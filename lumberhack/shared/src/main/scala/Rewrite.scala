@@ -112,7 +112,7 @@ object Rewrite {
               L(ProgDef(id, newBody))
             })
           } else {
-            println("recurse for too long")
+            d.log("recurse for too long")
           }
           id
         }
@@ -131,7 +131,7 @@ object Rewrite {
     def rewriteExpr(e: Expr)(using d: Deforest, p: Path, root: Option[Ident]): Expr = {e match
       case r@Ref(id) if id.isDef => 
         val newPath = p :+ (r -> r.uid)
-        println(pprint2(newPath).toString())
+        d.log(pprint2(newPath).toString())
         Ref(writeInstance(defMap.getOrElse(newPath, newPath))
         )
       case r@Ref(id) if !id.isDef => r

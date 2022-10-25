@@ -1,6 +1,6 @@
 package mlscript.lumberhack
 
-import mlscript.{DiffTests, TypingUnit, Term, Pgrm}
+import mlscript.{DiffTests, ModeType, TypingUnit, Term, Pgrm}
 import mlscript.utils.shorthands.Str
 import mlscript.lumberhack.pprint2
 import mlscript.codegen.Helpers.inspect as showStructure
@@ -8,13 +8,13 @@ import scala.collection.mutable.StringBuilder
 
 class DiffTestLumberhack extends DiffTests {
   import DiffTestLumberhack.*
-  override def postProcess(basePath: List[Str], testName: Str, unit: TypingUnit): List[Str] = {
+  override def postProcess(mode: ModeType, basePath: List[Str], testName: Str, unit: TypingUnit): List[Str] = {
     val outputBuilder = StringBuilder()
     // outputBuilder ++= "Parsed AST:\n"
     // outputBuilder ++= pprint2(Pgrm(unit.entities).desugared, showFieldNames = true, width = 150).plainText
     // outputBuilder ++= "Parsed AST:\n"
     outputBuilder ++= ">>>>>>>>>> Original >>>>>>>>>>\n"
-    given d: Deforest(true)
+    given d: Deforest(mode.stdout)
     val originalProgram = Program.fromPgrm(Pgrm(unit.entities))
     val constraints = d(originalProgram)
     outputBuilder ++= originalProgram.pp

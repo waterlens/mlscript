@@ -84,7 +84,7 @@ class Deforest(debug: Boolean) {
   private def summary(str: String) =
     val made = str.split('\n').mkString("\\")
     if (made.length > 100) made.take(100) + Console.RESET + Console.MAGENTA + "..." + Console.RESET else made
-  private inline def log(msg: => String, color: String = Console.RED): Unit =
+  inline def log(msg: => String, color: String = Console.RED): Unit =
     if debug then println("| " * indent + color + msg + Console.RESET)
   def show(x: Any) =
     Console.RESET + summary(pprint2.apply(x).toString)
@@ -176,7 +176,7 @@ class Deforest(debug: Boolean) {
       (prod.s, cons.s) match {
         case (_: ProdVar, _) | (_, _: ConsVar) => cache.find(_.equals(c)) match {
           case S(inCache) => {
-            println(s">> done [${pprint2.apply(c._1).toString} : ${pprint2.apply(c._2).toString}]\n" +
+            log(s">> done [${pprint2.apply(c._1).toString} : ${pprint2.apply(c._2).toString}]\n" +
               s">> with [${pprint2.apply(inCache._1).toString} : ${pprint2.apply(inCache._2).toString}]")
             recursiveConstr._1 += (c -> inCache)
             recursiveConstr._2 += (c._1.path -> inCache._1.path)

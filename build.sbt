@@ -92,3 +92,17 @@ lazy val compiler = crossProject(JSPlatform, JVMPlatform).in(file("compiler"))
 lazy val compilerJVM = compiler.jvm
 lazy val compilerJS = compiler.js
 
+lazy val lumberhack = crossProject(JSPlatform, JVMPlatform).in(file("lumberhack"))
+  .settings(
+    name := "lumberhack",
+    scalaVersion := "3.1.3",
+    sourceDirectory := baseDirectory.value.getParentFile()/"shared"/"src",
+    watchSources += WatchSource(
+      baseDirectory.value.getParentFile()/"shared"/"src"/"test"/"resources", "*.mls", NothingFilter),
+    libraryDependencies += ("com.lihaoyi" %% "pprint" % "0.7.0").cross(CrossVersion.for3Use2_13),
+    libraryDependencies += ("com.lihaoyi" %% "ammonite-ops" % "2.4.0").cross(CrossVersion.for3Use2_13),
+  )
+  .dependsOn(mlscript % "compile->compile;test->test")
+
+lazy val lumberhackJVM = lumberhack.jvm
+lazy val lumberhackJS = lumberhack.js

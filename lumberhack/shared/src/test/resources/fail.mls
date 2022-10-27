@@ -1,0 +1,20 @@
+:NewParser
+:ParseOnly
+
+let p = C(p)
+fun c(x) = if C(x) is
+    C(a) then c(a)
+c(p)
+//│ |#let| |p| |#=| |C|(|p|)|↵|#fun| |c|(|x|)| |#=| |#if| |C|(|x|)| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|c|(|p|)|
+//│ Parsed: {let p = C (p,); fun c = x, => if C (x,) is ‹(C (a,)) then c (a,)›; c (p,)}
+//│ /!!!\ Uncaught error: java.util.NoSuchElementException: key not found: List((Ref(Ident(true,p,1)),11))
+//│ 	at: scala.collection.immutable.Map$Map1.apply(Map.scala:245)
+//│ 	at: mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:124)
+//│ 	at: mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:146)
+//│ 	at: mlscript.lumberhack.Rewrite$$anon$2.applyOrElse(Rewrite.scala:151)
+//│ 	at: mlscript.lumberhack.Rewrite$$anon$2.applyOrElse(Rewrite.scala:151)
+//│ 	at: scala.collection.immutable.List.collect(List.scala:267)
+//│ 	at: mlscript.lumberhack.Rewrite$.rewrite(Rewrite.scala:151)
+//│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTest.scala:38)
+//│ 	at: mlscript.DiffTests.rec$1(DiffTests.scala:337)
+//│ 	at: mlscript.DiffTests.$anonfun$new$3(DiffTests.scala:781)

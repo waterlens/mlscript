@@ -1,0 +1,339 @@
+:NewParser
+:ParseOnly
+
+let rec p = C(p)
+fun c(x) = if x is
+    C(a) then c(a)
+c(p)
+//│ |#let| |#rec| |p| |#=| |C|(|p|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|c|(|p|)|
+//│ Parsed: {let rec p = C (p,); fun c = x, => if x is ‹(C (a,)) then c (a,)›; c (p,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def p:1 = [C p:1]
+//│ def c:2 = fun x:3 -> case x:3 of {C a:4 -> (c:2 a:5)}
+//│ (c:2 p:1)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ((p:1^10 ⋅ p:1^1 ⋅ ɛ, C((p:1^1 ⋅ ɛ, 0'p))), (c:2^9 ⋅ c:2^4 ⋅ ɛ, 2'x)) :::: ((p:1^10 ⋅ ɛ, C((p:1^1 ⋅ ɛ, 0'p))), (c:2^9 ⋅ ɛ, 2'x))
+//│ ------- defInstance -------
+//│ p:1^10 ⋅ ɛ ==> c:2^9 ⋅ ɛ:
+//│ 	2: [C p:1]  <-->  7: case x:3 of {C a:4 -> (c:2 a:5)}
+//│ 
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def p:1 = [C p:1]
+//│ def c:2 = fun x:3 -> case x:3 of {C a:4 -> (c:2 a:5)}
+//│ def p'1'10:6 = let a:4 = p'1'10:6 in (c'2'9:7 a:5)
+//│ def c'2'9:7 = fun x:3 -> x:3
+//│ (c'2'9:7 p'1'10:6)
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+
+
+
+let p = C(1, C(2, N))
+fun e(z) = if z is
+    C(aaa, bbb) then bbb
+    N then 7
+fun d(y) = if y is
+    C(aa, bb) then e(bb)
+    N then 5
+fun c(x) = if x is
+    C(a, b) then d(b)
+    N then 3
+c(p)
+//│ |#let| |p| |#=| |C|(|1|,| |C|(|2|,| |N|)|)|↵|#fun| |e|(|z|)| |#=| |#if| |z| |is|→|C|(|aaa|,| |bbb|)| |#then| |bbb|↵|N| |#then| |7|←|↵|#fun| |d|(|y|)| |#=| |#if| |y| |is|→|C|(|aa|,| |bb|)| |#then| |e|(|bb|)|↵|N| |#then| |5|←|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|,| |b|)| |#then| |d|(|b|)|↵|N| |#then| |3|←|↵|c|(|p|)|
+//│ Parsed: {let p = C (1, C (2, N,),); fun e = z, => if z is ‹(C (aaa, bbb,)) then bbb; (N) then 7›; fun d = y, => if y is ‹(C (aa, bb,)) then e (bb,); (N) then 5›; fun c = x, => if x is ‹(C (a, b,)) then d (b,); (N) then 3›; c (p,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def p:1 = [C 1 [C 2 [N]]]
+//│ def e:2 = fun z:5 -> case z:5 of {C aaa:6 bbb:7 -> bbb:8 | N -> 7}
+//│ def d:3 = fun y:9 -> case y:9 of {C aa:10 bb:11 -> (e:2 bb:12) | N -> 5}
+//│ def c:4 = fun x:13 -> case x:13 of {C a:14 b:15 -> (d:3 b:16) | N -> 3}
+//│ (c:4 p:1)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ------- defInstance -------
+//│ p:1^26 ⋅ ɛ ==> c:4^25 ⋅ ɛ:
+//│ 	5: [C 1 [C 2 [N]]]  <-->  23: case x:13 of {C a:14 b:15 -> (d:3 b:16) | N -> 3}
+//│ p:1^26 ⋅ ɛ ==> c:4^25 ⋅ d:3^19 ⋅ e:2^12 ⋅ ɛ:
+//│ 	3: [N]  <-->  9: case z:5 of {C aaa:6 bbb:7 -> bbb:8 | N -> 7}
+//│ p:1^26 ⋅ ɛ ==> c:4^25 ⋅ d:3^19 ⋅ ɛ:
+//│ 	4: [C 2 [N]]  <-->  16: case y:9 of {C aa:10 bb:11 -> (e:2 bb:12) | N -> 5}
+//│ 
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def p:1 = [C 1 [C 2 [N]]]
+//│ def e:2 = fun z:5 -> case z:5 of {C aaa:6 bbb:7 -> bbb:8 | N -> 7}
+//│ def d:3 = fun y:9 -> case y:9 of {C aa:10 bb:11 -> (e:2 bb:12) | N -> 5}
+//│ def c:4 = fun x:13 -> case x:13 of {C a:14 b:15 -> (d:3 b:16) | N -> 3}
+//│ def c'4'25_d'3'19:17 = fun y:9 -> y:9
+//│ def c'4'25:18 = fun x:13 -> x:13
+//│ def p'1'26:19 = let a:14 = 1 in let b:15 = let aa:10 = 2 in let bb:11 = 7 in (c'4'25_d'3'19_e'2'12:20 bb:12) in (c'4'25_d'3'19:17 b:16)
+//│ def c'4'25_d'3'19_e'2'12:20 = fun z:5 -> z:5
+//│ (c'4'25:18 p'1'26:19)
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+
+
+let rec p = C(C(p))
+fun c(x) = if x is
+    C(a) then if a is
+        C(b) then if b is
+            C(y) then c(y)
+c(p)
+//│ |#let| |#rec| |p| |#=| |C|(|C|(|p|)|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |#if| |a| |is|→|C|(|b|)| |#then| |#if| |b| |is|→|C|(|y|)| |#then| |c|(|y|)|←|←|←|↵|c|(|p|)|
+//│ Parsed: {let rec p = C (C (p,),); fun c = x, => if x is ‹(C (a,)) then if a is ‹(C (b,)) then if b is ‹(C (y,)) then c (y,)›››; c (p,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def p:1 = [C [C p:1]]
+//│ def c:2 = fun x:3 -> case x:3 of {C a:4 -> case a:5 of {C b:6 -> case b:7 of {C y:8 -> (c:2 y:9)}}}
+//│ (c:2 p:1)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ (
+//│   (p:1^15 ⋅ p:1^1 ⋅ p:1^1 ⋅ p:1^1 ⋅ ɛ, C((ɛ, C((p:1^1 ⋅ ɛ, 0'p))))),
+//│   (c:2^14 ⋅ c:2^7 ⋅ c:2^7 ⋅ ɛ, 2'x)
+//│ ) :::: ((p:1^15 ⋅ ɛ, C((ɛ, C((p:1^1 ⋅ ɛ, 0'p))))), (c:2^14 ⋅ ɛ, 2'x))
+//│ ------- defInstance -------
+//│ p:1^15 ⋅ ɛ ==> c:2^14 ⋅ ɛ:
+//│ 	2: [C p:1]  <-->  11: case a:5 of {C b:6 -> case b:7 of {C y:8 -> (c:2 y:9)}}
+//│ 	3: [C [C p:1]]  <-->  12: case x:3 of {C a:4 -> case a:5 of {C b:6 -> case b:7 of {C y:8 -> (c:2 y:9)}}}
+//│ p:1^15 ⋅ p:1^1 ⋅ ɛ ==> c:2^14 ⋅ c:2^7 ⋅ ɛ:
+//│ 	2: [C p:1]  <-->  12: case x:3 of {C a:4 -> case a:5 of {C b:6 -> case b:7 of {C y:8 -> (c:2 y:9)}}}
+//│ p:1^15 ⋅ p:1^1 ⋅ ɛ ==> c:2^14 ⋅ ɛ:
+//│ 	3: [C [C p:1]]  <-->  10: case b:7 of {C y:8 -> (c:2 y:9)}
+//│ p:1^15 ⋅ p:1^1 ⋅ p:1^1 ⋅ ɛ ==> c:2^14 ⋅ c:2^7 ⋅ ɛ:
+//│ 	2: [C p:1]  <-->  10: case b:7 of {C y:8 -> (c:2 y:9)}
+//│ 	3: [C [C p:1]]  <-->  11: case a:5 of {C b:6 -> case b:7 of {C y:8 -> (c:2 y:9)}}
+//│ 
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def p:1 = [C [C p:1]]
+//│ def c:2 = fun x:3 -> case x:3 of {C a:4 -> case a:5 of {C b:6 -> case b:7 of {C y:8 -> (c:2 y:9)}}}
+//│ def p'1'15:10 = let a:4 = let b:6 = p'1'15_p'1'1:11 in b:7 in a:5
+//│ def p'1'15_p'1'1:11 = let y:8 = let a:4 = p'1'15_p'1'1_p'1'1:13 in a:5 in (c'2'14_c'2'7:14 y:9)
+//│ def c'2'14:12 = fun x:3 -> x:3
+//│ def p'1'15_p'1'1_p'1'1:13 = let b:6 = let y:8 = p'1'15:10 in (c'2'14:12 y:9) in b:7
+//│ def c'2'14_c'2'7:14 = fun x:3 -> x:3
+//│ (c'2'14:12 p'1'15:10)
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+
+
+
+let rec p = C(C(C(id(p))))
+fun c(x) = if x is
+    C(a) then if a is
+        C(b) then c(b)
+fun id2(z) = z
+fun id(y) = id2(y)
+fun id3(d) = d
+c(id3(p))
+//│ |#let| |#rec| |p| |#=| |C|(|C|(|C|(|id|(|p|)|)|)|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |#if| |a| |is|→|C|(|b|)| |#then| |c|(|b|)|←|←|↵|#fun| |id2|(|z|)| |#=| |z|↵|#fun| |id|(|y|)| |#=| |id2|(|y|)|↵|#fun| |id3|(|d|)| |#=| |d|↵|c|(|id3|(|p|)|)|
+//│ Parsed: {let rec p = C (C (C (id (p,),),),); fun c = x, => if x is ‹(C (a,)) then if a is ‹(C (b,)) then c (b,)››; fun id2 = z, => z; fun id = y, => id2 (y,); fun id3 = d, => d; c (id3 (p,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def p:1 = [C [C [C (id:4 p:1)]]]
+//│ def c:2 = fun x:6 -> case x:6 of {C a:7 -> case a:8 of {C b:9 -> (c:2 b:10)}}
+//│ def id2:3 = fun z:11 -> z:11
+//│ def id:4 = fun y:12 -> (id2:3 y:12)
+//│ def id3:5 = fun d:13 -> d:13
+//│ (c:2 (id3:5 p:1))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ (
+//│   (p:1^25 ⋅ p:1^2 ⋅ p:1^2 ⋅ ɛ, C((ɛ, C((ɛ, C((ɛ, 5'3_callres))))))),
+//│   (c:2^23 ⋅ c:2^9 ⋅ c:2^9 ⋅ c:2^9 ⋅ ɛ, 6'x)
+//│ ) :::: ((p:1^25 ⋅ ɛ, C((ɛ, C((ɛ, C((ɛ, 5'3_callres))))))), (c:2^23 ⋅ ɛ, 6'x))
+//│ ------- defInstance -------
+//│ p:1^25 ⋅ ɛ ==> c:2^23 ⋅ c:2^9 ⋅ ɛ:
+//│ 	4: [C (id:4 p:1)]  <-->  13: case x:6 of {C a:7 -> case a:8 of {C b:9 -> (c:2 b:10)}}
+//│ p:1^25 ⋅ p:1^2 ⋅ ɛ ==> c:2^23 ⋅ c:2^9 ⋅ c:2^9 ⋅ ɛ:
+//│ 	4: [C (id:4 p:1)]  <-->  12: case a:8 of {C b:9 -> (c:2 b:10)}
+//│ 	5: [C [C (id:4 p:1)]]  <-->  13: case x:6 of {C a:7 -> case a:8 of {C b:9 -> (c:2 b:10)}}
+//│ p:1^25 ⋅ ɛ ==> c:2^23 ⋅ ɛ:
+//│ 	5: [C [C (id:4 p:1)]]  <-->  12: case a:8 of {C b:9 -> (c:2 b:10)}
+//│ 	6: [C [C [C (id:4 p:1)]]]  <-->  13: case x:6 of {C a:7 -> case a:8 of {C b:9 -> (c:2 b:10)}}
+//│ p:1^25 ⋅ p:1^2 ⋅ ɛ ==> c:2^23 ⋅ c:2^9 ⋅ ɛ:
+//│ 	6: [C [C [C (id:4 p:1)]]]  <-->  12: case a:8 of {C b:9 -> (c:2 b:10)}
+//│ 
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def p:1 = [C [C [C (id:4 p:1)]]]
+//│ def c:2 = fun x:6 -> case x:6 of {C a:7 -> case a:8 of {C b:9 -> (c:2 b:10)}}
+//│ def id2:3 = fun z:11 -> z:11
+//│ def id:4 = fun y:12 -> (id2:3 y:12)
+//│ def id3:5 = fun d:13 -> d:13
+//│ def c'2'23_c'2'9_c'2'9:14 = fun x:6 -> x:6
+//│ def c'2'23_c'2'9:15 = fun x:6 -> x:6
+//│ def p'1'25:16 = let a:7 = let b:9 = let a:7 = (id:4 p'1'25_p'1'2:18) in a:8 in (c'2'23_c'2'9:15 b:10) in a:8
+//│ def c'2'23:17 = fun x:6 -> x:6
+//│ def p'1'25_p'1'2:18 = let b:9 = let a:7 = let b:9 = (id:4 p'1'25:16) in (c'2'23:17 b:10) in a:8 in (c'2'23_c'2'9_c'2'9:14 b:10)
+//│ (c'2'23:17 (id3:5 p'1'25:16))
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+
+
+let rec p = C(C(p))
+fun c(x) = if x is
+    C(a) then c(a)
+fun id2(yy) = yy
+fun id(y) = id2(y)
+c(id(p))
+//│ |#let| |#rec| |p| |#=| |C|(|C|(|p|)|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|#fun| |id2|(|yy|)| |#=| |yy|↵|#fun| |id|(|y|)| |#=| |id2|(|y|)|↵|c|(|id|(|p|)|)|
+//│ Parsed: {let rec p = C (C (p,),); fun c = x, => if x is ‹(C (a,)) then c (a,)›; fun id2 = yy, => yy; fun id = y, => id2 (y,); c (id (p,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def p:1 = [C [C p:1]]
+//│ def c:2 = fun x:5 -> case x:5 of {C a:6 -> (c:2 a:7)}
+//│ def id2:3 = fun yy:8 -> yy:8
+//│ def id:4 = fun y:9 -> (id2:3 y:9)
+//│ (c:2 (id:4 p:1))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ((p:1^18 ⋅ p:1^1 ⋅ ɛ, C((ɛ, C((p:1^1 ⋅ ɛ, 0'p))))), (c:2^16 ⋅ c:2^5 ⋅ c:2^5 ⋅ ɛ, 4'x)) :::: ((p:1^18 ⋅ ɛ, C((ɛ, C((p:1^1 ⋅ ɛ, 0'p))))), (c:2^16 ⋅ ɛ, 4'x))
+//│ ------- defInstance -------
+//│ p:1^18 ⋅ ɛ ==> c:2^16 ⋅ ɛ:
+//│ 	3: [C [C p:1]]  <-->  8: case x:5 of {C a:6 -> (c:2 a:7)}
+//│ p:1^18 ⋅ ɛ ==> c:2^16 ⋅ c:2^5 ⋅ ɛ:
+//│ 	2: [C p:1]  <-->  8: case x:5 of {C a:6 -> (c:2 a:7)}
+//│ 
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def p:1 = [C [C p:1]]
+//│ def c:2 = fun x:5 -> case x:5 of {C a:6 -> (c:2 a:7)}
+//│ def id2:3 = fun yy:8 -> yy:8
+//│ def id:4 = fun y:9 -> (id2:3 y:9)
+//│ def c'2'16:10 = fun x:5 -> x:5
+//│ def p'1'18:11 = let a:6 = let a:6 = p'1'18:11 in (c'2'16:10 a:7) in (c'2'16_c'2'5:12 a:7)
+//│ def c'2'16_c'2'5:12 = fun x:5 -> x:5
+//│ (c'2'16:10 (id:4 p'1'18:11))
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+
+fun sum(ls) = if ls is
+    C(h, t) then S(N, sum(t))
+fun mapa(lsa) = if lsa is
+    C(ha, ta) then C(primitive(ha), mapa(ta))
+fun mapb(lsb) = if lsb is
+    C(hb, tb) then C(primitive(hb), mapb(tb))
+sum(mapa(mapb(primitive)))
+//│ |#fun| |sum|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |S|(|N|,| |sum|(|t|)|)|←|↵|#fun| |mapa|(|lsa|)| |#=| |#if| |lsa| |is|→|C|(|ha|,| |ta|)| |#then| |C|(|primitive|(|ha|)|,| |mapa|(|ta|)|)|←|↵|#fun| |mapb|(|lsb|)| |#=| |#if| |lsb| |is|→|C|(|hb|,| |tb|)| |#then| |C|(|primitive|(|hb|)|,| |mapb|(|tb|)|)|←|↵|sum|(|mapa|(|mapb|(|primitive|)|)|)|
+//│ Parsed: {fun sum = ls, => if ls is ‹(C (h, t,)) then S (N, sum (t,),)›; fun mapa = lsa, => if lsa is ‹(C (ha, ta,)) then C (primitive (ha,), mapa (ta,),)›; fun mapb = lsb, => if lsb is ‹(C (hb, tb,)) then C (primitive (hb,), mapb (tb,),)›; sum (mapa (mapb (primitive,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def sum:1 = fun ls:4 -> case ls:4 of {C h:5 t:6 -> [S [N] (sum:1 t:7)]}
+//│ def mapa:2 = fun lsa:8 -> case lsa:8 of {C ha:9 ta:10 -> [C (primitive:0 ha:11) (mapa:2 ta:12)]}
+//│ def mapb:3 = fun lsb:13 -> case lsb:13 of {C hb:14 tb:15 -> [C (primitive:0 hb:16) (mapb:3 tb:17)]}
+//│ (sum:1 (mapa:2 (mapb:3 primitive:0)))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ (
+//│   (mapa:2^30 ⋅ mapa:2^13 ⋅ ɛ, C((ɛ, 11'12_callres), (ɛ, 12'15_callres))),
+//│   (sum:1^29 ⋅ sum:1^3 ⋅ ɛ, 3'ls)
+//│ ) :::: ((mapa:2^30 ⋅ ɛ, C((ɛ, 11'12_callres), (ɛ, 12'15_callres))), (sum:1^29 ⋅ ɛ, 3'ls))
+//│ (
+//│   (mapb:3^31 ⋅ mapb:3^23 ⋅ ɛ, C((ɛ, 17'22_callres), (ɛ, 18'25_callres))),
+//│   (mapa:2^30 ⋅ mapa:2^13 ⋅ ɛ, 8'lsa)
+//│ ) :::: ((mapb:3^31 ⋅ ɛ, C((ɛ, 17'22_callres), (ɛ, 18'25_callres))), (mapa:2^30 ⋅ ɛ, 8'lsa))
+//│ ------- defInstance -------
+//│ mapa:2^30 ⋅ ɛ ==> sum:1^29 ⋅ ɛ:
+//│ 	16: [C (primitive:0 ha:11) (mapa:2 ta:12)]  <-->  7: case ls:4 of {C h:5 t:6 -> [S [N] (sum:1 t:7)]}
+//│ mapb:3^31 ⋅ ɛ ==> mapa:2^30 ⋅ ɛ:
+//│ 	26: [C (primitive:0 hb:16) (mapb:3 tb:17)]  <-->  17: case lsa:8 of {C ha:9 ta:10 -> [C (primitive:0 ha:11) (mapa:2 ta:12)]}
+//│ 
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def sum:1 = fun ls:4 -> case ls:4 of {C h:5 t:6 -> [S [N] (sum:1 t:7)]}
+//│ def mapa:2 = fun lsa:8 -> case lsa:8 of {C ha:9 ta:10 -> [C (primitive:0 ha:11) (mapa:2 ta:12)]}
+//│ def mapb:3 = fun lsb:13 -> case lsb:13 of {C hb:14 tb:15 -> [C (primitive:0 hb:16) (mapb:3 tb:17)]}
+//│ def mapa'2'30:18 = fun lsa:8 -> lsa:8
+//│ def sum'1'29:19 = fun ls:4 -> ls:4
+//│ def mapb'3'31:20 = fun lsb:13 -> case lsb:13 of {C hb:14 tb:15 -> let ha:9 = (primitive:0 hb:16) in let ta:10 = (mapb'3'31:20 tb:17) in let h:5 = (primitive:0 ha:11) in let t:6 = (mapa'2'30:18 ta:12) in [S [N] (sum'1'29:19 t:7)]}
+//│ (sum'1'29:19 (mapa'2'30:18 (mapb'3'31:20 primitive:0)))
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+
+
+if C(A, B(C)) is
+    C(a, b) then D(b)
+//│ |#if| |C|(|A|,| |B|(|C|)|)| |is|→|C|(|a|,| |b|)| |#then| |D|(|b|)|←|
+//│ Parsed: {if C (A, B (C,),) is ‹(C (a, b,)) then D (b,)›}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ case [C [A] [B [C]]] of {C a:1 b:2 -> [D b:3]}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ------- defInstance -------
+//│ ɛ ==> ɛ:
+//│ 	4: [C [A] [B [C]]]  <-->  7: case [C [A] [B [C]]] of {C a:1 b:2 -> [D b:3]}
+//│ 
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ let a:1 = [A] in let b:2 = [B [C]] in [D b:3]
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+//│
+
+
+fun id(k) = k
+fun id1(x) = id(x)
+fun id2(y) = y
+fun id3(z) = z
+let rec p = C(C(C(id7(C(C(id1(p)))))))
+fun c(xx) = if xx is
+    C(a) then c(a)
+fun id4(k) = k
+fun id5(j) = j
+fun id6(l) = l
+fun id7(i) = i
+id6(id4)(c)(id5(id2)(id3(p)))
+//│ |#fun| |id|(|k|)| |#=| |k|↵|#fun| |id1|(|x|)| |#=| |id|(|x|)|↵|#fun| |id2|(|y|)| |#=| |y|↵|#fun| |id3|(|z|)| |#=| |z|↵|#let| |#rec| |p| |#=| |C|(|C|(|C|(|id7|(|C|(|C|(|id1|(|p|)|)|)|)|)|)|)|↵|#fun| |c|(|xx|)| |#=| |#if| |xx| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|#fun| |id4|(|k|)| |#=| |k|↵|#fun| |id5|(|j|)| |#=| |j|↵|#fun| |id6|(|l|)| |#=| |l|↵|#fun| |id7|(|i|)| |#=| |i|↵|id6|(|id4|)|(|c|)|(|id5|(|id2|)|(|id3|(|p|)|)|)|
+//│ Parsed: {fun id = k, => k; fun id1 = x, => id (x,); fun id2 = y, => y; fun id3 = z, => z; let rec p = C (C (C (id7 (C (C (id1 (p,),),),),),),); fun c = xx, => if xx is ‹(C (a,)) then c (a,)›; fun id4 = k, => k; fun id5 = j, => j; fun id6 = l, => l; fun id7 = i, => i; id6 (id4,) (c,) (id5 (id2,) (id3 (p,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def id:1 = fun k:11 -> k:11
+//│ def id1:2 = fun x:12 -> (id:1 x:12)
+//│ def id2:3 = fun y:13 -> y:13
+//│ def id3:4 = fun z:14 -> z:14
+//│ def p:5 = [C [C [C (id7:10 [C [C (id1:2 p:5)]])]]]
+//│ def c:6 = fun xx:15 -> case xx:15 of {C a:16 -> (c:6 a:17)}
+//│ def id4:7 = fun k:18 -> k:18
+//│ def id5:8 = fun j:19 -> j:19
+//│ def id6:9 = fun l:20 -> l:20
+//│ def id7:10 = fun i:21 -> i:21
+//│ (((id6:9 id4:7) c:6) ((id5:8 id2:3) (id3:4 p:5)))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ (
+//│   (p:5^44 ⋅ p:5^13 ⋅ ɛ, C((ɛ, C((ɛ, C((ɛ, 16'17_callres))))))),
+//│   (c:6^38 ⋅ c:6^22 ⋅ c:6^22 ⋅ c:6^22 ⋅ c:6^22 ⋅ c:6^22 ⋅ ɛ, 17'xx)
+//│ ) :::: ((p:5^44 ⋅ ɛ, C((ɛ, C((ɛ, C((ɛ, 16'17_callres))))))), (c:6^38 ⋅ ɛ, 17'xx))
+//│ ------- defInstance -------
+//│ p:5^44 ⋅ ɛ ==> c:6^38 ⋅ ɛ:
+//│ 	20: [C [C [C (id7:10 [C [C (id1:2 p:5)]])]]]  <-->  25: case xx:15 of {C a:16 -> (c:6 a:17)}
+//│ p:5^44 ⋅ ɛ ==> c:6^38 ⋅ c:6^22 ⋅ c:6^22 ⋅ ɛ:
+//│ 	18: [C (id7:10 [C [C (id1:2 p:5)]])]  <-->  25: case xx:15 of {C a:16 -> (c:6 a:17)}
+//│ p:5^44 ⋅ ɛ ==> c:6^38 ⋅ c:6^22 ⋅ c:6^22 ⋅ c:6^22 ⋅ c:6^22 ⋅ ɛ:
+//│ 	15: [C (id1:2 p:5)]  <-->  25: case xx:15 of {C a:16 -> (c:6 a:17)}
+//│ p:5^44 ⋅ ɛ ==> c:6^38 ⋅ c:6^22 ⋅ c:6^22 ⋅ c:6^22 ⋅ ɛ:
+//│ 	16: [C [C (id1:2 p:5)]]  <-->  25: case xx:15 of {C a:16 -> (c:6 a:17)}
+//│ p:5^44 ⋅ ɛ ==> c:6^38 ⋅ c:6^22 ⋅ ɛ:
+//│ 	19: [C [C (id7:10 [C [C (id1:2 p:5)]])]]  <-->  25: case xx:15 of {C a:16 -> (c:6 a:17)}
+//│ 
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def id:1 = fun k:11 -> k:11
+//│ def id1:2 = fun x:12 -> (id:1 x:12)
+//│ def id2:3 = fun y:13 -> y:13
+//│ def id3:4 = fun z:14 -> z:14
+//│ def p:5 = [C [C [C (id7:10 [C [C (id1:2 p:5)]])]]]
+//│ def c:6 = fun xx:15 -> case xx:15 of {C a:16 -> (c:6 a:17)}
+//│ def id4:7 = fun k:18 -> k:18
+//│ def id5:8 = fun j:19 -> j:19
+//│ def id6:9 = fun l:20 -> l:20
+//│ def id7:10 = fun i:21 -> i:21
+//│ def p'5'44:22 = let a:16 = let a:16 = let a:16 = (id7:10 let a:16 = let a:16 = (id1:2 p'5'44:22) in (c'6'38:25 a:17) in (c'6'38_c'6'22_c'6'22_c'6'22_c'6'22:26 a:17)) in (c'6'38_c'6'22_c'6'22_c'6'22:27 a:17) in (c'6'38_c'6'22_c'6'22:23 a:17) in (c'6'38_c'6'22:24 a:17)
+//│ def c'6'38_c'6'22_c'6'22:23 = fun xx:15 -> xx:15
+//│ def c'6'38_c'6'22:24 = fun xx:15 -> xx:15
+//│ def c'6'38:25 = fun xx:15 -> xx:15
+//│ def c'6'38_c'6'22_c'6'22_c'6'22_c'6'22:26 = fun xx:15 -> xx:15
+//│ def c'6'38_c'6'22_c'6'22_c'6'22:27 = fun xx:15 -> xx:15
+//│ (((id6:9 id4:7) c'6'38:25) ((id5:8 id2:3) (id3:4 p'5'44:22)))
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+
+

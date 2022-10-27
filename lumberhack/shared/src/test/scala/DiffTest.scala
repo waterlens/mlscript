@@ -30,6 +30,7 @@ class DiffTestLumberhack extends DiffTests {
       outputBuilder ++= (xs.toArray.map {
         case (p, c) => s"\n\t$p: ${d.exprs(p).pp}  <-->  $c: ${d.exprs(c).pp}"
       }.sorted.mkString)
+      outputBuilder ++= "\n"
     }
     outputBuilder ++= "\n\n>>>>>>>>>> Rewritten >>>>>>>>>>\n"
     val newProgram = Rewrite.rewrite(originalProgram, d,

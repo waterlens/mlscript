@@ -1,29 +1,2 @@
 :NewParser
 :ParseOnly
-
-let rec p = C(p, primitive)
-fun c(x) = if x is
-    C(a, b) then c(a)
-c(p)
-//│ |#let| |#rec| |p| |#=| |C|(|p|,| |primitive|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|,| |b|)| |#then| |c|(|a|)|←|↵|c|(|p|)|
-//│ Parsed: {let rec p = C (p, primitive,); fun c = x, => if x is ‹(C (a, b,)) then c (a,)›; c (p,)}
-//│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:1 = [C p:1 primitive:0]
-//│ def c:2 = fun x:3 -> case x:3 of {C a:4 b:5 -> (c:2 a:6)}
-//│ (c:2 p:1)
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ ------- recursive -------
-//│ ((p:1^11 ⋅ p:1^1 ⋅ ɛ, C((p:1^1 ⋅ ɛ, 0'p), (ɛ, NoProd()))), (c:2^10 ⋅ c:2^5 ⋅ ɛ, 2'x)) :::: ((p:1^11 ⋅ ɛ, C((p:1^1 ⋅ ɛ, 0'p), (ɛ, NoProd()))), (c:2^10 ⋅ ɛ, 2'x))
-//│ ------- defInstance -------
-//│ p:1^11 ⋅ ɛ ==> c:2^10 ⋅ ɛ:
-//│ 	3: [C p:1 primitive:0]  <-->  8: case x:3 of {C a:4 b:5 -> (c:2 a:6)}
-//│ 
-//│ >>>>>>>>>> Rewritten >>>>>>>>>>
-//│ def p:1 = [C p:1 primitive:0]
-//│ def c:2 = fun x:3 -> case x:3 of {C a:4 b:5 -> (c:2 a:6)}
-//│ def p'1'11:7 = let a:4 = p'1'11:7 in let b:5 = primitive:0 in (c'2'10:8 a:6)
-//│ def c'2'10:8 = fun x:3 -> x:3
-//│ (c'2'10:8 p'1'11:7)
-//│ <<<<<<<<<< Rewritten <<<<<<<<<<
-

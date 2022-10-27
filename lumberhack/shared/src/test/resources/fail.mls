@@ -1,6 +1,110 @@
 :NewParser
 :ParseOnly
 
+// FIXME: wrong output: recursive calls should not only replace the identifier,
+// but also the strategy (on more than one use scenarios)
+// at this example the `recursive` map stores the actual type (which should have the concrete exprid), so
+// to fix the rewrite for this example should be simple ------ but what about if the producer is not concrete,
+// but another type variable?
+let t = T(K, T(N, L, L), T(N, L, L))
+fun c(x) = if x is
+    T(n, l, r) then T(
+        (if n is
+            K then KK
+            N then NN
+        ),
+        c(l),
+        c(r)
+    )
+    L then LL
+c(t)
+//│ |#let| |t| |#=| |T|(|K|,| |T|(|N|,| |L|,| |L|)|,| |T|(|N|,| |L|,| |L|)|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|T|(|n|,| |l|,| |r|)| |#then| |T|(|→|(|#if| |n| |is|→|K| |#then| |KK|↵|N| |#then| |NN|←|↵|)|,|↵|c|(|l|)|,|↵|c|(|r|)|←|↵|)|↵|L| |#then| |LL|←|↵|c|(|t|)|
+//│ Parsed: {let t = T (K, T (N, L, L,), T (N, L, L,),); fun c = x, => if x is ‹(T (n, l, r,)) then T ('(' if n is ‹(K) then KK; (N) then NN›, ')', c (l,), c (r,),); (L) then LL›; c (t,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def t:1 = [T [K] [T [N] [L] [L]] [T [N] [L] [L]]]
+//│ def c:2 = fun x:3 -> case x:3 of {T n:4 l:5 r:6 -> [T case n:7 of {K -> [KK] | N -> [NN]} (c:2 l:8) (c:2 r:9)] | L -> [LL]}
+//│ (c:2 t:1)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ((t:1^27 ⋅ ɛ, L()), (c:2^26 ⋅ c:2^16 ⋅ c:2^19 ⋅ ɛ, 2'x)) :::: ((t:1^27 ⋅ ɛ, L()), (c:2^26 ⋅ c:2^16 ⋅ c:2^16 ⋅ ɛ, 2'x))
+//│ ((t:1^27 ⋅ ɛ, T((ɛ, N()), (ɛ, L()), (ɛ, L()))), (c:2^26 ⋅ c:2^19 ⋅ ɛ, 2'x)) :::: ((t:1^27 ⋅ ɛ, T((ɛ, N()), (ɛ, L()), (ɛ, L()))), (c:2^26 ⋅ c:2^16 ⋅ ɛ, 2'x))
+//│ ------- defInstance -------
+//│ t:1^27 ⋅ ɛ ==> c:2^26 ⋅ c:2^16 ⋅ c:2^16 ⋅ ɛ:
+//│ 	3: [L]  <-->  24: case x:3 of {T n:4 l:5 r:6 -> [T case n:7 of {K -> [KK] | N -> [NN]} (c:2 l:8) (c:2 r:9)] | L -> [LL]}
+//│ t:1^27 ⋅ ɛ ==> c:2^26 ⋅ c:2^16 ⋅ ɛ:
+//│ 	2: [N]  <-->  15: case n:7 of {K -> [KK] | N -> [NN]}
+//│ 	5: [T [N] [L] [L]]  <-->  24: case x:3 of {T n:4 l:5 r:6 -> [T case n:7 of {K -> [KK] | N -> [NN]} (c:2 l:8) (c:2 r:9)] | L -> [LL]}
+//│ t:1^27 ⋅ ɛ ==> c:2^26 ⋅ ɛ:
+//│ 	10: [T [K] [T [N] [L] [L]] [T [N] [L] [L]]]  <-->  24: case x:3 of {T n:4 l:5 r:6 -> [T case n:7 of {K -> [KK] | N -> [NN]} (c:2 l:8) (c:2 r:9)] | L -> [LL]}
+//│ 	1: [K]  <-->  15: case n:7 of {K -> [KK] | N -> [NN]}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def t:1 = [T [K] [T [N] [L] [L]] [T [N] [L] [L]]]
+//│ def c:2 = fun x:3 -> case x:3 of {T n:4 l:5 r:6 -> [T case n:7 of {K -> [KK] | N -> [NN]} (c:2 l:8) (c:2 r:9)] | L -> [LL]}
+//│ def c'2'26:10 = fun x:3 -> x:3
+//│ def c'2'26_c'2'16:11 = fun x:3 -> x:3
+//│ def c'2'26_c'2'16_c'2'16:12 = fun x:3 -> x:3
+//│ def t'1'27:13 = let n:4 = [KK] in let l:5 = let n:4 = [NN] in let l:5 = [LL] in let r:6 = [L] in [T n:7 (c'2'26_c'2'16_c'2'16:12 l:8) (c'2'26_c'2'16_c'2'16:12 r:9)] in let r:6 = [T [N] [L] [L]] in [T n:7 (c'2'26_c'2'16:11 l:8) (c'2'26_c'2'16:11 r:9)]
+//│ (c'2'26:10 t'1'27:13)
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+
+
+// similar as above
+let aa = T(N, L, L)
+let bb = T(N, L, L)
+let t = T(K, aa, bb)
+fun c(x) = if x is
+    T(n, l, r) then T(
+        (if n is
+            K then KK
+            N then NN
+        ),
+        c(l),
+        c(r)
+    )
+    L then LL
+c(t)
+//│ |#let| |aa| |#=| |T|(|N|,| |L|,| |L|)|↵|#let| |bb| |#=| |T|(|N|,| |L|,| |L|)|↵|#let| |t| |#=| |T|(|K|,| |aa|,| |bb|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|T|(|n|,| |l|,| |r|)| |#then| |T|(|→|(|#if| |n| |is|→|K| |#then| |KK|↵|N| |#then| |NN|←|↵|)|,|↵|c|(|l|)|,|↵|c|(|r|)|←|↵|)|↵|L| |#then| |LL|←|↵|c|(|t|)|
+//│ Parsed: {let aa = T (N, L, L,); let bb = T (N, L, L,); let t = T (K, aa, bb,); fun c = x, => if x is ‹(T (n, l, r,)) then T ('(' if n is ‹(K) then KK; (N) then NN›, ')', c (l,), c (r,),); (L) then LL›; c (t,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def aa:1 = [T [N] [L] [L]]
+//│ def bb:2 = [T [N] [L] [L]]
+//│ def t:3 = [T [K] aa:1 bb:2]
+//│ def c:4 = fun x:5 -> case x:5 of {T n:6 l:7 r:8 -> [T case n:9 of {K -> [KK] | N -> [NN]} (c:4 l:10) (c:4 r:11)] | L -> [LL]}
+//│ (c:4 t:3)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ((t:3^29 ⋅ aa:1^10 ⋅ ɛ, T((ɛ, N()), (ɛ, L()), (ɛ, L()))), (c:4^28 ⋅ c:4^18 ⋅ ɛ, 4'x)) :::: ((t:3^29 ⋅ bb:2^11 ⋅ ɛ, T((ɛ, N()), (ɛ, L()), (ɛ, L()))), (c:4^28 ⋅ c:4^21 ⋅ ɛ, 4'x))
+//│ ((t:3^29 ⋅ bb:2^11 ⋅ ɛ, L()), (c:4^28 ⋅ c:4^21 ⋅ c:4^21 ⋅ ɛ, 4'x)) :::: ((t:3^29 ⋅ bb:2^11 ⋅ ɛ, L()), (c:4^28 ⋅ c:4^21 ⋅ c:4^18 ⋅ ɛ, 4'x))
+//│ ------- defInstance -------
+//│ t:3^29 ⋅ ɛ ==> c:4^28 ⋅ ɛ:
+//│ 	12: [T [K] aa:1 bb:2]  <-->  26: case x:5 of {T n:6 l:7 r:8 -> [T case n:9 of {K -> [KK] | N -> [NN]} (c:4 l:10) (c:4 r:11)] | L -> [LL]}
+//│ 	9: [K]  <-->  17: case n:9 of {K -> [KK] | N -> [NN]}
+//│ t:3^29 ⋅ bb:2^11 ⋅ ɛ ==> c:4^28 ⋅ c:4^21 ⋅ c:4^18 ⋅ ɛ:
+//│ 	6: [L]  <-->  26: case x:5 of {T n:6 l:7 r:8 -> [T case n:9 of {K -> [KK] | N -> [NN]} (c:4 l:10) (c:4 r:11)] | L -> [LL]}
+//│ t:3^29 ⋅ bb:2^11 ⋅ ɛ ==> c:4^28 ⋅ c:4^21 ⋅ ɛ:
+//│ 	5: [N]  <-->  17: case n:9 of {K -> [KK] | N -> [NN]}
+//│ 	8: [T [N] [L] [L]]  <-->  26: case x:5 of {T n:6 l:7 r:8 -> [T case n:9 of {K -> [KK] | N -> [NN]} (c:4 l:10) (c:4 r:11)] | L -> [LL]}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def aa:1 = [T [N] [L] [L]]
+//│ def bb:2 = [T [N] [L] [L]]
+//│ def t:3 = [T [K] aa:1 bb:2]
+//│ def c:4 = fun x:5 -> case x:5 of {T n:6 l:7 r:8 -> [T case n:9 of {K -> [KK] | N -> [NN]} (c:4 l:10) (c:4 r:11)] | L -> [LL]}
+//│ def c'4'28_c'4'21_c'4'18:12 = fun x:5 -> x:5
+//│ def c'4'28:13 = fun x:5 -> x:5
+//│ def t'3'29:14 = let n:6 = [KK] in let l:7 = t'3'29_bb'2'11:16 in let r:8 = t'3'29_bb'2'11:16 in [T n:9 (c'4'28_c'4'21:15 l:10) (c'4'28_c'4'21:15 r:11)]
+//│ def c'4'28_c'4'21:15 = fun x:5 -> x:5
+//│ def t'3'29_bb'2'11:16 = let n:6 = [NN] in let l:7 = [LL] in let r:8 = [L] in [T n:9 (c'4'28_c'4'21_c'4'18:12 l:10) (c'4'28_c'4'21_c'4'18:12 r:11)]
+//│ (c'4'28:13 t'3'29:14)
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+
+
+
+
+
 let p = C(p)
 fun c(x) = if C(x) is
     C(a) then c(a)
@@ -18,3 +122,93 @@ c(p)
 //│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTest.scala:38)
 //│ 	at: mlscript.DiffTests.rec$1(DiffTests.scala:337)
 //│ 	at: mlscript.DiffTests.$anonfun$new$3(DiffTests.scala:781)
+
+
+// NOTE: push in problem
+fun map(f, ls) = if ls is
+    C(h, t) then C(f(h), map(f, t))
+    N then N
+let l = C(K, l)
+fun ff(x) = if x is
+    K then T
+map(ff, l)
+//│ |#fun| |map|(|f|,| |ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#let| |l| |#=| |C|(|K|,| |l|)|↵|#fun| |ff|(|x|)| |#=| |#if| |x| |is|→|K| |#then| |T|←|↵|map|(|ff|,| |l|)|
+//│ Parsed: {fun map = f, ls, => if ls is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; let l = C (K, l,); fun ff = x, => if x is ‹(K) then T›; map (ff, l,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def map:1 = fun f:4 -> fun ls:5 -> case ls:5 of {C h:6 t:7 -> [C (f:4 h:8) ((map:1 f:4) t:9)] | N -> [N]}
+//│ def l:2 = [C [K] l:2]
+//│ def ff:3 = fun x:10 -> case x:10 of {K -> [T]}
+//│ ((map:1 ff:3) l:2)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ((l:2^25 ⋅ l:2^16 ⋅ ɛ, C((ɛ, K()), (l:2^16 ⋅ ɛ, 1'l))), (map:1^22 ⋅ map:1^5 ⋅ ɛ, 4'ls)) :::: ((l:2^25 ⋅ ɛ, C((ɛ, K()), (l:2^16 ⋅ ɛ, 1'l))), (map:1^22 ⋅ ɛ, 4'ls))
+//│ ((ff:3^23 ⋅ ɛ, (ɛ, 11'x) => ((ɛ, 12'20_matchres))), (map:1^22 ⋅ map:1^5 ⋅ ɛ, 3'f)) :::: ((ff:3^23 ⋅ ɛ, (ɛ, 11'x) => ((ɛ, 12'20_matchres))), (map:1^22 ⋅ ɛ, 3'f))
+//│ ------- defInstance -------
+//│ l:2^25 ⋅ ɛ ==> ff:3^23 ⋅ ɛ:
+//│ 	15: [K]  <-->  20: case x:10 of {K -> [T]}
+//│ l:2^25 ⋅ ɛ ==> map:1^22 ⋅ ɛ:
+//│ 	17: [C [K] l:2]  <-->  12: case ls:5 of {C h:6 t:7 -> [C (f:4 h:8) ((map:1 f:4) t:9)] | N -> [N]}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def map:1 = fun f:4 -> fun ls:5 -> case ls:5 of {C h:6 t:7 -> [C (f:4 h:8) ((map:1 f:4) t:9)] | N -> [N]}
+//│ def l:2 = [C [K] l:2]
+//│ def ff:3 = fun x:10 -> case x:10 of {K -> [T]}
+//│ def map'1'22:11 = fun f:4 -> fun ls:5 -> ls:5
+//│ def l'2'25:12 = let h:6 = [T] in let t:7 = l'2'25:12 in [C (f:4 h:8) ((map'1'22:11 f:4) t:9)]
+//│ def ff'3'23:13 = fun x:10 -> x:10
+//│ ((map'1'22:11 ff'3'23:13) l'2'25:12)
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+
+// NOTE: only first head is handled
+fun map(f, ls) = if ls is
+    C(h, t) then C(f(h), map(f, t))
+    N then N
+fun ff(x) = if x is
+    K then T
+    KK then TT
+    KKKK then TTTT
+let l = C(K, C(KK, C(KKKK, N)))
+map(ff, l)
+//│ |#fun| |map|(|f|,| |ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#fun| |ff|(|x|)| |#=| |#if| |x| |is|→|K| |#then| |T|↵|KK| |#then| |TT|↵|KKKK| |#then| |TTTT|←|↵|#let| |l| |#=| |C|(|K|,| |C|(|KK|,| |C|(|KKKK|,| |N|)|)|)|↵|map|(|ff|,| |l|)|
+//│ Parsed: {fun map = f, ls, => if ls is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; fun ff = x, => if x is ‹(K) then T; (KK) then TT; (KKKK) then TTTT›; let l = C (K, C (KK, C (KKKK, N,),),); map (ff, l,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def map:1 = fun f:4 -> fun ls:5 -> case ls:5 of {C h:6 t:7 -> [C (f:4 h:8) ((map:1 f:4) t:9)] | N -> [N]}
+//│ def ff:2 = fun x:10 -> case x:10 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ def l:3 = [C [K] [C [KK] [C [KKKK] [N]]]]
+//│ ((map:1 ff:2) l:3)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ((ff:2^29 ⋅ ɛ, (ɛ, 11'x) => ((ɛ, 12'19_matchres))), (map:1^28 ⋅ map:1^5 ⋅ ɛ, 3'f)) :::: ((ff:2^29 ⋅ ɛ, (ɛ, 11'x) => ((ɛ, 12'19_matchres))), (map:1^28 ⋅ ɛ, 3'f))
+//│ ------- defInstance -------
+//│ l:3^31 ⋅ ɛ ==> ff:2^29 ⋅ ɛ:
+//│ 	21: [K]  <-->  19: case x:10 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ map:1^28 ⋅ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ ff:2^29 ⋅ ɛ:
+//│ 	23: [KKKK]  <-->  19: case x:10 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ ɛ:
+//│ 	27: [C [K] [C [KK] [C [KKKK] [N]]]]  <-->  12: case ls:5 of {C h:6 t:7 -> [C (f:4 h:8) ((map:1 f:4) t:9)] | N -> [N]}
+//│ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ ɛ:
+//│ 	25: [C [KKKK] [N]]  <-->  12: case ls:5 of {C h:6 t:7 -> [C (f:4 h:8) ((map:1 f:4) t:9)] | N -> [N]}
+//│ map:1^28 ⋅ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ ff:2^29 ⋅ ɛ:
+//│ 	22: [KK]  <-->  19: case x:10 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ map:1^5 ⋅ ɛ:
+//│ 	24: [N]  <-->  12: case ls:5 of {C h:6 t:7 -> [C (f:4 h:8) ((map:1 f:4) t:9)] | N -> [N]}
+//│ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ ɛ:
+//│ 	26: [C [KK] [C [KKKK] [N]]]  <-->  12: case ls:5 of {C h:6 t:7 -> [C (f:4 h:8) ((map:1 f:4) t:9)] | N -> [N]}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def map:1 = fun f:4 -> fun ls:5 -> case ls:5 of {C h:6 t:7 -> [C (f:4 h:8) ((map:1 f:4) t:9)] | N -> [N]}
+//│ def ff:2 = fun x:10 -> case x:10 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ def l:3 = [C [K] [C [KK] [C [KKKK] [N]]]]
+//│ def map'1'28_map'1'5_ff'2'29:11 = fun x:10 -> x:10
+//│ def map'1'28_l'3'31:12 = [C [K] [C [TT] [C [TTTT] [N]]]]
+//│ def ff'2'29:13 = fun x:10 -> x:10
+//│ def map'1'28_map'1'5_map'1'5:14 = fun f:4 -> fun ls:5 -> ls:5
+//│ def map'1'28_map'1'5:15 = fun f:4 -> fun ls:5 -> ls:5
+//│ def map'1'28_map'1'5_map'1'5_map'1'5:16 = fun f:4 -> fun ls:5 -> ls:5
+//│ def l'3'31:17 = let h:6 = [T] in let t:7 = let h:6 = [KK] in let t:7 = let h:6 = [KKKK] in let t:7 = [N] in [C (f:4 h:8) ((map'1'28_map'1'5_map'1'5_map'1'5:16 f:4) t:9)] in [C (f:4 h:8) ((map'1'28_map'1'5_map'1'5:14 f:4) t:9)] in [C (f:4 h:8) ((map'1'28_map'1'5:15 f:4) t:9)]
+//│ def map'1'28:18 = fun f:4 -> fun ls:5 -> ls:5
+//│ def map'1'28_map'1'5_map'1'5_ff'2'29:19 = fun x:10 -> x:10
+//│ ((map'1'28:18 ff'2'29:13) l'3'31:17)
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<

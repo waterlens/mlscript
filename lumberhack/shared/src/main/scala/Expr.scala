@@ -108,6 +108,8 @@ object Expr {
         }
       )
     case Bra(false, t) => fromTerm(t)
+    // single element tuple as brackets
+    case Tup((N -> Fld(_, _, t)) :: Nil) => fromTerm(t)
     case _ => lastWords(s"unsupported: $t (${t.getClass})") // unsupported
 }
 

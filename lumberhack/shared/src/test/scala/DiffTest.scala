@@ -32,7 +32,7 @@ class DiffTestLumberhack extends DiffTests {
       }.sorted.mkString)
       outputBuilder ++= "\n"
     }
-    outputBuilder ++= "\n\n>>>>>>>>>> Rewritten >>>>>>>>>>\n"
+    outputBuilder ++= "\n>>>>>>>>>> Rewritten >>>>>>>>>>\n"
     val newProgram = Rewrite.rewrite(originalProgram, d,
       d.defInstances.map { case (ps, s) => (ps, s.toSet) }.toMap,
       d.recursiveConstr._2.toMap

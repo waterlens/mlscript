@@ -1,6 +1,5 @@
 package mlscript.lumberhack
 
-// import mlscript.lumberhack.utils.*
 import mlscript.utils.*, shorthands.*
 
 opaque type Uid[T] = Int

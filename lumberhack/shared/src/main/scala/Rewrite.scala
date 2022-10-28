@@ -1,8 +1,9 @@
-package mlscript.lumberhack
+package mlscript
+package lumberhack
 
 import scala.collection.mutable
 import mlscript.utils.*, shorthands.*
-import mlscript.Var, Function as FunctionTerm
+import mlscript.Function as FunctionTerm
 import Expr.*
 import scala.collection.mutable.Map as MutMap
 

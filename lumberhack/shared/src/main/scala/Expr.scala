@@ -1,12 +1,11 @@
-package mlscript.lumberhack
-import mlscript.*
+package mlscript
+package lumberhack
+
 import mlscript.utils.*, shorthands.*
 import lumberhack.utils.*
 
 case class Ident(isDef: Bool, tree: Var, uid: Uid[Ident])
-
 case class ProgDef(id: Ident, body: Expr)
-
 case class Program(contents: Ls[ProgDef \/ Expr]) {
   def pp(using showUids: Bool = false): Str =
     contents.iterator.map {

@@ -1,9 +1,8 @@
-package mlscript.lumberhack
+package mlscript
+package lumberhack
 
-// import mlscript.lumberhack.utils.*
 import mlscript.utils.shorthands.*
 import scala.collection.mutable
-import mlscript.Var
 import mlscript.utils.AnyOps
 
 def error(msg: Str): Nothing =
@@ -22,9 +21,6 @@ case class Strat[+T <: (ProdStratEnum | ConsStratEnum)](val s: T)(val path: Path
 trait ToStrat[+T <: (ProdStratEnum | ConsStratEnum)] { self: T =>
   def toStrat(p: Path = Nil): Strat[T] = Strat(this)(p)
 }
-
-// import scala.language.implicitConversions
-// implicit def enumToStrat[T <: (ProdStratEnum | ConsStratEnum)](e: T): Strat[T] = Strat(e)(Nil)
 
 type ProdStrat = Strat[ProdStratEnum]
 type ConsStrat = Strat[ConsStratEnum]

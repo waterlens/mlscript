@@ -1,4 +1,5 @@
-package mlscript.lumberhack
+package mlscript
+package lumberhack
 
 import mlscript.lumberhack.utils.*
 import mlscript.utils.shorthands.*

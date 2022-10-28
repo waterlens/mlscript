@@ -1,4 +1,5 @@
-package mlscript.lumberhack
+package mlscript
+package lumberhack
 
 import fastparse.*
 import fastparse.Parsed.Failure
@@ -6,16 +7,12 @@ import fastparse.Parsed.Success
 import mlscript.utils.*, shorthands.*
 import ammonite.ops.*
 import fastparse.Parsed.{Success, Failure}
-import mlscript.{Var, FastParseHelpers, MLParser, Origin, NewLexer, NewParser, Pgrm}
-
 import ProdStratEnum.*, ConsStratEnum.*
 import pprint.Tree, pprint.Tree.*
 
 object pprint2 extends pprint.PPrinter() {
   override def treeify(x: Any, escapeUnicode: Boolean, showFieldNames: Boolean): Tree = x match
-    case r @ Expr.Ref(id @ Ident(_, Var(nme), uid)) =>
-      // Literal(treeify(id, escapeUnicode, showFieldNames))
-      Literal(s"$nme:${uid}^${r.uid}")
+    case r @ Expr.Ref(id @ Ident(_, Var(nme), uid)) => Literal(s"$nme:${uid}^${r.uid}")
     case Ident(_, Var(nme), uid) => Literal(s"$nme:$uid")
     case Var(nme) => Literal(nme)
     case s@Strat(strat) => Apply("", Iterator(treeify(s.path, escapeUnicode, showFieldNames), treeify(strat, escapeUnicode, showFieldNames)))
@@ -34,7 +31,7 @@ object pprint2 extends pprint.PPrinter() {
     case MkCtor(v, args) =>
       Apply(v.name, args.iterator.map(treeify(_, escapeUnicode, showFieldNames)))
     case Nil => Literal("ɛ")
-    case (r: Expr.Ref, _: Uid[Expr]) => treeify(r, escapeUnicode, showFieldNames)
+    case (r: Expr.Ref, _) => treeify(r, escapeUnicode, showFieldNames)
     case x :: xs =>  Infix(
       treeify(x, escapeUnicode, showFieldNames),
       "⋅",
@@ -55,26 +52,19 @@ object Runner:
       def doPrintDbg(msg: => Str): Unit = if (dbg) println(msg)
     }
     val res = parser.parseAll(parser.typingUnit)
-    // val mlp = MLParser(Origin(fileName, 0, fph))
-    // val res = fastparse.parse(fph.blockStr, mlp.pgrm)
-    // println("========= PARSED =========")
-    // pprint2.pprintln(res)
-    
+
     given d: Deforest(true)
     val p = Program.fromPgrm(Pgrm(res.entities))
     println("========= NAMED =========")
-    // pprint2.pprintln(p)
+
     println(p.pp(using true))
     println("========= TYPED =========")
     val ty = d(p)
     pprint2.pprintln(ty)
-    // pprint2.pprintln(d.state)
     pprint2.pprintln(d.constraints)
-    // pprint2.pprintln(d.constraints.map { case l -> r => s"$l  <:  $r" })
     println("========= RESOLVE =========")
-    // d.resolveConstraints
     d.resolveConstraints
-    println("====== lists of constraints ======")
+    // println("====== lists of constraints ======")
     // d.cnstrsList.foreach { c =>
     //   println(s"${pprint2.apply(c._1).toString} : ${pprint2.apply(c._2).toString}")
     // }
@@ -102,7 +92,7 @@ object Runner:
       d.recursiveConstr._2.toMap
     )
     println(newProgram.pp(using false))
-    // println(newProgram)
+
     // println("========= OCAML =========")
     // println(OCamlGen(p))
         

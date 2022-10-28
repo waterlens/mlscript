@@ -50,16 +50,9 @@ class DiffTestLumberhack extends DiffTests {
 }
 
 object DiffTestLumberhack {
-
   private val pwd = os.pwd
   private val dir = pwd/"lumberhack"/"shared"/"src"/"test"/"resources"
-  
   private val allFiles = os.walk(dir)
-  
   private val validExt = Set("mls")
-  
-  private val modified: Set[os.RelPath] =
-    DiffTests.findModifiedFiles(dir)
-
-  // private def filter(file: os.RelPath) = DiffTests.filter(file)
+  private val modified: Set[os.RelPath] = DiffTests.findModifiedFiles(dir)
 }

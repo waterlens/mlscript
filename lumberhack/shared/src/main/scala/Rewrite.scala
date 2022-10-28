@@ -4,6 +4,7 @@ import scala.collection.mutable
 import mlscript.utils.*, shorthands.*
 import mlscript.Var, Function as FunctionTerm
 import Expr.*
+import scala.collection.mutable.Map as MutMap
 
 object Rewrite {
   
@@ -43,10 +44,14 @@ object Rewrite {
    *      def 4:a/1:b     = /* b impl */ ... 4:a/1:b ...
    *      3:a + 4:a
   */
+  def genId(p: Path)(using d: Deforest): Ident =
+    d.nextIdent(isDef=true, Var(p.map(r => s"${r._1.id.tree}'${r._1.id.uid}'${r._1.uid}").mkString("_")))
+
   def rewrite(p: Program, d: Deforest,
     defInstancesMap: Map[(Path, Path), Set[ExprId -> ExprId]],
     defMap: Map[Path, Path],
   ): Program = {
+    given Deforest = d;
     val defInstances = mutable.Map.empty[Path, Set[ExprId -> ExprId]]
     defInstancesMap.foreach { case ((p1, p2), s) =>
       defInstances.updateWith(p1){ case S(prev) => S(prev ++ s); case N => S(s) }
@@ -67,10 +72,7 @@ object Rewrite {
     val (pdefs, exprs) = p.contents.partition(c => c.isLeft)
     val pdefNamesToBodies = pdefs.collect{case L(pd) => pd.id -> pd.body}.toMap
 
-    val instanceIds = 
-      def genId(p: Path): Ident =
-        d.nextIdent(isDef=true, Var(p.map(r => s"${r._1.id.tree}'${r._1.id.uid}'${r._1.uid}").mkString("_")))  
-      defInstances.keysIterator.map(di => di -> genId(di)).toMap
+    // val instanceIds = defInstances.keysIterator.map(di => di -> genId(di)).toMap
     val csToMs: Map[(Path, ExprId), (Path, Match)] = {
       val res = mutable.Map.empty[(Path, ExprId), (Path, Match)]
       defInstancesMap foreach { case ((pp, cp), exprMap) =>
@@ -91,43 +93,48 @@ object Rewrite {
       }
       res.toMap
     }
-    // val csToMs: Map[(Path, ExprId), (Path, Match)] = 
-    //   defInstances.map{s => s._2.map{(c, m) => d.exprs(m) match 
-    //     case m: Match => (s._1, c) -> m
-    //     case _ => die
-    //   }.toList}.flatten.toMap
-    // val msToCs: Map[(Path, ExprId), (Path, Ctor)] = 
-    //   defInstances.map{s => s._2.map{(c, m) => d.exprs(c) match
-    //     case c: Ctor => (s._1, m) -> c
-    //     case _ => die  
-    //   }.toList}.flatten.toMap
 
-    def writeInstance(di: Path): ProgDef = 
-      val pdef = di.last._1.id
-      val oldBody = pdefNamesToBodies(pdef) //Might throw
-      // TODO: doesn't work
-      // val oldBodyLocallyRewrite = rewriteExpr(oldBody)(using d, Nil, None)
-      val newBody = rewriteExpr(oldBody)(using d, di, S(pdef))
-      ProgDef(instanceIds(di), newBody) 
+    val newDefs = MutMap.empty[Path, L[ProgDef]]
+    val defIds = MutMap.empty[Path, Ident]
+    def writeInstance(di: Path) = 
+      defIds.get(di) match {
+        case Some(id) => id
+        case None => {
+          val id = genId(di)
+          defIds += (di -> id)
+          if (di.length - di.distinct.length) < 10 then {
+            newDefs.getOrElseUpdate(di, {
+              val pdef = di.last._1.id
+              val oldBody = pdefNamesToBodies(pdef) //Might throw
+              // TODO:
+              // val oldBodyLocallyRewrite = rewriteExpr(oldBody)(using d, Nil, None)
+              val newBody = rewriteExpr(oldBody)(using d, di, S(pdef))
+              L(ProgDef(id, newBody))
+            })
+          } else {
+            println("recurse for too long")
+          }
+          id
+        }
+      }
+      // val id = defIds.getOrElseUpdate(di, genId(di))
+      // newDefs.getOrElseUpdate(di, {
+      //   val pdef = di.last._1.id
+      //   val oldBody = pdefNamesToBodies(pdef) //Might throw
+      //   // TODO: doesn't work
+      //   // val oldBodyLocallyRewrite = rewriteExpr(oldBody)(using d, Nil, None)
+      //   val newBody = rewriteExpr(oldBody)(using d, di, S(pdef))
+      //   L(ProgDef(id, newBody))
+      // }).value.id
+      
 
     def rewriteExpr(e: Expr)(using d: Deforest, p: Path, root: Option[Ident]): Expr = {e match
-      case r@Ref(id) => 
+      case r@Ref(id) if id.isDef => 
         val newPath = p :+ (r -> r.uid)
-        def genId(p: Path): Ident =
-          d.nextIdent(isDef=true, Var(p.map(r => s"${r._1.id.tree}'${r._1.id.uid}'${r._1.uid}").mkString("_")))  
-        Ref(
-          if (defInstances contains newPath) //goes to another unrolled def
-            instanceIds(newPath)
-          // TODO:
-          // else if ((defMap contains newPath) && instanceIds.get(defMap(newPath)).nonEmpty) //loops back to already unrolled def
-          else if (defMap contains newPath)
-            instanceIds(defMap(newPath))
-          else // doesn't unroll (e.g. primitive)
-            id
-          // if (defMap contains newPath)
-          //   instanceIds(defMap(newPath))
-          // else genId(newPath)
+        println(pprint2(newPath).toString())
+        Ref(writeInstance(defMap.getOrElse(newPath, newPath))
         )
+      case r@Ref(id) if !id.isDef => r
       // case Ctor(name, args) => Ctor(name, args.map(rewriteExpr))
       // case Match(scrut, arms) => Match(rewriteExpr(scrut), arms.map{case (v, args, body) => (v, args, rewriteExpr(body))})
       case Ctor(name, args) => csToMs.get(p -> e.uid) match
@@ -152,11 +159,11 @@ object Rewrite {
     // val oldBodyLocallyRewrite = pdefs.map {
     //   case L(ProgDef(id, body)) => L(ProgDef(id, rewriteExpr(body)(using d, Nil, None)))
     // }
-    val newDefs = defInstances.keysIterator.toList.collect{case di @ (_ :: _) => L(writeInstance(di))}
+    // val newDefs = defInstances.keysIterator.toList.collect{case di @ (_ :: _) => L(writeInstance(di))}
 
     // Program(oldBodyLocallyRewrite ++ newDefs ++ newExprs)
-    Program(pdefs ++ newDefs ++ newExprs)
-  }  
+    Program(pdefs ++ newDefs.values ++ newExprs)
+  }
 }
 
 

@@ -43,10 +43,10 @@ c(t)
 //│ def t:1 = [T [K] [T [N] [L] [L]] [T [N] [L] [L]]]
 //│ def c:2 = fun x:3 -> case x:3 of {T n:4 l:5 r:6 -> [T case n:7 of {K -> [KK] | N -> [NN]} (c:2 l:8) (c:2 r:9)] | L -> [LL]}
 //│ def c'2'26:10 = fun x:3 -> x:3
-//│ def c'2'26_c'2'16:11 = fun x:3 -> x:3
-//│ def c'2'26_c'2'16_c'2'16:12 = fun x:3 -> x:3
-//│ def t'1'27:13 = let n:4 = [KK] in let l:5 = let n:4 = [NN] in let l:5 = [LL] in let r:6 = [L] in [T n:7 (c'2'26_c'2'16_c'2'16:12 l:8) (c'2'26_c'2'16_c'2'16:12 r:9)] in let r:6 = [T [N] [L] [L]] in [T n:7 (c'2'26_c'2'16:11 l:8) (c'2'26_c'2'16:11 r:9)]
-//│ (c'2'26:10 t'1'27:13)
+//│ def c'2'26_c'2'16:12 = fun x:3 -> x:3
+//│ def c'2'26_c'2'16_c'2'16:13 = fun x:3 -> x:3
+//│ def t'1'27:11 = let n:4 = [KK] in let l:5 = let n:4 = [NN] in let l:5 = [LL] in let r:6 = [L] in [T n:7 (c'2'26_c'2'16_c'2'16:13 l:8) (c'2'26_c'2'16_c'2'16:13 r:9)] in let r:6 = [T [N] [L] [L]] in [T n:7 (c'2'26_c'2'16:12 l:8) (c'2'26_c'2'16:12 r:9)]
+//│ (c'2'26:10 t'1'27:11)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
 
@@ -93,12 +93,12 @@ c(t)
 //│ def bb:2 = [T [N] [L] [L]]
 //│ def t:3 = [T [K] aa:1 bb:2]
 //│ def c:4 = fun x:5 -> case x:5 of {T n:6 l:7 r:8 -> [T case n:9 of {K -> [KK] | N -> [NN]} (c:4 l:10) (c:4 r:11)] | L -> [LL]}
-//│ def c'4'28_c'4'21_c'4'18:12 = fun x:5 -> x:5
-//│ def c'4'28:13 = fun x:5 -> x:5
-//│ def t'3'29:14 = let n:6 = [KK] in let l:7 = t'3'29_bb'2'11:16 in let r:8 = t'3'29_bb'2'11:16 in [T n:9 (c'4'28_c'4'21:15 l:10) (c'4'28_c'4'21:15 r:11)]
-//│ def c'4'28_c'4'21:15 = fun x:5 -> x:5
-//│ def t'3'29_bb'2'11:16 = let n:6 = [NN] in let l:7 = [LL] in let r:8 = [L] in [T n:9 (c'4'28_c'4'21_c'4'18:12 l:10) (c'4'28_c'4'21_c'4'18:12 r:11)]
-//│ (c'4'28:13 t'3'29:14)
+//│ def c'4'28_c'4'21_c'4'18:16 = fun x:5 -> x:5
+//│ def c'4'28:12 = fun x:5 -> x:5
+//│ def t'3'29:13 = let n:6 = [KK] in let l:7 = t'3'29_bb'2'11:15 in let r:8 = t'3'29_bb'2'11:15 in [T n:9 (c'4'28_c'4'21:14 l:10) (c'4'28_c'4'21:14 r:11)]
+//│ def c'4'28_c'4'21:14 = fun x:5 -> x:5
+//│ def t'3'29_bb'2'11:15 = let n:6 = [NN] in let l:7 = [LL] in let r:8 = [L] in [T n:9 (c'4'28_c'4'21_c'4'18:16 l:10) (c'4'28_c'4'21_c'4'18:16 r:11)]
+//│ (c'4'28:12 t'3'29:13)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
 
@@ -111,17 +111,35 @@ fun c(x) = if C(x) is
 c(p)
 //│ |#let| |p| |#=| |C|(|p|)|↵|#fun| |c|(|x|)| |#=| |#if| |C|(|x|)| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|c|(|p|)|
 //│ Parsed: {let p = C (p,); fun c = x, => if C (x,) is ‹(C (a,)) then c (a,)›; c (p,)}
-//│ /!!!\ Uncaught error: java.util.NoSuchElementException: key not found: List((Ref(Ident(true,p,1)),11))
-//│ 	at: scala.collection.immutable.Map$Map1.apply(Map.scala:245)
-//│ 	at: mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:124)
-//│ 	at: mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:146)
-//│ 	at: mlscript.lumberhack.Rewrite$$anon$2.applyOrElse(Rewrite.scala:151)
-//│ 	at: mlscript.lumberhack.Rewrite$$anon$2.applyOrElse(Rewrite.scala:151)
-//│ 	at: scala.collection.immutable.List.collect(List.scala:267)
-//│ 	at: mlscript.lumberhack.Rewrite$.rewrite(Rewrite.scala:151)
-//│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTest.scala:38)
-//│ 	at: mlscript.DiffTests.rec$1(DiffTests.scala:337)
-//│ 	at: mlscript.DiffTests.$anonfun$new$3(DiffTests.scala:781)
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def p:1 = [C p:1]
+//│ def c:2 = fun x:3 -> case [C x:3] of {C a:4 -> (c:2 a:5)}
+//│ (c:2 p:1)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ((p:1^11 ⋅ ɛ, C((p:1^1 ⋅ ɛ, 0'p))), (c:2^10 ⋅ c:2^5 ⋅ ɛ, 2'x)) :::: ((p:1^11 ⋅ ɛ, C((p:1^1 ⋅ ɛ, 0'p))), (c:2^10 ⋅ ɛ, 2'x))
+//│ ------- defInstance -------
+//│ ɛ ==> ɛ:
+//│ 	4: [C x:3]  <-->  8: case [C x:3] of {C a:4 -> (c:2 a:5)}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def p:1 = [C p:1]
+//│ def c:2 = fun x:3 -> case [C x:3] of {C a:4 -> (c:2 a:5)}
+//│ def p'1'11:7 = [C p'1'11_p'1'1:8]
+//│ def p'1'11_p'1'1:8 = [C p'1'11_p'1'1_p'1'1:9]
+//│ def p'1'11_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:15 = [C p'1'11_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:16]
+//│ def p'1'11_p'1'1_p'1'1_p'1'1:10 = [C p'1'11_p'1'1_p'1'1_p'1'1_p'1'1:11]
+//│ def p'1'11_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:12 = [C p'1'11_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:13]
+//│ def p'1'11_p'1'1_p'1'1_p'1'1_p'1'1:11 = [C p'1'11_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:12]
+//│ def p'1'11_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:14 = [C p'1'11_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:15]
+//│ def p'1'11_p'1'1_p'1'1:9 = [C p'1'11_p'1'1_p'1'1_p'1'1:10]
+//│ def p'1'11_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:13 = [C p'1'11_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:14]
+//│ def p'1'11_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:16 = [C p'1'11_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:17]
+//│ def p'1'11_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:17 = [C p'1'11_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:18]
+//│ def c'2'10:6 = fun x:3 -> case [C x:3] of {C a:4 -> (c'2'10:6 a:5)}
+//│ (c'2'10:6 p'1'11:7)
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
 
 // NOTE: push in problem
@@ -155,9 +173,9 @@ map(ff, l)
 //│ def l:2 = [C [K] l:2]
 //│ def ff:3 = fun x:10 -> case x:10 of {K -> [T]}
 //│ def map'1'22:11 = fun f:4 -> fun ls:5 -> ls:5
-//│ def l'2'25:12 = let h:6 = [T] in let t:7 = l'2'25:12 in [C (f:4 h:8) ((map'1'22:11 f:4) t:9)]
-//│ def ff'3'23:13 = fun x:10 -> x:10
-//│ ((map'1'22:11 ff'3'23:13) l'2'25:12)
+//│ def l'2'25:13 = let h:6 = [T] in let t:7 = l'2'25:13 in [C (f:4 h:8) ((map'1'22:11 f:4) t:9)]
+//│ def ff'3'23:12 = fun x:10 -> x:10
+//│ ((map'1'22:11 ff'3'23:12) l'2'25:13)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
 // NOTE: only first head is handled
@@ -201,14 +219,10 @@ map(ff, l)
 //│ def map:1 = fun f:4 -> fun ls:5 -> case ls:5 of {C h:6 t:7 -> [C (f:4 h:8) ((map:1 f:4) t:9)] | N -> [N]}
 //│ def ff:2 = fun x:10 -> case x:10 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
 //│ def l:3 = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ def map'1'28_map'1'5_ff'2'29:11 = fun x:10 -> x:10
-//│ def map'1'28_l'3'31:12 = [C [K] [C [TT] [C [TTTT] [N]]]]
-//│ def ff'2'29:13 = fun x:10 -> x:10
+//│ def ff'2'29:12 = fun x:10 -> x:10
 //│ def map'1'28_map'1'5_map'1'5:14 = fun f:4 -> fun ls:5 -> ls:5
-//│ def map'1'28_map'1'5:15 = fun f:4 -> fun ls:5 -> ls:5
-//│ def map'1'28_map'1'5_map'1'5_map'1'5:16 = fun f:4 -> fun ls:5 -> ls:5
-//│ def l'3'31:17 = let h:6 = [T] in let t:7 = let h:6 = [KK] in let t:7 = let h:6 = [KKKK] in let t:7 = [N] in [C (f:4 h:8) ((map'1'28_map'1'5_map'1'5_map'1'5:16 f:4) t:9)] in [C (f:4 h:8) ((map'1'28_map'1'5_map'1'5:14 f:4) t:9)] in [C (f:4 h:8) ((map'1'28_map'1'5:15 f:4) t:9)]
-//│ def map'1'28:18 = fun f:4 -> fun ls:5 -> ls:5
-//│ def map'1'28_map'1'5_map'1'5_ff'2'29:19 = fun x:10 -> x:10
-//│ ((map'1'28:18 ff'2'29:13) l'3'31:17)
+//│ def map'1'28_map'1'5_map'1'5_map'1'5:15 = fun f:4 -> fun ls:5 -> ls:5
+//│ def l'3'31:13 = let h:6 = [T] in let t:7 = let h:6 = [KK] in let t:7 = let h:6 = [KKKK] in let t:7 = [N] in [C (f:4 h:8) ((map'1'28_map'1'5_map'1'5_map'1'5:15 f:4) t:9)] in [C (f:4 h:8) ((map'1'28_map'1'5_map'1'5:14 f:4) t:9)] in [C (f:4 h:8) ((map'1'28:11 f:4) t:9)]
+//│ def map'1'28:11 = fun f:4 -> fun ls:5 -> ls:5
+//│ ((map'1'28:11 ff'2'29:12) l'3'31:13)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<

@@ -45,11 +45,11 @@ class DiffTestLumberhack extends DiffTests {
   
   override protected lazy val files = allFiles.filter { file =>
     val fileName = file.baseName
-    validExt(file.ext) // && filter(file.relativeTo(pwd))
+    validExt(file.ext) && (modified(file.relativeTo(pwd)) | modified.isEmpty)
   }
 }
 
-object DiffTestLumberhack{
+object DiffTestLumberhack {
 
   private val pwd = os.pwd
   private val dir = pwd/"lumberhack"/"shared"/"src"/"test"/"resources"
@@ -57,6 +57,9 @@ object DiffTestLumberhack{
   private val allFiles = os.walk(dir)
   
   private val validExt = Set("mls")
+  
+  private val modified: Set[os.RelPath] =
+    DiffTests.findModifiedFiles(dir)
 
   // private def filter(file: os.RelPath) = DiffTests.filter(file)
 }

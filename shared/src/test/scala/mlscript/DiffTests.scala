@@ -846,17 +846,21 @@ object DiffTests {
   
   private val validExt = Set("fun", "mls")
   
-  // Aggregate unstaged modified files to only run the tests on them, if there are any
-  private val modified: Set[os.RelPath] =
+  /** Aggregate unstaged modified files to only run the tests on them, if there are any */
+  def findModifiedFiles(dir: os.Path): Set[os.RelPath] = 
     try os.proc("git", "status", "--porcelain", dir).call().out.lines().iterator.flatMap { gitStr =>
       println(" [git] " + gitStr)
       val prefix = gitStr.take(2)
       val filePath = os.RelPath(gitStr.drop(3))
       if (prefix =:= "A " || prefix =:= "M ") N else S(filePath) // disregard modified files that are staged
     }.toSet catch {
-      case err: Throwable => System.err.println("/!\\ git command failed with: " + err)
-      Set.empty
+      case err: Throwable =>
+        System.err.println("/!\\ git command failed with: " + err)
+        Set.empty
     }
+  
+  private val modified: Set[os.RelPath] =
+    findModifiedFiles(dir)
   
   // Allow overriding which specific tests to run, sometimes easier for development:
   private val focused = Set[Str](

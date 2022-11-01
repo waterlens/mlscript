@@ -1,4 +1,5 @@
-package mlscript.lumberhack
+package mlscript
+package lumberhack
 
 import mlscript.{DiffTests, ModeType, TypingUnit, Term, Pgrm}
 import mlscript.utils.shorthands.Str
@@ -15,31 +16,38 @@ class DiffTestLumberhack extends DiffTests {
     // outputBuilder ++= "Parsed AST:\n"
     outputBuilder ++= ">>>>>>>>>> Original >>>>>>>>>>\n"
     given d: Deforest(mode.stdout)
-    val originalProgram = Program.fromPgrm(Pgrm(unit.entities))
+    val (allowErr, filteredEntities) = unit.entities match {
+      case Var("_LUMBERHACK_ERROR") :: t => (true, t)
+      case l => (false, l)
+    }
+    val originalProgram = Program.fromPgrm(Pgrm(filteredEntities))
     val constraints = d(originalProgram)
     outputBuilder ++= originalProgram.pp
     outputBuilder ++= "\n<<<<<<<<<< Original <<<<<<<<<<\n"
-    d.resolveConstraints
-    outputBuilder ++= "\n------- recursive -------\n"
-    d.recursiveConstr._1.foreach { c => 
-      outputBuilder ++= (s"${pprint2.apply(c._1).plainText} :::: ${pprint2.apply(c._2).plainText}\n")
+    try {
+      d.resolveConstraints
+      outputBuilder ++= "\n------- recursive -------\n"
+      d.recursiveConstr._1.foreach { c => 
+        outputBuilder ++= (s"${pprint2.apply(c._1).plainText} :::: ${pprint2.apply(c._2).plainText}\n")
+      }
+      outputBuilder ++= ("------- defInstance -------\n")
+      d.defInstances.foreach { case (p, xs) =>
+        outputBuilder ++= (pprint2(p._1).plainText + " ==> " + pprint2(p._2).plainText + ":")
+        outputBuilder ++= (xs.toArray.map {
+          case (p, c) => s"\n\t$p: ${d.exprs(p).pp}  <-->  $c: ${d.exprs(c).pp}"
+        }.sorted.mkString)
+        outputBuilder ++= "\n"
+      }
+      outputBuilder ++= "\n>>>>>>>>>> Rewritten >>>>>>>>>>\n"
+      val newProgram = Rewrite.rewrite(originalProgram, d,
+        d.defInstances.map { case (ps, s) => (ps, s.toSet) }.toMap,
+        d.recursiveConstr._2.toMap
+      )
+      outputBuilder ++= newProgram.pp
+      outputBuilder ++= "\n<<<<<<<<<< Rewritten <<<<<<<<<<\n"
+    } catch {
+      case e: Exception => if allowErr then outputBuilder ++= s"!!!!!!ERROR!!!!!!\n${e.getMessage()}\n!!!!!!ERROR!!!!!!" else throw e
     }
-    outputBuilder ++= ("------- defInstance -------\n")
-    d.defInstances.foreach { case (p, xs) =>
-      outputBuilder ++= (pprint2(p._1).plainText + " ==> " + pprint2(p._2).plainText + ":")
-      outputBuilder ++= (xs.toArray.map {
-        case (p, c) => s"\n\t$p: ${d.exprs(p).pp}  <-->  $c: ${d.exprs(c).pp}"
-      }.sorted.mkString)
-      outputBuilder ++= "\n"
-    }
-    outputBuilder ++= "\n>>>>>>>>>> Rewritten >>>>>>>>>>\n"
-    val newProgram = Rewrite.rewrite(originalProgram, d,
-      d.defInstances.map { case (ps, s) => (ps, s.toSet) }.toMap,
-      d.recursiveConstr._2.toMap
-    )
-    outputBuilder ++= newProgram.pp
-    outputBuilder ++= "\n<<<<<<<<<< Rewritten <<<<<<<<<<\n"
-    
     outputBuilder.toString().linesIterator.toList
   }
   

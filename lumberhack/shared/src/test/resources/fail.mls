@@ -116,8 +116,7 @@ c(t)
 
 
 
-
-
+// path with same 'root' problem
 let p = C(p)
 fun c(x) = if C(x) is
     C(a) then c(a)
@@ -305,6 +304,7 @@ rev(rev1(p, N), N)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
 
+// `id2` used twice
 let p = C(C(C(id2(p))))
 fun c(x) = if x is
     C(a) then if a is
@@ -391,3 +391,21 @@ c(id(p))
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
 
+// no polymorphism
+_LUMBERHACK_ERROR
+fun id(x) = x
+let rec p1 = C(p1)
+fun c1(a) = if a is
+    C(i) then c1(i)
+id(c1)(id(p1))
+//│ |_LUMBERHACK_ERROR|↵|#fun| |id|(|x|)| |#=| |x|↵|#let| |#rec| |p1| |#=| |C|(|p1|)|↵|#fun| |c1|(|a|)| |#=| |#if| |a| |is|→|C|(|i|)| |#then| |c1|(|i|)|←|↵|id|(|c1|)|(|id|(|p1|)|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun id = x, => x; let rec p1 = C (p1,); fun c1 = a, => if a is ‹(C (i,)) then c1 (i,)›; id (c1,) (id (p1,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def id:1 = fun x:4 -> x:4
+//│ def p1:2 = [C p1:2]
+//│ def c1:3 = fun a:5 -> case a:5 of {C i:6 -> (c1:3 i:6)}
+//│ ((id:1 c1:3) (id:1 p1:2))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ !!!!!!ERROR!!!!!!
+//│ type error
+//│ !!!!!!ERROR!!!!!!

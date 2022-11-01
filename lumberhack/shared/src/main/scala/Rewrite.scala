@@ -88,7 +88,13 @@ object Rewrite {
       val res = mutable.Map.empty[(Path, ExprId), (Path, Ctor)]
       defInstancesMap foreach { case ((pp, cp), exprMap) =>
         exprMap foreach { case (ctor, matchh) => res.updateWith(cp, matchh) {
-          case S(a) => die
+          case S(a) => {
+            d.log(a._2.pp(using level = 0, showUids = true) +
+              " ||uses the same match as|| " +
+              d.exprs(ctor).pp(using level = 0, showUids = true)
+            )
+            S(a)
+          }
           case N => S(pp, d.exprs(ctor) match { case c: Ctor => c; case _ => die })
         } }
       }

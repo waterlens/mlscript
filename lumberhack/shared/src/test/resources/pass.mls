@@ -611,3 +611,56 @@ map(l)
 //│ def map'1'21_map'1'7_map'1'7:9 = fun ls:3 -> ls:3
 //│ (map'1'21:6 l'2'22:7)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
+
+:stdout
+fun sum(ls) = if ls is
+    C(h, t) then S(N, sum(t))
+    N then N
+fun mapa(lsa) = if lsa is
+    C(ha, ta) then C(primitive(ha), mapa(ta))
+    N then N
+fun mapb(lsb) = if lsb is
+    C(hb, tb) then C(primitive(hb), mapb(tb))
+    N then N
+sum(mapa(mapb(primitive)))
+//│ |#fun| |sum|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |S|(|N|,| |sum|(|t|)|)|↵|N| |#then| |N|←|↵|#fun| |mapa|(|lsa|)| |#=| |#if| |lsa| |is|→|C|(|ha|,| |ta|)| |#then| |C|(|primitive|(|ha|)|,| |mapa|(|ta|)|)|↵|N| |#then| |N|←|↵|#fun| |mapb|(|lsb|)| |#=| |#if| |lsb| |is|→|C|(|hb|,| |tb|)| |#then| |C|(|primitive|(|hb|)|,| |mapb|(|tb|)|)|↵|N| |#then| |N|←|↵|sum|(|mapa|(|mapb|(|primitive|)|)|)|
+//│ Parsed: {fun sum = ls, => if ls is ‹(C (h, t,)) then S (N, sum (t,),); (N) then N›; fun mapa = lsa, => if lsa is ‹(C (ha, ta,)) then C (primitive (ha,), mapa (ta,),); (N) then N›; fun mapb = lsb, => if lsb is ‹(C (hb, tb,)) then C (primitive (hb,), mapb (tb,),); (N) then N›; sum (mapa (mapb (primitive,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def sum:1 = fun ls:4 -> case ls:4 of {C h:5 t:6 -> [S [N] (sum:1 t:6)] | N -> [N]}
+//│ def mapa:2 = fun lsa:7 -> case lsa:7 of {C ha:8 ta:9 -> [C (primitive:0 ha:8) (mapa:2 ta:9)] | N -> [N]}
+//│ def mapb:3 = fun lsb:10 -> case lsb:10 of {C hb:11 tb:12 -> [C (primitive:0 hb:11) (mapb:3 tb:12)] | N -> [N]}
+//│ (sum:1 (mapa:2 (mapb:3 primitive:0)))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ (
+//│   (mapa:2^33 ⋅ mapa:2^14 ⋅ ɛ, C((ɛ, 11'13_callres), (ɛ, 12'16_callres))),
+//│   (sum:1^32 ⋅ sum:1^3 ⋅ ɛ, 3'ls)
+//│ ) :::: ((mapa:2^33 ⋅ ɛ, C((ɛ, 11'13_callres), (ɛ, 12'16_callres))), (sum:1^32 ⋅ ɛ, 3'ls))
+//│ (
+//│   (mapb:3^34 ⋅ mapb:3^25 ⋅ ɛ, C((ɛ, 17'24_callres), (ɛ, 18'27_callres))),
+//│   (mapa:2^33 ⋅ mapa:2^14 ⋅ ɛ, 8'lsa)
+//│ ) :::: ((mapb:3^34 ⋅ ɛ, C((ɛ, 17'24_callres), (ɛ, 18'27_callres))), (mapa:2^33 ⋅ ɛ, 8'lsa))
+//│ ((mapa:2^33 ⋅ mapa:2^14 ⋅ ɛ, N()), (sum:1^32 ⋅ sum:1^3 ⋅ ɛ, 3'ls)) :::: ((mapa:2^33 ⋅ ɛ, N()), (sum:1^32 ⋅ ɛ, 3'ls))
+//│ ((mapb:3^34 ⋅ mapb:3^25 ⋅ ɛ, N()), (mapa:2^33 ⋅ mapa:2^14 ⋅ ɛ, 8'lsa)) :::: ((mapb:3^34 ⋅ ɛ, N()), (mapa:2^33 ⋅ ɛ, 8'lsa))
+//│ ------- defInstance -------
+//│ mapa:2^33 ⋅ ɛ ==> sum:1^32 ⋅ ɛ:
+//│ 	17: [C (primitive:0 ha:8) (mapa:2 ta:9)]  <-->  8: case ls:4 of {C h:5 t:6 -> [S [N] (sum:1 t:6)] | N -> [N]}
+//│ 	18: [N]  <-->  8: case ls:4 of {C h:5 t:6 -> [S [N] (sum:1 t:6)] | N -> [N]}
+//│ mapb:3^34 ⋅ ɛ ==> mapa:2^33 ⋅ ɛ:
+//│ 	28: [C (primitive:0 hb:11) (mapb:3 tb:12)]  <-->  19: case lsa:7 of {C ha:8 ta:9 -> [C (primitive:0 ha:8) (mapa:2 ta:9)] | N -> [N]}
+//│ 	29: [N]  <-->  19: case lsa:7 of {C ha:8 ta:9 -> [C (primitive:0 ha:8) (mapa:2 ta:9)] | N -> [N]}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def sum:1 = fun ls:4 -> case ls:4 of {C h:5 t:6 -> [S [N] (sum:1 t:6)] | N -> [N]}
+//│ def mapa:2 = fun lsa:7 -> case lsa:7 of {C ha:8 ta:9 -> [C (primitive:0 ha:8) (mapa:2 ta:9)] | N -> [N]}
+//│ def mapb:3 = fun lsb:10 -> case lsb:10 of {C hb:11 tb:12 -> [C (primitive:0 hb:11) (mapb:3 tb:12)] | N -> [N]}
+//│ def sum'1'32:13 = fun ls:4 -> ls:4
+//│ def mapa'2'33:14 = fun lsa:7 -> lsa:7
+//│ def mapb'3'34:15 = fun lsb:10 -> case lsb:10 of {C hb:11 tb:12 -> 
+//│ 	let ha:8 = (primitive:0 hb:11) in 
+//│ 	let ta:9 = (mapb'3'34:15 tb:12) in 
+//│ 	let h:5 = (primitive:0 ha:8) in 
+//│ 	let t:6 = (mapa'2'33:14 ta:9) in [S [N] (sum'1'32:13 t:6)] | N -> [N]}
+//│ (sum'1'32:13 (mapa'2'33:14 (mapb'3'34:15 primitive:0)))
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<

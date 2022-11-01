@@ -72,7 +72,7 @@ object Expr {
     case lit: Lit => Const(lit)
     case v @ Var(nme) =>
       if (nme.isCapitalized) Ctor(v, Nil)
-      else Ref(ctx.getOrElse(nme, d.nextIdent(false, v)))
+      else Ref(ctx(nme))
     case Lam(Tup((N -> Fld(false, false, v: Var)) :: args), b) =>
       val id = d.nextIdent(false, v)
       given Ctx = ctx + (v.name -> id)
@@ -97,11 +97,10 @@ object Expr {
       } } => Match(
         fromTerm(lhs),
         lines.map {
-          case L(IfThen(App(ctorName: Var, Tup(args)), rhs)) => (
-            ctorName,
-            args.map { case (N -> Fld(false, false, a: Var)) => d.nextIdent(false, a); case _ => ??? },
-            fromTerm(rhs)
-          )
+          case L(IfThen(App(ctorName: Var, Tup(args)), rhs)) => {
+            val argMap = args.map { case (N -> Fld(false, false, a: Var)) => (a.name, d.nextIdent(false, a)); case _ => ??? };
+            (ctorName, argMap.unzip._2, fromTerm(rhs)(using d, ctx ++ argMap))
+          }
           case L(IfThen(ctorName: Var, rhs)) => (ctorName, Nil, fromTerm(rhs))
           case _ => ???
         }

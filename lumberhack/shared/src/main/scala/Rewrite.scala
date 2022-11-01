@@ -113,7 +113,6 @@ object Rewrite {
               L(ProgDef(id, newBody))
             })
           } else {
-            d.log("recurse for too long")
             newDefs.getOrElseUpdate(di, {
               val newBody = Const(StrLit("RECURSE_TOO_LONG"))
               L(ProgDef(id, newBody))
@@ -136,7 +135,6 @@ object Rewrite {
     def rewriteExpr(e: Expr)(using d: Deforest, p: Path, root: Option[Ident]): Expr = {e match
       case r@Ref(id) => if id.isDef then {
         val newPath = p :+ (r -> r.uid)
-        d.log(pprint2(newPath).toString())
         Ref(writeInstance(defMap.getOrElse(newPath, newPath)))
       } else { r }
       // case Ctor(name, args) => Ctor(name, args.map(rewriteExpr))

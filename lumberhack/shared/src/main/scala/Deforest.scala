@@ -172,8 +172,8 @@ class Deforest(debug: Boolean) {
       (prod.s, cons.s) match {
         case (_: ProdVar, _) | (_, _: ConsVar) => cache.find(_.equals(c)) match {
           case S(inCache) => {
-            log(s">> done [${pprint2.apply(c._1).toString} : ${pprint2.apply(c._2).toString}]\n" +
-              s">> with [${pprint2.apply(inCache._1).toString} : ${pprint2.apply(inCache._2).toString}]")
+            log(s">> done [${pprint2.apply(c._1).toString} : ${pprint2.apply(c._2).toString}]")
+            log(s">> with [${pprint2.apply(inCache._1).toString} : ${pprint2.apply(inCache._2).toString}]")
             recursiveConstr._1 += (c -> inCache)
             recursiveConstr._2 += (c._1.path -> inCache._1.path)
             recursiveConstr._2 += (c._2.path -> inCache._2.path)

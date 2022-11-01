@@ -45,17 +45,22 @@ enum Expr(using val deforest: Deforest) {
   val uid: Uid[Expr] = deforest.euid.nextUid
   deforest.exprs += uid -> this
   
-  def pp(using showUids: Bool = false): Str =
+  def pp(using level: Int = 1, showUids: Bool = false): Str =
     val res: fansi.Str = (if (showUids) Console.CYAN + uid.toString + ": " + Console.RESET else "") + (
       this match
         case Const(lit) => Console.YELLOW + lit.idStr + Console.RESET
         case Ref(id) => pprint2(id)
-        case Call(lhs, rhs) =>
-          // s"(${lhs.pp} ${Console.BOLD}of${Console.RESET} ${rhs.pp})"
-          s"(${lhs.pp} ${rhs.pp})"
+        case Call(lhs, rhs) => s"(${lhs.pp} ${rhs.pp})"
         case Ctor(name, args) =>
           s"${Console.BLUE}[$name${Console.RESET}${args.map(" " + _.pp).mkString + Console.BLUE}]${Console.RESET}"
-        case LetIn(id, rhs, body) => s"${Console.BOLD}let${Console.RESET} ${pprint2(id)} = ${rhs.pp} ${Console.BOLD}in${Console.RESET} ${body.pp}"
+        case LetIn(id, rhs, body) => {
+          val rhsStr = rhs.pp(using level + 1, showUids)
+          val inStr = if rhsStr.linesIterator.length == 1 then "in" else ("\n" + "\t" * level + "in")
+          "\n" + "\t" * level +
+          s"${Console.BOLD}let${Console.RESET} ${pprint2(id)} = ${rhsStr} ${Console.BOLD}" +
+          inStr +
+          s"${Console.RESET} ${body.pp}"
+        }
         case Match(scrut, arms) => s"${Console.BOLD}case${Console.RESET} ${scrut.pp} ${Console.BOLD}of${Console.RESET} {${arms.map {
             case (v, ids, e) =>
               s"${Console.BLUE + v.name + Console.RESET}${ids.map(id => " " + pprint2(id)).mkString} -> ${e.pp}"
@@ -63,11 +68,10 @@ enum Expr(using val deforest: Deforest) {
         case Function(param, body) => s"${Console.BOLD}fun${Console.RESET} ${pprint2(param)} -> ${body.pp}"
     )
     res.plainText
-  
 }
 object Expr {
   type Ctx = Map[Str, Ident]
-  type TypeCtx = Map[Str, Ls[Str]]
+
   def fromTerm(t: Term)(using d: Deforest, ctx: Ctx): Expr = t match
     case lit: Lit => Const(lit)
     case v @ Var(nme) =>

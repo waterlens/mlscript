@@ -22,7 +22,8 @@ c(p)
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
 //│ def p:1 = [C p:1]
 //│ def c:2 = fun x:3 -> case x:3 of {C a:4 -> (c:2 a:4)}
-//│ def p'1'10:6 = let a:4 = p'1'10:6 in (c'2'9:5 a:4)
+//│ def p'1'10:6 = 
+//│ 	let a:4 = p'1'10:6 in (c'2'9:5 a:4)
 //│ def c'2'9:5 = fun x:3 -> x:3
 //│ (c'2'9:5 p'1'10:6)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
@@ -66,7 +67,12 @@ c(p)
 //│ def c:4 = fun x:11 -> case x:11 of {C a:12 b:13 -> (d:3 b:13) | N -> 3}
 //│ def c'4'25_d'3'19:16 = fun y:8 -> y:8
 //│ def c'4'25:14 = fun x:11 -> x:11
-//│ def p'1'26:15 = let a:12 = 1 in let b:13 = let aa:9 = 2 in let bb:10 = 7 in (c'4'25_d'3'19_e'2'12:17 bb:10) in (c'4'25_d'3'19:16 b:13)
+//│ def p'1'26:15 = 
+//│ 	let a:12 = 1 in 
+//│ 	let b:13 = 
+//│ 		let aa:9 = 2 in 
+//│ 		let bb:10 = 7 in (c'4'25_d'3'19_e'2'12:17 bb:10) 
+//│ 	in (c'4'25_d'3'19:16 b:13)
 //│ def c'4'25_d'3'19_e'2'12:17 = fun z:5 -> z:5
 //│ (c'4'25:14 p'1'26:15)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
@@ -106,10 +112,19 @@ c(p)
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
 //│ def p:1 = [C [C p:1]]
 //│ def c:2 = fun x:3 -> case x:3 of {C a:4 -> case a:4 of {C b:5 -> case b:5 of {C y:6 -> (c:2 y:6)}}}
-//│ def p'1'15:8 = let a:4 = let b:5 = p'1'15_p'1'1:9 in b:5 in a:4
-//│ def p'1'15_p'1'1:9 = let y:6 = let a:4 = p'1'15_p'1'1_p'1'1:11 in a:4 in (c'2'14_c'2'7:10 y:6)
+//│ def p'1'15:8 = 
+//│ 	let a:4 = 
+//│ 		let b:5 = p'1'15_p'1'1:9 in b:5 
+//│ 	in a:4
+//│ def p'1'15_p'1'1:9 = 
+//│ 	let y:6 = 
+//│ 		let a:4 = p'1'15_p'1'1_p'1'1:11 in a:4 
+//│ 	in (c'2'14_c'2'7:10 y:6)
 //│ def c'2'14:7 = fun x:3 -> x:3
-//│ def p'1'15_p'1'1_p'1'1:11 = let b:5 = let y:6 = p'1'15:8 in (c'2'14:7 y:6) in b:5
+//│ def p'1'15_p'1'1_p'1'1:11 = 
+//│ 	let b:5 = 
+//│ 		let y:6 = p'1'15:8 in (c'2'14:7 y:6) 
+//│ 	in b:5
 //│ def c'2'14_c'2'7:10 = fun x:3 -> x:3
 //│ (c'2'14:7 p'1'15:8)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
@@ -164,9 +179,19 @@ c(id3(p))
 //│ def p'1'25_id'4'1:16 = fun y:10 -> (p'1'25_id'4'1_id2'3'17:17 y:10)
 //│ def p'1'25_p'1'2_id'4'1:20 = fun y:10 -> (p'1'25_p'1'2_id'4'1_id2'3'17:21 y:10)
 //│ def c'2'23_c'2'9:15 = fun x:6 -> x:6
-//│ def p'1'25:14 = let a:7 = let b:8 = let a:7 = (p'1'25_id'4'1:16 p'1'25_p'1'2:18) in a:7 in (c'2'23_c'2'9:15 b:8) in a:7
+//│ def p'1'25:14 = 
+//│ 	let a:7 = 
+//│ 		let b:8 = 
+//│ 			let a:7 = (p'1'25_id'4'1:16 p'1'25_p'1'2:18) in a:7 
+//│ 		in (c'2'23_c'2'9:15 b:8) 
+//│ 	in a:7
 //│ def c'2'23:12 = fun x:6 -> x:6
-//│ def p'1'25_p'1'2:18 = let b:8 = let a:7 = let b:8 = (p'1'25_p'1'2_id'4'1:20 p'1'25:14) in (c'2'23:12 b:8) in a:7 in (c'2'23_c'2'9_c'2'9:19 b:8)
+//│ def p'1'25_p'1'2:18 = 
+//│ 	let b:8 = 
+//│ 		let a:7 = 
+//│ 			let b:8 = (p'1'25_p'1'2_id'4'1:20 p'1'25:14) in (c'2'23:12 b:8) 
+//│ 		in a:7 
+//│ 	in (c'2'23_c'2'9_c'2'9:19 b:8)
 //│ def id3'5'24:13 = fun d:11 -> d:11
 //│ (c'2'23:12 (id3'5'24:13 p'1'25:14))
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
@@ -203,7 +228,10 @@ c(id(p))
 //│ def id:4 = fun y:8 -> (id2:3 y:8)
 //│ def id'4'17_id2'3'12:11 = fun yy:7 -> yy:7
 //│ def c'2'16:9 = fun x:5 -> x:5
-//│ def p'1'18:12 = let a:6 = let a:6 = p'1'18:12 in (c'2'16:9 a:6) in (c'2'16_c'2'5:13 a:6)
+//│ def p'1'18:12 = 
+//│ 	let a:6 = 
+//│ 		let a:6 = p'1'18:12 in (c'2'16:9 a:6) 
+//│ 	in (c'2'16_c'2'5:13 a:6)
 //│ def c'2'16_c'2'5:13 = fun x:5 -> x:5
 //│ def id'4'17:10 = fun y:8 -> (id'4'17_id2'3'12:11 y:8)
 //│ (c'2'16:9 (id'4'17:10 p'1'18:12))
@@ -246,7 +274,11 @@ sum(mapa(mapb(primitive)))
 //│ def mapb:3 = fun lsb:10 -> case lsb:10 of {C hb:11 tb:12 -> [C (primitive:0 hb:11) (mapb:3 tb:12)]}
 //│ def mapa'2'30:14 = fun lsa:7 -> lsa:7
 //│ def sum'1'29:13 = fun ls:4 -> ls:4
-//│ def mapb'3'31:15 = fun lsb:10 -> case lsb:10 of {C hb:11 tb:12 -> let ha:8 = (primitive:0 hb:11) in let ta:9 = (mapb'3'31:15 tb:12) in let h:5 = (primitive:0 ha:8) in let t:6 = (mapa'2'30:14 ta:9) in [S [N] (sum'1'29:13 t:6)]}
+//│ def mapb'3'31:15 = fun lsb:10 -> case lsb:10 of {C hb:11 tb:12 -> 
+//│ 	let ha:8 = (primitive:0 hb:11) in 
+//│ 	let ta:9 = (mapb'3'31:15 tb:12) in 
+//│ 	let h:5 = (primitive:0 ha:8) in 
+//│ 	let t:6 = (mapa'2'30:14 ta:9) in [S [N] (sum'1'29:13 t:6)]}
 //│ (sum'1'29:13 (mapa'2'30:14 (mapb'3'31:15 primitive:0)))
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
@@ -265,7 +297,9 @@ if C(A, B(C)) is
 //│ 	4: [C [A] [B [C]]]  <-->  7: case [C [A] [B [C]]] of {C a:1 b:2 -> [D b:2]}
 //│ 
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
-//│ let a:1 = [A] in let b:2 = [B [C]] in [D b:2]
+//│ 
+//│ 	let a:1 = [A] in 
+//│ 	let b:2 = [B [C]] in [D b:2]
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 //│
 
@@ -327,7 +361,16 @@ id6(id4)(c)(id5(id2)(id3(p)))
 //│ def id6:9 = fun l:19 -> l:19
 //│ def id7:10 = fun i:20 -> i:20
 //│ def id4'7'36:22 = fun k:17 -> k:17
-//│ def p'5'44:27 = let a:16 = let a:16 = let a:16 = (p'5'44_id7'10'11:31 let a:16 = let a:16 = (p'5'44_id1'2'12:33 p'5'44:27) in (c'6'38:23 a:16) in (c'6'38_c'6'22_c'6'22_c'6'22_c'6'22:32 a:16)) in (c'6'38_c'6'22_c'6'22_c'6'22:30 a:16) in (c'6'38_c'6'22_c'6'22:29 a:16) in (c'6'38_c'6'22:28 a:16)
+//│ def p'5'44:27 = 
+//│ 	let a:16 = 
+//│ 		let a:16 = 
+//│ 			let a:16 = (p'5'44_id7'10'11:31 
+//│ 				let a:16 = 
+//│ 					let a:16 = (p'5'44_id1'2'12:33 p'5'44:27) in (c'6'38:23 a:16) 
+//│ 				in (c'6'38_c'6'22_c'6'22_c'6'22_c'6'22:32 a:16)) 
+//│ 			in (c'6'38_c'6'22_c'6'22_c'6'22:30 a:16) 
+//│ 		in (c'6'38_c'6'22_c'6'22:29 a:16) 
+//│ 	in (c'6'38_c'6'22:28 a:16)
 //│ def c'6'38_c'6'22_c'6'22:29 = fun xx:15 -> xx:15
 //│ def c'6'38_c'6'22:28 = fun xx:15 -> xx:15
 //│ def p'5'44_id7'10'11:31 = fun i:20 -> i:20
@@ -384,12 +427,22 @@ ca(p)
 //│ def cb:3 = fun x:6 -> case x:6 of {C b:7 -> (ca:2 b:7)}
 //│ def ca'2'17_cb'3'6_ca'2'12_cb'3'6:12 = fun x:6 -> x:6
 //│ def ca'2'17_cb'3'6_ca'2'12_cb'3'6_ca'2'12:14 = fun x:4 -> x:4
-//│ def p'1'18_p'1'1:13 = let b:7 = let a:5 = let b:7 = p'1'18:9 in (ca'2'17:8 b:7) in (ca'2'17_cb'3'6_ca'2'12_cb'3'6_ca'2'12_cb'3'6:15 a:5) in (ca'2'17_cb'3'6_ca'2'12_cb'3'6_ca'2'12:14 b:7)
+//│ def p'1'18_p'1'1:13 = 
+//│ 	let b:7 = 
+//│ 		let a:5 = 
+//│ 			let b:7 = p'1'18:9 in (ca'2'17:8 b:7) 
+//│ 		in (ca'2'17_cb'3'6_ca'2'12_cb'3'6_ca'2'12_cb'3'6:15 a:5) 
+//│ 	in (ca'2'17_cb'3'6_ca'2'12_cb'3'6_ca'2'12:14 b:7)
 //│ def ca'2'17_cb'3'6_ca'2'12:11 = fun x:4 -> x:4
 //│ def ca'2'17:8 = fun x:4 -> x:4
 //│ def ca'2'17_cb'3'6:10 = fun x:6 -> x:6
 //│ def ca'2'17_cb'3'6_ca'2'12_cb'3'6_ca'2'12_cb'3'6:15 = fun x:6 -> x:6
-//│ def p'1'18:9 = let a:5 = let b:7 = let a:5 = p'1'18_p'1'1:13 in (ca'2'17_cb'3'6_ca'2'12_cb'3'6:12 a:5) in (ca'2'17_cb'3'6_ca'2'12:11 b:7) in (ca'2'17_cb'3'6:10 a:5)
+//│ def p'1'18:9 = 
+//│ 	let a:5 = 
+//│ 		let b:7 = 
+//│ 			let a:5 = p'1'18_p'1'1:13 in (ca'2'17_cb'3'6_ca'2'12_cb'3'6:12 a:5) 
+//│ 		in (ca'2'17_cb'3'6_ca'2'12:11 b:7) 
+//│ 	in (ca'2'17_cb'3'6:10 a:5)
 //│ (ca'2'17:8 p'1'18:9)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
@@ -434,9 +487,15 @@ c1(p1)
 //│ def c1'1'19_c2'2'2_c1'1'8_c2'2'2:13 = fun x2:7 -> x2:7
 //│ def c1'1'19_c2'2'2_c1'1'8:12 = fun x1:5 -> x1:5
 //│ def c1'1'19:9 = fun x1:5 -> x1:5
-//│ def p1'3'20_p2'4'13:14 = let b:8 = p1'3'20:10 in (c1'1'19:9 b:8)
+//│ def p1'3'20_p2'4'13:14 = 
+//│ 	let b:8 = p1'3'20:10 in (c1'1'19:9 b:8)
 //│ def c1'1'19_c2'2'2:11 = fun x2:7 -> x2:7
-//│ def p1'3'20:10 = let a:6 = let b:8 = let a:6 = p1'3'20_p2'4'13:14 in (c1'1'19_c2'2'2_c1'1'8_c2'2'2:13 a:6) in (c1'1'19_c2'2'2_c1'1'8:12 b:8) in (c1'1'19_c2'2'2:11 a:6)
+//│ def p1'3'20:10 = 
+//│ 	let a:6 = 
+//│ 		let b:8 = 
+//│ 			let a:6 = p1'3'20_p2'4'13:14 in (c1'1'19_c2'2'2_c1'1'8_c2'2'2:13 a:6) 
+//│ 		in (c1'1'19_c2'2'2_c1'1'8:12 b:8) 
+//│ 	in (c1'1'19_c2'2'2:11 a:6)
 //│ (c1'1'19:9 p1'3'20:10)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
@@ -480,7 +539,15 @@ map(l)
 //│ def ff:1 = fun x:4 -> case x:4 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
 //│ def map:2 = fun ls:5 -> case ls:5 of {C h:6 t:7 -> [C (ff:1 h:6) (map:2 t:7)] | N -> [N]}
 //│ def l:3 = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ def l'3'26:9 = let h:6 = [T] in let t:7 = let h:6 = [TT] in let t:7 = let h:6 = [TTTT] in let t:7 = [N] in [C (map'2'25_map'2'11_map'2'11_ff'1'8:14 h:6) (map'2'25_map'2'11_map'2'11_map'2'11:15 t:7)] in [C (map'2'25_map'2'11_ff'1'8:12 h:6) (map'2'25_map'2'11_map'2'11:13 t:7)] in [C (map'2'25_ff'1'8:10 h:6) (map'2'25_map'2'11:11 t:7)]
+//│ def l'3'26:9 = 
+//│ 	let h:6 = [T] in 
+//│ 	let t:7 = 
+//│ 		let h:6 = [TT] in 
+//│ 		let t:7 = 
+//│ 			let h:6 = [TTTT] in 
+//│ 			let t:7 = [N] in [C (map'2'25_map'2'11_map'2'11_ff'1'8:14 h:6) (map'2'25_map'2'11_map'2'11_map'2'11:15 t:7)] 
+//│ 		in [C (map'2'25_map'2'11_ff'1'8:12 h:6) (map'2'25_map'2'11_map'2'11:13 t:7)] 
+//│ 	in [C (map'2'25_ff'1'8:10 h:6) (map'2'25_map'2'11:11 t:7)]
 //│ def map'2'25_ff'1'8:10 = fun x:4 -> x:4
 //│ def map'2'25:8 = fun ls:5 -> ls:5
 //│ def map'2'25_map'2'11_ff'1'8:12 = fun x:4 -> x:4
@@ -532,7 +599,15 @@ map(l)
 //│ def map'1'21_map'1'7:8 = fun ls:3 -> ls:3
 //│ def map'1'21:6 = fun ls:3 -> ls:3
 //│ def map'1'21_map'1'7_map'1'7_map'1'7:10 = fun ls:3 -> ls:3
-//│ def l'2'22:7 = let h:4 = [T] in let t:5 = let h:4 = [TT] in let t:5 = let h:4 = [TTTT] in let t:5 = [N] in [C h:4 (map'1'21_map'1'7_map'1'7_map'1'7:10 t:5)] in [C h:4 (map'1'21_map'1'7_map'1'7:9 t:5)] in [C h:4 (map'1'21_map'1'7:8 t:5)]
+//│ def l'2'22:7 = 
+//│ 	let h:4 = [T] in 
+//│ 	let t:5 = 
+//│ 		let h:4 = [TT] in 
+//│ 		let t:5 = 
+//│ 			let h:4 = [TTTT] in 
+//│ 			let t:5 = [N] in [C h:4 (map'1'21_map'1'7_map'1'7_map'1'7:10 t:5)] 
+//│ 		in [C h:4 (map'1'21_map'1'7_map'1'7:9 t:5)] 
+//│ 	in [C h:4 (map'1'21_map'1'7:8 t:5)]
 //│ def map'1'21_map'1'7_map'1'7:9 = fun ls:3 -> ls:3
 //│ (map'1'21:6 l'2'22:7)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<

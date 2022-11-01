@@ -44,9 +44,7 @@ import ProdStratEnum.*, ConsStratEnum.*, Expr.*
 case class Destructor(ctor: Var, argCons: Ls[Strat[ConsVar]])
 
 
-case class Ctx(
-  bindings: Map[Str, ProdStrat]
-) {
+case class Ctx(bindings: Map[Str, ProdStrat]) {
   def apply(id: Ident): ProdStrat =
     bindings.getOrElse(id.tree.name, error(s"binding not found: " + id))
   def + (b: Str -> ProdStrat): Ctx =

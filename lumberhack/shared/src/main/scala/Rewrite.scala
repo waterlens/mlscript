@@ -73,7 +73,6 @@ object Rewrite {
     val (pdefs, exprs) = p.contents.partition(c => c.isLeft)
     val pdefNamesToBodies = pdefs.collect{case L(pd) => pd.id -> pd.body}.toMap
 
-    // val instanceIds = defInstances.keysIterator.map(di => di -> genId(di)).toMap
     val csToMs: Map[(Path, ExprId), (Path, Match)] = {
       val res = mutable.Map.empty[(Path, ExprId), (Path, Match)]
       defInstancesMap foreach { case ((pp, cp), exprMap) =>
@@ -127,17 +126,7 @@ object Rewrite {
           id
         }
       }
-      // val id = defIds.getOrElseUpdate(di, genId(di))
-      // newDefs.getOrElseUpdate(di, {
-      //   val pdef = di.last._1.id
-      //   val oldBody = pdefNamesToBodies(pdef) //Might throw
-      //   // TODO: doesn't work
-      //   // val oldBodyLocallyRewrite = rewriteExpr(oldBody)(using d, Nil, None)
-      //   val newBody = rewriteExpr(oldBody)(using d, di, S(pdef))
-      //   L(ProgDef(id, newBody))
-      // }).value.id
       
-
     def rewriteExpr(e: Expr)(using d: Deforest, p: Path, root: Option[Ident]): Expr = {e match
       case r@Ref(id) => if id.isDef then {
         val newPath = p :+ (r -> r.uid)

@@ -342,6 +342,7 @@ class DiffTests
         
         // try to parse block of text into mlscript ast
         val ans = try {
+          stdout = false
           if (newParser || basePath.headOption.contains("compiler")) {
             
             val origin = Origin(testName, globalStartLineNum, fph)
@@ -359,7 +360,7 @@ class DiffTests
             
             if (parseOnly)
               output("Parsed: " + res.show)
-            
+            stdout = mode.stdout
             postProcess(mode, basePath, testName, res).foreach(output)
             
             if (parseOnly)

@@ -100,6 +100,7 @@ object Rewrite {
       res.toMap
     }
 
+    // TODO: rely only on path, and not cache here?
     val newDefs = MutMap.empty[Path, L[ProgDef]]
     val defIds = MutMap.empty[Path, Ident]
     def writeInstance(di: Path) = {
@@ -112,8 +113,6 @@ object Rewrite {
             newDefs.getOrElseUpdate(di, {
               val pdef = di.last._1.id
               val oldBody = pdefNamesToBodies(pdef) //Might throw
-              // TODO:
-              // val oldBodyLocallyRewrite = rewriteExpr(oldBody)(using d, Nil, None)
               val newBody = rewriteExpr(oldBody)(using d, di, S(pdef))
               L(ProgDef(id, newBody))
             })
@@ -162,13 +161,6 @@ object Rewrite {
             }
           }
         }
-        // csToMs.get(p -> e.uid) match
-        //   case (_, S(matchExpr)) => 
-        //     val arm = matchExpr._2.arms.find(a => a._1 === name).get
-        //     (arm._2 zip args).foldRight(rewriteExpr(arm._3)(using d, matchExpr._1, None)){(t_i, acc) => 
-        //       LetIn(t_i._1, rewriteExpr(t_i._2), acc)
-        //     }
-        //   case N => Ctor(name, args.map(rewriteExpr))
       }
 
       // this search path should also be using the suffix thing
@@ -181,9 +173,6 @@ object Rewrite {
             rewriteExpr(scrut)
           }
         }
-        // msToCs.get(suffix -> e.uid) match
-        //   case S(_) => rewriteExpr(scrut)
-        //   case N => Match(rewriteExpr(scrut), arms.map{case (v, args, body) => (v, args, rewriteExpr(body))})
       }
       case Const(lit) => e
       case Call(lhs, rhs) => Call(rewriteExpr(lhs), rewriteExpr(rhs))
@@ -192,12 +181,7 @@ object Rewrite {
     }
 
     val newExprs = exprs.collect{case R(e) => R(rewriteExpr(e)(using d, Nil, N))}
-    // val oldBodyLocallyRewrite = pdefs.map {
-    //   case L(ProgDef(id, body)) => L(ProgDef(id, rewriteExpr(body)(using d, Nil, None)))
-    // }
-    // val newDefs = defInstances.keysIterator.toList.collect{case di @ (_ :: _) => L(writeInstance(di))}
-
-    // Program(oldBodyLocallyRewrite ++ newDefs ++ newExprs)
+    
     Program(pdefs ++ newDefs.values ++ newExprs)
   }
 }

@@ -8,9 +8,9 @@ c(p)
 //│ |#let| |#rec| |p| |#=| |C|(|p|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|c|(|p|)|
 //│ Parsed: {let rec p = C (p,); fun c = x, => if x is ‹(C (a,)) then c (a,)›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:1 = [C p:1]
-//│ def c:2 = fun x:3 -> case x:3 of {C a:4 -> (c:2 a:4)}
-//│ (c:2 p:1)
+//│ def p:1 = 2: [C 1: p:1]
+//│ def c:2 = 8: fun x:3 -> 7: case 3: x:3 of {C a:4 -> 6: (4: c:2 5: a:4)}
+//│ 11: (9: c:2 10: p:1)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -44,11 +44,11 @@ c(p)
 //│ |#let| |p| |#=| |C|(|1|,| |C|(|2|,| |N|)|)|↵|#fun| |e|(|z|)| |#=| |#if| |z| |is|→|C|(|aaa|,| |bbb|)| |#then| |bbb|↵|N| |#then| |7|←|↵|#fun| |d|(|y|)| |#=| |#if| |y| |is|→|C|(|aa|,| |bb|)| |#then| |e|(|bb|)|↵|N| |#then| |5|←|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|,| |b|)| |#then| |d|(|b|)|↵|N| |#then| |3|←|↵|c|(|p|)|
 //│ Parsed: {let p = C (1, C (2, N,),); fun e = z, => if z is ‹(C (aaa, bbb,)) then bbb; (N) then 7›; fun d = y, => if y is ‹(C (aa, bb,)) then e (bb,); (N) then 5›; fun c = x, => if x is ‹(C (a, b,)) then d (b,); (N) then 3›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:1 = [C 1 [C 2 [N]]]
-//│ def e:2 = fun z:5 -> case z:5 of {C aaa:6 bbb:7 -> bbb:7 | N -> 7}
-//│ def d:3 = fun y:8 -> case y:8 of {C aa:9 bb:10 -> (e:2 bb:10) | N -> 5}
-//│ def c:4 = fun x:11 -> case x:11 of {C a:12 b:13 -> (d:3 b:13) | N -> 3}
-//│ (c:4 p:1)
+//│ def p:1 = 5: [C 1: 1 4: [C 2: 2 3: [N]]]
+//│ def e:2 = 10: fun z:5 -> 9: case 6: z:5 of {C aaa:6 bbb:7 -> 7: bbb:7 | N -> 8: 7}
+//│ def d:3 = 17: fun y:8 -> 16: case 11: y:8 of {C aa:9 bb:10 -> 14: (12: e:2 13: bb:10) | N -> 15: 5}
+//│ def c:4 = 24: fun x:11 -> 23: case 18: x:11 of {C a:12 b:13 -> 21: (19: d:3 20: b:13) | N -> 22: 3}
+//│ 27: (25: c:4 26: p:1)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -87,9 +87,9 @@ c(p)
 //│ |#let| |#rec| |p| |#=| |C|(|C|(|p|)|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |#if| |a| |is|→|C|(|b|)| |#then| |#if| |b| |is|→|C|(|y|)| |#then| |c|(|y|)|←|←|←|↵|c|(|p|)|
 //│ Parsed: {let rec p = C (C (p,),); fun c = x, => if x is ‹(C (a,)) then if a is ‹(C (b,)) then if b is ‹(C (y,)) then c (y,)›››; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:1 = [C [C p:1]]
-//│ def c:2 = fun x:3 -> case x:3 of {C a:4 -> case a:4 of {C b:5 -> case b:5 of {C y:6 -> (c:2 y:6)}}}
-//│ (c:2 p:1)
+//│ def p:1 = 3: [C 2: [C 1: p:1]]
+//│ def c:2 = 13: fun x:3 -> 12: case 4: x:3 of {C a:4 -> 11: case 5: a:4 of {C b:5 -> 10: case 6: b:5 of {C y:6 -> 9: (7: c:2 8: y:6)}}}
+//│ 16: (14: c:2 15: p:1)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -142,12 +142,12 @@ c(id3(p))
 //│ |#let| |#rec| |p| |#=| |C|(|C|(|C|(|id|(|p|)|)|)|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |#if| |a| |is|→|C|(|b|)| |#then| |c|(|b|)|←|←|↵|#fun| |id2|(|z|)| |#=| |z|↵|#fun| |id|(|y|)| |#=| |id2|(|y|)|↵|#fun| |id3|(|d|)| |#=| |d|↵|c|(|id3|(|p|)|)|
 //│ Parsed: {let rec p = C (C (C (id (p,),),),); fun c = x, => if x is ‹(C (a,)) then if a is ‹(C (b,)) then c (b,)››; fun id2 = z, => z; fun id = y, => id2 (y,); fun id3 = d, => d; c (id3 (p,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:1 = [C [C [C (id:4 p:1)]]]
-//│ def c:2 = fun x:6 -> case x:6 of {C a:7 -> case a:7 of {C b:8 -> (c:2 b:8)}}
-//│ def id2:3 = fun z:9 -> z:9
-//│ def id:4 = fun y:10 -> (id2:3 y:10)
-//│ def id3:5 = fun d:11 -> d:11
-//│ (c:2 (id3:5 p:1))
+//│ def p:1 = 6: [C 5: [C 4: [C 3: (1: id:4 2: p:1)]]]
+//│ def c:2 = 14: fun x:6 -> 13: case 7: x:6 of {C a:7 -> 12: case 8: a:7 of {C b:8 -> 11: (9: c:2 10: b:8)}}
+//│ def id2:3 = 16: fun z:9 -> 15: z:9
+//│ def id:4 = 20: fun y:10 -> 19: (17: id2:3 18: y:10)
+//│ def id3:5 = 22: fun d:11 -> 21: d:11
+//│ 27: (23: c:2 26: (24: id3:5 25: p:1))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -206,11 +206,11 @@ c(id(p))
 //│ |#let| |#rec| |p| |#=| |C|(|C|(|p|)|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|#fun| |id2|(|yy|)| |#=| |yy|↵|#fun| |id|(|y|)| |#=| |id2|(|y|)|↵|c|(|id|(|p|)|)|
 //│ Parsed: {let rec p = C (C (p,),); fun c = x, => if x is ‹(C (a,)) then c (a,)›; fun id2 = yy, => yy; fun id = y, => id2 (y,); c (id (p,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:1 = [C [C p:1]]
-//│ def c:2 = fun x:5 -> case x:5 of {C a:6 -> (c:2 a:6)}
-//│ def id2:3 = fun yy:7 -> yy:7
-//│ def id:4 = fun y:8 -> (id2:3 y:8)
-//│ (c:2 (id:4 p:1))
+//│ def p:1 = 3: [C 2: [C 1: p:1]]
+//│ def c:2 = 9: fun x:5 -> 8: case 4: x:5 of {C a:6 -> 7: (5: c:2 6: a:6)}
+//│ def id2:3 = 11: fun yy:7 -> 10: yy:7
+//│ def id:4 = 15: fun y:8 -> 14: (12: id2:3 13: y:8)
+//│ 20: (16: c:2 19: (17: id:4 18: p:1))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -247,10 +247,10 @@ sum(mapa(mapb(primitive)))
 //│ |#fun| |sum|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |S|(|N|,| |sum|(|t|)|)|←|↵|#fun| |mapa|(|lsa|)| |#=| |#if| |lsa| |is|→|C|(|ha|,| |ta|)| |#then| |C|(|primitive|(|ha|)|,| |mapa|(|ta|)|)|←|↵|#fun| |mapb|(|lsb|)| |#=| |#if| |lsb| |is|→|C|(|hb|,| |tb|)| |#then| |C|(|primitive|(|hb|)|,| |mapb|(|tb|)|)|←|↵|sum|(|mapa|(|mapb|(|primitive|)|)|)|
 //│ Parsed: {fun sum = ls, => if ls is ‹(C (h, t,)) then S (N, sum (t,),)›; fun mapa = lsa, => if lsa is ‹(C (ha, ta,)) then C (primitive (ha,), mapa (ta,),)›; fun mapb = lsb, => if lsb is ‹(C (hb, tb,)) then C (primitive (hb,), mapb (tb,),)›; sum (mapa (mapb (primitive,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def sum:1 = fun ls:4 -> case ls:4 of {C h:5 t:6 -> [S [N] (sum:1 t:6)]}
-//│ def mapa:2 = fun lsa:7 -> case lsa:7 of {C ha:8 ta:9 -> [C (primitive:0 ha:8) (mapa:2 ta:9)]}
-//│ def mapb:3 = fun lsb:10 -> case lsb:10 of {C hb:11 tb:12 -> [C (primitive:0 hb:11) (mapb:3 tb:12)]}
-//│ (sum:1 (mapa:2 (mapb:3 primitive:0)))
+//│ def sum:1 = 8: fun ls:4 -> 7: case 1: ls:4 of {C h:5 t:6 -> 6: [S 2: [N] 5: (3: sum:1 4: t:6)]}
+//│ def mapa:2 = 18: fun lsa:7 -> 17: case 9: lsa:7 of {C ha:8 ta:9 -> 16: [C 12: (10: primitive:0 11: ha:8) 15: (13: mapa:2 14: ta:9)]}
+//│ def mapb:3 = 28: fun lsb:10 -> 27: case 19: lsb:10 of {C hb:11 tb:12 -> 26: [C 22: (20: primitive:0 21: hb:11) 25: (23: mapb:3 24: tb:12)]}
+//│ 35: (29: sum:1 34: (30: mapa:2 33: (31: mapb:3 32: primitive:0)))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -288,7 +288,7 @@ if C(A, B(C)) is
 //│ |#if| |C|(|A|,| |B|(|C|)|)| |is|→|C|(|a|,| |b|)| |#then| |D|(|b|)|←|
 //│ Parsed: {if C (A, B (C,),) is ‹(C (a, b,)) then D (b,)›}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ case [C [A] [B [C]]] of {C a:1 b:2 -> [D b:2]}
+//│ 7: case 4: [C 1: [A] 3: [B 2: [C]]] of {C a:1 b:2 -> 6: [D 5: b:2]}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -319,17 +319,17 @@ id6(id4)(c)(id5(id2)(id3(p)))
 //│ |#fun| |id|(|k|)| |#=| |k|↵|#fun| |id1|(|x|)| |#=| |id|(|x|)|↵|#fun| |id2|(|y|)| |#=| |y|↵|#fun| |id3|(|z|)| |#=| |z|↵|#let| |#rec| |p| |#=| |C|(|C|(|C|(|id7|(|C|(|C|(|id1|(|p|)|)|)|)|)|)|)|↵|#fun| |c|(|xx|)| |#=| |#if| |xx| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|#fun| |id4|(|k|)| |#=| |k|↵|#fun| |id5|(|j|)| |#=| |j|↵|#fun| |id6|(|l|)| |#=| |l|↵|#fun| |id7|(|i|)| |#=| |i|↵|id6|(|id4|)|(|c|)|(|id5|(|id2|)|(|id3|(|p|)|)|)|
 //│ Parsed: {fun id = k, => k; fun id1 = x, => id (x,); fun id2 = y, => y; fun id3 = z, => z; let rec p = C (C (C (id7 (C (C (id1 (p,),),),),),),); fun c = xx, => if xx is ‹(C (a,)) then c (a,)›; fun id4 = k, => k; fun id5 = j, => j; fun id6 = l, => l; fun id7 = i, => i; id6 (id4,) (c,) (id5 (id2,) (id3 (p,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def id:1 = fun k:11 -> k:11
-//│ def id1:2 = fun x:12 -> (id:1 x:12)
-//│ def id2:3 = fun y:13 -> y:13
-//│ def id3:4 = fun z:14 -> z:14
-//│ def p:5 = [C [C [C (id7:10 [C [C (id1:2 p:5)]])]]]
-//│ def c:6 = fun xx:15 -> case xx:15 of {C a:16 -> (c:6 a:16)}
-//│ def id4:7 = fun k:17 -> k:17
-//│ def id5:8 = fun j:18 -> j:18
-//│ def id6:9 = fun l:19 -> l:19
-//│ def id7:10 = fun i:20 -> i:20
-//│ (((id6:9 id4:7) c:6) ((id5:8 id2:3) (id3:4 p:5)))
+//│ def id:1 = 2: fun k:11 -> 1: k:11
+//│ def id1:2 = 6: fun x:12 -> 5: (3: id:1 4: x:12)
+//│ def id2:3 = 8: fun y:13 -> 7: y:13
+//│ def id3:4 = 10: fun z:14 -> 9: z:14
+//│ def p:5 = 20: [C 19: [C 18: [C 17: (11: id7:10 16: [C 15: [C 14: (12: id1:2 13: p:5)]])]]]
+//│ def c:6 = 26: fun xx:15 -> 25: case 21: xx:15 of {C a:16 -> 24: (22: c:6 23: a:16)}
+//│ def id4:7 = 28: fun k:17 -> 27: k:17
+//│ def id5:8 = 30: fun j:18 -> 29: j:18
+//│ def id6:9 = 32: fun l:19 -> 31: l:19
+//│ def id7:10 = 34: fun i:20 -> 33: i:20
+//│ 47: (39: (37: (35: id6:9 36: id4:7) 38: c:6) 46: (42: (40: id5:8 41: id2:3) 45: (43: id3:4 44: p:5)))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -396,10 +396,10 @@ ca(p)
 //│ |#let| |#rec| |p| |#=| |C|(|C|(|C|(|p|)|)|)|↵|#fun| |ca|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |cb|(|a|)|←|↵|#fun| |cb|(|x|)| |#=| |#if| |x| |is|→|C|(|b|)| |#then| |ca|(|b|)|←|↵|ca|(|p|)|
 //│ Parsed: {let rec p = C (C (C (p,),),); fun ca = x, => if x is ‹(C (a,)) then cb (a,)›; fun cb = x, => if x is ‹(C (b,)) then ca (b,)›; ca (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:1 = [C [C [C p:1]]]
-//│ def ca:2 = fun x:4 -> case x:4 of {C a:5 -> (cb:3 a:5)}
-//│ def cb:3 = fun x:6 -> case x:6 of {C b:7 -> (ca:2 b:7)}
-//│ (ca:2 p:1)
+//│ def p:1 = 4: [C 3: [C 2: [C 1: p:1]]]
+//│ def ca:2 = 10: fun x:4 -> 9: case 5: x:4 of {C a:5 -> 8: (6: cb:3 7: a:5)}
+//│ def cb:3 = 16: fun x:6 -> 15: case 11: x:6 of {C b:7 -> 14: (12: ca:2 13: b:7)}
+//│ 19: (17: ca:2 18: p:1)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -457,11 +457,11 @@ c1(p1)
 //│ |#fun| |c1|(|x1|)| |#=| |#if| |x1| |is|→|C|(|a|)| |#then| |c2|(|a|)|←|↵|#fun| |c2|(|x2|)| |#=| |#if| |x2| |is|→|C|(|b|)| |#then| |c1|(|b|)|←|↵|#let| |p1| |#=| |C|(|C|(|C|(|p2|)|)|)|↵|#let| |p2| |#=| |C|(|p1|)|↵|c1|(|p1|)|
 //│ Parsed: {fun c1 = x1, => if x1 is ‹(C (a,)) then c2 (a,)›; fun c2 = x2, => if x2 is ‹(C (b,)) then c1 (b,)›; let p1 = C (C (C (p2,),),); let p2 = C (p1,); c1 (p1,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def c1:1 = fun x1:5 -> case x1:5 of {C a:6 -> (c2:2 a:6)}
-//│ def c2:2 = fun x2:7 -> case x2:7 of {C b:8 -> (c1:1 b:8)}
-//│ def p1:3 = [C [C [C p2:4]]]
-//│ def p2:4 = [C p1:3]
-//│ (c1:1 p1:3)
+//│ def c1:1 = 6: fun x1:5 -> 5: case 1: x1:5 of {C a:6 -> 4: (2: c2:2 3: a:6)}
+//│ def c2:2 = 12: fun x2:7 -> 11: case 7: x2:7 of {C b:8 -> 10: (8: c1:1 9: b:8)}
+//│ def p1:3 = 16: [C 15: [C 14: [C 13: p2:4]]]
+//│ def p2:4 = 18: [C 17: p1:3]
+//│ 21: (19: c1:1 20: p1:3)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -512,10 +512,10 @@ map(l)
 //│ |#fun| |ff|(|x|)| |#=| |#if| |x| |is|→|K| |#then| |T|↵|KK| |#then| |TT|↵|KKKK| |#then| |TTTT|←|↵|#fun| |map|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|ff|(|h|)|,| |map|(|t|)|)|↵|N| |#then| |N|←|↵|#let| |l| |#=| |C|(|K|,| |C|(|KK|,| |C|(|KKKK|,| |N|)|)|)|↵|map|(|l|)|
 //│ Parsed: {fun ff = x, => if x is ‹(K) then T; (KK) then TT; (KKKK) then TTTT›; fun map = ls, => if ls is ‹(C (h, t,)) then C (ff (h,), map (t,),); (N) then N›; let l = C (K, C (KK, C (KKKK, N,),),); map (l,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def ff:1 = fun x:4 -> case x:4 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
-//│ def map:2 = fun ls:5 -> case ls:5 of {C h:6 t:7 -> [C (ff:1 h:6) (map:2 t:7)] | N -> [N]}
-//│ def l:3 = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ (map:2 l:3)
+//│ def ff:1 = 6: fun x:4 -> 5: case 1: x:4 of {K -> 2: [T] | KK -> 3: [TT] | KKKK -> 4: [TTTT]}
+//│ def map:2 = 17: fun ls:5 -> 16: case 7: ls:5 of {C h:6 t:7 -> 14: [C 10: (8: ff:1 9: h:6) 13: (11: map:2 12: t:7)] | N -> 15: [N]}
+//│ def l:3 = 24: [C 18: [K] 23: [C 19: [KK] 22: [C 20: [KKKK] 21: [N]]]]
+//│ 27: (25: map:2 26: l:3)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -574,9 +574,9 @@ map(l)
 //│ |#fun| |map|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|→|(|#if| |h| |is|→|K| |#then| |T|↵|KK| |#then| |TT|↵|KKKK| |#then| |TTTT|←|↵|)|,|↵|map|(|t|)|←|↵|)|↵|N| |#then| |N|←|↵|#let| |l| |#=| |C|(|K|,| |C|(|KK|,| |C|(|KKKK|,| |N|)|)|)|↵|map|(|l|)|
 //│ Parsed: {fun map = ls, => if ls is ‹(C (h, t,)) then C ('(' if h is ‹(K) then T; (KK) then TT; (KKKK) then TTTT›, ')', map (t,),); (N) then N›; let l = C (K, C (KK, C (KKKK, N,),),); map (l,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def map:1 = fun ls:3 -> case ls:3 of {C h:4 t:5 -> [C case h:4 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]} (map:1 t:5)] | N -> [N]}
-//│ def l:2 = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ (map:1 l:2)
+//│ def map:1 = 13: fun ls:3 -> 12: case 1: ls:3 of {C h:4 t:5 -> 10: [C 6: case 2: h:4 of {K -> 3: [T] | KK -> 4: [TT] | KKKK -> 5: [TTTT]} 9: (7: map:1 8: t:5)] | N -> 11: [N]}
+//│ def l:2 = 20: [C 14: [K] 19: [C 15: [KK] 18: [C 16: [KKKK] 17: [N]]]]
+//│ 23: (21: map:1 22: l:2)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -626,10 +626,10 @@ sum(mapa(mapb(primitive)))
 //│ |#fun| |sum|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |S|(|N|,| |sum|(|t|)|)|↵|N| |#then| |N|←|↵|#fun| |mapa|(|lsa|)| |#=| |#if| |lsa| |is|→|C|(|ha|,| |ta|)| |#then| |C|(|primitive|(|ha|)|,| |mapa|(|ta|)|)|↵|N| |#then| |N|←|↵|#fun| |mapb|(|lsb|)| |#=| |#if| |lsb| |is|→|C|(|hb|,| |tb|)| |#then| |C|(|primitive|(|hb|)|,| |mapb|(|tb|)|)|↵|N| |#then| |N|←|↵|sum|(|mapa|(|mapb|(|primitive|)|)|)|
 //│ Parsed: {fun sum = ls, => if ls is ‹(C (h, t,)) then S (N, sum (t,),); (N) then N›; fun mapa = lsa, => if lsa is ‹(C (ha, ta,)) then C (primitive (ha,), mapa (ta,),); (N) then N›; fun mapb = lsb, => if lsb is ‹(C (hb, tb,)) then C (primitive (hb,), mapb (tb,),); (N) then N›; sum (mapa (mapb (primitive,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def sum:1 = fun ls:4 -> case ls:4 of {C h:5 t:6 -> [S [N] (sum:1 t:6)] | N -> [N]}
-//│ def mapa:2 = fun lsa:7 -> case lsa:7 of {C ha:8 ta:9 -> [C (primitive:0 ha:8) (mapa:2 ta:9)] | N -> [N]}
-//│ def mapb:3 = fun lsb:10 -> case lsb:10 of {C hb:11 tb:12 -> [C (primitive:0 hb:11) (mapb:3 tb:12)] | N -> [N]}
-//│ (sum:1 (mapa:2 (mapb:3 primitive:0)))
+//│ def sum:1 = 9: fun ls:4 -> 8: case 1: ls:4 of {C h:5 t:6 -> 6: [S 2: [N] 5: (3: sum:1 4: t:6)] | N -> 7: [N]}
+//│ def mapa:2 = 20: fun lsa:7 -> 19: case 10: lsa:7 of {C ha:8 ta:9 -> 17: [C 13: (11: primitive:0 12: ha:8) 16: (14: mapa:2 15: ta:9)] | N -> 18: [N]}
+//│ def mapb:3 = 31: fun lsb:10 -> 30: case 21: lsb:10 of {C hb:11 tb:12 -> 28: [C 24: (22: primitive:0 23: hb:11) 27: (25: mapb:3 26: tb:12)] | N -> 29: [N]}
+//│ 38: (32: sum:1 37: (33: mapa:2 36: (34: mapb:3 35: primitive:0)))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -675,10 +675,10 @@ main(c)
 //│ |#let| |#rec| |p| |#=| |C|(|p|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|#fun| |main|(|cc|)| |#=| |cc|(|p|)|↵|main|(|c|)|
 //│ Parsed: {let rec p = C (p,); fun c = x, => if x is ‹(C (a,)) then c (a,)›; fun main = cc, => cc (p,); main (c,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:1 = [C p:1]
-//│ def c:2 = fun x:4 -> case x:4 of {C a:5 -> (c:2 a:5)}
-//│ def main:3 = fun cc:6 -> (cc:6 p:1)
-//│ (main:3 c:2)
+//│ def p:1 = 2: [C 1: p:1]
+//│ def c:2 = 8: fun x:4 -> 7: case 3: x:4 of {C a:5 -> 6: (4: c:2 5: a:5)}
+//│ def main:3 = 12: fun cc:6 -> 11: (9: cc:6 10: p:1)
+//│ 15: (13: main:3 14: c:2)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -710,10 +710,10 @@ main(p)
 //│ |#let| |#rec| |p| |#=| |C|(|p|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|#fun| |main|(|pp|)| |#=| |#if| |pp| |is|→|C|(|b|)| |#then| |#if| |b| |is|→|C|(|d|)| |#then| |c|(|d|)|←|←|↵|main|(|p|)|
 //│ Parsed: {let rec p = C (p,); fun c = x, => if x is ‹(C (a,)) then c (a,)›; fun main = pp, => if pp is ‹(C (b,)) then if b is ‹(C (d,)) then c (d,)››; main (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:1 = [C p:1]
-//│ def c:2 = fun x:4 -> case x:4 of {C a:5 -> (c:2 a:5)}
-//│ def main:3 = fun pp:6 -> case pp:6 of {C b:7 -> case b:7 of {C d:8 -> (c:2 d:8)}}
-//│ (main:3 p:1)
+//│ def p:1 = 2: [C 1: p:1]
+//│ def c:2 = 8: fun x:4 -> 7: case 3: x:4 of {C a:5 -> 6: (4: c:2 5: a:5)}
+//│ def main:3 = 16: fun pp:6 -> 15: case 9: pp:6 of {C b:7 -> 14: case 10: b:7 of {C d:8 -> 13: (11: c:2 12: d:8)}}
+//│ 19: (17: main:3 18: p:1)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -750,10 +750,10 @@ main(c, p)
 //│ |#let| |#rec| |p| |#=| |C|(|p|)|↵|#let| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|#fun| |main|(|cc|,| |pp|)| |#=| |cc|(|pp|)|↵|main|(|c|,| |p|)|
 //│ Parsed: {let rec p = C (p,); let c = x, => if x is ‹(C (a,)) then c (a,)›; fun main = cc, pp, => cc (pp,); main (c, p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:1 = [C p:1]
-//│ def c:2 = fun x:4 -> case x:4 of {C a:5 -> (c:2 a:5)}
-//│ def main:3 = fun cc:6 -> fun pp:7 -> (cc:6 pp:7)
-//│ ((main:3 c:2) p:1)
+//│ def p:1 = 2: [C 1: p:1]
+//│ def c:2 = 8: fun x:4 -> 7: case 3: x:4 of {C a:5 -> 6: (4: c:2 5: a:5)}
+//│ def main:3 = 13: fun cc:6 -> 12: fun pp:7 -> 11: (9: cc:6 10: pp:7)
+//│ 18: (16: (14: main:3 15: c:2) 17: p:1)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -785,13 +785,13 @@ a(p)
 //│ |#fun| |cons|(|y|)| |#=| |#if| |y| |is|→|C|(|aa|)| |#then| |cons|(|aa|)|←|↵|#fun| |a|(|x|)| |#=| |b|(|x|)|↵|#fun| |b|(|x|)| |#=| |c|(|x|)|↵|#fun| |c|(|x|)| |#=| |d|(|cons|,| |x|)|↵|#fun| |d|(|cc|,| |x|)| |#=| |cc|(|x|)|↵|#let| |p| |#=| |C|(|p|)|↵|a|(|p|)|
 //│ Parsed: {fun cons = y, => if y is ‹(C (aa,)) then cons (aa,)›; fun a = x, => b (x,); fun b = x, => c (x,); fun c = x, => d (cons, x,); fun d = cc, x, => cc (x,); let p = C (p,); a (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def cons:1 = fun y:7 -> case y:7 of {C aa:8 -> (cons:1 aa:8)}
-//│ def a:2 = fun x:9 -> (b:3 x:9)
-//│ def b:3 = fun x:10 -> (c:4 x:10)
-//│ def c:4 = fun x:11 -> ((d:5 cons:1) x:11)
-//│ def d:5 = fun cc:12 -> fun x:13 -> (cc:12 x:13)
-//│ def p:6 = [C p:6]
-//│ (a:2 p:6)
+//│ def cons:1 = 6: fun y:7 -> 5: case 1: y:7 of {C aa:8 -> 4: (2: cons:1 3: aa:8)}
+//│ def a:2 = 10: fun x:9 -> 9: (7: b:3 8: x:9)
+//│ def b:3 = 14: fun x:10 -> 13: (11: c:4 12: x:10)
+//│ def c:4 = 20: fun x:11 -> 19: (17: (15: d:5 16: cons:1) 18: x:11)
+//│ def d:5 = 25: fun cc:12 -> 24: fun x:13 -> 23: (21: cc:12 22: x:13)
+//│ def p:6 = 27: [C 26: p:6]
+//│ 30: (28: a:2 29: p:6)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -828,9 +828,9 @@ c(p)
 //│ |#let| |p| |#=| |C|(|N|)|↵|#fun| |c|(|x|)| |#=| |#if| |C|(|x|)| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|c|(|p|)|
 //│ Parsed: {let p = C (N,); fun c = x, => if C (x,) is ‹(C (a,)) then c (a,)›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:1 = [C [N]]
-//│ def c:2 = fun x:3 -> case [C x:3] of {C a:4 -> (c:2 a:4)}
-//│ (c:2 p:1)
+//│ def p:1 = 2: [C 1: [N]]
+//│ def c:2 = 9: fun x:3 -> 8: case 4: [C 3: x:3] of {C a:4 -> 7: (5: c:2 6: a:4)}
+//│ 12: (10: c:2 11: p:1)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -862,12 +862,12 @@ c2(main)
 //│ |#let| |#rec| |p| |#=| |C|(|p|)|↵|#let| |q| |#=| |p|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |a|←|↵|#fun| |c2|(|z|)| |#=| |#if| |z| |is|→|C|(|b|)| |#then| |c2|(|b|)|←|↵|#let| |main| |#=| |c|(|q|)|↵|c2|(|main|)|
 //│ Parsed: {let rec p = C (p,); let q = p; fun c = x, => if x is ‹(C (a,)) then a›; fun c2 = z, => if z is ‹(C (b,)) then c2 (b,)›; let main = c (q,); c2 (main,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:1 = [C p:1]
-//│ def q:2 = p:1
-//│ def c:3 = fun x:6 -> case x:6 of {C a:7 -> a:7}
-//│ def c2:4 = fun z:8 -> case z:8 of {C b:9 -> (c2:4 b:9)}
-//│ def main:5 = (c:3 q:2)
-//│ (c2:4 main:5)
+//│ def p:1 = 2: [C 1: p:1]
+//│ def q:2 = 3: p:1
+//│ def c:3 = 7: fun x:6 -> 6: case 4: x:6 of {C a:7 -> 5: a:7}
+//│ def c2:4 = 13: fun z:8 -> 12: case 8: z:8 of {C b:9 -> 11: (9: c2:4 10: b:9)}
+//│ def main:5 = 16: (14: c:3 15: q:2)
+//│ 19: (17: c2:4 18: main:5)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -909,13 +909,13 @@ c2(id(main))
 //│ |#let| |#rec| |p| |#=| |C|(|p|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |a|←|↵|#fun| |c1|(|xx|)| |#=| |#if| |xx| |is|→|C|(|aa|)| |#then| |aa|←|↵|#fun| |c2|(|z|)| |#=| |#if| |z| |is|→|C|(|b|)| |#then| |c2|(|b|)|←|↵|#let| |main| |#=| |c|(|p|)|↵|#fun| |id|(|y|)| |#=| |c1|(|C|(|y|)|)|↵|c2|(|id|(|main|)|)|
 //│ Parsed: {let rec p = C (p,); fun c = x, => if x is ‹(C (a,)) then a›; fun c1 = xx, => if xx is ‹(C (aa,)) then aa›; fun c2 = z, => if z is ‹(C (b,)) then c2 (b,)›; let main = c (p,); fun id = y, => c1 (C (y,),); c2 (id (main,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:1 = [C p:1]
-//│ def c:2 = fun x:7 -> case x:7 of {C a:8 -> a:8}
-//│ def c1:3 = fun xx:9 -> case xx:9 of {C aa:10 -> aa:10}
-//│ def c2:4 = fun z:11 -> case z:11 of {C b:12 -> (c2:4 b:12)}
-//│ def main:5 = (c:2 p:1)
-//│ def id:6 = fun y:13 -> (c1:3 [C y:13])
-//│ (c2:4 (id:6 main:5))
+//│ def p:1 = 2: [C 1: p:1]
+//│ def c:2 = 6: fun x:7 -> 5: case 3: x:7 of {C a:8 -> 4: a:8}
+//│ def c1:3 = 10: fun xx:9 -> 9: case 7: xx:9 of {C aa:10 -> 8: aa:10}
+//│ def c2:4 = 16: fun z:11 -> 15: case 11: z:11 of {C b:12 -> 14: (12: c2:4 13: b:12)}
+//│ def main:5 = 19: (17: c:2 18: p:1)
+//│ def id:6 = 24: fun y:13 -> 23: (20: c1:3 22: [C 21: y:13])
+//│ 29: (25: c2:4 28: (26: id:6 27: main:5))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------

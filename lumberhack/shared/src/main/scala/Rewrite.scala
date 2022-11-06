@@ -102,7 +102,7 @@ object Rewrite {
 
     val newDefs = MutMap.empty[Path, L[ProgDef]]
     val defIds = MutMap.empty[Path, Ident]
-    def writeInstance(di: Path) = 
+    def writeInstance(di: Path) = {
       defIds.get(di) match {
         case Some(id) => id
         case None => {
@@ -126,26 +126,65 @@ object Rewrite {
           id
         }
       }
-      
-    def rewriteExpr(e: Expr)(using d: Deforest, p: Path, root: Option[Ident]): Expr = {e match
+    }
+
+    def findMatchWithoutPrefix(longest: Path)(using map: Map[(Path, ExprId), (Path, Match | Ctor)], uid: Uid[Expr]): Ls[Path] = {
+      val rest = longest match {
+        case Nil => Nil
+        case _ :: t => findMatchWithoutPrefix(t)
+      }
+      if map.isDefinedAt(longest -> uid) then longest :: rest else rest
+    }
+
+    
+    def rewriteExpr(e: Expr)(using d: Deforest, p: Path, root: Opt[Ident]): Expr = e match {
       case r@Ref(id) => if id.isDef then {
         val newPath = p :+ (r -> r.uid)
+        // TODO: exlude the root in the prefix of the newPath when searching for ?????
         Ref(writeInstance(defMap.getOrElse(newPath, newPath)))
       } else { r }
       // case Ctor(name, args) => Ctor(name, args.map(rewriteExpr))
       // case Match(scrut, arms) => Match(rewriteExpr(scrut), arms.map{case (v, args, body) => (v, args, rewriteExpr(body))})
-      case Ctor(name, args) => csToMs.get(p -> e.uid) match
-        case S(matchExpr) => 
-          val arm = matchExpr._2.arms.find(a => a._1 === name).get
-          (arm._2 zip args).foldRight(rewriteExpr(arm._3)(using d, matchExpr._1, None)){(t_i, acc) => 
-            LetIn(t_i._1, rewriteExpr(t_i._2), acc)
-          }
-        case N => Ctor(name, args.map(rewriteExpr))
-
-      case Match(scrut, arms) => msToCs.get(p -> e.uid) match
-        case S(ctor) => rewriteExpr(scrut)
-        case N => Match(rewriteExpr(scrut), arms.map{case (v, args, body) => (v, args, rewriteExpr(body))})
       
+      // NOTE: every prefix of the path when getting the matching constructor
+      // TODO: after that the recursive search path should also be changed to exclude that root
+      case Ctor(name, args) => {
+        val suffix = findMatchWithoutPrefix(p)(using csToMs, e.uid)
+        val root = p.slice(0, p.length - suffix.length)
+        suffix match {
+          case Nil => Ctor(name, args.map(rewriteExpr))
+          case longest :: t => {
+            if t.length > 0 then println(s"************MORE THAN ONE MATCH: ${t}************")
+            val matchExpr = csToMs(longest -> e.uid)
+            val arm = matchExpr._2.arms.find(a => a._1 === name).get
+            (arm._2 zip args).foldRight(rewriteExpr(arm._3)(using d, matchExpr._1, N)){(t_i, acc) => 
+              LetIn(t_i._1, rewriteExpr(t_i._2), acc)
+            }
+          }
+        }
+        // csToMs.get(p -> e.uid) match
+        //   case (_, S(matchExpr)) => 
+        //     val arm = matchExpr._2.arms.find(a => a._1 === name).get
+        //     (arm._2 zip args).foldRight(rewriteExpr(arm._3)(using d, matchExpr._1, None)){(t_i, acc) => 
+        //       LetIn(t_i._1, rewriteExpr(t_i._2), acc)
+        //     }
+        //   case N => Ctor(name, args.map(rewriteExpr))
+      }
+
+      // this search path should also be using the suffix thing
+      case Match(scrut, arms) => {
+        val suffix = findMatchWithoutPrefix(p)(using msToCs, e.uid)
+        suffix match {
+          case Nil => Match(rewriteExpr(scrut), arms.map{case (v, args, body) => (v, args, rewriteExpr(body))})
+          case longest :: t => {
+            if t.length > 0 then println(s"************MORE THAN ONE MATCH: ${t}************")
+            rewriteExpr(scrut)
+          }
+        }
+        // msToCs.get(suffix -> e.uid) match
+        //   case S(_) => rewriteExpr(scrut)
+        //   case N => Match(rewriteExpr(scrut), arms.map{case (v, args, body) => (v, args, rewriteExpr(body))})
+      }
       case Const(lit) => e
       case Call(lhs, rhs) => Call(rewriteExpr(lhs), rewriteExpr(rhs))
       case LetIn(id, rhs, body) => LetIn(id, rewriteExpr(rhs), rewriteExpr(body))

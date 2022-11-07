@@ -116,7 +116,7 @@ c(t)
 
 
 
-// path with same 'root' problem
+// the `p · p` is never touched (checked) by the typer, so no path leads to it, and no recusive map from it
 let p = C(p)
 fun c(x) = if C(x) is
     C(a) then c(a)
@@ -156,6 +156,49 @@ c(p)
 //│ 	let a:4 = x:3 in (c'2'5:6 a:4)
 //│ (c'2'10:5 p'1'11:7)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
+
+// the `p · p` is never touched (checked) by the typer, so no path leads to it, and no recusive map from it
+let rec p = C(p)
+fun c(x) = if x is
+    C(a) then a
+fun main(y) = c(p)
+main(0)
+//│ |#let| |#rec| |p| |#=| |C|(|p|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |a|←|↵|#fun| |main|(|y|)| |#=| |c|(|p|)|↵|main|(|0|)|
+//│ Parsed: {let rec p = C (p,); fun c = x, => if x is ‹(C (a,)) then a›; fun main = y, => c (p,); main (0,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def p:1 = 2: [C 1: p:1]
+//│ def c:2 = 6: fun x:4 -> 5: case 3: x:4 of {C a:5 -> 4: a:5}
+//│ def main:3 = 10: fun y:6 -> 9: (7: c:2 8: p:1)
+//│ 13: (11: main:3 12: 0)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ------- defInstance -------
+//│ p:1^8 ⋅ ɛ ==> c:2^7 ⋅ ɛ:
+//│ 	2: [C p:1]  <-->  5: case x:4 of {C a:5 -> a:5}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def p:1 = [C p:1]
+//│ def c:2 = fun x:4 -> case x:4 of {C a:5 -> a:5}
+//│ def main:3 = fun y:6 -> (c:2 p:1)
+//│ def main'3'11_c'2'7:8 = fun x:4 -> x:4
+//│ def main'3'11_p'1'8_p'1'1_p'1'1:11 = [C main'3'11_p'1'8_p'1'1_p'1'1_p'1'1:12]
+//│ def main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:16 = [C main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:17]
+//│ def main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1:13 = [C main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:14]
+//│ def main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:20 = "RECURSE_TOO_LONG"
+//│ def main'3'11_p'1'8_p'1'1:10 = [C main'3'11_p'1'8_p'1'1_p'1'1:11]
+//│ def main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:18 = [C main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:19]
+//│ def main'3'11_p'1'8:9 = 
+//│ 	let a:5 = main'3'11_p'1'8_p'1'1:10 in a:5
+//│ def main'3'11:7 = fun y:6 -> (main'3'11_c'2'7:8 main'3'11_p'1'8:9)
+//│ def main'3'11_p'1'8_p'1'1_p'1'1_p'1'1:12 = [C main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1:13]
+//│ def main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:15 = [C main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:16]
+//│ def main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:17 = [C main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:18]
+//│ def main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:19 = [C main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:20]
+//│ def main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:14 = [C main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:15]
+//│ (main'3'11:7 0)
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+
 
 
 // NOTE: push in problem
@@ -412,47 +455,4 @@ id(c1)(id(p1))
 //│ !!!!!!ERROR!!!!!!
 //│ type error
 //│ !!!!!!ERROR!!!!!!
-
-
-// no path strats from `main`
-let rec p = C(p)
-fun c(x) = if x is
-    C(a) then a
-fun main(y) = c(p)
-main(0)
-//│ |#let| |#rec| |p| |#=| |C|(|p|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |a|←|↵|#fun| |main|(|y|)| |#=| |c|(|p|)|↵|main|(|0|)|
-//│ Parsed: {let rec p = C (p,); fun c = x, => if x is ‹(C (a,)) then a›; fun main = y, => c (p,); main (0,)}
-//│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:1 = 2: [C 1: p:1]
-//│ def c:2 = 6: fun x:4 -> 5: case 3: x:4 of {C a:5 -> 4: a:5}
-//│ def main:3 = 10: fun y:6 -> 9: (7: c:2 8: p:1)
-//│ 13: (11: main:3 12: 0)
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ ------- recursive -------
-//│ ------- defInstance -------
-//│ p:1^8 ⋅ ɛ ==> c:2^7 ⋅ ɛ:
-//│ 	2: [C p:1]  <-->  5: case x:4 of {C a:5 -> a:5}
-//│ 
-//│ >>>>>>>>>> Rewritten >>>>>>>>>>
-//│ def p:1 = [C p:1]
-//│ def c:2 = fun x:4 -> case x:4 of {C a:5 -> a:5}
-//│ def main:3 = fun y:6 -> (c:2 p:1)
-//│ def main'3'11_c'2'7:8 = fun x:4 -> x:4
-//│ def main'3'11_p'1'8_p'1'1_p'1'1:11 = [C main'3'11_p'1'8_p'1'1_p'1'1_p'1'1:12]
-//│ def main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:16 = [C main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:17]
-//│ def main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1:13 = [C main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:14]
-//│ def main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:20 = "RECURSE_TOO_LONG"
-//│ def main'3'11_p'1'8_p'1'1:10 = [C main'3'11_p'1'8_p'1'1_p'1'1:11]
-//│ def main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:18 = [C main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:19]
-//│ def main'3'11_p'1'8:9 = 
-//│ 	let a:5 = main'3'11_p'1'8_p'1'1:10 in a:5
-//│ def main'3'11:7 = fun y:6 -> (main'3'11_c'2'7:8 main'3'11_p'1'8:9)
-//│ def main'3'11_p'1'8_p'1'1_p'1'1_p'1'1:12 = [C main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1:13]
-//│ def main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:15 = [C main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:16]
-//│ def main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:17 = [C main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:18]
-//│ def main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:19 = [C main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:20]
-//│ def main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:14 = [C main'3'11_p'1'8_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:15]
-//│ (main'3'11:7 0)
-//│ <<<<<<<<<< Rewritten <<<<<<<<<<
 

@@ -821,7 +821,6 @@ a(p)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
 
-// NOTE: the name would be better to be the complete path
 let p = C(N)
 fun c(x) = if C(x) is
     C(a) then c(a)
@@ -844,15 +843,14 @@ c(p)
 //│ def p:1 = [C [N]]
 //│ def c:2 = fun x:3 -> case [C x:3] of {C a:4 -> (c:2 a:4)}
 //│ def p'1'11:7 = [C [N]]
-//│ def c'2'5:6 = fun x:3 -> 
-//│ 	let a:4 = x:3 in (c'2'5:6 a:4)
+//│ def c'2'10_c'2'5:6 = fun x:3 -> 
+//│ 	let a:4 = x:3 in (c'2'10_c'2'5:6 a:4)
 //│ def c'2'10:5 = fun x:3 -> 
-//│ 	let a:4 = x:3 in (c'2'5:6 a:4)
+//│ 	let a:4 = x:3 in (c'2'10_c'2'5:6 a:4)
 //│ (c'2'10:5 p'1'11:7)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
 
-// NOTE: the name would be better to be the complete path
 let rec p = C(p)
 let q = p
 fun c(x) = if x is
@@ -898,7 +896,6 @@ c2(main)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
 
-// NOTE: the name would be better to be the complete path
 let rec p = C(p)
 fun c(x) = if x is
     C(a) then a

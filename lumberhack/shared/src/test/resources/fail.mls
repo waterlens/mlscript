@@ -456,3 +456,57 @@ id(c1)(id(p1))
 //│ type error
 //│ !!!!!!ERROR!!!!!!
 
+
+fun map(ls) = if ls is
+    C(hh, tt) then C(
+        (if hh is
+            A then B
+            AA then BB
+        ),
+        map(tt)
+    )
+    N then N
+fun rev(a, lss) = if lss is
+    C(h, t) then rev(C(h, a), t)
+    N then a
+// map(rev(N, C(A, C(AA, N))))
+map(rev(N, primitive))
+//│ |#fun| |map|(|ls|)| |#=| |#if| |ls| |is|→|C|(|hh|,| |tt|)| |#then| |C|(|→|(|#if| |hh| |is|→|A| |#then| |B|↵|AA| |#then| |BB|←|↵|)|,|↵|map|(|tt|)|←|↵|)|↵|N| |#then| |N|←|↵|#fun| |rev|(|a|,| |lss|)| |#=| |#if| |lss| |is|→|C|(|h|,| |t|)| |#then| |rev|(|C|(|h|,| |a|)|,| |t|)|↵|N| |#then| |a|←|↵|/* map(rev(N, C(A, C(AA, N))))*/|↵|map|(|rev|(|N|,| |primitive|)|)|
+//│ Parsed: {fun map = ls, => if ls is ‹(C (hh, tt,)) then C ('(' if hh is ‹(A) then B; (AA) then BB›, ')', map (tt,),); (N) then N›; fun rev = a, lss, => if lss is ‹(C (h, t,)) then rev (C (h, a,), t,); (N) then a›; map (rev (N, primitive,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def map:1 = 12: fun ls:3 -> 11: case 1: ls:3 of {C hh:4 tt:5 -> 9: [C 5: case 2: hh:4 of {A -> 3: [B] | AA -> 4: [BB]} 8: (6: map:1 7: tt:5)] | N -> 10: [N]}
+//│ def rev:2 = 24: fun a:6 -> 23: fun lss:7 -> 22: case 13: lss:7 of {C h:8 t:9 -> 20: (18: (14: rev:2 17: [C 15: h:8 16: a:6]) 19: t:9) | N -> 21: a:6}
+//│ 31: (25: map:1 30: (28: (26: rev:2 27: [N]) 29: primitive:0))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ((rev:2^14 ⋅ ɛ, N()), (rev:2^26 ⋅ ɛ, 14'22_matchres)) :::: ((ɛ, N()), (rev:2^26 ⋅ ɛ, 14'22_matchres))
+//│ ((ɛ, N()), (rev:2^14 ⋅ map:1^25 ⋅ map:1^6 ⋅ ɛ, 2'ls)) :::: ((ɛ, N()), (map:1^25 ⋅ ɛ, 2'ls))
+//│ ((rev:2^26 ⋅ ɛ, C((ɛ, 10'h), (ɛ, 8'a))), (rev:2^14 ⋅ rev:2^14 ⋅ map:1^25 ⋅ map:1^6 ⋅ ɛ, 2'ls)) :::: ((rev:2^26 ⋅ ɛ, C((ɛ, 10'h), (ɛ, 8'a))), (rev:2^14 ⋅ map:1^25 ⋅ ɛ, 2'ls))
+//│ ((ɛ, C((ɛ, 10'h), (ɛ, 8'a))), (ɛ, 14'22_matchres)) :::: ((ɛ, C((ɛ, 10'h), (ɛ, 8'a))), (rev:2^14 ⋅ ɛ, 14'22_matchres))
+//│ ------- defInstance -------
+//│ ɛ ==> map:1^25 ⋅ ɛ:
+//│ 	27: [N]  <-->  11: case ls:3 of {C hh:4 tt:5 -> [C case hh:4 of {A -> [B] | AA -> [BB]} (map:1 tt:5)] | N -> [N]}
+//│ rev:2^26 ⋅ ɛ ==> rev:2^14 ⋅ map:1^25 ⋅ ɛ:
+//│ 	17: [C h:8 a:6]  <-->  11: case ls:3 of {C hh:4 tt:5 -> [C case hh:4 of {A -> [B] | AA -> [BB]} (map:1 tt:5)] | N -> [N]}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def map:1 = fun ls:3 -> case ls:3 of {C hh:4 tt:5 -> [C case hh:4 of {A -> [B] | AA -> [BB]} (map:1 tt:5)] | N -> [N]}
+//│ def rev:2 = fun a:6 -> fun lss:7 -> case lss:7 of {C h:8 t:9 -> ((rev:2 [C h:8 a:6]) t:9) | N -> a:6}
+//│ def rev'2'26:11 = fun a:6 -> fun lss:7 -> case lss:7 of {C h:8 t:9 -> ((rev'2'26_rev'2'14:12 
+//│ 	let hh:4 = h:8 in 
+//│ 	let tt:5 = a:6 in [C case hh:4 of {A -> [B] | AA -> [BB]} (map'1'25:10 tt:5)]) t:9) | N -> a:6}
+//│ def rev'2'26_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14:20 = fun a:6 -> fun lss:7 -> case lss:7 of {C h:8 t:9 -> ((rev'2'26_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14:21 [C h:8 a:6]) t:9) | N -> a:6}
+//│ def rev'2'26_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14:21 = fun a:6 -> fun lss:7 -> case lss:7 of {C h:8 t:9 -> ((rev'2'26_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14:22 [C h:8 a:6]) t:9) | N -> a:6}
+//│ def rev'2'26_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14:18 = fun a:6 -> fun lss:7 -> case lss:7 of {C h:8 t:9 -> ((rev'2'26_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14:19 [C h:8 a:6]) t:9) | N -> a:6}
+//│ def rev'2'26_rev'2'14_rev'2'14_rev'2'14_rev'2'14:15 = fun a:6 -> fun lss:7 -> case lss:7 of {C h:8 t:9 -> ((rev'2'26_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14:16 [C h:8 a:6]) t:9) | N -> a:6}
+//│ def rev'2'26_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14:19 = fun a:6 -> fun lss:7 -> case lss:7 of {C h:8 t:9 -> ((rev'2'26_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14:20 [C h:8 a:6]) t:9) | N -> a:6}
+//│ def map'1'25:10 = fun ls:3 -> ls:3
+//│ def rev'2'26_rev'2'14_rev'2'14_rev'2'14:14 = fun a:6 -> fun lss:7 -> case lss:7 of {C h:8 t:9 -> ((rev'2'26_rev'2'14_rev'2'14_rev'2'14_rev'2'14:15 [C h:8 a:6]) t:9) | N -> a:6}
+//│ def rev'2'26_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14:16 = fun a:6 -> fun lss:7 -> case lss:7 of {C h:8 t:9 -> ((rev'2'26_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14:17 [C h:8 a:6]) t:9) | N -> a:6}
+//│ def rev'2'26_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14:22 = "RECURSE_TOO_LONG"
+//│ def rev'2'26_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14:17 = fun a:6 -> fun lss:7 -> case lss:7 of {C h:8 t:9 -> ((rev'2'26_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14_rev'2'14:18 [C h:8 a:6]) t:9) | N -> a:6}
+//│ def rev'2'26_rev'2'14:12 = fun a:6 -> fun lss:7 -> case lss:7 of {C h:8 t:9 -> ((rev'2'26_rev'2'14_rev'2'14:13 [C h:8 a:6]) t:9) | N -> a:6}
+//│ def rev'2'26_rev'2'14_rev'2'14:13 = fun a:6 -> fun lss:7 -> case lss:7 of {C h:8 t:9 -> ((rev'2'26_rev'2'14_rev'2'14_rev'2'14:14 [C h:8 a:6]) t:9) | N -> a:6}
+//│ (map'1'25:10 ((rev'2'26:11 [N]) primitive:0))
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<

@@ -46,7 +46,11 @@ class DiffTestLumberhack extends DiffTests {
       outputBuilder ++= newProgram.pp
       outputBuilder ++= "\n<<<<<<<<<< Rewritten <<<<<<<<<<\n"
     } catch {
-      case e: Exception => if allowErr then outputBuilder ++= s"!!!!!!ERROR!!!!!!\n${e.getMessage()}\n!!!!!!ERROR!!!!!!" else throw e
+      case e => if allowErr then {
+        outputBuilder ++= "!!!!!!ERROR!!!!!!\n"
+        outputBuilder ++= s"${e.toString()}\n${e.getStackTrace().take(10).map(_.toString()).mkString("\n")}\n"
+        outputBuilder ++= "!!!!!!ERROR!!!!!!"
+      } else { throw e }
     }
     outputBuilder.toString().linesIterator.toList
   }

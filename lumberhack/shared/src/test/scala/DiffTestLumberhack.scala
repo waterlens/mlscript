@@ -9,7 +9,7 @@ import scala.collection.mutable.StringBuilder
 
 class DiffTestLumberhack extends DiffTests {
   import DiffTestLumberhack.*
-  override def postProcess(mode: ModeType, basePath: List[Str], testName: Str, unit: TypingUnit): List[Str] = {
+  override def postProcess(mode: ModeType, basePath: List[Str], testName: Str, unit: TypingUnit, output: Str => Unit): Unit = {
     val outputBuilder = StringBuilder()
     // outputBuilder ++= "Parsed AST:\n"
     // outputBuilder ++= pprint2(Pgrm(unit.entities).desugared, showFieldNames = true, width = 150).plainText
@@ -52,7 +52,7 @@ class DiffTestLumberhack extends DiffTests {
         outputBuilder ++= "!!!!!!ERROR!!!!!!"
       } else { throw e }
     }
-    outputBuilder.toString().linesIterator.toList
+    outputBuilder.toString().linesIterator.foreach(output)
   }
   
   override protected lazy val files = allFiles.filter { file =>

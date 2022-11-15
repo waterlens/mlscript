@@ -158,29 +158,29 @@ class Deforest(debug: Boolean) {
       case (p, c) => constraints ::= (prod, cons)
   }
   
+  type Cache = Map[Cnstr, Cnstr]
+  
   val defInstances = mutable.Map.empty[Path -> Path, mutable.Set[ExprId -> ExprId]]
   val cnstrsList = mutable.ArrayBuffer.empty[Cnstr]
   val recursiveConstr = mutable.Map.empty[Cnstr, Cnstr] -> mutable.Map.empty[Path, Path]
   def resolveConstraints: Unit = {
-    val cache: mutable.Set[Cnstr] = mutable.Set.empty
     
-    def handle(c: Cnstr): Unit = trace(s"handle [${pprint2.apply(c._1).toString} : ${pprint2.apply(c._2).toString}]") {
+    def handle(c: Cnstr)(using cache: Cache): Unit = trace(s"handle [${pprint2.apply(c._1).toString} : ${pprint2.apply(c._2).toString}]") {
       val (prod, cons) = c
       
-      (prod.s, cons.s) match {
-        case (_: ProdVar, _) | (_, _: ConsVar) => cache.find(_.equals(c)) match {
-          case S(inCache) => {
+      (prod.s, cons.s) match
+        case (_: ProdVar, _) | (_, _: ConsVar) => cache.get(c) match
+          case S(inCache) =>
             log(s">> done [${pprint2.apply(c._1).toString} : ${pprint2.apply(c._2).toString}]")
             log(s">> with [${pprint2.apply(inCache._1).toString} : ${pprint2.apply(inCache._2).toString}]")
             recursiveConstr._1 += (c -> inCache)
             recursiveConstr._2 += (c._1.path -> inCache._1.path)
             recursiveConstr._2 += (c._2.path -> inCache._2.path)
             return
-          }
-          case N => cache += c
-        }
+          case N => //cache += c
         case _ => ()
-      }
+
+      given Cache = cache + (c -> c)
 
       cnstrsList += c
       if prod.s.euid =/= noExprId && cons.s.euid =/= noExprId then
@@ -230,6 +230,8 @@ class Deforest(debug: Boolean) {
         }
         case _ => error("type error")
     }()
+    
+    given Cache = Map.empty
     
     constraints foreach handle
   }

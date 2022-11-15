@@ -52,7 +52,7 @@ class DiffTests
   
   
   /**  Hook for dependent projects, like the monomorphizer. */
-  def postProcess(mode: ModeType, basePath: Ls[Str], testName: Str, unit: TypingUnit): Ls[Str] = Nil
+  def postProcess(mode: ModeType, basePath: Ls[Str], testName: Str, unit: TypingUnit, output: Str => Unit): Unit = ()
   
   
   private val inParallel = isInstanceOf[ParallelTestExecution]
@@ -361,7 +361,7 @@ class DiffTests
             if (parseOnly)
               output("Parsed: " + res.show)
             stdout = mode.stdout
-            postProcess(mode, basePath, testName, res).foreach(output)
+            postProcess(mode, basePath, testName, res, output)
             
             if (parseOnly)
               Success(Pgrm(Nil), 0)

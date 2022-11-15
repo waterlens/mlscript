@@ -21,33 +21,47 @@ c(t)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ ((t:1^20 ⋅ ɛ, T((ɛ, N()), (ɛ, N()))), (c:2^19 ⋅ c:2^12 ⋅ ɛ, 2'x)) :::: ((t:1^20 ⋅ ɛ, T((ɛ, N()), (ɛ, N()))), (c:2^19 ⋅ c:2^9 ⋅ ɛ, 2'x))
-//│ ((t:1^20 ⋅ ɛ, N()), (c:2^19 ⋅ c:2^9 ⋅ c:2^12 ⋅ ɛ, 2'x)) :::: ((t:1^20 ⋅ ɛ, N()), (c:2^19 ⋅ c:2^9 ⋅ c:2^9 ⋅ ɛ, 2'x))
 //│ ------- defInstance -------
+//│ t:1^20 ⋅ ɛ ==> c:2^19 ⋅ c:2^12 ⋅ ɛ:
+//│ 	6: [T [N] [N]]  <-->  17: case x:3 of {T l:4 r:5 -> [T (c:2 l:4) (c:2 r:5)] | N -> [NN]}
+//│ t:1^20 ⋅ ɛ ==> c:2^19 ⋅ c:2^12 ⋅ c:2^12 ⋅ ɛ:
+//│ 	5: [N]  <-->  17: case x:3 of {T l:4 r:5 -> [T (c:2 l:4) (c:2 r:5)] | N -> [NN]}
 //│ t:1^20 ⋅ ɛ ==> c:2^19 ⋅ c:2^9 ⋅ ɛ:
 //│ 	3: [T [N] [N]]  <-->  17: case x:3 of {T l:4 r:5 -> [T (c:2 l:4) (c:2 r:5)] | N -> [NN]}
 //│ t:1^20 ⋅ ɛ ==> c:2^19 ⋅ ɛ:
 //│ 	7: [T [T [N] [N]] [T [N] [N]]]  <-->  17: case x:3 of {T l:4 r:5 -> [T (c:2 l:4) (c:2 r:5)] | N -> [NN]}
 //│ t:1^20 ⋅ ɛ ==> c:2^19 ⋅ c:2^9 ⋅ c:2^9 ⋅ ɛ:
 //│ 	1: [N]  <-->  17: case x:3 of {T l:4 r:5 -> [T (c:2 l:4) (c:2 r:5)] | N -> [NN]}
+//│ t:1^20 ⋅ ɛ ==> c:2^19 ⋅ c:2^12 ⋅ c:2^9 ⋅ ɛ:
+//│ 	4: [N]  <-->  17: case x:3 of {T l:4 r:5 -> [T (c:2 l:4) (c:2 r:5)] | N -> [NN]}
+//│ t:1^20 ⋅ ɛ ==> c:2^19 ⋅ c:2^9 ⋅ c:2^12 ⋅ ɛ:
+//│ 	2: [N]  <-->  17: case x:3 of {T l:4 r:5 -> [T (c:2 l:4) (c:2 r:5)] | N -> [NN]}
 //│ 
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
 //│ def t:1 = [T [T [N] [N]] [T [N] [N]]]
 //│ def c:2 = fun x:3 -> case x:3 of {T l:4 r:5 -> [T (c:2 l:4) (c:2 r:5)] | N -> [NN]}
-//│ def c'2'19_c'2'9_c'2'9:9 = fun x:3 -> x:3
+//│ def c'2'19_c'2'9_c'2'9:12 = fun x:3 -> x:3
+//│ def c'2'19_c'2'12:9 = fun x:3 -> x:3
+//│ def c'2'19_c'2'12_c'2'9:10 = fun x:3 -> x:3
 //│ def c'2'19_c'2'9:8 = fun x:3 -> x:3
 //│ def t'1'20:7 = 
 //│ 	let l:4 = 
 //│ 		let l:4 = [NN] in 
-//│ 		let r:5 = [N] in [T (c'2'19_c'2'9_c'2'9:9 l:4) (c'2'19_c'2'9_c'2'9:9 r:5)] 
+//│ 		let r:5 = [NN] in [T (c'2'19_c'2'9_c'2'9:12 l:4) (c'2'19_c'2'9_c'2'12:13 r:5)] 
 //│ 	in 
-//│ 	let r:5 = [T [N] [N]] in [T (c'2'19_c'2'9:8 l:4) (c'2'19_c'2'9:8 r:5)]
+//│ 	let r:5 = 
+//│ 		let l:4 = [NN] in 
+//│ 		let r:5 = [NN] in [T (c'2'19_c'2'12_c'2'9:10 l:4) (c'2'19_c'2'12_c'2'12:11 r:5)] 
+//│ 	in [T (c'2'19_c'2'9:8 l:4) (c'2'19_c'2'12:9 r:5)]
+//│ def c'2'19_c'2'12_c'2'12:11 = fun x:3 -> x:3
 //│ def c'2'19:6 = fun x:3 -> x:3
+//│ def c'2'19_c'2'9_c'2'12:13 = fun x:3 -> x:3
 //│ (c'2'19:6 t'1'20:7)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
 
 // NOTE: the `p` inside `C(p)` is untouched
+// TODO don't rewrite dead code
 let p = C(p)
 fun c(x) = if C(x) is
     C(a) then a
@@ -87,26 +101,116 @@ c(p)
 
 
 // NOTE: how to produce a finite rewrtten program?
+_LUMBERHACK_ERROR
 let p = Pair(A, B)
 fun c(x) = if x is
     Pair(a, b) then c(Pair(b, a))
 c(p)
-//│ |#let| |p| |#=| |Pair|(|A|,| |B|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|Pair|(|a|,| |b|)| |#then| |c|(|Pair|(|b|,| |a|)|)|←|↵|c|(|p|)|
-//│ Parsed: {let p = Pair (A, B,); fun c = x, => if x is ‹(Pair (a, b,)) then c (Pair (b, a,),)›; c (p,)}
-//│ /!!!\ Uncaught error: java.lang.StackOverflowError
-//│ 	at: mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:140)
-//│ 	at: mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:183)
-//│ 	at: mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:157)
-//│ 	at: mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:183)
-//│ 	at: mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:157)
-//│ 	at: mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:183)
-//│ 	at: mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:157)
-//│ 	at: mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:183)
-//│ 	at: mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:157)
-//│ 	at: mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:183)
+//│ |_LUMBERHACK_ERROR|↵|#let| |p| |#=| |Pair|(|A|,| |B|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|Pair|(|a|,| |b|)| |#then| |c|(|Pair|(|b|,| |a|)|)|←|↵|c|(|p|)|
+//│ Parsed: {_LUMBERHACK_ERROR; let p = Pair (A, B,); fun c = x, => if x is ‹(Pair (a, b,)) then c (Pair (b, a,),)›; c (p,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def p:1 = 3: [Pair 1: [A] 2: [B]]
+//│ def c:2 = 11: fun x:3 -> 10: case 4: x:3 of {Pair a:4 b:5 -> 9: (5: c:2 8: [Pair 6: b:5 7: a:4])}
+//│ 14: (12: c:2 13: p:1)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ((p:1^13 ⋅ ɛ, B()), (c:2^12 ⋅ c:2^5 ⋅ c:2^5 ⋅ ɛ, 4'b)) :::: ((p:1^13 ⋅ ɛ, B()), (c:2^12 ⋅ ɛ, 4'b))
+//│ ((p:1^13 ⋅ ɛ, A()), (c:2^12 ⋅ c:2^5 ⋅ c:2^5 ⋅ ɛ, 3'a)) :::: ((p:1^13 ⋅ ɛ, A()), (c:2^12 ⋅ ɛ, 3'a))
+//│ ------- defInstance -------
+//│ p:1^13 ⋅ ɛ ==> c:2^12 ⋅ ɛ:
+//│ 	3: [Pair [A] [B]]  <-->  10: case x:3 of {Pair a:4 b:5 -> (c:2 [Pair b:5 a:4])}
+//│ ɛ ==> c:2^5 ⋅ ɛ:
+//│ 	8: [Pair b:5 a:4]  <-->  10: case x:3 of {Pair a:4 b:5 -> (c:2 [Pair b:5 a:4])}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.StackOverflowError
+//│ scala.runtime.BoxesRunTime.equals2(BoxesRunTime.java:133)
+//│ scala.runtime.BoxesRunTime.equals(BoxesRunTime.java:119)
+//│ scala.collection.immutable.List.listEq$1(List.scala:603)
+//│ scala.collection.immutable.List.equals(List.scala:612)
+//│ scala.runtime.BoxesRunTime.equals2(BoxesRunTime.java:133)
+//│ scala.runtime.BoxesRunTime.equals(BoxesRunTime.java:119)
+//│ scala.collection.immutable.Map$Map2.getOrElse(Map.scala:305)
+//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:181)
+//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:185)
+//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:159)
+//│ !!!!!!ERROR!!!!!!
+
+// Just a more valid/reasonable version of the above
+// TODO support nested patterns as in `Pair(0)`
+// TODO get a recursive knot even when using `primitive` (we get it without)
+_LUMBERHACK_ERROR
+let p = Wrap(A)
+fun c(x) = if x is
+    N then 0
+    Wrap(a) then c(Wrap(primitive(a)))
+c(p)
+//│ |_LUMBERHACK_ERROR|↵|#let| |p| |#=| |Wrap|(|A|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|N| |#then| |0|↵|Wrap|(|a|)| |#then| |c|(|Wrap|(|primitive|(|a|)|)|)|←|↵|c|(|p|)|
+//│ Parsed: {_LUMBERHACK_ERROR; let p = Wrap (A,); fun c = x, => if x is ‹(N) then 0; (Wrap (a,)) then c (Wrap (primitive (a,),),)›; c (p,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def p:1 = 2: [Wrap 1: [A]]
+//│ def c:2 = 12: fun x:3 -> 11: case 3: x:3 of {N -> 4: 0 | Wrap a:4 -> 10: (5: c:2 9: [Wrap 8: (6: primitive:0 7: a:4)])}
+//│ 15: (13: c:2 14: p:1)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ------- defInstance -------
+//│ p:1^14 ⋅ ɛ ==> c:2^13 ⋅ ɛ:
+//│ 	2: [Wrap [A]]  <-->  11: case x:3 of {N -> 0 | Wrap a:4 -> (c:2 [Wrap (primitive:0 a:4)])}
+//│ ɛ ==> c:2^5 ⋅ ɛ:
+//│ 	9: [Wrap (primitive:0 a:4)]  <-->  11: case x:3 of {N -> 0 | Wrap a:4 -> (c:2 [Wrap (primitive:0 a:4)])}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.StackOverflowError
+//│ mlscript.lumberhack.Rewrite$.writeInstance$1(Rewrite.scala:108)
+//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:181)
+//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:185)
+//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:159)
+//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:185)
+//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:159)
+//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:185)
+//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:159)
+//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:185)
+//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:159)
+//│ !!!!!!ERROR!!!!!!
+
+fun c(x) = if primitive(x) is
+    True then 0
+    False then c(primitive(x))
+c(0)
+//│ |#fun| |c|(|x|)| |#=| |#if| |primitive|(|x|)| |is|→|True| |#then| |0|↵|False| |#then| |c|(|primitive|(|x|)|)|←|↵|c|(|0|)|
+//│ Parsed: {fun c = x, => if primitive (x,) is ‹(True) then 0; (False) then c (primitive (x,),)›; c (0,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def c:1 = 11: fun x:2 -> 10: case 3: (1: primitive:0 2: x:2) of {True -> 4: 0 | False -> 9: (5: c:1 8: (6: primitive:0 7: x:2))}
+//│ 14: (12: c:1 13: 0)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ------- defInstance -------
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def c:1 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c:1 (primitive:0 x:2))}
+//│ def c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:10 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:11 (primitive:0 x:2))}
+//│ def c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:11 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:12 (primitive:0 x:2))}
+//│ def c'1'12_c'1'5_c'1'5_c'1'5:6 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5_c'1'5_c'1'5:7 (primitive:0 x:2))}
+//│ def c'1'12_c'1'5:4 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5:5 (primitive:0 x:2))}
+//│ def c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:9 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:10 (primitive:0 x:2))}
+//│ def c'1'12_c'1'5_c'1'5_c'1'5_c'1'5:7 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:8 (primitive:0 x:2))}
+//│ def c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:12 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:13 (primitive:0 x:2))}
+//│ def c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:14 = "RECURSE_TOO_LONG"
+//│ def c'1'12_c'1'5_c'1'5:5 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5_c'1'5:6 (primitive:0 x:2))}
+//│ def c'1'12:3 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5:4 (primitive:0 x:2))}
+//│ def c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:13 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:14 (primitive:0 x:2))}
+//│ def c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:8 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:9 (primitive:0 x:2))}
+//│ (c'1'12:3 0)
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
 
 // NOTE: only the first element is handled
+_LUMBERHACK_ERROR
 fun map(f, ls) = if ls is
     C(h, t) then C(f(h), map(f, t))
     N then N
@@ -116,8 +220,8 @@ fun ff(x) = if x is
     KKKK then TTTT
 let l = C(K, C(KK, C(KKKK, N)))
 map(ff, l)
-//│ |#fun| |map|(|f|,| |ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#fun| |ff|(|x|)| |#=| |#if| |x| |is|→|K| |#then| |T|↵|KK| |#then| |TT|↵|KKKK| |#then| |TTTT|←|↵|#let| |l| |#=| |C|(|K|,| |C|(|KK|,| |C|(|KKKK|,| |N|)|)|)|↵|map|(|ff|,| |l|)|
-//│ Parsed: {fun map = f, ls, => if ls is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; fun ff = x, => if x is ‹(K) then T; (KK) then TT; (KKKK) then TTTT›; let l = C (K, C (KK, C (KKKK, N,),),); map (ff, l,)}
+//│ |_LUMBERHACK_ERROR|↵|#fun| |map|(|f|,| |ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#fun| |ff|(|x|)| |#=| |#if| |x| |is|→|K| |#then| |T|↵|KK| |#then| |TT|↵|KKKK| |#then| |TTTT|←|↵|#let| |l| |#=| |C|(|K|,| |C|(|KK|,| |C|(|KKKK|,| |N|)|)|)|↵|map|(|ff|,| |l|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun map = f, ls, => if ls is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; fun ff = x, => if x is ‹(K) then T; (KK) then TT; (KKKK) then TTTT›; let l = C (K, C (KK, C (KKKK, N,),),); map (ff, l,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ def map:1 = 14: fun f:4 -> 13: fun ls:5 -> 12: case 1: ls:5 of {C h:6 t:7 -> 10: [C 4: (2: f:4 3: h:6) 9: (7: (5: map:1 6: f:4) 8: t:7)] | N -> 11: [N]}
 //│ def ff:2 = 20: fun x:8 -> 19: case 15: x:8 of {K -> 16: [T] | KK -> 17: [TT] | KKKK -> 18: [TTTT]}
@@ -126,42 +230,47 @@ map(ff, l)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ ((ff:2^29 ⋅ ɛ, (ɛ, 11'x) => ((ɛ, 12'19_matchres))), (map:1^28 ⋅ map:1^5 ⋅ ɛ, 3'f)) :::: ((ff:2^29 ⋅ ɛ, (ɛ, 11'x) => ((ɛ, 12'19_matchres))), (map:1^28 ⋅ ɛ, 3'f))
+//│ ((ff:2^29 ⋅ ɛ, (ɛ, 11'x) => ((ɛ, 12'19_matchres))), (map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ ɛ, 3'f)) :::: ((ff:2^29 ⋅ ɛ, (ɛ, 11'x) => ((ɛ, 12'19_matchres))), (map:1^28 ⋅ map:1^5 ⋅ ɛ, 3'f))
 //│ ------- defInstance -------
 //│ l:3^31 ⋅ ɛ ==> ff:2^29 ⋅ ɛ:
 //│ 	21: [K]  <-->  19: case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ 	22: [KK]  <-->  19: case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
 //│ map:1^28 ⋅ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ ff:2^29 ⋅ ɛ:
 //│ 	23: [KKKK]  <-->  19: case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ map:1^28 ⋅ map:1^5 ⋅ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ ff:2^29 ⋅ ɛ:
+//│ 	21: [K]  <-->  19: case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
 //│ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ ɛ:
 //│ 	27: [C [K] [C [KK] [C [KKKK] [N]]]]  <-->  12: case ls:5 of {C h:6 t:7 -> [C (f:4 h:6) ((map:1 f:4) t:7)] | N -> [N]}
 //│ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ ɛ:
 //│ 	25: [C [KKKK] [N]]  <-->  12: case ls:5 of {C h:6 t:7 -> [C (f:4 h:6) ((map:1 f:4) t:7)] | N -> [N]}
 //│ map:1^28 ⋅ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ ff:2^29 ⋅ ɛ:
 //│ 	22: [KK]  <-->  19: case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ 	23: [KKKK]  <-->  19: case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
 //│ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ map:1^5 ⋅ ɛ:
 //│ 	24: [N]  <-->  12: case ls:5 of {C h:6 t:7 -> [C (f:4 h:6) ((map:1 f:4) t:7)] | N -> [N]}
 //│ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ ɛ:
 //│ 	26: [C [KK] [C [KKKK] [N]]]  <-->  12: case ls:5 of {C h:6 t:7 -> [C (f:4 h:6) ((map:1 f:4) t:7)] | N -> [N]}
 //│ 
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
-//│ def map:1 = fun f:4 -> fun ls:5 -> case ls:5 of {C h:6 t:7 -> [C (f:4 h:6) ((map:1 f:4) t:7)] | N -> [N]}
-//│ def ff:2 = fun x:8 -> case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
-//│ def l:3 = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ def ff'2'29:10 = fun x:8 -> x:8
-//│ def map'1'28_map'1'5_map'1'5:12 = fun f:4 -> fun ls:5 -> ls:5
-//│ def map'1'28_map'1'5_map'1'5_map'1'5:13 = fun f:4 -> fun ls:5 -> ls:5
-//│ def l'3'31:11 = 
-//│ 	let h:6 = [T] in 
-//│ 	let t:7 = 
-//│ 		let h:6 = [KK] in 
-//│ 		let t:7 = 
-//│ 			let h:6 = [KKKK] in 
-//│ 			let t:7 = [N] in [C (f:4 h:6) ((map'1'28_map'1'5_map'1'5_map'1'5:13 f:4) t:7)] 
-//│ 		in [C (f:4 h:6) ((map'1'28_map'1'5_map'1'5:12 f:4) t:7)] 
-//│ 	in [C (f:4 h:6) ((map'1'28:9 f:4) t:7)]
-//│ def map'1'28:9 = fun f:4 -> fun ls:5 -> ls:5
-//│ ((map'1'28:9 ff'2'29:10) l'3'31:11)
-//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: 23 19 (map:1^28 ⋅ l:3^31 ⋅ ɛ, 23) already has (
+//│   map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ ff:2^29 ⋅ ɛ,
+//│   Match(
+//│     scrut = x:8^15,
+//│     arms = (K, ɛ, Ctor(name = T, args = ɛ)) ⋅ (KK, ɛ, Ctor(name = TT, args = ɛ)) ⋅ (KKKK, ɛ, Ctor(name = TTTT, args = ɛ)) ⋅ ɛ
+//│   )
+//│ ) 
+//│ mlscript.utils.package$.lastWords(package.scala:183)
+//│ mlscript.lumberhack.Rewrite$.$anonfun$2$$anonfun$1$$anonfun$1(Rewrite.scala:82)
+//│ scala.collection.mutable.HashMap.updateWith(HashMap.scala:154)
+//│ mlscript.lumberhack.Rewrite$.$anonfun$2$$anonfun$1(Rewrite.scala:84)
+//│ scala.collection.immutable.Set$Set2.foreach(Set.scala:201)
+//│ mlscript.lumberhack.Rewrite$.$anonfun$2(Rewrite.scala:84)
+//│ scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
+//│ scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
+//│ scala.collection.immutable.HashMap.foreach(HashMap.scala:1076)
+//│ mlscript.lumberhack.Rewrite$.rewrite(Rewrite.scala:85)
+//│ !!!!!!ERROR!!!!!!
 
 
 // NOTE: some program not be able to write?
@@ -183,9 +292,8 @@ last(p)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ ((last:1^5 ⋅ ɛ, None()), (ɛ, 9'10_matchres)) :::: ((ɛ, None()), (ɛ, 9'10_matchres))
-//│ ((p:2^18 ⋅ ɛ, NoProd()), (last:1^17 ⋅ last:1^5 ⋅ ɛ, 3'h)) :::: ((p:2^18 ⋅ ɛ, NoProd()), (last:1^17 ⋅ ɛ, 3'h))
-//│ ((last:1^5 ⋅ ɛ, Some((ɛ, 3'h))), (ɛ, 8'8_matchres)) :::: ((ɛ, Some((ɛ, 3'h))), (ɛ, 8'8_matchres))
+//│ ((last:1^5 ⋅ last:1^5 ⋅ ɛ, Some((ɛ, 3'h))), (ɛ, 7'7_callres)) :::: ((last:1^5 ⋅ ɛ, Some((ɛ, 3'h))), (ɛ, 7'7_callres))
+//│ ((last:1^5 ⋅ last:1^5 ⋅ ɛ, None()), (ɛ, 7'7_callres)) :::: ((last:1^5 ⋅ ɛ, None()), (ɛ, 7'7_callres))
 //│ ------- defInstance -------
 //│ p:2^18 ⋅ ɛ ==> last:1^17 ⋅ ɛ:
 //│ 	15: [C 2 [N]]  <-->  8: case t:5 of {N -> [Some h:4] | C hh:6 tt:7 -> (last:1 t:5)}
@@ -198,17 +306,23 @@ last(p)
 //│ 
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: Program reached and unexpected state.
+//│ java.lang.Exception: Internal Error: 15 10 (p:2^18 ⋅ ɛ, 15) already has (
+//│   last:1^17 ⋅ ɛ,
+//│   Match(
+//│     scrut = t:5^2,
+//│     arms = (N, ɛ, Ctor(name = Some, args = h:4^3 ⋅ ɛ)) ⋅ (C, hh:6 ⋅ tt:7 ⋅ ɛ, Call(lhs = last:1^5, rhs = t:5^6)) ⋅ ɛ
+//│   )
+//│ ) 
 //│ mlscript.utils.package$.lastWords(package.scala:183)
-//│ mlscript.utils.package$.die(package.scala:182)
-//│ mlscript.lumberhack.Rewrite$.$anonfun$2$$anonfun$1$$anonfun$1(Rewrite.scala:80)
+//│ mlscript.lumberhack.Rewrite$.$anonfun$2$$anonfun$1$$anonfun$1(Rewrite.scala:82)
 //│ scala.collection.mutable.HashMap.updateWith(HashMap.scala:154)
-//│ mlscript.lumberhack.Rewrite$.$anonfun$2$$anonfun$1(Rewrite.scala:82)
+//│ mlscript.lumberhack.Rewrite$.$anonfun$2$$anonfun$1(Rewrite.scala:84)
 //│ scala.collection.immutable.Set$Set2.foreach(Set.scala:201)
-//│ mlscript.lumberhack.Rewrite$.$anonfun$2(Rewrite.scala:82)
+//│ mlscript.lumberhack.Rewrite$.$anonfun$2(Rewrite.scala:84)
 //│ scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
 //│ scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
 //│ scala.collection.immutable.Map$Map3.foreach(Map.scala:448)
+//│ mlscript.lumberhack.Rewrite$.rewrite(Rewrite.scala:85)
 //│ !!!!!!ERROR!!!!!!
 
 

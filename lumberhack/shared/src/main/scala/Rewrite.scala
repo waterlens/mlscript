@@ -77,7 +77,9 @@ object Rewrite {
       val res = mutable.Map.empty[(Path, ExprId), (Path, Match)]
       defInstancesMap foreach { case ((pp, cp), exprMap) =>
         exprMap foreach { case (ctor, matchh) => res.updateWith(pp, ctor) {
-          case S(_) => die
+          case S(v) if v === (ctor, matchh) => S(v) // FIXME
+          case S(v) =>
+            lastWords(s"$ctor $matchh (${pprint2(pp).plainText}, ${pprint2(ctor).plainText}) already has ${pprint2(v).plainText} ")
           case N => S(cp, d.exprs(matchh) match { case m: Match => m; case _ => die })
         } }
       }

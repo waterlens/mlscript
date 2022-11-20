@@ -1,64 +1,6 @@
 :NewParser
 :ParseOnly
 
-// NOTE: should use more recursive search to find out the correct output
-// let t = T(N, N)
-// fun c(x) = if x is
-//     T(l, r) then T(c(l), c(r))
-//     N then NN
-// c(t)
-let t = T(T(N, N), T(N, N))
-fun c(x) = if x is
-    T(l, r) then T(c(l), c(r))
-    N then NN
-c(t)
-//│ |#let| |t| |#=| |T|(|T|(|N|,| |N|)|,| |T|(|N|,| |N|)|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|T|(|l|,| |r|)| |#then| |T|(|c|(|l|)|,| |c|(|r|)|)|↵|N| |#then| |NN|←|↵|c|(|t|)|
-//│ Parsed: {let t = T (T (N, N,), T (N, N,),); fun c = x, => if x is ‹(T (l, r,)) then T (c (l,), c (r,),); (N) then NN›; c (t,)}
-//│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def t:1 = 7: [T 3: [T 1: [N] 2: [N]] 6: [T 4: [N] 5: [N]]]
-//│ def c:2 = 18: fun x:3 -> 17: case 8: x:3 of {T l:4 r:5 -> 15: [T 11: (9: c:2 10: l:4) 14: (12: c:2 13: r:5)] | N -> 16: [NN]}
-//│ 21: (19: c:2 20: t:1)
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ ------- recursive -------
-//│ ------- defInstance -------
-//│ t:1^20 ⋅ ɛ ==> c:2^19 ⋅ c:2^12 ⋅ ɛ:
-//│ 	6: [T [N] [N]]  <-->  17: case x:3 of {T l:4 r:5 -> [T (c:2 l:4) (c:2 r:5)] | N -> [NN]}
-//│ t:1^20 ⋅ ɛ ==> c:2^19 ⋅ c:2^12 ⋅ c:2^12 ⋅ ɛ:
-//│ 	5: [N]  <-->  17: case x:3 of {T l:4 r:5 -> [T (c:2 l:4) (c:2 r:5)] | N -> [NN]}
-//│ t:1^20 ⋅ ɛ ==> c:2^19 ⋅ c:2^9 ⋅ ɛ:
-//│ 	3: [T [N] [N]]  <-->  17: case x:3 of {T l:4 r:5 -> [T (c:2 l:4) (c:2 r:5)] | N -> [NN]}
-//│ t:1^20 ⋅ ɛ ==> c:2^19 ⋅ ɛ:
-//│ 	7: [T [T [N] [N]] [T [N] [N]]]  <-->  17: case x:3 of {T l:4 r:5 -> [T (c:2 l:4) (c:2 r:5)] | N -> [NN]}
-//│ t:1^20 ⋅ ɛ ==> c:2^19 ⋅ c:2^9 ⋅ c:2^9 ⋅ ɛ:
-//│ 	1: [N]  <-->  17: case x:3 of {T l:4 r:5 -> [T (c:2 l:4) (c:2 r:5)] | N -> [NN]}
-//│ t:1^20 ⋅ ɛ ==> c:2^19 ⋅ c:2^12 ⋅ c:2^9 ⋅ ɛ:
-//│ 	4: [N]  <-->  17: case x:3 of {T l:4 r:5 -> [T (c:2 l:4) (c:2 r:5)] | N -> [NN]}
-//│ t:1^20 ⋅ ɛ ==> c:2^19 ⋅ c:2^9 ⋅ c:2^12 ⋅ ɛ:
-//│ 	2: [N]  <-->  17: case x:3 of {T l:4 r:5 -> [T (c:2 l:4) (c:2 r:5)] | N -> [NN]}
-//│ 
-//│ >>>>>>>>>> Rewritten >>>>>>>>>>
-//│ def t:1 = [T [T [N] [N]] [T [N] [N]]]
-//│ def c:2 = fun x:3 -> case x:3 of {T l:4 r:5 -> [T (c:2 l:4) (c:2 r:5)] | N -> [NN]}
-//│ def c'2'19_c'2'9_c'2'9:12 = fun x:3 -> x:3
-//│ def c'2'19_c'2'12:9 = fun x:3 -> x:3
-//│ def c'2'19_c'2'12_c'2'9:10 = fun x:3 -> x:3
-//│ def c'2'19_c'2'9:8 = fun x:3 -> x:3
-//│ def t'1'20:7 = 
-//│ 	let l:4 = 
-//│ 		let l:4 = [NN] in 
-//│ 		let r:5 = [NN] in [T (c'2'19_c'2'9_c'2'9:12 l:4) (c'2'19_c'2'9_c'2'12:13 r:5)] 
-//│ 	in 
-//│ 	let r:5 = 
-//│ 		let l:4 = [NN] in 
-//│ 		let r:5 = [NN] in [T (c'2'19_c'2'12_c'2'9:10 l:4) (c'2'19_c'2'12_c'2'12:11 r:5)] 
-//│ 	in [T (c'2'19_c'2'9:8 l:4) (c'2'19_c'2'12:9 r:5)]
-//│ def c'2'19_c'2'12_c'2'12:11 = fun x:3 -> x:3
-//│ def c'2'19:6 = fun x:3 -> x:3
-//│ def c'2'19_c'2'9_c'2'12:13 = fun x:3 -> x:3
-//│ (c'2'19:6 t'1'20:7)
-//│ <<<<<<<<<< Rewritten <<<<<<<<<<
-
 
 // NOTE: the `p` inside `C(p)` is untouched
 // TODO don't rewrite dead code

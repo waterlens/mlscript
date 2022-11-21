@@ -140,6 +140,7 @@ map(ff, l)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
 // NOTE: only first head is handled
+_LUMBERHACK_ERROR
 fun map(f, ls) = if ls is
     C(h, t) then C(f(h), map(f, t))
     N then N
@@ -149,27 +150,46 @@ fun ff(x) = if x is
     KKKK then TTTT
 let l = C(K, C(KK, C(KKKK, N)))
 map(ff, l)
-//│ |#fun| |map|(|f|,| |ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#fun| |ff|(|x|)| |#=| |#if| |x| |is|→|K| |#then| |T|↵|KK| |#then| |TT|↵|KKKK| |#then| |TTTT|←|↵|#let| |l| |#=| |C|(|K|,| |C|(|KK|,| |C|(|KKKK|,| |N|)|)|)|↵|map|(|ff|,| |l|)|
-//│ Parsed: {fun map = f, ls, => if ls is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; fun ff = x, => if x is ‹(K) then T; (KK) then TT; (KKKK) then TTTT›; let l = C (K, C (KK, C (KKKK, N,),),); map (ff, l,)}
-//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: 23 19 (map:1^28 ⋅ l:3^31 ⋅ ɛ, 23) already has (
-//│   map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ ff:2^29 ⋅ ɛ,
-//│   Match(
-//│     scrut = x:8^15,
-//│     arms = (K, ɛ, Ctor(name = T, args = ɛ)) ⋅ (KK, ɛ, Ctor(name = TT, args = ɛ)) ⋅ (KKKK, ɛ, Ctor(name = TTTT, args = ɛ)) ⋅ ɛ
-//│   )
-//│ ) 
-//│ 	at: mlscript.utils.package$.lastWords(package.scala:183)
-//│ 	at: mlscript.lumberhack.Rewrite$.$anonfun$2$$anonfun$1$$anonfun$1(Rewrite.scala:82)
-//│ 	at: scala.collection.mutable.HashMap.updateWith(HashMap.scala:154)
-//│ 	at: mlscript.lumberhack.Rewrite$.$anonfun$2$$anonfun$1(Rewrite.scala:84)
-//│ 	at: scala.collection.immutable.Set$Set2.foreach(Set.scala:201)
-//│ 	at: mlscript.lumberhack.Rewrite$.$anonfun$2(Rewrite.scala:84)
-//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
-//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
-//│ 	at: scala.collection.immutable.HashMap.foreach(HashMap.scala:1076)
-//│ 	at: mlscript.lumberhack.Rewrite$.rewrite(Rewrite.scala:85)
+//│ |_LUMBERHACK_ERROR|↵|#fun| |map|(|f|,| |ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#fun| |ff|(|x|)| |#=| |#if| |x| |is|→|K| |#then| |T|↵|KK| |#then| |TT|↵|KKKK| |#then| |TTTT|←|↵|#let| |l| |#=| |C|(|K|,| |C|(|KK|,| |C|(|KKKK|,| |N|)|)|)|↵|map|(|ff|,| |l|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun map = f, ls, => if ls is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; fun ff = x, => if x is ‹(K) then T; (KK) then TT; (KKKK) then TTTT›; let l = C (K, C (KK, C (KKKK, N,),),); map (ff, l,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def map:1 = 14: fun f:4 -> 13: fun ls:5 -> 12: case 1: ls:5 of {C h:6 t:7 -> 10: [C 4: (2: f:4 3: h:6) 9: (7: (5: map:1 6: f:4) 8: t:7)] | N -> 11: [N]}
+//│ def ff:2 = 20: fun x:8 -> 19: case 15: x:8 of {K -> 16: [T] | KK -> 17: [TT] | KKKK -> 18: [TTTT]}
+//│ def l:3 = 27: [C 21: [K] 26: [C 22: [KK] 25: [C 23: [KKKK] 24: [N]]]]
+//│ 32: (30: (28: map:1 29: ff:2) 31: l:3)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ((ff:2^29 ⋅ ɛ, (ɛ, 11'x) => ((ɛ, 12'19_matchres))), (map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ ɛ, 3'f)) :::: ((ff:2^29 ⋅ ɛ, (ɛ, 11'x) => ((ɛ, 12'19_matchres))), (map:1^28 ⋅ map:1^5 ⋅ ɛ, 3'f))
+//│ ------- defInstance -------
+//│ l:3^31 ⋅ ɛ ==> ff:2^29 ⋅ ɛ:
+//│ 	21: [K]  <-->  19: case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ 	22: [KK]  <-->  19: case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ map:1^28 ⋅ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ ff:2^29 ⋅ ɛ:
+//│ 	23: [KKKK]  <-->  19: case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ map:1^28 ⋅ map:1^5 ⋅ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ ff:2^29 ⋅ ɛ:
+//│ 	21: [K]  <-->  19: case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ ɛ:
+//│ 	27: [C [K] [C [KK] [C [KKKK] [N]]]]  <-->  12: case ls:5 of {C h:6 t:7 -> [C (f:4 h:6) ((map:1 f:4) t:7)] | N -> [N]}
+//│ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ ɛ:
+//│ 	25: [C [KKKK] [N]]  <-->  12: case ls:5 of {C h:6 t:7 -> [C (f:4 h:6) ((map:1 f:4) t:7)] | N -> [N]}
+//│ map:1^28 ⋅ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ ff:2^29 ⋅ ɛ:
+//│ 	22: [KK]  <-->  19: case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ 	23: [KKKK]  <-->  19: case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ map:1^5 ⋅ ɛ:
+//│ 	24: [N]  <-->  12: case ls:5 of {C h:6 t:7 -> [C (f:4 h:6) ((map:1 f:4) t:7)] | N -> [N]}
+//│ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ ɛ:
+//│ 	26: [C [KK] [C [KKKK] [N]]]  <-->  12: case ls:5 of {C h:6 t:7 -> [C (f:4 h:6) ((map:1 f:4) t:7)] | N -> [N]}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: 
+//│ map:1^28 ⋅ l:3^31 ⋅ ɛ to `[KKKK]` 
+//│ 	already has map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ ff:2^29 ⋅ ɛ to `case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}` 
+//│ 	but here comes another match map:1^28 ⋅ map:1^5 ⋅ ff:2^29 ⋅ ɛ to `case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}` 
+//│ !!!!!!ERROR!!!!!!
 
-
+_LUMBERHACK_ERROR
 fun rev(l1, l2) = if l1 is
     C(h, t) then rev(t, C(h, l2))
     N then l2
@@ -178,29 +198,60 @@ fun rev1(l11, l22) = if l11 is
     N then l22
 let p = C(K, N)
 rev(rev1(p, N), N)
-//│ |#fun| |rev|(|l1|,| |l2|)| |#=| |#if| |l1| |is|→|C|(|h|,| |t|)| |#then| |rev|(|t|,| |C|(|h|,| |l2|)|)|↵|N| |#then| |l2|←|↵|#fun| |rev1|(|l11|,| |l22|)| |#=| |#if| |l11| |is|→|C|(|h1|,| |t1|)| |#then| |rev1|(|t1|,| |C|(|h1|,| |l22|)|)|↵|N| |#then| |l22|←|↵|#let| |p| |#=| |C|(|K|,| |N|)|↵|rev|(|rev1|(|p|,| |N|)|,| |N|)|
-//│ Parsed: {fun rev = l1, l2, => if l1 is ‹(C (h, t,)) then rev (t, C (h, l2,),); (N) then l2›; fun rev1 = l11, l22, => if l11 is ‹(C (h1, t1,)) then rev1 (t1, C (h1, l22,),); (N) then l22›; let p = C (K, N,); rev (rev1 (p, N,), N,)}
-//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: 19 10 (rev1:2^29 ⋅ ɛ, 19) already has (
-//│   rev1:2^14 ⋅ rev1:2^14 ⋅ rev:1^28 ⋅ rev:1^2 ⋅ ɛ,
-//│   Match(
-//│     scrut = l1:4^1,
-//│     arms = (
-//│       C,
-//│       h:6 ⋅ t:7 ⋅ ɛ,
-//│       Call(lhs = Call(lhs = rev:1^2, rhs = t:7^3), rhs = Ctor(name = C, args = h:6^5 ⋅ l2:5^6 ⋅ ɛ))
-//│     ) ⋅ (N, ɛ, l2:5^9) ⋅ ɛ
-//│   )
-//│ ) 
-//│ 	at: mlscript.utils.package$.lastWords(package.scala:183)
-//│ 	at: mlscript.lumberhack.Rewrite$.$anonfun$2$$anonfun$1$$anonfun$1(Rewrite.scala:82)
-//│ 	at: scala.collection.mutable.HashMap.updateWith(HashMap.scala:154)
-//│ 	at: mlscript.lumberhack.Rewrite$.$anonfun$2$$anonfun$1(Rewrite.scala:84)
-//│ 	at: scala.collection.immutable.Set$Set1.foreach(Set.scala:168)
-//│ 	at: mlscript.lumberhack.Rewrite$.$anonfun$2(Rewrite.scala:84)
-//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
-//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
-//│ 	at: scala.collection.immutable.HashMap.foreach(HashMap.scala:1076)
-//│ 	at: mlscript.lumberhack.Rewrite$.rewrite(Rewrite.scala:85)
+//│ |_LUMBERHACK_ERROR|↵|#fun| |rev|(|l1|,| |l2|)| |#=| |#if| |l1| |is|→|C|(|h|,| |t|)| |#then| |rev|(|t|,| |C|(|h|,| |l2|)|)|↵|N| |#then| |l2|←|↵|#fun| |rev1|(|l11|,| |l22|)| |#=| |#if| |l11| |is|→|C|(|h1|,| |t1|)| |#then| |rev1|(|t1|,| |C|(|h1|,| |l22|)|)|↵|N| |#then| |l22|←|↵|#let| |p| |#=| |C|(|K|,| |N|)|↵|rev|(|rev1|(|p|,| |N|)|,| |N|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun rev = l1, l2, => if l1 is ‹(C (h, t,)) then rev (t, C (h, l2,),); (N) then l2›; fun rev1 = l11, l22, => if l11 is ‹(C (h1, t1,)) then rev1 (t1, C (h1, l22,),); (N) then l22›; let p = C (K, N,); rev (rev1 (p, N,), N,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def rev:1 = 12: fun l1:4 -> 11: fun l2:5 -> 10: case 1: l1:4 of {C h:6 t:7 -> 8: (4: (2: rev:1 3: t:7) 7: [C 5: h:6 6: l2:5]) | N -> 9: l2:5}
+//│ def rev1:2 = 24: fun l11:8 -> 23: fun l22:9 -> 22: case 13: l11:8 of {C h1:10 t1:11 -> 20: (16: (14: rev1:2 15: t1:11) 19: [C 17: h1:10 18: l22:9]) | N -> 21: l22:9}
+//│ def p:3 = 27: [C 25: [K] 26: [N]]
+//│ 36: (34: (28: rev:1 33: (31: (29: rev1:2 30: p:3) 32: [N])) 35: [N])
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ((rev1:2^14 ⋅ rev1:2^14 ⋅ ɛ, N()), (rev1:2^29 ⋅ ɛ, 15'20_callres)) :::: ((rev1:2^14 ⋅ ɛ, N()), (rev1:2^29 ⋅ ɛ, 15'20_callres))
+//│ (
+//│   (rev1:2^29 ⋅ ɛ, C((ɛ, 12'h1), (ɛ, 11'l22))),
+//│   (rev1:2^14 ⋅ rev1:2^14 ⋅ rev:1^28 ⋅ rev:1^2 ⋅ rev:1^2 ⋅ ɛ, 3'l1)
+//│ ) :::: (
+//│   (rev1:2^29 ⋅ ɛ, C((ɛ, 12'h1), (ɛ, 11'l22))),
+//│   (rev1:2^14 ⋅ rev1:2^14 ⋅ rev:1^28 ⋅ rev:1^2 ⋅ ɛ, 3'l1)
+//│ )
+//│ ((rev1:2^14 ⋅ ɛ, C((ɛ, 12'h1), (ɛ, 11'l22))), (ɛ, 15'20_callres)) :::: ((ɛ, C((ɛ, 12'h1), (ɛ, 11'l22))), (ɛ, 15'20_callres))
+//│ ((rev:1^2 ⋅ rev:1^2 ⋅ ɛ, N()), (rev:1^28 ⋅ ɛ, 8'8_callres)) :::: ((rev:1^2 ⋅ ɛ, N()), (rev:1^28 ⋅ ɛ, 8'8_callres))
+//│ ((rev:1^2 ⋅ ɛ, C((ɛ, 5'h), (ɛ, 4'l2))), (ɛ, 8'8_callres)) :::: ((ɛ, C((ɛ, 5'h), (ɛ, 4'l2))), (ɛ, 8'8_callres))
+//│ ------- defInstance -------
+//│ ɛ ==> rev1:2^14 ⋅ rev1:2^14 ⋅ rev:1^28 ⋅ rev:1^2 ⋅ rev:1^2 ⋅ ɛ:
+//│ 	32: [N]  <-->  10: case l1:4 of {C h:6 t:7 -> ((rev:1 t:7) [C h:6 l2:5]) | N -> l2:5}
+//│ rev1:2^29 ⋅ ɛ ==> rev1:2^14 ⋅ rev:1^28 ⋅ rev:1^2 ⋅ ɛ:
+//│ 	19: [C h1:10 l22:9]  <-->  10: case l1:4 of {C h:6 t:7 -> ((rev:1 t:7) [C h:6 l2:5]) | N -> l2:5}
+//│ rev1:2^29 ⋅ ɛ ==> rev1:2^14 ⋅ rev:1^28 ⋅ ɛ:
+//│ 	19: [C h1:10 l22:9]  <-->  10: case l1:4 of {C h:6 t:7 -> ((rev:1 t:7) [C h:6 l2:5]) | N -> l2:5}
+//│ rev1:2^29 ⋅ ɛ ==> rev1:2^14 ⋅ rev1:2^14 ⋅ rev:1^28 ⋅ rev:1^2 ⋅ ɛ:
+//│ 	19: [C h1:10 l22:9]  <-->  10: case l1:4 of {C h:6 t:7 -> ((rev:1 t:7) [C h:6 l2:5]) | N -> l2:5}
+//│ p:3^30 ⋅ ɛ ==> rev1:2^29 ⋅ rev1:2^14 ⋅ ɛ:
+//│ 	26: [N]  <-->  22: case l11:8 of {C h1:10 t1:11 -> ((rev1:2 t1:11) [C h1:10 l22:9]) | N -> l22:9}
+//│ rev1:2^14 ⋅ ɛ ==> rev:1^28 ⋅ ɛ:
+//│ 	32: [N]  <-->  10: case l1:4 of {C h:6 t:7 -> ((rev:1 t:7) [C h:6 l2:5]) | N -> l2:5}
+//│ ɛ ==> rev:1^28 ⋅ rev:1^2 ⋅ ɛ:
+//│ 	32: [N]  <-->  10: case l1:4 of {C h:6 t:7 -> ((rev:1 t:7) [C h:6 l2:5]) | N -> l2:5}
+//│ rev1:2^29 ⋅ ɛ ==> rev:1^28 ⋅ ɛ:
+//│ 	19: [C h1:10 l22:9]  <-->  10: case l1:4 of {C h:6 t:7 -> ((rev:1 t:7) [C h:6 l2:5]) | N -> l2:5}
+//│ ɛ ==> rev:1^28 ⋅ ɛ:
+//│ 	32: [N]  <-->  10: case l1:4 of {C h:6 t:7 -> ((rev:1 t:7) [C h:6 l2:5]) | N -> l2:5}
+//│ p:3^30 ⋅ ɛ ==> rev1:2^29 ⋅ ɛ:
+//│ 	27: [C [K] [N]]  <-->  22: case l11:8 of {C h1:10 t1:11 -> ((rev1:2 t1:11) [C h1:10 l22:9]) | N -> l22:9}
+//│ ɛ ==> rev1:2^14 ⋅ rev:1^28 ⋅ rev:1^2 ⋅ ɛ:
+//│ 	32: [N]  <-->  10: case l1:4 of {C h:6 t:7 -> ((rev:1 t:7) [C h:6 l2:5]) | N -> l2:5}
+//│ ɛ ==> rev1:2^14 ⋅ rev:1^28 ⋅ rev:1^2 ⋅ rev:1^2 ⋅ ɛ:
+//│ 	32: [N]  <-->  10: case l1:4 of {C h:6 t:7 -> ((rev:1 t:7) [C h:6 l2:5]) | N -> l2:5}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: 
+//│ rev1:2^29 ⋅ ɛ to `[C h1:10 l22:9]` 
+//│ 	already has rev1:2^14 ⋅ rev1:2^14 ⋅ rev:1^28 ⋅ rev:1^2 ⋅ ɛ to `case l1:4 of {C h:6 t:7 -> ((rev:1 t:7) [C h:6 l2:5]) | N -> l2:5}` 
+//│ 	but here comes another match rev:1^28 ⋅ ɛ to `case l1:4 of {C h:6 t:7 -> ((rev:1 t:7) [C h:6 l2:5]) | N -> l2:5}` 
+//│ !!!!!!ERROR!!!!!!
 
 
 // `id2` used twice
@@ -424,19 +475,9 @@ id(c1)(id(p1))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ !!!!!!ERROR!!!!!!
 //│ java.lang.Exception: type error
-//│ mlscript.lumberhack.Deforest$package$.error(Deforest.scala:9)
-//│ mlscript.lumberhack.Deforest.thunk$1$1(Deforest.scala:232)
-//│ mlscript.lumberhack.Deforest.handle$1$$anonfun$1(Deforest.scala:169)
-//│ mlscript.lumberhack.Deforest.handle$1$$anonfun$adapted$1(Deforest.scala:169)
-//│ mlscript.lumberhack.Deforest.trace(Deforest.scala:73)
-//│ mlscript.lumberhack.Deforest.handle$1(Deforest.scala:169)
-//│ mlscript.lumberhack.Deforest.thunk$1$1$$anonfun$2(Deforest.scala:212)
-//│ scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
-//│ scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
-//│ scala.collection.immutable.List.foreach(List.scala:333)
 //│ !!!!!!ERROR!!!!!!
 
-
+_LUMBERHACK_ERROR
 fun map(ls) = if ls is
     C(hh, tt) then C(
         (if hh is
@@ -451,35 +492,50 @@ fun rev(a, lss) = if lss is
     N then a
 // map(rev(N, C(A, C(AA, N))))
 map(rev(N, primitive))
-//│ |#fun| |map|(|ls|)| |#=| |#if| |ls| |is|→|C|(|hh|,| |tt|)| |#then| |C|(|→|(|#if| |hh| |is|→|A| |#then| |B|↵|AA| |#then| |BB|←|↵|)|,|↵|map|(|tt|)|←|↵|)|↵|N| |#then| |N|←|↵|#fun| |rev|(|a|,| |lss|)| |#=| |#if| |lss| |is|→|C|(|h|,| |t|)| |#then| |rev|(|C|(|h|,| |a|)|,| |t|)|↵|N| |#then| |a|←|↵|/* map(rev(N, C(A, C(AA, N))))*/|↵|map|(|rev|(|N|,| |primitive|)|)|
-//│ Parsed: {fun map = ls, => if ls is ‹(C (hh, tt,)) then C ('(' if hh is ‹(A) then B; (AA) then BB›, ')', map (tt,),); (N) then N›; fun rev = a, lss, => if lss is ‹(C (h, t,)) then rev (C (h, a,), t,); (N) then a›; map (rev (N, primitive,),)}
-//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: 17 11 (rev:2^26 ⋅ ɛ, 17) already has (
-//│   rev:2^14 ⋅ rev:2^14 ⋅ map:1^25 ⋅ map:1^6 ⋅ ɛ,
-//│   Match(
-//│     scrut = ls:3^1,
-//│     arms = (
-//│       C,
-//│       hh:4 ⋅ tt:5 ⋅ ɛ,
-//│       Ctor(
-//│         name = C,
-//│         args = Match(
-//│           scrut = hh:4^2,
-//│           arms = (A, ɛ, Ctor(name = B, args = ɛ)) ⋅ (AA, ɛ, Ctor(name = BB, args = ɛ)) ⋅ ɛ
-//│         ) ⋅ Call(lhs = map:1^6, rhs = tt:5^7) ⋅ ɛ
-//│       )
-//│     ) ⋅ (N, ɛ, Ctor(name = N, args = ɛ)) ⋅ ɛ
-//│   )
-//│ ) 
-//│ 	at: mlscript.utils.package$.lastWords(package.scala:183)
-//│ 	at: mlscript.lumberhack.Rewrite$.$anonfun$2$$anonfun$1$$anonfun$1(Rewrite.scala:82)
-//│ 	at: scala.collection.mutable.HashMap.updateWith(HashMap.scala:154)
-//│ 	at: mlscript.lumberhack.Rewrite$.$anonfun$2$$anonfun$1(Rewrite.scala:84)
-//│ 	at: scala.collection.immutable.Set$Set1.foreach(Set.scala:168)
-//│ 	at: mlscript.lumberhack.Rewrite$.$anonfun$2(Rewrite.scala:84)
-//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
-//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
-//│ 	at: scala.collection.immutable.HashMap.foreach(HashMap.scala:1076)
-//│ 	at: mlscript.lumberhack.Rewrite$.rewrite(Rewrite.scala:85)
+//│ |_LUMBERHACK_ERROR|↵|#fun| |map|(|ls|)| |#=| |#if| |ls| |is|→|C|(|hh|,| |tt|)| |#then| |C|(|→|(|#if| |hh| |is|→|A| |#then| |B|↵|AA| |#then| |BB|←|↵|)|,|↵|map|(|tt|)|←|↵|)|↵|N| |#then| |N|←|↵|#fun| |rev|(|a|,| |lss|)| |#=| |#if| |lss| |is|→|C|(|h|,| |t|)| |#then| |rev|(|C|(|h|,| |a|)|,| |t|)|↵|N| |#then| |a|←|↵|/* map(rev(N, C(A, C(AA, N))))*/|↵|map|(|rev|(|N|,| |primitive|)|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun map = ls, => if ls is ‹(C (hh, tt,)) then C ('(' if hh is ‹(A) then B; (AA) then BB›, ')', map (tt,),); (N) then N›; fun rev = a, lss, => if lss is ‹(C (h, t,)) then rev (C (h, a,), t,); (N) then a›; map (rev (N, primitive,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def map:1 = 12: fun ls:3 -> 11: case 1: ls:3 of {C hh:4 tt:5 -> 9: [C 5: case 2: hh:4 of {A -> 3: [B] | AA -> 4: [BB]} 8: (6: map:1 7: tt:5)] | N -> 10: [N]}
+//│ def rev:2 = 24: fun a:6 -> 23: fun lss:7 -> 22: case 13: lss:7 of {C h:8 t:9 -> 20: (18: (14: rev:2 17: [C 15: h:8 16: a:6]) 19: t:9) | N -> 21: a:6}
+//│ 31: (25: map:1 30: (28: (26: rev:2 27: [N]) 29: primitive:0))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ((rev:2^14 ⋅ rev:2^14 ⋅ ɛ, N()), (rev:2^26 ⋅ ɛ, 13'20_callres)) :::: ((rev:2^14 ⋅ ɛ, N()), (rev:2^26 ⋅ ɛ, 13'20_callres))
+//│ ((rev:2^14 ⋅ ɛ, C((ɛ, 10'h), (ɛ, 8'a))), (ɛ, 13'20_callres)) :::: ((ɛ, C((ɛ, 10'h), (ɛ, 8'a))), (ɛ, 13'20_callres))
+//│ (
+//│   (rev:2^26 ⋅ ɛ, C((ɛ, 10'h), (ɛ, 8'a))),
+//│   (rev:2^14 ⋅ rev:2^14 ⋅ map:1^25 ⋅ map:1^6 ⋅ map:1^6 ⋅ ɛ, 2'ls)
+//│ ) :::: ((rev:2^26 ⋅ ɛ, C((ɛ, 10'h), (ɛ, 8'a))), (rev:2^14 ⋅ rev:2^14 ⋅ map:1^25 ⋅ map:1^6 ⋅ ɛ, 2'ls))
+//│ ------- defInstance -------
+//│ ɛ ==> rev:2^14 ⋅ rev:2^14 ⋅ map:1^25 ⋅ map:1^6 ⋅ map:1^6 ⋅ ɛ:
+//│ 	27: [N]  <-->  11: case ls:3 of {C hh:4 tt:5 -> [C case hh:4 of {A -> [B] | AA -> [BB]} (map:1 tt:5)] | N -> [N]}
+//│ rev:2^26 ⋅ ɛ ==> map:1^25 ⋅ ɛ:
+//│ 	17: [C h:8 a:6]  <-->  11: case ls:3 of {C hh:4 tt:5 -> [C case hh:4 of {A -> [B] | AA -> [BB]} (map:1 tt:5)] | N -> [N]}
+//│ rev:2^26 ⋅ ɛ ==> rev:2^14 ⋅ map:1^25 ⋅ map:1^6 ⋅ ɛ:
+//│ 	17: [C h:8 a:6]  <-->  11: case ls:3 of {C hh:4 tt:5 -> [C case hh:4 of {A -> [B] | AA -> [BB]} (map:1 tt:5)] | N -> [N]}
+//│ ɛ ==> rev:2^14 ⋅ map:1^25 ⋅ map:1^6 ⋅ ɛ:
+//│ 	27: [N]  <-->  11: case ls:3 of {C hh:4 tt:5 -> [C case hh:4 of {A -> [B] | AA -> [BB]} (map:1 tt:5)] | N -> [N]}
+//│ ɛ ==> map:1^25 ⋅ ɛ:
+//│ 	27: [N]  <-->  11: case ls:3 of {C hh:4 tt:5 -> [C case hh:4 of {A -> [B] | AA -> [BB]} (map:1 tt:5)] | N -> [N]}
+//│ ɛ ==> map:1^25 ⋅ map:1^6 ⋅ ɛ:
+//│ 	27: [N]  <-->  11: case ls:3 of {C hh:4 tt:5 -> [C case hh:4 of {A -> [B] | AA -> [BB]} (map:1 tt:5)] | N -> [N]}
+//│ rev:2^26 ⋅ ɛ ==> rev:2^14 ⋅ map:1^25 ⋅ ɛ:
+//│ 	17: [C h:8 a:6]  <-->  11: case ls:3 of {C hh:4 tt:5 -> [C case hh:4 of {A -> [B] | AA -> [BB]} (map:1 tt:5)] | N -> [N]}
+//│ ɛ ==> rev:2^14 ⋅ map:1^25 ⋅ map:1^6 ⋅ map:1^6 ⋅ ɛ:
+//│ 	27: [N]  <-->  11: case ls:3 of {C hh:4 tt:5 -> [C case hh:4 of {A -> [B] | AA -> [BB]} (map:1 tt:5)] | N -> [N]}
+//│ rev:2^14 ⋅ ɛ ==> map:1^25 ⋅ ɛ:
+//│ 	27: [N]  <-->  11: case ls:3 of {C hh:4 tt:5 -> [C case hh:4 of {A -> [B] | AA -> [BB]} (map:1 tt:5)] | N -> [N]}
+//│ rev:2^26 ⋅ ɛ ==> rev:2^14 ⋅ rev:2^14 ⋅ map:1^25 ⋅ map:1^6 ⋅ ɛ:
+//│ 	17: [C h:8 a:6]  <-->  11: case ls:3 of {C hh:4 tt:5 -> [C case hh:4 of {A -> [B] | AA -> [BB]} (map:1 tt:5)] | N -> [N]}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: 
+//│ rev:2^26 ⋅ ɛ to `[C h:8 a:6]` 
+//│ 	already has rev:2^14 ⋅ rev:2^14 ⋅ map:1^25 ⋅ map:1^6 ⋅ ɛ to `case ls:3 of {C hh:4 tt:5 -> [C case hh:4 of {A -> [B] | AA -> [BB]} (map:1 tt:5)] | N -> [N]}` 
+//│ 	but here comes another match rev:2^14 ⋅ map:1^25 ⋅ map:1^6 ⋅ ɛ to `case ls:3 of {C hh:4 tt:5 -> [C case hh:4 of {A -> [B] | AA -> [BB]} (map:1 tt:5)] | N -> [N]}` 
+//│ !!!!!!ERROR!!!!!!
 
 
 _LUMBERHACK_ERROR
@@ -507,14 +563,104 @@ c(p)
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
 //│ !!!!!!ERROR!!!!!!
 //│ java.lang.StackOverflowError
-//│ scala.runtime.Statics.anyHash(Statics.java:127)
-//│ scala.collection.mutable.HashMap.get(HashMap.scala:78)
-//│ mlscript.lumberhack.Rewrite$.writeInstance$1(Rewrite.scala:108)
-//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:181)
-//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:185)
-//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:159)
-//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:185)
-//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:159)
-//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:185)
-//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:159)
 //│ !!!!!!ERROR!!!!!!
+
+
+// pushing in of auxiliary parameters
+fun last(x, ys) = if ys is
+    N then x
+    C(h, t) then last(h, t)
+fun lastDrive(xs) = if xs is
+    N then None
+    C(hh, tt) then Some(last(hh, tt))
+lastDrive(C(1, C(2, N)))
+//│ |#fun| |last|(|x|,| |ys|)| |#=| |#if| |ys| |is|→|N| |#then| |x|↵|C|(|h|,| |t|)| |#then| |last|(|h|,| |t|)|←|↵|#fun| |lastDrive|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |None|↵|C|(|hh|,| |tt|)| |#then| |Some|(|last|(|hh|,| |tt|)|)|←|↵|lastDrive|(|C|(|1|,| |C|(|2|,| |N|)|)|)|
+//│ Parsed: {fun last = x, ys, => if ys is ‹(N) then x; (C (h, t,)) then last (h, t,)›; fun lastDrive = xs, => if xs is ‹(N) then None; (C (hh, tt,)) then Some (last (hh, tt,),)›; lastDrive (C (1, C (2, N,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def last:1 = 10: fun x:3 -> 9: fun ys:4 -> 8: case 1: ys:4 of {N -> 2: x:3 | C h:5 t:6 -> 7: (5: (3: last:1 4: h:5) 6: t:6)}
+//│ def lastDrive:2 = 20: fun xs:7 -> 19: case 11: xs:7 of {N -> 12: [None] | C hh:8 tt:9 -> 18: [Some 17: (15: (13: last:1 14: hh:8) 16: tt:9)]}
+//│ 27: (21: lastDrive:2 26: [C 22: 1 25: [C 23: 2 24: [N]]])
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ------- defInstance -------
+//│ ɛ ==> lastDrive:2^21 ⋅ last:1^13 ⋅ ɛ:
+//│ 	25: [C 2 [N]]  <-->  8: case ys:4 of {N -> x:3 | C h:5 t:6 -> ((last:1 h:5) t:6)}
+//│ ɛ ==> lastDrive:2^21 ⋅ last:1^13 ⋅ last:1^3 ⋅ ɛ:
+//│ 	24: [N]  <-->  8: case ys:4 of {N -> x:3 | C h:5 t:6 -> ((last:1 h:5) t:6)}
+//│ ɛ ==> lastDrive:2^21 ⋅ ɛ:
+//│ 	26: [C 1 [C 2 [N]]]  <-->  19: case xs:7 of {N -> [None] | C hh:8 tt:9 -> [Some ((last:1 hh:8) tt:9)]}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def last:1 = fun x:3 -> fun ys:4 -> case ys:4 of {N -> x:3 | C h:5 t:6 -> ((last:1 h:5) t:6)}
+//│ def lastDrive:2 = fun xs:7 -> case xs:7 of {N -> [None] | C hh:8 tt:9 -> [Some ((last:1 hh:8) tt:9)]}
+//│ def lastDrive'2'21:10 = fun xs:7 -> xs:7
+//│ def lastDrive'2'21_last'1'13_last'1'3:12 = fun x:3 -> fun ys:4 -> ys:4
+//│ def lastDrive'2'21_last'1'13:11 = fun x:3 -> fun ys:4 -> ys:4
+//│ (lastDrive'2'21:10 
+//│ 	let hh:8 = 1 in 
+//│ 	let tt:9 = 
+//│ 		let h:5 = 2 in 
+//│ 		let t:6 = x:3 in ((lastDrive'2'21_last'1'13_last'1'3:12 h:5) t:6) 
+//│ 	in [Some ((lastDrive'2'21_last'1'13:11 hh:8) tt:9)])
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+
+
+fun inter(xs, ys) = if xs is
+    N then ys
+    C(h, t) then C(h, inter(ys, t))
+inter(C(1, C(2, C(3, N))), C(9, C(8, C(7, N))))
+//│ |#fun| |inter|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|N| |#then| |ys|↵|C|(|h|,| |t|)| |#then| |C|(|h|,| |inter|(|ys|,| |t|)|)|←|↵|inter|(|C|(|1|,| |C|(|2|,| |C|(|3|,| |N|)|)|)|,| |C|(|9|,| |C|(|8|,| |C|(|7|,| |N|)|)|)|)|
+//│ Parsed: {fun inter = xs, ys, => if xs is ‹(N) then ys; (C (h, t,)) then C (h, inter (ys, t,),)›; inter (C (1, C (2, C (3, N,),),), C (9, C (8, C (7, N,),),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def inter:1 = 12: fun xs:2 -> 11: fun ys:3 -> 10: case 1: xs:2 of {N -> 2: ys:3 | C h:4 t:5 -> 9: [C 3: h:4 8: (6: (4: inter:1 5: ys:3) 7: t:5)]}
+//│ 29: (21: (13: inter:1 20: [C 14: 1 19: [C 15: 2 18: [C 16: 3 17: [N]]]]) 28: [C 22: 9 27: [C 23: 8 26: [C 24: 7 25: [N]]]])
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ------- defInstance -------
+//│ ɛ ==> inter:1^13 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ ɛ:
+//│ 	17: [N]  <-->  10: case xs:2 of {N -> ys:3 | C h:4 t:5 -> [C h:4 ((inter:1 ys:3) t:5)]}
+//│ ɛ ==> inter:1^13 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ ɛ:
+//│ 	18: [C 3 [N]]  <-->  10: case xs:2 of {N -> ys:3 | C h:4 t:5 -> [C h:4 ((inter:1 ys:3) t:5)]}
+//│ ɛ ==> inter:1^13 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ ɛ:
+//│ 	19: [C 2 [C 3 [N]]]  <-->  10: case xs:2 of {N -> ys:3 | C h:4 t:5 -> [C h:4 ((inter:1 ys:3) t:5)]}
+//│ ɛ ==> inter:1^13 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ ɛ:
+//│ 	26: [C 7 [N]]  <-->  10: case xs:2 of {N -> ys:3 | C h:4 t:5 -> [C h:4 ((inter:1 ys:3) t:5)]}
+//│ ɛ ==> inter:1^13 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ ɛ:
+//│ 	25: [N]  <-->  10: case xs:2 of {N -> ys:3 | C h:4 t:5 -> [C h:4 ((inter:1 ys:3) t:5)]}
+//│ ɛ ==> inter:1^13 ⋅ inter:1^4 ⋅ ɛ:
+//│ 	28: [C 9 [C 8 [C 7 [N]]]]  <-->  10: case xs:2 of {N -> ys:3 | C h:4 t:5 -> [C h:4 ((inter:1 ys:3) t:5)]}
+//│ ɛ ==> inter:1^13 ⋅ ɛ:
+//│ 	20: [C 1 [C 2 [C 3 [N]]]]  <-->  10: case xs:2 of {N -> ys:3 | C h:4 t:5 -> [C h:4 ((inter:1 ys:3) t:5)]}
+//│ ɛ ==> inter:1^13 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ inter:1^4 ⋅ ɛ:
+//│ 	27: [C 8 [C 7 [N]]]  <-->  10: case xs:2 of {N -> ys:3 | C h:4 t:5 -> [C h:4 ((inter:1 ys:3) t:5)]}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def inter:1 = fun xs:2 -> fun ys:3 -> case xs:2 of {N -> ys:3 | C h:4 t:5 -> [C h:4 ((inter:1 ys:3) t:5)]}
+//│ def inter'1'13_inter'1'4_inter'1'4_inter'1'4_inter'1'4:11 = fun xs:2 -> fun ys:3 -> xs:2
+//│ def inter'1'13_inter'1'4_inter'1'4:10 = fun xs:2 -> fun ys:3 -> xs:2
+//│ def inter'1'13_inter'1'4:7 = fun xs:2 -> fun ys:3 -> xs:2
+//│ def inter'1'13_inter'1'4_inter'1'4_inter'1'4:8 = fun xs:2 -> fun ys:3 -> xs:2
+//│ def inter'1'13:6 = fun xs:2 -> fun ys:3 -> xs:2
+//│ def inter'1'13_inter'1'4_inter'1'4_inter'1'4_inter'1'4_inter'1'4_inter'1'4:12 = fun xs:2 -> fun ys:3 -> xs:2
+//│ def inter'1'13_inter'1'4_inter'1'4_inter'1'4_inter'1'4_inter'1'4:9 = fun xs:2 -> fun ys:3 -> xs:2
+//│ ((inter'1'13:6 
+//│ 	let h:4 = 1 in 
+//│ 	let t:5 = 
+//│ 		let h:4 = 2 in 
+//│ 		let t:5 = 
+//│ 			let h:4 = 3 in 
+//│ 			let t:5 = ys:3 in [C h:4 ((inter'1'13_inter'1'4_inter'1'4_inter'1'4_inter'1'4_inter'1'4:9 ys:3) t:5)] 
+//│ 		in [C h:4 ((inter'1'13_inter'1'4_inter'1'4_inter'1'4:8 ys:3) t:5)] 
+//│ 	in [C h:4 ((inter'1'13_inter'1'4:7 ys:3) t:5)]) 
+//│ 	let h:4 = 9 in 
+//│ 	let t:5 = 
+//│ 		let h:4 = 8 in 
+//│ 		let t:5 = 
+//│ 			let h:4 = 7 in 
+//│ 			let t:5 = ys:3 in [C h:4 ((inter'1'13_inter'1'4_inter'1'4_inter'1'4_inter'1'4_inter'1'4_inter'1'4:12 ys:3) t:5)] 
+//│ 		in [C h:4 ((inter'1'13_inter'1'4_inter'1'4_inter'1'4_inter'1'4:11 ys:3) t:5)] 
+//│ 	in [C h:4 ((inter'1'13_inter'1'4_inter'1'4:10 ys:3) t:5)])
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+

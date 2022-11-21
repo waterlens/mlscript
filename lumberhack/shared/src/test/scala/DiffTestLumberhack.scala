@@ -48,7 +48,10 @@ class DiffTestLumberhack extends DiffTests {
     } catch {
       case e => if allowErr then {
         outputBuilder ++= "!!!!!!ERROR!!!!!!\n"
-        outputBuilder ++= s"${e.toString()}\n${e.getStackTrace().take(10).map(_.toString()).mkString("\n")}\n"
+        outputBuilder ++= s"${e.toString()}\n"
+        if mode.stdout then {
+          outputBuilder ++= s"\n${e.getStackTrace().take(10).map(_.toString()).mkString("\n")}\n"
+        }
         outputBuilder ++= "!!!!!!ERROR!!!!!!"
       } else { throw e }
     }

@@ -68,16 +68,6 @@ c(p)
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
 //│ !!!!!!ERROR!!!!!!
 //│ java.lang.StackOverflowError
-//│ scala.runtime.BoxesRunTime.equals2(BoxesRunTime.java:133)
-//│ scala.runtime.BoxesRunTime.equals(BoxesRunTime.java:119)
-//│ scala.collection.immutable.List.listEq$1(List.scala:603)
-//│ scala.collection.immutable.List.equals(List.scala:612)
-//│ scala.runtime.BoxesRunTime.equals2(BoxesRunTime.java:133)
-//│ scala.runtime.BoxesRunTime.equals(BoxesRunTime.java:119)
-//│ scala.collection.immutable.Map$Map2.getOrElse(Map.scala:305)
-//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:181)
-//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:185)
-//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:159)
 //│ !!!!!!ERROR!!!!!!
 
 // Just a more valid/reasonable version of the above
@@ -107,16 +97,6 @@ c(p)
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
 //│ !!!!!!ERROR!!!!!!
 //│ java.lang.StackOverflowError
-//│ mlscript.lumberhack.Rewrite$.writeInstance$1(Rewrite.scala:108)
-//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:181)
-//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:185)
-//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:159)
-//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:185)
-//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:159)
-//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:185)
-//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:159)
-//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:185)
-//│ mlscript.lumberhack.Rewrite$.mlscript$lumberhack$Rewrite$$$_$rewriteExpr$1(Rewrite.scala:159)
 //│ !!!!!!ERROR!!!!!!
 
 fun c(x) = if primitive(x) is
@@ -195,23 +175,10 @@ map(ff, l)
 //│ 
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: 23 19 (map:1^28 ⋅ l:3^31 ⋅ ɛ, 23) already has (
-//│   map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ ff:2^29 ⋅ ɛ,
-//│   Match(
-//│     scrut = x:8^15,
-//│     arms = (K, ɛ, Ctor(name = T, args = ɛ)) ⋅ (KK, ɛ, Ctor(name = TT, args = ɛ)) ⋅ (KKKK, ɛ, Ctor(name = TTTT, args = ɛ)) ⋅ ɛ
-//│   )
-//│ ) 
-//│ mlscript.utils.package$.lastWords(package.scala:183)
-//│ mlscript.lumberhack.Rewrite$.$anonfun$2$$anonfun$1$$anonfun$1(Rewrite.scala:82)
-//│ scala.collection.mutable.HashMap.updateWith(HashMap.scala:154)
-//│ mlscript.lumberhack.Rewrite$.$anonfun$2$$anonfun$1(Rewrite.scala:84)
-//│ scala.collection.immutable.Set$Set2.foreach(Set.scala:201)
-//│ mlscript.lumberhack.Rewrite$.$anonfun$2(Rewrite.scala:84)
-//│ scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
-//│ scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
-//│ scala.collection.immutable.HashMap.foreach(HashMap.scala:1076)
-//│ mlscript.lumberhack.Rewrite$.rewrite(Rewrite.scala:85)
+//│ java.lang.Exception: Internal Error: 
+//│ map:1^28 ⋅ l:3^31 ⋅ ɛ to `[KKKK]` 
+//│ 	already has map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ ff:2^29 ⋅ ɛ to `case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}` 
+//│ 	but here comes another match map:1^28 ⋅ map:1^5 ⋅ ff:2^29 ⋅ ɛ to `case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}` 
 //│ !!!!!!ERROR!!!!!!
 
 
@@ -248,23 +215,10 @@ last(p)
 //│ 
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: 15 10 (p:2^18 ⋅ ɛ, 15) already has (
-//│   last:1^17 ⋅ ɛ,
-//│   Match(
-//│     scrut = t:5^2,
-//│     arms = (N, ɛ, Ctor(name = Some, args = h:4^3 ⋅ ɛ)) ⋅ (C, hh:6 ⋅ tt:7 ⋅ ɛ, Call(lhs = last:1^5, rhs = t:5^6)) ⋅ ɛ
-//│   )
-//│ ) 
-//│ mlscript.utils.package$.lastWords(package.scala:183)
-//│ mlscript.lumberhack.Rewrite$.$anonfun$2$$anonfun$1$$anonfun$1(Rewrite.scala:82)
-//│ scala.collection.mutable.HashMap.updateWith(HashMap.scala:154)
-//│ mlscript.lumberhack.Rewrite$.$anonfun$2$$anonfun$1(Rewrite.scala:84)
-//│ scala.collection.immutable.Set$Set2.foreach(Set.scala:201)
-//│ mlscript.lumberhack.Rewrite$.$anonfun$2(Rewrite.scala:84)
-//│ scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
-//│ scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
-//│ scala.collection.immutable.Map$Map3.foreach(Map.scala:448)
-//│ mlscript.lumberhack.Rewrite$.rewrite(Rewrite.scala:85)
+//│ java.lang.Exception: Internal Error: 
+//│ p:2^18 ⋅ ɛ to `[C 2 [N]]` 
+//│ 	already has last:1^17 ⋅ ɛ to `case t:5 of {N -> [Some h:4] | C hh:6 tt:7 -> (last:1 t:5)}` 
+//│ 	but here comes another match last:1^17 ⋅ last:1^5 ⋅ ɛ to `case ls:3 of {C h:4 t:5 -> case t:5 of {N -> [Some h:4] | C hh:6 tt:7 -> (last:1 t:5)} | N -> [None]}` 
 //│ !!!!!!ERROR!!!!!!
 
 

@@ -79,7 +79,11 @@ object Rewrite {
         exprMap foreach { case (ctor, matchh) => res.updateWith(pp, ctor) {
           case S(v) if v === (ctor, matchh) => S(v)
           case S(v) =>
-            lastWords(s"$ctor $matchh (${pprint2(pp).plainText}, ${pprint2(ctor).plainText}) already has ${pprint2(v).plainText} ")
+            lastWords(
+              s"\n${pprint2(pp).plainText} to `${d.exprs(ctor).pp}` \n" +
+              s"\talready has ${pprint2(v._1).plainText} to `${v._2.pp}` \n" +
+              s"\tbut here comes another match ${pprint2(cp).plainText} to `${d.exprs(matchh).pp}`"
+            )
           case N => S(cp, d.exprs(matchh) match { case m: Match => m; case _ => die })
         } }
       }

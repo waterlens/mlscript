@@ -10,11 +10,11 @@ import scala.collection.mutable.StringBuilder
 class DiffTestLumberhack extends DiffTests {
   import DiffTestLumberhack.*
   override def postProcess(mode: ModeType, basePath: List[Str], testName: Str, unit: TypingUnit, output: Str => Unit): Unit = {
-    val outputBuilder = StringBuilder()
-    // outputBuilder ++= "Parsed AST:\n"
-    // outputBuilder ++= pprint2(Pgrm(unit.entities).desugared, showFieldNames = true, width = 150).plainText
-    // outputBuilder ++= "Parsed AST:\n"
-    outputBuilder ++= ">>>>>>>>>> Original >>>>>>>>>>\n"
+    // output("Parsed AST:\n")
+    // output(pprint2(Pgrm(unit.entities).desugared, showFieldNames = true, width = 150).plainText)
+    // output("Parsed AST:\n")
+    
+    output(">>>>>>>>>> Original >>>>>>>>>>")
     given d: Deforest(mode.stdout)
     val (allowErr, filteredEntities) = unit.entities match {
       case Var("_LUMBERHACK_ERROR") :: t => (true, t)
@@ -22,45 +22,43 @@ class DiffTestLumberhack extends DiffTests {
     }
     val originalProgram = Program.fromPgrm(Pgrm(filteredEntities))
     val constraints = d(originalProgram)
-    outputBuilder ++= originalProgram.pp(using true)
-    outputBuilder ++= "\n<<<<<<<<<< Original <<<<<<<<<<\n"
+    output(originalProgram.pp(using true))
+    output("<<<<<<<<<< Original <<<<<<<<<<")
     try {
       d.resolveConstraints
-      outputBuilder ++= "\n------- recursive -------\n"
+      output("\n------- recursive -------")
       d.recursiveConstr._1.foreach { c => 
-        outputBuilder ++= (s"${pprint2.apply(c._1).plainText} :::: ${pprint2.apply(c._2).plainText}\n")
+        output((s"${pprint2.apply(c._1).plainText} :::: ${pprint2.apply(c._2).plainText}"))
       }
-      outputBuilder ++= ("------- defInstance -------\n")
+      output(("------- defInstance -------"))
       d.defInstances.foreach { case (p, xs) =>
-        outputBuilder ++= (pprint2(p._1).plainText + " ==> " + pprint2(p._2).plainText + ":")
-        outputBuilder ++= (xs.toArray.map {
+        output((pprint2(p._1).plainText + " ==> " + pprint2(p._2).plainText + ":"))
+        output((xs.toArray.map {
           case (p, c) => s"\n\t$p: ${d.exprs(p).pp}  <-->  $c: ${d.exprs(c).pp}"
-        }.sorted.mkString)
-        outputBuilder ++= "\n"
+        }.sorted.mkString.substring(1)))
       }
-      outputBuilder ++= "\n>>>>>>>>>> Rewritten >>>>>>>>>>\n"
+      output("\n>>>>>>>>>> Rewritten >>>>>>>>>>")
       val newProgram = Rewrite.rewrite(originalProgram, d,
         d.defInstances.map { case (ps, s) => (ps, s.toSet) }.toMap,
         d.recursiveConstr._2.toMap
       )
-      outputBuilder ++= newProgram.pp
-      outputBuilder ++= "\n<<<<<<<<<< Rewritten <<<<<<<<<<\n"
+      output(newProgram.pp)
+      output("<<<<<<<<<< Rewritten <<<<<<<<<<")
     } catch {
       case e => if allowErr then {
-        outputBuilder ++= "!!!!!!ERROR!!!!!!\n"
-        outputBuilder ++= s"${e.toString()}\n"
+        output("!!!!!!ERROR!!!!!!")
+        output(s"${e.toString()}")
         if mode.stdout then {
-          outputBuilder ++= s"\n${e.getStackTrace().take(10).map(_.toString()).mkString("\n")}\n"
+          output(s"\n${e.getStackTrace().take(10).map(_.toString()).mkString("\n")}\n")
         }
-        outputBuilder ++= "!!!!!!ERROR!!!!!!"
+        output("!!!!!!ERROR!!!!!!")
       } else { throw e }
     }
-    outputBuilder.toString().linesIterator.foreach(output)
   }
   
   override protected lazy val files = allFiles.filter { file =>
     val fileName = file.baseName
-    validExt(file.ext) && (modified(file.relativeTo(pwd)) | modified.isEmpty)
+    validExt(file.ext) && ((modified.isEmpty || modified(file.relativeTo(pwd))) || lumberhackLocalTest(fileName))
   }
 }
 
@@ -70,4 +68,5 @@ object DiffTestLumberhack {
   private val allFiles = os.walk(dir)
   private val validExt = Set("mls")
   private val modified: Set[os.RelPath] = DiffTests.findModifiedFiles(dir)
+  private val lumberhackLocalTest = Set[Str]("_LocalTest")
 }

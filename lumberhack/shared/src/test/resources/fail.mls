@@ -664,3 +664,61 @@ inter(C(1, C(2, C(3, N))), C(9, C(8, C(7, N))))
 //│ 	in [C h:4 ((inter'1'13_inter'1'4_inter'1'4:10 ys:3) t:5)])
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
+
+_LUMBERHACK_ERROR
+let add = primitive
+fun idxSum(ls) = if ls is
+    N then acc => 0
+    C(h, t) then acc => add(acc, idxSum(t)(add(acc, 1)))
+fun rev(lss, a) = if lss is
+    N then a
+    C(hh, tt) then rev(tt, C(hh, a))
+idxSum(rev(primitive, N))(0)
+//│ |_LUMBERHACK_ERROR|↵|#let| |add| |#=| |primitive|↵|#fun| |idxSum|(|ls|)| |#=| |#if| |ls| |is|→|N| |#then| |acc| |=>| |0|↵|C|(|h|,| |t|)| |#then| |acc| |=>| |add|(|acc|,| |idxSum|(|t|)|(|add|(|acc|,| |1|)|)|)|←|↵|#fun| |rev|(|lss|,| |a|)| |#=| |#if| |lss| |is|→|N| |#then| |a|↵|C|(|hh|,| |tt|)| |#then| |rev|(|tt|,| |C|(|hh|,| |a|)|)|←|↵|idxSum|(|rev|(|primitive|,| |N|)|)|(|0|)|
+//│ Parsed: {_LUMBERHACK_ERROR; let add = primitive; fun idxSum = ls, => if ls is ‹(N) then acc, => 0; (C (h, t,)) then acc, => add (acc, idxSum (t,) (add (acc, 1,),),)›; fun rev = lss, a, => if lss is ‹(N) then a; (C (hh, tt,)) then rev (tt, C (hh, a,),)›; idxSum (rev (primitive, N,),) (0,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def add:1 = 1: primitive:0
+//│ def idxSum:2 = 20: fun ls:4 -> 19: case 2: ls:4 of {N -> 4: fun acc:5 -> 3: 0 | C h:6 t:7 -> 18: fun acc:8 -> 17: (7: (5: add:1 6: acc:8) 16: (10: (8: idxSum:2 9: t:7) 15: (13: (11: add:1 12: acc:8) 14: 1)))}
+//│ def rev:3 = 32: fun lss:9 -> 31: fun a:10 -> 30: case 21: lss:9 of {N -> 22: a:10 | C hh:11 tt:12 -> 29: (25: (23: rev:3 24: tt:12) 28: [C 26: hh:11 27: a:10])}
+//│ 41: (39: (33: idxSum:2 38: (36: (34: rev:3 35: primitive:0) 37: [N])) 40: 0)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ((rev:3^23 ⋅ rev:3^23 ⋅ ɛ, N()), (rev:3^34 ⋅ ɛ, 20'29_callres)) :::: ((rev:3^23 ⋅ ɛ, N()), (rev:3^34 ⋅ ɛ, 20'29_callres))
+//│ ((rev:3^23 ⋅ ɛ, C((ɛ, 17'hh), (ɛ, 16'a))), (ɛ, 20'29_callres)) :::: ((ɛ, C((ɛ, 17'hh), (ɛ, 16'a))), (ɛ, 20'29_callres))
+//│ (
+//│   (rev:3^34 ⋅ ɛ, C((ɛ, 17'hh), (ɛ, 16'a))),
+//│   (rev:3^23 ⋅ rev:3^23 ⋅ idxSum:2^33 ⋅ idxSum:2^8 ⋅ idxSum:2^8 ⋅ ɛ, 3'ls)
+//│ ) :::: (
+//│   (rev:3^34 ⋅ ɛ, C((ɛ, 17'hh), (ɛ, 16'a))),
+//│   (rev:3^23 ⋅ rev:3^23 ⋅ idxSum:2^33 ⋅ idxSum:2^8 ⋅ ɛ, 3'ls)
+//│ )
+//│ ------- defInstance -------
+//│ ɛ ==> rev:3^23 ⋅ rev:3^23 ⋅ idxSum:2^33 ⋅ idxSum:2^8 ⋅ idxSum:2^8 ⋅ ɛ:
+//│ 	37: [N]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
+//│ rev:3^23 ⋅ ɛ ==> idxSum:2^33 ⋅ ɛ:
+//│ 	37: [N]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
+//│ rev:3^34 ⋅ ɛ ==> idxSum:2^33 ⋅ ɛ:
+//│ 	28: [C hh:11 a:10]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
+//│ ɛ ==> idxSum:2^33 ⋅ idxSum:2^8 ⋅ ɛ:
+//│ 	37: [N]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
+//│ rev:3^34 ⋅ ɛ ==> rev:3^23 ⋅ rev:3^23 ⋅ idxSum:2^33 ⋅ idxSum:2^8 ⋅ ɛ:
+//│ 	28: [C hh:11 a:10]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
+//│ ɛ ==> rev:3^23 ⋅ idxSum:2^33 ⋅ idxSum:2^8 ⋅ idxSum:2^8 ⋅ ɛ:
+//│ 	37: [N]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
+//│ rev:3^34 ⋅ ɛ ==> rev:3^23 ⋅ idxSum:2^33 ⋅ ɛ:
+//│ 	28: [C hh:11 a:10]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
+//│ ɛ ==> rev:3^23 ⋅ idxSum:2^33 ⋅ idxSum:2^8 ⋅ ɛ:
+//│ 	37: [N]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
+//│ ɛ ==> idxSum:2^33 ⋅ ɛ:
+//│ 	37: [N]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
+//│ rev:3^34 ⋅ ɛ ==> rev:3^23 ⋅ idxSum:2^33 ⋅ idxSum:2^8 ⋅ ɛ:
+//│ 	28: [C hh:11 a:10]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: 
+//│ ɛ to `[N]` 
+//│ 	already has idxSum:2^33 ⋅ ɛ to `case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}` 
+//│ 	but here comes another match rev:3^23 ⋅ idxSum:2^33 ⋅ idxSum:2^8 ⋅ idxSum:2^8 ⋅ ɛ to `case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}`
+//│ !!!!!!ERROR!!!!!!

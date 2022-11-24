@@ -189,6 +189,7 @@ object Rewrite {
         case Call(lhs, rhs) => Call(rewriteExpr(lhs), rewriteExpr(rhs))
         case LetIn(id, rhs, body) => LetIn(id, rewriteExpr(rhs), rewriteExpr(body))
         case Function(param, body) => Function(param, rewriteExpr(body))
+        case IfThenElse(scrut, thenn, elze) => IfThenElse(rewriteExpr(scrut), rewriteExpr(thenn), rewriteExpr(elze))
       }
     }
 

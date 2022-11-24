@@ -19,7 +19,7 @@ case class Program(contents: Ls[ProgDef \/ Expr]) {
 object Program {
   def fromPgrm(p: Pgrm)(using d: Deforest): Program = {
     val (_, (typeDefs, stmts)) = p.desugared
-    given ctx: Expr.Ctx = Iterator("primitive").map {
+    given ctx: Expr.Ctx = Deforest.lumberhackKeywords.map {
       n => n -> d.nextIdent(false, Var(n))
     } ++ stmts.iterator.collect {
       case Def(_, nme, _, _) => nme.name -> d.nextIdent(true, nme)
@@ -40,6 +40,7 @@ enum Expr(using val deforest: Deforest) {
   case Ctor(name: Var, args: Ls[Expr])(using Deforest)
   case LetIn(id: Ident, rhs: Expr, body: Expr)(using Deforest)
   case Match(scrut: Expr, arms: Ls[(Var, Ls[Ident], Expr)])(using Deforest)
+  case IfThenElse(scrut: Expr, thenn: Expr, elze: Expr)(using Deforest)
   case Function(param: Ident, body: Expr)(using Deforest)
   
   val uid: Uid[Expr] = deforest.euid.nextUid
@@ -65,7 +66,10 @@ enum Expr(using val deforest: Deforest) {
             case (v, ids, e) =>
               s"${Console.BLUE + v.name + Console.RESET}${ids.map(id => " " + pprint2(id)).mkString} -> ${e.pp}"
           }.mkString(" | ")}}"
-        case Function(param, body) => s"${Console.BOLD}fun${Console.RESET} ${pprint2(param)} -> ${body.pp}"
+        case Function(param, body) => s"(${Console.BOLD}fun${Console.RESET} ${pprint2(param)} -> ${body.pp})"
+        case IfThenElse(scrut, thenn, elze) => 
+          s"${Console.BOLD}if${Console.RESET} ${scrut.pp} ${Console.BOLD}then${Console.RESET} " +
+          s"${thenn.pp} ${Console.BOLD}else${Console.RESET} ${elze.pp}"
     )
     res.plainText
 }
@@ -109,7 +113,11 @@ object Expr {
           case _ => ???
         }
       )
+    // if then else for int
+    case If(IfThen(expr, rhs), S(elze)) =>
+      IfThenElse(fromTerm(expr), fromTerm(rhs), fromTerm(elze))
     case Bra(false, t) => fromTerm(t)
+    case Blk((e: Term) :: Nil) => fromTerm(e)
     // single element tuple as brackets
     case Tup((N -> Fld(_, _, t)) :: Nil) => fromTerm(t)
     case _ => lastWords(s"unsupported: $t (${t.getClass})") // unsupported

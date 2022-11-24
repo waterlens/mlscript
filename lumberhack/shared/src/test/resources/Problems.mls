@@ -11,34 +11,34 @@ c(p)
 //│ |#let| |p| |#=| |C|(|p|)|↵|#fun| |c|(|x|)| |#=| |#if| |C|(|x|)| |is|→|C|(|a|)| |#then| |a|←|↵|c|(|p|)|
 //│ Parsed: {let p = C (p,); fun c = x, => if C (x,) is ‹(C (a,)) then a›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:1 = 2: [C 1: p:1]
-//│ def c:2 = 7: fun x:3 -> 6: case 4: [C 3: x:3] of {C a:4 -> 5: a:4}
-//│ 10: (8: c:2 9: p:1)
+//│ def p:6 = 2: [C 1: p:6]
+//│ def c:7 = 7: (fun x:8 -> 6: case 4: [C 3: x:8] of {C a:9 -> 5: a:9})
+//│ 10: (8: c:7 9: p:6)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
 //│ ------- defInstance -------
 //│ ɛ ==> ɛ:
-//│ 	4: [C x:3]  <-->  6: case [C x:3] of {C a:4 -> a:4}
+//│ 	4: [C x:8]  <-->  6: case [C x:8] of {C a:9 -> a:9}
 //│ 
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
-//│ def p:1 = [C p:1]
-//│ def c:2 = fun x:3 -> case [C x:3] of {C a:4 -> a:4}
-//│ def p'1'9_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:16 = [C p'1'9_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:17]
-//│ def p'1'9_p'1'1:7 = [C p'1'9_p'1'1_p'1'1:8]
-//│ def p'1'9_p'1'1_p'1'1_p'1'1_p'1'1:10 = [C p'1'9_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:11]
-//│ def p'1'9_p'1'1_p'1'1_p'1'1:9 = [C p'1'9_p'1'1_p'1'1_p'1'1_p'1'1:10]
-//│ def p'1'9_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:12 = [C p'1'9_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:13]
-//│ def p'1'9_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:14 = [C p'1'9_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:15]
-//│ def p'1'9_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:15 = [C p'1'9_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:16]
-//│ def p'1'9:6 = [C p'1'9_p'1'1:7]
-//│ def p'1'9_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:13 = [C p'1'9_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:14]
-//│ def p'1'9_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:17 = "RECURSE_TOO_LONG"
-//│ def p'1'9_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:11 = [C p'1'9_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1_p'1'1:12]
-//│ def c'2'8:5 = fun x:3 -> 
-//│ 	let a:4 = x:3 in a:4
-//│ def p'1'9_p'1'1_p'1'1:8 = [C p'1'9_p'1'1_p'1'1_p'1'1:9]
-//│ (c'2'8:5 p'1'9:6)
+//│ def p:6 = [C p:6]
+//│ def c:7 = (fun x:8 -> case [C x:8] of {C a:9 -> a:9})
+//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:21 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:22]
+//│ def p'6'9_p'6'1_p'6'1:13 = [C p'6'9_p'6'1_p'6'1_p'6'1:14]
+//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:19 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:20]
+//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:22 = "RECURSE_TOO_LONG"
+//│ def c'7'8:10 = (fun x:8 -> 
+//│ 	let a:9 = x:8 in a:9)
+//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:20 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:21]
+//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:18 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:19]
+//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:17 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:18]
+//│ def p'6'9_p'6'1:12 = [C p'6'9_p'6'1_p'6'1:13]
+//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:16 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:17]
+//│ def p'6'9_p'6'1_p'6'1_p'6'1:14 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1:15]
+//│ def p'6'9:11 = [C p'6'9_p'6'1:12]
+//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1:15 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:16]
+//│ (c'7'8:10 p'6'9:11)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
 
@@ -51,19 +51,19 @@ c(p)
 //│ |_LUMBERHACK_ERROR|↵|#let| |p| |#=| |Pair|(|A|,| |B|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|Pair|(|a|,| |b|)| |#then| |c|(|Pair|(|b|,| |a|)|)|←|↵|c|(|p|)|
 //│ Parsed: {_LUMBERHACK_ERROR; let p = Pair (A, B,); fun c = x, => if x is ‹(Pair (a, b,)) then c (Pair (b, a,),)›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:1 = 3: [Pair 1: [A] 2: [B]]
-//│ def c:2 = 11: fun x:3 -> 10: case 4: x:3 of {Pair a:4 b:5 -> 9: (5: c:2 8: [Pair 6: b:5 7: a:4])}
-//│ 14: (12: c:2 13: p:1)
+//│ def p:6 = 3: [Pair 1: [A] 2: [B]]
+//│ def c:7 = 11: (fun x:8 -> 10: case 4: x:8 of {Pair a:9 b:10 -> 9: (5: c:7 8: [Pair 6: b:10 7: a:9])})
+//│ 14: (12: c:7 13: p:6)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ ((p:1^13 ⋅ ɛ, B()), (c:2^12 ⋅ c:2^5 ⋅ c:2^5 ⋅ ɛ, 4'b)) :::: ((p:1^13 ⋅ ɛ, B()), (c:2^12 ⋅ ɛ, 4'b))
-//│ ((p:1^13 ⋅ ɛ, A()), (c:2^12 ⋅ c:2^5 ⋅ c:2^5 ⋅ ɛ, 3'a)) :::: ((p:1^13 ⋅ ɛ, A()), (c:2^12 ⋅ ɛ, 3'a))
+//│ ((p:6^13 ⋅ ɛ, B()), (c:7^12 ⋅ c:7^5 ⋅ c:7^5 ⋅ ɛ, 4'b)) :::: ((p:6^13 ⋅ ɛ, B()), (c:7^12 ⋅ ɛ, 4'b))
+//│ ((p:6^13 ⋅ ɛ, A()), (c:7^12 ⋅ c:7^5 ⋅ c:7^5 ⋅ ɛ, 3'a)) :::: ((p:6^13 ⋅ ɛ, A()), (c:7^12 ⋅ ɛ, 3'a))
 //│ ------- defInstance -------
-//│ p:1^13 ⋅ ɛ ==> c:2^12 ⋅ ɛ:
-//│ 	3: [Pair [A] [B]]  <-->  10: case x:3 of {Pair a:4 b:5 -> (c:2 [Pair b:5 a:4])}
-//│ ɛ ==> c:2^5 ⋅ ɛ:
-//│ 	8: [Pair b:5 a:4]  <-->  10: case x:3 of {Pair a:4 b:5 -> (c:2 [Pair b:5 a:4])}
+//│ ɛ ==> c:7^5 ⋅ ɛ:
+//│ 	8: [Pair b:10 a:9]  <-->  10: case x:8 of {Pair a:9 b:10 -> (c:7 [Pair b:10 a:9])}
+//│ p:6^13 ⋅ ɛ ==> c:7^12 ⋅ ɛ:
+//│ 	3: [Pair [A] [B]]  <-->  10: case x:8 of {Pair a:9 b:10 -> (c:7 [Pair b:10 a:9])}
 //│ 
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
 //│ !!!!!!ERROR!!!!!!
@@ -82,17 +82,17 @@ c(p)
 //│ |_LUMBERHACK_ERROR|↵|#let| |p| |#=| |Wrap|(|A|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|N| |#then| |0|↵|Wrap|(|a|)| |#then| |c|(|Wrap|(|primitive|(|a|)|)|)|←|↵|c|(|p|)|
 //│ Parsed: {_LUMBERHACK_ERROR; let p = Wrap (A,); fun c = x, => if x is ‹(N) then 0; (Wrap (a,)) then c (Wrap (primitive (a,),),)›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:1 = 2: [Wrap 1: [A]]
-//│ def c:2 = 12: fun x:3 -> 11: case 3: x:3 of {N -> 4: 0 | Wrap a:4 -> 10: (5: c:2 9: [Wrap 8: (6: primitive:0 7: a:4)])}
-//│ 15: (13: c:2 14: p:1)
+//│ def p:6 = 2: [Wrap 1: [A]]
+//│ def c:7 = 12: (fun x:8 -> 11: case 3: x:8 of {N -> 4: 0 | Wrap a:9 -> 10: (5: c:7 9: [Wrap 8: (6: primitive:3 7: a:9)])})
+//│ 15: (13: c:7 14: p:6)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
 //│ ------- defInstance -------
-//│ p:1^14 ⋅ ɛ ==> c:2^13 ⋅ ɛ:
-//│ 	2: [Wrap [A]]  <-->  11: case x:3 of {N -> 0 | Wrap a:4 -> (c:2 [Wrap (primitive:0 a:4)])}
-//│ ɛ ==> c:2^5 ⋅ ɛ:
-//│ 	9: [Wrap (primitive:0 a:4)]  <-->  11: case x:3 of {N -> 0 | Wrap a:4 -> (c:2 [Wrap (primitive:0 a:4)])}
+//│ ɛ ==> c:7^5 ⋅ ɛ:
+//│ 	9: [Wrap (primitive:3 a:9)]  <-->  11: case x:8 of {N -> 0 | Wrap a:9 -> (c:7 [Wrap (primitive:3 a:9)])}
+//│ p:6^14 ⋅ ɛ ==> c:7^13 ⋅ ɛ:
+//│ 	2: [Wrap [A]]  <-->  11: case x:8 of {N -> 0 | Wrap a:9 -> (c:7 [Wrap (primitive:3 a:9)])}
 //│ 
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
 //│ !!!!!!ERROR!!!!!!
@@ -106,28 +106,28 @@ c(0)
 //│ |#fun| |c|(|x|)| |#=| |#if| |primitive|(|x|)| |is|→|True| |#then| |0|↵|False| |#then| |c|(|primitive|(|x|)|)|←|↵|c|(|0|)|
 //│ Parsed: {fun c = x, => if primitive (x,) is ‹(True) then 0; (False) then c (primitive (x,),)›; c (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def c:1 = 11: fun x:2 -> 10: case 3: (1: primitive:0 2: x:2) of {True -> 4: 0 | False -> 9: (5: c:1 8: (6: primitive:0 7: x:2))}
-//│ 14: (12: c:1 13: 0)
+//│ def c:6 = 11: (fun x:7 -> 10: case 3: (1: primitive:3 2: x:7) of {True -> 4: 0 | False -> 9: (5: c:6 8: (6: primitive:3 7: x:7))})
+//│ 14: (12: c:6 13: 0)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
 //│ ------- defInstance -------
 //│ 
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
-//│ def c:1 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c:1 (primitive:0 x:2))}
-//│ def c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:10 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:11 (primitive:0 x:2))}
-//│ def c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:11 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:12 (primitive:0 x:2))}
-//│ def c'1'12_c'1'5_c'1'5_c'1'5:6 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5_c'1'5_c'1'5:7 (primitive:0 x:2))}
-//│ def c'1'12_c'1'5:4 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5:5 (primitive:0 x:2))}
-//│ def c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:9 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:10 (primitive:0 x:2))}
-//│ def c'1'12_c'1'5_c'1'5_c'1'5_c'1'5:7 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:8 (primitive:0 x:2))}
-//│ def c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:12 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:13 (primitive:0 x:2))}
-//│ def c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:14 = "RECURSE_TOO_LONG"
-//│ def c'1'12_c'1'5_c'1'5:5 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5_c'1'5:6 (primitive:0 x:2))}
-//│ def c'1'12:3 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5:4 (primitive:0 x:2))}
-//│ def c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:13 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:14 (primitive:0 x:2))}
-//│ def c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:8 = fun x:2 -> case (primitive:0 x:2) of {True -> 0 | False -> (c'1'12_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5_c'1'5:9 (primitive:0 x:2))}
-//│ (c'1'12:3 0)
+//│ def c:6 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c:6 (primitive:3 x:7))})
+//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:18 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:19 (primitive:3 x:7))})
+//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:19 = "RECURSE_TOO_LONG"
+//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:17 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:18 (primitive:3 x:7))})
+//│ def c'6'12_c'6'5_c'6'5:10 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5:11 (primitive:3 x:7))})
+//│ def c'6'12_c'6'5_c'6'5_c'6'5:11 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5:12 (primitive:3 x:7))})
+//│ def c'6'12_c'6'5:9 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5:10 (primitive:3 x:7))})
+//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5:12 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:13 (primitive:3 x:7))})
+//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:14 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:15 (primitive:3 x:7))})
+//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:13 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:14 (primitive:3 x:7))})
+//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:15 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:16 (primitive:3 x:7))})
+//│ def c'6'12:8 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5:9 (primitive:3 x:7))})
+//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:16 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:17 (primitive:3 x:7))})
+//│ (c'6'12:8 0)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
 
@@ -145,40 +145,40 @@ map(ff, l)
 //│ |_LUMBERHACK_ERROR|↵|#fun| |map|(|f|,| |ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#fun| |ff|(|x|)| |#=| |#if| |x| |is|→|K| |#then| |T|↵|KK| |#then| |TT|↵|KKKK| |#then| |TTTT|←|↵|#let| |l| |#=| |C|(|K|,| |C|(|KK|,| |C|(|KKKK|,| |N|)|)|)|↵|map|(|ff|,| |l|)|
 //│ Parsed: {_LUMBERHACK_ERROR; fun map = f, ls, => if ls is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; fun ff = x, => if x is ‹(K) then T; (KK) then TT; (KKKK) then TTTT›; let l = C (K, C (KK, C (KKKK, N,),),); map (ff, l,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def map:1 = 14: fun f:4 -> 13: fun ls:5 -> 12: case 1: ls:5 of {C h:6 t:7 -> 10: [C 4: (2: f:4 3: h:6) 9: (7: (5: map:1 6: f:4) 8: t:7)] | N -> 11: [N]}
-//│ def ff:2 = 20: fun x:8 -> 19: case 15: x:8 of {K -> 16: [T] | KK -> 17: [TT] | KKKK -> 18: [TTTT]}
-//│ def l:3 = 27: [C 21: [K] 26: [C 22: [KK] 25: [C 23: [KKKK] 24: [N]]]]
-//│ 32: (30: (28: map:1 29: ff:2) 31: l:3)
+//│ def map:6 = 14: (fun f:9 -> 13: (fun ls:10 -> 12: case 1: ls:10 of {C h:11 t:12 -> 10: [C 4: (2: f:9 3: h:11) 9: (7: (5: map:6 6: f:9) 8: t:12)] | N -> 11: [N]}))
+//│ def ff:7 = 20: (fun x:13 -> 19: case 15: x:13 of {K -> 16: [T] | KK -> 17: [TT] | KKKK -> 18: [TTTT]})
+//│ def l:8 = 27: [C 21: [K] 26: [C 22: [KK] 25: [C 23: [KKKK] 24: [N]]]]
+//│ 32: (30: (28: map:6 29: ff:7) 31: l:8)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ ((ff:2^29 ⋅ ɛ, (ɛ, 11'x) => ((ɛ, 12'19_matchres))), (map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ ɛ, 3'f)) :::: ((ff:2^29 ⋅ ɛ, (ɛ, 11'x) => ((ɛ, 12'19_matchres))), (map:1^28 ⋅ map:1^5 ⋅ ɛ, 3'f))
+//│ ((ff:7^29 ⋅ ɛ, (ɛ, 11'x) => ((ɛ, 12'19_matchres))), (map:6^28 ⋅ map:6^5 ⋅ map:6^5 ⋅ ɛ, 3'f)) :::: ((ff:7^29 ⋅ ɛ, (ɛ, 11'x) => ((ɛ, 12'19_matchres))), (map:6^28 ⋅ map:6^5 ⋅ ɛ, 3'f))
 //│ ------- defInstance -------
-//│ l:3^31 ⋅ ɛ ==> ff:2^29 ⋅ ɛ:
-//│ 	21: [K]  <-->  19: case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
-//│ 	22: [KK]  <-->  19: case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
-//│ map:1^28 ⋅ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ ff:2^29 ⋅ ɛ:
-//│ 	23: [KKKK]  <-->  19: case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
-//│ map:1^28 ⋅ map:1^5 ⋅ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ ff:2^29 ⋅ ɛ:
-//│ 	21: [K]  <-->  19: case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
-//│ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ ɛ:
-//│ 	27: [C [K] [C [KK] [C [KKKK] [N]]]]  <-->  12: case ls:5 of {C h:6 t:7 -> [C (f:4 h:6) ((map:1 f:4) t:7)] | N -> [N]}
-//│ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ ɛ:
-//│ 	25: [C [KKKK] [N]]  <-->  12: case ls:5 of {C h:6 t:7 -> [C (f:4 h:6) ((map:1 f:4) t:7)] | N -> [N]}
-//│ map:1^28 ⋅ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ ff:2^29 ⋅ ɛ:
-//│ 	22: [KK]  <-->  19: case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
-//│ 	23: [KKKK]  <-->  19: case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
-//│ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ map:1^5 ⋅ ɛ:
-//│ 	24: [N]  <-->  12: case ls:5 of {C h:6 t:7 -> [C (f:4 h:6) ((map:1 f:4) t:7)] | N -> [N]}
-//│ l:3^31 ⋅ ɛ ==> map:1^28 ⋅ map:1^5 ⋅ ɛ:
-//│ 	26: [C [KK] [C [KKKK] [N]]]  <-->  12: case ls:5 of {C h:6 t:7 -> [C (f:4 h:6) ((map:1 f:4) t:7)] | N -> [N]}
+//│ map:6^28 ⋅ l:8^31 ⋅ ɛ ==> map:6^28 ⋅ map:6^5 ⋅ ff:7^29 ⋅ ɛ:
+//│ 	22: [KK]  <-->  19: case x:13 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ 	23: [KKKK]  <-->  19: case x:13 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ l:8^31 ⋅ ɛ ==> map:6^28 ⋅ ɛ:
+//│ 	27: [C [K] [C [KK] [C [KKKK] [N]]]]  <-->  12: case ls:10 of {C h:11 t:12 -> [C (f:9 h:11) ((map:6 f:9) t:12)] | N -> [N]}
+//│ l:8^31 ⋅ ɛ ==> map:6^28 ⋅ map:6^5 ⋅ map:6^5 ⋅ ɛ:
+//│ 	25: [C [KKKK] [N]]  <-->  12: case ls:10 of {C h:11 t:12 -> [C (f:9 h:11) ((map:6 f:9) t:12)] | N -> [N]}
+//│ l:8^31 ⋅ ɛ ==> ff:7^29 ⋅ ɛ:
+//│ 	21: [K]  <-->  19: case x:13 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ 	22: [KK]  <-->  19: case x:13 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ map:6^28 ⋅ l:8^31 ⋅ ɛ ==> map:6^28 ⋅ map:6^5 ⋅ map:6^5 ⋅ ff:7^29 ⋅ ɛ:
+//│ 	23: [KKKK]  <-->  19: case x:13 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ l:8^31 ⋅ ɛ ==> map:6^28 ⋅ map:6^5 ⋅ map:6^5 ⋅ map:6^5 ⋅ ɛ:
+//│ 	24: [N]  <-->  12: case ls:10 of {C h:11 t:12 -> [C (f:9 h:11) ((map:6 f:9) t:12)] | N -> [N]}
+//│ map:6^28 ⋅ map:6^5 ⋅ l:8^31 ⋅ ɛ ==> map:6^28 ⋅ ff:7^29 ⋅ ɛ:
+//│ 	21: [K]  <-->  19: case x:13 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
+//│ l:8^31 ⋅ ɛ ==> map:6^28 ⋅ map:6^5 ⋅ ɛ:
+//│ 	26: [C [KK] [C [KKKK] [N]]]  <-->  12: case ls:10 of {C h:11 t:12 -> [C (f:9 h:11) ((map:6 f:9) t:12)] | N -> [N]}
 //│ 
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
 //│ !!!!!!ERROR!!!!!!
 //│ java.lang.Exception: Internal Error: 
-//│ map:1^28 ⋅ l:3^31 ⋅ ɛ to `[KKKK]` 
-//│ 	already has map:1^28 ⋅ map:1^5 ⋅ map:1^5 ⋅ ff:2^29 ⋅ ɛ to `case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}` 
-//│ 	but here comes another match map:1^28 ⋅ map:1^5 ⋅ ff:2^29 ⋅ ɛ to `case x:8 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}`
+//│ map:6^28 ⋅ l:8^31 ⋅ ɛ to `[KKKK]` 
+//│ 	already has map:6^28 ⋅ map:6^5 ⋅ map:6^5 ⋅ ff:7^29 ⋅ ɛ to `case x:13 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}` 
+//│ 	but here comes another match map:6^28 ⋅ map:6^5 ⋅ ff:7^29 ⋅ ɛ to `case x:13 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}`
 //│ !!!!!!ERROR!!!!!!
 
 
@@ -195,30 +195,30 @@ last(p)
 //│ |_LUMBERHACK_ERROR|↵|#fun| |last|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |t| |is|→|N| |#then| |Some|(|h|)|↵|C|(|hh|,| |tt|)| |#then| |last|(|t|)|↵|/* C(hh, tt) then last(C(hh, tt))*/|←|↵|N| |#then| |None|←|↵|#let| |p| |#=| |C|(|1|,| |C|(|2|,| |N|)|)|↵|last|(|p|)|
 //│ Parsed: {_LUMBERHACK_ERROR; fun last = ls, => if ls is ‹(C (h, t,)) then if t is ‹(N) then Some (h,); (C (hh, tt,)) then last (t,)›; (N) then None›; let p = C (1, C (2, N,),); last (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def last:1 = 11: fun ls:3 -> 10: case 1: ls:3 of {C h:4 t:5 -> 8: case 2: t:5 of {N -> 4: [Some 3: h:4] | C hh:6 tt:7 -> 7: (5: last:1 6: t:5)} | N -> 9: [None]}
-//│ def p:2 = 16: [C 12: 1 15: [C 13: 2 14: [N]]]
-//│ 19: (17: last:1 18: p:2)
+//│ def last:6 = 11: (fun ls:8 -> 10: case 1: ls:8 of {C h:9 t:10 -> 8: case 2: t:10 of {N -> 4: [Some 3: h:9] | C hh:11 tt:12 -> 7: (5: last:6 6: t:10)} | N -> 9: [None]})
+//│ def p:7 = 16: [C 12: 1 15: [C 13: 2 14: [N]]]
+//│ 19: (17: last:6 18: p:7)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ ((last:1^5 ⋅ last:1^5 ⋅ ɛ, Some((ɛ, 3'h))), (ɛ, 7'7_callres)) :::: ((last:1^5 ⋅ ɛ, Some((ɛ, 3'h))), (ɛ, 7'7_callres))
-//│ ((last:1^5 ⋅ last:1^5 ⋅ ɛ, None()), (ɛ, 7'7_callres)) :::: ((last:1^5 ⋅ ɛ, None()), (ɛ, 7'7_callres))
+//│ ((last:6^5 ⋅ last:6^5 ⋅ ɛ, Some((ɛ, 3'h))), (ɛ, 7'7_callres)) :::: ((last:6^5 ⋅ ɛ, Some((ɛ, 3'h))), (ɛ, 7'7_callres))
+//│ ((last:6^5 ⋅ last:6^5 ⋅ ɛ, None()), (ɛ, 7'7_callres)) :::: ((last:6^5 ⋅ ɛ, None()), (ɛ, 7'7_callres))
 //│ ------- defInstance -------
-//│ p:2^18 ⋅ ɛ ==> last:1^17 ⋅ ɛ:
-//│ 	15: [C 2 [N]]  <-->  8: case t:5 of {N -> [Some h:4] | C hh:6 tt:7 -> (last:1 t:5)}
-//│ 	16: [C 1 [C 2 [N]]]  <-->  10: case ls:3 of {C h:4 t:5 -> case t:5 of {N -> [Some h:4] | C hh:6 tt:7 -> (last:1 t:5)} | N -> [None]}
-//│ p:2^18 ⋅ ɛ ==> last:1^17 ⋅ last:1^5 ⋅ ɛ:
-//│ 	14: [N]  <-->  8: case t:5 of {N -> [Some h:4] | C hh:6 tt:7 -> (last:1 t:5)}
-//│ 	15: [C 2 [N]]  <-->  10: case ls:3 of {C h:4 t:5 -> case t:5 of {N -> [Some h:4] | C hh:6 tt:7 -> (last:1 t:5)} | N -> [None]}
-//│ p:2^18 ⋅ ɛ ==> last:1^17 ⋅ last:1^5 ⋅ last:1^5 ⋅ ɛ:
-//│ 	14: [N]  <-->  10: case ls:3 of {C h:4 t:5 -> case t:5 of {N -> [Some h:4] | C hh:6 tt:7 -> (last:1 t:5)} | N -> [None]}
+//│ p:7^18 ⋅ ɛ ==> last:6^17 ⋅ last:6^5 ⋅ last:6^5 ⋅ ɛ:
+//│ 	14: [N]  <-->  10: case ls:8 of {C h:9 t:10 -> case t:10 of {N -> [Some h:9] | C hh:11 tt:12 -> (last:6 t:10)} | N -> [None]}
+//│ p:7^18 ⋅ ɛ ==> last:6^17 ⋅ last:6^5 ⋅ ɛ:
+//│ 	14: [N]  <-->  8: case t:10 of {N -> [Some h:9] | C hh:11 tt:12 -> (last:6 t:10)}
+//│ 	15: [C 2 [N]]  <-->  10: case ls:8 of {C h:9 t:10 -> case t:10 of {N -> [Some h:9] | C hh:11 tt:12 -> (last:6 t:10)} | N -> [None]}
+//│ p:7^18 ⋅ ɛ ==> last:6^17 ⋅ ɛ:
+//│ 	15: [C 2 [N]]  <-->  8: case t:10 of {N -> [Some h:9] | C hh:11 tt:12 -> (last:6 t:10)}
+//│ 	16: [C 1 [C 2 [N]]]  <-->  10: case ls:8 of {C h:9 t:10 -> case t:10 of {N -> [Some h:9] | C hh:11 tt:12 -> (last:6 t:10)} | N -> [None]}
 //│ 
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
 //│ !!!!!!ERROR!!!!!!
 //│ java.lang.Exception: Internal Error: 
-//│ p:2^18 ⋅ ɛ to `[C 2 [N]]` 
-//│ 	already has last:1^17 ⋅ ɛ to `case t:5 of {N -> [Some h:4] | C hh:6 tt:7 -> (last:1 t:5)}` 
-//│ 	but here comes another match last:1^17 ⋅ last:1^5 ⋅ ɛ to `case ls:3 of {C h:4 t:5 -> case t:5 of {N -> [Some h:4] | C hh:6 tt:7 -> (last:1 t:5)} | N -> [None]}`
+//│ p:7^18 ⋅ ɛ to `[N]` 
+//│ 	already has last:6^17 ⋅ last:6^5 ⋅ last:6^5 ⋅ ɛ to `case ls:8 of {C h:9 t:10 -> case t:10 of {N -> [Some h:9] | C hh:11 tt:12 -> (last:6 t:10)} | N -> [None]}` 
+//│ 	but here comes another match last:6^17 ⋅ last:6^5 ⋅ ɛ to `case t:10 of {N -> [Some h:9] | C hh:11 tt:12 -> (last:6 t:10)}`
 //│ !!!!!!ERROR!!!!!!
 
 _LUMBERHACK_ERROR
@@ -233,48 +233,48 @@ idxSum(rev(primitive, N))(0)
 //│ |_LUMBERHACK_ERROR|↵|#let| |add| |#=| |primitive|↵|#fun| |idxSum|(|ls|)| |#=| |#if| |ls| |is|→|N| |#then| |acc| |=>| |0|↵|C|(|h|,| |t|)| |#then| |acc| |=>| |add|(|acc|,| |idxSum|(|t|)|(|add|(|acc|,| |1|)|)|)|←|↵|#fun| |rev|(|lss|,| |a|)| |#=| |#if| |lss| |is|→|N| |#then| |a|↵|C|(|hh|,| |tt|)| |#then| |rev|(|tt|,| |C|(|hh|,| |a|)|)|←|↵|idxSum|(|rev|(|primitive|,| |N|)|)|(|0|)|
 //│ Parsed: {_LUMBERHACK_ERROR; let add = primitive; fun idxSum = ls, => if ls is ‹(N) then acc, => 0; (C (h, t,)) then acc, => add (acc, idxSum (t,) (add (acc, 1,),),)›; fun rev = lss, a, => if lss is ‹(N) then a; (C (hh, tt,)) then rev (tt, C (hh, a,),)›; idxSum (rev (primitive, N,),) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def add:1 = 1: primitive:0
-//│ def idxSum:2 = 20: fun ls:4 -> 19: case 2: ls:4 of {N -> 4: fun acc:5 -> 3: 0 | C h:6 t:7 -> 18: fun acc:8 -> 17: (7: (5: add:1 6: acc:8) 16: (10: (8: idxSum:2 9: t:7) 15: (13: (11: add:1 12: acc:8) 14: 1)))}
-//│ def rev:3 = 32: fun lss:9 -> 31: fun a:10 -> 30: case 21: lss:9 of {N -> 22: a:10 | C hh:11 tt:12 -> 29: (25: (23: rev:3 24: tt:12) 28: [C 26: hh:11 27: a:10])}
-//│ 41: (39: (33: idxSum:2 38: (36: (34: rev:3 35: primitive:0) 37: [N])) 40: 0)
+//│ def add:4 = 1: primitive:3
+//│ def idxSum:7 = 20: (fun ls:9 -> 19: case 2: ls:9 of {N -> 4: (fun acc:10 -> 3: 0) | C h:11 t:12 -> 18: (fun acc:13 -> 17: (7: (5: add:4 6: acc:13) 16: (10: (8: idxSum:7 9: t:12) 15: (13: (11: add:4 12: acc:13) 14: 1))))})
+//│ def rev:8 = 32: (fun lss:14 -> 31: (fun a:15 -> 30: case 21: lss:14 of {N -> 22: a:15 | C hh:16 tt:17 -> 29: (25: (23: rev:8 24: tt:17) 28: [C 26: hh:16 27: a:15])}))
+//│ 41: (39: (33: idxSum:7 38: (36: (34: rev:8 35: primitive:3) 37: [N])) 40: 0)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ ((rev:3^23 ⋅ rev:3^23 ⋅ ɛ, N()), (rev:3^34 ⋅ ɛ, 20'29_callres)) :::: ((rev:3^23 ⋅ ɛ, N()), (rev:3^34 ⋅ ɛ, 20'29_callres))
-//│ ((rev:3^23 ⋅ ɛ, C((ɛ, 17'hh), (ɛ, 16'a))), (ɛ, 20'29_callres)) :::: ((ɛ, C((ɛ, 17'hh), (ɛ, 16'a))), (ɛ, 20'29_callres))
+//│ ((rev:8^23 ⋅ rev:8^23 ⋅ ɛ, N()), (rev:8^34 ⋅ ɛ, 20'29_callres)) :::: ((rev:8^23 ⋅ ɛ, N()), (rev:8^34 ⋅ ɛ, 20'29_callres))
+//│ ((rev:8^23 ⋅ ɛ, C((ɛ, 17'hh), (ɛ, 16'a))), (ɛ, 20'29_callres)) :::: ((ɛ, C((ɛ, 17'hh), (ɛ, 16'a))), (ɛ, 20'29_callres))
 //│ (
-//│   (rev:3^34 ⋅ ɛ, C((ɛ, 17'hh), (ɛ, 16'a))),
-//│   (rev:3^23 ⋅ rev:3^23 ⋅ idxSum:2^33 ⋅ idxSum:2^8 ⋅ idxSum:2^8 ⋅ ɛ, 3'ls)
+//│   (rev:8^34 ⋅ ɛ, C((ɛ, 17'hh), (ɛ, 16'a))),
+//│   (rev:8^23 ⋅ rev:8^23 ⋅ idxSum:7^33 ⋅ idxSum:7^8 ⋅ idxSum:7^8 ⋅ ɛ, 3'ls)
 //│ ) :::: (
-//│   (rev:3^34 ⋅ ɛ, C((ɛ, 17'hh), (ɛ, 16'a))),
-//│   (rev:3^23 ⋅ rev:3^23 ⋅ idxSum:2^33 ⋅ idxSum:2^8 ⋅ ɛ, 3'ls)
+//│   (rev:8^34 ⋅ ɛ, C((ɛ, 17'hh), (ɛ, 16'a))),
+//│   (rev:8^23 ⋅ rev:8^23 ⋅ idxSum:7^33 ⋅ idxSum:7^8 ⋅ ɛ, 3'ls)
 //│ )
 //│ ------- defInstance -------
-//│ ɛ ==> rev:3^23 ⋅ rev:3^23 ⋅ idxSum:2^33 ⋅ idxSum:2^8 ⋅ idxSum:2^8 ⋅ ɛ:
-//│ 	37: [N]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
-//│ rev:3^23 ⋅ ɛ ==> idxSum:2^33 ⋅ ɛ:
-//│ 	37: [N]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
-//│ rev:3^34 ⋅ ɛ ==> idxSum:2^33 ⋅ ɛ:
-//│ 	28: [C hh:11 a:10]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
-//│ ɛ ==> idxSum:2^33 ⋅ idxSum:2^8 ⋅ ɛ:
-//│ 	37: [N]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
-//│ rev:3^34 ⋅ ɛ ==> rev:3^23 ⋅ rev:3^23 ⋅ idxSum:2^33 ⋅ idxSum:2^8 ⋅ ɛ:
-//│ 	28: [C hh:11 a:10]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
-//│ ɛ ==> rev:3^23 ⋅ idxSum:2^33 ⋅ idxSum:2^8 ⋅ idxSum:2^8 ⋅ ɛ:
-//│ 	37: [N]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
-//│ rev:3^34 ⋅ ɛ ==> rev:3^23 ⋅ idxSum:2^33 ⋅ ɛ:
-//│ 	28: [C hh:11 a:10]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
-//│ ɛ ==> rev:3^23 ⋅ idxSum:2^33 ⋅ idxSum:2^8 ⋅ ɛ:
-//│ 	37: [N]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
-//│ ɛ ==> idxSum:2^33 ⋅ ɛ:
-//│ 	37: [N]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
-//│ rev:3^34 ⋅ ɛ ==> rev:3^23 ⋅ idxSum:2^33 ⋅ idxSum:2^8 ⋅ ɛ:
-//│ 	28: [C hh:11 a:10]  <-->  19: case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}
+//│ ɛ ==> rev:8^23 ⋅ idxSum:7^33 ⋅ idxSum:7^8 ⋅ ɛ:
+//│ 	37: [N]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
+//│ rev:8^34 ⋅ ɛ ==> rev:8^23 ⋅ rev:8^23 ⋅ idxSum:7^33 ⋅ idxSum:7^8 ⋅ ɛ:
+//│ 	28: [C hh:16 a:15]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
+//│ rev:8^34 ⋅ ɛ ==> rev:8^23 ⋅ idxSum:7^33 ⋅ idxSum:7^8 ⋅ ɛ:
+//│ 	28: [C hh:16 a:15]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
+//│ rev:8^34 ⋅ ɛ ==> idxSum:7^33 ⋅ ɛ:
+//│ 	28: [C hh:16 a:15]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
+//│ rev:8^23 ⋅ ɛ ==> idxSum:7^33 ⋅ ɛ:
+//│ 	37: [N]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
+//│ ɛ ==> idxSum:7^33 ⋅ ɛ:
+//│ 	37: [N]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
+//│ rev:8^34 ⋅ ɛ ==> rev:8^23 ⋅ idxSum:7^33 ⋅ ɛ:
+//│ 	28: [C hh:16 a:15]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
+//│ ɛ ==> idxSum:7^33 ⋅ idxSum:7^8 ⋅ ɛ:
+//│ 	37: [N]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
+//│ ɛ ==> rev:8^23 ⋅ idxSum:7^33 ⋅ idxSum:7^8 ⋅ idxSum:7^8 ⋅ ɛ:
+//│ 	37: [N]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
+//│ ɛ ==> rev:8^23 ⋅ rev:8^23 ⋅ idxSum:7^33 ⋅ idxSum:7^8 ⋅ idxSum:7^8 ⋅ ɛ:
+//│ 	37: [N]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
 //│ 
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
 //│ !!!!!!ERROR!!!!!!
 //│ java.lang.Exception: Internal Error: 
 //│ ɛ to `[N]` 
-//│ 	already has idxSum:2^33 ⋅ ɛ to `case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}` 
-//│ 	but here comes another match rev:3^23 ⋅ idxSum:2^33 ⋅ idxSum:2^8 ⋅ idxSum:2^8 ⋅ ɛ to `case ls:4 of {N -> fun acc:5 -> 0 | C h:6 t:7 -> fun acc:8 -> ((add:1 acc:8) ((idxSum:2 t:7) ((add:1 acc:8) 1)))}`
+//│ 	already has rev:8^23 ⋅ idxSum:7^33 ⋅ idxSum:7^8 ⋅ ɛ to `case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}` 
+//│ 	but here comes another match idxSum:7^33 ⋅ ɛ to `case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}`
 //│ !!!!!!ERROR!!!!!!

@@ -104,7 +104,7 @@ class Deforest(debug: Boolean) {
   def process(e: Expr)(using Ctx): ProdStrat = trace(s"process ${e.uid}: ${show(e.pp)}") {
     val res: ProdStratEnum = e match
       case Const(l) => NoProd()(using noExprId)
-      case Ref(Ident(_, Var("primitive"), _)) => NoProd()(using noExprId)
+      case Ref(Ident(_, Var(primitive), _)) if Deforest.lumberhackKeywords(primitive) => NoProd()(using noExprId)
       case r @ Ref(id) => return if id.isDef then ctx(id).updatePath((r -> r.uid) :: Nil) else ctx(id)
       case Call(f, a) =>
         val fp = process(f)
@@ -130,6 +130,12 @@ class Deforest(debug: Boolean) {
         ProdFun(sv._2.toStrat(),
           process(body)(using ctx + (param.tree.name -> sv._1.toStrat()))
         )(using e.uid)
+      case IfThenElse(scrut, thenn, elze) =>
+        process(scrut)
+        val res = freshVar(s"${e.uid}_ifres")
+        constrain(process(thenn), res._2.toStrat())
+        constrain(process(elze), res._2.toStrat())
+        res._1
       case LetIn(id, rhs, body) => ???
     res.toStrat()
   }(r => s"=> ${show(r)}")
@@ -235,4 +241,10 @@ class Deforest(debug: Boolean) {
     
     constraints foreach handle
   }
+}
+
+object Deforest {
+  val lumberhackKeywords = Set(
+    "primitive", "add", "minus", "eq", "mult", "div"
+  )
 }

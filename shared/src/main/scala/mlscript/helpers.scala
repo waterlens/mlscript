@@ -301,17 +301,18 @@ trait NuDeclImpl extends Located { self: NuDecl =>
     case _: NuTypeDef => "type declaration"
   }
   def show: Str = showHead + (this match {
-    case NuTypeDef(Als, _, _, _, _, _) | NuFunDef(_, _, _, L(_)) => " = "
-    case NuTypeDef(Cls, _, _, _, _, _) => " "
-    case _ => ": " }) + showBody
+    case NuFunDef(_, _, _, L(_)) => " = "
+    case NuFunDef(_, _, _, R(_)) => ": "
+    case NuTypeDef(_, _, _, _, _, _) => " "
+  }) + showBody
   def showHead: Str = this match {
     case NuFunDef(N, n, _, b) => s"fun $n"
     case NuFunDef(S(false), n, _, b) => s"let $n"
     case NuFunDef(S(true), n, _, b) => s"let rec $n"
     case NuTypeDef(k, n, tps, sps, parents, bod) =>
-      s"${k.str} ${n.name}${if (tps.isEmpty) "" else tps.map(_.name).mkString("[", ", ", "]")}(${
+      s"${k.str} ${n.name}${if (tps.isEmpty) "" else tps.map(_.name).mkString("‹", ", ", "›")}(${
         // sps.mkString("(",",",")")
-        sps})${if (parents.isEmpty) "" else ": "}${parents.mkString(", ")}"
+        sps})${if (parents.isEmpty) "" else if (k === Als) " = " else ": "}${parents.mkString(", ")}"
   }
 }
 trait TypingUnitImpl extends Located { self: TypingUnit =>
@@ -567,7 +568,19 @@ trait StatementImpl extends Located { self: Statement =>
       (diags ::: diags2 ::: diags3) -> (TypeDef(Als, TypeName(v.name).withLocOf(v), targs,
           dataDefs.map(td => AppliedType(td.nme, td.tparams)).reduceOption(Union).getOrElse(Bot), Nil, Nil, Nil
         ).withLocOf(hd) :: cs)
-      case NuTypeDef(k, nme, tps, tup @ Tup(fs), pars, unit) =>
+      case NuTypeDef(Nms, nme, tps, tup @ Tup(fs), pars, unit) =>
+        ??? // TODO
+      case NuTypeDef(k @ Als, nme, tps, tup @ Tup(fs), pars, unit) =>
+        // TODO properly check:
+        require(fs.isEmpty, fs)
+        require(pars.size === 1, pars)
+        require(unit.entities.isEmpty, unit)
+        val (diags, rhs) = pars.head.toType match {
+          case L(ds) => (ds :: Nil) -> Top
+          case R(ty) => Nil -> ty
+        }
+        diags -> (TypeDef(k, nme, tps, rhs, Nil, Nil, Nil) :: Nil)
+      case NuTypeDef(k @ (Cls | Trt), nme, tps, tup @ Tup(fs), pars, unit) =>
         val diags = Buffer.empty[Diagnostic]
         def tt(trm: Term): Type = trm.toType match {
           case L(ds) => diags += ds; Top

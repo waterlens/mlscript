@@ -5,66 +5,111 @@
 fun inter(xs) = if xs is
     N then ys => ys
     C(h, t) then ys => C(h, inter(ys)(t))
-let rec l1 = C(1, C(2, l1))
-let rec l2 = C(9, C(8, l2))
-inter(l1)(l2)
-//│ |#fun| |inter|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |ys| |=>| |ys|↵|C|(|h|,| |t|)| |#then| |ys| |=>| |C|(|h|,| |inter|(|ys|)|(|t|)|)|←|↵|#let| |#rec| |l1| |#=| |C|(|1|,| |C|(|2|,| |l1|)|)|↵|#let| |#rec| |l2| |#=| |C|(|9|,| |C|(|8|,| |l2|)|)|↵|inter|(|l1|)|(|l2|)|
-//│ Parsed: {fun inter = xs, => if xs is ‹(N) then ys, => ys; (C (h, t,)) then ys, => C (h, inter (ys,) (t,),)›; let rec l1 = C (1, C (2, l1,),); let rec l2 = C (9, C (8, l2,),); inter (l1,) (l2,)}
+let l1 = C(1, C(2, N))
+let rec l2 = N
+inter(l1, l2)
+//│ |#fun| |inter|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |ys| |=>| |ys|↵|C|(|h|,| |t|)| |#then| |ys| |=>| |C|(|h|,| |inter|(|ys|)|(|t|)|)|←|↵|#let| |l1| |#=| |C|(|1|,| |C|(|2|,| |N|)|)|↵|#let| |#rec| |l2| |#=| |N|↵|inter|(|l1|,| |l2|)|
+//│ Parsed: {fun inter = xs, => if xs is ‹(N) then ys, => ys; (C (h, t,)) then ys, => C (h, inter (ys,) (t,),)›; let l1 = C (1, C (2, N,),); let rec l2 = N; inter (l1, l2,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ def inter:6 = 13: (fun xs:9 -> 12: case 1: xs:9 of {N -> 3: (fun ys:10 -> 2: ys:10) | C h:11 t:12 -> 11: (fun ys:13 -> 10: [C 4: h:11 9: (7: (5: inter:6 6: ys:13) 8: t:12)])})
-//│ def l1:7 = 18: [C 14: 1 17: [C 15: 2 16: l1:7]]
-//│ def l2:8 = 23: [C 19: 9 22: [C 20: 8 21: l2:8]]
-//│ 28: (26: (24: inter:6 25: l1:7) 27: l2:8)
+//│ def l1:7 = 18: [C 14: 1 17: [C 15: 2 16: [N]]]
+//│ def l2:8 = 19: [N]
+//│ 24: (22: (20: inter:6 21: l1:7) 23: l2:8)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ------- defInstance -------
+//│ l1:7^21 ⋅ ɛ ==> inter:6^20 ⋅ ɛ:
+//│ 	18: [C 1 [C 2 [N]]]  <-->  12: case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 ((inter:6 ys:13) t:12)])}
+//│ l2:8^23 ⋅ ɛ ==> inter:6^20 ⋅ inter:6^5 ⋅ ɛ:
+//│ 	19: [N]  <-->  12: case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 ((inter:6 ys:13) t:12)])}
+//│ l1:7^21 ⋅ ɛ ==> inter:6^20 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ ɛ:
+//│ 	16: [N]  <-->  12: case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 ((inter:6 ys:13) t:12)])}
+//│ l1:7^21 ⋅ ɛ ==> inter:6^20 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ ɛ:
+//│ 	17: [C 2 [N]]  <-->  12: case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 ((inter:6 ys:13) t:12)])}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def inter:6 = (fun xs:9 -> case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 ((inter:6 ys:13) t:12)])})
+//│ def l1:7 = [C 1 [C 2 [N]]]
+//│ def l2:8 = [N]
+//│ def l1'7'21:15 = 
+//│ 	let h:11 = 1 in 
+//│ 	let t:12 = 
+//│ 		let h:11 = 2 in 
+//│ 		let t:12 = (fun ys:10 -> ys:10) in (fun ys:13 -> [C h:11 ((inter'6'20_inter'6'5_inter'6'5_inter'6'5:17 ys:13) t:12)]) 
+//│ 	in (fun ys:13 -> [C h:11 ((inter'6'20_inter'6'5:16 ys:13) t:12)])
+//│ def inter'6'20:14 = (fun xs:9 -> xs:9)
+//│ def inter'6'20_inter'6'5_inter'6'5_inter'6'5:17 = (fun xs:9 -> case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 ((inter'6'20_inter'6'5_inter'6'5_inter'6'5_inter'6'5:18 ys:13) t:12)])})
+//│ def l2'8'23:19 = (fun ys:10 -> ys:10)
+//│ def inter'6'20_inter'6'5_inter'6'5_inter'6'5_inter'6'5:18 = (fun xs:9 -> xs:9)
+//│ def inter'6'20_inter'6'5:16 = (fun xs:9 -> xs:9)
+//│ ((inter'6'20:14 l1'7'21:15) l2'8'23:19)
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+
+
+fun inter(xs) = if xs is
+    N then ys => ys
+    C(h, t) then ys => C(h, inter(ys)(t))
+fun l1(x) = C(1, C(2, l1(add(x, 1))))
+let rec l2 = C(9, C(8, l2))
+inter(l1(0))(l2)
+//│ |#fun| |inter|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |ys| |=>| |ys|↵|C|(|h|,| |t|)| |#then| |ys| |=>| |C|(|h|,| |inter|(|ys|)|(|t|)|)|←|↵|#fun| |l1|(|x|)| |#=| |C|(|1|,| |C|(|2|,| |l1|(|add|(|x|,| |1|)|)|)|)|↵|#let| |#rec| |l2| |#=| |C|(|9|,| |C|(|8|,| |l2|)|)|↵|inter|(|l1|(|0|)|)|(|l2|)|
+//│ Parsed: {fun inter = xs, => if xs is ‹(N) then ys, => ys; (C (h, t,)) then ys, => C (h, inter (ys,) (t,),)›; fun l1 = x, => C (1, C (2, l1 (add (x, 1,),),),); let rec l2 = C (9, C (8, l2,),); inter (l1 (0,),) (l2,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def inter:6 = 13: (fun xs:9 -> 12: case 1: xs:9 of {N -> 3: (fun ys:10 -> 2: ys:10) | C h:11 t:12 -> 11: (fun ys:13 -> 10: [C 4: h:11 9: (7: (5: inter:6 6: ys:13) 8: t:12)])})
+//│ def l1:7 = 25: (fun x:14 -> 24: [C 14: 1 23: [C 15: 2 22: (16: l1:7 21: (19: (17: add:4 18: x:14) 20: 1))]])
+//│ def l2:8 = 30: [C 26: 9 29: [C 27: 8 28: l2:8]]
+//│ 37: (35: (31: inter:6 34: (32: l1:7 33: 0)) 36: l2:8)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
 //│ (
-//│   (l2:8^27 ⋅ l2:8^21 ⋅ ɛ, C((ɛ, NoProd()), (l2:8^21 ⋅ ɛ, 2'l2))),
-//│   (inter:6^24 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ ɛ, 7'ys)
+//│   (l2:8^36 ⋅ l2:8^28 ⋅ ɛ, C((ɛ, NoProd()), (l2:8^28 ⋅ ɛ, 2'l2))),
+//│   (inter:6^31 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ ɛ, 7'ys)
 //│ ) :::: (
-//│   (l2:8^27 ⋅ ɛ, C((ɛ, NoProd()), (l2:8^21 ⋅ ɛ, 2'l2))),
-//│   (inter:6^24 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ ɛ, 7'ys)
+//│   (l2:8^36 ⋅ ɛ, C((ɛ, NoProd()), (l2:8^28 ⋅ ɛ, 2'l2))),
+//│   (inter:6^31 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ ɛ, 7'ys)
 //│ )
 //│ (
-//│   (l1:7^25 ⋅ l1:7^16 ⋅ ɛ, C((ɛ, NoProd()), (l1:7^16 ⋅ ɛ, 1'l1))),
-//│   (inter:6^24 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ ɛ, 7'ys)
-//│ ) :::: ((l1:7^25 ⋅ ɛ, C((ɛ, NoProd()), (l1:7^16 ⋅ ɛ, 1'l1))), (inter:6^24 ⋅ inter:6^5 ⋅ ɛ, 7'ys))
+//│   (l1:7^32 ⋅ l1:7^16 ⋅ ɛ, C((ɛ, NoProd()), (ɛ, 14'22_callres))),
+//│   (inter:6^31 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ ɛ, 7'ys)
+//│ ) :::: ((l1:7^32 ⋅ ɛ, C((ɛ, NoProd()), (ɛ, 14'22_callres))), (inter:6^31 ⋅ inter:6^5 ⋅ ɛ, 7'ys))
 //│ ------- defInstance -------
-//│ l2:8^27 ⋅ l2:8^21 ⋅ ɛ ==> inter:6^24 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ ɛ:
-//│ 	23: [C 9 [C 8 l2:8]]  <-->  12: case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 ((inter:6 ys:13) t:12)])}
-//│ l1:7^25 ⋅ ɛ ==> inter:6^24 ⋅ ɛ:
-//│ 	18: [C 1 [C 2 l1:7]]  <-->  12: case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 ((inter:6 ys:13) t:12)])}
-//│ l2:8^27 ⋅ ɛ ==> inter:6^24 ⋅ inter:6^5 ⋅ ɛ:
-//│ 	23: [C 9 [C 8 l2:8]]  <-->  12: case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 ((inter:6 ys:13) t:12)])}
-//│ l1:7^25 ⋅ l1:7^16 ⋅ ɛ ==> inter:6^24 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ ɛ:
-//│ 	18: [C 1 [C 2 l1:7]]  <-->  12: case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 ((inter:6 ys:13) t:12)])}
-//│ l2:8^27 ⋅ ɛ ==> inter:6^24 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ ɛ:
-//│ 	22: [C 8 l2:8]  <-->  12: case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 ((inter:6 ys:13) t:12)])}
-//│ l1:7^25 ⋅ ɛ ==> inter:6^24 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ ɛ:
-//│ 	17: [C 2 l1:7]  <-->  12: case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 ((inter:6 ys:13) t:12)])}
+//│ l1:7^32 ⋅ ɛ ==> inter:6^31 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ ɛ:
+//│ 	23: [C 2 (l1:7 ((add:4 x:14) 1))]  <-->  12: case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 ((inter:6 ys:13) t:12)])}
+//│ l2:8^36 ⋅ ɛ ==> inter:6^31 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ ɛ:
+//│ 	29: [C 8 l2:8]  <-->  12: case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 ((inter:6 ys:13) t:12)])}
+//│ l1:7^32 ⋅ ɛ ==> inter:6^31 ⋅ ɛ:
+//│ 	24: [C 1 [C 2 (l1:7 ((add:4 x:14) 1))]]  <-->  12: case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 ((inter:6 ys:13) t:12)])}
+//│ l2:8^36 ⋅ l2:8^28 ⋅ ɛ ==> inter:6^31 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ ɛ:
+//│ 	30: [C 9 [C 8 l2:8]]  <-->  12: case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 ((inter:6 ys:13) t:12)])}
+//│ l2:8^36 ⋅ ɛ ==> inter:6^31 ⋅ inter:6^5 ⋅ ɛ:
+//│ 	30: [C 9 [C 8 l2:8]]  <-->  12: case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 ((inter:6 ys:13) t:12)])}
+//│ l1:7^32 ⋅ l1:7^16 ⋅ ɛ ==> inter:6^31 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ inter:6^5 ⋅ ɛ:
+//│ 	24: [C 1 [C 2 (l1:7 ((add:4 x:14) 1))]]  <-->  12: case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 ((inter:6 ys:13) t:12)])}
 //│ 
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
 //│ def inter:6 = (fun xs:9 -> case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 ((inter:6 ys:13) t:12)])})
-//│ def l1:7 = [C 1 [C 2 l1:7]]
+//│ def l1:7 = (fun x:14 -> [C 1 [C 2 (l1:7 ((add:4 x:14) 1))]])
 //│ def l2:8 = [C 9 [C 8 l2:8]]
-//│ def inter'6'24_inter'6'5_inter'6'5_inter'6'5:17 = (fun xs:9 -> xs:9)
-//│ def l1'7'25:15 = 
+//│ def l1'7'32:16 = (fun x:14 -> 
 //│ 	let h:11 = 1 in 
 //│ 	let t:12 = 
 //│ 		let h:11 = 2 in 
-//│ 		let t:12 = l1'7'25:15 in (fun ys:13 -> [C h:11 ((inter'6'24_inter'6'5_inter'6'5_inter'6'5:17 ys:13) t:12)]) 
-//│ 	in (fun ys:13 -> [C h:11 ((inter'6'24_inter'6'5:16 ys:13) t:12)])
-//│ def inter'6'24_inter'6'5_inter'6'5_inter'6'5_inter'6'5:20 = (fun xs:9 -> xs:9)
-//│ def inter'6'24_inter'6'5:16 = (fun xs:9 -> xs:9)
-//│ def inter'6'24:14 = (fun xs:9 -> xs:9)
-//│ def l2'8'27:18 = 
+//│ 		let t:12 = (l1'7'32:16 ((add:4 x:14) 1)) in (fun ys:13 -> [C h:11 ((inter'6'31_inter'6'5_inter'6'5_inter'6'5:18 ys:13) t:12)]) 
+//│ 	in (fun ys:13 -> [C h:11 ((inter'6'31_inter'6'5:17 ys:13) t:12)]))
+//│ def inter'6'31_inter'6'5_inter'6'5:20 = (fun xs:9 -> xs:9)
+//│ def inter'6'31_inter'6'5_inter'6'5_inter'6'5:18 = (fun xs:9 -> xs:9)
+//│ def l2'8'36:19 = 
 //│ 	let h:11 = 9 in 
 //│ 	let t:12 = 
 //│ 		let h:11 = 8 in 
-//│ 		let t:12 = l2'8'27:18 in (fun ys:13 -> [C h:11 ((inter'6'24_inter'6'5_inter'6'5_inter'6'5_inter'6'5:20 ys:13) t:12)]) 
-//│ 	in (fun ys:13 -> [C h:11 ((inter'6'24_inter'6'5_inter'6'5:19 ys:13) t:12)])
-//│ def inter'6'24_inter'6'5_inter'6'5:19 = (fun xs:9 -> xs:9)
-//│ ((inter'6'24:14 l1'7'25:15) l2'8'27:18)
+//│ 		let t:12 = l2'8'36:19 in (fun ys:13 -> [C h:11 ((inter'6'31_inter'6'5_inter'6'5_inter'6'5_inter'6'5:21 ys:13) t:12)]) 
+//│ 	in (fun ys:13 -> [C h:11 ((inter'6'31_inter'6'5_inter'6'5:20 ys:13) t:12)])
+//│ def inter'6'31_inter'6'5_inter'6'5_inter'6'5_inter'6'5:21 = (fun xs:9 -> xs:9)
+//│ def inter'6'31:15 = (fun xs:9 -> xs:9)
+//│ def inter'6'31_inter'6'5:17 = (fun xs:9 -> xs:9)
+//│ ((inter'6'31:15 (l1'7'32:16 0)) l2'8'36:19)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
 
@@ -315,41 +360,73 @@ sum(mapa(mapb(primitive)))
 //│ (sum'6'32:18 (mapa'7'33:19 (mapb'8'34:20 primitive:3)))
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
-
+fun map(ls) = if ls is
+    N then N
+    C(hhh, ttt) then C((
+        head => if head is 
+            T then K
+            TT then KK
+    )(hhh), map(ttt))
 fun last(ys) = if ys is
     N then x => x
     C(h, t) then x => last(t)(h)
 fun lastDrive(xs) = if xs is
     N then None
     C(hh, tt) then Some(last(tt)(hh))
-lastDrive(C(1, C(2, N)))
-//│ |#fun| |last|(|ys|)| |#=| |#if| |ys| |is|→|N| |#then| |x| |=>| |x|↵|C|(|h|,| |t|)| |#then| |x| |=>| |last|(|t|)|(|h|)|←|↵|#fun| |lastDrive|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |None|↵|C|(|hh|,| |tt|)| |#then| |Some|(|last|(|tt|)|(|hh|)|)|←|↵|lastDrive|(|C|(|1|,| |C|(|2|,| |N|)|)|)|
-//│ Parsed: {fun last = ys, => if ys is ‹(N) then x, => x; (C (h, t,)) then x, => last (t,) (h,)›; fun lastDrive = xs, => if xs is ‹(N) then None; (C (hh, tt,)) then Some (last (tt,) (hh,),)›; lastDrive (C (1, C (2, N,),),)}
+lastDrive(map(C(T, C(TT, N))))
+//│ |#fun| |map|(|ls|)| |#=| |#if| |ls| |is|→|N| |#then| |N|↵|C|(|hhh|,| |ttt|)| |#then| |C|(|(|→|head| |=>| |#if| |head| |is| |→|T| |#then| |K|↵|TT| |#then| |KK|←|←|↵|)|(|hhh|)|,| |map|(|ttt|)|)|←|↵|#fun| |last|(|ys|)| |#=| |#if| |ys| |is|→|N| |#then| |x| |=>| |x|↵|C|(|h|,| |t|)| |#then| |x| |=>| |last|(|t|)|(|h|)|←|↵|#fun| |lastDrive|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |None|↵|C|(|hh|,| |tt|)| |#then| |Some|(|last|(|tt|)|(|hh|)|)|←|↵|lastDrive|(|map|(|C|(|T|,| |C|(|TT|,| |N|)|)|)|)|
+//│ Parsed: {fun map = ls, => if ls is ‹(N) then N; (C (hhh, ttt,)) then C ('(' head, => if head is ‹(T) then K; (TT) then KK›, ')' (hhh,), map (ttt,),)›; fun last = ys, => if ys is ‹(N) then x, => x; (C (h, t,)) then x, => last (t,) (h,)›; fun lastDrive = xs, => if xs is ‹(N) then None; (C (hh, tt,)) then Some (last (tt,) (hh,),)›; lastDrive (map (C (T, C (TT, N,),),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def last:6 = 11: (fun ys:8 -> 10: case 1: ys:8 of {N -> 3: (fun x:9 -> 2: x:9) | C h:10 t:11 -> 9: (fun x:12 -> 8: (6: (4: last:6 5: t:11) 7: h:10))})
-//│ def lastDrive:7 = 21: (fun xs:13 -> 20: case 12: xs:13 of {N -> 13: [None] | C hh:14 tt:15 -> 19: [Some 18: (16: (14: last:6 15: tt:15) 17: hh:14)]})
-//│ 28: (22: lastDrive:7 27: [C 23: 1 26: [C 24: 2 25: [N]]])
+//│ def map:6 = 15: (fun ls:9 -> 14: case 1: ls:9 of {N -> 2: [N] | C hhh:10 ttt:11 -> 13: [C 9: (7: (fun head:12 -> 6: case 3: head:12 of {T -> 4: [K] | TT -> 5: [KK]}) 8: hhh:10) 12: (10: map:6 11: ttt:11)]})
+//│ def last:7 = 26: (fun ys:13 -> 25: case 16: ys:13 of {N -> 18: (fun x:14 -> 17: x:14) | C h:15 t:16 -> 24: (fun x:17 -> 23: (21: (19: last:7 20: t:16) 22: h:15))})
+//│ def lastDrive:8 = 36: (fun xs:18 -> 35: case 27: xs:18 of {N -> 28: [None] | C hh:19 tt:20 -> 34: [Some 33: (31: (29: last:7 30: tt:20) 32: hh:19)]})
+//│ 45: (37: lastDrive:8 44: (38: map:6 43: [C 39: [T] 42: [C 40: [TT] 41: [N]]]))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
+//│ ((last:7^19 ⋅ map:6^38 ⋅ map:6^10 ⋅ ɛ, K()), (lastDrive:8^37 ⋅ last:7^29 ⋅ ɛ, 17'23_callres)) :::: ((last:7^19 ⋅ map:6^38 ⋅ ɛ, K()), (lastDrive:8^37 ⋅ last:7^29 ⋅ ɛ, 17'23_callres))
+//│ (
+//│   (map:6^38 ⋅ map:6^10 ⋅ map:6^10 ⋅ ɛ, C((ɛ, 8'9_callres), (ɛ, 9'12_callres))),
+//│   (lastDrive:8^37 ⋅ last:7^29 ⋅ last:7^19 ⋅ ɛ, 11'ys)
+//│ ) :::: (
+//│   (map:6^38 ⋅ map:6^10 ⋅ ɛ, C((ɛ, 8'9_callres), (ɛ, 9'12_callres))),
+//│   (lastDrive:8^37 ⋅ last:7^29 ⋅ ɛ, 11'ys)
+//│ )
+//│ ((last:7^19 ⋅ map:6^38 ⋅ map:6^10 ⋅ ɛ, KK()), (lastDrive:8^37 ⋅ last:7^29 ⋅ ɛ, 17'23_callres)) :::: ((last:7^19 ⋅ map:6^38 ⋅ ɛ, KK()), (lastDrive:8^37 ⋅ last:7^29 ⋅ ɛ, 17'23_callres))
 //│ ------- defInstance -------
-//│ ɛ ==> lastDrive:7^22 ⋅ ɛ:
-//│ 	27: [C 1 [C 2 [N]]]  <-->  20: case xs:13 of {N -> [None] | C hh:14 tt:15 -> [Some ((last:6 tt:15) hh:14)]}
-//│ ɛ ==> lastDrive:7^22 ⋅ last:6^14 ⋅ ɛ:
-//│ 	26: [C 2 [N]]  <-->  10: case ys:8 of {N -> (fun x:9 -> x:9) | C h:10 t:11 -> (fun x:12 -> ((last:6 t:11) h:10))}
-//│ ɛ ==> lastDrive:7^22 ⋅ last:6^14 ⋅ last:6^4 ⋅ ɛ:
-//│ 	25: [N]  <-->  10: case ys:8 of {N -> (fun x:9 -> x:9) | C h:10 t:11 -> (fun x:12 -> ((last:6 t:11) h:10))}
+//│ ɛ ==> map:6^38 ⋅ map:6^10 ⋅ map:6^10 ⋅ ɛ:
+//│ 	41: [N]  <-->  14: case ls:9 of {N -> [N] | C hhh:10 ttt:11 -> [C ((fun head:12 -> case head:12 of {T -> [K] | TT -> [KK]}) hhh:10) (map:6 ttt:11)]}
+//│ ɛ ==> map:6^38 ⋅ ɛ:
+//│ 	39: [T]  <-->  6: case head:12 of {T -> [K] | TT -> [KK]}
+//│ 	43: [C [T] [C [TT] [N]]]  <-->  14: case ls:9 of {N -> [N] | C hhh:10 ttt:11 -> [C ((fun head:12 -> case head:12 of {T -> [K] | TT -> [KK]}) hhh:10) (map:6 ttt:11)]}
+//│ map:6^38 ⋅ map:6^10 ⋅ ɛ ==> lastDrive:8^37 ⋅ last:7^29 ⋅ ɛ:
+//│ 	13: [C ((fun head:12 -> case head:12 of {T -> [K] | TT -> [KK]}) hhh:10) (map:6 ttt:11)]  <-->  25: case ys:13 of {N -> (fun x:14 -> x:14) | C h:15 t:16 -> (fun x:17 -> ((last:7 t:16) h:15))}
+//│ 	2: [N]  <-->  25: case ys:13 of {N -> (fun x:14 -> x:14) | C h:15 t:16 -> (fun x:17 -> ((last:7 t:16) h:15))}
+//│ ɛ ==> map:6^38 ⋅ map:6^10 ⋅ ɛ:
+//│ 	40: [TT]  <-->  6: case head:12 of {T -> [K] | TT -> [KK]}
+//│ 	42: [C [TT] [N]]  <-->  14: case ls:9 of {N -> [N] | C hhh:10 ttt:11 -> [C ((fun head:12 -> case head:12 of {T -> [K] | TT -> [KK]}) hhh:10) (map:6 ttt:11)]}
+//│ map:6^38 ⋅ map:6^10 ⋅ map:6^10 ⋅ ɛ ==> lastDrive:8^37 ⋅ last:7^29 ⋅ last:7^19 ⋅ ɛ:
+//│ 	2: [N]  <-->  25: case ys:13 of {N -> (fun x:14 -> x:14) | C h:15 t:16 -> (fun x:17 -> ((last:7 t:16) h:15))}
+//│ map:6^38 ⋅ ɛ ==> lastDrive:8^37 ⋅ ɛ:
+//│ 	13: [C ((fun head:12 -> case head:12 of {T -> [K] | TT -> [KK]}) hhh:10) (map:6 ttt:11)]  <-->  35: case xs:18 of {N -> [None] | C hh:19 tt:20 -> [Some ((last:7 tt:20) hh:19)]}
+//│ 	2: [N]  <-->  35: case xs:18 of {N -> [None] | C hh:19 tt:20 -> [Some ((last:7 tt:20) hh:19)]}
 //│ 
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
-//│ def last:6 = (fun ys:8 -> case ys:8 of {N -> (fun x:9 -> x:9) | C h:10 t:11 -> (fun x:12 -> ((last:6 t:11) h:10))})
-//│ def lastDrive:7 = (fun xs:13 -> case xs:13 of {N -> [None] | C hh:14 tt:15 -> [Some ((last:6 tt:15) hh:14)]})
-//│ def lastDrive'7'22_last'6'14:17 = (fun ys:8 -> ys:8)
-//│ def lastDrive'7'22_last'6'14_last'6'4:18 = (fun ys:8 -> ys:8)
-//│ def lastDrive'7'22:16 = (fun xs:13 -> xs:13)
-//│ (lastDrive'7'22:16 
-//│ 	let hh:14 = 1 in 
-//│ 	let tt:15 = 
-//│ 		let h:10 = 2 in 
-//│ 		let t:11 = (fun x:9 -> x:9) in (fun x:12 -> ((lastDrive'7'22_last'6'14_last'6'4:18 t:11) h:10)) 
-//│ 	in [Some ((lastDrive'7'22_last'6'14:17 tt:15) hh:14)])
+//│ def map:6 = (fun ls:9 -> case ls:9 of {N -> [N] | C hhh:10 ttt:11 -> [C ((fun head:12 -> case head:12 of {T -> [K] | TT -> [KK]}) hhh:10) (map:6 ttt:11)]})
+//│ def last:7 = (fun ys:13 -> case ys:13 of {N -> (fun x:14 -> x:14) | C h:15 t:16 -> (fun x:17 -> ((last:7 t:16) h:15))})
+//│ def lastDrive:8 = (fun xs:18 -> case xs:18 of {N -> [None] | C hh:19 tt:20 -> [Some ((last:7 tt:20) hh:19)]})
+//│ def lastDrive'8'37:21 = (fun xs:18 -> xs:18)
+//│ def map'6'38:22 = (fun ls:9 -> ls:9)
+//│ def lastDrive'8'37_last'7'29:23 = (fun ys:13 -> ys:13)
+//│ def map'6'38_map'6'10:24 = (fun ls:9 -> ls:9)
+//│ (lastDrive'8'37:21 (map'6'38:22 
+//│ 	let hhh:10 = [K] in 
+//│ 	let ttt:11 = 
+//│ 		let hhh:10 = [KK] in 
+//│ 		let ttt:11 = (fun x:14 -> x:14) in 
+//│ 		let h:15 = ((fun head:12 -> head:12) hhh:10) in 
+//│ 		let t:16 = (map'6'38_map'6'10:24 ttt:11) in (fun x:17 -> ((lastDrive'8'37_last'7'29:23 t:16) h:15)) 
+//│ 	in 
+//│ 	let hh:19 = ((fun head:12 -> head:12) hhh:10) in 
+//│ 	let tt:20 = (map'6'38_map'6'10:24 ttt:11) in [Some ((lastDrive'8'37_last'7'29:23 tt:20) hh:19)]))
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<

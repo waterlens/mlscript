@@ -74,15 +74,15 @@ c(p)
 // TODO support nested patterns as in `Pair(0)`
 // TODO get a recursive knot even when using `primitive` (we get it without)
 _LUMBERHACK_ERROR
-let p = Wrap(A)
+let p = Wrap(3)
 fun c(x) = if x is
     N then 0
     Wrap(a) then c(Wrap(primitive(a)))
 c(p)
-//│ |_LUMBERHACK_ERROR|↵|#let| |p| |#=| |Wrap|(|A|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|N| |#then| |0|↵|Wrap|(|a|)| |#then| |c|(|Wrap|(|primitive|(|a|)|)|)|←|↵|c|(|p|)|
-//│ Parsed: {_LUMBERHACK_ERROR; let p = Wrap (A,); fun c = x, => if x is ‹(N) then 0; (Wrap (a,)) then c (Wrap (primitive (a,),),)›; c (p,)}
+//│ |_LUMBERHACK_ERROR|↵|#let| |p| |#=| |Wrap|(|3|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|N| |#then| |0|↵|Wrap|(|a|)| |#then| |c|(|Wrap|(|primitive|(|a|)|)|)|←|↵|c|(|p|)|
+//│ Parsed: {_LUMBERHACK_ERROR; let p = Wrap (3,); fun c = x, => if x is ‹(N) then 0; (Wrap (a,)) then c (Wrap (primitive (a,),),)›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:6 = 2: [Wrap 1: [A]]
+//│ def p:6 = 2: [Wrap 1: 3]
 //│ def c:7 = 12: (fun x:8 -> 11: case 3: x:8 of {N -> 4: 0 | Wrap a:9 -> 10: (5: c:7 9: [Wrap 8: (6: primitive:3 7: a:9)])})
 //│ 15: (13: c:7 14: p:6)
 //│ <<<<<<<<<< Original <<<<<<<<<<
@@ -92,7 +92,7 @@ c(p)
 //│ ɛ ==> c:7^5 ⋅ ɛ:
 //│ 	9: [Wrap (primitive:3 a:9)]  <-->  11: case x:8 of {N -> 0 | Wrap a:9 -> (c:7 [Wrap (primitive:3 a:9)])}
 //│ p:6^14 ⋅ ɛ ==> c:7^13 ⋅ ɛ:
-//│ 	2: [Wrap [A]]  <-->  11: case x:8 of {N -> 0 | Wrap a:9 -> (c:7 [Wrap (primitive:3 a:9)])}
+//│ 	2: [Wrap 3]  <-->  11: case x:8 of {N -> 0 | Wrap a:9 -> (c:7 [Wrap (primitive:3 a:9)])}
 //│ 
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
 //│ !!!!!!ERROR!!!!!!
@@ -278,3 +278,98 @@ idxSum(rev(primitive, N))(0)
 //│ 	already has rev:8^23 ⋅ idxSum:7^33 ⋅ idxSum:7^8 ⋅ ɛ to `case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}` 
 //│ 	but here comes another match idxSum:7^33 ⋅ ɛ to `case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}`
 //│ !!!!!!ERROR!!!!!!
+
+
+fun minuss(a) = if a is
+    S(aa) then b => if b is
+        S(bb) then minuss(aa, bb)
+        Z then aa
+    Z then n => Z
+let fst = S(S(Z))
+let snd = Z
+minuss(fst)(snd)
+//│ |#fun| |minuss|(|a|)| |#=| |#if| |a| |is|→|S|(|aa|)| |#then| |b| |=>| |#if| |b| |is|→|S|(|bb|)| |#then| |minuss|(|aa|,| |bb|)|↵|Z| |#then| |aa|←|↵|Z| |#then| |n| |=>| |Z|←|↵|#let| |fst| |#=| |S|(|S|(|Z|)|)|↵|#let| |snd| |#=| |Z|↵|minuss|(|fst|)|(|snd|)|
+//│ Parsed: {fun minuss = a, => if a is ‹(S (aa,)) then b, => if b is ‹(S (bb,)) then minuss (aa, bb,); (Z) then aa›; (Z) then n, => Z›; let fst = S (S (Z,),); let snd = Z; minuss (fst,) (snd,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def minuss:6 = 14: (fun a:9 -> 13: case 1: a:9 of {S aa:10 -> 10: (fun b:11 -> 9: case 2: b:11 of {S bb:12 -> 7: (5: (3: minuss:6 4: aa:10) 6: bb:12) | Z -> 8: aa:10}) | Z -> 12: (fun n:13 -> 11: [Z])})
+//│ def fst:7 = 17: [S 16: [S 15: [Z]]]
+//│ def snd:8 = 18: [Z]
+//│ 23: (21: (19: minuss:6 20: fst:7) 22: snd:8)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ((minuss:6^3 ⋅ minuss:6^3 ⋅ fst:7^20 ⋅ ɛ, S((ɛ, Z()))), (minuss:6^19 ⋅ ɛ, 8'7_callres)) :::: ((minuss:6^3 ⋅ fst:7^20 ⋅ ɛ, S((ɛ, Z()))), (minuss:6^19 ⋅ ɛ, 8'7_callres))
+//│ ((minuss:6^3 ⋅ fst:7^20 ⋅ ɛ, Z()), (minuss:6^19 ⋅ ɛ, 8'7_callres)) :::: ((minuss:6^3 ⋅ ɛ, Z()), (ɛ, 8'7_callres))
+//│ ------- defInstance -------
+//│ fst:7^20 ⋅ ɛ ==> minuss:6^19 ⋅ ɛ:
+//│ 	17: [S [S [Z]]]  <-->  13: case a:9 of {S aa:10 -> (fun b:11 -> case b:11 of {S bb:12 -> ((minuss:6 aa:10) bb:12) | Z -> aa:10}) | Z -> (fun n:13 -> [Z])}
+//│ fst:7^20 ⋅ ɛ ==> minuss:6^19 ⋅ minuss:6^3 ⋅ minuss:6^3 ⋅ ɛ:
+//│ 	15: [Z]  <-->  13: case a:9 of {S aa:10 -> (fun b:11 -> case b:11 of {S bb:12 -> ((minuss:6 aa:10) bb:12) | Z -> aa:10}) | Z -> (fun n:13 -> [Z])}
+//│ snd:8^22 ⋅ ɛ ==> minuss:6^19 ⋅ ɛ:
+//│ 	18: [Z]  <-->  9: case b:11 of {S bb:12 -> ((minuss:6 aa:10) bb:12) | Z -> aa:10}
+//│ fst:7^20 ⋅ ɛ ==> minuss:6^19 ⋅ minuss:6^3 ⋅ ɛ:
+//│ 	16: [S [Z]]  <-->  13: case a:9 of {S aa:10 -> (fun b:11 -> case b:11 of {S bb:12 -> ((minuss:6 aa:10) bb:12) | Z -> aa:10}) | Z -> (fun n:13 -> [Z])}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def minuss:6 = (fun a:9 -> case a:9 of {S aa:10 -> (fun b:11 -> case b:11 of {S bb:12 -> ((minuss:6 aa:10) bb:12) | Z -> aa:10}) | Z -> (fun n:13 -> [Z])})
+//│ def fst:7 = [S [S [Z]]]
+//│ def snd:8 = [Z]
+//│ def minuss'6'19:14 = (fun a:9 -> a:9)
+//│ def minuss'6'19_minuss'6'3_minuss'6'3:16 = (fun a:9 -> a:9)
+//│ def fst'7'20:15 = 
+//│ 	let aa:10 = 
+//│ 		let aa:10 = (fun n:13 -> [Z]) in (fun b:11 -> case b:11 of {S bb:12 -> ((minuss'6'19_minuss'6'3_minuss'6'3:16 aa:10) bb:12) | Z -> aa:10}) 
+//│ 	in (fun b:11 -> b:11)
+//│ def snd'8'22:17 = aa:10
+//│ ((minuss'6'19:14 fst'7'20:15) snd'8'22:17)
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+
+
+fun minuss(a) = if a is
+    S(aa) then b => checkb(b)(aa)
+    Z then n => Z
+fun checkb(b) = if b is
+    S(bb) then aaa => minuss(aaa, bb)
+    Z then aaa => aaa
+let fst = S(S(Z))
+let snd = Z
+minuss(fst)(snd)
+//│ |#fun| |minuss|(|a|)| |#=| |#if| |a| |is|→|S|(|aa|)| |#then| |b| |=>| |checkb|(|b|)|(|aa|)|↵|Z| |#then| |n| |=>| |Z|←|↵|#fun| |checkb|(|b|)| |#=| |#if| |b| |is|→|S|(|bb|)| |#then| |aaa| |=>| |minuss|(|aaa|,| |bb|)|↵|Z| |#then| |aaa| |=>| |aaa|←|↵|#let| |fst| |#=| |S|(|S|(|Z|)|)|↵|#let| |snd| |#=| |Z|↵|minuss|(|fst|)|(|snd|)|
+//│ Parsed: {fun minuss = a, => if a is ‹(S (aa,)) then b, => checkb (b,) (aa,); (Z) then n, => Z›; fun checkb = b, => if b is ‹(S (bb,)) then aaa, => minuss (aaa, bb,); (Z) then aaa, => aaa›; let fst = S (S (Z,),); let snd = Z; minuss (fst,) (snd,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def minuss:6 = 11: (fun a:10 -> 10: case 1: a:10 of {S aa:11 -> 7: (fun b:12 -> 6: (4: (2: checkb:7 3: b:12) 5: aa:11)) | Z -> 9: (fun n:13 -> 8: [Z])})
+//│ def checkb:7 = 22: (fun b:14 -> 21: case 12: b:14 of {S bb:15 -> 18: (fun aaa:16 -> 17: (15: (13: minuss:6 14: aaa:16) 16: bb:15)) | Z -> 20: (fun aaa:17 -> 19: aaa:17)})
+//│ def fst:8 = 25: [S 24: [S 23: [Z]]]
+//│ def snd:9 = 26: [Z]
+//│ 31: (29: (27: minuss:6 28: fst:8) 30: snd:9)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ ((checkb:7^2 ⋅ minuss:6^13 ⋅ fst:8^28 ⋅ ɛ, S((ɛ, Z()))), (minuss:6^27 ⋅ ɛ, 8'6_callres)) :::: ((fst:8^28 ⋅ ɛ, S((ɛ, Z()))), (minuss:6^27 ⋅ ɛ, 8'6_callres))
+//│ ((checkb:7^2 ⋅ minuss:6^13 ⋅ checkb:7^2 ⋅ minuss:6^13 ⋅ ɛ, Z()), (ɛ, 8'6_callres)) :::: ((fst:8^28 ⋅ ɛ, Z()), (minuss:6^27 ⋅ checkb:7^2 ⋅ minuss:6^13 ⋅ ɛ, 8'6_callres))
+//│ ------- defInstance -------
+//│ fst:8^28 ⋅ ɛ ==> minuss:6^27 ⋅ checkb:7^2 ⋅ minuss:6^13 ⋅ ɛ:
+//│ 	24: [S [Z]]  <-->  10: case a:10 of {S aa:11 -> (fun b:12 -> ((checkb:7 b:12) aa:11)) | Z -> (fun n:13 -> [Z])}
+//│ snd:9^30 ⋅ ɛ ==> minuss:6^27 ⋅ checkb:7^2 ⋅ ɛ:
+//│ 	26: [Z]  <-->  21: case b:14 of {S bb:15 -> (fun aaa:16 -> ((minuss:6 aaa:16) bb:15)) | Z -> (fun aaa:17 -> aaa:17)}
+//│ fst:8^28 ⋅ ɛ ==> minuss:6^27 ⋅ checkb:7^2 ⋅ minuss:6^13 ⋅ checkb:7^2 ⋅ minuss:6^13 ⋅ ɛ:
+//│ 	23: [Z]  <-->  10: case a:10 of {S aa:11 -> (fun b:12 -> ((checkb:7 b:12) aa:11)) | Z -> (fun n:13 -> [Z])}
+//│ fst:8^28 ⋅ ɛ ==> minuss:6^27 ⋅ ɛ:
+//│ 	25: [S [S [Z]]]  <-->  10: case a:10 of {S aa:11 -> (fun b:12 -> ((checkb:7 b:12) aa:11)) | Z -> (fun n:13 -> [Z])}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def minuss:6 = (fun a:10 -> case a:10 of {S aa:11 -> (fun b:12 -> ((checkb:7 b:12) aa:11)) | Z -> (fun n:13 -> [Z])})
+//│ def checkb:7 = (fun b:14 -> case b:14 of {S bb:15 -> (fun aaa:16 -> ((minuss:6 aaa:16) bb:15)) | Z -> (fun aaa:17 -> aaa:17)})
+//│ def fst:8 = [S [S [Z]]]
+//│ def snd:9 = [Z]
+//│ def minuss'6'27_checkb'7'2_minuss'6'13_checkb'7'2:21 = (fun b:14 -> case b:14 of {S bb:15 -> (fun aaa:16 -> ((minuss'6'27_checkb'7'2_minuss'6'13_checkb'7'2_minuss'6'13:22 aaa:16) bb:15)) | Z -> (fun aaa:17 -> aaa:17)})
+//│ def fst'8'28:19 = 
+//│ 	let aa:11 = 
+//│ 		let aa:11 = (fun n:13 -> [Z]) in (fun b:12 -> ((minuss'6'27_checkb'7'2_minuss'6'13_checkb'7'2:21 b:12) aa:11)) 
+//│ 	in (fun b:12 -> ((minuss'6'27_checkb'7'2:20 b:12) aa:11))
+//│ def minuss'6'27_checkb'7'2_minuss'6'13:18 = (fun a:10 -> a:10)
+//│ def minuss'6'27_checkb'7'2_minuss'6'13_checkb'7'2_minuss'6'13:22 = (fun a:10 -> a:10)
+//│ def snd'9'30:23 = (fun aaa:17 -> aaa:17)
+//│ def minuss'6'27_checkb'7'2:20 = (fun b:14 -> b:14)
+//│ ((minuss'6'27_checkb'7'2_minuss'6'13:18 fst'8'28:19) snd'9'30:23)
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<

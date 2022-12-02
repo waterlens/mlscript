@@ -28,8 +28,9 @@ object pprint2 extends pprint.PPrinter() {
       "=>",
       Apply("", Iterator(treeify(r, escapeUnicode, showFieldNames))),
     )
-    case MkCtor(v, args) =>
+    case MkCtor(v, args) if args.length > 0 =>
       Apply(v.name, args.iterator.map(treeify(_, escapeUnicode, showFieldNames)))
+    case MkCtor(v, _) => Literal(v.name)
     case Nil => Literal("ɛ")
     case (r: Expr.Ref, _) => treeify(r, escapeUnicode, showFieldNames)
     case x :: xs =>  Infix(

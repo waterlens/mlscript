@@ -42,7 +42,26 @@ enum ConsStratEnum(using val euid: ExprId) extends ToStrat[ConsStratEnum] {
 
 import ProdStratEnum.*, ConsStratEnum.*, Expr.*
 case class Destructor(ctor: Var, argCons: Ls[Strat[ConsVar]])
-
+object ProdStratEnum {
+  def prodBool(using ExprId) = Sum(
+    MkCtor(Var("True"), Nil).toStrat() :: MkCtor(Var("False"), Nil).toStrat() :: Nil
+  )
+  def prodInt(using ExprId) = MkCtor(Var("Int"), Nil)
+  def prodIntBinOp(using ExprId) = ProdFun(
+    consInt.toStrat(),
+    ProdFun(consInt.toStrat(), prodInt.toStrat()).toStrat()
+  )
+  def prodIntEq(using ExprId) = ProdFun(
+    consInt.toStrat(),
+    ProdFun(consInt.toStrat(), prodBool.toStrat()).toStrat()
+  )
+}
+object ConsStratEnum {
+  def consBool(using ExprId) = Destruct(
+    Destructor(Var("True"), Nil) :: Destructor(Var("False"), Nil) :: Nil
+  )
+  def consInt(using ExprId) = Destruct(Destructor(Var("Int"), Nil) :: Nil)
+}
 
 case class Ctx(bindings: Map[Str, ProdStrat]) {
   def apply(id: Ident): ProdStrat =
@@ -103,8 +122,14 @@ class Deforest(debug: Boolean) {
   
   def process(e: Expr)(using Ctx): ProdStrat = trace(s"process ${e.uid}: ${show(e.pp)}") {
     val res: ProdStratEnum = e match
+      case Const(IntLit(_)) => prodInt(using noExprId)
       case Const(l) => NoProd()(using noExprId)
-      case Ref(Ident(_, Var(primitive), _)) if Deforest.lumberhackKeywords(primitive) => NoProd()(using noExprId)
+      case Ref(Ident(_, Var(primitive), _)) if Deforest.lumberhackKeywords(primitive) => {
+        if Deforest.lumberhackIntOps(primitive) then
+          if primitive == "eq" then prodIntEq(using noExprId) else prodIntBinOp(using noExprId)
+        else
+          NoProd()(using noExprId)
+      }
       case r @ Ref(id) => return if id.isDef then ctx(id).updatePath((r -> r.uid) :: Nil) else ctx(id)
       case Call(f, a) =>
         val fp = process(f)
@@ -131,7 +156,7 @@ class Deforest(debug: Boolean) {
           process(body)(using ctx + (param.tree.name -> sv._1.toStrat()))
         )(using e.uid)
       case IfThenElse(scrut, thenn, elze) =>
-        process(scrut)
+        constrain(process(scrut), consBool(using noExprId).toStrat())
         val res = freshVar(s"${e.uid}_ifres")
         constrain(process(thenn), res._2.toStrat())
         constrain(process(elze), res._2.toStrat())
@@ -247,4 +272,5 @@ object Deforest {
   val lumberhackKeywords = Set(
     "primitive", "add", "minus", "eq", "mult", "div"
   )
+  val lumberhackIntOps = Set("add", "minus", "mult", "div", "eq")
 }

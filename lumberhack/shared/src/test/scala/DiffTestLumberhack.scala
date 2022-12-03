@@ -28,7 +28,9 @@ class DiffTestLumberhack extends DiffTests {
       d.resolveConstraints
       output("\n------- recursive -------")
       d.recursiveConstr._1.foreach { c => 
-        output((s"${pprint2.apply(c._1).plainText} :::: ${pprint2.apply(c._2).plainText}"))
+        output((s"${pprint2(c._1._1._1).plainText} <: ${pprint2(c._1._2._1).plainText}"))
+        output(s"\t[${pprint2(c._1._1.path).plainText}] <: [${pprint2(c._1._2.path).plainText}]")
+        output(s"\t[${pprint2(c._2._1.path).plainText}] <: [${pprint2(c._2._2.path).plainText}]")
       }
       output(("------- defInstance -------"))
       d.defInstances.foreach { case (p, xs) =>

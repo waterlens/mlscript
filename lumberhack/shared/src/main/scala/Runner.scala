@@ -88,10 +88,10 @@ object Runner:
       }.sorted.mkString)
     }
     println("====== rewrite ======")
-    val newProgram = Rewrite.rewrite(p, d,
+    val newProgram = Rewrite(p, d,
       d.defInstances.map { case (ps, s) => (ps, s.toSet) }.toMap,
       d.recursiveConstr._2.toMap
-    )
+    ).rewrite
     println(newProgram.pp(using false))
 
     // println("========= OCAML =========")

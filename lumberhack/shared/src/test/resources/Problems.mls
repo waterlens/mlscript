@@ -40,6 +40,23 @@ c(p)
 //│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1:15 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:16]
 //│ (c'7'8:10 p'6'9:11)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
+//│ >>>>>>>>>> Simplify >>>>>>>>>>
+//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:21 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:22]
+//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:16 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:17]
+//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:19 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:20]
+//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:18 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:19]
+//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:22 = "RECURSE_TOO_LONG"
+//│ def p'6'9_p'6'1:12 = [C p'6'9_p'6'1_p'6'1:13]
+//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1:15 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:16]
+//│ def p'6'9_p'6'1_p'6'1:13 = [C p'6'9_p'6'1_p'6'1_p'6'1:14]
+//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:17 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:18]
+//│ def p'6'9_p'6'1_p'6'1_p'6'1:14 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1:15]
+//│ def c'7'8:10 = (fun x:8 -> 
+//│ 	let a:9 = x:8 in a:9)
+//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:20 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:21]
+//│ def p'6'9:11 = [C p'6'9_p'6'1:12]
+//│ (c'7'8:10 p'6'9:11)
+//│ <<<<<<<<<< Simplify <<<<<<<<<<
 
 
 // NOTE: how to produce a finite rewrtten program?
@@ -139,6 +156,21 @@ c(0)
 //│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:16 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:17 (primitive:3 x:7))})
 //│ (c'6'12:8 0)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
+//│ >>>>>>>>>> Simplify >>>>>>>>>>
+//│ def c'6'12_c'6'5_c'6'5_c'6'5:11 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5:12 (primitive:3 x:7))})
+//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:13 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:14 (primitive:3 x:7))})
+//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:18 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:19 (primitive:3 x:7))})
+//│ def c'6'12:8 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5:9 (primitive:3 x:7))})
+//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:16 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:17 (primitive:3 x:7))})
+//│ def c'6'12_c'6'5:9 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5:10 (primitive:3 x:7))})
+//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:19 = "RECURSE_TOO_LONG"
+//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5:12 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:13 (primitive:3 x:7))})
+//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:14 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:15 (primitive:3 x:7))})
+//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:15 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:16 (primitive:3 x:7))})
+//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:17 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:18 (primitive:3 x:7))})
+//│ def c'6'12_c'6'5_c'6'5:10 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5:11 (primitive:3 x:7))})
+//│ (c'6'12:8 0)
+//│ <<<<<<<<<< Simplify <<<<<<<<<<
 
 
 // NOTE: only the first element is handled
@@ -343,6 +375,16 @@ minuss(fst)(snd)
 //│ def snd'8'22:17 = aa:10
 //│ ((minuss'6'19:14 fst'7'20:15) snd'8'22:17)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
+//│ >>>>>>>>>> Simplify >>>>>>>>>>
+//│ def minuss'6'19:14 = (fun a:9 -> a:9)
+//│ def minuss'6'19_minuss'6'3_minuss'6'3:16 = (fun a:9 -> a:9)
+//│ def fst'7'20:15 = 
+//│ 	let aa:10 = 
+//│ 		let aa:10 = (fun n:13 -> [Z]) in (fun b:11 -> case b:11 of {S bb:12 -> (aa:10 bb:12) | Z -> aa:10}) 
+//│ 	in (fun b:11 -> b:11)
+//│ def snd'8'22:17 = aa:10
+//│ (fst'7'20:15 snd'8'22:17)
+//│ <<<<<<<<<< Simplify <<<<<<<<<<
 
 // FIXME: weird recursive
 fun minuss(a) = if a is
@@ -397,3 +439,15 @@ minuss(fst)(snd)
 //│ def minuss'6'27_checkb'7'2:20 = (fun b:14 -> b:14)
 //│ ((minuss'6'27_checkb'7'2_minuss'6'13:18 fst'8'28:19) snd'9'30:23)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
+//│ >>>>>>>>>> Simplify >>>>>>>>>>
+//│ def minuss'6'27_checkb'7'2:20 = (fun b:14 -> b:14)
+//│ def snd'9'30:23 = (fun aaa:17 -> aaa:17)
+//│ def minuss'6'27_checkb'7'2_minuss'6'13_checkb'7'2:21 = (fun b:14 -> case b:14 of {S bb:15 -> (fun aaa:16 -> (aaa:16 bb:15)) | Z -> (fun aaa:17 -> aaa:17)})
+//│ def minuss'6'27_checkb'7'2_minuss'6'13:18 = (fun a:10 -> a:10)
+//│ def minuss'6'27_checkb'7'2_minuss'6'13_checkb'7'2_minuss'6'13:22 = (fun a:10 -> a:10)
+//│ def fst'8'28:19 = 
+//│ 	let aa:11 = 
+//│ 		let aa:11 = (fun n:13 -> [Z]) in (fun b:12 -> ((minuss'6'27_checkb'7'2_minuss'6'13_checkb'7'2:21 b:12) aa:11)) 
+//│ 	in (fun b:12 -> (b:12 aa:11))
+//│ (fst'8'28:19 snd'9'30:23)
+//│ <<<<<<<<<< Simplify <<<<<<<<<<

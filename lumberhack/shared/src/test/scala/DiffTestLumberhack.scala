@@ -40,12 +40,19 @@ class DiffTestLumberhack extends DiffTests {
         }.sorted.mkString.substring(1)))
       }
       output("\n>>>>>>>>>> Rewritten >>>>>>>>>>")
-      val newProgram = Rewrite.rewrite(originalProgram, d,
+      val rewritter = Rewrite(originalProgram, d,
         d.defInstances.map { case (ps, s) => (ps, s.toSet) }.toMap,
         d.recursiveConstr._2.toMap
       )
+      val newProgram = rewritter.rewrite
       output(newProgram.pp)
       output("<<<<<<<<<< Rewritten <<<<<<<<<<")
+      if !mode.noSimplification then {
+        output(">>>>>>>>>> Simplify >>>>>>>>>>")
+        val simplified = Simplify().simplify(rewritter.newDefs.toMap, rewritter.newExprs)(using rewritter.id2Path.toMap, rewritter.d)
+        output(simplified.pp)
+        output("<<<<<<<<<< Simplify <<<<<<<<<<")
+      }
     } catch {
       case e => if allowErr then {
         output("!!!!!!ERROR!!!!!!")

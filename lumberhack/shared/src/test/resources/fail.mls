@@ -1,6 +1,7 @@
 :NewParser
 :ParseOnly
 
+:ns
 // the `p · p` is never touched (checked) by the typer, so no path leads to it, and no recusive map from it
 let p = C(p)
 fun c(x) = if C(x) is
@@ -45,6 +46,7 @@ c(p)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
 // the `p · p` is never touched (checked) by the typer, so no path leads to it, and no recusive map from it
+:ns
 let rec p = C(p)
 fun c(x) = if x is
     C(a) then a
@@ -89,6 +91,7 @@ main(0)
 
 
 // NOTE: push in problem
+:ns
 fun map(f, ls) = if ls is
     C(h, t) then C(f(h), map(f, t))
     N then N
@@ -143,6 +146,7 @@ map(ff, l)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
 // NOTE: only first head is handled
+:ns
 _LUMBERHACK_ERROR
 fun map(f, ls) = if ls is
     C(h, t) then C(f(h), map(f, t))
@@ -194,6 +198,7 @@ map(ff, l)
 //│ 	but here comes another match map:6^28 ⋅ map:6^5 ⋅ ff:7^29 ⋅ ɛ to `case x:13 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}`
 //│ !!!!!!ERROR!!!!!!
 
+:ns
 _LUMBERHACK_ERROR
 fun rev(l1, l2) = if l1 is
     C(h, t) then rev(t, C(h, l2))
@@ -264,6 +269,7 @@ rev(rev1(p, N), N)
 
 
 // `id2` used twice
+:ns
 let p = C(C(C(id2(p))))
 fun c(x) = if x is
     C(a) then if a is
@@ -454,6 +460,7 @@ c(id(p))
 
 
 // no polymorphism
+:ns
 _LUMBERHACK_ERROR
 fun id(x) = x
 let rec p1 = C(p1)
@@ -535,7 +542,7 @@ map(rev(N, primitive))
 //│ 	but here comes another match rev:7^14 ⋅ map:6^25 ⋅ map:6^6 ⋅ map:6^6 ⋅ ɛ to `case ls:8 of {C hh:9 tt:10 -> [C case hh:9 of {A -> [B] | AA -> [BB]} (map:6 tt:10)] | N -> [N]}`
 //│ !!!!!!ERROR!!!!!!
 
-
+:ns
 _LUMBERHACK_ERROR
 let p = Pair(A, B)
 fun c(x) = if x is
@@ -570,6 +577,7 @@ c(p)
 
 // pushing in of auxiliary parameters
 // FIXME: weird recursive
+:ns
 fun last(x, ys) = if ys is
     N then x
     C(h, t) then last(h, t)
@@ -611,7 +619,7 @@ lastDrive(C(1, C(2, N)))
 //│ 	in [Some ((lastDrive'7'21_last'6'13:16 hh:13) tt:14)])
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
-
+:ns
 fun inter(xs, ys) = if xs is
     N then ys
     C(h, t) then C(h, inter(ys, t))
@@ -670,7 +678,7 @@ inter(C(1, C(2, C(3, N))), C(9, C(8, C(7, N))))
 //│ 	in [C h:9 ((inter'6'13_inter'6'4_inter'6'4:15 ys:8) t:10)])
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
 
-
+:ns
 _LUMBERHACK_ERROR
 let add = primitive
 fun idxSum(ls) = if ls is
@@ -731,6 +739,7 @@ idxSum(rev(primitive, N))(0)
 
 
 // scope extrusion
+:ns
 fun inter(xs) = if xs is
     N then ys => ys
     C(h0, t0) then ys => if ys is
@@ -790,4 +799,202 @@ inter(l1, l2)
 //│ 	let t1:15 = [N2] in [C2 ((add:4 h0:11) h1:14) ((inter'6'33_inter'6'11:21 t0:12) t1:15)]
 //│ def inter'6'33_inter'6'11:21 = (fun xs:9 -> xs:9)
 //│ ((inter'6'33:16 l1'7'34:17) l2'8'36:20)
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+
+
+:ns
+let rec p = C(C(C(id(p))))
+fun c(x) = if x is
+    C(a) then if a is
+        C(b) then c(b)
+fun id2(z) = z
+fun id(y) = id2(y)
+fun id3(d) = d
+c(id3(p))
+//│ |#let| |#rec| |p| |#=| |C|(|C|(|C|(|id|(|p|)|)|)|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |#if| |a| |is|→|C|(|b|)| |#then| |c|(|b|)|←|←|↵|#fun| |id2|(|z|)| |#=| |z|↵|#fun| |id|(|y|)| |#=| |id2|(|y|)|↵|#fun| |id3|(|d|)| |#=| |d|↵|c|(|id3|(|p|)|)|
+//│ Parsed: {let rec p = C (C (C (id (p,),),),); fun c = x, => if x is ‹(C (a,)) then if a is ‹(C (b,)) then c (b,)››; fun id2 = z, => z; fun id = y, => id2 (y,); fun id3 = d, => d; c (id3 (p,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def p:6 = 6: [C 5: [C 4: [C 3: (1: id:9 2: p:6)]]]
+//│ def c:7 = 14: (fun x:11 -> 13: case 7: x:11 of {C a:12 -> 12: case 8: a:12 of {C b:13 -> 11: (9: c:7 10: b:13)}})
+//│ def id2:8 = 16: (fun z:14 -> 15: z:14)
+//│ def id:9 = 20: (fun y:15 -> 19: (17: id2:8 18: y:15))
+//│ def id3:10 = 22: (fun d:16 -> 21: d:16)
+//│ 27: (23: c:7 26: (24: id3:10 25: p:6))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ C((ɛ, C((ɛ, C((ɛ, 5'3_callres)))))) <: 7'a
+//│ 	[p:6^25 ⋅ p:6^2 ⋅ p:6^2 ⋅ p:6^2 ⋅ ɛ] <: [c:7^23 ⋅ c:7^9 ⋅ c:7^9 ⋅ c:7^9 ⋅ c:7^9 ⋅ ɛ]
+//│ 	[p:6^25 ⋅ p:6^2 ⋅ ɛ] <: [c:7^23 ⋅ c:7^9 ⋅ ɛ]
+//│ ------- defInstance -------
+//│ p:6^25 ⋅ p:6^2 ⋅ ɛ ==> c:7^23 ⋅ c:7^9 ⋅ ɛ:
+//│ 	6: [C [C [C (id:9 p:6)]]]  <-->  12: case a:12 of {C b:13 -> (c:7 b:13)}
+//│ p:6^25 ⋅ ɛ ==> c:7^23 ⋅ c:7^9 ⋅ ɛ:
+//│ 	4: [C (id:9 p:6)]  <-->  13: case x:11 of {C a:12 -> case a:12 of {C b:13 -> (c:7 b:13)}}
+//│ p:6^25 ⋅ p:6^2 ⋅ ɛ ==> c:7^23 ⋅ c:7^9 ⋅ c:7^9 ⋅ ɛ:
+//│ 	4: [C (id:9 p:6)]  <-->  12: case a:12 of {C b:13 -> (c:7 b:13)}
+//│ 	5: [C [C (id:9 p:6)]]  <-->  13: case x:11 of {C a:12 -> case a:12 of {C b:13 -> (c:7 b:13)}}
+//│ p:6^25 ⋅ ɛ ==> c:7^23 ⋅ ɛ:
+//│ 	5: [C [C (id:9 p:6)]]  <-->  12: case a:12 of {C b:13 -> (c:7 b:13)}
+//│ 	6: [C [C [C (id:9 p:6)]]]  <-->  13: case x:11 of {C a:12 -> case a:12 of {C b:13 -> (c:7 b:13)}}
+//│ p:6^25 ⋅ p:6^2 ⋅ p:6^2 ⋅ ɛ ==> c:7^23 ⋅ c:7^9 ⋅ c:7^9 ⋅ c:7^9 ⋅ ɛ:
+//│ 	5: [C [C (id:9 p:6)]]  <-->  12: case a:12 of {C b:13 -> (c:7 b:13)}
+//│ 	6: [C [C [C (id:9 p:6)]]]  <-->  13: case x:11 of {C a:12 -> case a:12 of {C b:13 -> (c:7 b:13)}}
+//│ p:6^25 ⋅ p:6^2 ⋅ p:6^2 ⋅ ɛ ==> c:7^23 ⋅ c:7^9 ⋅ c:7^9 ⋅ c:7^9 ⋅ c:7^9 ⋅ ɛ:
+//│ 	4: [C (id:9 p:6)]  <-->  13: case x:11 of {C a:12 -> case a:12 of {C b:13 -> (c:7 b:13)}}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def p:6 = [C [C [C (id:9 p:6)]]]
+//│ def c:7 = (fun x:11 -> case x:11 of {C a:12 -> case a:12 of {C b:13 -> (c:7 b:13)}})
+//│ def id2:8 = (fun z:14 -> z:14)
+//│ def id:9 = (fun y:15 -> (id2:8 y:15))
+//│ def id3:10 = (fun d:16 -> d:16)
+//│ def c'7'23_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9:35 = "RECURSE_TOO_LONG"
+//│ def c'7'23_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9:33 = (fun x:11 -> case x:11 of {C a:12 -> case a:12 of {C b:13 -> (c'7'23_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9:34 b:13)}})
+//│ def p'6'25_id'9'1:21 = (fun y:15 -> (p'6'25_id'9'1_id2'8'17:22 y:15))
+//│ def c'7'23_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9:34 = (fun x:11 -> case x:11 of {C a:12 -> case a:12 of {C b:13 -> (c'7'23_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9:35 b:13)}})
+//│ def p'6'25_p'6'2_id'9'1:26 = (fun y:15 -> (p'6'25_p'6'2_id'9'1_id2'8'17:27 y:15))
+//│ def p'6'25_p'6'2_p'6'2_id'9'1:36 = (fun y:15 -> (p'6'25_p'6'2_p'6'2_id'9'1_id2'8'17:37 y:15))
+//│ def p'6'25_p'6'2_p'6'2:28 = 
+//│ 	let a:12 = 
+//│ 		let b:13 = 
+//│ 			let a:12 = (p'6'25_p'6'2_p'6'2_id'9'1:36 p'6'25_p'6'2:23) in case a:12 of {C b:13 -> (c'7'23_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9:29 b:13)} 
+//│ 		in (c'7'23_c'7'9:20 b:13) 
+//│ 	in a:12
+//│ def c'7'23_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9:31 = (fun x:11 -> case x:11 of {C a:12 -> case a:12 of {C b:13 -> (c'7'23_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9:32 b:13)}})
+//│ def c'7'23_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9:32 = (fun x:11 -> case x:11 of {C a:12 -> case a:12 of {C b:13 -> (c'7'23_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9:33 b:13)}})
+//│ def p'6'25_id'9'1_id2'8'17:22 = (fun z:14 -> z:14)
+//│ def id3'10'24:18 = (fun d:16 -> d:16)
+//│ def c'7'23_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9:30 = (fun x:11 -> case x:11 of {C a:12 -> case a:12 of {C b:13 -> (c'7'23_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9:31 b:13)}})
+//│ def c'7'23_c'7'9_c'7'9:24 = (fun x:11 -> x:11)
+//│ def c'7'23_c'7'9_c'7'9_c'7'9:25 = (fun x:11 -> x:11)
+//│ def c'7'23:17 = (fun x:11 -> x:11)
+//│ def c'7'23_c'7'9:20 = (fun x:11 -> x:11)
+//│ def p'6'25_p'6'2:23 = 
+//│ 	let b:13 = 
+//│ 		let a:12 = 
+//│ 			let b:13 = (p'6'25_p'6'2_id'9'1:26 p'6'25_p'6'2_p'6'2:28) in (c'7'23_c'7'9_c'7'9_c'7'9:25 b:13) 
+//│ 		in a:12 
+//│ 	in (c'7'23_c'7'9_c'7'9:24 b:13)
+//│ def c'7'23_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9:29 = (fun x:11 -> case x:11 of {C a:12 -> case a:12 of {C b:13 -> (c'7'23_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9_c'7'9:30 b:13)}})
+//│ def p'6'25_p'6'2_id'9'1_id2'8'17:27 = (fun z:14 -> z:14)
+//│ def p'6'25_p'6'2_p'6'2_id'9'1_id2'8'17:37 = (fun z:14 -> z:14)
+//│ def p'6'25:19 = 
+//│ 	let a:12 = 
+//│ 		let b:13 = 
+//│ 			let a:12 = (p'6'25_id'9'1:21 p'6'25_p'6'2:23) in a:12 
+//│ 		in (c'7'23_c'7'9:20 b:13) 
+//│ 	in a:12
+//│ (c'7'23:17 (id3'10'24:18 p'6'25:19))
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+
+:ns
+fun id(k) = k
+fun id1(x) = id(x)
+fun id2(y) = y
+fun id3(z) = z
+let rec p = C(C(C(id7(C(C(id1(p)))))))
+fun c(xx) = if xx is
+    C(a) then c(a)
+fun id4(k) = k
+fun id5(j) = j
+fun id6(l) = l
+fun id7(i) = i
+id6(id4)(c)(id5(id2)(id3(p)))
+//│ |#fun| |id|(|k|)| |#=| |k|↵|#fun| |id1|(|x|)| |#=| |id|(|x|)|↵|#fun| |id2|(|y|)| |#=| |y|↵|#fun| |id3|(|z|)| |#=| |z|↵|#let| |#rec| |p| |#=| |C|(|C|(|C|(|id7|(|C|(|C|(|id1|(|p|)|)|)|)|)|)|)|↵|#fun| |c|(|xx|)| |#=| |#if| |xx| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|#fun| |id4|(|k|)| |#=| |k|↵|#fun| |id5|(|j|)| |#=| |j|↵|#fun| |id6|(|l|)| |#=| |l|↵|#fun| |id7|(|i|)| |#=| |i|↵|id6|(|id4|)|(|c|)|(|id5|(|id2|)|(|id3|(|p|)|)|)|
+//│ Parsed: {fun id = k, => k; fun id1 = x, => id (x,); fun id2 = y, => y; fun id3 = z, => z; let rec p = C (C (C (id7 (C (C (id1 (p,),),),),),),); fun c = xx, => if xx is ‹(C (a,)) then c (a,)›; fun id4 = k, => k; fun id5 = j, => j; fun id6 = l, => l; fun id7 = i, => i; id6 (id4,) (c,) (id5 (id2,) (id3 (p,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def id:6 = 2: (fun k:16 -> 1: k:16)
+//│ def id1:7 = 6: (fun x:17 -> 5: (3: id:6 4: x:17))
+//│ def id2:8 = 8: (fun y:18 -> 7: y:18)
+//│ def id3:9 = 10: (fun z:19 -> 9: z:19)
+//│ def p:10 = 20: [C 19: [C 18: [C 17: (11: id7:15 16: [C 15: [C 14: (12: id1:7 13: p:10)]])]]]
+//│ def c:11 = 26: (fun xx:20 -> 25: case 21: xx:20 of {C a:21 -> 24: (22: c:11 23: a:21)})
+//│ def id4:12 = 28: (fun k:22 -> 27: k:22)
+//│ def id5:13 = 30: (fun j:23 -> 29: j:23)
+//│ def id6:14 = 32: (fun l:24 -> 31: l:24)
+//│ def id7:15 = 34: (fun i:25 -> 33: i:25)
+//│ 47: (39: (37: (35: id6:14 36: id4:12) 38: c:11) 46: (42: (40: id5:13 41: id2:8) 45: (43: id3:9 44: p:10)))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ ------- recursive -------
+//│ C((ɛ, C((ɛ, C((ɛ, 16'17_callres)))))) <: 18'a
+//│ 	[p:10^44 ⋅ p:10^13 ⋅ p:10^13 ⋅ ɛ] <: [c:11^38 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ ɛ]
+//│ 	[p:10^44 ⋅ p:10^13 ⋅ ɛ] <: [c:11^38 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ ɛ]
+//│ ------- defInstance -------
+//│ p:10^44 ⋅ p:10^13 ⋅ ɛ ==> c:11^38 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ ɛ:
+//│ 	15: [C (id1:7 p:10)]  <-->  25: case xx:20 of {C a:21 -> (c:11 a:21)}
+//│ p:10^44 ⋅ p:10^13 ⋅ ɛ ==> c:11^38 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ ɛ:
+//│ 	20: [C [C [C (id7:15 [C [C (id1:7 p:10)]])]]]  <-->  25: case xx:20 of {C a:21 -> (c:11 a:21)}
+//│ p:10^44 ⋅ ɛ ==> c:11^38 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ ɛ:
+//│ 	16: [C [C (id1:7 p:10)]]  <-->  25: case xx:20 of {C a:21 -> (c:11 a:21)}
+//│ p:10^44 ⋅ p:10^13 ⋅ ɛ ==> c:11^38 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ ɛ:
+//│ 	18: [C (id7:15 [C [C (id1:7 p:10)]])]  <-->  25: case xx:20 of {C a:21 -> (c:11 a:21)}
+//│ p:10^44 ⋅ p:10^13 ⋅ ɛ ==> c:11^38 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ ɛ:
+//│ 	19: [C [C (id7:15 [C [C (id1:7 p:10)]])]]  <-->  25: case xx:20 of {C a:21 -> (c:11 a:21)}
+//│ p:10^44 ⋅ ɛ ==> c:11^38 ⋅ ɛ:
+//│ 	20: [C [C [C (id7:15 [C [C (id1:7 p:10)]])]]]  <-->  25: case xx:20 of {C a:21 -> (c:11 a:21)}
+//│ p:10^44 ⋅ ɛ ==> c:11^38 ⋅ c:11^22 ⋅ c:11^22 ⋅ ɛ:
+//│ 	18: [C (id7:15 [C [C (id1:7 p:10)]])]  <-->  25: case xx:20 of {C a:21 -> (c:11 a:21)}
+//│ p:10^44 ⋅ p:10^13 ⋅ ɛ ==> c:11^38 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ ɛ:
+//│ 	16: [C [C (id1:7 p:10)]]  <-->  25: case xx:20 of {C a:21 -> (c:11 a:21)}
+//│ p:10^44 ⋅ ɛ ==> c:11^38 ⋅ c:11^22 ⋅ ɛ:
+//│ 	19: [C [C (id7:15 [C [C (id1:7 p:10)]])]]  <-->  25: case xx:20 of {C a:21 -> (c:11 a:21)}
+//│ p:10^44 ⋅ ɛ ==> c:11^38 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ c:11^22 ⋅ ɛ:
+//│ 	15: [C (id1:7 p:10)]  <-->  25: case xx:20 of {C a:21 -> (c:11 a:21)}
+//│ 
+//│ >>>>>>>>>> Rewritten >>>>>>>>>>
+//│ def id:6 = (fun k:16 -> k:16)
+//│ def id1:7 = (fun x:17 -> (id:6 x:17))
+//│ def id2:8 = (fun y:18 -> y:18)
+//│ def id3:9 = (fun z:19 -> z:19)
+//│ def p:10 = [C [C [C (id7:15 [C [C (id1:7 p:10)]])]]]
+//│ def c:11 = (fun xx:20 -> case xx:20 of {C a:21 -> (c:11 a:21)})
+//│ def id4:12 = (fun k:22 -> k:22)
+//│ def id5:13 = (fun j:23 -> j:23)
+//│ def id6:14 = (fun l:24 -> l:24)
+//│ def id7:15 = (fun i:25 -> i:25)
+//│ def p'10'44_id1'7'12_id'6'3:40 = (fun k:16 -> k:16)
+//│ def id5'13'40:29 = (fun j:23 -> j:23)
+//│ def c'11'38_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22:42 = (fun xx:20 -> xx:20)
+//│ def id4'12'36:27 = (fun k:22 -> k:22)
+//│ def c'11'38_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22:44 = (fun xx:20 -> xx:20)
+//│ def c'11'38_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22:43 = (fun xx:20 -> xx:20)
+//│ def p'10'44_p'10'13_id1'7'12_id'6'3:49 = (fun k:16 -> k:16)
+//│ def p'10'44:32 = 
+//│ 	let a:21 = 
+//│ 		let a:21 = 
+//│ 			let a:21 = (p'10'44_id7'15'11:36 
+//│ 				let a:21 = 
+//│ 					let a:21 = (p'10'44_id1'7'12:39 p'10'44_p'10'13:41) in (c'11'38_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22:38 a:21) 
+//│ 				in (c'11'38_c'11'22_c'11'22_c'11'22_c'11'22:37 a:21)) 
+//│ 			in (c'11'38_c'11'22_c'11'22_c'11'22:35 a:21) 
+//│ 		in (c'11'38_c'11'22_c'11'22:34 a:21) 
+//│ 	in (c'11'38_c'11'22:33 a:21)
+//│ def p'10'44_p'10'13_id7'15'11:45 = (fun i:25 -> i:25)
+//│ def c'11'38_c'11'22_c'11'22:34 = (fun xx:20 -> xx:20)
+//│ def p'10'44_p'10'13_id1'7'12:48 = (fun x:17 -> (p'10'44_p'10'13_id1'7'12_id'6'3:49 x:17))
+//│ def id2'8'41:30 = (fun y:18 -> y:18)
+//│ def p'10'44_id7'15'11:36 = (fun i:25 -> i:25)
+//│ def c'11'38:28 = (fun xx:20 -> xx:20)
+//│ def p'10'44_p'10'13:41 = 
+//│ 	let a:21 = 
+//│ 		let a:21 = 
+//│ 			let a:21 = (p'10'44_p'10'13_id7'15'11:45 
+//│ 				let a:21 = 
+//│ 					let a:21 = (p'10'44_p'10'13_id1'7'12:48 p'10'44_p'10'13:41) in (c'11'38_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22:46 a:21) 
+//│ 				in (c'11'38_c'11'22_c'11'22_c'11'22_c'11'22:37 a:21)) 
+//│ 			in (c'11'38_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22:44 a:21) 
+//│ 		in (c'11'38_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22:43 a:21) 
+//│ 	in (c'11'38_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22:42 a:21)
+//│ def c'11'38_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22:38 = (fun xx:20 -> xx:20)
+//│ def c'11'38_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22:47 = "RECURSE_TOO_LONG"
+//│ def p'10'44_id1'7'12:39 = (fun x:17 -> (p'10'44_id1'7'12_id'6'3:40 x:17))
+//│ def id6'14'35:26 = (fun l:24 -> l:24)
+//│ def c'11'38_c'11'22_c'11'22_c'11'22:35 = (fun xx:20 -> xx:20)
+//│ def id3'9'43:31 = (fun z:19 -> z:19)
+//│ def c'11'38_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22:46 = (fun xx:20 -> case xx:20 of {C a:21 -> (c'11'38_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22_c'11'22:47 a:21)})
+//│ def c'11'38_c'11'22:33 = (fun xx:20 -> xx:20)
+//│ def c'11'38_c'11'22_c'11'22_c'11'22_c'11'22:37 = (fun xx:20 -> xx:20)
+//│ (((id6'14'35:26 id4'12'36:27) c'11'38:28) ((id5'13'40:29 id2'8'41:30) (id3'9'43:31 p'10'44:32)))
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<

@@ -45,6 +45,20 @@ inter(l1, l2)
 //│ def inter'6'20_inter'6'5:16 = (fun xs:9 -> xs:9)
 //│ ((inter'6'20:14 l1'7'21:15) l2'8'23:19)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
+//│ >>>>>>>>>> Simplify >>>>>>>>>>
+//│ def inter'6'20_inter'6'5_inter'6'5_inter'6'5:17 = (fun xs:9 -> case xs:9 of {N -> (fun ys:10 -> ys:10) | C h:11 t:12 -> (fun ys:13 -> [C h:11 (ys:13 t:12)])})
+//│ def l1'7'21:15 = 
+//│ 	let h:11 = 1 in 
+//│ 	let t:12 = 
+//│ 		let h:11 = 2 in 
+//│ 		let t:12 = (fun ys:10 -> ys:10) in (fun ys:13 -> [C h:11 ((inter'6'20_inter'6'5_inter'6'5_inter'6'5:17 ys:13) t:12)]) 
+//│ 	in (fun ys:13 -> [C h:11 (ys:13 t:12)])
+//│ def inter'6'20:14 = (fun xs:9 -> xs:9)
+//│ def inter'6'20_inter'6'5_inter'6'5_inter'6'5_inter'6'5:18 = (fun xs:9 -> xs:9)
+//│ def l2'8'23:19 = (fun ys:10 -> ys:10)
+//│ def inter'6'20_inter'6'5:16 = (fun xs:9 -> xs:9)
+//│ (l1'7'21:15 l2'8'23:19)
+//│ <<<<<<<<<< Simplify <<<<<<<<<<
 
 
 fun inter(xs) = if xs is
@@ -106,6 +120,26 @@ inter(l1(0))(l2)
 //│ def inter'6'31_inter'6'5:17 = (fun xs:9 -> xs:9)
 //│ ((inter'6'31:15 (l1'7'32:16 0)) l2'8'36:19)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
+//│ >>>>>>>>>> Simplify >>>>>>>>>>
+//│ def inter'6'31_inter'6'5_inter'6'5:20 = (fun xs:9 -> xs:9)
+//│ def l1'7'32:16 = (fun x:14 -> 
+//│ 	let h:11 = 1 in 
+//│ 	let t:12 = 
+//│ 		let h:11 = 2 in 
+//│ 		let t:12 = (l1'7'32:16 ((add:4 x:14) 1)) in (fun ys:13 -> [C h:11 (ys:13 t:12)]) 
+//│ 	in (fun ys:13 -> [C h:11 (ys:13 t:12)]))
+//│ def inter'6'31_inter'6'5:17 = (fun xs:9 -> xs:9)
+//│ def inter'6'31_inter'6'5_inter'6'5_inter'6'5_inter'6'5:21 = (fun xs:9 -> xs:9)
+//│ def inter'6'31_inter'6'5_inter'6'5_inter'6'5:18 = (fun xs:9 -> xs:9)
+//│ def l2'8'36:19 = 
+//│ 	let h:11 = 9 in 
+//│ 	let t:12 = 
+//│ 		let h:11 = 8 in 
+//│ 		let t:12 = l2'8'36:19 in (fun ys:13 -> [C h:11 (ys:13 t:12)]) 
+//│ 	in (fun ys:13 -> [C h:11 (ys:13 t:12)])
+//│ def inter'6'31:15 = (fun xs:9 -> xs:9)
+//│ ((l1'7'32:16 0) l2'8'36:19)
+//│ <<<<<<<<<< Simplify <<<<<<<<<<
 
 
 
@@ -151,6 +185,14 @@ map(l)(
 //│ 	let t:10 = (fun f:12 -> [N]) in (fun f:11 -> [C (f:11 h:9) ((map'6'19_map'6'5:16 t:10) f:11)])
 //│ ((map'6'19:14 l'7'20:15) (fun x:13 -> x:13))
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
+//│ >>>>>>>>>> Simplify >>>>>>>>>>
+//│ def map'6'19:14 = (fun ls:8 -> ls:8)
+//│ def map'6'19_map'6'5:16 = (fun ls:8 -> ls:8)
+//│ def l'7'20:15 = 
+//│ 	let h:9 = [T] in 
+//│ 	let t:10 = (fun f:12 -> [N]) in (fun f:11 -> [C (f:11 h:9) (t:10 f:11)])
+//│ (l'7'20:15 (fun x:13 -> x:13))
+//│ <<<<<<<<<< Simplify <<<<<<<<<<
 
 
 
@@ -206,6 +248,22 @@ map(l)
 //│ def map'6'21:11 = (fun ls:8 -> ls:8)
 //│ (map'6'21:11 l'7'22:12)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
+//│ >>>>>>>>>> Simplify >>>>>>>>>>
+//│ def map'6'21_map'6'7_map'6'7_map'6'7:15 = (fun ls:8 -> ls:8)
+//│ def map'6'21_map'6'7_map'6'7:14 = (fun ls:8 -> ls:8)
+//│ def map'6'21_map'6'7:13 = (fun ls:8 -> ls:8)
+//│ def map'6'21:11 = (fun ls:8 -> ls:8)
+//│ def l'7'22:12 = 
+//│ 	let h:9 = [T] in 
+//│ 	let t:10 = 
+//│ 		let h:9 = [TT] in 
+//│ 		let t:10 = 
+//│ 			let h:9 = [TTTT] in 
+//│ 			let t:10 = [N] in [C h:9 t:10] 
+//│ 		in [C h:9 t:10] 
+//│ 	in [C h:9 t:10]
+//│ l'7'22:12
+//│ <<<<<<<<<< Simplify <<<<<<<<<<
 
 
 
@@ -280,6 +338,28 @@ c(t)
 //│ def c'9'28_c'9'21_c'9'21:20 = (fun x:10 -> x:10)
 //│ (c'9'28:14 t'8'29:15)
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
+//│ >>>>>>>>>> Simplify >>>>>>>>>>
+//│ def c'9'28_c'9'21:17 = (fun x:10 -> x:10)
+//│ def c'9'28_c'9'21_c'9'18:19 = (fun x:10 -> x:10)
+//│ def c'9'28:14 = (fun x:10 -> x:10)
+//│ def t'8'29_bb'7'11:18 = 
+//│ 	let n:11 = [NN] in 
+//│ 	let l:12 = [LL] in 
+//│ 	let r:13 = [LL] in [T n:11 l:12 r:13]
+//│ def c'9'28_c'9'18_c'9'18:22 = (fun x:10 -> x:10)
+//│ def c'9'28_c'9'18_c'9'21:23 = (fun x:10 -> x:10)
+//│ def t'8'29:15 = 
+//│ 	let n:11 = [KK] in 
+//│ 	let l:12 = t'8'29_aa'6'10:21 in 
+//│ 	let r:13 = t'8'29_bb'7'11:18 in [T n:11 l:12 r:13]
+//│ def c'9'28_c'9'21_c'9'21:20 = (fun x:10 -> x:10)
+//│ def c'9'28_c'9'18:16 = (fun x:10 -> x:10)
+//│ def t'8'29_aa'6'10:21 = 
+//│ 	let n:11 = [NN] in 
+//│ 	let l:12 = [LL] in 
+//│ 	let r:13 = [LL] in [T n:11 l:12 r:13]
+//│ t'8'29:15
+//│ <<<<<<<<<< Simplify <<<<<<<<<<
 
 
 
@@ -348,6 +428,23 @@ sum(mapa(mapb(primitive)))
 //│ 	let t:11 = (mapa'7'33_mapa'7'14:22 ta:14) in [S [N] (sum'6'32_sum'6'3:21 t:11)] | N -> [N]})
 //│ (sum'6'32:18 (mapa'7'33:19 (mapb'8'34:20 primitive:3)))
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
+//│ >>>>>>>>>> Simplify >>>>>>>>>>
+//│ def sum'6'32_sum'6'3:21 = (fun ls:9 -> ls:9)
+//│ def mapa'7'33:19 = (fun lsa:12 -> lsa:12)
+//│ def mapb'8'34:20 = (fun lsb:15 -> case lsb:15 of {C hb:16 tb:17 -> 
+//│ 	let ha:13 = (primitive:3 hb:16) in 
+//│ 	let ta:14 = (mapb'8'34_mapb'8'25:23 tb:17) in 
+//│ 	let h:10 = (primitive:3 ha:13) in 
+//│ 	let t:11 = ta:14 in [S [N] t:11] | N -> [N]})
+//│ def sum'6'32:18 = (fun ls:9 -> ls:9)
+//│ def mapb'8'34_mapb'8'25:23 = (fun lsb:15 -> case lsb:15 of {C hb:16 tb:17 -> 
+//│ 	let ha:13 = (primitive:3 hb:16) in 
+//│ 	let ta:14 = (mapb'8'34_mapb'8'25:23 tb:17) in 
+//│ 	let h:10 = (primitive:3 ha:13) in 
+//│ 	let t:11 = ta:14 in [S [N] t:11] | N -> [N]})
+//│ def mapa'7'33_mapa'7'14:22 = (fun lsa:12 -> lsa:12)
+//│ (mapb'8'34:20 primitive:3)
+//│ <<<<<<<<<< Simplify <<<<<<<<<<
 
 fun map(ls) = if ls is
     N then N
@@ -419,3 +516,19 @@ lastDrive(map(C(T, C(TT, N))))
 //│ 	let hh:19 = ((fun head:12 -> head:12) hhh:10) in 
 //│ 	let tt:20 = (map'6'38_map'6'10:24 ttt:11) in [Some ((lastDrive'8'37_last'7'29:23 tt:20) hh:19)]))
 //│ <<<<<<<<<< Rewritten <<<<<<<<<<
+//│ >>>>>>>>>> Simplify >>>>>>>>>>
+//│ def lastDrive'8'37:21 = (fun xs:18 -> xs:18)
+//│ def map'6'38:22 = (fun ls:9 -> ls:9)
+//│ def lastDrive'8'37_last'7'29:23 = (fun ys:13 -> ys:13)
+//│ def map'6'38_map'6'10:24 = (fun ls:9 -> ls:9)
+//│ 
+//│ 	let hhh:10 = [K] in 
+//│ 	let ttt:11 = 
+//│ 		let hhh:10 = [KK] in 
+//│ 		let ttt:11 = (fun x:14 -> x:14) in 
+//│ 		let h:15 = hhh:10 in 
+//│ 		let t:16 = ttt:11 in (fun x:17 -> (t:16 h:15)) 
+//│ 	in 
+//│ 	let hh:19 = hhh:10 in 
+//│ 	let tt:20 = ttt:11 in [Some (tt:20 hh:19)]
+//│ <<<<<<<<<< Simplify <<<<<<<<<<

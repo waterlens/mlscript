@@ -55,7 +55,7 @@ class Rewrite(p: Program, val d: Deforest,
     val res = mutable.Map.empty[(Path, ExprId), (Path, Match)]
     defInstancesMap foreach { case ((pp, cp), exprMap) =>
       exprMap foreach { case (ctor, matchh) => res.updateWith(pp, ctor) {
-        case S(v) if v === (ctor, matchh) => S(v)
+        case S(v) if v._2.uid == matchh => S(v)
         case S(v) =>
           lastWords(
             s"\n${pprint2(pp).plainText} to `${d.exprs(ctor).pp}` \n" +
@@ -156,8 +156,8 @@ class Rewrite(p: Program, val d: Deforest,
         suffix match {
           case Nil => Match(rewriteExpr(scrut), arms.map{case (v, args, body) => (v, args, rewriteExpr(body))})
           case longest :: t => {
-            if t.length > 0 then println(s"************MORE THAN ONE MATCH: ${t}************")
-            rewriteExpr(scrut)
+            if t.length > 0 then println(s"************MORE THAN ONE MATCH:\n${suffix.map(pprint2.apply(_)).mkString("\n")}\n************")
+            if msToCs.contains(longest -> e.uid) then rewriteExpr(scrut) else Match(rewriteExpr(scrut), arms.map{case (v, args, body) => (v, args, rewriteExpr(body))})
           }
         }
       }

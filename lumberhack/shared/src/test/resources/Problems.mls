@@ -173,7 +173,7 @@ c(0)
 //│ <<<<<<<<<< Simplify <<<<<<<<<<
 
 
-// NOTE: only the first element is handled
+// NOTE: only the first two element is handled
 _LUMBERHACK_ERROR
 fun map(f, ls) = if ls is
     C(h, t) then C(f(h), map(f, t))
@@ -218,12 +218,40 @@ map(ff, l)
 //│ 	26: [C [KK] [C [KKKK] [N]]]  <-->  12: case ls:10 of {C h:11 t:12 -> [C (f:9 h:11) ((map:6 f:9) t:12)] | N -> [N]}
 //│ 
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
-//│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: 
-//│ map:6^28 ⋅ l:8^31 ⋅ ɛ to `[KKKK]` 
-//│ 	already has map:6^28 ⋅ map:6^5 ⋅ map:6^5 ⋅ ff:7^29 ⋅ ɛ to `case x:13 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}` 
-//│ 	but here comes another match map:6^28 ⋅ map:6^5 ⋅ ff:7^29 ⋅ ɛ to `case x:13 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}`
-//│ !!!!!!ERROR!!!!!!
+//│ def map:6 = (fun f:9 -> (fun ls:10 -> case ls:10 of {C h:11 t:12 -> [C (f:9 h:11) ((map:6 f:9) t:12)] | N -> [N]}))
+//│ def ff:7 = (fun x:13 -> case x:13 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]})
+//│ def l:8 = [C [K] [C [KK] [C [KKKK] [N]]]]
+//│ def map'6'28:14 = (fun f:9 -> (fun ls:10 -> ls:10))
+//│ def map'6'28_map'6'5:17 = (fun f:9 -> (fun ls:10 -> ls:10))
+//│ def map'6'28_map'6'5_map'6'5_map'6'5:18 = (fun f:9 -> (fun ls:10 -> ls:10))
+//│ def ff'7'29:15 = (fun x:13 -> x:13)
+//│ def l'8'31:16 = 
+//│ 	let h:11 = [T] in 
+//│ 	let t:12 = 
+//│ 		let h:11 = [TT] in 
+//│ 		let t:12 = 
+//│ 			let h:11 = [KKKK] in 
+//│ 			let t:12 = [N] in [C (f:9 h:11) ((map'6'28_map'6'5_map'6'5_map'6'5:18 f:9) t:12)] 
+//│ 		in [C (f:9 h:11) ((map'6'28_map'6'5:17 f:9) t:12)] 
+//│ 	in [C (f:9 h:11) ((map'6'28_map'6'5:17 f:9) t:12)]
+//│ ((map'6'28:14 ff'7'29:15) l'8'31:16)
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+//│ >>>>>>>>>> Simplify >>>>>>>>>>
+//│ def l'8'31:16 = 
+//│ 	let h:11 = [T] in 
+//│ 	let t:12 = 
+//│ 		let h:11 = [TT] in 
+//│ 		let t:12 = 
+//│ 			let h:11 = [KKKK] in 
+//│ 			let t:12 = [N] in [C (f:9 h:11) ((map'6'28_map'6'5_map'6'5_map'6'5:18 f:9) t:12)] 
+//│ 		in [C (f:9 h:11) ((map'6'28_map'6'5:17 f:9) t:12)] 
+//│ 	in [C (f:9 h:11) ((map'6'28_map'6'5:17 f:9) t:12)]
+//│ def map'6'28_map'6'5:17 = (fun f:9 -> (fun ls:10 -> ls:10))
+//│ def ff'7'29:15 = (fun x:13 -> x:13)
+//│ def map'6'28:14 = (fun f:9 -> (fun ls:10 -> ls:10))
+//│ def map'6'28_map'6'5_map'6'5_map'6'5:18 = (fun f:9 -> (fun ls:10 -> ls:10))
+//│ ((map'6'28:14 ff'7'29:15) l'8'31:16)
+//│ <<<<<<<<<< Simplify <<<<<<<<<<
 
 
 // NOTE: some program not be able to write?
@@ -320,12 +348,46 @@ idxSum(rev(primitive, N))(0)
 //│ 	37: [N]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
 //│ 
 //│ >>>>>>>>>> Rewritten >>>>>>>>>>
-//│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: 
-//│ ɛ to `[N]` 
-//│ 	already has rev:8^23 ⋅ idxSum:7^33 ⋅ idxSum:7^8 ⋅ ɛ to `case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}` 
-//│ 	but here comes another match idxSum:7^33 ⋅ ɛ to `case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}`
-//│ !!!!!!ERROR!!!!!!
+//│ def add:4 = primitive:3
+//│ def idxSum:7 = (fun ls:9 -> case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))})
+//│ def rev:8 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev:8 tt:17) [C hh:16 a:15])}))
+//│ def rev'8'34:19 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23:20 tt:17) 
+//│ 	let h:11 = hh:16 in 
+//│ 	let t:12 = a:15 in (fun acc:13 -> ((add:4 acc:13) ((idxSum'7'33_idxSum'7'8:31 t:12) ((add:4 acc:13) 1)))))}))
+//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23:23 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:24 tt:17) [C hh:16 a:15])}))
+//│ def idxSum'7'33:18 = (fun ls:9 -> ls:9)
+//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:28 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:29 tt:17) [C hh:16 a:15])}))
+//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:29 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:30 tt:17) [C hh:16 a:15])}))
+//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23:22 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23:23 tt:17) [C hh:16 a:15])}))
+//│ def rev'8'34_rev'8'23_rev'8'23:21 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23:22 tt:17) [C hh:16 a:15])}))
+//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:25 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:26 tt:17) [C hh:16 a:15])}))
+//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:26 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:27 tt:17) [C hh:16 a:15])}))
+//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:24 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:25 tt:17) [C hh:16 a:15])}))
+//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:30 = "RECURSE_TOO_LONG"
+//│ def idxSum'7'33_idxSum'7'8:31 = (fun ls:9 -> ls:9)
+//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:27 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:28 tt:17) [C hh:16 a:15])}))
+//│ def rev'8'34_rev'8'23:20 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23:21 tt:17) [C hh:16 a:15])}))
+//│ ((idxSum'7'33:18 ((rev'8'34:19 primitive:3) (fun acc:10 -> 0))) 0)
+//│ <<<<<<<<<< Rewritten <<<<<<<<<<
+//│ >>>>>>>>>> Simplify >>>>>>>>>>
+//│ def rev'8'34_rev'8'23:20 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23:21 tt:17) [C hh:16 a:15])}))
+//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:24 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:25 tt:17) [C hh:16 a:15])}))
+//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:29 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:30 tt:17) [C hh:16 a:15])}))
+//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23:22 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23:23 tt:17) [C hh:16 a:15])}))
+//│ def rev'8'34:19 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23:20 tt:17) 
+//│ 	let h:11 = hh:16 in 
+//│ 	let t:12 = a:15 in (fun acc:13 -> ((add:4 acc:13) (t:12 ((add:4 acc:13) 1)))))}))
+//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:28 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:29 tt:17) [C hh:16 a:15])}))
+//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23:23 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:24 tt:17) [C hh:16 a:15])}))
+//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:26 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:27 tt:17) [C hh:16 a:15])}))
+//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:25 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:26 tt:17) [C hh:16 a:15])}))
+//│ def rev'8'34_rev'8'23_rev'8'23:21 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23:22 tt:17) [C hh:16 a:15])}))
+//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:27 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:28 tt:17) [C hh:16 a:15])}))
+//│ def idxSum'7'33_idxSum'7'8:31 = (fun ls:9 -> ls:9)
+//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:30 = "RECURSE_TOO_LONG"
+//│ def idxSum'7'33:18 = (fun ls:9 -> ls:9)
+//│ (((rev'8'34:19 primitive:3) (fun acc:10 -> 0)) 0)
+//│ <<<<<<<<<< Simplify <<<<<<<<<<
 
 
 fun minuss(a) = if a is

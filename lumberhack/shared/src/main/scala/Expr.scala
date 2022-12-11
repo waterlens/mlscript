@@ -57,10 +57,14 @@ enum Expr(using val deforest: Deforest) {
         case LetIn(id, rhs, body) => {
           val rhsStr = rhs.pp(using level + 1, showUids)
           val inStr = if rhsStr.linesIterator.length == 1 then "in" else ("\n" + "\t" * level + "in")
+          val bodyStr = body match {
+            case b: LetIn => body.pp
+            case _ => body.pp(using level + 1, showUids)
+          }
           "\n" + "\t" * level +
           s"${Console.BOLD}let${Console.RESET} ${pprint2(id)} = ${rhsStr} ${Console.BOLD}" +
           inStr +
-          s"${Console.RESET} ${body.pp}"
+          s"${Console.RESET} ${bodyStr}"
         }
         case Match(scrut, arms) => s"${Console.BOLD}case${Console.RESET} ${scrut.pp} ${Console.BOLD}of${Console.RESET} {${arms.map {
             case (v, ids, e) =>

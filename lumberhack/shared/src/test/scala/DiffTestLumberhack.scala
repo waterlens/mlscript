@@ -27,10 +27,19 @@ class DiffTestLumberhack extends DiffTests {
     try {
       d.resolveConstraints
       output("\n------- recursive -------")
-      d.recursiveConstr._1.foreach { c => 
-        output((s"${pprint2(c._1._1._1).plainText} <: ${pprint2(c._1._2._1).plainText}"))
-        output(s"\t[${pprint2(c._1._1.path).plainText}] <: [${pprint2(c._1._2.path).plainText}]")
-        output(s"\t[${pprint2(c._2._1.path).plainText}] <: [${pprint2(c._2._2.path).plainText}]")
+      // d.recursiveConstr._1.foreach { c => 
+      //   output((s"${pprint2(c._1._1._1).plainText} <: ${pprint2(c._1._2._1).plainText}"))
+      //   output(s"\t[${pprint2(c._1._1.path).plainText}] <: [${pprint2(c._1._2.path).plainText}]")
+      //   output(s"\t[${pprint2(c._2._1.path).plainText}] <: [${pprint2(c._2._2.path).plainText}]")
+      // }
+      // d.recursiveConstr._2.foreach { p =>
+      //   output(s"${pprint2(p._1).plainText}  <--->  ${pprint2(p._2).plainText}")
+      // }
+      d.recursiveConstr._3.foreach { r =>
+        output(s"${pprint2(r._1._1.s).plainText} <: ${pprint2(r._1._2.s).plainText}")
+        r._2.foreach { p =>
+          output(s"\t[${pprint2(p._1).plainText}]  <--->  [${pprint2(p._2).plainText}]")
+        }
       }
       output(("------- defInstance -------"))
       d.defInstances.foreach { case (p, xs) =>

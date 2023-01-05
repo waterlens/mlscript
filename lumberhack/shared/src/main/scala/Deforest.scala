@@ -193,7 +193,7 @@ class Deforest(debug: Boolean) {
   
   val defInstances = mutable.Map.empty[Path -> Path, mutable.Set[ExprId -> ExprId]]
   val cnstrsList = mutable.ArrayBuffer.empty[Cnstr]
-  val recursiveConstr = mutable.Map.empty[Cnstr, Cnstr] -> mutable.Map.empty[Path, Path]
+  val recursiveConstr = (mutable.Map.empty[Cnstr, Cnstr], mutable.Map.empty[Path, Path], mutable.Map.empty[Cnstr, mutable.Map[Path, Path]])
   def resolveConstraints: Unit = {
     
     def handle(c: Cnstr)(using cache: Cache): Unit = trace(s"handle [${pprint2.apply(c._1).toString} : ${pprint2.apply(c._2).toString}]") {
@@ -205,8 +205,28 @@ class Deforest(debug: Boolean) {
             log(s">> done [${pprint2.apply(c._1).toString} : ${pprint2.apply(c._2).toString}]")
             log(s">> with [${pprint2.apply(inCache._1).toString} : ${pprint2.apply(inCache._2).toString}]")
             recursiveConstr._1 += (c -> inCache)
+            
+            recursiveConstr._2.get(c._1.path).map { p =>
+              assert(p == inCache._1.path, s"${pprint2(c._1.path).plainText} tied different knots: ${pprint2(p).plainText} ≠ ${pprint2(inCache._1.path).plainText}")
+            }
+            recursiveConstr._2.get(c._2.path).map { p =>
+              assert(p == inCache._2.path, s"${pprint2(c._2.path).plainText} tied different knots: ${pprint2(p).plainText} ≠ ${pprint2(inCache._2.path).plainText}")
+            }
             recursiveConstr._2 += (c._1.path -> inCache._1.path)
             recursiveConstr._2 += (c._2.path -> inCache._2.path)
+            
+            recursiveConstr._3.updateWith(c) {
+              case Some(m) =>
+                m += (c._1.path -> inCache._1.path)
+                m += (c._2.path -> inCache._2.path)
+                Some(m)
+              case None => Some({
+                val m = mutable.Map.empty[Path, Path]
+                m += (c._1.path -> inCache._1.path)
+                m += (c._2.path -> inCache._2.path)
+                m
+              })
+            }
             return
           case N => //cache += c
         case _ => ()

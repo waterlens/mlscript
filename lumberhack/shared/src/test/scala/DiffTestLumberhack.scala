@@ -27,14 +27,6 @@ class DiffTestLumberhack extends DiffTests {
     try {
       d.resolveConstraints
       output("\n------- recursive -------")
-      // d.recursiveConstr._1.foreach { c => 
-      //   output((s"${pprint2(c._1._1._1).plainText} <: ${pprint2(c._1._2._1).plainText}"))
-      //   output(s"\t[${pprint2(c._1._1.path).plainText}] <: [${pprint2(c._1._2.path).plainText}]")
-      //   output(s"\t[${pprint2(c._2._1.path).plainText}] <: [${pprint2(c._2._2.path).plainText}]")
-      // }
-      // d.recursiveConstr._2.foreach { p =>
-      //   output(s"${pprint2(p._1).plainText}  <--->  ${pprint2(p._2).plainText}")
-      // }
       d.recursiveConstr._3.foreach { r =>
         output(s"${pprint2(r._1._1.s).plainText} <: ${pprint2(r._1._2.s).plainText}")
         r._2.foreach { p =>
@@ -48,20 +40,14 @@ class DiffTestLumberhack extends DiffTests {
           case (p, c) => s"\n\t$p: ${d.exprs(p).pp}  <-->  $c: ${d.exprs(c).pp}"
         }.sorted.mkString.substring(1)))
       }
-      output("\n>>>>>>>>>> Rewritten >>>>>>>>>>")
+      output("\n>>>>>>>>>> Expanded >>>>>>>>>>")
       val rewritter = Rewrite(originalProgram, d,
         d.defInstances.map { case (ps, s) => (ps, s.toSet) }.toMap,
         d.recursiveConstr._2.toMap
       )
       val newProgram = rewritter.rewrite
       output(newProgram.pp)
-      output("<<<<<<<<<< Rewritten <<<<<<<<<<")
-      if !mode.noSimplification then {
-        output(">>>>>>>>>> Simplify >>>>>>>>>>")
-        val simplified = Simplify().simplify(rewritter.newDefs.toMap, rewritter.newExprs)(using rewritter.id2Path.toMap, rewritter.d)
-        output(simplified.pp)
-        output("<<<<<<<<<< Simplify <<<<<<<<<<")
-      }
+      output("<<<<<<<<<< Expanded <<<<<<<<<<")
     } catch {
       case e => if allowErr then {
         output("!!!!!!ERROR!!!!!!")

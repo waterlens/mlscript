@@ -9,8 +9,6 @@ case class ProgDef(id: Ident, body: Expr)
 case class Program(contents: Ls[ProgDef \/ Expr]) {
   def pp(using showUids: Bool = false): Str =
     contents.iterator.map {
-      // case L(pd) => s"def ${pd.id.tree} = ${pd.body.pp}\n"
-      // case R(e) => s"${e.pp}\n"
       case L(pd) => s"def ${pprint2(pd.id).plainText} = ${pd.body.pp}"
       case R(e) => e.pp
     }.mkString("\n")
@@ -117,7 +115,6 @@ object Expr {
           case _ => ???
         }
       )
-    // if then else for int
     case If(IfThen(expr, rhs), S(elze)) =>
       IfThenElse(fromTerm(expr), fromTerm(rhs), fromTerm(elze))
     case Bra(false, t) => fromTerm(t)

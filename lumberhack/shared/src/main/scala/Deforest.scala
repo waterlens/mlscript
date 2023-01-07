@@ -2,11 +2,9 @@ package mlscript
 package lumberhack
 
 import mlscript.utils.shorthands.*
+import mlscript.utils.lastWords
 import scala.collection.mutable
 import mlscript.utils.AnyOps
-
-def error(msg: Str): Nothing =
-  throw new Exception(msg)
 
 type TypeVar
 type Path = Ls[Ref -> Uid[Expr]]
@@ -65,42 +63,42 @@ object ConsStratEnum {
 
 case class Ctx(bindings: Map[Str, ProdStrat]) {
   def apply(id: Ident): ProdStrat =
-    bindings.getOrElse(id.tree.name, error(s"binding not found: " + id))
+    bindings.getOrElse(id.tree.name, lastWords(s"binding not found: " + id))
   def + (b: Str -> ProdStrat): Ctx =
     copy(bindings = bindings + b)
   def ++ (bs: Iterable[Str -> ProdStrat]): Ctx =
     copy(bindings = bindings ++ bs)
 }
 object Ctx {
-  def empty = Ctx(
-    Map.empty
-  )
+  def empty = Ctx(Map.empty)
 }
 def ctx(using Ctx): Ctx = summon
 
 class Deforest(debug: Boolean) {
-  
+  object Trace {
+    private val noPostTrace: Any => String = _ => ""
+    private var indent = 0
+    private[lumberhack] def trace[T](pre: String)(thunk: => T)(post: T => String = noPostTrace): T = {
+      log(pre, color = Console.CYAN)
+      indent += 1
+      val res =
+        try thunk
+        finally indent -= 1
+      if (!(post eq noPostTrace)) log(post(res), color = Console.CYAN)
+      res
+    }
+    private def summary(str: String) =
+      val made = str.split('\n').mkString("\\")
+      if (made.length > 100) made.take(100) + Console.RESET + Console.MAGENTA + "..." + Console.RESET else made
+    private[lumberhack] def log(msg: => String, color: String = Console.RED): Unit =
+      if debug then println("| " * indent + color + msg + Console.RESET)
+    def show(x: Any) =
+      Console.RESET + summary(pprint2.apply(x).toString)
+  }
+  import Trace.*
+
   var constraints: Ls[Cnstr] = Nil
   val exprs: mutable.Map[ExprId, Expr] = mutable.Map.empty
-  
-  private val noPostTrace: Any => String = _ => ""
-  private var indent = 0
-  private[lumberhack] def trace[T](pre: String)(thunk: => T)(post: T => String = noPostTrace): T = {
-    log(pre, color = Console.CYAN)
-    indent += 1
-    val res =
-      try thunk
-      finally indent -= 1
-    if (!(post eq noPostTrace)) log(post(res), color = Console.CYAN)
-    res
-  }
-  private def summary(str: String) =
-    val made = str.split('\n').mkString("\\")
-    if (made.length > 100) made.take(100) + Console.RESET + Console.MAGENTA + "..." + Console.RESET else made
-  inline def log(msg: => String, color: String = Console.RED): Unit =
-    if debug then println("| " * indent + color + msg + Console.RESET)
-  def show(x: Any) =
-    Console.RESET + summary(pprint2.apply(x).toString)
   
   val vuid = Uid.TypeVar.State()
   val iuid = Uid.Ident.State()
@@ -249,14 +247,12 @@ class Deforest(debug: Boolean) {
         case (ProdVar(v, _), _) =>
           upperBounds += v -> ((prod.path, cons) :: upperBounds(v))
           lowerBounds(v).foreach((lb_path, lb_strat) => handle({
-            // NOTE: explain this
             val (core, new_lb_path, new_prod_path) = biggestCore(lb_path, prod.path)
             lb_strat.addPath(new_prod_path) -> cons.addPath(new_lb_path)
           }))
         case (_, ConsVar(v, _)) =>
           lowerBounds += v -> ((cons.path, prod) :: lowerBounds(v))
           upperBounds(v).foreach((ub_path, ub_strat) => handle({
-            // NOTE: explain this
             val (core, new_ub_path, new_cons_path) = biggestCore(ub_path, cons.path)
             prod.addPath(new_ub_path) -> ub_strat.addPath(new_cons_path)
           }))
@@ -279,7 +275,7 @@ class Deforest(debug: Boolean) {
             }
           }
         }
-        case _ => error("type error")
+        case _ => lastWords("type error")
     }()
     
     given Cache = Map.empty

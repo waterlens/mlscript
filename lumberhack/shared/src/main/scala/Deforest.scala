@@ -25,6 +25,9 @@ enum PathElem[+T <: PathElemType] {
   lazy val pp: Str = this match
     case n@Normal(r@Ref(Ident(_, Var(nme), uid)), _) => s"${if n.pol then "+" else "-"}$nme:${uid}^${r.uid}"
     case Star(elms) => s"{${elms.map(_.pp).mkString(" · ")}}*"
+  def canCancel[V <: PathElemType](other: PathElem[V]): Boolean = (this, other) match
+    case (n: Normal, o: Normal) => (n == o) && (n.pol ^ o.pol)
+    case _ => ???
 }
 case class Path(p: Ls[PathElem[PathElemType]]) {
   lazy val neg = this.copy(p = p.map(_.neg))
@@ -33,6 +36,13 @@ case class Path(p: Ls[PathElem[PathElemType]]) {
   def ::: (other: Path) = Path(other.p ::: p)
   def map(f: PathElem[PathElemType] => PathElem[PathElemType]) = Path(p.map(f))
   lazy val pp: Str = s"[${p.map(_.pp).mkString(" · ")}]"
+  lazy val annihilated: Path =
+    def anni(i: Ls[PathElem[PathElemType]], o: Ls[PathElem[PathElemType]]): Path = (i, o) match
+      case (Nil, Nil) => Path(Nil)
+      case (h :: t, Nil) => anni(t, h :: Nil)
+      case (h :: t, h2 :: t2) => if h.canCancel(h2) then anni(t, t2) else anni(t, h :: h2 :: t2)
+      case (Nil, r) => Path(r.reverse)
+    anni(this.p, Nil)
 }
 
 type ExprId = Uid[Expr]

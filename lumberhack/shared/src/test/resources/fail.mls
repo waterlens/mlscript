@@ -16,10 +16,8 @@ c(p)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = Normal(name = p:6^1, uid = 1) ⋅ ɛ), 0'p)) <: 2'x
-//│ 	[Path(p = Normal(name = p:6^11, uid = 11) ⋅ Normal(name = c:7^10, uid = 10) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = p:6^11, uid = 11) ⋅ Normal(name = c:7^10, uid = 10) ⋅ Normal(name = c:7^5, uid = 5) ⋅ ɛ
-//│ )]
+//│ C(([-p:6^1], 0'p)) <: 2'x
+//│ 	[-p:6^11 · +c:7^10 · +c:7^5]  --->  [-p:6^11 · +c:7^10]
 
 // the `p · p` is never touched (checked) by the typer, so no path leads to it, and no recusive map from it
 :ns
@@ -60,18 +58,10 @@ map(ff, l)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = ɛ), K), (Path(p = Normal(name = l:7^16, uid = 16) ⋅ ɛ), 1'l)) <: 4'ls
-//│ 	[Path(
-//│   p = Normal(name = l:7^16, uid = 16) ⋅ Normal(name = l:7^25, uid = 25) ⋅ Normal(name = map:6^22, uid = 22) ⋅ Normal(name = map:6^5, uid = 5) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = l:7^16, uid = 16) ⋅ Normal(name = l:7^16, uid = 16) ⋅ Normal(name = l:7^25, uid = 25) ⋅ Normal(name = map:6^22, uid = 22) ⋅ Normal(name = map:6^5, uid = 5) ⋅ Normal(name = map:6^5, uid = 5) ⋅ ɛ
-//│ )]
-//│ (Path(p = ɛ), 11'x) => ((Path(p = ɛ), 12'20_matchres)) <: 3'f
-//│ 	[Path(
-//│   p = Normal(name = ff:8^23, uid = 23) ⋅ Normal(name = map:6^22, uid = 22) ⋅ Normal(name = map:6^5, uid = 5) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = ff:8^23, uid = 23) ⋅ Normal(name = map:6^22, uid = 22) ⋅ Normal(name = map:6^5, uid = 5) ⋅ Normal(name = map:6^5, uid = 5) ⋅ ɛ
-//│ )]
+//│ C(([], K), ([-l:7^16], 1'l)) <: 4'ls
+//│ 	[-l:7^16 · -l:7^16 · -l:7^25 · +map:6^22 · +map:6^5 · +map:6^5]  --->  [-l:7^16 · -l:7^25 · +map:6^22 · +map:6^5]
+//│ ([], 11'x) => (([], 12'20_matchres)) <: 3'f
+//│ 	[-ff:8^23 · +map:6^22 · +map:6^5 · +map:6^5]  --->  [-ff:8^23 · +map:6^22 · +map:6^5]
 
 // NOTE: only first two is handled
 :ns
@@ -95,12 +85,8 @@ map(ff, l)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ (Path(p = ɛ), 11'x) => ((Path(p = ɛ), 12'19_matchres)) <: 3'f
-//│ 	[Path(
-//│   p = Normal(name = ff:7^29, uid = 29) ⋅ Normal(name = map:6^28, uid = 28) ⋅ Normal(name = map:6^5, uid = 5) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = ff:7^29, uid = 29) ⋅ Normal(name = map:6^28, uid = 28) ⋅ Normal(name = map:6^5, uid = 5) ⋅ Normal(name = map:6^5, uid = 5) ⋅ ɛ
-//│ )]
+//│ ([], 11'x) => (([], 12'19_matchres)) <: 3'f
+//│ 	[-ff:7^29 · +map:6^28 · +map:6^5 · +map:6^5]  --->  [-ff:7^29 · +map:6^28 · +map:6^5]
 
 :ns
 _LUMBERHACK_ERROR
@@ -123,32 +109,16 @@ rev(rev1(p, N), N)
 //│ 
 //│ ------- recursive -------
 //│ N <: 15'20_callres
-//│ 	[Path(p = Normal(name = rev1:7^29, uid = 29) ⋅ Normal(name = rev1:7^14, uid = 14) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = rev1:7^29, uid = 29) ⋅ Normal(name = rev1:7^14, uid = 14) ⋅ Normal(name = rev1:7^14, uid = 14) ⋅ ɛ
-//│ )]
-//│ C((Path(p = ɛ), 12'h1), (Path(p = ɛ), 11'l22)) <: 3'l1
-//│ 	[Path(
-//│   p = Normal(name = rev1:7^14, uid = 14) ⋅ Normal(name = rev1:7^14, uid = 14) ⋅ Normal(name = rev1:7^29, uid = 29) ⋅ Normal(name = rev:6^28, uid = 28) ⋅ Normal(name = rev:6^2, uid = 2) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = rev1:7^14, uid = 14) ⋅ Normal(name = rev1:7^14, uid = 14) ⋅ Normal(name = rev1:7^14, uid = 14) ⋅ Normal(name = rev1:7^29, uid = 29) ⋅ Normal(name = rev:6^28, uid = 28) ⋅ Normal(name = rev:6^2, uid = 2) ⋅ Normal(name = rev:6^2, uid = 2) ⋅ ɛ
-//│ )]
-//│ 	[Path(
-//│   p = Normal(name = rev1:7^14, uid = 14) ⋅ Normal(name = rev1:7^14, uid = 14) ⋅ Normal(name = rev1:7^14, uid = 14) ⋅ Normal(name = rev1:7^29, uid = 29) ⋅ Normal(name = rev:6^28, uid = 28) ⋅ Normal(name = rev:6^2, uid = 2) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = rev1:7^14, uid = 14) ⋅ Normal(name = rev1:7^14, uid = 14) ⋅ Normal(name = rev1:7^14, uid = 14) ⋅ Normal(name = rev1:7^14, uid = 14) ⋅ Normal(name = rev1:7^29, uid = 29) ⋅ Normal(name = rev:6^28, uid = 28) ⋅ Normal(name = rev:6^2, uid = 2) ⋅ Normal(name = rev:6^2, uid = 2) ⋅ ɛ
-//│ )]
-//│ C((Path(p = ɛ), 12'h1), (Path(p = ɛ), 11'l22)) <: 15'20_callres
-//│ 	[Path(p = Normal(name = rev1:7^14, uid = 14) ⋅ Normal(name = rev1:7^14, uid = 14) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = rev1:7^14, uid = 14) ⋅ Normal(name = rev1:7^14, uid = 14) ⋅ Normal(name = rev1:7^14, uid = 14) ⋅ ɛ
-//│ )]
+//│ 	[+rev1:7^29 · -rev1:7^14 · -rev1:7^14]  --->  [+rev1:7^29 · -rev1:7^14]
+//│ C(([], 12'h1), ([], 11'l22)) <: 3'l1
+//│ 	[+rev1:7^14 · +rev1:7^14 · +rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2 · +rev:6^2]  --->  [+rev1:7^14 · +rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2]
+//│ 	[+rev1:7^14 · +rev1:7^14 · +rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2 · +rev:6^2]  --->  [+rev1:7^14 · +rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2]
+//│ C(([], 12'h1), ([], 11'l22)) <: 15'20_callres
+//│ 	[+rev1:7^14 · -rev1:7^14 · -rev1:7^14]  --->  [+rev1:7^14 · -rev1:7^14]
 //│ N <: 8'8_callres
-//│ 	[Path(p = Normal(name = rev:6^28, uid = 28) ⋅ Normal(name = rev:6^2, uid = 2) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = rev:6^28, uid = 28) ⋅ Normal(name = rev:6^2, uid = 2) ⋅ Normal(name = rev:6^2, uid = 2) ⋅ ɛ
-//│ )]
-//│ C((Path(p = ɛ), 5'h), (Path(p = ɛ), 4'l2)) <: 8'8_callres
-//│ 	[Path(p = Normal(name = rev:6^2, uid = 2) ⋅ Normal(name = rev:6^2, uid = 2) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = rev:6^2, uid = 2) ⋅ Normal(name = rev:6^2, uid = 2) ⋅ Normal(name = rev:6^2, uid = 2) ⋅ ɛ
-//│ )]
+//│ 	[+rev:6^28 · -rev:6^2 · -rev:6^2]  --->  [+rev:6^28 · -rev:6^2]
+//│ C(([], 5'h), ([], 4'l2)) <: 8'8_callres
+//│ 	[+rev:6^2 · -rev:6^2 · -rev:6^2]  --->  [+rev:6^2 · -rev:6^2]
 
 
 // `id2` used twice
@@ -171,48 +141,34 @@ c(id(p))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = ɛ), C((Path(p = ɛ), C((Path(p = ɛ), 4'3_callres)))))) <: 7'a
-//│ 	[Path(
-//│   p = Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = c:7^21, uid = 21) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = c:7^21, uid = 21) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ ɛ
-//│ )]
-//│ 	[Path(
-//│   p = Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = c:7^21, uid = 21) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = c:7^21, uid = 21) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ ɛ
-//│ )]
-//│ C((Path(p = ɛ), C((Path(p = ɛ), C((Path(p = ɛ), 4'3_callres)))))) <: 6'a
-//│ 	[Path(
-//│   p = Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = c:7^21, uid = 21) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = c:7^21, uid = 21) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ ɛ
-//│ )]
-//│ 	[Path(
-//│   p = Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = c:7^21, uid = 21) ⋅ Normal(name = c:7^9, uid = 9) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = c:7^21, uid = 21) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ ɛ
-//│ )]
-//│ 	[Path(
-//│   p = Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = c:7^21, uid = 21) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = c:7^21, uid = 21) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ ɛ
-//│ )]
-//│ 	[Path(
-//│   p = Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = c:7^21, uid = 21) ⋅ Normal(name = c:7^9, uid = 9) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = c:7^21, uid = 21) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ ɛ
-//│ )]
-//│ 	[Path(
-//│   p = Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = c:7^21, uid = 21) ⋅ Normal(name = c:7^9, uid = 9) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^23, uid = 23) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = c:7^21, uid = 21) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ ɛ
-//│ )]
-//│ 	[Path(
-//│   p = Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = c:7^21, uid = 21) ⋅ Normal(name = c:7^9, uid = 9) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id2:8^1, uid = 1) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^22, uid = 22) ⋅ Normal(name = c:7^21, uid = 21) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ ɛ
-//│ )]
+//│ C(([], C(([], C(([], 4'3_callres)))))) <: 7'a
+//│ 	[-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9]
+//│ 	[-p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9]
+//│ 	[-p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9]
+//│ 	[-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9]
+//│ 	[-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9]
+//│ 	[-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9]
+//│ 	[-p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9]
+//│ 	[-p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9]
+//│ C(([], C(([], C(([], 4'3_callres)))))) <: 6'a
+//│ 	[-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9]
+//│ 	[-p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]
+//│ 	[-p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]
+//│ 	[-p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9]
+//│ 	[-p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9]
+//│ 	[-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9]
+//│ 	[-p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9]
+//│ 	[-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]
+//│ 	[-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]
+//│ 	[-p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9]
+//│ 	[-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]
+//│ 	[-p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9]
+//│ 	[-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]
+//│ 	[-p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]
+//│ 	[-p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]
+//│ 	[-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9]
+//│ 	[-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9]
+//│ 	[-p:6^2 · +id2:8^1 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^23 · +id:9^22 · +id2:8^17 · -id2:8^1 · -p:6^2 · +id2:8^1 · -id2:8^17 · -id:9^22 · +c:7^21 · +c:7^9]
 
 
 // no polymorphism
@@ -261,24 +217,12 @@ map(rev(N, primitive))
 //│ 
 //│ ------- recursive -------
 //│ N <: 13'20_callres
-//│ 	[Path(p = Normal(name = rev:7^26, uid = 26) ⋅ Normal(name = rev:7^14, uid = 14) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = rev:7^26, uid = 26) ⋅ Normal(name = rev:7^14, uid = 14) ⋅ Normal(name = rev:7^14, uid = 14) ⋅ ɛ
-//│ )]
-//│ C((Path(p = ɛ), 10'h), (Path(p = ɛ), 8'a)) <: 13'20_callres
-//│ 	[Path(p = Normal(name = rev:7^14, uid = 14) ⋅ Normal(name = rev:7^14, uid = 14) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = rev:7^14, uid = 14) ⋅ Normal(name = rev:7^14, uid = 14) ⋅ Normal(name = rev:7^14, uid = 14) ⋅ ɛ
-//│ )]
-//│ C((Path(p = ɛ), 10'h), (Path(p = ɛ), 8'a)) <: 2'ls
-//│ 	[Path(
-//│   p = Normal(name = rev:7^14, uid = 14) ⋅ Normal(name = rev:7^14, uid = 14) ⋅ Normal(name = rev:7^14, uid = 14) ⋅ Normal(name = rev:7^26, uid = 26) ⋅ Normal(name = map:6^25, uid = 25) ⋅ Normal(name = map:6^6, uid = 6) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = rev:7^14, uid = 14) ⋅ Normal(name = rev:7^14, uid = 14) ⋅ Normal(name = rev:7^14, uid = 14) ⋅ Normal(name = rev:7^14, uid = 14) ⋅ Normal(name = rev:7^26, uid = 26) ⋅ Normal(name = map:6^25, uid = 25) ⋅ Normal(name = map:6^6, uid = 6) ⋅ Normal(name = map:6^6, uid = 6) ⋅ ɛ
-//│ )]
-//│ 	[Path(
-//│   p = Normal(name = rev:7^14, uid = 14) ⋅ Normal(name = rev:7^14, uid = 14) ⋅ Normal(name = rev:7^26, uid = 26) ⋅ Normal(name = map:6^25, uid = 25) ⋅ Normal(name = map:6^6, uid = 6) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = rev:7^14, uid = 14) ⋅ Normal(name = rev:7^14, uid = 14) ⋅ Normal(name = rev:7^14, uid = 14) ⋅ Normal(name = rev:7^26, uid = 26) ⋅ Normal(name = map:6^25, uid = 25) ⋅ Normal(name = map:6^6, uid = 6) ⋅ Normal(name = map:6^6, uid = 6) ⋅ ɛ
-//│ )]
+//│ 	[+rev:7^26 · -rev:7^14 · -rev:7^14]  --->  [+rev:7^26 · -rev:7^14]
+//│ C(([], 10'h), ([], 8'a)) <: 13'20_callres
+//│ 	[+rev:7^14 · -rev:7^14 · -rev:7^14]  --->  [+rev:7^14 · -rev:7^14]
+//│ C(([], 10'h), ([], 8'a)) <: 2'ls
+//│ 	[+rev:7^14 · +rev:7^14 · +rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6 · +map:6^6]  --->  [+rev:7^14 · +rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6]
+//│ 	[+rev:7^14 · +rev:7^14 · +rev:7^14 · -rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6 · +map:6^6]  --->  [+rev:7^14 · +rev:7^14 · -rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6]
 
 :ns
 _LUMBERHACK_ERROR
@@ -296,13 +240,9 @@ c(p)
 //│ 
 //│ ------- recursive -------
 //│ B <: 4'b
-//│ 	[Path(p = Normal(name = p:6^13, uid = 13) ⋅ Normal(name = c:7^12, uid = 12) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = p:6^13, uid = 13) ⋅ Normal(name = c:7^12, uid = 12) ⋅ Normal(name = c:7^5, uid = 5) ⋅ Normal(name = c:7^5, uid = 5) ⋅ ɛ
-//│ )]
+//│ 	[-p:6^13 · +c:7^12 · +c:7^5 · +c:7^5]  --->  [-p:6^13 · +c:7^12]
 //│ A <: 3'a
-//│ 	[Path(p = Normal(name = p:6^13, uid = 13) ⋅ Normal(name = c:7^12, uid = 12) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = p:6^13, uid = 13) ⋅ Normal(name = c:7^12, uid = 12) ⋅ Normal(name = c:7^5, uid = 5) ⋅ Normal(name = c:7^5, uid = 5) ⋅ ɛ
-//│ )]
+//│ 	[-p:6^13 · +c:7^12 · +c:7^5 · +c:7^5]  --->  [-p:6^13 · +c:7^12]
 
 
 // pushing in of auxiliary parameters
@@ -325,16 +265,8 @@ lastDrive(C(1, C(2, N)))
 //│ 
 //│ ------- recursive -------
 //│ Int <: 7'7_callres
-//│ 	[Path(
-//│   p = Normal(name = lastDrive:7^21, uid = 21) ⋅ Normal(name = last:6^13, uid = 13) ⋅ Normal(name = last:6^3, uid = 3) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = lastDrive:7^21, uid = 21) ⋅ Normal(name = last:6^13, uid = 13) ⋅ Normal(name = last:6^3, uid = 3) ⋅ Normal(name = last:6^3, uid = 3) ⋅ ɛ
-//│ )]
-//│ 	[Path(
-//│   p = Normal(name = lastDrive:7^21, uid = 21) ⋅ Normal(name = last:6^13, uid = 13) ⋅ Normal(name = last:6^3, uid = 3) ⋅ Normal(name = last:6^3, uid = 3) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = lastDrive:7^21, uid = 21) ⋅ Normal(name = last:6^13, uid = 13) ⋅ Normal(name = last:6^3, uid = 3) ⋅ Normal(name = last:6^3, uid = 3) ⋅ Normal(name = last:6^3, uid = 3) ⋅ ɛ
-//│ )]
+//│ 	[+lastDrive:7^21 · +last:6^13 · +last:6^3 · -last:6^3 · -last:6^3]  --->  [+lastDrive:7^21 · +last:6^13 · +last:6^3 · -last:6^3]
+//│ 	[+lastDrive:7^21 · +last:6^13 · -last:6^3 · -last:6^3]  --->  [+lastDrive:7^21 · +last:6^13 · -last:6^3]
 
 :ns
 fun inter(xs, ys) = if xs is
@@ -371,24 +303,12 @@ idxSum(rev(primitive, N))(0)
 //│ 
 //│ ------- recursive -------
 //│ N <: 20'29_callres
-//│ 	[Path(p = Normal(name = rev:8^34, uid = 34) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = rev:8^34, uid = 34) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ ɛ
-//│ )]
-//│ C((Path(p = ɛ), 17'hh), (Path(p = ɛ), 16'a)) <: 20'29_callres
-//│ 	[Path(p = Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ ɛ
-//│ )]
-//│ C((Path(p = ɛ), 17'hh), (Path(p = ɛ), 16'a)) <: 3'ls
-//│ 	[Path(
-//│   p = Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^34, uid = 34) ⋅ Normal(name = idxSum:7^33, uid = 33) ⋅ Normal(name = idxSum:7^8, uid = 8) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^34, uid = 34) ⋅ Normal(name = idxSum:7^33, uid = 33) ⋅ Normal(name = idxSum:7^8, uid = 8) ⋅ Normal(name = idxSum:7^8, uid = 8) ⋅ ɛ
-//│ )]
-//│ 	[Path(
-//│   p = Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^34, uid = 34) ⋅ Normal(name = idxSum:7^33, uid = 33) ⋅ Normal(name = idxSum:7^8, uid = 8) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^34, uid = 34) ⋅ Normal(name = idxSum:7^33, uid = 33) ⋅ Normal(name = idxSum:7^8, uid = 8) ⋅ Normal(name = idxSum:7^8, uid = 8) ⋅ ɛ
-//│ )]
+//│ 	[+rev:8^34 · -rev:8^23 · -rev:8^23]  --->  [+rev:8^34 · -rev:8^23]
+//│ C(([], 17'hh), ([], 16'a)) <: 20'29_callres
+//│ 	[+rev:8^23 · -rev:8^23 · -rev:8^23]  --->  [+rev:8^23 · -rev:8^23]
+//│ C(([], 17'hh), ([], 16'a)) <: 3'ls
+//│ 	[+rev:8^23 · +rev:8^23 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8 · +idxSum:7^8]  --->  [+rev:8^23 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]
+//│ 	[+rev:8^23 · +rev:8^23 · +rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8 · +idxSum:7^8]  --->  [+rev:8^23 · +rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]
 
 
 // scope extrusion
@@ -435,12 +355,8 @@ c(id3(p))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = ɛ), C((Path(p = ɛ), C((Path(p = ɛ), 5'3_callres)))))) <: 7'a
-//│ 	[Path(
-//│   p = Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id:9^1, uid = 1) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^1, uid = 1) ⋅ Normal(name = p:6^25, uid = 25) ⋅ Normal(name = id3:10^24, uid = 24) ⋅ Normal(name = id3:10^24, uid = 24) ⋅ Normal(name = c:7^23, uid = 23) ⋅ Normal(name = c:7^9, uid = 9) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id:9^1, uid = 1) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id:9^1, uid = 1) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^1, uid = 1) ⋅ Normal(name = p:6^2, uid = 2) ⋅ Normal(name = id:9^1, uid = 1) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id2:8^17, uid = 17) ⋅ Normal(name = id:9^1, uid = 1) ⋅ Normal(name = p:6^25, uid = 25) ⋅ Normal(name = id3:10^24, uid = 24) ⋅ Normal(name = id3:10^24, uid = 24) ⋅ Normal(name = c:7^23, uid = 23) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^9, uid = 9) ⋅ ɛ
-//│ )]
+//│ C(([], C(([], C(([], 5'3_callres)))))) <: 7'a
+//│ 	[-p:6^2 · +id:9^1 · +id2:8^17 · -id2:8^17 · -id:9^1 · -p:6^2 · +id:9^1 · +id2:8^17 · -id2:8^17 · -id:9^1 · -p:6^2 · +id:9^1 · +id2:8^17 · -id2:8^17 · -id:9^1 · -p:6^25 · +id3:10^24 · -id3:10^24 · +c:7^23 · +c:7^9 · +c:7^9 · +c:7^9 · +c:7^9]  --->  [-p:6^2 · +id:9^1 · +id2:8^17 · -id2:8^17 · -id:9^1 · -p:6^25 · +id3:10^24 · -id3:10^24 · +c:7^23 · +c:7^9]
 
 :ns
 fun id(k) = k
@@ -472,9 +388,5 @@ id6(id4)(c)(id5(id2)(id3(p)))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = ɛ), C((Path(p = ɛ), C((Path(p = ɛ), 16'17_callres)))))) <: 18'a
-//│ 	[Path(
-//│   p = Normal(name = p:10^13, uid = 13) ⋅ Normal(name = id1:7^12, uid = 12) ⋅ Normal(name = id:6^3, uid = 3) ⋅ Normal(name = id:6^3, uid = 3) ⋅ Normal(name = id1:7^12, uid = 12) ⋅ Normal(name = id7:15^11, uid = 11) ⋅ Normal(name = id7:15^11, uid = 11) ⋅ Normal(name = p:10^44, uid = 44) ⋅ Normal(name = id3:9^43, uid = 43) ⋅ Normal(name = id3:9^43, uid = 43) ⋅ Normal(name = id5:13^40, uid = 40) ⋅ Normal(name = id5:13^40, uid = 40) ⋅ Normal(name = id2:8^41, uid = 41) ⋅ Normal(name = id2:8^41, uid = 41) ⋅ Normal(name = id5:13^40, uid = 40) ⋅ Normal(name = id5:13^40, uid = 40) ⋅ Normal(name = id6:14^35, uid = 35) ⋅ Normal(name = id6:14^35, uid = 35) ⋅ Normal(name = id4:12^36, uid = 36) ⋅ Normal(name = id4:12^36, uid = 36) ⋅ Normal(name = id6:14^35, uid = 35) ⋅ Normal(name = id6:14^35, uid = 35) ⋅ Normal(name = c:11^38, uid = 38) ⋅ Normal(name = c:11^22, uid = 22) ⋅ Normal(name = c:11^22, uid = 22) ⋅ Normal(name = c:11^22, uid = 22) ⋅ Normal(name = c:11^22, uid = 22) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = p:10^13, uid = 13) ⋅ Normal(name = id1:7^12, uid = 12) ⋅ Normal(name = id:6^3, uid = 3) ⋅ Normal(name = id:6^3, uid = 3) ⋅ Normal(name = id1:7^12, uid = 12) ⋅ Normal(name = id7:15^11, uid = 11) ⋅ Normal(name = id7:15^11, uid = 11) ⋅ Normal(name = p:10^13, uid = 13) ⋅ Normal(name = id1:7^12, uid = 12) ⋅ Normal(name = id:6^3, uid = 3) ⋅ Normal(name = id:6^3, uid = 3) ⋅ Normal(name = id1:7^12, uid = 12) ⋅ Normal(name = id7:15^11, uid = 11) ⋅ Normal(name = id7:15^11, uid = 11) ⋅ Normal(name = p:10^44, uid = 44) ⋅ Normal(name = id3:9^43, uid = 43) ⋅ Normal(name = id3:9^43, uid = 43) ⋅ Normal(name = id5:13^40, uid = 40) ⋅ Normal(name = id5:13^40, uid = 40) ⋅ Normal(name = id2:8^41, uid = 41) ⋅ Normal(name = id2:8^41, uid = 41) ⋅ Normal(name = id5:13^40, uid = 40) ⋅ Normal(name = id5:13^40, uid = 40) ⋅ Normal(name = id6:14^35, uid = 35) ⋅ Normal(name = id6:14^35, uid = 35) ⋅ Normal(name = id4:12^36, uid = 36) ⋅ Normal(name = id4:12^36, uid = 36) ⋅ Normal(name = id6:14^35, uid = 35) ⋅ Normal(name = id6:14^35, uid = 35) ⋅ Normal(name = c:11^38, uid = 38) ⋅ Normal(name = c:11^22, uid = 22) ⋅ Normal(name = c:11^22, uid = 22) ⋅ Normal(name = c:11^22, uid = 22) ⋅ Normal(name = c:11^22, uid = 22) ⋅ Normal(name = c:11^22, uid = 22) ⋅ Normal(name = c:11^22, uid = 22) ⋅ Normal(name = c:11^22, uid = 22) ⋅ Normal(name = c:11^22, uid = 22) ⋅ Normal(name = c:11^22, uid = 22) ⋅ ɛ
-//│ )]
+//│ C(([], C(([], C(([], 16'17_callres)))))) <: 18'a
+//│ 	[-p:10^13 · +id1:7^12 · +id:6^3 · -id:6^3 · -id1:7^12 · +id7:15^11 · -id7:15^11 · -p:10^13 · +id1:7^12 · +id:6^3 · -id:6^3 · -id1:7^12 · +id7:15^11 · -id7:15^11 · -p:10^44 · +id3:9^43 · -id3:9^43 · +id5:13^40 · -id5:13^40 · +id2:8^41 · -id2:8^41 · +id5:13^40 · -id5:13^40 · +id6:14^35 · -id6:14^35 · +id4:12^36 · -id4:12^36 · +id6:14^35 · -id6:14^35 · +c:11^38 · +c:11^22 · +c:11^22 · +c:11^22 · +c:11^22 · +c:11^22 · +c:11^22 · +c:11^22 · +c:11^22 · +c:11^22]  --->  [-p:10^13 · +id1:7^12 · +id:6^3 · -id:6^3 · -id1:7^12 · +id7:15^11 · -id7:15^11 · -p:10^44 · +id3:9^43 · -id3:9^43 · +id5:13^40 · -id5:13^40 · +id2:8^41 · -id2:8^41 · +id5:13^40 · -id5:13^40 · +id6:14^35 · -id6:14^35 · +id4:12^36 · -id4:12^36 · +id6:14^35 · -id6:14^35 · +c:11^38 · +c:11^22 · +c:11^22 · +c:11^22 · +c:11^22]

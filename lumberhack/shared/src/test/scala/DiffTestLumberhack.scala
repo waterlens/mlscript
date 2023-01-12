@@ -30,7 +30,7 @@ class DiffTestLumberhack extends DiffTests {
       d.recursiveConstr._3.foreach { r =>
         output(s"${pprint2(r._1._1.s).plainText} <: ${pprint2(r._1._2.s).plainText}")
         r._2.foreach { p =>
-          output(s"\t[${pprint2(p._1).plainText}]  <--->  [${pprint2(p._2).plainText}]")
+          output(s"\t${p._1.pp}  --->  ${p._2.pp}")
         }
       }
       // output(("------- defInstance -------"))

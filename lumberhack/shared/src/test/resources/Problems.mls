@@ -35,13 +35,9 @@ c(p)
 //│ 
 //│ ------- recursive -------
 //│ B <: 4'b
-//│ 	[Path(p = Normal(name = p:6^13, uid = 13) ⋅ Normal(name = c:7^12, uid = 12) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = p:6^13, uid = 13) ⋅ Normal(name = c:7^12, uid = 12) ⋅ Normal(name = c:7^5, uid = 5) ⋅ Normal(name = c:7^5, uid = 5) ⋅ ɛ
-//│ )]
+//│ 	[-p:6^13 · +c:7^12 · +c:7^5 · +c:7^5]  --->  [-p:6^13 · +c:7^12]
 //│ A <: 3'a
-//│ 	[Path(p = Normal(name = p:6^13, uid = 13) ⋅ Normal(name = c:7^12, uid = 12) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = p:6^13, uid = 13) ⋅ Normal(name = c:7^12, uid = 12) ⋅ Normal(name = c:7^5, uid = 5) ⋅ Normal(name = c:7^5, uid = 5) ⋅ ɛ
-//│ )]
+//│ 	[-p:6^13 · +c:7^12 · +c:7^5 · +c:7^5]  --->  [-p:6^13 · +c:7^12]
 
 // Just a more valid/reasonable version of the above
 // TODO support nested patterns as in `Pair(0)`
@@ -62,7 +58,7 @@ c(p)
 //│ 
 //│ ------- recursive -------
 //│ Int <: 5'10_callres
-//│ 	[Path(p = Normal(name = c:7^5, uid = 5) ⋅ ɛ)]  <--->  [Path(p = Normal(name = c:7^5, uid = 5) ⋅ Normal(name = c:7^5, uid = 5) ⋅ ɛ)]
+//│ 	[-c:7^5 · -c:7^5]  --->  [-c:7^5]
 
 fun c(x) = if primitive(x) is
     True then 0
@@ -77,7 +73,7 @@ c(0)
 //│ 
 //│ ------- recursive -------
 //│ Int <: 4'9_callres
-//│ 	[Path(p = Normal(name = c:6^5, uid = 5) ⋅ ɛ)]  <--->  [Path(p = Normal(name = c:6^5, uid = 5) ⋅ Normal(name = c:6^5, uid = 5) ⋅ ɛ)]
+//│ 	[-c:6^5 · -c:6^5]  --->  [-c:6^5]
 
 
 // NOTE: only the first two element is handled
@@ -101,12 +97,8 @@ map(ff, l)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ (Path(p = ɛ), 11'x) => ((Path(p = ɛ), 12'19_matchres)) <: 3'f
-//│ 	[Path(
-//│   p = Normal(name = ff:7^29, uid = 29) ⋅ Normal(name = map:6^28, uid = 28) ⋅ Normal(name = map:6^5, uid = 5) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = ff:7^29, uid = 29) ⋅ Normal(name = map:6^28, uid = 28) ⋅ Normal(name = map:6^5, uid = 5) ⋅ Normal(name = map:6^5, uid = 5) ⋅ ɛ
-//│ )]
+//│ ([], 11'x) => (([], 12'19_matchres)) <: 3'f
+//│ 	[-ff:7^29 · +map:6^28 · +map:6^5 · +map:6^5]  --->  [-ff:7^29 · +map:6^28 · +map:6^5]
 
 
 // NOTE: some program not be able to write?
@@ -128,10 +120,10 @@ last(p)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ Some((Path(p = ɛ), 3'h)) <: 7'7_callres
-//│ 	[Path(p = Normal(name = last:6^5, uid = 5) ⋅ ɛ)]  <--->  [Path(p = Normal(name = last:6^5, uid = 5) ⋅ Normal(name = last:6^5, uid = 5) ⋅ ɛ)]
+//│ Some(([], 3'h)) <: 7'7_callres
+//│ 	[-last:6^5 · -last:6^5]  --->  [-last:6^5]
 //│ None <: 7'7_callres
-//│ 	[Path(p = Normal(name = last:6^5, uid = 5) ⋅ ɛ)]  <--->  [Path(p = Normal(name = last:6^5, uid = 5) ⋅ Normal(name = last:6^5, uid = 5) ⋅ ɛ)]
+//│ 	[-last:6^5 · -last:6^5]  --->  [-last:6^5]
 
 _LUMBERHACK_ERROR
 let add = primitive
@@ -153,24 +145,12 @@ idxSum(rev(primitive, N))(0)
 //│ 
 //│ ------- recursive -------
 //│ N <: 20'29_callres
-//│ 	[Path(p = Normal(name = rev:8^34, uid = 34) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = rev:8^34, uid = 34) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ ɛ
-//│ )]
-//│ C((Path(p = ɛ), 17'hh), (Path(p = ɛ), 16'a)) <: 20'29_callres
-//│ 	[Path(p = Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ ɛ
-//│ )]
-//│ C((Path(p = ɛ), 17'hh), (Path(p = ɛ), 16'a)) <: 3'ls
-//│ 	[Path(
-//│   p = Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^34, uid = 34) ⋅ Normal(name = idxSum:7^33, uid = 33) ⋅ Normal(name = idxSum:7^8, uid = 8) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^34, uid = 34) ⋅ Normal(name = idxSum:7^33, uid = 33) ⋅ Normal(name = idxSum:7^8, uid = 8) ⋅ Normal(name = idxSum:7^8, uid = 8) ⋅ ɛ
-//│ )]
-//│ 	[Path(
-//│   p = Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^34, uid = 34) ⋅ Normal(name = idxSum:7^33, uid = 33) ⋅ Normal(name = idxSum:7^8, uid = 8) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^34, uid = 34) ⋅ Normal(name = idxSum:7^33, uid = 33) ⋅ Normal(name = idxSum:7^8, uid = 8) ⋅ Normal(name = idxSum:7^8, uid = 8) ⋅ ɛ
-//│ )]
+//│ 	[+rev:8^34 · -rev:8^23 · -rev:8^23]  --->  [+rev:8^34 · -rev:8^23]
+//│ C(([], 17'hh), ([], 16'a)) <: 20'29_callres
+//│ 	[+rev:8^23 · -rev:8^23 · -rev:8^23]  --->  [+rev:8^23 · -rev:8^23]
+//│ C(([], 17'hh), ([], 16'a)) <: 3'ls
+//│ 	[+rev:8^23 · +rev:8^23 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8 · +idxSum:7^8]  --->  [+rev:8^23 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]
+//│ 	[+rev:8^23 · +rev:8^23 · +rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8 · +idxSum:7^8]  --->  [+rev:8^23 · +rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]
 
 
 fun minuss(a) = if a is
@@ -191,19 +171,11 @@ minuss(fst)(snd)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ S((Path(p = ɛ), Z)) <: 8'7_callres
-//│ 	[Path(
-//│   p = Normal(name = fst:7^20, uid = 20) ⋅ Normal(name = minuss:6^19, uid = 19) ⋅ Normal(name = minuss:6^3, uid = 3) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = fst:7^20, uid = 20) ⋅ Normal(name = minuss:6^19, uid = 19) ⋅ Normal(name = minuss:6^3, uid = 3) ⋅ Normal(name = minuss:6^3, uid = 3) ⋅ ɛ
-//│ )]
+//│ S(([], Z)) <: 8'7_callres
+//│ 	[-fst:7^20 · +minuss:6^19 · -minuss:6^3 · -minuss:6^3]  --->  [-fst:7^20 · +minuss:6^19 · -minuss:6^3]
 //│ Z <: 8'7_callres
-//│ 	[Path(p = Normal(name = minuss:6^3, uid = 3) ⋅ ɛ)]  <--->  [Path(p = Normal(name = minuss:6^3, uid = 3) ⋅ Normal(name = minuss:6^3, uid = 3) ⋅ ɛ)]
-//│ 	[Path(
-//│   p = Normal(name = fst:7^20, uid = 20) ⋅ Normal(name = minuss:6^19, uid = 19) ⋅ Normal(name = minuss:6^3, uid = 3) ⋅ Normal(name = minuss:6^3, uid = 3) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = fst:7^20, uid = 20) ⋅ Normal(name = minuss:6^19, uid = 19) ⋅ Normal(name = minuss:6^3, uid = 3) ⋅ Normal(name = minuss:6^3, uid = 3) ⋅ Normal(name = minuss:6^3, uid = 3) ⋅ ɛ
-//│ )]
+//│ 	[-minuss:6^3 · -minuss:6^3]  --->  [-minuss:6^3]
+//│ 	[-fst:7^20 · +minuss:6^19 · +minuss:6^3 · -minuss:6^3 · -minuss:6^3]  --->  [-fst:7^20 · +minuss:6^19 · +minuss:6^3 · -minuss:6^3]
 
 // FIXME: weird recursive
 _LUMBERHACK_ERROR
@@ -227,18 +199,8 @@ minuss(fst)(snd)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ S((Path(p = ɛ), Z)) <: 8'6_callres
-//│ 	[Path(
-//│   p = Normal(name = fst:8^28, uid = 28) ⋅ Normal(name = minuss:6^27, uid = 27) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = fst:8^28, uid = 28) ⋅ Normal(name = minuss:6^27, uid = 27) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ Normal(name = minuss:6^13, uid = 13) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ ɛ
-//│ )]
+//│ S(([], Z)) <: 8'6_callres
+//│ 	[-fst:8^28 · +minuss:6^27 · +checkb:7^2 · -checkb:7^2 · -minuss:6^13 · -checkb:7^2]  --->  [-fst:8^28 · +minuss:6^27 · +checkb:7^2 · -checkb:7^2]
 //│ Z <: 8'6_callres
-//│ 	[Path(
-//│   p = Normal(name = fst:8^28, uid = 28) ⋅ Normal(name = minuss:6^27, uid = 27) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ Normal(name = minuss:6^13, uid = 13) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = fst:8^28, uid = 28) ⋅ Normal(name = minuss:6^27, uid = 27) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ Normal(name = minuss:6^13, uid = 13) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ Normal(name = minuss:6^13, uid = 13) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ ɛ
-//│ )]
-//│ 	[Path(p = Normal(name = minuss:6^13, uid = 13) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = minuss:6^13, uid = 13) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ Normal(name = minuss:6^13, uid = 13) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ ɛ
-//│ )]
+//│ 	[-fst:8^28 · +minuss:6^27 · +checkb:7^2 · +minuss:6^13 · +checkb:7^2 · -checkb:7^2 · -minuss:6^13 · -checkb:7^2]  --->  [-fst:8^28 · +minuss:6^27 · +checkb:7^2 · +minuss:6^13 · +checkb:7^2 · -checkb:7^2]
+//│ 	[-minuss:6^13 · -checkb:7^2 · -minuss:6^13 · -checkb:7^2]  --->  [-minuss:6^13 · -checkb:7^2]

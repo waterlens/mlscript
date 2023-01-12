@@ -15,7 +15,9 @@ object pprint2 extends pprint.PPrinter() {
     case r @ Expr.Ref(id @ Ident(_, Var(nme), uid)) => Literal(s"$nme:${uid}^${r.uid}")
     case Ident(_, Var(nme), uid) => Literal(s"$nme:$uid")
     case Var(nme) => Literal(nme)
-    case s@Strat(strat) => Apply("", Iterator(treeify(s.path, escapeUnicode, showFieldNames), treeify(strat, escapeUnicode, showFieldNames)))
+    case s@Strat(strat) => Apply("", Iterator(
+      Literal(s"${s.path.pp}"),
+      treeify(strat, escapeUnicode, showFieldNames)))
     case ConsVar(uid, n) => Literal(s"${uid}" + "'" + n)
     case ProdVar(uid, n) => Literal(s"${uid}" + "'" + n)
     case ProdFun(l, r) => Infix(

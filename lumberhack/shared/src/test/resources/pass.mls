@@ -14,10 +14,8 @@ c(p)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = Normal(name = p:6^1, uid = 1) ⋅ ɛ), 0'p)) <: 2'x
-//│ 	[Path(p = Normal(name = p:6^10, uid = 10) ⋅ Normal(name = c:7^9, uid = 9) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^10, uid = 10) ⋅ Normal(name = c:7^9, uid = 9) ⋅ Normal(name = c:7^4, uid = 4) ⋅ ɛ
-//│ )]
+//│ C(([-p:6^1], 0'p)) <: 2'x
+//│ 	[-p:6^1 · -p:6^10 · +c:7^9 · +c:7^4]  --->  [-p:6^10 · +c:7^9]
 
 
 
@@ -60,10 +58,8 @@ c(p)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = ɛ), C((Path(p = Normal(name = p:6^1, uid = 1) ⋅ ɛ), 0'p)))) <: 2'x
-//│ 	[Path(p = Normal(name = p:6^15, uid = 15) ⋅ Normal(name = c:7^14, uid = 14) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^15, uid = 15) ⋅ Normal(name = c:7^14, uid = 14) ⋅ Normal(name = c:7^7, uid = 7) ⋅ Normal(name = c:7^7, uid = 7) ⋅ ɛ
-//│ )]
+//│ C(([], C(([-p:6^1], 0'p)))) <: 2'x
+//│ 	[-p:6^1 · -p:6^1 · -p:6^1 · -p:6^15 · +c:7^14 · +c:7^7 · +c:7^7]  --->  [-p:6^15 · +c:7^14]
 
 
 
@@ -85,12 +81,8 @@ c(id(p))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = ɛ), C((Path(p = Normal(name = p:6^1, uid = 1) ⋅ ɛ), 0'p)))) <: 4'x
-//│ 	[Path(
-//│   p = Normal(name = p:6^18, uid = 18) ⋅ Normal(name = id:9^17, uid = 17) ⋅ Normal(name = id2:8^12, uid = 12) ⋅ Normal(name = id2:8^12, uid = 12) ⋅ Normal(name = id:9^17, uid = 17) ⋅ Normal(name = c:7^16, uid = 16) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^18, uid = 18) ⋅ Normal(name = id:9^17, uid = 17) ⋅ Normal(name = id2:8^12, uid = 12) ⋅ Normal(name = id2:8^12, uid = 12) ⋅ Normal(name = id:9^17, uid = 17) ⋅ Normal(name = c:7^16, uid = 16) ⋅ Normal(name = c:7^5, uid = 5) ⋅ Normal(name = c:7^5, uid = 5) ⋅ ɛ
-//│ )]
+//│ C(([], C(([-p:6^1], 0'p)))) <: 4'x
+//│ 	[-p:6^1 · -p:6^18 · +id:9^17 · +id2:8^12 · -id2:8^12 · -id:9^17 · +c:7^16 · +c:7^5 · +c:7^5]  --->  [-p:6^18 · +id:9^17 · +id2:8^12 · -id2:8^12 · -id:9^17 · +c:7^16]
 
 fun sum(ls) = if ls is
     C(h, t) then S(N, sum(t))
@@ -109,18 +101,10 @@ sum(mapa(mapb(primitive)))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = ɛ), 11'12_callres), (Path(p = ɛ), 12'15_callres)) <: 3'ls
-//│ 	[Path(
-//│   p = Normal(name = mapa:7^13, uid = 13) ⋅ Normal(name = mapa:7^30, uid = 30) ⋅ Normal(name = sum:6^29, uid = 29) ⋅ Normal(name = sum:6^3, uid = 3) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = mapa:7^13, uid = 13) ⋅ Normal(name = mapa:7^13, uid = 13) ⋅ Normal(name = mapa:7^30, uid = 30) ⋅ Normal(name = sum:6^29, uid = 29) ⋅ Normal(name = sum:6^3, uid = 3) ⋅ Normal(name = sum:6^3, uid = 3) ⋅ ɛ
-//│ )]
-//│ C((Path(p = ɛ), 17'22_callres), (Path(p = ɛ), 18'25_callres)) <: 8'lsa
-//│ 	[Path(
-//│   p = Normal(name = mapb:8^23, uid = 23) ⋅ Normal(name = mapb:8^31, uid = 31) ⋅ Normal(name = mapa:7^30, uid = 30) ⋅ Normal(name = mapa:7^13, uid = 13) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = mapb:8^23, uid = 23) ⋅ Normal(name = mapb:8^23, uid = 23) ⋅ Normal(name = mapb:8^31, uid = 31) ⋅ Normal(name = mapa:7^30, uid = 30) ⋅ Normal(name = mapa:7^13, uid = 13) ⋅ Normal(name = mapa:7^13, uid = 13) ⋅ ɛ
-//│ )]
+//│ C(([], 11'12_callres), ([], 12'15_callres)) <: 3'ls
+//│ 	[-mapa:7^13 · -mapa:7^13 · -mapa:7^30 · +sum:6^29 · +sum:6^3 · +sum:6^3]  --->  [-mapa:7^13 · -mapa:7^30 · +sum:6^29 · +sum:6^3]
+//│ C(([], 17'22_callres), ([], 18'25_callres)) <: 8'lsa
+//│ 	[-mapb:8^23 · -mapb:8^23 · -mapb:8^31 · +mapa:7^30 · +mapa:7^13 · +mapa:7^13]  --->  [-mapb:8^23 · -mapb:8^31 · +mapa:7^30 · +mapa:7^13]
 
 
 if C(A, B(C)) is
@@ -152,10 +136,8 @@ ca(p)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = ɛ), C((Path(p = ɛ), C((Path(p = Normal(name = p:6^1, uid = 1) ⋅ ɛ), 0'p)))))) <: 3'x
-//│ 	[Path(p = Normal(name = p:6^18, uid = 18) ⋅ Normal(name = ca:7^17, uid = 17) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^18, uid = 18) ⋅ Normal(name = ca:7^17, uid = 17) ⋅ Normal(name = cb:8^6, uid = 6) ⋅ Normal(name = ca:7^12, uid = 12) ⋅ Normal(name = cb:8^6, uid = 6) ⋅ Normal(name = ca:7^12, uid = 12) ⋅ Normal(name = cb:8^6, uid = 6) ⋅ Normal(name = ca:7^12, uid = 12) ⋅ ɛ
-//│ )]
+//│ C(([], C(([], C(([-p:6^1], 0'p)))))) <: 3'x
+//│ 	[-p:6^1 · -p:6^1 · -p:6^18 · +ca:7^17 · +cb:8^6 · +ca:7^12 · +cb:8^6 · +ca:7^12 · +cb:8^6 · +ca:7^12]  --->  [-p:6^18 · +ca:7^17]
 
 
 fun c1(x1) = if x1 is
@@ -176,12 +158,8 @@ c1(p1)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = ɛ), C((Path(p = Normal(name = p2:9^13, uid = 13) ⋅ ɛ), 3'p2)))) <: 8'x2
-//│ 	[Path(
-//│   p = Normal(name = p1:8^20, uid = 20) ⋅ Normal(name = c1:6^19, uid = 19) ⋅ Normal(name = c2:7^2, uid = 2) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = p1:8^17, uid = 17) ⋅ Normal(name = p2:9^13, uid = 13) ⋅ Normal(name = p1:8^20, uid = 20) ⋅ Normal(name = c1:6^19, uid = 19) ⋅ Normal(name = c2:7^2, uid = 2) ⋅ Normal(name = c1:6^8, uid = 8) ⋅ Normal(name = c2:7^2, uid = 2) ⋅ Normal(name = c1:6^8, uid = 8) ⋅ Normal(name = c2:7^2, uid = 2) ⋅ ɛ
-//│ )]
+//│ C(([], C(([-p2:9^13], 3'p2)))) <: 8'x2
+//│ 	[-p1:8^17 · -p2:9^13 · -p1:8^20 · +c1:6^19 · +c2:7^2 · +c1:6^8 · +c2:7^2 · +c1:6^8 · +c2:7^2]  --->  [-p1:8^20 · +c1:6^19 · +c2:7^2]
 
 
 fun ff(x) = if x is
@@ -248,18 +226,10 @@ sum(mapa(mapb(primitive)))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = ɛ), 11'13_callres), (Path(p = ɛ), 12'16_callres)) <: 3'ls
-//│ 	[Path(
-//│   p = Normal(name = mapa:7^14, uid = 14) ⋅ Normal(name = mapa:7^33, uid = 33) ⋅ Normal(name = sum:6^32, uid = 32) ⋅ Normal(name = sum:6^3, uid = 3) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = mapa:7^14, uid = 14) ⋅ Normal(name = mapa:7^14, uid = 14) ⋅ Normal(name = mapa:7^33, uid = 33) ⋅ Normal(name = sum:6^32, uid = 32) ⋅ Normal(name = sum:6^3, uid = 3) ⋅ Normal(name = sum:6^3, uid = 3) ⋅ ɛ
-//│ )]
-//│ C((Path(p = ɛ), 17'24_callres), (Path(p = ɛ), 18'27_callres)) <: 8'lsa
-//│ 	[Path(
-//│   p = Normal(name = mapb:8^25, uid = 25) ⋅ Normal(name = mapb:8^34, uid = 34) ⋅ Normal(name = mapa:7^33, uid = 33) ⋅ Normal(name = mapa:7^14, uid = 14) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = mapb:8^25, uid = 25) ⋅ Normal(name = mapb:8^25, uid = 25) ⋅ Normal(name = mapb:8^34, uid = 34) ⋅ Normal(name = mapa:7^33, uid = 33) ⋅ Normal(name = mapa:7^14, uid = 14) ⋅ Normal(name = mapa:7^14, uid = 14) ⋅ ɛ
-//│ )]
+//│ C(([], 11'13_callres), ([], 12'16_callres)) <: 3'ls
+//│ 	[-mapa:7^14 · -mapa:7^14 · -mapa:7^33 · +sum:6^32 · +sum:6^3 · +sum:6^3]  --->  [-mapa:7^14 · -mapa:7^33 · +sum:6^32 · +sum:6^3]
+//│ C(([], 17'24_callres), ([], 18'27_callres)) <: 8'lsa
+//│ 	[-mapb:8^25 · -mapb:8^25 · -mapb:8^34 · +mapa:7^33 · +mapa:7^14 · +mapa:7^14]  --->  [-mapb:8^25 · -mapb:8^34 · +mapa:7^33 · +mapa:7^14]
 
 
 
@@ -278,12 +248,8 @@ main(c)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = Normal(name = p:6^1, uid = 1) ⋅ ɛ), 0'p)) <: 3'x
-//│ 	[Path(
-//│   p = Normal(name = p:6^10, uid = 10) ⋅ Normal(name = main:8^13, uid = 13) ⋅ Normal(name = c:7^14, uid = 14) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^10, uid = 10) ⋅ Normal(name = main:8^13, uid = 13) ⋅ Normal(name = c:7^14, uid = 14) ⋅ Normal(name = c:7^4, uid = 4) ⋅ ɛ
-//│ )]
+//│ C(([-p:6^1], 0'p)) <: 3'x
+//│ 	[-p:6^1 · -p:6^10 · -main:8^13 · +c:7^14 · +c:7^4]  --->  [-p:6^10 · -main:8^13 · +c:7^14]
 
 
 // this path seems also to be sensible
@@ -304,12 +270,8 @@ main(p)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = Normal(name = p:6^1, uid = 1) ⋅ ɛ), 0'p)) <: 3'x
-//│ 	[Path(
-//│   p = Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^18, uid = 18) ⋅ Normal(name = main:8^17, uid = 17) ⋅ Normal(name = c:7^11, uid = 11) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^18, uid = 18) ⋅ Normal(name = main:8^17, uid = 17) ⋅ Normal(name = c:7^11, uid = 11) ⋅ Normal(name = c:7^4, uid = 4) ⋅ ɛ
-//│ )]
+//│ C(([-p:6^1], 0'p)) <: 3'x
+//│ 	[-p:6^1 · -p:6^1 · -p:6^1 · -p:6^18 · +main:8^17 · +c:7^11 · +c:7^4]  --->  [-p:6^1 · -p:6^1 · -p:6^18 · +main:8^17 · +c:7^11]
 
 
 let rec p = C(p)
@@ -327,12 +289,8 @@ main(c, p)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = Normal(name = p:6^1, uid = 1) ⋅ ɛ), 0'p)) <: 3'x
-//│ 	[Path(
-//│   p = Normal(name = p:6^17, uid = 17) ⋅ Normal(name = main:8^14, uid = 14) ⋅ Normal(name = main:8^14, uid = 14) ⋅ Normal(name = c:7^15, uid = 15) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^17, uid = 17) ⋅ Normal(name = main:8^14, uid = 14) ⋅ Normal(name = main:8^14, uid = 14) ⋅ Normal(name = c:7^15, uid = 15) ⋅ Normal(name = c:7^4, uid = 4) ⋅ ɛ
-//│ )]
+//│ C(([-p:6^1], 0'p)) <: 3'x
+//│ 	[-p:6^1 · -p:6^17 · +main:8^14 · -main:8^14 · +c:7^15 · +c:7^4]  --->  [-p:6^17 · +main:8^14 · -main:8^14 · +c:7^15]
 
 
 fun cons(y) = if y is
@@ -356,12 +314,8 @@ a(p)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = Normal(name = p:11^26, uid = 26) ⋅ ɛ), 5'p)) <: 6'y
-//│ 	[Path(
-//│   p = Normal(name = p:11^26, uid = 26) ⋅ Normal(name = p:11^29, uid = 29) ⋅ Normal(name = a:7^28, uid = 28) ⋅ Normal(name = b:8^7, uid = 7) ⋅ Normal(name = c:9^11, uid = 11) ⋅ Normal(name = d:10^15, uid = 15) ⋅ Normal(name = d:10^15, uid = 15) ⋅ Normal(name = cons:6^16, uid = 16) ⋅ Normal(name = cons:6^2, uid = 2) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = p:11^26, uid = 26) ⋅ Normal(name = p:11^26, uid = 26) ⋅ Normal(name = p:11^29, uid = 29) ⋅ Normal(name = a:7^28, uid = 28) ⋅ Normal(name = b:8^7, uid = 7) ⋅ Normal(name = c:9^11, uid = 11) ⋅ Normal(name = d:10^15, uid = 15) ⋅ Normal(name = d:10^15, uid = 15) ⋅ Normal(name = cons:6^16, uid = 16) ⋅ Normal(name = cons:6^2, uid = 2) ⋅ Normal(name = cons:6^2, uid = 2) ⋅ ɛ
-//│ )]
+//│ C(([-p:11^26], 5'p)) <: 6'y
+//│ 	[-p:11^26 · -p:11^26 · -p:11^29 · +a:7^28 · +b:8^7 · +c:9^11 · +d:10^15 · -d:10^15 · +cons:6^16 · +cons:6^2 · +cons:6^2]  --->  [-p:11^26 · -p:11^29 · +a:7^28 · +b:8^7 · +c:9^11 · +d:10^15 · -d:10^15 · +cons:6^16 · +cons:6^2]
 
 
 let p = C(N)
@@ -377,10 +331,8 @@ c(p)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = ɛ), N)) <: 2'x
-//│ 	[Path(p = Normal(name = p:6^11, uid = 11) ⋅ Normal(name = c:7^10, uid = 10) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = p:6^11, uid = 11) ⋅ Normal(name = c:7^10, uid = 10) ⋅ Normal(name = c:7^5, uid = 5) ⋅ ɛ
-//│ )]
+//│ C(([], N)) <: 2'x
+//│ 	[-p:6^11 · +c:7^10 · +c:7^5]  --->  [-p:6^11 · +c:7^10]
 
 
 let rec p = C(p)
@@ -403,12 +355,8 @@ c2(main)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = Normal(name = p:6^1, uid = 1) ⋅ ɛ), 0'p)) <: 8'z
-//│ 	[Path(
-//│   p = Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^3, uid = 3) ⋅ Normal(name = q:7^15, uid = 15) ⋅ Normal(name = c:8^14, uid = 14) ⋅ Normal(name = c:8^14, uid = 14) ⋅ Normal(name = main:10^18, uid = 18) ⋅ Normal(name = c2:9^17, uid = 17) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^3, uid = 3) ⋅ Normal(name = q:7^15, uid = 15) ⋅ Normal(name = c:8^14, uid = 14) ⋅ Normal(name = c:8^14, uid = 14) ⋅ Normal(name = main:10^18, uid = 18) ⋅ Normal(name = c2:9^17, uid = 17) ⋅ Normal(name = c2:9^9, uid = 9) ⋅ ɛ
-//│ )]
+//│ C(([-p:6^1], 0'p)) <: 8'z
+//│ 	[-p:6^1 · -p:6^1 · -p:6^3 · -q:7^15 · +c:8^14 · -c:8^14 · -main:10^18 · +c2:9^17 · +c2:9^9]  --->  [-p:6^1 · -p:6^3 · -q:7^15 · +c:8^14 · -c:8^14 · -main:10^18 · +c2:9^17]
 
 
 let rec p = C(p)
@@ -434,12 +382,8 @@ c2(id(main))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = Normal(name = p:6^1, uid = 1) ⋅ ɛ), 0'p)) <: 12'z
-//│ 	[Path(
-//│   p = Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^18, uid = 18) ⋅ Normal(name = c:7^17, uid = 17) ⋅ Normal(name = c:7^17, uid = 17) ⋅ Normal(name = main:10^27, uid = 27) ⋅ Normal(name = id:11^26, uid = 26) ⋅ Normal(name = c1:8^20, uid = 20) ⋅ Normal(name = c1:8^20, uid = 20) ⋅ Normal(name = id:11^26, uid = 26) ⋅ Normal(name = c2:9^25, uid = 25) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^1, uid = 1) ⋅ Normal(name = p:6^18, uid = 18) ⋅ Normal(name = c:7^17, uid = 17) ⋅ Normal(name = c:7^17, uid = 17) ⋅ Normal(name = main:10^27, uid = 27) ⋅ Normal(name = id:11^26, uid = 26) ⋅ Normal(name = c1:8^20, uid = 20) ⋅ Normal(name = c1:8^20, uid = 20) ⋅ Normal(name = id:11^26, uid = 26) ⋅ Normal(name = c2:9^25, uid = 25) ⋅ Normal(name = c2:9^12, uid = 12) ⋅ ɛ
-//│ )]
+//│ C(([-p:6^1], 0'p)) <: 12'z
+//│ 	[-p:6^1 · -p:6^1 · -p:6^18 · +c:7^17 · -c:7^17 · -main:10^27 · +id:11^26 · +c1:8^20 · -c1:8^20 · -id:11^26 · +c2:9^25 · +c2:9^12]  --->  [-p:6^1 · -p:6^18 · +c:7^17 · -c:7^17 · -main:10^27 · +id:11^26 · +c1:8^20 · -c1:8^20 · -id:11^26 · +c2:9^25]
 
 
 let t = T(K, T(N, L, L), T(N, L, L))
@@ -509,10 +453,8 @@ map(l)(
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ (Path(p = ɛ), 12'x) => ((Path(p = ɛ), 13'24_matchres)) <: 5'f
-//│ 	[Path(p = Normal(name = map:6^19, uid = 19) ⋅ Normal(name = map:6^5, uid = 5) ⋅ ɛ)]  <--->  [Path(
-//│   p = Normal(name = map:6^19, uid = 19) ⋅ Normal(name = map:6^5, uid = 5) ⋅ Normal(name = map:6^5, uid = 5) ⋅ ɛ
-//│ )]
+//│ ([], 12'x) => (([], 13'24_matchres)) <: 5'f
+//│ 	[+map:6^19 · +map:6^5 · +map:6^5]  --->  [+map:6^19 · +map:6^5]
 
 
 fun inter(xs) = if xs is
@@ -531,18 +473,10 @@ inter(l1)(l2)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ C((Path(p = ɛ), Int), (Path(p = Normal(name = l1:7^16, uid = 16) ⋅ ɛ), 1'l1)) <: 7'ys
-//│ 	[Path(
-//│   p = Normal(name = l1:7^25, uid = 25) ⋅ Normal(name = inter:6^24, uid = 24) ⋅ Normal(name = inter:6^5, uid = 5) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = l1:7^16, uid = 16) ⋅ Normal(name = l1:7^25, uid = 25) ⋅ Normal(name = inter:6^24, uid = 24) ⋅ Normal(name = inter:6^5, uid = 5) ⋅ Normal(name = inter:6^5, uid = 5) ⋅ Normal(name = inter:6^5, uid = 5) ⋅ Normal(name = inter:6^5, uid = 5) ⋅ Normal(name = inter:6^5, uid = 5) ⋅ ɛ
-//│ )]
-//│ C((Path(p = ɛ), Int), (Path(p = Normal(name = l2:8^21, uid = 21) ⋅ ɛ), 2'l2)) <: 7'ys
-//│ 	[Path(
-//│   p = Normal(name = l2:8^27, uid = 27) ⋅ Normal(name = inter:6^24, uid = 24) ⋅ Normal(name = inter:6^5, uid = 5) ⋅ Normal(name = inter:6^5, uid = 5) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = l2:8^21, uid = 21) ⋅ Normal(name = l2:8^27, uid = 27) ⋅ Normal(name = inter:6^24, uid = 24) ⋅ Normal(name = inter:6^5, uid = 5) ⋅ Normal(name = inter:6^5, uid = 5) ⋅ Normal(name = inter:6^5, uid = 5) ⋅ Normal(name = inter:6^5, uid = 5) ⋅ Normal(name = inter:6^5, uid = 5) ⋅ Normal(name = inter:6^5, uid = 5) ⋅ ɛ
-//│ )]
+//│ C(([], Int), ([-l1:7^16], 1'l1)) <: 7'ys
+//│ 	[-l1:7^16 · -l1:7^25 · +inter:6^24 · +inter:6^5 · +inter:6^5 · +inter:6^5 · +inter:6^5 · +inter:6^5]  --->  [-l1:7^25 · +inter:6^24 · +inter:6^5]
+//│ C(([], Int), ([-l2:8^21], 2'l2)) <: 7'ys
+//│ 	[-l2:8^21 · -l2:8^27 · +inter:6^24 · +inter:6^5 · +inter:6^5 · +inter:6^5 · +inter:6^5 · +inter:6^5 · +inter:6^5]  --->  [-l2:8^27 · +inter:6^24 · +inter:6^5 · +inter:6^5]
 
 
 fun last(ys) = if ys is
@@ -562,13 +496,5 @@ lastDrive(C(1, C(2, N)))
 //│ 
 //│ ------- recursive -------
 //│ Int <: 8'8_callres
-//│ 	[Path(
-//│   p = Normal(name = lastDrive:7^22, uid = 22) ⋅ Normal(name = last:6^14, uid = 14) ⋅ Normal(name = last:6^4, uid = 4) ⋅ Normal(name = last:6^4, uid = 4) ⋅ Normal(name = last:6^4, uid = 4) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = lastDrive:7^22, uid = 22) ⋅ Normal(name = last:6^14, uid = 14) ⋅ Normal(name = last:6^4, uid = 4) ⋅ Normal(name = last:6^4, uid = 4) ⋅ Normal(name = last:6^4, uid = 4) ⋅ Normal(name = last:6^4, uid = 4) ⋅ ɛ
-//│ )]
-//│ 	[Path(
-//│   p = Normal(name = lastDrive:7^22, uid = 22) ⋅ Normal(name = last:6^14, uid = 14) ⋅ Normal(name = last:6^4, uid = 4) ⋅ Normal(name = last:6^4, uid = 4) ⋅ ɛ
-//│ )]  <--->  [Path(
-//│   p = Normal(name = lastDrive:7^22, uid = 22) ⋅ Normal(name = last:6^14, uid = 14) ⋅ Normal(name = last:6^4, uid = 4) ⋅ Normal(name = last:6^4, uid = 4) ⋅ Normal(name = last:6^4, uid = 4) ⋅ ɛ
-//│ )]
+//│ 	[+lastDrive:7^22 · +last:6^14 · -last:6^4 · -last:6^4 · -last:6^4]  --->  [+lastDrive:7^22 · +last:6^14 · -last:6^4 · -last:6^4]
+//│ 	[+lastDrive:7^22 · +last:6^14 · +last:6^4 · -last:6^4 · -last:6^4 · -last:6^4]  --->  [+lastDrive:7^22 · +last:6^14 · +last:6^4 · -last:6^4 · -last:6^4]

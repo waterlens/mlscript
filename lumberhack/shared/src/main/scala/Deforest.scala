@@ -19,15 +19,17 @@ enum PathElem[+T <: PathElemType] {
   def neg: PathElem[T] = this match
     case n: Normal => n.copy()(pol = !n.pol)
     case s: Star => s.copy(elms = s.elms.map(_.neg))
-  
+  def rev: PathElem[T] = this match
+    case n: Normal => n
+    case s: Star => s.copy(elms = s.elms.reverse)  
   lazy val pp: Str = this match
     case Normal(r@Ref(Ident(_, Var(nme), uid)), _) => s"$nme:${uid}^${r.uid}"
     case Star(elms) => s"{${elms.map(_.pp).mkString(" · ")}}*"
-  
 }
 case class Path(p: Ls[PathElem[PathElemType]]) {
   lazy val neg = this.copy(p = p.map(_.neg))
-  // TODO: merge two consecutive identical stars
+  lazy val rev = this.copy(p = p.map(_.rev).reverse)
+  // TODO: merge two consecutive identical stars during concatenation
   def ::: (other: Path) = Path(other.p ::: p)
   def map(f: PathElem[PathElemType] => PathElem[PathElemType]) = Path(p.map(f))
   lazy val pp: Str = s"[${p.map(_.pp).mkString(" · ")}]"
@@ -215,7 +217,7 @@ class Deforest(debug: Boolean) {
   
   type Cache = Map[Cnstr, Cnstr]
 
-  val recursiveConstr = (mutable.Map.empty[Cnstr, Cnstr], mutable.Map.empty[Path, Path], mutable.Map.empty[Cnstr, mutable.Map[Path, Path]])
+  val recursiveConstr = (mutable.Set.empty[Path -> Path], mutable.Map.empty[Path, Path], mutable.Map.empty[Cnstr, mutable.Map[Path, Path]])
   def resolveConstraints: Unit = {
     
     def handle(c: Cnstr)(using cache: Cache): Unit = trace(s"handle [${pprint2.apply(c._1).toString} : ${pprint2.apply(c._2).toString}]") {
@@ -226,26 +228,29 @@ class Deforest(debug: Boolean) {
           case S(inCache) =>
             log(s">> done [${pprint2.apply(c._1).toString} : ${pprint2.apply(c._2).toString}]")
             log(s">> with [${pprint2.apply(inCache._1).toString} : ${pprint2.apply(inCache._2).toString}]")
-            recursiveConstr._1 += (c -> inCache)
+            recursiveConstr._1 += (c._1.path -> inCache._1.path)
+            recursiveConstr._1 += (c._2.path -> inCache._2.path)
             
-            recursiveConstr._2.get(c._1.path).map { p =>
-              assert(p == inCache._1.path, s"${pprint2(c._1.path).plainText} tied different knots: ${pprint2(p).plainText} ≠ ${pprint2(inCache._1.path).plainText}")
-            }
-            recursiveConstr._2.get(c._2.path).map { p =>
-              assert(p == inCache._2.path, s"${pprint2(c._2.path).plainText} tied different knots: ${pprint2(p).plainText} ≠ ${pprint2(inCache._2.path).plainText}")
-            }
-            recursiveConstr._2 += (c._1.path -> inCache._1.path)
-            recursiveConstr._2 += (c._2.path -> inCache._2.path)
+            // recursiveConstr._2.get(c._1.path).map { p =>
+            //   assert(p == inCache._1.path, s"${pprint2(c._1.path).plainText} tied different knots: ${pprint2(p).plainText} ≠ ${pprint2(inCache._1.path).plainText}")
+            // }
+            // recursiveConstr._2.get(c._2.path).map { p =>
+            //   assert(p == inCache._2.path, s"${pprint2(c._2.path).plainText} tied different knots: ${pprint2(p).plainText} ≠ ${pprint2(inCache._2.path).plainText}")
+            // }
+            // recursiveConstr._2 += (c._1.path -> inCache._1.path)
+            // recursiveConstr._2 += (c._2.path -> inCache._2.path)
             
             recursiveConstr._3.updateWith(c) {
               case Some(m) =>
-                m += (c._1.path -> inCache._1.path)
-                m += (c._2.path -> inCache._2.path)
+                m += (inCache._1.path.rev ::: inCache._2.path) -> (c._1.path.rev ::: c._2.path)
+                // m += (c._1.path -> inCache._1.path)
+                // m += (c._2.path -> inCache._2.path)
                 Some(m)
               case None => Some({
                 val m = mutable.Map.empty[Path, Path]
-                m += (c._1.path -> inCache._1.path)
-                m += (c._2.path -> inCache._2.path)
+                m += (inCache._1.path.rev ::: inCache._2.path) -> (c._1.path.rev ::: c._2.path)
+                // m += (c._1.path -> inCache._1.path)
+                // m += (c._2.path -> inCache._2.path)
                 m
               })
             }
@@ -260,12 +265,12 @@ class Deforest(debug: Boolean) {
         case (ProdVar(v, _), _) =>
           upperBounds += v -> ((prod.path, cons) :: upperBounds(v))
           lowerBounds(v).foreach((lb_path, lb_strat) => handle({
-            lb_strat.addPath(lb_path) -> cons.addPath(prod.path)
+            lb_strat.addPath(lb_path.rev) -> cons.addPath(prod.path.rev)
           }))
         case (_, ConsVar(v, _)) =>
           lowerBounds += v -> ((cons.path, prod) :: lowerBounds(v))
           upperBounds(v).foreach((ub_path, ub_strat) => handle({
-            prod.addPath(cons.path) -> ub_strat.addPath(ub_path)
+            prod.addPath(cons.path.rev) -> ub_strat.addPath(ub_path.rev)
           }))
         case (ProdFun(lhs1, rhs1), ConsFun(lhs2, rhs2)) =>
           handle(lhs2.addPath(cons.path.neg).negPath -> lhs1.addPath(prod.path.neg).negPath)

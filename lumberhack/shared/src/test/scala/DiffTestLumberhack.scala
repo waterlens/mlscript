@@ -33,21 +33,21 @@ class DiffTestLumberhack extends DiffTests {
           output(s"\t[${pprint2(p._1).plainText}]  <--->  [${pprint2(p._2).plainText}]")
         }
       }
-      output(("------- defInstance -------"))
-      d.defInstances.foreach { case (p, xs) =>
-        output((pprint2(p._1).plainText + " ==> " + pprint2(p._2).plainText + ":"))
-        output((xs.toArray.map {
-          case (p, c) => s"\n\t$p: ${d.exprs(p).pp}  <-->  $c: ${d.exprs(c).pp}"
-        }.sorted.mkString.substring(1)))
-      }
-      output("\n>>>>>>>>>> Expanded >>>>>>>>>>")
-      val rewritter = Rewrite(originalProgram, d,
-        d.defInstances.map { case (ps, s) => (ps, s.toSet) }.toMap,
-        d.recursiveConstr._2.toMap
-      )
-      val newProgram = rewritter.rewrite
-      output(newProgram.pp)
-      output("<<<<<<<<<< Expanded <<<<<<<<<<")
+      // output(("------- defInstance -------"))
+      // d.defInstances.foreach { case (p, xs) =>
+      //   output((pprint2(p._1).plainText + " ==> " + pprint2(p._2).plainText + ":"))
+      //   output((xs.toArray.map {
+      //     case (p, c) => s"\n\t$p: ${d.exprs(p).pp}  <-->  $c: ${d.exprs(c).pp}"
+      //   }.sorted.mkString.substring(1)))
+      // }
+      // output("\n>>>>>>>>>> Expanded >>>>>>>>>>")
+      // val rewritter = Rewrite(originalProgram, d,
+      //   d.defInstances.map { case (ps, s) => (ps, s.toSet) }.toMap,
+      //   d.recursiveConstr._2.toMap
+      // )
+      // val newProgram = rewritter.rewrite
+      // output(newProgram.pp)
+      // output("<<<<<<<<<< Expanded <<<<<<<<<<")
     } catch {
       case e => if allowErr then {
         output("!!!!!!ERROR!!!!!!")

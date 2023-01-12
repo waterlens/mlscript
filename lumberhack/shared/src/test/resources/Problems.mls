@@ -17,26 +17,6 @@ c(p)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ ------- defInstance -------
-//│ ɛ ==> ɛ:
-//│ 	4: [C x:8]  <-->  6: case [C x:8] of {C a:9 -> a:9}
-//│ 
-//│ >>>>>>>>>> Expanded >>>>>>>>>>
-//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:21 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:22]
-//│ def p'6'9_p'6'1_p'6'1:13 = [C p'6'9_p'6'1_p'6'1_p'6'1:14]
-//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:19 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:20]
-//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:22 = "RECURSE_TOO_LONG"
-//│ def c'7'8:10 = (fun x:8 -> case [C x:8] of {C a:9 -> a:9})
-//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:20 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:21]
-//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:18 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:19]
-//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:17 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:18]
-//│ def p'6'9_p'6'1:12 = [C p'6'9_p'6'1_p'6'1:13]
-//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:16 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:17]
-//│ def p'6'9_p'6'1_p'6'1_p'6'1:14 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1:15]
-//│ def p'6'9:11 = [C p'6'9_p'6'1:12]
-//│ def p'6'9_p'6'1_p'6'1_p'6'1_p'6'1:15 = [C p'6'9_p'6'1_p'6'1_p'6'1_p'6'1_p'6'1:16]
-//│ (c'7'8:10 p'6'9:11)
-//│ <<<<<<<<<< Expanded <<<<<<<<<<
 
 
 // NOTE: how to produce a finite rewrtten program?
@@ -55,23 +35,15 @@ c(p)
 //│ 
 //│ ------- recursive -------
 //│ B <: 4'b
-//│ 	[c:7^12 ⋅ c:7^5 ⋅ c:7^5 ⋅ ɛ]  <--->  [c:7^12 ⋅ ɛ]
-//│ 	[p:6^13 ⋅ ɛ]  <--->  [p:6^13 ⋅ ɛ]
+//│ 	[Path(p = Normal(name = c:7^5, uid = 5) ⋅ ɛ)]  <--->  [Path(p = ɛ)]
+//│ 	[Path(
+//│   p = Normal(name = c:7^5, uid = 5) ⋅ Normal(name = c:7^12, uid = 12) ⋅ Normal(name = p:6^13, uid = 13) ⋅ ɛ
+//│ )]  <--->  [Path(p = Normal(name = c:7^12, uid = 12) ⋅ Normal(name = p:6^13, uid = 13) ⋅ ɛ)]
 //│ A <: 3'a
-//│ 	[c:7^12 ⋅ c:7^5 ⋅ c:7^5 ⋅ ɛ]  <--->  [c:7^12 ⋅ ɛ]
-//│ 	[p:6^13 ⋅ ɛ]  <--->  [p:6^13 ⋅ ɛ]
-//│ ------- defInstance -------
-//│ ɛ ==> c:7^5 ⋅ ɛ:
-//│ 	8: [Pair b:10 a:9]  <-->  10: case x:8 of {Pair a:9 b:10 -> (c:7 [Pair b:10 a:9])}
-//│ p:6^13 ⋅ ɛ ==> c:7^12 ⋅ ɛ:
-//│ 	3: [Pair [A] [B]]  <-->  10: case x:8 of {Pair a:9 b:10 -> (c:7 [Pair b:10 a:9])}
-//│ 
-//│ >>>>>>>>>> Expanded >>>>>>>>>>
-//│ def p'6'13:13 = [Pair [A] [B]]
-//│ def c'7'12_c'7'5:12 = (fun x:8 -> case x:8 of {Pair a:9 b:10 -> (c'7'12:11 [Pair b:10 a:9])})
-//│ def c'7'12:11 = (fun x:8 -> case x:8 of {Pair a:9 b:10 -> (c'7'12_c'7'5:12 [Pair b:10 a:9])})
-//│ (c'7'12:11 p'6'13:13)
-//│ <<<<<<<<<< Expanded <<<<<<<<<<
+//│ 	[Path(p = Normal(name = c:7^5, uid = 5) ⋅ ɛ)]  <--->  [Path(p = ɛ)]
+//│ 	[Path(
+//│   p = Normal(name = c:7^5, uid = 5) ⋅ Normal(name = c:7^12, uid = 12) ⋅ Normal(name = p:6^13, uid = 13) ⋅ ɛ
+//│ )]  <--->  [Path(p = Normal(name = c:7^12, uid = 12) ⋅ Normal(name = p:6^13, uid = 13) ⋅ ɛ)]
 
 // Just a more valid/reasonable version of the above
 // TODO support nested patterns as in `Pair(0)`
@@ -92,30 +64,7 @@ c(p)
 //│ 
 //│ ------- recursive -------
 //│ Int <: 5'10_callres
-//│ 	[ɛ]  <--->  [ɛ]
-//│ 	[c:7^5 ⋅ c:7^5 ⋅ ɛ]  <--->  [c:7^5 ⋅ ɛ]
-//│ ------- defInstance -------
-//│ ɛ ==> c:7^5 ⋅ ɛ:
-//│ 	9: [Wrap (primitive:3 a:9)]  <-->  11: case x:8 of {N -> 0 | Wrap a:9 -> (c:7 [Wrap (primitive:3 a:9)])}
-//│ p:6^14 ⋅ ɛ ==> c:7^13 ⋅ ɛ:
-//│ 	2: [Wrap 3]  <-->  11: case x:8 of {N -> 0 | Wrap a:9 -> (c:7 [Wrap (primitive:3 a:9)])}
-//│ 
-//│ >>>>>>>>>> Expanded >>>>>>>>>>
-//│ def c'7'13_c'7'5_c'7'5_c'7'5_c'7'5:14 = (fun x:8 -> case x:8 of {N -> 0 | Wrap a:9 -> (c'7'13_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5:15 [Wrap (primitive:3 a:9)])})
-//│ def c'7'13_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5:19 = (fun x:8 -> case x:8 of {N -> 0 | Wrap a:9 -> (c'7'13_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5:20 [Wrap (primitive:3 a:9)])})
-//│ def c'7'13_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5:20 = (fun x:8 -> case x:8 of {N -> 0 | Wrap a:9 -> (c'7'13_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5:21 [Wrap (primitive:3 a:9)])})
-//│ def c'7'13_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5:16 = (fun x:8 -> case x:8 of {N -> 0 | Wrap a:9 -> (c'7'13_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5:17 [Wrap (primitive:3 a:9)])})
-//│ def c'7'13_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5:17 = (fun x:8 -> case x:8 of {N -> 0 | Wrap a:9 -> (c'7'13_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5:18 [Wrap (primitive:3 a:9)])})
-//│ def c'7'13_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5:15 = (fun x:8 -> case x:8 of {N -> 0 | Wrap a:9 -> (c'7'13_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5:16 [Wrap (primitive:3 a:9)])})
-//│ def c'7'13_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5:21 = "RECURSE_TOO_LONG"
-//│ def c'7'13_c'7'5:11 = (fun x:8 -> case x:8 of {N -> 0 | Wrap a:9 -> (c'7'13_c'7'5_c'7'5:12 [Wrap (primitive:3 a:9)])})
-//│ def c'7'13_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5:18 = (fun x:8 -> case x:8 of {N -> 0 | Wrap a:9 -> (c'7'13_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5_c'7'5:19 [Wrap (primitive:3 a:9)])})
-//│ def c'7'13_c'7'5_c'7'5:12 = (fun x:8 -> case x:8 of {N -> 0 | Wrap a:9 -> (c'7'13_c'7'5_c'7'5_c'7'5:13 [Wrap (primitive:3 a:9)])})
-//│ def c'7'13_c'7'5_c'7'5_c'7'5:13 = (fun x:8 -> case x:8 of {N -> 0 | Wrap a:9 -> (c'7'13_c'7'5_c'7'5_c'7'5_c'7'5:14 [Wrap (primitive:3 a:9)])})
-//│ def c'7'13:10 = (fun x:8 -> case x:8 of {N -> 0 | Wrap a:9 -> (c'7'13_c'7'5:11 [Wrap (primitive:3 a:9)])})
-//│ def p'6'14:22 = [Wrap 3]
-//│ (c'7'13:10 p'6'14:22)
-//│ <<<<<<<<<< Expanded <<<<<<<<<<
+//│ 	[Path(p = Normal(name = c:7^5, uid = 5) ⋅ ɛ)]  <--->  [Path(p = Normal(name = c:7^5, uid = 5) ⋅ ɛ)]
 
 fun c(x) = if primitive(x) is
     True then 0
@@ -130,25 +79,7 @@ c(0)
 //│ 
 //│ ------- recursive -------
 //│ Int <: 4'9_callres
-//│ 	[c:6^5 ⋅ c:6^5 ⋅ ɛ]  <--->  [c:6^5 ⋅ ɛ]
-//│ 	[ɛ]  <--->  [ɛ]
-//│ ------- defInstance -------
-//│ 
-//│ >>>>>>>>>> Expanded >>>>>>>>>>
-//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:18 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:19 (primitive:3 x:7))})
-//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:19 = "RECURSE_TOO_LONG"
-//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:17 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:18 (primitive:3 x:7))})
-//│ def c'6'12_c'6'5_c'6'5:10 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5:11 (primitive:3 x:7))})
-//│ def c'6'12_c'6'5_c'6'5_c'6'5:11 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5:12 (primitive:3 x:7))})
-//│ def c'6'12_c'6'5:9 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5:10 (primitive:3 x:7))})
-//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5:12 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:13 (primitive:3 x:7))})
-//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:14 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:15 (primitive:3 x:7))})
-//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:13 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:14 (primitive:3 x:7))})
-//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:15 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:16 (primitive:3 x:7))})
-//│ def c'6'12:8 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5:9 (primitive:3 x:7))})
-//│ def c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:16 = (fun x:7 -> case (primitive:3 x:7) of {True -> 0 | False -> (c'6'12_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5_c'6'5:17 (primitive:3 x:7))})
-//│ (c'6'12:8 0)
-//│ <<<<<<<<<< Expanded <<<<<<<<<<
+//│ 	[Path(p = Normal(name = c:6^5, uid = 5) ⋅ ɛ)]  <--->  [Path(p = Normal(name = c:6^5, uid = 5) ⋅ ɛ)]
 
 
 // NOTE: only the first two element is handled
@@ -172,36 +103,11 @@ map(ff, l)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
-//│ (ɛ, 11'x) => ((ɛ, 12'19_matchres)) <: 3'f
-//│ 	[ff:7^29 ⋅ ɛ]  <--->  [ff:7^29 ⋅ ɛ]
-//│ 	[map:6^28 ⋅ map:6^5 ⋅ map:6^5 ⋅ ɛ]  <--->  [map:6^28 ⋅ map:6^5 ⋅ ɛ]
-//│ ------- defInstance -------
-//│ map:6^28 ⋅ l:8^31 ⋅ ɛ ==> map:6^28 ⋅ map:6^5 ⋅ ff:7^29 ⋅ ɛ:
-//│ 	22: [KK]  <-->  19: case x:13 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
-//│ 	23: [KKKK]  <-->  19: case x:13 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
-//│ l:8^31 ⋅ ɛ ==> map:6^28 ⋅ ɛ:
-//│ 	27: [C [K] [C [KK] [C [KKKK] [N]]]]  <-->  12: case ls:10 of {C h:11 t:12 -> [C (f:9 h:11) ((map:6 f:9) t:12)] | N -> [N]}
-//│ l:8^31 ⋅ ɛ ==> map:6^28 ⋅ map:6^5 ⋅ map:6^5 ⋅ ɛ:
-//│ 	25: [C [KKKK] [N]]  <-->  12: case ls:10 of {C h:11 t:12 -> [C (f:9 h:11) ((map:6 f:9) t:12)] | N -> [N]}
-//│ l:8^31 ⋅ ɛ ==> ff:7^29 ⋅ ɛ:
-//│ 	21: [K]  <-->  19: case x:13 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
-//│ 	22: [KK]  <-->  19: case x:13 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
-//│ map:6^28 ⋅ l:8^31 ⋅ ɛ ==> map:6^28 ⋅ map:6^5 ⋅ map:6^5 ⋅ ff:7^29 ⋅ ɛ:
-//│ 	23: [KKKK]  <-->  19: case x:13 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
-//│ l:8^31 ⋅ ɛ ==> map:6^28 ⋅ map:6^5 ⋅ map:6^5 ⋅ map:6^5 ⋅ ɛ:
-//│ 	24: [N]  <-->  12: case ls:10 of {C h:11 t:12 -> [C (f:9 h:11) ((map:6 f:9) t:12)] | N -> [N]}
-//│ map:6^28 ⋅ map:6^5 ⋅ l:8^31 ⋅ ɛ ==> map:6^28 ⋅ ff:7^29 ⋅ ɛ:
-//│ 	21: [K]  <-->  19: case x:13 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]}
-//│ l:8^31 ⋅ ɛ ==> map:6^28 ⋅ map:6^5 ⋅ ɛ:
-//│ 	26: [C [KK] [C [KKKK] [N]]]  <-->  12: case ls:10 of {C h:11 t:12 -> [C (f:9 h:11) ((map:6 f:9) t:12)] | N -> [N]}
-//│ 
-//│ >>>>>>>>>> Expanded >>>>>>>>>>
-//│ def map'6'28:14 = (fun f:9 -> (fun ls:10 -> case ls:10 of {C h:11 t:12 -> [C (f:9 h:11) ((map'6'28_map'6'5:15 f:9) t:12)] | N -> [N]}))
-//│ def map'6'28_map'6'5:15 = (fun f:9 -> (fun ls:10 -> case ls:10 of {C h:11 t:12 -> [C (f:9 h:11) ((map'6'28_map'6'5:15 f:9) t:12)] | N -> [N]}))
-//│ def ff'7'29:16 = (fun x:13 -> case x:13 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]})
-//│ def l'8'31:17 = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ ((map'6'28:14 ff'7'29:16) l'8'31:17)
-//│ <<<<<<<<<< Expanded <<<<<<<<<<
+//│ (Path(p = ɛ), 11'x) => ((Path(p = ɛ), 12'19_matchres)) <: 3'f
+//│ 	[Path(p = Normal(name = map:6^5, uid = 5) ⋅ ɛ)]  <--->  [Path(p = Normal(name = map:6^5, uid = 5) ⋅ ɛ)]
+//│ 	[Path(
+//│   p = Normal(name = map:6^5, uid = 5) ⋅ Normal(name = map:6^28, uid = 28) ⋅ Normal(name = ff:7^29, uid = 29) ⋅ ɛ
+//│ )]  <--->  [Path(p = Normal(name = map:6^28, uid = 28) ⋅ Normal(name = ff:7^29, uid = 29) ⋅ ɛ)]
 
 
 // NOTE: some program not be able to write?
@@ -221,30 +127,8 @@ last(p)
 //│ def p:7 = 16: [C 12: 1 15: [C 13: 2 14: [N]]]
 //│ 19: (17: last:6 18: p:7)
 //│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ ------- recursive -------
-//│ Some((ɛ, 3'h)) <: 7'7_callres
-//│ 	[last:6^5 ⋅ last:6^5 ⋅ ɛ]  <--->  [last:6^5 ⋅ ɛ]
-//│ 	[ɛ]  <--->  [ɛ]
-//│ None <: 7'7_callres
-//│ 	[last:6^5 ⋅ last:6^5 ⋅ ɛ]  <--->  [last:6^5 ⋅ ɛ]
-//│ 	[ɛ]  <--->  [ɛ]
-//│ ------- defInstance -------
-//│ p:7^18 ⋅ ɛ ==> last:6^17 ⋅ last:6^5 ⋅ last:6^5 ⋅ ɛ:
-//│ 	14: [N]  <-->  10: case ls:8 of {C h:9 t:10 -> case t:10 of {N -> [Some h:9] | C hh:11 tt:12 -> (last:6 t:10)} | N -> [None]}
-//│ p:7^18 ⋅ ɛ ==> last:6^17 ⋅ last:6^5 ⋅ ɛ:
-//│ 	14: [N]  <-->  8: case t:10 of {N -> [Some h:9] | C hh:11 tt:12 -> (last:6 t:10)}
-//│ 	15: [C 2 [N]]  <-->  10: case ls:8 of {C h:9 t:10 -> case t:10 of {N -> [Some h:9] | C hh:11 tt:12 -> (last:6 t:10)} | N -> [None]}
-//│ p:7^18 ⋅ ɛ ==> last:6^17 ⋅ ɛ:
-//│ 	15: [C 2 [N]]  <-->  8: case t:10 of {N -> [Some h:9] | C hh:11 tt:12 -> (last:6 t:10)}
-//│ 	16: [C 1 [C 2 [N]]]  <-->  10: case ls:8 of {C h:9 t:10 -> case t:10 of {N -> [Some h:9] | C hh:11 tt:12 -> (last:6 t:10)} | N -> [None]}
-//│ 
-//│ >>>>>>>>>> Expanded >>>>>>>>>>
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: 
-//│ p:7^18 ⋅ ɛ to `[N]` 
-//│ 	already has last:6^17 ⋅ last:6^5 ⋅ last:6^5 ⋅ ɛ to `case ls:8 of {C h:9 t:10 -> case t:10 of {N -> [Some h:9] | C hh:11 tt:12 -> (last:6 t:10)} | N -> [None]}` 
-//│ 	but here comes another match last:6^17 ⋅ last:6^5 ⋅ ɛ to `case t:10 of {N -> [Some h:9] | C hh:11 tt:12 -> (last:6 t:10)}`
+//│ java.lang.AssertionError: assertion failed: Path(p = Normal(name = last:6^5, uid = 5) ⋅ ɛ) tied different knots: Path(p = Normal(name = last:6^5, uid = 5) ⋅ ɛ) ≠ Path(p = ɛ)
 //│ !!!!!!ERROR!!!!!!
 
 _LUMBERHACK_ERROR
@@ -267,64 +151,23 @@ idxSum(rev(primitive, N))(0)
 //│ 
 //│ ------- recursive -------
 //│ N <: 20'29_callres
-//│ 	[rev:8^34 ⋅ ɛ]  <--->  [rev:8^34 ⋅ ɛ]
-//│ 	[rev:8^23 ⋅ rev:8^23 ⋅ ɛ]  <--->  [rev:8^23 ⋅ ɛ]
-//│ C((ɛ, 17'hh), (ɛ, 16'a)) <: 20'29_callres
-//│ 	[rev:8^23 ⋅ ɛ]  <--->  [ɛ]
-//│ 	[ɛ]  <--->  [ɛ]
-//│ C((ɛ, 17'hh), (ɛ, 16'a)) <: 3'ls
-//│ 	[rev:8^23 ⋅ rev:8^23 ⋅ rev:8^23 ⋅ idxSum:7^33 ⋅ idxSum:7^8 ⋅ idxSum:7^8 ⋅ ɛ]  <--->  [rev:8^23 ⋅ rev:8^23 ⋅ idxSum:7^33 ⋅ idxSum:7^8 ⋅ ɛ]
-//│ 	[rev:8^23 ⋅ rev:8^23 ⋅ idxSum:7^33 ⋅ idxSum:7^8 ⋅ idxSum:7^8 ⋅ ɛ]  <--->  [rev:8^23 ⋅ idxSum:7^33 ⋅ idxSum:7^8 ⋅ ɛ]
-//│ 	[rev:8^34 ⋅ ɛ]  <--->  [rev:8^34 ⋅ ɛ]
-//│ ------- defInstance -------
-//│ ɛ ==> rev:8^23 ⋅ idxSum:7^33 ⋅ idxSum:7^8 ⋅ ɛ:
-//│ 	37: [N]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
-//│ rev:8^34 ⋅ ɛ ==> rev:8^23 ⋅ rev:8^23 ⋅ idxSum:7^33 ⋅ idxSum:7^8 ⋅ ɛ:
-//│ 	28: [C hh:16 a:15]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
-//│ rev:8^34 ⋅ ɛ ==> rev:8^23 ⋅ idxSum:7^33 ⋅ idxSum:7^8 ⋅ ɛ:
-//│ 	28: [C hh:16 a:15]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
-//│ rev:8^34 ⋅ ɛ ==> idxSum:7^33 ⋅ ɛ:
-//│ 	28: [C hh:16 a:15]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
-//│ rev:8^23 ⋅ ɛ ==> idxSum:7^33 ⋅ ɛ:
-//│ 	37: [N]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
-//│ ɛ ==> idxSum:7^33 ⋅ ɛ:
-//│ 	37: [N]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
-//│ rev:8^34 ⋅ ɛ ==> rev:8^23 ⋅ idxSum:7^33 ⋅ ɛ:
-//│ 	28: [C hh:16 a:15]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
-//│ ɛ ==> idxSum:7^33 ⋅ idxSum:7^8 ⋅ ɛ:
-//│ 	37: [N]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
-//│ ɛ ==> rev:8^23 ⋅ idxSum:7^33 ⋅ idxSum:7^8 ⋅ idxSum:7^8 ⋅ ɛ:
-//│ 	37: [N]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
-//│ ɛ ==> rev:8^23 ⋅ rev:8^23 ⋅ idxSum:7^33 ⋅ idxSum:7^8 ⋅ idxSum:7^8 ⋅ ɛ:
-//│ 	37: [N]  <-->  19: case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum:7 t:12) ((add:4 acc:13) 1))))}
-//│ 
-//│ >>>>>>>>>> Expanded >>>>>>>>>>
-//│ def idxSum'7'33_idxSum'7'8_idxSum'7'8:20 = (fun ls:9 -> case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum'7'33_idxSum'7'8_idxSum'7'8_idxSum'7'8:21 t:12) ((add:4 acc:13) 1))))})
-//│ def idxSum'7'33_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8:24 = (fun ls:9 -> case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum'7'33_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8:25 t:12) ((add:4 acc:13) 1))))})
-//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23:34 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:35 tt:17) [C hh:16 a:15])}))
-//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:39 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:40 tt:17) [C hh:16 a:15])}))
-//│ def idxSum'7'33_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8:27 = (fun ls:9 -> case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum'7'33_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8:28 t:12) ((add:4 acc:13) 1))))})
-//│ def idxSum'7'33_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8:23 = (fun ls:9 -> case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum'7'33_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8:24 t:12) ((add:4 acc:13) 1))))})
-//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:40 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:41 tt:17) [C hh:16 a:15])}))
-//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23:33 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23:34 tt:17) [C hh:16 a:15])}))
-//│ def rev'8'34_rev'8'23_rev'8'23:32 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23:33 tt:17) [C hh:16 a:15])}))
-//│ def idxSum'7'33_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8:29 = "RECURSE_TOO_LONG"
-//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:35 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:36 tt:17) [C hh:16 a:15])}))
-//│ def idxSum'7'33_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8:22 = (fun ls:9 -> case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum'7'33_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8:23 t:12) ((add:4 acc:13) 1))))})
-//│ def idxSum'7'33_idxSum'7'8_idxSum'7'8_idxSum'7'8:21 = (fun ls:9 -> case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum'7'33_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8:22 t:12) ((add:4 acc:13) 1))))})
-//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:38 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:39 tt:17) [C hh:16 a:15])}))
-//│ def idxSum'7'33_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8:28 = (fun ls:9 -> case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum'7'33_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8:29 t:12) ((add:4 acc:13) 1))))})
-//│ def rev'8'34_rev'8'23:31 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23:32 tt:17) [C hh:16 a:15])}))
-//│ def rev'8'34:30 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23:31 tt:17) [C hh:16 a:15])}))
-//│ def idxSum'7'33_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8:25 = (fun ls:9 -> case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum'7'33_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8:26 t:12) ((add:4 acc:13) 1))))})
-//│ def idxSum'7'33_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8:26 = (fun ls:9 -> case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum'7'33_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8_idxSum'7'8:27 t:12) ((add:4 acc:13) 1))))})
-//│ def idxSum'7'33:18 = (fun ls:9 -> case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum'7'33_idxSum'7'8:19 t:12) ((add:4 acc:13) 1))))})
-//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:36 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:37 tt:17) [C hh:16 a:15])}))
-//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:37 = (fun lss:14 -> (fun a:15 -> case lss:14 of {N -> a:15 | C hh:16 tt:17 -> ((rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:38 tt:17) [C hh:16 a:15])}))
-//│ def rev'8'34_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23_rev'8'23:41 = "RECURSE_TOO_LONG"
-//│ def idxSum'7'33_idxSum'7'8:19 = (fun ls:9 -> case ls:9 of {N -> (fun acc:10 -> 0) | C h:11 t:12 -> (fun acc:13 -> ((add:4 acc:13) ((idxSum'7'33_idxSum'7'8_idxSum'7'8:20 t:12) ((add:4 acc:13) 1))))})
-//│ ((idxSum'7'33:18 ((rev'8'34:30 primitive:3) [N])) 0)
-//│ <<<<<<<<<< Expanded <<<<<<<<<<
+//│ 	[Path(p = Normal(name = rev:8^23, uid = 23) ⋅ ɛ)]  <--->  [Path(p = Normal(name = rev:8^23, uid = 23) ⋅ ɛ)]
+//│ 	[Path(p = Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^34, uid = 34) ⋅ ɛ)]  <--->  [Path(p = Normal(name = rev:8^34, uid = 34) ⋅ ɛ)]
+//│ C((Path(p = ɛ), 17'hh), (Path(p = ɛ), 16'a)) <: 20'29_callres
+//│ 	[Path(p = Normal(name = rev:8^23, uid = 23) ⋅ ɛ)]  <--->  [Path(p = Normal(name = rev:8^23, uid = 23) ⋅ ɛ)]
+//│ 	[Path(p = Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ ɛ)]  <--->  [Path(p = Normal(name = rev:8^23, uid = 23) ⋅ ɛ)]
+//│ C((Path(p = ɛ), 17'hh), (Path(p = ɛ), 16'a)) <: 3'ls
+//│ 	[Path(p = Normal(name = idxSum:7^8, uid = 8) ⋅ ɛ)]  <--->  [Path(p = Normal(name = idxSum:7^8, uid = 8) ⋅ ɛ)]
+//│ 	[Path(
+//│   p = Normal(name = idxSum:7^8, uid = 8) ⋅ Normal(name = idxSum:7^33, uid = 33) ⋅ Normal(name = rev:8^34, uid = 34) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ ɛ
+//│ )]  <--->  [Path(
+//│   p = Normal(name = idxSum:7^33, uid = 33) ⋅ Normal(name = rev:8^34, uid = 34) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ ɛ
+//│ )]
+//│ 	[Path(
+//│   p = Normal(name = idxSum:7^8, uid = 8) ⋅ Normal(name = idxSum:7^33, uid = 33) ⋅ Normal(name = rev:8^34, uid = 34) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ ɛ
+//│ )]  <--->  [Path(
+//│   p = Normal(name = idxSum:7^33, uid = 33) ⋅ Normal(name = rev:8^34, uid = 34) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ Normal(name = rev:8^23, uid = 23) ⋅ ɛ
+//│ )]
 
 
 fun minuss(a) = if a is
@@ -343,43 +186,17 @@ minuss(fst)(snd)
 //│ def snd:8 = 18: [Z]
 //│ 23: (21: (19: minuss:6 20: fst:7) 22: snd:8)
 //│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ ------- recursive -------
-//│ S((ɛ, Z)) <: 8'7_callres
-//│ 	[minuss:6^19 ⋅ ɛ]  <--->  [minuss:6^19 ⋅ ɛ]
-//│ 	[minuss:6^3 ⋅ minuss:6^3 ⋅ fst:7^20 ⋅ ɛ]  <--->  [minuss:6^3 ⋅ fst:7^20 ⋅ ɛ]
-//│ Z <: 8'7_callres
-//│ 	[minuss:6^19 ⋅ ɛ]  <--->  [minuss:6^19 ⋅ ɛ]
-//│ 	[minuss:6^3 ⋅ fst:7^20 ⋅ ɛ]  <--->  [fst:7^20 ⋅ ɛ]
-//│ 	[minuss:6^3 ⋅ minuss:6^3 ⋅ ɛ]  <--->  [minuss:6^3 ⋅ ɛ]
-//│ 	[ɛ]  <--->  [ɛ]
-//│ ------- defInstance -------
-//│ fst:7^20 ⋅ ɛ ==> minuss:6^19 ⋅ ɛ:
-//│ 	17: [S [S [Z]]]  <-->  13: case a:9 of {S aa:10 -> (fun b:11 -> case b:11 of {S bb:12 -> ((minuss:6 aa:10) bb:12) | Z -> aa:10}) | Z -> (fun n:13 -> [Z])}
-//│ fst:7^20 ⋅ ɛ ==> minuss:6^19 ⋅ minuss:6^3 ⋅ minuss:6^3 ⋅ ɛ:
-//│ 	15: [Z]  <-->  13: case a:9 of {S aa:10 -> (fun b:11 -> case b:11 of {S bb:12 -> ((minuss:6 aa:10) bb:12) | Z -> aa:10}) | Z -> (fun n:13 -> [Z])}
-//│ snd:8^22 ⋅ ɛ ==> minuss:6^19 ⋅ ɛ:
-//│ 	18: [Z]  <-->  9: case b:11 of {S bb:12 -> ((minuss:6 aa:10) bb:12) | Z -> aa:10}
-//│ fst:7^20 ⋅ ɛ ==> minuss:6^19 ⋅ minuss:6^3 ⋅ ɛ:
-//│ 	16: [S [Z]]  <-->  13: case a:9 of {S aa:10 -> (fun b:11 -> case b:11 of {S bb:12 -> ((minuss:6 aa:10) bb:12) | Z -> aa:10}) | Z -> (fun n:13 -> [Z])}
-//│ 
-//│ >>>>>>>>>> Expanded >>>>>>>>>>
-//│ def minuss'6'19_minuss'6'3:15 = (fun a:9 -> case a:9 of {S aa:10 -> (fun b:11 -> case b:11 of {S bb:12 -> ((minuss'6'19_minuss'6'3_minuss'6'3:16 aa:10) bb:12) | Z -> aa:10}) | Z -> (fun n:13 -> [Z])})
-//│ def minuss'6'19_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3:20 = (fun a:9 -> case a:9 of {S aa:10 -> (fun b:11 -> case b:11 of {S bb:12 -> ((minuss'6'19_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3:21 aa:10) bb:12) | Z -> aa:10}) | Z -> (fun n:13 -> [Z])})
-//│ def minuss'6'19_minuss'6'3_minuss'6'3:16 = (fun a:9 -> case a:9 of {S aa:10 -> (fun b:11 -> case b:11 of {S bb:12 -> ((minuss'6'19_minuss'6'3_minuss'6'3_minuss'6'3:17 aa:10) bb:12) | Z -> aa:10}) | Z -> (fun n:13 -> [Z])})
-//│ def minuss'6'19_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3:23 = (fun a:9 -> case a:9 of {S aa:10 -> (fun b:11 -> case b:11 of {S bb:12 -> ((minuss'6'19_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3:24 aa:10) bb:12) | Z -> aa:10}) | Z -> (fun n:13 -> [Z])})
-//│ def minuss'6'19_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3:22 = (fun a:9 -> case a:9 of {S aa:10 -> (fun b:11 -> case b:11 of {S bb:12 -> ((minuss'6'19_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3:23 aa:10) bb:12) | Z -> aa:10}) | Z -> (fun n:13 -> [Z])})
-//│ def minuss'6'19_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3:18 = (fun a:9 -> case a:9 of {S aa:10 -> (fun b:11 -> case b:11 of {S bb:12 -> ((minuss'6'19_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3:19 aa:10) bb:12) | Z -> aa:10}) | Z -> (fun n:13 -> [Z])})
-//│ def snd'8'22:27 = [Z]
-//│ def minuss'6'19_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3:21 = (fun a:9 -> case a:9 of {S aa:10 -> (fun b:11 -> case b:11 of {S bb:12 -> ((minuss'6'19_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3:22 aa:10) bb:12) | Z -> aa:10}) | Z -> (fun n:13 -> [Z])})
-//│ def minuss'6'19:14 = (fun a:9 -> case a:9 of {S aa:10 -> (fun b:11 -> case b:11 of {S bb:12 -> ((minuss'6'19_minuss'6'3:15 aa:10) bb:12) | Z -> aa:10}) | Z -> (fun n:13 -> [Z])})
-//│ def minuss'6'19_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3:24 = (fun a:9 -> case a:9 of {S aa:10 -> (fun b:11 -> case b:11 of {S bb:12 -> ((minuss'6'19_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3:25 aa:10) bb:12) | Z -> aa:10}) | Z -> (fun n:13 -> [Z])})
-//│ def minuss'6'19_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3:19 = (fun a:9 -> case a:9 of {S aa:10 -> (fun b:11 -> case b:11 of {S bb:12 -> ((minuss'6'19_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3:20 aa:10) bb:12) | Z -> aa:10}) | Z -> (fun n:13 -> [Z])})
-//│ def minuss'6'19_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3:25 = "RECURSE_TOO_LONG"
-//│ def fst'7'20:26 = [S [S [Z]]]
-//│ def minuss'6'19_minuss'6'3_minuss'6'3_minuss'6'3:17 = (fun a:9 -> case a:9 of {S aa:10 -> (fun b:11 -> case b:11 of {S bb:12 -> ((minuss'6'19_minuss'6'3_minuss'6'3_minuss'6'3_minuss'6'3:18 aa:10) bb:12) | Z -> aa:10}) | Z -> (fun n:13 -> [Z])})
-//│ ((minuss'6'19:14 fst'7'20:26) snd'8'22:27)
-//│ <<<<<<<<<< Expanded <<<<<<<<<<
+//│ /!!!\ Uncaught error: java.lang.AssertionError: assertion failed: Path(p = Normal(name = minuss:6^3, uid = 3) ⋅ ɛ) tied different knots: Path(p = Normal(name = minuss:6^3, uid = 3) ⋅ ɛ) ≠ Path(p = ɛ)
+//│ 	at: scala.runtime.Scala3RunTime$.assertFailed(Scala3RunTime.scala:8)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1$$anonfun$4(Deforest.scala:235)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
+//│ 	at: scala.Option.map(Option.scala:242)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1(Deforest.scala:235)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$1(Deforest.scala:221)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$adapted$1(Deforest.scala:221)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:111)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1(Deforest.scala:221)
 
 // FIXME: weird recursive
 _LUMBERHACK_ERROR
@@ -401,6 +218,22 @@ minuss(fst)(snd)
 //│ def snd:9 = 26: [Z]
 //│ 31: (29: (27: minuss:6 28: fst:8) 30: snd:9)
 //│ <<<<<<<<<< Original <<<<<<<<<<
-//│ !!!!!!ERROR!!!!!!
-//│ java.lang.AssertionError: assertion failed: minuss:6^27 ⋅ ɛ tied different knots: minuss:6^27 ⋅ ɛ ≠ minuss:6^27 ⋅ checkb:7^2 ⋅ minuss:6^13 ⋅ ɛ
-//│ !!!!!!ERROR!!!!!!
+//│ 
+//│ ------- recursive -------
+//│ S((Path(p = ɛ), Z)) <: 8'6_callres
+//│ 	[Path(
+//│   p = Normal(name = minuss:6^13, uid = 13) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ Normal(name = minuss:6^27, uid = 27) ⋅ Normal(name = fst:8^28, uid = 28) ⋅ ɛ
+//│ )]  <--->  [Path(
+//│   p = Normal(name = checkb:7^2, uid = 2) ⋅ Normal(name = minuss:6^27, uid = 27) ⋅ Normal(name = fst:8^28, uid = 28) ⋅ ɛ
+//│ )]
+//│ 	[Path(p = Normal(name = checkb:7^2, uid = 2) ⋅ ɛ)]  <--->  [Path(p = Normal(name = checkb:7^2, uid = 2) ⋅ ɛ)]
+//│ Z <: 8'6_callres
+//│ 	[Path(
+//│   p = Normal(name = minuss:6^13, uid = 13) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ Normal(name = minuss:6^13, uid = 13) ⋅ ɛ
+//│ )]  <--->  [Path(p = Normal(name = minuss:6^13, uid = 13) ⋅ ɛ)]
+//│ 	[Path(
+//│   p = Normal(name = minuss:6^13, uid = 13) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ Normal(name = minuss:6^13, uid = 13) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ Normal(name = minuss:6^27, uid = 27) ⋅ Normal(name = fst:8^28, uid = 28) ⋅ ɛ
+//│ )]  <--->  [Path(
+//│   p = Normal(name = checkb:7^2, uid = 2) ⋅ Normal(name = minuss:6^13, uid = 13) ⋅ Normal(name = checkb:7^2, uid = 2) ⋅ Normal(name = minuss:6^27, uid = 27) ⋅ Normal(name = fst:8^28, uid = 28) ⋅ ɛ
+//│ )]
+//│ 	[Path(p = Normal(name = checkb:7^2, uid = 2) ⋅ ɛ)]  <--->  [Path(p = Normal(name = checkb:7^2, uid = 2) ⋅ ɛ)]

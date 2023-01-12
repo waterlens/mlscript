@@ -1,23 +1,49 @@
 package mlscript
 package lumberhack
 
+import lumberhack.Expr.Ref
 import mlscript.utils.shorthands.*
 import mlscript.utils.lastWords
 import scala.collection.mutable
 import mlscript.utils.AnyOps
 
 type TypeVar
-type Path = Ls[Ref -> Uid[Expr]]
+
+type NormalPathElem
+type StarPathElem
+type PathElemType = NormalPathElem | StarPathElem
+enum PathElem[+T <: PathElemType] {
+  case Normal(name: Ref, uid: Uid[Expr])(val pol: Boolean) extends PathElem[NormalPathElem]
+  case Star(elms: List[PathElem[NormalPathElem]]) extends PathElem[StarPathElem]
+
+  def neg: PathElem[T] = this match
+    case n: Normal => n.copy()(pol = !n.pol)
+    case s: Star => s.copy(elms = s.elms.map(_.neg))
+  
+  lazy val pp: Str = this match
+    case Normal(r@Ref(Ident(_, Var(nme), uid)), _) => s"$nme:${uid}^${r.uid}"
+    case Star(elms) => s"{${elms.map(_.pp).mkString(" · ")}}*"
+  
+}
+case class Path(p: Ls[PathElem[PathElemType]]) {
+  lazy val neg = this.copy(p = p.map(_.neg))
+  // TODO: merge two consecutive identical stars
+  def ::: (other: Path) = Path(other.p ::: p)
+  def map(f: PathElem[PathElemType] => PathElem[PathElemType]) = Path(p.map(f))
+  lazy val pp: Str = s"[${p.map(_.pp).mkString(" · ")}]"
+}
+
 type ExprId = Uid[Expr]
 type Cnstr = ProdStrat -> ConsStrat
 
 case class Strat[+T <: (ProdStratEnum | ConsStratEnum)](val s: T)(val path: Path) {
   def updatePath(newPath: Path): Strat[T] = this.copy()(path = newPath)
   def addPath(newPath: Path): Strat[T] = this.updatePath(newPath ::: this.path)
+  lazy val negPath = this.copy()(path = path.neg)
 }
 
 trait ToStrat[+T <: (ProdStratEnum | ConsStratEnum)] { self: T =>
-  def toStrat(p: Path = Nil): Strat[T] = Strat(this)(p)
+  def toStrat(p: Path = Path(Nil)): Strat[T] = Strat(this)(p)
 }
 
 type ProdStrat = Strat[ProdStratEnum]
@@ -128,7 +154,7 @@ class Deforest(debug: Boolean) {
         else
           NoProd()(using noExprId)
       }
-      case r @ Ref(id) => return if id.isDef then ctx(id).updatePath((r -> r.uid) :: Nil) else ctx(id)
+      case r @ Ref(id) => return if id.isDef then ctx(id).updatePath(Path(PathElem.Normal(r, r.uid)(true) :: Nil)) else ctx(id)
       case Call(f, a) =>
         val fp = process(f)
         val ap = process(a)
@@ -184,13 +210,11 @@ class Deforest(debug: Boolean) {
   def constrain(prod: ProdStrat, cons: ConsStrat): Unit = {
     (prod.s, cons.s) match
       case (NoProd(), _) | (_, NoCons()) => ()
-      case (p, c) => constraints ::= (prod, cons)
+      case (p, c) => constraints ::= (prod.negPath, cons)
   }
   
   type Cache = Map[Cnstr, Cnstr]
-  
-  val defInstances = mutable.Map.empty[Path -> Path, mutable.Set[ExprId -> ExprId]]
-  val cnstrsList = mutable.ArrayBuffer.empty[Cnstr]
+
   val recursiveConstr = (mutable.Map.empty[Cnstr, Cnstr], mutable.Map.empty[Path, Path], mutable.Map.empty[Cnstr, mutable.Map[Path, Path]])
   def resolveConstraints: Unit = {
     
@@ -231,33 +255,20 @@ class Deforest(debug: Boolean) {
 
       given Cache = cache + (c -> c)
 
-      cnstrsList += c
-      if prod.s.euid =/= noExprId && cons.s.euid =/= noExprId then
-        val pcs = defInstances.getOrElseUpdate((prod.path -> cons.path), mutable.Set.empty)
-        pcs += prod.s.euid -> cons.s.euid
-
-      def biggestCore(p1: Path, p2: Path): (Path, Path, Path) = {
-        // val core = Nil;
-        val core = p1.reverse.zip(p2.reverse).takeWhile(_ == _).map(_._1).reverse
-        (core, p1.take(p1.length - core.length), p2.take(p2.length - core.length))
-      }
-
       (prod.s, cons.s) match
         case (NoProd(), _) | (_, NoCons()) => ()
         case (ProdVar(v, _), _) =>
           upperBounds += v -> ((prod.path, cons) :: upperBounds(v))
           lowerBounds(v).foreach((lb_path, lb_strat) => handle({
-            val (core, new_lb_path, new_prod_path) = biggestCore(lb_path, prod.path)
-            lb_strat.addPath(new_prod_path) -> cons.addPath(new_lb_path)
+            lb_strat.addPath(lb_path) -> cons.addPath(prod.path)
           }))
         case (_, ConsVar(v, _)) =>
           lowerBounds += v -> ((cons.path, prod) :: lowerBounds(v))
           upperBounds(v).foreach((ub_path, ub_strat) => handle({
-            val (core, new_ub_path, new_cons_path) = biggestCore(ub_path, cons.path)
-            prod.addPath(new_ub_path) -> ub_strat.addPath(new_cons_path)
+            prod.addPath(cons.path) -> ub_strat.addPath(ub_path)
           }))
         case (ProdFun(lhs1, rhs1), ConsFun(lhs2, rhs2)) =>
-          handle(lhs2.addPath(cons.path) -> lhs1.addPath(prod.path))
+          handle(lhs2.addPath(cons.path.neg).negPath -> lhs1.addPath(prod.path.neg).negPath)
           handle(rhs1.addPath(prod.path) -> rhs2.addPath(cons.path))
         case (MkCtor(ctor, args), Destruct(ds)) =>
           val d = ds.find(_.ctor === ctor).get

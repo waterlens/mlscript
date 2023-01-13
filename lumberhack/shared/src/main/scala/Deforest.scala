@@ -294,6 +294,7 @@ class Deforest(debug: Boolean) {
       given Cache = cache + (c -> c)
 
       (prod.s, cons.s) match
+        case (ProdVar(v, _), ConsVar(w, _)) if v === w => ()
         case (NoProd(), _) | (_, NoCons()) => ()
         case (ProdVar(v, _), _) =>
           upperBounds += v -> ((prod.path, cons) :: upperBounds(v))

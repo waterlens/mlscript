@@ -3,7 +3,6 @@ package lumberhack
 
 import mlscript.{DiffTests, ModeType, TypingUnit, Term, Pgrm}
 import mlscript.utils.shorthands.Str
-import mlscript.lumberhack.pprint2
 import mlscript.codegen.Helpers.inspect as showStructure
 import scala.collection.mutable.StringBuilder
 
@@ -28,7 +27,7 @@ class DiffTestLumberhack extends DiffTests {
       d.resolveConstraints
       output("\n------- recursive -------")
       d.recursiveConstr._3.foreach { r =>
-        output(s"${pprint2(r._1._1.s).plainText} <: ${pprint2(r._1._2.s).plainText}")
+        output(s"${r._1._1.s.pp} <: ${r._1._2.s.pp}")
         r._2.foreach { p =>
           val origin = s"${p._1.pp}  --->  ${p._2.pp}"
           val annihilated = s"${p._1.annihilated.pp}  --->  ${p._2.annihilated.pp}"

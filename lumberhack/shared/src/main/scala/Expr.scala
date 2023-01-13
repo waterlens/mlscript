@@ -4,12 +4,14 @@ package lumberhack
 import mlscript.utils.*, shorthands.*
 import lumberhack.utils.*
 
-case class Ident(isDef: Bool, tree: Var, uid: Uid[Ident])
+case class Ident(isDef: Bool, tree: Var, uid: Uid[Ident]) {
+  lazy val pp: Str = s"${tree.name}:$uid"
+}
 case class ProgDef(id: Ident, body: Expr)
 case class Program(contents: Ls[ProgDef \/ Expr]) {
   def pp(using showUids: Bool = false): Str =
     contents.iterator.map {
-      case L(pd) => s"def ${pprint2(pd.id).plainText} = ${pd.body.pp}"
+      case L(pd) => s"def ${pd.id.pp} = ${pd.body.pp}"
       case R(e) => e.pp
     }.mkString("\n")
 }
@@ -48,7 +50,7 @@ enum Expr(using val deforest: Deforest) {
     val res: fansi.Str = (if (showUids) Console.CYAN + uid.toString + ": " + Console.RESET else "") + (
       this match
         case Const(lit) => Console.YELLOW + lit.idStr + Console.RESET
-        case Ref(id) => pprint2(id)
+        case Ref(id) => id.pp
         case Call(lhs, rhs) => s"(${lhs.pp} ${rhs.pp})"
         case Ctor(name, args) =>
           s"${Console.BLUE}[$name${Console.RESET}${args.map(" " + _.pp).mkString + Console.BLUE}]${Console.RESET}"
@@ -60,15 +62,15 @@ enum Expr(using val deforest: Deforest) {
             case _ => body.pp(using level + 1, showUids)
           }
           "\n" + "\t" * level +
-          s"${Console.BOLD}let${Console.RESET} ${pprint2(id)} = ${rhsStr} ${Console.BOLD}" +
+          s"${Console.BOLD}let${Console.RESET} ${id.pp} = ${rhsStr} ${Console.BOLD}" +
           inStr +
           s"${Console.RESET} ${bodyStr}"
         }
         case Match(scrut, arms) => s"${Console.BOLD}case${Console.RESET} ${scrut.pp} ${Console.BOLD}of${Console.RESET} {${arms.map {
             case (v, ids, e) =>
-              s"${Console.BLUE + v.name + Console.RESET}${ids.map(id => " " + pprint2(id)).mkString} -> ${e.pp}"
+              s"${Console.BLUE + v.name + Console.RESET}${ids.map(id => " " + id.pp).mkString} -> ${e.pp}"
           }.mkString(" | ")}}"
-        case Function(param, body) => s"(${Console.BOLD}fun${Console.RESET} ${pprint2(param)} -> ${body.pp})"
+        case Function(param, body) => s"(${Console.BOLD}fun${Console.RESET} ${param.pp} -> ${body.pp})"
         case IfThenElse(scrut, thenn, elze) => 
           s"${Console.BOLD}if${Console.RESET} ${scrut.pp} ${Console.BOLD}then${Console.RESET} " +
           s"${thenn.pp} ${Console.BOLD}else${Console.RESET} ${elze.pp}"

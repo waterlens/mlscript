@@ -52,10 +52,12 @@ case class Strat[+T <: (ProdStratEnum | ConsStratEnum)](val s: T)(val path: Path
   def updatePath(newPath: Path): Strat[T] = this.copy()(path = newPath)
   def addPath(newPath: Path): Strat[T] = this.updatePath(newPath ::: this.path)
   lazy val negPath = this.copy()(path = path.neg)
+  lazy val pp: Str = s"(${path.pp}: ${s.pp})"
 }
 
 trait ToStrat[+T <: (ProdStratEnum | ConsStratEnum)] { self: T =>
   def toStrat(p: Path = Path(Nil)): Strat[T] = Strat(this)(p)
+  lazy val pp: Str
 }
 
 type ProdStrat = Strat[ProdStratEnum]
@@ -67,6 +69,14 @@ enum ProdStratEnum(using val euid: ExprId) extends ToStrat[ProdStratEnum] {
   case Sum(ctors: Ls[Strat[MkCtor]])(using ExprId) extends ProdStratEnum with ToStrat[Sum]
   case ProdFun(lhs: ConsStrat, rhs: ProdStrat)(using ExprId) extends ProdStratEnum with ToStrat[ProdFun]
   case ProdVar(uid: Uid[TypeVar], name: String)(using ExprId) extends ProdStratEnum with ToStrat[ProdVar]
+
+  lazy val pp: Str = this match
+    case NoProd() => "NoProd"
+    case MkCtor(ctor, args) if args.length > 0 => s"${ctor.name}(${args.map(_.pp).mkString(", ")})"
+    case MkCtor(ctor, _) => ctor.name
+    case Sum(ls) => s"Sum${ls.map(_.pp).mkString(", ")}"
+    case ProdFun(l, r) => s"${l.pp} => ${r.pp}"
+    case ProdVar(uid, n) => s"${uid}" + "'" + n
 }
 
 enum ConsStratEnum(using val euid: ExprId) extends ToStrat[ConsStratEnum] {
@@ -74,10 +84,19 @@ enum ConsStratEnum(using val euid: ExprId) extends ToStrat[ConsStratEnum] {
   case Destruct(destrs: Ls[Destructor])(using ExprId) extends ConsStratEnum with ToStrat[Destruct]
   case ConsFun(lhs: ProdStrat, rhs: ConsStrat)(using ExprId) extends ConsStratEnum with ToStrat[ConsFun]
   case ConsVar(uid: Uid[TypeVar], name: String)(using ExprId) extends ConsStratEnum with ToStrat[ConsVar]
+
+  lazy val pp: Str = this match
+    case NoCons() => "NoCons"
+    case Destruct(x) => s"Destruct(${x.map(_.pp).mkString(", ")})"
+    case ConsFun(l, r) => s"${l.pp} => ${r.pp}"
+    case ConsVar(uid, n) => s"${uid}" + "'" + n
 }
 
 import ProdStratEnum.*, ConsStratEnum.*, Expr.*
-case class Destructor(ctor: Var, argCons: Ls[Strat[ConsVar]])
+case class Destructor(ctor: Var, argCons: Ls[Strat[ConsVar]]) {
+  lazy val pp: Str =
+    if argCons.length > 0 then s"${ctor.name}(${argCons.map(_.pp).mkString(", ")})" else ctor.name
+}
 object ProdStratEnum {
   def prodBool(using ExprId) = Sum(
     MkCtor(Var("True"), Nil).toStrat() :: MkCtor(Var("False"), Nil).toStrat() :: Nil
@@ -125,13 +144,11 @@ class Deforest(debug: Boolean) {
       if (!(post eq noPostTrace)) log(post(res), color = Console.CYAN)
       res
     }
-    private def summary(str: String) =
+    private[lumberhack] def summary(str: String) =
       val made = str.split('\n').mkString("\\")
       if (made.length > 100) made.take(100) + Console.RESET + Console.MAGENTA + "..." + Console.RESET else made
     private[lumberhack] def log(msg: => String, color: String = Console.RED): Unit =
       if debug then println("| " * indent + color + msg + Console.RESET)
-    def show(x: Any) =
-      Console.RESET + summary(pprint2.apply(x).toString)
   }
   import Trace.*
 
@@ -148,7 +165,7 @@ class Deforest(debug: Boolean) {
     val vid = vuid.nextUid
     val pv = ProdVar(vid, n)(using noExprId)
     val cv = ConsVar(vid, n)(using noExprId)
-    log(s"fresh var ${show(pv)}")
+    log(s"fresh var ${pv.pp}")
     (pv, cv)
   
   def nextIdent(isDef: Bool, name: Var): Ident = Ident(isDef, name, iuid.nextUid)
@@ -156,7 +173,7 @@ class Deforest(debug: Boolean) {
   val upperBounds = mutable.Map.empty[Uid[TypeVar], Ls[(Path, ConsStrat)]].withDefaultValue(Nil)
   val lowerBounds = mutable.Map.empty[Uid[TypeVar], Ls[(Path, ProdStrat)]].withDefaultValue(Nil)
   
-  def process(e: Expr)(using Ctx): ProdStrat = trace(s"process ${e.uid}: ${show(e.pp)}") {
+  def process(e: Expr)(using Ctx): ProdStrat = trace(s"process ${e.uid}: ${e.pp}") {
     val res: ProdStratEnum = e match
       case Const(IntLit(_)) => prodInt(using noExprId)
       case Const(l) => NoProd()(using noExprId)
@@ -199,9 +216,9 @@ class Deforest(debug: Boolean) {
         res._1
       case LetIn(id, rhs, body) => ???
     res.toStrat()
-  }(r => s"=> ${show(r)}")
+  }(r => s"=> ${r.pp}")
 
-  def apply(p: Program): Ls[Str -> ProdStrat] = trace(s"apply ${show(p)}") {
+  def apply(p: Program): Ls[Str -> ProdStrat] = trace(s"apply ${summary(p.pp)}") {
     val vars: Map[Str, Strat[ProdVar]] = p.contents.collect {
       case L(ProgDef(id, body)) =>
         id.tree.name -> freshVar(id.tree.name)._1.toStrat()
@@ -217,7 +234,7 @@ class Deforest(debug: Boolean) {
       case R(e) => process(e)
     }
     vars.toList
-  }(r => s"=> ${show(r)}")
+  }(r => s"=> ${summary(r.map(v => s"${v._1}: ${v._2.pp}").mkString(", "))}")
   
   def constrain(prod: ProdStrat, cons: ConsStrat): Unit = {
     (prod.s, cons.s) match
@@ -236,22 +253,22 @@ class Deforest(debug: Boolean) {
   val recursiveConstr = (mutable.Set.empty[Path -> Path], mutable.Map.empty[Path, Path], mutable.Map.empty[Cnstr, mutable.Set[Path -> Path]])
   def resolveConstraints: Unit = {
     
-    def handle(c: Cnstr)(using cache: Cache): Unit = trace(s"handle [${pprint2.apply(c._1).toString} : ${pprint2.apply(c._2).toString}]") {
+    def handle(c: Cnstr)(using cache: Cache): Unit = trace(s"handle [${c._1.pp} : ${c._2.pp}]") {
       val (prod, cons) = c
       
       (prod.s, cons.s) match
         case (_: ProdVar, _) | (_, _: ConsVar) => cache.get(c) match
           case S(inCache) =>
-            log(s">> done [${pprint2.apply(c._1).toString} : ${pprint2.apply(c._2).toString}]")
-            log(s">> with [${pprint2.apply(inCache._1).toString} : ${pprint2.apply(inCache._2).toString}]")
+            log(s">> done [${c._1.pp} : ${c._2.pp}]")
+            log(s">> with [${inCache._1.pp} : ${inCache._2.pp}]")
             // recursiveConstr._1 += (c._1.path -> inCache._1.path)
             // recursiveConstr._1 += (c._2.path -> inCache._2.path)
             
             // recursiveConstr._2.get(c._1.path).map { p =>
-            //   assert(p == inCache._1.path, s"${pprint2(c._1.path).plainText} tied different knots: ${pprint2(p).plainText} ≠ ${pprint2(inCache._1.path).plainText}")
+            //   assert(p == inCache._1.path, s"${c.path.pp} tied different knots: ${p.pp} ≠ ${inCache.path.pp}")
             // }
             // recursiveConstr._2.get(c._2.path).map { p =>
-            //   assert(p == inCache._2.path, s"${pprint2(c._2.path).plainText} tied different knots: ${pprint2(p).plainText} ≠ ${pprint2(inCache._2.path).plainText}")
+            //   assert(p == inCache._2.path, s"${c.path.pp} tied different knots: ${p.pp} ≠ ${inCache.path.pp}")
             // }
             // recursiveConstr._2 += (c._1.path -> inCache._1.path)
             // recursiveConstr._2 += (c._2.path -> inCache._2.path)

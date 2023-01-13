@@ -21,14 +21,11 @@ count(0, rev(N, N))
 //│ ------- recursive -------
 //│ Int <: 10'12_matchres
 //│ 	[+count:6^2 · -count:6^2]  --->  [+count:6^2]
-//│ 		[]  --->  [+count:6^2]
 //│ C(([]: 13'h1), ([]: 11'a)) <: 3'xs
 //│ 	[+rev:7^16 · +rev:7^16 · +rev:7^16 · -rev:7^30 · +count:6^27 · +count:6^2 · +count:6^2]  --->  [+rev:7^16 · +rev:7^16 · -rev:7^30 · +count:6^27 · +count:6^2]
 //│ 	[+rev:7^16 · +rev:7^16 · +rev:7^16 · -rev:7^16 · -rev:7^30 · +count:6^27 · +count:6^2 · +count:6^2]  --->  [+rev:7^16 · +rev:7^16 · -rev:7^16 · -rev:7^30 · +count:6^27 · +count:6^2]
-//│ 		[+rev:7^16 · +rev:7^16 · -rev:7^30 · +count:6^27 · +count:6^2 · +count:6^2]  --->  [+rev:7^16 · -rev:7^30 · +count:6^27 · +count:6^2]
 //│ C(([]: 13'h1), ([]: 11'a)) <: 16'22_callres
 //│ 	[+rev:7^16 · -rev:7^16 · -rev:7^16]  --->  [+rev:7^16 · -rev:7^16]
-//│ 		[-rev:7^16]  --->  []
 //│ N <: 16'22_callres
 //│ 	[+rev:7^30 · -rev:7^16 · -rev:7^16]  --->  [+rev:7^30 · -rev:7^16]
 //│ Int <: 9'10_callres
@@ -59,14 +56,11 @@ count(rev(N, init))(0)
 //│ Int <: 10'10_callres
 //│ 	[+count:6^29 · -count:6^2 · -count:6^2]  --->  [+count:6^29 · -count:6^2]
 //│ 	[+count:6^2 · -count:6^2 · -count:6^2]  --->  [+count:6^2 · -count:6^2]
-//│ 		[-count:6^2]  --->  []
 //│ C(([]: 15'h1), ([]: 13'a)) <: 3'xs
 //│ 	[+rev:7^17 · +rev:7^17 · +rev:7^17 · -rev:7^30 · +count:6^29 · +count:6^2 · +count:6^2]  --->  [+rev:7^17 · +rev:7^17 · -rev:7^30 · +count:6^29 · +count:6^2]
 //│ 	[+rev:7^17 · +rev:7^17 · +rev:7^17 · -rev:7^17 · -rev:7^30 · +count:6^29 · +count:6^2 · +count:6^2]  --->  [+rev:7^17 · +rev:7^17 · -rev:7^17 · -rev:7^30 · +count:6^29 · +count:6^2]
-//│ 		[+rev:7^17 · +rev:7^17 · -rev:7^30 · +count:6^29 · +count:6^2 · +count:6^2]  --->  [+rev:7^17 · -rev:7^30 · +count:6^29 · +count:6^2]
 //│ C(([]: 15'h1), ([]: 13'a)) <: 18'23_callres
 //│ 	[+rev:7^17 · -rev:7^17 · -rev:7^17]  --->  [+rev:7^17 · -rev:7^17]
-//│ 		[-rev:7^17]  --->  []
 
 
 // Paper example (original)
@@ -76,25 +70,23 @@ fun idxSum(i, xs) = if xs is
 fun rev(a, ys) = if ys is
     C(h1, t1) then rev(C(h1, a), t1)
     N then a
-idxSum(0, rev(N, N), N)
-//│ |#fun| |idxSum|(|i|,| |xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |add|(|i|,| |idxSum|(|add|(|i|,| |1|)|,| |t|)|)|↵|N| |#then| |0|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|idxSum|(|0|,| |rev|(|N|,| |N|)|,| |N|)|
-//│ Parsed: {fun idxSum = i, xs, => if xs is ‹(C (h, t,)) then add (i, idxSum (add (i, 1,), t,),); (N) then 0›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; idxSum (0, rev (N, N,), N,)}
+idxSum(0, rev(N, N))
+//│ |#fun| |idxSum|(|i|,| |xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |add|(|i|,| |idxSum|(|add|(|i|,| |1|)|,| |t|)|)|↵|N| |#then| |0|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|idxSum|(|0|,| |rev|(|N|,| |N|)|)|
+//│ Parsed: {fun idxSum = i, xs, => if xs is ‹(C (h, t,)) then add (i, idxSum (add (i, 1,), t,),); (N) then 0›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; idxSum (0, rev (N, N,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ def idxSum:6 = (fun i:8 -> (fun xs:9 -> case xs:9^1 of {C h:10 t:11 -> ((add:4^2 i:8^3) ((idxSum:6^5 ((add:4^6 i:8^7) 1)) t:11^12)) | N -> 0}))
 //│ def rev:7 = (fun a:12 -> (fun ys:13 -> case ys:13^19 of {C h1:14 t1:15 -> ((rev:7^20 [C h1:14^21 a:12^22]) t1:15^25) | N -> a:12^27}))
-//│ (((idxSum:6^31 0) ((rev:7^34 [N]) [N])) [N])
+//│ ((idxSum:6^31 0) ((rev:7^34 [N]) [N]))
 //│ <<<<<<<<<< Original <<<<<<<<<<
-//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: type error
-//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
-//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1(Deforest.scala:327)
-//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$1(Deforest.scala:256)
-//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$adapted$1(Deforest.scala:256)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:142)
-//│ 	at: mlscript.lumberhack.Deforest.handle$1(Deforest.scala:256)
-//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1$$anonfun$5(Deforest.scala:307)
-//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
-//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
-//│ 	at: scala.collection.immutable.List.foreach(List.scala:333)
+//│ 
+//│ ------- recursive -------
+//│ C(([]: 15'h1), ([]: 13'a)) <: 3'xs
+//│ 	[+rev:7^20 · +rev:7^20 · +rev:7^20 · -rev:7^20 · -rev:7^34 · +idxSum:6^31 · +idxSum:6^5 · +idxSum:6^5]  --->  [+rev:7^20 · +rev:7^20 · -rev:7^20 · -rev:7^34 · +idxSum:6^31 · +idxSum:6^5]
+//│ 	[+rev:7^20 · +rev:7^20 · +rev:7^20 · -rev:7^34 · +idxSum:6^31 · +idxSum:6^5 · +idxSum:6^5]  --->  [+rev:7^20 · +rev:7^20 · -rev:7^34 · +idxSum:6^31 · +idxSum:6^5]
+//│ C(([]: 15'h1), ([]: 13'a)) <: 18'26_callres
+//│ 	[+rev:7^20 · -rev:7^20 · -rev:7^20]  --->  [+rev:7^20 · -rev:7^20]
+//│ N <: 18'26_callres
+//│ 	[+rev:7^34 · -rev:7^20 · -rev:7^20]  --->  [+rev:7^34 · -rev:7^20]
 
 
 
@@ -119,11 +111,9 @@ count(rev(N, init))
 //│ ------- recursive -------
 //│ C(([]: 12'h1), ([]: 10'a)) <: 3'xs
 //│ 	[+rev:7^13 · +rev:7^13 · +rev:7^13 · -rev:7^13 · -rev:7^26 · +count:6^25 · +count:6^5 · +count:6^5]  --->  [+rev:7^13 · +rev:7^13 · -rev:7^13 · -rev:7^26 · +count:6^25 · +count:6^5]
-//│ 		[+rev:7^13 · +rev:7^13 · -rev:7^26 · +count:6^25 · +count:6^5 · +count:6^5]  --->  [+rev:7^13 · -rev:7^26 · +count:6^25 · +count:6^5]
 //│ 	[+rev:7^13 · +rev:7^13 · +rev:7^13 · -rev:7^26 · +count:6^25 · +count:6^5 · +count:6^5]  --->  [+rev:7^13 · +rev:7^13 · -rev:7^26 · +count:6^25 · +count:6^5]
 //│ C(([]: 12'h1), ([]: 10'a)) <: 15'19_callres
 //│ 	[+rev:7^13 · -rev:7^13 · -rev:7^13]  --->  [+rev:7^13 · -rev:7^13]
-//│ 		[-rev:7^13]  --->  []
 //│ N <: 15'19_callres
 //│ 	[+rev:7^26 · -rev:7^13 · -rev:7^13]  --->  [+rev:7^26 · -rev:7^13]
 
@@ -148,7 +138,6 @@ rev(N, init)
 //│ 	[+rev:6^16 · -rev:6^2 · -rev:6^2]  --->  [+rev:6^16 · -rev:6^2]
 //│ C(([]: 4'h1), ([]: 2'a)) <: 7'8_callres
 //│ 	[+rev:6^2 · -rev:6^2 · -rev:6^2]  --->  [+rev:6^2 · -rev:6^2]
-//│ 		[-rev:6^2]  --->  []
 
 fun rev(a, ys) = if ys is
     C(h1, t1) then rev(C(h1, a), t1)

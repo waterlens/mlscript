@@ -31,9 +31,9 @@ class DiffTestLumberhack extends DiffTests {
         output(s"${r._1._1.s.pp} <: ${r._1._2.s.pp}")
         r._2.foreach { p =>
           val origin = s"${p._1.pp}  --->  ${p._2.pp}"
-          val annihilated = s"${p._1.annihilated.pp}  --->  ${p._2.annihilated.pp}"
+          // val annihilated = s"${p._1.annihilated.pp}  --->  ${p._2.annihilated.pp}"
           output(s"\t${p._1.pp}  --->  ${p._2.pp}")
-          if origin != annihilated then output(s"\t\t$annihilated")
+          // if origin != annihilated then output(s"\t\t$annihilated")
         }
       }
       // output(("------- defInstance -------"))

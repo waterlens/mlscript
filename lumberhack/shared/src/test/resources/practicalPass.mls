@@ -11,10 +11,10 @@ inter(l1, l2)
 //│ |#fun| |inter|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |ys| |=>| |ys|↵|C|(|h|,| |t|)| |#then| |ys| |=>| |C|(|h|,| |inter|(|ys|)|(|t|)|)|←|↵|#let| |l1| |#=| |C|(|1|,| |C|(|2|,| |N|)|)|↵|#let| |#rec| |l2| |#=| |N|↵|inter|(|l1|,| |l2|)|
 //│ Parsed: {fun inter = xs, => if xs is ‹(N) then ys, => ys; (C (h, t,)) then ys, => C (h, inter (ys,) (t,),)›; let l1 = C (1, C (2, N,),); let rec l2 = N; inter (l1, l2,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def inter:6 = 13: (fun xs:9 -> 12: case 1: xs:9 of {N -> 3: (fun ys:10 -> 2: ys:10) | C h:11 t:12 -> 11: (fun ys:13 -> 10: [C 4: h:11 9: (7: (5: inter:6 6: ys:13) 8: t:12)])})
-//│ def l1:7 = 18: [C 14: 1 17: [C 15: 2 16: [N]]]
-//│ def l2:8 = 19: [N]
-//│ 24: (22: (20: inter:6 21: l1:7) 23: l2:8)
+//│ def inter:6 = (fun xs:9 -> case xs:9^1 of {N -> (fun ys:10 -> ys:10^2) | C h:11 t:12 -> (fun ys:13 -> [C h:11^4 ((inter:6^5 ys:13^6) t:12^8)])})
+//│ def l1:7 = [C 1 [C 2 [N]]]
+//│ def l2:8 = [N]
+//│ ((inter:6^20 l1:7^21) l2:8^23)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -29,10 +29,10 @@ inter(l1(0))(l2)
 //│ |#fun| |inter|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |ys| |=>| |ys|↵|C|(|h|,| |t|)| |#then| |ys| |=>| |C|(|h|,| |inter|(|ys|)|(|t|)|)|←|↵|#fun| |l1|(|x|)| |#=| |C|(|1|,| |C|(|2|,| |l1|(|add|(|x|,| |1|)|)|)|)|↵|#let| |#rec| |l2| |#=| |C|(|9|,| |C|(|8|,| |l2|)|)|↵|inter|(|l1|(|0|)|)|(|l2|)|
 //│ Parsed: {fun inter = xs, => if xs is ‹(N) then ys, => ys; (C (h, t,)) then ys, => C (h, inter (ys,) (t,),)›; fun l1 = x, => C (1, C (2, l1 (add (x, 1,),),),); let rec l2 = C (9, C (8, l2,),); inter (l1 (0,),) (l2,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def inter:6 = 13: (fun xs:9 -> 12: case 1: xs:9 of {N -> 3: (fun ys:10 -> 2: ys:10) | C h:11 t:12 -> 11: (fun ys:13 -> 10: [C 4: h:11 9: (7: (5: inter:6 6: ys:13) 8: t:12)])})
-//│ def l1:7 = 25: (fun x:14 -> 24: [C 14: 1 23: [C 15: 2 22: (16: l1:7 21: (19: (17: add:4 18: x:14) 20: 1))]])
-//│ def l2:8 = 30: [C 26: 9 29: [C 27: 8 28: l2:8]]
-//│ 37: (35: (31: inter:6 34: (32: l1:7 33: 0)) 36: l2:8)
+//│ def inter:6 = (fun xs:9 -> case xs:9^1 of {N -> (fun ys:10 -> ys:10^2) | C h:11 t:12 -> (fun ys:13 -> [C h:11^4 ((inter:6^5 ys:13^6) t:12^8)])})
+//│ def l1:7 = (fun x:14 -> [C 1 [C 2 (l1:7^16 ((add:4^17 x:14^18) 1))]])
+//│ def l2:8 = [C 9 [C 8 l2:8^28]]
+//│ ((inter:6^31 (l1:7^32 0)) l2:8^36)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -56,9 +56,9 @@ map(l)(
 //│ |#fun| |map|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |f| |=>| |C|(|f|(|h|)|,| |map|(|t|)|(|f|)|)|↵|N| |#then| |f| |=>| |N|←|↵|#let| |l| |#=| |C|(|K|,| |N|)|↵|map|(|l|)|(|→|x| |=>| |#if| |x| |is|→|K| |#then| |T|←|←|↵|)|
 //│ Parsed: {fun map = ls, => if ls is ‹(C (h, t,)) then f, => C (f (h,), map (t,) (f,),); (N) then f, => N›; let l = C (K, N,); map (l,) (x, => if x is ‹(K) then T›,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def map:6 = 15: (fun ls:8 -> 14: case 1: ls:8 of {C h:9 t:10 -> 11: (fun f:11 -> 10: [C 4: (2: f:11 3: h:9) 9: (7: (5: map:6 6: t:10) 8: f:11)]) | N -> 13: (fun f:12 -> 12: [N])})
-//│ def l:7 = 18: [C 16: [K] 17: [N]]
-//│ 26: (21: (19: map:6 20: l:7) 25: (fun x:13 -> 24: case 22: x:13 of {K -> 23: [T]}))
+//│ def map:6 = (fun ls:8 -> case ls:8^1 of {C h:9 t:10 -> (fun f:11 -> [C (f:11^2 h:9^3) ((map:6^5 t:10^6) f:11^8)]) | N -> (fun f:12 -> [N])})
+//│ def l:7 = [C [K] [N]]
+//│ ((map:6^19 l:7^20) (fun x:13 -> case x:13^22 of {K -> [T]}))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -82,9 +82,9 @@ map(l)
 //│ |#fun| |map|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|→|(|#if| |h| |is|→|K| |#then| |T|↵|KK| |#then| |TT|↵|KKKK| |#then| |TTTT|←|↵|)|,|↵|map|(|t|)|←|↵|)|↵|N| |#then| |N|←|↵|#let| |l| |#=| |C|(|K|,| |C|(|KK|,| |C|(|KKKK|,| |N|)|)|)|↵|map|(|l|)|
 //│ Parsed: {fun map = ls, => if ls is ‹(C (h, t,)) then C ('(' if h is ‹(K) then T; (KK) then TT; (KKKK) then TTTT›, ')', map (t,),); (N) then N›; let l = C (K, C (KK, C (KKKK, N,),),); map (l,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def map:6 = 13: (fun ls:8 -> 12: case 1: ls:8 of {C h:9 t:10 -> 10: [C 6: case 2: h:9 of {K -> 3: [T] | KK -> 4: [TT] | KKKK -> 5: [TTTT]} 9: (7: map:6 8: t:10)] | N -> 11: [N]})
-//│ def l:7 = 20: [C 14: [K] 19: [C 15: [KK] 18: [C 16: [KKKK] 17: [N]]]]
-//│ 23: (21: map:6 22: l:7)
+//│ def map:6 = (fun ls:8 -> case ls:8^1 of {C h:9 t:10 -> [C case h:9^2 of {K -> [T] | KK -> [TT] | KKKK -> [TTTT]} (map:6^7 t:10^8)] | N -> [N]})
+//│ def l:7 = [C [K] [C [KK] [C [KKKK] [N]]]]
+//│ (map:6^21 l:7^22)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -109,11 +109,11 @@ c(t)
 //│ |#let| |aa| |#=| |T|(|N|,| |L|,| |L|)|↵|#let| |bb| |#=| |T|(|N|,| |L|,| |L|)|↵|#let| |t| |#=| |T|(|K|,| |aa|,| |bb|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|T|(|n|,| |l|,| |r|)| |#then| |T|(|→|(|#if| |n| |is|→|K| |#then| |KK|↵|N| |#then| |NN|←|↵|)|,|↵|c|(|l|)|,|↵|c|(|r|)|←|↵|)|↵|L| |#then| |LL|←|↵|c|(|t|)|
 //│ Parsed: {let aa = T (N, L, L,); let bb = T (N, L, L,); let t = T (K, aa, bb,); fun c = x, => if x is ‹(T (n, l, r,)) then T ('(' if n is ‹(K) then KK; (N) then NN›, ')', c (l,), c (r,),); (L) then LL›; c (t,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def aa:6 = 4: [T 1: [N] 2: [L] 3: [L]]
-//│ def bb:7 = 8: [T 5: [N] 6: [L] 7: [L]]
-//│ def t:8 = 12: [T 9: [K] 10: aa:6 11: bb:7]
-//│ def c:9 = 27: (fun x:10 -> 26: case 13: x:10 of {T n:11 l:12 r:13 -> 24: [T 17: case 14: n:11 of {K -> 15: [KK] | N -> 16: [NN]} 20: (18: c:9 19: l:12) 23: (21: c:9 22: r:13)] | L -> 25: [LL]})
-//│ 30: (28: c:9 29: t:8)
+//│ def aa:6 = [T [N] [L] [L]]
+//│ def bb:7 = [T [N] [L] [L]]
+//│ def t:8 = [T [K] aa:6^10 bb:7^11]
+//│ def c:9 = (fun x:10 -> case x:10^13 of {T n:11 l:12 r:13 -> [T case n:11^14 of {K -> [KK] | N -> [NN]} (c:9^18 l:12^19) (c:9^21 r:13^22)] | L -> [LL]})
+//│ (c:9^28 t:8^29)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -134,10 +134,10 @@ sum(mapa(mapb(primitive)))
 //│ |#fun| |sum|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |S|(|N|,| |sum|(|t|)|)|↵|N| |#then| |N|←|↵|#fun| |mapa|(|lsa|)| |#=| |#if| |lsa| |is|→|C|(|ha|,| |ta|)| |#then| |C|(|primitive|(|ha|)|,| |mapa|(|ta|)|)|↵|N| |#then| |N|←|↵|#fun| |mapb|(|lsb|)| |#=| |#if| |lsb| |is|→|C|(|hb|,| |tb|)| |#then| |C|(|primitive|(|hb|)|,| |mapb|(|tb|)|)|↵|N| |#then| |N|←|↵|sum|(|mapa|(|mapb|(|primitive|)|)|)|
 //│ Parsed: {fun sum = ls, => if ls is ‹(C (h, t,)) then S (N, sum (t,),); (N) then N›; fun mapa = lsa, => if lsa is ‹(C (ha, ta,)) then C (primitive (ha,), mapa (ta,),); (N) then N›; fun mapb = lsb, => if lsb is ‹(C (hb, tb,)) then C (primitive (hb,), mapb (tb,),); (N) then N›; sum (mapa (mapb (primitive,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def sum:6 = 9: (fun ls:9 -> 8: case 1: ls:9 of {C h:10 t:11 -> 6: [S 2: [N] 5: (3: sum:6 4: t:11)] | N -> 7: [N]})
-//│ def mapa:7 = 20: (fun lsa:12 -> 19: case 10: lsa:12 of {C ha:13 ta:14 -> 17: [C 13: (11: primitive:3 12: ha:13) 16: (14: mapa:7 15: ta:14)] | N -> 18: [N]})
-//│ def mapb:8 = 31: (fun lsb:15 -> 30: case 21: lsb:15 of {C hb:16 tb:17 -> 28: [C 24: (22: primitive:3 23: hb:16) 27: (25: mapb:8 26: tb:17)] | N -> 29: [N]})
-//│ 38: (32: sum:6 37: (33: mapa:7 36: (34: mapb:8 35: primitive:3)))
+//│ def sum:6 = (fun ls:9 -> case ls:9^1 of {C h:10 t:11 -> [S [N] (sum:6^3 t:11^4)] | N -> [N]})
+//│ def mapa:7 = (fun lsa:12 -> case lsa:12^10 of {C ha:13 ta:14 -> [C (primitive:3^11 ha:13^12) (mapa:7^14 ta:14^15)] | N -> [N]})
+//│ def mapb:8 = (fun lsb:15 -> case lsb:15^21 of {C hb:16 tb:17 -> [C (primitive:3^22 hb:16^23) (mapb:8^25 tb:17^26)] | N -> [N]})
+//│ (sum:6^32 (mapa:7^33 (mapb:8^34 primitive:3^35)))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------
@@ -163,10 +163,10 @@ lastDrive(map(C(T, C(TT, N))))
 //│ |#fun| |map|(|ls|)| |#=| |#if| |ls| |is|→|N| |#then| |N|↵|C|(|hhh|,| |ttt|)| |#then| |C|(|(|→|head| |=>| |#if| |head| |is| |→|T| |#then| |K|↵|TT| |#then| |KK|←|←|↵|)|(|hhh|)|,| |map|(|ttt|)|)|←|↵|#fun| |last|(|ys|)| |#=| |#if| |ys| |is|→|N| |#then| |x| |=>| |x|↵|C|(|h|,| |t|)| |#then| |x| |=>| |last|(|t|)|(|h|)|←|↵|#fun| |lastDrive|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |None|↵|C|(|hh|,| |tt|)| |#then| |Some|(|last|(|tt|)|(|hh|)|)|←|↵|lastDrive|(|map|(|C|(|T|,| |C|(|TT|,| |N|)|)|)|)|
 //│ Parsed: {fun map = ls, => if ls is ‹(N) then N; (C (hhh, ttt,)) then C ('(' head, => if head is ‹(T) then K; (TT) then KK›, ')' (hhh,), map (ttt,),)›; fun last = ys, => if ys is ‹(N) then x, => x; (C (h, t,)) then x, => last (t,) (h,)›; fun lastDrive = xs, => if xs is ‹(N) then None; (C (hh, tt,)) then Some (last (tt,) (hh,),)›; lastDrive (map (C (T, C (TT, N,),),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def map:6 = 15: (fun ls:9 -> 14: case 1: ls:9 of {N -> 2: [N] | C hhh:10 ttt:11 -> 13: [C 9: (7: (fun head:12 -> 6: case 3: head:12 of {T -> 4: [K] | TT -> 5: [KK]}) 8: hhh:10) 12: (10: map:6 11: ttt:11)]})
-//│ def last:7 = 26: (fun ys:13 -> 25: case 16: ys:13 of {N -> 18: (fun x:14 -> 17: x:14) | C h:15 t:16 -> 24: (fun x:17 -> 23: (21: (19: last:7 20: t:16) 22: h:15))})
-//│ def lastDrive:8 = 36: (fun xs:18 -> 35: case 27: xs:18 of {N -> 28: [None] | C hh:19 tt:20 -> 34: [Some 33: (31: (29: last:7 30: tt:20) 32: hh:19)]})
-//│ 45: (37: lastDrive:8 44: (38: map:6 43: [C 39: [T] 42: [C 40: [TT] 41: [N]]]))
+//│ def map:6 = (fun ls:9 -> case ls:9^1 of {N -> [N] | C hhh:10 ttt:11 -> [C ((fun head:12 -> case head:12^3 of {T -> [K] | TT -> [KK]}) hhh:10^8) (map:6^10 ttt:11^11)]})
+//│ def last:7 = (fun ys:13 -> case ys:13^16 of {N -> (fun x:14 -> x:14^17) | C h:15 t:16 -> (fun x:17 -> ((last:7^19 t:16^20) h:15^22))})
+//│ def lastDrive:8 = (fun xs:18 -> case xs:18^27 of {N -> [None] | C hh:19 tt:20 -> [Some ((last:7^29 tt:20^30) hh:19^32)]})
+//│ (lastDrive:8^37 (map:6^38 [C [T] [C [TT] [N]]]))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ ------- recursive -------

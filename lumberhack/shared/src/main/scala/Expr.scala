@@ -50,7 +50,9 @@ enum Expr(using val deforest: Deforest) {
     val res: fansi.Str = (if (showUids) Console.CYAN + uid.toString + ": " + Console.RESET else "") + (
       this match
         case Const(lit) => Console.YELLOW + lit.idStr + Console.RESET
-        case Ref(id) => id.pp
+        case Ref(id) =>
+          // id.pp
+          id.pp + "^" + uid
         case Call(lhs, rhs) => s"(${lhs.pp} ${rhs.pp})"
         case Ctor(name, args) =>
           s"${Console.BLUE}[$name${Console.RESET}${args.map(" " + _.pp).mkString + Console.BLUE}]${Console.RESET}"

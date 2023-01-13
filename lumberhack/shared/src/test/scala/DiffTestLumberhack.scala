@@ -21,7 +21,8 @@ class DiffTestLumberhack extends DiffTests {
     }
     val originalProgram = Program.fromPgrm(Pgrm(filteredEntities))
     val constraints = d(originalProgram)
-    output(originalProgram.pp(using true))
+    // output(originalProgram.pp(using true))
+    output(originalProgram.pp)
     output("<<<<<<<<<< Original <<<<<<<<<<")
     try {
       d.resolveConstraints

@@ -28,7 +28,7 @@ class DiffTestLumberhack extends DiffTests {
       d.resolveConstraints
       output("\n------- recursive -------")
       d.recursiveConstr._3.foreach { r =>
-        output(s"${r._1._1.s.pp} <: ${r._1._2.s.pp}")
+        output(s"${r._1._1.pp} <: ${r._1._2.pp}")
         r._2.foreach { p =>
           val origin = s"${p._1.pp}  --->  ${p._2.pp}"
           // val annihilated = s"${p._1.annihilated.pp}  --->  ${p._2.annihilated.pp}"

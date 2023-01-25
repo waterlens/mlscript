@@ -52,12 +52,12 @@ case class Strat[+T <: (ProdStratEnum | ConsStratEnum)](val s: T)(val path: Path
   def updatePath(newPath: Path): Strat[T] = this.copy()(path = newPath)
   def addPath(newPath: Path): Strat[T] = this.updatePath(newPath ::: this.path)
   lazy val negPath = this.copy()(path = path.neg)
-  lazy val pp: Str = s"(${path.pp}: ${s.pp})"
+  def pp(using showPath: Bool = false): Str = if showPath then s"(${path.pp}: ${s.pp})" else s.pp
 }
 
 trait ToStrat[+T <: (ProdStratEnum | ConsStratEnum)] { self: T =>
   def toStrat(p: Path = Path(Nil)): Strat[T] = Strat(this)(p)
-  lazy val pp: Str
+  def pp(using showPath: Bool): Str
 }
 
 type ProdStrat = Strat[ProdStratEnum]
@@ -70,7 +70,7 @@ enum ProdStratEnum(using val euid: ExprId) extends ToStrat[ProdStratEnum] {
   case ProdFun(lhs: ConsStrat, rhs: ProdStrat)(using ExprId) extends ProdStratEnum with ToStrat[ProdFun]
   case ProdVar(uid: Uid[TypeVar], name: String)(using ExprId) extends ProdStratEnum with ToStrat[ProdVar]
 
-  lazy val pp: Str = this match
+  def pp(using showPath: Bool = false): Str = this match
     case NoProd() => "NoProd"
     case MkCtor(ctor, args) if args.length > 0 => s"${ctor.name}(${args.map(_.pp).mkString(", ")})"
     case MkCtor(ctor, _) => ctor.name
@@ -85,7 +85,7 @@ enum ConsStratEnum(using val euid: ExprId) extends ToStrat[ConsStratEnum] {
   case ConsFun(lhs: ProdStrat, rhs: ConsStrat)(using ExprId) extends ConsStratEnum with ToStrat[ConsFun]
   case ConsVar(uid: Uid[TypeVar], name: String)(using ExprId) extends ConsStratEnum with ToStrat[ConsVar]
 
-  lazy val pp: Str = this match
+  def pp(using showPath: Bool = false): Str = this match
     case NoCons() => "NoCons"
     case Destruct(x) => s"Destruct(${x.map(_.pp).mkString(", ")})"
     case ConsFun(l, r) => s"${l.pp} => ${r.pp}"

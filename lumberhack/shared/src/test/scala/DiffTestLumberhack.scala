@@ -26,7 +26,7 @@ class DiffTestLumberhack extends DiffTests {
     output("<<<<<<<<<< Original <<<<<<<<<<")
     try {
       d.resolveConstraints
-      output("\n------- recursive -------")
+      output("\n------- knots -------")
       d.recursiveConstr._3.foreach { r =>
         output(s"${r._1._1.pp} <: ${r._1._2.pp}")
         r._2.foreach { p =>

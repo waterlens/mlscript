@@ -46,7 +46,7 @@ enum Expr(using val deforest: Deforest) {
   val uid: Uid[Expr] = deforest.euid.nextUid
   deforest.exprs += uid -> this
   
-  def pp(using level: Int = 1, showUids: Bool = false): Str =
+  def pp(using showUids: Bool = false): Str =
     val res: fansi.Str = (if (showUids) Console.CYAN + uid.toString + ": " + Console.RESET else "") + (
       this match
         case Const(lit) => Console.YELLOW + lit.idStr + Console.RESET
@@ -55,21 +55,19 @@ enum Expr(using val deforest: Deforest) {
         case Ctor(name, args) =>
           s"${Console.BLUE}[$name${Console.RESET}${args.map(" " + _.pp).mkString + Console.BLUE}]${Console.RESET}"
         case LetIn(id, rhs, body) => {
-          val rhsStr = rhs.pp(using level + 1, showUids)
-          val inStr = if rhsStr.linesIterator.length == 1 then "in" else ("\n" + "\t" * level + "in")
-          val bodyStr = body match {
-            case b: LetIn => body.pp
-            case _ => body.pp(using level + 1, showUids)
+          val rhsStr = rhs match {
+            case r: LetIn => "\n\t" + rhs.pp.linesIterator.map("\t" + _).mkString("\n").dropWhile(_ == '\t')
+            case _ => rhs.pp
           }
-          "\n" + "\t" * level +
-          s"${Console.BOLD}let${Console.RESET} ${id.pp} = ${rhsStr} ${Console.BOLD}" +
-          inStr +
-          s"${Console.RESET} ${bodyStr}"
+          s"${Console.BOLD}let${Console.RESET} ${id.pp} = ${rhsStr}" + s"\n${Console.BOLD}in${Console.RESET} ${body.pp}"
         }
-        case Match(scrut, arms) => s"${Console.BOLD}case${Console.RESET} ${scrut.pp} ${Console.BOLD}of${Console.RESET} {${arms.map {
-            case (v, ids, e) =>
-              s"${Console.BLUE + v.name + Console.RESET}${ids.map(id => " " + id.pp).mkString} -> ${e.pp}"
-          }.mkString(" | ")}}"
+        case Match(scrut, arms) => s"${Console.BOLD}case${Console.RESET} ${scrut.pp} ${Console.BOLD}of${Console.RESET} {${
+          "\n\t" + arms.map { case (v, ids, e) =>
+            s"${Console.BLUE + v.name + Console.RESET}${ids.map(" " + _.pp).mkString} => ${
+              e.pp.linesIterator.map("\t" + _).mkString("\n").dropWhile(_ == '\t')
+            }"
+          }.mkString("\n\t| ")
+        }}"
         case Function(param, body) => s"(${Console.BOLD}fun${Console.RESET} ${param.pp} -> ${body.pp})"
         case IfThenElse(scrut, thenn, elze) => 
           s"${Console.BOLD}if${Console.RESET} ${scrut.pp} ${Console.BOLD}then${Console.RESET} " +

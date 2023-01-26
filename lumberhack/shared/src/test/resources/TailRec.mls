@@ -13,12 +13,16 @@ count(0, rev(N, N))
 //│ |#fun| |count|(|c|,| |xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |count|(|add|(|c|,| |1|)|,| |t|)|↵|N| |#then| |c|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|count|(|0|,| |rev|(|N|,| |N|)|)|
 //│ Parsed: {fun count = c, xs, => if xs is ‹(C (h, t,)) then count (add (c, 1,), t,); (N) then c›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; count (0, rev (N, N,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def count:6 = (fun c:8 -> (fun xs:9 -> case xs:9^1 of {C h:10 t:11 -> ((count:6^2 ((add:4^3 c:8^4) 1)) t:11^9) | N -> c:8^11}))
-//│ def rev:7 = (fun a:12 -> (fun ys:13 -> case ys:13^15 of {C h1:14 t1:15 -> ((rev:7^16 [C h1:14^17 a:12^18]) t1:15^21) | N -> a:12^23}))
+//│ def count:6 = (fun c:8 -> (fun xs:9 -> case xs:9^1 of {
+//│ 	C h:10 t:11 => ((count:6^2 ((add:4^3 c:8^4) 1)) t:11^9)
+//│ 	| N => c:8^11}))
+//│ def rev:7 = (fun a:12 -> (fun ys:13 -> case ys:13^15 of {
+//│ 	C h1:14 t1:15 => ((rev:7^16 [C h1:14^17 a:12^18]) t1:15^21)
+//│ 	| N => a:12^23}))
 //│ ((count:6^27 0) ((rev:7^30 [N]) [N]))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ ------- recursive -------
+//│ ------- knots -------
 //│ Int <: 10'12_matchres
 //│ 	[+count:6^2 · -count:6^2]  --->  [+count:6^2]
 //│ C(13'h1, 11'a) <: 3'xs
@@ -44,13 +48,17 @@ count(rev(N, init))(0)
 //│ |#fun| |count|(|xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |c| |=>| |count|(|t|)|(|add|(|c|,| |1|)|)|↵|N| |#then| |c| |=>| |c|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|#fun| |init| |#=| |N|↵|count|(|rev|(|N|,| |init|)|)|(|0|)|
 //│ Parsed: {fun count = xs, => if xs is ‹(C (h, t,)) then c, => count (t,) (add (c, 1,),); (N) then c, => c›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; fun init = N; count (rev (N, init,),) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def count:6 = (fun xs:9 -> case xs:9^1 of {C h:10 t:11 -> (fun c:12 -> ((count:6^2 t:11^3) ((add:4^5 c:12^6) 1))) | N -> (fun c:13 -> c:13^12)})
-//│ def rev:7 = (fun a:14 -> (fun ys:15 -> case ys:15^16 of {C h1:16 t1:17 -> ((rev:7^17 [C h1:16^18 a:14^19]) t1:17^22) | N -> a:14^24}))
+//│ def count:6 = (fun xs:9 -> case xs:9^1 of {
+//│ 	C h:10 t:11 => (fun c:12 -> ((count:6^2 t:11^3) ((add:4^5 c:12^6) 1)))
+//│ 	| N => (fun c:13 -> c:13^12)})
+//│ def rev:7 = (fun a:14 -> (fun ys:15 -> case ys:15^16 of {
+//│ 	C h1:16 t1:17 => ((rev:7^17 [C h1:16^18 a:14^19]) t1:17^22)
+//│ 	| N => a:14^24}))
 //│ def init:8 = [N]
 //│ ((count:6^29 ((rev:7^30 [N]) init:8^33)) 0)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ ------- recursive -------
+//│ ------- knots -------
 //│ N <: 18'23_callres
 //│ 	[+rev:7^30 · -rev:7^17 · -rev:7^17]  --->  [+rev:7^30 · -rev:7^17]
 //│ Int <: 10'10_callres
@@ -74,12 +82,16 @@ idxSum(0, rev(N, N))
 //│ |#fun| |idxSum|(|i|,| |xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |add|(|i|,| |idxSum|(|add|(|i|,| |1|)|,| |t|)|)|↵|N| |#then| |0|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|idxSum|(|0|,| |rev|(|N|,| |N|)|)|
 //│ Parsed: {fun idxSum = i, xs, => if xs is ‹(C (h, t,)) then add (i, idxSum (add (i, 1,), t,),); (N) then 0›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; idxSum (0, rev (N, N,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def idxSum:6 = (fun i:8 -> (fun xs:9 -> case xs:9^1 of {C h:10 t:11 -> ((add:4^2 i:8^3) ((idxSum:6^5 ((add:4^6 i:8^7) 1)) t:11^12)) | N -> 0}))
-//│ def rev:7 = (fun a:12 -> (fun ys:13 -> case ys:13^19 of {C h1:14 t1:15 -> ((rev:7^20 [C h1:14^21 a:12^22]) t1:15^25) | N -> a:12^27}))
+//│ def idxSum:6 = (fun i:8 -> (fun xs:9 -> case xs:9^1 of {
+//│ 	C h:10 t:11 => ((add:4^2 i:8^3) ((idxSum:6^5 ((add:4^6 i:8^7) 1)) t:11^12))
+//│ 	| N => 0}))
+//│ def rev:7 = (fun a:12 -> (fun ys:13 -> case ys:13^19 of {
+//│ 	C h1:14 t1:15 => ((rev:7^20 [C h1:14^21 a:12^22]) t1:15^25)
+//│ 	| N => a:12^27}))
 //│ ((idxSum:6^31 0) ((rev:7^34 [N]) [N]))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ ------- recursive -------
+//│ ------- knots -------
 //│ C(15'h1, 13'a) <: 3'xs
 //│ 	[+rev:7^20 · +rev:7^20 · +rev:7^20 · -rev:7^20 · -rev:7^34 · +idxSum:6^31 · +idxSum:6^5 · +idxSum:6^5]  --->  [+rev:7^20 · +rev:7^20 · -rev:7^20 · -rev:7^34 · +idxSum:6^31 · +idxSum:6^5]
 //│ 	[+rev:7^20 · +rev:7^20 · +rev:7^20 · -rev:7^34 · +idxSum:6^31 · +idxSum:6^5 · +idxSum:6^5]  --->  [+rev:7^20 · +rev:7^20 · -rev:7^34 · +idxSum:6^31 · +idxSum:6^5]
@@ -102,13 +114,17 @@ count(rev(N, init))
 //│ |#fun| |count|(|xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |add|(|1|,| |count|(|t|)|)|↵|N| |#then| |0|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|#fun| |init| |#=| |N|↵|count|(|rev|(|N|,| |init|)|)|
 //│ Parsed: {fun count = xs, => if xs is ‹(C (h, t,)) then add (1, count (t,),); (N) then 0›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; fun init = N; count (rev (N, init,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def count:6 = (fun xs:9 -> case xs:9^1 of {C h:10 t:11 -> ((add:4^2 1) (count:6^5 t:11^6)) | N -> 0})
-//│ def rev:7 = (fun a:12 -> (fun ys:13 -> case ys:13^12 of {C h1:14 t1:15 -> ((rev:7^13 [C h1:14^14 a:12^15]) t1:15^18) | N -> a:12^20}))
+//│ def count:6 = (fun xs:9 -> case xs:9^1 of {
+//│ 	C h:10 t:11 => ((add:4^2 1) (count:6^5 t:11^6))
+//│ 	| N => 0})
+//│ def rev:7 = (fun a:12 -> (fun ys:13 -> case ys:13^12 of {
+//│ 	C h1:14 t1:15 => ((rev:7^13 [C h1:14^14 a:12^15]) t1:15^18)
+//│ 	| N => a:12^20}))
 //│ def init:8 = [N]
 //│ (count:6^25 ((rev:7^26 [N]) init:8^29))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ ------- recursive -------
+//│ ------- knots -------
 //│ C(12'h1, 10'a) <: 3'xs
 //│ 	[+rev:7^13 · +rev:7^13 · +rev:7^13 · -rev:7^13 · -rev:7^26 · +count:6^25 · +count:6^5 · +count:6^5]  --->  [+rev:7^13 · +rev:7^13 · -rev:7^13 · -rev:7^26 · +count:6^25 · +count:6^5]
 //│ 	[+rev:7^13 · +rev:7^13 · +rev:7^13 · -rev:7^26 · +count:6^25 · +count:6^5 · +count:6^5]  --->  [+rev:7^13 · +rev:7^13 · -rev:7^26 · +count:6^25 · +count:6^5]
@@ -126,12 +142,14 @@ rev(N, init)
 //│ |#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|#fun| |init| |#=| |C|(|0|,| |init|)|↵|rev|(|N|,| |init|)|
 //│ Parsed: {fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; fun init = C (0, init,); rev (N, init,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def rev:6 = (fun a:8 -> (fun ys:9 -> case ys:9^1 of {C h1:10 t1:11 -> ((rev:6^2 [C h1:10^3 a:8^4]) t1:11^7) | N -> a:8^9}))
+//│ def rev:6 = (fun a:8 -> (fun ys:9 -> case ys:9^1 of {
+//│ 	C h1:10 t1:11 => ((rev:6^2 [C h1:10^3 a:8^4]) t1:11^7)
+//│ 	| N => a:8^9}))
 //│ def init:7 = [C 0 init:7^14]
 //│ ((rev:6^16 [N]) init:7^19)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ ------- recursive -------
+//│ ------- knots -------
 //│ C(Int, 1'init) <: 3'ys
 //│ 	[-init:7^14 · -init:7^14 · -init:7^19 · +rev:6^16 · +rev:6^2 · +rev:6^2]  --->  [-init:7^14 · -init:7^19 · +rev:6^16 · +rev:6^2]
 //│ N <: 7'8_callres
@@ -146,12 +164,13 @@ rev(N, init)
 //│ |#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|←|↵|#fun| |init| |#=| |C|(|0|,| |init|)|↵|rev|(|N|,| |init|)|
 //│ Parsed: {fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,)›; fun init = C (0, init,); rev (N, init,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def rev:6 = (fun a:8 -> (fun ys:9 -> case ys:9^1 of {C h1:10 t1:11 -> ((rev:6^2 [C h1:10^3 a:8^4]) t1:11^7)}))
+//│ def rev:6 = (fun a:8 -> (fun ys:9 -> case ys:9^1 of {
+//│ 	C h1:10 t1:11 => ((rev:6^2 [C h1:10^3 a:8^4]) t1:11^7)}))
 //│ def init:7 = [C 0 init:7^13]
 //│ ((rev:6^15 [N]) init:7^18)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ ------- recursive -------
+//│ ------- knots -------
 //│ C(Int, 1'init) <: 3'ys
 //│ 	[-init:7^13 · -init:7^13 · -init:7^18 · +rev:6^15 · +rev:6^2 · +rev:6^2]  --->  [-init:7^13 · -init:7^18 · +rev:6^15 · +rev:6^2]
 
@@ -161,9 +180,11 @@ fun c(x) = if x is
 //│ |#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |c|(|a|)|↵|N| |#then| |N|←|
 //│ Parsed: {fun c = x, => if x is ‹(C (a,)) then c (a,); (N) then N›}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def c:6 = (fun x:7 -> case x:7^1 of {C a:8 -> (c:6^2 a:8^3) | N -> [N]})
+//│ def c:6 = (fun x:7 -> case x:7^1 of {
+//│ 	C a:8 => (c:6^2 a:8^3)
+//│ 	| N => [N]})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ ------- recursive -------
+//│ ------- knots -------
 //│ N <: 3'4_callres
 //│ 	[-c:6^2 · -c:6^2]  --->  [-c:6^2]

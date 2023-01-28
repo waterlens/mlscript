@@ -183,6 +183,7 @@ class Deforest(debug: Boolean) {
 
   var constraints: Ls[Cnstr] = Nil
   val exprs: mutable.Map[ExprId, Expr] = mutable.Map.empty
+  val varsName = mutable.Map.empty[Uid[TypeVar], Str]
   
   val vuid = Uid.TypeVar.State()
   val iuid = Uid.Ident.State()
@@ -194,6 +195,7 @@ class Deforest(debug: Boolean) {
     val vid = vuid.nextUid
     val pv = ProdVar(vid, n)(using noExprId)
     val cv = ConsVar(vid, n)(using noExprId)
+    varsName += vid -> pv.pp
     log(s"fresh var ${pv.pp}")
     (pv, cv)
   

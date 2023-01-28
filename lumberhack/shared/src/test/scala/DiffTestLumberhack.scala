@@ -25,12 +25,13 @@ class DiffTestLumberhack extends DiffTests {
     output(originalProgram.pp)
     output("<<<<<<<<<< Original <<<<<<<<<<")
 
-    output(">>>>>>>>>> initial constraints >>>>>>>>>>")
+    output("\n>>>>>>>>>> initial constraints >>>>>>>>>>")
     output(d.constraints.map((p, c) => s"${p.pp(using true)} <: ${c.pp(using true)}").mkString("\n"))
     output("<<<<<<<<<< initial constraints <<<<<<<<<<")
     try {
       d.resolveConstraints
-      output("\n------- knots -------")
+
+      output("\n>>>>>>> knots >>>>>>>")
       d.recursiveConstr._3.foreach { r =>
         output(s"${r._1._1.pp} <: ${r._1._2.pp}")
         r._2.foreach { p =>
@@ -39,6 +40,20 @@ class DiffTestLumberhack extends DiffTests {
           output(s"\t${p._1.pp}  --->  ${p._2.pp}")
         }
       }
+      output("<<<<<<< knots <<<<<<<")
+
+      output("\n>>>>>>> type variable bounds >>>>>>>")
+      val tvs = d.upperBounds.keySet ++ d.lowerBounds.keySet
+      tvs.foreach { tv =>
+        val ub = d.upperBounds(tv).map(u => s"${u._1.rev.pp} < ${u._2.pp(using true)}")
+        val lb = d.lowerBounds(tv).map(l => s"${l._2.pp(using true)} < ${l._1.pp}")
+        val tvName = d.varsName(tv)
+        output(tvName + ":")
+        ub.foreach(u => output(s"\t${tvName}${u}"))
+        lb.foreach(l => output(s"\t${l}${tvName}"))
+        output("--------------")
+      }
+      output("<<<<<<< type variable bounds <<<<<<<")
       // output(("------- defInstance -------"))
       // d.defInstances.foreach { case (p, xs) =>
       //   output((pprint2(p._1).plainText + " ==> " + pprint2(p._2).plainText + ":"))

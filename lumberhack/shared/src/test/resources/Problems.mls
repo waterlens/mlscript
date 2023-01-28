@@ -16,6 +16,13 @@ c(p)
 //│ 	C a:9 => a:9^5})
 //│ (c:7^8 p:6^9)
 //│ <<<<<<<<<< Original <<<<<<<<<<
+//│ >>>>>>>>>> initial constraints >>>>>>>>>>
+//│ ([c:7^8]: 1'c) <: ([]: ([p:6^9]: 0'p) => ([]: 5'10_callres))
+//│ ([]: ([]: 2'x) => ([]: 4'6_matchres)) <: ([]: 1'c)
+//│ ([]: 3'a) <: ([]: 4'6_matchres)
+//│ ([]: C(([]: 2'x))) <: ([]: Destruct(C(3'a)))
+//│ ([]: C(([p:6^1]: 0'p))) <: ([]: 0'p)
+//│ <<<<<<<<<< initial constraints <<<<<<<<<<
 //│ 
 //│ ------- knots -------
 
@@ -34,6 +41,14 @@ c(p)
 //│ 	Pair a:9 b:10 => (c:7^5 [Pair b:10^6 a:9^7])})
 //│ (c:7^12 p:6^13)
 //│ <<<<<<<<<< Original <<<<<<<<<<
+//│ >>>>>>>>>> initial constraints >>>>>>>>>>
+//│ ([c:7^12]: 1'c) <: ([]: ([p:6^13]: 0'p) => ([]: 7'14_callres))
+//│ ([]: ([]: 2'x) => ([]: 6'10_matchres)) <: ([]: 1'c)
+//│ ([]: 5'9_callres) <: ([]: 6'10_matchres)
+//│ ([]: 2'x) <: ([]: Destruct(Pair(3'a, 4'b)))
+//│ ([c:7^5]: 1'c) <: ([]: ([]: Pair(([]: 4'b), ([]: 3'a))) => ([]: 5'9_callres))
+//│ ([]: Pair(([]: A), ([]: B))) <: ([]: 0'p)
+//│ <<<<<<<<<< initial constraints <<<<<<<<<<
 //│ 
 //│ ------- knots -------
 //│ B <: 4'b
@@ -59,6 +74,15 @@ c(p)
 //│ 	| Wrap a:9 => (c:7^5 [Wrap (primitive:3^6 a:9^7)])})
 //│ (c:7^13 p:6^14)
 //│ <<<<<<<<<< Original <<<<<<<<<<
+//│ >>>>>>>>>> initial constraints >>>>>>>>>>
+//│ ([c:7^13]: 1'c) <: ([]: ([p:6^14]: 0'p) => ([]: 7'15_callres))
+//│ ([]: ([]: 2'x) => ([]: 6'11_matchres)) <: ([]: 1'c)
+//│ ([]: 5'10_callres) <: ([]: 6'11_matchres)
+//│ ([]: Int) <: ([]: 6'11_matchres)
+//│ ([]: 2'x) <: ([]: Destruct(N, Wrap(3'a)))
+//│ ([c:7^5]: 1'c) <: ([]: ([]: Wrap(([]: 4'8_callres))) => ([]: 5'10_callres))
+//│ ([]: Wrap(([]: Int))) <: ([]: 0'p)
+//│ <<<<<<<<<< initial constraints <<<<<<<<<<
 //│ 
 //│ ------- knots -------
 //│ Int <: 5'10_callres
@@ -76,6 +100,14 @@ c(0)
 //│ 	| False => (c:6^5 (primitive:3^6 x:7^7))})
 //│ (c:6^12 0)
 //│ <<<<<<<<<< Original <<<<<<<<<<
+//│ >>>>>>>>>> initial constraints >>>>>>>>>>
+//│ ([c:6^12]: 0'c) <: ([]: ([]: Int) => ([]: 6'14_callres))
+//│ ([]: ([]: 1'x) => ([]: 5'10_matchres)) <: ([]: 0'c)
+//│ ([]: 4'9_callres) <: ([]: 5'10_matchres)
+//│ ([]: Int) <: ([]: 5'10_matchres)
+//│ ([]: 2'3_callres) <: ([]: Destruct(True, False))
+//│ ([c:6^5]: 0'c) <: ([]: ([]: 3'8_callres) => ([]: 4'9_callres))
+//│ <<<<<<<<<< initial constraints <<<<<<<<<<
 //│ 
 //│ ------- knots -------
 //│ Int <: 4'9_callres
@@ -106,6 +138,23 @@ map(ff, l)
 //│ def l:8 = [C [K] [C [KK] [C [KKKK] [N]]]]
 //│ ((map:6^28 ff:7^29) l:8^31)
 //│ <<<<<<<<<< Original <<<<<<<<<<
+//│ >>>>>>>>>> initial constraints >>>>>>>>>>
+//│ ([]: 13'30_callres) <: ([]: ([l:8^31]: 2'l) => ([]: 14'32_callres))
+//│ ([map:6^28]: 0'map) <: ([]: ([ff:7^29]: 1'ff) => ([]: 13'30_callres))
+//│ ([]: C(([]: K), ([]: C(([]: KK), ([]: C(([]: KKKK), ([]: N))))))) <: ([]: 2'l)
+//│ ([]: ([]: 11'x) => ([]: 12'19_matchres)) <: ([]: 1'ff)
+//│ ([]: TTTT) <: ([]: 12'19_matchres)
+//│ ([]: TT) <: ([]: 12'19_matchres)
+//│ ([]: T) <: ([]: 12'19_matchres)
+//│ ([]: 11'x) <: ([]: Destruct(K, KK, KKKK))
+//│ ([]: ([]: 3'f) => ([]: ([]: 4'ls) => ([]: 10'12_matchres))) <: ([]: 0'map)
+//│ ([]: N) <: ([]: 10'12_matchres)
+//│ ([]: C(([]: 7'4_callres), ([]: 9'9_callres))) <: ([]: 10'12_matchres)
+//│ ([]: 4'ls) <: ([]: Destruct(C(5'h, 6't), N))
+//│ ([]: 8'7_callres) <: ([]: ([]: 6't) => ([]: 9'9_callres))
+//│ ([map:6^5]: 0'map) <: ([]: ([]: 3'f) => ([]: 8'7_callres))
+//│ ([]: 3'f) <: ([]: ([]: 5'h) => ([]: 7'4_callres))
+//│ <<<<<<<<<< initial constraints <<<<<<<<<<
 //│ 
 //│ ------- knots -------
 //│ 11'x => 12'19_matchres <: 3'f
@@ -133,6 +182,18 @@ last(p)
 //│ def p:7 = [C 1 [C 2 [N]]]
 //│ (last:6^17 p:7^18)
 //│ <<<<<<<<<< Original <<<<<<<<<<
+//│ >>>>>>>>>> initial constraints >>>>>>>>>>
+//│ ([last:6^17]: 0'last) <: ([]: ([p:7^18]: 1'p) => ([]: 10'19_callres))
+//│ ([]: C(([]: Int), ([]: C(([]: Int), ([]: N))))) <: ([]: 1'p)
+//│ ([]: ([]: 2'ls) => ([]: 9'10_matchres)) <: ([]: 0'last)
+//│ ([]: None) <: ([]: 9'10_matchres)
+//│ ([]: 8'8_matchres) <: ([]: 9'10_matchres)
+//│ ([]: 2'ls) <: ([]: Destruct(C(3'h, 4't), N))
+//│ ([]: 7'7_callres) <: ([]: 8'8_matchres)
+//│ ([]: Some(([]: 3'h))) <: ([]: 8'8_matchres)
+//│ ([]: 4't) <: ([]: Destruct(N, C(5'hh, 6'tt)))
+//│ ([last:6^5]: 0'last) <: ([]: ([]: 4't) => ([]: 7'7_callres))
+//│ <<<<<<<<<< initial constraints <<<<<<<<<<
 //│ 
 //│ ------- knots -------
 //│ Some(3'h) <: 7'7_callres
@@ -161,6 +222,28 @@ idxSum(rev(primitive, N))(0)
 //│ 	| C hh:16 tt:17 => ((rev:8^23 tt:17^24) [C hh:16^26 a:15^27])}))
 //│ ((idxSum:7^33 ((rev:8^34 primitive:3^35) [N])) 0)
 //│ <<<<<<<<<< Original <<<<<<<<<<
+//│ >>>>>>>>>> initial constraints >>>>>>>>>>
+//│ ([]: 24'39_callres) <: ([]: ([]: Int) => ([]: 25'41_callres))
+//│ ([idxSum:7^33]: 1'idxSum) <: ([]: ([]: 23'38_callres) => ([]: 24'39_callres))
+//│ ([]: 22'36_callres) <: ([]: ([]: N) => ([]: 23'38_callres))
+//│ ([rev:8^34]: 2'rev) <: ([]: ([]: NoProd) => ([]: 22'36_callres))
+//│ ([]: ([]: 15'lss) => ([]: ([]: 16'a) => ([]: 21'30_matchres))) <: ([]: 2'rev)
+//│ ([]: 20'29_callres) <: ([]: 21'30_matchres)
+//│ ([]: 16'a) <: ([]: 21'30_matchres)
+//│ ([]: 15'lss) <: ([]: Destruct(N, C(17'hh, 18'tt)))
+//│ ([]: 19'25_callres) <: ([]: ([]: C(([]: 17'hh), ([]: 16'a))) => ([]: 20'29_callres))
+//│ ([rev:8^23]: 2'rev) <: ([]: ([]: 18'tt) => ([]: 19'25_callres))
+//│ ([]: ([]: 3'ls) => ([]: 14'19_matchres)) <: ([]: 1'idxSum)
+//│ ([]: ([]: 7'acc) => ([]: 13'17_callres)) <: ([]: 14'19_matchres)
+//│ ([]: ([]: 4'acc) => ([]: Int)) <: ([]: 14'19_matchres)
+//│ ([]: 3'ls) <: ([]: Destruct(N, C(5'h, 6't)))
+//│ ([]: 8'7_callres) <: ([]: ([]: 12'16_callres) => ([]: 13'17_callres))
+//│ ([]: 9'10_callres) <: ([]: ([]: 11'15_callres) => ([]: 12'16_callres))
+//│ ([]: 10'13_callres) <: ([]: ([]: Int) => ([]: 11'15_callres))
+//│ ([]: ([]: Destruct(Int)) => ([]: ([]: Destruct(Int)) => ([]: Int))) <: ([]: ([]: 7'acc) => ([]: 10'13_callres))
+//│ ([idxSum:7^8]: 1'idxSum) <: ([]: ([]: 6't) => ([]: 9'10_callres))
+//│ ([]: ([]: Destruct(Int)) => ([]: ([]: Destruct(Int)) => ([]: Int))) <: ([]: ([]: 7'acc) => ([]: 8'7_callres))
+//│ <<<<<<<<<< initial constraints <<<<<<<<<<
 //│ 
 //│ ------- knots -------
 //│ N <: 20'29_callres
@@ -192,6 +275,21 @@ minuss(fst)(snd)
 //│ def snd:8 = [Z]
 //│ ((minuss:6^19 fst:7^20) snd:8^22)
 //│ <<<<<<<<<< Original <<<<<<<<<<
+//│ >>>>>>>>>> initial constraints >>>>>>>>>>
+//│ ([]: 12'21_callres) <: ([]: ([snd:8^22]: 2'snd) => ([]: 13'23_callres))
+//│ ([minuss:6^19]: 0'minuss) <: ([]: ([fst:7^20]: 1'fst) => ([]: 12'21_callres))
+//│ ([]: Z) <: ([]: 2'snd)
+//│ ([]: S(([]: S(([]: Z))))) <: ([]: 1'fst)
+//│ ([]: ([]: 3'a) => ([]: 11'13_matchres)) <: ([]: 0'minuss)
+//│ ([]: ([]: 10'n) => ([]: Z)) <: ([]: 11'13_matchres)
+//│ ([]: ([]: 5'b) => ([]: 9'9_matchres)) <: ([]: 11'13_matchres)
+//│ ([]: 3'a) <: ([]: Destruct(S(4'aa), Z))
+//│ ([]: 4'aa) <: ([]: 9'9_matchres)
+//│ ([]: 8'7_callres) <: ([]: 9'9_matchres)
+//│ ([]: 5'b) <: ([]: Destruct(S(6'bb), Z))
+//│ ([]: 7'5_callres) <: ([]: ([]: 6'bb) => ([]: 8'7_callres))
+//│ ([minuss:6^3]: 0'minuss) <: ([]: ([]: 4'aa) => ([]: 7'5_callres))
+//│ <<<<<<<<<< initial constraints <<<<<<<<<<
 //│ 
 //│ ------- knots -------
 //│ S(Z) <: 8'7_callres
@@ -224,6 +322,24 @@ minuss(fst)(snd)
 //│ def snd:9 = [Z]
 //│ ((minuss:6^27 fst:8^28) snd:9^30)
 //│ <<<<<<<<<< Original <<<<<<<<<<
+//│ >>>>>>>>>> initial constraints >>>>>>>>>>
+//│ ([]: 18'29_callres) <: ([]: ([snd:9^30]: 3'snd) => ([]: 19'31_callres))
+//│ ([minuss:6^27]: 0'minuss) <: ([]: ([fst:8^28]: 2'fst) => ([]: 18'29_callres))
+//│ ([]: Z) <: ([]: 3'snd)
+//│ ([]: S(([]: S(([]: Z))))) <: ([]: 2'fst)
+//│ ([]: ([]: 11'b) => ([]: 17'21_matchres)) <: ([]: 1'checkb)
+//│ ([]: ([]: 16'aaa) => ([]: 16'aaa)) <: ([]: 17'21_matchres)
+//│ ([]: ([]: 13'aaa) => ([]: 15'17_callres)) <: ([]: 17'21_matchres)
+//│ ([]: 11'b) <: ([]: Destruct(S(12'bb), Z))
+//│ ([]: 14'15_callres) <: ([]: ([]: 12'bb) => ([]: 15'17_callres))
+//│ ([minuss:6^13]: 0'minuss) <: ([]: ([]: 13'aaa) => ([]: 14'15_callres))
+//│ ([]: ([]: 4'a) => ([]: 10'10_matchres)) <: ([]: 0'minuss)
+//│ ([]: ([]: 9'n) => ([]: Z)) <: ([]: 10'10_matchres)
+//│ ([]: ([]: 6'b) => ([]: 8'6_callres)) <: ([]: 10'10_matchres)
+//│ ([]: 4'a) <: ([]: Destruct(S(5'aa), Z))
+//│ ([]: 7'4_callres) <: ([]: ([]: 5'aa) => ([]: 8'6_callres))
+//│ ([checkb:7^2]: 1'checkb) <: ([]: ([]: 6'b) => ([]: 7'4_callres))
+//│ <<<<<<<<<< initial constraints <<<<<<<<<<
 //│ 
 //│ ------- knots -------
 //│ S(Z) <: 8'6_callres

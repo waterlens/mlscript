@@ -12,21 +12,38 @@ type TypeVar
 type NormalPathElem
 type StarPathElem
 type PathElemType = NormalPathElem | StarPathElem
+enum PathElemPol {
+  case In
+  case Out
+  case Neu
+  lazy val neg = this match
+    case In => Out
+    case Out => In
+    case Neu => Neu
+  lazy val pp = this match
+    case In => "+"
+    case Out => "-"
+    case Neu => ""
+  def canCancel(other: PathElemPol) = (this, other) match
+    case (In, Out) | (Out, In) => true
+    case (Neu, _) | (_, Neu) => lastWords("cannot neu")
+    case _ => false
+}
 enum PathElem[+T <: PathElemType] {
-  case Normal(name: Ref, uid: Uid[Expr])(val pol: Boolean) extends PathElem[NormalPathElem]
+  case Normal(name: Ref, uid: Uid[Expr])(val pol: PathElemPol) extends PathElem[NormalPathElem]
   case Star(elms: List[PathElem[NormalPathElem]]) extends PathElem[StarPathElem]
 
   def neg: PathElem[T] = this match
-    case n: Normal => n.copy()(pol = !n.pol)
+    case n: Normal => n.copy()(pol = n.pol.neg)
     case s: Star => s.copy(elms = s.elms.map(_.neg))
   def rev: PathElem[T] = this match
     case n: Normal => n
     case s: Star => s.copy(elms = s.elms.reverse)
   lazy val pp: Str = this match
-    case n@Normal(r@Ref(Ident(_, Var(nme), uid)), _) => s"${if n.pol then "+" else "-"}$nme:${uid}^${r.uid}"
+    case n@Normal(r@Ref(Ident(_, Var(nme), uid)), _) => s"${n.pol.pp}$nme:${uid}^${r.uid}"
     case Star(elms) => s"{${elms.map(_.pp).mkString(" · ")}}*"
   def canCancel[V <: PathElemType](other: PathElem[V]): Boolean = (this, other) match
-    case (n: Normal, o: Normal) => (n == o) && (n.pol ^ o.pol)
+    case (n: Normal, o: Normal) => (n == o) && (n.pol.canCancel(o.pol))
     case _ => ???
 }
 case class Path(p: Ls[PathElem[PathElemType]]) {
@@ -35,6 +52,12 @@ case class Path(p: Ls[PathElem[PathElemType]]) {
   // TODO: merge two consecutive identical stars during concatenation
   def ::: (other: Path) = Path(other.p ::: p)
   def map(f: PathElem[PathElemType] => PathElem[PathElemType]) = Path(p.map(f))
+  lazy val inBoundary = this.p match
+    case (h: PathElem.Normal) :: Nil if h.pol == PathElemPol.Neu => Some(Path(h.copy()(pol = PathElemPol.In) :: Nil))
+    case _ => None
+  lazy val outBoundary = this.p match
+    case (h: PathElem.Normal) :: Nil if h.pol == PathElemPol.Neu => Some(Path(h.copy()(pol = PathElemPol.Out) :: Nil))
+    case _ => None
   lazy val pp: Str = s"[${p.map(_.pp).mkString(" · ")}]"
   lazy val annihilated: Path =
     def anni(i: Ls[PathElem[PathElemType]], o: Ls[PathElem[PathElemType]]): Path = (i, o) match
@@ -43,6 +66,10 @@ case class Path(p: Ls[PathElem[PathElemType]]) {
       case (h :: t, h2 :: t2) => if h.canCancel(h2) then anni(t, t2) else anni(t, h :: h2 :: t2)
       case (Nil, r) => Path(r.reverse)
     anni(this.p, Nil)
+  def validate = assert(p.forall(_ match {
+    case n: PathElem.Normal => n.pol != PathElemPol.Neu
+    case _ => true
+  }))
 }
 
 type ExprId = Uid[Expr]
@@ -52,6 +79,8 @@ case class Strat[+T <: (ProdStratEnum | ConsStratEnum)](val s: T)(val path: Path
   def updatePath(newPath: Path): Strat[T] = this.copy()(path = newPath)
   def addPath(newPath: Path): Strat[T] = this.updatePath(newPath ::: this.path)
   lazy val negPath = this.copy()(path = path.neg)
+  lazy val neuAsIn = this.copy()(path = path.inBoundary.getOrElse(path))
+  lazy val neuAsOut = this.copy()(path = path.outBoundary.getOrElse(path))
   def pp(using showPath: Bool = false): Str = if showPath then s"(${path.pp}: ${s.pp})" else s.pp
 }
 
@@ -183,7 +212,7 @@ class Deforest(debug: Boolean) {
         else
           NoProd()(using noExprId)
       }
-      case r @ Ref(id) => return if id.isDef then ctx(id).updatePath(Path(PathElem.Normal(r, r.uid)(false) :: Nil)) else ctx(id)
+      case r @ Ref(id) => return if id.isDef then ctx(id).updatePath(Path(PathElem.Normal(r, r.uid)(PathElemPol.Neu) :: Nil)) else ctx(id)
       case Call(f, a) =>
         val fp = process(f)
         val ap = process(a)
@@ -239,59 +268,40 @@ class Deforest(debug: Boolean) {
   def constrain(prod: ProdStrat, cons: ConsStrat): Unit = {
     (prod.s, cons.s) match
       case (NoProd(), _) | (_, NoCons()) => ()
-      case (p, c) => {
-        // assert(prod.path.p.length <= 1)
-        // assert(prod.path.pp.isEmpty || prod.path.pp.contains("-"))
-        // assert(cons.path.pp.isEmpty || cons.path.pp.contains("+"))
-        // assert(cons.path.pp.isEmpty)
-        constraints ::= (prod, cons)
-      }
+      case (p, c) => constraints ::= (prod, cons)
   }
   
   type Cache = Map[Cnstr, Cnstr]
 
   val recursiveConstr = (mutable.Set.empty[Path -> Path], mutable.Map.empty[Path, Path], mutable.Map.empty[Cnstr, mutable.Set[Path -> Path]])
   def resolveConstraints: Unit = {
-    
+
     def handle(c: Cnstr)(using cache: Cache): Unit = trace(s"handle [${c._1.pp} : ${c._2.pp}]") {
-      val (prod, cons) = c
-      
+      val prod = c._1.neuAsOut
+      val cons = c._2.neuAsIn
+      val currentCnstr = prod -> cons
+
       (prod.s, cons.s) match
-        case (_: ProdVar, _) | (_, _: ConsVar) => cache.get(c) match
+        case (_: ProdVar, _) | (_, _: ConsVar) => cache.get(currentCnstr) match
           case S(inCache) =>
-            log(s">> done [${c._1.pp} : ${c._2.pp}]")
+            log(s">> done [${prod.pp} : ${cons.pp}]")
             log(s">> with [${inCache._1.pp} : ${inCache._2.pp}]")
-            // recursiveConstr._1 += (c._1.path -> inCache._1.path)
-            // recursiveConstr._1 += (c._2.path -> inCache._2.path)
             
-            // recursiveConstr._2.get(c._1.path).map { p =>
-            //   assert(p == inCache._1.path, s"${c.path.pp} tied different knots: ${p.pp} ≠ ${inCache.path.pp}")
-            // }
-            // recursiveConstr._2.get(c._2.path).map { p =>
-            //   assert(p == inCache._2.path, s"${c.path.pp} tied different knots: ${p.pp} ≠ ${inCache.path.pp}")
-            // }
-            // recursiveConstr._2 += (c._1.path -> inCache._1.path)
-            // recursiveConstr._2 += (c._2.path -> inCache._2.path)
-            
-            recursiveConstr._3.updateWith(c) {
+            recursiveConstr._3.updateWith(currentCnstr) {
               case Some(m) =>
-                m += (c._1.path.rev ::: c._2.path) -> (inCache._1.path.rev ::: inCache._2.path)
-                // m += (c._1.path -> inCache._1.path)
-                // m += (c._2.path -> inCache._2.path)
+                m += (prod.path.rev ::: cons.path) -> (inCache._1.path.rev ::: inCache._2.path)
                 Some(m)
               case None => Some({
                 val m = mutable.Set.empty[Path -> Path]
-                m += (c._1.path.rev ::: c._2.path) -> (inCache._1.path.rev ::: inCache._2.path)
-                // m += (c._1.path -> inCache._1.path)
-                // m += (c._2.path -> inCache._2.path)
+                m += (prod.path.rev ::: cons.path) -> (inCache._1.path.rev ::: inCache._2.path)
                 m
               })
             }
             return
-          case N => //cache += c
+          case N => ()
         case _ => ()
 
-      given Cache = cache + (c -> c)
+      given Cache = cache + (currentCnstr -> currentCnstr)
 
       (prod.s, cons.s) match
         case (NoProd(), _) | (_, NoCons()) => ()
@@ -306,21 +316,21 @@ class Deforest(debug: Boolean) {
             prod.addPath(cons.path.rev) -> ub_strat.addPath(ub_path.rev)
           }))
         case (ProdFun(lhs1, rhs1), ConsFun(lhs2, rhs2)) =>
-          handle(lhs2.addPath(cons.path.neg) -> lhs1.addPath(prod.path.neg))
-          handle(rhs1.addPath(prod.path) -> rhs2.addPath(cons.path))
+          handle(lhs2.neuAsOut.addPath(cons.path.neg) -> lhs1.neuAsIn.addPath(prod.path.neg))
+          handle(rhs1.neuAsOut.addPath(prod.path) -> rhs2.neuAsIn.addPath(cons.path))
         case (MkCtor(ctor, args), Destruct(ds)) =>
           val d = ds.find(_.ctor === ctor).get
           assert(args.size === d.argCons.size)
           args lazyZip d.argCons foreach {
             case (a, c) =>
-              handle(a.addPath(prod.path), c.addPath(cons.path))
+              handle(a.neuAsOut.addPath(prod.path), c.neuAsIn.addPath(cons.path))
           }
         case (Sum(ctors), Destruct(ds)) => ctors.foreach { ctorStrat => ctorStrat.s match
           case MkCtor(ctor, args) => {
             val d = ds.find(_.ctor === ctor).get
             assert(args.size === d.argCons.size)
             args lazyZip d.argCons foreach {
-              case (a, c) => handle(a.addPath(prod.path ::: ctorStrat.path), c.addPath(cons.path))
+              case (a, c) => handle(a.neuAsOut.addPath(prod.path ::: ctorStrat.path), c.neuAsIn.addPath(cons.path))
             }
           }
         }

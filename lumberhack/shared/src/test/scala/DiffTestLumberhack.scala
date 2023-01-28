@@ -24,16 +24,19 @@ class DiffTestLumberhack extends DiffTests {
     // output(originalProgram.pp(using true))
     output(originalProgram.pp)
     output("<<<<<<<<<< Original <<<<<<<<<<")
+
+    output(">>>>>>>>>> initial constraints >>>>>>>>>>")
+    output(d.constraints.map((p, c) => s"${p.pp(using true)} <: ${c.pp(using true)}").mkString("\n"))
+    output("<<<<<<<<<< initial constraints <<<<<<<<<<")
     try {
       d.resolveConstraints
       output("\n------- knots -------")
       d.recursiveConstr._3.foreach { r =>
         output(s"${r._1._1.pp} <: ${r._1._2.pp}")
         r._2.foreach { p =>
-          val origin = s"${p._1.pp}  --->  ${p._2.pp}"
-          // val annihilated = s"${p._1.annihilated.pp}  --->  ${p._2.annihilated.pp}"
+          p._1.validate
+          p._2.validate
           output(s"\t${p._1.pp}  --->  ${p._2.pp}")
-          // if origin != annihilated then output(s"\t\t$annihilated")
         }
       }
       // output(("------- defInstance -------"))

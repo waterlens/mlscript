@@ -286,12 +286,12 @@ class Deforest(debug: Boolean) {
       case (p, c) => constraints ::= (prod, cons)
   }
   
-  type Cache = Map[Cnstr, Cnstr]
+  type Cache = Map[Cnstr, Cnstr -> Int]
 
   val recursiveConstr = (mutable.Set.empty[Path -> Path], mutable.Map.empty[Path, Path], mutable.Map.empty[Cnstr, mutable.Set[Path -> Path]])
   def resolveConstraints: Unit = {
 
-    def handle(c: Cnstr)(using cache: Cache): Unit = trace(s"handle [${c._1.pp} : ${c._2.pp}]") {
+    def handle(c: Cnstr)(using cache: Cache, numOfTypeCtor: Int): Unit = trace(s"handle [${c._1.pp} : ${c._2.pp}]") {
       val prod = c._1
       val cons = c._2
 
@@ -299,23 +299,25 @@ class Deforest(debug: Boolean) {
         case (_: ProdVar, _) | (_, _: ConsVar) => cache.get(c) match
           case S(inCache) =>
             log(s">> done [${prod.pp} : ${cons.pp}]")
-            log(s">> with [${inCache._1.pp} : ${inCache._2.pp}]")
-            
-            recursiveConstr._3.updateWith(c) {
-              case Some(m) =>
-                m += (prod.path.rev ::: cons.path) -> (inCache._1.path.rev ::: inCache._2.path)
-                Some(m)
-              case None => Some({
-                val m = mutable.Set.empty[Path -> Path]
-                m += (prod.path.rev ::: cons.path) -> (inCache._1.path.rev ::: inCache._2.path)
-                m
-              })
+            log(s">> with [${inCache._1._1.pp} : ${inCache._1._2.pp}]")
+            // register knots that actually pass through type ctors
+            if inCache._2 < numOfTypeCtor then {
+              recursiveConstr._3.updateWith(c) {
+                case Some(m) =>
+                  m += (prod.path.rev ::: cons.path) -> (inCache._1._1.path.rev ::: inCache._1._2.path)
+                  Some(m)
+                case None => Some({
+                  val m = mutable.Set.empty[Path -> Path]
+                  m += (prod.path.rev ::: cons.path) -> (inCache._1._1.path.rev ::: inCache._1._2.path)
+                  m
+                })
+              }
             }
             return
           case N => ()
         case _ => ()
 
-      given Cache = cache + (c -> c)
+      given Cache = cache + (c -> (c -> numOfTypeCtor))
 
       (prod.s, cons.s) match
         case (NoProd(), _) | (_, NoCons()) => ()
@@ -330,28 +332,33 @@ class Deforest(debug: Boolean) {
             prod.addPath(cons.path.rev).addPath(cv.asInPath.getOrElse(Path.empty)) -> ub_strat.addPath(ub_path)
           }))
         case (ProdFun(lhs1, rhs1), ConsFun(lhs2, rhs2)) =>
+          given Int = numOfTypeCtor + 1
           handle(lhs2.addPath(cons.path.neg) -> lhs1.addPath(prod.path.neg))
           handle(rhs1.addPath(prod.path) -> rhs2.addPath(cons.path))
         case (MkCtor(ctor, args), Destruct(ds)) =>
+          given Int = numOfTypeCtor + 1
           val d = ds.find(_.ctor === ctor).get
           assert(args.size === d.argCons.size)
           args lazyZip d.argCons foreach {
             case (a, c) =>
               handle(a.addPath(prod.path), c.addPath(cons.path))
           }
-        case (Sum(ctors), Destruct(ds)) => ctors.foreach { ctorStrat => ctorStrat.s match
-          case MkCtor(ctor, args) => {
-            val d = ds.find(_.ctor === ctor).get
-            assert(args.size === d.argCons.size)
-            args lazyZip d.argCons foreach {
-              case (a, c) => handle(a.addPath(prod.path ::: ctorStrat.path), c.addPath(cons.path))
+        case (Sum(ctors), Destruct(ds)) =>
+          given Int = numOfTypeCtor + 1
+          ctors.foreach { ctorStrat => ctorStrat.s match
+            case MkCtor(ctor, args) => {
+              val d = ds.find(_.ctor === ctor).get
+              assert(args.size === d.argCons.size)
+              args lazyZip d.argCons foreach {
+                case (a, c) => handle(a.addPath(prod.path ::: ctorStrat.path), c.addPath(cons.path))
+              }
             }
           }
-        }
         case _ => lastWords("type error")
     }()
     
     given Cache = Map.empty
+    given Int = 0
     
     constraints foreach handle
   }

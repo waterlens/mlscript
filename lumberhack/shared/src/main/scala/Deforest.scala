@@ -320,6 +320,7 @@ class Deforest(debug: Boolean) {
       given Cache = cache + (c -> (c -> numOfTypeCtor))
 
       (prod.s, cons.s) match
+        case (ProdVar(v, _), ConsVar(w, _)) if v === w => ()
         case (NoProd(), _) | (_, NoCons()) => ()
         case (pv@ProdVar(v, _), _) =>
           upperBounds += v -> ((pv.asOutPath.getOrElse(Path.empty) ::: prod.path.rev, cons) :: upperBounds(v))

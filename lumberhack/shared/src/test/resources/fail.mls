@@ -283,6 +283,8 @@ map(ff, l)
 //│ <<<<<<<<<< initial constraints <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
+//│ NoProd <: 6't
+//│ 	[-l:8^31 · +map:6^28 · +map:6^5 · +map:6^5 · +map:6^5 · +map:6^5]  --->  [-l:8^31 · +map:6^28 · +map:6^5 · +map:6^5 · +map:6^5]
 //│ <<<<<<< knots <<<<<<<
 //│ 
 //│ >>>>>>> type variable bounds >>>>>>>
@@ -293,6 +295,8 @@ map(ff, l)
 //│ --------------
 //│ 5'h:
 //│ 	5'h[] < ([-map:6^28 · +ff:7^29]: 11'x)
+//│ 	([+map:6^5 · +map:6^5 · +map:6^5 · +map:6^5 · +map:6^28 · -l:8^31]: NoProd) < []5'h
+//│ 	([+map:6^5 · +map:6^5 · +map:6^5 · +map:6^28 · -l:8^31]: NoProd) < []5'h
 //│ 	([+map:6^5 · +map:6^5 · +map:6^28 · -l:8^31]: KKKK) < []5'h
 //│ 	([+map:6^5 · +map:6^28 · -l:8^31]: KK) < []5'h
 //│ 	([+map:6^28 · -l:8^31]: K) < []5'h
@@ -313,6 +317,7 @@ map(ff, l)
 //│ --------------
 //│ 6't:
 //│ 	6't[] < ([+map:6^5]: 4'ls)
+//│ 	([+map:6^5 · +map:6^5 · +map:6^5 · +map:6^28 · -l:8^31]: NoProd) < []6't
 //│ 	([+map:6^5 · +map:6^5 · +map:6^28 · -l:8^31]: N) < []6't
 //│ 	([+map:6^5 · +map:6^28 · -l:8^31]: C(([]: KKKK), ([]: N))) < []6't
 //│ 	([+map:6^28 · -l:8^31]: C(([]: KK), ([]: C(([]: KKKK), ([]: N))))) < []6't
@@ -349,6 +354,8 @@ map(ff, l)
 //│ 	([+map:6^28 · -l:8^31]: K) < [-map:6^28 · +ff:7^29]11'x
 //│ 	([+map:6^5 · +map:6^28 · -l:8^31]: KK) < [-map:6^28 · +ff:7^29]11'x
 //│ 	([+map:6^5 · +map:6^5 · +map:6^28 · -l:8^31]: KKKK) < [-map:6^28 · +ff:7^29]11'x
+//│ 	([+map:6^5 · +map:6^5 · +map:6^5 · +map:6^28 · -l:8^31]: NoProd) < [-map:6^28 · +ff:7^29]11'x
+//│ 	([+map:6^5 · +map:6^5 · +map:6^5 · +map:6^5 · +map:6^28 · -l:8^31]: NoProd) < [-map:6^28 · +ff:7^29]11'x
 //│ --------------
 //│ 8'7_callres:
 //│ 	8'7_callres[] < ([]: ([]: 6't) => ([]: 9'9_callres))
@@ -356,6 +363,7 @@ map(ff, l)
 //│ --------------
 //│ 4'ls:
 //│ 	4'ls[] < ([]: Destruct(C(5'h, 6't), N))
+//│ 	([+map:6^5 · +map:6^5 · +map:6^5 · +map:6^28 · -l:8^31]: NoProd) < [+map:6^5]4'ls
 //│ 	([+map:6^5 · +map:6^5 · +map:6^28 · -l:8^31]: N) < [+map:6^5]4'ls
 //│ 	([+map:6^5 · +map:6^28 · -l:8^31]: C(([]: KKKK), ([]: N))) < [+map:6^5]4'ls
 //│ 	([+map:6^28 · -l:8^31]: C(([]: KK), ([]: C(([]: KKKK), ([]: N))))) < [+map:6^5]4'ls
@@ -410,6 +418,16 @@ rev(rev1(p, N), N)
 //│ C(12'h1, 11'l22) <: 3'l1
 //│ 	[+rev1:7^14 · +rev1:7^14 · +rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2 · +rev:6^2]  --->  [+rev1:7^14 · +rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2]
 //│ 	[+rev1:7^14 · +rev1:7^14 · +rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2 · +rev:6^2]  --->  [+rev1:7^14 · +rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2]
+//│ NoProd <: 3'l1
+//│ 	[+rev1:7^29 · -rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2 · +rev:6^2]  --->  [+rev1:7^29 · -rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2]
+//│ 	[+rev1:7^29 · -rev1:7^29 · +rev:6^28 · +rev:6^2 · +rev:6^2]  --->  [+rev1:7^29 · -rev1:7^29 · +rev:6^28 · +rev:6^2]
+//│ NoProd <: 13't1
+//│ 	[-p:8^30 · +rev1:7^29 · +rev1:7^14 · +rev1:7^14]  --->  [-p:8^30 · +rev1:7^29 · +rev1:7^14]
+//│ NoProd <: 6't
+//│ 	[+rev1:7^29 · +rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2 · +rev:6^2]  --->  [+rev1:7^29 · +rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2]
+//│ 	[+rev1:7^29 · +rev1:7^14 · +rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2 · +rev:6^2 · +rev:6^2]  --->  [+rev1:7^29 · +rev1:7^14 · +rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2 · +rev:6^2]
+//│ 	[+rev1:7^29 · +rev1:7^14 · +rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2 · +rev:6^2 · +rev:6^2]  --->  [+rev1:7^29 · +rev1:7^14 · +rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2 · +rev:6^2]
+//│ 	[+rev1:7^29 · +rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2 · +rev:6^2]  --->  [+rev1:7^29 · +rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2]
 //│ <<<<<<< knots <<<<<<<
 //│ 
 //│ >>>>>>> type variable bounds >>>>>>>
@@ -419,13 +437,34 @@ rev(rev1(p, N), N)
 //│ 	([]: ([]: 3'l1) => ([]: ([]: 4'l2) => ([]: 9'10_matchres))) < []0'rev
 //│ --------------
 //│ 5'h:
+//│ 	([+rev:6^2 · +rev:6^28 · -rev1:7^29 · +rev1:7^29]: NoProd) < []5'h
+//│ 	([+rev:6^2 · +rev:6^2 · +rev:6^2 · +rev:6^28 · -rev1:7^29 · +rev1:7^14 · +rev1:7^14 · +rev1:7^29]: NoProd) < []5'h
+//│ 	([+rev:6^2 · +rev:6^2 · +rev:6^28 · -rev1:7^29 · +rev1:7^14 · +rev1:7^14 · +rev1:7^29]: NoProd) < []5'h
 //│ 	([+rev1:7^29 · -p:8^30]: K) < [+rev1:7^14 · +rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2]5'h
+//│ 	([+rev1:7^14 · +rev1:7^29 · -p:8^30]: NoProd) < [+rev1:7^14 · +rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2]5'h
+//│ 	([+rev1:7^14 · +rev1:7^14 · +rev1:7^29 · -p:8^30]: NoProd) < [+rev1:7^14 · +rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2]5'h
+//│ 	([+rev:6^2 · +rev:6^2 · +rev:6^28 · -rev1:7^29 · +rev1:7^14 · +rev1:7^29]: NoProd) < []5'h
+//│ 	([+rev:6^2 · +rev:6^28 · -rev1:7^29 · +rev1:7^14 · +rev1:7^29]: NoProd) < []5'h
+//│ 	([+rev:6^2 · +rev:6^2 · +rev:6^2 · +rev:6^28 · -rev1:7^29 · -rev1:7^14 · +rev1:7^14 · +rev1:7^14 · +rev1:7^29]: NoProd) < []5'h
+//│ 	([+rev:6^2 · +rev:6^2 · +rev:6^28 · -rev1:7^29 · -rev1:7^14 · +rev1:7^14 · +rev1:7^14 · +rev1:7^29]: NoProd) < []5'h
 //│ 	([+rev1:7^29 · -p:8^30]: K) < [+rev1:7^14 · +rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2]5'h
+//│ 	([+rev1:7^14 · +rev1:7^29 · -p:8^30]: NoProd) < [+rev1:7^14 · +rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2]5'h
+//│ 	([+rev1:7^14 · +rev1:7^14 · +rev1:7^29 · -p:8^30]: NoProd) < [+rev1:7^14 · +rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2]5'h
+//│ 	([+rev:6^2 · +rev:6^2 · +rev:6^28 · -rev1:7^29 · -rev1:7^14 · +rev1:7^14 · +rev1:7^29]: NoProd) < []5'h
+//│ 	([+rev:6^2 · +rev:6^28 · -rev1:7^29 · -rev1:7^14 · +rev1:7^14 · +rev1:7^29]: NoProd) < []5'h
+//│ 	([+rev:6^2 · +rev:6^28 · -rev1:7^29 · -rev1:7^14 · +rev1:7^29]: NoProd) < []5'h
+//│ 	([+rev:6^28 · -rev1:7^29 · -rev1:7^14 · +rev1:7^29]: NoProd) < []5'h
 //│ 	([+rev1:7^29 · -p:8^30]: K) < [+rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28]5'h
+//│ 	([+rev1:7^14 · +rev1:7^29 · -p:8^30]: NoProd) < [+rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28]5'h
+//│ 	([+rev1:7^14 · +rev1:7^14 · +rev1:7^29 · -p:8^30]: NoProd) < [+rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28]5'h
 //│ 	([+rev1:7^29 · -p:8^30]: K) < [+rev1:7^14 · -rev1:7^29 · +rev:6^28]5'h
+//│ 	([+rev1:7^14 · +rev1:7^29 · -p:8^30]: NoProd) < [+rev1:7^14 · -rev1:7^29 · +rev:6^28]5'h
+//│ 	([+rev1:7^14 · +rev1:7^14 · +rev1:7^29 · -p:8^30]: NoProd) < [+rev1:7^14 · -rev1:7^29 · +rev:6^28]5'h
+//│ 	([+rev:6^28 · -rev1:7^29 · +rev1:7^29]: NoProd) < []5'h
 //│ --------------
 //│ 10'l11:
 //│ 	10'l11[] < ([]: Destruct(C(12'h1, 13't1), N))
+//│ 	([+rev1:7^14 · +rev1:7^29 · -p:8^30]: NoProd) < [+rev1:7^14]10'l11
 //│ 	([+rev1:7^29 · -p:8^30]: N) < [+rev1:7^14]10'l11
 //│ 	([]: C(([]: K), ([]: N))) < [-p:8^30 · +rev1:7^29]10'l11
 //│ --------------
@@ -446,14 +485,22 @@ rev(rev1(p, N), N)
 //│ --------------
 //│ 6't:
 //│ 	6't[+rev:6^2] < ([]: 3'l1)
+//│ 	([+rev:6^2 · +rev:6^28 · -rev1:7^29 · +rev1:7^29]: NoProd) < []6't
+//│ 	([+rev:6^2 · +rev:6^2 · +rev:6^28 · -rev1:7^29 · +rev1:7^14 · +rev1:7^14 · +rev1:7^29]: NoProd) < []6't
 //│ 	([+rev1:7^29]: N) < [+rev1:7^14 · +rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2]6't
 //│ 	([+rev1:7^14]: C(([]: 12'h1), ([]: 11'l22))) < [+rev1:7^14 · +rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2]6't
+//│ 	([+rev:6^2 · +rev:6^28 · -rev1:7^29 · +rev1:7^14 · +rev1:7^29]: NoProd) < []6't
+//│ 	([+rev:6^2 · +rev:6^2 · +rev:6^28 · -rev1:7^29 · -rev1:7^14 · +rev1:7^14 · +rev1:7^14 · +rev1:7^29]: NoProd) < []6't
 //│ 	([+rev1:7^29]: N) < [+rev1:7^14 · +rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2]6't
 //│ 	([+rev1:7^14]: C(([]: 12'h1), ([]: 11'l22))) < [+rev1:7^14 · +rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2]6't
+//│ 	([+rev:6^2 · +rev:6^28 · -rev1:7^29 · -rev1:7^14 · +rev1:7^14 · +rev1:7^29]: NoProd) < []6't
+//│ 	([+rev:6^2 · +rev:6^28 · -rev1:7^29 · -rev1:7^14 · +rev1:7^29]: NoProd) < []6't
+//│ 	([+rev:6^28 · -rev1:7^29 · -rev1:7^14 · +rev1:7^29]: NoProd) < []6't
 //│ 	([+rev1:7^29]: N) < [+rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28]6't
 //│ 	([+rev1:7^14]: C(([]: 12'h1), ([]: 11'l22))) < [+rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28]6't
 //│ 	([+rev1:7^29]: N) < [+rev1:7^14 · -rev1:7^29 · +rev:6^28]6't
 //│ 	([+rev1:7^14]: C(([]: 12'h1), ([]: 11'l22))) < [+rev1:7^14 · -rev1:7^29 · +rev:6^28]6't
+//│ 	([+rev:6^28 · -rev1:7^29 · +rev1:7^29]: NoProd) < []6't
 //│ --------------
 //│ 9'10_matchres:
 //│ 	9'10_matchres[-rev:6^2] < ([]: 8'8_callres)
@@ -465,6 +512,7 @@ rev(rev1(p, N), N)
 //│ --------------
 //│ 13't1:
 //│ 	13't1[+rev1:7^14] < ([]: 10'l11)
+//│ 	([+rev1:7^14 · +rev1:7^29 · -p:8^30]: NoProd) < []13't1
 //│ 	([+rev1:7^29 · -p:8^30]: N) < []13't1
 //│ --------------
 //│ 2'p:
@@ -480,6 +528,8 @@ rev(rev1(p, N), N)
 //│ 	12'h1[+rev1:7^14 · +rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28 · +rev:6^2] < ([]: 5'h)
 //│ 	12'h1[+rev1:7^14 · -rev1:7^14 · -rev1:7^29 · +rev:6^28] < ([]: 5'h)
 //│ 	12'h1[+rev1:7^14 · -rev1:7^29 · +rev:6^28] < ([]: 5'h)
+//│ 	([+rev1:7^14 · +rev1:7^14 · +rev1:7^29 · -p:8^30]: NoProd) < []12'h1
+//│ 	([+rev1:7^14 · +rev1:7^29 · -p:8^30]: NoProd) < []12'h1
 //│ 	([+rev1:7^29 · -p:8^30]: K) < []12'h1
 //│ --------------
 //│ 7'4_callres:
@@ -488,12 +538,18 @@ rev(rev1(p, N), N)
 //│ --------------
 //│ 3'l1:
 //│ 	3'l1[] < ([]: Destruct(C(5'h, 6't), N))
+//│ 	([+rev:6^28 · -rev1:7^29 · +rev1:7^29]: NoProd) < [+rev:6^2]3'l1
+//│ 	([+rev:6^2 · +rev:6^2 · +rev:6^28 · -rev1:7^29 · +rev1:7^14 · +rev1:7^14 · +rev1:7^29]: NoProd) < [+rev:6^2]3'l1
 //│ 	([+rev:6^2 · +rev:6^28 · -rev1:7^29 · +rev1:7^14 · +rev1:7^14 · +rev1:7^29]: N) < [+rev:6^2]3'l1
 //│ 	([+rev:6^28 · -rev1:7^29 · +rev1:7^14 · +rev1:7^14]: C(([]: 12'h1), ([]: 11'l22))) < [+rev:6^2]3'l1
+//│ 	([+rev:6^2 · +rev:6^28 · -rev1:7^29 · +rev1:7^14 · +rev1:7^29]: NoProd) < [+rev:6^2]3'l1
 //│ 	([+rev:6^28 · -rev1:7^29 · +rev1:7^14 · +rev1:7^29]: N) < [+rev:6^2]3'l1
+//│ 	([+rev:6^2 · +rev:6^2 · +rev:6^28 · -rev1:7^29 · -rev1:7^14 · +rev1:7^14 · +rev1:7^14 · +rev1:7^29]: NoProd) < [+rev:6^2]3'l1
 //│ 	([+rev:6^2 · +rev:6^28 · -rev1:7^29 · -rev1:7^14 · +rev1:7^14 · +rev1:7^14 · +rev1:7^29]: N) < [+rev:6^2]3'l1
 //│ 	([+rev:6^28 · -rev1:7^29 · -rev1:7^14 · +rev1:7^14 · +rev1:7^14]: C(([]: 12'h1), ([]: 11'l22))) < [+rev:6^2]3'l1
+//│ 	([+rev:6^2 · +rev:6^28 · -rev1:7^29 · -rev1:7^14 · +rev1:7^14 · +rev1:7^29]: NoProd) < [+rev:6^2]3'l1
 //│ 	([+rev:6^28 · -rev1:7^29 · -rev1:7^14 · +rev1:7^14 · +rev1:7^29]: N) < [+rev:6^2]3'l1
+//│ 	([+rev:6^28 · -rev1:7^29 · -rev1:7^14 · +rev1:7^29]: NoProd) < [+rev:6^2]3'l1
 //│ 	([-rev1:7^29 · +rev1:7^29]: N) < [+rev:6^28]3'l1
 //│ 	([-rev1:7^29 · +rev1:7^14]: C(([]: 12'h1), ([]: 11'l22))) < [+rev:6^28]3'l1
 //│ 	([-rev1:7^29 · -rev1:7^14 · +rev1:7^14]: C(([]: 12'h1), ([]: 11'l22))) < [+rev:6^28]3'l1
@@ -895,6 +951,16 @@ map(rev(N, primitive))
 //│ <<<<<<<<<< initial constraints <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
+//│ NoProd <: 2'ls
+//│ 	[+rev:7^26 · -rev:7^26 · +map:6^25 · +map:6^6 · +map:6^6]  --->  [+rev:7^26 · -rev:7^26 · +map:6^25 · +map:6^6]
+//│ 	[+rev:7^26 · -rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6 · +map:6^6]  --->  [+rev:7^26 · -rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6]
+//│ NoProd <: 4'tt
+//│ 	[+rev:7^26 · +rev:7^14 · +rev:7^14 · -rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6 · +map:6^6 · +map:6^6]  --->  [+rev:7^26 · +rev:7^14 · +rev:7^14 · -rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6 · +map:6^6]
+//│ 	[+rev:7^26 · +rev:7^14 · -rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6 · +map:6^6]  --->  [+rev:7^26 · +rev:7^14 · -rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6]
+//│ 	[+rev:7^26 · +rev:7^14 · +rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6 · +map:6^6 · +map:6^6]  --->  [+rev:7^26 · +rev:7^14 · +rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6 · +map:6^6]
+//│ 	[+rev:7^26 · +rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6 · +map:6^6]  --->  [+rev:7^26 · +rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6]
+//│ NoProd <: 9'lss
+//│ 	[+rev:7^26 · +rev:7^14 · +rev:7^14]  --->  [+rev:7^26 · +rev:7^14]
 //│ C(10'h, 8'a) <: 2'ls
 //│ 	[+rev:7^14 · +rev:7^14 · +rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6 · +map:6^6]  --->  [+rev:7^14 · +rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6]
 //│ 	[+rev:7^14 · +rev:7^14 · +rev:7^14 · -rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6 · +map:6^6]  --->  [+rev:7^14 · +rev:7^14 · -rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6]
@@ -915,6 +981,8 @@ map(rev(N, primitive))
 //│ 	10'h[+rev:7^14 · +rev:7^14 · -rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6] < ([]: 3'hh)
 //│ 	10'h[+rev:7^14 · -rev:7^14 · -rev:7^26 · +map:6^25] < ([]: 3'hh)
 //│ 	10'h[+rev:7^14 · -rev:7^26 · +map:6^25] < ([]: 3'hh)
+//│ 	([+rev:7^14 · +rev:7^26]: NoProd) < []10'h
+//│ 	([+rev:7^26]: NoProd) < []10'h
 //│ --------------
 //│ 14'22_matchres:
 //│ 	14'22_matchres[-rev:7^14] < ([]: 13'20_callres)
@@ -935,6 +1003,8 @@ map(rev(N, primitive))
 //│ --------------
 //│ 9'lss:
 //│ 	9'lss[] < ([]: Destruct(C(10'h, 11't), N))
+//│ 	([+rev:7^26]: NoProd) < [+rev:7^14]9'lss
+//│ 	([]: NoProd) < [+rev:7^26]9'lss
 //│ --------------
 //│ 13'20_callres:
 //│ 	13'20_callres[] < ([]: 14'22_matchres)
@@ -943,12 +1013,18 @@ map(rev(N, primitive))
 //│ --------------
 //│ 2'ls:
 //│ 	2'ls[] < ([]: Destruct(C(3'hh, 4'tt), N))
+//│ 	([+map:6^25 · -rev:7^26 · +rev:7^26]: NoProd) < [+map:6^6]2'ls
+//│ 	([+map:6^6 · +map:6^6 · +map:6^25 · -rev:7^26 · +rev:7^14 · +rev:7^14 · +rev:7^26]: NoProd) < [+map:6^6]2'ls
 //│ 	([+map:6^6 · +map:6^25 · -rev:7^26 · +rev:7^14 · +rev:7^14 · +rev:7^26]: N) < [+map:6^6]2'ls
 //│ 	([+map:6^25 · -rev:7^26 · +rev:7^14 · +rev:7^14]: C(([]: 10'h), ([]: 8'a))) < [+map:6^6]2'ls
+//│ 	([+map:6^6 · +map:6^25 · -rev:7^26 · +rev:7^14 · +rev:7^26]: NoProd) < [+map:6^6]2'ls
 //│ 	([+map:6^25 · -rev:7^26 · +rev:7^14 · +rev:7^26]: N) < [+map:6^6]2'ls
+//│ 	([+map:6^6 · +map:6^6 · +map:6^25 · -rev:7^26 · -rev:7^14 · +rev:7^14 · +rev:7^14 · +rev:7^26]: NoProd) < [+map:6^6]2'ls
 //│ 	([+map:6^6 · +map:6^25 · -rev:7^26 · -rev:7^14 · +rev:7^14 · +rev:7^14 · +rev:7^26]: N) < [+map:6^6]2'ls
 //│ 	([+map:6^25 · -rev:7^26 · -rev:7^14 · +rev:7^14 · +rev:7^14]: C(([]: 10'h), ([]: 8'a))) < [+map:6^6]2'ls
+//│ 	([+map:6^6 · +map:6^25 · -rev:7^26 · -rev:7^14 · +rev:7^14 · +rev:7^26]: NoProd) < [+map:6^6]2'ls
 //│ 	([+map:6^25 · -rev:7^26 · -rev:7^14 · +rev:7^14 · +rev:7^26]: N) < [+map:6^6]2'ls
+//│ 	([+map:6^25 · -rev:7^26 · -rev:7^14 · +rev:7^26]: NoProd) < [+map:6^6]2'ls
 //│ 	([-rev:7^26 · +rev:7^26]: N) < [+map:6^25]2'ls
 //│ 	([-rev:7^26 · +rev:7^14]: C(([]: 10'h), ([]: 8'a))) < [+map:6^25]2'ls
 //│ 	([-rev:7^26 · -rev:7^14 · +rev:7^14]: C(([]: 10'h), ([]: 8'a))) < [+map:6^25]2'ls
@@ -970,6 +1046,26 @@ map(rev(N, primitive))
 //│ --------------
 //│ 3'hh:
 //│ 	3'hh[] < ([]: Destruct(A, AA))
+//│ 	([+map:6^6 · +map:6^25 · -rev:7^26 · +rev:7^26]: NoProd) < []3'hh
+//│ 	([+map:6^6 · +map:6^6 · +map:6^6 · +map:6^25 · -rev:7^26 · +rev:7^14 · +rev:7^14 · +rev:7^26]: NoProd) < []3'hh
+//│ 	([+map:6^6 · +map:6^6 · +map:6^25 · -rev:7^26 · +rev:7^14 · +rev:7^14 · +rev:7^26]: NoProd) < []3'hh
+//│ 	([+rev:7^26]: NoProd) < [+rev:7^14 · +rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6]3'hh
+//│ 	([+rev:7^14 · +rev:7^26]: NoProd) < [+rev:7^14 · +rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6]3'hh
+//│ 	([+map:6^6 · +map:6^6 · +map:6^25 · -rev:7^26 · +rev:7^14 · +rev:7^26]: NoProd) < []3'hh
+//│ 	([+map:6^6 · +map:6^25 · -rev:7^26 · +rev:7^14 · +rev:7^26]: NoProd) < []3'hh
+//│ 	([+map:6^6 · +map:6^6 · +map:6^6 · +map:6^25 · -rev:7^26 · -rev:7^14 · +rev:7^14 · +rev:7^14 · +rev:7^26]: NoProd) < []3'hh
+//│ 	([+map:6^6 · +map:6^6 · +map:6^25 · -rev:7^26 · -rev:7^14 · +rev:7^14 · +rev:7^14 · +rev:7^26]: NoProd) < []3'hh
+//│ 	([+rev:7^26]: NoProd) < [+rev:7^14 · +rev:7^14 · -rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6]3'hh
+//│ 	([+rev:7^14 · +rev:7^26]: NoProd) < [+rev:7^14 · +rev:7^14 · -rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6]3'hh
+//│ 	([+map:6^6 · +map:6^6 · +map:6^25 · -rev:7^26 · -rev:7^14 · +rev:7^14 · +rev:7^26]: NoProd) < []3'hh
+//│ 	([+map:6^6 · +map:6^25 · -rev:7^26 · -rev:7^14 · +rev:7^14 · +rev:7^26]: NoProd) < []3'hh
+//│ 	([+map:6^6 · +map:6^25 · -rev:7^26 · -rev:7^14 · +rev:7^26]: NoProd) < []3'hh
+//│ 	([+map:6^25 · -rev:7^26 · -rev:7^14 · +rev:7^26]: NoProd) < []3'hh
+//│ 	([+rev:7^26]: NoProd) < [+rev:7^14 · -rev:7^14 · -rev:7^26 · +map:6^25]3'hh
+//│ 	([+rev:7^14 · +rev:7^26]: NoProd) < [+rev:7^14 · -rev:7^14 · -rev:7^26 · +map:6^25]3'hh
+//│ 	([+rev:7^26]: NoProd) < [+rev:7^14 · -rev:7^26 · +map:6^25]3'hh
+//│ 	([+rev:7^14 · +rev:7^26]: NoProd) < [+rev:7^14 · -rev:7^26 · +map:6^25]3'hh
+//│ 	([+map:6^25 · -rev:7^26 · +rev:7^26]: NoProd) < []3'hh
 //│ --------------
 //│ 16'30_callres:
 //│ 	16'30_callres[+map:6^25] < ([]: 2'ls)
@@ -980,6 +1076,8 @@ map(rev(N, primitive))
 //│ --------------
 //│ 11't:
 //│ 	11't[] < ([+rev:7^14]: 9'lss)
+//│ 	([+rev:7^14 · +rev:7^26]: NoProd) < []11't
+//│ 	([+rev:7^26]: NoProd) < []11't
 //│ --------------
 //│ 8'a:
 //│ 	8'a[+rev:7^14 · +rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6] < ([]: 4'tt)
@@ -992,14 +1090,22 @@ map(rev(N, primitive))
 //│ --------------
 //│ 4'tt:
 //│ 	4'tt[+map:6^6] < ([]: 2'ls)
+//│ 	([+map:6^6 · +map:6^25 · -rev:7^26 · +rev:7^26]: NoProd) < []4'tt
+//│ 	([+map:6^6 · +map:6^6 · +map:6^25 · -rev:7^26 · +rev:7^14 · +rev:7^14 · +rev:7^26]: NoProd) < []4'tt
 //│ 	([+rev:7^26]: N) < [+rev:7^14 · +rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6]4'tt
 //│ 	([+rev:7^14]: C(([]: 10'h), ([]: 8'a))) < [+rev:7^14 · +rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6]4'tt
+//│ 	([+map:6^6 · +map:6^25 · -rev:7^26 · +rev:7^14 · +rev:7^26]: NoProd) < []4'tt
+//│ 	([+map:6^6 · +map:6^6 · +map:6^25 · -rev:7^26 · -rev:7^14 · +rev:7^14 · +rev:7^14 · +rev:7^26]: NoProd) < []4'tt
 //│ 	([+rev:7^26]: N) < [+rev:7^14 · +rev:7^14 · -rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6]4'tt
 //│ 	([+rev:7^14]: C(([]: 10'h), ([]: 8'a))) < [+rev:7^14 · +rev:7^14 · -rev:7^14 · -rev:7^26 · +map:6^25 · +map:6^6]4'tt
+//│ 	([+map:6^6 · +map:6^25 · -rev:7^26 · -rev:7^14 · +rev:7^14 · +rev:7^26]: NoProd) < []4'tt
+//│ 	([+map:6^6 · +map:6^25 · -rev:7^26 · -rev:7^14 · +rev:7^26]: NoProd) < []4'tt
+//│ 	([+map:6^25 · -rev:7^26 · -rev:7^14 · +rev:7^26]: NoProd) < []4'tt
 //│ 	([+rev:7^26]: N) < [+rev:7^14 · -rev:7^14 · -rev:7^26 · +map:6^25]4'tt
 //│ 	([+rev:7^14]: C(([]: 10'h), ([]: 8'a))) < [+rev:7^14 · -rev:7^14 · -rev:7^26 · +map:6^25]4'tt
 //│ 	([+rev:7^26]: N) < [+rev:7^14 · -rev:7^26 · +map:6^25]4'tt
 //│ 	([+rev:7^14]: C(([]: 10'h), ([]: 8'a))) < [+rev:7^14 · -rev:7^26 · +map:6^25]4'tt
+//│ 	([+map:6^25 · -rev:7^26 · +rev:7^26]: NoProd) < []4'tt
 //│ --------------
 //│ 15'28_callres:
 //│ 	15'28_callres[] < ([]: ([]: NoProd) => ([]: 16'30_callres))
@@ -1108,6 +1214,8 @@ lastDrive(C(1, C(2, N)))
 //│ <<<<<<<<<< initial constraints <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
+//│ NoProd <: 5't
+//│ 	[+lastDrive:7^21 · +last:6^13 · +last:6^3 · +last:6^3]  --->  [+lastDrive:7^21 · +last:6^13 · +last:6^3]
 //│ <<<<<<< knots <<<<<<<
 //│ 
 //│ >>>>>>> type variable bounds >>>>>>>
@@ -1118,6 +1226,7 @@ lastDrive(C(1, C(2, N)))
 //│ --------------
 //│ 5't:
 //│ 	5't[] < ([+last:6^3]: 3'ys)
+//│ 	([+last:6^3 · +last:6^13 · +lastDrive:7^21]: NoProd) < []5't
 //│ 	([+last:6^13 · +lastDrive:7^21]: N) < []5't
 //│ --------------
 //│ 10'hh:
@@ -1144,11 +1253,17 @@ lastDrive(C(1, C(2, N)))
 //│ 13'17_callres:
 //│ 	([-last:6^3 · +last:6^13 · +lastDrive:7^21]: Int) < [-last:6^13]13'17_callres
 //│ 	([-last:6^3 · +last:6^3 · +last:6^13 · +lastDrive:7^21]: Int) < [-last:6^13]13'17_callres
+//│ 	([-last:6^3 · +last:6^3 · +last:6^3 · +last:6^13 · +lastDrive:7^21]: NoProd) < [-last:6^13]13'17_callres
+//│ 	([-last:6^3 · +last:6^3 · +last:6^3 · +last:6^3 · +last:6^13 · +lastDrive:7^21]: NoProd) < [-last:6^13]13'17_callres
+//│ 	([+last:6^3 · +last:6^3 · +last:6^3 · +last:6^13 · +lastDrive:7^21]: NoProd) < [-last:6^13]13'17_callres
+//│ 	([+last:6^3 · +last:6^3 · +last:6^13 · +lastDrive:7^21]: NoProd) < [-last:6^13]13'17_callres
 //│ 	([+last:6^3 · +last:6^13 · +lastDrive:7^21]: Int) < [-last:6^13]13'17_callres
 //│ 	([+last:6^13 · +lastDrive:7^21]: Int) < [-last:6^13]13'17_callres
 //│ --------------
 //│ 2'x:
 //│ 	2'x[] < ([]: 8'8_matchres)
+//│ 	([+last:6^3 · +last:6^3 · +last:6^13 · +lastDrive:7^21]: NoProd) < [+last:6^3]2'x
+//│ 	([+last:6^3 · +last:6^13 · +lastDrive:7^21]: NoProd) < [+last:6^3]2'x
 //│ 	([+last:6^13 · +lastDrive:7^21]: Int) < [+last:6^3]2'x
 //│ 	([+lastDrive:7^21]: Int) < [+last:6^13]2'x
 //│ --------------
@@ -1160,9 +1275,12 @@ lastDrive(C(1, C(2, N)))
 //│ 	7'7_callres[] < ([]: 8'8_matchres)
 //│ 	([+last:6^13 · +lastDrive:7^21]: Int) < [-last:6^3]7'7_callres
 //│ 	([+last:6^3 · +last:6^13 · +lastDrive:7^21]: Int) < [-last:6^3]7'7_callres
+//│ 	([+last:6^3 · +last:6^3 · +last:6^13 · +lastDrive:7^21]: NoProd) < [-last:6^3]7'7_callres
+//│ 	([+last:6^3 · +last:6^3 · +last:6^3 · +last:6^13 · +lastDrive:7^21]: NoProd) < [-last:6^3]7'7_callres
 //│ --------------
 //│ 3'ys:
 //│ 	3'ys[] < ([]: Destruct(N, C(4'h, 5't)))
+//│ 	([+last:6^3 · +last:6^13 · +lastDrive:7^21]: NoProd) < [+last:6^3]3'ys
 //│ 	([+last:6^13 · +lastDrive:7^21]: N) < [+last:6^3]3'ys
 //│ 	([+lastDrive:7^21]: C(([]: Int), ([]: N))) < [+last:6^13]3'ys
 //│ --------------
@@ -1175,11 +1293,17 @@ lastDrive(C(1, C(2, N)))
 //│ 	8'8_matchres[-last:6^13] < ([]: 13'17_callres)
 //│ 	([-last:6^3 · +last:6^13 · +lastDrive:7^21]: Int) < []8'8_matchres
 //│ 	([-last:6^3 · +last:6^3 · +last:6^13 · +lastDrive:7^21]: Int) < []8'8_matchres
+//│ 	([-last:6^3 · +last:6^3 · +last:6^3 · +last:6^13 · +lastDrive:7^21]: NoProd) < []8'8_matchres
+//│ 	([-last:6^3 · +last:6^3 · +last:6^3 · +last:6^3 · +last:6^13 · +lastDrive:7^21]: NoProd) < []8'8_matchres
+//│ 	([+last:6^3 · +last:6^3 · +last:6^3 · +last:6^13 · +lastDrive:7^21]: NoProd) < []8'8_matchres
+//│ 	([+last:6^3 · +last:6^3 · +last:6^13 · +lastDrive:7^21]: NoProd) < []8'8_matchres
 //│ 	([+last:6^3 · +last:6^13 · +lastDrive:7^21]: Int) < []8'8_matchres
 //│ 	([+last:6^13 · +lastDrive:7^21]: Int) < []8'8_matchres
 //│ --------------
 //│ 4'h:
 //│ 	4'h[+last:6^3] < ([]: 2'x)
+//│ 	([+last:6^3 · +last:6^3 · +last:6^13 · +lastDrive:7^21]: NoProd) < []4'h
+//│ 	([+last:6^3 · +last:6^13 · +lastDrive:7^21]: NoProd) < []4'h
 //│ 	([+last:6^13 · +lastDrive:7^21]: Int) < []4'h
 //│ --------------
 //│ 15'27_callres:
@@ -1214,6 +1338,9 @@ inter(C(1, C(2, C(3, N))), C(9, C(8, C(7, N))))
 //│ <<<<<<<<<< initial constraints <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
+//│ NoProd <: 4't
+//│ 	[+inter:6^13 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4]  --->  [+inter:6^13 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4]
+//│ 	[+inter:6^13 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4]  --->  [+inter:6^13 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4]
 //│ <<<<<<< knots <<<<<<<
 //│ 
 //│ >>>>>>> type variable bounds >>>>>>>
@@ -1228,9 +1355,11 @@ inter(C(1, C(2, C(3, N))), C(9, C(8, C(7, N))))
 //│ --------------
 //│ 1'xs:
 //│ 	1'xs[] < ([]: Destruct(N, C(3'h, 4't)))
+//│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: NoProd) < [+inter:6^4]1'xs
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: N) < [+inter:6^4]1'xs
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: C(([]: Int), ([]: N))) < [+inter:6^4]1'xs
 //│ 	([+inter:6^4 · +inter:6^13]: C(([]: Int), ([]: C(([]: Int), ([]: N))))) < [+inter:6^4]1'xs
+//│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: NoProd) < [+inter:6^4]1'xs
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: N) < [+inter:6^4]1'xs
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: C(([]: Int), ([]: N))) < [+inter:6^4]1'xs
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^13]: C(([]: Int), ([]: C(([]: Int), ([]: N))))) < [+inter:6^4]1'xs
@@ -1240,9 +1369,11 @@ inter(C(1, C(2, C(3, N))), C(9, C(8, C(7, N))))
 //│ 6'8_callres:
 //│ 	([]: C(([]: 3'h), ([]: 6'8_callres))) < [-inter:6^4]6'8_callres
 //│ 	([+inter:6^13]: C(([]: Int), ([]: C(([]: Int), ([]: C(([]: Int), ([]: N))))))) < [-inter:6^4]6'8_callres
+//│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: NoProd) < [-inter:6^4]6'8_callres
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: N) < [-inter:6^4]6'8_callres
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: C(([]: Int), ([]: N))) < [-inter:6^4]6'8_callres
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^13]: C(([]: Int), ([]: C(([]: Int), ([]: N))))) < [-inter:6^4]6'8_callres
+//│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: NoProd) < [-inter:6^4]6'8_callres
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: N) < [-inter:6^4]6'8_callres
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: C(([]: Int), ([]: N))) < [-inter:6^4]6'8_callres
 //│ 	([+inter:6^4 · +inter:6^13]: C(([]: Int), ([]: C(([]: Int), ([]: N))))) < [-inter:6^4]6'8_callres
@@ -1251,18 +1382,22 @@ inter(C(1, C(2, C(3, N))), C(9, C(8, C(7, N))))
 //│ 	([+inter:6^4 · +inter:6^13]: C(([]: Int), ([]: C(([]: Int), ([]: N))))) < [-inter:6^13]9'29_callres
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: C(([]: Int), ([]: N))) < [-inter:6^13]9'29_callres
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: N) < [-inter:6^13]9'29_callres
+//│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: NoProd) < [-inter:6^13]9'29_callres
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^13]: C(([]: Int), ([]: C(([]: Int), ([]: N))))) < [-inter:6^13]9'29_callres
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: C(([]: Int), ([]: N))) < [-inter:6^13]9'29_callres
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: N) < [-inter:6^13]9'29_callres
+//│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: NoProd) < [-inter:6^13]9'29_callres
 //│ 	([+inter:6^13]: C(([]: Int), ([]: C(([]: Int), ([]: C(([]: Int), ([]: N))))))) < [-inter:6^13]9'29_callres
 //│ 	([]: C(([]: 3'h), ([]: 6'8_callres))) < [-inter:6^13]9'29_callres
 //│ --------------
 //│ 2'ys:
 //│ 	2'ys[+inter:6^4] < ([]: 1'xs)
 //│ 	2'ys[] < ([]: 7'10_matchres)
+//│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: NoProd) < [+inter:6^4]2'ys
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: N) < [+inter:6^4]2'ys
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^13]: C(([]: Int), ([]: N))) < [+inter:6^4]2'ys
 //│ 	([+inter:6^13]: C(([]: Int), ([]: C(([]: Int), ([]: N))))) < [+inter:6^4]2'ys
+//│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: NoProd) < [+inter:6^4]2'ys
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: N) < [+inter:6^4]2'ys
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: C(([]: Int), ([]: N))) < [+inter:6^4]2'ys
 //│ 	([+inter:6^4 · +inter:6^13]: C(([]: Int), ([]: C(([]: Int), ([]: N))))) < [+inter:6^4]2'ys
@@ -1274,15 +1409,21 @@ inter(C(1, C(2, C(3, N))), C(9, C(8, C(7, N))))
 //│ 	([+inter:6^4 · +inter:6^13]: C(([]: Int), ([]: C(([]: Int), ([]: N))))) < []7'10_matchres
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: C(([]: Int), ([]: N))) < []7'10_matchres
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: N) < []7'10_matchres
+//│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: NoProd) < []7'10_matchres
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^13]: C(([]: Int), ([]: C(([]: Int), ([]: N))))) < []7'10_matchres
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: C(([]: Int), ([]: N))) < []7'10_matchres
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: N) < []7'10_matchres
+//│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: NoProd) < []7'10_matchres
 //│ 	([+inter:6^13]: C(([]: Int), ([]: C(([]: Int), ([]: C(([]: Int), ([]: N))))))) < []7'10_matchres
 //│ 	([]: C(([]: 3'h), ([]: 6'8_callres))) < []7'10_matchres
 //│ --------------
 //│ 3'h:
+//│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: NoProd) < []3'h
+//│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: NoProd) < []3'h
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: Int) < []3'h
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^13]: Int) < []3'h
+//│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: NoProd) < []3'h
+//│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: NoProd) < []3'h
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: Int) < []3'h
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: Int) < []3'h
 //│ 	([+inter:6^4 · +inter:6^13]: Int) < []3'h
@@ -1294,8 +1435,10 @@ inter(C(1, C(2, C(3, N))), C(9, C(8, C(7, N))))
 //│ --------------
 //│ 4't:
 //│ 	4't[] < ([+inter:6^4]: 2'ys)
+//│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: NoProd) < []4't
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: N) < []4't
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^13]: C(([]: Int), ([]: N))) < []4't
+//│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: NoProd) < []4't
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: N) < []4't
 //│ 	([+inter:6^4 · +inter:6^4 · +inter:6^4 · +inter:6^13]: C(([]: Int), ([]: N))) < []4't
 //│ 	([+inter:6^4 · +inter:6^13]: C(([]: Int), ([]: C(([]: Int), ([]: N))))) < []4't
@@ -1350,12 +1493,44 @@ idxSum(rev(primitive, N))(0)
 //│ <<<<<<<<<< initial constraints <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
+//│ NoProd <: 15'lss
+//│ 	[+rev:8^34 · +rev:8^23 · +rev:8^23]  --->  [+rev:8^34 · +rev:8^23]
+//│ NoProd <: 3'ls
+//│ 	[+rev:8^34 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8 · +idxSum:7^8]  --->  [+rev:8^34 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]
+//│ 	[+rev:8^34 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8 · +idxSum:7^8]  --->  [+rev:8^34 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]
 //│ C(17'hh, 16'a) <: 3'ls
 //│ 	[+rev:8^23 · +rev:8^23 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8 · +idxSum:7^8]  --->  [+rev:8^23 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]
 //│ 	[+rev:8^23 · +rev:8^23 · +rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8 · +idxSum:7^8]  --->  [+rev:8^23 · +rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]
+//│ NoProd <: 6't
+//│ 	[+rev:8^34 · +rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8 · +idxSum:7^8]  --->  [+rev:8^34 · +rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]
+//│ 	[+rev:8^34 · +rev:8^23 · +rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8 · +idxSum:7^8 · +idxSum:7^8]  --->  [+rev:8^34 · +rev:8^23 · +rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8 · +idxSum:7^8]
+//│ 	[+rev:8^34 · +rev:8^23 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8 · +idxSum:7^8 · +idxSum:7^8]  --->  [+rev:8^34 · +rev:8^23 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8 · +idxSum:7^8]
+//│ 	[+rev:8^34 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8 · +idxSum:7^8]  --->  [+rev:8^34 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]
 //│ <<<<<<< knots <<<<<<<
 //│ 
 //│ >>>>>>> type variable bounds >>>>>>>
+//│ 5'h:
+//│ 	([+idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · +rev:8^34]: NoProd) < []5'h
+//│ 	([+idxSum:7^8 · +idxSum:7^8 · +idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · +rev:8^23 · +rev:8^23 · +rev:8^34]: NoProd) < []5'h
+//│ 	([+idxSum:7^8 · +idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · +rev:8^23 · +rev:8^23 · +rev:8^34]: NoProd) < []5'h
+//│ 	([+rev:8^34]: NoProd) < [+rev:8^23 · +rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]5'h
+//│ 	([+rev:8^23 · +rev:8^34]: NoProd) < [+rev:8^23 · +rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]5'h
+//│ 	([+idxSum:7^8 · +idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · +rev:8^23 · +rev:8^34]: NoProd) < []5'h
+//│ 	([+idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · +rev:8^23 · +rev:8^34]: NoProd) < []5'h
+//│ 	([+idxSum:7^8 · +idxSum:7^8 · +idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · -rev:8^23 · +rev:8^23 · +rev:8^23 · +rev:8^34]: NoProd) < []5'h
+//│ 	([+idxSum:7^8 · +idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · -rev:8^23 · +rev:8^23 · +rev:8^23 · +rev:8^34]: NoProd) < []5'h
+//│ 	([+rev:8^34]: NoProd) < [+rev:8^23 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]5'h
+//│ 	([+rev:8^23 · +rev:8^34]: NoProd) < [+rev:8^23 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]5'h
+//│ 	([+idxSum:7^8 · +idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · -rev:8^23 · +rev:8^23 · +rev:8^34]: NoProd) < []5'h
+//│ 	([+idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · -rev:8^23 · +rev:8^23 · +rev:8^34]: NoProd) < []5'h
+//│ 	([+idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · -rev:8^23 · +rev:8^34]: NoProd) < []5'h
+//│ 	([+idxSum:7^33 · -rev:8^34 · -rev:8^23 · +rev:8^34]: NoProd) < []5'h
+//│ 	([+rev:8^34]: NoProd) < [+rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33]5'h
+//│ 	([+rev:8^23 · +rev:8^34]: NoProd) < [+rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33]5'h
+//│ 	([+rev:8^34]: NoProd) < [+rev:8^23 · -rev:8^34 · +idxSum:7^33]5'h
+//│ 	([+rev:8^23 · +rev:8^34]: NoProd) < [+rev:8^23 · -rev:8^34 · +idxSum:7^33]5'h
+//│ 	([+idxSum:7^33 · -rev:8^34 · +rev:8^34]: NoProd) < []5'h
+//│ --------------
 //│ 10'13_callres:
 //│ 	10'13_callres[] < ([]: ([]: Int) => ([]: 11'15_callres))
 //│ 	([]: ([]: Destruct(Int)) => ([]: Int)) < []10'13_callres
@@ -1378,14 +1553,22 @@ idxSum(rev(primitive, N))(0)
 //│ --------------
 //│ 6't:
 //│ 	6't[+idxSum:7^8] < ([]: 3'ls)
+//│ 	([+idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · +rev:8^34]: NoProd) < []6't
+//│ 	([+idxSum:7^8 · +idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · +rev:8^23 · +rev:8^23 · +rev:8^34]: NoProd) < []6't
 //│ 	([+rev:8^34]: N) < [+rev:8^23 · +rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]6't
 //│ 	([+rev:8^23]: C(([]: 17'hh), ([]: 16'a))) < [+rev:8^23 · +rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]6't
+//│ 	([+idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · +rev:8^23 · +rev:8^34]: NoProd) < []6't
+//│ 	([+idxSum:7^8 · +idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · -rev:8^23 · +rev:8^23 · +rev:8^23 · +rev:8^34]: NoProd) < []6't
 //│ 	([+rev:8^34]: N) < [+rev:8^23 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]6't
 //│ 	([+rev:8^23]: C(([]: 17'hh), ([]: 16'a))) < [+rev:8^23 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]6't
+//│ 	([+idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · -rev:8^23 · +rev:8^23 · +rev:8^34]: NoProd) < []6't
+//│ 	([+idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · -rev:8^23 · +rev:8^34]: NoProd) < []6't
+//│ 	([+idxSum:7^33 · -rev:8^34 · -rev:8^23 · +rev:8^34]: NoProd) < []6't
 //│ 	([+rev:8^34]: N) < [+rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33]6't
 //│ 	([+rev:8^23]: C(([]: 17'hh), ([]: 16'a))) < [+rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33]6't
 //│ 	([+rev:8^34]: N) < [+rev:8^23 · -rev:8^34 · +idxSum:7^33]6't
 //│ 	([+rev:8^23]: C(([]: 17'hh), ([]: 16'a))) < [+rev:8^23 · -rev:8^34 · +idxSum:7^33]6't
+//│ 	([+idxSum:7^33 · -rev:8^34 · +rev:8^34]: NoProd) < []6't
 //│ --------------
 //│ 21'30_matchres:
 //│ 	21'30_matchres[-rev:8^23] < ([]: 20'29_callres)
@@ -1415,6 +1598,8 @@ idxSum(rev(primitive, N))(0)
 //│ 	17'hh[+rev:8^23 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8] < ([]: 5'h)
 //│ 	17'hh[+rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33] < ([]: 5'h)
 //│ 	17'hh[+rev:8^23 · -rev:8^34 · +idxSum:7^33] < ([]: 5'h)
+//│ 	([+rev:8^23 · +rev:8^34]: NoProd) < []17'hh
+//│ 	([+rev:8^34]: NoProd) < []17'hh
 //│ --------------
 //│ 22'36_callres:
 //│ 	22'36_callres[] < ([]: ([]: N) => ([]: 23'38_callres))
@@ -1433,12 +1618,18 @@ idxSum(rev(primitive, N))(0)
 //│ --------------
 //│ 3'ls:
 //│ 	3'ls[] < ([]: Destruct(N, C(5'h, 6't)))
+//│ 	([+idxSum:7^33 · -rev:8^34 · +rev:8^34]: NoProd) < [+idxSum:7^8]3'ls
+//│ 	([+idxSum:7^8 · +idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · +rev:8^23 · +rev:8^23 · +rev:8^34]: NoProd) < [+idxSum:7^8]3'ls
 //│ 	([+idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · +rev:8^23 · +rev:8^23 · +rev:8^34]: N) < [+idxSum:7^8]3'ls
 //│ 	([+idxSum:7^33 · -rev:8^34 · +rev:8^23 · +rev:8^23]: C(([]: 17'hh), ([]: 16'a))) < [+idxSum:7^8]3'ls
+//│ 	([+idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · +rev:8^23 · +rev:8^34]: NoProd) < [+idxSum:7^8]3'ls
 //│ 	([+idxSum:7^33 · -rev:8^34 · +rev:8^23 · +rev:8^34]: N) < [+idxSum:7^8]3'ls
+//│ 	([+idxSum:7^8 · +idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · -rev:8^23 · +rev:8^23 · +rev:8^23 · +rev:8^34]: NoProd) < [+idxSum:7^8]3'ls
 //│ 	([+idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · -rev:8^23 · +rev:8^23 · +rev:8^23 · +rev:8^34]: N) < [+idxSum:7^8]3'ls
 //│ 	([+idxSum:7^33 · -rev:8^34 · -rev:8^23 · +rev:8^23 · +rev:8^23]: C(([]: 17'hh), ([]: 16'a))) < [+idxSum:7^8]3'ls
+//│ 	([+idxSum:7^8 · +idxSum:7^33 · -rev:8^34 · -rev:8^23 · +rev:8^23 · +rev:8^34]: NoProd) < [+idxSum:7^8]3'ls
 //│ 	([+idxSum:7^33 · -rev:8^34 · -rev:8^23 · +rev:8^23 · +rev:8^34]: N) < [+idxSum:7^8]3'ls
+//│ 	([+idxSum:7^33 · -rev:8^34 · -rev:8^23 · +rev:8^34]: NoProd) < [+idxSum:7^8]3'ls
 //│ 	([-rev:8^34 · +rev:8^34]: N) < [+idxSum:7^33]3'ls
 //│ 	([-rev:8^34 · +rev:8^23]: C(([]: 17'hh), ([]: 16'a))) < [+idxSum:7^33]3'ls
 //│ 	([-rev:8^34 · -rev:8^23 · +rev:8^23]: C(([]: 17'hh), ([]: 16'a))) < [+idxSum:7^33]3'ls
@@ -1446,6 +1637,8 @@ idxSum(rev(primitive, N))(0)
 //│ --------------
 //│ 18'tt:
 //│ 	18'tt[+rev:8^23] < ([]: 15'lss)
+//│ 	([+rev:8^23 · +rev:8^34]: NoProd) < []18'tt
+//│ 	([+rev:8^34]: NoProd) < []18'tt
 //│ --------------
 //│ 16'a:
 //│ 	16'a[+rev:8^23 · +rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8] < ([]: 6't)
@@ -1482,6 +1675,8 @@ idxSum(rev(primitive, N))(0)
 //│ --------------
 //│ 15'lss:
 //│ 	15'lss[] < ([]: Destruct(N, C(17'hh, 18'tt)))
+//│ 	([+rev:8^34]: NoProd) < [+rev:8^23]15'lss
+//│ 	([+rev:8^34]: NoProd) < []15'lss
 //│ --------------
 //│ 24'39_callres:
 //│ 	24'39_callres[] < ([]: ([]: Int) => ([]: 25'41_callres))
@@ -1538,6 +1733,10 @@ inter(l1, l2)
 //│ <<<<<<<<<< initial constraints <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
+//│ NoProd <: 9't1
+//│ 	[-l2:8^36 · +inter:6^33 · +inter:6^11 · +inter:6^11]  --->  [-l2:8^36 · +inter:6^33 · +inter:6^11]
+//│ NoProd <: 6't0
+//│ 	[-l1:7^34 · +inter:6^33 · +inter:6^11 · +inter:6^11 · +inter:6^11 · +inter:6^11 · +inter:6^11]  --->  [-l1:7^34 · +inter:6^33 · +inter:6^11 · +inter:6^11 · +inter:6^11 · +inter:6^11]
 //│ <<<<<<< knots <<<<<<<
 //│ 
 //│ >>>>>>> type variable bounds >>>>>>>
@@ -1548,6 +1747,8 @@ inter(l1, l2)
 //│ --------------
 //│ 5'h0:
 //│ 	5'h0[] < ([]: Destruct(Int))
+//│ 	([+inter:6^11 · +inter:6^11 · +inter:6^11 · +inter:6^11 · +inter:6^11 · +inter:6^33 · -l1:7^34]: NoProd) < []5'h0
+//│ 	([+inter:6^11 · +inter:6^11 · +inter:6^11 · +inter:6^11 · +inter:6^33 · -l1:7^34]: NoProd) < []5'h0
 //│ 	([+inter:6^11 · +inter:6^11 · +inter:6^11 · +inter:6^33 · -l1:7^34]: Int) < []5'h0
 //│ 	([+inter:6^11 · +inter:6^11 · +inter:6^33 · -l1:7^34]: Int) < []5'h0
 //│ 	([+inter:6^11 · +inter:6^33 · -l1:7^34]: Int) < []5'h0
@@ -1569,6 +1770,7 @@ inter(l1, l2)
 //│ --------------
 //│ 6't0:
 //│ 	6't0[+inter:6^11] < ([]: 3'xs)
+//│ 	([+inter:6^11 · +inter:6^11 · +inter:6^11 · +inter:6^11 · +inter:6^33 · -l1:7^34]: NoProd) < []6't0
 //│ 	([+inter:6^11 · +inter:6^11 · +inter:6^11 · +inter:6^33 · -l1:7^34]: N) < []6't0
 //│ 	([+inter:6^11 · +inter:6^11 · +inter:6^33 · -l1:7^34]: C(([]: Int), ([]: N))) < []6't0
 //│ 	([+inter:6^11 · +inter:6^33 · -l1:7^34]: C(([]: Int), ([]: C(([]: Int), ([]: N))))) < []6't0
@@ -1577,11 +1779,13 @@ inter(l1, l2)
 //│ 9't1:
 //│ 	9't1[] < ([+inter:6^11]: 7'ys)
 //│ 	9't1[] < ([+inter:6^11]: 4'ys)
+//│ 	([+inter:6^11 · +inter:6^33 · -l2:8^36]: NoProd) < []9't1
 //│ 	([+inter:6^33 · -l2:8^36]: N) < []9't1
 //│ --------------
 //│ 13'15_callres:
 //│ 	([]: C2(([]: 11'10_callres), ([]: 13'15_callres))) < [-inter:6^11]13'15_callres
 //│ 	([]: N2) < [-inter:6^11]13'15_callres
+//│ 	([+inter:6^11 · +inter:6^11 · +inter:6^33 · -l2:8^36]: NoProd) < [-inter:6^11]13'15_callres
 //│ 	([+inter:6^33 · -l2:8^36]: C(([]: Int), ([]: N))) < [-inter:6^11]13'15_callres
 //│ 	([+inter:6^11 · +inter:6^33 · -l2:8^36]: N) < [-inter:6^11]13'15_callres
 //│ --------------
@@ -1591,6 +1795,7 @@ inter(l1, l2)
 //│ 	([]: C(([]: Int), ([]: N))) < []2'l2
 //│ --------------
 //│ 17'37_callres:
+//│ 	([+inter:6^11 · +inter:6^11 · +inter:6^33 · -l2:8^36]: NoProd) < [-inter:6^33]17'37_callres
 //│ 	([+inter:6^11 · +inter:6^33 · -l2:8^36]: N) < [-inter:6^33]17'37_callres
 //│ 	([]: N2) < [-inter:6^33]17'37_callres
 //│ 	([]: C2(([]: 11'10_callres), ([]: 13'15_callres))) < [-inter:6^33]17'37_callres
@@ -1603,11 +1808,13 @@ inter(l1, l2)
 //│ --------------
 //│ 7'ys:
 //│ 	7'ys[] < ([]: Destruct(N, C(8'h1, 9't1)))
+//│ 	([+inter:6^11 · +inter:6^33 · -l2:8^36]: NoProd) < [+inter:6^11]7'ys
 //│ 	([+inter:6^33 · -l2:8^36]: N) < [+inter:6^11]7'ys
 //│ 	([]: C(([]: Int), ([]: N))) < [-l2:8^36 · +inter:6^33]7'ys
 //│ --------------
 //│ 3'xs:
 //│ 	3'xs[] < ([]: Destruct(N, C(5'h0, 6't0)))
+//│ 	([+inter:6^11 · +inter:6^11 · +inter:6^11 · +inter:6^11 · +inter:6^33 · -l1:7^34]: NoProd) < [+inter:6^11]3'xs
 //│ 	([+inter:6^11 · +inter:6^11 · +inter:6^11 · +inter:6^33 · -l1:7^34]: N) < [+inter:6^11]3'xs
 //│ 	([+inter:6^11 · +inter:6^11 · +inter:6^33 · -l1:7^34]: C(([]: Int), ([]: N))) < [+inter:6^11]3'xs
 //│ 	([+inter:6^11 · +inter:6^33 · -l1:7^34]: C(([]: Int), ([]: C(([]: Int), ([]: N))))) < [+inter:6^11]3'xs
@@ -1624,11 +1831,14 @@ inter(l1, l2)
 //│ --------------
 //│ 8'h1:
 //│ 	8'h1[] < ([]: Destruct(Int))
+//│ 	([+inter:6^11 · +inter:6^11 · +inter:6^33 · -l2:8^36]: NoProd) < []8'h1
+//│ 	([+inter:6^11 · +inter:6^33 · -l2:8^36]: NoProd) < []8'h1
 //│ 	([+inter:6^33 · -l2:8^36]: Int) < []8'h1
 //│ --------------
 //│ 4'ys:
 //│ 	4'ys[-inter:6^11] < ([]: 13'15_callres)
 //│ 	4'ys[-inter:6^33] < ([]: 17'37_callres)
+//│ 	([+inter:6^11 · +inter:6^33 · -l2:8^36]: NoProd) < [+inter:6^11]4'ys
 //│ 	([+inter:6^33 · -l2:8^36]: N) < [+inter:6^11]4'ys
 //│ 	([]: C(([]: Int), ([]: N))) < [-l2:8^36 · +inter:6^33]4'ys
 //│ --------------

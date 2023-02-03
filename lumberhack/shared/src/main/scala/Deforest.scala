@@ -291,15 +291,15 @@ class Deforest(debug: Boolean) {
   val recursiveConstr = (mutable.Set.empty[Path -> Path], mutable.Map.empty[Path, Path], mutable.Map.empty[Cnstr, mutable.Set[Path -> Path]])
   def resolveConstraints: Unit = {
 
-    def handle(c: Cnstr)(using cache: Cache, numOfTypeCtor: Int): Unit = trace(s"handle [${c._1.pp} : ${c._2.pp}]") {
+    def handle(c: Cnstr)(using cache: Cache, numOfTypeCtor: Int): Unit = trace(s"handle [${c._1.pp(using true)} <: ${c._2.pp(using true)}]") {
       val prod = c._1
       val cons = c._2
 
       (prod.s, cons.s) match
         case (_: ProdVar, _) | (_, _: ConsVar) => cache.get(c) match
           case S(inCache) =>
-            log(s">> done [${prod.pp} : ${cons.pp}]")
-            log(s">> with [${inCache._1._1.pp} : ${inCache._1._2.pp}]")
+            log(s">> done [${prod.pp(using true)} : ${cons.pp(using true)}]")
+            log(s">> with [${inCache._1._1.pp(using true)} : ${inCache._1._2.pp(using true)}]")
             // register knots that actually pass through type ctors
             if inCache._2 < numOfTypeCtor then {
               recursiveConstr._3.updateWith(c) {
@@ -321,7 +321,23 @@ class Deforest(debug: Boolean) {
 
       (prod.s, cons.s) match
         case (ProdVar(v, _), ConsVar(w, _)) if v === w => ()
-        case (NoProd(), _) | (_, NoCons()) => ()
+        case (NoProd(), NoCons()) => ()
+        case (NoProd(), ConsFun(l, r)) =>
+          given Int = numOfTypeCtor + 1
+          handle(l.addPath(cons.path.neg) -> NoCons()(using noExprId).toStrat(prod.path.neg))
+          handle(NoProd()(using noExprId).toStrat(prod.path) -> r.addPath(cons.path))
+        case (ProdFun(l, r), NoCons()) =>
+          given Int = numOfTypeCtor + 1
+          handle(r.addPath(prod.path) -> NoCons()(using noExprId).toStrat(cons.path))
+          handle(NoProd()(using noExprId).toStrat(cons.path.neg) -> l.addPath(prod.path.neg))
+        case (NoProd(), Destruct(ds)) =>
+          given Int = numOfTypeCtor + 1
+          ds foreach { case Destructor(ctor, argCons) =>
+            argCons foreach { c => handle(prod, c.addPath(cons.path)) }
+          }
+        case (MkCtor(ctor, args), NoCons()) =>
+          given Int = numOfTypeCtor + 1
+          args foreach { p => handle(p.addPath(prod.path), cons) }
         case (pv@ProdVar(v, _), _) =>
           upperBounds += v -> ((pv.asOutPath.getOrElse(Path.empty) ::: prod.path.rev, cons) :: upperBounds(v))
           lowerBounds(v).foreach((lb_path, lb_strat) => handle({
@@ -338,12 +354,16 @@ class Deforest(debug: Boolean) {
           handle(rhs1.addPath(prod.path) -> rhs2.addPath(cons.path))
         case (MkCtor(ctor, args), Destruct(ds)) =>
           given Int = numOfTypeCtor + 1
-          val d = ds.find(_.ctor === ctor).get
-          assert(args.size === d.argCons.size)
-          args lazyZip d.argCons foreach {
-            case (a, c) =>
-              handle(a.addPath(prod.path), c.addPath(cons.path))
+          ds foreach { case Destructor(ds_ctor, argCons) =>
+            if ds_ctor == ctor then
+              assert(args.size == argCons.size)
+              args lazyZip argCons foreach { case (a, c) =>
+                handle(a.addPath(prod.path), c.addPath(cons.path))
+              }
+            else
+              argCons foreach { c => handle(NoProd()(using noExprId).toStrat(prod.path), c.addPath(cons.path)) }
           }
+          val d = ds.find(_.ctor === ctor).get
         case (Sum(ctors), Destruct(ds)) =>
           given Int = numOfTypeCtor + 1
           ctors.foreach { ctorStrat => ctorStrat.s match

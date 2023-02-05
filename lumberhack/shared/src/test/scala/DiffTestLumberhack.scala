@@ -25,9 +25,11 @@ class DiffTestLumberhack extends DiffTests {
     output(originalProgram.pp)
     output("<<<<<<<<<< Original <<<<<<<<<<")
 
-    output("\n>>>>>>>>>> initial constraints >>>>>>>>>>")
-    output(d.constraints.map((p, c) => s"${p.pp(using true)} <: ${c.pp(using true)}").mkString("\n"))
-    output("<<<<<<<<<< initial constraints <<<<<<<<<<")
+    if mode.stdout then {
+      output("\n>>>>>>>>>> initial constraints >>>>>>>>>>")
+      output(d.constraints.map((p, c) => s"${p.pp(using true)} <: ${c.pp(using true)}").mkString("\n"))
+      output("<<<<<<<<<< initial constraints <<<<<<<<<<")
+    }
     try {
       d.resolveConstraints
 
@@ -40,18 +42,20 @@ class DiffTestLumberhack extends DiffTests {
       }
       output("<<<<<<< knots <<<<<<<")
 
-      output("\n>>>>>>> type variable bounds >>>>>>>")
-      val tvs = d.upperBounds.keySet ++ d.lowerBounds.keySet
-      tvs.foreach { tv =>
-        val ub = d.upperBounds(tv).map(u => s"${u._1.pp} < ${u._2.pp(using true)}")
-        val lb = d.lowerBounds(tv).map(l => s"${l._2.pp(using true)} < ${l._1.rev.pp}")
-        val tvName = d.varsName(tv)
-        output(tvName + ":")
-        ub.foreach(u => output(s"\t${tvName}${u}"))
-        lb.foreach(l => output(s"\t${l}${tvName}"))
-        output("--------------")
+      if mode.stdout then {
+        output("\n>>>>>>> type variable bounds >>>>>>>")
+        val tvs = d.upperBounds.keySet ++ d.lowerBounds.keySet
+        tvs.foreach { tv =>
+          val ub = d.upperBounds(tv).map(u => s"${u._1.pp} < ${u._2.pp(using true)}")
+          val lb = d.lowerBounds(tv).map(l => s"${l._2.pp(using true)} < ${l._1.rev.pp}")
+          val tvName = d.varsName(tv)
+          output(tvName + ":")
+          ub.foreach(u => output(s"\t${tvName}${u}"))
+          lb.foreach(l => output(s"\t${l}${tvName}"))
+          output("--------------")
+        }
+        output("<<<<<<< type variable bounds <<<<<<<")
       }
-      output("<<<<<<< type variable bounds <<<<<<<")
       
       // output(("------- defInstance -------"))
       // d.defInstances.foreach { case (p, xs) =>

@@ -10,7 +10,7 @@ class DiffTestLumberhack extends DiffTests {
   import DiffTestLumberhack.*
   override def postProcess(mode: ModeType, basePath: List[Str], testName: Str, unit: TypingUnit, output: Str => Unit): Unit = {
     // output("Parsed AST:\n")
-    // output(pprint2(Pgrm(unit.entities).desugared, showFieldNames = true, width = 150).plainText)
+    // output(Pgrm(unit.entities).toString())
     // output("Parsed AST:\n")
     
     output(">>>>>>>>>> Original >>>>>>>>>>")
@@ -25,7 +25,7 @@ class DiffTestLumberhack extends DiffTests {
     output(originalProgram.pp)
     output("<<<<<<<<<< Original <<<<<<<<<<")
 
-    if mode.stdout then {
+    if mode.stdout || mode.verbose then {
       output("\n>>>>>>>>>> initial constraints >>>>>>>>>>")
       output(d.constraints.map((p, c) => s"${p.pp(using true)} <: ${c.pp(using true)}").mkString("\n"))
       output("<<<<<<<<<< initial constraints <<<<<<<<<<")
@@ -42,7 +42,7 @@ class DiffTestLumberhack extends DiffTests {
       }
       output("<<<<<<< knots <<<<<<<")
 
-      if mode.stdout then {
+      if mode.stdout || mode.verbose then {
         output("\n>>>>>>> type variable bounds >>>>>>>")
         val tvs = d.upperBounds.keySet ++ d.lowerBounds.keySet
         tvs.foreach { tv =>
@@ -76,7 +76,7 @@ class DiffTestLumberhack extends DiffTests {
       case e => if allowErr then {
         output("!!!!!!ERROR!!!!!!")
         output(s"${e.toString()}")
-        if mode.stdout then {
+        if mode.stdout || mode.verbose then {
           output(s"\n${e.getStackTrace().take(10).map(_.toString()).mkString("\n")}\n")
         }
         output("!!!!!!ERROR!!!!!!")

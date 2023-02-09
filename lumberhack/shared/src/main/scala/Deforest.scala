@@ -354,16 +354,20 @@ class Deforest(debug: Boolean) {
           handle(rhs1.addPath(prod.path) -> rhs2.addPath(cons.path))
         case (MkCtor(ctor, args), Destruct(ds)) =>
           given Int = numOfTypeCtor + 1
+          var found = false
           ds foreach { case Destructor(ds_ctor, argCons) =>
             if ds_ctor == ctor then
+              found = true
               assert(args.size == argCons.size)
               args lazyZip argCons foreach { case (a, c) =>
                 handle(a.addPath(prod.path), c.addPath(cons.path))
               }
+            else if ds_ctor.name == "_" then
+              found = true
             else
               argCons foreach { c => handle(NoProd()(using noExprId).toStrat(prod.path), c.addPath(cons.path)) }
           }
-          val d = ds.find(_.ctor === ctor).get
+          if !found then lastWords(s"type error ${prod.pp} <: ${cons.pp}")
         case (Sum(ctors), Destruct(ds)) =>
           given Int = numOfTypeCtor + 1
           ctors.foreach { ctorStrat => ctorStrat.s match
@@ -375,7 +379,7 @@ class Deforest(debug: Boolean) {
               }
             }
           }
-        case _ => lastWords("type error")
+        case _ => lastWords(s"type error ${prod.pp} <: ${cons.pp}")
     }()
     
     given Cache = Map.empty

@@ -102,7 +102,7 @@ object Expr {
     case If(IfOpApp(lhs, Var("is"), IfBlock(lines)), N)
       if lines.forall { _ match {
         case L(IfThen(App(Var(ctor), Tup((N -> Fld(false, false, _: Var)) :: _)), _)) => ctor.isCapitalized
-        case L(IfThen(Var(ctor), _)) => ctor.isCapitalized
+        case L(IfThen(Var(ctor), _)) if (ctor.isCapitalized || ctor == "_") => true
         case _ => false
       } } => Match(
         fromTerm(lhs),

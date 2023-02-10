@@ -55,6 +55,16 @@ case class Path(p: Ls[PathElem[PathElemType]]) {
       case (h :: t, h2 :: t2) => if h.canCancel(h2) then anni(t, t2) else anni(t, h :: h2 :: t2)
       case (Nil, r) => Path(r.reverse)
     anni(this.p, Nil)
+  def splitted: Path -> Path = {
+    var prod: Ls[PathElem[PathElemType]] = Nil
+    var cons: Ls[PathElem[PathElemType]] = Nil
+    p foreach {
+      case n: PathElem.Normal if n.pol == PathElemPol.Out => prod = (n :: prod)
+      case n: PathElem.Normal if n.pol == PathElemPol.In => cons = (n :: cons)
+      case n: PathElem.Star => ???
+    }
+    Path(prod) -> Path(cons.reverse)
+  }
 }
 object Path {
   lazy val empty = Path(Nil)
@@ -288,7 +298,7 @@ class Deforest(debug: Boolean) {
   
   type Cache = Map[Cnstr, Cnstr -> Int]
 
-  val recursiveConstr = (mutable.Set.empty[Path -> Path], mutable.Map.empty[Path, Path], mutable.Map.empty[Cnstr, mutable.Set[Path -> Path]])
+  val recursiveConstr = mutable.Map.empty[Cnstr, mutable.Set[Path -> Path]]
   def resolveConstraints: Unit = {
 
     def handle(c: Cnstr)(using cache: Cache, numOfTypeCtor: Int): Unit = trace(s"handle [${c._1.pp(using true)} <: ${c._2.pp(using true)}]") {
@@ -302,7 +312,7 @@ class Deforest(debug: Boolean) {
             log(s">> with [${inCache._1._1.pp(using true)} : ${inCache._1._2.pp(using true)}]")
             // register knots that actually pass through type ctors
             if inCache._2 < numOfTypeCtor then {
-              recursiveConstr._3.updateWith(c) {
+              recursiveConstr.updateWith(c) {
                 case Some(m) =>
                   m += (prod.path.rev ::: cons.path) -> (inCache._1._1.path.rev ::: inCache._1._2.path)
                   Some(m)
@@ -386,6 +396,17 @@ class Deforest(debug: Boolean) {
     given Int = 0
     
     constraints foreach handle
+  }
+
+  def actualKnots = {
+    val afterAnniAndSplit = recursiveConstr.map { (cnstr, set) => (cnstr, set.flatMap { (key, vall) => 
+      val (keyProd, keyCons) = key.splitted
+      val (valProd, valCons) = vall.splitted
+      (keyProd -> valProd) :: (keyCons -> valCons) :: Nil
+    })}
+    val allKnotsMap = mutable.Map.empty[Path, Set[Path]].withDefaultValue(Set.empty[Path])
+    afterAnniAndSplit.values.flatten.foreach { (key, vall) => allKnotsMap.update(key, allKnotsMap(key) + vall)}
+
   }
 }
 

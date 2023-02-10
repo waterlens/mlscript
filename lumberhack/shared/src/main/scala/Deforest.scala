@@ -55,15 +55,32 @@ case class Path(p: Ls[PathElem[PathElemType]]) {
       case (h :: t, h2 :: t2) => if h.canCancel(h2) then anni(t, t2) else anni(t, h :: h2 :: t2)
       case (Nil, r) => Path(r.reverse)
     anni(this.p, Nil)
+
   def splitted: Path -> Path = {
     var prod: Ls[PathElem[PathElemType]] = Nil
     var cons: Ls[PathElem[PathElemType]] = Nil
     p foreach {
-      case n: PathElem.Normal if n.pol == PathElemPol.Out => prod = (n :: prod)
-      case n: PathElem.Normal if n.pol == PathElemPol.In => cons = (n :: cons)
+      case n: PathElem.Normal => n.pol match
+        case PathElemPol.Out => prod = (n :: prod)
+        case PathElemPol.In => cons = (n :: cons)
       case n: PathElem.Star => ???
     }
     Path(prod) -> Path(cons.reverse)
+  }
+
+  def reachable(callsInfo: (mutable.Set[(Ref, ExprId)], mutable.Map[Str, Set[(Ref, ExprId)]])): Boolean = {
+    p match {
+      case Nil => true
+      case (PathElem.Normal(ref, uid)) :: t => {
+        val headCheck: Boolean = callsInfo._1.contains((ref, uid))
+        val nextCalls: Option[Set[(Ref, ExprId)]] = callsInfo._2.get(ref.id.tree.name)
+        (headCheck, nextCalls) match {
+          case (true, Some(next)) => Path(t).reachable((next.to(mutable.Set), callsInfo._2))
+          case _ => false
+        }
+      }
+      case _ => ???
+    }
   }
 }
 object Path {
@@ -181,7 +198,7 @@ case class Ctx(bindings: Map[Str, Strat[ProdVar]]) {
 object Ctx {
   def empty = Ctx(Map.empty)
 }
-def ctx(using Ctx): Ctx = summon
+// def ctx(using Ctx): Ctx = summon
 
 class Deforest(debug: Boolean) {
   object Trace {
@@ -226,8 +243,10 @@ class Deforest(debug: Boolean) {
   
   val upperBounds = mutable.Map.empty[Uid[TypeVar], Ls[(Path, ConsStrat)]].withDefaultValue(Nil)
   val lowerBounds = mutable.Map.empty[Uid[TypeVar], Ls[(Path, ProdStrat)]].withDefaultValue(Nil)
+  // type CallsInfo = (mutable.Set.empty[(Ref, ExprId)], mutable.Map.empty[Ident, Set[Str -> ExprId]])
+  val callsInfo = (mutable.Set.empty[(Ref, ExprId)], mutable.Map.empty[Str, Set[Ref -> ExprId]])
   
-  def process(e: Expr)(using Ctx): ProdStrat = trace(s"process ${e.uid}: ${e.pp}") {
+  def process(e: Expr)(using ctx: Ctx, calls: mutable.Set[(Ref, Uid[Expr])]): ProdStrat = trace(s"process ${e.uid}: ${e.pp}") {
     val res: ProdStratEnum = e match
       case Const(IntLit(_)) => prodInt(using noExprId)
       case Const(l) => NoProd()(using noExprId)
@@ -237,7 +256,10 @@ class Deforest(debug: Boolean) {
         else
           NoProd()(using noExprId)
       }
-      case r @ Ref(id) => return if id.isDef then ctx(id).s.copy()(Some(r -> r.uid))(using e.uid).toStrat() else ctx(id)
+      case r @ Ref(id) => return if id.isDef then {
+        calls.add(r -> r.uid)
+        ctx(id).s.copy()(Some(r -> r.uid))(using e.uid).toStrat()
+      } else ctx(id)
       case Call(f, a) =>
         val fp = process(f)
         val ap = process(a)
@@ -278,14 +300,20 @@ class Deforest(debug: Boolean) {
         id.tree.name -> freshVar(id.tree.name)._1.toStrat()
     }.toMap
 
-    implicit val ctx = Ctx.empty ++ vars
+    val ctx = Ctx.empty ++ vars
     p.contents.map {
       case L(ProgDef(id, body)) => {
-        val p = process(body)
+        val calls = mutable.Set.empty[(Ref, Uid[Expr])]
+        val p = process(body)(using ctx, calls)
         val v = vars(id.tree.name).s
         constrain(p, ConsVar(v.uid, v.name)()(using noExprId).toStrat())
+        callsInfo._2.addOne(id.tree.name -> calls.toSet)
       }
-      case R(e) => process(e)
+      case R(e) => {
+        val calls = mutable.Set.empty[(Ref, Uid[Expr])]
+        process(e)(using ctx, calls)
+        callsInfo._1.addAll(calls)
+      }
     }
     vars.toList
   }(r => s"=> ${summary(r.map(v => s"${v._1}: ${v._2.pp}").mkString(", "))}")
@@ -398,15 +426,17 @@ class Deforest(debug: Boolean) {
     constraints foreach handle
   }
 
-  def actualKnots = {
+  def actualKnotsUsingSplit = {
     val afterAnniAndSplit = recursiveConstr.map { (cnstr, set) => (cnstr, set.flatMap { (key, vall) => 
-      val (keyProd, keyCons) = key.splitted
-      val (valProd, valCons) = vall.splitted
+      val (keyProd, keyCons) = key.annihilated.splitted
+      val (valProd, valCons) = vall.annihilated.splitted
       (keyProd -> valProd) :: (keyCons -> valCons) :: Nil
     })}
     val allKnotsMap = mutable.Map.empty[Path, Set[Path]].withDefaultValue(Set.empty[Path])
     afterAnniAndSplit.values.flatten.foreach { (key, vall) => allKnotsMap.update(key, allKnotsMap(key) + vall)}
 
+    allKnotsMap.retain { case (k, _) => k.reachable(callsInfo) }
+    (allKnotsMap, afterAnniAndSplit)
   }
 }
 

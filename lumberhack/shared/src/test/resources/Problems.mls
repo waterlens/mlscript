@@ -19,6 +19,9 @@ c(p)
 //│ 
 //│ >>>>>>> knots >>>>>>>
 //│ <<<<<<< knots <<<<<<<
+//│ 
+//│ >>>>>>> computed knots >>>>>>>
+//│ <<<<<<< computed knots <<<<<<<
 
 
 // NOTE: how to produce a finite rewrtten program?
@@ -38,6 +41,9 @@ c(p)
 //│ 
 //│ >>>>>>> knots >>>>>>>
 //│ <<<<<<< knots <<<<<<<
+//│ 
+//│ >>>>>>> computed knots >>>>>>>
+//│ <<<<<<< computed knots <<<<<<<
 
 // Just a more valid/reasonable version of the above
 // TODO support nested patterns as in `Pair(0)`
@@ -60,6 +66,9 @@ c(p)
 //│ 
 //│ >>>>>>> knots >>>>>>>
 //│ <<<<<<< knots <<<<<<<
+//│ 
+//│ >>>>>>> computed knots >>>>>>>
+//│ <<<<<<< computed knots <<<<<<<
 
 fun c(x) = if primitive(x) is
     True then 0
@@ -76,6 +85,9 @@ c(0)
 //│ 
 //│ >>>>>>> knots >>>>>>>
 //│ <<<<<<< knots <<<<<<<
+//│ 
+//│ >>>>>>> computed knots >>>>>>>
+//│ <<<<<<< computed knots <<<<<<<
 
 
 // NOTE: only the first two element is handled
@@ -107,6 +119,11 @@ map(ff, l)
 //│ NoProd <: 6't
 //│ 	[-l:8^31 · +map:6^28 · +map:6^5 · +map:6^5 · +map:6^5 · +map:6^5]  --->  [-l:8^31 · +map:6^28 · +map:6^5 · +map:6^5 · +map:6^5]
 //│ <<<<<<< knots <<<<<<<
+//│ 
+//│ >>>>>>> computed knots >>>>>>>
+//│ [-l:8^31] --> [-l:8^31]
+//│ [+map:6^28 · +map:6^5 · +map:6^5 · +map:6^5 · +map:6^5] --> [+map:6^28 · +map:6^5 · +map:6^5 · +map:6^5]
+//│ <<<<<<< computed knots <<<<<<<
 
 
 // NOTE: some program not be able to write?
@@ -135,6 +152,11 @@ last(p)
 //│ NoProd <: 4't
 //│ 	[-p:7^18 · +last:6^17 · +last:6^5 · +last:6^5 · +last:6^5]  --->  [-p:7^18 · +last:6^17 · +last:6^5 · +last:6^5]
 //│ <<<<<<< knots <<<<<<<
+//│ 
+//│ >>>>>>> computed knots >>>>>>>
+//│ [+last:6^17 · +last:6^5 · +last:6^5 · +last:6^5] --> [+last:6^17 · +last:6^5 · +last:6^5]
+//│ [-p:7^18] --> [-p:7^18]
+//│ <<<<<<< computed knots <<<<<<<
 
 _LUMBERHACK_ERROR
 let add = primitive
@@ -173,6 +195,14 @@ idxSum(rev(primitive, N))(0)
 //│ 	[+rev:8^34 · +rev:8^23 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8 · +idxSum:7^8 · +idxSum:7^8]  --->  [+rev:8^34 · +rev:8^23 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8 · +idxSum:7^8]
 //│ 	[+rev:8^34 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8 · +idxSum:7^8]  --->  [+rev:8^34 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]
 //│ <<<<<<< knots <<<<<<<
+//│ 
+//│ >>>>>>> computed knots >>>>>>>
+//│ [-rev:8^34 · -rev:8^23] --> [-rev:8^34 · -rev:8^23]
+//│ [-rev:8^34] --> [-rev:8^34]
+//│ [+rev:8^34 · +rev:8^23 · +rev:8^23] --> [+rev:8^34 · +rev:8^23]
+//│ [+idxSum:7^33 · +idxSum:7^8 · +idxSum:7^8] --> [+idxSum:7^33 · +idxSum:7^8]
+//│ [] --> []
+//│ <<<<<<< computed knots <<<<<<<
 
 
 fun minuss(a) = if a is
@@ -202,6 +232,13 @@ minuss(fst)(snd)
 //│ NoProd <: 5'b
 //│ 	[-snd:8^22 · +minuss:6^19 · +minuss:6^3 · +minuss:6^3]  --->  [-snd:8^22 · +minuss:6^19 · +minuss:6^3]
 //│ <<<<<<< knots <<<<<<<
+//│ 
+//│ >>>>>>> computed knots >>>>>>>
+//│ [+minuss:6^19 · +minuss:6^3 · +minuss:6^3 · +minuss:6^3] --> [+minuss:6^19 · +minuss:6^3 · +minuss:6^3]
+//│ [+minuss:6^19 · +minuss:6^3 · +minuss:6^3] --> [+minuss:6^19 · +minuss:6^3]
+//│ [-snd:8^22] --> [-snd:8^22]
+//│ [-fst:7^20] --> [-fst:7^20]
+//│ <<<<<<< computed knots <<<<<<<
 
 // FIXME: weird recursive
 _LUMBERHACK_ERROR
@@ -234,3 +271,49 @@ minuss(fst)(snd)
 //│ NoProd <: 5'aa
 //│ 	[-fst:8^28 · +minuss:6^27 · +checkb:7^2 · +minuss:6^13 · +checkb:7^2 · +minuss:6^13 · +checkb:7^2 · +minuss:6^13]  --->  [-fst:8^28 · +minuss:6^27 · +checkb:7^2 · +minuss:6^13 · +checkb:7^2 · +minuss:6^13]
 //│ <<<<<<< knots <<<<<<<
+//│ 
+//│ >>>>>>> computed knots >>>>>>>
+//│ [+minuss:6^27 · +checkb:7^2 · +minuss:6^13 · +checkb:7^2 · +minuss:6^13 · +checkb:7^2 · +minuss:6^13] --> [+minuss:6^27 · +checkb:7^2 · +minuss:6^13 · +checkb:7^2 · +minuss:6^13]
+//│ [-snd:9^30] --> [-snd:9^30]
+//│ [-fst:8^28] --> [-fst:8^28]
+//│ [+minuss:6^27 · +checkb:7^2 · +minuss:6^13 · +checkb:7^2] --> [+minuss:6^27 · +checkb:7^2]
+//│ <<<<<<< computed knots <<<<<<<
+
+
+fun id(x) = if x is
+    ID(b) then b
+    C(a) then id(ID(C(a)))
+let p = C(p)
+fun c(y) = if y is
+    C(aa) then c(aa)
+c(id(p))
+//│ |#fun| |id|(|x|)| |#=| |#if| |x| |is|→|ID|(|b|)| |#then| |b|↵|C|(|a|)| |#then| |id|(|ID|(|C|(|a|)|)|)|←|↵|#let| |p| |#=| |C|(|p|)|↵|#fun| |c|(|y|)| |#=| |#if| |y| |is|→|C|(|aa|)| |#then| |c|(|aa|)|←|↵|c|(|id|(|p|)|)|
+//│ Parsed: {fun id = x, => if x is ‹(ID (b,)) then b; (C (a,)) then id (ID (C (a,),),)›; let p = C (p,); fun c = y, => if y is ‹(C (aa,)) then c (aa,)›; c (id (p,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ def id:6 = (fun x:9 -> case x:9^1 of {
+//│ 	ID b:10 => b:10^2
+//│ 	| C a:11 => (id:6^3 [ID [C a:11^4]])})
+//│ def p:7 = [C p:7^10]
+//│ def c:8 = (fun y:12 -> case y:12^12 of {
+//│ 	C aa:13 => (c:8^13 aa:13^14)})
+//│ (c:8^18 (id:6^19 p:7^20))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> knots >>>>>>>
+//│ C(1'p_7^10) <: 9'aa
+//│ 	[-p:7^10 · -p:7^10 · -p:7^20 · +id:6^19 · +id:6^3 · -id:6^19 · +c:8^18 · +c:8^13]  --->  [-p:7^10 · -p:7^20 · +id:6^19 · +id:6^3 · -id:6^19 · +c:8^18]
+//│ 	[-p:7^10 · -p:7^10 · -p:7^20 · +id:6^19 · +id:6^3 · -id:6^3 · -id:6^19 · +c:8^18 · +c:8^13]  --->  [-p:7^10 · -p:7^20 · +id:6^19 · +id:6^3 · -id:6^3 · -id:6^19 · +c:8^18]
+//│ NoProd <: 9'aa
+//│ 	[+id:6^3 · +id:6^3 · -id:6^3 · -id:6^19 · +c:8^18 · +c:8^13]  --->  [+id:6^3 · +id:6^3 · -id:6^3 · -id:6^19 · +c:8^18]
+//│ 	[+id:6^3 · +id:6^3 · -id:6^19 · +c:8^18 · +c:8^13]  --->  [+id:6^3 · +id:6^3 · -id:6^19 · +c:8^18]
+//│ NoProd <: 8'y
+//│ 	[-p:7^20 · +id:6^19 · -id:6^19 · +c:8^18 · +c:8^13]  --->  [-p:7^20 · +id:6^19 · -id:6^19 · +c:8^18]
+//│ 	[-p:7^20 · +id:6^19 · -id:6^3 · -id:6^19 · +c:8^18 · +c:8^13]  --->  [-p:7^20 · +id:6^19 · -id:6^3 · -id:6^19 · +c:8^18]
+//│ <<<<<<< knots <<<<<<<
+//│ 
+//│ >>>>>>> computed knots >>>>>>>
+//│ [-id:6^19] --> [-id:6^19]
+//│ [+c:8^18 · +c:8^13] --> [+c:8^18]
+//│ [-p:7^20 · -p:7^10 · -p:7^10] --> [-p:7^20 · -p:7^10]
+//│ [-p:7^20] --> [-p:7^20]
+//│ <<<<<<< computed knots <<<<<<<

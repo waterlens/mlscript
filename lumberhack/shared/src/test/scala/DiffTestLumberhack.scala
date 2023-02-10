@@ -42,6 +42,12 @@ class DiffTestLumberhack extends DiffTests {
       }
       output("<<<<<<< knots <<<<<<<")
 
+      output("\n>>>>>>> computed knots >>>>>>>")
+      d.actualKnotsUsingSplit._1.foreach { (k, v) =>
+        output(s"${k.pp} --> ${v.map(v => s"${v.pp}").mkString("\n\t")}")
+      }
+      output("<<<<<<< computed knots <<<<<<<")
+
       if mode.stdout || mode.verbose then {
         output("\n>>>>>>> type variable bounds >>>>>>>")
         val tvs = d.upperBounds.keySet ++ d.lowerBounds.keySet

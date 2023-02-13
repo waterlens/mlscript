@@ -435,8 +435,17 @@ class Deforest(debug: Boolean) {
     val allKnotsMap = mutable.Map.empty[Path, Set[Path]].withDefaultValue(Set.empty[Path])
     afterAnniAndSplit.values.flatten.foreach { (key, vall) => allKnotsMap.update(key, allKnotsMap(key) + vall)}
 
-    allKnotsMap.retain { case (k, _) => k.reachable(callsInfo) }
+    allKnotsMap.retain { case (k, vs) => k.reachable(callsInfo) && vs.forall(vsp => vsp.reachable(callsInfo))}
     (allKnotsMap, afterAnniAndSplit)
+  }
+
+  def actualKnotsUsingExpansion = {
+    val afterAnni = recursiveConstr.map { (cnstr, set) => (cnstr, set.map { (key, vall) =>
+      val nk = key.annihilated
+      val nv = vall.annihilated
+      (nk, nv)
+    })}
+    // TODO:
   }
 }
 

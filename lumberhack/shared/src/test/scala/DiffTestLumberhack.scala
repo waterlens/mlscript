@@ -38,6 +38,7 @@ class DiffTestLumberhack extends DiffTests {
         output(s"${r._1._1.pp} <: ${r._1._2.pp}")
         r._2.foreach { p =>
           output(s"\t${p._1.pp}  --->  ${p._2.pp}")
+          if !p._1.p.containsSlice(p._2.p) then output("\t!!NOT SUB-PATH")
         }
       }
       output("<<<<<<< knots <<<<<<<")
@@ -45,6 +46,9 @@ class DiffTestLumberhack extends DiffTests {
       output("\n>>>>>>> computed knots >>>>>>>")
       d.actualKnotsUsingSplit._1.foreach { (k, v) =>
         output(s"${k.pp} --> ${v.map(v => s"${v.pp}").mkString("\n\t")}")
+        
+        if v.size > 1 then output("\t!!MORE THAN ONE MATCH")
+        if !v.forall(vp => k.p.startsWith(vp.p)) then output("\t!!NOT PREFIX")
       }
       output("<<<<<<< computed knots <<<<<<<")
 

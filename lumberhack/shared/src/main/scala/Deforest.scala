@@ -11,6 +11,11 @@ type TypeVar
 type NormalPathElem
 type StarPathElem
 type PathElemType = NormalPathElem | StarPathElem
+type ExprId = Uid[Expr]
+type Cnstr = ProdStrat -> ConsStrat
+type ProdStrat = Strat[ProdStratEnum]
+type ConsStrat = Strat[ConsStratEnum]
+
 enum PathElemPol {
   case In
   case Out
@@ -34,8 +39,8 @@ enum PathElem[+T <: PathElemType] {
   def rev: PathElem[T] = this match
     case n: Normal => n
     case s: Star => s.copy(elms = s.elms.reverse)
-  lazy val pp: Str = this match
-    case n@Normal(r@Ref(Ident(_, Var(nme), uid)), _) => s"${n.pol.pp}$nme:${uid}^${r.uid}"
+  def pp(using showPol: Boolean = true): Str = this match
+    case n@Normal(r@Ref(Ident(_, Var(nme), uid)), _) => s"${if showPol then n.pol.pp else ""}$nme:${uid}^${r.uid}"
     case Star(elms) => s"{${elms.map(_.pp).mkString(" · ")}}*"
   def canCancel[V <: PathElemType](other: PathElem[V]): Boolean = (this, other) match
     case (n: Normal, o: Normal) => (n == o) && (n.pol.canCancel(o.pol))
@@ -47,7 +52,7 @@ case class Path(p: Ls[PathElem[PathElemType]]) {
   // TODO: merge two consecutive identical stars during concatenation
   def ::: (other: Path) = Path(other.p ::: p)
   def map(f: PathElem[PathElemType] => PathElem[PathElemType]) = Path(p.map(f))
-  lazy val pp: Str = s"[${p.map(_.pp).mkString(" · ")}]"
+  def pp(using showPol: Boolean = true): Str = s"[${p.map(_.pp).mkString(" · ")}]"
   lazy val annihilated: Path =
     def anni(i: Ls[PathElem[PathElemType]], o: Ls[PathElem[PathElemType]]): Path = (i, o) match
       case (Nil, Nil) => Path(Nil)
@@ -86,10 +91,6 @@ case class Path(p: Ls[PathElem[PathElemType]]) {
 object Path {
   lazy val empty = Path(Nil)
 }
-
-type ExprId = Uid[Expr]
-type Cnstr = ProdStrat -> ConsStrat
-
 case class Strat[+T <: (ProdStratEnum | ConsStratEnum)](val s: T)(val path: Path) {
   def updatePath(newPath: Path): Strat[T] = this.copy()(path = newPath)
   def addPath(newPath: Path): Strat[T] = this.updatePath(newPath ::: this.path)
@@ -106,7 +107,6 @@ case class Strat[+T <: (ProdStratEnum | ConsStratEnum)](val s: T)(val path: Path
     case _ => None
   }
 }
-
 trait ToStrat[+T <: (ProdStratEnum | ConsStratEnum)] { self: T =>
   def toStrat(p: Path = Path(Nil)): Strat[T] = Strat(this)(p)
   def pp(using showPath: Bool): Str
@@ -122,10 +122,6 @@ trait TypevarWithBoundary(val boundary: Option[Ref -> Uid[Expr]]) { self: (ProdS
     case (r@Ref(Ident(_, Var(nme), uid)), _) => s"${uid}^${r.uid}"
   }
 }
-
-type ProdStrat = Strat[ProdStratEnum]
-type ConsStrat = Strat[ConsStratEnum]
-
 enum ProdStratEnum(using val euid: ExprId) extends ToStrat[ProdStratEnum] {
   case NoProd()(using ExprId) extends ProdStratEnum with ToStrat[NoProd]
   case MkCtor(ctor: Var, args: Ls[ProdStrat])(using ExprId) extends ProdStratEnum with ToStrat[MkCtor]
@@ -144,7 +140,6 @@ enum ProdStratEnum(using val euid: ExprId) extends ToStrat[ProdStratEnum] {
     case ProdFun(l, r) => s"${l.pp} => ${r.pp}"
     case pv@ProdVar(uid, n) => s"${uid}" + "'" + n + pv.printBoundary.map("_" + _).getOrElse("")
 }
-
 enum ConsStratEnum(using val euid: ExprId) extends ToStrat[ConsStratEnum] {
   case NoCons()(using ExprId) extends ConsStratEnum with ToStrat[NoCons]
   case Destruct(destrs: Ls[Destructor])(using ExprId) extends ConsStratEnum with ToStrat[Destruct]
@@ -160,7 +155,6 @@ enum ConsStratEnum(using val euid: ExprId) extends ToStrat[ConsStratEnum] {
     case ConsFun(l, r) => s"${l.pp} => ${r.pp}"
     case cv@ConsVar(uid, n) => s"${uid}" + "'" + n + cv.printBoundary.map("_" + _).getOrElse("")
 }
-
 import ProdStratEnum.*, ConsStratEnum.*, Expr.*
 case class Destructor(ctor: Var, argCons: Ls[Strat[ConsVar]]) {
   lazy val pp: Str =
@@ -186,7 +180,6 @@ object ConsStratEnum {
   )
   def consInt(using ExprId) = Destruct(Destructor(Var("Int"), Nil) :: Nil)
 }
-
 case class Ctx(bindings: Map[Str, Strat[ProdVar]]) {
   def apply(id: Ident): Strat[ProdVar] =
     bindings.getOrElse(id.tree.name, lastWords(s"binding not found: " + id))
@@ -198,7 +191,6 @@ case class Ctx(bindings: Map[Str, Strat[ProdVar]]) {
 object Ctx {
   def empty = Ctx(Map.empty)
 }
-// def ctx(using Ctx): Ctx = summon
 
 class Deforest(debug: Boolean) {
   object Trace {
@@ -243,8 +235,7 @@ class Deforest(debug: Boolean) {
   
   val upperBounds = mutable.Map.empty[Uid[TypeVar], Ls[(Path, ConsStrat)]].withDefaultValue(Nil)
   val lowerBounds = mutable.Map.empty[Uid[TypeVar], Ls[(Path, ProdStrat)]].withDefaultValue(Nil)
-  // type CallsInfo = (mutable.Set.empty[(Ref, ExprId)], mutable.Map.empty[Ident, Set[Str -> ExprId]])
-  val callsInfo = (mutable.Set.empty[(Ref, ExprId)], mutable.Map.empty[Str, Set[Ref -> ExprId]])
+  val callsInfo = (mutable.Set.empty[Ref -> ExprId], mutable.Map.empty[Str, Set[Ref -> ExprId]])
   
   def process(e: Expr)(using ctx: Ctx, calls: mutable.Set[(Ref, Uid[Expr])]): ProdStrat = trace(s"process ${e.uid}: ${e.pp}") {
     val res: ProdStratEnum = e match

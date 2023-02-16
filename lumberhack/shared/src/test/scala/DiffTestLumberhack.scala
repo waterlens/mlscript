@@ -45,7 +45,7 @@ class DiffTestLumberhack extends DiffTests {
 
       output("\n>>>>>>> computed knots >>>>>>>")
       d.actualKnotsUsingSplit._1.foreach { (k, v) =>
-        output(s"${k.pp} --> ${v.map(v => s"${v.pp}").mkString("\n\t")}")
+        output(s"${k.pp(using false)} --> ${v.map(v => s"${v.pp(using false)}").mkString("\n\t")}")
         
         if v.size > 1 then output("\t!!MORE THAN ONE MATCH")
         if !v.forall(vp => k.p.startsWith(vp.p)) then output("\t!!NOT PREFIX")

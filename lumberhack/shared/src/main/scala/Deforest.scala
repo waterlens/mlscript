@@ -416,28 +416,47 @@ class Deforest(debug: Boolean) {
     
     constraints foreach handle
   }
+  
+  lazy val knotsAfterAnnihilation = recursiveConstr.map { (cnstr, set) => (cnstr, set.map { (key, vall) =>
+    (key.annihilated, vall.annihilated)
+  }.toMap)}.toMap
 
-  def actualKnotsUsingSplit = {
-    val afterAnniAndSplit = recursiveConstr.map { (cnstr, set) => (cnstr, set.flatMap { (key, vall) => 
-      val (keyProd, keyCons) = key.annihilated.splitted
-      val (valProd, valCons) = vall.annihilated.splitted
+  lazy val actualKnotsUsingSplit = {
+    val afterSplit = knotsAfterAnnihilation.map{ (cnstr, set) => (cnstr, set.flatMap { (key, vall) =>
+      val (keyProd, keyCons) = key.splitted
+      val (valProd, valCons) = vall.splitted
       (keyProd -> valProd) :: (keyCons -> valCons) :: Nil
     })}
     val allKnotsMap = mutable.Map.empty[Path, Set[Path]].withDefaultValue(Set.empty[Path])
-    afterAnniAndSplit.values.flatten.foreach { (key, vall) => allKnotsMap.update(key, allKnotsMap(key) + vall)}
+    afterSplit.values.flatten.foreach { (key, vall) => allKnotsMap.update(key, allKnotsMap(key) + vall)}
 
     allKnotsMap.retain { case (k, vs) => k.reachable(callsInfo) && vs.forall(vsp => vsp.reachable(callsInfo))}
-    (allKnotsMap, afterAnniAndSplit)
+    (allKnotsMap.toMap, afterSplit)
   }
 
-  def actualKnotsUsingExpansion = {
-    val afterAnni = recursiveConstr.map { (cnstr, set) => (cnstr, set.map { (key, vall) =>
-      val nk = key.annihilated
-      val nv = vall.annihilated
-      (nk, nv)
-    })}
-    // TODO:
+  enum CallTree {
+    case Knot(current: Path, prev: Path)
+    case Continue(current: Path, calls: List[CallTree])
+
+    lazy val pp: String = this match {
+      case Continue(current, calls) => s"${current.pp(using false)}\n" + calls.map(c => s"\t${c.pp}").mkString("\n")
+      case Knot(current, prev) => s"${current.pp(using false)} ---> ${prev.pp(using false)}"
+    }
   }
+
+  def growCallTree(start: Set[Path])(using callsInfo: Map[Str, Set[Ref -> ExprId]], knotTier: Path => Option[Path]): List[CallTree] = {
+    start.map { p => { knotTier(p) match {
+      case None => {
+        val nexts = p.p.last match {
+          case PathElem.Normal(Ref(Ident(_, Var(name), _)), _) => callsInfo(name).map(n => p ::: Path(PathElem.Normal(n._1, n._2)(PathElemPol.In) :: Nil))
+          case _ => ???
+        }
+        CallTree.Continue(p, growCallTree(nexts))
+      }
+      case Some(k) => CallTree.Knot(p, k)
+    }}}.toList
+  }
+
 }
 
 object Deforest {

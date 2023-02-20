@@ -20,8 +20,13 @@ c(p)
 //│ >>>>>>> knots >>>>>>>
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> computed knots >>>>>>>
-//│ <<<<<<< computed knots <<<<<<<
+//│ >>>>>>> splitted knots >>>>>>>
+//│ <<<<<<< splitted knots <<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [c:7^8] ---> [c:7^8]
+//│ [p:6^9] ---> [p:6^9]
+//│ <<<<<<< expansion <<<<<<<
 
 
 // NOTE: how to produce a finite rewrtten program?
@@ -42,8 +47,13 @@ c(p)
 //│ >>>>>>> knots >>>>>>>
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> computed knots >>>>>>>
-//│ <<<<<<< computed knots <<<<<<<
+//│ >>>>>>> splitted knots >>>>>>>
+//│ <<<<<<< splitted knots <<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [c:7^12] ---> [c:7^12]
+//│ [p:6^13] ---> [p:6^13]
+//│ <<<<<<< expansion <<<<<<<
 
 // Just a more valid/reasonable version of the above
 // TODO support nested patterns as in `Pair(0)`
@@ -67,8 +77,13 @@ c(p)
 //│ >>>>>>> knots >>>>>>>
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> computed knots >>>>>>>
-//│ <<<<<<< computed knots <<<<<<<
+//│ >>>>>>> splitted knots >>>>>>>
+//│ <<<<<<< splitted knots <<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [p:6^14] ---> [p:6^14]
+//│ [c:7^13] ---> [c:7^13]
+//│ <<<<<<< expansion <<<<<<<
 
 fun c(x) = if primitive(x) is
     True then 0
@@ -86,8 +101,12 @@ c(0)
 //│ >>>>>>> knots >>>>>>>
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> computed knots >>>>>>>
-//│ <<<<<<< computed knots <<<<<<<
+//│ >>>>>>> splitted knots >>>>>>>
+//│ <<<<<<< splitted knots <<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [c:6^12] ---> [c:6^12]
+//│ <<<<<<< expansion <<<<<<<
 
 
 // NOTE: only the first two element is handled
@@ -120,10 +139,21 @@ map(ff, l)
 //│ 	[-l:8^31 · +map:6^28 · +map:6^5 · +map:6^5 · +map:6^5 · +map:6^5]  --->  [-l:8^31 · +map:6^28 · +map:6^5 · +map:6^5 · +map:6^5]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> computed knots >>>>>>>
+//│ >>>>>>> splitted knots >>>>>>>
 //│ [l:8^31] --> [l:8^31]
 //│ [map:6^28 · map:6^5 · map:6^5 · map:6^5 · map:6^5] --> [map:6^28 · map:6^5 · map:6^5 · map:6^5]
-//│ <<<<<<< computed knots <<<<<<<
+//│ <<<<<<< splitted knots <<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [ff:7^29] ---> [ff:7^29]
+//│ [map:6^28]
+//│ 	[map:6^28 · map:6^5]
+//│ 		[map:6^28 · map:6^5 · map:6^5]
+//│ 			[map:6^28 · map:6^5 · map:6^5 · map:6^5]
+//│ 				[map:6^28 · map:6^5 · map:6^5 · map:6^5 · map:6^5] ---> [map:6^28 · map:6^5 · map:6^5 · map:6^5]
+//│ [l:8^31]
+//│ 
+//│ <<<<<<< expansion <<<<<<<
 
 
 // NOTE: some program not be able to write?
@@ -153,10 +183,19 @@ last(p)
 //│ 	[-p:7^18 · +last:6^17 · +last:6^5 · +last:6^5 · +last:6^5]  --->  [-p:7^18 · +last:6^17 · +last:6^5 · +last:6^5]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> computed knots >>>>>>>
+//│ >>>>>>> splitted knots >>>>>>>
 //│ [last:6^17 · last:6^5 · last:6^5 · last:6^5] --> [last:6^17 · last:6^5 · last:6^5]
 //│ [p:7^18] --> [p:7^18]
-//│ <<<<<<< computed knots <<<<<<<
+//│ <<<<<<< splitted knots <<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [last:6^17]
+//│ 	[last:6^17 · last:6^5]
+//│ 		[last:6^17 · last:6^5 · last:6^5]
+//│ 			[last:6^17 · last:6^5 · last:6^5 · last:6^5] ---> [last:6^17 · last:6^5 · last:6^5]
+//│ [p:7^18]
+//│ 
+//│ <<<<<<< expansion <<<<<<<
 
 _LUMBERHACK_ERROR
 let add = primitive
@@ -196,13 +235,22 @@ idxSum(rev(primitive, N))(0)
 //│ 	[+rev:8^34 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8 · +idxSum:7^8]  --->  [+rev:8^34 · +rev:8^23 · -rev:8^23 · -rev:8^34 · +idxSum:7^33 · +idxSum:7^8]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> computed knots >>>>>>>
+//│ >>>>>>> splitted knots >>>>>>>
 //│ [] --> []
 //│ [idxSum:7^33 · idxSum:7^8 · idxSum:7^8] --> [idxSum:7^33 · idxSum:7^8]
 //│ [rev:8^34 · rev:8^23] --> [rev:8^34 · rev:8^23]
 //│ [rev:8^34 · rev:8^23 · rev:8^23] --> [rev:8^34 · rev:8^23]
 //│ [rev:8^34] --> [rev:8^34]
-//│ <<<<<<< computed knots <<<<<<<
+//│ <<<<<<< splitted knots <<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [idxSum:7^33]
+//│ 	[idxSum:7^33 · idxSum:7^8]
+//│ 		[idxSum:7^33 · idxSum:7^8 · idxSum:7^8] ---> [idxSum:7^33 · idxSum:7^8]
+//│ [rev:8^34]
+//│ 	[rev:8^34 · rev:8^23]
+//│ 		[rev:8^34 · rev:8^23 · rev:8^23] ---> [rev:8^34 · rev:8^23]
+//│ <<<<<<< expansion <<<<<<<
 
 
 fun minuss(a) = if a is
@@ -233,12 +281,22 @@ minuss(fst)(snd)
 //│ 	[-snd:8^22 · +minuss:6^19 · +minuss:6^3 · +minuss:6^3]  --->  [-snd:8^22 · +minuss:6^19 · +minuss:6^3]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> computed knots >>>>>>>
+//│ >>>>>>> splitted knots >>>>>>>
 //│ [minuss:6^19 · minuss:6^3 · minuss:6^3 · minuss:6^3] --> [minuss:6^19 · minuss:6^3 · minuss:6^3]
 //│ [minuss:6^19 · minuss:6^3 · minuss:6^3] --> [minuss:6^19 · minuss:6^3]
 //│ [snd:8^22] --> [snd:8^22]
 //│ [fst:7^20] --> [fst:7^20]
-//│ <<<<<<< computed knots <<<<<<<
+//│ <<<<<<< splitted knots <<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [minuss:6^19]
+//│ 	[minuss:6^19 · minuss:6^3]
+//│ 		[minuss:6^19 · minuss:6^3 · minuss:6^3] ---> [minuss:6^19 · minuss:6^3]
+//│ [snd:8^22]
+//│ 
+//│ [fst:7^20]
+//│ 
+//│ <<<<<<< expansion <<<<<<<
 
 // FIXME: weird recursive
 _LUMBERHACK_ERROR
@@ -272,12 +330,23 @@ minuss(fst)(snd)
 //│ 	[-fst:8^28 · +minuss:6^27 · +checkb:7^2 · +minuss:6^13 · +checkb:7^2 · +minuss:6^13 · +checkb:7^2 · +minuss:6^13]  --->  [-fst:8^28 · +minuss:6^27 · +checkb:7^2 · +minuss:6^13 · +checkb:7^2 · +minuss:6^13]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> computed knots >>>>>>>
+//│ >>>>>>> splitted knots >>>>>>>
 //│ [minuss:6^27 · checkb:7^2 · minuss:6^13 · checkb:7^2 · minuss:6^13 · checkb:7^2 · minuss:6^13] --> [minuss:6^27 · checkb:7^2 · minuss:6^13 · checkb:7^2 · minuss:6^13]
 //│ [snd:9^30] --> [snd:9^30]
 //│ [fst:8^28] --> [fst:8^28]
 //│ [minuss:6^27 · checkb:7^2 · minuss:6^13 · checkb:7^2] --> [minuss:6^27 · checkb:7^2]
-//│ <<<<<<< computed knots <<<<<<<
+//│ <<<<<<< splitted knots <<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [minuss:6^27]
+//│ 	[minuss:6^27 · checkb:7^2]
+//│ 		[minuss:6^27 · checkb:7^2 · minuss:6^13]
+//│ 			[minuss:6^27 · checkb:7^2 · minuss:6^13 · checkb:7^2] ---> [minuss:6^27 · checkb:7^2]
+//│ [snd:9^30]
+//│ 
+//│ [fst:8^28]
+//│ 
+//│ <<<<<<< expansion <<<<<<<
 
 
 fun id(x) = if x is
@@ -311,9 +380,21 @@ c(id(p))
 //│ 	[-p:7^20 · +id:6^19 · -id:6^3 · -id:6^19 · +c:8^18 · +c:8^13]  --->  [-p:7^20 · +id:6^19 · -id:6^3 · -id:6^19 · +c:8^18]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> computed knots >>>>>>>
+//│ >>>>>>> splitted knots >>>>>>>
 //│ [id:6^19] --> [id:6^19]
 //│ [c:8^18 · c:8^13] --> [c:8^18]
 //│ [p:7^20 · p:7^10 · p:7^10] --> [p:7^20 · p:7^10]
 //│ [p:7^20] --> [p:7^20]
-//│ <<<<<<< computed knots <<<<<<<
+//│ <<<<<<< splitted knots <<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [id:6^19]
+//│ 	[id:6^19 · id:6^3]
+//│ 		[id:6^19 · id:6^3 · id:6^3]
+//│ 			[id:6^19 · id:6^3 · id:6^3 · id:6^3] ---> [id:6^3]
+//│ [p:7^20]
+//│ 	[p:7^20 · p:7^10]
+//│ 		[p:7^20 · p:7^10 · p:7^10] ---> [p:7^20 · p:7^10]
+//│ [c:8^18]
+//│ 	[c:8^18 · c:8^13] ---> [c:8^18]
+//│ <<<<<<< expansion <<<<<<<

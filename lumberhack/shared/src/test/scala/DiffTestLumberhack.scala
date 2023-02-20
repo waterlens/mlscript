@@ -43,14 +43,19 @@ class DiffTestLumberhack extends DiffTests {
       }
       output("<<<<<<< knots <<<<<<<")
 
-      output("\n>>>>>>> computed knots >>>>>>>")
+      output("\n>>>>>>> splitted knots >>>>>>>")
       d.actualKnotsUsingSplit._1.foreach { (k, v) =>
         output(s"${k.pp(using false)} --> ${v.map(v => s"${v.pp(using false)}").mkString("\n\t")}")
         
         if v.size > 1 then output("\t!!MORE THAN ONE MATCH")
         if !v.forall(vp => k.p.startsWith(vp.p)) then output("\t!!NOT PREFIX")
       }
-      output("<<<<<<< computed knots <<<<<<<")
+      output("<<<<<<< splitted knots <<<<<<<")
+      
+      output("\n>>>>>>> expansion >>>>>>>")
+      // output(d.callTreeUsingSplitKnot.map(_.pp).mkString("\n"))
+      output(d.callTreeUsingNonSplitKnot.map(_.pp).mkString("\n"))
+      output("<<<<<<< expansion <<<<<<<")
 
       if mode.stdout || mode.verbose then {
         output("\n>>>>>>> type variable bounds >>>>>>>")

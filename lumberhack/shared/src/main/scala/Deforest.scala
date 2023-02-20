@@ -438,8 +438,8 @@ class Deforest(debug: Boolean) {
     case Knot(current: Path, prev: Path)
     case Continue(current: Path, calls: List[CallTree])
 
-    lazy val pp: String = this match {
-      case Continue(current, calls) => s"${current.pp(using false)}\n" + calls.map(c => s"\t${c.pp}").mkString("\n")
+    def pp(using level: Int = 1): String = this match {
+      case Continue(current, calls) => s"${current.pp(using false)}\n" + calls.map(c => s"${"\t" * level}${c.pp(using level + 1)}").mkString("\n")
       case Knot(current, prev) => s"${current.pp(using false)} ---> ${prev.pp(using false)}"
     }
   }
@@ -455,6 +455,50 @@ class Deforest(debug: Boolean) {
       }
       case Some(k) => CallTree.Knot(p, k)
     }}}.toList
+  }
+
+  def callTreeUsingSplitKnot = {
+    def tier(p: Path): Option[Path] = {
+      assert(p.p.nonEmpty)
+      val knots = actualKnotsUsingSplit._1
+      knots.get(p).map(_.filter(sp => sp != p)) match {
+        case Some(s) if s.size == 1 => Some(s.head)  // the reuslt will not be an empty path
+        case Some(s) if s.size > 1 => Some(s.head)   // the result will not be an empty path
+        // we can always tie the knot back to its definition before expansion if it is hopeless to keep expanding
+        case Some(_) | None => if knots.keys.exists(_.p.startsWith(p.p)) then None else Some(Path(p.p.last :: Nil))
+      }
+    }
+    growCallTree(callsInfo._1.map(c => Path(PathElem.Normal(c._1, c._2)(PathElemPol.In) :: Nil)).toSet)(using callsInfo._2.toMap, tier)
+  }
+
+  def callTreeUsingNonSplitKnot = {
+    val knots = {
+      val res = mutable.Map.empty[Path, Set[Path]]
+      knotsAfterAnnihilation.values.foreach { _.foreach { (k, v) => res.updateWith(k)(s => Some(s.getOrElse(Set.empty[Path]) + v)) } }
+      res.toMap
+    }
+    def tier(p: Path): Option[Path] = {
+      assert(p.p.nonEmpty)
+
+      val matches = {
+        val res = mutable.Set.empty[Path]
+        // match from left
+        knots.filterKeys(_.p.startsWith(p.rev.p)).values.flatten.foreach { v => 
+          val ind = v.p.indexOf(p.p.head)
+          if ind >= 0 then res += Path(v.p.take(ind + 1).reverse)
+        }
+        // match from right
+        knots.filterKeys(_.p.endsWith(p.p)).values.flatten.foreach { v =>
+          val ind = v.p.indexOf(p.p.head)
+          if ind >= 0 then res += Path(v.p.takeRight(v.p.length - ind))
+        }
+        // res.foreach { r => log(r.pp) }
+        res.retain(_ != p)
+        res.toSet
+      }
+      matches.headOption.orElse { if knots.keySet.exists(k => k.p.containsSlice(p.p) || k.p.containsSlice(p.p.reverse)) then None else Some(Path(p.p.last :: Nil)) }    
+    }
+    growCallTree(callsInfo._1.map(c => Path(PathElem.Normal(c._1, c._2)(PathElemPol.In) :: Nil)).toSet)(using callsInfo._2.toMap, tier)
   }
 
 }

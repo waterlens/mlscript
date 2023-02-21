@@ -435,37 +435,37 @@ class Deforest(debug: Boolean) {
   }
 
   enum CallTree {
-    case Knot(current: Path, prev: Path)
+    case Knot(current: Path, prev: Path)(val info: Str)
     case Continue(current: Path, calls: List[CallTree])
 
     def pp(using level: Int = 1): String = this match {
       case Continue(current, calls) => s"${current.pp(using false)}\n" + calls.map(c => s"${"\t" * level}${c.pp(using level + 1)}").mkString("\n")
-      case Knot(current, prev) => s"${current.pp(using false)} ---> ${prev.pp(using false)}"
+      case k@Knot(current, prev) => s"${current.pp(using false)} ---> ${prev.pp(using false)} (${k.info})"
     }
   }
 
-  def growCallTree(start: Set[Path])(using callsInfo: Map[Str, Set[Ref -> ExprId]], knotTier: Path => Option[Path]): List[CallTree] = {
+  def growCallTree(start: Set[Path])(using callsInfo: Map[Str, Set[Ref -> ExprId]], knotTier: Path => Option[Path] -> Str): List[CallTree] = {
     start.map { p => { knotTier(p) match {
-      case None => {
+      case None -> _ => {
         val nexts = p.p.last match {
           case PathElem.Normal(Ref(Ident(_, Var(name), _)), _) => callsInfo(name).map(n => p ::: Path(PathElem.Normal(n._1, n._2)(PathElemPol.In) :: Nil))
           case _ => ???
         }
         CallTree.Continue(p, growCallTree(nexts))
       }
-      case Some(k) => CallTree.Knot(p, k)
+      case Some(k) -> info => CallTree.Knot(p, k)(info)
     }}}.toList
   }
 
   def callTreeUsingSplitKnot = {
-    def tier(p: Path): Option[Path] = {
+    def tier(p: Path): Option[Path] -> Str = {
       assert(p.p.nonEmpty)
       val knots = actualKnotsUsingSplit._1
       knots.get(p).map(_.filter(sp => sp != p)) match {
-        case Some(s) if s.size == 1 => Some(s.head)  // the reuslt will not be an empty path
-        case Some(s) if s.size > 1 => Some(s.head)   // the result will not be an empty path
+        case Some(s) if s.size == 1 => Some(s.head) -> "only one" // the reuslt will not be an empty path
+        case Some(s) if s.size > 1 => Some(s.head) -> s.map(_.pp(using false)).mkString(" OR ")  // the result will not be an empty path
         // we can always tie the knot back to its definition before expansion if it is hopeless to keep expanding
-        case Some(_) | None => if knots.keys.exists(_.p.startsWith(p.p)) then None else Some(Path(p.p.last :: Nil))
+        case Some(_) | None => if knots.keys.exists(_.p.startsWith(p.p)) then None -> "" else Some(Path(p.p.last :: Nil)) -> "hopeless to continue"
       }
     }
     growCallTree(callsInfo._1.map(c => Path(PathElem.Normal(c._1, c._2)(PathElemPol.In) :: Nil)).toSet)(using callsInfo._2.toMap, tier)
@@ -477,7 +477,7 @@ class Deforest(debug: Boolean) {
       knotsAfterAnnihilation.values.foreach { _.foreach { (k, v) => res.updateWith(k)(s => Some(s.getOrElse(Set.empty[Path]) + v)) } }
       res.toMap
     }
-    def tier(p: Path): Option[Path] = {
+    def tier(p: Path): Option[Path] -> Str = {
       assert(p.p.nonEmpty)
 
       val matches = {
@@ -496,7 +496,10 @@ class Deforest(debug: Boolean) {
         res.retain(_ != p)
         res.toSet
       }
-      matches.headOption.orElse { if knots.keySet.exists(k => k.p.containsSlice(p.p) || k.p.containsSlice(p.p.reverse)) then None else Some(Path(p.p.last :: Nil)) }    
+      matches.headOption match {
+        case Some(s) => Some(s) -> (if matches.size > 1 then matches.map(_.pp(using false)).mkString(" OR ") else "only one")
+        case None => if knots.keySet.exists(k => k.p.containsSlice(p.p) || k.p.containsSlice(p.p.reverse)) then None -> "" else Some(Path(p.p.last :: Nil)) -> "hopeless to continue"
+      }
     }
     growCallTree(callsInfo._1.map(c => Path(PathElem.Normal(c._1, c._2)(PathElemPol.In) :: Nil)).toSet)(using callsInfo._2.toMap, tier)
   }

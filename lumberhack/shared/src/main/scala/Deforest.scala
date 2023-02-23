@@ -51,7 +51,6 @@ case class Path(p: Ls[PathElem[PathElemType]]) {
   lazy val rev = this.copy(p = p.map(_.rev).reverse)
   // TODO: merge two consecutive identical stars during concatenation
   def ::: (other: Path) = Path(other.p ::: p)
-  def map(f: PathElem[PathElemType] => PathElem[PathElemType]) = Path(p.map(f))
   def pp(using showPol: Boolean = true): Str = s"[${p.map(_.pp).mkString(" · ")}]"
   lazy val annihilated: Path =
     def anni(i: Ls[PathElem[PathElemType]], o: Ls[PathElem[PathElemType]]): Path = (i, o) match
@@ -73,12 +72,12 @@ case class Path(p: Ls[PathElem[PathElemType]]) {
     Path(prod) -> Path(cons.reverse)
   }
 
-  def reachable(callsInfo: (mutable.Set[(Ref, ExprId)], mutable.Map[Str, Set[(Ref, ExprId)]])): Boolean = {
+  def reachable(callsInfo: (mutable.Set[(Ref, ExprId)], mutable.Map[Ident, Set[(Ref, ExprId)]])): Boolean = {
     p match {
       case Nil => true
       case (PathElem.Normal(ref, uid)) :: t => {
         val headCheck: Boolean = callsInfo._1.contains((ref, uid))
-        val nextCalls: Option[Set[(Ref, ExprId)]] = callsInfo._2.get(ref.id.tree.name)
+        val nextCalls: Option[Set[(Ref, ExprId)]] = callsInfo._2.get(ref.id)
         (headCheck, nextCalls) match {
           case (true, Some(next)) => Path(t).reachable((next.to(mutable.Set), callsInfo._2))
           case _ => false
@@ -235,7 +234,7 @@ class Deforest(debug: Boolean) {
   
   val upperBounds = mutable.Map.empty[Uid[TypeVar], Ls[(Path, ConsStrat)]].withDefaultValue(Nil)
   val lowerBounds = mutable.Map.empty[Uid[TypeVar], Ls[(Path, ProdStrat)]].withDefaultValue(Nil)
-  val callsInfo = (mutable.Set.empty[Ref -> ExprId], mutable.Map.empty[Str, Set[Ref -> ExprId]])
+  val callsInfo = (mutable.Set.empty[Ref -> ExprId], mutable.Map.empty[Ident, Set[Ref -> ExprId]])
   
   def process(e: Expr)(using ctx: Ctx, calls: mutable.Set[(Ref, Uid[Expr])]): ProdStrat = trace(s"process ${e.uid}: ${e.pp}") {
     val res: ProdStratEnum = e match
@@ -298,7 +297,7 @@ class Deforest(debug: Boolean) {
         val p = process(body)(using ctx, calls)
         val v = vars(id.tree.name).s
         constrain(p, ConsVar(v.uid, v.name)()(using noExprId).toStrat())
-        callsInfo._2.addOne(id.tree.name -> calls.toSet)
+        callsInfo._2.addOne(id -> calls.toSet)
       }
       case R(e) => {
         val calls = mutable.Set.empty[(Ref, Uid[Expr])]
@@ -433,22 +432,23 @@ class Deforest(debug: Boolean) {
     allKnotsMap.retain { case (k, vs) => k.reachable(callsInfo) && vs.forall(vsp => vsp.reachable(callsInfo))}
     (allKnotsMap.toMap, afterSplit)
   }
+}
 
-  enum CallTree {
-    case Knot(current: Path, prev: Path)(val info: Str)
-    case Continue(current: Path, calls: List[CallTree])
+enum CallTree {
+  case Knot(current: Path, prev: Path)(val info: Str)
+  case Continue(current: Path, calls: List[CallTree])
 
-    def pp(using level: Int = 1): String = this match {
-      case Continue(current, calls) => s"${current.pp(using false)}\n" + calls.map(c => s"${"\t" * level}${c.pp(using level + 1)}").mkString("\n")
-      case k@Knot(current, prev) => s"${current.pp(using false)} ---> ${prev.pp(using false)} (${k.info})"
-    }
+  def pp(using level: Int = 1): String = this match {
+    case Continue(current, calls) => s"${current.pp(using false)}\n" + calls.map(c => s"${"\t" * level}${c.pp(using level + 1)}").mkString("\n")
+    case k@Knot(current, prev) => s"${current.pp(using false)} ---> ${prev.pp(using false)} (${k.info})"
   }
-
-  def growCallTree(start: Set[Path])(using callsInfo: Map[Str, Set[Ref -> ExprId]], knotTier: Path => Option[Path] -> Str): List[CallTree] = {
+}
+object CallTree {
+  def growCallTree(start: Set[Path])(using callsInfo: Map[Ident, Set[Ref -> ExprId]], knotTier: Path => Option[Path] -> Str): List[CallTree] = {
     start.map { p => { knotTier(p) match {
       case None -> _ => {
         val nexts = p.p.last match {
-          case PathElem.Normal(Ref(Ident(_, Var(name), _)), _) => callsInfo(name).map(n => p ::: Path(PathElem.Normal(n._1, n._2)(PathElemPol.In) :: Nil))
+          case PathElem.Normal(Ref(id), _) => callsInfo(id).map(n => p ::: Path(PathElem.Normal(n._1, n._2)(PathElemPol.In) :: Nil))
           case _ => ???
         }
         CallTree.Continue(p, growCallTree(nexts))
@@ -457,10 +457,10 @@ class Deforest(debug: Boolean) {
     }}}.toList
   }
 
-  def callTreeUsingSplitKnot = {
+  def callTreeUsingSplitKnot(d: Deforest) = {
     def tier(p: Path): Option[Path] -> Str = {
       assert(p.p.nonEmpty)
-      val knots = actualKnotsUsingSplit._1
+      val knots = d.actualKnotsUsingSplit._1
       knots.get(p).map(_.filter(sp => sp != p)) match {
         case Some(s) if s.size == 1 => Some(s.head) -> "only one" // the reuslt will not be an empty path
         case Some(s) if s.size > 1 => Some(s.head) -> s.map(_.pp(using false)).mkString(" OR ")  // the result will not be an empty path
@@ -468,13 +468,13 @@ class Deforest(debug: Boolean) {
         case Some(_) | None => if knots.keys.exists(_.p.startsWith(p.p)) then None -> "" else Some(Path(p.p.last :: Nil)) -> "hopeless to continue"
       }
     }
-    growCallTree(callsInfo._1.map(c => Path(PathElem.Normal(c._1, c._2)(PathElemPol.In) :: Nil)).toSet)(using callsInfo._2.toMap, tier)
+    growCallTree(d.callsInfo._1.map(c => Path(PathElem.Normal(c._1, c._2)(PathElemPol.In) :: Nil)).toSet)(using d.callsInfo._2.toMap, tier)
   }
 
-  def callTreeUsingNonSplitKnot = {
+  def callTreeUsingNonSplitKnot(d: Deforest) = {
     val knots = {
       val res = mutable.Map.empty[Path, Set[Path]]
-      knotsAfterAnnihilation.values.foreach { _.foreach { (k, v) => res.updateWith(k)(s => Some(s.getOrElse(Set.empty[Path]) + v)) } }
+      d.knotsAfterAnnihilation.values.foreach { _.foreach { (k, v) => res.updateWith(k)(s => Some(s.getOrElse(Set.empty[Path]) + v)) } }
       res.toMap
     }
     def tier(p: Path): Option[Path] -> Str = {
@@ -501,9 +501,8 @@ class Deforest(debug: Boolean) {
         case None => if knots.keySet.exists(k => k.p.containsSlice(p.p) || k.p.containsSlice(p.p.reverse)) then None -> "" else Some(Path(p.p.last :: Nil)) -> "hopeless to continue"
       }
     }
-    growCallTree(callsInfo._1.map(c => Path(PathElem.Normal(c._1, c._2)(PathElemPol.In) :: Nil)).toSet)(using callsInfo._2.toMap, tier)
+    growCallTree(d.callsInfo._1.map(c => Path(PathElem.Normal(c._1, c._2)(PathElemPol.In) :: Nil)).toSet)(using d.callsInfo._2.toMap, tier)
   }
-
 }
 
 object Deforest {

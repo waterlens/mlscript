@@ -53,8 +53,8 @@ class DiffTestLumberhack extends DiffTests {
       output("<<<<<<< splitted knots <<<<<<<")
       
       output("\n>>>>>>> expansion >>>>>>>")
-      // output(d.callTreeUsingSplitKnot.map(_.pp).mkString("\n"))
-      output(d.callTreeUsingNonSplitKnot.map(_.pp).mkString("\n"))
+      // output(CallTree.callTreeUsingSplitKnot(d).map(_.pp).mkString("\n"))
+      output(CallTree.callTreeUsingNonSplitKnot(d).map(_.pp).mkString("\n"))
       output("<<<<<<< expansion <<<<<<<")
 
       if mode.stdout || mode.verbose then {

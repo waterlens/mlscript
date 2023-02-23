@@ -14,6 +14,12 @@ case class Program(contents: Ls[ProgDef \/ Expr]) {
       case L(pd) => s"def ${pd.id.pp} = ${pd.body.pp}"
       case R(e) => e.pp
     }.mkString("\n")
+  
+  lazy val defAndExpr = contents.partitionMap(identity).mapFirst(_.map(pd => pd.id -> pd.body).toMap)
+
+  def expanded(callTree: List[CallTree]): Program = {
+    ???
+  }
 }
 
 object Program {

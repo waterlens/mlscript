@@ -219,9 +219,9 @@ class Deforest(debug: Boolean) {
   val vuid = Uid.TypeVar.State()
   val iuid = Uid.Ident.State()
   val euid = Uid.Expr.State()
-  
   val noExprId = euid.nextUid
-  
+  def nextIdent(isDef: Bool, name: Var): Ident = Ident(isDef, name, iuid.nextUid)
+
   def freshVar(n: String) =
     val vid = vuid.nextUid
     val pv = ProdVar(vid, n)()(using noExprId)
@@ -230,7 +230,6 @@ class Deforest(debug: Boolean) {
     log(s"fresh var ${pv.pp}")
     (pv, cv)
   
-  def nextIdent(isDef: Bool, name: Var): Ident = Ident(isDef, name, iuid.nextUid)
   
   val upperBounds = mutable.Map.empty[Uid[TypeVar], Ls[(Path, ConsStrat)]].withDefaultValue(Nil)
   val lowerBounds = mutable.Map.empty[Uid[TypeVar], Ls[(Path, ProdStrat)]].withDefaultValue(Nil)
@@ -442,6 +441,16 @@ enum CallTree {
     case Continue(current, calls) => s"${current.pp(using false)}\n" + calls.map(c => s"${"\t" * level}${c.pp(using level + 1)}").mkString("\n")
     case k@Knot(current, prev) => s"${current.pp(using false)} ---> ${prev.pp(using false)} (${k.info})"
   }
+
+  private def generatePathToIdent(using newd: Deforest, store: mutable.Map[Path, Ident]): Unit = this match {
+    case k@Knot(current, prev) =>
+      if k.info != "hopeless to continue" then store.updateWith(current)(_.orElse({
+        store.updateWith(prev)(_.orElse(Some(newd.nextIdent(true, Var(prev.pp(using false))))))
+      }))
+    case Continue(current, calls) =>
+      store.updateWith(current)(_.orElse(Some(newd.nextIdent(true, Var(current.pp(using false))))))
+      calls.foreach(_.generatePathToIdent)
+  }
 }
 object CallTree {
   def growCallTree(start: Set[Path])(using callsInfo: Map[Ident, Set[Ref -> ExprId]], knotTier: Path => Option[Path] -> Str): List[CallTree] = {
@@ -458,17 +467,26 @@ object CallTree {
   }
 
   def callTreeUsingSplitKnot(d: Deforest) = {
+    var knotsCollection = Map.empty[Path, Option[Path]]
     def tier(p: Path): Option[Path] -> Str = {
       assert(p.p.nonEmpty)
       val knots = d.actualKnotsUsingSplit._1
       knots.get(p).map(_.filter(sp => sp != p)) match {
-        case Some(s) if s.size == 1 => Some(s.head) -> "only one" // the reuslt will not be an empty path
-        case Some(s) if s.size > 1 => Some(s.head) -> s.map(_.pp(using false)).mkString(" OR ")  // the result will not be an empty path
+        case Some(s) if s.size == 1 =>
+          knotsCollection += p -> Some(s.head)
+          Some(s.head) -> "only one" // the reuslt will not be an empty path
+        case Some(s) if s.size > 1 =>
+          knotsCollection += p -> Some(s.head)
+          Some(s.head) -> s.map(_.pp(using false)).mkString(" OR ")  // the result will not be an empty path
         // we can always tie the knot back to its definition before expansion if it is hopeless to keep expanding
-        case Some(_) | None => if knots.keys.exists(_.p.startsWith(p.p)) then None -> "" else Some(Path(p.p.last :: Nil)) -> "hopeless to continue"
+        case Some(_) | None =>
+          if knots.keys.exists(_.p.startsWith(p.p)) then None -> "" else
+            knotsCollection += p -> None
+            Some(Path(p.p.last :: Nil)) -> "hopeless to continue"
       }
     }
     growCallTree(d.callsInfo._1.map(c => Path(PathElem.Normal(c._1, c._2)(PathElemPol.In) :: Nil)).toSet)(using d.callsInfo._2.toMap, tier)
+      -> knotsCollection
   }
 
   def callTreeUsingNonSplitKnot(d: Deforest) = {
@@ -477,6 +495,7 @@ object CallTree {
       d.knotsAfterAnnihilation.values.foreach { _.foreach { (k, v) => res.updateWith(k)(s => Some(s.getOrElse(Set.empty[Path]) + v)) } }
       res.toMap
     }
+    var knotsCollection = Map.empty[Path, Option[Path]]
     def tier(p: Path): Option[Path] -> Str = {
       assert(p.p.nonEmpty)
 
@@ -497,11 +516,22 @@ object CallTree {
         res.toSet
       }
       matches.headOption match {
-        case Some(s) => Some(s) -> (if matches.size > 1 then matches.map(_.pp(using false)).mkString(" OR ") else "only one")
-        case None => if knots.keySet.exists(k => k.p.containsSlice(p.p) || k.p.containsSlice(p.p.reverse)) then None -> "" else Some(Path(p.p.last :: Nil)) -> "hopeless to continue"
+        case Some(s) =>
+          knotsCollection += p -> Some(s)
+          Some(s) -> (if matches.size > 1 then matches.map(_.pp(using false)).mkString(" OR ") else "only one")
+        case None => if knots.keySet.exists(k => k.p.containsSlice(p.p) || k.p.containsSlice(p.p.reverse)) then None -> "" else
+          knotsCollection += p -> None
+          Some(Path(p.p.last :: Nil)) -> "hopeless to continue"
       }
     }
     growCallTree(d.callsInfo._1.map(c => Path(PathElem.Normal(c._1, c._2)(PathElemPol.In) :: Nil)).toSet)(using d.callsInfo._2.toMap, tier)
+      -> knotsCollection
+  }
+
+  def generatePathToIdent(calls: List[CallTree])(using newd: Deforest): Map[Path, Ident] = {
+    given store: mutable.Map[Path, Ident] = mutable.Map.empty[Path, Ident]
+    calls.foreach(_.generatePathToIdent)
+    store.toMap
   }
 }
 

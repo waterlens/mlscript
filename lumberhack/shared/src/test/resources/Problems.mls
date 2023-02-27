@@ -11,10 +11,10 @@ c(p)
 //│ |#let| |p| |#=| |C|(|p|)|↵|#fun| |c|(|x|)| |#=| |#if| |C|(|x|)| |is|→|C|(|a|)| |#then| |a|←|↵|c|(|p|)|
 //│ Parsed: {let p = C (p,); fun c = x, => if C (x,) is ‹(C (a,)) then a›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:6 = [C p:6^1]
+//│ (c:7^8 p:6^9)
 //│ def c:7 = (fun x:8 -> case [C x:8^3] of {
 //│ 	C a:9 => a:9^5})
-//│ (c:7^8 p:6^9)
+//│ def p:6 = [C p:6^1]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
@@ -27,6 +27,13 @@ c(p)
 //│ [c:7^8] ---> [c:7^8] (hopeless to continue)
 //│ [p:6^9] ---> [p:6^9] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c:7^11 p:6^12)
+//│ def c:7 = (fun x:8 -> case [C x:8^6] of {
+//│ 	C a:9 => a:9^8})
+//│ def p:6 = [C p:6^4]
+//│ <<<<<<< expanded program <<<<<<<
 
 
 // NOTE: how to produce a finite rewrtten program?
@@ -38,10 +45,10 @@ c(p)
 //│ |_LUMBERHACK_ERROR|↵|#let| |p| |#=| |Pair|(|A|,| |B|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|Pair|(|a|,| |b|)| |#then| |c|(|Pair|(|b|,| |a|)|)|←|↵|c|(|p|)|
 //│ Parsed: {_LUMBERHACK_ERROR; let p = Pair (A, B,); fun c = x, => if x is ‹(Pair (a, b,)) then c (Pair (b, a,),)›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:6 = [Pair [A] [B]]
+//│ (c:7^12 p:6^13)
 //│ def c:7 = (fun x:8 -> case x:8^4 of {
 //│ 	Pair a:9 b:10 => (c:7^5 [Pair b:10^6 a:9^7])})
-//│ (c:7^12 p:6^13)
+//│ def p:6 = [Pair [A] [B]]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
@@ -54,6 +61,13 @@ c(p)
 //│ [c:7^12] ---> [c:7^12] (hopeless to continue)
 //│ [p:6^13] ---> [p:6^13] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c:7^15 p:6^16)
+//│ def c:7 = (fun x:8 -> case x:8^7 of {
+//│ 	Pair a:9 b:10 => (c:7^8 [Pair b:10^9 a:9^10])})
+//│ def p:6 = [Pair [A] [B]]
+//│ <<<<<<< expanded program <<<<<<<
 
 // Just a more valid/reasonable version of the above
 // TODO support nested patterns as in `Pair(0)`
@@ -67,11 +81,11 @@ c(p)
 //│ |_LUMBERHACK_ERROR|↵|#let| |p| |#=| |Wrap|(|3|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|N| |#then| |0|↵|Wrap|(|a|)| |#then| |c|(|Wrap|(|primitive|(|a|)|)|)|←|↵|c|(|p|)|
 //│ Parsed: {_LUMBERHACK_ERROR; let p = Wrap (3,); fun c = x, => if x is ‹(N) then 0; (Wrap (a,)) then c (Wrap (primitive (a,),),)›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def p:6 = [Wrap 3]
+//│ (c:7^13 p:6^14)
 //│ def c:7 = (fun x:8 -> case x:8^3 of {
 //│ 	N => 0
 //│ 	| Wrap a:9 => (c:7^5 [Wrap (primitive:3^6 a:9^7)])})
-//│ (c:7^13 p:6^14)
+//│ def p:6 = [Wrap 3]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
@@ -84,6 +98,14 @@ c(p)
 //│ [p:6^14] ---> [p:6^14] (hopeless to continue)
 //│ [c:7^13] ---> [c:7^13] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c:7^16 p:6^17)
+//│ def c:7 = (fun x:8 -> case x:8^6 of {
+//│ 	N => 0
+//│ 	| Wrap a:9 => (c:7^8 [Wrap (primitive:3^9 a:9^10)])})
+//│ def p:6 = [Wrap 3]
+//│ <<<<<<< expanded program <<<<<<<
 
 fun c(x) = if primitive(x) is
     True then 0
@@ -92,10 +114,10 @@ c(0)
 //│ |#fun| |c|(|x|)| |#=| |#if| |primitive|(|x|)| |is|→|True| |#then| |0|↵|False| |#then| |c|(|primitive|(|x|)|)|←|↵|c|(|0|)|
 //│ Parsed: {fun c = x, => if primitive (x,) is ‹(True) then 0; (False) then c (primitive (x,),)›; c (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (c:6^12 0)
 //│ def c:6 = (fun x:7 -> case (primitive:3^1 x:7^2) of {
 //│ 	True => 0
 //│ 	| False => (c:6^5 (primitive:3^6 x:7^7))})
-//│ (c:6^12 0)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
@@ -107,6 +129,13 @@ c(0)
 //│ >>>>>>> expansion >>>>>>>
 //│ [c:6^12] ---> [c:6^12] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c:6^15 0)
+//│ def c:6 = (fun x:7 -> case (primitive:3^4 x:7^5) of {
+//│ 	True => 0
+//│ 	| False => (c:6^8 (primitive:3^9 x:7^10))})
+//│ <<<<<<< expanded program <<<<<<<
 
 
 // NOTE: only the first two element is handled
@@ -123,15 +152,15 @@ map(ff, l)
 //│ |_LUMBERHACK_ERROR|↵|#fun| |map|(|f|,| |ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#fun| |ff|(|x|)| |#=| |#if| |x| |is|→|K| |#then| |T|↵|KK| |#then| |TT|↵|KKKK| |#then| |TTTT|←|↵|#let| |l| |#=| |C|(|K|,| |C|(|KK|,| |C|(|KKKK|,| |N|)|)|)|↵|map|(|ff|,| |l|)|
 //│ Parsed: {_LUMBERHACK_ERROR; fun map = f, ls, => if ls is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; fun ff = x, => if x is ‹(K) then T; (KK) then TT; (KKKK) then TTTT›; let l = C (K, C (KK, C (KKKK, N,),),); map (ff, l,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def map:6 = (fun f:9 -> (fun ls:10 -> case ls:10^1 of {
-//│ 	C h:11 t:12 => [C (f:9^2 h:11^3) ((map:6^5 f:9^6) t:12^8)]
-//│ 	| N => [N]}))
+//│ ((map:6^28 ff:7^29) l:8^31)
 //│ def ff:7 = (fun x:13 -> case x:13^15 of {
 //│ 	K => [T]
 //│ 	| KK => [TT]
 //│ 	| KKKK => [TTTT]})
 //│ def l:8 = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ ((map:6^28 ff:7^29) l:8^31)
+//│ def map:6 = (fun f:9 -> (fun ls:10 -> case ls:10^1 of {
+//│ 	C h:11 t:12 => [C (f:9^2 h:11^3) ((map:6^5 f:9^6) t:12^8)]
+//│ 	| N => [N]}))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
@@ -154,6 +183,31 @@ map(ff, l)
 //│ [l:8^31]
 //│ 
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (([map:6^28]:14^96 ff:7^97) [l:8^31]:18^99)
+//│ def [l:8^31]:18 = [C [K] [C [KK] [C [KKKK] [N]]]]
+//│ def [map:6^28 · map:6^5 · map:6^5 · map:6^5]:17 = (fun f:37 -> (fun ls:38 -> case ls:38^82 of {
+//│ 	C h:39 t:40 => [C (f:37^83 h:39^84) (([map:6^28 · map:6^5 · map:6^5 · map:6^5]:17^86 f:37^87) t:40^89)]
+//│ 	| N => [N]}))
+//│ def [map:6^28 · map:6^5 · map:6^5]:16 = (fun f:29 -> (fun ls:30 -> case ls:30^47 of {
+//│ 	C h:31 t:32 => [C (f:29^48 h:31^49) (([map:6^28 · map:6^5 · map:6^5 · map:6^5]:17^51 f:29^52) t:32^54)]
+//│ 	| N => [N]}))
+//│ def [map:6^28 · map:6^5]:15 = (fun f:25 -> (fun ls:26 -> case ls:26^33 of {
+//│ 	C h:27 t:28 => [C (f:25^34 h:27^35) (([map:6^28 · map:6^5 · map:6^5]:16^37 f:25^38) t:28^40)]
+//│ 	| N => [N]}))
+//│ def [map:6^28]:14 = (fun f:33 -> (fun ls:34 -> case ls:34^61 of {
+//│ 	C h:35 t:36 => [C (f:33^62 h:35^63) (([map:6^28 · map:6^5]:15^65 f:33^66) t:36^68)]
+//│ 	| N => [N]}))
+//│ def ff:7 = (fun x:13 -> case x:13^20 of {
+//│ 	K => [T]
+//│ 	| KK => [TT]
+//│ 	| KKKK => [TTTT]})
+//│ def l:8 = [C [K] [C [KK] [C [KKKK] [N]]]]
+//│ def map:6 = (fun f:9 -> (fun ls:10 -> case ls:10^6 of {
+//│ 	C h:11 t:12 => [C (f:9^7 h:11^8) ((map:6^10 f:9^11) t:12^13)]
+//│ 	| N => [N]}))
+//│ <<<<<<< expanded program <<<<<<<
 
 
 // NOTE: some program not be able to write?
@@ -169,13 +223,13 @@ last(p)
 //│ |_LUMBERHACK_ERROR|↵|#fun| |last|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |t| |is|→|N| |#then| |Some|(|h|)|↵|C|(|hh|,| |tt|)| |#then| |last|(|t|)|↵|/* C(hh, tt) then last(C(hh, tt))*/|←|↵|N| |#then| |None|←|↵|#let| |p| |#=| |C|(|1|,| |C|(|2|,| |N|)|)|↵|last|(|p|)|
 //│ Parsed: {_LUMBERHACK_ERROR; fun last = ls, => if ls is ‹(C (h, t,)) then if t is ‹(N) then Some (h,); (C (hh, tt,)) then last (t,)›; (N) then None›; let p = C (1, C (2, N,),); last (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (last:6^17 p:7^18)
 //│ def last:6 = (fun ls:8 -> case ls:8^1 of {
 //│ 	C h:9 t:10 => case t:10^2 of {
 //│ 		N => [Some h:9^3]
 //│ 		| C hh:11 tt:12 => (last:6^5 t:10^6)}
 //│ 	| N => [None]})
 //│ def p:7 = [C 1 [C 2 [N]]]
-//│ (last:6^17 p:7^18)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
@@ -196,6 +250,32 @@ last(p)
 //│ [p:7^18]
 //│ 
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ([last:6^17]:13^58 [p:7^18]:16^59)
+//│ def [last:6^17 · last:6^5 · last:6^5]:15 = (fun ls:23 -> case ls:23^20 of {
+//│ 	C h:24 t:25 => case t:25^21 of {
+//│ 		N => [Some h:24^22]
+//│ 		| C hh:26 tt:27 => ([last:6^17 · last:6^5 · last:6^5]:15^24 t:25^25)}
+//│ 	| N => [None]})
+//│ def [last:6^17 · last:6^5]:14 = (fun ls:28 -> case ls:28^31 of {
+//│ 	C h:29 t:30 => case t:30^32 of {
+//│ 		N => [Some h:29^33]
+//│ 		| C hh:31 tt:32 => ([last:6^17 · last:6^5 · last:6^5]:15^35 t:30^36)}
+//│ 	| N => [None]})
+//│ def [last:6^17]:13 = (fun ls:33 -> case ls:33^42 of {
+//│ 	C h:34 t:35 => case t:35^43 of {
+//│ 		N => [Some h:34^44]
+//│ 		| C hh:36 tt:37 => ([last:6^17 · last:6^5]:14^46 t:35^47)}
+//│ 	| N => [None]})
+//│ def [p:7^18]:16 = [C 1 [C 2 [N]]]
+//│ def last:6 = (fun ls:8 -> case ls:8^4 of {
+//│ 	C h:9 t:10 => case t:10^5 of {
+//│ 		N => [Some h:9^6]
+//│ 		| C hh:11 tt:12 => (last:6^8 t:10^9)}
+//│ 	| N => [None]})
+//│ def p:7 = [C 1 [C 2 [N]]]
+//│ <<<<<<< expanded program <<<<<<<
 
 _LUMBERHACK_ERROR
 let add = primitive
@@ -209,6 +289,7 @@ idxSum(rev(primitive, N))(0)
 //│ |_LUMBERHACK_ERROR|↵|#let| |add| |#=| |primitive|↵|#fun| |idxSum|(|ls|)| |#=| |#if| |ls| |is|→|N| |#then| |acc| |=>| |0|↵|C|(|h|,| |t|)| |#then| |acc| |=>| |add|(|acc|,| |idxSum|(|t|)|(|add|(|acc|,| |1|)|)|)|←|↵|#fun| |rev|(|lss|,| |a|)| |#=| |#if| |lss| |is|→|N| |#then| |a|↵|C|(|hh|,| |tt|)| |#then| |rev|(|tt|,| |C|(|hh|,| |a|)|)|←|↵|idxSum|(|rev|(|primitive|,| |N|)|)|(|0|)|
 //│ Parsed: {_LUMBERHACK_ERROR; let add = primitive; fun idxSum = ls, => if ls is ‹(N) then acc, => 0; (C (h, t,)) then acc, => add (acc, idxSum (t,) (add (acc, 1,),),)›; fun rev = lss, a, => if lss is ‹(N) then a; (C (hh, tt,)) then rev (tt, C (hh, a,),)›; idxSum (rev (primitive, N,),) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
+//│ ((idxSum:7^33 ((rev:8^34 primitive:3^35) [N])) 0)
 //│ def add:4 = primitive:3^1
 //│ def idxSum:7 = (fun ls:9 -> case ls:9^2 of {
 //│ 	N => (fun acc:10 -> 0)
@@ -216,7 +297,6 @@ idxSum(rev(primitive, N))(0)
 //│ def rev:8 = (fun lss:14 -> (fun a:15 -> case lss:14^21 of {
 //│ 	N => a:15^22
 //│ 	| C hh:16 tt:17 => ((rev:8^23 tt:17^24) [C hh:16^26 a:15^27])}))
-//│ ((idxSum:7^33 ((rev:8^34 primitive:3^35) [N])) 0)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
@@ -251,6 +331,29 @@ idxSum(rev(primitive, N))(0)
 //│ 	[rev:8^34 · rev:8^23]
 //│ 		[rev:8^34 · rev:8^23 · rev:8^23] ---> [rev:8^34 · rev:8^23] (only one)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (([idxSum:7^33]:18^104 (([rev:8^34]:20^105 primitive:25^106) [N])) 0)
+//│ def [idxSum:7^33 · idxSum:7^8]:19 = (fun ls:32 -> case ls:32^54 of {
+//│ 	N => (fun acc:33 -> 0)
+//│ 	| C h:34 t:35 => (fun acc:36 -> ((add:26^57 acc:36^58) (([idxSum:7^33 · idxSum:7^8]:19^60 t:35^61) ((add:26^63 acc:36^64) 1))))})
+//│ def [idxSum:7^33]:18 = (fun ls:37 -> case ls:37^73 of {
+//│ 	N => (fun acc:38 -> 0)
+//│ 	| C h:39 t:40 => (fun acc:41 -> ((add:26^76 acc:41^77) (([idxSum:7^33 · idxSum:7^8]:19^79 t:40^80) ((add:26^82 acc:41^83) 1))))})
+//│ def [rev:8^34 · rev:8^23]:21 = (fun lss:42 -> (fun a:43 -> case lss:42^92 of {
+//│ 	N => a:43^93
+//│ 	| C hh:44 tt:45 => (([rev:8^34 · rev:8^23]:21^94 tt:45^95) [C hh:44^97 a:43^98])}))
+//│ def [rev:8^34]:20 = (fun lss:28 -> (fun a:29 -> case lss:28^42 of {
+//│ 	N => a:29^43
+//│ 	| C hh:30 tt:31 => (([rev:8^34 · rev:8^23]:21^44 tt:31^45) [C hh:30^47 a:29^48])}))
+//│ def add:4 = primitive:3^10
+//│ def idxSum:7 = (fun ls:9 -> case ls:9^11 of {
+//│ 	N => (fun acc:10 -> 0)
+//│ 	| C h:11 t:12 => (fun acc:13 -> ((add:4^14 acc:13^15) ((idxSum:7^17 t:12^18) ((add:4^20 acc:13^21) 1))))})
+//│ def rev:8 = (fun lss:14 -> (fun a:15 -> case lss:14^30 of {
+//│ 	N => a:15^31
+//│ 	| C hh:16 tt:17 => ((rev:8^32 tt:17^33) [C hh:16^35 a:15^36])}))
+//│ <<<<<<< expanded program <<<<<<<
 
 
 fun minuss(a) = if a is
@@ -264,14 +367,14 @@ minuss(fst)(snd)
 //│ |#fun| |minuss|(|a|)| |#=| |#if| |a| |is|→|S|(|aa|)| |#then| |b| |=>| |#if| |b| |is|→|S|(|bb|)| |#then| |minuss|(|aa|,| |bb|)|↵|Z| |#then| |aa|←|↵|Z| |#then| |n| |=>| |Z|←|↵|#let| |fst| |#=| |S|(|S|(|Z|)|)|↵|#let| |snd| |#=| |Z|↵|minuss|(|fst|)|(|snd|)|
 //│ Parsed: {fun minuss = a, => if a is ‹(S (aa,)) then b, => if b is ‹(S (bb,)) then minuss (aa, bb,); (Z) then aa›; (Z) then n, => Z›; let fst = S (S (Z,),); let snd = Z; minuss (fst,) (snd,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
+//│ ((minuss:6^19 fst:7^20) snd:8^22)
+//│ def fst:7 = [S [S [Z]]]
 //│ def minuss:6 = (fun a:9 -> case a:9^1 of {
 //│ 	S aa:10 => (fun b:11 -> case b:11^2 of {
 //│ 		S bb:12 => ((minuss:6^3 aa:10^4) bb:12^6)
 //│ 		| Z => aa:10^8})
 //│ 	| Z => (fun n:13 -> [Z])})
-//│ def fst:7 = [S [S [Z]]]
 //│ def snd:8 = [Z]
-//│ ((minuss:6^19 fst:7^20) snd:8^22)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
@@ -297,6 +400,29 @@ minuss(fst)(snd)
 //│ [fst:7^20]
 //│ 
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (([minuss:6^19]:14^56 [fst:7^20]:17^57) [snd:8^22]:16^59)
+//│ def [fst:7^20]:17 = [S [S [Z]]]
+//│ def [minuss:6^19 · minuss:6^3]:15 = (fun a:29 -> case a:29^42 of {
+//│ 	S aa:30 => (fun b:31 -> case b:31^43 of {
+//│ 		S bb:32 => (([minuss:6^19 · minuss:6^3]:15^44 aa:30^45) bb:32^47)
+//│ 		| Z => aa:30^49})
+//│ 	| Z => (fun n:33 -> [Z])})
+//│ def [minuss:6^19]:14 = (fun a:24 -> case a:24^27 of {
+//│ 	S aa:25 => (fun b:26 -> case b:26^28 of {
+//│ 		S bb:27 => (([minuss:6^19 · minuss:6^3]:15^29 aa:25^30) bb:27^32)
+//│ 		| Z => aa:25^34})
+//│ 	| Z => (fun n:28 -> [Z])})
+//│ def [snd:8^22]:16 = [Z]
+//│ def fst:7 = [S [S [Z]]]
+//│ def minuss:6 = (fun a:9 -> case a:9^6 of {
+//│ 	S aa:10 => (fun b:11 -> case b:11^7 of {
+//│ 		S bb:12 => ((minuss:6^8 aa:10^9) bb:12^11)
+//│ 		| Z => aa:10^13})
+//│ 	| Z => (fun n:13 -> [Z])})
+//│ def snd:8 = [Z]
+//│ <<<<<<< expanded program <<<<<<<
 
 // FIXME: weird recursive
 _LUMBERHACK_ERROR
@@ -312,15 +438,15 @@ minuss(fst)(snd)
 //│ |_LUMBERHACK_ERROR|↵|#fun| |minuss|(|a|)| |#=| |#if| |a| |is|→|S|(|aa|)| |#then| |b| |=>| |checkb|(|b|)|(|aa|)|↵|Z| |#then| |n| |=>| |Z|←|↵|#fun| |checkb|(|b|)| |#=| |#if| |b| |is|→|S|(|bb|)| |#then| |aaa| |=>| |minuss|(|aaa|,| |bb|)|↵|Z| |#then| |aaa| |=>| |aaa|←|↵|#let| |fst| |#=| |S|(|S|(|Z|)|)|↵|#let| |snd| |#=| |Z|↵|minuss|(|fst|)|(|snd|)|
 //│ Parsed: {_LUMBERHACK_ERROR; fun minuss = a, => if a is ‹(S (aa,)) then b, => checkb (b,) (aa,); (Z) then n, => Z›; fun checkb = b, => if b is ‹(S (bb,)) then aaa, => minuss (aaa, bb,); (Z) then aaa, => aaa›; let fst = S (S (Z,),); let snd = Z; minuss (fst,) (snd,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def minuss:6 = (fun a:10 -> case a:10^1 of {
-//│ 	S aa:11 => (fun b:12 -> ((checkb:7^2 b:12^3) aa:11^5))
-//│ 	| Z => (fun n:13 -> [Z])})
+//│ ((minuss:6^27 fst:8^28) snd:9^30)
 //│ def checkb:7 = (fun b:14 -> case b:14^12 of {
 //│ 	S bb:15 => (fun aaa:16 -> ((minuss:6^13 aaa:16^14) bb:15^16))
 //│ 	| Z => (fun aaa:17 -> aaa:17^19)})
 //│ def fst:8 = [S [S [Z]]]
+//│ def minuss:6 = (fun a:10 -> case a:10^1 of {
+//│ 	S aa:11 => (fun b:12 -> ((checkb:7^2 b:12^3) aa:11^5))
+//│ 	| Z => (fun n:13 -> [Z])})
 //│ def snd:9 = [Z]
-//│ ((minuss:6^27 fst:8^28) snd:9^30)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
@@ -347,6 +473,29 @@ minuss(fst)(snd)
 //│ [fst:8^28]
 //│ 
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (([minuss:6^27]:18^69 [fst:8^28]:22^70) [snd:9^30]:21^72)
+//│ def [fst:8^28]:22 = [S [S [Z]]]
+//│ def [minuss:6^27 · checkb:7^2 · minuss:6^13]:20 = (fun a:37 -> case a:37^58 of {
+//│ 	S aa:38 => (fun b:39 -> (([minuss:6^27 · checkb:7^2]:19^59 b:39^60) aa:38^62))
+//│ 	| Z => (fun n:40 -> [Z])})
+//│ def [minuss:6^27 · checkb:7^2]:19 = (fun b:33 -> case b:33^47 of {
+//│ 	S bb:34 => (fun aaa:35 -> (([minuss:6^27 · checkb:7^2 · minuss:6^13]:20^48 aaa:35^49) bb:34^51))
+//│ 	| Z => (fun aaa:36 -> aaa:36^54)})
+//│ def [minuss:6^27]:18 = (fun a:29 -> case a:29^35 of {
+//│ 	S aa:30 => (fun b:31 -> (([minuss:6^27 · checkb:7^2]:19^36 b:31^37) aa:30^39))
+//│ 	| Z => (fun n:32 -> [Z])})
+//│ def [snd:9^30]:21 = [Z]
+//│ def checkb:7 = (fun b:14 -> case b:14^17 of {
+//│ 	S bb:15 => (fun aaa:16 -> ((minuss:6^18 aaa:16^19) bb:15^21))
+//│ 	| Z => (fun aaa:17 -> aaa:17^24)})
+//│ def fst:8 = [S [S [Z]]]
+//│ def minuss:6 = (fun a:10 -> case a:10^6 of {
+//│ 	S aa:11 => (fun b:12 -> ((checkb:7^7 b:12^8) aa:11^10))
+//│ 	| Z => (fun n:13 -> [Z])})
+//│ def snd:9 = [Z]
+//│ <<<<<<< expanded program <<<<<<<
 
 
 fun id(x) = if x is
@@ -359,13 +508,13 @@ c(id(p))
 //│ |#fun| |id|(|x|)| |#=| |#if| |x| |is|→|ID|(|b|)| |#then| |b|↵|C|(|a|)| |#then| |id|(|ID|(|C|(|a|)|)|)|←|↵|#let| |p| |#=| |C|(|p|)|↵|#fun| |c|(|y|)| |#=| |#if| |y| |is|→|C|(|aa|)| |#then| |c|(|aa|)|←|↵|c|(|id|(|p|)|)|
 //│ Parsed: {fun id = x, => if x is ‹(ID (b,)) then b; (C (a,)) then id (ID (C (a,),),)›; let p = C (p,); fun c = y, => if y is ‹(C (aa,)) then c (aa,)›; c (id (p,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (c:8^18 (id:6^19 p:7^20))
+//│ def c:8 = (fun y:12 -> case y:12^12 of {
+//│ 	C aa:13 => (c:8^13 aa:13^14)})
 //│ def id:6 = (fun x:9 -> case x:9^1 of {
 //│ 	ID b:10 => b:10^2
 //│ 	| C a:11 => (id:6^3 [ID [C a:11^4]])})
 //│ def p:7 = [C p:7^10]
-//│ def c:8 = (fun y:12 -> case y:12^12 of {
-//│ 	C aa:13 => (c:8^13 aa:13^14)})
-//│ (c:8^18 (id:6^19 p:7^20))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
@@ -398,3 +547,26 @@ c(id(p))
 //│ [c:8^18]
 //│ 	[c:8^18 · c:8^13] ---> [c:8^18] (only one)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ([c:8^18]:19^60 ([id:6^19]:14^61 [p:7^20]:17^62))
+//│ def [c:8^18]:19 = (fun y:32 -> case y:32^43 of {
+//│ 	C aa:33 => ([c:8^18]:19^44 aa:33^45)})
+//│ def [id:6^19 · id:6^3 · id:6^3]:16 = (fun x:26 -> case x:26^23 of {
+//│ 	ID b:27 => b:27^24
+//│ 	| C a:28 => (id:6^25 [ID [C a:28^26]])})
+//│ def [id:6^19 · id:6^3]:15 = (fun x:29 -> case x:29^34 of {
+//│ 	ID b:30 => b:30^35
+//│ 	| C a:31 => ([id:6^19 · id:6^3 · id:6^3]:16^36 [ID [C a:31^37]])})
+//│ def [id:6^19]:14 = (fun x:34 -> case x:34^49 of {
+//│ 	ID b:35 => b:35^50
+//│ 	| C a:36 => ([id:6^19 · id:6^3]:15^51 [ID [C a:36^52]])})
+//│ def [p:7^20 · p:7^10]:18 = [C [p:7^20 · p:7^10]:18^32]
+//│ def [p:7^20]:17 = [C [p:7^20 · p:7^10]:18^58]
+//│ def c:8 = (fun y:12 -> case y:12^17 of {
+//│ 	C aa:13 => (c:8^18 aa:13^19)})
+//│ def id:6 = (fun x:9 -> case x:9^6 of {
+//│ 	ID b:10 => b:10^7
+//│ 	| C a:11 => (id:6^8 [ID [C a:11^9]])})
+//│ def p:7 = [C p:7^15]
+//│ <<<<<<< expanded program <<<<<<<

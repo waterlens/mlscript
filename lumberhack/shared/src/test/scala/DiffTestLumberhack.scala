@@ -53,8 +53,9 @@ class DiffTestLumberhack extends DiffTests {
       output("<<<<<<< splitted knots <<<<<<<")
       
       output("\n>>>>>>> expansion >>>>>>>")
-      // output(CallTree.callTreeUsingSplitKnot(d).map(_.pp).mkString("\n"))
-      output(CallTree.callTreeUsingNonSplitKnot(d).map(_.pp).mkString("\n"))
+      // output(CallTree.callTreeUsingSplitKnot(d)._1.map(_.pp).mkString("\n"))
+      val callTree = CallTree.callTreeUsingNonSplitKnot(d)
+      output(callTree._1.map(_.pp).mkString("\n"))
       output("<<<<<<< expansion <<<<<<<")
 
       if mode.stdout || mode.verbose then {
@@ -71,6 +72,12 @@ class DiffTestLumberhack extends DiffTests {
         }
         output("<<<<<<< type variable bounds <<<<<<<")
       }
+
+      output("\n>>>>>>> expanded program >>>>>>>")
+      // output(CallTree.callTreeUsingSplitKnot(d)._1.map(_.pp).mkString("\n"))
+      // output(CallTree.callTreeUsingNonSplitKnot(d)._1.map(_.pp).mkString("\n"))
+      output(originalProgram.expandedWithNewDeforest(callTree._1)._1.pp)
+      output("<<<<<<< expanded program <<<<<<<")
       
       // output(("------- defInstance -------"))
       // d.defInstances.foreach { case (p, xs) =>

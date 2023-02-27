@@ -11,12 +11,12 @@ inter(l1, l2)
 //│ |#fun| |inter|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |ys| |=>| |ys|↵|C|(|h|,| |t|)| |#then| |ys| |=>| |C|(|h|,| |inter|(|ys|)|(|t|)|)|←|↵|#let| |l1| |#=| |C|(|1|,| |C|(|2|,| |N|)|)|↵|#let| |#rec| |l2| |#=| |N|↵|inter|(|l1|,| |l2|)|
 //│ Parsed: {fun inter = xs, => if xs is ‹(N) then ys, => ys; (C (h, t,)) then ys, => C (h, inter (ys,) (t,),)›; let l1 = C (1, C (2, N,),); let rec l2 = N; inter (l1, l2,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
+//│ ((inter:6^20 l1:7^21) l2:8^23)
 //│ def inter:6 = (fun xs:9 -> case xs:9^1 of {
 //│ 	N => (fun ys:10 -> ys:10^2)
 //│ 	| C h:11 t:12 => (fun ys:13 -> [C h:11^4 ((inter:6^5 ys:13^6) t:12^8)])})
 //│ def l1:7 = [C 1 [C 2 [N]]]
 //│ def l2:8 = [N]
-//│ ((inter:6^20 l1:7^21) l2:8^23)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
@@ -44,6 +44,29 @@ inter(l1, l2)
 //│ [l1:7^21]
 //│ 
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (([inter:6^20]:15^83 [l1:7^21]:19^84) [l2:8^23]:14^86)
+//│ def [inter:6^20 · inter:6^5 · inter:6^5 · inter:6^5]:18 = (fun xs:41 -> case xs:41^70 of {
+//│ 	N => (fun ys:42 -> ys:42^71)
+//│ 	| C h:43 t:44 => (fun ys:45 -> [C h:43^73 (([inter:6^20 · inter:6^5 · inter:6^5]:17^74 ys:45^75) t:44^77)])})
+//│ def [inter:6^20 · inter:6^5 · inter:6^5]:17 = (fun xs:26 -> case xs:26^30 of {
+//│ 	N => (fun ys:27 -> ys:27^31)
+//│ 	| C h:28 t:29 => (fun ys:30 -> [C h:28^33 (([inter:6^20 · inter:6^5 · inter:6^5 · inter:6^5]:18^34 ys:30^35) t:29^37)])})
+//│ def [inter:6^20 · inter:6^5]:16 = (fun xs:36 -> case xs:36^57 of {
+//│ 	N => (fun ys:37 -> ys:37^58)
+//│ 	| C h:38 t:39 => (fun ys:40 -> [C h:38^60 (([inter:6^20 · inter:6^5 · inter:6^5]:17^61 ys:40^62) t:39^64)])})
+//│ def [inter:6^20]:15 = (fun xs:31 -> case xs:31^43 of {
+//│ 	N => (fun ys:32 -> ys:32^44)
+//│ 	| C h:33 t:34 => (fun ys:35 -> [C h:33^46 (([inter:6^20 · inter:6^5]:16^47 ys:35^48) t:34^50)])})
+//│ def [l1:7^21]:19 = [C 1 [C 2 [N]]]
+//│ def [l2:8^23]:14 = [N]
+//│ def inter:6 = (fun xs:9 -> case xs:9^6 of {
+//│ 	N => (fun ys:10 -> ys:10^7)
+//│ 	| C h:11 t:12 => (fun ys:13 -> [C h:11^9 ((inter:6^10 ys:13^11) t:12^13)])})
+//│ def l1:7 = [C 1 [C 2 [N]]]
+//│ def l2:8 = [N]
+//│ <<<<<<< expanded program <<<<<<<
 
 
 fun inter(xs) = if xs is
@@ -55,12 +78,12 @@ inter(l1(0))(l2)
 //│ |#fun| |inter|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |ys| |=>| |ys|↵|C|(|h|,| |t|)| |#then| |ys| |=>| |C|(|h|,| |inter|(|ys|)|(|t|)|)|←|↵|#fun| |l1|(|x|)| |#=| |C|(|1|,| |C|(|2|,| |l1|(|add|(|x|,| |1|)|)|)|)|↵|#let| |#rec| |l2| |#=| |C|(|9|,| |C|(|8|,| |l2|)|)|↵|inter|(|l1|(|0|)|)|(|l2|)|
 //│ Parsed: {fun inter = xs, => if xs is ‹(N) then ys, => ys; (C (h, t,)) then ys, => C (h, inter (ys,) (t,),)›; fun l1 = x, => C (1, C (2, l1 (add (x, 1,),),),); let rec l2 = C (9, C (8, l2,),); inter (l1 (0,),) (l2,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
+//│ ((inter:6^31 (l1:7^32 0)) l2:8^36)
 //│ def inter:6 = (fun xs:9 -> case xs:9^1 of {
 //│ 	N => (fun ys:10 -> ys:10^2)
 //│ 	| C h:11 t:12 => (fun ys:13 -> [C h:11^4 ((inter:6^5 ys:13^6) t:12^8)])})
 //│ def l1:7 = (fun x:14 -> [C 1 [C 2 (l1:7^16 ((add:4^17 x:14^18) 1))]])
 //│ def l2:8 = [C 9 [C 8 l2:8^28]]
-//│ ((inter:6^31 (l1:7^32 0)) l2:8^36)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
@@ -89,6 +112,32 @@ inter(l1(0))(l2)
 //│ 				[inter:6^31 · inter:6^5 · inter:6^5 · inter:6^5 · inter:6^5]
 //│ 					[inter:6^31 · inter:6^5 · inter:6^5 · inter:6^5 · inter:6^5 · inter:6^5] ---> [inter:6^31 · inter:6^5] (only one)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (([inter:6^31]:17^120 ([l1:7^32]:15^121 0)) [l2:8^36]:16^125)
+//│ def [inter:6^31 · inter:6^5 · inter:6^5 · inter:6^5 · inter:6^5]:21 = (fun xs:39 -> case xs:39^81 of {
+//│ 	N => (fun ys:40 -> ys:40^82)
+//│ 	| C h:41 t:42 => (fun ys:43 -> [C h:41^84 (([inter:6^31 · inter:6^5]:18^85 ys:43^86) t:42^88)])})
+//│ def [inter:6^31 · inter:6^5 · inter:6^5 · inter:6^5]:20 = (fun xs:28 -> case xs:28^43 of {
+//│ 	N => (fun ys:29 -> ys:29^44)
+//│ 	| C h:30 t:31 => (fun ys:32 -> [C h:30^46 (([inter:6^31 · inter:6^5 · inter:6^5 · inter:6^5 · inter:6^5]:21^47 ys:32^48) t:31^50)])})
+//│ def [inter:6^31 · inter:6^5 · inter:6^5]:19 = (fun xs:49 -> case xs:49^107 of {
+//│ 	N => (fun ys:50 -> ys:50^108)
+//│ 	| C h:51 t:52 => (fun ys:53 -> [C h:51^110 (([inter:6^31 · inter:6^5 · inter:6^5 · inter:6^5]:20^111 ys:53^112) t:52^114)])})
+//│ def [inter:6^31 · inter:6^5]:18 = (fun xs:34 -> case xs:34^68 of {
+//│ 	N => (fun ys:35 -> ys:35^69)
+//│ 	| C h:36 t:37 => (fun ys:38 -> [C h:36^71 (([inter:6^31 · inter:6^5 · inter:6^5]:19^72 ys:38^73) t:37^75)])})
+//│ def [inter:6^31]:17 = (fun xs:44 -> case xs:44^94 of {
+//│ 	N => (fun ys:45 -> ys:45^95)
+//│ 	| C h:46 t:47 => (fun ys:48 -> [C h:46^97 (([inter:6^31 · inter:6^5]:18^98 ys:48^99) t:47^101)])})
+//│ def [l1:7^32]:15 = (fun x:33 -> [C 1 [C 2 ([l1:7^32]:15^58 ((add:26^59 x:33^60) 1))]])
+//│ def [l2:8^36]:16 = [C 9 [C 8 [l2:8^36]:16^40]]
+//│ def inter:6 = (fun xs:9 -> case xs:9^8 of {
+//│ 	N => (fun ys:10 -> ys:10^9)
+//│ 	| C h:11 t:12 => (fun ys:13 -> [C h:11^11 ((inter:6^12 ys:13^13) t:12^15)])})
+//│ def l1:7 = (fun x:14 -> [C 1 [C 2 (l1:7^23 ((add:4^24 x:14^25) 1))]])
+//│ def l2:8 = [C 9 [C 8 l2:8^35]]
+//│ <<<<<<< expanded program <<<<<<<
 
 
 
@@ -105,12 +154,12 @@ map(l)(
 //│ |#fun| |map|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |f| |=>| |C|(|f|(|h|)|,| |map|(|t|)|(|f|)|)|↵|N| |#then| |f| |=>| |N|←|↵|#let| |l| |#=| |C|(|K|,| |N|)|↵|map|(|l|)|(|→|x| |=>| |#if| |x| |is|→|K| |#then| |T|←|←|↵|)|
 //│ Parsed: {fun map = ls, => if ls is ‹(C (h, t,)) then f, => C (f (h,), map (t,) (f,),); (N) then f, => N›; let l = C (K, N,); map (l,) (x, => if x is ‹(K) then T›,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
+//│ ((map:6^19 l:7^20) (fun x:13 -> case x:13^22 of {
+//│ 	K => [T]}))
+//│ def l:7 = [C [K] [N]]
 //│ def map:6 = (fun ls:8 -> case ls:8^1 of {
 //│ 	C h:9 t:10 => (fun f:11 -> [C (f:11^2 h:9^3) ((map:6^5 t:10^6) f:11^8)])
 //│ 	| N => (fun f:12 -> [N])})
-//│ def l:7 = [C [K] [N]]
-//│ ((map:6^19 l:7^20) (fun x:13 -> case x:13^22 of {
-//│ 	K => [T]}))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
@@ -130,6 +179,22 @@ map(l)(
 //│ 	[map:6^19 · map:6^5]
 //│ 		[map:6^19 · map:6^5 · map:6^5] ---> [map:6^19 · map:6^5] (only one)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (([map:6^19]:15^60 [l:7^20]:14^61) (fun x:33 -> case x:33^63 of {
+//│ 	K => [T]}))
+//│ def [l:7^20]:14 = [C [K] [N]]
+//│ def [map:6^19 · map:6^5]:16 = (fun ls:23 -> case ls:23^27 of {
+//│ 	C h:24 t:25 => (fun f:26 -> [C (f:26^28 h:24^29) (([map:6^19 · map:6^5]:16^31 t:25^32) f:26^34)])
+//│ 	| N => (fun f:27 -> [N])})
+//│ def [map:6^19]:15 = (fun ls:28 -> case ls:28^42 of {
+//│ 	C h:29 t:30 => (fun f:31 -> [C (f:31^43 h:29^44) (([map:6^19 · map:6^5]:16^46 t:30^47) f:31^49)])
+//│ 	| N => (fun f:32 -> [N])})
+//│ def l:7 = [C [K] [N]]
+//│ def map:6 = (fun ls:9 -> case ls:9^9 of {
+//│ 	C h:10 t:11 => (fun f:12 -> [C (f:12^10 h:10^11) ((map:6^13 t:11^14) f:12^16)])
+//│ 	| N => (fun f:13 -> [N])})
+//│ <<<<<<< expanded program <<<<<<<
 
 
 
@@ -148,14 +213,14 @@ map(l)
 //│ |#fun| |map|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|→|(|#if| |h| |is|→|K| |#then| |T|↵|KK| |#then| |TT|↵|KKKK| |#then| |TTTT|←|↵|)|,|↵|map|(|t|)|←|↵|)|↵|N| |#then| |N|←|↵|#let| |l| |#=| |C|(|K|,| |C|(|KK|,| |C|(|KKKK|,| |N|)|)|)|↵|map|(|l|)|
 //│ Parsed: {fun map = ls, => if ls is ‹(C (h, t,)) then C ('(' if h is ‹(K) then T; (KK) then TT; (KKKK) then TTTT›, ')', map (t,),); (N) then N›; let l = C (K, C (KK, C (KKKK, N,),),); map (l,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (map:6^21 l:7^22)
+//│ def l:7 = [C [K] [C [KK] [C [KKKK] [N]]]]
 //│ def map:6 = (fun ls:8 -> case ls:8^1 of {
 //│ 	C h:9 t:10 => [C case h:9^2 of {
 //│ 		K => [T]
 //│ 		| KK => [TT]
 //│ 		| KKKK => [TTTT]} (map:6^7 t:10^8)]
 //│ 	| N => [N]})
-//│ def l:7 = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ (map:6^21 l:7^22)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
@@ -177,6 +242,42 @@ map(l)
 //│ 			[map:6^21 · map:6^7 · map:6^7 · map:6^7]
 //│ 				[map:6^21 · map:6^7 · map:6^7 · map:6^7 · map:6^7] ---> [map:6^21 · map:6^7 · map:6^7 · map:6^7] (only one)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ([map:6^21]:12^83 [l:7^22]:11^84)
+//│ def [l:7^22]:11 = [C [K] [C [KK] [C [KKKK] [N]]]]
+//│ def [map:6^21 · map:6^7 · map:6^7 · map:6^7]:15 = (fun ls:28 -> case ls:28^50 of {
+//│ 	C h:29 t:30 => [C case h:29^51 of {
+//│ 		K => [T]
+//│ 		| KK => [TT]
+//│ 		| KKKK => [TTTT]} ([map:6^21 · map:6^7 · map:6^7 · map:6^7]:15^56 t:30^57)]
+//│ 	| N => [N]})
+//│ def [map:6^21 · map:6^7 · map:6^7]:14 = (fun ls:31 -> case ls:31^70 of {
+//│ 	C h:32 t:33 => [C case h:32^71 of {
+//│ 		K => [T]
+//│ 		| KK => [TT]
+//│ 		| KKKK => [TTTT]} ([map:6^21 · map:6^7 · map:6^7 · map:6^7]:15^76 t:33^77)]
+//│ 	| N => [N]})
+//│ def [map:6^21 · map:6^7]:13 = (fun ls:25 -> case ls:25^37 of {
+//│ 	C h:26 t:27 => [C case h:26^38 of {
+//│ 		K => [T]
+//│ 		| KK => [TT]
+//│ 		| KKKK => [TTTT]} ([map:6^21 · map:6^7 · map:6^7]:14^43 t:27^44)]
+//│ 	| N => [N]})
+//│ def [map:6^21]:12 = (fun ls:22 -> case ls:22^24 of {
+//│ 	C h:23 t:24 => [C case h:23^25 of {
+//│ 		K => [T]
+//│ 		| KK => [TT]
+//│ 		| KKKK => [TTTT]} ([map:6^21 · map:6^7]:13^30 t:24^31)]
+//│ 	| N => [N]})
+//│ def l:7 = [C [K] [C [KK] [C [KKKK] [N]]]]
+//│ def map:6 = (fun ls:8 -> case ls:8^4 of {
+//│ 	C h:9 t:10 => [C case h:9^5 of {
+//│ 		K => [T]
+//│ 		| KK => [TT]
+//│ 		| KKKK => [TTTT]} (map:6^10 t:10^11)]
+//│ 	| N => [N]})
+//│ <<<<<<< expanded program <<<<<<<
 
 
 
@@ -198,15 +299,15 @@ c(t)
 //│ |#let| |aa| |#=| |T|(|N|,| |L|,| |L|)|↵|#let| |bb| |#=| |T|(|N|,| |L|,| |L|)|↵|#let| |t| |#=| |T|(|K|,| |aa|,| |bb|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|T|(|n|,| |l|,| |r|)| |#then| |T|(|→|(|#if| |n| |is|→|K| |#then| |KK|↵|N| |#then| |NN|←|↵|)|,|↵|c|(|l|)|,|↵|c|(|r|)|←|↵|)|↵|L| |#then| |LL|←|↵|c|(|t|)|
 //│ Parsed: {let aa = T (N, L, L,); let bb = T (N, L, L,); let t = T (K, aa, bb,); fun c = x, => if x is ‹(T (n, l, r,)) then T ('(' if n is ‹(K) then KK; (N) then NN›, ')', c (l,), c (r,),); (L) then LL›; c (t,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (c:9^28 t:8^29)
 //│ def aa:6 = [T [N] [L] [L]]
 //│ def bb:7 = [T [N] [L] [L]]
-//│ def t:8 = [T [K] aa:6^10 bb:7^11]
 //│ def c:9 = (fun x:10 -> case x:10^13 of {
 //│ 	T n:11 l:12 r:13 => [T case n:11^14 of {
 //│ 		K => [KK]
 //│ 		| N => [NN]} (c:9^18 l:12^19) (c:9^21 r:13^22)]
 //│ 	| L => [LL]})
-//│ (c:9^28 t:8^29)
+//│ def t:8 = [T [K] aa:6^10 bb:7^11]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
@@ -274,6 +375,56 @@ c(t)
 //│ 	[t:8^29 · bb:7^11]
 //│ 
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ([c:9^28]:14^148 [t:8^29]:21^149)
+//│ def [c:9^28 · c:9^18 · c:9^18]:16 = (fun x:30 -> case x:30^39 of {
+//│ 	T n:31 l:32 r:33 => [T case n:31^40 of {
+//│ 		K => [KK]
+//│ 		| N => [NN]} ([c:9^28 · c:9^18 · c:9^18]:16^44 l:32^45) ([c:9^28 · c:9^18 · c:9^18]:16^47 r:33^48)]
+//│ 	| L => [LL]})
+//│ def [c:9^28 · c:9^18 · c:9^21]:17 = (fun x:54 -> case x:54^133 of {
+//│ 	T n:55 l:56 r:57 => [T case n:55^134 of {
+//│ 		K => [KK]
+//│ 		| N => [NN]} ([c:9^28 · c:9^18 · c:9^21]:17^138 l:56^139) ([c:9^28 · c:9^18 · c:9^21]:17^141 r:57^142)]
+//│ 	| L => [LL]})
+//│ def [c:9^28 · c:9^18]:15 = (fun x:42 -> case x:42^88 of {
+//│ 	T n:43 l:44 r:45 => [T case n:43^89 of {
+//│ 		K => [KK]
+//│ 		| N => [NN]} ([c:9^28 · c:9^18 · c:9^18]:16^93 l:44^94) ([c:9^28 · c:9^18 · c:9^21]:17^96 r:45^97)]
+//│ 	| L => [LL]})
+//│ def [c:9^28 · c:9^21 · c:9^18]:19 = (fun x:38 -> case x:38^69 of {
+//│ 	T n:39 l:40 r:41 => [T case n:39^70 of {
+//│ 		K => [KK]
+//│ 		| N => [NN]} ([c:9^28 · c:9^21 · c:9^18]:19^74 l:40^75) ([c:9^28 · c:9^21 · c:9^18]:19^77 r:41^78)]
+//│ 	| L => [LL]})
+//│ def [c:9^28 · c:9^21 · c:9^21]:20 = (fun x:50 -> case x:50^118 of {
+//│ 	T n:51 l:52 r:53 => [T case n:51^119 of {
+//│ 		K => [KK]
+//│ 		| N => [NN]} ([c:9^28 · c:9^21 · c:9^21]:20^123 l:52^124) ([c:9^28 · c:9^21 · c:9^21]:20^126 r:53^127)]
+//│ 	| L => [LL]})
+//│ def [c:9^28 · c:9^21]:18 = (fun x:46 -> case x:46^103 of {
+//│ 	T n:47 l:48 r:49 => [T case n:47^104 of {
+//│ 		K => [KK]
+//│ 		| N => [NN]} ([c:9^28 · c:9^21 · c:9^18]:19^108 l:48^109) ([c:9^28 · c:9^21 · c:9^21]:20^111 r:49^112)]
+//│ 	| L => [LL]})
+//│ def [c:9^28]:14 = (fun x:34 -> case x:34^54 of {
+//│ 	T n:35 l:36 r:37 => [T case n:35^55 of {
+//│ 		K => [KK]
+//│ 		| N => [NN]} ([c:9^28 · c:9^18]:15^59 l:36^60) ([c:9^28 · c:9^21]:18^62 r:37^63)]
+//│ 	| L => [LL]})
+//│ def [t:8^29 · aa:6^10]:22 = [T [N] [L] [L]]
+//│ def [t:8^29 · bb:7^11]:23 = [T [N] [L] [L]]
+//│ def [t:8^29]:21 = [T [K] [t:8^29 · aa:6^10]:22^32 [t:8^29 · bb:7^11]:23^33]
+//│ def aa:6 = [T [N] [L] [L]]
+//│ def bb:7 = [T [N] [L] [L]]
+//│ def c:9 = (fun x:10 -> case x:10^16 of {
+//│ 	T n:11 l:12 r:13 => [T case n:11^17 of {
+//│ 		K => [KK]
+//│ 		| N => [NN]} (c:9^21 l:12^22) (c:9^24 r:13^25)]
+//│ 	| L => [LL]})
+//│ def t:8 = [T [K] aa:6^13 bb:7^14]
+//│ <<<<<<< expanded program <<<<<<<
 
 
 
@@ -291,16 +442,16 @@ sum(mapa(mapb(primitive)))
 //│ |#fun| |sum|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |S|(|N|,| |sum|(|t|)|)|↵|N| |#then| |N|←|↵|#fun| |mapa|(|lsa|)| |#=| |#if| |lsa| |is|→|C|(|ha|,| |ta|)| |#then| |C|(|primitive|(|ha|)|,| |mapa|(|ta|)|)|↵|N| |#then| |N|←|↵|#fun| |mapb|(|lsb|)| |#=| |#if| |lsb| |is|→|C|(|hb|,| |tb|)| |#then| |C|(|primitive|(|hb|)|,| |mapb|(|tb|)|)|↵|N| |#then| |N|←|↵|sum|(|mapa|(|mapb|(|primitive|)|)|)|
 //│ Parsed: {fun sum = ls, => if ls is ‹(C (h, t,)) then S (N, sum (t,),); (N) then N›; fun mapa = lsa, => if lsa is ‹(C (ha, ta,)) then C (primitive (ha,), mapa (ta,),); (N) then N›; fun mapb = lsb, => if lsb is ‹(C (hb, tb,)) then C (primitive (hb,), mapb (tb,),); (N) then N›; sum (mapa (mapb (primitive,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def sum:6 = (fun ls:9 -> case ls:9^1 of {
-//│ 	C h:10 t:11 => [S [N] (sum:6^3 t:11^4)]
-//│ 	| N => [N]})
+//│ (sum:6^32 (mapa:7^33 (mapb:8^34 primitive:3^35)))
 //│ def mapa:7 = (fun lsa:12 -> case lsa:12^10 of {
 //│ 	C ha:13 ta:14 => [C (primitive:3^11 ha:13^12) (mapa:7^14 ta:14^15)]
 //│ 	| N => [N]})
 //│ def mapb:8 = (fun lsb:15 -> case lsb:15^21 of {
 //│ 	C hb:16 tb:17 => [C (primitive:3^22 hb:16^23) (mapb:8^25 tb:17^26)]
 //│ 	| N => [N]})
-//│ (sum:6^32 (mapa:7^33 (mapb:8^34 primitive:3^35)))
+//│ def sum:6 = (fun ls:9 -> case ls:9^1 of {
+//│ 	C h:10 t:11 => [S [N] (sum:6^3 t:11^4)]
+//│ 	| N => [N]})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
@@ -350,6 +501,37 @@ sum(mapa(mapb(primitive)))
 //│ 	[mapb:8^34 · mapb:8^25]
 //│ 		[mapb:8^34 · mapb:8^25 · mapb:8^25] ---> [mapb:8^34 · mapb:8^25] (only one)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ([sum:6^32]:18^101 ([mapa:7^33]:20^102 ([mapb:8^34]:22^103 primitive:27^104)))
+//│ def [mapa:7^33 · mapa:7^14]:21 = (fun lsa:36 -> case lsa:36^59 of {
+//│ 	C ha:37 ta:38 => [C (primitive:27^60 ha:37^61) ([mapa:7^33 · mapa:7^14]:21^63 ta:38^64)]
+//│ 	| N => [N]})
+//│ def [mapa:7^33]:20 = (fun lsa:33 -> case lsa:33^48 of {
+//│ 	C ha:34 ta:35 => [C (primitive:27^49 ha:34^50) ([mapa:7^33 · mapa:7^14]:21^52 ta:35^53)]
+//│ 	| N => [N]})
+//│ def [mapb:8^34 · mapb:8^25]:23 = (fun lsb:39 -> case lsb:39^70 of {
+//│ 	C hb:40 tb:41 => [C (primitive:27^71 hb:40^72) ([mapb:8^34 · mapb:8^25]:23^74 tb:41^75)]
+//│ 	| N => [N]})
+//│ def [mapb:8^34]:22 = (fun lsb:45 -> case lsb:45^90 of {
+//│ 	C hb:46 tb:47 => [C (primitive:27^91 hb:46^92) ([mapb:8^34 · mapb:8^25]:23^94 tb:47^95)]
+//│ 	| N => [N]})
+//│ def [sum:6^32 · sum:6^3]:19 = (fun ls:42 -> case ls:42^81 of {
+//│ 	C h:43 t:44 => [S [N] ([sum:6^32 · sum:6^3]:19^83 t:44^84)]
+//│ 	| N => [N]})
+//│ def [sum:6^32]:18 = (fun ls:30 -> case ls:30^39 of {
+//│ 	C h:31 t:32 => [S [N] ([sum:6^32 · sum:6^3]:19^41 t:32^42)]
+//│ 	| N => [N]})
+//│ def mapa:7 = (fun lsa:12 -> case lsa:12^17 of {
+//│ 	C ha:13 ta:14 => [C (primitive:3^18 ha:13^19) (mapa:7^21 ta:14^22)]
+//│ 	| N => [N]})
+//│ def mapb:8 = (fun lsb:15 -> case lsb:15^28 of {
+//│ 	C hb:16 tb:17 => [C (primitive:3^29 hb:16^30) (mapb:8^32 tb:17^33)]
+//│ 	| N => [N]})
+//│ def sum:6 = (fun ls:9 -> case ls:9^8 of {
+//│ 	C h:10 t:11 => [S [N] (sum:6^10 t:11^11)]
+//│ 	| N => [N]})
+//│ <<<<<<< expanded program <<<<<<<
 
 fun map(ls) = if ls is
     N then N
@@ -368,18 +550,18 @@ lastDrive(map(C(T, C(TT, N))))
 //│ |#fun| |map|(|ls|)| |#=| |#if| |ls| |is|→|N| |#then| |N|↵|C|(|hhh|,| |ttt|)| |#then| |C|(|(|→|head| |=>| |#if| |head| |is| |→|T| |#then| |K|↵|TT| |#then| |KK|←|←|↵|)|(|hhh|)|,| |map|(|ttt|)|)|←|↵|#fun| |last|(|ys|)| |#=| |#if| |ys| |is|→|N| |#then| |x| |=>| |x|↵|C|(|h|,| |t|)| |#then| |x| |=>| |last|(|t|)|(|h|)|←|↵|#fun| |lastDrive|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |None|↵|C|(|hh|,| |tt|)| |#then| |Some|(|last|(|tt|)|(|hh|)|)|←|↵|lastDrive|(|map|(|C|(|T|,| |C|(|TT|,| |N|)|)|)|)|
 //│ Parsed: {fun map = ls, => if ls is ‹(N) then N; (C (hhh, ttt,)) then C ('(' head, => if head is ‹(T) then K; (TT) then KK›, ')' (hhh,), map (ttt,),)›; fun last = ys, => if ys is ‹(N) then x, => x; (C (h, t,)) then x, => last (t,) (h,)›; fun lastDrive = xs, => if xs is ‹(N) then None; (C (hh, tt,)) then Some (last (tt,) (hh,),)›; lastDrive (map (C (T, C (TT, N,),),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def map:6 = (fun ls:9 -> case ls:9^1 of {
-//│ 	N => [N]
-//│ 	| C hhh:10 ttt:11 => [C ((fun head:12 -> case head:12^3 of {
-//│ 		T => [K]
-//│ 		| TT => [KK]}) hhh:10^8) (map:6^10 ttt:11^11)]})
+//│ (lastDrive:8^37 (map:6^38 [C [T] [C [TT] [N]]]))
 //│ def last:7 = (fun ys:13 -> case ys:13^16 of {
 //│ 	N => (fun x:14 -> x:14^17)
 //│ 	| C h:15 t:16 => (fun x:17 -> ((last:7^19 t:16^20) h:15^22))})
 //│ def lastDrive:8 = (fun xs:18 -> case xs:18^27 of {
 //│ 	N => [None]
 //│ 	| C hh:19 tt:20 => [Some ((last:7^29 tt:20^30) hh:19^32)]})
-//│ (lastDrive:8^37 (map:6^38 [C [T] [C [TT] [N]]]))
+//│ def map:6 = (fun ls:9 -> case ls:9^1 of {
+//│ 	N => [N]
+//│ 	| C hhh:10 ttt:11 => [C ((fun head:12 -> case head:12^3 of {
+//│ 		T => [K]
+//│ 		| TT => [KK]}) hhh:10^8) (map:6^10 ttt:11^11)]})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
@@ -414,3 +596,34 @@ lastDrive(map(C(T, C(TT, N))))
 //│ 	[map:6^38 · map:6^10]
 //│ 		[map:6^38 · map:6^10 · map:6^10] ---> [map:6^38 · map:6^10] (only one)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ([lastDrive:8^37]:21^97 ([map:6^38]:23^98 [C [T] [C [TT] [N]]]))
+//│ def [lastDrive:8^37 · last:7^29]:22 = (fun ys:35 -> case ys:35^61 of {
+//│ 	N => (fun x:36 -> x:36^62)
+//│ 	| C h:37 t:38 => (fun x:39 -> (([lastDrive:8^37 · last:7^29]:22^64 t:38^65) h:37^67))})
+//│ def [lastDrive:8^37]:21 = (fun xs:40 -> case xs:40^72 of {
+//│ 	N => [None]
+//│ 	| C hh:41 tt:42 => [Some (([lastDrive:8^37 · last:7^29]:22^74 tt:42^75) hh:41^77)]})
+//│ def [map:6^38 · map:6^10]:24 = (fun ls:43 -> case ls:43^82 of {
+//│ 	N => [N]
+//│ 	| C hhh:44 ttt:45 => [C ((fun head:46 -> case head:46^84 of {
+//│ 		T => [K]
+//│ 		| TT => [KK]}) hhh:44^89) ([map:6^38 · map:6^10]:24^91 ttt:45^92)]})
+//│ def [map:6^38]:23 = (fun ls:31 -> case ls:31^46 of {
+//│ 	N => [N]
+//│ 	| C hhh:32 ttt:33 => [C ((fun head:34 -> case head:34^48 of {
+//│ 		T => [K]
+//│ 		| TT => [KK]}) hhh:32^53) ([map:6^38 · map:6^10]:24^55 ttt:33^56)]})
+//│ def last:7 = (fun ys:13 -> case ys:13^25 of {
+//│ 	N => (fun x:14 -> x:14^26)
+//│ 	| C h:15 t:16 => (fun x:17 -> ((last:7^28 t:16^29) h:15^31))})
+//│ def lastDrive:8 = (fun xs:18 -> case xs:18^36 of {
+//│ 	N => [None]
+//│ 	| C hh:19 tt:20 => [Some ((last:7^38 tt:20^39) hh:19^41)]})
+//│ def map:6 = (fun ls:9 -> case ls:9^10 of {
+//│ 	N => [N]
+//│ 	| C hhh:10 ttt:11 => [C ((fun head:12 -> case head:12^12 of {
+//│ 		T => [K]
+//│ 		| TT => [KK]}) hhh:10^17) (map:6^19 ttt:11^20)]})
+//│ <<<<<<< expanded program <<<<<<<

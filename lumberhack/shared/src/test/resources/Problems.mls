@@ -34,6 +34,19 @@ c(p)
 //│ 	C a:9 => a:9^8})
 //│ def p:6 = [C p:6^4]
 //│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 7: [C 6: x:8^6]
+//│ [C x:8^6] --->
+//│ 	case [C x:8^6] of {C a:9 => a:9^8}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (c:7^14 p:6^15)
+//│ def c:7 = (fun x:8 -> let a:9 = x:8^20
+//│ in a:9^19)
+//│ def p:6 = [C p:6^17]
+//│ <<<<<<< after fusion <<<<<<<
 
 
 // NOTE: how to produce a finite rewrtten program?
@@ -68,6 +81,20 @@ c(p)
 //│ 	Pair a:9 b:10 => (c:7^8 [Pair b:10^9 a:9^10])})
 //│ def p:6 = [Pair [A] [B]]
 //│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 6: [Pair 4: [A] 5: [B]]
+//│ [Pair [A] [B]] --->
+//│ 	case x:8^7 of {Pair a:9 b:10 => (c:7^8 [Pair b:10^9 a:9^10])}
+//│ 11: [Pair 9: b:10^9 10: a:9^10]
+//│ [Pair b:10^9 a:9^10] --->
+//│ 	case x:8^7 of {Pair a:9 b:10 => (c:7^8 [Pair b:10^9 a:9^10])}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.StackOverflowError
+//│ !!!!!!ERROR!!!!!!
 
 // Just a more valid/reasonable version of the above
 // TODO support nested patterns as in `Pair(0)`
@@ -106,6 +133,20 @@ c(p)
 //│ 	| Wrap a:9 => (c:7^8 [Wrap (primitive:3^9 a:9^10)])})
 //│ def p:6 = [Wrap 3]
 //│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 5: [Wrap 4: 3]
+//│ [Wrap 3] --->
+//│ 	case x:8^6 of {N => 0 | Wrap a:9 => (c:7^8 [Wrap (primitive:3^9 a:9^10)])}
+//│ 12: [Wrap 11: (9: primitive:3^9 10: a:9^10)]
+//│ [Wrap (primitive:3^9 a:9^10)] --->
+//│ 	case x:8^6 of {N => 0 | Wrap a:9 => (c:7^8 [Wrap (primitive:3^9 a:9^10)])}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.StackOverflowError
+//│ !!!!!!ERROR!!!!!!
 
 fun c(x) = if primitive(x) is
     True then 0
@@ -136,6 +177,17 @@ c(0)
 //│ 	True => 0
 //│ 	| False => (c:6^8 (primitive:3^9 x:7^10))})
 //│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (c:6^18 0)
+//│ def c:6 = (fun x:7 -> case (primitive:3^21 x:7^22) of {
+//│ 	True => 0
+//│ 	| False => (c:6^25 (primitive:3^26 x:7^27))})
+//│ <<<<<<< after fusion <<<<<<<
 
 
 // NOTE: only the first two element is handled
@@ -208,6 +260,52 @@ map(ff, l)
 //│ 	C h:11 t:12 => [C (f:9^7 h:11^8) ((map:6^10 f:9^11) t:12^13)]
 //│ 	| N => [N]}))
 //│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 80: [C 76: [KK] 79: [C 77: [KKKK] 78: [N]]]
+//│ [C [KK] [C [KKKK] [N]]] --->
+//│ 	case ls:26^33 of {C h:27 t:28 => [C (f:25^34 h:27^35) (([map:6^28 · map:6^5 · map:6^5]:16^37 f:25^38) t:28^40)] | N => [N]}
+//│ 81: [C 75: [K] 80: [C 76: [KK] 79: [C 77: [KKKK] 78: [N]]]]
+//│ [C [K] [C [KK] [C [KKKK] [N]]]] --->
+//│ 	case ls:34^61 of {C h:35 t:36 => [C (f:33^62 h:35^63) (([map:6^28 · map:6^5]:15^65 f:33^66) t:36^68)] | N => [N]}
+//│ 75: [K]
+//│ [K] --->
+//│ 	case x:13^20 of {K => [T] | KK => [TT] | KKKK => [TTTT]}
+//│ 76: [KK]
+//│ [KK] --->
+//│ 	case x:13^20 of {K => [T] | KK => [TT] | KKKK => [TTTT]}
+//│ 77: [KKKK]
+//│ [KKKK] --->
+//│ 	case x:13^20 of {K => [T] | KK => [TT] | KKKK => [TTTT]}
+//│ 78: [N]
+//│ [N] --->
+//│ 	case ls:38^82 of {C h:39 t:40 => [C (f:37^83 h:39^84) (([map:6^28 · map:6^5 · map:6^5 · map:6^5]:17^86 f:37^87) t:40^89)] | N => [N]}
+//│ 79: [C 77: [KKKK] 78: [N]]
+//│ [C [KKKK] [N]] --->
+//│ 	case ls:30^47 of {C h:31 t:32 => [C (f:29^48 h:31^49) (([map:6^28 · map:6^5 · map:6^5 · map:6^5]:17^51 f:29^52) t:32^54)] | N => [N]}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (([map:6^28]:14^101 ff:7^102) [l:8^31]:18^104)
+//│ def [l:8^31]:18 = let h:35 = [T]
+//│ in let t:36 = 
+//│ 	let h:27 = [TT]
+//│ 	in let t:28 = 
+//│ 		let h:31 = [TTTT]
+//│ 		in let t:32 = [N]
+//│ 		in [C (f:29^143 h:31^144) (([map:6^28 · map:6^5 · map:6^5 · map:6^5]:17^146 f:29^147) t:32^149)]
+//│ 	in [C (f:25^134 h:27^135) (([map:6^28 · map:6^5 · map:6^5]:16^137 f:25^138) t:28^140)]
+//│ in [C (f:33^125 h:35^126) (([map:6^28 · map:6^5]:15^128 f:33^129) t:36^131)]
+//│ def [map:6^28 · map:6^5 · map:6^5 · map:6^5]:17 = (fun f:37 -> (fun ls:38 -> ls:38^162))
+//│ def [map:6^28 · map:6^5 · map:6^5]:16 = (fun f:29 -> (fun ls:30 -> ls:30^172))
+//│ def [map:6^28 · map:6^5]:15 = (fun f:25 -> (fun ls:26 -> ls:26^175))
+//│ def [map:6^28]:14 = (fun f:33 -> (fun ls:34 -> ls:34^106))
+//│ def ff:7 = (fun x:13 -> x:13^123)
+//│ def l:8 = [C [K] [C [KK] [C [KKKK] [N]]]]
+//│ def map:6 = (fun f:9 -> (fun ls:10 -> case ls:10^109 of {
+//│ 	C h:11 t:12 => [C (f:9^110 h:11^111) ((map:6^113 f:9^114) t:12^116)]
+//│ 	| N => [N]}))
+//│ <<<<<<< after fusion <<<<<<<
 
 
 // NOTE: some program not be able to write?
@@ -276,6 +374,45 @@ last(p)
 //│ 	| N => [None]})
 //│ def p:7 = [C 1 [C 2 [N]]]
 //│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 55: [N]
+//│ [N] --->
+//│ 	case ls:23^20 of {C h:24 t:25 => case t:25^21 of {N => [Some h:24^22] | C hh:26 tt:27 => ([last:6^17 · last:6^5 · last:6^5]:15^24 t:25^25)} | N => [None]}
+//│ 	case t:30^32 of {N => [Some h:29^33] | C hh:31 tt:32 => ([last:6^17 · last:6^5 · last:6^5]:15^35 t:30^36)}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ 56: [C 54: 2 55: [N]]
+//│ [C 2 [N]] --->
+//│ 	case ls:28^31 of {C h:29 t:30 => case t:30^32 of {N => [Some h:29^33] | C hh:31 tt:32 => ([last:6^17 · last:6^5 · last:6^5]:15^35 t:30^36)} | N => [None]}
+//│ 	case t:35^43 of {N => [Some h:34^44] | C hh:36 tt:37 => ([last:6^17 · last:6^5]:14^46 t:35^47)}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ 57: [C 53: 1 56: [C 54: 2 55: [N]]]
+//│ [C 1 [C 2 [N]]] --->
+//│ 	case ls:33^42 of {C h:34 t:35 => case t:35^43 of {N => [Some h:34^44] | C hh:36 tt:37 => ([last:6^17 · last:6^5]:14^46 t:35^47)} | N => [None]}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ([last:6^17]:13^61 [p:7^18]:16^62)
+//│ def [last:6^17 · last:6^5 · last:6^5]:15 = (fun ls:23 -> ls:23^64)
+//│ def [last:6^17 · last:6^5]:14 = (fun ls:28 -> ls:28^82)
+//│ def [last:6^17]:13 = (fun ls:33 -> ls:33^105)
+//│ def [p:7^18]:16 = let h:34 = 1
+//│ in let t:35 = 
+//│ 	let h:29 = 2
+//│ 	in let t:30 = [None]
+//│ 	in case t:30^91 of {
+//│ 		N => [Some h:29^92]
+//│ 		| C hh:31 tt:32 => ([last:6^17 · last:6^5 · last:6^5]:15^94 t:30^95)}
+//│ in case t:35^84 of {
+//│ 	N => [Some h:34^85]
+//│ 	| C hh:36 tt:37 => ([last:6^17 · last:6^5]:14^87 t:35^88)}
+//│ def last:6 = (fun ls:8 -> case ls:8^71 of {
+//│ 	C h:9 t:10 => case t:10^72 of {
+//│ 		N => [Some h:9^73]
+//│ 		| C hh:11 tt:12 => (last:6^75 t:10^76)}
+//│ 	| N => [None]})
+//│ def p:7 = [C 1 [C 2 [N]]]
+//│ <<<<<<< after fusion <<<<<<<
 
 _LUMBERHACK_ERROR
 let add = primitive
@@ -354,6 +491,47 @@ idxSum(rev(primitive, N))(0)
 //│ 	N => a:15^31
 //│ 	| C hh:16 tt:17 => ((rev:8^32 tt:17^33) [C hh:16^35 a:15^36])}))
 //│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 49: [C 47: hh:30^47 48: a:29^48]
+//│ [C hh:30^47 a:29^48] --->
+//│ 	case ls:32^54 of {N => (fun acc:33 -> 0) | C h:34 t:35 => (fun acc:36 -> ((add:26^57 acc:36^58) (([idxSum:7^33 · idxSum:7^8]:19^60 t:35^61) ((add:26^63 acc:36^64) 1))))}
+//│ 	case ls:37^73 of {N => (fun acc:38 -> 0) | C h:39 t:40 => (fun acc:41 -> ((add:26^76 acc:41^77) (([idxSum:7^33 · idxSum:7^8]:19^79 t:40^80) ((add:26^82 acc:41^83) 1))))}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ 99: [C 97: hh:44^97 98: a:43^98]
+//│ [C hh:44^97 a:43^98] --->
+//│ 	case ls:37^73 of {N => (fun acc:38 -> 0) | C h:39 t:40 => (fun acc:41 -> ((add:26^76 acc:41^77) (([idxSum:7^33 · idxSum:7^8]:19^79 t:40^80) ((add:26^82 acc:41^83) 1))))}
+//│ 	case ls:32^54 of {N => (fun acc:33 -> 0) | C h:34 t:35 => (fun acc:36 -> ((add:26^57 acc:36^58) (([idxSum:7^33 · idxSum:7^8]:19^60 t:35^61) ((add:26^63 acc:36^64) 1))))}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ 108: [N]
+//│ [N] --->
+//│ 	case ls:37^73 of {N => (fun acc:38 -> 0) | C h:39 t:40 => (fun acc:41 -> ((add:26^76 acc:41^77) (([idxSum:7^33 · idxSum:7^8]:19^79 t:40^80) ((add:26^82 acc:41^83) 1))))}
+//│ 	case ls:32^54 of {N => (fun acc:33 -> 0) | C h:34 t:35 => (fun acc:36 -> ((add:26^57 acc:36^58) (([idxSum:7^33 · idxSum:7^8]:19^60 t:35^61) ((add:26^63 acc:36^64) 1))))}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (([idxSum:7^33]:18^113 (([rev:8^34]:20^114 primitive:25^115) (fun acc:38 -> 0))) 0)
+//│ def [idxSum:7^33 · idxSum:7^8]:19 = (fun ls:32 -> ls:32^165)
+//│ def [idxSum:7^33]:18 = (fun ls:37 -> ls:37^163)
+//│ def [rev:8^34 · rev:8^23]:21 = (fun lss:42 -> (fun a:43 -> case lss:42^123 of {
+//│ 	N => a:43^124
+//│ 	| C hh:44 tt:45 => (([rev:8^34 · rev:8^23]:21^125 tt:45^126) let h:39 = hh:44^144
+//│ 	in let t:40 = a:43^142
+//│ 	in (fun acc:41 -> ((add:26^128 acc:41^129) (([idxSum:7^33 · idxSum:7^8]:19^131 t:40^132) ((add:26^134 acc:41^135) 1)))))}))
+//│ def [rev:8^34]:20 = (fun lss:28 -> (fun a:29 -> case lss:28^186 of {
+//│ 	N => a:29^187
+//│ 	| C hh:30 tt:31 => (([rev:8^34 · rev:8^23]:21^188 tt:31^189) let h:34 = hh:30^207
+//│ 	in let t:35 = a:29^205
+//│ 	in (fun acc:36 -> ((add:26^191 acc:36^192) (([idxSum:7^33 · idxSum:7^8]:19^194 t:35^195) ((add:26^197 acc:36^198) 1)))))}))
+//│ def add:4 = primitive:3^162
+//│ def idxSum:7 = (fun ls:9 -> case ls:9^167 of {
+//│ 	N => (fun acc:10 -> 0)
+//│ 	| C h:11 t:12 => (fun acc:13 -> ((add:4^170 acc:13^171) ((idxSum:7^173 t:12^174) ((add:4^176 acc:13^177) 1))))})
+//│ def rev:8 = (fun lss:14 -> (fun a:15 -> case lss:14^150 of {
+//│ 	N => a:15^151
+//│ 	| C hh:16 tt:17 => ((rev:8^152 tt:17^153) [C hh:16^155 a:15^156])}))
+//│ <<<<<<< after fusion <<<<<<<
 
 
 fun minuss(a) = if a is
@@ -423,6 +601,41 @@ minuss(fst)(snd)
 //│ 	| Z => (fun n:13 -> [Z])})
 //│ def snd:8 = [Z]
 //│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 24: [Z]
+//│ [Z] --->
+//│ 	case a:29^42 of {S aa:30 => (fun b:31 -> case b:31^43 of {S bb:32 => (([minuss:6^19 · minuss:6^3]:15^44 aa:30^45) bb:32^47) | Z => aa:30^49}) | Z => (fun n:33 -> [Z])}
+//│ 25: [S 24: [Z]]
+//│ [S [Z]] --->
+//│ 	case a:29^42 of {S aa:30 => (fun b:31 -> case b:31^43 of {S bb:32 => (([minuss:6^19 · minuss:6^3]:15^44 aa:30^45) bb:32^47) | Z => aa:30^49}) | Z => (fun n:33 -> [Z])}
+//│ 41: [Z]
+//│ [Z] --->
+//│ 	case b:26^28 of {S bb:27 => (([minuss:6^19 · minuss:6^3]:15^29 aa:25^30) bb:27^32) | Z => aa:25^34}
+//│ 26: [S 25: [S 24: [Z]]]
+//│ [S [S [Z]]] --->
+//│ 	case a:24^27 of {S aa:25 => (fun b:26 -> case b:26^28 of {S bb:27 => (([minuss:6^19 · minuss:6^3]:15^29 aa:25^30) bb:27^32) | Z => aa:25^34}) | Z => (fun n:28 -> [Z])}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (([minuss:6^19]:14^61 [fst:7^20]:17^62) [snd:8^22]:16^64)
+//│ def [fst:7^20]:17 = let aa:25 = 
+//│ 	let aa:30 = (fun n:33 -> [Z])
+//│ 	in (fun b:31 -> case b:31^70 of {
+//│ 		S bb:32 => (([minuss:6^19 · minuss:6^3]:15^71 aa:30^72) bb:32^74)
+//│ 		| Z => aa:30^76})
+//│ in (fun b:26 -> b:26^68)
+//│ def [minuss:6^19 · minuss:6^3]:15 = (fun a:29 -> a:29^66)
+//│ def [minuss:6^19]:14 = (fun a:24 -> a:24^83)
+//│ def [snd:8^22]:16 = aa:25^100
+//│ def fst:7 = [S [S [Z]]]
+//│ def minuss:6 = (fun a:9 -> case a:9^86 of {
+//│ 	S aa:10 => (fun b:11 -> case b:11^87 of {
+//│ 		S bb:12 => ((minuss:6^88 aa:10^89) bb:12^91)
+//│ 		| Z => aa:10^93})
+//│ 	| Z => (fun n:13 -> [Z])})
+//│ def snd:8 = [Z]
+//│ <<<<<<< after fusion <<<<<<<
 
 // FIXME: weird recursive
 _LUMBERHACK_ERROR
@@ -496,6 +709,41 @@ minuss(fst)(snd)
 //│ 	| Z => (fun n:13 -> [Z])})
 //│ def snd:9 = [Z]
 //│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 32: [Z]
+//│ [Z] --->
+//│ 	case a:37^58 of {S aa:38 => (fun b:39 -> (([minuss:6^27 · checkb:7^2]:19^59 b:39^60) aa:38^62)) | Z => (fun n:40 -> [Z])}
+//│ 33: [S 32: [Z]]
+//│ [S [Z]] --->
+//│ 	case a:37^58 of {S aa:38 => (fun b:39 -> (([minuss:6^27 · checkb:7^2]:19^59 b:39^60) aa:38^62)) | Z => (fun n:40 -> [Z])}
+//│ 34: [S 33: [S 32: [Z]]]
+//│ [S [S [Z]]] --->
+//│ 	case a:29^35 of {S aa:30 => (fun b:31 -> (([minuss:6^27 · checkb:7^2]:19^36 b:31^37) aa:30^39)) | Z => (fun n:32 -> [Z])}
+//│ 46: [Z]
+//│ [Z] --->
+//│ 	case b:33^47 of {S bb:34 => (fun aaa:35 -> (([minuss:6^27 · checkb:7^2 · minuss:6^13]:20^48 aaa:35^49) bb:34^51)) | Z => (fun aaa:36 -> aaa:36^54)}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (([minuss:6^27]:18^74 [fst:8^28]:22^75) [snd:9^30]:21^77)
+//│ def [fst:8^28]:22 = let aa:30 = 
+//│ 	let aa:38 = (fun n:40 -> [Z])
+//│ 	in (fun b:39 -> (([minuss:6^27 · checkb:7^2]:19^87 b:39^88) aa:38^90))
+//│ in (fun b:31 -> (([minuss:6^27 · checkb:7^2]:19^81 b:31^82) aa:30^84))
+//│ def [minuss:6^27 · checkb:7^2 · minuss:6^13]:20 = (fun a:37 -> a:37^98)
+//│ def [minuss:6^27 · checkb:7^2]:19 = (fun b:33 -> b:33^79)
+//│ def [minuss:6^27]:18 = (fun a:29 -> a:29^125)
+//│ def [snd:9^30]:21 = (fun aaa:36 -> aaa:36^127)
+//│ def checkb:7 = (fun b:14 -> case b:14^114 of {
+//│ 	S bb:15 => (fun aaa:16 -> ((minuss:6^115 aaa:16^116) bb:15^118))
+//│ 	| Z => (fun aaa:17 -> aaa:17^121)})
+//│ def fst:8 = [S [S [Z]]]
+//│ def minuss:6 = (fun a:10 -> case a:10^103 of {
+//│ 	S aa:11 => (fun b:12 -> ((checkb:7^104 b:12^105) aa:11^107))
+//│ 	| Z => (fun n:13 -> [Z])})
+//│ def snd:9 = [Z]
+//│ <<<<<<< after fusion <<<<<<<
 
 
 fun id(x) = if x is
@@ -538,9 +786,7 @@ c(id(p))
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [id:6^19]
-//│ 	[id:6^19 · id:6^3]
-//│ 		[id:6^19 · id:6^3 · id:6^3]
-//│ 			[id:6^19 · id:6^3 · id:6^3 · id:6^3] ---> [id:6^3] (hopeless to continue)
+//│ 	[id:6^19 · id:6^3] ---> [id:6^3] (hopeless to continue)
 //│ [p:7^20]
 //│ 	[p:7^20 · p:7^10]
 //│ 		[p:7^20 · p:7^10 · p:7^10] ---> [p:7^20 · p:7^10] (only one)
@@ -549,20 +795,14 @@ c(id(p))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ ([c:8^18]:19^60 ([id:6^19]:14^61 [p:7^20]:17^62))
-//│ def [c:8^18]:19 = (fun y:32 -> case y:32^43 of {
-//│ 	C aa:33 => ([c:8^18]:19^44 aa:33^45)})
-//│ def [id:6^19 · id:6^3 · id:6^3]:16 = (fun x:26 -> case x:26^23 of {
-//│ 	ID b:27 => b:27^24
-//│ 	| C a:28 => (id:6^25 [ID [C a:28^26]])})
-//│ def [id:6^19 · id:6^3]:15 = (fun x:29 -> case x:29^34 of {
-//│ 	ID b:30 => b:30^35
-//│ 	| C a:31 => ([id:6^19 · id:6^3 · id:6^3]:16^36 [ID [C a:31^37]])})
-//│ def [id:6^19]:14 = (fun x:34 -> case x:34^49 of {
-//│ 	ID b:35 => b:35^50
-//│ 	| C a:36 => ([id:6^19 · id:6^3]:15^51 [ID [C a:36^52]])})
-//│ def [p:7^20 · p:7^10]:18 = [C [p:7^20 · p:7^10]:18^32]
-//│ def [p:7^20]:17 = [C [p:7^20 · p:7^10]:18^58]
+//│ ([c:8^18]:17^42 ([id:6^19]:14^43 [p:7^20]:15^44))
+//│ def [c:8^18]:17 = (fun y:24 -> case y:24^25 of {
+//│ 	C aa:25 => ([c:8^18]:17^26 aa:25^27)})
+//│ def [id:6^19]:14 = (fun x:26 -> case x:26^31 of {
+//│ 	ID b:27 => b:27^32
+//│ 	| C a:28 => (id:6^33 [ID [C a:28^34]])})
+//│ def [p:7^20 · p:7^10]:16 = [C [p:7^20 · p:7^10]:16^23]
+//│ def [p:7^20]:15 = [C [p:7^20 · p:7^10]:16^40]
 //│ def c:8 = (fun y:12 -> case y:12^17 of {
 //│ 	C aa:13 => (c:8^18 aa:13^19)})
 //│ def id:6 = (fun x:9 -> case x:9^6 of {
@@ -570,3 +810,41 @@ c(id(p))
 //│ 	| C a:11 => (id:6^8 [ID [C a:11^9]])})
 //│ def p:7 = [C p:7^15]
 //│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 35: [C 34: a:28^34]
+//│ [C a:28^34] --->
+//│ 	case y:24^25 of {C aa:25 => ([c:8^18]:17^26 aa:25^27)}
+//│ 36: [ID 35: [C 34: a:28^34]]
+//│ [ID [C a:28^34]] --->
+//│ 	case x:9^6 of {ID b:10 => b:10^7 | C a:11 => (id:6^8 [ID [C a:11^9]])}
+//│ 24: [C 23: [p:7^20 · p:7^10]:16^23]
+//│ [C [p:7^20 · p:7^10]:16^23] --->
+//│ 	case y:24^25 of {C aa:25 => ([c:8^18]:17^26 aa:25^27)}
+//│ 41: [C 40: [p:7^20 · p:7^10]:16^40]
+//│ [C [p:7^20 · p:7^10]:16^40] --->
+//│ 	case x:26^31 of {ID b:27 => b:27^32 | C a:28 => (id:6^33 [ID [C a:28^34]])}
+//│ 10: [C 9: a:11^9]
+//│ [C a:11^9] --->
+//│ 	case y:24^25 of {C aa:25 => ([c:8^18]:17^26 aa:25^27)}
+//│ 11: [ID 10: [C 9: a:11^9]]
+//│ [ID [C a:11^9]] --->
+//│ 	case x:9^6 of {ID b:10 => b:10^7 | C a:11 => (id:6^8 [ID [C a:11^9]])}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ([c:8^18]:17^47 ([id:6^19]:14^48 [p:7^20]:15^49))
+//│ def [c:8^18]:17 = (fun y:24 -> y:24^80)
+//│ def [id:6^19]:14 = (fun x:26 -> x:26^58)
+//│ def [p:7^20 · p:7^10]:16 = let aa:25 = [p:7^20 · p:7^10]:16^78
+//│ in ([c:8^18]:17^75 aa:25^76)
+//│ def [p:7^20]:15 = let a:28 = [p:7^20 · p:7^10]:16^73
+//│ in (id:6^64 let b:10 = 
+//│ 	let aa:25 = a:28^69
+//│ 	in ([c:8^18]:17^66 aa:25^67)
+//│ in b:10^65)
+//│ def c:8 = (fun y:12 -> case y:12^52 of {
+//│ 	C aa:13 => (c:8^53 aa:13^54)})
+//│ def id:6 = (fun x:9 -> x:9^60)
+//│ def p:7 = [C p:7^62]
+//│ <<<<<<< after fusion <<<<<<<

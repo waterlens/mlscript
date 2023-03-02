@@ -53,8 +53,8 @@ class DiffTestLumberhack extends DiffTests {
       output("<<<<<<< splitted knots <<<<<<<")
       
       output("\n>>>>>>> expansion >>>>>>>")
-      // output(CallTree.callTreeUsingSplitKnot(d)._1.map(_.pp).mkString("\n"))
-      val callTree = CallTree.callTreeUsingNonSplitKnot(d)
+      val callTree = CallTree.callTreeUsingSplitKnot(d)
+      // val callTree = CallTree.callTreeUsingNonSplitKnot(d)
       output(callTree._1.map(_.pp).mkString("\n"))
       output("<<<<<<< expansion <<<<<<<")
 
@@ -74,26 +74,61 @@ class DiffTestLumberhack extends DiffTests {
       }
 
       output("\n>>>>>>> expanded program >>>>>>>")
-      // output(CallTree.callTreeUsingSplitKnot(d)._1.map(_.pp).mkString("\n"))
-      // output(CallTree.callTreeUsingNonSplitKnot(d)._1.map(_.pp).mkString("\n"))
-      output(originalProgram.expandedWithNewDeforest(callTree._1)._1.pp)
+      val (newProg, newd) = originalProgram.expandedWithNewDeforest(callTree._1)
+      output(newProg.pp)
       output("<<<<<<< expanded program <<<<<<<")
+
       
-      // output(("------- defInstance -------"))
-      // d.defInstances.foreach { case (p, xs) =>
-      //   output((pprint2(p._1).plainText + " ==> " + pprint2(p._2).plainText + ":"))
-      //   output((xs.toArray.map {
-      //     case (p, c) => s"\n\t$p: ${d.exprs(p).pp}  <-->  $c: ${d.exprs(c).pp}"
-      //   }.sorted.mkString.substring(1)))
+
+      // =========== run the typer again and do the fusion ==============
+
+      
+
+      newd(newProg)
+      newd.resolveConstraints
+
+      output("\n>>>>>>> fusion matches >>>>>>>")
+      val fusionMatchStr = newd.fusionMatch.map { (p, cs) =>
+        newd.exprs(p).pp(false)(using true) + "\n" + newd.exprs(p).pp(false) + " --->\n" + cs.map { c =>
+          "\t" + newd.exprs(c).pp(false)
+        }.mkString("\n") + (if cs.size > 1 then "\n\t MORE THAN ONE MATCH EXPR" else "")
+      }.mkString("\n")
+      output(fusionMatchStr)
+      output("<<<<<<< fusion matches <<<<<<<")
+
+      output("\n>>>>>>> after fusion >>>>>>>")
+      val prgmAfterFusion = newProg.rewrite(newd.fusionMatch.toMap, newd)
+      output(prgmAfterFusion.pp)
+      output("<<<<<<< after fusion <<<<<<<")
+      // output("\n>>>>>>> new type variable bounds >>>>>>>")
+      // val newtvs = newd.upperBounds.keySet ++ d.lowerBounds.keySet
+      // newtvs.foreach { tv =>
+      //   val ub = d.upperBounds(tv).map(u => s"${u._1.pp} < ${u._2.pp(using true)}")
+      //   val lb = d.lowerBounds(tv).map(l => s"${l._2.pp(using true)} < ${l._1.rev.pp}")
+      //   val tvName = d.varsName(tv)
+      //   output(tvName + ":")
+      //   ub.foreach(u => output(s"\t${tvName}${u}"))
+      //   lb.foreach(l => output(s"\t${l}${tvName}"))
+      //   output("--------------")
       // }
-      // output("\n>>>>>>>>>> Expanded >>>>>>>>>>")
-      // val rewritter = Rewrite(originalProgram, d,
-      //   d.defInstances.map { case (ps, s) => (ps, s.toSet) }.toMap,
-      //   d.recursiveConstr._2.toMap
-      // )
-      // val newProgram = rewritter.rewrite
-      // output(newProgram.pp)
-      // output("<<<<<<<<<< Expanded <<<<<<<<<<")
+      // output("<<<<<<< new type variable bounds <<<<<<<")
+
+      // output("\n>>>>>>> new knots >>>>>>>")
+      // newd.recursiveConstr.foreach { r =>
+      //   output(s"${r._1._1.pp} <: ${r._1._2.pp}")
+      //   r._2.foreach { p =>
+      //     output(s"\t${p._1.pp}  --->  ${p._2.pp}")
+      //     if !p._1.p.containsSlice(p._2.p) then output("\t!!NOT SUB-PATH")
+      //   }
+      // }
+      // output("<<<<<<< new knots <<<<<<<")
+
+      // output("\n>>>>>>> new expansion >>>>>>>")
+      // // val newCallTree = CallTree.callTreeUsingSplitKnot(d)
+      // val newCallTree = CallTree.callTreeUsingNonSplitKnot(newd)
+      // val outputString = newCallTree._1.map(_.pp).mkString("\n")
+      // output(outputString)
+      // output("<<<<<<< new expansion <<<<<<<")
     } catch {
       case e => if allowErr then {
         output("!!!!!!ERROR!!!!!!")

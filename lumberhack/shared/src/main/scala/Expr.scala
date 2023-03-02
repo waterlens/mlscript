@@ -15,13 +15,13 @@ case class Program(contents: Ls[ProgDef \/ Expr]) {
       case Left(pdef) => pdef.id.pp(using false)
       case Right(expr) => ""
     }.map {
-      case L(pd) => s"def ${pd.id.pp(using true)} = ${pd.body.pp}"
-      case R(e) => e.pp
+      case L(pd) => s"def ${pd.id.pp(using true)} = ${pd.body.pp()}"
+      case R(e) => e.pp()
     }.mkString("\n")
   
   lazy val defAndExpr: (Map[Ident, Expr], List[Expr]) = contents.partitionMap(identity).mapFirst(_.map(pd => pd.id -> pd.body).toMap)
 
-  def copyDefsToNewDeforest(using newd: Deforest): Program -> Map[Expr.Ref -> ExprId, Expr.Ref] = {
+  private def copyDefsToNewDeforest(using newd: Deforest): Program -> Map[Expr.Ref -> ExprId, Expr.Ref] = {
     val refMaps = scala.collection.mutable.Map.empty[Expr.Ref -> ExprId, Expr.Ref]
     def copyExpr(e: Expr)(using ctx: Expr.Ctx, newd: Deforest): Expr = e match {
       case Expr.Const(lit: Lit) => Expr.Const(lit)
@@ -51,8 +51,8 @@ case class Program(contents: Ls[ProgDef \/ Expr]) {
     } ++ this.defAndExpr._1.keySet.map(id => id.tree.name -> id.copyToNewDeforest) |> (_.toMap)
     
     Program(
-      this.defAndExpr._2.map(e => R(copyExpr(e)))
-      ::: this.defAndExpr._1.iterator.map((id, body) => L(ProgDef(ctx(id.tree.name), copyExpr(body)))).toList
+      this.defAndExpr._2.map { e => R(copyExpr(e)) }
+      ::: this.defAndExpr._1.map { (id, body) => L(ProgDef(ctx(id.tree.name), copyExpr(body))) }.toList
     ) -> refMaps.toMap
   }
 
@@ -91,6 +91,15 @@ case class Program(contents: Ls[ProgDef \/ Expr]) {
     ) -> newd
     
   }
+
+  def rewrite(fusionMatch: Map[ExprId, Set[ExprId]], d: Deforest): Program = {
+    given Map[ExprId, ExprId] = fusionMatch.map { (p, cs) => p -> cs.head }
+    given Deforest = d
+    Program(
+      this.defAndExpr._2.map { e => R(e.rewriteFusion) }
+      ::: this.defAndExpr._1.map { (id, body) => L(ProgDef(id, body.rewriteFusion)) }.toList
+    )
+  }
 }
 
 object Program {
@@ -123,38 +132,43 @@ enum Expr(using val deforest: Deforest) {
   val uid: Uid[Expr] = deforest.euid.nextUid
   deforest.exprs += uid -> this
   
-  def pp(using showUids: Bool = false): Str =
-    val res: fansi.Str = (if (showUids) Console.CYAN + uid.toString + ": " + Console.RESET else "") + (
+  def pp(multiline: Bool = true)(using showEuids: Bool = false): Str =
+    val res: fansi.Str = (if (showEuids) Console.CYAN + uid.toString + ": " + Console.RESET else "") + (
       this match
         case Const(lit) => Console.YELLOW + lit.idStr + Console.RESET
         case Ref(id) => id.pp(using true) + "^" + uid
-        case Call(lhs, rhs) => s"(${lhs.pp} ${rhs.pp})"
+        case Call(lhs, rhs) => s"(${lhs.pp(multiline)} ${rhs.pp(multiline)})"
         case Ctor(name, args) =>
-          s"${Console.BLUE}[$name${Console.RESET}${args.map(" " + _.pp).mkString + Console.BLUE}]${Console.RESET}"
-        case LetIn(id, rhs, body) => {
+          s"${Console.BLUE}[$name${Console.RESET}${args.map(" " + _.pp(multiline)).mkString + Console.BLUE}]${Console.RESET}"
+        case LetIn(id, rhs, body) if multiline => {
           val rhsStr = rhs match {
-            case r: LetIn => "\n\t" + rhs.pp.linesIterator.map("\t" + _).mkString("\n").dropWhile(_ == '\t')
-            case _ => rhs.pp
+            case r: LetIn => "\n\t" + rhs.pp(multiline).linesIterator.map("\t" + _).mkString("\n").dropWhile(_ == '\t')
+            case _ => rhs.pp(multiline)
           }
-          s"${Console.BOLD}let${Console.RESET} ${id.pp} = ${rhsStr}" + s"\n${Console.BOLD}in${Console.RESET} ${body.pp}"
+          s"${Console.BOLD}let${Console.RESET} ${id.pp(using true)} = ${rhsStr}" + s"\n${Console.BOLD}in${Console.RESET} ${body.pp(multiline)}"
         }
-        case Match(scrut, arms) => s"${Console.BOLD}case${Console.RESET} ${scrut.pp} ${Console.BOLD}of${Console.RESET} {${
+        case LetIn(id, rhs, body) => s"${Console.BOLD}let${Console.RESET} ${id.pp(using true)} = ${rhs.pp(multiline)}" + s"\n${Console.BOLD}in${Console.RESET} ${body.pp(multiline)}"
+        case Match(scrut, arms) if multiline => s"${Console.BOLD}case${Console.RESET} ${scrut.pp(multiline)} ${Console.BOLD}of${Console.RESET} {${
           "\n\t" + arms.map { case (v, ids, e) =>
             s"${Console.BLUE + v.name + Console.RESET}${ids.map(" " + _.pp(using true)).mkString} => ${
-              e.pp.linesIterator.map("\t" + _).mkString("\n").dropWhile(_ == '\t')
+              e.pp(multiline).linesIterator.map("\t" + _).mkString("\n").dropWhile(_ == '\t')
             }"
           }.mkString("\n\t| ")
         }}"
-        case Function(param, body) => s"(${Console.BOLD}fun${Console.RESET} ${param.pp(using true)} -> ${body.pp})"
+        case Match(scrut, arms) => s"${Console.BOLD}case${Console.RESET} ${scrut.pp(multiline)} ${Console.BOLD}of${Console.RESET} {${
+          arms.map { case (v, ids, e) =>
+            s"${Console.BLUE + v.name + Console.RESET}${ids.map(" " + _.pp(using true)).mkString} => ${e.pp(multiline)}"
+          }.mkString(" | ")
+        }}"
+        case Function(param, body) => s"(${Console.BOLD}fun${Console.RESET} ${param.pp(using true)} -> ${body.pp(multiline)})"
         case IfThenElse(scrut, thenn, elze) => 
-          s"${Console.BOLD}if${Console.RESET} ${scrut.pp} ${Console.BOLD}then${Console.RESET} " +
-          s"${thenn.pp} ${Console.BOLD}else${Console.RESET} ${elze.pp}"
+          s"${Console.BOLD}if${Console.RESET} ${scrut.pp(multiline)} ${Console.BOLD}then${Console.RESET} " +
+          s"${thenn.pp(multiline)} ${Console.BOLD}else${Console.RESET} ${elze.pp(multiline)}"
     )
     res.plainText
   
   // ctx should initially contain the keywords and the ids of original function definitions
   def rewriteExpand(using ctx: Expr.Ctx, currentPath: Path, newd: Deforest, pathToIdent: Map[Path, Ident], refMap: Map[Expr.Ref -> ExprId, Expr.Ref]): Expr = {
-    given Deforest = newd
     this match {
       case Const(lit) => Const(lit)
       case Call(lhs, rhs) => Call(lhs.rewriteExpand, rhs.rewriteExpand)
@@ -179,6 +193,24 @@ enum Expr(using val deforest: Deforest) {
         } 
       } else Ref(ctx(id.tree.name)) // a parameter or match binder or builtin keyword
     } 
+  }
+
+  def rewriteFusion(using fusionMatch: Map[ExprId, ExprId], newd: Deforest): Expr = {
+    this match {
+      case Const(lit) => Const(lit)
+      case Call(lhs, rhs) => Call(lhs.rewriteFusion, rhs.rewriteFusion)
+      case LetIn(id, rhs, body) => LetIn(id, rhs.rewriteFusion, body.rewriteFusion)
+      case IfThenElse(s, t, e) => IfThenElse(s.rewriteFusion, t.rewriteFusion, e.rewriteFusion)
+      case Function(param, body) => Function(param, body.rewriteFusion)
+      case Ref(id) => Ref(id)
+      case Match(scrut, arms) => if fusionMatch.valuesIterator.contains(this.uid)
+        then scrut.rewriteFusion
+        else Match(scrut.rewriteFusion, arms.map{(n, args, body) => (n, args, body.rewriteFusion)})
+      case Ctor(name, args) => fusionMatch.get(this.uid).map { matchId =>
+        val matchArm = newd.exprs(matchId).asInstanceOf[Match].arms.find(_._1 == name).get
+        (matchArm._2 zip args).foldRight(matchArm._3.rewriteFusion){(t_i, acc) => LetIn(t_i._1, t_i._2.rewriteFusion, acc)}
+      }.orElse(Some(Ctor(name, args.map(_.rewriteFusion)))).get
+    }
   }
 }
 object Expr {

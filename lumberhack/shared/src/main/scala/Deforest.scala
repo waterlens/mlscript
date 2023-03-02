@@ -272,7 +272,7 @@ class Deforest(debug: Boolean) {
         val sv = freshVar(param.tree.name)
         ProdFun(sv._2.toStrat(),
           process(body)(using ctx + (param.tree.name -> sv._1.toStrat()))
-        )(using e.uid)
+        )(using noExprId)
       case IfThenElse(scrut, thenn, elze) =>
         constrain(process(scrut), consBool(using noExprId).toStrat())
         val res = freshVar(s"${e.uid}_ifres")
@@ -316,6 +316,7 @@ class Deforest(debug: Boolean) {
   type Cache = Map[Cnstr, Cnstr -> Int]
 
   val recursiveConstr = mutable.Map.empty[Cnstr, mutable.Set[Path -> Path]]
+  val fusionMatch = mutable.Map.empty[ExprId, Set[ExprId]]
   def resolveConstraints: Unit = {
 
     def handle(c: Cnstr)(using cache: Cache, numOfTypeCtor: Int): Unit = trace(s"handle [${c._1.pp(using true)} <: ${c._2.pp(using true)}]") {
@@ -386,6 +387,9 @@ class Deforest(debug: Boolean) {
             if ds_ctor == ctor then
               found = true
               assert(args.size == argCons.size)
+              // register the fusion match
+              if (prod.s.euid =/= noExprId && cons.s.euid =/= noExprId) then fusionMatch.updateWith(prod.s.euid)(_.map(_ + cons.s.euid).orElse(Some(Set(cons.s.euid))))
+
               args lazyZip argCons foreach { case (a, c) =>
                 handle(a.addPath(prod.path), c.addPath(cons.path))
               }

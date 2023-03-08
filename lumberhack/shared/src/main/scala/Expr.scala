@@ -21,14 +21,14 @@ case class Program(contents: Ls[ProgDef \/ Expr]) {
   
   lazy val defAndExpr: (Map[Ident, Expr], List[Expr]) = contents.partitionMap(identity).mapFirst(_.map(pd => pd.id -> pd.body).toMap)
 
-  private def copyDefsToNewDeforest(using newd: Deforest): Program -> Map[Expr.Ref -> ExprId, Expr.Ref] = {
-    val refMaps = scala.collection.mutable.Map.empty[Expr.Ref -> ExprId, Expr.Ref]
+  private def copyDefsToNewDeforest(using newd: Deforest): Program -> Map[Expr.Ref, Expr.Ref] = {
+    val refMaps = scala.collection.mutable.Map.empty[Expr.Ref, Expr.Ref]
     def copyExpr(e: Expr)(using ctx: Expr.Ctx, newd: Deforest): Expr = e match {
       case Expr.Const(lit: Lit) => Expr.Const(lit)
       case r@Expr.Ref(id: Ident) =>
         val res = Expr.Ref(ctx(id.tree.name))
-        assert(!refMaps.contains(res -> res.uid))
-        refMaps += ((res -> res.uid) -> r)
+        assert(!refMaps.contains(res))
+        refMaps += (res -> r)
         res
       case Expr.Call(lhs: Expr, rhs: Expr) => Expr.Call(copyExpr(lhs), copyExpr(rhs))
       case Expr.Ctor(name: Var, args: Ls[Expr]) => Expr.Ctor(name, args.map(copyExpr))
@@ -77,7 +77,7 @@ case class Program(contents: Ls[ProgDef \/ Expr]) {
       val res = defined.map { (id, p) =>
         assert(p.p.nonEmpty)
         val identKey = p.p.last match
-          case PathElem.Normal(ref, _) => initContext(ref.id.tree.name)
+          case PathElem.Normal(ref) => initContext(ref.id.tree.name)
           case PathElem.Star(elms) => ???
         val newBody: Expr = copiedOriginalProgram.defAndExpr._1(identKey).rewriteExpand(using initContext, p, newd, pathToIdent, refMaps)
         L(ProgDef(id, newBody))
@@ -119,9 +119,17 @@ object Program {
   }
 }
 
+trait RefTrait { this: Expr.Ref =>
+  override def equals(x: Any): Boolean = x match {
+    case r@Expr.Ref(otherId) => this.id == otherId && this.uid == r.uid
+    case _ => false
+  }
+  override def hashCode(): Int = (this.id, this.uid).hashCode()
+  def toPath(pol: PathElemPol = PathElemPol.In): Path = Path(PathElem.Normal(this)(pol) :: Nil)
+}
 enum Expr(using val deforest: Deforest) {
   case Const(lit: Lit)(using Deforest)
-  case Ref(id: Ident)(using Deforest)
+  case Ref(id: Ident)(using Deforest) extends Expr with RefTrait
   case Call(lhs: Expr, rhs: Expr)(using Deforest)
   case Ctor(name: Var, args: Ls[Expr])(using Deforest)
   case LetIn(id: Ident, rhs: Expr, body: Expr)(using Deforest)
@@ -168,7 +176,7 @@ enum Expr(using val deforest: Deforest) {
     res.plainText
   
   // ctx should initially contain the keywords and the ids of original function definitions
-  def rewriteExpand(using ctx: Expr.Ctx, currentPath: Path, newd: Deforest, pathToIdent: Map[Path, Ident], refMap: Map[Expr.Ref -> ExprId, Expr.Ref]): Expr = {
+  def rewriteExpand(using ctx: Expr.Ctx, currentPath: Path, newd: Deforest, pathToIdent: Map[Path, Ident], refMap: Map[Expr.Ref, Expr.Ref]): Expr = {
     this match {
       case Const(lit) => Const(lit)
       case Call(lhs, rhs) => Call(lhs.rewriteExpand, rhs.rewriteExpand)
@@ -187,7 +195,7 @@ enum Expr(using val deforest: Deforest) {
         val newParam = param.copyToNewDeforest
         Function(newParam, body.rewriteExpand(using ctx + (newParam.tree.name -> newParam)))
       case ref@Ref(id) => if id.isDef then { // a function def
-        pathToIdent.get(currentPath ::: Path(PathElem.Normal(refMap(ref -> ref.uid), refMap(ref -> ref.uid).uid)() :: Nil)) match {
+        pathToIdent.get(currentPath ::: refMap(ref).toPath()) match {
           case Some(id) => Ref(id)            // either a knot or a new def
           case None => Ref(ctx(id.tree.name)) // hopeless to continue, should use the original definition
         } 

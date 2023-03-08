@@ -187,7 +187,7 @@ enum Expr(using val deforest: Deforest) {
         val newParam = param.copyToNewDeforest
         Function(newParam, body.rewriteExpand(using ctx + (newParam.tree.name -> newParam)))
       case ref@Ref(id) => if id.isDef then { // a function def
-        pathToIdent.get(currentPath ::: Path(PathElem.Normal(refMap(ref -> ref.uid), refMap(ref -> ref.uid).uid)(PathElemPol.In) :: Nil)) match {
+        pathToIdent.get(currentPath ::: Path(PathElem.Normal(refMap(ref -> ref.uid), refMap(ref -> ref.uid).uid)() :: Nil)) match {
           case Some(id) => Ref(id)            // either a knot or a new def
           case None => Ref(ctx(id.tree.name)) // hopeless to continue, should use the original definition
         } 

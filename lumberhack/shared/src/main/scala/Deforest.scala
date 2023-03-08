@@ -12,6 +12,7 @@ type NormalPathElem
 type StarPathElem
 type PathElemType = NormalPathElem | StarPathElem
 type ExprId = Uid[Expr]
+type TypeVarId = Uid[TypeVar]
 type Cnstr = ProdStrat -> ConsStrat
 type ProdStrat = Strat[ProdStratEnum]
 type ConsStrat = Strat[ConsStratEnum]
@@ -30,7 +31,7 @@ enum PathElemPol {
     case _ => false
 }
 enum PathElem[+T <: PathElemType] {
-  case Normal(name: Ref, uid: Uid[Expr])(val pol: PathElemPol) extends PathElem[NormalPathElem]
+  case Normal(name: Ref, uid: Uid[Expr])(val pol: PathElemPol = PathElemPol.In) extends PathElem[NormalPathElem]
   case Star(elms: List[PathElem[NormalPathElem]]) extends PathElem[StarPathElem]
 
   def neg: PathElem[T] = this match
@@ -49,7 +50,7 @@ enum PathElem[+T <: PathElemType] {
 case class Path(p: Ls[PathElem[PathElemType]]) {
   lazy val neg = this.copy(p = p.map(_.neg))
   lazy val rev = this.copy(p = p.map(_.rev).reverse)
-  // TODO: merge two consecutive identical stars during concatenation
+  // merge two consecutive identical stars during concatenation if we have stars
   def ::: (other: Path) = Path(other.p ::: p)
   def pp(using showPol: Boolean = true): Str = s"[${p.map(_.pp).mkString(" · ")}]"
   lazy val annihilated: Path =
@@ -126,7 +127,7 @@ enum ProdStratEnum(using val euid: ExprId) extends ToStrat[ProdStratEnum] {
   case MkCtor(ctor: Var, args: Ls[ProdStrat])(using ExprId) extends ProdStratEnum with ToStrat[MkCtor]
   case Sum(ctors: Ls[Strat[MkCtor]])(using ExprId) extends ProdStratEnum with ToStrat[Sum]
   case ProdFun(lhs: ConsStrat, rhs: ProdStrat)(using ExprId) extends ProdStratEnum with ToStrat[ProdFun]
-  case ProdVar(uid: Uid[TypeVar], name: String)(boundary: Option[Ref -> ExprId] = None)(using ExprId)
+  case ProdVar(uid: TypeVarId, name: String)(boundary: Option[Ref -> ExprId] = None)(using ExprId)
     extends ProdStratEnum
     with ToStrat[ProdVar]
     with TypevarWithBoundary(boundary)
@@ -143,7 +144,7 @@ enum ConsStratEnum(using val euid: ExprId) extends ToStrat[ConsStratEnum] {
   case NoCons()(using ExprId) extends ConsStratEnum with ToStrat[NoCons]
   case Destruct(destrs: Ls[Destructor])(using ExprId) extends ConsStratEnum with ToStrat[Destruct]
   case ConsFun(lhs: ProdStrat, rhs: ConsStrat)(using ExprId) extends ConsStratEnum with ToStrat[ConsFun]
-  case ConsVar(uid: Uid[TypeVar], name: String)(boundary: Option[Ref -> ExprId] = None)(using ExprId)
+  case ConsVar(uid: TypeVarId, name: String)(boundary: Option[Ref -> ExprId] = None)(using ExprId)
     extends ConsStratEnum
     with ToStrat[ConsVar]
     with TypevarWithBoundary(boundary)
@@ -214,7 +215,7 @@ class Deforest(debug: Boolean) {
 
   var constraints: Ls[Cnstr] = Nil
   val exprs: mutable.Map[ExprId, Expr] = mutable.Map.empty
-  val varsName = mutable.Map.empty[Uid[TypeVar], Str]
+  val varsName = mutable.Map.empty[TypeVarId, Str]
   
   val vuid = Uid.TypeVar.State()
   val iuid = Uid.Ident.State()
@@ -231,8 +232,8 @@ class Deforest(debug: Boolean) {
     (pv, cv)
   
   
-  val upperBounds = mutable.Map.empty[Uid[TypeVar], Ls[(Path, ConsStrat)]].withDefaultValue(Nil)
-  val lowerBounds = mutable.Map.empty[Uid[TypeVar], Ls[(Path, ProdStrat)]].withDefaultValue(Nil)
+  val upperBounds = mutable.Map.empty[TypeVarId, Ls[(Path, ConsStrat)]].withDefaultValue(Nil)
+  val lowerBounds = mutable.Map.empty[TypeVarId, Ls[(Path, ProdStrat)]].withDefaultValue(Nil)
   val callsInfo = (mutable.Set.empty[Ref -> ExprId], mutable.Map.empty[Ident, Set[Ref -> ExprId]])
   
   def process(e: Expr)(using ctx: Ctx, calls: mutable.Set[(Ref, Uid[Expr])]): ProdStrat = trace(s"process ${e.uid}: ${e.pp}") {
@@ -461,7 +462,7 @@ object CallTree {
     start.map { p => { knotTier(p) match {
       case None -> _ => {
         val nexts = p.p.last match {
-          case PathElem.Normal(Ref(id), _) => callsInfo(id).map(n => p ::: Path(PathElem.Normal(n._1, n._2)(PathElemPol.In) :: Nil))
+          case PathElem.Normal(Ref(id), _) => callsInfo(id).map(n => p ::: Path(PathElem.Normal(n._1, n._2)() :: Nil))
           case _ => ???
         }
         CallTree.Continue(p, growCallTree(nexts))
@@ -489,7 +490,7 @@ object CallTree {
             Some(Path(p.p.last :: Nil)) -> "hopeless to continue"
       }
     }
-    growCallTree(d.callsInfo._1.map(c => Path(PathElem.Normal(c._1, c._2)(PathElemPol.In) :: Nil)).toSet)(using d.callsInfo._2.toMap, tier)
+    growCallTree(d.callsInfo._1.map(c => Path(PathElem.Normal(c._1, c._2)() :: Nil)).toSet)(using d.callsInfo._2.toMap, tier)
       -> knotsCollection
   }
 
@@ -528,7 +529,7 @@ object CallTree {
           Some(Path(p.p.last :: Nil)) -> "hopeless to continue"
       }
     }
-    growCallTree(d.callsInfo._1.map(c => Path(PathElem.Normal(c._1, c._2)(PathElemPol.In) :: Nil)).toSet)(using d.callsInfo._2.toMap, tier)
+    growCallTree(d.callsInfo._1.map(c => Path(PathElem.Normal(c._1, c._2)() :: Nil)).toSet)(using d.callsInfo._2.toMap, tier)
       -> knotsCollection
   }
 

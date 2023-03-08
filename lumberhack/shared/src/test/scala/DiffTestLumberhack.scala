@@ -34,9 +34,9 @@ class DiffTestLumberhack extends DiffTests {
       d.resolveConstraints
 
       output("\n>>>>>>> knots >>>>>>>")
-      d.recursiveConstr.foreach { r =>
+      d.recursiveConstr.toSeq.sortBy(_._1._1.pp).foreach { r =>
         output(s"${r._1._1.pp} <: ${r._1._2.pp}")
-        r._2.foreach { p =>
+        r._2.toSeq.sortBy(_._1.pp).foreach { p =>
           output(s"\t${p._1.pp}  --->  ${p._2.pp}")
           if !p._1.p.containsSlice(p._2.p) then output("\t!!NOT SUB-PATH")
         }
@@ -44,8 +44,8 @@ class DiffTestLumberhack extends DiffTests {
       output("<<<<<<< knots <<<<<<<")
 
       output("\n>>>>>>> splitted knots >>>>>>>")
-      d.actualKnotsUsingSplit._1.foreach { (k, v) =>
-        output(s"${k.pp(using false)} --> ${v.map(v => s"${v.pp(using false)}").mkString("\n\t")}")
+      d.actualKnotsUsingSplit._1.toSeq.sortBy(_._1.pp).foreach { (k, v) =>
+        output(s"${k.pp(using false)} --> ${v.toSeq.sortBy(_.pp).map(v => s"${v.pp(using false)}").mkString("\n\t")}")
         
         if v.size > 1 then output("\t!!MORE THAN ONE MATCH")
         if !v.forall(vp => k.p.startsWith(vp.p)) then output("\t!!NOT PREFIX")
@@ -55,7 +55,7 @@ class DiffTestLumberhack extends DiffTests {
       output("\n>>>>>>> expansion >>>>>>>")
       val callTree = CallTree.callTreeUsingSplitKnot(d)
       // val callTree = CallTree.callTreeUsingNonSplitKnot(d)
-      output(callTree._1.map(_.pp).mkString("\n"))
+      output(callTree._1.sortBy(_.pp).map(_.pp).mkString("\n"))
       output("<<<<<<< expansion <<<<<<<")
 
       if mode.stdout || mode.verbose then {
@@ -88,8 +88,8 @@ class DiffTestLumberhack extends DiffTests {
       newd.resolveConstraints
 
       output("\n>>>>>>> fusion matches >>>>>>>")
-      val fusionMatchStr = newd.fusionMatch.map { (p, cs) =>
-        newd.exprs(p).pp(false)(using true) + "\n" + newd.exprs(p).pp(false) + " --->\n" + cs.map { c =>
+      val fusionMatchStr = newd.fusionMatch.toSeq.sortBy(expr => newd.exprs(expr._1).pp(false)(using true)).map { (p, cs) =>
+        newd.exprs(p).pp(false)(using true) + "\n" + newd.exprs(p).pp(false) + " --->\n" + cs.toSeq.sortBy(c => newd.exprs(c).pp()).map { c =>
           "\t" + newd.exprs(c).pp(false)
         }.mkString("\n") + (if cs.size > 1 then "\n\t MORE THAN ONE MATCH EXPR" else "")
       }.mkString("\n")

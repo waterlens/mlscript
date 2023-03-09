@@ -24,7 +24,7 @@ class DiffTestLumberhack extends DiffTests {
     val originalProgram = Program.fromPgrm(Pgrm(filteredEntities))
     val constraints = d(originalProgram)
     // output(originalProgram.pp(using true))
-    output(originalProgram.pp(using InitPpConfig.multilineOn.showIuidOn))
+    output(originalProgram.pp(using InitPpConfig.multilineOn.showIuidOn.showRefEuidOn))
     output("<<<<<<<<<< Original <<<<<<<<<<")
 
     if mode.stdout || mode.verbose then {
@@ -39,7 +39,7 @@ class DiffTestLumberhack extends DiffTests {
       d.recursiveConstr.toSeq.sortBy(_._1._1.pp(using InitPpConfig)).foreach { r =>
         output(s"${r._1._1.pp(using InitPpConfig)} <: ${r._1._2.pp(using InitPpConfig)}")
         r._2.toSeq.sortBy(_._1.pp(using InitPpConfig)).foreach { p =>
-          output(s"\t${p._1.pp(using InitPpConfig.showPolarityOn)}  --->  ${p._2.pp(using InitPpConfig.showPolarityOn)}")
+          output(s"\t${p._1.pp(using InitPpConfig.showPolarityOn.showRefEuidOn)}  --->  ${p._2.pp(using InitPpConfig.showPolarityOn.showRefEuidOn)}")
           if !p._1.p.containsSlice(p._2.p) then output("\t!!NOT SUB-PATH")
         }
       }
@@ -47,7 +47,10 @@ class DiffTestLumberhack extends DiffTests {
 
       output("\n>>>>>>> splitted knots >>>>>>>")
       d.actualKnotsUsingSplit._1.toSeq.sortBy(_._1.pp(using InitPpConfig.showPolarityOn)).foreach { (k, v) =>
-        output(s"${k.pp(using InitPpConfig)} --> ${v.toSeq.sortBy(_.pp(using InitPpConfig.showPolarityOn)).map(v => s"${v.pp(using InitPpConfig)}").mkString("\n\t")}")
+        output(s"${k.pp(using InitPpConfig.showRefEuidOn)} --> ${v.toSeq
+          .sortBy(_.pp(using InitPpConfig.showPolarityOn.showRefEuidOn))
+          .map(v => s"${v.pp(using InitPpConfig.showEuidOn.showRefEuidOn)}").mkString("\n\t")}"
+        )
         
         if v.size > 1 then output("\t!!MORE THAN ONE MATCH")
         if !v.forall(vp => k.p.startsWith(vp.p)) then output("\t!!NOT PREFIX")
@@ -91,8 +94,8 @@ class DiffTestLumberhack extends DiffTests {
 
       output("\n>>>>>>> fusion matches >>>>>>>")
       val fusionMatchStr = newd.fusionMatch.toSeq.sortBy(expr => newd.exprs(expr._1).pp(using InitPpConfig.showEuidOn)).map { (p, cs) =>
-        newd.exprs(p).pp(using InitPpConfig.showEuidOn) + "\n" + newd.exprs(p).pp(using InitPpConfig) + " --->\n" + cs.toSeq.sortBy(c => newd.exprs(c).pp(using InitPpConfig)).map { c =>
-          "\t" + newd.exprs(c).pp(using InitPpConfig)
+        newd.exprs(p).pp(using InitPpConfig.showEuidOn) + "\n" + newd.exprs(p).pp(using InitPpConfig.showIuidOn) + " --->\n" + cs.toSeq.sortBy(c => newd.exprs(c).pp(using InitPpConfig.showIuidOn)).map { c =>
+          "\t" + newd.exprs(c).pp(using InitPpConfig.showIuidOn)
         }.mkString("\n") + (if cs.size > 1 then "\n\t MORE THAN ONE MATCH EXPR" else "")
       }.mkString("\n")
       output(fusionMatchStr)

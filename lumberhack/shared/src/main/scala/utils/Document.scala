@@ -4,18 +4,25 @@ case class PrettyPrintConfig(
   multiline: Boolean,
   showEuid: Boolean,
   showIuid: Boolean,
+  showRefEuid: Boolean,
+  showVuid: Boolean,
   showPolarity: Boolean,
+  showVboundary: Boolean,
   showPath: Boolean,
-  pathAsIdent: Boolean
+  pathAsIdent: Boolean,
+  
 ) {
   lazy val multilineOn = copy(multiline = true)
   lazy val showEuidOn = copy(showEuid = true)
   lazy val showIuidOn = copy(showIuid = true)
+  lazy val showRefEuidOn = copy(showRefEuid = true)
+  lazy val showVuidOn = copy(showVuid = true)
   lazy val showPolarityOn = copy(showPolarity = true)
+  lazy val showVboundaryOn = copy(showVboundary = true)
   lazy val showPathOn = copy(showPath = true)
   lazy val pathAsIdentOn = copy(pathAsIdent = true)
 }
-object InitPpConfig extends PrettyPrintConfig(false, false, false, false, false, false)
+object InitPpConfig extends PrettyPrintConfig(false, false, false, false, false, false, false, false, false)
 
 // A structured document to be printed with nice indentation
 enum Document:

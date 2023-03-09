@@ -43,7 +43,11 @@ enum PathElem[+T <: PathElemType] {
     case n: Normal => n
     case s: Star => s.copy(elms = s.elms.reverse)
   def pp(using config: PrettyPrintConfig): Str = this match
-    case n@Normal(r@Ref(Ident(_, Var(nme), uid))) => s"${if config.showPolarity then n.pol.pp else ""}$nme:${uid}^${r.uid}"
+    case n@Normal(r@Ref(Ident(_, Var(nme), uid))) =>
+      (if config.showPolarity then n.pol.pp else "")
+      + nme
+      + (if config.showIuid then s":$uid" else "")
+      + (if config.showRefEuid then s"^${r.uid}" else "")
     case Star(elms) => s"{${elms.map(_.pp).mkString(" · ")}}*"
   def canCancel[V <: PathElemType](other: PathElem[V]): Boolean = (this, other) match
     case (n: Normal, o: Normal) => (n == o) && (n.pol.canCancel(o.pol))
@@ -56,7 +60,7 @@ case class Path(p: Ls[PathElem[PathElemType]]) {
   def ::: (other: Path) = Path(other.p ::: p)
   def pp(using config: PrettyPrintConfig): Str = if !config.pathAsIdent
     then s"[${p.map(_.pp).mkString(" · ")}]"
-    else p.map(_.pp).mkString("_")
+    else p.map(_.pp(using InitPpConfig.showRefEuidOn)).mkString("_")
 
   lazy val annihilated: Path =
     def anni(i: Ls[PathElem[PathElemType]], o: Ls[PathElem[PathElemType]]): Path = (i, o) match
@@ -119,8 +123,10 @@ trait ToStrat[+T <: (ProdStratEnum | ConsStratEnum)] { self: T =>
 trait TypevarWithBoundary(val boundary: Option[Ref]) { self: (ProdStratEnum.ProdVar | ConsStratEnum.ConsVar) =>
   lazy val asInPath: Option[Path] = this.boundary.map(_.toPath(PathElemPol.In))
   lazy val asOutPath: Option[Path] = this.boundary.map(_.toPath(PathElemPol.Out))
-  lazy val printBoundary = boundary.map {
-    case r@Ref(Ident(_, Var(nme), uid)) => s"_${uid}^${r.uid}"
+  def printBoundary(config: PrettyPrintConfig) = boundary.map {
+    case r@Ref(Ident(_, Var(nme), uid)) =>
+      (if config.showIuid then s"_${uid}" else "") +
+      (if config.showRefEuid then s"^${r.uid}" else "")
   }.getOrElse("")
 }
 enum ProdStratEnum(using val euid: ExprId) extends ToStrat[ProdStratEnum] {
@@ -139,7 +145,10 @@ enum ProdStratEnum(using val euid: ExprId) extends ToStrat[ProdStratEnum] {
     case MkCtor(ctor, _) => ctor.name
     case Sum(ls) => s"Sum${ls.map(_.pp).mkString(", ")}"
     case ProdFun(l, r) => s"${l.pp} => ${r.pp}"
-    case pv@ProdVar(uid, n) => s"${uid}" + "'" + n + pv.printBoundary
+    case pv@ProdVar(uid, n) =>
+      (if config.showVuid then s"$uid" else "") +
+      s"'$n" +
+      (if config.showVboundary then pv.printBoundary else "")
 }
 enum ConsStratEnum(using val euid: ExprId) extends ToStrat[ConsStratEnum] {
   case NoCons()(using ExprId) extends ConsStratEnum with ToStrat[NoCons]
@@ -154,7 +163,10 @@ enum ConsStratEnum(using val euid: ExprId) extends ToStrat[ConsStratEnum] {
     case NoCons() => "NoCons"
     case Destruct(x) => s"Destruct(${x.map(_.pp).mkString(", ")})"
     case ConsFun(l, r) => s"${l.pp} => ${r.pp}"
-    case cv@ConsVar(uid, n) => s"${uid}" + "'" + n + cv.printBoundary
+    case cv@ConsVar(uid, n) =>
+      (if config.showVuid then s"$uid" + "'" else "") +
+      s"'$n" +
+      (if config.showVboundary then cv.printBoundary else "")
 }
 import ProdStratEnum.*, ConsStratEnum.*, Expr.*
 case class Destructor(ctor: Var, argCons: Ls[Strat[ConsVar]]) {
@@ -228,8 +240,9 @@ class Deforest(debug: Boolean) {
     val vid = vuid.nextUid
     val pv = ProdVar(vid, n)()(using noExprId)
     val cv = ConsVar(vid, n)()(using noExprId)
-    varsName += vid -> pv.pp(using InitPpConfig)
-    log(s"fresh var ${pv.pp(using InitPpConfig)}")
+    val name = pv.pp(using InitPpConfig)
+    varsName += vid -> name
+    log(s"fresh var $name")
     (pv, cv)
   
   
@@ -262,16 +275,16 @@ class Deforest(debug: Boolean) {
       case Match(scrut, arms) =>
         val sp = process(scrut)
         val (detrs, bodies) = arms.map { (v, as, e) =>
-          val as_tys = as.map(a => a.tree.name -> freshVar(a.tree.name)._1.toStrat())
+          val as_tys = as.map(a => a.tree.name -> freshVar(a.tree.name + ":" + a.uid)._1.toStrat())
           val ep = process(e)(using ctx ++ as_tys)
-          (Destructor(v, as_tys.map(a_ty => ConsVar(a_ty._2.s.uid, a_ty._1)()(using noExprId).toStrat())), ep)
+          (Destructor(v, as_tys.map(a_ty => ConsVar(a_ty._2.s.uid, a_ty._2.s.name)()(using noExprId).toStrat())), ep)
         }.unzip
         constrain(sp, Destruct(detrs)(using e.uid).toStrat())
         val res = freshVar(s"${e.uid}_matchres")
         bodies.foreach(constrain(_, res._2.toStrat()))
         res._1
       case Function(param, body) =>
-        val sv = freshVar(param.tree.name)
+        val sv = freshVar(param.tree.name + ":" + param.uid)
         ProdFun(sv._2.toStrat(),
           process(body)(using ctx + (param.tree.name -> sv._1.toStrat()))
         )(using noExprId)
@@ -288,7 +301,7 @@ class Deforest(debug: Boolean) {
   def apply(p: Program): Ls[Str -> ProdStrat] = trace(s"apply ${summary(p.pp(using InitPpConfig))}") {
     val vars: Map[Str, Strat[ProdVar]] = p.contents.collect {
       case L(ProgDef(id, body)) =>
-        id.tree.name -> freshVar(id.tree.name)._1.toStrat()
+        id.tree.name -> freshVar(id.tree.name + ":" + id.uid)._1.toStrat()
     }.toMap
 
     val ctx = Ctx.empty ++ vars
@@ -444,9 +457,9 @@ enum CallTree {
   case Continue(current: Path, calls: List[CallTree])
 
   def pp(using level: Int = 1): String = {
-    given PrettyPrintConfig = InitPpConfig
+    given PrettyPrintConfig = InitPpConfig.showRefEuidOn
     this match {
-      case Continue(current, calls) => s"${current.pp}\n" + calls.map(c => s"${"\t" * level}${c.pp(using level + 1)}").mkString("\n")
+      case Continue(current, calls) => s"${current.pp}" + calls.map(c => s"\n${"\t" * level}${c.pp(using level + 1)}").mkString
       case k@Knot(current, prev) => s"${current.pp} ---> ${prev.pp} (${k.info})"
     }
   }

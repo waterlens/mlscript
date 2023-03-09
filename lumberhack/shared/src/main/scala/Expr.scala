@@ -5,18 +5,18 @@ import mlscript.utils.*, shorthands.*
 import lumberhack.utils.*
 
 case class Ident(isDef: Bool, tree: Var, uid: Uid[Ident]) {
-  def pp(using showUid: Boolean = true): Str = s"${tree.name}${if showUid then s":$uid" else ""}"
+  def pp(using config: PrettyPrintConfig): Str = s"${tree.name}${if config.showIuid then s":$uid" else ""}"
   def copyToNewDeforest(using newd: Deforest): Ident = newd.nextIdent(isDef, tree)
 }
 case class ProgDef(id: Ident, body: Expr)
 case class Program(contents: Ls[ProgDef \/ Expr]) {
-  def pp(using showUids: Bool = false): Str =
+  def pp(using config: PrettyPrintConfig): Str =
     contents.sortBy{
-      case Left(pdef) => pdef.id.pp(using false)
+      case Left(pdef) => pdef.id.pp(using InitPpConfig)
       case Right(expr) => ""
     }.map {
-      case L(pd) => s"def ${pd.id.pp(using true)} = ${pd.body.pp()}"
-      case R(e) => e.pp()
+      case L(pd) => s"def ${pd.id.pp} = ${pd.body.pp}"
+      case R(e) => e.pp
     }.mkString("\n")
   
   lazy val defAndExpr: (Map[Ident, Expr], List[Expr]) = contents.partitionMap(identity).mapFirst(_.map(pd => pd.id -> pd.body).toMap)
@@ -61,15 +61,17 @@ case class Program(contents: Ls[ProgDef \/ Expr]) {
     val copiedOriginalProgram -> refMaps -> initContext = this.copyDefsToNewDeforest
     val pathToIdent = CallTree.generatePathToIdent(callTree)
     assert({
-      val a = pathToIdent.values.map(_.pp(using false)).toSet
-      val b = pathToIdent.values.map(_.pp(using true)).toSet
+      val a = pathToIdent.values.map(_.pp(using InitPpConfig)).toSet
+      val b = pathToIdent.values.map(_.pp(using InitPpConfig.showIuidOn)).toSet
       b.size == a.size
     })
     
     val newDefs = {
       var defined = List.empty[Ident -> Path]
       pathToIdent.keys.foreach { p =>
-        if p.pp(using false) == pathToIdent(p).pp(using false) then defined = (pathToIdent(p) -> p) :: defined
+        // make sure to only register those that are real new defs
+        if p.pp(using InitPpConfig.showEuidOn.pathAsIdentOn) == pathToIdent(p).pp(using InitPpConfig.showEuidOn.pathAsIdentOn)
+          then defined = (pathToIdent(p) -> p) :: defined
       }
       val res = defined.map { (id, p) =>
         assert(p.p.nonEmpty)
@@ -137,38 +139,38 @@ enum Expr(using val deforest: Deforest) {
   val uid: Uid[Expr] = deforest.euid.nextUid
   deforest.exprs += uid -> this
   
-  def pp(multiline: Bool = true)(using showEuids: Bool = false): Str =
-    val res: fansi.Str = (if (showEuids) Console.CYAN + uid.toString + ": " + Console.RESET else "") + (
+  def pp(using config: PrettyPrintConfig): Str =
+    val res: fansi.Str = (if (config.showEuid) Console.CYAN + uid.toString + ": " + Console.RESET else "") + (
       this match
         case Const(lit) => Console.YELLOW + lit.idStr + Console.RESET
-        case Ref(id) => id.pp(using true) + "^" + uid
-        case Call(lhs, rhs) => s"(${lhs.pp(multiline)} ${rhs.pp(multiline)})"
+        case Ref(id) => id.pp(using config.copy(showIuid = true)) + "^" + uid
+        case Call(lhs, rhs) => s"(${lhs.pp} ${rhs.pp})"
         case Ctor(name, args) =>
-          s"${Console.BLUE}[$name${Console.RESET}${args.map(" " + _.pp(multiline)).mkString + Console.BLUE}]${Console.RESET}"
-        case LetIn(id, rhs, body) if multiline => {
+          s"${Console.BLUE}[$name${Console.RESET}${args.map(" " + _.pp).mkString + Console.BLUE}]${Console.RESET}"
+        case LetIn(id, rhs, body) if config.multiline => {
           val rhsStr = rhs match {
-            case r: LetIn => "\n\t" + rhs.pp(multiline).linesIterator.map("\t" + _).mkString("\n").dropWhile(_ == '\t')
-            case _ => rhs.pp(multiline)
+            case r: LetIn => "\n\t" + rhs.pp.linesIterator.map("\t" + _).mkString("\n").dropWhile(_ == '\t')
+            case _ => rhs.pp
           }
-          s"${Console.BOLD}let${Console.RESET} ${id.pp(using true)} = ${rhsStr}" + s"\n${Console.BOLD}in${Console.RESET} ${body.pp(multiline)}"
+          s"${Console.BOLD}let${Console.RESET} ${id.pp(using config.copy(showIuid = true))} = ${rhsStr}" + s"\n${Console.BOLD}in${Console.RESET} ${body.pp}"
         }
-        case LetIn(id, rhs, body) => s"${Console.BOLD}let${Console.RESET} ${id.pp(using true)} = ${rhs.pp(multiline)}" + s"\n${Console.BOLD}in${Console.RESET} ${body.pp(multiline)}"
-        case Match(scrut, arms) if multiline => s"${Console.BOLD}case${Console.RESET} ${scrut.pp(multiline)} ${Console.BOLD}of${Console.RESET} {${
+        case LetIn(id, rhs, body) => s"${Console.BOLD}let${Console.RESET} ${id.pp(using config.copy(showIuid = true))} = ${rhs.pp}" + s"\n${Console.BOLD}in${Console.RESET} ${body.pp}"
+        case Match(scrut, arms) if config.multiline => s"${Console.BOLD}case${Console.RESET} ${scrut.pp} ${Console.BOLD}of${Console.RESET} {${
           "\n\t" + arms.map { case (v, ids, e) =>
-            s"${Console.BLUE + v.name + Console.RESET}${ids.map(" " + _.pp(using true)).mkString} => ${
-              e.pp(multiline).linesIterator.map("\t" + _).mkString("\n").dropWhile(_ == '\t')
+            s"${Console.BLUE + v.name + Console.RESET}${ids.map(" " + _.pp(using config.copy(showIuid = true))).mkString} => ${
+              e.pp.linesIterator.map("\t" + _).mkString("\n").dropWhile(_ == '\t')
             }"
           }.mkString("\n\t| ")
         }}"
-        case Match(scrut, arms) => s"${Console.BOLD}case${Console.RESET} ${scrut.pp(multiline)} ${Console.BOLD}of${Console.RESET} {${
+        case Match(scrut, arms) => s"${Console.BOLD}case${Console.RESET} ${scrut.pp} ${Console.BOLD}of${Console.RESET} {${
           arms.map { case (v, ids, e) =>
-            s"${Console.BLUE + v.name + Console.RESET}${ids.map(" " + _.pp(using true)).mkString} => ${e.pp(multiline)}"
+            s"${Console.BLUE + v.name + Console.RESET}${ids.map(" " + _.pp(using config.copy(showIuid = true))).mkString} => ${e.pp}"
           }.mkString(" | ")
         }}"
-        case Function(param, body) => s"(${Console.BOLD}fun${Console.RESET} ${param.pp(using true)} -> ${body.pp(multiline)})"
+        case Function(param, body) => s"(${Console.BOLD}fun${Console.RESET} ${param.pp(using config.copy(showIuid = true))} -> ${body.pp})"
         case IfThenElse(scrut, thenn, elze) => 
-          s"${Console.BOLD}if${Console.RESET} ${scrut.pp(multiline)} ${Console.BOLD}then${Console.RESET} " +
-          s"${thenn.pp(multiline)} ${Console.BOLD}else${Console.RESET} ${elze.pp(multiline)}"
+          s"${Console.BOLD}if${Console.RESET} ${scrut.pp} ${Console.BOLD}then${Console.RESET} " +
+          s"${thenn.pp} ${Console.BOLD}else${Console.RESET} ${elze.pp}"
     )
     res.plainText
   

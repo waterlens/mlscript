@@ -5,6 +5,8 @@ import mlscript.{DiffTests, ModeType, TypingUnit, Term, Pgrm}
 import mlscript.utils.shorthands.Str
 import mlscript.codegen.Helpers.inspect as showStructure
 import scala.collection.mutable.StringBuilder
+import mlscript.lumberhack.utils.PrettyPrintConfig
+import mlscript.lumberhack.utils.InitPpConfig
 
 class DiffTestLumberhack extends DiffTests {
   import DiffTestLumberhack.*
@@ -22,30 +24,30 @@ class DiffTestLumberhack extends DiffTests {
     val originalProgram = Program.fromPgrm(Pgrm(filteredEntities))
     val constraints = d(originalProgram)
     // output(originalProgram.pp(using true))
-    output(originalProgram.pp)
+    output(originalProgram.pp(using InitPpConfig.multilineOn.showIuidOn))
     output("<<<<<<<<<< Original <<<<<<<<<<")
 
     if mode.stdout || mode.verbose then {
       output("\n>>>>>>>>>> initial constraints >>>>>>>>>>")
-      output(d.constraints.map((p, c) => s"${p.pp(using true)} <: ${c.pp(using true)}").mkString("\n"))
+      output(d.constraints.map((p, c) => s"${p.pp(using InitPpConfig.showPathOn)} <: ${c.pp(using InitPpConfig.showPathOn)}").mkString("\n"))
       output("<<<<<<<<<< initial constraints <<<<<<<<<<")
     }
     try {
       d.resolveConstraints
 
       output("\n>>>>>>> knots >>>>>>>")
-      d.recursiveConstr.toSeq.sortBy(_._1._1.pp).foreach { r =>
-        output(s"${r._1._1.pp} <: ${r._1._2.pp}")
-        r._2.toSeq.sortBy(_._1.pp).foreach { p =>
-          output(s"\t${p._1.pp}  --->  ${p._2.pp}")
+      d.recursiveConstr.toSeq.sortBy(_._1._1.pp(using InitPpConfig)).foreach { r =>
+        output(s"${r._1._1.pp(using InitPpConfig)} <: ${r._1._2.pp(using InitPpConfig)}")
+        r._2.toSeq.sortBy(_._1.pp(using InitPpConfig)).foreach { p =>
+          output(s"\t${p._1.pp(using InitPpConfig.showPolarityOn)}  --->  ${p._2.pp(using InitPpConfig.showPolarityOn)}")
           if !p._1.p.containsSlice(p._2.p) then output("\t!!NOT SUB-PATH")
         }
       }
       output("<<<<<<< knots <<<<<<<")
 
       output("\n>>>>>>> splitted knots >>>>>>>")
-      d.actualKnotsUsingSplit._1.toSeq.sortBy(_._1.pp).foreach { (k, v) =>
-        output(s"${k.pp(using false)} --> ${v.toSeq.sortBy(_.pp).map(v => s"${v.pp(using false)}").mkString("\n\t")}")
+      d.actualKnotsUsingSplit._1.toSeq.sortBy(_._1.pp(using InitPpConfig.showPolarityOn)).foreach { (k, v) =>
+        output(s"${k.pp(using InitPpConfig)} --> ${v.toSeq.sortBy(_.pp(using InitPpConfig.showPolarityOn)).map(v => s"${v.pp(using InitPpConfig)}").mkString("\n\t")}")
         
         if v.size > 1 then output("\t!!MORE THAN ONE MATCH")
         if !v.forall(vp => k.p.startsWith(vp.p)) then output("\t!!NOT PREFIX")
@@ -62,8 +64,8 @@ class DiffTestLumberhack extends DiffTests {
         output("\n>>>>>>> type variable bounds >>>>>>>")
         val tvs = d.upperBounds.keySet ++ d.lowerBounds.keySet
         tvs.foreach { tv =>
-          val ub = d.upperBounds(tv).map(u => s"${u._1.pp} < ${u._2.pp(using true)}")
-          val lb = d.lowerBounds(tv).map(l => s"${l._2.pp(using true)} < ${l._1.rev.pp}")
+          val ub = d.upperBounds(tv).map(u => s"${u._1.pp(using InitPpConfig.showPolarityOn)} < ${u._2.pp(using InitPpConfig.showPathOn)}")
+          val lb = d.lowerBounds(tv).map(l => s"${l._2.pp(using InitPpConfig.showPathOn)} < ${l._1.rev.pp(using InitPpConfig.showPolarityOn)}")
           val tvName = d.varsName(tv)
           output(tvName + ":")
           ub.foreach(u => output(s"\t${tvName}${u}"))
@@ -75,7 +77,7 @@ class DiffTestLumberhack extends DiffTests {
 
       output("\n>>>>>>> expanded program >>>>>>>")
       val (newProg, newd) = originalProgram.expandedWithNewDeforest(callTree._1)
-      output(newProg.pp)
+      output(newProg.pp(using InitPpConfig.multilineOn.showIuidOn))
       output("<<<<<<< expanded program <<<<<<<")
 
       
@@ -88,9 +90,9 @@ class DiffTestLumberhack extends DiffTests {
       newd.resolveConstraints
 
       output("\n>>>>>>> fusion matches >>>>>>>")
-      val fusionMatchStr = newd.fusionMatch.toSeq.sortBy(expr => newd.exprs(expr._1).pp(false)(using true)).map { (p, cs) =>
-        newd.exprs(p).pp(false)(using true) + "\n" + newd.exprs(p).pp(false) + " --->\n" + cs.toSeq.sortBy(c => newd.exprs(c).pp()).map { c =>
-          "\t" + newd.exprs(c).pp(false)
+      val fusionMatchStr = newd.fusionMatch.toSeq.sortBy(expr => newd.exprs(expr._1).pp(using InitPpConfig.showEuidOn)).map { (p, cs) =>
+        newd.exprs(p).pp(using InitPpConfig.showEuidOn) + "\n" + newd.exprs(p).pp(using InitPpConfig) + " --->\n" + cs.toSeq.sortBy(c => newd.exprs(c).pp(using InitPpConfig)).map { c =>
+          "\t" + newd.exprs(c).pp(using InitPpConfig)
         }.mkString("\n") + (if cs.size > 1 then "\n\t MORE THAN ONE MATCH EXPR" else "")
       }.mkString("\n")
       output(fusionMatchStr)
@@ -98,7 +100,7 @@ class DiffTestLumberhack extends DiffTests {
 
       output("\n>>>>>>> after fusion >>>>>>>")
       val prgmAfterFusion = newProg.rewrite(newd.fusionMatch.toMap, newd)
-      output(prgmAfterFusion.pp)
+      output(prgmAfterFusion.pp(using InitPpConfig.multilineOn.showIuidOn))
       output("<<<<<<< after fusion <<<<<<<")
       // output("\n>>>>>>> new type variable bounds >>>>>>>")
       // val newtvs = newd.upperBounds.keySet ++ d.lowerBounds.keySet

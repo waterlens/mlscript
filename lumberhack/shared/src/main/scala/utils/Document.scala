@@ -1,5 +1,22 @@
 package mlscript.lumberhack.utils
 
+case class PrettyPrintConfig(
+  multiline: Boolean,
+  showEuid: Boolean,
+  showIuid: Boolean,
+  showPolarity: Boolean,
+  showPath: Boolean,
+  pathAsIdent: Boolean
+) {
+  lazy val multilineOn = copy(multiline = true)
+  lazy val showEuidOn = copy(showEuid = true)
+  lazy val showIuidOn = copy(showIuid = true)
+  lazy val showPolarityOn = copy(showPolarity = true)
+  lazy val showPathOn = copy(showPath = true)
+  lazy val pathAsIdentOn = copy(pathAsIdent = true)
+}
+object InitPpConfig extends PrettyPrintConfig(false, false, false, false, false, false)
+
 // A structured document to be printed with nice indentation
 enum Document:
 

@@ -6,6 +6,8 @@ import mlscript.utils.shorthands.*
 import mlscript.utils.lastWords
 import scala.collection.mutable
 import mlscript.utils.AnyOps
+import mlscript.lumberhack.utils.PrettyPrintConfig
+import mlscript.lumberhack.utils.InitPpConfig
 
 type TypeVar
 type NormalPathElem
@@ -40,8 +42,8 @@ enum PathElem[+T <: PathElemType] {
   def rev: PathElem[T] = this match
     case n: Normal => n
     case s: Star => s.copy(elms = s.elms.reverse)
-  def pp(using showPol: Boolean = true): Str = this match
-    case n@Normal(r@Ref(Ident(_, Var(nme), uid))) => s"${if showPol then n.pol.pp else ""}$nme:${uid}^${r.uid}"
+  def pp(using config: PrettyPrintConfig): Str = this match
+    case n@Normal(r@Ref(Ident(_, Var(nme), uid))) => s"${if config.showPolarity then n.pol.pp else ""}$nme:${uid}^${r.uid}"
     case Star(elms) => s"{${elms.map(_.pp).mkString(" · ")}}*"
   def canCancel[V <: PathElemType](other: PathElem[V]): Boolean = (this, other) match
     case (n: Normal, o: Normal) => (n == o) && (n.pol.canCancel(o.pol))
@@ -52,7 +54,10 @@ case class Path(p: Ls[PathElem[PathElemType]]) {
   lazy val rev = this.copy(p = p.map(_.rev).reverse)
   // merge two consecutive identical stars during concatenation if we have stars
   def ::: (other: Path) = Path(other.p ::: p)
-  def pp(using showPol: Boolean = true): Str = s"[${p.map(_.pp).mkString(" · ")}]"
+  def pp(using config: PrettyPrintConfig): Str = if !config.pathAsIdent
+    then s"[${p.map(_.pp).mkString(" · ")}]"
+    else s"[${p.map(_.pp).mkString(" · ")}]" // p.map(_.pp).mkString("_")
+
   lazy val annihilated: Path =
     def anni(i: Ls[PathElem[PathElemType]], o: Ls[PathElem[PathElemType]]): Path = (i, o) match
       case (Nil, Nil) => Path(Nil)
@@ -94,7 +99,7 @@ object Path {
 case class Strat[+T <: (ProdStratEnum | ConsStratEnum)](val s: T)(val path: Path) {
   def updatePath(newPath: Path): Strat[T] = this.copy()(path = newPath)
   def addPath(newPath: Path): Strat[T] = this.updatePath(newPath ::: this.path)
-  def pp(using showPath: Bool = false): Str = if showPath then s"(${path.pp}: ${s.pp})" else s.pp
+  def pp(using config: PrettyPrintConfig): Str = if config.showPath then s"(${path.pp}: ${s.pp})" else s.pp
   lazy val negPath = this.copy()(path = path.neg)
   lazy val asInPath: Option[Path] = this.s match {
     case pv: ProdStratEnum.ProdVar => pv.asInPath
@@ -109,14 +114,14 @@ case class Strat[+T <: (ProdStratEnum | ConsStratEnum)](val s: T)(val path: Path
 }
 trait ToStrat[+T <: (ProdStratEnum | ConsStratEnum)] { self: T =>
   def toStrat(p: Path = Path(Nil)): Strat[T] = Strat(this)(p)
-  def pp(using showPath: Bool): Str
+  def pp(using config: PrettyPrintConfig): Str
 }
 trait TypevarWithBoundary(val boundary: Option[Ref]) { self: (ProdStratEnum.ProdVar | ConsStratEnum.ConsVar) =>
   lazy val asInPath: Option[Path] = this.boundary.map(_.toPath(PathElemPol.In))
   lazy val asOutPath: Option[Path] = this.boundary.map(_.toPath(PathElemPol.Out))
   lazy val printBoundary = boundary.map {
-    case r@Ref(Ident(_, Var(nme), uid)) => s"${uid}^${r.uid}"
-  }
+    case r@Ref(Ident(_, Var(nme), uid)) => s"_${uid}^${r.uid}"
+  }.getOrElse("")
 }
 enum ProdStratEnum(using val euid: ExprId) extends ToStrat[ProdStratEnum] {
   case NoProd()(using ExprId) extends ProdStratEnum with ToStrat[NoProd]
@@ -128,13 +133,13 @@ enum ProdStratEnum(using val euid: ExprId) extends ToStrat[ProdStratEnum] {
     with ToStrat[ProdVar]
     with TypevarWithBoundary(boundary)
 
-  def pp(using showPath: Bool = false): Str = this match
+  def pp(using config: PrettyPrintConfig): Str = this match
     case NoProd() => "NoProd"
     case MkCtor(ctor, args) if args.length > 0 => s"${ctor.name}(${args.map(_.pp).mkString(", ")})"
     case MkCtor(ctor, _) => ctor.name
     case Sum(ls) => s"Sum${ls.map(_.pp).mkString(", ")}"
     case ProdFun(l, r) => s"${l.pp} => ${r.pp}"
-    case pv@ProdVar(uid, n) => s"${uid}" + "'" + n + pv.printBoundary.map("_" + _).getOrElse("")
+    case pv@ProdVar(uid, n) => s"${uid}" + "'" + n + pv.printBoundary
 }
 enum ConsStratEnum(using val euid: ExprId) extends ToStrat[ConsStratEnum] {
   case NoCons()(using ExprId) extends ConsStratEnum with ToStrat[NoCons]
@@ -145,15 +150,15 @@ enum ConsStratEnum(using val euid: ExprId) extends ToStrat[ConsStratEnum] {
     with ToStrat[ConsVar]
     with TypevarWithBoundary(boundary)
 
-  def pp(using showPath: Bool = false): Str = this match
+  def pp(using config: PrettyPrintConfig): Str = this match
     case NoCons() => "NoCons"
     case Destruct(x) => s"Destruct(${x.map(_.pp).mkString(", ")})"
     case ConsFun(l, r) => s"${l.pp} => ${r.pp}"
-    case cv@ConsVar(uid, n) => s"${uid}" + "'" + n + cv.printBoundary.map("_" + _).getOrElse("")
+    case cv@ConsVar(uid, n) => s"${uid}" + "'" + n + cv.printBoundary
 }
 import ProdStratEnum.*, ConsStratEnum.*, Expr.*
 case class Destructor(ctor: Var, argCons: Ls[Strat[ConsVar]]) {
-  lazy val pp: Str =
+  def pp(using config: PrettyPrintConfig): Str =
     if argCons.length > 0 then s"${ctor.name}(${argCons.map(_.pp).mkString(", ")})" else ctor.name
 }
 object ProdStratEnum {
@@ -223,8 +228,8 @@ class Deforest(debug: Boolean) {
     val vid = vuid.nextUid
     val pv = ProdVar(vid, n)()(using noExprId)
     val cv = ConsVar(vid, n)()(using noExprId)
-    varsName += vid -> pv.pp
-    log(s"fresh var ${pv.pp}")
+    varsName += vid -> pv.pp(using InitPpConfig)
+    log(s"fresh var ${pv.pp(using InitPpConfig)}")
     (pv, cv)
   
   
@@ -232,7 +237,7 @@ class Deforest(debug: Boolean) {
   val lowerBounds = mutable.Map.empty[TypeVarId, Ls[(Path, ProdStrat)]].withDefaultValue(Nil)
   val callsInfo = (mutable.Set.empty[Ref], mutable.Map.empty[Ident, Set[Ref]])
   
-  def process(e: Expr)(using ctx: Ctx, calls: mutable.Set[Ref]): ProdStrat = trace(s"process ${e.uid}: ${e.pp}") {
+  def process(e: Expr)(using ctx: Ctx, calls: mutable.Set[Ref]): ProdStrat = trace(s"process ${e.uid}: ${e.pp(using InitPpConfig)}") {
     val res: ProdStratEnum = e match
       case Const(IntLit(_)) => prodInt(using noExprId)
       case Const(l) => NoProd()(using noExprId)
@@ -278,9 +283,9 @@ class Deforest(debug: Boolean) {
         res._1
       case LetIn(id, rhs, body) => ???
     res.toStrat()
-  }(r => s"=> ${r.pp}")
+  }(r => s"=> ${r.pp(using InitPpConfig)}")
 
-  def apply(p: Program): Ls[Str -> ProdStrat] = trace(s"apply ${summary(p.pp)}") {
+  def apply(p: Program): Ls[Str -> ProdStrat] = trace(s"apply ${summary(p.pp(using InitPpConfig))}") {
     val vars: Map[Str, Strat[ProdVar]] = p.contents.collect {
       case L(ProgDef(id, body)) =>
         id.tree.name -> freshVar(id.tree.name)._1.toStrat()
@@ -302,7 +307,7 @@ class Deforest(debug: Boolean) {
       }
     }
     vars.toList
-  }(r => s"=> ${summary(r.map(v => s"${v._1}: ${v._2.pp}").mkString(", "))}")
+  }(r => s"=> ${summary(r.map(v => s"${v._1}: ${v._2.pp(using InitPpConfig)}").mkString(", "))}")
   
   def constrain(prod: ProdStrat, cons: ConsStrat): Unit = {
     (prod.s, cons.s) match
@@ -316,15 +321,15 @@ class Deforest(debug: Boolean) {
   val fusionMatch = mutable.Map.empty[ExprId, Set[ExprId]]
   def resolveConstraints: Unit = {
 
-    def handle(c: Cnstr)(using cache: Cache, numOfTypeCtor: Int): Unit = trace(s"handle [${c._1.pp(using true)} <: ${c._2.pp(using true)}]") {
+    def handle(c: Cnstr)(using cache: Cache, numOfTypeCtor: Int): Unit = trace(s"handle [${c._1.pp(using InitPpConfig)} <: ${c._2.pp(using InitPpConfig)}]") {
       val prod = c._1
       val cons = c._2
 
       (prod.s, cons.s) match
         case (_: ProdVar, _) | (_, _: ConsVar) => cache.get(c) match
           case S(inCache) =>
-            log(s">> done [${prod.pp(using true)} : ${cons.pp(using true)}]")
-            log(s">> with [${inCache._1._1.pp(using true)} : ${inCache._1._2.pp(using true)}]")
+            log(s">> done [${prod.pp(using InitPpConfig)} : ${cons.pp(using InitPpConfig)}]")
+            log(s">> with [${inCache._1._1.pp(using InitPpConfig)} : ${inCache._1._2.pp(using InitPpConfig)}]")
             // register knots that actually pass through type ctors
             if inCache._2 < numOfTypeCtor then {
               recursiveConstr.updateWith(c) {
@@ -395,7 +400,7 @@ class Deforest(debug: Boolean) {
             else
               argCons foreach { c => handle(NoProd()(using noExprId).toStrat(prod.path), c.addPath(cons.path)) }
           }
-          if !found then lastWords(s"type error ${prod.pp} <: ${cons.pp}")
+          if !found then lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
         case (Sum(ctors), Destruct(ds)) =>
           given Int = numOfTypeCtor + 1
           ctors.foreach { ctorStrat => ctorStrat.s match
@@ -407,7 +412,7 @@ class Deforest(debug: Boolean) {
               }
             }
           }
-        case _ => lastWords(s"type error ${prod.pp} <: ${cons.pp}")
+        case _ => lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
     }()
     
     given Cache = Map.empty
@@ -438,18 +443,21 @@ enum CallTree {
   case Knot(current: Path, prev: Path)(val info: Str)
   case Continue(current: Path, calls: List[CallTree])
 
-  def pp(using level: Int = 1): String = this match {
-    case Continue(current, calls) => s"${current.pp(using false)}\n" + calls.map(c => s"${"\t" * level}${c.pp(using level + 1)}").mkString("\n")
-    case k@Knot(current, prev) => s"${current.pp(using false)} ---> ${prev.pp(using false)} (${k.info})"
+  def pp(using level: Int = 1): String = {
+    given PrettyPrintConfig = InitPpConfig
+    this match {
+      case Continue(current, calls) => s"${current.pp}\n" + calls.map(c => s"${"\t" * level}${c.pp(using level + 1)}").mkString("\n")
+      case k@Knot(current, prev) => s"${current.pp} ---> ${prev.pp} (${k.info})"
+    }
   }
 
   private def generatePathToIdent(using newd: Deforest, store: mutable.Map[Path, Ident]): Unit = this match {
     case k@Knot(current, prev) =>
       if k.info != "hopeless to continue" then store.updateWith(current)(_.orElse({
-        store.updateWith(prev)(_.orElse(Some(newd.nextIdent(true, Var(prev.pp(using false))))))
+        store.updateWith(prev)(_.orElse(Some(newd.nextIdent(true, Var(prev.pp(using InitPpConfig.pathAsIdentOn))))))
       }))
     case Continue(current, calls) =>
-      store.updateWith(current)(_.orElse(Some(newd.nextIdent(true, Var(current.pp(using false))))))
+      store.updateWith(current)(_.orElse(Some(newd.nextIdent(true, Var(current.pp(using InitPpConfig.pathAsIdentOn))))))
       calls.foreach(_.generatePathToIdent)
   }
 }
@@ -478,7 +486,7 @@ object CallTree {
           Some(s.head) -> "only one" // the reuslt will not be an empty path
         case Some(s) if s.size > 1 =>
           knotsCollection += p -> Some(s.head)
-          Some(s.head) -> s.map(_.pp(using false)).mkString(" OR ")  // the result will not be an empty path
+          Some(s.head) -> s.map(_.pp(using InitPpConfig)).mkString(" OR ")  // the result will not be an empty path
         // we can always tie the knot back to its definition before expansion if it is hopeless to keep expanding
         case Some(_) | None =>
           if knots.keys.exists(_.p.startsWith(p.p)) then None -> "" else
@@ -519,7 +527,7 @@ object CallTree {
       matches.headOption match {
         case Some(s) =>
           knotsCollection += p -> Some(s)
-          Some(s) -> (if matches.size > 1 then matches.map(_.pp(using false)).mkString(" OR ") else "only one")
+          Some(s) -> (if matches.size > 1 then matches.map(_.pp(using InitPpConfig)).mkString(" OR ") else "only one")
         case None => if knots.keySet.exists(k => k.p.containsSlice(p.p) || k.p.containsSlice(p.p.reverse)) then None -> "" else
           knotsCollection += p -> None
           Some(Path(p.p.last :: Nil)) -> "hopeless to continue"

@@ -56,7 +56,7 @@ case class Path(p: Ls[PathElem[PathElemType]]) {
   def ::: (other: Path) = Path(other.p ::: p)
   def pp(using config: PrettyPrintConfig): Str = if !config.pathAsIdent
     then s"[${p.map(_.pp).mkString(" · ")}]"
-    else s"[${p.map(_.pp).mkString(" · ")}]" // p.map(_.pp).mkString("_")
+    else p.map(_.pp).mkString("_")
 
   lazy val annihilated: Path =
     def anni(i: Ls[PathElem[PathElemType]], o: Ls[PathElem[PathElemType]]): Path = (i, o) match

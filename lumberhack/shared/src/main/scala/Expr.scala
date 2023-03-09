@@ -21,7 +21,7 @@ case class Program(contents: Ls[ProgDef \/ Expr]) {
   
   lazy val defAndExpr: (Map[Ident, Expr], List[Expr]) = contents.partitionMap(identity).mapFirst(_.map(pd => pd.id -> pd.body).toMap)
 
-  private def copyDefsToNewDeforest(using newd: Deforest): Program -> Map[Expr.Ref, Expr.Ref] = {
+  private def copyDefsToNewDeforest(using newd: Deforest): Program -> Map[Expr.Ref, Expr.Ref] -> Expr.Ctx = {
     val refMaps = scala.collection.mutable.Map.empty[Expr.Ref, Expr.Ref]
     def copyExpr(e: Expr)(using ctx: Expr.Ctx, newd: Deforest): Expr = e match {
       case Expr.Const(lit: Lit) => Expr.Const(lit)
@@ -53,21 +53,18 @@ case class Program(contents: Ls[ProgDef \/ Expr]) {
     Program(
       this.defAndExpr._2.map { e => R(copyExpr(e)) }
       ::: this.defAndExpr._1.map { (id, body) => L(ProgDef(ctx(id.tree.name), copyExpr(body))) }.toList
-    ) -> refMaps.toMap
+    ) -> refMaps.toMap -> ctx
   }
 
   def expandedWithNewDeforest(callTree: List[CallTree]): Program -> Deforest = {
     given newd: Deforest(false)
-    val (copiedOriginalProgram, refMaps) = this.copyDefsToNewDeforest
+    val copiedOriginalProgram -> refMaps -> initContext = this.copyDefsToNewDeforest
     val pathToIdent = CallTree.generatePathToIdent(callTree)
     assert({
       val a = pathToIdent.values.map(_.pp(using false)).toSet
       val b = pathToIdent.values.map(_.pp(using true)).toSet
       b.size == a.size
     })
-    val initContext = Deforest.lumberhackKeywords.map {
-      n => n -> newd.nextIdent(false, Var(n))
-    } ++ copiedOriginalProgram.defAndExpr._1.keys.map(k => k.tree.name -> k) |> (_.toMap)
     
     val newDefs = {
       var defined = List.empty[Ident -> Path]

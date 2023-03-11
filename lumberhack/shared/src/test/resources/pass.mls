@@ -19,11 +19,6 @@ c(p)
 //│ 	[-p^1 · -p^10 · +c^9 · +c^4]  --->  [-p^10 · +c^9]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [c^9 · c^4] --> [c^9]
-//│ [p^10 · p^1] --> [p^10]
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [c^9]
 //│ 	[c^9 · c^4] ---> [c^9] (only one)
@@ -31,18 +26,7 @@ c(p)
 //│ 	[p^10 · p^1] ---> [p^10] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (c^9 p^10)
-//│ def c = (fun x:8 -> case x:8 of {
-//│ 	C a:9 => (c a:9)})
-//│ def c^9 = (fun x:12 -> case x:12 of {
-//│ 	C a:13 => (c^9 a:13)})
-//│ def p = [C p]
-//│ def p^10 = [C p^10]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 19: [C 18: p^10]
 //│ [C p^10] --->
 //│ 	case x:12 of {C a:13 => (c^9 a:13)}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -89,36 +73,16 @@ c(p)
 //│ >>>>>>> knots >>>>>>>
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [c^25] ---> [c^25] (hopeless to continue)
 //│ [p^26] ---> [p^26] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (c p)
-//│ def c = (fun x:16 -> case x:16 of {
-//│ 	C a:17 b:18 => (d b:18)
-//│ 	| N => 3})
-//│ def d = (fun y:13 -> case y:13 of {
-//│ 	C aa:14 bb:15 => (e bb:15)
-//│ 	| N => 5})
-//│ def e = (fun z:10 -> case z:10 of {
-//│ 	C aaa:11 bbb:12 => bbb:12
-//│ 	| N => 7})
-//│ def p = [C 1 [C 2 [N]]]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 6: [N]
 //│ [N] --->
 //│ 	case z:10 of {C aaa:11 bbb:12 => bbb:12 | N => 7}
-//│ 7: [C 5: 2 6: [N]]
 //│ [C 2 [N]] --->
 //│ 	case y:13 of {C aa:14 bb:15 => (e bb:15) | N => 5}
-//│ 8: [C 4: 1 7: [C 5: 2 6: [N]]]
 //│ [C 1 [C 2 [N]]] --->
 //│ 	case x:16 of {C a:17 b:18 => (d b:18) | N => 3}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -159,11 +123,6 @@ c(p)
 //│ 	[-p^1 · -p^1 · -p^1 · -p^15 · +c^14 · +c^7 · +c^7]  --->  [-p^15 · +c^14]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [c^14 · c^7 · c^7] --> [c^14]
-//│ [p^15 · p^1 · p^1 · p^1] --> [p^15]
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [c^14]
 //│ 	[c^14 · c^7]
@@ -174,43 +133,17 @@ c(p)
 //│ 			[p^15 · p^1 · p^1 · p^1] ---> [p^15] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (c^14 p^15)
-//│ def c = (fun x:8 -> case x:8 of {
-//│ 	C a:9 => case a:9 of {
-//│ 		C b:10 => case b:10 of {
-//│ 			C y:11 => (c y:11)}}})
-//│ def c^14 = (fun x:17 -> case x:17 of {
-//│ 	C a:18 => case a:18 of {
-//│ 		C b:19 => case b:19 of {
-//│ 			C y:20 => (c^14_c^7 y:20)}}})
-//│ def c^14_c^7 = (fun x:21 -> case x:21 of {
-//│ 	C a:22 => case a:22 of {
-//│ 		C b:23 => case b:23 of {
-//│ 			C y:24 => (c^14 y:24)}}})
-//│ def p = [C [C p]]
-//│ def p^15 = [C [C p^15_p^1]]
-//│ def p^15_p^1 = [C [C p^15_p^1_p^1]]
-//│ def p^15_p^1_p^1 = [C [C p^15]]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 38: [C 37: p^15]
 //│ [C p^15] --->
 //│ 	case b:23 of {C y:24 => (c^14 y:24)}
-//│ 39: [C 38: [C 37: p^15]]
 //│ [C [C p^15]] --->
 //│ 	case a:22 of {C b:23 => case b:23 of {C y:24 => (c^14 y:24)}}
-//│ 41: [C 40: p^15_p^1_p^1]
 //│ [C p^15_p^1_p^1] --->
 //│ 	case x:21 of {C a:22 => case a:22 of {C b:23 => case b:23 of {C y:24 => (c^14 y:24)}}}
-//│ 42: [C 41: [C 40: p^15_p^1_p^1]]
 //│ [C [C p^15_p^1_p^1]] --->
 //│ 	case b:19 of {C y:20 => (c^14_c^7 y:20)}
-//│ 44: [C 43: p^15_p^1]
 //│ [C p^15_p^1] --->
 //│ 	case a:18 of {C b:19 => case b:19 of {C y:20 => (c^14_c^7 y:20)}}
-//│ 45: [C 44: [C 43: p^15_p^1]]
 //│ [C [C p^15_p^1]] --->
 //│ 	case x:17 of {C a:18 => case a:18 of {C b:19 => case b:19 of {C y:20 => (c^14_c^7 y:20)}}}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -263,11 +196,6 @@ c(id(p))
 //│ 	[-p^1 · -p^18 · +id^17 · +id2^12 · -id2^12 · -id^17 · +c^16 · +c^5 · +c^5]  --->  [-p^18 · +id^17 · +id2^12 · -id2^12 · -id^17 · +c^16]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [c^16 · c^5 · c^5] --> [c^16]
-//│ [p^18 · p^1] --> [p^18]
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [c^16]
 //│ 	[c^16 · c^5]
@@ -277,25 +205,9 @@ c(id(p))
 //│ 	[p^18 · p^1] ---> [p^18] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (c^16 (id p^18))
-//│ def c = (fun x:10 -> case x:10 of {
-//│ 	C a:11 => (c a:11)})
-//│ def c^16 = (fun x:19 -> case x:19 of {
-//│ 	C a:20 => (c^16_c^5 a:20)})
-//│ def c^16_c^5 = (fun x:17 -> case x:17 of {
-//│ 	C a:18 => (c^16 a:18)})
-//│ def id = (fun y:13 -> (id2 y:13))
-//│ def id2 = (fun yy:12 -> yy:12)
-//│ def p = [C [C p]]
-//│ def p^18 = [C [C p^18]]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 22: [C 21: p^18]
 //│ [C p^18] --->
 //│ 	case x:17 of {C a:18 => (c^16 a:18)}
-//│ 23: [C 22: [C 21: p^18]]
 //│ [C [C p^18]] --->
 //│ 	case x:19 of {C a:20 => (c^16_c^5 a:20)}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -343,13 +255,6 @@ sum(mapa(mapb(primitive)))
 //│ 	[+mapb^31 · +mapb^23 · +mapb^23]  --->  [+mapb^31 · +mapb^23]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [mapa^30 · mapa^13 · mapa^13] --> [mapa^30 · mapa^13]
-//│ [sum^29 · sum^3 · sum^3] --> [sum^29 · sum^3]
-//│ [mapb^31 · mapb^23 · mapb^23] --> [mapb^31 · mapb^23]
-//│ [] --> []
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [mapa^30]
 //│ 	[mapa^30 · mapa^13]
@@ -362,39 +267,13 @@ sum(mapa(mapb(primitive)))
 //│ 		[sum^29 · sum^3 · sum^3] ---> [sum^29 · sum^3] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (sum^29 (mapa^30 (mapb^31 primitive:3)))
-//│ def mapa = (fun lsa:12 -> case lsa:12 of {
-//│ 	C ha:13 ta:14 => [C (primitive:3 ha:13) (mapa ta:14)]})
-//│ def mapa^30 = (fun lsa:30 -> case lsa:30 of {
-//│ 	C ha:31 ta:32 => [C (primitive:3 ha:31) (mapa^30_mapa^13 ta:32)]})
-//│ def mapa^30_mapa^13 = (fun lsa:36 -> case lsa:36 of {
-//│ 	C ha:37 ta:38 => [C (primitive:3 ha:37) (mapa^30_mapa^13 ta:38)]})
-//│ def mapb = (fun lsb:15 -> case lsb:15 of {
-//│ 	C hb:16 tb:17 => [C (primitive:3 hb:16) (mapb tb:17)]})
-//│ def mapb^31 = (fun lsb:24 -> case lsb:24 of {
-//│ 	C hb:25 tb:26 => [C (primitive:3 hb:25) (mapb^31_mapb^23 tb:26)]})
-//│ def mapb^31_mapb^23 = (fun lsb:27 -> case lsb:27 of {
-//│ 	C hb:28 tb:29 => [C (primitive:3 hb:28) (mapb^31_mapb^23 tb:29)]})
-//│ def sum = (fun ls:9 -> case ls:9 of {
-//│ 	C h:10 t:11 => [S [N] (sum t:11)]})
-//│ def sum^29 = (fun ls:39 -> case ls:39 of {
-//│ 	C h:40 t:41 => [S [N] (sum^29_sum^3 t:41)]})
-//│ def sum^29_sum^3 = (fun ls:33 -> case ls:33 of {
-//│ 	C h:34 t:35 => [S [N] (sum^29_sum^3 t:35)]})
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 43: [C 39: (37: primitive 38: hb) 42: (40: mapb^31_mapb^23 41: tb)]
 //│ [C (primitive:3 hb:25) (mapb^31_mapb^23 tb:26)] --->
 //│ 	case lsa:30 of {C ha:31 ta:32 => [C (primitive:3 ha:31) (mapa^30_mapa^13 ta:32)]}
-//│ 53: [C 49: (47: primitive 48: hb) 52: (50: mapb^31_mapb^23 51: tb)]
 //│ [C (primitive:3 hb:28) (mapb^31_mapb^23 tb:29)] --->
 //│ 	case lsa:36 of {C ha:37 ta:38 => [C (primitive:3 ha:37) (mapa^30_mapa^13 ta:38)]}
-//│ 63: [C 59: (57: primitive 58: ha) 62: (60: mapa^30_mapa^13 61: ta)]
 //│ [C (primitive:3 ha:31) (mapa^30_mapa^13 ta:32)] --->
 //│ 	case ls:39 of {C h:40 t:41 => [S [N] (sum^29_sum^3 t:41)]}
-//│ 81: [C 77: (75: primitive 76: ha) 80: (78: mapa^30_mapa^13 79: ta)]
 //│ [C (primitive:3 ha:37) (mapa^30_mapa^13 ta:38)] --->
 //│ 	case ls:33 of {C h:34 t:35 => [S [N] (sum^29_sum^3 t:35)]}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -438,20 +317,11 @@ if C(A, B(C)) is
 //│ >>>>>>> knots >>>>>>>
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ 
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ case [C [A] [B [C]]] of {
-//│ 	C a:8 b:9 => [D b:9]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 11: [C 8: [A] 10: [B 9: [C]]]
 //│ [C [A] [B [C]]] --->
 //│ 	case [C [A] [B [C]]] of {C a:8 b:9 => [D b:9]}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -487,11 +357,6 @@ ca(p)
 //│ 	[-p^1 · -p^1 · -p^18 · +ca^17 · +cb^6 · +ca^12 · +cb^6 · +ca^12 · +cb^6 · +ca^12]  --->  [-p^18 · +ca^17]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [ca^17 · cb^6 · ca^12 · cb^6 · ca^12 · cb^6 · ca^12] --> [ca^17]
-//│ [p^18 · p^1 · p^1] --> [p^18]
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [ca^17]
 //│ 	[ca^17 · cb^6]
@@ -505,46 +370,17 @@ ca(p)
 //│ 		[p^18 · p^1 · p^1] ---> [p^18] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (ca^17 p^18)
-//│ def ca = (fun x:9 -> case x:9 of {
-//│ 	C a:10 => (cb a:10)})
-//│ def ca^17 = (fun x:31 -> case x:31 of {
-//│ 	C a:32 => (ca^17_cb^6 a:32)})
-//│ def ca^17_cb^6 = (fun x:25 -> case x:25 of {
-//│ 	C b:26 => (ca^17_cb^6_ca^12 b:26)})
-//│ def ca^17_cb^6_ca^12 = (fun x:29 -> case x:29 of {
-//│ 	C a:30 => (ca^17_cb^6_ca^12_cb^6 a:30)})
-//│ def ca^17_cb^6_ca^12_cb^6 = (fun x:23 -> case x:23 of {
-//│ 	C b:24 => (ca^17_cb^6_ca^12_cb^6_ca^12 b:24)})
-//│ def ca^17_cb^6_ca^12_cb^6_ca^12 = (fun x:27 -> case x:27 of {
-//│ 	C a:28 => (ca^17_cb^6_ca^12_cb^6_ca^12_cb^6 a:28)})
-//│ def ca^17_cb^6_ca^12_cb^6_ca^12_cb^6 = (fun x:21 -> case x:21 of {
-//│ 	C b:22 => (ca^17 b:22)})
-//│ def cb = (fun x:11 -> case x:11 of {
-//│ 	C b:12 => (ca b:12)})
-//│ def p = [C [C [C p]]]
-//│ def p^18 = [C [C [C p^18_p^1]]]
-//│ def p^18_p^1 = [C [C [C p^18]]]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 33: [C 32: p^18]
 //│ [C p^18] --->
 //│ 	case x:21 of {C b:22 => (ca^17 b:22)}
-//│ 34: [C 33: [C 32: p^18]]
 //│ [C [C p^18]] --->
 //│ 	case x:27 of {C a:28 => (ca^17_cb^6_ca^12_cb^6_ca^12_cb^6 a:28)}
-//│ 35: [C 34: [C 33: [C 32: p^18]]]
 //│ [C [C [C p^18]]] --->
 //│ 	case x:23 of {C b:24 => (ca^17_cb^6_ca^12_cb^6_ca^12 b:24)}
-//│ 37: [C 36: p^18_p^1]
 //│ [C p^18_p^1] --->
 //│ 	case x:29 of {C a:30 => (ca^17_cb^6_ca^12_cb^6 a:30)}
-//│ 38: [C 37: [C 36: p^18_p^1]]
 //│ [C [C p^18_p^1]] --->
 //│ 	case x:25 of {C b:26 => (ca^17_cb^6_ca^12 b:26)}
-//│ 39: [C 38: [C 37: [C 36: p^18_p^1]]]
 //│ [C [C [C p^18_p^1]]] --->
 //│ 	case x:31 of {C a:32 => (ca^17_cb^6 a:32)}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -612,11 +448,6 @@ c1(p1)
 //│ 	[-p1^17 · -p2^13 · -p1^20 · +c1^19 · +c2^2 · +c1^8 · +c2^2 · +c1^8 · +c2^2]  --->  [-p1^20 · +c1^19 · +c2^2]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [c1^19 · c2^2 · c1^8 · c2^2 · c1^8 · c2^2] --> [c1^19 · c2^2]
-//│ [p1^20 · p2^13 · p1^17] --> [p1^20]
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [c1^19]
 //│ 	[c1^19 · c2^2]
@@ -629,41 +460,15 @@ c1(p1)
 //│ 		[p1^20 · p2^13 · p1^17] ---> [p1^20] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (c1^19 p1^20)
-//│ def c1 = (fun x1:10 -> case x1:10 of {
-//│ 	C a:11 => (c2 a:11)})
-//│ def c1^19 = (fun x1:23 -> case x1:23 of {
-//│ 	C a:24 => (c1^19_c2^2 a:24)})
-//│ def c1^19_c2^2 = (fun x2:21 -> case x2:21 of {
-//│ 	C b:22 => (c1^19_c2^2_c1^8 b:22)})
-//│ def c1^19_c2^2_c1^8 = (fun x1:27 -> case x1:27 of {
-//│ 	C a:28 => (c1^19_c2^2_c1^8_c2^2 a:28)})
-//│ def c1^19_c2^2_c1^8_c2^2 = (fun x2:25 -> case x2:25 of {
-//│ 	C b:26 => (c1^19_c2^2_c1^8_c2^2_c1^8 b:26)})
-//│ def c1^19_c2^2_c1^8_c2^2_c1^8 = (fun x1:29 -> case x1:29 of {
-//│ 	C a:30 => (c1^19_c2^2 a:30)})
-//│ def c2 = (fun x2:12 -> case x2:12 of {
-//│ 	C b:13 => (c1 b:13)})
-//│ def p1 = [C [C [C p2]]]
-//│ def p1^20 = [C [C [C p1^20_p2^13]]]
-//│ def p1^20_p2^13 = [C p1^20]
-//│ def p2 = [C p1]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 29: [C 28: p1^20_p2^13]
 //│ [C p1^20_p2^13] --->
 //│ 	case x1:27 of {C a:28 => (c1^19_c2^2_c1^8_c2^2 a:28)}
-//│ 30: [C 29: [C 28: p1^20_p2^13]]
 //│ [C [C p1^20_p2^13]] --->
 //│ 	case x2:21 of {C b:22 => (c1^19_c2^2_c1^8 b:22)}
-//│ 31: [C 30: [C 29: [C 28: p1^20_p2^13]]]
 //│ [C [C [C p1^20_p2^13]]] --->
 //│ 	case x1:23 of {C a:24 => (c1^19_c2^2 a:24)}
 //│ 	case x1:29 of {C a:30 => (c1^19_c2^2 a:30)}
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ 33: [C 32: p1^20]
 //│ [C p1^20] --->
 //│ 	case x2:25 of {C b:26 => (c1^19_c2^2_c1^8_c2^2_c1^8 b:26)}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -721,11 +526,6 @@ map(l)
 //│ 	[-l^26 · +map^25 · +map^11 · +map^11 · +map^11 · +map^11]  --->  [-l^26 · +map^25 · +map^11 · +map^11 · +map^11]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [map^25 · map^11 · map^11 · map^11 · map^11] --> [map^25 · map^11 · map^11 · map^11]
-//│ [l^26] --> [l^26]
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [l^26]
 //│ [map^25]
@@ -739,51 +539,19 @@ map(l)
 //│ 	[map^25 · ff^8] ---> [ff^8] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (map^25 l^26)
-//│ def ff = (fun x:9 -> case x:9 of {
-//│ 	K => [T]
-//│ 	| KK => [TT]
-//│ 	| KKKK => [TTTT]})
-//│ def l = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ def l^26 = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ def map = (fun ls:10 -> case ls:10 of {
-//│ 	C h:11 t:12 => [C (ff h:11) (map t:12)]
-//│ 	| N => [N]})
-//│ def map^25 = (fun ls:18 -> case ls:18 of {
-//│ 	C h:19 t:20 => [C (ff h:19) (map^25_map^11 t:20)]
-//│ 	| N => [N]})
-//│ def map^25_map^11 = (fun ls:21 -> case ls:21 of {
-//│ 	C h:22 t:23 => [C (ff h:22) (map^25_map^11_map^11 t:23)]
-//│ 	| N => [N]})
-//│ def map^25_map^11_map^11 = (fun ls:24 -> case ls:24 of {
-//│ 	C h:25 t:26 => [C (ff h:25) (map^25_map^11_map^11_map^11 t:26)]
-//│ 	| N => [N]})
-//│ def map^25_map^11_map^11_map^11 = (fun ls:27 -> case ls:27 of {
-//│ 	C h:28 t:29 => [C (ff h:28) (map^25_map^11_map^11_map^11 t:29)]
-//│ 	| N => [N]})
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 39: [K]
 //│ [K] --->
 //│ 	case x:9 of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ 40: [KK]
 //│ [KK] --->
 //│ 	case x:9 of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ 41: [KKKK]
 //│ [KKKK] --->
 //│ 	case x:9 of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ 42: [N]
 //│ [N] --->
 //│ 	case ls:27 of {C h:28 t:29 => [C (ff h:28) (map^25_map^11_map^11_map^11 t:29)] | N => [N]}
-//│ 43: [C 41: [KKKK] 42: [N]]
 //│ [C [KKKK] [N]] --->
 //│ 	case ls:24 of {C h:25 t:26 => [C (ff h:25) (map^25_map^11_map^11_map^11 t:26)] | N => [N]}
-//│ 44: [C 40: [KK] 43: [C 41: [KKKK] 42: [N]]]
 //│ [C [KK] [C [KKKK] [N]]] --->
 //│ 	case ls:21 of {C h:22 t:23 => [C (ff h:22) (map^25_map^11_map^11 t:23)] | N => [N]}
-//│ 45: [C 39: [K] 44: [C 40: [KK] 43: [C 41: [KKKK] 42: [N]]]]
 //│ [C [K] [C [KK] [C [KKKK] [N]]]] --->
 //│ 	case ls:18 of {C h:19 t:20 => [C (ff h:19) (map^25_map^11 t:20)] | N => [N]}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -841,11 +609,6 @@ map(l)
 //│ 	[-l^22 · +map^21 · +map^7 · +map^7 · +map^7 · +map^7]  --->  [-l^22 · +map^21 · +map^7 · +map^7 · +map^7]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [map^21 · map^7 · map^7 · map^7 · map^7] --> [map^21 · map^7 · map^7 · map^7]
-//│ [l^22] --> [l^22]
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [l^22]
 //│ [map^21]
@@ -855,62 +618,19 @@ map(l)
 //│ 				[map^21 · map^7 · map^7 · map^7 · map^7] ---> [map^21 · map^7 · map^7 · map^7] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (map^21 l^22)
-//│ def l = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ def l^22 = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ def map = (fun ls:8 -> case ls:8 of {
-//│ 	C h:9 t:10 => [C case h:9 of {
-//│ 		K => [T]
-//│ 		| KK => [TT]
-//│ 		| KKKK => [TTTT]} (map t:10)]
-//│ 	| N => [N]})
-//│ def map^21 = (fun ls:22 -> case ls:22 of {
-//│ 	C h:23 t:24 => [C case h:23 of {
-//│ 		K => [T]
-//│ 		| KK => [TT]
-//│ 		| KKKK => [TTTT]} (map^21_map^7 t:24)]
-//│ 	| N => [N]})
-//│ def map^21_map^7 = (fun ls:19 -> case ls:19 of {
-//│ 	C h:20 t:21 => [C case h:20 of {
-//│ 		K => [T]
-//│ 		| KK => [TT]
-//│ 		| KKKK => [TTTT]} (map^21_map^7_map^7 t:21)]
-//│ 	| N => [N]})
-//│ def map^21_map^7_map^7 = (fun ls:25 -> case ls:25 of {
-//│ 	C h:26 t:27 => [C case h:26 of {
-//│ 		K => [T]
-//│ 		| KK => [TT]
-//│ 		| KKKK => [TTTT]} (map^21_map^7_map^7_map^7 t:27)]
-//│ 	| N => [N]})
-//│ def map^21_map^7_map^7_map^7 = (fun ls:16 -> case ls:16 of {
-//│ 	C h:17 t:18 => [C case h:17 of {
-//│ 		K => [T]
-//│ 		| KK => [TT]
-//│ 		| KKKK => [TTTT]} (map^21_map^7_map^7_map^7 t:18)]
-//│ 	| N => [N]})
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 76: [K]
 //│ [K] --->
 //│ 	case h:23 of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ 77: [KK]
 //│ [KK] --->
 //│ 	case h:20 of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ 78: [KKKK]
 //│ [KKKK] --->
 //│ 	case h:26 of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ 79: [N]
 //│ [N] --->
 //│ 	case ls:16 of {C h:17 t:18 => [C case h:17 of {K => [T] | KK => [TT] | KKKK => [TTTT]} (map^21_map^7_map^7_map^7 t:18)] | N => [N]}
-//│ 80: [C 78: [KKKK] 79: [N]]
 //│ [C [KKKK] [N]] --->
 //│ 	case ls:25 of {C h:26 t:27 => [C case h:26 of {K => [T] | KK => [TT] | KKKK => [TTTT]} (map^21_map^7_map^7_map^7 t:27)] | N => [N]}
-//│ 81: [C 77: [KK] 80: [C 78: [KKKK] 79: [N]]]
 //│ [C [KK] [C [KKKK] [N]]] --->
 //│ 	case ls:19 of {C h:20 t:21 => [C case h:20 of {K => [T] | KK => [TT] | KKKK => [TTTT]} (map^21_map^7_map^7 t:21)] | N => [N]}
-//│ 82: [C 76: [K] 81: [C 77: [KK] 80: [C 78: [KKKK] 79: [N]]]]
 //│ [C [K] [C [KK] [C [KKKK] [N]]]] --->
 //│ 	case ls:22 of {C h:23 t:24 => [C case h:23 of {K => [T] | KK => [TT] | KKKK => [TTTT]} (map^21_map^7 t:24)] | N => [N]}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -984,23 +704,6 @@ sum(mapa(mapb(primitive)))
 //│ 	[-mapb^34 · +mapa^33 · +mapa^14 · +mapa^14]  --->  [-mapb^34 · +mapa^33 · +mapa^14]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [mapa^33 · mapa^14 · mapa^14 · mapa^14] --> [mapa^33 · mapa^14 · mapa^14]
-//│ [mapb^34 · mapb^25 · mapb^25] --> [mapb^34 · mapb^25]
-//│ 	[mapb^34 · mapb^25 · mapb^25]
-//│ 	!!MORE THAN ONE MATCH
-//│ [sum^32 · sum^3 · sum^3 · sum^3] --> [sum^32 · sum^3 · sum^3]
-//│ [sum^32 · sum^3 · sum^3] --> [sum^32 · sum^3]
-//│ [mapa^33 · mapa^14 · mapa^14] --> [mapa^33 · mapa^14 · mapa^14]
-//│ 	[mapa^33 · mapa^14]
-//│ 	!!MORE THAN ONE MATCH
-//│ [mapa^33 · mapa^14] --> [mapa^33 · mapa^14]
-//│ [mapa^33] --> [mapa^33]
-//│ [mapb^34 · mapb^25] --> [mapb^34 · mapb^25]
-//│ [mapb^34] --> [mapb^34]
-//│ [] --> []
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [mapa^33]
 //│ 	[mapa^33 · mapa^14]
@@ -1013,60 +716,21 @@ sum(mapa(mapb(primitive)))
 //│ 		[sum^32 · sum^3 · sum^3] ---> [sum^32 · sum^3] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (sum^32 (mapa^33 (mapb^34 primitive:3)))
-//│ def mapa = (fun lsa:12 -> case lsa:12 of {
-//│ 	C ha:13 ta:14 => [C (primitive:3 ha:13) (mapa ta:14)]
-//│ 	| N => [N]})
-//│ def mapa^33 = (fun lsa:36 -> case lsa:36 of {
-//│ 	C ha:37 ta:38 => [C (primitive:3 ha:37) (mapa^33_mapa^14 ta:38)]
-//│ 	| N => [N]})
-//│ def mapa^33_mapa^14 = (fun lsa:24 -> case lsa:24 of {
-//│ 	C ha:25 ta:26 => [C (primitive:3 ha:25) (mapa^33_mapa^14 ta:26)]
-//│ 	| N => [N]})
-//│ def mapb = (fun lsb:15 -> case lsb:15 of {
-//│ 	C hb:16 tb:17 => [C (primitive:3 hb:16) (mapb tb:17)]
-//│ 	| N => [N]})
-//│ def mapb^34 = (fun lsb:27 -> case lsb:27 of {
-//│ 	C hb:28 tb:29 => [C (primitive:3 hb:28) (mapb^34_mapb^25 tb:29)]
-//│ 	| N => [N]})
-//│ def mapb^34_mapb^25 = (fun lsb:33 -> case lsb:33 of {
-//│ 	C hb:34 tb:35 => [C (primitive:3 hb:34) (mapb^34_mapb^25 tb:35)]
-//│ 	| N => [N]})
-//│ def sum = (fun ls:9 -> case ls:9 of {
-//│ 	C h:10 t:11 => [S [N] (sum t:11)]
-//│ 	| N => [N]})
-//│ def sum^32 = (fun ls:39 -> case ls:39 of {
-//│ 	C h:40 t:41 => [S [N] (sum^32_sum^3 t:41)]
-//│ 	| N => [N]})
-//│ def sum^32_sum^3 = (fun ls:30 -> case ls:30 of {
-//│ 	C h:31 t:32 => [S [N] (sum^32_sum^3 t:32)]
-//│ 	| N => [N]})
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 46: [C 42: (40: primitive 41: ha) 45: (43: mapa^33_mapa^14 44: ta)]
 //│ [C (primitive:3 ha:25) (mapa^33_mapa^14 ta:26)] --->
 //│ 	case ls:30 of {C h:31 t:32 => [S [N] (sum^32_sum^3 t:32)] | N => [N]}
-//│ 47: [N]
 //│ [N] --->
 //│ 	case ls:30 of {C h:31 t:32 => [S [N] (sum^32_sum^3 t:32)] | N => [N]}
-//│ 57: [C 53: (51: primitive 52: hb) 56: (54: mapb^34_mapb^25 55: tb)]
 //│ [C (primitive:3 hb:28) (mapb^34_mapb^25 tb:29)] --->
 //│ 	case lsa:36 of {C ha:37 ta:38 => [C (primitive:3 ha:37) (mapa^33_mapa^14 ta:38)] | N => [N]}
-//│ 58: [N]
 //│ [N] --->
 //│ 	case lsa:36 of {C ha:37 ta:38 => [C (primitive:3 ha:37) (mapa^33_mapa^14 ta:38)] | N => [N]}
-//│ 77: [C 73: (71: primitive 72: hb) 76: (74: mapb^34_mapb^25 75: tb)]
 //│ [C (primitive:3 hb:34) (mapb^34_mapb^25 tb:35)] --->
 //│ 	case lsa:24 of {C ha:25 ta:26 => [C (primitive:3 ha:25) (mapa^33_mapa^14 ta:26)] | N => [N]}
-//│ 78: [N]
 //│ [N] --->
 //│ 	case lsa:24 of {C ha:25 ta:26 => [C (primitive:3 ha:25) (mapa^33_mapa^14 ta:26)] | N => [N]}
-//│ 88: [C 84: (82: primitive 83: ha) 87: (85: mapa^33_mapa^14 86: ta)]
 //│ [C (primitive:3 ha:37) (mapa^33_mapa^14 ta:38)] --->
 //│ 	case ls:39 of {C h:40 t:41 => [S [N] (sum^32_sum^3 t:41)] | N => [N]}
-//│ 89: [N]
 //│ [N] --->
 //│ 	case ls:39 of {C h:40 t:41 => [S [N] (sum^32_sum^3 t:41)] | N => [N]}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -1124,11 +788,6 @@ main(c)
 //│ 	[-p^1 · -p^10 · -main^13 · +c^14 · +c^4]  --->  [-p^10 · -main^13 · +c^14]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [c^14 · c^4] --> [c^14]
-//│ [main^13 · p^10 · p^1] --> [main^13 · p^10]
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [c^14]
 //│ 	[c^14 · c^4] ---> [c^14] (only one)
@@ -1137,20 +796,7 @@ main(c)
 //│ 		[main^13 · p^10 · p^1] ---> [main^13 · p^10] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (main^13 c^14)
-//│ def c = (fun x:9 -> case x:9 of {
-//│ 	C a:10 => (c a:10)})
-//│ def c^14 = (fun x:15 -> case x:15 of {
-//│ 	C a:16 => (c^14 a:16)})
-//│ def main = (fun cc:11 -> (cc:11 p))
-//│ def main^13 = (fun cc:17 -> (cc:17 main^13_p^10))
-//│ def main^13_p^10 = [C main^13_p^10]
-//│ def p = [C p]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 17: [C 16: main^13_p^10]
 //│ [C main^13_p^10] --->
 //│ 	case x:15 of {C a:16 => (c^14 a:16)}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -1193,11 +839,6 @@ main(p)
 //│ 	[-p^1 · -p^1 · -p^1 · -p^18 · +main^17 · +c^11 · +c^4]  --->  [-p^1 · -p^1 · -p^18 · +main^17 · +c^11]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [main^17 · c^11 · c^4] --> [main^17 · c^11]
-//│ [p^18 · p^1 · p^1 · p^1] --> [p^18 · p^1 · p^1]
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [main^17]
 //│ 	[main^17 · c^11]
@@ -1208,32 +849,11 @@ main(p)
 //│ 			[p^18 · p^1 · p^1 · p^1] ---> [p^18 · p^1 · p^1] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (main^17 p^18)
-//│ def c = (fun x:9 -> case x:9 of {
-//│ 	C a:10 => (c a:10)})
-//│ def main = (fun pp:11 -> case pp:11 of {
-//│ 	C b:12 => case b:12 of {
-//│ 		C d:13 => (c d:13)}})
-//│ def main^17 = (fun pp:19 -> case pp:19 of {
-//│ 	C b:20 => case b:20 of {
-//│ 		C d:21 => (main^17_c^11 d:21)}})
-//│ def main^17_c^11 = (fun x:22 -> case x:22 of {
-//│ 	C a:23 => (main^17_c^11 a:23)})
-//│ def p = [C p]
-//│ def p^18 = [C p^18_p^1]
-//│ def p^18_p^1 = [C p^18_p^1_p^1]
-//│ def p^18_p^1_p^1 = [C p^18_p^1_p^1]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 21: [C 20: p^18_p^1_p^1]
 //│ [C p^18_p^1_p^1] --->
 //│ 	case b:20 of {C d:21 => (main^17_c^11 d:21)}
-//│ 23: [C 22: p^18_p^1]
 //│ [C p^18_p^1] --->
 //│ 	case pp:19 of {C b:20 => case b:20 of {C d:21 => (main^17_c^11 d:21)}}
-//│ 33: [C 32: p^18_p^1_p^1]
 //│ [C p^18_p^1_p^1] --->
 //│ 	case x:22 of {C a:23 => (main^17_c^11 a:23)}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -1277,11 +897,6 @@ main(c, p)
 //│ 	[-p^1 · -p^17 · +main^14 · -main^14 · +c^15 · +c^4]  --->  [-p^17 · +main^14 · -main^14 · +c^15]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [c^15 · c^4] --> [c^15]
-//│ [p^17 · p^1] --> [p^17]
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [c^15]
 //│ 	[c^15 · c^4] ---> [c^15] (only one)
@@ -1290,19 +905,7 @@ main(c, p)
 //│ 	[p^17 · p^1] ---> [p^17] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ ((main c^15) p^17)
-//│ def c = (fun x:9 -> case x:9 of {
-//│ 	C a:10 => (c a:10)})
-//│ def c^15 = (fun x:15 -> case x:15 of {
-//│ 	C a:16 => (c^15 a:16)})
-//│ def main = (fun cc:11 -> (fun pp:12 -> (cc:11 pp:12)))
-//│ def p = [C p]
-//│ def p^17 = [C p^17]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 26: [C 25: p^17]
 //│ [C p^17] --->
 //│ 	case x:15 of {C a:16 => (c^15 a:16)}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -1345,11 +948,6 @@ a(p)
 //│ 	[-p^26 · -p^26 · -p^29 · +a^28 · +b^7 · +c^11 · +d^15 · -d^15 · +cons^16 · +cons^2 · +cons^2]  --->  [-p^26 · -p^29 · +a^28 · +b^7 · +c^11 · +d^15 · -d^15 · +cons^16 · +cons^2]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [a^28 · b^7 · c^11 · cons^16 · cons^2 · cons^2] --> [a^28 · b^7 · c^11 · cons^16 · cons^2]
-//│ [p^29 · p^26 · p^26] --> [p^29 · p^26]
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [a^28]
 //│ 	[a^28 · b^7]
@@ -1363,33 +961,11 @@ a(p)
 //│ 		[p^29 · p^26 · p^26] ---> [p^29 · p^26] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (a^28 p^29)
-//│ def a = (fun x:12 -> (b x:12))
-//│ def a^28 = (fun x:32 -> (a^28_b^7 x:32))
-//│ def a^28_b^7 = (fun x:27 -> (a^28_b^7_c^11 x:27))
-//│ def a^28_b^7_c^11 = (fun x:26 -> ((d a^28_b^7_c^11_cons^16) x:26))
-//│ def a^28_b^7_c^11_cons^16 = (fun y:30 -> case y:30 of {
-//│ 	C aa:31 => (a^28_b^7_c^11_cons^16_cons^2 aa:31)})
-//│ def a^28_b^7_c^11_cons^16_cons^2 = (fun y:28 -> case y:28 of {
-//│ 	C aa:29 => (a^28_b^7_c^11_cons^16_cons^2 aa:29)})
-//│ def b = (fun x:15 -> (c x:15))
-//│ def c = (fun x:16 -> ((d cons) x:16))
-//│ def cons = (fun y:13 -> case y:13 of {
-//│ 	C aa:14 => (cons aa:14)})
-//│ def d = (fun cc:17 -> (fun x:18 -> (cc:17 x:18)))
-//│ def p = [C p]
-//│ def p^29 = [C p^29_p^26]
-//│ def p^29_p^26 = [C p^29_p^26]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 54: [C 53: p^29_p^26]
 //│ [C p^29_p^26] --->
 //│ 	case y:13 of {C aa:14 => (cons aa:14)}
 //│ 	case y:30 of {C aa:31 => (a^28_b^7_c^11_cons^16_cons^2 aa:31)}
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ 56: [C 55: p^29_p^26]
 //│ [C p^29_p^26] --->
 //│ 	case y:28 of {C aa:29 => (a^28_b^7_c^11_cons^16_cons^2 aa:29)}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -1431,23 +1007,12 @@ c(p)
 //│ >>>>>>> knots >>>>>>>
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [c^10] ---> [c^10] (hopeless to continue)
 //│ [p^11] ---> [p^11] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (c p)
-//│ def c = (fun x:8 -> case [C x:8] of {
-//│ 	C a:9 => (c a:9)})
-//│ def p = [C [N]]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 7: [C 6: x]
 //│ [C x:8] --->
 //│ 	case [C x:8] of {C a:9 => (c a:9)}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -1500,11 +1065,6 @@ c2(id(main))
 //│ 	[-p^1 · -p^1 · -p^18 · +c^17 · -c^17 · -main^27 · +id^26 · +c1^20 · -c1^20 · -id^26 · +c2^25 · +c2^12]  --->  [-p^1 · -p^18 · +c^17 · -c^17 · -main^27 · +id^26 · +c1^20 · -c1^20 · -id^26 · +c2^25]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [c2^25 · c2^12] --> [c2^25]
-//│ [main^27 · p^18 · p^1 · p^1] --> [main^27 · p^18 · p^1]
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [c2^25]
 //│ 	[c2^25 · c2^12] ---> [c2^25] (only one)
@@ -1516,37 +1076,15 @@ c2(id(main))
 //│ 			[main^27 · p^18 · p^1 · p^1] ---> [main^27 · p^18 · p^1] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (c2^25 (id main^27))
-//│ def c = (fun x:17 -> case x:17 of {
-//│ 	C a:18 => a:18})
-//│ def c1 = (fun xx:13 -> case xx:13 of {
-//│ 	C aa:14 => aa:14})
-//│ def c2 = (fun z:15 -> case z:15 of {
-//│ 	C b:16 => (c2 b:16)})
-//│ def c2^25 = (fun z:23 -> case z:23 of {
-//│ 	C b:24 => (c2^25 b:24)})
-//│ def id = (fun y:12 -> (c1 [C y:12]))
-//│ def main = (c p)
-//│ def main^27 = (c main^27_p^18)
-//│ def main^27_p^18 = [C main^27_p^18_p^1]
-//│ def main^27_p^18_p^1 = [C main^27_p^18_p^1]
-//│ def p = [C p]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 25: [C 24: p]
 //│ [C p] --->
 //│ 	case x:17 of {C a:18 => a:18}
 //│ 	case z:23 of {C b:24 => (c2^25 b:24)}
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ 37: [C 36: main^27_p^18_p^1]
 //│ [C main^27_p^18_p^1] --->
 //│ 	case x:17 of {C a:18 => a:18}
-//│ 42: [C 41: main^27_p^18_p^1]
 //│ [C main^27_p^18_p^1] --->
 //│ 	case z:23 of {C b:24 => (c2^25 b:24)}
-//│ 8: [C 7: y]
 //│ [C y:12] --->
 //│ 	case xx:13 of {C aa:14 => aa:14}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -1617,26 +1155,6 @@ c(t)
 //│ 	[-t^27 · +c^26 · +c^16 · +c^19 · +c^16 · +c^19]  --->  [-t^27 · +c^26 · +c^16 · +c^19 · +c^16]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [c^26 · c^16 · c^19 · c^19 · c^16] --> [c^26 · c^16 · c^19 · c^19]
-//│ [c^26 · c^19 · c^19 · c^16 · c^19] --> [c^26 · c^19 · c^19 · c^16]
-//│ [c^26 · c^19 · c^19 · c^19 · c^16] --> [c^26 · c^19 · c^19 · c^19]
-//│ [c^26 · c^19 · c^16 · c^16 · c^19] --> [c^26 · c^19 · c^16 · c^16]
-//│ [c^26 · c^16 · c^19 · c^16 · c^19] --> [c^26 · c^16 · c^19 · c^16]
-//│ [c^26 · c^16 · c^16 · c^16 · c^19] --> [c^26 · c^16 · c^16 · c^16]
-//│ [c^26 · c^16 · c^16 · c^19 · c^16] --> [c^26 · c^16 · c^16 · c^19]
-//│ [c^26 · c^19 · c^16 · c^19 · c^16] --> [c^26 · c^19 · c^16 · c^19]
-//│ [c^26 · c^16 · c^19 · c^16] --> [c^26 · c^16 · c^19]
-//│ [c^26 · c^16 · c^19 · c^19] --> [c^26 · c^16 · c^19]
-//│ [c^26 · c^19 · c^16 · c^19] --> [c^26 · c^19 · c^16]
-//│ [c^26 · c^19 · c^19 · c^16] --> [c^26 · c^19 · c^19]
-//│ [c^26 · c^19 · c^19 · c^19] --> [c^26 · c^19 · c^19]
-//│ [c^26 · c^16 · c^16 · c^19] --> [c^26 · c^16 · c^16]
-//│ [c^26 · c^19 · c^16 · c^16] --> [c^26 · c^19 · c^16]
-//│ [c^26 · c^16 · c^16 · c^16] --> [c^26 · c^16 · c^16]
-//│ [t^27] --> [t^27]
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [c^26]
 //│ 	[c^26 · c^16]
@@ -1656,81 +1174,25 @@ c(t)
 //│ [t^27]
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (c^26 t^27)
-//│ def c = (fun x:8 -> case x:8 of {
-//│ 	T n:9 l:10 r:11 => [T case n:9 of {
-//│ 		K => [KK]
-//│ 		| N => [NN]} (c l:10) (c r:11)]
-//│ 	| L => [LL]})
-//│ def c^26 = (fun x:20 -> case x:20 of {
-//│ 	T n:21 l:22 r:23 => [T case n:21 of {
-//│ 		K => [KK]
-//│ 		| N => [NN]} (c^26_c^16 l:22) (c^26_c^19 r:23)]
-//│ 	| L => [LL]})
-//│ def c^26_c^16 = (fun x:32 -> case x:32 of {
-//│ 	T n:33 l:34 r:35 => [T case n:33 of {
-//│ 		K => [KK]
-//│ 		| N => [NN]} (c^26_c^16_c^16 l:34) (c^26_c^16_c^19 r:35)]
-//│ 	| L => [LL]})
-//│ def c^26_c^16_c^16 = (fun x:28 -> case x:28 of {
-//│ 	T n:29 l:30 r:31 => [T case n:29 of {
-//│ 		K => [KK]
-//│ 		| N => [NN]} (c^26_c^16_c^16 l:30) (c^26_c^16_c^16 r:31)]
-//│ 	| L => [LL]})
-//│ def c^26_c^16_c^19 = (fun x:40 -> case x:40 of {
-//│ 	T n:41 l:42 r:43 => [T case n:41 of {
-//│ 		K => [KK]
-//│ 		| N => [NN]} (c^26_c^16_c^19 l:42) (c^26_c^16_c^19 r:43)]
-//│ 	| L => [LL]})
-//│ def c^26_c^19 = (fun x:36 -> case x:36 of {
-//│ 	T n:37 l:38 r:39 => [T case n:37 of {
-//│ 		K => [KK]
-//│ 		| N => [NN]} (c^26_c^19_c^16 l:38) (c^26_c^19_c^19 r:39)]
-//│ 	| L => [LL]})
-//│ def c^26_c^19_c^16 = (fun x:24 -> case x:24 of {
-//│ 	T n:25 l:26 r:27 => [T case n:25 of {
-//│ 		K => [KK]
-//│ 		| N => [NN]} (c^26_c^19_c^16 l:26) (c^26_c^19_c^16 r:27)]
-//│ 	| L => [LL]})
-//│ def c^26_c^19_c^19 = (fun x:44 -> case x:44 of {
-//│ 	T n:45 l:46 r:47 => [T case n:45 of {
-//│ 		K => [KK]
-//│ 		| N => [NN]} (c^26_c^19_c^19 l:46) (c^26_c^19_c^19 r:47)]
-//│ 	| L => [LL]})
-//│ def t = [T [K] [T [N] [L] [L]] [T [N] [L] [L]]]
-//│ def t^27 = [T [K] [T [N] [L] [L]] [T [N] [L] [L]]]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 59: [K]
 //│ [K] --->
 //│ 	case n:21 of {K => [KK] | N => [NN]}
-//│ 60: [N]
 //│ [N] --->
 //│ 	case n:33 of {K => [KK] | N => [NN]}
-//│ 61: [L]
 //│ [L] --->
 //│ 	case x:28 of {T n:29 l:30 r:31 => [T case n:29 of {K => [KK] | N => [NN]} (c^26_c^16_c^16 l:30) (c^26_c^16_c^16 r:31)] | L => [LL]}
-//│ 62: [L]
 //│ [L] --->
 //│ 	case x:40 of {T n:41 l:42 r:43 => [T case n:41 of {K => [KK] | N => [NN]} (c^26_c^16_c^19 l:42) (c^26_c^16_c^19 r:43)] | L => [LL]}
-//│ 63: [T 60: [N] 61: [L] 62: [L]]
 //│ [T [N] [L] [L]] --->
 //│ 	case x:32 of {T n:33 l:34 r:35 => [T case n:33 of {K => [KK] | N => [NN]} (c^26_c^16_c^16 l:34) (c^26_c^16_c^19 r:35)] | L => [LL]}
-//│ 64: [N]
 //│ [N] --->
 //│ 	case n:37 of {K => [KK] | N => [NN]}
-//│ 65: [L]
 //│ [L] --->
 //│ 	case x:24 of {T n:25 l:26 r:27 => [T case n:25 of {K => [KK] | N => [NN]} (c^26_c^19_c^16 l:26) (c^26_c^19_c^16 r:27)] | L => [LL]}
-//│ 66: [L]
 //│ [L] --->
 //│ 	case x:44 of {T n:45 l:46 r:47 => [T case n:45 of {K => [KK] | N => [NN]} (c^26_c^19_c^19 l:46) (c^26_c^19_c^19 r:47)] | L => [LL]}
-//│ 67: [T 64: [N] 65: [L] 66: [L]]
 //│ [T [N] [L] [L]] --->
 //│ 	case x:36 of {T n:37 l:38 r:39 => [T case n:37 of {K => [KK] | N => [NN]} (c^26_c^19_c^16 l:38) (c^26_c^19_c^19 r:39)] | L => [LL]}
-//│ 68: [T 59: [K] 63: [T 60: [N] 61: [L] 62: [L]] 67: [T 64: [N] 65: [L] 66: [L]]]
 //│ [T [K] [T [N] [L] [L]] [T [N] [L] [L]]] --->
 //│ 	case x:20 of {T n:21 l:22 r:23 => [T case n:21 of {K => [KK] | N => [NN]} (c^26_c^16 l:22) (c^26_c^19 r:23)] | L => [LL]}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -1815,27 +1277,6 @@ c(t)
 //│ 	[-bb^11 · -t^29 · +c^28 · +c^21 · +c^18 · +c^21 · +c^18]  --->  [-bb^11 · -t^29 · +c^28 · +c^21 · +c^18 · +c^21]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [c^28 · c^18 · c^21 · c^18 · c^21] --> [c^28 · c^18 · c^21 · c^18]
-//│ [c^28 · c^21 · c^21 · c^21 · c^18] --> [c^28 · c^21 · c^21 · c^21]
-//│ [c^28 · c^18 · c^21 · c^21 · c^18] --> [c^28 · c^18 · c^21 · c^21]
-//│ [c^28 · c^18 · c^18 · c^18 · c^21] --> [c^28 · c^18 · c^18 · c^18]
-//│ [c^28 · c^21 · c^18 · c^21 · c^18] --> [c^28 · c^21 · c^18 · c^21]
-//│ [c^28 · c^18 · c^18 · c^21 · c^18] --> [c^28 · c^18 · c^18 · c^21]
-//│ [c^28 · c^21 · c^18 · c^18 · c^21] --> [c^28 · c^21 · c^18 · c^18]
-//│ [c^28 · c^21 · c^21 · c^18 · c^21] --> [c^28 · c^21 · c^21 · c^18]
-//│ [c^28 · c^18 · c^18 · c^18] --> [c^28 · c^18 · c^18]
-//│ [c^28 · c^21 · c^21 · c^21] --> [c^28 · c^21 · c^21]
-//│ [c^28 · c^18 · c^18 · c^21] --> [c^28 · c^18 · c^18]
-//│ [c^28 · c^18 · c^21 · c^21] --> [c^28 · c^18 · c^21]
-//│ [c^28 · c^21 · c^18 · c^21] --> [c^28 · c^21 · c^18]
-//│ [c^28 · c^21 · c^21 · c^18] --> [c^28 · c^21 · c^21]
-//│ [c^28 · c^21 · c^18 · c^18] --> [c^28 · c^21 · c^18]
-//│ [c^28 · c^18 · c^21 · c^18] --> [c^28 · c^18 · c^21]
-//│ [t^29 · aa^10] --> [t^29 · aa^10]
-//│ [t^29 · bb^11] --> [t^29 · bb^11]
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [c^28]
 //│ 	[c^28 · c^21]
@@ -1857,85 +1298,25 @@ c(t)
 //│ 	[t^29 · aa^10]
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (c^28 t^29)
-//│ def aa = [T [N] [L] [L]]
-//│ def bb = [T [N] [L] [L]]
-//│ def c = (fun x:10 -> case x:10 of {
-//│ 	T n:11 l:12 r:13 => [T case n:11 of {
-//│ 		K => [KK]
-//│ 		| N => [NN]} (c l:12) (c r:13)]
-//│ 	| L => [LL]})
-//│ def c^28 = (fun x:40 -> case x:40 of {
-//│ 	T n:41 l:42 r:43 => [T case n:41 of {
-//│ 		K => [KK]
-//│ 		| N => [NN]} (c^28_c^18 l:42) (c^28_c^21 r:43)]
-//│ 	| L => [LL]})
-//│ def c^28_c^18 = (fun x:48 -> case x:48 of {
-//│ 	T n:49 l:50 r:51 => [T case n:49 of {
-//│ 		K => [KK]
-//│ 		| N => [NN]} (c^28_c^18_c^18 l:50) (c^28_c^18_c^21 r:51)]
-//│ 	| L => [LL]})
-//│ def c^28_c^18_c^18 = (fun x:24 -> case x:24 of {
-//│ 	T n:25 l:26 r:27 => [T case n:25 of {
-//│ 		K => [KK]
-//│ 		| N => [NN]} (c^28_c^18_c^18 l:26) (c^28_c^18_c^18 r:27)]
-//│ 	| L => [LL]})
-//│ def c^28_c^18_c^21 = (fun x:44 -> case x:44 of {
-//│ 	T n:45 l:46 r:47 => [T case n:45 of {
-//│ 		K => [KK]
-//│ 		| N => [NN]} (c^28_c^18_c^21 l:46) (c^28_c^18_c^21 r:47)]
-//│ 	| L => [LL]})
-//│ def c^28_c^21 = (fun x:36 -> case x:36 of {
-//│ 	T n:37 l:38 r:39 => [T case n:37 of {
-//│ 		K => [KK]
-//│ 		| N => [NN]} (c^28_c^21_c^18 l:38) (c^28_c^21_c^21 r:39)]
-//│ 	| L => [LL]})
-//│ def c^28_c^21_c^18 = (fun x:28 -> case x:28 of {
-//│ 	T n:29 l:30 r:31 => [T case n:29 of {
-//│ 		K => [KK]
-//│ 		| N => [NN]} (c^28_c^21_c^18 l:30) (c^28_c^21_c^18 r:31)]
-//│ 	| L => [LL]})
-//│ def c^28_c^21_c^21 = (fun x:32 -> case x:32 of {
-//│ 	T n:33 l:34 r:35 => [T case n:33 of {
-//│ 		K => [KK]
-//│ 		| N => [NN]} (c^28_c^21_c^21 l:34) (c^28_c^21_c^21 r:35)]
-//│ 	| L => [LL]})
-//│ def t = [T [K] aa bb]
-//│ def t^29 = [T [K] t^29_aa^10 t^29_bb^11]
-//│ def t^29_aa^10 = [T [N] [L] [L]]
-//│ def t^29_bb^11 = [T [N] [L] [L]]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 46: [K]
 //│ [K] --->
 //│ 	case n:41 of {K => [KK] | N => [NN]}
-//│ 49: [T 46: [K] 47: t^29_aa^10 48: t^29_bb^11]
 //│ [T [K] t^29_aa^10 t^29_bb^11] --->
 //│ 	case x:40 of {T n:41 l:42 r:43 => [T case n:41 of {K => [KK] | N => [NN]} (c^28_c^18 l:42) (c^28_c^21 r:43)] | L => [LL]}
-//│ 50: [N]
 //│ [N] --->
 //│ 	case n:37 of {K => [KK] | N => [NN]}
-//│ 51: [L]
 //│ [L] --->
 //│ 	case x:28 of {T n:29 l:30 r:31 => [T case n:29 of {K => [KK] | N => [NN]} (c^28_c^21_c^18 l:30) (c^28_c^21_c^18 r:31)] | L => [LL]}
-//│ 52: [L]
 //│ [L] --->
 //│ 	case x:32 of {T n:33 l:34 r:35 => [T case n:33 of {K => [KK] | N => [NN]} (c^28_c^21_c^21 l:34) (c^28_c^21_c^21 r:35)] | L => [LL]}
-//│ 53: [T 50: [N] 51: [L] 52: [L]]
 //│ [T [N] [L] [L]] --->
 //│ 	case x:36 of {T n:37 l:38 r:39 => [T case n:37 of {K => [KK] | N => [NN]} (c^28_c^21_c^18 l:38) (c^28_c^21_c^21 r:39)] | L => [LL]}
-//│ 84: [N]
 //│ [N] --->
 //│ 	case n:49 of {K => [KK] | N => [NN]}
-//│ 85: [L]
 //│ [L] --->
 //│ 	case x:24 of {T n:25 l:26 r:27 => [T case n:25 of {K => [KK] | N => [NN]} (c^28_c^18_c^18 l:26) (c^28_c^18_c^18 r:27)] | L => [LL]}
-//│ 86: [L]
 //│ [L] --->
 //│ 	case x:44 of {T n:45 l:46 r:47 => [T case n:45 of {K => [KK] | N => [NN]} (c^28_c^18_c^21 l:46) (c^28_c^18_c^21 r:47)] | L => [LL]}
-//│ 87: [T 84: [N] 85: [L] 86: [L]]
 //│ [T [N] [L] [L]] --->
 //│ 	case x:48 of {T n:49 l:50 r:51 => [T case n:49 of {K => [KK] | N => [NN]} (c^28_c^18_c^18 l:50) (c^28_c^18_c^21 r:51)] | L => [LL]}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -1996,11 +1377,6 @@ map(l)(
 //│ 	[-l^20 · +map^19 · +map^5 · +map^5]  --->  [-l^20 · +map^19 · +map^5]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [map^19 · map^5 · map^5] --> [map^19 · map^5]
-//│ [l^20] --> [l^20]
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [l^20]
 //│ [map^19]
@@ -2008,30 +1384,11 @@ map(l)(
 //│ 		[map^19 · map^5 · map^5] ---> [map^19 · map^5] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ ((map^19 l^20) (fun x:27 -> case x:27 of {
-//│ 	K => [T]}))
-//│ def l = [C [K] [N]]
-//│ def l^20 = [C [K] [N]]
-//│ def map = (fun ls:9 -> case ls:9 of {
-//│ 	C h:10 t:11 => (fun f:12 -> [C (f:12 h:10) ((map t:11) f:12)])
-//│ 	| N => (fun f:13 -> [N])})
-//│ def map^19 = (fun ls:17 -> case ls:17 of {
-//│ 	C h:18 t:19 => (fun f:20 -> [C (f:20 h:18) ((map^19_map^5 t:19) f:20)])
-//│ 	| N => (fun f:21 -> [N])})
-//│ def map^19_map^5 = (fun ls:22 -> case ls:22 of {
-//│ 	C h:23 t:24 => (fun f:25 -> [C (f:25 h:23) ((map^19_map^5 t:24) f:25)])
-//│ 	| N => (fun f:26 -> [N])})
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 42: [K]
 //│ [K] --->
 //│ 	case x:27 of {K => [T]}
-//│ 43: [N]
 //│ [N] --->
 //│ 	case ls:22 of {C h:23 t:24 => (fun f:25 -> [C (f:25 h:23) ((map^19_map^5 t:24) f:25)]) | N => (fun f:26 -> [N])}
-//│ 44: [C 42: [K] 43: [N]]
 //│ [C [K] [N]] --->
 //│ 	case ls:17 of {C h:18 t:19 => (fun f:20 -> [C (f:20 h:18) ((map^19_map^5 t:19) f:20)]) | N => (fun f:21 -> [N])}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -2074,13 +1431,6 @@ inter(l1)(l2)
 //│ 	[-l2^21 · -l2^27 · +inter^24 · +inter^5 · +inter^5 · +inter^5 · +inter^5 · +inter^5 · +inter^5]  --->  [-l2^27 · +inter^24 · +inter^5 · +inter^5]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [inter^24 · inter^5 · inter^5 · inter^5 · inter^5 · inter^5 · inter^5] --> [inter^24 · inter^5 · inter^5]
-//│ [inter^24 · inter^5 · inter^5 · inter^5 · inter^5 · inter^5] --> [inter^24 · inter^5]
-//│ [l1^25 · l1^16] --> [l1^25]
-//│ [l2^27 · l2^21] --> [l2^27]
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [inter^24]
 //│ 	[inter^24 · inter^5]
@@ -2094,43 +1444,13 @@ inter(l1)(l2)
 //│ 	[l2^27 · l2^21] ---> [l2^27] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ ((inter^24 l1^25) l2^27)
-//│ def inter = (fun xs:9 -> case xs:9 of {
-//│ 	N => (fun ys:10 -> ys:10)
-//│ 	| C h:11 t:12 => (fun ys:13 -> [C h:11 ((inter ys:13) t:12)])})
-//│ def inter^24 = (fun xs:21 -> case xs:21 of {
-//│ 	N => (fun ys:22 -> ys:22)
-//│ 	| C h:23 t:24 => (fun ys:25 -> [C h:23 ((inter^24_inter^5 ys:25) t:24)])})
-//│ def inter^24_inter^5 = (fun xs:36 -> case xs:36 of {
-//│ 	N => (fun ys:37 -> ys:37)
-//│ 	| C h:38 t:39 => (fun ys:40 -> [C h:38 ((inter^24_inter^5_inter^5 ys:40) t:39)])})
-//│ def inter^24_inter^5_inter^5 = (fun xs:41 -> case xs:41 of {
-//│ 	N => (fun ys:42 -> ys:42)
-//│ 	| C h:43 t:44 => (fun ys:45 -> [C h:43 ((inter^24_inter^5_inter^5_inter^5 ys:45) t:44)])})
-//│ def inter^24_inter^5_inter^5_inter^5 = (fun xs:26 -> case xs:26 of {
-//│ 	N => (fun ys:27 -> ys:27)
-//│ 	| C h:28 t:29 => (fun ys:30 -> [C h:28 ((inter^24_inter^5_inter^5_inter^5_inter^5 ys:30) t:29)])})
-//│ def inter^24_inter^5_inter^5_inter^5_inter^5 = (fun xs:31 -> case xs:31 of {
-//│ 	N => (fun ys:32 -> ys:32)
-//│ 	| C h:33 t:34 => (fun ys:35 -> [C h:33 ((inter^24_inter^5 ys:35) t:34)])})
-//│ def l1 = [C 1 [C 2 l1]]
-//│ def l1^25 = [C 1 [C 2 l1^25]]
-//│ def l2 = [C 9 [C 8 l2]]
-//│ def l2^27 = [C 9 [C 8 l2^27]]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 45: [C 43: 8 44: l2^27]
 //│ [C 8 l2^27] --->
 //│ 	case xs:26 of {N => (fun ys:27 -> ys:27) | C h:28 t:29 => (fun ys:30 -> [C h:28 ((inter^24_inter^5_inter^5_inter^5_inter^5 ys:30) t:29)])}
-//│ 46: [C 42: 9 45: [C 43: 8 44: l2^27]]
 //│ [C 9 [C 8 l2^27]] --->
 //│ 	case xs:36 of {N => (fun ys:37 -> ys:37) | C h:38 t:39 => (fun ys:40 -> [C h:38 ((inter^24_inter^5_inter^5 ys:40) t:39)])}
-//│ 89: [C 87: 2 88: l1^25]
 //│ [C 2 l1^25] --->
 //│ 	case xs:41 of {N => (fun ys:42 -> ys:42) | C h:43 t:44 => (fun ys:45 -> [C h:43 ((inter^24_inter^5_inter^5_inter^5 ys:45) t:44)])}
-//│ 90: [C 86: 1 89: [C 87: 2 88: l1^25]]
 //│ [C 1 [C 2 l1^25]] --->
 //│ 	case xs:21 of {N => (fun ys:22 -> ys:22) | C h:23 t:24 => (fun ys:25 -> [C h:23 ((inter^24_inter^5 ys:25) t:24)])}
 //│ 	case xs:31 of {N => (fun ys:32 -> ys:32) | C h:33 t:34 => (fun ys:35 -> [C h:33 ((inter^24_inter^5 ys:35) t:34)])}
@@ -2190,11 +1510,6 @@ lastDrive(C(1, C(2, N)))
 //│ 	[+lastDrive^22 · +last^14 · +last^4 · +last^4]  --->  [+lastDrive^22 · +last^14 · +last^4]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [lastDrive^22 · last^14 · last^4 · last^4] --> [lastDrive^22 · last^14 · last^4]
-//│ [] --> []
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [lastDrive^22]
 //│ 	[lastDrive^22 · last^14]
@@ -2202,33 +1517,11 @@ lastDrive(C(1, C(2, N)))
 //│ 			[lastDrive^22 · last^14 · last^4 · last^4] ---> [lastDrive^22 · last^14 · last^4] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (lastDrive^22 [C 1 [C 2 [N]]])
-//│ def last = (fun ys:8 -> case ys:8 of {
-//│ 	N => (fun x:9 -> x:9)
-//│ 	| C h:10 t:11 => (fun x:12 -> ((last t:11) h:10))})
-//│ def lastDrive = (fun xs:13 -> case xs:13 of {
-//│ 	N => [None]
-//│ 	| C hh:14 tt:15 => [Some ((last tt:15) hh:14)]})
-//│ def lastDrive^22 = (fun xs:19 -> case xs:19 of {
-//│ 	N => [None]
-//│ 	| C hh:20 tt:21 => [Some ((lastDrive^22_last^14 tt:21) hh:20)]})
-//│ def lastDrive^22_last^14 = (fun ys:22 -> case ys:22 of {
-//│ 	N => (fun x:23 -> x:23)
-//│ 	| C h:24 t:25 => (fun x:26 -> ((lastDrive^22_last^14_last^4 t:25) h:24))})
-//│ def lastDrive^22_last^14_last^4 = (fun ys:27 -> case ys:27 of {
-//│ 	N => (fun x:28 -> x:28)
-//│ 	| C h:29 t:30 => (fun x:31 -> ((lastDrive^22_last^14_last^4 t:30) h:29))})
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 64: [N]
 //│ [N] --->
 //│ 	case ys:27 of {N => (fun x:28 -> x:28) | C h:29 t:30 => (fun x:31 -> ((lastDrive^22_last^14_last^4 t:30) h:29))}
-//│ 65: [C 63: 2 64: [N]]
 //│ [C 2 [N]] --->
 //│ 	case ys:22 of {N => (fun x:23 -> x:23) | C h:24 t:25 => (fun x:26 -> ((lastDrive^22_last^14_last^4 t:25) h:24))}
-//│ 66: [C 62: 1 65: [C 63: 2 64: [N]]]
 //│ [C 1 [C 2 [N]]] --->
 //│ 	case xs:19 of {N => [None] | C hh:20 tt:21 => [Some ((lastDrive^22_last^14 tt:21) hh:20)]}
 //│ <<<<<<< fusion matches <<<<<<<

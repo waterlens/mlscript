@@ -38,14 +38,6 @@ count(0, rev(N, N))
 //│ 	[+rev^30 · -rev^16 · -rev^30 · +count^27 · +count^2 · +count^2]  --->  [+rev^30 · -rev^16 · -rev^30 · +count^27 · +count^2]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [count^27 · count^2 · count^2] --> [count^27 · count^2]
-//│ [rev^30 · rev^16 · rev^16] --> [rev^30 · rev^16]
-//│ [rev^30 · rev^16] --> [rev^30 · rev^16]
-//│ [rev^30] --> [rev^30]
-//│ [] --> []
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [count^27]
 //│ 	[count^27 · count^2]
@@ -55,45 +47,19 @@ count(0, rev(N, N))
 //│ 		[rev^30 · rev^16 · rev^16] ---> [rev^30 · rev^16] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ ((count^27 0) ((rev^30 [N]) [N]))
-//│ def count = (fun c:8 -> (fun xs:9 -> case xs:9 of {
-//│ 	C h:10 t:11 => ((count ((add:4 c:8) 1)) t:11)
-//│ 	| N => c:8}))
-//│ def count^27 = (fun c:32 -> (fun xs:33 -> case xs:33 of {
-//│ 	C h:34 t:35 => ((count^27_count^2 ((add:4 c:32) 1)) t:35)
-//│ 	| N => c:32}))
-//│ def count^27_count^2 = (fun c:28 -> (fun xs:29 -> case xs:29 of {
-//│ 	C h:30 t:31 => ((count^27_count^2 ((add:4 c:28) 1)) t:31)
-//│ 	| N => c:28}))
-//│ def rev = (fun a:12 -> (fun ys:13 -> case ys:13 of {
-//│ 	C h1:14 t1:15 => ((rev [C h1:14 a:12]) t1:15)
-//│ 	| N => a:12}))
-//│ def rev^30 = (fun a:20 -> (fun ys:21 -> case ys:21 of {
-//│ 	C h1:22 t1:23 => ((rev^30_rev^16 [C h1:22 a:20]) t1:23)
-//│ 	| N => a:20}))
-//│ def rev^30_rev^16 = (fun a:24 -> (fun ys:25 -> case ys:25 of {
-//│ 	C h1:26 t1:27 => ((rev^30_rev^16 [C h1:26 a:24]) t1:27)
-//│ 	| N => a:24}))
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 40: [C 38: h1 39: a]
 //│ [C h1:22 a:20] --->
 //│ 	case xs:29 of {C h:30 t:31 => ((count^27_count^2 ((add:4 c:28) 1)) t:31) | N => c:28}
 //│ 	case xs:33 of {C h:34 t:35 => ((count^27_count^2 ((add:4 c:32) 1)) t:35) | N => c:32}
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ 52: [C 50: h1 51: a]
 //│ [C h1:26 a:24] --->
 //│ 	case xs:29 of {C h:30 t:31 => ((count^27_count^2 ((add:4 c:28) 1)) t:31) | N => c:28}
 //│ 	case xs:33 of {C h:34 t:35 => ((count^27_count^2 ((add:4 c:32) 1)) t:35) | N => c:32}
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ 92: [N]
 //│ [N] --->
 //│ 	case xs:29 of {C h:30 t:31 => ((count^27_count^2 ((add:4 c:28) 1)) t:31) | N => c:28}
 //│ 	case xs:33 of {C h:34 t:35 => ((count^27_count^2 ((add:4 c:32) 1)) t:35) | N => c:32}
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ 94: [N]
 //│ [N] --->
 //│ 	case ys:21 of {C h1:22 t1:23 => ((rev^30_rev^16 [C h1:22 a:20]) t1:23) | N => a:20}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -155,15 +121,6 @@ count(rev(N, init))(0)
 //│ 	[-init^33 · +rev^30 · +rev^17 · +rev^17]  --->  [-init^33 · +rev^30 · +rev^17]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [count^29 · count^2 · count^2] --> [count^29 · count^2]
-//│ [rev^30 · rev^17 · rev^17] --> [rev^30 · rev^17]
-//│ [init^33] --> [init^33]
-//│ [rev^30 · rev^17] --> [rev^30 · rev^17]
-//│ [rev^30] --> [rev^30]
-//│ [] --> []
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [count^29]
 //│ 	[count^29 · count^2]
@@ -174,45 +131,17 @@ count(rev(N, init))(0)
 //│ 		[rev^30 · rev^17 · rev^17] ---> [rev^30 · rev^17] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ ((count^29 ((rev^30 [N]) init^33)) 0)
-//│ def count = (fun xs:9 -> case xs:9 of {
-//│ 	C h:10 t:11 => (fun c:12 -> ((count t:11) ((add:4 c:12) 1)))
-//│ 	| N => (fun c:13 -> c:13)})
-//│ def count^29 = (fun xs:36 -> case xs:36 of {
-//│ 	C h:37 t:38 => (fun c:39 -> ((count^29_count^2 t:38) ((add:4 c:39) 1)))
-//│ 	| N => (fun c:40 -> c:40)})
-//│ def count^29_count^2 = (fun xs:23 -> case xs:23 of {
-//│ 	C h:24 t:25 => (fun c:26 -> ((count^29_count^2 t:25) ((add:4 c:26) 1)))
-//│ 	| N => (fun c:27 -> c:27)})
-//│ def init = [N]
-//│ def init^33 = [N]
-//│ def rev = (fun a:14 -> (fun ys:15 -> case ys:15 of {
-//│ 	C h1:16 t1:17 => ((rev [C h1:16 a:14]) t1:17)
-//│ 	| N => a:14}))
-//│ def rev^30 = (fun a:28 -> (fun ys:29 -> case ys:29 of {
-//│ 	C h1:30 t1:31 => ((rev^30_rev^17 [C h1:30 a:28]) t1:31)
-//│ 	| N => a:28}))
-//│ def rev^30_rev^17 = (fun a:32 -> (fun ys:33 -> case ys:33 of {
-//│ 	C h1:34 t1:35 => ((rev^30_rev^17 [C h1:34 a:32]) t1:35)
-//│ 	| N => a:32}))
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 38: [N]
 //│ [N] --->
 //│ 	case ys:29 of {C h1:30 t1:31 => ((rev^30_rev^17 [C h1:30 a:28]) t1:31) | N => a:28}
-//│ 58: [C 56: h1 57: a]
 //│ [C h1:30 a:28] --->
 //│ 	case xs:23 of {C h:24 t:25 => (fun c:26 -> ((count^29_count^2 t:25) ((add:4 c:26) 1))) | N => (fun c:27 -> c:27)}
 //│ 	case xs:36 of {C h:37 t:38 => (fun c:39 -> ((count^29_count^2 t:38) ((add:4 c:39) 1))) | N => (fun c:40 -> c:40)}
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ 70: [C 68: h1 69: a]
 //│ [C h1:34 a:32] --->
 //│ 	case xs:23 of {C h:24 t:25 => (fun c:26 -> ((count^29_count^2 t:25) ((add:4 c:26) 1))) | N => (fun c:27 -> c:27)}
 //│ 	case xs:36 of {C h:37 t:38 => (fun c:39 -> ((count^29_count^2 t:38) ((add:4 c:39) 1))) | N => (fun c:40 -> c:40)}
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ 95: [N]
 //│ [N] --->
 //│ 	case xs:23 of {C h:24 t:25 => (fun c:26 -> ((count^29_count^2 t:25) ((add:4 c:26) 1))) | N => (fun c:27 -> c:27)}
 //│ 	case xs:36 of {C h:37 t:38 => (fun c:39 -> ((count^29_count^2 t:38) ((add:4 c:39) 1))) | N => (fun c:40 -> c:40)}
@@ -277,14 +206,6 @@ idxSum(0, rev(N, N))
 //│ 	[+rev^34 · +rev^20 · +rev^20]  --->  [+rev^34 · +rev^20]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [idxSum^31 · idxSum^5 · idxSum^5] --> [idxSum^31 · idxSum^5]
-//│ [rev^34 · rev^20 · rev^20] --> [rev^34 · rev^20]
-//│ [rev^34 · rev^20] --> [rev^34 · rev^20]
-//│ [rev^34] --> [rev^34]
-//│ [] --> []
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [idxSum^31]
 //│ 	[idxSum^31 · idxSum^5]
@@ -294,43 +215,17 @@ idxSum(0, rev(N, N))
 //│ 		[rev^34 · rev^20 · rev^20] ---> [rev^34 · rev^20] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ ((idxSum^31 0) ((rev^34 [N]) [N]))
-//│ def idxSum = (fun i:8 -> (fun xs:9 -> case xs:9 of {
-//│ 	C h:10 t:11 => ((add:4 i:8) ((idxSum ((add:4 i:8) 1)) t:11))
-//│ 	| N => 0}))
-//│ def idxSum^31 = (fun i:32 -> (fun xs:33 -> case xs:33 of {
-//│ 	C h:34 t:35 => ((add:4 i:32) ((idxSum^31_idxSum^5 ((add:4 i:32) 1)) t:35))
-//│ 	| N => 0}))
-//│ def idxSum^31_idxSum^5 = (fun i:20 -> (fun xs:21 -> case xs:21 of {
-//│ 	C h:22 t:23 => ((add:4 i:20) ((idxSum^31_idxSum^5 ((add:4 i:20) 1)) t:23))
-//│ 	| N => 0}))
-//│ def rev = (fun a:12 -> (fun ys:13 -> case ys:13 of {
-//│ 	C h1:14 t1:15 => ((rev [C h1:14 a:12]) t1:15)
-//│ 	| N => a:12}))
-//│ def rev^34 = (fun a:24 -> (fun ys:25 -> case ys:25 of {
-//│ 	C h1:26 t1:27 => ((rev^34_rev^20 [C h1:26 a:24]) t1:27)
-//│ 	| N => a:24}))
-//│ def rev^34_rev^20 = (fun a:28 -> (fun ys:29 -> case ys:29 of {
-//│ 	C h1:30 t1:31 => ((rev^34_rev^20 [C h1:30 a:28]) t1:31)
-//│ 	| N => a:28}))
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 104: [N]
 //│ [N] --->
 //│ 	case xs:21 of {C h:22 t:23 => ((add:4 i:20) ((idxSum^31_idxSum^5 ((add:4 i:20) 1)) t:23)) | N => 0}
 //│ 	case xs:33 of {C h:34 t:35 => ((add:4 i:32) ((idxSum^31_idxSum^5 ((add:4 i:32) 1)) t:35)) | N => 0}
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ 106: [N]
 //│ [N] --->
 //│ 	case ys:25 of {C h1:26 t1:27 => ((rev^34_rev^20 [C h1:26 a:24]) t1:27) | N => a:24}
-//│ 62: [C 60: h1 61: a]
 //│ [C h1:26 a:24] --->
 //│ 	case xs:21 of {C h:22 t:23 => ((add:4 i:20) ((idxSum^31_idxSum^5 ((add:4 i:20) 1)) t:23)) | N => 0}
 //│ 	case xs:33 of {C h:34 t:35 => ((add:4 i:32) ((idxSum^31_idxSum^5 ((add:4 i:32) 1)) t:35)) | N => 0}
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ 74: [C 72: h1 73: a]
 //│ [C h1:30 a:28] --->
 //│ 	case xs:21 of {C h:22 t:23 => ((add:4 i:20) ((idxSum^31_idxSum^5 ((add:4 i:20) 1)) t:23)) | N => 0}
 //│ 	case xs:33 of {C h:34 t:35 => ((add:4 i:32) ((idxSum^31_idxSum^5 ((add:4 i:32) 1)) t:35)) | N => 0}
@@ -395,15 +290,6 @@ count(rev(N, init))
 //│ 	[+rev^26 · -rev^13 · -rev^26 · +count^25 · +count^5 · +count^5]  --->  [+rev^26 · -rev^13 · -rev^26 · +count^25 · +count^5]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [count^25 · count^5 · count^5] --> [count^25 · count^5]
-//│ [rev^26 · rev^13 · rev^13] --> [rev^26 · rev^13]
-//│ [init^29] --> [init^29]
-//│ [rev^26 · rev^13] --> [rev^26 · rev^13]
-//│ [rev^26] --> [rev^26]
-//│ [] --> []
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [count^25]
 //│ 	[count^25 · count^5]
@@ -414,45 +300,17 @@ count(rev(N, init))
 //│ 		[rev^26 · rev^13 · rev^13] ---> [rev^26 · rev^13] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (count^25 ((rev^26 [N]) init^29))
-//│ def count = (fun xs:9 -> case xs:9 of {
-//│ 	C h:10 t:11 => ((add:4 1) (count t:11))
-//│ 	| N => 0})
-//│ def count^25 = (fun xs:32 -> case xs:32 of {
-//│ 	C h:33 t:34 => ((add:4 1) (count^25_count^5 t:34))
-//│ 	| N => 0})
-//│ def count^25_count^5 = (fun xs:25 -> case xs:25 of {
-//│ 	C h:26 t:27 => ((add:4 1) (count^25_count^5 t:27))
-//│ 	| N => 0})
-//│ def init = [N]
-//│ def init^29 = [N]
-//│ def rev = (fun a:12 -> (fun ys:13 -> case ys:13 of {
-//│ 	C h1:14 t1:15 => ((rev [C h1:14 a:12]) t1:15)
-//│ 	| N => a:12}))
-//│ def rev^26 = (fun a:28 -> (fun ys:29 -> case ys:29 of {
-//│ 	C h1:30 t1:31 => ((rev^26_rev^13 [C h1:30 a:28]) t1:31)
-//│ 	| N => a:28}))
-//│ def rev^26_rev^13 = (fun a:21 -> (fun ys:22 -> case ys:22 of {
-//│ 	C h1:23 t1:24 => ((rev^26_rev^13 [C h1:23 a:21]) t1:24)
-//│ 	| N => a:21}))
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 36: [C 34: h1 35: a]
 //│ [C h1:23 a:21] --->
 //│ 	case xs:25 of {C h:26 t:27 => ((add:4 1) (count^25_count^5 t:27)) | N => 0}
 //│ 	case xs:32 of {C h:33 t:34 => ((add:4 1) (count^25_count^5 t:34)) | N => 0}
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ 55: [N]
 //│ [N] --->
 //│ 	case ys:29 of {C h1:30 t1:31 => ((rev^26_rev^13 [C h1:30 a:28]) t1:31) | N => a:28}
-//│ 60: [C 58: h1 59: a]
 //│ [C h1:30 a:28] --->
 //│ 	case xs:25 of {C h:26 t:27 => ((add:4 1) (count^25_count^5 t:27)) | N => 0}
 //│ 	case xs:32 of {C h:33 t:34 => ((add:4 1) (count^25_count^5 t:34)) | N => 0}
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ 81: [N]
 //│ [N] --->
 //│ 	case xs:25 of {C h:26 t:27 => ((add:4 1) (count^25_count^5 t:27)) | N => 0}
 //│ 	case xs:32 of {C h:33 t:34 => ((add:4 1) (count^25_count^5 t:34)) | N => 0}
@@ -502,11 +360,6 @@ rev(N, init)
 //│ 	[-init^14 · -init^14 · -init^19 · +rev^16 · +rev^2 · +rev^2]  --->  [-init^14 · -init^19 · +rev^16 · +rev^2]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [rev^16 · rev^2 · rev^2] --> [rev^16 · rev^2]
-//│ [init^19 · init^14 · init^14] --> [init^19 · init^14]
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [init^19]
 //│ 	[init^19 · init^14]
@@ -516,27 +369,9 @@ rev(N, init)
 //│ 		[rev^16 · rev^2 · rev^2] ---> [rev^16 · rev^2] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ ((rev^16 [N]) init^19)
-//│ def init = [C 0 init]
-//│ def init^19 = [C 0 init^19_init^14]
-//│ def init^19_init^14 = [C 0 init^19_init^14]
-//│ def rev = (fun a:8 -> (fun ys:9 -> case ys:9 of {
-//│ 	C h1:10 t1:11 => ((rev [C h1:10 a:8]) t1:11)
-//│ 	| N => a:8}))
-//│ def rev^16 = (fun a:20 -> (fun ys:21 -> case ys:21 of {
-//│ 	C h1:22 t1:23 => ((rev^16_rev^2 [C h1:22 a:20]) t1:23)
-//│ 	| N => a:20}))
-//│ def rev^16_rev^2 = (fun a:16 -> (fun ys:17 -> case ys:17 of {
-//│ 	C h1:18 t1:19 => ((rev^16_rev^2 [C h1:18 a:16]) t1:19)
-//│ 	| N => a:16}))
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 47: [C 45: 0 46: init^19_init^14]
 //│ [C 0 init^19_init^14] --->
 //│ 	case ys:21 of {C h1:22 t1:23 => ((rev^16_rev^2 [C h1:22 a:20]) t1:23) | N => a:20}
-//│ 50: [C 48: 0 49: init^19_init^14]
 //│ [C 0 init^19_init^14] --->
 //│ 	case ys:17 of {C h1:18 t1:19 => ((rev^16_rev^2 [C h1:18 a:16]) t1:19) | N => a:16}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -575,11 +410,6 @@ rev(N, init)
 //│ 	[-init^13 · -init^13 · -init^18 · +rev^15 · +rev^2 · +rev^2]  --->  [-init^13 · -init^18 · +rev^15 · +rev^2]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [rev^15 · rev^2 · rev^2] --> [rev^15 · rev^2]
-//│ [init^18 · init^13 · init^13] --> [init^18 · init^13]
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [init^18]
 //│ 	[init^18 · init^13]
@@ -589,24 +419,9 @@ rev(N, init)
 //│ 		[rev^15 · rev^2 · rev^2] ---> [rev^15 · rev^2] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ ((rev^15 [N]) init^18)
-//│ def init = [C 0 init]
-//│ def init^18 = [C 0 init^18_init^13]
-//│ def init^18_init^13 = [C 0 init^18_init^13]
-//│ def rev = (fun a:8 -> (fun ys:9 -> case ys:9 of {
-//│ 	C h1:10 t1:11 => ((rev [C h1:10 a:8]) t1:11)}))
-//│ def rev^15 = (fun a:20 -> (fun ys:21 -> case ys:21 of {
-//│ 	C h1:22 t1:23 => ((rev^15_rev^2 [C h1:22 a:20]) t1:23)}))
-//│ def rev^15_rev^2 = (fun a:16 -> (fun ys:17 -> case ys:17 of {
-//│ 	C h1:18 t1:19 => ((rev^15_rev^2 [C h1:18 a:16]) t1:19)}))
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 33: [C 31: 0 32: init^18_init^13]
 //│ [C 0 init^18_init^13] --->
 //│ 	case ys:17 of {C h1:18 t1:19 => ((rev^15_rev^2 [C h1:18 a:16]) t1:19)}
-//│ 36: [C 34: 0 35: init^18_init^13]
 //│ [C 0 init^18_init^13] --->
 //│ 	case ys:21 of {C h1:22 t1:23 => ((rev^15_rev^2 [C h1:22 a:20]) t1:23)}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -640,18 +455,9 @@ fun c(x) = if x is
 //│ >>>>>>> knots >>>>>>>
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ 
 //│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ def c = (fun x:7 -> case x:7 of {
-//│ 	C a:8 => (c a:8)
-//│ 	| N => [N]})
-//│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ 
@@ -695,13 +501,6 @@ rev(rev2, init)(1, init2)
 //│ 	[-init^22 · -init^22 · -init^30 · +rev^27 · +rev^2 · +rev^2]  --->  [-init^22 · -init^30 · +rev^27 · +rev^2]
 //│ <<<<<<< knots <<<<<<<
 //│ 
-//│ >>>>>>> splitted knots >>>>>>>
-//│ [rev^27 · rev^2 · rev^2] --> [rev^27 · rev^2]
-//│ [rev2^28 · rev2^12] --> [rev2^28]
-//│ [init^30 · init^22 · init^22] --> [init^30 · init^22]
-//│ [init2^34 · init2^25] --> [init2^34]
-//│ <<<<<<< splitted knots <<<<<<<
-//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [init2^34]
 //│ 	[init2^34 · init2^25] ---> [init2^34] (only one)
@@ -715,38 +514,11 @@ rev(rev2, init)(1, init2)
 //│ 		[rev^27 · rev^2 · rev^2] ---> [rev^27 · rev^2] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ ((((rev^27 rev2^28) init^30) 1) init2^34)
-//│ def init = [C 0 init]
-//│ def init2 = [C 0 init2]
-//│ def init2^34 = [C 0 init2^34]
-//│ def init^30 = [C 0 init^30_init^22]
-//│ def init^30_init^22 = [C 0 init^30_init^22]
-//│ def rev = (fun a:10 -> (fun ys:11 -> case ys:11 of {
-//│ 	C h1:12 t1:13 => ((rev a:10) t1:13)
-//│ 	| N => a:10}))
-//│ def rev2 = (fun a2:14 -> (fun ys2:15 -> case ys2:15 of {
-//│ 	C h12:16 t12:17 => ((rev2 a2:14) t12:17)
-//│ 	| N => a2:14}))
-//│ def rev2^28 = (fun a2:28 -> (fun ys2:29 -> case ys2:29 of {
-//│ 	C h12:30 t12:31 => ((rev2^28 a2:28) t12:31)
-//│ 	| N => a2:28}))
-//│ def rev^27 = (fun a:32 -> (fun ys:33 -> case ys:33 of {
-//│ 	C h1:34 t1:35 => ((rev^27_rev^2 a:32) t1:35)
-//│ 	| N => a:32}))
-//│ def rev^27_rev^2 = (fun a:24 -> (fun ys:25 -> case ys:25 of {
-//│ 	C h1:26 t1:27 => ((rev^27_rev^2 a:24) t1:27)
-//│ 	| N => a:24}))
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 58: [C 56: 0 57: init^30_init^22]
 //│ [C 0 init^30_init^22] --->
 //│ 	case ys:33 of {C h1:34 t1:35 => ((rev^27_rev^2 a:32) t1:35) | N => a:32}
-//│ 61: [C 59: 0 60: init^30_init^22]
 //│ [C 0 init^30_init^22] --->
 //│ 	case ys:25 of {C h1:26 t1:27 => ((rev^27_rev^2 a:24) t1:27) | N => a:24}
-//│ 64: [C 62: 0 63: init2^34]
 //│ [C 0 init2^34] --->
 //│ 	case ys2:29 of {C h12:30 t12:31 => ((rev2^28 a2:28) t12:31) | N => a2:28}
 //│ <<<<<<< fusion matches <<<<<<<

@@ -45,17 +45,19 @@ class DiffTestLumberhack extends DiffTests {
       }
       output("<<<<<<< knots <<<<<<<")
 
-      output("\n>>>>>>> splitted knots >>>>>>>")
-      d.actualKnotsUsingSplit._1.toSeq.sortBy(_._1.pp(using InitPpConfig.showPolarityOn)).foreach { (k, v) =>
-        output(s"${k.pp(using InitPpConfig.showRefEuidOn)} --> ${v.toSeq
-          .sortBy(_.pp(using InitPpConfig.showPolarityOn.showRefEuidOn))
-          .map(v => s"${v.pp(using InitPpConfig.showEuidOn.showRefEuidOn)}").mkString("\n\t")}"
-        )
-        
-        if v.size > 1 then output("\t!!MORE THAN ONE MATCH")
-        if !v.forall(vp => k.p.startsWith(vp.p)) then output("\t!!NOT PREFIX")
+      if mode.stdout || mode.verbose then {
+        output("\n>>>>>>> splitted knots >>>>>>>")
+        d.actualKnotsUsingSplit._1.toSeq.sortBy(_._1.pp(using InitPpConfig.showPolarityOn)).foreach { (k, v) =>
+          output(s"${k.pp(using InitPpConfig.showRefEuidOn)} --> ${v.toSeq
+            .sortBy(_.pp(using InitPpConfig.showPolarityOn.showRefEuidOn))
+            .map(v => s"${v.pp(using InitPpConfig.showEuidOn.showRefEuidOn)}").mkString("\n\t")}"
+          )
+          
+          if v.size > 1 then output("\t!!MORE THAN ONE MATCH")
+          if !v.forall(vp => k.p.startsWith(vp.p)) then output("\t!!NOT PREFIX")
+        }
+        output("<<<<<<< splitted knots <<<<<<<")
       }
-      output("<<<<<<< splitted knots <<<<<<<")
       
       output("\n>>>>>>> expansion >>>>>>>")
       val callTree = CallTree.callTreeUsingSplitKnot(d)
@@ -78,10 +80,12 @@ class DiffTestLumberhack extends DiffTests {
         output("<<<<<<< type variable bounds <<<<<<<")
       }
 
-      output("\n>>>>>>> expanded program >>>>>>>")
       val (newProg, newd) = originalProgram.expandedWithNewDeforest(callTree._1)
-      output(newProg.pp(using InitPpConfig.multilineOn.showIuidOn))
-      output("<<<<<<< expanded program <<<<<<<")
+      if mode.stdout || mode.verbose then {
+        output("\n>>>>>>> expanded program >>>>>>>")
+        output(newProg.pp(using InitPpConfig.multilineOn.showIuidOn))
+        output("<<<<<<< expanded program <<<<<<<")
+      }
 
       
 
@@ -94,7 +98,9 @@ class DiffTestLumberhack extends DiffTests {
 
       output("\n>>>>>>> fusion matches >>>>>>>")
       val fusionMatchStr = newd.fusionMatch.toSeq.sortBy(expr => newd.exprs(expr._1).pp(using InitPpConfig.showEuidOn)).map { (p, cs) =>
-        newd.exprs(p).pp(using InitPpConfig.showEuidOn) + "\n" + newd.exprs(p).pp(using InitPpConfig.showIuidOn) + " --->\n" + cs.toSeq.sortBy(c => newd.exprs(c).pp(using InitPpConfig.showIuidOn)).map { c =>
+        // newd.exprs(p).pp(using InitPpConfig.showEuidOn) + "\n" +
+        newd.exprs(p).pp(using InitPpConfig.showIuidOn) + " --->\n" +
+        cs.toSeq.sortBy(c => newd.exprs(c).pp(using InitPpConfig.showIuidOn)).map { c =>
           "\t" + newd.exprs(c).pp(using InitPpConfig.showIuidOn)
         }.mkString("\n") + (if cs.size > 1 then "\n\t MORE THAN ONE MATCH EXPR" else "")
       }.mkString("\n")

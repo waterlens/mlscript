@@ -76,9 +76,10 @@ count(0, rev(N, N))
 //│ 	| N => a:12}))
 //│ def rev^30 = (fun a:20 -> (fun ys:21 -> ys:21))
 //│ def rev^30_rev^16 = (fun a:24 -> (fun ys:25 -> case ys:25 of {
-//│ 	C h1:26 t1:27 => ((rev^30_rev^16 let h:34 = h1:26
-//│ 	in let t:35 = a:24
-//│ 	in ((count^27_count^2 ((add:4 c:32) 1)) t:35)) t1:27)
+//│ 	C h1:26 t1:27 => ((rev^30_rev^16 
+//│ 		let h:34 = h1:26
+//│ 		in let t:35 = a:24
+//│ 		in ((count^27_count^2 ((add:4 c:32) 1)) t:35)) t1:27)
 //│ 	| N => a:24}))
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -162,9 +163,10 @@ count(rev(N, init))(0)
 //│ 	| N => a:14}))
 //│ def rev^30 = (fun a:28 -> (fun ys:29 -> ys:29))
 //│ def rev^30_rev^17 = (fun a:32 -> (fun ys:33 -> case ys:33 of {
-//│ 	C h1:34 t1:35 => ((rev^30_rev^17 let h:37 = h1:34
-//│ 	in let t:38 = a:32
-//│ 	in (fun c:39 -> ((count^29_count^2 t:38) ((add:4 c:39) 1)))) t1:35)
+//│ 	C h1:34 t1:35 => ((rev^30_rev^17 
+//│ 		let h:37 = h1:34
+//│ 		in let t:38 = a:32
+//│ 		in (fun c:39 -> ((count^29_count^2 t:38) ((add:4 c:39) 1)))) t1:35)
 //│ 	| N => a:32}))
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -244,9 +246,10 @@ idxSum(0, rev(N, N))
 //│ 	| N => a:12}))
 //│ def rev^34 = (fun a:24 -> (fun ys:25 -> ys:25))
 //│ def rev^34_rev^20 = (fun a:28 -> (fun ys:29 -> case ys:29 of {
-//│ 	C h1:30 t1:31 => ((rev^34_rev^20 let h:34 = h1:30
-//│ 	in let t:35 = a:28
-//│ 	in ((add:4 i:32) ((idxSum^31_idxSum^5 ((add:4 i:32) 1)) t:35))) t1:31)
+//│ 	C h1:30 t1:31 => ((rev^34_rev^20 
+//│ 		let h:34 = h1:30
+//│ 		in let t:35 = a:28
+//│ 		in ((add:4 i:32) ((idxSum^31_idxSum^5 ((add:4 i:32) 1)) t:35))) t1:31)
 //│ 	| N => a:28}))
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -333,9 +336,10 @@ count(rev(N, init))
 //│ 	| N => a:12}))
 //│ def rev^26 = (fun a:28 -> (fun ys:29 -> ys:29))
 //│ def rev^26_rev^13 = (fun a:21 -> (fun ys:22 -> case ys:22 of {
-//│ 	C h1:23 t1:24 => ((rev^26_rev^13 let h:33 = h1:23
-//│ 	in let t:34 = a:21
-//│ 	in ((add:4 1) (count^25_count^5 t:34))) t1:24)
+//│ 	C h1:23 t1:24 => ((rev^26_rev^13 
+//│ 		let h:33 = h1:23
+//│ 		in let t:34 = a:21
+//│ 		in ((add:4 1) (count^25_count^5 t:34))) t1:24)
 //│ 	| N => a:21}))
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -379,12 +383,14 @@ rev(N, init)
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((rev^16 [N]) init^19)
 //│ def init = [C 0 init]
-//│ def init^19 = let h1:22 = 0
-//│ in let t1:23 = init^19_init^14
-//│ in ((rev^16_rev^2 [C h1:22 a:20]) t1:23)
-//│ def init^19_init^14 = let h1:18 = 0
-//│ in let t1:19 = init^19_init^14
-//│ in ((rev^16_rev^2 [C h1:18 a:16]) t1:19)
+//│ def init^19 = 
+//│ 	let h1:22 = 0
+//│ 	in let t1:23 = init^19_init^14
+//│ 	in ((rev^16_rev^2 [C h1:22 a:20]) t1:23)
+//│ def init^19_init^14 = 
+//│ 	let h1:18 = 0
+//│ 	in let t1:19 = init^19_init^14
+//│ 	in ((rev^16_rev^2 [C h1:18 a:16]) t1:19)
 //│ def rev = (fun a:8 -> (fun ys:9 -> case ys:9 of {
 //│ 	C h1:10 t1:11 => ((rev [C h1:10 a:8]) t1:11)
 //│ 	| N => a:8}))
@@ -429,12 +435,14 @@ rev(N, init)
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((rev^15 [N]) init^18)
 //│ def init = [C 0 init]
-//│ def init^18 = let h1:22 = 0
-//│ in let t1:23 = init^18_init^13
-//│ in ((rev^15_rev^2 [C h1:22 a:20]) t1:23)
-//│ def init^18_init^13 = let h1:18 = 0
-//│ in let t1:19 = init^18_init^13
-//│ in ((rev^15_rev^2 [C h1:18 a:16]) t1:19)
+//│ def init^18 = 
+//│ 	let h1:22 = 0
+//│ 	in let t1:23 = init^18_init^13
+//│ 	in ((rev^15_rev^2 [C h1:22 a:20]) t1:23)
+//│ def init^18_init^13 = 
+//│ 	let h1:18 = 0
+//│ 	in let t1:19 = init^18_init^13
+//│ 	in ((rev^15_rev^2 [C h1:18 a:16]) t1:19)
 //│ def rev = (fun a:8 -> (fun ys:9 -> case ys:9 of {
 //│ 	C h1:10 t1:11 => ((rev [C h1:10 a:8]) t1:11)}))
 //│ def rev^15 = (fun a:20 -> (fun ys:21 -> ys:21))
@@ -527,15 +535,18 @@ rev(rev2, init)(1, init2)
 //│ ((((rev^27 rev2^28) init^30) 1) init2^34)
 //│ def init = [C 0 init]
 //│ def init2 = [C 0 init2]
-//│ def init2^34 = let h12:30 = 0
-//│ in let t12:31 = init2^34
-//│ in ((rev2^28 a2:28) t12:31)
-//│ def init^30 = let h1:34 = 0
-//│ in let t1:35 = init^30_init^22
-//│ in ((rev^27_rev^2 a:32) t1:35)
-//│ def init^30_init^22 = let h1:26 = 0
-//│ in let t1:27 = init^30_init^22
-//│ in ((rev^27_rev^2 a:24) t1:27)
+//│ def init2^34 = 
+//│ 	let h12:30 = 0
+//│ 	in let t12:31 = init2^34
+//│ 	in ((rev2^28 a2:28) t12:31)
+//│ def init^30 = 
+//│ 	let h1:34 = 0
+//│ 	in let t1:35 = init^30_init^22
+//│ 	in ((rev^27_rev^2 a:32) t1:35)
+//│ def init^30_init^22 = 
+//│ 	let h1:26 = 0
+//│ 	in let t1:27 = init^30_init^22
+//│ 	in ((rev^27_rev^2 a:24) t1:27)
 //│ def rev = (fun a:10 -> (fun ys:11 -> case ys:11 of {
 //│ 	C h1:12 t1:13 => ((rev a:10) t1:13)
 //│ 	| N => a:10}))

@@ -59,12 +59,13 @@ inter(l1, l2)
 //│ 	N => (fun ys:26 -> ys:26)
 //│ 	| C h:27 t:28 => (fun ys:29 -> [C h:27 ((inter^20_inter^5_inter^5 ys:29) t:28)])})
 //│ def l1 = [C 1 [C 2 [N]]]
-//│ def l1^21 = let h:32 = 1
-//│ in let t:33 = 
-//│ 	let h:22 = 2
-//│ 	in let t:23 = (fun ys:21 -> ys:21)
-//│ 	in (fun ys:24 -> [C h:22 ((inter^20_inter^5_inter^5_inter^5 ys:24) t:23)])
-//│ in (fun ys:34 -> [C h:32 ((inter^20_inter^5 ys:34) t:33)])
+//│ def l1^21 = 
+//│ 	let h:32 = 1
+//│ 	in let t:33 = 	
+//│ 		let h:22 = 2
+//│ 		in let t:23 = (fun ys:21 -> ys:21)
+//│ 		in (fun ys:24 -> [C h:22 ((inter^20_inter^5_inter^5_inter^5 ys:24) t:23)])
+//│ 	in (fun ys:34 -> [C h:32 ((inter^20_inter^5 ys:34) t:33)])
 //│ def l2 = [N]
 //│ def l2^23 = (fun ys:36 -> ys:36)
 //│ <<<<<<< after fusion <<<<<<<
@@ -133,19 +134,21 @@ inter(l1(0))(l2)
 //│ 	N => (fun ys:34 -> ys:34)
 //│ 	| C h:35 t:36 => (fun ys:37 -> [C h:35 ((inter^31_inter^5 ys:37) t:36)])})
 //│ def l1 = (fun x:14 -> [C 1 [C 2 (l1 ((add:4 x:14) 1))]])
-//│ def l1^32 = (fun x:22 -> let h:45 = 1
-//│ in let t:46 = 
-//│ 	let h:30 = 2
-//│ 	in let t:31 = (l1^32 ((add:4 x:22) 1))
-//│ 	in (fun ys:32 -> [C h:30 ((inter^31_inter^5_inter^5_inter^5 ys:32) t:31)])
-//│ in (fun ys:47 -> [C h:45 ((inter^31_inter^5 ys:47) t:46)]))
+//│ def l1^32 = (fun x:22 -> 
+//│ 	let h:45 = 1
+//│ 	in let t:46 = 	
+//│ 		let h:30 = 2
+//│ 		in let t:31 = (l1^32 ((add:4 x:22) 1))
+//│ 		in (fun ys:32 -> [C h:30 ((inter^31_inter^5_inter^5_inter^5 ys:32) t:31)])
+//│ 	in (fun ys:47 -> [C h:45 ((inter^31_inter^5 ys:47) t:46)]))
 //│ def l2 = [C 9 [C 8 l2]]
-//│ def l2^36 = let h:25 = 9
-//│ in let t:26 = 
-//│ 	let h:40 = 8
-//│ 	in let t:41 = l2^36
-//│ 	in (fun ys:42 -> [C h:40 ((inter^31_inter^5_inter^5_inter^5_inter^5 ys:42) t:41)])
-//│ in (fun ys:27 -> [C h:25 ((inter^31_inter^5_inter^5 ys:27) t:26)])
+//│ def l2^36 = 
+//│ 	let h:25 = 9
+//│ 	in let t:26 = 	
+//│ 		let h:40 = 8
+//│ 		in let t:41 = l2^36
+//│ 		in (fun ys:42 -> [C h:40 ((inter^31_inter^5_inter^5_inter^5_inter^5 ys:42) t:41)])
+//│ 	in (fun ys:27 -> [C h:25 ((inter^31_inter^5_inter^5 ys:27) t:26)])
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -195,9 +198,10 @@ map(l)(
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((map^19 l^20) (fun x:27 -> x:27))
 //│ def l = [C [K] [N]]
-//│ def l^20 = let h:18 = [T]
-//│ in let t:19 = (fun f:26 -> [N])
-//│ in (fun f:20 -> [C (f:20 h:18) ((map^19_map^5 t:19) f:20)])
+//│ def l^20 = 
+//│ 	let h:18 = [T]
+//│ 	in let t:19 = (fun f:26 -> [N])
+//│ 	in (fun f:20 -> [C (f:20 h:18) ((map^19_map^5 t:19) f:20)])
 //│ def map = (fun ls:9 -> case ls:9 of {
 //│ 	C h:10 t:11 => (fun f:12 -> [C (f:12 h:10) ((map t:11) f:12)])
 //│ 	| N => (fun f:13 -> [N])})
@@ -266,15 +270,16 @@ map(l)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (map^21 l^22)
 //│ def l = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ def l^22 = let h:23 = [T]
-//│ in let t:24 = 
-//│ 	let h:20 = [TT]
-//│ 	in let t:21 = 
-//│ 		let h:26 = [TTTT]
-//│ 		in let t:27 = [N]
-//│ 		in [C h:26 (map^21_map^7_map^7_map^7 t:27)]
-//│ 	in [C h:20 (map^21_map^7_map^7 t:21)]
-//│ in [C h:23 (map^21_map^7 t:24)]
+//│ def l^22 = 
+//│ 	let h:23 = [T]
+//│ 	in let t:24 = 	
+//│ 		let h:20 = [TT]
+//│ 		in let t:21 = 	
+//│ 			let h:26 = [TTTT]
+//│ 			in let t:27 = [N]
+//│ 			in [C h:26 (map^21_map^7_map^7_map^7 t:27)]
+//│ 		in [C h:20 (map^21_map^7_map^7 t:21)]
+//│ 	in [C h:23 (map^21_map^7 t:24)]
 //│ def map = (fun ls:8 -> case ls:8 of {
 //│ 	C h:9 t:10 => [C case h:9 of {
 //│ 		K => [T]
@@ -401,18 +406,21 @@ c(t)
 //│ def c^28_c^21_c^18 = (fun x:28 -> x:28)
 //│ def c^28_c^21_c^21 = (fun x:32 -> x:32)
 //│ def t = [T [K] aa bb]
-//│ def t^29 = let n:41 = [KK]
-//│ in let l:42 = t^29_aa^10
-//│ in let r:43 = t^29_bb^11
-//│ in [T n:41 (c^28_c^18 l:42) (c^28_c^21 r:43)]
-//│ def t^29_aa^10 = let n:49 = [NN]
-//│ in let l:50 = [LL]
-//│ in let r:51 = [LL]
-//│ in [T n:49 (c^28_c^18_c^18 l:50) (c^28_c^18_c^21 r:51)]
-//│ def t^29_bb^11 = let n:37 = [NN]
-//│ in let l:38 = [LL]
-//│ in let r:39 = [LL]
-//│ in [T n:37 (c^28_c^21_c^18 l:38) (c^28_c^21_c^21 r:39)]
+//│ def t^29 = 
+//│ 	let n:41 = [KK]
+//│ 	in let l:42 = t^29_aa^10
+//│ 	in let r:43 = t^29_bb^11
+//│ 	in [T n:41 (c^28_c^18 l:42) (c^28_c^21 r:43)]
+//│ def t^29_aa^10 = 
+//│ 	let n:49 = [NN]
+//│ 	in let l:50 = [LL]
+//│ 	in let r:51 = [LL]
+//│ 	in [T n:49 (c^28_c^18_c^18 l:50) (c^28_c^18_c^21 r:51)]
+//│ def t^29_bb^11 = 
+//│ 	let n:37 = [NN]
+//│ 	in let l:38 = [LL]
+//│ 	in let r:39 = [LL]
+//│ 	in [T n:37 (c^28_c^21_c^18 l:38) (c^28_c^21_c^21 r:39)]
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -504,18 +512,20 @@ sum(mapa(mapb(primitive)))
 //│ 	C hb:16 tb:17 => [C (primitive:3 hb:16) (mapb tb:17)]
 //│ 	| N => [N]})
 //│ def mapb^34 = (fun lsb:27 -> case lsb:27 of {
-//│ 	C hb:28 tb:29 => let ha:37 = (primitive:3 hb:28)
-//│ 	in let ta:38 = (mapb^34_mapb^25 tb:29)
-//│ 	in let h:40 = (primitive:3 ha:37)
-//│ 	in let t:41 = (mapa^33_mapa^14 ta:38)
-//│ 	in [S [N] (sum^32_sum^3 t:41)]
+//│ 	C hb:28 tb:29 => 
+//│ 		let ha:37 = (primitive:3 hb:28)
+//│ 		in let ta:38 = (mapb^34_mapb^25 tb:29)
+//│ 		in let h:40 = (primitive:3 ha:37)
+//│ 		in let t:41 = (mapa^33_mapa^14 ta:38)
+//│ 		in [S [N] (sum^32_sum^3 t:41)]
 //│ 	| N => [N]})
 //│ def mapb^34_mapb^25 = (fun lsb:33 -> case lsb:33 of {
-//│ 	C hb:34 tb:35 => let ha:25 = (primitive:3 hb:34)
-//│ 	in let ta:26 = (mapb^34_mapb^25 tb:35)
-//│ 	in let h:31 = (primitive:3 ha:25)
-//│ 	in let t:32 = (mapa^33_mapa^14 ta:26)
-//│ 	in [S [N] (sum^32_sum^3 t:32)]
+//│ 	C hb:34 tb:35 => 
+//│ 		let ha:25 = (primitive:3 hb:34)
+//│ 		in let ta:26 = (mapb^34_mapb^25 tb:35)
+//│ 		in let h:31 = (primitive:3 ha:25)
+//│ 		in let t:32 = (mapa^33_mapa^14 ta:26)
+//│ 		in [S [N] (sum^32_sum^3 t:32)]
 //│ 	| N => [N]})
 //│ def sum = (fun ls:9 -> case ls:9 of {
 //│ 	C h:10 t:11 => [S [N] (sum t:11)]
@@ -598,16 +608,17 @@ lastDrive(map(C(T, C(TT, N))))
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (lastDrive^37 (map^38 let hhh:26 = [K]
-//│ in let ttt:27 = 
-//│ 	let hhh:30 = [KK]
-//│ 	in let ttt:31 = (fun x:37 -> x:37)
-//│ 	in let h:38 = ((fun head:32 -> head:32) hhh:30)
-//│ 	in let t:39 = (map^38_map^10 ttt:31)
-//│ 	in (fun x:40 -> ((lastDrive^37_last^29 t:39) h:38))
-//│ in let hh:34 = ((fun head:28 -> head:28) hhh:26)
-//│ in let tt:35 = (map^38_map^10 ttt:27)
-//│ in [Some ((lastDrive^37_last^29 tt:35) hh:34)]))
+//│ (lastDrive^37 (map^38 
+//│ 	let hhh:26 = [K]
+//│ 	in let ttt:27 = 	
+//│ 		let hhh:30 = [KK]
+//│ 		in let ttt:31 = (fun x:37 -> x:37)
+//│ 		in let h:38 = ((fun head:32 -> head:32) hhh:30)
+//│ 		in let t:39 = (map^38_map^10 ttt:31)
+//│ 		in (fun x:40 -> ((lastDrive^37_last^29 t:39) h:38))
+//│ 	in let hh:34 = ((fun head:28 -> head:28) hhh:26)
+//│ 	in let tt:35 = (map^38_map^10 ttt:27)
+//│ 	in [Some ((lastDrive^37_last^29 tt:35) hh:34)]))
 //│ def last = (fun ys:13 -> case ys:13 of {
 //│ 	N => (fun x:14 -> x:14)
 //│ 	| C h:15 t:16 => (fun x:17 -> ((last t:16) h:15))})

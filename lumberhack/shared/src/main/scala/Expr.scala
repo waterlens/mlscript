@@ -16,6 +16,7 @@ case class Program(contents: Ls[ProgDef \/ Expr]) {
       case Right(expr) => ""
     }.map {
       case L(pd) => s"def ${pd.id.pp(using InitPpConfig)} = ${pd.body.pp}"
+      case R(e: Expr.LetIn) => e.pp.linesIterator.filter(_.nonEmpty).map(_.drop(1)).mkString("\n")
       case R(e) => e.pp
     }.mkString("\n")
   
@@ -151,10 +152,26 @@ enum Expr(using val deforest: Deforest) {
           s"${Console.BLUE}[$name${Console.RESET}${args.map(" " + _.pp).mkString + Console.BLUE}]${Console.RESET}"
         case LetIn(id, rhs, body) if config.multiline => {
           val rhsStr = rhs match {
-            case r: LetIn => "\n\t" + rhs.pp.linesIterator.map("\t" + _).mkString("\n").dropWhile(_ == '\t')
-            case _ => rhs.pp
+            case r: LetIn => rhs.pp.linesIterator.map("\t" + _).mkString("\n")
+            case _ => {
+              val res = rhs.pp
+              val resLines = res.linesIterator.toSeq
+              if resLines.length > 1 then {
+                resLines.map("\t" + _).mkString("\n").dropWhile(c => c == '\n' || c.isWhitespace)
+              } else { res }
+            }
           }
-          s"${Console.BOLD}let${Console.RESET} ${id.pp} = ${rhsStr}" + s"\n${Console.BOLD}in${Console.RESET} ${body.pp}"
+          val bodyStr = body match {
+            case b: LetIn => b.pp.dropWhile(c => c == '\n' || c.isWhitespace)
+            case _ => {
+              val res = body.pp
+              val resLines = res.linesIterator.toSeq
+              if resLines.length > 1 then {
+                resLines.map("\t" + _).mkString("\n").dropWhile(c => c == '\n' || c.isWhitespace)
+              } else { res }
+            }
+          }
+          s"\n\t${Console.BOLD}let${Console.RESET} ${id.pp} = ${rhsStr}" + s"\n\t${Console.BOLD}in${Console.RESET} $bodyStr"
         }
         case LetIn(id, rhs, body) => s"${Console.BOLD}let${Console.RESET} ${id.pp} = ${rhs.pp}" + s"\n${Console.BOLD}in${Console.RESET} ${body.pp}"
         case Match(scrut, arms) if config.multiline => s"${Console.BOLD}case${Console.RESET} ${scrut.pp} ${Console.BOLD}of${Console.RESET} {${

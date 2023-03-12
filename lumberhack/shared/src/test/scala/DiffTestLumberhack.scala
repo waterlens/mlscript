@@ -109,7 +109,7 @@ class DiffTestLumberhack extends DiffTests {
 
       output("\n>>>>>>> after fusion >>>>>>>")
       val prgmAfterFusion = newProg.rewrite(newd.fusionMatch.toMap, newd)
-      output(prgmAfterFusion.pp(using InitPpConfig.multilineOn.showIuidOn))
+      output(prgmAfterFusion.pp(callTree._1)(using InitPpConfig.multilineOn.showIuidOn))
       output("<<<<<<< after fusion <<<<<<<")
       // output("\n>>>>>>> new type variable bounds >>>>>>>")
       // val newtvs = newd.upperBounds.keySet ++ d.lowerBounds.keySet

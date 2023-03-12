@@ -35,11 +35,16 @@ c(p)
 //│ (c^9 p^10)
 //│ def c = (fun x:8 -> case x:8 of {
 //│ 	C a:9 => (c a:9)})
-//│ def c^9 = (fun x:12 -> x:12)
 //│ def p = [C p]
-//│ def p^10 = 
+//│ module p^10 = {
 //│ 	let a:13 = p^10
 //│ 	in (c^9 a:13)
+//│ 	module p^10_p^1 = {p^10}
+//│ }
+//│ module c^9 = {
+//│ 	(fun x:12 -> x:12)
+//│ 	module c^9_c^4 = {c^9}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -100,6 +105,8 @@ c(p)
 //│ 		in let bb:15 = 7
 //│ 		in (e bb:15)
 //│ 	in (d b:18)
+//│ module c^25 = {c^25}
+//│ module p^26 = {p^26}
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -156,24 +163,33 @@ c(p)
 //│ 	C a:9 => case a:9 of {
 //│ 		C b:10 => case b:10 of {
 //│ 			C y:11 => (c y:11)}}})
-//│ def c^14 = (fun x:17 -> x:17)
-//│ def c^14_c^7 = (fun x:21 -> x:21)
 //│ def p = [C [C p]]
-//│ def p^15 = 
+//│ module c^14 = {
+//│ 	(fun x:17 -> x:17)
+//│ 	module c^14_c^7 = {
+//│ 		(fun x:21 -> x:21)
+//│ 		module c^14_c^7_c^7 = {c^14}
+//│ 	}
+//│ }
+//│ module p^15 = {
 //│ 	let a:18 = 	
 //│ 		let b:19 = p^15_p^1
 //│ 		in b:19
 //│ 	in a:18
-//│ def p^15_p^1 = 
-//│ 	let y:20 = 	
-//│ 		let a:22 = p^15_p^1_p^1
-//│ 		in a:22
-//│ 	in (c^14_c^7 y:20)
-//│ def p^15_p^1_p^1 = 
-//│ 	let b:23 = 	
-//│ 		let y:24 = p^15
-//│ 		in (c^14 y:24)
-//│ 	in b:23
+//│ 	module p^15_p^1 = {
+//│ 		let y:20 = 	
+//│ 			let a:22 = p^15_p^1_p^1
+//│ 			in a:22
+//│ 		in (c^14_c^7 y:20)
+//│ 		module p^15_p^1_p^1 = {
+//│ 			let b:23 = 	
+//│ 				let y:24 = p^15
+//│ 				in (c^14 y:24)
+//│ 			in b:23
+//│ 			module p^15_p^1_p^1_p^1 = {p^15}
+//│ 		}
+//│ 	}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -221,16 +237,24 @@ c(id(p))
 //│ (c^16 (id p^18))
 //│ def c = (fun x:10 -> case x:10 of {
 //│ 	C a:11 => (c a:11)})
-//│ def c^16 = (fun x:19 -> x:19)
-//│ def c^16_c^5 = (fun x:17 -> x:17)
 //│ def id = (fun y:13 -> (id2 y:13))
 //│ def id2 = (fun yy:12 -> yy:12)
 //│ def p = [C [C p]]
-//│ def p^18 = 
+//│ module p^18 = {
 //│ 	let a:20 = 	
 //│ 		let a:18 = p^18
 //│ 		in (c^16 a:18)
 //│ 	in (c^16_c^5 a:20)
+//│ 	module p^18_p^1 = {p^18}
+//│ }
+//│ module id^17 = {id^17}
+//│ module c^16 = {
+//│ 	(fun x:19 -> x:19)
+//│ 	module c^16_c^5 = {
+//│ 		(fun x:17 -> x:17)
+//│ 		module c^16_c^5_c^5 = {c^16}
+//│ 	}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 fun sum(ls) = if ls is
@@ -288,28 +312,43 @@ sum(mapa(mapb(primitive)))
 //│ (sum^29 (mapa^30 (mapb^31 primitive:3)))
 //│ def mapa = (fun lsa:12 -> case lsa:12 of {
 //│ 	C ha:13 ta:14 => [C (primitive:3 ha:13) (mapa ta:14)]})
-//│ def mapa^30 = (fun lsa:30 -> lsa:30)
-//│ def mapa^30_mapa^13 = (fun lsa:36 -> lsa:36)
 //│ def mapb = (fun lsb:15 -> case lsb:15 of {
 //│ 	C hb:16 tb:17 => [C (primitive:3 hb:16) (mapb tb:17)]})
-//│ def mapb^31 = (fun lsb:24 -> case lsb:24 of {
-//│ 	C hb:25 tb:26 => 
-//│ 		let ha:31 = (primitive:3 hb:25)
-//│ 		in let ta:32 = (mapb^31_mapb^23 tb:26)
-//│ 		in let h:40 = (primitive:3 ha:31)
-//│ 		in let t:41 = (mapa^30_mapa^13 ta:32)
-//│ 		in [S [N] (sum^29_sum^3 t:41)]})
-//│ def mapb^31_mapb^23 = (fun lsb:27 -> case lsb:27 of {
-//│ 	C hb:28 tb:29 => 
-//│ 		let ha:37 = (primitive:3 hb:28)
-//│ 		in let ta:38 = (mapb^31_mapb^23 tb:29)
-//│ 		in let h:34 = (primitive:3 ha:37)
-//│ 		in let t:35 = (mapa^30_mapa^13 ta:38)
-//│ 		in [S [N] (sum^29_sum^3 t:35)]})
 //│ def sum = (fun ls:9 -> case ls:9 of {
 //│ 	C h:10 t:11 => [S [N] (sum t:11)]})
-//│ def sum^29 = (fun ls:39 -> ls:39)
-//│ def sum^29_sum^3 = (fun ls:33 -> ls:33)
+//│ module mapa^30 = {
+//│ 	(fun lsa:30 -> lsa:30)
+//│ 	module mapa^30_mapa^13 = {
+//│ 		(fun lsa:36 -> lsa:36)
+//│ 		module mapa^30_mapa^13_mapa^13 = {mapa^30_mapa^13}
+//│ 	}
+//│ }
+//│ module sum^29 = {
+//│ 	(fun ls:39 -> ls:39)
+//│ 	module sum^29_sum^3 = {
+//│ 		(fun ls:33 -> ls:33)
+//│ 		module sum^29_sum^3_sum^3 = {sum^29_sum^3}
+//│ 	}
+//│ }
+//│ module mapb^31 = {
+//│ 	(fun lsb:24 -> case lsb:24 of {
+//│ 		C hb:25 tb:26 => 
+//│ 			let ha:31 = (primitive:3 hb:25)
+//│ 			in let ta:32 = (mapb^31_mapb^23 tb:26)
+//│ 			in let h:40 = (primitive:3 ha:31)
+//│ 			in let t:41 = (mapa^30_mapa^13 ta:32)
+//│ 			in [S [N] (sum^29_sum^3 t:41)]})
+//│ 	module mapb^31_mapb^23 = {
+//│ 		(fun lsb:27 -> case lsb:27 of {
+//│ 			C hb:28 tb:29 => 
+//│ 				let ha:37 = (primitive:3 hb:28)
+//│ 				in let ta:38 = (mapb^31_mapb^23 tb:29)
+//│ 				in let h:34 = (primitive:3 ha:37)
+//│ 				in let t:35 = (mapa^30_mapa^13 ta:38)
+//│ 				in [S [N] (sum^29_sum^3 t:35)]})
+//│ 		module mapb^31_mapb^23_mapb^23 = {mapb^31_mapb^23}
+//│ 	}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -335,9 +374,12 @@ if C(A, B(C)) is
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ let a:8 = [A]
-//│ in let b:9 = [B [C]]
-//│ in [D b:9]
+//│ 
+//│ 	let a:8 = [A]
+//│ 	in let b:9 = [B [C]]
+//│ 	in [D b:9]
+//│ 
+//│ 
 //│ <<<<<<< after fusion <<<<<<<
 //│
 
@@ -397,29 +439,45 @@ ca(p)
 //│ (ca^17 p^18)
 //│ def ca = (fun x:9 -> case x:9 of {
 //│ 	C a:10 => (cb a:10)})
-//│ def ca^17 = (fun x:31 -> x:31)
-//│ def ca^17_cb^6 = (fun x:25 -> x:25)
-//│ def ca^17_cb^6_ca^12 = (fun x:29 -> x:29)
-//│ def ca^17_cb^6_ca^12_cb^6 = (fun x:23 -> x:23)
-//│ def ca^17_cb^6_ca^12_cb^6_ca^12 = (fun x:27 -> x:27)
-//│ def ca^17_cb^6_ca^12_cb^6_ca^12_cb^6 = (fun x:21 -> x:21)
 //│ def cb = (fun x:11 -> case x:11 of {
 //│ 	C b:12 => (ca b:12)})
 //│ def p = [C [C [C p]]]
-//│ def p^18 = 
+//│ module ca^17 = {
+//│ 	(fun x:31 -> x:31)
+//│ 	module ca^17_cb^6 = {
+//│ 		(fun x:25 -> x:25)
+//│ 		module ca^17_cb^6_ca^12 = {
+//│ 			(fun x:29 -> x:29)
+//│ 			module ca^17_cb^6_ca^12_cb^6 = {
+//│ 				(fun x:23 -> x:23)
+//│ 				module ca^17_cb^6_ca^12_cb^6_ca^12 = {
+//│ 					(fun x:27 -> x:27)
+//│ 					module ca^17_cb^6_ca^12_cb^6_ca^12_cb^6 = {
+//│ 						(fun x:21 -> x:21)
+//│ 						module ca^17_cb^6_ca^12_cb^6_ca^12_cb^6_ca^12 = {ca^17}
+//│ 					}
+//│ 				}
+//│ 			}
+//│ 		}
+//│ 	}
+//│ }
+//│ module p^18 = {
 //│ 	let a:32 = 	
 //│ 		let b:26 = 	
 //│ 			let a:30 = p^18_p^1
 //│ 			in (ca^17_cb^6_ca^12_cb^6 a:30)
 //│ 		in (ca^17_cb^6_ca^12 b:26)
 //│ 	in (ca^17_cb^6 a:32)
-//│ def p^18_p^1 = 
-//│ 	let b:24 = 	
-//│ 		let a:28 = 	
-//│ 			let b:22 = p^18
-//│ 			in (ca^17 b:22)
-//│ 		in (ca^17_cb^6_ca^12_cb^6_ca^12_cb^6 a:28)
-//│ 	in (ca^17_cb^6_ca^12_cb^6_ca^12 b:24)
+//│ 	module p^18_p^1 = {
+//│ 		let b:24 = 	
+//│ 			let a:28 = 	
+//│ 				let b:22 = p^18
+//│ 				in (ca^17 b:22)
+//│ 			in (ca^17_cb^6_ca^12_cb^6_ca^12_cb^6 a:28)
+//│ 		in (ca^17_cb^6_ca^12_cb^6_ca^12 b:24)
+//│ 		module p^18_p^1_p^1 = {p^18}
+//│ 	}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -487,26 +545,40 @@ c1(p1)
 //│ (c1^19 p1^20)
 //│ def c1 = (fun x1:10 -> case x1:10 of {
 //│ 	C a:11 => (c2 a:11)})
-//│ def c1^19 = (fun x1:23 -> x1:23)
-//│ def c1^19_c2^2 = (fun x2:21 -> x2:21)
-//│ def c1^19_c2^2_c1^8 = (fun x1:27 -> x1:27)
-//│ def c1^19_c2^2_c1^8_c2^2 = (fun x2:25 -> x2:25)
-//│ def c1^19_c2^2_c1^8_c2^2_c1^8 = (fun x1:29 -> case x1:29 of {
-//│ 	C a:30 => (c1^19_c2^2 a:30)})
 //│ def c2 = (fun x2:12 -> case x2:12 of {
 //│ 	C b:13 => (c1 b:13)})
 //│ def p1 = [C [C [C p2]]]
-//│ def p1^20 = 
+//│ def p2 = [C p1]
+//│ module c1^19 = {
+//│ 	(fun x1:23 -> x1:23)
+//│ 	module c1^19_c2^2 = {
+//│ 		(fun x2:21 -> x2:21)
+//│ 		module c1^19_c2^2_c1^8 = {
+//│ 			(fun x1:27 -> x1:27)
+//│ 			module c1^19_c2^2_c1^8_c2^2 = {
+//│ 				(fun x2:25 -> x2:25)
+//│ 				module c1^19_c2^2_c1^8_c2^2_c1^8 = {
+//│ 					(fun x1:29 -> case x1:29 of {
+//│ 						C a:30 => (c1^19_c2^2 a:30)})
+//│ 					module c1^19_c2^2_c1^8_c2^2_c1^8_c2^2 = {c1^19_c2^2}
+//│ 				}
+//│ 			}
+//│ 		}
+//│ 	}
+//│ }
+//│ module p1^20 = {
 //│ 	let a:24 = 	
 //│ 		let b:22 = 	
 //│ 			let a:28 = p1^20_p2^13
 //│ 			in (c1^19_c2^2_c1^8_c2^2 a:28)
 //│ 		in (c1^19_c2^2_c1^8 b:22)
 //│ 	in (c1^19_c2^2 a:24)
-//│ def p1^20_p2^13 = 
-//│ 	let b:26 = p1^20
-//│ 	in (c1^19_c2^2_c1^8_c2^2_c1^8 b:26)
-//│ def p2 = [C p1]
+//│ 	module p1^20_p2^13 = {
+//│ 		let b:26 = p1^20
+//│ 		in (c1^19_c2^2_c1^8_c2^2_c1^8 b:26)
+//│ 		module p1^20_p2^13_p1^17 = {p1^20}
+//│ 	}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -572,7 +644,27 @@ map(l)
 //│ (map^25 l^26)
 //│ def ff = (fun x:9 -> x:9)
 //│ def l = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ def l^26 = 
+//│ def map = (fun ls:10 -> case ls:10 of {
+//│ 	C h:11 t:12 => [C (ff h:11) (map t:12)]
+//│ 	| N => [N]})
+//│ module map^25 = {
+//│ 	(fun ls:18 -> ls:18)
+//│ 	module map^25_map^11 = {
+//│ 		(fun ls:21 -> ls:21)
+//│ 		module map^25_map^11_map^11 = {
+//│ 			(fun ls:24 -> ls:24)
+//│ 			module map^25_map^11_map^11_map^11 = {
+//│ 				(fun ls:27 -> ls:27)
+//│ 				module map^25_map^11_map^11_map^11_map^11 = {map^25_map^11_map^11_map^11}
+//│ 				module map^25_map^11_map^11_map^11_ff^8 = {ff^8}
+//│ 			}
+//│ 			module map^25_map^11_map^11_ff^8 = {ff^8}
+//│ 		}
+//│ 		module map^25_map^11_ff^8 = {ff^8}
+//│ 	}
+//│ 	module map^25_ff^8 = {ff^8}
+//│ }
+//│ module l^26 = {
 //│ 	let h:19 = [T]
 //│ 	in let t:20 = 	
 //│ 		let h:22 = [TT]
@@ -582,13 +674,7 @@ map(l)
 //│ 			in [C (ff h:25) (map^25_map^11_map^11_map^11 t:26)]
 //│ 		in [C (ff h:22) (map^25_map^11_map^11 t:23)]
 //│ 	in [C (ff h:19) (map^25_map^11 t:20)]
-//│ def map = (fun ls:10 -> case ls:10 of {
-//│ 	C h:11 t:12 => [C (ff h:11) (map t:12)]
-//│ 	| N => [N]})
-//│ def map^25 = (fun ls:18 -> ls:18)
-//│ def map^25_map^11 = (fun ls:21 -> ls:21)
-//│ def map^25_map^11_map^11 = (fun ls:24 -> ls:24)
-//│ def map^25_map^11_map^11_map^11 = (fun ls:27 -> ls:27)
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -651,7 +737,13 @@ map(l)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (map^21 l^22)
 //│ def l = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ def l^22 = 
+//│ def map = (fun ls:8 -> case ls:8 of {
+//│ 	C h:9 t:10 => [C case h:9 of {
+//│ 		K => [T]
+//│ 		| KK => [TT]
+//│ 		| KKKK => [TTTT]} (map t:10)]
+//│ 	| N => [N]})
+//│ module l^22 = {
 //│ 	let h:23 = [T]
 //│ 	in let t:24 = 	
 //│ 		let h:20 = [TT]
@@ -661,16 +753,20 @@ map(l)
 //│ 			in [C h:26 (map^21_map^7_map^7_map^7 t:27)]
 //│ 		in [C h:20 (map^21_map^7_map^7 t:21)]
 //│ 	in [C h:23 (map^21_map^7 t:24)]
-//│ def map = (fun ls:8 -> case ls:8 of {
-//│ 	C h:9 t:10 => [C case h:9 of {
-//│ 		K => [T]
-//│ 		| KK => [TT]
-//│ 		| KKKK => [TTTT]} (map t:10)]
-//│ 	| N => [N]})
-//│ def map^21 = (fun ls:22 -> ls:22)
-//│ def map^21_map^7 = (fun ls:19 -> ls:19)
-//│ def map^21_map^7_map^7 = (fun ls:25 -> ls:25)
-//│ def map^21_map^7_map^7_map^7 = (fun ls:16 -> ls:16)
+//│ }
+//│ module map^21 = {
+//│ 	(fun ls:22 -> ls:22)
+//│ 	module map^21_map^7 = {
+//│ 		(fun ls:19 -> ls:19)
+//│ 		module map^21_map^7_map^7 = {
+//│ 			(fun ls:25 -> ls:25)
+//│ 			module map^21_map^7_map^7_map^7 = {
+//│ 				(fun ls:16 -> ls:16)
+//│ 				module map^21_map^7_map^7_map^7_map^7 = {map^21_map^7_map^7_map^7}
+//│ 			}
+//│ 		}
+//│ 	}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -754,32 +850,47 @@ sum(mapa(mapb(primitive)))
 //│ def mapa = (fun lsa:12 -> case lsa:12 of {
 //│ 	C ha:13 ta:14 => [C (primitive:3 ha:13) (mapa ta:14)]
 //│ 	| N => [N]})
-//│ def mapa^33 = (fun lsa:36 -> lsa:36)
-//│ def mapa^33_mapa^14 = (fun lsa:24 -> lsa:24)
 //│ def mapb = (fun lsb:15 -> case lsb:15 of {
 //│ 	C hb:16 tb:17 => [C (primitive:3 hb:16) (mapb tb:17)]
-//│ 	| N => [N]})
-//│ def mapb^34 = (fun lsb:27 -> case lsb:27 of {
-//│ 	C hb:28 tb:29 => 
-//│ 		let ha:37 = (primitive:3 hb:28)
-//│ 		in let ta:38 = (mapb^34_mapb^25 tb:29)
-//│ 		in let h:40 = (primitive:3 ha:37)
-//│ 		in let t:41 = (mapa^33_mapa^14 ta:38)
-//│ 		in [S [N] (sum^32_sum^3 t:41)]
-//│ 	| N => [N]})
-//│ def mapb^34_mapb^25 = (fun lsb:33 -> case lsb:33 of {
-//│ 	C hb:34 tb:35 => 
-//│ 		let ha:25 = (primitive:3 hb:34)
-//│ 		in let ta:26 = (mapb^34_mapb^25 tb:35)
-//│ 		in let h:31 = (primitive:3 ha:25)
-//│ 		in let t:32 = (mapa^33_mapa^14 ta:26)
-//│ 		in [S [N] (sum^32_sum^3 t:32)]
 //│ 	| N => [N]})
 //│ def sum = (fun ls:9 -> case ls:9 of {
 //│ 	C h:10 t:11 => [S [N] (sum t:11)]
 //│ 	| N => [N]})
-//│ def sum^32 = (fun ls:39 -> ls:39)
-//│ def sum^32_sum^3 = (fun ls:30 -> ls:30)
+//│ module mapa^33 = {
+//│ 	(fun lsa:36 -> lsa:36)
+//│ 	module mapa^33_mapa^14 = {
+//│ 		(fun lsa:24 -> lsa:24)
+//│ 		module mapa^33_mapa^14_mapa^14 = {mapa^33_mapa^14}
+//│ 	}
+//│ }
+//│ module sum^32 = {
+//│ 	(fun ls:39 -> ls:39)
+//│ 	module sum^32_sum^3 = {
+//│ 		(fun ls:30 -> ls:30)
+//│ 		module sum^32_sum^3_sum^3 = {sum^32_sum^3}
+//│ 	}
+//│ }
+//│ module mapb^34 = {
+//│ 	(fun lsb:27 -> case lsb:27 of {
+//│ 		C hb:28 tb:29 => 
+//│ 			let ha:37 = (primitive:3 hb:28)
+//│ 			in let ta:38 = (mapb^34_mapb^25 tb:29)
+//│ 			in let h:40 = (primitive:3 ha:37)
+//│ 			in let t:41 = (mapa^33_mapa^14 ta:38)
+//│ 			in [S [N] (sum^32_sum^3 t:41)]
+//│ 		| N => [N]})
+//│ 	module mapb^34_mapb^25 = {
+//│ 		(fun lsb:33 -> case lsb:33 of {
+//│ 			C hb:34 tb:35 => 
+//│ 				let ha:25 = (primitive:3 hb:34)
+//│ 				in let ta:26 = (mapb^34_mapb^25 tb:35)
+//│ 				in let h:31 = (primitive:3 ha:25)
+//│ 				in let t:32 = (mapa^33_mapa^14 ta:26)
+//│ 				in [S [N] (sum^32_sum^3 t:32)]
+//│ 			| N => [N]})
+//│ 		module mapb^34_mapb^25_mapb^25 = {mapb^34_mapb^25}
+//│ 	}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -821,13 +932,20 @@ main(c)
 //│ (main^13 c^14)
 //│ def c = (fun x:9 -> case x:9 of {
 //│ 	C a:10 => (c a:10)})
-//│ def c^14 = (fun x:15 -> x:15)
 //│ def main = (fun cc:11 -> (cc:11 p))
-//│ def main^13 = (fun cc:17 -> (cc:17 main^13_p^10))
-//│ def main^13_p^10 = 
-//│ 	let a:16 = main^13_p^10
-//│ 	in (c^14 a:16)
 //│ def p = [C p]
+//│ module main^13 = {
+//│ 	(fun cc:17 -> (cc:17 main^13_p^10))
+//│ 	module main^13_p^10 = {
+//│ 		let a:16 = main^13_p^10
+//│ 		in (c^14 a:16)
+//│ 		module main^13_p^10_p^1 = {main^13_p^10}
+//│ 	}
+//│ }
+//│ module c^14 = {
+//│ 	(fun x:15 -> x:15)
+//│ 	module c^14_c^4 = {c^14}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -882,18 +1000,27 @@ main(p)
 //│ def main = (fun pp:11 -> case pp:11 of {
 //│ 	C b:12 => case b:12 of {
 //│ 		C d:13 => (c d:13)}})
-//│ def main^17 = (fun pp:19 -> pp:19)
-//│ def main^17_c^11 = (fun x:22 -> x:22)
 //│ def p = [C p]
-//│ def p^18 = 
+//│ module p^18 = {
 //│ 	let b:20 = p^18_p^1
 //│ 	in b:20
-//│ def p^18_p^1 = 
-//│ 	let d:21 = p^18_p^1_p^1
-//│ 	in (main^17_c^11 d:21)
-//│ def p^18_p^1_p^1 = 
-//│ 	let a:23 = p^18_p^1_p^1
-//│ 	in (main^17_c^11 a:23)
+//│ 	module p^18_p^1 = {
+//│ 		let d:21 = p^18_p^1_p^1
+//│ 		in (main^17_c^11 d:21)
+//│ 		module p^18_p^1_p^1 = {
+//│ 			let a:23 = p^18_p^1_p^1
+//│ 			in (main^17_c^11 a:23)
+//│ 			module p^18_p^1_p^1_p^1 = {p^18_p^1_p^1}
+//│ 		}
+//│ 	}
+//│ }
+//│ module main^17 = {
+//│ 	(fun pp:19 -> pp:19)
+//│ 	module main^17_c^11 = {
+//│ 		(fun x:22 -> x:22)
+//│ 		module main^17_c^11_c^4 = {main^17_c^11}
+//│ 	}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -934,12 +1061,18 @@ main(c, p)
 //│ ((main c^15) p^17)
 //│ def c = (fun x:9 -> case x:9 of {
 //│ 	C a:10 => (c a:10)})
-//│ def c^15 = (fun x:15 -> x:15)
 //│ def main = (fun cc:11 -> (fun pp:12 -> (cc:11 pp:12)))
 //│ def p = [C p]
-//│ def p^17 = 
+//│ module p^17 = {
 //│ 	let a:16 = p^17
 //│ 	in (c^15 a:16)
+//│ 	module p^17_p^1 = {p^17}
+//│ }
+//│ module main^14 = {main^14}
+//│ module c^15 = {
+//│ 	(fun x:15 -> x:15)
+//│ 	module c^15_c^4 = {c^15}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -994,23 +1127,38 @@ a(p)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (a^28 p^29)
 //│ def a = (fun x:12 -> (b x:12))
-//│ def a^28 = (fun x:32 -> (a^28_b^7 x:32))
-//│ def a^28_b^7 = (fun x:27 -> (a^28_b^7_c^11 x:27))
-//│ def a^28_b^7_c^11 = (fun x:26 -> ((d a^28_b^7_c^11_cons^16) x:26))
-//│ def a^28_b^7_c^11_cons^16 = (fun y:30 -> case y:30 of {
-//│ 	C aa:31 => (a^28_b^7_c^11_cons^16_cons^2 aa:31)})
-//│ def a^28_b^7_c^11_cons^16_cons^2 = (fun y:28 -> y:28)
 //│ def b = (fun x:15 -> (c x:15))
 //│ def c = (fun x:16 -> ((d cons) x:16))
 //│ def cons = (fun y:13 -> y:13)
 //│ def d = (fun cc:17 -> (fun x:18 -> (cc:17 x:18)))
 //│ def p = [C p]
-//│ def p^29 = 
+//│ module a^28 = {
+//│ 	(fun x:32 -> (a^28_b^7 x:32))
+//│ 	module a^28_b^7 = {
+//│ 		(fun x:27 -> (a^28_b^7_c^11 x:27))
+//│ 		module a^28_b^7_c^11 = {
+//│ 			(fun x:26 -> ((d a^28_b^7_c^11_cons^16) x:26))
+//│ 			module a^28_b^7_c^11_cons^16 = {
+//│ 				(fun y:30 -> case y:30 of {
+//│ 					C aa:31 => (a^28_b^7_c^11_cons^16_cons^2 aa:31)})
+//│ 				module a^28_b^7_c^11_cons^16_cons^2 = {
+//│ 					(fun y:28 -> y:28)
+//│ 					module a^28_b^7_c^11_cons^16_cons^2_cons^2 = {a^28_b^7_c^11_cons^16_cons^2}
+//│ 				}
+//│ 			}
+//│ 			module a^28_b^7_c^11_d^15 = {d^15}
+//│ 		}
+//│ 	}
+//│ }
+//│ module p^29 = {
 //│ 	let aa:14 = p^29_p^26
 //│ 	in (cons aa:14)
-//│ def p^29_p^26 = 
-//│ 	let aa:29 = p^29_p^26
-//│ 	in (a^28_b^7_c^11_cons^16_cons^2 aa:29)
+//│ 	module p^29_p^26 = {
+//│ 		let aa:29 = p^29_p^26
+//│ 		in (a^28_b^7_c^11_cons^16_cons^2 aa:29)
+//│ 		module p^29_p^26_p^26 = {p^29_p^26}
+//│ 	}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -1046,6 +1194,8 @@ c(p)
 //│ 	let a:9 = x:8
 //│ 	in (c a:9))
 //│ def p = [C [N]]
+//│ module c^10 = {c^10}
+//│ module p^11 = {p^11}
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -1119,21 +1269,31 @@ c2(id(main))
 //│ def c1 = (fun xx:13 -> xx:13)
 //│ def c2 = (fun z:15 -> case z:15 of {
 //│ 	C b:16 => (c2 b:16)})
-//│ def c2^25 = (fun z:23 -> z:23)
 //│ def id = (fun y:12 -> (c1 
 //│ 	let aa:14 = y:12
 //│ 	in aa:14))
 //│ def main = (c p)
-//│ def main^27 = (c main^27_p^18)
-//│ def main^27_p^18 = 
-//│ 	let a:18 = main^27_p^18_p^1
-//│ 	in a:18
-//│ def main^27_p^18_p^1 = 
-//│ 	let b:24 = main^27_p^18_p^1
-//│ 	in (c2^25 b:24)
 //│ def p = 
 //│ 	let a:18 = p
 //│ 	in a:18
+//│ module c2^25 = {
+//│ 	(fun z:23 -> z:23)
+//│ 	module c2^25_c2^12 = {c2^25}
+//│ }
+//│ module main^27 = {
+//│ 	(c main^27_p^18)
+//│ 	module main^27_c^17 = {c^17}
+//│ 	module main^27_p^18 = {
+//│ 		let a:18 = main^27_p^18_p^1
+//│ 		in a:18
+//│ 		module main^27_p^18_p^1 = {
+//│ 			let b:24 = main^27_p^18_p^1
+//│ 			in (c2^25 b:24)
+//│ 			module main^27_p^18_p^1_p^1 = {main^27_p^18_p^1}
+//│ 		}
+//│ 	}
+//│ }
+//│ module id^26 = {id^26}
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -1232,15 +1392,37 @@ c(t)
 //│ 		K => [KK]
 //│ 		| N => [NN]} (c l:10) (c r:11)]
 //│ 	| L => [LL]})
-//│ def c^26 = (fun x:20 -> x:20)
-//│ def c^26_c^16 = (fun x:32 -> x:32)
-//│ def c^26_c^16_c^16 = (fun x:28 -> x:28)
-//│ def c^26_c^16_c^19 = (fun x:40 -> x:40)
-//│ def c^26_c^19 = (fun x:36 -> x:36)
-//│ def c^26_c^19_c^16 = (fun x:24 -> x:24)
-//│ def c^26_c^19_c^19 = (fun x:44 -> x:44)
 //│ def t = [T [K] [T [N] [L] [L]] [T [N] [L] [L]]]
-//│ def t^27 = 
+//│ module c^26 = {
+//│ 	(fun x:20 -> x:20)
+//│ 	module c^26_c^16 = {
+//│ 		(fun x:32 -> x:32)
+//│ 		module c^26_c^16_c^16 = {
+//│ 			(fun x:28 -> x:28)
+//│ 			module c^26_c^16_c^16_c^16 = {c^26_c^16_c^16}
+//│ 			module c^26_c^16_c^16_c^19 = {c^26_c^16_c^16}
+//│ 		}
+//│ 		module c^26_c^16_c^19 = {
+//│ 			(fun x:40 -> x:40)
+//│ 			module c^26_c^16_c^19_c^16 = {c^26_c^16_c^19}
+//│ 			module c^26_c^16_c^19_c^19 = {c^26_c^16_c^19}
+//│ 		}
+//│ 	}
+//│ 	module c^26_c^19 = {
+//│ 		(fun x:36 -> x:36)
+//│ 		module c^26_c^19_c^16 = {
+//│ 			(fun x:24 -> x:24)
+//│ 			module c^26_c^19_c^16_c^16 = {c^26_c^19_c^16}
+//│ 			module c^26_c^19_c^16_c^19 = {c^26_c^19_c^16}
+//│ 		}
+//│ 		module c^26_c^19_c^19 = {
+//│ 			(fun x:44 -> x:44)
+//│ 			module c^26_c^19_c^19_c^16 = {c^26_c^19_c^19}
+//│ 			module c^26_c^19_c^19_c^19 = {c^26_c^19_c^19}
+//│ 		}
+//│ 	}
+//│ }
+//│ module t^27 = {
 //│ 	let n:21 = [KK]
 //│ 	in let l:22 = 	
 //│ 		let n:33 = [NN]
@@ -1253,6 +1435,7 @@ c(t)
 //│ 		in let r:39 = [LL]
 //│ 		in [T n:37 (c^26_c^19_c^16 l:38) (c^26_c^19_c^19 r:39)]
 //│ 	in [T n:21 (c^26_c^16 l:22) (c^26_c^19 r:23)]
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -1359,29 +1542,54 @@ c(t)
 //│ 		K => [KK]
 //│ 		| N => [NN]} (c l:12) (c r:13)]
 //│ 	| L => [LL]})
-//│ def c^28 = (fun x:40 -> x:40)
-//│ def c^28_c^18 = (fun x:48 -> x:48)
-//│ def c^28_c^18_c^18 = (fun x:24 -> x:24)
-//│ def c^28_c^18_c^21 = (fun x:44 -> x:44)
-//│ def c^28_c^21 = (fun x:36 -> x:36)
-//│ def c^28_c^21_c^18 = (fun x:28 -> x:28)
-//│ def c^28_c^21_c^21 = (fun x:32 -> x:32)
 //│ def t = [T [K] aa bb]
-//│ def t^29 = 
+//│ module t^29 = {
 //│ 	let n:41 = [KK]
 //│ 	in let l:42 = t^29_aa^10
 //│ 	in let r:43 = t^29_bb^11
 //│ 	in [T n:41 (c^28_c^18 l:42) (c^28_c^21 r:43)]
-//│ def t^29_aa^10 = 
-//│ 	let n:49 = [NN]
-//│ 	in let l:50 = [LL]
-//│ 	in let r:51 = [LL]
-//│ 	in [T n:49 (c^28_c^18_c^18 l:50) (c^28_c^18_c^21 r:51)]
-//│ def t^29_bb^11 = 
-//│ 	let n:37 = [NN]
-//│ 	in let l:38 = [LL]
-//│ 	in let r:39 = [LL]
-//│ 	in [T n:37 (c^28_c^21_c^18 l:38) (c^28_c^21_c^21 r:39)]
+//│ 	module t^29_bb^11 = {
+//│ 		let n:37 = [NN]
+//│ 		in let l:38 = [LL]
+//│ 		in let r:39 = [LL]
+//│ 		in [T n:37 (c^28_c^21_c^18 l:38) (c^28_c^21_c^21 r:39)]
+//│ 	}
+//│ 	module t^29_aa^10 = {
+//│ 		let n:49 = [NN]
+//│ 		in let l:50 = [LL]
+//│ 		in let r:51 = [LL]
+//│ 		in [T n:49 (c^28_c^18_c^18 l:50) (c^28_c^18_c^21 r:51)]
+//│ 	}
+//│ }
+//│ module c^28 = {
+//│ 	(fun x:40 -> x:40)
+//│ 	module c^28_c^21 = {
+//│ 		(fun x:36 -> x:36)
+//│ 		module c^28_c^21_c^21 = {
+//│ 			(fun x:32 -> x:32)
+//│ 			module c^28_c^21_c^21_c^21 = {c^28_c^21_c^21}
+//│ 			module c^28_c^21_c^21_c^18 = {c^28_c^21_c^21}
+//│ 		}
+//│ 		module c^28_c^21_c^18 = {
+//│ 			(fun x:28 -> x:28)
+//│ 			module c^28_c^21_c^18_c^21 = {c^28_c^21_c^18}
+//│ 			module c^28_c^21_c^18_c^18 = {c^28_c^21_c^18}
+//│ 		}
+//│ 	}
+//│ 	module c^28_c^18 = {
+//│ 		(fun x:48 -> x:48)
+//│ 		module c^28_c^18_c^21 = {
+//│ 			(fun x:44 -> x:44)
+//│ 			module c^28_c^18_c^21_c^21 = {c^28_c^18_c^21}
+//│ 			module c^28_c^18_c^21_c^18 = {c^28_c^18_c^21}
+//│ 		}
+//│ 		module c^28_c^18_c^18 = {
+//│ 			(fun x:24 -> x:24)
+//│ 			module c^28_c^18_c^18_c^21 = {c^28_c^18_c^18}
+//│ 			module c^28_c^18_c^18_c^18 = {c^28_c^18_c^18}
+//│ 		}
+//│ 	}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -1428,15 +1636,21 @@ map(l)(
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((map^19 l^20) (fun x:27 -> x:27))
 //│ def l = [C [K] [N]]
-//│ def l^20 = 
-//│ 	let h:18 = [T]
-//│ 	in let t:19 = (fun f:26 -> [N])
-//│ 	in (fun f:20 -> [C (f:20 h:18) ((map^19_map^5 t:19) f:20)])
 //│ def map = (fun ls:9 -> case ls:9 of {
 //│ 	C h:10 t:11 => (fun f:12 -> [C (f:12 h:10) ((map t:11) f:12)])
 //│ 	| N => (fun f:13 -> [N])})
-//│ def map^19 = (fun ls:17 -> ls:17)
-//│ def map^19_map^5 = (fun ls:22 -> ls:22)
+//│ module l^20 = {
+//│ 	let h:18 = [T]
+//│ 	in let t:19 = (fun f:26 -> [N])
+//│ 	in (fun f:20 -> [C (f:20 h:18) ((map^19_map^5 t:19) f:20)])
+//│ }
+//│ module map^19 = {
+//│ 	(fun ls:17 -> ls:17)
+//│ 	module map^19_map^5 = {
+//│ 		(fun ls:22 -> ls:22)
+//│ 		module map^19_map^5_map^5 = {map^19_map^5}
+//│ 	}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -1495,29 +1709,44 @@ inter(l1)(l2)
 //│ def inter = (fun xs:9 -> case xs:9 of {
 //│ 	N => (fun ys:10 -> ys:10)
 //│ 	| C h:11 t:12 => (fun ys:13 -> [C h:11 ((inter ys:13) t:12)])})
-//│ def inter^24 = (fun xs:21 -> xs:21)
-//│ def inter^24_inter^5 = (fun xs:36 -> xs:36)
-//│ def inter^24_inter^5_inter^5 = (fun xs:41 -> xs:41)
-//│ def inter^24_inter^5_inter^5_inter^5 = (fun xs:26 -> xs:26)
-//│ def inter^24_inter^5_inter^5_inter^5_inter^5 = (fun xs:31 -> case xs:31 of {
-//│ 	N => (fun ys:32 -> ys:32)
-//│ 	| C h:33 t:34 => (fun ys:35 -> [C h:33 ((inter^24_inter^5 ys:35) t:34)])})
 //│ def l1 = [C 1 [C 2 l1]]
-//│ def l1^25 = 
-//│ 	let h:23 = 1
-//│ 	in let t:24 = 	
-//│ 		let h:43 = 2
-//│ 		in let t:44 = l1^25
-//│ 		in (fun ys:45 -> [C h:43 ((inter^24_inter^5_inter^5_inter^5 ys:45) t:44)])
-//│ 	in (fun ys:25 -> [C h:23 ((inter^24_inter^5 ys:25) t:24)])
 //│ def l2 = [C 9 [C 8 l2]]
-//│ def l2^27 = 
+//│ module l2^27 = {
 //│ 	let h:38 = 9
 //│ 	in let t:39 = 	
 //│ 		let h:28 = 8
 //│ 		in let t:29 = l2^27
 //│ 		in (fun ys:30 -> [C h:28 ((inter^24_inter^5_inter^5_inter^5_inter^5 ys:30) t:29)])
 //│ 	in (fun ys:40 -> [C h:38 ((inter^24_inter^5_inter^5 ys:40) t:39)])
+//│ 	module l2^27_l2^21 = {l2^27}
+//│ }
+//│ module l1^25 = {
+//│ 	let h:23 = 1
+//│ 	in let t:24 = 	
+//│ 		let h:43 = 2
+//│ 		in let t:44 = l1^25
+//│ 		in (fun ys:45 -> [C h:43 ((inter^24_inter^5_inter^5_inter^5 ys:45) t:44)])
+//│ 	in (fun ys:25 -> [C h:23 ((inter^24_inter^5 ys:25) t:24)])
+//│ 	module l1^25_l1^16 = {l1^25}
+//│ }
+//│ module inter^24 = {
+//│ 	(fun xs:21 -> xs:21)
+//│ 	module inter^24_inter^5 = {
+//│ 		(fun xs:36 -> xs:36)
+//│ 		module inter^24_inter^5_inter^5 = {
+//│ 			(fun xs:41 -> xs:41)
+//│ 			module inter^24_inter^5_inter^5_inter^5 = {
+//│ 				(fun xs:26 -> xs:26)
+//│ 				module inter^24_inter^5_inter^5_inter^5_inter^5 = {
+//│ 					(fun xs:31 -> case xs:31 of {
+//│ 						N => (fun ys:32 -> ys:32)
+//│ 						| C h:33 t:34 => (fun ys:35 -> [C h:33 ((inter^24_inter^5 ys:35) t:34)])})
+//│ 					module inter^24_inter^5_inter^5_inter^5_inter^5_inter^5 = {inter^24_inter^5}
+//│ 				}
+//│ 			}
+//│ 		}
+//│ 	}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -1575,7 +1804,14 @@ lastDrive(C(1, C(2, N)))
 //│ def lastDrive = (fun xs:13 -> case xs:13 of {
 //│ 	N => [None]
 //│ 	| C hh:14 tt:15 => [Some ((last tt:15) hh:14)]})
-//│ def lastDrive^22 = (fun xs:19 -> xs:19)
-//│ def lastDrive^22_last^14 = (fun ys:22 -> ys:22)
-//│ def lastDrive^22_last^14_last^4 = (fun ys:27 -> ys:27)
+//│ module lastDrive^22 = {
+//│ 	(fun xs:19 -> xs:19)
+//│ 	module lastDrive^22_last^14 = {
+//│ 		(fun ys:22 -> ys:22)
+//│ 		module lastDrive^22_last^14_last^4 = {
+//│ 			(fun ys:27 -> ys:27)
+//│ 			module lastDrive^22_last^14_last^4_last^4 = {lastDrive^22_last^14_last^4}
+//│ 		}
+//│ 	}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<

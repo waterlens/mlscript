@@ -36,6 +36,8 @@ c(p)
 //│ 	let a:9 = x:8
 //│ 	in a:9)
 //│ def p = [C p]
+//│ module p^9 = {p^9}
+//│ module c^8 = {c^8}
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -141,6 +143,7 @@ c(0)
 //│ def c = (fun x:7 -> case (primitive:3 x:7) of {
 //│ 	True => 0
 //│ 	| False => (c (primitive:3 x:7))})
+//│ module c^12 = {c^12}
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -205,7 +208,24 @@ map(ff, l)
 //│ ((map^28 ff) l^31)
 //│ def ff = (fun x:13 -> x:13)
 //│ def l = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ def l^31 = 
+//│ def map = (fun f:9 -> (fun ls:10 -> case ls:10 of {
+//│ 	C h:11 t:12 => [C (f:9 h:11) ((map f:9) t:12)]
+//│ 	| N => [N]}))
+//│ module ff^29 = {ff^29}
+//│ module map^28 = {
+//│ 	(fun f:27 -> (fun ls:28 -> ls:28))
+//│ 	module map^28_map^5 = {
+//│ 		(fun f:31 -> (fun ls:32 -> ls:32))
+//│ 		module map^28_map^5_map^5 = {
+//│ 			(fun f:23 -> (fun ls:24 -> ls:24))
+//│ 			module map^28_map^5_map^5_map^5 = {
+//│ 				(fun f:19 -> (fun ls:20 -> ls:20))
+//│ 				module map^28_map^5_map^5_map^5_map^5 = {map^28_map^5_map^5_map^5}
+//│ 			}
+//│ 		}
+//│ 	}
+//│ }
+//│ module l^31 = {
 //│ 	let h:29 = [T]
 //│ 	in let t:30 = 	
 //│ 		let h:33 = [TT]
@@ -215,13 +235,7 @@ map(ff, l)
 //│ 			in [C (f:23 h:25) ((map^28_map^5_map^5_map^5 f:23) t:26)]
 //│ 		in [C (f:31 h:33) ((map^28_map^5_map^5 f:31) t:34)]
 //│ 	in [C (f:27 h:29) ((map^28_map^5 f:27) t:30)]
-//│ def map = (fun f:9 -> (fun ls:10 -> case ls:10 of {
-//│ 	C h:11 t:12 => [C (f:9 h:11) ((map f:9) t:12)]
-//│ 	| N => [N]}))
-//│ def map^28 = (fun f:27 -> (fun ls:28 -> ls:28))
-//│ def map^28_map^5 = (fun f:31 -> (fun ls:32 -> ls:32))
-//│ def map^28_map^5_map^5 = (fun f:23 -> (fun ls:24 -> ls:24))
-//│ def map^28_map^5_map^5_map^5 = (fun f:19 -> (fun ls:20 -> ls:20))
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -280,11 +294,8 @@ last(p)
 //│ 		N => [Some h:9]
 //│ 		| C hh:11 tt:12 => (last t:10)}
 //│ 	| N => [None]})
-//│ def last^17 = (fun ls:22 -> ls:22)
-//│ def last^17_last^5 = (fun ls:17 -> ls:17)
-//│ def last^17_last^5_last^5 = (fun ls:27 -> ls:27)
 //│ def p = [C 1 [C 2 [N]]]
-//│ def p^18 = 
+//│ module p^18 = {
 //│ 	let h:23 = 1
 //│ 	in let t:24 = 	
 //│ 		let h:18 = 2
@@ -295,6 +306,17 @@ last(p)
 //│ 	in case t:24 of {
 //│ 		N => [Some h:23]
 //│ 		| C hh:25 tt:26 => (last^17_last^5 t:24)}
+//│ }
+//│ module last^17 = {
+//│ 	(fun ls:22 -> ls:22)
+//│ 	module last^17_last^5 = {
+//│ 		(fun ls:17 -> ls:17)
+//│ 		module last^17_last^5_last^5 = {
+//│ 			(fun ls:27 -> ls:27)
+//│ 			module last^17_last^5_last^5_last^5 = {last^17_last^5_last^5}
+//│ 		}
+//│ 	}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 _LUMBERHACK_ERROR
@@ -365,25 +387,35 @@ idxSum(rev(primitive, N))(0)
 //│ def idxSum = (fun ls:9 -> case ls:9 of {
 //│ 	N => (fun acc:10 -> 0)
 //│ 	| C h:11 t:12 => (fun acc:13 -> ((add:4 acc:13) ((idxSum t:12) ((add:4 acc:13) 1))))})
-//│ def idxSum^33 = (fun ls:31 -> ls:31)
-//│ def idxSum^33_idxSum^8 = (fun ls:26 -> case ls:26 of {
-//│ 	N => (fun acc:27 -> 0)
-//│ 	| C h:28 t:29 => (fun acc:30 -> ((add:4 acc:30) ((idxSum^33_idxSum^8 t:29) ((add:4 acc:30) 1))))})
 //│ def rev = (fun lss:14 -> (fun a:15 -> case lss:14 of {
 //│ 	N => a:15
 //│ 	| C hh:16 tt:17 => ((rev tt:17) [C hh:16 a:15])}))
-//│ def rev^34 = (fun lss:36 -> (fun a:37 -> case lss:36 of {
-//│ 	N => a:37
-//│ 	| C hh:38 tt:39 => ((rev^34_rev^23 tt:39) 
-//│ 		let h:33 = hh:38
-//│ 		in let t:34 = a:37
-//│ 		in (fun acc:35 -> ((add:4 acc:35) ((idxSum^33_idxSum^8 t:34) ((add:4 acc:35) 1)))))}))
-//│ def rev^34_rev^23 = (fun lss:22 -> (fun a:23 -> case lss:22 of {
-//│ 	N => a:23
-//│ 	| C hh:24 tt:25 => ((rev^34_rev^23 tt:25) 
-//│ 		let h:33 = hh:24
-//│ 		in let t:34 = a:23
-//│ 		in (fun acc:35 -> ((add:4 acc:35) ((idxSum^33_idxSum^8 t:34) ((add:4 acc:35) 1)))))}))
+//│ module rev^34 = {
+//│ 	(fun lss:36 -> (fun a:37 -> case lss:36 of {
+//│ 		N => a:37
+//│ 		| C hh:38 tt:39 => ((rev^34_rev^23 tt:39) 
+//│ 			let h:33 = hh:38
+//│ 			in let t:34 = a:37
+//│ 			in (fun acc:35 -> ((add:4 acc:35) ((idxSum^33_idxSum^8 t:34) ((add:4 acc:35) 1)))))}))
+//│ 	module rev^34_rev^23 = {
+//│ 		(fun lss:22 -> (fun a:23 -> case lss:22 of {
+//│ 			N => a:23
+//│ 			| C hh:24 tt:25 => ((rev^34_rev^23 tt:25) 
+//│ 				let h:33 = hh:24
+//│ 				in let t:34 = a:23
+//│ 				in (fun acc:35 -> ((add:4 acc:35) ((idxSum^33_idxSum^8 t:34) ((add:4 acc:35) 1)))))}))
+//│ 		module rev^34_rev^23_rev^23 = {rev^34_rev^23}
+//│ 	}
+//│ }
+//│ module idxSum^33 = {
+//│ 	(fun ls:31 -> ls:31)
+//│ 	module idxSum^33_idxSum^8 = {
+//│ 		(fun ls:26 -> case ls:26 of {
+//│ 			N => (fun acc:27 -> 0)
+//│ 			| C h:28 t:29 => (fun acc:30 -> ((add:4 acc:30) ((idxSum^33_idxSum^8 t:29) ((add:4 acc:30) 1))))})
+//│ 		module idxSum^33_idxSum^8_idxSum^8 = {idxSum^33_idxSum^8}
+//│ 	}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -437,22 +469,30 @@ minuss(fst)(snd)
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((minuss^19 fst^20) snd^22)
 //│ def fst = [S [S [Z]]]
-//│ def fst^20 = 
+//│ def minuss = (fun a:9 -> case a:9 of {
+//│ 	S aa:10 => (fun b:11 -> case b:11 of {
+//│ 		S bb:12 => ((minuss aa:10) bb:12)
+//│ 		| Z => aa:10})
+//│ 	| Z => (fun n:13 -> [Z])})
+//│ def snd = [Z]
+//│ module snd^22 = {
+//│ 	aa:19
+//│ }
+//│ module minuss^19 = {
+//│ 	(fun a:18 -> a:18)
+//│ 	module minuss^19_minuss^3 = {
+//│ 		(fun a:23 -> a:23)
+//│ 		module minuss^19_minuss^3_minuss^3 = {minuss^19_minuss^3}
+//│ 	}
+//│ }
+//│ module fst^20 = {
 //│ 	let aa:19 = 	
 //│ 		let aa:24 = (fun n:27 -> [Z])
 //│ 		in (fun b:25 -> case b:25 of {
 //│ 			S bb:26 => ((minuss^19_minuss^3 aa:24) bb:26)
 //│ 			| Z => aa:24})
 //│ 	in (fun b:20 -> b:20)
-//│ def minuss = (fun a:9 -> case a:9 of {
-//│ 	S aa:10 => (fun b:11 -> case b:11 of {
-//│ 		S bb:12 => ((minuss aa:10) bb:12)
-//│ 		| Z => aa:10})
-//│ 	| Z => (fun n:13 -> [Z])})
-//│ def minuss^19 = (fun a:18 -> a:18)
-//│ def minuss^19_minuss^3 = (fun a:23 -> a:23)
-//│ def snd = [Z]
-//│ def snd^22 = aa:19
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 // FIXME: weird recursive
@@ -513,19 +553,29 @@ minuss(fst)(snd)
 //│ 	S bb:15 => (fun aaa:16 -> ((minuss aaa:16) bb:15))
 //│ 	| Z => (fun aaa:17 -> aaa:17)})
 //│ def fst = [S [S [Z]]]
-//│ def fst^28 = 
+//│ def minuss = (fun a:10 -> case a:10 of {
+//│ 	S aa:11 => (fun b:12 -> ((checkb b:12) aa:11))
+//│ 	| Z => (fun n:13 -> [Z])})
+//│ def snd = [Z]
+//│ module minuss^27 = {
+//│ 	(fun a:31 -> a:31)
+//│ 	module minuss^27_checkb^2 = {
+//│ 		(fun b:23 -> b:23)
+//│ 		module minuss^27_checkb^2_minuss^13 = {
+//│ 			(fun a:27 -> a:27)
+//│ 			module minuss^27_checkb^2_minuss^13_checkb^2 = {minuss^27_checkb^2}
+//│ 		}
+//│ 	}
+//│ }
+//│ module snd^30 = {
+//│ 	(fun aaa:26 -> aaa:26)
+//│ }
+//│ module fst^28 = {
 //│ 	let aa:32 = 	
 //│ 		let aa:28 = (fun n:30 -> [Z])
 //│ 		in (fun b:29 -> ((minuss^27_checkb^2 b:29) aa:28))
 //│ 	in (fun b:33 -> ((minuss^27_checkb^2 b:33) aa:32))
-//│ def minuss = (fun a:10 -> case a:10 of {
-//│ 	S aa:11 => (fun b:12 -> ((checkb b:12) aa:11))
-//│ 	| Z => (fun n:13 -> [Z])})
-//│ def minuss^27 = (fun a:31 -> a:31)
-//│ def minuss^27_checkb^2 = (fun b:23 -> b:23)
-//│ def minuss^27_checkb^2_minuss^13 = (fun a:27 -> a:27)
-//│ def snd = [Z]
-//│ def snd^30 = (fun aaa:26 -> aaa:26)
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -589,18 +639,27 @@ c(id(p))
 //│ (c^18 (id^19 p^20))
 //│ def c = (fun y:12 -> case y:12 of {
 //│ 	C aa:13 => (c aa:13)})
-//│ def c^18 = (fun y:21 -> y:21)
 //│ def id = (fun x:9 -> x:9)
-//│ def id^19 = (fun x:18 -> x:18)
 //│ def p = [C p]
-//│ def p^20 = 
+//│ module id^19 = {
+//│ 	(fun x:18 -> x:18)
+//│ 	module id^19_id^3 = {id^3}
+//│ }
+//│ module p^20 = {
 //│ 	let a:20 = p^20_p^10
 //│ 	in (id 
 //│ 		let b:10 = 	
 //│ 			let aa:22 = a:20
 //│ 			in (c^18 aa:22)
 //│ 		in b:10)
-//│ def p^20_p^10 = 
-//│ 	let aa:22 = p^20_p^10
-//│ 	in (c^18 aa:22)
+//│ 	module p^20_p^10 = {
+//│ 		let aa:22 = p^20_p^10
+//│ 		in (c^18 aa:22)
+//│ 		module p^20_p^10_p^10 = {p^20_p^10}
+//│ 	}
+//│ }
+//│ module c^18 = {
+//│ 	(fun y:21 -> y:21)
+//│ 	module c^18_c^13 = {c^18}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<

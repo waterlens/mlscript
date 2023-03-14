@@ -205,7 +205,7 @@ object Ctx {
   def empty = Ctx(Map.empty)
 }
 
-class Deforest(debug: Boolean) {
+class Deforest(var debug: Boolean) {
   object Trace {
     private val noPostTrace: Any => String = _ => ""
     private var indent = 0

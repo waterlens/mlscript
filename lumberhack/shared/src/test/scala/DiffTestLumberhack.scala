@@ -83,7 +83,7 @@ class DiffTestLumberhack extends DiffTests {
       val (newProg, newd) = originalProgram.expandedWithNewDeforest(callTree._1)
       if mode.stdout || mode.verbose then {
         output("\n>>>>>>> expanded program >>>>>>>")
-        output(newProg.pp(using InitPpConfig.multilineOn.showIuidOn))
+        output(newProg.pp(using InitPpConfig.multilineOn.showIuidOn.showEuidOn))
         output("<<<<<<< expanded program <<<<<<<")
       }
 
@@ -92,7 +92,7 @@ class DiffTestLumberhack extends DiffTests {
       // =========== run the typer again and do the fusion ==============
 
       
-
+      newd.debug = mode.stdout
       newd(newProg)
       newd.resolveConstraints
 

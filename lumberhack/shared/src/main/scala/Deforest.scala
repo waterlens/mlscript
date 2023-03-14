@@ -484,7 +484,10 @@ object CallTree {
         }
         CallTree.Continue(p, growCallTree(nexts))
       }
-      case Some(k) -> info => CallTree.Knot(p, k)(info)
+      case Some(k) -> info => {
+        val newInfo = if (info != "hopeless to continue") && !(p.p.startsWith(k.p)) then info + "; NOT PREFIX" else info
+        CallTree.Knot(p, k)(newInfo)
+      }
     }}}.toList
   }
 

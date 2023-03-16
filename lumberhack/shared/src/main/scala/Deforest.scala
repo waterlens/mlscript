@@ -452,9 +452,11 @@ class Deforest(var debug: Boolean) {
   }
 }
 
-enum CallTree {
-  case Knot(current: Path, prev: Path)(val info: Str)
-  case Continue(current: Path, calls: List[CallTree])
+enum CallTree(val info: Str) {
+  // TODO:
+  // FIXME: also need to collect all the newly duplicated definition
+  case Knot(current: Path, prev: Path)(info: Str) extends CallTree(info)
+  case Continue(current: Path, calls: List[CallTree])(info: Str) extends CallTree(info)
 
   def pp(using level: Int = 1): String = {
     given PrettyPrintConfig = InitPpConfig.showRefEuidOn
@@ -475,53 +477,30 @@ enum CallTree {
   }
 }
 object CallTree {
-  def growCallTree(start: Set[Path])(using callsInfo: Map[Ident, Set[Ref]], knotTier: Path => Option[Path] -> Str): List[CallTree] = {
-    start.map { p => { knotTier(p) match {
-      case None -> _ => {
-        val nexts = p.p.last match {
-          case PathElem.Normal(Ref(id)) => callsInfo(id).map(p ::: _.toPath())
-          case _ => ???
-        }
-        CallTree.Continue(p, growCallTree(nexts))
-      }
-      case Some(k) -> info => {
-        val newInfo = if (info != "hopeless to continue") && !(p.p.startsWith(k.p)) then info + "; NOT PREFIX" else info
-        CallTree.Knot(p, k)(newInfo)
-      }
-    }}}.toList
-  }
-
-  def callTreeUsingSplitKnot(d: Deforest) = {
-    var knotsCollection = Map.empty[Path, Option[Path]]
-    def tier(p: Path): Option[Path] -> Str = {
+  sealed trait CallTreeKnotTierFunc { def tie(p: Path, mapping: Option[Map[Ident, Path]]): Option[Path] -> Str }
+  class SplitKnotTier(using d: Deforest) extends CallTreeKnotTierFunc {
+    val knots = d.actualKnotsUsingSplit._1
+    def tie(p: Path, mapping: Option[Map[Ident, Path]]): Option[Path] -> Str = {
       assert(p.p.nonEmpty)
-      val knots = d.actualKnotsUsingSplit._1
       knots.get(p).map(_.filter(sp => sp != p)) match {
         case Some(s) if s.size == 1 =>
-          knotsCollection += p -> Some(s.head)
           Some(s.head) -> "only one" // the reuslt will not be an empty path
         case Some(s) if s.size > 1 =>
-          knotsCollection += p -> Some(s.head)
           Some(s.head) -> s.map(_.pp(using InitPpConfig)).mkString(" OR ")  // the result will not be an empty path
         // we can always tie the knot back to its definition before expansion if it is hopeless to keep expanding
         case Some(_) | None =>
           if knots.keys.exists(_.p.startsWith(p.p)) then None -> "" else
-            knotsCollection += p -> None
             Some(Path(p.p.last :: Nil)) -> "hopeless to continue"
       }
     }
-    growCallTree(d.callsInfo._1.map(_.toPath()).toSet)(using d.callsInfo._2.toMap, tier)
-      -> knotsCollection
   }
-
-  def callTreeUsingNonSplitKnot(d: Deforest) = {
+  class NonSplitKnotTier(using d: Deforest) extends CallTreeKnotTierFunc {
     val knots = {
       val res = mutable.Map.empty[Path, Set[Path]]
       d.knotsAfterAnnihilation.values.foreach { _.foreach { (k, v) => res.updateWith(k)(s => Some(s.getOrElse(Set.empty[Path]) + v)) } }
       res.toMap
     }
-    var knotsCollection = Map.empty[Path, Option[Path]]
-    def tier(p: Path): Option[Path] -> Str = {
+    def tie(p: Path, mapping: Option[Map[Ident, Path]]): Option[Path] -> Str = {
       assert(p.p.nonEmpty)
 
       val matches = {
@@ -542,15 +521,49 @@ object CallTree {
       }
       matches.headOption match {
         case Some(s) =>
-          knotsCollection += p -> Some(s)
           Some(s) -> (if matches.size > 1 then matches.map(_.pp(using InitPpConfig)).mkString(" OR ") else "only one")
         case None => if knots.keySet.exists(k => k.p.containsSlice(p.p) || k.p.containsSlice(p.p.reverse)) then None -> "" else
-          knotsCollection += p -> None
           Some(Path(p.p.last :: Nil)) -> "hopeless to continue"
       }
     }
-    growCallTree(d.callsInfo._1.map(_.toPath()).toSet)(using d.callsInfo._2.toMap, tier)
-      -> knotsCollection
+  }
+  case class CallTreeKnotTier(val ctxMapping: Option[Map[Ident, Path]] = None)(using val tier: CallTreeKnotTierFunc) {
+    def updateCtxMapping(id: Ident, p: Path) = copy(ctxMapping = this.ctxMapping.orElse(Some(Map.empty[Ident, Path])).map(_ + (id -> p)))
+    def apply(p: Path) = tier.tie(p, ctxMapping)
+    // if return true, then we are duplicating possible multiple usages functions, otherwise we are are duplicating recursive functions
+    def mode = ctxMapping.isDefined
+  }
+  
+
+  private def growCallTree(start: Set[Path])(using knotTier: CallTreeKnotTier, callsInfo: Map[Ident, Set[Ref]]): List[CallTree] = {
+    start.map { p => { knotTier(p) match {
+      // if returns none, means needs to continue expanding, either for duplicate def or recursion
+      case None -> info => {
+        val nexts = p.p.last match {
+          case PathElem.Normal(Ref(id)) => callsInfo(id).map(p ::: _.toPath())
+          case _ => ???
+        }
+        if info == "hopeless to continue" then { // need to use the original definition, enter into the multiple usages duplication mode
+          CallTree.Continue(p, growCallTree(nexts)(using knotTier.updateCtxMapping(p.p.last.asInstanceOf[PathElem.Normal].r.id, p)))(info)
+        } else { // still in recursive expansion mode
+          CallTree.Continue(p, growCallTree(nexts))(info)
+        }
+      }
+      case Some(k) -> info => {
+        val newInfo = if (info != "hopeless to continue") && !(p.p.startsWith(k.p)) then info + "; NOT PREFIX" else info
+        CallTree.Knot(p, k)(newInfo)
+      }
+    }}}.toList
+  }
+
+  def callTreeUsingSplitKnot(d: Deforest) = {
+    val tier = CallTreeKnotTier()(using new SplitKnotTier(using d))
+    growCallTree(d.callsInfo._1.map(_.toPath()).toSet)(using tier, d.callsInfo._2.toMap)
+  }
+
+  def callTreeUsingNonSplitKnot(d: Deforest) = {
+    val tier = CallTreeKnotTier()(using new NonSplitKnotTier(using d))
+    growCallTree(d.callsInfo._1.map(_.toPath()).toSet)(using tier, d.callsInfo._2.toMap)
   }
 
   def generatePathToIdent(calls: List[CallTree])(using newd: Deforest): Map[Path, Ident] = {

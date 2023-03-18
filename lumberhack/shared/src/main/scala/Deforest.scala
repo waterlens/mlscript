@@ -56,6 +56,7 @@ enum PathElem[+T <: PathElemType] {
 case class Path(p: Ls[PathElem[PathElemType]]) {
   lazy val neg = this.copy(p = p.map(_.neg))
   lazy val rev = this.copy(p = p.map(_.rev).reverse)
+  lazy val last = this.p.last.asInstanceOf[PathElem.Normal]
   // merge two consecutive identical stars during concatenation if we have stars
   def ::: (other: Path) = Path(other.p ::: p)
   def pp(using config: PrettyPrintConfig): Str = if !config.pathAsIdent
@@ -249,7 +250,9 @@ class Deforest(var debug: Boolean) {
   val upperBounds = mutable.Map.empty[TypeVarId, Ls[(Path, ConsStrat)]].withDefaultValue(Nil)
   val lowerBounds = mutable.Map.empty[TypeVarId, Ls[(Path, ProdStrat)]].withDefaultValue(Nil)
   val callsInfo = (mutable.Set.empty[Ref], mutable.Map.empty[Ident, Set[Ref]])
-  
+
+  // NOTE: the thing is that, to get recursive knots, we need the program to tyoe check, but to make a polymorphic program to
+  // type check, we need to do the duplication of multiple-usage definitions, so seems that these two things has to be done in two steps
   def process(e: Expr)(using ctx: Ctx, calls: mutable.Set[Ref]): ProdStrat = trace(s"process ${e.uid}: ${e.pp(using InitPpConfig)}") {
     val res: ProdStratEnum = e match
       case Const(IntLit(_)) => prodInt(using noExprId)
@@ -480,7 +483,7 @@ object CallTree {
   sealed trait CallTreeKnotTierFunc { def tie(p: Path, mapping: Option[Map[Ident, Path]]): Option[Path] -> Str }
   class SplitKnotTier(using d: Deforest) extends CallTreeKnotTierFunc {
     val knots = d.actualKnotsUsingSplit._1
-    def tie(p: Path, mapping: Option[Map[Ident, Path]]): Option[Path] -> Str = {
+    def tie(p: Path, mapping: Option[Map[Ident, Path]]): Option[Path] -> Str = if mapping.isEmpty then {
       assert(p.p.nonEmpty)
       knots.get(p).map(_.filter(sp => sp != p)) match {
         case Some(s) if s.size == 1 =>
@@ -490,8 +493,10 @@ object CallTree {
         // we can always tie the knot back to its definition before expansion if it is hopeless to keep expanding
         case Some(_) | None =>
           if knots.keys.exists(_.p.startsWith(p.p)) then None -> "" else
-            Some(Path(p.p.last :: Nil)) -> "hopeless to continue"
+            None -> "hopeless to continue"
       }
+    } else {
+      mapping.get.get(p.last.r.id) -> "using original def"
     }
   }
   class NonSplitKnotTier(using d: Deforest) extends CallTreeKnotTierFunc {
@@ -500,7 +505,7 @@ object CallTree {
       d.knotsAfterAnnihilation.values.foreach { _.foreach { (k, v) => res.updateWith(k)(s => Some(s.getOrElse(Set.empty[Path]) + v)) } }
       res.toMap
     }
-    def tie(p: Path, mapping: Option[Map[Ident, Path]]): Option[Path] -> Str = {
+    def tie(p: Path, mapping: Option[Map[Ident, Path]]): Option[Path] -> Str = if mapping.isEmpty then {
       assert(p.p.nonEmpty)
 
       val matches = {
@@ -523,8 +528,10 @@ object CallTree {
         case Some(s) =>
           Some(s) -> (if matches.size > 1 then matches.map(_.pp(using InitPpConfig)).mkString(" OR ") else "only one")
         case None => if knots.keySet.exists(k => k.p.containsSlice(p.p) || k.p.containsSlice(p.p.reverse)) then None -> "" else
-          Some(Path(p.p.last :: Nil)) -> "hopeless to continue"
+          None -> "hopeless to continue"
       }
+    } else {
+      mapping.get.get(p.last.r.id) -> "using original def"
     }
   }
   case class CallTreeKnotTier(val ctxMapping: Option[Map[Ident, Path]] = None)(using val tier: CallTreeKnotTierFunc) {
@@ -543,7 +550,7 @@ object CallTree {
           case PathElem.Normal(Ref(id)) => callsInfo(id).map(p ::: _.toPath())
           case _ => ???
         }
-        if info == "hopeless to continue" then { // need to use the original definition, enter into the multiple usages duplication mode
+        if info == "hopeless to continue" || knotTier.mode then { // need to use the original definition, enter into the multiple usages duplication mode
           CallTree.Continue(p, growCallTree(nexts)(using knotTier.updateCtxMapping(p.p.last.asInstanceOf[PathElem.Normal].r.id, p)))(info)
         } else { // still in recursive expansion mode
           CallTree.Continue(p, growCallTree(nexts))(info)

@@ -21,23 +21,33 @@ c(p)
 //│ <<<<<<< knots <<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [c^8] ---> [c^8] (hopeless to continue)
-//│ [p^9] ---> [p^9] (hopeless to continue)
+//│ [c^8]
+//│ [p^9]
+//│ 	[p^9 · p^1] ---> [p^9] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
+//│ [C x:12] --->
+//│ 	case [C x:12] of {C a:13 => a:13}
 //│ [C x:8] --->
 //│ 	case [C x:8] of {C a:9 => a:9}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (c p)
+//│ (c^8 p^9)
 //│ def c = (fun x:8 -> 
 //│ 	let a:9 = x:8
 //│ 	in a:9)
 //│ def p = [C p]
-//│ module p^9 = {p^9}
-//│ module c^8 = {c^8}
+//│ module p^9 = {
+//│ 	[C p^9]
+//│ 	module p^9_p^1 = {p^9}
+//│ }
+//│ module c^8 = {
+//│ 	(fun x:12 -> 
+//│ 		let a:13 = x:12
+//│ 		in a:13)
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -60,15 +70,18 @@ c(p)
 //│ <<<<<<< knots <<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [c^12] ---> [c^12] (hopeless to continue)
-//│ [p^13] ---> [p^13] (hopeless to continue)
+//│ [c^12]
+//│ 	[c^12 · c^5] ---> [c^12] (using original def)
+//│ [p^13]
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [Pair b:10 a:9] --->
 //│ 	case x:8 of {Pair a:9 b:10 => (c [Pair b:10 a:9])}
 //│ [Pair [A] [B]] --->
-//│ 	case x:8 of {Pair a:9 b:10 => (c [Pair b:10 a:9])}
+//│ 	case x:13 of {Pair a:14 b:15 => (c^12 [Pair b:15 a:14])}
+//│ [Pair b:15 a:14] --->
+//│ 	case x:13 of {Pair a:14 b:15 => (c^12 [Pair b:15 a:14])}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -98,15 +111,18 @@ c(p)
 //│ <<<<<<< knots <<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [c^13] ---> [c^13] (hopeless to continue)
-//│ [p^14] ---> [p^14] (hopeless to continue)
+//│ [c^13]
+//│ 	[c^13 · c^5] ---> [c^13] (using original def)
+//│ [p^14]
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [Wrap (primitive:3 a:9)] --->
 //│ 	case x:8 of {N => 0 | Wrap a:9 => (c [Wrap (primitive:3 a:9)])}
 //│ [Wrap 3] --->
-//│ 	case x:8 of {N => 0 | Wrap a:9 => (c [Wrap (primitive:3 a:9)])}
+//│ 	case x:12 of {N => 0 | Wrap a:13 => (c^13 [Wrap (primitive:3 a:13)])}
+//│ [Wrap (primitive:3 a:13)] --->
+//│ 	case x:12 of {N => 0 | Wrap a:13 => (c^13 [Wrap (primitive:3 a:13)])}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -131,7 +147,8 @@ c(0)
 //│ <<<<<<< knots <<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [c^12] ---> [c^12] (hopeless to continue)
+//│ [c^12]
+//│ 	[c^12 · c^5] ---> [c^12] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
@@ -139,11 +156,16 @@ c(0)
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (c 0)
+//│ (c^12 0)
 //│ def c = (fun x:7 -> case (primitive:3 x:7) of {
 //│ 	True => 0
 //│ 	| False => (c (primitive:3 x:7))})
-//│ module c^12 = {c^12}
+//│ module c^12 = {
+//│ 	(fun x:9 -> case (primitive:3 x:9) of {
+//│ 		True => 0
+//│ 		| False => (c^12 (primitive:3 x:9))})
+//│ 	module c^12_c^5 = {c^12}
+//│ }
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -178,7 +200,7 @@ map(ff, l)
 //│ <<<<<<< knots <<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [ff^29] ---> [ff^29] (hopeless to continue)
+//│ [ff^29]
 //│ [l^31]
 //│ [map^28]
 //│ 	[map^28 · map^5]
@@ -189,52 +211,57 @@ map(ff, l)
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [K] --->
-//│ 	case x:13 of {K => [T] | KK => [TT] | KKKK => [TTTT]}
+//│ 	case x:32 of {K => [T] | KK => [TT] | KKKK => [TTTT]}
 //│ [KK] --->
-//│ 	case x:13 of {K => [T] | KK => [TT] | KKKK => [TTTT]}
+//│ 	case x:32 of {K => [T] | KK => [TT] | KKKK => [TTTT]}
 //│ [KKKK] --->
-//│ 	case x:13 of {K => [T] | KK => [TT] | KKKK => [TTTT]}
+//│ 	case x:32 of {K => [T] | KK => [TT] | KKKK => [TTTT]}
 //│ [N] --->
-//│ 	case ls:20 of {C h:21 t:22 => [C (f:19 h:21) ((map^28_map^5_map^5_map^5 f:19) t:22)] | N => [N]}
+//│ 	case ls:21 of {C h:22 t:23 => [C (f:20 h:22) ((map^28_map^5_map^5_map^5 f:20) t:23)] | N => [N]}
 //│ [C [KKKK] [N]] --->
-//│ 	case ls:24 of {C h:25 t:26 => [C (f:23 h:25) ((map^28_map^5_map^5_map^5 f:23) t:26)] | N => [N]}
+//│ 	case ls:25 of {C h:26 t:27 => [C (f:24 h:26) ((map^28_map^5_map^5_map^5 f:24) t:27)] | N => [N]}
 //│ [C [KK] [C [KKKK] [N]]] --->
-//│ 	case ls:32 of {C h:33 t:34 => [C (f:31 h:33) ((map^28_map^5_map^5 f:31) t:34)] | N => [N]}
+//│ 	case ls:34 of {C h:35 t:36 => [C (f:33 h:35) ((map^28_map^5_map^5 f:33) t:36)] | N => [N]}
 //│ [C [K] [C [KK] [C [KKKK] [N]]]] --->
-//│ 	case ls:28 of {C h:29 t:30 => [C (f:27 h:29) ((map^28_map^5 f:27) t:30)] | N => [N]}
+//│ 	case ls:29 of {C h:30 t:31 => [C (f:28 h:30) ((map^28_map^5 f:28) t:31)] | N => [N]}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((map^28 ff) l^31)
-//│ def ff = (fun x:13 -> x:13)
+//│ ((map^28 ff^29) l^31)
+//│ def ff = (fun x:13 -> case x:13 of {
+//│ 	K => [T]
+//│ 	| KK => [TT]
+//│ 	| KKKK => [TTTT]})
 //│ def l = [C [K] [C [KK] [C [KKKK] [N]]]]
 //│ def map = (fun f:9 -> (fun ls:10 -> case ls:10 of {
 //│ 	C h:11 t:12 => [C (f:9 h:11) ((map f:9) t:12)]
 //│ 	| N => [N]}))
-//│ module ff^29 = {ff^29}
+//│ module ff^29 = {
+//│ 	(fun x:32 -> x:32)
+//│ }
 //│ module map^28 = {
-//│ 	(fun f:27 -> (fun ls:28 -> ls:28))
+//│ 	(fun f:28 -> (fun ls:29 -> ls:29))
 //│ 	module map^28_map^5 = {
-//│ 		(fun f:31 -> (fun ls:32 -> ls:32))
+//│ 		(fun f:33 -> (fun ls:34 -> ls:34))
 //│ 		module map^28_map^5_map^5 = {
-//│ 			(fun f:23 -> (fun ls:24 -> ls:24))
+//│ 			(fun f:24 -> (fun ls:25 -> ls:25))
 //│ 			module map^28_map^5_map^5_map^5 = {
-//│ 				(fun f:19 -> (fun ls:20 -> ls:20))
+//│ 				(fun f:20 -> (fun ls:21 -> ls:21))
 //│ 				module map^28_map^5_map^5_map^5_map^5 = {map^28_map^5_map^5_map^5}
 //│ 			}
 //│ 		}
 //│ 	}
 //│ }
 //│ module l^31 = {
-//│ 	let h:29 = [T]
-//│ 	in let t:30 = 	
-//│ 		let h:33 = [TT]
-//│ 		in let t:34 = 	
-//│ 			let h:25 = [TTTT]
-//│ 			in let t:26 = [N]
-//│ 			in [C (f:23 h:25) ((map^28_map^5_map^5_map^5 f:23) t:26)]
-//│ 		in [C (f:31 h:33) ((map^28_map^5_map^5 f:31) t:34)]
-//│ 	in [C (f:27 h:29) ((map^28_map^5 f:27) t:30)]
+//│ 	let h:30 = [T]
+//│ 	in let t:31 = 	
+//│ 		let h:35 = [TT]
+//│ 		in let t:36 = 	
+//│ 			let h:26 = [TTTT]
+//│ 			in let t:27 = [N]
+//│ 			in [C (f:24 h:26) ((map^28_map^5_map^5_map^5 f:24) t:27)]
+//│ 		in [C (f:33 h:35) ((map^28_map^5_map^5 f:33) t:36)]
+//│ 	in [C (f:28 h:30) ((map^28_map^5 f:28) t:31)]
 //│ }
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -614,25 +641,28 @@ c(id(p))
 //│ [c^18]
 //│ 	[c^18 · c^13] ---> [c^18] (only one)
 //│ [id^19]
-//│ 	[id^19 · id^3] ---> [id^3] (hopeless to continue)
+//│ 	[id^19 · id^3]
+//│ 		[id^19 · id^3 · id^3] ---> [id^19 · id^3] (using original def)
 //│ [p^20]
 //│ 	[p^20 · p^10]
 //│ 		[p^20 · p^10 · p^10] ---> [p^20 · p^10] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C a:11] --->
-//│ 	case y:21 of {C aa:22 => (c^18 aa:22)}
 //│ [ID [C a:11]] --->
 //│ 	case x:9 of {ID b:10 => b:10 | C a:11 => (id [ID [C a:11]])}
 //│ [C p^20_p^10] --->
-//│ 	case x:18 of {ID b:19 => b:19 | C a:20 => (id [ID [C a:20]])}
+//│ 	case x:19 of {ID b:20 => b:20 | C a:21 => (id^19_id^3 [ID [C a:21]])}
 //│ [C p^20_p^10] --->
-//│ 	case y:21 of {C aa:22 => (c^18 aa:22)}
-//│ [C a:20] --->
-//│ 	case y:21 of {C aa:22 => (c^18 aa:22)}
-//│ [ID [C a:20]] --->
-//│ 	case x:9 of {ID b:10 => b:10 | C a:11 => (id [ID [C a:11]])}
+//│ 	case y:25 of {C aa:26 => (c^18 aa:26)}
+//│ [C a:21] --->
+//│ 	case y:25 of {C aa:26 => (c^18 aa:26)}
+//│ [ID [C a:21]] --->
+//│ 	case x:22 of {ID b:23 => b:23 | C a:24 => (id^19_id^3 [ID [C a:24]])}
+//│ [C a:24] --->
+//│ 	case y:25 of {C aa:26 => (c^18 aa:26)}
+//│ [ID [C a:24]] --->
+//│ 	case x:22 of {ID b:23 => b:23 | C a:24 => (id^19_id^3 [ID [C a:24]])}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -642,24 +672,27 @@ c(id(p))
 //│ def id = (fun x:9 -> x:9)
 //│ def p = [C p]
 //│ module id^19 = {
-//│ 	(fun x:18 -> x:18)
-//│ 	module id^19_id^3 = {id^3}
+//│ 	(fun x:19 -> x:19)
+//│ 	module id^19_id^3 = {
+//│ 		(fun x:22 -> x:22)
+//│ 		module id^19_id^3_id^3 = {id^19_id^3}
+//│ 	}
 //│ }
 //│ module p^20 = {
-//│ 	let a:20 = p^20_p^10
-//│ 	in (id 
-//│ 		let b:10 = 	
-//│ 			let aa:22 = a:20
-//│ 			in (c^18 aa:22)
-//│ 		in b:10)
+//│ 	let a:21 = p^20_p^10
+//│ 	in (id^19_id^3 
+//│ 		let b:23 = 	
+//│ 			let aa:26 = a:21
+//│ 			in (c^18 aa:26)
+//│ 		in b:23)
 //│ 	module p^20_p^10 = {
-//│ 		let aa:22 = p^20_p^10
-//│ 		in (c^18 aa:22)
+//│ 		let aa:26 = p^20_p^10
+//│ 		in (c^18 aa:26)
 //│ 		module p^20_p^10_p^10 = {p^20_p^10}
 //│ 	}
 //│ }
 //│ module c^18 = {
-//│ 	(fun y:21 -> y:21)
+//│ 	(fun y:25 -> y:25)
 //│ 	module c^18_c^13 = {c^18}
 //│ }
 //│ <<<<<<< after fusion <<<<<<<

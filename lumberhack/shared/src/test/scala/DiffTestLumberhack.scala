@@ -16,14 +16,27 @@ class DiffTestLumberhack extends DiffTests {
     // output("Parsed AST:\n")
     
     output(">>>>>>>>>> Original >>>>>>>>>>")
+    // NOTE: currently do not duplicate multiple usages, since we have already exploded the program by a lot
+    // val originalD = Deforest(mode.stdout)
+    // val (allowErr, filteredEntities) = unit.entities match {
+    //   case Var("_LUMBERHACK_ERROR") :: t => (true, t)
+    //   case l => (false, l)
+    // }
+    // val originalOriginalProgram = Program.fromPgrm(Pgrm(filteredEntities))(using originalD)
+    // val _ = originalD(originalOriginalProgram)
+    // val originalOriginalProgramCallTree = CallTree.callTreeUsingSplitKnot(originalD)
+    // output(originalOriginalProgramCallTree.sortBy(_.pp).map(_.pp).mkString("\n"))
+    // output("-------------------------------")
+    // val (originalProgram, d) = originalOriginalProgram.expandedWithNewDeforest(originalOriginalProgramCallTree)
+
     given d: Deforest(mode.stdout)
     val (allowErr, filteredEntities) = unit.entities match {
       case Var("_LUMBERHACK_ERROR") :: t => (true, t)
       case l => (false, l)
     }
     val originalProgram = Program.fromPgrm(Pgrm(filteredEntities))
+
     val constraints = d(originalProgram)
-    // output(originalProgram.pp(using true))
     output(originalProgram.pp(using InitPpConfig.multilineOn.showIuidOn.showRefEuidOn))
     output("<<<<<<<<<< Original <<<<<<<<<<")
 

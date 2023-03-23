@@ -1,0 +1,53 @@
+:NewParser
+:ParseOnly
+
+
+fun seq(fst, snd) = seqq(M(fst), M(snd))
+fun seqq(fst, snd) = if mfst is
+    M(fst) then seqq
+    Err then Err
+//│ |#fun| |seq|(|fst|,| |snd|)| |#=| |seqq|(|M|(|fst|)|,| |M|(|snd|)|)|↵|#fun| |seqq|(|fst|,| |snd|)| |#=| |#if| |mfst| |is|→|M|(|fst|)| |#then| |seqq|↵|Err| |#then| |Err|←|
+//│ Parsed: {fun seq = fst, snd, => seqq (M (fst,), M (snd,),); fun seqq = fst, snd, => if mfst is ‹(M (fst,)) then seqq; (Err) then Err›}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ /!!!\ Uncaught error: java.util.NoSuchElementException: key not found: mfst
+//│ 	at: scala.collection.immutable.BitmapIndexedMapNode.apply(HashMap.scala:635)
+//│ 	at: scala.collection.immutable.HashMap.apply(HashMap.scala:132)
+//│ 	at: mlscript.lumberhack.Expr$.fromTerm(Expr.scala:282)
+//│ 	at: mlscript.lumberhack.Expr$.fromTerm(Expr.scala:305)
+//│ 	at: mlscript.lumberhack.Expr$.fromTerm(Expr.scala:287)
+//│ 	at: mlscript.lumberhack.Expr$.fromTerm(Expr.scala:288)
+//│ 	at: mlscript.lumberhack.Program$.fromPgrm$$anonfun$1(Expr.scala:149)
+//│ 	at: scala.collection.immutable.List.map(List.scala:250)
+//│ 	at: mlscript.lumberhack.Program$.fromPgrm(Expr.scala:151)
+//│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTestLumberhack.scala:37)
+
+fun p(x) =
+  if primitive(x) then N
+  else
+    if primitive(x) then C(p(add(x, 1)))
+    else ff(C(p(minus(x, 1))))
+fun ff(k) = seq(
+    h(k),
+    k
+)
+fun h(z) = if z is
+    C(b) then b
+    N then 1
+fun c(xx) = if xx is
+    C(aa) then aa
+    N then N
+p(0)
+//│ |#fun| |p|(|x|)| |#=|→|#if| |primitive|(|x|)| |#then| |N|↵|#else|→|#if| |primitive|(|x|)| |#then| |C|(|p|(|add|(|x|,| |1|)|)|)|↵|#else| |ff|(|C|(|p|(|minus|(|x|,| |1|)|)|)|)|←|←|↵|#fun| |ff|(|k|)| |#=| |seq|(|→|h|(|k|)|,|↵|k|←|↵|)|↵|#fun| |h|(|z|)| |#=| |#if| |z| |is|→|C|(|b|)| |#then| |b|↵|N| |#then| |1|←|↵|#fun| |c|(|xx|)| |#=| |#if| |xx| |is|→|C|(|aa|)| |#then| |aa|↵|N| |#then| |N|←|↵|p|(|0|)|
+//│ Parsed: {fun p = x, => {if (primitive (x,)) then N else {if (primitive (x,)) then C (p (add (x, 1,),),) else ff (C (p (minus (x, 1,),),),)}}; fun ff = k, => seq (h (k,), k,); fun h = z, => if z is ‹(C (b,)) then b; (N) then 1›; fun c = xx, => if xx is ‹(C (aa,)) then aa; (N) then N›; p (0,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ /!!!\ Uncaught error: java.util.NoSuchElementException: key not found: seq
+//│ 	at: scala.collection.immutable.BitmapIndexedMapNode.apply(HashMap.scala:635)
+//│ 	at: scala.collection.immutable.HashMap.apply(HashMap.scala:132)
+//│ 	at: mlscript.lumberhack.Expr$.fromTerm(Expr.scala:282)
+//│ 	at: mlscript.lumberhack.Expr$.fromTerm(Expr.scala:291)
+//│ 	at: mlscript.lumberhack.Expr$.fromTerm(Expr.scala:287)
+//│ 	at: mlscript.lumberhack.Program$.fromPgrm$$anonfun$1(Expr.scala:149)
+//│ 	at: scala.collection.immutable.List.map(List.scala:250)
+//│ 	at: mlscript.lumberhack.Program$.fromPgrm(Expr.scala:151)
+//│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTestLumberhack.scala:37)
+//│ 	at: mlscript.DiffTests.rec$1(DiffTests.scala:365)

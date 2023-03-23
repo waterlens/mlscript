@@ -35,9 +35,9 @@ case class Program(contents: Ls[ProgDef \/ Expr]) {
           case e => e.pp
         }
         val nextMods = calls.calls.map(rec(_, defs)).filter(_.nonEmpty).mkString("\n").linesIterator.map("\t" + _).mkString("\n")
-        s"def ${currentIdentStr.pp(using InitPpConfig)} = {\n" +
-        s"${currentFunPp.linesIterator.map("\t" + _).mkString("\n")}\n" +
-        (if nextMods.isEmpty() then "}" else s"\t\twhere\n$nextMods\n}")
+        s"def ${currentIdentStr.pp(using InitPpConfig)} = \n" +
+        s"${currentFunPp.linesIterator.map("\t" + _).mkString("\n")}" +
+        (if nextMods.isEmpty() then "" else s"\n\twhere\n$nextMods")
       }
       // case CallTree.Knot(current, prev) => s"module ${callTree.store(current).pp(using InitPpConfig)} = {${callTree.store(prev).pp(using InitPpConfig)}}"
       case CallTree.Knot(current, prev) => ""

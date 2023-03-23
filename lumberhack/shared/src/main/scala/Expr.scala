@@ -20,12 +20,12 @@ case class Program(contents: Ls[ProgDef \/ Expr]) {
       case R(e) => e.pp
     }.mkString("\n")
   
-  def pp(callTree: List[CallTree])(using config: PrettyPrintConfig): Str = {
+  def pp(callTree: CallTrees)(using config: PrettyPrintConfig): Str = {
     def rec(tree: CallTree, defs: Map[Ident, Expr]): Str = tree match {
       case CallTree.Continue(current, calls) => {
-        val currentIdentStr = current.pp(using InitPpConfig.pathAsIdentOn)
+        val currentIdentStr = callTree.store(current)
         val currentFunBody = {
-          val tmp = this.defAndExpr._1.filterKeys(_.tree.name == currentIdentStr).toSet
+          val tmp = this.defAndExpr._1.filterKeys(_ == currentIdentStr).toSet
           assert(tmp.size == 1)
           tmp.head
         }
@@ -34,21 +34,23 @@ case class Program(contents: Ls[ProgDef \/ Expr]) {
           case e: Expr.LetIn => e.pp.linesIterator.filter(_.nonEmpty).map(_.drop(1)).mkString("\n")
           case e => e.pp
         }
-        val nextMods = calls.map(rec(_, defs)).mkString("\n").linesIterator.map("\t" + _).mkString("\n")
-        s"module ${current.pp(using InitPpConfig.pathAsIdentOn)} = {\n" +
+        val nextMods = calls.calls.map(rec(_, defs)).filter(_.nonEmpty).mkString("\n").linesIterator.map("\t" + _).mkString("\n")
+        s"def ${currentIdentStr.pp(using InitPpConfig)} = {\n" +
         s"${currentFunPp.linesIterator.map("\t" + _).mkString("\n")}\n" +
-        (if nextMods.isEmpty() then "}" else s"$nextMods\n}")
+        (if nextMods.isEmpty() then "}" else s"\t\twhere\n$nextMods\n}")
       }
-      case CallTree.Knot(current, prev) => s"module ${current.pp(using InitPpConfig.pathAsIdentOn)} = {${prev.pp(using InitPpConfig.pathAsIdentOn)}}"
+      // case CallTree.Knot(current, prev) => s"module ${callTree.store(current).pp(using InitPpConfig)} = {${callTree.store(prev).pp(using InitPpConfig)}}"
+      case CallTree.Knot(current, prev) => ""
     }
     
-    val (newDefs, originalDefs) = this.defAndExpr._1.partition(_._1.tree.name.contains("^"))
+    // val (newDefs, originalDefs) = this.defAndExpr._1.partition(_._1.tree.name.contains("_"))
     val topLevelExprsPp = this.defAndExpr._2.map(_.pp).mkString("\n")
-    val originalDefsPp = originalDefs.toSeq.sortBy(_._1.pp(using InitPpConfig)).map { (id, body) =>
-      s"def ${id.pp(using InitPpConfig)} = ${body.pp}"
-    }.mkString("\n")
-    val newDefsPp = callTree.map(rec(_, newDefs)).mkString("\n")
-    topLevelExprsPp + "\n" + originalDefsPp + "\n" + newDefsPp
+    // val originalDefsPp = originalDefs.toSeq.sortBy(_._1.pp(using InitPpConfig)).map { (id, body) =>
+    //   s"def ${id.pp(using InitPpConfig)} = ${body.pp}"
+    // }.mkString("\n")
+    val newDefsPp = callTree.calls.map(rec(_, this.defAndExpr._1)).mkString("\n")
+    // topLevelExprsPp + "\n" + originalDefsPp + "\n" + newDefsPp
+    topLevelExprsPp + "\n" + newDefsPp
   }
   
   lazy val defAndExpr: (Map[Ident, Expr], List[Expr]) = contents.partitionMap(identity).mapFirst(_.map(pd => pd.id -> pd.body).toMap)
@@ -88,10 +90,10 @@ case class Program(contents: Ls[ProgDef \/ Expr]) {
     ) -> refMaps.toMap -> ctx
   }
 
-  def expandedWithNewDeforest(callTree: List[CallTree]): Program -> Deforest = {
+  def expandedWithNewDeforest(callTrees: CallTrees): Program -> Deforest = {
     given newd: Deforest(false)
     val copiedOriginalProgram -> refMaps -> initContext = this.copyDefsToNewDeforest
-    val pathToIdent = CallTree.generatePathToIdent(callTree)
+    val pathToIdent = callTrees.generatePathToIdent
     assert({
       val a = pathToIdent.values.map(_.pp(using InitPpConfig)).toSet
       val b = pathToIdent.values.map(_.pp(using InitPpConfig.showIuidOn)).toSet
@@ -102,8 +104,8 @@ case class Program(contents: Ls[ProgDef \/ Expr]) {
       var defined = List.empty[Ident -> Path]
       pathToIdent.keys.foreach { p =>
         // make sure to only register those that are real new defs
-        if p.pp(using InitPpConfig.showRefEuidOn.pathAsIdentOn) == pathToIdent(p).pp(using InitPpConfig.showRefEuidOn.pathAsIdentOn)
-          then defined = (pathToIdent(p) -> p) :: defined
+        // if p.pp(using InitPpConfig.showRefEuidOn.pathAsIdentOn) == pathToIdent(p).pp(using InitPpConfig.showRefEuidOn.pathAsIdentOn)
+        if callTrees.originalDefs(p) then defined = (pathToIdent(p) -> p) :: defined
       }
       val res = defined.map { (id, p) =>
         assert(p.p.nonEmpty)

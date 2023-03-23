@@ -455,29 +455,65 @@ class Deforest(var debug: Boolean) {
   }
 }
 
+def toSubscript(i: String) = i.map {
+  case '0' => '₀'; case '1' => '₁'; case '2' => '₂'
+  case '3' => '₃'; case '4' => '₄'; case '5' => '₅'
+  case '6' => '₆'; case '7' => '₇'; case '8' => '₈'
+  case '9' => '₉'; case c => c
+}
+
 enum CallTree(val info: Str) {
-  // TODO:
-  // FIXME: also need to collect all the newly duplicated definition
   case Knot(current: Path, prev: Path)(info: Str) extends CallTree(info)
-  case Continue(current: Path, calls: List[CallTree])(info: Str) extends CallTree(info)
+  case Continue(current: Path, calls: CallTrees)(info: Str) extends CallTree(info)
 
   def pp(using level: Int = 1): String = {
     given PrettyPrintConfig = InitPpConfig.showRefEuidOn
     this match {
-      case Continue(current, calls) => s"${current.pp}" + calls.map(c => s"\n${"\t" * level}${c.pp(using level + 1)}").mkString
+      case Continue(current, calls) => s"${current.pp}" + calls.calls.map(c => s"\n${"\t" * level}${c.pp(using level + 1)}").mkString
       case k@Knot(current, prev) => s"${current.pp} ---> ${prev.pp} (${k.info})"
     }
   }
 
-  private def generatePathToIdent(using newd: Deforest, store: mutable.Map[Path, Ident]): Unit = this match {
+  def generatePathToIdent(using newd: Deforest, store: mutable.Map[Path, Ident], nameMap: mutable.Map[String, Int], originalDefs: mutable.Set[Path]): Unit = this match {
     case k@Knot(current, prev) =>
       if k.info != "hopeless to continue" then store.updateWith(current)(_.orElse({
-        store.updateWith(prev)(_.orElse(Some(newd.nextIdent(true, Var(prev.pp(using InitPpConfig.pathAsIdentOn))))))
+        store.updateWith(prev)(_.orElse(Some(newd.nextIdent(true, {
+          val name = prev.last.r.id.tree.name
+          val id = nameMap.updateWith(name){
+            case None => Some(0)
+            case Some(v) => Some(v + 1)
+          }.get
+          // cannot be s"$name$id", or it will clash with defined names
+          // Var(if id == 0 then name else name + s"_$id")
+          Var(name + toSubscript(s"$id"))
+        }))))
       }))
     case Continue(current, calls) =>
-      store.updateWith(current)(_.orElse(Some(newd.nextIdent(true, Var(current.pp(using InitPpConfig.pathAsIdentOn))))))
-      calls.foreach(_.generatePathToIdent)
+      store.updateWith(current)(_.orElse(Some(newd.nextIdent(true, {
+        originalDefs += current
+        val name = current.last.r.id.tree.name
+        val id = nameMap.updateWith(name){
+          case None => Some(0)
+          case Some(v) => Some(v + 1)
+        }.get
+        // Var(if id == 0 then name else name + s"_$id")
+        Var(name + toSubscript(s"$id"))
+      }))))
+      calls.calls.foreach(_.generatePathToIdent)
   }
+}
+case class CallTrees(calls: List[CallTree]) {
+  val store = mutable.Map.empty[Path, Ident]
+  val originalDefs = mutable.Set.empty[Path]
+  def generatePathToIdent(using newd: Deforest): Map[Path, Ident] = {
+    given mutable.Map[Path, Ident] = store
+    given mutable.Set[Path] = originalDefs
+    given nameMap: mutable.Map[String, Int] = mutable.Map.empty[String, Int]
+    calls.foreach(_.generatePathToIdent)
+    store.toMap
+  }
+
+  lazy val pp = calls.sortBy(_.pp).map(_.pp).mkString("\n")
 }
 object CallTree {
   sealed trait CallTreeKnotTierFunc { def tie(p: Path, mapping: Option[Map[Ident, Path]]): Option[Path] -> Str }
@@ -542,8 +578,8 @@ object CallTree {
   }
   
 
-  private def growCallTree(start: Set[Path])(using knotTier: CallTreeKnotTier, callsInfo: Map[Ident, Set[Ref]]): List[CallTree] = {
-    start.map { p => { knotTier(p) match {
+  private def growCallTree(start: Set[Path])(using knotTier: CallTreeKnotTier, callsInfo: Map[Ident, Set[Ref]]): CallTrees = {
+    CallTrees(start.map { p => { knotTier(p) match {
       // if returns none, means needs to continue expanding, either for duplicate def or recursion
       case None -> info => {
         val nexts = p.p.last match {
@@ -560,7 +596,7 @@ object CallTree {
         val newInfo = if (info != "hopeless to continue") && !(p.p.startsWith(k.p)) then info + "; NOT PREFIX" else info
         CallTree.Knot(p, k)(newInfo)
       }
-    }}}.toList
+    }}}.toList)
   }
 
   def callTreeUsingSplitKnot(d: Deforest) = {
@@ -571,12 +607,6 @@ object CallTree {
   def callTreeUsingNonSplitKnot(d: Deforest) = {
     val tier = CallTreeKnotTier()(using new NonSplitKnotTier(using d))
     growCallTree(d.callsInfo._1.map(_.toPath()).toSet)(using tier, d.callsInfo._2.toMap)
-  }
-
-  def generatePathToIdent(calls: List[CallTree])(using newd: Deforest): Map[Path, Ident] = {
-    given store: mutable.Map[Path, Ident] = mutable.Map.empty[Path, Ident]
-    calls.foreach(_.generatePathToIdent)
-    store.toMap
   }
 }
 

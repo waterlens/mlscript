@@ -115,7 +115,7 @@ case class Program(contents: Ls[ProgDef \/ Expr])(using d: Deforest) {
     }
     Program(
       copiedOriginalProgram.defAndExpr._2.map(e => R(e.rewriteExpand(using initContext, Path(Nil), newd, pathToIdent, refMaps)))
-      ++ copiedOriginalProgram.defAndExpr._1.iterator.map((id, body) => L(ProgDef(id, body)))
+      // ++ copiedOriginalProgram.defAndExpr._1.iterator.map((id, body) => L(ProgDef(id, body)))
       ++ newDefs
     ) -> newd
     

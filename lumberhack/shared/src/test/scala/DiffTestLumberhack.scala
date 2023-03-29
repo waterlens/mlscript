@@ -156,6 +156,7 @@ class DiffTestLumberhack extends DiffTests {
       // val outputString = newCallTree._1.map(_.pp).mkString("\n")
       // output(outputString)
       // output("<<<<<<< new expansion <<<<<<<")
+      if allowErr then throw Exception("expect to fail but pass")
     } catch {
       case e => if allowErr then {
         output("!!!!!!ERROR!!!!!!")

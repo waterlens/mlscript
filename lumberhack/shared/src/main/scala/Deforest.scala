@@ -479,7 +479,10 @@ enum CallTree(val info: Str) {
   def pp(using level: Int = 1): String = {
     given PrettyPrintConfig = InitPpConfig.showRefEuidOn
     this match {
-      case Continue(current, calls) => s"${current.pp}" + calls.pp.linesIterator.map("\n\t" + _).mkString
+      case c@Continue(current, calls) =>
+        s"${current.pp}"
+        + (if c.info.isEmpty then "" else s" (${c.info})")
+        + calls.pp.linesIterator.map("\n\t" + _).mkString
       case k@Knot(current, prev) => s"${current.pp} ---> ${prev.pp} (${k.info})"
     }
   }
@@ -522,7 +525,7 @@ case class CallTrees(calls: List[CallTree]) {
     calls.foreach(_.generatePathToIdent)
     store.toMap
   }
-  
+
   lazy val pp = this.calls.map(_.pp).mkString("\n")
 }
 object CallTree {

@@ -48,15 +48,17 @@ class DiffTestLumberhack extends DiffTests {
     try {
       d.resolveConstraints
 
-      output("\n>>>>>>> knots >>>>>>>")
-      d.recursiveConstr.toSeq.sortBy(_._1._1.pp(using InitPpConfig)).foreach { r =>
-        output(s"${r._1._1.pp(using InitPpConfig)} <: ${r._1._2.pp(using InitPpConfig)}")
-        r._2.toSeq.sortBy(_._1.pp(using InitPpConfig)).foreach { p =>
-          output(s"\t${p._1.pp(using InitPpConfig.showPolarityOn.showRefEuidOn)}  --->  ${p._2.pp(using InitPpConfig.showPolarityOn.showRefEuidOn)}")
-          if !p._1.p.containsSlice(p._2.p) then output("\t!!NOT SUB-PATH")
+      if mode.stdout || mode.verbose then {
+        output("\n>>>>>>> knots >>>>>>>")
+        d.recursiveConstr.toSeq.sortBy(_._1._1.pp(using InitPpConfig)).foreach { r =>
+          output(s"${r._1._1.pp(using InitPpConfig)} <: ${r._1._2.pp(using InitPpConfig)}")
+          r._2.toSeq.sortBy(_._1.pp(using InitPpConfig)).foreach { p =>
+            output(s"\t${p._1.pp(using InitPpConfig.showPolarityOn.showRefEuidOn)}  --->  ${p._2.pp(using InitPpConfig.showPolarityOn.showRefEuidOn)}")
+            if !p._1.p.containsSlice(p._2.p) then output("\t!!NOT SUB-PATH")
+          }
         }
+        output("<<<<<<< knots <<<<<<<")
       }
-      output("<<<<<<< knots <<<<<<<")
 
       if mode.stdout || mode.verbose then {
         output("\n>>>>>>> splitted knots >>>>>>>")

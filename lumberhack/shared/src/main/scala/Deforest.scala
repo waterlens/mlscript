@@ -8,6 +8,7 @@ import scala.collection.mutable
 import mlscript.utils.AnyOps
 import mlscript.lumberhack.utils.PrettyPrintConfig
 import mlscript.lumberhack.utils.InitPpConfig
+import mlscript.lumberhack.utils.{toSubscript, toSuperscript}
 
 type TypeVar
 type NormalPathElem
@@ -235,7 +236,7 @@ class Deforest(var debug: Boolean) {
   val iuid = Uid.Ident.State()
   val euid = Uid.Expr.State()
   val noExprId = euid.nextUid
-  def nextIdent(isDef: Bool, name: Var): Ident = Ident(isDef, name, iuid.nextUid)
+  def nextIdent(isDef: Bool, name: Var): Ident = Ident(isDef, name, iuid.nextUid(name.name))
 
   def freshVar(n: String) =
     val vid = vuid.nextUid
@@ -465,12 +466,6 @@ class Deforest(var debug: Boolean) {
   }
 }
 
-def toSubscript(i: String) = i.map {
-  case '0' => '₀'; case '1' => '₁'; case '2' => '₂'
-  case '3' => '₃'; case '4' => '₄'; case '5' => '₅'
-  case '6' => '₆'; case '7' => '₇'; case '8' => '₈'
-  case '9' => '₉'; case c => c
-}
 
 enum CallTree(val info: Str) {
   case Knot(current: Path, prev: Path)(info: Str) extends CallTree(info)

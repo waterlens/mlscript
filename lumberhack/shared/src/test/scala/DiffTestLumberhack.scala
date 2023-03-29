@@ -98,7 +98,7 @@ class DiffTestLumberhack extends DiffTests {
       val (newProg, newd) = originalProgram.expandedWithNewDeforest(callTree)
       if mode.stdout || mode.verbose then {
         output("\n>>>>>>> expanded program >>>>>>>")
-        output(newProg.pp(callTree)(using InitPpConfig.multilineOn))
+        output(newProg.pp(callTree)(using InitPpConfig.multilineOn.showIuidOn))
         output("<<<<<<< expanded program <<<<<<<")
       }
 
@@ -114,9 +114,9 @@ class DiffTestLumberhack extends DiffTests {
       output("\n>>>>>>> fusion matches >>>>>>>")
       val fusionMatchStr = newd.fusionMatch.toSeq.sortBy(expr => newd.exprs(expr._1).pp(using InitPpConfig)).map { (p, cs) =>
         // newd.exprs(p).pp(using InitPpConfig.showEuidOn) + "\n" +
-        newd.exprs(p).pp(using InitPpConfig) + " --->\n" +
+        newd.exprs(p).pp(using InitPpConfig.showIuidOn) + " --->\n" +
         cs.toSeq.sortBy(c => newd.exprs(c).pp(using InitPpConfig)).map { c =>
-          "\t" + newd.exprs(c).pp(using InitPpConfig)
+          "\t" + newd.exprs(c).pp(using InitPpConfig.showIuidOn)
         }.mkString("\n") + (if cs.size > 1 then "\n\t MORE THAN ONE MATCH EXPR" else "")
       }.mkString("\n")
       output(fusionMatchStr)
@@ -124,7 +124,7 @@ class DiffTestLumberhack extends DiffTests {
 
       output("\n>>>>>>> after fusion >>>>>>>")
       val prgmAfterFusion = newProg.rewrite(newd.fusionMatch.toMap, newd)
-      output(prgmAfterFusion.pp(callTree)(using InitPpConfig.multilineOn))
+      output(prgmAfterFusion.pp(callTree)(using InitPpConfig.multilineOn.showIuidOn))
       output("<<<<<<< after fusion <<<<<<<")
 
       // output("\n>>>>>>> new type variable bounds >>>>>>>")

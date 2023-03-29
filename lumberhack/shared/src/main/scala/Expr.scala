@@ -5,7 +5,7 @@ import mlscript.utils.*, shorthands.*
 import lumberhack.utils.*
 
 case class Ident(isDef: Bool, tree: Var, uid: Uid[Ident]) {
-  def pp(using config: PrettyPrintConfig): Str = s"${tree.name}${if config.showIuid then s":$uid" else ""}"
+  def pp(using config: PrettyPrintConfig): Str = s"${tree.name}${if config.showIuid then s"${toSuperscript(uid.toString)}" else ""}"
   def copyToNewDeforest(using newd: Deforest): Ident = newd.nextIdent(isDef, tree)
 }
 case class ProgDef(id: Ident, body: Expr)

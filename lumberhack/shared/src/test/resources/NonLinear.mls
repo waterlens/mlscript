@@ -19,16 +19,16 @@ c(p(0))
 //│ Parsed: {fun seq = a, b, => b; fun p = x, => {if (primitive (x,)) then N else {if (primitive (x,)) then C (p (add (x, 1,),),) else let temp = C (p (minus (x, 1,),),) in seq (f (temp,), temp,)}}; fun f = z, => if z is ‹(C (b,)) then b; (N) then 1›; fun c = xx, => if xx is ‹(C (aa,)) then primitive (aa,); (N) then N›; c (p (0,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (c^50 (p^51 0))
-//│ def c = (fun xx:21 -> case xx:21 of {
-//│ 	C aa:22 => (primitive:4 aa:22)
+//│ def c = (fun xx⁰ -> case xx⁰ of {
+//│ 	C aa⁰ => (primitive⁰ aa⁰)
 //│ 	| N => [N]})
-//│ def f = (fun z:19 -> case z:19 of {
-//│ 	C b:20 => b:20
+//│ def f = (fun z⁰ -> case z⁰ of {
+//│ 	C b¹ => b¹
 //│ 	| N => 1})
-//│ def p = (fun x:17 -> if (primitive:4 x:17) then [N] else if (primitive:4 x:17) then [C (p^11 ((add:6 x:17) 1))] else 
-//│ 	let temp:18 = [C (p^19 ((minus:1 x:17) 1))]
-//│ 	in ((seq^27 (f^28 temp:18)) temp:18))
-//│ def seq = (fun a:15 -> (fun b:16 -> b:16))
+//│ def p = (fun x⁰ -> if (primitive⁰ x⁰) then [N] else if (primitive⁰ x⁰) then [C (p^11 ((add⁰ x⁰) 1))] else 
+//│ 	let temp⁰ = [C (p^19 ((minus⁰ x⁰) 1))]
+//│ 	in ((seq^27 (f^28 temp⁰)) temp⁰))
+//│ def seq = (fun a⁰ -> (fun b⁰ -> b⁰))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -41,33 +41,33 @@ c(p(0))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C (p₀ ((add x) 1))] --->
-//│ 	case xx of {C aa => (primitive aa) | N => [N]}
-//│ [C (p₀ ((minus x) 1))] --->
-//│ 	case xx of {C aa => (primitive aa) | N => [N]}
-//│ 	case z of {C b => b | N => 1}
+//│ [C (p₀ ((add⁰ x¹) 1))] --->
+//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}
+//│ [C (p₀ ((minus⁰ x¹) 1))] --->
+//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}
+//│ 	case z¹ of {C b³ => b³ | N => 1}
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ [N] --->
-//│ 	case xx of {C aa => (primitive aa) | N => [N]}
+//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c₀ (p₀ 0))
 //│ def c₀ = 
-//│ 	(fun xx -> xx)
+//│ 	(fun xx¹ -> xx¹)
 //│ def p₀ = 
-//│ 	(fun x -> if (primitive x) then [N] else if (primitive x) then 
-//│ 		let aa = (p₀ ((add x) 1))
-//│ 		in (primitive aa) else 
-//│ 		let temp = 	
-//│ 			let b = (p₀ ((minus x) 1))
-//│ 			in b
-//│ 		in ((seq₀ (f₀ temp)) temp))
+//│ 	(fun x¹ -> if (primitive⁰ x¹) then [N] else if (primitive⁰ x¹) then 
+//│ 		let aa¹ = (p₀ ((add⁰ x¹) 1))
+//│ 		in (primitive⁰ aa¹) else 
+//│ 		let temp¹ = 	
+//│ 			let b³ = (p₀ ((minus⁰ x¹) 1))
+//│ 			in b³
+//│ 		in ((seq₀ (f₀ temp¹)) temp¹))
 //│ 	where
 //│ 	def f₀ = 
-//│ 		(fun z -> z)
+//│ 		(fun z¹ -> z¹)
 //│ 	def seq₀ = 
-//│ 		(fun a -> (fun b -> b))
+//│ 		(fun a¹ -> (fun b² -> b²))
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -81,8 +81,8 @@ let a =
 //│ Parsed: {let a = {let d = 4; d; 123}}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ def a = 
-//│ 	let d:12 = 4
-//│ 	in d:12
+//│ 	let d⁰ = 4
+//│ 	in d⁰
 //│ 	123
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 

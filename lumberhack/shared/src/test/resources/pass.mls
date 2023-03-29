@@ -72,12 +72,12 @@ c(p)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N] --->
-//│ 	case z of {C aaa bbb => bbb | N => 7}
-//│ [C 2 [N]] --->
-//│ 	case y of {C aa bb => (e₀ bb) | N => 5}
 //│ [C 1 [C 2 [N]]] --->
 //│ 	case x of {C a b => (d₀ b) | N => 3}
+//│ [C 2 [N]] --->
+//│ 	case y of {C aa bb => (e₀ bb) | N => 5}
+//│ [N] --->
+//│ 	case z of {C aaa bbb => bbb | N => 7}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -128,18 +128,18 @@ c(p)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C p₁] --->
-//│ 	case a of {C b => case b of {C y => (c₁ y)}}
+//│ [C [C p₀]] --->
+//│ 	case a of {C b => case b of {C y => (c₀ y)}}
 //│ [C [C p₁]] --->
 //│ 	case x of {C a => case a of {C b => case b of {C y => (c₁ y)}}}
-//│ [C p₂] --->
-//│ 	case x of {C a => case a of {C b => case b of {C y => (c₀ y)}}}
 //│ [C [C p₂]] --->
 //│ 	case b of {C y => (c₁ y)}
 //│ [C p₀] --->
 //│ 	case b of {C y => (c₀ y)}
-//│ [C [C p₀]] --->
-//│ 	case a of {C b => case b of {C y => (c₀ y)}}
+//│ [C p₁] --->
+//│ 	case a of {C b => case b of {C y => (c₁ y)}}
+//│ [C p₂] --->
+//│ 	case x of {C a => case a of {C b => case b of {C y => (c₀ y)}}}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -199,10 +199,10 @@ c(id(p))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C p₀] --->
-//│ 	case x of {C a => (c₀ a)}
 //│ [C [C p₀]] --->
 //│ 	case x of {C a => (c₁ a)}
+//│ [C p₀] --->
+//│ 	case x of {C a => (c₀ a)}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -358,18 +358,18 @@ ca(p)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C p₀] --->
-//│ 	case x of {C b => (ca₀ b)}
-//│ [C [C p₀]] --->
-//│ 	case x of {C a => (cb₂ a)}
 //│ [C [C [C p₀]]] --->
 //│ 	case x of {C b => (ca₂ b)}
-//│ [C p₁] --->
-//│ 	case x of {C a => (cb₁ a)}
-//│ [C [C p₁]] --->
-//│ 	case x of {C b => (ca₁ b)}
 //│ [C [C [C p₁]]] --->
 //│ 	case x of {C a => (cb₀ a)}
+//│ [C [C p₀]] --->
+//│ 	case x of {C a => (cb₂ a)}
+//│ [C [C p₁]] --->
+//│ 	case x of {C b => (ca₁ b)}
+//│ [C p₀] --->
+//│ 	case x of {C b => (ca₀ b)}
+//│ [C p₁] --->
+//│ 	case x of {C a => (cb₁ a)}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -452,16 +452,16 @@ c1(p1)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C p1₀] --->
-//│ 	case x2 of {C b => (c1₂ b)}
-//│ [C p2₀] --->
-//│ 	case x1 of {C a => (c2₁ a)}
-//│ [C [C p2₀]] --->
-//│ 	case x2 of {C b => (c1₁ b)}
 //│ [C [C [C p2₀]]] --->
 //│ 	case x1 of {C a => (c2₀ a)}
 //│ 	case x1 of {C a => (c2₀ a)}
 //│ 	 MORE THAN ONE MATCH EXPR
+//│ [C [C p2₀]] --->
+//│ 	case x2 of {C b => (c1₁ b)}
+//│ [C p1₀] --->
+//│ 	case x2 of {C b => (c1₂ b)}
+//│ [C p2₀] --->
+//│ 	case x1 of {C a => (c2₁ a)}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -532,20 +532,20 @@ map(l)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [K] --->
-//│ 	case x of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ [KK] --->
-//│ 	case x of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ [KKKK] --->
-//│ 	case x of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ [N] --->
-//│ 	case ls of {C h t => [C (ff₃ h) (map₃ t)] | N => [N]}
 //│ [C [KKKK] [N]] --->
 //│ 	case ls of {C h t => [C (ff₂ h) (map₃ t)] | N => [N]}
 //│ [C [KK] [C [KKKK] [N]]] --->
 //│ 	case ls of {C h t => [C (ff₁ h) (map₂ t)] | N => [N]}
 //│ [C [K] [C [KK] [C [KKKK] [N]]]] --->
 //│ 	case ls of {C h t => [C (ff₀ h) (map₁ t)] | N => [N]}
+//│ [KKKK] --->
+//│ 	case x of {K => [T] | KK => [TT] | KKKK => [TTTT]}
+//│ [KK] --->
+//│ 	case x of {K => [T] | KK => [TT] | KKKK => [TTTT]}
+//│ [K] --->
+//│ 	case x of {K => [T] | KK => [TT] | KKKK => [TTTT]}
+//│ [N] --->
+//│ 	case ls of {C h t => [C (ff₃ h) (map₃ t)] | N => [N]}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -621,20 +621,20 @@ map(l)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [K] --->
-//│ 	case h of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ [KK] --->
-//│ 	case h of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ [KKKK] --->
-//│ 	case h of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ [N] --->
-//│ 	case ls of {C h t => [C case h of {K => [T] | KK => [TT] | KKKK => [TTTT]} (map₃ t)] | N => [N]}
 //│ [C [KKKK] [N]] --->
 //│ 	case ls of {C h t => [C case h of {K => [T] | KK => [TT] | KKKK => [TTTT]} (map₃ t)] | N => [N]}
 //│ [C [KK] [C [KKKK] [N]]] --->
 //│ 	case ls of {C h t => [C case h of {K => [T] | KK => [TT] | KKKK => [TTTT]} (map₂ t)] | N => [N]}
 //│ [C [K] [C [KK] [C [KKKK] [N]]]] --->
 //│ 	case ls of {C h t => [C case h of {K => [T] | KK => [TT] | KKKK => [TTTT]} (map₁ t)] | N => [N]}
+//│ [KKKK] --->
+//│ 	case h of {K => [T] | KK => [TT] | KKKK => [TTTT]}
+//│ [KK] --->
+//│ 	case h of {K => [T] | KK => [TT] | KKKK => [TTTT]}
+//│ [K] --->
+//│ 	case h of {K => [T] | KK => [TT] | KKKK => [TTTT]}
+//│ [N] --->
+//│ 	case ls of {C h t => [C case h of {K => [T] | KK => [TT] | KKKK => [TTTT]} (map₃ t)] | N => [N]}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -701,22 +701,22 @@ sum(mapa(mapb(primitive)))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C (primitive hb) (mapb₁ tb)] --->
-//│ 	case lsa of {C ha ta => [C (primitive ha) (mapa₁ ta)] | N => [N]}
-//│ [N] --->
-//│ 	case lsa of {C ha ta => [C (primitive ha) (mapa₁ ta)] | N => [N]}
 //│ [C (primitive ha) (mapa₁ ta)] --->
 //│ 	case ls of {C h t => [S [N] (sum₁ t)] | N => [N]}
-//│ [N] --->
+//│ [C (primitive ha) (mapa₁ ta)] --->
 //│ 	case ls of {C h t => [S [N] (sum₁ t)] | N => [N]}
 //│ [C (primitive hb) (mapb₁ tb)] --->
 //│ 	case lsa of {C ha ta => [C (primitive ha) (mapa₁ ta)] | N => [N]}
+//│ [C (primitive hb) (mapb₁ tb)] --->
+//│ 	case lsa of {C ha ta => [C (primitive ha) (mapa₁ ta)] | N => [N]}
+//│ [N] --->
+//│ 	case ls of {C h t => [S [N] (sum₁ t)] | N => [N]}
 //│ [N] --->
 //│ 	case lsa of {C ha ta => [C (primitive ha) (mapa₁ ta)] | N => [N]}
-//│ [C (primitive ha) (mapa₁ ta)] --->
-//│ 	case ls of {C h t => [S [N] (sum₁ t)] | N => [N]}
 //│ [N] --->
 //│ 	case ls of {C h t => [S [N] (sum₁ t)] | N => [N]}
+//│ [N] --->
+//│ 	case lsa of {C ha ta => [C (primitive ha) (mapa₁ ta)] | N => [N]}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -826,12 +826,12 @@ main(p)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
+//│ [C p₁] --->
+//│ 	case pp of {C b => case b of {C d => (c₀ d)}}
 //│ [C p₂] --->
 //│ 	case b of {C d => (c₀ d)}
 //│ [C p₂] --->
 //│ 	case x of {C a => (c₀ a)}
-//│ [C p₁] --->
-//│ 	case pp of {C b => case b of {C d => (c₀ d)}}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -985,9 +985,9 @@ c(p)
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C x] --->
-//│ 	case [C x] of {C a => (c₀ a)}
-//│ [C x] --->
 //│ 	case [C x] of {C a => (c a)}
+//│ [C x] --->
+//│ 	case [C x] of {C a => (c₀ a)}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -1051,14 +1051,14 @@ c2(id(main))
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C p] --->
 //│ 	case x of {C a => a}
-//│ [C y] --->
-//│ 	case xx of {C aa => aa}
+//│ [C p₁] --->
+//│ 	case x of {C a => a}
 //│ [C p₁] --->
 //│ 	case z of {C b => (c2₀ b)}
 //│ [C y] --->
 //│ 	case xx of {C aa => aa}
-//│ [C p₁] --->
-//│ 	case x of {C a => a}
+//│ [C y] --->
+//│ 	case xx of {C aa => aa}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -1133,24 +1133,24 @@ c(t)
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [K] --->
 //│ 	case n of {K => [KK] | N => [NN]}
-//│ [N] --->
-//│ 	case n of {K => [KK] | N => [NN]}
-//│ [L] --->
-//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₂ l) (c₂ r)] | L => [LL]}
-//│ [L] --->
-//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₃ l) (c₃ r)] | L => [LL]}
-//│ [T [N] [L] [L]] --->
-//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₂ l) (c₃ r)] | L => [LL]}
-//│ [N] --->
-//│ 	case n of {K => [KK] | N => [NN]}
 //│ [L] --->
 //│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₅ l) (c₅ r)] | L => [LL]}
 //│ [L] --->
 //│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₆ l) (c₆ r)] | L => [LL]}
-//│ [T [N] [L] [L]] --->
-//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₅ l) (c₆ r)] | L => [LL]}
+//│ [L] --->
+//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₂ l) (c₂ r)] | L => [LL]}
+//│ [L] --->
+//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₃ l) (c₃ r)] | L => [LL]}
+//│ [N] --->
+//│ 	case n of {K => [KK] | N => [NN]}
+//│ [N] --->
+//│ 	case n of {K => [KK] | N => [NN]}
 //│ [T [K] [T [N] [L] [L]] [T [N] [L] [L]]] --->
 //│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₁ l) (c₄ r)] | L => [LL]}
+//│ [T [N] [L] [L]] --->
+//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₂ l) (c₃ r)] | L => [LL]}
+//│ [T [N] [L] [L]] --->
+//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₅ l) (c₆ r)] | L => [LL]}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -1238,26 +1238,26 @@ c(t)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N] --->
-//│ 	case n of {K => [KK] | N => [NN]}
-//│ [L] --->
-//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₅ l) (c₅ r)] | L => [LL]}
-//│ [L] --->
-//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₆ l) (c₆ r)] | L => [LL]}
-//│ [T [N] [L] [L]] --->
-//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₅ l) (c₆ r)] | L => [LL]}
 //│ [K] --->
-//│ 	case n of {K => [KK] | N => [NN]}
-//│ [T [K] aa₀ bb₀] --->
-//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₁ l) (c₄ r)] | L => [LL]}
-//│ [N] --->
 //│ 	case n of {K => [KK] | N => [NN]}
 //│ [L] --->
 //│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₂ l) (c₂ r)] | L => [LL]}
 //│ [L] --->
 //│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₃ l) (c₃ r)] | L => [LL]}
+//│ [L] --->
+//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₅ l) (c₅ r)] | L => [LL]}
+//│ [L] --->
+//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₆ l) (c₆ r)] | L => [LL]}
+//│ [N] --->
+//│ 	case n of {K => [KK] | N => [NN]}
+//│ [N] --->
+//│ 	case n of {K => [KK] | N => [NN]}
+//│ [T [K] aa₀ bb₀] --->
+//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₁ l) (c₄ r)] | L => [LL]}
 //│ [T [N] [L] [L]] --->
 //│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₂ l) (c₃ r)] | L => [LL]}
+//│ [T [N] [L] [L]] --->
+//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₅ l) (c₆ r)] | L => [LL]}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -1325,11 +1325,11 @@ map(l)(
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
+//│ [C [K] [N]] --->
+//│ 	case ls of {C h t => (fun f -> [C (f h) ((map₁ t) f)]) | N => (fun f -> [N])}
 //│ [K] --->
 //│ 	case x of {K => [T]}
 //│ [N] --->
-//│ 	case ls of {C h t => (fun f -> [C (f h) ((map₁ t) f)]) | N => (fun f -> [N])}
-//│ [C [K] [N]] --->
 //│ 	case ls of {C h t => (fun f -> [C (f h) ((map₁ t) f)]) | N => (fun f -> [N])}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -1378,16 +1378,16 @@ inter(l1)(l2)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 8 l2₀] --->
-//│ 	case xs of {N => (fun ys -> ys) | C h t => (fun ys -> [C h ((inter₄ ys) t)])}
-//│ [C 9 [C 8 l2₀]] --->
-//│ 	case xs of {N => (fun ys -> ys) | C h t => (fun ys -> [C h ((inter₂ ys) t)])}
-//│ [C 2 l1₀] --->
-//│ 	case xs of {N => (fun ys -> ys) | C h t => (fun ys -> [C h ((inter₃ ys) t)])}
 //│ [C 1 [C 2 l1₀]] --->
 //│ 	case xs of {N => (fun ys -> ys) | C h t => (fun ys -> [C h ((inter₁ ys) t)])}
 //│ 	case xs of {N => (fun ys -> ys) | C h t => (fun ys -> [C h ((inter₁ ys) t)])}
 //│ 	 MORE THAN ONE MATCH EXPR
+//│ [C 2 l1₀] --->
+//│ 	case xs of {N => (fun ys -> ys) | C h t => (fun ys -> [C h ((inter₃ ys) t)])}
+//│ [C 8 l2₀] --->
+//│ 	case xs of {N => (fun ys -> ys) | C h t => (fun ys -> [C h ((inter₄ ys) t)])}
+//│ [C 9 [C 8 l2₀]] --->
+//│ 	case xs of {N => (fun ys -> ys) | C h t => (fun ys -> [C h ((inter₂ ys) t)])}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -1452,12 +1452,12 @@ lastDrive(C(1, C(2, N)))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N] --->
-//│ 	case ys of {N => (fun x -> x) | C h t => (fun x -> ((last₁ t) h))}
-//│ [C 2 [N]] --->
-//│ 	case ys of {N => (fun x -> x) | C h t => (fun x -> ((last₁ t) h))}
 //│ [C 1 [C 2 [N]]] --->
 //│ 	case xs of {N => [None] | C hh tt => [Some ((last₀ tt) hh)]}
+//│ [C 2 [N]] --->
+//│ 	case ys of {N => (fun x -> x) | C h t => (fun x -> ((last₁ t) h))}
+//│ [N] --->
+//│ 	case ys of {N => (fun x -> x) | C h t => (fun x -> ((last₁ t) h))}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>

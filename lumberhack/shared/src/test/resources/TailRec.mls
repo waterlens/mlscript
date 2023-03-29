@@ -105,12 +105,12 @@ count(rev(N, init))(0)
 //│ 	case xs of {C h t => (fun c -> ((count₁ t) ((add c) 1))) | N => (fun c -> c)}
 //│ 	case xs of {C h t => (fun c -> ((count₁ t) ((add c) 1))) | N => (fun c -> c)}
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [N] --->
-//│ 	case ys of {C h1 t1 => ((rev₁ [C h1 a]) t1) | N => a}
 //│ [C h1 a] --->
 //│ 	case xs of {C h t => (fun c -> ((count₁ t) ((add c) 1))) | N => (fun c -> c)}
 //│ 	case xs of {C h t => (fun c -> ((count₁ t) ((add c) 1))) | N => (fun c -> c)}
 //│ 	 MORE THAN ONE MATCH EXPR
+//│ [N] --->
+//│ 	case ys of {C h1 t1 => ((rev₁ [C h1 a]) t1) | N => a}
 //│ [N] --->
 //│ 	case xs of {C h t => (fun c -> ((count₁ t) ((add c) 1))) | N => (fun c -> c)}
 //│ 	case xs of {C h t => (fun c -> ((count₁ t) ((add c) 1))) | N => (fun c -> c)}
@@ -170,20 +170,20 @@ idxSum(0, rev(N, N))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
+//│ [C h1 a] --->
+//│ 	case xs of {C h t => ((add i) ((idxSum₁ ((add i) 1)) t)) | N => 0}
+//│ 	case xs of {C h t => ((add i) ((idxSum₁ ((add i) 1)) t)) | N => 0}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [C h1 a] --->
+//│ 	case xs of {C h t => ((add i) ((idxSum₁ ((add i) 1)) t)) | N => 0}
+//│ 	case xs of {C h t => ((add i) ((idxSum₁ ((add i) 1)) t)) | N => 0}
+//│ 	 MORE THAN ONE MATCH EXPR
 //│ [N] --->
 //│ 	case xs of {C h t => ((add i) ((idxSum₁ ((add i) 1)) t)) | N => 0}
 //│ 	case xs of {C h t => ((add i) ((idxSum₁ ((add i) 1)) t)) | N => 0}
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ [N] --->
 //│ 	case ys of {C h1 t1 => ((rev₁ [C h1 a]) t1) | N => a}
-//│ [C h1 a] --->
-//│ 	case xs of {C h t => ((add i) ((idxSum₁ ((add i) 1)) t)) | N => 0}
-//│ 	case xs of {C h t => ((add i) ((idxSum₁ ((add i) 1)) t)) | N => 0}
-//│ 	 MORE THAN ONE MATCH EXPR
-//│ [C h1 a] --->
-//│ 	case xs of {C h t => ((add i) ((idxSum₁ ((add i) 1)) t)) | N => 0}
-//│ 	case xs of {C h t => ((add i) ((idxSum₁ ((add i) 1)) t)) | N => 0}
-//│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -244,8 +244,6 @@ count(rev(N, init))
 //│ 	case xs of {C h t => ((add 1) (count₁ t)) | N => 0}
 //│ 	case xs of {C h t => ((add 1) (count₁ t)) | N => 0}
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [N] --->
-//│ 	case ys of {C h1 t1 => ((rev₁ [C h1 a]) t1) | N => a}
 //│ [C h1 a] --->
 //│ 	case xs of {C h t => ((add 1) (count₁ t)) | N => 0}
 //│ 	case xs of {C h t => ((add 1) (count₁ t)) | N => 0}
@@ -254,6 +252,8 @@ count(rev(N, init))
 //│ 	case xs of {C h t => ((add 1) (count₁ t)) | N => 0}
 //│ 	case xs of {C h t => ((add 1) (count₁ t)) | N => 0}
 //│ 	 MORE THAN ONE MATCH EXPR
+//│ [N] --->
+//│ 	case ys of {C h1 t1 => ((rev₁ [C h1 a]) t1) | N => a}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -436,10 +436,10 @@ rev(rev2, init)(1, init2)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 0 init₁] --->
-//│ 	case ys of {C h1 t1 => ((rev₁ a) t1) | N => a}
 //│ [C 0 init2₀] --->
 //│ 	case ys2 of {C h12 t12 => ((rev2₀ a2) t12) | N => a2}
+//│ [C 0 init₁] --->
+//│ 	case ys of {C h1 t1 => ((rev₁ a) t1) | N => a}
 //│ [C 0 init₁] --->
 //│ 	case ys of {C h1 t1 => ((rev₁ a) t1) | N => a}
 //│ <<<<<<< fusion matches <<<<<<<

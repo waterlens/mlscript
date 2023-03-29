@@ -112,10 +112,10 @@ class DiffTestLumberhack extends DiffTests {
       newd.resolveConstraints
 
       output("\n>>>>>>> fusion matches >>>>>>>")
-      val fusionMatchStr = newd.fusionMatch.toSeq.sortBy(expr => newd.exprs(expr._1).pp(using InitPpConfig.showEuidOn)).map { (p, cs) =>
+      val fusionMatchStr = newd.fusionMatch.toSeq.sortBy(expr => newd.exprs(expr._1).pp(using InitPpConfig)).map { (p, cs) =>
         // newd.exprs(p).pp(using InitPpConfig.showEuidOn) + "\n" +
         newd.exprs(p).pp(using InitPpConfig) + " --->\n" +
-        cs.toSeq.sortBy(c => newd.exprs(c).pp(using InitPpConfig.showIuidOn)).map { c =>
+        cs.toSeq.sortBy(c => newd.exprs(c).pp(using InitPpConfig)).map { c =>
           "\t" + newd.exprs(c).pp(using InitPpConfig)
         }.mkString("\n") + (if cs.size > 1 then "\n\t MORE THAN ONE MATCH EXPR" else "")
       }.mkString("\n")

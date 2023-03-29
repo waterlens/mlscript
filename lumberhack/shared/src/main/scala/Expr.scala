@@ -9,7 +9,7 @@ case class Ident(isDef: Bool, tree: Var, uid: Uid[Ident]) {
   def copyToNewDeforest(using newd: Deforest): Ident = newd.nextIdent(isDef, tree)
 }
 case class ProgDef(id: Ident, body: Expr)
-case class Program(contents: Ls[ProgDef \/ Expr]) {
+case class Program(contents: Ls[ProgDef \/ Expr])(using d: Deforest) {
   def pp(using config: PrettyPrintConfig): Str =
     contents.sortBy{
       case Left(pdef) => pdef.id.pp(using InitPpConfig)
@@ -43,13 +43,8 @@ case class Program(contents: Ls[ProgDef \/ Expr]) {
       case CallTree.Knot(current, prev) => ""
     }
     
-    // val (newDefs, originalDefs) = this.defAndExpr._1.partition(_._1.tree.name.contains("_"))
     val topLevelExprsPp = this.defAndExpr._2.map(_.pp).mkString("\n")
-    // val originalDefsPp = originalDefs.toSeq.sortBy(_._1.pp(using InitPpConfig)).map { (id, body) =>
-    //   s"def ${id.pp(using InitPpConfig)} = ${body.pp}"
-    // }.mkString("\n")
     val newDefsPp = callTree.calls.map(rec(_, this.defAndExpr._1)).mkString("\n")
-    // topLevelExprsPp + "\n" + originalDefsPp + "\n" + newDefsPp
     topLevelExprsPp + "\n" + newDefsPp
   }
   
@@ -65,6 +60,7 @@ case class Program(contents: Ls[ProgDef \/ Expr]) {
         refMaps += (res -> r)
         res
       case Expr.Call(lhs: Expr, rhs: Expr) => Expr.Call(copyExpr(lhs), copyExpr(rhs))
+      case Expr.Sequence(fst: Expr, snd: Expr) => Expr.Sequence(copyExpr(fst), copyExpr(snd))
       case Expr.Ctor(name: Var, args: Ls[Expr]) => Expr.Ctor(name, args.map(copyExpr))
       case Expr.LetIn(id: Ident, rhs: Expr, body: Expr) =>
         val newId = id.copyToNewDeforest
@@ -83,7 +79,7 @@ case class Program(contents: Ls[ProgDef \/ Expr]) {
     given ctx: Expr.Ctx = Deforest.lumberhackKeywords.map {
       n => n -> newd.nextIdent(false, Var(n))
     } ++ this.defAndExpr._1.keySet.map(id => id.tree.name -> id.copyToNewDeforest) |> (_.toMap)
-    
+
     Program(
       this.defAndExpr._2.map { e => R(copyExpr(e)) }
       ::: this.defAndExpr._1.map { (id, body) => L(ProgDef(ctx(id.tree.name), copyExpr(body))) }.toList
@@ -169,7 +165,10 @@ enum Expr(using val deforest: Deforest) {
   case Match(scrut: Expr, arms: Ls[(Var, Ls[Ident], Expr)])(using Deforest)
   case IfThenElse(scrut: Expr, thenn: Expr, elze: Expr)(using Deforest)
   case Function(param: Ident, body: Expr)(using Deforest)
+  case Sequence(fst: Expr, snd: Expr)(using Deforest)
   
+  type MultiLineExprs = LetIn | Sequence
+
   val uid: Uid[Expr] = deforest.euid.nextUid
   deforest.exprs += uid -> this
   
@@ -180,12 +179,26 @@ enum Expr(using val deforest: Deforest) {
         case Ref(id) => if id.isDef
           then id.tree.name + (if config.showRefEuid then s"^$uid" else "")
           else id.pp
+        case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackIntBinOps(op) => s"(${fst.pp} $op ${snd.pp})"
         case Call(lhs, rhs) => s"(${lhs.pp} ${rhs.pp})"
+        case Sequence(fst, snd) if config.multiline =>
+          val sndStr = snd match {
+            case b: MultiLineExprs => b.pp.dropWhile(c => c == '\n' || c.isWhitespace)
+            case _ => {
+              val res = snd.pp
+              val resLines = res.linesIterator.toSeq
+              if resLines.length > 1 then {
+                resLines.map("\t" + _).mkString("\n").dropWhile(c => c == '\n' || c.isWhitespace)
+              } else { res }
+            }
+          }
+          s"\n\t${fst.pp}\n\t$sndStr"
+        case Sequence(fst, snd) => s"${fst.pp}; ${snd.pp}"
         case Ctor(name, args) =>
           s"${Console.BLUE}[$name${Console.RESET}${args.map(" " + _.pp).mkString + Console.BLUE}]${Console.RESET}"
         case LetIn(id, rhs, body) if config.multiline => {
           val rhsStr = rhs match {
-            case r: LetIn => rhs.pp.linesIterator.map("\t" + _).mkString("\n")
+            case r: MultiLineExprs => rhs.pp.linesIterator.map("\t" + _).mkString("\n")
             case _ => {
               val res = rhs.pp
               val resLines = res.linesIterator.toSeq
@@ -195,7 +208,7 @@ enum Expr(using val deforest: Deforest) {
             }
           }
           val bodyStr = body match {
-            case b: LetIn => b.pp.dropWhile(c => c == '\n' || c.isWhitespace)
+            case b: MultiLineExprs => b.pp.dropWhile(c => c == '\n' || c.isWhitespace)
             case _ => {
               val res = body.pp
               val resLines = res.linesIterator.toSeq
@@ -231,6 +244,7 @@ enum Expr(using val deforest: Deforest) {
     this match {
       case Const(lit) => Const(lit)
       case Call(lhs, rhs) => Call(lhs.rewriteExpand, rhs.rewriteExpand)
+      case Sequence(f, s) => Sequence(f.rewriteExpand, s.rewriteExpand)
       case Ctor(name, args) => Ctor(name, args.map(_.rewriteExpand))
       case LetIn(id, rhs, body) =>
         val newId = id.copyToNewDeforest
@@ -258,6 +272,7 @@ enum Expr(using val deforest: Deforest) {
     this match {
       case Const(lit) => Const(lit)
       case Call(lhs, rhs) => Call(lhs.rewriteFusion, rhs.rewriteFusion)
+      case Sequence(f, s) => Sequence(f.rewriteFusion, s.rewriteFusion)
       case LetIn(id, rhs, body) => LetIn(id, rhs.rewriteFusion, body.rewriteFusion)
       case IfThenElse(s, t, e) => IfThenElse(s.rewriteFusion, t.rewriteFusion, e.rewriteFusion)
       case Function(param, body) => Function(param, body.rewriteFusion)
@@ -316,6 +331,13 @@ object Expr {
       IfThenElse(fromTerm(expr), fromTerm(rhs), fromTerm(elze))
     case Bra(false, t) => fromTerm(t)
     case Blk((e: Term) :: Nil) => fromTerm(e)
+    // case Blk((NuFunDef(_, name, Nil, L(e))) :: Nil) => fromTerm(e) // do not allow let binding at the last
+    case Blk((e: Term) :: t) => Sequence(fromTerm(e), fromTerm(Blk(t)))
+    case Blk((NuFunDef(_, name, Nil, L(e))) :: t) =>
+      val id = d.nextIdent(false, name) // TODO deforest local let bindings? false ~> true
+      given Ctx = ctx + (name.name -> id)
+      LetIn(id, fromTerm(e), fromTerm(Blk(t)))
+      
     // single element tuple as brackets
     case Tup((N -> Fld(_, _, t)) :: Nil) => fromTerm(t)
     case _ => lastWords(s"unsupported: $t (${t.getClass})") // unsupported

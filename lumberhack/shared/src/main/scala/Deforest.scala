@@ -259,7 +259,10 @@ class Deforest(var debug: Boolean) {
       case Const(l) => NoProd()(using noExprId)
       case Ref(Ident(_, Var(primitive), _)) if Deforest.lumberhackKeywords(primitive) => {
         if Deforest.lumberhackIntOps(primitive) then
-          if primitive == "eq" then prodIntEq(using noExprId) else prodIntBinOp(using noExprId)
+          primitive match {
+            case "eq" | "==" => prodIntEq(using noExprId)
+            case _ => prodIntBinOp(using noExprId)
+          }
         else
           NoProd()(using noExprId)
       }
@@ -297,7 +300,14 @@ class Deforest(var debug: Boolean) {
         constrain(process(thenn), res._2.toStrat())
         constrain(process(elze), res._2.toStrat())
         res._1
-      case LetIn(id, rhs, body) => ???
+      case LetIn(id, rhs, body) =>
+        val v = freshVar(id.tree.name + ":" + id.uid)
+        constrain(process(rhs), v._2.toStrat())
+        process(body)(using ctx + (id.tree.name -> v._1.toStrat())).s
+      case Sequence(fst, snd) =>
+        process(fst)
+        process(snd).s
+
     res.toStrat()
   }(r => s"=> ${r.pp(using InitPpConfig)}")
 
@@ -469,7 +479,7 @@ enum CallTree(val info: Str) {
   def pp(using level: Int = 1): String = {
     given PrettyPrintConfig = InitPpConfig.showRefEuidOn
     this match {
-      case Continue(current, calls) => s"${current.pp}" + calls.calls.map(c => s"\n${"\t" * level}${c.pp(using level + 1)}").mkString
+      case Continue(current, calls) => s"${current.pp}" + calls.pp.linesIterator.map("\n\t" + _).mkString
       case k@Knot(current, prev) => s"${current.pp} ---> ${prev.pp} (${k.info})"
     }
   }
@@ -512,8 +522,8 @@ case class CallTrees(calls: List[CallTree]) {
     calls.foreach(_.generatePathToIdent)
     store.toMap
   }
-
-  lazy val pp = calls.sortBy(_.pp).map(_.pp).mkString("\n")
+  
+  lazy val pp = this.calls.map(_.pp).mkString("\n")
 }
 object CallTree {
   sealed trait CallTreeKnotTierFunc { def tie(p: Path, mapping: Option[Map[Ident, Path]]): Option[Path] -> Str }
@@ -579,7 +589,8 @@ object CallTree {
   
 
   private def growCallTree(start: Set[Path])(using knotTier: CallTreeKnotTier, callsInfo: Map[Ident, Set[Ref]]): CallTrees = {
-    CallTrees(start.map { p => { knotTier(p) match {
+    // the call tree will be growed to be sorted
+    CallTrees(start.toList.sortBy(_.pp(using InitPpConfig.showRefEuidOn)).map { p => { knotTier(p) match {
       // if returns none, means needs to continue expanding, either for duplicate def or recursion
       case None -> info => {
         val nexts = p.p.last match {
@@ -596,7 +607,7 @@ object CallTree {
         val newInfo = if (info != "hopeless to continue") && !(p.p.startsWith(k.p)) then info + "; NOT PREFIX" else info
         CallTree.Knot(p, k)(newInfo)
       }
-    }}}.toList)
+    }}})
   }
 
   def callTreeUsingSplitKnot(d: Deforest) = {
@@ -611,8 +622,7 @@ object CallTree {
 }
 
 object Deforest {
-  val lumberhackKeywords = Set(
-    "primitive", "add", "minus", "eq", "mult", "div"
-  )
+  lazy val lumberhackKeywords = lumberhackIntOps ++ lumberhackIntBinOps + "primitive"
   val lumberhackIntOps = Set("add", "minus", "mult", "div", "eq")
+  val lumberhackIntBinOps = Set("+", "-", "*", "/", "==")
 }

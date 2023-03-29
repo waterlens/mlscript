@@ -12,8 +12,8 @@ c(p)
 //│ Parsed: {let p = C (p,); fun c = x, => if C (x,) is ‹(C (a,)) then a›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (c^8 p^9)
-//│ def c = (fun x:8 -> case [C x:8] of {
-//│ 	C a:9 => a:9})
+//│ def c = (fun x:13 -> case [C x:13] of {
+//│ 	C a:14 => a:14})
 //│ def p = [C p^1]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -35,12 +35,12 @@ c(p)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c₀ p₀)
-//│ def p₀ = 
-//│ 	[C p₀]
 //│ def c₀ = 
 //│ 	(fun x -> 
 //│ 		let a = x
 //│ 		in a)
+//│ def p₀ = 
+//│ 	[C p₀]
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -54,8 +54,8 @@ c(p)
 //│ Parsed: {_LUMBERHACK_ERROR; let p = Pair (A, B,); fun c = x, => if x is ‹(Pair (a, b,)) then c (Pair (b, a,),)›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (c^12 p^13)
-//│ def c = (fun x:8 -> case x:8 of {
-//│ 	Pair a:9 b:10 => (c^5 [Pair b:10 a:9])})
+//│ def c = (fun x:13 -> case x:13 of {
+//│ 	Pair a:14 b:15 => (c^5 [Pair b:15 a:14])})
 //│ def p = [Pair [A] [B]]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -71,9 +71,9 @@ c(p)
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [Pair b a] --->
 //│ 	case x of {Pair a b => (c [Pair b a])}
-//│ [Pair [A] [B]] --->
-//│ 	case x of {Pair a b => (c₀ [Pair b a])}
 //│ [Pair b a] --->
+//│ 	case x of {Pair a b => (c₀ [Pair b a])}
+//│ [Pair [A] [B]] --->
 //│ 	case x of {Pair a b => (c₀ [Pair b a])}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -94,9 +94,9 @@ c(p)
 //│ Parsed: {_LUMBERHACK_ERROR; let p = Wrap (3,); fun c = x, => if x is ‹(N) then 0; (Wrap (a,)) then c (Wrap (primitive (a,),),)›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (c^13 p^14)
-//│ def c = (fun x:8 -> case x:8 of {
+//│ def c = (fun x:13 -> case x:13 of {
 //│ 	N => 0
-//│ 	| Wrap a:9 => (c^5 [Wrap (primitive:3 a:9)])})
+//│ 	| Wrap a:14 => (c^5 [Wrap (primitive:4 a:14)])})
 //│ def p = [Wrap 3]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -112,9 +112,9 @@ c(p)
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [Wrap (primitive a)] --->
 //│ 	case x of {N => 0 | Wrap a => (c [Wrap (primitive a)])}
-//│ [Wrap 3] --->
-//│ 	case x of {N => 0 | Wrap a => (c₀ [Wrap (primitive a)])}
 //│ [Wrap (primitive a)] --->
+//│ 	case x of {N => 0 | Wrap a => (c₀ [Wrap (primitive a)])}
+//│ [Wrap 3] --->
 //│ 	case x of {N => 0 | Wrap a => (c₀ [Wrap (primitive a)])}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -131,9 +131,9 @@ c(0)
 //│ Parsed: {fun c = x, => if primitive (x,) is ‹(True) then 0; (False) then c (primitive (x,),)›; c (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (c^12 0)
-//│ def c = (fun x:7 -> case (primitive:3 x:7) of {
+//│ def c = (fun x:12 -> case (primitive:4 x:12) of {
 //│ 	True => 0
-//│ 	| False => (c^5 (primitive:3 x:7))})
+//│ 	| False => (c^5 (primitive:4 x:12))})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
@@ -172,18 +172,18 @@ map(ff, l)
 //│ Parsed: {_LUMBERHACK_ERROR; fun map = f, ls, => if ls is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; fun ff = x, => if x is ‹(K) then T; (KK) then TT; (KKKK) then TTTT›; let l = C (K, C (KK, C (KKKK, N,),),); map (ff, l,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((map^28 ff^29) l^31)
-//│ def ff = (fun x:13 -> case x:13 of {
+//│ def ff = (fun x:18 -> case x:18 of {
 //│ 	K => [T]
 //│ 	| KK => [TT]
 //│ 	| KKKK => [TTTT]})
 //│ def l = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ def map = (fun f:9 -> (fun ls:10 -> case ls:10 of {
-//│ 	C h:11 t:12 => [C (f:9 h:11) ((map^5 f:9) t:12)]
+//│ def map = (fun f:14 -> (fun ls:15 -> case ls:15 of {
+//│ 	C h:16 t:17 => [C (f:14 h:16) ((map^5 f:14) t:17)]
 //│ 	| N => [N]}))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ NoProd <: 't:12
+//│ NoProd <: 't:17
 //│ 	[-l^31 · +map^28 · +map^5 · +map^5 · +map^5 · +map^5]  --->  [-l^31 · +map^28 · +map^5 · +map^5 · +map^5]
 //│ <<<<<<< knots <<<<<<<
 //│ 
@@ -218,6 +218,16 @@ map(ff, l)
 //│ ((map₀ ff₀) l₀)
 //│ def ff₀ = 
 //│ 	(fun x -> x)
+//│ def l₀ = 
+//│ 	let h = [T]
+//│ 	in let t = 	
+//│ 		let h = [TT]
+//│ 		in let t = 	
+//│ 			let h = [TTTT]
+//│ 			in let t = [N]
+//│ 			in [C (f h) ((map₃ f) t)]
+//│ 		in [C (f h) ((map₂ f) t)]
+//│ 	in [C (f h) ((map₁ f) t)]
 //│ def map₀ = 
 //│ 	(fun f -> (fun ls -> ls))
 //│ 	where
@@ -229,16 +239,6 @@ map(ff, l)
 //│ 			where
 //│ 			def map₃ = 
 //│ 				(fun f -> (fun ls -> ls))
-//│ def l₀ = 
-//│ 	let h = [T]
-//│ 	in let t = 	
-//│ 		let h = [TT]
-//│ 		in let t = 	
-//│ 			let h = [TTTT]
-//│ 			in let t = [N]
-//│ 			in [C (f h) ((map₃ f) t)]
-//│ 		in [C (f h) ((map₂ f) t)]
-//│ 	in [C (f h) ((map₁ f) t)]
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -256,16 +256,16 @@ last(p)
 //│ Parsed: {_LUMBERHACK_ERROR; fun last = ls, => if ls is ‹(C (h, t,)) then if t is ‹(N) then Some (h,); (C (hh, tt,)) then last (t,)›; (N) then None›; let p = C (1, C (2, N,),); last (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (last^17 p^18)
-//│ def last = (fun ls:8 -> case ls:8 of {
-//│ 	C h:9 t:10 => case t:10 of {
-//│ 		N => [Some h:9]
-//│ 		| C hh:11 tt:12 => (last^5 t:10)}
+//│ def last = (fun ls:13 -> case ls:13 of {
+//│ 	C h:14 t:15 => case t:15 of {
+//│ 		N => [Some h:14]
+//│ 		| C hh:16 tt:17 => (last^5 t:15)}
 //│ 	| N => [None]})
 //│ def p = [C 1 [C 2 [N]]]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ NoProd <: 't:10
+//│ NoProd <: 't:15
 //│ 	[-p^18 · +last^17 · +last^5 · +last^5 · +last^5]  --->  [-p^18 · +last^17 · +last^5 · +last^5]
 //│ <<<<<<< knots <<<<<<<
 //│ 
@@ -292,6 +292,14 @@ last(p)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (last₀ p₀)
+//│ def last₀ = 
+//│ 	(fun ls -> ls)
+//│ 	where
+//│ 	def last₁ = 
+//│ 		(fun ls -> ls)
+//│ 		where
+//│ 		def last₂ = 
+//│ 			(fun ls -> ls)
 //│ def p₀ = 
 //│ 	let h = 1
 //│ 	in let t = 	
@@ -303,14 +311,6 @@ last(p)
 //│ 	in case t of {
 //│ 		N => [Some h]
 //│ 		| C hh tt => (last₁ t)}
-//│ def last₀ = 
-//│ 	(fun ls -> ls)
-//│ 	where
-//│ 	def last₁ = 
-//│ 		(fun ls -> ls)
-//│ 		where
-//│ 		def last₂ = 
-//│ 			(fun ls -> ls)
 //│ <<<<<<< after fusion <<<<<<<
 
 _LUMBERHACK_ERROR
@@ -325,26 +325,26 @@ idxSum(rev(primitive, N))(0)
 //│ |_LUMBERHACK_ERROR|↵|#let| |add| |#=| |primitive|↵|#fun| |idxSum|(|ls|)| |#=| |#if| |ls| |is|→|N| |#then| |acc| |=>| |0|↵|C|(|h|,| |t|)| |#then| |acc| |=>| |add|(|acc|,| |idxSum|(|t|)|(|add|(|acc|,| |1|)|)|)|←|↵|#fun| |rev|(|lss|,| |a|)| |#=| |#if| |lss| |is|→|N| |#then| |a|↵|C|(|hh|,| |tt|)| |#then| |rev|(|tt|,| |C|(|hh|,| |a|)|)|←|↵|idxSum|(|rev|(|primitive|,| |N|)|)|(|0|)|
 //│ Parsed: {_LUMBERHACK_ERROR; let add = primitive; fun idxSum = ls, => if ls is ‹(N) then acc, => 0; (C (h, t,)) then acc, => add (acc, idxSum (t,) (add (acc, 1,),),)›; fun rev = lss, a, => if lss is ‹(N) then a; (C (hh, tt,)) then rev (tt, C (hh, a,),)›; idxSum (rev (primitive, N,),) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ ((idxSum^33 ((rev^34 primitive:3) [N])) 0)
-//│ def add = primitive:3
-//│ def idxSum = (fun ls:9 -> case ls:9 of {
-//│ 	N => (fun acc:10 -> 0)
-//│ 	| C h:11 t:12 => (fun acc:13 -> ((add:4 acc:13) ((idxSum^8 t:12) ((add:4 acc:13) 1))))})
-//│ def rev = (fun lss:14 -> (fun a:15 -> case lss:14 of {
-//│ 	N => a:15
-//│ 	| C hh:16 tt:17 => ((rev^23 tt:17) [C hh:16 a:15])}))
+//│ ((idxSum^33 ((rev^34 primitive:4) [N])) 0)
+//│ def add = primitive:4
+//│ def idxSum = (fun ls:14 -> case ls:14 of {
+//│ 	N => (fun acc:15 -> 0)
+//│ 	| C h:16 t:17 => (fun acc:18 -> ((add^5 acc:18) ((idxSum^8 t:17) ((add^11 acc:18) 1))))})
+//│ def rev = (fun lss:19 -> (fun a:20 -> case lss:19 of {
+//│ 	N => a:20
+//│ 	| C hh:21 tt:22 => ((rev^23 tt:22) [C hh:21 a:20])}))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ C('hh:16, 'a:15) <: 'ls:9
+//│ C('hh:21, 'a:20) <: 'ls:14
 //│ 	[+rev^23 · +rev^23 · +rev^23 · -rev^34 · +idxSum^33 · +idxSum^8 · +idxSum^8]  --->  [+rev^23 · +rev^23 · -rev^34 · +idxSum^33 · +idxSum^8]
 //│ 	[+rev^23 · +rev^23 · +rev^23 · -rev^23 · -rev^34 · +idxSum^33 · +idxSum^8 · +idxSum^8]  --->  [+rev^23 · +rev^23 · -rev^23 · -rev^34 · +idxSum^33 · +idxSum^8]
-//│ NoProd <: 'lss:14
+//│ NoProd <: 'lss:19
 //│ 	[+rev^34 · +rev^23 · +rev^23]  --->  [+rev^34 · +rev^23]
-//│ NoProd <: 'ls:9
+//│ NoProd <: 'ls:14
 //│ 	[+rev^34 · -rev^34 · +idxSum^33 · +idxSum^8 · +idxSum^8]  --->  [+rev^34 · -rev^34 · +idxSum^33 · +idxSum^8]
 //│ 	[+rev^34 · -rev^23 · -rev^34 · +idxSum^33 · +idxSum^8 · +idxSum^8]  --->  [+rev^34 · -rev^23 · -rev^34 · +idxSum^33 · +idxSum^8]
-//│ NoProd <: 't:12
+//│ NoProd <: 't:17
 //│ 	[+rev^34 · +rev^23 · -rev^34 · +idxSum^33 · +idxSum^8 · +idxSum^8]  --->  [+rev^34 · +rev^23 · -rev^34 · +idxSum^33 · +idxSum^8]
 //│ 	[+rev^34 · +rev^23 · +rev^23 · -rev^34 · +idxSum^33 · +idxSum^8 · +idxSum^8 · +idxSum^8]  --->  [+rev^34 · +rev^23 · +rev^23 · -rev^34 · +idxSum^33 · +idxSum^8 · +idxSum^8]
 //│ 	[+rev^34 · +rev^23 · -rev^23 · -rev^34 · +idxSum^33 · +idxSum^8 · +idxSum^8]  --->  [+rev^34 · +rev^23 · -rev^23 · -rev^34 · +idxSum^33 · +idxSum^8]
@@ -377,6 +377,13 @@ idxSum(rev(primitive, N))(0)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((idxSum₀ ((rev₀ primitive) (fun acc -> 0))) 0)
+//│ def idxSum₀ = 
+//│ 	(fun ls -> ls)
+//│ 	where
+//│ 	def idxSum₁ = 
+//│ 		(fun ls -> case ls of {
+//│ 			N => (fun acc -> 0)
+//│ 			| C h t => (fun acc -> ((add acc) ((idxSum₁ t) ((add acc) 1))))})
 //│ def rev₀ = 
 //│ 	(fun lss -> (fun a -> case lss of {
 //│ 		N => a
@@ -392,13 +399,6 @@ idxSum(rev(primitive, N))(0)
 //│ 				let h = hh
 //│ 				in let t = a
 //│ 				in (fun acc -> ((add acc) ((idxSum₁ t) ((add acc) 1)))))}))
-//│ def idxSum₀ = 
-//│ 	(fun ls -> ls)
-//│ 	where
-//│ 	def idxSum₁ = 
-//│ 		(fun ls -> case ls of {
-//│ 			N => (fun acc -> 0)
-//│ 			| C h t => (fun acc -> ((add acc) ((idxSum₁ t) ((add acc) 1))))})
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -415,18 +415,18 @@ minuss(fst)(snd)
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((minuss^19 fst^20) snd^22)
 //│ def fst = [S [S [Z]]]
-//│ def minuss = (fun a:9 -> case a:9 of {
-//│ 	S aa:10 => (fun b:11 -> case b:11 of {
-//│ 		S bb:12 => ((minuss^3 aa:10) bb:12)
-//│ 		| Z => aa:10})
-//│ 	| Z => (fun n:13 -> [Z])})
+//│ def minuss = (fun a:14 -> case a:14 of {
+//│ 	S aa:15 => (fun b:16 -> case b:16 of {
+//│ 		S bb:17 => ((minuss^3 aa:15) bb:17)
+//│ 		| Z => aa:15})
+//│ 	| Z => (fun n:18 -> [Z])})
 //│ def snd = [Z]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ NoProd <: 'aa:10
+//│ NoProd <: 'aa:15
 //│ 	[-fst^20 · +minuss^19 · +minuss^3 · +minuss^3 · +minuss^3]  --->  [-fst^20 · +minuss^19 · +minuss^3 · +minuss^3]
-//│ NoProd <: 'b:11
+//│ NoProd <: 'b:16
 //│ 	[-snd^22 · +minuss^19 · +minuss^3 · +minuss^3]  --->  [-snd^22 · +minuss^19 · +minuss^3]
 //│ <<<<<<< knots <<<<<<<
 //│ 
@@ -451,13 +451,6 @@ minuss(fst)(snd)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((minuss₀ fst₀) snd₀)
-//│ def snd₀ = 
-//│ 	aa
-//│ def minuss₀ = 
-//│ 	(fun a -> a)
-//│ 	where
-//│ 	def minuss₁ = 
-//│ 		(fun a -> a)
 //│ def fst₀ = 
 //│ 	let aa = 	
 //│ 		let aa = (fun n -> [Z])
@@ -465,6 +458,13 @@ minuss(fst)(snd)
 //│ 			S bb => ((minuss₁ aa) bb)
 //│ 			| Z => aa})
 //│ 	in (fun b -> b)
+//│ def minuss₀ = 
+//│ 	(fun a -> a)
+//│ 	where
+//│ 	def minuss₁ = 
+//│ 		(fun a -> a)
+//│ def snd₀ = 
+//│ 	aa
 //│ <<<<<<< after fusion <<<<<<<
 
 // FIXME: weird recursive
@@ -482,20 +482,20 @@ minuss(fst)(snd)
 //│ Parsed: {_LUMBERHACK_ERROR; fun minuss = a, => if a is ‹(S (aa,)) then b, => checkb (b,) (aa,); (Z) then n, => Z›; fun checkb = b, => if b is ‹(S (bb,)) then aaa, => minuss (aaa, bb,); (Z) then aaa, => aaa›; let fst = S (S (Z,),); let snd = Z; minuss (fst,) (snd,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((minuss^27 fst^28) snd^30)
-//│ def checkb = (fun b:14 -> case b:14 of {
-//│ 	S bb:15 => (fun aaa:16 -> ((minuss^13 aaa:16) bb:15))
-//│ 	| Z => (fun aaa:17 -> aaa:17)})
+//│ def checkb = (fun b:19 -> case b:19 of {
+//│ 	S bb:20 => (fun aaa:21 -> ((minuss^13 aaa:21) bb:20))
+//│ 	| Z => (fun aaa:22 -> aaa:22)})
 //│ def fst = [S [S [Z]]]
-//│ def minuss = (fun a:10 -> case a:10 of {
-//│ 	S aa:11 => (fun b:12 -> ((checkb^2 b:12) aa:11))
-//│ 	| Z => (fun n:13 -> [Z])})
+//│ def minuss = (fun a:15 -> case a:15 of {
+//│ 	S aa:16 => (fun b:17 -> ((checkb^2 b:17) aa:16))
+//│ 	| Z => (fun n:18 -> [Z])})
 //│ def snd = [Z]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ NoProd <: 'bb:15
+//│ NoProd <: 'bb:20
 //│ 	[-snd^30 · +minuss^27 · +checkb^2 · +minuss^13 · +checkb^2]  --->  [-snd^30 · +minuss^27 · +checkb^2]
-//│ NoProd <: 'aa:11
+//│ NoProd <: 'aa:16
 //│ 	[-fst^28 · +minuss^27 · +checkb^2 · +minuss^13 · +checkb^2 · +minuss^13 · +checkb^2 · +minuss^13]  --->  [-fst^28 · +minuss^27 · +checkb^2 · +minuss^13 · +checkb^2 · +minuss^13]
 //│ <<<<<<< knots <<<<<<<
 //│ 
@@ -510,17 +510,22 @@ minuss(fst)(snd)
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [Z] --->
+//│ 	case b of {S bb => (fun aaa -> ((minuss₁ aaa) bb)) | Z => (fun aaa -> aaa)}
+//│ [Z] --->
 //│ 	case a of {S aa => (fun b -> ((checkb₀ b) aa)) | Z => (fun n -> [Z])}
 //│ [S [Z]] --->
 //│ 	case a of {S aa => (fun b -> ((checkb₀ b) aa)) | Z => (fun n -> [Z])}
 //│ [S [S [Z]]] --->
 //│ 	case a of {S aa => (fun b -> ((checkb₀ b) aa)) | Z => (fun n -> [Z])}
-//│ [Z] --->
-//│ 	case b of {S bb => (fun aaa -> ((minuss₁ aaa) bb)) | Z => (fun aaa -> aaa)}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((minuss₀ fst₀) snd₀)
+//│ def fst₀ = 
+//│ 	let aa = 	
+//│ 		let aa = (fun n -> [Z])
+//│ 		in (fun b -> ((checkb₀ b) aa))
+//│ 	in (fun b -> ((checkb₀ b) aa))
 //│ def minuss₀ = 
 //│ 	(fun a -> a)
 //│ 	where
@@ -531,11 +536,6 @@ minuss(fst)(snd)
 //│ 			(fun a -> a)
 //│ def snd₀ = 
 //│ 	(fun aaa -> aaa)
-//│ def fst₀ = 
-//│ 	let aa = 	
-//│ 		let aa = (fun n -> [Z])
-//│ 		in (fun b -> ((checkb₀ b) aa))
-//│ 	in (fun b -> ((checkb₀ b) aa))
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -550,22 +550,22 @@ c(id(p))
 //│ Parsed: {fun id = x, => if x is ‹(ID (b,)) then b; (C (a,)) then id (ID (C (a,),),)›; let p = C (p,); fun c = y, => if y is ‹(C (aa,)) then c (aa,)›; c (id (p,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (c^18 (id^19 p^20))
-//│ def c = (fun y:12 -> case y:12 of {
-//│ 	C aa:13 => (c^13 aa:13)})
-//│ def id = (fun x:9 -> case x:9 of {
-//│ 	ID b:10 => b:10
-//│ 	| C a:11 => (id^3 [ID [C a:11]])})
+//│ def c = (fun y:17 -> case y:17 of {
+//│ 	C aa:18 => (c^13 aa:18)})
+//│ def id = (fun x:14 -> case x:14 of {
+//│ 	ID b:15 => b:15
+//│ 	| C a:16 => (id^3 [ID [C a:16]])})
 //│ def p = [C p^10]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ C('p:7) <: 'aa:13
+//│ C('p:12) <: 'aa:18
 //│ 	[-p^10 · -p^10 · -p^20 · +id^19 · +id^3 · -id^19 · +c^18 · +c^13]  --->  [-p^10 · -p^20 · +id^19 · +id^3 · -id^19 · +c^18]
 //│ 	[-p^10 · -p^10 · -p^20 · +id^19 · +id^3 · -id^3 · -id^19 · +c^18 · +c^13]  --->  [-p^10 · -p^20 · +id^19 · +id^3 · -id^3 · -id^19 · +c^18]
-//│ NoProd <: 'y:12
+//│ NoProd <: 'y:17
 //│ 	[-p^20 · +id^19 · -id^19 · +c^18 · +c^13]  --->  [-p^20 · +id^19 · -id^19 · +c^18]
 //│ 	[-p^20 · +id^19 · -id^3 · -id^19 · +c^18 · +c^13]  --->  [-p^20 · +id^19 · -id^3 · -id^19 · +c^18]
-//│ NoProd <: 'aa:13
+//│ NoProd <: 'aa:18
 //│ 	[+id^3 · +id^3 · -id^19 · +c^18 · +c^13]  --->  [+id^3 · +id^3 · -id^19 · +c^18]
 //│ 	[+id^3 · +id^3 · -id^3 · -id^19 · +c^18 · +c^13]  --->  [+id^3 · +id^3 · -id^3 · -id^19 · +c^18]
 //│ <<<<<<< knots <<<<<<<
@@ -584,10 +584,6 @@ c(id(p))
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [ID [C a]] --->
 //│ 	case x of {ID b => b | C a => (id [ID [C a]])}
-//│ [C p₁] --->
-//│ 	case x of {ID b => b | C a => (id₁ [ID [C a]])}
-//│ [C p₁] --->
-//│ 	case y of {C aa => (c₀ aa)}
 //│ [C a] --->
 //│ 	case y of {C aa => (c₀ aa)}
 //│ [ID [C a]] --->
@@ -596,10 +592,16 @@ c(id(p))
 //│ 	case y of {C aa => (c₀ aa)}
 //│ [ID [C a]] --->
 //│ 	case x of {ID b => b | C a => (id₁ [ID [C a]])}
+//│ [C p₁] --->
+//│ 	case x of {ID b => b | C a => (id₁ [ID [C a]])}
+//│ [C p₁] --->
+//│ 	case y of {C aa => (c₀ aa)}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c₀ (id₀ p₀))
+//│ def c₀ = 
+//│ 	(fun y -> y)
 //│ def id₀ = 
 //│ 	(fun x -> x)
 //│ 	where
@@ -616,6 +618,4 @@ c(id(p))
 //│ 	def p₁ = 
 //│ 		let aa = p₁
 //│ 		in (c₀ aa)
-//│ def c₀ = 
-//│ 	(fun y -> y)
 //│ <<<<<<< after fusion <<<<<<<

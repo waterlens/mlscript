@@ -9,13 +9,13 @@ c(p)
 //│ Parsed: {let rec p = C (p,); fun c = x, => if x is ‹(C (a,)) then c (a,)›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (c^9 p^10)
-//│ def c = (fun x:8 -> case x:8 of {
-//│ 	C a:9 => (c^4 a:9)})
+//│ def c = (fun x:13 -> case x:13 of {
+//│ 	C a:14 => (c^4 a:14)})
 //│ def p = [C p^1]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ C('p:6) <: 'x:8
+//│ C('p:11) <: 'x:13
 //│ 	[-p^1 · -p^10 · +c^9 · +c^4]  --->  [-p^10 · +c^9]
 //│ <<<<<<< knots <<<<<<<
 //│ 
@@ -33,11 +33,11 @@ c(p)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c₀ p₀)
+//│ def c₀ = 
+//│ 	(fun x -> x)
 //│ def p₀ = 
 //│ 	let a = p₀
 //│ 	in (c₀ a)
-//│ def c₀ = 
-//│ 	(fun x -> x)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -57,14 +57,14 @@ c(p)
 //│ Parsed: {let p = C (1, C (2, N,),); fun e = z, => if z is ‹(C (aaa, bbb,)) then bbb; (N) then 7›; fun d = y, => if y is ‹(C (aa, bb,)) then e (bb,); (N) then 5›; fun c = x, => if x is ‹(C (a, b,)) then d (b,); (N) then 3›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (c^25 p^26)
-//│ def c = (fun x:16 -> case x:16 of {
-//│ 	C a:17 b:18 => (d^19 b:18)
+//│ def c = (fun x:21 -> case x:21 of {
+//│ 	C a:22 b:23 => (d^19 b:23)
 //│ 	| N => 3})
-//│ def d = (fun y:13 -> case y:13 of {
-//│ 	C aa:14 bb:15 => (e^12 bb:15)
+//│ def d = (fun y:18 -> case y:18 of {
+//│ 	C aa:19 bb:20 => (e^12 bb:20)
 //│ 	| N => 5})
-//│ def e = (fun z:10 -> case z:10 of {
-//│ 	C aaa:11 bbb:12 => bbb:12
+//│ def e = (fun z:15 -> case z:15 of {
+//│ 	C aaa:16 bbb:17 => bbb:17
 //│ 	| N => 7})
 //│ def p = [C 1 [C 2 [N]]]
 //│ <<<<<<<<<< Original <<<<<<<<<<
@@ -118,15 +118,15 @@ c(p)
 //│ Parsed: {let rec p = C (C (p,),); fun c = x, => if x is ‹(C (a,)) then if a is ‹(C (b,)) then if b is ‹(C (y,)) then c (y,)›››; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (c^14 p^15)
-//│ def c = (fun x:8 -> case x:8 of {
-//│ 	C a:9 => case a:9 of {
-//│ 		C b:10 => case b:10 of {
-//│ 			C y:11 => (c^7 y:11)}}})
+//│ def c = (fun x:13 -> case x:13 of {
+//│ 	C a:14 => case a:14 of {
+//│ 		C b:15 => case b:15 of {
+//│ 			C y:16 => (c^7 y:16)}}})
 //│ def p = [C [C p^1]]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ C(C('p:6)) <: 'x:8
+//│ C(C('p:11)) <: 'x:13
 //│ 	[-p^1 · -p^1 · -p^1 · -p^15 · +c^14 · +c^7 · +c^7]  --->  [-p^15 · +c^14]
 //│ <<<<<<< knots <<<<<<<
 //│ 
@@ -141,18 +141,18 @@ c(p)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C p₀] --->
-//│ 	case b of {C y => (c₀ y)}
-//│ [C [C p₀]] --->
-//│ 	case a of {C b => case b of {C y => (c₀ y)}}
-//│ [C p₂] --->
-//│ 	case x of {C a => case a of {C b => case b of {C y => (c₀ y)}}}
-//│ [C [C p₂]] --->
-//│ 	case b of {C y => (c₁ y)}
 //│ [C p₁] --->
 //│ 	case a of {C b => case b of {C y => (c₁ y)}}
 //│ [C [C p₁]] --->
 //│ 	case x of {C a => case a of {C b => case b of {C y => (c₁ y)}}}
+//│ [C p₂] --->
+//│ 	case x of {C a => case a of {C b => case b of {C y => (c₀ y)}}}
+//│ [C [C p₂]] --->
+//│ 	case b of {C y => (c₁ y)}
+//│ [C p₀] --->
+//│ 	case b of {C y => (c₀ y)}
+//│ [C [C p₀]] --->
+//│ 	case a of {C b => case b of {C y => (c₀ y)}}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -194,15 +194,15 @@ c(id(p))
 //│ Parsed: {let rec p = C (C (p,),); fun c = x, => if x is ‹(C (a,)) then c (a,)›; fun id2 = yy, => yy; fun id = y, => id2 (y,); c (id (p,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (c^16 (id^17 p^18))
-//│ def c = (fun x:10 -> case x:10 of {
-//│ 	C a:11 => (c^5 a:11)})
-//│ def id = (fun y:13 -> (id2^12 y:13))
-//│ def id2 = (fun yy:12 -> yy:12)
+//│ def c = (fun x:15 -> case x:15 of {
+//│ 	C a:16 => (c^5 a:16)})
+//│ def id = (fun y:18 -> (id2^12 y:18))
+//│ def id2 = (fun yy:17 -> yy:17)
 //│ def p = [C [C p^1]]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ C(C('p:6)) <: 'x:10
+//│ C(C('p:11)) <: 'x:15
 //│ 	[-p^1 · -p^18 · +id^17 · +id2^12 · -id2^12 · -id^17 · +c^16 · +c^5 · +c^5]  --->  [-p^18 · +id^17 · +id2^12 · -id2^12 · -id^17 · +c^16]
 //│ <<<<<<< knots <<<<<<<
 //│ 
@@ -225,21 +225,21 @@ c(id(p))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c₀ (id₀ p₀))
-//│ def p₀ = 
-//│ 	let a = 	
-//│ 		let a = p₀
-//│ 		in (c₀ a)
-//│ 	in (c₁ a)
-//│ def id₀ = 
-//│ 	(fun y -> (id2₀ y))
-//│ 	where
-//│ 	def id2₀ = 
-//│ 		(fun yy -> yy)
 //│ def c₀ = 
 //│ 	(fun x -> x)
 //│ 	where
 //│ 	def c₁ = 
 //│ 		(fun x -> x)
+//│ def id₀ = 
+//│ 	(fun y -> (id2₀ y))
+//│ 	where
+//│ 	def id2₀ = 
+//│ 		(fun yy -> yy)
+//│ def p₀ = 
+//│ 	let a = 	
+//│ 		let a = p₀
+//│ 		in (c₀ a)
+//│ 	in (c₁ a)
 //│ <<<<<<< after fusion <<<<<<<
 
 fun sum(ls) = if ls is
@@ -252,21 +252,21 @@ sum(mapa(mapb(primitive)))
 //│ |#fun| |sum|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |S|(|N|,| |sum|(|t|)|)|←|↵|#fun| |mapa|(|lsa|)| |#=| |#if| |lsa| |is|→|C|(|ha|,| |ta|)| |#then| |C|(|primitive|(|ha|)|,| |mapa|(|ta|)|)|←|↵|#fun| |mapb|(|lsb|)| |#=| |#if| |lsb| |is|→|C|(|hb|,| |tb|)| |#then| |C|(|primitive|(|hb|)|,| |mapb|(|tb|)|)|←|↵|sum|(|mapa|(|mapb|(|primitive|)|)|)|
 //│ Parsed: {fun sum = ls, => if ls is ‹(C (h, t,)) then S (N, sum (t,),)›; fun mapa = lsa, => if lsa is ‹(C (ha, ta,)) then C (primitive (ha,), mapa (ta,),)›; fun mapb = lsb, => if lsb is ‹(C (hb, tb,)) then C (primitive (hb,), mapb (tb,),)›; sum (mapa (mapb (primitive,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (sum^29 (mapa^30 (mapb^31 primitive:3)))
-//│ def mapa = (fun lsa:12 -> case lsa:12 of {
-//│ 	C ha:13 ta:14 => [C (primitive:3 ha:13) (mapa^13 ta:14)]})
-//│ def mapb = (fun lsb:15 -> case lsb:15 of {
-//│ 	C hb:16 tb:17 => [C (primitive:3 hb:16) (mapb^23 tb:17)]})
-//│ def sum = (fun ls:9 -> case ls:9 of {
-//│ 	C h:10 t:11 => [S [N] (sum^3 t:11)]})
+//│ (sum^29 (mapa^30 (mapb^31 primitive:4)))
+//│ def mapa = (fun lsa:17 -> case lsa:17 of {
+//│ 	C ha:18 ta:19 => [C (primitive:4 ha:18) (mapa^13 ta:19)]})
+//│ def mapb = (fun lsb:20 -> case lsb:20 of {
+//│ 	C hb:21 tb:22 => [C (primitive:4 hb:21) (mapb^23 tb:22)]})
+//│ def sum = (fun ls:14 -> case ls:14 of {
+//│ 	C h:15 t:16 => [S [N] (sum^3 t:16)]})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ C('12_callres, '15_callres) <: 'ls:9
+//│ C('12_callres, '15_callres) <: 'ls:14
 //│ 	[-mapa^13 · -mapa^13 · -mapa^30 · +sum^29 · +sum^3 · +sum^3]  --->  [-mapa^13 · -mapa^30 · +sum^29 · +sum^3]
-//│ C('22_callres, '25_callres) <: 'lsa:12
+//│ C('22_callres, '25_callres) <: 'lsa:17
 //│ 	[-mapb^23 · -mapb^23 · -mapb^31 · +mapa^30 · +mapa^13 · +mapa^13]  --->  [-mapb^23 · -mapb^31 · +mapa^30 · +mapa^13]
-//│ NoProd <: 'lsb:15
+//│ NoProd <: 'lsb:20
 //│ 	[+mapb^31 · +mapb^23 · +mapb^23]  --->  [+mapb^31 · +mapb^23]
 //│ <<<<<<< knots <<<<<<<
 //│ 
@@ -283,14 +283,14 @@ sum(mapa(mapb(primitive)))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C (primitive hb) (mapb₁ tb)] --->
-//│ 	case lsa of {C ha ta => [C (primitive ha) (mapa₁ ta)]}
-//│ [C (primitive hb) (mapb₁ tb)] --->
-//│ 	case lsa of {C ha ta => [C (primitive ha) (mapa₁ ta)]}
 //│ [C (primitive ha) (mapa₁ ta)] --->
 //│ 	case ls of {C h t => [S [N] (sum₁ t)]}
 //│ [C (primitive ha) (mapa₁ ta)] --->
 //│ 	case ls of {C h t => [S [N] (sum₁ t)]}
+//│ [C (primitive hb) (mapb₁ tb)] --->
+//│ 	case lsa of {C ha ta => [C (primitive ha) (mapa₁ ta)]}
+//│ [C (primitive hb) (mapb₁ tb)] --->
+//│ 	case lsa of {C ha ta => [C (primitive ha) (mapa₁ ta)]}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -300,11 +300,6 @@ sum(mapa(mapb(primitive)))
 //│ 	where
 //│ 	def mapa₁ = 
 //│ 		(fun lsa -> lsa)
-//│ def sum₀ = 
-//│ 	(fun ls -> ls)
-//│ 	where
-//│ 	def sum₁ = 
-//│ 		(fun ls -> ls)
 //│ def mapb₀ = 
 //│ 	(fun lsb -> case lsb of {
 //│ 		C hb tb => 
@@ -322,6 +317,11 @@ sum(mapa(mapb(primitive)))
 //│ 				in let h = (primitive ha)
 //│ 				in let t = (mapa₁ ta)
 //│ 				in [S [N] (sum₁ t)]})
+//│ def sum₀ = 
+//│ 	(fun ls -> ls)
+//│ 	where
+//│ 	def sum₁ = 
+//│ 		(fun ls -> ls)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -331,7 +331,7 @@ if C(A, B(C)) is
 //│ Parsed: {if C (A, B (C,),) is ‹(C (a, b,)) then D (b,)›}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ case [C [A] [B [C]]] of {
-//│ 	C a:6 b:7 => [D b:7]}
+//│ 	C a:11 b:12 => [D b:12]}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
@@ -367,15 +367,15 @@ ca(p)
 //│ Parsed: {let rec p = C (C (C (p,),),); fun ca = x, => if x is ‹(C (a,)) then cb (a,)›; fun cb = x, => if x is ‹(C (b,)) then ca (b,)›; ca (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (ca^17 p^18)
-//│ def ca = (fun x:9 -> case x:9 of {
-//│ 	C a:10 => (cb^6 a:10)})
-//│ def cb = (fun x:11 -> case x:11 of {
-//│ 	C b:12 => (ca^12 b:12)})
+//│ def ca = (fun x:14 -> case x:14 of {
+//│ 	C a:15 => (cb^6 a:15)})
+//│ def cb = (fun x:16 -> case x:16 of {
+//│ 	C b:17 => (ca^12 b:17)})
 //│ def p = [C [C [C p^1]]]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ C(C(C('p:6))) <: 'x:9
+//│ C(C(C('p:11))) <: 'x:14
 //│ 	[-p^1 · -p^1 · -p^18 · +ca^17 · +cb^6 · +ca^12 · +cb^6 · +ca^12 · +cb^6 · +ca^12]  --->  [-p^18 · +ca^17]
 //│ <<<<<<< knots <<<<<<<
 //│ 
@@ -466,16 +466,16 @@ c1(p1)
 //│ Parsed: {fun c1 = x1, => if x1 is ‹(C (a,)) then c2 (a,)›; fun c2 = x2, => if x2 is ‹(C (b,)) then c1 (b,)›; let p1 = C (C (C (p2,),),); let p2 = C (p1,); c1 (p1,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (c1^19 p1^20)
-//│ def c1 = (fun x1:10 -> case x1:10 of {
-//│ 	C a:11 => (c2^2 a:11)})
-//│ def c2 = (fun x2:12 -> case x2:12 of {
-//│ 	C b:13 => (c1^8 b:13)})
+//│ def c1 = (fun x1:15 -> case x1:15 of {
+//│ 	C a:16 => (c2^2 a:16)})
+//│ def c2 = (fun x2:17 -> case x2:17 of {
+//│ 	C b:18 => (c1^8 b:18)})
 //│ def p1 = [C [C [C p2^13]]]
 //│ def p2 = [C p1^17]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ C(C('p2:9)) <: 'x2:12
+//│ C(C('p2:14)) <: 'x2:17
 //│ 	[-p1^17 · -p2^13 · -p1^20 · +c1^19 · +c2^2 · +c1^8 · +c2^2 · +c1^8 · +c2^2]  --->  [-p1^20 · +c1^19 · +c2^2]
 //│ <<<<<<< knots <<<<<<<
 //│ 
@@ -492,6 +492,8 @@ c1(p1)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
+//│ [C p1₀] --->
+//│ 	case x2 of {C b => (c1₂ b)}
 //│ [C p2₀] --->
 //│ 	case x1 of {C a => (c2₁ a)}
 //│ [C [C p2₀]] --->
@@ -500,8 +502,6 @@ c1(p1)
 //│ 	case x1 of {C a => (c2₀ a)}
 //│ 	case x1 of {C a => (c2₀ a)}
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [C p1₀] --->
-//│ 	case x2 of {C b => (c1₂ b)}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -548,32 +548,32 @@ map(l)
 //│ Parsed: {fun ff = x, => if x is ‹(K) then T; (KK) then TT; (KKKK) then TTTT›; fun map = ls, => if ls is ‹(C (h, t,)) then C (ff (h,), map (t,),); (N) then N›; let l = C (K, C (KK, C (KKKK, N,),),); map (l,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (map^25 l^26)
-//│ def ff = (fun x:9 -> case x:9 of {
+//│ def ff = (fun x:14 -> case x:14 of {
 //│ 	K => [T]
 //│ 	| KK => [TT]
 //│ 	| KKKK => [TTTT]})
 //│ def l = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ def map = (fun ls:10 -> case ls:10 of {
-//│ 	C h:11 t:12 => [C (ff^8 h:11) (map^11 t:12)]
+//│ def map = (fun ls:15 -> case ls:15 of {
+//│ 	C h:16 t:17 => [C (ff^8 h:16) (map^11 t:17)]
 //│ 	| N => [N]})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ NoProd <: 't:12
+//│ NoProd <: 't:17
 //│ 	[-l^26 · +map^25 · +map^11 · +map^11 · +map^11 · +map^11]  --->  [-l^26 · +map^25 · +map^11 · +map^11 · +map^11]
 //│ <<<<<<< knots <<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [l^26]
 //│ [map^25]
-//│ 	[map^25 · map^11]
-//│ 		[map^25 · map^11 · map^11]
-//│ 			[map^25 · map^11 · map^11 · map^11]
-//│ 				[map^25 · map^11 · map^11 · map^11 · map^11] ---> [map^25 · map^11 · map^11 · map^11] (only one)
-//│ 				[map^25 · map^11 · map^11 · map^11 · ff^8]
-//│ 			[map^25 · map^11 · map^11 · ff^8]
-//│ 		[map^25 · map^11 · ff^8]
 //│ 	[map^25 · ff^8]
+//│ 	[map^25 · map^11]
+//│ 		[map^25 · map^11 · ff^8]
+//│ 		[map^25 · map^11 · map^11]
+//│ 			[map^25 · map^11 · map^11 · ff^8]
+//│ 			[map^25 · map^11 · map^11 · map^11]
+//│ 				[map^25 · map^11 · map^11 · map^11 · ff^8]
+//│ 				[map^25 · map^11 · map^11 · map^11 · map^11] ---> [map^25 · map^11 · map^11 · map^11] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
@@ -584,40 +584,17 @@ map(l)
 //│ [KKKK] --->
 //│ 	case x of {K => [T] | KK => [TT] | KKKK => [TTTT]}
 //│ [N] --->
-//│ 	case ls of {C h t => [C (ff₀ h) (map₃ t)] | N => [N]}
+//│ 	case ls of {C h t => [C (ff₃ h) (map₃ t)] | N => [N]}
 //│ [C [KKKK] [N]] --->
-//│ 	case ls of {C h t => [C (ff₁ h) (map₃ t)] | N => [N]}
+//│ 	case ls of {C h t => [C (ff₂ h) (map₃ t)] | N => [N]}
 //│ [C [KK] [C [KKKK] [N]]] --->
-//│ 	case ls of {C h t => [C (ff₂ h) (map₂ t)] | N => [N]}
+//│ 	case ls of {C h t => [C (ff₁ h) (map₂ t)] | N => [N]}
 //│ [C [K] [C [KK] [C [KKKK] [N]]]] --->
-//│ 	case ls of {C h t => [C (ff₃ h) (map₁ t)] | N => [N]}
+//│ 	case ls of {C h t => [C (ff₀ h) (map₁ t)] | N => [N]}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (map₀ l₀)
-//│ def map₀ = 
-//│ 	(fun ls -> ls)
-//│ 	where
-//│ 	def map₁ = 
-//│ 		(fun ls -> ls)
-//│ 		where
-//│ 		def map₂ = 
-//│ 			(fun ls -> ls)
-//│ 			where
-//│ 			def map₃ = 
-//│ 				(fun ls -> ls)
-//│ 				where
-//│ 				def ff₀ = 
-//│ 					(fun x -> case x of {
-//│ 						K => [T]
-//│ 						| KK => [TT]
-//│ 						| KKKK => [TTTT]})
-//│ 			def ff₁ = 
-//│ 				(fun x -> x)
-//│ 		def ff₂ = 
-//│ 			(fun x -> x)
-//│ 	def ff₃ = 
-//│ 		(fun x -> x)
 //│ def l₀ = 
 //│ 	let h = [T]
 //│ 	in let t = 	
@@ -625,9 +602,32 @@ map(l)
 //│ 		in let t = 	
 //│ 			let h = [TTTT]
 //│ 			in let t = [N]
-//│ 			in [C (ff₁ h) (map₃ t)]
-//│ 		in [C (ff₂ h) (map₂ t)]
-//│ 	in [C (ff₃ h) (map₁ t)]
+//│ 			in [C (ff₂ h) (map₃ t)]
+//│ 		in [C (ff₁ h) (map₂ t)]
+//│ 	in [C (ff₀ h) (map₁ t)]
+//│ def map₀ = 
+//│ 	(fun ls -> ls)
+//│ 	where
+//│ 	def ff₀ = 
+//│ 		(fun x -> x)
+//│ 	def map₁ = 
+//│ 		(fun ls -> ls)
+//│ 		where
+//│ 		def ff₁ = 
+//│ 			(fun x -> x)
+//│ 		def map₂ = 
+//│ 			(fun ls -> ls)
+//│ 			where
+//│ 			def ff₂ = 
+//│ 				(fun x -> x)
+//│ 			def map₃ = 
+//│ 				(fun ls -> ls)
+//│ 				where
+//│ 				def ff₃ = 
+//│ 					(fun x -> case x of {
+//│ 						K => [T]
+//│ 						| KK => [TT]
+//│ 						| KKKK => [TTTT]})
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -648,16 +648,16 @@ map(l)
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (map^21 l^22)
 //│ def l = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ def map = (fun ls:8 -> case ls:8 of {
-//│ 	C h:9 t:10 => [C case h:9 of {
+//│ def map = (fun ls:13 -> case ls:13 of {
+//│ 	C h:14 t:15 => [C case h:14 of {
 //│ 		K => [T]
 //│ 		| KK => [TT]
-//│ 		| KKKK => [TTTT]} (map^7 t:10)]
+//│ 		| KKKK => [TTTT]} (map^7 t:15)]
 //│ 	| N => [N]})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ NoProd <: 't:10
+//│ NoProd <: 't:15
 //│ 	[-l^22 · +map^21 · +map^7 · +map^7 · +map^7 · +map^7]  --->  [-l^22 · +map^21 · +map^7 · +map^7 · +map^7]
 //│ <<<<<<< knots <<<<<<<
 //│ 
@@ -726,35 +726,35 @@ sum(mapa(mapb(primitive)))
 //│ |#fun| |sum|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |S|(|N|,| |sum|(|t|)|)|↵|N| |#then| |N|←|↵|#fun| |mapa|(|lsa|)| |#=| |#if| |lsa| |is|→|C|(|ha|,| |ta|)| |#then| |C|(|primitive|(|ha|)|,| |mapa|(|ta|)|)|↵|N| |#then| |N|←|↵|#fun| |mapb|(|lsb|)| |#=| |#if| |lsb| |is|→|C|(|hb|,| |tb|)| |#then| |C|(|primitive|(|hb|)|,| |mapb|(|tb|)|)|↵|N| |#then| |N|←|↵|sum|(|mapa|(|mapb|(|primitive|)|)|)|
 //│ Parsed: {fun sum = ls, => if ls is ‹(C (h, t,)) then S (N, sum (t,),); (N) then N›; fun mapa = lsa, => if lsa is ‹(C (ha, ta,)) then C (primitive (ha,), mapa (ta,),); (N) then N›; fun mapb = lsb, => if lsb is ‹(C (hb, tb,)) then C (primitive (hb,), mapb (tb,),); (N) then N›; sum (mapa (mapb (primitive,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (sum^32 (mapa^33 (mapb^34 primitive:3)))
-//│ def mapa = (fun lsa:12 -> case lsa:12 of {
-//│ 	C ha:13 ta:14 => [C (primitive:3 ha:13) (mapa^14 ta:14)]
+//│ (sum^32 (mapa^33 (mapb^34 primitive:4)))
+//│ def mapa = (fun lsa:17 -> case lsa:17 of {
+//│ 	C ha:18 ta:19 => [C (primitive:4 ha:18) (mapa^14 ta:19)]
 //│ 	| N => [N]})
-//│ def mapb = (fun lsb:15 -> case lsb:15 of {
-//│ 	C hb:16 tb:17 => [C (primitive:3 hb:16) (mapb^25 tb:17)]
+//│ def mapb = (fun lsb:20 -> case lsb:20 of {
+//│ 	C hb:21 tb:22 => [C (primitive:4 hb:21) (mapb^25 tb:22)]
 //│ 	| N => [N]})
-//│ def sum = (fun ls:9 -> case ls:9 of {
-//│ 	C h:10 t:11 => [S [N] (sum^3 t:11)]
+//│ def sum = (fun ls:14 -> case ls:14 of {
+//│ 	C h:15 t:16 => [S [N] (sum^3 t:16)]
 //│ 	| N => [N]})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ C('13_callres, '16_callres) <: 'ls:9
+//│ C('13_callres, '16_callres) <: 'ls:14
 //│ 	[-mapa^14 · -mapa^14 · -mapa^33 · +sum^32 · +sum^3 · +sum^3]  --->  [-mapa^14 · -mapa^33 · +sum^32 · +sum^3]
-//│ C('24_callres, '27_callres) <: 'lsa:12
+//│ C('24_callres, '27_callres) <: 'lsa:17
 //│ 	[-mapb^25 · -mapb^25 · -mapb^34 · +mapa^33 · +mapa^14 · +mapa^14]  --->  [-mapb^25 · -mapb^34 · +mapa^33 · +mapa^14]
-//│ NoProd <: 'ls:9
-//│ 	[-mapa^33 · +sum^32 · +sum^3 · +sum^3]  --->  [-mapa^33 · +sum^32 · +sum^3]
-//│ NoProd <: 't:11
+//│ NoProd <: 'lsa:17
+//│ 	[-mapb^34 · +mapa^33 · +mapa^14 · +mapa^14]  --->  [-mapb^34 · +mapa^33 · +mapa^14]
+//│ NoProd <: 't:16
 //│ 	[-mapa^14 · -mapa^14 · -mapa^33 · +sum^32 · +sum^3 · +sum^3 · +sum^3]  --->  [-mapa^14 · -mapa^14 · -mapa^33 · +sum^32 · +sum^3 · +sum^3]
 //│ 	[-mapa^14 · -mapa^33 · +sum^32 · +sum^3 · +sum^3]  --->  [-mapa^14 · -mapa^33 · +sum^32 · +sum^3]
-//│ NoProd <: 'ta:14
+//│ NoProd <: 'ta:19
 //│ 	[-mapb^25 · -mapb^34 · +mapa^33 · +mapa^14 · +mapa^14]  --->  [-mapb^25 · -mapb^34 · +mapa^33 · +mapa^14]
 //│ 	[-mapb^25 · -mapb^25 · -mapb^34 · +mapa^33 · +mapa^14 · +mapa^14 · +mapa^14]  --->  [-mapb^25 · -mapb^25 · -mapb^34 · +mapa^33 · +mapa^14 · +mapa^14]
-//│ NoProd <: 'lsb:15
+//│ NoProd <: 'lsb:20
 //│ 	[+mapb^34 · +mapb^25 · +mapb^25]  --->  [+mapb^34 · +mapb^25]
-//│ NoProd <: 'lsa:12
-//│ 	[-mapb^34 · +mapa^33 · +mapa^14 · +mapa^14]  --->  [-mapb^34 · +mapa^33 · +mapa^14]
+//│ NoProd <: 'ls:14
+//│ 	[-mapa^33 · +sum^32 · +sum^3 · +sum^3]  --->  [-mapa^33 · +sum^32 · +sum^3]
 //│ <<<<<<< knots <<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -770,14 +770,14 @@ sum(mapa(mapb(primitive)))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C (primitive ha) (mapa₁ ta)] --->
-//│ 	case ls of {C h t => [S [N] (sum₁ t)] | N => [N]}
-//│ [N] --->
-//│ 	case ls of {C h t => [S [N] (sum₁ t)] | N => [N]}
 //│ [C (primitive hb) (mapb₁ tb)] --->
 //│ 	case lsa of {C ha ta => [C (primitive ha) (mapa₁ ta)] | N => [N]}
 //│ [N] --->
 //│ 	case lsa of {C ha ta => [C (primitive ha) (mapa₁ ta)] | N => [N]}
+//│ [C (primitive ha) (mapa₁ ta)] --->
+//│ 	case ls of {C h t => [S [N] (sum₁ t)] | N => [N]}
+//│ [N] --->
+//│ 	case ls of {C h t => [S [N] (sum₁ t)] | N => [N]}
 //│ [C (primitive hb) (mapb₁ tb)] --->
 //│ 	case lsa of {C ha ta => [C (primitive ha) (mapa₁ ta)] | N => [N]}
 //│ [N] --->
@@ -795,11 +795,6 @@ sum(mapa(mapb(primitive)))
 //│ 	where
 //│ 	def mapa₁ = 
 //│ 		(fun lsa -> lsa)
-//│ def sum₀ = 
-//│ 	(fun ls -> ls)
-//│ 	where
-//│ 	def sum₁ = 
-//│ 		(fun ls -> ls)
 //│ def mapb₀ = 
 //│ 	(fun lsb -> case lsb of {
 //│ 		C hb tb => 
@@ -819,6 +814,11 @@ sum(mapa(mapb(primitive)))
 //│ 				in let t = (mapa₁ ta)
 //│ 				in [S [N] (sum₁ t)]
 //│ 			| N => [N]})
+//│ def sum₀ = 
+//│ 	(fun ls -> ls)
+//│ 	where
+//│ 	def sum₁ = 
+//│ 		(fun ls -> ls)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -832,14 +832,14 @@ main(c)
 //│ Parsed: {let rec p = C (p,); fun c = x, => if x is ‹(C (a,)) then c (a,)›; fun main = cc, => cc (p,); main (c,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (main^13 c^14)
-//│ def c = (fun x:9 -> case x:9 of {
-//│ 	C a:10 => (c^4 a:10)})
-//│ def main = (fun cc:11 -> (cc:11 p^10))
+//│ def c = (fun x:14 -> case x:14 of {
+//│ 	C a:15 => (c^4 a:15)})
+//│ def main = (fun cc:16 -> (cc:16 p^10))
 //│ def p = [C p^1]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ C('p:6) <: 'x:9
+//│ C('p:11) <: 'x:14
 //│ 	[-p^1 · -p^10 · -main^13 · +c^14 · +c^4]  --->  [-p^10 · -main^13 · +c^14]
 //│ <<<<<<< knots <<<<<<<
 //│ 
@@ -858,14 +858,14 @@ main(c)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (main₀ c₀)
+//│ def c₀ = 
+//│ 	(fun x -> x)
 //│ def main₀ = 
 //│ 	(fun cc -> (cc p₀))
 //│ 	where
 //│ 	def p₀ = 
 //│ 		let a = p₀
 //│ 		in (c₀ a)
-//│ def c₀ = 
-//│ 	(fun x -> x)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -881,16 +881,16 @@ main(p)
 //│ Parsed: {let rec p = C (p,); fun c = x, => if x is ‹(C (a,)) then c (a,)›; fun main = pp, => if pp is ‹(C (b,)) then if b is ‹(C (d,)) then c (d,)››; main (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (main^17 p^18)
-//│ def c = (fun x:9 -> case x:9 of {
-//│ 	C a:10 => (c^4 a:10)})
-//│ def main = (fun pp:11 -> case pp:11 of {
-//│ 	C b:12 => case b:12 of {
-//│ 		C d:13 => (c^11 d:13)}})
+//│ def c = (fun x:14 -> case x:14 of {
+//│ 	C a:15 => (c^4 a:15)})
+//│ def main = (fun pp:16 -> case pp:16 of {
+//│ 	C b:17 => case b:17 of {
+//│ 		C d:18 => (c^11 d:18)}})
 //│ def p = [C p^1]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ C('p:6) <: 'x:9
+//│ C('p:11) <: 'x:14
 //│ 	[-p^1 · -p^1 · -p^1 · -p^18 · +main^17 · +c^11 · +c^4]  --->  [-p^1 · -p^1 · -p^18 · +main^17 · +c^11]
 //│ <<<<<<< knots <<<<<<<
 //│ 
@@ -907,14 +907,19 @@ main(p)
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C p₂] --->
 //│ 	case b of {C d => (c₀ d)}
-//│ [C p₁] --->
-//│ 	case pp of {C b => case b of {C d => (c₀ d)}}
 //│ [C p₂] --->
 //│ 	case x of {C a => (c₀ a)}
+//│ [C p₁] --->
+//│ 	case pp of {C b => case b of {C d => (c₀ d)}}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (main₀ p₀)
+//│ def main₀ = 
+//│ 	(fun pp -> pp)
+//│ 	where
+//│ 	def c₀ = 
+//│ 		(fun x -> x)
 //│ def p₀ = 
 //│ 	let b = p₁
 //│ 	in b
@@ -926,11 +931,6 @@ main(p)
 //│ 		def p₂ = 
 //│ 			let a = p₂
 //│ 			in (c₀ a)
-//│ def main₀ = 
-//│ 	(fun pp -> pp)
-//│ 	where
-//│ 	def c₀ = 
-//│ 		(fun x -> x)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -943,14 +943,14 @@ main(c, p)
 //│ Parsed: {let rec p = C (p,); let c = x, => if x is ‹(C (a,)) then c (a,)›; fun main = cc, pp, => cc (pp,); main (c, p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((main^14 c^15) p^17)
-//│ def c = (fun x:9 -> case x:9 of {
-//│ 	C a:10 => (c^4 a:10)})
-//│ def main = (fun cc:11 -> (fun pp:12 -> (cc:11 pp:12)))
+//│ def c = (fun x:14 -> case x:14 of {
+//│ 	C a:15 => (c^4 a:15)})
+//│ def main = (fun cc:16 -> (fun pp:17 -> (cc:16 pp:17)))
 //│ def p = [C p^1]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ C('p:6) <: 'x:9
+//│ C('p:11) <: 'x:14
 //│ 	[-p^1 · -p^17 · +main^14 · -main^14 · +c^15 · +c^4]  --->  [-p^17 · +main^14 · -main^14 · +c^15]
 //│ <<<<<<< knots <<<<<<<
 //│ 
@@ -969,13 +969,13 @@ main(c, p)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((main₀ c₀) p₀)
+//│ def c₀ = 
+//│ 	(fun x -> x)
+//│ def main₀ = 
+//│ 	(fun cc -> (fun pp -> (cc pp)))
 //│ def p₀ = 
 //│ 	let a = p₀
 //│ 	in (c₀ a)
-//│ def main₀ = 
-//│ 	(fun cc -> (fun pp -> (cc pp)))
-//│ def c₀ = 
-//│ 	(fun x -> x)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -991,17 +991,17 @@ a(p)
 //│ Parsed: {fun cons = y, => if y is ‹(C (aa,)) then cons (aa,)›; fun a = x, => b (x,); fun b = x, => c (x,); fun c = x, => d (cons, x,); fun d = cc, x, => cc (x,); let p = C (p,); a (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (a^28 p^29)
-//│ def a = (fun x:14 -> (b^7 x:14))
-//│ def b = (fun x:15 -> (c^11 x:15))
-//│ def c = (fun x:16 -> ((d^15 cons^16) x:16))
-//│ def cons = (fun y:12 -> case y:12 of {
-//│ 	C aa:13 => (cons^2 aa:13)})
-//│ def d = (fun cc:17 -> (fun x:18 -> (cc:17 x:18)))
+//│ def a = (fun x:19 -> (b^7 x:19))
+//│ def b = (fun x:20 -> (c^11 x:20))
+//│ def c = (fun x:21 -> ((d^15 cons^16) x:21))
+//│ def cons = (fun y:17 -> case y:17 of {
+//│ 	C aa:18 => (cons^2 aa:18)})
+//│ def d = (fun cc:22 -> (fun x:23 -> (cc:22 x:23)))
 //│ def p = [C p^26]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ C('p:11) <: 'y:12
+//│ C('p:16) <: 'y:17
 //│ 	[-p^26 · -p^26 · -p^29 · +a^28 · +b^7 · +c^11 · +d^15 · -d^15 · +cons^16 · +cons^2 · +cons^2]  --->  [-p^26 · -p^29 · +a^28 · +b^7 · +c^11 · +d^15 · -d^15 · +cons^16 · +cons^2]
 //│ <<<<<<< knots <<<<<<<
 //│ 
@@ -1061,8 +1061,8 @@ c(p)
 //│ Parsed: {let p = C (N,); fun c = x, => if C (x,) is ‹(C (a,)) then c (a,)›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (c^10 p^11)
-//│ def c = (fun x:8 -> case [C x:8] of {
-//│ 	C a:9 => (c^5 a:9)})
+//│ def c = (fun x:13 -> case [C x:13] of {
+//│ 	C a:14 => (c^5 a:14)})
 //│ def p = [C [N]]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -1117,19 +1117,19 @@ c2(id(main))
 //│ Parsed: {let rec p = C (p,); fun c = x, => if x is ‹(C (a,)) then a›; fun c1 = xx, => if xx is ‹(C (aa,)) then aa›; fun c2 = z, => if z is ‹(C (b,)) then c2 (b,)›; let main = c (p,); fun id = y, => c1 (C (y,),); c2 (id (main,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (c2^25 (id^26 main^27))
-//│ def c = (fun x:12 -> case x:12 of {
-//│ 	C a:13 => a:13})
-//│ def c1 = (fun xx:14 -> case xx:14 of {
-//│ 	C aa:15 => aa:15})
-//│ def c2 = (fun z:16 -> case z:16 of {
-//│ 	C b:17 => (c2^12 b:17)})
-//│ def id = (fun y:18 -> (c1^20 [C y:18]))
+//│ def c = (fun x:17 -> case x:17 of {
+//│ 	C a:18 => a:18})
+//│ def c1 = (fun xx:19 -> case xx:19 of {
+//│ 	C aa:20 => aa:20})
+//│ def c2 = (fun z:21 -> case z:21 of {
+//│ 	C b:22 => (c2^12 b:22)})
+//│ def id = (fun y:23 -> (c1^20 [C y:23]))
 //│ def main = (c^17 p^18)
 //│ def p = [C p^1]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ C('p:6) <: 'z:16
+//│ C('p:11) <: 'z:21
 //│ 	[-p^1 · -p^1 · -p^18 · +c^17 · -c^17 · -main^27 · +id^26 · +c1^20 · -c1^20 · -id^26 · +c2^25 · +c2^12]  --->  [-p^1 · -p^18 · +c^17 · -c^17 · -main^27 · +id^26 · +c1^20 · -c1^20 · -id^26 · +c2^25]
 //│ <<<<<<< knots <<<<<<<
 //│ 
@@ -1148,20 +1148,27 @@ c2(id(main))
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C p] --->
 //│ 	case x of {C a => a}
-//│ [C p₁] --->
-//│ 	case x of {C a => a}
 //│ [C y] --->
 //│ 	case xx of {C aa => aa}
 //│ [C p₁] --->
 //│ 	case z of {C b => (c2₀ b)}
 //│ [C y] --->
 //│ 	case xx of {C aa => aa}
+//│ [C p₁] --->
+//│ 	case x of {C a => a}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c2₀ (id₀ main₀))
 //│ def c2₀ = 
 //│ 	(fun z -> z)
+//│ def id₀ = 
+//│ 	(fun y -> (c1₀ 
+//│ 		let aa = y
+//│ 		in aa))
+//│ 	where
+//│ 	def c1₀ = 
+//│ 		(fun xx -> xx)
 //│ def main₀ = 
 //│ 	(c₀ p₀)
 //│ 	where
@@ -1174,13 +1181,6 @@ c2(id(main))
 //│ 		def p₁ = 
 //│ 			let b = p₁
 //│ 			in (c2₀ b)
-//│ def id₀ = 
-//│ 	(fun y -> (c1₀ 
-//│ 		let aa = y
-//│ 		in aa))
-//│ 	where
-//│ 	def c1₀ = 
-//│ 		(fun xx -> xx)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -1200,34 +1200,34 @@ c(t)
 //│ Parsed: {let t = T (K, T (N, L, L,), T (N, L, L,),); fun c = x, => if x is ‹(T (n, l, r,)) then T ('(' if n is ‹(K) then KK; (N) then NN›, ')', c (l,), c (r,),); (L) then LL›; c (t,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (c^26 t^27)
-//│ def c = (fun x:8 -> case x:8 of {
-//│ 	T n:9 l:10 r:11 => [T case n:9 of {
+//│ def c = (fun x:13 -> case x:13 of {
+//│ 	T n:14 l:15 r:16 => [T case n:14 of {
 //│ 		K => [KK]
-//│ 		| N => [NN]} (c^16 l:10) (c^19 r:11)]
+//│ 		| N => [NN]} (c^16 l:15) (c^19 r:16)]
 //│ 	| L => [LL]})
 //│ def t = [T [K] [T [N] [L] [L]] [T [N] [L] [L]]]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ NoProd <: 'r:11
+//│ NoProd <: 'l:15
+//│ 	[-t^27 · +c^26 · +c^19 · +c^16 · +c^16]  --->  [-t^27 · +c^26 · +c^19 · +c^16]
+//│ 	[-t^27 · +c^26 · +c^19 · +c^19 · +c^16]  --->  [-t^27 · +c^26 · +c^19 · +c^19]
+//│ 	[-t^27 · +c^26 · +c^16 · +c^16 · +c^16]  --->  [-t^27 · +c^26 · +c^16 · +c^16]
+//│ 	[-t^27 · +c^26 · +c^16 · +c^19 · +c^16]  --->  [-t^27 · +c^26 · +c^16 · +c^19]
+//│ NoProd <: 'r:16
+//│ 	[-t^27 · +c^26 · +c^19 · +c^16 · +c^19]  --->  [-t^27 · +c^26 · +c^19 · +c^16]
 //│ 	[-t^27 · +c^26 · +c^16 · +c^16 · +c^19]  --->  [-t^27 · +c^26 · +c^16 · +c^16]
 //│ 	[-t^27 · +c^26 · +c^16 · +c^19 · +c^19]  --->  [-t^27 · +c^26 · +c^16 · +c^19]
 //│ 	[-t^27 · +c^26 · +c^19 · +c^19 · +c^19]  --->  [-t^27 · +c^26 · +c^19 · +c^19]
-//│ 	[-t^27 · +c^26 · +c^19 · +c^16 · +c^19]  --->  [-t^27 · +c^26 · +c^19 · +c^16]
-//│ NoProd <: 'l:10
-//│ 	[-t^27 · +c^26 · +c^19 · +c^16 · +c^16]  --->  [-t^27 · +c^26 · +c^19 · +c^16]
-//│ 	[-t^27 · +c^26 · +c^16 · +c^16 · +c^16]  --->  [-t^27 · +c^26 · +c^16 · +c^16]
-//│ 	[-t^27 · +c^26 · +c^19 · +c^19 · +c^16]  --->  [-t^27 · +c^26 · +c^19 · +c^19]
-//│ 	[-t^27 · +c^26 · +c^16 · +c^19 · +c^16]  --->  [-t^27 · +c^26 · +c^16 · +c^19]
-//│ NoProd <: 'x:8
-//│ 	[-t^27 · +c^26 · +c^16 · +c^16 · +c^16 · +c^19]  --->  [-t^27 · +c^26 · +c^16 · +c^16 · +c^16]
-//│ 	[-t^27 · +c^26 · +c^19 · +c^19 · +c^19 · +c^16]  --->  [-t^27 · +c^26 · +c^19 · +c^19 · +c^19]
-//│ 	[-t^27 · +c^26 · +c^16 · +c^19 · +c^19 · +c^16]  --->  [-t^27 · +c^26 · +c^16 · +c^19 · +c^19]
+//│ NoProd <: 'x:13
 //│ 	[-t^27 · +c^26 · +c^19 · +c^19 · +c^16 · +c^19]  --->  [-t^27 · +c^26 · +c^19 · +c^19 · +c^16]
-//│ 	[-t^27 · +c^26 · +c^19 · +c^16 · +c^16 · +c^19]  --->  [-t^27 · +c^26 · +c^19 · +c^16 · +c^16]
+//│ 	[-t^27 · +c^26 · +c^19 · +c^19 · +c^19 · +c^16]  --->  [-t^27 · +c^26 · +c^19 · +c^19 · +c^19]
 //│ 	[-t^27 · +c^26 · +c^16 · +c^16 · +c^19 · +c^16]  --->  [-t^27 · +c^26 · +c^16 · +c^16 · +c^19]
-//│ 	[-t^27 · +c^26 · +c^19 · +c^16 · +c^19 · +c^16]  --->  [-t^27 · +c^26 · +c^19 · +c^16 · +c^19]
 //│ 	[-t^27 · +c^26 · +c^16 · +c^19 · +c^16 · +c^19]  --->  [-t^27 · +c^26 · +c^16 · +c^19 · +c^16]
+//│ 	[-t^27 · +c^26 · +c^16 · +c^16 · +c^16 · +c^19]  --->  [-t^27 · +c^26 · +c^16 · +c^16 · +c^16]
+//│ 	[-t^27 · +c^26 · +c^19 · +c^16 · +c^16 · +c^19]  --->  [-t^27 · +c^26 · +c^19 · +c^16 · +c^16]
+//│ 	[-t^27 · +c^26 · +c^16 · +c^19 · +c^19 · +c^16]  --->  [-t^27 · +c^26 · +c^16 · +c^19 · +c^19]
+//│ 	[-t^27 · +c^26 · +c^19 · +c^16 · +c^19 · +c^16]  --->  [-t^27 · +c^26 · +c^19 · +c^16 · +c^19]
 //│ <<<<<<< knots <<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -1327,98 +1327,82 @@ c(t)
 //│ (c^28 t^29)
 //│ def aa = [T [N] [L] [L]]
 //│ def bb = [T [N] [L] [L]]
-//│ def c = (fun x:10 -> case x:10 of {
-//│ 	T n:11 l:12 r:13 => [T case n:11 of {
+//│ def c = (fun x:15 -> case x:15 of {
+//│ 	T n:16 l:17 r:18 => [T case n:16 of {
 //│ 		K => [KK]
-//│ 		| N => [NN]} (c^18 l:12) (c^21 r:13)]
+//│ 		| N => [NN]} (c^18 l:17) (c^21 r:18)]
 //│ 	| L => [LL]})
 //│ def t = [T [K] aa^10 bb^11]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ NoProd <: 'l:12
-//│ 	[-aa^10 · -t^29 · +c^28 · +c^18 · +c^18 · +c^18]  --->  [-aa^10 · -t^29 · +c^28 · +c^18 · +c^18]
-//│ 	[-aa^10 · -t^29 · +c^28 · +c^18 · +c^21 · +c^18]  --->  [-aa^10 · -t^29 · +c^28 · +c^18 · +c^21]
-//│ 	[-bb^11 · -t^29 · +c^28 · +c^21 · +c^21 · +c^18]  --->  [-bb^11 · -t^29 · +c^28 · +c^21 · +c^21]
-//│ 	[-bb^11 · -t^29 · +c^28 · +c^21 · +c^18 · +c^18]  --->  [-bb^11 · -t^29 · +c^28 · +c^21 · +c^18]
-//│ NoProd <: 'r:13
-//│ 	[-aa^10 · -t^29 · +c^28 · +c^18 · +c^21 · +c^21]  --->  [-aa^10 · -t^29 · +c^28 · +c^18 · +c^21]
-//│ 	[-aa^10 · -t^29 · +c^28 · +c^18 · +c^18 · +c^21]  --->  [-aa^10 · -t^29 · +c^28 · +c^18 · +c^18]
-//│ 	[-bb^11 · -t^29 · +c^28 · +c^21 · +c^21 · +c^21]  --->  [-bb^11 · -t^29 · +c^28 · +c^21 · +c^21]
-//│ 	[-bb^11 · -t^29 · +c^28 · +c^21 · +c^18 · +c^21]  --->  [-bb^11 · -t^29 · +c^28 · +c^21 · +c^18]
-//│ NoProd <: 'x:10
+//│ NoProd <: 'x:15
 //│ 	[-aa^10 · -t^29 · +c^28 · +c^18 · +c^21 · +c^21 · +c^18]  --->  [-aa^10 · -t^29 · +c^28 · +c^18 · +c^21 · +c^21]
-//│ 	[-aa^10 · -t^29 · +c^28 · +c^18 · +c^18 · +c^18 · +c^21]  --->  [-aa^10 · -t^29 · +c^28 · +c^18 · +c^18 · +c^18]
 //│ 	[-aa^10 · -t^29 · +c^28 · +c^18 · +c^21 · +c^18 · +c^21]  --->  [-aa^10 · -t^29 · +c^28 · +c^18 · +c^21 · +c^18]
 //│ 	[-aa^10 · -t^29 · +c^28 · +c^18 · +c^18 · +c^21 · +c^18]  --->  [-aa^10 · -t^29 · +c^28 · +c^18 · +c^18 · +c^21]
-//│ 	[-bb^11 · -t^29 · +c^28 · +c^21 · +c^18 · +c^18 · +c^21]  --->  [-bb^11 · -t^29 · +c^28 · +c^21 · +c^18 · +c^18]
+//│ 	[-aa^10 · -t^29 · +c^28 · +c^18 · +c^18 · +c^18 · +c^21]  --->  [-aa^10 · -t^29 · +c^28 · +c^18 · +c^18 · +c^18]
 //│ 	[-bb^11 · -t^29 · +c^28 · +c^21 · +c^21 · +c^21 · +c^18]  --->  [-bb^11 · -t^29 · +c^28 · +c^21 · +c^21 · +c^21]
 //│ 	[-bb^11 · -t^29 · +c^28 · +c^21 · +c^21 · +c^18 · +c^21]  --->  [-bb^11 · -t^29 · +c^28 · +c^21 · +c^21 · +c^18]
+//│ 	[-bb^11 · -t^29 · +c^28 · +c^21 · +c^18 · +c^18 · +c^21]  --->  [-bb^11 · -t^29 · +c^28 · +c^21 · +c^18 · +c^18]
 //│ 	[-bb^11 · -t^29 · +c^28 · +c^21 · +c^18 · +c^21 · +c^18]  --->  [-bb^11 · -t^29 · +c^28 · +c^21 · +c^18 · +c^21]
+//│ NoProd <: 'l:17
+//│ 	[-aa^10 · -t^29 · +c^28 · +c^18 · +c^18 · +c^18]  --->  [-aa^10 · -t^29 · +c^28 · +c^18 · +c^18]
+//│ 	[-aa^10 · -t^29 · +c^28 · +c^18 · +c^21 · +c^18]  --->  [-aa^10 · -t^29 · +c^28 · +c^18 · +c^21]
+//│ 	[-bb^11 · -t^29 · +c^28 · +c^21 · +c^18 · +c^18]  --->  [-bb^11 · -t^29 · +c^28 · +c^21 · +c^18]
+//│ 	[-bb^11 · -t^29 · +c^28 · +c^21 · +c^21 · +c^18]  --->  [-bb^11 · -t^29 · +c^28 · +c^21 · +c^21]
+//│ NoProd <: 'r:18
+//│ 	[-aa^10 · -t^29 · +c^28 · +c^18 · +c^21 · +c^21]  --->  [-aa^10 · -t^29 · +c^28 · +c^18 · +c^21]
+//│ 	[-aa^10 · -t^29 · +c^28 · +c^18 · +c^18 · +c^21]  --->  [-aa^10 · -t^29 · +c^28 · +c^18 · +c^18]
+//│ 	[-bb^11 · -t^29 · +c^28 · +c^21 · +c^18 · +c^21]  --->  [-bb^11 · -t^29 · +c^28 · +c^21 · +c^18]
+//│ 	[-bb^11 · -t^29 · +c^28 · +c^21 · +c^21 · +c^21]  --->  [-bb^11 · -t^29 · +c^28 · +c^21 · +c^21]
 //│ <<<<<<< knots <<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [c^28]
-//│ 	[c^28 · c^21]
-//│ 		[c^28 · c^21 · c^21]
-//│ 			[c^28 · c^21 · c^21 · c^21] ---> [c^28 · c^21 · c^21] (only one)
-//│ 			[c^28 · c^21 · c^21 · c^18] ---> [c^28 · c^21 · c^21] (only one)
-//│ 		[c^28 · c^21 · c^18]
-//│ 			[c^28 · c^21 · c^18 · c^21] ---> [c^28 · c^21 · c^18] (only one)
-//│ 			[c^28 · c^21 · c^18 · c^18] ---> [c^28 · c^21 · c^18] (only one)
 //│ 	[c^28 · c^18]
-//│ 		[c^28 · c^18 · c^21]
-//│ 			[c^28 · c^18 · c^21 · c^21] ---> [c^28 · c^18 · c^21] (only one)
-//│ 			[c^28 · c^18 · c^21 · c^18] ---> [c^28 · c^18 · c^21] (only one)
 //│ 		[c^28 · c^18 · c^18]
-//│ 			[c^28 · c^18 · c^18 · c^21] ---> [c^28 · c^18 · c^18] (only one)
 //│ 			[c^28 · c^18 · c^18 · c^18] ---> [c^28 · c^18 · c^18] (only one)
+//│ 			[c^28 · c^18 · c^18 · c^21] ---> [c^28 · c^18 · c^18] (only one)
+//│ 		[c^28 · c^18 · c^21]
+//│ 			[c^28 · c^18 · c^21 · c^18] ---> [c^28 · c^18 · c^21] (only one)
+//│ 			[c^28 · c^18 · c^21 · c^21] ---> [c^28 · c^18 · c^21] (only one)
+//│ 	[c^28 · c^21]
+//│ 		[c^28 · c^21 · c^18]
+//│ 			[c^28 · c^21 · c^18 · c^18] ---> [c^28 · c^21 · c^18] (only one)
+//│ 			[c^28 · c^21 · c^18 · c^21] ---> [c^28 · c^21 · c^18] (only one)
+//│ 		[c^28 · c^21 · c^21]
+//│ 			[c^28 · c^21 · c^21 · c^18] ---> [c^28 · c^21 · c^21] (only one)
+//│ 			[c^28 · c^21 · c^21 · c^21] ---> [c^28 · c^21 · c^21] (only one)
 //│ [t^29]
-//│ 	[t^29 · bb^11]
 //│ 	[t^29 · aa^10]
+//│ 	[t^29 · bb^11]
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
+//│ [N] --->
+//│ 	case n of {K => [KK] | N => [NN]}
+//│ [L] --->
+//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₅ l) (c₅ r)] | L => [LL]}
+//│ [L] --->
+//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₆ l) (c₆ r)] | L => [LL]}
+//│ [T [N] [L] [L]] --->
+//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₅ l) (c₆ r)] | L => [LL]}
 //│ [K] --->
 //│ 	case n of {K => [KK] | N => [NN]}
 //│ [T [K] aa₀ bb₀] --->
-//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₄ l) (c₁ r)] | L => [LL]}
+//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₁ l) (c₄ r)] | L => [LL]}
 //│ [N] --->
 //│ 	case n of {K => [KK] | N => [NN]}
-//│ [L] --->
-//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₃ l) (c₃ r)] | L => [LL]}
 //│ [L] --->
 //│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₂ l) (c₂ r)] | L => [LL]}
-//│ [T [N] [L] [L]] --->
-//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₃ l) (c₂ r)] | L => [LL]}
-//│ [N] --->
-//│ 	case n of {K => [KK] | N => [NN]}
 //│ [L] --->
-//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₆ l) (c₆ r)] | L => [LL]}
-//│ [L] --->
-//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₅ l) (c₅ r)] | L => [LL]}
+//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₃ l) (c₃ r)] | L => [LL]}
 //│ [T [N] [L] [L]] --->
-//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₆ l) (c₅ r)] | L => [LL]}
+//│ 	case x of {T n l r => [T case n of {K => [KK] | N => [NN]} (c₂ l) (c₃ r)] | L => [LL]}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c₀ t₀)
-//│ def t₀ = 
-//│ 	let n = [KK]
-//│ 	in let l = aa₀
-//│ 	in let r = bb₀
-//│ 	in [T n (c₄ l) (c₁ r)]
-//│ 	where
-//│ 	def bb₀ = 
-//│ 		let n = [NN]
-//│ 		in let l = [LL]
-//│ 		in let r = [LL]
-//│ 		in [T n (c₃ l) (c₂ r)]
-//│ 	def aa₀ = 
-//│ 		let n = [NN]
-//│ 		in let l = [LL]
-//│ 		in let r = [LL]
-//│ 		in [T n (c₆ l) (c₅ r)]
 //│ def c₀ = 
 //│ 	(fun x -> x)
 //│ 	where
@@ -1436,6 +1420,22 @@ c(t)
 //│ 			(fun x -> x)
 //│ 		def c₆ = 
 //│ 			(fun x -> x)
+//│ def t₀ = 
+//│ 	let n = [KK]
+//│ 	in let l = aa₀
+//│ 	in let r = bb₀
+//│ 	in [T n (c₁ l) (c₄ r)]
+//│ 	where
+//│ 	def aa₀ = 
+//│ 		let n = [NN]
+//│ 		in let l = [LL]
+//│ 		in let r = [LL]
+//│ 		in [T n (c₂ l) (c₃ r)]
+//│ 	def bb₀ = 
+//│ 		let n = [NN]
+//│ 		in let l = [LL]
+//│ 		in let r = [LL]
+//│ 		in [T n (c₅ l) (c₆ r)]
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -1450,16 +1450,16 @@ map(l)(
 //│ |#fun| |map|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |f| |=>| |C|(|f|(|h|)|,| |map|(|t|)|(|f|)|)|↵|N| |#then| |f| |=>| |N|←|↵|#let| |l| |#=| |C|(|K|,| |N|)|↵|map|(|l|)|(|→|x| |=>| |#if| |x| |is|→|K| |#then| |T|←|←|↵|)|
 //│ Parsed: {fun map = ls, => if ls is ‹(C (h, t,)) then f, => C (f (h,), map (t,) (f,),); (N) then f, => N›; let l = C (K, N,); map (l,) (x, => if x is ‹(K) then T›,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ ((map^19 l^20) (fun x:13 -> case x:13 of {
+//│ ((map^19 l^20) (fun x:18 -> case x:18 of {
 //│ 	K => [T]}))
 //│ def l = [C [K] [N]]
-//│ def map = (fun ls:8 -> case ls:8 of {
-//│ 	C h:9 t:10 => (fun f:11 -> [C (f:11 h:9) ((map^5 t:10) f:11)])
-//│ 	| N => (fun f:12 -> [N])})
+//│ def map = (fun ls:13 -> case ls:13 of {
+//│ 	C h:14 t:15 => (fun f:16 -> [C (f:16 h:14) ((map^5 t:15) f:16)])
+//│ 	| N => (fun f:17 -> [N])})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ NoProd <: 't:10
+//│ NoProd <: 't:15
 //│ 	[-l^20 · +map^19 · +map^5 · +map^5]  --->  [-l^20 · +map^19 · +map^5]
 //│ <<<<<<< knots <<<<<<<
 //│ 
@@ -1503,17 +1503,17 @@ inter(l1)(l2)
 //│ Parsed: {fun inter = xs, => if xs is ‹(N) then ys, => ys; (C (h, t,)) then ys, => C (h, inter (ys,) (t,),)›; let rec l1 = C (1, C (2, l1,),); let rec l2 = C (9, C (8, l2,),); inter (l1,) (l2,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((inter^24 l1^25) l2^27)
-//│ def inter = (fun xs:9 -> case xs:9 of {
-//│ 	N => (fun ys:10 -> ys:10)
-//│ 	| C h:11 t:12 => (fun ys:13 -> [C h:11 ((inter^5 ys:13) t:12)])})
+//│ def inter = (fun xs:14 -> case xs:14 of {
+//│ 	N => (fun ys:15 -> ys:15)
+//│ 	| C h:16 t:17 => (fun ys:18 -> [C h:16 ((inter^5 ys:18) t:17)])})
 //│ def l1 = [C 1 [C 2 l1^16]]
 //│ def l2 = [C 9 [C 8 l2^21]]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ C(Int, 'l1:7) <: 'ys:13
+//│ C(Int, 'l1:12) <: 'ys:18
 //│ 	[-l1^16 · -l1^25 · +inter^24 · +inter^5 · +inter^5 · +inter^5 · +inter^5 · +inter^5]  --->  [-l1^25 · +inter^24 · +inter^5]
-//│ C(Int, 'l2:8) <: 'ys:13
+//│ C(Int, 'l2:13) <: 'ys:18
 //│ 	[-l2^21 · -l2^27 · +inter^24 · +inter^5 · +inter^5 · +inter^5 · +inter^5 · +inter^5 · +inter^5]  --->  [-l2^27 · +inter^24 · +inter^5 · +inter^5]
 //│ <<<<<<< knots <<<<<<<
 //│ 
@@ -1545,20 +1545,6 @@ inter(l1)(l2)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((inter₀ l1₀) l2₀)
-//│ def l2₀ = 
-//│ 	let h = 9
-//│ 	in let t = 	
-//│ 		let h = 8
-//│ 		in let t = l2₀
-//│ 		in (fun ys -> [C h ((inter₄ ys) t)])
-//│ 	in (fun ys -> [C h ((inter₂ ys) t)])
-//│ def l1₀ = 
-//│ 	let h = 1
-//│ 	in let t = 	
-//│ 		let h = 2
-//│ 		in let t = l1₀
-//│ 		in (fun ys -> [C h ((inter₃ ys) t)])
-//│ 	in (fun ys -> [C h ((inter₁ ys) t)])
 //│ def inter₀ = 
 //│ 	(fun xs -> xs)
 //│ 	where
@@ -1575,6 +1561,20 @@ inter(l1)(l2)
 //│ 					(fun xs -> case xs of {
 //│ 						N => (fun ys -> ys)
 //│ 						| C h t => (fun ys -> [C h ((inter₁ ys) t)])})
+//│ def l1₀ = 
+//│ 	let h = 1
+//│ 	in let t = 	
+//│ 		let h = 2
+//│ 		in let t = l1₀
+//│ 		in (fun ys -> [C h ((inter₃ ys) t)])
+//│ 	in (fun ys -> [C h ((inter₁ ys) t)])
+//│ def l2₀ = 
+//│ 	let h = 9
+//│ 	in let t = 	
+//│ 		let h = 8
+//│ 		in let t = l2₀
+//│ 		in (fun ys -> [C h ((inter₄ ys) t)])
+//│ 	in (fun ys -> [C h ((inter₂ ys) t)])
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -1589,16 +1589,16 @@ lastDrive(C(1, C(2, N)))
 //│ Parsed: {fun last = ys, => if ys is ‹(N) then x, => x; (C (h, t,)) then x, => last (t,) (h,)›; fun lastDrive = xs, => if xs is ‹(N) then None; (C (hh, tt,)) then Some (last (tt,) (hh,),)›; lastDrive (C (1, C (2, N,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (lastDrive^22 [C 1 [C 2 [N]]])
-//│ def last = (fun ys:8 -> case ys:8 of {
-//│ 	N => (fun x:9 -> x:9)
-//│ 	| C h:10 t:11 => (fun x:12 -> ((last^4 t:11) h:10))})
-//│ def lastDrive = (fun xs:13 -> case xs:13 of {
+//│ def last = (fun ys:13 -> case ys:13 of {
+//│ 	N => (fun x:14 -> x:14)
+//│ 	| C h:15 t:16 => (fun x:17 -> ((last^4 t:16) h:15))})
+//│ def lastDrive = (fun xs:18 -> case xs:18 of {
 //│ 	N => [None]
-//│ 	| C hh:14 tt:15 => [Some ((last^14 tt:15) hh:14)]})
+//│ 	| C hh:19 tt:20 => [Some ((last^14 tt:20) hh:19)]})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> knots >>>>>>>
-//│ NoProd <: 't:11
+//│ NoProd <: 't:16
 //│ 	[+lastDrive^22 · +last^14 · +last^4 · +last^4]  --->  [+lastDrive^22 · +last^14 · +last^4]
 //│ <<<<<<< knots <<<<<<<
 //│ 

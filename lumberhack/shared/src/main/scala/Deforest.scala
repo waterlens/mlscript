@@ -238,7 +238,7 @@ class Deforest(var debug: Boolean) {
   val noExprId = euid.nextUid
   def nextIdent(isDef: Bool, name: Var): Ident = Ident(isDef, name, iuid.nextUid(name.name))
 
-  def freshVar(n: String) =
+  def freshVar(n: String): ((ProdStratEnum & ToStrat[ProdVar] & TypevarWithBoundary), (ConsStratEnum & ToStrat[ConsVar] & TypevarWithBoundary)) =
     val vid = vuid.nextUid
     val pv = ProdVar(vid, n)()(using noExprId)
     val cv = ConsVar(vid, n)()(using noExprId)
@@ -246,7 +246,8 @@ class Deforest(var debug: Boolean) {
     varsName += vid -> name
     log(s"fresh var $name")
     (pv, cv)
-  
+  def freshVar(n: Ident): ((ProdStratEnum & ToStrat[ProdVar] & TypevarWithBoundary), (ConsStratEnum & ToStrat[ConsVar] & TypevarWithBoundary)) =
+    freshVar(n.pp(using InitPpConfig.showIuidOn))
   
   val upperBounds = mutable.Map.empty[TypeVarId, Ls[(Path, ConsStrat)]].withDefaultValue(Nil)
   val lowerBounds = mutable.Map.empty[TypeVarId, Ls[(Path, ProdStrat)]].withDefaultValue(Nil)
@@ -282,7 +283,7 @@ class Deforest(var debug: Boolean) {
       case Match(scrut, arms) =>
         val sp = process(scrut)
         val (detrs, bodies) = arms.map { (v, as, e) =>
-          val as_tys = as.map(a => a.tree.name -> freshVar(a.tree.name + ":" + a.uid)._1.toStrat())
+          val as_tys = as.map(a => a.tree.name -> freshVar(a)._1.toStrat())
           val ep = process(e)(using ctx ++ as_tys)
           (Destructor(v, as_tys.map(a_ty => ConsVar(a_ty._2.s.uid, a_ty._2.s.name)()(using noExprId).toStrat())), ep)
         }.unzip
@@ -291,7 +292,7 @@ class Deforest(var debug: Boolean) {
         bodies.foreach(constrain(_, res._2.toStrat()))
         res._1
       case Function(param, body) =>
-        val sv = freshVar(param.tree.name + ":" + param.uid)
+        val sv = freshVar(param)
         ProdFun(sv._2.toStrat(),
           process(body)(using ctx + (param.tree.name -> sv._1.toStrat()))
         )(using noExprId)
@@ -302,7 +303,7 @@ class Deforest(var debug: Boolean) {
         constrain(process(elze), res._2.toStrat())
         res._1
       case LetIn(id, rhs, body) =>
-        val v = freshVar(id.tree.name + ":" + id.uid)
+        val v = freshVar(id)
         constrain(process(rhs), v._2.toStrat())
         process(body)(using ctx + (id.tree.name -> v._1.toStrat())).s
       case Sequence(fst, snd) =>
@@ -315,7 +316,7 @@ class Deforest(var debug: Boolean) {
   def apply(p: Program): Ls[Str -> ProdStrat] = trace(s"apply ${summary(p.pp(using InitPpConfig))}") {
     val vars: Map[Str, Strat[ProdVar]] = p.contents.collect {
       case L(ProgDef(id, body)) =>
-        id.tree.name -> freshVar(id.tree.name + ":" + id.uid)._1.toStrat()
+        id.tree.name -> freshVar(id.pp(using InitPpConfig))._1.toStrat()
     }.toMap
 
     val ctx = Ctx.empty ++ vars

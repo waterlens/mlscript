@@ -1,52 +1,52 @@
 :NewParser
 :ParseOnly
 
-
-fun seq(a, b) = b
 fun p(x) =
-  if primitive(x) then N
+  if x == 0 then N
   else
-    if primitive(x) then C(p(add(x, 1)))
-    else let temp = C(p(minus(x, 1))) in seq(f(temp), temp)
+    if x >= 2 then C(p(x - 1))
+    else
+      let temp = C(p(x + 1))
+      f(temp)
+      temp
 fun f(z) = if z is
-    C(b) then b
-    N then 1
+  C(b) then b
+  N then 1
 fun c(xx) = if xx is
-    C(aa) then primitive(aa)
-    N then N
+  C(aa) then primitive(aa)
+  N then N
 c(p(0))
-//│ |#fun| |seq|(|a|,| |b|)| |#=| |b|↵|#fun| |p|(|x|)| |#=|→|#if| |primitive|(|x|)| |#then| |N|↵|#else|→|#if| |primitive|(|x|)| |#then| |C|(|p|(|add|(|x|,| |1|)|)|)|↵|#else| |#let| |temp| |#=| |C|(|p|(|minus|(|x|,| |1|)|)|)| |#in| |seq|(|f|(|temp|)|,| |temp|)|←|←|↵|#fun| |f|(|z|)| |#=| |#if| |z| |is|→|C|(|b|)| |#then| |b|↵|N| |#then| |1|←|↵|#fun| |c|(|xx|)| |#=| |#if| |xx| |is|→|C|(|aa|)| |#then| |primitive|(|aa|)|↵|N| |#then| |N|←|↵|c|(|p|(|0|)|)|
-//│ Parsed: {fun seq = a, b, => b; fun p = x, => {if (primitive (x,)) then N else {if (primitive (x,)) then C (p (add (x, 1,),),) else let temp = C (p (minus (x, 1,),),) in seq (f (temp,), temp,)}}; fun f = z, => if z is ‹(C (b,)) then b; (N) then 1›; fun c = xx, => if xx is ‹(C (aa,)) then primitive (aa,); (N) then N›; c (p (0,),)}
+//│ |#fun| |p|(|x|)| |#=|→|#if| |x| |==| |0| |#then| |N|↵|#else|→|#if| |x| |>=| |2| |#then| |C|(|p|(|x| |-| |1|)|)|↵|#else|→|#let| |temp| |#=| |C|(|p|(|x| |+| |1|)|)|↵|f|(|temp|)|↵|temp|←|←|←|↵|#fun| |f|(|z|)| |#=| |#if| |z| |is|→|C|(|b|)| |#then| |b|↵|N| |#then| |1|←|↵|#fun| |c|(|xx|)| |#=| |#if| |xx| |is|→|C|(|aa|)| |#then| |primitive|(|aa|)|↵|N| |#then| |N|←|↵|c|(|p|(|0|)|)|
+//│ Parsed: {fun p = x, => {if (== (x,) (0,)) then N else {if (>= (x,) (2,)) then C (p (- (x,) (1,),),) else {let temp = C (p (+ (x,) (1,),),); f (temp,); temp}}}; fun f = z, => if z is ‹(C (b,)) then b; (N) then 1›; fun c = xx, => if xx is ‹(C (aa,)) then primitive (aa,); (N) then N›; c (p (0,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (c^50 (p^51 0))
+//│ (c^49 (p^50 0))
 //│ def c = (fun xx⁰ -> case xx⁰ of {
 //│ 	C aa⁰ => (primitive⁰ aa⁰)
 //│ 	| N => [N]})
 //│ def f = (fun z⁰ -> case z⁰ of {
-//│ 	C b¹ => b¹
+//│ 	C b⁰ => b⁰
 //│ 	| N => 1})
-//│ def p = (fun x⁰ -> if (primitive⁰ x⁰) then [N] else if (primitive⁰ x⁰) then [C (p^11 ((add⁰ x⁰) 1))] else 
-//│ 	let temp⁰ = [C (p^19 ((minus⁰ x⁰) 1))]
-//│ 	in ((seq^27 (f^28 temp⁰)) temp⁰))
-//│ def seq = (fun a⁰ -> (fun b⁰ -> b⁰))
+//│ def p = (fun x⁰ -> if (x⁰ == 0) then [N] else if (x⁰ >= 2) then [C (p^12 (x⁰ - 1))] else 
+//│ 	let temp⁰ = [C (p^20 (x⁰ + 1))]
+//│ 	in (f^28 temp⁰)
+//│ 	temp⁰)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [c^50] (hopeless to continue)
-//│ [p^51] (hopeless to continue)
-//│ 	[p^51 · f^28] (using original def)
-//│ 	[p^51 · p^11] ---> [p^51] (using original def)
-//│ 	[p^51 · p^19] ---> [p^51] (using original def)
-//│ 	[p^51 · seq^27] (using original def)
+//│ [c^49] (hopeless to continue)
+//│ [p^50] (hopeless to continue)
+//│ 	[p^50 · f^28] (using original def)
+//│ 	[p^50 · p^12] ---> [p^50] (using original def)
+//│ 	[p^50 · p^20] ---> [p^50] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C (p₀ ((add⁰ x¹) 1))] --->
+//│ [C (p₀ (x¹ + 1))] --->
 //│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}
-//│ [C (p₀ ((minus⁰ x¹) 1))] --->
-//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}
-//│ 	case z¹ of {C b³ => b³ | N => 1}
+//│ 	case z¹ of {C b¹ => b¹ | N => 1}
 //│ 	 MORE THAN ONE MATCH EXPR
+//│ [C (p₀ (x¹ - 1))] --->
+//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}
 //│ [N] --->
 //│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}
 //│ <<<<<<< fusion matches <<<<<<<
@@ -56,47 +56,16 @@ c(p(0))
 //│ def c₀ = 
 //│ 	(fun xx¹ -> xx¹)
 //│ def p₀ = 
-//│ 	(fun x¹ -> if (primitive⁰ x¹) then [N] else if (primitive⁰ x¹) then 
-//│ 		let aa¹ = (p₀ ((add⁰ x¹) 1))
+//│ 	(fun x¹ -> if (x¹ == 0) then [N] else if (x¹ >= 2) then 
+//│ 		let aa¹ = (p₀ (x¹ - 1))
 //│ 		in (primitive⁰ aa¹) else 
 //│ 		let temp¹ = 	
-//│ 			let b³ = (p₀ ((minus⁰ x¹) 1))
-//│ 			in b³
-//│ 		in ((seq₀ (f₀ temp¹)) temp¹))
+//│ 			let b¹ = (p₀ (x¹ + 1))
+//│ 			in b¹
+//│ 		in (f₀ temp¹)
+//│ 		temp¹)
 //│ 	where
 //│ 	def f₀ = 
 //│ 		(fun z¹ -> z¹)
-//│ 	def seq₀ = 
-//│ 		(fun a¹ -> (fun b² -> b²))
 //│ <<<<<<< after fusion <<<<<<<
-
-
-
-
-let a =
-    let d = 4
-    d
-    123
-//│ |#let| |a| |#=|→|#let| |d| |#=| |4|↵|d|↵|123|←|
-//│ Parsed: {let a = {let d = 4; d; 123}}
-//│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def a = 
-//│ 	let d⁰ = 4
-//│ 	in d⁰
-//│ 	123
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ 
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ 
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ 
-//│ 
-//│ <<<<<<< after fusion <<<<<<<
-
 

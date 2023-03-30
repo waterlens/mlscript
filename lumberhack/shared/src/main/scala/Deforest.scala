@@ -259,9 +259,9 @@ class Deforest(var debug: Boolean) {
       case Const(IntLit(_)) => prodInt(using noExprId)
       case Const(l) => NoProd()(using noExprId)
       case Ref(Ident(_, Var(primitive), _)) if Deforest.lumberhackKeywords(primitive) => {
-        if Deforest.lumberhackIntOps(primitive) then
+        if (Deforest.lumberhackIntFun(primitive) || Deforest.lumberhackIntBinOps(primitive)) then
           primitive match {
-            case "eq" | "==" => prodIntEq(using noExprId)
+            case a if (Deforest.lumberhackIntComparisonFun(a) || Deforest.lumberhackIntComparisonOps(a)) => prodIntEq(using noExprId)
             case _ => prodIntBinOp(using noExprId)
           }
         else
@@ -484,7 +484,7 @@ enum CallTree(val info: Str) {
 
   def generatePathToIdent(using newd: Deforest, store: mutable.Map[Path, Ident], nameMap: mutable.Map[String, Int], originalDefs: mutable.Set[Path]): Unit = this match {
     case k@Knot(current, prev) =>
-      if k.info != "hopeless to continue" then store.updateWith(current)(_.orElse({
+      store.updateWith(current)(_.orElse({
         store.updateWith(prev)(_.orElse(Some(newd.nextIdent(true, {
           val name = prev.last.r.id.tree.name
           val id = nameMap.updateWith(name){
@@ -620,7 +620,9 @@ object CallTree {
 }
 
 object Deforest {
-  lazy val lumberhackKeywords = lumberhackIntOps ++ lumberhackIntBinOps + "primitive"
-  val lumberhackIntOps = Set("add", "minus", "mult", "div", "eq")
-  val lumberhackIntBinOps = Set("+", "-", "*", "/", "==")
+  lazy val lumberhackKeywords: Set[String] = (lumberhackIntFun ++ lumberhackIntBinOps) + "primitive"
+  lazy val lumberhackIntFun: Set[String] = Set("add", "minus", "mult", "div") ++ lumberhackIntComparisonFun 
+  lazy val lumberhackIntComparisonFun: Set[String] = Set("eq", "lt", "gt", "leq", "geq")
+  lazy val lumberhackIntBinOps: Set[String] = Set("+", "-", "*", "/") ++ lumberhackIntComparisonOps
+  lazy val lumberhackIntComparisonOps: Set[String] = Set("==", ">", "<", ">=", "<=")
 }

@@ -23,6 +23,15 @@ c(p)
 //│ 	[p^11 · p^1] ---> [p^11] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c₀ p₀)
+//│ def c₀ = 
+//│ 	(fun x¹ -> case [C x¹] of {
+//│ 		C a¹ => (c₀ a¹)})
+//│ def p₀ = 
+//│ 	[C p₀]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C x¹] --->
 //│ 	case [C x¹] of {C a¹ => (c₀ a¹)}
@@ -61,6 +70,18 @@ main(0)
 //│ 	[main^11 · p^8] (using original def)
 //│ 		[main^11 · p^8 · p^1] ---> [main^11 · p^8] (using original def)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (main₀ 0)
+//│ def main₀ = 
+//│ 	(fun y¹ -> (c₀ p₀))
+//│ 	where
+//│ 	def c₀ = 
+//│ 		(fun x¹ -> case x¹ of {
+//│ 			C a¹ => a¹})
+//│ 	def p₀ = 
+//│ 		[C p₀]
+//│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C p₀] --->
@@ -112,6 +133,27 @@ map(ff, l)
 //│ 		[map^22 · map^5 · map^5] ---> [map^22 · map^5] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((map₀ ff₀) l₀)
+//│ def ff₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		K => [T]})
+//│ def l₀ = 
+//│ 	[C [K] l₁]
+//│ 	where
+//│ 	def l₁ = 
+//│ 		[C [K] l₁]
+//│ def map₀ = 
+//│ 	(fun f¹ -> (fun ls¹ -> case ls¹ of {
+//│ 		C h¹ t¹ => [C (f¹ h¹) ((map₁ f¹) t¹)]
+//│ 		| N => [N]}))
+//│ 	where
+//│ 	def map₁ = 
+//│ 		(fun f² -> (fun ls² -> case ls² of {
+//│ 			C h² t² => [C (f² h²) ((map₁ f²) t²)]
+//│ 			| N => [N]}))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C [K] l₁] --->
 //│ 	case ls² of {C h² t² => [C (f² h²) ((map₁ f²) t²)] | N => [N]}
@@ -142,6 +184,17 @@ map(ff, l)
 //│ 	def map₁ = 
 //│ 		(fun f² -> (fun ls² -> ls²))
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,f,1)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Ctx.apply$$anonfun$1(Deforest.scala:200)
+//│ 	at: scala.collection.immutable.HashMap.getOrElse(HashMap.scala:683)
+//│ 	at: mlscript.lumberhack.Ctx.apply(Deforest.scala:200)
+//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:274)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
+//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
+//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:276)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
+//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
 
 // NOTE: only first two is handled
 :ns
@@ -178,6 +231,36 @@ map(ff, l)
 //│ 			[map^28 · map^5 · map^5 · map^5]
 //│ 				[map^28 · map^5 · map^5 · map^5 · map^5] ---> [map^28 · map^5 · map^5 · map^5] (only one)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((map₀ ff₀) l₀)
+//│ def ff₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		K => [T]
+//│ 		| KK => [TT]
+//│ 		| KKKK => [TTTT]})
+//│ def l₀ = 
+//│ 	[C [K] [C [KK] [C [KKKK] [N]]]]
+//│ def map₀ = 
+//│ 	(fun f⁴ -> (fun ls⁴ -> case ls⁴ of {
+//│ 		C h⁴ t⁴ => [C (f⁴ h⁴) ((map₁ f⁴) t⁴)]
+//│ 		| N => [N]}))
+//│ 	where
+//│ 	def map₁ = 
+//│ 		(fun f³ -> (fun ls³ -> case ls³ of {
+//│ 			C h³ t³ => [C (f³ h³) ((map₂ f³) t³)]
+//│ 			| N => [N]}))
+//│ 		where
+//│ 		def map₂ = 
+//│ 			(fun f¹ -> (fun ls¹ -> case ls¹ of {
+//│ 				C h¹ t¹ => [C (f¹ h¹) ((map₃ f¹) t¹)]
+//│ 				| N => [N]}))
+//│ 			where
+//│ 			def map₃ = 
+//│ 				(fun f² -> (fun ls² -> case ls² of {
+//│ 					C h² t² => [C (f² h²) ((map₃ f²) t²)]
+//│ 					| N => [N]}))
+//│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C [KKKK] [N]] --->
@@ -223,7 +306,7 @@ map(ff, l)
 //│ 				(fun f² -> (fun ls² -> ls²))
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: expect to fail but pass
+//│ java.lang.Exception: Internal Error: binding not found: Ident(false,f,1)
 //│ !!!!!!ERROR!!!!!!
 
 :ns
@@ -258,6 +341,30 @@ rev(rev1(p, N), N)
 //│ 	[rev^28 · rev^2]
 //│ 		[rev^28 · rev^2 · rev^2] ---> [rev^28 · rev^2] (only one)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((rev₀ ((rev1₀ p₀) [N])) [N])
+//│ def p₀ = 
+//│ 	[C [K] [N]]
+//│ def rev1₀ = 
+//│ 	(fun l11² -> (fun l22² -> case l11² of {
+//│ 		C h1² t1² => ((rev1₁ t1²) [C h1² l22²])
+//│ 		| N => l22²}))
+//│ 	where
+//│ 	def rev1₁ = 
+//│ 		(fun l11¹ -> (fun l22¹ -> case l11¹ of {
+//│ 			C h1¹ t1¹ => ((rev1₁ t1¹) [C h1¹ l22¹])
+//│ 			| N => l22¹}))
+//│ def rev₀ = 
+//│ 	(fun l1¹ -> (fun l2¹ -> case l1¹ of {
+//│ 		C h¹ t¹ => ((rev₁ t¹) [C h¹ l2¹])
+//│ 		| N => l2¹}))
+//│ 	where
+//│ 	def rev₁ = 
+//│ 		(fun l1² -> (fun l2² -> case l1² of {
+//│ 			C h² t² => ((rev₁ t²) [C h² l2²])
+//│ 			| N => l2²}))
+//│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C [K] [N]] --->
@@ -301,7 +408,7 @@ rev(rev1(p, N), N)
 //│ 			| N => l2²}))
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: expect to fail but pass
+//│ java.lang.Exception: Internal Error: binding not found: Ident(false,l2,1)
 //│ !!!!!!ERROR!!!!!!
 
 
@@ -342,6 +449,49 @@ c(id(p))
 //│ 			[p^23 · p^2 · p^2 · id2^1] (hopeless to continue)
 //│ 			[p^23 · p^2 · p^2 · p^2] ---> [p^23 · p^2] (only one)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c₀ (id₀ p₀))
+//│ def c₀ = 
+//│ 	(fun x³ -> case x³ of {
+//│ 		C a⁶ => case a⁶ of {
+//│ 			C a⁷ => (c₁ a⁷)}})
+//│ 	where
+//│ 	def c₁ = 
+//│ 		(fun x¹ -> case x¹ of {
+//│ 			C a² => case a² of {
+//│ 				C a³ => (c₂ a³)}})
+//│ 		where
+//│ 		def c₂ = 
+//│ 			(fun x² -> case x² of {
+//│ 				C a⁴ => case a⁴ of {
+//│ 					C a⁵ => (c₃ a⁵)}})
+//│ 			where
+//│ 			def c₃ = 
+//│ 				(fun x⁴ -> case x⁴ of {
+//│ 					C a⁸ => case a⁸ of {
+//│ 						C a⁹ => (c₁ a⁹)}})
+//│ def id₀ = 
+//│ 	(fun y¹ -> (id2₀ y¹))
+//│ 	where
+//│ 	def id2₀ = 
+//│ 		(fun yy³ -> yy³)
+//│ def p₀ = 
+//│ 	[C [C [C (id2₁ p₁)]]]
+//│ 	where
+//│ 	def id2₁ = 
+//│ 		(fun yy⁴ -> yy⁴)
+//│ 	def p₁ = 
+//│ 		[C [C [C (id2₂ p₂)]]]
+//│ 		where
+//│ 		def id2₂ = 
+//│ 			(fun yy¹ -> yy¹)
+//│ 		def p₂ = 
+//│ 			[C [C [C (id2₃ p₁)]]]
+//│ 			where
+//│ 			def id2₃ = 
+//│ 				(fun yy² -> yy²)
+//│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C (id2₁ p₁)] --->
@@ -475,6 +625,32 @@ map(rev(N, primitive))
 //│ 		[rev^26 · rev^14 · rev^14] ---> [rev^26 · rev^14] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (map₀ ((rev₀ [N]) primitive⁰))
+//│ def map₀ = 
+//│ 	(fun ls² -> case ls² of {
+//│ 		C hh² tt² => [C case hh² of {
+//│ 			A => [B]
+//│ 			| AA => [BB]} (map₁ tt²)]
+//│ 		| N => [N]})
+//│ 	where
+//│ 	def map₁ = 
+//│ 		(fun ls¹ -> case ls¹ of {
+//│ 			C hh¹ tt¹ => [C case hh¹ of {
+//│ 				A => [B]
+//│ 				| AA => [BB]} (map₁ tt¹)]
+//│ 			| N => [N]})
+//│ def rev₀ = 
+//│ 	(fun a² -> (fun lss² -> case lss² of {
+//│ 		C h² t² => ((rev₁ [C h² a²]) t²)
+//│ 		| N => a²}))
+//│ 	where
+//│ 	def rev₁ = 
+//│ 		(fun a¹ -> (fun lss¹ -> case lss¹ of {
+//│ 			C h¹ t¹ => ((rev₁ [C h¹ a¹]) t¹)
+//│ 			| N => a¹}))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C h¹ a¹] --->
 //│ 	case ls² of {C hh² tt² => [C case hh² of {A => [B] | AA => [BB]} (map₁ tt²)] | N => [N]}
@@ -522,7 +698,7 @@ map(rev(N, primitive))
 //│ 			| N => a¹}))
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: expect to fail but pass
+//│ java.lang.Exception: Internal Error: type error B <: Destruct(A, AA)
 //│ !!!!!!ERROR!!!!!!
 
 :ns
@@ -545,6 +721,15 @@ c(p)
 //│ 	[c^12 · c^5] ---> [c^12] (using original def)
 //│ [p^13] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c₀ p₀)
+//│ def c₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		Pair a¹ b¹ => (c₀ [Pair b¹ a¹])})
+//│ def p₀ = 
+//│ 	[Pair [A] [B]]
+//│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [Pair [A] [B]] --->
@@ -588,6 +773,24 @@ lastDrive(C(1, C(2, N)))
 //│ 			[lastDrive^21 · last^13 · last^3 · last^3] ---> [lastDrive^21 · last^13 · last^3] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (lastDrive₀ [C 1 [C 2 [N]]])
+//│ def lastDrive₀ = 
+//│ 	(fun xs¹ -> case xs¹ of {
+//│ 		N => [None]
+//│ 		| C hh¹ tt¹ => [Some ((last₀ hh¹) tt¹)]})
+//│ 	where
+//│ 	def last₀ = 
+//│ 		(fun x¹ -> (fun ys¹ -> case ys¹ of {
+//│ 			N => x¹
+//│ 			| C h¹ t¹ => ((last₁ h¹) t¹)}))
+//│ 		where
+//│ 		def last₁ = 
+//│ 			(fun x² -> (fun ys² -> case ys² of {
+//│ 				N => x²
+//│ 				| C h² t² => ((last₁ h²) t²)}))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 1 [C 2 [N]]] --->
 //│ 	case xs¹ of {N => [None] | C hh¹ tt¹ => [Some ((last₀ hh¹) tt¹)]}
@@ -614,6 +817,7 @@ lastDrive(C(1, C(2, N)))
 //│ 		def last₁ = 
 //│ 			(fun x² -> (fun ys² -> ys²))
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,x,2)
 
 :ns
 fun inter(xs, ys) = if xs is
@@ -640,6 +844,49 @@ inter(C(1, C(2, C(3, N))), C(9, C(8, C(7, N))))
 //│ 							[inter^13 · inter^4 · inter^4 · inter^4 · inter^4 · inter^4 · inter^4 · inter^4]
 //│ 								[inter^13 · inter^4 · inter^4 · inter^4 · inter^4 · inter^4 · inter^4 · inter^4 · inter^4] ---> [inter^13 · inter^4 · inter^4 · inter^4 · inter^4 · inter^4 · inter^4] (only one)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((inter₀ [C 1 [C 2 [C 3 [N]]]]) [C 9 [C 8 [C 7 [N]]]])
+//│ def inter₀ = 
+//│ 	(fun xs² -> (fun ys² -> case xs² of {
+//│ 		N => ys²
+//│ 		| C h² t² => [C h² ((inter₁ ys²) t²)]}))
+//│ 	where
+//│ 	def inter₁ = 
+//│ 		(fun xs¹ -> (fun ys¹ -> case xs¹ of {
+//│ 			N => ys¹
+//│ 			| C h¹ t¹ => [C h¹ ((inter₂ ys¹) t¹)]}))
+//│ 		where
+//│ 		def inter₂ = 
+//│ 			(fun xs⁶ -> (fun ys⁶ -> case xs⁶ of {
+//│ 				N => ys⁶
+//│ 				| C h⁶ t⁶ => [C h⁶ ((inter₃ ys⁶) t⁶)]}))
+//│ 			where
+//│ 			def inter₃ = 
+//│ 				(fun xs⁸ -> (fun ys⁸ -> case xs⁸ of {
+//│ 					N => ys⁸
+//│ 					| C h⁸ t⁸ => [C h⁸ ((inter₄ ys⁸) t⁸)]}))
+//│ 				where
+//│ 				def inter₄ = 
+//│ 					(fun xs⁷ -> (fun ys⁷ -> case xs⁷ of {
+//│ 						N => ys⁷
+//│ 						| C h⁷ t⁷ => [C h⁷ ((inter₅ ys⁷) t⁷)]}))
+//│ 					where
+//│ 					def inter₅ = 
+//│ 						(fun xs³ -> (fun ys³ -> case xs³ of {
+//│ 							N => ys³
+//│ 							| C h³ t³ => [C h³ ((inter₆ ys³) t³)]}))
+//│ 						where
+//│ 						def inter₆ = 
+//│ 							(fun xs⁴ -> (fun ys⁴ -> case xs⁴ of {
+//│ 								N => ys⁴
+//│ 								| C h⁴ t⁴ => [C h⁴ ((inter₇ ys⁴) t⁴)]}))
+//│ 							where
+//│ 							def inter₇ = 
+//│ 								(fun xs⁵ -> (fun ys⁵ -> case xs⁵ of {
+//│ 									N => ys⁵
+//│ 									| C h⁵ t⁵ => [C h⁵ ((inter₆ ys⁵) t⁵)]}))
+//│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 1 [C 2 [C 3 [N]]]] --->
@@ -704,6 +951,17 @@ inter(C(1, C(2, C(3, N))), C(9, C(8, C(7, N))))
 //│ 							def inter₇ = 
 //│ 								(fun xs⁵ -> (fun ys⁵ -> xs⁵))
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,ys,4)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Ctx.apply$$anonfun$1(Deforest.scala:200)
+//│ 	at: scala.collection.immutable.HashMap.getOrElse(HashMap.scala:683)
+//│ 	at: mlscript.lumberhack.Ctx.apply(Deforest.scala:200)
+//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:274)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
+//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
+//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:307)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
+//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
 
 :ns
 _LUMBERHACK_ERROR
@@ -736,6 +994,28 @@ idxSum(rev(primitive, N))(0)
 //│ 	[rev^34 · rev^23]
 //│ 		[rev^34 · rev^23 · rev^23] ---> [rev^34 · rev^23] (only one)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((idxSum₀ ((rev₀ primitive⁰) [N])) 0)
+//│ def idxSum₀ = 
+//│ 	(fun ls¹ -> case ls¹ of {
+//│ 		N => (fun acc² -> 0)
+//│ 		| C h¹ t¹ => (fun acc³ -> ((add acc³) ((idxSum₁ t¹) ((add acc³) 1))))})
+//│ 	where
+//│ 	def idxSum₁ = 
+//│ 		(fun ls² -> case ls² of {
+//│ 			N => (fun acc⁴ -> 0)
+//│ 			| C h² t² => (fun acc⁵ -> ((add acc⁵) ((idxSum₁ t²) ((add acc⁵) 1))))})
+//│ def rev₀ = 
+//│ 	(fun lss¹ -> (fun a¹ -> case lss¹ of {
+//│ 		N => a¹
+//│ 		| C hh¹ tt¹ => ((rev₁ tt¹) [C hh¹ a¹])}))
+//│ 	where
+//│ 	def rev₁ = 
+//│ 		(fun lss² -> (fun a² -> case lss² of {
+//│ 			N => a²
+//│ 			| C hh² tt² => ((rev₁ tt²) [C hh² a²])}))
+//│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C hh² a²] --->
@@ -812,6 +1092,27 @@ inter(l1, l2)
 //│ [l2^36]
 //│ <<<<<<< expansion <<<<<<<
 //│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((inter₀ l1₀) l2₀)
+//│ def inter₀ = 
+//│ 	(fun xs¹ -> case xs¹ of {
+//│ 		N => (fun ys² -> ys²)
+//│ 		| C h0¹ t0¹ => (fun ys³ -> case ys³ of {
+//│ 			N => [N2]
+//│ 			| C h1¹ t1¹ => [C2 ((add⁰ h0¹) h1¹) ((inter₁ t0¹) t1¹)]})})
+//│ 	where
+//│ 	def inter₁ = 
+//│ 		(fun xs² -> case xs² of {
+//│ 			N => (fun ys⁴ -> ys⁴)
+//│ 			| C h0² t0² => (fun ys⁵ -> case ys⁵ of {
+//│ 				N => [N2]
+//│ 				| C h1² t1² => [C2 ((add⁰ h0²) h1²) ((inter₁ t0²) t1²)]})})
+//│ def l1₀ = 
+//│ 	[C 1 [C 2 [C 1 [C 2 [N]]]]]
+//│ def l2₀ = 
+//│ 	[C 11 [N]]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 1 [C 2 [C 1 [C 2 [N]]]]] --->
 //│ 	case xs¹ of {N => (fun ys² -> ys²) | C h0¹ t0¹ => (fun ys³ -> case ys³ of {N => [N2] | C h1¹ t1¹ => [C2 ((add⁰ h0¹) h1¹) ((inter₁ t0¹) t1¹)]})}
@@ -854,6 +1155,17 @@ inter(l1, l2)
 //│ 	in let t1¹ = [N2]
 //│ 	in [C2 ((add⁰ h0¹) h1¹) ((inter₁ t0¹) t1¹)]
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,h0,1)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Ctx.apply$$anonfun$1(Deforest.scala:200)
+//│ 	at: scala.collection.immutable.HashMap.getOrElse(HashMap.scala:683)
+//│ 	at: mlscript.lumberhack.Ctx.apply(Deforest.scala:200)
+//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:274)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
+//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
+//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:277)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
+//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
 
 
 :ns
@@ -896,6 +1208,55 @@ c(id3(p))
 //│ 				[p^25 · p^2 · p^2 · id^1 · id2^17] (using original def)
 //│ 			[p^25 · p^2 · p^2 · p^2] ---> [p^25 · p^2] (only one)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c₀ (id3₀ p₀))
+//│ def c₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		C a¹ => case a¹ of {
+//│ 			C b¹ => (c₁ b¹)}})
+//│ 	where
+//│ 	def c₁ = 
+//│ 		(fun x² -> case x² of {
+//│ 			C a² => case a² of {
+//│ 				C b² => (c₂ b²)}})
+//│ 		where
+//│ 		def c₂ = 
+//│ 			(fun x³ -> case x³ of {
+//│ 				C a³ => case a³ of {
+//│ 					C b³ => (c₃ b³)}})
+//│ 			where
+//│ 			def c₃ = 
+//│ 				(fun x⁴ -> case x⁴ of {
+//│ 					C a⁴ => case a⁴ of {
+//│ 						C b⁴ => (c₁ b⁴)}})
+//│ def id3₀ = 
+//│ 	(fun d¹ -> d¹)
+//│ def p₀ = 
+//│ 	[C [C [C (id₀ p₁)]]]
+//│ 	where
+//│ 	def id₀ = 
+//│ 		(fun y² -> (id2₀ y²))
+//│ 		where
+//│ 		def id2₀ = 
+//│ 			(fun z² -> z²)
+//│ 	def p₁ = 
+//│ 		[C [C [C (id₁ p₂)]]]
+//│ 		where
+//│ 		def id₁ = 
+//│ 			(fun y¹ -> (id2₁ y¹))
+//│ 			where
+//│ 			def id2₁ = 
+//│ 				(fun z¹ -> z¹)
+//│ 		def p₂ = 
+//│ 			[C [C [C (id₂ p₁)]]]
+//│ 			where
+//│ 			def id₂ = 
+//│ 				(fun y³ -> (id2₂ y³))
+//│ 				where
+//│ 				def id2₂ = 
+//│ 					(fun z³ -> z³)
+//│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C (id₀ p₁)] --->
@@ -1030,6 +1391,75 @@ id6(id4)(c)(id5(id2)(id3(p)))
 //│ 		[p^44 · p^13 · id7^11] (hopeless to continue)
 //│ 		[p^44 · p^13 · p^13] ---> [p^44 · p^13] (only one)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (((id6₀ id4₀) c₀) ((id5₀ id2₀) (id3₀ p₀)))
+//│ def c₀ = 
+//│ 	(fun xx⁷ -> case xx⁷ of {
+//│ 		C a⁷ => (c₁ a⁷)})
+//│ 	where
+//│ 	def c₁ = 
+//│ 		(fun xx³ -> case xx³ of {
+//│ 			C a³ => (c₂ a³)})
+//│ 		where
+//│ 		def c₂ = 
+//│ 			(fun xx⁵ -> case xx⁵ of {
+//│ 				C a⁵ => (c₃ a⁵)})
+//│ 			where
+//│ 			def c₃ = 
+//│ 				(fun xx² -> case xx² of {
+//│ 					C a² => (c₄ a²)})
+//│ 				where
+//│ 				def c₄ = 
+//│ 					(fun xx⁴ -> case xx⁴ of {
+//│ 						C a⁴ => (c₅ a⁴)})
+//│ 					where
+//│ 					def c₅ = 
+//│ 						(fun xx⁸ -> case xx⁸ of {
+//│ 							C a⁸ => (c₆ a⁸)})
+//│ 						where
+//│ 						def c₆ = 
+//│ 							(fun xx⁹ -> case xx⁹ of {
+//│ 								C a⁹ => (c₇ a⁹)})
+//│ 							where
+//│ 							def c₇ = 
+//│ 								(fun xx¹ -> case xx¹ of {
+//│ 									C a¹ => (c₈ a¹)})
+//│ 								where
+//│ 								def c₈ = 
+//│ 									(fun xx⁶ -> case xx⁶ of {
+//│ 										C a⁶ => (c₄ a⁶)})
+//│ def id2₀ = 
+//│ 	(fun y¹ -> y¹)
+//│ def id3₀ = 
+//│ 	(fun z¹ -> z¹)
+//│ def id4₀ = 
+//│ 	(fun k³ -> k³)
+//│ def id5₀ = 
+//│ 	(fun j¹ -> j¹)
+//│ def id6₀ = 
+//│ 	(fun l¹ -> l¹)
+//│ def p₀ = 
+//│ 	[C [C [C (id7₀ [C [C (id1₀ p₁)]])]]]
+//│ 	where
+//│ 	def id1₀ = 
+//│ 		(fun x¹ -> (id₀ x¹))
+//│ 		where
+//│ 		def id₀ = 
+//│ 			(fun k⁴ -> k⁴)
+//│ 	def id7₀ = 
+//│ 		(fun i¹ -> i¹)
+//│ 	def p₁ = 
+//│ 		[C [C [C (id7₁ [C [C (id1₁ p₁)]])]]]
+//│ 		where
+//│ 		def id1₁ = 
+//│ 			(fun x² -> (id₁ x²))
+//│ 			where
+//│ 			def id₁ = 
+//│ 				(fun k² -> k²)
+//│ 		def id7₁ = 
+//│ 			(fun i² -> i²)
+//│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C (id1₀ p₁)] --->

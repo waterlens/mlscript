@@ -1,0 +1,597 @@
+:NewParser
+:ParseOnly
+// one ctor matches to multiple dtors, or the reverse
+
+// CORRECT:
+fun f(c) = P(c(A), c(A))
+f(a => if (if a is
+  A then B) is
+    B then 0)
+//│ |#fun| |f|(|c|)| |#=| |P|(|c|(|A|)|,| |c|(|A|)|)|↵|f|(|a| |=>| |#if| |(|#if| |a| |is|→|A| |#then| |B|←|)| |is|→|B| |#then| |0|←|)|
+//│ Parsed: {fun f = c, => P (c (A,), c (A,),); f (a, => if '(' if a is ‹(A) then B›, ')' is ‹(B) then 0›,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (f^9 (fun a⁰ -> case case a⁰ of {
+//│ 	A => [B]} of {
+//│ 	B => 0}))
+//│ def f = (fun c⁰ -> [P (c⁰ [A]) (c⁰ [A])])
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^9] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀ (fun a¹ -> case case a¹ of {
+//│ 	A => [B]} of {
+//│ 	B => 0}))
+//│ def f₀ = 
+//│ 	(fun c¹ -> [P (c¹ [A]) (c¹ [A])])
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [A] --->
+//│ 	case a¹ of {A => [B]}
+//│ [A] --->
+//│ 	case a¹ of {A => [B]}
+//│ [B] --->
+//│ 	case case a¹ of {A => [B]} of {B => 0}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ (fun a¹ -> a¹))
+//│ def f₀ = 
+//│ 	(fun c¹ -> [P (c¹ 0) (c¹ 0)])
+//│ <<<<<<< after fusion <<<<<<<
+
+
+// CORRECT:
+fun f(c) = P(c(A), c(B))
+f(a => if a is
+  A then B
+  B then C)
+//│ |#fun| |f|(|c|)| |#=| |P|(|c|(|A|)|,| |c|(|B|)|)|↵|f|(|a| |=>| |#if| |a| |is|→|A| |#then| |B|↵|B| |#then| |C|←|)|
+//│ Parsed: {fun f = c, => P (c (A,), c (B,),); f (a, => if a is ‹(A) then B; (B) then C›,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (f^9 (fun a⁰ -> case a⁰ of {
+//│ 	A => [B]
+//│ 	| B => [C]}))
+//│ def f = (fun c⁰ -> [P (c⁰ [A]) (c⁰ [B])])
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^9] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀ (fun a¹ -> case a¹ of {
+//│ 	A => [B]
+//│ 	| B => [C]}))
+//│ def f₀ = 
+//│ 	(fun c¹ -> [P (c¹ [A]) (c¹ [B])])
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [A] --->
+//│ 	case a¹ of {A => [B] | B => [C]}
+//│ [B] --->
+//│ 	case a¹ of {A => [B] | B => [C]}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ (fun a¹ -> a¹))
+//│ def f₀ = 
+//│ 	(fun c¹ -> [P (c¹ [B]) (c¹ [C])])
+//│ <<<<<<< after fusion <<<<<<<
+
+// WRONG: wrong result
+fun f(c) =
+  let aa = A
+  if aa is
+    A then C
+  P(c(A), c(aa))
+f(a => if a is
+  A then B)
+//│ |#fun| |f|(|c|)| |#=|→|#let| |aa| |#=| |A|↵|#if| |aa| |is|→|A| |#then| |C|←|↵|P|(|c|(|A|)|,| |c|(|aa|)|)|←|↵|f|(|a| |=>| |#if| |a| |is|→|A| |#then| |B|←|)|
+//│ Parsed: {fun f = c, => {let aa = A; if aa is ‹(A) then C›; P (c (A,), c (aa,),)}; f (a, => if a is ‹(A) then B›,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (f^15 (fun a⁰ -> case a⁰ of {
+//│ 	A => [B]}))
+//│ def f = (fun c⁰ -> 
+//│ 	let aa⁰ = [A]
+//│ 	in case aa⁰ of {
+//│ 	A => [C]}
+//│ 	[P (c⁰ [A]) (c⁰ aa⁰)])
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^15] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀ (fun a¹ -> case a¹ of {
+//│ 	A => [B]}))
+//│ def f₀ = 
+//│ 	(fun c¹ -> 
+//│ 		let aa¹ = [A]
+//│ 		in case aa¹ of {
+//│ 		A => [C]}
+//│ 		[P (c¹ [A]) (c¹ aa¹)])
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [A] --->
+//│ 	case a¹ of {A => [B]}
+//│ 	case aa¹ of {A => [C]}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [A] --->
+//│ 	case a¹ of {A => [B]}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ (fun a¹ -> a¹))
+//│ def f₀ = 
+//│ 	(fun c¹ -> 
+//│ 		let aa¹ = [C]
+//│ 		in aa¹
+//│ 		[P (c¹ [B]) (c¹ aa¹)])
+//│ <<<<<<< after fusion <<<<<<<
+
+// WRONG: `primitive(a)` requires `a` to be of type `A` or `B`
+fun f(c) = P(c(A), c(B))
+f(a =>
+  primitive(a)
+  D(if a is
+    A then B
+    B then C))
+//│ |#fun| |f|(|c|)| |#=| |P|(|c|(|A|)|,| |c|(|B|)|)|↵|f|(|a| |=>|→|primitive|(|a|)|↵|D|(|#if| |a| |is|→|A| |#then| |B|↵|B| |#then| |C|←|)|←|)|
+//│ Parsed: {fun f = c, => P (c (A,), c (B,),); f (a, => {primitive (a,); D (if a is ‹(A) then B; (B) then C›,)},)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (f^9 (fun a⁰ -> 
+//│ 	(primitive⁰ a⁰)
+//│ 	[D case a⁰ of {
+//│ 		A => [B]
+//│ 		| B => [C]}]))
+//│ def f = (fun c⁰ -> [P (c⁰ [A]) (c⁰ [B])])
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^9] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀ (fun a¹ -> 
+//│ 	(primitive⁰ a¹)
+//│ 	[D case a¹ of {
+//│ 		A => [B]
+//│ 		| B => [C]}]))
+//│ def f₀ = 
+//│ 	(fun c¹ -> [P (c¹ [A]) (c¹ [B])])
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [A] --->
+//│ 	case a¹ of {A => [B] | B => [C]}
+//│ [B] --->
+//│ 	case a¹ of {A => [B] | B => [C]}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ (fun a¹ -> 
+//│ 	(primitive⁰ a¹)
+//│ 	[D a¹]))
+//│ def f₀ = 
+//│ 	(fun c¹ -> [P (c¹ [B]) (c¹ [C])])
+//│ <<<<<<< after fusion <<<<<<<
+
+
+// CORRECT:
+fun f(c) = P(c(A), c(B))
+f(a => if (if a is
+  A then X
+  B then Y) is
+    X then 0
+    Y then 1)
+//│ |#fun| |f|(|c|)| |#=| |P|(|c|(|A|)|,| |c|(|B|)|)|↵|f|(|a| |=>| |#if| |(|#if| |a| |is|→|A| |#then| |X|↵|B| |#then| |Y|←|)| |is|→|X| |#then| |0|↵|Y| |#then| |1|←|)|
+//│ Parsed: {fun f = c, => P (c (A,), c (B,),); f (a, => if '(' if a is ‹(A) then X; (B) then Y›, ')' is ‹(X) then 0; (Y) then 1›,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (f^9 (fun a⁰ -> case case a⁰ of {
+//│ 	A => [X]
+//│ 	| B => [Y]} of {
+//│ 	X => 0
+//│ 	| Y => 1}))
+//│ def f = (fun c⁰ -> [P (c⁰ [A]) (c⁰ [B])])
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^9] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀ (fun a¹ -> case case a¹ of {
+//│ 	A => [X]
+//│ 	| B => [Y]} of {
+//│ 	X => 0
+//│ 	| Y => 1}))
+//│ def f₀ = 
+//│ 	(fun c¹ -> [P (c¹ [A]) (c¹ [B])])
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [A] --->
+//│ 	case a¹ of {A => [X] | B => [Y]}
+//│ [B] --->
+//│ 	case a¹ of {A => [X] | B => [Y]}
+//│ [X] --->
+//│ 	case case a¹ of {A => [X] | B => [Y]} of {X => 0 | Y => 1}
+//│ [Y] --->
+//│ 	case case a¹ of {A => [X] | B => [Y]} of {X => 0 | Y => 1}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ (fun a¹ -> a¹))
+//│ def f₀ = 
+//│ 	(fun c¹ -> [P (c¹ 0) (c¹ 1)])
+//│ <<<<<<< after fusion <<<<<<<
+
+// CORRECT:
+// NOTE: as long as X or Y appears, it will do the fusion correctly
+fun f(c) = P(c(A), c(B))
+f(a => if (if a is
+  A then X
+  B then (if 1 > 2 then X else Y)) is
+    X then 0
+    Y then 1)
+//│ |#fun| |f|(|c|)| |#=| |P|(|c|(|A|)|,| |c|(|B|)|)|↵|f|(|a| |=>| |#if| |(|#if| |a| |is|→|A| |#then| |X|↵|B| |#then| |(|#if| |1| |>| |2| |#then| |X| |#else| |Y|)|←|)| |is|→|X| |#then| |0|↵|Y| |#then| |1|←|)|
+//│ Parsed: {fun f = c, => P (c (A,), c (B,),); f (a, => if '(' if a is ‹(A) then X; (B) then '(' if (> (1,) (2,)) then X else Y, ')'›, ')' is ‹(X) then 0; (Y) then 1›,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (f^9 (fun a⁰ -> case case a⁰ of {
+//│ 	A => [X]
+//│ 	| B => if (1 > 2) then [X] else [Y]} of {
+//│ 	X => 0
+//│ 	| Y => 1}))
+//│ def f = (fun c⁰ -> [P (c⁰ [A]) (c⁰ [B])])
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^9] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀ (fun a¹ -> case case a¹ of {
+//│ 	A => [X]
+//│ 	| B => if (1 > 2) then [X] else [Y]} of {
+//│ 	X => 0
+//│ 	| Y => 1}))
+//│ def f₀ = 
+//│ 	(fun c¹ -> [P (c¹ [A]) (c¹ [B])])
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [A] --->
+//│ 	case a¹ of {A => [X] | B => if (1 > 2) then [X] else [Y]}
+//│ [B] --->
+//│ 	case a¹ of {A => [X] | B => if (1 > 2) then [X] else [Y]}
+//│ [X] --->
+//│ 	case case a¹ of {A => [X] | B => if (1 > 2) then [X] else [Y]} of {X => 0 | Y => 1}
+//│ [X] --->
+//│ 	case case a¹ of {A => [X] | B => if (1 > 2) then [X] else [Y]} of {X => 0 | Y => 1}
+//│ [Y] --->
+//│ 	case case a¹ of {A => [X] | B => if (1 > 2) then [X] else [Y]} of {X => 0 | Y => 1}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ (fun a¹ -> a¹))
+//│ def f₀ = 
+//│ 	(fun c¹ -> [P (c¹ 0) (c¹ if (1 > 2) then 0 else 1)])
+//│ <<<<<<< after fusion <<<<<<<
+
+// WRONG: the outer match is "shadowed" by only one branch of the inner 
+fun f(c) = P(c(A), c(B))
+f(a => if (if a is
+  A then X
+  B then primitive) is // primitive: produce X or Y randomly
+    X then 0
+    Y then 1)
+//│ |#fun| |f|(|c|)| |#=| |P|(|c|(|A|)|,| |c|(|B|)|)|↵|f|(|a| |=>| |#if| |(|#if| |a| |is|→|A| |#then| |X|↵|B| |#then| |primitive|←|)| |is| |/* primitive: produce X or Y randomly*/|→|X| |#then| |0|↵|Y| |#then| |1|←|)|
+//│ Parsed: {fun f = c, => P (c (A,), c (B,),); f (a, => if '(' if a is ‹(A) then X; (B) then primitive›, ')' is ‹(X) then 0; (Y) then 1›,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (f^9 (fun a⁰ -> case case a⁰ of {
+//│ 	A => [X]
+//│ 	| B => primitive⁰} of {
+//│ 	X => 0
+//│ 	| Y => 1}))
+//│ def f = (fun c⁰ -> [P (c⁰ [A]) (c⁰ [B])])
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^9] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀ (fun a¹ -> case case a¹ of {
+//│ 	A => [X]
+//│ 	| B => primitive⁰} of {
+//│ 	X => 0
+//│ 	| Y => 1}))
+//│ def f₀ = 
+//│ 	(fun c¹ -> [P (c¹ [A]) (c¹ [B])])
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [A] --->
+//│ 	case a¹ of {A => [X] | B => primitive⁰}
+//│ [B] --->
+//│ 	case a¹ of {A => [X] | B => primitive⁰}
+//│ [X] --->
+//│ 	case case a¹ of {A => [X] | B => primitive⁰} of {X => 0 | Y => 1}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ (fun a¹ -> a¹))
+//│ def f₀ = 
+//│ 	(fun c¹ -> [P (c¹ 0) (c¹ primitive⁰)])
+//│ <<<<<<< after fusion <<<<<<<
+
+
+// WRONG: maybe we can try to rewrite into destructor? which is equivalent to copy the constructor
+fun f(cond) = if cond is
+    A then x => x 
+    _ then x => g(x)
+fun g(y) = if y is
+    C(y) then y
+f(A)(C(K))
+//│ |#fun| |f|(|cond|)| |#=| |#if| |cond| |is|→|A| |#then| |x| |=>| |x| |↵|_| |#then| |x| |=>| |g|(|x|)|←|↵|#fun| |g|(|y|)| |#=| |#if| |y| |is|→|C|(|y|)| |#then| |y|←|↵|f|(|A|)|(|C|(|K|)|)|
+//│ Parsed: {fun f = cond, => if cond is ‹(A) then x, => x; (_) then x, => g (x,)›; fun g = y, => if y is ‹(C (y,)) then y›; f (A,) (C (K,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ ((f^14 [A]) [C [K]])
+//│ def f = (fun cond⁰ -> case cond⁰ of {
+//│ 	A => (fun x⁰ -> x⁰)
+//│ 	| _ => (fun x¹ -> (g^4 x¹))})
+//│ def g = (fun y⁰ -> case y⁰ of {
+//│ 	C y¹ => y¹})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^14] (hopeless to continue)
+//│ 	[f^14 · g^4] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((f₀ [A]) [C [K]])
+//│ def f₀ = 
+//│ 	(fun cond¹ -> case cond¹ of {
+//│ 		A => (fun x² -> x²)
+//│ 		| _ => (fun x³ -> (g₀ x³))})
+//│ 	where
+//│ 	def g₀ = 
+//│ 		(fun y² -> case y² of {
+//│ 			C y³ => y³})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [A] --->
+//│ 	case cond¹ of {A => (fun x² -> x²) | _ => (fun x³ -> (g₀ x³))}
+//│ [C [K]] --->
+//│ 	case y² of {C y³ => y³}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((f₀ (fun x² -> x²)) 
+//│ 	let y³ = [K]
+//│ 	in y³)
+//│ def f₀ = 
+//│ 	(fun cond¹ -> cond¹)
+//│ 	where
+//│ 	def g₀ = 
+//│ 		(fun y² -> y²)
+//│ <<<<<<< after fusion <<<<<<<
+
+
+// WRONG: here, we duplicate the consumer at the current approach/lazy eval?
+// fun c(x) = if x is
+//   A then
+//     primitive(X) // some complicated operations
+//   B then
+//     primitive(Y) // some complicated operations
+// if 1 > 2 then c(A) else c(B)
+
+
+// WRONG: rewrite into consumer?
+fun f(x) = if primitive then x else g(x)
+fun g(y) = if y is
+    C(a) then a
+f(C(A))
+//│ |#fun| |f|(|x|)| |#=| |#if| |primitive| |#then| |x| |#else| |g|(|x|)|↵|#fun| |g|(|y|)| |#=| |#if| |y| |is|→|C|(|a|)| |#then| |a|←|↵|f|(|C|(|A|)|)|
+//│ Parsed: {fun f = x, => if (primitive) then x else g (x,); fun g = y, => if y is ‹(C (a,)) then a›; f (C (A,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (f^12 [C [A]])
+//│ def f = (fun x⁰ -> if primitive⁰ then x⁰ else (g^3 x⁰))
+//│ def g = (fun y⁰ -> case y⁰ of {
+//│ 	C a⁰ => a⁰})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^12] (hopeless to continue)
+//│ 	[f^12 · g^3] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀ [C [A]])
+//│ def f₀ = 
+//│ 	(fun x¹ -> if primitive⁰ then x¹ else (g₀ x¹))
+//│ 	where
+//│ 	def g₀ = 
+//│ 		(fun y¹ -> case y¹ of {
+//│ 			C a¹ => a¹})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C [A]] --->
+//│ 	case y¹ of {C a¹ => a¹}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ 
+//│ 	let a¹ = [A]
+//│ 	in a¹)
+//│ def f₀ = 
+//│ 	(fun x¹ -> if primitive⁰ then x¹ else (g₀ x¹))
+//│ 	where
+//│ 	def g₀ = 
+//│ 		(fun y¹ -> y¹)
+//│ <<<<<<< after fusion <<<<<<<
+
+// WRONG:
+fun p(x) =
+  if x == 0 then N
+  else
+    if x >= 2 then C(p(x - 1))
+    else
+      let temp = C(p(x + 1))
+      f(temp)
+      temp
+fun f(z) = if z is
+  C(b) then b
+  N then 1
+fun c(xx) = if xx is
+  C(aa) then primitive(aa)
+  N then N
+c(p(0))
+//│ |#fun| |p|(|x|)| |#=|→|#if| |x| |==| |0| |#then| |N|↵|#else|→|#if| |x| |>=| |2| |#then| |C|(|p|(|x| |-| |1|)|)|↵|#else|→|#let| |temp| |#=| |C|(|p|(|x| |+| |1|)|)|↵|f|(|temp|)|↵|temp|←|←|←|↵|#fun| |f|(|z|)| |#=| |#if| |z| |is|→|C|(|b|)| |#then| |b|↵|N| |#then| |1|←|↵|#fun| |c|(|xx|)| |#=| |#if| |xx| |is|→|C|(|aa|)| |#then| |primitive|(|aa|)|↵|N| |#then| |N|←|↵|c|(|p|(|0|)|)|
+//│ Parsed: {fun p = x, => {if (== (x,) (0,)) then N else {if (>= (x,) (2,)) then C (p (- (x,) (1,),),) else {let temp = C (p (+ (x,) (1,),),); f (temp,); temp}}}; fun f = z, => if z is ‹(C (b,)) then b; (N) then 1›; fun c = xx, => if xx is ‹(C (aa,)) then primitive (aa,); (N) then N›; c (p (0,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (c^49 (p^50 0))
+//│ def c = (fun xx⁰ -> case xx⁰ of {
+//│ 	C aa⁰ => (primitive⁰ aa⁰)
+//│ 	| N => [N]})
+//│ def f = (fun z⁰ -> case z⁰ of {
+//│ 	C b⁰ => b⁰
+//│ 	| N => 1})
+//│ def p = (fun x⁰ -> if (x⁰ == 0) then [N] else if (x⁰ >= 2) then [C (p^12 (x⁰ - 1))] else 
+//│ 	let temp⁰ = [C (p^20 (x⁰ + 1))]
+//│ 	in (f^28 temp⁰)
+//│ 	temp⁰)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [c^49] (hopeless to continue)
+//│ [p^50] (hopeless to continue)
+//│ 	[p^50 · f^28] (using original def)
+//│ 	[p^50 · p^12] ---> [p^50] (using original def)
+//│ 	[p^50 · p^20] ---> [p^50] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c₀ (p₀ 0))
+//│ def c₀ = 
+//│ 	(fun xx¹ -> case xx¹ of {
+//│ 		C aa¹ => (primitive⁰ aa¹)
+//│ 		| N => [N]})
+//│ def p₀ = 
+//│ 	(fun x¹ -> if (x¹ == 0) then [N] else if (x¹ >= 2) then [C (p₀ (x¹ - 1))] else 
+//│ 		let temp¹ = [C (p₀ (x¹ + 1))]
+//│ 		in (f₀ temp¹)
+//│ 		temp¹)
+//│ 	where
+//│ 	def f₀ = 
+//│ 		(fun z¹ -> case z¹ of {
+//│ 			C b¹ => b¹
+//│ 			| N => 1})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C (p₀ (x¹ + 1))] --->
+//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}
+//│ 	case z¹ of {C b¹ => b¹ | N => 1}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [C (p₀ (x¹ - 1))] --->
+//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}
+//│ [N] --->
+//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (c₀ (p₀ 0))
+//│ def c₀ = 
+//│ 	(fun xx¹ -> xx¹)
+//│ def p₀ = 
+//│ 	(fun x¹ -> if (x¹ == 0) then [N] else if (x¹ >= 2) then 
+//│ 		let aa¹ = (p₀ (x¹ - 1))
+//│ 		in (primitive⁰ aa¹) else 
+//│ 		let temp¹ = 	
+//│ 			let b¹ = (p₀ (x¹ + 1))
+//│ 			in b¹
+//│ 		in (f₀ temp¹)
+//│ 		temp¹)
+//│ 	where
+//│ 	def f₀ = 
+//│ 		(fun z¹ -> z¹)
+//│ <<<<<<< after fusion <<<<<<<
+
+
+// WRONG:
+fun f(xf) = if primitive then g(xf) else h(xf)
+fun g(xg) = if xg is
+    C then G
+fun h(xf) = if xf is
+    C then H
+f(C)
+//│ |#fun| |f|(|xf|)| |#=| |#if| |primitive| |#then| |g|(|xf|)| |#else| |h|(|xf|)|↵|#fun| |g|(|xg|)| |#=| |#if| |xg| |is|→|C| |#then| |G|←|↵|#fun| |h|(|xf|)| |#=| |#if| |xf| |is|→|C| |#then| |H|←|↵|f|(|C|)|
+//│ Parsed: {fun f = xf, => if (primitive) then g (xf,) else h (xf,); fun g = xg, => if xg is ‹(C) then G›; fun h = xf, => if xf is ‹(C) then H›; f (C,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (f^18 [C])
+//│ def f = (fun xf⁰ -> if primitive⁰ then (g^2 xf⁰) else (h^5 xf⁰))
+//│ def g = (fun xg⁰ -> case xg⁰ of {
+//│ 	C => [G]})
+//│ def h = (fun xf¹ -> case xf¹ of {
+//│ 	C => [H]})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^18] (hopeless to continue)
+//│ 	[f^18 · g^2] (using original def)
+//│ 	[f^18 · h^5] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀ [C])
+//│ def f₀ = 
+//│ 	(fun xf³ -> if primitive⁰ then (g₀ xf³) else (h₀ xf³))
+//│ 	where
+//│ 	def g₀ = 
+//│ 		(fun xg¹ -> case xg¹ of {
+//│ 			C => [G]})
+//│ 	def h₀ = 
+//│ 		(fun xf² -> case xf² of {
+//│ 			C => [H]})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C] --->
+//│ 	case xf² of {C => [H]}
+//│ 	case xg¹ of {C => [G]}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ [G])
+//│ def f₀ = 
+//│ 	(fun xf³ -> if primitive⁰ then (g₀ xf³) else (h₀ xf³))
+//│ 	where
+//│ 	def g₀ = 
+//│ 		(fun xg¹ -> xg¹)
+//│ 	def h₀ = 
+//│ 		(fun xf² -> case xf² of {
+//│ 			C => [H]})
+//│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: type error G <: Destruct(C)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1(Deforest.scala:431)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$1(Deforest.scala:352)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$adapted$1(Deforest.scala:352)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1(Deforest.scala:352)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1$$anonfun$7(Deforest.scala:408)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
+//│ 	at: scala.collection.immutable.List.foreach(List.scala:333)

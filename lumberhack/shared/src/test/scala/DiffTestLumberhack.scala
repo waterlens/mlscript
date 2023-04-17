@@ -96,7 +96,7 @@ class DiffTestLumberhack extends DiffTests {
       }
 
       val (newProg, newd) = originalProgram.expandedWithNewDeforest(callTree)
-      if mode.stdout || mode.verbose then {
+      if mode.stdout || mode.verbose || true then {
         output("\n>>>>>>> expanded program >>>>>>>")
         output(newProg.pp(callTree)(using InitPpConfig.multilineOn.showIuidOn))
         output("<<<<<<< expanded program <<<<<<<")
@@ -126,6 +126,13 @@ class DiffTestLumberhack extends DiffTests {
       val prgmAfterFusion = newProg.rewrite(newd.fusionMatch.toMap, newd)
       output(prgmAfterFusion.pp(callTree)(using InitPpConfig.multilineOn.showIuidOn))
       output("<<<<<<< after fusion <<<<<<<")
+
+
+
+
+      val finalD = Deforest(false)
+      finalD(prgmAfterFusion)
+      finalD.resolveConstraints
 
       // output("\n>>>>>>> new type variable bounds >>>>>>>")
       // val newtvs = newd.upperBounds.keySet ++ d.lowerBounds.keySet

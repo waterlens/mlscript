@@ -31,6 +31,28 @@ count(0, rev(N, N))
 //│ 		[rev^30 · rev^16 · rev^16] ---> [rev^30 · rev^16] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((count₀ 0) ((rev₀ [N]) [N]))
+//│ def count₀ = 
+//│ 	(fun c² -> (fun xs² -> case xs² of {
+//│ 		C h² t² => ((count₁ ((add⁰ c²) 1)) t²)
+//│ 		| N => c²}))
+//│ 	where
+//│ 	def count₁ = 
+//│ 		(fun c¹ -> (fun xs¹ -> case xs¹ of {
+//│ 			C h¹ t¹ => ((count₁ ((add⁰ c¹) 1)) t¹)
+//│ 			| N => c¹}))
+//│ def rev₀ = 
+//│ 	(fun a¹ -> (fun ys¹ -> case ys¹ of {
+//│ 		C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹)
+//│ 		| N => a¹}))
+//│ 	where
+//│ 	def rev₁ = 
+//│ 		(fun a² -> (fun ys² -> case ys² of {
+//│ 			C h1² t1² => ((rev₁ [C h1² a²]) t1²)
+//│ 			| N => a²}))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C h1² a²] --->
 //│ 	case xs² of {C h² t² => ((count₁ ((add⁰ c²) 1)) t²) | N => c²}
@@ -66,6 +88,17 @@ count(0, rev(N, N))
 //│ 				in ((count₁ ((add⁰ c²) 1)) t²)) t1²)
 //│ 			| N => a²}))
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,c,1)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Ctx.apply$$anonfun$1(Deforest.scala:200)
+//│ 	at: scala.collection.immutable.Map$Map4.getOrElse(Map.scala:530)
+//│ 	at: mlscript.lumberhack.Ctx.apply(Deforest.scala:200)
+//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:274)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
+//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
+//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:277)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
+//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
 
 
 // Fusablified program:
@@ -99,6 +132,30 @@ count(rev(N, init))(0)
 //│ 	[rev^30 · rev^17]
 //│ 		[rev^30 · rev^17 · rev^17] ---> [rev^30 · rev^17] (only one)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((count₀ ((rev₀ [N]) init₀)) 0)
+//│ def count₀ = 
+//│ 	(fun xs² -> case xs² of {
+//│ 		C h² t² => (fun c⁴ -> ((count₁ t²) ((add⁰ c⁴) 1)))
+//│ 		| N => (fun c⁵ -> c⁵)})
+//│ 	where
+//│ 	def count₁ = 
+//│ 		(fun xs¹ -> case xs¹ of {
+//│ 			C h¹ t¹ => (fun c² -> ((count₁ t¹) ((add⁰ c²) 1)))
+//│ 			| N => (fun c³ -> c³)})
+//│ def init₀ = 
+//│ 	[N]
+//│ def rev₀ = 
+//│ 	(fun a¹ -> (fun ys¹ -> case ys¹ of {
+//│ 		C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹)
+//│ 		| N => a¹}))
+//│ 	where
+//│ 	def rev₁ = 
+//│ 		(fun a² -> (fun ys² -> case ys² of {
+//│ 			C h1² t1² => ((rev₁ [C h1² a²]) t1²)
+//│ 			| N => a²}))
+//│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C h1² a²] --->
@@ -137,6 +194,17 @@ count(rev(N, init))(0)
 //│ 				in (fun c⁴ -> ((count₁ t²) ((add⁰ c⁴) 1)))) t1²)
 //│ 			| N => a²}))
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,a,1)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Ctx.apply$$anonfun$1(Deforest.scala:200)
+//│ 	at: scala.collection.immutable.HashMap.getOrElse(HashMap.scala:683)
+//│ 	at: mlscript.lumberhack.Ctx.apply(Deforest.scala:200)
+//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:274)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
+//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
+//│ 	at: mlscript.lumberhack.Deforest.apply$$anonfun$2$$anonfun$1(Deforest.scala:326)
+//│ 	at: scala.collection.immutable.List.map(List.scala:250)
+//│ 	at: mlscript.lumberhack.Deforest.apply$$anonfun$2(Deforest.scala:336)
 
 
 // FIXME
@@ -168,6 +236,28 @@ idxSum(0, rev(N, N))
 //│ 	[rev^34 · rev^20]
 //│ 		[rev^34 · rev^20 · rev^20] ---> [rev^34 · rev^20] (only one)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((idxSum₀ 0) ((rev₀ [N]) [N]))
+//│ def idxSum₀ = 
+//│ 	(fun i² -> (fun xs² -> case xs² of {
+//│ 		C h² t² => ((add⁰ i²) ((idxSum₁ ((add⁰ i²) 1)) t²))
+//│ 		| N => 0}))
+//│ 	where
+//│ 	def idxSum₁ = 
+//│ 		(fun i¹ -> (fun xs¹ -> case xs¹ of {
+//│ 			C h¹ t¹ => ((add⁰ i¹) ((idxSum₁ ((add⁰ i¹) 1)) t¹))
+//│ 			| N => 0}))
+//│ def rev₀ = 
+//│ 	(fun a¹ -> (fun ys¹ -> case ys¹ of {
+//│ 		C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹)
+//│ 		| N => a¹}))
+//│ 	where
+//│ 	def rev₁ = 
+//│ 		(fun a² -> (fun ys² -> case ys² of {
+//│ 			C h1² t1² => ((rev₁ [C h1² a²]) t1²)
+//│ 			| N => a²}))
+//│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C h1² a²] --->
@@ -204,6 +294,7 @@ idxSum(0, rev(N, N))
 //│ 				in ((add⁰ i²) ((idxSum₁ ((add⁰ i²) 1)) t²))) t1²)
 //│ 			| N => a²}))
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,a,1)
 
 
 
@@ -238,6 +329,30 @@ count(rev(N, init))
 //│ 	[rev^26 · rev^13]
 //│ 		[rev^26 · rev^13 · rev^13] ---> [rev^26 · rev^13] (only one)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (count₀ ((rev₀ [N]) init₀))
+//│ def count₀ = 
+//│ 	(fun xs¹ -> case xs¹ of {
+//│ 		C h¹ t¹ => ((add⁰ 1) (count₁ t¹))
+//│ 		| N => 0})
+//│ 	where
+//│ 	def count₁ = 
+//│ 		(fun xs² -> case xs² of {
+//│ 			C h² t² => ((add⁰ 1) (count₁ t²))
+//│ 			| N => 0})
+//│ def init₀ = 
+//│ 	[N]
+//│ def rev₀ = 
+//│ 	(fun a² -> (fun ys² -> case ys² of {
+//│ 		C h1² t1² => ((rev₁ [C h1² a²]) t1²)
+//│ 		| N => a²}))
+//│ 	where
+//│ 	def rev₁ = 
+//│ 		(fun a¹ -> (fun ys¹ -> case ys¹ of {
+//│ 			C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹)
+//│ 			| N => a¹}))
+//│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C h1¹ a¹] --->
@@ -278,6 +393,17 @@ count(rev(N, init))
 //│ 				in ((add⁰ 1) (count₁ t¹))) t1¹)
 //│ 			| N => a¹}))
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,a,2)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Ctx.apply$$anonfun$1(Deforest.scala:200)
+//│ 	at: scala.collection.immutable.HashMap.getOrElse(HashMap.scala:683)
+//│ 	at: mlscript.lumberhack.Ctx.apply(Deforest.scala:200)
+//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:274)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
+//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
+//│ 	at: mlscript.lumberhack.Deforest.apply$$anonfun$2$$anonfun$1(Deforest.scala:326)
+//│ 	at: scala.collection.immutable.List.map(List.scala:250)
+//│ 	at: mlscript.lumberhack.Deforest.apply$$anonfun$2(Deforest.scala:336)
 
 
 fun rev(a, ys) = if ys is
@@ -304,6 +430,24 @@ rev(N, init)
 //│ 		[rev^16 · rev^2 · rev^2] ---> [rev^16 · rev^2] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((rev₀ [N]) init₀)
+//│ def init₀ = 
+//│ 	[C 0 init₁]
+//│ 	where
+//│ 	def init₁ = 
+//│ 		[C 0 init₁]
+//│ def rev₀ = 
+//│ 	(fun a² -> (fun ys² -> case ys² of {
+//│ 		C h1² t1² => ((rev₁ [C h1² a²]) t1²)
+//│ 		| N => a²}))
+//│ 	where
+//│ 	def rev₁ = 
+//│ 		(fun a¹ -> (fun ys¹ -> case ys¹ of {
+//│ 			C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹)
+//│ 			| N => a¹}))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 0 init₁] --->
 //│ 	case ys² of {C h1² t1² => ((rev₁ [C h1² a²]) t1²) | N => a²}
@@ -328,6 +472,17 @@ rev(N, init)
 //│ 	def rev₁ = 
 //│ 		(fun a¹ -> (fun ys¹ -> ys¹))
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,a,1)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Ctx.apply$$anonfun$1(Deforest.scala:200)
+//│ 	at: scala.collection.immutable.HashMap.getOrElse(HashMap.scala:678)
+//│ 	at: mlscript.lumberhack.Ctx.apply(Deforest.scala:200)
+//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:274)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
+//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
+//│ 	at: mlscript.lumberhack.Deforest.$anonfun$1(Deforest.scala:282)
+//│ 	at: scala.collection.immutable.List.map(List.scala:250)
+//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:282)
 
 fun rev(a, ys) = if ys is
     C(h1, t1) then rev(C(h1, a), t1)
@@ -350,6 +505,22 @@ rev(N, init)
 //│ 	[rev^15 · rev^2]
 //│ 		[rev^15 · rev^2 · rev^2] ---> [rev^15 · rev^2] (only one)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((rev₀ [N]) init₀)
+//│ def init₀ = 
+//│ 	[C 0 init₁]
+//│ 	where
+//│ 	def init₁ = 
+//│ 		[C 0 init₁]
+//│ def rev₀ = 
+//│ 	(fun a¹ -> (fun ys¹ -> case ys¹ of {
+//│ 		C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹)}))
+//│ 	where
+//│ 	def rev₁ = 
+//│ 		(fun a² -> (fun ys² -> case ys² of {
+//│ 			C h1² t1² => ((rev₁ [C h1² a²]) t1²)}))
+//│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 0 init₁] --->
@@ -375,6 +546,17 @@ rev(N, init)
 //│ 	def rev₁ = 
 //│ 		(fun a² -> (fun ys² -> ys²))
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,a,2)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Ctx.apply$$anonfun$1(Deforest.scala:200)
+//│ 	at: scala.collection.immutable.HashMap.getOrElse(HashMap.scala:678)
+//│ 	at: mlscript.lumberhack.Ctx.apply(Deforest.scala:200)
+//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:274)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
+//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
+//│ 	at: mlscript.lumberhack.Deforest.$anonfun$1(Deforest.scala:282)
+//│ 	at: scala.collection.immutable.List.map(List.scala:250)
+//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:282)
 
 fun c(x) = if x is
     C(a) then c(a)
@@ -390,6 +572,11 @@ fun c(x) = if x is
 //│ >>>>>>> expansion >>>>>>>
 //│ 
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ 
+//│ 
+//│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ 
@@ -437,6 +624,30 @@ rev(rev2, init)(1, init2)
 //│ 		[rev^27 · rev^2 · rev^2] ---> [rev^27 · rev^2] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((((rev₀ rev2₀) init₀) 1) init2₀)
+//│ def init2₀ = 
+//│ 	[C 0 init2₀]
+//│ def init₀ = 
+//│ 	[C 0 init₁]
+//│ 	where
+//│ 	def init₁ = 
+//│ 		[C 0 init₁]
+//│ def rev2₀ = 
+//│ 	(fun a2¹ -> (fun ys2¹ -> case ys2¹ of {
+//│ 		C h12¹ t12¹ => ((rev2₀ a2¹) t12¹)
+//│ 		| N => a2¹}))
+//│ def rev₀ = 
+//│ 	(fun a¹ -> (fun ys¹ -> case ys¹ of {
+//│ 		C h1¹ t1¹ => ((rev₁ a¹) t1¹)
+//│ 		| N => a¹}))
+//│ 	where
+//│ 	def rev₁ = 
+//│ 		(fun a² -> (fun ys² -> case ys² of {
+//│ 			C h1² t1² => ((rev₁ a²) t1²)
+//│ 			| N => a²}))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 0 init2₀] --->
 //│ 	case ys2¹ of {C h12¹ t12¹ => ((rev2₀ a2¹) t12¹) | N => a2¹}
@@ -469,3 +680,14 @@ rev(rev2, init)(1, init2)
 //│ 	def rev₁ = 
 //│ 		(fun a² -> (fun ys² -> ys²))
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,a,1)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Ctx.apply$$anonfun$1(Deforest.scala:200)
+//│ 	at: scala.collection.immutable.HashMap.getOrElse(HashMap.scala:678)
+//│ 	at: mlscript.lumberhack.Ctx.apply(Deforest.scala:200)
+//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:274)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
+//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
+//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:277)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
+//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)

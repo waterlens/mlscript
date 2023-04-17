@@ -40,6 +40,24 @@ c(p(0))
 //│ 	[p^50 · p^20] ---> [p^50] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c₀ (p₀ 0))
+//│ def c₀ = 
+//│ 	(fun xx¹ -> case xx¹ of {
+//│ 		C aa¹ => (primitive⁰ aa¹)
+//│ 		| N => [N]})
+//│ def p₀ = 
+//│ 	(fun x¹ -> if (x¹ == 0) then [N] else if (x¹ >= 2) then [C (p₀ (x¹ - 1))] else 
+//│ 		let temp¹ = [C (p₀ (x¹ + 1))]
+//│ 		in (f₀ temp¹)
+//│ 		temp¹)
+//│ 	where
+//│ 	def f₀ = 
+//│ 		(fun z¹ -> case z¹ of {
+//│ 			C b¹ => b¹
+//│ 			| N => 1})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C (p₀ (x¹ + 1))] --->
 //│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}
@@ -68,4 +86,98 @@ c(p(0))
 //│ 	def f₀ = 
 //│ 		(fun z¹ -> z¹)
 //│ <<<<<<< after fusion <<<<<<<
+
+fun last(ls) = if ls is
+  C(h, t) then if t is
+    C(hh, tt) then Some(last(t))
+    N then Some(h)
+  N then None
+last(C(A, C(B, N)))
+//│ |#fun| |last|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |t| |is|→|C|(|hh|,| |tt|)| |#then| |Some|(|last|(|t|)|)|↵|N| |#then| |Some|(|h|)|←|↵|N| |#then| |None|←|↵|last|(|C|(|A|,| |C|(|B|,| |N|)|)|)|
+//│ Parsed: {fun last = ls, => if ls is ‹(C (h, t,)) then if t is ‹(C (hh, tt,)) then Some (last (t,),); (N) then Some (h,)›; (N) then None›; last (C (A, C (B, N,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (last^13 [C [A] [C [B] [N]]])
+//│ def last = (fun ls⁰ -> case ls⁰ of {
+//│ 	C h⁰ t⁰ => case t⁰ of {
+//│ 		C hh⁰ tt⁰ => [Some (last^3 t⁰)]
+//│ 		| N => [Some h⁰]}
+//│ 	| N => [None]})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [last^13]
+//│ 	[last^13 · last^3]
+//│ 		[last^13 · last^3 · last^3]
+//│ 			[last^13 · last^3 · last^3 · last^3] ---> [last^13 · last^3 · last^3] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (last₀ [C [A] [C [B] [N]]])
+//│ def last₀ = 
+//│ 	(fun ls¹ -> case ls¹ of {
+//│ 		C h¹ t¹ => case t¹ of {
+//│ 			C hh¹ tt¹ => [Some (last₁ t¹)]
+//│ 			| N => [Some h¹]}
+//│ 		| N => [None]})
+//│ 	where
+//│ 	def last₁ = 
+//│ 		(fun ls² -> case ls² of {
+//│ 			C h² t² => case t² of {
+//│ 				C hh² tt² => [Some (last₂ t²)]
+//│ 				| N => [Some h²]}
+//│ 			| N => [None]})
+//│ 		where
+//│ 		def last₂ = 
+//│ 			(fun ls³ -> case ls³ of {
+//│ 				C h³ t³ => case t³ of {
+//│ 					C hh³ tt³ => [Some (last₂ t³)]
+//│ 					| N => [Some h³]}
+//│ 				| N => [None]})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C [A] [C [B] [N]]] --->
+//│ 	case ls¹ of {C h¹ t¹ => case t¹ of {C hh¹ tt¹ => [Some (last₁ t¹)] | N => [Some h¹]} | N => [None]}
+//│ [C [B] [N]] --->
+//│ 	case ls² of {C h² t² => case t² of {C hh² tt² => [Some (last₂ t²)] | N => [Some h²]} | N => [None]}
+//│ 	case t¹ of {C hh¹ tt¹ => [Some (last₁ t¹)] | N => [Some h¹]}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [N] --->
+//│ 	case ls³ of {C h³ t³ => case t³ of {C hh³ tt³ => [Some (last₂ t³)] | N => [Some h³]} | N => [None]}
+//│ 	case t² of {C hh² tt² => [Some (last₂ t²)] | N => [Some h²]}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (last₀ 
+//│ 	let h¹ = [A]
+//│ 	in let t¹ = 	
+//│ 		let h² = [B]
+//│ 		in let t² = [None]
+//│ 		in case t² of {
+//│ 			C hh² tt² => [Some (last₂ t²)]
+//│ 			| N => [Some h²]}
+//│ 	in case t¹ of {
+//│ 		C hh¹ tt¹ => [Some (last₁ t¹)]
+//│ 		| N => [Some h¹]})
+//│ def last₀ = 
+//│ 	(fun ls¹ -> ls¹)
+//│ 	where
+//│ 	def last₁ = 
+//│ 		(fun ls² -> ls²)
+//│ 		where
+//│ 		def last₂ = 
+//│ 			(fun ls³ -> ls³)
+//│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: type error Some('h²) <: Destruct(C('hh¹, 'tt¹), N)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1(Deforest.scala:431)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$1(Deforest.scala:352)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$adapted$1(Deforest.scala:352)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1(Deforest.scala:352)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1$$anonfun$7(Deforest.scala:408)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
+//│ 	at: scala.collection.immutable.List.foreach(List.scala:333)
 

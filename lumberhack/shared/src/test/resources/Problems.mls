@@ -23,6 +23,15 @@ c(p)
 //│ 	[p^9 · p^1] ---> [p^9] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c₀ p₀)
+//│ def c₀ = 
+//│ 	(fun x¹ -> case [C x¹] of {
+//│ 		C a¹ => a¹})
+//│ def p₀ = 
+//│ 	[C p₀]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C x¹] --->
 //│ 	case [C x¹] of {C a¹ => a¹}
@@ -60,6 +69,15 @@ c(p)
 //│ [p^13] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c₀ p₀)
+//│ def c₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		Pair a¹ b¹ => (c₀ [Pair b¹ a¹])})
+//│ def p₀ = 
+//│ 	[Pair [A] [B]]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [Pair [A] [B]] --->
 //│ 	case x¹ of {Pair a¹ b¹ => (c₀ [Pair b¹ a¹])}
@@ -96,6 +114,16 @@ c(p)
 //│ [p^14] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c₀ p₀)
+//│ def c₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		N => 0
+//│ 		| Wrap a¹ => (c₀ [Wrap (primitive⁰ a¹)])})
+//│ def p₀ = 
+//│ 	[Wrap 3]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [Wrap (primitive⁰ a¹)] --->
 //│ 	case x¹ of {N => 0 | Wrap a¹ => (c₀ [Wrap (primitive⁰ a¹)])}
@@ -125,6 +153,14 @@ c(0)
 //│ [c^12] (hopeless to continue)
 //│ 	[c^12 · c^5] ---> [c^12] (using original def)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c₀ 0)
+//│ def c₀ = 
+//│ 	(fun x¹ -> case (primitive⁰ x¹) of {
+//│ 		True => 0
+//│ 		| False => (c₀ (primitive⁰ x¹))})
+//│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ 
@@ -174,6 +210,36 @@ map(ff, l)
 //│ 				[map^28 · map^5 · map^5 · map^5 · map^5] ---> [map^28 · map^5 · map^5 · map^5] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((map₀ ff₀) l₀)
+//│ def ff₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		K => [T]
+//│ 		| KK => [TT]
+//│ 		| KKKK => [TTTT]})
+//│ def l₀ = 
+//│ 	[C [K] [C [KK] [C [KKKK] [N]]]]
+//│ def map₀ = 
+//│ 	(fun f⁴ -> (fun ls⁴ -> case ls⁴ of {
+//│ 		C h⁴ t⁴ => [C (f⁴ h⁴) ((map₁ f⁴) t⁴)]
+//│ 		| N => [N]}))
+//│ 	where
+//│ 	def map₁ = 
+//│ 		(fun f³ -> (fun ls³ -> case ls³ of {
+//│ 			C h³ t³ => [C (f³ h³) ((map₂ f³) t³)]
+//│ 			| N => [N]}))
+//│ 		where
+//│ 		def map₂ = 
+//│ 			(fun f¹ -> (fun ls¹ -> case ls¹ of {
+//│ 				C h¹ t¹ => [C (f¹ h¹) ((map₃ f¹) t¹)]
+//│ 				| N => [N]}))
+//│ 			where
+//│ 			def map₃ = 
+//│ 				(fun f² -> (fun ls² -> case ls² of {
+//│ 					C h² t² => [C (f² h²) ((map₃ f²) t²)]
+//│ 					| N => [N]}))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C [KKKK] [N]] --->
 //│ 	case ls¹ of {C h¹ t¹ => [C (f¹ h¹) ((map₃ f¹) t¹)] | N => [N]}
@@ -218,7 +284,7 @@ map(ff, l)
 //│ 				(fun f² -> (fun ls² -> ls²))
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: expect to fail but pass
+//│ java.lang.Exception: Internal Error: binding not found: Ident(false,f,1)
 //│ !!!!!!ERROR!!!!!!
 
 
@@ -251,6 +317,32 @@ last(p)
 //│ 			[last^17 · last^5 · last^5 · last^5] ---> [last^17 · last^5 · last^5] (only one)
 //│ [p^18]
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (last₀ p₀)
+//│ def last₀ = 
+//│ 	(fun ls³ -> case ls³ of {
+//│ 		C h³ t³ => case t³ of {
+//│ 			N => [Some h³]
+//│ 			| C hh³ tt³ => (last₁ t³)}
+//│ 		| N => [None]})
+//│ 	where
+//│ 	def last₁ = 
+//│ 		(fun ls¹ -> case ls¹ of {
+//│ 			C h¹ t¹ => case t¹ of {
+//│ 				N => [Some h¹]
+//│ 				| C hh¹ tt¹ => (last₂ t¹)}
+//│ 			| N => [None]})
+//│ 		where
+//│ 		def last₂ = 
+//│ 			(fun ls² -> case ls² of {
+//│ 				C h² t² => case t² of {
+//│ 					N => [Some h²]
+//│ 					| C hh² tt² => (last₂ t²)}
+//│ 				| N => [None]})
+//│ def p₀ = 
+//│ 	[C 1 [C 2 [N]]]
+//│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 1 [C 2 [N]]] --->
@@ -288,77 +380,118 @@ last(p)
 //│ 		| C hh³ tt³ => (last₁ t³)}
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: expect to fail but pass
+//│ java.lang.Exception: Internal Error: type error Some('h¹) <: Destruct(N, C('hh³, 'tt³))
 //│ !!!!!!ERROR!!!!!!
 
 _LUMBERHACK_ERROR
-let add = primitive
 fun idxSum(ls) = if ls is
     N then acc => 0
-    C(h, t) then acc => add(acc, idxSum(t)(add(acc, 1)))
-fun rev(lss, a) = if lss is
-    N then a
-    C(hh, tt) then rev(tt, C(hh, a))
-idxSum(rev(primitive, N))(0)
-//│ |_LUMBERHACK_ERROR|↵|#let| |add| |#=| |primitive|↵|#fun| |idxSum|(|ls|)| |#=| |#if| |ls| |is|→|N| |#then| |acc| |=>| |0|↵|C|(|h|,| |t|)| |#then| |acc| |=>| |add|(|acc|,| |idxSum|(|t|)|(|add|(|acc|,| |1|)|)|)|←|↵|#fun| |rev|(|lss|,| |a|)| |#=| |#if| |lss| |is|→|N| |#then| |a|↵|C|(|hh|,| |tt|)| |#then| |rev|(|tt|,| |C|(|hh|,| |a|)|)|←|↵|idxSum|(|rev|(|primitive|,| |N|)|)|(|0|)|
-//│ Parsed: {_LUMBERHACK_ERROR; let add = primitive; fun idxSum = ls, => if ls is ‹(N) then acc, => 0; (C (h, t,)) then acc, => add (acc, idxSum (t,) (add (acc, 1,),),)›; fun rev = lss, a, => if lss is ‹(N) then a; (C (hh, tt,)) then rev (tt, C (hh, a,),)›; idxSum (rev (primitive, N,),) (0,)}
+    C(h, t) then acc => acc + idxSum(t)(acc + 1)
+fun rev(lss) = if lss is
+    N then a => a
+    C(hh, tt) then a => rev(tt, C(hh, a))
+idxSum(rev(C(1, C(2, N)))(N))(0)
+//│ |_LUMBERHACK_ERROR|↵|#fun| |idxSum|(|ls|)| |#=| |#if| |ls| |is|→|N| |#then| |acc| |=>| |0|↵|C|(|h|,| |t|)| |#then| |acc| |=>| |acc| |+| |idxSum|(|t|)|(|acc| |+| |1|)|←|↵|#fun| |rev|(|lss|)| |#=| |#if| |lss| |is|→|N| |#then| |a| |=>| |a|↵|C|(|hh|,| |tt|)| |#then| |a| |=>| |rev|(|tt|,| |C|(|hh|,| |a|)|)|←|↵|idxSum|(|rev|(|C|(|1|,| |C|(|2|,| |N|)|)|)|(|N|)|)|(|0|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun idxSum = ls, => if ls is ‹(N) then acc, => 0; (C (h, t,)) then acc, => + (acc,) (idxSum (t,) (+ (acc,) (1,),),)›; fun rev = lss, => if lss is ‹(N) then a, => a; (C (hh, tt,)) then a, => rev (tt, C (hh, a,),)›; idxSum (rev (C (1, C (2, N,),),) (N,),) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ ((idxSum^33 ((rev^34 primitive⁰) [N])) 0)
-//│ def add = primitive⁰
+//│ ((idxSum^33 ((rev^34 [C 1 [C 2 [N]]]) [N])) 0)
 //│ def idxSum = (fun ls⁰ -> case ls⁰ of {
 //│ 	N => (fun acc⁰ -> 0)
-//│ 	| C h⁰ t⁰ => (fun acc¹ -> ((add^5 acc¹) ((idxSum^8 t⁰) ((add^11 acc¹) 1))))})
-//│ def rev = (fun lss⁰ -> (fun a⁰ -> case lss⁰ of {
-//│ 	N => a⁰
-//│ 	| C hh⁰ tt⁰ => ((rev^23 tt⁰) [C hh⁰ a⁰])}))
+//│ 	| C h⁰ t⁰ => (fun acc¹ -> (acc¹ + ((idxSum^7 t⁰) (acc¹ + 1))))})
+//│ def rev = (fun lss⁰ -> case lss⁰ of {
+//│ 	N => (fun a⁰ -> a⁰)
+//│ 	| C hh⁰ tt⁰ => (fun a¹ -> ((rev^23 tt⁰) [C hh⁰ a¹]))})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [idxSum^33]
-//│ 	[idxSum^33 · idxSum^8]
-//│ 		[idxSum^33 · idxSum^8 · idxSum^8] ---> [idxSum^33 · idxSum^8] (only one)
+//│ 	[idxSum^33 · idxSum^7]
+//│ 		[idxSum^33 · idxSum^7 · idxSum^7] ---> [idxSum^33 · idxSum^7] (only one)
 //│ [rev^34]
 //│ 	[rev^34 · rev^23]
-//│ 		[rev^34 · rev^23 · rev^23] ---> [rev^34 · rev^23] (only one)
+//│ 		[rev^34 · rev^23 · rev^23]
+//│ 			[rev^34 · rev^23 · rev^23 · rev^23] ---> [rev^34 · rev^23 · rev^23] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((idxSum₀ ((rev₀ [C 1 [C 2 [N]]]) [N])) 0)
+//│ def idxSum₀ = 
+//│ 	(fun ls² -> case ls² of {
+//│ 		N => (fun acc⁴ -> 0)
+//│ 		| C h² t² => (fun acc⁵ -> (acc⁵ + ((idxSum₁ t²) (acc⁵ + 1))))})
+//│ 	where
+//│ 	def idxSum₁ = 
+//│ 		(fun ls¹ -> case ls¹ of {
+//│ 			N => (fun acc² -> 0)
+//│ 			| C h¹ t¹ => (fun acc³ -> (acc³ + ((idxSum₁ t¹) (acc³ + 1))))})
+//│ def rev₀ = 
+//│ 	(fun lss¹ -> case lss¹ of {
+//│ 		N => (fun a² -> a²)
+//│ 		| C hh¹ tt¹ => (fun a³ -> ((rev₁ tt¹) [C hh¹ a³]))})
+//│ 	where
+//│ 	def rev₁ = 
+//│ 		(fun lss³ -> case lss³ of {
+//│ 			N => (fun a⁶ -> a⁶)
+//│ 			| C hh³ tt³ => (fun a⁷ -> ((rev₂ tt³) [C hh³ a⁷]))})
+//│ 		where
+//│ 		def rev₂ = 
+//│ 			(fun lss² -> case lss² of {
+//│ 				N => (fun a⁴ -> a⁴)
+//│ 				| C hh² tt² => (fun a⁵ -> ((rev₂ tt²) [C hh² a⁵]))})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C hh² a²] --->
-//│ 	case ls¹ of {N => (fun acc² -> 0) | C h¹ t¹ => (fun acc³ -> ((add acc³) ((idxSum₁ t¹) ((add acc³) 1))))}
-//│ 	case ls² of {N => (fun acc⁴ -> 0) | C h² t² => (fun acc⁵ -> ((add acc⁵) ((idxSum₁ t²) ((add acc⁵) 1))))}
+//│ [C 1 [C 2 [N]]] --->
+//│ 	case lss¹ of {N => (fun a² -> a²) | C hh¹ tt¹ => (fun a³ -> ((rev₁ tt¹) [C hh¹ a³]))}
+//│ [C 2 [N]] --->
+//│ 	case lss³ of {N => (fun a⁶ -> a⁶) | C hh³ tt³ => (fun a⁷ -> ((rev₂ tt³) [C hh³ a⁷]))}
+//│ [C hh³ a⁷] --->
+//│ 	case ls² of {N => (fun acc⁴ -> 0) | C h² t² => (fun acc⁵ -> (acc⁵ + ((idxSum₁ t²) (acc⁵ + 1))))}
+//│ 	case ls¹ of {N => (fun acc² -> 0) | C h¹ t¹ => (fun acc³ -> (acc³ + ((idxSum₁ t¹) (acc³ + 1))))}
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [C hh¹ a¹] --->
-//│ 	case ls² of {N => (fun acc⁴ -> 0) | C h² t² => (fun acc⁵ -> ((add acc⁵) ((idxSum₁ t²) ((add acc⁵) 1))))}
-//│ 	case ls¹ of {N => (fun acc² -> 0) | C h¹ t¹ => (fun acc³ -> ((add acc³) ((idxSum₁ t¹) ((add acc³) 1))))}
+//│ [C hh² a⁵] --->
+//│ 	case ls² of {N => (fun acc⁴ -> 0) | C h² t² => (fun acc⁵ -> (acc⁵ + ((idxSum₁ t²) (acc⁵ + 1))))}
+//│ 	case ls¹ of {N => (fun acc² -> 0) | C h¹ t¹ => (fun acc³ -> (acc³ + ((idxSum₁ t¹) (acc³ + 1))))}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [C hh¹ a³] --->
+//│ 	case ls¹ of {N => (fun acc² -> 0) | C h¹ t¹ => (fun acc³ -> (acc³ + ((idxSum₁ t¹) (acc³ + 1))))}
+//│ 	case ls² of {N => (fun acc⁴ -> 0) | C h² t² => (fun acc⁵ -> (acc⁵ + ((idxSum₁ t²) (acc⁵ + 1))))}
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ [N] --->
-//│ 	case ls¹ of {N => (fun acc² -> 0) | C h¹ t¹ => (fun acc³ -> ((add acc³) ((idxSum₁ t¹) ((add acc³) 1))))}
-//│ 	case ls² of {N => (fun acc⁴ -> 0) | C h² t² => (fun acc⁵ -> ((add acc⁵) ((idxSum₁ t²) ((add acc⁵) 1))))}
+//│ 	case ls² of {N => (fun acc⁴ -> 0) | C h² t² => (fun acc⁵ -> (acc⁵ + ((idxSum₁ t²) (acc⁵ + 1))))}
+//│ 	case ls¹ of {N => (fun acc² -> 0) | C h¹ t¹ => (fun acc³ -> (acc³ + ((idxSum₁ t¹) (acc³ + 1))))}
 //│ 	 MORE THAN ONE MATCH EXPR
+//│ [N] --->
+//│ 	case lss² of {N => (fun a⁴ -> a⁴) | C hh² tt² => (fun a⁵ -> ((rev₂ tt²) [C hh² a⁵]))}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((idxSum₀ ((rev₀ primitive⁰) (fun acc² -> 0))) 0)
+//│ ((idxSum₀ ((rev₀ 
+//│ 	let hh¹ = 1
+//│ 	in let tt¹ = 	
+//│ 		let hh³ = 2
+//│ 		in let tt³ = (fun a⁴ -> a⁴)
+//│ 		in (fun a⁷ -> ((rev₂ tt³) 
+//│ 			let h² = hh³
+//│ 			in let t² = a⁷
+//│ 			in (fun acc⁵ -> (acc⁵ + ((idxSum₁ t²) (acc⁵ + 1))))))
+//│ 	in (fun a³ -> ((rev₁ tt¹) 
+//│ 		let h¹ = hh¹
+//│ 		in let t¹ = a³
+//│ 		in (fun acc³ -> (acc³ + ((idxSum₁ t¹) (acc³ + 1))))))) (fun acc⁴ -> 0))) 0)
 //│ def idxSum₀ = 
-//│ 	(fun ls¹ -> ls¹)
+//│ 	(fun ls² -> ls²)
 //│ 	where
 //│ 	def idxSum₁ = 
-//│ 		(fun ls² -> ls²)
+//│ 		(fun ls¹ -> ls¹)
 //│ def rev₀ = 
-//│ 	(fun lss¹ -> (fun a¹ -> case lss¹ of {
-//│ 		N => a¹
-//│ 		| C hh¹ tt¹ => ((rev₁ tt¹) 
-//│ 			let h² = hh¹
-//│ 			in let t² = a¹
-//│ 			in (fun acc⁵ -> ((add acc⁵) ((idxSum₁ t²) ((add acc⁵) 1)))))}))
+//│ 	(fun lss¹ -> lss¹)
 //│ 	where
 //│ 	def rev₁ = 
-//│ 		(fun lss² -> (fun a² -> case lss² of {
-//│ 			N => a²
-//│ 			| C hh² tt² => ((rev₁ tt²) 
-//│ 				let h¹ = hh²
-//│ 				in let t¹ = a²
-//│ 				in (fun acc³ -> ((add acc³) ((idxSum₁ t¹) ((add acc³) 1)))))}))
+//│ 		(fun lss³ -> lss³)
+//│ 		where
+//│ 		def rev₂ = 
+//│ 			(fun lss² -> lss²)
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
 //│ java.lang.Exception: expect to fail but pass
@@ -394,6 +527,27 @@ minuss(fst)(snd)
 //│ [snd^22]
 //│ <<<<<<< expansion <<<<<<<
 //│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((minuss₀ fst₀) snd₀)
+//│ def fst₀ = 
+//│ 	[S [S [Z]]]
+//│ def minuss₀ = 
+//│ 	(fun a² -> case a² of {
+//│ 		S aa² => (fun b² -> case b² of {
+//│ 			S bb² => ((minuss₁ aa²) bb²)
+//│ 			| Z => aa²})
+//│ 		| Z => (fun n² -> [Z])})
+//│ 	where
+//│ 	def minuss₁ = 
+//│ 		(fun a¹ -> case a¹ of {
+//│ 			S aa¹ => (fun b¹ -> case b¹ of {
+//│ 				S bb¹ => ((minuss₁ aa¹) bb¹)
+//│ 				| Z => aa¹})
+//│ 			| Z => (fun n¹ -> [Z])})
+//│ def snd₀ = 
+//│ 	[Z]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [S [S [Z]]] --->
 //│ 	case a² of {S aa² => (fun b² -> case b² of {S bb² => ((minuss₁ aa²) bb²) | Z => aa²}) | Z => (fun n² -> [Z])}
@@ -422,6 +576,17 @@ minuss(fst)(snd)
 //│ def snd₀ = 
 //│ 	aa²
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,aa,2)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Ctx.apply$$anonfun$1(Deforest.scala:200)
+//│ 	at: scala.collection.immutable.Map$Map4.getOrElse(Map.scala:530)
+//│ 	at: mlscript.lumberhack.Ctx.apply(Deforest.scala:200)
+//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:274)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
+//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
+//│ 	at: mlscript.lumberhack.Deforest.apply$$anonfun$2$$anonfun$1(Deforest.scala:326)
+//│ 	at: scala.collection.immutable.List.map(List.scala:250)
+//│ 	at: mlscript.lumberhack.Deforest.apply$$anonfun$2(Deforest.scala:336)
 
 // FIXME: weird recursive
 _LUMBERHACK_ERROR
@@ -456,6 +621,28 @@ minuss(fst)(snd)
 //│ 			[minuss^27 · checkb^2 · minuss^13 · checkb^2] ---> [minuss^27 · checkb^2] (only one)
 //│ [snd^30]
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((minuss₀ fst₀) snd₀)
+//│ def fst₀ = 
+//│ 	[S [S [Z]]]
+//│ def minuss₀ = 
+//│ 	(fun a¹ -> case a¹ of {
+//│ 		S aa¹ => (fun b² -> ((checkb₀ b²) aa¹))
+//│ 		| Z => (fun n¹ -> [Z])})
+//│ 	where
+//│ 	def checkb₀ = 
+//│ 		(fun b⁴ -> case b⁴ of {
+//│ 			S bb¹ => (fun aaa² -> ((minuss₁ aaa²) bb¹))
+//│ 			| Z => (fun aaa³ -> aaa³)})
+//│ 		where
+//│ 		def minuss₁ = 
+//│ 			(fun a² -> case a² of {
+//│ 				S aa² => (fun b³ -> ((checkb₀ b³) aa²))
+//│ 				| Z => (fun n² -> [Z])})
+//│ def snd₀ = 
+//│ 	[Z]
+//│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [S [S [Z]]] --->
@@ -521,6 +708,27 @@ c(id(p))
 //│ 		[p^20 · p^10 · p^10] ---> [p^20 · p^10] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c₀ (id₀ p₀))
+//│ def c₀ = 
+//│ 	(fun y¹ -> case y¹ of {
+//│ 		C aa¹ => (c₀ aa¹)})
+//│ def id₀ = 
+//│ 	(fun x² -> case x² of {
+//│ 		ID b² => b²
+//│ 		| C a² => (id₁ [ID [C a²]])})
+//│ 	where
+//│ 	def id₁ = 
+//│ 		(fun x¹ -> case x¹ of {
+//│ 			ID b¹ => b¹
+//│ 			| C a¹ => (id₁ [ID [C a¹]])})
+//│ def p₀ = 
+//│ 	[C p₁]
+//│ 	where
+//│ 	def p₁ = 
+//│ 		[C p₁]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C a¹] --->
 //│ 	case y¹ of {C aa¹ => (c₀ aa¹)}
@@ -557,3 +765,4 @@ c(id(p))
 //│ 		let aa¹ = p₁
 //│ 		in (c₀ aa¹)
 //│ <<<<<<< after fusion <<<<<<<
+

@@ -2,57 +2,11 @@
 :ParseOnly
 
 
-// NOTE: the `p` inside `C(p)` is untouched
-// TODO don't rewrite dead code
-let p = C(p)
-fun c(x) = if C(x) is
-    C(a) then a
-c(p)
-//│ |#let| |p| |#=| |C|(|p|)|↵|#fun| |c|(|x|)| |#=| |#if| |C|(|x|)| |is|→|C|(|a|)| |#then| |a|←|↵|c|(|p|)|
-//│ Parsed: {let p = C (p,); fun c = x, => if C (x,) is ‹(C (a,)) then a›; c (p,)}
-//│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (c^8 p^9)
-//│ def c = (fun x⁰ -> case [C x⁰] of {
-//│ 	C a⁰ => a⁰})
-//│ def p = [C p^1]
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [c^8] (hopeless to continue)
-//│ [p^9] (hopeless to continue)
-//│ 	[p^9 · p^1] ---> [p^9] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (c₀ p₀)
-//│ def c₀ = 
-//│ 	(fun x¹ -> case [C x¹] of {
-//│ 		C a¹ => a¹})
-//│ def p₀ = 
-//│ 	[C p₀]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ [C x¹] --->
-//│ 	case [C x¹] of {C a¹ => a¹}
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ (c₀ p₀)
-//│ def c₀ = 
-//│ 	(fun x¹ -> 
-//│ 		let a¹ = x¹
-//│ 		in a¹)
-//│ def p₀ = 
-//│ 	[C p₀]
-//│ <<<<<<< after fusion <<<<<<<
-
-
-// NOTE: how to produce a finite rewrtten program?
+// WRONG: infinite rewrting how to produce a finite rewrtten program?
 _LUMBERHACK_ERROR
 let p = Pair(A, B)
 fun c(x) = if x is
-    Pair(a, b) then c(Pair(b, a))
+  Pair(a, b) then c(Pair(b, a))
 c(p)
 //│ |_LUMBERHACK_ERROR|↵|#let| |p| |#=| |Pair|(|A|,| |B|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|Pair|(|a|,| |b|)| |#then| |c|(|Pair|(|b|,| |a|)|)|←|↵|c|(|p|)|
 //│ Parsed: {_LUMBERHACK_ERROR; let p = Pair (A, B,); fun c = x, => if x is ‹(Pair (a, b,)) then c (Pair (b, a,),)›; c (p,)}
@@ -91,44 +45,41 @@ c(p)
 //│ !!!!!!ERROR!!!!!!
 
 // Just a more valid/reasonable version of the above
-// TODO get a recursive knot even when using `primitive` (we get it without)
+// WRONG: recursive strategy
 _LUMBERHACK_ERROR
 let p = Wrap(3)
 fun c(x) = if x is
-    N then 0
-    Wrap(a) then c(Wrap(primitive(a)))
+  Wrap(a) then if a > 0 then c(Wrap(a - 1)) else Wrap(0)
 c(p)
-//│ |_LUMBERHACK_ERROR|↵|#let| |p| |#=| |Wrap|(|3|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|N| |#then| |0|↵|Wrap|(|a|)| |#then| |c|(|Wrap|(|primitive|(|a|)|)|)|←|↵|c|(|p|)|
-//│ Parsed: {_LUMBERHACK_ERROR; let p = Wrap (3,); fun c = x, => if x is ‹(N) then 0; (Wrap (a,)) then c (Wrap (primitive (a,),),)›; c (p,)}
+//│ |_LUMBERHACK_ERROR|↵|#let| |p| |#=| |Wrap|(|3|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|Wrap|(|a|)| |#then| |#if| |a| |>| |0| |#then| |c|(|Wrap|(|a| |-| |1|)|)| |#else| |Wrap|(|0|)|←|↵|c|(|p|)|
+//│ Parsed: {_LUMBERHACK_ERROR; let p = Wrap (3,); fun c = x, => if x is ‹(Wrap (a,)) then if (> (a,) (0,)) then c (Wrap (- (a,) (1,),),) else Wrap (0,)›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (c^13 p^14)
+//│ (c^22 p^23)
 //│ def c = (fun x⁰ -> case x⁰ of {
-//│ 	N => 0
-//│ 	| Wrap a⁰ => (c^5 [Wrap (primitive⁰ a⁰)])})
+//│ 	Wrap a⁰ => if (a⁰ > 0) then (c^9 [Wrap (a⁰ - 1)]) else [Wrap 0]})
 //│ def p = [Wrap 3]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [c^13] (hopeless to continue)
-//│ 	[c^13 · c^5] ---> [c^13] (using original def)
-//│ [p^14] (hopeless to continue)
+//│ [c^22] (hopeless to continue)
+//│ 	[c^22 · c^9] ---> [c^22] (using original def)
+//│ [p^23] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
 //│ (c₀ p₀)
 //│ def c₀ = 
 //│ 	(fun x¹ -> case x¹ of {
-//│ 		N => 0
-//│ 		| Wrap a¹ => (c₀ [Wrap (primitive⁰ a¹)])})
+//│ 		Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]})
 //│ def p₀ = 
 //│ 	[Wrap 3]
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [Wrap (primitive⁰ a¹)] --->
-//│ 	case x¹ of {N => 0 | Wrap a¹ => (c₀ [Wrap (primitive⁰ a¹)])}
+//│ [Wrap (a¹ - 1)] --->
+//│ 	case x¹ of {Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]}
 //│ [Wrap 3] --->
-//│ 	case x¹ of {N => 0 | Wrap a¹ => (c₀ [Wrap (primitive⁰ a¹)])}
+//│ 	case x¹ of {Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -136,169 +87,19 @@ c(p)
 //│ java.lang.StackOverflowError
 //│ !!!!!!ERROR!!!!!!
 
-fun c(x) = if primitive(x) is
-    True then 0
-    False then c(primitive(x))
-c(0)
-//│ |#fun| |c|(|x|)| |#=| |#if| |primitive|(|x|)| |is|→|True| |#then| |0|↵|False| |#then| |c|(|primitive|(|x|)|)|←|↵|c|(|0|)|
-//│ Parsed: {fun c = x, => if primitive (x,) is ‹(True) then 0; (False) then c (primitive (x,),)›; c (0,)}
-//│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (c^12 0)
-//│ def c = (fun x⁰ -> case (primitive⁰ x⁰) of {
-//│ 	True => 0
-//│ 	| False => (c^5 (primitive⁰ x⁰))})
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [c^12] (hopeless to continue)
-//│ 	[c^12 · c^5] ---> [c^12] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (c₀ 0)
-//│ def c₀ = 
-//│ 	(fun x¹ -> case (primitive⁰ x¹) of {
-//│ 		True => 0
-//│ 		| False => (c₀ (primitive⁰ x¹))})
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ 
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ (c₀ 0)
-//│ def c₀ = 
-//│ 	(fun x¹ -> case (primitive⁰ x¹) of {
-//│ 		True => 0
-//│ 		| False => (c₀ (primitive⁰ x¹))})
-//│ <<<<<<< after fusion <<<<<<<
 
 
-// NOTE: only the first two element is handled
-_LUMBERHACK_ERROR
-fun map(f, ls) = if ls is
-    C(h, t) then C(f(h), map(f, t))
-    N then N
-fun ff(x) = if x is
-    K then T
-    KK then TT
-    KKKK then TTTT
-let l = C(K, C(KK, C(KKKK, N)))
-map(ff, l)
-//│ |_LUMBERHACK_ERROR|↵|#fun| |map|(|f|,| |ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#fun| |ff|(|x|)| |#=| |#if| |x| |is|→|K| |#then| |T|↵|KK| |#then| |TT|↵|KKKK| |#then| |TTTT|←|↵|#let| |l| |#=| |C|(|K|,| |C|(|KK|,| |C|(|KKKK|,| |N|)|)|)|↵|map|(|ff|,| |l|)|
-//│ Parsed: {_LUMBERHACK_ERROR; fun map = f, ls, => if ls is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; fun ff = x, => if x is ‹(K) then T; (KK) then TT; (KKKK) then TTTT›; let l = C (K, C (KK, C (KKKK, N,),),); map (ff, l,)}
-//│ >>>>>>>>>> Original >>>>>>>>>>
-//│ ((map^28 ff^29) l^31)
-//│ def ff = (fun x⁰ -> case x⁰ of {
-//│ 	K => [T]
-//│ 	| KK => [TT]
-//│ 	| KKKK => [TTTT]})
-//│ def l = [C [K] [C [KK] [C [KKKK] [N]]]]
-//│ def map = (fun f⁰ -> (fun ls⁰ -> case ls⁰ of {
-//│ 	C h⁰ t⁰ => [C (f⁰ h⁰) ((map^5 f⁰) t⁰)]
-//│ 	| N => [N]}))
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [ff^29] (hopeless to continue)
-//│ [l^31]
-//│ [map^28]
-//│ 	[map^28 · map^5]
-//│ 		[map^28 · map^5 · map^5]
-//│ 			[map^28 · map^5 · map^5 · map^5]
-//│ 				[map^28 · map^5 · map^5 · map^5 · map^5] ---> [map^28 · map^5 · map^5 · map^5] (only one)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ ((map₀ ff₀) l₀)
-//│ def ff₀ = 
-//│ 	(fun x¹ -> case x¹ of {
-//│ 		K => [T]
-//│ 		| KK => [TT]
-//│ 		| KKKK => [TTTT]})
-//│ def l₀ = 
-//│ 	[C [K] [C [KK] [C [KKKK] [N]]]]
-//│ def map₀ = 
-//│ 	(fun f⁴ -> (fun ls⁴ -> case ls⁴ of {
-//│ 		C h⁴ t⁴ => [C (f⁴ h⁴) ((map₁ f⁴) t⁴)]
-//│ 		| N => [N]}))
-//│ 	where
-//│ 	def map₁ = 
-//│ 		(fun f³ -> (fun ls³ -> case ls³ of {
-//│ 			C h³ t³ => [C (f³ h³) ((map₂ f³) t³)]
-//│ 			| N => [N]}))
-//│ 		where
-//│ 		def map₂ = 
-//│ 			(fun f¹ -> (fun ls¹ -> case ls¹ of {
-//│ 				C h¹ t¹ => [C (f¹ h¹) ((map₃ f¹) t¹)]
-//│ 				| N => [N]}))
-//│ 			where
-//│ 			def map₃ = 
-//│ 				(fun f² -> (fun ls² -> case ls² of {
-//│ 					C h² t² => [C (f² h²) ((map₃ f²) t²)]
-//│ 					| N => [N]}))
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ [C [KKKK] [N]] --->
-//│ 	case ls¹ of {C h¹ t¹ => [C (f¹ h¹) ((map₃ f¹) t¹)] | N => [N]}
-//│ [C [KK] [C [KKKK] [N]]] --->
-//│ 	case ls³ of {C h³ t³ => [C (f³ h³) ((map₂ f³) t³)] | N => [N]}
-//│ [C [K] [C [KK] [C [KKKK] [N]]]] --->
-//│ 	case ls⁴ of {C h⁴ t⁴ => [C (f⁴ h⁴) ((map₁ f⁴) t⁴)] | N => [N]}
-//│ [KKKK] --->
-//│ 	case x¹ of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ [KK] --->
-//│ 	case x¹ of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ [K] --->
-//│ 	case x¹ of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ [N] --->
-//│ 	case ls² of {C h² t² => [C (f² h²) ((map₃ f²) t²)] | N => [N]}
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ ((map₀ ff₀) l₀)
-//│ def ff₀ = 
-//│ 	(fun x¹ -> x¹)
-//│ def l₀ = 
-//│ 	let h⁴ = [T]
-//│ 	in let t⁴ = 	
-//│ 		let h³ = [TT]
-//│ 		in let t³ = 	
-//│ 			let h¹ = [TTTT]
-//│ 			in let t¹ = [N]
-//│ 			in [C (f¹ h¹) ((map₃ f¹) t¹)]
-//│ 		in [C (f³ h³) ((map₂ f³) t³)]
-//│ 	in [C (f⁴ h⁴) ((map₁ f⁴) t⁴)]
-//│ def map₀ = 
-//│ 	(fun f⁴ -> (fun ls⁴ -> ls⁴))
-//│ 	where
-//│ 	def map₁ = 
-//│ 		(fun f³ -> (fun ls³ -> ls³))
-//│ 		where
-//│ 		def map₂ = 
-//│ 			(fun f¹ -> (fun ls¹ -> ls¹))
-//│ 			where
-//│ 			def map₃ = 
-//│ 				(fun f² -> (fun ls² -> ls²))
-//│ <<<<<<< after fusion <<<<<<<
-//│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: binding not found: Ident(false,f,1)
-//│ !!!!!!ERROR!!!!!!
-
-
+// WRONG: branching and conflict, but can be solved by rewriting into
 // NOTE: some program not be able to write?
 _LUMBERHACK_ERROR
 fun last(ls) = if ls is
-    C(h, t) then if t is
-        N then Some(h)
-        C(hh, tt) then last(t)
-        // C(hh, tt) then last(C(hh, tt))
-    N then None
+  C(h, t) then if t is
+    N then Some(h)
+    C(hh, tt) then last(t)
+  N then None
 let p = C(1, C(2, N))
 last(p)
-//│ |_LUMBERHACK_ERROR|↵|#fun| |last|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |t| |is|→|N| |#then| |Some|(|h|)|↵|C|(|hh|,| |tt|)| |#then| |last|(|t|)|↵|/* C(hh, tt) then last(C(hh, tt))*/|←|↵|N| |#then| |None|←|↵|#let| |p| |#=| |C|(|1|,| |C|(|2|,| |N|)|)|↵|last|(|p|)|
+//│ |_LUMBERHACK_ERROR|↵|#fun| |last|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |t| |is|→|N| |#then| |Some|(|h|)|↵|C|(|hh|,| |tt|)| |#then| |last|(|t|)|←|↵|N| |#then| |None|←|↵|#let| |p| |#=| |C|(|1|,| |C|(|2|,| |N|)|)|↵|last|(|p|)|
 //│ Parsed: {_LUMBERHACK_ERROR; fun last = ls, => if ls is ‹(C (h, t,)) then if t is ‹(N) then Some (h,); (C (hh, tt,)) then last (t,)›; (N) then None›; let p = C (1, C (2, N,),); last (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (last^17 p^18)
@@ -383,16 +184,16 @@ last(p)
 //│ java.lang.Exception: Internal Error: type error Some('h¹) <: Destruct(N, C('hh³, 'tt³))
 //│ !!!!!!ERROR!!!!!!
 
-_LUMBERHACK_ERROR
+// WRONG: one consumer cannot be expanded fully?
 fun idxSum(ls) = if ls is
-    N then acc => 0
-    C(h, t) then acc => acc + idxSum(t)(acc + 1)
+  N then acc => 0
+  C(h, t) then acc => acc + idxSum(t)(acc + 1)
 fun rev(lss) = if lss is
-    N then a => a
-    C(hh, tt) then a => rev(tt, C(hh, a))
+  N then a => a
+  C(hh, tt) then a => rev(tt, C(hh, a))
 idxSum(rev(C(1, C(2, N)))(N))(0)
-//│ |_LUMBERHACK_ERROR|↵|#fun| |idxSum|(|ls|)| |#=| |#if| |ls| |is|→|N| |#then| |acc| |=>| |0|↵|C|(|h|,| |t|)| |#then| |acc| |=>| |acc| |+| |idxSum|(|t|)|(|acc| |+| |1|)|←|↵|#fun| |rev|(|lss|)| |#=| |#if| |lss| |is|→|N| |#then| |a| |=>| |a|↵|C|(|hh|,| |tt|)| |#then| |a| |=>| |rev|(|tt|,| |C|(|hh|,| |a|)|)|←|↵|idxSum|(|rev|(|C|(|1|,| |C|(|2|,| |N|)|)|)|(|N|)|)|(|0|)|
-//│ Parsed: {_LUMBERHACK_ERROR; fun idxSum = ls, => if ls is ‹(N) then acc, => 0; (C (h, t,)) then acc, => + (acc,) (idxSum (t,) (+ (acc,) (1,),),)›; fun rev = lss, => if lss is ‹(N) then a, => a; (C (hh, tt,)) then a, => rev (tt, C (hh, a,),)›; idxSum (rev (C (1, C (2, N,),),) (N,),) (0,)}
+//│ |#fun| |idxSum|(|ls|)| |#=| |#if| |ls| |is|→|N| |#then| |acc| |=>| |0|↵|C|(|h|,| |t|)| |#then| |acc| |=>| |acc| |+| |idxSum|(|t|)|(|acc| |+| |1|)|←|↵|#fun| |rev|(|lss|)| |#=| |#if| |lss| |is|→|N| |#then| |a| |=>| |a|↵|C|(|hh|,| |tt|)| |#then| |a| |=>| |rev|(|tt|,| |C|(|hh|,| |a|)|)|←|↵|idxSum|(|rev|(|C|(|1|,| |C|(|2|,| |N|)|)|)|(|N|)|)|(|0|)|
+//│ Parsed: {fun idxSum = ls, => if ls is ‹(N) then acc, => 0; (C (h, t,)) then acc, => + (acc,) (idxSum (t,) (+ (acc,) (1,),),)›; fun rev = lss, => if lss is ‹(N) then a, => a; (C (hh, tt,)) then a, => rev (tt, C (hh, a,),)›; idxSum (rev (C (1, C (2, N,),),) (N,),) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((idxSum^33 ((rev^34 [C 1 [C 2 [N]]]) [N])) 0)
 //│ def idxSum = (fun ls⁰ -> case ls⁰ of {
@@ -493,21 +294,20 @@ idxSum(rev(C(1, C(2, N)))(N))(0)
 //│ 		def rev₂ = 
 //│ 			(fun lss² -> lss²)
 //│ <<<<<<< after fusion <<<<<<<
-//│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: expect to fail but pass
-//│ !!!!!!ERROR!!!!!!
 
 
+// WRONG: still has variable extrusion
+_LUMBERHACK_ERROR
 fun minuss(a) = if a is
-    S(aa) then b => if b is
-        S(bb) then minuss(aa, bb)
-        Z then aa
-    Z then n => Z
+  S(aa) then b => if b is
+    S(bb) then minuss(aa, bb)
+    Z then aa
+  Z then n => Z
 let fst = S(S(Z))
 let snd = Z
 minuss(fst)(snd)
-//│ |#fun| |minuss|(|a|)| |#=| |#if| |a| |is|→|S|(|aa|)| |#then| |b| |=>| |#if| |b| |is|→|S|(|bb|)| |#then| |minuss|(|aa|,| |bb|)|↵|Z| |#then| |aa|←|↵|Z| |#then| |n| |=>| |Z|←|↵|#let| |fst| |#=| |S|(|S|(|Z|)|)|↵|#let| |snd| |#=| |Z|↵|minuss|(|fst|)|(|snd|)|
-//│ Parsed: {fun minuss = a, => if a is ‹(S (aa,)) then b, => if b is ‹(S (bb,)) then minuss (aa, bb,); (Z) then aa›; (Z) then n, => Z›; let fst = S (S (Z,),); let snd = Z; minuss (fst,) (snd,)}
+//│ |_LUMBERHACK_ERROR|↵|#fun| |minuss|(|a|)| |#=| |#if| |a| |is|→|S|(|aa|)| |#then| |b| |=>| |#if| |b| |is|→|S|(|bb|)| |#then| |minuss|(|aa|,| |bb|)|↵|Z| |#then| |aa|←|↵|Z| |#then| |n| |=>| |Z|←|↵|#let| |fst| |#=| |S|(|S|(|Z|)|)|↵|#let| |snd| |#=| |Z|↵|minuss|(|fst|)|(|snd|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun minuss = a, => if a is ‹(S (aa,)) then b, => if b is ‹(S (bb,)) then minuss (aa, bb,); (Z) then aa›; (Z) then n, => Z›; let fst = S (S (Z,),); let snd = Z; minuss (fst,) (snd,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((minuss^19 fst^20) snd^22)
 //│ def fst = [S [S [Z]]]
@@ -576,31 +376,23 @@ minuss(fst)(snd)
 //│ def snd₀ = 
 //│ 	aa²
 //│ <<<<<<< after fusion <<<<<<<
-//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,aa,2)
-//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
-//│ 	at: mlscript.lumberhack.Ctx.apply$$anonfun$1(Deforest.scala:200)
-//│ 	at: scala.collection.immutable.Map$Map4.getOrElse(Map.scala:530)
-//│ 	at: mlscript.lumberhack.Ctx.apply(Deforest.scala:200)
-//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:274)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
-//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
-//│ 	at: mlscript.lumberhack.Deforest.apply$$anonfun$2$$anonfun$1(Deforest.scala:326)
-//│ 	at: scala.collection.immutable.List.map(List.scala:250)
-//│ 	at: mlscript.lumberhack.Deforest.apply$$anonfun$2(Deforest.scala:336)
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: binding not found: Ident(false,aa,2)
+//│ !!!!!!ERROR!!!!!!
 
-// FIXME: weird recursive
-_LUMBERHACK_ERROR
+
+// WRONG:
 fun minuss(a) = if a is
-    S(aa) then b => checkb(b)(aa)
-    Z then n => Z
+  S(aa) then b => checkb(b)(aa)
+  Z then n => Z
 fun checkb(b) = if b is
-    S(bb) then aaa => minuss(aaa, bb)
-    Z then aaa => aaa
+  S(bb) then aaa => minuss(aaa, bb)
+  Z then aaa => aaa
 let fst = S(S(Z))
 let snd = Z
 minuss(fst)(snd)
-//│ |_LUMBERHACK_ERROR|↵|#fun| |minuss|(|a|)| |#=| |#if| |a| |is|→|S|(|aa|)| |#then| |b| |=>| |checkb|(|b|)|(|aa|)|↵|Z| |#then| |n| |=>| |Z|←|↵|#fun| |checkb|(|b|)| |#=| |#if| |b| |is|→|S|(|bb|)| |#then| |aaa| |=>| |minuss|(|aaa|,| |bb|)|↵|Z| |#then| |aaa| |=>| |aaa|←|↵|#let| |fst| |#=| |S|(|S|(|Z|)|)|↵|#let| |snd| |#=| |Z|↵|minuss|(|fst|)|(|snd|)|
-//│ Parsed: {_LUMBERHACK_ERROR; fun minuss = a, => if a is ‹(S (aa,)) then b, => checkb (b,) (aa,); (Z) then n, => Z›; fun checkb = b, => if b is ‹(S (bb,)) then aaa, => minuss (aaa, bb,); (Z) then aaa, => aaa›; let fst = S (S (Z,),); let snd = Z; minuss (fst,) (snd,)}
+//│ |#fun| |minuss|(|a|)| |#=| |#if| |a| |is|→|S|(|aa|)| |#then| |b| |=>| |checkb|(|b|)|(|aa|)|↵|Z| |#then| |n| |=>| |Z|←|↵|#fun| |checkb|(|b|)| |#=| |#if| |b| |is|→|S|(|bb|)| |#then| |aaa| |=>| |minuss|(|aaa|,| |bb|)|↵|Z| |#then| |aaa| |=>| |aaa|←|↵|#let| |fst| |#=| |S|(|S|(|Z|)|)|↵|#let| |snd| |#=| |Z|↵|minuss|(|fst|)|(|snd|)|
+//│ Parsed: {fun minuss = a, => if a is ‹(S (aa,)) then b, => checkb (b,) (aa,); (Z) then n, => Z›; fun checkb = b, => if b is ‹(S (bb,)) then aaa, => minuss (aaa, bb,); (Z) then aaa, => aaa›; let fst = S (S (Z,),); let snd = Z; minuss (fst,) (snd,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((minuss^27 fst^28) snd^30)
 //│ def checkb = (fun b¹ -> case b¹ of {
@@ -673,96 +465,465 @@ minuss(fst)(snd)
 //│ def snd₀ = 
 //│ 	(fun aaa³ -> aaa³)
 //│ <<<<<<< after fusion <<<<<<<
-//│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: expect to fail but pass
-//│ !!!!!!ERROR!!!!!!
 
-
-fun id(x) = if x is
-    ID(b) then b
-    C(a) then id(ID(C(a)))
-let p = C(p)
-fun c(y) = if y is
-    C(aa) then c(aa)
-c(id(p))
-//│ |#fun| |id|(|x|)| |#=| |#if| |x| |is|→|ID|(|b|)| |#then| |b|↵|C|(|a|)| |#then| |id|(|ID|(|C|(|a|)|)|)|←|↵|#let| |p| |#=| |C|(|p|)|↵|#fun| |c|(|y|)| |#=| |#if| |y| |is|→|C|(|aa|)| |#then| |c|(|aa|)|←|↵|c|(|id|(|p|)|)|
-//│ Parsed: {fun id = x, => if x is ‹(ID (b,)) then b; (C (a,)) then id (ID (C (a,),),)›; let p = C (p,); fun c = y, => if y is ‹(C (aa,)) then c (aa,)›; c (id (p,),)}
+// WRONG:
+_LUMBERHACK_ERROR
+fun inter(xs) = if xs is
+  N then ys => ys
+  C(h, t) then ys => C(h, inter(ys)(t))
+let rec l1 = C(1, C(2, l1))
+let rec l2 = C(9, C(8, l2))
+inter(l1)(l2)
+//│ |_LUMBERHACK_ERROR|↵|#fun| |inter|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |ys| |=>| |ys|↵|C|(|h|,| |t|)| |#then| |ys| |=>| |C|(|h|,| |inter|(|ys|)|(|t|)|)|←|↵|#let| |#rec| |l1| |#=| |C|(|1|,| |C|(|2|,| |l1|)|)|↵|#let| |#rec| |l2| |#=| |C|(|9|,| |C|(|8|,| |l2|)|)|↵|inter|(|l1|)|(|l2|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun inter = xs, => if xs is ‹(N) then ys, => ys; (C (h, t,)) then ys, => C (h, inter (ys,) (t,),)›; let rec l1 = C (1, C (2, l1,),); let rec l2 = C (9, C (8, l2,),); inter (l1,) (l2,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (c^18 (id^19 p^20))
-//│ def c = (fun y⁰ -> case y⁰ of {
-//│ 	C aa⁰ => (c^13 aa⁰)})
-//│ def id = (fun x⁰ -> case x⁰ of {
-//│ 	ID b⁰ => b⁰
-//│ 	| C a⁰ => (id^3 [ID [C a⁰]])})
-//│ def p = [C p^10]
+//│ ((inter^24 l1^25) l2^27)
+//│ def inter = (fun xs⁰ -> case xs⁰ of {
+//│ 	N => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ ((inter^5 ys¹) t⁰)])})
+//│ def l1 = [C 1 [C 2 l1^16]]
+//│ def l2 = [C 9 [C 8 l2^21]]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [c^18]
-//│ 	[c^18 · c^13] ---> [c^18] (only one)
-//│ [id^19]
-//│ 	[id^19 · id^3] (hopeless to continue)
-//│ 		[id^19 · id^3 · id^3] ---> [id^19 · id^3] (using original def)
-//│ [p^20]
-//│ 	[p^20 · p^10]
-//│ 		[p^20 · p^10 · p^10] ---> [p^20 · p^10] (only one)
+//│ [inter^24]
+//│ 	[inter^24 · inter^5]
+//│ 		[inter^24 · inter^5 · inter^5]
+//│ 			[inter^24 · inter^5 · inter^5 · inter^5]
+//│ 				[inter^24 · inter^5 · inter^5 · inter^5 · inter^5]
+//│ 					[inter^24 · inter^5 · inter^5 · inter^5 · inter^5 · inter^5] ---> [inter^24 · inter^5] (only one)
+//│ [l1^25]
+//│ 	[l1^25 · l1^16] ---> [l1^25] (only one)
+//│ [l2^27]
+//│ 	[l2^27 · l2^21] ---> [l2^27] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (c₀ (id₀ p₀))
-//│ def c₀ = 
-//│ 	(fun y¹ -> case y¹ of {
-//│ 		C aa¹ => (c₀ aa¹)})
-//│ def id₀ = 
-//│ 	(fun x² -> case x² of {
-//│ 		ID b² => b²
-//│ 		| C a² => (id₁ [ID [C a²]])})
+//│ ((inter₀ l1₀) l2₀)
+//│ def inter₀ = 
+//│ 	(fun xs⁵ -> case xs⁵ of {
+//│ 		N => (fun ys¹⁰ -> ys¹⁰)
+//│ 		| C h⁵ t⁵ => (fun ys¹¹ -> [C h⁵ ((inter₁ ys¹¹) t⁵)])})
 //│ 	where
-//│ 	def id₁ = 
-//│ 		(fun x¹ -> case x¹ of {
-//│ 			ID b¹ => b¹
-//│ 			| C a¹ => (id₁ [ID [C a¹]])})
-//│ def p₀ = 
-//│ 	[C p₁]
-//│ 	where
-//│ 	def p₁ = 
-//│ 		[C p₁]
+//│ 	def inter₁ = 
+//│ 		(fun xs² -> case xs² of {
+//│ 			N => (fun ys⁴ -> ys⁴)
+//│ 			| C h² t² => (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])})
+//│ 		where
+//│ 		def inter₂ = 
+//│ 			(fun xs³ -> case xs³ of {
+//│ 				N => (fun ys⁶ -> ys⁶)
+//│ 				| C h³ t³ => (fun ys⁷ -> [C h³ ((inter₃ ys⁷) t³)])})
+//│ 			where
+//│ 			def inter₃ = 
+//│ 				(fun xs¹ -> case xs¹ of {
+//│ 					N => (fun ys² -> ys²)
+//│ 					| C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₄ ys³) t¹)])})
+//│ 				where
+//│ 				def inter₄ = 
+//│ 					(fun xs⁴ -> case xs⁴ of {
+//│ 						N => (fun ys⁸ -> ys⁸)
+//│ 						| C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₁ ys⁹) t⁴)])})
+//│ def l1₀ = 
+//│ 	[C 1 [C 2 l1₀]]
+//│ def l2₀ = 
+//│ 	[C 9 [C 8 l2₀]]
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C a¹] --->
-//│ 	case y¹ of {C aa¹ => (c₀ aa¹)}
-//│ [C a²] --->
-//│ 	case y¹ of {C aa¹ => (c₀ aa¹)}
-//│ [C p₁] --->
-//│ 	case y¹ of {C aa¹ => (c₀ aa¹)}
-//│ [C p₁] --->
-//│ 	case x² of {ID b² => b² | C a² => (id₁ [ID [C a²]])}
-//│ [ID [C a¹]] --->
-//│ 	case x¹ of {ID b¹ => b¹ | C a¹ => (id₁ [ID [C a¹]])}
-//│ [ID [C a²]] --->
-//│ 	case x¹ of {ID b¹ => b¹ | C a¹ => (id₁ [ID [C a¹]])}
+//│ [C 1 [C 2 l1₀]] --->
+//│ 	case xs⁵ of {N => (fun ys¹⁰ -> ys¹⁰) | C h⁵ t⁵ => (fun ys¹¹ -> [C h⁵ ((inter₁ ys¹¹) t⁵)])}
+//│ 	case xs⁴ of {N => (fun ys⁸ -> ys⁸) | C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₁ ys⁹) t⁴)])}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [C 2 l1₀] --->
+//│ 	case xs³ of {N => (fun ys⁶ -> ys⁶) | C h³ t³ => (fun ys⁷ -> [C h³ ((inter₃ ys⁷) t³)])}
+//│ [C 8 l2₀] --->
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₄ ys³) t¹)])}
+//│ [C 9 [C 8 l2₀]] --->
+//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])}
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (c₀ (id₀ p₀))
-//│ def c₀ = 
-//│ 	(fun y¹ -> y¹)
-//│ def id₀ = 
-//│ 	(fun x² -> x²)
+//│ ((inter₀ l1₀) l2₀)
+//│ def inter₀ = 
+//│ 	(fun xs⁵ -> xs⁵)
 //│ 	where
-//│ 	def id₁ = 
-//│ 		(fun x¹ -> x¹)
-//│ def p₀ = 
-//│ 	let a² = p₁
-//│ 	in (id₁ 
-//│ 		let b¹ = 	
-//│ 			let aa¹ = a²
-//│ 			in (c₀ aa¹)
-//│ 		in b¹)
+//│ 	def inter₁ = 
+//│ 		(fun xs² -> xs²)
+//│ 		where
+//│ 		def inter₂ = 
+//│ 			(fun xs³ -> xs³)
+//│ 			where
+//│ 			def inter₃ = 
+//│ 				(fun xs¹ -> xs¹)
+//│ 				where
+//│ 				def inter₄ = 
+//│ 					(fun xs⁴ -> case xs⁴ of {
+//│ 						N => (fun ys⁸ -> ys⁸)
+//│ 						| C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₁ ys⁹) t⁴)])})
+//│ def l1₀ = 
+//│ 	let h⁵ = 1
+//│ 	in let t⁵ = 	
+//│ 		let h³ = 2
+//│ 		in let t³ = l1₀
+//│ 		in (fun ys⁷ -> [C h³ ((inter₃ ys⁷) t³)])
+//│ 	in (fun ys¹¹ -> [C h⁵ ((inter₁ ys¹¹) t⁵)])
+//│ def l2₀ = 
+//│ 	let h² = 9
+//│ 	in let t² = 	
+//│ 		let h¹ = 8
+//│ 		in let t¹ = l2₀
+//│ 		in (fun ys³ -> [C h¹ ((inter₄ ys³) t¹)])
+//│ 	in (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])
+//│ <<<<<<< after fusion <<<<<<<
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: type error 'ys¹¹ => C('h⁵, '159_callres) <: Destruct(N, C('h⁴, 't⁴))
+//│ !!!!!!ERROR!!!!!!
+
+
+// WRONG: push in cannot work still have binding error
+// and wrong recursive knots
+_LUMBERHACK_ERROR
+fun f(xs) = if xs is
+  X(x1) then if x1 is
+    X(x2) then if x2 is
+      X(x3) then ys => if ys is
+        Y(y1) then if y1 is
+          Y(y2) then f(x3, y2)
+let rec xx = X(X(xx))
+let rec yy = Y(Y(Y(yy)))
+f(xx, yy)
+//│ |_LUMBERHACK_ERROR|↵|#fun| |f|(|xs|)| |#=| |#if| |xs| |is|→|X|(|x1|)| |#then| |#if| |x1| |is|→|X|(|x2|)| |#then| |#if| |x2| |is|→|X|(|x3|)| |#then| |ys| |=>| |#if| |ys| |is|→|Y|(|y1|)| |#then| |#if| |y1| |is|→|Y|(|y2|)| |#then| |f|(|x3|,| |y2|)|←|←|←|←|←|↵|#let| |#rec| |xx| |#=| |X|(|X|(|xx|)|)|↵|#let| |#rec| |yy| |#=| |Y|(|Y|(|Y|(|yy|)|)|)|↵|f|(|xx|,| |yy|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun f = xs, => if xs is ‹(X (x1,)) then if x1 is ‹(X (x2,)) then if x2 is ‹(X (x3,)) then ys, => if ys is ‹(Y (y1,)) then if y1 is ‹(Y (y2,)) then f (x3, y2,)›››››; let rec xx = X (X (xx,),); let rec yy = Y (Y (Y (yy,),),); f (xx, yy,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ ((f^25 xx^26) yy^28)
+//│ def f = (fun xs⁰ -> case xs⁰ of {
+//│ 	X x1⁰ => case x1⁰ of {
+//│ 		X x2⁰ => case x2⁰ of {
+//│ 			X x3⁰ => (fun ys⁰ -> case ys⁰ of {
+//│ 				Y y1⁰ => case y1⁰ of {
+//│ 					Y y2⁰ => ((f^6 x3⁰) y2⁰)}})}}})
+//│ def xx = [X [X xx^18]]
+//│ def yy = [Y [Y [Y yy^21]]]
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^25]
+//│ 	[f^25 · f^6]
+//│ 		[f^25 · f^6 · f^6]
+//│ 			[f^25 · f^6 · f^6 · f^6] ---> [f^25 · f^6] (only one)
+//│ [xx^26]
+//│ 	[xx^26 · xx^18]
+//│ 		[xx^26 · xx^18 · xx^18]
+//│ 			[xx^26 · xx^18 · xx^18 · xx^18]
+//│ 				[xx^26 · xx^18 · xx^18 · xx^18 · xx^18] ---> [xx^26 · xx^18] (only one)
+//│ [yy^28]
+//│ 	[yy^28 · yy^21]
+//│ 		[yy^28 · yy^21 · yy^21] ---> [yy^28] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((f₀ xx₀) yy₀)
+//│ def f₀ = 
+//│ 	(fun xs³ -> case xs³ of {
+//│ 		X x1³ => case x1³ of {
+//│ 			X x2³ => case x2³ of {
+//│ 				X x3³ => (fun ys³ -> case ys³ of {
+//│ 					Y y1³ => case y1³ of {
+//│ 						Y y2³ => ((f₁ x3³) y2³)}})}}})
 //│ 	where
-//│ 	def p₁ = 
-//│ 		let aa¹ = p₁
-//│ 		in (c₀ aa¹)
+//│ 	def f₁ = 
+//│ 		(fun xs² -> case xs² of {
+//│ 			X x1² => case x1² of {
+//│ 				X x2² => case x2² of {
+//│ 					X x3² => (fun ys² -> case ys² of {
+//│ 						Y y1² => case y1² of {
+//│ 							Y y2² => ((f₂ x3²) y2²)}})}}})
+//│ 		where
+//│ 		def f₂ = 
+//│ 			(fun xs¹ -> case xs¹ of {
+//│ 				X x1¹ => case x1¹ of {
+//│ 					X x2¹ => case x2¹ of {
+//│ 						X x3¹ => (fun ys¹ -> case ys¹ of {
+//│ 							Y y1¹ => case y1¹ of {
+//│ 								Y y2¹ => ((f₁ x3¹) y2¹)}})}}})
+//│ def xx₀ = 
+//│ 	[X [X xx₁]]
+//│ 	where
+//│ 	def xx₁ = 
+//│ 		[X [X xx₂]]
+//│ 		where
+//│ 		def xx₂ = 
+//│ 			[X [X xx₃]]
+//│ 			where
+//│ 			def xx₃ = 
+//│ 				[X [X xx₁]]
+//│ def yy₀ = 
+//│ 	[Y [Y [Y yy₁]]]
+//│ 	where
+//│ 	def yy₁ = 
+//│ 		[Y [Y [Y yy₀]]]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [X [X xx₁]] --->
+//│ 	case xs¹ of {X x1¹ => case x1¹ of {X x2¹ => case x2¹ of {X x3¹ => (fun ys¹ -> case ys¹ of {Y y1¹ => case y1¹ of {Y y2¹ => ((f₁ x3¹) y2¹)}})}}}
+//│ [X [X xx₁]] --->
+//│ 	case xs³ of {X x1³ => case x1³ of {X x2³ => case x2³ of {X x3³ => (fun ys³ -> case ys³ of {Y y1³ => case y1³ of {Y y2³ => ((f₁ x3³) y2³)}})}}}
+//│ [X [X xx₂]] --->
+//│ 	case x2³ of {X x3³ => (fun ys³ -> case ys³ of {Y y1³ => case y1³ of {Y y2³ => ((f₁ x3³) y2³)}})}
+//│ 	case x2¹ of {X x3¹ => (fun ys¹ -> case ys¹ of {Y y1¹ => case y1¹ of {Y y2¹ => ((f₁ x3¹) y2¹)}})}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [X [X xx₃]] --->
+//│ 	case x1² of {X x2² => case x2² of {X x3² => (fun ys² -> case ys² of {Y y1² => case y1² of {Y y2² => ((f₂ x3²) y2²)}})}}
+//│ [X xx₁] --->
+//│ 	case x1¹ of {X x2¹ => case x2¹ of {X x3¹ => (fun ys¹ -> case ys¹ of {Y y1¹ => case y1¹ of {Y y2¹ => ((f₁ x3¹) y2¹)}})}}
+//│ [X xx₁] --->
+//│ 	case x1³ of {X x2³ => case x2³ of {X x3³ => (fun ys³ -> case ys³ of {Y y1³ => case y1³ of {Y y2³ => ((f₁ x3³) y2³)}})}}
+//│ [X xx₂] --->
+//│ 	case xs² of {X x1² => case x1² of {X x2² => case x2² of {X x3² => (fun ys² -> case ys² of {Y y1² => case y1² of {Y y2² => ((f₂ x3²) y2²)}})}}}
+//│ [X xx₃] --->
+//│ 	case x2² of {X x3² => (fun ys² -> case ys² of {Y y1² => case y1² of {Y y2² => ((f₂ x3²) y2²)}})}
+//│ [Y [Y [Y yy₀]]] --->
+//│ 	case y1¹ of {Y y2¹ => ((f₁ x3¹) y2¹)}
+//│ 	case y1² of {Y y2² => ((f₂ x3²) y2²)}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [Y [Y [Y yy₁]]] --->
+//│ 	case ys³ of {Y y1³ => case y1³ of {Y y2³ => ((f₁ x3³) y2³)}}
+//│ 	case ys¹ of {Y y1¹ => case y1¹ of {Y y2¹ => ((f₁ x3¹) y2¹)}}
+//│ 	case ys² of {Y y1² => case y1² of {Y y2² => ((f₂ x3²) y2²)}}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [Y [Y yy₀]] --->
+//│ 	case ys¹ of {Y y1¹ => case y1¹ of {Y y2¹ => ((f₁ x3¹) y2¹)}}
+//│ 	case ys² of {Y y1² => case y1² of {Y y2² => ((f₂ x3²) y2²)}}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [Y [Y yy₁]] --->
+//│ 	case y1³ of {Y y2³ => ((f₁ x3³) y2³)}
+//│ 	case y1¹ of {Y y2¹ => ((f₁ x3¹) y2¹)}
+//│ 	case y1² of {Y y2² => ((f₂ x3²) y2²)}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [Y yy₀] --->
+//│ 	case y1¹ of {Y y2¹ => ((f₁ x3¹) y2¹)}
+//│ 	case y1² of {Y y2² => ((f₂ x3²) y2²)}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [Y yy₁] --->
+//│ 	case ys¹ of {Y y1¹ => case y1¹ of {Y y2¹ => ((f₁ x3¹) y2¹)}}
+//│ 	case ys² of {Y y1² => case y1² of {Y y2² => ((f₂ x3²) y2²)}}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((f₀ xx₀) yy₀)
+//│ def f₀ = 
+//│ 	(fun xs³ -> xs³)
+//│ 	where
+//│ 	def f₁ = 
+//│ 		(fun xs² -> xs²)
+//│ 		where
+//│ 		def f₂ = 
+//│ 			(fun xs¹ -> xs¹)
+//│ def xx₀ = 
+//│ 	let x1³ = 	
+//│ 		let x2³ = xx₁
+//│ 		in x2³
+//│ 	in x1³
+//│ 	where
+//│ 	def xx₁ = 
+//│ 		let x3³ = 	
+//│ 			let x1² = xx₂
+//│ 			in x1²
+//│ 		in (fun ys³ -> ys³)
+//│ 		where
+//│ 		def xx₂ = 
+//│ 			let x2² = 	
+//│ 				let x3² = xx₃
+//│ 				in (fun ys² -> ys²)
+//│ 			in x2²
+//│ 			where
+//│ 			def xx₃ = 
+//│ 				let x1¹ = 	
+//│ 					let x2¹ = xx₁
+//│ 					in case x2¹ of {
+//│ 						X x3¹ => (fun ys¹ -> ys¹)}
+//│ 				in x1¹
+//│ def yy₀ = 
+//│ 	let y1³ = 	
+//│ 		let y2³ = 	
+//│ 			let y1² = yy₁
+//│ 			in y1²
+//│ 		in ((f₁ x3³) y2³)
+//│ 	in y1³
+//│ 	where
+//│ 	def yy₁ = 
+//│ 		let y2² = 	
+//│ 			let y1¹ = 	
+//│ 				let y2¹ = yy₀
+//│ 				in ((f₁ x3¹) y2¹)
+//│ 			in y1¹
+//│ 		in ((f₂ x3²) y2²)
+//│ <<<<<<< after fusion <<<<<<<
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: binding not found: Ident(false,x3,3)
+//│ !!!!!!ERROR!!!!!!
+
+
+
+// WRONG: still have binding error
+_LUMBERHACK_ERROR
+fun f(x) = if x is
+  C(k) then f(x)
+f(C(primitive))
+//│ |_LUMBERHACK_ERROR|↵|#fun| |f|(|x|)| |#=| |#if| |x| |is|→|C|(|k|)| |#then| |f|(|x|)|←|↵|f|(|C|(|primitive|)|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun f = x, => if x is ‹(C (k,)) then f (x,)›; f (C (primitive,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (f^7 [C primitive⁰])
+//│ def f = (fun x⁰ -> case x⁰ of {
+//│ 	C k⁰ => (f^2 x⁰)})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^7] (hopeless to continue)
+//│ 	[f^7 · f^2] ---> [f^7] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀ [C primitive⁰])
+//│ def f₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		C k¹ => (f₀ x¹)})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C primitive⁰] --->
+//│ 	case x¹ of {C k¹ => (f₀ x¹)}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ 
+//│ 	let k¹ = primitive⁰
+//│ 	in (f₀ x¹))
+//│ def f₀ = 
+//│ 	(fun x¹ -> x¹)
+//│ <<<<<<< after fusion <<<<<<<
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: binding not found: Ident(false,x,1)
+//│ !!!!!!ERROR!!!!!!
+
+
+// WRONG: recursive strategy
+_LUMBERHACK_ERROR
+fun f(x) = if x is
+  C(k) then f(C(x))
+f(C(primitive))
+//│ |_LUMBERHACK_ERROR|↵|#fun| |f|(|x|)| |#=| |#if| |x| |is|→|C|(|k|)| |#then| |f|(|C|(|x|)|)|←|↵|f|(|C|(|primitive|)|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun f = x, => if x is ‹(C (k,)) then f (C (x,),)›; f (C (primitive,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (f^8 [C primitive⁰])
+//│ def f = (fun x⁰ -> case x⁰ of {
+//│ 	C k⁰ => (f^2 [C x⁰])})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^8] (hopeless to continue)
+//│ 	[f^8 · f^2] ---> [f^8] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀ [C primitive⁰])
+//│ def f₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		C k¹ => (f₀ [C x¹])})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C primitive⁰] --->
+//│ 	case x¹ of {C k¹ => (f₀ [C x¹])}
+//│ [C x¹] --->
+//│ 	case x¹ of {C k¹ => (f₀ [C x¹])}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.StackOverflowError
+//│ !!!!!!ERROR!!!!!!
+
+
+// WRONG: branching, but no recursive strategy stackoverflow problem
+// because the infinite rewriting cannot be started by `primitive`
+fun f(x) = if x is
+  N then f(N)
+  _ then 0
+f(primitive)
+//│ |#fun| |f|(|x|)| |#=| |#if| |x| |is|→|N| |#then| |f|(|N|)|↵|_| |#then| |0|←|↵|f|(|primitive|)|
+//│ Parsed: {fun f = x, => if x is ‹(N) then f (N,); (_) then 0›; f (primitive,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (f^8 primitive⁰)
+//│ def f = (fun x⁰ -> case x⁰ of {
+//│ 	N => (f^2 [N])
+//│ 	| _ => 0})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^8] (hopeless to continue)
+//│ 	[f^8 · f^2] ---> [f^8] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀ primitive⁰)
+//│ def f₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		N => (f₀ [N])
+//│ 		| _ => 0})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [N] --->
+//│ 	case x¹ of {N => (f₀ [N]) | _ => 0}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ primitive⁰)
+//│ def f₀ = 
+//│ 	(fun x¹ -> x¹)
 //│ <<<<<<< after fusion <<<<<<<
 
+// WRONG: mutual recursive strategy
+_LUMBERHACK_ERROR
+fun f(x) = if x is
+    C(a) then f(C(a))
+fun g(y) = if y is
+    D(b) then f(C(b))
+f(C(A))
+//│ |_LUMBERHACK_ERROR|↵|#fun| |f|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |f|(|C|(|a|)|)|←|↵|#fun| |g|(|y|)| |#=| |#if| |y| |is|→|D|(|b|)| |#then| |f|(|C|(|b|)|)|←|↵|f|(|C|(|A|)|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun f = x, => if x is ‹(C (a,)) then f (C (a,),)›; fun g = y, => if y is ‹(D (b,)) then f (C (b,),)›; f (C (A,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (f^15 [C [A]])
+//│ def f = (fun x⁰ -> case x⁰ of {
+//│ 	C a⁰ => (f^2 [C a⁰])})
+//│ def g = (fun y⁰ -> case y⁰ of {
+//│ 	D b⁰ => (f^9 [C b⁰])})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^15] (hopeless to continue)
+//│ 	[f^15 · f^2] ---> [f^15] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀ [C [A]])
+//│ def f₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		C a¹ => (f₀ [C a¹])})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C [A]] --->
+//│ 	case x¹ of {C a¹ => (f₀ [C a¹])}
+//│ [C a¹] --->
+//│ 	case x¹ of {C a¹ => (f₀ [C a¹])}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.StackOverflowError
+//│ !!!!!!ERROR!!!!!!

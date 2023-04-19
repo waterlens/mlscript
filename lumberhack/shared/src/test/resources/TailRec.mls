@@ -2,20 +2,21 @@
 :ParseOnly
 
 
-// Initial program, not immediately fusable:
+// WRONG: Initial program, not immediately fusable:
+_LUMBERHACK_ERROR
 fun count(c, xs) = if xs is
-    C(h, t) then count(add(c, 1), t)
-    N then c
+  C(h, t) then count(c + 1, t)
+  N then c
 fun rev(a, ys) = if ys is
-    C(h1, t1) then rev(C(h1, a), t1)
-    N then a
+  C(h1, t1) then rev(C(h1, a), t1)
+  N then a
 count(0, rev(N, N))
-//│ |#fun| |count|(|c|,| |xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |count|(|add|(|c|,| |1|)|,| |t|)|↵|N| |#then| |c|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|count|(|0|,| |rev|(|N|,| |N|)|)|
-//│ Parsed: {fun count = c, xs, => if xs is ‹(C (h, t,)) then count (add (c, 1,), t,); (N) then c›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; count (0, rev (N, N,),)}
+//│ |_LUMBERHACK_ERROR|↵|#fun| |count|(|c|,| |xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |count|(|c| |+| |1|,| |t|)|↵|N| |#then| |c|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|count|(|0|,| |rev|(|N|,| |N|)|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun count = c, xs, => if xs is ‹(C (h, t,)) then count (+ (c,) (1,), t,); (N) then c›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; count (0, rev (N, N,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((count^27 0) ((rev^30 [N]) [N]))
 //│ def count = (fun c⁰ -> (fun xs⁰ -> case xs⁰ of {
-//│ 	C h⁰ t⁰ => ((count^2 ((add⁰ c⁰) 1)) t⁰)
+//│ 	C h⁰ t⁰ => ((count^2 (c⁰ + 1)) t⁰)
 //│ 	| N => c⁰}))
 //│ def rev = (fun a⁰ -> (fun ys⁰ -> case ys⁰ of {
 //│ 	C h1⁰ t1⁰ => ((rev^16 [C h1⁰ a⁰]) t1⁰)
@@ -35,12 +36,12 @@ count(0, rev(N, N))
 //│ ((count₀ 0) ((rev₀ [N]) [N]))
 //│ def count₀ = 
 //│ 	(fun c² -> (fun xs² -> case xs² of {
-//│ 		C h² t² => ((count₁ ((add⁰ c²) 1)) t²)
+//│ 		C h² t² => ((count₁ (c² + 1)) t²)
 //│ 		| N => c²}))
 //│ 	where
 //│ 	def count₁ = 
 //│ 		(fun c¹ -> (fun xs¹ -> case xs¹ of {
-//│ 			C h¹ t¹ => ((count₁ ((add⁰ c¹) 1)) t¹)
+//│ 			C h¹ t¹ => ((count₁ (c¹ + 1)) t¹)
 //│ 			| N => c¹}))
 //│ def rev₀ = 
 //│ 	(fun a¹ -> (fun ys¹ -> case ys¹ of {
@@ -55,16 +56,16 @@ count(0, rev(N, N))
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C h1² a²] --->
-//│ 	case xs² of {C h² t² => ((count₁ ((add⁰ c²) 1)) t²) | N => c²}
-//│ 	case xs¹ of {C h¹ t¹ => ((count₁ ((add⁰ c¹) 1)) t¹) | N => c¹}
+//│ 	case xs² of {C h² t² => ((count₁ (c² + 1)) t²) | N => c²}
+//│ 	case xs¹ of {C h¹ t¹ => ((count₁ (c¹ + 1)) t¹) | N => c¹}
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ [C h1¹ a¹] --->
-//│ 	case xs² of {C h² t² => ((count₁ ((add⁰ c²) 1)) t²) | N => c²}
-//│ 	case xs¹ of {C h¹ t¹ => ((count₁ ((add⁰ c¹) 1)) t¹) | N => c¹}
+//│ 	case xs² of {C h² t² => ((count₁ (c² + 1)) t²) | N => c²}
+//│ 	case xs¹ of {C h¹ t¹ => ((count₁ (c¹ + 1)) t¹) | N => c¹}
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ [N] --->
-//│ 	case xs¹ of {C h¹ t¹ => ((count₁ ((add⁰ c¹) 1)) t¹) | N => c¹}
-//│ 	case xs² of {C h² t² => ((count₁ ((add⁰ c²) 1)) t²) | N => c²}
+//│ 	case xs¹ of {C h¹ t¹ => ((count₁ (c¹ + 1)) t¹) | N => c¹}
+//│ 	case xs² of {C h² t² => ((count₁ (c² + 1)) t²) | N => c²}
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ [N] --->
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹) | N => a¹}
@@ -85,37 +86,31 @@ count(0, rev(N, N))
 //│ 			C h1² t1² => ((rev₁ 
 //│ 				let h² = h1²
 //│ 				in let t² = a²
-//│ 				in ((count₁ ((add⁰ c²) 1)) t²)) t1²)
+//│ 				in ((count₁ (c² + 1)) t²)) t1²)
 //│ 			| N => a²}))
 //│ <<<<<<< after fusion <<<<<<<
-//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,c,1)
-//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
-//│ 	at: mlscript.lumberhack.Ctx.apply$$anonfun$1(Deforest.scala:200)
-//│ 	at: scala.collection.immutable.Map$Map4.getOrElse(Map.scala:530)
-//│ 	at: mlscript.lumberhack.Ctx.apply(Deforest.scala:200)
-//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:274)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
-//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
-//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:277)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
-//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: binding not found: Ident(false,c,1)
+//│ !!!!!!ERROR!!!!!!
 
 
+// WRONG:
 // Fusablified program:
+_LUMBERHACK_ERROR
 fun count(xs) = if xs is
-    C(h, t) then c => count(t)(add(c, 1))
-    N then c => c
+  C(h, t) then c => count(t)(c + 1)
+  N then c => c
 fun rev(a, ys) = if ys is
-    C(h1, t1) then rev(C(h1, a), t1)
-    N then a
+  C(h1, t1) then rev(C(h1, a), t1)
+  N then a
 fun init = N
 count(rev(N, init))(0)
-//│ |#fun| |count|(|xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |c| |=>| |count|(|t|)|(|add|(|c|,| |1|)|)|↵|N| |#then| |c| |=>| |c|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|#fun| |init| |#=| |N|↵|count|(|rev|(|N|,| |init|)|)|(|0|)|
-//│ Parsed: {fun count = xs, => if xs is ‹(C (h, t,)) then c, => count (t,) (add (c, 1,),); (N) then c, => c›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; fun init = N; count (rev (N, init,),) (0,)}
+//│ |_LUMBERHACK_ERROR|↵|#fun| |count|(|xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |c| |=>| |count|(|t|)|(|c| |+| |1|)|↵|N| |#then| |c| |=>| |c|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|#fun| |init| |#=| |N|↵|count|(|rev|(|N|,| |init|)|)|(|0|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun count = xs, => if xs is ‹(C (h, t,)) then c, => count (t,) (+ (c,) (1,),); (N) then c, => c›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; fun init = N; count (rev (N, init,),) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((count^29 ((rev^30 [N]) init^33)) 0)
 //│ def count = (fun xs⁰ -> case xs⁰ of {
-//│ 	C h⁰ t⁰ => (fun c⁰ -> ((count^2 t⁰) ((add⁰ c⁰) 1)))
+//│ 	C h⁰ t⁰ => (fun c⁰ -> ((count^2 t⁰) (c⁰ + 1)))
 //│ 	| N => (fun c¹ -> c¹)})
 //│ def init = [N]
 //│ def rev = (fun a⁰ -> (fun ys⁰ -> case ys⁰ of {
@@ -137,12 +132,12 @@ count(rev(N, init))(0)
 //│ ((count₀ ((rev₀ [N]) init₀)) 0)
 //│ def count₀ = 
 //│ 	(fun xs² -> case xs² of {
-//│ 		C h² t² => (fun c⁴ -> ((count₁ t²) ((add⁰ c⁴) 1)))
+//│ 		C h² t² => (fun c⁴ -> ((count₁ t²) (c⁴ + 1)))
 //│ 		| N => (fun c⁵ -> c⁵)})
 //│ 	where
 //│ 	def count₁ = 
 //│ 		(fun xs¹ -> case xs¹ of {
-//│ 			C h¹ t¹ => (fun c² -> ((count₁ t¹) ((add⁰ c²) 1)))
+//│ 			C h¹ t¹ => (fun c² -> ((count₁ t¹) (c² + 1)))
 //│ 			| N => (fun c³ -> c³)})
 //│ def init₀ = 
 //│ 	[N]
@@ -159,18 +154,18 @@ count(rev(N, init))(0)
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C h1² a²] --->
-//│ 	case xs² of {C h² t² => (fun c⁴ -> ((count₁ t²) ((add⁰ c⁴) 1))) | N => (fun c⁵ -> c⁵)}
-//│ 	case xs¹ of {C h¹ t¹ => (fun c² -> ((count₁ t¹) ((add⁰ c²) 1))) | N => (fun c³ -> c³)}
+//│ 	case xs² of {C h² t² => (fun c⁴ -> ((count₁ t²) (c⁴ + 1))) | N => (fun c⁵ -> c⁵)}
+//│ 	case xs¹ of {C h¹ t¹ => (fun c² -> ((count₁ t¹) (c² + 1))) | N => (fun c³ -> c³)}
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ [C h1¹ a¹] --->
-//│ 	case xs¹ of {C h¹ t¹ => (fun c² -> ((count₁ t¹) ((add⁰ c²) 1))) | N => (fun c³ -> c³)}
-//│ 	case xs² of {C h² t² => (fun c⁴ -> ((count₁ t²) ((add⁰ c⁴) 1))) | N => (fun c⁵ -> c⁵)}
+//│ 	case xs¹ of {C h¹ t¹ => (fun c² -> ((count₁ t¹) (c² + 1))) | N => (fun c³ -> c³)}
+//│ 	case xs² of {C h² t² => (fun c⁴ -> ((count₁ t²) (c⁴ + 1))) | N => (fun c⁵ -> c⁵)}
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ [N] --->
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹) | N => a¹}
 //│ [N] --->
-//│ 	case xs² of {C h² t² => (fun c⁴ -> ((count₁ t²) ((add⁰ c⁴) 1))) | N => (fun c⁵ -> c⁵)}
-//│ 	case xs¹ of {C h¹ t¹ => (fun c² -> ((count₁ t¹) ((add⁰ c²) 1))) | N => (fun c³ -> c³)}
+//│ 	case xs² of {C h² t² => (fun c⁴ -> ((count₁ t²) (c⁴ + 1))) | N => (fun c⁵ -> c⁵)}
+//│ 	case xs¹ of {C h¹ t¹ => (fun c² -> ((count₁ t¹) (c² + 1))) | N => (fun c³ -> c³)}
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -191,33 +186,27 @@ count(rev(N, init))(0)
 //│ 			C h1² t1² => ((rev₁ 
 //│ 				let h² = h1²
 //│ 				in let t² = a²
-//│ 				in (fun c⁴ -> ((count₁ t²) ((add⁰ c⁴) 1)))) t1²)
+//│ 				in (fun c⁴ -> ((count₁ t²) (c⁴ + 1)))) t1²)
 //│ 			| N => a²}))
 //│ <<<<<<< after fusion <<<<<<<
-//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,a,1)
-//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
-//│ 	at: mlscript.lumberhack.Ctx.apply$$anonfun$1(Deforest.scala:200)
-//│ 	at: scala.collection.immutable.HashMap.getOrElse(HashMap.scala:683)
-//│ 	at: mlscript.lumberhack.Ctx.apply(Deforest.scala:200)
-//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:274)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
-//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
-//│ 	at: mlscript.lumberhack.Deforest.apply$$anonfun$2$$anonfun$1(Deforest.scala:326)
-//│ 	at: scala.collection.immutable.List.map(List.scala:250)
-//│ 	at: mlscript.lumberhack.Deforest.apply$$anonfun$2(Deforest.scala:336)
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: binding not found: Ident(false,a,1)
+//│ !!!!!!ERROR!!!!!!
 
 
+// WRONG:
 // FIXME
 // Paper example (original)
+_LUMBERHACK_ERROR
 fun idxSum(i, xs) = if xs is
-    C(h, t) then add(i, idxSum(add(i, 1), t))
-    N then 0
+  C(h, t) then add(i, idxSum(add(i, 1), t))
+  N then 0
 fun rev(a, ys) = if ys is
-    C(h1, t1) then rev(C(h1, a), t1)
-    N then a
+  C(h1, t1) then rev(C(h1, a), t1)
+  N then a
 idxSum(0, rev(N, N))
-//│ |#fun| |idxSum|(|i|,| |xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |add|(|i|,| |idxSum|(|add|(|i|,| |1|)|,| |t|)|)|↵|N| |#then| |0|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|idxSum|(|0|,| |rev|(|N|,| |N|)|)|
-//│ Parsed: {fun idxSum = i, xs, => if xs is ‹(C (h, t,)) then add (i, idxSum (add (i, 1,), t,),); (N) then 0›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; idxSum (0, rev (N, N,),)}
+//│ |_LUMBERHACK_ERROR|↵|#fun| |idxSum|(|i|,| |xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |add|(|i|,| |idxSum|(|add|(|i|,| |1|)|,| |t|)|)|↵|N| |#then| |0|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|idxSum|(|0|,| |rev|(|N|,| |N|)|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun idxSum = i, xs, => if xs is ‹(C (h, t,)) then add (i, idxSum (add (i, 1,), t,),); (N) then 0›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; idxSum (0, rev (N, N,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((idxSum^31 0) ((rev^34 [N]) [N]))
 //│ def idxSum = (fun i⁰ -> (fun xs⁰ -> case xs⁰ of {
@@ -294,21 +283,24 @@ idxSum(0, rev(N, N))
 //│ 				in ((add⁰ i²) ((idxSum₁ ((add⁰ i²) 1)) t²))) t1²)
 //│ 			| N => a²}))
 //│ <<<<<<< after fusion <<<<<<<
-//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,a,1)
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: binding not found: Ident(false,a,1)
+//│ !!!!!!ERROR!!!!!!
 
 
 
-
+// WRONG:
+_LUMBERHACK_ERROR
 fun count(xs) = if xs is
-    C(h, t) then add(1, count(t))
-    N then 0
+  C(h, t) then add(1, count(t))
+  N then 0
 fun rev(a, ys) = if ys is
-    C(h1, t1) then rev(C(h1, a), t1)
-    N then a
+  C(h1, t1) then rev(C(h1, a), t1)
+  N then a
 fun init = N
 count(rev(N, init))
-//│ |#fun| |count|(|xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |add|(|1|,| |count|(|t|)|)|↵|N| |#then| |0|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|#fun| |init| |#=| |N|↵|count|(|rev|(|N|,| |init|)|)|
-//│ Parsed: {fun count = xs, => if xs is ‹(C (h, t,)) then add (1, count (t,),); (N) then 0›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; fun init = N; count (rev (N, init,),)}
+//│ |_LUMBERHACK_ERROR|↵|#fun| |count|(|xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |add|(|1|,| |count|(|t|)|)|↵|N| |#then| |0|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|#fun| |init| |#=| |N|↵|count|(|rev|(|N|,| |init|)|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun count = xs, => if xs is ‹(C (h, t,)) then add (1, count (t,),); (N) then 0›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; fun init = N; count (rev (N, init,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (count^25 ((rev^26 [N]) init^29))
 //│ def count = (fun xs⁰ -> case xs⁰ of {
@@ -393,26 +385,20 @@ count(rev(N, init))
 //│ 				in ((add⁰ 1) (count₁ t¹))) t1¹)
 //│ 			| N => a¹}))
 //│ <<<<<<< after fusion <<<<<<<
-//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,a,2)
-//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
-//│ 	at: mlscript.lumberhack.Ctx.apply$$anonfun$1(Deforest.scala:200)
-//│ 	at: scala.collection.immutable.HashMap.getOrElse(HashMap.scala:683)
-//│ 	at: mlscript.lumberhack.Ctx.apply(Deforest.scala:200)
-//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:274)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
-//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
-//│ 	at: mlscript.lumberhack.Deforest.apply$$anonfun$2$$anonfun$1(Deforest.scala:326)
-//│ 	at: scala.collection.immutable.List.map(List.scala:250)
-//│ 	at: mlscript.lumberhack.Deforest.apply$$anonfun$2(Deforest.scala:336)
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: binding not found: Ident(false,a,2)
+//│ !!!!!!ERROR!!!!!!
 
 
+// WRONG:
+_LUMBERHACK_ERROR
 fun rev(a, ys) = if ys is
-    C(h1, t1) then rev(C(h1, a), t1)
-    N then a
+  C(h1, t1) then rev(C(h1, a), t1)
+  N then a
 fun init = C(0, init)
 rev(N, init)
-//│ |#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|#fun| |init| |#=| |C|(|0|,| |init|)|↵|rev|(|N|,| |init|)|
-//│ Parsed: {fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; fun init = C (0, init,); rev (N, init,)}
+//│ |_LUMBERHACK_ERROR|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|#fun| |init| |#=| |C|(|0|,| |init|)|↵|rev|(|N|,| |init|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; fun init = C (0, init,); rev (N, init,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((rev^16 [N]) init^19)
 //│ def init = [C 0 init^14]
@@ -472,24 +458,18 @@ rev(N, init)
 //│ 	def rev₁ = 
 //│ 		(fun a¹ -> (fun ys¹ -> ys¹))
 //│ <<<<<<< after fusion <<<<<<<
-//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,a,1)
-//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
-//│ 	at: mlscript.lumberhack.Ctx.apply$$anonfun$1(Deforest.scala:200)
-//│ 	at: scala.collection.immutable.HashMap.getOrElse(HashMap.scala:678)
-//│ 	at: mlscript.lumberhack.Ctx.apply(Deforest.scala:200)
-//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:274)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
-//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
-//│ 	at: mlscript.lumberhack.Deforest.$anonfun$1(Deforest.scala:282)
-//│ 	at: scala.collection.immutable.List.map(List.scala:250)
-//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:282)
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: binding not found: Ident(false,a,1)
+//│ !!!!!!ERROR!!!!!!
 
+// WRONG:
+_LUMBERHACK_ERROR
 fun rev(a, ys) = if ys is
-    C(h1, t1) then rev(C(h1, a), t1)
+  C(h1, t1) then rev(C(h1, a), t1)
 fun init = C(0, init)
 rev(N, init)
-//│ |#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|←|↵|#fun| |init| |#=| |C|(|0|,| |init|)|↵|rev|(|N|,| |init|)|
-//│ Parsed: {fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,)›; fun init = C (0, init,); rev (N, init,)}
+//│ |_LUMBERHACK_ERROR|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|←|↵|#fun| |init| |#=| |C|(|0|,| |init|)|↵|rev|(|N|,| |init|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,)›; fun init = C (0, init,); rev (N, init,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((rev^15 [N]) init^18)
 //│ def init = [C 0 init^13]
@@ -546,59 +526,25 @@ rev(N, init)
 //│ 	def rev₁ = 
 //│ 		(fun a² -> (fun ys² -> ys²))
 //│ <<<<<<< after fusion <<<<<<<
-//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,a,2)
-//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
-//│ 	at: mlscript.lumberhack.Ctx.apply$$anonfun$1(Deforest.scala:200)
-//│ 	at: scala.collection.immutable.HashMap.getOrElse(HashMap.scala:678)
-//│ 	at: mlscript.lumberhack.Ctx.apply(Deforest.scala:200)
-//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:274)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
-//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
-//│ 	at: mlscript.lumberhack.Deforest.$anonfun$1(Deforest.scala:282)
-//│ 	at: scala.collection.immutable.List.map(List.scala:250)
-//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:282)
-
-fun c(x) = if x is
-    C(a) then c(a)
-    N then N
-//│ |#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |c|(|a|)|↵|N| |#then| |N|←|
-//│ Parsed: {fun c = x, => if x is ‹(C (a,)) then c (a,); (N) then N›}
-//│ >>>>>>>>>> Original >>>>>>>>>>
-//│ def c = (fun x⁰ -> case x⁰ of {
-//│ 	C a⁰ => (c^2 a⁰)
-//│ 	| N => [N]})
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ 
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ 
-//│ 
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ 
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ 
-//│ 
-//│ <<<<<<< after fusion <<<<<<<
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: binding not found: Ident(false,a,2)
+//│ !!!!!!ERROR!!!!!!
 
 
+
+// WRONG:
+_LUMBERHACK_ERROR
 fun rev(a, ys) = if ys is
-    C(h1, t1) then rev(a, t1)
-    N then a
+  C(h1, t1) then rev(a, t1)
+  N then a
 fun rev2(a2, ys2) = if ys2 is
-    C(h12, t12) then rev2(a2, t12)
-    N then a2
+  C(h12, t12) then rev2(a2, t12)
+  N then a2
 fun init = C(0, init)
 fun init2 = C(0, init2)
 rev(rev2, init)(1, init2)
-//│ |#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|a|,| |t1|)|↵|N| |#then| |a|←|↵|#fun| |rev2|(|a2|,| |ys2|)| |#=| |#if| |ys2| |is|→|C|(|h12|,| |t12|)| |#then| |rev2|(|a2|,| |t12|)|↵|N| |#then| |a2|←|↵|#fun| |init| |#=| |C|(|0|,| |init|)|↵|#fun| |init2| |#=| |C|(|0|,| |init2|)|↵|rev|(|rev2|,| |init|)|(|1|,| |init2|)|
-//│ Parsed: {fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (a, t1,); (N) then a›; fun rev2 = a2, ys2, => if ys2 is ‹(C (h12, t12,)) then rev2 (a2, t12,); (N) then a2›; fun init = C (0, init,); fun init2 = C (0, init2,); rev (rev2, init,) (1, init2,)}
+//│ |_LUMBERHACK_ERROR|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|a|,| |t1|)|↵|N| |#then| |a|←|↵|#fun| |rev2|(|a2|,| |ys2|)| |#=| |#if| |ys2| |is|→|C|(|h12|,| |t12|)| |#then| |rev2|(|a2|,| |t12|)|↵|N| |#then| |a2|←|↵|#fun| |init| |#=| |C|(|0|,| |init|)|↵|#fun| |init2| |#=| |C|(|0|,| |init2|)|↵|rev|(|rev2|,| |init|)|(|1|,| |init2|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (a, t1,); (N) then a›; fun rev2 = a2, ys2, => if ys2 is ‹(C (h12, t12,)) then rev2 (a2, t12,); (N) then a2›; fun init = C (0, init,); fun init2 = C (0, init2,); rev (rev2, init,) (1, init2,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((((rev^27 rev2^28) init^30) 1) init2^34)
 //│ def init = [C 0 init^22]
@@ -680,14 +626,6 @@ rev(rev2, init)(1, init2)
 //│ 	def rev₁ = 
 //│ 		(fun a² -> (fun ys² -> ys²))
 //│ <<<<<<< after fusion <<<<<<<
-//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: binding not found: Ident(false,a,1)
-//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
-//│ 	at: mlscript.lumberhack.Ctx.apply$$anonfun$1(Deforest.scala:200)
-//│ 	at: scala.collection.immutable.HashMap.getOrElse(HashMap.scala:678)
-//│ 	at: mlscript.lumberhack.Ctx.apply(Deforest.scala:200)
-//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:274)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
-//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
-//│ 	at: mlscript.lumberhack.Deforest.process$$anonfun$1(Deforest.scala:277)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
-//│ 	at: mlscript.lumberhack.Deforest.process(Deforest.scala:314)
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: binding not found: Ident(false,a,1)
+//│ !!!!!!ERROR!!!!!!

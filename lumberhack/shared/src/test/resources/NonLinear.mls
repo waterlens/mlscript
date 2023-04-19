@@ -87,14 +87,16 @@ c(p(0))
 //│ 		(fun z¹ -> z¹)
 //│ <<<<<<< after fusion <<<<<<<
 
+// WRONG:
+_LUMBERHACK_ERROR
 fun last(ls) = if ls is
   C(h, t) then if t is
     C(hh, tt) then Some(last(t))
     N then Some(h)
   N then None
 last(C(A, C(B, N)))
-//│ |#fun| |last|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |t| |is|→|C|(|hh|,| |tt|)| |#then| |Some|(|last|(|t|)|)|↵|N| |#then| |Some|(|h|)|←|↵|N| |#then| |None|←|↵|last|(|C|(|A|,| |C|(|B|,| |N|)|)|)|
-//│ Parsed: {fun last = ls, => if ls is ‹(C (h, t,)) then if t is ‹(C (hh, tt,)) then Some (last (t,),); (N) then Some (h,)›; (N) then None›; last (C (A, C (B, N,),),)}
+//│ |_LUMBERHACK_ERROR|↵|#fun| |last|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |t| |is|→|C|(|hh|,| |tt|)| |#then| |Some|(|last|(|t|)|)|↵|N| |#then| |Some|(|h|)|←|↵|N| |#then| |None|←|↵|last|(|C|(|A|,| |C|(|B|,| |N|)|)|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun last = ls, => if ls is ‹(C (h, t,)) then if t is ‹(C (hh, tt,)) then Some (last (t,),); (N) then Some (h,)›; (N) then None›; last (C (A, C (B, N,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (last^13 [C [A] [C [B] [N]]])
 //│ def last = (fun ls⁰ -> case ls⁰ of {
@@ -169,15 +171,7 @@ last(C(A, C(B, N)))
 //│ 		def last₂ = 
 //│ 			(fun ls³ -> ls³)
 //│ <<<<<<< after fusion <<<<<<<
-//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: type error Some('h²) <: Destruct(C('hh¹, 'tt¹), N)
-//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
-//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1(Deforest.scala:431)
-//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$1(Deforest.scala:352)
-//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$adapted$1(Deforest.scala:352)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
-//│ 	at: mlscript.lumberhack.Deforest.handle$1(Deforest.scala:352)
-//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1$$anonfun$7(Deforest.scala:408)
-//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
-//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
-//│ 	at: scala.collection.immutable.List.foreach(List.scala:333)
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: type error Some('h²) <: Destruct(C('hh¹, 'tt¹), N)
+//│ !!!!!!ERROR!!!!!!
 

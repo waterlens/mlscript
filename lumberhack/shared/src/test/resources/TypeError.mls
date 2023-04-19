@@ -121,84 +121,22 @@ inter(l1)(l2)
 //│ <<<<<<< after fusion <<<<<<<
 
 
-//│ |#fun| |last|(|ys|)| |#=| |#if| |ys| |is|→|N| |#then| |x| |=>| |x|↵|C|(|h|,| |t|)| |#then| |x| |=>| |last|(|t|)|(|h|)|←|↵|#fun| |lastDrive|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |None|↵|C|(|hh|,| |tt|)| |#then| |Some|(|last|(|tt|)|(|hh|)|)|←|↵|lastDrive|(|C|(|A|,| |C|(|B|,| |N|)|)|)|
-//│ Parsed: {fun last = ys, => if ys is ‹(N) then x, => x; (C (h, t,)) then x, => last (t,) (h,)›; fun lastDrive = xs, => if xs is ‹(N) then None; (C (hh, tt,)) then Some (last (tt,) (hh,),)›; lastDrive (C (A, C (B, N,),),)}
-//│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (lastDrive^22 [C [A] [C [B] [N]]])
-//│ def last = (fun ys⁰ -> case ys⁰ of {
-//│ 	N => (fun x⁰ -> x⁰)
-//│ 	| C h⁰ t⁰ => (fun x¹ -> ((last^4 t⁰) h⁰))})
-//│ def lastDrive = (fun xs⁰ -> case xs⁰ of {
-//│ 	N => [None]
-//│ 	| C hh⁰ tt⁰ => [Some ((last^14 tt⁰) hh⁰)]})
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [lastDrive^22]
-//│ 	[lastDrive^22 · last^14]
-//│ 		[lastDrive^22 · last^14 · last^4]
-//│ 			[lastDrive^22 · last^14 · last^4 · last^4] ---> [lastDrive^22 · last^14 · last^4] (only one)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ (lastDrive₀ [C [A] [C [B] [N]]])
-//│ def lastDrive₀ = 
-//│ 	(fun xs¹ -> case xs¹ of {
-//│ 		N => [None]
-//│ 		| C hh¹ tt¹ => [Some ((last₀ tt¹) hh¹)]})
-//│ 	where
-//│ 	def last₀ = 
-//│ 		(fun ys¹ -> case ys¹ of {
-//│ 			N => (fun x² -> x²)
-//│ 			| C h¹ t¹ => (fun x³ -> ((last₁ t¹) h¹))})
-//│ 		where
-//│ 		def last₁ = 
-//│ 			(fun ys² -> case ys² of {
-//│ 				N => (fun x⁴ -> x⁴)
-//│ 				| C h² t² => (fun x⁵ -> ((last₁ t²) h²))})
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ [C [A] [C [B] [N]]] --->
-//│ 	case xs¹ of {N => [None] | C hh¹ tt¹ => [Some ((last₀ tt¹) hh¹)]}
-//│ [C [B] [N]] --->
-//│ 	case ys¹ of {N => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> ((last₁ t¹) h¹))}
-//│ [N] --->
-//│ 	case ys² of {N => (fun x⁴ -> x⁴) | C h² t² => (fun x⁵ -> ((last₁ t²) h²))}
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ (lastDrive₀ 
-//│ 	let hh¹ = [A]
-//│ 	in let tt¹ = 	
-//│ 		let h¹ = [B]
-//│ 		in let t¹ = (fun x⁴ -> x⁴)
-//│ 		in (fun x³ -> ((last₁ t¹) h¹))
-//│ 	in [Some ((last₀ tt¹) hh¹)])
-//│ def lastDrive₀ = 
-//│ 	(fun xs¹ -> xs¹)
-//│ 	where
-//│ 	def last₀ = 
-//│ 		(fun ys¹ -> ys¹)
-//│ 		where
-//│ 		def last₁ = 
-//│ 			(fun ys² -> ys²)
-//│ <<<<<<< after fusion <<<<<<<
 
-// WRONG:
+// WRONG: a wrong choice when resolving collision
+_LUMBERHACK_ERROR
 fun f(x) = if x is
-    C(a) then
-        if a is
-            A then N
-            B then g(D(a))
+  C(a) then
+    if a is
+      A then N
+      B then g(D(a))
 fun g(y) = if y is
-    D(b) then
-        if b is
-            A then N
-            B then f(C(b))
+  D(b) then
+    if b is
+      A then N
+      B then f(C(b))
 f(C(A))
-//│ |#fun| |f|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then|→|#if| |a| |is|→|A| |#then| |N|↵|B| |#then| |g|(|D|(|a|)|)|←|←|←|↵|#fun| |g|(|y|)| |#=| |#if| |y| |is|→|D|(|b|)| |#then|→|#if| |b| |is|→|A| |#then| |N|↵|B| |#then| |f|(|C|(|b|)|)|←|←|←|↵|f|(|C|(|A|)|)|
-//│ Parsed: {fun f = x, => if x is ‹(C (a,)) then {if a is ‹(A) then N; (B) then g (D (a,),)›}›; fun g = y, => if y is ‹(D (b,)) then {if b is ‹(A) then N; (B) then f (C (b,),)›}›; f (C (A,),)}
+//│ |_LUMBERHACK_ERROR|↵|#fun| |f|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then|→|#if| |a| |is|→|A| |#then| |N|↵|B| |#then| |g|(|D|(|a|)|)|←|←|←|↵|#fun| |g|(|y|)| |#=| |#if| |y| |is|→|D|(|b|)| |#then|→|#if| |b| |is|→|A| |#then| |N|↵|B| |#then| |f|(|C|(|b|)|)|←|←|←|↵|f|(|C|(|A|)|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun f = x, => if x is ‹(C (a,)) then {if a is ‹(A) then N; (B) then g (D (a,),)›}›; fun g = y, => if y is ‹(D (b,)) then {if b is ‹(A) then N; (B) then f (C (b,),)›}›; f (C (A,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (f^21 [C [A]])
 //│ def f = (fun x⁰ -> case x⁰ of {
@@ -259,22 +197,14 @@ f(C(A))
 //│ 	def g₀ = 
 //│ 		(fun y¹ -> y¹)
 //│ <<<<<<< after fusion <<<<<<<
-//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: type error N <: Destruct(A, B)
-//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
-//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1(Deforest.scala:431)
-//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$1(Deforest.scala:352)
-//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$adapted$1(Deforest.scala:352)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
-//│ 	at: mlscript.lumberhack.Deforest.handle$1(Deforest.scala:352)
-//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1$$anonfun$7(Deforest.scala:408)
-//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
-//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
-//│ 	at: scala.collection.immutable.List.foreach(List.scala:333)
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: type error N <: Destruct(A, B)
+//│ !!!!!!ERROR!!!!!!
 
 
 // WRONG: lazy eval?
 fun c(x) = if x is
-    C(a) then primitive(a) // print(a)
+  C(a) then primitive(a) // print(a)
 fun f(a) = if False then c(a) else Unit
 f(C(A))
 //│ |#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |primitive|(|a|)| |/* print(a)*/|←|↵|#fun| |f|(|a|)| |#=| |#if| |False| |#then| |c|(|a|)| |#else| |Unit|↵|f|(|C|(|A|)|)|

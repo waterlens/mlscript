@@ -286,6 +286,8 @@ f(a => if (if a is
 //│ <<<<<<< after fusion <<<<<<<
 
 // WRONG: the outer match is "shadowed" by only one branch of the inner 
+// maybe can try
+// rewrite into the constructor, AND also + then use id strategy
 fun f(c) = P(c(A), c(B))
 f(a => if (if a is
   A then X
@@ -397,6 +399,9 @@ f(A)(C(K))
 
 
 // WRONG: rewrite into consumer?
+// f(x) = if primitive then x else g(x)
+// g(y) = let a = A in a
+// f(C(A))
 fun f(x) = if primitive then x else g(x)
 fun g(y) = if y is
     C(a) then a
@@ -529,21 +534,26 @@ c(p(0))
 //│ <<<<<<< after fusion <<<<<<<
 
 
-// WRONG:
+// WRONG:, but maybe can be fused to this:
+// f(xf) = if primitive then g(xf) else h(xf)
+// g(xg) = G
+// h(xh) = H
+// f(C)
+_LUMBERHACK_ERROR
 fun f(xf) = if primitive then g(xf) else h(xf)
 fun g(xg) = if xg is
-    C then G
-fun h(xf) = if xf is
-    C then H
+  C then G
+fun h(xh) = if xh is
+  C then H
 f(C)
-//│ |#fun| |f|(|xf|)| |#=| |#if| |primitive| |#then| |g|(|xf|)| |#else| |h|(|xf|)|↵|#fun| |g|(|xg|)| |#=| |#if| |xg| |is|→|C| |#then| |G|←|↵|#fun| |h|(|xf|)| |#=| |#if| |xf| |is|→|C| |#then| |H|←|↵|f|(|C|)|
-//│ Parsed: {fun f = xf, => if (primitive) then g (xf,) else h (xf,); fun g = xg, => if xg is ‹(C) then G›; fun h = xf, => if xf is ‹(C) then H›; f (C,)}
+//│ |_LUMBERHACK_ERROR|↵|#fun| |f|(|xf|)| |#=| |#if| |primitive| |#then| |g|(|xf|)| |#else| |h|(|xf|)|↵|#fun| |g|(|xg|)| |#=| |#if| |xg| |is|→|C| |#then| |G|←|↵|#fun| |h|(|xh|)| |#=| |#if| |xh| |is|→|C| |#then| |H|←|↵|f|(|C|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun f = xf, => if (primitive) then g (xf,) else h (xf,); fun g = xg, => if xg is ‹(C) then G›; fun h = xh, => if xh is ‹(C) then H›; f (C,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (f^18 [C])
 //│ def f = (fun xf⁰ -> if primitive⁰ then (g^2 xf⁰) else (h^5 xf⁰))
 //│ def g = (fun xg⁰ -> case xg⁰ of {
 //│ 	C => [G]})
-//│ def h = (fun xf¹ -> case xf¹ of {
+//│ def h = (fun xh⁰ -> case xh⁰ of {
 //│ 	C => [H]})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -556,42 +566,113 @@ f(C)
 //│ >>>>>>> expanded program >>>>>>>
 //│ (f₀ [C])
 //│ def f₀ = 
-//│ 	(fun xf³ -> if primitive⁰ then (g₀ xf³) else (h₀ xf³))
+//│ 	(fun xf¹ -> if primitive⁰ then (g₀ xf¹) else (h₀ xf¹))
 //│ 	where
 //│ 	def g₀ = 
 //│ 		(fun xg¹ -> case xg¹ of {
 //│ 			C => [G]})
 //│ 	def h₀ = 
-//│ 		(fun xf² -> case xf² of {
+//│ 		(fun xh¹ -> case xh¹ of {
 //│ 			C => [H]})
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C] --->
-//│ 	case xf² of {C => [H]}
 //│ 	case xg¹ of {C => [G]}
+//│ 	case xh¹ of {C => [H]}
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (f₀ [G])
 //│ def f₀ = 
-//│ 	(fun xf³ -> if primitive⁰ then (g₀ xf³) else (h₀ xf³))
+//│ 	(fun xf¹ -> if primitive⁰ then (g₀ xf¹) else (h₀ xf¹))
 //│ 	where
 //│ 	def g₀ = 
 //│ 		(fun xg¹ -> xg¹)
 //│ 	def h₀ = 
-//│ 		(fun xf² -> case xf² of {
+//│ 		(fun xh¹ -> case xh¹ of {
 //│ 			C => [H]})
 //│ <<<<<<< after fusion <<<<<<<
-//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: type error G <: Destruct(C)
-//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
-//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1(Deforest.scala:431)
-//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$1(Deforest.scala:352)
-//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$adapted$1(Deforest.scala:352)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
-//│ 	at: mlscript.lumberhack.Deforest.handle$1(Deforest.scala:352)
-//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1$$anonfun$7(Deforest.scala:408)
-//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
-//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
-//│ 	at: scala.collection.immutable.List.foreach(List.scala:333)
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: type error G <: Destruct(C)
+//│ !!!!!!ERROR!!!!!!
+
+// WRONG: wrong knots, because the knots are tied using only one
+// of the many variables in this function definition
+let rec t = T(X, T(Y, t, t), t)
+fun f(x) = if x is
+  T(a, l, r) then if r is
+    T(b, ll, rr) then T(a, T(b, f(rr), f(ll)), f(l))
+f(t)
+//│ |#let| |#rec| |t| |#=| |T|(|X|,| |T|(|Y|,| |t|,| |t|)|,| |t|)|↵|#fun| |f|(|x|)| |#=| |#if| |x| |is|→|T|(|a|,| |l|,| |r|)| |#then| |#if| |r| |is|→|T|(|b|,| |ll|,| |rr|)| |#then| |T|(|a|,| |T|(|b|,| |f|(|rr|)|,| |f|(|ll|)|)|,| |f|(|l|)|)|←|←|↵|f|(|t|)|
+//│ Parsed: {let rec t = T (X, T (Y, t, t,), t,); fun f = x, => if x is ‹(T (a, l, r,)) then if r is ‹(T (b, ll, rr,)) then T (a, T (b, f (rr,), f (ll,),), f (l,),)››; f (t,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (f^26 t^27)
+//│ def f = (fun x⁰ -> case x⁰ of {
+//│ 	T a⁰ l⁰ r⁰ => case r⁰ of {
+//│ 		T b⁰ ll⁰ rr⁰ => [T a⁰ [T b⁰ (f^12 rr⁰) (f^15 ll⁰)] (f^19 l⁰)]}})
+//│ def t = [T [X] [T [Y] t^3 t^4] t^6]
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^26]
+//│ 	[f^26 · f^12] ---> [f^26] (only one)
+//│ 	[f^26 · f^15] ---> [f^26] (only one)
+//│ 	[f^26 · f^19]
+//│ 		[f^26 · f^19 · f^12] ---> [f^26] (only one)
+//│ 		[f^26 · f^19 · f^15] ---> [f^26 · f^19] (only one)
+//│ 		[f^26 · f^19 · f^19] ---> [f^26] (only one)
+//│ [t^27]
+//│ 	[t^27 · t^3] ---> [t^27] (only one)
+//│ 	[t^27 · t^4] ---> [t^27] (only one)
+//│ 	[t^27 · t^6] ---> [t^27] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀ t₀)
+//│ def f₀ = 
+//│ 	(fun x² -> case x² of {
+//│ 		T a² l² r² => case r² of {
+//│ 			T b² ll² rr² => [T a² [T b² (f₀ rr²) (f₀ ll²)] (f₁ l²)]}})
+//│ 	where
+//│ 	def f₁ = 
+//│ 		(fun x¹ -> case x¹ of {
+//│ 			T a¹ l¹ r¹ => case r¹ of {
+//│ 				T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₁ ll¹)] (f₀ l¹)]}})
+//│ def t₀ = 
+//│ 	[T [X] [T [Y] t₀ t₀] t₀]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [T [X] [T [Y] t₀ t₀] t₀] --->
+//│ 	case r² of {T b² ll² rr² => [T a² [T b² (f₀ rr²) (f₀ ll²)] (f₁ l²)]}
+//│ 	case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₁ ll¹)] (f₀ l¹)]}
+//│ 	case x² of {T a² l² r² => case r² of {T b² ll² rr² => [T a² [T b² (f₀ rr²) (f₀ ll²)] (f₁ l²)]}}
+//│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₁ ll¹)] (f₀ l¹)]}}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [T [Y] t₀ t₀] --->
+//│ 	case x² of {T a² l² r² => case r² of {T b² ll² rr² => [T a² [T b² (f₀ rr²) (f₀ ll²)] (f₁ l²)]}}
+//│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₁ ll¹)] (f₀ l¹)]}}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ t₀)
+//│ def f₀ = 
+//│ 	(fun x² -> x²)
+//│ 	where
+//│ 	def f₁ = 
+//│ 		(fun x¹ -> x¹)
+//│ def t₀ = 
+//│ 	let a² = [X]
+//│ 	in let l² = 	
+//│ 		let a¹ = [Y]
+//│ 		in let l¹ = t₀
+//│ 		in let r¹ = t₀
+//│ 		in case r¹ of {
+//│ 			T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₁ ll¹)] (f₀ l¹)]}
+//│ 	in let r² = t₀
+//│ 	in case r² of {
+//│ 		T b² ll² rr² => [T a² [T b² (f₀ rr²) (f₀ ll²)] (f₁ l²)]}
+//│ <<<<<<< after fusion <<<<<<<

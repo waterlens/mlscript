@@ -2,12 +2,11 @@
 :ParseOnly
 
 
-
-
-// NOTE: branch
+// WRONG: it returns something like: C(1, C(9, C(2, C(10, ys => ys))))
+// despite the fact that there is no clash at all
 fun inter(xs) = if xs is
-    N then ys => ys
-    C(h, t) then ys => C(h, inter(ys)(t))
+  N then ys => ys
+  C(h, t) then ys => C(h, inter(ys)(t))
 let l1 = C(1, C(2, N))
 let l2 = C(9, C(10, N))
 inter(l1)(l2)
@@ -122,18 +121,6 @@ inter(l1)(l2)
 //│ <<<<<<< after fusion <<<<<<<
 
 
-
-
-
-
-
-fun last(ys) = if ys is
-    N then x => x
-    C(h, t) then x => last(t)(h)
-fun lastDrive(xs) = if xs is
-    N then None
-    C(hh, tt) then Some(last(tt)(hh))
-lastDrive(C(A, C(B, N)))
 //│ |#fun| |last|(|ys|)| |#=| |#if| |ys| |is|→|N| |#then| |x| |=>| |x|↵|C|(|h|,| |t|)| |#then| |x| |=>| |last|(|t|)|(|h|)|←|↵|#fun| |lastDrive|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |None|↵|C|(|hh|,| |tt|)| |#then| |Some|(|last|(|tt|)|(|hh|)|)|←|↵|lastDrive|(|C|(|A|,| |C|(|B|,| |N|)|)|)|
 //│ Parsed: {fun last = ys, => if ys is ‹(N) then x, => x; (C (h, t,)) then x, => last (t,) (h,)›; fun lastDrive = xs, => if xs is ‹(N) then None; (C (hh, tt,)) then Some (last (tt,) (hh,),)›; lastDrive (C (A, C (B, N,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
@@ -198,7 +185,7 @@ lastDrive(C(A, C(B, N)))
 //│ 			(fun ys² -> ys²)
 //│ <<<<<<< after fusion <<<<<<<
 
-
+// WRONG:
 fun f(x) = if x is
     C(a) then
         if a is

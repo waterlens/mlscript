@@ -2033,3 +2033,566 @@ lastDrive(C(1, C(2, N)))
 //│ 		def last₁ = 
 //│ 			(fun ys² -> ys²)
 //│ <<<<<<< after fusion <<<<<<<
+
+// CORRECT: with expanding termination
+let p = C(p)
+fun c(x) = if C(x) is
+    C(a) then c(a)
+c(p)
+//│ |#let| |p| |#=| |C|(|p|)|↵|#fun| |c|(|x|)| |#=| |#if| |C|(|x|)| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|c|(|p|)|
+//│ Parsed: {let p = C (p,); fun c = x, => if C (x,) is ‹(C (a,)) then c (a,)›; c (p,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (c^10 p^11)
+//│ def c = (fun x⁰ -> case [C x⁰] of {
+//│ 	C a⁰ => (c^5 a⁰)})
+//│ def p = [C p^1]
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [c^10] (hopeless to continue)
+//│ 	[c^10 · c^5] ---> [c^10] (using original def)
+//│ [p^11] (hopeless to continue)
+//│ 	[p^11 · p^1] ---> [p^11] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c₀ p₀)
+//│ def c₀ = 
+//│ 	(fun x¹ -> case [C x¹] of {
+//│ 		C a¹ => (c₀ a¹)})
+//│ def p₀ = 
+//│ 	[C p₀]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C x¹] --->
+//│ 	case [C x¹] of {C a¹ => (c₀ a¹)}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (c₀ p₀)
+//│ def c₀ = 
+//│ 	(fun x¹ -> 
+//│ 		let a¹ = x¹
+//│ 		in (c₀ a¹))
+//│ def p₀ = 
+//│ 	[C p₀]
+//│ <<<<<<< after fusion <<<<<<<
+
+
+// CORRECT: with expanding termination
+let rec p = C(p)
+fun c(x) = if x is
+    C(a) then a
+fun main(y) = c(p)
+main(0)
+//│ |#let| |#rec| |p| |#=| |C|(|p|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |a|←|↵|#fun| |main|(|y|)| |#=| |c|(|p|)|↵|main|(|0|)|
+//│ Parsed: {let rec p = C (p,); fun c = x, => if x is ‹(C (a,)) then a›; fun main = y, => c (p,); main (0,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (main^11 0)
+//│ def c = (fun x⁰ -> case x⁰ of {
+//│ 	C a⁰ => a⁰})
+//│ def main = (fun y⁰ -> (c^7 p^8))
+//│ def p = [C p^1]
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [main^11] (hopeless to continue)
+//│ 	[main^11 · c^7] (using original def)
+//│ 	[main^11 · p^8] (using original def)
+//│ 		[main^11 · p^8 · p^1] ---> [main^11 · p^8] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (main₀ 0)
+//│ def main₀ = 
+//│ 	(fun y¹ -> (c₀ p₀))
+//│ 	where
+//│ 	def c₀ = 
+//│ 		(fun x¹ -> case x¹ of {
+//│ 			C a¹ => a¹})
+//│ 	def p₀ = 
+//│ 		[C p₀]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C p₀] --->
+//│ 	case x¹ of {C a¹ => a¹}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (main₀ 0)
+//│ def main₀ = 
+//│ 	(fun y¹ -> (c₀ p₀))
+//│ 	where
+//│ 	def c₀ = 
+//│ 		(fun x¹ -> x¹)
+//│ 	def p₀ = 
+//│ 		let a¹ = p₀
+//│ 		in a¹
+//│ <<<<<<< after fusion <<<<<<<
+
+// CORRECT: although multiple matches
+// top level definitions as producers can be duplicated
+fun c1(x1) = if x1 is
+  A then AA
+  B then BB
+fun c2(x2) = if x2 is
+  A then AAA
+  B then BBB
+let a = A
+c1(a)
+c2(a)
+c2(B)
+//│ |#fun| |c1|(|x1|)| |#=| |#if| |x1| |is|→|A| |#then| |AA|↵|B| |#then| |BB|←|↵|#fun| |c2|(|x2|)| |#=| |#if| |x2| |is|→|A| |#then| |AAA|↵|B| |#then| |BBB|←|↵|#let| |a| |#=| |A|↵|c1|(|a|)|↵|c2|(|a|)|↵|c2|(|B|)|
+//│ Parsed: {fun c1 = x1, => if x1 is ‹(A) then AA; (B) then BB›; fun c2 = x2, => if x2 is ‹(A) then AAA; (B) then BBB›; let a = A; c1 (a,); c2 (a,); c2 (B,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (c1^12 a^13)
+//│ (c2^15 a^16)
+//│ (c2^18 [B])
+//│ def a = [A]
+//│ def c1 = (fun x1⁰ -> case x1⁰ of {
+//│ 	A => [AA]
+//│ 	| B => [BB]})
+//│ def c2 = (fun x2⁰ -> case x2⁰ of {
+//│ 	A => [AAA]
+//│ 	| B => [BBB]})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [a^13] (hopeless to continue)
+//│ [a^16] (hopeless to continue)
+//│ [c1^12] (hopeless to continue)
+//│ [c2^15] (hopeless to continue)
+//│ [c2^18] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c1₀ a₀)
+//│ (c2₀ a₁)
+//│ (c2₁ [B])
+//│ def a₀ = 
+//│ 	[A]
+//│ def a₁ = 
+//│ 	[A]
+//│ def c1₀ = 
+//│ 	(fun x1¹ -> case x1¹ of {
+//│ 		A => [AA]
+//│ 		| B => [BB]})
+//│ def c2₀ = 
+//│ 	(fun x2¹ -> case x2¹ of {
+//│ 		A => [AAA]
+//│ 		| B => [BBB]})
+//│ def c2₁ = 
+//│ 	(fun x2² -> case x2² of {
+//│ 		A => [AAA]
+//│ 		| B => [BBB]})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [A] --->
+//│ 	case x1¹ of {A => [AA] | B => [BB]}
+//│ [A] --->
+//│ 	case x2¹ of {A => [AAA] | B => [BBB]}
+//│ [B] --->
+//│ 	case x2² of {A => [AAA] | B => [BBB]}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (c1₀ a₀)
+//│ (c2₀ a₁)
+//│ (c2₁ [BBB])
+//│ def a₀ = 
+//│ 	[AA]
+//│ def a₁ = 
+//│ 	[AAA]
+//│ def c1₀ = 
+//│ 	(fun x1¹ -> x1¹)
+//│ def c2₀ = 
+//│ 	(fun x2¹ -> x2¹)
+//│ def c2₁ = 
+//│ 	(fun x2² -> x2²)
+//│ <<<<<<< after fusion <<<<<<<
+
+
+// CORRECT: the single rev can work, because the expansion can
+// handle the correct time of expansion
+fun rev(ls) = if ls is
+  N then a => a
+  C(h, t) then a => rev(t)(C(h, a))
+rev(C(AA, C(BB, C(CC, N))))(N)
+//│ |#fun| |rev|(|ls|)| |#=| |#if| |ls| |is|→|N| |#then| |a| |=>| |a|↵|C|(|h|,| |t|)| |#then| |a| |=>| |rev|(|t|)|(|C|(|h|,| |a|)|)|←|↵|rev|(|C|(|AA|,| |C|(|BB|,| |C|(|CC|,| |N|)|)|)|)|(|N|)|
+//│ Parsed: {fun rev = ls, => if ls is ‹(N) then a, => a; (C (h, t,)) then a, => rev (t,) (C (h, a,),)›; rev (C (AA, C (BB, C (CC, N,),),),) (N,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ ((rev^14 [C [AA] [C [BB] [C [CC] [N]]]]) [N])
+//│ def rev = (fun ls⁰ -> case ls⁰ of {
+//│ 	N => (fun a⁰ -> a⁰)
+//│ 	| C h⁰ t⁰ => (fun a¹ -> ((rev^4 t⁰) [C h⁰ a¹]))})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [rev^14]
+//│ 	[rev^14 · rev^4]
+//│ 		[rev^14 · rev^4 · rev^4]
+//│ 			[rev^14 · rev^4 · rev^4 · rev^4]
+//│ 				[rev^14 · rev^4 · rev^4 · rev^4 · rev^4] ---> [rev^14 · rev^4 · rev^4 · rev^4] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((rev₀ [C [AA] [C [BB] [C [CC] [N]]]]) [N])
+//│ def rev₀ = 
+//│ 	(fun ls⁴ -> case ls⁴ of {
+//│ 		N => (fun a⁸ -> a⁸)
+//│ 		| C h⁴ t⁴ => (fun a⁹ -> ((rev₁ t⁴) [C h⁴ a⁹]))})
+//│ 	where
+//│ 	def rev₁ = 
+//│ 		(fun ls³ -> case ls³ of {
+//│ 			N => (fun a⁶ -> a⁶)
+//│ 			| C h³ t³ => (fun a⁷ -> ((rev₂ t³) [C h³ a⁷]))})
+//│ 		where
+//│ 		def rev₂ = 
+//│ 			(fun ls² -> case ls² of {
+//│ 				N => (fun a⁴ -> a⁴)
+//│ 				| C h² t² => (fun a⁵ -> ((rev₃ t²) [C h² a⁵]))})
+//│ 			where
+//│ 			def rev₃ = 
+//│ 				(fun ls¹ -> case ls¹ of {
+//│ 					N => (fun a² -> a²)
+//│ 					| C h¹ t¹ => (fun a³ -> ((rev₃ t¹) [C h¹ a³]))})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C [AA] [C [BB] [C [CC] [N]]]] --->
+//│ 	case ls⁴ of {N => (fun a⁸ -> a⁸) | C h⁴ t⁴ => (fun a⁹ -> ((rev₁ t⁴) [C h⁴ a⁹]))}
+//│ [C [BB] [C [CC] [N]]] --->
+//│ 	case ls³ of {N => (fun a⁶ -> a⁶) | C h³ t³ => (fun a⁷ -> ((rev₂ t³) [C h³ a⁷]))}
+//│ [C [CC] [N]] --->
+//│ 	case ls² of {N => (fun a⁴ -> a⁴) | C h² t² => (fun a⁵ -> ((rev₃ t²) [C h² a⁵]))}
+//│ [N] --->
+//│ 	case ls¹ of {N => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₃ t¹) [C h¹ a³]))}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((rev₀ 
+//│ 	let h⁴ = [AA]
+//│ 	in let t⁴ = 	
+//│ 		let h³ = [BB]
+//│ 		in let t³ = 	
+//│ 			let h² = [CC]
+//│ 			in let t² = (fun a² -> a²)
+//│ 			in (fun a⁵ -> ((rev₃ t²) [C h² a⁵]))
+//│ 		in (fun a⁷ -> ((rev₂ t³) [C h³ a⁷]))
+//│ 	in (fun a⁹ -> ((rev₁ t⁴) [C h⁴ a⁹]))) [N])
+//│ def rev₀ = 
+//│ 	(fun ls⁴ -> ls⁴)
+//│ 	where
+//│ 	def rev₁ = 
+//│ 		(fun ls³ -> ls³)
+//│ 		where
+//│ 		def rev₂ = 
+//│ 			(fun ls² -> ls²)
+//│ 			where
+//│ 			def rev₃ = 
+//│ 				(fun ls¹ -> ls¹)
+//│ <<<<<<< after fusion <<<<<<<
+
+
+
+// CORRECT:
+fun last(ys) = if ys is
+    N then x => x
+    C(h, t) then x => last(t)(h)
+fun lastDrive(xs) = if xs is
+    N then None
+    C(hh, tt) then Some(last(tt)(hh))
+lastDrive(C(1, C(2, N)))
+//│ |#fun| |last|(|ys|)| |#=| |#if| |ys| |is|→|N| |#then| |x| |=>| |x|↵|C|(|h|,| |t|)| |#then| |x| |=>| |last|(|t|)|(|h|)|←|↵|#fun| |lastDrive|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |None|↵|C|(|hh|,| |tt|)| |#then| |Some|(|last|(|tt|)|(|hh|)|)|←|↵|lastDrive|(|C|(|1|,| |C|(|2|,| |N|)|)|)|
+//│ Parsed: {fun last = ys, => if ys is ‹(N) then x, => x; (C (h, t,)) then x, => last (t,) (h,)›; fun lastDrive = xs, => if xs is ‹(N) then None; (C (hh, tt,)) then Some (last (tt,) (hh,),)›; lastDrive (C (1, C (2, N,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (lastDrive^22 [C 1 [C 2 [N]]])
+//│ def last = (fun ys⁰ -> case ys⁰ of {
+//│ 	N => (fun x⁰ -> x⁰)
+//│ 	| C h⁰ t⁰ => (fun x¹ -> ((last^4 t⁰) h⁰))})
+//│ def lastDrive = (fun xs⁰ -> case xs⁰ of {
+//│ 	N => [None]
+//│ 	| C hh⁰ tt⁰ => [Some ((last^14 tt⁰) hh⁰)]})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [lastDrive^22]
+//│ 	[lastDrive^22 · last^14]
+//│ 		[lastDrive^22 · last^14 · last^4]
+//│ 			[lastDrive^22 · last^14 · last^4 · last^4] ---> [lastDrive^22 · last^14 · last^4] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (lastDrive₀ [C 1 [C 2 [N]]])
+//│ def lastDrive₀ = 
+//│ 	(fun xs¹ -> case xs¹ of {
+//│ 		N => [None]
+//│ 		| C hh¹ tt¹ => [Some ((last₀ tt¹) hh¹)]})
+//│ 	where
+//│ 	def last₀ = 
+//│ 		(fun ys¹ -> case ys¹ of {
+//│ 			N => (fun x² -> x²)
+//│ 			| C h¹ t¹ => (fun x³ -> ((last₁ t¹) h¹))})
+//│ 		where
+//│ 		def last₁ = 
+//│ 			(fun ys² -> case ys² of {
+//│ 				N => (fun x⁴ -> x⁴)
+//│ 				| C h² t² => (fun x⁵ -> ((last₁ t²) h²))})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [C 2 [N]]] --->
+//│ 	case xs¹ of {N => [None] | C hh¹ tt¹ => [Some ((last₀ tt¹) hh¹)]}
+//│ [C 2 [N]] --->
+//│ 	case ys¹ of {N => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> ((last₁ t¹) h¹))}
+//│ [N] --->
+//│ 	case ys² of {N => (fun x⁴ -> x⁴) | C h² t² => (fun x⁵ -> ((last₁ t²) h²))}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (lastDrive₀ 
+//│ 	let hh¹ = 1
+//│ 	in let tt¹ = 	
+//│ 		let h¹ = 2
+//│ 		in let t¹ = (fun x⁴ -> x⁴)
+//│ 		in (fun x³ -> ((last₁ t¹) h¹))
+//│ 	in [Some ((last₀ tt¹) hh¹)])
+//│ def lastDrive₀ = 
+//│ 	(fun xs¹ -> xs¹)
+//│ 	where
+//│ 	def last₀ = 
+//│ 		(fun ys¹ -> ys¹)
+//│ 		where
+//│ 		def last₁ = 
+//│ 			(fun ys² -> ys²)
+//│ <<<<<<< after fusion <<<<<<<
+
+// CORRECT: the time of unrolling is correct
+fun id(k) = k
+fun id1(x) = id(x)
+fun id2(y) = y
+fun id3(z) = z
+let rec p = C(C(C(id7(C(C(id1(p)))))))
+fun c(xx) = if xx is
+    C(a) then c(a)
+fun id4(k) = k
+fun id5(j) = j
+fun id6(l) = l
+fun id7(i) = i
+id6(id4)(c)(id5(id2)(id3(p)))
+//│ |#fun| |id|(|k|)| |#=| |k|↵|#fun| |id1|(|x|)| |#=| |id|(|x|)|↵|#fun| |id2|(|y|)| |#=| |y|↵|#fun| |id3|(|z|)| |#=| |z|↵|#let| |#rec| |p| |#=| |C|(|C|(|C|(|id7|(|C|(|C|(|id1|(|p|)|)|)|)|)|)|)|↵|#fun| |c|(|xx|)| |#=| |#if| |xx| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|#fun| |id4|(|k|)| |#=| |k|↵|#fun| |id5|(|j|)| |#=| |j|↵|#fun| |id6|(|l|)| |#=| |l|↵|#fun| |id7|(|i|)| |#=| |i|↵|id6|(|id4|)|(|c|)|(|id5|(|id2|)|(|id3|(|p|)|)|)|
+//│ Parsed: {fun id = k, => k; fun id1 = x, => id (x,); fun id2 = y, => y; fun id3 = z, => z; let rec p = C (C (C (id7 (C (C (id1 (p,),),),),),),); fun c = xx, => if xx is ‹(C (a,)) then c (a,)›; fun id4 = k, => k; fun id5 = j, => j; fun id6 = l, => l; fun id7 = i, => i; id6 (id4,) (c,) (id5 (id2,) (id3 (p,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (((id6^35 id4^36) c^38) ((id5^40 id2^41) (id3^43 p^44)))
+//│ def c = (fun xx⁰ -> case xx⁰ of {
+//│ 	C a⁰ => (c^22 a⁰)})
+//│ def id = (fun k⁰ -> k⁰)
+//│ def id1 = (fun x⁰ -> (id^3 x⁰))
+//│ def id2 = (fun y⁰ -> y⁰)
+//│ def id3 = (fun z⁰ -> z⁰)
+//│ def id4 = (fun k¹ -> k¹)
+//│ def id5 = (fun j⁰ -> j⁰)
+//│ def id6 = (fun l⁰ -> l⁰)
+//│ def id7 = (fun i⁰ -> i⁰)
+//│ def p = [C [C [C (id7^11 [C [C (id1^12 p^13)]])]]]
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [c^38]
+//│ 	[c^38 · c^22]
+//│ 		[c^38 · c^22 · c^22]
+//│ 			[c^38 · c^22 · c^22 · c^22]
+//│ 				[c^38 · c^22 · c^22 · c^22 · c^22]
+//│ 					[c^38 · c^22 · c^22 · c^22 · c^22 · c^22]
+//│ 						[c^38 · c^22 · c^22 · c^22 · c^22 · c^22 · c^22]
+//│ 							[c^38 · c^22 · c^22 · c^22 · c^22 · c^22 · c^22 · c^22]
+//│ 								[c^38 · c^22 · c^22 · c^22 · c^22 · c^22 · c^22 · c^22 · c^22]
+//│ 									[c^38 · c^22 · c^22 · c^22 · c^22 · c^22 · c^22 · c^22 · c^22 · c^22] ---> [c^38 · c^22 · c^22 · c^22 · c^22] (only one)
+//│ [id2^41] (hopeless to continue)
+//│ [id3^43] (hopeless to continue)
+//│ [id4^36] (hopeless to continue)
+//│ [id5^40] (hopeless to continue)
+//│ [id6^35] (hopeless to continue)
+//│ [p^44]
+//│ 	[p^44 · id1^12] (hopeless to continue)
+//│ 		[p^44 · id1^12 · id^3] (using original def)
+//│ 	[p^44 · id7^11] (hopeless to continue)
+//│ 	[p^44 · p^13]
+//│ 		[p^44 · p^13 · id1^12] (hopeless to continue)
+//│ 			[p^44 · p^13 · id1^12 · id^3] (using original def)
+//│ 		[p^44 · p^13 · id7^11] (hopeless to continue)
+//│ 		[p^44 · p^13 · p^13] ---> [p^44 · p^13] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (((id6₀ id4₀) c₀) ((id5₀ id2₀) (id3₀ p₀)))
+//│ def c₀ = 
+//│ 	(fun xx⁷ -> case xx⁷ of {
+//│ 		C a⁷ => (c₁ a⁷)})
+//│ 	where
+//│ 	def c₁ = 
+//│ 		(fun xx³ -> case xx³ of {
+//│ 			C a³ => (c₂ a³)})
+//│ 		where
+//│ 		def c₂ = 
+//│ 			(fun xx⁵ -> case xx⁵ of {
+//│ 				C a⁵ => (c₃ a⁵)})
+//│ 			where
+//│ 			def c₃ = 
+//│ 				(fun xx² -> case xx² of {
+//│ 					C a² => (c₄ a²)})
+//│ 				where
+//│ 				def c₄ = 
+//│ 					(fun xx⁴ -> case xx⁴ of {
+//│ 						C a⁴ => (c₅ a⁴)})
+//│ 					where
+//│ 					def c₅ = 
+//│ 						(fun xx⁸ -> case xx⁸ of {
+//│ 							C a⁸ => (c₆ a⁸)})
+//│ 						where
+//│ 						def c₆ = 
+//│ 							(fun xx⁹ -> case xx⁹ of {
+//│ 								C a⁹ => (c₇ a⁹)})
+//│ 							where
+//│ 							def c₇ = 
+//│ 								(fun xx¹ -> case xx¹ of {
+//│ 									C a¹ => (c₈ a¹)})
+//│ 								where
+//│ 								def c₈ = 
+//│ 									(fun xx⁶ -> case xx⁶ of {
+//│ 										C a⁶ => (c₄ a⁶)})
+//│ def id2₀ = 
+//│ 	(fun y¹ -> y¹)
+//│ def id3₀ = 
+//│ 	(fun z¹ -> z¹)
+//│ def id4₀ = 
+//│ 	(fun k³ -> k³)
+//│ def id5₀ = 
+//│ 	(fun j¹ -> j¹)
+//│ def id6₀ = 
+//│ 	(fun l¹ -> l¹)
+//│ def p₀ = 
+//│ 	[C [C [C (id7₀ [C [C (id1₀ p₁)]])]]]
+//│ 	where
+//│ 	def id1₀ = 
+//│ 		(fun x¹ -> (id₀ x¹))
+//│ 		where
+//│ 		def id₀ = 
+//│ 			(fun k⁴ -> k⁴)
+//│ 	def id7₀ = 
+//│ 		(fun i¹ -> i¹)
+//│ 	def p₁ = 
+//│ 		[C [C [C (id7₁ [C [C (id1₁ p₁)]])]]]
+//│ 		where
+//│ 		def id1₁ = 
+//│ 			(fun x² -> (id₁ x²))
+//│ 			where
+//│ 			def id₁ = 
+//│ 				(fun k² -> k²)
+//│ 		def id7₁ = 
+//│ 			(fun i² -> i²)
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C (id1₀ p₁)] --->
+//│ 	case xx⁴ of {C a⁴ => (c₅ a⁴)}
+//│ [C (id1₁ p₁)] --->
+//│ 	case xx⁴ of {C a⁴ => (c₅ a⁴)}
+//│ [C (id7₀ [C [C (id1₀ p₁)]])] --->
+//│ 	case xx⁵ of {C a⁵ => (c₃ a⁵)}
+//│ [C (id7₁ [C [C (id1₁ p₁)]])] --->
+//│ 	case xx¹ of {C a¹ => (c₈ a¹)}
+//│ [C [C (id1₀ p₁)]] --->
+//│ 	case xx² of {C a² => (c₄ a²)}
+//│ [C [C (id1₁ p₁)]] --->
+//│ 	case xx⁶ of {C a⁶ => (c₄ a⁶)}
+//│ [C [C (id7₀ [C [C (id1₀ p₁)]])]] --->
+//│ 	case xx³ of {C a³ => (c₂ a³)}
+//│ [C [C (id7₁ [C [C (id1₁ p₁)]])]] --->
+//│ 	case xx⁹ of {C a⁹ => (c₇ a⁹)}
+//│ [C [C [C (id7₀ [C [C (id1₀ p₁)]])]]] --->
+//│ 	case xx⁷ of {C a⁷ => (c₁ a⁷)}
+//│ [C [C [C (id7₁ [C [C (id1₁ p₁)]])]]] --->
+//│ 	case xx⁸ of {C a⁸ => (c₆ a⁸)}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (((id6₀ id4₀) c₀) ((id5₀ id2₀) (id3₀ p₀)))
+//│ def c₀ = 
+//│ 	(fun xx⁷ -> xx⁷)
+//│ 	where
+//│ 	def c₁ = 
+//│ 		(fun xx³ -> xx³)
+//│ 		where
+//│ 		def c₂ = 
+//│ 			(fun xx⁵ -> xx⁵)
+//│ 			where
+//│ 			def c₃ = 
+//│ 				(fun xx² -> xx²)
+//│ 				where
+//│ 				def c₄ = 
+//│ 					(fun xx⁴ -> xx⁴)
+//│ 					where
+//│ 					def c₅ = 
+//│ 						(fun xx⁸ -> xx⁸)
+//│ 						where
+//│ 						def c₆ = 
+//│ 							(fun xx⁹ -> xx⁹)
+//│ 							where
+//│ 							def c₇ = 
+//│ 								(fun xx¹ -> xx¹)
+//│ 								where
+//│ 								def c₈ = 
+//│ 									(fun xx⁶ -> xx⁶)
+//│ def id2₀ = 
+//│ 	(fun y¹ -> y¹)
+//│ def id3₀ = 
+//│ 	(fun z¹ -> z¹)
+//│ def id4₀ = 
+//│ 	(fun k³ -> k³)
+//│ def id5₀ = 
+//│ 	(fun j¹ -> j¹)
+//│ def id6₀ = 
+//│ 	(fun l¹ -> l¹)
+//│ def p₀ = 
+//│ 	let a⁷ = 	
+//│ 		let a³ = 	
+//│ 			let a⁵ = (id7₀ 
+//│ 				let a² = 	
+//│ 					let a⁴ = (id1₀ p₁)
+//│ 					in (c₅ a⁴)
+//│ 				in (c₄ a²))
+//│ 			in (c₃ a⁵)
+//│ 		in (c₂ a³)
+//│ 	in (c₁ a⁷)
+//│ 	where
+//│ 	def id1₀ = 
+//│ 		(fun x¹ -> (id₀ x¹))
+//│ 		where
+//│ 		def id₀ = 
+//│ 			(fun k⁴ -> k⁴)
+//│ 	def id7₀ = 
+//│ 		(fun i¹ -> i¹)
+//│ 	def p₁ = 
+//│ 		let a⁸ = 	
+//│ 			let a⁹ = 	
+//│ 				let a¹ = (id7₁ 
+//│ 					let a⁶ = 	
+//│ 						let a⁴ = (id1₁ p₁)
+//│ 						in (c₅ a⁴)
+//│ 					in (c₄ a⁶))
+//│ 				in (c₈ a¹)
+//│ 			in (c₇ a⁹)
+//│ 		in (c₆ a⁸)
+//│ 		where
+//│ 		def id1₁ = 
+//│ 			(fun x² -> (id₁ x²))
+//│ 			where
+//│ 			def id₁ = 
+//│ 				(fun k² -> k²)
+//│ 		def id7₁ = 
+//│ 			(fun i² -> i²)
+//│ <<<<<<< after fusion <<<<<<<

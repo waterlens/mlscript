@@ -91,6 +91,12 @@ inter(l1)(l2)
 //│ def l2₀ = 
 //│ 	(fun ys² -> ys²)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [C 1 (fun ys⁵ -> [C 2 (case ys⁵ of {
+//│ 	N => (fun ys⁸ -> ys⁸)
+//│ 	| C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ (ys⁹ t⁴)])} (fun ys⁴ -> ys⁴))])]
+//│ <<<<<<< evaluate <<<<<<<
 
 
 
@@ -158,6 +164,10 @@ map(l)(
 //│ 	def map₁ = 
 //│ 		(fun ls¹ -> ls¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [C [T] [N]]
+//│ <<<<<<< evaluate <<<<<<<
 
 
 
@@ -273,6 +283,19 @@ map(l)
 //│ 			def map₃ = 
 //│ 				(fun ls¹ -> ls¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ 
+//│ 	let h⁴ = [T]
+//│ 	in let t⁴ = 	
+//│ 		let h² = [TT]
+//│ 		in let t² = 	
+//│ 			let h³ = [TTTT]
+//│ 			in let t³ = [N]
+//│ 			in [C h³ (map₃ t³)]
+//│ 		in [C h² (map₂ t²)]
+//│ 	in [C h⁴ (map₁ t⁴)]
+//│ <<<<<<< evaluate <<<<<<<
 
 
 
@@ -441,6 +464,14 @@ c(t)
 //│ 		in let r⁴ = [LL]
 //│ 		in [T n⁴ (c₅ l⁴) (c₆ r⁴)]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ 
+//│ 	let n³ = [KK]
+//│ 	in let l³ = aa₀
+//│ 	in let r³ = bb₀
+//│ 	in [T n³ (c₁ l³) (c₄ r³)]
+//│ <<<<<<< evaluate <<<<<<<
 
 
 
@@ -564,6 +595,19 @@ sum(mapa(mapb(primitive)))
 //│ 	def sum₁ = 
 //│ 		(fun ls¹ -> ls¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ /!!!\ Uncaught error: java.lang.StackOverflowError
+//│ 	at: mlscript.lumberhack.utils.PrettyPrintConfig.showIuidOn(Document.scala:20)
+//│ 	at: mlscript.lumberhack.Expr.evaluate(Expr.scala:294)
+//│ 	at: mlscript.lumberhack.Expr.evaluate$$anonfun$1(Expr.scala:299)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
+//│ 	at: mlscript.lumberhack.Expr.evaluate(Expr.scala:333)
+//│ 	at: mlscript.lumberhack.Expr.evaluate$$anonfun$1(Expr.scala:303)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
+//│ 	at: mlscript.lumberhack.Expr.evaluate(Expr.scala:333)
+//│ 	at: mlscript.lumberhack.Expr.evaluate$$anonfun$1$$anonfun$1(Expr.scala:309)
+//│ 	at: scala.collection.immutable.List.map(List.scala:250)
 
 fun map(ls) = if ls is
     N then N
@@ -675,3 +719,7 @@ lastDrive(map(C(T, C(TT, N))))
 //│ 	def map₁ = 
 //│ 		(fun ls¹ -> ls¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [Some [KK]]
+//│ <<<<<<< evaluate <<<<<<<

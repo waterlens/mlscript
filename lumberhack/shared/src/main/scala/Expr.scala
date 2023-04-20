@@ -129,6 +129,8 @@ case class Program(contents: Ls[ProgDef \/ Expr])(using d: Deforest) {
       ::: this.defAndExpr._1.map { (id, body) => L(ProgDef(id, body.rewriteFusion)) }.toList
     )
   }
+
+  lazy val evaluated: List[Expr] = defAndExpr._2.map(_.evaluate(using defAndExpr._1))
 }
 
 object Program {
@@ -286,6 +288,49 @@ enum Expr(using val deforest: Deforest) {
       }.orElse(Some(Ctor(name, args.map(_.rewriteFusion)))).get
     }
   }
+  
+  // NOTE: eval order?
+  def evaluate(using ctx: Map[Ident, Expr], d: Deforest): Expr = d.Trace.trace(
+    this.pp(using InitPpConfig.showIuidOn.multilineOn)
+  ){ this match {
+    case c: Const => c
+    case Ref(id) if Deforest.lumberhackKeywords(id.tree.name) => this
+    case Ref(id) => ctx.get(id) match {
+      case Some(v) => if id.isDef then v else v.evaluate
+      case None => this
+    }
+    case Call(f, p) => f.evaluate match {
+      case Function(arg, body) => body.evaluate(using ctx + (arg -> p))
+      case c: Ctor => throw Exception("\n" + c.pp(using InitPpConfig.showIuidOn.multilineOn))
+      case newF if newF == f => Call(newF, p.evaluate)
+      case newF => Call(newF.evaluate, p).evaluate
+      // case newF => Call(newF, p.evaluate)
+    }
+    case Ctor(name, args) => Ctor(name, args.map(_.evaluate))
+    case LetIn(id, value, body) => body.evaluate(using ctx + (id -> value))
+    case Match(scrut, arms) => scrut.evaluate match {
+      case Ctor(name, args) => {
+        val branch = arms.find((n, _, _) => n == name).get
+        val bindings = {
+          assert(args.length == branch._2.length)
+          branch._2.zip(args)
+        }
+        branch._3.evaluate(using ctx ++ bindings)
+      }
+      case s: Function => throw Exception("\n" + s.pp(using InitPpConfig.showIuidOn.multilineOn))
+      case s if s == scrut => Match(s, arms.map((v, args, body) => (v, args, body.evaluate)))
+      case s => Match(s.evaluate, arms).evaluate
+    }
+    case IfThenElse(cond, thenn, elze) => cond match {
+      case Ctor(n, Nil) if n.name == "False" => elze.evaluate
+      case Ctor(n, Nil) if n.name == "True" => thenn.evaluate
+      case a: (LetIn | Function) => throw Exception("\n" + a.pp(using InitPpConfig.showIuidOn.multilineOn))
+      case c if c == cond => IfThenElse(c, thenn.evaluate, elze.evaluate)
+      case c => IfThenElse(c.evaluate, thenn, elze).evaluate
+    }
+    case Function(param, body) => Function(param, body.evaluate)
+    case Sequence(a, b) => Sequence(a.evaluate, b.evaluate)
+  }}(_.pp(using InitPpConfig.showIuidOn.multilineOn))
 }
 object Expr {
   type Ctx = Map[Str, Ident]

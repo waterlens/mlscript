@@ -43,12 +43,6 @@ c(p)
 //│ 	let a¹ = p₀
 //│ 	in (c₀ a¹)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let a¹ = p₀
-//│ 	in (c₀ a¹)
-//│ <<<<<<< evaluate <<<<<<<
 
 
 
@@ -133,16 +127,6 @@ c(p)
 //│ 		in (e₀ bb¹)
 //│ 	in (d₀ b¹)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let a¹ = 1
-//│ 	in let b¹ = 	
-//│ 		let aa¹ = 2
-//│ 		in let bb¹ = 7
-//│ 		in (e₀ bb¹)
-//│ 	in (d₀ b¹)
-//│ <<<<<<< evaluate <<<<<<<
 
 
 let rec p = C(C(p))
@@ -235,14 +219,6 @@ c(p)
 //│ 				in (c₀ y¹)
 //│ 			in b¹
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let a² = 	
-//│ 		let b² = p₁
-//│ 		in b²
-//│ 	in a²
-//│ <<<<<<< evaluate <<<<<<<
 
 
 
@@ -317,14 +293,6 @@ c(id(p))
 //│ 		in (c₀ a¹)
 //│ 	in (c₁ a²)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let a² = 	
-//│ 		let a¹ = p₀
-//│ 		in (c₀ a¹)
-//│ 	in (c₁ a²)
-//│ <<<<<<< evaluate <<<<<<<
 
 fun sum(ls) = if ls is
   C(h, t) then S(N, sum(t))
@@ -423,19 +391,6 @@ sum(mapa(mapb(primitive)))
 //│ 	def sum₁ = 
 //│ 		(fun ls² -> ls²)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ /!!!\ Uncaught error: java.lang.StackOverflowError
-//│ 	at: mlscript.lumberhack.Expr.pp(Expr.scala:178)
-//│ 	at: mlscript.lumberhack.Expr.pp(Expr.scala:185)
-//│ 	at: mlscript.lumberhack.Expr.pp(Expr.scala:205)
-//│ 	at: mlscript.lumberhack.Expr.$anonfun$26(Expr.scala:228)
-//│ 	at: scala.collection.immutable.List.map(List.scala:246)
-//│ 	at: mlscript.lumberhack.Expr.pp(Expr.scala:230)
-//│ 	at: mlscript.lumberhack.Expr.evaluate(Expr.scala:294)
-//│ 	at: mlscript.lumberhack.Expr.evaluate$$anonfun$1(Expr.scala:303)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
-//│ 	at: mlscript.lumberhack.Expr.evaluate(Expr.scala:333)
 
 
 if C(A, B(C)) is
@@ -469,10 +424,6 @@ if C(A, B(C)) is
 //│ 	in [D b¹]
 //│ 
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ [D [B [C]]]
-//│ <<<<<<< evaluate <<<<<<<
 //│
 
 
@@ -589,16 +540,6 @@ ca(p)
 //│ 			in (cb₂ a¹)
 //│ 		in (ca₂ b³)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let a² = 	
-//│ 		let b² = 	
-//│ 			let a³ = p₁
-//│ 			in (cb₁ a³)
-//│ 		in (ca₁ b²)
-//│ 	in (cb₀ a²)
-//│ <<<<<<< evaluate <<<<<<<
 
 
 // def p:6^18 =
@@ -713,16 +654,6 @@ c1(p1)
 //│ 		let b² = p1₀
 //│ 		in (c1₂ b²)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let a² = 	
-//│ 		let b¹ = 	
-//│ 			let a³ = p2₀
-//│ 			in (c2₁ a³)
-//│ 		in (c1₁ b¹)
-//│ 	in (c2₀ a²)
-//│ <<<<<<< evaluate <<<<<<<
 
 
 fun ff(x) = if x is
@@ -860,19 +791,6 @@ map(l)
 //│ 						| KK => [TT]
 //│ 						| KKKK => [TTTT]})
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let h³ = [T]
-//│ 	in let t³ = 	
-//│ 		let h¹ = [TT]
-//│ 		in let t¹ = 	
-//│ 			let h⁴ = [TTTT]
-//│ 			in let t⁴ = [N]
-//│ 			in [C (ff₂ h⁴) (map₃ t⁴)]
-//│ 		in [C (ff₁ h¹) (map₂ t¹)]
-//│ 	in [C (ff₀ h³) (map₁ t³)]
-//│ <<<<<<< evaluate <<<<<<<
 
 
 fun map(ls) = if ls is
@@ -987,19 +905,6 @@ map(l)
 //│ 			def map₃ = 
 //│ 				(fun ls¹ -> ls¹)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let h⁴ = [T]
-//│ 	in let t⁴ = 	
-//│ 		let h² = [TT]
-//│ 		in let t² = 	
-//│ 			let h³ = [TTTT]
-//│ 			in let t³ = [N]
-//│ 			in [C h³ (map₃ t³)]
-//│ 		in [C h² (map₂ t²)]
-//│ 	in [C h⁴ (map₁ t⁴)]
-//│ <<<<<<< evaluate <<<<<<<
 
 
 fun sum(ls) = if ls is
@@ -1121,19 +1026,6 @@ sum(mapa(mapb(primitive)))
 //│ 	def sum₁ = 
 //│ 		(fun ls¹ -> ls¹)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ /!!!\ Uncaught error: java.lang.StackOverflowError
-//│ 	at: java.lang.Integer.toString(Integer.java:935)
-//│ 	at: mlscript.lumberhack.Ident.pp(Expr.scala:8)
-//│ 	at: mlscript.lumberhack.Expr.$anonfun$26$$anonfun$1(Expr.scala:227)
-//│ 	at: scala.collection.immutable.List.map(List.scala:246)
-//│ 	at: mlscript.lumberhack.Expr.$anonfun$26(Expr.scala:227)
-//│ 	at: scala.collection.immutable.List.map(List.scala:246)
-//│ 	at: mlscript.lumberhack.Expr.pp(Expr.scala:230)
-//│ 	at: mlscript.lumberhack.Expr.evaluate(Expr.scala:294)
-//│ 	at: mlscript.lumberhack.Expr.evaluate$$anonfun$1(Expr.scala:303)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
 
 
 
@@ -1188,12 +1080,6 @@ main(c)
 //│ 		let a¹ = p₀
 //│ 		in (c₀ a¹)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let a¹ = p₀
-//│ 	in (c₀ a¹)
-//│ <<<<<<< evaluate <<<<<<<
 
 
 // this path seems also to be sensible
@@ -1274,12 +1160,6 @@ main(p)
 //│ 			let a¹ = p₂
 //│ 			in (c₀ a¹)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let b¹ = p₁
-//│ 	in b¹
-//│ <<<<<<< evaluate <<<<<<<
 
 
 let rec p = C(p)
@@ -1331,12 +1211,6 @@ main(c, p)
 //│ 	let a¹ = p₀
 //│ 	in (c₀ a¹)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let a¹ = p₀
-//│ 	in (c₀ a¹)
-//│ <<<<<<< evaluate <<<<<<<
 
 
 fun cons(y) = if y is
@@ -1433,12 +1307,6 @@ a(p)
 //│ 		let aa¹ = p₁
 //│ 		in (cons₁ aa¹)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let aa² = p₁
-//│ 	in (cons₁ aa²)
-//│ <<<<<<< evaluate <<<<<<<
 
 // CORRECT:
 let p = C(N)
@@ -1483,19 +1351,6 @@ c(p)
 //│ def p₀ = 
 //│ 	[C [N]]
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ /!!!\ Uncaught error: java.lang.StackOverflowError
-//│ 	at: fansi.Str$.implicitApply(Fansi.scala:227)
-//│ 	at: mlscript.lumberhack.Expr.pp(Expr.scala:240)
-//│ 	at: mlscript.lumberhack.Expr.pp(Expr.scala:185)
-//│ 	at: mlscript.lumberhack.Expr.pp(Expr.scala:215)
-//│ 	at: mlscript.lumberhack.Expr.evaluate(Expr.scala:294)
-//│ 	at: mlscript.lumberhack.Expr.evaluate$$anonfun$1(Expr.scala:303)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
-//│ 	at: mlscript.lumberhack.Expr.evaluate(Expr.scala:333)
-//│ 	at: mlscript.lumberhack.Expr.evaluate$$anonfun$1(Expr.scala:310)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
 
 
 // let rec p = C(p)
@@ -1602,12 +1457,6 @@ c2(id(main))
 //│ 			let b¹ = p₁
 //│ 			in (c2₀ b¹)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let a¹ = p₁
-//│ 	in a¹
-//│ <<<<<<< evaluate <<<<<<<
 
 // CORRECT:
 let t = T(K, T(N, L, L), T(N, L, L))
@@ -1760,22 +1609,6 @@ c(t)
 //│ 		in [T n¹ (c₅ l¹) (c₆ r¹)]
 //│ 	in [T n⁶ (c₁ l⁶) (c₄ r⁶)]
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let n⁶ = [KK]
-//│ 	in let l⁶ = 	
-//│ 		let n² = [NN]
-//│ 		in let l² = [LL]
-//│ 		in let r² = [LL]
-//│ 		in [T n² (c₂ l²) (c₃ r²)]
-//│ 	in let r⁶ = 	
-//│ 		let n¹ = [NN]
-//│ 		in let l¹ = [LL]
-//│ 		in let r¹ = [LL]
-//│ 		in [T n¹ (c₅ l¹) (c₆ r¹)]
-//│ 	in [T n⁶ (c₁ l⁶) (c₄ r⁶)]
-//│ <<<<<<< evaluate <<<<<<<
 
 
 let aa = T(N, L, L)
@@ -1942,14 +1775,6 @@ c(t)
 //│ 		in let r⁴ = [LL]
 //│ 		in [T n⁴ (c₅ l⁴) (c₆ r⁴)]
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let n³ = [KK]
-//│ 	in let l³ = aa₀
-//│ 	in let r³ = bb₀
-//│ 	in [T n³ (c₁ l³) (c₄ r³)]
-//│ <<<<<<< evaluate <<<<<<<
 
 
 fun map(ls) = if ls is
@@ -2015,10 +1840,6 @@ map(l)(
 //│ 	def map₁ = 
 //│ 		(fun ls¹ -> ls¹)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ [C [T] [N]]
-//│ <<<<<<< evaluate <<<<<<<
 
 
 fun last(ys) = if ys is
@@ -2091,10 +1912,6 @@ lastDrive(C(1, C(2, N)))
 //│ 		def last₁ = 
 //│ 			(fun ys² -> ys²)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ [Some 2]
-//│ <<<<<<< evaluate <<<<<<<
 
 // CORRECT: with expanding termination
 let p = C(p)
@@ -2140,19 +1957,6 @@ c(p)
 //│ def p₀ = 
 //│ 	[C p₀]
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ /!!!\ Uncaught error: java.lang.StackOverflowError
-//│ 	at: fansi.Str$.implicitApply(Fansi.scala:227)
-//│ 	at: mlscript.lumberhack.Expr.pp(Expr.scala:240)
-//│ 	at: mlscript.lumberhack.Expr.pp(Expr.scala:185)
-//│ 	at: mlscript.lumberhack.Expr.pp(Expr.scala:215)
-//│ 	at: mlscript.lumberhack.Expr.evaluate(Expr.scala:294)
-//│ 	at: mlscript.lumberhack.Expr.evaluate$$anonfun$1(Expr.scala:303)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
-//│ 	at: mlscript.lumberhack.Expr.evaluate(Expr.scala:333)
-//│ 	at: mlscript.lumberhack.Expr.evaluate$$anonfun$1(Expr.scala:310)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
 
 
 // CORRECT: with expanding termination
@@ -2206,12 +2010,6 @@ main(0)
 //│ 		let a¹ = p₀
 //│ 		in a¹
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let a¹ = p₀
-//│ 	in a¹
-//│ <<<<<<< evaluate <<<<<<<
 
 // CORRECT: although multiple matches
 // top level definitions as producers can be duplicated
@@ -2294,12 +2092,6 @@ c2(B)
 //│ def c2₁ = 
 //│ 	(fun x2² -> x2²)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ [AA]
-//│ [AAA]
-//│ [BBB]
-//│ <<<<<<< evaluate <<<<<<<
 
 
 // CORRECT: the single rev can work, because the expansion can
@@ -2382,10 +2174,6 @@ rev(C(AA, C(BB, C(CC, N))))(N)
 //│ 			def rev₃ = 
 //│ 				(fun ls¹ -> ls¹)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ [C [CC] [C [BB] [C [AA] [N]]]]
-//│ <<<<<<< evaluate <<<<<<<
 
 
 
@@ -2460,10 +2248,6 @@ lastDrive(C(1, C(2, N)))
 //│ 		def last₁ = 
 //│ 			(fun ys² -> ys²)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ [Some 2]
-//│ <<<<<<< evaluate <<<<<<<
 
 // CORRECT: the time of unrolling is correct
 fun id(k) = k
@@ -2691,20 +2475,6 @@ id6(id4)(c)(id5(id2)(id3(p)))
 //│ 		def id7₁ = 
 //│ 			(fun i² -> i²)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let a⁷ = 	
-//│ 		let a³ = 	
-//│ 			let a⁵ = (id7₀ 
-//│ 				let a² = 	
-//│ 					let a⁴ = (id1₀ p₁)
-//│ 					in (c₅ a⁴)
-//│ 				in (c₄ a²))
-//│ 			in (c₃ a⁵)
-//│ 		in (c₂ a³)
-//│ 	in (c₁ a⁷)
-//│ <<<<<<< evaluate <<<<<<<
 
 // CORRECT:
 fun id(x) = if x is
@@ -2794,16 +2564,6 @@ c(id(p))
 //│ 		let aa¹ = p₁
 //│ 		in (c₀ aa¹)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let a² = p₁
-//│ 	in (id₁ 
-//│ 		let b¹ = 	
-//│ 			let aa¹ = a²
-//│ 			in (c₀ aa¹)
-//│ 		in b¹)
-//│ <<<<<<< evaluate <<<<<<<
 
 
 // CORRECT: unlike the rev rev case, TODO: why?
@@ -2904,10 +2664,6 @@ len(map(C(A, C(B, N))))
 //│ 	def map₁ = 
 //│ 		(fun ls² -> ls²)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ (1 + (1 + 0))
-//│ <<<<<<< evaluate <<<<<<<
 
 // CORRECT: multiple match, but correct
 fun f(x) = if x is
@@ -2953,19 +2709,6 @@ f(C(A))(C(B))(C(D))
 //│ def f₀ = 
 //│ 	(fun x¹ -> x¹)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ /!!!\ Uncaught error: java.lang.StackOverflowError
-//│ 	at: mlscript.lumberhack.Expr.pp(Expr.scala:178)
-//│ 	at: mlscript.lumberhack.Expr.pp(Expr.scala:237)
-//│ 	at: mlscript.lumberhack.Expr.evaluate(Expr.scala:294)
-//│ 	at: mlscript.lumberhack.Expr.evaluate$$anonfun$1(Expr.scala:310)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
-//│ 	at: mlscript.lumberhack.Expr.evaluate(Expr.scala:333)
-//│ 	at: mlscript.lumberhack.Expr.evaluate$$anonfun$1(Expr.scala:299)
-//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:218)
-//│ 	at: mlscript.lumberhack.Expr.evaluate(Expr.scala:333)
-//│ 	at: mlscript.lumberhack.Expr.evaluate$$anonfun$1(Expr.scala:331)
 
 // CORRECT:
 let aa = T(N, t, t)
@@ -3146,11 +2889,3 @@ c(t)
 //│ 			in let r¹ = aa₁
 //│ 			in [T n¹ (c₁ l¹) (c₂ r¹)]
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let n¹ = [KK]
-//│ 	in let l¹ = aa₀
-//│ 	in let r¹ = aa₁
-//│ 	in [T n¹ (c₁ l¹) (c₂ r¹)]
-//│ <<<<<<< evaluate <<<<<<<

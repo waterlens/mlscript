@@ -193,10 +193,6 @@ rev(C(AA, C(BB, C(CC, N))))(N)
 //│ 			def rev₃ = 
 //│ 				(fun ls¹ -> ls¹)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ [C [CC] [C [BB] [C [AA] [N]]]]
-//│ <<<<<<< evaluate <<<<<<<
 //│ !!!!!!ERROR!!!!!!
 //│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
@@ -354,16 +350,6 @@ c(id(p))
 //│ 			def id2₃ = 
 //│ 				(fun yy² -> yy²)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ 
-//│ 	let a³ = 	
-//│ 		let b³ = 	
-//│ 			let a¹ = (id2₁ p₁)
-//│ 			in a¹
-//│ 		in (c₁ b³)
-//│ 	in a³
-//│ <<<<<<< evaluate <<<<<<<
 
 
 // WRONG: no polymorphism
@@ -518,10 +504,6 @@ map(rev(C(A, C(AA, N)))(N))
 //│ 		def rev₂ = 
 //│ 			(fun lss¹ -> lss¹)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ [C [BB] [C [B] [N]]]
-//│ <<<<<<< evaluate <<<<<<<
 
 // WRONG: recursive fusion strategies
 _LUMBERHACK_ERROR
@@ -656,10 +638,6 @@ inter(C(1, C(2, N)))(C(9, N))
 //│ 				def inter₄ = 
 //│ 					(fun xs² -> xs²)
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ [C 1 [C 9 [C 2 (fun ys⁴ -> ys⁴)]]]
-//│ <<<<<<< evaluate <<<<<<<
 
 
 // WRONG:
@@ -853,10 +831,8 @@ idxSum(rev(primitive, N))(0)
 //│ 				in let t² = a⁵
 //│ 				in (fun acc⁵ -> (acc⁵ + ((idxSum₁ t²) (acc⁵ + 1))))))})
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.StackOverflowError
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 

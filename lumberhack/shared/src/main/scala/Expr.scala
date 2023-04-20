@@ -289,6 +289,18 @@ enum Expr(using val deforest: Deforest) {
     }
   }
   
+  def subst(using mapping: Map[Ident, Expr], d: Deforest): Expr = this match {
+    case c: Const => c
+    case Ref(id) => mapping.getOrElse(id, this)
+    case Call(f, p) => Call(f.subst, p.subst)
+    case Ctor(n, args) => Ctor(n, args.map(_.subst))
+    case LetIn(id, value, body) => LetIn(id, value.subst, body.subst)
+    case Match(scrut, arms) => Match(scrut.subst, arms.map((n, args, body) => (n, args, body.subst)))
+    case IfThenElse(cond, thenn, elze) => IfThenElse(cond.subst, thenn.subst, elze.subst)
+    case Function(p, body) => Function(p, body.subst)
+    case Sequence(f, s) => Sequence(f.subst, s.subst)
+  }
+
   // NOTE: eval order?
   def evaluate(using ctx: Map[Ident, Expr], d: Deforest): Expr = d.Trace.trace(
     this.pp(using InitPpConfig.showIuidOn.multilineOn)
@@ -296,18 +308,17 @@ enum Expr(using val deforest: Deforest) {
     case c: Const => c
     case Ref(id) if Deforest.lumberhackKeywords(id.tree.name) => this
     case Ref(id) => ctx.get(id) match {
-      case Some(v) => if id.isDef then v else v.evaluate
-      case None => this
+      case Some(v) => v.evaluate
+      // case None => this
     }
     case Call(f, p) => f.evaluate match {
-      case Function(arg, body) => body.evaluate(using ctx + (arg -> p))
+      case Function(arg, body) => body.subst(using Map(arg -> p.evaluate)).evaluate
       case c: Ctor => throw Exception("\n" + c.pp(using InitPpConfig.showIuidOn.multilineOn))
-      case newF if newF == f => Call(newF, p.evaluate)
-      case newF => Call(newF.evaluate, p).evaluate
+      case newF => Call(newF, p.evaluate)
       // case newF => Call(newF, p.evaluate)
     }
     case Ctor(name, args) => Ctor(name, args.map(_.evaluate))
-    case LetIn(id, value, body) => body.evaluate(using ctx + (id -> value))
+    case LetIn(id, value, body) => body.subst(using Map(id -> value)).evaluate
     case Match(scrut, arms) => scrut.evaluate match {
       case Ctor(name, args) => {
         val branch = arms.find((n, _, _) => n == name).get
@@ -315,20 +326,20 @@ enum Expr(using val deforest: Deforest) {
           assert(args.length == branch._2.length)
           branch._2.zip(args)
         }
-        branch._3.evaluate(using ctx ++ bindings)
+        branch._3.subst(using bindings.toMap).evaluate
       }
       case s: Function => throw Exception("\n" + s.pp(using InitPpConfig.showIuidOn.multilineOn))
-      case s if s == scrut => Match(s, arms.map((v, args, body) => (v, args, body.evaluate)))
-      case s => Match(s.evaluate, arms).evaluate
+      // case s if s == scrut => Match(s, arms.map((v, args, body) => (v, args, body.evaluate)))
+      case s => Match(s, arms.map((v, args, body) => (v, args, body.evaluate)))
     }
     case IfThenElse(cond, thenn, elze) => cond match {
       case Ctor(n, Nil) if n.name == "False" => elze.evaluate
       case Ctor(n, Nil) if n.name == "True" => thenn.evaluate
       case a: (LetIn | Function) => throw Exception("\n" + a.pp(using InitPpConfig.showIuidOn.multilineOn))
-      case c if c == cond => IfThenElse(c, thenn.evaluate, elze.evaluate)
-      case c => IfThenElse(c.evaluate, thenn, elze).evaluate
+      // case c if c == cond => IfThenElse(c, thenn.evaluate, elze.evaluate)
+      case c => IfThenElse(c.evaluate, thenn.evaluate, elze.evaluate)
     }
-    case Function(param, body) => Function(param, body.evaluate)
+    case Function(param, body) => Function(param, body)
     case Sequence(a, b) => Sequence(a.evaluate, b.evaluate)
   }}(_.pp(using InitPpConfig.showIuidOn.multilineOn))
 }

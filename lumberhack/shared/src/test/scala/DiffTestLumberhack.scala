@@ -135,10 +135,10 @@ class DiffTestLumberhack extends DiffTests {
       finalD.resolveConstraints
 
 
-      output("\n>>>>>>> evaluate >>>>>>>")
-      val evalStr = prgmAfterFusion.evaluated.map(_.pp(using InitPpConfig.multilineOn.showIuidOn)).mkString("\n")
-      output(evalStr)
-      output("<<<<<<< evaluate <<<<<<<")
+      // output("\n>>>>>>> evaluate >>>>>>>")
+      // val evalStr = prgmAfterFusion.evaluated.map(_.pp(using InitPpConfig.multilineOn.showIuidOn)).mkString("\n")
+      // output(evalStr)
+      // output("<<<<<<< evaluate <<<<<<<")
       // output("\n>>>>>>> new type variable bounds >>>>>>>")
       // val newtvs = newd.upperBounds.keySet ++ d.lowerBounds.keySet
       // newtvs.foreach { tv =>

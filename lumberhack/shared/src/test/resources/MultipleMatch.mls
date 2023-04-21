@@ -288,6 +288,13 @@ f(a => if (if a is
 // WRONG: the outer match is "shadowed" by only one branch of the inner 
 // maybe can try
 // rewrite into the constructor, AND also + then use id strategy
+// first, normal rewrite into ctor
+// f(c) = P(c(X), c(primitive))
+// f(a => if a is X then 0; Y then 1)
+// ======> 
+// second, rewrite into ctor with one of them being id strategy
+// f(c) = P(c(0), c(if primitive is X then 0; Y then 1))
+// f(a => a)
 fun f(c) = P(c(A), c(B))
 f(a => if (if a is
   A then X
@@ -334,8 +341,81 @@ f(a => if (if a is
 //│ 	(fun c¹ -> [P (c¹ 0) (c¹ primitive⁰)])
 //│ <<<<<<< after fusion <<<<<<<
 
+// WRONG: cannot be resolved?
+fun f(c) = P(c(X), c(primitive))
+fun h(y) = if y is
+  X then primitive
+  Y then 2
+fun g(x) =
+  h(x)
+  if x is
+    X then 0
+    Y then 1
+f(a => g(a))
+//│ |#fun| |f|(|c|)| |#=| |P|(|c|(|X|)|,| |c|(|primitive|)|)|↵|#fun| |h|(|y|)| |#=| |#if| |y| |is|→|X| |#then| |primitive|←|↵|#fun| |g|(|x|)| |#=| |#if| |x| |is|→|X| |#then|→|h|(|x|)|↵|0|←|↵|Y| |#then| |1|←|↵|f|(|a| |=>| |g|(|a|)|)|
+//│ Parsed: {fun f = c, => P (c (X,), c (primitive,),); fun h = y, => if y is ‹(X) then primitive›; fun g = x, => if x is ‹(X) then {h (x,); 0}; (Y) then 1›; f (a, => g (a,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (f^22 (fun a⁰ -> (g^23 a⁰)))
+//│ def f = (fun c⁰ -> [P (c⁰ [X]) (c⁰ primitive⁰)])
+//│ def g = (fun x⁰ -> case x⁰ of {
+//│ 	X => 
+//│ 		(h^14 x⁰)
+//│ 		0
+//│ 	| Y => 1})
+//│ def h = (fun y⁰ -> case y⁰ of {
+//│ 	X => primitive⁰})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^22] (hopeless to continue)
+//│ [g^23] (hopeless to continue)
+//│ 	[g^23 · h^14] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀ (fun a¹ -> (g₀ a¹)))
+//│ def f₀ = 
+//│ 	(fun c¹ -> [P (c¹ [X]) (c¹ primitive⁰)])
+//│ def g₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		X => 
+//│ 			(h₀ x¹)
+//│ 			0
+//│ 		| Y => 1})
+//│ 	where
+//│ 	def h₀ = 
+//│ 		(fun y¹ -> case y¹ of {
+//│ 			X => primitive⁰})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [X] --->
+//│ 	case x¹ of {X => (h₀ x¹); 0 | Y => 1}
+//│ 	case y¹ of {X => primitive⁰}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ (fun a¹ -> (g₀ a¹)))
+//│ def f₀ = 
+//│ 	(fun c¹ -> [P (c¹ primitive⁰) (c¹ primitive⁰)])
+//│ def g₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		X => 
+//│ 			(h₀ x¹)
+//│ 			0
+//│ 		| Y => 1})
+//│ 	where
+//│ 	def h₀ = 
+//│ 		(fun y¹ -> y¹)
+//│ <<<<<<< after fusion <<<<<<<
+
+
 
 // WRONG: maybe we can try to rewrite into destructor? which is equivalent to copy the constructor
+// f(cond) = cond
+// g(y) = let y = K in y
+// f(x => x)(C(K))
 fun f(cond) = if cond is
     A then x => x 
     _ then x => g(x)

@@ -1,6 +1,66 @@
 :NewParser
 :ParseOnly
 
+// WRONG: result is not correct
+fun inter(xs) = if xs is
+  N then ys => ys
+  C(h, t) then ys => C(h, inter(ys)(t))
+inter(N)(N)
+//│ |#fun| |inter|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |ys| |=>| |ys|↵|C|(|h|,| |t|)| |#then| |ys| |=>| |C|(|h|,| |inter|(|ys|)|(|t|)|)|←|↵|inter|(|N|)|(|N|)|
+//│ Parsed: {fun inter = xs, => if xs is ‹(N) then ys, => ys; (C (h, t,)) then ys, => C (h, inter (ys,) (t,),)›; inter (N,) (N,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ ((inter^14 [N]) [N])
+//│ def inter = (fun xs⁰ -> case xs⁰ of {
+//│ 	N => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ ((inter^5 ys¹) t⁰)])})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [inter^14]
+//│ 	[inter^14 · inter^5]
+//│ 		[inter^14 · inter^5 · inter^5]
+//│ 			[inter^14 · inter^5 · inter^5 · inter^5] ---> [inter^14 · inter^5] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((inter₀ [N]) [N])
+//│ def inter₀ = 
+//│ 	(fun xs¹ -> case xs¹ of {
+//│ 		N => (fun ys² -> ys²)
+//│ 		| C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])})
+//│ 	where
+//│ 	def inter₁ = 
+//│ 		(fun xs² -> case xs² of {
+//│ 			N => (fun ys⁴ -> ys⁴)
+//│ 			| C h² t² => (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])})
+//│ 		where
+//│ 		def inter₂ = 
+//│ 			(fun xs³ -> case xs³ of {
+//│ 				N => (fun ys⁶ -> ys⁶)
+//│ 				| C h³ t³ => (fun ys⁷ -> [C h³ ((inter₁ ys⁷) t³)])})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [N] --->
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])}
+//│ [N] --->
+//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((inter₀ (fun ys² -> ys²)) (fun ys⁴ -> ys⁴))
+//│ def inter₀ = 
+//│ 	(fun xs¹ -> xs¹)
+//│ 	where
+//│ 	def inter₁ = 
+//│ 		(fun xs² -> xs²)
+//│ 		where
+//│ 		def inter₂ = 
+//│ 			(fun xs³ -> case xs³ of {
+//│ 				N => (fun ys⁶ -> ys⁶)
+//│ 				| C h³ t³ => (fun ys⁷ -> [C h³ ((inter₁ ys⁷) t³)])})
+//│ <<<<<<< after fusion <<<<<<<
+
 
 // WRONG: it returns something like: C(1, C(9, C(2, C(10, ys => ys))))
 // despite the fact that there is no clash at all
@@ -120,6 +180,110 @@ inter(l1)(l2)
 //│ 	in (fun ys¹¹ -> [C h⁵ ((inter₂ ys¹¹) t⁵)])
 //│ <<<<<<< after fusion <<<<<<<
 
+// WRONG: the return type is not correct
+fun inter(xs) = if xs is
+  N then ys => ys
+  C(h, t) then ys => C(h, inter(ys)(t))
+let l1 = C(1, C(2, l1))
+let l2 = C(9, l2)
+inter(l1)(l2)
+//│ |#fun| |inter|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |ys| |=>| |ys|↵|C|(|h|,| |t|)| |#then| |ys| |=>| |C|(|h|,| |inter|(|ys|)|(|t|)|)|←|↵|#let| |l1| |#=| |C|(|1|,| |C|(|2|,| |l1|)|)|↵|#let| |l2| |#=| |C|(|9|,| |l2|)|↵|inter|(|l1|)|(|l2|)|
+//│ Parsed: {fun inter = xs, => if xs is ‹(N) then ys, => ys; (C (h, t,)) then ys, => C (h, inter (ys,) (t,),)›; let l1 = C (1, C (2, l1,),); let l2 = C (9, l2,); inter (l1,) (l2,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ ((inter^22 l1^23) l2^25)
+//│ def inter = (fun xs⁰ -> case xs⁰ of {
+//│ 	N => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ ((inter^5 ys¹) t⁰)])})
+//│ def l1 = [C 1 [C 2 l1^16]]
+//│ def l2 = [C 9 l2^20]
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [inter^22]
+//│ 	[inter^22 · inter^5]
+//│ 		[inter^22 · inter^5 · inter^5]
+//│ 			[inter^22 · inter^5 · inter^5 · inter^5]
+//│ 				[inter^22 · inter^5 · inter^5 · inter^5 · inter^5] ---> [inter^22 · inter^5 · inter^5] (only one)
+//│ [l1^23]
+//│ 	[l1^23 · l1^16] ---> [l1^23] (only one)
+//│ [l2^25]
+//│ 	[l2^25 · l2^20]
+//│ 		[l2^25 · l2^20 · l2^20] ---> [l2^25 · l2^20] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((inter₀ l1₀) l2₀)
+//│ def inter₀ = 
+//│ 	(fun xs¹ -> case xs¹ of {
+//│ 		N => (fun ys² -> ys²)
+//│ 		| C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])})
+//│ 	where
+//│ 	def inter₁ = 
+//│ 		(fun xs³ -> case xs³ of {
+//│ 			N => (fun ys⁶ -> ys⁶)
+//│ 			| C h³ t³ => (fun ys⁷ -> [C h³ ((inter₂ ys⁷) t³)])})
+//│ 		where
+//│ 		def inter₂ = 
+//│ 			(fun xs⁴ -> case xs⁴ of {
+//│ 				N => (fun ys⁸ -> ys⁸)
+//│ 				| C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₃ ys⁹) t⁴)])})
+//│ 			where
+//│ 			def inter₃ = 
+//│ 				(fun xs² -> case xs² of {
+//│ 					N => (fun ys⁴ -> ys⁴)
+//│ 					| C h² t² => (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])})
+//│ def l1₀ = 
+//│ 	[C 1 [C 2 l1₀]]
+//│ def l2₀ = 
+//│ 	[C 9 l2₁]
+//│ 	where
+//│ 	def l2₁ = 
+//│ 		[C 9 l2₁]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [C 2 l1₀]] --->
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])}
+//│ 	case xs⁴ of {N => (fun ys⁸ -> ys⁸) | C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₃ ys⁹) t⁴)])}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [C 2 l1₀] --->
+//│ 	case xs⁴ of {N => (fun ys⁸ -> ys⁸) | C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₃ ys⁹) t⁴)])}
+//│ [C 9 l2₁] --->
+//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])}
+//│ [C 9 l2₁] --->
+//│ 	case xs³ of {N => (fun ys⁶ -> ys⁶) | C h³ t³ => (fun ys⁷ -> [C h³ ((inter₂ ys⁷) t³)])}
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((inter₀ l1₀) l2₀)
+//│ def inter₀ = 
+//│ 	(fun xs¹ -> xs¹)
+//│ 	where
+//│ 	def inter₁ = 
+//│ 		(fun xs³ -> xs³)
+//│ 		where
+//│ 		def inter₂ = 
+//│ 			(fun xs⁴ -> xs⁴)
+//│ 			where
+//│ 			def inter₃ = 
+//│ 				(fun xs² -> xs²)
+//│ def l1₀ = 
+//│ 	let h¹ = 1
+//│ 	in let t¹ = 	
+//│ 		let h⁴ = 2
+//│ 		in let t⁴ = l1₀
+//│ 		in (fun ys⁹ -> [C h⁴ ((inter₃ ys⁹) t⁴)])
+//│ 	in (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])
+//│ def l2₀ = 
+//│ 	let h³ = 9
+//│ 	in let t³ = l2₁
+//│ 	in (fun ys⁷ -> [C h³ ((inter₂ ys⁷) t³)])
+//│ 	where
+//│ 	def l2₁ = 
+//│ 		let h² = 9
+//│ 		in let t² = l2₁
+//│ 		in (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])
+//│ <<<<<<< after fusion <<<<<<<
 
 
 // WRONG: a wrong choice when resolving collision

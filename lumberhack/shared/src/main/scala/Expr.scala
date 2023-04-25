@@ -131,6 +131,8 @@ case class Program(contents: Ls[ProgDef \/ Expr])(using d: Deforest) {
   }
 
   lazy val evaluated: List[Expr] = defAndExpr._2.map(_.evaluate(using defAndExpr._1))
+
+  lazy val evaluatedSmallStep: List[Expr] = defAndExpr._2.map(e => e.evaluateStartSmallStep(e)(using defAndExpr._1))
 }
 
 object Program {
@@ -302,6 +304,7 @@ enum Expr(using val deforest: Deforest) {
   }
 
   // NOTE: eval order?
+  // bigstep
   def evaluate(using ctx: Map[Ident, Expr], d: Deforest): Expr = d.Trace.trace(
     this.pp(using InitPpConfig.showIuidOn.multilineOn)
   ){ this match {
@@ -309,7 +312,7 @@ enum Expr(using val deforest: Deforest) {
     case Ref(id) if Deforest.lumberhackKeywords(id.tree.name) => this
     case Ref(id) => ctx.get(id) match {
       case Some(v) => v.evaluate
-      // case None => this
+      case None => ???
     }
     case Call(f, p) => f.evaluate match {
       case Function(arg, body) => body.subst(using Map(arg -> p.evaluate)).evaluate
@@ -353,6 +356,61 @@ enum Expr(using val deforest: Deforest) {
       case c => IfThenElse(c.evaluate, thenn.evaluate, elze.evaluate)
     }
     case Function(param, body) => Function(param, body)
+    case Sequence(a, b) => Sequence(a.evaluate, b.evaluate)
+  }}(_.pp(using InitPpConfig.showIuidOn.multilineOn))
+
+
+  // small step
+  def evaluateStartSmallStep(prev: Expr)(using ctx: Map[Ident, Expr], d: Deforest, step: Int = 0): Expr = {
+    var res = prev.evaluate
+    if (res == prev || step > 20) then res else evaluateStartSmallStep(res)(using ctx, d, step + 1)
+  }
+  def evaluateSmallStep(using ctx: Map[Ident, Expr], d: Deforest): Expr = d.Trace.trace(
+    this.pp(using InitPpConfig.showIuidOn.multilineOn)
+  ){this match {
+    case c: Const => c
+    case Ref(id) if Deforest.lumberhackKeywords(id.tree.name) => this
+    case Ref(id) => ctx.get(id) match {
+      case Some(v) => v
+      case None => this
+    }
+    case Call(f, p) => f match {
+      case Function(arg, body) => body.subst(using Map(arg -> p))
+      case c: Ctor => throw Exception("\n" + c.pp(using InitPpConfig.showIuidOn.multilineOn))
+      case f => {
+        val newF = f.evaluate
+        if newF == f then Call(f, p.evaluate) else Call(newF, p)
+      }
+    }
+    case Ctor(name, args) => Ctor(name, args.map(_.evaluate))
+    case LetIn(id, value, body) => body.subst(using Map(id -> value))
+    case Match(scrut, arms) => scrut match {
+      case Ctor(name, args) => {
+        val branch = arms.find((n, _, _) => n == name).getOrElse(arms.find((n, _, _) => !n.name.head.isUpper).get)
+        val bindings = if branch._1.name.head.isUpper then {
+          assert(args.length == branch._2.length)
+          branch._2.zip(args).toMap
+        } else {
+          Map.empty[Ident, Expr] // FIXME:
+        }
+        branch._3.subst(using bindings)
+      }
+      case s: Function => throw Exception("\n" + s.pp(using InitPpConfig.showIuidOn.multilineOn))
+      case s => {
+        val newS = s.evaluate
+        if newS == s then Match(s, arms.map((v, args, body) => (v, args, body.evaluate))) else Match(newS, arms)
+      }
+    }
+    case IfThenElse(cond, thenn, elze) => cond match {
+      case Ctor(n, Nil) if n.name == "False" => elze.evaluate
+      case Ctor(n, Nil) if n.name == "True" => thenn.evaluate
+      case a: (LetIn | Function) => throw Exception("\n" + a.pp(using InitPpConfig.showIuidOn.multilineOn))
+      case c => {
+        val newC = c.evaluate
+        if newC == c then IfThenElse(c, thenn.evaluate, elze.evaluate) else IfThenElse(newC, thenn, elze)
+      }
+    }
+    case Function(param, body) => Function(param, body.evaluate)
     case Sequence(a, b) => Sequence(a.evaluate, b.evaluate)
   }}(_.pp(using InitPpConfig.showIuidOn.multilineOn))
 }

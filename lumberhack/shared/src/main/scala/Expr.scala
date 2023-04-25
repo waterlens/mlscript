@@ -314,8 +314,21 @@ enum Expr(using val deforest: Deforest) {
     case Call(f, p) => f.evaluate match {
       case Function(arg, body) => body.subst(using Map(arg -> p.evaluate)).evaluate
       case c: Ctor => throw Exception("\n" + c.pp(using InitPpConfig.showIuidOn.multilineOn))
+      case ff@Call(Ref(id), Const(IntLit(fst))) => p.evaluate match {
+        case Const(IntLit(snd)) =>  id.tree.name match {
+          case "+" | "add" => Const(IntLit(fst + snd))
+          case "-" | "minus" => Const(IntLit(fst - snd))
+          case "*" | "mult" => Const(IntLit(fst * snd))
+          case "/" | "div" => Const(IntLit(fst / snd))
+          case "==" | "eq" => Ctor(Var(if fst == snd then "True" else "False"), Nil)
+          case ">" | "gt" => Ctor(Var(if fst > snd then "True" else "False"), Nil)
+          case "<" | "lt" => Ctor(Var(if fst < snd then "True" else "False"), Nil)
+          case ">=" | "geq" => Ctor(Var(if fst >= snd then "True" else "False"), Nil)
+          case "<=" | "leq" => Ctor(Var(if fst <= snd then "True" else "False"), Nil)
+        }
+        case p => Call(ff, p)
+      }
       case newF => Call(newF, p.evaluate)
-      // case newF => Call(newF, p.evaluate)
     }
     case Ctor(name, args) => Ctor(name, args.map(_.evaluate))
     case LetIn(id, value, body) => body.subst(using Map(id -> value)).evaluate

@@ -352,24 +352,25 @@ fun g(x) =
     X then 0
     Y then 1
 f(a => g(a))
-//│ |#fun| |f|(|c|)| |#=| |P|(|c|(|X|)|,| |c|(|primitive|)|)|↵|#fun| |h|(|y|)| |#=| |#if| |y| |is|→|X| |#then| |primitive|←|↵|#fun| |g|(|x|)| |#=| |#if| |x| |is|→|X| |#then|→|h|(|x|)|↵|0|←|↵|Y| |#then| |1|←|↵|f|(|a| |=>| |g|(|a|)|)|
-//│ Parsed: {fun f = c, => P (c (X,), c (primitive,),); fun h = y, => if y is ‹(X) then primitive›; fun g = x, => if x is ‹(X) then {h (x,); 0}; (Y) then 1›; f (a, => g (a,),)}
+//│ |#fun| |f|(|c|)| |#=| |P|(|c|(|X|)|,| |c|(|primitive|)|)|↵|#fun| |h|(|y|)| |#=| |#if| |y| |is|→|X| |#then| |primitive|↵|Y| |#then| |2|←|↵|#fun| |g|(|x|)| |#=|→|h|(|x|)|↵|#if| |x| |is|→|X| |#then| |0|↵|Y| |#then| |1|←|←|↵|f|(|a| |=>| |g|(|a|)|)|
+//│ Parsed: {fun f = c, => P (c (X,), c (primitive,),); fun h = y, => if y is ‹(X) then primitive; (Y) then 2›; fun g = x, => {h (x,); if x is ‹(X) then 0; (Y) then 1›}; f (a, => g (a,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (f^22 (fun a⁰ -> (g^23 a⁰)))
+//│ (f^23 (fun a⁰ -> (g^24 a⁰)))
 //│ def f = (fun c⁰ -> [P (c⁰ [X]) (c⁰ primitive⁰)])
-//│ def g = (fun x⁰ -> case x⁰ of {
-//│ 	X => 
-//│ 		(h^14 x⁰)
-//│ 		0
-//│ 	| Y => 1})
+//│ def g = (fun x⁰ -> 
+//│ 	(h^14 x⁰)
+//│ 	case x⁰ of {
+//│ 		X => 0
+//│ 		| Y => 1})
 //│ def h = (fun y⁰ -> case y⁰ of {
-//│ 	X => primitive⁰})
+//│ 	X => primitive⁰
+//│ 	| Y => 2})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [f^22] (hopeless to continue)
-//│ [g^23] (hopeless to continue)
-//│ 	[g^23 · h^14] (using original def)
+//│ [f^23] (hopeless to continue)
+//│ [g^24] (hopeless to continue)
+//│ 	[g^24 · h^14] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -377,21 +378,22 @@ f(a => g(a))
 //│ def f₀ = 
 //│ 	(fun c¹ -> [P (c¹ [X]) (c¹ primitive⁰)])
 //│ def g₀ = 
-//│ 	(fun x¹ -> case x¹ of {
-//│ 		X => 
-//│ 			(h₀ x¹)
-//│ 			0
-//│ 		| Y => 1})
+//│ 	(fun x¹ -> 
+//│ 		(h₀ x¹)
+//│ 		case x¹ of {
+//│ 			X => 0
+//│ 			| Y => 1})
 //│ 	where
 //│ 	def h₀ = 
 //│ 		(fun y¹ -> case y¹ of {
-//│ 			X => primitive⁰})
+//│ 			X => primitive⁰
+//│ 			| Y => 2})
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [X] --->
-//│ 	case x¹ of {X => (h₀ x¹); 0 | Y => 1}
-//│ 	case y¹ of {X => primitive⁰}
+//│ 	case x¹ of {X => 0 | Y => 1}
+//│ 	case y¹ of {X => primitive⁰ | Y => 2}
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -400,11 +402,11 @@ f(a => g(a))
 //│ def f₀ = 
 //│ 	(fun c¹ -> [P (c¹ primitive⁰) (c¹ primitive⁰)])
 //│ def g₀ = 
-//│ 	(fun x¹ -> case x¹ of {
-//│ 		X => 
-//│ 			(h₀ x¹)
-//│ 			0
-//│ 		| Y => 1})
+//│ 	(fun x¹ -> 
+//│ 		(h₀ x¹)
+//│ 		case x¹ of {
+//│ 			X => 0
+//│ 			| Y => 1})
 //│ 	where
 //│ 	def h₀ = 
 //│ 		(fun y¹ -> y¹)

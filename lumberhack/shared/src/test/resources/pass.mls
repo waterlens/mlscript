@@ -2889,3 +2889,298 @@ c(t)
 //│ 			in let r¹ = aa₁
 //│ 			in [T n¹ (c₁ l¹) (c₂ r¹)]
 //│ <<<<<<< after fusion <<<<<<<
+
+
+// CORRECT: but explode on branches
+fun filter(ls) = if ls is
+  C(h, t) then if h > 1 is
+    True then C(h, filter(t))
+    False then filter(t)
+  N then N
+filter(C(1, C(2, C(3, N))))
+//│ |#fun| |filter|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |h| |>| |1| |is|→|True| |#then| |C|(|h|,| |filter|(|t|)|)|↵|False| |#then| |filter|(|t|)|←|↵|N| |#then| |N|←|↵|filter|(|C|(|1|,| |C|(|2|,| |C|(|3|,| |N|)|)|)|)|
+//│ Parsed: {fun filter = ls, => if ls is ‹(C (h, t,)) then if > (h,) (1,) is ‹(True) then C (h, filter (t,),); (False) then filter (t,)›; (N) then N›; filter (C (1, C (2, C (3, N,),),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (filter^19 [C 1 [C 2 [C 3 [N]]]])
+//│ def filter = (fun ls⁰ -> case ls⁰ of {
+//│ 	C h⁰ t⁰ => case (h⁰ > 1) of {
+//│ 		True => [C h⁰ (filter^8 t⁰)]
+//│ 		| False => (filter^12 t⁰)}
+//│ 	| N => [N]})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [filter^19]
+//│ 	[filter^19 · filter^12]
+//│ 		[filter^19 · filter^12 · filter^12]
+//│ 			[filter^19 · filter^12 · filter^12 · filter^12]
+//│ 				[filter^19 · filter^12 · filter^12 · filter^12 · filter^12] ---> [filter^19 · filter^12 · filter^12 · filter^12] (only one)
+//│ 				[filter^19 · filter^12 · filter^12 · filter^12 · filter^8]
+//│ 					[filter^19 · filter^12 · filter^12 · filter^12 · filter^8 · filter^12] ---> [filter^19 · filter^12 · filter^12 · filter^12 · filter^8] (only one)
+//│ 					[filter^19 · filter^12 · filter^12 · filter^12 · filter^8 · filter^8] ---> [filter^19 · filter^12 · filter^12 · filter^12 · filter^8] (only one)
+//│ 			[filter^19 · filter^12 · filter^12 · filter^8]
+//│ 				[filter^19 · filter^12 · filter^12 · filter^8 · filter^12] ---> [filter^19 · filter^12 · filter^12 · filter^8] (only one)
+//│ 				[filter^19 · filter^12 · filter^12 · filter^8 · filter^8] ---> [filter^19 · filter^12 · filter^12 · filter^8] (only one)
+//│ 		[filter^19 · filter^12 · filter^8]
+//│ 			[filter^19 · filter^12 · filter^8 · filter^12]
+//│ 				[filter^19 · filter^12 · filter^8 · filter^12 · filter^12] ---> [filter^19 · filter^12 · filter^8 · filter^12] (only one)
+//│ 				[filter^19 · filter^12 · filter^8 · filter^12 · filter^8] ---> [filter^19 · filter^12 · filter^8 · filter^12] (only one)
+//│ 			[filter^19 · filter^12 · filter^8 · filter^8]
+//│ 				[filter^19 · filter^12 · filter^8 · filter^8 · filter^12] ---> [filter^19 · filter^12 · filter^8 · filter^8] (only one)
+//│ 				[filter^19 · filter^12 · filter^8 · filter^8 · filter^8] ---> [filter^19 · filter^12 · filter^8 · filter^8] (only one)
+//│ 	[filter^19 · filter^8]
+//│ 		[filter^19 · filter^8 · filter^12]
+//│ 			[filter^19 · filter^8 · filter^12 · filter^12]
+//│ 				[filter^19 · filter^8 · filter^12 · filter^12 · filter^12] ---> [filter^19 · filter^8 · filter^12 · filter^12] (only one)
+//│ 				[filter^19 · filter^8 · filter^12 · filter^12 · filter^8] ---> [filter^19 · filter^8 · filter^12 · filter^12] (only one)
+//│ 			[filter^19 · filter^8 · filter^12 · filter^8]
+//│ 				[filter^19 · filter^8 · filter^12 · filter^8 · filter^12] ---> [filter^19 · filter^8 · filter^12 · filter^8] (only one)
+//│ 				[filter^19 · filter^8 · filter^12 · filter^8 · filter^8] ---> [filter^19 · filter^8 · filter^12 · filter^8] (only one)
+//│ 		[filter^19 · filter^8 · filter^8]
+//│ 			[filter^19 · filter^8 · filter^8 · filter^12]
+//│ 				[filter^19 · filter^8 · filter^8 · filter^12 · filter^12] ---> [filter^19 · filter^8 · filter^8 · filter^12] (only one)
+//│ 				[filter^19 · filter^8 · filter^8 · filter^12 · filter^8] ---> [filter^19 · filter^8 · filter^8 · filter^12] (only one)
+//│ 			[filter^19 · filter^8 · filter^8 · filter^8]
+//│ 				[filter^19 · filter^8 · filter^8 · filter^8 · filter^12] ---> [filter^19 · filter^8 · filter^8 · filter^8] (only one)
+//│ 				[filter^19 · filter^8 · filter^8 · filter^8 · filter^8] ---> [filter^19 · filter^8 · filter^8 · filter^8] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (filter₀ [C 1 [C 2 [C 3 [N]]]])
+//│ def filter₀ = 
+//│ 	(fun ls⁴ -> case ls⁴ of {
+//│ 		C h⁴ t⁴ => case (h⁴ > 1) of {
+//│ 			True => [C h⁴ (filter₉ t⁴)]
+//│ 			| False => (filter₁ t⁴)}
+//│ 		| N => [N]})
+//│ 	where
+//│ 	def filter₁ = 
+//│ 		(fun ls⁵ -> case ls⁵ of {
+//│ 			C h⁵ t⁵ => case (h⁵ > 1) of {
+//│ 				True => [C h⁵ (filter₆ t⁵)]
+//│ 				| False => (filter₂ t⁵)}
+//│ 			| N => [N]})
+//│ 		where
+//│ 		def filter₂ = 
+//│ 			(fun ls¹⁶ -> case ls¹⁶ of {
+//│ 				C h¹⁶ t¹⁶ => case (h¹⁶ > 1) of {
+//│ 					True => [C h¹⁶ (filter₅ t¹⁶)]
+//│ 					| False => (filter₃ t¹⁶)}
+//│ 				| N => [N]})
+//│ 			where
+//│ 			def filter₃ = 
+//│ 				(fun ls¹⁰ -> case ls¹⁰ of {
+//│ 					C h¹⁰ t¹⁰ => case (h¹⁰ > 1) of {
+//│ 						True => [C h¹⁰ (filter₄ t¹⁰)]
+//│ 						| False => (filter₃ t¹⁰)}
+//│ 					| N => [N]})
+//│ 				where
+//│ 				def filter₄ = 
+//│ 					(fun ls¹ -> case ls¹ of {
+//│ 						C h¹ t¹ => case (h¹ > 1) of {
+//│ 							True => [C h¹ (filter₄ t¹)]
+//│ 							| False => (filter₄ t¹)}
+//│ 						| N => [N]})
+//│ 			def filter₅ = 
+//│ 				(fun ls⁹ -> case ls⁹ of {
+//│ 					C h⁹ t⁹ => case (h⁹ > 1) of {
+//│ 						True => [C h⁹ (filter₅ t⁹)]
+//│ 						| False => (filter₅ t⁹)}
+//│ 					| N => [N]})
+//│ 		def filter₆ = 
+//│ 			(fun ls⁸ -> case ls⁸ of {
+//│ 				C h⁸ t⁸ => case (h⁸ > 1) of {
+//│ 					True => [C h⁸ (filter₈ t⁸)]
+//│ 					| False => (filter₇ t⁸)}
+//│ 				| N => [N]})
+//│ 			where
+//│ 			def filter₇ = 
+//│ 				(fun ls¹³ -> case ls¹³ of {
+//│ 					C h¹³ t¹³ => case (h¹³ > 1) of {
+//│ 						True => [C h¹³ (filter₇ t¹³)]
+//│ 						| False => (filter₇ t¹³)}
+//│ 					| N => [N]})
+//│ 			def filter₈ = 
+//│ 				(fun ls¹⁵ -> case ls¹⁵ of {
+//│ 					C h¹⁵ t¹⁵ => case (h¹⁵ > 1) of {
+//│ 						True => [C h¹⁵ (filter₈ t¹⁵)]
+//│ 						| False => (filter₈ t¹⁵)}
+//│ 					| N => [N]})
+//│ 	def filter₉ = 
+//│ 		(fun ls¹² -> case ls¹² of {
+//│ 			C h¹² t¹² => case (h¹² > 1) of {
+//│ 				True => [C h¹² (filter₁₃ t¹²)]
+//│ 				| False => (filter₁₀ t¹²)}
+//│ 			| N => [N]})
+//│ 		where
+//│ 		def filter₁₀ = 
+//│ 			(fun ls⁶ -> case ls⁶ of {
+//│ 				C h⁶ t⁶ => case (h⁶ > 1) of {
+//│ 					True => [C h⁶ (filter₁₂ t⁶)]
+//│ 					| False => (filter₁₁ t⁶)}
+//│ 				| N => [N]})
+//│ 			where
+//│ 			def filter₁₁ = 
+//│ 				(fun ls¹¹ -> case ls¹¹ of {
+//│ 					C h¹¹ t¹¹ => case (h¹¹ > 1) of {
+//│ 						True => [C h¹¹ (filter₁₁ t¹¹)]
+//│ 						| False => (filter₁₁ t¹¹)}
+//│ 					| N => [N]})
+//│ 			def filter₁₂ = 
+//│ 				(fun ls³ -> case ls³ of {
+//│ 					C h³ t³ => case (h³ > 1) of {
+//│ 						True => [C h³ (filter₁₂ t³)]
+//│ 						| False => (filter₁₂ t³)}
+//│ 					| N => [N]})
+//│ 		def filter₁₃ = 
+//│ 			(fun ls¹⁴ -> case ls¹⁴ of {
+//│ 				C h¹⁴ t¹⁴ => case (h¹⁴ > 1) of {
+//│ 					True => [C h¹⁴ (filter₁₅ t¹⁴)]
+//│ 					| False => (filter₁₄ t¹⁴)}
+//│ 				| N => [N]})
+//│ 			where
+//│ 			def filter₁₄ = 
+//│ 				(fun ls⁷ -> case ls⁷ of {
+//│ 					C h⁷ t⁷ => case (h⁷ > 1) of {
+//│ 						True => [C h⁷ (filter₁₄ t⁷)]
+//│ 						| False => (filter₁₄ t⁷)}
+//│ 					| N => [N]})
+//│ 			def filter₁₅ = 
+//│ 				(fun ls² -> case ls² of {
+//│ 					C h² t² => case (h² > 1) of {
+//│ 						True => [C h² (filter₁₅ t²)]
+//│ 						| False => (filter₁₅ t²)}
+//│ 					| N => [N]})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [C 2 [C 3 [N]]]] --->
+//│ 	case ls⁴ of {C h⁴ t⁴ => case (h⁴ > 1) of {True => [C h⁴ (filter₉ t⁴)] | False => (filter₁ t⁴)} | N => [N]}
+//│ [C 2 [C 3 [N]]] --->
+//│ 	case ls¹² of {C h¹² t¹² => case (h¹² > 1) of {True => [C h¹² (filter₁₃ t¹²)] | False => (filter₁₀ t¹²)} | N => [N]}
+//│ 	case ls⁵ of {C h⁵ t⁵ => case (h⁵ > 1) of {True => [C h⁵ (filter₆ t⁵)] | False => (filter₂ t⁵)} | N => [N]}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [C 3 [N]] --->
+//│ 	case ls⁶ of {C h⁶ t⁶ => case (h⁶ > 1) of {True => [C h⁶ (filter₁₂ t⁶)] | False => (filter₁₁ t⁶)} | N => [N]}
+//│ 	case ls¹⁴ of {C h¹⁴ t¹⁴ => case (h¹⁴ > 1) of {True => [C h¹⁴ (filter₁₅ t¹⁴)] | False => (filter₁₄ t¹⁴)} | N => [N]}
+//│ 	case ls¹⁶ of {C h¹⁶ t¹⁶ => case (h¹⁶ > 1) of {True => [C h¹⁶ (filter₅ t¹⁶)] | False => (filter₃ t¹⁶)} | N => [N]}
+//│ 	case ls⁸ of {C h⁸ t⁸ => case (h⁸ > 1) of {True => [C h⁸ (filter₈ t⁸)] | False => (filter₇ t⁸)} | N => [N]}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [N] --->
+//│ 	case ls¹¹ of {C h¹¹ t¹¹ => case (h¹¹ > 1) of {True => [C h¹¹ (filter₁₁ t¹¹)] | False => (filter₁₁ t¹¹)} | N => [N]}
+//│ 	case ls³ of {C h³ t³ => case (h³ > 1) of {True => [C h³ (filter₁₂ t³)] | False => (filter₁₂ t³)} | N => [N]}
+//│ 	case ls⁷ of {C h⁷ t⁷ => case (h⁷ > 1) of {True => [C h⁷ (filter₁₄ t⁷)] | False => (filter₁₄ t⁷)} | N => [N]}
+//│ 	case ls² of {C h² t² => case (h² > 1) of {True => [C h² (filter₁₅ t²)] | False => (filter₁₅ t²)} | N => [N]}
+//│ 	case ls¹⁰ of {C h¹⁰ t¹⁰ => case (h¹⁰ > 1) of {True => [C h¹⁰ (filter₄ t¹⁰)] | False => (filter₃ t¹⁰)} | N => [N]}
+//│ 	case ls⁹ of {C h⁹ t⁹ => case (h⁹ > 1) of {True => [C h⁹ (filter₅ t⁹)] | False => (filter₅ t⁹)} | N => [N]}
+//│ 	case ls¹³ of {C h¹³ t¹³ => case (h¹³ > 1) of {True => [C h¹³ (filter₇ t¹³)] | False => (filter₇ t¹³)} | N => [N]}
+//│ 	case ls¹⁵ of {C h¹⁵ t¹⁵ => case (h¹⁵ > 1) of {True => [C h¹⁵ (filter₈ t¹⁵)] | False => (filter₈ t¹⁵)} | N => [N]}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (filter₀ 
+//│ 	let h⁴ = 1
+//│ 	in let t⁴ = 	
+//│ 		let h¹² = 2
+//│ 		in let t¹² = 	
+//│ 			let h⁶ = 3
+//│ 			in let t⁶ = [N]
+//│ 			in case (h⁶ > 1) of {
+//│ 				True => [C h⁶ (filter₁₂ t⁶)]
+//│ 				| False => (filter₁₁ t⁶)}
+//│ 		in case (h¹² > 1) of {
+//│ 			True => [C h¹² (filter₁₃ t¹²)]
+//│ 			| False => (filter₁₀ t¹²)}
+//│ 	in case (h⁴ > 1) of {
+//│ 		True => [C h⁴ (filter₉ t⁴)]
+//│ 		| False => (filter₁ t⁴)})
+//│ def filter₀ = 
+//│ 	(fun ls⁴ -> ls⁴)
+//│ 	where
+//│ 	def filter₁ = 
+//│ 		(fun ls⁵ -> case ls⁵ of {
+//│ 			C h⁵ t⁵ => case (h⁵ > 1) of {
+//│ 				True => [C h⁵ (filter₆ t⁵)]
+//│ 				| False => (filter₂ t⁵)}
+//│ 			| N => [N]})
+//│ 		where
+//│ 		def filter₂ = 
+//│ 			(fun ls¹⁶ -> case ls¹⁶ of {
+//│ 				C h¹⁶ t¹⁶ => case (h¹⁶ > 1) of {
+//│ 					True => [C h¹⁶ (filter₅ t¹⁶)]
+//│ 					| False => (filter₃ t¹⁶)}
+//│ 				| N => [N]})
+//│ 			where
+//│ 			def filter₃ = 
+//│ 				(fun ls¹⁰ -> case ls¹⁰ of {
+//│ 					C h¹⁰ t¹⁰ => case (h¹⁰ > 1) of {
+//│ 						True => [C h¹⁰ (filter₄ t¹⁰)]
+//│ 						| False => (filter₃ t¹⁰)}
+//│ 					| N => [N]})
+//│ 				where
+//│ 				def filter₄ = 
+//│ 					(fun ls¹ -> case ls¹ of {
+//│ 						C h¹ t¹ => case (h¹ > 1) of {
+//│ 							True => [C h¹ (filter₄ t¹)]
+//│ 							| False => (filter₄ t¹)}
+//│ 						| N => [N]})
+//│ 			def filter₅ = 
+//│ 				(fun ls⁹ -> case ls⁹ of {
+//│ 					C h⁹ t⁹ => case (h⁹ > 1) of {
+//│ 						True => [C h⁹ (filter₅ t⁹)]
+//│ 						| False => (filter₅ t⁹)}
+//│ 					| N => [N]})
+//│ 		def filter₆ = 
+//│ 			(fun ls⁸ -> case ls⁸ of {
+//│ 				C h⁸ t⁸ => case (h⁸ > 1) of {
+//│ 					True => [C h⁸ (filter₈ t⁸)]
+//│ 					| False => (filter₇ t⁸)}
+//│ 				| N => [N]})
+//│ 			where
+//│ 			def filter₇ = 
+//│ 				(fun ls¹³ -> case ls¹³ of {
+//│ 					C h¹³ t¹³ => case (h¹³ > 1) of {
+//│ 						True => [C h¹³ (filter₇ t¹³)]
+//│ 						| False => (filter₇ t¹³)}
+//│ 					| N => [N]})
+//│ 			def filter₈ = 
+//│ 				(fun ls¹⁵ -> case ls¹⁵ of {
+//│ 					C h¹⁵ t¹⁵ => case (h¹⁵ > 1) of {
+//│ 						True => [C h¹⁵ (filter₈ t¹⁵)]
+//│ 						| False => (filter₈ t¹⁵)}
+//│ 					| N => [N]})
+//│ 	def filter₉ = 
+//│ 		(fun ls¹² -> ls¹²)
+//│ 		where
+//│ 		def filter₁₀ = 
+//│ 			(fun ls⁶ -> ls⁶)
+//│ 			where
+//│ 			def filter₁₁ = 
+//│ 				(fun ls¹¹ -> case ls¹¹ of {
+//│ 					C h¹¹ t¹¹ => case (h¹¹ > 1) of {
+//│ 						True => [C h¹¹ (filter₁₁ t¹¹)]
+//│ 						| False => (filter₁₁ t¹¹)}
+//│ 					| N => [N]})
+//│ 			def filter₁₂ = 
+//│ 				(fun ls³ -> case ls³ of {
+//│ 					C h³ t³ => case (h³ > 1) of {
+//│ 						True => [C h³ (filter₁₂ t³)]
+//│ 						| False => (filter₁₂ t³)}
+//│ 					| N => [N]})
+//│ 		def filter₁₃ = 
+//│ 			(fun ls¹⁴ -> case ls¹⁴ of {
+//│ 				C h¹⁴ t¹⁴ => case (h¹⁴ > 1) of {
+//│ 					True => [C h¹⁴ (filter₁₅ t¹⁴)]
+//│ 					| False => (filter₁₄ t¹⁴)}
+//│ 				| N => [N]})
+//│ 			where
+//│ 			def filter₁₄ = 
+//│ 				(fun ls⁷ -> ls⁷)
+//│ 			def filter₁₅ = 
+//│ 				(fun ls² -> case ls² of {
+//│ 					C h² t² => case (h² > 1) of {
+//│ 						True => [C h² (filter₁₅ t²)]
+//│ 						| False => (filter₁₅ t²)}
+//│ 					| N => [N]})
+//│ <<<<<<< after fusion <<<<<<<

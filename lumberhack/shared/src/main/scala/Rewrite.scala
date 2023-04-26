@@ -6,114 +6,136 @@ import mlscript.utils.*, shorthands.*
 import mlscript.Function as FunctionTerm
 import Expr.*
 import scala.collection.mutable.Map as MutMap
+import lumberhack.utils.*
 
-class Rewrite(p: Program, val d: Deforest,
-  defInstancesMap: Map[(Path, Path), Set[ExprId -> ExprId]],
-  defMap: Map[Path, Path],
-) {
-  // val defInstances = mutable.Map.empty[Path, Set[ExprId -> ExprId]]
-  // val (pdefs, exprs) = p.contents.partition(c => c.isLeft)
-  // val pdefNamesToBodies = pdefs.collect{case L(pd) => pd.id -> pd.body}.toMap
-  // val csToMs: Map[(Path, ExprId), (Path, Match)] = {
-  //   val res = mutable.Map.empty[(Path, ExprId), (Path, Match)]
-  //   defInstancesMap foreach { case ((pp, cp), exprMap) =>
-  //     exprMap foreach { case (ctor, matchh) => res.updateWith(pp, ctor) {
-  //       case S(v) if v._2.uid == matchh => S(v)
-  //       case S(v) =>
-  //         lastWords(
-  //           s"\n${pprint2(pp).plainText} to `${d.exprs(ctor).pp}` \n" +
-  //           s"\talready has ${pprint2(v._1).plainText} to `${v._2.pp}` \n" +
-  //           s"\tbut here comes another match ${pprint2(cp).plainText} to `${d.exprs(matchh).pp}`"
-  //         )
-  //       case N => S(cp, d.exprs(matchh) match { case m: Match => m; case _ => die })
-  //     } }
-  //   }
-  //   res.toMap
-  // }
-  // val msToCs: Map[(Path, ExprId), (Path, Ctor)] = {
-  //   val res = mutable.Map.empty[(Path, ExprId), (Path, Ctor)]
-  //   defInstancesMap foreach { case ((pp, cp), exprMap) =>
-  //     exprMap foreach { case (ctor, matchh) => res.updateWith(cp, matchh) {
-  //       case S(a) => {
-  //         d.Trace.log(a._2.pp(using level = 0, showUids = true) +
-  //           " ||uses the same match as|| " +
-  //           d.exprs(ctor).pp(using level = 0, showUids = true)
-  //         )
-  //         S(a)
-  //       }
-  //       case N => S(pp, d.exprs(ctor) match { case c: Ctor => c; case _ => die })
-  //     } }
-  //   }
-  //   res.toMap
-  // }
-  // val newDefs = MutMap.empty[Path, L[ProgDef]]
-  // val defIds = MutMap.empty[Path, Ident]
-  // val id2Path = MutMap.empty[String, Path]
-  // val newExprs = exprs.collect{case R(e) => R(rewriteExpr(e)(using d, Nil -> Nil))}
+trait ExprRewrite { this: Expr =>
+  // ctx should initially contain the keywords and the ids of original function definitions
+  def rewriteExpand(using ctx: Expr.Ctx, currentPath: Path, newd: Deforest, pathToIdent: Map[Path, Ident], refMap: Map[Expr.Ref, Expr.Ref]): Expr = {
+    this match {
+      case Const(lit) => Const(lit)
+      case Call(lhs, rhs) => Call(lhs.rewriteExpand, rhs.rewriteExpand)
+      case Sequence(f, s) => Sequence(f.rewriteExpand, s.rewriteExpand)
+      case Ctor(name, args) => Ctor(name, args.map(_.rewriteExpand))
+      case LetIn(id, rhs, body) =>
+        val newId = id.copyToNewDeforest
+        LetIn(newId, rhs.rewriteExpand, body.rewriteExpand(using ctx + (id.tree.name -> newId)))
+      case Match(scrut, arms) =>
+        Match(scrut.rewriteExpand, arms.map {(ctor, args, body) =>
+          val newArgs = args.map(a => a.tree.name -> a.copyToNewDeforest)
+          given Expr.Ctx = ctx ++ newArgs
+          (ctor, newArgs.map(_._2), body.rewriteExpand)
+        })
+      case IfThenElse(s, t, e) => IfThenElse(s.rewriteExpand, t.rewriteExpand, e.rewriteExpand)
+      case Function(param, body) =>
+        val newParam = param.copyToNewDeforest
+        Function(newParam, body.rewriteExpand(using ctx + (newParam.tree.name -> newParam)))
+      case ref@Ref(id) => if id.isDef then { // a function def
+        pathToIdent.get(currentPath ::: refMap(ref).toPath()) match {
+          case Some(id) => Ref(id)            // either a knot or a new def
+          case None => Ref(ctx(id.tree.name)) // hopeless to continue, should use the original definition
+        } 
+      } else Ref(ctx(id.tree.name)) // a parameter or match binder or builtin keyword
+    } 
+  }
 
-  // def genId(p: Path)(using d: Deforest): Ident =
-  //   d.nextIdent(isDef=true, Var(p.map(r => s"${r._1.id.tree}'${r._1.id.uid}'${r._1.uid}").mkString("_")))
+  def rewriteFusion(using fusionMatch: Map[ExprId, ExprId], newd: Deforest): Expr = {
+    this match {
+      case Const(lit) => Const(lit)
+      case Call(lhs, rhs) => Call(lhs.rewriteFusion, rhs.rewriteFusion)
+      case Sequence(f, s) => Sequence(f.rewriteFusion, s.rewriteFusion)
+      case LetIn(id, rhs, body) => LetIn(id, rhs.rewriteFusion, body.rewriteFusion)
+      case IfThenElse(s, t, e) => IfThenElse(s.rewriteFusion, t.rewriteFusion, e.rewriteFusion)
+      case Function(param, body) => Function(param, body.rewriteFusion)
+      case Ref(id) => Ref(id)
+      case Match(scrut, arms) => if fusionMatch.valuesIterator.contains(this.uid)
+        then scrut.rewriteFusion
+        else Match(scrut.rewriteFusion, arms.map{(n, args, body) => (n, args, body.rewriteFusion)})
+      case Ctor(name, args) => fusionMatch.get(this.uid).map { matchId =>
+        val matchArm = newd.exprs(matchId).asInstanceOf[Match].arms.find(_._1 == name).get
+        (matchArm._2 zip args).foldRight(matchArm._3.rewriteFusion){(t_i, acc) => LetIn(t_i._1, t_i._2.rewriteFusion, acc)}
+      }.orElse(Some(Ctor(name, args.map(_.rewriteFusion)))).get
+    }
+  }
+}
 
-  // def writeInstance(di: Path, root: Path): Ident = {
-  //   defIds.get(di) match {
-  //     case Some(id) => id
-  //     case None => {
-  //       val id = genId(root ::: di)(using d)
-  //       defIds += (di -> id)
-  //       id2Path += ((id.tree.name) -> di)
-  //       newDefs.get(di) match {
-  //         case Some(_) => ???
-  //         case None => {
-  //           newDefs += (di -> (if (di.length - di.distinct.length) < 10 then {
-  //             val pdef = di.last._1.id
-  //             val oldBody = pdefNamesToBodies(pdef)
-  //             val newBody = rewriteExpr(oldBody)(using d, di -> root)
-  //             L(ProgDef(id, newBody))
-  //           } else {
-  //             val newBody = Const(StrLit("RECURSE_TOO_LONG"))(using d)
-  //             L(ProgDef(id, newBody))
-  //           }))
-  //         }
-  //       }
-  //       id
-  //     }
-  //   }
-  // }
+trait ProgramRewrite { this: Program =>
+  private def copyDefsToNewDeforest(using newd: Deforest): Program -> Map[Expr.Ref, Expr.Ref] -> Expr.Ctx = {
+    val refMaps = scala.collection.mutable.Map.empty[Expr.Ref, Expr.Ref]
+    def copyExpr(e: Expr)(using ctx: Expr.Ctx, newd: Deforest): Expr = e match {
+      case Expr.Const(lit: Lit) => Expr.Const(lit)
+      case r@Expr.Ref(id: Ident) =>
+        val res = Expr.Ref(ctx(id.tree.name))
+        assert(!refMaps.contains(res))
+        refMaps += (res -> r)
+        res
+      case Expr.Call(lhs: Expr, rhs: Expr) => Expr.Call(copyExpr(lhs), copyExpr(rhs))
+      case Expr.Sequence(fst: Expr, snd: Expr) => Expr.Sequence(copyExpr(fst), copyExpr(snd))
+      case Expr.Ctor(name: Var, args: Ls[Expr]) => Expr.Ctor(name, args.map(copyExpr))
+      case Expr.LetIn(id: Ident, rhs: Expr, body: Expr) =>
+        val newId = id.copyToNewDeforest
+        Expr.LetIn(newId, copyExpr(rhs), copyExpr(body)(using ctx + (id.tree.name -> newId)))
+      case Expr.Match(scrut: Expr, arms: Ls[(Var, Ls[Ident], Expr)]) =>
+        Expr.Match(copyExpr(scrut), arms.map {(ctor, args, body) =>
+          val newArgs = args.map(a => a.tree.name -> a.copyToNewDeforest)
+          given Expr.Ctx = ctx ++ newArgs
+          (ctor, newArgs.map(_._2), copyExpr(body))
+        })
+      case Expr.IfThenElse(scrut: Expr, thenn: Expr, elze: Expr) => Expr.IfThenElse(copyExpr(scrut), copyExpr(thenn), copyExpr(elze))
+      case Expr.Function(param: Ident, body: Expr) =>
+        val newParam = param.copyToNewDeforest
+        Expr.Function(newParam, copyExpr(body)(using ctx + (newParam.tree.name -> newParam)))
+    }
+    given ctx: Expr.Ctx = Deforest.lumberhackKeywords.map {
+      n => n -> newd.nextIdent(false, Var(n))
+    } ++ this.defAndExpr._1.keySet.map(id => id.tree.name -> id.copyToNewDeforest) |> (_.toMap)
 
-  // def findMatchWithoutPrefix(longest: Path)(using map: Map[(Path, ExprId), (Path, Match | Ctor)], uid: Uid[Expr]): Ls[Path] = {
-  //   val rest = longest match {
-  //     case Nil => Nil
-  //     case _ :: t => findMatchWithoutPrefix(t)
-  //   }
-  //   if map.isDefinedAt(longest -> uid) then longest :: rest else rest
-  // }
-  
-  // def rewriteExpr(e: Expr)(using d: Deforest, pathAndRoot: Path -> Path): Expr = {
-  //   val p = pathAndRoot._1
-  //   e match {
-  //     case Ctor(name, args) => Ctor(name, args.map(rewriteExpr))
-  //     case Match(scrut, arms) => Match(rewriteExpr(scrut), arms.map{case (v, args, body) => (v, args, rewriteExpr(body))})
-  //     case r@Ref(id) => if id.isDef then {
-  //       val newPath = p :+ (r -> r.uid)
-  //       Ref(writeInstance(defMap.getOrElse(newPath, newPath), pathAndRoot._2))
-  //     } else { r }
-  //     case Const(lit) => e
-  //     case Call(lhs, rhs) => Call(rewriteExpr(lhs), rewriteExpr(rhs))
-  //     case LetIn(id, rhs, body) => LetIn(id, rewriteExpr(rhs), rewriteExpr(body))
-  //     case Function(param, body) => Function(param, rewriteExpr(body))
-  //     case IfThenElse(scrut, thenn, elze) => IfThenElse(rewriteExpr(scrut), rewriteExpr(thenn), rewriteExpr(elze))
-  //   }
-  // }
-  
+    Program(
+      this.defAndExpr._2.map { e => R(copyExpr(e)) }
+      ::: this.defAndExpr._1.map { (id, body) => L(ProgDef(ctx(id.tree.name), copyExpr(body))) }.toList
+    ) -> refMaps.toMap -> ctx
+  }
 
-  // def rewrite: Program = {
-  //   given Deforest = d;
+  def expandedWithNewDeforest(callTrees: CallTrees): Program -> Deforest = {
+    given newd: Deforest(false)
+    val copiedOriginalProgram -> refMaps -> initContext = this.copyDefsToNewDeforest
+    val pathToIdent = callTrees.generatePathToIdent
+    assert({
+      val a = pathToIdent.values.map(_.pp(using InitPpConfig)).toSet
+      val b = pathToIdent.values.map(_.pp(using InitPpConfig.showIuidOn)).toSet
+      b.size == a.size
+    })
     
-  //   defInstancesMap.foreach { case ((p1, p2), s) =>
-  //     defInstances.updateWith(p1){ case S(prev) => S(prev ++ s); case N => S(s) }
-  //     defInstances.updateWith(p2){ case S(prev) => S(prev ++ s); case N => S(s) }
-  //   }
+    val newDefs = {
+      var defined = List.empty[Ident -> Path]
+      pathToIdent.keys.foreach { p =>
+        // make sure to only register those that are real new defs
+        // if p.pp(using InitPpConfig.showRefEuidOn.pathAsIdentOn) == pathToIdent(p).pp(using InitPpConfig.showRefEuidOn.pathAsIdentOn)
+        if callTrees.originalDefs(p) then defined = (pathToIdent(p) -> p) :: defined
+      }
+      val res = defined.map { (id, p) =>
+        assert(p.p.nonEmpty)
+        val identKey = p.p.last match
+          case PathElem.Normal(ref) => initContext(ref.id.tree.name)
+          case PathElem.Star(elms) => ???
+        val newBody: Expr = copiedOriginalProgram.defAndExpr._1(identKey).rewriteExpand(using initContext, p, newd, pathToIdent, refMaps)
+        L(ProgDef(id, newBody))
+      }
+      res
+    }
+    Program(
+      copiedOriginalProgram.defAndExpr._2.map(e => R(e.rewriteExpand(using initContext, Path(Nil), newd, pathToIdent, refMaps)))
+      // ++ copiedOriginalProgram.defAndExpr._1.iterator.map((id, body) => L(ProgDef(id, body)))
+      ++ newDefs
+    ) -> newd
+    
+  }
 
-  //   Program(newDefs.values.toList ++ newExprs)
-  // }
+  def rewrite(fusionMatch: Map[ExprId, Set[ExprId]], d: Deforest): Program = {
+    given Map[ExprId, ExprId] = fusionMatch.map { (p, cs) => p -> cs.head }
+    given Deforest = d
+    Program(
+      this.defAndExpr._2.map { e => R(e.rewriteFusion) }
+      ::: this.defAndExpr._1.map { (id, body) => L(ProgDef(id, body.rewriteFusion)) }.toList
+    )
+  }
 }

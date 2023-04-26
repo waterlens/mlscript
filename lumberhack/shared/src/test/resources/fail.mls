@@ -1805,3 +1805,189 @@ max(C(1, C(3, C(2, N))))(0)
 //│ !!!!!!ERROR!!!!!!
 //│ java.lang.Exception: Internal Error: type error 'm²⁴ => '430_matchres <: Destruct(C('h¹⁶, 't¹⁶), N)
 //│ !!!!!!ERROR!!!!!!
+
+// WRONG: multiple match
+_LUMBERHACK_ERROR
+fun last(ls) = if ls is
+  C(h, t) then if t is
+    N then Some(h)
+    C(hh, tt) then last(t)
+  N then None
+last(C(1, C(2, C(3, N))))
+//│ |_LUMBERHACK_ERROR|↵|#fun| |last|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |t| |is|→|N| |#then| |Some|(|h|)|↵|C|(|hh|,| |tt|)| |#then| |last|(|t|)|←|↵|N| |#then| |None|←|↵|last|(|C|(|1|,| |C|(|2|,| |C|(|3|,| |N|)|)|)|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun last = ls, => if ls is ‹(C (h, t,)) then if t is ‹(N) then Some (h,); (C (hh, tt,)) then last (t,)›; (N) then None›; last (C (1, C (2, C (3, N,),),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (last^12 [C 1 [C 2 [C 3 [N]]]])
+//│ def last = (fun ls⁰ -> case ls⁰ of {
+//│ 	C h⁰ t⁰ => case t⁰ of {
+//│ 		N => [Some h⁰]
+//│ 		| C hh⁰ tt⁰ => (last^5 t⁰)}
+//│ 	| N => [None]})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [last^12]
+//│ 	[last^12 · last^5]
+//│ 		[last^12 · last^5 · last^5]
+//│ 			[last^12 · last^5 · last^5 · last^5]
+//│ 				[last^12 · last^5 · last^5 · last^5 · last^5] ---> [last^12 · last^5 · last^5 · last^5] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (last₀ [C 1 [C 2 [C 3 [N]]]])
+//│ def last₀ = 
+//│ 	(fun ls⁴ -> case ls⁴ of {
+//│ 		C h⁴ t⁴ => case t⁴ of {
+//│ 			N => [Some h⁴]
+//│ 			| C hh⁴ tt⁴ => (last₁ t⁴)}
+//│ 		| N => [None]})
+//│ 	where
+//│ 	def last₁ = 
+//│ 		(fun ls³ -> case ls³ of {
+//│ 			C h³ t³ => case t³ of {
+//│ 				N => [Some h³]
+//│ 				| C hh³ tt³ => (last₂ t³)}
+//│ 			| N => [None]})
+//│ 		where
+//│ 		def last₂ = 
+//│ 			(fun ls² -> case ls² of {
+//│ 				C h² t² => case t² of {
+//│ 					N => [Some h²]
+//│ 					| C hh² tt² => (last₃ t²)}
+//│ 				| N => [None]})
+//│ 			where
+//│ 			def last₃ = 
+//│ 				(fun ls¹ -> case ls¹ of {
+//│ 					C h¹ t¹ => case t¹ of {
+//│ 						N => [Some h¹]
+//│ 						| C hh¹ tt¹ => (last₃ t¹)}
+//│ 					| N => [None]})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [C 2 [C 3 [N]]]] --->
+//│ 	case ls⁴ of {C h⁴ t⁴ => case t⁴ of {N => [Some h⁴] | C hh⁴ tt⁴ => (last₁ t⁴)} | N => [None]}
+//│ [C 2 [C 3 [N]]] --->
+//│ 	case ls³ of {C h³ t³ => case t³ of {N => [Some h³] | C hh³ tt³ => (last₂ t³)} | N => [None]}
+//│ 	case t⁴ of {N => [Some h⁴] | C hh⁴ tt⁴ => (last₁ t⁴)}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [C 3 [N]] --->
+//│ 	case ls² of {C h² t² => case t² of {N => [Some h²] | C hh² tt² => (last₃ t²)} | N => [None]}
+//│ 	case t³ of {N => [Some h³] | C hh³ tt³ => (last₂ t³)}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [N] --->
+//│ 	case ls¹ of {C h¹ t¹ => case t¹ of {N => [Some h¹] | C hh¹ tt¹ => (last₃ t¹)} | N => [None]}
+//│ 	case t² of {N => [Some h²] | C hh² tt² => (last₃ t²)}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (last₀ 
+//│ 	let h⁴ = 1
+//│ 	in let t⁴ = 	
+//│ 		let h³ = 2
+//│ 		in let t³ = 	
+//│ 			let h² = 3
+//│ 			in let t² = [None]
+//│ 			in case t² of {
+//│ 				N => [Some h²]
+//│ 				| C hh² tt² => (last₃ t²)}
+//│ 		in case t³ of {
+//│ 			N => [Some h³]
+//│ 			| C hh³ tt³ => (last₂ t³)}
+//│ 	in case t⁴ of {
+//│ 		N => [Some h⁴]
+//│ 		| C hh⁴ tt⁴ => (last₁ t⁴)})
+//│ def last₀ = 
+//│ 	(fun ls⁴ -> ls⁴)
+//│ 	where
+//│ 	def last₁ = 
+//│ 		(fun ls³ -> ls³)
+//│ 		where
+//│ 		def last₂ = 
+//│ 			(fun ls² -> ls²)
+//│ 			where
+//│ 			def last₃ = 
+//│ 				(fun ls¹ -> ls¹)
+//│ <<<<<<< after fusion <<<<<<<
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: type error Some('h³) <: Destruct(N, C('hh⁴, 'tt⁴))
+//│ !!!!!!ERROR!!!!!!
+
+
+// WRONG: recursive strategy
+_LUMBERHACK_ERROR
+fun concat(xs) = if xs is
+  N then ys => ys
+  C(h, t) then ys => C(h, concat(t, ys))
+fun rev(ls) = if ls is
+  C(h, t) then concat(rev(t), C(h, N))
+  N then N
+rev(primitive)
+//│ |_LUMBERHACK_ERROR|↵|#fun| |concat|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |ys| |=>| |ys|↵|C|(|h|,| |t|)| |#then| |ys| |=>| |C|(|h|,| |concat|(|t|,| |ys|)|)|←|↵|#fun| |rev|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |concat|(|rev|(|t|)|,| |C|(|h|,| |N|)|)|↵|N| |#then| |N|←|↵|rev|(|primitive|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun concat = xs, => if xs is ‹(N) then ys, => ys; (C (h, t,)) then ys, => C (h, concat (t, ys,),)›; fun rev = ls, => if ls is ‹(C (h, t,)) then concat (rev (t,), C (h, N,),); (N) then N›; rev (primitive,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (rev^27 primitive⁰)
+//│ def concat = (fun xs⁰ -> case xs⁰ of {
+//│ 	N => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ ((concat^5 t⁰) ys¹)])})
+//│ def rev = (fun ls⁰ -> case ls⁰ of {
+//│ 	C h¹ t¹ => ((concat^15 (rev^16 t¹)) [C h¹ [N]])
+//│ 	| N => [N]})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [rev^27]
+//│ 	[rev^27 · concat^15] (hopeless to continue)
+//│ 		[rev^27 · concat^15 · concat^5] ---> [rev^27 · concat^15] (using original def)
+//│ 	[rev^27 · rev^16]
+//│ 		[rev^27 · rev^16 · concat^15] (hopeless to continue)
+//│ 			[rev^27 · rev^16 · concat^15 · concat^5] ---> [rev^27 · rev^16 · concat^15] (using original def)
+//│ 		[rev^27 · rev^16 · rev^16] ---> [rev^27 · rev^16] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (rev₀ primitive⁰)
+//│ def rev₀ = 
+//│ 	(fun ls¹ -> case ls¹ of {
+//│ 		C h² t² => ((concat₀ (rev₁ t²)) [C h² [N]])
+//│ 		| N => [N]})
+//│ 	where
+//│ 	def concat₀ = 
+//│ 		(fun xs² -> case xs² of {
+//│ 			N => (fun ys⁴ -> ys⁴)
+//│ 			| C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ ((concat₀ t⁵) ys⁵)])})
+//│ 	def rev₁ = 
+//│ 		(fun ls² -> case ls² of {
+//│ 			C h³ t³ => ((concat₁ (rev₁ t³)) [C h³ [N]])
+//│ 			| N => [N]})
+//│ 		where
+//│ 		def concat₁ = 
+//│ 			(fun xs¹ -> case xs¹ of {
+//│ 				N => (fun ys² -> ys²)
+//│ 				| C h⁴ t⁴ => (fun ys³ -> [C h⁴ ((concat₁ t⁴) ys³)])})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C h⁴ ((concat₁ t⁴) ys³)] --->
+//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ ((concat₀ t⁵) ys⁵)])}
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ ((concat₁ t⁴) ys³)])}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [C h³ [N]] --->
+//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ ((concat₀ t⁵) ys⁵)])}
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ ((concat₁ t⁴) ys³)])}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [N] --->
+//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ ((concat₀ t⁵) ys⁵)])}
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ ((concat₁ t⁴) ys³)])}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [N] --->
+//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ ((concat₀ t⁵) ys⁵)])}
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ ((concat₁ t⁴) ys³)])}
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.StackOverflowError
+//│ !!!!!!ERROR!!!!!!

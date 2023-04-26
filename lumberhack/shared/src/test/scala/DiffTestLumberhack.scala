@@ -30,9 +30,13 @@ class DiffTestLumberhack extends DiffTests {
     // val (originalProgram, d) = originalOriginalProgram.expandedWithNewDeforest(originalOriginalProgramCallTree)
 
     given d: Deforest(mode.stdout)
-    val (allowErr, filteredEntities) = unit.entities match {
-      case Var("_LUMBERHACK_ERROR") :: t => (true, t)
-      case l => (false, l)
+    val (allowErr, evaluate, filteredEntities) = unit.entities match {
+      case Var(flags) :: t if flags.startsWith("_LUMBERHACK") => (
+        flags.contains("_LUMBERHACK_ERROR"),
+        flags.contains("_LUMBERHACK_EVAL"),
+        t
+      )
+      case l => (false, false, l)
     }
     val originalProgram = Program.fromPgrm(Pgrm(filteredEntities))
 
@@ -134,11 +138,13 @@ class DiffTestLumberhack extends DiffTests {
       finalD(prgmAfterFusion)
       finalD.resolveConstraints
 
+      if evaluate then {
+        output("\n>>>>>>> evaluate >>>>>>>")
+        val evalStr = prgmAfterFusion.evaluatedSmallStep.map(_.pp(using InitPpConfig.multilineOn.showIuidOn)).mkString("\n")
+        output(evalStr)
+        output("<<<<<<< evaluate <<<<<<<")
+      }
 
-      // output("\n>>>>>>> evaluate >>>>>>>")
-      // val evalStr = prgmAfterFusion.evaluated.map(_.pp(using InitPpConfig.multilineOn.showIuidOn)).mkString("\n")
-      // output(evalStr)
-      // output("<<<<<<< evaluate <<<<<<<")
       // output("\n>>>>>>> new type variable bounds >>>>>>>")
       // val newtvs = newd.upperBounds.keySet ++ d.lowerBounds.keySet
       // newtvs.foreach { tv =>

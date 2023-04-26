@@ -172,7 +172,7 @@ enum Expr(using val deforest: Deforest) extends ExprRewrite {
     case LetIn(id, value, body) => LetIn(id, value.subst, body.subst)
     case Match(scrut, arms) => Match(scrut.subst, arms.map((n, args, body) => (n, args, body.subst)))
     case IfThenElse(cond, thenn, elze) => IfThenElse(cond.subst, thenn.subst, elze.subst)
-    case Function(p, body) => Function(p, body.subst)
+    case Function(p, body) => Function(p, body.subst(using mapping.filterKeys(_ != p).toMap))
     case Sequence(f, s) => Sequence(f.subst, s.subst)
   }
 

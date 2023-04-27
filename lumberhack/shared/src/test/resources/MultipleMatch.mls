@@ -29,12 +29,12 @@ f(a => if (if a is
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [A] --->
-//│ 	case a¹ of {A => [B]}
-//│ [A] --->
-//│ 	case a¹ of {A => [B]}
-//│ [B] --->
-//│ 	case case a¹ of {A => [B]} of {B => 0}
+//│ [A]: 18 --->
+//│ 	case a¹ of {A => [B]}: 28
+//│ [A]: 21 --->
+//│ 	case a¹ of {A => [B]}: 28
+//│ [B]: 27 --->
+//│ 	case case a¹ of {A => [B]} of {B => 0}: 30
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -71,10 +71,10 @@ f(a => if a is
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [A] --->
-//│ 	case a¹ of {A => [B] | B => [C]}
-//│ [B] --->
-//│ 	case a¹ of {A => [B] | B => [C]}
+//│ [A]: 17 --->
+//│ 	case a¹ of {A => [B] | B => [C]}: 28
+//│ [B]: 20 --->
+//│ 	case a¹ of {A => [B] | B => [C]}: 28
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -119,12 +119,12 @@ f(a => if a is
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [A] --->
-//│ 	case a¹ of {A => [B]}
-//│ 	case aa¹ of {A => [C]}
+//│ [A]: 21 --->
+//│ 	case a¹ of {A => [B]}: 38
+//│ 	case aa¹ of {A => [C]}: 24
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [A] --->
-//│ 	case a¹ of {A => [B]}
+//│ [A]: 26 --->
+//│ 	case a¹ of {A => [B]}: 38
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -169,10 +169,10 @@ f(a =>
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [A] --->
-//│ 	case a¹ of {A => [B] | B => [C]}
-//│ [B] --->
-//│ 	case a¹ of {A => [B] | B => [C]}
+//│ [A]: 22 --->
+//│ 	case a¹ of {A => [B] | B => [C]}: 36
+//│ [B]: 25 --->
+//│ 	case a¹ of {A => [B] | B => [C]}: 36
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -217,14 +217,14 @@ f(a => if (if a is
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [A] --->
-//│ 	case a¹ of {A => [X] | B => [Y]}
-//│ [B] --->
-//│ 	case a¹ of {A => [X] | B => [Y]}
-//│ [X] --->
-//│ 	case case a¹ of {A => [X] | B => [Y]} of {X => 0 | Y => 1}
-//│ [Y] --->
-//│ 	case case a¹ of {A => [X] | B => [Y]} of {X => 0 | Y => 1}
+//│ [A]: 20 --->
+//│ 	case a¹ of {A => [X] | B => [Y]}: 31
+//│ [B]: 23 --->
+//│ 	case a¹ of {A => [X] | B => [Y]}: 31
+//│ [X]: 29 --->
+//│ 	case case a¹ of {A => [X] | B => [Y]} of {X => 0 | Y => 1}: 34
+//│ [Y]: 30 --->
+//│ 	case case a¹ of {A => [X] | B => [Y]} of {X => 0 | Y => 1}: 34
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -267,16 +267,16 @@ f(a => if (if a is
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [A] --->
-//│ 	case a¹ of {A => [X] | B => if (1 > 2) then [X] else [Y]}
-//│ [B] --->
-//│ 	case a¹ of {A => [X] | B => if (1 > 2) then [X] else [Y]}
-//│ [X] --->
-//│ 	case case a¹ of {A => [X] | B => if (1 > 2) then [X] else [Y]} of {X => 0 | Y => 1}
-//│ [X] --->
-//│ 	case case a¹ of {A => [X] | B => if (1 > 2) then [X] else [Y]} of {X => 0 | Y => 1}
-//│ [Y] --->
-//│ 	case case a¹ of {A => [X] | B => if (1 > 2) then [X] else [Y]} of {X => 0 | Y => 1}
+//│ [A]: 27 --->
+//│ 	case a¹ of {A => [X] | B => if (1 > 2) then [X] else [Y]}: 45
+//│ [B]: 30 --->
+//│ 	case a¹ of {A => [X] | B => if (1 > 2) then [X] else [Y]}: 45
+//│ [X]: 36 --->
+//│ 	case case a¹ of {A => [X] | B => if (1 > 2) then [X] else [Y]} of {X => 0 | Y => 1}: 48
+//│ [X]: 42 --->
+//│ 	case case a¹ of {A => [X] | B => if (1 > 2) then [X] else [Y]} of {X => 0 | Y => 1}: 48
+//│ [Y]: 43 --->
+//│ 	case case a¹ of {A => [X] | B => if (1 > 2) then [X] else [Y]} of {X => 0 | Y => 1}: 48
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -327,12 +327,12 @@ f(a => if (if a is
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [A] --->
-//│ 	case a¹ of {A => [X] | B => primitive⁰}
-//│ [B] --->
-//│ 	case a¹ of {A => [X] | B => primitive⁰}
-//│ [X] --->
-//│ 	case case a¹ of {A => [X] | B => primitive⁰} of {X => 0 | Y => 1}
+//│ [A]: 20 --->
+//│ 	case a¹ of {A => [X] | B => primitive⁰}: 31
+//│ [B]: 23 --->
+//│ 	case a¹ of {A => [X] | B => primitive⁰}: 31
+//│ [X]: 29 --->
+//│ 	case case a¹ of {A => [X] | B => primitive⁰} of {X => 0 | Y => 1}: 34
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -391,9 +391,9 @@ f(a => g(a))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [X] --->
-//│ 	case x¹ of {X => 0 | Y => 1}
-//│ 	case y¹ of {X => primitive⁰ | Y => 2}
+//│ [X]: 35 --->
+//│ 	case x¹ of {X => 0 | Y => 1}: 48
+//│ 	case y¹ of {X => primitive⁰ | Y => 2}: 32
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -453,10 +453,10 @@ f(A)(C(K))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [A] --->
-//│ 	case cond¹ of {A => (fun x² -> x²) | _ => (fun x³ -> (g₀ x³))}
-//│ [C [K]] --->
-//│ 	case y² of {C y³ => y³}
+//│ [A]: 34 --->
+//│ 	case cond¹ of {A => (fun x² -> x²) | _ => (fun x³ -> (g₀ x³))}: 27
+//│ [C [K]]: 37 --->
+//│ 	case y² of {C y³ => y³}: 31
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -513,8 +513,8 @@ f(C(A))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C [A]] --->
-//│ 	case y¹ of {C a¹ => a¹}
+//│ [C [A]]: 29 --->
+//│ 	case y¹ of {C a¹ => a¹}: 18
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -587,14 +587,14 @@ c(p(0))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C (p₀ (x¹ + 1))] --->
-//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}
-//│ 	case z¹ of {C b¹ => b¹ | N => 1}
+//│ [C (p₀ (x¹ + 1))]: 92 --->
+//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59
+//│ 	case z¹ of {C b¹ => b¹ | N => 1}: 64
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [C (p₀ (x¹ - 1))] --->
-//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}
-//│ [N] --->
-//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}
+//│ [C (p₀ (x¹ - 1))]: 84 --->
+//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59
+//│ [N]: 71 --->
+//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -659,9 +659,9 @@ f(C)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C] --->
-//│ 	case xg¹ of {C => [G]}
-//│ 	case xh¹ of {C => [H]}
+//│ [C]: 39 --->
+//│ 	case xg¹ of {C => [G]}: 23
+//│ 	case xh¹ of {C => [H]}: 27
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -727,15 +727,15 @@ f(t)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [T [X] [T [Y] t₀ t₀] t₀] --->
-//│ 	case r² of {T b² ll² rr² => [T a² [T b² (f₀ rr²) (f₀ ll²)] (f₁ l²)]}
-//│ 	case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₁ ll¹)] (f₀ l¹)]}
-//│ 	case x² of {T a² l² r² => case r² of {T b² ll² rr² => [T a² [T b² (f₀ rr²) (f₀ ll²)] (f₁ l²)]}}
-//│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₁ ll¹)] (f₀ l¹)]}}
+//│ [T [X] [T [Y] t₀ t₀] t₀]: 71 --->
+//│ 	case r² of {T b² ll² rr² => [T a² [T b² (f₀ rr²) (f₀ ll²)] (f₁ l²)]}: 62
+//│ 	case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₁ ll¹)] (f₀ l¹)]}: 44
+//│ 	case x² of {T a² l² r² => case r² of {T b² ll² rr² => [T a² [T b² (f₀ rr²) (f₀ ll²)] (f₁ l²)]}}: 63
+//│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₁ ll¹)] (f₀ l¹)]}}: 45
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [T [Y] t₀ t₀] --->
-//│ 	case x² of {T a² l² r² => case r² of {T b² ll² rr² => [T a² [T b² (f₀ rr²) (f₀ ll²)] (f₁ l²)]}}
-//│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₁ ll¹)] (f₀ l¹)]}}
+//│ [T [Y] t₀ t₀]: 69 --->
+//│ 	case x² of {T a² l² r² => case r² of {T b² ll² rr² => [T a² [T b² (f₀ rr²) (f₀ ll²)] (f₁ l²)]}}: 63
+//│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₁ ll¹)] (f₀ l¹)]}}: 45
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 

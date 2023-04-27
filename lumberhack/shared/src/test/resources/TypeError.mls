@@ -41,10 +41,10 @@ inter(N)(N)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N] --->
-//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])}
-//│ [N] --->
-//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])}
+//│ [N]: 59 --->
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])}: 30
+//│ [N]: 61 --->
+//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])}: 43
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -131,18 +131,18 @@ inter(l1)(l2)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [C 2 [N]]] --->
-//│ 	case xs⁶ of {N => (fun ys¹² -> ys¹²) | C h⁶ t⁶ => (fun ys¹³ -> [C h⁶ ((inter₁ ys¹³) t⁶)])}
-//│ [C 10 [N]] --->
-//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₄ ys⁵) t²)])}
-//│ [C 2 [N]] --->
-//│ 	case xs³ of {N => (fun ys⁶ -> ys⁶) | C h³ t³ => (fun ys⁷ -> [C h³ ((inter₃ ys⁷) t³)])}
-//│ [C 9 [C 10 [N]]] --->
-//│ 	case xs⁵ of {N => (fun ys¹⁰ -> ys¹⁰) | C h⁵ t⁵ => (fun ys¹¹ -> [C h⁵ ((inter₂ ys¹¹) t⁵)])}
-//│ [N] --->
-//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₄ ys³) t¹)])}
-//│ [N] --->
-//│ 	case xs⁴ of {N => (fun ys⁸ -> ys⁸) | C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₅ ys⁹) t⁴)])}
+//│ [C 1 [C 2 [N]]]: 90 --->
+//│ 	case xs⁶ of {N => (fun ys¹² -> ys¹²) | C h⁶ t⁶ => (fun ys¹³ -> [C h⁶ ((inter₁ ys¹³) t⁶)])}: 115
+//│ [C 10 [N]]: 84 --->
+//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₄ ys⁵) t²)])}: 53
+//│ [C 2 [N]]: 89 --->
+//│ 	case xs³ of {N => (fun ys⁶ -> ys⁶) | C h³ t³ => (fun ys⁷ -> [C h³ ((inter₃ ys⁷) t³)])}: 66
+//│ [C 9 [C 10 [N]]]: 85 --->
+//│ 	case xs⁵ of {N => (fun ys¹⁰ -> ys¹⁰) | C h⁵ t⁵ => (fun ys¹¹ -> [C h⁵ ((inter₂ ys¹¹) t⁵)])}: 102
+//│ [N]: 83 --->
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₄ ys³) t¹)])}: 40
+//│ [N]: 88 --->
+//│ 	case xs⁴ of {N => (fun ys⁸ -> ys⁸) | C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₅ ys⁹) t⁴)])}: 79
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -242,16 +242,16 @@ inter(l1)(l2)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [C 2 l1₀]] --->
-//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])}
-//│ 	case xs⁴ of {N => (fun ys⁸ -> ys⁸) | C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₃ ys⁹) t⁴)])}
+//│ [C 1 [C 2 l1₀]]: 31 --->
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])}: 43
+//│ 	case xs⁴ of {N => (fun ys⁸ -> ys⁸) | C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₃ ys⁹) t⁴)])}: 88
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [C 2 l1₀] --->
-//│ 	case xs⁴ of {N => (fun ys⁸ -> ys⁸) | C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₃ ys⁹) t⁴)])}
-//│ [C 9 l2₁] --->
-//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])}
-//│ [C 9 l2₁] --->
-//│ 	case xs³ of {N => (fun ys⁶ -> ys⁶) | C h³ t³ => (fun ys⁷ -> [C h³ ((inter₂ ys⁷) t³)])}
+//│ [C 2 l1₀]: 30 --->
+//│ 	case xs⁴ of {N => (fun ys⁸ -> ys⁸) | C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₃ ys⁹) t⁴)])}: 88
+//│ [C 9 l2₁]: 73 --->
+//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])}: 56
+//│ [C 9 l2₁]: 76 --->
+//│ 	case xs³ of {N => (fun ys⁶ -> ys⁶) | C h³ t³ => (fun ys⁷ -> [C h³ ((inter₂ ys⁷) t³)])}: 69
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -335,16 +335,16 @@ f(C(A))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [A] --->
-//│ 	case a¹ of {A => [N] | B => (g₀ [D a¹])}
-//│ 	case b¹ of {A => [N] | B => (f₀ [C b¹])}
+//│ [A]: 46 --->
+//│ 	case a¹ of {A => [N] | B => (g₀ [D a¹])}: 42
+//│ 	case b¹ of {A => [N] | B => (f₀ [C b¹])}: 32
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [C [A]] --->
-//│ 	case x¹ of {C a¹ => case a¹ of {A => [N] | B => (g₀ [D a¹])}}
-//│ [C b¹] --->
-//│ 	case x¹ of {C a¹ => case a¹ of {A => [N] | B => (g₀ [D a¹])}}
-//│ [D a¹] --->
-//│ 	case y¹ of {D b¹ => case b¹ of {A => [N] | B => (f₀ [C b¹])}}
+//│ [C [A]]: 47 --->
+//│ 	case x¹ of {C a¹ => case a¹ of {A => [N] | B => (g₀ [D a¹])}}: 43
+//│ [C b¹]: 30 --->
+//│ 	case x¹ of {C a¹ => case a¹ of {A => [N] | B => (g₀ [D a¹])}}: 43
+//│ [D a¹]: 40 --->
+//│ 	case y¹ of {D b¹ => case b¹ of {A => [N] | B => (f₀ [C b¹])}}: 33
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -396,8 +396,8 @@ f(C(A))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C [A]] --->
-//│ 	case x¹ of {C a² => (primitive⁰ a²)}
+//│ [C [A]]: 33 --->
+//│ 	case x¹ of {C a² => (primitive⁰ a²)}: 22
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>

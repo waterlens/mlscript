@@ -8,6 +8,87 @@ import Expr.*
 import scala.collection.mutable.Map as MutMap
 import lumberhack.utils.*
 
+
+class FusionStrategy(d: Deforest) {
+  import ConsStratEnum.*
+  import ProdStratEnum.*
+  val (upperBounds, lowerBounds) = d.upperBounds.map{(id, ls) => (id, ls.map(_._2))}.toMap -> d.lowerBounds.map{(id, ls) => (id, ls.map(_._2))}.toMap
+
+  private def findToEndCons(v: ConsVar, cache: Set[ConsVar]): Set[ConsVar] = {
+    if upperBounds.get(v.uid) match { case None => true; case Some(v) => v.isEmpty } then Set(v)
+    else upperBounds(v.uid).foldLeft(Set()){(acc, ub) => ub.s match {
+      case cv: ConsVar if cache(cv) => acc + cv
+      case cv: ConsVar => acc ++ findToEndCons(cv, cache + cv)
+      case _ => acc
+    }}
+  }
+  private def findToEndProd(v: ProdVar, cache: Set[ProdVar]): Set[ProdVar] = {
+    if lowerBounds.get(v.uid) match { case None => true; case Some(v) => v.isEmpty } then Set(v)
+    else lowerBounds(v.uid).foldLeft(Set()){(acc, lb) => lb.s match {
+      case pv: ProdVar if cache(pv) => acc + pv
+      case pv: ProdVar => acc ++ findToEndProd(pv, cache + pv)
+      case _ => acc
+    }}
+  }
+
+
+  val ctorFinalDestinations: Map[MkCtor, Set[ConsStratEnum]] = {
+    val res = MutMap.empty[MkCtor, Set[ConsStratEnum]].withDefaultValue(Set())
+    d.ctorDestinations.foreach { (ctor, dests) =>
+      dests.foreach { dest => dest match {
+        case c: (NoCons | Destruct) => res += ctor -> (res(ctor) + c)
+        case cv: ConsVar => res += ctor -> (res(ctor) ++ findToEndCons(cv, Set(cv)))
+        case _ => ??? // unreachable
+      }}
+    }
+    res.toMap
+  }
+
+  val dtorFinalSource: Map[Destruct, Set[ProdStratEnum]] = {
+    val res = MutMap.empty[Destruct, Set[ProdStratEnum]].withDefaultValue(Set())
+    d.dtorSources.foreach { (dtor, sources) =>
+      sources.foreach { src => src match {
+        case s: (NoProd | MkCtor) => res += dtor -> (res(dtor) + s)
+        case pv: ProdVar => res += dtor -> (res(dtor) ++ findToEndProd(pv, Set(pv)))
+        case _ => ??? // unreachable
+      }}
+    }
+    res.toMap
+  }
+
+  lazy val ppCtorFinalDestinations: Str = {
+    ctorFinalDestinations.map { (ctor, dests) =>
+      (d.exprs.get(ctor.euid) match {
+        case Some(value) => value.pp(using InitPpConfig.showIuidOn) + s": ${ctor.euid}"
+        case None => ctor.pp(using InitPpConfig)
+      }) + " --->\n" + dests.map {
+        case dtor: Destruct => "\t" + (d.exprs.get(dtor.euid) match {
+          case Some(v) => v.pp(using InitPpConfig.showIuidOn)
+          case None => dtor.pp(using InitPpConfig)
+        })
+        case ty => "\t" + ty.pp(using InitPpConfig)
+      }.mkString("\n")
+    }.mkString("\n")
+  }
+
+  lazy val ppDtorFinalSources: Str = {
+    dtorFinalSource.map { (dtor, dests) =>
+      (d.exprs.get(dtor.euid) match {
+        case Some(v) => v.pp(using InitPpConfig.showIuidOn) + s": ${dtor.euid}"
+        case None => dtor.pp(using InitPpConfig)
+      }) + " --->\n" + dests.map {
+        case ctor: MkCtor => "\t" + (d.exprs.get(ctor.euid) match {
+          case Some(v) => v.pp(using InitPpConfig.showIuidOn)
+          case None => ctor.pp(using InitPpConfig)
+        })
+        case ty => "\t" + ty.pp(using InitPpConfig)
+      }.mkString("\n")
+    }.mkString("\n")
+  }
+}
+
+
+
 trait ExprRewrite { this: Expr =>
   // ctx should initially contain the keywords and the ids of original function definitions
   def rewriteExpand(using ctx: Expr.Ctx, currentPath: Path, newd: Deforest, pathToIdent: Map[Path, Ident], refMap: Map[Expr.Ref, Expr.Ref]): Expr = {
@@ -130,8 +211,8 @@ trait ProgramRewrite { this: Program =>
     
   }
 
-  def rewrite(fusionMatch: Map[ExprId, Set[ExprId]], d: Deforest): Program = {
-    given Map[ExprId, ExprId] = fusionMatch.map { (p, cs) => p -> cs.head }
+  def rewrite(d: Deforest): Program = {
+    given Map[ExprId, ExprId] = d.fusionMatch.map { (p, cs) => p -> cs.head }.toMap
     given Deforest = d
     Program(
       this.defAndExpr._2.map { e => R(e.rewriteFusion) }

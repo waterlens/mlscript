@@ -67,20 +67,20 @@ map(ff, l)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C [KKKK] [N]] --->
-//│ 	case ls¹ of {C h¹ t¹ => [C (f¹ h¹) ((map₃ f¹) t¹)] | N => [N]}
-//│ [C [KK] [C [KKKK] [N]]] --->
-//│ 	case ls³ of {C h³ t³ => [C (f³ h³) ((map₂ f³) t³)] | N => [N]}
-//│ [C [K] [C [KK] [C [KKKK] [N]]]] --->
-//│ 	case ls⁴ of {C h⁴ t⁴ => [C (f⁴ h⁴) ((map₁ f⁴) t⁴)] | N => [N]}
-//│ [KKKK] --->
-//│ 	case x¹ of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ [KK] --->
-//│ 	case x¹ of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ [K] --->
-//│ 	case x¹ of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ [N] --->
-//│ 	case ls² of {C h² t² => [C (f² h²) ((map₃ f²) t²)] | N => [N]}
+//│ [C [KKKK] [N]]: 99 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C (f¹ h¹) ((map₃ f¹) t¹)] | N => [N]}: 44
+//│ [C [KK] [C [KKKK] [N]]]: 100 --->
+//│ 	case ls³ of {C h³ t³ => [C (f³ h³) ((map₂ f³) t³)] | N => [N]}: 72
+//│ [C [K] [C [KK] [C [KKKK] [N]]]]: 101 --->
+//│ 	case ls⁴ of {C h⁴ t⁴ => [C (f⁴ h⁴) ((map₁ f⁴) t⁴)] | N => [N]}: 92
+//│ [KKKK]: 97 --->
+//│ 	case x¹ of {K => [T] | KK => [TT] | KKKK => [TTTT]}: 79
+//│ [KK]: 96 --->
+//│ 	case x¹ of {K => [T] | KK => [TT] | KKKK => [TTTT]}: 79
+//│ [K]: 95 --->
+//│ 	case x¹ of {K => [T] | KK => [TT] | KKKK => [TTTT]}: 79
+//│ [N]: 98 --->
+//│ 	case ls² of {C h² t² => [C (f² h²) ((map₃ f²) t²)] | N => [N]}: 58
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -160,14 +160,14 @@ rev(C(AA, C(BB, C(CC, N))))(N)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C [AA] [C [BB] [C [CC] [N]]]] --->
-//│ 	case ls⁴ of {N => (fun a⁸ -> a⁸) | C h⁴ t⁴ => (fun a⁹ -> ((rev₁ t⁴) [C h⁴ a⁹]))}
-//│ [C [BB] [C [CC] [N]]] --->
-//│ 	case ls³ of {N => (fun a⁶ -> a⁶) | C h³ t³ => (fun a⁷ -> ((rev₂ t³) [C h³ a⁷]))}
-//│ [C [CC] [N]] --->
-//│ 	case ls² of {N => (fun a⁴ -> a⁴) | C h² t² => (fun a⁵ -> ((rev₃ t²) [C h² a⁵]))}
-//│ [N] --->
-//│ 	case ls¹ of {N => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₃ t¹) [C h¹ a³]))}
+//│ [C [AA] [C [BB] [C [CC] [N]]]]: 84 --->
+//│ 	case ls⁴ of {N => (fun a⁸ -> a⁸) | C h⁴ t⁴ => (fun a⁹ -> ((rev₁ t⁴) [C h⁴ a⁹]))}: 75
+//│ [C [BB] [C [CC] [N]]]: 83 --->
+//│ 	case ls³ of {N => (fun a⁶ -> a⁶) | C h³ t³ => (fun a⁷ -> ((rev₂ t³) [C h³ a⁷]))}: 62
+//│ [C [CC] [N]]: 82 --->
+//│ 	case ls² of {N => (fun a⁴ -> a⁴) | C h² t² => (fun a⁵ -> ((rev₃ t²) [C h² a⁵]))}: 49
+//│ [N]: 81 --->
+//│ 	case ls¹ of {N => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₃ t¹) [C h¹ a³]))}: 36
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -281,24 +281,24 @@ c(id(p))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C (id2₁ p₁)] --->
-//│ 	case x¹ of {C a¹ => case a¹ of {C b¹ => (c₂ b¹)}}
-//│ [C (id2₂ p₂)] --->
-//│ 	case a² of {C b² => (c₃ b²)}
-//│ [C (id2₃ p₁)] --->
-//│ 	case x¹ of {C a¹ => case a¹ of {C b¹ => (c₂ b¹)}}
-//│ [C [C (id2₁ p₁)]] --->
-//│ 	case a³ of {C b³ => (c₁ b³)}
-//│ [C [C (id2₂ p₂)]] --->
-//│ 	case x² of {C a² => case a² of {C b² => (c₃ b²)}}
-//│ [C [C (id2₃ p₁)]] --->
-//│ 	case a⁴ of {C b⁴ => (c₁ b⁴)}
-//│ [C [C [C (id2₁ p₁)]]] --->
-//│ 	case x³ of {C a³ => case a³ of {C b³ => (c₁ b³)}}
-//│ [C [C [C (id2₂ p₂)]]] --->
-//│ 	case a¹ of {C b¹ => (c₂ b¹)}
-//│ [C [C [C (id2₃ p₁)]]] --->
-//│ 	case x⁴ of {C a⁴ => case a⁴ of {C b⁴ => (c₁ b⁴)}}
+//│ [C (id2₁ p₁)]: 85 --->
+//│ 	case x¹ of {C a¹ => case a¹ of {C b¹ => (c₂ b¹)}}: 32
+//│ [C (id2₂ p₂)]: 71 --->
+//│ 	case a² of {C b² => (c₃ b²)}: 51
+//│ [C (id2₃ p₁)]: 41 --->
+//│ 	case x¹ of {C a¹ => case a¹ of {C b¹ => (c₂ b¹)}}: 32
+//│ [C [C (id2₁ p₁)]]: 86 --->
+//│ 	case a³ of {C b³ => (c₁ b³)}: 59
+//│ [C [C (id2₂ p₂)]]: 72 --->
+//│ 	case x² of {C a² => case a² of {C b² => (c₃ b²)}}: 52
+//│ [C [C (id2₃ p₁)]]: 42 --->
+//│ 	case a⁴ of {C b⁴ => (c₁ b⁴)}: 79
+//│ [C [C [C (id2₁ p₁)]]]: 87 --->
+//│ 	case x³ of {C a³ => case a³ of {C b³ => (c₁ b³)}}: 60
+//│ [C [C [C (id2₂ p₂)]]]: 73 --->
+//│ 	case a¹ of {C b¹ => (c₂ b¹)}: 31
+//│ [C [C [C (id2₃ p₁)]]]: 43 --->
+//│ 	case x⁴ of {C a⁴ => case a⁴ of {C b⁴ => (c₁ b⁴)}}: 80
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -444,35 +444,35 @@ map(rev(C(A, C(AA, N)))(N))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [AA] --->
-//│ 	case hh² of {A => [B] | AA => [BB]}
-//│ 	case hh¹ of {A => [B] | AA => [BB]}
+//│ [AA]: 103 --->
+//│ 	case hh² of {A => [B] | AA => [BB]}: 66
+//│ 	case hh¹ of {A => [B] | AA => [BB]}: 41
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [A] --->
-//│ 	case hh¹ of {A => [B] | AA => [BB]}
-//│ 	case hh² of {A => [B] | AA => [BB]}
+//│ [A]: 102 --->
+//│ 	case hh¹ of {A => [B] | AA => [BB]}: 41
+//│ 	case hh² of {A => [B] | AA => [BB]}: 66
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [C [AA] [N]] --->
-//│ 	case lss³ of {C h³ t³ => (fun a⁶ -> ((rev₂ t³) [C h³ a⁶])) | N => (fun a⁷ -> a⁷)}
-//│ [C [A] [C [AA] [N]]] --->
-//│ 	case lss² of {C h² t² => (fun a⁴ -> ((rev₁ t²) [C h² a⁴])) | N => (fun a⁵ -> a⁵)}
-//│ [C h² a⁴] --->
-//│ 	case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A => [B] | AA => [BB]} (map₁ tt¹)] | N => [N]}
-//│ 	case ls² of {C hh² tt² => [C case hh² of {A => [B] | AA => [BB]} (map₁ tt²)] | N => [N]}
+//│ [C [AA] [N]]: 105 --->
+//│ 	case lss³ of {C h³ t³ => (fun a⁶ -> ((rev₂ t³) [C h³ a⁶])) | N => (fun a⁷ -> a⁷)}: 98
+//│ [C [A] [C [AA] [N]]]: 106 --->
+//│ 	case lss² of {C h² t² => (fun a⁴ -> ((rev₁ t²) [C h² a⁴])) | N => (fun a⁵ -> a⁵)}: 85
+//│ [C h² a⁴]: 80 --->
+//│ 	case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A => [B] | AA => [BB]} (map₁ tt¹)] | N => [N]}: 47
+//│ 	case ls² of {C hh² tt² => [C case hh² of {A => [B] | AA => [BB]} (map₁ tt²)] | N => [N]}: 72
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [C h¹ a²] --->
-//│ 	case ls² of {C hh² tt² => [C case hh² of {A => [B] | AA => [BB]} (map₁ tt²)] | N => [N]}
-//│ 	case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A => [B] | AA => [BB]} (map₁ tt¹)] | N => [N]}
+//│ [C h¹ a²]: 55 --->
+//│ 	case ls² of {C hh² tt² => [C case hh² of {A => [B] | AA => [BB]} (map₁ tt²)] | N => [N]}: 72
+//│ 	case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A => [B] | AA => [BB]} (map₁ tt¹)] | N => [N]}: 47
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [C h³ a⁶] --->
-//│ 	case ls² of {C hh² tt² => [C case hh² of {A => [B] | AA => [BB]} (map₁ tt²)] | N => [N]}
-//│ 	case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A => [B] | AA => [BB]} (map₁ tt¹)] | N => [N]}
+//│ [C h³ a⁶]: 93 --->
+//│ 	case ls² of {C hh² tt² => [C case hh² of {A => [B] | AA => [BB]} (map₁ tt²)] | N => [N]}: 72
+//│ 	case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A => [B] | AA => [BB]} (map₁ tt¹)] | N => [N]}: 47
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [N] --->
-//│ 	case lss¹ of {C h¹ t¹ => (fun a² -> ((rev₂ t¹) [C h¹ a²])) | N => (fun a³ -> a³)}
-//│ [N] --->
-//│ 	case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A => [B] | AA => [BB]} (map₁ tt¹)] | N => [N]}
-//│ 	case ls² of {C hh² tt² => [C case hh² of {A => [B] | AA => [BB]} (map₁ tt²)] | N => [N]}
+//│ [N]: 104 --->
+//│ 	case lss¹ of {C h¹ t¹ => (fun a² -> ((rev₂ t¹) [C h¹ a²])) | N => (fun a³ -> a³)}: 60
+//│ [N]: 108 --->
+//│ 	case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A => [B] | AA => [BB]} (map₁ tt¹)] | N => [N]}: 47
+//│ 	case ls² of {C hh² tt² => [C case hh² of {A => [B] | AA => [BB]} (map₁ tt²)] | N => [N]}: 72
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -536,10 +536,10 @@ c(p)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [Pair [A] [B]] --->
-//│ 	case x¹ of {Pair a¹ b¹ => (c₀ [Pair b¹ a¹])}
-//│ [Pair b¹ a¹] --->
-//│ 	case x¹ of {Pair a¹ b¹ => (c₀ [Pair b¹ a¹])}
+//│ [Pair [A] [B]]: 25 --->
+//│ 	case x¹ of {Pair a¹ b¹ => (c₀ [Pair b¹ a¹])}: 21
+//│ [Pair b¹ a¹]: 19 --->
+//│ 	case x¹ of {Pair a¹ b¹ => (c₀ [Pair b¹ a¹])}: 21
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -600,16 +600,16 @@ inter(C(1, C(2, N)))(C(9, N))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [C 2 [N]]] --->
-//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])}
-//│ [C 2 [N]] --->
-//│ 	case xs⁴ of {N => (fun ys⁸ -> ys⁸) | C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₃ ys⁹) t⁴)])}
-//│ [C 9 [N]] --->
-//│ 	case xs⁵ of {N => (fun ys¹⁰ -> ys¹⁰) | C h⁵ t⁵ => (fun ys¹¹ -> [C h⁵ ((inter₂ ys¹¹) t⁵)])}
-//│ [N] --->
-//│ 	case xs³ of {N => (fun ys⁶ -> ys⁶) | C h³ t³ => (fun ys⁷ -> [C h³ ((inter₄ ys⁷) t³)])}
-//│ [N] --->
-//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₃ ys⁵) t²)])}
+//│ [C 1 [C 2 [N]]]: 95 --->
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])}: 36
+//│ [C 2 [N]]: 94 --->
+//│ 	case xs⁴ of {N => (fun ys⁸ -> ys⁸) | C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₃ ys⁹) t⁴)])}: 75
+//│ [C 9 [N]]: 99 --->
+//│ 	case xs⁵ of {N => (fun ys¹⁰ -> ys¹⁰) | C h⁵ t⁵ => (fun ys¹¹ -> [C h⁵ ((inter₂ ys¹¹) t⁵)])}: 88
+//│ [N]: 98 --->
+//│ 	case xs³ of {N => (fun ys⁶ -> ys⁶) | C h³ t³ => (fun ys⁷ -> [C h³ ((inter₄ ys⁷) t³)])}: 62
+//│ [N]: 93 --->
+//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₃ ys⁵) t²)])}: 49
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -687,27 +687,27 @@ typeCheck(inter(C(1, C(2, N)))(C(9, N)))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [C 2 [N]]] --->
-//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₁ ys⁵) t²)])}
-//│ [C 2 [N]] --->
-//│ 	case ls¹ of {C a¹ b¹ => (typeCheck₀ b¹) | N => [OK]}
-//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])}
+//│ [C 1 [C 2 [N]]]: 73 --->
+//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₁ ys⁵) t²)])}: 65
+//│ [C 2 [N]]: 72 --->
+//│ 	case ls¹ of {C a¹ b¹ => (typeCheck₀ b¹) | N => [OK]}: 39
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])}: 52
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [C 9 [N]] --->
-//│ 	case ls¹ of {C a¹ b¹ => (typeCheck₀ b¹) | N => [OK]}
-//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])}
+//│ [C 9 [N]]: 77 --->
+//│ 	case ls¹ of {C a¹ b¹ => (typeCheck₀ b¹) | N => [OK]}: 39
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])}: 52
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [C h¹ ((inter₁ ys³) t¹)] --->
-//│ 	case ls¹ of {C a¹ b¹ => (typeCheck₀ b¹) | N => [OK]}
-//│ [C h² ((inter₁ ys⁵) t²)] --->
-//│ 	case ls¹ of {C a¹ b¹ => (typeCheck₀ b¹) | N => [OK]}
-//│ [N] --->
-//│ 	case ls¹ of {C a¹ b¹ => (typeCheck₀ b¹) | N => [OK]}
-//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])}
+//│ [C h¹ ((inter₁ ys³) t¹)]: 50 --->
+//│ 	case ls¹ of {C a¹ b¹ => (typeCheck₀ b¹) | N => [OK]}: 39
+//│ [C h² ((inter₁ ys⁵) t²)]: 63 --->
+//│ 	case ls¹ of {C a¹ b¹ => (typeCheck₀ b¹) | N => [OK]}: 39
+//│ [N]: 71 --->
+//│ 	case ls¹ of {C a¹ b¹ => (typeCheck₀ b¹) | N => [OK]}: 39
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])}: 52
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [N] --->
-//│ 	case ls¹ of {C a¹ b¹ => (typeCheck₀ b¹) | N => [OK]}
-//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])}
+//│ [N]: 76 --->
+//│ 	case ls¹ of {C a¹ b¹ => (typeCheck₀ b¹) | N => [OK]}: 39
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])}: 52
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -794,17 +794,17 @@ idxSum(rev(primitive, N))(0)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C hh² a⁵] --->
-//│ 	case ls² of {N => (fun acc⁴ -> 0) | C h² t² => (fun acc⁵ -> (acc⁵ + ((idxSum₁ t²) (acc⁵ + 1))))}
-//│ 	case ls¹ of {N => (fun acc² -> 0) | C h¹ t¹ => (fun acc³ -> (acc³ + ((idxSum₁ t¹) (acc³ + 1))))}
+//│ [C hh² a⁵]: 101 --->
+//│ 	case ls² of {N => (fun acc⁴ -> 0) | C h² t² => (fun acc⁵ -> (acc⁵ + ((idxSum₁ t²) (acc⁵ + 1))))}: 78
+//│ 	case ls¹ of {N => (fun acc² -> 0) | C h¹ t¹ => (fun acc³ -> (acc³ + ((idxSum₁ t¹) (acc³ + 1))))}: 59
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [C hh¹ a³] --->
-//│ 	case ls¹ of {N => (fun acc² -> 0) | C h¹ t¹ => (fun acc³ -> (acc³ + ((idxSum₁ t¹) (acc³ + 1))))}
-//│ 	case ls² of {N => (fun acc⁴ -> 0) | C h² t² => (fun acc⁵ -> (acc⁵ + ((idxSum₁ t²) (acc⁵ + 1))))}
+//│ [C hh¹ a³]: 88 --->
+//│ 	case ls¹ of {N => (fun acc² -> 0) | C h¹ t¹ => (fun acc³ -> (acc³ + ((idxSum₁ t¹) (acc³ + 1))))}: 59
+//│ 	case ls² of {N => (fun acc⁴ -> 0) | C h² t² => (fun acc⁵ -> (acc⁵ + ((idxSum₁ t²) (acc⁵ + 1))))}: 78
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [N] --->
-//│ 	case ls² of {N => (fun acc⁴ -> 0) | C h² t² => (fun acc⁵ -> (acc⁵ + ((idxSum₁ t²) (acc⁵ + 1))))}
-//│ 	case ls¹ of {N => (fun acc² -> 0) | C h¹ t¹ => (fun acc³ -> (acc³ + ((idxSum₁ t¹) (acc³ + 1))))}
+//│ [N]: 110 --->
+//│ 	case ls² of {N => (fun acc⁴ -> 0) | C h² t² => (fun acc⁵ -> (acc⁵ + ((idxSum₁ t²) (acc⁵ + 1))))}: 78
+//│ 	case ls¹ of {N => (fun acc² -> 0) | C h¹ t¹ => (fun acc³ -> (acc³ + ((idxSum₁ t¹) (acc³ + 1))))}: 59
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -927,16 +927,16 @@ inter(l1(0))(l2)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [C 2 (l1₀ ((add⁰ x¹) 1))]] --->
-//│ 	case xs⁵ of {N => (fun ys¹⁰ -> ys¹⁰) | C h⁵ t⁵ => (fun ys¹¹ -> [C h⁵ ((inter₁ ys¹¹) t⁵)])}
-//│ 	case xs⁴ of {N => (fun ys⁸ -> ys⁸) | C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₁ ys⁹) t⁴)])}
+//│ [C 1 [C 2 (l1₀ ((add⁰ x¹) 1))]]: 118 --->
+//│ 	case xs⁵ of {N => (fun ys¹⁰ -> ys¹⁰) | C h⁵ t⁵ => (fun ys¹¹ -> [C h⁵ ((inter₁ ys¹¹) t⁵)])}: 106
+//│ 	case xs⁴ of {N => (fun ys⁸ -> ys⁸) | C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₁ ys⁹) t⁴)])}: 93
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [C 2 (l1₀ ((add⁰ x¹) 1))] --->
-//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₃ ys³) t¹)])}
-//│ [C 8 l2₀] --->
-//│ 	case xs³ of {N => (fun ys⁶ -> ys⁶) | C h³ t³ => (fun ys⁷ -> [C h³ ((inter₄ ys⁷) t³)])}
-//│ [C 9 [C 8 l2₀]] --->
-//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])}
+//│ [C 2 (l1₀ ((add⁰ x¹) 1))]: 117 --->
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₃ ys³) t¹)])}: 49
+//│ [C 8 l2₀]: 54 --->
+//│ 	case xs³ of {N => (fun ys⁶ -> ys⁶) | C h³ t³ => (fun ys⁷ -> [C h³ ((inter₄ ys⁷) t³)])}: 80
+//│ [C 9 [C 8 l2₀]]: 55 --->
+//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])}: 67
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -1271,233 +1271,233 @@ filterMax(C(1, C(2, N)))(0)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [C 2 [N]]] --->
-//│ 	case ls¹ of {C h¹ t¹ => (fun m² -> case (h¹ > 0) of {True => case (h¹ > m²) of {True => case ((filterMax₁ t¹) h¹) of {Pair ys² max² => [Pair [C h¹ ys²] max²]} | False => case ((filterMax₅ t¹) m²) of {Pair ys³ max³ => [Pair [C h¹ ys³] max³]}} | False => ((filterMax₁₁ t¹) m²)}) | N => (fun m³ -> [Pair [N] m³])}
-//│ [C 2 [N]] --->
-//│ 	case ls⁵ of {C h⁵ t⁵ => (fun m¹⁰ -> case (h⁵ > 0) of {True => case (h⁵ > m¹⁰) of {True => case ((filterMax₁₂ t⁵) h⁵) of {Pair ys¹⁰ max¹⁰ => [Pair [C h⁵ ys¹⁰] max¹⁰]} | False => case ((filterMax₁₃ t⁵) m¹⁰) of {Pair ys¹¹ max¹¹ => [Pair [C h⁵ ys¹¹] max¹¹]}} | False => ((filterMax₁₅ t⁵) m¹⁰)}) | N => (fun m¹¹ -> [Pair [N] m¹¹])}
-//│ 	case ls¹³ of {C h¹³ t¹³ => (fun m²⁶ -> case (h¹³ > 0) of {True => case (h¹³ > m²⁶) of {True => case ((filterMax₂ t¹³) h¹³) of {Pair ys²⁶ max²⁶ => [Pair [C h¹³ ys²⁶] max²⁶]} | False => case ((filterMax₃ t¹³) m²⁶) of {Pair ys²⁷ max²⁷ => [Pair [C h¹³ ys²⁷] max²⁷]}} | False => ((filterMax₄ t¹³) m²⁶)}) | N => (fun m²⁷ -> [Pair [N] m²⁷])}
-//│ 	case ls⁶ of {C h⁶ t⁶ => (fun m¹² -> case (h⁶ > 0) of {True => case (h⁶ > m¹²) of {True => case ((filterMax₆ t⁶) h⁶) of {Pair ys¹² max¹² => [Pair [C h⁶ ys¹²] max¹²]} | False => case ((filterMax₇ t⁶) m¹²) of {Pair ys¹³ max¹³ => [Pair [C h⁶ ys¹³] max¹³]}} | False => ((filterMax₉ t⁶) m¹²)}) | N => (fun m¹³ -> [Pair [N] m¹³])}
+//│ [C 1 [C 2 [N]]]: 955 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun m² -> case (h¹ > 0) of {True => case (h¹ > m²) of {True => case ((filterMax₁ t¹) h¹) of {Pair ys² max² => [Pair [C h¹ ys²] max²]} | False => case ((filterMax₅ t¹) m²) of {Pair ys³ max³ => [Pair [C h¹ ys³] max³]}} | False => ((filterMax₁₁ t¹) m²)}) | N => (fun m³ -> [Pair [N] m³])}: 102
+//│ [C 2 [N]]: 954 --->
+//│ 	case ls⁵ of {C h⁵ t⁵ => (fun m¹⁰ -> case (h⁵ > 0) of {True => case (h⁵ > m¹⁰) of {True => case ((filterMax₁₂ t⁵) h⁵) of {Pair ys¹⁰ max¹⁰ => [Pair [C h⁵ ys¹⁰] max¹⁰]} | False => case ((filterMax₁₃ t⁵) m¹⁰) of {Pair ys¹¹ max¹¹ => [Pair [C h⁵ ys¹¹] max¹¹]}} | False => ((filterMax₁₅ t⁵) m¹⁰)}) | N => (fun m¹¹ -> [Pair [N] m¹¹])}: 290
+//│ 	case ls¹³ of {C h¹³ t¹³ => (fun m²⁶ -> case (h¹³ > 0) of {True => case (h¹³ > m²⁶) of {True => case ((filterMax₂ t¹³) h¹³) of {Pair ys²⁶ max²⁶ => [Pair [C h¹³ ys²⁶] max²⁶]} | False => case ((filterMax₃ t¹³) m²⁶) of {Pair ys²⁷ max²⁷ => [Pair [C h¹³ ys²⁷] max²⁷]}} | False => ((filterMax₄ t¹³) m²⁶)}) | N => (fun m²⁷ -> [Pair [N] m²⁷])}: 666
+//│ 	case ls⁶ of {C h⁶ t⁶ => (fun m¹² -> case (h⁶ > 0) of {True => case (h⁶ > m¹²) of {True => case ((filterMax₆ t⁶) h⁶) of {Pair ys¹² max¹² => [Pair [C h⁶ ys¹²] max¹²]} | False => case ((filterMax₇ t⁶) m¹²) of {Pair ys¹³ max¹³ => [Pair [C h⁶ ys¹³] max¹³]}} | False => ((filterMax₉ t⁶) m¹²)}) | N => (fun m¹³ -> [Pair [N] m¹³])}: 337
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [N] --->
-//│ 	case ls⁷ of {C h⁷ t⁷ => (fun m¹⁴ -> case (h⁷ > 0) of {True => case (h⁷ > m¹⁴) of {True => case ((filterMax₁₀ t⁷) h⁷) of {Pair ys¹⁴ max¹⁴ => [Pair [C h⁷ ys¹⁴] max¹⁴]} | False => case ((filterMax₉ t⁷) m¹⁴) of {Pair ys¹⁵ max¹⁵ => [Pair [C h⁷ ys¹⁵] max¹⁵]}} | False => ((filterMax₉ t⁷) m¹⁴)}) | N => (fun m¹⁵ -> [Pair [N] m¹⁵])}
-//│ 	case ls¹⁹ of {C h¹⁹ t¹⁹ => (fun m³⁸ -> case (h¹⁹ > 0) of {True => case (h¹⁹ > m³⁸) of {True => case ((filterMax₁₂ t¹⁹) h¹⁹) of {Pair ys³⁸ max³⁸ => [Pair [C h¹⁹ ys³⁸] max³⁸]} | False => case ((filterMax₁₂ t¹⁹) m³⁸) of {Pair ys³⁹ max³⁹ => [Pair [C h¹⁹ ys³⁹] max³⁹]}} | False => ((filterMax₁₂ t¹⁹) m³⁸)}) | N => (fun m³⁹ -> [Pair [N] m³⁹])}
-//│ 	case ls¹⁶ of {C h¹⁶ t¹⁶ => (fun m³² -> case (h¹⁶ > 0) of {True => case (h¹⁶ > m³²) of {True => case ((filterMax₁₄ t¹⁶) h¹⁶) of {Pair ys³² max³² => [Pair [C h¹⁶ ys³²] max³²]} | False => case ((filterMax₁₃ t¹⁶) m³²) of {Pair ys³³ max³³ => [Pair [C h¹⁶ ys³³] max³³]}} | False => ((filterMax₁₃ t¹⁶) m³²)}) | N => (fun m³³ -> [Pair [N] m³³])}
-//│ 	case ls² of {C h² t² => (fun m⁴ -> case (h² > 0) of {True => case (h² > m⁴) of {True => case ((filterMax₁₆ t²) h²) of {Pair ys⁴ max⁴ => [Pair [C h² ys⁴] max⁴]} | False => case ((filterMax₁₇ t²) m⁴) of {Pair ys⁵ max⁵ => [Pair [C h² ys⁵] max⁵]}} | False => ((filterMax₁₅ t²) m⁴)}) | N => (fun m⁵ -> [Pair [N] m⁵])}
-//│ 	case ls¹⁵ of {C h¹⁵ t¹⁵ => (fun m³⁰ -> case (h¹⁵ > 0) of {True => case (h¹⁵ > m³⁰) of {True => case ((filterMax₂ t¹⁵) h¹⁵) of {Pair ys³⁰ max³⁰ => [Pair [C h¹⁵ ys³⁰] max³⁰]} | False => case ((filterMax₂ t¹⁵) m³⁰) of {Pair ys³¹ max³¹ => [Pair [C h¹⁵ ys³¹] max³¹]}} | False => ((filterMax₂ t¹⁵) m³⁰)}) | N => (fun m³¹ -> [Pair [N] m³¹])}
-//│ 	case ls¹⁷ of {C h¹⁷ t¹⁷ => (fun m³⁴ -> case (h¹⁷ > 0) of {True => case (h¹⁷ > m³⁴) of {True => case ((filterMax₃ t¹⁷) h¹⁷) of {Pair ys³⁴ max³⁴ => [Pair [C h¹⁷ ys³⁴] max³⁴]} | False => case ((filterMax₃ t¹⁷) m³⁴) of {Pair ys³⁵ max³⁵ => [Pair [C h¹⁷ ys³⁵] max³⁵]}} | False => ((filterMax₃ t¹⁷) m³⁴)}) | N => (fun m³⁵ -> [Pair [N] m³⁵])}
-//│ 	case ls¹¹ of {C h¹¹ t¹¹ => (fun m²² -> case (h¹¹ > 0) of {True => case (h¹¹ > m²²) of {True => case ((filterMax₄ t¹¹) h¹¹) of {Pair ys²² max²² => [Pair [C h¹¹ ys²²] max²²]} | False => case ((filterMax₄ t¹¹) m²²) of {Pair ys²³ max²³ => [Pair [C h¹¹ ys²³] max²³]}} | False => ((filterMax₄ t¹¹) m²²)}) | N => (fun m²³ -> [Pair [N] m²³])}
-//│ 	case ls¹⁸ of {C h¹⁸ t¹⁸ => (fun m³⁶ -> case (h¹⁸ > 0) of {True => case (h¹⁸ > m³⁶) of {True => case ((filterMax₆ t¹⁸) h¹⁸) of {Pair ys³⁶ max³⁶ => [Pair [C h¹⁸ ys³⁶] max³⁶]} | False => case ((filterMax₆ t¹⁸) m³⁶) of {Pair ys³⁷ max³⁷ => [Pair [C h¹⁸ ys³⁷] max³⁷]}} | False => ((filterMax₆ t¹⁸) m³⁶)}) | N => (fun m³⁷ -> [Pair [N] m³⁷])}
-//│ 	case ls¹² of {C h¹² t¹² => (fun m²⁴ -> case (h¹² > 0) of {True => case (h¹² > m²⁴) of {True => case ((filterMax₈ t¹²) h¹²) of {Pair ys²⁴ max²⁴ => [Pair [C h¹² ys²⁴] max²⁴]} | False => case ((filterMax₇ t¹²) m²⁴) of {Pair ys²⁵ max²⁵ => [Pair [C h¹² ys²⁵] max²⁵]}} | False => ((filterMax₇ t¹²) m²⁴)}) | N => (fun m²⁵ -> [Pair [N] m²⁵])}
+//│ [N]: 953 --->
+//│ 	case ls⁷ of {C h⁷ t⁷ => (fun m¹⁴ -> case (h⁷ > 0) of {True => case (h⁷ > m¹⁴) of {True => case ((filterMax₁₀ t⁷) h⁷) of {Pair ys¹⁴ max¹⁴ => [Pair [C h⁷ ys¹⁴] max¹⁴]} | False => case ((filterMax₉ t⁷) m¹⁴) of {Pair ys¹⁵ max¹⁵ => [Pair [C h⁷ ys¹⁵] max¹⁵]}} | False => ((filterMax₉ t⁷) m¹⁴)}) | N => (fun m¹⁵ -> [Pair [N] m¹⁵])}: 384
+//│ 	case ls¹⁹ of {C h¹⁹ t¹⁹ => (fun m³⁸ -> case (h¹⁹ > 0) of {True => case (h¹⁹ > m³⁸) of {True => case ((filterMax₁₂ t¹⁹) h¹⁹) of {Pair ys³⁸ max³⁸ => [Pair [C h¹⁹ ys³⁸] max³⁸]} | False => case ((filterMax₁₂ t¹⁹) m³⁸) of {Pair ys³⁹ max³⁹ => [Pair [C h¹⁹ ys³⁹] max³⁹]}} | False => ((filterMax₁₂ t¹⁹) m³⁸)}) | N => (fun m³⁹ -> [Pair [N] m³⁹])}: 948
+//│ 	case ls¹⁶ of {C h¹⁶ t¹⁶ => (fun m³² -> case (h¹⁶ > 0) of {True => case (h¹⁶ > m³²) of {True => case ((filterMax₁₄ t¹⁶) h¹⁶) of {Pair ys³² max³² => [Pair [C h¹⁶ ys³²] max³²]} | False => case ((filterMax₁₃ t¹⁶) m³²) of {Pair ys³³ max³³ => [Pair [C h¹⁶ ys³³] max³³]}} | False => ((filterMax₁₃ t¹⁶) m³²)}) | N => (fun m³³ -> [Pair [N] m³³])}: 807
+//│ 	case ls² of {C h² t² => (fun m⁴ -> case (h² > 0) of {True => case (h² > m⁴) of {True => case ((filterMax₁₆ t²) h²) of {Pair ys⁴ max⁴ => [Pair [C h² ys⁴] max⁴]} | False => case ((filterMax₁₇ t²) m⁴) of {Pair ys⁵ max⁵ => [Pair [C h² ys⁵] max⁵]}} | False => ((filterMax₁₅ t²) m⁴)}) | N => (fun m⁵ -> [Pair [N] m⁵])}: 149
+//│ 	case ls¹⁵ of {C h¹⁵ t¹⁵ => (fun m³⁰ -> case (h¹⁵ > 0) of {True => case (h¹⁵ > m³⁰) of {True => case ((filterMax₂ t¹⁵) h¹⁵) of {Pair ys³⁰ max³⁰ => [Pair [C h¹⁵ ys³⁰] max³⁰]} | False => case ((filterMax₂ t¹⁵) m³⁰) of {Pair ys³¹ max³¹ => [Pair [C h¹⁵ ys³¹] max³¹]}} | False => ((filterMax₂ t¹⁵) m³⁰)}) | N => (fun m³¹ -> [Pair [N] m³¹])}: 760
+//│ 	case ls¹⁷ of {C h¹⁷ t¹⁷ => (fun m³⁴ -> case (h¹⁷ > 0) of {True => case (h¹⁷ > m³⁴) of {True => case ((filterMax₃ t¹⁷) h¹⁷) of {Pair ys³⁴ max³⁴ => [Pair [C h¹⁷ ys³⁴] max³⁴]} | False => case ((filterMax₃ t¹⁷) m³⁴) of {Pair ys³⁵ max³⁵ => [Pair [C h¹⁷ ys³⁵] max³⁵]}} | False => ((filterMax₃ t¹⁷) m³⁴)}) | N => (fun m³⁵ -> [Pair [N] m³⁵])}: 854
+//│ 	case ls¹¹ of {C h¹¹ t¹¹ => (fun m²² -> case (h¹¹ > 0) of {True => case (h¹¹ > m²²) of {True => case ((filterMax₄ t¹¹) h¹¹) of {Pair ys²² max²² => [Pair [C h¹¹ ys²²] max²²]} | False => case ((filterMax₄ t¹¹) m²²) of {Pair ys²³ max²³ => [Pair [C h¹¹ ys²³] max²³]}} | False => ((filterMax₄ t¹¹) m²²)}) | N => (fun m²³ -> [Pair [N] m²³])}: 572
+//│ 	case ls¹⁸ of {C h¹⁸ t¹⁸ => (fun m³⁶ -> case (h¹⁸ > 0) of {True => case (h¹⁸ > m³⁶) of {True => case ((filterMax₆ t¹⁸) h¹⁸) of {Pair ys³⁶ max³⁶ => [Pair [C h¹⁸ ys³⁶] max³⁶]} | False => case ((filterMax₆ t¹⁸) m³⁶) of {Pair ys³⁷ max³⁷ => [Pair [C h¹⁸ ys³⁷] max³⁷]}} | False => ((filterMax₆ t¹⁸) m³⁶)}) | N => (fun m³⁷ -> [Pair [N] m³⁷])}: 901
+//│ 	case ls¹² of {C h¹² t¹² => (fun m²⁴ -> case (h¹² > 0) of {True => case (h¹² > m²⁴) of {True => case ((filterMax₈ t¹²) h¹²) of {Pair ys²⁴ max²⁴ => [Pair [C h¹² ys²⁴] max²⁴]} | False => case ((filterMax₇ t¹²) m²⁴) of {Pair ys²⁵ max²⁵ => [Pair [C h¹² ys²⁵] max²⁵]}} | False => ((filterMax₇ t¹²) m²⁴)}) | N => (fun m²⁵ -> [Pair [N] m²⁵])}: 619
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h¹³ ys²⁶] max²⁶] --->
-//│ 	case ((filterMax₁ t¹) h¹) of {Pair ys² max² => [Pair [C h¹ ys²] max²]}
-//│ [Pair [C h¹³ ys²⁷] max²⁷] --->
-//│ 	case ((filterMax₁ t¹) h¹) of {Pair ys² max² => [Pair [C h¹ ys²] max²]}
-//│ [Pair [C h¹⁶ ys³²] max³²] --->
-//│ 	case ((filterMax₁₃ t¹⁶) m³²) of {Pair ys³³ max³³ => [Pair [C h¹⁶ ys³³] max³³]}
-//│ 	case ((filterMax₁₃ t⁵) m¹⁰) of {Pair ys¹¹ max¹¹ => [Pair [C h⁵ ys¹¹] max¹¹]}
+//│ [Pair [C h¹³ ys²⁶] max²⁶]: 641 --->
+//│ 	case ((filterMax₁ t¹) h¹) of {Pair ys² max² => [Pair [C h¹ ys²] max²]}: 78
+//│ [Pair [C h¹³ ys²⁷] max²⁷]: 652 --->
+//│ 	case ((filterMax₁ t¹) h¹) of {Pair ys² max² => [Pair [C h¹ ys²] max²]}: 78
+//│ [Pair [C h¹⁶ ys³²] max³²]: 782 --->
+//│ 	case ((filterMax₁₃ t¹⁶) m³²) of {Pair ys³³ max³³ => [Pair [C h¹⁶ ys³³] max³³]}: 794
+//│ 	case ((filterMax₁₃ t⁵) m¹⁰) of {Pair ys¹¹ max¹¹ => [Pair [C h⁵ ys¹¹] max¹¹]}: 277
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h⁸ ys¹⁶] max¹⁶] --->
-//│ 	case ((filterMax₁₄ t¹⁶) h¹⁶) of {Pair ys³² max³² => [Pair [C h¹⁶ ys³²] max³²]}
-//│ 	case ((filterMax₁₄ t⁸) h⁸) of {Pair ys¹⁶ max¹⁶ => [Pair [C h⁸ ys¹⁶] max¹⁶]}
-//│ 	case ((filterMax₁₄ t⁸) m¹⁶) of {Pair ys¹⁷ max¹⁷ => [Pair [C h⁸ ys¹⁷] max¹⁷]}
+//│ [Pair [C h⁸ ys¹⁶] max¹⁶]: 406 --->
+//│ 	case ((filterMax₁₄ t¹⁶) h¹⁶) of {Pair ys³² max³² => [Pair [C h¹⁶ ys³²] max³²]}: 783
+//│ 	case ((filterMax₁₄ t⁸) h⁸) of {Pair ys¹⁶ max¹⁶ => [Pair [C h⁸ ys¹⁶] max¹⁶]}: 407
+//│ 	case ((filterMax₁₄ t⁸) m¹⁶) of {Pair ys¹⁷ max¹⁷ => [Pair [C h⁸ ys¹⁷] max¹⁷]}: 418
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h¹⁶ ys³³] max³³] --->
-//│ 	case ((filterMax₁₃ t¹⁶) m³²) of {Pair ys³³ max³³ => [Pair [C h¹⁶ ys³³] max³³]}
-//│ 	case ((filterMax₁₃ t⁵) m¹⁰) of {Pair ys¹¹ max¹¹ => [Pair [C h⁵ ys¹¹] max¹¹]}
+//│ [Pair [C h¹⁶ ys³³] max³³]: 793 --->
+//│ 	case ((filterMax₁₃ t¹⁶) m³²) of {Pair ys³³ max³³ => [Pair [C h¹⁶ ys³³] max³³]}: 794
+//│ 	case ((filterMax₁₃ t⁵) m¹⁰) of {Pair ys¹¹ max¹¹ => [Pair [C h⁵ ys¹¹] max¹¹]}: 277
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h¹⁹ ys³⁸] max³⁸] --->
-//│ 	case ((filterMax₁₂ t¹⁹) h¹⁹) of {Pair ys³⁸ max³⁸ => [Pair [C h¹⁹ ys³⁸] max³⁸]}
-//│ 	case ((filterMax₁₂ t⁵) h⁵) of {Pair ys¹⁰ max¹⁰ => [Pair [C h⁵ ys¹⁰] max¹⁰]}
-//│ 	case ((filterMax₁₂ t¹⁹) m³⁸) of {Pair ys³⁹ max³⁹ => [Pair [C h¹⁹ ys³⁹] max³⁹]}
+//│ [Pair [C h¹⁹ ys³⁸] max³⁸]: 923 --->
+//│ 	case ((filterMax₁₂ t¹⁹) h¹⁹) of {Pair ys³⁸ max³⁸ => [Pair [C h¹⁹ ys³⁸] max³⁸]}: 924
+//│ 	case ((filterMax₁₂ t⁵) h⁵) of {Pair ys¹⁰ max¹⁰ => [Pair [C h⁵ ys¹⁰] max¹⁰]}: 266
+//│ 	case ((filterMax₁₂ t¹⁹) m³⁸) of {Pair ys³⁹ max³⁹ => [Pair [C h¹⁹ ys³⁹] max³⁹]}: 935
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h⁸ ys¹⁷] max¹⁷] --->
-//│ 	case ((filterMax₁₄ t¹⁶) h¹⁶) of {Pair ys³² max³² => [Pair [C h¹⁶ ys³²] max³²]}
-//│ 	case ((filterMax₁₄ t⁸) h⁸) of {Pair ys¹⁶ max¹⁶ => [Pair [C h⁸ ys¹⁶] max¹⁶]}
-//│ 	case ((filterMax₁₄ t⁸) m¹⁶) of {Pair ys¹⁷ max¹⁷ => [Pair [C h⁸ ys¹⁷] max¹⁷]}
+//│ [Pair [C h⁸ ys¹⁷] max¹⁷]: 417 --->
+//│ 	case ((filterMax₁₄ t¹⁶) h¹⁶) of {Pair ys³² max³² => [Pair [C h¹⁶ ys³²] max³²]}: 783
+//│ 	case ((filterMax₁₄ t⁸) h⁸) of {Pair ys¹⁶ max¹⁶ => [Pair [C h⁸ ys¹⁶] max¹⁶]}: 407
+//│ 	case ((filterMax₁₄ t⁸) m¹⁶) of {Pair ys¹⁷ max¹⁷ => [Pair [C h⁸ ys¹⁷] max¹⁷]}: 418
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h¹¹ ys²²] max²²] --->
-//│ 	case ((filterMax₁ t¹) h¹) of {Pair ys² max² => [Pair [C h¹ ys²] max²]}
-//│ 	case ((filterMax₄ t¹¹) h¹¹) of {Pair ys²² max²² => [Pair [C h¹¹ ys²²] max²²]}
-//│ 	case ((filterMax₄ t¹¹) m²²) of {Pair ys²³ max²³ => [Pair [C h¹¹ ys²³] max²³]}
+//│ [Pair [C h¹¹ ys²²] max²²]: 547 --->
+//│ 	case ((filterMax₁ t¹) h¹) of {Pair ys² max² => [Pair [C h¹ ys²] max²]}: 78
+//│ 	case ((filterMax₄ t¹¹) h¹¹) of {Pair ys²² max²² => [Pair [C h¹¹ ys²²] max²²]}: 548
+//│ 	case ((filterMax₄ t¹¹) m²²) of {Pair ys²³ max²³ => [Pair [C h¹¹ ys²³] max²³]}: 559
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h¹⁹ ys³⁹] max³⁹] --->
-//│ 	case ((filterMax₁₂ t¹⁹) h¹⁹) of {Pair ys³⁸ max³⁸ => [Pair [C h¹⁹ ys³⁸] max³⁸]}
-//│ 	case ((filterMax₁₂ t⁵) h⁵) of {Pair ys¹⁰ max¹⁰ => [Pair [C h⁵ ys¹⁰] max¹⁰]}
-//│ 	case ((filterMax₁₂ t¹⁹) m³⁸) of {Pair ys³⁹ max³⁹ => [Pair [C h¹⁹ ys³⁹] max³⁹]}
+//│ [Pair [C h¹⁹ ys³⁹] max³⁹]: 934 --->
+//│ 	case ((filterMax₁₂ t¹⁹) h¹⁹) of {Pair ys³⁸ max³⁸ => [Pair [C h¹⁹ ys³⁸] max³⁸]}: 924
+//│ 	case ((filterMax₁₂ t⁵) h⁵) of {Pair ys¹⁰ max¹⁰ => [Pair [C h⁵ ys¹⁰] max¹⁰]}: 266
+//│ 	case ((filterMax₁₂ t¹⁹) m³⁸) of {Pair ys³⁹ max³⁹ => [Pair [C h¹⁹ ys³⁹] max³⁹]}: 935
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h³ ys⁶] max⁶] --->
-//│ 	case ((filterMax₁₇ t³) m⁶) of {Pair ys⁷ max⁷ => [Pair [C h³ ys⁷] max⁷]}
-//│ 	case ((filterMax₁₇ t²) m⁴) of {Pair ys⁵ max⁵ => [Pair [C h² ys⁵] max⁵]}
+//│ [Pair [C h³ ys⁶] max⁶]: 171 --->
+//│ 	case ((filterMax₁₇ t³) m⁶) of {Pair ys⁷ max⁷ => [Pair [C h³ ys⁷] max⁷]}: 183
+//│ 	case ((filterMax₁₇ t²) m⁴) of {Pair ys⁵ max⁵ => [Pair [C h² ys⁵] max⁵]}: 136
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h¹¹ ys²³] max²³] --->
-//│ 	case ((filterMax₁ t¹) h¹) of {Pair ys² max² => [Pair [C h¹ ys²] max²]}
-//│ 	case ((filterMax₄ t¹¹) h¹¹) of {Pair ys²² max²² => [Pair [C h¹¹ ys²²] max²²]}
-//│ 	case ((filterMax₄ t¹¹) m²²) of {Pair ys²³ max²³ => [Pair [C h¹¹ ys²³] max²³]}
+//│ [Pair [C h¹¹ ys²³] max²³]: 558 --->
+//│ 	case ((filterMax₁ t¹) h¹) of {Pair ys² max² => [Pair [C h¹ ys²] max²]}: 78
+//│ 	case ((filterMax₄ t¹¹) h¹¹) of {Pair ys²² max²² => [Pair [C h¹¹ ys²²] max²²]}: 548
+//│ 	case ((filterMax₄ t¹¹) m²²) of {Pair ys²³ max²³ => [Pair [C h¹¹ ys²³] max²³]}: 559
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h¹⁴ ys²⁸] max²⁸] --->
-//│ 	case ((filterMax₁₈ t¹⁴) h¹⁴) of {Pair ys²⁸ max²⁸ => [Pair [C h¹⁴ ys²⁸] max²⁸]}
-//│ 	case ((filterMax₁₈ t³) h³) of {Pair ys⁶ max⁶ => [Pair [C h³ ys⁶] max⁶]}
-//│ 	case ((filterMax₁₈ t¹⁴) m²⁸) of {Pair ys²⁹ max²⁹ => [Pair [C h¹⁴ ys²⁹] max²⁹]}
+//│ [Pair [C h¹⁴ ys²⁸] max²⁸]: 688 --->
+//│ 	case ((filterMax₁₈ t¹⁴) h¹⁴) of {Pair ys²⁸ max²⁸ => [Pair [C h¹⁴ ys²⁸] max²⁸]}: 689
+//│ 	case ((filterMax₁₈ t³) h³) of {Pair ys⁶ max⁶ => [Pair [C h³ ys⁶] max⁶]}: 172
+//│ 	case ((filterMax₁₈ t¹⁴) m²⁸) of {Pair ys²⁹ max²⁹ => [Pair [C h¹⁴ ys²⁹] max²⁹]}: 700
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h³ ys⁷] max⁷] --->
-//│ 	case ((filterMax₁₇ t³) m⁶) of {Pair ys⁷ max⁷ => [Pair [C h³ ys⁷] max⁷]}
-//│ 	case ((filterMax₁₇ t²) m⁴) of {Pair ys⁵ max⁵ => [Pair [C h² ys⁵] max⁵]}
+//│ [Pair [C h³ ys⁷] max⁷]: 182 --->
+//│ 	case ((filterMax₁₇ t³) m⁶) of {Pair ys⁷ max⁷ => [Pair [C h³ ys⁷] max⁷]}: 183
+//│ 	case ((filterMax₁₇ t²) m⁴) of {Pair ys⁵ max⁵ => [Pair [C h² ys⁵] max⁵]}: 136
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h⁶ ys¹²] max¹²] --->
-//│ 	case ((filterMax₅ t¹) m²) of {Pair ys³ max³ => [Pair [C h¹ ys³] max³]}
-//│ [Pair [C h¹⁴ ys²⁹] max²⁹] --->
-//│ 	case ((filterMax₁₈ t¹⁴) h¹⁴) of {Pair ys²⁸ max²⁸ => [Pair [C h¹⁴ ys²⁸] max²⁸]}
-//│ 	case ((filterMax₁₈ t³) h³) of {Pair ys⁶ max⁶ => [Pair [C h³ ys⁶] max⁶]}
-//│ 	case ((filterMax₁₈ t¹⁴) m²⁸) of {Pair ys²⁹ max²⁹ => [Pair [C h¹⁴ ys²⁹] max²⁹]}
+//│ [Pair [C h⁶ ys¹²] max¹²]: 312 --->
+//│ 	case ((filterMax₅ t¹) m²) of {Pair ys³ max³ => [Pair [C h¹ ys³] max³]}: 89
+//│ [Pair [C h¹⁴ ys²⁹] max²⁹]: 699 --->
+//│ 	case ((filterMax₁₈ t¹⁴) h¹⁴) of {Pair ys²⁸ max²⁸ => [Pair [C h¹⁴ ys²⁸] max²⁸]}: 689
+//│ 	case ((filterMax₁₈ t³) h³) of {Pair ys⁶ max⁶ => [Pair [C h³ ys⁶] max⁶]}: 172
+//│ 	case ((filterMax₁₈ t¹⁴) m²⁸) of {Pair ys²⁹ max²⁹ => [Pair [C h¹⁴ ys²⁹] max²⁹]}: 700
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h¹⁷ ys³⁴] max³⁴] --->
-//│ 	case ((filterMax₃ t¹⁷) h¹⁷) of {Pair ys³⁴ max³⁴ => [Pair [C h¹⁷ ys³⁴] max³⁴]}
-//│ 	case ((filterMax₃ t¹⁷) m³⁴) of {Pair ys³⁵ max³⁵ => [Pair [C h¹⁷ ys³⁵] max³⁵]}
-//│ 	case ((filterMax₃ t¹³) m²⁶) of {Pair ys²⁷ max²⁷ => [Pair [C h¹³ ys²⁷] max²⁷]}
+//│ [Pair [C h¹⁷ ys³⁴] max³⁴]: 829 --->
+//│ 	case ((filterMax₃ t¹⁷) h¹⁷) of {Pair ys³⁴ max³⁴ => [Pair [C h¹⁷ ys³⁴] max³⁴]}: 830
+//│ 	case ((filterMax₃ t¹⁷) m³⁴) of {Pair ys³⁵ max³⁵ => [Pair [C h¹⁷ ys³⁵] max³⁵]}: 841
+//│ 	case ((filterMax₃ t¹³) m²⁶) of {Pair ys²⁷ max²⁷ => [Pair [C h¹³ ys²⁷] max²⁷]}: 653
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h⁶ ys¹³] max¹³] --->
-//│ 	case ((filterMax₅ t¹) m²) of {Pair ys³ max³ => [Pair [C h¹ ys³] max³]}
-//│ [Pair [C h⁹ ys¹⁸] max¹⁸] --->
-//│ 	case ((filterMax₁₀ t⁹) h⁹) of {Pair ys¹⁸ max¹⁸ => [Pair [C h⁹ ys¹⁸] max¹⁸]}
-//│ 	case ((filterMax₁₀ t⁷) h⁷) of {Pair ys¹⁴ max¹⁴ => [Pair [C h⁷ ys¹⁴] max¹⁴]}
-//│ 	case ((filterMax₁₀ t⁹) m¹⁸) of {Pair ys¹⁹ max¹⁹ => [Pair [C h⁹ ys¹⁹] max¹⁹]}
+//│ [Pair [C h⁶ ys¹³] max¹³]: 323 --->
+//│ 	case ((filterMax₅ t¹) m²) of {Pair ys³ max³ => [Pair [C h¹ ys³] max³]}: 89
+//│ [Pair [C h⁹ ys¹⁸] max¹⁸]: 453 --->
+//│ 	case ((filterMax₁₀ t⁹) h⁹) of {Pair ys¹⁸ max¹⁸ => [Pair [C h⁹ ys¹⁸] max¹⁸]}: 454
+//│ 	case ((filterMax₁₀ t⁷) h⁷) of {Pair ys¹⁴ max¹⁴ => [Pair [C h⁷ ys¹⁴] max¹⁴]}: 360
+//│ 	case ((filterMax₁₀ t⁹) m¹⁸) of {Pair ys¹⁹ max¹⁹ => [Pair [C h⁹ ys¹⁹] max¹⁹]}: 465
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h¹⁷ ys³⁵] max³⁵] --->
-//│ 	case ((filterMax₃ t¹⁷) h¹⁷) of {Pair ys³⁴ max³⁴ => [Pair [C h¹⁷ ys³⁴] max³⁴]}
-//│ 	case ((filterMax₃ t¹⁷) m³⁴) of {Pair ys³⁵ max³⁵ => [Pair [C h¹⁷ ys³⁵] max³⁵]}
-//│ 	case ((filterMax₃ t¹³) m²⁶) of {Pair ys²⁷ max²⁷ => [Pair [C h¹³ ys²⁷] max²⁷]}
+//│ [Pair [C h¹⁷ ys³⁵] max³⁵]: 840 --->
+//│ 	case ((filterMax₃ t¹⁷) h¹⁷) of {Pair ys³⁴ max³⁴ => [Pair [C h¹⁷ ys³⁴] max³⁴]}: 830
+//│ 	case ((filterMax₃ t¹⁷) m³⁴) of {Pair ys³⁵ max³⁵ => [Pair [C h¹⁷ ys³⁵] max³⁵]}: 841
+//│ 	case ((filterMax₃ t¹³) m²⁶) of {Pair ys²⁷ max²⁷ => [Pair [C h¹³ ys²⁷] max²⁷]}: 653
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h⁹ ys¹⁹] max¹⁹] --->
-//│ 	case ((filterMax₁₀ t⁹) h⁹) of {Pair ys¹⁸ max¹⁸ => [Pair [C h⁹ ys¹⁸] max¹⁸]}
-//│ 	case ((filterMax₁₀ t⁷) h⁷) of {Pair ys¹⁴ max¹⁴ => [Pair [C h⁷ ys¹⁴] max¹⁴]}
-//│ 	case ((filterMax₁₀ t⁹) m¹⁸) of {Pair ys¹⁹ max¹⁹ => [Pair [C h⁹ ys¹⁹] max¹⁹]}
+//│ [Pair [C h⁹ ys¹⁹] max¹⁹]: 464 --->
+//│ 	case ((filterMax₁₀ t⁹) h⁹) of {Pair ys¹⁸ max¹⁸ => [Pair [C h⁹ ys¹⁸] max¹⁸]}: 454
+//│ 	case ((filterMax₁₀ t⁷) h⁷) of {Pair ys¹⁴ max¹⁴ => [Pair [C h⁷ ys¹⁴] max¹⁴]}: 360
+//│ 	case ((filterMax₁₀ t⁹) m¹⁸) of {Pair ys¹⁹ max¹⁹ => [Pair [C h⁹ ys¹⁹] max¹⁹]}: 465
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h¹² ys²⁴] max²⁴] --->
-//│ 	case ((filterMax₇ t¹²) m²⁴) of {Pair ys²⁵ max²⁵ => [Pair [C h¹² ys²⁵] max²⁵]}
-//│ 	case ((filterMax₇ t⁶) m¹²) of {Pair ys¹³ max¹³ => [Pair [C h⁶ ys¹³] max¹³]}
+//│ [Pair [C h¹² ys²⁴] max²⁴]: 594 --->
+//│ 	case ((filterMax₇ t¹²) m²⁴) of {Pair ys²⁵ max²⁵ => [Pair [C h¹² ys²⁵] max²⁵]}: 606
+//│ 	case ((filterMax₇ t⁶) m¹²) of {Pair ys¹³ max¹³ => [Pair [C h⁶ ys¹³] max¹³]}: 324
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h⁴ ys⁸] max⁸] --->
-//│ 	case ((filterMax₁₆ t⁴) h⁴) of {Pair ys⁸ max⁸ => [Pair [C h⁴ ys⁸] max⁸]}
-//│ 	case ((filterMax₁₆ t²) h²) of {Pair ys⁴ max⁴ => [Pair [C h² ys⁴] max⁴]}
-//│ 	case ((filterMax₁₆ t⁴) m⁸) of {Pair ys⁹ max⁹ => [Pair [C h⁴ ys⁹] max⁹]}
+//│ [Pair [C h⁴ ys⁸] max⁸]: 218 --->
+//│ 	case ((filterMax₁₆ t⁴) h⁴) of {Pair ys⁸ max⁸ => [Pair [C h⁴ ys⁸] max⁸]}: 219
+//│ 	case ((filterMax₁₆ t²) h²) of {Pair ys⁴ max⁴ => [Pair [C h² ys⁴] max⁴]}: 125
+//│ 	case ((filterMax₁₆ t⁴) m⁸) of {Pair ys⁹ max⁹ => [Pair [C h⁴ ys⁹] max⁹]}: 230
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h¹² ys²⁵] max²⁵] --->
-//│ 	case ((filterMax₇ t¹²) m²⁴) of {Pair ys²⁵ max²⁵ => [Pair [C h¹² ys²⁵] max²⁵]}
-//│ 	case ((filterMax₇ t⁶) m¹²) of {Pair ys¹³ max¹³ => [Pair [C h⁶ ys¹³] max¹³]}
+//│ [Pair [C h¹² ys²⁵] max²⁵]: 605 --->
+//│ 	case ((filterMax₇ t¹²) m²⁴) of {Pair ys²⁵ max²⁵ => [Pair [C h¹² ys²⁵] max²⁵]}: 606
+//│ 	case ((filterMax₇ t⁶) m¹²) of {Pair ys¹³ max¹³ => [Pair [C h⁶ ys¹³] max¹³]}: 324
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h¹⁵ ys³⁰] max³⁰] --->
-//│ 	case ((filterMax₂ t¹⁵) h¹⁵) of {Pair ys³⁰ max³⁰ => [Pair [C h¹⁵ ys³⁰] max³⁰]}
-//│ 	case ((filterMax₂ t¹³) h¹³) of {Pair ys²⁶ max²⁶ => [Pair [C h¹³ ys²⁶] max²⁶]}
-//│ 	case ((filterMax₂ t¹⁵) m³⁰) of {Pair ys³¹ max³¹ => [Pair [C h¹⁵ ys³¹] max³¹]}
+//│ [Pair [C h¹⁵ ys³⁰] max³⁰]: 735 --->
+//│ 	case ((filterMax₂ t¹⁵) h¹⁵) of {Pair ys³⁰ max³⁰ => [Pair [C h¹⁵ ys³⁰] max³⁰]}: 736
+//│ 	case ((filterMax₂ t¹³) h¹³) of {Pair ys²⁶ max²⁶ => [Pair [C h¹³ ys²⁶] max²⁶]}: 642
+//│ 	case ((filterMax₂ t¹⁵) m³⁰) of {Pair ys³¹ max³¹ => [Pair [C h¹⁵ ys³¹] max³¹]}: 747
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h⁴ ys⁹] max⁹] --->
-//│ 	case ((filterMax₁₆ t⁴) h⁴) of {Pair ys⁸ max⁸ => [Pair [C h⁴ ys⁸] max⁸]}
-//│ 	case ((filterMax₁₆ t²) h²) of {Pair ys⁴ max⁴ => [Pair [C h² ys⁴] max⁴]}
-//│ 	case ((filterMax₁₆ t⁴) m⁸) of {Pair ys⁹ max⁹ => [Pair [C h⁴ ys⁹] max⁹]}
+//│ [Pair [C h⁴ ys⁹] max⁹]: 229 --->
+//│ 	case ((filterMax₁₆ t⁴) h⁴) of {Pair ys⁸ max⁸ => [Pair [C h⁴ ys⁸] max⁸]}: 219
+//│ 	case ((filterMax₁₆ t²) h²) of {Pair ys⁴ max⁴ => [Pair [C h² ys⁴] max⁴]}: 125
+//│ 	case ((filterMax₁₆ t⁴) m⁸) of {Pair ys⁹ max⁹ => [Pair [C h⁴ ys⁹] max⁹]}: 230
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h⁷ ys¹⁴] max¹⁴] --->
-//│ 	case ((filterMax₅ t¹) m²) of {Pair ys³ max³ => [Pair [C h¹ ys³] max³]}
-//│ 	case ((filterMax₉ t⁷) m¹⁴) of {Pair ys¹⁵ max¹⁵ => [Pair [C h⁷ ys¹⁵] max¹⁵]}
+//│ [Pair [C h⁷ ys¹⁴] max¹⁴]: 359 --->
+//│ 	case ((filterMax₅ t¹) m²) of {Pair ys³ max³ => [Pair [C h¹ ys³] max³]}: 89
+//│ 	case ((filterMax₉ t⁷) m¹⁴) of {Pair ys¹⁵ max¹⁵ => [Pair [C h⁷ ys¹⁵] max¹⁵]}: 371
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h¹⁵ ys³¹] max³¹] --->
-//│ 	case ((filterMax₂ t¹⁵) h¹⁵) of {Pair ys³⁰ max³⁰ => [Pair [C h¹⁵ ys³⁰] max³⁰]}
-//│ 	case ((filterMax₂ t¹³) h¹³) of {Pair ys²⁶ max²⁶ => [Pair [C h¹³ ys²⁶] max²⁶]}
-//│ 	case ((filterMax₂ t¹⁵) m³⁰) of {Pair ys³¹ max³¹ => [Pair [C h¹⁵ ys³¹] max³¹]}
+//│ [Pair [C h¹⁵ ys³¹] max³¹]: 746 --->
+//│ 	case ((filterMax₂ t¹⁵) h¹⁵) of {Pair ys³⁰ max³⁰ => [Pair [C h¹⁵ ys³⁰] max³⁰]}: 736
+//│ 	case ((filterMax₂ t¹³) h¹³) of {Pair ys²⁶ max²⁶ => [Pair [C h¹³ ys²⁶] max²⁶]}: 642
+//│ 	case ((filterMax₂ t¹⁵) m³⁰) of {Pair ys³¹ max³¹ => [Pair [C h¹⁵ ys³¹] max³¹]}: 747
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h¹⁸ ys³⁶] max³⁶] --->
-//│ 	case ((filterMax₆ t¹⁸) h¹⁸) of {Pair ys³⁶ max³⁶ => [Pair [C h¹⁸ ys³⁶] max³⁶]}
-//│ 	case ((filterMax₆ t⁶) h⁶) of {Pair ys¹² max¹² => [Pair [C h⁶ ys¹²] max¹²]}
-//│ 	case ((filterMax₆ t¹⁸) m³⁶) of {Pair ys³⁷ max³⁷ => [Pair [C h¹⁸ ys³⁷] max³⁷]}
+//│ [Pair [C h¹⁸ ys³⁶] max³⁶]: 876 --->
+//│ 	case ((filterMax₆ t¹⁸) h¹⁸) of {Pair ys³⁶ max³⁶ => [Pair [C h¹⁸ ys³⁶] max³⁶]}: 877
+//│ 	case ((filterMax₆ t⁶) h⁶) of {Pair ys¹² max¹² => [Pair [C h⁶ ys¹²] max¹²]}: 313
+//│ 	case ((filterMax₆ t¹⁸) m³⁶) of {Pair ys³⁷ max³⁷ => [Pair [C h¹⁸ ys³⁷] max³⁷]}: 888
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h⁷ ys¹⁵] max¹⁵] --->
-//│ 	case ((filterMax₅ t¹) m²) of {Pair ys³ max³ => [Pair [C h¹ ys³] max³]}
-//│ 	case ((filterMax₉ t⁷) m¹⁴) of {Pair ys¹⁵ max¹⁵ => [Pair [C h⁷ ys¹⁵] max¹⁵]}
+//│ [Pair [C h⁷ ys¹⁵] max¹⁵]: 370 --->
+//│ 	case ((filterMax₅ t¹) m²) of {Pair ys³ max³ => [Pair [C h¹ ys³] max³]}: 89
+//│ 	case ((filterMax₉ t⁷) m¹⁴) of {Pair ys¹⁵ max¹⁵ => [Pair [C h⁷ ys¹⁵] max¹⁵]}: 371
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h¹⁰ ys²⁰] max²⁰] --->
-//│ 	case ((filterMax₈ t¹²) h¹²) of {Pair ys²⁴ max²⁴ => [Pair [C h¹² ys²⁴] max²⁴]}
-//│ 	case ((filterMax₈ t¹⁰) h¹⁰) of {Pair ys²⁰ max²⁰ => [Pair [C h¹⁰ ys²⁰] max²⁰]}
-//│ 	case ((filterMax₈ t¹⁰) m²⁰) of {Pair ys²¹ max²¹ => [Pair [C h¹⁰ ys²¹] max²¹]}
+//│ [Pair [C h¹⁰ ys²⁰] max²⁰]: 500 --->
+//│ 	case ((filterMax₈ t¹²) h¹²) of {Pair ys²⁴ max²⁴ => [Pair [C h¹² ys²⁴] max²⁴]}: 595
+//│ 	case ((filterMax₈ t¹⁰) h¹⁰) of {Pair ys²⁰ max²⁰ => [Pair [C h¹⁰ ys²⁰] max²⁰]}: 501
+//│ 	case ((filterMax₈ t¹⁰) m²⁰) of {Pair ys²¹ max²¹ => [Pair [C h¹⁰ ys²¹] max²¹]}: 512
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h¹⁸ ys³⁷] max³⁷] --->
-//│ 	case ((filterMax₆ t¹⁸) h¹⁸) of {Pair ys³⁶ max³⁶ => [Pair [C h¹⁸ ys³⁶] max³⁶]}
-//│ 	case ((filterMax₆ t⁶) h⁶) of {Pair ys¹² max¹² => [Pair [C h⁶ ys¹²] max¹²]}
-//│ 	case ((filterMax₆ t¹⁸) m³⁶) of {Pair ys³⁷ max³⁷ => [Pair [C h¹⁸ ys³⁷] max³⁷]}
+//│ [Pair [C h¹⁸ ys³⁷] max³⁷]: 887 --->
+//│ 	case ((filterMax₆ t¹⁸) h¹⁸) of {Pair ys³⁶ max³⁶ => [Pair [C h¹⁸ ys³⁶] max³⁶]}: 877
+//│ 	case ((filterMax₆ t⁶) h⁶) of {Pair ys¹² max¹² => [Pair [C h⁶ ys¹²] max¹²]}: 313
+//│ 	case ((filterMax₆ t¹⁸) m³⁶) of {Pair ys³⁷ max³⁷ => [Pair [C h¹⁸ ys³⁷] max³⁷]}: 888
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [C h¹⁰ ys²¹] max²¹] --->
-//│ 	case ((filterMax₈ t¹²) h¹²) of {Pair ys²⁴ max²⁴ => [Pair [C h¹² ys²⁴] max²⁴]}
-//│ 	case ((filterMax₈ t¹⁰) h¹⁰) of {Pair ys²⁰ max²⁰ => [Pair [C h¹⁰ ys²⁰] max²⁰]}
-//│ 	case ((filterMax₈ t¹⁰) m²⁰) of {Pair ys²¹ max²¹ => [Pair [C h¹⁰ ys²¹] max²¹]}
+//│ [Pair [C h¹⁰ ys²¹] max²¹]: 511 --->
+//│ 	case ((filterMax₈ t¹²) h¹²) of {Pair ys²⁴ max²⁴ => [Pair [C h¹² ys²⁴] max²⁴]}: 595
+//│ 	case ((filterMax₈ t¹⁰) h¹⁰) of {Pair ys²⁰ max²⁰ => [Pair [C h¹⁰ ys²⁰] max²⁰]}: 501
+//│ 	case ((filterMax₈ t¹⁰) m²⁰) of {Pair ys²¹ max²¹ => [Pair [C h¹⁰ ys²¹] max²¹]}: 512
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [N] m³⁷] --->
-//│ 	case ((filterMax₆ t¹⁸) h¹⁸) of {Pair ys³⁶ max³⁶ => [Pair [C h¹⁸ ys³⁶] max³⁶]}
-//│ 	case ((filterMax₆ t⁶) h⁶) of {Pair ys¹² max¹² => [Pair [C h⁶ ys¹²] max¹²]}
-//│ 	case ((filterMax₆ t¹⁸) m³⁶) of {Pair ys³⁷ max³⁷ => [Pair [C h¹⁸ ys³⁷] max³⁷]}
+//│ [Pair [N] m³⁷]: 899 --->
+//│ 	case ((filterMax₆ t¹⁸) h¹⁸) of {Pair ys³⁶ max³⁶ => [Pair [C h¹⁸ ys³⁶] max³⁶]}: 877
+//│ 	case ((filterMax₆ t⁶) h⁶) of {Pair ys¹² max¹² => [Pair [C h⁶ ys¹²] max¹²]}: 313
+//│ 	case ((filterMax₆ t¹⁸) m³⁶) of {Pair ys³⁷ max³⁷ => [Pair [C h¹⁸ ys³⁷] max³⁷]}: 888
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [N] m²¹] --->
-//│ 	case ((filterMax₈ t¹²) h¹²) of {Pair ys²⁴ max²⁴ => [Pair [C h¹² ys²⁴] max²⁴]}
-//│ 	case ((filterMax₈ t¹⁰) h¹⁰) of {Pair ys²⁰ max²⁰ => [Pair [C h¹⁰ ys²⁰] max²⁰]}
-//│ 	case ((filterMax₈ t¹⁰) m²⁰) of {Pair ys²¹ max²¹ => [Pair [C h¹⁰ ys²¹] max²¹]}
+//│ [Pair [N] m²¹]: 523 --->
+//│ 	case ((filterMax₈ t¹²) h¹²) of {Pair ys²⁴ max²⁴ => [Pair [C h¹² ys²⁴] max²⁴]}: 595
+//│ 	case ((filterMax₈ t¹⁰) h¹⁰) of {Pair ys²⁰ max²⁰ => [Pair [C h¹⁰ ys²⁰] max²⁰]}: 501
+//│ 	case ((filterMax₈ t¹⁰) m²⁰) of {Pair ys²¹ max²¹ => [Pair [C h¹⁰ ys²¹] max²¹]}: 512
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [N] m²⁷] --->
-//│ 	case ((filterMax₁ t¹) h¹) of {Pair ys² max² => [Pair [C h¹ ys²] max²]}
-//│ [Pair [N] m³³] --->
-//│ 	case ((filterMax₁₃ t¹⁶) m³²) of {Pair ys³³ max³³ => [Pair [C h¹⁶ ys³³] max³³]}
-//│ 	case ((filterMax₁₃ t⁵) m¹⁰) of {Pair ys¹¹ max¹¹ => [Pair [C h⁵ ys¹¹] max¹¹]}
+//│ [Pair [N] m²⁷]: 664 --->
+//│ 	case ((filterMax₁ t¹) h¹) of {Pair ys² max² => [Pair [C h¹ ys²] max²]}: 78
+//│ [Pair [N] m³³]: 805 --->
+//│ 	case ((filterMax₁₃ t¹⁶) m³²) of {Pair ys³³ max³³ => [Pair [C h¹⁶ ys³³] max³³]}: 794
+//│ 	case ((filterMax₁₃ t⁵) m¹⁰) of {Pair ys¹¹ max¹¹ => [Pair [C h⁵ ys¹¹] max¹¹]}: 277
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [N] m¹⁷] --->
-//│ 	case ((filterMax₁₄ t¹⁶) h¹⁶) of {Pair ys³² max³² => [Pair [C h¹⁶ ys³²] max³²]}
-//│ 	case ((filterMax₁₄ t⁸) h⁸) of {Pair ys¹⁶ max¹⁶ => [Pair [C h⁸ ys¹⁶] max¹⁶]}
-//│ 	case ((filterMax₁₄ t⁸) m¹⁶) of {Pair ys¹⁷ max¹⁷ => [Pair [C h⁸ ys¹⁷] max¹⁷]}
+//│ [Pair [N] m¹⁷]: 429 --->
+//│ 	case ((filterMax₁₄ t¹⁶) h¹⁶) of {Pair ys³² max³² => [Pair [C h¹⁶ ys³²] max³²]}: 783
+//│ 	case ((filterMax₁₄ t⁸) h⁸) of {Pair ys¹⁶ max¹⁶ => [Pair [C h⁸ ys¹⁶] max¹⁶]}: 407
+//│ 	case ((filterMax₁₄ t⁸) m¹⁶) of {Pair ys¹⁷ max¹⁷ => [Pair [C h⁸ ys¹⁷] max¹⁷]}: 418
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [N] m³⁹] --->
-//│ 	case ((filterMax₁₂ t¹⁹) h¹⁹) of {Pair ys³⁸ max³⁸ => [Pair [C h¹⁹ ys³⁸] max³⁸]}
-//│ 	case ((filterMax₁₂ t⁵) h⁵) of {Pair ys¹⁰ max¹⁰ => [Pair [C h⁵ ys¹⁰] max¹⁰]}
-//│ 	case ((filterMax₁₂ t¹⁹) m³⁸) of {Pair ys³⁹ max³⁹ => [Pair [C h¹⁹ ys³⁹] max³⁹]}
+//│ [Pair [N] m³⁹]: 946 --->
+//│ 	case ((filterMax₁₂ t¹⁹) h¹⁹) of {Pair ys³⁸ max³⁸ => [Pair [C h¹⁹ ys³⁸] max³⁸]}: 924
+//│ 	case ((filterMax₁₂ t⁵) h⁵) of {Pair ys¹⁰ max¹⁰ => [Pair [C h⁵ ys¹⁰] max¹⁰]}: 266
+//│ 	case ((filterMax₁₂ t¹⁹) m³⁸) of {Pair ys³⁹ max³⁹ => [Pair [C h¹⁹ ys³⁹] max³⁹]}: 935
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [N] m²³] --->
-//│ 	case ((filterMax₁ t¹) h¹) of {Pair ys² max² => [Pair [C h¹ ys²] max²]}
-//│ 	case ((filterMax₄ t¹¹) h¹¹) of {Pair ys²² max²² => [Pair [C h¹¹ ys²²] max²²]}
-//│ 	case ((filterMax₄ t¹¹) m²²) of {Pair ys²³ max²³ => [Pair [C h¹¹ ys²³] max²³]}
+//│ [Pair [N] m²³]: 570 --->
+//│ 	case ((filterMax₁ t¹) h¹) of {Pair ys² max² => [Pair [C h¹ ys²] max²]}: 78
+//│ 	case ((filterMax₄ t¹¹) h¹¹) of {Pair ys²² max²² => [Pair [C h¹¹ ys²²] max²²]}: 548
+//│ 	case ((filterMax₄ t¹¹) m²²) of {Pair ys²³ max²³ => [Pair [C h¹¹ ys²³] max²³]}: 559
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [N] m⁷] --->
-//│ 	case ((filterMax₁₇ t³) m⁶) of {Pair ys⁷ max⁷ => [Pair [C h³ ys⁷] max⁷]}
-//│ 	case ((filterMax₁₇ t²) m⁴) of {Pair ys⁵ max⁵ => [Pair [C h² ys⁵] max⁵]}
+//│ [Pair [N] m⁷]: 194 --->
+//│ 	case ((filterMax₁₇ t³) m⁶) of {Pair ys⁷ max⁷ => [Pair [C h³ ys⁷] max⁷]}: 183
+//│ 	case ((filterMax₁₇ t²) m⁴) of {Pair ys⁵ max⁵ => [Pair [C h² ys⁵] max⁵]}: 136
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [N] m²⁹] --->
-//│ 	case ((filterMax₁₈ t¹⁴) h¹⁴) of {Pair ys²⁸ max²⁸ => [Pair [C h¹⁴ ys²⁸] max²⁸]}
-//│ 	case ((filterMax₁₈ t³) h³) of {Pair ys⁶ max⁶ => [Pair [C h³ ys⁶] max⁶]}
-//│ 	case ((filterMax₁₈ t¹⁴) m²⁸) of {Pair ys²⁹ max²⁹ => [Pair [C h¹⁴ ys²⁹] max²⁹]}
+//│ [Pair [N] m²⁹]: 711 --->
+//│ 	case ((filterMax₁₈ t¹⁴) h¹⁴) of {Pair ys²⁸ max²⁸ => [Pair [C h¹⁴ ys²⁸] max²⁸]}: 689
+//│ 	case ((filterMax₁₈ t³) h³) of {Pair ys⁶ max⁶ => [Pair [C h³ ys⁶] max⁶]}: 172
+//│ 	case ((filterMax₁₈ t¹⁴) m²⁸) of {Pair ys²⁹ max²⁹ => [Pair [C h¹⁴ ys²⁹] max²⁹]}: 700
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [N] m¹³] --->
-//│ 	case ((filterMax₅ t¹) m²) of {Pair ys³ max³ => [Pair [C h¹ ys³] max³]}
-//│ [Pair [N] m³⁵] --->
-//│ 	case ((filterMax₃ t¹⁷) h¹⁷) of {Pair ys³⁴ max³⁴ => [Pair [C h¹⁷ ys³⁴] max³⁴]}
-//│ 	case ((filterMax₃ t¹⁷) m³⁴) of {Pair ys³⁵ max³⁵ => [Pair [C h¹⁷ ys³⁵] max³⁵]}
-//│ 	case ((filterMax₃ t¹³) m²⁶) of {Pair ys²⁷ max²⁷ => [Pair [C h¹³ ys²⁷] max²⁷]}
+//│ [Pair [N] m¹³]: 335 --->
+//│ 	case ((filterMax₅ t¹) m²) of {Pair ys³ max³ => [Pair [C h¹ ys³] max³]}: 89
+//│ [Pair [N] m³⁵]: 852 --->
+//│ 	case ((filterMax₃ t¹⁷) h¹⁷) of {Pair ys³⁴ max³⁴ => [Pair [C h¹⁷ ys³⁴] max³⁴]}: 830
+//│ 	case ((filterMax₃ t¹⁷) m³⁴) of {Pair ys³⁵ max³⁵ => [Pair [C h¹⁷ ys³⁵] max³⁵]}: 841
+//│ 	case ((filterMax₃ t¹³) m²⁶) of {Pair ys²⁷ max²⁷ => [Pair [C h¹³ ys²⁷] max²⁷]}: 653
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [N] m¹⁹] --->
-//│ 	case ((filterMax₁₀ t⁹) h⁹) of {Pair ys¹⁸ max¹⁸ => [Pair [C h⁹ ys¹⁸] max¹⁸]}
-//│ 	case ((filterMax₁₀ t⁷) h⁷) of {Pair ys¹⁴ max¹⁴ => [Pair [C h⁷ ys¹⁴] max¹⁴]}
-//│ 	case ((filterMax₁₀ t⁹) m¹⁸) of {Pair ys¹⁹ max¹⁹ => [Pair [C h⁹ ys¹⁹] max¹⁹]}
+//│ [Pair [N] m¹⁹]: 476 --->
+//│ 	case ((filterMax₁₀ t⁹) h⁹) of {Pair ys¹⁸ max¹⁸ => [Pair [C h⁹ ys¹⁸] max¹⁸]}: 454
+//│ 	case ((filterMax₁₀ t⁷) h⁷) of {Pair ys¹⁴ max¹⁴ => [Pair [C h⁷ ys¹⁴] max¹⁴]}: 360
+//│ 	case ((filterMax₁₀ t⁹) m¹⁸) of {Pair ys¹⁹ max¹⁹ => [Pair [C h⁹ ys¹⁹] max¹⁹]}: 465
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [N] m²⁵] --->
-//│ 	case ((filterMax₇ t¹²) m²⁴) of {Pair ys²⁵ max²⁵ => [Pair [C h¹² ys²⁵] max²⁵]}
-//│ 	case ((filterMax₇ t⁶) m¹²) of {Pair ys¹³ max¹³ => [Pair [C h⁶ ys¹³] max¹³]}
+//│ [Pair [N] m²⁵]: 617 --->
+//│ 	case ((filterMax₇ t¹²) m²⁴) of {Pair ys²⁵ max²⁵ => [Pair [C h¹² ys²⁵] max²⁵]}: 606
+//│ 	case ((filterMax₇ t⁶) m¹²) of {Pair ys¹³ max¹³ => [Pair [C h⁶ ys¹³] max¹³]}: 324
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [N] m⁹] --->
-//│ 	case ((filterMax₁₆ t⁴) h⁴) of {Pair ys⁸ max⁸ => [Pair [C h⁴ ys⁸] max⁸]}
-//│ 	case ((filterMax₁₆ t²) h²) of {Pair ys⁴ max⁴ => [Pair [C h² ys⁴] max⁴]}
-//│ 	case ((filterMax₁₆ t⁴) m⁸) of {Pair ys⁹ max⁹ => [Pair [C h⁴ ys⁹] max⁹]}
+//│ [Pair [N] m⁹]: 241 --->
+//│ 	case ((filterMax₁₆ t⁴) h⁴) of {Pair ys⁸ max⁸ => [Pair [C h⁴ ys⁸] max⁸]}: 219
+//│ 	case ((filterMax₁₆ t²) h²) of {Pair ys⁴ max⁴ => [Pair [C h² ys⁴] max⁴]}: 125
+//│ 	case ((filterMax₁₆ t⁴) m⁸) of {Pair ys⁹ max⁹ => [Pair [C h⁴ ys⁹] max⁹]}: 230
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [N] m³¹] --->
-//│ 	case ((filterMax₂ t¹⁵) h¹⁵) of {Pair ys³⁰ max³⁰ => [Pair [C h¹⁵ ys³⁰] max³⁰]}
-//│ 	case ((filterMax₂ t¹³) h¹³) of {Pair ys²⁶ max²⁶ => [Pair [C h¹³ ys²⁶] max²⁶]}
-//│ 	case ((filterMax₂ t¹⁵) m³⁰) of {Pair ys³¹ max³¹ => [Pair [C h¹⁵ ys³¹] max³¹]}
+//│ [Pair [N] m³¹]: 758 --->
+//│ 	case ((filterMax₂ t¹⁵) h¹⁵) of {Pair ys³⁰ max³⁰ => [Pair [C h¹⁵ ys³⁰] max³⁰]}: 736
+//│ 	case ((filterMax₂ t¹³) h¹³) of {Pair ys²⁶ max²⁶ => [Pair [C h¹³ ys²⁶] max²⁶]}: 642
+//│ 	case ((filterMax₂ t¹⁵) m³⁰) of {Pair ys³¹ max³¹ => [Pair [C h¹⁵ ys³¹] max³¹]}: 747
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [Pair [N] m¹⁵] --->
-//│ 	case ((filterMax₅ t¹) m²) of {Pair ys³ max³ => [Pair [C h¹ ys³] max³]}
-//│ 	case ((filterMax₉ t⁷) m¹⁴) of {Pair ys¹⁵ max¹⁵ => [Pair [C h⁷ ys¹⁵] max¹⁵]}
+//│ [Pair [N] m¹⁵]: 382 --->
+//│ 	case ((filterMax₅ t¹) m²) of {Pair ys³ max³ => [Pair [C h¹ ys³] max³]}: 89
+//│ 	case ((filterMax₉ t⁷) m¹⁴) of {Pair ys¹⁵ max¹⁵ => [Pair [C h⁷ ys¹⁵] max¹⁵]}: 371
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -1672,27 +1672,27 @@ max(C(1, C(3, C(2, N))))(0)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [C 3 [C 2 [N]]]] --->
-//│ 	case ms⁷ of {C h⁷ t⁷ => (fun m¹⁴ -> case (h⁷ > m¹⁴) of {True => ((max₉ t⁷) h⁷) | False => ((max₁ t⁷) m¹⁴)}) | N => (fun m¹⁵ -> m¹⁵)}
-//│ [C 2 [N]] --->
-//│ 	case ms⁴ of {C h⁴ t⁴ => (fun m⁸ -> case (h⁴ > m⁸) of {True => ((max₁₂ t⁴) h⁴) | False => ((max₁₁ t⁴) m⁸)}) | N => (fun m⁹ -> m⁹)}
-//│ 	case ms⁸ of {C h⁸ t⁸ => (fun m¹⁶ -> case (h⁸ > m¹⁶) of {True => ((max₁₅ t⁸) h⁸) | False => ((max₁₄ t⁸) m¹⁶)}) | N => (fun m¹⁷ -> m¹⁷)}
-//│ 	case ms⁹ of {C h⁹ t⁹ => (fun m¹⁸ -> case (h⁹ > m¹⁸) of {True => ((max₅ t⁹) h⁹) | False => ((max₃ t⁹) m¹⁸)}) | N => (fun m¹⁹ -> m¹⁹)}
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> case (h¹ > m²) of {True => ((max₈ t¹) h¹) | False => ((max₇ t¹) m²)}) | N => (fun m³ -> m³)}
+//│ [C 1 [C 3 [C 2 [N]]]]: 393 --->
+//│ 	case ms⁷ of {C h⁷ t⁷ => (fun m¹⁴ -> case (h⁷ > m¹⁴) of {True => ((max₉ t⁷) h⁷) | False => ((max₁ t⁷) m¹⁴)}) | N => (fun m¹⁵ -> m¹⁵)}: 186
+//│ [C 2 [N]]: 391 --->
+//│ 	case ms⁴ of {C h⁴ t⁴ => (fun m⁸ -> case (h⁴ > m⁸) of {True => ((max₁₂ t⁴) h⁴) | False => ((max₁₁ t⁴) m⁸)}) | N => (fun m⁹ -> m⁹)}: 120
+//│ 	case ms⁸ of {C h⁸ t⁸ => (fun m¹⁶ -> case (h⁸ > m¹⁶) of {True => ((max₁₅ t⁸) h⁸) | False => ((max₁₄ t⁸) m¹⁶)}) | N => (fun m¹⁷ -> m¹⁷)}: 208
+//│ 	case ms⁹ of {C h⁹ t⁹ => (fun m¹⁸ -> case (h⁹ > m¹⁸) of {True => ((max₅ t⁹) h⁹) | False => ((max₃ t⁹) m¹⁸)}) | N => (fun m¹⁹ -> m¹⁹)}: 230
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> case (h¹ > m²) of {True => ((max₈ t¹) h¹) | False => ((max₇ t¹) m²)}) | N => (fun m³ -> m³)}: 54
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [C 3 [C 2 [N]]] --->
-//│ 	case ms¹² of {C h¹² t¹² => (fun m²⁴ -> case (h¹² > m²⁴) of {True => ((max₁₃ t¹²) h¹²) | False => ((max₁₀ t¹²) m²⁴)}) | N => (fun m²⁵ -> m²⁵)}
-//│ 	case ms¹⁶ of {C h¹⁶ t¹⁶ => (fun m³² -> case (h¹⁶ > m³²) of {True => ((max₆ t¹⁶) h¹⁶) | False => ((max₂ t¹⁶) m³²)}) | N => (fun m³³ -> m³³)}
+//│ [C 3 [C 2 [N]]]: 392 --->
+//│ 	case ms¹² of {C h¹² t¹² => (fun m²⁴ -> case (h¹² > m²⁴) of {True => ((max₁₃ t¹²) h¹²) | False => ((max₁₀ t¹²) m²⁴)}) | N => (fun m²⁵ -> m²⁵)}: 296
+//│ 	case ms¹⁶ of {C h¹⁶ t¹⁶ => (fun m³² -> case (h¹⁶ > m³²) of {True => ((max₆ t¹⁶) h¹⁶) | False => ((max₂ t¹⁶) m³²)}) | N => (fun m³³ -> m³³)}: 384
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [N] --->
-//│ 	case ms¹⁰ of {C h¹⁰ t¹⁰ => (fun m²⁰ -> case (h¹⁰ > m²⁰) of {True => ((max₁₁ t¹⁰) h¹⁰) | False => ((max₁₁ t¹⁰) m²⁰)}) | N => (fun m²¹ -> m²¹)}
-//│ 	case ms⁶ of {C h⁶ t⁶ => (fun m¹² -> case (h⁶ > m¹²) of {True => ((max₁₂ t⁶) h⁶) | False => ((max₁₂ t⁶) m¹²)}) | N => (fun m¹³ -> m¹³)}
-//│ 	case ms¹⁵ of {C h¹⁵ t¹⁵ => (fun m³⁰ -> case (h¹⁵ > m³⁰) of {True => ((max₁₄ t¹⁵) h¹⁵) | False => ((max₁₄ t¹⁵) m³⁰)}) | N => (fun m³¹ -> m³¹)}
-//│ 	case ms¹³ of {C h¹³ t¹³ => (fun m²⁶ -> case (h¹³ > m²⁶) of {True => ((max₁₅ t¹³) h¹³) | False => ((max₁₅ t¹³) m²⁶)}) | N => (fun m²⁷ -> m²⁷)}
-//│ 	case ms¹⁴ of {C h¹⁴ t¹⁴ => (fun m²⁸ -> case (h¹⁴ > m²⁸) of {True => ((max₄ t¹⁴) h¹⁴) | False => ((max₃ t¹⁴) m²⁸)}) | N => (fun m²⁹ -> m²⁹)}
-//│ 	case ms⁵ of {C h⁵ t⁵ => (fun m¹⁰ -> case (h⁵ > m¹⁰) of {True => ((max₅ t⁵) h⁵) | False => ((max₅ t⁵) m¹⁰)}) | N => (fun m¹¹ -> m¹¹)}
-//│ 	case ms¹¹ of {C h¹¹ t¹¹ => (fun m²² -> case (h¹¹ > m²²) of {True => ((max₇ t¹¹) h¹¹) | False => ((max₇ t¹¹) m²²)}) | N => (fun m²³ -> m²³)}
-//│ 	case ms³ of {C h³ t³ => (fun m⁶ -> case (h³ > m⁶) of {True => ((max₈ t³) h³) | False => ((max₈ t³) m⁶)}) | N => (fun m⁷ -> m⁷)}
+//│ [N]: 390 --->
+//│ 	case ms¹⁰ of {C h¹⁰ t¹⁰ => (fun m²⁰ -> case (h¹⁰ > m²⁰) of {True => ((max₁₁ t¹⁰) h¹⁰) | False => ((max₁₁ t¹⁰) m²⁰)}) | N => (fun m²¹ -> m²¹)}: 252
+//│ 	case ms⁶ of {C h⁶ t⁶ => (fun m¹² -> case (h⁶ > m¹²) of {True => ((max₁₂ t⁶) h⁶) | False => ((max₁₂ t⁶) m¹²)}) | N => (fun m¹³ -> m¹³)}: 164
+//│ 	case ms¹⁵ of {C h¹⁵ t¹⁵ => (fun m³⁰ -> case (h¹⁵ > m³⁰) of {True => ((max₁₄ t¹⁵) h¹⁵) | False => ((max₁₄ t¹⁵) m³⁰)}) | N => (fun m³¹ -> m³¹)}: 362
+//│ 	case ms¹³ of {C h¹³ t¹³ => (fun m²⁶ -> case (h¹³ > m²⁶) of {True => ((max₁₅ t¹³) h¹³) | False => ((max₁₅ t¹³) m²⁶)}) | N => (fun m²⁷ -> m²⁷)}: 318
+//│ 	case ms¹⁴ of {C h¹⁴ t¹⁴ => (fun m²⁸ -> case (h¹⁴ > m²⁸) of {True => ((max₄ t¹⁴) h¹⁴) | False => ((max₃ t¹⁴) m²⁸)}) | N => (fun m²⁹ -> m²⁹)}: 340
+//│ 	case ms⁵ of {C h⁵ t⁵ => (fun m¹⁰ -> case (h⁵ > m¹⁰) of {True => ((max₅ t⁵) h⁵) | False => ((max₅ t⁵) m¹⁰)}) | N => (fun m¹¹ -> m¹¹)}: 142
+//│ 	case ms¹¹ of {C h¹¹ t¹¹ => (fun m²² -> case (h¹¹ > m²²) of {True => ((max₇ t¹¹) h¹¹) | False => ((max₇ t¹¹) m²²)}) | N => (fun m²³ -> m²³)}: 274
+//│ 	case ms³ of {C h³ t³ => (fun m⁶ -> case (h³ > m⁶) of {True => ((max₈ t³) h³) | False => ((max₈ t³) m⁶)}) | N => (fun m⁷ -> m⁷)}: 98
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -1865,19 +1865,19 @@ last(C(1, C(2, C(3, N))))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [C 2 [C 3 [N]]]] --->
-//│ 	case ls⁴ of {C h⁴ t⁴ => case t⁴ of {N => [Some h⁴] | C hh⁴ tt⁴ => (last₁ t⁴)} | N => [None]}
-//│ [C 2 [C 3 [N]]] --->
-//│ 	case ls³ of {C h³ t³ => case t³ of {N => [Some h³] | C hh³ tt³ => (last₂ t³)} | N => [None]}
-//│ 	case t⁴ of {N => [Some h⁴] | C hh⁴ tt⁴ => (last₁ t⁴)}
+//│ [C 1 [C 2 [C 3 [N]]]]: 72 --->
+//│ 	case ls⁴ of {C h⁴ t⁴ => case t⁴ of {N => [Some h⁴] | C hh⁴ tt⁴ => (last₁ t⁴)} | N => [None]}: 63
+//│ [C 2 [C 3 [N]]]: 71 --->
+//│ 	case ls³ of {C h³ t³ => case t³ of {N => [Some h³] | C hh³ tt³ => (last₂ t³)} | N => [None]}: 52
+//│ 	case t⁴ of {N => [Some h⁴] | C hh⁴ tt⁴ => (last₁ t⁴)}: 61
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [C 3 [N]] --->
-//│ 	case ls² of {C h² t² => case t² of {N => [Some h²] | C hh² tt² => (last₃ t²)} | N => [None]}
-//│ 	case t³ of {N => [Some h³] | C hh³ tt³ => (last₂ t³)}
+//│ [C 3 [N]]: 70 --->
+//│ 	case ls² of {C h² t² => case t² of {N => [Some h²] | C hh² tt² => (last₃ t²)} | N => [None]}: 41
+//│ 	case t³ of {N => [Some h³] | C hh³ tt³ => (last₂ t³)}: 50
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [N] --->
-//│ 	case ls¹ of {C h¹ t¹ => case t¹ of {N => [Some h¹] | C hh¹ tt¹ => (last₃ t¹)} | N => [None]}
-//│ 	case t² of {N => [Some h²] | C hh² tt² => (last₃ t²)}
+//│ [N]: 69 --->
+//│ 	case ls¹ of {C h¹ t¹ => case t¹ of {N => [Some h¹] | C hh¹ tt¹ => (last₃ t¹)} | N => [None]}: 30
+//│ 	case t² of {N => [Some h²] | C hh² tt² => (last₃ t²)}: 39
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -1969,21 +1969,21 @@ rev(primitive)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h⁴ ((concat₁ t⁴) ys³)] --->
-//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ ((concat₀ t⁵) ys⁵)])}
-//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ ((concat₁ t⁴) ys³)])}
+//│ [C h⁴ ((concat₁ t⁴) ys³)]: 65 --->
+//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ ((concat₀ t⁵) ys⁵)])}: 80
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ ((concat₁ t⁴) ys³)])}: 67
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [C h³ [N]] --->
-//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ ((concat₀ t⁵) ys⁵)])}
-//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ ((concat₁ t⁴) ys³)])}
+//│ [C h³ [N]]: 51 --->
+//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ ((concat₀ t⁵) ys⁵)])}: 80
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ ((concat₁ t⁴) ys³)])}: 67
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [N] --->
-//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ ((concat₀ t⁵) ys⁵)])}
-//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ ((concat₁ t⁴) ys³)])}
+//│ [N]: 50 --->
+//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ ((concat₀ t⁵) ys⁵)])}: 80
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ ((concat₁ t⁴) ys³)])}: 67
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [N] --->
-//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ ((concat₀ t⁵) ys⁵)])}
-//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ ((concat₁ t⁴) ys³)])}
+//│ [N]: 53 --->
+//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ ((concat₀ t⁵) ys⁵)])}: 80
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ ((concat₁ t⁴) ys³)])}: 67
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 

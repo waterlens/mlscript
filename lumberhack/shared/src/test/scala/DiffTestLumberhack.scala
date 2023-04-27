@@ -118,16 +118,24 @@ class DiffTestLumberhack extends DiffTests {
       output("\n>>>>>>> fusion matches >>>>>>>")
       val fusionMatchStr = newd.fusionMatch.toSeq.sortBy(expr => newd.exprs(expr._1).pp(using InitPpConfig)).map { (p, cs) =>
         // newd.exprs(p).pp(using InitPpConfig.showEuidOn) + "\n" +
-        newd.exprs(p).pp(using InitPpConfig.showIuidOn) + " --->\n" +
+        newd.exprs(p).pp(using InitPpConfig.showIuidOn) + s": $p --->\n" +
         cs.toSeq.sortBy(c => newd.exprs(c).pp(using InitPpConfig)).map { c =>
-          "\t" + newd.exprs(c).pp(using InitPpConfig.showIuidOn)
+          "\t" + newd.exprs(c).pp(using InitPpConfig.showIuidOn) + s": $c"
         }.mkString("\n") + (if cs.size > 1 then "\n\t MORE THAN ONE MATCH EXPR" else "")
       }.mkString("\n")
       output(fusionMatchStr)
       output("<<<<<<< fusion matches <<<<<<<")
 
+      // output("\n>>>>>>> new fusion strategy >>>>>>>")
+      val fusionStrategy = FusionStrategy(newd)
+      // output(fusionStrategy.ppCtorFinalDestinations)
+      // output("--------------")
+      // output(fusionStrategy.ppDtorFinalSources)
+      // output("<<<<<<< new fusion strategy <<<<<<<")
+
+
       output("\n>>>>>>> after fusion >>>>>>>")
-      val prgmAfterFusion = newProg.rewrite(newd.fusionMatch.toMap, newd)
+      val prgmAfterFusion = newProg.rewrite(newd)
       output(prgmAfterFusion.pp(callTree)(using InitPpConfig.multilineOn.showIuidOn))
       output("<<<<<<< after fusion <<<<<<<")
 
@@ -141,6 +149,7 @@ class DiffTestLumberhack extends DiffTests {
       if evaluate then {
         output("\n>>>>>>> evaluate >>>>>>>")
         val evalStr = prgmAfterFusion.evaluatedSmallStep.map(_.pp(using InitPpConfig.multilineOn.showIuidOn)).mkString("\n")
+        // val evalStr = prgmAfterFusion.evaluated.map(_.pp(using InitPpConfig.multilineOn.showIuidOn)).mkString("\n")
         output(evalStr)
         output("<<<<<<< evaluate <<<<<<<")
       }

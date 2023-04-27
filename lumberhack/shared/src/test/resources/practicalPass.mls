@@ -56,14 +56,14 @@ inter(l1)(l2)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [C 2 [N]]] --->
-//│ 	case xs³ of {N => (fun ys⁶ -> ys⁶) | C h³ t³ => (fun ys⁷ -> [C h³ ((inter₁ ys⁷) t³)])}
-//│ [C 2 [N]] --->
-//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₃ ys⁵) t²)])}
-//│ [N] --->
-//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₂ ys³) t¹)])}
-//│ [N] --->
-//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₃ ys⁵) t²)])}
+//│ [C 1 [C 2 [N]]]: 42 --->
+//│ 	case xs³ of {N => (fun ys⁶ -> ys⁶) | C h³ t³ => (fun ys⁷ -> [C h³ ((inter₁ ys⁷) t³)])}: 67
+//│ [C 2 [N]]: 41 --->
+//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₃ ys⁵) t²)])}: 54
+//│ [N]: 69 --->
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₂ ys³) t¹)])}: 36
+//│ [N]: 40 --->
+//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₃ ys⁵) t²)])}: 54
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -138,12 +138,12 @@ map(l)(
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C [K] [N]] --->
-//│ 	case ls² of {C h² t² => (fun f⁴ -> [C (f⁴ h²) ((map₁ t²) f⁴)]) | N => (fun f⁵ -> [N])}
-//│ [K] --->
-//│ 	case x¹ of {K => [T]}
-//│ [N] --->
-//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> [C (f² h¹) ((map₁ t¹) f²)]) | N => (fun f³ -> [N])}
+//│ [C [K] [N]]: 44 --->
+//│ 	case ls² of {C h² t² => (fun f⁴ -> [C (f⁴ h²) ((map₁ t²) f⁴)]) | N => (fun f⁵ -> [N])}: 58
+//│ [K]: 42 --->
+//│ 	case x¹ of {K => [T]}: 65
+//│ [N]: 43 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> [C (f² h¹) ((map₁ t¹) f²)]) | N => (fun f³ -> [N])}: 40
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -233,20 +233,20 @@ map(l)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C [KKKK] [N]] --->
-//│ 	case ls³ of {C h³ t³ => [C case h³ of {K => [T] | KK => [TT] | KKKK => [TTTT]} (map₃ t³)] | N => [N]}
-//│ [C [KK] [C [KKKK] [N]]] --->
-//│ 	case ls² of {C h² t² => [C case h² of {K => [T] | KK => [TT] | KKKK => [TTTT]} (map₂ t²)] | N => [N]}
-//│ [C [K] [C [KK] [C [KKKK] [N]]]] --->
-//│ 	case ls⁴ of {C h⁴ t⁴ => [C case h⁴ of {K => [T] | KK => [TT] | KKKK => [TTTT]} (map₁ t⁴)] | N => [N]}
-//│ [KKKK] --->
-//│ 	case h³ of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ [KK] --->
-//│ 	case h² of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ [K] --->
-//│ 	case h⁴ of {K => [T] | KK => [TT] | KKKK => [TTTT]}
-//│ [N] --->
-//│ 	case ls¹ of {C h¹ t¹ => [C case h¹ of {K => [T] | KK => [TT] | KKKK => [TTTT]} (map₃ t¹)] | N => [N]}
+//│ [C [KKKK] [N]]: 80 --->
+//│ 	case ls³ of {C h³ t³ => [C case h³ of {K => [T] | KK => [TT] | KKKK => [TTTT]} (map₃ t³)] | N => [N]}: 61
+//│ [C [KK] [C [KKKK] [N]]]: 81 --->
+//│ 	case ls² of {C h² t² => [C case h² of {K => [T] | KK => [TT] | KKKK => [TTTT]} (map₂ t²)] | N => [N]}: 48
+//│ [C [K] [C [KK] [C [KKKK] [N]]]]: 82 --->
+//│ 	case ls⁴ of {C h⁴ t⁴ => [C case h⁴ of {K => [T] | KK => [TT] | KKKK => [TTTT]} (map₁ t⁴)] | N => [N]}: 74
+//│ [KKKK]: 78 --->
+//│ 	case h³ of {K => [T] | KK => [TT] | KKKK => [TTTT]}: 55
+//│ [KK]: 77 --->
+//│ 	case h² of {K => [T] | KK => [TT] | KKKK => [TTTT]}: 42
+//│ [K]: 76 --->
+//│ 	case h⁴ of {K => [T] | KK => [TT] | KKKK => [TTTT]}: 68
+//│ [N]: 79 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C case h¹ of {K => [T] | KK => [TT] | KKKK => [TTTT]} (map₃ t¹)] | N => [N]}: 35
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -383,26 +383,26 @@ c(t)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [K] --->
-//│ 	case n³ of {K => [KK] | N => [NN]}
-//│ [L] --->
-//│ 	case x² of {T n² l² r² => [T case n² of {K => [KK] | N => [NN]} (c₂ l²) (c₂ r²)] | L => [LL]}
-//│ [L] --->
-//│ 	case x⁶ of {T n⁶ l⁶ r⁶ => [T case n⁶ of {K => [KK] | N => [NN]} (c₃ l⁶) (c₃ r⁶)] | L => [LL]}
-//│ [L] --->
-//│ 	case x⁷ of {T n⁷ l⁷ r⁷ => [T case n⁷ of {K => [KK] | N => [NN]} (c₅ l⁷) (c₅ r⁷)] | L => [LL]}
-//│ [L] --->
-//│ 	case x⁵ of {T n⁵ l⁵ r⁵ => [T case n⁵ of {K => [KK] | N => [NN]} (c₆ l⁵) (c₆ r⁵)] | L => [LL]}
-//│ [N] --->
-//│ 	case n¹ of {K => [KK] | N => [NN]}
-//│ [N] --->
-//│ 	case n⁴ of {K => [KK] | N => [NN]}
-//│ [T [K] aa₀ bb₀] --->
-//│ 	case x³ of {T n³ l³ r³ => [T case n³ of {K => [KK] | N => [NN]} (c₁ l³) (c₄ r³)] | L => [LL]}
-//│ [T [N] [L] [L]] --->
-//│ 	case x⁴ of {T n⁴ l⁴ r⁴ => [T case n⁴ of {K => [KK] | N => [NN]} (c₅ l⁴) (c₆ r⁴)] | L => [LL]}
-//│ [T [N] [L] [L]] --->
-//│ 	case x¹ of {T n¹ l¹ r¹ => [T case n¹ of {K => [KK] | N => [NN]} (c₂ l¹) (c₃ r¹)] | L => [LL]}
+//│ [K]: 80 --->
+//│ 	case n³ of {K => [KK] | N => [NN]}: 69
+//│ [L]: 130 --->
+//│ 	case x² of {T n² l² r² => [T case n² of {K => [KK] | N => [NN]} (c₂ l²) (c₂ r²)] | L => [LL]}: 59
+//│ [L]: 131 --->
+//│ 	case x⁶ of {T n⁶ l⁶ r⁶ => [T case n⁶ of {K => [KK] | N => [NN]} (c₃ l⁶) (c₃ r⁶)] | L => [LL]}: 127
+//│ [L]: 62 --->
+//│ 	case x⁷ of {T n⁷ l⁷ r⁷ => [T case n⁷ of {K => [KK] | N => [NN]} (c₅ l⁷) (c₅ r⁷)] | L => [LL]}: 146
+//│ [L]: 63 --->
+//│ 	case x⁵ of {T n⁵ l⁵ r⁵ => [T case n⁵ of {K => [KK] | N => [NN]} (c₆ l⁵) (c₆ r⁵)] | L => [LL]}: 112
+//│ [N]: 129 --->
+//│ 	case n¹ of {K => [KK] | N => [NN]}: 35
+//│ [N]: 61 --->
+//│ 	case n⁴ of {K => [KK] | N => [NN]}: 88
+//│ [T [K] aa₀ bb₀]: 83 --->
+//│ 	case x³ of {T n³ l³ r³ => [T case n³ of {K => [KK] | N => [NN]} (c₁ l³) (c₄ r³)] | L => [LL]}: 78
+//│ [T [N] [L] [L]]: 64 --->
+//│ 	case x⁴ of {T n⁴ l⁴ r⁴ => [T case n⁴ of {K => [KK] | N => [NN]} (c₅ l⁴) (c₆ r⁴)] | L => [LL]}: 97
+//│ [T [N] [L] [L]]: 132 --->
+//│ 	case x¹ of {T n¹ l¹ r¹ => [T case n¹ of {K => [KK] | N => [NN]} (c₂ l¹) (c₃ r¹)] | L => [LL]}: 44
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -514,22 +514,22 @@ sum(mapa(mapb(primitive)))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C (primitive⁰ ha²) (mapa₁ ta²)] --->
-//│ 	case ls¹ of {C h¹ t¹ => [S [N] (sum₁ t¹)] | N => [N]}
-//│ [C (primitive⁰ ha¹) (mapa₁ ta¹)] --->
-//│ 	case ls² of {C h² t² => [S [N] (sum₁ t²)] | N => [N]}
-//│ [C (primitive⁰ hb²) (mapb₁ tb²)] --->
-//│ 	case lsa¹ of {C ha¹ ta¹ => [C (primitive⁰ ha¹) (mapa₁ ta¹)] | N => [N]}
-//│ [C (primitive⁰ hb¹) (mapb₁ tb¹)] --->
-//│ 	case lsa² of {C ha² ta² => [C (primitive⁰ ha²) (mapa₁ ta²)] | N => [N]}
-//│ [N] --->
-//│ 	case lsa¹ of {C ha¹ ta¹ => [C (primitive⁰ ha¹) (mapa₁ ta¹)] | N => [N]}
-//│ [N] --->
-//│ 	case ls¹ of {C h¹ t¹ => [S [N] (sum₁ t¹)] | N => [N]}
-//│ [N] --->
-//│ 	case lsa² of {C ha² ta² => [C (primitive⁰ ha²) (mapa₁ ta²)] | N => [N]}
-//│ [N] --->
-//│ 	case ls² of {C h² t² => [S [N] (sum₁ t²)] | N => [N]}
+//│ [C (primitive⁰ ha²) (mapa₁ ta²)]: 86 --->
+//│ 	case ls¹ of {C h¹ t¹ => [S [N] (sum₁ t¹)] | N => [N]}: 68
+//│ [C (primitive⁰ ha¹) (mapa₁ ta¹)]: 46 --->
+//│ 	case ls² of {C h² t² => [S [N] (sum₁ t²)] | N => [N]}: 77
+//│ [C (primitive⁰ hb²) (mapb₁ tb²)]: 97 --->
+//│ 	case lsa¹ of {C ha¹ ta¹ => [C (primitive⁰ ha¹) (mapa₁ ta¹)] | N => [N]}: 48
+//│ [C (primitive⁰ hb¹) (mapb₁ tb¹)]: 57 --->
+//│ 	case lsa² of {C ha² ta² => [C (primitive⁰ ha²) (mapa₁ ta²)] | N => [N]}: 88
+//│ [N]: 98 --->
+//│ 	case lsa¹ of {C ha¹ ta¹ => [C (primitive⁰ ha¹) (mapa₁ ta¹)] | N => [N]}: 48
+//│ [N]: 87 --->
+//│ 	case ls¹ of {C h¹ t¹ => [S [N] (sum₁ t¹)] | N => [N]}: 68
+//│ [N]: 58 --->
+//│ 	case lsa² of {C ha² ta² => [C (primitive⁰ ha²) (mapa₁ ta²)] | N => [N]}: 88
+//│ [N]: 47 --->
+//│ 	case ls² of {C h² t² => [S [N] (sum₁ t²)] | N => [N]}: 77
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -632,24 +632,24 @@ lastDrive(map(C(T, C(TT, N))))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C ((fun head² -> case head² of {T => [K] | TT => [KK]}) hhh²) (map₁ ttt²)] --->
-//│ 	case xs¹ of {N => [None] | C hh¹ tt¹ => [Some ((last₀ tt¹) hh¹)]}
-//│ [C ((fun head¹ -> case head¹ of {T => [K] | TT => [KK]}) hhh¹) (map₁ ttt¹)] --->
-//│ 	case ys¹ of {N => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> ((last₀ t¹) h¹))}
-//│ [C [TT] [N]] --->
-//│ 	case ls¹ of {N => [N] | C hhh¹ ttt¹ => [C ((fun head¹ -> case head¹ of {T => [K] | TT => [KK]}) hhh¹) (map₁ ttt¹)]}
-//│ [C [T] [C [TT] [N]]] --->
-//│ 	case ls² of {N => [N] | C hhh² ttt² => [C ((fun head² -> case head² of {T => [K] | TT => [KK]}) hhh²) (map₁ ttt²)]}
-//│ [N] --->
-//│ 	case ls¹ of {N => [N] | C hhh¹ ttt¹ => [C ((fun head¹ -> case head¹ of {T => [K] | TT => [KK]}) hhh¹) (map₁ ttt¹)]}
-//│ [N] --->
-//│ 	case xs¹ of {N => [None] | C hh¹ tt¹ => [Some ((last₀ tt¹) hh¹)]}
-//│ [N] --->
-//│ 	case ys¹ of {N => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> ((last₀ t¹) h¹))}
-//│ [TT] --->
-//│ 	case head¹ of {T => [K] | TT => [KK]}
-//│ [T] --->
-//│ 	case head² of {T => [K] | TT => [KK]}
+//│ [C ((fun head² -> case head² of {T => [K] | TT => [KK]}) hhh²) (map₁ ttt²)]: 73 --->
+//│ 	case xs¹ of {N => [None] | C hh¹ tt¹ => [Some ((last₀ tt¹) hh¹)]}: 84
+//│ [C ((fun head¹ -> case head¹ of {T => [K] | TT => [KK]}) hhh¹) (map₁ ttt¹)]: 58 --->
+//│ 	case ys¹ of {N => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> ((last₀ t¹) h¹))}: 95
+//│ [C [TT] [N]]: 102 --->
+//│ 	case ls¹ of {N => [N] | C hhh¹ ttt¹ => [C ((fun head¹ -> case head¹ of {T => [K] | TT => [KK]}) hhh¹) (map₁ ttt¹)]}: 59
+//│ [C [T] [C [TT] [N]]]: 103 --->
+//│ 	case ls² of {N => [N] | C hhh² ttt² => [C ((fun head² -> case head² of {T => [K] | TT => [KK]}) hhh²) (map₁ ttt²)]}: 74
+//│ [N]: 101 --->
+//│ 	case ls¹ of {N => [N] | C hhh¹ ttt¹ => [C ((fun head¹ -> case head¹ of {T => [K] | TT => [KK]}) hhh¹) (map₁ ttt¹)]}: 59
+//│ [N]: 62 --->
+//│ 	case xs¹ of {N => [None] | C hh¹ tt¹ => [Some ((last₀ tt¹) hh¹)]}: 84
+//│ [N]: 47 --->
+//│ 	case ys¹ of {N => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> ((last₀ t¹) h¹))}: 95
+//│ [TT]: 100 --->
+//│ 	case head¹ of {T => [K] | TT => [KK]}: 51
+//│ [T]: 99 --->
+//│ 	case head² of {T => [K] | TT => [KK]}: 66
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>

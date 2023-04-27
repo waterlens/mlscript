@@ -122,7 +122,7 @@ trait ToStrat[+T <: (ProdStratEnum | ConsStratEnum)] { self: T =>
   def toStrat(p: Path = Path(Nil)): Strat[T] = Strat(this)(p)
   def pp(using config: PrettyPrintConfig): Str
 }
-trait TypevarWithBoundary(val boundary: Option[Ref]) { self: (ProdStratEnum.ProdVar | ConsStratEnum.ConsVar) =>
+trait TypevarWithBoundary(val boundary: Option[Ref]) { this: (ProdStratEnum.ProdVar | ConsStratEnum.ConsVar) =>
   lazy val asInPath: Option[Path] = this.boundary.map(_.toPath(PathElemPol.In))
   lazy val asOutPath: Option[Path] = this.boundary.map(_.toPath(PathElemPol.Out))
   def printBoundary(config: PrettyPrintConfig) = boundary.map {
@@ -131,9 +131,25 @@ trait TypevarWithBoundary(val boundary: Option[Ref]) { self: (ProdStratEnum.Prod
       (if config.showRefEuid then s"^${r.uid}" else "")
   }.getOrElse("")
 }
+trait MkCtorTrait { this: ProdStratEnum.MkCtor =>
+  override def equals(x: Any): Boolean = x match {
+    case r: ProdStratEnum.MkCtor => this.ctor == r.ctor && this.args == r.args && this.euid == r.euid
+    case _ => false
+  }
+  override def hashCode(): Int = (this.ctor, this.args, this.euid).hashCode()
+}
+trait DestructTrait { this: ConsStratEnum.Destruct =>
+  override def equals(x: Any): Boolean = x match {
+    case r: ConsStratEnum.Destruct => this.destrs == r.destrs && this.euid == r.euid
+    case _ => false
+  }
+  override def hashCode(): Int = (this.destrs, this.euid).hashCode()
+}
 enum ProdStratEnum(using val euid: ExprId) extends ToStrat[ProdStratEnum] {
   case NoProd()(using ExprId) extends ProdStratEnum with ToStrat[NoProd]
-  case MkCtor(ctor: Var, args: Ls[ProdStrat])(using ExprId) extends ProdStratEnum with ToStrat[MkCtor]
+  case MkCtor(ctor: Var, args: Ls[ProdStrat])(using ExprId) extends ProdStratEnum
+    with ToStrat[MkCtor]
+    with MkCtorTrait
   case Sum(ctors: Ls[Strat[MkCtor]])(using ExprId) extends ProdStratEnum with ToStrat[Sum]
   case ProdFun(lhs: ConsStrat, rhs: ProdStrat)(using ExprId) extends ProdStratEnum with ToStrat[ProdFun]
   case ProdVar(uid: TypeVarId, name: String)(boundary: Option[Ref] = None)(using ExprId)
@@ -154,7 +170,9 @@ enum ProdStratEnum(using val euid: ExprId) extends ToStrat[ProdStratEnum] {
 }
 enum ConsStratEnum(using val euid: ExprId) extends ToStrat[ConsStratEnum] {
   case NoCons()(using ExprId) extends ConsStratEnum with ToStrat[NoCons]
-  case Destruct(destrs: Ls[Destructor])(using ExprId) extends ConsStratEnum with ToStrat[Destruct]
+  case Destruct(destrs: Ls[Destructor])(using ExprId) extends ConsStratEnum
+    with ToStrat[Destruct]
+    with DestructTrait
   case ConsFun(lhs: ProdStrat, rhs: ConsStrat)(using ExprId) extends ConsStratEnum with ToStrat[ConsFun]
   case ConsVar(uid: TypeVarId, name: String)(boundary: Option[Ref] = None)(using ExprId)
     extends ConsStratEnum
@@ -249,8 +267,6 @@ class Deforest(var debug: Boolean) {
   def freshVar(n: Ident): ((ProdStratEnum & ToStrat[ProdVar] & TypevarWithBoundary), (ConsStratEnum & ToStrat[ConsVar] & TypevarWithBoundary)) =
     freshVar(n.pp(using InitPpConfig.showIuidOn))
   
-  val upperBounds = mutable.Map.empty[TypeVarId, Ls[(Path, ConsStrat)]].withDefaultValue(Nil)
-  val lowerBounds = mutable.Map.empty[TypeVarId, Ls[(Path, ProdStrat)]].withDefaultValue(Nil)
   val callsInfo = (mutable.Set.empty[Ref], mutable.Map.empty[Ident, Set[Ref]])
 
   // NOTE: the thing is that, to get recursive knots, we need the program to tyoe check, but to make a polymorphic program to
@@ -347,9 +363,13 @@ class Deforest(var debug: Boolean) {
 
   val recursiveConstr = mutable.Map.empty[Cnstr, mutable.Set[Path -> Path]]
   val fusionMatch = mutable.Map.empty[ExprId, Set[ExprId]]
+  val upperBounds = mutable.Map.empty[TypeVarId, Ls[(Path, ConsStrat)]].withDefaultValue(Nil)
+  val lowerBounds = mutable.Map.empty[TypeVarId, Ls[(Path, ProdStrat)]].withDefaultValue(Nil)
+  val ctorDestinations = mutable.Map.empty[ProdStratEnum.MkCtor, Set[ConsStratEnum]].withDefaultValue(Set())
+  val dtorSources = mutable.Map.empty[ConsStratEnum.Destruct, Set[ProdStratEnum]].withDefaultValue(Set())
   def resolveConstraints: Unit = {
 
-    def handle(c: Cnstr)(using cache: Cache, numOfTypeCtor: Int): Unit = trace(s"handle [${c._1.pp(using InitPpConfig)} <: ${c._2.pp(using InitPpConfig)}]") {
+    def handle(c: Cnstr)(using cache: Cache, numOfTypeCtor: Int): Unit = trace(s"handle [${c._1.pp(using InitPpConfig.showPathOn)} <: ${c._2.pp(using InitPpConfig.showPathOn)}]") {
       val prod = c._1
       val cons = c._2
 
@@ -388,20 +408,34 @@ class Deforest(var debug: Boolean) {
           given Int = numOfTypeCtor + 1
           handle(r.addPath(prod.path) -> NoCons()(using noExprId).toStrat(cons.path))
           handle(NoProd()(using noExprId).toStrat(cons.path.neg) -> l.addPath(prod.path.neg))
-        case (NoProd(), Destruct(ds)) =>
+        case (NoProd(), dtor@Destruct(ds)) =>
           given Int = numOfTypeCtor + 1
+          if dtor.euid != noExprId then {
+            dtorSources += dtor -> (dtorSources(dtor) + prod.s)
+          }
           ds foreach { case Destructor(ctor, argCons) =>
             argCons foreach { c => handle(prod, c.addPath(cons.path)) }
           }
-        case (MkCtor(ctor, args), NoCons()) =>
+        case (ctorType@MkCtor(ctor, args), NoCons()) =>
           given Int = numOfTypeCtor + 1
+          if ctorType.euid != noExprId then {
+            ctorDestinations += ctorType -> (ctorDestinations(ctorType) + cons.s)
+          }
           args foreach { p => handle(p.addPath(prod.path), cons) }
         case (pv@ProdVar(v, _), _) =>
+          cons.s match {
+            case dtor: Destruct if lowerBounds(v).isEmpty && dtor.euid != noExprId => dtorSources += dtor -> (dtorSources(dtor) + pv)
+            case _ => ()
+          }
           upperBounds += v -> ((pv.asOutPath.getOrElse(Path.empty) ::: prod.path.rev, cons) :: upperBounds(v))
           lowerBounds(v).foreach((lb_path, lb_strat) => handle({
             lb_strat.addPath(lb_path) -> cons.addPath(prod.path.rev).addPath(pv.asOutPath.getOrElse(Path.empty))
           }))
         case (_, cv@ConsVar(v, _)) =>
+          prod.s match {
+            case ctor: MkCtor if upperBounds(v).isEmpty && ctor.euid != noExprId => ctorDestinations += ctor -> (ctorDestinations(ctor) + cv)
+            case _ => ()
+          }
           lowerBounds += v -> ((cv.asInPath.getOrElse(Path.empty) ::: cons.path.rev, prod) :: lowerBounds(v))
           upperBounds(v).foreach((ub_path, ub_strat) => handle({
             prod.addPath(cons.path.rev).addPath(cv.asInPath.getOrElse(Path.empty)) -> ub_strat.addPath(ub_path)
@@ -418,7 +452,11 @@ class Deforest(var debug: Boolean) {
               found = true
               assert(args.size == argCons.size)
               // register the fusion match
-              if (prod.s.euid =/= noExprId && cons.s.euid =/= noExprId) then fusionMatch.updateWith(prod.s.euid)(_.map(_ + cons.s.euid).orElse(Some(Set(cons.s.euid))))
+              if (prod.s.euid =/= noExprId && cons.s.euid =/= noExprId) then {
+                fusionMatch.updateWith(prod.s.euid)(_.map(_ + cons.s.euid).orElse(Some(Set(cons.s.euid))))
+                dtorSources += cons.s.asInstanceOf[Destruct] -> (dtorSources(cons.s.asInstanceOf[Destruct]) + prod.s)
+                ctorDestinations += prod.s.asInstanceOf[MkCtor] -> (ctorDestinations(prod.s.asInstanceOf[MkCtor]) + cons.s)
+              }
 
               args lazyZip argCons foreach { case (a, c) =>
                 handle(a.addPath(prod.path), c.addPath(cons.path))

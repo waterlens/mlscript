@@ -47,7 +47,7 @@ class FusionStrategy(d: Deforest) {
     res.toMap
   }
 
-  val dtorFinalSource: Map[Destruct, Set[ProdStratEnum]] = {
+  val dtorFinalSources: Map[Destruct, Set[ProdStratEnum]] = {
     val res = MutMap.empty[Destruct, Set[ProdStratEnum]].withDefaultValue(Set())
     d.dtorSources.foreach { (dtor, sources) => if involvedDtors(dtor.euid) then 
       sources.foreach { src => src match {
@@ -59,39 +59,62 @@ class FusionStrategy(d: Deforest) {
     res.toMap
   }
 
-  lazy val ppCtorFinalDestinations: Str = {
-    ctorFinalDestinations.toSeq.sortBy(_._1.euid.asInstanceOf[Int]).map { (ctor, dests) =>
-      (d.exprs.get(ctor.euid) match {
-        case Some(value) => value.pp(using InitPpConfig.showIuidOn) + s": ${ctor.euid}"
-        case None => ctor.pp(using InitPpConfig)
-      }) + " --->\n" + dests.toSeq.sortBy(_.euid.asInstanceOf[Int]).map {
-        case dtor: Destruct => "\t" + (d.exprs.get(dtor.euid) match {
-          case Some(v) => v.pp(using InitPpConfig.showIuidOn) + s": ${dtor.euid}"
-          case None => dtor.pp(using InitPpConfig)
-        })
-        case ty => "\t" + ty.pp(using InitPpConfig)
-      }.mkString("\n")
-    }.mkString("\n")
-  }
-
-  lazy val ppDtorFinalSources: Str = {
-    dtorFinalSource.toSeq.sortBy(_._1.euid.asInstanceOf[Int]).map { (dtor, dests) =>
-      (d.exprs.get(dtor.euid) match {
+  def ppCtorMap(m: Map[MkCtor, Set[ConsStratEnum]]): Str = m.toSeq.sortBy(_._1.euid.asInstanceOf[Int]).map { (ctor, dests) =>
+    (d.exprs.get(ctor.euid) match {
+      case Some(value) => value.pp(using InitPpConfig.showIuidOn) + s": ${ctor.euid}"
+      case None => ctor.pp(using InitPpConfig)
+    }) + " --->\n" + dests.toSeq.sortBy(_.euid.asInstanceOf[Int]).map {
+      case dtor: Destruct => "\t" + (d.exprs.get(dtor.euid) match {
         case Some(v) => v.pp(using InitPpConfig.showIuidOn) + s": ${dtor.euid}"
         case None => dtor.pp(using InitPpConfig)
-      }) + " --->\n" + dests.toSeq.sortBy(_.euid.asInstanceOf[Int]).map {
-        case ctor: MkCtor => "\t" + (d.exprs.get(ctor.euid) match {
-          case Some(v) => v.pp(using InitPpConfig.showIuidOn) + s": ${ctor.euid}"
-          case None => ctor.pp(using InitPpConfig)
-        })
-        case ty => "\t" + ty.pp(using InitPpConfig)
-      }.mkString("\n")
+      })
+      case ty => "\t" + ty.pp(using InitPpConfig)
     }.mkString("\n")
+  }.mkString("\n")
+  def ppDtorMap(m: Map[Destruct, Set[ProdStratEnum]]): Str = m.toSeq.sortBy(_._1.euid.asInstanceOf[Int]).map { (dtor, dests) =>
+    (d.exprs.get(dtor.euid) match {
+      case Some(v) => v.pp(using InitPpConfig.showIuidOn) + s": ${dtor.euid}"
+      case None => dtor.pp(using InitPpConfig)
+    }) + " --->\n" + dests.toSeq.sortBy(_.euid.asInstanceOf[Int]).map {
+      case ctor: MkCtor => "\t" + (d.exprs.get(ctor.euid) match {
+        case Some(v) => v.pp(using InitPpConfig.showIuidOn) + s": ${ctor.euid}"
+        case None => ctor.pp(using InitPpConfig)
+      })
+      case ty => "\t" + ty.pp(using InitPpConfig)
+    }.mkString("\n")
+  }.mkString("\n")
+
+
+  lazy val ppCtorFinalDestinations: Str = ppCtorMap(ctorFinalDestinations)
+  lazy val ppDtorFinalSources: Str = ppDtorMap(dtorFinalSources)
+
+  private def removeCtor(
+    ctorDests: Map[MkCtor, Set[ConsStratEnum]],
+    dtorSrcs: Map[Destruct, Set[ProdStratEnum]],
+    rm: Set[ProdStratEnum]
+  ): Map[MkCtor, Set[ConsStratEnum]] -> Map[Destruct, Set[ProdStratEnum]] = {
+    if rm.isEmpty then ctorDests -> dtorSrcs else {
+      val (newCtorDests, toDeleteCtors) = ctorDests.partition(c => !rm(c._1))
+      removeDtor(newCtorDests, dtorSrcs, toDeleteCtors.values.flatten.toSet)
+    }
   }
-
-  // lazy val afterRemoveMultipleMatch = {
-
-  // }
+  private def removeDtor(
+    ctorDests: Map[MkCtor, Set[ConsStratEnum]],
+    dtorSrcs: Map[Destruct, Set[ProdStratEnum]],
+    rm: Set[ConsStratEnum]
+  ): Map[MkCtor, Set[ConsStratEnum]] -> Map[Destruct, Set[ProdStratEnum]] = {
+    if rm.isEmpty then ctorDests -> dtorSrcs else {
+      val (newDtorSrcs, toDeleteDtors) = dtorSrcs.partition(d => !rm(d._1))
+      removeCtor(ctorDests, newDtorSrcs, toDeleteDtors.values.flatten.toSet)
+    }
+  }
+  
+  val afterRemoveMultipleMatch = {
+    // var (ctorDests, toDeleteCtors) = ctorFinalDestinations.partition(_._2.size == 1)
+    // var (dtorSrcs, toDeleteDtors) = dtorFinalSources.partition((dtor, _) => !toDeleteCtors.valuesIterator.contains(dtor))
+    val toRm = ctorFinalDestinations.filter(_._2.size > 1).keySet.asInstanceOf[Set[ProdStratEnum]]
+    removeCtor(ctorFinalDestinations, dtorFinalSources, toRm)
+  }
 }
 
 

@@ -127,10 +127,13 @@ class DiffTestLumberhack extends DiffTests {
       output("<<<<<<< fusion matches <<<<<<<")
 
       // output("\n>>>>>>> new fusion strategy >>>>>>>")
-      val fusionStrategy = FusionStrategy(newd)
-      // output(fusionStrategy.ppCtorFinalDestinations)
-      // output("--------------")
-      // output(fusionStrategy.ppDtorFinalSources)
+      // val fusionStrategy = FusionStrategy(newd)
+      // output(fusionStrategy.ppCtorMap(fusionStrategy.afterRemoveMultipleMatch._1))
+      // output("------------------")
+      // output(fusionStrategy.ppDtorMap(fusionStrategy.afterRemoveMultipleMatch._2))
+      // // output(fusionStrategy.ppCtorFinalDestinations)
+      // // output("--------------")
+      // // output(fusionStrategy.ppDtorFinalSources)
       // output("<<<<<<< new fusion strategy <<<<<<<")
 
 

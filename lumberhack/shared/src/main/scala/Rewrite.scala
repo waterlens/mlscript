@@ -60,11 +60,11 @@ class FusionStrategy(d: Deforest) {
   }
 
   lazy val ppCtorFinalDestinations: Str = {
-    ctorFinalDestinations.map { (ctor, dests) =>
+    ctorFinalDestinations.toSeq.sortBy(_._1.euid.asInstanceOf[Int]).map { (ctor, dests) =>
       (d.exprs.get(ctor.euid) match {
         case Some(value) => value.pp(using InitPpConfig.showIuidOn) + s": ${ctor.euid}"
         case None => ctor.pp(using InitPpConfig)
-      }) + " --->\n" + dests.map {
+      }) + " --->\n" + dests.toSeq.sortBy(_.euid.asInstanceOf[Int]).map {
         case dtor: Destruct => "\t" + (d.exprs.get(dtor.euid) match {
           case Some(v) => v.pp(using InitPpConfig.showIuidOn) + s": ${dtor.euid}"
           case None => dtor.pp(using InitPpConfig)
@@ -75,11 +75,11 @@ class FusionStrategy(d: Deforest) {
   }
 
   lazy val ppDtorFinalSources: Str = {
-    dtorFinalSource.map { (dtor, dests) =>
+    dtorFinalSource.toSeq.sortBy(_._1.euid.asInstanceOf[Int]).map { (dtor, dests) =>
       (d.exprs.get(dtor.euid) match {
         case Some(v) => v.pp(using InitPpConfig.showIuidOn) + s": ${dtor.euid}"
         case None => dtor.pp(using InitPpConfig)
-      }) + " --->\n" + dests.map {
+      }) + " --->\n" + dests.toSeq.sortBy(_.euid.asInstanceOf[Int]).map {
         case ctor: MkCtor => "\t" + (d.exprs.get(ctor.euid) match {
           case Some(v) => v.pp(using InitPpConfig.showIuidOn) + s": ${ctor.euid}"
           case None => ctor.pp(using InitPpConfig)
@@ -88,6 +88,10 @@ class FusionStrategy(d: Deforest) {
       }.mkString("\n")
     }.mkString("\n")
   }
+
+  // lazy val afterRemoveMultipleMatch = {
+
+  // }
 }
 
 

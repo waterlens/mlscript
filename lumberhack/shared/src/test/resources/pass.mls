@@ -3752,3 +3752,48 @@ rev(C(1, C(2, N)))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 2 [C 1 [N]]]
 //│ <<<<<<< evaluate <<<<<<<
+
+
+// CORRECT: but will be WRONG: if strategy-filtering is strict, since y is a destination of [C 1 N]
+fun f(x) = if A(x) is
+  A(y) then if x is
+    C(h, t) then t
+f(C(1, N))
+//│ |#fun| |f|(|x|)| |#=| |#if| |A|(|x|)| |is|→|A|(|y|)| |#then| |#if| |x| |is|→|C|(|h|,| |t|)| |#then| |t|←|←|↵|f|(|C|(|1|,| |N|)|)|
+//│ Parsed: {fun f = x, => if A (x,) is ‹(A (y,)) then if x is ‹(C (h, t,)) then t››; f (C (1, N,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (f^8 [C 1 [N]])
+//│ def f = (fun x⁰ -> case [A x⁰] of {
+//│ 	A y⁰ => case x⁰ of {
+//│ 		C h⁰ t⁰ => t⁰}})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^8] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀ [C 1 [N]])
+//│ def f₀ = 
+//│ 	(fun x¹ -> case [A x¹] of {
+//│ 		A y¹ => case x¹ of {
+//│ 			C h¹ t¹ => t¹}})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [A x¹]: 14 --->
+//│ 	case [A x¹] of {A y¹ => case x¹ of {C h¹ t¹ => t¹}}: 18
+//│ [C 1 [N]]: 23 --->
+//│ 	case x¹ of {C h¹ t¹ => t¹}: 17
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ 
+//│ 	let h¹ = 1
+//│ 	in let t¹ = [N]
+//│ 	in t¹)
+//│ def f₀ = 
+//│ 	(fun x¹ -> 
+//│ 		let y¹ = x¹
+//│ 		in x¹)
+//│ <<<<<<< after fusion <<<<<<<

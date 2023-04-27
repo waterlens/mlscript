@@ -346,7 +346,8 @@ class Deforest(var debug: Boolean) {
       }
       case R(e) => {
         val calls = mutable.Set.empty[Ref]
-        process(e)(using ctx, calls)
+        val topLevelProd = process(e)(using ctx, calls)
+        constrain(topLevelProd, freshVar("lumberhackTopLevelResult")._2.toStrat())
         callsInfo._1.addAll(calls)
       }
     }

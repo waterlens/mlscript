@@ -561,11 +561,20 @@ c(p(0))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [c^49] (hopeless to continue)
-//│ [p^50] (hopeless to continue)
-//│ 	[p^50 · f^28] (using original def)
-//│ 	[p^50 · p^12] ---> [p^50] (using original def)
-//│ 	[p^50 · p^20] ---> [p^50] (using original def)
+//│ [c^49]
+//│ [p^50]
+//│ 	[p^50 · f^28] (hopeless to continue)
+//│ 	[p^50 · p^12]
+//│ 		[p^50 · p^12 · f^28] (hopeless to continue)
+//│ 		[p^50 · p^12 · p^12] ---> [p^50 · p^12] (only one)
+//│ 		[p^50 · p^12 · p^20] ---> [p^50 · p^12] (only one)
+//│ 	[p^50 · p^20]
+//│ 		[p^50 · p^20 · f^28] (hopeless to continue)
+//│ 		[p^50 · p^20 · p^12]
+//│ 			[p^50 · p^20 · p^12 · f^28] (hopeless to continue)
+//│ 			[p^50 · p^20 · p^12 · p^12] ---> [p^50 · p^20 · p^12] (only one)
+//│ 			[p^50 · p^20 · p^12 · p^20] ---> [p^50 · p^20 · p^12] (only one)
+//│ 		[p^50 · p^20 · p^20] ---> [p^50 · p^20] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -575,25 +584,61 @@ c(p(0))
 //│ 		C aa¹ => (primitive⁰ aa¹)
 //│ 		| N => [N]})
 //│ def p₀ = 
-//│ 	(fun x¹ -> if (x¹ == 0) then [N] else if (x¹ >= 2) then [C (p₀ (x¹ - 1))] else 
-//│ 		let temp¹ = [C (p₀ (x¹ + 1))]
-//│ 		in (f₀ temp¹)
-//│ 		temp¹)
+//│ 	(fun x³ -> if (x³ == 0) then [N] else if (x³ >= 2) then [C (p₁ (x³ - 1))] else 
+//│ 		let temp³ = [C (p₂ (x³ + 1))]
+//│ 		in (f₀ temp³)
+//│ 		temp³)
 //│ 	where
 //│ 	def f₀ = 
 //│ 		(fun z¹ -> case z¹ of {
 //│ 			C b¹ => b¹
 //│ 			| N => 1})
+//│ 	def p₁ = 
+//│ 		(fun x¹ -> if (x¹ == 0) then [N] else if (x¹ >= 2) then [C (p₁ (x¹ - 1))] else 
+//│ 			let temp¹ = [C (p₁ (x¹ + 1))]
+//│ 			in (f₁ temp¹)
+//│ 			temp¹)
+//│ 		where
+//│ 		def f₁ = 
+//│ 			(fun z⁴ -> case z⁴ of {
+//│ 				C b⁴ => b⁴
+//│ 				| N => 1})
+//│ 	def p₂ = 
+//│ 		(fun x² -> if (x² == 0) then [N] else if (x² >= 2) then [C (p₃ (x² - 1))] else 
+//│ 			let temp² = [C (p₂ (x² + 1))]
+//│ 			in (f₂ temp²)
+//│ 			temp²)
+//│ 		where
+//│ 		def f₂ = 
+//│ 			(fun z³ -> case z³ of {
+//│ 				C b³ => b³
+//│ 				| N => 1})
+//│ 		def p₃ = 
+//│ 			(fun x⁴ -> if (x⁴ == 0) then [N] else if (x⁴ >= 2) then [C (p₃ (x⁴ - 1))] else 
+//│ 				let temp⁴ = [C (p₃ (x⁴ + 1))]
+//│ 				in (f₃ temp⁴)
+//│ 				temp⁴)
+//│ 			where
+//│ 			def f₃ = 
+//│ 				(fun z² -> case z² of {
+//│ 					C b² => b²
+//│ 					| N => 1})
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C (p₀ (x¹ + 1))]: 92 --->
+//│ [C (p₁ (x¹ + 1))]: 107 --->
+//│ 	case z⁴ of {C b⁴ => b⁴ | N => 1}: 79
+//│ [C (p₁ (x³ - 1))]: 171 --->
+//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59
+//│ [C (p₂ (x³ + 1))]: 179 --->
 //│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59
 //│ 	case z¹ of {C b¹ => b¹ | N => 1}: 64
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [C (p₀ (x¹ - 1))]: 84 --->
-//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59
-//│ [N]: 71 --->
+//│ [C (p₂ (x² + 1))]: 143 --->
+//│ 	case z³ of {C b³ => b³ | N => 1}: 74
+//│ [C (p₃ (x⁴ + 1))]: 215 --->
+//│ 	case z² of {C b² => b² | N => 1}: 69
+//│ [N]: 158 --->
 //│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -602,17 +647,47 @@ c(p(0))
 //│ def c₀ = 
 //│ 	(fun xx¹ -> xx¹)
 //│ def p₀ = 
-//│ 	(fun x¹ -> if (x¹ == 0) then [N] else if (x¹ >= 2) then 
-//│ 		let aa¹ = (p₀ (x¹ - 1))
+//│ 	(fun x³ -> if (x³ == 0) then [N] else if (x³ >= 2) then 
+//│ 		let aa¹ = (p₁ (x³ - 1))
 //│ 		in (primitive⁰ aa¹) else 
-//│ 		let temp¹ = 	
-//│ 			let b¹ = (p₀ (x¹ + 1))
+//│ 		let temp³ = 	
+//│ 			let b¹ = (p₂ (x³ + 1))
 //│ 			in b¹
-//│ 		in (f₀ temp¹)
-//│ 		temp¹)
+//│ 		in (f₀ temp³)
+//│ 		temp³)
 //│ 	where
 //│ 	def f₀ = 
 //│ 		(fun z¹ -> z¹)
+//│ 	def p₁ = 
+//│ 		(fun x¹ -> if (x¹ == 0) then [N] else if (x¹ >= 2) then [C (p₁ (x¹ - 1))] else 
+//│ 			let temp¹ = 	
+//│ 				let b⁴ = (p₁ (x¹ + 1))
+//│ 				in b⁴
+//│ 			in (f₁ temp¹)
+//│ 			temp¹)
+//│ 		where
+//│ 		def f₁ = 
+//│ 			(fun z⁴ -> z⁴)
+//│ 	def p₂ = 
+//│ 		(fun x² -> if (x² == 0) then [N] else if (x² >= 2) then [C (p₃ (x² - 1))] else 
+//│ 			let temp² = 	
+//│ 				let b³ = (p₂ (x² + 1))
+//│ 				in b³
+//│ 			in (f₂ temp²)
+//│ 			temp²)
+//│ 		where
+//│ 		def f₂ = 
+//│ 			(fun z³ -> z³)
+//│ 		def p₃ = 
+//│ 			(fun x⁴ -> if (x⁴ == 0) then [N] else if (x⁴ >= 2) then [C (p₃ (x⁴ - 1))] else 
+//│ 				let temp⁴ = 	
+//│ 					let b² = (p₃ (x⁴ + 1))
+//│ 					in b²
+//│ 				in (f₃ temp⁴)
+//│ 				temp⁴)
+//│ 			where
+//│ 			def f₃ = 
+//│ 				(fun z² -> z²)
 //│ <<<<<<< after fusion <<<<<<<
 
 

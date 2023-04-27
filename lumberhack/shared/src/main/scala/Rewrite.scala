@@ -13,6 +13,9 @@ class FusionStrategy(d: Deforest) {
   import ConsStratEnum.*
   import ProdStratEnum.*
   val (upperBounds, lowerBounds) = d.upperBounds.map{(id, ls) => (id, ls.map(_._2))}.toMap -> d.lowerBounds.map{(id, ls) => (id, ls.map(_._2))}.toMap
+  
+  val involvedDtors = d.fusionMatch.values.flatten.toSet
+  val involvedCtors = d.fusionMatch.keySet
 
   private def findToEndCons(v: ConsVar, cache: Set[ConsVar]): Set[ConsVar] = {
     if upperBounds.get(v.uid) match { case None => true; case Some(v) => v.isEmpty } then Set(v)
@@ -34,7 +37,7 @@ class FusionStrategy(d: Deforest) {
 
   val ctorFinalDestinations: Map[MkCtor, Set[ConsStratEnum]] = {
     val res = MutMap.empty[MkCtor, Set[ConsStratEnum]].withDefaultValue(Set())
-    d.ctorDestinations.foreach { (ctor, dests) =>
+    d.ctorDestinations.foreach { (ctor, dests) => if involvedCtors(ctor.euid) then
       dests.foreach { dest => dest match {
         case c: (NoCons | Destruct) => res += ctor -> (res(ctor) + c)
         case cv: ConsVar => res += ctor -> (res(ctor) ++ findToEndCons(cv, Set(cv)))
@@ -46,7 +49,7 @@ class FusionStrategy(d: Deforest) {
 
   val dtorFinalSource: Map[Destruct, Set[ProdStratEnum]] = {
     val res = MutMap.empty[Destruct, Set[ProdStratEnum]].withDefaultValue(Set())
-    d.dtorSources.foreach { (dtor, sources) =>
+    d.dtorSources.foreach { (dtor, sources) => if involvedDtors(dtor.euid) then 
       sources.foreach { src => src match {
         case s: (NoProd | MkCtor) => res += dtor -> (res(dtor) + s)
         case pv: ProdVar => res += dtor -> (res(dtor) ++ findToEndProd(pv, Set(pv)))
@@ -63,7 +66,7 @@ class FusionStrategy(d: Deforest) {
         case None => ctor.pp(using InitPpConfig)
       }) + " --->\n" + dests.map {
         case dtor: Destruct => "\t" + (d.exprs.get(dtor.euid) match {
-          case Some(v) => v.pp(using InitPpConfig.showIuidOn)
+          case Some(v) => v.pp(using InitPpConfig.showIuidOn) + s": ${dtor.euid}"
           case None => dtor.pp(using InitPpConfig)
         })
         case ty => "\t" + ty.pp(using InitPpConfig)
@@ -78,7 +81,7 @@ class FusionStrategy(d: Deforest) {
         case None => dtor.pp(using InitPpConfig)
       }) + " --->\n" + dests.map {
         case ctor: MkCtor => "\t" + (d.exprs.get(ctor.euid) match {
-          case Some(v) => v.pp(using InitPpConfig.showIuidOn)
+          case Some(v) => v.pp(using InitPpConfig.showIuidOn) + s": ${ctor.euid}"
           case None => ctor.pp(using InitPpConfig)
         })
         case ty => "\t" + ty.pp(using InitPpConfig)

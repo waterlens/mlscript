@@ -355,7 +355,7 @@ class Deforest(var debug: Boolean) {
   
   def constrain(prod: ProdStrat, cons: ConsStrat): Unit = {
     (prod.s, cons.s) match
-      case (NoProd(), _) | (_, NoCons()) => ()
+      // case (NoProd(), _) | (_, NoCons()) => ()
       case (p, c) => constraints ::= (prod, cons)
   }
   

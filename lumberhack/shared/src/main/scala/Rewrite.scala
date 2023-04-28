@@ -7,11 +7,11 @@ import mlscript.Function as FunctionTerm
 import Expr.*
 import scala.collection.mutable.Map as MutMap
 import lumberhack.utils.*
+import ConsStratEnum.*
+import ProdStratEnum.*
 
 
 class FusionStrategy(d: Deforest) {
-  import ConsStratEnum.*
-  import ProdStratEnum.*
   val (upperBounds, lowerBounds) = d.upperBounds.map{(id, ls) => (id, ls.map(_._2))}.toMap -> d.lowerBounds.map{(id, ls) => (id, ls.map(_._2))}.toMap
   
   val involvedDtors = d.fusionMatch.values.flatten.toSet
@@ -113,7 +113,12 @@ class FusionStrategy(d: Deforest) {
     // var (ctorDests, toDeleteCtors) = ctorFinalDestinations.partition(_._2.size == 1)
     // var (dtorSrcs, toDeleteDtors) = dtorFinalSources.partition((dtor, _) => !toDeleteCtors.valuesIterator.contains(dtor))
     val toRm = ctorFinalDestinations.filter(_._2.size > 1).keySet.asInstanceOf[Set[ProdStratEnum]]
-    removeCtor(ctorFinalDestinations, dtorFinalSources, toRm)
+    val res1 = removeCtor(ctorFinalDestinations, dtorFinalSources, toRm)
+    val toRmDtor = res1._2.filter(_._2.exists(p => p match {
+      case _: MkCtor => false
+      case _ => true
+    })).keySet.asInstanceOf[Set[ConsStratEnum]]
+    removeDtor(res1._1, res1._2, toRmDtor)
   }
 }
 
@@ -242,8 +247,12 @@ trait ProgramRewrite { this: Program =>
   }
 
   def rewrite(d: Deforest): Program = {
-    given Map[ExprId, ExprId] = d.fusionMatch.map { (p, cs) => p -> cs.head }.toMap
+    // given Map[ExprId, ExprId] = d.fusionMatch.map { (p, cs) => p -> cs.head }.toMap
     given Deforest = d
+    given Map[ExprId, ExprId] = FusionStrategy(d).afterRemoveMultipleMatch._1.map { (ctor, dtors) =>
+      assert(dtors.size == 1 && dtors.head.isInstanceOf[Destruct])
+      ctor.euid -> dtors.head.euid
+    }
     Program(
       this.defAndExpr._2.map { e => R(e.rewriteFusion) }
       ::: this.defAndExpr._1.map { (id, body) => L(ProgDef(id, body.rewriteFusion)) }.toList

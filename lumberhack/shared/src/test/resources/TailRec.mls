@@ -71,26 +71,35 @@ count(0, rev(N, N))
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹) | N => a¹}: 59
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [N]: 94 --->
+//│ 	case ys¹ of {C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹) | N => a¹}: 59
+//│ ------------------
+//│ case ys¹ of {C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹) | N => a¹}: 59 --->
+//│ 	[N]: 94
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((count₀ 0) ((rev₀ c¹) a¹))
+//│ ((count₀ 0) ((rev₀ [N]) a¹))
 //│ def count₀ = 
-//│ 	(fun c² -> (fun xs² -> xs²))
+//│ 	(fun c² -> (fun xs² -> case xs² of {
+//│ 		C h² t² => ((count₁ (c² + 1)) t²)
+//│ 		| N => c²}))
 //│ 	where
 //│ 	def count₁ = 
-//│ 		(fun c¹ -> (fun xs¹ -> xs¹))
+//│ 		(fun c¹ -> (fun xs¹ -> case xs¹ of {
+//│ 			C h¹ t¹ => ((count₁ (c¹ + 1)) t¹)
+//│ 			| N => c¹}))
 //│ def rev₀ = 
 //│ 	(fun a¹ -> (fun ys¹ -> ys¹))
 //│ 	where
 //│ 	def rev₁ = 
 //│ 		(fun a² -> (fun ys² -> case ys² of {
-//│ 			C h1² t1² => ((rev₁ 
-//│ 				let h² = h1²
-//│ 				in let t² = a²
-//│ 				in ((count₁ (c² + 1)) t²)) t1²)
+//│ 			C h1² t1² => ((rev₁ [C h1² a²]) t1²)
 //│ 			| N => a²}))
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: binding not found: Ident(false,c,1)
+//│ java.lang.Exception: Internal Error: binding not found: Ident(false,a,1)
 //│ !!!!!!ERROR!!!!!!
 
 
@@ -169,13 +178,25 @@ count(rev(N, init))(0)
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [N]: 92 --->
+//│ 	case ys¹ of {C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹) | N => a¹}: 62
+//│ ------------------
+//│ case ys¹ of {C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹) | N => a¹}: 62 --->
+//│ 	[N]: 92
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((count₀ ((rev₀ (fun c⁵ -> c⁵)) init₀)) 0)
+//│ ((count₀ ((rev₀ [N]) init₀)) 0)
 //│ def count₀ = 
-//│ 	(fun xs² -> xs²)
+//│ 	(fun xs² -> case xs² of {
+//│ 		C h² t² => (fun c⁴ -> ((count₁ t²) (c⁴ + 1)))
+//│ 		| N => (fun c⁵ -> c⁵)})
 //│ 	where
 //│ 	def count₁ = 
-//│ 		(fun xs¹ -> xs¹)
+//│ 		(fun xs¹ -> case xs¹ of {
+//│ 			C h¹ t¹ => (fun c² -> ((count₁ t¹) (c² + 1)))
+//│ 			| N => (fun c³ -> c³)})
 //│ def init₀ = 
 //│ 	a¹
 //│ def rev₀ = 
@@ -183,10 +204,7 @@ count(rev(N, init))(0)
 //│ 	where
 //│ 	def rev₁ = 
 //│ 		(fun a² -> (fun ys² -> case ys² of {
-//│ 			C h1² t1² => ((rev₁ 
-//│ 				let h² = h1²
-//│ 				in let t² = a²
-//│ 				in (fun c⁴ -> ((count₁ t²) (c⁴ + 1)))) t1²)
+//│ 			C h1² t1² => ((rev₁ [C h1² a²]) t1²)
 //│ 			| N => a²}))
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
@@ -265,22 +283,31 @@ idxSum(0, rev(N, N))
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹) | N => a¹}: 49
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [N]: 106 --->
+//│ 	case ys¹ of {C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹) | N => a¹}: 49
+//│ ------------------
+//│ case ys¹ of {C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹) | N => a¹}: 49 --->
+//│ 	[N]: 106
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((idxSum₀ 0) ((rev₀ 0) a¹))
+//│ ((idxSum₀ 0) ((rev₀ [N]) a¹))
 //│ def idxSum₀ = 
-//│ 	(fun i² -> (fun xs² -> xs²))
+//│ 	(fun i² -> (fun xs² -> case xs² of {
+//│ 		C h² t² => ((add⁰ i²) ((idxSum₁ ((add⁰ i²) 1)) t²))
+//│ 		| N => 0}))
 //│ 	where
 //│ 	def idxSum₁ = 
-//│ 		(fun i¹ -> (fun xs¹ -> xs¹))
+//│ 		(fun i¹ -> (fun xs¹ -> case xs¹ of {
+//│ 			C h¹ t¹ => ((add⁰ i¹) ((idxSum₁ ((add⁰ i¹) 1)) t¹))
+//│ 			| N => 0}))
 //│ def rev₀ = 
 //│ 	(fun a¹ -> (fun ys¹ -> ys¹))
 //│ 	where
 //│ 	def rev₁ = 
 //│ 		(fun a² -> (fun ys² -> case ys² of {
-//│ 			C h1² t1² => ((rev₁ 
-//│ 				let h² = h1²
-//│ 				in let t² = a²
-//│ 				in ((add⁰ i²) ((idxSum₁ ((add⁰ i²) 1)) t²))) t1²)
+//│ 			C h1² t1² => ((rev₁ [C h1² a²]) t1²)
 //│ 			| N => a²}))
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
@@ -363,10 +390,20 @@ count(rev(N, init))
 //│ 	case ys² of {C h1² t1² => ((rev₁ [C h1² a²]) t1²) | N => a²}: 76
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [N]: 66 --->
+//│ 	case ys² of {C h1² t1² => ((rev₁ [C h1² a²]) t1²) | N => a²}: 76
+//│ ------------------
+//│ case ys² of {C h1² t1² => ((rev₁ [C h1² a²]) t1²) | N => a²}: 76 --->
+//│ 	[N]: 66
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (count₀ ((rev₀ 0) init₀))
+//│ (count₀ ((rev₀ [N]) init₀))
 //│ def count₀ = 
-//│ 	(fun xs¹ -> xs¹)
+//│ 	(fun xs¹ -> case xs¹ of {
+//│ 		C h¹ t¹ => ((add⁰ 1) (count₁ t¹))
+//│ 		| N => 0})
 //│ 	where
 //│ 	def count₁ = 
 //│ 		(fun xs² -> case xs² of {
@@ -379,10 +416,7 @@ count(rev(N, init))
 //│ 	where
 //│ 	def rev₁ = 
 //│ 		(fun a¹ -> (fun ys¹ -> case ys¹ of {
-//│ 			C h1¹ t1¹ => ((rev₁ 
-//│ 				let h¹ = h1¹
-//│ 				in let t¹ = a¹
-//│ 				in ((add⁰ 1) (count₁ t¹))) t1¹)
+//│ 			C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹)
 //│ 			| N => a¹}))
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
@@ -440,6 +474,18 @@ rev(N, init)
 //│ [C 0 init₁]: 35 --->
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹) | N => a¹}: 30
 //│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 0 init₁]: 35 --->
+//│ 	case ys¹ of {C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹) | N => a¹}: 30
+//│ [C 0 init₁]: 50 --->
+//│ 	case ys² of {C h1² t1² => ((rev₁ [C h1² a²]) t1²) | N => a²}: 45
+//│ ------------------
+//│ case ys¹ of {C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹) | N => a¹}: 30 --->
+//│ 	[C 0 init₁]: 35
+//│ case ys² of {C h1² t1² => ((rev₁ [C h1² a²]) t1²) | N => a²}: 45 --->
+//│ 	[C 0 init₁]: 50
+//│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((rev₀ [N]) init₀)
@@ -508,6 +554,18 @@ rev(N, init)
 //│ [C 0 init₁]: 47 --->
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹)}: 31
 //│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 0 init₁]: 22 --->
+//│ 	case ys² of {C h1² t1² => ((rev₁ [C h1² a²]) t1²)}: 42
+//│ [C 0 init₁]: 47 --->
+//│ 	case ys¹ of {C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹)}: 31
+//│ ------------------
+//│ case ys¹ of {C h1¹ t1¹ => ((rev₁ [C h1¹ a¹]) t1¹)}: 31 --->
+//│ 	[C 0 init₁]: 47
+//│ case ys² of {C h1² t1² => ((rev₁ [C h1² a²]) t1²)}: 42 --->
+//│ 	[C 0 init₁]: 22
+//│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((rev₀ [N]) init₀)
@@ -602,6 +660,22 @@ rev(rev2, init)(1, init2)
 //│ [C 0 init₁]: 41 --->
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₁ a¹) t1¹) | N => a¹}: 49
 //│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 0 init2₀]: 38 --->
+//│ 	case ys2¹ of {C h12¹ t12¹ => ((rev2₀ a2¹) t12¹) | N => a2¹}: 62
+//│ [C 0 init₁]: 41 --->
+//│ 	case ys¹ of {C h1¹ t1¹ => ((rev₁ a¹) t1¹) | N => a¹}: 49
+//│ [C 0 init₁]: 54 --->
+//│ 	case ys² of {C h1² t1² => ((rev₁ a²) t1²) | N => a²}: 72
+//│ ------------------
+//│ case ys¹ of {C h1¹ t1¹ => ((rev₁ a¹) t1¹) | N => a¹}: 49 --->
+//│ 	[C 0 init₁]: 41
+//│ case ys2¹ of {C h12¹ t12¹ => ((rev2₀ a2¹) t12¹) | N => a2¹}: 62 --->
+//│ 	[C 0 init2₀]: 38
+//│ case ys² of {C h1² t1² => ((rev₁ a²) t1²) | N => a²}: 72 --->
+//│ 	[C 0 init₁]: 54
+//│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((((rev₀ rev2₀) init₀) 1) init2₀)

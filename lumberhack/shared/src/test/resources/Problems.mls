@@ -39,6 +39,17 @@ c(p)
 //│ 	case x¹ of {Pair a¹ b¹ => (c₀ [Pair b¹ a¹])}: 21
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [Pair b¹ a¹]: 19 --->
+//│ 	case x¹ of {Pair a¹ b¹ => (c₀ [Pair b¹ a¹])}: 21
+//│ [Pair [A] [B]]: 25 --->
+//│ 	case x¹ of {Pair a¹ b¹ => (c₀ [Pair b¹ a¹])}: 21
+//│ ------------------
+//│ case x¹ of {Pair a¹ b¹ => (c₀ [Pair b¹ a¹])}: 21 --->
+//│ 	[Pair b¹ a¹]: 19
+//│ 	[Pair [A] [B]]: 25
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ !!!!!!ERROR!!!!!!
 //│ java.lang.StackOverflowError
@@ -81,6 +92,17 @@ c(p)
 //│ [Wrap 3]: 26 --->
 //│ 	case x¹ of {Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]}: 44
 //│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [Wrap 3]: 26 --->
+//│ 	case x¹ of {Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]}: 44
+//│ [Wrap (a¹ - 1)]: 39 --->
+//│ 	case x¹ of {Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]}: 44
+//│ ------------------
+//│ case x¹ of {Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]}: 44 --->
+//│ 	[Wrap 3]: 26
+//│ 	[Wrap (a¹ - 1)]: 39
+//│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ !!!!!!ERROR!!!!!!
@@ -158,30 +180,41 @@ last(p)
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 1 [C 2 [N]]]: 46 --->
+//│ 	case ls³ of {C h³ t³ => case t³ of {N => [Some h³] | C hh³ tt³ => (last₁ t³)} | N => [None]}: 56
+//│ ------------------
+//│ case ls³ of {C h³ t³ => case t³ of {N => [Some h³] | C hh³ tt³ => (last₁ t³)} | N => [None]}: 56 --->
+//│ 	[C 1 [C 2 [N]]]: 46
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (last₀ p₀)
 //│ def last₀ = 
 //│ 	(fun ls³ -> ls³)
 //│ 	where
 //│ 	def last₁ = 
-//│ 		(fun ls¹ -> ls¹)
+//│ 		(fun ls¹ -> case ls¹ of {
+//│ 			C h¹ t¹ => case t¹ of {
+//│ 				N => [Some h¹]
+//│ 				| C hh¹ tt¹ => (last₂ t¹)}
+//│ 			| N => [None]})
 //│ 		where
 //│ 		def last₂ = 
-//│ 			(fun ls² -> ls²)
+//│ 			(fun ls² -> case ls² of {
+//│ 				C h² t² => case t² of {
+//│ 					N => [Some h²]
+//│ 					| C hh² tt² => (last₂ t²)}
+//│ 				| N => [None]})
 //│ def p₀ = 
 //│ 	let h³ = 1
-//│ 	in let t³ = 	
-//│ 		let h¹ = 2
-//│ 		in let t¹ = [None]
-//│ 		in case t¹ of {
-//│ 			N => [Some h¹]
-//│ 			| C hh¹ tt¹ => (last₂ t¹)}
+//│ 	in let t³ = [C 2 [N]]
 //│ 	in case t³ of {
 //│ 		N => [Some h³]
 //│ 		| C hh³ tt³ => (last₁ t³)}
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: type error Some('h¹) <: Destruct(N, C('hh³, 'tt³))
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 // WRONG: one consumer cannot be expanded fully?
@@ -266,25 +299,35 @@ idxSum(rev(C(1, C(2, N)))(N))(0)
 //│ 	case lss² of {N => (fun a⁴ -> a⁴) | C hh² tt² => (fun a⁵ -> ((rev₂ tt²) [C hh² a⁵]))}: 108
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 2 [N]]: 128 --->
+//│ 	case lss³ of {N => (fun a⁶ -> a⁶) | C hh³ tt³ => (fun a⁷ -> ((rev₂ tt³) [C hh³ a⁷]))}: 121
+//│ [C 1 [C 2 [N]]]: 129 --->
+//│ 	case lss¹ of {N => (fun a² -> a²) | C hh¹ tt¹ => (fun a³ -> ((rev₁ tt¹) [C hh¹ a³]))}: 95
+//│ ------------------
+//│ case lss¹ of {N => (fun a² -> a²) | C hh¹ tt¹ => (fun a³ -> ((rev₁ tt¹) [C hh¹ a³]))}: 95 --->
+//│ 	[C 1 [C 2 [N]]]: 129
+//│ case lss³ of {N => (fun a⁶ -> a⁶) | C hh³ tt³ => (fun a⁷ -> ((rev₂ tt³) [C hh³ a⁷]))}: 121 --->
+//│ 	[C 2 [N]]: 128
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((idxSum₀ ((rev₀ 
 //│ 	let hh¹ = 1
 //│ 	in let tt¹ = 	
 //│ 		let hh³ = 2
-//│ 		in let tt³ = (fun a⁴ -> a⁴)
-//│ 		in (fun a⁷ -> ((rev₂ tt³) 
-//│ 			let h² = hh³
-//│ 			in let t² = a⁷
-//│ 			in (fun acc⁵ -> (acc⁵ + ((idxSum₁ t²) (acc⁵ + 1))))))
-//│ 	in (fun a³ -> ((rev₁ tt¹) 
-//│ 		let h¹ = hh¹
-//│ 		in let t¹ = a³
-//│ 		in (fun acc³ -> (acc³ + ((idxSum₁ t¹) (acc³ + 1))))))) (fun acc⁴ -> 0))) 0)
+//│ 		in let tt³ = [N]
+//│ 		in (fun a⁷ -> ((rev₂ tt³) [C hh³ a⁷]))
+//│ 	in (fun a³ -> ((rev₁ tt¹) [C hh¹ a³]))) [N])) 0)
 //│ def idxSum₀ = 
-//│ 	(fun ls² -> ls²)
+//│ 	(fun ls² -> case ls² of {
+//│ 		N => (fun acc⁴ -> 0)
+//│ 		| C h² t² => (fun acc⁵ -> (acc⁵ + ((idxSum₁ t²) (acc⁵ + 1))))})
 //│ 	where
 //│ 	def idxSum₁ = 
-//│ 		(fun ls¹ -> ls¹)
+//│ 		(fun ls¹ -> case ls¹ of {
+//│ 			N => (fun acc² -> 0)
+//│ 			| C h¹ t¹ => (fun acc³ -> (acc³ + ((idxSum₁ t¹) (acc³ + 1))))})
 //│ def rev₀ = 
 //│ 	(fun lss¹ -> lss¹)
 //│ 	where
@@ -292,7 +335,9 @@ idxSum(rev(C(1, C(2, N)))(N))(0)
 //│ 		(fun lss³ -> lss³)
 //│ 		where
 //│ 		def rev₂ = 
-//│ 			(fun lss² -> lss²)
+//│ 			(fun lss² -> case lss² of {
+//│ 				N => (fun a⁴ -> a⁴)
+//│ 				| C hh² tt² => (fun a⁵ -> ((rev₂ tt²) [C hh² a⁵]))})
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -359,25 +404,35 @@ minuss(fst)(snd)
 //│ 	case b² of {S bb² => ((minuss₁ aa²) bb²) | Z => aa²}: 50
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [S [S [Z]]]: 26 --->
+//│ 	case a² of {S aa² => (fun b² -> case b² of {S bb² => ((minuss₁ aa²) bb²) | Z => aa²}) | Z => (fun n² -> [Z])}: 54
+//│ ------------------
+//│ case a² of {S aa² => (fun b² -> case b² of {S bb² => ((minuss₁ aa²) bb²) | Z => aa²}) | Z => (fun n² -> [Z])}: 54 --->
+//│ 	[S [S [Z]]]: 26
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((minuss₀ fst₀) snd₀)
 //│ def fst₀ = 
-//│ 	let aa² = 	
-//│ 		let aa¹ = (fun n¹ -> [Z])
-//│ 		in (fun b¹ -> case b¹ of {
-//│ 			S bb¹ => ((minuss₁ aa¹) bb¹)
-//│ 			| Z => aa¹})
-//│ 	in (fun b² -> b²)
+//│ 	let aa² = [S [Z]]
+//│ 	in (fun b² -> case b² of {
+//│ 		S bb² => ((minuss₁ aa²) bb²)
+//│ 		| Z => aa²})
 //│ def minuss₀ = 
 //│ 	(fun a² -> a²)
 //│ 	where
 //│ 	def minuss₁ = 
-//│ 		(fun a¹ -> a¹)
+//│ 		(fun a¹ -> case a¹ of {
+//│ 			S aa¹ => (fun b¹ -> case b¹ of {
+//│ 				S bb¹ => ((minuss₁ aa¹) bb¹)
+//│ 				| Z => aa¹})
+//│ 			| Z => (fun n¹ -> [Z])})
 //│ def snd₀ = 
-//│ 	aa²
+//│ 	[Z]
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: binding not found: Ident(false,aa,2)
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 
@@ -447,23 +502,33 @@ minuss(fst)(snd)
 //│ 	case b⁴ of {S bb¹ => (fun aaa² -> ((minuss₁ aaa²) bb¹)) | Z => (fun aaa³ -> aaa³)}: 64
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [S [S [Z]]]: 68 --->
+//│ 	case a¹ of {S aa¹ => (fun b² -> ((checkb₀ b²) aa¹)) | Z => (fun n¹ -> [Z])}: 41
+//│ ------------------
+//│ case a¹ of {S aa¹ => (fun b² -> ((checkb₀ b²) aa¹)) | Z => (fun n¹ -> [Z])}: 41 --->
+//│ 	[S [S [Z]]]: 68
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((minuss₀ fst₀) snd₀)
 //│ def fst₀ = 
-//│ 	let aa¹ = 	
-//│ 		let aa² = (fun n² -> [Z])
-//│ 		in (fun b³ -> ((checkb₀ b³) aa²))
+//│ 	let aa¹ = [S [Z]]
 //│ 	in (fun b² -> ((checkb₀ b²) aa¹))
 //│ def minuss₀ = 
 //│ 	(fun a¹ -> a¹)
 //│ 	where
 //│ 	def checkb₀ = 
-//│ 		(fun b⁴ -> b⁴)
+//│ 		(fun b⁴ -> case b⁴ of {
+//│ 			S bb¹ => (fun aaa² -> ((minuss₁ aaa²) bb¹))
+//│ 			| Z => (fun aaa³ -> aaa³)})
 //│ 		where
 //│ 		def minuss₁ = 
-//│ 			(fun a² -> a²)
+//│ 			(fun a² -> case a² of {
+//│ 				S aa² => (fun b³ -> ((checkb₀ b³) aa²))
+//│ 				| Z => (fun n² -> [Z])})
 //│ def snd₀ = 
-//│ 	(fun aaa³ -> aaa³)
+//│ 	[Z]
 //│ <<<<<<< after fusion <<<<<<<
 
 // WRONG:
@@ -543,41 +608,45 @@ inter(l1)(l2)
 //│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])}: 53
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((inter₀ l1₀) l2₀)
 //│ def inter₀ = 
-//│ 	(fun xs⁵ -> xs⁵)
+//│ 	(fun xs⁵ -> case xs⁵ of {
+//│ 		N => (fun ys¹⁰ -> ys¹⁰)
+//│ 		| C h⁵ t⁵ => (fun ys¹¹ -> [C h⁵ ((inter₁ ys¹¹) t⁵)])})
 //│ 	where
 //│ 	def inter₁ = 
-//│ 		(fun xs² -> xs²)
+//│ 		(fun xs² -> case xs² of {
+//│ 			N => (fun ys⁴ -> ys⁴)
+//│ 			| C h² t² => (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])})
 //│ 		where
 //│ 		def inter₂ = 
-//│ 			(fun xs³ -> xs³)
+//│ 			(fun xs³ -> case xs³ of {
+//│ 				N => (fun ys⁶ -> ys⁶)
+//│ 				| C h³ t³ => (fun ys⁷ -> [C h³ ((inter₃ ys⁷) t³)])})
 //│ 			where
 //│ 			def inter₃ = 
-//│ 				(fun xs¹ -> xs¹)
+//│ 				(fun xs¹ -> case xs¹ of {
+//│ 					N => (fun ys² -> ys²)
+//│ 					| C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₄ ys³) t¹)])})
 //│ 				where
 //│ 				def inter₄ = 
 //│ 					(fun xs⁴ -> case xs⁴ of {
 //│ 						N => (fun ys⁸ -> ys⁸)
 //│ 						| C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₁ ys⁹) t⁴)])})
 //│ def l1₀ = 
-//│ 	let h⁵ = 1
-//│ 	in let t⁵ = 	
-//│ 		let h³ = 2
-//│ 		in let t³ = l1₀
-//│ 		in (fun ys⁷ -> [C h³ ((inter₃ ys⁷) t³)])
-//│ 	in (fun ys¹¹ -> [C h⁵ ((inter₁ ys¹¹) t⁵)])
+//│ 	[C 1 [C 2 l1₀]]
 //│ def l2₀ = 
-//│ 	let h² = 9
-//│ 	in let t² = 	
-//│ 		let h¹ = 8
-//│ 		in let t¹ = l2₀
-//│ 		in (fun ys³ -> [C h¹ ((inter₄ ys³) t¹)])
-//│ 	in (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])
+//│ 	[C 9 [C 8 l2₀]]
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: type error 'ys¹¹ => C('h⁵, '159_callres) <: Destruct(N, C('h⁴, 't⁴))
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 
@@ -712,6 +781,38 @@ f(xx, yy)
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [X xx₃]: 31 --->
+//│ 	case x2² of {X x3² => (fun ys² -> case ys² of {Y y1² => case y1² of {Y y2² => ((f₂ x3²) y2²)}})}: 76
+//│ [X [X xx₃]]: 32 --->
+//│ 	case x1² of {X x2² => case x2² of {X x3² => (fun ys² -> case ys² of {Y y1² => case y1² of {Y y2² => ((f₂ x3²) y2²)}})}}: 77
+//│ [X xx₂]: 34 --->
+//│ 	case xs² of {X x1² => case x1² of {X x2² => case x2² of {X x3² => (fun ys² -> case ys² of {Y y1² => case y1² of {Y y2² => ((f₂ x3²) y2²)}})}}}: 78
+//│ [X xx₁]: 54 --->
+//│ 	case x1¹ of {X x2¹ => case x2¹ of {X x3¹ => (fun ys¹ -> case ys¹ of {Y y1¹ => case y1¹ of {Y y2¹ => ((f₁ x3¹) y2¹)}})}}: 50
+//│ [X [X xx₁]]: 55 --->
+//│ 	case xs¹ of {X x1¹ => case x1¹ of {X x2¹ => case x2¹ of {X x3¹ => (fun ys¹ -> case ys¹ of {Y y1¹ => case y1¹ of {Y y2¹ => ((f₁ x3¹) y2¹)}})}}}: 51
+//│ [X xx₁]: 61 --->
+//│ 	case x1³ of {X x2³ => case x2³ of {X x3³ => (fun ys³ -> case ys³ of {Y y1³ => case y1³ of {Y y2³ => ((f₁ x3³) y2³)}})}}: 94
+//│ [X [X xx₁]]: 62 --->
+//│ 	case xs³ of {X x1³ => case x1³ of {X x2³ => case x2³ of {X x3³ => (fun ys³ -> case ys³ of {Y y1³ => case y1³ of {Y y2³ => ((f₁ x3³) y2³)}})}}}: 95
+//│ ------------------
+//│ case x1¹ of {X x2¹ => case x2¹ of {X x3¹ => (fun ys¹ -> case ys¹ of {Y y1¹ => case y1¹ of {Y y2¹ => ((f₁ x3¹) y2¹)}})}}: 50 --->
+//│ 	[X xx₁]: 54
+//│ case xs¹ of {X x1¹ => case x1¹ of {X x2¹ => case x2¹ of {X x3¹ => (fun ys¹ -> case ys¹ of {Y y1¹ => case y1¹ of {Y y2¹ => ((f₁ x3¹) y2¹)}})}}}: 51 --->
+//│ 	[X [X xx₁]]: 55
+//│ case x2² of {X x3² => (fun ys² -> case ys² of {Y y1² => case y1² of {Y y2² => ((f₂ x3²) y2²)}})}: 76 --->
+//│ 	[X xx₃]: 31
+//│ case x1² of {X x2² => case x2² of {X x3² => (fun ys² -> case ys² of {Y y1² => case y1² of {Y y2² => ((f₂ x3²) y2²)}})}}: 77 --->
+//│ 	[X [X xx₃]]: 32
+//│ case xs² of {X x1² => case x1² of {X x2² => case x2² of {X x3² => (fun ys² -> case ys² of {Y y1² => case y1² of {Y y2² => ((f₂ x3²) y2²)}})}}}: 78 --->
+//│ 	[X xx₂]: 34
+//│ case x1³ of {X x2³ => case x2³ of {X x3³ => (fun ys³ -> case ys³ of {Y y1³ => case y1³ of {Y y2³ => ((f₁ x3³) y2³)}})}}: 94 --->
+//│ 	[X xx₁]: 61
+//│ case xs³ of {X x1³ => case x1³ of {X x2³ => case x2³ of {X x3³ => (fun ys³ -> case ys³ of {Y y1³ => case y1³ of {Y y2³ => ((f₁ x3³) y2³)}})}}}: 95 --->
+//│ 	[X [X xx₁]]: 62
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((f₀ xx₀) yy₀)
 //│ def f₀ = 
@@ -725,45 +826,41 @@ f(xx, yy)
 //│ def xx₀ = 
 //│ 	let x1³ = 	
 //│ 		let x2³ = xx₁
-//│ 		in x2³
+//│ 		in case x2³ of {
+//│ 			X x3³ => (fun ys³ -> case ys³ of {
+//│ 				Y y1³ => case y1³ of {
+//│ 					Y y2³ => ((f₁ x3³) y2³)}})}
 //│ 	in x1³
 //│ 	where
 //│ 	def xx₁ = 
-//│ 		let x3³ = 	
+//│ 		[X 
 //│ 			let x1² = xx₂
-//│ 			in x1²
-//│ 		in (fun ys³ -> ys³)
+//│ 			in x1²]
 //│ 		where
 //│ 		def xx₂ = 
 //│ 			let x2² = 	
 //│ 				let x3² = xx₃
-//│ 				in (fun ys² -> ys²)
+//│ 				in (fun ys² -> case ys² of {
+//│ 					Y y1² => case y1² of {
+//│ 						Y y2² => ((f₂ x3²) y2²)}})
 //│ 			in x2²
 //│ 			where
 //│ 			def xx₃ = 
 //│ 				let x1¹ = 	
 //│ 					let x2¹ = xx₁
 //│ 					in case x2¹ of {
-//│ 						X x3¹ => (fun ys¹ -> ys¹)}
+//│ 						X x3¹ => (fun ys¹ -> case ys¹ of {
+//│ 							Y y1¹ => case y1¹ of {
+//│ 								Y y2¹ => ((f₁ x3¹) y2¹)}})}
 //│ 				in x1¹
 //│ def yy₀ = 
-//│ 	let y1³ = 	
-//│ 		let y2³ = 	
-//│ 			let y1² = yy₁
-//│ 			in y1²
-//│ 		in ((f₁ x3³) y2³)
-//│ 	in y1³
+//│ 	[Y [Y [Y yy₁]]]
 //│ 	where
 //│ 	def yy₁ = 
-//│ 		let y2² = 	
-//│ 			let y1¹ = 	
-//│ 				let y2¹ = yy₀
-//│ 				in ((f₁ x3¹) y2¹)
-//│ 			in y1¹
-//│ 		in ((f₂ x3²) y2²)
+//│ 		[Y [Y [Y yy₀]]]
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: binding not found: Ident(false,x3,3)
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 
@@ -797,6 +894,14 @@ f(C(primitive))
 //│ [C primitive⁰]: 19 --->
 //│ 	case x¹ of {C k¹ => (f₀ x¹)}: 15
 //│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C primitive⁰]: 19 --->
+//│ 	case x¹ of {C k¹ => (f₀ x¹)}: 15
+//│ ------------------
+//│ case x¹ of {C k¹ => (f₀ x¹)}: 15 --->
+//│ 	[C primitive⁰]: 19
+//│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (f₀ 
@@ -842,9 +947,20 @@ f(C(primitive))
 //│ 	case x¹ of {C k¹ => (f₀ [C x¹])}: 17
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
 //│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ [C primitive⁰])
+//│ def f₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		C k¹ => (f₀ [C x¹])})
+//│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.StackOverflowError
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 
@@ -881,10 +997,18 @@ f(primitive)
 //│ 	case x¹ of {N => (f₀ [N]) | _ => 0}: 16
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (f₀ primitive⁰)
 //│ def f₀ = 
-//│ 	(fun x¹ -> x¹)
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		N => (f₀ [N])
+//│ 		| _ => 0})
 //│ <<<<<<< after fusion <<<<<<<
 
 // WRONG: mutual recursive strategy
@@ -922,6 +1046,17 @@ f(C(A))
 //│ [C a¹]: 22 --->
 //│ 	case x¹ of {C a¹ => (f₀ [C a¹])}: 24
 //│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C a¹]: 22 --->
+//│ 	case x¹ of {C a¹ => (f₀ [C a¹])}: 24
+//│ [C [A]]: 28 --->
+//│ 	case x¹ of {C a¹ => (f₀ [C a¹])}: 24
+//│ ------------------
+//│ case x¹ of {C a¹ => (f₀ [C a¹])}: 24 --->
+//│ 	[C a¹]: 22
+//│ 	[C [A]]: 28
+//│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ !!!!!!ERROR!!!!!!

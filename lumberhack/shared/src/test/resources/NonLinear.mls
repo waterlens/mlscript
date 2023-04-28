@@ -114,52 +114,58 @@ c(p(0))
 //│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c₀ (p₀ 0))
 //│ def c₀ = 
-//│ 	(fun xx¹ -> xx¹)
+//│ 	(fun xx¹ -> case xx¹ of {
+//│ 		C aa¹ => (primitive⁰ aa¹)
+//│ 		| N => [N]})
 //│ def p₀ = 
-//│ 	(fun x³ -> if (x³ == 0) then [N] else if (x³ >= 2) then 
-//│ 		let aa¹ = (p₁ (x³ - 1))
-//│ 		in (primitive⁰ aa¹) else 
-//│ 		let temp³ = 	
-//│ 			let b¹ = (p₂ (x³ + 1))
-//│ 			in b¹
+//│ 	(fun x³ -> if (x³ == 0) then [N] else if (x³ >= 2) then [C (p₁ (x³ - 1))] else 
+//│ 		let temp³ = [C (p₂ (x³ + 1))]
 //│ 		in (f₀ temp³)
 //│ 		temp³)
 //│ 	where
 //│ 	def f₀ = 
-//│ 		(fun z¹ -> z¹)
+//│ 		(fun z¹ -> case z¹ of {
+//│ 			C b¹ => b¹
+//│ 			| N => 1})
 //│ 	def p₁ = 
 //│ 		(fun x¹ -> if (x¹ == 0) then [N] else if (x¹ >= 2) then [C (p₁ (x¹ - 1))] else 
-//│ 			let temp¹ = 	
-//│ 				let b⁴ = (p₁ (x¹ + 1))
-//│ 				in b⁴
+//│ 			let temp¹ = [C (p₁ (x¹ + 1))]
 //│ 			in (f₁ temp¹)
 //│ 			temp¹)
 //│ 		where
 //│ 		def f₁ = 
-//│ 			(fun z⁴ -> z⁴)
+//│ 			(fun z⁴ -> case z⁴ of {
+//│ 				C b⁴ => b⁴
+//│ 				| N => 1})
 //│ 	def p₂ = 
 //│ 		(fun x² -> if (x² == 0) then [N] else if (x² >= 2) then [C (p₃ (x² - 1))] else 
-//│ 			let temp² = 	
-//│ 				let b³ = (p₂ (x² + 1))
-//│ 				in b³
+//│ 			let temp² = [C (p₂ (x² + 1))]
 //│ 			in (f₂ temp²)
 //│ 			temp²)
 //│ 		where
 //│ 		def f₂ = 
-//│ 			(fun z³ -> z³)
+//│ 			(fun z³ -> case z³ of {
+//│ 				C b³ => b³
+//│ 				| N => 1})
 //│ 		def p₃ = 
 //│ 			(fun x⁴ -> if (x⁴ == 0) then [N] else if (x⁴ >= 2) then [C (p₃ (x⁴ - 1))] else 
-//│ 				let temp⁴ = 	
-//│ 					let b² = (p₃ (x⁴ + 1))
-//│ 					in b²
+//│ 				let temp⁴ = [C (p₃ (x⁴ + 1))]
 //│ 				in (f₃ temp⁴)
 //│ 				temp⁴)
 //│ 			where
 //│ 			def f₃ = 
-//│ 				(fun z² -> z²)
+//│ 				(fun z² -> case z² of {
+//│ 					C b² => b²
+//│ 					| N => 1})
 //│ <<<<<<< after fusion <<<<<<<
 
 // WRONG:
@@ -225,15 +231,18 @@ last(C(A, C(B, N)))
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C [A] [C [B] [N]]]: 61 --->
+//│ 	case ls¹ of {C h¹ t¹ => case t¹ of {C hh¹ tt¹ => [Some (last₁ t¹)] | N => [Some h¹]} | N => [None]}: 30
+//│ ------------------
+//│ case ls¹ of {C h¹ t¹ => case t¹ of {C hh¹ tt¹ => [Some (last₁ t¹)] | N => [Some h¹]} | N => [None]}: 30 --->
+//│ 	[C [A] [C [B] [N]]]: 61
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (last₀ 
 //│ 	let h¹ = [A]
-//│ 	in let t¹ = 	
-//│ 		let h² = [B]
-//│ 		in let t² = [None]
-//│ 		in case t² of {
-//│ 			C hh² tt² => [Some (last₂ t²)]
-//│ 			| N => [Some h²]}
+//│ 	in let t¹ = [C [B] [N]]
 //│ 	in case t¹ of {
 //│ 		C hh¹ tt¹ => [Some (last₁ t¹)]
 //│ 		| N => [Some h¹]})
@@ -241,12 +250,20 @@ last(C(A, C(B, N)))
 //│ 	(fun ls¹ -> ls¹)
 //│ 	where
 //│ 	def last₁ = 
-//│ 		(fun ls² -> ls²)
+//│ 		(fun ls² -> case ls² of {
+//│ 			C h² t² => case t² of {
+//│ 				C hh² tt² => [Some (last₂ t²)]
+//│ 				| N => [Some h²]}
+//│ 			| N => [None]})
 //│ 		where
 //│ 		def last₂ = 
-//│ 			(fun ls³ -> ls³)
+//│ 			(fun ls³ -> case ls³ of {
+//│ 				C h³ t³ => case t³ of {
+//│ 					C hh³ tt³ => [Some (last₂ t³)]
+//│ 					| N => [Some h³]}
+//│ 				| N => [None]})
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: type error Some('h²) <: Destruct(C('hh¹, 'tt¹), N)
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 

@@ -1,0 +1,186 @@
+:NewParser
+:ParseOnly
+
+
+fun map(ls) = if ls is
+  C(h, t) then C(
+    primitive(h),
+    map(t)
+  )
+  N then N
+let l = C(K, C(KK, l))
+map(l)
+//│ |#fun| |map|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|→|primitive|(|h|)|,|↵|map|(|t|)|←|↵|)|↵|N| |#then| |N|←|↵|#let| |l| |#=| |C|(|K|,| |C|(|KK|,| |l|)|)|↵|map|(|l|)|
+//│ Parsed: {fun map = ls, => if ls is ‹(C (h, t,)) then C (primitive (h,), map (t,),); (N) then N›; let l = C (K, C (KK, l,),); map (l,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (map^17 l^18)
+//│ def l = [C [K] [C [KK] l^14]]
+//│ def map = (fun ls⁰ -> case ls⁰ of {
+//│ 	C h⁰ t⁰ => [C (primitive⁰ h⁰) (map^5 t⁰)]
+//│ 	| N => [N]})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [l^18]
+//│ 	[l^18 · l^14] ---> [l^18] (only one)
+//│ [map^17]
+//│ 	[map^17 · map^5]
+//│ 		[map^17 · map^5 · map^5]
+//│ 			[map^17 · map^5 · map^5 · map^5] ---> [map^17 · map^5] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (map₀ l₀)
+//│ def l₀ = 
+//│ 	[C [K] [C [KK] l₀]]
+//│ def map₀ = 
+//│ 	(fun ls² -> case ls² of {
+//│ 		C h² t² => [C (primitive⁰ h²) (map₁ t²)]
+//│ 		| N => [N]})
+//│ 	where
+//│ 	def map₁ = 
+//│ 		(fun ls¹ -> case ls¹ of {
+//│ 			C h¹ t¹ => [C (primitive⁰ h¹) (map₂ t¹)]
+//│ 			| N => [N]})
+//│ 		where
+//│ 		def map₂ = 
+//│ 			(fun ls³ -> case ls³ of {
+//│ 				C h³ t³ => [C (primitive⁰ h³) (map₁ t³)]
+//│ 				| N => [N]})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C [KK] l₀]: 56 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C (primitive⁰ h¹) (map₂ t¹)] | N => [N]}: 29
+//│ [C [K] [C [KK] l₀]]: 57 --->
+//│ 	case ls² of {C h² t² => [C (primitive⁰ h²) (map₁ t²)] | N => [N]}: 40
+//│ 	case ls³ of {C h³ t³ => [C (primitive⁰ h³) (map₁ t³)] | N => [N]}: 51
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C [KK] l₀]: 56 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C (primitive⁰ h¹) (map₂ t¹)] | N => [N]}: 29
+//│ ------------------
+//│ case ls¹ of {C h¹ t¹ => [C (primitive⁰ h¹) (map₂ t¹)] | N => [N]}: 29 --->
+//│ 	[C [KK] l₀]: 56
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (map₀ l₀)
+//│ def l₀ = 
+//│ 	[C [K] 
+//│ 		let h¹ = [KK]
+//│ 		in let t¹ = l₀
+//│ 		in [C (primitive⁰ h¹) (map₂ t¹)]]
+//│ def map₀ = 
+//│ 	(fun ls² -> case ls² of {
+//│ 		C h² t² => [C (primitive⁰ h²) (map₁ t²)]
+//│ 		| N => [N]})
+//│ 	where
+//│ 	def map₁ = 
+//│ 		(fun ls¹ -> ls¹)
+//│ 		where
+//│ 		def map₂ = 
+//│ 			(fun ls³ -> case ls³ of {
+//│ 				C h³ t³ => [C (primitive⁰ h³) (map₁ t³)]
+//│ 				| N => [N]})
+//│ <<<<<<< after fusion <<<<<<<
+
+
+fun map(ls) = if ls is
+  C(h, t) then C(
+    primitive(h),
+    map(t)
+  )
+  N then N
+let l = C(K, C(KK, l))
+map(C(S, l))
+//│ |#fun| |map|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|→|primitive|(|h|)|,|↵|map|(|t|)|←|↵|)|↵|N| |#then| |N|←|↵|#let| |l| |#=| |C|(|K|,| |C|(|KK|,| |l|)|)|↵|map|(|C|(|S|,| |l|)|)|
+//│ Parsed: {fun map = ls, => if ls is ‹(C (h, t,)) then C (primitive (h,), map (t,),); (N) then N›; let l = C (K, C (KK, l,),); map (C (S, l,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (map^17 [C [S] l^19])
+//│ def l = [C [K] [C [KK] l^14]]
+//│ def map = (fun ls⁰ -> case ls⁰ of {
+//│ 	C h⁰ t⁰ => [C (primitive⁰ h⁰) (map^5 t⁰)]
+//│ 	| N => [N]})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [l^19]
+//│ 	[l^19 · l^14] ---> [l^19] (only one)
+//│ [map^17]
+//│ 	[map^17 · map^5]
+//│ 		[map^17 · map^5 · map^5]
+//│ 			[map^17 · map^5 · map^5 · map^5] ---> [map^17 · map^5] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (map₀ [C [S] l₀])
+//│ def l₀ = 
+//│ 	[C [K] [C [KK] l₀]]
+//│ def map₀ = 
+//│ 	(fun ls² -> case ls² of {
+//│ 		C h² t² => [C (primitive⁰ h²) (map₁ t²)]
+//│ 		| N => [N]})
+//│ 	where
+//│ 	def map₁ = 
+//│ 		(fun ls¹ -> case ls¹ of {
+//│ 			C h¹ t¹ => [C (primitive⁰ h¹) (map₂ t¹)]
+//│ 			| N => [N]})
+//│ 		where
+//│ 		def map₂ = 
+//│ 			(fun ls³ -> case ls³ of {
+//│ 				C h³ t³ => [C (primitive⁰ h³) (map₁ t³)]
+//│ 				| N => [N]})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C [KK] l₀]: 25 --->
+//│ 	case ls³ of {C h³ t³ => [C (primitive⁰ h³) (map₁ t³)] | N => [N]}: 58
+//│ [C [K] [C [KK] l₀]]: 26 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C (primitive⁰ h¹) (map₂ t¹)] | N => [N]}: 36
+//│ [C [S] l₀]: 63 --->
+//│ 	case ls² of {C h² t² => [C (primitive⁰ h²) (map₁ t²)] | N => [N]}: 47
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C [KK] l₀]: 25 --->
+//│ 	case ls³ of {C h³ t³ => [C (primitive⁰ h³) (map₁ t³)] | N => [N]}: 58
+//│ [C [K] [C [KK] l₀]]: 26 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C (primitive⁰ h¹) (map₂ t¹)] | N => [N]}: 36
+//│ [C [S] l₀]: 63 --->
+//│ 	case ls² of {C h² t² => [C (primitive⁰ h²) (map₁ t²)] | N => [N]}: 47
+//│ ------------------
+//│ case ls¹ of {C h¹ t¹ => [C (primitive⁰ h¹) (map₂ t¹)] | N => [N]}: 36 --->
+//│ 	[C [K] [C [KK] l₀]]: 26
+//│ case ls² of {C h² t² => [C (primitive⁰ h²) (map₁ t²)] | N => [N]}: 47 --->
+//│ 	[C [S] l₀]: 63
+//│ case ls³ of {C h³ t³ => [C (primitive⁰ h³) (map₁ t³)] | N => [N]}: 58 --->
+//│ 	[C [KK] l₀]: 25
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (map₀ 
+//│ 	let h² = [S]
+//│ 	in let t² = l₀
+//│ 	in [C (primitive⁰ h²) (map₁ t²)])
+//│ def l₀ = 
+//│ 	let h¹ = [K]
+//│ 	in let t¹ = 	
+//│ 		let h³ = [KK]
+//│ 		in let t³ = l₀
+//│ 		in [C (primitive⁰ h³) (map₁ t³)]
+//│ 	in [C (primitive⁰ h¹) (map₂ t¹)]
+//│ def map₀ = 
+//│ 	(fun ls² -> ls²)
+//│ 	where
+//│ 	def map₁ = 
+//│ 		(fun ls¹ -> ls¹)
+//│ 		where
+//│ 		def map₂ = 
+//│ 			(fun ls³ -> ls³)
+//│ <<<<<<< after fusion <<<<<<<
+
+
+

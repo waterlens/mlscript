@@ -464,8 +464,8 @@ class Deforest(var debug: Boolean) {
               }
             else if ds_ctor.name == "_" then
               found = true
-            else
-              argCons foreach { c => handle(NoProd()(using noExprId).toStrat(prod.path), c.addPath(cons.path)) }
+            // else
+              // argCons foreach { c => handle(NoProd()(using noExprId).toStrat(prod.path), c.addPath(cons.path)) }
           }
           if !found then lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
         case (Sum(ctors), Destruct(ds)) =>

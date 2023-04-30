@@ -8,7 +8,25 @@
 // max(C(1, C(3, C(2, N))))(0)
 
 
-// CORRECT: if max is duplicated for each call site, harder to timeout
+// WRONG: timeout
+// fun max = x => x
+// max(
+//   let h = 1
+//   let t = (
+//     let h = 3
+//     let t = (
+//       let h = 2
+//       let t = m => m
+//       m => if (h > m) then max(t)(h) else max(t)(m)
+//     )
+//     (m => if h > m then max(t)(h) else max(t)(m))
+//   )
+//   (m => if (h > m) then max(t)(h) else max(t)(m))
+// )(0)
+
+
+// WRONG:
+// NOTE: if max is duplicated for each call site, less likely to timeout
 fun max = x => x
 fun max0 = x => x
 fun max1 = x => x
@@ -105,23 +123,23 @@ max(
 //│ 		let h⁴ = 3
 //│ 		in let t⁴ = 	
 //│ 			let h⁵ = 2
-//│ 			in let t⁵ = (fun m⁴ -> m⁴)
-//│ 			in (fun m⁵ -> if (h⁵ > m⁵) then ((max0₀ t⁵) h⁵) else ((max1₀ t⁵) m⁵))
-//│ 		in (fun m⁶ -> if (h⁴ > m⁶) then ((max2₀ t⁴) h⁴) else ((max3₀ t⁴) m⁶))
-//│ 	in (fun m⁷ -> if (h³ > m⁷) then ((max4₀ t³) h³) else ((max5₀ t³) m⁷))) 0)
+//│ 			in let t⁵ = (fun m⁸ -> m⁸)
+//│ 			in (fun m⁹ -> if (h⁵ > m⁹) then ((max0₀ t⁵) h⁵) else ((max1₀ t⁵) m⁹))
+//│ 		in (fun m¹⁰ -> if (h⁴ > m¹⁰) then ((max2₀ t⁴) h⁴) else ((max3₀ t⁴) m¹⁰))
+//│ 	in (fun m¹¹ -> if (h³ > m¹¹) then ((max4₀ t³) h³) else ((max5₀ t³) m¹¹))) 0)
 //│ def max0₀ = 
-//│ 	(fun x¹⁰ -> x¹⁰)
+//│ 	(fun x²⁰ -> x²⁰)
 //│ def max1₀ = 
-//│ 	(fun x¹³ -> x¹³)
+//│ 	(fun x¹⁴ -> x¹⁴)
 //│ def max2₀ = 
-//│ 	(fun x⁷ -> x⁷)
+//│ 	(fun x¹⁷ -> x¹⁷)
 //│ def max3₀ = 
-//│ 	(fun x⁸ -> x⁸)
+//│ 	(fun x¹⁸ -> x¹⁸)
 //│ def max4₀ = 
-//│ 	(fun x¹¹ -> x¹¹)
+//│ 	(fun x¹⁵ -> x¹⁵)
 //│ def max5₀ = 
-//│ 	(fun x¹² -> x¹²)
+//│ 	(fun x¹⁹ -> x¹⁹)
 //│ def max₀ = 
-//│ 	(fun x⁹ -> x⁹)
+//│ 	(fun x¹⁶ -> x¹⁶)
 //│ <<<<<<< after fusion <<<<<<<
 

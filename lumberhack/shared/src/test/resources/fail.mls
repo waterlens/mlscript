@@ -95,19 +95,19 @@ map(ff, l)
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((map₀ ff₀) l₀)
 //│ def ff₀ = 
-//│ 	(fun x¹ -> x¹)
+//│ 	(fun x² -> x²)
 //│ def l₀ = 
-//│ 	let h¹ = [T]
-//│ 	in let t¹ = 	
-//│ 		let h¹ = [TT]
-//│ 		in let t¹ = 	
-//│ 			let h¹ = [TTTT]
-//│ 			in let t¹ = [N]
-//│ 			in [C (f¹ h¹) ((map₀ f¹) t¹)]
-//│ 		in [C (f¹ h¹) ((map₀ f¹) t¹)]
-//│ 	in [C (f¹ h¹) ((map₀ f¹) t¹)]
+//│ 	let h² = [T]
+//│ 	in let t² = 	
+//│ 		let h³ = [TT]
+//│ 		in let t³ = 	
+//│ 			let h⁴ = [TTTT]
+//│ 			in let t⁴ = [N]
+//│ 			in [C (f¹ h⁴) ((map₀ f¹) t⁴)]
+//│ 		in [C (f¹ h³) ((map₀ f¹) t³)]
+//│ 	in [C (f¹ h²) ((map₀ f¹) t²)]
 //│ def map₀ = 
-//│ 	(fun f¹ -> (fun ls¹ -> ls¹))
+//│ 	(fun f² -> (fun ls² -> ls²))
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
 //│ java.lang.Exception: Internal Error: binding not found: Ident(false,f,1)
@@ -171,17 +171,17 @@ rev(C(AA, C(BB, C(CC, N))))(N)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((rev₀ 
-//│ 	let h¹ = [AA]
-//│ 	in let t¹ = 	
-//│ 		let h¹ = [BB]
-//│ 		in let t¹ = 	
-//│ 			let h¹ = [CC]
-//│ 			in let t¹ = (fun a² -> a²)
-//│ 			in (fun a³ -> ((rev₀ t¹) [C h¹ a³]))
-//│ 		in (fun a³ -> ((rev₀ t¹) [C h¹ a³]))
-//│ 	in (fun a³ -> ((rev₀ t¹) [C h¹ a³]))) [N])
+//│ 	let h² = [AA]
+//│ 	in let t² = 	
+//│ 		let h³ = [BB]
+//│ 		in let t³ = 	
+//│ 			let h⁴ = [CC]
+//│ 			in let t⁴ = (fun a⁷ -> a⁷)
+//│ 			in (fun a⁶ -> ((rev₀ t⁴) [C h⁴ a⁶]))
+//│ 		in (fun a⁵ -> ((rev₀ t³) [C h³ a⁵]))
+//│ 	in (fun a⁴ -> ((rev₀ t²) [C h² a⁴]))) [N])
 //│ def rev₀ = 
-//│ 	(fun ls¹ -> ls¹)
+//│ 	(fun ls² -> ls²)
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
 //│ java.lang.Exception: expect to fail but pass
@@ -333,51 +333,51 @@ c(id(p))
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c₀ (id₀ p₀))
 //│ def c₀ = 
-//│ 	(fun x³ -> x³)
+//│ 	(fun x⁸ -> x⁸)
 //│ 	where
 //│ 	def c₁ = 
-//│ 		(fun x¹ -> x¹)
+//│ 		(fun x⁷ -> x⁷)
 //│ 		where
 //│ 		def c₂ = 
-//│ 			(fun x² -> x²)
+//│ 			(fun x⁶ -> x⁶)
 //│ 			where
 //│ 			def c₃ = 
-//│ 				(fun x⁴ -> x⁴)
+//│ 				(fun x⁵ -> x⁵)
 //│ def id₀ = 
-//│ 	(fun y¹ -> (id2₀ y¹))
+//│ 	(fun y² -> (id2₀ y²))
 //│ 	where
 //│ 	def id2₀ = 
-//│ 		(fun yy³ -> yy³)
+//│ 		(fun yy⁷ -> yy⁷)
 //│ def p₀ = 
-//│ 	let a³ = 	
-//│ 		let b³ = 	
-//│ 			let a¹ = (id2₁ p₁)
-//│ 			in a¹
-//│ 		in (c₁ b³)
-//│ 	in a³
+//│ 	let a⁸ = 	
+//│ 		let b⁸ = 	
+//│ 			let a⁹ = (id2₁ p₁)
+//│ 			in a⁹
+//│ 		in (c₁ b⁸)
+//│ 	in a⁸
 //│ 	where
 //│ 	def id2₁ = 
-//│ 		(fun yy⁴ -> yy⁴)
+//│ 		(fun yy⁸ -> yy⁸)
 //│ 	def p₁ = 
-//│ 		let b¹ = 	
-//│ 			let a² = 	
-//│ 				let b² = (id2₂ p₂)
-//│ 				in (c₃ b²)
-//│ 			in a²
-//│ 		in (c₂ b¹)
+//│ 		let b⁶ = 	
+//│ 			let a⁷ = 	
+//│ 				let b⁷ = (id2₂ p₂)
+//│ 				in (c₃ b⁷)
+//│ 			in a⁷
+//│ 		in (c₂ b⁶)
 //│ 		where
 //│ 		def id2₂ = 
-//│ 			(fun yy¹ -> yy¹)
+//│ 			(fun yy⁶ -> yy⁶)
 //│ 		def p₂ = 
-//│ 			let a⁴ = 	
-//│ 				let b⁴ = 	
-//│ 					let a¹ = (id2₃ p₁)
-//│ 					in a¹
-//│ 				in (c₁ b⁴)
-//│ 			in a⁴
+//│ 			let a⁵ = 	
+//│ 				let b⁵ = 	
+//│ 					let a⁶ = (id2₃ p₁)
+//│ 					in a⁶
+//│ 				in (c₁ b⁵)
+//│ 			in a⁵
 //│ 			where
 //│ 			def id2₃ = 
-//│ 				(fun yy² -> yy²)
+//│ 				(fun yy⁵ -> yy⁵)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -511,25 +511,25 @@ map(rev(C(A, C(AA, N)))(N))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (map₀ ((rev₀ 
-//│ 	let h¹ = [B]
-//│ 	in let t¹ = 	
-//│ 		let h² = [BB]
-//│ 		in let t² = (fun a⁵ -> a⁵)
-//│ 		in (fun a⁴ -> ((rev₁ t²) 
-//│ 			let hh¹ = h²
-//│ 			in let tt¹ = a⁴
-//│ 			in [C hh¹ (map₀ tt¹)]))
-//│ 	in (fun a² -> ((rev₁ t¹) 
-//│ 		let hh¹ = h¹
-//│ 		in let tt¹ = a²
-//│ 		in [C hh¹ (map₀ tt¹)]))) [N]))
+//│ 	let h³ = [B]
+//│ 	in let t³ = 	
+//│ 		let h⁴ = [BB]
+//│ 		in let t⁴ = (fun a⁸ -> a⁸)
+//│ 		in (fun a⁷ -> ((rev₁ t⁴) 
+//│ 			let hh³ = h⁴
+//│ 			in let tt³ = a⁷
+//│ 			in [C hh³ (map₀ tt³)]))
+//│ 	in (fun a⁶ -> ((rev₁ t³) 
+//│ 		let hh² = h³
+//│ 		in let tt² = a⁶
+//│ 		in [C hh² (map₀ tt²)]))) [N]))
 //│ def map₀ = 
-//│ 	(fun ls¹ -> ls¹)
+//│ 	(fun ls² -> ls²)
 //│ def rev₀ = 
-//│ 	(fun lss¹ -> lss¹)
+//│ 	(fun lss³ -> lss³)
 //│ 	where
 //│ 	def rev₁ = 
-//│ 		(fun lss² -> lss²)
+//│ 		(fun lss⁴ -> lss⁴)
 //│ <<<<<<< after fusion <<<<<<<
 
 // WRONG: recursive fusion strategies
@@ -636,9 +636,9 @@ inter(C(1, C(2, N)))(C(9, N))
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((inter₀ [C 1 [C 2 [N]]]) [C 9 [N]])
 //│ def inter₀ = 
-//│ 	(fun xs¹ -> case xs¹ of {
-//│ 		N => (fun ys² -> ys²)
-//│ 		| C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₀ ys³) t¹)])})
+//│ 	(fun xs² -> case xs² of {
+//│ 		N => (fun ys⁴ -> ys⁴)
+//│ 		| C h¹ t¹ => (fun ys⁵ -> [C h¹ ((inter₀ ys⁵) t¹)])})
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -727,18 +727,18 @@ typeCheck(inter(C(1, C(2, N)))(C(9, N)))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (typeCheck₀ ((inter₀ 
-//│ 	let h² = 1
-//│ 	in let t² = [C 2 [N]]
-//│ 	in (fun ys⁵ -> [C h² ((inter₁ ys⁵) t²)])) [C 9 [N]]))
+//│ 	let h³ = 1
+//│ 	in let t³ = [C 2 [N]]
+//│ 	in (fun ys⁶ -> [C h³ ((inter₁ ys⁶) t³)])) [C 9 [N]]))
 //│ def inter₀ = 
-//│ 	(fun xs² -> xs²)
+//│ 	(fun xs⁴ -> xs⁴)
 //│ 	where
 //│ 	def inter₁ = 
-//│ 		(fun xs¹ -> case xs¹ of {
-//│ 			N => (fun ys² -> ys²)
-//│ 			| C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])})
+//│ 		(fun xs³ -> case xs³ of {
+//│ 			N => (fun ys⁷ -> ys⁷)
+//│ 			| C h¹ t¹ => (fun ys⁸ -> [C h¹ ((inter₁ ys⁸) t¹)])})
 //│ def typeCheck₀ = 
-//│ 	(fun ls¹ -> case ls¹ of {
+//│ 	(fun ls² -> case ls² of {
 //│ 		C a¹ b¹ => (typeCheck₀ b¹)
 //│ 		| N => [OK]})
 //│ <<<<<<< after fusion <<<<<<<
@@ -772,8 +772,8 @@ idxSum(rev(primitive, N))(0)
 //│ [idxSum^33] (hopeless to continue)
 //│ 	[idxSum^33 · idxSum^7] ---> [idxSum^33] (using original def)
 //│ [rev^34]
-//│ 	[rev^34 · rev^23]
-//│ 		[rev^34 · rev^23 · rev^23] ---> [rev^34 · rev^23] (only one)
+//│ 	[rev^34 · rev^23] (hopeless to continue)
+//│ 		[rev^34 · rev^23 · rev^23] ---> [rev^34 · rev^23] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -817,24 +817,24 @@ idxSum(rev(primitive, N))(0)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((idxSum₀ ((rev₀ primitive⁰) (fun acc² -> 0))) 0)
+//│ ((idxSum₀ ((rev₀ primitive⁰) (fun acc⁴ -> 0))) 0)
 //│ def idxSum₀ = 
-//│ 	(fun ls¹ -> ls¹)
+//│ 	(fun ls² -> ls²)
 //│ def rev₀ = 
-//│ 	(fun lss¹ -> case lss¹ of {
-//│ 		N => (fun a² -> a²)
-//│ 		| C hh¹ tt¹ => (fun a³ -> ((rev₁ tt¹) 
-//│ 			let h¹ = hh¹
-//│ 			in let t¹ = a³
-//│ 			in (fun acc³ -> (acc³ + ((idxSum₀ t¹) (acc³ + 1))))))})
+//│ 	(fun lss³ -> case lss³ of {
+//│ 		N => (fun a⁶ -> a⁶)
+//│ 		| C hh¹ tt¹ => (fun a⁷ -> ((rev₁ tt¹) 
+//│ 			let h² = hh¹
+//│ 			in let t² = a⁷
+//│ 			in (fun acc⁵ -> (acc⁵ + ((idxSum₀ t²) (acc⁵ + 1))))))})
 //│ 	where
 //│ 	def rev₁ = 
-//│ 		(fun lss² -> case lss² of {
-//│ 			N => (fun a⁴ -> a⁴)
-//│ 			| C hh² tt² => (fun a⁵ -> ((rev₁ tt²) 
-//│ 				let h¹ = hh²
-//│ 				in let t¹ = a⁵
-//│ 				in (fun acc³ -> (acc³ + ((idxSum₀ t¹) (acc³ + 1))))))})
+//│ 		(fun lss⁴ -> case lss⁴ of {
+//│ 			N => (fun a⁸ -> a⁸)
+//│ 			| C hh² tt² => (fun a⁹ -> ((rev₁ tt²) 
+//│ 				let h³ = hh²
+//│ 				in let t³ = a⁹
+//│ 				in (fun acc⁶ -> (acc⁶ + ((idxSum₀ t³) (acc⁶ + 1))))))})
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
 //│ java.lang.Exception: expect to fail but pass
@@ -953,31 +953,31 @@ inter(l1(0))(l2)
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((inter₀ (l1₀ 0)) l2₀)
 //│ def inter₀ = 
-//│ 	(fun xs⁵ -> case xs⁵ of {
-//│ 		N => (fun ys¹⁰ -> ys¹⁰)
-//│ 		| C h⁵ t⁵ => (fun ys¹¹ -> [C h⁵ ((inter₁ ys¹¹) t⁵)])})
+//│ 	(fun xs⁷ -> case xs⁷ of {
+//│ 		N => (fun ys¹⁴ -> ys¹⁴)
+//│ 		| C h⁵ t⁵ => (fun ys¹⁵ -> [C h⁵ ((inter₁ ys¹⁵) t⁵)])})
 //│ 	where
 //│ 	def inter₁ = 
-//│ 		(fun xs² -> case xs² of {
-//│ 			N => (fun ys⁴ -> ys⁴)
-//│ 			| C h² t² => (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])})
+//│ 		(fun xs⁹ -> case xs⁹ of {
+//│ 			N => (fun ys¹⁸ -> ys¹⁸)
+//│ 			| C h² t² => (fun ys¹⁹ -> [C h² ((inter₂ ys¹⁹) t²)])})
 //│ 		where
 //│ 		def inter₂ = 
-//│ 			(fun xs¹ -> case xs¹ of {
-//│ 				N => (fun ys² -> ys²)
-//│ 				| C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₃ ys³) t¹)])})
+//│ 			(fun xs⁸ -> case xs⁸ of {
+//│ 				N => (fun ys¹⁶ -> ys¹⁶)
+//│ 				| C h¹ t¹ => (fun ys¹⁷ -> [C h¹ ((inter₃ ys¹⁷) t¹)])})
 //│ 			where
 //│ 			def inter₃ = 
-//│ 				(fun xs³ -> case xs³ of {
-//│ 					N => (fun ys⁶ -> ys⁶)
-//│ 					| C h³ t³ => (fun ys⁷ -> [C h³ ((inter₄ ys⁷) t³)])})
+//│ 				(fun xs¹⁰ -> case xs¹⁰ of {
+//│ 					N => (fun ys²⁰ -> ys²⁰)
+//│ 					| C h³ t³ => (fun ys²¹ -> [C h³ ((inter₄ ys²¹) t³)])})
 //│ 				where
 //│ 				def inter₄ = 
-//│ 					(fun xs⁴ -> case xs⁴ of {
-//│ 						N => (fun ys⁸ -> ys⁸)
-//│ 						| C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₁ ys⁹) t⁴)])})
+//│ 					(fun xs⁶ -> case xs⁶ of {
+//│ 						N => (fun ys¹² -> ys¹²)
+//│ 						| C h⁴ t⁴ => (fun ys¹³ -> [C h⁴ ((inter₁ ys¹³) t⁴)])})
 //│ def l1₀ = 
-//│ 	(fun x¹ -> [C 1 [C 2 (l1₀ ((add⁰ x¹) 1))]])
+//│ 	(fun x² -> [C 1 [C 2 (l1₀ ((add⁰ x²) 1))]])
 //│ def l2₀ = 
 //│ 	[C 9 [C 8 l2₀]]
 //│ <<<<<<< after fusion <<<<<<<
@@ -1100,7 +1100,7 @@ last(C(1, C(2, C(3, N))))
 //│ >>>>>>> after fusion >>>>>>>
 //│ (last₀ [C 1 [C 2 [C 3 [N]]]])
 //│ def last₀ = 
-//│ 	(fun ls¹ -> case ls¹ of {
+//│ 	(fun ls² -> case ls² of {
 //│ 		C h¹ t¹ => case t¹ of {
 //│ 			N => [Some h¹]
 //│ 			| C hh¹ tt¹ => (last₀ t¹)}
@@ -1133,54 +1133,34 @@ rev(primitive)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [rev^27]
-//│ 	[rev^27 · concat^15] (hopeless to continue)
+//│ [rev^27] (hopeless to continue)
+//│ 	[rev^27 · concat^15] (using original def)
 //│ 		[rev^27 · concat^15 · concat^5] ---> [rev^27 · concat^15] (using original def)
-//│ 	[rev^27 · rev^16]
-//│ 		[rev^27 · rev^16 · concat^15] (hopeless to continue)
-//│ 			[rev^27 · rev^16 · concat^15 · concat^5] ---> [rev^27 · rev^16 · concat^15] (using original def)
-//│ 		[rev^27 · rev^16 · rev^16] ---> [rev^27 · rev^16] (only one)
+//│ 	[rev^27 · rev^16] ---> [rev^27] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
 //│ (rev₀ primitive⁰)
 //│ def rev₀ = 
 //│ 	(fun ls¹ -> case ls¹ of {
-//│ 		C h² t² => ((concat₀ (rev₁ t²)) [C h² [N]])
+//│ 		C h³ t³ => ((concat₀ (rev₀ t³)) [C h³ [N]])
 //│ 		| N => [N]})
 //│ 	where
 //│ 	def concat₀ = 
-//│ 		(fun xs² -> case xs² of {
-//│ 			N => (fun ys⁴ -> ys⁴)
-//│ 			| C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ ((concat₀ t⁵) ys⁵)])})
-//│ 	def rev₁ = 
-//│ 		(fun ls² -> case ls² of {
-//│ 			C h³ t³ => ((concat₁ (rev₁ t³)) [C h³ [N]])
-//│ 			| N => [N]})
-//│ 		where
-//│ 		def concat₁ = 
-//│ 			(fun xs¹ -> case xs¹ of {
-//│ 				N => (fun ys² -> ys²)
-//│ 				| C h⁴ t⁴ => (fun ys³ -> [C h⁴ ((concat₁ t⁴) ys³)])})
+//│ 		(fun xs¹ -> case xs¹ of {
+//│ 			N => (fun ys² -> ys²)
+//│ 			| C h² t² => (fun ys³ -> [C h² ((concat₀ t²) ys³)])})
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h⁴ ((concat₁ t⁴) ys³)]: 65 --->
-//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ ((concat₀ t⁵) ys⁵)])}: 80
-//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ ((concat₁ t⁴) ys³)])}: 67
-//│ 	 MORE THAN ONE MATCH EXPR
+//│ [C h² ((concat₀ t²) ys³)]: 39 --->
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h² t² => (fun ys³ -> [C h² ((concat₀ t²) ys³)])}: 41
 //│ [C h³ [N]]: 51 --->
-//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ ((concat₀ t⁵) ys⁵)])}: 80
-//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ ((concat₁ t⁴) ys³)])}: 67
-//│ 	 MORE THAN ONE MATCH EXPR
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h² t² => (fun ys³ -> [C h² ((concat₀ t²) ys³)])}: 41
 //│ [N]: 50 --->
-//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ ((concat₀ t⁵) ys⁵)])}: 80
-//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ ((concat₁ t⁴) ys³)])}: 67
-//│ 	 MORE THAN ONE MATCH EXPR
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h² t² => (fun ys³ -> [C h² ((concat₀ t²) ys³)])}: 41
 //│ [N]: 53 --->
-//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ ((concat₀ t⁵) ys⁵)])}: 80
-//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ ((concat₁ t⁴) ys³)])}: 67
-//│ 	 MORE THAN ONE MATCH EXPR
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h² t² => (fun ys³ -> [C h² ((concat₀ t²) ys³)])}: 41
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -1192,23 +1172,14 @@ rev(primitive)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (rev₀ primitive⁰)
 //│ def rev₀ = 
-//│ 	(fun ls¹ -> case ls¹ of {
-//│ 		C h² t² => ((concat₀ (rev₁ t²)) [C h² [N]])
+//│ 	(fun ls² -> case ls² of {
+//│ 		C h³ t³ => ((concat₀ (rev₀ t³)) [C h³ [N]])
 //│ 		| N => [N]})
 //│ 	where
 //│ 	def concat₀ = 
 //│ 		(fun xs² -> case xs² of {
 //│ 			N => (fun ys⁴ -> ys⁴)
-//│ 			| C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ ((concat₀ t⁵) ys⁵)])})
-//│ 	def rev₁ = 
-//│ 		(fun ls² -> case ls² of {
-//│ 			C h³ t³ => ((concat₁ (rev₁ t³)) [C h³ [N]])
-//│ 			| N => [N]})
-//│ 		where
-//│ 		def concat₁ = 
-//│ 			(fun xs¹ -> case xs¹ of {
-//│ 				N => (fun ys² -> ys²)
-//│ 				| C h⁴ t⁴ => (fun ys³ -> [C h⁴ ((concat₁ t⁴) ys³)])})
+//│ 			| C h² t² => (fun ys⁵ -> [C h² ((concat₀ t²) ys⁵)])})
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
 //│ java.lang.Exception: expect to fail but pass

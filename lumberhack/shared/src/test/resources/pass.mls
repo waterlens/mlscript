@@ -46,10 +46,10 @@ c(p)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c₀ p₀)
 //│ def c₀ = 
-//│ 	(fun x¹ -> x¹)
+//│ 	(fun x² -> x²)
 //│ def p₀ = 
-//│ 	let a¹ = p₀
-//│ 	in (c₀ a¹)
+//│ 	let a² = p₀
+//│ 	in (c₀ a²)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -136,20 +136,20 @@ c(p)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c₀ p₀)
 //│ def c₀ = 
-//│ 	(fun x¹ -> x¹)
+//│ 	(fun x² -> x²)
 //│ 	where
 //│ 	def d₀ = 
-//│ 		(fun y¹ -> y¹)
+//│ 		(fun y² -> y²)
 //│ 		where
 //│ 		def e₀ = 
-//│ 			(fun z¹ -> z¹)
+//│ 			(fun z² -> z²)
 //│ def p₀ = 
-//│ 	let a¹ = 1
-//│ 	in let b¹ = 	
-//│ 		let aa¹ = 2
-//│ 		in let bb¹ = 7
-//│ 		in (e₀ bb¹)
-//│ 	in (d₀ b¹)
+//│ 	let a² = 1
+//│ 	in let b² = 	
+//│ 		let aa² = 2
+//│ 		in let bb² = 7
+//│ 		in (e₀ bb²)
+//│ 	in (d₀ b²)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -249,27 +249,27 @@ c(p)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c₀ p₀)
 //│ def c₀ = 
-//│ 	(fun x² -> x²)
+//│ 	(fun x⁴ -> x⁴)
 //│ 	where
 //│ 	def c₁ = 
-//│ 		(fun x¹ -> x¹)
+//│ 		(fun x³ -> x³)
 //│ def p₀ = 
-//│ 	let a² = 	
-//│ 		let b² = p₁
-//│ 		in b²
-//│ 	in a²
+//│ 	let a⁴ = 	
+//│ 		let b⁴ = p₁
+//│ 		in b⁴
+//│ 	in a⁴
 //│ 	where
 //│ 	def p₁ = 
-//│ 		let y² = 	
-//│ 			let a¹ = p₂
-//│ 			in a¹
-//│ 		in (c₁ y²)
+//│ 		let y⁴ = 	
+//│ 			let a³ = p₂
+//│ 			in a³
+//│ 		in (c₁ y⁴)
 //│ 		where
 //│ 		def p₂ = 
-//│ 			let b¹ = 	
-//│ 				let y¹ = p₀
-//│ 				in (c₀ y¹)
-//│ 			in b¹
+//│ 			let b³ = 	
+//│ 				let y³ = p₀
+//│ 				in (c₀ y³)
+//│ 			in b³
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -342,20 +342,20 @@ c(id(p))
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c₀ (id₀ p₀))
 //│ def c₀ = 
-//│ 	(fun x² -> x²)
+//│ 	(fun x⁴ -> x⁴)
 //│ 	where
 //│ 	def c₁ = 
-//│ 		(fun x¹ -> x¹)
+//│ 		(fun x³ -> x³)
 //│ def id₀ = 
-//│ 	(fun y¹ -> (id2₀ y¹))
+//│ 	(fun y² -> (id2₀ y²))
 //│ 	where
 //│ 	def id2₀ = 
-//│ 		(fun yy¹ -> yy¹)
+//│ 		(fun yy² -> yy²)
 //│ def p₀ = 
-//│ 	let a² = 	
-//│ 		let a¹ = p₀
-//│ 		in (c₀ a¹)
-//│ 	in (c₁ a²)
+//│ 	let a³ = 	
+//│ 		let a⁴ = p₀
+//│ 		in (c₀ a⁴)
+//│ 	in (c₁ a³)
 //│ <<<<<<< after fusion <<<<<<<
 
 fun sum(ls) = if ls is
@@ -448,32 +448,32 @@ sum(mapa(mapb(primitive)))
 //│ >>>>>>> after fusion >>>>>>>
 //│ (sum₀ (mapa₀ (mapb₀ primitive⁰)))
 //│ def mapa₀ = 
-//│ 	(fun lsa² -> lsa²)
+//│ 	(fun lsa³ -> lsa³)
 //│ 	where
 //│ 	def mapa₁ = 
-//│ 		(fun lsa¹ -> lsa¹)
+//│ 		(fun lsa⁴ -> lsa⁴)
 //│ def mapb₀ = 
-//│ 	(fun lsb² -> case lsb² of {
+//│ 	(fun lsb⁴ -> case lsb⁴ of {
 //│ 		C hb² tb² => 
-//│ 			let ha² = (primitive⁰ hb²)
-//│ 			in let ta² = (mapb₁ tb²)
-//│ 			in let h¹ = (primitive⁰ ha²)
-//│ 			in let t¹ = (mapa₁ ta²)
-//│ 			in [S [N] (sum₁ t¹)]})
+//│ 			let ha⁴ = (primitive⁰ hb²)
+//│ 			in let ta⁴ = (mapb₁ tb²)
+//│ 			in let h⁴ = (primitive⁰ ha⁴)
+//│ 			in let t⁴ = (mapa₁ ta⁴)
+//│ 			in [S [N] (sum₁ t⁴)]})
 //│ 	where
 //│ 	def mapb₁ = 
-//│ 		(fun lsb¹ -> case lsb¹ of {
+//│ 		(fun lsb³ -> case lsb³ of {
 //│ 			C hb¹ tb¹ => 
-//│ 				let ha¹ = (primitive⁰ hb¹)
-//│ 				in let ta¹ = (mapb₁ tb¹)
-//│ 				in let h² = (primitive⁰ ha¹)
-//│ 				in let t² = (mapa₁ ta¹)
-//│ 				in [S [N] (sum₁ t²)]})
+//│ 				let ha³ = (primitive⁰ hb¹)
+//│ 				in let ta³ = (mapb₁ tb¹)
+//│ 				in let h³ = (primitive⁰ ha³)
+//│ 				in let t³ = (mapa₁ ta³)
+//│ 				in [S [N] (sum₁ t³)]})
 //│ def sum₀ = 
-//│ 	(fun ls¹ -> ls¹)
+//│ 	(fun ls³ -> ls³)
 //│ 	where
 //│ 	def sum₁ = 
-//│ 		(fun ls² -> ls²)
+//│ 		(fun ls⁴ -> ls⁴)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -511,9 +511,9 @@ if C(A, B(C)) is
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ 
-//│ 	let a¹ = [A]
-//│ 	in let b¹ = [B [C]]
-//│ 	in [D b¹]
+//│ 	let a² = [A]
+//│ 	in let b² = [B [C]]
+//│ 	in [D b²]
 //│ 
 //│ <<<<<<< after fusion <<<<<<<
 //│
@@ -628,37 +628,37 @@ ca(p)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (ca₀ p₀)
 //│ def ca₀ = 
-//│ 	(fun x³ -> x³)
+//│ 	(fun x⁹ -> x⁹)
 //│ 	where
 //│ 	def cb₀ = 
-//│ 		(fun x⁶ -> x⁶)
+//│ 		(fun x¹⁰ -> x¹⁰)
 //│ 		where
 //│ 		def ca₁ = 
-//│ 			(fun x⁴ -> x⁴)
+//│ 			(fun x¹¹ -> x¹¹)
 //│ 			where
 //│ 			def cb₁ = 
-//│ 				(fun x⁷ -> x⁷)
+//│ 				(fun x¹² -> x¹²)
 //│ 				where
 //│ 				def ca₂ = 
-//│ 					(fun x² -> x²)
+//│ 					(fun x⁸ -> x⁸)
 //│ 					where
 //│ 					def cb₂ = 
-//│ 						(fun x⁵ -> x⁵)
+//│ 						(fun x¹³ -> x¹³)
 //│ def p₀ = 
-//│ 	let a² = 	
-//│ 		let b² = 	
-//│ 			let a³ = p₁
-//│ 			in (cb₁ a³)
-//│ 		in (ca₁ b²)
-//│ 	in (cb₀ a²)
+//│ 	let a⁵ = 	
+//│ 		let b⁶ = 	
+//│ 			let a⁶ = p₁
+//│ 			in (cb₁ a⁶)
+//│ 		in (ca₁ b⁶)
+//│ 	in (cb₀ a⁵)
 //│ 	where
 //│ 	def p₁ = 
-//│ 		let b³ = 	
-//│ 			let a¹ = 	
-//│ 				let b¹ = p₀
-//│ 				in (ca₀ b¹)
-//│ 			in (cb₂ a¹)
-//│ 		in (ca₂ b³)
+//│ 		let b⁴ = 	
+//│ 			let a⁴ = 	
+//│ 				let b⁵ = p₀
+//│ 				in (ca₀ b⁵)
+//│ 			in (cb₂ a⁴)
+//│ 		in (ca₂ b⁴)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -764,31 +764,31 @@ c1(p1)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c1₀ p1₀)
 //│ def c1₀ = 
-//│ 	(fun x1² -> case x1² of {
+//│ 	(fun x1⁶ -> case x1⁶ of {
 //│ 		C a² => (c2₀ a²)})
 //│ 	where
 //│ 	def c2₀ = 
-//│ 		(fun x2¹ -> x2¹)
+//│ 		(fun x2⁴ -> x2⁴)
 //│ 		where
 //│ 		def c1₁ = 
-//│ 			(fun x1³ -> x1³)
+//│ 			(fun x1⁴ -> x1⁴)
 //│ 			where
 //│ 			def c2₁ = 
-//│ 				(fun x2² -> x2²)
+//│ 				(fun x2³ -> x2³)
 //│ 				where
 //│ 				def c1₂ = 
-//│ 					(fun x1¹ -> case x1¹ of {
+//│ 					(fun x1⁵ -> case x1⁵ of {
 //│ 						C a¹ => (c2₀ a¹)})
 //│ def p1₀ = 
 //│ 	[C 
-//│ 		let b¹ = 	
-//│ 			let a³ = p2₀
-//│ 			in (c2₁ a³)
-//│ 		in (c1₁ b¹)]
+//│ 		let b⁴ = 	
+//│ 			let a⁴ = p2₀
+//│ 			in (c2₁ a⁴)
+//│ 		in (c1₁ b⁴)]
 //│ 	where
 //│ 	def p2₀ = 
-//│ 		let b² = p1₀
-//│ 		in (c1₂ b²)
+//│ 		let b³ = p1₀
+//│ 		in (c1₂ b³)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -885,20 +885,20 @@ map(l)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (map₀ l₀)
 //│ def l₀ = 
-//│ 	let h¹ = [T]
-//│ 	in let t¹ = 	
-//│ 		let h¹ = [TT]
-//│ 		in let t¹ = 	
-//│ 			let h¹ = [TTTT]
-//│ 			in let t¹ = [N]
-//│ 			in [C (ff₀ h¹) (map₀ t¹)]
-//│ 		in [C (ff₀ h¹) (map₀ t¹)]
-//│ 	in [C (ff₀ h¹) (map₀ t¹)]
+//│ 	let h² = [T]
+//│ 	in let t² = 	
+//│ 		let h³ = [TT]
+//│ 		in let t³ = 	
+//│ 			let h⁴ = [TTTT]
+//│ 			in let t⁴ = [N]
+//│ 			in [C (ff₀ h⁴) (map₀ t⁴)]
+//│ 		in [C (ff₀ h³) (map₀ t³)]
+//│ 	in [C (ff₀ h²) (map₀ t²)]
 //│ def map₀ = 
-//│ 	(fun ls¹ -> ls¹)
+//│ 	(fun ls² -> ls²)
 //│ 	where
 //│ 	def ff₀ = 
-//│ 		(fun x¹ -> x¹)
+//│ 		(fun x² -> x²)
 //│ <<<<<<< after fusion <<<<<<<
 
 fun map(ls) = if ls is
@@ -992,17 +992,17 @@ map(l)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (map₀ l₀)
 //│ def l₀ = 
-//│ 	let h¹ = [T]
-//│ 	in let t¹ = 	
-//│ 		let h¹ = [TT]
-//│ 		in let t¹ = 	
-//│ 			let h¹ = [TTTT]
-//│ 			in let t¹ = [N]
-//│ 			in [C h¹ (map₀ t¹)]
-//│ 		in [C h¹ (map₀ t¹)]
-//│ 	in [C h¹ (map₀ t¹)]
+//│ 	let h² = [T]
+//│ 	in let t² = 	
+//│ 		let h³ = [TT]
+//│ 		in let t³ = 	
+//│ 			let h⁴ = [TTTT]
+//│ 			in let t⁴ = [N]
+//│ 			in [C h⁴ (map₀ t⁴)]
+//│ 		in [C h³ (map₀ t³)]
+//│ 	in [C h² (map₀ t²)]
 //│ def map₀ = 
-//│ 	(fun ls¹ -> ls¹)
+//│ 	(fun ls² -> ls²)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -1128,34 +1128,34 @@ sum(mapa(mapb(primitive)))
 //│ >>>>>>> after fusion >>>>>>>
 //│ (sum₀ (mapa₀ (mapb₀ primitive⁰)))
 //│ def mapa₀ = 
-//│ 	(fun lsa¹ -> lsa¹)
+//│ 	(fun lsa³ -> lsa³)
 //│ 	where
 //│ 	def mapa₁ = 
-//│ 		(fun lsa² -> lsa²)
+//│ 		(fun lsa⁴ -> lsa⁴)
 //│ def mapb₀ = 
-//│ 	(fun lsb² -> case lsb² of {
+//│ 	(fun lsb⁴ -> case lsb⁴ of {
 //│ 		C hb² tb² => 
-//│ 			let ha¹ = (primitive⁰ hb²)
-//│ 			in let ta¹ = (mapb₁ tb²)
-//│ 			in let h² = (primitive⁰ ha¹)
-//│ 			in let t² = (mapa₁ ta¹)
-//│ 			in [S [N] (sum₁ t²)]
+//│ 			let ha⁴ = (primitive⁰ hb²)
+//│ 			in let ta⁴ = (mapb₁ tb²)
+//│ 			in let h⁴ = (primitive⁰ ha⁴)
+//│ 			in let t⁴ = (mapa₁ ta⁴)
+//│ 			in [S [N] (sum₁ t⁴)]
 //│ 		| N => [N]})
 //│ 	where
 //│ 	def mapb₁ = 
-//│ 		(fun lsb¹ -> case lsb¹ of {
+//│ 		(fun lsb³ -> case lsb³ of {
 //│ 			C hb¹ tb¹ => 
-//│ 				let ha² = (primitive⁰ hb¹)
-//│ 				in let ta² = (mapb₁ tb¹)
-//│ 				in let h¹ = (primitive⁰ ha²)
-//│ 				in let t¹ = (mapa₁ ta²)
-//│ 				in [S [N] (sum₁ t¹)]
+//│ 				let ha³ = (primitive⁰ hb¹)
+//│ 				in let ta³ = (mapb₁ tb¹)
+//│ 				in let h³ = (primitive⁰ ha³)
+//│ 				in let t³ = (mapa₁ ta³)
+//│ 				in [S [N] (sum₁ t³)]
 //│ 			| N => [N]})
 //│ def sum₀ = 
-//│ 	(fun ls² -> ls²)
+//│ 	(fun ls³ -> ls³)
 //│ 	where
 //│ 	def sum₁ = 
-//│ 		(fun ls¹ -> ls¹)
+//│ 		(fun ls⁴ -> ls⁴)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -1211,13 +1211,13 @@ main(c)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (main₀ c₀)
 //│ def c₀ = 
-//│ 	(fun x¹ -> x¹)
+//│ 	(fun x² -> x²)
 //│ def main₀ = 
-//│ 	(fun cc¹ -> (cc¹ p₀))
+//│ 	(fun cc² -> (cc² p₀))
 //│ 	where
 //│ 	def p₀ = 
-//│ 		let a¹ = p₀
-//│ 		in (c₀ a¹)
+//│ 		let a² = p₀
+//│ 		in (c₀ a²)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -1299,21 +1299,21 @@ main(p)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (main₀ p₀)
 //│ def main₀ = 
-//│ 	(fun pp¹ -> pp¹)
+//│ 	(fun pp² -> pp²)
 //│ 	where
 //│ 	def c₀ = 
-//│ 		(fun x¹ -> x¹)
+//│ 		(fun x² -> x²)
 //│ def p₀ = 
-//│ 	let b¹ = p₁
-//│ 	in b¹
+//│ 	let b² = p₁
+//│ 	in b²
 //│ 	where
 //│ 	def p₁ = 
-//│ 		let d¹ = p₂
-//│ 		in (c₀ d¹)
+//│ 		let d² = p₂
+//│ 		in (c₀ d²)
 //│ 		where
 //│ 		def p₂ = 
-//│ 			let a¹ = p₂
-//│ 			in (c₀ a¹)
+//│ 			let a² = p₂
+//│ 			in (c₀ a²)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -1367,12 +1367,12 @@ main(c, p)
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((main₀ c₀) p₀)
 //│ def c₀ = 
-//│ 	(fun x¹ -> x¹)
+//│ 	(fun x² -> x²)
 //│ def main₀ = 
-//│ 	(fun cc¹ -> (fun pp¹ -> (cc¹ pp¹)))
+//│ 	(fun cc² -> (fun pp² -> (cc² pp²)))
 //│ def p₀ = 
-//│ 	let a¹ = p₀
-//│ 	in (c₀ a¹)
+//│ 	let a² = p₀
+//│ 	in (c₀ a²)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -1459,28 +1459,28 @@ a(p)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (a₀ p₀)
 //│ def a₀ = 
-//│ 	(fun x⁴ -> (b₀ x⁴))
+//│ 	(fun x¹⁰ -> (b₀ x¹⁰))
 //│ 	where
 //│ 	def b₀ = 
-//│ 		(fun x⁷ -> (c₀ x⁷))
+//│ 		(fun x¹¹ -> (c₀ x¹¹))
 //│ 		where
 //│ 		def c₀ = 
-//│ 			(fun x⁶ -> ((d₀ cons₀) x⁶))
+//│ 			(fun x⁸ -> ((d₀ cons₀) x⁸))
 //│ 			where
 //│ 			def cons₀ = 
-//│ 				(fun y² -> y²)
+//│ 				(fun y³ -> y³)
 //│ 				where
 //│ 				def cons₁ = 
-//│ 					(fun y¹ -> y¹)
+//│ 					(fun y⁴ -> y⁴)
 //│ 			def d₀ = 
-//│ 				(fun cc¹ -> (fun x⁵ -> (cc¹ x⁵)))
+//│ 				(fun cc² -> (fun x⁹ -> (cc² x⁹)))
 //│ def p₀ = 
-//│ 	let aa² = p₁
-//│ 	in (cons₁ aa²)
+//│ 	let aa⁴ = p₁
+//│ 	in (cons₁ aa⁴)
 //│ 	where
 //│ 	def p₁ = 
-//│ 		let aa¹ = p₁
-//│ 		in (cons₁ aa¹)
+//│ 		let aa³ = p₁
+//│ 		in (cons₁ aa³)
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT:
@@ -1528,9 +1528,9 @@ c(p)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c₀ p₀)
 //│ def c₀ = 
-//│ 	(fun x¹ -> 
-//│ 		let a¹ = x¹
-//│ 		in (c₀ a¹))
+//│ 	(fun x² -> 
+//│ 		let a² = x²
+//│ 		in (c₀ a²))
 //│ def p₀ = 
 //│ 	[C [N]]
 //│ <<<<<<< after fusion <<<<<<<
@@ -1635,26 +1635,26 @@ c2(id(main))
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c2₀ (id₀ main₀))
 //│ def c2₀ = 
-//│ 	(fun z¹ -> z¹)
+//│ 	(fun z² -> z²)
 //│ def id₀ = 
-//│ 	(fun y¹ -> (c1₀ 
-//│ 		let aa¹ = y¹
-//│ 		in aa¹))
+//│ 	(fun y² -> (c1₀ 
+//│ 		let aa² = y²
+//│ 		in aa²))
 //│ 	where
 //│ 	def c1₀ = 
-//│ 		(fun xx¹ -> xx¹)
+//│ 		(fun xx² -> xx²)
 //│ def main₀ = 
 //│ 	(c₀ p₀)
 //│ 	where
 //│ 	def c₀ = 
-//│ 		(fun x¹ -> x¹)
+//│ 		(fun x² -> x²)
 //│ 	def p₀ = 
-//│ 		let a¹ = p₁
-//│ 		in a¹
+//│ 		let a² = p₁
+//│ 		in a²
 //│ 		where
 //│ 		def p₁ = 
-//│ 			let b¹ = p₁
-//│ 			in (c2₀ b¹)
+//│ 			let b² = p₁
+//│ 			in (c2₀ b²)
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT:
@@ -1763,20 +1763,20 @@ c(t)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c₀ t₀)
 //│ def c₀ = 
-//│ 	(fun x¹ -> x¹)
+//│ 	(fun x² -> x²)
 //│ def t₀ = 
-//│ 	let n¹ = [KK]
-//│ 	in let l¹ = 	
-//│ 		let n¹ = [NN]
-//│ 		in let l¹ = [LL]
-//│ 		in let r¹ = [LL]
-//│ 		in [T n¹ (c₀ l¹) (c₀ r¹)]
-//│ 	in let r¹ = 	
-//│ 		let n¹ = [NN]
-//│ 		in let l¹ = [LL]
-//│ 		in let r¹ = [LL]
-//│ 		in [T n¹ (c₀ l¹) (c₀ r¹)]
-//│ 	in [T n¹ (c₀ l¹) (c₀ r¹)]
+//│ 	let n² = [KK]
+//│ 	in let l² = 	
+//│ 		let n⁴ = [NN]
+//│ 		in let l⁴ = [LL]
+//│ 		in let r⁴ = [LL]
+//│ 		in [T n⁴ (c₀ l⁴) (c₀ r⁴)]
+//│ 	in let r² = 	
+//│ 		let n³ = [NN]
+//│ 		in let l³ = [LL]
+//│ 		in let r³ = [LL]
+//│ 		in [T n³ (c₀ l³) (c₀ r³)]
+//│ 	in [T n² (c₀ l²) (c₀ r²)]
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -1896,23 +1896,23 @@ c(t)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c₀ t₀)
 //│ def c₀ = 
-//│ 	(fun x¹ -> x¹)
+//│ 	(fun x² -> x²)
 //│ def t₀ = 
-//│ 	let n¹ = [KK]
-//│ 	in let l¹ = aa₀
-//│ 	in let r¹ = bb₀
-//│ 	in [T n¹ (c₀ l¹) (c₀ r¹)]
+//│ 	let n³ = [KK]
+//│ 	in let l³ = aa₀
+//│ 	in let r³ = bb₀
+//│ 	in [T n³ (c₀ l³) (c₀ r³)]
 //│ 	where
 //│ 	def aa₀ = 
-//│ 		let n¹ = [NN]
-//│ 		in let l¹ = [LL]
-//│ 		in let r¹ = [LL]
-//│ 		in [T n¹ (c₀ l¹) (c₀ r¹)]
+//│ 		let n⁴ = [NN]
+//│ 		in let l⁴ = [LL]
+//│ 		in let r⁴ = [LL]
+//│ 		in [T n⁴ (c₀ l⁴) (c₀ r⁴)]
 //│ 	def bb₀ = 
-//│ 		let n¹ = [NN]
-//│ 		in let l¹ = [LL]
-//│ 		in let r¹ = [LL]
-//│ 		in [T n¹ (c₀ l¹) (c₀ r¹)]
+//│ 		let n² = [NN]
+//│ 		in let l² = [LL]
+//│ 		in let r² = [LL]
+//│ 		in [T n² (c₀ l²) (c₀ r²)]
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -1977,13 +1977,13 @@ map(l)(
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((map₀ l₀) (fun x¹ -> x¹))
+//│ ((map₀ l₀) (fun x² -> x²))
 //│ def l₀ = 
-//│ 	let h¹ = [T]
-//│ 	in let t¹ = (fun f³ -> [N])
-//│ 	in (fun f² -> [C (f² h¹) ((map₀ t¹) f²)])
+//│ 	let h² = [T]
+//│ 	in let t² = (fun f⁵ -> [N])
+//│ 	in (fun f⁴ -> [C (f⁴ h²) ((map₀ t²) f⁴)])
 //│ def map₀ = 
-//│ 	(fun ls¹ -> ls¹)
+//│ 	(fun ls² -> ls²)
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT:
@@ -2051,17 +2051,17 @@ lastDrive(C(1, C(2, N)))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (lastDrive₀ 
-//│ 	let hh¹ = 1
-//│ 	in let tt¹ = 	
-//│ 		let h¹ = 2
-//│ 		in let t¹ = (fun x² -> x²)
-//│ 		in (fun x³ -> ((last₀ t¹) h¹))
-//│ 	in [Some ((last₀ tt¹) hh¹)])
+//│ 	let hh² = 1
+//│ 	in let tt² = 	
+//│ 		let h² = 2
+//│ 		in let t² = (fun x⁵ -> x⁵)
+//│ 		in (fun x⁴ -> ((last₀ t²) h²))
+//│ 	in [Some ((last₀ tt²) hh²)])
 //│ def lastDrive₀ = 
-//│ 	(fun xs¹ -> xs¹)
+//│ 	(fun xs² -> xs²)
 //│ 	where
 //│ 	def last₀ = 
-//│ 		(fun ys¹ -> ys¹)
+//│ 		(fun ys² -> ys²)
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: with expanding termination
@@ -2110,9 +2110,9 @@ c(p)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c₀ p₀)
 //│ def c₀ = 
-//│ 	(fun x¹ -> 
-//│ 		let a¹ = x¹
-//│ 		in (c₀ a¹))
+//│ 	(fun x² -> 
+//│ 		let a² = x²
+//│ 		in (c₀ a²))
 //│ def p₀ = 
 //│ 	[C p₀]
 //│ <<<<<<< after fusion <<<<<<<
@@ -2167,10 +2167,10 @@ main(0)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (main₀ 0)
 //│ def main₀ = 
-//│ 	(fun y¹ -> (c₀ p₀))
+//│ 	(fun y² -> (c₀ p₀))
 //│ 	where
 //│ 	def c₀ = 
-//│ 		(fun x¹ -> case x¹ of {
+//│ 		(fun x² -> case x² of {
 //│ 			C a¹ => a¹})
 //│ 	def p₀ = 
 //│ 		[C p₀]
@@ -2267,11 +2267,11 @@ c2(B)
 //│ def a₁ = 
 //│ 	[AAA]
 //│ def c1₀ = 
-//│ 	(fun x1¹ -> x1¹)
+//│ 	(fun x1² -> x1²)
 //│ def c2₀ = 
-//│ 	(fun x2¹ -> x2¹)
+//│ 	(fun x2⁴ -> x2⁴)
 //│ def c2₁ = 
-//│ 	(fun x2² -> x2²)
+//│ 	(fun x2³ -> x2³)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -2333,17 +2333,17 @@ rev(C(AA, C(BB, C(CC, N))))(N)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((rev₀ 
-//│ 	let h¹ = [AA]
-//│ 	in let t¹ = 	
-//│ 		let h¹ = [BB]
-//│ 		in let t¹ = 	
-//│ 			let h¹ = [CC]
-//│ 			in let t¹ = (fun a² -> a²)
-//│ 			in (fun a³ -> ((rev₀ t¹) [C h¹ a³]))
-//│ 		in (fun a³ -> ((rev₀ t¹) [C h¹ a³]))
-//│ 	in (fun a³ -> ((rev₀ t¹) [C h¹ a³]))) [N])
+//│ 	let h² = [AA]
+//│ 	in let t² = 	
+//│ 		let h³ = [BB]
+//│ 		in let t³ = 	
+//│ 			let h⁴ = [CC]
+//│ 			in let t⁴ = (fun a⁷ -> a⁷)
+//│ 			in (fun a⁶ -> ((rev₀ t⁴) [C h⁴ a⁶]))
+//│ 		in (fun a⁵ -> ((rev₀ t³) [C h³ a⁵]))
+//│ 	in (fun a⁴ -> ((rev₀ t²) [C h² a⁴]))) [N])
 //│ def rev₀ = 
-//│ 	(fun ls¹ -> ls¹)
+//│ 	(fun ls² -> ls²)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -2413,17 +2413,17 @@ lastDrive(C(1, C(2, N)))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (lastDrive₀ 
-//│ 	let hh¹ = 1
-//│ 	in let tt¹ = 	
-//│ 		let h¹ = 2
-//│ 		in let t¹ = (fun x² -> x²)
-//│ 		in (fun x³ -> ((last₀ t¹) h¹))
-//│ 	in [Some ((last₀ tt¹) hh¹)])
+//│ 	let hh² = 1
+//│ 	in let tt² = 	
+//│ 		let h² = 2
+//│ 		in let t² = (fun x⁵ -> x⁵)
+//│ 		in (fun x⁴ -> ((last₀ t²) h²))
+//│ 	in [Some ((last₀ tt²) hh²)])
 //│ def lastDrive₀ = 
-//│ 	(fun xs¹ -> xs¹)
+//│ 	(fun xs² -> xs²)
 //│ 	where
 //│ 	def last₀ = 
-//│ 		(fun ys¹ -> ys¹)
+//│ 		(fun ys² -> ys²)
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: the time of unrolling is correct
@@ -2621,79 +2621,79 @@ id6(id4)(c)(id5(id2)(id3(p)))
 //│ >>>>>>> after fusion >>>>>>>
 //│ (((id6₀ id4₀) c₀) ((id5₀ id2₀) (id3₀ p₀)))
 //│ def c₀ = 
-//│ 	(fun xx⁷ -> xx⁷)
+//│ 	(fun xx¹⁷ -> xx¹⁷)
 //│ 	where
 //│ 	def c₁ = 
-//│ 		(fun xx³ -> xx³)
+//│ 		(fun xx¹² -> xx¹²)
 //│ 		where
 //│ 		def c₂ = 
-//│ 			(fun xx⁵ -> xx⁵)
+//│ 			(fun xx¹⁸ -> xx¹⁸)
 //│ 			where
 //│ 			def c₃ = 
-//│ 				(fun xx² -> xx²)
+//│ 				(fun xx¹⁴ -> xx¹⁴)
 //│ 				where
 //│ 				def c₄ = 
-//│ 					(fun xx⁴ -> xx⁴)
+//│ 					(fun xx¹¹ -> xx¹¹)
 //│ 					where
 //│ 					def c₅ = 
-//│ 						(fun xx⁸ -> xx⁸)
+//│ 						(fun xx¹⁰ -> xx¹⁰)
 //│ 						where
 //│ 						def c₆ = 
-//│ 							(fun xx⁹ -> xx⁹)
+//│ 							(fun xx¹⁵ -> xx¹⁵)
 //│ 							where
 //│ 							def c₇ = 
-//│ 								(fun xx¹ -> xx¹)
+//│ 								(fun xx¹⁶ -> xx¹⁶)
 //│ 								where
 //│ 								def c₈ = 
-//│ 									(fun xx⁶ -> xx⁶)
+//│ 									(fun xx¹³ -> xx¹³)
 //│ def id2₀ = 
-//│ 	(fun y¹ -> y¹)
+//│ 	(fun y² -> y²)
 //│ def id3₀ = 
-//│ 	(fun z¹ -> z¹)
+//│ 	(fun z² -> z²)
 //│ def id4₀ = 
-//│ 	(fun k³ -> k³)
+//│ 	(fun k⁷ -> k⁷)
 //│ def id5₀ = 
-//│ 	(fun j¹ -> j¹)
+//│ 	(fun j² -> j²)
 //│ def id6₀ = 
-//│ 	(fun l¹ -> l¹)
+//│ 	(fun l² -> l²)
 //│ def p₀ = 
-//│ 	let a⁷ = 	
-//│ 		let a³ = 	
-//│ 			let a⁵ = (id7₀ 
-//│ 				let a² = 	
-//│ 					let a⁴ = (id1₀ p₁)
-//│ 					in (c₅ a⁴)
-//│ 				in (c₄ a²))
-//│ 			in (c₃ a⁵)
-//│ 		in (c₂ a³)
-//│ 	in (c₁ a⁷)
+//│ 	let a¹⁵ = 	
+//│ 		let a¹⁶ = 	
+//│ 			let a¹⁷ = (id7₀ 
+//│ 				let a¹⁸ = 	
+//│ 					let a¹⁹ = (id1₀ p₁)
+//│ 					in (c₅ a¹⁹)
+//│ 				in (c₄ a¹⁸))
+//│ 			in (c₃ a¹⁷)
+//│ 		in (c₂ a¹⁶)
+//│ 	in (c₁ a¹⁵)
 //│ 	where
 //│ 	def id1₀ = 
-//│ 		(fun x¹ -> (id₀ x¹))
+//│ 		(fun x³ -> (id₀ x³))
 //│ 		where
 //│ 		def id₀ = 
-//│ 			(fun k⁴ -> k⁴)
+//│ 			(fun k⁶ -> k⁶)
 //│ 	def id7₀ = 
-//│ 		(fun i¹ -> i¹)
+//│ 		(fun i³ -> i³)
 //│ 	def p₁ = 
-//│ 		let a⁸ = 	
-//│ 			let a⁹ = 	
-//│ 				let a¹ = (id7₁ 
-//│ 					let a⁶ = 	
-//│ 						let a⁴ = (id1₁ p₁)
-//│ 						in (c₅ a⁴)
-//│ 					in (c₄ a⁶))
-//│ 				in (c₈ a¹)
-//│ 			in (c₇ a⁹)
-//│ 		in (c₆ a⁸)
+//│ 		let a¹⁰ = 	
+//│ 			let a¹¹ = 	
+//│ 				let a¹² = (id7₁ 
+//│ 					let a¹³ = 	
+//│ 						let a¹⁴ = (id1₁ p₁)
+//│ 						in (c₅ a¹⁴)
+//│ 					in (c₄ a¹³))
+//│ 				in (c₈ a¹²)
+//│ 			in (c₇ a¹¹)
+//│ 		in (c₆ a¹⁰)
 //│ 		where
 //│ 		def id1₁ = 
-//│ 			(fun x² -> (id₁ x²))
+//│ 			(fun x⁴ -> (id₁ x⁴))
 //│ 			where
 //│ 			def id₁ = 
-//│ 				(fun k² -> k²)
+//│ 				(fun k⁵ -> k⁵)
 //│ 		def id7₁ = 
-//│ 			(fun i² -> i²)
+//│ 			(fun i⁴ -> i⁴)
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT:
@@ -2767,15 +2767,15 @@ c(id(p))
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c₀ (id₀ p₀))
 //│ def c₀ = 
-//│ 	(fun y¹ -> case y¹ of {
+//│ 	(fun y² -> case y² of {
 //│ 		C aa¹ => (c₀ aa¹)})
 //│ def id₀ = 
-//│ 	(fun x¹ -> x¹)
+//│ 	(fun x² -> x²)
 //│ def p₀ = 
-//│ 	let a¹ = p₁
+//│ 	let a² = p₁
 //│ 	in (id₀ 
-//│ 		let b¹ = [C a¹]
-//│ 		in b¹)
+//│ 		let b² = [C a²]
+//│ 		in b²)
 //│ 	where
 //│ 	def p₁ = 
 //│ 		[C p₁]
@@ -2898,23 +2898,23 @@ len(map(C(A, C(B, N))))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (len₀ (map₀ 
-//│ 	let h⁴ = [AA]
-//│ 	in let t⁴ = 	
-//│ 		let h² = [BB]
-//│ 		in let t² = 0
-//│ 		in let h³ = h²
-//│ 		in let t³ = (map₁ t²)
-//│ 		in (1 + (len₀ t³))
-//│ 	in let h³ = h⁴
-//│ 	in let t³ = (map₁ t⁴)
-//│ 	in (1 + (len₀ t³))))
+//│ 	let h⁵ = [AA]
+//│ 	in let t⁵ = 	
+//│ 		let h⁷ = [BB]
+//│ 		in let t⁷ = 0
+//│ 		in let h⁸ = h⁷
+//│ 		in let t⁸ = (map₁ t⁷)
+//│ 		in (1 + (len₀ t⁸))
+//│ 	in let h⁶ = h⁵
+//│ 	in let t⁶ = (map₁ t⁵)
+//│ 	in (1 + (len₀ t⁶))))
 //│ def len₀ = 
-//│ 	(fun ls³ -> ls³)
+//│ 	(fun ls⁶ -> ls⁶)
 //│ def map₀ = 
-//│ 	(fun ls⁴ -> ls⁴)
+//│ 	(fun ls⁷ -> ls⁷)
 //│ 	where
 //│ 	def map₁ = 
-//│ 		(fun ls² -> ls²)
+//│ 		(fun ls⁵ -> ls⁵)
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: multiple match, but correct
@@ -2966,14 +2966,14 @@ f(C(A))(C(B))(C(D))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (((f₀ 
-//│ 	let a¹ = [A]
+//│ 	let a² = [A]
 //│ 	in f₀) 
-//│ 	let a¹ = [B]
+//│ 	let a³ = [B]
 //│ 	in f₀) 
-//│ 	let a¹ = [D]
+//│ 	let a⁴ = [D]
 //│ 	in f₀)
 //│ def f₀ = 
-//│ 	(fun x¹ -> x¹)
+//│ 	(fun x² -> x²)
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT:
@@ -3146,52 +3146,52 @@ c(t)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c₀ t₀)
 //│ def c₀ = 
-//│ 	(fun x¹ -> x¹)
+//│ 	(fun x⁵ -> x⁵)
 //│ 	where
 //│ 	def c₁ = 
-//│ 		(fun x² -> case x² of {
+//│ 		(fun x⁴ -> case x⁴ of {
 //│ 			T n² l² r² => [T case n² of {
 //│ 				K => [KK]
 //│ 				| N => [NN]} (c₀ l²) (c₀ r²)]
 //│ 			| L => [LL]})
 //│ 	def c₂ = 
-//│ 		(fun x³ -> case x³ of {
+//│ 		(fun x⁶ -> case x⁶ of {
 //│ 			T n³ l³ r³ => [T case n³ of {
 //│ 				K => [KK]
 //│ 				| N => [NN]} (c₀ l³) (c₀ r³)]
 //│ 			| L => [LL]})
 //│ def t₀ = 
-//│ 	let n¹ = [KK]
-//│ 	in let l¹ = aa₀
-//│ 	in let r¹ = aa₁
-//│ 	in [T n¹ (c₁ l¹) (c₂ r¹)]
+//│ 	let n⁵ = [KK]
+//│ 	in let l⁵ = aa₀
+//│ 	in let r⁵ = aa₁
+//│ 	in [T n⁵ (c₁ l⁵) (c₂ r⁵)]
 //│ 	where
 //│ 	def aa₀ = 
 //│ 		[T [N] t₁ t₂]
 //│ 		where
 //│ 		def t₁ = 
-//│ 			let n¹ = [KK]
-//│ 			in let l¹ = aa₀
-//│ 			in let r¹ = aa₀
-//│ 			in [T n¹ (c₁ l¹) (c₂ r¹)]
+//│ 			let n⁸ = [KK]
+//│ 			in let l⁸ = aa₀
+//│ 			in let r⁸ = aa₀
+//│ 			in [T n⁸ (c₁ l⁸) (c₂ r⁸)]
 //│ 		def t₂ = 
-//│ 			let n¹ = [KK]
-//│ 			in let l¹ = aa₀
-//│ 			in let r¹ = aa₀
-//│ 			in [T n¹ (c₁ l¹) (c₂ r¹)]
+//│ 			let n⁷ = [KK]
+//│ 			in let l⁷ = aa₀
+//│ 			in let r⁷ = aa₀
+//│ 			in [T n⁷ (c₁ l⁷) (c₂ r⁷)]
 //│ 	def aa₁ = 
 //│ 		[T [N] t₃ t₄]
 //│ 		where
 //│ 		def t₃ = 
-//│ 			let n¹ = [KK]
-//│ 			in let l¹ = aa₁
-//│ 			in let r¹ = aa₁
-//│ 			in [T n¹ (c₁ l¹) (c₂ r¹)]
+//│ 			let n⁴ = [KK]
+//│ 			in let l⁴ = aa₁
+//│ 			in let r⁴ = aa₁
+//│ 			in [T n⁴ (c₁ l⁴) (c₂ r⁴)]
 //│ 		def t₄ = 
-//│ 			let n¹ = [KK]
-//│ 			in let l¹ = aa₁
-//│ 			in let r¹ = aa₁
-//│ 			in [T n¹ (c₁ l¹) (c₂ r¹)]
+//│ 			let n⁶ = [KK]
+//│ 			in let l⁶ = aa₁
+//│ 			in let r⁶ = aa₁
+//│ 			in [T n⁶ (c₁ l⁶) (c₂ r⁶)]
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -3259,23 +3259,23 @@ filter(C(1, C(2, C(3, N))))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (filter₀ 
-//│ 	let h¹ = 1
-//│ 	in let t¹ = 	
-//│ 		let h¹ = 2
-//│ 		in let t¹ = 	
-//│ 			let h¹ = 3
-//│ 			in let t¹ = [N]
-//│ 			in case (h¹ > 1) of {
-//│ 				True => [C h¹ (filter₀ t¹)]
-//│ 				| False => (filter₀ t¹)}
-//│ 		in case (h¹ > 1) of {
-//│ 			True => [C h¹ (filter₀ t¹)]
-//│ 			| False => (filter₀ t¹)}
-//│ 	in case (h¹ > 1) of {
-//│ 		True => [C h¹ (filter₀ t¹)]
-//│ 		| False => (filter₀ t¹)})
+//│ 	let h² = 1
+//│ 	in let t² = 	
+//│ 		let h³ = 2
+//│ 		in let t³ = 	
+//│ 			let h⁴ = 3
+//│ 			in let t⁴ = [N]
+//│ 			in case (h⁴ > 1) of {
+//│ 				True => [C h⁴ (filter₀ t⁴)]
+//│ 				| False => (filter₀ t⁴)}
+//│ 		in case (h³ > 1) of {
+//│ 			True => [C h³ (filter₀ t³)]
+//│ 			| False => (filter₀ t³)}
+//│ 	in case (h² > 1) of {
+//│ 		True => [C h² (filter₀ t²)]
+//│ 		| False => (filter₀ t²)})
 //│ def filter₀ = 
-//│ 	(fun ls¹ -> ls¹)
+//│ 	(fun ls² -> ls²)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -3357,17 +3357,17 @@ P(c(pp), c(p))
 //│ >>>>>>> after fusion >>>>>>>
 //│ [P (c₀ pp₀) (c₁ p₀)]
 //│ def c₀ = 
-//│ 	(fun x² -> case x² of {
+//│ 	(fun x³ -> case x³ of {
 //│ 		C a² => case a² of {
 //│ 			C b² => (c₀ b²)
 //│ 			| N => a²}
-//│ 		| N => x²})
+//│ 		| N => x³})
 //│ def c₁ = 
-//│ 	(fun x¹ -> case x¹ of {
+//│ 	(fun x⁴ -> case x⁴ of {
 //│ 		C a¹ => case a¹ of {
 //│ 			C b¹ => (c₁ b¹)
 //│ 			| N => a¹}
-//│ 		| N => x¹})
+//│ 		| N => x⁴})
 //│ def p₀ = 
 //│ 	[C p₁]
 //│ 	where
@@ -3466,25 +3466,25 @@ rev2(rev(C(1, C(2, N)))(N))(N)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((rev2₀ ((rev₀ 
-//│ 	let h¹ = 1
-//│ 	in let t¹ = 	
-//│ 		let h² = 2
-//│ 		in let t² = (fun a⁴ -> a⁴)
-//│ 		in (fun a⁵ -> ((rev₁ t²) 
-//│ 			let h2¹ = h²
-//│ 			in let t2¹ = a⁵
-//│ 			in (fun a2³ -> ((rev2₀ t2¹) [C h2¹ a2³]))))
-//│ 	in (fun a³ -> ((rev₁ t¹) 
-//│ 		let h2¹ = h¹
-//│ 		in let t2¹ = a³
-//│ 		in (fun a2³ -> ((rev2₀ t2¹) [C h2¹ a2³]))))) (fun a2² -> a2²))) [N])
+//│ 	let h³ = 1
+//│ 	in let t³ = 	
+//│ 		let h⁴ = 2
+//│ 		in let t⁴ = (fun a⁸ -> a⁸)
+//│ 		in (fun a⁷ -> ((rev₁ t⁴) 
+//│ 			let h2³ = h⁴
+//│ 			in let t2³ = a⁷
+//│ 			in (fun a2⁵ -> ((rev2₀ t2³) [C h2³ a2⁵]))))
+//│ 	in (fun a⁶ -> ((rev₁ t³) 
+//│ 		let h2² = h³
+//│ 		in let t2² = a⁶
+//│ 		in (fun a2⁴ -> ((rev2₀ t2²) [C h2² a2⁴]))))) (fun a2⁶ -> a2⁶))) [N])
 //│ def rev2₀ = 
-//│ 	(fun ls2¹ -> ls2¹)
+//│ 	(fun ls2² -> ls2²)
 //│ def rev₀ = 
-//│ 	(fun ls¹ -> ls¹)
+//│ 	(fun ls³ -> ls³)
 //│ 	where
 //│ 	def rev₁ = 
-//│ 		(fun ls² -> ls²)
+//│ 		(fun ls⁴ -> ls⁴)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -3600,38 +3600,38 @@ rev(rev(C(A, C(B, N)))(N))(N)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((rev₀ 
-//│ 	let h² = [A]
-//│ 	in let t² = 	
-//│ 		let h² = [B]
-//│ 		in let t² = (fun a⁵ -> a⁵)
-//│ 		in (fun a⁴ -> ((rev₀ t²) [C h² a⁴]))
-//│ 	in (fun a⁴ -> ((rev₀ t²) [C h² a⁴]))) [N])
+//│ 	let h⁵ = [A]
+//│ 	in let t⁵ = 	
+//│ 		let h⁶ = [B]
+//│ 		in let t⁶ = (fun a¹² -> a¹²)
+//│ 		in (fun a¹¹ -> ((rev₀ t⁶) [C h⁶ a¹¹]))
+//│ 	in (fun a¹⁰ -> ((rev₀ t⁵) [C h⁵ a¹⁰]))) [N])
 //│ ((rev₁ ((rev₂ 
-//│ 	let h¹ = [A]
-//│ 	in let t¹ = 	
-//│ 		let h³ = [B]
-//│ 		in let t³ = (fun a⁷ -> a⁷)
-//│ 		in (fun a⁶ -> ((rev₃ t³) 
-//│ 			let h⁴ = h³
-//│ 			in let t⁴ = a⁶
-//│ 			in (fun a⁸ -> ((rev₁ t⁴) [C h⁴ a⁸]))))
-//│ 	in (fun a² -> ((rev₃ t¹) 
-//│ 		let h⁴ = h¹
-//│ 		in let t⁴ = a²
-//│ 		in (fun a⁸ -> ((rev₁ t⁴) [C h⁴ a⁸]))))) (fun a⁹ -> a⁹))) [N])
+//│ 	let h⁷ = [A]
+//│ 	in let t⁷ = 	
+//│ 		let h⁹ = [B]
+//│ 		in let t⁹ = (fun a¹⁷ -> a¹⁷)
+//│ 		in (fun a¹⁵ -> ((rev₃ t⁹) 
+//│ 			let h¹⁰ = h⁹
+//│ 			in let t¹⁰ = a¹⁵
+//│ 			in (fun a¹⁶ -> ((rev₁ t¹⁰) [C h¹⁰ a¹⁶]))))
+//│ 	in (fun a¹³ -> ((rev₃ t⁷) 
+//│ 		let h⁸ = h⁷
+//│ 		in let t⁸ = a¹³
+//│ 		in (fun a¹⁴ -> ((rev₁ t⁸) [C h⁸ a¹⁴]))))) (fun a¹⁸ -> a¹⁸))) [N])
 //│ def rev₀ = 
-//│ 	(fun ls² -> ls²)
+//│ 	(fun ls⁶ -> ls⁶)
 //│ def rev₁ = 
-//│ 	(fun ls⁴ -> ls⁴)
+//│ 	(fun ls⁸ -> ls⁸)
 //│ def rev₂ = 
-//│ 	(fun ls¹ -> ls¹)
+//│ 	(fun ls⁵ -> ls⁵)
 //│ 	where
 //│ 	def rev₃ = 
-//│ 		(fun ls³ -> ls³)
+//│ 		(fun ls⁷ -> ls⁷)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
-//│ [C [A] [C [A] [N]]]
+//│ [C [B] [C [A] [N]]]
 //│ [C [A] [C [B] [N]]]
 //│ <<<<<<< evaluate <<<<<<<
 
@@ -3653,8 +3653,8 @@ rev(rev(primitive)(N))(N)
 //│ [rev^14] (hopeless to continue)
 //│ 	[rev^14 · rev^2] ---> [rev^14] (using original def)
 //│ [rev^15]
-//│ 	[rev^15 · rev^2]
-//│ 		[rev^15 · rev^2 · rev^2] ---> [rev^15 · rev^2] (only one)
+//│ 	[rev^15 · rev^2] (hopeless to continue)
+//│ 		[rev^15 · rev^2 · rev^2] ---> [rev^15 · rev^2] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -3698,24 +3698,24 @@ rev(rev(primitive)(N))(N)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((rev₀ ((rev₁ primitive⁰) (fun a⁷ -> a⁷))) [N])
+//│ ((rev₀ ((rev₁ primitive⁰) (fun a⁸ -> a⁸))) [N])
 //│ def rev₀ = 
-//│ 	(fun ls³ -> ls³)
+//│ 	(fun ls⁶ -> ls⁶)
 //│ def rev₁ = 
-//│ 	(fun ls¹ -> case ls¹ of {
-//│ 		C h¹ t¹ => (fun a² -> ((rev₂ t¹) 
-//│ 			let h³ = h¹
-//│ 			in let t³ = a²
-//│ 			in (fun a⁶ -> ((rev₀ t³) [C h³ a⁶]))))
-//│ 		| N => (fun a³ -> a³)})
+//│ 	(fun ls⁴ -> case ls⁴ of {
+//│ 		C h¹ t¹ => (fun a⁹ -> ((rev₂ t¹) 
+//│ 			let h⁴ = h¹
+//│ 			in let t⁴ = a⁹
+//│ 			in (fun a¹⁰ -> ((rev₀ t⁴) [C h⁴ a¹⁰]))))
+//│ 		| N => (fun a¹¹ -> a¹¹)})
 //│ 	where
 //│ 	def rev₂ = 
-//│ 		(fun ls² -> case ls² of {
-//│ 			C h² t² => (fun a⁴ -> ((rev₂ t²) 
-//│ 				let h³ = h²
-//│ 				in let t³ = a⁴
-//│ 				in (fun a⁶ -> ((rev₀ t³) [C h³ a⁶]))))
-//│ 			| N => (fun a⁵ -> a⁵)})
+//│ 		(fun ls⁵ -> case ls⁵ of {
+//│ 			C h² t² => (fun a¹² -> ((rev₂ t²) 
+//│ 				let h⁵ = h²
+//│ 				in let t⁵ = a¹²
+//│ 				in (fun a¹³ -> ((rev₀ t⁵) [C h⁵ a¹³]))))
+//│ 			| N => (fun a¹⁴ -> a¹⁴)})
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: even normal rev can be optimized?
@@ -3793,23 +3793,23 @@ rev(C(1, C(2, N)))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (rev₀ 
-//│ 	let h³ = 1
-//│ 	in let t³ = 	
-//│ 		let h³ = 2
-//│ 		in let t³ = [N]
-//│ 		in ((concat₀ (rev₀ t³)) [C h³ [N]])
-//│ 	in ((concat₀ (rev₀ t³)) [C h³ [N]]))
+//│ 	let h⁴ = 1
+//│ 	in let t⁴ = 	
+//│ 		let h⁵ = 2
+//│ 		in let t⁵ = [N]
+//│ 		in ((concat₀ (rev₀ t⁵)) [C h⁵ [N]])
+//│ 	in ((concat₀ (rev₀ t⁴)) [C h⁴ [N]]))
 //│ def rev₀ = 
-//│ 	(fun ls¹ -> ls¹)
+//│ 	(fun ls² -> ls²)
 //│ 	where
 //│ 	def concat₀ = 
-//│ 		(fun xs¹ -> case xs¹ of {
-//│ 			N => (fun ys² -> ys²)
-//│ 			| C h² t² => (fun ys³ -> [C h² ((concat₀ t²) ys³)])})
+//│ 		(fun xs² -> case xs² of {
+//│ 			N => (fun ys⁴ -> ys⁴)
+//│ 			| C h² t² => (fun ys⁵ -> [C h² ((concat₀ t²) ys⁵)])})
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
-//│ [C 1 [C 1 [N]]]
+//│ [C 2 [C 1 [N]]]
 //│ <<<<<<< evaluate <<<<<<<
 
 
@@ -3857,8 +3857,8 @@ f(C(1, N))
 //│ >>>>>>> after fusion >>>>>>>
 //│ (f₀ [C 1 [N]])
 //│ def f₀ = 
-//│ 	(fun x¹ -> 
-//│ 		let y¹ = x¹
-//│ 		in case x¹ of {
+//│ 	(fun x² -> 
+//│ 		let y² = x²
+//│ 		in case x² of {
 //│ 			C h¹ t¹ => t¹})
 //│ <<<<<<< after fusion <<<<<<<

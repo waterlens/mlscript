@@ -154,21 +154,28 @@ trait ExprRewrite { this: Expr =>
     } 
   }
 
-  def rewriteFusion(using fusionMatch: Map[ExprId, ExprId], newd: Deforest): Expr = {
+  def rewriteFusion(using ctx: Expr.Ctx, fusionMatch: Map[ExprId, ExprId], newd: Deforest): Expr = {
     this match {
       case Const(lit) => Const(lit)
       case Call(lhs, rhs) => Call(lhs.rewriteFusion, rhs.rewriteFusion)
       case Sequence(f, s) => Sequence(f.rewriteFusion, s.rewriteFusion)
       case LetIn(id, rhs, body) => LetIn(id, rhs.rewriteFusion, body.rewriteFusion)
       case IfThenElse(s, t, e) => IfThenElse(s.rewriteFusion, t.rewriteFusion, e.rewriteFusion)
-      case Function(param, body) => Function(param, body.rewriteFusion)
-      case Ref(id) => Ref(id)
+      case Function(param, body) =>
+        val newParamId = param.copyToNewDeforest
+        val newCtx = ctx + (newParamId.tree.name -> newParamId)
+        Function(newParamId, body.rewriteFusion(using newCtx))
+      case Ref(id) => Ref(ctx.getOrElse(id.tree.name, id))
       case Match(scrut, arms) => if fusionMatch.valuesIterator.contains(this.uid)
         then scrut.rewriteFusion
         else Match(scrut.rewriteFusion, arms.map{(n, args, body) => (n, args, body.rewriteFusion)})
       case Ctor(name, args) => fusionMatch.get(this.uid).map { matchId =>
         val matchArm = newd.exprs(matchId).asInstanceOf[Match].arms.find(_._1 == name).get
-        (matchArm._2 zip args).foldRight(matchArm._3.rewriteFusion){(t_i, acc) => LetIn(t_i._1, t_i._2.rewriteFusion, acc)}
+        val newIds = matchArm._2.map(_.copyToNewDeforest)
+        val newCtx = ctx ++ newIds.map(id => id.tree.name -> id).toMap
+        (newIds zip args).foldRight(matchArm._3.rewriteFusion(using newCtx)){(t_i, acc) => 
+          LetIn(t_i._1, t_i._2.rewriteFusion, acc)
+        }
       }.orElse(Some(Ctor(name, args.map(_.rewriteFusion)))).get
     }
   }
@@ -254,8 +261,8 @@ trait ProgramRewrite { this: Program =>
       ctor.euid -> dtors.head.euid
     }
     Program(
-      this.defAndExpr._2.map { e => R(e.rewriteFusion) }
-      ::: this.defAndExpr._1.map { (id, body) => L(ProgDef(id, body.rewriteFusion)) }.toList
+      this.defAndExpr._2.map { e => R(e.rewriteFusion(using Map.empty)) }
+      ::: this.defAndExpr._1.map { (id, body) => L(ProgDef(id, body.rewriteFusion(using Map.empty))) }.toList
     )
   }
 }

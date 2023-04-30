@@ -184,7 +184,7 @@ enum ConsStratEnum(using val euid: ExprId) extends ToStrat[ConsStratEnum] {
     case Destruct(x) => s"Destruct(${x.map(_.pp).mkString(", ")})"
     case ConsFun(l, r) => s"${l.pp} => ${r.pp}"
     case cv@ConsVar(uid, n) =>
-      (if config.showVuid then s"$uid" + "'" else "") +
+      (if config.showVuid then s"$uid" else "") +
       s"'$n" +
       (if config.showVboundary then cv.printBoundary else "")
 }
@@ -361,16 +361,20 @@ class Deforest(var debug: Boolean) {
   }
   
   type Cache = Map[Cnstr, Cnstr -> Int]
+  // type Cache = scala.collection.mutable.Map[Cnstr, Cnstr -> Int]
+
 
   val recursiveConstr = mutable.Map.empty[Cnstr, mutable.Set[Path -> Path]]
   val fusionMatch = mutable.Map.empty[ExprId, Set[ExprId]]
   val upperBounds = mutable.Map.empty[TypeVarId, Ls[(Path, ConsStrat)]].withDefaultValue(Nil)
   val lowerBounds = mutable.Map.empty[TypeVarId, Ls[(Path, ProdStrat)]].withDefaultValue(Nil)
+  // val upperBounds = mutable.Map.empty[TypeVarId, Set[(Path, ConsStrat)]].withDefaultValue(Set.empty)
+  // val lowerBounds = mutable.Map.empty[TypeVarId, Set[(Path, ProdStrat)]].withDefaultValue(Set.empty)
   val ctorDestinations = mutable.Map.empty[ProdStratEnum.MkCtor, Set[ConsStratEnum]].withDefaultValue(Set())
   val dtorSources = mutable.Map.empty[ConsStratEnum.Destruct, Set[ProdStratEnum]].withDefaultValue(Set())
   def resolveConstraints: Unit = {
 
-    def handle(c: Cnstr)(using cache: Cache, numOfTypeCtor: Int): Unit = trace(s"handle [${c._1.pp(using InitPpConfig.showPathOn)} <: ${c._2.pp(using InitPpConfig.showPathOn)}]") {
+    def handle(c: Cnstr)(using cache: Cache, numOfTypeCtor: Int): Unit = trace(s"handle [${c._1.pp(using InitPpConfig.showVuidOn)} <: ${c._2.pp(using InitPpConfig.showVuidOn)}]") {
       val prod = c._1
       val cons = c._2
 
@@ -397,38 +401,40 @@ class Deforest(var debug: Boolean) {
         case _ => ()
 
       given Cache = cache + (c -> (c -> numOfTypeCtor))
+      // cache += (c -> (c -> numOfTypeCtor))
 
       (prod.s, cons.s) match
         case (ProdVar(v, _), ConsVar(w, _)) if v === w => ()
         case (NoProd(), NoCons()) => ()
         case (NoProd(), ConsFun(l, r)) =>
-          given Int = numOfTypeCtor + 1
-          handle(l.addPath(cons.path.neg) -> NoCons()(using noExprId).toStrat(prod.path.neg))
-          handle(NoProd()(using noExprId).toStrat(prod.path) -> r.addPath(cons.path))
+          // given Int = numOfTypeCtor + 1
+          // handle(l.addPath(cons.path.neg) -> NoCons()(using noExprId).toStrat(prod.path.neg))
+          // handle(NoProd()(using noExprId).toStrat(prod.path) -> r.addPath(cons.path))
         case (ProdFun(l, r), NoCons()) =>
-          given Int = numOfTypeCtor + 1
-          handle(r.addPath(prod.path) -> NoCons()(using noExprId).toStrat(cons.path))
-          handle(NoProd()(using noExprId).toStrat(cons.path.neg) -> l.addPath(prod.path.neg))
+          // given Int = numOfTypeCtor + 1
+          // handle(r.addPath(prod.path) -> NoCons()(using noExprId).toStrat(cons.path))
+          // handle(NoProd()(using noExprId).toStrat(cons.path.neg) -> l.addPath(prod.path.neg))
         case (NoProd(), dtor@Destruct(ds)) =>
-          given Int = numOfTypeCtor + 1
-          if dtor.euid != noExprId then {
-            dtorSources += dtor -> (dtorSources(dtor) + prod.s)
-          }
-          ds foreach { case Destructor(ctor, argCons) =>
-            argCons foreach { c => handle(prod, c.addPath(cons.path)) }
-          }
+          // given Int = numOfTypeCtor + 1
+          // if dtor.euid != noExprId then {
+          //   dtorSources += dtor -> (dtorSources(dtor) + prod.s)
+          // }
+          // ds foreach { case Destructor(ctor, argCons) =>
+          //   argCons foreach { c => handle(prod, c.addPath(cons.path)) }
+          // }
         case (ctorType@MkCtor(ctor, args), NoCons()) =>
-          given Int = numOfTypeCtor + 1
-          if ctorType.euid != noExprId then {
-            ctorDestinations += ctorType -> (ctorDestinations(ctorType) + cons.s)
-          }
-          args foreach { p => handle(p.addPath(prod.path), cons) }
+          // given Int = numOfTypeCtor + 1
+          // if ctorType.euid != noExprId then {
+          //   ctorDestinations += ctorType -> (ctorDestinations(ctorType) + cons.s)
+          // }
+          // args foreach { p => handle(p.addPath(prod.path), cons) }
         case (pv@ProdVar(v, _), _) =>
           cons.s match {
             case dtor: Destruct if lowerBounds(v).isEmpty && dtor.euid != noExprId => dtorSources += dtor -> (dtorSources(dtor) + pv)
             case _ => ()
           }
           upperBounds += v -> ((pv.asOutPath.getOrElse(Path.empty) ::: prod.path.rev, cons) :: upperBounds(v))
+          // upperBounds += v -> (upperBounds(v) + ((pv.asOutPath.getOrElse(Path.empty) ::: prod.path.rev) -> cons))
           lowerBounds(v).foreach((lb_path, lb_strat) => handle({
             lb_strat.addPath(lb_path) -> cons.addPath(prod.path.rev).addPath(pv.asOutPath.getOrElse(Path.empty))
           }))
@@ -438,6 +444,7 @@ class Deforest(var debug: Boolean) {
             case _ => ()
           }
           lowerBounds += v -> ((cv.asInPath.getOrElse(Path.empty) ::: cons.path.rev, prod) :: lowerBounds(v))
+          // lowerBounds += v -> (lowerBounds(v) + ((cv.asInPath.getOrElse(Path.empty) ::: cons.path.rev) -> prod))
           upperBounds(v).foreach((ub_path, ub_strat) => handle({
             prod.addPath(cons.path.rev).addPath(cv.asInPath.getOrElse(Path.empty)) -> ub_strat.addPath(ub_path)
           }))
@@ -465,7 +472,7 @@ class Deforest(var debug: Boolean) {
             else if ds_ctor.name == "_" then
               found = true
             // else
-              // argCons foreach { c => handle(NoProd()(using noExprId).toStrat(prod.path), c.addPath(cons.path)) }
+            //   argCons foreach { c => handle(NoProd()(using noExprId).toStrat(prod.path), c.addPath(cons.path)) }
           }
           if !found then lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
         case (Sum(ctors), Destruct(ds)) =>
@@ -482,6 +489,7 @@ class Deforest(var debug: Boolean) {
         case _ => lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
     }()
     
+    // given Cache = scala.collection.mutable.Map.empty
     given Cache = Map.empty
     given Int = 0
     

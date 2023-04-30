@@ -57,9 +57,9 @@ inter(l1)(l2)
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((inter₀ l1₀) l2₀)
 //│ def inter₀ = 
-//│ 	(fun xs¹ -> case xs¹ of {
-//│ 		N => (fun ys² -> ys²)
-//│ 		| C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₀ ys³) t¹)])})
+//│ 	(fun xs² -> case xs² of {
+//│ 		N => (fun ys⁴ -> ys⁴)
+//│ 		| C h¹ t¹ => (fun ys⁵ -> [C h¹ ((inter₀ ys⁵) t¹)])})
 //│ def l1₀ = 
 //│ 	[C 1 [C 2 [N]]]
 //│ def l2₀ = 
@@ -130,13 +130,13 @@ map(l)(
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((map₀ l₀) (fun x¹ -> x¹))
+//│ ((map₀ l₀) (fun x² -> x²))
 //│ def l₀ = 
-//│ 	let h¹ = [T]
-//│ 	in let t¹ = (fun f³ -> [N])
-//│ 	in (fun f² -> [C (f² h¹) ((map₀ t¹) f²)])
+//│ 	let h² = [T]
+//│ 	in let t² = (fun f⁵ -> [N])
+//│ 	in (fun f⁴ -> [C (f⁴ h²) ((map₀ t²) f⁴)])
 //│ def map₀ = 
-//│ 	(fun ls¹ -> ls¹)
+//│ 	(fun ls² -> ls²)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -232,17 +232,17 @@ map(l)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (map₀ l₀)
 //│ def l₀ = 
-//│ 	let h¹ = [T]
-//│ 	in let t¹ = 	
-//│ 		let h¹ = [TT]
-//│ 		in let t¹ = 	
-//│ 			let h¹ = [TTTT]
-//│ 			in let t¹ = [N]
-//│ 			in [C h¹ (map₀ t¹)]
-//│ 		in [C h¹ (map₀ t¹)]
-//│ 	in [C h¹ (map₀ t¹)]
+//│ 	let h² = [T]
+//│ 	in let t² = 	
+//│ 		let h³ = [TT]
+//│ 		in let t³ = 	
+//│ 			let h⁴ = [TTTT]
+//│ 			in let t⁴ = [N]
+//│ 			in [C h⁴ (map₀ t⁴)]
+//│ 		in [C h³ (map₀ t³)]
+//│ 	in [C h² (map₀ t²)]
 //│ def map₀ = 
-//│ 	(fun ls¹ -> ls¹)
+//│ 	(fun ls² -> ls²)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -364,23 +364,23 @@ c(t)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (c₀ t₀)
 //│ def c₀ = 
-//│ 	(fun x¹ -> x¹)
+//│ 	(fun x² -> x²)
 //│ def t₀ = 
-//│ 	let n¹ = [KK]
-//│ 	in let l¹ = aa₀
-//│ 	in let r¹ = bb₀
-//│ 	in [T n¹ (c₀ l¹) (c₀ r¹)]
+//│ 	let n³ = [KK]
+//│ 	in let l³ = aa₀
+//│ 	in let r³ = bb₀
+//│ 	in [T n³ (c₀ l³) (c₀ r³)]
 //│ 	where
 //│ 	def aa₀ = 
-//│ 		let n¹ = [NN]
-//│ 		in let l¹ = [LL]
-//│ 		in let r¹ = [LL]
-//│ 		in [T n¹ (c₀ l¹) (c₀ r¹)]
+//│ 		let n⁴ = [NN]
+//│ 		in let l⁴ = [LL]
+//│ 		in let r⁴ = [LL]
+//│ 		in [T n⁴ (c₀ l⁴) (c₀ r⁴)]
 //│ 	def bb₀ = 
-//│ 		let n¹ = [NN]
-//│ 		in let l¹ = [LL]
-//│ 		in let r¹ = [LL]
-//│ 		in [T n¹ (c₀ l¹) (c₀ r¹)]
+//│ 		let n² = [NN]
+//│ 		in let l² = [LL]
+//│ 		in let r² = [LL]
+//│ 		in [T n² (c₀ l²) (c₀ r²)]
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -508,34 +508,34 @@ sum(mapa(mapb(primitive)))
 //│ >>>>>>> after fusion >>>>>>>
 //│ (sum₀ (mapa₀ (mapb₀ primitive⁰)))
 //│ def mapa₀ = 
-//│ 	(fun lsa¹ -> lsa¹)
+//│ 	(fun lsa³ -> lsa³)
 //│ 	where
 //│ 	def mapa₁ = 
-//│ 		(fun lsa² -> lsa²)
+//│ 		(fun lsa⁴ -> lsa⁴)
 //│ def mapb₀ = 
-//│ 	(fun lsb² -> case lsb² of {
+//│ 	(fun lsb⁴ -> case lsb⁴ of {
 //│ 		C hb² tb² => 
-//│ 			let ha¹ = (primitive⁰ hb²)
-//│ 			in let ta¹ = (mapb₁ tb²)
-//│ 			in let h² = (primitive⁰ ha¹)
-//│ 			in let t² = (mapa₁ ta¹)
-//│ 			in [S [N] (sum₁ t²)]
+//│ 			let ha⁴ = (primitive⁰ hb²)
+//│ 			in let ta⁴ = (mapb₁ tb²)
+//│ 			in let h⁴ = (primitive⁰ ha⁴)
+//│ 			in let t⁴ = (mapa₁ ta⁴)
+//│ 			in [S [N] (sum₁ t⁴)]
 //│ 		| N => [N]})
 //│ 	where
 //│ 	def mapb₁ = 
-//│ 		(fun lsb¹ -> case lsb¹ of {
+//│ 		(fun lsb³ -> case lsb³ of {
 //│ 			C hb¹ tb¹ => 
-//│ 				let ha² = (primitive⁰ hb¹)
-//│ 				in let ta² = (mapb₁ tb¹)
-//│ 				in let h¹ = (primitive⁰ ha²)
-//│ 				in let t¹ = (mapa₁ ta²)
-//│ 				in [S [N] (sum₁ t¹)]
+//│ 				let ha³ = (primitive⁰ hb¹)
+//│ 				in let ta³ = (mapb₁ tb¹)
+//│ 				in let h³ = (primitive⁰ ha³)
+//│ 				in let t³ = (mapa₁ ta³)
+//│ 				in [S [N] (sum₁ t³)]
 //│ 			| N => [N]})
 //│ def sum₀ = 
-//│ 	(fun ls² -> ls²)
+//│ 	(fun ls³ -> ls³)
 //│ 	where
 //│ 	def sum₁ = 
-//│ 		(fun ls¹ -> ls¹)
+//│ 		(fun ls⁴ -> ls⁴)
 //│ <<<<<<< after fusion <<<<<<<
 
 fun map(ls) = if ls is
@@ -664,24 +664,24 @@ lastDrive(map(C(T, C(TT, N))))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (lastDrive₀ (map₀ 
-//│ 	let hhh² = [K]
-//│ 	in let ttt² = 	
-//│ 		let hhh¹ = [KK]
-//│ 		in let ttt¹ = (fun x² -> x²)
-//│ 		in let h¹ = ((fun head¹ -> head¹) hhh¹)
-//│ 		in let t¹ = (map₁ ttt¹)
-//│ 		in (fun x³ -> ((last₀ t¹) h¹))
-//│ 	in let hh¹ = ((fun head² -> head²) hhh²)
-//│ 	in let tt¹ = (map₁ ttt²)
-//│ 	in [Some ((last₀ tt¹) hh¹)]))
+//│ 	let hhh³ = [K]
+//│ 	in let ttt³ = 	
+//│ 		let hhh⁴ = [KK]
+//│ 		in let ttt⁴ = (fun x⁵ -> x⁵)
+//│ 		in let h² = ((fun head⁴ -> head⁴) hhh⁴)
+//│ 		in let t² = (map₁ ttt⁴)
+//│ 		in (fun x⁴ -> ((last₀ t²) h²))
+//│ 	in let hh² = ((fun head³ -> head³) hhh³)
+//│ 	in let tt² = (map₁ ttt³)
+//│ 	in [Some ((last₀ tt²) hh²)]))
 //│ def lastDrive₀ = 
-//│ 	(fun xs¹ -> xs¹)
+//│ 	(fun xs² -> xs²)
 //│ 	where
 //│ 	def last₀ = 
-//│ 		(fun ys¹ -> ys¹)
+//│ 		(fun ys² -> ys²)
 //│ def map₀ = 
-//│ 	(fun ls² -> ls²)
+//│ 	(fun ls⁴ -> ls⁴)
 //│ 	where
 //│ 	def map₁ = 
-//│ 		(fun ls¹ -> ls¹)
+//│ 		(fun ls³ -> ls³)
 //│ <<<<<<< after fusion <<<<<<<

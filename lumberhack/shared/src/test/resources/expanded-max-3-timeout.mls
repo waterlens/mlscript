@@ -1,7 +1,21 @@
 :NewParser
 :ParseOnly
 
+// WRONG: the program after fusion will timeout
+// fun max(ms) = if ms is
+//   C(h, t) then m => if h > m then max(t)(h) else max(t)(m)
+//   N then m => m
+// max(C(1, C(3, C(2, N))))(0)
+
+
+// CORRECT: if max is duplicated for each call site, harder to timeout
 fun max = x => x
+fun max0 = x => x
+fun max1 = x => x
+fun max2 = x => x
+fun max3 = x => x
+fun max4 = x => x
+fun max5 = x => x
 max(
   let h = 1
   let t = (
@@ -9,9 +23,105 @@ max(
     let t = (
       let h = 2
       let t = m => m
-      m => if (h > m) then max(t)(h) else max(t)(m)
+      m => if (h > m) then max0(t)(h) else max1(t)(m)
     )
-    (m => if h > m then max(t)(h) else max(t)(m))
+    (m => if h > m then max2(t)(h) else max3(t)(m))
   )
-  (m => if (h > m) then max(t)(h) else max(t)(m))
+  (m => if (h > m) then max4(t)(h) else max5(t)(m))
 )(0)
+//│ |#fun| |max| |#=| |x| |=>| |x|↵|#fun| |max0| |#=| |x| |=>| |x|↵|#fun| |max1| |#=| |x| |=>| |x|↵|#fun| |max2| |#=| |x| |=>| |x|↵|#fun| |max3| |#=| |x| |=>| |x|↵|#fun| |max4| |#=| |x| |=>| |x|↵|#fun| |max5| |#=| |x| |=>| |x|↵|max|(|→|#let| |h| |#=| |1|↵|#let| |t| |#=| |(|→|#let| |h| |#=| |3|↵|#let| |t| |#=| |(|→|#let| |h| |#=| |2|↵|#let| |t| |#=| |m| |=>| |m|↵|m| |=>| |#if| |(|h| |>| |m|)| |#then| |max0|(|t|)|(|h|)| |#else| |max1|(|t|)|(|m|)|←|↵|)|↵|(|m| |=>| |#if| |h| |>| |m| |#then| |max2|(|t|)|(|h|)| |#else| |max3|(|t|)|(|m|)|)|←|↵|)|↵|(|m| |=>| |#if| |(|h| |>| |m|)| |#then| |max4|(|t|)|(|h|)| |#else| |max5|(|t|)|(|m|)|)|←|↵|)|(|0|)|
+//│ Parsed: {fun max = x, => x; fun max0 = x, => x; fun max1 = x, => x; fun max2 = x, => x; fun max3 = x, => x; fun max4 = x, => x; fun max5 = x, => x; max (let h = 1 in let t = '(' let h = 3 in let t = '(' let h = 2 in let t = m, => m in m, => if ('(' > (h,) (m,), ')') then max0 (t,) (h,) else max1 (t,) (m,), ')' in '(' m, => if (> (h,) (m,)) then max2 (t,) (h,) else max3 (t,) (m,), ')', ')' in '(' m, => if ('(' > (h,) (m,), ')') then max4 (t,) (h,) else max5 (t,) (m,), ')',) (0,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ ((max^15 
+//│ 	let h⁰ = 1
+//│ 	in let t⁰ = 	
+//│ 		let h¹ = 3
+//│ 		in let t¹ = 	
+//│ 			let h² = 2
+//│ 			in let t² = (fun m⁰ -> m⁰)
+//│ 			in (fun m¹ -> if (h² > m¹) then ((max0^26 t²) h²) else ((max1^31 t²) m¹))
+//│ 		in (fun m² -> if (h¹ > m²) then ((max2^45 t¹) h¹) else ((max3^50 t¹) m²))
+//│ 	in (fun m³ -> if (h⁰ > m³) then ((max4^64 t⁰) h⁰) else ((max5^69 t⁰) m³))) 0)
+//│ def max = (fun x⁰ -> x⁰)
+//│ def max0 = (fun x¹ -> x¹)
+//│ def max1 = (fun x² -> x²)
+//│ def max2 = (fun x³ -> x³)
+//│ def max3 = (fun x⁴ -> x⁴)
+//│ def max4 = (fun x⁵ -> x⁵)
+//│ def max5 = (fun x⁶ -> x⁶)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [max0^26] (hopeless to continue)
+//│ [max1^31] (hopeless to continue)
+//│ [max2^45] (hopeless to continue)
+//│ [max3^50] (hopeless to continue)
+//│ [max4^64] (hopeless to continue)
+//│ [max5^69] (hopeless to continue)
+//│ [max^15] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((max₀ 
+//│ 	let h³ = 1
+//│ 	in let t³ = 	
+//│ 		let h⁴ = 3
+//│ 		in let t⁴ = 	
+//│ 			let h⁵ = 2
+//│ 			in let t⁵ = (fun m⁴ -> m⁴)
+//│ 			in (fun m⁵ -> if (h⁵ > m⁵) then ((max0₀ t⁵) h⁵) else ((max1₀ t⁵) m⁵))
+//│ 		in (fun m⁶ -> if (h⁴ > m⁶) then ((max2₀ t⁴) h⁴) else ((max3₀ t⁴) m⁶))
+//│ 	in (fun m⁷ -> if (h³ > m⁷) then ((max4₀ t³) h³) else ((max5₀ t³) m⁷))) 0)
+//│ def max0₀ = 
+//│ 	(fun x¹⁰ -> x¹⁰)
+//│ def max1₀ = 
+//│ 	(fun x¹³ -> x¹³)
+//│ def max2₀ = 
+//│ 	(fun x⁷ -> x⁷)
+//│ def max3₀ = 
+//│ 	(fun x⁸ -> x⁸)
+//│ def max4₀ = 
+//│ 	(fun x¹¹ -> x¹¹)
+//│ def max5₀ = 
+//│ 	(fun x¹² -> x¹²)
+//│ def max₀ = 
+//│ 	(fun x⁹ -> x⁹)
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((max₀ 
+//│ 	let h³ = 1
+//│ 	in let t³ = 	
+//│ 		let h⁴ = 3
+//│ 		in let t⁴ = 	
+//│ 			let h⁵ = 2
+//│ 			in let t⁵ = (fun m⁴ -> m⁴)
+//│ 			in (fun m⁵ -> if (h⁵ > m⁵) then ((max0₀ t⁵) h⁵) else ((max1₀ t⁵) m⁵))
+//│ 		in (fun m⁶ -> if (h⁴ > m⁶) then ((max2₀ t⁴) h⁴) else ((max3₀ t⁴) m⁶))
+//│ 	in (fun m⁷ -> if (h³ > m⁷) then ((max4₀ t³) h³) else ((max5₀ t³) m⁷))) 0)
+//│ def max0₀ = 
+//│ 	(fun x¹⁰ -> x¹⁰)
+//│ def max1₀ = 
+//│ 	(fun x¹³ -> x¹³)
+//│ def max2₀ = 
+//│ 	(fun x⁷ -> x⁷)
+//│ def max3₀ = 
+//│ 	(fun x⁸ -> x⁸)
+//│ def max4₀ = 
+//│ 	(fun x¹¹ -> x¹¹)
+//│ def max5₀ = 
+//│ 	(fun x¹² -> x¹²)
+//│ def max₀ = 
+//│ 	(fun x⁹ -> x⁹)
+//│ <<<<<<< after fusion <<<<<<<
+

@@ -161,7 +161,7 @@ enum ProdStratEnum(using val euid: ExprId) extends ToStrat[ProdStratEnum] {
     case NoProd() => "NoProd"
     case MkCtor(ctor, args) if args.length > 0 => s"${ctor.name}(${args.map(_.pp).mkString(", ")})"
     case MkCtor(ctor, _) => ctor.name
-    case Sum(ls) => s"Sum${ls.map(_.pp).mkString(", ")}"
+    case Sum(ls) => s"Sum[${ls.map(_.pp).mkString(", ")}]"
     case ProdFun(l, r) => s"${l.pp} => ${r.pp}"
     case pv@ProdVar(uid, n) =>
       (if config.showVuid then s"$uid" else "") +
@@ -485,6 +485,8 @@ class Deforest(var debug: Boolean) {
     given Cache = Map.empty
     given Int = 0
     
+    // import scala.util.Random.shuffle
+    // shuffle(constraints) foreach handle
     constraints foreach handle
   }
   

@@ -7,8 +7,100 @@
 // fun id2(z) = z
 // id2(if primitive then id1(id(id(id2)))(3) else id1(id(id(id2)))(4))
 
+// CORRECT: will not timeout
+fun id(x) = x
+fun id1(y) = y
+fun id2(z) = z
+fun id3(z) = z
+fun id4(z) = z
+fun id5(z) = z
+fun id6(z) = z
+fun id7(z) = z
+fun id8(z) = z
+id(if primitive then id1(id2(id3(id4)))(3) else id5(id6(id7(id8)))(4))
+//│ |#fun| |id|(|x|)| |#=| |x|↵|#fun| |id1|(|y|)| |#=| |y|↵|#fun| |id2|(|z|)| |#=| |z|↵|#fun| |id3|(|z|)| |#=| |z|↵|#fun| |id4|(|z|)| |#=| |z|↵|#fun| |id5|(|z|)| |#=| |z|↵|#fun| |id6|(|z|)| |#=| |z|↵|#fun| |id7|(|z|)| |#=| |z|↵|#fun| |id8|(|z|)| |#=| |z|↵|id|(|#if| |primitive| |#then| |id1|(|id2|(|id3|(|id4|)|)|)|(|3|)| |#else| |id5|(|id6|(|id7|(|id8|)|)|)|(|4|)|)|
+//│ Parsed: {fun id = x, => x; fun id1 = y, => y; fun id2 = z, => z; fun id3 = z, => z; fun id4 = z, => z; fun id5 = z, => z; fun id6 = z, => z; fun id7 = z, => z; fun id8 = z, => z; id (if (primitive) then id1 (id2 (id3 (id4,),),) (3,) else id5 (id6 (id7 (id8,),),) (4,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (id^19 if primitive⁰ then ((id1^21 (id2^22 (id3^23 id4^24))) 3) else ((id5^30 (id6^31 (id7^32 id8^33))) 4))
+//│ def id = (fun x⁰ -> x⁰)
+//│ def id1 = (fun y⁰ -> y⁰)
+//│ def id2 = (fun z⁰ -> z⁰)
+//│ def id3 = (fun z¹ -> z¹)
+//│ def id4 = (fun z² -> z²)
+//│ def id5 = (fun z³ -> z³)
+//│ def id6 = (fun z⁴ -> z⁴)
+//│ def id7 = (fun z⁵ -> z⁵)
+//│ def id8 = (fun z⁶ -> z⁶)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [id1^21] (hopeless to continue)
+//│ [id2^22] (hopeless to continue)
+//│ [id3^23] (hopeless to continue)
+//│ [id4^24] (hopeless to continue)
+//│ [id5^30] (hopeless to continue)
+//│ [id6^31] (hopeless to continue)
+//│ [id7^32] (hopeless to continue)
+//│ [id8^33] (hopeless to continue)
+//│ [id^19] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (id₀ if primitive⁰ then ((id1₀ (id2₀ (id3₀ id4₀))) 3) else ((id5₀ (id6₀ (id7₀ id8₀))) 4))
+//│ def id1₀ = 
+//│ 	(fun y¹ -> y¹)
+//│ def id2₀ = 
+//│ 	(fun z⁷ -> z⁷)
+//│ def id3₀ = 
+//│ 	(fun z⁸ -> z⁸)
+//│ def id4₀ = 
+//│ 	(fun z¹¹ -> z¹¹)
+//│ def id5₀ = 
+//│ 	(fun z⁹ -> z⁹)
+//│ def id6₀ = 
+//│ 	(fun z¹³ -> z¹³)
+//│ def id7₀ = 
+//│ 	(fun z¹² -> z¹²)
+//│ def id8₀ = 
+//│ 	(fun z¹⁰ -> z¹⁰)
+//│ def id₀ = 
+//│ 	(fun x¹ -> x¹)
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (id₀ if primitive⁰ then ((id1₀ (id2₀ (id3₀ id4₀))) 3) else ((id5₀ (id6₀ (id7₀ id8₀))) 4))
+//│ def id1₀ = 
+//│ 	(fun y² -> y²)
+//│ def id2₀ = 
+//│ 	(fun z²⁰ -> z²⁰)
+//│ def id3₀ = 
+//│ 	(fun z¹⁹ -> z¹⁹)
+//│ def id4₀ = 
+//│ 	(fun z¹⁷ -> z¹⁷)
+//│ def id5₀ = 
+//│ 	(fun z¹⁸ -> z¹⁸)
+//│ def id6₀ = 
+//│ 	(fun z¹⁴ -> z¹⁴)
+//│ def id7₀ = 
+//│ 	(fun z¹⁵ -> z¹⁵)
+//│ def id8₀ = 
+//│ 	(fun z¹⁶ -> z¹⁶)
+//│ def id₀ = 
+//│ 	(fun x² -> x²)
+//│ <<<<<<< after fusion <<<<<<<
 
-// WRONG: will timeout
+
+// WRONG: will timeout sometimes
 // fun id(x) = x
 // fun id1(y) = y
 // id1(id1(id1(id(id(id(id(id(id1)))))(3))))

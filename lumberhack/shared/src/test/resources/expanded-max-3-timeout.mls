@@ -25,9 +25,9 @@
 // )(0)
 
 
-// WRONG:
+// CORRECT:
 // NOTE: if max is duplicated for each call site, less likely to timeout
-fun max = x => x
+fun max = y => y
 fun max0 = x => x
 fun max1 = x => x
 fun max2 = x => x
@@ -47,8 +47,8 @@ max(
   )
   (m => if (h > m) then max4(t)(h) else max5(t)(m))
 )(0)
-//│ |#fun| |max| |#=| |x| |=>| |x|↵|#fun| |max0| |#=| |x| |=>| |x|↵|#fun| |max1| |#=| |x| |=>| |x|↵|#fun| |max2| |#=| |x| |=>| |x|↵|#fun| |max3| |#=| |x| |=>| |x|↵|#fun| |max4| |#=| |x| |=>| |x|↵|#fun| |max5| |#=| |x| |=>| |x|↵|max|(|→|#let| |h| |#=| |1|↵|#let| |t| |#=| |(|→|#let| |h| |#=| |3|↵|#let| |t| |#=| |(|→|#let| |h| |#=| |2|↵|#let| |t| |#=| |m| |=>| |m|↵|m| |=>| |#if| |(|h| |>| |m|)| |#then| |max0|(|t|)|(|h|)| |#else| |max1|(|t|)|(|m|)|←|↵|)|↵|(|m| |=>| |#if| |h| |>| |m| |#then| |max2|(|t|)|(|h|)| |#else| |max3|(|t|)|(|m|)|)|←|↵|)|↵|(|m| |=>| |#if| |(|h| |>| |m|)| |#then| |max4|(|t|)|(|h|)| |#else| |max5|(|t|)|(|m|)|)|←|↵|)|(|0|)|
-//│ Parsed: {fun max = x, => x; fun max0 = x, => x; fun max1 = x, => x; fun max2 = x, => x; fun max3 = x, => x; fun max4 = x, => x; fun max5 = x, => x; max (let h = 1 in let t = '(' let h = 3 in let t = '(' let h = 2 in let t = m, => m in m, => if ('(' > (h,) (m,), ')') then max0 (t,) (h,) else max1 (t,) (m,), ')' in '(' m, => if (> (h,) (m,)) then max2 (t,) (h,) else max3 (t,) (m,), ')', ')' in '(' m, => if ('(' > (h,) (m,), ')') then max4 (t,) (h,) else max5 (t,) (m,), ')',) (0,)}
+//│ |#fun| |max| |#=| |y| |=>| |y|↵|#fun| |max0| |#=| |x| |=>| |x|↵|#fun| |max1| |#=| |x| |=>| |x|↵|#fun| |max2| |#=| |x| |=>| |x|↵|#fun| |max3| |#=| |x| |=>| |x|↵|#fun| |max4| |#=| |x| |=>| |x|↵|#fun| |max5| |#=| |x| |=>| |x|↵|max|(|→|#let| |h| |#=| |1|↵|#let| |t| |#=| |(|→|#let| |h| |#=| |3|↵|#let| |t| |#=| |(|→|#let| |h| |#=| |2|↵|#let| |t| |#=| |m| |=>| |m|↵|m| |=>| |#if| |(|h| |>| |m|)| |#then| |max0|(|t|)|(|h|)| |#else| |max1|(|t|)|(|m|)|←|↵|)|↵|(|m| |=>| |#if| |h| |>| |m| |#then| |max2|(|t|)|(|h|)| |#else| |max3|(|t|)|(|m|)|)|←|↵|)|↵|(|m| |=>| |#if| |(|h| |>| |m|)| |#then| |max4|(|t|)|(|h|)| |#else| |max5|(|t|)|(|m|)|)|←|↵|)|(|0|)|
+//│ Parsed: {fun max = y, => y; fun max0 = x, => x; fun max1 = x, => x; fun max2 = x, => x; fun max3 = x, => x; fun max4 = x, => x; fun max5 = x, => x; max (let h = 1 in let t = '(' let h = 3 in let t = '(' let h = 2 in let t = m, => m in m, => if ('(' > (h,) (m,), ')') then max0 (t,) (h,) else max1 (t,) (m,), ')' in '(' m, => if (> (h,) (m,)) then max2 (t,) (h,) else max3 (t,) (m,), ')', ')' in '(' m, => if ('(' > (h,) (m,), ')') then max4 (t,) (h,) else max5 (t,) (m,), ')',) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((max^15 
 //│ 	let h⁰ = 1
@@ -60,13 +60,13 @@ max(
 //│ 			in (fun m¹ -> if (h² > m¹) then ((max0^26 t²) h²) else ((max1^31 t²) m¹))
 //│ 		in (fun m² -> if (h¹ > m²) then ((max2^45 t¹) h¹) else ((max3^50 t¹) m²))
 //│ 	in (fun m³ -> if (h⁰ > m³) then ((max4^64 t⁰) h⁰) else ((max5^69 t⁰) m³))) 0)
-//│ def max = (fun x⁰ -> x⁰)
-//│ def max0 = (fun x¹ -> x¹)
-//│ def max1 = (fun x² -> x²)
-//│ def max2 = (fun x³ -> x³)
-//│ def max3 = (fun x⁴ -> x⁴)
-//│ def max4 = (fun x⁵ -> x⁵)
-//│ def max5 = (fun x⁶ -> x⁶)
+//│ def max = (fun y⁰ -> y⁰)
+//│ def max0 = (fun x⁰ -> x⁰)
+//│ def max1 = (fun x¹ -> x¹)
+//│ def max2 = (fun x² -> x²)
+//│ def max3 = (fun x³ -> x³)
+//│ def max4 = (fun x⁴ -> x⁴)
+//│ def max5 = (fun x⁵ -> x⁵)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -91,19 +91,19 @@ max(
 //│ 		in (fun m⁶ -> if (h⁴ > m⁶) then ((max2₀ t⁴) h⁴) else ((max3₀ t⁴) m⁶))
 //│ 	in (fun m⁷ -> if (h³ > m⁷) then ((max4₀ t³) h³) else ((max5₀ t³) m⁷))) 0)
 //│ def max0₀ = 
-//│ 	(fun x¹⁰ -> x¹⁰)
-//│ def max1₀ = 
-//│ 	(fun x¹³ -> x¹³)
-//│ def max2₀ = 
-//│ 	(fun x⁷ -> x⁷)
-//│ def max3₀ = 
 //│ 	(fun x⁸ -> x⁸)
-//│ def max4₀ = 
+//│ def max1₀ = 
 //│ 	(fun x¹¹ -> x¹¹)
-//│ def max5₀ = 
-//│ 	(fun x¹² -> x¹²)
-//│ def max₀ = 
+//│ def max2₀ = 
+//│ 	(fun x⁶ -> x⁶)
+//│ def max3₀ = 
+//│ 	(fun x⁷ -> x⁷)
+//│ def max4₀ = 
 //│ 	(fun x⁹ -> x⁹)
+//│ def max5₀ = 
+//│ 	(fun x¹⁰ -> x¹⁰)
+//│ def max₀ = 
+//│ 	(fun y¹ -> y¹)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
@@ -128,18 +128,18 @@ max(
 //│ 		in (fun m¹⁰ -> if (h⁴ > m¹⁰) then ((max2₀ t⁴) h⁴) else ((max3₀ t⁴) m¹⁰))
 //│ 	in (fun m¹¹ -> if (h³ > m¹¹) then ((max4₀ t³) h³) else ((max5₀ t³) m¹¹))) 0)
 //│ def max0₀ = 
-//│ 	(fun x²⁰ -> x²⁰)
-//│ def max1₀ = 
-//│ 	(fun x¹⁴ -> x¹⁴)
-//│ def max2₀ = 
 //│ 	(fun x¹⁷ -> x¹⁷)
+//│ def max1₀ = 
+//│ 	(fun x¹² -> x¹²)
+//│ def max2₀ = 
+//│ 	(fun x¹⁴ -> x¹⁴)
 //│ def max3₀ = 
-//│ 	(fun x¹⁸ -> x¹⁸)
-//│ def max4₀ = 
 //│ 	(fun x¹⁵ -> x¹⁵)
+//│ def max4₀ = 
+//│ 	(fun x¹³ -> x¹³)
 //│ def max5₀ = 
-//│ 	(fun x¹⁹ -> x¹⁹)
-//│ def max₀ = 
 //│ 	(fun x¹⁶ -> x¹⁶)
+//│ def max₀ = 
+//│ 	(fun y² -> y²)
 //│ <<<<<<< after fusion <<<<<<<
 

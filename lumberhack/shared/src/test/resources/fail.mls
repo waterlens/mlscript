@@ -116,9 +116,8 @@ map(ff, l)
 
 
 
-// WRONG: recursive length wrong: p should unrolled once and c should be unrolled to length 6!
+// WRONG: recursive length wrong: p should unrolled once and c should be unrolled to length 6 (unrol for 2 more times)!
 // `id2` used twice
-// NOTE: any more behavioural differences?
 let p = C(C(C(id2(p))))
 fun c(x) = if x is
   C(a) then if a is
@@ -678,30 +677,75 @@ inter(l1(0))(l2)
 
  
 // WRONG: explode on branch
-// _LUMBERHACK_ERROR
-// fun max(ms) = if ms is
-//   C(h, t) then m => if h > m is
-//    True then max(t)(h)
-//    False then max(t)(m)
-//   N then m => m
-// max(C(1, C(3, C(2, N))))(0)
-//│ | |↵|/* WRONG: explode on branch*/|↵|/* _LUMBERHACK_ERROR*/|↵|/* fun max(ms) = if ms is*/|↵|/*   C(h, t) then m => if h > m is*/|↵|/*    True then max(t)(h)*/|↵|/*    False then max(t)(m)*/|↵|/*   N then m => m*/|↵|/* max(C(1, C(3, C(2, N))))(0)*/|
-//│ Parsed: {}
+_LUMBERHACK_ERROR
+fun max(ms) = if ms is
+  C(h, t) then m => if h > m is
+   True then max(t)(h)
+   False then max(t)(m)
+  N then m => m
+max(C(1, C(3, C(2, N))))(0)
+//│ | |↵|/* WRONG: explode on branch*/|↵|_LUMBERHACK_ERROR|↵|#fun| |max|(|ms|)| |#=| |#if| |ms| |is|→|C|(|h|,| |t|)| |#then| |m| |=>| |#if| |h| |>| |m| |is|→|True| |#then| |max|(|t|)|(|h|)|↵|False| |#then| |max|(|t|)|(|m|)|←|↵|N| |#then| |m| |=>| |m|←|↵|max|(|C|(|1|,| |C|(|3|,| |C|(|2|,| |N|)|)|)|)|(|0|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun max = ms, => if ms is ‹(C (h, t,)) then m, => if > (h,) (m,) is ‹(True) then max (t,) (h,); (False) then max (t,) (m,)›; (N) then m, => m›; max (C (1, C (3, C (2, N,),),),) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ 
+//│ ((max^23 [C 1 [C 3 [C 2 [N]]]]) 0)
+//│ def max = (fun ms⁰ -> case ms⁰ of {
+//│ 	C h⁰ t⁰ => (fun m⁰ -> case (h⁰ > m⁰) of {
+//│ 		True => ((max^7 t⁰) h⁰)
+//│ 		| False => ((max^12 t⁰) m⁰)})
+//│ 	| N => (fun m¹ -> m¹)})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ 
+//│ [max^23]
+//│ 	[max^23 · max^12]
+//│ 		[max^23 · max^12 · max^12] ---> [max^23] (only one)
+//│ 		[max^23 · max^12 · max^7] (hopeless to continue)
+//│ 			[max^23 · max^12 · max^7 · max^12] ---> [max^23 · max^12 · max^7] (using original def)
+//│ 			[max^23 · max^12 · max^7 · max^7] ---> [max^23 · max^12 · max^7] (using original def)
+//│ 	[max^23 · max^7] ---> [max^23] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ 
-//│ 
+//│ ((max₀ [C 1 [C 3 [C 2 [N]]]]) 0)
+//│ def max₀ = 
+//│ 	(fun ms² -> case ms² of {
+//│ 		C h² t² => (fun m⁴ -> case (h² > m⁴) of {
+//│ 			True => ((max₀ t²) h²)
+//│ 			| False => ((max₁ t²) m⁴)})
+//│ 		| N => (fun m⁵ -> m⁵)})
+//│ 	where
+//│ 	def max₁ = 
+//│ 		(fun ms³ -> case ms³ of {
+//│ 			C h³ t³ => (fun m⁶ -> case (h³ > m⁶) of {
+//│ 				True => ((max₂ t³) h³)
+//│ 				| False => ((max₀ t³) m⁶)})
+//│ 			| N => (fun m⁷ -> m⁷)})
+//│ 		where
+//│ 		def max₂ = 
+//│ 			(fun ms¹ -> case ms¹ of {
+//│ 				C h¹ t¹ => (fun m² -> case (h¹ > m²) of {
+//│ 					True => ((max₂ t¹) h¹)
+//│ 					| False => ((max₂ t¹) m²)})
+//│ 				| N => (fun m³ -> m³)})
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 
+//│ [C 1 [C 3 [C 2 [N]]]]: 107 --->
+//│ 	case ms² of {C h² t² => (fun m⁴ -> case (h² > m⁴) of {True => ((max₀ t²) h²) | False => ((max₁ t²) m⁴)}) | N => (fun m⁵ -> m⁵)}: 76
+//│ [C 2 [N]]: 105 --->
+//│ 	case ms² of {C h² t² => (fun m⁴ -> case (h² > m⁴) of {True => ((max₀ t²) h²) | False => ((max₁ t²) m⁴)}) | N => (fun m⁵ -> m⁵)}: 76
+//│ 	case ms³ of {C h³ t³ => (fun m⁶ -> case (h³ > m⁶) of {True => ((max₂ t³) h³) | False => ((max₀ t³) m⁶)}) | N => (fun m⁷ -> m⁷)}: 98
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> case (h¹ > m²) of {True => ((max₂ t¹) h¹) | False => ((max₂ t¹) m²)}) | N => (fun m³ -> m³)}: 54
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [C 3 [C 2 [N]]]: 106 --->
+//│ 	case ms² of {C h² t² => (fun m⁴ -> case (h² > m⁴) of {True => ((max₀ t²) h²) | False => ((max₁ t²) m⁴)}) | N => (fun m⁵ -> m⁵)}: 76
+//│ 	case ms³ of {C h³ t³ => (fun m⁶ -> case (h³ > m⁶) of {True => ((max₂ t³) h³) | False => ((max₀ t³) m⁶)}) | N => (fun m⁷ -> m⁷)}: 98
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [N]: 104 --->
+//│ 	case ms² of {C h² t² => (fun m⁴ -> case (h² > m⁴) of {True => ((max₀ t²) h²) | False => ((max₁ t²) m⁴)}) | N => (fun m⁵ -> m⁵)}: 76
+//│ 	case ms³ of {C h³ t³ => (fun m⁶ -> case (h³ > m⁶) of {True => ((max₂ t³) h³) | False => ((max₀ t³) m⁶)}) | N => (fun m⁷ -> m⁷)}: 98
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> case (h¹ > m²) of {True => ((max₂ t¹) h¹) | False => ((max₂ t¹) m²)}) | N => (fun m³ -> m³)}: 54
+//│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -711,9 +755,31 @@ inter(l1(0))(l2)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ 
-//│ 
+//│ ((max₀ [C 1 [C 3 [C 2 [N]]]]) 0)
+//│ def max₀ = 
+//│ 	(fun ms⁵ -> case ms⁵ of {
+//│ 		C h² t² => (fun m¹⁰ -> case (h² > m¹⁰) of {
+//│ 			True => ((max₀ t²) h²)
+//│ 			| False => ((max₁ t²) m¹⁰)})
+//│ 		| N => (fun m¹¹ -> m¹¹)})
+//│ 	where
+//│ 	def max₁ = 
+//│ 		(fun ms⁶ -> case ms⁶ of {
+//│ 			C h³ t³ => (fun m¹² -> case (h³ > m¹²) of {
+//│ 				True => ((max₂ t³) h³)
+//│ 				| False => ((max₀ t³) m¹²)})
+//│ 			| N => (fun m¹³ -> m¹³)})
+//│ 		where
+//│ 		def max₂ = 
+//│ 			(fun ms⁴ -> case ms⁴ of {
+//│ 				C h¹ t¹ => (fun m⁸ -> case (h¹ > m⁸) of {
+//│ 					True => ((max₂ t¹) h¹)
+//│ 					| False => ((max₂ t¹) m⁸)})
+//│ 				| N => (fun m⁹ -> m⁹)})
 //│ <<<<<<< after fusion <<<<<<<
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: expect to fail but pass
+//│ !!!!!!ERROR!!!!!!
 
 // WRONG: multiple match
 _LUMBERHACK_ERROR

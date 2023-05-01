@@ -71,8 +71,8 @@ inter(l1)(l2)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [inter^24] (hopeless to continue)
-//│ 	[inter^24 · inter^5] ---> [inter^24] (using original def)
+//│ [inter^24]
+//│ 	[inter^24 · inter^5] ---> [inter^24] (only one)
 //│ [l1^25] (hopeless to continue)
 //│ [l2^27] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
@@ -146,15 +146,11 @@ inter(l1)(l2)
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [inter^22]
-//│ 	[inter^22 · inter^5]
-//│ 		[inter^22 · inter^5 · inter^5]
-//│ 			[inter^22 · inter^5 · inter^5 · inter^5]
-//│ 				[inter^22 · inter^5 · inter^5 · inter^5 · inter^5] ---> [inter^22 · inter^5 · inter^5] (only one)
+//│ 	[inter^22 · inter^5] ---> [inter^22] (only one)
 //│ [l1^23]
 //│ 	[l1^23 · l1^16] ---> [l1^23] (only one)
 //│ [l2^25]
-//│ 	[l2^25 · l2^20]
-//│ 		[l2^25 · l2^20 · l2^20] ---> [l2^25 · l2^20] (only one)
+//│ 	[l2^25 · l2^20] ---> [l2^25] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -162,42 +158,20 @@ inter(l1)(l2)
 //│ def inter₀ = 
 //│ 	(fun xs¹ -> case xs¹ of {
 //│ 		N => (fun ys² -> ys²)
-//│ 		| C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])})
-//│ 	where
-//│ 	def inter₁ = 
-//│ 		(fun xs³ -> case xs³ of {
-//│ 			N => (fun ys⁶ -> ys⁶)
-//│ 			| C h³ t³ => (fun ys⁷ -> [C h³ ((inter₂ ys⁷) t³)])})
-//│ 		where
-//│ 		def inter₂ = 
-//│ 			(fun xs⁴ -> case xs⁴ of {
-//│ 				N => (fun ys⁸ -> ys⁸)
-//│ 				| C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₃ ys⁹) t⁴)])})
-//│ 			where
-//│ 			def inter₃ = 
-//│ 				(fun xs² -> case xs² of {
-//│ 					N => (fun ys⁴ -> ys⁴)
-//│ 					| C h² t² => (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])})
+//│ 		| C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₀ ys³) t¹)])})
 //│ def l1₀ = 
 //│ 	[C 1 [C 2 l1₀]]
 //│ def l2₀ = 
-//│ 	[C 9 l2₁]
-//│ 	where
-//│ 	def l2₁ = 
-//│ 		[C 9 l2₁]
+//│ 	[C 9 l2₀]
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 1 [C 2 l1₀]]: 31 --->
-//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₁ ys³) t¹)])}: 43
-//│ 	case xs⁴ of {N => (fun ys⁸ -> ys⁸) | C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₃ ys⁹) t⁴)])}: 88
-//│ 	 MORE THAN ONE MATCH EXPR
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₀ ys³) t¹)])}: 46
 //│ [C 2 l1₀]: 30 --->
-//│ 	case xs⁴ of {N => (fun ys⁸ -> ys⁸) | C h⁴ t⁴ => (fun ys⁹ -> [C h⁴ ((inter₃ ys⁹) t⁴)])}: 88
-//│ [C 9 l2₁]: 73 --->
-//│ 	case xs² of {N => (fun ys⁴ -> ys⁴) | C h² t² => (fun ys⁵ -> [C h² ((inter₂ ys⁵) t²)])}: 56
-//│ [C 9 l2₁]: 76 --->
-//│ 	case xs³ of {N => (fun ys⁶ -> ys⁶) | C h³ t³ => (fun ys⁷ -> [C h³ ((inter₂ ys⁷) t³)])}: 69
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₀ ys³) t¹)])}: 46
+//│ [C 9 l2₀]: 34 --->
+//│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₀ ys³) t¹)])}: 46
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -209,31 +183,13 @@ inter(l1)(l2)
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((inter₀ l1₀) l2₀)
 //│ def inter₀ = 
-//│ 	(fun xs⁵ -> case xs⁵ of {
-//│ 		N => (fun ys¹⁰ -> ys¹⁰)
-//│ 		| C h¹ t¹ => (fun ys¹¹ -> [C h¹ ((inter₁ ys¹¹) t¹)])})
-//│ 	where
-//│ 	def inter₁ = 
-//│ 		(fun xs⁷ -> case xs⁷ of {
-//│ 			N => (fun ys¹⁴ -> ys¹⁴)
-//│ 			| C h³ t³ => (fun ys¹⁵ -> [C h³ ((inter₂ ys¹⁵) t³)])})
-//│ 		where
-//│ 		def inter₂ = 
-//│ 			(fun xs⁶ -> case xs⁶ of {
-//│ 				N => (fun ys¹² -> ys¹²)
-//│ 				| C h⁴ t⁴ => (fun ys¹³ -> [C h⁴ ((inter₃ ys¹³) t⁴)])})
-//│ 			where
-//│ 			def inter₃ = 
-//│ 				(fun xs⁸ -> case xs⁸ of {
-//│ 					N => (fun ys¹⁶ -> ys¹⁶)
-//│ 					| C h² t² => (fun ys¹⁷ -> [C h² ((inter₂ ys¹⁷) t²)])})
+//│ 	(fun xs² -> case xs² of {
+//│ 		N => (fun ys⁴ -> ys⁴)
+//│ 		| C h¹ t¹ => (fun ys⁵ -> [C h¹ ((inter₀ ys⁵) t¹)])})
 //│ def l1₀ = 
 //│ 	[C 1 [C 2 l1₀]]
 //│ def l2₀ = 
-//│ 	[C 9 l2₁]
-//│ 	where
-//│ 	def l2₁ = 
-//│ 		[C 9 l2₁]
+//│ 	[C 9 l2₀]
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -265,9 +221,9 @@ f(C(A))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [f^21] (hopeless to continue)
-//│ 	[f^21 · g^4] (using original def)
-//│ 		[f^21 · g^4 · f^14] ---> [f^21] (using original def)
+//│ [f^21]
+//│ 	[f^21 · g^4]
+//│ 		[f^21 · g^4 · f^14] ---> [f^21] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>

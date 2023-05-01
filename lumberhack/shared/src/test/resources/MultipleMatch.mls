@@ -830,8 +830,14 @@ f(t)
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [f^26]
-//│ 	[f^26 · f^12] ---> [f^26] (only one)
-//│ 	[f^26 · f^15] ---> [f^26] (only one)
+//│ 	[f^26 · f^12] (hopeless to continue)
+//│ 		[f^26 · f^12 · f^12] ---> [f^26 · f^12] (using original def)
+//│ 		[f^26 · f^12 · f^15] ---> [f^26 · f^12] (using original def)
+//│ 		[f^26 · f^12 · f^19] ---> [f^26 · f^12] (using original def)
+//│ 	[f^26 · f^15] (hopeless to continue)
+//│ 		[f^26 · f^15 · f^12] ---> [f^26 · f^15] (using original def)
+//│ 		[f^26 · f^15 · f^15] ---> [f^26 · f^15] (using original def)
+//│ 		[f^26 · f^15 · f^19] ---> [f^26 · f^15] (using original def)
 //│ 	[f^26 · f^19]
 //│ 		[f^26 · f^19 · f^12] ---> [f^26] (only one)
 //│ 		[f^26 · f^19 · f^15] ---> [f^26 · f^19] (only one)
@@ -839,7 +845,10 @@ f(t)
 //│ [t^27]
 //│ 	[t^27 · t^3] ---> [t^27] (only one)
 //│ 	[t^27 · t^4] ---> [t^27] (only one)
-//│ 	[t^27 · t^6] ---> [t^27] (only one)
+//│ 	[t^27 · t^6] (hopeless to continue)
+//│ 		[t^27 · t^6 · t^3] ---> [t^27 · t^6] (using original def)
+//│ 		[t^27 · t^6 · t^4] ---> [t^27 · t^6] (using original def)
+//│ 		[t^27 · t^6 · t^6] ---> [t^27 · t^6] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -847,26 +856,47 @@ f(t)
 //│ def f₀ = 
 //│ 	(fun x² -> case x² of {
 //│ 		T a² l² r² => case r² of {
-//│ 			T b² ll² rr² => [T a² [T b² (f₀ rr²) (f₀ ll²)] (f₁ l²)]}})
+//│ 			T b² ll² rr² => [T a² [T b² (f₁ rr²) (f₂ ll²)] (f₃ l²)]}})
 //│ 	where
 //│ 	def f₁ = 
+//│ 		(fun x⁴ -> case x⁴ of {
+//│ 			T a⁴ l⁴ r⁴ => case r⁴ of {
+//│ 				T b⁴ ll⁴ rr⁴ => [T a⁴ [T b⁴ (f₁ rr⁴) (f₁ ll⁴)] (f₁ l⁴)]}})
+//│ 	def f₂ = 
+//│ 		(fun x³ -> case x³ of {
+//│ 			T a³ l³ r³ => case r³ of {
+//│ 				T b³ ll³ rr³ => [T a³ [T b³ (f₂ rr³) (f₂ ll³)] (f₂ l³)]}})
+//│ 	def f₃ = 
 //│ 		(fun x¹ -> case x¹ of {
 //│ 			T a¹ l¹ r¹ => case r¹ of {
-//│ 				T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₁ ll¹)] (f₀ l¹)]}})
+//│ 				T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₃ ll¹)] (f₀ l¹)]}})
 //│ def t₀ = 
-//│ 	[T [X] [T [Y] t₀ t₀] t₀]
+//│ 	[T [X] [T [Y] t₀ t₀] t₁]
+//│ 	where
+//│ 	def t₁ = 
+//│ 		[T [X] [T [Y] t₁ t₁] t₁]
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [T [X] [T [Y] t₀ t₀] t₀]: 71 --->
-//│ 	case r² of {T b² ll² rr² => [T a² [T b² (f₀ rr²) (f₀ ll²)] (f₁ l²)]}: 62
-//│ 	case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₁ ll¹)] (f₀ l¹)]}: 44
-//│ 	case x² of {T a² l² r² => case r² of {T b² ll² rr² => [T a² [T b² (f₀ rr²) (f₀ ll²)] (f₁ l²)]}}: 63
-//│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₁ ll¹)] (f₀ l¹)]}}: 45
+//│ [T [X] [T [Y] t₀ t₀] t₁]: 114 --->
+//│ 	case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₃ ll¹)] (f₀ l¹)]}: 44
+//│ 	case x² of {T a² l² r² => case r² of {T b² ll² rr² => [T a² [T b² (f₁ rr²) (f₂ ll²)] (f₃ l²)]}}: 63
 //│ 	 MORE THAN ONE MATCH EXPR
-//│ [T [Y] t₀ t₀]: 69 --->
-//│ 	case x² of {T a² l² r² => case r² of {T b² ll² rr² => [T a² [T b² (f₀ rr²) (f₀ ll²)] (f₁ l²)]}}: 63
-//│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₁ ll¹)] (f₀ l¹)]}}: 45
+//│ [T [X] [T [Y] t₁ t₁] t₁]: 71 --->
+//│ 	case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₃ ll¹)] (f₀ l¹)]}: 44
+//│ 	case r⁴ of {T b⁴ ll⁴ rr⁴ => [T a⁴ [T b⁴ (f₁ rr⁴) (f₁ ll⁴)] (f₁ l⁴)]}: 105
+//│ 	case r² of {T b² ll² rr² => [T a² [T b² (f₁ rr²) (f₂ ll²)] (f₃ l²)]}: 62
+//│ 	case r³ of {T b³ ll³ rr³ => [T a³ [T b³ (f₂ rr³) (f₂ ll³)] (f₂ l³)]}: 87
+//│ 	case x⁴ of {T a⁴ l⁴ r⁴ => case r⁴ of {T b⁴ ll⁴ rr⁴ => [T a⁴ [T b⁴ (f₁ rr⁴) (f₁ ll⁴)] (f₁ l⁴)]}}: 106
+//│ 	case x² of {T a² l² r² => case r² of {T b² ll² rr² => [T a² [T b² (f₁ rr²) (f₂ ll²)] (f₃ l²)]}}: 63
+//│ 	case x³ of {T a³ l³ r³ => case r³ of {T b³ ll³ rr³ => [T a³ [T b³ (f₂ rr³) (f₂ ll³)] (f₂ l³)]}}: 88
+//│ 	 MORE THAN ONE MATCH EXPR
+//│ [T [Y] t₀ t₀]: 112 --->
+//│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₃ ll¹)] (f₀ l¹)]}}: 45
+//│ [T [Y] t₁ t₁]: 69 --->
+//│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₃ ll¹)] (f₀ l¹)]}}: 45
+//│ 	case x⁴ of {T a⁴ l⁴ r⁴ => case r⁴ of {T b⁴ ll⁴ rr⁴ => [T a⁴ [T b⁴ (f₁ rr⁴) (f₁ ll⁴)] (f₁ l⁴)]}}: 106
+//│ 	case x³ of {T a³ l³ r³ => case r³ of {T b³ ll³ rr³ => [T a³ [T b³ (f₂ rr³) (f₂ ll³)] (f₂ l³)]}}: 88
 //│ 	 MORE THAN ONE MATCH EXPR
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -879,14 +909,25 @@ f(t)
 //│ >>>>>>> after fusion >>>>>>>
 //│ (f₀ t₀)
 //│ def f₀ = 
-//│ 	(fun x⁴ -> case x⁴ of {
+//│ 	(fun x⁷ -> case x⁷ of {
 //│ 		T a² l² r² => case r² of {
-//│ 			T b² ll² rr² => [T a² [T b² (f₀ rr²) (f₀ ll²)] (f₁ l²)]}})
+//│ 			T b² ll² rr² => [T a² [T b² (f₁ rr²) (f₂ ll²)] (f₃ l²)]}})
 //│ 	where
 //│ 	def f₁ = 
-//│ 		(fun x³ -> case x³ of {
+//│ 		(fun x⁸ -> case x⁸ of {
+//│ 			T a⁴ l⁴ r⁴ => case r⁴ of {
+//│ 				T b⁴ ll⁴ rr⁴ => [T a⁴ [T b⁴ (f₁ rr⁴) (f₁ ll⁴)] (f₁ l⁴)]}})
+//│ 	def f₂ = 
+//│ 		(fun x⁵ -> case x⁵ of {
+//│ 			T a³ l³ r³ => case r³ of {
+//│ 				T b³ ll³ rr³ => [T a³ [T b³ (f₂ rr³) (f₂ ll³)] (f₂ l³)]}})
+//│ 	def f₃ = 
+//│ 		(fun x⁶ -> case x⁶ of {
 //│ 			T a¹ l¹ r¹ => case r¹ of {
-//│ 				T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₁ ll¹)] (f₀ l¹)]}})
+//│ 				T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₃ ll¹)] (f₀ l¹)]}})
 //│ def t₀ = 
-//│ 	[T [X] [T [Y] t₀ t₀] t₀]
+//│ 	[T [X] [T [Y] t₀ t₀] t₁]
+//│ 	where
+//│ 	def t₁ = 
+//│ 		[T [X] [T [Y] t₁ t₁] t₁]
 //│ <<<<<<< after fusion <<<<<<<

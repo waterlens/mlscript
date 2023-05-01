@@ -360,8 +360,8 @@ class Deforest(var debug: Boolean) {
       case (p, c) => constraints ::= (prod, cons)
   }
   
-  type Cache = Map[Cnstr, Cnstr -> Int]
-  // type Cache = scala.collection.mutable.Map[Cnstr, Cnstr -> Int]
+  // type Cache = Map[Cnstr, Cnstr -> Int]
+  type Cache = scala.collection.mutable.Map[Cnstr, Cnstr -> Int]
 
 
   val recursiveConstr = mutable.Map.empty[Cnstr, mutable.Set[Path -> Path]]
@@ -384,7 +384,7 @@ class Deforest(var debug: Boolean) {
             log(s">> done [${prod.pp(using InitPpConfig)} : ${cons.pp(using InitPpConfig)}]")
             log(s">> with [${inCache._1._1.pp(using InitPpConfig)} : ${inCache._1._2.pp(using InitPpConfig)}]")
             // register knots that actually pass through type ctors
-            if inCache._2 < numOfTypeCtor then {
+            if inCache._2 < numOfTypeCtor || true then {
               recursiveConstr.updateWith(c) {
                 case Some(m) =>
                   m += (prod.path.rev ::: cons.path) -> (inCache._1._1.path.rev ::: inCache._1._2.path)
@@ -400,8 +400,8 @@ class Deforest(var debug: Boolean) {
           case N => ()
         case _ => ()
 
-      given Cache = cache + (c -> (c -> numOfTypeCtor))
-      // cache += (c -> (c -> numOfTypeCtor))
+      // given Cache = cache + (c -> (c -> numOfTypeCtor))
+      cache += (c -> (c -> numOfTypeCtor))
 
       (prod.s, cons.s) match
         case (ProdVar(v, _), ConsVar(w, _)) if v === w => ()
@@ -489,8 +489,8 @@ class Deforest(var debug: Boolean) {
         case _ => lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
     }()
     
-    // given Cache = scala.collection.mutable.Map.empty
-    given Cache = Map.empty
+    given Cache = scala.collection.mutable.Map.empty
+    // given Cache = Map.empty
     given Int = 0
     
     // import scala.util.Random.shuffle
@@ -511,7 +511,7 @@ class Deforest(var debug: Boolean) {
     val allKnotsMap = mutable.Map.empty[Path, Set[Path]].withDefaultValue(Set.empty[Path])
     afterSplit.values.flatten.foreach { (key, vall) => allKnotsMap.update(key, allKnotsMap(key) + vall)}
 
-    allKnotsMap.retain { case (k, vs) => k.reachable(callsInfo) && vs.forall(vsp => vsp.reachable(callsInfo))}
+    allKnotsMap.retain { case (k, vs) => k.reachable(callsInfo) && vs.forall(vsp => Deforest.filterKnots(k, vsp)(using this)) }
     (allKnotsMap.toMap, afterSplit)
   }
 }
@@ -603,16 +603,23 @@ object CallTree {
       assert(p.p.nonEmpty)
 
       val matches = {
+        import Deforest.filterKnots
         val res = mutable.Set.empty[Path]
         // match from left
         knots.filterKeys(_.p.startsWith(p.rev.p)).values.flatten.foreach { v => 
           val ind = v.p.indexOf(p.p.head)
-          if ind >= 0 then res += Path(v.p.take(ind + 1).reverse)
+          if ind >= 0 then {
+            val tempRes = Path(v.p.take(ind + 1).reverse)
+            if filterKnots(p, tempRes) then res += tempRes
+          }
         }
         // match from right
         knots.filterKeys(_.p.endsWith(p.p)).values.flatten.foreach { v =>
           val ind = v.p.indexOf(p.p.head)
-          if ind >= 0 then res += Path(v.p.takeRight(v.p.length - ind))
+          if ind >= 0 then {
+            val tempRes = Path(v.p.takeRight(v.p.length - ind))
+            if filterKnots(p, tempRes) then res += tempRes
+          }
         }
         // res.foreach { r => log(r.pp) }
         res.retain(_ != p)
@@ -667,6 +674,16 @@ object CallTree {
     val tier = CallTreeKnotTier()(using new NonSplitKnotTier(using d))
     growCallTree(d.callsInfo._1.map(_.toPath()).toSet)(using tier, d.callsInfo._2.toMap)
   }
+
+  def callTreeWithoutKnotTying(d: Deforest) = {
+    val tier = CallTreeKnotTier()(using new CallTreeKnotTierFunc {
+      override def tie(p: Path, mapping: Option[Map[Ident, Path]]): (Option[Path], Str) = mapping match {
+        case None => None -> "hopeless to continue"
+        case Some(value) => value.get(p.last.r.id) -> "using original def"
+      }
+    })
+    growCallTree(d.callsInfo._1.map(_.toPath()).toSet)(using tier, d.callsInfo._2.toMap)
+  }
 }
 
 object Deforest {
@@ -675,4 +692,10 @@ object Deforest {
   lazy val lumberhackIntComparisonFun: Set[String] = Set("eq", "lt", "gt", "leq", "geq")
   lazy val lumberhackIntBinOps: Set[String] = Set("+", "-", "*", "/") ++ lumberhackIntComparisonOps
   lazy val lumberhackIntComparisonOps: Set[String] = Set("==", ">", "<", ">=", "<=")
+
+  def filterKnots(k: Path, v: Path)(using d: Deforest) = v.reachable(d.callsInfo) &&
+    v.p.nonEmpty &&
+    v.p.last.asInstanceOf[PathElem.Normal].r.id == k.last.r.id &&
+    k.p.startsWith(v.p) &&
+    k != v
 }

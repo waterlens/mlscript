@@ -81,6 +81,7 @@ class DiffTestLumberhack extends DiffTests {
       output("\n>>>>>>> expansion >>>>>>>")
       val callTree = CallTree.callTreeUsingSplitKnot(d)
       // val callTree = CallTree.callTreeUsingNonSplitKnot(d)
+      // val callTree = CallTree.callTreeWithoutKnotTying(d)
       output(callTree.pp)
       output("<<<<<<< expansion <<<<<<<")
 

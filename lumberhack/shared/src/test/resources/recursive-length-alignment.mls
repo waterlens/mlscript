@@ -1,0 +1,931 @@
+:NewParser
+:ParseOnly
+
+// CORRECT: simplest recursive length
+let rec p = C(p)
+fun c(x) = if x is
+  C(a) then c(a)
+c(p)
+//│ |#let| |#rec| |p| |#=| |C|(|p|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|c|(|p|)|
+//│ Parsed: {let rec p = C (p,); fun c = x, => if x is ‹(C (a,)) then c (a,)›; c (p,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (c^9 p^10)
+//│ def c = (fun x⁰ -> case x⁰ of {
+//│ 	C a⁰ => (c^4 a⁰)})
+//│ def p = [C p^1]
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [c^9]
+//│ 	[c^9 · c^4] ---> [c^9] (only one)
+//│ [p^10]
+//│ 	[p^10 · p^1] ---> [p^10] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c₀ p₀)
+//│ def c₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		C a¹ => (c₀ a¹)})
+//│ def p₀ = 
+//│ 	[C p₀]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C p₀]: 19 --->
+//│ 	case x¹ of {C a¹ => (c₀ a¹)}: 16
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C p₀]: 19 --->
+//│ 	case x¹ of {C a¹ => (c₀ a¹)}: 16
+//│ ------------------
+//│ case x¹ of {C a¹ => (c₀ a¹)}: 16 --->
+//│ 	[C p₀]: 19
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (c₀ p₀)
+//│ def c₀ = 
+//│ 	(fun x² -> x²)
+//│ def p₀ = 
+//│ 	let a² = p₀
+//│ 	in (c₀ a²)
+//│ <<<<<<< after fusion <<<<<<<
+
+// CORRECT: correctly aligned recursive length
+let rec p = C(C(p))
+fun c(x) = if x is
+  C(a) then if a is
+    C(b) then if b is
+      C(y) then c(y)
+c(p)
+//│ |#let| |#rec| |p| |#=| |C|(|C|(|p|)|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |#if| |a| |is|→|C|(|b|)| |#then| |#if| |b| |is|→|C|(|y|)| |#then| |c|(|y|)|←|←|←|↵|c|(|p|)|
+//│ Parsed: {let rec p = C (C (p,),); fun c = x, => if x is ‹(C (a,)) then if a is ‹(C (b,)) then if b is ‹(C (y,)) then c (y,)›››; c (p,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (c^14 p^15)
+//│ def c = (fun x⁰ -> case x⁰ of {
+//│ 	C a⁰ => case a⁰ of {
+//│ 		C b⁰ => case b⁰ of {
+//│ 			C y⁰ => (c^7 y⁰)}}})
+//│ def p = [C [C p^1]]
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [c^14]
+//│ 	[c^14 · c^7]
+//│ 		[c^14 · c^7 · c^7] ---> [c^14] (only one)
+//│ [p^15]
+//│ 	[p^15 · p^1]
+//│ 		[p^15 · p^1 · p^1]
+//│ 			[p^15 · p^1 · p^1 · p^1] ---> [p^15] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c₀ p₀)
+//│ def c₀ = 
+//│ 	(fun x² -> case x² of {
+//│ 		C a² => case a² of {
+//│ 			C b² => case b² of {
+//│ 				C y² => (c₁ y²)}}})
+//│ 	where
+//│ 	def c₁ = 
+//│ 		(fun x¹ -> case x¹ of {
+//│ 			C a¹ => case a¹ of {
+//│ 				C b¹ => case b¹ of {
+//│ 					C y¹ => (c₀ y¹)}}})
+//│ def p₀ = 
+//│ 	[C [C p₁]]
+//│ 	where
+//│ 	def p₁ = 
+//│ 		[C [C p₂]]
+//│ 		where
+//│ 		def p₂ = 
+//│ 			[C [C p₀]]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C [C p₀]]: 29 --->
+//│ 	case a¹ of {C b¹ => case b¹ of {C y¹ => (c₀ y¹)}}: 24
+//│ [C [C p₁]]: 42 --->
+//│ 	case x² of {C a² => case a² of {C b² => case b² of {C y² => (c₁ y²)}}}: 38
+//│ [C [C p₂]]: 45 --->
+//│ 	case b² of {C y² => (c₁ y²)}: 36
+//│ [C p₀]: 28 --->
+//│ 	case b¹ of {C y¹ => (c₀ y¹)}: 23
+//│ [C p₁]: 41 --->
+//│ 	case a² of {C b² => case b² of {C y² => (c₁ y²)}}: 37
+//│ [C p₂]: 44 --->
+//│ 	case x¹ of {C a¹ => case a¹ of {C b¹ => case b¹ of {C y¹ => (c₀ y¹)}}}: 25
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C p₀]: 28 --->
+//│ 	case b¹ of {C y¹ => (c₀ y¹)}: 23
+//│ [C [C p₀]]: 29 --->
+//│ 	case a¹ of {C b¹ => case b¹ of {C y¹ => (c₀ y¹)}}: 24
+//│ [C p₁]: 41 --->
+//│ 	case a² of {C b² => case b² of {C y² => (c₁ y²)}}: 37
+//│ [C [C p₁]]: 42 --->
+//│ 	case x² of {C a² => case a² of {C b² => case b² of {C y² => (c₁ y²)}}}: 38
+//│ [C p₂]: 44 --->
+//│ 	case x¹ of {C a¹ => case a¹ of {C b¹ => case b¹ of {C y¹ => (c₀ y¹)}}}: 25
+//│ [C [C p₂]]: 45 --->
+//│ 	case b² of {C y² => (c₁ y²)}: 36
+//│ ------------------
+//│ case b¹ of {C y¹ => (c₀ y¹)}: 23 --->
+//│ 	[C p₀]: 28
+//│ case a¹ of {C b¹ => case b¹ of {C y¹ => (c₀ y¹)}}: 24 --->
+//│ 	[C [C p₀]]: 29
+//│ case x¹ of {C a¹ => case a¹ of {C b¹ => case b¹ of {C y¹ => (c₀ y¹)}}}: 25 --->
+//│ 	[C p₂]: 44
+//│ case b² of {C y² => (c₁ y²)}: 36 --->
+//│ 	[C [C p₂]]: 45
+//│ case a² of {C b² => case b² of {C y² => (c₁ y²)}}: 37 --->
+//│ 	[C p₁]: 41
+//│ case x² of {C a² => case a² of {C b² => case b² of {C y² => (c₁ y²)}}}: 38 --->
+//│ 	[C [C p₁]]: 42
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (c₀ p₀)
+//│ def c₀ = 
+//│ 	(fun x⁴ -> x⁴)
+//│ 	where
+//│ 	def c₁ = 
+//│ 		(fun x³ -> x³)
+//│ def p₀ = 
+//│ 	let a⁴ = 	
+//│ 		let b⁴ = p₁
+//│ 		in b⁴
+//│ 	in a⁴
+//│ 	where
+//│ 	def p₁ = 
+//│ 		let y⁴ = 	
+//│ 			let a³ = p₂
+//│ 			in a³
+//│ 		in (c₁ y⁴)
+//│ 		where
+//│ 		def p₂ = 
+//│ 			let b³ = 	
+//│ 				let y³ = p₀
+//│ 				in (c₀ y³)
+//│ 			in b³
+//│ <<<<<<< after fusion <<<<<<<
+
+// CORRECT: correctly aligned recursive length (using split knot)
+let rec p = C(C(p))
+fun c(x) = if x is
+  C(a) then c(a)
+fun id2(yy) = yy
+fun id(y) = id2(y)
+c(id(p))
+//│ |#let| |#rec| |p| |#=| |C|(|C|(|p|)|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|#fun| |id2|(|yy|)| |#=| |yy|↵|#fun| |id|(|y|)| |#=| |id2|(|y|)|↵|c|(|id|(|p|)|)|
+//│ Parsed: {let rec p = C (C (p,),); fun c = x, => if x is ‹(C (a,)) then c (a,)›; fun id2 = yy, => yy; fun id = y, => id2 (y,); c (id (p,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (c^16 (id^17 p^18))
+//│ def c = (fun x⁰ -> case x⁰ of {
+//│ 	C a⁰ => (c^5 a⁰)})
+//│ def id = (fun y⁰ -> (id2^12 y⁰))
+//│ def id2 = (fun yy⁰ -> yy⁰)
+//│ def p = [C [C p^1]]
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [c^16]
+//│ 	[c^16 · c^5]
+//│ 		[c^16 · c^5 · c^5] ---> [c^16] (only one)
+//│ [id^17] (hopeless to continue)
+//│ 	[id^17 · id2^12] (using original def)
+//│ [p^18]
+//│ 	[p^18 · p^1] ---> [p^18] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c₀ (id₀ p₀))
+//│ def c₀ = 
+//│ 	(fun x² -> case x² of {
+//│ 		C a² => (c₁ a²)})
+//│ 	where
+//│ 	def c₁ = 
+//│ 		(fun x¹ -> case x¹ of {
+//│ 			C a¹ => (c₀ a¹)})
+//│ def id₀ = 
+//│ 	(fun y¹ -> (id2₀ y¹))
+//│ 	where
+//│ 	def id2₀ = 
+//│ 		(fun yy¹ -> yy¹)
+//│ def p₀ = 
+//│ 	[C [C p₀]]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C [C p₀]]: 35 --->
+//│ 	case x² of {C a² => (c₁ a²)}: 40
+//│ [C p₀]: 34 --->
+//│ 	case x¹ of {C a¹ => (c₀ a¹)}: 25
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C p₀]: 34 --->
+//│ 	case x¹ of {C a¹ => (c₀ a¹)}: 25
+//│ [C [C p₀]]: 35 --->
+//│ 	case x² of {C a² => (c₁ a²)}: 40
+//│ ------------------
+//│ case x¹ of {C a¹ => (c₀ a¹)}: 25 --->
+//│ 	[C p₀]: 34
+//│ case x² of {C a² => (c₁ a²)}: 40 --->
+//│ 	[C [C p₀]]: 35
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (c₀ (id₀ p₀))
+//│ def c₀ = 
+//│ 	(fun x⁴ -> x⁴)
+//│ 	where
+//│ 	def c₁ = 
+//│ 		(fun x³ -> x³)
+//│ def id₀ = 
+//│ 	(fun y² -> (id2₀ y²))
+//│ 	where
+//│ 	def id2₀ = 
+//│ 		(fun yy² -> yy²)
+//│ def p₀ = 
+//│ 	let a³ = 	
+//│ 		let a⁴ = p₀
+//│ 		in (c₀ a⁴)
+//│ 	in (c₁ a³)
+//│ <<<<<<< after fusion <<<<<<<
+
+
+// CORRECT: correctly aligned recursive length (using split knot)
+let rec p = C(C(C(p)))
+fun ca(x) = if x is
+  C(a) then cb(a)
+fun cb(x) = if x is
+  C(b) then ca(b)
+ca(p)
+//│ |#let| |#rec| |p| |#=| |C|(|C|(|C|(|p|)|)|)|↵|#fun| |ca|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |cb|(|a|)|←|↵|#fun| |cb|(|x|)| |#=| |#if| |x| |is|→|C|(|b|)| |#then| |ca|(|b|)|←|↵|ca|(|p|)|
+//│ Parsed: {let rec p = C (C (C (p,),),); fun ca = x, => if x is ‹(C (a,)) then cb (a,)›; fun cb = x, => if x is ‹(C (b,)) then ca (b,)›; ca (p,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (ca^17 p^18)
+//│ def ca = (fun x⁰ -> case x⁰ of {
+//│ 	C a⁰ => (cb^6 a⁰)})
+//│ def cb = (fun x¹ -> case x¹ of {
+//│ 	C b⁰ => (ca^12 b⁰)})
+//│ def p = [C [C [C p^1]]]
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [ca^17]
+//│ 	[ca^17 · cb^6]
+//│ 		[ca^17 · cb^6 · ca^12]
+//│ 			[ca^17 · cb^6 · ca^12 · cb^6]
+//│ 				[ca^17 · cb^6 · ca^12 · cb^6 · ca^12]
+//│ 					[ca^17 · cb^6 · ca^12 · cb^6 · ca^12 · cb^6]
+//│ 						[ca^17 · cb^6 · ca^12 · cb^6 · ca^12 · cb^6 · ca^12] ---> [ca^17] (only one)
+//│ [p^18]
+//│ 	[p^18 · p^1]
+//│ 		[p^18 · p^1 · p^1] ---> [p^18] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (ca₀ p₀)
+//│ def ca₀ = 
+//│ 	(fun x³ -> case x³ of {
+//│ 		C a² => (cb₀ a²)})
+//│ 	where
+//│ 	def cb₀ = 
+//│ 		(fun x⁶ -> case x⁶ of {
+//│ 			C b² => (ca₁ b²)})
+//│ 		where
+//│ 		def ca₁ = 
+//│ 			(fun x⁴ -> case x⁴ of {
+//│ 				C a³ => (cb₁ a³)})
+//│ 			where
+//│ 			def cb₁ = 
+//│ 				(fun x⁷ -> case x⁷ of {
+//│ 					C b³ => (ca₂ b³)})
+//│ 				where
+//│ 				def ca₂ = 
+//│ 					(fun x² -> case x² of {
+//│ 						C a¹ => (cb₂ a¹)})
+//│ 					where
+//│ 					def cb₂ = 
+//│ 						(fun x⁵ -> case x⁵ of {
+//│ 							C b¹ => (ca₀ b¹)})
+//│ def p₀ = 
+//│ 	[C [C [C p₁]]]
+//│ 	where
+//│ 	def p₁ = 
+//│ 		[C [C [C p₀]]]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C [C [C p₀]]]: 35 --->
+//│ 	case x⁷ of {C b³ => (ca₂ b³)}: 62
+//│ [C [C [C p₁]]]: 57 --->
+//│ 	case x³ of {C a² => (cb₀ a²)}: 30
+//│ [C [C p₀]]: 34 --->
+//│ 	case x² of {C a¹ => (cb₂ a¹)}: 24
+//│ [C [C p₁]]: 56 --->
+//│ 	case x⁶ of {C b² => (ca₁ b²)}: 52
+//│ [C p₀]: 33 --->
+//│ 	case x⁵ of {C b¹ => (ca₀ b¹)}: 46
+//│ [C p₁]: 55 --->
+//│ 	case x⁴ of {C a³ => (cb₁ a³)}: 40
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C p₀]: 33 --->
+//│ 	case x⁵ of {C b¹ => (ca₀ b¹)}: 46
+//│ [C [C p₀]]: 34 --->
+//│ 	case x² of {C a¹ => (cb₂ a¹)}: 24
+//│ [C [C [C p₀]]]: 35 --->
+//│ 	case x⁷ of {C b³ => (ca₂ b³)}: 62
+//│ [C p₁]: 55 --->
+//│ 	case x⁴ of {C a³ => (cb₁ a³)}: 40
+//│ [C [C p₁]]: 56 --->
+//│ 	case x⁶ of {C b² => (ca₁ b²)}: 52
+//│ [C [C [C p₁]]]: 57 --->
+//│ 	case x³ of {C a² => (cb₀ a²)}: 30
+//│ ------------------
+//│ case x² of {C a¹ => (cb₂ a¹)}: 24 --->
+//│ 	[C [C p₀]]: 34
+//│ case x³ of {C a² => (cb₀ a²)}: 30 --->
+//│ 	[C [C [C p₁]]]: 57
+//│ case x⁴ of {C a³ => (cb₁ a³)}: 40 --->
+//│ 	[C p₁]: 55
+//│ case x⁵ of {C b¹ => (ca₀ b¹)}: 46 --->
+//│ 	[C p₀]: 33
+//│ case x⁶ of {C b² => (ca₁ b²)}: 52 --->
+//│ 	[C [C p₁]]: 56
+//│ case x⁷ of {C b³ => (ca₂ b³)}: 62 --->
+//│ 	[C [C [C p₀]]]: 35
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (ca₀ p₀)
+//│ def ca₀ = 
+//│ 	(fun x⁹ -> x⁹)
+//│ 	where
+//│ 	def cb₀ = 
+//│ 		(fun x¹⁰ -> x¹⁰)
+//│ 		where
+//│ 		def ca₁ = 
+//│ 			(fun x¹¹ -> x¹¹)
+//│ 			where
+//│ 			def cb₁ = 
+//│ 				(fun x¹² -> x¹²)
+//│ 				where
+//│ 				def ca₂ = 
+//│ 					(fun x⁸ -> x⁸)
+//│ 					where
+//│ 					def cb₂ = 
+//│ 						(fun x¹³ -> x¹³)
+//│ def p₀ = 
+//│ 	let a⁵ = 	
+//│ 		let b⁶ = 	
+//│ 			let a⁶ = p₁
+//│ 			in (cb₁ a⁶)
+//│ 		in (ca₁ b⁶)
+//│ 	in (cb₀ a⁵)
+//│ 	where
+//│ 	def p₁ = 
+//│ 		let b⁴ = 	
+//│ 			let a⁴ = 	
+//│ 				let b⁵ = p₀
+//│ 				in (ca₀ b⁵)
+//│ 			in (cb₂ a⁴)
+//│ 		in (ca₂ b⁴)
+//│ <<<<<<< after fusion <<<<<<<
+
+
+// CORRECT: correctly aligned recursive length (using split knot)
+fun c1(x1) = if x1 is
+  C(a) then c2(a)
+fun c2(x2) = if x2 is
+  C(b) then c1(b)
+let p1 = C(C(C(p2)))
+let p2 = C(p1)
+c1(p1)
+//│ |#fun| |c1|(|x1|)| |#=| |#if| |x1| |is|→|C|(|a|)| |#then| |c2|(|a|)|←|↵|#fun| |c2|(|x2|)| |#=| |#if| |x2| |is|→|C|(|b|)| |#then| |c1|(|b|)|←|↵|#let| |p1| |#=| |C|(|C|(|C|(|p2|)|)|)|↵|#let| |p2| |#=| |C|(|p1|)|↵|c1|(|p1|)|
+//│ Parsed: {fun c1 = x1, => if x1 is ‹(C (a,)) then c2 (a,)›; fun c2 = x2, => if x2 is ‹(C (b,)) then c1 (b,)›; let p1 = C (C (C (p2,),),); let p2 = C (p1,); c1 (p1,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (c1^19 p1^20)
+//│ def c1 = (fun x1⁰ -> case x1⁰ of {
+//│ 	C a⁰ => (c2^2 a⁰)})
+//│ def c2 = (fun x2⁰ -> case x2⁰ of {
+//│ 	C b⁰ => (c1^8 b⁰)})
+//│ def p1 = [C [C [C p2^13]]]
+//│ def p2 = [C p1^17]
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [c1^19]
+//│ 	[c1^19 · c2^2]
+//│ 		[c1^19 · c2^2 · c1^8]
+//│ 			[c1^19 · c2^2 · c1^8 · c2^2]
+//│ 				[c1^19 · c2^2 · c1^8 · c2^2 · c1^8] ---> [c1^19] (only one)
+//│ [p1^20]
+//│ 	[p1^20 · p2^13]
+//│ 		[p1^20 · p2^13 · p1^17] ---> [p1^20] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c1₀ p1₀)
+//│ def c1₀ = 
+//│ 	(fun x1¹ -> case x1¹ of {
+//│ 		C a¹ => (c2₀ a¹)})
+//│ 	where
+//│ 	def c2₀ = 
+//│ 		(fun x2¹ -> case x2¹ of {
+//│ 			C b¹ => (c1₁ b¹)})
+//│ 		where
+//│ 		def c1₁ = 
+//│ 			(fun x1² -> case x1² of {
+//│ 				C a² => (c2₁ a²)})
+//│ 			where
+//│ 			def c2₁ = 
+//│ 				(fun x2² -> case x2² of {
+//│ 					C b² => (c1₀ b²)})
+//│ def p1₀ = 
+//│ 	[C [C [C p2₀]]]
+//│ 	where
+//│ 	def p2₀ = 
+//│ 		[C p1₀]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C [C [C p2₀]]]: 31 --->
+//│ 	case x1¹ of {C a¹ => (c2₀ a¹)}: 26
+//│ [C [C p2₀]]: 30 --->
+//│ 	case x2¹ of {C b¹ => (c1₁ b¹)}: 36
+//│ [C p1₀]: 51 --->
+//│ 	case x2² of {C b² => (c1₀ b²)}: 48
+//│ [C p2₀]: 29 --->
+//│ 	case x1² of {C a² => (c2₁ a²)}: 42
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C p2₀]: 29 --->
+//│ 	case x1² of {C a² => (c2₁ a²)}: 42
+//│ [C [C p2₀]]: 30 --->
+//│ 	case x2¹ of {C b¹ => (c1₁ b¹)}: 36
+//│ [C [C [C p2₀]]]: 31 --->
+//│ 	case x1¹ of {C a¹ => (c2₀ a¹)}: 26
+//│ [C p1₀]: 51 --->
+//│ 	case x2² of {C b² => (c1₀ b²)}: 48
+//│ ------------------
+//│ case x1¹ of {C a¹ => (c2₀ a¹)}: 26 --->
+//│ 	[C [C [C p2₀]]]: 31
+//│ case x2¹ of {C b¹ => (c1₁ b¹)}: 36 --->
+//│ 	[C [C p2₀]]: 30
+//│ case x1² of {C a² => (c2₁ a²)}: 42 --->
+//│ 	[C p2₀]: 29
+//│ case x2² of {C b² => (c1₀ b²)}: 48 --->
+//│ 	[C p1₀]: 51
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (c1₀ p1₀)
+//│ def c1₀ = 
+//│ 	(fun x1⁴ -> x1⁴)
+//│ 	where
+//│ 	def c2₀ = 
+//│ 		(fun x2⁴ -> x2⁴)
+//│ 		where
+//│ 		def c1₁ = 
+//│ 			(fun x1³ -> x1³)
+//│ 			where
+//│ 			def c2₁ = 
+//│ 				(fun x2³ -> x2³)
+//│ def p1₀ = 
+//│ 	let a³ = 	
+//│ 		let b⁴ = 	
+//│ 			let a⁴ = p2₀
+//│ 			in (c2₁ a⁴)
+//│ 		in (c1₁ b⁴)
+//│ 	in (c2₀ a³)
+//│ 	where
+//│ 	def p2₀ = 
+//│ 		let b³ = p1₀
+//│ 		in (c1₀ b³)
+//│ <<<<<<< after fusion <<<<<<<
+
+
+// CORRECT:
+let rec p = C(p)
+fun c(x) = if x is
+  C(a) then c(a)
+fun main(cc) = cc(p)
+main(c)
+//│ |#let| |#rec| |p| |#=| |C|(|p|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|#fun| |main|(|cc|)| |#=| |cc|(|p|)|↵|main|(|c|)|
+//│ Parsed: {let rec p = C (p,); fun c = x, => if x is ‹(C (a,)) then c (a,)›; fun main = cc, => cc (p,); main (c,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (main^13 c^14)
+//│ def c = (fun x⁰ -> case x⁰ of {
+//│ 	C a⁰ => (c^4 a⁰)})
+//│ def main = (fun cc⁰ -> (cc⁰ p^10))
+//│ def p = [C p^1]
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [c^14]
+//│ 	[c^14 · c^4] ---> [c^14] (only one)
+//│ [main^13]
+//│ 	[main^13 · p^10]
+//│ 		[main^13 · p^10 · p^1] ---> [main^13 · p^10] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (main₀ c₀)
+//│ def c₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		C a¹ => (c₀ a¹)})
+//│ def main₀ = 
+//│ 	(fun cc¹ -> (cc¹ p₀))
+//│ 	where
+//│ 	def p₀ = 
+//│ 		[C p₀]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C p₀]: 17 --->
+//│ 	case x¹ of {C a¹ => (c₀ a¹)}: 26
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C p₀]: 17 --->
+//│ 	case x¹ of {C a¹ => (c₀ a¹)}: 26
+//│ ------------------
+//│ case x¹ of {C a¹ => (c₀ a¹)}: 26 --->
+//│ 	[C p₀]: 17
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (main₀ c₀)
+//│ def c₀ = 
+//│ 	(fun x² -> x²)
+//│ def main₀ = 
+//│ 	(fun cc² -> (cc² p₀))
+//│ 	where
+//│ 	def p₀ = 
+//│ 		let a² = p₀
+//│ 		in (c₀ a²)
+//│ <<<<<<< after fusion <<<<<<<
+
+
+// CORRECT:
+let rec p = C(p)
+fun c(x) = if x is
+  C(a) then c(a)
+fun main(pp) = if pp is
+  C(b) then if b is
+    C(d) then c(d)
+main(p)
+//│ |#let| |#rec| |p| |#=| |C|(|p|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|#fun| |main|(|pp|)| |#=| |#if| |pp| |is|→|C|(|b|)| |#then| |#if| |b| |is|→|C|(|d|)| |#then| |c|(|d|)|←|←|↵|main|(|p|)|
+//│ Parsed: {let rec p = C (p,); fun c = x, => if x is ‹(C (a,)) then c (a,)›; fun main = pp, => if pp is ‹(C (b,)) then if b is ‹(C (d,)) then c (d,)››; main (p,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (main^17 p^18)
+//│ def c = (fun x⁰ -> case x⁰ of {
+//│ 	C a⁰ => (c^4 a⁰)})
+//│ def main = (fun pp⁰ -> case pp⁰ of {
+//│ 	C b⁰ => case b⁰ of {
+//│ 		C d⁰ => (c^11 d⁰)}})
+//│ def p = [C p^1]
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [main^17]
+//│ 	[main^17 · c^11]
+//│ 		[main^17 · c^11 · c^4] ---> [main^17 · c^11] (only one)
+//│ [p^18]
+//│ 	[p^18 · p^1]
+//│ 		[p^18 · p^1 · p^1]
+//│ 			[p^18 · p^1 · p^1 · p^1] ---> [p^18 · p^1 · p^1] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (main₀ p₀)
+//│ def main₀ = 
+//│ 	(fun pp¹ -> case pp¹ of {
+//│ 		C b¹ => case b¹ of {
+//│ 			C d¹ => (c₀ d¹)}})
+//│ 	where
+//│ 	def c₀ = 
+//│ 		(fun x¹ -> case x¹ of {
+//│ 			C a¹ => (c₀ a¹)})
+//│ def p₀ = 
+//│ 	[C p₁]
+//│ 	where
+//│ 	def p₁ = 
+//│ 		[C p₂]
+//│ 		where
+//│ 		def p₂ = 
+//│ 			[C p₂]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C p₁]: 39 --->
+//│ 	case pp¹ of {C b¹ => case b¹ of {C d¹ => (c₀ d¹)}}: 26
+//│ [C p₂]: 37 --->
+//│ 	case b¹ of {C d¹ => (c₀ d¹)}: 25
+//│ [C p₂]: 29 --->
+//│ 	case x¹ of {C a¹ => (c₀ a¹)}: 34
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C p₂]: 29 --->
+//│ 	case x¹ of {C a¹ => (c₀ a¹)}: 34
+//│ [C p₂]: 37 --->
+//│ 	case b¹ of {C d¹ => (c₀ d¹)}: 25
+//│ [C p₁]: 39 --->
+//│ 	case pp¹ of {C b¹ => case b¹ of {C d¹ => (c₀ d¹)}}: 26
+//│ ------------------
+//│ case b¹ of {C d¹ => (c₀ d¹)}: 25 --->
+//│ 	[C p₂]: 37
+//│ case pp¹ of {C b¹ => case b¹ of {C d¹ => (c₀ d¹)}}: 26 --->
+//│ 	[C p₁]: 39
+//│ case x¹ of {C a¹ => (c₀ a¹)}: 34 --->
+//│ 	[C p₂]: 29
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (main₀ p₀)
+//│ def main₀ = 
+//│ 	(fun pp² -> pp²)
+//│ 	where
+//│ 	def c₀ = 
+//│ 		(fun x² -> x²)
+//│ def p₀ = 
+//│ 	let b² = p₁
+//│ 	in b²
+//│ 	where
+//│ 	def p₁ = 
+//│ 		let d² = p₂
+//│ 		in (c₀ d²)
+//│ 		where
+//│ 		def p₂ = 
+//│ 			let a² = p₂
+//│ 			in (c₀ a²)
+//│ <<<<<<< after fusion <<<<<<<
+
+// CORRECT:
+let rec p = C(p)
+let c(x) = if x is
+  C(a) then c(a)
+fun main(cc, pp) = cc(pp)
+main(c, p)
+//│ |#let| |#rec| |p| |#=| |C|(|p|)|↵|#let| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |c|(|a|)|←|↵|#fun| |main|(|cc|,| |pp|)| |#=| |cc|(|pp|)|↵|main|(|c|,| |p|)|
+//│ Parsed: {let rec p = C (p,); let c = x, => if x is ‹(C (a,)) then c (a,)›; fun main = cc, pp, => cc (pp,); main (c, p,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ ((main^14 c^15) p^17)
+//│ def c = (fun x⁰ -> case x⁰ of {
+//│ 	C a⁰ => (c^4 a⁰)})
+//│ def main = (fun cc⁰ -> (fun pp⁰ -> (cc⁰ pp⁰)))
+//│ def p = [C p^1]
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [c^15]
+//│ 	[c^15 · c^4] ---> [c^15] (only one)
+//│ [main^14] (hopeless to continue)
+//│ [p^17]
+//│ 	[p^17 · p^1] ---> [p^17] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((main₀ c₀) p₀)
+//│ def c₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		C a¹ => (c₀ a¹)})
+//│ def main₀ = 
+//│ 	(fun cc¹ -> (fun pp¹ -> (cc¹ pp¹)))
+//│ def p₀ = 
+//│ 	[C p₀]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C p₀]: 26 --->
+//│ 	case x¹ of {C a¹ => (c₀ a¹)}: 23
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C p₀]: 26 --->
+//│ 	case x¹ of {C a¹ => (c₀ a¹)}: 23
+//│ ------------------
+//│ case x¹ of {C a¹ => (c₀ a¹)}: 23 --->
+//│ 	[C p₀]: 26
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((main₀ c₀) p₀)
+//│ def c₀ = 
+//│ 	(fun x² -> x²)
+//│ def main₀ = 
+//│ 	(fun cc² -> (fun pp² -> (cc² pp²)))
+//│ def p₀ = 
+//│ 	let a² = p₀
+//│ 	in (c₀ a²)
+//│ <<<<<<< after fusion <<<<<<<
+
+
+// CORRECT:
+fun cons(y) = if y is
+  C(aa) then cons(aa)
+fun a(x) = b(x)
+fun b(x) = c(x)
+fun c(x) = d(cons, x)
+fun d(cc, x) = cc(x)
+let p = C(p)
+a(p)
+//│ |#fun| |cons|(|y|)| |#=| |#if| |y| |is|→|C|(|aa|)| |#then| |cons|(|aa|)|←|↵|#fun| |a|(|x|)| |#=| |b|(|x|)|↵|#fun| |b|(|x|)| |#=| |c|(|x|)|↵|#fun| |c|(|x|)| |#=| |d|(|cons|,| |x|)|↵|#fun| |d|(|cc|,| |x|)| |#=| |cc|(|x|)|↵|#let| |p| |#=| |C|(|p|)|↵|a|(|p|)|
+//│ Parsed: {fun cons = y, => if y is ‹(C (aa,)) then cons (aa,)›; fun a = x, => b (x,); fun b = x, => c (x,); fun c = x, => d (cons, x,); fun d = cc, x, => cc (x,); let p = C (p,); a (p,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (a^28 p^29)
+//│ def a = (fun x⁰ -> (b^7 x⁰))
+//│ def b = (fun x¹ -> (c^11 x¹))
+//│ def c = (fun x² -> ((d^15 cons^16) x²))
+//│ def cons = (fun y⁰ -> case y⁰ of {
+//│ 	C aa⁰ => (cons^2 aa⁰)})
+//│ def d = (fun cc⁰ -> (fun x³ -> (cc⁰ x³)))
+//│ def p = [C p^26]
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [a^28]
+//│ 	[a^28 · b^7]
+//│ 		[a^28 · b^7 · c^11]
+//│ 			[a^28 · b^7 · c^11 · cons^16]
+//│ 				[a^28 · b^7 · c^11 · cons^16 · cons^2] ---> [a^28 · b^7 · c^11 · cons^16] (only one)
+//│ 			[a^28 · b^7 · c^11 · d^15] (hopeless to continue)
+//│ [p^29]
+//│ 	[p^29 · p^26] ---> [p^29] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (a₀ p₀)
+//│ def a₀ = 
+//│ 	(fun x⁴ -> (b₀ x⁴))
+//│ 	where
+//│ 	def b₀ = 
+//│ 		(fun x⁷ -> (c₀ x⁷))
+//│ 		where
+//│ 		def c₀ = 
+//│ 			(fun x⁶ -> ((d₀ cons₀) x⁶))
+//│ 			where
+//│ 			def cons₀ = 
+//│ 				(fun y¹ -> case y¹ of {
+//│ 					C aa¹ => (cons₀ aa¹)})
+//│ 			def d₀ = 
+//│ 				(fun cc¹ -> (fun x⁵ -> (cc¹ x⁵)))
+//│ def p₀ = 
+//│ 	[C p₀]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C p₀]: 38 --->
+//│ 	case y¹ of {C aa¹ => (cons₀ aa¹)}: 35
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C p₀]: 38 --->
+//│ 	case y¹ of {C aa¹ => (cons₀ aa¹)}: 35
+//│ ------------------
+//│ case y¹ of {C aa¹ => (cons₀ aa¹)}: 35 --->
+//│ 	[C p₀]: 38
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (a₀ p₀)
+//│ def a₀ = 
+//│ 	(fun x¹⁰ -> (b₀ x¹⁰))
+//│ 	where
+//│ 	def b₀ = 
+//│ 		(fun x¹¹ -> (c₀ x¹¹))
+//│ 		where
+//│ 		def c₀ = 
+//│ 			(fun x⁸ -> ((d₀ cons₀) x⁸))
+//│ 			where
+//│ 			def cons₀ = 
+//│ 				(fun y² -> y²)
+//│ 			def d₀ = 
+//│ 				(fun cc² -> (fun x⁹ -> (cc² x⁹)))
+//│ def p₀ = 
+//│ 	let aa² = p₀
+//│ 	in (cons₀ aa²)
+//│ <<<<<<< after fusion <<<<<<<
+
+
+// CORRECT: `main` consumes one C, `c2` then recursively consumes one C at a time
+let rec p = C(p)
+fun c(x) = if x is
+  C(a) then a
+fun c1(xx) = if xx is
+  C(aa) then aa
+fun c2(z) = if z is
+  C(b) then c2(b)
+let main = c(p)
+fun id(y) = c1(C(y))
+c2(id(main))
+//│ |#let| |#rec| |p| |#=| |C|(|p|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |a|←|↵|#fun| |c1|(|xx|)| |#=| |#if| |xx| |is|→|C|(|aa|)| |#then| |aa|←|↵|#fun| |c2|(|z|)| |#=| |#if| |z| |is|→|C|(|b|)| |#then| |c2|(|b|)|←|↵|#let| |main| |#=| |c|(|p|)|↵|#fun| |id|(|y|)| |#=| |c1|(|C|(|y|)|)|↵|c2|(|id|(|main|)|)|
+//│ Parsed: {let rec p = C (p,); fun c = x, => if x is ‹(C (a,)) then a›; fun c1 = xx, => if xx is ‹(C (aa,)) then aa›; fun c2 = z, => if z is ‹(C (b,)) then c2 (b,)›; let main = c (p,); fun id = y, => c1 (C (y,),); c2 (id (main,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (c2^25 (id^26 main^27))
+//│ def c = (fun x⁰ -> case x⁰ of {
+//│ 	C a⁰ => a⁰})
+//│ def c1 = (fun xx⁰ -> case xx⁰ of {
+//│ 	C aa⁰ => aa⁰})
+//│ def c2 = (fun z⁰ -> case z⁰ of {
+//│ 	C b⁰ => (c2^12 b⁰)})
+//│ def id = (fun y⁰ -> (c1^20 [C y⁰]))
+//│ def main = (c^17 p^18)
+//│ def p = [C p^1]
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [c2^25]
+//│ 	[c2^25 · c2^12] ---> [c2^25] (only one)
+//│ [id^26] (hopeless to continue)
+//│ 	[id^26 · c1^20] (using original def)
+//│ [main^27]
+//│ 	[main^27 · c^17] (hopeless to continue)
+//│ 	[main^27 · p^18]
+//│ 		[main^27 · p^18 · p^1]
+//│ 			[main^27 · p^18 · p^1 · p^1] ---> [main^27 · p^18 · p^1] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c2₀ (id₀ main₀))
+//│ def c2₀ = 
+//│ 	(fun z¹ -> case z¹ of {
+//│ 		C b¹ => (c2₀ b¹)})
+//│ def id₀ = 
+//│ 	(fun y¹ -> (c1₀ [C y¹]))
+//│ 	where
+//│ 	def c1₀ = 
+//│ 		(fun xx¹ -> case xx¹ of {
+//│ 			C aa¹ => aa¹})
+//│ def main₀ = 
+//│ 	(c₀ p₀)
+//│ 	where
+//│ 	def c₀ = 
+//│ 		(fun x¹ -> case x¹ of {
+//│ 			C a¹ => a¹})
+//│ 	def p₀ = 
+//│ 		[C p₁]
+//│ 		where
+//│ 		def p₁ = 
+//│ 			[C p₁]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C p₁]: 45 --->
+//│ 	case z¹ of {C b¹ => (c2₀ b¹)}: 54
+//│ [C p₁]: 31 --->
+//│ 	case x¹ of {C a¹ => a¹}: 48
+//│ [C y¹]: 34 --->
+//│ 	case xx¹ of {C aa¹ => aa¹}: 42
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C p₁]: 31 --->
+//│ 	case x¹ of {C a¹ => a¹}: 48
+//│ [C y¹]: 34 --->
+//│ 	case xx¹ of {C aa¹ => aa¹}: 42
+//│ [C p₁]: 45 --->
+//│ 	case z¹ of {C b¹ => (c2₀ b¹)}: 54
+//│ ------------------
+//│ case xx¹ of {C aa¹ => aa¹}: 42 --->
+//│ 	[C y¹]: 34
+//│ case x¹ of {C a¹ => a¹}: 48 --->
+//│ 	[C p₁]: 31
+//│ case z¹ of {C b¹ => (c2₀ b¹)}: 54 --->
+//│ 	[C p₁]: 45
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (c2₀ (id₀ main₀))
+//│ def c2₀ = 
+//│ 	(fun z² -> z²)
+//│ def id₀ = 
+//│ 	(fun y² -> (c1₀ 
+//│ 		let aa² = y²
+//│ 		in aa²))
+//│ 	where
+//│ 	def c1₀ = 
+//│ 		(fun xx² -> xx²)
+//│ def main₀ = 
+//│ 	(c₀ p₀)
+//│ 	where
+//│ 	def c₀ = 
+//│ 		(fun x² -> x²)
+//│ 	def p₀ = 
+//│ 		let a² = p₁
+//│ 		in a²
+//│ 		where
+//│ 		def p₁ = 
+//│ 			let b² = p₁
+//│ 			in (c2₀ b²)
+//│ <<<<<<< after fusion <<<<<<<

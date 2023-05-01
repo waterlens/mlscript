@@ -889,7 +889,8 @@ f(C(primitive))
 //│ !!!!!!ERROR!!!!!!
 
 
-// WRONG: branching, but no recursive strategy stackoverflow problem
+// // CORRECT: after the detection and elimination of multiple matches
+// NOTE: no recursive strategy stackoverflow problem
 // because the infinite rewriting cannot be started by `primitive`
 fun f(x) = if x is
   N then f(N)
@@ -923,17 +924,17 @@ f(primitive)
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [N]: 13 --->
-//│ 	case x¹ of {N => (f₀ [N]) | _ => 0}: 16
+//│ 
 //│ ------------------
-//│ case x¹ of {N => (f₀ [N]) | _ => 0}: 16 --->
-//│ 	[N]: 13
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (f₀ primitive⁰)
 //│ def f₀ = 
-//│ 	(fun x² -> x²)
+//│ 	(fun x² -> case x² of {
+//│ 		N => (f₀ [N])
+//│ 		| _ => 0})
 //│ <<<<<<< after fusion <<<<<<<
 
 // WRONG: mutual recursive strategy

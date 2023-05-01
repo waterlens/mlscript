@@ -407,26 +407,26 @@ class Deforest(var debug: Boolean) {
         case (ProdVar(v, _), ConsVar(w, _)) if v === w => ()
         case (NoProd(), NoCons()) => ()
         case (NoProd(), ConsFun(l, r)) =>
-          // given Int = numOfTypeCtor + 1
-          // handle(l.addPath(cons.path.neg) -> NoCons()(using noExprId).toStrat(prod.path.neg))
-          // handle(NoProd()(using noExprId).toStrat(prod.path) -> r.addPath(cons.path))
+          given Int = numOfTypeCtor + 1
+          handle(l.addPath(cons.path.neg) -> NoCons()(using noExprId).toStrat(prod.path.neg))
+          handle(NoProd()(using noExprId).toStrat(prod.path) -> r.addPath(cons.path))
         case (ProdFun(l, r), NoCons()) =>
-          // given Int = numOfTypeCtor + 1
-          // handle(r.addPath(prod.path) -> NoCons()(using noExprId).toStrat(cons.path))
-          // handle(NoProd()(using noExprId).toStrat(cons.path.neg) -> l.addPath(prod.path.neg))
+          given Int = numOfTypeCtor + 1
+          handle(r.addPath(prod.path) -> NoCons()(using noExprId).toStrat(cons.path))
+          handle(NoProd()(using noExprId).toStrat(cons.path.neg) -> l.addPath(prod.path.neg))
         case (NoProd(), dtor@Destruct(ds)) =>
-          // given Int = numOfTypeCtor + 1
-          // if dtor.euid != noExprId then {
-          //   dtorSources += dtor -> (dtorSources(dtor) + prod.s)
-          // }
+          given Int = numOfTypeCtor + 1
+          if dtor.euid != noExprId then {
+            dtorSources += dtor -> (dtorSources(dtor) + prod.s)
+          }
           // ds foreach { case Destructor(ctor, argCons) =>
           //   argCons foreach { c => handle(prod, c.addPath(cons.path)) }
           // }
         case (ctorType@MkCtor(ctor, args), NoCons()) =>
-          // given Int = numOfTypeCtor + 1
-          // if ctorType.euid != noExprId then {
-          //   ctorDestinations += ctorType -> (ctorDestinations(ctorType) + cons.s)
-          // }
+          given Int = numOfTypeCtor + 1
+          if ctorType.euid != noExprId then {
+            ctorDestinations += ctorType -> (ctorDestinations(ctorType) + cons.s)
+          }
           // args foreach { p => handle(p.addPath(prod.path), cons) }
         case (pv@ProdVar(v, _), _) =>
           cons.s match {

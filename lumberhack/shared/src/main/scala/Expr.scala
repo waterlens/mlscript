@@ -64,9 +64,9 @@ object Program {
       case Def(_, nme, _, _) => nme.name -> d.nextIdent(true, nme)
     } |> (_.toMap)
     Program(stmts.map {
-      case t: Term => R(Expr.fromTerm(t))
+      case t: Term => R(Expr.fromTerm(t)(using d, ctx, None))
       case Def(_, nme, L(rhs), _) =>
-        L(ProgDef(ctx(nme.name), Expr.fromTerm(rhs)))
+        L(ProgDef(ctx(nme.name), Expr.fromTerm(rhs)(using d, ctx, Some(ctx(nme.name)))))
       case t => throw new Exception("unsupported: " + t)
     })
   }
@@ -80,16 +80,16 @@ trait RefTrait { this: Expr.Ref =>
   override def hashCode(): Int = (this.id, this.uid).hashCode()
   def toPath(pol: PathElemPol = PathElemPol.In): Path = Path(PathElem.Normal(this)(pol) :: Nil)
 }
-enum Expr(using val deforest: Deforest) extends ExprRewrite {
-  case Const(lit: Lit)(using Deforest)
-  case Ref(id: Ident)(using Deforest) extends Expr with RefTrait
-  case Call(lhs: Expr, rhs: Expr)(using Deforest)
-  case Ctor(name: Var, args: Ls[Expr])(using Deforest)
-  case LetIn(id: Ident, rhs: Expr, body: Expr)(using Deforest)
-  case Match(scrut: Expr, arms: Ls[(Var, Ls[Ident], Expr)])(using Deforest)
-  case IfThenElse(scrut: Expr, thenn: Expr, elze: Expr)(using Deforest)
-  case Function(param: Ident, body: Expr)(using Deforest)
-  case Sequence(fst: Expr, snd: Expr)(using Deforest)
+enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRewrite {
+  case Const(lit: Lit)(using Deforest, Option[Ident])
+  case Ref(id: Ident)(using Deforest, Option[Ident]) extends Expr with RefTrait
+  case Call(lhs: Expr, rhs: Expr)(using Deforest, Option[Ident])
+  case Ctor(name: Var, args: Ls[Expr])(using Deforest, Option[Ident])
+  case LetIn(id: Ident, rhs: Expr, body: Expr)(using Deforest, Option[Ident])
+  case Match(scrut: Expr, arms: Ls[(Var, Ls[Ident], Expr)])(using Deforest, Option[Ident])
+  case IfThenElse(scrut: Expr, thenn: Expr, elze: Expr)(using Deforest, Option[Ident])
+  case Function(param: Ident, body: Expr)(using Deforest, Option[Ident])
+  case Sequence(fst: Expr, snd: Expr)(using Deforest, Option[Ident])
   
   type MultiLineExprs = LetIn | Sequence
 
@@ -164,73 +164,79 @@ enum Expr(using val deforest: Deforest) extends ExprRewrite {
     res.plainText
   
   
-  def subst(using mapping: Map[Ident, Expr], d: Deforest): Expr = this match {
-    case c: Const => c
-    case Ref(id) => mapping.getOrElse(id, this)
-    case Call(f, p) => Call(f.subst, p.subst)
-    case Ctor(n, args) => Ctor(n, args.map(_.subst))
-    case LetIn(id, value, body) => LetIn(id, value.subst, body.subst)
-    case Match(scrut, arms) => Match(scrut.subst, arms.map((n, args, body) => (n, args, body.subst)))
-    case IfThenElse(cond, thenn, elze) => IfThenElse(cond.subst, thenn.subst, elze.subst)
-    case Function(p, body) => Function(p, body.subst(using mapping.filterKeys(_ != p).toMap))
-    case Sequence(f, s) => Sequence(f.subst, s.subst)
+  def subst(using mapping: Map[Ident, Expr], d: Deforest): Expr = {
+    given Option[Ident] = None
+    this match {
+      case c: Const => c
+      case Ref(id) => mapping.getOrElse(id, this)
+      case Call(f, p) => Call(f.subst, p.subst)
+      case Ctor(n, args) => Ctor(n, args.map(_.subst))
+      case LetIn(id, value, body) => LetIn(id, value.subst, body.subst)
+      case Match(scrut, arms) => Match(scrut.subst, arms.map((n, args, body) => (n, args, body.subst)))
+      case IfThenElse(cond, thenn, elze) => IfThenElse(cond.subst, thenn.subst, elze.subst)
+      case Function(p, body) => Function(p, body.subst(using mapping.filterKeys(_ != p).toMap))
+      case Sequence(f, s) => Sequence(f.subst, s.subst)
+    }
   }
 
   // NOTE: eval order?
   // bigstep
   def evaluate(using ctx: Map[Ident, Expr], d: Deforest): Expr = d.Trace.trace(
     this.pp(using InitPpConfig.showIuidOn.multilineOn)
-  ){ this match {
-    case c: Const => c
-    case Ref(id) if Deforest.lumberhackKeywords(id.tree.name) => this
-    case Ref(id) => ctx.get(id) match {
-      case Some(v) => v.evaluate
-      case None => ???
-    }
-    case Call(f, p) => f.evaluate match {
-      case Function(arg, body) => body.subst(using Map(arg -> p.evaluate)).evaluate
-      case c: Ctor => throw Exception("\n" + c.pp(using InitPpConfig.showIuidOn.multilineOn))
-      case ff@Call(Ref(id), Const(IntLit(fst))) => p.evaluate match {
-        case Const(IntLit(snd)) =>  id.tree.name match {
-          case "+" | "add" => Const(IntLit(fst + snd))
-          case "-" | "minus" => Const(IntLit(fst - snd))
-          case "*" | "mult" => Const(IntLit(fst * snd))
-          case "/" | "div" => Const(IntLit(fst / snd))
-          case "==" | "eq" => Ctor(Var(if fst == snd then "True" else "False"), Nil)
-          case ">" | "gt" => Ctor(Var(if fst > snd then "True" else "False"), Nil)
-          case "<" | "lt" => Ctor(Var(if fst < snd then "True" else "False"), Nil)
-          case ">=" | "geq" => Ctor(Var(if fst >= snd then "True" else "False"), Nil)
-          case "<=" | "leq" => Ctor(Var(if fst <= snd then "True" else "False"), Nil)
-        }
-        case p => Call(ff, p)
+  ){
+    given Option[Ident] = None
+    this match {
+      case c: Const => c
+      case Ref(id) if Deforest.lumberhackKeywords(id.tree.name) => this
+      case Ref(id) => ctx.get(id) match {
+        case Some(v) => v.evaluate
+        case None => ???
       }
-      case newF => Call(newF, p.evaluate)
-    }
-    case Ctor(name, args) => Ctor(name, args.map(_.evaluate))
-    case LetIn(id, value, body) => body.subst(using Map(id -> value)).evaluate
-    case Match(scrut, arms) => scrut.evaluate match {
-      case Ctor(name, args) => {
-        val branch = arms.find((n, _, _) => n == name).get
-        val bindings = {
-          assert(args.length == branch._2.length)
-          branch._2.zip(args)
+      case Call(f, p) => f.evaluate match {
+        case Function(arg, body) => body.subst(using Map(arg -> p.evaluate)).evaluate
+        case c: Ctor => throw Exception("\n" + c.pp(using InitPpConfig.showIuidOn.multilineOn))
+        case ff@Call(Ref(id), Const(IntLit(fst))) => p.evaluate match {
+          case Const(IntLit(snd)) =>  id.tree.name match {
+            case "+" | "add" => Const(IntLit(fst + snd))
+            case "-" | "minus" => Const(IntLit(fst - snd))
+            case "*" | "mult" => Const(IntLit(fst * snd))
+            case "/" | "div" => Const(IntLit(fst / snd))
+            case "==" | "eq" => Ctor(Var(if fst == snd then "True" else "False"), Nil)
+            case ">" | "gt" => Ctor(Var(if fst > snd then "True" else "False"), Nil)
+            case "<" | "lt" => Ctor(Var(if fst < snd then "True" else "False"), Nil)
+            case ">=" | "geq" => Ctor(Var(if fst >= snd then "True" else "False"), Nil)
+            case "<=" | "leq" => Ctor(Var(if fst <= snd then "True" else "False"), Nil)
+          }
+          case p => Call(ff, p)
         }
-        branch._3.subst(using bindings.toMap).evaluate
+        case newF => Call(newF, p.evaluate)
       }
-      case s: Function => throw Exception("\n" + s.pp(using InitPpConfig.showIuidOn.multilineOn))
-      // case s if s == scrut => Match(s, arms.map((v, args, body) => (v, args, body.evaluate)))
-      case s => Match(s, arms.map((v, args, body) => (v, args, body.evaluate)))
+      case Ctor(name, args) => Ctor(name, args.map(_.evaluate))
+      case LetIn(id, value, body) => body.subst(using Map(id -> value)).evaluate
+      case Match(scrut, arms) => scrut.evaluate match {
+        case Ctor(name, args) => {
+          val branch = arms.find((n, _, _) => n == name).get
+          val bindings = {
+            assert(args.length == branch._2.length)
+            branch._2.zip(args)
+          }
+          branch._3.subst(using bindings.toMap).evaluate
+        }
+        case s: Function => throw Exception("\n" + s.pp(using InitPpConfig.showIuidOn.multilineOn))
+        // case s if s == scrut => Match(s, arms.map((v, args, body) => (v, args, body.evaluate)))
+        case s => Match(s, arms.map((v, args, body) => (v, args, body.evaluate)))
+      }
+      case IfThenElse(cond, thenn, elze) => cond match {
+        case Ctor(n, Nil) if n.name == "False" => elze.evaluate
+        case Ctor(n, Nil) if n.name == "True" => thenn.evaluate
+        case a: (LetIn | Function) => throw Exception("\n" + a.pp(using InitPpConfig.showIuidOn.multilineOn))
+        // case c if c == cond => IfThenElse(c, thenn.evaluate, elze.evaluate)
+        case c => IfThenElse(c.evaluate, thenn.evaluate, elze.evaluate)
+      }
+      case Function(param, body) => Function(param, body)
+      case Sequence(a, b) => Sequence(a.evaluate, b.evaluate)
     }
-    case IfThenElse(cond, thenn, elze) => cond match {
-      case Ctor(n, Nil) if n.name == "False" => elze.evaluate
-      case Ctor(n, Nil) if n.name == "True" => thenn.evaluate
-      case a: (LetIn | Function) => throw Exception("\n" + a.pp(using InitPpConfig.showIuidOn.multilineOn))
-      // case c if c == cond => IfThenElse(c, thenn.evaluate, elze.evaluate)
-      case c => IfThenElse(c.evaluate, thenn.evaluate, elze.evaluate)
-    }
-    case Function(param, body) => Function(param, body)
-    case Sequence(a, b) => Sequence(a.evaluate, b.evaluate)
-  }}(_.pp(using InitPpConfig.showIuidOn.multilineOn))
+  }(_.pp(using InitPpConfig.showIuidOn.multilineOn))
 
 
   // small step
@@ -240,66 +246,69 @@ enum Expr(using val deforest: Deforest) extends ExprRewrite {
   }
   def evaluateSmallStep(using ctx: Map[Ident, Expr], d: Deforest): Expr = d.Trace.trace(
     this.pp(using InitPpConfig.showIuidOn.multilineOn)
-  ){this match {
-    case c: Const => c
-    case Ref(id) if Deforest.lumberhackKeywords(id.tree.name) => this
-    case Ref(id) => ctx.get(id) match {
-      case Some(v) => v
-      case None => this
-    }
-    case Call(f, p) => f match {
-      case Function(arg, body) => body.subst(using Map(arg -> p))
-      case c: Ctor => throw Exception("\n" + c.pp(using InitPpConfig.showIuidOn.multilineOn))
-      case ff@Call(Ref(id), Const(IntLit(fst))) => p match {
-        case Const(IntLit(snd)) =>  id.tree.name match {
-          case "+" | "add" => Const(IntLit(fst + snd))
-          case "-" | "minus" => Const(IntLit(fst - snd))
-          case "*" | "mult" => Const(IntLit(fst * snd))
-          case "/" | "div" => Const(IntLit(fst / snd))
-          case "==" | "eq" => Ctor(Var(if fst == snd then "True" else "False"), Nil)
-          case ">" | "gt" => Ctor(Var(if fst > snd then "True" else "False"), Nil)
-          case "<" | "lt" => Ctor(Var(if fst < snd then "True" else "False"), Nil)
-          case ">=" | "geq" => Ctor(Var(if fst >= snd then "True" else "False"), Nil)
-          case "<=" | "leq" => Ctor(Var(if fst <= snd then "True" else "False"), Nil)
+  ){
+    given Option[Ident] = None
+    this match {
+      case c: Const => c
+      case Ref(id) if Deforest.lumberhackKeywords(id.tree.name) => this
+      case Ref(id) => ctx.get(id) match {
+        case Some(v) => v
+        case None => this
+      }
+      case Call(f, p) => f match {
+        case Function(arg, body) => body.subst(using Map(arg -> p))
+        case c: Ctor => throw Exception("\n" + c.pp(using InitPpConfig.showIuidOn.multilineOn))
+        case ff@Call(Ref(id), Const(IntLit(fst))) => p match {
+          case Const(IntLit(snd)) =>  id.tree.name match {
+            case "+" | "add" => Const(IntLit(fst + snd))
+            case "-" | "minus" => Const(IntLit(fst - snd))
+            case "*" | "mult" => Const(IntLit(fst * snd))
+            case "/" | "div" => Const(IntLit(fst / snd))
+            case "==" | "eq" => Ctor(Var(if fst == snd then "True" else "False"), Nil)
+            case ">" | "gt" => Ctor(Var(if fst > snd then "True" else "False"), Nil)
+            case "<" | "lt" => Ctor(Var(if fst < snd then "True" else "False"), Nil)
+            case ">=" | "geq" => Ctor(Var(if fst >= snd then "True" else "False"), Nil)
+            case "<=" | "leq" => Ctor(Var(if fst <= snd then "True" else "False"), Nil)
+          }
+          case p => Call(ff, p.evaluate)
         }
-        case p => Call(ff, p.evaluate)
-      }
-      case f => {
-        val newF = f.evaluate
-        if newF == f then Call(f, p.evaluate) else Call(newF, p)
-      }
-    }
-    case Ctor(name, args) => Ctor(name, args.map(_.evaluate))
-    case LetIn(id, value, body) => body.subst(using Map(id -> value))
-    case Match(scrut, arms) => scrut match {
-      case Ctor(name, args) => {
-        val branch = arms.find((n, _, _) => n == name).getOrElse(arms.find((n, _, _) => !n.name.head.isUpper).get)
-        val bindings = if branch._1.name.head.isUpper then {
-          assert(args.length == branch._2.length)
-          branch._2.zip(args).toMap
-        } else {
-          Map.empty[Ident, Expr] // FIXME:
+        case f => {
+          val newF = f.evaluate
+          if newF == f then Call(f, p.evaluate) else Call(newF, p)
         }
-        branch._3.subst(using bindings)
       }
-      case s: Function => throw Exception("\n" + s.pp(using InitPpConfig.showIuidOn.multilineOn))
-      case s => {
-        val newS = s.evaluate
-        if newS == s then Match(s, arms.map((v, args, body) => (v, args, body.evaluate))) else Match(newS, arms)
+      case Ctor(name, args) => Ctor(name, args.map(_.evaluate))
+      case LetIn(id, value, body) => body.subst(using Map(id -> value))
+      case Match(scrut, arms) => scrut match {
+        case Ctor(name, args) => {
+          val branch = arms.find((n, _, _) => n == name).getOrElse(arms.find((n, _, _) => !n.name.head.isUpper).get)
+          val bindings = if branch._1.name.head.isUpper then {
+            assert(args.length == branch._2.length)
+            branch._2.zip(args).toMap
+          } else {
+            Map.empty[Ident, Expr] // FIXME:
+          }
+          branch._3.subst(using bindings)
+        }
+        case s: Function => throw Exception("\n" + s.pp(using InitPpConfig.showIuidOn.multilineOn))
+        case s => {
+          val newS = s.evaluate
+          if newS == s then Match(s, arms.map((v, args, body) => (v, args, body.evaluate))) else Match(newS, arms)
+        }
       }
+      case IfThenElse(cond, thenn, elze) => cond match {
+        case Ctor(n, Nil) if n.name == "False" => elze.evaluate
+        case Ctor(n, Nil) if n.name == "True" => thenn.evaluate
+        case a: (LetIn | Function) => throw Exception("\n" + a.pp(using InitPpConfig.showIuidOn.multilineOn))
+        case c => {
+          val newC = c.evaluate
+          if newC == c then IfThenElse(c, thenn.evaluate, elze.evaluate) else IfThenElse(newC, thenn, elze)
+        }
+      }
+      case Function(param, body) => Function(param, body.evaluate)
+      case Sequence(a, b) => Sequence(a.evaluate, b.evaluate)
     }
-    case IfThenElse(cond, thenn, elze) => cond match {
-      case Ctor(n, Nil) if n.name == "False" => elze.evaluate
-      case Ctor(n, Nil) if n.name == "True" => thenn.evaluate
-      case a: (LetIn | Function) => throw Exception("\n" + a.pp(using InitPpConfig.showIuidOn.multilineOn))
-      case c => {
-        val newC = c.evaluate
-        if newC == c then IfThenElse(c, thenn.evaluate, elze.evaluate) else IfThenElse(newC, thenn, elze)
-      }
-    }
-    case Function(param, body) => Function(param, body.evaluate)
-    case Sequence(a, b) => Sequence(a.evaluate, b.evaluate)
-  }}(_.pp(using InitPpConfig.showIuidOn.multilineOn))
+  }(_.pp(using InitPpConfig.showIuidOn.multilineOn))
 
   def alphaRenamingCheck(other: Expr)(using renamming: Map[Ident, Ident] = Map.empty): Boolean = this -> other match {
     case Const(lit) -> Const(litOther) => lit == litOther
@@ -320,7 +329,7 @@ enum Expr(using val deforest: Deforest) extends ExprRewrite {
 object Expr {
   type Ctx = Map[Str, Ident]
 
-  def fromTerm(t: Term)(using d: Deforest, ctx: Ctx): Expr = t match
+  def fromTerm(t: Term)(using d: Deforest, ctx: Ctx, inDef: Option[Ident]): Expr = t match
     case lit: Lit => Const(lit)
     case v @ Var(nme) =>
       if (nme.isCapitalized) Ctor(v, Nil)

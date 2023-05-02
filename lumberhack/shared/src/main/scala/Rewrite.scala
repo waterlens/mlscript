@@ -139,7 +139,7 @@ class FusionStrategy(d: Deforest) {
 
 trait ExprRewrite { this: Expr =>
   // ctx should initially contain the keywords and the ids of original function definitions
-  def rewriteExpand(using ctx: Expr.Ctx, currentPath: Path, newd: Deforest, pathToIdent: Map[Path, Ident], refMap: Map[Expr.Ref, Expr.Ref]): Expr = {
+  def rewriteExpand(using ctx: Expr.Ctx, currentPath: Path, newd: Deforest, pathToIdent: Map[Path, Ident], refMap: Map[Expr.Ref, Expr.Ref], inDef: Option[Ident]): Expr = {
     this match {
       case Const(lit) => Const(lit)
       case Call(lhs, rhs) => Call(lhs.rewriteExpand, rhs.rewriteExpand)
@@ -167,7 +167,7 @@ trait ExprRewrite { this: Expr =>
     } 
   }
 
-  def rewriteFusion(using ctx: Expr.Ctx, fusionMatch: Map[ExprId, ExprId], newd: Deforest): Expr = {
+  def rewriteFusion(using ctx: Expr.Ctx, fusionMatch: Map[ExprId, ExprId], newd: Deforest, inDef: Option[Ident]): Expr = {
     this match {
       case Const(lit) => Const(lit)
       case Call(lhs, rhs) => Call(lhs.rewriteFusion, rhs.rewriteFusion)
@@ -197,7 +197,7 @@ trait ExprRewrite { this: Expr =>
 trait ProgramRewrite { this: Program =>
   private def copyDefsToNewDeforest(using newd: Deforest): Program -> Map[Expr.Ref, Expr.Ref] -> Expr.Ctx = {
     val refMaps = scala.collection.mutable.Map.empty[Expr.Ref, Expr.Ref]
-    def copyExpr(e: Expr)(using ctx: Expr.Ctx, newd: Deforest): Expr = e match {
+    def copyExpr(e: Expr)(using ctx: Expr.Ctx, newd: Deforest, inDef: Option[Ident]): Expr = e match {
       case Expr.Const(lit: Lit) => Expr.Const(lit)
       case r@Expr.Ref(id: Ident) =>
         val res = Expr.Ref(ctx(id.tree.name))
@@ -226,8 +226,11 @@ trait ProgramRewrite { this: Program =>
     } ++ this.defAndExpr._1.keySet.map(id => id.tree.name -> id.copyToNewDeforest) |> (_.toMap)
 
     Program(
-      this.defAndExpr._2.map { e => R(copyExpr(e)) }
-      ::: this.defAndExpr._1.map { (id, body) => L(ProgDef(ctx(id.tree.name), copyExpr(body))) }.toList
+      this.defAndExpr._2.map { e => given Option[Ident] = None; R(copyExpr(e)) }
+      ::: this.defAndExpr._1.map { (id, body) =>
+        given Option[Ident] = Some(ctx(id.tree.name))
+        L(ProgDef(ctx(id.tree.name), copyExpr(body)))
+      }.toList
     ) -> refMaps.toMap -> ctx
   }
 
@@ -253,13 +256,14 @@ trait ProgramRewrite { this: Program =>
         val identKey = p.p.last match
           case PathElem.Normal(ref) => initContext(ref.id.tree.name)
           case PathElem.Star(elms) => ???
-        val newBody: Expr = copiedOriginalProgram.defAndExpr._1(identKey).rewriteExpand(using initContext, p, newd, pathToIdent, refMaps)
+        val newBody: Expr = copiedOriginalProgram.defAndExpr._1(identKey)
+          .rewriteExpand(using initContext, p, newd, pathToIdent, refMaps, Some(id))
         L(ProgDef(id, newBody))
       }
       res
     }
     Program(
-      copiedOriginalProgram.defAndExpr._2.map(e => R(e.rewriteExpand(using initContext, Path(Nil), newd, pathToIdent, refMaps)))
+      copiedOriginalProgram.defAndExpr._2.map(e => R(e.rewriteExpand(using initContext, Path(Nil), newd, pathToIdent, refMaps, None)))
       // ++ copiedOriginalProgram.defAndExpr._1.iterator.map((id, body) => L(ProgDef(id, body)))
       ++ newDefs
     ) -> newd
@@ -274,8 +278,11 @@ trait ProgramRewrite { this: Program =>
       ctor.euid -> dtors.head.euid
     }
     Program(
-      this.defAndExpr._2.map { e => R(e.rewriteFusion(using Map.empty)) }
-      ::: this.defAndExpr._1.map { (id, body) => L(ProgDef(id, body.rewriteFusion(using Map.empty))) }.toList
+      this.defAndExpr._2.map { e => given Option[Ident] = None; R(e.rewriteFusion(using Map.empty)) }
+      ::: this.defAndExpr._1.map { (id, body) =>
+        given Option[Ident] = Some(id)
+        L(ProgDef(id, body.rewriteFusion(using Map.empty)))
+      }.toList
     )
   }
 }

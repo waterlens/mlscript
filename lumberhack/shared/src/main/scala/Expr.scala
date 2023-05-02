@@ -300,6 +300,22 @@ enum Expr(using val deforest: Deforest) extends ExprRewrite {
     case Function(param, body) => Function(param, body.evaluate)
     case Sequence(a, b) => Sequence(a.evaluate, b.evaluate)
   }}(_.pp(using InitPpConfig.showIuidOn.multilineOn))
+
+  def alphaRenamingCheck(other: Expr)(using renamming: Map[Ident, Ident] = Map.empty): Boolean = this -> other match {
+    case Const(lit) -> Const(litOther) => lit == litOther
+    case Ref(id) -> Ref(idOther) => renamming.get(idOther).fold(false)(_ == id)
+    case Call(lhs, rhs) -> Call(lhsOther, rhsOther) => lhs.alphaRenamingCheck(lhsOther) && rhs.alphaRenamingCheck(rhsOther)
+    case Ctor(name, args) -> Ctor(nameOther, argsOther) => name == nameOther && args.zip(argsOther).forall(_.alphaRenamingCheck(_))
+    case LetIn(id, rhs, body) -> LetIn(idOther, rhsOther, bodyOther) => rhs.alphaRenamingCheck(rhsOther) && body.alphaRenamingCheck(bodyOther)(using renamming + (idOther -> id))
+    case Match(scrut, arms) -> Match(scrutOther, armsOther) => scrut.alphaRenamingCheck(scrutOther) && arms.zip(armsOther).forall { case ((v, args, body), (vOther, argsOther, bodyOther)) =>
+      v == vOther && args.length == argsOther.length && body.alphaRenamingCheck(bodyOther)(using renamming ++ argsOther.zip(args).toMap)
+    }
+    case IfThenElse(scrut, thenn, elze) -> IfThenElse(scrutOther, thennOther, elzeOther) => scrut.alphaRenamingCheck(scrutOther)
+      && thenn.alphaRenamingCheck(thennOther) && elze.alphaRenamingCheck(elzeOther)
+    case Function(param, body) -> Function(paramOther, bodyOther) => body.alphaRenamingCheck(bodyOther)(using renamming + (paramOther -> param))
+    case Sequence(fst, snd) -> Sequence(fstOther, sndOther) => fst.alphaRenamingCheck(fstOther) && snd.alphaRenamingCheck(sndOther)
+    case _ => false
+  }
 }
 object Expr {
   type Ctx = Map[Str, Ident]

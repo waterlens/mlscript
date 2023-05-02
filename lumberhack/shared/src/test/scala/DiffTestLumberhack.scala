@@ -51,6 +51,7 @@ class DiffTestLumberhack extends DiffTests {
     }
     try {
       d.resolveConstraints
+      // d.resolveConstraintsImmutableCache
 
       if mode.stdout || mode.verbose then {
         output("\n>>>>>>> knots >>>>>>>")
@@ -114,6 +115,7 @@ class DiffTestLumberhack extends DiffTests {
       
       newd.debug = mode.stdout
       newd(newProg)
+      // newd.resolveConstraintsImmutableCache
       newd.resolveConstraints
 
       output("\n>>>>>>> fusion matches >>>>>>>")

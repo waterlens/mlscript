@@ -514,6 +514,133 @@ class Deforest(var debug: Boolean) {
     allKnotsMap.retain { case (k, vs) => k.reachable(callsInfo) && vs.forall(vsp => Deforest.filterKnots(k, vsp)(using this)) }
     (allKnotsMap.toMap, afterSplit)
   }
+
+
+  def resolveConstraintsImmutableCache: Unit = {
+    type CacheImmutable = Map[Cnstr, Cnstr -> Int]
+    def handle(c: Cnstr)(using cache: CacheImmutable, numOfTypeCtor: Int): Unit = trace(s"handle [${c._1.pp(using InitPpConfig.showVuidOn)} <: ${c._2.pp(using InitPpConfig.showVuidOn)}]") {
+      val prod = c._1
+      val cons = c._2
+
+      (prod.s, cons.s) match
+        case (_: ProdVar, _) | (_, _: ConsVar) => cache.get(c) match
+          case S(inCache) =>
+            log(s">> done [${prod.pp(using InitPpConfig)} : ${cons.pp(using InitPpConfig)}]")
+            log(s">> with [${inCache._1._1.pp(using InitPpConfig)} : ${inCache._1._2.pp(using InitPpConfig)}]")
+            // register knots that actually pass through type ctors
+            if inCache._2 < numOfTypeCtor then {
+              recursiveConstr.updateWith(c) {
+                case Some(m) =>
+                  m += (prod.path.rev ::: cons.path) -> (inCache._1._1.path.rev ::: inCache._1._2.path)
+                  Some(m)
+                case None => Some({
+                  val m = mutable.Set.empty[Path -> Path]
+                  m += (prod.path.rev ::: cons.path) -> (inCache._1._1.path.rev ::: inCache._1._2.path)
+                  m
+                })
+              }
+            }
+            return
+          case N => ()
+        case _ => ()
+
+      given CacheImmutable = cache + (c -> (c -> numOfTypeCtor))
+      // cache += (c -> (c -> numOfTypeCtor))
+
+      (prod.s, cons.s) match
+        case (ProdVar(v, _), ConsVar(w, _)) if v === w => ()
+        case (NoProd(), NoCons()) => ()
+        case (NoProd(), ConsFun(l, r)) =>
+          given Int = numOfTypeCtor + 1
+          handle(l.addPath(cons.path.neg) -> NoCons()(using noExprId).toStrat(prod.path.neg))
+          handle(NoProd()(using noExprId).toStrat(prod.path) -> r.addPath(cons.path))
+        case (ProdFun(l, r), NoCons()) =>
+          given Int = numOfTypeCtor + 1
+          handle(r.addPath(prod.path) -> NoCons()(using noExprId).toStrat(cons.path))
+          handle(NoProd()(using noExprId).toStrat(cons.path.neg) -> l.addPath(prod.path.neg))
+        case (NoProd(), dtor@Destruct(ds)) =>
+          given Int = numOfTypeCtor + 1
+          if dtor.euid != noExprId then {
+            dtorSources += dtor -> (dtorSources(dtor) + prod.s)
+          }
+          // ds foreach { case Destructor(ctor, argCons) =>
+          //   argCons foreach { c => handle(prod, c.addPath(cons.path)) }
+          // }
+        case (ctorType@MkCtor(ctor, args), NoCons()) =>
+          given Int = numOfTypeCtor + 1
+          if ctorType.euid != noExprId then {
+            ctorDestinations += ctorType -> (ctorDestinations(ctorType) + cons.s)
+          }
+          // args foreach { p => handle(p.addPath(prod.path), cons) }
+        case (pv@ProdVar(v, _), _) =>
+          cons.s match {
+            case dtor: Destruct if lowerBounds(v).isEmpty && dtor.euid != noExprId => dtorSources += dtor -> (dtorSources(dtor) + pv)
+            case _ => ()
+          }
+          upperBounds += v -> ((pv.asOutPath.getOrElse(Path.empty) ::: prod.path.rev, cons) :: upperBounds(v))
+          // upperBounds += v -> (upperBounds(v) + ((pv.asOutPath.getOrElse(Path.empty) ::: prod.path.rev) -> cons))
+          lowerBounds(v).foreach((lb_path, lb_strat) => handle({
+            lb_strat.addPath(lb_path) -> cons.addPath(prod.path.rev).addPath(pv.asOutPath.getOrElse(Path.empty))
+          }))
+        case (_, cv@ConsVar(v, _)) =>
+          prod.s match {
+            case ctor: MkCtor if upperBounds(v).isEmpty && ctor.euid != noExprId => ctorDestinations += ctor -> (ctorDestinations(ctor) + cv)
+            case _ => ()
+          }
+          lowerBounds += v -> ((cv.asInPath.getOrElse(Path.empty) ::: cons.path.rev, prod) :: lowerBounds(v))
+          // lowerBounds += v -> (lowerBounds(v) + ((cv.asInPath.getOrElse(Path.empty) ::: cons.path.rev) -> prod))
+          upperBounds(v).foreach((ub_path, ub_strat) => handle({
+            prod.addPath(cons.path.rev).addPath(cv.asInPath.getOrElse(Path.empty)) -> ub_strat.addPath(ub_path)
+          }))
+        case (ProdFun(lhs1, rhs1), ConsFun(lhs2, rhs2)) =>
+          given Int = numOfTypeCtor + 1
+          handle(lhs2.addPath(cons.path.neg) -> lhs1.addPath(prod.path.neg))
+          handle(rhs1.addPath(prod.path) -> rhs2.addPath(cons.path))
+        case (MkCtor(ctor, args), Destruct(ds)) =>
+          given Int = numOfTypeCtor + 1
+          var found = false
+          ds foreach { case Destructor(ds_ctor, argCons) =>
+            if ds_ctor == ctor then
+              found = true
+              assert(args.size == argCons.size)
+              // register the fusion match
+              if (prod.s.euid =/= noExprId && cons.s.euid =/= noExprId) then {
+                fusionMatch.updateWith(prod.s.euid)(_.map(_ + cons.s.euid).orElse(Some(Set(cons.s.euid))))
+                dtorSources += cons.s.asInstanceOf[Destruct] -> (dtorSources(cons.s.asInstanceOf[Destruct]) + prod.s)
+                ctorDestinations += prod.s.asInstanceOf[MkCtor] -> (ctorDestinations(prod.s.asInstanceOf[MkCtor]) + cons.s)
+              }
+
+              args lazyZip argCons foreach { case (a, c) =>
+                handle(a.addPath(prod.path), c.addPath(cons.path))
+              }
+            else if ds_ctor.name == "_" then
+              found = true
+            // else
+            //   argCons foreach { c => handle(NoProd()(using noExprId).toStrat(prod.path), c.addPath(cons.path)) }
+          }
+          if !found then lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
+        case (Sum(ctors), Destruct(ds)) =>
+          given Int = numOfTypeCtor + 1
+          ctors.foreach { ctorStrat => ctorStrat.s match
+            case MkCtor(ctor, args) => {
+              val d = ds.find(_.ctor === ctor).get
+              assert(args.size === d.argCons.size)
+              args lazyZip d.argCons foreach {
+                case (a, c) => handle(a.addPath(prod.path ::: ctorStrat.path), c.addPath(cons.path))
+              }
+            }
+          }
+        case _ => lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
+    }()
+    
+    // given Cache = scala.collection.mutable.Map.empty
+    given CacheImmutable = Map.empty
+    given Int = 0
+    
+    // import scala.util.Random.shuffle
+    // shuffle(constraints) foreach handle
+    constraints foreach handle
+  }
 }
 
 
@@ -579,6 +706,7 @@ object CallTree {
     val knots = d.actualKnotsUsingSplit._1
     def tie(p: Path, mapping: Option[Map[Ident, Path]]): Option[Path] -> Str = if mapping.isEmpty then {
       assert(p.p.nonEmpty)
+      // if knots.keys.exists(k => k.p.startsWith(p.p) && k.p.length > p.p.length) then None -> "" else {}
       knots.get(p).map(_.filter(sp => sp != p)) match {
         case Some(s) if s.size == 1 =>
           Some(s.head) -> "only one" // the reuslt will not be an empty path

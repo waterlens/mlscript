@@ -110,15 +110,28 @@ class FusionStrategy(d: Deforest) {
   }
   
   val afterRemoveMultipleMatch = {
-    // var (ctorDests, toDeleteCtors) = ctorFinalDestinations.partition(_._2.size == 1)
-    // var (dtorSrcs, toDeleteDtors) = dtorFinalSources.partition((dtor, _) => !toDeleteCtors.valuesIterator.contains(dtor))
-    val toRm = ctorFinalDestinations.filter(_._2.size > 1).keySet.asInstanceOf[Set[ProdStratEnum]]
-    val res1 = removeCtor(ctorFinalDestinations, dtorFinalSources, toRm)
-    val toRmDtor = res1._2.filter(_._2.exists(p => p match {
+    val toRmDtor = dtorFinalSources.filter(_._2.exists(p => p match {
       case _: MkCtor => false
       case _ => true
     })).keySet.asInstanceOf[Set[ConsStratEnum]]
-    removeDtor(res1._1, res1._2, toRmDtor)
+    val res = removeDtor(ctorFinalDestinations, dtorFinalSources, toRmDtor)
+
+    // val ctorDests = res._1
+    // val allDtors = ctorDests.values.flatten.map(ctor => d.exprs(ctor.euid))
+    // val disjointSetsOfDtors = {
+    //   val repsToElems = MutMap.empty[Expr, Set[Expr]]
+    //   val elemToReps = MutMap.empty[Expr, Expr]
+    //   allDtors.foreach( dtor =>
+    //     repsToElems.keys.find(rep => dtor.alphaRenamingCheck(rep)) match {
+    //       case None => repsToElems += (dtor -> Set(dtor)); elemToReps += (dtor -> dtor)
+    //       case Some(rep) => repsToElems.update(rep, repsToElems(rep) + dtor); elemToReps += (dtor -> rep)
+    //     }
+    //   )
+    //   repsToElems.toMap -> elemToReps.toMap
+    // }
+    
+    val toRmCtor = res._1.filter(_._2.size > 1).keySet.asInstanceOf[Set[ProdStratEnum]]
+    removeCtor(res._1, res._2, toRmCtor)
   }
 }
 

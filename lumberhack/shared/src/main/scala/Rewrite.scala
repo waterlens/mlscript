@@ -116,8 +116,15 @@ class FusionStrategy(d: Deforest) {
     })).keySet.asInstanceOf[Set[ConsStratEnum]]
     val res = removeDtor(ctorFinalDestinations, dtorFinalSources, toRmDtor)
 
+    val toRmCtor = res._1.filter(_._2.exists {
+      case _: Destruct => false
+      case _ => true
+    }).keySet.asInstanceOf[Set[ProdStratEnum]]
+    val res1 = removeCtor(res._1, res._2, toRmCtor)
+
+    // TODO: also needs to remember the merging, and change its subsequent calls
     // val ctorDests = res._1
-    // val allDtors = ctorDests.values.flatten.map(ctor => d.exprs(ctor.euid))
+    // val allDtors = ctorDests.values.flatten.filter(d => d.isInstanceOf[Destruct]).map(dtor => d.exprs(dtor.euid))
     // val disjointSetsOfDtors = {
     //   val repsToElems = MutMap.empty[Expr, Set[Expr]]
     //   val elemToReps = MutMap.empty[Expr, Expr]
@@ -130,8 +137,8 @@ class FusionStrategy(d: Deforest) {
     //   repsToElems.toMap -> elemToReps.toMap
     // }
     
-    val toRmCtor = res._1.filter(_._2.size > 1).keySet.asInstanceOf[Set[ProdStratEnum]]
-    removeCtor(res._1, res._2, toRmCtor)
+    val toRmCtor1 = res1._1.filter(_._2.size > 1).keySet.asInstanceOf[Set[ProdStratEnum]]
+    removeCtor(res1._1, res1._2, toRmCtor1)
   }
 }
 

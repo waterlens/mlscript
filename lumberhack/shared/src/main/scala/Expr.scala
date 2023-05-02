@@ -3,6 +3,7 @@ package lumberhack
 
 import mlscript.utils.*, shorthands.*
 import lumberhack.utils.*
+import scala.collection.mutable.Map as MutMap
 
 case class Ident(isDef: Bool, tree: Var, uid: Uid[Ident]) {
   def pp(using config: PrettyPrintConfig): Str = s"${tree.name}${if config.showIuid then s"${toSuperscript(uid.toString)}" else ""}"
@@ -10,6 +11,7 @@ case class Ident(isDef: Bool, tree: Var, uid: Uid[Ident]) {
 }
 case class ProgDef(id: Ident, body: Expr)
 case class Program(contents: Ls[ProgDef \/ Expr])(using d: Deforest) extends ProgramRewrite {
+  d.prgm = Some(this)
   def pp(using config: PrettyPrintConfig): Str =
     contents.sortBy{
       case Left(pdef) => pdef.id.pp(using InitPpConfig)
@@ -79,6 +81,18 @@ trait RefTrait { this: Expr.Ref =>
   }
   override def hashCode(): Int = (this.id, this.uid).hashCode()
   def toPath(pol: PathElemPol = PathElemPol.In): Path = Path(PathElem.Normal(this)(pol) :: Nil)
+}
+trait MatchTrait { this: Expr.Match =>
+  def isDuplicateOf(other: Expr.Match) =
+    (this.inDef -> other.inDef match {
+      case Some(t) -> Some(o) => t.tree.name.takeWhile(_.isLetterOrDigit) == o.tree.name.takeWhile(_.isLetterOrDigit)
+      case _ => false
+    }) && {
+      val thisDef = this.deforest.prgm.get.defAndExpr._1(this.inDef.get)
+      val otherDef = other.deforest.prgm.get.defAndExpr._1(other.inDef.get)
+      val (_, renamingMap) = thisDef.alphaRenamingCheckForMerge(otherDef)
+      this.alphaRenamingCheck(other)(using renamingMap.to(MutMap))
+    }
 }
 enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRewrite {
   case Const(lit: Lit)(using Deforest, Option[Ident])
@@ -310,18 +324,31 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
     }
   }(_.pp(using InitPpConfig.showIuidOn.multilineOn))
 
-  def alphaRenamingCheck(other: Expr)(using renamming: Map[Ident, Ident] = Map.empty): Boolean = this -> other match {
+  def alphaRenamingCheckForMerge(other: Expr): Boolean -> Map[Ident, Ident] = {
+    given resRenammingMap: MutMap[Ident, Ident] = MutMap.empty[Ident, Ident]
+    alphaRenamingCheck(other) -> resRenammingMap.toMap
+  }
+
+  def alphaRenamingCheck(other: Expr)(using renamming: MutMap[Ident, Ident]): Boolean = (this -> other) match {
     case Const(lit) -> Const(litOther) => lit == litOther
     case Ref(id) -> Ref(idOther) => renamming.get(idOther).fold(false)(_ == id)
     case Call(lhs, rhs) -> Call(lhsOther, rhsOther) => lhs.alphaRenamingCheck(lhsOther) && rhs.alphaRenamingCheck(rhsOther)
     case Ctor(name, args) -> Ctor(nameOther, argsOther) => name == nameOther && args.zip(argsOther).forall(_.alphaRenamingCheck(_))
-    case LetIn(id, rhs, body) -> LetIn(idOther, rhsOther, bodyOther) => rhs.alphaRenamingCheck(rhsOther) && body.alphaRenamingCheck(bodyOther)(using renamming + (idOther -> id))
+    case LetIn(id, rhs, body) -> LetIn(idOther, rhsOther, bodyOther) => rhs.alphaRenamingCheck(rhsOther) && {
+      renamming += (idOther -> id)
+      body.alphaRenamingCheck(bodyOther)
+    }
     case Match(scrut, arms) -> Match(scrutOther, armsOther) => scrut.alphaRenamingCheck(scrutOther) && arms.zip(armsOther).forall { case ((v, args, body), (vOther, argsOther, bodyOther)) =>
-      v == vOther && args.length == argsOther.length && body.alphaRenamingCheck(bodyOther)(using renamming ++ argsOther.zip(args).toMap)
+      v == vOther && args.length == argsOther.length && {
+        renamming ++= argsOther.zip(args)
+        body.alphaRenamingCheck(bodyOther)
+      }
     }
     case IfThenElse(scrut, thenn, elze) -> IfThenElse(scrutOther, thennOther, elzeOther) => scrut.alphaRenamingCheck(scrutOther)
       && thenn.alphaRenamingCheck(thennOther) && elze.alphaRenamingCheck(elzeOther)
-    case Function(param, body) -> Function(paramOther, bodyOther) => body.alphaRenamingCheck(bodyOther)(using renamming + (paramOther -> param))
+    case Function(param, body) -> Function(paramOther, bodyOther) =>
+      renamming += (paramOther -> param)
+      body.alphaRenamingCheck(bodyOther)
     case Sequence(fst, snd) -> Sequence(fstOther, sndOther) => fst.alphaRenamingCheck(fstOther) && snd.alphaRenamingCheck(sndOther)
     case _ => false
   }

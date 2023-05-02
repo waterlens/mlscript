@@ -245,7 +245,8 @@ class Deforest(var debug: Boolean) {
       if debug then println("| " * indent + color + msg + Console.RESET)
   }
   import Trace.*
-
+  
+  var prgm: Option[Program] = None
   var constraints: Ls[Cnstr] = Nil
   val exprs: mutable.Map[ExprId, Expr] = mutable.Map.empty
   val varsName = mutable.Map.empty[TypeVarId, Str]

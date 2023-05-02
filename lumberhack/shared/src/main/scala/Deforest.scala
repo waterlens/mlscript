@@ -694,7 +694,7 @@ object Deforest {
   lazy val lumberhackIntComparisonOps: Set[String] = Set("==", ">", "<", ">=", "<=")
 
   def filterKnots(k: Path, v: Path)(using d: Deforest) = v.reachable(d.callsInfo) &&
-    v.p.nonEmpty &&
+    v.p.nonEmpty && k.p.nonEmpty &&
     v.p.last.asInstanceOf[PathElem.Normal].r.id == k.last.r.id &&
     k.p.startsWith(v.p) &&
     k != v

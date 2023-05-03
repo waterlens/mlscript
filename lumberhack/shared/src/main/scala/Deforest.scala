@@ -213,12 +213,12 @@ object ConsStratEnum {
   )
   def consInt(using ExprId) = Destruct(Destructor(Var("Int"), Nil) :: Nil)
 }
-case class Ctx(bindings: Map[Str, Strat[ProdVar]]) {
+case class Ctx(bindings: Map[Ident, Strat[ProdVar]]) {
   def apply(id: Ident): Strat[ProdVar] =
-    bindings.getOrElse(id.tree.name, lastWords(s"binding not found: " + id))
-  def + (b: Str -> Strat[ProdVar]): Ctx =
+    bindings.getOrElse(id, lastWords(s"binding not found: " + id))
+  def + (b: Ident -> Strat[ProdVar]): Ctx =
     copy(bindings = bindings + b)
-  def ++ (bs: Iterable[Str -> Strat[ProdVar]]): Ctx =
+  def ++ (bs: Iterable[Ident -> Strat[ProdVar]]): Ctx =
     copy(bindings = bindings ++ bs)
 }
 object Ctx {
@@ -300,7 +300,7 @@ class Deforest(var debug: Boolean) {
       case Match(scrut, arms) =>
         val sp = process(scrut)
         val (detrs, bodies) = arms.map { (v, as, e) =>
-          val as_tys = as.map(a => a.tree.name -> freshVar(a)._1.toStrat())
+          val as_tys = as.map(a => a -> freshVar(a)._1.toStrat())
           val ep = process(e)(using ctx ++ as_tys)
           (Destructor(v, as_tys.map(a_ty => ConsVar(a_ty._2.s.uid, a_ty._2.s.name)()(using noExprId).toStrat())), ep)
         }.unzip
@@ -311,7 +311,7 @@ class Deforest(var debug: Boolean) {
       case Function(param, body) =>
         val sv = freshVar(param)
         ProdFun(sv._2.toStrat(),
-          process(body)(using ctx + (param.tree.name -> sv._1.toStrat()))
+          process(body)(using ctx + (param -> sv._1.toStrat()))
         )(using noExprId)
       case IfThenElse(scrut, thenn, elze) =>
         constrain(process(scrut), consBool(using noExprId).toStrat())
@@ -322,7 +322,7 @@ class Deforest(var debug: Boolean) {
       case LetIn(id, rhs, body) =>
         val v = freshVar(id)
         constrain(process(rhs), v._2.toStrat())
-        process(body)(using ctx + (id.tree.name -> v._1.toStrat())).s
+        process(body)(using ctx + (id -> v._1.toStrat())).s
       case Sequence(fst, snd) =>
         process(fst)
         process(snd).s
@@ -330,10 +330,10 @@ class Deforest(var debug: Boolean) {
     res.toStrat()
   }(r => s"=> ${r.pp(using InitPpConfig)}")
 
-  def apply(p: Program): Ls[Str -> ProdStrat] = trace(s"apply ${summary(p.pp(using InitPpConfig))}") {
-    val vars: Map[Str, Strat[ProdVar]] = p.contents.collect {
+  def apply(p: Program): Ls[Ident -> ProdStrat] = trace(s"apply ${summary(p.pp(using InitPpConfig))}") {
+    val vars: Map[Ident, Strat[ProdVar]] = p.contents.collect {
       case L(ProgDef(id, body)) =>
-        id.tree.name -> freshVar(id.pp(using InitPpConfig))._1.toStrat()
+        id -> freshVar(id.pp(using InitPpConfig))._1.toStrat()
     }.toMap
 
     val ctx = Ctx.empty ++ vars
@@ -341,7 +341,7 @@ class Deforest(var debug: Boolean) {
       case L(ProgDef(id, body)) => {
         val calls = mutable.Set.empty[Ref]
         val p = process(body)(using ctx, calls)
-        val v = vars(id.tree.name).s
+        val v = vars(id).s
         constrain(p, ConsVar(v.uid, v.name)()(using noExprId).toStrat())
         callsInfo._2.addOne(id -> calls.toSet)
       }
@@ -353,7 +353,7 @@ class Deforest(var debug: Boolean) {
       }
     }
     vars.toList
-  }(r => s"=> ${summary(r.map(v => s"${v._1}: ${v._2.pp(using InitPpConfig)}").mkString(", "))}")
+  }(r => s"=> ${summary(r.map(v => s"${v._1.pp(using InitPpConfig)}: ${v._2.pp(using InitPpConfig)}").mkString(", "))}")
   
   def constrain(prod: ProdStrat, cons: ConsStrat): Unit = {
     (prod.s, cons.s) match

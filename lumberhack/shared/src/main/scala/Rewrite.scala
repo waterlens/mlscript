@@ -270,7 +270,7 @@ trait ExprRewrite { this: Expr =>
         Function(newParamId, body.rewriteFusion(using newCtx))
       case Ref(id) => Ref(ctx.getOrElse(id.tree.name, id))
       case Match(scrut, arms) => if fusionMatch.valuesIterator.contains(this.uid) then {
-        val extrudedIds = scopeExtrusionInfo(this.uid)
+        val extrudedIds = scopeExtrusionInfo.getOrElse(this.uid, Nil)
         extrudedIds.foldLeft(scrut.rewriteFusion){
           (acc, id) => Call(acc, Ref(ctx.getOrElse(id.tree.name, id)))
         }
@@ -282,7 +282,7 @@ trait ExprRewrite { this: Expr =>
         val newCtx = ctx ++ newIds.map(id => id.tree.name -> id).toMap
         
         val extrudedIds =
-          scopeExtrusionInfo(matchId).map(original => original -> Ref(original.copyToNewDeforest)).reverse
+          scopeExtrusionInfo.getOrElse(matchId, Nil).map(original => original -> Ref(original.copyToNewDeforest)).reverse
         val innerAfterExtrusionHandling =
           matchArm._3.rewriteFusion(using newCtx).subst(using extrudedIds.toMap)
         val inner = extrudedIds.foldLeft(innerAfterExtrusionHandling){ (acc, newId) =>

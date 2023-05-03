@@ -60,16 +60,16 @@ count(0, rev(N, N))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((count₀ 0) ((rev₀ [N]) a¹))
+//│ ((count₀ 0) ((rev₀ [N]) (fun a² -> (fun a³ -> a²))))
 //│ def count₀ = 
 //│ 	(fun c² -> (fun xs² -> case xs² of {
 //│ 		C h¹ t¹ => ((count₀ (c² + 1)) t¹)
 //│ 		| N => c²}))
 //│ def rev₀ = 
-//│ 	(fun a² -> (fun ys² -> ys²))
+//│ 	(fun a⁴ -> (fun ys² -> ((ys² a⁴) a⁴)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: binding not found: Ident(false,a,1)
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 // NOTE: new way to push in?
@@ -220,12 +220,12 @@ count(rev(N, init))(0)
 //│ 		C h¹ t¹ => (fun c⁴ -> ((count₀ t¹) (c⁴ + 1)))
 //│ 		| N => (fun c⁵ -> c⁵)})
 //│ def init₀ = 
-//│ 	a¹
+//│ 	(fun a³ -> (fun a⁴ -> a³))
 //│ def rev₀ = 
-//│ 	(fun a² -> (fun ys² -> ys²))
+//│ 	(fun a² -> (fun ys² -> ((ys² a²) a²)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: binding not found: Ident(false,a,1)
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 
@@ -289,16 +289,16 @@ idxSum(0, rev(N, N))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((idxSum₀ 0) ((rev₀ [N]) a¹))
+//│ ((idxSum₀ 0) ((rev₀ [N]) (fun a² -> (fun a³ -> a²))))
 //│ def idxSum₀ = 
 //│ 	(fun i² -> (fun xs² -> case xs² of {
 //│ 		C h¹ t¹ => ((add⁰ i²) ((idxSum₀ ((add⁰ i²) 1)) t¹))
 //│ 		| N => 0}))
 //│ def rev₀ = 
-//│ 	(fun a² -> (fun ys² -> ys²))
+//│ 	(fun a⁴ -> (fun ys² -> ((ys² a⁴) a⁴)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: binding not found: Ident(false,a,1)
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 
@@ -372,12 +372,12 @@ count(rev(N, init))
 //│ 		C h¹ t¹ => ((add⁰ 1) (count₀ t¹))
 //│ 		| N => 0})
 //│ def init₀ = 
-//│ 	a¹
+//│ 	(fun a² -> (fun a³ -> a²))
 //│ def rev₀ = 
-//│ 	(fun a² -> (fun ys² -> ys²))
+//│ 	(fun a⁴ -> (fun ys² -> ((ys² a⁴) a⁴)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: binding not found: Ident(false,a,1)
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 
@@ -433,12 +433,12 @@ rev(N, init)
 //│ def init₀ = 
 //│ 	let h1² = 0
 //│ 	in let t1² = init₀
-//│ 	in ((rev₀ [C h1² a¹]) t1²)
+//│ 	in (fun a² -> (fun a³ -> ((rev₀ [C h1² a²]) t1²)))
 //│ def rev₀ = 
-//│ 	(fun a² -> (fun ys² -> ys²))
+//│ 	(fun a⁴ -> (fun ys² -> ((ys² a⁴) a⁴)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: binding not found: Ident(false,a,1)
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 // WRONG:
@@ -490,12 +490,12 @@ rev(N, init)
 //│ def init₀ = 
 //│ 	let h1² = 0
 //│ 	in let t1² = init₀
-//│ 	in ((rev₀ [C h1² a¹]) t1²)
+//│ 	in (fun a² -> ((rev₀ [C h1² a²]) t1²))
 //│ def rev₀ = 
-//│ 	(fun a² -> (fun ys² -> ys²))
+//│ 	(fun a³ -> (fun ys² -> (ys² a³)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: binding not found: Ident(false,a,1)
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 
@@ -576,16 +576,16 @@ rev(rev2, init)(1, init2)
 //│ def init2₀ = 
 //│ 	let h12² = 0
 //│ 	in let t12² = init2₀
-//│ 	in ((rev2₀ a2¹) t12²)
+//│ 	in (fun a2² -> (fun a2³ -> ((rev2₀ a2²) t12²)))
 //│ def init₀ = 
 //│ 	let h1² = 0
 //│ 	in let t1² = init₀
-//│ 	in ((rev₀ a¹) t1²)
+//│ 	in (fun a² -> (fun a³ -> ((rev₀ a²) t1²)))
 //│ def rev2₀ = 
-//│ 	(fun a2² -> (fun ys2² -> ys2²))
+//│ 	(fun a2⁴ -> (fun ys2² -> ((ys2² a2⁴) a2⁴)))
 //│ def rev₀ = 
-//│ 	(fun a² -> (fun ys² -> ys²))
+//│ 	(fun a⁴ -> (fun ys² -> ((ys² a⁴) a⁴)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: binding not found: Ident(false,a2,1)
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!

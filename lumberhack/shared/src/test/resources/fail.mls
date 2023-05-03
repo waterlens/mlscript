@@ -102,15 +102,15 @@ map(ff, l)
 //│ 		let h³ = [TT]
 //│ 		in let t³ = 	
 //│ 			let h⁴ = [TTTT]
-//│ 			in let t⁴ = [N]
-//│ 			in [C (f¹ h⁴) ((map₀ f¹) t⁴)]
-//│ 		in [C (f¹ h³) ((map₀ f¹) t³)]
-//│ 	in [C (f¹ h²) ((map₀ f¹) t²)]
+//│ 			in let t⁴ = (fun f⁶ -> [N])
+//│ 			in (fun f⁵ -> [C (f⁵ h⁴) ((map₀ f⁵) t⁴)])
+//│ 		in (fun f⁴ -> [C (f⁴ h³) ((map₀ f⁴) t³)])
+//│ 	in (fun f³ -> [C (f³ h²) ((map₀ f³) t²)])
 //│ def map₀ = 
-//│ 	(fun f² -> (fun ls² -> ls²))
+//│ 	(fun f² -> (fun ls² -> (ls² f²)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: binding not found: Ident(false,f,1)
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 // NOTE: this way of doing param pushing in is a local change

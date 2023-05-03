@@ -732,6 +732,53 @@ f(C(primitive))
 //│ java.lang.Exception: Internal Error: binding not found: Ident(false,x,1)
 //│ !!!!!!ERROR!!!!!!
 
+// NOTE: this way of pushing in var is local
+fun f(x) = (if x is
+  C(k) then x => f(x)
+)(x)
+f(C(primitive))
+//│ |#fun| |f|(|x|)| |#=| |(|#if| |x| |is|→|C|(|k|)| |#then| |x| |=>| |f|(|x|)|←|↵|)|(|x|)|↵|f|(|C|(|primitive|)|)|
+//│ Parsed: {fun f = x, => '(' if x is ‹(C (k,)) then x, => f (x,)›, ')' (x,); f (C (primitive,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (f^10 [C primitive⁰])
+//│ def f = (fun x⁰ -> (case x⁰ of {
+//│ 	C k⁰ => (fun x¹ -> (f^2 x¹))} x⁰))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^10]
+//│ 	[f^10 · f^2] ---> [f^10] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀ [C primitive⁰])
+//│ def f₀ = 
+//│ 	(fun x² -> (case x² of {
+//│ 		C k¹ => (fun x³ -> (f₀ x³))} x²))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C primitive⁰]: 25 --->
+//│ 	case x² of {C k¹ => (fun x³ -> (f₀ x³))}: 19
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C primitive⁰]: 25 --->
+//│ 	case x² of {C k¹ => (fun x³ -> (f₀ x³))}: 19
+//│ ------------------
+//│ case x² of {C k¹ => (fun x³ -> (f₀ x³))}: 19 --->
+//│ 	[C primitive⁰]: 25
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ 
+//│ 	let k² = primitive⁰
+//│ 	in (fun x⁴ -> (f₀ x⁴)))
+//│ def f₀ = 
+//│ 	(fun x⁵ -> (x⁵ x⁵))
+//│ <<<<<<< after fusion <<<<<<<
+
+
 
 // CORRECT: after filtering out recursive strategies
 fun f(x) = if x is

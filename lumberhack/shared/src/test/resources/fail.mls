@@ -113,6 +113,119 @@ map(ff, l)
 //│ java.lang.Exception: Internal Error: binding not found: Ident(false,f,1)
 //│ !!!!!!ERROR!!!!!!
 
+// NOTE: this way of doing param pushing in is a local change
+_LUMBERHACK_EVAL
+fun map(f, ls) = (if ls is
+  C(h, t) then f => C(f(h), map(f, t))
+  N then f => N
+)(f)
+fun ff(x) = if x is
+  K then T
+  KK then TT
+  KKKK then TTTT
+let l = C(K, C(KK, C(KKKK, N)))
+map(ff, l)
+//│ |_LUMBERHACK_EVAL|↵|#fun| |map|(|f|,| |ls|)| |#=| |(|#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |f| |=>| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |f| |=>| |N|←|↵|)|(|f|)|↵|#fun| |ff|(|x|)| |#=| |#if| |x| |is|→|K| |#then| |T|↵|KK| |#then| |TT|↵|KKKK| |#then| |TTTT|←|↵|#let| |l| |#=| |C|(|K|,| |C|(|KK|,| |C|(|KKKK|,| |N|)|)|)|↵|map|(|ff|,| |l|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun map = f, ls, => '(' if ls is ‹(C (h, t,)) then f, => C (f (h,), map (f, t,),); (N) then f, => N›, ')' (f,); fun ff = x, => if x is ‹(K) then T; (KK) then TT; (KKKK) then TTTT›; let l = C (K, C (KK, C (KKKK, N,),),); map (ff, l,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ ((map^32 ff^33) l^35)
+//│ def ff = (fun x⁰ -> case x⁰ of {
+//│ 	K => [T]
+//│ 	| KK => [TT]
+//│ 	| KKKK => [TTTT]})
+//│ def l = [C [K] [C [KK] [C [KKKK] [N]]]]
+//│ def map = (fun f⁰ -> (fun ls⁰ -> (case ls⁰ of {
+//│ 	C h⁰ t⁰ => (fun f¹ -> [C (f¹ h⁰) ((map^5 f¹) t⁰)])
+//│ 	| N => (fun f² -> [N])} f⁰)))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [ff^33] (hopeless to continue)
+//│ [l^35] (hopeless to continue)
+//│ [map^32]
+//│ 	[map^32 · map^5] ---> [map^32] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((map₀ ff₀) l₀)
+//│ def ff₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		K => [T]
+//│ 		| KK => [TT]
+//│ 		| KKKK => [TTTT]})
+//│ def l₀ = 
+//│ 	[C [K] [C [KK] [C [KKKK] [N]]]]
+//│ def map₀ = 
+//│ 	(fun f³ -> (fun ls¹ -> (case ls¹ of {
+//│ 		C h¹ t¹ => (fun f⁴ -> [C (f⁴ h¹) ((map₀ f⁴) t¹)])
+//│ 		| N => (fun f⁵ -> [N])} f³)))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C [KKKK] [N]]: 59 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f⁴ -> [C (f⁴ h¹) ((map₀ f⁴) t¹)]) | N => (fun f⁵ -> [N])}: 50
+//│ [C [KK] [C [KKKK] [N]]]: 60 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f⁴ -> [C (f⁴ h¹) ((map₀ f⁴) t¹)]) | N => (fun f⁵ -> [N])}: 50
+//│ [C [K] [C [KK] [C [KKKK] [N]]]]: 61 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f⁴ -> [C (f⁴ h¹) ((map₀ f⁴) t¹)]) | N => (fun f⁵ -> [N])}: 50
+//│ [KKKK]: 57 --->
+//│ 	case x¹ of {K => [T] | KK => [TT] | KKKK => [TTTT]}: 66
+//│ [KK]: 56 --->
+//│ 	case x¹ of {K => [T] | KK => [TT] | KKKK => [TTTT]}: 66
+//│ [K]: 55 --->
+//│ 	case x¹ of {K => [T] | KK => [TT] | KKKK => [TTTT]}: 66
+//│ [N]: 58 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f⁴ -> [C (f⁴ h¹) ((map₀ f⁴) t¹)]) | N => (fun f⁵ -> [N])}: 50
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [K]: 55 --->
+//│ 	case x¹ of {K => [T] | KK => [TT] | KKKK => [TTTT]}: 66
+//│ [KK]: 56 --->
+//│ 	case x¹ of {K => [T] | KK => [TT] | KKKK => [TTTT]}: 66
+//│ [KKKK]: 57 --->
+//│ 	case x¹ of {K => [T] | KK => [TT] | KKKK => [TTTT]}: 66
+//│ [N]: 58 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f⁴ -> [C (f⁴ h¹) ((map₀ f⁴) t¹)]) | N => (fun f⁵ -> [N])}: 50
+//│ [C [KKKK] [N]]: 59 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f⁴ -> [C (f⁴ h¹) ((map₀ f⁴) t¹)]) | N => (fun f⁵ -> [N])}: 50
+//│ [C [KK] [C [KKKK] [N]]]: 60 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f⁴ -> [C (f⁴ h¹) ((map₀ f⁴) t¹)]) | N => (fun f⁵ -> [N])}: 50
+//│ [C [K] [C [KK] [C [KKKK] [N]]]]: 61 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f⁴ -> [C (f⁴ h¹) ((map₀ f⁴) t¹)]) | N => (fun f⁵ -> [N])}: 50
+//│ ------------------
+//│ case ls¹ of {C h¹ t¹ => (fun f⁴ -> [C (f⁴ h¹) ((map₀ f⁴) t¹)]) | N => (fun f⁵ -> [N])}: 50 --->
+//│ 	[N]: 58
+//│ 	[C [KKKK] [N]]: 59
+//│ 	[C [KK] [C [KKKK] [N]]]: 60
+//│ 	[C [K] [C [KK] [C [KKKK] [N]]]]: 61
+//│ case x¹ of {K => [T] | KK => [TT] | KKKK => [TTTT]}: 66 --->
+//│ 	[K]: 55
+//│ 	[KK]: 56
+//│ 	[KKKK]: 57
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((map₀ ff₀) l₀)
+//│ def ff₀ = 
+//│ 	(fun x² -> x²)
+//│ def l₀ = 
+//│ 	let h² = [T]
+//│ 	in let t² = 	
+//│ 		let h³ = [TT]
+//│ 		in let t³ = 	
+//│ 			let h⁴ = [TTTT]
+//│ 			in let t⁴ = (fun f¹⁰ -> [N])
+//│ 			in (fun f⁹ -> [C (f⁹ h⁴) ((map₀ f⁹) t⁴)])
+//│ 		in (fun f⁸ -> [C (f⁸ h³) ((map₀ f⁸) t³)])
+//│ 	in (fun f⁷ -> [C (f⁷ h²) ((map₀ f⁷) t²)])
+//│ def map₀ = 
+//│ 	(fun f⁶ -> (fun ls² -> (ls² f⁶)))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [C [T] [C [TT] [C [TTTT] [N]]]]
+//│ <<<<<<< evaluate <<<<<<<
 
 
 

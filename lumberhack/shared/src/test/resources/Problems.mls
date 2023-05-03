@@ -47,23 +47,25 @@ c(p)
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [Pair b¹ a¹]: 19 --->
-//│ 	case x² of {Pair a² b² => (c₀ [Pair b² a²])}: 29
-//│ [Pair b² a²]: 27 --->
-//│ 	case x¹ of {Pair a¹ b¹ => (c₁ [Pair b¹ a¹])}: 21
-//│ [Pair [A] [B]]: 33 --->
-//│ 	case x¹ of {Pair a¹ b¹ => (c₁ [Pair b¹ a¹])}: 21
+//│ 
 //│ ------------------
-//│ case x¹ of {Pair a¹ b¹ => (c₁ [Pair b¹ a¹])}: 21 --->
-//│ 	[Pair b² a²]: 27
-//│ 	[Pair [A] [B]]: 33
-//│ case x² of {Pair a² b² => (c₀ [Pair b² a²])}: 29 --->
-//│ 	[Pair b¹ a¹]: 19
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
+//│ (c₀ p₀)
+//│ def c₀ = 
+//│ 	(fun x³ -> case x³ of {
+//│ 		Pair a¹ b¹ => (c₁ [Pair b¹ a¹])})
+//│ 	where
+//│ 	def c₁ = 
+//│ 		(fun x⁴ -> case x⁴ of {
+//│ 			Pair a² b² => (c₀ [Pair b² a²])})
+//│ def p₀ = 
+//│ 	[Pair [A] [B]]
+//│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.StackOverflowError
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 // Just a more valid/reasonable version of the above
@@ -105,19 +107,21 @@ c(p)
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [Wrap 3]: 26 --->
-//│ 	case x¹ of {Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]}: 44
-//│ [Wrap (a¹ - 1)]: 39 --->
-//│ 	case x¹ of {Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]}: 44
+//│ 
 //│ ------------------
-//│ case x¹ of {Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]}: 44 --->
-//│ 	[Wrap 3]: 26
-//│ 	[Wrap (a¹ - 1)]: 39
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
+//│ (c₀ p₀)
+//│ def c₀ = 
+//│ 	(fun x² -> case x² of {
+//│ 		Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]})
+//│ def p₀ = 
+//│ 	[Wrap 3]
+//│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.StackOverflowError
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 
@@ -887,17 +891,17 @@ f(C(A))
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C a¹]: 22 --->
-//│ 	case x¹ of {C a¹ => (f₀ [C a¹])}: 24
-//│ [C [A]]: 28 --->
-//│ 	case x¹ of {C a¹ => (f₀ [C a¹])}: 24
+//│ 
 //│ ------------------
-//│ case x¹ of {C a¹ => (f₀ [C a¹])}: 24 --->
-//│ 	[C a¹]: 22
-//│ 	[C [A]]: 28
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ [C [A]])
+//│ def f₀ = 
+//│ 	(fun x² -> case x² of {
+//│ 		C a¹ => (f₀ [C a¹])})
+//│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.StackOverflowError
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!

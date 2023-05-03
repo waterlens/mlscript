@@ -1,0 +1,244 @@
+:NewParser
+:ParseOnly
+
+_LUMBERHACK_ERROR
+let p = Pair(A, B)
+fun c(x) = if x is
+  Pair(a, b) then c(Pair(b, a))
+c(p)
+//│ |_LUMBERHACK_ERROR|↵|#let| |p| |#=| |Pair|(|A|,| |B|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|Pair|(|a|,| |b|)| |#then| |c|(|Pair|(|b|,| |a|)|)|←|↵|c|(|p|)|
+//│ Parsed: {_LUMBERHACK_ERROR; let p = Pair (A, B,); fun c = x, => if x is ‹(Pair (a, b,)) then c (Pair (b, a,),)›; c (p,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (c^12 p^13)
+//│ def c = (fun x⁰ -> case x⁰ of {
+//│ 	Pair a⁰ b⁰ => (c^5 [Pair b⁰ a⁰])})
+//│ def p = [Pair [A] [B]]
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [c^12]
+//│ 	[c^12 · c^5]
+//│ 		[c^12 · c^5 · c^5] ---> [c^12] (only one)
+//│ [p^13] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c₀ p₀)
+//│ def c₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		Pair a¹ b¹ => (c₁ [Pair b¹ a¹])})
+//│ 	where
+//│ 	def c₁ = 
+//│ 		(fun x² -> case x² of {
+//│ 			Pair a² b² => (c₀ [Pair b² a²])})
+//│ def p₀ = 
+//│ 	[Pair [A] [B]]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [Pair [A] [B]]: 33 --->
+//│ 	case x¹ of {Pair a¹ b¹ => (c₁ [Pair b¹ a¹])}: 21
+//│ [Pair b¹ a¹]: 19 --->
+//│ 	case x² of {Pair a² b² => (c₀ [Pair b² a²])}: 29
+//│ [Pair b² a²]: 27 --->
+//│ 	case x¹ of {Pair a¹ b¹ => (c₁ [Pair b¹ a¹])}: 21
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (c₀ p₀)
+//│ def c₀ = 
+//│ 	(fun x³ -> case x³ of {
+//│ 		Pair a¹ b¹ => (c₁ [Pair b¹ a¹])})
+//│ 	where
+//│ 	def c₁ = 
+//│ 		(fun x⁴ -> case x⁴ of {
+//│ 			Pair a² b² => (c₀ [Pair b² a²])})
+//│ def p₀ = 
+//│ 	[Pair [A] [B]]
+//│ <<<<<<< after fusion <<<<<<<
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: expect to fail but pass
+//│ !!!!!!ERROR!!!!!!
+
+
+_LUMBERHACK_ERROR
+let p = Wrap(3)
+fun c(x) = if x is
+  Wrap(a) then if a > 0 then c(Wrap(a - 1)) else Wrap(0)
+c(p)
+//│ |_LUMBERHACK_ERROR|↵|#let| |p| |#=| |Wrap|(|3|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|Wrap|(|a|)| |#then| |#if| |a| |>| |0| |#then| |c|(|Wrap|(|a| |-| |1|)|)| |#else| |Wrap|(|0|)|←|↵|c|(|p|)|
+//│ Parsed: {_LUMBERHACK_ERROR; let p = Wrap (3,); fun c = x, => if x is ‹(Wrap (a,)) then if (> (a,) (0,)) then c (Wrap (- (a,) (1,),),) else Wrap (0,)›; c (p,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (c^22 p^23)
+//│ def c = (fun x⁰ -> case x⁰ of {
+//│ 	Wrap a⁰ => if (a⁰ > 0) then (c^9 [Wrap (a⁰ - 1)]) else [Wrap 0]})
+//│ def p = [Wrap 3]
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [c^22] (hopeless to continue)
+//│ 	[c^22 · c^9] ---> [c^22] (using original def)
+//│ [p^23] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (c₀ p₀)
+//│ def c₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]})
+//│ def p₀ = 
+//│ 	[Wrap 3]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [Wrap (a¹ - 1)]: 39 --->
+//│ 	case x¹ of {Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]}: 44
+//│ [Wrap 3]: 26 --->
+//│ 	case x¹ of {Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]}: 44
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (c₀ p₀)
+//│ def c₀ = 
+//│ 	(fun x² -> case x² of {
+//│ 		Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]})
+//│ def p₀ = 
+//│ 	[Wrap 3]
+//│ <<<<<<< after fusion <<<<<<<
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: expect to fail but pass
+//│ !!!!!!ERROR!!!!!!
+
+_LUMBERHACK_ERROR
+fun f(x) = if x is
+    C(a) then f(C(a))
+fun g(y) = if y is
+    D(b) then f(C(b))
+f(C(A))
+//│ |_LUMBERHACK_ERROR|↵|#fun| |f|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |f|(|C|(|a|)|)|←|↵|#fun| |g|(|y|)| |#=| |#if| |y| |is|→|D|(|b|)| |#then| |f|(|C|(|b|)|)|←|↵|f|(|C|(|A|)|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun f = x, => if x is ‹(C (a,)) then f (C (a,),)›; fun g = y, => if y is ‹(D (b,)) then f (C (b,),)›; f (C (A,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (f^15 [C [A]])
+//│ def f = (fun x⁰ -> case x⁰ of {
+//│ 	C a⁰ => (f^2 [C a⁰])})
+//│ def g = (fun y⁰ -> case y⁰ of {
+//│ 	D b⁰ => (f^9 [C b⁰])})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^15] (hopeless to continue)
+//│ 	[f^15 · f^2] ---> [f^15] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀ [C [A]])
+//│ def f₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		C a¹ => (f₀ [C a¹])})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C [A]]: 28 --->
+//│ 	case x¹ of {C a¹ => (f₀ [C a¹])}: 24
+//│ [C a¹]: 22 --->
+//│ 	case x¹ of {C a¹ => (f₀ [C a¹])}: 24
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ [C [A]])
+//│ def f₀ = 
+//│ 	(fun x² -> case x² of {
+//│ 		C a¹ => (f₀ [C a¹])})
+//│ <<<<<<< after fusion <<<<<<<
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: expect to fail but pass
+//│ !!!!!!ERROR!!!!!!
+
+
+// CORRECT: there is recursive strategies, but it is not triggered
+// WRONG: after filtering out recursive strategies, a fusion possibility is lost
+fun f(x) = if x is
+  C(a) then if a is
+    D(d) then d
+    C(b) then f(C(C(b)))
+f(C(D(A)))
+//│ |#fun| |f|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |#if| |a| |is|→|D|(|d|)| |#then| |d|↵|C|(|b|)| |#then| |f|(|C|(|C|(|b|)|)|)|←|←|↵|f|(|C|(|D|(|A|)|)|)|
+//│ Parsed: {fun f = x, => if x is ‹(C (a,)) then if a is ‹(D (d,)) then d; (C (b,)) then f (C (C (b,),),)››; f (C (D (A,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (f^12 [C [D [A]]])
+//│ def f = (fun x⁰ -> case x⁰ of {
+//│ 	C a⁰ => case a⁰ of {
+//│ 		D d⁰ => d⁰
+//│ 		| C b⁰ => (f^4 [C [C b⁰]])}})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^12] (hopeless to continue)
+//│ 	[f^12 · f^4] ---> [f^12] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀ [C [D [A]]])
+//│ def f₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		C a¹ => case a¹ of {
+//│ 			D d¹ => d¹
+//│ 			| C b¹ => (f₀ [C [C b¹]])}})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C [C b¹]]: 23 --->
+//│ 	case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}}: 26
+//│ [C [D [A]]]: 31 --->
+//│ 	case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}}: 26
+//│ [C b¹]: 22 --->
+//│ 	case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}: 25
+//│ [D [A]]: 30 --->
+//│ 	case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}: 25
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C b¹]: 22 --->
+//│ 	case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}: 25
+//│ [C [C b¹]]: 23 --->
+//│ 	case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}}: 26
+//│ [D [A]]: 30 --->
+//│ 	case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}: 25
+//│ [C [D [A]]]: 31 --->
+//│ 	case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}}: 26
+//│ ------------------
+//│ case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}: 25 --->
+//│ 	[C b¹]: 22
+//│ 	[D [A]]: 30
+//│ case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}}: 26 --->
+//│ 	[C [C b¹]]: 23
+//│ 	[C [D [A]]]: 31
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ 
+//│ 	let a² = 	
+//│ 		let d² = [A]
+//│ 		in d²
+//│ 	in a²)
+//│ def f₀ = 
+//│ 	(fun x² -> x²)
+//│ <<<<<<< after fusion <<<<<<<

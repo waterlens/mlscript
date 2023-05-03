@@ -6,6 +6,7 @@ import mlscript.utils.*, shorthands.*
 import mlscript.Function as FunctionTerm
 import Expr.*
 import scala.collection.mutable.Map as MutMap
+import scala.collection.mutable.Set as MutSet
 import lumberhack.utils.*
 import ConsStratEnum.*
 import ProdStratEnum.*
@@ -110,12 +111,14 @@ class FusionStrategy(d: Deforest) {
   }
   
   val afterRemoveMultipleMatch = {
+    // remove those dtors with primitive ctors flowing in
     val toRmDtor = dtorFinalSources.filter(_._2.exists(p => p match {
       case _: MkCtor => false
       case _ => true
     })).keySet.asInstanceOf[Set[ConsStratEnum]]
     val res = removeDtor(ctorFinalDestinations, dtorFinalSources, toRmDtor)
 
+    // remove those ctors with primitive dtors as destinations
     val toRmCtor = res._1.filter(_._2.exists {
       case _: Destruct => false
       case _ => true
@@ -137,8 +140,69 @@ class FusionStrategy(d: Deforest) {
     //   repsToElems.toMap -> elemToReps.toMap
     // }
     
+    // remove those ctors with multiple dtors
     val toRmCtor1 = res1._1.filter(_._2.size > 1).keySet.asInstanceOf[Set[ProdStratEnum]]
     removeCtor(res1._1, res1._2, toRmCtor1)
+  }
+
+  // assume that there is already no multiple match clashes, can be more efficient
+  val afterRemoveRecursiveStrategies = {
+    
+    val ctorsInExprCache = MutMap.empty[ExprId, Set[MkCtor]]
+    def getCtorsInExpr(e: Expr): Set[MkCtor] = {
+      ctorsInExprCache.getOrElseUpdate(e.uid, {
+        e match {
+          case Const(lit: Lit) => Set.empty
+          case Ref(id: Ident) => Set.empty
+          case Call(lhs: Expr, rhs: Expr) => getCtorsInExpr(lhs) ++ getCtorsInExpr(rhs)
+          case ce@Ctor(name: Var, args: Ls[Expr]) => d.ctorExprToType.get(ce.uid).toSet
+          case LetIn(id: Ident, rhs: Expr, body: Expr) => getCtorsInExpr(rhs) ++ getCtorsInExpr(body)
+          case me@Match(scrut: Expr, arms: Ls[(Var, Ls[Ident], Expr)]) => {
+            val dtorType = d.dtorExprToType(me.uid)
+            afterRemoveMultipleMatch._2.get(dtorType) match {
+              // if there is a match, only the scrut will be possibly exposed to further fusion possibilities
+              case Some(_) => getCtorsInExpr(scrut)
+              // case Some(ctors) => getCtorsInExpr(scrut) ++ (ctors.flatMap { ctor =>
+              //   val alsoCheckedCtor = ctor.asInstanceOf[MkCtor]
+              //   getCtorsInExpr(arms.find(_._1 == alsoCheckedCtor.ctor).get._3)
+              // })
+              case None => getCtorsInExpr(scrut) ++ arms.flatMap(a => getCtorsInExpr(a._3))
+            }
+          }
+          case IfThenElse(scrut: Expr, thenn: Expr, elze: Expr) => getCtorsInExpr(scrut) ++ getCtorsInExpr(thenn) ++ getCtorsInExpr(elze)
+          case Function(param: Ident, body: Expr) => getCtorsInExpr(body)
+          case Sequence(fst: Expr, snd: Expr) => getCtorsInExpr(fst) ++ getCtorsInExpr(snd)
+        }
+      })
+    }
+
+    def getCtorsInStrategy(ctor: MkCtor, dtor: Destruct): Set[MkCtor] = {
+      val matchingArm = d.exprs(dtor.euid).asInstanceOf[Expr.Match].arms.find(_._1 == ctor.ctor).get
+      getCtorsInExpr(matchingArm._3)
+    }
+
+    def findCycle(ctor: MkCtor, dtor: Destruct): Set[MkCtor] = d.Trace.trace("findCycle: [" + ctor.pp(using InitPpConfig) + " ---> " + dtor.pp(using InitPpConfig) + "]"){
+      val cache = MutSet(ctor)
+
+      def go(strats: Set[(MkCtor, ConsStratEnum)]): Set[MkCtor] = {
+        val res = strats.flatMap((c, d) => getCtorsInStrategy(c, d.asInstanceOf[Destruct]))
+        val retained = res.flatMap(c => afterRemoveMultipleMatch._1.get(c).flatMap(d => {
+          // since it's aleaday after strategy clash elimination
+          assert(d.size == 1)
+          Some(c -> d.head)
+        }))
+        val cycled = retained.filter(c => !cache.add(c._1))
+        if retained.isEmpty then Set.empty else
+          if cycled.nonEmpty then cycled.map(_._1) else go(retained)
+      }
+      go(Set(ctor -> dtor))
+    }(s => "remove: " + s.map(_.pp(using InitPpConfig)).mkString(";;"))
+
+    val toRmCtor = afterRemoveMultipleMatch._1.flatMap { (c, ds) =>
+      assert(ds.size == 1)
+      findCycle(c, ds.head.asInstanceOf[Destruct])
+    }
+    removeCtor(afterRemoveMultipleMatch._1, afterRemoveMultipleMatch._2, toRmCtor.toSet)
   }
 }
 
@@ -280,7 +344,7 @@ trait ProgramRewrite { this: Program =>
   def rewrite(d: Deforest): Program = {
     // given Map[ExprId, ExprId] = d.fusionMatch.map { (p, cs) => p -> cs.head }.toMap
     given Deforest = d
-    given Map[ExprId, ExprId] = FusionStrategy(d).afterRemoveMultipleMatch._1.map { (ctor, dtors) =>
+    given Map[ExprId, ExprId] = FusionStrategy(d).afterRemoveRecursiveStrategies._1.map { (ctor, dtors) =>
       assert(dtors.size == 1 && dtors.head.isInstanceOf[Destruct])
       ctor.euid -> dtors.head.euid
     }

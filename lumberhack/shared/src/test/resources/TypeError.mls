@@ -255,23 +255,27 @@ f(C(A))
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C b¹]: 30 --->
-//│ 	case x¹ of {C a¹ => case a¹ of {A => [N] | B => (g₀ [D a¹])}}: 43
-//│ [D a¹]: 40 --->
-//│ 	case y¹ of {D b¹ => case b¹ of {A => [N] | B => (f₀ [C b¹])}}: 33
-//│ [C [A]]: 47 --->
-//│ 	case x¹ of {C a¹ => case a¹ of {A => [N] | B => (g₀ [D a¹])}}: 43
+//│ 
 //│ ------------------
-//│ case y¹ of {D b¹ => case b¹ of {A => [N] | B => (f₀ [C b¹])}}: 33 --->
-//│ 	[D a¹]: 40
-//│ case x¹ of {C a¹ => case a¹ of {A => [N] | B => (g₀ [D a¹])}}: 43 --->
-//│ 	[C b¹]: 30
-//│ 	[C [A]]: 47
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
+//│ (f₀ [C [A]])
+//│ def f₀ = 
+//│ 	(fun x² -> case x² of {
+//│ 		C a¹ => case a¹ of {
+//│ 			A => [N]
+//│ 			| B => (g₀ [D a¹])}})
+//│ 	where
+//│ 	def g₀ = 
+//│ 		(fun y² -> case y² of {
+//│ 			D b¹ => case b¹ of {
+//│ 				A => [N]
+//│ 				| B => (f₀ [C b¹])}})
+//│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.StackOverflowError
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 

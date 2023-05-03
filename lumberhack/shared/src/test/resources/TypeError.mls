@@ -193,8 +193,7 @@ inter(l1)(l2)
 //│ <<<<<<< after fusion <<<<<<<
 
 
-// WRONG: a wrong choice when resolving collision
-_LUMBERHACK_ERROR
+// NOTE: maybe more fusion can be done
 fun f(x) = if x is
   C(a) then
     if a is
@@ -206,8 +205,8 @@ fun g(y) = if y is
       A then N
       B then f(C(b))
 f(C(A))
-//│ |_LUMBERHACK_ERROR|↵|#fun| |f|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then|→|#if| |a| |is|→|A| |#then| |N|↵|B| |#then| |g|(|D|(|a|)|)|←|←|←|↵|#fun| |g|(|y|)| |#=| |#if| |y| |is|→|D|(|b|)| |#then|→|#if| |b| |is|→|A| |#then| |N|↵|B| |#then| |f|(|C|(|b|)|)|←|←|←|↵|f|(|C|(|A|)|)|
-//│ Parsed: {_LUMBERHACK_ERROR; fun f = x, => if x is ‹(C (a,)) then {if a is ‹(A) then N; (B) then g (D (a,),)›}›; fun g = y, => if y is ‹(D (b,)) then {if b is ‹(A) then N; (B) then f (C (b,),)›}›; f (C (A,),)}
+//│ |#fun| |f|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then|→|#if| |a| |is|→|A| |#then| |N|↵|B| |#then| |g|(|D|(|a|)|)|←|←|←|↵|#fun| |g|(|y|)| |#=| |#if| |y| |is|→|D|(|b|)| |#then|→|#if| |b| |is|→|A| |#then| |N|↵|B| |#then| |f|(|C|(|b|)|)|←|←|←|↵|f|(|C|(|A|)|)|
+//│ Parsed: {fun f = x, => if x is ‹(C (a,)) then {if a is ‹(A) then N; (B) then g (D (a,),)›}›; fun g = y, => if y is ‹(D (b,)) then {if b is ‹(A) then N; (B) then f (C (b,),)›}›; f (C (A,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (f^21 [C [A]])
 //│ def f = (fun x⁰ -> case x⁰ of {
@@ -274,9 +273,6 @@ f(C(A))
 //│ 				A => [N]
 //│ 				| B => (f₀ [C b¹])}})
 //│ <<<<<<< after fusion <<<<<<<
-//│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: expect to fail but pass
-//│ !!!!!!ERROR!!!!!!
 
 
 // WRONG: lazy eval?

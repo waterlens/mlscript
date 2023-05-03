@@ -1,13 +1,13 @@
 :NewParser
 :ParseOnly
 
-_LUMBERHACK_ERROR
+// CORRECT:
 let p = Pair(A, B)
 fun c(x) = if x is
   Pair(a, b) then c(Pair(b, a))
 c(p)
-//│ |_LUMBERHACK_ERROR|↵|#let| |p| |#=| |Pair|(|A|,| |B|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|Pair|(|a|,| |b|)| |#then| |c|(|Pair|(|b|,| |a|)|)|←|↵|c|(|p|)|
-//│ Parsed: {_LUMBERHACK_ERROR; let p = Pair (A, B,); fun c = x, => if x is ‹(Pair (a, b,)) then c (Pair (b, a,),)›; c (p,)}
+//│ |#let| |p| |#=| |Pair|(|A|,| |B|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|Pair|(|a|,| |b|)| |#then| |c|(|Pair|(|b|,| |a|)|)|←|↵|c|(|p|)|
+//│ Parsed: {let p = Pair (A, B,); fun c = x, => if x is ‹(Pair (a, b,)) then c (Pair (b, a,),)›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (c^12 p^13)
 //│ def c = (fun x⁰ -> case x⁰ of {
@@ -62,18 +62,14 @@ c(p)
 //│ def p₀ = 
 //│ 	[Pair [A] [B]]
 //│ <<<<<<< after fusion <<<<<<<
-//│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: expect to fail but pass
-//│ !!!!!!ERROR!!!!!!
 
-
-_LUMBERHACK_ERROR
+// CORRECT:
 let p = Wrap(3)
 fun c(x) = if x is
   Wrap(a) then if a > 0 then c(Wrap(a - 1)) else Wrap(0)
 c(p)
-//│ |_LUMBERHACK_ERROR|↵|#let| |p| |#=| |Wrap|(|3|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|Wrap|(|a|)| |#then| |#if| |a| |>| |0| |#then| |c|(|Wrap|(|a| |-| |1|)|)| |#else| |Wrap|(|0|)|←|↵|c|(|p|)|
-//│ Parsed: {_LUMBERHACK_ERROR; let p = Wrap (3,); fun c = x, => if x is ‹(Wrap (a,)) then if (> (a,) (0,)) then c (Wrap (- (a,) (1,),),) else Wrap (0,)›; c (p,)}
+//│ |#let| |p| |#=| |Wrap|(|3|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|Wrap|(|a|)| |#then| |#if| |a| |>| |0| |#then| |c|(|Wrap|(|a| |-| |1|)|)| |#else| |Wrap|(|0|)|←|↵|c|(|p|)|
+//│ Parsed: {let p = Wrap (3,); fun c = x, => if x is ‹(Wrap (a,)) then if (> (a,) (0,)) then c (Wrap (- (a,) (1,),),) else Wrap (0,)›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (c^22 p^23)
 //│ def c = (fun x⁰ -> case x⁰ of {
@@ -117,18 +113,15 @@ c(p)
 //│ def p₀ = 
 //│ 	[Wrap 3]
 //│ <<<<<<< after fusion <<<<<<<
-//│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: expect to fail but pass
-//│ !!!!!!ERROR!!!!!!
 
-_LUMBERHACK_ERROR
+// CORRECT:
 fun f(x) = if x is
     C(a) then f(C(a))
 fun g(y) = if y is
     D(b) then f(C(b))
 f(C(A))
-//│ |_LUMBERHACK_ERROR|↵|#fun| |f|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |f|(|C|(|a|)|)|←|↵|#fun| |g|(|y|)| |#=| |#if| |y| |is|→|D|(|b|)| |#then| |f|(|C|(|b|)|)|←|↵|f|(|C|(|A|)|)|
-//│ Parsed: {_LUMBERHACK_ERROR; fun f = x, => if x is ‹(C (a,)) then f (C (a,),)›; fun g = y, => if y is ‹(D (b,)) then f (C (b,),)›; f (C (A,),)}
+//│ |#fun| |f|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |f|(|C|(|a|)|)|←|↵|#fun| |g|(|y|)| |#=| |#if| |y| |is|→|D|(|b|)| |#then| |f|(|C|(|b|)|)|←|↵|f|(|C|(|A|)|)|
+//│ Parsed: {fun f = x, => if x is ‹(C (a,)) then f (C (a,),)›; fun g = y, => if y is ‹(D (b,)) then f (C (b,),)›; f (C (A,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (f^15 [C [A]])
 //│ def f = (fun x⁰ -> case x⁰ of {
@@ -168,9 +161,6 @@ f(C(A))
 //│ 	(fun x² -> case x² of {
 //│ 		C a¹ => (f₀ [C a¹])})
 //│ <<<<<<< after fusion <<<<<<<
-//│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: expect to fail but pass
-//│ !!!!!!ERROR!!!!!!
 
 
 // CORRECT: there is recursive strategies, but it is not triggered

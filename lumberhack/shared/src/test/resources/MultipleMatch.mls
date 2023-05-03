@@ -745,15 +745,14 @@ c(p(0))
 // g(xg) = G
 // h(xh) = H
 // f(C)
-_LUMBERHACK_ERROR
 fun f(xf) = if primitive then g(xf) else h(xf)
 fun g(xg) = if xg is
   C then G
 fun h(xh) = if xh is
   C then H
 f(C)
-//│ |_LUMBERHACK_ERROR|↵|#fun| |f|(|xf|)| |#=| |#if| |primitive| |#then| |g|(|xf|)| |#else| |h|(|xf|)|↵|#fun| |g|(|xg|)| |#=| |#if| |xg| |is|→|C| |#then| |G|←|↵|#fun| |h|(|xh|)| |#=| |#if| |xh| |is|→|C| |#then| |H|←|↵|f|(|C|)|
-//│ Parsed: {_LUMBERHACK_ERROR; fun f = xf, => if (primitive) then g (xf,) else h (xf,); fun g = xg, => if xg is ‹(C) then G›; fun h = xh, => if xh is ‹(C) then H›; f (C,)}
+//│ |#fun| |f|(|xf|)| |#=| |#if| |primitive| |#then| |g|(|xf|)| |#else| |h|(|xf|)|↵|#fun| |g|(|xg|)| |#=| |#if| |xg| |is|→|C| |#then| |G|←|↵|#fun| |h|(|xh|)| |#=| |#if| |xh| |is|→|C| |#then| |H|←|↵|f|(|C|)|
+//│ Parsed: {fun f = xf, => if (primitive) then g (xf,) else h (xf,); fun g = xg, => if xg is ‹(C) then G›; fun h = xh, => if xh is ‹(C) then H›; f (C,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (f^18 [C])
 //│ def f = (fun xf⁰ -> if primitive⁰ then (g^2 xf⁰) else (h^5 xf⁰))
@@ -807,9 +806,6 @@ f(C)
 //│ 		(fun xh² -> case xh² of {
 //│ 			C => [H]})
 //│ <<<<<<< after fusion <<<<<<<
-//│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: expect to fail but pass
-//│ !!!!!!ERROR!!!!!!
 
 // WRONG: wrong knots, because the knots are tied using only one
 // of the many variables in this function definition

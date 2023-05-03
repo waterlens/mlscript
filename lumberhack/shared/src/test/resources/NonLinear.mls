@@ -94,15 +94,14 @@ c(p(0))
 //│ <<<<<<< after fusion <<<<<<<
 
 // WRONG:
-_LUMBERHACK_ERROR
 fun last(ls) = if ls is
   C(h, t) then if t is
     C(hh, tt) then Some(last(t))
     N then Some(h)
   N then None
 last(C(A, C(B, N)))
-//│ |_LUMBERHACK_ERROR|↵|#fun| |last|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |t| |is|→|C|(|hh|,| |tt|)| |#then| |Some|(|last|(|t|)|)|↵|N| |#then| |Some|(|h|)|←|↵|N| |#then| |None|←|↵|last|(|C|(|A|,| |C|(|B|,| |N|)|)|)|
-//│ Parsed: {_LUMBERHACK_ERROR; fun last = ls, => if ls is ‹(C (h, t,)) then if t is ‹(C (hh, tt,)) then Some (last (t,),); (N) then Some (h,)›; (N) then None›; last (C (A, C (B, N,),),)}
+//│ |#fun| |last|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |t| |is|→|C|(|hh|,| |tt|)| |#then| |Some|(|last|(|t|)|)|↵|N| |#then| |Some|(|h|)|←|↵|N| |#then| |None|←|↵|last|(|C|(|A|,| |C|(|B|,| |N|)|)|)|
+//│ Parsed: {fun last = ls, => if ls is ‹(C (h, t,)) then if t is ‹(C (hh, tt,)) then Some (last (t,),); (N) then Some (h,)›; (N) then None›; last (C (A, C (B, N,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (last^13 [C [A] [C [B] [N]]])
 //│ def last = (fun ls⁰ -> case ls⁰ of {
@@ -155,7 +154,4 @@ last(C(A, C(B, N)))
 //│ 			| N => [Some h¹]}
 //│ 		| N => [None]})
 //│ <<<<<<< after fusion <<<<<<<
-//│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: expect to fail but pass
-//│ !!!!!!ERROR!!!!!!
 

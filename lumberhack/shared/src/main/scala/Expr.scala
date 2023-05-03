@@ -178,8 +178,8 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
     res.plainText
   
   
-  def subst(using mapping: Map[Ident, Expr], d: Deforest): Expr = {
-    given Option[Ident] = None
+  def subst(using mapping: Map[Ident, Expr], d: Deforest, inDef: Option[Ident] = None): Expr = {
+    if mapping.isEmpty then { return this }
     this match {
       case c: Const => c
       case Ref(id) => mapping.getOrElse(id, this)

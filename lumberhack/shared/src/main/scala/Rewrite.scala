@@ -204,6 +204,19 @@ class FusionStrategy(d: Deforest) {
     }
     removeCtor(afterRemoveMultipleMatch._1, afterRemoveMultipleMatch._2, toRmCtor.toSet)
   }
+  
+  val scopeExtrusionInfo: Map[ExprId, List[Ident]] = {
+    // first is the match expr, second is the expr of the definition it belongs to; not sure about topleve match exprs
+    val dtorExprs = afterRemoveRecursiveStrategies._2.keys.flatMap { de =>
+      val expr = d.exprs(de.euid).asInstanceOf[Expr.Match]
+      expr.inDef.map(expr -> d.prgm.get.defAndExpr._1(_))
+    }
+    dtorExprs.map { (me, e) =>
+      me.uid -> me.arms.flatMap { (_, ids, body) =>
+        body.outOfScopeIds(using (ids ++ d.prgm.get.defAndExpr._1.keys).toSet)
+      }
+    }.toMap
+  }
 }
 
 
@@ -238,7 +251,13 @@ trait ExprRewrite { this: Expr =>
     } 
   }
 
-  def rewriteFusion(using ctx: Expr.Ctx, fusionMatch: Map[ExprId, ExprId], newd: Deforest, inDef: Option[Ident]): Expr = {
+  def rewriteFusion(
+    using ctx: Expr.Ctx,
+    fusionMatch: Map[ExprId, ExprId],
+    newd: Deforest,
+    inDef: Option[Ident],
+    scopeExtrusionInfo: Map[ExprId, List[Ident]]
+  ): Expr = {
     this match {
       case Const(lit) => Const(lit)
       case Call(lhs, rhs) => Call(lhs.rewriteFusion, rhs.rewriteFusion)
@@ -250,18 +269,51 @@ trait ExprRewrite { this: Expr =>
         val newCtx = ctx + (newParamId.tree.name -> newParamId)
         Function(newParamId, body.rewriteFusion(using newCtx))
       case Ref(id) => Ref(ctx.getOrElse(id.tree.name, id))
-      case Match(scrut, arms) => if fusionMatch.valuesIterator.contains(this.uid)
-        then scrut.rewriteFusion
-        else Match(scrut.rewriteFusion, arms.map{(n, args, body) => (n, args, body.rewriteFusion)})
+      case Match(scrut, arms) => if fusionMatch.valuesIterator.contains(this.uid) then {
+        val extrudedIds = scopeExtrusionInfo(this.uid)
+        extrudedIds.foldLeft(scrut.rewriteFusion){
+          (acc, id) => Call(acc, Ref(ctx.getOrElse(id.tree.name, id)))
+        }
+        // scrut.rewriteFusion
+      } else Match(scrut.rewriteFusion, arms.map{(n, args, body) => (n, args, body.rewriteFusion)})
       case Ctor(name, args) => fusionMatch.get(this.uid).map { matchId =>
         val matchArm = newd.exprs(matchId).asInstanceOf[Match].arms.find(_._1 == name).get
         val newIds = matchArm._2.map(_.copyToNewDeforest)
         val newCtx = ctx ++ newIds.map(id => id.tree.name -> id).toMap
-        (newIds zip args).foldRight(matchArm._3.rewriteFusion(using newCtx)){(t_i, acc) => 
+        
+        val extrudedIds =
+          scopeExtrusionInfo(matchId).map(original => original -> Ref(original.copyToNewDeforest)).reverse
+        val innerAfterExtrusionHandling =
+          matchArm._3.rewriteFusion(using newCtx).subst(using extrudedIds.toMap)
+        val inner = extrudedIds.foldLeft(innerAfterExtrusionHandling){ (acc, newId) =>
+          Function(newId._2.id, acc)
+        }
+        (newIds zip args).foldRight(inner){(t_i, acc) => 
           LetIn(t_i._1, t_i._2.rewriteFusion, acc)
         }
+        // (newIds zip args).foldRight(matchArm._3.rewriteFusion(using newCtx)){(t_i, acc) => 
+        //   LetIn(t_i._1, t_i._2.rewriteFusion, acc)
+        // }
       }.orElse(Some(Ctor(name, args.map(_.rewriteFusion)))).get
     }
+  }
+
+  def outOfScopeIdsSet(using set: Set[Ident]): Set[Ident] = this match {
+    case Const(lit: Lit) => Set.empty
+    case Ref(id: Ident) if Deforest.lumberhackKeywords(id.tree.name) => Set.empty
+    case Ref(id: Ident) => if set(id) then Set.empty else Set(id)
+    case Call(lhs: Expr, rhs: Expr) => lhs.outOfScopeIdsSet ++ rhs.outOfScopeIdsSet
+    case Ctor(name: Var, args: Ls[Expr]) => args.flatMap(_.outOfScopeIdsSet).toSet
+    case LetIn(id: Ident, rhs: Expr, body: Expr) => rhs.outOfScopeIdsSet ++ body.outOfScopeIdsSet(using set + id)
+    case Match(scrut: Expr, arms: Ls[(Var, Ls[Ident], Expr)]) =>
+      scrut.outOfScopeIdsSet ++ (arms.flatMap { (_, newIds, body) => body.outOfScopeIdsSet(using set ++ newIds) })
+    case IfThenElse(scrut: Expr, thenn: Expr, elze: Expr) =>
+      scrut.outOfScopeIdsSet ++ thenn.outOfScopeIdsSet ++ elze.outOfScopeIdsSet
+    case Function(param: Ident, body: Expr) => body.outOfScopeIdsSet(using set + param)
+    case Sequence(fst: Expr, snd: Expr) => fst.outOfScopeIdsSet ++ snd.outOfScopeIdsSet
+  }
+  def outOfScopeIds(using set: Set[Ident]): List[Ident] = {
+    this.outOfScopeIdsSet.toList.sortBy(_.uid.asInstanceOf[Int])
   }
 }
 
@@ -343,11 +395,13 @@ trait ProgramRewrite { this: Program =>
 
   def rewrite(d: Deforest): Program = {
     // given Map[ExprId, ExprId] = d.fusionMatch.map { (p, cs) => p -> cs.head }.toMap
+    val fusionStrategy = FusionStrategy(d)
     given Deforest = d
-    given Map[ExprId, ExprId] = FusionStrategy(d).afterRemoveRecursiveStrategies._1.map { (ctor, dtors) =>
+    given Map[ExprId, ExprId] = fusionStrategy.afterRemoveRecursiveStrategies._1.map { (ctor, dtors) =>
       assert(dtors.size == 1 && dtors.head.isInstanceOf[Destruct])
       ctor.euid -> dtors.head.euid
     }
+    given Map[ExprId, List[Ident]] = fusionStrategy.scopeExtrusionInfo
     Program(
       this.defAndExpr._2.map { e => given Option[Ident] = None; R(e.rewriteFusion(using Map.empty)) }
       ::: this.defAndExpr._1.map { (id, body) =>

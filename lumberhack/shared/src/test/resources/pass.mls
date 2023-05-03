@@ -2502,3 +2502,99 @@ f(C(1, N))
 //│ 		in case x² of {
 //│ 			C h¹ t¹ => t¹})
 //│ <<<<<<< after fusion <<<<<<<
+
+// CORRECT: after using `last(C(hh, tt))` instead of `last(t)` and pushing in of parameters
+_LUMBERHACK_EVAL
+fun last(ls) = if ls is
+  C(h, t) then
+    (
+      if t is
+        N then h => Some(h)
+        C(hh, tt) then h => last(C(hh, tt))
+    )(h)
+  N then None
+last(C(1, C(2, C(3, N))))
+//│ |_LUMBERHACK_EVAL|↵|#fun| |last|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then|→|(|→|#if| |t| |is|→|N| |#then| |h| |=>| |Some|(|h|)|↵|C|(|hh|,| |tt|)| |#then| |h| |=>| |last|(|C|(|hh|,| |tt|)|)|←|←|↵|)|(|h|)|←|↵|N| |#then| |None|←|↵|last|(|C|(|1|,| |C|(|2|,| |C|(|3|,| |N|)|)|)|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun last = ls, => if ls is ‹(C (h, t,)) then {'(' if t is ‹(N) then h, => Some (h,); (C (hh, tt,)) then h, => last (C (hh, tt,),)›, ')' (h,)}; (N) then None›; last (C (1, C (2, C (3, N,),),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (last^18 [C 1 [C 2 [C 3 [N]]]])
+//│ def last = (fun ls⁰ -> case ls⁰ of {
+//│ 	C h⁰ t⁰ => (case t⁰ of {
+//│ 		N => (fun h¹ -> [Some h¹])
+//│ 		| C hh⁰ tt⁰ => (fun h² -> (last^6 [C hh⁰ tt⁰]))} h⁰)
+//│ 	| N => [None]})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [last^18]
+//│ 	[last^18 · last^6] ---> [last^18] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (last₀ [C 1 [C 2 [C 3 [N]]]])
+//│ def last₀ = 
+//│ 	(fun ls¹ -> case ls¹ of {
+//│ 		C h³ t¹ => (case t¹ of {
+//│ 			N => (fun h⁴ -> [Some h⁴])
+//│ 			| C hh¹ tt¹ => (fun h⁵ -> (last₀ [C hh¹ tt¹]))} h³)
+//│ 		| N => [None]})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [C 2 [C 3 [N]]]]: 51 --->
+//│ 	case ls¹ of {C h³ t¹ => (case t¹ of {N => (fun h⁴ -> [Some h⁴]) | C hh¹ tt¹ => (fun h⁵ -> (last₀ [C hh¹ tt¹]))} h³) | N => [None]}: 42
+//│ [C 2 [C 3 [N]]]: 50 --->
+//│ 	case t¹ of {N => (fun h⁴ -> [Some h⁴]) | C hh¹ tt¹ => (fun h⁵ -> (last₀ [C hh¹ tt¹]))}: 38
+//│ [C 3 [N]]: 49 --->
+//│ 	case t¹ of {N => (fun h⁴ -> [Some h⁴]) | C hh¹ tt¹ => (fun h⁵ -> (last₀ [C hh¹ tt¹]))}: 38
+//│ [C hh¹ tt¹]: 35 --->
+//│ 	case ls¹ of {C h³ t¹ => (case t¹ of {N => (fun h⁴ -> [Some h⁴]) | C hh¹ tt¹ => (fun h⁵ -> (last₀ [C hh¹ tt¹]))} h³) | N => [None]}: 42
+//│ [N]: 48 --->
+//│ 	case t¹ of {N => (fun h⁴ -> [Some h⁴]) | C hh¹ tt¹ => (fun h⁵ -> (last₀ [C hh¹ tt¹]))}: 38
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C hh¹ tt¹]: 35 --->
+//│ 	case ls¹ of {C h³ t¹ => (case t¹ of {N => (fun h⁴ -> [Some h⁴]) | C hh¹ tt¹ => (fun h⁵ -> (last₀ [C hh¹ tt¹]))} h³) | N => [None]}: 42
+//│ [N]: 48 --->
+//│ 	case t¹ of {N => (fun h⁴ -> [Some h⁴]) | C hh¹ tt¹ => (fun h⁵ -> (last₀ [C hh¹ tt¹]))}: 38
+//│ [C 3 [N]]: 49 --->
+//│ 	case t¹ of {N => (fun h⁴ -> [Some h⁴]) | C hh¹ tt¹ => (fun h⁵ -> (last₀ [C hh¹ tt¹]))}: 38
+//│ [C 2 [C 3 [N]]]: 50 --->
+//│ 	case t¹ of {N => (fun h⁴ -> [Some h⁴]) | C hh¹ tt¹ => (fun h⁵ -> (last₀ [C hh¹ tt¹]))}: 38
+//│ [C 1 [C 2 [C 3 [N]]]]: 51 --->
+//│ 	case ls¹ of {C h³ t¹ => (case t¹ of {N => (fun h⁴ -> [Some h⁴]) | C hh¹ tt¹ => (fun h⁵ -> (last₀ [C hh¹ tt¹]))} h³) | N => [None]}: 42
+//│ ------------------
+//│ case t¹ of {N => (fun h⁴ -> [Some h⁴]) | C hh¹ tt¹ => (fun h⁵ -> (last₀ [C hh¹ tt¹]))}: 38 --->
+//│ 	[N]: 48
+//│ 	[C 3 [N]]: 49
+//│ 	[C 2 [C 3 [N]]]: 50
+//│ case ls¹ of {C h³ t¹ => (case t¹ of {N => (fun h⁴ -> [Some h⁴]) | C hh¹ tt¹ => (fun h⁵ -> (last₀ [C hh¹ tt¹]))} h³) | N => [None]}: 42 --->
+//│ 	[C hh¹ tt¹]: 35
+//│ 	[C 1 [C 2 [C 3 [N]]]]: 51
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (last₀ 
+//│ 	let h⁶ = 1
+//│ 	in let t² = 	
+//│ 		let hh² = 2
+//│ 		in let tt² = 	
+//│ 			let hh³ = 3
+//│ 			in let tt³ = (fun h¹¹ -> [Some h¹¹])
+//│ 			in (fun h⁹ -> (last₀ 
+//│ 				let h¹⁰ = hh³
+//│ 				in let t⁴ = tt³
+//│ 				in (t⁴ h¹⁰)))
+//│ 		in (fun h⁷ -> (last₀ 
+//│ 			let h⁸ = hh²
+//│ 			in let t³ = tt²
+//│ 			in (t³ h⁸)))
+//│ 	in (t² h⁶))
+//│ def last₀ = 
+//│ 	(fun ls² -> ls²)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [Some 3]
+//│ <<<<<<< evaluate <<<<<<<

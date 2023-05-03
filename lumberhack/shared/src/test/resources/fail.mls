@@ -782,15 +782,14 @@ max(C(1, C(3, C(2, N))))(0)
 //│ !!!!!!ERROR!!!!!!
 
 // WRONG: multiple match
-_LUMBERHACK_ERROR
 fun last(ls) = if ls is
   C(h, t) then if t is
     N then Some(h)
     C(hh, tt) then last(t)
   N then None
 last(C(1, C(2, C(3, N))))
-//│ |_LUMBERHACK_ERROR|↵|#fun| |last|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |t| |is|→|N| |#then| |Some|(|h|)|↵|C|(|hh|,| |tt|)| |#then| |last|(|t|)|←|↵|N| |#then| |None|←|↵|last|(|C|(|1|,| |C|(|2|,| |C|(|3|,| |N|)|)|)|)|
-//│ Parsed: {_LUMBERHACK_ERROR; fun last = ls, => if ls is ‹(C (h, t,)) then if t is ‹(N) then Some (h,); (C (hh, tt,)) then last (t,)›; (N) then None›; last (C (1, C (2, C (3, N,),),),)}
+//│ |#fun| |last|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |t| |is|→|N| |#then| |Some|(|h|)|↵|C|(|hh|,| |tt|)| |#then| |last|(|t|)|←|↵|N| |#then| |None|←|↵|last|(|C|(|1|,| |C|(|2|,| |C|(|3|,| |N|)|)|)|)|
+//│ Parsed: {fun last = ls, => if ls is ‹(C (h, t,)) then if t is ‹(N) then Some (h,); (C (hh, tt,)) then last (t,)›; (N) then None›; last (C (1, C (2, C (3, N,),),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (last^12 [C 1 [C 2 [C 3 [N]]]])
 //│ def last = (fun ls⁰ -> case ls⁰ of {
@@ -847,9 +846,6 @@ last(C(1, C(2, C(3, N))))
 //│ 			| C hh¹ tt¹ => (last₀ t¹)}
 //│ 		| N => [None]})
 //│ <<<<<<< after fusion <<<<<<<
-//│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: expect to fail but pass
-//│ !!!!!!ERROR!!!!!!
 
 
 // WRONG: recursive strategy

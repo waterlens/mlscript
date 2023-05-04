@@ -326,7 +326,7 @@ trait ExprRewrite { this: Expr =>
 }
 
 trait ProgramRewrite { this: Program =>
-  private def copyDefsToNewDeforest(using newd: Deforest): Program -> Map[Expr.Ref, Expr.Ref] -> Expr.Ctx = {
+  def copyDefsToNewDeforest(using newd: Deforest): Program -> Map[Expr.Ref, Expr.Ref] -> Expr.Ctx = {
     val refMaps = scala.collection.mutable.Map.empty[Expr.Ref, Expr.Ref]
     def copyExpr(e: Expr)(using ctx: Expr.Ctx, newd: Deforest, inDef: Option[Ident]): Expr = e match {
       case Expr.Const(lit: Lit) => Expr.Const(lit)

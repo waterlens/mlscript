@@ -45,10 +45,17 @@ count(0, rev(N, N))
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C h1¹ a¹]: 54 --->
 //│ 	case xs¹ of {C h¹ t¹ => ((count₀ (c¹ + 1)) t¹) | N => c¹}: 47
+//│ 	'59_matchres
 //│ [N]: 66 --->
 //│ 	case xs¹ of {C h¹ t¹ => ((count₀ (c¹ + 1)) t¹) | N => c¹}: 47
 //│ [N]: 68 --->
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 59
+//│ ------------------
+//│ case xs¹ of {C h¹ t¹ => ((count₀ (c¹ + 1)) t¹) | N => c¹}: 47 --->
+//│ 	[C h1¹ a¹]: 54
+//│ 	[N]: 66
+//│ case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 59 --->
+//│ 	[N]: 68
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -112,16 +119,25 @@ count(0, rev(C(1, C(2, N)), N))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [C 2 [N]]]: 90 --->
+//│ [C h1¹ a⁴]: 70 --->
+//│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61
+//│ 	'79_callres
+//│ [N]: 88 --->
 //│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61
 //│ [C 2 [N]]: 89 --->
 //│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61
-//│ [C h1¹ a⁴]: 70 --->
-//│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61
-//│ [N]: 88 --->
+//│ [C 1 [C 2 [N]]]: 90 --->
 //│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61
 //│ [N]: 92 --->
 //│ 	case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N => (fun a⁵ -> a⁵)}: 77
+//│ ------------------
+//│ case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61 --->
+//│ 	[C h1¹ a⁴]: 70
+//│ 	[N]: 88
+//│ 	[C 2 [N]]: 89
+//│ 	[C 1 [C 2 [N]]]: 90
+//│ case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N => (fun a⁵ -> a⁵)}: 77 --->
+//│ 	[N]: 92
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -195,11 +211,18 @@ count(rev(N, init))(0)
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C h1¹ a¹]: 42 --->
+//│ 	'47_matchres
 //│ 	case xs¹ of {C h¹ t¹ => (fun c² -> ((count₀ t¹) (c² + 1))) | N => (fun c³ -> c³)}: 63
 //│ [N]: 65 --->
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 47
 //│ [N]: 68 --->
 //│ 	case xs¹ of {C h¹ t¹ => (fun c² -> ((count₀ t¹) (c² + 1))) | N => (fun c³ -> c³)}: 63
+//│ ------------------
+//│ case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 47 --->
+//│ 	[N]: 65
+//│ case xs¹ of {C h¹ t¹ => (fun c² -> ((count₀ t¹) (c² + 1))) | N => (fun c³ -> c³)}: 63 --->
+//│ 	[C h1¹ a¹]: 42
+//│ 	[N]: 68
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -267,11 +290,18 @@ idxSum(0, rev(N, N))
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C h1¹ a¹]: 44 --->
+//│ 	'49_matchres
 //│ 	case xs¹ of {C h¹ t¹ => ((add⁰ i¹) ((idxSum₀ ((add⁰ i¹) 1)) t¹)) | N => 0}: 67
 //│ [N]: 74 --->
 //│ 	case xs¹ of {C h¹ t¹ => ((add⁰ i¹) ((idxSum₀ ((add⁰ i¹) 1)) t¹)) | N => 0}: 67
 //│ [N]: 76 --->
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 49
+//│ ------------------
+//│ case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 49 --->
+//│ 	[N]: 76
+//│ case xs¹ of {C h¹ t¹ => ((add⁰ i¹) ((idxSum₀ ((add⁰ i¹) 1)) t¹)) | N => 0}: 67 --->
+//│ 	[C h1¹ a¹]: 44
+//│ 	[N]: 74
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -340,12 +370,19 @@ count(rev(N, init))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h1¹ a¹]: 48 --->
-//│ 	case xs¹ of {C h¹ t¹ => ((add⁰ 1) (count₀ t¹)) | N => 0}: 41
-//│ [N]: 58 --->
-//│ 	case xs¹ of {C h¹ t¹ => ((add⁰ 1) (count₀ t¹)) | N => 0}: 41
 //│ [N]: 43 --->
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 53
+//│ [C h1¹ a¹]: 48 --->
+//│ 	case xs¹ of {C h¹ t¹ => ((add⁰ 1) (count₀ t¹)) | N => 0}: 41
+//│ 	'53_matchres
+//│ [N]: 58 --->
+//│ 	case xs¹ of {C h¹ t¹ => ((add⁰ 1) (count₀ t¹)) | N => 0}: 41
+//│ ------------------
+//│ case xs¹ of {C h¹ t¹ => ((add⁰ 1) (count₀ t¹)) | N => 0}: 41 --->
+//│ 	[C h1¹ a¹]: 48
+//│ 	[N]: 58
+//│ case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 53 --->
+//│ 	[N]: 43
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -406,6 +443,9 @@ rev(N, init)
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 0 init₀]: 23 --->
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 33
+//│ ------------------
+//│ case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 33 --->
+//│ 	[C 0 init₀]: 23
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -460,6 +500,9 @@ rev(N, init)
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 0 init₀]: 22 --->
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹)}: 31
+//│ ------------------
+//│ case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹)}: 31 --->
+//│ 	[C 0 init₀]: 22
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -539,6 +582,11 @@ rev(rev2, init)(1, init2)
 //│ 	case ys2¹ of {C h12¹ t12¹ => ((rev2₀ a2¹) t12¹) | N => a2¹}: 59
 //│ [C 0 init₀]: 41 --->
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₀ a¹) t1¹) | N => a¹}: 49
+//│ ------------------
+//│ case ys¹ of {C h1¹ t1¹ => ((rev₀ a¹) t1¹) | N => a¹}: 49 --->
+//│ 	[C 0 init₀]: 41
+//│ case ys2¹ of {C h12¹ t12¹ => ((rev2₀ a2¹) t12¹) | N => a2¹}: 59 --->
+//│ 	[C 0 init2₀]: 38
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>

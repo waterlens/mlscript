@@ -37,12 +37,17 @@ max(C(1, N))(0)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [N]]: 77 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₁ t¹) m²)) | N => (fun m³ -> m³)}: 50
 //│ [N]: 76 --->
 //│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₁ t¹) m²)) | N => (fun m³ -> m³)}: 50
 //│ 	case ms² of {C h² t² => (fun m⁴ -> if (h² > m⁴) then ((max₁ t²) h²) else ((max₁ t²) m⁴)) | N => (fun m⁵ -> m⁵)}: 72
-//│ 	 MORE THAN ONE MATCH EXPR
+//│ [C 1 [N]]: 77 --->
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₁ t¹) m²)) | N => (fun m³ -> m³)}: 50
+//│ ------------------
+//│ case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₁ t¹) m²)) | N => (fun m³ -> m³)}: 50 --->
+//│ 	[N]: 76
+//│ 	[C 1 [N]]: 77
+//│ case ms² of {C h² t² => (fun m⁴ -> if (h² > m⁴) then ((max₁ t²) h²) else ((max₁ t²) m⁴)) | N => (fun m⁵ -> m⁵)}: 72 --->
+//│ 	[N]: 76
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -110,22 +115,32 @@ max(C(1, C(3, C(2, N))))(0)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [C 3 [C 2 [N]]]]: 107 --->
-//│ 	case ms² of {C h² t² => (fun m⁴ -> if (h² > m⁴) then ((max₀ t²) h²) else ((max₁ t²) m⁴)) | N => (fun m⁵ -> m⁵)}: 76
-//│ [C 2 [N]]: 105 --->
+//│ [N]: 104 --->
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₂ t¹) h¹) else ((max₂ t¹) m²)) | N => (fun m³ -> m³)}: 54
 //│ 	case ms² of {C h² t² => (fun m⁴ -> if (h² > m⁴) then ((max₀ t²) h²) else ((max₁ t²) m⁴)) | N => (fun m⁵ -> m⁵)}: 76
 //│ 	case ms³ of {C h³ t³ => (fun m⁶ -> if (h³ > m⁶) then ((max₂ t³) h³) else ((max₀ t³) m⁶)) | N => (fun m⁷ -> m⁷)}: 98
+//│ [C 2 [N]]: 105 --->
 //│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₂ t¹) h¹) else ((max₂ t¹) m²)) | N => (fun m³ -> m³)}: 54
-//│ 	 MORE THAN ONE MATCH EXPR
+//│ 	case ms² of {C h² t² => (fun m⁴ -> if (h² > m⁴) then ((max₀ t²) h²) else ((max₁ t²) m⁴)) | N => (fun m⁵ -> m⁵)}: 76
+//│ 	case ms³ of {C h³ t³ => (fun m⁶ -> if (h³ > m⁶) then ((max₂ t³) h³) else ((max₀ t³) m⁶)) | N => (fun m⁷ -> m⁷)}: 98
 //│ [C 3 [C 2 [N]]]: 106 --->
 //│ 	case ms² of {C h² t² => (fun m⁴ -> if (h² > m⁴) then ((max₀ t²) h²) else ((max₁ t²) m⁴)) | N => (fun m⁵ -> m⁵)}: 76
 //│ 	case ms³ of {C h³ t³ => (fun m⁶ -> if (h³ > m⁶) then ((max₂ t³) h³) else ((max₀ t³) m⁶)) | N => (fun m⁷ -> m⁷)}: 98
-//│ 	 MORE THAN ONE MATCH EXPR
-//│ [N]: 104 --->
+//│ [C 1 [C 3 [C 2 [N]]]]: 107 --->
 //│ 	case ms² of {C h² t² => (fun m⁴ -> if (h² > m⁴) then ((max₀ t²) h²) else ((max₁ t²) m⁴)) | N => (fun m⁵ -> m⁵)}: 76
-//│ 	case ms³ of {C h³ t³ => (fun m⁶ -> if (h³ > m⁶) then ((max₂ t³) h³) else ((max₀ t³) m⁶)) | N => (fun m⁷ -> m⁷)}: 98
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₂ t¹) h¹) else ((max₂ t¹) m²)) | N => (fun m³ -> m³)}: 54
-//│ 	 MORE THAN ONE MATCH EXPR
+//│ ------------------
+//│ case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₂ t¹) h¹) else ((max₂ t¹) m²)) | N => (fun m³ -> m³)}: 54 --->
+//│ 	[N]: 104
+//│ 	[C 2 [N]]: 105
+//│ case ms² of {C h² t² => (fun m⁴ -> if (h² > m⁴) then ((max₀ t²) h²) else ((max₁ t²) m⁴)) | N => (fun m⁵ -> m⁵)}: 76 --->
+//│ 	[N]: 104
+//│ 	[C 2 [N]]: 105
+//│ 	[C 3 [C 2 [N]]]: 106
+//│ 	[C 1 [C 3 [C 2 [N]]]]: 107
+//│ case ms³ of {C h³ t³ => (fun m⁶ -> if (h³ > m⁶) then ((max₂ t³) h³) else ((max₀ t³) m⁶)) | N => (fun m⁷ -> m⁷)}: 98 --->
+//│ 	[N]: 104
+//│ 	[C 2 [N]]: 105
+//│ 	[C 3 [C 2 [N]]]: 106
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -223,6 +238,8 @@ max(
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
 //│ 
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -347,6 +364,8 @@ max(
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ 
+//│ ------------------
+//│ 
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -431,26 +450,38 @@ max(l)(0)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [C 3 [C 2 [C 5 l₀]]]]: 45 --->
-//│ 	case ms² of {C h² t² => (fun m⁴ -> if (h² > m⁴) then ((max₀ t²) h²) else ((max₁ t²) m⁴)) | N => (fun m⁵ -> m⁵)}: 88
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₂ t¹) h¹) else ((max₀ t¹) m²)) | N => (fun m³ -> m³)}: 66
-//│ 	case ms³ of {C h³ t³ => (fun m⁶ -> if (h³ > m⁶) then ((max₂ t³) h³) else ((max₂ t³) m⁶)) | N => (fun m⁷ -> m⁷)}: 110
-//│ 	 MORE THAN ONE MATCH EXPR
-//│ [C 2 [C 5 l₀]]: 43 --->
-//│ 	case ms² of {C h² t² => (fun m⁴ -> if (h² > m⁴) then ((max₀ t²) h²) else ((max₁ t²) m⁴)) | N => (fun m⁵ -> m⁵)}: 88
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₂ t¹) h¹) else ((max₀ t¹) m²)) | N => (fun m³ -> m³)}: 66
-//│ 	case ms³ of {C h³ t³ => (fun m⁶ -> if (h³ > m⁶) then ((max₂ t³) h³) else ((max₂ t³) m⁶)) | N => (fun m⁷ -> m⁷)}: 110
-//│ 	 MORE THAN ONE MATCH EXPR
-//│ [C 3 [C 2 [C 5 l₀]]]: 44 --->
-//│ 	case ms² of {C h² t² => (fun m⁴ -> if (h² > m⁴) then ((max₀ t²) h²) else ((max₁ t²) m⁴)) | N => (fun m⁵ -> m⁵)}: 88
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₂ t¹) h¹) else ((max₀ t¹) m²)) | N => (fun m³ -> m³)}: 66
-//│ 	case ms³ of {C h³ t³ => (fun m⁶ -> if (h³ > m⁶) then ((max₂ t³) h³) else ((max₂ t³) m⁶)) | N => (fun m⁷ -> m⁷)}: 110
-//│ 	 MORE THAN ONE MATCH EXPR
 //│ [C 5 l₀]: 42 --->
-//│ 	case ms² of {C h² t² => (fun m⁴ -> if (h² > m⁴) then ((max₀ t²) h²) else ((max₁ t²) m⁴)) | N => (fun m⁵ -> m⁵)}: 88
 //│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₂ t¹) h¹) else ((max₀ t¹) m²)) | N => (fun m³ -> m³)}: 66
+//│ 	case ms² of {C h² t² => (fun m⁴ -> if (h² > m⁴) then ((max₀ t²) h²) else ((max₁ t²) m⁴)) | N => (fun m⁵ -> m⁵)}: 88
 //│ 	case ms³ of {C h³ t³ => (fun m⁶ -> if (h³ > m⁶) then ((max₂ t³) h³) else ((max₂ t³) m⁶)) | N => (fun m⁷ -> m⁷)}: 110
-//│ 	 MORE THAN ONE MATCH EXPR
+//│ [C 2 [C 5 l₀]]: 43 --->
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₂ t¹) h¹) else ((max₀ t¹) m²)) | N => (fun m³ -> m³)}: 66
+//│ 	case ms² of {C h² t² => (fun m⁴ -> if (h² > m⁴) then ((max₀ t²) h²) else ((max₁ t²) m⁴)) | N => (fun m⁵ -> m⁵)}: 88
+//│ 	case ms³ of {C h³ t³ => (fun m⁶ -> if (h³ > m⁶) then ((max₂ t³) h³) else ((max₂ t³) m⁶)) | N => (fun m⁷ -> m⁷)}: 110
+//│ [C 3 [C 2 [C 5 l₀]]]: 44 --->
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₂ t¹) h¹) else ((max₀ t¹) m²)) | N => (fun m³ -> m³)}: 66
+//│ 	case ms² of {C h² t² => (fun m⁴ -> if (h² > m⁴) then ((max₀ t²) h²) else ((max₁ t²) m⁴)) | N => (fun m⁵ -> m⁵)}: 88
+//│ 	case ms³ of {C h³ t³ => (fun m⁶ -> if (h³ > m⁶) then ((max₂ t³) h³) else ((max₂ t³) m⁶)) | N => (fun m⁷ -> m⁷)}: 110
+//│ [C 1 [C 3 [C 2 [C 5 l₀]]]]: 45 --->
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₂ t¹) h¹) else ((max₀ t¹) m²)) | N => (fun m³ -> m³)}: 66
+//│ 	case ms² of {C h² t² => (fun m⁴ -> if (h² > m⁴) then ((max₀ t²) h²) else ((max₁ t²) m⁴)) | N => (fun m⁵ -> m⁵)}: 88
+//│ 	case ms³ of {C h³ t³ => (fun m⁶ -> if (h³ > m⁶) then ((max₂ t³) h³) else ((max₂ t³) m⁶)) | N => (fun m⁷ -> m⁷)}: 110
+//│ ------------------
+//│ case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₂ t¹) h¹) else ((max₀ t¹) m²)) | N => (fun m³ -> m³)}: 66 --->
+//│ 	[C 5 l₀]: 42
+//│ 	[C 2 [C 5 l₀]]: 43
+//│ 	[C 3 [C 2 [C 5 l₀]]]: 44
+//│ 	[C 1 [C 3 [C 2 [C 5 l₀]]]]: 45
+//│ case ms² of {C h² t² => (fun m⁴ -> if (h² > m⁴) then ((max₀ t²) h²) else ((max₁ t²) m⁴)) | N => (fun m⁵ -> m⁵)}: 88 --->
+//│ 	[C 5 l₀]: 42
+//│ 	[C 2 [C 5 l₀]]: 43
+//│ 	[C 3 [C 2 [C 5 l₀]]]: 44
+//│ 	[C 1 [C 3 [C 2 [C 5 l₀]]]]: 45
+//│ case ms³ of {C h³ t³ => (fun m⁶ -> if (h³ > m⁶) then ((max₂ t³) h³) else ((max₂ t³) m⁶)) | N => (fun m⁷ -> m⁷)}: 110 --->
+//│ 	[C 5 l₀]: 42
+//│ 	[C 2 [C 5 l₀]]: 43
+//│ 	[C 3 [C 2 [C 5 l₀]]]: 44
+//│ 	[C 1 [C 3 [C 2 [C 5 l₀]]]]: 45
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>

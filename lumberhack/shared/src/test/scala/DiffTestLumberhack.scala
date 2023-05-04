@@ -102,11 +102,12 @@ class DiffTestLumberhack extends DiffTests {
       }
 
       val (newProg, newd) = originalProgram.expandedWithNewDeforest(callTree)
-      if mode.stdout || mode.verbose || true then {
-        output("\n>>>>>>> expanded program >>>>>>>")
-        output(newProg.pp(callTree)(using InitPpConfig.multilineOn.showIuidOn))
-        output("<<<<<<< expanded program <<<<<<<")
+      output("\n>>>>>>> expanded program >>>>>>>")
+      if mode.stdout || mode.verbose then {
+        output(newProg.pp(callTree)(using InitPpConfig.multilineOn.showIuidOn.showEuidOn)) 
       }
+      output(newProg.pp(callTree)(using InitPpConfig.multilineOn.showIuidOn)) 
+      output("<<<<<<< expanded program <<<<<<<")
 
       
 
@@ -118,19 +119,37 @@ class DiffTestLumberhack extends DiffTests {
       // newd.resolveConstraintsImmutableCache
       newd.resolveConstraints
 
+      if mode.stdout || mode.verbose then {
+        output("\n>>>>>>> type variable bounds after expansion >>>>>>>")
+        val tvs = newd.upperBounds.keySet ++ newd.lowerBounds.keySet
+        tvs.foreach { tv =>
+          val ub = newd.upperBounds(tv).map(u => s"${u._1.pp(using InitPpConfig.showPolarityOn)} < ${u._2.pp(using InitPpConfig.showPathOn)}")
+          val lb = newd.lowerBounds(tv).map(l => s"${l._2.pp(using InitPpConfig.showPathOn)} < ${l._1.rev.pp(using InitPpConfig.showPolarityOn)}")
+          val tvName = newd.varsName(tv)
+          output(tvName + ":")
+          ub.foreach(u => output(s"\t${tvName}${u}"))
+          lb.foreach(l => output(s"\t${l}${tvName}"))
+          output("--------------")
+        }
+        output("<<<<<<< type variable bounds after expansion <<<<<<<")
+      }
+
+      val fusionStrategy = FusionStrategy(newd)
       output("\n>>>>>>> fusion matches >>>>>>>")
-      val fusionMatchStr = newd.fusionMatch.toSeq.sortBy(expr => newd.exprs(expr._1).pp(using InitPpConfig)).map { (p, cs) =>
-        // newd.exprs(p).pp(using InitPpConfig.showEuidOn) + "\n" +
-        newd.exprs(p).pp(using InitPpConfig.showIuidOn) + s": $p --->\n" +
-        cs.toSeq.sortBy(c => newd.exprs(c).pp(using InitPpConfig)).map { c =>
-          "\t" + newd.exprs(c).pp(using InitPpConfig.showIuidOn) + s": $c"
-        }.mkString("\n") + (if cs.size > 1 then "\n\t MORE THAN ONE MATCH EXPR" else "")
-      }.mkString("\n")
-      output(fusionMatchStr)
+      // val fusionMatchStr = newd.fusionMatch.toSeq.sortBy(expr => newd.exprs(expr._1).pp(using InitPpConfig)).map { (p, cs) =>
+      //   // newd.exprs(p).pp(using InitPpConfig.showEuidOn) + "\n" +
+      //   newd.exprs(p).pp(using InitPpConfig.showIuidOn) + s": $p --->\n" +
+      //   cs.toSeq.sortBy(c => newd.exprs(c).pp(using InitPpConfig)).map { c =>
+      //     "\t" + newd.exprs(c).pp(using InitPpConfig.showIuidOn) + s": $c"
+      //   }.mkString("\n") + (if cs.size > 1 then "\n\t MORE THAN ONE MATCH EXPR" else "")
+      // }.mkString("\n")
+      // output(fusionMatchStr)
+      output(fusionStrategy.ppCtorFinalDestinations)
+      output("------------------")
+      output(fusionStrategy.ppDtorFinalSources)
       output("<<<<<<< fusion matches <<<<<<<")
 
       output("\n>>>>>>> new fusion strategy >>>>>>>")
-      val fusionStrategy = FusionStrategy(newd)
       output(fusionStrategy.ppCtorMap(fusionStrategy.afterRemoveRecursiveStrategies._1))
       output("------------------")
       output(fusionStrategy.ppDtorMap(fusionStrategy.afterRemoveRecursiveStrategies._2))

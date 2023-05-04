@@ -34,6 +34,9 @@ c(p)
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C p₀]: 19 --->
 //│ 	case x¹ of {C a¹ => (c₀ a¹)}: 16
+//│ ------------------
+//│ case x¹ of {C a¹ => (c₀ a¹)}: 16 --->
+//│ 	[C p₀]: 19
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -105,18 +108,31 @@ c(p)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C [C p₀]]: 29 --->
-//│ 	case a¹ of {C b¹ => case b¹ of {C y¹ => (c₀ y¹)}}: 24
-//│ [C [C p₁]]: 42 --->
-//│ 	case x² of {C a² => case a² of {C b² => case b² of {C y² => (c₁ y²)}}}: 38
-//│ [C [C p₂]]: 45 --->
-//│ 	case b² of {C y² => (c₁ y²)}: 36
 //│ [C p₀]: 28 --->
 //│ 	case b¹ of {C y¹ => (c₀ y¹)}: 23
+//│ [C [C p₀]]: 29 --->
+//│ 	case a¹ of {C b¹ => case b¹ of {C y¹ => (c₀ y¹)}}: 24
 //│ [C p₁]: 41 --->
 //│ 	case a² of {C b² => case b² of {C y² => (c₁ y²)}}: 37
+//│ [C [C p₁]]: 42 --->
+//│ 	case x² of {C a² => case a² of {C b² => case b² of {C y² => (c₁ y²)}}}: 38
 //│ [C p₂]: 44 --->
 //│ 	case x¹ of {C a¹ => case a¹ of {C b¹ => case b¹ of {C y¹ => (c₀ y¹)}}}: 25
+//│ [C [C p₂]]: 45 --->
+//│ 	case b² of {C y² => (c₁ y²)}: 36
+//│ ------------------
+//│ case b¹ of {C y¹ => (c₀ y¹)}: 23 --->
+//│ 	[C p₀]: 28
+//│ case a¹ of {C b¹ => case b¹ of {C y¹ => (c₀ y¹)}}: 24 --->
+//│ 	[C [C p₀]]: 29
+//│ case x¹ of {C a¹ => case a¹ of {C b¹ => case b¹ of {C y¹ => (c₀ y¹)}}}: 25 --->
+//│ 	[C p₂]: 44
+//│ case b² of {C y² => (c₁ y²)}: 36 --->
+//│ 	[C [C p₂]]: 45
+//│ case a² of {C b² => case b² of {C y² => (c₁ y²)}}: 37 --->
+//│ 	[C p₁]: 41
+//│ case x² of {C a² => case a² of {C b² => case b² of {C y² => (c₁ y²)}}}: 38 --->
+//│ 	[C [C p₁]]: 42
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -220,10 +236,15 @@ c(id(p))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C [C p₀]]: 35 --->
-//│ 	case x² of {C a² => (c₁ a²)}: 40
 //│ [C p₀]: 34 --->
 //│ 	case x¹ of {C a¹ => (c₀ a¹)}: 25
+//│ [C [C p₀]]: 35 --->
+//│ 	case x² of {C a² => (c₁ a²)}: 40
+//│ ------------------
+//│ case x¹ of {C a¹ => (c₀ a¹)}: 25 --->
+//│ 	[C p₀]: 34
+//│ case x² of {C a² => (c₁ a²)}: 40 --->
+//│ 	[C [C p₀]]: 35
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -322,18 +343,31 @@ ca(p)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C [C [C p₀]]]: 35 --->
-//│ 	case x⁷ of {C b³ => (ca₂ b³)}: 62
-//│ [C [C [C p₁]]]: 57 --->
-//│ 	case x³ of {C a² => (cb₀ a²)}: 30
-//│ [C [C p₀]]: 34 --->
-//│ 	case x² of {C a¹ => (cb₂ a¹)}: 24
-//│ [C [C p₁]]: 56 --->
-//│ 	case x⁶ of {C b² => (ca₁ b²)}: 52
 //│ [C p₀]: 33 --->
 //│ 	case x⁵ of {C b¹ => (ca₀ b¹)}: 46
+//│ [C [C p₀]]: 34 --->
+//│ 	case x² of {C a¹ => (cb₂ a¹)}: 24
+//│ [C [C [C p₀]]]: 35 --->
+//│ 	case x⁷ of {C b³ => (ca₂ b³)}: 62
 //│ [C p₁]: 55 --->
 //│ 	case x⁴ of {C a³ => (cb₁ a³)}: 40
+//│ [C [C p₁]]: 56 --->
+//│ 	case x⁶ of {C b² => (ca₁ b²)}: 52
+//│ [C [C [C p₁]]]: 57 --->
+//│ 	case x³ of {C a² => (cb₀ a²)}: 30
+//│ ------------------
+//│ case x² of {C a¹ => (cb₂ a¹)}: 24 --->
+//│ 	[C [C p₀]]: 34
+//│ case x³ of {C a² => (cb₀ a²)}: 30 --->
+//│ 	[C [C [C p₁]]]: 57
+//│ case x⁴ of {C a³ => (cb₁ a³)}: 40 --->
+//│ 	[C p₁]: 55
+//│ case x⁵ of {C b¹ => (ca₀ b¹)}: 46 --->
+//│ 	[C p₀]: 33
+//│ case x⁶ of {C b² => (ca₁ b²)}: 52 --->
+//│ 	[C [C p₁]]: 56
+//│ case x⁷ of {C b³ => (ca₂ b³)}: 62 --->
+//│ 	[C [C [C p₀]]]: 35
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -457,14 +491,23 @@ c1(p1)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C [C [C p2₀]]]: 31 --->
-//│ 	case x1¹ of {C a¹ => (c2₀ a¹)}: 26
-//│ [C [C p2₀]]: 30 --->
-//│ 	case x2¹ of {C b¹ => (c1₁ b¹)}: 36
-//│ [C p1₀]: 51 --->
-//│ 	case x2² of {C b² => (c1₀ b²)}: 48
 //│ [C p2₀]: 29 --->
 //│ 	case x1² of {C a² => (c2₁ a²)}: 42
+//│ [C [C p2₀]]: 30 --->
+//│ 	case x2¹ of {C b¹ => (c1₁ b¹)}: 36
+//│ [C [C [C p2₀]]]: 31 --->
+//│ 	case x1¹ of {C a¹ => (c2₀ a¹)}: 26
+//│ [C p1₀]: 51 --->
+//│ 	case x2² of {C b² => (c1₀ b²)}: 48
+//│ ------------------
+//│ case x1¹ of {C a¹ => (c2₀ a¹)}: 26 --->
+//│ 	[C [C [C p2₀]]]: 31
+//│ case x2¹ of {C b¹ => (c1₁ b¹)}: 36 --->
+//│ 	[C [C p2₀]]: 30
+//│ case x1² of {C a² => (c2₁ a²)}: 42 --->
+//│ 	[C p2₀]: 29
+//│ case x2² of {C b² => (c1₀ b²)}: 48 --->
+//│ 	[C p1₀]: 51
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -553,6 +596,9 @@ main(c)
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C p₀]: 17 --->
 //│ 	case x¹ of {C a¹ => (c₀ a¹)}: 26
+//│ ------------------
+//│ case x¹ of {C a¹ => (c₀ a¹)}: 26 --->
+//│ 	[C p₀]: 17
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -627,12 +673,19 @@ main(p)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C p₁]: 39 --->
-//│ 	case pp¹ of {C b¹ => case b¹ of {C d¹ => (c₀ d¹)}}: 26
-//│ [C p₂]: 37 --->
-//│ 	case b¹ of {C d¹ => (c₀ d¹)}: 25
 //│ [C p₂]: 29 --->
 //│ 	case x¹ of {C a¹ => (c₀ a¹)}: 34
+//│ [C p₂]: 37 --->
+//│ 	case b¹ of {C d¹ => (c₀ d¹)}: 25
+//│ [C p₁]: 39 --->
+//│ 	case pp¹ of {C b¹ => case b¹ of {C d¹ => (c₀ d¹)}}: 26
+//│ ------------------
+//│ case b¹ of {C d¹ => (c₀ d¹)}: 25 --->
+//│ 	[C p₂]: 37
+//│ case pp¹ of {C b¹ => case b¹ of {C d¹ => (c₀ d¹)}}: 26 --->
+//│ 	[C p₁]: 39
+//│ case x¹ of {C a¹ => (c₀ a¹)}: 34 --->
+//│ 	[C p₂]: 29
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -709,6 +762,9 @@ main(c, p)
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C p₀]: 26 --->
 //│ 	case x¹ of {C a¹ => (c₀ a¹)}: 23
+//│ ------------------
+//│ case x¹ of {C a¹ => (c₀ a¹)}: 23 --->
+//│ 	[C p₀]: 26
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -787,6 +843,9 @@ a(p)
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C p₀]: 38 --->
 //│ 	case y¹ of {C aa¹ => (cons₀ aa¹)}: 35
+//│ ------------------
+//│ case y¹ of {C aa¹ => (cons₀ aa¹)}: 35 --->
+//│ 	[C p₀]: 38
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -881,12 +940,19 @@ c2(id(main))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C p₁]: 45 --->
-//│ 	case z¹ of {C b¹ => (c2₀ b¹)}: 54
 //│ [C p₁]: 31 --->
 //│ 	case x¹ of {C a¹ => a¹}: 48
 //│ [C y¹]: 34 --->
 //│ 	case xx¹ of {C aa¹ => aa¹}: 42
+//│ [C p₁]: 45 --->
+//│ 	case z¹ of {C b¹ => (c2₀ b¹)}: 54
+//│ ------------------
+//│ case xx¹ of {C aa¹ => aa¹}: 42 --->
+//│ 	[C y¹]: 34
+//│ case x¹ of {C a¹ => a¹}: 48 --->
+//│ 	[C p₁]: 31
+//│ case z¹ of {C b¹ => (c2₀ b¹)}: 54 --->
+//│ 	[C p₁]: 45
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>

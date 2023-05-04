@@ -35,6 +35,12 @@ f(a => if (if a is
 //│ 	case a¹ of {A => [B]}: 28
 //│ [B]: 27 --->
 //│ 	case case a¹ of {A => [B]} of {B => 0}: 30
+//│ ------------------
+//│ case a¹ of {A => [B]}: 28 --->
+//│ 	[A]: 18
+//│ 	[A]: 21
+//│ case case a¹ of {A => [B]} of {B => 0}: 30 --->
+//│ 	[B]: 27
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -90,6 +96,10 @@ f(a => if a is
 //│ 	case a¹ of {A => [B] | B => [C]}: 28
 //│ [B]: 20 --->
 //│ 	case a¹ of {A => [B] | B => [C]}: 28
+//│ ------------------
+//│ case a¹ of {A => [B] | B => [C]}: 28 --->
+//│ 	[A]: 17
+//│ 	[B]: 20
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -146,11 +156,16 @@ f(a => if a is
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [A]: 21 --->
-//│ 	case a¹ of {A => [B]}: 38
 //│ 	case aa¹ of {A => [C]}: 24
-//│ 	 MORE THAN ONE MATCH EXPR
+//│ 	case a¹ of {A => [B]}: 38
 //│ [A]: 26 --->
 //│ 	case a¹ of {A => [B]}: 38
+//│ ------------------
+//│ case aa¹ of {A => [C]}: 24 --->
+//│ 	[A]: 21
+//│ case a¹ of {A => [B]}: 38 --->
+//│ 	[A]: 21
+//│ 	[A]: 26
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -204,9 +219,15 @@ f(a =>
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [A]: 22 --->
+//│ 	NoCons
 //│ 	case a¹ of {A => [B] | B => [C]}: 36
 //│ [B]: 25 --->
+//│ 	NoCons
 //│ 	case a¹ of {A => [B] | B => [C]}: 36
+//│ ------------------
+//│ case a¹ of {A => [B] | B => [C]}: 36 --->
+//│ 	[A]: 22
+//│ 	[B]: 25
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -267,6 +288,13 @@ f(a => if (if a is
 //│ 	case case a¹ of {A => [X] | B => [Y]} of {X => 0 | Y => 1}: 34
 //│ [Y]: 30 --->
 //│ 	case case a¹ of {A => [X] | B => [Y]} of {X => 0 | Y => 1}: 34
+//│ ------------------
+//│ case a¹ of {A => [X] | B => [Y]}: 31 --->
+//│ 	[A]: 20
+//│ 	[B]: 23
+//│ case case a¹ of {A => [X] | B => [Y]} of {X => 0 | Y => 1}: 34 --->
+//│ 	[X]: 29
+//│ 	[Y]: 30
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -337,6 +365,14 @@ f(a => if (if a is
 //│ 	case case a¹ of {A => [X] | B => if (1 > 2) then [X] else [Y]} of {X => 0 | Y => 1}: 48
 //│ [Y]: 43 --->
 //│ 	case case a¹ of {A => [X] | B => if (1 > 2) then [X] else [Y]} of {X => 0 | Y => 1}: 48
+//│ ------------------
+//│ case a¹ of {A => [X] | B => if (1 > 2) then [X] else [Y]}: 45 --->
+//│ 	[A]: 27
+//│ 	[B]: 30
+//│ case case a¹ of {A => [X] | B => if (1 > 2) then [X] else [Y]} of {X => 0 | Y => 1}: 48 --->
+//│ 	[X]: 36
+//│ 	[X]: 42
+//│ 	[Y]: 43
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -416,6 +452,13 @@ f(a => if (if a is
 //│ 	case a¹ of {A => [X] | B => primitive⁰}: 31
 //│ [X]: 29 --->
 //│ 	case case a¹ of {A => [X] | B => primitive⁰} of {X => 0 | Y => 1}: 34
+//│ ------------------
+//│ case a¹ of {A => [X] | B => primitive⁰}: 31 --->
+//│ 	[A]: 20
+//│ 	[B]: 23
+//│ case case a¹ of {A => [X] | B => primitive⁰} of {X => 0 | Y => 1}: 34 --->
+//│ 	[X]: 29
+//│ 	NoProd
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -488,9 +531,15 @@ f(a => g(a))
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [X]: 35 --->
-//│ 	case x¹ of {X => 0 | Y => 1}: 48
 //│ 	case y¹ of {X => primitive⁰ | Y => 2}: 32
-//│ 	 MORE THAN ONE MATCH EXPR
+//│ 	case x¹ of {X => 0 | Y => 1}: 48
+//│ ------------------
+//│ case y¹ of {X => primitive⁰ | Y => 2}: 32 --->
+//│ 	[X]: 35
+//│ 	NoProd
+//│ case x¹ of {X => 0 | Y => 1}: 48 --->
+//│ 	[X]: 35
+//│ 	NoProd
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -560,7 +609,13 @@ f(A)(C(K))
 //│ [A]: 34 --->
 //│ 	case cond¹ of {A => (fun x² -> x²) | _ => (fun x³ -> (g₀ x³))}: 27
 //│ [C [K]]: 37 --->
+//│ 	'lumberhackTopLevelResult
 //│ 	case y² of {C y³ => y³}: 31
+//│ ------------------
+//│ case cond¹ of {A => (fun x² -> x²) | _ => (fun x³ -> (g₀ x³))}: 27 --->
+//│ 	[A]: 34
+//│ case y² of {C y³ => y³}: 31 --->
+//│ 	[C [K]]: 37
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -626,7 +681,11 @@ f(C(A))
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C [A]]: 29 --->
+//│ 	'lumberhackTopLevelResult
 //│ 	case y¹ of {C a¹ => a¹}: 18
+//│ ------------------
+//│ case y¹ of {C a¹ => a¹}: 18 --->
+//│ 	[C [A]]: 29
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -704,14 +763,26 @@ c(p(0))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
+//│ [N]: 71 --->
+//│ 	NoCons
+//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59
+//│ 	'95_callres
+//│ [C (p₀ (x¹ - 1))]: 84 --->
+//│ 	NoCons
+//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59
+//│ 	'95_callres
 //│ [C (p₀ (x¹ + 1))]: 92 --->
+//│ 	NoCons
 //│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59
 //│ 	case z¹ of {C b¹ => b¹ | N => 1}: 64
-//│ 	 MORE THAN ONE MATCH EXPR
-//│ [C (p₀ (x¹ - 1))]: 84 --->
-//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59
-//│ [N]: 71 --->
-//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59
+//│ 	'95_callres
+//│ ------------------
+//│ case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59 --->
+//│ 	[N]: 71
+//│ 	[C (p₀ (x¹ - 1))]: 84
+//│ 	[C (p₀ (x¹ + 1))]: 92
+//│ case z¹ of {C b¹ => b¹ | N => 1}: 64 --->
+//│ 	[C (p₀ (x¹ + 1))]: 92
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -785,7 +856,11 @@ f(C)
 //│ [C]: 39 --->
 //│ 	case xg¹ of {C => [G]}: 23
 //│ 	case xh¹ of {C => [H]}: 27
-//│ 	 MORE THAN ONE MATCH EXPR
+//│ ------------------
+//│ case xg¹ of {C => [G]}: 23 --->
+//│ 	[C]: 39
+//│ case xh¹ of {C => [H]}: 27 --->
+//│ 	[C]: 39
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -874,26 +949,45 @@ f(t)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
+//│ [T [Y] t₁ t₁]: 69 --->
+//│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₃ ll¹)] (f₀ l¹)]}}: 45
+//│ 	case x³ of {T a³ l³ r³ => case r³ of {T b³ ll³ rr³ => [T a³ [T b³ (f₂ rr³) (f₂ ll³)] (f₂ l³)]}}: 88
+//│ 	case x⁴ of {T a⁴ l⁴ r⁴ => case r⁴ of {T b⁴ ll⁴ rr⁴ => [T a⁴ [T b⁴ (f₁ rr⁴) (f₁ ll⁴)] (f₁ l⁴)]}}: 106
+//│ [T [X] [T [Y] t₁ t₁] t₁]: 71 --->
+//│ 	case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₃ ll¹)] (f₀ l¹)]}: 44
+//│ 	case r² of {T b² ll² rr² => [T a² [T b² (f₁ rr²) (f₂ ll²)] (f₃ l²)]}: 62
+//│ 	case x² of {T a² l² r² => case r² of {T b² ll² rr² => [T a² [T b² (f₁ rr²) (f₂ ll²)] (f₃ l²)]}}: 63
+//│ 	case r³ of {T b³ ll³ rr³ => [T a³ [T b³ (f₂ rr³) (f₂ ll³)] (f₂ l³)]}: 87
+//│ 	case x³ of {T a³ l³ r³ => case r³ of {T b³ ll³ rr³ => [T a³ [T b³ (f₂ rr³) (f₂ ll³)] (f₂ l³)]}}: 88
+//│ 	case r⁴ of {T b⁴ ll⁴ rr⁴ => [T a⁴ [T b⁴ (f₁ rr⁴) (f₁ ll⁴)] (f₁ l⁴)]}: 105
+//│ 	case x⁴ of {T a⁴ l⁴ r⁴ => case r⁴ of {T b⁴ ll⁴ rr⁴ => [T a⁴ [T b⁴ (f₁ rr⁴) (f₁ ll⁴)] (f₁ l⁴)]}}: 106
+//│ [T [Y] t₀ t₀]: 112 --->
+//│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₃ ll¹)] (f₀ l¹)]}}: 45
 //│ [T [X] [T [Y] t₀ t₀] t₁]: 114 --->
 //│ 	case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₃ ll¹)] (f₀ l¹)]}: 44
 //│ 	case x² of {T a² l² r² => case r² of {T b² ll² rr² => [T a² [T b² (f₁ rr²) (f₂ ll²)] (f₃ l²)]}}: 63
-//│ 	 MORE THAN ONE MATCH EXPR
-//│ [T [X] [T [Y] t₁ t₁] t₁]: 71 --->
-//│ 	case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₃ ll¹)] (f₀ l¹)]}: 44
-//│ 	case r⁴ of {T b⁴ ll⁴ rr⁴ => [T a⁴ [T b⁴ (f₁ rr⁴) (f₁ ll⁴)] (f₁ l⁴)]}: 105
-//│ 	case r² of {T b² ll² rr² => [T a² [T b² (f₁ rr²) (f₂ ll²)] (f₃ l²)]}: 62
-//│ 	case r³ of {T b³ ll³ rr³ => [T a³ [T b³ (f₂ rr³) (f₂ ll³)] (f₂ l³)]}: 87
-//│ 	case x⁴ of {T a⁴ l⁴ r⁴ => case r⁴ of {T b⁴ ll⁴ rr⁴ => [T a⁴ [T b⁴ (f₁ rr⁴) (f₁ ll⁴)] (f₁ l⁴)]}}: 106
-//│ 	case x² of {T a² l² r² => case r² of {T b² ll² rr² => [T a² [T b² (f₁ rr²) (f₂ ll²)] (f₃ l²)]}}: 63
-//│ 	case x³ of {T a³ l³ r³ => case r³ of {T b³ ll³ rr³ => [T a³ [T b³ (f₂ rr³) (f₂ ll³)] (f₂ l³)]}}: 88
-//│ 	 MORE THAN ONE MATCH EXPR
-//│ [T [Y] t₀ t₀]: 112 --->
-//│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₃ ll¹)] (f₀ l¹)]}}: 45
-//│ [T [Y] t₁ t₁]: 69 --->
-//│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₃ ll¹)] (f₀ l¹)]}}: 45
-//│ 	case x⁴ of {T a⁴ l⁴ r⁴ => case r⁴ of {T b⁴ ll⁴ rr⁴ => [T a⁴ [T b⁴ (f₁ rr⁴) (f₁ ll⁴)] (f₁ l⁴)]}}: 106
-//│ 	case x³ of {T a³ l³ r³ => case r³ of {T b³ ll³ rr³ => [T a³ [T b³ (f₂ rr³) (f₂ ll³)] (f₂ l³)]}}: 88
-//│ 	 MORE THAN ONE MATCH EXPR
+//│ ------------------
+//│ case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₃ ll¹)] (f₀ l¹)]}: 44 --->
+//│ 	[T [X] [T [Y] t₁ t₁] t₁]: 71
+//│ 	[T [X] [T [Y] t₀ t₀] t₁]: 114
+//│ case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ (f₀ rr¹) (f₃ ll¹)] (f₀ l¹)]}}: 45 --->
+//│ 	[T [Y] t₁ t₁]: 69
+//│ 	[T [Y] t₀ t₀]: 112
+//│ case r² of {T b² ll² rr² => [T a² [T b² (f₁ rr²) (f₂ ll²)] (f₃ l²)]}: 62 --->
+//│ 	[T [X] [T [Y] t₁ t₁] t₁]: 71
+//│ case x² of {T a² l² r² => case r² of {T b² ll² rr² => [T a² [T b² (f₁ rr²) (f₂ ll²)] (f₃ l²)]}}: 63 --->
+//│ 	[T [X] [T [Y] t₁ t₁] t₁]: 71
+//│ 	[T [X] [T [Y] t₀ t₀] t₁]: 114
+//│ case r³ of {T b³ ll³ rr³ => [T a³ [T b³ (f₂ rr³) (f₂ ll³)] (f₂ l³)]}: 87 --->
+//│ 	[T [X] [T [Y] t₁ t₁] t₁]: 71
+//│ case x³ of {T a³ l³ r³ => case r³ of {T b³ ll³ rr³ => [T a³ [T b³ (f₂ rr³) (f₂ ll³)] (f₂ l³)]}}: 88 --->
+//│ 	[T [Y] t₁ t₁]: 69
+//│ 	[T [X] [T [Y] t₁ t₁] t₁]: 71
+//│ case r⁴ of {T b⁴ ll⁴ rr⁴ => [T a⁴ [T b⁴ (f₁ rr⁴) (f₁ ll⁴)] (f₁ l⁴)]}: 105 --->
+//│ 	[T [X] [T [Y] t₁ t₁] t₁]: 71
+//│ case x⁴ of {T a⁴ l⁴ r⁴ => case r⁴ of {T b⁴ ll⁴ rr⁴ => [T a⁴ [T b⁴ (f₁ rr⁴) (f₁ ll⁴)] (f₁ l⁴)]}}: 106 --->
+//│ 	[T [Y] t₁ t₁]: 69
+//│ 	[T [X] [T [Y] t₁ t₁] t₁]: 71
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>

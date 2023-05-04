@@ -59,14 +59,26 @@ c(p(0))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
+//│ [N]: 71 --->
+//│ 	NoCons
+//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59
+//│ 	'95_callres
+//│ [C (p₀ (x¹ - 1))]: 84 --->
+//│ 	NoCons
+//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59
+//│ 	'95_callres
 //│ [C (p₀ (x¹ + 1))]: 92 --->
+//│ 	NoCons
 //│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59
 //│ 	case z¹ of {C b¹ => b¹ | N => 1}: 64
-//│ 	 MORE THAN ONE MATCH EXPR
-//│ [C (p₀ (x¹ - 1))]: 84 --->
-//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59
-//│ [N]: 71 --->
-//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59
+//│ 	'95_callres
+//│ ------------------
+//│ case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N => [N]}: 59 --->
+//│ 	[N]: 71
+//│ 	[C (p₀ (x¹ - 1))]: 84
+//│ 	[C (p₀ (x¹ + 1))]: 92
+//│ case z¹ of {C b¹ => b¹ | N => 1}: 64 --->
+//│ 	[C (p₀ (x¹ + 1))]: 92
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -127,16 +139,23 @@ last(C(A, C(B, N)))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C [A] [C [B] [N]]]: 37 --->
+//│ [N]: 35 --->
+//│ 	'tt¹
+//│ 	case t¹ of {C hh¹ tt¹ => [Some (last₀ t¹)] | N => [Some h¹]}: 28
 //│ 	case ls¹ of {C h¹ t¹ => case t¹ of {C hh¹ tt¹ => [Some (last₀ t¹)] | N => [Some h¹]} | N => [None]}: 30
 //│ [C [B] [N]]: 36 --->
-//│ 	case ls¹ of {C h¹ t¹ => case t¹ of {C hh¹ tt¹ => [Some (last₀ t¹)] | N => [Some h¹]} | N => [None]}: 30
 //│ 	case t¹ of {C hh¹ tt¹ => [Some (last₀ t¹)] | N => [Some h¹]}: 28
-//│ 	 MORE THAN ONE MATCH EXPR
-//│ [N]: 35 --->
 //│ 	case ls¹ of {C h¹ t¹ => case t¹ of {C hh¹ tt¹ => [Some (last₀ t¹)] | N => [Some h¹]} | N => [None]}: 30
-//│ 	case t¹ of {C hh¹ tt¹ => [Some (last₀ t¹)] | N => [Some h¹]}: 28
-//│ 	 MORE THAN ONE MATCH EXPR
+//│ [C [A] [C [B] [N]]]: 37 --->
+//│ 	case ls¹ of {C h¹ t¹ => case t¹ of {C hh¹ tt¹ => [Some (last₀ t¹)] | N => [Some h¹]} | N => [None]}: 30
+//│ ------------------
+//│ case t¹ of {C hh¹ tt¹ => [Some (last₀ t¹)] | N => [Some h¹]}: 28 --->
+//│ 	[N]: 35
+//│ 	[C [B] [N]]: 36
+//│ case ls¹ of {C h¹ t¹ => case t¹ of {C hh¹ tt¹ => [Some (last₀ t¹)] | N => [Some h¹]} | N => [None]}: 30 --->
+//│ 	[N]: 35
+//│ 	[C [B] [N]]: 36
+//│ 	[C [A] [C [B] [N]]]: 37
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>

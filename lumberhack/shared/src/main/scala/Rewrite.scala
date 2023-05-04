@@ -409,6 +409,7 @@ trait ProgramRewrite { this: Program =>
       assert(dtors.size == 1 && dtors.head.isInstanceOf[Destruct])
       ctor.euid -> dtors.head.euid
     }
+    // given Map[ExprId, List[Ident]] = Map.empty.withDefaultValue(Nil)
     given Map[ExprId, List[Ident]] = fusionStrategy.scopeExtrusionInfo
     Program(
       this.defAndExpr._2.map { e => given Option[Ident] = None; R(e.rewriteFusion(using Map.empty)) }

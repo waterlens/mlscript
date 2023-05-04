@@ -206,15 +206,20 @@ class FusionStrategy(d: Deforest) {
   }
   
   val scopeExtrusionInfo: Map[ExprId, List[Ident]] = {
-    // first is the match expr, second is the expr of the definition it belongs to; not sure about topleve match exprs
-    val dtorExprs = afterRemoveRecursiveStrategies._2.keys.flatMap { de =>
+    // val dtorExprs = afterRemoveRecursiveStrategies._2.keys.flatMap { de =>
+    //   val expr = d.exprs(de.euid).asInstanceOf[Expr.Match]
+    //   expr.inDef.map(expr -> d.prgm.get.defAndExpr._1(_))
+    // }
+    // dtorExprs.map { (me, _) =>
+    //   me.uid -> me.arms.flatMap { (_, ids, body) =>
+    //     body.outOfScopeIds(using (ids ++ d.prgm.get.defAndExpr._1.keys).toSet)
+    //   }
+    // }.toMap
+    afterRemoveRecursiveStrategies._2.keys.map { de =>
       val expr = d.exprs(de.euid).asInstanceOf[Expr.Match]
-      expr.inDef.map(expr -> d.prgm.get.defAndExpr._1(_))
-    }
-    dtorExprs.map { (me, e) =>
-      me.uid -> me.arms.flatMap { (_, ids, body) =>
+      expr.uid -> (expr.arms.flatMap { (_, ids, body) =>
         body.outOfScopeIds(using (ids ++ d.prgm.get.defAndExpr._1.keys).toSet)
-      }
+      }.distinct)
     }.toMap
   }
 }
@@ -270,7 +275,8 @@ trait ExprRewrite { this: Expr =>
         Function(newParamId, body.rewriteFusion(using newCtx))
       case Ref(id) => Ref(ctx.getOrElse(id.tree.name, id))
       case Match(scrut, arms) => if fusionMatch.valuesIterator.contains(this.uid) then {
-        val extrudedIds = scopeExtrusionInfo.getOrElse(this.uid, Nil)
+        val extrudedIds = scopeExtrusionInfo(this.uid)
+        // val extrudedIds = scopeExtrusionInfo.getOrElse(this.uid, Nil)
         extrudedIds.foldLeft(scrut.rewriteFusion){
           (acc, id) => Call(acc, Ref(ctx.getOrElse(id.tree.name, id)))
         }
@@ -282,7 +288,9 @@ trait ExprRewrite { this: Expr =>
         val newCtx = ctx ++ newIds.map(id => id.tree.name -> id).toMap
         
         val extrudedIds =
-          scopeExtrusionInfo.getOrElse(matchId, Nil).map(original => original -> Ref(original.copyToNewDeforest)).reverse
+          scopeExtrusionInfo(matchId).map(original => original -> Ref(original.copyToNewDeforest)).reverse
+        // val extrudedIds =
+        //   scopeExtrusionInfo.getOrElse(matchId, Nil).map(original => original -> Ref(original.copyToNewDeforest)).reverse
         val innerAfterExtrusionHandling =
           matchArm._3.rewriteFusion(using newCtx).subst(using extrudedIds.toMap)
         val inner = extrudedIds.foldLeft(innerAfterExtrusionHandling){ (acc, newId) =>

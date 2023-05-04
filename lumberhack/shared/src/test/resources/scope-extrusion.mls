@@ -1,0 +1,67 @@
+:NewParser
+:ParseOnly
+
+_LUMBERHACK_EVAL
+if C(A, B(D)) is
+  C(a, bd) then if bd is
+    B(d) then if a is
+      A then OK
+//│ |_LUMBERHACK_EVAL|↵|#if| |C|(|A|,| |B|(|D|)|)| |is|→|C|(|a|,| |bd|)| |#then| |#if| |bd| |is|→|B|(|d|)| |#then| |#if| |a| |is|→|A| |#then| |OK|←|←|←|
+//│ Parsed: {_LUMBERHACK_EVAL; if C (A, B (D,),) is ‹(C (a, bd,)) then if bd is ‹(B (d,)) then if a is ‹(A) then OK›››}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ case [C [A] [B [D]]] of {
+//│ 	C a⁰ bd⁰ => case bd⁰ of {
+//│ 		B d⁰ => case a⁰ of {
+//│ 			A => [OK]}}}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ 
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ case [C [A] [B [D]]] of {
+//│ 	C a¹ bd¹ => case bd¹ of {
+//│ 		B d¹ => case a¹ of {
+//│ 			A => [OK]}}}
+//│ 
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [A]: 11 --->
+//│ 	case a¹ of {A => [OK]}: 18
+//│ [B [D]]: 13 --->
+//│ 	case bd¹ of {B d¹ => case a¹ of {A => [OK]}}: 19
+//│ [C [A] [B [D]]]: 14 --->
+//│ 	case [C [A] [B [D]]] of {C a¹ bd¹ => case bd¹ of {B d¹ => case a¹ of {A => [OK]}}}: 20
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [A]: 11 --->
+//│ 	case a¹ of {A => [OK]}: 18
+//│ [B [D]]: 13 --->
+//│ 	case bd¹ of {B d¹ => case a¹ of {A => [OK]}}: 19
+//│ [C [A] [B [D]]]: 14 --->
+//│ 	case [C [A] [B [D]]] of {C a¹ bd¹ => case bd¹ of {B d¹ => case a¹ of {A => [OK]}}}: 20
+//│ ------------------
+//│ case a¹ of {A => [OK]}: 18 --->
+//│ 	[A]: 11
+//│ case bd¹ of {B d¹ => case a¹ of {A => [OK]}}: 19 --->
+//│ 	[B [D]]: 13
+//│ case [C [A] [B [D]]] of {C a¹ bd¹ => case bd¹ of {B d¹ => case a¹ of {A => [OK]}}}: 20 --->
+//│ 	[C [A] [B [D]]]: 14
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ 
+//│ 	let a² = [OK]
+//│ 	in let bd² = 	
+//│ 		let d² = [D]
+//│ 		in (fun a³ -> a³)
+//│ 	in (bd² a²)
+//│ 
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [OK]
+//│ <<<<<<< evaluate <<<<<<<

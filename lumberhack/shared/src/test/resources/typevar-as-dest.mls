@@ -50,3 +50,72 @@ Ok(f(C(A)))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [Ok [C [A]]]
 //│ <<<<<<< evaluate <<<<<<<
+
+
+fun f(x) =
+  primitive(x)
+  if x is
+    C(a) then x
+fun wrapInRes(y) =
+  Res1(y)
+  Res2(y)
+wrapInRes(f(C(A)))
+//│ |#fun| |f|(|x|)| |#=|→|primitive|(|x|)|↵|#if| |x| |is|→|C|(|a|)| |#then| |x|←|←|↵|#fun| |wrapInRes|(|y|)| |#=|→|Res1|(|y|)|↵|Res2|(|y|)|←|↵|wrapInRes|(|f|(|C|(|A|)|)|)|
+//│ Parsed: {fun f = x, => {primitive (x,); if x is ‹(C (a,)) then x›}; fun wrapInRes = y, => {Res1 (y,); Res2 (y,)}; wrapInRes (f (C (A,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (wrapInRes^15 (f^16 [C [A]]))
+//│ def f = (fun x⁰ -> 
+//│ 	(primitive⁰ x⁰)
+//│ 	case x⁰ of {
+//│ 		C a⁰ => x⁰})
+//│ def wrapInRes = (fun y⁰ -> 
+//│ 	[Res1 y⁰]
+//│ 	[Res2 y⁰])
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^16] (hopeless to continue)
+//│ [wrapInRes^15] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (wrapInRes₀ (f₀ [C [A]]))
+//│ def f₀ = 
+//│ 	(fun x¹ -> 
+//│ 		(primitive⁰ x¹)
+//│ 		case x¹ of {
+//│ 			C a¹ => x¹})
+//│ def wrapInRes₀ = 
+//│ 	(fun y¹ -> 
+//│ 		[Res1 y¹]
+//│ 		[Res2 y¹])
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C [A]]: 38 --->
+//│ 	NoCons
+//│ 	'y¹
+//│ 	case x¹ of {C a¹ => x¹}: 26
+//│ ------------------
+//│ case x¹ of {C a¹ => x¹}: 26 --->
+//│ 	[C [A]]: 38
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (wrapInRes₀ (f₀ [C [A]]))
+//│ def f₀ = 
+//│ 	(fun x² -> 
+//│ 		(primitive⁰ x²)
+//│ 		case x² of {
+//│ 			C a¹ => x²})
+//│ def wrapInRes₀ = 
+//│ 	(fun y² -> 
+//│ 		[Res1 y²]
+//│ 		[Res2 y²])
+//│ <<<<<<< after fusion <<<<<<<

@@ -2,8 +2,8 @@
 :ParseOnly
 
 
-// :stdout
 // NOTE: more to fuse if there is no strategy clash of '79_callres
+// :stdout
 _LUMBERHACK_EVAL
 fun count(c, xs) = (if xs is
   C(h, t) then c => count(c + 1, t)
@@ -48,7 +48,6 @@ count(0, rev(N, C(1, C(2, N))))
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C h1¹ a⁴]: 70 --->
 //│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61
-//│ 	'79_callres
 //│ [N]: 86 --->
 //│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61
 //│ [N]: 90 --->
@@ -68,6 +67,10 @@ count(0, rev(N, C(1, C(2, N))))
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C h1¹ a⁴]: 70 --->
+//│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61
+//│ [N]: 86 --->
+//│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61
 //│ [N]: 90 --->
 //│ 	case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N => (fun a⁵ -> a⁵)}: 77
 //│ [C 2 [N]]: 91 --->
@@ -75,6 +78,9 @@ count(0, rev(N, C(1, C(2, N))))
 //│ [C 1 [C 2 [N]]]: 92 --->
 //│ 	case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N => (fun a⁵ -> a⁵)}: 77
 //│ ------------------
+//│ case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61 --->
+//│ 	[C h1¹ a⁴]: 70
+//│ 	[N]: 86
 //│ case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N => (fun a⁵ -> a⁵)}: 77 --->
 //│ 	[N]: 90
 //│ 	[C 2 [N]]: 91
@@ -82,17 +88,21 @@ count(0, rev(N, C(1, C(2, N))))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((count₀ 0) ((rev₀ [N]) 
+//│ ((count₀ 0) ((rev₀ (fun c⁶ -> c⁶)) 
 //│ 	let h1² = 1
 //│ 	in let t1² = 	
 //│ 		let h1³ = 2
 //│ 		in let t1³ = (fun a⁸ -> a⁸)
-//│ 		in (fun a⁷ -> ((rev₀ [C h1³ a⁷]) t1³))
-//│ 	in (fun a⁶ -> ((rev₀ [C h1² a⁶]) t1²))))
+//│ 		in (fun a⁷ -> ((rev₀ 
+//│ 			let h³ = h1³
+//│ 			in let t³ = a⁷
+//│ 			in (fun c⁸ -> ((count₀ (c⁸ + 1)) t³))) t1³))
+//│ 	in (fun a⁶ -> ((rev₀ 
+//│ 		let h² = h1²
+//│ 		in let t² = a⁶
+//│ 		in (fun c⁷ -> ((count₀ (c⁷ + 1)) t²))) t1²))))
 //│ def count₀ = 
-//│ 	(fun c⁶ -> (fun xs² -> (case xs² of {
-//│ 		C h¹ t¹ => (fun c⁷ -> ((count₀ (c⁷ + 1)) t¹))
-//│ 		| N => (fun c⁸ -> c⁸)} c⁶)))
+//│ 	(fun c⁹ -> (fun xs² -> (xs² c⁹)))
 //│ def rev₀ = 
 //│ 	(fun a⁹ -> (fun ys² -> (ys² a⁹)))
 //│ <<<<<<< after fusion <<<<<<<

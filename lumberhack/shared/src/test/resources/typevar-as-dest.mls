@@ -1,0 +1,52 @@
+:NewParser
+:ParseOnly
+
+
+_LUMBERHACK_EVAL
+fun f(a) = if a is
+  C(d) then a
+Ok(f(C(A)))
+//│ |_LUMBERHACK_EVAL|↵|#fun| |f|(|a|)| |#=| |#if| |a| |is|→|C|(|d|)| |#then| |a|←|↵|Ok|(|f|(|C|(|A|)|)|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun f = a, => if a is ‹(C (d,)) then a›; Ok (f (C (A,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ [Ok (f^5 [C [A]])]
+//│ def f = (fun a⁰ -> case a⁰ of {
+//│ 	C d⁰ => a⁰})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^5] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ [Ok (f₀ [C [A]])]
+//│ def f₀ = 
+//│ 	(fun a¹ -> case a¹ of {
+//│ 		C d¹ => a¹})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C [A]]: 16 --->
+//│ 	case a¹ of {C d¹ => a¹}: 12
+//│ 	'17_callres
+//│ ------------------
+//│ case a¹ of {C d¹ => a¹}: 12 --->
+//│ 	[C [A]]: 16
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ [Ok (f₀ [C [A]])]
+//│ def f₀ = 
+//│ 	(fun a² -> case a² of {
+//│ 		C d¹ => a²})
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [Ok [C [A]]]
+//│ <<<<<<< evaluate <<<<<<<

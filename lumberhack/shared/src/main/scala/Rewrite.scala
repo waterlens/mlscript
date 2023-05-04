@@ -21,7 +21,7 @@ class FusionStrategy(d: Deforest) {
   private def findToEndCons(v: ConsVar, cache: Set[ConsVar]): Set[ConsVar] = {
     if upperBounds.get(v.uid) match { case None => true; case Some(v) => v.isEmpty } then Set(v)
     else upperBounds(v.uid).foldLeft(Set()){(acc, ub) => ub.s match {
-      case cv: ConsVar if cache(cv) => acc + cv
+      case cv: ConsVar if cache(cv) => acc
       case cv: ConsVar => acc ++ findToEndCons(cv, cache + cv)
       case _ => acc
     }}
@@ -29,7 +29,7 @@ class FusionStrategy(d: Deforest) {
   private def findToEndProd(v: ProdVar, cache: Set[ProdVar]): Set[ProdVar] = {
     if lowerBounds.get(v.uid) match { case None => true; case Some(v) => v.isEmpty } then Set(v)
     else lowerBounds(v.uid).foldLeft(Set()){(acc, lb) => lb.s match {
-      case pv: ProdVar if cache(pv) => acc + pv
+      case pv: ProdVar if cache(pv) => acc
       case pv: ProdVar => acc ++ findToEndProd(pv, cache + pv)
       case _ => acc
     }}

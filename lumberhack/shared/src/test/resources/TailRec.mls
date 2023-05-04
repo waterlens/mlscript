@@ -4,6 +4,7 @@
 
 // WRONG: Initial program, not immediately fusable:
 // _LUMBERHACK_ERROR
+_LUMBERHACK_EVAL
 fun count(c, xs) = if xs is
   C(h, t) then count(c + 1, t)
   N then c
@@ -11,8 +12,8 @@ fun rev(a, ys) = if ys is
   C(h1, t1) then rev(C(h1, a), t1)
   N then a
 count(0, rev(N, N))
-//│ |#fun| |count|(|c|,| |xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |count|(|c| |+| |1|,| |t|)|↵|N| |#then| |c|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|count|(|0|,| |rev|(|N|,| |N|)|)|
-//│ Parsed: {fun count = c, xs, => if xs is ‹(C (h, t,)) then count (+ (c,) (1,), t,); (N) then c›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; count (0, rev (N, N,),)}
+//│ |_LUMBERHACK_EVAL|↵|#fun| |count|(|c|,| |xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |count|(|c| |+| |1|,| |t|)|↵|N| |#then| |c|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|count|(|0|,| |rev|(|N|,| |N|)|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun count = c, xs, => if xs is ‹(C (h, t,)) then count (+ (c,) (1,), t,); (N) then c›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; count (0, rev (N, N,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((count^27 0) ((rev^30 [N]) [N]))
 //│ def count = (fun c⁰ -> (fun xs⁰ -> case xs⁰ of {
@@ -45,7 +46,6 @@ count(0, rev(N, N))
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C h1¹ a¹]: 54 --->
 //│ 	case xs¹ of {C h¹ t¹ => ((count₀ (c¹ + 1)) t¹) | N => c¹}: 47
-//│ 	'59_matchres
 //│ [N]: 66 --->
 //│ 	case xs¹ of {C h¹ t¹ => ((count₀ (c¹ + 1)) t¹) | N => c¹}: 47
 //│ [N]: 68 --->
@@ -59,22 +59,31 @@ count(0, rev(N, N))
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C h1¹ a¹]: 54 --->
+//│ 	case xs¹ of {C h¹ t¹ => ((count₀ (c¹ + 1)) t¹) | N => c¹}: 47
+//│ [N]: 66 --->
+//│ 	case xs¹ of {C h¹ t¹ => ((count₀ (c¹ + 1)) t¹) | N => c¹}: 47
 //│ [N]: 68 --->
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 59
 //│ ------------------
+//│ case xs¹ of {C h¹ t¹ => ((count₀ (c¹ + 1)) t¹) | N => c¹}: 47 --->
+//│ 	[C h1¹ a¹]: 54
+//│ 	[N]: 66
 //│ case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 59 --->
 //│ 	[N]: 68
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((count₀ 0) ((rev₀ [N]) (fun a² -> a²)))
+//│ ((count₀ 0) ((rev₀ (fun c² -> c²)) (fun a² -> a²)))
 //│ def count₀ = 
-//│ 	(fun c² -> (fun xs² -> case xs² of {
-//│ 		C h¹ t¹ => ((count₀ (c² + 1)) t¹)
-//│ 		| N => c²}))
+//│ 	(fun c³ -> (fun xs² -> (xs² c³)))
 //│ def rev₀ = 
 //│ 	(fun a³ -> (fun ys² -> (ys² a³)))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ 0
+//│ <<<<<<< evaluate <<<<<<<
 
 // NOTE: new way to push in?
 _LUMBERHACK_EVAL
@@ -121,7 +130,6 @@ count(0, rev(C(1, C(2, N)), N))
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C h1¹ a⁴]: 70 --->
 //│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61
-//│ 	'79_callres
 //│ [N]: 88 --->
 //│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61
 //│ [C 2 [N]]: 89 --->
@@ -141,19 +149,36 @@ count(0, rev(C(1, C(2, N)), N))
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C h1¹ a⁴]: 70 --->
+//│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61
+//│ [N]: 88 --->
+//│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61
+//│ [C 2 [N]]: 89 --->
+//│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61
+//│ [C 1 [C 2 [N]]]: 90 --->
+//│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61
 //│ [N]: 92 --->
 //│ 	case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N => (fun a⁵ -> a⁵)}: 77
 //│ ------------------
+//│ case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61 --->
+//│ 	[C h1¹ a⁴]: 70
+//│ 	[N]: 88
+//│ 	[C 2 [N]]: 89
+//│ 	[C 1 [C 2 [N]]]: 90
 //│ case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N => (fun a⁵ -> a⁵)}: 77 --->
 //│ 	[N]: 92
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((count₀ 0) ((rev₀ [C 1 [C 2 [N]]]) (fun a⁶ -> a⁶)))
+//│ ((count₀ 0) ((rev₀ 
+//│ 	let h² = 1
+//│ 	in let t² = 	
+//│ 		let h³ = 2
+//│ 		in let t³ = (fun c⁸ -> c⁸)
+//│ 		in (fun c⁷ -> ((count₀ (c⁷ + 1)) t³))
+//│ 	in (fun c⁶ -> ((count₀ (c⁶ + 1)) t²))) (fun a⁶ -> a⁶)))
 //│ def count₀ = 
-//│ 	(fun c⁶ -> (fun xs² -> (case xs² of {
-//│ 		C h¹ t¹ => (fun c⁷ -> ((count₀ (c⁷ + 1)) t¹))
-//│ 		| N => (fun c⁸ -> c⁸)} c⁶)))
+//│ 	(fun c⁹ -> (fun xs² -> (xs² c⁹)))
 //│ def rev₀ = 
 //│ 	(fun a⁷ -> (fun ys² -> (ys² a⁷)))
 //│ <<<<<<< after fusion <<<<<<<
@@ -166,6 +191,7 @@ count(0, rev(C(1, C(2, N)), N))
 // WRONG:
 // Fusablified program:
 // _LUMBERHACK_ERROR
+_LUMBERHACK_EVAL
 fun count(xs) = if xs is
   C(h, t) then c => count(t)(c + 1)
   N then c => c
@@ -174,8 +200,8 @@ fun rev(a, ys) = if ys is
   N then a
 fun init = N
 count(rev(N, init))(0)
-//│ |#fun| |count|(|xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |c| |=>| |count|(|t|)|(|c| |+| |1|)|↵|N| |#then| |c| |=>| |c|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|#fun| |init| |#=| |N|↵|count|(|rev|(|N|,| |init|)|)|(|0|)|
-//│ Parsed: {fun count = xs, => if xs is ‹(C (h, t,)) then c, => count (t,) (+ (c,) (1,),); (N) then c, => c›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; fun init = N; count (rev (N, init,),) (0,)}
+//│ |_LUMBERHACK_EVAL|↵|#fun| |count|(|xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |c| |=>| |count|(|t|)|(|c| |+| |1|)|↵|N| |#then| |c| |=>| |c|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|#fun| |init| |#=| |N|↵|count|(|rev|(|N|,| |init|)|)|(|0|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun count = xs, => if xs is ‹(C (h, t,)) then c, => count (t,) (+ (c,) (1,),); (N) then c, => c›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; fun init = N; count (rev (N, init,),) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((count^29 ((rev^30 [N]) init^33)) 0)
 //│ def count = (fun xs⁰ -> case xs⁰ of {
@@ -211,7 +237,6 @@ count(rev(N, init))(0)
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C h1¹ a¹]: 42 --->
-//│ 	'47_matchres
 //│ 	case xs¹ of {C h¹ t¹ => (fun c² -> ((count₀ t¹) (c² + 1))) | N => (fun c³ -> c³)}: 63
 //│ [N]: 65 --->
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 47
@@ -226,30 +251,40 @@ count(rev(N, init))(0)
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C h1¹ a¹]: 42 --->
+//│ 	case xs¹ of {C h¹ t¹ => (fun c² -> ((count₀ t¹) (c² + 1))) | N => (fun c³ -> c³)}: 63
 //│ [N]: 65 --->
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 47
+//│ [N]: 68 --->
+//│ 	case xs¹ of {C h¹ t¹ => (fun c² -> ((count₀ t¹) (c² + 1))) | N => (fun c³ -> c³)}: 63
 //│ ------------------
 //│ case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 47 --->
 //│ 	[N]: 65
+//│ case xs¹ of {C h¹ t¹ => (fun c² -> ((count₀ t¹) (c² + 1))) | N => (fun c³ -> c³)}: 63 --->
+//│ 	[C h1¹ a¹]: 42
+//│ 	[N]: 68
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((count₀ ((rev₀ [N]) init₀)) 0)
+//│ ((count₀ ((rev₀ (fun c⁴ -> c⁴)) init₀)) 0)
 //│ def count₀ = 
-//│ 	(fun xs² -> case xs² of {
-//│ 		C h¹ t¹ => (fun c⁴ -> ((count₀ t¹) (c⁴ + 1)))
-//│ 		| N => (fun c⁵ -> c⁵)})
+//│ 	(fun xs² -> xs²)
 //│ def init₀ = 
 //│ 	(fun a³ -> a³)
 //│ def rev₀ = 
 //│ 	(fun a² -> (fun ys² -> (ys² a²)))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ 0
+//│ <<<<<<< evaluate <<<<<<<
 
 
 // WRONG:
 // FIXME
 // Paper example (original)
 // _LUMBERHACK_ERROR
+_LUMBERHACK_EVAL
 fun idxSum(i, xs) = if xs is
   C(h, t) then add(i, idxSum(add(i, 1), t))
   N then 0
@@ -257,8 +292,8 @@ fun rev(a, ys) = if ys is
   C(h1, t1) then rev(C(h1, a), t1)
   N then a
 idxSum(0, rev(N, N))
-//│ |#fun| |idxSum|(|i|,| |xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |add|(|i|,| |idxSum|(|add|(|i|,| |1|)|,| |t|)|)|↵|N| |#then| |0|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|idxSum|(|0|,| |rev|(|N|,| |N|)|)|
-//│ Parsed: {fun idxSum = i, xs, => if xs is ‹(C (h, t,)) then add (i, idxSum (add (i, 1,), t,),); (N) then 0›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; idxSum (0, rev (N, N,),)}
+//│ |_LUMBERHACK_EVAL|↵|#fun| |idxSum|(|i|,| |xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |add|(|i|,| |idxSum|(|add|(|i|,| |1|)|,| |t|)|)|↵|N| |#then| |0|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|idxSum|(|0|,| |rev|(|N|,| |N|)|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun idxSum = i, xs, => if xs is ‹(C (h, t,)) then add (i, idxSum (add (i, 1,), t,),); (N) then 0›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; idxSum (0, rev (N, N,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((idxSum^31 0) ((rev^34 [N]) [N]))
 //│ def idxSum = (fun i⁰ -> (fun xs⁰ -> case xs⁰ of {
@@ -290,7 +325,6 @@ idxSum(0, rev(N, N))
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C h1¹ a¹]: 44 --->
-//│ 	'49_matchres
 //│ 	case xs¹ of {C h¹ t¹ => ((add⁰ i¹) ((idxSum₀ ((add⁰ i¹) 1)) t¹)) | N => 0}: 67
 //│ [N]: 74 --->
 //│ 	case xs¹ of {C h¹ t¹ => ((add⁰ i¹) ((idxSum₀ ((add⁰ i¹) 1)) t¹)) | N => 0}: 67
@@ -305,27 +339,37 @@ idxSum(0, rev(N, N))
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C h1¹ a¹]: 44 --->
+//│ 	case xs¹ of {C h¹ t¹ => ((add⁰ i¹) ((idxSum₀ ((add⁰ i¹) 1)) t¹)) | N => 0}: 67
+//│ [N]: 74 --->
+//│ 	case xs¹ of {C h¹ t¹ => ((add⁰ i¹) ((idxSum₀ ((add⁰ i¹) 1)) t¹)) | N => 0}: 67
 //│ [N]: 76 --->
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 49
 //│ ------------------
 //│ case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 49 --->
 //│ 	[N]: 76
+//│ case xs¹ of {C h¹ t¹ => ((add⁰ i¹) ((idxSum₀ ((add⁰ i¹) 1)) t¹)) | N => 0}: 67 --->
+//│ 	[C h1¹ a¹]: 44
+//│ 	[N]: 74
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((idxSum₀ 0) ((rev₀ [N]) (fun a² -> a²)))
+//│ ((idxSum₀ 0) ((rev₀ (fun i² -> 0)) (fun a² -> a²)))
 //│ def idxSum₀ = 
-//│ 	(fun i² -> (fun xs² -> case xs² of {
-//│ 		C h¹ t¹ => ((add⁰ i²) ((idxSum₀ ((add⁰ i²) 1)) t¹))
-//│ 		| N => 0}))
+//│ 	(fun i³ -> (fun xs² -> (xs² i³)))
 //│ def rev₀ = 
 //│ 	(fun a³ -> (fun ys² -> (ys² a³)))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ 0
+//│ <<<<<<< evaluate <<<<<<<
 
 
 
 // WRONG:
 // _LUMBERHACK_ERROR
+_LUMBERHACK_EVAL
 fun count(xs) = if xs is
   C(h, t) then add(1, count(t))
   N then 0
@@ -334,8 +378,8 @@ fun rev(a, ys) = if ys is
   N then a
 fun init = N
 count(rev(N, init))
-//│ |#fun| |count|(|xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |add|(|1|,| |count|(|t|)|)|↵|N| |#then| |0|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|#fun| |init| |#=| |N|↵|count|(|rev|(|N|,| |init|)|)|
-//│ Parsed: {fun count = xs, => if xs is ‹(C (h, t,)) then add (1, count (t,),); (N) then 0›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; fun init = N; count (rev (N, init,),)}
+//│ |_LUMBERHACK_EVAL|↵|#fun| |count|(|xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |add|(|1|,| |count|(|t|)|)|↵|N| |#then| |0|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h1|,| |t1|)| |#then| |rev|(|C|(|h1|,| |a|)|,| |t1|)|↵|N| |#then| |a|←|↵|#fun| |init| |#=| |N|↵|count|(|rev|(|N|,| |init|)|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun count = xs, => if xs is ‹(C (h, t,)) then add (1, count (t,),); (N) then 0›; fun rev = a, ys, => if ys is ‹(C (h1, t1,)) then rev (C (h1, a,), t1,); (N) then a›; fun init = N; count (rev (N, init,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ (count^25 ((rev^26 [N]) init^29))
 //│ def count = (fun xs⁰ -> case xs⁰ of {
@@ -374,7 +418,6 @@ count(rev(N, init))
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 53
 //│ [C h1¹ a¹]: 48 --->
 //│ 	case xs¹ of {C h¹ t¹ => ((add⁰ 1) (count₀ t¹)) | N => 0}: 41
-//│ 	'53_matchres
 //│ [N]: 58 --->
 //│ 	case xs¹ of {C h¹ t¹ => ((add⁰ 1) (count₀ t¹)) | N => 0}: 41
 //│ ------------------
@@ -388,22 +431,31 @@ count(rev(N, init))
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [N]: 43 --->
 //│ 	case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 53
+//│ [C h1¹ a¹]: 48 --->
+//│ 	case xs¹ of {C h¹ t¹ => ((add⁰ 1) (count₀ t¹)) | N => 0}: 41
+//│ [N]: 58 --->
+//│ 	case xs¹ of {C h¹ t¹ => ((add⁰ 1) (count₀ t¹)) | N => 0}: 41
 //│ ------------------
+//│ case xs¹ of {C h¹ t¹ => ((add⁰ 1) (count₀ t¹)) | N => 0}: 41 --->
+//│ 	[C h1¹ a¹]: 48
+//│ 	[N]: 58
 //│ case ys¹ of {C h1¹ t1¹ => ((rev₀ [C h1¹ a¹]) t1¹) | N => a¹}: 53 --->
 //│ 	[N]: 43
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (count₀ ((rev₀ [N]) init₀))
+//│ (count₀ ((rev₀ 0) init₀))
 //│ def count₀ = 
-//│ 	(fun xs² -> case xs² of {
-//│ 		C h¹ t¹ => ((add⁰ 1) (count₀ t¹))
-//│ 		| N => 0})
+//│ 	(fun xs² -> xs²)
 //│ def init₀ = 
 //│ 	(fun a² -> a²)
 //│ def rev₀ = 
 //│ 	(fun a³ -> (fun ys² -> (ys² a³)))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ 0
+//│ <<<<<<< evaluate <<<<<<<
 
 
 // WRONG:

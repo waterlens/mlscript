@@ -84,6 +84,45 @@ count(0, rev(N, N))
 //│ >>>>>>> evaluate >>>>>>>
 //│ 0
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [count₀^1] (hopeless to continue)
+//│ [rev₀^4] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((count₀₀ 0) ((rev₀₀ (fun c³ -> c³)) (fun a³ -> a³)))
+//│ def count₀₀ = 
+//│ 	(fun c² -> (fun xs¹ -> (xs¹ c²)))
+//│ def rev₀₀ = 
+//│ 	(fun a² -> (fun ys¹ -> (ys¹ a²)))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((count₀₀ 0) ((rev₀₀ (fun c⁴ -> c⁴)) (fun a⁴ -> a⁴)))
+//│ def count₀₀ = 
+//│ 	(fun c⁵ -> (fun xs² -> (xs² c⁵)))
+//│ def rev₀₀ = 
+//│ 	(fun a⁵ -> (fun ys² -> (ys² a⁵)))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ 0
+//│ <<<<<<< evaluate <<<<<<<
 
 // NOTE: new way to push in?
 _LUMBERHACK_EVAL
@@ -186,6 +225,67 @@ count(0, rev(C(1, C(2, N)), N))
 //│ >>>>>>> evaluate >>>>>>>
 //│ 2
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [count₀^1] (hopeless to continue)
+//│ [count₀^21] (hopeless to continue)
+//│ [count₀^9] (hopeless to continue)
+//│ [rev₀^4] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((count₀₀ 0) ((rev₀₀ 
+//│ 	let h² = 1
+//│ 	in let t² = 	
+//│ 		let h³ = 2
+//│ 		in let t³ = (fun c⁷ -> c⁷)
+//│ 		in (fun c⁸ -> ((count₀₂ (c⁸ + 1)) t³))
+//│ 	in (fun c⁹ -> ((count₀₁ (c⁹ + 1)) t²))) (fun a³ -> a³)))
+//│ def count₀₀ = 
+//│ 	(fun c⁵ -> (fun xs² -> (xs² c⁵)))
+//│ def count₀₁ = 
+//│ 	(fun c⁶ -> (fun xs³ -> (xs³ c⁶)))
+//│ def count₀₂ = 
+//│ 	(fun c⁴ -> (fun xs¹ -> (xs¹ c⁴)))
+//│ def rev₀₀ = 
+//│ 	(fun a² -> (fun ys¹ -> (ys¹ a²)))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((count₀₀ 0) ((rev₀₀ 
+//│ 	let h² = 1
+//│ 	in let t² = 	
+//│ 		let h³ = 2
+//│ 		in let t³ = (fun c¹⁰ -> c¹⁰)
+//│ 		in (fun c¹¹ -> ((count₀₂ (c¹¹ + 1)) t³))
+//│ 	in (fun c¹² -> ((count₀₁ (c¹² + 1)) t²))) (fun a⁴ -> a⁴)))
+//│ def count₀₀ = 
+//│ 	(fun c¹⁴ -> (fun xs⁵ -> (xs⁵ c¹⁴)))
+//│ def count₀₁ = 
+//│ 	(fun c¹⁵ -> (fun xs⁶ -> (xs⁶ c¹⁵)))
+//│ def count₀₂ = 
+//│ 	(fun c¹³ -> (fun xs⁴ -> (xs⁴ c¹³)))
+//│ def rev₀₀ = 
+//│ 	(fun a⁵ -> (fun ys² -> (ys² a⁵)))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ 2
+//│ <<<<<<< evaluate <<<<<<<
 
 
 // WRONG:
@@ -278,6 +378,50 @@ count(rev(N, init))(0)
 //│ >>>>>>> evaluate >>>>>>>
 //│ 0
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [count₀^1] (hopeless to continue)
+//│ [init₀^6] (hopeless to continue)
+//│ [rev₀^2] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((count₀₀ ((rev₀₀ (fun c¹ -> c¹)) init₀₀)) 0)
+//│ def count₀₀ = 
+//│ 	(fun xs¹ -> xs¹)
+//│ def init₀₀ = 
+//│ 	(fun a³ -> a³)
+//│ def rev₀₀ = 
+//│ 	(fun a² -> (fun ys¹ -> (ys¹ a²)))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((count₀₀ ((rev₀₀ (fun c² -> c²)) init₀₀)) 0)
+//│ def count₀₀ = 
+//│ 	(fun xs² -> xs²)
+//│ def init₀₀ = 
+//│ 	(fun a⁵ -> a⁵)
+//│ def rev₀₀ = 
+//│ 	(fun a⁴ -> (fun ys² -> (ys² a⁴)))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ 0
+//│ <<<<<<< evaluate <<<<<<<
 
 
 // WRONG:
@@ -359,6 +503,45 @@ idxSum(0, rev(N, N))
 //│ 	(fun i³ -> (fun xs² -> (xs² i³)))
 //│ def rev₀ = 
 //│ 	(fun a³ -> (fun ys² -> (ys² a³)))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ 0
+//│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [idxSum₀^1] (hopeless to continue)
+//│ [rev₀^4] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((idxSum₀₀ 0) ((rev₀₀ (fun i³ -> 0)) (fun a³ -> a³)))
+//│ def idxSum₀₀ = 
+//│ 	(fun i² -> (fun xs¹ -> (xs¹ i²)))
+//│ def rev₀₀ = 
+//│ 	(fun a² -> (fun ys¹ -> (ys¹ a²)))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((idxSum₀₀ 0) ((rev₀₀ (fun i⁴ -> 0)) (fun a⁴ -> a⁴)))
+//│ def idxSum₀₀ = 
+//│ 	(fun i⁵ -> (fun xs² -> (xs² i⁵)))
+//│ def rev₀₀ = 
+//│ 	(fun a⁵ -> (fun ys² -> (ys² a⁵)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -456,6 +639,50 @@ count(rev(N, init))
 //│ >>>>>>> evaluate >>>>>>>
 //│ 0
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [count₀^1] (hopeless to continue)
+//│ [init₀^5] (hopeless to continue)
+//│ [rev₀^2] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (count₀₀ ((rev₀₀ 0) init₀₀))
+//│ def count₀₀ = 
+//│ 	(fun xs¹ -> xs¹)
+//│ def init₀₀ = 
+//│ 	(fun a³ -> a³)
+//│ def rev₀₀ = 
+//│ 	(fun a² -> (fun ys¹ -> (ys¹ a²)))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (count₀₀ ((rev₀₀ 0) init₀₀))
+//│ def count₀₀ = 
+//│ 	(fun xs² -> xs²)
+//│ def init₀₀ = 
+//│ 	(fun a⁵ -> a⁵)
+//│ def rev₀₀ = 
+//│ 	(fun a⁴ -> (fun ys² -> (ys² a⁴)))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ 0
+//│ <<<<<<< evaluate <<<<<<<
 
 
 // WRONG:
@@ -517,6 +744,53 @@ rev(N, init)
 //│ def rev₀ = 
 //│ 	(fun a³ -> (fun ys² -> (ys² a³)))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [init₀^4] (hopeless to continue)
+//│ 	[init₀^4 · init₀^7] ---> [init₀^4] (using original def)
+//│ 	[init₀^4 · rev₀^8] (using original def)
+//│ [rev₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((rev₀₁ [N]) init₀₀)
+//│ def init₀₀ = 
+//│ 	let h1¹ = 0
+//│ 	in let t1¹ = init₀₀
+//│ 	in (fun a² -> ((rev₀₀ [C h1¹ a²]) t1¹))
+//│ 	where
+//│ 	def rev₀₀ = 
+//│ 		(fun a³ -> (fun ys¹ -> (ys¹ a³)))
+//│ def rev₀₁ = 
+//│ 	(fun a⁴ -> (fun ys² -> (ys² a⁴)))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((rev₀₁ [N]) init₀₀)
+//│ def init₀₀ = 
+//│ 	let h1¹ = 0
+//│ 	in let t1¹ = init₀₀
+//│ 	in (fun a⁵ -> ((rev₀₀ [C h1¹ a⁵]) t1¹))
+//│ 	where
+//│ 	def rev₀₀ = 
+//│ 		(fun a⁶ -> (fun ys³ -> (ys³ a⁶)))
+//│ def rev₀₁ = 
+//│ 	(fun a⁷ -> (fun ys⁴ -> (ys⁴ a⁷)))
+//│ <<<<<<< after fusion <<<<<<<
 
 // WRONG:
 // _LUMBERHACK_ERROR
@@ -573,6 +847,53 @@ rev(N, init)
 //│ 	in (fun a² -> ((rev₀ [C h1² a²]) t1²))
 //│ def rev₀ = 
 //│ 	(fun a³ -> (fun ys² -> (ys² a³)))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [init₀^4] (hopeless to continue)
+//│ 	[init₀^4 · init₀^7] ---> [init₀^4] (using original def)
+//│ 	[init₀^4 · rev₀^8] (using original def)
+//│ [rev₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((rev₀₁ [N]) init₀₀)
+//│ def init₀₀ = 
+//│ 	let h1¹ = 0
+//│ 	in let t1¹ = init₀₀
+//│ 	in (fun a² -> ((rev₀₀ [C h1¹ a²]) t1¹))
+//│ 	where
+//│ 	def rev₀₀ = 
+//│ 		(fun a³ -> (fun ys¹ -> (ys¹ a³)))
+//│ def rev₀₁ = 
+//│ 	(fun a⁴ -> (fun ys² -> (ys² a⁴)))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((rev₀₁ [N]) init₀₀)
+//│ def init₀₀ = 
+//│ 	let h1¹ = 0
+//│ 	in let t1¹ = init₀₀
+//│ 	in (fun a⁵ -> ((rev₀₀ [C h1¹ a⁵]) t1¹))
+//│ 	where
+//│ 	def rev₀₀ = 
+//│ 		(fun a⁶ -> (fun ys³ -> (ys³ a⁶)))
+//│ def rev₀₁ = 
+//│ 	(fun a⁷ -> (fun ys⁴ -> (ys⁴ a⁷)))
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -667,4 +988,73 @@ rev(rev2, init)(1, init2)
 //│ 	(fun a2³ -> (fun ys2² -> (ys2² a2³)))
 //│ def rev₀ = 
 //│ 	(fun a³ -> (fun ys² -> (ys² a³)))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [init2₀^8] (hopeless to continue)
+//│ 	[init2₀^8 · init2₀^11] ---> [init2₀^8] (using original def)
+//│ 	[init2₀^8 · rev2₀^12] (using original def)
+//│ [init₀^4] (hopeless to continue)
+//│ 	[init₀^4 · init₀^21] ---> [init₀^4] (using original def)
+//│ 	[init₀^4 · rev₀^22] (using original def)
+//│ [rev2₀^2] (hopeless to continue)
+//│ [rev₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((((rev₀₁ rev2₀₁) init₀₀) 1) init2₀₀)
+//│ def init2₀₀ = 
+//│ 	let h12¹ = 0
+//│ 	in let t12¹ = init2₀₀
+//│ 	in (fun a2³ -> ((rev2₀₀ a2³) t12¹))
+//│ 	where
+//│ 	def rev2₀₀ = 
+//│ 		(fun a2² -> (fun ys2¹ -> (ys2¹ a2²)))
+//│ def init₀₀ = 
+//│ 	let h1¹ = 0
+//│ 	in let t1¹ = init₀₀
+//│ 	in (fun a² -> ((rev₀₀ a²) t1¹))
+//│ 	where
+//│ 	def rev₀₀ = 
+//│ 		(fun a³ -> (fun ys¹ -> (ys¹ a³)))
+//│ def rev2₀₁ = 
+//│ 	(fun a2⁴ -> (fun ys2² -> (ys2² a2⁴)))
+//│ def rev₀₁ = 
+//│ 	(fun a⁴ -> (fun ys² -> (ys² a⁴)))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((((rev₀₁ rev2₀₁) init₀₀) 1) init2₀₀)
+//│ def init2₀₀ = 
+//│ 	let h12¹ = 0
+//│ 	in let t12¹ = init2₀₀
+//│ 	in (fun a2⁷ -> ((rev2₀₀ a2⁷) t12¹))
+//│ 	where
+//│ 	def rev2₀₀ = 
+//│ 		(fun a2⁶ -> (fun ys2⁴ -> (ys2⁴ a2⁶)))
+//│ def init₀₀ = 
+//│ 	let h1¹ = 0
+//│ 	in let t1¹ = init₀₀
+//│ 	in (fun a⁵ -> ((rev₀₀ a⁵) t1¹))
+//│ 	where
+//│ 	def rev₀₀ = 
+//│ 		(fun a⁶ -> (fun ys³ -> (ys³ a⁶)))
+//│ def rev2₀₁ = 
+//│ 	(fun a2⁵ -> (fun ys2³ -> (ys2³ a2⁵)))
+//│ def rev₀₁ = 
+//│ 	(fun a⁷ -> (fun ys⁴ -> (ys⁴ a⁷)))
 //│ <<<<<<< after fusion <<<<<<<

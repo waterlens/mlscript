@@ -216,8 +216,9 @@ class DiffTestLumberhack extends DiffTests {
       
       d(originalProgram)
       d.resolveConstraints
-      val (expandedP, expandedD, callTree) = expander(using originalProgram, d, mode, output)
-      val (fusedP, fusedD, stop) = fuser(using expandedP, expandedD, callTree, mode, evaluate, output)
+      keepFuse(originalProgram, d, mode, evaluate, output)
+      // val (expandedP, expandedD, callTree) = expander(using originalProgram, d, mode, output)
+      // val (fusedP, fusedD, stop) = fuser(using expandedP, expandedD, callTree, mode, evaluate, output)
       // fusedD(fusedP)
       // fusedD.resolveConstraints
       // output(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
@@ -241,6 +242,21 @@ class DiffTestLumberhack extends DiffTests {
     validExt(file.ext) && ((modified.isEmpty || modified(file.relativeTo(pwd))) || lumberhackLocalTest(fileName))
   }
 
+  def keepFuse(p: Program,
+    d: Deforest,
+    mode: ModeType,
+    evaluate: Boolean,
+    output: Str => Unit,
+    count: Int = 0,
+  ): (Program, Deforest) = {
+    val (expandedP, expandedD, callTree) = expander(using p, d, mode, output)
+    val (fusedP, fusedD, stop) = fuser(using expandedP, expandedD, callTree, mode, evaluate, output)
+    if (stop || count > 10) then
+      (fusedP, fusedD)
+    else
+      output("\n~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~")
+      keepFuse(fusedP, fusedD, mode, evaluate, output, count + 1)
+  }
 
   def expander(
     using p: Program,

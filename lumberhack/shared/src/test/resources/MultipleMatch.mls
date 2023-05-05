@@ -63,6 +63,36 @@ f(a => if (if a is
 //│ def f₀ = 
 //│ 	(fun c² -> [P (c² 0) (c² 0)])
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀₀ (fun a¹ -> a¹))
+//│ def f₀₀ = 
+//│ 	(fun c¹ -> [P (c¹ 0) (c¹ 0)])
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀₀ (fun a² -> a²))
+//│ def f₀₀ = 
+//│ 	(fun c² -> [P (c² 0) (c² 0)])
+//│ <<<<<<< after fusion <<<<<<<
 
 
 // CORRECT:
@@ -116,6 +146,36 @@ f(a => if a is
 //│ >>>>>>> after fusion >>>>>>>
 //│ (f₀ (fun a² -> a²))
 //│ def f₀ = 
+//│ 	(fun c² -> [P (c² [B]) (c² [C])])
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀₀ (fun a¹ -> a¹))
+//│ def f₀₀ = 
+//│ 	(fun c¹ -> [P (c¹ [B]) (c¹ [C])])
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀₀ (fun a² -> a²))
+//│ def f₀₀ = 
 //│ 	(fun c² -> [P (c² [B]) (c² [C])])
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -320,6 +380,36 @@ f(a => if (if a is
 //│ def f₀ = 
 //│ 	(fun c² -> [P (c² 0) (c² 1)])
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀₀ (fun a¹ -> a¹))
+//│ def f₀₀ = 
+//│ 	(fun c¹ -> [P (c¹ 0) (c¹ 1)])
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀₀ (fun a² -> a²))
+//│ def f₀₀ = 
+//│ 	(fun c² -> [P (c² 0) (c² 1)])
+//│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT:
 // NOTE: as long as X or Y appears, it will do the fusion correctly
@@ -401,6 +491,36 @@ f(a => if (if a is
 //│ def f₀ = 
 //│ 	(fun c² -> [P (c² 0) (c² if (1 > 2) then 0 else 1)])
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀₀ (fun a¹ -> a¹))
+//│ def f₀₀ = 
+//│ 	(fun c¹ -> [P (c¹ 0) (c¹ if (1 > 2) then 0 else 1)])
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀₀ (fun a² -> a²))
+//│ def f₀₀ = 
+//│ 	(fun c² -> [P (c² 0) (c² if (1 > 2) then 0 else 1)])
+//│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: after the detection and elimination of multiple matches
 // NOTE: but maybe can be further fused by the idea below
@@ -477,6 +597,43 @@ f(a => if (if a is
 //│ 	X => 0
 //│ 	| Y => 1}))
 //│ def f₀ = 
+//│ 	(fun c² -> [P (c² [X]) (c² primitive⁰)])
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (f₀₀ (fun a¹ -> case a¹ of {
+//│ 	X => 0
+//│ 	| Y => 1}))
+//│ def f₀₀ = 
+//│ 	(fun c¹ -> [P (c¹ [X]) (c¹ primitive⁰)])
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [X]: 17 --->
+//│ 	case a¹ of {X => 0 | Y => 1}: 28
+//│ ------------------
+//│ case a¹ of {X => 0 | Y => 1}: 28 --->
+//│ 	[X]: 17
+//│ 	NoProd
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (f₀₀ (fun a² -> case a² of {
+//│ 	X => 0
+//│ 	| Y => 1}))
+//│ def f₀₀ = 
 //│ 	(fun c² -> [P (c² [X]) (c² primitive⁰)])
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -634,6 +791,36 @@ f(A)(C(K))
 //│ 	def g₀ = 
 //│ 		(fun y⁴ -> case y⁴ of {
 //│ 			C y³ => y⁴})
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((f₀₀ (fun x¹ -> x¹)) [C [K]])
+//│ def f₀₀ = 
+//│ 	(fun cond¹ -> cond¹)
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((f₀₀ (fun x² -> x²)) [C [K]])
+//│ def f₀₀ = 
+//│ 	(fun cond² -> cond²)
 //│ <<<<<<< after fusion <<<<<<<
 
 

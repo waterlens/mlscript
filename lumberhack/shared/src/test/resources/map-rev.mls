@@ -583,3 +583,444 @@ map(rev(C(A, C(AA, N)))(N))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C [BB] [C [B] [N]]]
 //│ <<<<<<< evaluate <<<<<<<
+
+_LUMBERHACK_EVAL
+fun map(xs, f) = if xs is
+  C(h, t) then C(f(h), map(t, f))
+  N then N
+fun rev(a, ys) = if ys is
+  C(h, t) then rev(C(h, a), t)
+  N then a
+fun ff(x) = if x is
+  A then AA
+  B then BB
+map(rev(N, C(A, C(B, N))), ff)
+//│ |_LUMBERHACK_EVAL|↵|#fun| |map|(|xs|,| |f|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|t|,| |f|)|)|↵|N| |#then| |N|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h|,| |t|)| |#then| |rev|(|C|(|h|,| |a|)|,| |t|)|↵|N| |#then| |a|←|↵|#fun| |ff|(|x|)| |#=| |#if| |x| |is|→|A| |#then| |AA|↵|B| |#then| |BB|←|↵|map|(|rev|(|N|,| |C|(|A|,| |C|(|B|,| |N|)|)|)|,| |ff|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun map = xs, f, => if xs is ‹(C (h, t,)) then C (f (h,), map (t, f,),); (N) then N›; fun rev = a, ys, => if ys is ‹(C (h, t,)) then rev (C (h, a,), t,); (N) then a›; fun ff = x, => if x is ‹(A) then AA; (B) then BB›; map (rev (N, C (A, C (B, N,),),), ff,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ ((map^32 ((rev^33 [N]) [C [A] [C [B] [N]]])) ff^43)
+//│ def ff = (fun x⁰ -> case x⁰ of {
+//│ 	A => [AA]
+//│ 	| B => [BB]})
+//│ def map = (fun xs⁰ -> (fun f⁰ -> case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C (f⁰ h⁰) ((map^5 t⁰) f⁰)]
+//│ 	| N => [N]}))
+//│ def rev = (fun a⁰ -> (fun ys⁰ -> case ys⁰ of {
+//│ 	C h¹ t¹ => ((rev^16 [C h¹ a⁰]) t¹)
+//│ 	| N => a⁰}))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [ff^43] (hopeless to continue)
+//│ [map^32] (hopeless to continue)
+//│ 	[map^32 · map^5] ---> [map^32] (using original def)
+//│ [rev^33] (hopeless to continue)
+//│ 	[rev^33 · rev^16] ---> [rev^33] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((map₀ ((rev₀ [N]) [C [A] [C [B] [N]]])) ff₀)
+//│ def ff₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		A => [AA]
+//│ 		| B => [BB]})
+//│ def map₀ = 
+//│ 	(fun xs¹ -> (fun f¹ -> case xs¹ of {
+//│ 		C h² t² => [C (f¹ h²) ((map₀ t²) f¹)]
+//│ 		| N => [N]}))
+//│ def rev₀ = 
+//│ 	(fun a¹ -> (fun ys¹ -> case ys¹ of {
+//│ 		C h³ t³ => ((rev₀ [C h³ a¹]) t³)
+//│ 		| N => a¹}))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C h³ a¹]: 68 --->
+//│ 	case xs¹ of {C h² t² => [C (f¹ h²) ((map₀ t²) f¹)] | N => [N]}: 61
+//│ [N]: 78 --->
+//│ 	case xs¹ of {C h² t² => [C (f¹ h²) ((map₀ t²) f¹)] | N => [N]}: 61
+//│ [A]: 80 --->
+//│ 	case x¹ of {A => [AA] | B => [BB]}: 48
+//│ [B]: 81 --->
+//│ 	case x¹ of {A => [AA] | B => [BB]}: 48
+//│ [N]: 82 --->
+//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 73
+//│ [C [B] [N]]: 83 --->
+//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 73
+//│ [C [A] [C [B] [N]]]: 84 --->
+//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 73
+//│ ------------------
+//│ case x¹ of {A => [AA] | B => [BB]}: 48 --->
+//│ 	[A]: 80
+//│ 	[B]: 81
+//│ case xs¹ of {C h² t² => [C (f¹ h²) ((map₀ t²) f¹)] | N => [N]}: 61 --->
+//│ 	[C h³ a¹]: 68
+//│ 	[N]: 78
+//│ case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 73 --->
+//│ 	[N]: 82
+//│ 	[C [B] [N]]: 83
+//│ 	[C [A] [C [B] [N]]]: 84
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C h³ a¹]: 68 --->
+//│ 	case xs¹ of {C h² t² => [C (f¹ h²) ((map₀ t²) f¹)] | N => [N]}: 61
+//│ [N]: 78 --->
+//│ 	case xs¹ of {C h² t² => [C (f¹ h²) ((map₀ t²) f¹)] | N => [N]}: 61
+//│ [A]: 80 --->
+//│ 	case x¹ of {A => [AA] | B => [BB]}: 48
+//│ [B]: 81 --->
+//│ 	case x¹ of {A => [AA] | B => [BB]}: 48
+//│ [N]: 82 --->
+//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 73
+//│ [C [B] [N]]: 83 --->
+//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 73
+//│ [C [A] [C [B] [N]]]: 84 --->
+//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 73
+//│ ------------------
+//│ case x¹ of {A => [AA] | B => [BB]}: 48 --->
+//│ 	[A]: 80
+//│ 	[B]: 81
+//│ case xs¹ of {C h² t² => [C (f¹ h²) ((map₀ t²) f¹)] | N => [N]}: 61 --->
+//│ 	[C h³ a¹]: 68
+//│ 	[N]: 78
+//│ case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 73 --->
+//│ 	[N]: 82
+//│ 	[C [B] [N]]: 83
+//│ 	[C [A] [C [B] [N]]]: 84
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((map₀ ((rev₀ (fun f² -> [N])) 
+//│ 	let h⁴ = [AA]
+//│ 	in let t⁴ = 	
+//│ 		let h⁶ = [BB]
+//│ 		in let t⁶ = (fun a⁴ -> a⁴)
+//│ 		in (fun a³ -> ((rev₀ 
+//│ 			let h⁷ = h⁶
+//│ 			in let t⁷ = a³
+//│ 			in (fun f⁴ -> [C (f⁴ h⁷) ((map₀ t⁷) f⁴)])) t⁶))
+//│ 	in (fun a² -> ((rev₀ 
+//│ 		let h⁵ = h⁴
+//│ 		in let t⁵ = a²
+//│ 		in (fun f³ -> [C (f³ h⁵) ((map₀ t⁵) f³)])) t⁴)))) ff₀)
+//│ def ff₀ = 
+//│ 	(fun x² -> x²)
+//│ def map₀ = 
+//│ 	(fun xs² -> (fun f⁵ -> (xs² f⁵)))
+//│ def rev₀ = 
+//│ 	(fun a⁵ -> (fun ys² -> (ys² a⁵)))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [C [BB] [C [AA] [N]]]
+//│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [ff₀^54] (hopeless to continue)
+//│ [map₀^16] (hopeless to continue)
+//│ [map₀^1] (hopeless to continue)
+//│ [map₀^37] (hopeless to continue)
+//│ [rev₀^10] (hopeless to continue)
+//│ [rev₀^2] (hopeless to continue)
+//│ [rev₀^31] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((map₀₁ ((rev₀₁ (fun f⁷ -> [N])) 
+//│ 	let h⁴ = [AA]
+//│ 	in let t⁴ = 	
+//│ 		let h⁵ = [BB]
+//│ 		in let t⁵ = (fun a⁷ -> a⁷)
+//│ 		in (fun a⁸ -> ((rev₀₀ 
+//│ 			let h⁶ = h⁵
+//│ 			in let t⁶ = a⁸
+//│ 			in (fun f⁸ -> [C (f⁸ h⁶) ((map₀₀ t⁶) f⁸)])) t⁵))
+//│ 	in (fun a⁹ -> ((rev₀₂ 
+//│ 		let h⁷ = h⁴
+//│ 		in let t⁷ = a⁹
+//│ 		in (fun f⁹ -> [C (f⁹ h⁷) ((map₀₂ t⁷) f⁹)])) t⁴)))) ff₀₀)
+//│ def ff₀₀ = 
+//│ 	(fun x¹ -> x¹)
+//│ def map₀₀ = 
+//│ 	(fun xs² -> (fun f⁵ -> (xs² f⁵)))
+//│ def map₀₁ = 
+//│ 	(fun xs³ -> (fun f⁶ -> (xs³ f⁶)))
+//│ def map₀₂ = 
+//│ 	(fun xs¹ -> (fun f⁴ -> (xs¹ f⁴)))
+//│ def rev₀₀ = 
+//│ 	(fun a⁵ -> (fun ys² -> (ys² a⁵)))
+//│ def rev₀₁ = 
+//│ 	(fun a⁶ -> (fun ys³ -> (ys³ a⁶)))
+//│ def rev₀₂ = 
+//│ 	(fun a⁴ -> (fun ys¹ -> (ys¹ a⁴)))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((map₀₁ ((rev₀₁ (fun f¹⁰ -> [N])) 
+//│ 	let h⁴ = [AA]
+//│ 	in let t⁴ = 	
+//│ 		let h⁵ = [BB]
+//│ 		in let t⁵ = (fun a¹⁰ -> a¹⁰)
+//│ 		in (fun a¹¹ -> ((rev₀₀ 
+//│ 			let h⁶ = h⁵
+//│ 			in let t⁶ = a¹¹
+//│ 			in (fun f¹¹ -> [C (f¹¹ h⁶) ((map₀₀ t⁶) f¹¹)])) t⁵))
+//│ 	in (fun a¹² -> ((rev₀₂ 
+//│ 		let h⁷ = h⁴
+//│ 		in let t⁷ = a¹²
+//│ 		in (fun f¹² -> [C (f¹² h⁷) ((map₀₂ t⁷) f¹²)])) t⁴)))) ff₀₀)
+//│ def ff₀₀ = 
+//│ 	(fun x² -> x²)
+//│ def map₀₀ = 
+//│ 	(fun xs⁴ -> (fun f¹³ -> (xs⁴ f¹³)))
+//│ def map₀₁ = 
+//│ 	(fun xs⁶ -> (fun f¹⁵ -> (xs⁶ f¹⁵)))
+//│ def map₀₂ = 
+//│ 	(fun xs⁵ -> (fun f¹⁴ -> (xs⁵ f¹⁴)))
+//│ def rev₀₀ = 
+//│ 	(fun a¹⁴ -> (fun ys⁵ -> (ys⁵ a¹⁴)))
+//│ def rev₀₁ = 
+//│ 	(fun a¹⁵ -> (fun ys⁶ -> (ys⁶ a¹⁵)))
+//│ def rev₀₂ = 
+//│ 	(fun a¹³ -> (fun ys⁴ -> (ys⁴ a¹³)))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [C [BB] [C [AA] [N]]]
+//│ <<<<<<< evaluate <<<<<<<
+
+_LUMBERHACK_EVAL
+fun map(xs, f) = if xs is
+  C(h, t) then C(f(h), map(t, f))
+  N then N
+fun rev(a, ys) = if ys is
+  C(h, t) then rev(C(h, a), t)
+  N then a
+fun ff(x) = if x is
+  A then AA
+  B then BB
+rev(N, map(C(A, C(B, N)), ff))
+//│ |_LUMBERHACK_EVAL|↵|#fun| |map|(|xs|,| |f|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|t|,| |f|)|)|↵|N| |#then| |N|←|↵|#fun| |rev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h|,| |t|)| |#then| |rev|(|C|(|h|,| |a|)|,| |t|)|↵|N| |#then| |a|←|↵|#fun| |ff|(|x|)| |#=| |#if| |x| |is|→|A| |#then| |AA|↵|B| |#then| |BB|←|↵|rev|(|N|,| |map|(|C|(|A|,| |C|(|B|,| |N|)|)|,| |ff|)|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun map = xs, f, => if xs is ‹(C (h, t,)) then C (f (h,), map (t, f,),); (N) then N›; fun rev = a, ys, => if ys is ‹(C (h, t,)) then rev (C (h, a,), t,); (N) then a›; fun ff = x, => if x is ‹(A) then AA; (B) then BB›; rev (N, map (C (A, C (B, N,),), ff,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ ((rev^32 [N]) ((map^35 [C [A] [C [B] [N]]]) ff^42))
+//│ def ff = (fun x⁰ -> case x⁰ of {
+//│ 	A => [AA]
+//│ 	| B => [BB]})
+//│ def map = (fun xs⁰ -> (fun f⁰ -> case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C (f⁰ h⁰) ((map^5 t⁰) f⁰)]
+//│ 	| N => [N]}))
+//│ def rev = (fun a⁰ -> (fun ys⁰ -> case ys⁰ of {
+//│ 	C h¹ t¹ => ((rev^16 [C h¹ a⁰]) t¹)
+//│ 	| N => a⁰}))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [ff^42] (hopeless to continue)
+//│ [map^35]
+//│ 	[map^35 · map^5] ---> [map^35] (only one)
+//│ [rev^32]
+//│ 	[rev^32 · rev^16] ---> [rev^32] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((rev₀ [N]) ((map₀ [C [A] [C [B] [N]]]) ff₀))
+//│ def ff₀ = 
+//│ 	(fun x¹ -> case x¹ of {
+//│ 		A => [AA]
+//│ 		| B => [BB]})
+//│ def map₀ = 
+//│ 	(fun xs¹ -> (fun f¹ -> case xs¹ of {
+//│ 		C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)]
+//│ 		| N => [N]}))
+//│ def rev₀ = 
+//│ 	(fun a¹ -> (fun ys¹ -> case ys¹ of {
+//│ 		C h² t² => ((rev₀ [C h² a¹]) t²)
+//│ 		| N => a¹}))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C (f¹ h³) ((map₀ t³) f¹)]: 66 --->
+//│ 	case ys¹ of {C h² t² => ((rev₀ [C h² a¹]) t²) | N => a¹}: 54
+//│ [N]: 67 --->
+//│ 	case ys¹ of {C h² t² => ((rev₀ [C h² a¹]) t²) | N => a¹}: 54
+//│ [A]: 80 --->
+//│ 	case x¹ of {A => [AA] | B => [BB]}: 74
+//│ [B]: 81 --->
+//│ 	case x¹ of {A => [AA] | B => [BB]}: 74
+//│ [N]: 82 --->
+//│ 	case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N => [N]}: 68
+//│ [C [B] [N]]: 83 --->
+//│ 	case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N => [N]}: 68
+//│ [C [A] [C [B] [N]]]: 84 --->
+//│ 	case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N => [N]}: 68
+//│ ------------------
+//│ case ys¹ of {C h² t² => ((rev₀ [C h² a¹]) t²) | N => a¹}: 54 --->
+//│ 	[C (f¹ h³) ((map₀ t³) f¹)]: 66
+//│ 	[N]: 67
+//│ case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N => [N]}: 68 --->
+//│ 	[N]: 82
+//│ 	[C [B] [N]]: 83
+//│ 	[C [A] [C [B] [N]]]: 84
+//│ case x¹ of {A => [AA] | B => [BB]}: 74 --->
+//│ 	[A]: 80
+//│ 	[B]: 81
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C (f¹ h³) ((map₀ t³) f¹)]: 66 --->
+//│ 	case ys¹ of {C h² t² => ((rev₀ [C h² a¹]) t²) | N => a¹}: 54
+//│ [N]: 67 --->
+//│ 	case ys¹ of {C h² t² => ((rev₀ [C h² a¹]) t²) | N => a¹}: 54
+//│ [A]: 80 --->
+//│ 	case x¹ of {A => [AA] | B => [BB]}: 74
+//│ [B]: 81 --->
+//│ 	case x¹ of {A => [AA] | B => [BB]}: 74
+//│ [N]: 82 --->
+//│ 	case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N => [N]}: 68
+//│ [C [B] [N]]: 83 --->
+//│ 	case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N => [N]}: 68
+//│ [C [A] [C [B] [N]]]: 84 --->
+//│ 	case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N => [N]}: 68
+//│ ------------------
+//│ case ys¹ of {C h² t² => ((rev₀ [C h² a¹]) t²) | N => a¹}: 54 --->
+//│ 	[C (f¹ h³) ((map₀ t³) f¹)]: 66
+//│ 	[N]: 67
+//│ case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N => [N]}: 68 --->
+//│ 	[N]: 82
+//│ 	[C [B] [N]]: 83
+//│ 	[C [A] [C [B] [N]]]: 84
+//│ case x¹ of {A => [AA] | B => [BB]}: 74 --->
+//│ 	[A]: 80
+//│ 	[B]: 81
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((rev₀ [N]) ((map₀ 
+//│ 	let h⁴ = [AA]
+//│ 	in let t⁴ = 	
+//│ 		let h⁶ = [BB]
+//│ 		in let t⁶ = (fun f⁴ -> (fun a⁴ -> a⁴))
+//│ 		in (fun f³ -> 
+//│ 			let h⁷ = (f³ h⁶)
+//│ 			in let t⁷ = ((map₀ t⁶) f³)
+//│ 			in (fun a³ -> ((rev₀ [C h⁷ a³]) t⁷)))
+//│ 	in (fun f² -> 
+//│ 		let h⁵ = (f² h⁴)
+//│ 		in let t⁵ = ((map₀ t⁴) f²)
+//│ 		in (fun a² -> ((rev₀ [C h⁵ a²]) t⁵)))) ff₀))
+//│ def ff₀ = 
+//│ 	(fun x² -> x²)
+//│ def map₀ = 
+//│ 	(fun xs² -> (fun f⁵ -> (xs² f⁵)))
+//│ def rev₀ = 
+//│ 	(fun a⁵ -> (fun ys² -> (ys² a⁵)))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [C [BB] [C [AA] [N]]]
+//│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [ff₀^53] (hopeless to continue)
+//│ [map₀^13] (hopeless to continue)
+//│ [map₀^34] (hopeless to continue)
+//│ [map₀^4] (hopeless to continue)
+//│ [rev₀^18] (hopeless to continue)
+//│ [rev₀^1] (hopeless to continue)
+//│ [rev₀^39] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((rev₀₁ [N]) ((map₀₂ 
+//│ 	let h⁴ = [AA]
+//│ 	in let t⁴ = 	
+//│ 		let h⁵ = [BB]
+//│ 		in let t⁵ = (fun f⁷ -> (fun a⁷ -> a⁷))
+//│ 		in (fun f⁸ -> 
+//│ 			let h⁶ = (f⁸ h⁵)
+//│ 			in let t⁶ = ((map₀₀ t⁵) f⁸)
+//│ 			in (fun a⁸ -> ((rev₀₀ [C h⁶ a⁸]) t⁶)))
+//│ 	in (fun f⁹ -> 
+//│ 		let h⁷ = (f⁹ h⁴)
+//│ 		in let t⁷ = ((map₀₁ t⁴) f⁹)
+//│ 		in (fun a⁹ -> ((rev₀₂ [C h⁷ a⁹]) t⁷)))) ff₀₀))
+//│ def ff₀₀ = 
+//│ 	(fun x¹ -> x¹)
+//│ def map₀₀ = 
+//│ 	(fun xs² -> (fun f⁵ -> (xs² f⁵)))
+//│ def map₀₁ = 
+//│ 	(fun xs³ -> (fun f⁶ -> (xs³ f⁶)))
+//│ def map₀₂ = 
+//│ 	(fun xs¹ -> (fun f⁴ -> (xs¹ f⁴)))
+//│ def rev₀₀ = 
+//│ 	(fun a⁴ -> (fun ys¹ -> (ys¹ a⁴)))
+//│ def rev₀₁ = 
+//│ 	(fun a⁵ -> (fun ys² -> (ys² a⁵)))
+//│ def rev₀₂ = 
+//│ 	(fun a⁶ -> (fun ys³ -> (ys³ a⁶)))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((rev₀₁ [N]) ((map₀₂ 
+//│ 	let h⁴ = [AA]
+//│ 	in let t⁴ = 	
+//│ 		let h⁵ = [BB]
+//│ 		in let t⁵ = (fun f¹⁰ -> (fun a¹⁰ -> a¹⁰))
+//│ 		in (fun f¹¹ -> 
+//│ 			let h⁶ = (f¹¹ h⁵)
+//│ 			in let t⁶ = ((map₀₀ t⁵) f¹¹)
+//│ 			in (fun a¹¹ -> ((rev₀₀ [C h⁶ a¹¹]) t⁶)))
+//│ 	in (fun f¹² -> 
+//│ 		let h⁷ = (f¹² h⁴)
+//│ 		in let t⁷ = ((map₀₁ t⁴) f¹²)
+//│ 		in (fun a¹² -> ((rev₀₂ [C h⁷ a¹²]) t⁷)))) ff₀₀))
+//│ def ff₀₀ = 
+//│ 	(fun x² -> x²)
+//│ def map₀₀ = 
+//│ 	(fun xs⁴ -> (fun f¹³ -> (xs⁴ f¹³)))
+//│ def map₀₁ = 
+//│ 	(fun xs⁶ -> (fun f¹⁵ -> (xs⁶ f¹⁵)))
+//│ def map₀₂ = 
+//│ 	(fun xs⁵ -> (fun f¹⁴ -> (xs⁵ f¹⁴)))
+//│ def rev₀₀ = 
+//│ 	(fun a¹⁴ -> (fun ys⁵ -> (ys⁵ a¹⁴)))
+//│ def rev₀₁ = 
+//│ 	(fun a¹⁵ -> (fun ys⁶ -> (ys⁶ a¹⁵)))
+//│ def rev₀₂ = 
+//│ 	(fun a¹³ -> (fun ys⁴ -> (ys⁴ a¹³)))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [C [BB] [C [AA] [N]]]
+//│ <<<<<<< evaluate <<<<<<<
+

@@ -4625,3 +4625,128 @@ last(C(1, C(2, C(3, N))))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [Some 1]
 //│ <<<<<<< evaluate <<<<<<<
+
+
+_LUMBERHACK_EVAL
+fun f(x) = if primitive(x) then A(x) else B(x + 1)
+fun g(scrut, y) = if scrut is
+  A(n) then y + n + 1
+  B(m) then y + m
+g(f(1), 2)
+//│ |_LUMBERHACK_EVAL|↵|#fun| |f|(|x|)| |#=| |#if| |primitive|(|x|)| |#then| |A|(|x|)| |#else| |B|(|x| |+| |1|)|↵|#fun| |g|(|scrut|,| |y|)| |#=| |#if| |scrut| |is|→|A|(|n|)| |#then| |y| |+| |n| |+| |1|↵|B|(|m|)| |#then| |y| |+| |m|←|↵|g|(|f|(|1|)|,| |2|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun f = x, => if (primitive (x,)) then A (x,) else B (+ (x,) (1,),); fun g = scrut, y, => if scrut is ‹(A (n,)) then + (+ (y,) (n,),) (1,); (B (m,)) then + (y,) (m,)›; g (f (1,), 2,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ ((g^32 (f^33 1)) 2)
+//│ def f = (fun x⁰ -> if (primitive⁰ x⁰) then [A x⁰] else [B (x⁰ + 1)])
+//│ def g = (fun scrut⁰ -> (fun y⁰ -> case scrut⁰ of {
+//│ 	A n⁰ => ((y⁰ + n⁰) + 1)
+//│ 	| B m⁰ => (y⁰ + m⁰)}))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^33] (hopeless to continue)
+//│ [g^32] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((g₀ (f₀ 1)) 2)
+//│ def f₀ = 
+//│ 	(fun x¹ -> if (primitive⁰ x¹) then [A x¹] else [B (x¹ + 1)])
+//│ def g₀ = 
+//│ 	(fun scrut¹ -> (fun y¹ -> case scrut¹ of {
+//│ 		A n¹ => ((y¹ + n¹) + 1)
+//│ 		| B m¹ => (y¹ + m¹)}))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [A x¹]: 61 --->
+//│ 	case scrut¹ of {A n¹ => ((y¹ + n¹) + 1) | B m¹ => (y¹ + m¹)}: 54
+//│ [B (x¹ + 1)]: 67 --->
+//│ 	case scrut¹ of {A n¹ => ((y¹ + n¹) + 1) | B m¹ => (y¹ + m¹)}: 54
+//│ ------------------
+//│ case scrut¹ of {A n¹ => ((y¹ + n¹) + 1) | B m¹ => (y¹ + m¹)}: 54 --->
+//│ 	[A x¹]: 61
+//│ 	[B (x¹ + 1)]: 67
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [A x¹]: 61 --->
+//│ 	case scrut¹ of {A n¹ => ((y¹ + n¹) + 1) | B m¹ => (y¹ + m¹)}: 54
+//│ [B (x¹ + 1)]: 67 --->
+//│ 	case scrut¹ of {A n¹ => ((y¹ + n¹) + 1) | B m¹ => (y¹ + m¹)}: 54
+//│ ------------------
+//│ case scrut¹ of {A n¹ => ((y¹ + n¹) + 1) | B m¹ => (y¹ + m¹)}: 54 --->
+//│ 	[A x¹]: 61
+//│ 	[B (x¹ + 1)]: 67
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((g₀ (f₀ 1)) 2)
+//│ def f₀ = 
+//│ 	(fun x² -> if (primitive⁰ x²) then 
+//│ 		let n² = x²
+//│ 		in (fun y³ -> ((y³ + n²) + 1)) else 
+//│ 		let m² = (x² + 1)
+//│ 		in (fun y⁴ -> (y⁴ + m²)))
+//│ def g₀ = 
+//│ 	(fun scrut² -> (fun y² -> (scrut² y²)))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ (if (primitive⁰ 1) then 
+//│ 	let n² = 1
+//│ 	in (fun y³ -> ((y³ + n²) + 1)) else 
+//│ 	let m² = (1 + 1)
+//│ 	in (fun y⁴ -> (y⁴ + m²)) 2)
+//│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀^2] (hopeless to continue)
+//│ [g₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((g₀₀ (f₀₀ 1)) 2)
+//│ def f₀₀ = 
+//│ 	(fun x¹ -> if (primitive⁰ x¹) then 
+//│ 		let n¹ = x¹
+//│ 		in (fun y⁴ -> ((y⁴ + n¹) + 1)) else 
+//│ 		let m¹ = (x¹ + 1)
+//│ 		in (fun y⁵ -> (y⁵ + m¹)))
+//│ def g₀₀ = 
+//│ 	(fun scrut¹ -> (fun y³ -> (scrut¹ y³)))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((g₀₀ (f₀₀ 1)) 2)
+//│ def f₀₀ = 
+//│ 	(fun x² -> if (primitive⁰ x²) then 
+//│ 		let n¹ = x²
+//│ 		in (fun y⁷ -> ((y⁷ + n¹) + 1)) else 
+//│ 		let m¹ = (x² + 1)
+//│ 		in (fun y⁸ -> (y⁸ + m¹)))
+//│ def g₀₀ = 
+//│ 	(fun scrut² -> (fun y⁶ -> (scrut² y⁶)))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ (if (primitive⁰ 1) then 
+//│ 	let n¹ = 1
+//│ 	in (fun y⁷ -> ((y⁷ + n¹) + 1)) else 
+//│ 	let m¹ = (1 + 1)
+//│ 	in (fun y⁸ -> (y⁸ + m¹)) 2)
+//│ <<<<<<< evaluate <<<<<<<

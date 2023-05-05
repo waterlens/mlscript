@@ -7,6 +7,7 @@ import mlscript.codegen.Helpers.inspect as showStructure
 import scala.collection.mutable.StringBuilder
 import mlscript.lumberhack.utils.PrettyPrintConfig
 import mlscript.lumberhack.utils.InitPpConfig
+import scala.collection.mutable.Buffer
 
 class DiffTestLumberhack extends DiffTests {
   import DiffTestLumberhack.*
@@ -249,13 +250,21 @@ class DiffTestLumberhack extends DiffTests {
     output: Str => Unit,
     count: Int = 0,
   ): (Program, Deforest) = {
-    val (expandedP, expandedD, callTree) = expander(using p, d, mode, output)
-    val (fusedP, fusedD, stop) = fuser(using expandedP, expandedD, callTree, mode, evaluate, output)
-    if (stop || count > 10) then
-      (fusedP, fusedD)
-    else
-      output("\n~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~")
-      keepFuse(fusedP, fusedD, mode, evaluate, output, count + 1)
+    val buf = Buffer.empty[String]
+    val _output = { (str: String) => buf.append(str); () }
+
+    val (expandedP, expandedD, callTree) = expander(using p, d, mode, _output)
+    val (fusedP, fusedD, stop) = fuser(using expandedP, expandedD, callTree, mode, evaluate, _output)
+    
+    if count == 0 then
+      output(buf.mkString("\n"))
+    else if !stop then
+      output("\n~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~"); output(buf.mkString("\n"))
+
+    if stop then return (p, d)
+    if count > 10 then return (fusedP, fusedD)
+    
+    keepFuse(fusedP, fusedD, mode, evaluate, output, count + 1)
   }
 
   def expander(

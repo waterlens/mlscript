@@ -72,62 +72,6 @@ rev(C(1, C(2, N)), N)
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 2 [C 1 [N]]]
 //│ <<<<<<< evaluate <<<<<<<
-//│ 
-//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
-//│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [rev₀^16] (hopeless to continue)
-//│ [rev₀^1] (hopeless to continue)
-//│ [rev₀^6] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ ((rev₀₁ 
-//│ 	let h² = 1
-//│ 	in let t² = 	
-//│ 		let h³ = 2
-//│ 		in let t³ = (fun a⁷ -> a⁷)
-//│ 		in (fun a⁸ -> ((rev₀₂ t³) [C h³ a⁸]))
-//│ 	in (fun a⁹ -> ((rev₀₀ t²) [C h² a⁹]))) [N])
-//│ def rev₀₀ = 
-//│ 	(fun ys³ -> (fun a⁶ -> (ys³ a⁶)))
-//│ def rev₀₁ = 
-//│ 	(fun ys² -> (fun a⁵ -> (ys² a⁵)))
-//│ def rev₀₂ = 
-//│ 	(fun ys¹ -> (fun a⁴ -> (ys¹ a⁴)))
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ ((rev₀₁ 
-//│ 	let h² = 1
-//│ 	in let t² = 	
-//│ 		let h³ = 2
-//│ 		in let t³ = (fun a¹⁰ -> a¹⁰)
-//│ 		in (fun a¹¹ -> ((rev₀₂ t³) [C h³ a¹¹]))
-//│ 	in (fun a¹² -> ((rev₀₀ t²) [C h² a¹²]))) [N])
-//│ def rev₀₀ = 
-//│ 	(fun ys⁶ -> (fun a¹⁵ -> (ys⁶ a¹⁵)))
-//│ def rev₀₁ = 
-//│ 	(fun ys⁵ -> (fun a¹⁴ -> (ys⁵ a¹⁴)))
-//│ def rev₀₂ = 
-//│ 	(fun ys⁴ -> (fun a¹³ -> (ys⁴ a¹³)))
-//│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ [C 2 [C 1 [N]]]
-//│ <<<<<<< evaluate <<<<<<<
 
 // NOTE: single rev, paper style of pushing in
 _LUMBERHACK_EVAL
@@ -195,62 +139,6 @@ rev(C(1, C(2, N)))(N)
 //│ 	in (fun a⁴ -> ((rev₀ t²) [C h² a⁴]))) [N])
 //│ def rev₀ = 
 //│ 	(fun ys² -> ys²)
-//│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ [C 2 [C 1 [N]]]
-//│ <<<<<<< evaluate <<<<<<<
-//│ 
-//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
-//│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [rev₀^16] (hopeless to continue)
-//│ [rev₀^1] (hopeless to continue)
-//│ [rev₀^6] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ ((rev₀₁ 
-//│ 	let h² = 1
-//│ 	in let t² = 	
-//│ 		let h³ = 2
-//│ 		in let t³ = (fun a³ -> a³)
-//│ 		in (fun a⁴ -> ((rev₀₂ t³) [C h³ a⁴]))
-//│ 	in (fun a⁵ -> ((rev₀₀ t²) [C h² a⁵]))) [N])
-//│ def rev₀₀ = 
-//│ 	(fun ys³ -> ys³)
-//│ def rev₀₁ = 
-//│ 	(fun ys² -> ys²)
-//│ def rev₀₂ = 
-//│ 	(fun ys¹ -> ys¹)
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ ((rev₀₁ 
-//│ 	let h² = 1
-//│ 	in let t² = 	
-//│ 		let h³ = 2
-//│ 		in let t³ = (fun a⁶ -> a⁶)
-//│ 		in (fun a⁷ -> ((rev₀₂ t³) [C h³ a⁷]))
-//│ 	in (fun a⁸ -> ((rev₀₀ t²) [C h² a⁸]))) [N])
-//│ def rev₀₀ = 
-//│ 	(fun ys⁶ -> ys⁶)
-//│ def rev₀₁ = 
-//│ 	(fun ys⁵ -> ys⁵)
-//│ def rev₀₂ = 
-//│ 	(fun ys⁴ -> ys⁴)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -345,68 +233,6 @@ map(rev(primitive, N), ff)
 //│ 			in (fun f⁴ -> [C (f⁴ h⁴) ((map₀ t⁴) f⁴)]))
 //│ 		| N => a²}))
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
-//│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [ff₀^9] (hopeless to continue)
-//│ [map₀^1] (hopeless to continue)
-//│ [rev₀^2] (hopeless to continue)
-//│ 	[rev₀^2 · map₀^30] (using original def)
-//│ 	[rev₀^2 · rev₀^22] ---> [rev₀^2] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ ((map₀₀ ((rev₀₀ primitive⁰) (fun f⁶ -> [N]))) ff₀₀)
-//│ def ff₀₀ = 
-//│ 	(fun x¹ -> case x¹ of {
-//│ 		A => [AA]
-//│ 		| B => [BB]})
-//│ def map₀₀ = 
-//│ 	(fun xs² -> (fun f⁵ -> (xs² f⁵)))
-//│ def rev₀₀ = 
-//│ 	(fun ys¹ -> (fun a¹ -> case ys¹ of {
-//│ 		C h² t² => ((rev₀₀ t²) 
-//│ 			let h³ = h²
-//│ 			in let t³ = a¹
-//│ 			in (fun f⁴ -> [C (f⁴ h³) ((map₀₁ t³) f⁴)]))
-//│ 		| N => a¹}))
-//│ 	where
-//│ 	def map₀₁ = 
-//│ 		(fun xs¹ -> (fun f³ -> (xs¹ f³)))
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ ((map₀₀ ((rev₀₀ primitive⁰) (fun f⁷ -> [N]))) ff₀₀)
-//│ def ff₀₀ = 
-//│ 	(fun x² -> case x² of {
-//│ 		A => [AA]
-//│ 		| B => [BB]})
-//│ def map₀₀ = 
-//│ 	(fun xs⁴ -> (fun f¹⁰ -> (xs⁴ f¹⁰)))
-//│ def rev₀₀ = 
-//│ 	(fun ys² -> (fun a² -> case ys² of {
-//│ 		C h² t² => ((rev₀₀ t²) 
-//│ 			let h³ = h²
-//│ 			in let t³ = a²
-//│ 			in (fun f⁹ -> [C (f⁹ h³) ((map₀₁ t³) f⁹)]))
-//│ 		| N => a²}))
-//│ 	where
-//│ 	def map₀₁ = 
-//│ 		(fun xs³ -> (fun f⁸ -> (xs³ f⁸)))
-//│ <<<<<<< after fusion <<<<<<<
 
 // NOTE: map rev on primitive, paper style of pushing in
 fun map(xs) = if xs is
@@ -495,68 +321,6 @@ map(rev(primitive, N), ff)
 //│ 			in let t⁴ = a²
 //│ 			in (fun f⁵ -> [C (f⁵ h⁴) ((map₀ t⁴) f⁵)]))
 //│ 		| N => a²}))
-//│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
-//│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [ff₀^9] (hopeless to continue)
-//│ [map₀^1] (hopeless to continue)
-//│ [rev₀^2] (hopeless to continue)
-//│ 	[rev₀^2 · map₀^27] (using original def)
-//│ 	[rev₀^2 · rev₀^19] ---> [rev₀^2] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ ((map₀₀ ((rev₀₀ primitive⁰) (fun f³ -> [N]))) ff₀₀)
-//│ def ff₀₀ = 
-//│ 	(fun x¹ -> case x¹ of {
-//│ 		A => [AA]
-//│ 		| B => [BB]})
-//│ def map₀₀ = 
-//│ 	(fun xs² -> xs²)
-//│ def rev₀₀ = 
-//│ 	(fun ys¹ -> (fun a¹ -> case ys¹ of {
-//│ 		C h² t² => ((rev₀₀ t²) 
-//│ 			let h³ = h²
-//│ 			in let t³ = a¹
-//│ 			in (fun f² -> [C (f² h³) ((map₀₁ t³) f²)]))
-//│ 		| N => a¹}))
-//│ 	where
-//│ 	def map₀₁ = 
-//│ 		(fun xs¹ -> xs¹)
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ ((map₀₀ ((rev₀₀ primitive⁰) (fun f⁴ -> [N]))) ff₀₀)
-//│ def ff₀₀ = 
-//│ 	(fun x² -> case x² of {
-//│ 		A => [AA]
-//│ 		| B => [BB]})
-//│ def map₀₀ = 
-//│ 	(fun xs⁴ -> xs⁴)
-//│ def rev₀₀ = 
-//│ 	(fun ys² -> (fun a² -> case ys² of {
-//│ 		C h² t² => ((rev₀₀ t²) 
-//│ 			let h³ = h²
-//│ 			in let t³ = a²
-//│ 			in (fun f⁵ -> [C (f⁵ h³) ((map₀₁ t³) f⁵)]))
-//│ 		| N => a²}))
-//│ 	where
-//│ 	def map₀₁ = 
-//│ 		(fun xs³ -> xs³)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -648,68 +412,6 @@ rev(N, map(primitive, ff))
 //│ def rev₀ = 
 //│ 	(fun a² -> (fun ys² -> (ys² a²)))
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
-//│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [ff₀^7] (hopeless to continue)
-//│ [map₀^4] (hopeless to continue)
-//│ 	[map₀^4 · map₀^19] ---> [map₀^4] (using original def)
-//│ 	[map₀^4 · rev₀^24] (using original def)
-//│ [rev₀^1] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ ((rev₀₁ [N]) ((map₀₀ primitive⁰) ff₀₀))
-//│ def ff₀₀ = 
-//│ 	(fun x¹ -> case x¹ of {
-//│ 		A => [AA]
-//│ 		| B => [BB]})
-//│ def map₀₀ = 
-//│ 	(fun xs¹ -> (fun f¹ -> case xs¹ of {
-//│ 		C h² t² => 
-//│ 			let h³ = (f¹ h²)
-//│ 			in let t³ = ((map₀₀ t²) f¹)
-//│ 			in (fun a⁵ -> ((rev₀₀ [C h³ a⁵]) t³))
-//│ 		| N => (fun a⁶ -> a⁶)}))
-//│ 	where
-//│ 	def rev₀₀ = 
-//│ 		(fun a³ -> (fun ys¹ -> (ys¹ a³)))
-//│ def rev₀₁ = 
-//│ 	(fun a⁴ -> (fun ys² -> (ys² a⁴)))
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ ((rev₀₁ [N]) ((map₀₀ primitive⁰) ff₀₀))
-//│ def ff₀₀ = 
-//│ 	(fun x² -> case x² of {
-//│ 		A => [AA]
-//│ 		| B => [BB]})
-//│ def map₀₀ = 
-//│ 	(fun xs² -> (fun f² -> case xs² of {
-//│ 		C h² t² => 
-//│ 			let h³ = (f² h²)
-//│ 			in let t³ = ((map₀₀ t²) f²)
-//│ 			in (fun a⁹ -> ((rev₀₀ [C h³ a⁹]) t³))
-//│ 		| N => (fun a¹⁰ -> a¹⁰)}))
-//│ 	where
-//│ 	def rev₀₀ = 
-//│ 		(fun a⁷ -> (fun ys³ -> (ys³ a⁷)))
-//│ def rev₀₁ = 
-//│ 	(fun a⁸ -> (fun ys⁴ -> (ys⁴ a⁸)))
-//│ <<<<<<< after fusion <<<<<<<
 
 
 // NOTE: rev map on primitive, paper style pushing in
@@ -799,66 +501,4 @@ rev(map(primitive, ff), N)
 //│ 		| N => (fun f⁵ -> (fun a⁵ -> a⁵))})
 //│ def rev₀ = 
 //│ 	(fun ys² -> ys²)
-//│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
-//│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [ff₀^5] (hopeless to continue)
-//│ [map₀^2] (hopeless to continue)
-//│ 	[map₀^2 · map₀^21] ---> [map₀^2] (using original def)
-//│ 	[map₀^2 · rev₀^26] (using original def)
-//│ [rev₀^1] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ ((rev₀₁ ((map₀₀ primitive⁰) ff₀₀)) [N])
-//│ def ff₀₀ = 
-//│ 	(fun x¹ -> case x¹ of {
-//│ 		A => [AA]
-//│ 		| B => [BB]})
-//│ def map₀₀ = 
-//│ 	(fun xs¹ -> case xs¹ of {
-//│ 		C h² t² => (fun f² -> 
-//│ 			let h³ = (f² h²)
-//│ 			in let t³ = ((map₀₀ t²) f²)
-//│ 			in (fun a² -> ((rev₀₀ t³) [C h³ a²])))
-//│ 		| N => (fun f³ -> (fun a³ -> a³))})
-//│ 	where
-//│ 	def rev₀₀ = 
-//│ 		(fun ys¹ -> ys¹)
-//│ def rev₀₁ = 
-//│ 	(fun ys² -> ys²)
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ ((rev₀₁ ((map₀₀ primitive⁰) ff₀₀)) [N])
-//│ def ff₀₀ = 
-//│ 	(fun x² -> case x² of {
-//│ 		A => [AA]
-//│ 		| B => [BB]})
-//│ def map₀₀ = 
-//│ 	(fun xs² -> case xs² of {
-//│ 		C h² t² => (fun f⁴ -> 
-//│ 			let h³ = (f⁴ h²)
-//│ 			in let t³ = ((map₀₀ t²) f⁴)
-//│ 			in (fun a⁴ -> ((rev₀₀ t³) [C h³ a⁴])))
-//│ 		| N => (fun f⁵ -> (fun a⁵ -> a⁵))})
-//│ 	where
-//│ 	def rev₀₀ = 
-//│ 		(fun ys³ -> ys³)
-//│ def rev₀₁ = 
-//│ 	(fun ys⁴ -> ys⁴)
 //│ <<<<<<< after fusion <<<<<<<

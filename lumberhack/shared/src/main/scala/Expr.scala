@@ -238,14 +238,14 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
         }
         case s: Function => throw Exception("\n" + s.pp(using InitPpConfig.showIuidOn.multilineOn))
         // case s if s == scrut => Match(s, arms.map((v, args, body) => (v, args, body.evaluate)))
-        case s => Match(s, arms.map((v, args, body) => (v, args, body.evaluate)))
+        case s => this
       }
-      case IfThenElse(cond, thenn, elze) => cond match {
+      case IfThenElse(cond, thenn, elze) => cond.evaluate match {
         case Ctor(n, Nil) if n.name == "False" => elze.evaluate
         case Ctor(n, Nil) if n.name == "True" => thenn.evaluate
         case a: (LetIn | Function) => throw Exception("\n" + a.pp(using InitPpConfig.showIuidOn.multilineOn))
         // case c if c == cond => IfThenElse(c, thenn.evaluate, elze.evaluate)
-        case c => IfThenElse(c.evaluate, thenn.evaluate, elze.evaluate)
+        case c => this
       }
       case Function(param, body) => Function(param, body)
       case Sequence(a, b) => Sequence(a.evaluate, b.evaluate)
@@ -284,14 +284,14 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
             case ">=" | "geq" => Ctor(Var(if fst >= snd then "True" else "False"), Nil)
             case "<=" | "leq" => Ctor(Var(if fst <= snd then "True" else "False"), Nil)
           }
-          case p => Call(ff, p.evaluate)
+          case p => Call(ff, p.evaluateSmallStep)
         }
         case f => {
-          val newF = f.evaluate
-          if newF == f then Call(f, p.evaluate) else Call(newF, p)
+          val newF = f.evaluateSmallStep
+          if newF == f then Call(f, p.evaluateSmallStep) else Call(newF, p)
         }
       }
-      case Ctor(name, args) => Ctor(name, args.map(_.evaluate))
+      case Ctor(name, args) => Ctor(name, args.map(_.evaluateSmallStep))
       case LetIn(id, value, body) => body.subst(using Map(id -> value))
       case Match(scrut, arms) => scrut match {
         case Ctor(name, args) => {
@@ -306,21 +306,21 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
         }
         case s: Function => throw Exception("\n" + s.pp(using InitPpConfig.showIuidOn.multilineOn))
         case s => {
-          val newS = s.evaluate
-          if newS == s then Match(s, arms.map((v, args, body) => (v, args, body.evaluate))) else Match(newS, arms)
+          val newS = s.evaluateSmallStep
+          if newS == s then Match(s, arms.map((v, args, body) => (v, args, body.evaluateSmallStep))) else Match(newS, arms)
         }
       }
       case IfThenElse(cond, thenn, elze) => cond match {
-        case Ctor(n, Nil) if n.name == "False" => elze.evaluate
-        case Ctor(n, Nil) if n.name == "True" => thenn.evaluate
+        case Ctor(n, Nil) if n.name == "False" => elze.evaluateSmallStep
+        case Ctor(n, Nil) if n.name == "True" => thenn.evaluateSmallStep
         case a: (LetIn | Function) => throw Exception("\n" + a.pp(using InitPpConfig.showIuidOn.multilineOn))
         case c => {
-          val newC = c.evaluate
-          if newC == c then IfThenElse(c, thenn.evaluate, elze.evaluate) else IfThenElse(newC, thenn, elze)
+          val newC = c.evaluateSmallStep
+          if newC == c then IfThenElse(c, thenn.evaluateSmallStep, elze.evaluateSmallStep) else IfThenElse(newC, thenn, elze)
         }
       }
-      case Function(param, body) => Function(param, body.evaluate)
-      case Sequence(a, b) => Sequence(a.evaluate, b.evaluate)
+      case Function(param, body) => Function(param, body.evaluateSmallStep)
+      case Sequence(a, b) => Sequence(a.evaluateSmallStep, b.evaluateSmallStep)
     }
   }(_.pp(using InitPpConfig.showIuidOn.multilineOn))
 

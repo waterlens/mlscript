@@ -321,7 +321,7 @@ fun g(init) = if init > 0
   then C(1, g(init - 1))
   else N
 f(g(42))(0)
-//│ |_LUMBERHACK_EVAL|↵|#fun| |f|(|xs|,| |a|)| |#=| |primitive|(|→|#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |primitive|(|h|)|(|f|(|t|,| |a| |+| |1|)|)|(|a|)|↵|N| |#then| |primitive|(|a|)|←|←|↵|)|↵|#fun| |g|(|init|)| |#=| |#if| |init| |>| |0|→|#then| |C|(|1|,| |g|(|init| |-| |1|)|)|↵|#else| |N| |←|↵|f|(|g|(|42|)|)|(|0|)|
+//│ |_LUMBERHACK_EVAL|↵|#fun| |f|(|xs|,| |a|)| |#=| |primitive|(|→|#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |primitive|(|h|)|(|f|(|t|,| |a| |+| |1|)|)|(|a|)|↵|N| |#then| |primitive|(|a|)|←|←|↵|)|↵|#fun| |g|(|init|)| |#=| |#if| |init| |>| |0|→|#then| |C|(|1|,| |g|(|init| |-| |1|)|)|↵|#else| |N|←|↵|f|(|g|(|42|)|)|(|0|)|
 //│ Parsed: {_LUMBERHACK_EVAL; fun f = xs, a, => primitive (if xs is ‹(C (h, t,)) then primitive (h,) (f (t, + (a,) (1,),),) (a,); (N) then primitive (a,)›,); fun g = init, => if (> (init,) (0,)) then C (1, g (- (init,) (1,),),) else N; f (g (42,),) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((f^42 (g^43 42)) 0)
@@ -439,7 +439,8 @@ f(g(42))(0)
 //│ <<<<<<< evaluate <<<<<<<
 
 
-// TODO why '54_callres
+// TODO: why '54_callres
+_LUMBERHACK_EVAL
 fun f(xs, a) = primitive(
   if xs is
     C(h, t) then primitive(h)(t)(a)
@@ -447,12 +448,12 @@ fun f(xs, a) = primitive(
 )
 fun g(init) = if init > 0
   then C(1, C(2, g(init - 1)))
-  else N 
-f(g(42))
-//│ |#fun| |f|(|xs|,| |a|)| |#=| |primitive|(|→|#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |primitive|(|h|)|(|t|)|(|a|)|↵|N| |#then| |primitive|(|a|)|←|←|↵|)|↵|#fun| |g|(|init|)| |#=| |#if| |init| |>| |0|→|#then| |C|(|1|,| |C|(|2|,| |g|(|init| |-| |1|)|)|)|↵|#else| |N| |←|↵|f|(|g|(|42|)|)|
-//│ Parsed: {fun f = xs, a, => primitive (if xs is ‹(C (h, t,)) then primitive (h,) (t,) (a,); (N) then primitive (a,)›,); fun g = init, => if (> (init,) (0,)) then C (1, C (2, g (- (init,) (1,),),),) else N; f (g (42,),)}
+  else N
+f(g(42))(0)
+//│ |_LUMBERHACK_EVAL|↵|#fun| |f|(|xs|,| |a|)| |#=| |primitive|(|→|#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |primitive|(|h|)|(|t|)|(|a|)|↵|N| |#then| |primitive|(|a|)|←|←|↵|)|↵|#fun| |g|(|init|)| |#=| |#if| |init| |>| |0|→|#then| |C|(|1|,| |C|(|2|,| |g|(|init| |-| |1|)|)|)|↵|#else| |N|←|↵|f|(|g|(|42|)|)|(|0|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun f = xs, a, => primitive (if xs is ‹(C (h, t,)) then primitive (h,) (t,) (a,); (N) then primitive (a,)›,); fun g = init, => if (> (init,) (0,)) then C (1, C (2, g (- (init,) (1,),),),) else N; f (g (42,),) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (f^36 (g^37 42))
+//│ ((f^36 (g^37 42)) 0)
 //│ def f = (fun xs⁰ -> (fun a⁰ -> (primitive⁰ case xs⁰ of {
 //│ 	C h⁰ t⁰ => (((primitive⁰ h⁰) t⁰) a⁰)
 //│ 	| N => (primitive⁰ a⁰)})))
@@ -466,7 +467,7 @@ f(g(42))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (f₀ (g₀ 42))
+//│ ((f₀ (g₀ 42)) 0)
 //│ def f₀ = 
 //│ 	(fun xs¹ -> (fun a¹ -> (primitive⁰ case xs¹ of {
 //│ 		C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹)
@@ -476,16 +477,16 @@ f(g(42))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [C 2 (g₀ (init¹ - 1))]]: 56 --->
-//│ 	'54_callres
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹) | N => (primitive⁰ a¹)}: 72
-//│ [N]: 57 --->
-//│ 	'54_callres
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹) | N => (primitive⁰ a¹)}: 72
+//│ [C 1 [C 2 (g₀ (init¹ - 1))]]: 58 --->
+//│ 	'56_callres
+//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹) | N => (primitive⁰ a¹)}: 74
+//│ [N]: 59 --->
+//│ 	'56_callres
+//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹) | N => (primitive⁰ a¹)}: 74
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹) | N => (primitive⁰ a¹)}: 72 --->
-//│ 	[C 1 [C 2 (g₀ (init¹ - 1))]]: 56
-//│ 	[N]: 57
+//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹) | N => (primitive⁰ a¹)}: 74 --->
+//│ 	[C 1 [C 2 (g₀ (init¹ - 1))]]: 58
+//│ 	[N]: 59
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -495,7 +496,7 @@ f(g(42))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (f₀ (g₀ 42))
+//│ ((f₀ (g₀ 42)) 0)
 //│ def f₀ = 
 //│ 	(fun xs² -> (fun a² -> (primitive⁰ case xs² of {
 //│ 		C h¹ t¹ => (((primitive⁰ h¹) t¹) a²)
@@ -503,5 +504,10 @@ f(g(42))
 //│ def g₀ = 
 //│ 	(fun init² -> if (init² > 0) then [C 1 [C 2 (g₀ (init² - 1))]] else [N])
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ (primitive⁰ (((primitive⁰ 1) [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]) 0))
+//│ <<<<<<< evaluate <<<<<<<
+
 
 

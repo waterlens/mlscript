@@ -214,10 +214,22 @@ class DiffTestLumberhack extends DiffTests {
         // output(outputString)
         // output("<<<<<<< new expansion <<<<<<<")
       } */
+      if evaluate then {
+        output("\n>>>>>>>>>> Original Eval Res >>>>>>>>>>")
+        output(originalProgram.evaluatedSmallStep.map(_.pp(using InitPpConfig.multilineOn.showIuidOn)).mkString("\n"))
+        output("<<<<<<<<<< Original Eval Res <<<<<<<<<<")
+      }
       
       d(originalProgram)
       d.resolveConstraints
-      keepFuse(originalProgram, d, mode, evaluate, output)
+      val iterativeProcessRes = keepFuse(originalProgram, d, mode, evaluate, output)
+      
+      if evaluate then {
+        if !iterativeProcessRes._3.get.forall(
+          _.map(_.pp(using InitPpConfig)) == originalProgram.evaluatedSmallStep.map(_.pp(using InitPpConfig))
+        ) then throw Exception("output different!")
+      }
+
       // val (expandedP, expandedD, callTree) = expander(using originalProgram, d, mode, output)
       // val (fusedP, fusedD, stop) = fuser(using expandedP, expandedD, callTree, mode, evaluate, output)
       // fusedD(fusedP)
@@ -249,22 +261,24 @@ class DiffTestLumberhack extends DiffTests {
     evaluate: Boolean,
     output: Str => Unit,
     count: Int = 0,
-  ): (Program, Deforest) = {
+    evalRess: Option[List[List[Expr]]] = Some(Nil),
+  ): (Program, Deforest, Option[List[List[Expr]]]) = {
     val buf = Buffer.empty[String]
     val _output = { (str: String) => buf.append(str); () }
 
     val (expandedP, expandedD, callTree) = expander(using p, d, mode, _output)
-    val (fusedP, fusedD, stop) = fuser(using expandedP, expandedD, callTree, mode, evaluate, _output)
+    val (fusedP, fusedD, stop, evalRes) = fuser(using expandedP, expandedD, callTree, mode, evaluate, _output)
     
     if count == 0 then
       output(buf.mkString("\n"))
     else if !stop then
       output("\n~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~"); output(buf.mkString("\n"))
 
-    if stop then return (p, d)
-    if count > 10 then return (fusedP, fusedD)
+    val newEvalRess = evalRes.flatMap(r => evalRess.map(rs => r :: rs))
+    if stop then return (p, d, evalRess)
+    if count > 10 then return (fusedP, fusedD, newEvalRess)
     
-    keepFuse(fusedP, fusedD, mode, evaluate, output, count + 1)
+    keepFuse(fusedP, fusedD, mode, evaluate, output, count + 1, newEvalRess)
   }
 
   def expander(
@@ -346,7 +360,7 @@ class DiffTestLumberhack extends DiffTests {
     mode: ModeType,
     evaluate: Boolean,
     output: Str => Unit
-  ): (Program, Deforest, Boolean) = {
+  ): (Program, Deforest, Boolean, Option[List[Expr]]) = {
     d.debug = mode.stdout
     d(p)
     // d.resolveConstraintsImmutableCache
@@ -400,9 +414,12 @@ class DiffTestLumberhack extends DiffTests {
     output(prgmAfterFusion.pp(callTree)(using InitPpConfig.multilineOn.showIuidOn))
     output("<<<<<<< after fusion <<<<<<<")
 
+    var evaluatedExpr: Option[List[Expr]] = None
     if evaluate then {
       output("\n>>>>>>> evaluate >>>>>>>")
-      val evalStr = prgmAfterFusion.evaluatedSmallStep.map(_.pp(using InitPpConfig.multilineOn.showIuidOn)).mkString("\n")
+      // will only have one toplevel expr
+      evaluatedExpr = Some(prgmAfterFusion.evaluatedSmallStep)
+      val evalStr = evaluatedExpr.get.map(_.pp(using InitPpConfig.multilineOn.showIuidOn)).mkString("\n")
       // val evalStr = prgmAfterFusion.evaluated.map(_.pp(using InitPpConfig.multilineOn.showIuidOn)).mkString("\n")
       output(evalStr)
       output("<<<<<<< evaluate <<<<<<<")
@@ -412,7 +429,7 @@ class DiffTestLumberhack extends DiffTests {
     val newP = prgmAfterFusion.copyDefsToNewDeforest(using newD)._1._1
     newD(newP)
     newD.resolveConstraints
-    (newP, newD, fusionStrategy.afterRemoveRecursiveStrategies._1.isEmpty) // if is empty, stop the iterative process
+    (newP, newD, fusionStrategy.afterRemoveRecursiveStrategies._1.isEmpty, evaluatedExpr) // if is empty, stop the iterative process
   }
 }
 

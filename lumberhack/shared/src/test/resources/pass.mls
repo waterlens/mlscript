@@ -688,6 +688,10 @@ c(t)
 //│ def t = [T [K] [T [N] [L] [L]] [T [N] [L] [L]]]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [T [KK] [T [NN] [LL] [LL]] [T [NN] [LL] [LL]]]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [c^26] (hopeless to continue)
 //│ 	[c^26 · c^16] ---> [c^26] (using original def)
@@ -831,6 +835,10 @@ c(t)
 //│ 	| L => [LL]})
 //│ def t = [T [K] aa^10 bb^11]
 //│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [T [KK] [T [NN] [LL] [LL]] [T [NN] [LL] [LL]]]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [c^28] (hopeless to continue)
@@ -977,6 +985,10 @@ map(l)(
 //│ 	| N => (fun f¹ -> [N])})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [C [T] [N]]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [l^20] (hopeless to continue)
 //│ [map^19]
@@ -1058,6 +1070,10 @@ lastDrive(C(1, C(2, N)))
 //│ 	N => [None]
 //│ 	| C hh⁰ tt⁰ => [Some ((last^14 tt⁰) hh⁰)]})
 //│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [Some 2]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [lastDrive^22]
@@ -2257,6 +2273,10 @@ rev2(rev(C(1, C(2, N)))(N))(N)
 //│ 	| C h2⁰ t2⁰ => (fun a2¹ -> ((rev2^17 t2⁰) [C h2⁰ a2¹]))})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [C 1 [C 2 [N]]]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [rev2^27] (hopeless to continue)
 //│ 	[rev2^27 · rev2^17] ---> [rev2^27] (using original def)
@@ -2360,6 +2380,11 @@ rev(rev(C(A, C(B, N)))(N))(N)
 //│ 	C h⁰ t⁰ => (fun a⁰ -> ((rev^2 t⁰) [C h⁰ a⁰]))
 //│ 	| N => (fun a¹ -> a¹)})
 //│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [C [B] [C [A] [N]]]
+//│ [C [A] [C [B] [N]]]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [rev^14] (hopeless to continue)
@@ -2572,6 +2597,10 @@ rev(C(1, C(2, N)))
 //│ 	C h¹ t¹ => ((concat^15 (rev^16 t¹)) [C h¹ [N]])
 //│ 	| N => [N]})
 //│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [C 2 [C 1 [N]]]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [rev^27]
@@ -2836,6 +2865,10 @@ last(C(1, C(2, C(3, N))))
 //│ 	| N => [None]})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [Some 3]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [last^18]
 //│ 	[last^18 · last^6] ---> [last^18] (only one)
@@ -2919,14 +2952,13 @@ last(C(1, C(2, C(3, N))))
 //│ <<<<<<< evaluate <<<<<<<
 
 
-_LUMBERHACK_EVAL
 fun f(x) = if primitive(x) then A(x) else B(x + 1)
 fun g(scrut, y) = if scrut is
   A(n) then y + n + 1
   B(m) then y + m
 g(f(1), 2)
-//│ |_LUMBERHACK_EVAL|↵|#fun| |f|(|x|)| |#=| |#if| |primitive|(|x|)| |#then| |A|(|x|)| |#else| |B|(|x| |+| |1|)|↵|#fun| |g|(|scrut|,| |y|)| |#=| |#if| |scrut| |is|→|A|(|n|)| |#then| |y| |+| |n| |+| |1|↵|B|(|m|)| |#then| |y| |+| |m|←|↵|g|(|f|(|1|)|,| |2|)|
-//│ Parsed: {_LUMBERHACK_EVAL; fun f = x, => if (primitive (x,)) then A (x,) else B (+ (x,) (1,),); fun g = scrut, y, => if scrut is ‹(A (n,)) then + (+ (y,) (n,),) (1,); (B (m,)) then + (y,) (m,)›; g (f (1,), 2,)}
+//│ |#fun| |f|(|x|)| |#=| |#if| |primitive|(|x|)| |#then| |A|(|x|)| |#else| |B|(|x| |+| |1|)|↵|#fun| |g|(|scrut|,| |y|)| |#=| |#if| |scrut| |is|→|A|(|n|)| |#then| |y| |+| |n| |+| |1|↵|B|(|m|)| |#then| |y| |+| |m|←|↵|g|(|f|(|1|)|,| |2|)|
+//│ Parsed: {fun f = x, => if (primitive (x,)) then A (x,) else B (+ (x,) (1,),); fun g = scrut, y, => if scrut is ‹(A (n,)) then + (+ (y,) (n,),) (1,); (B (m,)) then + (y,) (m,)›; g (f (1,), 2,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((g^32 (f^33 1)) 2)
 //│ def f = (fun x⁰ -> if (primitive⁰ x⁰) then [A x⁰] else [B (x⁰ + 1)])
@@ -2983,11 +3015,3 @@ g(f(1), 2)
 //│ def g₀ = 
 //│ 	(fun scrut² -> (fun y² -> (scrut² y²)))
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ (if (primitive⁰ 1) then 
-//│ 	let n² = 1
-//│ 	in (fun y³ -> ((y³ + n²) + 1)) else 
-//│ 	let m² = (1 + 1)
-//│ 	in (fun y⁴ -> (y⁴ + m²)) 2)
-//│ <<<<<<< evaluate <<<<<<<

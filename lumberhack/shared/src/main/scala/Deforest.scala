@@ -504,6 +504,7 @@ class Deforest(var debug: Boolean) {
     // import scala.util.Random.shuffle
     // shuffle(constraints) foreach handle
     constraints foreach handle
+    assert(lowerBounds.values.flatten.forall(!_._2.s.isInstanceOf[ProdVar]))
   }
   
   lazy val knotsAfterAnnihilation = recursiveConstr.map { (cnstr, set) => (cnstr, set.map { (key, vall) =>

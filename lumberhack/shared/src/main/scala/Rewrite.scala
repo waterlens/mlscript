@@ -18,22 +18,23 @@ class FusionStrategy(d: Deforest) {
   val involvedDtors = d.fusionMatch.values.flatten.toSet
   val involvedCtors = d.fusionMatch.keySet
 
-  private def findToEndCons(v: ConsVar, cache: Set[ConsVar]): Set[ConsVar] = {
-    if upperBounds.get(v.uid) match { case None => true; case Some(v) => v.isEmpty } then Set(v)
-    else upperBounds(v.uid).foldLeft(Set()){(acc, ub) => ub.s match {
-      case cv: ConsVar if cache(cv) => acc
-      case cv: ConsVar => acc ++ findToEndCons(cv, cache + cv)
-      case _ => acc
-    }}
-  }
-  private def findToEndProd(v: ProdVar, cache: Set[ProdVar]): Set[ProdVar] = {
-    if lowerBounds.get(v.uid) match { case None => true; case Some(v) => v.isEmpty } then Set(v)
-    else lowerBounds(v.uid).foldLeft(Set()){(acc, lb) => lb.s match {
-      case pv: ProdVar if cache(pv) => acc
-      case pv: ProdVar => acc ++ findToEndProd(pv, cache + pv)
-      case _ => acc
-    }}
-  }
+  // private def findToEndCons(v: ConsVar, cache: Set[ConsVar]): Set[ConsVar] = {
+  //   if upperBounds.get(v.uid) match { case None => true; case Some(v) => v.isEmpty } then Set(v)
+  //   else upperBounds(v.uid).foldLeft(Set()){(acc, ub) => ub.s match {
+  //     case cv: ConsVar if cache(cv) => acc
+  //     case cv: ConsVar => acc ++ findToEndCons(cv, cache + cv)
+  //     case _ => acc
+  //   }}
+  // }
+  // private def findToEndProd(v: ProdVar, cache: Set[ProdVar]): Set[ProdVar] = {
+  //   if lowerBounds.get(v.uid) match { case None => true; case Some(v) => v.isEmpty } then Set(v)
+  //   else lowerBounds(v.uid).foldLeft(Set()){(acc, lb) => lb.s match {
+  //     // case pv: ProdVar if cache(pv) => acc
+  //     // case pv: ProdVar => acc ++ findToEndProd(pv, cache + pv)
+  //     case pv: ProdVar => ??? // lowerBounds cannot have any prodvar
+  //     case _ => acc
+  //   }}
+  // }
 
 
   val ctorFinalDestinations: Map[MkCtor, Set[ConsStratEnum]] = {
@@ -41,7 +42,8 @@ class FusionStrategy(d: Deforest) {
     d.ctorDestinations.foreach { (ctor, dests) => if involvedCtors(ctor.euid) then
       dests.foreach { dest => dest match {
         case c: (NoCons | Destruct) => res += ctor -> (res(ctor) + c)
-        case cv: ConsVar => res += ctor -> (res(ctor) ++ findToEndCons(cv, Set(cv)))
+        // case cv: ConsVar => res += ctor -> (res(ctor) ++ findToEndCons(cv, Set(cv)))
+        case cv: ConsVar => if d.upperBounds(cv.uid).isEmpty then res += ctor -> (res(ctor) + cv)
         case _ => ??? // unreachable
       }}
     }
@@ -53,7 +55,13 @@ class FusionStrategy(d: Deforest) {
     d.dtorSources.foreach { (dtor, sources) => if involvedDtors(dtor.euid) then 
       sources.foreach { src => src match {
         case s: (NoProd | MkCtor) => res += dtor -> (res(dtor) + s)
-        case pv: ProdVar => res += dtor -> (res(dtor) ++ findToEndProd(pv, Set(pv)))
+        // case pv: ProdVar => res += dtor -> (res(dtor) ++ findToEndProd(pv, Set(pv)))
+        case pv: ProdVar =>
+          // although this `pv` may appear in upperBounds of another typevar, but if it does not
+          // have a lower bound, it indeed indicates that following this pv will give a typevar
+          // as final source, and will not give a false source (if there is a real noprod/mkctor
+          // as the lower bound as this pv, it will be registered!)
+          if d.lowerBounds(pv.uid).isEmpty then res += dtor -> (res(dtor) + pv)
         case _ => ??? // unreachable
       }}
     }

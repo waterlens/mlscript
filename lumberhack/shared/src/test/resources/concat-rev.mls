@@ -263,7 +263,7 @@ rev(C(1, C(2, C(3, N))))
 //│ [C 3 [C 2 [C 1 [N]]]]
 //│ <<<<<<< evaluate <<<<<<<
 
-
+// NOTE: global way to push in variables
 _LUMBERHACK_EVAL
 fun concat(xs) = if xs is
   N then ys => ys
@@ -617,4 +617,94 @@ rev(primitive)
 //│ case primitive⁰ of {
 //│ 	C h³ t³ => ((concat₀ (rev₀ t³)) [C h³ [N]])
 //│ 	| N => [N]}
+//│ <<<<<<< evaluate <<<<<<<
+
+
+// NOTE: if there is no concrete list provided as input, no fusion will be done
+_LUMBERHACK_EVAL
+fun concat(xs, ys) = if xs is
+  N then ys
+  C(h, t) then C(h, concat(t, ys))
+fun rev(ls) = if ls is
+  C(h, t) then concat(rev(t), C(h, N))
+  N then N
+rev
+//│ |_LUMBERHACK_EVAL|↵|#fun| |concat|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|N| |#then| |ys|↵|C|(|h|,| |t|)| |#then| |C|(|h|,| |concat|(|t|,| |ys|)|)|←|↵|#fun| |rev|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |concat|(|rev|(|t|)|,| |C|(|h|,| |N|)|)|↵|N| |#then| |N|←|↵|rev|
+//│ Parsed: {_LUMBERHACK_EVAL; fun concat = xs, ys, => if xs is ‹(N) then ys; (C (h, t,)) then C (h, concat (t, ys,),)›; fun rev = ls, => if ls is ‹(C (h, t,)) then concat (rev (t,), C (h, N,),); (N) then N›; rev}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ rev^26
+//│ def concat = (fun xs⁰ -> (fun ys⁰ -> case xs⁰ of {
+//│ 	N => ys⁰
+//│ 	| C h⁰ t⁰ => [C h⁰ ((concat^4 t⁰) ys⁰)]}))
+//│ def rev = (fun ls⁰ -> case ls⁰ of {
+//│ 	C h¹ t¹ => ((concat^14 (rev^15 t¹)) [C h¹ [N]])
+//│ 	| N => [N]})
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ (fun ls⁰ -> case ls⁰ of {
+//│ 	C h¹ t¹ => ((concat (rev t¹)) [C h¹ [N]])
+//│ 	| N => [N]})
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [rev^26] (hopeless to continue)
+//│ 	[rev^26 · concat^14] (using original def)
+//│ 		[rev^26 · concat^14 · concat^4] ---> [rev^26 · concat^14] (using original def)
+//│ 	[rev^26 · rev^15] ---> [rev^26] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ rev₀
+//│ def rev₀ = 
+//│ 	(fun ls¹ -> case ls¹ of {
+//│ 		C h³ t³ => ((concat₀ (rev₀ t³)) [C h³ [N]])
+//│ 		| N => [N]})
+//│ 	where
+//│ 	def concat₀ = 
+//│ 		(fun xs¹ -> (fun ys¹ -> case xs¹ of {
+//│ 			N => ys¹
+//│ 			| C h² t² => [C h² ((concat₀ t²) ys¹)]}))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C h² ((concat₀ t²) ys¹)]: 35 --->
+//│ 	case xs¹ of {N => ys¹ | C h² t² => [C h² ((concat₀ t²) ys¹)]}: 36
+//│ [N]: 46 --->
+//│ 	case xs¹ of {N => ys¹ | C h² t² => [C h² ((concat₀ t²) ys¹)]}: 36
+//│ [C h³ [N]]: 47 --->
+//│ 	case xs¹ of {N => ys¹ | C h² t² => [C h² ((concat₀ t²) ys¹)]}: 36
+//│ [N]: 49 --->
+//│ 	case xs¹ of {N => ys¹ | C h² t² => [C h² ((concat₀ t²) ys¹)]}: 36
+//│ ------------------
+//│ case xs¹ of {N => ys¹ | C h² t² => [C h² ((concat₀ t²) ys¹)]}: 36 --->
+//│ 	[C h² ((concat₀ t²) ys¹)]: 35
+//│ 	[N]: 46
+//│ 	[C h³ [N]]: 47
+//│ 	[N]: 49
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ rev₀
+//│ def rev₀ = 
+//│ 	(fun ls² -> case ls² of {
+//│ 		C h³ t³ => ((concat₀ (rev₀ t³)) [C h³ [N]])
+//│ 		| N => [N]})
+//│ 	where
+//│ 	def concat₀ = 
+//│ 		(fun xs² -> (fun ys² -> case xs² of {
+//│ 			N => ys²
+//│ 			| C h² t² => [C h² ((concat₀ t²) ys²)]}))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ (fun ls² -> case ls² of {
+//│ 	C h³ t³ => ((concat₀ (rev₀ t³)) [C h³ [N]])
+//│ 	| N => [N]})
 //│ <<<<<<< evaluate <<<<<<<

@@ -1,0 +1,98 @@
+:NewParser
+:ParseOnly
+
+fun filter(ls, f) = if ls is
+  C(h, t) then if f(h) then C(h, filter(t, f)) else filter(t, f)
+  N then N
+fun lastDrive(ls) = if ls is
+  C(h, t) then Some(last(t, h))
+  N then None
+fun last(a, ls) = if ls is
+  N then a
+  C(h, t) then last(h, t)
+fun lastFilter(ls, f) = lastDrive(filter(ls, f))
+lastFilter
+//│ |#fun| |filter|(|ls|,| |f|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |f|(|h|)| |#then| |C|(|h|,| |filter|(|t|,| |f|)|)| |#else| |filter|(|t|,| |f|)|↵|N| |#then| |N|←|↵|#fun| |lastDrive|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |Some|(|last|(|t|,| |h|)|)|↵|N| |#then| |None|←|↵|#fun| |last|(|a|,| |ls|)| |#=| |#if| |ls| |is|→|N| |#then| |a|↵|C|(|h|,| |t|)| |#then| |last|(|h|,| |t|)|←|↵|#fun| |lastFilter|(|ls|,| |f|)| |#=| |lastDrive|(|filter|(|ls|,| |f|)|)|↵|lastFilter|
+//│ Parsed: {fun filter = ls, f, => if ls is ‹(C (h, t,)) then if (f (h,)) then C (h, filter (t, f,),) else filter (t, f,); (N) then N›; fun lastDrive = ls, => if ls is ‹(C (h, t,)) then Some (last (t, h,),); (N) then None›; fun last = a, ls, => if ls is ‹(N) then a; (C (h, t,)) then last (h, t,)›; fun lastFilter = ls, f, => lastDrive (filter (ls, f,),); lastFilter}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ lastFilter^51
+//│ def filter = (fun ls⁰ -> (fun f⁰ -> case ls⁰ of {
+//│ 	C h⁰ t⁰ => if (f⁰ h⁰) then [C h⁰ ((filter^6 t⁰) f⁰)] else ((filter^12 t⁰) f⁰)
+//│ 	| N => [N]}))
+//│ def last = (fun a⁰ -> (fun ls² -> case ls² of {
+//│ 	N => a⁰
+//│ 	| C h² t² => ((last^34 h²) t²)}))
+//│ def lastDrive = (fun ls¹ -> case ls¹ of {
+//│ 	C h¹ t¹ => [Some ((last^23 t¹) h¹)]
+//│ 	| N => [None]})
+//│ def lastFilter = (fun ls³ -> (fun f¹ -> (lastDrive^42 ((filter^43 ls³) f¹))))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [lastFilter^51] (hopeless to continue)
+//│ 	[lastFilter^51 · filter^43] (using original def)
+//│ 		[lastFilter^51 · filter^43 · filter^12] ---> [lastFilter^51 · filter^43] (using original def)
+//│ 		[lastFilter^51 · filter^43 · filter^6] ---> [lastFilter^51 · filter^43] (using original def)
+//│ 	[lastFilter^51 · lastDrive^42] (using original def)
+//│ 		[lastFilter^51 · lastDrive^42 · last^23] (using original def)
+//│ 			[lastFilter^51 · lastDrive^42 · last^23 · last^34] ---> [lastFilter^51 · lastDrive^42 · last^23] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ lastFilter₀
+//│ def lastFilter₀ = 
+//│ 	(fun ls⁴ -> (fun f² -> (lastDrive₀ ((filter₀ ls⁴) f²))))
+//│ 	where
+//│ 	def filter₀ = 
+//│ 		(fun ls⁷ -> (fun f³ -> case ls⁷ of {
+//│ 			C h⁵ t⁵ => if (f³ h⁵) then [C h⁵ ((filter₀ t⁵) f³)] else ((filter₀ t⁵) f³)
+//│ 			| N => [N]}))
+//│ 	def lastDrive₀ = 
+//│ 		(fun ls⁶ -> case ls⁶ of {
+//│ 			C h⁴ t⁴ => [Some ((last₀ t⁴) h⁴)]
+//│ 			| N => [None]})
+//│ 		where
+//│ 		def last₀ = 
+//│ 			(fun a¹ -> (fun ls⁵ -> case ls⁵ of {
+//│ 				N => a¹
+//│ 				| C h³ t³ => ((last₀ h³) t³)}))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C h⁵ ((filter₀ t⁵) f³)]: 91 --->
+//│ 	'76_callres
+//│ 	case ls⁶ of {C h⁴ t⁴ => [Some ((last₀ t⁴) h⁴)] | N => [None]}: 79
+//│ [N]: 98 --->
+//│ 	'76_callres
+//│ 	case ls⁶ of {C h⁴ t⁴ => [Some ((last₀ t⁴) h⁴)] | N => [None]}: 79
+//│ ------------------
+//│ case ls⁶ of {C h⁴ t⁴ => [Some ((last₀ t⁴) h⁴)] | N => [None]}: 79 --->
+//│ 	[C h⁵ ((filter₀ t⁵) f³)]: 91
+//│ 	[N]: 98
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ lastFilter₀
+//│ def lastFilter₀ = 
+//│ 	(fun ls⁸ -> (fun f⁴ -> (lastDrive₀ ((filter₀ ls⁸) f⁴))))
+//│ 	where
+//│ 	def filter₀ = 
+//│ 		(fun ls¹¹ -> (fun f⁵ -> case ls¹¹ of {
+//│ 			C h⁵ t⁵ => if (f⁵ h⁵) then [C h⁵ ((filter₀ t⁵) f⁵)] else ((filter₀ t⁵) f⁵)
+//│ 			| N => [N]}))
+//│ 	def lastDrive₀ = 
+//│ 		(fun ls¹⁰ -> case ls¹⁰ of {
+//│ 			C h⁴ t⁴ => [Some ((last₀ t⁴) h⁴)]
+//│ 			| N => [None]})
+//│ 		where
+//│ 		def last₀ = 
+//│ 			(fun a² -> (fun ls⁹ -> case ls⁹ of {
+//│ 				N => a²
+//│ 				| C h³ t³ => ((last₀ h³) t³)}))
+//│ <<<<<<< after fusion <<<<<<<

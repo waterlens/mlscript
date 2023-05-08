@@ -375,3 +375,82 @@ rev(l, N)
 //│ def rev₀ = 
 //│ 	(fun ls² -> (fun a⁴ -> (ls² a⁴)))
 //│ <<<<<<< after fusion <<<<<<<
+
+
+fun rev(ls, a) = if ls is
+  C(h, t) then rev(t, C(h, a))
+  N then a
+let l = C(A, C(B, l))
+rev(l, N)
+//│ |#fun| |rev|(|ls|,| |a|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |rev|(|t|,| |C|(|h|,| |a|)|)|↵|N| |#then| |a|←|↵|#let| |l| |#=| |C|(|A|,| |C|(|B|,| |l|)|)|↵|rev|(|l|,| |N|)|
+//│ Parsed: {fun rev = ls, a, => if ls is ‹(C (h, t,)) then rev (t, C (h, a,),); (N) then a›; let l = C (A, C (B, l,),); rev (l, N,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ ((rev^18 l^19) [N])
+//│ def l = [C [A] [C [B] l^15]]
+//│ def rev = (fun ls⁰ -> (fun a⁰ -> case ls⁰ of {
+//│ 	C h⁰ t⁰ => ((rev^2 t⁰) [C h⁰ a⁰])
+//│ 	| N => a⁰}))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [l^19]
+//│ 	[l^19 · l^15] ---> [l^19] (only one)
+//│ [rev^18]
+//│ 	[rev^18 · rev^2]
+//│ 		[rev^18 · rev^2 · rev^2] ---> [rev^18] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((rev₀ l₀) [N])
+//│ def l₀ = 
+//│ 	[C [A] [C [B] l₀]]
+//│ def rev₀ = 
+//│ 	(fun ls¹ -> (fun a¹ -> case ls¹ of {
+//│ 		C h¹ t¹ => ((rev₁ t¹) [C h¹ a¹])
+//│ 		| N => a¹}))
+//│ 	where
+//│ 	def rev₁ = 
+//│ 		(fun ls² -> (fun a² -> case ls² of {
+//│ 			C h² t² => ((rev₀ t²) [C h² a²])
+//│ 			| N => a²}))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C [B] l₀]: 38 --->
+//│ 	case ls² of {C h² t² => ((rev₀ t²) [C h² a²]) | N => a²}: 49
+//│ [C [A] [C [B] l₀]]: 39 --->
+//│ 	case ls¹ of {C h¹ t¹ => ((rev₁ t¹) [C h¹ a¹]) | N => a¹}: 32
+//│ ------------------
+//│ case ls¹ of {C h¹ t¹ => ((rev₁ t¹) [C h¹ a¹]) | N => a¹}: 32 --->
+//│ 	[C [A] [C [B] l₀]]: 39
+//│ case ls² of {C h² t² => ((rev₀ t²) [C h² a²]) | N => a²}: 49 --->
+//│ 	[C [B] l₀]: 38
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C [B] l₀]: 38 --->
+//│ 	case ls² of {C h² t² => ((rev₀ t²) [C h² a²]) | N => a²}: 49
+//│ [C [A] [C [B] l₀]]: 39 --->
+//│ 	case ls¹ of {C h¹ t¹ => ((rev₁ t¹) [C h¹ a¹]) | N => a¹}: 32
+//│ ------------------
+//│ case ls¹ of {C h¹ t¹ => ((rev₁ t¹) [C h¹ a¹]) | N => a¹}: 32 --->
+//│ 	[C [A] [C [B] l₀]]: 39
+//│ case ls² of {C h² t² => ((rev₀ t²) [C h² a²]) | N => a²}: 49 --->
+//│ 	[C [B] l₀]: 38
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((rev₀ l₀) [N])
+//│ def l₀ = 
+//│ 	let h³ = [A]
+//│ 	in let t³ = 	
+//│ 		let h⁴ = [B]
+//│ 		in let t⁴ = l₀
+//│ 		in (fun a⁵ -> ((rev₀ t⁴) [C h⁴ a⁵]))
+//│ 	in (fun a⁴ -> ((rev₁ t³) [C h³ a⁴]))
+//│ def rev₀ = 
+//│ 	(fun ls³ -> (fun a³ -> (ls³ a³)))
+//│ 	where
+//│ 	def rev₁ = 
+//│ 		(fun ls⁴ -> (fun a⁶ -> (ls⁴ a⁶)))
+//│ <<<<<<< after fusion <<<<<<<

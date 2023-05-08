@@ -264,7 +264,7 @@ class DiffTestLumberhack extends DiffTests {
     evalRess: Option[List[List[Expr]]] = Some(Nil),
   ): (Program, Deforest, Option[List[List[Expr]]]) = {
     val buf = Buffer.empty[String]
-    val _output = { (str: String) => buf.append(str); () }
+    val _output = if mode.stdout || mode.verbose then output else { (str: String) => buf.append(str); () }
 
     val (expandedP, expandedD, callTree) = expander(using p, d, mode, _output)
     val (fusedP, fusedD, stop, evalRes) = fuser(using expandedP, expandedD, callTree, mode, evaluate, _output)
@@ -273,6 +273,9 @@ class DiffTestLumberhack extends DiffTests {
       output(buf.mkString("\n"))
     else if !stop then
       output("\n~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~"); output(buf.mkString("\n"))
+    
+    if mode.stdout || mode.verbose then
+      output("\n~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~")
 
     val newEvalRess = evalRes.flatMap(r => evalRess.map(rs => r :: rs))
     if stop then return (p, d, evalRess)

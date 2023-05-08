@@ -26,14 +26,33 @@ class FusionStrategy(d: Deforest) {
   //     case _ => acc
   //   }}
   // }
-  // private def findToEndProd(v: ProdVar, cache: Set[ProdVar]): Set[ProdVar] = {
-  //   if lowerBounds.get(v.uid) match { case None => true; case Some(v) => v.isEmpty } then Set(v)
-  //   else lowerBounds(v.uid).foldLeft(Set()){(acc, lb) => lb.s match {
-  //     // case pv: ProdVar if cache(pv) => acc
-  //     // case pv: ProdVar => acc ++ findToEndProd(pv, cache + pv)
-  //     case pv: ProdVar => ??? // lowerBounds cannot have any prodvar
-  //     case _ => acc
-  //   }}
+  // private def findToEndProd(v: ProdVar): Set[ProdVar] = {
+  //   def find(vuid: TypeVarId, cache: Set[TypeVarId]): Set[TypeVarId] = {
+  //     // if lowerBounds.get(vuid).nonEmpty then
+  //     //   Set()
+  //     // else
+  //     val realLowerBounds = upperBounds.filter { (_, ubs) => ubs.exists { ub =>
+  //       ub.s match {
+  //         case ConsVar(uid, name) => uid == vuid && !cache(uid)
+  //         case _ => false
+  //       }
+  //     }}.keySet
+  //     // ++ (lowerBounds.getOrElse(vuid, Nil).flatMap { _.s match {
+  //     //   case ProdVar(uid, _) => Some(uid)
+  //     //   case _ => None
+  //     // }})
+  //     // assert(realLowerBounds.isEmpty)
+  //     (if realLowerBounds.isEmpty then Set(vuid) else realLowerBounds.flatMap(b => find(b, cache + vuid)))
+  //       .filter(lowerBounds.get(_).isEmpty)
+  //   }
+  //   find(v.uid, Set()).map(id => ProdVar(id, d.varsName(id))()(using d.noExprId))
+  //   // if lowerBounds.get(v.uid) match { case None => true; case Some(v) => v.isEmpty } then Set(v)
+  //   // else lowerBounds(v.uid).foldLeft(Set()){(acc, lb) => lb.s match {
+  //   //   // case pv: ProdVar if cache(pv) => acc
+  //   //   // case pv: ProdVar => acc ++ findToEndProd(pv, cache + pv)
+  //   //   case pv: ProdVar => ??? // lowerBounds cannot have any prodvar
+  //   //   case _ => acc
+  //   // }}
   // }
 
 
@@ -55,13 +74,8 @@ class FusionStrategy(d: Deforest) {
     d.dtorSources.foreach { (dtor, sources) => if involvedDtors(dtor.euid) then 
       sources.foreach { src => src match {
         case s: (NoProd | MkCtor) => res += dtor -> (res(dtor) + s)
-        // case pv: ProdVar => res += dtor -> (res(dtor) ++ findToEndProd(pv, Set(pv)))
-        case pv: ProdVar =>
-          // although this `pv` may appear in upperBounds of another typevar, but if it does not
-          // have a lower bound, it indeed indicates that following this pv will give a typevar
-          // as final source, and will not give a false source (if there is a real noprod/mkctor
-          // as the lower bound as this pv, it will be registered!)
-          if d.lowerBounds(pv.uid).isEmpty then res += dtor -> (res(dtor) + pv)
+        // case pv: ProdVar => res += dtor -> (res(dtor) ++ findToEndProd(pv))
+        case pv: ProdVar => if d.lowerBounds(pv.uid).isEmpty then res += dtor -> (res(dtor) + pv)
         case _ => ??? // unreachable
       }}
     }

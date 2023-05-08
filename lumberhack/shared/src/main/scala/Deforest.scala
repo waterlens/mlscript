@@ -261,9 +261,8 @@ class Deforest(var debug: Boolean) {
     val vid = vuid.nextUid
     val pv = ProdVar(vid, n)()
     val cv = ConsVar(vid, n)()
-    val name = pv.pp(using InitPpConfig)
-    varsName += vid -> name
-    log(s"fresh var $name")
+    varsName += vid -> n
+    log(s"fresh var '$n")
     (pv, cv)
   def freshVar(n: Ident)(using ExprId): ((ProdStratEnum & ToStrat[ProdVar] & TypevarWithBoundary), (ConsStratEnum & ToStrat[ConsVar] & TypevarWithBoundary)) =
     freshVar(n.pp(using InitPpConfig.showIuidOn))

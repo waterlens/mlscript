@@ -1,0 +1,125 @@
+:NewParser
+:ParseOnly
+
+fun zip(xs, ys) = if xs is
+  C(x, xt) then if ys is
+    C(y, yt) then C(Pair(x, y), zip(xt, yt))
+    N then N
+  N then N
+fun unzip(ls) = if ls is
+  C(h, t) then if h is
+    Pair(a, b) then if unzip(t) is
+      Pair(atail, btail) then Pair(C(a, atail), C(b, btail))
+  N then Pair(N, N)
+fun unzipZip(fst, snd) = unzip(zip(fst, snd))
+unzipZip
+//│ |#fun| |zip|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|x|,| |xt|)| |#then| |#if| |ys| |is|→|C|(|y|,| |yt|)| |#then| |C|(|Pair|(|x|,| |y|)|,| |zip|(|xt|,| |yt|)|)|↵|N| |#then| |N|←|↵|N| |#then| |N|←|↵|#fun| |unzip|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |h| |is|→|Pair|(|a|,| |b|)| |#then| |#if| |unzip|(|t|)| |is|→|Pair|(|atail|,| |btail|)| |#then| |Pair|(|C|(|a|,| |atail|)|,| |C|(|b|,| |btail|)|)|←|←|↵|N| |#then| |Pair|(|N|,| |N|)|←|↵|#fun| |unzipZip|(|fst|,| |snd|)| |#=| |unzip|(|zip|(|fst|,| |snd|)|)|↵|unzipZip|
+//│ Parsed: {fun zip = xs, ys, => if xs is ‹(C (x, xt,)) then if ys is ‹(C (y, yt,)) then C (Pair (x, y,), zip (xt, yt,),); (N) then N›; (N) then N›; fun unzip = ls, => if ls is ‹(C (h, t,)) then if h is ‹(Pair (a, b,)) then if unzip (t,) is ‹(Pair (atail, btail,)) then Pair (C (a, atail,), C (b, btail,),)››; (N) then Pair (N, N,)›; fun unzipZip = fst, snd, => unzip (zip (fst, snd,),); unzipZip}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ unzipZip^46
+//│ def unzip = (fun ls⁰ -> case ls⁰ of {
+//│ 	C h⁰ t⁰ => case h⁰ of {
+//│ 		Pair a⁰ b⁰ => case (unzip^20 t⁰) of {
+//│ 			Pair atail⁰ btail⁰ => [Pair [C a⁰ atail⁰] [C b⁰ btail⁰]]}}
+//│ 	| N => [Pair [N] [N]]})
+//│ def unzipZip = (fun fst⁰ -> (fun snd⁰ -> (unzip^37 ((zip^38 fst⁰) snd⁰))))
+//│ def zip = (fun xs⁰ -> (fun ys⁰ -> case xs⁰ of {
+//│ 	C x⁰ xt⁰ => case ys⁰ of {
+//│ 		C y⁰ yt⁰ => [C [Pair x⁰ y⁰] ((zip^6 xt⁰) yt⁰)]
+//│ 		| N => [N]}
+//│ 	| N => [N]}))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [unzipZip^46] (hopeless to continue)
+//│ 	[unzipZip^46 · unzip^37] (using original def)
+//│ 		[unzipZip^46 · unzip^37 · unzip^20] ---> [unzipZip^46 · unzip^37] (using original def)
+//│ 	[unzipZip^46 · zip^38] (using original def)
+//│ 		[unzipZip^46 · zip^38 · zip^6] ---> [unzipZip^46 · zip^38] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ unzipZip₀
+//│ def unzipZip₀ = 
+//│ 	(fun fst¹ -> (fun snd¹ -> (unzip₀ ((zip₀ fst¹) snd¹))))
+//│ 	where
+//│ 	def unzip₀ = 
+//│ 		(fun ls¹ -> case ls¹ of {
+//│ 			C h¹ t¹ => case h¹ of {
+//│ 				Pair a¹ b¹ => case (unzip₀ t¹) of {
+//│ 					Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}}
+//│ 			| N => [Pair [N] [N]]})
+//│ 	def zip₀ = 
+//│ 		(fun xs¹ -> (fun ys¹ -> case xs¹ of {
+//│ 			C x¹ xt¹ => case ys¹ of {
+//│ 				C y¹ yt¹ => [C [Pair x¹ y¹] ((zip₀ xt¹) yt¹)]
+//│ 				| N => [N]}
+//│ 			| N => [N]}))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [Pair [C a¹ atail¹] [C b¹ btail¹]]: 58 --->
+//│ 	case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 59
+//│ 	'89_callres
+//│ [Pair [N] [N]]: 63 --->
+//│ 	case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 59
+//│ 	'89_callres
+//│ [Pair x¹ y¹]: 70 --->
+//│ 	case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}}: 60
+//│ [C [Pair x¹ y¹] ((zip₀ xt¹) yt¹)]: 76 --->
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N => [Pair [N] [N]]}: 64
+//│ [N]: 77 --->
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N => [Pair [N] [N]]}: 64
+//│ [N]: 79 --->
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N => [Pair [N] [N]]}: 64
+//│ ------------------
+//│ case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 59 --->
+//│ 	[Pair [C a¹ atail¹] [C b¹ btail¹]]: 58
+//│ 	[Pair [N] [N]]: 63
+//│ case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}}: 60 --->
+//│ 	[Pair x¹ y¹]: 70
+//│ case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N => [Pair [N] [N]]}: 64 --->
+//│ 	[C [Pair x¹ y¹] ((zip₀ xt¹) yt¹)]: 76
+//│ 	[N]: 77
+//│ 	[N]: 79
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [Pair x¹ y¹]: 70 --->
+//│ 	case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}}: 60
+//│ [C [Pair x¹ y¹] ((zip₀ xt¹) yt¹)]: 76 --->
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N => [Pair [N] [N]]}: 64
+//│ [N]: 77 --->
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N => [Pair [N] [N]]}: 64
+//│ [N]: 79 --->
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N => [Pair [N] [N]]}: 64
+//│ ------------------
+//│ case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}}: 60 --->
+//│ 	[Pair x¹ y¹]: 70
+//│ case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N => [Pair [N] [N]]}: 64 --->
+//│ 	[C [Pair x¹ y¹] ((zip₀ xt¹) yt¹)]: 76
+//│ 	[N]: 77
+//│ 	[N]: 79
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ unzipZip₀
+//│ def unzipZip₀ = 
+//│ 	(fun fst² -> (fun snd² -> (unzip₀ ((zip₀ fst²) snd²))))
+//│ 	where
+//│ 	def unzip₀ = 
+//│ 		(fun ls² -> ls²)
+//│ 	def zip₀ = 
+//│ 		(fun xs² -> (fun ys² -> case xs² of {
+//│ 			C x¹ xt¹ => case ys² of {
+//│ 				C y¹ yt¹ => 
+//│ 					let h² = 	
+//│ 						let a² = x¹
+//│ 						in let b² = y¹
+//│ 						in (fun t³ -> case (unzip₀ t³) of {
+//│ 							Pair atail¹ btail¹ => [Pair [C a² atail¹] [C b² btail¹]]})
+//│ 					in let t² = ((zip₀ xt¹) yt¹)
+//│ 					in (h² t²)
+//│ 				| N => [Pair [N] [N]]}
+//│ 			| N => [Pair [N] [N]]}))
+//│ <<<<<<< after fusion <<<<<<<

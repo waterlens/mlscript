@@ -4,6 +4,21 @@ package lumberhack
 import mlscript.lumberhack.utils.*
 import mlscript.utils.shorthands.*
 import Expr.*
+import ai.serenade.treesitter.{Parser, Node, Tree, Languages}
+import com.github.sbt.jni.syntax.NativeLoader
+
+
+// NOTE: "/Users/<name>/Library/Java/Extensions/libjava-tree-sitter.dylib" should exist
+object FromHaskell extends NativeLoader("java-tree-sitter") {
+  def f() = {
+    val parser = new Parser()
+    parser.setLanguage(Languages.haskell())
+    // why segfault
+    val treeRootNode = parser.parseString("f :: Int -> Int -> Int\nf a b = a + b\nf 2 3").getRootNode()
+  }
+}
+
+
 
 trait CodeGen {
   //implicit def printName(name: Name)(implicit printUniqueIds: Boolean): Document

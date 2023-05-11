@@ -94,13 +94,16 @@ lazy val compilerJS = compiler.js
 
 lazy val lumberhack = crossProject(JSPlatform, JVMPlatform).in(file("lumberhack"))
   .settings(
+    resolvers += "jitpack" at "https://jitpack.io",
     name := "lumberhack",
-    scalaVersion := "3.1.3",
+    scalaVersion := "3.2.0",
+    sbtJniCoreScope := Compile,
     sourceDirectory := baseDirectory.value.getParentFile()/"shared"/"src",
     watchSources += WatchSource(
       baseDirectory.value.getParentFile()/"shared"/"src"/"test"/"resources", "*.mls", NothingFilter),
     libraryDependencies += ("com.lihaoyi" %% "pprint" % "0.7.0").cross(CrossVersion.for3Use2_13),
     libraryDependencies += ("com.lihaoyi" %% "ammonite-ops" % "2.4.0").cross(CrossVersion.for3Use2_13),
+    libraryDependencies += ("com.github.serenadeai" % "java-tree-sitter" % "master"),
   )
   .dependsOn(mlscript % "compile->compile;test->test")
 

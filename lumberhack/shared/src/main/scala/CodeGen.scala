@@ -10,11 +10,11 @@ import com.github.sbt.jni.syntax.NativeLoader
 
 // NOTE: "/Users/<name>/Library/Java/Extensions/libjava-tree-sitter.dylib" should exist
 object FromHaskell extends NativeLoader("java-tree-sitter") {
-  def f() = {
+  def f(program: Str, output: Str => Unit) = {
     val parser = new Parser()
     parser.setLanguage(Languages.haskell())
-    // why segfault
-    val treeRootNode = parser.parseString("f :: Int -> Int -> Int\nf a b = a + b\nf 2 3").getRootNode()
+    val treeRootNode = parser.parseString(program).getRootNode()
+    output(treeRootNode.getNodeString())
   }
 }
 

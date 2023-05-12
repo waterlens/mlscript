@@ -11,11 +11,21 @@ import scala.collection.mutable.Buffer
 
 class DiffTestLumberhack extends DiffTests {
   import DiffTestLumberhack.*
-  override def postProcess(mode: ModeType, basePath: List[Str], testName: Str, unit: TypingUnit, output: Str => Unit): Unit = {
+  override def postProcess(
+    mode: ModeType,
+    basePath: List[Str],
+    testName: Str,
+    unit: TypingUnit,
+    output: Str => Unit,
+    prgmStr: Seq[String]
+  ): Unit = {
     // output("Parsed AST:\n")
     // output(Pgrm(unit.entities).toString())
     // output("Parsed AST:\n")
-    
+    if mode.isHaskell then
+      FromHaskell.f(prgmStr.mkString("\n"), output)
+
+
     output(">>>>>>>>>> Original >>>>>>>>>>")
     // NOTE: currently do not duplicate multiple usages, since we have already exploded the program by a lot
     // val originalD = Deforest(mode.stdout)

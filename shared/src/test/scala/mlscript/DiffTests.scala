@@ -39,6 +39,7 @@ abstract class ModeType {
   def expectCodeGenErrors: Bool
   def showRepl: Bool
   def allowEscape: Bool
+  def isHaskell: Bool
 }
 
 class DiffTests
@@ -49,7 +50,7 @@ class DiffTests
   
   
   /**  Hook for dependent projects, like the monomorphizer. */
-  def postProcess(mode: ModeType, basePath: Ls[Str], testName: Str, unit: TypingUnit, output: Str => Unit): Unit = ()
+  def postProcess(mode: ModeType, basePath: Ls[Str], testName: Str, unit: TypingUnit, output: Str => Unit, prgmStr: Seq[String]): Unit = ()
   
   
   private val inParallel = isInstanceOf[ParallelTestExecution]
@@ -152,6 +153,7 @@ class DiffTests
       showRepl: Bool = false,
       allowEscape: Bool = false,
       // noProvs: Bool = false,
+      isHaskell: Bool = false,
     ) extends ModeType {
       def isDebugging: Bool = dbg || dbgSimplif
     }
@@ -206,6 +208,7 @@ class DiffTests
           case "re" => mode.copy(expectRuntimeErrors = true)
           case "ShowRepl" => mode.copy(showRepl = true)
           case "escape" => mode.copy(allowEscape = true)
+          case "haskell" => mode.copy(isHaskell = true)
           case _ =>
             failures += allLines.size - lines.size
             output("/!\\ Unrecognized option " + line)
@@ -345,7 +348,6 @@ class DiffTests
         val ans = try {
           stdout = false
           if (newParser || basePath.headOption.contains("compiler")) {
-            
             val origin = Origin(testName, globalStartLineNum, fph)
             val lexer = new NewLexer(origin, raise, dbg = mode.dbgParsing)
             
@@ -357,12 +359,12 @@ class DiffTests
             val p = new NewParser(origin, tokens, raise, dbg = mode.dbgParsing, N) {
               def doPrintDbg(msg: => Str): Unit = if (dbg) output(msg)
             }
-            val res = p.parseAll(p.typingUnit)
+            val res = if (!mode.isHaskell) { p.parseAll(p.typingUnit) } else { TypingUnit(Nil) }
             
             if (parseOnly)
               output("Parsed: " + res.show)
             stdout = mode.stdout
-            postProcess(mode, basePath, testName, res, output)
+            postProcess(mode, basePath, testName, res, output, block)
             
             if (parseOnly)
               Success(Pgrm(Nil), 0)

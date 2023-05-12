@@ -506,10 +506,10 @@ class Deforest(var debug: Boolean) {
     assert(lowerBounds.values.flatten.forall(!_._2.s.isInstanceOf[ProdVar]))
   }
   
-  lazy val knotsAfterAnnihilation = recursiveConstr.map { (cnstr, set) => (cnstr, set.map { (key, vall) =>
-    (key.annihilated, vall.annihilated)
-  }.toMap)}.toMap
-
+  lazy val knotsAfterAnnihilation = recursiveConstr.map { (cnstr, set) => (cnstr, {
+    set.map { (key, vall) => (key.annihilated, vall.annihilated) }.toSet
+  })}.toMap
+  
   lazy val actualKnotsUsingSplit = {
     val afterSplit = knotsAfterAnnihilation.map{ (cnstr, set) => (cnstr, set.flatMap { (key, vall) =>
       val (keyProd, keyCons) = key.splitted
@@ -519,8 +519,18 @@ class Deforest(var debug: Boolean) {
     val allKnotsMap = mutable.Map.empty[Path, Set[Path]].withDefaultValue(Set.empty[Path])
     afterSplit.values.flatten.foreach { (key, vall) => allKnotsMap.update(key, allKnotsMap(key) + vall)}
 
-    allKnotsMap.retain { case (k, vs) => k.reachable(callsInfo) && vs.forall(vsp => Deforest.filterKnots(k, vsp)(using this)) }
-    (allKnotsMap.toMap, afterSplit)
+    val allKnotsMapUnfiltered = allKnotsMap
+      .filter { case (k, vs) => k.p.nonEmpty }
+      .map { case (k, vs) => k -> vs.filter(v => v.p.nonEmpty && v.last.r.id == k.last.r.id && v != k) }
+      .filter(_._2.nonEmpty)
+      .toMap
+    // allKnotsMap.retain { case (k, vs) => k.reachable(callsInfo) && vs.forall(vsp => Deforest.filterKnots(k, vsp)(using this)) }
+    val allKnotsMapFiltered = allKnotsMap
+      .filter { case (k, vs) => k.reachable(callsInfo) && k.p.nonEmpty }
+      .map { (k, vs) => k -> vs.filter(vsp => Deforest.filterKnots(k, vsp)(using this)) }
+      .filter(_._2.nonEmpty)
+      .toMap
+    (allKnotsMapFiltered, allKnotsMapUnfiltered, afterSplit)
   }
 
 
@@ -709,10 +719,10 @@ case class CallTrees(calls: List[CallTree]) {
   lazy val pp = this.calls.map(_.pp).mkString("\n")
 }
 object CallTree {
-  sealed trait CallTreeKnotTierFunc { def tie(p: Path, mapping: Option[Map[Ident, Path]]): Option[Path] -> Str }
+  sealed trait CallTreeKnotTierFunc { def tie(p: Path, mapping: Option[Map[Ident, Path]], cache: Set[Path]): Option[Path] -> Str }
   class SplitKnotTier(using d: Deforest) extends CallTreeKnotTierFunc {
-    val knots = d.actualKnotsUsingSplit._1
-    def tie(p: Path, mapping: Option[Map[Ident, Path]]): Option[Path] -> Str = if mapping.isEmpty then {
+    val (knots, knots_) = (d.actualKnotsUsingSplit._1, d.actualKnotsUsingSplit._2)
+    def tie(p: Path, mapping: Option[Map[Ident, Path]], cache: Set[Path]): Option[Path] -> Str = if mapping.isEmpty then {
       assert(p.p.nonEmpty)
       // if knots.keys.exists(k => k.p.startsWith(p.p) && k.p.length > p.p.length) then None -> "" else {}
       knots.get(p).map(_.filter(sp => sp != p)) match {
@@ -721,9 +731,14 @@ object CallTree {
         case Some(s) if s.size > 1 =>
           Some(s.head) -> s.map(_.pp(using InitPpConfig)).mkString(" OR ")  // the result will not be an empty path
         // we can always tie the knot back to its definition before expansion if it is hopeless to keep expanding
-        case Some(_) | None =>
-          if knots.keys.exists(_.p.startsWith(p.p)) then None -> "" else
+        case None => if knots.keys.exists(_.p.startsWith(p.p)) then
+            None -> ""
+          else {
+            // val commonPrefixed = 
             None -> "hopeless to continue"
+          }
+
+        case _ => ??? // cannot be empty set
       }
     } else {
       mapping.get.get(p.last.r.id) -> "using original def"
@@ -735,7 +750,7 @@ object CallTree {
       d.knotsAfterAnnihilation.values.foreach { _.foreach { (k, v) => res.updateWith(k)(s => Some(s.getOrElse(Set.empty[Path]) + v)) } }
       res.toMap
     }
-    def tie(p: Path, mapping: Option[Map[Ident, Path]]): Option[Path] -> Str = if mapping.isEmpty then {
+    def tie(p: Path, mapping: Option[Map[Ident, Path]], cache: Set[Path]): Option[Path] -> Str = if mapping.isEmpty then {
       assert(p.p.nonEmpty)
 
       val matches = {
@@ -771,9 +786,10 @@ object CallTree {
       mapping.get.get(p.last.r.id) -> "using original def"
     }
   }
-  case class CallTreeKnotTier(val ctxMapping: Option[Map[Ident, Path]] = None)(using val tier: CallTreeKnotTierFunc) {
+  case class CallTreeKnotTier(val ctxMapping: Option[Map[Ident, Path]] = None, val cache: Set[Path] = Set.empty)(using val tier: CallTreeKnotTierFunc) {
     def updateCtxMapping(id: Ident, p: Path) = copy(ctxMapping = this.ctxMapping.orElse(Some(Map.empty[Ident, Path])).map(_ + (id -> p)))
-    def apply(p: Path) = tier.tie(p, ctxMapping)
+    def updateCache(p: Path) = copy(cache = this.cache + p)
+    def apply(p: Path) = tier.tie(p, ctxMapping, cache)
     // if return true, then we are duplicating possible multiple usages functions, otherwise we are are duplicating recursive functions
     def mode = ctxMapping.isDefined
   }
@@ -813,7 +829,7 @@ object CallTree {
 
   def callTreeWithoutKnotTying(d: Deforest) = {
     val tier = CallTreeKnotTier()(using new CallTreeKnotTierFunc {
-      override def tie(p: Path, mapping: Option[Map[Ident, Path]]): (Option[Path], Str) = mapping match {
+      override def tie(p: Path, mapping: Option[Map[Ident, Path]], cache: Set[Path]): (Option[Path], Str) = mapping match {
         case None => None -> "hopeless to continue"
         case Some(value) => value.get(p.last.r.id) -> "using original def"
       }
@@ -831,7 +847,7 @@ object Deforest {
 
   def filterKnots(k: Path, v: Path)(using d: Deforest) = v.reachable(d.callsInfo) &&
     v.p.nonEmpty && k.p.nonEmpty &&
-    v.p.last.asInstanceOf[PathElem.Normal].r.id == k.last.r.id &&
+    v.last.r.id == k.last.r.id &&
     k.p.startsWith(v.p) &&
     k != v
 }

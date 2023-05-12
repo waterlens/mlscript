@@ -264,14 +264,12 @@ class DiffTestLumberhack extends DiffTests {
     evalRess: Option[List[List[Expr]]] = Some(Nil),
   ): (Program, Deforest, Option[List[List[Expr]]]) = {
     val buf = Buffer.empty[String]
-    val _output = if mode.stdout || mode.verbose then output else { (str: String) => buf.append(str); () }
+    val _output = if mode.stdout || mode.verbose || count == 0 then output else { (str: String) => buf.append(str); () }
 
     val (expandedP, expandedD, callTree) = expander(using p, d, mode, _output)
     val (fusedP, fusedD, stop, evalRes) = fuser(using expandedP, expandedD, callTree, mode, evaluate, _output)
     
-    if count == 0 then
-      output(buf.mkString("\n"))
-    else if !stop then
+    if count > 0 && !stop then
       output("\n~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~"); output(buf.mkString("\n"))
     
     if mode.stdout || mode.verbose then
@@ -312,7 +310,7 @@ class DiffTestLumberhack extends DiffTests {
 
     if mode.stdout || mode.verbose then {
       output("\n>>>>>>> splitted knots >>>>>>>")
-      d.actualKnotsUsingSplit._1.toSeq.sortBy(_._1.pp(using InitPpConfig.showPolarityOn)).foreach { (k, v) =>
+      d.actualKnotsUsingSplit._2.toSeq.sortBy(_._1.pp(using InitPpConfig.showPolarityOn)).foreach { (k, v) =>
         output(s"${k.pp(using InitPpConfig.showRefEuidOn)} --> ${v.toSeq
           .sortBy(_.pp(using InitPpConfig.showPolarityOn.showRefEuidOn))
           .map(v => s"${v.pp(using InitPpConfig.showEuidOn.showRefEuidOn)}").mkString("\n\t")}"

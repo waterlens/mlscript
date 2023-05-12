@@ -20,73 +20,76 @@ filter(C(0, C(5, C(2, C(4, N)))))(predicate)
 //│ >>>>>>> expansion >>>>>>>
 //│ [filter^29]
 //│ 	[filter^29 · filter^12] ---> [filter^29] (only one)
-//│ 	[filter^29 · filter^6] (hopeless to continue)
-//│ 		[filter^29 · filter^6 · filter^12] ---> [filter^29 · filter^6] (using original def)
-//│ 		[filter^29 · filter^6 · filter^6] ---> [filter^29 · filter^6] (using original def)
+//│ 	[filter^29 · filter^6] ---> [filter^29 · filter^12] (only one; NOT PREFIX)
 //│ [predicate^40] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
 //│ ((filter₀ [C 0 [C 5 [C 2 [C 4 [N]]]]]) predicate₀)
 //│ def filter₀ = 
-//│ 	(fun ls² -> case ls² of {
-//│ 		C h² t² => (fun f⁴ -> if (f⁴ h²) then [C h² ((filter₁ t²) f⁴)] else ((filter₀ t²) f⁴))
-//│ 		| N => (fun f⁵ -> [N])})
-//│ 	where
-//│ 	def filter₁ = 
-//│ 		(fun ls¹ -> case ls¹ of {
-//│ 			C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₁ t¹) f²)] else ((filter₁ t¹) f²))
-//│ 			| N => (fun f³ -> [N])})
+//│ 	(fun ls¹ -> case ls¹ of {
+//│ 		C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²))
+//│ 		| N => (fun f³ -> [N])})
 //│ def predicate₀ = 
 //│ 	(fun x¹ -> (x¹ > 3))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 97 --->
-//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₁ t¹) f²)] else ((filter₁ t¹) f²)) | N => (fun f³ -> [N])}: 62
-//│ 	case ls² of {C h² t² => (fun f⁴ -> if (f⁴ h²) then [C h² ((filter₁ t²) f⁴)] else ((filter₀ t²) f⁴)) | N => (fun f⁵ -> [N])}: 90
-//│ [C 4 [N]]: 98 --->
-//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₁ t¹) f²)] else ((filter₁ t¹) f²)) | N => (fun f³ -> [N])}: 62
-//│ 	case ls² of {C h² t² => (fun f⁴ -> if (f⁴ h²) then [C h² ((filter₁ t²) f⁴)] else ((filter₀ t²) f⁴)) | N => (fun f⁵ -> [N])}: 90
-//│ [C 2 [C 4 [N]]]: 99 --->
-//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₁ t¹) f²)] else ((filter₁ t¹) f²)) | N => (fun f³ -> [N])}: 62
-//│ 	case ls² of {C h² t² => (fun f⁴ -> if (f⁴ h²) then [C h² ((filter₁ t²) f⁴)] else ((filter₀ t²) f⁴)) | N => (fun f⁵ -> [N])}: 90
-//│ [C 5 [C 2 [C 4 [N]]]]: 100 --->
-//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₁ t¹) f²)] else ((filter₁ t¹) f²)) | N => (fun f³ -> [N])}: 62
-//│ 	case ls² of {C h² t² => (fun f⁴ -> if (f⁴ h²) then [C h² ((filter₁ t²) f⁴)] else ((filter₀ t²) f⁴)) | N => (fun f⁵ -> [N])}: 90
-//│ [C 0 [C 5 [C 2 [C 4 [N]]]]]: 101 --->
-//│ 	case ls² of {C h² t² => (fun f⁴ -> if (f⁴ h²) then [C h² ((filter₁ t²) f⁴)] else ((filter₀ t²) f⁴)) | N => (fun f⁵ -> [N])}: 90
+//│ [N]: 75 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 62
+//│ [C 4 [N]]: 76 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 62
+//│ [C 2 [C 4 [N]]]: 77 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 62
+//│ [C 5 [C 2 [C 4 [N]]]]: 78 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 62
+//│ [C 0 [C 5 [C 2 [C 4 [N]]]]]: 79 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 62
 //│ ------------------
-//│ case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₁ t¹) f²)] else ((filter₁ t¹) f²)) | N => (fun f³ -> [N])}: 62 --->
-//│ 	[N]: 97
-//│ 	[C 4 [N]]: 98
-//│ 	[C 2 [C 4 [N]]]: 99
-//│ 	[C 5 [C 2 [C 4 [N]]]]: 100
-//│ case ls² of {C h² t² => (fun f⁴ -> if (f⁴ h²) then [C h² ((filter₁ t²) f⁴)] else ((filter₀ t²) f⁴)) | N => (fun f⁵ -> [N])}: 90 --->
-//│ 	[N]: 97
-//│ 	[C 4 [N]]: 98
-//│ 	[C 2 [C 4 [N]]]: 99
-//│ 	[C 5 [C 2 [C 4 [N]]]]: 100
-//│ 	[C 0 [C 5 [C 2 [C 4 [N]]]]]: 101
+//│ case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 62 --->
+//│ 	[N]: 75
+//│ 	[C 4 [N]]: 76
+//│ 	[C 2 [C 4 [N]]]: 77
+//│ 	[C 5 [C 2 [C 4 [N]]]]: 78
+//│ 	[C 0 [C 5 [C 2 [C 4 [N]]]]]: 79
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
+//│ [N]: 75 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 62
+//│ [C 4 [N]]: 76 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 62
+//│ [C 2 [C 4 [N]]]: 77 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 62
+//│ [C 5 [C 2 [C 4 [N]]]]: 78 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 62
+//│ [C 0 [C 5 [C 2 [C 4 [N]]]]]: 79 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 62
 //│ ------------------
-//│ 
+//│ case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 62 --->
+//│ 	[N]: 75
+//│ 	[C 4 [N]]: 76
+//│ 	[C 2 [C 4 [N]]]: 77
+//│ 	[C 5 [C 2 [C 4 [N]]]]: 78
+//│ 	[C 0 [C 5 [C 2 [C 4 [N]]]]]: 79
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((filter₀ [C 0 [C 5 [C 2 [C 4 [N]]]]]) predicate₀)
+//│ ((filter₀ 
+//│ 	let h² = 0
+//│ 	in let t² = 	
+//│ 		let h³ = 5
+//│ 		in let t³ = 	
+//│ 			let h⁴ = 2
+//│ 			in let t⁴ = 	
+//│ 				let h⁵ = 4
+//│ 				in let t⁵ = (fun f⁸ -> [N])
+//│ 				in (fun f⁷ -> if (f⁷ h⁵) then [C h⁵ ((filter₀ t⁵) f⁷)] else ((filter₀ t⁵) f⁷))
+//│ 			in (fun f⁶ -> if (f⁶ h⁴) then [C h⁴ ((filter₀ t⁴) f⁶)] else ((filter₀ t⁴) f⁶))
+//│ 		in (fun f⁵ -> if (f⁵ h³) then [C h³ ((filter₀ t³) f⁵)] else ((filter₀ t³) f⁵))
+//│ 	in (fun f⁴ -> if (f⁴ h²) then [C h² ((filter₀ t²) f⁴)] else ((filter₀ t²) f⁴))) predicate₀)
 //│ def filter₀ = 
-//│ 	(fun ls⁴ -> case ls⁴ of {
-//│ 		C h² t² => (fun f⁸ -> if (f⁸ h²) then [C h² ((filter₁ t²) f⁸)] else ((filter₀ t²) f⁸))
-//│ 		| N => (fun f⁹ -> [N])})
-//│ 	where
-//│ 	def filter₁ = 
-//│ 		(fun ls³ -> case ls³ of {
-//│ 			C h¹ t¹ => (fun f⁶ -> if (f⁶ h¹) then [C h¹ ((filter₁ t¹) f⁶)] else ((filter₁ t¹) f⁶))
-//│ 			| N => (fun f⁷ -> [N])})
+//│ 	(fun ls² -> ls²)
 //│ def predicate₀ = 
 //│ 	(fun x² -> (x² > 3))
 //│ <<<<<<< after fusion <<<<<<<
@@ -114,9 +117,7 @@ filter(l)(predicate)
 //│ >>>>>>> expansion >>>>>>>
 //│ [filter^40]
 //│ 	[filter^40 · filter^12] ---> [filter^40] (only one)
-//│ 	[filter^40 · filter^6] (hopeless to continue)
-//│ 		[filter^40 · filter^6 · filter^12] ---> [filter^40 · filter^6] (using original def)
-//│ 		[filter^40 · filter^6 · filter^6] ---> [filter^40 · filter^6] (using original def)
+//│ 	[filter^40 · filter^6] ---> [filter^40 · filter^12] (only one; NOT PREFIX)
 //│ [l^41]
 //│ 	[l^41 · l^34] ---> [l^41] (only one)
 //│ [predicate^43] (hopeless to continue)
@@ -126,13 +127,8 @@ filter(l)(predicate)
 //│ ((filter₀ l₀) predicate₀)
 //│ def filter₀ = 
 //│ 	(fun ls¹ -> case ls¹ of {
-//│ 		C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₁ t¹) f²)] else ((filter₀ t¹) f²))
+//│ 		C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²))
 //│ 		| N => (fun f³ -> [N])})
-//│ 	where
-//│ 	def filter₁ = 
-//│ 		(fun ls² -> case ls² of {
-//│ 			C h² t² => (fun f⁴ -> if (f⁴ h²) then [C h² ((filter₁ t²) f⁴)] else ((filter₁ t²) f⁴))
-//│ 			| N => (fun f⁵ -> [N])})
 //│ def l₀ = 
 //│ 	[C 0 [C 5 [C 2 [C 4 [C 1 l₀]]]]]
 //│ def predicate₀ = 
@@ -141,28 +137,17 @@ filter(l)(predicate)
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 1 l₀]: 79 --->
-//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₁ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 65
-//│ 	case ls² of {C h² t² => (fun f⁴ -> if (f⁴ h²) then [C h² ((filter₁ t²) f⁴)] else ((filter₁ t²) f⁴)) | N => (fun f⁵ -> [N])}: 104
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 65
 //│ [C 4 [C 1 l₀]]: 80 --->
-//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₁ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 65
-//│ 	case ls² of {C h² t² => (fun f⁴ -> if (f⁴ h²) then [C h² ((filter₁ t²) f⁴)] else ((filter₁ t²) f⁴)) | N => (fun f⁵ -> [N])}: 104
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 65
 //│ [C 2 [C 4 [C 1 l₀]]]: 81 --->
-//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₁ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 65
-//│ 	case ls² of {C h² t² => (fun f⁴ -> if (f⁴ h²) then [C h² ((filter₁ t²) f⁴)] else ((filter₁ t²) f⁴)) | N => (fun f⁵ -> [N])}: 104
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 65
 //│ [C 5 [C 2 [C 4 [C 1 l₀]]]]: 82 --->
-//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₁ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 65
-//│ 	case ls² of {C h² t² => (fun f⁴ -> if (f⁴ h²) then [C h² ((filter₁ t²) f⁴)] else ((filter₁ t²) f⁴)) | N => (fun f⁵ -> [N])}: 104
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 65
 //│ [C 0 [C 5 [C 2 [C 4 [C 1 l₀]]]]]: 83 --->
-//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₁ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 65
-//│ 	case ls² of {C h² t² => (fun f⁴ -> if (f⁴ h²) then [C h² ((filter₁ t²) f⁴)] else ((filter₁ t²) f⁴)) | N => (fun f⁵ -> [N])}: 104
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 65
 //│ ------------------
-//│ case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₁ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 65 --->
-//│ 	[C 1 l₀]: 79
-//│ 	[C 4 [C 1 l₀]]: 80
-//│ 	[C 2 [C 4 [C 1 l₀]]]: 81
-//│ 	[C 5 [C 2 [C 4 [C 1 l₀]]]]: 82
-//│ 	[C 0 [C 5 [C 2 [C 4 [C 1 l₀]]]]]: 83
-//│ case ls² of {C h² t² => (fun f⁴ -> if (f⁴ h²) then [C h² ((filter₁ t²) f⁴)] else ((filter₁ t²) f⁴)) | N => (fun f⁵ -> [N])}: 104 --->
+//│ case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 65 --->
 //│ 	[C 1 l₀]: 79
 //│ 	[C 4 [C 1 l₀]]: 80
 //│ 	[C 2 [C 4 [C 1 l₀]]]: 81
@@ -171,24 +156,45 @@ filter(l)(predicate)
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
+//│ [C 1 l₀]: 79 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 65
+//│ [C 4 [C 1 l₀]]: 80 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 65
+//│ [C 2 [C 4 [C 1 l₀]]]: 81 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 65
+//│ [C 5 [C 2 [C 4 [C 1 l₀]]]]: 82 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 65
+//│ [C 0 [C 5 [C 2 [C 4 [C 1 l₀]]]]]: 83 --->
+//│ 	case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 65
 //│ ------------------
-//│ 
+//│ case ls¹ of {C h¹ t¹ => (fun f² -> if (f² h¹) then [C h¹ ((filter₀ t¹) f²)] else ((filter₀ t¹) f²)) | N => (fun f³ -> [N])}: 65 --->
+//│ 	[C 1 l₀]: 79
+//│ 	[C 4 [C 1 l₀]]: 80
+//│ 	[C 2 [C 4 [C 1 l₀]]]: 81
+//│ 	[C 5 [C 2 [C 4 [C 1 l₀]]]]: 82
+//│ 	[C 0 [C 5 [C 2 [C 4 [C 1 l₀]]]]]: 83
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((filter₀ l₀) predicate₀)
 //│ def filter₀ = 
-//│ 	(fun ls³ -> case ls³ of {
-//│ 		C h¹ t¹ => (fun f⁶ -> if (f⁶ h¹) then [C h¹ ((filter₁ t¹) f⁶)] else ((filter₀ t¹) f⁶))
-//│ 		| N => (fun f⁷ -> [N])})
-//│ 	where
-//│ 	def filter₁ = 
-//│ 		(fun ls⁴ -> case ls⁴ of {
-//│ 			C h² t² => (fun f⁸ -> if (f⁸ h²) then [C h² ((filter₁ t²) f⁸)] else ((filter₁ t²) f⁸))
-//│ 			| N => (fun f⁹ -> [N])})
+//│ 	(fun ls² -> ls²)
 //│ def l₀ = 
-//│ 	[C 0 [C 5 [C 2 [C 4 [C 1 l₀]]]]]
+//│ 	let h² = 0
+//│ 	in let t² = 	
+//│ 		let h³ = 5
+//│ 		in let t³ = 	
+//│ 			let h⁴ = 2
+//│ 			in let t⁴ = 	
+//│ 				let h⁵ = 4
+//│ 				in let t⁵ = 	
+//│ 					let h⁶ = 1
+//│ 					in let t⁶ = l₀
+//│ 					in (fun f⁸ -> if (f⁸ h⁶) then [C h⁶ ((filter₀ t⁶) f⁸)] else ((filter₀ t⁶) f⁸))
+//│ 				in (fun f⁷ -> if (f⁷ h⁵) then [C h⁵ ((filter₀ t⁵) f⁷)] else ((filter₀ t⁵) f⁷))
+//│ 			in (fun f⁶ -> if (f⁶ h⁴) then [C h⁴ ((filter₀ t⁴) f⁶)] else ((filter₀ t⁴) f⁶))
+//│ 		in (fun f⁵ -> if (f⁵ h³) then [C h³ ((filter₀ t³) f⁵)] else ((filter₀ t³) f⁵))
+//│ 	in (fun f⁴ -> if (f⁴ h²) then [C h² ((filter₀ t²) f⁴)] else ((filter₀ t²) f⁴))
 //│ def predicate₀ = 
 //│ 	(fun x² -> (x² > 3))
 //│ <<<<<<< after fusion <<<<<<<
@@ -219,9 +225,7 @@ filter(l)(predicate)
 //│ >>>>>>> expansion >>>>>>>
 //│ [filter^49]
 //│ 	[filter^49 · filter^13] ---> [filter^49] (only one)
-//│ 	[filter^49 · filter^7] (hopeless to continue)
-//│ 		[filter^49 · filter^7 · filter^13] ---> [filter^49 · filter^7] (using original def)
-//│ 		[filter^49 · filter^7 · filter^7] ---> [filter^49 · filter^7] (using original def)
+//│ 	[filter^49 · filter^7] ---> [filter^49 · filter^13] (only one; NOT PREFIX)
 //│ [l^50]
 //│ 	[l^50 · l^43] ---> [l^50] (only one)
 //│ [predicate^52] (hopeless to continue)
@@ -233,15 +237,8 @@ filter(l)(predicate)
 //│ 	(fun ls¹ -> case ls¹ of {
 //│ 		C h¹ t¹ => (fun f¹ -> 
 //│ 			let tail¹ = case t¹ of {
-//│ 				C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₁ tt¹) f¹)] else ((filter₀ tt¹) f¹)}
+//│ 				C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₀ tt¹) f¹)] else ((filter₀ tt¹) f¹)}
 //│ 			in if (f¹ h¹) then [C h¹ tail¹] else tail¹)})
-//│ 	where
-//│ 	def filter₁ = 
-//│ 		(fun ls² -> case ls² of {
-//│ 			C h² t² => (fun f² -> 
-//│ 				let tail² = case t² of {
-//│ 					C hh² tt² => if (f² hh²) then [C hh² ((filter₁ tt²) f²)] else ((filter₁ tt²) f²)}
-//│ 				in if (f² h²) then [C h² tail²] else tail²)})
 //│ def l₀ = 
 //│ 	[C 0 [C 5 [C 2 [C 4 [C 1 l₀]]]]]
 //│ def predicate₀ = 
@@ -249,68 +246,40 @@ filter(l)(predicate)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 l₀]: 128 --->
-//│ 	case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₁ tt¹) f¹)] else ((filter₀ tt¹) f¹)}: 72
-//│ 	case ls¹ of {C h¹ t¹ => (fun f¹ -> let tail¹ = case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₁ tt¹) f¹)] else ((filter₀ tt¹) f¹)}
+//│ [C 1 l₀]: 97 --->
+//│ 	case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₀ tt¹) f¹)] else ((filter₀ tt¹) f¹)}: 72
+//│ 	case ls¹ of {C h¹ t¹ => (fun f¹ -> let tail¹ = case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₀ tt¹) f¹)] else ((filter₀ tt¹) f¹)}
 //│ in if (f¹ h¹) then [C h¹ tail¹] else tail¹)}: 83
-//│ 	case t² of {C hh² tt² => if (f² hh²) then [C hh² ((filter₁ tt²) f²)] else ((filter₁ tt²) f²)}: 103
-//│ 	case ls² of {C h² t² => (fun f² -> let tail² = case t² of {C hh² tt² => if (f² hh²) then [C hh² ((filter₁ tt²) f²)] else ((filter₁ tt²) f²)}
-//│ in if (f² h²) then [C h² tail²] else tail²)}: 114
-//│ [C 4 [C 1 l₀]]: 129 --->
-//│ 	case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₁ tt¹) f¹)] else ((filter₀ tt¹) f¹)}: 72
-//│ 	case ls¹ of {C h¹ t¹ => (fun f¹ -> let tail¹ = case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₁ tt¹) f¹)] else ((filter₀ tt¹) f¹)}
+//│ [C 4 [C 1 l₀]]: 98 --->
+//│ 	case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₀ tt¹) f¹)] else ((filter₀ tt¹) f¹)}: 72
+//│ 	case ls¹ of {C h¹ t¹ => (fun f¹ -> let tail¹ = case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₀ tt¹) f¹)] else ((filter₀ tt¹) f¹)}
 //│ in if (f¹ h¹) then [C h¹ tail¹] else tail¹)}: 83
-//│ 	case t² of {C hh² tt² => if (f² hh²) then [C hh² ((filter₁ tt²) f²)] else ((filter₁ tt²) f²)}: 103
-//│ 	case ls² of {C h² t² => (fun f² -> let tail² = case t² of {C hh² tt² => if (f² hh²) then [C hh² ((filter₁ tt²) f²)] else ((filter₁ tt²) f²)}
-//│ in if (f² h²) then [C h² tail²] else tail²)}: 114
-//│ [C 2 [C 4 [C 1 l₀]]]: 130 --->
-//│ 	case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₁ tt¹) f¹)] else ((filter₀ tt¹) f¹)}: 72
-//│ 	case ls¹ of {C h¹ t¹ => (fun f¹ -> let tail¹ = case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₁ tt¹) f¹)] else ((filter₀ tt¹) f¹)}
+//│ [C 2 [C 4 [C 1 l₀]]]: 99 --->
+//│ 	case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₀ tt¹) f¹)] else ((filter₀ tt¹) f¹)}: 72
+//│ 	case ls¹ of {C h¹ t¹ => (fun f¹ -> let tail¹ = case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₀ tt¹) f¹)] else ((filter₀ tt¹) f¹)}
 //│ in if (f¹ h¹) then [C h¹ tail¹] else tail¹)}: 83
-//│ 	case t² of {C hh² tt² => if (f² hh²) then [C hh² ((filter₁ tt²) f²)] else ((filter₁ tt²) f²)}: 103
-//│ 	case ls² of {C h² t² => (fun f² -> let tail² = case t² of {C hh² tt² => if (f² hh²) then [C hh² ((filter₁ tt²) f²)] else ((filter₁ tt²) f²)}
-//│ in if (f² h²) then [C h² tail²] else tail²)}: 114
-//│ [C 5 [C 2 [C 4 [C 1 l₀]]]]: 131 --->
-//│ 	case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₁ tt¹) f¹)] else ((filter₀ tt¹) f¹)}: 72
-//│ 	case ls¹ of {C h¹ t¹ => (fun f¹ -> let tail¹ = case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₁ tt¹) f¹)] else ((filter₀ tt¹) f¹)}
+//│ [C 5 [C 2 [C 4 [C 1 l₀]]]]: 100 --->
+//│ 	case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₀ tt¹) f¹)] else ((filter₀ tt¹) f¹)}: 72
+//│ 	case ls¹ of {C h¹ t¹ => (fun f¹ -> let tail¹ = case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₀ tt¹) f¹)] else ((filter₀ tt¹) f¹)}
 //│ in if (f¹ h¹) then [C h¹ tail¹] else tail¹)}: 83
-//│ 	case t² of {C hh² tt² => if (f² hh²) then [C hh² ((filter₁ tt²) f²)] else ((filter₁ tt²) f²)}: 103
-//│ 	case ls² of {C h² t² => (fun f² -> let tail² = case t² of {C hh² tt² => if (f² hh²) then [C hh² ((filter₁ tt²) f²)] else ((filter₁ tt²) f²)}
-//│ in if (f² h²) then [C h² tail²] else tail²)}: 114
-//│ [C 0 [C 5 [C 2 [C 4 [C 1 l₀]]]]]: 132 --->
-//│ 	case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₁ tt¹) f¹)] else ((filter₀ tt¹) f¹)}: 72
-//│ 	case ls¹ of {C h¹ t¹ => (fun f¹ -> let tail¹ = case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₁ tt¹) f¹)] else ((filter₀ tt¹) f¹)}
+//│ [C 0 [C 5 [C 2 [C 4 [C 1 l₀]]]]]: 101 --->
+//│ 	case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₀ tt¹) f¹)] else ((filter₀ tt¹) f¹)}: 72
+//│ 	case ls¹ of {C h¹ t¹ => (fun f¹ -> let tail¹ = case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₀ tt¹) f¹)] else ((filter₀ tt¹) f¹)}
 //│ in if (f¹ h¹) then [C h¹ tail¹] else tail¹)}: 83
-//│ 	case t² of {C hh² tt² => if (f² hh²) then [C hh² ((filter₁ tt²) f²)] else ((filter₁ tt²) f²)}: 103
-//│ 	case ls² of {C h² t² => (fun f² -> let tail² = case t² of {C hh² tt² => if (f² hh²) then [C hh² ((filter₁ tt²) f²)] else ((filter₁ tt²) f²)}
-//│ in if (f² h²) then [C h² tail²] else tail²)}: 114
 //│ ------------------
-//│ case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₁ tt¹) f¹)] else ((filter₀ tt¹) f¹)}: 72 --->
-//│ 	[C 1 l₀]: 128
-//│ 	[C 4 [C 1 l₀]]: 129
-//│ 	[C 2 [C 4 [C 1 l₀]]]: 130
-//│ 	[C 5 [C 2 [C 4 [C 1 l₀]]]]: 131
-//│ 	[C 0 [C 5 [C 2 [C 4 [C 1 l₀]]]]]: 132
-//│ case ls¹ of {C h¹ t¹ => (fun f¹ -> let tail¹ = case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₁ tt¹) f¹)] else ((filter₀ tt¹) f¹)}
+//│ case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₀ tt¹) f¹)] else ((filter₀ tt¹) f¹)}: 72 --->
+//│ 	[C 1 l₀]: 97
+//│ 	[C 4 [C 1 l₀]]: 98
+//│ 	[C 2 [C 4 [C 1 l₀]]]: 99
+//│ 	[C 5 [C 2 [C 4 [C 1 l₀]]]]: 100
+//│ 	[C 0 [C 5 [C 2 [C 4 [C 1 l₀]]]]]: 101
+//│ case ls¹ of {C h¹ t¹ => (fun f¹ -> let tail¹ = case t¹ of {C hh¹ tt¹ => if (f¹ hh¹) then [C hh¹ ((filter₀ tt¹) f¹)] else ((filter₀ tt¹) f¹)}
 //│ in if (f¹ h¹) then [C h¹ tail¹] else tail¹)}: 83 --->
-//│ 	[C 1 l₀]: 128
-//│ 	[C 4 [C 1 l₀]]: 129
-//│ 	[C 2 [C 4 [C 1 l₀]]]: 130
-//│ 	[C 5 [C 2 [C 4 [C 1 l₀]]]]: 131
-//│ 	[C 0 [C 5 [C 2 [C 4 [C 1 l₀]]]]]: 132
-//│ case t² of {C hh² tt² => if (f² hh²) then [C hh² ((filter₁ tt²) f²)] else ((filter₁ tt²) f²)}: 103 --->
-//│ 	[C 1 l₀]: 128
-//│ 	[C 4 [C 1 l₀]]: 129
-//│ 	[C 2 [C 4 [C 1 l₀]]]: 130
-//│ 	[C 5 [C 2 [C 4 [C 1 l₀]]]]: 131
-//│ 	[C 0 [C 5 [C 2 [C 4 [C 1 l₀]]]]]: 132
-//│ case ls² of {C h² t² => (fun f² -> let tail² = case t² of {C hh² tt² => if (f² hh²) then [C hh² ((filter₁ tt²) f²)] else ((filter₁ tt²) f²)}
-//│ in if (f² h²) then [C h² tail²] else tail²)}: 114 --->
-//│ 	[C 1 l₀]: 128
-//│ 	[C 4 [C 1 l₀]]: 129
-//│ 	[C 2 [C 4 [C 1 l₀]]]: 130
-//│ 	[C 5 [C 2 [C 4 [C 1 l₀]]]]: 131
-//│ 	[C 0 [C 5 [C 2 [C 4 [C 1 l₀]]]]]: 132
+//│ 	[C 1 l₀]: 97
+//│ 	[C 4 [C 1 l₀]]: 98
+//│ 	[C 2 [C 4 [C 1 l₀]]]: 99
+//│ 	[C 5 [C 2 [C 4 [C 1 l₀]]]]: 100
+//│ 	[C 0 [C 5 [C 2 [C 4 [C 1 l₀]]]]]: 101
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -322,18 +291,11 @@ filter(l)(predicate)
 //│ >>>>>>> after fusion >>>>>>>
 //│ ((filter₀ l₀) predicate₀)
 //│ def filter₀ = 
-//│ 	(fun ls³ -> case ls³ of {
-//│ 		C h¹ t¹ => (fun f³ -> 
+//│ 	(fun ls² -> case ls² of {
+//│ 		C h¹ t¹ => (fun f² -> 
 //│ 			let tail¹ = case t¹ of {
-//│ 				C hh¹ tt¹ => if (f³ hh¹) then [C hh¹ ((filter₁ tt¹) f³)] else ((filter₀ tt¹) f³)}
-//│ 			in if (f³ h¹) then [C h¹ tail¹] else tail¹)})
-//│ 	where
-//│ 	def filter₁ = 
-//│ 		(fun ls⁴ -> case ls⁴ of {
-//│ 			C h² t² => (fun f⁴ -> 
-//│ 				let tail² = case t² of {
-//│ 					C hh² tt² => if (f⁴ hh²) then [C hh² ((filter₁ tt²) f⁴)] else ((filter₁ tt²) f⁴)}
-//│ 				in if (f⁴ h²) then [C h² tail²] else tail²)})
+//│ 				C hh¹ tt¹ => if (f² hh¹) then [C hh¹ ((filter₀ tt¹) f²)] else ((filter₀ tt¹) f²)}
+//│ 			in if (f² h¹) then [C h¹ tail¹] else tail¹)})
 //│ def l₀ = 
 //│ 	[C 0 [C 5 [C 2 [C 4 [C 1 l₀]]]]]
 //│ def predicate₀ = 

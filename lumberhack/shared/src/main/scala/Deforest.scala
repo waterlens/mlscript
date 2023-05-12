@@ -719,10 +719,10 @@ case class CallTrees(calls: List[CallTree]) {
   lazy val pp = this.calls.map(_.pp).mkString("\n")
 }
 object CallTree {
-  sealed trait CallTreeKnotTierFunc { def tie(p: Path, mapping: Option[Map[Ident, Path]], cache: Set[Path]): Option[Path] -> Str }
+  sealed trait CallTreeKnotTierFunc { def tie(p: Path, mapping: Option[Map[Ident, Path]], cache: mutable.Set[Path]): Option[Path] -> Str }
   class SplitKnotTier(using d: Deforest) extends CallTreeKnotTierFunc {
-    val (knots, knots_) = (d.actualKnotsUsingSplit._1, d.actualKnotsUsingSplit._2)
-    def tie(p: Path, mapping: Option[Map[Ident, Path]], cache: Set[Path]): Option[Path] -> Str = if mapping.isEmpty then {
+    val (knots, knotsUnfiltered) = (d.actualKnotsUsingSplit._1, d.actualKnotsUsingSplit._2)
+    def tie(p: Path, mapping: Option[Map[Ident, Path]], cache: mutable.Set[Path]): Option[Path] -> Str = if mapping.isEmpty then {
       assert(p.p.nonEmpty)
       // if knots.keys.exists(k => k.p.startsWith(p.p) && k.p.length > p.p.length) then None -> "" else {}
       knots.get(p).map(_.filter(sp => sp != p)) match {
@@ -731,12 +731,22 @@ object CallTree {
         case Some(s) if s.size > 1 =>
           Some(s.head) -> s.map(_.pp(using InitPpConfig)).mkString(" OR ")  // the result will not be an empty path
         // we can always tie the knot back to its definition before expansion if it is hopeless to keep expanding
-        case None => if knots.keys.exists(_.p.startsWith(p.p)) then
+        // case None => if knots.keys.exists(_.p.startsWith(p.p)) then None -> "" else None -> "hopeless to continue"
+        case None => {
+          val commonPrefixedMatch = knotsUnfiltered.filter(m => p.p.endsWith(m._1.p)).map { case (k, vs) =>
+            val prefix = p.p.take(p.p.length - k.p.length)
+            // vs.map(v => Path(prefix ::: v.p)).filter(v => cache.exists(_.p == v.p) || v.reachable(d.callsInfo))
+            vs.map(v => Path(prefix ::: v.p)).filter(v => cache.exists(_.p == v.p))
+          }.flatten.toSet
+          if commonPrefixedMatch.size == 1 then
+            Some(commonPrefixedMatch.head) -> "only one"
+          else if commonPrefixedMatch.size > 1 then
+            Some(commonPrefixedMatch.head) -> commonPrefixedMatch.map(_.pp(using InitPpConfig)).mkString(" OR ")
+          else if knots.keys.exists(_.p.startsWith(p.p)) then
             None -> ""
-          else {
-            // val commonPrefixed = 
+          else
             None -> "hopeless to continue"
-          }
+        }
 
         case _ => ??? // cannot be empty set
       }
@@ -750,7 +760,7 @@ object CallTree {
       d.knotsAfterAnnihilation.values.foreach { _.foreach { (k, v) => res.updateWith(k)(s => Some(s.getOrElse(Set.empty[Path]) + v)) } }
       res.toMap
     }
-    def tie(p: Path, mapping: Option[Map[Ident, Path]], cache: Set[Path]): Option[Path] -> Str = if mapping.isEmpty then {
+    def tie(p: Path, mapping: Option[Map[Ident, Path]], cache: mutable.Set[Path]): Option[Path] -> Str = if mapping.isEmpty then {
       assert(p.p.nonEmpty)
 
       val matches = {
@@ -786,7 +796,7 @@ object CallTree {
       mapping.get.get(p.last.r.id) -> "using original def"
     }
   }
-  case class CallTreeKnotTier(val ctxMapping: Option[Map[Ident, Path]] = None, val cache: Set[Path] = Set.empty)(using val tier: CallTreeKnotTierFunc) {
+  case class CallTreeKnotTier(val ctxMapping: Option[Map[Ident, Path]] = None, val cache: mutable.Set[Path] = mutable.Set.empty)(using val tier: CallTreeKnotTierFunc) {
     def updateCtxMapping(id: Ident, p: Path) = copy(ctxMapping = this.ctxMapping.orElse(Some(Map.empty[Ident, Path])).map(_ + (id -> p)))
     def updateCache(p: Path) = copy(cache = this.cache + p)
     def apply(p: Path) = tier.tie(p, ctxMapping, cache)
@@ -807,11 +817,13 @@ object CallTree {
         if info == "hopeless to continue" || knotTier.mode then { // need to use the original definition, enter into the multiple usages duplication mode
           CallTree.Continue(p, growCallTree(nexts)(using knotTier.updateCtxMapping(p.p.last.asInstanceOf[PathElem.Normal].r.id, p)))(info)
         } else { // still in recursive expansion mode
+          knotTier.cache += p
           CallTree.Continue(p, growCallTree(nexts))(info)
         }
       }
       case Some(k) -> info => {
         val newInfo = if (info != "hopeless to continue") && !(p.p.startsWith(k.p)) then info + "; NOT PREFIX" else info
+        knotTier.cache += p
         CallTree.Knot(p, k)(newInfo)
       }
     }}})
@@ -829,7 +841,7 @@ object CallTree {
 
   def callTreeWithoutKnotTying(d: Deforest) = {
     val tier = CallTreeKnotTier()(using new CallTreeKnotTierFunc {
-      override def tie(p: Path, mapping: Option[Map[Ident, Path]], cache: Set[Path]): (Option[Path], Str) = mapping match {
+      override def tie(p: Path, mapping: Option[Map[Ident, Path]], cache: mutable.Set[Path]): (Option[Path], Str) = mapping match {
         case None => None -> "hopeless to continue"
         case Some(value) => value.get(p.last.r.id) -> "using original def"
       }

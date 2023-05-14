@@ -23,7 +23,7 @@ class DiffTestLumberhack extends DiffTests {
     // output(Pgrm(unit.entities).toString())
     // output("Parsed AST:\n")
     if mode.isHaskell then
-      FromHaskell.f(prgmStr.mkString("\n"), output)
+      FromHaskell.f(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output)
 
 
     output(">>>>>>>>>> Original >>>>>>>>>>")

@@ -6,16 +6,67 @@ import mlscript.utils.shorthands.*
 import Expr.*
 import ai.serenade.treesitter.{Parser, Node, Tree, Languages}
 import com.github.sbt.jni.syntax.NativeLoader
+import mlscript.utils.lastWords
 
 
 // NOTE: "/Users/<name>/Library/Java/Extensions/libjava-tree-sitter.dylib" should exist
 object FromHaskell extends NativeLoader("java-tree-sitter") {
-  def f(program: Str, output: Str => Unit) = {
+  def f(program: Str)(using d: Deforest, output: Str => Unit) = {
     val parser = new Parser()
     parser.setLanguage(Languages.haskell())
-    val treeRootNode = parser.parseString(program).getRootNode()
-    output(treeRootNode.getNodeString())
+    val tree = parser.parseString(program)
+    val treeRootNode = tree.getRootNode()
+    output(treeRootNode.pp)
+    // output(treeRootNode.getNodeString())
+    // fromHaskellToPrgm(treeRootNode)(using program)
   }
+  extension (n: Node) {
+    def getSrcContent(using prgmStr: Str): Str = prgmStr.slice(n.getStartByte(), n.getEndByte())
+    def getAllChilds = (0 until n.getChildCount()).map(n.getChild(_))
+    def pp: Str = {
+       s"\"${n.getType()}\" (" + n.getAllChilds.map(c => c.pp).mkString("\n").linesIterator.map("\n\t" + _).mkString + ")"
+    }
+
+    def toExpr(using inDef: Option[Ident], d: Deforest, output: Str => Unit, prgmStr: Str): Expr = {
+      n.getType() match {
+        case "exp_apply" => {
+          // must have two or more childs
+          val res = n.getAllChilds.toList match {
+            case f :: a :: rest => rest.foldLeft(Call(f.toExpr, a.toExpr))((e, n) => Call(e, n.toExpr))
+            case _ => lastWords("cannot be single")
+          }
+          // output(res.pp(using InitPpConfig.showIuidOn))
+          res
+        }
+        case "exp_name" => {
+          val res = Ref(d.nextIdent(false, Var(n.getSrcContent)))
+          // output(res.pp(using InitPpConfig.showIuidOn))
+          res
+        }
+        case "exp_literal" => {
+          val child = n.getChild(0)
+          child.getType() match {
+            case "integer" => Const(IntLit(child.getSrcContent.toInt))
+            case "string" => Const(StrLit(child.getSrcContent.drop(1).dropRight(1)))
+          }
+        }
+
+      }
+    }
+  }
+
+  def fromHaskellToPrgm(rootNode: Node)(using prgmStr: Str, d: Deforest, output: Str => Unit): Program = {
+    given Deforest = Deforest(true)
+    val content = rootNode.getAllChilds.flatMap { c => c.getType() match {
+      case "signature" => None
+      case "function" => ???
+      case "top_splice" =>
+        assert(c.getChildCount() == 1)
+        Some(Right(c.getChild(0).toExpr(using None)))
+    }}
+    Program(content.toList)
+  }
+
 }
 
 

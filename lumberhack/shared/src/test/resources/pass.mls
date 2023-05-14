@@ -1796,55 +1796,84 @@ f(C(A))(C(B))(C(D))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [f^5] (hopeless to continue)
-//│ 	[f^5 · f^2] ---> [f^5] (using original def)
+//│ [f^5]
+//│ 	[f^5 · f^2]
+//│ 		[f^5 · f^2 · f^2]
+//│ 			[f^5 · f^2 · f^2 · f^2]
+//│ 				[f^5 · f^2 · f^2 · f^2 · f^2] ---> [f^5 · f^2 · f^2 · f^2] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
 //│ (((f₀ [C [A]]) [C [B]]) [C [D]])
 //│ def f₀ = 
-//│ 	(fun x¹ -> case x¹ of {
-//│ 		C a¹ => f₀})
+//│ 	(fun x² -> case x² of {
+//│ 		C a² => f₁})
+//│ 	where
+//│ 	def f₁ = 
+//│ 		(fun x⁴ -> case x⁴ of {
+//│ 			C a⁴ => f₂})
+//│ 		where
+//│ 		def f₂ = 
+//│ 			(fun x¹ -> case x¹ of {
+//│ 				C a¹ => f₃})
+//│ 			where
+//│ 			def f₃ = 
+//│ 				(fun x³ -> case x³ of {
+//│ 					C a³ => f₃})
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C [A]]: 21 --->
-//│ 	case x¹ of {C a¹ => f₀}: 17
-//│ [C [B]]: 24 --->
-//│ 	case x¹ of {C a¹ => f₀}: 17
-//│ [C [D]]: 27 --->
-//│ 	case x¹ of {C a¹ => f₀}: 17
+//│ [C [A]]: 33 --->
+//│ 	case x² of {C a² => f₁}: 21
+//│ [C [B]]: 36 --->
+//│ 	case x⁴ of {C a⁴ => f₂}: 29
+//│ [C [D]]: 39 --->
+//│ 	case x¹ of {C a¹ => f₃}: 17
 //│ ------------------
-//│ case x¹ of {C a¹ => f₀}: 17 --->
-//│ 	[C [A]]: 21
-//│ 	[C [B]]: 24
-//│ 	[C [D]]: 27
+//│ case x¹ of {C a¹ => f₃}: 17 --->
+//│ 	[C [D]]: 39
+//│ case x² of {C a² => f₁}: 21 --->
+//│ 	[C [A]]: 33
+//│ case x⁴ of {C a⁴ => f₂}: 29 --->
+//│ 	[C [B]]: 36
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C [A]]: 21 --->
-//│ 	case x¹ of {C a¹ => f₀}: 17
-//│ [C [B]]: 24 --->
-//│ 	case x¹ of {C a¹ => f₀}: 17
-//│ [C [D]]: 27 --->
-//│ 	case x¹ of {C a¹ => f₀}: 17
+//│ [C [A]]: 33 --->
+//│ 	case x² of {C a² => f₁}: 21
+//│ [C [B]]: 36 --->
+//│ 	case x⁴ of {C a⁴ => f₂}: 29
+//│ [C [D]]: 39 --->
+//│ 	case x¹ of {C a¹ => f₃}: 17
 //│ ------------------
-//│ case x¹ of {C a¹ => f₀}: 17 --->
-//│ 	[C [A]]: 21
-//│ 	[C [B]]: 24
-//│ 	[C [D]]: 27
+//│ case x¹ of {C a¹ => f₃}: 17 --->
+//│ 	[C [D]]: 39
+//│ case x² of {C a² => f₁}: 21 --->
+//│ 	[C [A]]: 33
+//│ case x⁴ of {C a⁴ => f₂}: 29 --->
+//│ 	[C [B]]: 36
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (((f₀ 
-//│ 	let a² = [A]
-//│ 	in f₀) 
-//│ 	let a³ = [B]
-//│ 	in f₀) 
-//│ 	let a⁴ = [D]
-//│ 	in f₀)
+//│ 	let a⁵ = [A]
+//│ 	in f₁) 
+//│ 	let a⁶ = [B]
+//│ 	in f₂) 
+//│ 	let a⁷ = [D]
+//│ 	in f₃)
 //│ def f₀ = 
-//│ 	(fun x² -> x²)
+//│ 	(fun x⁶ -> x⁶)
+//│ 	where
+//│ 	def f₁ = 
+//│ 		(fun x⁸ -> x⁸)
+//│ 		where
+//│ 		def f₂ = 
+//│ 			(fun x⁵ -> x⁵)
+//│ 			where
+//│ 			def f₃ = 
+//│ 				(fun x⁷ -> case x⁷ of {
+//│ 					C a³ => f₃})
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT:
@@ -2623,15 +2652,15 @@ rev(C(1, C(2, N)))
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C h² ((concat₀ t²) ys³)]: 43 --->
-//│ 	'lumberhackTopLevelResult
+//│ 	NoCons
 //│ 	case xs¹ of {N => (fun ys² -> ys²) | C h² t² => (fun ys³ -> [C h² ((concat₀ t²) ys³)])}: 45
 //│ [N]: 54 --->
 //│ 	case xs¹ of {N => (fun ys² -> ys²) | C h² t² => (fun ys³ -> [C h² ((concat₀ t²) ys³)])}: 45
 //│ [C h³ [N]]: 55 --->
-//│ 	'lumberhackTopLevelResult
+//│ 	NoCons
 //│ 	case xs¹ of {N => (fun ys² -> ys²) | C h² t² => (fun ys³ -> [C h² ((concat₀ t²) ys³)])}: 45
 //│ [N]: 57 --->
-//│ 	'lumberhackTopLevelResult
+//│ 	NoCons
 //│ 	case xs¹ of {N => (fun ys² -> ys²) | C h² t² => (fun ys³ -> [C h² ((concat₀ t²) ys³)])}: 45
 //│ [N]: 63 --->
 //│ 	case ls¹ of {C h³ t³ => ((concat₀ (rev₀ t³)) [C h³ [N]]) | N => [N]}: 58

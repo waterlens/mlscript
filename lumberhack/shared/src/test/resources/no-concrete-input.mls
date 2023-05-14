@@ -41,15 +41,14 @@ g
 //│ 	case a¹ of {A aa¹ => (f₀ [B]) | B => [OK]}: 22
 //│ ------------------
 //│ case a¹ of {A aa¹ => (f₀ [B]) | B => [OK]}: 22 --->
+//│ 	NoProd
 //│ 	[B]: 19
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [B]: 19 --->
-//│ 	case a¹ of {A aa¹ => (f₀ [B]) | B => [OK]}: 22
+//│ 
 //│ ------------------
-//│ case a¹ of {A aa¹ => (f₀ [B]) | B => [OK]}: 22 --->
-//│ 	[B]: 19
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -58,7 +57,9 @@ g
 //│ 	(fun b² -> (f₀ b²))
 //│ 	where
 //│ 	def f₀ = 
-//│ 		(fun a² -> a²)
+//│ 		(fun a² -> case a² of {
+//│ 			A aa¹ => (f₀ [B])
+//│ 			| B => [OK]})
 //│ <<<<<<< after fusion <<<<<<<
 
 // NOTE: should this be considered correct?

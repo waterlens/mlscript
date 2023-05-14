@@ -1,0 +1,104 @@
+:NewParser
+:ParseOnly
+
+:haskell
+// \x -> x + 1
+f :: S -> T -> L -> K
+f a b c = b + c
+f "3" 2 3 + 3
+//│ |f| |::| |S| |#->| |T| |#->| |L| |#->| |K|↵|f| |a| |b| |c| |#=| |b| |+| |c|↵|f| |"3"| |2| |3| |+| |3|
+//│ Parsed: {}
+//│ "haskell" (
+//│ 	"signature" (
+//│ 		"variable" ()
+//│ 		"::" ()
+//│ 		"fun" (
+//│ 			"type_name" (
+//│ 				"type" ())
+//│ 			"->" ()
+//│ 			"fun" (
+//│ 				"type_name" (
+//│ 					"type" ())
+//│ 				"->" ()
+//│ 				"fun" (
+//│ 					"type_name" (
+//│ 						"type" ())
+//│ 					"->" ()
+//│ 					"type_name" (
+//│ 						"type" ())))))
+//│ 	"function" (
+//│ 		"variable" ()
+//│ 		"patterns" (
+//│ 			"pat_name" (
+//│ 				"variable" ())
+//│ 			"pat_name" (
+//│ 				"variable" ())
+//│ 			"pat_name" (
+//│ 				"variable" ()))
+//│ 		"=" ()
+//│ 		"exp_infix" (
+//│ 			"exp_name" (
+//│ 				"variable" ())
+//│ 			"operator" ()
+//│ 			"exp_name" (
+//│ 				"variable" ())))
+//│ 	"top_splice" (
+//│ 		"exp_infix" (
+//│ 			"exp_apply" (
+//│ 				"exp_name" (
+//│ 					"variable" ())
+//│ 				"exp_literal" (
+//│ 					"string" ())
+//│ 				"exp_literal" (
+//│ 					"integer" ())
+//│ 				"exp_literal" (
+//│ 					"integer" ()))
+//│ 			"operator" ()
+//│ 			"exp_literal" (
+//│ 				"integer" ()))))
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ 
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ 
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ 
+//│ 
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ 
+//│ 
+//│ <<<<<<< after fusion <<<<<<<
+
+
+
+
+// :haskell
+// main = (print . sum . concat . queens) 10
+//   where
+//     queens :: Int -> [[Int]]
+//     queens 0 = [[]]
+//     queens m = [ p ++ [n] | p <- queens (m-1) , n <- [1..10], safe p n]
+//    
+//     safe : : [Int] -> Int -> Bool
+//     safe p n = and [ (j /= n) && (i+j /= m + n) && (i - j /= m - n) | (i, j) <- zip [1 ..] p]
+//       where
+//         m = length p + 1
+
+

@@ -286,10 +286,10 @@ class Deforest(var debug: Boolean) {
         else
           NoProd()(using e.uid)
       }
-      case r @ Ref(id) => return if id.isDef then {
+      case r @ Ref(id) => if id.isDef then {
         calls.add(r)
-        ctx(id).s.copy()(Some(r))(using e.uid).toStrat()
-      } else ctx(id).s.copy()(None)(using e.uid).toStrat()
+        ctx(id).s.copy()(Some(r))(using e.uid)
+      } else ctx(id).s.copy()(None)(using e.uid)
       case Call(f, a) =>
         val fp = process(f)
         val ap = process(a)

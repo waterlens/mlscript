@@ -18,42 +18,42 @@ class FusionStrategy(d: Deforest) {
   val involvedDtors = d.fusionMatch.values.flatten.toSet
   val involvedCtors = d.fusionMatch.keySet
 
-  // private def findToEndCons(v: ConsVar, cache: Set[ConsVar]): Set[ConsVar] = {
-  //   if upperBounds.get(v.uid) match { case None => true; case Some(v) => v.isEmpty } then Set(v)
-  //   else upperBounds(v.uid).foldLeft(Set()){(acc, ub) => ub.s match {
-  //     case cv: ConsVar if cache(cv) => acc
-  //     case cv: ConsVar => acc ++ findToEndCons(cv, cache + cv)
-  //     case _ => acc
-  //   }}
-  // }
-  // private def findToEndProd(v: ProdVar): Set[ProdVar] = {
-  //   def find(vuid: TypeVarId, cache: Set[TypeVarId]): Set[TypeVarId] = {
-  //     // if lowerBounds.get(vuid).nonEmpty then
-  //     //   Set()
-  //     // else
-  //     val realLowerBounds = upperBounds.filter { (_, ubs) => ubs.exists { ub =>
-  //       ub.s match {
-  //         case ConsVar(uid, name) => uid == vuid && !cache(uid)
-  //         case _ => false
-  //       }
-  //     }}.keySet
-  //     // ++ (lowerBounds.getOrElse(vuid, Nil).flatMap { _.s match {
-  //     //   case ProdVar(uid, _) => Some(uid)
-  //     //   case _ => None
-  //     // }})
-  //     // assert(realLowerBounds.isEmpty)
-  //     (if realLowerBounds.isEmpty then Set(vuid) else realLowerBounds.flatMap(b => find(b, cache + vuid)))
-  //       .filter(lowerBounds.get(_).isEmpty)
-  //   }
-  //   find(v.uid, Set()).map(id => ProdVar(id, d.varsName(id))()(using d.noExprId))
-  //   // if lowerBounds.get(v.uid) match { case None => true; case Some(v) => v.isEmpty } then Set(v)
-  //   // else lowerBounds(v.uid).foldLeft(Set()){(acc, lb) => lb.s match {
-  //   //   // case pv: ProdVar if cache(pv) => acc
-  //   //   // case pv: ProdVar => acc ++ findToEndProd(pv, cache + pv)
-  //   //   case pv: ProdVar => ??? // lowerBounds cannot have any prodvar
-  //   //   case _ => acc
-  //   // }}
-  // }
+  private def findToEndCons(v: ConsVar, cache: Set[ConsVar]): Set[ConsVar] = {
+    if upperBounds.get(v.uid) match { case None => true; case Some(v) => v.isEmpty } then Set(v)
+    else upperBounds(v.uid).foldLeft(Set()){(acc, ub) => ub.s match {
+      case cv: ConsVar if cache(cv) => acc
+      case cv: ConsVar => acc ++ findToEndCons(cv, cache + cv)
+      case _ => acc
+    }}
+  }
+  private def findToEndProd(v: ProdVar): Set[ProdVar] = {
+    def find(vuid: TypeVarId, cache: Set[TypeVarId]): Set[TypeVarId] = {
+      // if lowerBounds.get(vuid).nonEmpty then
+      //   Set()
+      // else
+      val realLowerBounds = upperBounds.filter { (_, ubs) => ubs.exists { ub =>
+        ub.s match {
+          case ConsVar(uid, name) => uid == vuid && !cache(uid)
+          case _ => false
+        }
+      }}.keySet
+      // ++ (lowerBounds.getOrElse(vuid, Nil).flatMap { _.s match {
+      //   case ProdVar(uid, _) => Some(uid)
+      //   case _ => None
+      // }})
+      // assert(realLowerBounds.isEmpty)
+      (if realLowerBounds.isEmpty then Set(vuid) else realLowerBounds.flatMap(b => find(b, cache + vuid)))
+        .filter(lowerBounds.get(_).isEmpty)
+    }
+    find(v.uid, Set()).map(id => ProdVar(id, d.varsName(id))()(using d.noExprId))
+    // if lowerBounds.get(v.uid) match { case None => true; case Some(v) => v.isEmpty } then Set(v)
+    // else lowerBounds(v.uid).foldLeft(Set()){(acc, lb) => lb.s match {
+    //   // case pv: ProdVar if cache(pv) => acc
+    //   // case pv: ProdVar => acc ++ findToEndProd(pv, cache + pv)
+    //   case pv: ProdVar => ??? // lowerBounds cannot have any prodvar
+    //   case _ => acc
+    // }}
+  }
 
 
   val ctorFinalDestinations: Map[MkCtor, Set[ConsStratEnum]] = {
@@ -291,7 +291,10 @@ trait ExprRewrite { this: Expr =>
       case Const(lit) => Const(lit)
       case Call(lhs, rhs) => Call(lhs.rewriteFusion, rhs.rewriteFusion)
       case Sequence(f, s) => Sequence(f.rewriteFusion, s.rewriteFusion)
-      case LetIn(id, rhs, body) => LetIn(id, rhs.rewriteFusion, body.rewriteFusion)
+      case LetIn(id, rhs, body) =>
+        val newId = id.copyToNewDeforest
+        val newCtx = ctx + (newId.tree.name -> newId)
+        LetIn(newId, rhs.rewriteFusion, body.rewriteFusion(using newCtx))
       case IfThenElse(s, t, e) => IfThenElse(s.rewriteFusion, t.rewriteFusion, e.rewriteFusion)
       case Function(param, body) =>
         val newParamId = param.copyToNewDeforest
@@ -311,8 +314,10 @@ trait ExprRewrite { this: Expr =>
         val newIds = matchArm._2.map(_.copyToNewDeforest)
         val newCtx = ctx ++ newIds.map(id => id.tree.name -> id).toMap
         
-        val extrudedIds =
-          scopeExtrusionInfo(matchId).map(original => original -> Ref(original.copyToNewDeforest)).reverse
+        val extrudedIds = scopeExtrusionInfo(matchId).map(original =>
+          newCtx.getOrElse(original.tree.name, original) -> Ref(original.copyToNewDeforest)
+          // original -> Ref(original.copyToNewDeforest)
+        ).reverse
         // val extrudedIds =
         //   scopeExtrusionInfo.getOrElse(matchId, Nil).map(original => original -> Ref(original.copyToNewDeforest)).reverse
         val innerAfterExtrusionHandling =

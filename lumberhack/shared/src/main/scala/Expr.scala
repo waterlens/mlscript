@@ -256,7 +256,7 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
   // small step
   def evaluateStartSmallStep(prev: Expr)(using ctx: Map[Ident, Expr], d: Deforest, step: Int = 0): Expr = {
     var res = prev.evaluate
-    if (res == prev || step > 100) then res else evaluateStartSmallStep(res)(using ctx, d, step + 1)
+    if (res == prev || step > 200) then res else evaluateStartSmallStep(res)(using ctx, d, step + 1)
   }
   def evaluateSmallStep(using ctx: Map[Ident, Expr], d: Deforest): Expr = d.Trace.trace(
     this.pp(using InitPpConfig.showIuidOn.multilineOn)

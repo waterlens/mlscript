@@ -169,7 +169,6 @@ last(p)
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 33 --->
-//│ 	'tt¹
 //│ 	case t¹ of {N => [Some h¹] | C hh¹ tt¹ => (last₀ t¹)}: 27
 //│ 	case ls¹ of {C h¹ t¹ => case t¹ of {N => [Some h¹] | C hh¹ tt¹ => (last₀ t¹)} | N => [None]}: 29
 //│ [C 2 [N]]: 34 --->
@@ -308,6 +307,7 @@ idxSum(rev(C(1, C(2, N)))(N))(0)
 
 
 // WRONG: still has variable extrusion
+_LUMBERHACK_EVAL
 fun minuss(a) = if a is
   S(aa) then b => if b is
     S(bb) then minuss(aa, bb)
@@ -316,8 +316,8 @@ fun minuss(a) = if a is
 let fst = S(S(Z))
 let snd = Z
 minuss(fst)(snd)
-//│ |#fun| |minuss|(|a|)| |#=| |#if| |a| |is|→|S|(|aa|)| |#then| |b| |=>| |#if| |b| |is|→|S|(|bb|)| |#then| |minuss|(|aa|,| |bb|)|↵|Z| |#then| |aa|←|↵|Z| |#then| |n| |=>| |Z|←|↵|#let| |fst| |#=| |S|(|S|(|Z|)|)|↵|#let| |snd| |#=| |Z|↵|minuss|(|fst|)|(|snd|)|
-//│ Parsed: {fun minuss = a, => if a is ‹(S (aa,)) then b, => if b is ‹(S (bb,)) then minuss (aa, bb,); (Z) then aa›; (Z) then n, => Z›; let fst = S (S (Z,),); let snd = Z; minuss (fst,) (snd,)}
+//│ |_LUMBERHACK_EVAL|↵|#fun| |minuss|(|a|)| |#=| |#if| |a| |is|→|S|(|aa|)| |#then| |b| |=>| |#if| |b| |is|→|S|(|bb|)| |#then| |minuss|(|aa|,| |bb|)|↵|Z| |#then| |aa|←|↵|Z| |#then| |n| |=>| |Z|←|↵|#let| |fst| |#=| |S|(|S|(|Z|)|)|↵|#let| |snd| |#=| |Z|↵|minuss|(|fst|)|(|snd|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun minuss = a, => if a is ‹(S (aa,)) then b, => if b is ‹(S (bb,)) then minuss (aa, bb,); (Z) then aa›; (Z) then n, => Z›; let fst = S (S (Z,),); let snd = Z; minuss (fst,) (snd,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((minuss^19 fst^20) snd^22)
 //│ def fst = [S [S [Z]]]
@@ -328,6 +328,10 @@ minuss(fst)(snd)
 //│ 	| Z => (fun n⁰ -> [Z])})
 //│ def snd = [Z]
 //│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [S [Z]]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [fst^20] (hopeless to continue)
@@ -352,7 +356,6 @@ minuss(fst)(snd)
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [Z]: 24 --->
-//│ 	'n¹
 //│ 	case b¹ of {S bb¹ => ((minuss₀ aa¹) bb¹) | Z => aa¹}: 36
 //│ [Z]: 25 --->
 //│ 	NoCons
@@ -372,9 +375,11 @@ minuss(fst)(snd)
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
+//│ [Z]: 24 --->
+//│ 	case b¹ of {S bb¹ => ((minuss₀ aa¹) bb¹) | Z => aa¹}: 36
 //│ ------------------
-//│ 
+//│ case b¹ of {S bb¹ => ((minuss₀ aa¹) bb¹) | Z => aa¹}: 36 --->
+//│ 	[Z]: 24
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -383,16 +388,70 @@ minuss(fst)(snd)
 //│ 	[S [S [Z]]]
 //│ def minuss₀ = 
 //│ 	(fun a² -> case a² of {
-//│ 		S aa¹ => (fun b² -> case b² of {
-//│ 			S bb¹ => ((minuss₀ aa¹) bb¹)
-//│ 			| Z => aa¹})
+//│ 		S aa¹ => (fun b² -> (b² aa¹))
 //│ 		| Z => (fun n² -> [Z])})
 //│ def snd₀ = 
-//│ 	[Z]
+//│ 	(fun aa² -> aa²)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [S [Z]]
+//│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [fst₀^2] (hopeless to continue)
+//│ [minuss₀^1] (hopeless to continue)
+//│ [snd₀^4] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((minuss₀₀ fst₀₀) snd₀₀)
+//│ def fst₀₀ = 
+//│ 	[S [S [Z]]]
+//│ def minuss₀₀ = 
+//│ 	(fun a¹ -> case a¹ of {
+//│ 		S aa² => (fun b¹ -> (b¹ aa²))
+//│ 		| Z => (fun n¹ -> [Z])})
+//│ def snd₀₀ = 
+//│ 	(fun aa³ -> aa³)
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [S [S [Z]]]: 22 --->
+//│ 	case a¹ of {S aa² => (fun b¹ -> (b¹ aa²)) | Z => (fun n¹ -> [Z])}: 30
+//│ ------------------
+//│ case a¹ of {S aa² => (fun b¹ -> (b¹ aa²)) | Z => (fun n¹ -> [Z])}: 30 --->
+//│ 	[S [S [Z]]]: 22
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [S [S [Z]]]: 22 --->
+//│ 	case a¹ of {S aa² => (fun b¹ -> (b¹ aa²)) | Z => (fun n¹ -> [Z])}: 30
+//│ ------------------
+//│ case a¹ of {S aa² => (fun b¹ -> (b¹ aa²)) | Z => (fun n¹ -> [Z])}: 30 --->
+//│ 	[S [S [Z]]]: 22
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((minuss₀₀ fst₀₀) snd₀₀)
+//│ def fst₀₀ = 
+//│ 	let aa⁴ = [S [Z]]
+//│ 	in (fun b² -> (b² aa⁴))
+//│ def minuss₀₀ = 
+//│ 	(fun a² -> a²)
+//│ def snd₀₀ = 
+//│ 	(fun aa⁵ -> aa⁵)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [S [Z]]
+//│ <<<<<<< evaluate <<<<<<<
 
 
 // WRONG:
+_LUMBERHACK_EVAL
 fun minuss(a) = if a is
   S(aa) then b => checkb(b)(aa)
   Z then n => Z
@@ -402,8 +461,8 @@ fun checkb(b) = if b is
 let fst = S(S(Z))
 let snd = Z
 minuss(fst)(snd)
-//│ |#fun| |minuss|(|a|)| |#=| |#if| |a| |is|→|S|(|aa|)| |#then| |b| |=>| |checkb|(|b|)|(|aa|)|↵|Z| |#then| |n| |=>| |Z|←|↵|#fun| |checkb|(|b|)| |#=| |#if| |b| |is|→|S|(|bb|)| |#then| |aaa| |=>| |minuss|(|aaa|,| |bb|)|↵|Z| |#then| |aaa| |=>| |aaa|←|↵|#let| |fst| |#=| |S|(|S|(|Z|)|)|↵|#let| |snd| |#=| |Z|↵|minuss|(|fst|)|(|snd|)|
-//│ Parsed: {fun minuss = a, => if a is ‹(S (aa,)) then b, => checkb (b,) (aa,); (Z) then n, => Z›; fun checkb = b, => if b is ‹(S (bb,)) then aaa, => minuss (aaa, bb,); (Z) then aaa, => aaa›; let fst = S (S (Z,),); let snd = Z; minuss (fst,) (snd,)}
+//│ |_LUMBERHACK_EVAL|↵|#fun| |minuss|(|a|)| |#=| |#if| |a| |is|→|S|(|aa|)| |#then| |b| |=>| |checkb|(|b|)|(|aa|)|↵|Z| |#then| |n| |=>| |Z|←|↵|#fun| |checkb|(|b|)| |#=| |#if| |b| |is|→|S|(|bb|)| |#then| |aaa| |=>| |minuss|(|aaa|,| |bb|)|↵|Z| |#then| |aaa| |=>| |aaa|←|↵|#let| |fst| |#=| |S|(|S|(|Z|)|)|↵|#let| |snd| |#=| |Z|↵|minuss|(|fst|)|(|snd|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun minuss = a, => if a is ‹(S (aa,)) then b, => checkb (b,) (aa,); (Z) then n, => Z›; fun checkb = b, => if b is ‹(S (bb,)) then aaa, => minuss (aaa, bb,); (Z) then aaa, => aaa›; let fst = S (S (Z,),); let snd = Z; minuss (fst,) (snd,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((minuss^27 fst^28) snd^30)
 //│ def checkb = (fun b¹ -> case b¹ of {
@@ -415,6 +474,10 @@ minuss(fst)(snd)
 //│ 	| Z => (fun n⁰ -> [Z])})
 //│ def snd = [Z]
 //│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [S [Z]]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [fst^28] (hopeless to continue)
@@ -443,7 +506,6 @@ minuss(fst)(snd)
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [Z]: 43 --->
-//│ 	'n¹
 //│ 	case b³ of {S bb¹ => (fun aaa² -> ((minuss₀ aaa²) bb¹)) | Z => (fun aaa³ -> aaa³)}: 53
 //│ [Z]: 55 --->
 //│ 	NoCons
@@ -463,9 +525,11 @@ minuss(fst)(snd)
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
+//│ [Z]: 43 --->
+//│ 	case b³ of {S bb¹ => (fun aaa² -> ((minuss₀ aaa²) bb¹)) | Z => (fun aaa³ -> aaa³)}: 53
 //│ ------------------
-//│ 
+//│ case b³ of {S bb¹ => (fun aaa² -> ((minuss₀ aaa²) bb¹)) | Z => (fun aaa³ -> aaa³)}: 53 --->
+//│ 	[Z]: 43
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -478,12 +542,72 @@ minuss(fst)(snd)
 //│ 		| Z => (fun n² -> [Z])})
 //│ 	where
 //│ 	def checkb₀ = 
-//│ 		(fun b⁵ -> case b⁵ of {
-//│ 			S bb¹ => (fun aaa⁴ -> ((minuss₀ aaa⁴) bb¹))
-//│ 			| Z => (fun aaa⁵ -> aaa⁵)})
+//│ 		(fun b⁵ -> b⁵)
 //│ def snd₀ = 
-//│ 	[Z]
+//│ 	(fun aaa⁴ -> aaa⁴)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [S [Z]]
+//│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [fst₀^2] (hopeless to continue)
+//│ [minuss₀^1] (hopeless to continue)
+//│ 	[minuss₀^1 · checkb₀^7] (using original def)
+//│ [snd₀^4] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((minuss₀₀ fst₀₀) snd₀₀)
+//│ def fst₀₀ = 
+//│ 	[S [S [Z]]]
+//│ def minuss₀₀ = 
+//│ 	(fun a¹ -> case a¹ of {
+//│ 		S aa¹ => (fun b² -> ((checkb₀₀ b²) aa¹))
+//│ 		| Z => (fun n¹ -> [Z])})
+//│ 	where
+//│ 	def checkb₀₀ = 
+//│ 		(fun b³ -> b³)
+//│ def snd₀₀ = 
+//│ 	(fun aaa¹ -> aaa¹)
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [S [S [Z]]]: 26 --->
+//│ 	case a¹ of {S aa¹ => (fun b² -> ((checkb₀₀ b²) aa¹)) | Z => (fun n¹ -> [Z])}: 36
+//│ ------------------
+//│ case a¹ of {S aa¹ => (fun b² -> ((checkb₀₀ b²) aa¹)) | Z => (fun n¹ -> [Z])}: 36 --->
+//│ 	[S [S [Z]]]: 26
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [S [S [Z]]]: 26 --->
+//│ 	case a¹ of {S aa¹ => (fun b² -> ((checkb₀₀ b²) aa¹)) | Z => (fun n¹ -> [Z])}: 36
+//│ ------------------
+//│ case a¹ of {S aa¹ => (fun b² -> ((checkb₀₀ b²) aa¹)) | Z => (fun n¹ -> [Z])}: 36 --->
+//│ 	[S [S [Z]]]: 26
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((minuss₀₀ fst₀₀) snd₀₀)
+//│ def fst₀₀ = 
+//│ 	let aa² = [S [Z]]
+//│ 	in (fun b⁴ -> ((checkb₀₀ b⁴) aa²))
+//│ def minuss₀₀ = 
+//│ 	(fun a² -> a²)
+//│ 	where
+//│ 	def checkb₀₀ = 
+//│ 		(fun b⁵ -> b⁵)
+//│ def snd₀₀ = 
+//│ 	(fun aaa² -> aaa²)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [S [Z]]
+//│ <<<<<<< evaluate <<<<<<<
 
 // WRONG:
 fun inter(xs) = if xs is
@@ -527,19 +651,15 @@ inter(l1)(l2)
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 2 l1₀]: 32 --->
 //│ 	NoCons
-//│ 	'47_callres
 //│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₀ ys³) t¹)])}: 50
 //│ [C 1 [C 2 l1₀]]: 33 --->
 //│ 	NoCons
-//│ 	'47_callres
 //│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₀ ys³) t¹)])}: 50
 //│ [C 8 l2₀]: 37 --->
 //│ 	NoCons
-//│ 	'47_callres
 //│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₀ ys³) t¹)])}: 50
 //│ [C 9 [C 8 l2₀]]: 38 --->
 //│ 	NoCons
-//│ 	'47_callres
 //│ 	case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₀ ys³) t¹)])}: 50
 //│ ------------------
 //│ case xs¹ of {N => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ ((inter₀ ys³) t¹)])}: 50 --->
@@ -891,10 +1011,8 @@ f(C(primitive))
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C x¹]: 15 --->
-//│ 	'k¹
 //│ 	case x¹ of {C k¹ => (f₀ [C x¹])}: 17
 //│ [C primitive⁰]: 21 --->
-//│ 	'k¹
 //│ 	case x¹ of {C k¹ => (f₀ [C x¹])}: 17
 //│ ------------------
 //│ case x¹ of {C k¹ => (f₀ [C x¹])}: 17 --->

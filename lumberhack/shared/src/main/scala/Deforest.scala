@@ -426,15 +426,15 @@ class Deforest(var debug: Boolean) {
           if dtor.euid != noExprId then {
             dtorSources += dtor -> (dtorSources(dtor) + prod.s)
           }
-          // ds foreach { case Destructor(ctor, argCons) =>
-          //   argCons foreach { c => handle(prod, c.addPath(cons.path)) }
-          // }
+          ds foreach { case Destructor(ctor, argCons) =>
+            argCons foreach { c => handle(prod, c.addPath(cons.path)) }
+          }
         case (ctorType@MkCtor(ctor, args), NoCons()) =>
           given Int = numOfTypeCtor + 1
           if ctorType.euid != noExprId then {
             ctorDestinations += ctorType -> (ctorDestinations(ctorType) + cons.s)
           }
-          // args foreach { p => handle(p.addPath(prod.path), cons) }
+          args foreach { p => handle(p.addPath(prod.path), cons) }
         case (pv@ProdVar(v, _), _) =>
           cons.s match {
             case dtor: Destruct if lowerBounds(v).isEmpty && dtor.euid != noExprId => dtorSources += dtor -> (dtorSources(dtor) + pv)

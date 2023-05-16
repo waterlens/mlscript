@@ -62,8 +62,8 @@ class FusionStrategy(d: Deforest) {
       dests.foreach { dest => dest match {
         case c: (NoCons | Destruct) => res += ctor -> (res(ctor) + c)
         // case cv: ConsVar => res += ctor -> (res(ctor) ++ findToEndCons(cv, Set(cv)))
-        // case cv: ConsVar => ()
-        case cv: ConsVar => if d.upperBounds(cv.uid).isEmpty then res += ctor -> (res(ctor) + cv)
+        case cv: ConsVar => ()
+        // case cv: ConsVar => if d.upperBounds(cv.uid).isEmpty then res += ctor -> (res(ctor) + cv)
         case _ => ??? // unreachable
       }}
     }
@@ -76,8 +76,8 @@ class FusionStrategy(d: Deforest) {
       sources.foreach { src => src match {
         case s: (NoProd | MkCtor) => res += dtor -> (res(dtor) + s)
         // case pv: ProdVar => res += dtor -> (res(dtor) ++ findToEndProd(pv))
-        // case pv: ProdVar => ()
-        case pv: ProdVar => if d.lowerBounds(pv.uid).isEmpty then res += dtor -> (res(dtor) + pv)
+        case pv: ProdVar => ()
+        // case pv: ProdVar => if d.lowerBounds(pv.uid).isEmpty then res += dtor -> (res(dtor) + pv)
         case _ => ??? // unreachable
       }}
     }

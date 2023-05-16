@@ -242,11 +242,11 @@ main
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [main^25] (hopeless to continue)
-//│ 	[main^25 · append^13] (using original def)
-//│ 		[main^25 · append^13 · append^3] ---> [main^25 · append^13] (using original def)
-//│ 	[main^25 · append^14] (using original def)
-//│ 		[main^25 · append^14 · append^3] ---> [main^25 · append^14] (using original def)
+//│ [main^25]
+//│ 	[main^25 · append^13]
+//│ 		[main^25 · append^13 · append^3] ---> [main^25 · append^13] (only one)
+//│ 	[main^25 · append^14]
+//│ 		[main^25 · append^14 · append^3] ---> [main^25 · append^14] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -295,7 +295,7 @@ main
 //│ <<<<<<< after fusion <<<<<<<
 
 
-// WRONG: using an idList will still be wrong type, and even toplevel noprod cannot help??
+// WRONG: cannot fuse if noprod flow into y
 fun append(xs, ys) = if xs is
   C(h, t) then C(h, append(t, ys))
   N then ys
@@ -324,12 +324,12 @@ main
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [main^46] (hopeless to continue)
-//│ 	[main^46 · append2^35] (using original def)
-//│ 		[main^46 · append2^35 · append2^22] ---> [main^46 · append2^35] (using original def)
-//│ 		[main^46 · append2^35 · idList^28] (using original def)
-//│ 	[main^46 · append^34] (using original def)
-//│ 		[main^46 · append^34 · append^3] ---> [main^46 · append^34] (using original def)
+//│ [main^46]
+//│ 	[main^46 · append2^35]
+//│ 		[main^46 · append2^35 · append2^22] ---> [main^46 · append2^35] (only one)
+//│ 		[main^46 · append2^35 · idList^28] (hopeless to continue)
+//│ 	[main^46 · append^34]
+//│ 		[main^46 · append^34 · append^3] ---> [main^46 · append^34] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -361,23 +361,123 @@ main
 //│ 	case xs³ of {C h⁴ t⁴ => [C h⁴ ((append₀ t⁴) ys³)] | N => ys³}: 82
 //│ ------------------
 //│ case xs³ of {C h⁴ t⁴ => [C h⁴ ((append₀ t⁴) ys³)] | N => ys³}: 82 --->
+//│ 	NoProd
 //│ 	[C h³ ((append2₀ t³) ys²)]: 66
 //│ 	[C h⁵ t⁵]: 88
 //│ 	[N]: 89
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C h³ ((append2₀ t³) ys²)]: 66 --->
-//│ 	case xs³ of {C h⁴ t⁴ => [C h⁴ ((append₀ t⁴) ys³)] | N => ys³}: 82
-//│ [C h⁵ t⁵]: 88 --->
-//│ 	case xs³ of {C h⁴ t⁴ => [C h⁴ ((append₀ t⁴) ys³)] | N => ys³}: 82
-//│ [N]: 89 --->
-//│ 	case xs³ of {C h⁴ t⁴ => [C h⁴ ((append₀ t⁴) ys³)] | N => ys³}: 82
+//│ 
 //│ ------------------
-//│ case xs³ of {C h⁴ t⁴ => [C h⁴ ((append₀ t⁴) ys³)] | N => ys³}: 82 --->
-//│ 	[C h³ ((append2₀ t³) ys²)]: 66
-//│ 	[C h⁵ t⁵]: 88
-//│ 	[N]: 89
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ main₀
+//│ def main₀ = 
+//│ 	(fun x² -> (fun y² -> (fun z² -> ((append₀ ((append2₀ x²) y²)) z²))))
+//│ 	where
+//│ 	def append2₀ = 
+//│ 		(fun xs⁴ -> (fun ys⁴ -> case xs⁴ of {
+//│ 			C h³ t³ => [C h³ ((append2₀ t³) ys⁴)]
+//│ 			| N => (idList₀ ys⁴)}))
+//│ 		where
+//│ 		def idList₀ = 
+//│ 			(fun ls² -> case ls² of {
+//│ 				C h⁵ t⁵ => [C h⁵ t⁵]
+//│ 				| N => [N]})
+//│ 	def append₀ = 
+//│ 		(fun xs⁵ -> (fun ys⁵ -> case xs⁵ of {
+//│ 			C h⁴ t⁴ => [C h⁴ ((append₀ t⁴) ys⁵)]
+//│ 			| N => ys⁵}))
+//│ <<<<<<< after fusion <<<<<<<
+
+// CORRECT: will fuse if idList is recursive (this idea can be generalized to other
+// data structure? an id to traverse the data to expose its structure)
+fun append(xs, ys) = if xs is
+  C(h, t) then C(h, append(t, ys))
+  N then ys
+fun idList(ls) = if ls is
+  C(h, t) then C(h, idList(t))
+  N then N
+fun append2(xs, ys) = if xs is
+  C(h, t) then C(h, append2(t, ys))
+  N then idList(ys)
+fun main(x, y, z) = append(append2(x, y), z)
+main
+//│ |#fun| |append|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|h|,| |append|(|t|,| |ys|)|)|↵|N| |#then| |ys|←|↵|#fun| |idList|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|h|,| |idList|(|t|)|)|↵|N| |#then| |N|←|↵|#fun| |append2|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|h|,| |append2|(|t|,| |ys|)|)|↵|N| |#then| |idList|(|ys|)|←|↵|#fun| |main|(|x|,| |y|,| |z|)| |#=| |append|(|append2|(|x|,| |y|)|,| |z|)|↵|main|
+//│ Parsed: {fun append = xs, ys, => if xs is ‹(C (h, t,)) then C (h, append (t, ys,),); (N) then ys›; fun idList = ls, => if ls is ‹(C (h, t,)) then C (h, idList (t,),); (N) then N›; fun append2 = xs, ys, => if xs is ‹(C (h, t,)) then C (h, append2 (t, ys,),); (N) then idList (ys,)›; fun main = x, y, z, => append (append2 (x, y,), z,); main}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ main^48
+//│ def append = (fun xs⁰ -> (fun ys⁰ -> case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ ((append^3 t⁰) ys⁰)]
+//│ 	| N => ys⁰}))
+//│ def append2 = (fun xs¹ -> (fun ys¹ -> case xs¹ of {
+//│ 	C h² t² => [C h² ((append2^24 t²) ys¹)]
+//│ 	| N => (idList^30 ys¹)}))
+//│ def idList = (fun ls⁰ -> case ls⁰ of {
+//│ 	C h¹ t¹ => [C h¹ (idList^15 t¹)]
+//│ 	| N => [N]})
+//│ def main = (fun x⁰ -> (fun y⁰ -> (fun z⁰ -> ((append^36 ((append2^37 x⁰) y⁰)) z⁰))))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [main^48]
+//│ 	[main^48 · append2^37]
+//│ 		[main^48 · append2^37 · append2^24] ---> [main^48 · append2^37] (only one)
+//│ 		[main^48 · append2^37 · idList^30]
+//│ 			[main^48 · append2^37 · idList^30 · idList^15] ---> [main^48 · append2^37 · idList^30] (only one)
+//│ 	[main^48 · append^36]
+//│ 		[main^48 · append^36 · append^3] ---> [main^48 · append^36] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ main₀
+//│ def main₀ = 
+//│ 	(fun x¹ -> (fun y¹ -> (fun z¹ -> ((append₀ ((append2₀ x¹) y¹)) z¹))))
+//│ 	where
+//│ 	def append2₀ = 
+//│ 		(fun xs² -> (fun ys² -> case xs² of {
+//│ 			C h³ t³ => [C h³ ((append2₀ t³) ys²)]
+//│ 			| N => (idList₀ ys²)}))
+//│ 		where
+//│ 		def idList₀ = 
+//│ 			(fun ls¹ -> case ls¹ of {
+//│ 				C h⁵ t⁵ => [C h⁵ (idList₀ t⁵)]
+//│ 				| N => [N]})
+//│ 	def append₀ = 
+//│ 		(fun xs³ -> (fun ys³ -> case xs³ of {
+//│ 			C h⁴ t⁴ => [C h⁴ ((append₀ t⁴) ys³)]
+//│ 			| N => ys³}))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C h³ ((append2₀ t³) ys²)]: 56 --->
+//│ 	case xs³ of {C h⁴ t⁴ => [C h⁴ ((append₀ t⁴) ys³)] | N => ys³}: 84
+//│ [C h⁵ (idList₀ t⁵)]: 92 --->
+//│ 	case xs³ of {C h⁴ t⁴ => [C h⁴ ((append₀ t⁴) ys³)] | N => ys³}: 84
+//│ [N]: 93 --->
+//│ 	case xs³ of {C h⁴ t⁴ => [C h⁴ ((append₀ t⁴) ys³)] | N => ys³}: 84
+//│ ------------------
+//│ case xs³ of {C h⁴ t⁴ => [C h⁴ ((append₀ t⁴) ys³)] | N => ys³}: 84 --->
+//│ 	[C h³ ((append2₀ t³) ys²)]: 56
+//│ 	[C h⁵ (idList₀ t⁵)]: 92
+//│ 	[N]: 93
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C h³ ((append2₀ t³) ys²)]: 56 --->
+//│ 	case xs³ of {C h⁴ t⁴ => [C h⁴ ((append₀ t⁴) ys³)] | N => ys³}: 84
+//│ [C h⁵ (idList₀ t⁵)]: 92 --->
+//│ 	case xs³ of {C h⁴ t⁴ => [C h⁴ ((append₀ t⁴) ys³)] | N => ys³}: 84
+//│ [N]: 93 --->
+//│ 	case xs³ of {C h⁴ t⁴ => [C h⁴ ((append₀ t⁴) ys³)] | N => ys³}: 84
+//│ ------------------
+//│ case xs³ of {C h⁴ t⁴ => [C h⁴ ((append₀ t⁴) ys³)] | N => ys³}: 84 --->
+//│ 	[C h³ ((append2₀ t³) ys²)]: 56
+//│ 	[C h⁵ (idList₀ t⁵)]: 92
+//│ 	[N]: 93
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -397,12 +497,14 @@ main
 //│ 			(fun ls² -> case ls² of {
 //│ 				C h⁵ t⁵ => 
 //│ 					let h⁷ = h⁵
-//│ 					in let t⁷ = t⁵
+//│ 					in let t⁷ = (idList₀ t⁵)
 //│ 					in (fun ys⁷ -> [C h⁷ ((append₀ t⁷) ys⁷)])
 //│ 				| N => (fun ys⁸ -> ys⁸)})
 //│ 	def append₀ = 
 //│ 		(fun xs⁵ -> (fun ys⁶ -> (xs⁵ ys⁶)))
 //│ <<<<<<< after fusion <<<<<<<
+
+
 
 // CORRECT: NOTE: provide all lists using map, then it will fuse to be like
 // fun map0(ls, f) = if ls is
@@ -435,17 +537,17 @@ main
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [main^51] (hopeless to continue)
-//│ 	[main^51 · append^13] (using original def)
-//│ 		[main^51 · append^13 · append^3] ---> [main^51 · append^13] (using original def)
-//│ 	[main^51 · append^14] (using original def)
+//│ [main^51]
+//│ 	[main^51 · append^13]
+//│ 		[main^51 · append^13 · append^3] ---> [main^51 · append^13] (only one)
+//│ 	[main^51 · append^14] (hopeless to continue)
 //│ 		[main^51 · append^14 · append^3] ---> [main^51 · append^14] (using original def)
-//│ 	[main^51 · map^15] (using original def)
+//│ 	[main^51 · map^15] (hopeless to continue)
 //│ 		[main^51 · map^15 · map^41] ---> [main^51 · map^15] (using original def)
-//│ 	[main^51 · map^21] (using original def)
+//│ 	[main^51 · map^21] (hopeless to continue)
 //│ 		[main^51 · map^21 · map^41] ---> [main^51 · map^21] (using original def)
-//│ 	[main^51 · map^28] (using original def)
-//│ 		[main^51 · map^28 · map^41] ---> [main^51 · map^28] (using original def)
+//│ 	[main^51 · map^28]
+//│ 		[main^51 · map^28 · map^41] ---> [main^51 · map^28] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -567,11 +669,11 @@ main
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [main^24] (hopeless to continue)
-//│ 	[main^24 · append^13] (using original def)
-//│ 		[main^24 · append^13 · append^3] ---> [main^24 · append^13] (using original def)
-//│ 	[main^24 · append^14] (using original def)
-//│ 		[main^24 · append^14 · append^3] ---> [main^24 · append^14] (using original def)
+//│ [main^24]
+//│ 	[main^24 · append^13]
+//│ 		[main^24 · append^13 · append^3] ---> [main^24 · append^13] (only one)
+//│ 	[main^24 · append^14]
+//│ 		[main^24 · append^14 · append^3] ---> [main^24 · append^14] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -645,11 +747,11 @@ main
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [main^28] (hopeless to continue)
-//│ 	[main^28 · append^13] (using original def)
-//│ 		[main^28 · append^13 · append^3] ---> [main^28 · append^13] (using original def)
-//│ 	[main^28 · append^14] (using original def)
-//│ 		[main^28 · append^14 · append^3] ---> [main^28 · append^14] (using original def)
+//│ [main^28]
+//│ 	[main^28 · append^13]
+//│ 		[main^28 · append^13 · append^3] ---> [main^28 · append^13] (only one)
+//│ 	[main^28 · append^14]
+//│ 		[main^28 · append^14 · append^3] ---> [main^28 · append^14] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -742,13 +844,13 @@ ff
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [ff^19] (hopeless to continue)
-//│ 	[ff^19 · flip^13] (using original def)
-//│ 		[ff^19 · flip^13 · flip^2] ---> [ff^19 · flip^13] (using original def)
-//│ 		[ff^19 · flip^13 · flip^5] ---> [ff^19 · flip^13] (using original def)
-//│ 	[ff^19 · flip^14] (using original def)
-//│ 		[ff^19 · flip^14 · flip^2] ---> [ff^19 · flip^14] (using original def)
-//│ 		[ff^19 · flip^14 · flip^5] ---> [ff^19 · flip^14] (using original def)
+//│ [ff^19]
+//│ 	[ff^19 · flip^13]
+//│ 		[ff^19 · flip^13 · flip^2] ---> [ff^19 · flip^13] (only one)
+//│ 		[ff^19 · flip^13 · flip^5] ---> [ff^19 · flip^13] (only one)
+//│ 	[ff^19 · flip^14]
+//│ 		[ff^19 · flip^14 · flip^2] ---> [ff^19 · flip^14] (only one)
+//│ 		[ff^19 · flip^14 · flip^5] ---> [ff^19 · flip^14] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -829,11 +931,11 @@ main
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [main^36] (hopeless to continue)
-//│ 	[main^36 · squaretr^31] (using original def)
-//│ 		[main^36 · squaretr^31 · squaretr^11] ---> [main^36 · squaretr^31] (using original def)
-//│ 		[main^36 · squaretr^31 · squaretr^8] ---> [main^36 · squaretr^31] (using original def)
-//│ 	[main^36 · sumtr^30] (using original def)
+//│ [main^36]
+//│ 	[main^36 · squaretr^31]
+//│ 		[main^36 · squaretr^31 · squaretr^11] ---> [main^36 · squaretr^31] (only one)
+//│ 		[main^36 · squaretr^31 · squaretr^8] ---> [main^36 · squaretr^31] (only one)
+//│ 	[main^36 · sumtr^30] (hopeless to continue)
 //│ 		[main^36 · sumtr^30 · sumtr^20] ---> [main^36 · sumtr^30] (using original def)
 //│ 		[main^36 · sumtr^30 · sumtr^24] ---> [main^36 · sumtr^30] (using original def)
 //│ <<<<<<< expansion <<<<<<<

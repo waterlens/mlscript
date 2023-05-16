@@ -50,7 +50,9 @@ class DiffTestLumberhack extends DiffTests {
       case l => (false, false, l)
     }
     val originalProgram = Program.fromPgrm(Pgrm(filteredEntities))
-
+    if mode.stdout || mode.verbose then {
+      output(originalProgram.pp(using InitPpConfig.multilineOn.showIuidOn.showEuidOn)) 
+    }
     output(originalProgram.pp(using InitPpConfig.multilineOn.showIuidOn.showRefEuidOn))
     output("<<<<<<<<<< Original <<<<<<<<<<")
     

@@ -67,8 +67,8 @@ f(cs)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [cs^20] (hopeless to continue)
-//│ 	[cs^20 · cs^16] ---> [cs^20] (using original def)
+//│ [cs^20]
+//│ 	[cs^20 · cs^16] ---> [cs^20] (only one)
 //│ [f^19] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
@@ -83,6 +83,7 @@ f(cs)
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 1 [C 2 cs₀]]: 26 --->
+//│ 	NoCons
 //│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹)}: 36
 //│ ------------------
 //│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹)}: 36 --->
@@ -90,21 +91,18 @@ f(cs)
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C 1 [C 2 cs₀]]: 26 --->
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹)}: 36
+//│ 
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹)}: 36 --->
-//│ 	[C 1 [C 2 cs₀]]: 26
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (f₀ cs₀)
 //│ def cs₀ = 
-//│ 	let h² = 1
-//│ 	in let t² = [C 2 cs₀]
-//│ 	in (fun a² -> (((primitive⁰ h²) t²) a²))
+//│ 	[C 1 [C 2 cs₀]]
 //│ def f₀ = 
-//│ 	(fun xs² -> (fun a³ -> (primitive⁰ (xs² a³))))
+//│ 	(fun xs² -> (fun a² -> (primitive⁰ case xs² of {
+//│ 		C h¹ t¹ => (((primitive⁰ h¹) t¹) a²)})))
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -292,8 +290,8 @@ f(g(42))(0)
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [f^36] (hopeless to continue)
-//│ [g^37] (hopeless to continue)
-//│ 	[g^37 · g^24] ---> [g^37] (using original def)
+//│ [g^37]
+//│ 	[g^37 · g^24] ---> [g^37] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -308,10 +306,10 @@ f(g(42))(0)
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 1 [C 2 (g₀ (init¹ - 1))]]: 58 --->
-//│ 	'56_callres
+//│ 	NoCons
 //│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹) | N => (primitive⁰ a¹)}: 74
 //│ [N]: 59 --->
-//│ 	'56_callres
+//│ 	NoCons
 //│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹) | N => (primitive⁰ a¹)}: 74
 //│ ------------------
 //│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹) | N => (primitive⁰ a¹)}: 74 --->

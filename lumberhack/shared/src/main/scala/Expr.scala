@@ -217,6 +217,7 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
             case "-" | "minus" => Const(IntLit(fst - snd))
             case "*" | "mult" => Const(IntLit(fst * snd))
             case "/" | "div" => Const(IntLit(fst / snd))
+            case "%" => Const(IntLit(fst % snd))
             case "==" | "eq" => Ctor(Var(if fst == snd then "True" else "False"), Nil)
             case ">" | "gt" => Ctor(Var(if fst > snd then "True" else "False"), Nil)
             case "<" | "lt" => Ctor(Var(if fst < snd then "True" else "False"), Nil)

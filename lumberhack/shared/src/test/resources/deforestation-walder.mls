@@ -115,6 +115,17 @@ main
 //│ 				in let t⁵ = ((map₀ f³) t⁴)
 //│ 				in (fun acc³ -> ((summ₀ (acc³ + h⁵)) t⁵)))))
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: type error 'x⁰ => '68_callres <: Destruct(Int)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1(Deforest.scala:496)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$adapted$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:236)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1$$anonfun$7(Deforest.scala:457)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
+//│ 	at: scala.collection.immutable.List.foreach(List.scala:333)
 
 
 // CORRECT: slightly different from actual example in wadler's paper: the sum is no longer tail recursive
@@ -224,6 +235,17 @@ main
 //│ 				in let t⁵ = ((map₀ f⁴) t⁴)
 //│ 				in (h⁵ + (sum₀ t⁵)))))
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: type error Int <: 'f⁰ => '4_callres
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1(Deforest.scala:496)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$adapted$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:236)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1$$anonfun$7(Deforest.scala:457)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
+//│ 	at: scala.collection.immutable.List.foreach(List.scala:333)
 
 // WRONG: cannot fuse at all if there is no concrete input
 fun append(xs, ys) = if xs is
@@ -503,6 +525,17 @@ main
 //│ 	def append₀ = 
 //│ 		(fun xs⁵ -> (fun ys⁶ -> (xs⁵ ys⁶)))
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: type error 'ys³ => C('h³, '52_callres) <: Destruct(C('h², 't²), N)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1(Deforest.scala:496)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$adapted$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:236)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1$$anonfun$7(Deforest.scala:457)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
+//│ 	at: scala.collection.immutable.List.foreach(List.scala:333)
 
 
 
@@ -650,6 +683,17 @@ main
 //│ 			C h⁴ t⁴ => [C (f⁶ h⁴) ((map₂ t⁴) f⁶)]
 //│ 			| N => [N]}))
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: type error 'ys⁴ => C('h⁴, '78_callres) <: Destruct(C('h³, 't³), N)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1(Deforest.scala:496)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$adapted$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:236)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1$$anonfun$7(Deforest.scala:457)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
+//│ 	at: scala.collection.immutable.List.foreach(List.scala:333)
 
 
 // CORRECT: will fuse
@@ -728,6 +772,17 @@ main
 //│ 				in (fun ys⁴ -> [C h³ ((append₀ t³) ys⁴)])
 //│ 			| N => ys³}))
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: type error 'ys¹ => C('h¹, '14_callres) <: Destruct(C('h⁰, 't⁰), N)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1(Deforest.scala:496)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$adapted$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:236)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1$$anonfun$7(Deforest.scala:457)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
+//│ 	at: scala.collection.immutable.List.foreach(List.scala:333)
 
 
 // CORRECT: will fuse
@@ -824,6 +879,17 @@ main
 //│ 				in (fun ys⁵ -> [C h³ ((append₀ t³) ys⁵)])
 //│ 			| N => ys⁴}))
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: type error 'ys² => C('h¹, '19_callres) <: Destruct(C('h⁰, 't⁰), N)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1(Deforest.scala:496)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$adapted$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:236)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1$$anonfun$7(Deforest.scala:457)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
+//│ 	at: scala.collection.immutable.List.foreach(List.scala:333)
 
 
 
@@ -994,3 +1060,14 @@ main
 //│ 	def sumtr₀ = 
 //│ 		(fun t⁶ -> t⁶)
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: type error Int <: Destruct(N('v⁰), T('l⁰, 'r⁰))
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1(Deforest.scala:484)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$adapted$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:236)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1$$anonfun$7(Deforest.scala:457)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
+//│ 	at: scala.collection.immutable.List.foreach(List.scala:333)

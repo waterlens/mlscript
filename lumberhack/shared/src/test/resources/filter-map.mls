@@ -75,6 +75,17 @@ filter(map(primitive, primitive), primitive)
 //│ 			in (fun p² -> if (p² h⁴) then [C h⁴ ((filter₀ t⁴) p²)] else ((filter₀ t⁴) p²))
 //│ 		| N => (fun p³ -> [N])}))
 //│ <<<<<<< after fusion <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: type error 'p⁰ => '34_ifres <: Destruct(C('h⁰, 't⁰), N)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1(Deforest.scala:496)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$adapted$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:236)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1$$anonfun$7(Deforest.scala:457)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
+//│ 	at: scala.collection.immutable.List.foreach(List.scala:333)
 
 _LUMBERHACK_EVAL
 fun map(ls, f) = if ls is
@@ -197,3 +208,14 @@ filter(map(C(1, C(2, C(3, N))), x => x * 2), x => x > 3)
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 4 [C 6 [N]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: type error Int <: Destruct(True, False)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1(Deforest.scala:484)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$adapted$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:236)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1$$anonfun$7(Deforest.scala:457)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
+//│ 	at: scala.collection.immutable.List.foreach(List.scala:333)

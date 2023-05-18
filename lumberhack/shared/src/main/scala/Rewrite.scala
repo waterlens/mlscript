@@ -260,7 +260,7 @@ trait ExprRewrite { this: Expr =>
       case Ctor(name, args) => Ctor(name, args.map(_.rewriteExpand))
       case LetIn(id, rhs, body) =>
         val newId = id.copyToNewDeforest
-        LetIn(newId, rhs.rewriteExpand, body.rewriteExpand(using ctx + (id.tree.name -> newId)))
+        LetIn(newId, rhs.rewriteExpand(using ctx + (id.tree.name -> newId)), body.rewriteExpand(using ctx + (id.tree.name -> newId)))
       case Match(scrut, arms) =>
         Match(scrut.rewriteExpand, arms.map {(ctor, args, body) =>
           val newArgs = args.map(a => a.tree.name -> a.copyToNewDeforest)
@@ -294,7 +294,7 @@ trait ExprRewrite { this: Expr =>
       case LetIn(id, rhs, body) =>
         val newId = id.copyToNewDeforest
         val newCtx = ctx + (newId.tree.name -> newId)
-        LetIn(newId, rhs.rewriteFusion, body.rewriteFusion(using newCtx))
+        LetIn(newId, rhs.rewriteFusion(using newCtx), body.rewriteFusion(using newCtx))
       case IfThenElse(s, t, e) => IfThenElse(s.rewriteFusion, t.rewriteFusion, e.rewriteFusion)
       case Function(param, body) =>
         val newParamId = param.copyToNewDeforest
@@ -341,7 +341,7 @@ trait ExprRewrite { this: Expr =>
     case Ref(id: Ident) => if set(id) then Set.empty else Set(id)
     case Call(lhs: Expr, rhs: Expr) => lhs.outOfScopeIdsSet ++ rhs.outOfScopeIdsSet
     case Ctor(name: Var, args: Ls[Expr]) => args.flatMap(_.outOfScopeIdsSet).toSet
-    case LetIn(id: Ident, rhs: Expr, body: Expr) => rhs.outOfScopeIdsSet ++ body.outOfScopeIdsSet(using set + id)
+    case LetIn(id: Ident, rhs: Expr, body: Expr) => rhs.outOfScopeIdsSet(using set + id) ++ body.outOfScopeIdsSet(using set + id)
     case Match(scrut: Expr, arms: Ls[(Var, Ls[Ident], Expr)]) =>
       scrut.outOfScopeIdsSet ++ (arms.flatMap { (_, newIds, body) => body.outOfScopeIdsSet(using set ++ newIds) })
     case IfThenElse(scrut: Expr, thenn: Expr, elze: Expr) =>
@@ -369,7 +369,7 @@ trait ProgramRewrite { this: Program =>
       case Expr.Ctor(name: Var, args: Ls[Expr]) => Expr.Ctor(name, args.map(copyExpr))
       case Expr.LetIn(id: Ident, rhs: Expr, body: Expr) =>
         val newId = id.copyToNewDeforest
-        Expr.LetIn(newId, copyExpr(rhs), copyExpr(body)(using ctx + (id.tree.name -> newId)))
+        Expr.LetIn(newId, copyExpr(rhs)(using ctx + (id.tree.name -> newId)), copyExpr(body)(using ctx + (id.tree.name -> newId)))
       case Expr.Match(scrut: Expr, arms: Ls[(Var, Ls[Ident], Expr)]) =>
         Expr.Match(copyExpr(scrut), arms.map {(ctor, args, body) =>
           val newArgs = args.map(a => a.tree.name -> a.copyToNewDeforest)

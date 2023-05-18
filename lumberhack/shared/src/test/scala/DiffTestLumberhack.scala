@@ -228,7 +228,7 @@ class DiffTestLumberhack extends DiffTests {
       } */
       if evaluate then {
         output("\n>>>>>>>>>> Original Eval Res >>>>>>>>>>")
-        output(originalProgram.evaluatedSmallStep.map(_.pp(using InitPpConfig.multilineOn.showIuidOn)).mkString("\n"))
+        output(originalProgram.evaluated.map(_.pp(using InitPpConfig.multilineOn.showIuidOn)).mkString("\n"))
         output("<<<<<<<<<< Original Eval Res <<<<<<<<<<")
       }
       
@@ -238,7 +238,7 @@ class DiffTestLumberhack extends DiffTests {
       
       if evaluate then {
         if !iterativeProcessRes._3.get.forall(
-          _.map(_.pp(using InitPpConfig)) == originalProgram.evaluatedSmallStep.map(_.pp(using InitPpConfig))
+          _.map(_.pp(using InitPpConfig)) == originalProgram.evaluated.map(_.pp(using InitPpConfig))
         ) then throw Exception("output different!")
       }
 
@@ -431,7 +431,7 @@ class DiffTestLumberhack extends DiffTests {
     if evaluate then {
       output("\n>>>>>>> evaluate >>>>>>>")
       // will only have one toplevel expr
-      evaluatedExpr = Some(prgmAfterFusion.evaluatedSmallStep)
+      evaluatedExpr = Some(prgmAfterFusion.evaluated)
       val evalStr = evaluatedExpr.get.map(_.pp(using InitPpConfig.multilineOn.showIuidOn)).mkString("\n")
       // val evalStr = prgmAfterFusion.evaluated.map(_.pp(using InitPpConfig.multilineOn.showIuidOn)).mkString("\n")
       output(evalStr)
@@ -440,6 +440,11 @@ class DiffTestLumberhack extends DiffTests {
 
     val newD = Deforest(false)
     val newP = prgmAfterFusion.copyDefsToNewDeforest(using newD)._1._1
+    if mode.stdout || mode.verbose then {
+      output("\n>>>>>>> program after copying to new deforest >>>>>>>")
+      output(newP.pp(using InitPpConfig.multilineOn.showIuidOn))
+      output("<<<<<<< program after copying to new deforest <<<<<<<")
+    }
     newD(newP)
     newD.resolveConstraints
     (newP, newD, fusionStrategy.afterRemoveRecursiveStrategies._1.isEmpty, evaluatedExpr) // if is empty, stop the iterative process

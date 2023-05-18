@@ -204,7 +204,7 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
       case Ref(id) if Deforest.lumberhackKeywords(id.tree.name) => this
       case Ref(id) => ctx.get(id) match {
         case Some(v) => v.evaluate
-        case None => ???
+        case None => lastWords(this.pp(using InitPpConfig.showIuidOn) + " not in ctx")
       }
       case Call(f, p) => f.evaluate match {
         case Function(arg, body) => body.subst(using Map(arg -> p.evaluate)).evaluate
@@ -250,7 +250,7 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
       case Function(param, body) => Function(param, body)
       case Sequence(a, b) => Sequence(a.evaluate, b.evaluate)
     }
-  }(_.pp(using InitPpConfig.showIuidOn.multilineOn))
+  }()
 
 
   // small step
@@ -267,7 +267,7 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
       case Ref(id) if Deforest.lumberhackKeywords(id.tree.name) => this
       case Ref(id) => ctx.get(id) match {
         case Some(v) => v
-        case None => this
+        case None => lastWords(this.pp(using InitPpConfig.showIuidOn) + " not in ctx (small step)")
       }
       case Call(f, p) => f match {
         case Function(arg, body) => body.subst(using Map(arg -> p))

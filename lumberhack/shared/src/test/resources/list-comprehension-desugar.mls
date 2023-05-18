@@ -1,6 +1,7 @@
 :ParseOnly
 :NewParser
 
+
 // [(a, c) | (a, b) <- [(5, 10)], (c, d) <- [(1, 3), (2, 3), (a, b)]]
 // a less efficient desugaring of list comprehension
 _LUMBERHACK_EVAL
@@ -299,234 +300,17 @@ concatMap(ok1, C(P2(5, 10), N))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C [P2 5 1] [C [P2 5 2] [C [P2 5 5] [N]]]]
 //│ <<<<<<< evaluate <<<<<<<
-//│ 
-//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
-//│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [append₀^93]
-//│ 	[append₀^93 · append₀^168] ---> [append₀^93] (only one)
-//│ [append₂^73]
-//│ 	[append₂^73 · append₂^141] ---> [append₂^73] (only one)
-//│ [append₃^45] (hopeless to continue)
-//│ 	[append₃^45 · append₃^117] ---> [append₃^45] (using original def)
-//│ [append₃^59] (hopeless to continue)
-//│ 	[append₃^59 · append₃^117] ---> [append₃^59] (using original def)
-//│ [concatMap₀^1] (hopeless to continue)
-//│ [concatMap₁^98] (hopeless to continue)
-//│ [concatMap₂^10] (hopeless to continue)
-//│ [concatMap₃^50] (hopeless to continue)
-//│ [concatMap₃^64] (hopeless to continue)
-//│ [concatMap₃^78] (hopeless to continue)
-//│ [ok1₀^2] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ ((concatMap₀₀ ok1₀₀) 
-//│ 	let h¹² = 	
-//│ 		let a⁴ = 5
-//│ 		in let b⁴ = 10
-//│ 		in let ok2¹ = (fun arg2¹ -> (arg2¹ a⁴))
-//│ 		in ((concatMap₂₀ ok2¹) 
-//│ 			let h¹³ = 	
-//│ 				let c³ = 1
-//│ 				in let b⁵ = 3
-//│ 				in (fun a⁵ -> [C [P2 a⁵ c³] [N]])
-//│ 			in let t¹² = 	
-//│ 				let h¹⁴ = 	
-//│ 					let c⁴ = 2
-//│ 					in let b⁶ = 3
-//│ 					in (fun a⁶ -> [C [P2 a⁶ c⁴] [N]])
-//│ 				in let t¹³ = 	
-//│ 					let h¹⁵ = 	
-//│ 						let c⁵ = a⁴
-//│ 						in let b⁷ = b⁴
-//│ 						in (fun a⁷ -> [C [P2 a⁷ c⁵] [N]])
-//│ 					in let t¹⁴ = (fun f¹⁶ -> [N])
-//│ 					in (fun f¹⁷ -> ((append₃₀ (f¹⁷ h¹⁵)) ((concatMap₃₀ f¹⁷) t¹⁴)))
-//│ 				in (fun f¹⁸ -> ((append₃₁ (f¹⁸ h¹⁴)) ((concatMap₃₁ f¹⁸) t¹³)))
-//│ 			in (fun f¹⁹ -> ((append₂₀ (f¹⁹ h¹³)) ((concatMap₃₂ f¹⁹) t¹²))))
-//│ 	in let t¹⁵ = (fun f²⁰ -> [N])
-//│ 	in (fun f²¹ -> ((append₀₀ (f²¹ h¹²)) ((concatMap₁₀ f²¹) t¹⁵))))
-//│ def append₀₀ = 
-//│ 	(fun xs⁵ -> (fun ys⁵ -> case xs⁵ of {
-//│ 		C h⁹ t⁹ => [C h⁹ ((append₀₀ t⁹) ys⁵)]
-//│ 		| N => ys⁵}))
-//│ def append₂₀ = 
-//│ 	(fun xs⁶ -> (fun ys⁶ -> case xs⁶ of {
-//│ 		C h¹⁰ t¹⁰ => [C h¹⁰ ((append₂₀ t¹⁰) ys⁶)]
-//│ 		| N => ys⁶}))
-//│ def append₃₀ = 
-//│ 	(fun xs⁴ -> (fun ys⁴ -> case xs⁴ of {
-//│ 		C h⁸ t⁸ => [C h⁸ ((append₃₀ t⁸) ys⁴)]
-//│ 		| N => ys⁴}))
-//│ def append₃₁ = 
-//│ 	(fun xs⁷ -> (fun ys⁷ -> case xs⁷ of {
-//│ 		C h¹¹ t¹¹ => [C h¹¹ ((append₃₁ t¹¹) ys⁷)]
-//│ 		| N => ys⁷}))
-//│ def concatMap₀₀ = 
-//│ 	(fun f¹² -> (fun ls⁶ -> (ls⁶ f¹²)))
-//│ def concatMap₁₀ = 
-//│ 	(fun f¹⁵ -> (fun ls⁹ -> (ls⁹ f¹⁵)))
-//│ def concatMap₂₀ = 
-//│ 	(fun f¹⁰ -> (fun ls⁴ -> (ls⁴ f¹⁰)))
-//│ def concatMap₃₀ = 
-//│ 	(fun f¹³ -> (fun ls⁷ -> (ls⁷ f¹³)))
-//│ def concatMap₃₁ = 
-//│ 	(fun f¹¹ -> (fun ls⁵ -> (ls⁵ f¹¹)))
-//│ def concatMap₃₂ = 
-//│ 	(fun f¹⁴ -> (fun ls⁸ -> (ls⁸ f¹⁴)))
-//│ def ok1₀₀ = 
-//│ 	(fun arg1¹ -> arg1¹)
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ [C h⁸ ((append₃₀ t⁸) ys⁴)]: 190 --->
-//│ 	case xs⁵ of {C h⁹ t⁹ => [C h⁹ ((append₀₀ t⁹) ys⁵)] | N => ys⁵}: 226
-//│ [C h¹⁰ ((append₂₀ t¹⁰) ys⁶)]: 236 --->
-//│ 	case xs⁵ of {C h⁹ t⁹ => [C h⁹ ((append₀₀ t⁹) ys⁵)] | N => ys⁵}: 226
-//│ [C h¹¹ ((append₃₁ t¹¹) ys⁷)]: 253 --->
-//│ 	case xs⁵ of {C h⁹ t⁹ => [C h⁹ ((append₀₀ t⁹) ys⁵)] | N => ys⁵}: 226
-//│ [N]: 275 --->
-//│ 	case xs⁴ of {C h⁸ t⁸ => [C h⁸ ((append₃₀ t⁸) ys⁴)] | N => ys⁴}: 192
-//│ 	case xs⁶ of {C h¹⁰ t¹⁰ => [C h¹⁰ ((append₂₀ t¹⁰) ys⁶)] | N => ys⁶}: 238
-//│ 	case xs⁷ of {C h¹¹ t¹¹ => [C h¹¹ ((append₃₁ t¹¹) ys⁷)] | N => ys⁷}: 255
-//│ [C [P2 a⁵ c³] [N]]: 276 --->
-//│ 	case xs⁴ of {C h⁸ t⁸ => [C h⁸ ((append₃₀ t⁸) ys⁴)] | N => ys⁴}: 192
-//│ 	case xs⁶ of {C h¹⁰ t¹⁰ => [C h¹⁰ ((append₂₀ t¹⁰) ys⁶)] | N => ys⁶}: 238
-//│ 	case xs⁷ of {C h¹¹ t¹¹ => [C h¹¹ ((append₃₁ t¹¹) ys⁷)] | N => ys⁷}: 255
-//│ [N]: 285 --->
-//│ 	case xs⁴ of {C h⁸ t⁸ => [C h⁸ ((append₃₀ t⁸) ys⁴)] | N => ys⁴}: 192
-//│ 	case xs⁶ of {C h¹⁰ t¹⁰ => [C h¹⁰ ((append₂₀ t¹⁰) ys⁶)] | N => ys⁶}: 238
-//│ 	case xs⁷ of {C h¹¹ t¹¹ => [C h¹¹ ((append₃₁ t¹¹) ys⁷)] | N => ys⁷}: 255
-//│ [C [P2 a⁶ c⁴] [N]]: 286 --->
-//│ 	case xs⁴ of {C h⁸ t⁸ => [C h⁸ ((append₃₀ t⁸) ys⁴)] | N => ys⁴}: 192
-//│ 	case xs⁶ of {C h¹⁰ t¹⁰ => [C h¹⁰ ((append₂₀ t¹⁰) ys⁶)] | N => ys⁶}: 238
-//│ 	case xs⁷ of {C h¹¹ t¹¹ => [C h¹¹ ((append₃₁ t¹¹) ys⁷)] | N => ys⁷}: 255
-//│ [N]: 295 --->
-//│ 	case xs⁴ of {C h⁸ t⁸ => [C h⁸ ((append₃₀ t⁸) ys⁴)] | N => ys⁴}: 192
-//│ 	case xs⁶ of {C h¹⁰ t¹⁰ => [C h¹⁰ ((append₂₀ t¹⁰) ys⁶)] | N => ys⁶}: 238
-//│ 	case xs⁷ of {C h¹¹ t¹¹ => [C h¹¹ ((append₃₁ t¹¹) ys⁷)] | N => ys⁷}: 255
-//│ [C [P2 a⁷ c⁵] [N]]: 296 --->
-//│ 	case xs⁴ of {C h⁸ t⁸ => [C h⁸ ((append₃₀ t⁸) ys⁴)] | N => ys⁴}: 192
-//│ 	case xs⁶ of {C h¹⁰ t¹⁰ => [C h¹⁰ ((append₂₀ t¹⁰) ys⁶)] | N => ys⁶}: 238
-//│ 	case xs⁷ of {C h¹¹ t¹¹ => [C h¹¹ ((append₃₁ t¹¹) ys⁷)] | N => ys⁷}: 255
-//│ [N]: 300 --->
-//│ 	case xs⁵ of {C h⁹ t⁹ => [C h⁹ ((append₀₀ t⁹) ys⁵)] | N => ys⁵}: 226
-//│ ------------------
-//│ case xs⁴ of {C h⁸ t⁸ => [C h⁸ ((append₃₀ t⁸) ys⁴)] | N => ys⁴}: 192 --->
-//│ 	[N]: 275
-//│ 	[C [P2 a⁵ c³] [N]]: 276
-//│ 	[N]: 285
-//│ 	[C [P2 a⁶ c⁴] [N]]: 286
-//│ 	[N]: 295
-//│ 	[C [P2 a⁷ c⁵] [N]]: 296
-//│ case xs⁵ of {C h⁹ t⁹ => [C h⁹ ((append₀₀ t⁹) ys⁵)] | N => ys⁵}: 226 --->
-//│ 	[C h⁸ ((append₃₀ t⁸) ys⁴)]: 190
-//│ 	[C h¹⁰ ((append₂₀ t¹⁰) ys⁶)]: 236
-//│ 	[C h¹¹ ((append₃₁ t¹¹) ys⁷)]: 253
-//│ 	[N]: 300
-//│ case xs⁶ of {C h¹⁰ t¹⁰ => [C h¹⁰ ((append₂₀ t¹⁰) ys⁶)] | N => ys⁶}: 238 --->
-//│ 	[N]: 275
-//│ 	[C [P2 a⁵ c³] [N]]: 276
-//│ 	[N]: 285
-//│ 	[C [P2 a⁶ c⁴] [N]]: 286
-//│ 	[N]: 295
-//│ 	[C [P2 a⁷ c⁵] [N]]: 296
-//│ case xs⁷ of {C h¹¹ t¹¹ => [C h¹¹ ((append₃₁ t¹¹) ys⁷)] | N => ys⁷}: 255 --->
-//│ 	[N]: 275
-//│ 	[C [P2 a⁵ c³] [N]]: 276
-//│ 	[N]: 285
-//│ 	[C [P2 a⁶ c⁴] [N]]: 286
-//│ 	[N]: 295
-//│ 	[C [P2 a⁷ c⁵] [N]]: 296
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C h⁸ ((append₃₀ t⁸) ys⁴)]: 190 --->
-//│ 	case xs⁵ of {C h⁹ t⁹ => [C h⁹ ((append₀₀ t⁹) ys⁵)] | N => ys⁵}: 226
-//│ [C h¹⁰ ((append₂₀ t¹⁰) ys⁶)]: 236 --->
-//│ 	case xs⁵ of {C h⁹ t⁹ => [C h⁹ ((append₀₀ t⁹) ys⁵)] | N => ys⁵}: 226
-//│ [C h¹¹ ((append₃₁ t¹¹) ys⁷)]: 253 --->
-//│ 	case xs⁵ of {C h⁹ t⁹ => [C h⁹ ((append₀₀ t⁹) ys⁵)] | N => ys⁵}: 226
-//│ [N]: 300 --->
-//│ 	case xs⁵ of {C h⁹ t⁹ => [C h⁹ ((append₀₀ t⁹) ys⁵)] | N => ys⁵}: 226
-//│ ------------------
-//│ case xs⁵ of {C h⁹ t⁹ => [C h⁹ ((append₀₀ t⁹) ys⁵)] | N => ys⁵}: 226 --->
-//│ 	[C h⁸ ((append₃₀ t⁸) ys⁴)]: 190
-//│ 	[C h¹⁰ ((append₂₀ t¹⁰) ys⁶)]: 236
-//│ 	[C h¹¹ ((append₃₁ t¹¹) ys⁷)]: 253
-//│ 	[N]: 300
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ ((concatMap₀₀ ok1₀₀) 
-//│ 	let h¹⁶ = 	
-//│ 		let a⁸ = 5
-//│ 		in let b⁸ = 10
-//│ 		in let ok2² = (fun arg2² -> (arg2² a⁸))
-//│ 		in ((concatMap₂₀ ok2²) 
-//│ 			let h¹⁷ = 	
-//│ 				let c⁶ = 1
-//│ 				in let b⁹ = 3
-//│ 				in (fun a⁹ -> [C [P2 a⁹ c⁶] [N]])
-//│ 			in let t¹⁶ = 	
-//│ 				let h¹⁸ = 	
-//│ 					let c⁷ = 2
-//│ 					in let b¹⁰ = 3
-//│ 					in (fun a¹⁰ -> [C [P2 a¹⁰ c⁷] [N]])
-//│ 				in let t¹⁷ = 	
-//│ 					let h¹⁹ = 	
-//│ 						let c⁸ = a⁸
-//│ 						in let b¹¹ = b⁸
-//│ 						in (fun a¹¹ -> [C [P2 a¹¹ c⁸] [N]])
-//│ 					in let t¹⁸ = (fun f²² -> (fun ys⁸ -> ys⁸))
-//│ 					in (fun f²³ -> ((append₃₀ (f²³ h¹⁹)) ((concatMap₃₀ f²³) t¹⁸)))
-//│ 				in (fun f²⁴ -> ((append₃₁ (f²⁴ h¹⁸)) ((concatMap₃₁ f²⁴) t¹⁷)))
-//│ 			in (fun f²⁵ -> ((append₂₀ (f²⁵ h¹⁷)) ((concatMap₃₂ f²⁵) t¹⁶))))
-//│ 	in let t¹⁹ = (fun f²⁶ -> [N])
-//│ 	in (fun f²⁷ -> ((append₀₀ (f²⁷ h¹⁶)) ((concatMap₁₀ f²⁷) t¹⁹))))
-//│ def append₀₀ = 
-//│ 	(fun xs⁹ -> (fun ys¹¹ -> (xs⁹ ys¹¹)))
-//│ def append₂₀ = 
-//│ 	(fun xs¹¹ -> (fun ys¹⁴ -> case xs¹¹ of {
-//│ 		C h¹⁰ t¹⁰ => 
-//│ 			let h²² = h¹⁰
-//│ 			in let t²² = ((append₂₀ t¹⁰) ys¹⁴)
-//│ 			in (fun ys¹⁵ -> [C h²² ((append₀₀ t²²) ys¹⁵)])
-//│ 		| N => ys¹⁴}))
-//│ def append₃₀ = 
-//│ 	(fun xs¹⁰ -> (fun ys¹² -> case xs¹⁰ of {
-//│ 		C h⁸ t⁸ => 
-//│ 			let h²¹ = h⁸
-//│ 			in let t²¹ = ((append₃₀ t⁸) ys¹²)
-//│ 			in (fun ys¹³ -> [C h²¹ ((append₀₀ t²¹) ys¹³)])
-//│ 		| N => ys¹²}))
-//│ def append₃₁ = 
-//│ 	(fun xs⁸ -> (fun ys⁹ -> case xs⁸ of {
-//│ 		C h¹¹ t¹¹ => 
-//│ 			let h²⁰ = h¹¹
-//│ 			in let t²⁰ = ((append₃₁ t¹¹) ys⁹)
-//│ 			in (fun ys¹⁰ -> [C h²⁰ ((append₀₀ t²⁰) ys¹⁰)])
-//│ 		| N => ys⁹}))
-//│ def concatMap₀₀ = 
-//│ 	(fun f²⁸ -> (fun ls¹⁰ -> (ls¹⁰ f²⁸)))
-//│ def concatMap₁₀ = 
-//│ 	(fun f²⁹ -> (fun ls¹¹ -> (ls¹¹ f²⁹)))
-//│ def concatMap₂₀ = 
-//│ 	(fun f³² -> (fun ls¹⁴ -> (ls¹⁴ f³²)))
-//│ def concatMap₃₀ = 
-//│ 	(fun f³¹ -> (fun ls¹³ -> (ls¹³ f³¹)))
-//│ def concatMap₃₁ = 
-//│ 	(fun f³³ -> (fun ls¹⁵ -> (ls¹⁵ f³³)))
-//│ def concatMap₃₂ = 
-//│ 	(fun f³⁰ -> (fun ls¹² -> (ls¹² f³⁰)))
-//│ def ok1₀₀ = 
-//│ 	(fun arg1² -> arg1²)
-//│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ [C [P2 5 1] [C [P2 5 2] [C [P2 5 5] [N]]]]
-//│ <<<<<<< evaluate <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: Internal Error: type error 'ys⁷ => C('h⁹, '195_callres) <: Destruct(C('h⁸, 't⁸), N)
+//│ 	at: mlscript.utils.package$.lastWords(package.scala:186)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1(Deforest.scala:496)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1$$anonfun$adapted$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest$Trace$.trace(Deforest.scala:236)
+//│ 	at: mlscript.lumberhack.Deforest.handle$1(Deforest.scala:384)
+//│ 	at: mlscript.lumberhack.Deforest.thunk$1$1$$anonfun$7(Deforest.scala:457)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
+//│ 	at: scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
+//│ 	at: scala.collection.immutable.List.foreach(List.scala:333)
 
 
 // [(x, z) | (x, y1) <- zip [1 .. 3] [2 .. 4], (y2, z) <- zip [x .. x + 2] [y1 .. y1 + 1] , y1 == y2]
@@ -602,8 +386,326 @@ ok1(zip(fromTo(1,3), fromTo(2,4)))
 //│ [zip^103]
 //│ 	[zip^103 · zip^6] ---> [zip^103] (only one)
 //│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (ok1₀ ((zip₂ ((fromTo₀ 1) 3)) ((fromTo₁ 2) 4)))
+//│ def fromTo₀ = 
+//│ 	(fun a³ -> (fun b³ -> if (a³ < (b³ + 1)) then [C a³ ((fromTo₀ (a³ + 1)) b³)] else [N]))
+//│ def fromTo₁ = 
+//│ 	(fun a² -> (fun b² -> if (a² < (b² + 1)) then [C a² ((fromTo₁ (a² + 1)) b²)] else [N]))
+//│ def ok1₀ = 
+//│ 	(fun ls1² -> case ls1² of {
+//│ 		C h⁴ t⁴ => case h⁴ of {
+//│ 			P2 x² y1² => 
+//│ 				let ok2² = (fun ls2² -> case ls2² of {
+//│ 					C h2⁴ t2⁴ => case h2⁴ of {
+//│ 						P2 y2² z² => if (y1² == y2²) then [C [P2 x² z²] (ok2² t2⁴)] else (ok2² t2⁴)
+//│ 						| _ => (ok2² t2⁴)}
+//│ 					| N => (ok1₁ t⁴)})
+//│ 				in (ok2² ((zip₁ ((fromTo₂ x²) (x² + 2))) ((fromTo₃ y1²) (y1² + 1))))
+//│ 			| _ => (ok1₀ t⁴)}
+//│ 		| N => [N]})
+//│ 	where
+//│ 	def fromTo₂ = 
+//│ 		(fun a¹ -> (fun b¹ -> if (a¹ < (b¹ + 1)) then [C a¹ ((fromTo₂ (a¹ + 1)) b¹)] else [N]))
+//│ 	def fromTo₃ = 
+//│ 		(fun a⁵ -> (fun b⁵ -> if (a⁵ < (b⁵ + 1)) then [C a⁵ ((fromTo₃ (a⁵ + 1)) b⁵)] else [N]))
+//│ 	def ok1₁ = 
+//│ 		(fun ls1¹ -> case ls1¹ of {
+//│ 			C h² t² => case h² of {
+//│ 				P2 x¹ y1¹ => 
+//│ 					let ok2¹ = (fun ls2¹ -> case ls2¹ of {
+//│ 						C h2² t2² => case h2² of {
+//│ 							P2 y2¹ z¹ => if (y1¹ == y2¹) then [C [P2 x¹ z¹] (ok2¹ t2²)] else (ok2¹ t2²)
+//│ 							| _ => (ok2¹ t2²)}
+//│ 						| N => (ok1₁ t²)})
+//│ 					in (ok2¹ ((zip₀ ((fromTo₄ x¹) (x¹ + 2))) ((fromTo₅ y1¹) (y1¹ + 1))))
+//│ 				| _ => (ok1₁ t²)}
+//│ 			| N => [N]})
+//│ 		where
+//│ 		def fromTo₄ = 
+//│ 			(fun a⁶ -> (fun b⁶ -> if (a⁶ < (b⁶ + 1)) then [C a⁶ ((fromTo₄ (a⁶ + 1)) b⁶)] else [N]))
+//│ 		def fromTo₅ = 
+//│ 			(fun a⁴ -> (fun b⁴ -> if (a⁴ < (b⁴ + 1)) then [C a⁴ ((fromTo₅ (a⁴ + 1)) b⁴)] else [N]))
+//│ 		def zip₀ = 
+//│ 			(fun xs³ -> (fun ys³ -> case xs³ of {
+//│ 				C h⁶ t⁶ => case ys³ of {
+//│ 					C h2⁶ t2⁶ => [C [P2 h⁶ h2⁶] ((zip₀ t⁶) t2⁶)]
+//│ 					| N => [N]}
+//│ 				| N => [N]}))
+//│ 	def zip₁ = 
+//│ 		(fun xs¹ -> (fun ys¹ -> case xs¹ of {
+//│ 			C h³ t³ => case ys¹ of {
+//│ 				C h2³ t2³ => [C [P2 h³ h2³] ((zip₁ t³) t2³)]
+//│ 				| N => [N]}
+//│ 			| N => [N]}))
+//│ def zip₂ = 
+//│ 	(fun xs² -> (fun ys² -> case xs² of {
+//│ 		C h⁵ t⁵ => case ys² of {
+//│ 			C h2⁵ t2⁵ => [C [P2 h⁵ h2⁵] ((zip₂ t⁵) t2⁵)]
+//│ 			| N => [N]}
+//│ 		| N => [N]}))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C a¹ ((fromTo₂ (a¹ + 1)) b¹)]: 136 --->
+//│ 	case xs¹ of {C h³ t³ => case ys¹ of {C h2³ t2³ => [C [P2 h³ h2³] ((zip₁ t³) t2³)] | N => [N]} | N => [N]}: 239
+//│ [N]: 137 --->
+//│ 	case xs¹ of {C h³ t³ => case ys¹ of {C h2³ t2³ => [C [P2 h³ h2³] ((zip₁ t³) t2³)] | N => [N]} | N => [N]}: 239
+//│ [C a² ((fromTo₁ (a² + 1)) b²)]: 160 --->
+//│ 	case ys² of {C h2⁵ t2⁵ => [C [P2 h⁵ h2⁵] ((zip₂ t⁵) t2⁵)] | N => [N]}: 362
+//│ [N]: 161 --->
+//│ 	case ys² of {C h2⁵ t2⁵ => [C [P2 h⁵ h2⁵] ((zip₂ t⁵) t2⁵)] | N => [N]}: 362
+//│ [P2 h³ h2³]: 229 --->
+//│ 	case h2⁴ of {P2 y2² z² => if (y1² == y2²) then [C [P2 x² z²] (ok2² t2⁴)] else (ok2² t2⁴) | _ => (ok2² t2⁴)}: 313
+//│ [C [P2 h³ h2³] ((zip₁ t³) t2³)]: 235 --->
+//│ 	case ls2² of {C h2⁴ t2⁴ => case h2⁴ of {P2 y2² z² => if (y1² == y2²) then [C [P2 x² z²] (ok2² t2⁴)] else (ok2² t2⁴) | _ => (ok2² t2⁴)} | N => (ok1₁ t⁴)}: 317
+//│ [N]: 236 --->
+//│ 	case ls2² of {C h2⁴ t2⁴ => case h2⁴ of {P2 y2² z² => if (y1² == y2²) then [C [P2 x² z²] (ok2² t2⁴)] else (ok2² t2⁴) | _ => (ok2² t2⁴)} | N => (ok1₁ t⁴)}: 317
+//│ [N]: 238 --->
+//│ 	case ls2² of {C h2⁴ t2⁴ => case h2⁴ of {P2 y2² z² => if (y1² == y2²) then [C [P2 x² z²] (ok2² t2⁴)] else (ok2² t2⁴) | _ => (ok2² t2⁴)} | N => (ok1₁ t⁴)}: 317
+//│ [C a³ ((fromTo₀ (a³ + 1)) b³)]: 261 --->
+//│ 	case xs² of {C h⁵ t⁵ => case ys² of {C h2⁵ t2⁵ => [C [P2 h⁵ h2⁵] ((zip₂ t⁵) t2⁵)] | N => [N]} | N => [N]}: 364
+//│ [N]: 262 --->
+//│ 	case xs² of {C h⁵ t⁵ => case ys² of {C h2⁵ t2⁵ => [C [P2 h⁵ h2⁵] ((zip₂ t⁵) t2⁵)] | N => [N]} | N => [N]}: 364
+//│ [C a⁴ ((fromTo₅ (a⁴ + 1)) b⁴)]: 285 --->
+//│ 	case ys³ of {C h2⁶ t2⁶ => [C [P2 h⁶ h2⁶] ((zip₀ t⁶) t2⁶)] | N => [N]}: 427
+//│ [N]: 286 --->
+//│ 	case ys³ of {C h2⁶ t2⁶ => [C [P2 h⁶ h2⁶] ((zip₀ t⁶) t2⁶)] | N => [N]}: 427
+//│ [P2 h⁵ h2⁵]: 354 --->
+//│ 	case h² of {P2 x¹ y1¹ => let ok2¹ = (fun ls2¹ -> case ls2¹ of {C h2² t2² => case h2² of {P2 y2¹ z¹ => if (y1¹ == y2¹) then [C [P2 x¹ z¹] (ok2¹ t2²)] else (ok2¹ t2²) | _ => (ok2¹ t2²)} | N => (ok1₁ t²)})
+//│ in (ok2¹ ((zip₀ ((fromTo₄ x¹) (x¹ + 2))) ((fromTo₅ y1¹) (y1¹ + 1)))) | _ => (ok1₁ t²)}: 221
+//│ 	case h⁴ of {P2 x² y1² => let ok2² = (fun ls2² -> case ls2² of {C h2⁴ t2⁴ => case h2⁴ of {P2 y2² z² => if (y1² == y2²) then [C [P2 x² z²] (ok2² t2⁴)] else (ok2² t2⁴) | _ => (ok2² t2⁴)} | N => (ok1₁ t⁴)})
+//│ in (ok2² ((zip₁ ((fromTo₂ x²) (x² + 2))) ((fromTo₃ y1²) (y1² + 1)))) | _ => (ok1₀ t⁴)}: 346
+//│ [C [P2 h⁵ h2⁵] ((zip₂ t⁵) t2⁵)]: 360 --->
+//│ 	case ls1¹ of {C h² t² => case h² of {P2 x¹ y1¹ => let ok2¹ = (fun ls2¹ -> case ls2¹ of {C h2² t2² => case h2² of {P2 y2¹ z¹ => if (y1¹ == y2¹) then [C [P2 x¹ z¹] (ok2¹ t2²)] else (ok2¹ t2²) | _ => (ok2¹ t2²)} | N => (ok1₁ t²)})
+//│ in (ok2¹ ((zip₀ ((fromTo₄ x¹) (x¹ + 2))) ((fromTo₅ y1¹) (y1¹ + 1)))) | _ => (ok1₁ t²)} | N => [N]}: 223
+//│ 	case ls1² of {C h⁴ t⁴ => case h⁴ of {P2 x² y1² => let ok2² = (fun ls2² -> case ls2² of {C h2⁴ t2⁴ => case h2⁴ of {P2 y2² z² => if (y1² == y2²) then [C [P2 x² z²] (ok2² t2⁴)] else (ok2² t2⁴) | _ => (ok2² t2⁴)} | N => (ok1₁ t⁴)})
+//│ in (ok2² ((zip₁ ((fromTo₂ x²) (x² + 2))) ((fromTo₃ y1²) (y1² + 1)))) | _ => (ok1₀ t⁴)} | N => [N]}: 348
+//│ [N]: 361 --->
+//│ 	case ls1¹ of {C h² t² => case h² of {P2 x¹ y1¹ => let ok2¹ = (fun ls2¹ -> case ls2¹ of {C h2² t2² => case h2² of {P2 y2¹ z¹ => if (y1¹ == y2¹) then [C [P2 x¹ z¹] (ok2¹ t2²)] else (ok2¹ t2²) | _ => (ok2¹ t2²)} | N => (ok1₁ t²)})
+//│ in (ok2¹ ((zip₀ ((fromTo₄ x¹) (x¹ + 2))) ((fromTo₅ y1¹) (y1¹ + 1)))) | _ => (ok1₁ t²)} | N => [N]}: 223
+//│ 	case ls1² of {C h⁴ t⁴ => case h⁴ of {P2 x² y1² => let ok2² = (fun ls2² -> case ls2² of {C h2⁴ t2⁴ => case h2⁴ of {P2 y2² z² => if (y1² == y2²) then [C [P2 x² z²] (ok2² t2⁴)] else (ok2² t2⁴) | _ => (ok2² t2⁴)} | N => (ok1₁ t⁴)})
+//│ in (ok2² ((zip₁ ((fromTo₂ x²) (x² + 2))) ((fromTo₃ y1²) (y1² + 1)))) | _ => (ok1₀ t⁴)} | N => [N]}: 348
+//│ [N]: 363 --->
+//│ 	case ls1¹ of {C h² t² => case h² of {P2 x¹ y1¹ => let ok2¹ = (fun ls2¹ -> case ls2¹ of {C h2² t2² => case h2² of {P2 y2¹ z¹ => if (y1¹ == y2¹) then [C [P2 x¹ z¹] (ok2¹ t2²)] else (ok2¹ t2²) | _ => (ok2¹ t2²)} | N => (ok1₁ t²)})
+//│ in (ok2¹ ((zip₀ ((fromTo₄ x¹) (x¹ + 2))) ((fromTo₅ y1¹) (y1¹ + 1)))) | _ => (ok1₁ t²)} | N => [N]}: 223
+//│ 	case ls1² of {C h⁴ t⁴ => case h⁴ of {P2 x² y1² => let ok2² = (fun ls2² -> case ls2² of {C h2⁴ t2⁴ => case h2⁴ of {P2 y2² z² => if (y1² == y2²) then [C [P2 x² z²] (ok2² t2⁴)] else (ok2² t2⁴) | _ => (ok2² t2⁴)} | N => (ok1₁ t⁴)})
+//│ in (ok2² ((zip₁ ((fromTo₂ x²) (x² + 2))) ((fromTo₃ y1²) (y1² + 1)))) | _ => (ok1₀ t⁴)} | N => [N]}: 348
+//│ [C a⁵ ((fromTo₃ (a⁵ + 1)) b⁵)]: 386 --->
+//│ 	case ys¹ of {C h2³ t2³ => [C [P2 h³ h2³] ((zip₁ t³) t2³)] | N => [N]}: 237
+//│ [N]: 387 --->
+//│ 	case ys¹ of {C h2³ t2³ => [C [P2 h³ h2³] ((zip₁ t³) t2³)] | N => [N]}: 237
+//│ [C a⁶ ((fromTo₄ (a⁶ + 1)) b⁶)]: 410 --->
+//│ 	case xs³ of {C h⁶ t⁶ => case ys³ of {C h2⁶ t2⁶ => [C [P2 h⁶ h2⁶] ((zip₀ t⁶) t2⁶)] | N => [N]} | N => [N]}: 429
+//│ [N]: 411 --->
+//│ 	case xs³ of {C h⁶ t⁶ => case ys³ of {C h2⁶ t2⁶ => [C [P2 h⁶ h2⁶] ((zip₀ t⁶) t2⁶)] | N => [N]} | N => [N]}: 429
+//│ [P2 h⁶ h2⁶]: 419 --->
+//│ 	case h2² of {P2 y2¹ z¹ => if (y1¹ == y2¹) then [C [P2 x¹ z¹] (ok2¹ t2²)] else (ok2¹ t2²) | _ => (ok2¹ t2²)}: 188
+//│ [C [P2 h⁶ h2⁶] ((zip₀ t⁶) t2⁶)]: 425 --->
+//│ 	case ls2¹ of {C h2² t2² => case h2² of {P2 y2¹ z¹ => if (y1¹ == y2¹) then [C [P2 x¹ z¹] (ok2¹ t2²)] else (ok2¹ t2²) | _ => (ok2¹ t2²)} | N => (ok1₁ t²)}: 192
+//│ [N]: 426 --->
+//│ 	case ls2¹ of {C h2² t2² => case h2² of {P2 y2¹ z¹ => if (y1¹ == y2¹) then [C [P2 x¹ z¹] (ok2¹ t2²)] else (ok2¹ t2²) | _ => (ok2¹ t2²)} | N => (ok1₁ t²)}: 192
+//│ [N]: 428 --->
+//│ 	case ls2¹ of {C h2² t2² => case h2² of {P2 y2¹ z¹ => if (y1¹ == y2¹) then [C [P2 x¹ z¹] (ok2¹ t2²)] else (ok2¹ t2²) | _ => (ok2¹ t2²)} | N => (ok1₁ t²)}: 192
+//│ ------------------
+//│ case h2² of {P2 y2¹ z¹ => if (y1¹ == y2¹) then [C [P2 x¹ z¹] (ok2¹ t2²)] else (ok2¹ t2²) | _ => (ok2¹ t2²)}: 188 --->
+//│ 	[P2 h⁶ h2⁶]: 419
+//│ case ls2¹ of {C h2² t2² => case h2² of {P2 y2¹ z¹ => if (y1¹ == y2¹) then [C [P2 x¹ z¹] (ok2¹ t2²)] else (ok2¹ t2²) | _ => (ok2¹ t2²)} | N => (ok1₁ t²)}: 192 --->
+//│ 	[C [P2 h⁶ h2⁶] ((zip₀ t⁶) t2⁶)]: 425
+//│ 	[N]: 426
+//│ 	[N]: 428
+//│ case h² of {P2 x¹ y1¹ => let ok2¹ = (fun ls2¹ -> case ls2¹ of {C h2² t2² => case h2² of {P2 y2¹ z¹ => if (y1¹ == y2¹) then [C [P2 x¹ z¹] (ok2¹ t2²)] else (ok2¹ t2²) | _ => (ok2¹ t2²)} | N => (ok1₁ t²)})
+//│ in (ok2¹ ((zip₀ ((fromTo₄ x¹) (x¹ + 2))) ((fromTo₅ y1¹) (y1¹ + 1)))) | _ => (ok1₁ t²)}: 221 --->
+//│ 	[P2 h⁵ h2⁵]: 354
+//│ case ls1¹ of {C h² t² => case h² of {P2 x¹ y1¹ => let ok2¹ = (fun ls2¹ -> case ls2¹ of {C h2² t2² => case h2² of {P2 y2¹ z¹ => if (y1¹ == y2¹) then [C [P2 x¹ z¹] (ok2¹ t2²)] else (ok2¹ t2²) | _ => (ok2¹ t2²)} | N => (ok1₁ t²)})
+//│ in (ok2¹ ((zip₀ ((fromTo₄ x¹) (x¹ + 2))) ((fromTo₅ y1¹) (y1¹ + 1)))) | _ => (ok1₁ t²)} | N => [N]}: 223 --->
+//│ 	[C [P2 h⁵ h2⁵] ((zip₂ t⁵) t2⁵)]: 360
+//│ 	[N]: 361
+//│ 	[N]: 363
+//│ case ys¹ of {C h2³ t2³ => [C [P2 h³ h2³] ((zip₁ t³) t2³)] | N => [N]}: 237 --->
+//│ 	[C a⁵ ((fromTo₃ (a⁵ + 1)) b⁵)]: 386
+//│ 	[N]: 387
+//│ case xs¹ of {C h³ t³ => case ys¹ of {C h2³ t2³ => [C [P2 h³ h2³] ((zip₁ t³) t2³)] | N => [N]} | N => [N]}: 239 --->
+//│ 	[C a¹ ((fromTo₂ (a¹ + 1)) b¹)]: 136
+//│ 	[N]: 137
+//│ case h2⁴ of {P2 y2² z² => if (y1² == y2²) then [C [P2 x² z²] (ok2² t2⁴)] else (ok2² t2⁴) | _ => (ok2² t2⁴)}: 313 --->
+//│ 	[P2 h³ h2³]: 229
+//│ case ls2² of {C h2⁴ t2⁴ => case h2⁴ of {P2 y2² z² => if (y1² == y2²) then [C [P2 x² z²] (ok2² t2⁴)] else (ok2² t2⁴) | _ => (ok2² t2⁴)} | N => (ok1₁ t⁴)}: 317 --->
+//│ 	[C [P2 h³ h2³] ((zip₁ t³) t2³)]: 235
+//│ 	[N]: 236
+//│ 	[N]: 238
+//│ case h⁴ of {P2 x² y1² => let ok2² = (fun ls2² -> case ls2² of {C h2⁴ t2⁴ => case h2⁴ of {P2 y2² z² => if (y1² == y2²) then [C [P2 x² z²] (ok2² t2⁴)] else (ok2² t2⁴) | _ => (ok2² t2⁴)} | N => (ok1₁ t⁴)})
+//│ in (ok2² ((zip₁ ((fromTo₂ x²) (x² + 2))) ((fromTo₃ y1²) (y1² + 1)))) | _ => (ok1₀ t⁴)}: 346 --->
+//│ 	[P2 h⁵ h2⁵]: 354
+//│ case ls1² of {C h⁴ t⁴ => case h⁴ of {P2 x² y1² => let ok2² = (fun ls2² -> case ls2² of {C h2⁴ t2⁴ => case h2⁴ of {P2 y2² z² => if (y1² == y2²) then [C [P2 x² z²] (ok2² t2⁴)] else (ok2² t2⁴) | _ => (ok2² t2⁴)} | N => (ok1₁ t⁴)})
+//│ in (ok2² ((zip₁ ((fromTo₂ x²) (x² + 2))) ((fromTo₃ y1²) (y1² + 1)))) | _ => (ok1₀ t⁴)} | N => [N]}: 348 --->
+//│ 	[C [P2 h⁵ h2⁵] ((zip₂ t⁵) t2⁵)]: 360
+//│ 	[N]: 361
+//│ 	[N]: 363
+//│ case ys² of {C h2⁵ t2⁵ => [C [P2 h⁵ h2⁵] ((zip₂ t⁵) t2⁵)] | N => [N]}: 362 --->
+//│ 	[C a² ((fromTo₁ (a² + 1)) b²)]: 160
+//│ 	[N]: 161
+//│ case xs² of {C h⁵ t⁵ => case ys² of {C h2⁵ t2⁵ => [C [P2 h⁵ h2⁵] ((zip₂ t⁵) t2⁵)] | N => [N]} | N => [N]}: 364 --->
+//│ 	[C a³ ((fromTo₀ (a³ + 1)) b³)]: 261
+//│ 	[N]: 262
+//│ case ys³ of {C h2⁶ t2⁶ => [C [P2 h⁶ h2⁶] ((zip₀ t⁶) t2⁶)] | N => [N]}: 427 --->
+//│ 	[C a⁴ ((fromTo₅ (a⁴ + 1)) b⁴)]: 285
+//│ 	[N]: 286
+//│ case xs³ of {C h⁶ t⁶ => case ys³ of {C h2⁶ t2⁶ => [C [P2 h⁶ h2⁶] ((zip₀ t⁶) t2⁶)] | N => [N]} | N => [N]}: 429 --->
+//│ 	[C a⁶ ((fromTo₄ (a⁶ + 1)) b⁶)]: 410
+//│ 	[N]: 411
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C a¹ ((fromTo₂ (a¹ + 1)) b¹)]: 136 --->
+//│ 	case xs¹ of {C h³ t³ => case ys¹ of {C h2³ t2³ => [C [P2 h³ h2³] ((zip₁ t³) t2³)] | N => [N]} | N => [N]}: 239
+//│ [N]: 137 --->
+//│ 	case xs¹ of {C h³ t³ => case ys¹ of {C h2³ t2³ => [C [P2 h³ h2³] ((zip₁ t³) t2³)] | N => [N]} | N => [N]}: 239
+//│ [C a² ((fromTo₁ (a² + 1)) b²)]: 160 --->
+//│ 	case ys² of {C h2⁵ t2⁵ => [C [P2 h⁵ h2⁵] ((zip₂ t⁵) t2⁵)] | N => [N]}: 362
+//│ [N]: 161 --->
+//│ 	case ys² of {C h2⁵ t2⁵ => [C [P2 h⁵ h2⁵] ((zip₂ t⁵) t2⁵)] | N => [N]}: 362
+//│ [P2 h³ h2³]: 229 --->
+//│ 	case h2⁴ of {P2 y2² z² => if (y1² == y2²) then [C [P2 x² z²] (ok2² t2⁴)] else (ok2² t2⁴) | _ => (ok2² t2⁴)}: 313
+//│ [C [P2 h³ h2³] ((zip₁ t³) t2³)]: 235 --->
+//│ 	case ls2² of {C h2⁴ t2⁴ => case h2⁴ of {P2 y2² z² => if (y1² == y2²) then [C [P2 x² z²] (ok2² t2⁴)] else (ok2² t2⁴) | _ => (ok2² t2⁴)} | N => (ok1₁ t⁴)}: 317
+//│ [N]: 236 --->
+//│ 	case ls2² of {C h2⁴ t2⁴ => case h2⁴ of {P2 y2² z² => if (y1² == y2²) then [C [P2 x² z²] (ok2² t2⁴)] else (ok2² t2⁴) | _ => (ok2² t2⁴)} | N => (ok1₁ t⁴)}: 317
+//│ [N]: 238 --->
+//│ 	case ls2² of {C h2⁴ t2⁴ => case h2⁴ of {P2 y2² z² => if (y1² == y2²) then [C [P2 x² z²] (ok2² t2⁴)] else (ok2² t2⁴) | _ => (ok2² t2⁴)} | N => (ok1₁ t⁴)}: 317
+//│ [C a³ ((fromTo₀ (a³ + 1)) b³)]: 261 --->
+//│ 	case xs² of {C h⁵ t⁵ => case ys² of {C h2⁵ t2⁵ => [C [P2 h⁵ h2⁵] ((zip₂ t⁵) t2⁵)] | N => [N]} | N => [N]}: 364
+//│ [N]: 262 --->
+//│ 	case xs² of {C h⁵ t⁵ => case ys² of {C h2⁵ t2⁵ => [C [P2 h⁵ h2⁵] ((zip₂ t⁵) t2⁵)] | N => [N]} | N => [N]}: 364
+//│ [C a⁴ ((fromTo₅ (a⁴ + 1)) b⁴)]: 285 --->
+//│ 	case ys³ of {C h2⁶ t2⁶ => [C [P2 h⁶ h2⁶] ((zip₀ t⁶) t2⁶)] | N => [N]}: 427
+//│ [N]: 286 --->
+//│ 	case ys³ of {C h2⁶ t2⁶ => [C [P2 h⁶ h2⁶] ((zip₀ t⁶) t2⁶)] | N => [N]}: 427
+//│ [C a⁵ ((fromTo₃ (a⁵ + 1)) b⁵)]: 386 --->
+//│ 	case ys¹ of {C h2³ t2³ => [C [P2 h³ h2³] ((zip₁ t³) t2³)] | N => [N]}: 237
+//│ [N]: 387 --->
+//│ 	case ys¹ of {C h2³ t2³ => [C [P2 h³ h2³] ((zip₁ t³) t2³)] | N => [N]}: 237
+//│ [C a⁶ ((fromTo₄ (a⁶ + 1)) b⁶)]: 410 --->
+//│ 	case xs³ of {C h⁶ t⁶ => case ys³ of {C h2⁶ t2⁶ => [C [P2 h⁶ h2⁶] ((zip₀ t⁶) t2⁶)] | N => [N]} | N => [N]}: 429
+//│ [N]: 411 --->
+//│ 	case xs³ of {C h⁶ t⁶ => case ys³ of {C h2⁶ t2⁶ => [C [P2 h⁶ h2⁶] ((zip₀ t⁶) t2⁶)] | N => [N]} | N => [N]}: 429
+//│ [P2 h⁶ h2⁶]: 419 --->
+//│ 	case h2² of {P2 y2¹ z¹ => if (y1¹ == y2¹) then [C [P2 x¹ z¹] (ok2¹ t2²)] else (ok2¹ t2²) | _ => (ok2¹ t2²)}: 188
+//│ [C [P2 h⁶ h2⁶] ((zip₀ t⁶) t2⁶)]: 425 --->
+//│ 	case ls2¹ of {C h2² t2² => case h2² of {P2 y2¹ z¹ => if (y1¹ == y2¹) then [C [P2 x¹ z¹] (ok2¹ t2²)] else (ok2¹ t2²) | _ => (ok2¹ t2²)} | N => (ok1₁ t²)}: 192
+//│ [N]: 426 --->
+//│ 	case ls2¹ of {C h2² t2² => case h2² of {P2 y2¹ z¹ => if (y1¹ == y2¹) then [C [P2 x¹ z¹] (ok2¹ t2²)] else (ok2¹ t2²) | _ => (ok2¹ t2²)} | N => (ok1₁ t²)}: 192
+//│ [N]: 428 --->
+//│ 	case ls2¹ of {C h2² t2² => case h2² of {P2 y2¹ z¹ => if (y1¹ == y2¹) then [C [P2 x¹ z¹] (ok2¹ t2²)] else (ok2¹ t2²) | _ => (ok2¹ t2²)} | N => (ok1₁ t²)}: 192
+//│ ------------------
+//│ case h2² of {P2 y2¹ z¹ => if (y1¹ == y2¹) then [C [P2 x¹ z¹] (ok2¹ t2²)] else (ok2¹ t2²) | _ => (ok2¹ t2²)}: 188 --->
+//│ 	[P2 h⁶ h2⁶]: 419
+//│ case ls2¹ of {C h2² t2² => case h2² of {P2 y2¹ z¹ => if (y1¹ == y2¹) then [C [P2 x¹ z¹] (ok2¹ t2²)] else (ok2¹ t2²) | _ => (ok2¹ t2²)} | N => (ok1₁ t²)}: 192 --->
+//│ 	[C [P2 h⁶ h2⁶] ((zip₀ t⁶) t2⁶)]: 425
+//│ 	[N]: 426
+//│ 	[N]: 428
+//│ case ys¹ of {C h2³ t2³ => [C [P2 h³ h2³] ((zip₁ t³) t2³)] | N => [N]}: 237 --->
+//│ 	[C a⁵ ((fromTo₃ (a⁵ + 1)) b⁵)]: 386
+//│ 	[N]: 387
+//│ case xs¹ of {C h³ t³ => case ys¹ of {C h2³ t2³ => [C [P2 h³ h2³] ((zip₁ t³) t2³)] | N => [N]} | N => [N]}: 239 --->
+//│ 	[C a¹ ((fromTo₂ (a¹ + 1)) b¹)]: 136
+//│ 	[N]: 137
+//│ case h2⁴ of {P2 y2² z² => if (y1² == y2²) then [C [P2 x² z²] (ok2² t2⁴)] else (ok2² t2⁴) | _ => (ok2² t2⁴)}: 313 --->
+//│ 	[P2 h³ h2³]: 229
+//│ case ls2² of {C h2⁴ t2⁴ => case h2⁴ of {P2 y2² z² => if (y1² == y2²) then [C [P2 x² z²] (ok2² t2⁴)] else (ok2² t2⁴) | _ => (ok2² t2⁴)} | N => (ok1₁ t⁴)}: 317 --->
+//│ 	[C [P2 h³ h2³] ((zip₁ t³) t2³)]: 235
+//│ 	[N]: 236
+//│ 	[N]: 238
+//│ case ys² of {C h2⁵ t2⁵ => [C [P2 h⁵ h2⁵] ((zip₂ t⁵) t2⁵)] | N => [N]}: 362 --->
+//│ 	[C a² ((fromTo₁ (a² + 1)) b²)]: 160
+//│ 	[N]: 161
+//│ case xs² of {C h⁵ t⁵ => case ys² of {C h2⁵ t2⁵ => [C [P2 h⁵ h2⁵] ((zip₂ t⁵) t2⁵)] | N => [N]} | N => [N]}: 364 --->
+//│ 	[C a³ ((fromTo₀ (a³ + 1)) b³)]: 261
+//│ 	[N]: 262
+//│ case ys³ of {C h2⁶ t2⁶ => [C [P2 h⁶ h2⁶] ((zip₀ t⁶) t2⁶)] | N => [N]}: 427 --->
+//│ 	[C a⁴ ((fromTo₅ (a⁴ + 1)) b⁴)]: 285
+//│ 	[N]: 286
+//│ case xs³ of {C h⁶ t⁶ => case ys³ of {C h2⁶ t2⁶ => [C [P2 h⁶ h2⁶] ((zip₀ t⁶) t2⁶)] | N => [N]} | N => [N]}: 429 --->
+//│ 	[C a⁶ ((fromTo₄ (a⁶ + 1)) b⁶)]: 410
+//│ 	[N]: 411
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (ok1₀ ((zip₂ ((fromTo₀ 1) 3)) ((fromTo₁ 2) 4)))
+//│ def fromTo₀ = 
+//│ 	(fun a¹¹ -> (fun b¹¹ -> if (a¹¹ < (b¹¹ + 1)) then 
+//│ 		let h¹⁴ = a¹¹
+//│ 		in let t¹⁹ = ((fromTo₀ (a¹¹ + 1)) b¹¹)
+//│ 		in (fun ys⁷ -> ((ys⁷ h¹⁴) t¹⁹)) else (fun ys⁸ -> [N])))
+//│ def fromTo₁ = 
+//│ 	(fun a¹⁰ -> (fun b¹⁰ -> if (a¹⁰ < (b¹⁰ + 1)) then 
+//│ 		let h2¹¹ = a¹⁰
+//│ 		in let t2¹³ = ((fromTo₁ (a¹⁰ + 1)) b¹⁰)
+//│ 		in (fun h¹² -> (fun t¹⁷ -> [C [P2 h¹² h2¹¹] ((zip₂ t¹⁷) t2¹³)])) else (fun h¹³ -> (fun t¹⁸ -> [N]))))
+//│ def ok1₀ = 
+//│ 	(fun ls1³ -> case ls1³ of {
+//│ 		C h⁴ t⁴ => case h⁴ of {
+//│ 			P2 x² y1² => 
+//│ 				let ok2³ = (fun ls2³ -> ((((ls2³ y1²) x²) ok2³) t⁴))
+//│ 				in (ok2³ ((zip₁ ((fromTo₂ x²) (x² + 2))) ((fromTo₃ y1²) (y1² + 1))))
+//│ 			| _ => (ok1₀ t⁴)}
+//│ 		| N => [N]})
+//│ 	where
+//│ 	def fromTo₂ = 
+//│ 		(fun a¹² -> (fun b¹² -> if (a¹² < (b¹² + 1)) then 
+//│ 			let h¹⁵ = a¹²
+//│ 			in let t²⁰ = ((fromTo₂ (a¹² + 1)) b¹²)
+//│ 			in (fun ys¹⁰ -> ((ys¹⁰ h¹⁵) t²⁰)) else (fun ys¹¹ -> (fun y1¹⁰ -> (fun x¹⁰ -> (fun ok2¹² -> (fun t²¹ -> (ok1₁ t²¹))))))))
+//│ 	def fromTo₃ = 
+//│ 		(fun a⁷ -> (fun b⁷ -> if (a⁷ < (b⁷ + 1)) then 
+//│ 			let h2⁷ = a⁷
+//│ 			in let t2⁷ = ((fromTo₃ (a⁷ + 1)) b⁷)
+//│ 			in (fun h⁷ -> (fun t⁷ -> 
+//│ 				let h2⁸ = 	
+//│ 					let y2³ = h⁷
+//│ 					in let z³ = h2⁷
+//│ 					in (fun y1⁴ -> (fun x⁴ -> (fun ok2⁵ -> (fun t2⁹ -> if (y1⁴ == y2³) then [C [P2 x⁴ z³] (ok2⁵ t2⁹)] else (ok2⁵ t2⁹)))))
+//│ 				in let t2⁸ = ((zip₁ t⁷) t2⁷)
+//│ 				in (fun y1³ -> (fun x³ -> (fun ok2⁴ -> (fun t⁸ -> ((((h2⁸ y1³) x³) ok2⁴) t2⁸))))))) else (fun h⁸ -> (fun t⁹ -> (fun y1⁵ -> (fun x⁵ -> (fun ok2⁶ -> (fun t¹⁰ -> (ok1₁ t¹⁰)))))))))
+//│ 	def ok1₁ = 
+//│ 		(fun ls1⁴ -> case ls1⁴ of {
+//│ 			C h² t² => case h² of {
+//│ 				P2 x¹ y1¹ => 
+//│ 					let ok2¹¹ = (fun ls2⁴ -> ((((ls2⁴ y1¹) x¹) ok2¹¹) t²))
+//│ 					in (ok2¹¹ ((zip₀ ((fromTo₄ x¹) (x¹ + 2))) ((fromTo₅ y1¹) (y1¹ + 1))))
+//│ 				| _ => (ok1₁ t²)}
+//│ 			| N => [N]})
+//│ 		where
+//│ 		def fromTo₄ = 
+//│ 			(fun a⁹ -> (fun b⁹ -> if (a⁹ < (b⁹ + 1)) then 
+//│ 				let h¹¹ = a⁹
+//│ 				in let t¹⁵ = ((fromTo₄ (a⁹ + 1)) b⁹)
+//│ 				in (fun ys⁵ -> ((ys⁵ h¹¹) t¹⁵)) else (fun ys⁶ -> (fun y1⁹ -> (fun x⁹ -> (fun ok2¹⁰ -> (fun t¹⁶ -> (ok1₁ t¹⁶))))))))
+//│ 		def fromTo₅ = 
+//│ 			(fun a⁸ -> (fun b⁸ -> if (a⁸ < (b⁸ + 1)) then 
+//│ 				let h2⁹ = a⁸
+//│ 				in let t2¹⁰ = ((fromTo₅ (a⁸ + 1)) b⁸)
+//│ 				in (fun h⁹ -> (fun t¹¹ -> 
+//│ 					let h2¹⁰ = 	
+//│ 						let y2⁴ = h⁹
+//│ 						in let z⁴ = h2⁹
+//│ 						in (fun y1⁷ -> (fun x⁷ -> (fun ok2⁸ -> (fun t2¹² -> if (y1⁷ == y2⁴) then [C [P2 x⁷ z⁴] (ok2⁸ t2¹²)] else (ok2⁸ t2¹²)))))
+//│ 					in let t2¹¹ = ((zip₀ t¹¹) t2¹⁰)
+//│ 					in (fun y1⁶ -> (fun x⁶ -> (fun ok2⁷ -> (fun t¹² -> ((((h2¹⁰ y1⁶) x⁶) ok2⁷) t2¹¹))))))) else (fun h¹⁰ -> (fun t¹³ -> (fun y1⁸ -> (fun x⁸ -> (fun ok2⁹ -> (fun t¹⁴ -> (ok1₁ t¹⁴)))))))))
+//│ 		def zip₀ = 
+//│ 			(fun xs⁴ -> (fun ys⁴ -> (xs⁴ ys⁴)))
+//│ 	def zip₁ = 
+//│ 		(fun xs⁶ -> (fun ys¹² -> (xs⁶ ys¹²)))
+//│ def zip₂ = 
+//│ 	(fun xs⁵ -> (fun ys⁹ -> (xs⁵ ys⁹)))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [C [P2 1 3] [C [P2 2 4] [C [P2 3 5] [N]]]]
+//│ <<<<<<< evaluate <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.util.NoSuchElementException: key not found: ok2
+//│ java.lang.Exception: Internal Error: type error 'ys² => 'y1⁷ => 'x⁷ => 'ok2⁷ => 't¹⁰ => '251_callres <: Destruct(C('h⁶, 't¹¹), N)
 //│ !!!!!!ERROR!!!!!!
 
 

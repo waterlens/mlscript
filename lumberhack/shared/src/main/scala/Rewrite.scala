@@ -11,7 +11,7 @@ import lumberhack.utils.*
 import ConsStratEnum.*
 import ProdStratEnum.*
 
-
+type RewriteCtx = Map[Ident, Ident]
 class FusionStrategy(d: Deforest) {
   val (upperBounds, lowerBounds) = d.upperBounds.map{(id, ls) => (id, ls.map(_._2))}.toMap -> d.lowerBounds.map{(id, ls) => (id, ls.map(_._2))}.toMap
   
@@ -252,7 +252,7 @@ class FusionStrategy(d: Deforest) {
 
 trait ExprRewrite { this: Expr =>
   // ctx should initially contain the keywords and the ids of original function definitions
-  def rewriteExpand(using ctx: Expr.Ctx, currentPath: Path, newd: Deforest, pathToIdent: Map[Path, Ident], refMap: Map[Expr.Ref, Expr.Ref], inDef: Option[Ident]): Expr = {
+  def rewriteExpand(using ctx: RewriteCtx, currentPath: Path, newd: Deforest, pathToIdent: Map[Path, Ident], refMap: Map[Expr.Ref, Expr.Ref], inDef: Option[Ident]): Expr = {
     this match {
       case Const(lit) => Const(lit)
       case Call(lhs, rhs) => Call(lhs.rewriteExpand, rhs.rewriteExpand)
@@ -260,28 +260,28 @@ trait ExprRewrite { this: Expr =>
       case Ctor(name, args) => Ctor(name, args.map(_.rewriteExpand))
       case LetIn(id, rhs, body) =>
         val newId = id.copyToNewDeforest
-        LetIn(newId, rhs.rewriteExpand(using ctx + (id.tree.name -> newId)), body.rewriteExpand(using ctx + (id.tree.name -> newId)))
+        LetIn(newId, rhs.rewriteExpand(using ctx + (id -> newId)), body.rewriteExpand(using ctx + (id -> newId)))
       case Match(scrut, arms) =>
         Match(scrut.rewriteExpand, arms.map {(ctor, args, body) =>
-          val newArgs = args.map(a => a.tree.name -> a.copyToNewDeforest)
-          given Expr.Ctx = ctx ++ newArgs
+          val newArgs = args.map(a => a -> a.copyToNewDeforest)
+          given RewriteCtx = ctx ++ newArgs
           (ctor, newArgs.map(_._2), body.rewriteExpand)
         })
       case IfThenElse(s, t, e) => IfThenElse(s.rewriteExpand, t.rewriteExpand, e.rewriteExpand)
       case Function(param, body) =>
         val newParam = param.copyToNewDeforest
-        Function(newParam, body.rewriteExpand(using ctx + (newParam.tree.name -> newParam)))
+        Function(newParam, body.rewriteExpand(using ctx + (param -> newParam)))
       case ref@Ref(id) => if id.isDef then { // a function def
         pathToIdent.get(currentPath ::: refMap(ref).toPath()) match {
           case Some(id) => Ref(id)            // either a knot or a new def
-          case None => Ref(ctx(id.tree.name)) // hopeless to continue, should use the original definition
+          case None => Ref(ctx(id)) // hopeless to continue, should use the original definition
         } 
-      } else Ref(ctx(id.tree.name)) // a parameter or match binder or builtin keyword
+      } else Ref(ctx(id)) // a parameter or match binder or builtin keyword
     } 
   }
 
   def rewriteFusion(
-    using ctx: Expr.Ctx,
+    using ctx: RewriteCtx,
     fusionMatch: Map[ExprId, ExprId],
     newd: Deforest,
     inDef: Option[Ident],
@@ -293,29 +293,29 @@ trait ExprRewrite { this: Expr =>
       case Sequence(f, s) => Sequence(f.rewriteFusion, s.rewriteFusion)
       case LetIn(id, rhs, body) =>
         val newId = id.copyToNewDeforest
-        val newCtx = ctx + (newId.tree.name -> newId)
+        val newCtx = ctx + (id -> newId)
         LetIn(newId, rhs.rewriteFusion(using newCtx), body.rewriteFusion(using newCtx))
       case IfThenElse(s, t, e) => IfThenElse(s.rewriteFusion, t.rewriteFusion, e.rewriteFusion)
       case Function(param, body) =>
         val newParamId = param.copyToNewDeforest
-        val newCtx = ctx + (newParamId.tree.name -> newParamId)
+        val newCtx = ctx + (param -> newParamId)
         Function(newParamId, body.rewriteFusion(using newCtx))
-      case Ref(id) => Ref(ctx.getOrElse(id.tree.name, id))
+      case Ref(id) => Ref(ctx.getOrElse(id, id))
       case Match(scrut, arms) => if fusionMatch.valuesIterator.contains(this.uid) then {
         val extrudedIds = scopeExtrusionInfo(this.uid)
         // val extrudedIds = scopeExtrusionInfo.getOrElse(this.uid, Nil)
         extrudedIds.foldLeft(scrut.rewriteFusion){
-          (acc, id) => Call(acc, Ref(ctx.getOrElse(id.tree.name, id)))
+          (acc, id) => Call(acc, Ref(ctx.getOrElse(id, id)))
         }
         // scrut.rewriteFusion
       } else Match(scrut.rewriteFusion, arms.map{(n, args, body) => (n, args, body.rewriteFusion)})
       case Ctor(name, args) => fusionMatch.get(this.uid).map { matchId =>
         val matchArm = newd.exprs(matchId).asInstanceOf[Match].arms.find(_._1 == name).get
-        val newIds = matchArm._2.map(_.copyToNewDeforest)
-        val newCtx = ctx ++ newIds.map(id => id.tree.name -> id).toMap
+        val newIds = matchArm._2.map(i => i -> i.copyToNewDeforest)
+        val newCtx = ctx ++ newIds.toMap
         
         val extrudedIds = scopeExtrusionInfo(matchId).map(original =>
-          newCtx.getOrElse(original.tree.name, original) -> Ref(original.copyToNewDeforest)
+          newCtx.getOrElse(original, original) -> Ref(original.copyToNewDeforest)
           // original -> Ref(original.copyToNewDeforest)
         ).reverse
         // val extrudedIds =
@@ -326,7 +326,7 @@ trait ExprRewrite { this: Expr =>
           Function(newId._2.id, acc)
         }
         (newIds zip args).foldRight(inner){(t_i, acc) => 
-          LetIn(t_i._1, t_i._2.rewriteFusion, acc)
+          LetIn(t_i._1._2, t_i._2.rewriteFusion, acc)
         }
         // (newIds zip args).foldRight(matchArm._3.rewriteFusion(using newCtx)){(t_i, acc) => 
         //   LetIn(t_i._1, t_i._2.rewriteFusion, acc)
@@ -355,12 +355,12 @@ trait ExprRewrite { this: Expr =>
 }
 
 trait ProgramRewrite { this: Program =>
-  def copyDefsToNewDeforest(using newd: Deforest): Program -> Map[Expr.Ref, Expr.Ref] -> Expr.Ctx = {
+  def copyDefsToNewDeforest(using newd: Deforest): Program -> Map[Expr.Ref, Expr.Ref] -> RewriteCtx = {
     val refMaps = scala.collection.mutable.Map.empty[Expr.Ref, Expr.Ref]
-    def copyExpr(e: Expr)(using ctx: Expr.Ctx, newd: Deforest, inDef: Option[Ident]): Expr = e match {
+    def copyExpr(e: Expr)(using ctx: RewriteCtx, newd: Deforest, inDef: Option[Ident]): Expr = e match {
       case Expr.Const(lit: Lit) => Expr.Const(lit)
       case r@Expr.Ref(id: Ident) =>
-        val res = Expr.Ref(ctx(id.tree.name))
+        val res = Expr.Ref(ctx(id))
         assert(!refMaps.contains(res))
         refMaps += (res -> r)
         res
@@ -369,27 +369,32 @@ trait ProgramRewrite { this: Program =>
       case Expr.Ctor(name: Var, args: Ls[Expr]) => Expr.Ctor(name, args.map(copyExpr))
       case Expr.LetIn(id: Ident, rhs: Expr, body: Expr) =>
         val newId = id.copyToNewDeforest
-        Expr.LetIn(newId, copyExpr(rhs)(using ctx + (id.tree.name -> newId)), copyExpr(body)(using ctx + (id.tree.name -> newId)))
+        Expr.LetIn(newId, copyExpr(rhs)(using ctx + (id -> newId)), copyExpr(body)(using ctx + (id -> newId)))
       case Expr.Match(scrut: Expr, arms: Ls[(Var, Ls[Ident], Expr)]) =>
         Expr.Match(copyExpr(scrut), arms.map {(ctor, args, body) =>
-          val newArgs = args.map(a => a.tree.name -> a.copyToNewDeforest)
-          given Expr.Ctx = ctx ++ newArgs
+          val newArgs = args.map(a => a -> a.copyToNewDeforest)
+          given RewriteCtx = ctx ++ newArgs
           (ctor, newArgs.map(_._2), copyExpr(body))
         })
       case Expr.IfThenElse(scrut: Expr, thenn: Expr, elze: Expr) => Expr.IfThenElse(copyExpr(scrut), copyExpr(thenn), copyExpr(elze))
       case Expr.Function(param: Ident, body: Expr) =>
         val newParam = param.copyToNewDeforest
-        Expr.Function(newParam, copyExpr(body)(using ctx + (newParam.tree.name -> newParam)))
+        Expr.Function(newParam, copyExpr(body)(using ctx + (param -> newParam)))
     }
-    given ctx: Expr.Ctx = Deforest.lumberhackKeywords.map {
-      n => n -> newd.nextIdent(false, Var(n))
-    } ++ this.defAndExpr._1.keySet.map(id => id.tree.name -> id.copyToNewDeforest) |> (_.toMap)
+    
+    given ctx: RewriteCtx = Deforest.lumberhackKeywords.map {
+      n => {
+        // new and old identifier ids for the primitives should be the same
+        val newAndOldId = newd.nextIdent(false, Var(n))
+        newAndOldId -> newAndOldId
+      }
+    } ++ this.defAndExpr._1.keySet.map(id => id -> id.copyToNewDeforest) |> (_.toMap)
 
     Program(
       this.defAndExpr._2.map { e => given Option[Ident] = None; R(copyExpr(e)) }
       ::: this.defAndExpr._1.map { (id, body) =>
-        given Option[Ident] = Some(ctx(id.tree.name))
-        L(ProgDef(ctx(id.tree.name), copyExpr(body)))
+        given Option[Ident] = Some(ctx(id))
+        L(ProgDef(ctx(id), copyExpr(body)))
       }.toList
     ) -> refMaps.toMap -> ctx
   }
@@ -414,7 +419,7 @@ trait ProgramRewrite { this: Program =>
       val res = defined.map { (id, p) =>
         assert(p.p.nonEmpty)
         val identKey = p.p.last match
-          case PathElem.Normal(ref) => initContext(ref.id.tree.name)
+          case PathElem.Normal(ref) => initContext(ref.id)
           case PathElem.Star(elms) => ???
         val newBody: Expr = copiedOriginalProgram.defAndExpr._1(identKey)
           .rewriteExpand(using initContext, p, newd, pathToIdent, refMaps, Some(id))

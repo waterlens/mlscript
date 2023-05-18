@@ -226,7 +226,7 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
         case newF => Call(newF, p.evaluate)
       }
       case Ctor(name, args) => Ctor(name, args.map(_.evaluate))
-      case LetIn(id, value, body) => body.subst(using Map(id -> value)).evaluate
+      case LetIn(id, value, body) => body.subst(using Map(id -> value)).evaluate(using ctx + (id -> value))
       case Match(scrut, arms) => scrut.evaluate match {
         case Ctor(name, args) => {
           val branch = arms.find((n, _, _) => n == name).get

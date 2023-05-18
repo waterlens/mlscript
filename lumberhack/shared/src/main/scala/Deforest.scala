@@ -327,7 +327,7 @@ class Deforest(var debug: Boolean) {
         res._1
       case LetIn(id, rhs, body) =>
         val v = freshVar(id)(using noExprId)
-        constrain(process(rhs), v._2.toStrat())
+        constrain(process(rhs)(using ctx + (id -> v._1.toStrat())), v._2.toStrat())
         process(body)(using ctx + (id -> v._1.toStrat())).s
       case Sequence(fst, snd) =>
         process(fst)

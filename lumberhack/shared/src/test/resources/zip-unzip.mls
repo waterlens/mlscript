@@ -21,13 +21,13 @@ unzipZip
 //│ 	C h⁰ t⁰ => case h⁰ of {
 //│ 		Pair a⁰ b⁰ => case (unzip^20 t⁰) of {
 //│ 			Pair atail⁰ btail⁰ => [Pair [C a⁰ atail⁰] [C b⁰ btail⁰]]}}
-//│ 	| N => [Pair [N] [N]]})
+//│ 	| N  => [Pair [N] [N]]})
 //│ def unzipZip = (fun fst⁰ -> (fun snd⁰ -> (unzip^37 ((zip^38 fst⁰) snd⁰))))
 //│ def zip = (fun xs⁰ -> (fun ys⁰ -> case xs⁰ of {
 //│ 	C x⁰ xt⁰ => case ys⁰ of {
 //│ 		C y⁰ yt⁰ => [C [Pair x⁰ y⁰] ((zip^6 xt⁰) yt⁰)]
-//│ 		| N => [N]}
-//│ 	| N => [N]}))
+//│ 		| N  => [N]}
+//│ 	| N  => [N]}))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -48,13 +48,13 @@ unzipZip
 //│ 			C h¹ t¹ => case h¹ of {
 //│ 				Pair a¹ b¹ => case (unzip₀ t¹) of {
 //│ 					Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}}
-//│ 			| N => [Pair [N] [N]]})
+//│ 			| N  => [Pair [N] [N]]})
 //│ 	def zip₀ = 
 //│ 		(fun xs¹ -> (fun ys¹ -> case xs¹ of {
 //│ 			C x¹ xt¹ => case ys¹ of {
 //│ 				C y¹ yt¹ => [C [Pair x¹ y¹] ((zip₀ xt¹) yt¹)]
-//│ 				| N => [N]}
-//│ 			| N => [N]}))
+//│ 				| N  => [N]}
+//│ 			| N  => [N]}))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
@@ -67,18 +67,18 @@ unzipZip
 //│ [Pair x¹ y¹]: 70 --->
 //│ 	case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}}: 60
 //│ [C [Pair x¹ y¹] ((zip₀ xt¹) yt¹)]: 76 --->
-//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N => [Pair [N] [N]]}: 64
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N  => [Pair [N] [N]]}: 64
 //│ [N]: 77 --->
-//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N => [Pair [N] [N]]}: 64
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N  => [Pair [N] [N]]}: 64
 //│ [N]: 79 --->
-//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N => [Pair [N] [N]]}: 64
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N  => [Pair [N] [N]]}: 64
 //│ ------------------
 //│ case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 59 --->
 //│ 	[Pair [C a¹ atail¹] [C b¹ btail¹]]: 58
 //│ 	[Pair [N] [N]]: 63
 //│ case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}}: 60 --->
 //│ 	[Pair x¹ y¹]: 70
-//│ case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N => [Pair [N] [N]]}: 64 --->
+//│ case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N  => [Pair [N] [N]]}: 64 --->
 //│ 	[C [Pair x¹ y¹] ((zip₀ xt¹) yt¹)]: 76
 //│ 	[N]: 77
 //│ 	[N]: 79
@@ -88,15 +88,15 @@ unzipZip
 //│ [Pair x¹ y¹]: 70 --->
 //│ 	case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}}: 60
 //│ [C [Pair x¹ y¹] ((zip₀ xt¹) yt¹)]: 76 --->
-//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N => [Pair [N] [N]]}: 64
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N  => [Pair [N] [N]]}: 64
 //│ [N]: 77 --->
-//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N => [Pair [N] [N]]}: 64
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N  => [Pair [N] [N]]}: 64
 //│ [N]: 79 --->
-//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N => [Pair [N] [N]]}: 64
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N  => [Pair [N] [N]]}: 64
 //│ ------------------
 //│ case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}}: 60 --->
 //│ 	[Pair x¹ y¹]: 70
-//│ case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N => [Pair [N] [N]]}: 64 --->
+//│ case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case (unzip₀ t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N  => [Pair [N] [N]]}: 64 --->
 //│ 	[C [Pair x¹ y¹] ((zip₀ xt¹) yt¹)]: 76
 //│ 	[N]: 77
 //│ 	[N]: 79
@@ -120,6 +120,6 @@ unzipZip
 //│ 							Pair atail¹ btail¹ => [Pair [C a² atail¹] [C b² btail¹]]})
 //│ 					in let t² = ((zip₀ xt¹) yt¹)
 //│ 					in (h² t²)
-//│ 				| N => [Pair [N] [N]]}
-//│ 			| N => [Pair [N] [N]]}))
+//│ 				| N  => [Pair [N] [N]]}
+//│ 			| N  => [Pair [N] [N]]}))
 //│ <<<<<<< after fusion <<<<<<<

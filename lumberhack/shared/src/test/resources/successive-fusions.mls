@@ -11,10 +11,10 @@ if f(N) is
 //│ Parsed: {fun f = x, => if x is ‹(N) then K; (C (a,)) then primitive›; if f (N,) is ‹(K) then 0; (L) then 1›}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ case (f^6 [N]) of {
-//│ 	K => 0
-//│ 	| L => 1}
+//│ 	K  => 0
+//│ 	| L  => 1}
 //│ def f = (fun x⁰ -> case x⁰ of {
-//│ 	N => [K]
+//│ 	N  => [K]
 //│ 	| C a⁰ => primitive⁰})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -24,39 +24,39 @@ if f(N) is
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
 //│ case (f₀ [N]) of {
-//│ 	K => 0
-//│ 	| L => 1}
+//│ 	K  => 0
+//│ 	| L  => 1}
 //│ def f₀ = 
 //│ 	(fun x¹ -> case x¹ of {
-//│ 		N => [K]
+//│ 		N  => [K]
 //│ 		| C a¹ => primitive⁰})
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [K]: 13 --->
-//│ 	case (f₀ [N]) of {K => 0 | L => 1}: 22
+//│ 	case (f₀ [N]) of {K  => 0 | L  => 1}: 22
 //│ [N]: 18 --->
-//│ 	case x¹ of {N => [K] | C a¹ => primitive⁰}: 15
+//│ 	case x¹ of {N  => [K] | C a¹ => primitive⁰}: 15
 //│ ------------------
-//│ case x¹ of {N => [K] | C a¹ => primitive⁰}: 15 --->
+//│ case x¹ of {N  => [K] | C a¹ => primitive⁰}: 15 --->
 //│ 	[N]: 18
-//│ case (f₀ [N]) of {K => 0 | L => 1}: 22 --->
+//│ case (f₀ [N]) of {K  => 0 | L  => 1}: 22 --->
 //│ 	[K]: 13
 //│ 	NoProd
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [N]: 18 --->
-//│ 	case x¹ of {N => [K] | C a¹ => primitive⁰}: 15
+//│ 	case x¹ of {N  => [K] | C a¹ => primitive⁰}: 15
 //│ ------------------
-//│ case x¹ of {N => [K] | C a¹ => primitive⁰}: 15 --->
+//│ case x¹ of {N  => [K] | C a¹ => primitive⁰}: 15 --->
 //│ 	[N]: 18
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ case (f₀ [K]) of {
-//│ 	K => 0
-//│ 	| L => 1}
+//│ 	K  => 0
+//│ 	| L  => 1}
 //│ def f₀ = 
 //│ 	(fun x² -> x²)
 //│ <<<<<<< after fusion <<<<<<<
@@ -69,25 +69,25 @@ if f(N) is
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
 //│ case (f₀₀ [K]) of {
-//│ 	K => 0
-//│ 	| L => 1}
+//│ 	K  => 0
+//│ 	| L  => 1}
 //│ def f₀₀ = 
 //│ 	(fun x¹ -> x¹)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [K]: 12 --->
-//│ 	case (f₀₀ [K]) of {K => 0 | L => 1}: 16
+//│ 	case (f₀₀ [K]) of {K  => 0 | L  => 1}: 16
 //│ ------------------
-//│ case (f₀₀ [K]) of {K => 0 | L => 1}: 16 --->
+//│ case (f₀₀ [K]) of {K  => 0 | L  => 1}: 16 --->
 //│ 	[K]: 12
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [K]: 12 --->
-//│ 	case (f₀₀ [K]) of {K => 0 | L => 1}: 16
+//│ 	case (f₀₀ [K]) of {K  => 0 | L  => 1}: 16
 //│ ------------------
-//│ case (f₀₀ [K]) of {K => 0 | L => 1}: 16 --->
+//│ case (f₀₀ [K]) of {K  => 0 | L  => 1}: 16 --->
 //│ 	[K]: 12
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 

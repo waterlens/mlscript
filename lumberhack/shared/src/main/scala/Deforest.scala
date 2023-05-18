@@ -5,7 +5,7 @@ import lumberhack.Expr.Ref
 import mlscript.utils.shorthands.*
 import mlscript.utils.lastWords
 import scala.collection.mutable
-import mlscript.utils.AnyOps
+import mlscript.utils.{AnyOps, StringOps}
 import mlscript.lumberhack.utils.PrettyPrintConfig
 import mlscript.lumberhack.utils.InitPpConfig
 import mlscript.lumberhack.utils.{toSubscript, toSuperscript}
@@ -303,9 +303,18 @@ class Deforest(var debug: Boolean) {
       case me@Match(scrut, arms) =>
         val sp = process(scrut)
         val (detrs, bodies) = arms.map { (v, as, e) =>
-          val as_tys = as.map(a => a -> freshVar(a)(using noExprId)._1.toStrat())
-          val ep = process(e)(using ctx ++ as_tys)
-          (Destructor(v, as_tys.map(a_ty => ConsVar(a_ty._2.s.uid, a_ty._2.s.name)()(using noExprId).toStrat())), ep)
+          if v.name.isCapitalized then {
+            val as_tys = as.map(a => a -> freshVar(a)(using noExprId))
+            val ep = process(e)(using ctx ++ as_tys.map(v => v._1 -> v._2._1.toStrat()))
+            (Destructor(v, as_tys.map(a_ty => a_ty._2._2.toStrat())), ep)
+          } else if v.name == "_" then { // id pattern or wildcard pattern
+            val newIdCtx = as.headOption.map { newId =>
+              val idVar = freshVar(newId)(using noExprId)
+              (newId -> idVar._1.toStrat(), idVar._2.toStrat())
+            }
+            val ep = process(e)(using ctx ++ newIdCtx.map(_._1))
+            (Destructor(v, newIdCtx.map(_._2).toList), ep)
+          } else { lastWords("unreachable") }
         }.unzip
         val dtorType = Destruct(detrs)(using e.uid).toStrat()
         constrain(sp, dtorType)
@@ -463,7 +472,7 @@ class Deforest(var debug: Boolean) {
           given Int = numOfTypeCtor + 1
           var found = false
           ds foreach { case Destructor(ds_ctor, argCons) =>
-            if ds_ctor == ctor then
+            if ds_ctor == ctor then {
               found = true
               assert(args.size == argCons.size)
               // register the fusion match
@@ -476,8 +485,12 @@ class Deforest(var debug: Boolean) {
               args lazyZip argCons foreach { case (a, c) =>
                 handle(a.addPath(prod.path), c.addPath(cons.path))
               }
-            else if ds_ctor.name == "_" then
+            } else if ds_ctor.name == "_" then { // both wildcard pattern and id pattern
               found = true
+              (prod :: Nil) lazyZip argCons foreach { case (a, c) =>
+                handle(a.addPath(prod.path), c.addPath(cons.path))
+              }
+            }
             // else
             //   argCons foreach { c => handle(NoProd()(using noExprId).toStrat(prod.path), c.addPath(cons.path)) }
           }
@@ -486,10 +499,16 @@ class Deforest(var debug: Boolean) {
           given Int = numOfTypeCtor + 1
           ctors.foreach { ctorStrat => ctorStrat.s match
             case MkCtor(ctor, args) => {
-              val d = ds.find(_.ctor === ctor).get
-              assert(args.size === d.argCons.size)
-              args lazyZip d.argCons foreach {
-                case (a, c) => handle(a.addPath(prod.path ::: ctorStrat.path), c.addPath(cons.path))
+              val d = ds.find(d => d.ctor == ctor || d.ctor.name == "_").get
+              assert(args.size == d.argCons.size && d.ctor.name != "_")
+              if d.ctor.name == "_" then {
+                args lazyZip d.argCons foreach {
+                  case (a, c) => handle(a.addPath(prod.path ::: ctorStrat.path), c.addPath(cons.path))
+                }
+              } else {
+                (prod :: Nil) lazyZip d.argCons foreach { case (a, c) =>
+                  handle(a.addPath(prod.path ::: ctorStrat.path), c.addPath(cons.path))
+                }
               }
             }
           }

@@ -20,10 +20,10 @@ count(0, rev(N, C(1, C(2, N))))
 //│ ((count^35 0) ((rev^38 [N]) [C 1 [C 2 [N]]]))
 //│ def count = (fun c⁰ -> (fun xs⁰ -> (case xs⁰ of {
 //│ 	C h⁰ t⁰ => (fun c¹ -> ((count^2 (c¹ + 1)) t⁰))
-//│ 	| N => (fun c² -> c²)} c⁰)))
+//│ 	| N  => (fun c² -> c²)} c⁰)))
 //│ def rev = (fun a⁰ -> (fun ys⁰ -> (case ys⁰ of {
 //│ 	C h1⁰ t1⁰ => (fun a¹ -> ((rev^20 [C h1⁰ a¹]) t1⁰))
-//│ 	| N => (fun a² -> a²)} a⁰)))
+//│ 	| N  => (fun a² -> a²)} a⁰)))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
@@ -42,29 +42,29 @@ count(0, rev(N, C(1, C(2, N))))
 //│ def count₀ = 
 //│ 	(fun c³ -> (fun xs¹ -> (case xs¹ of {
 //│ 		C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹))
-//│ 		| N => (fun c⁵ -> c⁵)} c³)))
+//│ 		| N  => (fun c⁵ -> c⁵)} c³)))
 //│ def rev₀ = 
 //│ 	(fun a³ -> (fun ys¹ -> (case ys¹ of {
 //│ 		C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹))
-//│ 		| N => (fun a⁵ -> a⁵)} a³)))
+//│ 		| N  => (fun a⁵ -> a⁵)} a³)))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C h1¹ a⁴]: 70 --->
-//│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61
+//│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N  => (fun c⁵ -> c⁵)}: 61
 //│ [N]: 86 --->
-//│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61
+//│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N  => (fun c⁵ -> c⁵)}: 61
 //│ [N]: 90 --->
-//│ 	case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N => (fun a⁵ -> a⁵)}: 77
+//│ 	case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N  => (fun a⁵ -> a⁵)}: 77
 //│ [C 2 [N]]: 91 --->
-//│ 	case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N => (fun a⁵ -> a⁵)}: 77
+//│ 	case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N  => (fun a⁵ -> a⁵)}: 77
 //│ [C 1 [C 2 [N]]]: 92 --->
-//│ 	case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N => (fun a⁵ -> a⁵)}: 77
+//│ 	case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N  => (fun a⁵ -> a⁵)}: 77
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61 --->
+//│ case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N  => (fun c⁵ -> c⁵)}: 61 --->
 //│ 	[C h1¹ a⁴]: 70
 //│ 	[N]: 86
-//│ case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N => (fun a⁵ -> a⁵)}: 77 --->
+//│ case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N  => (fun a⁵ -> a⁵)}: 77 --->
 //│ 	[N]: 90
 //│ 	[C 2 [N]]: 91
 //│ 	[C 1 [C 2 [N]]]: 92
@@ -72,20 +72,20 @@ count(0, rev(N, C(1, C(2, N))))
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [C h1¹ a⁴]: 70 --->
-//│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61
+//│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N  => (fun c⁵ -> c⁵)}: 61
 //│ [N]: 86 --->
-//│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61
+//│ 	case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N  => (fun c⁵ -> c⁵)}: 61
 //│ [N]: 90 --->
-//│ 	case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N => (fun a⁵ -> a⁵)}: 77
+//│ 	case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N  => (fun a⁵ -> a⁵)}: 77
 //│ [C 2 [N]]: 91 --->
-//│ 	case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N => (fun a⁵ -> a⁵)}: 77
+//│ 	case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N  => (fun a⁵ -> a⁵)}: 77
 //│ [C 1 [C 2 [N]]]: 92 --->
-//│ 	case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N => (fun a⁵ -> a⁵)}: 77
+//│ 	case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N  => (fun a⁵ -> a⁵)}: 77
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N => (fun c⁵ -> c⁵)}: 61 --->
+//│ case xs¹ of {C h¹ t¹ => (fun c⁴ -> ((count₀ (c⁴ + 1)) t¹)) | N  => (fun c⁵ -> c⁵)}: 61 --->
 //│ 	[C h1¹ a⁴]: 70
 //│ 	[N]: 86
-//│ case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N => (fun a⁵ -> a⁵)}: 77 --->
+//│ case ys¹ of {C h1¹ t1¹ => (fun a⁴ -> ((rev₀ [C h1¹ a⁴]) t1¹)) | N  => (fun a⁵ -> a⁵)}: 77 --->
 //│ 	[N]: 90
 //│ 	[C 2 [N]]: 91
 //│ 	[C 1 [C 2 [N]]]: 92

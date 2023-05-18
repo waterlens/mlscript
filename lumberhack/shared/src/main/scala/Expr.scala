@@ -160,14 +160,16 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
         case LetIn(id, rhs, body) => s"${Console.BOLD}let${Console.RESET} ${id.pp} = ${rhs.pp}" + s"\n${Console.BOLD}in${Console.RESET} ${body.pp}"
         case Match(scrut, arms) if config.multiline => s"${Console.BOLD}case${Console.RESET} ${scrut.pp} ${Console.BOLD}of${Console.RESET} {${
           "\n\t" + arms.map { case (v, ids, e) =>
-            s"${Console.BLUE + v.name + Console.RESET}${ids.map(" " + _.pp).mkString} => ${
+            s"${if (v.name == "_" && ids.isEmpty) || v.name.isCapitalized then Console.BLUE + v.name + Console.RESET + " " else ""}" +
+            s"${ids.map(_.pp).mkString(" ")} => ${
               e.pp.linesIterator.map("\t" + _).mkString("\n").dropWhile(_ == '\t')
             }"
           }.mkString("\n\t| ")
         }}"
         case Match(scrut, arms) => s"${Console.BOLD}case${Console.RESET} ${scrut.pp} ${Console.BOLD}of${Console.RESET} {${
           arms.map { case (v, ids, e) =>
-            s"${Console.BLUE + v.name + Console.RESET}${ids.map(" " + _.pp).mkString} => ${e.pp}"
+            s"${if (v.name == "_" && ids.isEmpty) || v.name.isCapitalized then Console.BLUE + v.name + Console.RESET + " " else ""}" +
+            s"${ids.map(_.pp).mkString(" ")} => ${e.pp}"
           }.mkString(" | ")
         }}"
         case Function(param, body) => s"(${Console.BOLD}fun${Console.RESET} ${param.pp} -> ${body.pp})"
@@ -228,12 +230,19 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
       case Ctor(name, args) => Ctor(name, args.map(_.evaluate))
       case LetIn(id, value, body) => body.subst(using Map(id -> value)).evaluate(using ctx + (id -> value))
       case Match(scrut, arms) => scrut.evaluate match {
-        case Ctor(name, args) => {
-          val branch = arms.find((n, _, _) => n == name).get
-          val bindings = {
+        case c@Ctor(name, args) => {
+          val branch = arms.find((n, _, _) => n == name || n.name == "_").get
+          val bindings = if branch._1.name != "_" then {
             assert(args.length == branch._2.length)
             branch._2.zip(args)
+          } else { // wildcard or id pattern
+            branch._2.zip(c :: Nil)
           }
+          branch._3.subst(using bindings.toMap).evaluate
+        }
+        case c@Const(IntLit(i)) => { // only wildcard or id pattern will match
+          val branch = arms.find(a => a._1.name == "_").get
+          val bindings = branch._2.zip(c :: Nil)
           branch._3.subst(using bindings.toMap).evaluate
         }
         case s: Function => throw Exception("\n" + s.pp(using InitPpConfig.showIuidOn.multilineOn))
@@ -380,7 +389,7 @@ object Expr {
     case If(IfOpApp(lhs, Var("is"), IfBlock(lines)), N)
       if lines.forall { _ match {
         case L(IfThen(App(Var(ctor), Tup((N -> Fld(false, false, _: Var)) :: _)), _)) => ctor.isCapitalized
-        case L(IfThen(Var(ctor), _)) if (ctor.isCapitalized || ctor == "_") => true
+        case L(IfThen(Var(ctor), _)) => true
         case _ => false
       } } => Match(
         fromTerm(lhs),
@@ -389,7 +398,11 @@ object Expr {
             val argMap = args.map { case (N -> Fld(false, false, a: Var)) => (a.name, d.nextIdent(false, a)); case _ => ??? };
             (ctorName, argMap.unzip._2, fromTerm(rhs)(using d, ctx ++ argMap))
           }
-          case L(IfThen(ctorName: Var, rhs)) => (ctorName, Nil, fromTerm(rhs))
+          case L(IfThen(name: Var, rhs)) if name.name.isCapitalized => (name, Nil, fromTerm(rhs))  // constructor with no field
+          case L(IfThen(name: Var, rhs)) if name.name == "_" => (name, Nil, fromTerm(rhs))         // wildcard pattern
+          case L(IfThen(name: Var, rhs)) =>                                                        // id pattern
+            val newId = d.nextIdent(false, name)
+            (Var("_"), newId :: Nil, fromTerm(rhs)(using d, ctx + (name.name -> newId)))
           case _ => ???
         }
       )

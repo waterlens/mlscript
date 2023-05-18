@@ -122,7 +122,7 @@ f(g(42))(0)
 //│ ((f^38 (g^39 42)) 0)
 //│ def f = (fun xs⁰ -> (fun a⁰ -> (primitive⁰ case xs⁰ of {
 //│ 	C h⁰ t⁰ => (((primitive⁰ h⁰) ((f^6 t⁰) a⁰)) a⁰)
-//│ 	| N => (primitive⁰ a⁰)})))
+//│ 	| N  => (primitive⁰ a⁰)})))
 //│ def g = (fun init⁰ -> if (init⁰ > 0) then [C 1 (g^27 (init⁰ - 1))] else [N])
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -142,29 +142,29 @@ f(g(42))(0)
 //│ def f₀ = 
 //│ 	(fun xs¹ -> (fun a¹ -> (primitive⁰ case xs¹ of {
 //│ 		C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹)
-//│ 		| N => (primitive⁰ a¹)})))
+//│ 		| N  => (primitive⁰ a¹)})))
 //│ def g₀ = 
 //│ 	(fun init¹ -> if (init¹ > 0) then [C 1 (g₀ (init¹ - 1))] else [N])
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 1 (g₀ (init¹ - 1))]: 78 --->
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹) | N => (primitive⁰ a¹)}: 61
+//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹) | N  => (primitive⁰ a¹)}: 61
 //│ [N]: 79 --->
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹) | N => (primitive⁰ a¹)}: 61
+//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹) | N  => (primitive⁰ a¹)}: 61
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹) | N => (primitive⁰ a¹)}: 61 --->
+//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹) | N  => (primitive⁰ a¹)}: 61 --->
 //│ 	[C 1 (g₀ (init¹ - 1))]: 78
 //│ 	[N]: 79
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [C 1 (g₀ (init¹ - 1))]: 78 --->
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹) | N => (primitive⁰ a¹)}: 61
+//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹) | N  => (primitive⁰ a¹)}: 61
 //│ [N]: 79 --->
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹) | N => (primitive⁰ a¹)}: 61
+//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹) | N  => (primitive⁰ a¹)}: 61
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹) | N => (primitive⁰ a¹)}: 61 --->
+//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹) | N  => (primitive⁰ a¹)}: 61 --->
 //│ 	[C 1 (g₀ (init¹ - 1))]: 78
 //│ 	[N]: 79
 //│ <<<<<<< new fusion strategy <<<<<<<
@@ -200,7 +200,7 @@ f(g(42))(0)
 //│ ((f^42 (g^43 42)) 0)
 //│ def f = (fun xs⁰ -> (fun a⁰ -> (primitive⁰ case xs⁰ of {
 //│ 	C h⁰ t⁰ => (((primitive⁰ h⁰) ((f^6 t⁰) (a⁰ + 1))) a⁰)
-//│ 	| N => (primitive⁰ a⁰)})))
+//│ 	| N  => (primitive⁰ a⁰)})))
 //│ def g = (fun init⁰ -> if (init⁰ > 0) then [C 1 (g^31 (init⁰ - 1))] else [N])
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -220,29 +220,29 @@ f(g(42))(0)
 //│ def f₀ = 
 //│ 	(fun xs¹ -> (fun a¹ -> (primitive⁰ case xs¹ of {
 //│ 		C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹)
-//│ 		| N => (primitive⁰ a¹)})))
+//│ 		| N  => (primitive⁰ a¹)})))
 //│ def g₀ = 
 //│ 	(fun init¹ -> if (init¹ > 0) then [C 1 (g₀ (init¹ - 1))] else [N])
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 1 (g₀ (init¹ - 1))]: 86 --->
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹) | N => (primitive⁰ a¹)}: 69
+//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹) | N  => (primitive⁰ a¹)}: 69
 //│ [N]: 87 --->
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹) | N => (primitive⁰ a¹)}: 69
+//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹) | N  => (primitive⁰ a¹)}: 69
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹) | N => (primitive⁰ a¹)}: 69 --->
+//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹) | N  => (primitive⁰ a¹)}: 69 --->
 //│ 	[C 1 (g₀ (init¹ - 1))]: 86
 //│ 	[N]: 87
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [C 1 (g₀ (init¹ - 1))]: 86 --->
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹) | N => (primitive⁰ a¹)}: 69
+//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹) | N  => (primitive⁰ a¹)}: 69
 //│ [N]: 87 --->
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹) | N => (primitive⁰ a¹)}: 69
+//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹) | N  => (primitive⁰ a¹)}: 69
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹) | N => (primitive⁰ a¹)}: 69 --->
+//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹) | N  => (primitive⁰ a¹)}: 69 --->
 //│ 	[C 1 (g₀ (init¹ - 1))]: 86
 //│ 	[N]: 87
 //│ <<<<<<< new fusion strategy <<<<<<<
@@ -280,7 +280,7 @@ f(g(42))(0)
 //│ ((f^36 (g^37 42)) 0)
 //│ def f = (fun xs⁰ -> (fun a⁰ -> (primitive⁰ case xs⁰ of {
 //│ 	C h⁰ t⁰ => (((primitive⁰ h⁰) t⁰) a⁰)
-//│ 	| N => (primitive⁰ a⁰)})))
+//│ 	| N  => (primitive⁰ a⁰)})))
 //│ def g = (fun init⁰ -> if (init⁰ > 0) then [C 1 [C 2 (g^24 (init⁰ - 1))]] else [N])
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -299,7 +299,7 @@ f(g(42))(0)
 //│ def f₀ = 
 //│ 	(fun xs¹ -> (fun a¹ -> (primitive⁰ case xs¹ of {
 //│ 		C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹)
-//│ 		| N => (primitive⁰ a¹)})))
+//│ 		| N  => (primitive⁰ a¹)})))
 //│ def g₀ = 
 //│ 	(fun init¹ -> if (init¹ > 0) then [C 1 [C 2 (g₀ (init¹ - 1))]] else [N])
 //│ <<<<<<< expanded program <<<<<<<
@@ -307,12 +307,12 @@ f(g(42))(0)
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 1 [C 2 (g₀ (init¹ - 1))]]: 58 --->
 //│ 	NoCons
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹) | N => (primitive⁰ a¹)}: 74
+//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹) | N  => (primitive⁰ a¹)}: 74
 //│ [N]: 59 --->
 //│ 	NoCons
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹) | N => (primitive⁰ a¹)}: 74
+//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹) | N  => (primitive⁰ a¹)}: 74
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹) | N => (primitive⁰ a¹)}: 74 --->
+//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹) | N  => (primitive⁰ a¹)}: 74 --->
 //│ 	[C 1 [C 2 (g₀ (init¹ - 1))]]: 58
 //│ 	[N]: 59
 //│ <<<<<<< fusion matches <<<<<<<
@@ -328,7 +328,7 @@ f(g(42))(0)
 //│ def f₀ = 
 //│ 	(fun xs² -> (fun a² -> (primitive⁰ case xs² of {
 //│ 		C h¹ t¹ => (((primitive⁰ h¹) t¹) a²)
-//│ 		| N => (primitive⁰ a²)})))
+//│ 		| N  => (primitive⁰ a²)})))
 //│ def g₀ = 
 //│ 	(fun init² -> if (init² > 0) then [C 1 [C 2 (g₀ (init² - 1))]] else [N])
 //│ <<<<<<< after fusion <<<<<<<

@@ -12,7 +12,7 @@ if C(A, B(D)) is
 //│ case [C [A] [B [D]]] of {
 //│ 	C a⁰ bd⁰ => case bd⁰ of {
 //│ 		B d⁰ => case a⁰ of {
-//│ 			A => [OK]}}}
+//│ 			A  => [OK]}}}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
@@ -27,39 +27,39 @@ if C(A, B(D)) is
 //│ case [C [A] [B [D]]] of {
 //│ 	C a¹ bd¹ => case bd¹ of {
 //│ 		B d¹ => case a¹ of {
-//│ 			A => [OK]}}}
+//│ 			A  => [OK]}}}
 //│ 
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [A]: 11 --->
-//│ 	case a¹ of {A => [OK]}: 18
+//│ 	case a¹ of {A  => [OK]}: 18
 //│ [B [D]]: 13 --->
-//│ 	case bd¹ of {B d¹ => case a¹ of {A => [OK]}}: 19
+//│ 	case bd¹ of {B d¹ => case a¹ of {A  => [OK]}}: 19
 //│ [C [A] [B [D]]]: 14 --->
-//│ 	case [C [A] [B [D]]] of {C a¹ bd¹ => case bd¹ of {B d¹ => case a¹ of {A => [OK]}}}: 20
+//│ 	case [C [A] [B [D]]] of {C a¹ bd¹ => case bd¹ of {B d¹ => case a¹ of {A  => [OK]}}}: 20
 //│ ------------------
-//│ case a¹ of {A => [OK]}: 18 --->
+//│ case a¹ of {A  => [OK]}: 18 --->
 //│ 	[A]: 11
-//│ case bd¹ of {B d¹ => case a¹ of {A => [OK]}}: 19 --->
+//│ case bd¹ of {B d¹ => case a¹ of {A  => [OK]}}: 19 --->
 //│ 	[B [D]]: 13
-//│ case [C [A] [B [D]]] of {C a¹ bd¹ => case bd¹ of {B d¹ => case a¹ of {A => [OK]}}}: 20 --->
+//│ case [C [A] [B [D]]] of {C a¹ bd¹ => case bd¹ of {B d¹ => case a¹ of {A  => [OK]}}}: 20 --->
 //│ 	[C [A] [B [D]]]: 14
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [A]: 11 --->
-//│ 	case a¹ of {A => [OK]}: 18
+//│ 	case a¹ of {A  => [OK]}: 18
 //│ [B [D]]: 13 --->
-//│ 	case bd¹ of {B d¹ => case a¹ of {A => [OK]}}: 19
+//│ 	case bd¹ of {B d¹ => case a¹ of {A  => [OK]}}: 19
 //│ [C [A] [B [D]]]: 14 --->
-//│ 	case [C [A] [B [D]]] of {C a¹ bd¹ => case bd¹ of {B d¹ => case a¹ of {A => [OK]}}}: 20
+//│ 	case [C [A] [B [D]]] of {C a¹ bd¹ => case bd¹ of {B d¹ => case a¹ of {A  => [OK]}}}: 20
 //│ ------------------
-//│ case a¹ of {A => [OK]}: 18 --->
+//│ case a¹ of {A  => [OK]}: 18 --->
 //│ 	[A]: 11
-//│ case bd¹ of {B d¹ => case a¹ of {A => [OK]}}: 19 --->
+//│ case bd¹ of {B d¹ => case a¹ of {A  => [OK]}}: 19 --->
 //│ 	[B [D]]: 13
-//│ case [C [A] [B [D]]] of {C a¹ bd¹ => case bd¹ of {B d¹ => case a¹ of {A => [OK]}}}: 20 --->
+//│ case [C [A] [B [D]]] of {C a¹ bd¹ => case bd¹ of {B d¹ => case a¹ of {A  => [OK]}}}: 20 --->
 //│ 	[C [A] [B [D]]]: 14
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
@@ -89,7 +89,7 @@ if C(A, B(D)) is
 //│ case [C [A] [B [D]]] of {
 //│ 	C a⁰ bd⁰ => case bd⁰ of {
 //│ 		B d⁰ => ((fun a¹ -> case a¹ of {
-//│ 			A => [OK]}) a⁰)}}
+//│ 			A  => [OK]}) a⁰)}}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -100,39 +100,39 @@ if C(A, B(D)) is
 //│ case [C [A] [B [D]]] of {
 //│ 	C a² bd¹ => case bd¹ of {
 //│ 		B d¹ => ((fun a³ -> case a³ of {
-//│ 			A => [OK]}) a²)}}
+//│ 			A  => [OK]}) a²)}}
 //│ 
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [A]: 14 --->
-//│ 	case a³ of {A => [OK]}: 21
+//│ 	case a³ of {A  => [OK]}: 21
 //│ [B [D]]: 16 --->
-//│ 	case bd¹ of {B d¹ => ((fun a³ -> case a³ of {A => [OK]}) a²)}: 25
+//│ 	case bd¹ of {B d¹ => ((fun a³ -> case a³ of {A  => [OK]}) a²)}: 25
 //│ [C [A] [B [D]]]: 17 --->
-//│ 	case [C [A] [B [D]]] of {C a² bd¹ => case bd¹ of {B d¹ => ((fun a³ -> case a³ of {A => [OK]}) a²)}}: 26
+//│ 	case [C [A] [B [D]]] of {C a² bd¹ => case bd¹ of {B d¹ => ((fun a³ -> case a³ of {A  => [OK]}) a²)}}: 26
 //│ ------------------
-//│ case a³ of {A => [OK]}: 21 --->
+//│ case a³ of {A  => [OK]}: 21 --->
 //│ 	[A]: 14
-//│ case bd¹ of {B d¹ => ((fun a³ -> case a³ of {A => [OK]}) a²)}: 25 --->
+//│ case bd¹ of {B d¹ => ((fun a³ -> case a³ of {A  => [OK]}) a²)}: 25 --->
 //│ 	[B [D]]: 16
-//│ case [C [A] [B [D]]] of {C a² bd¹ => case bd¹ of {B d¹ => ((fun a³ -> case a³ of {A => [OK]}) a²)}}: 26 --->
+//│ case [C [A] [B [D]]] of {C a² bd¹ => case bd¹ of {B d¹ => ((fun a³ -> case a³ of {A  => [OK]}) a²)}}: 26 --->
 //│ 	[C [A] [B [D]]]: 17
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [A]: 14 --->
-//│ 	case a³ of {A => [OK]}: 21
+//│ 	case a³ of {A  => [OK]}: 21
 //│ [B [D]]: 16 --->
-//│ 	case bd¹ of {B d¹ => ((fun a³ -> case a³ of {A => [OK]}) a²)}: 25
+//│ 	case bd¹ of {B d¹ => ((fun a³ -> case a³ of {A  => [OK]}) a²)}: 25
 //│ [C [A] [B [D]]]: 17 --->
-//│ 	case [C [A] [B [D]]] of {C a² bd¹ => case bd¹ of {B d¹ => ((fun a³ -> case a³ of {A => [OK]}) a²)}}: 26
+//│ 	case [C [A] [B [D]]] of {C a² bd¹ => case bd¹ of {B d¹ => ((fun a³ -> case a³ of {A  => [OK]}) a²)}}: 26
 //│ ------------------
-//│ case a³ of {A => [OK]}: 21 --->
+//│ case a³ of {A  => [OK]}: 21 --->
 //│ 	[A]: 14
-//│ case bd¹ of {B d¹ => ((fun a³ -> case a³ of {A => [OK]}) a²)}: 25 --->
+//│ case bd¹ of {B d¹ => ((fun a³ -> case a³ of {A  => [OK]}) a²)}: 25 --->
 //│ 	[B [D]]: 16
-//│ case [C [A] [B [D]]] of {C a² bd¹ => case bd¹ of {B d¹ => ((fun a³ -> case a³ of {A => [OK]}) a²)}}: 26 --->
+//│ case [C [A] [B [D]]] of {C a² bd¹ => case bd¹ of {B d¹ => ((fun a³ -> case a³ of {A  => [OK]}) a²)}}: 26 --->
 //│ 	[C [A] [B [D]]]: 17
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 

@@ -12,7 +12,7 @@ rev(C(AA, C(BB, C(CC, N))))(N)
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((rev^14 [C [AA] [C [BB] [C [CC] [N]]]]) [N])
 //│ def rev = (fun ls⁰ -> case ls⁰ of {
-//│ 	N => (fun a⁰ -> a⁰)
+//│ 	N  => (fun a⁰ -> a⁰)
 //│ 	| C h⁰ t⁰ => (fun a¹ -> ((rev^4 t⁰) [C h⁰ a¹]))})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -29,21 +29,21 @@ rev(C(AA, C(BB, C(CC, N))))(N)
 //│ ((rev₀ [C [AA] [C [BB] [C [CC] [N]]]]) [N])
 //│ def rev₀ = 
 //│ 	(fun ls¹ -> case ls¹ of {
-//│ 		N => (fun a² -> a²)
+//│ 		N  => (fun a² -> a²)
 //│ 		| C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))})
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 42 --->
-//│ 	case ls¹ of {N => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36
+//│ 	case ls¹ of {N  => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36
 //│ [C [CC] [N]]: 43 --->
-//│ 	case ls¹ of {N => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36
+//│ 	case ls¹ of {N  => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36
 //│ [C [BB] [C [CC] [N]]]: 44 --->
-//│ 	case ls¹ of {N => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36
+//│ 	case ls¹ of {N  => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36
 //│ [C [AA] [C [BB] [C [CC] [N]]]]: 45 --->
-//│ 	case ls¹ of {N => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36
+//│ 	case ls¹ of {N  => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36
 //│ ------------------
-//│ case ls¹ of {N => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36 --->
+//│ case ls¹ of {N  => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36 --->
 //│ 	[N]: 42
 //│ 	[C [CC] [N]]: 43
 //│ 	[C [BB] [C [CC] [N]]]: 44
@@ -52,15 +52,15 @@ rev(C(AA, C(BB, C(CC, N))))(N)
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [N]: 42 --->
-//│ 	case ls¹ of {N => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36
+//│ 	case ls¹ of {N  => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36
 //│ [C [CC] [N]]: 43 --->
-//│ 	case ls¹ of {N => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36
+//│ 	case ls¹ of {N  => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36
 //│ [C [BB] [C [CC] [N]]]: 44 --->
-//│ 	case ls¹ of {N => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36
+//│ 	case ls¹ of {N  => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36
 //│ [C [AA] [C [BB] [C [CC] [N]]]]: 45 --->
-//│ 	case ls¹ of {N => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36
+//│ 	case ls¹ of {N  => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36
 //│ ------------------
-//│ case ls¹ of {N => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36 --->
+//│ case ls¹ of {N  => (fun a² -> a²) | C h¹ t¹ => (fun a³ -> ((rev₀ t¹) [C h¹ a³]))}: 36 --->
 //│ 	[N]: 42
 //│ 	[C [CC] [N]]: 43
 //│ 	[C [BB] [C [CC] [N]]]: 44
@@ -103,13 +103,13 @@ rev(map(C(A, C(B, N)))(f))(N)
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((rev^34 ((map^35 [C [A] [C [B] [N]]]) f^42)) [N])
 //│ def f = (fun x⁰ -> case x⁰ of {
-//│ 	A => [AA]
-//│ 	| B => [BB]})
+//│ 	A  => [AA]
+//│ 	| B  => [BB]})
 //│ def map = (fun xs⁰ -> case xs⁰ of {
-//│ 	N => (fun f¹ -> [N])
+//│ 	N  => (fun f¹ -> [N])
 //│ 	| C h¹ t¹ => (fun f² -> [C (f² h¹) ((map^20 t¹) f²)])})
 //│ def rev = (fun ys⁰ -> case ys⁰ of {
-//│ 	N => (fun a⁰ -> a⁰)
+//│ 	N  => (fun a⁰ -> a⁰)
 //│ 	| C h⁰ t⁰ => (fun a¹ -> ((rev^4 t⁰) [C h⁰ a¹]))})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -129,70 +129,70 @@ rev(map(C(A, C(B, N)))(f))(N)
 //│ ((rev₀ ((map₀ [C [A] [C [B] [N]]]) f₀)) [N])
 //│ def f₀ = 
 //│ 	(fun x¹ -> case x¹ of {
-//│ 		A => [AA]
-//│ 		| B => [BB]})
+//│ 		A  => [AA]
+//│ 		| B  => [BB]})
 //│ def map₀ = 
 //│ 	(fun xs¹ -> case xs¹ of {
-//│ 		N => (fun f³ -> [N])
+//│ 		N  => (fun f³ -> [N])
 //│ 		| C h³ t³ => (fun f⁴ -> [C (f⁴ h³) ((map₀ t³) f⁴)])})
 //│ def rev₀ = 
 //│ 	(fun ys¹ -> case ys¹ of {
-//│ 		N => (fun a² -> a²)
+//│ 		N  => (fun a² -> a²)
 //│ 		| C h² t² => (fun a³ -> ((rev₀ t²) [C h² a³]))})
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 61 --->
-//│ 	case ys¹ of {N => (fun a² -> a²) | C h² t² => (fun a³ -> ((rev₀ t²) [C h² a³]))}: 58
+//│ 	case ys¹ of {N  => (fun a² -> a²) | C h² t² => (fun a³ -> ((rev₀ t²) [C h² a³]))}: 58
 //│ [C (f⁴ h³) ((map₀ t³) f⁴)]: 71 --->
-//│ 	case ys¹ of {N => (fun a² -> a²) | C h² t² => (fun a³ -> ((rev₀ t²) [C h² a³]))}: 58
+//│ 	case ys¹ of {N  => (fun a² -> a²) | C h² t² => (fun a³ -> ((rev₀ t²) [C h² a³]))}: 58
 //│ [A]: 82 --->
-//│ 	case x¹ of {A => [AA] | B => [BB]}: 78
+//│ 	case x¹ of {A  => [AA] | B  => [BB]}: 78
 //│ [B]: 83 --->
-//│ 	case x¹ of {A => [AA] | B => [BB]}: 78
+//│ 	case x¹ of {A  => [AA] | B  => [BB]}: 78
 //│ [N]: 84 --->
-//│ 	case xs¹ of {N => (fun f³ -> [N]) | C h³ t³ => (fun f⁴ -> [C (f⁴ h³) ((map₀ t³) f⁴)])}: 73
+//│ 	case xs¹ of {N  => (fun f³ -> [N]) | C h³ t³ => (fun f⁴ -> [C (f⁴ h³) ((map₀ t³) f⁴)])}: 73
 //│ [C [B] [N]]: 85 --->
-//│ 	case xs¹ of {N => (fun f³ -> [N]) | C h³ t³ => (fun f⁴ -> [C (f⁴ h³) ((map₀ t³) f⁴)])}: 73
+//│ 	case xs¹ of {N  => (fun f³ -> [N]) | C h³ t³ => (fun f⁴ -> [C (f⁴ h³) ((map₀ t³) f⁴)])}: 73
 //│ [C [A] [C [B] [N]]]: 86 --->
-//│ 	case xs¹ of {N => (fun f³ -> [N]) | C h³ t³ => (fun f⁴ -> [C (f⁴ h³) ((map₀ t³) f⁴)])}: 73
+//│ 	case xs¹ of {N  => (fun f³ -> [N]) | C h³ t³ => (fun f⁴ -> [C (f⁴ h³) ((map₀ t³) f⁴)])}: 73
 //│ ------------------
-//│ case ys¹ of {N => (fun a² -> a²) | C h² t² => (fun a³ -> ((rev₀ t²) [C h² a³]))}: 58 --->
+//│ case ys¹ of {N  => (fun a² -> a²) | C h² t² => (fun a³ -> ((rev₀ t²) [C h² a³]))}: 58 --->
 //│ 	[N]: 61
 //│ 	[C (f⁴ h³) ((map₀ t³) f⁴)]: 71
-//│ case xs¹ of {N => (fun f³ -> [N]) | C h³ t³ => (fun f⁴ -> [C (f⁴ h³) ((map₀ t³) f⁴)])}: 73 --->
+//│ case xs¹ of {N  => (fun f³ -> [N]) | C h³ t³ => (fun f⁴ -> [C (f⁴ h³) ((map₀ t³) f⁴)])}: 73 --->
 //│ 	[N]: 84
 //│ 	[C [B] [N]]: 85
 //│ 	[C [A] [C [B] [N]]]: 86
-//│ case x¹ of {A => [AA] | B => [BB]}: 78 --->
+//│ case x¹ of {A  => [AA] | B  => [BB]}: 78 --->
 //│ 	[A]: 82
 //│ 	[B]: 83
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [N]: 61 --->
-//│ 	case ys¹ of {N => (fun a² -> a²) | C h² t² => (fun a³ -> ((rev₀ t²) [C h² a³]))}: 58
+//│ 	case ys¹ of {N  => (fun a² -> a²) | C h² t² => (fun a³ -> ((rev₀ t²) [C h² a³]))}: 58
 //│ [C (f⁴ h³) ((map₀ t³) f⁴)]: 71 --->
-//│ 	case ys¹ of {N => (fun a² -> a²) | C h² t² => (fun a³ -> ((rev₀ t²) [C h² a³]))}: 58
+//│ 	case ys¹ of {N  => (fun a² -> a²) | C h² t² => (fun a³ -> ((rev₀ t²) [C h² a³]))}: 58
 //│ [A]: 82 --->
-//│ 	case x¹ of {A => [AA] | B => [BB]}: 78
+//│ 	case x¹ of {A  => [AA] | B  => [BB]}: 78
 //│ [B]: 83 --->
-//│ 	case x¹ of {A => [AA] | B => [BB]}: 78
+//│ 	case x¹ of {A  => [AA] | B  => [BB]}: 78
 //│ [N]: 84 --->
-//│ 	case xs¹ of {N => (fun f³ -> [N]) | C h³ t³ => (fun f⁴ -> [C (f⁴ h³) ((map₀ t³) f⁴)])}: 73
+//│ 	case xs¹ of {N  => (fun f³ -> [N]) | C h³ t³ => (fun f⁴ -> [C (f⁴ h³) ((map₀ t³) f⁴)])}: 73
 //│ [C [B] [N]]: 85 --->
-//│ 	case xs¹ of {N => (fun f³ -> [N]) | C h³ t³ => (fun f⁴ -> [C (f⁴ h³) ((map₀ t³) f⁴)])}: 73
+//│ 	case xs¹ of {N  => (fun f³ -> [N]) | C h³ t³ => (fun f⁴ -> [C (f⁴ h³) ((map₀ t³) f⁴)])}: 73
 //│ [C [A] [C [B] [N]]]: 86 --->
-//│ 	case xs¹ of {N => (fun f³ -> [N]) | C h³ t³ => (fun f⁴ -> [C (f⁴ h³) ((map₀ t³) f⁴)])}: 73
+//│ 	case xs¹ of {N  => (fun f³ -> [N]) | C h³ t³ => (fun f⁴ -> [C (f⁴ h³) ((map₀ t³) f⁴)])}: 73
 //│ ------------------
-//│ case ys¹ of {N => (fun a² -> a²) | C h² t² => (fun a³ -> ((rev₀ t²) [C h² a³]))}: 58 --->
+//│ case ys¹ of {N  => (fun a² -> a²) | C h² t² => (fun a³ -> ((rev₀ t²) [C h² a³]))}: 58 --->
 //│ 	[N]: 61
 //│ 	[C (f⁴ h³) ((map₀ t³) f⁴)]: 71
-//│ case xs¹ of {N => (fun f³ -> [N]) | C h³ t³ => (fun f⁴ -> [C (f⁴ h³) ((map₀ t³) f⁴)])}: 73 --->
+//│ case xs¹ of {N  => (fun f³ -> [N]) | C h³ t³ => (fun f⁴ -> [C (f⁴ h³) ((map₀ t³) f⁴)])}: 73 --->
 //│ 	[N]: 84
 //│ 	[C [B] [N]]: 85
 //│ 	[C [A] [C [B] [N]]]: 86
-//│ case x¹ of {A => [AA] | B => [BB]}: 78 --->
+//│ case x¹ of {A  => [AA] | B  => [BB]}: 78 --->
 //│ 	[A]: 82
 //│ 	[B]: 83
 //│ <<<<<<< new fusion strategy <<<<<<<
@@ -245,12 +245,12 @@ map(rev(C(A, C(AA, N)))(N))
 //│ (map^26 ((rev^27 [C [A] [C [AA] [N]]]) [N]))
 //│ def map = (fun ls⁰ -> case ls⁰ of {
 //│ 	C hh⁰ tt⁰ => [C case hh⁰ of {
-//│ 		A => [B]
-//│ 		| AA => [BB]} (map^6 tt⁰)]
-//│ 	| N => [N]})
+//│ 		A  => [B]
+//│ 		| AA  => [BB]} (map^6 tt⁰)]
+//│ 	| N  => [N]})
 //│ def rev = (fun lss⁰ -> case lss⁰ of {
 //│ 	C h⁰ t⁰ => (fun a⁰ -> ((rev^14 t⁰) [C h⁰ a⁰]))
-//│ 	| N => (fun a¹ -> a¹)})
+//│ 	| N  => (fun a¹ -> a¹)})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
@@ -269,38 +269,38 @@ map(rev(C(A, C(AA, N)))(N))
 //│ def map₀ = 
 //│ 	(fun ls¹ -> case ls¹ of {
 //│ 		C hh¹ tt¹ => [C case hh¹ of {
-//│ 			A => [B]
-//│ 			| AA => [BB]} (map₀ tt¹)]
-//│ 		| N => [N]})
+//│ 			A  => [B]
+//│ 			| AA  => [BB]} (map₀ tt¹)]
+//│ 		| N  => [N]})
 //│ def rev₀ = 
 //│ 	(fun lss¹ -> case lss¹ of {
 //│ 		C h¹ t¹ => (fun a² -> ((rev₀ t¹) [C h¹ a²]))
-//│ 		| N => (fun a³ -> a³)})
+//│ 		| N  => (fun a³ -> a³)})
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C h¹ a²]: 55 --->
-//│ 	case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A => [B] | AA => [BB]} (map₀ tt¹)] | N => [N]}: 47
+//│ 	case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A  => [B] | AA  => [BB]} (map₀ tt¹)] | N  => [N]}: 47
 //│ [A]: 64 --->
-//│ 	case hh¹ of {A => [B] | AA => [BB]}: 41
+//│ 	case hh¹ of {A  => [B] | AA  => [BB]}: 41
 //│ [AA]: 65 --->
-//│ 	case hh¹ of {A => [B] | AA => [BB]}: 41
+//│ 	case hh¹ of {A  => [B] | AA  => [BB]}: 41
 //│ [N]: 66 --->
-//│ 	case lss¹ of {C h¹ t¹ => (fun a² -> ((rev₀ t¹) [C h¹ a²])) | N => (fun a³ -> a³)}: 60
+//│ 	case lss¹ of {C h¹ t¹ => (fun a² -> ((rev₀ t¹) [C h¹ a²])) | N  => (fun a³ -> a³)}: 60
 //│ [C [AA] [N]]: 67 --->
-//│ 	case lss¹ of {C h¹ t¹ => (fun a² -> ((rev₀ t¹) [C h¹ a²])) | N => (fun a³ -> a³)}: 60
+//│ 	case lss¹ of {C h¹ t¹ => (fun a² -> ((rev₀ t¹) [C h¹ a²])) | N  => (fun a³ -> a³)}: 60
 //│ [C [A] [C [AA] [N]]]: 68 --->
-//│ 	case lss¹ of {C h¹ t¹ => (fun a² -> ((rev₀ t¹) [C h¹ a²])) | N => (fun a³ -> a³)}: 60
+//│ 	case lss¹ of {C h¹ t¹ => (fun a² -> ((rev₀ t¹) [C h¹ a²])) | N  => (fun a³ -> a³)}: 60
 //│ [N]: 70 --->
-//│ 	case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A => [B] | AA => [BB]} (map₀ tt¹)] | N => [N]}: 47
+//│ 	case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A  => [B] | AA  => [BB]} (map₀ tt¹)] | N  => [N]}: 47
 //│ ------------------
-//│ case hh¹ of {A => [B] | AA => [BB]}: 41 --->
+//│ case hh¹ of {A  => [B] | AA  => [BB]}: 41 --->
 //│ 	[A]: 64
 //│ 	[AA]: 65
-//│ case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A => [B] | AA => [BB]} (map₀ tt¹)] | N => [N]}: 47 --->
+//│ case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A  => [B] | AA  => [BB]} (map₀ tt¹)] | N  => [N]}: 47 --->
 //│ 	[C h¹ a²]: 55
 //│ 	[N]: 70
-//│ case lss¹ of {C h¹ t¹ => (fun a² -> ((rev₀ t¹) [C h¹ a²])) | N => (fun a³ -> a³)}: 60 --->
+//│ case lss¹ of {C h¹ t¹ => (fun a² -> ((rev₀ t¹) [C h¹ a²])) | N  => (fun a³ -> a³)}: 60 --->
 //│ 	[N]: 66
 //│ 	[C [AA] [N]]: 67
 //│ 	[C [A] [C [AA] [N]]]: 68
@@ -308,27 +308,27 @@ map(rev(C(A, C(AA, N)))(N))
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [C h¹ a²]: 55 --->
-//│ 	case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A => [B] | AA => [BB]} (map₀ tt¹)] | N => [N]}: 47
+//│ 	case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A  => [B] | AA  => [BB]} (map₀ tt¹)] | N  => [N]}: 47
 //│ [A]: 64 --->
-//│ 	case hh¹ of {A => [B] | AA => [BB]}: 41
+//│ 	case hh¹ of {A  => [B] | AA  => [BB]}: 41
 //│ [AA]: 65 --->
-//│ 	case hh¹ of {A => [B] | AA => [BB]}: 41
+//│ 	case hh¹ of {A  => [B] | AA  => [BB]}: 41
 //│ [N]: 66 --->
-//│ 	case lss¹ of {C h¹ t¹ => (fun a² -> ((rev₀ t¹) [C h¹ a²])) | N => (fun a³ -> a³)}: 60
+//│ 	case lss¹ of {C h¹ t¹ => (fun a² -> ((rev₀ t¹) [C h¹ a²])) | N  => (fun a³ -> a³)}: 60
 //│ [C [AA] [N]]: 67 --->
-//│ 	case lss¹ of {C h¹ t¹ => (fun a² -> ((rev₀ t¹) [C h¹ a²])) | N => (fun a³ -> a³)}: 60
+//│ 	case lss¹ of {C h¹ t¹ => (fun a² -> ((rev₀ t¹) [C h¹ a²])) | N  => (fun a³ -> a³)}: 60
 //│ [C [A] [C [AA] [N]]]: 68 --->
-//│ 	case lss¹ of {C h¹ t¹ => (fun a² -> ((rev₀ t¹) [C h¹ a²])) | N => (fun a³ -> a³)}: 60
+//│ 	case lss¹ of {C h¹ t¹ => (fun a² -> ((rev₀ t¹) [C h¹ a²])) | N  => (fun a³ -> a³)}: 60
 //│ [N]: 70 --->
-//│ 	case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A => [B] | AA => [BB]} (map₀ tt¹)] | N => [N]}: 47
+//│ 	case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A  => [B] | AA  => [BB]} (map₀ tt¹)] | N  => [N]}: 47
 //│ ------------------
-//│ case hh¹ of {A => [B] | AA => [BB]}: 41 --->
+//│ case hh¹ of {A  => [B] | AA  => [BB]}: 41 --->
 //│ 	[A]: 64
 //│ 	[AA]: 65
-//│ case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A => [B] | AA => [BB]} (map₀ tt¹)] | N => [N]}: 47 --->
+//│ case ls¹ of {C hh¹ tt¹ => [C case hh¹ of {A  => [B] | AA  => [BB]} (map₀ tt¹)] | N  => [N]}: 47 --->
 //│ 	[C h¹ a²]: 55
 //│ 	[N]: 70
-//│ case lss¹ of {C h¹ t¹ => (fun a² -> ((rev₀ t¹) [C h¹ a²])) | N => (fun a³ -> a³)}: 60 --->
+//│ case lss¹ of {C h¹ t¹ => (fun a² -> ((rev₀ t¹) [C h¹ a²])) | N  => (fun a³ -> a³)}: 60 --->
 //│ 	[N]: 66
 //│ 	[C [AA] [N]]: 67
 //│ 	[C [A] [C [AA] [N]]]: 68
@@ -374,14 +374,14 @@ map(rev(N, C(A, C(B, N))), ff)
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((map^32 ((rev^33 [N]) [C [A] [C [B] [N]]])) ff^43)
 //│ def ff = (fun x⁰ -> case x⁰ of {
-//│ 	A => [AA]
-//│ 	| B => [BB]})
+//│ 	A  => [AA]
+//│ 	| B  => [BB]})
 //│ def map = (fun xs⁰ -> (fun f⁰ -> case xs⁰ of {
 //│ 	C h⁰ t⁰ => [C (f⁰ h⁰) ((map^5 t⁰) f⁰)]
-//│ 	| N => [N]}))
+//│ 	| N  => [N]}))
 //│ def rev = (fun a⁰ -> (fun ys⁰ -> case ys⁰ of {
 //│ 	C h¹ t¹ => ((rev^16 [C h¹ a⁰]) t¹)
-//│ 	| N => a⁰}))
+//│ 	| N  => a⁰}))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
@@ -400,41 +400,41 @@ map(rev(N, C(A, C(B, N))), ff)
 //│ ((map₀ ((rev₀ [N]) [C [A] [C [B] [N]]])) ff₀)
 //│ def ff₀ = 
 //│ 	(fun x¹ -> case x¹ of {
-//│ 		A => [AA]
-//│ 		| B => [BB]})
+//│ 		A  => [AA]
+//│ 		| B  => [BB]})
 //│ def map₀ = 
 //│ 	(fun xs¹ -> (fun f¹ -> case xs¹ of {
 //│ 		C h² t² => [C (f¹ h²) ((map₀ t²) f¹)]
-//│ 		| N => [N]}))
+//│ 		| N  => [N]}))
 //│ def rev₀ = 
 //│ 	(fun a¹ -> (fun ys¹ -> case ys¹ of {
 //│ 		C h³ t³ => ((rev₀ [C h³ a¹]) t³)
-//│ 		| N => a¹}))
+//│ 		| N  => a¹}))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C h³ a¹]: 68 --->
-//│ 	case xs¹ of {C h² t² => [C (f¹ h²) ((map₀ t²) f¹)] | N => [N]}: 61
+//│ 	case xs¹ of {C h² t² => [C (f¹ h²) ((map₀ t²) f¹)] | N  => [N]}: 61
 //│ [N]: 78 --->
-//│ 	case xs¹ of {C h² t² => [C (f¹ h²) ((map₀ t²) f¹)] | N => [N]}: 61
+//│ 	case xs¹ of {C h² t² => [C (f¹ h²) ((map₀ t²) f¹)] | N  => [N]}: 61
 //│ [A]: 80 --->
-//│ 	case x¹ of {A => [AA] | B => [BB]}: 48
+//│ 	case x¹ of {A  => [AA] | B  => [BB]}: 48
 //│ [B]: 81 --->
-//│ 	case x¹ of {A => [AA] | B => [BB]}: 48
+//│ 	case x¹ of {A  => [AA] | B  => [BB]}: 48
 //│ [N]: 82 --->
-//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 73
+//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N  => a¹}: 73
 //│ [C [B] [N]]: 83 --->
-//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 73
+//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N  => a¹}: 73
 //│ [C [A] [C [B] [N]]]: 84 --->
-//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 73
+//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N  => a¹}: 73
 //│ ------------------
-//│ case x¹ of {A => [AA] | B => [BB]}: 48 --->
+//│ case x¹ of {A  => [AA] | B  => [BB]}: 48 --->
 //│ 	[A]: 80
 //│ 	[B]: 81
-//│ case xs¹ of {C h² t² => [C (f¹ h²) ((map₀ t²) f¹)] | N => [N]}: 61 --->
+//│ case xs¹ of {C h² t² => [C (f¹ h²) ((map₀ t²) f¹)] | N  => [N]}: 61 --->
 //│ 	[C h³ a¹]: 68
 //│ 	[N]: 78
-//│ case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 73 --->
+//│ case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N  => a¹}: 73 --->
 //│ 	[N]: 82
 //│ 	[C [B] [N]]: 83
 //│ 	[C [A] [C [B] [N]]]: 84
@@ -442,27 +442,27 @@ map(rev(N, C(A, C(B, N))), ff)
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [C h³ a¹]: 68 --->
-//│ 	case xs¹ of {C h² t² => [C (f¹ h²) ((map₀ t²) f¹)] | N => [N]}: 61
+//│ 	case xs¹ of {C h² t² => [C (f¹ h²) ((map₀ t²) f¹)] | N  => [N]}: 61
 //│ [N]: 78 --->
-//│ 	case xs¹ of {C h² t² => [C (f¹ h²) ((map₀ t²) f¹)] | N => [N]}: 61
+//│ 	case xs¹ of {C h² t² => [C (f¹ h²) ((map₀ t²) f¹)] | N  => [N]}: 61
 //│ [A]: 80 --->
-//│ 	case x¹ of {A => [AA] | B => [BB]}: 48
+//│ 	case x¹ of {A  => [AA] | B  => [BB]}: 48
 //│ [B]: 81 --->
-//│ 	case x¹ of {A => [AA] | B => [BB]}: 48
+//│ 	case x¹ of {A  => [AA] | B  => [BB]}: 48
 //│ [N]: 82 --->
-//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 73
+//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N  => a¹}: 73
 //│ [C [B] [N]]: 83 --->
-//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 73
+//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N  => a¹}: 73
 //│ [C [A] [C [B] [N]]]: 84 --->
-//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 73
+//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N  => a¹}: 73
 //│ ------------------
-//│ case x¹ of {A => [AA] | B => [BB]}: 48 --->
+//│ case x¹ of {A  => [AA] | B  => [BB]}: 48 --->
 //│ 	[A]: 80
 //│ 	[B]: 81
-//│ case xs¹ of {C h² t² => [C (f¹ h²) ((map₀ t²) f¹)] | N => [N]}: 61 --->
+//│ case xs¹ of {C h² t² => [C (f¹ h²) ((map₀ t²) f¹)] | N  => [N]}: 61 --->
 //│ 	[C h³ a¹]: 68
 //│ 	[N]: 78
-//│ case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 73 --->
+//│ case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N  => a¹}: 73 --->
 //│ 	[N]: 82
 //│ 	[C [B] [N]]: 83
 //│ 	[C [A] [C [B] [N]]]: 84
@@ -510,14 +510,14 @@ rev(N, map(C(A, C(B, N)), ff))
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ ((rev^32 [N]) ((map^35 [C [A] [C [B] [N]]]) ff^42))
 //│ def ff = (fun x⁰ -> case x⁰ of {
-//│ 	A => [AA]
-//│ 	| B => [BB]})
+//│ 	A  => [AA]
+//│ 	| B  => [BB]})
 //│ def map = (fun xs⁰ -> (fun f⁰ -> case xs⁰ of {
 //│ 	C h⁰ t⁰ => [C (f⁰ h⁰) ((map^5 t⁰) f⁰)]
-//│ 	| N => [N]}))
+//│ 	| N  => [N]}))
 //│ def rev = (fun a⁰ -> (fun ys⁰ -> case ys⁰ of {
 //│ 	C h¹ t¹ => ((rev^16 [C h¹ a⁰]) t¹)
-//│ 	| N => a⁰}))
+//│ 	| N  => a⁰}))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
@@ -536,70 +536,70 @@ rev(N, map(C(A, C(B, N)), ff))
 //│ ((rev₀ [N]) ((map₀ [C [A] [C [B] [N]]]) ff₀))
 //│ def ff₀ = 
 //│ 	(fun x¹ -> case x¹ of {
-//│ 		A => [AA]
-//│ 		| B => [BB]})
+//│ 		A  => [AA]
+//│ 		| B  => [BB]})
 //│ def map₀ = 
 //│ 	(fun xs¹ -> (fun f¹ -> case xs¹ of {
 //│ 		C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)]
-//│ 		| N => [N]}))
+//│ 		| N  => [N]}))
 //│ def rev₀ = 
 //│ 	(fun a¹ -> (fun ys¹ -> case ys¹ of {
 //│ 		C h² t² => ((rev₀ [C h² a¹]) t²)
-//│ 		| N => a¹}))
+//│ 		| N  => a¹}))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C (f¹ h³) ((map₀ t³) f¹)]: 66 --->
-//│ 	case ys¹ of {C h² t² => ((rev₀ [C h² a¹]) t²) | N => a¹}: 54
+//│ 	case ys¹ of {C h² t² => ((rev₀ [C h² a¹]) t²) | N  => a¹}: 54
 //│ [N]: 67 --->
-//│ 	case ys¹ of {C h² t² => ((rev₀ [C h² a¹]) t²) | N => a¹}: 54
+//│ 	case ys¹ of {C h² t² => ((rev₀ [C h² a¹]) t²) | N  => a¹}: 54
 //│ [A]: 80 --->
-//│ 	case x¹ of {A => [AA] | B => [BB]}: 74
+//│ 	case x¹ of {A  => [AA] | B  => [BB]}: 74
 //│ [B]: 81 --->
-//│ 	case x¹ of {A => [AA] | B => [BB]}: 74
+//│ 	case x¹ of {A  => [AA] | B  => [BB]}: 74
 //│ [N]: 82 --->
-//│ 	case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N => [N]}: 68
+//│ 	case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N  => [N]}: 68
 //│ [C [B] [N]]: 83 --->
-//│ 	case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N => [N]}: 68
+//│ 	case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N  => [N]}: 68
 //│ [C [A] [C [B] [N]]]: 84 --->
-//│ 	case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N => [N]}: 68
+//│ 	case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N  => [N]}: 68
 //│ ------------------
-//│ case ys¹ of {C h² t² => ((rev₀ [C h² a¹]) t²) | N => a¹}: 54 --->
+//│ case ys¹ of {C h² t² => ((rev₀ [C h² a¹]) t²) | N  => a¹}: 54 --->
 //│ 	[C (f¹ h³) ((map₀ t³) f¹)]: 66
 //│ 	[N]: 67
-//│ case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N => [N]}: 68 --->
+//│ case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N  => [N]}: 68 --->
 //│ 	[N]: 82
 //│ 	[C [B] [N]]: 83
 //│ 	[C [A] [C [B] [N]]]: 84
-//│ case x¹ of {A => [AA] | B => [BB]}: 74 --->
+//│ case x¹ of {A  => [AA] | B  => [BB]}: 74 --->
 //│ 	[A]: 80
 //│ 	[B]: 81
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [C (f¹ h³) ((map₀ t³) f¹)]: 66 --->
-//│ 	case ys¹ of {C h² t² => ((rev₀ [C h² a¹]) t²) | N => a¹}: 54
+//│ 	case ys¹ of {C h² t² => ((rev₀ [C h² a¹]) t²) | N  => a¹}: 54
 //│ [N]: 67 --->
-//│ 	case ys¹ of {C h² t² => ((rev₀ [C h² a¹]) t²) | N => a¹}: 54
+//│ 	case ys¹ of {C h² t² => ((rev₀ [C h² a¹]) t²) | N  => a¹}: 54
 //│ [A]: 80 --->
-//│ 	case x¹ of {A => [AA] | B => [BB]}: 74
+//│ 	case x¹ of {A  => [AA] | B  => [BB]}: 74
 //│ [B]: 81 --->
-//│ 	case x¹ of {A => [AA] | B => [BB]}: 74
+//│ 	case x¹ of {A  => [AA] | B  => [BB]}: 74
 //│ [N]: 82 --->
-//│ 	case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N => [N]}: 68
+//│ 	case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N  => [N]}: 68
 //│ [C [B] [N]]: 83 --->
-//│ 	case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N => [N]}: 68
+//│ 	case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N  => [N]}: 68
 //│ [C [A] [C [B] [N]]]: 84 --->
-//│ 	case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N => [N]}: 68
+//│ 	case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N  => [N]}: 68
 //│ ------------------
-//│ case ys¹ of {C h² t² => ((rev₀ [C h² a¹]) t²) | N => a¹}: 54 --->
+//│ case ys¹ of {C h² t² => ((rev₀ [C h² a¹]) t²) | N  => a¹}: 54 --->
 //│ 	[C (f¹ h³) ((map₀ t³) f¹)]: 66
 //│ 	[N]: 67
-//│ case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N => [N]}: 68 --->
+//│ case xs¹ of {C h³ t³ => [C (f¹ h³) ((map₀ t³) f¹)] | N  => [N]}: 68 --->
 //│ 	[N]: 82
 //│ 	[C [B] [N]]: 83
 //│ 	[C [A] [C [B] [N]]]: 84
-//│ case x¹ of {A => [AA] | B => [BB]}: 74 --->
+//│ case x¹ of {A  => [AA] | B  => [BB]}: 74 --->
 //│ 	[A]: 80
 //│ 	[B]: 81
 //│ <<<<<<< new fusion strategy <<<<<<<
@@ -647,14 +647,14 @@ revMap
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ revMap^43
 //│ def ff = (fun x⁰ -> case x⁰ of {
-//│ 	A => [AA]
-//│ 	| B => [BB]})
+//│ 	A  => [AA]
+//│ 	| B  => [BB]})
 //│ def map = (fun xs⁰ -> (fun f⁰ -> case xs⁰ of {
 //│ 	C h⁰ t⁰ => [C (f⁰ h⁰) ((map^5 t⁰) f⁰)]
-//│ 	| N => [N]}))
+//│ 	| N  => [N]}))
 //│ def rev = (fun a⁰ -> (fun ys⁰ -> case ys⁰ of {
 //│ 	C h¹ t¹ => ((rev^16 [C h¹ a⁰]) t¹)
-//│ 	| N => a⁰}))
+//│ 	| N  => a⁰}))
 //│ def revMap = (fun ls⁰ -> (fun f¹ -> ((rev^32 [N]) ((map^35 ls⁰) f¹))))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -674,31 +674,31 @@ revMap
 //│ 	def map₀ = 
 //│ 		(fun xs¹ -> (fun f² -> case xs¹ of {
 //│ 			C h² t² => [C (f² h²) ((map₀ t²) f²)]
-//│ 			| N => [N]}))
+//│ 			| N  => [N]}))
 //│ 	def rev₀ = 
 //│ 		(fun a¹ -> (fun ys¹ -> case ys¹ of {
 //│ 			C h³ t³ => ((rev₀ [C h³ a¹]) t³)
-//│ 			| N => a¹}))
+//│ 			| N  => a¹}))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C (f² h²) ((map₀ t²) f²)]: 53 --->
-//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 67
+//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N  => a¹}: 67
 //│ [N]: 54 --->
-//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 67
+//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N  => a¹}: 67
 //│ ------------------
-//│ case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 67 --->
+//│ case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N  => a¹}: 67 --->
 //│ 	[C (f² h²) ((map₀ t²) f²)]: 53
 //│ 	[N]: 54
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [C (f² h²) ((map₀ t²) f²)]: 53 --->
-//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 67
+//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N  => a¹}: 67
 //│ [N]: 54 --->
-//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 67
+//│ 	case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N  => a¹}: 67
 //│ ------------------
-//│ case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N => a¹}: 67 --->
+//│ case ys¹ of {C h³ t³ => ((rev₀ [C h³ a¹]) t³) | N  => a¹}: 67 --->
 //│ 	[C (f² h²) ((map₀ t²) f²)]: 53
 //│ 	[N]: 54
 //│ <<<<<<< new fusion strategy <<<<<<<
@@ -714,7 +714,7 @@ revMap
 //│ 				let h⁴ = (f⁴ h²)
 //│ 				in let t⁴ = ((map₀ t²) f⁴)
 //│ 				in (fun a² -> ((rev₀ [C h⁴ a²]) t⁴))
-//│ 			| N => (fun a³ -> a³)}))
+//│ 			| N  => (fun a³ -> a³)}))
 //│ 	def rev₀ = 
 //│ 		(fun a⁴ -> (fun ys² -> (ys² a⁴)))
 //│ <<<<<<< after fusion <<<<<<<

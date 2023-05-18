@@ -15,7 +15,7 @@ g
 //│ g^12
 //│ def f = (fun a⁰ -> case a⁰ of {
 //│ 	A aa⁰ => (f^2 [B])
-//│ 	| B => [OK]})
+//│ 	| B  => [OK]})
 //│ def g = (fun b⁰ -> (f^8 b⁰))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -33,14 +33,14 @@ g
 //│ 	def f₀ = 
 //│ 		(fun a¹ -> case a¹ of {
 //│ 			A aa¹ => (f₀ [B])
-//│ 			| B => [OK]})
+//│ 			| B  => [OK]})
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [B]: 19 --->
-//│ 	case a¹ of {A aa¹ => (f₀ [B]) | B => [OK]}: 22
+//│ 	case a¹ of {A aa¹ => (f₀ [B]) | B  => [OK]}: 22
 //│ ------------------
-//│ case a¹ of {A aa¹ => (f₀ [B]) | B => [OK]}: 22 --->
+//│ case a¹ of {A aa¹ => (f₀ [B]) | B  => [OK]}: 22 --->
 //│ 	NoProd
 //│ 	[B]: 19
 //│ <<<<<<< fusion matches <<<<<<<
@@ -59,7 +59,7 @@ g
 //│ 	def f₀ = 
 //│ 		(fun a² -> case a² of {
 //│ 			A aa¹ => (f₀ [B])
-//│ 			| B => [OK]})
+//│ 			| B  => [OK]})
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: when the top level result is consumed by nocons
@@ -75,7 +75,7 @@ primitive(g)
 //│ (primitive⁰ g^13)
 //│ def f = (fun a⁰ -> case a⁰ of {
 //│ 	A aa⁰ => (f^2 [B])
-//│ 	| B => [OK]})
+//│ 	| B  => [OK]})
 //│ def g = (fun b⁰ -> (f^8 b⁰))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -93,14 +93,14 @@ primitive(g)
 //│ 	def f₀ = 
 //│ 		(fun a¹ -> case a¹ of {
 //│ 			A aa¹ => (f₀ [B])
-//│ 			| B => [OK]})
+//│ 			| B  => [OK]})
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [B]: 21 --->
-//│ 	case a¹ of {A aa¹ => (f₀ [B]) | B => [OK]}: 24
+//│ 	case a¹ of {A aa¹ => (f₀ [B]) | B  => [OK]}: 24
 //│ ------------------
-//│ case a¹ of {A aa¹ => (f₀ [B]) | B => [OK]}: 24 --->
+//│ case a¹ of {A aa¹ => (f₀ [B]) | B  => [OK]}: 24 --->
 //│ 	NoProd
 //│ 	[B]: 21
 //│ <<<<<<< fusion matches <<<<<<<
@@ -119,7 +119,7 @@ primitive(g)
 //│ 	def f₀ = 
 //│ 		(fun a² -> case a² of {
 //│ 			A aa¹ => (f₀ [B])
-//│ 			| B => [OK]})
+//│ 			| B  => [OK]})
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -136,8 +136,8 @@ k
 //│ k^17
 //│ def f = (fun a⁰ -> if primitive⁰ then [B] else a⁰)
 //│ def g = (fun x⁰ -> case x⁰ of {
-//│ 	B => [C]
-//│ 	| D => [E]})
+//│ 	B  => [C]
+//│ 	| D  => [E]})
 //│ def k = (fun a¹ -> (g^11 (f^12 a¹)))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -156,15 +156,15 @@ k
 //│ 		(fun a³ -> if primitive⁰ then [B] else a³)
 //│ 	def g₀ = 
 //│ 		(fun x¹ -> case x¹ of {
-//│ 			B => [C]
-//│ 			| D => [E]})
+//│ 			B  => [C]
+//│ 			| D  => [E]})
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [B]: 30 --->
-//│ 	case x¹ of {B => [C] | D => [E]}: 27
+//│ 	case x¹ of {B  => [C] | D  => [E]}: 27
 //│ ------------------
-//│ case x¹ of {B => [C] | D => [E]}: 27 --->
+//│ case x¹ of {B  => [C] | D  => [E]}: 27 --->
 //│ 	NoProd
 //│ 	[B]: 30
 //│ <<<<<<< fusion matches <<<<<<<
@@ -184,6 +184,6 @@ k
 //│ 		(fun a⁵ -> if primitive⁰ then [B] else a⁵)
 //│ 	def g₀ = 
 //│ 		(fun x² -> case x² of {
-//│ 			B => [C]
-//│ 			| D => [E]})
+//│ 			B  => [C]
+//│ 			| D  => [E]})
 //│ <<<<<<< after fusion <<<<<<<

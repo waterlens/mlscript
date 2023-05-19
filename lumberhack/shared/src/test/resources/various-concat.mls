@@ -121,10 +121,280 @@ appendThree(
 //│ 	[P3 [C 1 [C 2 [N]]] [C 3 [C 4 [N]]] [C 5 [C 6 [N]]]]
 //│ <<<<<<< evaluate <<<<<<<
 
+// original append, duplicated append
+_LUMBERHACK_EVAL
+fun append(xs, ys) = if xs is
+  C(h, t) then C(h, append(t, ys))
+  N then ys
+fun append'(xs, ys) = if xs is
+  C(h, t) then C(h, append'(t, ys))
+  N then ys
+fun appendThree(xs, ys, zs) =
+  append(append'(xs, ys), zs)
+  P3(xs, ys, zs)
+appendThree(
+  C(1, C(2, N)),
+  C(3, C(4, N)),
+  C(5, C(6, N))
+)
+//│ |_LUMBERHACK_EVAL|↵|#fun| |append|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|h|,| |append|(|t|,| |ys|)|)|↵|N| |#then| |ys|←|↵|#fun| |append'|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|h|,| |append'|(|t|,| |ys|)|)|↵|N| |#then| |ys|←|↵|#fun| |appendThree|(|xs|,| |ys|,| |zs|)| |#=|→|append|(|append'|(|xs|,| |ys|)|,| |zs|)|↵|P3|(|xs|,| |ys|,| |zs|)|←|↵|appendThree|(|→|C|(|1|,| |C|(|2|,| |N|)|)|,|↵|C|(|3|,| |C|(|4|,| |N|)|)|,|↵|C|(|5|,| |C|(|6|,| |N|)|)|←|↵|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun append = xs, ys, => if xs is ‹(C (h, t,)) then C (h, append (t, ys,),); (N) then ys›; fun append' = xs, ys, => if xs is ‹(C (h, t,)) then C (h, append' (t, ys,),); (N) then ys›; fun appendThree = xs, ys, zs, => {append (append' (xs, ys,), zs,); P3 (xs, ys, zs,)}; appendThree (C (1, C (2, N,),), C (3, C (4, N,),), C (5, C (6, N,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (((appendThree^42 [C 1 [C 2 [N]]]) [C 3 [C 4 [N]]]) [C 5 [C 6 [N]]])
+//│ def append = (fun xs⁰ -> (fun ys⁰ -> case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ ((append^3 t⁰) ys⁰)]
+//│ 	| N  => ys⁰}))
+//│ def append' = (fun xs¹ -> (fun ys¹ -> case xs¹ of {
+//│ 	C h¹ t¹ => [C h¹ ((append'^15 t¹) ys¹)]
+//│ 	| N  => ys¹}))
+//│ def appendThree = (fun xs² -> (fun ys² -> (fun zs⁰ -> 
+//│ 	((append^25 ((append'^26 xs²) ys²)) zs⁰)
+//│ 	[P3 xs² ys² zs⁰])))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ 
+//│ 	[C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]
+//│ 	[P3 [C 1 [C 2 [N]]] [C 3 [C 4 [N]]] [C 5 [C 6 [N]]]]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [appendThree^42]
+//│ 	[appendThree^42 · append'^26]
+//│ 		[appendThree^42 · append'^26 · append'^15] ---> [appendThree^42 · append'^26] (only one)
+//│ 	[appendThree^42 · append^25]
+//│ 		[appendThree^42 · append^25 · append^3] ---> [appendThree^42 · append^25] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (((appendThree₀ [C 1 [C 2 [N]]]) [C 3 [C 4 [N]]]) [C 5 [C 6 [N]]])
+//│ def appendThree₀ = 
+//│ 	(fun xs⁴ -> (fun ys⁴ -> (fun zs¹ -> 
+//│ 		((append₀ ((append'₀ xs⁴) ys⁴)) zs¹)
+//│ 		[P3 xs⁴ ys⁴ zs¹])))
+//│ 	where
+//│ 	def append'₀ = 
+//│ 		(fun xs³ -> (fun ys³ -> case xs³ of {
+//│ 			C h² t² => [C h² ((append'₀ t²) ys³)]
+//│ 			| N  => ys³}))
+//│ 	def append₀ = 
+//│ 		(fun xs⁵ -> (fun ys⁵ -> case xs⁵ of {
+//│ 			C h³ t³ => [C h³ ((append₀ t³) ys⁵)]
+//│ 			| N  => ys⁵}))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C h² ((append'₀ t²) ys³)]: 68 --->
+//│ 	case xs⁵ of {C h³ t³ => [C h³ ((append₀ t³) ys⁵)] | N  => ys⁵}: 99
+//│ [N]: 105 --->
+//│ 	NoCons
+//│ 	case xs³ of {C h² t² => [C h² ((append'₀ t²) ys³)] | N  => ys³}: 70
+//│ [C 2 [N]]: 106 --->
+//│ 	NoCons
+//│ 	case xs³ of {C h² t² => [C h² ((append'₀ t²) ys³)] | N  => ys³}: 70
+//│ [C 1 [C 2 [N]]]: 107 --->
+//│ 	NoCons
+//│ 	case xs³ of {C h² t² => [C h² ((append'₀ t²) ys³)] | N  => ys³}: 70
+//│ [N]: 111 --->
+//│ 	NoCons
+//│ 	case xs⁵ of {C h³ t³ => [C h³ ((append₀ t³) ys⁵)] | N  => ys⁵}: 99
+//│ [C 4 [N]]: 112 --->
+//│ 	NoCons
+//│ 	case xs⁵ of {C h³ t³ => [C h³ ((append₀ t³) ys⁵)] | N  => ys⁵}: 99
+//│ [C 3 [C 4 [N]]]: 113 --->
+//│ 	NoCons
+//│ 	case xs⁵ of {C h³ t³ => [C h³ ((append₀ t³) ys⁵)] | N  => ys⁵}: 99
+//│ ------------------
+//│ case xs³ of {C h² t² => [C h² ((append'₀ t²) ys³)] | N  => ys³}: 70 --->
+//│ 	[N]: 105
+//│ 	[C 2 [N]]: 106
+//│ 	[C 1 [C 2 [N]]]: 107
+//│ case xs⁵ of {C h³ t³ => [C h³ ((append₀ t³) ys⁵)] | N  => ys⁵}: 99 --->
+//│ 	[C h² ((append'₀ t²) ys³)]: 68
+//│ 	[N]: 111
+//│ 	[C 4 [N]]: 112
+//│ 	[C 3 [C 4 [N]]]: 113
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (((appendThree₀ [C 1 [C 2 [N]]]) [C 3 [C 4 [N]]]) [C 5 [C 6 [N]]])
+//│ def appendThree₀ = 
+//│ 	(fun xs⁷ -> (fun ys⁷ -> (fun zs² -> 
+//│ 		((append₀ ((append'₀ xs⁷) ys⁷)) zs²)
+//│ 		[P3 xs⁷ ys⁷ zs²])))
+//│ 	where
+//│ 	def append'₀ = 
+//│ 		(fun xs⁶ -> (fun ys⁶ -> case xs⁶ of {
+//│ 			C h² t² => [C h² ((append'₀ t²) ys⁶)]
+//│ 			| N  => ys⁶}))
+//│ 	def append₀ = 
+//│ 		(fun xs⁸ -> (fun ys⁸ -> case xs⁸ of {
+//│ 			C h³ t³ => [C h³ ((append₀ t³) ys⁸)]
+//│ 			| N  => ys⁸}))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ 
+//│ 	[C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]
+//│ 	[P3 [C 1 [C 2 [N]]] [C 3 [C 4 [N]]] [C 5 [C 6 [N]]]]
+//│ <<<<<<< evaluate <<<<<<<
+
+// original append, duplicated append, but the input is `fromTo`
+_LUMBERHACK_EVAL
+fun append(xs, ys) = if xs is
+  C(h, t) then C(h, append(t, ys))
+  N then ys
+fun append'(xs, ys) = if xs is
+  C(h, t) then C(h, append'(t, ys))
+  N then ys
+fun appendThree(xs, ys, zs) =
+  append(append'(xs, ys), zs)
+fun fromTo(a, b) = if a < b then C(a, fromTo(a + 1, b)) else N
+fun main(a, b) = appendThree(fromTo(a, b), fromTo(a, b), fromTo(a, b))
+main(11, 22)
+//│ |_LUMBERHACK_EVAL|↵|#fun| |append|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|h|,| |append|(|t|,| |ys|)|)|↵|N| |#then| |ys|←|↵|#fun| |append'|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|h|,| |append'|(|t|,| |ys|)|)|↵|N| |#then| |ys|←|↵|#fun| |appendThree|(|xs|,| |ys|,| |zs|)| |#=|→|append|(|append'|(|xs|,| |ys|)|,| |zs|)|←|↵|#fun| |fromTo|(|a|,| |b|)| |#=| |#if| |a| |<| |b| |#then| |C|(|a|,| |fromTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |main|(|a|,| |b|)| |#=| |appendThree|(|fromTo|(|a|,| |b|)|,| |fromTo|(|a|,| |b|)|,| |fromTo|(|a|,| |b|)|)|↵|main|(|11|,| |22|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun append = xs, ys, => if xs is ‹(C (h, t,)) then C (h, append (t, ys,),); (N) then ys›; fun append' = xs, ys, => if xs is ‹(C (h, t,)) then C (h, append' (t, ys,),); (N) then ys›; fun appendThree = xs, ys, zs, => {append (append' (xs, ys,), zs,)}; fun fromTo = a, b, => if (< (a,) (b,)) then C (a, fromTo (+ (a,) (1,), b,),) else N; fun main = a, b, => appendThree (fromTo (a, b,), fromTo (a, b,), fromTo (a, b,),); main (11, 22,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ ((main^78 11) 22)
+//│ def append = (fun xs⁰ -> (fun ys⁰ -> case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ ((append^3 t⁰) ys⁰)]
+//│ 	| N  => ys⁰}))
+//│ def append' = (fun xs¹ -> (fun ys¹ -> case xs¹ of {
+//│ 	C h¹ t¹ => [C h¹ ((append'^15 t¹) ys¹)]
+//│ 	| N  => ys¹}))
+//│ def appendThree = (fun xs² -> (fun ys² -> (fun zs⁰ -> ((append^25 ((append'^26 xs²) ys²)) zs⁰))))
+//│ def fromTo = (fun a⁰ -> (fun b⁰ -> if (a⁰ < b⁰) then [C a⁰ ((fromTo^43 (a⁰ + 1)) b⁰)] else [N]))
+//│ def main = (fun a¹ -> (fun b¹ -> (((appendThree^57 ((fromTo^58 a¹) b¹)) ((fromTo^64 a¹) b¹)) ((fromTo^70 a¹) b¹))))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [C 11 [C 12 [C 13 [C 14 [C 15 [C 16 [C 17 [C 18 [C 19 [C 20 [C 21 [C 11 [C 12 [C 13 [C 14 [C 15 [C 16 [C 17 [C 18 [C 19 [C 20 [C 21 [C 11 [C 12 [C 13 [C 14 [C 15 [C 16 [C 17 [C 18 [C 19 [C 20 [C 21 [N]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [main^78]
+//│ 	[main^78 · appendThree^57]
+//│ 		[main^78 · appendThree^57 · append'^26] (hopeless to continue)
+//│ 			[main^78 · appendThree^57 · append'^26 · append'^15] ---> [main^78 · appendThree^57 · append'^26] (using original def)
+//│ 		[main^78 · appendThree^57 · append^25]
+//│ 			[main^78 · appendThree^57 · append^25 · append^3] ---> [main^78 · appendThree^57 · append^25] (only one)
+//│ 	[main^78 · fromTo^58] (hopeless to continue)
+//│ 		[main^78 · fromTo^58 · fromTo^43] ---> [main^78 · fromTo^58] (using original def)
+//│ 	[main^78 · fromTo^64] (hopeless to continue)
+//│ 		[main^78 · fromTo^64 · fromTo^43] ---> [main^78 · fromTo^64] (using original def)
+//│ 	[main^78 · fromTo^70]
+//│ 		[main^78 · fromTo^70 · fromTo^43] ---> [main^78 · fromTo^70] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ((main₀ 11) 22)
+//│ def main₀ = 
+//│ 	(fun a⁵ -> (fun b⁵ -> (((appendThree₀ ((fromTo₀ a⁵) b⁵)) ((fromTo₁ a⁵) b⁵)) ((fromTo₂ a⁵) b⁵))))
+//│ 	where
+//│ 	def appendThree₀ = 
+//│ 		(fun xs⁵ -> (fun ys⁵ -> (fun zs¹ -> ((append₀ ((append'₀ xs⁵) ys⁵)) zs¹))))
+//│ 		where
+//│ 		def append'₀ = 
+//│ 			(fun xs⁴ -> (fun ys⁴ -> case xs⁴ of {
+//│ 				C h³ t³ => [C h³ ((append'₀ t³) ys⁴)]
+//│ 				| N  => ys⁴}))
+//│ 		def append₀ = 
+//│ 			(fun xs³ -> (fun ys³ -> case xs³ of {
+//│ 				C h² t² => [C h² ((append₀ t²) ys³)]
+//│ 				| N  => ys³}))
+//│ 	def fromTo₀ = 
+//│ 		(fun a³ -> (fun b³ -> if (a³ < b³) then [C a³ ((fromTo₀ (a³ + 1)) b³)] else [N]))
+//│ 	def fromTo₁ = 
+//│ 		(fun a⁴ -> (fun b⁴ -> if (a⁴ < b⁴) then [C a⁴ ((fromTo₁ (a⁴ + 1)) b⁴)] else [N]))
+//│ 	def fromTo₂ = 
+//│ 		(fun a² -> (fun b² -> if (a² < b²) then [C a² ((fromTo₂ (a² + 1)) b²)] else [N]))
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C a³ ((fromTo₀ (a³ + 1)) b³)]: 130 --->
+//│ 	case xs⁴ of {C h³ t³ => [C h³ ((append'₀ t³) ys⁴)] | N  => ys⁴}: 144
+//│ [N]: 131 --->
+//│ 	case xs⁴ of {C h³ t³ => [C h³ ((append'₀ t³) ys⁴)] | N  => ys⁴}: 144
+//│ [C h³ ((append'₀ t³) ys⁴)]: 142 --->
+//│ 	case xs³ of {C h² t² => [C h² ((append₀ t²) ys³)] | N  => ys³}: 112
+//│ [C a⁴ ((fromTo₁ (a⁴ + 1)) b⁴)]: 162 --->
+//│ 	case xs³ of {C h² t² => [C h² ((append₀ t²) ys³)] | N  => ys³}: 112
+//│ [N]: 163 --->
+//│ 	case xs³ of {C h² t² => [C h² ((append₀ t²) ys³)] | N  => ys³}: 112
+//│ ------------------
+//│ case xs³ of {C h² t² => [C h² ((append₀ t²) ys³)] | N  => ys³}: 112 --->
+//│ 	[C h³ ((append'₀ t³) ys⁴)]: 142
+//│ 	[C a⁴ ((fromTo₁ (a⁴ + 1)) b⁴)]: 162
+//│ 	[N]: 163
+//│ case xs⁴ of {C h³ t³ => [C h³ ((append'₀ t³) ys⁴)] | N  => ys⁴}: 144 --->
+//│ 	[C a³ ((fromTo₀ (a³ + 1)) b³)]: 130
+//│ 	[N]: 131
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C a³ ((fromTo₀ (a³ + 1)) b³)]: 130 --->
+//│ 	case xs⁴ of {C h³ t³ => [C h³ ((append'₀ t³) ys⁴)] | N  => ys⁴}: 144
+//│ [N]: 131 --->
+//│ 	case xs⁴ of {C h³ t³ => [C h³ ((append'₀ t³) ys⁴)] | N  => ys⁴}: 144
+//│ [C h³ ((append'₀ t³) ys⁴)]: 142 --->
+//│ 	case xs³ of {C h² t² => [C h² ((append₀ t²) ys³)] | N  => ys³}: 112
+//│ [C a⁴ ((fromTo₁ (a⁴ + 1)) b⁴)]: 162 --->
+//│ 	case xs³ of {C h² t² => [C h² ((append₀ t²) ys³)] | N  => ys³}: 112
+//│ [N]: 163 --->
+//│ 	case xs³ of {C h² t² => [C h² ((append₀ t²) ys³)] | N  => ys³}: 112
+//│ ------------------
+//│ case xs³ of {C h² t² => [C h² ((append₀ t²) ys³)] | N  => ys³}: 112 --->
+//│ 	[C h³ ((append'₀ t³) ys⁴)]: 142
+//│ 	[C a⁴ ((fromTo₁ (a⁴ + 1)) b⁴)]: 162
+//│ 	[N]: 163
+//│ case xs⁴ of {C h³ t³ => [C h³ ((append'₀ t³) ys⁴)] | N  => ys⁴}: 144 --->
+//│ 	[C a³ ((fromTo₀ (a³ + 1)) b³)]: 130
+//│ 	[N]: 131
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ((main₀ 11) 22)
+//│ def main₀ = 
+//│ 	(fun a⁶ -> (fun b⁶ -> (((appendThree₀ ((fromTo₀ a⁶) b⁶)) ((fromTo₁ a⁶) b⁶)) ((fromTo₂ a⁶) b⁶))))
+//│ 	where
+//│ 	def appendThree₀ = 
+//│ 		(fun xs⁷ -> (fun ys⁷ -> (fun zs² -> ((append₀ ((append'₀ xs⁷) ys⁷)) zs²))))
+//│ 		where
+//│ 		def append'₀ = 
+//│ 			(fun xs⁶ -> (fun ys⁶ -> (xs⁶ ys⁶)))
+//│ 		def append₀ = 
+//│ 			(fun xs⁸ -> (fun ys¹³ -> (xs⁸ ys¹³)))
+//│ 	def fromTo₀ = 
+//│ 		(fun a⁹ -> (fun b⁹ -> if (a⁹ < b⁹) then 
+//│ 			let h⁵ = a⁹
+//│ 			in let t⁵ = ((fromTo₀ (a⁹ + 1)) b⁹)
+//│ 			in (fun ys¹⁰ -> 
+//│ 				let h⁶ = h⁵
+//│ 				in let t⁶ = ((append'₀ t⁵) ys¹⁰)
+//│ 				in (fun ys¹¹ -> [C h⁶ ((append₀ t⁶) ys¹¹)])) else (fun ys¹² -> ys¹²)))
+//│ 	def fromTo₁ = 
+//│ 		(fun a⁸ -> (fun b⁸ -> if (a⁸ < b⁸) then 
+//│ 			let h⁴ = a⁸
+//│ 			in let t⁴ = ((fromTo₁ (a⁸ + 1)) b⁸)
+//│ 			in (fun ys⁸ -> [C h⁴ ((append₀ t⁴) ys⁸)]) else (fun ys⁹ -> ys⁹)))
+//│ 	def fromTo₂ = 
+//│ 		(fun a⁷ -> (fun b⁷ -> if (a⁷ < b⁷) then [C a⁷ ((fromTo₂ (a⁷ + 1)) b⁷)] else [N]))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [C 11 [C 12 [C 13 [C 14 [C 15 [C 16 [C 17 [C 18 [C 19 [C 20 [C 21 [C 11 [C 12 [C 13 [C 14 [C 15 [C 16 [C 17 [C 18 [C 19 [C 20 [C 21 [C 11 [C 12 [C 13 [C 14 [C 15 [C 16 [C 17 [C 18 [C 19 [C 20 [C 21 [N]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+//│ <<<<<<< evaluate <<<<<<<
+
 
 // append where recursive `idList` is used
 // now this `appendThree(xs, ys, zs)` is like `concat [xs, ys, zs]`, where if we do not optimize
-// the last `idList` call on `zs`, it will also be traversed once, hence less efficient
+// the last `idList` call on `zs`, the `zs` will also be traversed once, hence less efficient
 // than the version in the deforestation by wadler
 _LUMBERHACK_EVAL
 fun idList(l) = if l is

@@ -870,7 +870,7 @@ object CallTree {
 }
 
 object Deforest {
-  lazy val lumberhackKeywords: Set[String] = (lumberhackIntFun ++ lumberhackIntBinOps) + "primitive"
+  lazy val lumberhackKeywords: Set[String] = (lumberhackIntFun ++ lumberhackIntBinOps) + "primitive" + "primId"
   lazy val lumberhackIntFun: Set[String] = Set("add", "minus", "mult", "div") ++ lumberhackIntComparisonFun 
   lazy val lumberhackIntComparisonFun: Set[String] = Set("eq", "lt", "gt", "leq", "geq")
   lazy val lumberhackIntBinOps: Set[String] = Set("+", "-", "*", "/", "%") ++ lumberhackIntComparisonOps

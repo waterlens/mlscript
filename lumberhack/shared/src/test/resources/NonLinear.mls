@@ -19,17 +19,17 @@ c(p(0))
 //│ |#fun| |p|(|x|)| |#=|→|#if| |x| |==| |0| |#then| |N|↵|#else|→|#if| |x| |>=| |2| |#then| |C|(|p|(|x| |-| |1|)|)|↵|#else|→|#let| |temp| |#=| |C|(|p|(|x| |+| |1|)|)|↵|f|(|temp|)|↵|temp|←|←|←|↵|#fun| |f|(|z|)| |#=| |#if| |z| |is|→|C|(|b|)| |#then| |b|↵|N| |#then| |1|←|↵|#fun| |c|(|xx|)| |#=| |#if| |xx| |is|→|C|(|aa|)| |#then| |primitive|(|aa|)|↵|N| |#then| |N|←|↵|c|(|p|(|0|)|)|
 //│ Parsed: {fun p = x, => {if (== (x,) (0,)) then N else {if (>= (x,) (2,)) then C (p (- (x,) (1,),),) else {let temp = C (p (+ (x,) (1,),),); f (temp,); temp}}}; fun f = z, => if z is ‹(C (b,)) then b; (N) then 1›; fun c = xx, => if xx is ‹(C (aa,)) then primitive (aa,); (N) then N›; c (p (0,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (c^49 (p^50 0))
-//│ def c = (fun xx⁰ -> case xx⁰ of {
-//│ 	C aa⁰ => (primitive⁰ aa⁰)
-//│ 	| N  => [N]})
-//│ def f = (fun z⁰ -> case z⁰ of {
+//│ c^49(p^50(0))
+//│ def c(xx⁰) = case xx⁰ of {
+//│ 	C aa⁰ => primitive⁰(aa⁰)
+//│ 	| N  => [N]}
+//│ def f(z⁰) = case z⁰ of {
 //│ 	C b⁰ => b⁰
-//│ 	| N  => 1})
-//│ def p = (fun x⁰ -> if (x⁰ == 0) then [N] else if (x⁰ >= 2) then [C (p^12 (x⁰ - 1))] else 
-//│ 	let temp⁰ = [C (p^20 (x⁰ + 1))]
-//│ 	in (f^28 temp⁰)
-//│ 	temp⁰)
+//│ 	| N  => 1}
+//│ def p(x⁰) = if (x⁰ == 0) then [N] else if (x⁰ >= 2) then [C p^12((x⁰ - 1))] else 
+//│ 	let temp⁰ = [C p^20((x⁰ + 1))]
+//│ 	in f^28(temp⁰)
+//│ 	temp⁰
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -50,83 +50,83 @@ c(p(0))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (c₀ (p₀ 0))
-//│ def c₀ = 
-//│ 	(fun xx¹ -> case xx¹ of {
-//│ 		C aa¹ => (primitive⁰ aa¹)
-//│ 		| N  => [N]})
-//│ def p₀ = 
-//│ 	(fun x³ -> if (x³ == 0) then [N] else if (x³ >= 2) then [C (p₁ (x³ - 1))] else 
-//│ 		let temp³ = [C (p₂ (x³ + 1))]
-//│ 		in (f₀ temp³)
-//│ 		temp³)
+//│ c₀(p₀(0))
+//│ def c₀(xx¹) = 
+//│ 	case xx¹ of {
+//│ 		C aa¹ => primitive⁰(aa¹)
+//│ 		| N  => [N]}
+//│ def p₀(x³) = 
+//│ 	if (x³ == 0) then [N] else if (x³ >= 2) then [C p₁((x³ - 1))] else 
+//│ 		let temp³ = [C p₂((x³ + 1))]
+//│ 		in f₀(temp³)
+//│ 		temp³
 //│ 	where
-//│ 	def f₀ = 
-//│ 		(fun z¹ -> case z¹ of {
+//│ 	def f₀(z¹) = 
+//│ 		case z¹ of {
 //│ 			C b¹ => b¹
-//│ 			| N  => 1})
-//│ 	def p₁ = 
-//│ 		(fun x¹ -> if (x¹ == 0) then [N] else if (x¹ >= 2) then [C (p₁ (x¹ - 1))] else 
-//│ 			let temp¹ = [C (p₁ (x¹ + 1))]
-//│ 			in (f₁ temp¹)
-//│ 			temp¹)
+//│ 			| N  => 1}
+//│ 	def p₁(x¹) = 
+//│ 		if (x¹ == 0) then [N] else if (x¹ >= 2) then [C p₁((x¹ - 1))] else 
+//│ 			let temp¹ = [C p₁((x¹ + 1))]
+//│ 			in f₁(temp¹)
+//│ 			temp¹
 //│ 		where
-//│ 		def f₁ = 
-//│ 			(fun z⁴ -> case z⁴ of {
+//│ 		def f₁(z⁴) = 
+//│ 			case z⁴ of {
 //│ 				C b⁴ => b⁴
-//│ 				| N  => 1})
-//│ 	def p₂ = 
-//│ 		(fun x² -> if (x² == 0) then [N] else if (x² >= 2) then [C (p₃ (x² - 1))] else 
-//│ 			let temp² = [C (p₂ (x² + 1))]
-//│ 			in (f₂ temp²)
-//│ 			temp²)
+//│ 				| N  => 1}
+//│ 	def p₂(x²) = 
+//│ 		if (x² == 0) then [N] else if (x² >= 2) then [C p₃((x² - 1))] else 
+//│ 			let temp² = [C p₂((x² + 1))]
+//│ 			in f₂(temp²)
+//│ 			temp²
 //│ 		where
-//│ 		def f₂ = 
-//│ 			(fun z³ -> case z³ of {
+//│ 		def f₂(z³) = 
+//│ 			case z³ of {
 //│ 				C b³ => b³
-//│ 				| N  => 1})
-//│ 		def p₃ = 
-//│ 			(fun x⁴ -> if (x⁴ == 0) then [N] else if (x⁴ >= 2) then [C (p₃ (x⁴ - 1))] else 
-//│ 				let temp⁴ = [C (p₃ (x⁴ + 1))]
-//│ 				in (f₃ temp⁴)
-//│ 				temp⁴)
+//│ 				| N  => 1}
+//│ 		def p₃(x⁴) = 
+//│ 			if (x⁴ == 0) then [N] else if (x⁴ >= 2) then [C p₃((x⁴ - 1))] else 
+//│ 				let temp⁴ = [C p₃((x⁴ + 1))]
+//│ 				in f₃(temp⁴)
+//│ 				temp⁴
 //│ 			where
-//│ 			def f₃ = 
-//│ 				(fun z² -> case z² of {
+//│ 			def f₃(z²) = 
+//│ 				case z² of {
 //│ 					C b² => b²
-//│ 					| N  => 1})
+//│ 					| N  => 1}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C (p₁ (x¹ + 1))]: 107 --->
+//│ [C p₁((x¹ + 1))]: 107 --->
 //│ 	NoCons
 //│ 	case z⁴ of {C b⁴ => b⁴ | N  => 1}: 79
-//│ [C (p₂ (x² + 1))]: 143 --->
+//│ [C p₂((x² + 1))]: 143 --->
 //│ 	NoCons
 //│ 	case z³ of {C b³ => b³ | N  => 1}: 74
 //│ [N]: 158 --->
-//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N  => [N]}: 59
-//│ [C (p₁ (x³ - 1))]: 171 --->
-//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N  => [N]}: 59
-//│ [C (p₂ (x³ + 1))]: 179 --->
-//│ 	case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N  => [N]}: 59
+//│ 	case xx¹ of {C aa¹ => primitive⁰(aa¹) | N  => [N]}: 59
+//│ [C p₁((x³ - 1))]: 171 --->
+//│ 	case xx¹ of {C aa¹ => primitive⁰(aa¹) | N  => [N]}: 59
+//│ [C p₂((x³ + 1))]: 179 --->
+//│ 	case xx¹ of {C aa¹ => primitive⁰(aa¹) | N  => [N]}: 59
 //│ 	case z¹ of {C b¹ => b¹ | N  => 1}: 64
-//│ [C (p₃ (x⁴ + 1))]: 215 --->
+//│ [C p₃((x⁴ + 1))]: 215 --->
 //│ 	NoCons
 //│ 	case z² of {C b² => b² | N  => 1}: 69
 //│ ------------------
-//│ case xx¹ of {C aa¹ => (primitive⁰ aa¹) | N  => [N]}: 59 --->
+//│ case xx¹ of {C aa¹ => primitive⁰(aa¹) | N  => [N]}: 59 --->
 //│ 	[N]: 158
-//│ 	[C (p₁ (x³ - 1))]: 171
-//│ 	[C (p₂ (x³ + 1))]: 179
+//│ 	[C p₁((x³ - 1))]: 171
+//│ 	[C p₂((x³ + 1))]: 179
 //│ case z¹ of {C b¹ => b¹ | N  => 1}: 64 --->
-//│ 	[C (p₂ (x³ + 1))]: 179
+//│ 	[C p₂((x³ + 1))]: 179
 //│ case z² of {C b² => b² | N  => 1}: 69 --->
-//│ 	[C (p₃ (x⁴ + 1))]: 215
+//│ 	[C p₃((x⁴ + 1))]: 215
 //│ case z³ of {C b³ => b³ | N  => 1}: 74 --->
-//│ 	[C (p₂ (x² + 1))]: 143
+//│ 	[C p₂((x² + 1))]: 143
 //│ case z⁴ of {C b⁴ => b⁴ | N  => 1}: 79 --->
-//│ 	[C (p₁ (x¹ + 1))]: 107
+//│ 	[C p₁((x¹ + 1))]: 107
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -136,51 +136,51 @@ c(p(0))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (c₀ (p₀ 0))
-//│ def c₀ = 
-//│ 	(fun xx² -> case xx² of {
-//│ 		C aa¹ => (primitive⁰ aa¹)
-//│ 		| N  => [N]})
-//│ def p₀ = 
-//│ 	(fun x⁸ -> if (x⁸ == 0) then [N] else if (x⁸ >= 2) then [C (p₁ (x⁸ - 1))] else 
-//│ 		let temp⁸ = [C (p₂ (x⁸ + 1))]
-//│ 		in (f₀ temp⁸)
-//│ 		temp⁸)
+//│ c₀(p₀(0))
+//│ def c₀(xx²) = 
+//│ 	case xx² of {
+//│ 		C aa¹ => primitive⁰(aa¹)
+//│ 		| N  => [N]}
+//│ def p₀(x⁸) = 
+//│ 	if (x⁸ == 0) then [N] else if (x⁸ >= 2) then [C p₁((x⁸ - 1))] else 
+//│ 		let temp⁸ = [C p₂((x⁸ + 1))]
+//│ 		in f₀(temp⁸)
+//│ 		temp⁸
 //│ 	where
-//│ 	def f₀ = 
-//│ 		(fun z⁷ -> case z⁷ of {
+//│ 	def f₀(z⁷) = 
+//│ 		case z⁷ of {
 //│ 			C b¹ => b¹
-//│ 			| N  => 1})
-//│ 	def p₁ = 
-//│ 		(fun x⁷ -> if (x⁷ == 0) then [N] else if (x⁷ >= 2) then [C (p₁ (x⁷ - 1))] else 
-//│ 			let temp⁷ = [C (p₁ (x⁷ + 1))]
-//│ 			in (f₁ temp⁷)
-//│ 			temp⁷)
+//│ 			| N  => 1}
+//│ 	def p₁(x⁷) = 
+//│ 		if (x⁷ == 0) then [N] else if (x⁷ >= 2) then [C p₁((x⁷ - 1))] else 
+//│ 			let temp⁷ = [C p₁((x⁷ + 1))]
+//│ 			in f₁(temp⁷)
+//│ 			temp⁷
 //│ 		where
-//│ 		def f₁ = 
-//│ 			(fun z⁵ -> case z⁵ of {
+//│ 		def f₁(z⁵) = 
+//│ 			case z⁵ of {
 //│ 				C b⁴ => b⁴
-//│ 				| N  => 1})
-//│ 	def p₂ = 
-//│ 		(fun x⁶ -> if (x⁶ == 0) then [N] else if (x⁶ >= 2) then [C (p₃ (x⁶ - 1))] else 
-//│ 			let temp⁶ = [C (p₂ (x⁶ + 1))]
-//│ 			in (f₂ temp⁶)
-//│ 			temp⁶)
+//│ 				| N  => 1}
+//│ 	def p₂(x⁶) = 
+//│ 		if (x⁶ == 0) then [N] else if (x⁶ >= 2) then [C p₃((x⁶ - 1))] else 
+//│ 			let temp⁶ = [C p₂((x⁶ + 1))]
+//│ 			in f₂(temp⁶)
+//│ 			temp⁶
 //│ 		where
-//│ 		def f₂ = 
-//│ 			(fun z⁸ -> case z⁸ of {
+//│ 		def f₂(z⁸) = 
+//│ 			case z⁸ of {
 //│ 				C b³ => b³
-//│ 				| N  => 1})
-//│ 		def p₃ = 
-//│ 			(fun x⁵ -> if (x⁵ == 0) then [N] else if (x⁵ >= 2) then [C (p₃ (x⁵ - 1))] else 
-//│ 				let temp⁵ = [C (p₃ (x⁵ + 1))]
-//│ 				in (f₃ temp⁵)
-//│ 				temp⁵)
+//│ 				| N  => 1}
+//│ 		def p₃(x⁵) = 
+//│ 			if (x⁵ == 0) then [N] else if (x⁵ >= 2) then [C p₃((x⁵ - 1))] else 
+//│ 				let temp⁵ = [C p₃((x⁵ + 1))]
+//│ 				in f₃(temp⁵)
+//│ 				temp⁵
 //│ 			where
-//│ 			def f₃ = 
-//│ 				(fun z⁶ -> case z⁶ of {
+//│ 			def f₃(z⁶) = 
+//│ 				case z⁶ of {
 //│ 					C b² => b²
-//│ 					| N  => 1})
+//│ 					| N  => 1}
 //│ <<<<<<< after fusion <<<<<<<
 
 // WRONG:
@@ -193,12 +193,12 @@ last(C(A, C(B, N)))
 //│ |#fun| |last|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |t| |is|→|C|(|hh|,| |tt|)| |#then| |Some|(|last|(|t|)|)|↵|N| |#then| |Some|(|h|)|←|↵|N| |#then| |None|←|↵|last|(|C|(|A|,| |C|(|B|,| |N|)|)|)|
 //│ Parsed: {fun last = ls, => if ls is ‹(C (h, t,)) then if t is ‹(C (hh, tt,)) then Some (last (t,),); (N) then Some (h,)›; (N) then None›; last (C (A, C (B, N,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (last^13 [C [A] [C [B] [N]]])
-//│ def last = (fun ls⁰ -> case ls⁰ of {
+//│ last^13([C [A] [C [B] [N]]])
+//│ def last(ls⁰) = case ls⁰ of {
 //│ 	C h⁰ t⁰ => case t⁰ of {
-//│ 		C hh⁰ tt⁰ => [Some (last^3 t⁰)]
+//│ 		C hh⁰ tt⁰ => [Some last^3(t⁰)]
 //│ 		| N  => [Some h⁰]}
-//│ 	| N  => [None]})
+//│ 	| N  => [None]}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -207,29 +207,29 @@ last(C(A, C(B, N)))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (last₀ [C [A] [C [B] [N]]])
-//│ def last₀ = 
-//│ 	(fun ls¹ -> case ls¹ of {
+//│ last₀([C [A] [C [B] [N]]])
+//│ def last₀(ls¹) = 
+//│ 	case ls¹ of {
 //│ 		C h¹ t¹ => case t¹ of {
-//│ 			C hh¹ tt¹ => [Some (last₀ t¹)]
+//│ 			C hh¹ tt¹ => [Some last₀(t¹)]
 //│ 			| N  => [Some h¹]}
-//│ 		| N  => [None]})
+//│ 		| N  => [None]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 35 --->
-//│ 	case t¹ of {C hh¹ tt¹ => [Some (last₀ t¹)] | N  => [Some h¹]}: 28
-//│ 	case ls¹ of {C h¹ t¹ => case t¹ of {C hh¹ tt¹ => [Some (last₀ t¹)] | N  => [Some h¹]} | N  => [None]}: 30
+//│ 	case t¹ of {C hh¹ tt¹ => [Some last₀(t¹)] | N  => [Some h¹]}: 28
+//│ 	case ls¹ of {C h¹ t¹ => case t¹ of {C hh¹ tt¹ => [Some last₀(t¹)] | N  => [Some h¹]} | N  => [None]}: 30
 //│ [C [B] [N]]: 36 --->
-//│ 	case t¹ of {C hh¹ tt¹ => [Some (last₀ t¹)] | N  => [Some h¹]}: 28
-//│ 	case ls¹ of {C h¹ t¹ => case t¹ of {C hh¹ tt¹ => [Some (last₀ t¹)] | N  => [Some h¹]} | N  => [None]}: 30
+//│ 	case t¹ of {C hh¹ tt¹ => [Some last₀(t¹)] | N  => [Some h¹]}: 28
+//│ 	case ls¹ of {C h¹ t¹ => case t¹ of {C hh¹ tt¹ => [Some last₀(t¹)] | N  => [Some h¹]} | N  => [None]}: 30
 //│ [C [A] [C [B] [N]]]: 37 --->
-//│ 	case ls¹ of {C h¹ t¹ => case t¹ of {C hh¹ tt¹ => [Some (last₀ t¹)] | N  => [Some h¹]} | N  => [None]}: 30
+//│ 	case ls¹ of {C h¹ t¹ => case t¹ of {C hh¹ tt¹ => [Some last₀(t¹)] | N  => [Some h¹]} | N  => [None]}: 30
 //│ ------------------
-//│ case t¹ of {C hh¹ tt¹ => [Some (last₀ t¹)] | N  => [Some h¹]}: 28 --->
+//│ case t¹ of {C hh¹ tt¹ => [Some last₀(t¹)] | N  => [Some h¹]}: 28 --->
 //│ 	[N]: 35
 //│ 	[C [B] [N]]: 36
-//│ case ls¹ of {C h¹ t¹ => case t¹ of {C hh¹ tt¹ => [Some (last₀ t¹)] | N  => [Some h¹]} | N  => [None]}: 30 --->
+//│ case ls¹ of {C h¹ t¹ => case t¹ of {C hh¹ tt¹ => [Some last₀(t¹)] | N  => [Some h¹]} | N  => [None]}: 30 --->
 //│ 	[N]: 35
 //│ 	[C [B] [N]]: 36
 //│ 	[C [A] [C [B] [N]]]: 37
@@ -242,12 +242,12 @@ last(C(A, C(B, N)))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (last₀ [C [A] [C [B] [N]]])
-//│ def last₀ = 
-//│ 	(fun ls² -> case ls² of {
+//│ last₀([C [A] [C [B] [N]]])
+//│ def last₀(ls²) = 
+//│ 	case ls² of {
 //│ 		C h¹ t¹ => case t¹ of {
-//│ 			C hh¹ tt¹ => [Some (last₀ t¹)]
+//│ 			C hh¹ tt¹ => [Some last₀(t¹)]
 //│ 			| N  => [Some h¹]}
-//│ 		| N  => [None]})
+//│ 		| N  => [None]}
 //│ <<<<<<< after fusion <<<<<<<
 

@@ -17,13 +17,13 @@ appendThree(
 //│ |_LUMBERHACK_EVAL|↵|#fun| |append|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|h|,| |append|(|t|,| |ys|)|)|↵|N| |#then| |ys|←|↵|#fun| |appendThree|(|xs|,| |ys|,| |zs|)| |#=|→|append|(|append|(|xs|,| |ys|)|,| |zs|)|↵|P3|(|xs|,| |ys|,| |zs|)|←|↵|appendThree|(|→|C|(|1|,| |C|(|2|,| |N|)|)|,|↵|C|(|3|,| |C|(|4|,| |N|)|)|,|↵|C|(|5|,| |C|(|6|,| |N|)|)|←|↵|)|
 //│ Parsed: {_LUMBERHACK_EVAL; fun append = xs, ys, => if xs is ‹(C (h, t,)) then C (h, append (t, ys,),); (N) then ys›; fun appendThree = xs, ys, zs, => {append (append (xs, ys,), zs,); P3 (xs, ys, zs,)}; appendThree (C (1, C (2, N,),), C (3, C (4, N,),), C (5, C (6, N,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (((appendThree^30 [C 1 [C 2 [N]]]) [C 3 [C 4 [N]]]) [C 5 [C 6 [N]]])
-//│ def append = (fun xs⁰ -> (fun ys⁰ -> case xs⁰ of {
-//│ 	C h⁰ t⁰ => [C h⁰ ((append^3 t⁰) ys⁰)]
-//│ 	| N  => ys⁰}))
-//│ def appendThree = (fun xs¹ -> (fun ys¹ -> (fun zs⁰ -> 
-//│ 	((append^13 ((append^14 xs¹) ys¹)) zs⁰)
-//│ 	[P3 xs¹ ys¹ zs⁰])))
+//│ appendThree^30([C 1 [C 2 [N]]], [C 3 [C 4 [N]]], [C 5 [C 6 [N]]])
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append^3(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def appendThree(xs¹, ys¹, zs⁰) = 
+//│ 	append^13(append^14(xs¹, ys¹), zs⁰)
+//│ 	[P3 xs¹ ys¹ zs⁰]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
@@ -40,51 +40,50 @@ appendThree(
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (((appendThree₀ [C 1 [C 2 [N]]]) [C 3 [C 4 [N]]]) [C 5 [C 6 [N]]])
-//│ def appendThree₀ = 
-//│ 	(fun xs³ -> (fun ys³ -> (fun zs¹ -> 
-//│ 		((append₀ ((append₀ xs³) ys³)) zs¹)
-//│ 		[P3 xs³ ys³ zs¹])))
+//│ appendThree₀([C 1 [C 2 [N]]], [C 3 [C 4 [N]]], [C 5 [C 6 [N]]])
+//│ def appendThree₀(xs³, ys³, zs¹) = 
+//│ 	append₀(append₀(xs³, ys³), zs¹)
+//│ 	[P3 xs³ ys³ zs¹]
 //│ 	where
-//│ 	def append₀ = 
-//│ 		(fun xs² -> (fun ys² -> case xs² of {
-//│ 			C h¹ t¹ => [C h¹ ((append₀ t¹) ys²)]
-//│ 			| N  => ys²}))
+//│ 	def append₀(xs², ys²) = 
+//│ 		case xs² of {
+//│ 			C h¹ t¹ => [C h¹ append₀(t¹, ys²)]
+//│ 			| N  => ys²}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h¹ ((append₀ t¹) ys²)]: 56 --->
-//│ 	case xs² of {C h¹ t¹ => [C h¹ ((append₀ t¹) ys²)] | N  => ys²}: 58
+//│ [C h¹ append₀(t¹, ys²)]: 56 --->
+//│ 	case xs² of {C h¹ t¹ => [C h¹ append₀(t¹, ys²)] | N  => ys²}: 58
 //│ [N]: 81 --->
 //│ 	NoCons
-//│ 	case xs² of {C h¹ t¹ => [C h¹ ((append₀ t¹) ys²)] | N  => ys²}: 58
+//│ 	case xs² of {C h¹ t¹ => [C h¹ append₀(t¹, ys²)] | N  => ys²}: 58
 //│ [C 2 [N]]: 82 --->
 //│ 	NoCons
-//│ 	case xs² of {C h¹ t¹ => [C h¹ ((append₀ t¹) ys²)] | N  => ys²}: 58
+//│ 	case xs² of {C h¹ t¹ => [C h¹ append₀(t¹, ys²)] | N  => ys²}: 58
 //│ [C 1 [C 2 [N]]]: 83 --->
 //│ 	NoCons
-//│ 	case xs² of {C h¹ t¹ => [C h¹ ((append₀ t¹) ys²)] | N  => ys²}: 58
+//│ 	case xs² of {C h¹ t¹ => [C h¹ append₀(t¹, ys²)] | N  => ys²}: 58
 //│ [N]: 87 --->
 //│ 	NoCons
-//│ 	case xs² of {C h¹ t¹ => [C h¹ ((append₀ t¹) ys²)] | N  => ys²}: 58
+//│ 	case xs² of {C h¹ t¹ => [C h¹ append₀(t¹, ys²)] | N  => ys²}: 58
 //│ [C 4 [N]]: 88 --->
 //│ 	NoCons
-//│ 	case xs² of {C h¹ t¹ => [C h¹ ((append₀ t¹) ys²)] | N  => ys²}: 58
+//│ 	case xs² of {C h¹ t¹ => [C h¹ append₀(t¹, ys²)] | N  => ys²}: 58
 //│ [C 3 [C 4 [N]]]: 89 --->
 //│ 	NoCons
-//│ 	case xs² of {C h¹ t¹ => [C h¹ ((append₀ t¹) ys²)] | N  => ys²}: 58
+//│ 	case xs² of {C h¹ t¹ => [C h¹ append₀(t¹, ys²)] | N  => ys²}: 58
 //│ [N]: 93 --->
 //│ 	NoCons
-//│ 	case xs² of {C h¹ t¹ => [C h¹ ((append₀ t¹) ys²)] | N  => ys²}: 58
+//│ 	case xs² of {C h¹ t¹ => [C h¹ append₀(t¹, ys²)] | N  => ys²}: 58
 //│ [C 6 [N]]: 94 --->
 //│ 	NoCons
-//│ 	case xs² of {C h¹ t¹ => [C h¹ ((append₀ t¹) ys²)] | N  => ys²}: 58
+//│ 	case xs² of {C h¹ t¹ => [C h¹ append₀(t¹, ys²)] | N  => ys²}: 58
 //│ [C 5 [C 6 [N]]]: 95 --->
 //│ 	NoCons
-//│ 	case xs² of {C h¹ t¹ => [C h¹ ((append₀ t¹) ys²)] | N  => ys²}: 58
+//│ 	case xs² of {C h¹ t¹ => [C h¹ append₀(t¹, ys²)] | N  => ys²}: 58
 //│ ------------------
-//│ case xs² of {C h¹ t¹ => [C h¹ ((append₀ t¹) ys²)] | N  => ys²}: 58 --->
-//│ 	[C h¹ ((append₀ t¹) ys²)]: 56
+//│ case xs² of {C h¹ t¹ => [C h¹ append₀(t¹, ys²)] | N  => ys²}: 58 --->
+//│ 	[C h¹ append₀(t¹, ys²)]: 56
 //│ 	[N]: 81
 //│ 	[C 2 [N]]: 82
 //│ 	[C 1 [C 2 [N]]]: 83
@@ -103,16 +102,15 @@ appendThree(
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (((appendThree₀ [C 1 [C 2 [N]]]) [C 3 [C 4 [N]]]) [C 5 [C 6 [N]]])
-//│ def appendThree₀ = 
-//│ 	(fun xs⁵ -> (fun ys⁵ -> (fun zs² -> 
-//│ 		((append₀ ((append₀ xs⁵) ys⁵)) zs²)
-//│ 		[P3 xs⁵ ys⁵ zs²])))
+//│ appendThree₀([C 1 [C 2 [N]]], [C 3 [C 4 [N]]], [C 5 [C 6 [N]]])
+//│ def appendThree₀(xs⁵, ys⁵, zs²) = 
+//│ 	append₀(append₀(xs⁵, ys⁵), zs²)
+//│ 	[P3 xs⁵ ys⁵ zs²]
 //│ 	where
-//│ 	def append₀ = 
-//│ 		(fun xs⁴ -> (fun ys⁴ -> case xs⁴ of {
-//│ 			C h¹ t¹ => [C h¹ ((append₀ t¹) ys⁴)]
-//│ 			| N  => ys⁴}))
+//│ 	def append₀(xs⁴, ys⁴) = 
+//│ 		case xs⁴ of {
+//│ 			C h¹ t¹ => [C h¹ append₀(t¹, ys⁴)]
+//│ 			| N  => ys⁴}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -140,16 +138,16 @@ appendThree(
 //│ |_LUMBERHACK_EVAL|↵|#fun| |append|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|h|,| |append|(|t|,| |ys|)|)|↵|N| |#then| |ys|←|↵|#fun| |append'|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|h|,| |append'|(|t|,| |ys|)|)|↵|N| |#then| |ys|←|↵|#fun| |appendThree|(|xs|,| |ys|,| |zs|)| |#=|→|append|(|append'|(|xs|,| |ys|)|,| |zs|)|↵|P3|(|xs|,| |ys|,| |zs|)|←|↵|appendThree|(|→|C|(|1|,| |C|(|2|,| |N|)|)|,|↵|C|(|3|,| |C|(|4|,| |N|)|)|,|↵|C|(|5|,| |C|(|6|,| |N|)|)|←|↵|)|
 //│ Parsed: {_LUMBERHACK_EVAL; fun append = xs, ys, => if xs is ‹(C (h, t,)) then C (h, append (t, ys,),); (N) then ys›; fun append' = xs, ys, => if xs is ‹(C (h, t,)) then C (h, append' (t, ys,),); (N) then ys›; fun appendThree = xs, ys, zs, => {append (append' (xs, ys,), zs,); P3 (xs, ys, zs,)}; appendThree (C (1, C (2, N,),), C (3, C (4, N,),), C (5, C (6, N,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (((appendThree^42 [C 1 [C 2 [N]]]) [C 3 [C 4 [N]]]) [C 5 [C 6 [N]]])
-//│ def append = (fun xs⁰ -> (fun ys⁰ -> case xs⁰ of {
-//│ 	C h⁰ t⁰ => [C h⁰ ((append^3 t⁰) ys⁰)]
-//│ 	| N  => ys⁰}))
-//│ def append' = (fun xs¹ -> (fun ys¹ -> case xs¹ of {
-//│ 	C h¹ t¹ => [C h¹ ((append'^15 t¹) ys¹)]
-//│ 	| N  => ys¹}))
-//│ def appendThree = (fun xs² -> (fun ys² -> (fun zs⁰ -> 
-//│ 	((append^25 ((append'^26 xs²) ys²)) zs⁰)
-//│ 	[P3 xs² ys² zs⁰])))
+//│ appendThree^42([C 1 [C 2 [N]]], [C 3 [C 4 [N]]], [C 5 [C 6 [N]]])
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append^3(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def append'(xs¹, ys¹) = case xs¹ of {
+//│ 	C h¹ t¹ => [C h¹ append'^15(t¹, ys¹)]
+//│ 	| N  => ys¹}
+//│ def appendThree(xs², ys², zs⁰) = 
+//│ 	append^25(append'^26(xs², ys²), zs⁰)
+//│ 	[P3 xs² ys² zs⁰]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
@@ -167,50 +165,49 @@ appendThree(
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (((appendThree₀ [C 1 [C 2 [N]]]) [C 3 [C 4 [N]]]) [C 5 [C 6 [N]]])
-//│ def appendThree₀ = 
-//│ 	(fun xs⁴ -> (fun ys⁴ -> (fun zs¹ -> 
-//│ 		((append₀ ((append'₀ xs⁴) ys⁴)) zs¹)
-//│ 		[P3 xs⁴ ys⁴ zs¹])))
+//│ appendThree₀([C 1 [C 2 [N]]], [C 3 [C 4 [N]]], [C 5 [C 6 [N]]])
+//│ def appendThree₀(xs⁴, ys⁴, zs¹) = 
+//│ 	append₀(append'₀(xs⁴, ys⁴), zs¹)
+//│ 	[P3 xs⁴ ys⁴ zs¹]
 //│ 	where
-//│ 	def append'₀ = 
-//│ 		(fun xs³ -> (fun ys³ -> case xs³ of {
-//│ 			C h² t² => [C h² ((append'₀ t²) ys³)]
-//│ 			| N  => ys³}))
-//│ 	def append₀ = 
-//│ 		(fun xs⁵ -> (fun ys⁵ -> case xs⁵ of {
-//│ 			C h³ t³ => [C h³ ((append₀ t³) ys⁵)]
-//│ 			| N  => ys⁵}))
+//│ 	def append'₀(xs³, ys³) = 
+//│ 		case xs³ of {
+//│ 			C h² t² => [C h² append'₀(t², ys³)]
+//│ 			| N  => ys³}
+//│ 	def append₀(xs⁵, ys⁵) = 
+//│ 		case xs⁵ of {
+//│ 			C h³ t³ => [C h³ append₀(t³, ys⁵)]
+//│ 			| N  => ys⁵}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h² ((append'₀ t²) ys³)]: 68 --->
-//│ 	case xs⁵ of {C h³ t³ => [C h³ ((append₀ t³) ys⁵)] | N  => ys⁵}: 99
+//│ [C h² append'₀(t², ys³)]: 68 --->
+//│ 	case xs⁵ of {C h³ t³ => [C h³ append₀(t³, ys⁵)] | N  => ys⁵}: 99
 //│ [N]: 105 --->
 //│ 	NoCons
-//│ 	case xs³ of {C h² t² => [C h² ((append'₀ t²) ys³)] | N  => ys³}: 70
+//│ 	case xs³ of {C h² t² => [C h² append'₀(t², ys³)] | N  => ys³}: 70
 //│ [C 2 [N]]: 106 --->
 //│ 	NoCons
-//│ 	case xs³ of {C h² t² => [C h² ((append'₀ t²) ys³)] | N  => ys³}: 70
+//│ 	case xs³ of {C h² t² => [C h² append'₀(t², ys³)] | N  => ys³}: 70
 //│ [C 1 [C 2 [N]]]: 107 --->
 //│ 	NoCons
-//│ 	case xs³ of {C h² t² => [C h² ((append'₀ t²) ys³)] | N  => ys³}: 70
+//│ 	case xs³ of {C h² t² => [C h² append'₀(t², ys³)] | N  => ys³}: 70
 //│ [N]: 111 --->
 //│ 	NoCons
-//│ 	case xs⁵ of {C h³ t³ => [C h³ ((append₀ t³) ys⁵)] | N  => ys⁵}: 99
+//│ 	case xs⁵ of {C h³ t³ => [C h³ append₀(t³, ys⁵)] | N  => ys⁵}: 99
 //│ [C 4 [N]]: 112 --->
 //│ 	NoCons
-//│ 	case xs⁵ of {C h³ t³ => [C h³ ((append₀ t³) ys⁵)] | N  => ys⁵}: 99
+//│ 	case xs⁵ of {C h³ t³ => [C h³ append₀(t³, ys⁵)] | N  => ys⁵}: 99
 //│ [C 3 [C 4 [N]]]: 113 --->
 //│ 	NoCons
-//│ 	case xs⁵ of {C h³ t³ => [C h³ ((append₀ t³) ys⁵)] | N  => ys⁵}: 99
+//│ 	case xs⁵ of {C h³ t³ => [C h³ append₀(t³, ys⁵)] | N  => ys⁵}: 99
 //│ ------------------
-//│ case xs³ of {C h² t² => [C h² ((append'₀ t²) ys³)] | N  => ys³}: 70 --->
+//│ case xs³ of {C h² t² => [C h² append'₀(t², ys³)] | N  => ys³}: 70 --->
 //│ 	[N]: 105
 //│ 	[C 2 [N]]: 106
 //│ 	[C 1 [C 2 [N]]]: 107
-//│ case xs⁵ of {C h³ t³ => [C h³ ((append₀ t³) ys⁵)] | N  => ys⁵}: 99 --->
-//│ 	[C h² ((append'₀ t²) ys³)]: 68
+//│ case xs⁵ of {C h³ t³ => [C h³ append₀(t³, ys⁵)] | N  => ys⁵}: 99 --->
+//│ 	[C h² append'₀(t², ys³)]: 68
 //│ 	[N]: 111
 //│ 	[C 4 [N]]: 112
 //│ 	[C 3 [C 4 [N]]]: 113
@@ -223,20 +220,19 @@ appendThree(
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (((appendThree₀ [C 1 [C 2 [N]]]) [C 3 [C 4 [N]]]) [C 5 [C 6 [N]]])
-//│ def appendThree₀ = 
-//│ 	(fun xs⁷ -> (fun ys⁷ -> (fun zs² -> 
-//│ 		((append₀ ((append'₀ xs⁷) ys⁷)) zs²)
-//│ 		[P3 xs⁷ ys⁷ zs²])))
+//│ appendThree₀([C 1 [C 2 [N]]], [C 3 [C 4 [N]]], [C 5 [C 6 [N]]])
+//│ def appendThree₀(xs⁷, ys⁷, zs²) = 
+//│ 	append₀(append'₀(xs⁷, ys⁷), zs²)
+//│ 	[P3 xs⁷ ys⁷ zs²]
 //│ 	where
-//│ 	def append'₀ = 
-//│ 		(fun xs⁶ -> (fun ys⁶ -> case xs⁶ of {
-//│ 			C h² t² => [C h² ((append'₀ t²) ys⁶)]
-//│ 			| N  => ys⁶}))
-//│ 	def append₀ = 
-//│ 		(fun xs⁸ -> (fun ys⁸ -> case xs⁸ of {
-//│ 			C h³ t³ => [C h³ ((append₀ t³) ys⁸)]
-//│ 			| N  => ys⁸}))
+//│ 	def append'₀(xs⁶, ys⁶) = 
+//│ 		case xs⁶ of {
+//│ 			C h² t² => [C h² append'₀(t², ys⁶)]
+//│ 			| N  => ys⁶}
+//│ 	def append₀(xs⁸, ys⁸) = 
+//│ 		case xs⁸ of {
+//│ 			C h³ t³ => [C h³ append₀(t³, ys⁸)]
+//│ 			| N  => ys⁸}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -261,16 +257,16 @@ main(11, 22)
 //│ |_LUMBERHACK_EVAL|↵|#fun| |append|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|h|,| |append|(|t|,| |ys|)|)|↵|N| |#then| |ys|←|↵|#fun| |append'|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|h|,| |append'|(|t|,| |ys|)|)|↵|N| |#then| |ys|←|↵|#fun| |appendThree|(|xs|,| |ys|,| |zs|)| |#=|→|append|(|append'|(|xs|,| |ys|)|,| |zs|)|←|↵|#fun| |fromTo|(|a|,| |b|)| |#=| |#if| |a| |<| |b| |#then| |C|(|a|,| |fromTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |main|(|a|,| |b|)| |#=| |appendThree|(|fromTo|(|a|,| |b|)|,| |fromTo|(|a|,| |b|)|,| |fromTo|(|a|,| |b|)|)|↵|main|(|11|,| |22|)|
 //│ Parsed: {_LUMBERHACK_EVAL; fun append = xs, ys, => if xs is ‹(C (h, t,)) then C (h, append (t, ys,),); (N) then ys›; fun append' = xs, ys, => if xs is ‹(C (h, t,)) then C (h, append' (t, ys,),); (N) then ys›; fun appendThree = xs, ys, zs, => {append (append' (xs, ys,), zs,)}; fun fromTo = a, b, => if (< (a,) (b,)) then C (a, fromTo (+ (a,) (1,), b,),) else N; fun main = a, b, => appendThree (fromTo (a, b,), fromTo (a, b,), fromTo (a, b,),); main (11, 22,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ ((main^78 11) 22)
-//│ def append = (fun xs⁰ -> (fun ys⁰ -> case xs⁰ of {
-//│ 	C h⁰ t⁰ => [C h⁰ ((append^3 t⁰) ys⁰)]
-//│ 	| N  => ys⁰}))
-//│ def append' = (fun xs¹ -> (fun ys¹ -> case xs¹ of {
-//│ 	C h¹ t¹ => [C h¹ ((append'^15 t¹) ys¹)]
-//│ 	| N  => ys¹}))
-//│ def appendThree = (fun xs² -> (fun ys² -> (fun zs⁰ -> ((append^25 ((append'^26 xs²) ys²)) zs⁰))))
-//│ def fromTo = (fun a⁰ -> (fun b⁰ -> if (a⁰ < b⁰) then [C a⁰ ((fromTo^43 (a⁰ + 1)) b⁰)] else [N]))
-//│ def main = (fun a¹ -> (fun b¹ -> (((appendThree^57 ((fromTo^58 a¹) b¹)) ((fromTo^64 a¹) b¹)) ((fromTo^70 a¹) b¹))))
+//│ main^78(11, 22)
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append^3(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def append'(xs¹, ys¹) = case xs¹ of {
+//│ 	C h¹ t¹ => [C h¹ append'^15(t¹, ys¹)]
+//│ 	| N  => ys¹}
+//│ def appendThree(xs², ys², zs⁰) = append^25(append'^26(xs², ys²), zs⁰)
+//│ def fromTo(a⁰, b⁰) = if (a⁰ < b⁰) then [C a⁰ fromTo^43((a⁰ + 1), b⁰)] else [N]
+//│ def main(a¹, b¹) = appendThree^57(fromTo^58(a¹, b¹), fromTo^64(a¹, b¹), fromTo^70(a¹, b¹))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
@@ -293,98 +289,98 @@ main(11, 22)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ ((main₀ 11) 22)
-//│ def main₀ = 
-//│ 	(fun a⁵ -> (fun b⁵ -> (((appendThree₀ ((fromTo₀ a⁵) b⁵)) ((fromTo₁ a⁵) b⁵)) ((fromTo₂ a⁵) b⁵))))
+//│ main₀(11, 22)
+//│ def main₀(a⁵, b⁵) = 
+//│ 	appendThree₀(fromTo₀(a⁵, b⁵), fromTo₁(a⁵, b⁵), fromTo₂(a⁵, b⁵))
 //│ 	where
-//│ 	def appendThree₀ = 
-//│ 		(fun xs⁵ -> (fun ys⁵ -> (fun zs¹ -> ((append₀ ((append'₀ xs⁵) ys⁵)) zs¹))))
+//│ 	def appendThree₀(xs⁵, ys⁵, zs¹) = 
+//│ 		append₀(append'₀(xs⁵, ys⁵), zs¹)
 //│ 		where
-//│ 		def append'₀ = 
-//│ 			(fun xs⁴ -> (fun ys⁴ -> case xs⁴ of {
-//│ 				C h³ t³ => [C h³ ((append'₀ t³) ys⁴)]
-//│ 				| N  => ys⁴}))
-//│ 		def append₀ = 
-//│ 			(fun xs³ -> (fun ys³ -> case xs³ of {
-//│ 				C h² t² => [C h² ((append₀ t²) ys³)]
-//│ 				| N  => ys³}))
-//│ 	def fromTo₀ = 
-//│ 		(fun a³ -> (fun b³ -> if (a³ < b³) then [C a³ ((fromTo₀ (a³ + 1)) b³)] else [N]))
-//│ 	def fromTo₁ = 
-//│ 		(fun a⁴ -> (fun b⁴ -> if (a⁴ < b⁴) then [C a⁴ ((fromTo₁ (a⁴ + 1)) b⁴)] else [N]))
-//│ 	def fromTo₂ = 
-//│ 		(fun a² -> (fun b² -> if (a² < b²) then [C a² ((fromTo₂ (a² + 1)) b²)] else [N]))
+//│ 		def append'₀(xs⁴, ys⁴) = 
+//│ 			case xs⁴ of {
+//│ 				C h³ t³ => [C h³ append'₀(t³, ys⁴)]
+//│ 				| N  => ys⁴}
+//│ 		def append₀(xs³, ys³) = 
+//│ 			case xs³ of {
+//│ 				C h² t² => [C h² append₀(t², ys³)]
+//│ 				| N  => ys³}
+//│ 	def fromTo₀(a³, b³) = 
+//│ 		if (a³ < b³) then [C a³ fromTo₀((a³ + 1), b³)] else [N]
+//│ 	def fromTo₁(a⁴, b⁴) = 
+//│ 		if (a⁴ < b⁴) then [C a⁴ fromTo₁((a⁴ + 1), b⁴)] else [N]
+//│ 	def fromTo₂(a², b²) = 
+//│ 		if (a² < b²) then [C a² fromTo₂((a² + 1), b²)] else [N]
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C a³ ((fromTo₀ (a³ + 1)) b³)]: 130 --->
-//│ 	case xs⁴ of {C h³ t³ => [C h³ ((append'₀ t³) ys⁴)] | N  => ys⁴}: 144
+//│ [C a³ fromTo₀((a³ + 1), b³)]: 130 --->
+//│ 	case xs⁴ of {C h³ t³ => [C h³ append'₀(t³, ys⁴)] | N  => ys⁴}: 144
 //│ [N]: 131 --->
-//│ 	case xs⁴ of {C h³ t³ => [C h³ ((append'₀ t³) ys⁴)] | N  => ys⁴}: 144
-//│ [C h³ ((append'₀ t³) ys⁴)]: 142 --->
-//│ 	case xs³ of {C h² t² => [C h² ((append₀ t²) ys³)] | N  => ys³}: 112
-//│ [C a⁴ ((fromTo₁ (a⁴ + 1)) b⁴)]: 162 --->
-//│ 	case xs³ of {C h² t² => [C h² ((append₀ t²) ys³)] | N  => ys³}: 112
+//│ 	case xs⁴ of {C h³ t³ => [C h³ append'₀(t³, ys⁴)] | N  => ys⁴}: 144
+//│ [C h³ append'₀(t³, ys⁴)]: 142 --->
+//│ 	case xs³ of {C h² t² => [C h² append₀(t², ys³)] | N  => ys³}: 112
+//│ [C a⁴ fromTo₁((a⁴ + 1), b⁴)]: 162 --->
+//│ 	case xs³ of {C h² t² => [C h² append₀(t², ys³)] | N  => ys³}: 112
 //│ [N]: 163 --->
-//│ 	case xs³ of {C h² t² => [C h² ((append₀ t²) ys³)] | N  => ys³}: 112
+//│ 	case xs³ of {C h² t² => [C h² append₀(t², ys³)] | N  => ys³}: 112
 //│ ------------------
-//│ case xs³ of {C h² t² => [C h² ((append₀ t²) ys³)] | N  => ys³}: 112 --->
-//│ 	[C h³ ((append'₀ t³) ys⁴)]: 142
-//│ 	[C a⁴ ((fromTo₁ (a⁴ + 1)) b⁴)]: 162
+//│ case xs³ of {C h² t² => [C h² append₀(t², ys³)] | N  => ys³}: 112 --->
+//│ 	[C h³ append'₀(t³, ys⁴)]: 142
+//│ 	[C a⁴ fromTo₁((a⁴ + 1), b⁴)]: 162
 //│ 	[N]: 163
-//│ case xs⁴ of {C h³ t³ => [C h³ ((append'₀ t³) ys⁴)] | N  => ys⁴}: 144 --->
-//│ 	[C a³ ((fromTo₀ (a³ + 1)) b³)]: 130
+//│ case xs⁴ of {C h³ t³ => [C h³ append'₀(t³, ys⁴)] | N  => ys⁴}: 144 --->
+//│ 	[C a³ fromTo₀((a³ + 1), b³)]: 130
 //│ 	[N]: 131
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C a³ ((fromTo₀ (a³ + 1)) b³)]: 130 --->
-//│ 	case xs⁴ of {C h³ t³ => [C h³ ((append'₀ t³) ys⁴)] | N  => ys⁴}: 144
+//│ [C a³ fromTo₀((a³ + 1), b³)]: 130 --->
+//│ 	case xs⁴ of {C h³ t³ => [C h³ append'₀(t³, ys⁴)] | N  => ys⁴}: 144
 //│ [N]: 131 --->
-//│ 	case xs⁴ of {C h³ t³ => [C h³ ((append'₀ t³) ys⁴)] | N  => ys⁴}: 144
-//│ [C h³ ((append'₀ t³) ys⁴)]: 142 --->
-//│ 	case xs³ of {C h² t² => [C h² ((append₀ t²) ys³)] | N  => ys³}: 112
-//│ [C a⁴ ((fromTo₁ (a⁴ + 1)) b⁴)]: 162 --->
-//│ 	case xs³ of {C h² t² => [C h² ((append₀ t²) ys³)] | N  => ys³}: 112
+//│ 	case xs⁴ of {C h³ t³ => [C h³ append'₀(t³, ys⁴)] | N  => ys⁴}: 144
+//│ [C h³ append'₀(t³, ys⁴)]: 142 --->
+//│ 	case xs³ of {C h² t² => [C h² append₀(t², ys³)] | N  => ys³}: 112
+//│ [C a⁴ fromTo₁((a⁴ + 1), b⁴)]: 162 --->
+//│ 	case xs³ of {C h² t² => [C h² append₀(t², ys³)] | N  => ys³}: 112
 //│ [N]: 163 --->
-//│ 	case xs³ of {C h² t² => [C h² ((append₀ t²) ys³)] | N  => ys³}: 112
+//│ 	case xs³ of {C h² t² => [C h² append₀(t², ys³)] | N  => ys³}: 112
 //│ ------------------
-//│ case xs³ of {C h² t² => [C h² ((append₀ t²) ys³)] | N  => ys³}: 112 --->
-//│ 	[C h³ ((append'₀ t³) ys⁴)]: 142
-//│ 	[C a⁴ ((fromTo₁ (a⁴ + 1)) b⁴)]: 162
+//│ case xs³ of {C h² t² => [C h² append₀(t², ys³)] | N  => ys³}: 112 --->
+//│ 	[C h³ append'₀(t³, ys⁴)]: 142
+//│ 	[C a⁴ fromTo₁((a⁴ + 1), b⁴)]: 162
 //│ 	[N]: 163
-//│ case xs⁴ of {C h³ t³ => [C h³ ((append'₀ t³) ys⁴)] | N  => ys⁴}: 144 --->
-//│ 	[C a³ ((fromTo₀ (a³ + 1)) b³)]: 130
+//│ case xs⁴ of {C h³ t³ => [C h³ append'₀(t³, ys⁴)] | N  => ys⁴}: 144 --->
+//│ 	[C a³ fromTo₀((a³ + 1), b³)]: 130
 //│ 	[N]: 131
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((main₀ 11) 22)
-//│ def main₀ = 
-//│ 	(fun a⁶ -> (fun b⁶ -> (((appendThree₀ ((fromTo₀ a⁶) b⁶)) ((fromTo₁ a⁶) b⁶)) ((fromTo₂ a⁶) b⁶))))
+//│ main₀(11, 22)
+//│ def main₀(a⁶, b⁶) = 
+//│ 	appendThree₀(fromTo₀(a⁶, b⁶), fromTo₁(a⁶, b⁶), fromTo₂(a⁶, b⁶))
 //│ 	where
-//│ 	def appendThree₀ = 
-//│ 		(fun xs⁷ -> (fun ys⁷ -> (fun zs² -> ((append₀ ((append'₀ xs⁷) ys⁷)) zs²))))
+//│ 	def appendThree₀(xs⁷, ys⁷, zs²) = 
+//│ 		append₀(append'₀(xs⁷, ys⁷), zs²)
 //│ 		where
-//│ 		def append'₀ = 
-//│ 			(fun xs⁶ -> (fun ys⁶ -> (xs⁶ ys⁶)))
-//│ 		def append₀ = 
-//│ 			(fun xs⁸ -> (fun ys¹³ -> (xs⁸ ys¹³)))
-//│ 	def fromTo₀ = 
-//│ 		(fun a⁹ -> (fun b⁹ -> if (a⁹ < b⁹) then 
+//│ 		def append'₀(xs⁶, ys⁶) = 
+//│ 			xs⁶(ys⁶)
+//│ 		def append₀(xs⁸, ys¹³) = 
+//│ 			xs⁸(ys¹³)
+//│ 	def fromTo₀(a⁹, b⁹) = 
+//│ 		if (a⁹ < b⁹) then 
 //│ 			let h⁵ = a⁹
-//│ 			in let t⁵ = ((fromTo₀ (a⁹ + 1)) b⁹)
+//│ 			in let t⁵ = fromTo₀((a⁹ + 1), b⁹)
 //│ 			in (fun ys¹⁰ -> 
 //│ 				let h⁶ = h⁵
-//│ 				in let t⁶ = ((append'₀ t⁵) ys¹⁰)
-//│ 				in (fun ys¹¹ -> [C h⁶ ((append₀ t⁶) ys¹¹)])) else (fun ys¹² -> ys¹²)))
-//│ 	def fromTo₁ = 
-//│ 		(fun a⁸ -> (fun b⁸ -> if (a⁸ < b⁸) then 
+//│ 				in let t⁶ = append'₀(t⁵, ys¹⁰)
+//│ 				in (fun ys¹¹ -> [C h⁶ append₀(t⁶, ys¹¹)])) else (fun ys¹² -> ys¹²)
+//│ 	def fromTo₁(a⁸, b⁸) = 
+//│ 		if (a⁸ < b⁸) then 
 //│ 			let h⁴ = a⁸
-//│ 			in let t⁴ = ((fromTo₁ (a⁸ + 1)) b⁸)
-//│ 			in (fun ys⁸ -> [C h⁴ ((append₀ t⁴) ys⁸)]) else (fun ys⁹ -> ys⁹)))
-//│ 	def fromTo₂ = 
-//│ 		(fun a⁷ -> (fun b⁷ -> if (a⁷ < b⁷) then [C a⁷ ((fromTo₂ (a⁷ + 1)) b⁷)] else [N]))
+//│ 			in let t⁴ = fromTo₁((a⁸ + 1), b⁸)
+//│ 			in (fun ys⁸ -> [C h⁴ append₀(t⁴, ys⁸)]) else (fun ys⁹ -> ys⁹)
+//│ 	def fromTo₂(a⁷, b⁷) = 
+//│ 		if (a⁷ < b⁷) then [C a⁷ fromTo₂((a⁷ + 1), b⁷)] else [N]
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -414,16 +410,16 @@ appendThree(
 //│ |_LUMBERHACK_EVAL|↵|#fun| |idList|(|l|)| |#=| |#if| |l| |is|→|C|(|h|,| |t|)| |#then| |C|(|h|,| |idList|(|t|)|)|↵|N| |#then| |N|←|↵|#fun| |append|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|h|,| |append|(|t|,| |ys|)|)|↵|N| |#then| |idList|(|ys|)|←|↵|#fun| |appendThree|(|xs|,| |ys|,| |zs|)| |#=|→|append|(|append|(|xs|,| |ys|)|,| |zs|)|↵|P3|(|xs|,| |ys|,| |zs|)|←|↵|appendThree|(|→|C|(|1|,| |C|(|2|,| |N|)|)|,|↵|C|(|3|,| |C|(|4|,| |N|)|)|,|↵|C|(|5|,| |C|(|6|,| |N|)|)|←|↵|)|
 //│ Parsed: {_LUMBERHACK_EVAL; fun idList = l, => if l is ‹(C (h, t,)) then C (h, idList (t,),); (N) then N›; fun append = xs, ys, => if xs is ‹(C (h, t,)) then C (h, append (t, ys,),); (N) then idList (ys,)›; fun appendThree = xs, ys, zs, => {append (append (xs, ys,), zs,); P3 (xs, ys, zs,)}; appendThree (C (1, C (2, N,),), C (3, C (4, N,),), C (5, C (6, N,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (((appendThree^41 [C 1 [C 2 [N]]]) [C 3 [C 4 [N]]]) [C 5 [C 6 [N]]])
-//│ def append = (fun xs⁰ -> (fun ys⁰ -> case xs⁰ of {
-//│ 	C h¹ t¹ => [C h¹ ((append^12 t¹) ys⁰)]
-//│ 	| N  => (idList^18 ys⁰)}))
-//│ def appendThree = (fun xs¹ -> (fun ys¹ -> (fun zs⁰ -> 
-//│ 	((append^24 ((append^25 xs¹) ys¹)) zs⁰)
-//│ 	[P3 xs¹ ys¹ zs⁰])))
-//│ def idList = (fun l⁰ -> case l⁰ of {
-//│ 	C h⁰ t⁰ => [C h⁰ (idList^3 t⁰)]
-//│ 	| N  => [N]})
+//│ appendThree^41([C 1 [C 2 [N]]], [C 3 [C 4 [N]]], [C 5 [C 6 [N]]])
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h¹ t¹ => [C h¹ append^12(t¹, ys⁰)]
+//│ 	| N  => idList^18(ys⁰)}
+//│ def appendThree(xs¹, ys¹, zs⁰) = 
+//│ 	append^24(append^25(xs¹, ys¹), zs⁰)
+//│ 	[P3 xs¹ ys¹ zs⁰]
+//│ def idList(l⁰) = case l⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ idList^3(t⁰)]
+//│ 	| N  => [N]}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
@@ -445,128 +441,126 @@ appendThree(
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (((appendThree₀ [C 1 [C 2 [N]]]) [C 3 [C 4 [N]]]) [C 5 [C 6 [N]]])
-//│ def appendThree₀ = 
-//│ 	(fun xs² -> (fun ys² -> (fun zs¹ -> 
-//│ 		((append₀ ((append₁ xs²) ys²)) zs¹)
-//│ 		[P3 xs² ys² zs¹])))
+//│ appendThree₀([C 1 [C 2 [N]]], [C 3 [C 4 [N]]], [C 5 [C 6 [N]]])
+//│ def appendThree₀(xs², ys², zs¹) = 
+//│ 	append₀(append₁(xs², ys²), zs¹)
+//│ 	[P3 xs² ys² zs¹]
 //│ 	where
-//│ 	def append₀ = 
-//│ 		(fun xs⁴ -> (fun ys⁴ -> case xs⁴ of {
-//│ 			C h⁵ t⁵ => [C h⁵ ((append₀ t⁵) ys⁴)]
-//│ 			| N  => (idList₀ ys⁴)}))
+//│ 	def append₀(xs⁴, ys⁴) = 
+//│ 		case xs⁴ of {
+//│ 			C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys⁴)]
+//│ 			| N  => idList₀(ys⁴)}
 //│ 		where
-//│ 		def idList₀ = 
-//│ 			(fun l² -> case l² of {
-//│ 				C h⁴ t⁴ => [C h⁴ (idList₀ t⁴)]
-//│ 				| N  => [N]})
-//│ 	def append₁ = 
-//│ 		(fun xs³ -> (fun ys³ -> case xs³ of {
-//│ 			C h² t² => [C h² ((append₁ t²) ys³)]
-//│ 			| N  => (idList₁ ys³)}))
+//│ 		def idList₀(l²) = 
+//│ 			case l² of {
+//│ 				C h⁴ t⁴ => [C h⁴ idList₀(t⁴)]
+//│ 				| N  => [N]}
+//│ 	def append₁(xs³, ys³) = 
+//│ 		case xs³ of {
+//│ 			C h² t² => [C h² append₁(t², ys³)]
+//│ 			| N  => idList₁(ys³)}
 //│ 		where
-//│ 		def idList₁ = 
-//│ 			(fun l¹ -> case l¹ of {
-//│ 				C h³ t³ => [C h³ (idList₁ t³)]
-//│ 				| N  => [N]})
+//│ 		def idList₁(l¹) = 
+//│ 			case l¹ of {
+//│ 				C h³ t³ => [C h³ idList₁(t³)]
+//│ 				| N  => [N]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h² ((append₁ t²) ys³)]: 84 --->
-//│ 	case xs⁴ of {C h⁵ t⁵ => [C h⁵ ((append₀ t⁵) ys⁴)] | N  => (idList₀ ys⁴)}: 120
-//│ [C h³ (idList₁ t³)]: 96 --->
-//│ 	case xs⁴ of {C h⁵ t⁵ => [C h⁵ ((append₀ t⁵) ys⁴)] | N  => (idList₀ ys⁴)}: 120
+//│ [C h² append₁(t², ys³)]: 84 --->
+//│ 	case xs⁴ of {C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys⁴)] | N  => idList₀(ys⁴)}: 120
+//│ [C h³ idList₁(t³)]: 96 --->
+//│ 	case xs⁴ of {C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys⁴)] | N  => idList₀(ys⁴)}: 120
 //│ [N]: 97 --->
-//│ 	case xs⁴ of {C h⁵ t⁵ => [C h⁵ ((append₀ t⁵) ys⁴)] | N  => (idList₀ ys⁴)}: 120
+//│ 	case xs⁴ of {C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys⁴)] | N  => idList₀(ys⁴)}: 120
 //│ [N]: 126 --->
 //│ 	NoCons
-//│ 	case xs³ of {C h² t² => [C h² ((append₁ t²) ys³)] | N  => (idList₁ ys³)}: 88
+//│ 	case xs³ of {C h² t² => [C h² append₁(t², ys³)] | N  => idList₁(ys³)}: 88
 //│ [C 2 [N]]: 127 --->
 //│ 	NoCons
-//│ 	case xs³ of {C h² t² => [C h² ((append₁ t²) ys³)] | N  => (idList₁ ys³)}: 88
+//│ 	case xs³ of {C h² t² => [C h² append₁(t², ys³)] | N  => idList₁(ys³)}: 88
 //│ [C 1 [C 2 [N]]]: 128 --->
 //│ 	NoCons
-//│ 	case xs³ of {C h² t² => [C h² ((append₁ t²) ys³)] | N  => (idList₁ ys³)}: 88
+//│ 	case xs³ of {C h² t² => [C h² append₁(t², ys³)] | N  => idList₁(ys³)}: 88
 //│ [N]: 132 --->
 //│ 	NoCons
-//│ 	case l¹ of {C h³ t³ => [C h³ (idList₁ t³)] | N  => [N]}: 98
+//│ 	case l¹ of {C h³ t³ => [C h³ idList₁(t³)] | N  => [N]}: 98
 //│ [C 4 [N]]: 133 --->
 //│ 	NoCons
-//│ 	case l¹ of {C h³ t³ => [C h³ (idList₁ t³)] | N  => [N]}: 98
+//│ 	case l¹ of {C h³ t³ => [C h³ idList₁(t³)] | N  => [N]}: 98
 //│ [C 3 [C 4 [N]]]: 134 --->
 //│ 	NoCons
-//│ 	case l¹ of {C h³ t³ => [C h³ (idList₁ t³)] | N  => [N]}: 98
+//│ 	case l¹ of {C h³ t³ => [C h³ idList₁(t³)] | N  => [N]}: 98
 //│ [N]: 138 --->
 //│ 	NoCons
-//│ 	case l² of {C h⁴ t⁴ => [C h⁴ (idList₀ t⁴)] | N  => [N]}: 107
+//│ 	case l² of {C h⁴ t⁴ => [C h⁴ idList₀(t⁴)] | N  => [N]}: 107
 //│ [C 6 [N]]: 139 --->
 //│ 	NoCons
-//│ 	case l² of {C h⁴ t⁴ => [C h⁴ (idList₀ t⁴)] | N  => [N]}: 107
+//│ 	case l² of {C h⁴ t⁴ => [C h⁴ idList₀(t⁴)] | N  => [N]}: 107
 //│ [C 5 [C 6 [N]]]: 140 --->
 //│ 	NoCons
-//│ 	case l² of {C h⁴ t⁴ => [C h⁴ (idList₀ t⁴)] | N  => [N]}: 107
+//│ 	case l² of {C h⁴ t⁴ => [C h⁴ idList₀(t⁴)] | N  => [N]}: 107
 //│ ------------------
-//│ case xs³ of {C h² t² => [C h² ((append₁ t²) ys³)] | N  => (idList₁ ys³)}: 88 --->
+//│ case xs³ of {C h² t² => [C h² append₁(t², ys³)] | N  => idList₁(ys³)}: 88 --->
 //│ 	[N]: 126
 //│ 	[C 2 [N]]: 127
 //│ 	[C 1 [C 2 [N]]]: 128
-//│ case l¹ of {C h³ t³ => [C h³ (idList₁ t³)] | N  => [N]}: 98 --->
+//│ case l¹ of {C h³ t³ => [C h³ idList₁(t³)] | N  => [N]}: 98 --->
 //│ 	[N]: 132
 //│ 	[C 4 [N]]: 133
 //│ 	[C 3 [C 4 [N]]]: 134
-//│ case l² of {C h⁴ t⁴ => [C h⁴ (idList₀ t⁴)] | N  => [N]}: 107 --->
+//│ case l² of {C h⁴ t⁴ => [C h⁴ idList₀(t⁴)] | N  => [N]}: 107 --->
 //│ 	[N]: 138
 //│ 	[C 6 [N]]: 139
 //│ 	[C 5 [C 6 [N]]]: 140
-//│ case xs⁴ of {C h⁵ t⁵ => [C h⁵ ((append₀ t⁵) ys⁴)] | N  => (idList₀ ys⁴)}: 120 --->
-//│ 	[C h² ((append₁ t²) ys³)]: 84
-//│ 	[C h³ (idList₁ t³)]: 96
+//│ case xs⁴ of {C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys⁴)] | N  => idList₀(ys⁴)}: 120 --->
+//│ 	[C h² append₁(t², ys³)]: 84
+//│ 	[C h³ idList₁(t³)]: 96
 //│ 	[N]: 97
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C h² ((append₁ t²) ys³)]: 84 --->
-//│ 	case xs⁴ of {C h⁵ t⁵ => [C h⁵ ((append₀ t⁵) ys⁴)] | N  => (idList₀ ys⁴)}: 120
-//│ [C h³ (idList₁ t³)]: 96 --->
-//│ 	case xs⁴ of {C h⁵ t⁵ => [C h⁵ ((append₀ t⁵) ys⁴)] | N  => (idList₀ ys⁴)}: 120
+//│ [C h² append₁(t², ys³)]: 84 --->
+//│ 	case xs⁴ of {C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys⁴)] | N  => idList₀(ys⁴)}: 120
+//│ [C h³ idList₁(t³)]: 96 --->
+//│ 	case xs⁴ of {C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys⁴)] | N  => idList₀(ys⁴)}: 120
 //│ [N]: 97 --->
-//│ 	case xs⁴ of {C h⁵ t⁵ => [C h⁵ ((append₀ t⁵) ys⁴)] | N  => (idList₀ ys⁴)}: 120
+//│ 	case xs⁴ of {C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys⁴)] | N  => idList₀(ys⁴)}: 120
 //│ ------------------
-//│ case xs⁴ of {C h⁵ t⁵ => [C h⁵ ((append₀ t⁵) ys⁴)] | N  => (idList₀ ys⁴)}: 120 --->
-//│ 	[C h² ((append₁ t²) ys³)]: 84
-//│ 	[C h³ (idList₁ t³)]: 96
+//│ case xs⁴ of {C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys⁴)] | N  => idList₀(ys⁴)}: 120 --->
+//│ 	[C h² append₁(t², ys³)]: 84
+//│ 	[C h³ idList₁(t³)]: 96
 //│ 	[N]: 97
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (((appendThree₀ [C 1 [C 2 [N]]]) [C 3 [C 4 [N]]]) [C 5 [C 6 [N]]])
-//│ def appendThree₀ = 
-//│ 	(fun xs⁶ -> (fun ys⁹ -> (fun zs² -> 
-//│ 		((append₀ ((append₁ xs⁶) ys⁹)) zs²)
-//│ 		[P3 xs⁶ ys⁹ zs²])))
+//│ appendThree₀([C 1 [C 2 [N]]], [C 3 [C 4 [N]]], [C 5 [C 6 [N]]])
+//│ def appendThree₀(xs⁶, ys⁹, zs²) = 
+//│ 	append₀(append₁(xs⁶, ys⁹), zs²)
+//│ 	[P3 xs⁶ ys⁹ zs²]
 //│ 	where
-//│ 	def append₀ = 
-//│ 		(fun xs⁷ -> (fun ys¹⁰ -> (xs⁷ ys¹⁰)))
+//│ 	def append₀(xs⁷, ys¹⁰) = 
+//│ 		xs⁷(ys¹⁰)
 //│ 		where
-//│ 		def idList₀ = 
-//│ 			(fun l⁴ -> case l⁴ of {
-//│ 				C h⁴ t⁴ => [C h⁴ (idList₀ t⁴)]
-//│ 				| N  => [N]})
-//│ 	def append₁ = 
-//│ 		(fun xs⁵ -> (fun ys⁵ -> case xs⁵ of {
+//│ 		def idList₀(l⁴) = 
+//│ 			case l⁴ of {
+//│ 				C h⁴ t⁴ => [C h⁴ idList₀(t⁴)]
+//│ 				| N  => [N]}
+//│ 	def append₁(xs⁵, ys⁵) = 
+//│ 		case xs⁵ of {
 //│ 			C h² t² => 
 //│ 				let h⁶ = h²
-//│ 				in let t⁶ = ((append₁ t²) ys⁵)
-//│ 				in (fun ys⁶ -> [C h⁶ ((append₀ t⁶) ys⁶)])
-//│ 			| N  => (idList₁ ys⁵)}))
+//│ 				in let t⁶ = append₁(t², ys⁵)
+//│ 				in (fun ys⁶ -> [C h⁶ append₀(t⁶, ys⁶)])
+//│ 			| N  => idList₁(ys⁵)}
 //│ 		where
-//│ 		def idList₁ = 
-//│ 			(fun l³ -> case l³ of {
+//│ 		def idList₁(l³) = 
+//│ 			case l³ of {
 //│ 				C h³ t³ => 
 //│ 					let h⁷ = h³
-//│ 					in let t⁷ = (idList₁ t³)
-//│ 					in (fun ys⁷ -> [C h⁷ ((append₀ t⁷) ys⁷)])
-//│ 				| N  => (fun ys⁸ -> (idList₀ ys⁸))})
+//│ 					in let t⁷ = idList₁(t³)
+//│ 					in (fun ys⁷ -> [C h⁷ append₀(t⁷, ys⁷)])
+//│ 				| N  => (fun ys⁸ -> idList₀(ys⁸))}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -601,16 +595,16 @@ main(C(
 //│ |_LUMBERHACK_EVAL|↵|#fun| |append|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|h|,| |append|(|t|,| |ys|)|)|↵|N| |#then| |ys|←|↵|#fun| |concat|(|lss|)| |#=| |#if| |lss| |is|→|C|(|hh|,| |tt|)| |#then| |append|(|hh|,| |concat|(|tt|)|)|↵|N| |#then| |N|←|↵|#fun| |main|(|xss|)| |#=|→|concat|(|xss|)|↵|xss|←|↵|main|(|C|(|→|C|(|1|,| |C|(|2|,| |N|)|)|,|↵|C|(|→|C|(|3|,| |C|(|4|,| |N|)|)|,|↵|C|(|→|C|(|5|,| |C|(|6|,| |N|)|)|,|↵|N|←|↵|)|←|↵|)|←|↵|)|)|
 //│ Parsed: {_LUMBERHACK_EVAL; fun append = xs, ys, => if xs is ‹(C (h, t,)) then C (h, append (t, ys,),); (N) then ys›; fun concat = lss, => if lss is ‹(C (hh, tt,)) then append (hh, concat (tt,),); (N) then N›; fun main = xss, => {concat (xss,); xss}; main (C (C (1, C (2, N,),), C (C (3, C (4, N,),), C (C (5, C (6, N,),), N,),),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (main^30 [C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]])
-//│ def append = (fun xs⁰ -> (fun ys⁰ -> case xs⁰ of {
-//│ 	C h⁰ t⁰ => [C h⁰ ((append^3 t⁰) ys⁰)]
-//│ 	| N  => ys⁰}))
-//│ def concat = (fun lss⁰ -> case lss⁰ of {
-//│ 	C hh⁰ tt⁰ => ((append^14 hh⁰) (concat^17 tt⁰))
-//│ 	| N  => [N]})
-//│ def main = (fun xss⁰ -> 
-//│ 	(concat^24 xss⁰)
-//│ 	xss⁰)
+//│ main^30([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]])
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append^3(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def concat(lss⁰) = case lss⁰ of {
+//│ 	C hh⁰ tt⁰ => append^14(hh⁰, concat^17(tt⁰))
+//│ 	| N  => [N]}
+//│ def main(xss⁰) = 
+//│ 	concat^24(xss⁰)
+//│ 	xss⁰
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
@@ -631,84 +625,83 @@ main(C(
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (main₀ [C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]])
-//│ def main₀ = 
-//│ 	(fun xss¹ -> 
-//│ 		(concat₀ xss¹)
-//│ 		xss¹)
+//│ main₀([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]])
+//│ def main₀(xss¹) = 
+//│ 	concat₀(xss¹)
+//│ 	xss¹
 //│ 	where
-//│ 	def concat₀ = 
-//│ 		(fun lss² -> case lss² of {
-//│ 			C hh² tt² => ((append₀ hh²) (concat₁ tt²))
-//│ 			| N  => [N]})
+//│ 	def concat₀(lss²) = 
+//│ 		case lss² of {
+//│ 			C hh² tt² => append₀(hh², concat₁(tt²))
+//│ 			| N  => [N]}
 //│ 		where
-//│ 		def append₀ = 
-//│ 			(fun xs¹ -> (fun ys¹ -> case xs¹ of {
-//│ 				C h¹ t¹ => [C h¹ ((append₀ t¹) ys¹)]
-//│ 				| N  => ys¹}))
-//│ 		def concat₁ = 
-//│ 			(fun lss¹ -> case lss¹ of {
-//│ 				C hh¹ tt¹ => ((append₁ hh¹) (concat₁ tt¹))
-//│ 				| N  => [N]})
+//│ 		def append₀(xs¹, ys¹) = 
+//│ 			case xs¹ of {
+//│ 				C h¹ t¹ => [C h¹ append₀(t¹, ys¹)]
+//│ 				| N  => ys¹}
+//│ 		def concat₁(lss¹) = 
+//│ 			case lss¹ of {
+//│ 				C hh¹ tt¹ => append₁(hh¹, concat₁(tt¹))
+//│ 				| N  => [N]}
 //│ 			where
-//│ 			def append₁ = 
-//│ 				(fun xs² -> (fun ys² -> case xs² of {
-//│ 					C h² t² => [C h² ((append₁ t²) ys²)]
-//│ 					| N  => ys²}))
+//│ 			def append₁(xs², ys²) = 
+//│ 				case xs² of {
+//│ 					C h² t² => [C h² append₁(t², ys²)]
+//│ 					| N  => ys²}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 106 --->
 //│ 	NoCons
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ ((append₀ t¹) ys¹)] | N  => ys¹}: 88
+//│ 	case xs¹ of {C h¹ t¹ => [C h¹ append₀(t¹, ys¹)] | N  => ys¹}: 88
 //│ [C 2 [N]]: 107 --->
 //│ 	NoCons
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ ((append₀ t¹) ys¹)] | N  => ys¹}: 88
+//│ 	case xs¹ of {C h¹ t¹ => [C h¹ append₀(t¹, ys¹)] | N  => ys¹}: 88
 //│ [C 1 [C 2 [N]]]: 108 --->
 //│ 	NoCons
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ ((append₀ t¹) ys¹)] | N  => ys¹}: 88
+//│ 	case xs¹ of {C h¹ t¹ => [C h¹ append₀(t¹, ys¹)] | N  => ys¹}: 88
 //│ [N]: 111 --->
 //│ 	NoCons
-//│ 	case xs² of {C h² t² => [C h² ((append₁ t²) ys²)] | N  => ys²}: 100
+//│ 	case xs² of {C h² t² => [C h² append₁(t², ys²)] | N  => ys²}: 100
 //│ [C 4 [N]]: 112 --->
 //│ 	NoCons
-//│ 	case xs² of {C h² t² => [C h² ((append₁ t²) ys²)] | N  => ys²}: 100
+//│ 	case xs² of {C h² t² => [C h² append₁(t², ys²)] | N  => ys²}: 100
 //│ [C 3 [C 4 [N]]]: 113 --->
 //│ 	NoCons
-//│ 	case xs² of {C h² t² => [C h² ((append₁ t²) ys²)] | N  => ys²}: 100
+//│ 	case xs² of {C h² t² => [C h² append₁(t², ys²)] | N  => ys²}: 100
 //│ [N]: 116 --->
 //│ 	NoCons
-//│ 	case xs² of {C h² t² => [C h² ((append₁ t²) ys²)] | N  => ys²}: 100
+//│ 	case xs² of {C h² t² => [C h² append₁(t², ys²)] | N  => ys²}: 100
 //│ [C 6 [N]]: 117 --->
 //│ 	NoCons
-//│ 	case xs² of {C h² t² => [C h² ((append₁ t²) ys²)] | N  => ys²}: 100
+//│ 	case xs² of {C h² t² => [C h² append₁(t², ys²)] | N  => ys²}: 100
 //│ [C 5 [C 6 [N]]]: 118 --->
 //│ 	NoCons
-//│ 	case xs² of {C h² t² => [C h² ((append₁ t²) ys²)] | N  => ys²}: 100
+//│ 	case xs² of {C h² t² => [C h² append₁(t², ys²)] | N  => ys²}: 100
 //│ [N]: 119 --->
 //│ 	NoCons
-//│ 	case lss¹ of {C hh¹ tt¹ => ((append₁ hh¹) (concat₁ tt¹)) | N  => [N]}: 60
+//│ 	case lss¹ of {C hh¹ tt¹ => append₁(hh¹, concat₁(tt¹)) | N  => [N]}: 60
 //│ [C [C 5 [C 6 [N]]] [N]]: 120 --->
 //│ 	NoCons
-//│ 	case lss¹ of {C hh¹ tt¹ => ((append₁ hh¹) (concat₁ tt¹)) | N  => [N]}: 60
+//│ 	case lss¹ of {C hh¹ tt¹ => append₁(hh¹, concat₁(tt¹)) | N  => [N]}: 60
 //│ [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]: 121 --->
 //│ 	NoCons
-//│ 	case lss¹ of {C hh¹ tt¹ => ((append₁ hh¹) (concat₁ tt¹)) | N  => [N]}: 60
+//│ 	case lss¹ of {C hh¹ tt¹ => append₁(hh¹, concat₁(tt¹)) | N  => [N]}: 60
 //│ [C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]: 122 --->
 //│ 	NoCons
-//│ 	case lss² of {C hh² tt² => ((append₀ hh²) (concat₁ tt²)) | N  => [N]}: 71
+//│ 	case lss² of {C hh² tt² => append₀(hh², concat₁(tt²)) | N  => [N]}: 71
 //│ ------------------
-//│ case lss¹ of {C hh¹ tt¹ => ((append₁ hh¹) (concat₁ tt¹)) | N  => [N]}: 60 --->
+//│ case lss¹ of {C hh¹ tt¹ => append₁(hh¹, concat₁(tt¹)) | N  => [N]}: 60 --->
 //│ 	[N]: 119
 //│ 	[C [C 5 [C 6 [N]]] [N]]: 120
 //│ 	[C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]: 121
-//│ case lss² of {C hh² tt² => ((append₀ hh²) (concat₁ tt²)) | N  => [N]}: 71 --->
+//│ case lss² of {C hh² tt² => append₀(hh², concat₁(tt²)) | N  => [N]}: 71 --->
 //│ 	[C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]: 122
-//│ case xs¹ of {C h¹ t¹ => [C h¹ ((append₀ t¹) ys¹)] | N  => ys¹}: 88 --->
+//│ case xs¹ of {C h¹ t¹ => [C h¹ append₀(t¹, ys¹)] | N  => ys¹}: 88 --->
 //│ 	[N]: 106
 //│ 	[C 2 [N]]: 107
 //│ 	[C 1 [C 2 [N]]]: 108
-//│ case xs² of {C h² t² => [C h² ((append₁ t²) ys²)] | N  => ys²}: 100 --->
+//│ case xs² of {C h² t² => [C h² append₁(t², ys²)] | N  => ys²}: 100 --->
 //│ 	[N]: 111
 //│ 	[C 4 [N]]: 112
 //│ 	[C 3 [C 4 [N]]]: 113
@@ -724,30 +717,29 @@ main(C(
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (main₀ [C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]])
-//│ def main₀ = 
-//│ 	(fun xss² -> 
-//│ 		(concat₀ xss²)
-//│ 		xss²)
+//│ main₀([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]])
+//│ def main₀(xss²) = 
+//│ 	concat₀(xss²)
+//│ 	xss²
 //│ 	where
-//│ 	def concat₀ = 
-//│ 		(fun lss⁴ -> case lss⁴ of {
-//│ 			C hh² tt² => ((append₀ hh²) (concat₁ tt²))
-//│ 			| N  => [N]})
+//│ 	def concat₀(lss⁴) = 
+//│ 		case lss⁴ of {
+//│ 			C hh² tt² => append₀(hh², concat₁(tt²))
+//│ 			| N  => [N]}
 //│ 		where
-//│ 		def append₀ = 
-//│ 			(fun xs⁴ -> (fun ys⁴ -> case xs⁴ of {
-//│ 				C h¹ t¹ => [C h¹ ((append₀ t¹) ys⁴)]
-//│ 				| N  => ys⁴}))
-//│ 		def concat₁ = 
-//│ 			(fun lss³ -> case lss³ of {
-//│ 				C hh¹ tt¹ => ((append₁ hh¹) (concat₁ tt¹))
-//│ 				| N  => [N]})
+//│ 		def append₀(xs⁴, ys⁴) = 
+//│ 			case xs⁴ of {
+//│ 				C h¹ t¹ => [C h¹ append₀(t¹, ys⁴)]
+//│ 				| N  => ys⁴}
+//│ 		def concat₁(lss³) = 
+//│ 			case lss³ of {
+//│ 				C hh¹ tt¹ => append₁(hh¹, concat₁(tt¹))
+//│ 				| N  => [N]}
 //│ 			where
-//│ 			def append₁ = 
-//│ 				(fun xs³ -> (fun ys³ -> case xs³ of {
-//│ 					C h² t² => [C h² ((append₁ t²) ys³)]
-//│ 					| N  => ys³}))
+//│ 			def append₁(xs³, ys³) = 
+//│ 				case xs³ of {
+//│ 					C h² t² => [C h² append₁(t², ys³)]
+//│ 					| N  => ys³}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -787,21 +779,21 @@ main(C(
 //│ |_LUMBERHACK_EVAL|↵|#let| |concat| |#=| |lss| |=>| |#if| |lss| |is|→|C|(|h|,| |t|)| |#then| |#if| |h| |is|→|xs| |#then|→|#let| |ok2| |#=| |args2| |=>| |#if| |args2| |is|→|C|(|h|,| |t|)| |#then| |#if| |h| |is|→|x| |#then| |C|(|x|,| |ok2|(|t|)|)|↵|_| |#then| |ok2|(|t|)|←|↵|_| |#then| |concat|(|t|)|←|↵|ok2|(|xs|)|←|↵|_| |#then| |concat|(|t|)|←|↵|_| |#then| |N|←|↵|#fun| |main|(|xss|)| |#=|→|concat|(|xss|)|↵|xss|←|↵|main|(|C|(|→|C|(|1|,| |C|(|2|,| |N|)|)|,|↵|C|(|→|C|(|3|,| |C|(|4|,| |N|)|)|,|↵|C|(|→|C|(|5|,| |C|(|6|,| |N|)|)|,|↵|N|←|↵|)|←|↵|)|←|↵|)|)|
 //│ Parsed: {_LUMBERHACK_EVAL; let concat = lss, => if lss is ‹(C (h, t,)) then if h is ‹(xs) then {let ok2 = args2, => if args2 is ‹(C (h, t,)) then if h is ‹(x) then C (x, ok2 (t,),); (_) then ok2 (t,)›; (_) then concat (t,)›; ok2 (xs,)}; (_) then concat (t,)›; (_) then N›; fun main = xss, => {concat (xss,); xss}; main (C (C (1, C (2, N,),), C (C (3, C (4, N,),), C (C (5, C (6, N,),), N,),),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (main^36 [C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]])
-//│ def concat = (fun lss⁰ -> case lss⁰ of {
+//│ main^36([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]])
+//│ def concat(lss⁰) = case lss⁰ of {
 //│ 	C h⁰ t⁰ => case h⁰ of {
 //│ 		xs⁰ => 
 //│ 			let ok2⁰ = (fun args2⁰ -> case args2⁰ of {
 //│ 				C h¹ t¹ => case h¹ of {
-//│ 					x⁰ => [C x⁰ (ok2⁰ t¹)]
-//│ 					| _  => (ok2⁰ t¹)}
-//│ 				| _  => (concat^14 t⁰)})
-//│ 			in (ok2⁰ xs⁰)
-//│ 		| _  => (concat^23 t⁰)}
-//│ 	| _  => [N]})
-//│ def main = (fun xss⁰ -> 
-//│ 	(concat^30 xss⁰)
-//│ 	xss⁰)
+//│ 					x⁰ => [C x⁰ ok2⁰(t¹)]
+//│ 					| _  => ok2⁰(t¹)}
+//│ 				| _  => concat^14(t⁰)})
+//│ 			in ok2⁰(xs⁰)
+//│ 		| _  => concat^23(t⁰)}
+//│ 	| _  => [N]}
+//│ def main(xss⁰) = 
+//│ 	concat^30(xss⁰)
+//│ 	xss⁰
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
@@ -818,67 +810,66 @@ main(C(
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (main₀ [C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]])
-//│ def main₀ = 
-//│ 	(fun xss¹ -> 
-//│ 		(concat₀ xss¹)
-//│ 		xss¹)
+//│ main₀([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]])
+//│ def main₀(xss¹) = 
+//│ 	concat₀(xss¹)
+//│ 	xss¹
 //│ 	where
-//│ 	def concat₀ = 
-//│ 		(fun lss¹ -> case lss¹ of {
+//│ 	def concat₀(lss¹) = 
+//│ 		case lss¹ of {
 //│ 			C h² t² => case h² of {
 //│ 				xs¹ => 
 //│ 					let ok2¹ = (fun args2¹ -> case args2¹ of {
 //│ 						C h³ t³ => case h³ of {
-//│ 							x¹ => [C x¹ (ok2¹ t³)]
-//│ 							| _  => (ok2¹ t³)}
-//│ 						| _  => (concat₀ t²)})
-//│ 					in (ok2¹ xs¹)
-//│ 				| _  => (concat₀ t²)}
-//│ 			| _  => [N]})
+//│ 							x¹ => [C x¹ ok2¹(t³)]
+//│ 							| _  => ok2¹(t³)}
+//│ 						| _  => concat₀(t²)})
+//│ 					in ok2¹(xs¹)
+//│ 				| _  => concat₀(t²)}
+//│ 			| _  => [N]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 2 [N]]: 96 --->
 //│ 	NoCons
-//│ 	case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ (ok2¹ t³)] | _  => (ok2¹ t³)} | _  => (concat₀ t²)}: 73
+//│ 	case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ ok2¹(t³)] | _  => ok2¹(t³)} | _  => concat₀(t²)}: 73
 //│ [C 1 [C 2 [N]]]: 97 --->
 //│ 	NoCons
-//│ 	case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ (ok2¹ t³)] | _  => (ok2¹ t³)} | _  => (concat₀ t²)}: 73
+//│ 	case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ ok2¹(t³)] | _  => ok2¹(t³)} | _  => concat₀(t²)}: 73
 //│ [C 4 [N]]: 101 --->
 //│ 	NoCons
-//│ 	case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ (ok2¹ t³)] | _  => (ok2¹ t³)} | _  => (concat₀ t²)}: 73
+//│ 	case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ ok2¹(t³)] | _  => ok2¹(t³)} | _  => concat₀(t²)}: 73
 //│ [C 3 [C 4 [N]]]: 102 --->
 //│ 	NoCons
-//│ 	case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ (ok2¹ t³)] | _  => (ok2¹ t³)} | _  => (concat₀ t²)}: 73
+//│ 	case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ ok2¹(t³)] | _  => ok2¹(t³)} | _  => concat₀(t²)}: 73
 //│ [C 6 [N]]: 106 --->
 //│ 	NoCons
-//│ 	case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ (ok2¹ t³)] | _  => (ok2¹ t³)} | _  => (concat₀ t²)}: 73
+//│ 	case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ ok2¹(t³)] | _  => ok2¹(t³)} | _  => concat₀(t²)}: 73
 //│ [C 5 [C 6 [N]]]: 107 --->
 //│ 	NoCons
-//│ 	case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ (ok2¹ t³)] | _  => (ok2¹ t³)} | _  => (concat₀ t²)}: 73
+//│ 	case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ ok2¹(t³)] | _  => ok2¹(t³)} | _  => concat₀(t²)}: 73
 //│ [C [C 5 [C 6 [N]]] [N]]: 109 --->
 //│ 	NoCons
-//│ 	case lss¹ of {C h² t² => case h² of {xs¹ => let ok2¹ = (fun args2¹ -> case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ (ok2¹ t³)] | _  => (ok2¹ t³)} | _  => (concat₀ t²)})
-//│ in (ok2¹ xs¹) | _  => (concat₀ t²)} | _  => [N]}: 84
+//│ 	case lss¹ of {C h² t² => case h² of {xs¹ => let ok2¹ = (fun args2¹ -> case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ ok2¹(t³)] | _  => ok2¹(t³)} | _  => concat₀(t²)})
+//│ in ok2¹(xs¹) | _  => concat₀(t²)} | _  => [N]}: 84
 //│ [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]: 110 --->
 //│ 	NoCons
-//│ 	case lss¹ of {C h² t² => case h² of {xs¹ => let ok2¹ = (fun args2¹ -> case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ (ok2¹ t³)] | _  => (ok2¹ t³)} | _  => (concat₀ t²)})
-//│ in (ok2¹ xs¹) | _  => (concat₀ t²)} | _  => [N]}: 84
+//│ 	case lss¹ of {C h² t² => case h² of {xs¹ => let ok2¹ = (fun args2¹ -> case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ ok2¹(t³)] | _  => ok2¹(t³)} | _  => concat₀(t²)})
+//│ in ok2¹(xs¹) | _  => concat₀(t²)} | _  => [N]}: 84
 //│ [C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]: 111 --->
 //│ 	NoCons
-//│ 	case lss¹ of {C h² t² => case h² of {xs¹ => let ok2¹ = (fun args2¹ -> case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ (ok2¹ t³)] | _  => (ok2¹ t³)} | _  => (concat₀ t²)})
-//│ in (ok2¹ xs¹) | _  => (concat₀ t²)} | _  => [N]}: 84
+//│ 	case lss¹ of {C h² t² => case h² of {xs¹ => let ok2¹ = (fun args2¹ -> case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ ok2¹(t³)] | _  => ok2¹(t³)} | _  => concat₀(t²)})
+//│ in ok2¹(xs¹) | _  => concat₀(t²)} | _  => [N]}: 84
 //│ ------------------
-//│ case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ (ok2¹ t³)] | _  => (ok2¹ t³)} | _  => (concat₀ t²)}: 73 --->
+//│ case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ ok2¹(t³)] | _  => ok2¹(t³)} | _  => concat₀(t²)}: 73 --->
 //│ 	[C 2 [N]]: 96
 //│ 	[C 1 [C 2 [N]]]: 97
 //│ 	[C 4 [N]]: 101
 //│ 	[C 3 [C 4 [N]]]: 102
 //│ 	[C 6 [N]]: 106
 //│ 	[C 5 [C 6 [N]]]: 107
-//│ case lss¹ of {C h² t² => case h² of {xs¹ => let ok2¹ = (fun args2¹ -> case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ (ok2¹ t³)] | _  => (ok2¹ t³)} | _  => (concat₀ t²)})
-//│ in (ok2¹ xs¹) | _  => (concat₀ t²)} | _  => [N]}: 84 --->
+//│ case lss¹ of {C h² t² => case h² of {xs¹ => let ok2¹ = (fun args2¹ -> case args2¹ of {C h³ t³ => case h³ of {x¹ => [C x¹ ok2¹(t³)] | _  => ok2¹(t³)} | _  => concat₀(t²)})
+//│ in ok2¹(xs¹) | _  => concat₀(t²)} | _  => [N]}: 84 --->
 //│ 	[C [C 5 [C 6 [N]]] [N]]: 109
 //│ 	[C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]: 110
 //│ 	[C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]: 111
@@ -891,24 +882,23 @@ main(C(
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (main₀ [C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]])
-//│ def main₀ = 
-//│ 	(fun xss² -> 
-//│ 		(concat₀ xss²)
-//│ 		xss²)
+//│ main₀([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]])
+//│ def main₀(xss²) = 
+//│ 	concat₀(xss²)
+//│ 	xss²
 //│ 	where
-//│ 	def concat₀ = 
-//│ 		(fun lss² -> case lss² of {
+//│ 	def concat₀(lss²) = 
+//│ 		case lss² of {
 //│ 			C h² t² => case h² of {
 //│ 				xs¹ => 
 //│ 					let ok2² = (fun args2² -> case args2² of {
 //│ 						C h³ t³ => case h³ of {
-//│ 							x¹ => [C x¹ (ok2² t³)]
-//│ 							| _  => (ok2² t³)}
-//│ 						| _  => (concat₀ t²)})
-//│ 					in (ok2² xs¹)
-//│ 				| _  => (concat₀ t²)}
-//│ 			| _  => [N]})
+//│ 							x¹ => [C x¹ ok2²(t³)]
+//│ 							| _  => ok2²(t³)}
+//│ 						| _  => concat₀(t²)})
+//│ 					in ok2²(xs¹)
+//│ 				| _  => concat₀(t²)}
+//│ 			| _  => [N]}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -941,16 +931,16 @@ main(C(
 //│ |_LUMBERHACK_EVAL|↵|#fun| |concat|(|lss|)| |#=| |#if| |lss| |is|→|C|(|hh|,| |tt|)| |#then| |concatInner|(|hh|,| |tt|)|↵|N| |#then| |N|←|↵|#fun| |concatInner|(|xs|,| |xss|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|h|,| |concatInner|(|t|,| |xss|)|)|↵|N| |#then| |concat|(|xss|)|←|↵|#fun| |main|(|xss|)| |#=|→|concat|(|xss|)|↵|xss|←|↵|main|(|C|(|→|C|(|1|,| |C|(|2|,| |N|)|)|,|↵|C|(|→|C|(|3|,| |C|(|4|,| |N|)|)|,|↵|C|(|→|C|(|5|,| |C|(|6|,| |N|)|)|,|↵|N|←|↵|)|←|↵|)|←|↵|)|)|
 //│ Parsed: {_LUMBERHACK_EVAL; fun concat = lss, => if lss is ‹(C (hh, tt,)) then concatInner (hh, tt,); (N) then N›; fun concatInner = xs, xss, => if xs is ‹(C (h, t,)) then C (h, concatInner (t, xss,),); (N) then concat (xss,)›; fun main = xss, => {concat (xss,); xss}; main (C (C (1, C (2, N,),), C (C (3, C (4, N,),), C (C (5, C (6, N,),), N,),),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (main^30 [C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]])
-//│ def concat = (fun lss⁰ -> case lss⁰ of {
-//│ 	C hh⁰ tt⁰ => ((concatInner^2 hh⁰) tt⁰)
-//│ 	| N  => [N]})
-//│ def concatInner = (fun xs⁰ -> (fun xss⁰ -> case xs⁰ of {
-//│ 	C h⁰ t⁰ => [C h⁰ ((concatInner^12 t⁰) xss⁰)]
-//│ 	| N  => (concat^18 xss⁰)}))
-//│ def main = (fun xss¹ -> 
-//│ 	(concat^24 xss¹)
-//│ 	xss¹)
+//│ main^30([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]])
+//│ def concat(lss⁰) = case lss⁰ of {
+//│ 	C hh⁰ tt⁰ => concatInner^2(hh⁰, tt⁰)
+//│ 	| N  => [N]}
+//│ def concatInner(xs⁰, xss⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ concatInner^12(t⁰, xss⁰)]
+//│ 	| N  => concat^18(xss⁰)}
+//│ def main(xss¹) = 
+//│ 	concat^24(xss¹)
+//│ 	xss¹
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
@@ -969,74 +959,73 @@ main(C(
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (main₀ [C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]])
-//│ def main₀ = 
-//│ 	(fun xss³ -> 
-//│ 		(concat₀ xss³)
-//│ 		xss³)
+//│ main₀([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]])
+//│ def main₀(xss³) = 
+//│ 	concat₀(xss³)
+//│ 	xss³
 //│ 	where
-//│ 	def concat₀ = 
-//│ 		(fun lss² -> case lss² of {
-//│ 			C hh² tt² => ((concatInner₀ hh²) tt²)
-//│ 			| N  => [N]})
+//│ 	def concat₀(lss²) = 
+//│ 		case lss² of {
+//│ 			C hh² tt² => concatInner₀(hh², tt²)
+//│ 			| N  => [N]}
 //│ 		where
-//│ 		def concatInner₀ = 
-//│ 			(fun xs¹ -> (fun xss² -> case xs¹ of {
-//│ 				C h¹ t¹ => [C h¹ ((concatInner₀ t¹) xss²)]
-//│ 				| N  => (concat₁ xss²)}))
+//│ 		def concatInner₀(xs¹, xss²) = 
+//│ 			case xs¹ of {
+//│ 				C h¹ t¹ => [C h¹ concatInner₀(t¹, xss²)]
+//│ 				| N  => concat₁(xss²)}
 //│ 			where
-//│ 			def concat₁ = 
-//│ 				(fun lss¹ -> case lss¹ of {
-//│ 					C hh¹ tt¹ => ((concatInner₀ hh¹) tt¹)
-//│ 					| N  => [N]})
+//│ 			def concat₁(lss¹) = 
+//│ 				case lss¹ of {
+//│ 					C hh¹ tt¹ => concatInner₀(hh¹, tt¹)
+//│ 					| N  => [N]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 92 --->
 //│ 	NoCons
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ ((concatInner₀ t¹) xss²)] | N  => (concat₁ xss²)}: 71
+//│ 	case xs¹ of {C h¹ t¹ => [C h¹ concatInner₀(t¹, xss²)] | N  => concat₁(xss²)}: 71
 //│ [C 2 [N]]: 93 --->
 //│ 	NoCons
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ ((concatInner₀ t¹) xss²)] | N  => (concat₁ xss²)}: 71
+//│ 	case xs¹ of {C h¹ t¹ => [C h¹ concatInner₀(t¹, xss²)] | N  => concat₁(xss²)}: 71
 //│ [C 1 [C 2 [N]]]: 94 --->
 //│ 	NoCons
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ ((concatInner₀ t¹) xss²)] | N  => (concat₁ xss²)}: 71
+//│ 	case xs¹ of {C h¹ t¹ => [C h¹ concatInner₀(t¹, xss²)] | N  => concat₁(xss²)}: 71
 //│ [N]: 97 --->
 //│ 	NoCons
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ ((concatInner₀ t¹) xss²)] | N  => (concat₁ xss²)}: 71
+//│ 	case xs¹ of {C h¹ t¹ => [C h¹ concatInner₀(t¹, xss²)] | N  => concat₁(xss²)}: 71
 //│ [C 4 [N]]: 98 --->
 //│ 	NoCons
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ ((concatInner₀ t¹) xss²)] | N  => (concat₁ xss²)}: 71
+//│ 	case xs¹ of {C h¹ t¹ => [C h¹ concatInner₀(t¹, xss²)] | N  => concat₁(xss²)}: 71
 //│ [C 3 [C 4 [N]]]: 99 --->
 //│ 	NoCons
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ ((concatInner₀ t¹) xss²)] | N  => (concat₁ xss²)}: 71
+//│ 	case xs¹ of {C h¹ t¹ => [C h¹ concatInner₀(t¹, xss²)] | N  => concat₁(xss²)}: 71
 //│ [N]: 102 --->
 //│ 	NoCons
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ ((concatInner₀ t¹) xss²)] | N  => (concat₁ xss²)}: 71
+//│ 	case xs¹ of {C h¹ t¹ => [C h¹ concatInner₀(t¹, xss²)] | N  => concat₁(xss²)}: 71
 //│ [C 6 [N]]: 103 --->
 //│ 	NoCons
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ ((concatInner₀ t¹) xss²)] | N  => (concat₁ xss²)}: 71
+//│ 	case xs¹ of {C h¹ t¹ => [C h¹ concatInner₀(t¹, xss²)] | N  => concat₁(xss²)}: 71
 //│ [C 5 [C 6 [N]]]: 104 --->
 //│ 	NoCons
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ ((concatInner₀ t¹) xss²)] | N  => (concat₁ xss²)}: 71
+//│ 	case xs¹ of {C h¹ t¹ => [C h¹ concatInner₀(t¹, xss²)] | N  => concat₁(xss²)}: 71
 //│ [N]: 105 --->
 //│ 	NoCons
-//│ 	case lss¹ of {C hh¹ tt¹ => ((concatInner₀ hh¹) tt¹) | N  => [N]}: 58
+//│ 	case lss¹ of {C hh¹ tt¹ => concatInner₀(hh¹, tt¹) | N  => [N]}: 58
 //│ [C [C 5 [C 6 [N]]] [N]]: 106 --->
 //│ 	NoCons
-//│ 	case lss¹ of {C hh¹ tt¹ => ((concatInner₀ hh¹) tt¹) | N  => [N]}: 58
+//│ 	case lss¹ of {C hh¹ tt¹ => concatInner₀(hh¹, tt¹) | N  => [N]}: 58
 //│ [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]: 107 --->
 //│ 	NoCons
-//│ 	case lss¹ of {C hh¹ tt¹ => ((concatInner₀ hh¹) tt¹) | N  => [N]}: 58
+//│ 	case lss¹ of {C hh¹ tt¹ => concatInner₀(hh¹, tt¹) | N  => [N]}: 58
 //│ [C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]: 108 --->
 //│ 	NoCons
-//│ 	case lss² of {C hh² tt² => ((concatInner₀ hh²) tt²) | N  => [N]}: 87
+//│ 	case lss² of {C hh² tt² => concatInner₀(hh², tt²) | N  => [N]}: 87
 //│ ------------------
-//│ case lss¹ of {C hh¹ tt¹ => ((concatInner₀ hh¹) tt¹) | N  => [N]}: 58 --->
+//│ case lss¹ of {C hh¹ tt¹ => concatInner₀(hh¹, tt¹) | N  => [N]}: 58 --->
 //│ 	[N]: 105
 //│ 	[C [C 5 [C 6 [N]]] [N]]: 106
 //│ 	[C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]: 107
-//│ case xs¹ of {C h¹ t¹ => [C h¹ ((concatInner₀ t¹) xss²)] | N  => (concat₁ xss²)}: 71 --->
+//│ case xs¹ of {C h¹ t¹ => [C h¹ concatInner₀(t¹, xss²)] | N  => concat₁(xss²)}: 71 --->
 //│ 	[N]: 92
 //│ 	[C 2 [N]]: 93
 //│ 	[C 1 [C 2 [N]]]: 94
@@ -1046,7 +1035,7 @@ main(C(
 //│ 	[N]: 102
 //│ 	[C 6 [N]]: 103
 //│ 	[C 5 [C 6 [N]]]: 104
-//│ case lss² of {C hh² tt² => ((concatInner₀ hh²) tt²) | N  => [N]}: 87 --->
+//│ case lss² of {C hh² tt² => concatInner₀(hh², tt²) | N  => [N]}: 87 --->
 //│ 	[C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]: 108
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -1057,26 +1046,25 @@ main(C(
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (main₀ [C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]])
-//│ def main₀ = 
-//│ 	(fun xss⁵ -> 
-//│ 		(concat₀ xss⁵)
-//│ 		xss⁵)
+//│ main₀([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]])
+//│ def main₀(xss⁵) = 
+//│ 	concat₀(xss⁵)
+//│ 	xss⁵
 //│ 	where
-//│ 	def concat₀ = 
-//│ 		(fun lss⁴ -> case lss⁴ of {
-//│ 			C hh² tt² => ((concatInner₀ hh²) tt²)
-//│ 			| N  => [N]})
+//│ 	def concat₀(lss⁴) = 
+//│ 		case lss⁴ of {
+//│ 			C hh² tt² => concatInner₀(hh², tt²)
+//│ 			| N  => [N]}
 //│ 		where
-//│ 		def concatInner₀ = 
-//│ 			(fun xs² -> (fun xss⁴ -> case xs² of {
-//│ 				C h¹ t¹ => [C h¹ ((concatInner₀ t¹) xss⁴)]
-//│ 				| N  => (concat₁ xss⁴)}))
+//│ 		def concatInner₀(xs², xss⁴) = 
+//│ 			case xs² of {
+//│ 				C h¹ t¹ => [C h¹ concatInner₀(t¹, xss⁴)]
+//│ 				| N  => concat₁(xss⁴)}
 //│ 			where
-//│ 			def concat₁ = 
-//│ 				(fun lss³ -> case lss³ of {
-//│ 					C hh¹ tt¹ => ((concatInner₀ hh¹) tt¹)
-//│ 					| N  => [N]})
+//│ 			def concat₁(lss³) = 
+//│ 				case lss³ of {
+//│ 					C hh¹ tt¹ => concatInner₀(hh¹, tt¹)
+//│ 					| N  => [N]}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>

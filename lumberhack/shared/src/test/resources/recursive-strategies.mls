@@ -9,9 +9,9 @@ c(p)
 //│ |#let| |p| |#=| |Pair|(|A|,| |B|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|Pair|(|a|,| |b|)| |#then| |c|(|Pair|(|b|,| |a|)|)|←|↵|c|(|p|)|
 //│ Parsed: {let p = Pair (A, B,); fun c = x, => if x is ‹(Pair (a, b,)) then c (Pair (b, a,),)›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (c^12 p^13)
-//│ def c = (fun x⁰ -> case x⁰ of {
-//│ 	Pair a⁰ b⁰ => (c^5 [Pair b⁰ a⁰])})
+//│ c^12(p^13)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	Pair a⁰ b⁰ => c^5([Pair b⁰ a⁰])}
 //│ def p = [Pair [A] [B]]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -23,30 +23,30 @@ c(p)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (c₀ p₀)
-//│ def c₀ = 
-//│ 	(fun x¹ -> case x¹ of {
-//│ 		Pair a¹ b¹ => (c₁ [Pair b¹ a¹])})
+//│ c₀(p₀)
+//│ def c₀(x¹) = 
+//│ 	case x¹ of {
+//│ 		Pair a¹ b¹ => c₁([Pair b¹ a¹])}
 //│ 	where
-//│ 	def c₁ = 
-//│ 		(fun x² -> case x² of {
-//│ 			Pair a² b² => (c₀ [Pair b² a²])})
+//│ 	def c₁(x²) = 
+//│ 		case x² of {
+//│ 			Pair a² b² => c₀([Pair b² a²])}
 //│ def p₀ = 
 //│ 	[Pair [A] [B]]
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [Pair b¹ a¹]: 19 --->
-//│ 	case x² of {Pair a² b² => (c₀ [Pair b² a²])}: 29
+//│ 	case x² of {Pair a² b² => c₀([Pair b² a²])}: 29
 //│ [Pair b² a²]: 27 --->
-//│ 	case x¹ of {Pair a¹ b¹ => (c₁ [Pair b¹ a¹])}: 21
+//│ 	case x¹ of {Pair a¹ b¹ => c₁([Pair b¹ a¹])}: 21
 //│ [Pair [A] [B]]: 33 --->
-//│ 	case x¹ of {Pair a¹ b¹ => (c₁ [Pair b¹ a¹])}: 21
+//│ 	case x¹ of {Pair a¹ b¹ => c₁([Pair b¹ a¹])}: 21
 //│ ------------------
-//│ case x¹ of {Pair a¹ b¹ => (c₁ [Pair b¹ a¹])}: 21 --->
+//│ case x¹ of {Pair a¹ b¹ => c₁([Pair b¹ a¹])}: 21 --->
 //│ 	[Pair b² a²]: 27
 //│ 	[Pair [A] [B]]: 33
-//│ case x² of {Pair a² b² => (c₀ [Pair b² a²])}: 29 --->
+//│ case x² of {Pair a² b² => c₀([Pair b² a²])}: 29 --->
 //│ 	[Pair b¹ a¹]: 19
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -57,14 +57,14 @@ c(p)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (c₀ p₀)
-//│ def c₀ = 
-//│ 	(fun x³ -> case x³ of {
-//│ 		Pair a¹ b¹ => (c₁ [Pair b¹ a¹])})
+//│ c₀(p₀)
+//│ def c₀(x³) = 
+//│ 	case x³ of {
+//│ 		Pair a¹ b¹ => c₁([Pair b¹ a¹])}
 //│ 	where
-//│ 	def c₁ = 
-//│ 		(fun x⁴ -> case x⁴ of {
-//│ 			Pair a² b² => (c₀ [Pair b² a²])})
+//│ 	def c₁(x⁴) = 
+//│ 		case x⁴ of {
+//│ 			Pair a² b² => c₀([Pair b² a²])}
 //│ def p₀ = 
 //│ 	[Pair [A] [B]]
 //│ <<<<<<< after fusion <<<<<<<
@@ -77,9 +77,9 @@ c(p)
 //│ |#let| |p| |#=| |Wrap|(|3|)|↵|#fun| |c|(|x|)| |#=| |#if| |x| |is|→|Wrap|(|a|)| |#then| |#if| |a| |>| |0| |#then| |c|(|Wrap|(|a| |-| |1|)|)| |#else| |Wrap|(|0|)|←|↵|c|(|p|)|
 //│ Parsed: {let p = Wrap (3,); fun c = x, => if x is ‹(Wrap (a,)) then if (> (a,) (0,)) then c (Wrap (- (a,) (1,),),) else Wrap (0,)›; c (p,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (c^22 p^23)
-//│ def c = (fun x⁰ -> case x⁰ of {
-//│ 	Wrap a⁰ => if (a⁰ > 0) then (c^9 [Wrap (a⁰ - 1)]) else [Wrap 0]})
+//│ c^22(p^23)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	Wrap a⁰ => if (a⁰ > 0) then c^9([Wrap (a⁰ - 1)]) else [Wrap 0]}
 //│ def p = [Wrap 3]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -90,21 +90,21 @@ c(p)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (c₀ p₀)
-//│ def c₀ = 
-//│ 	(fun x¹ -> case x¹ of {
-//│ 		Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]})
+//│ c₀(p₀)
+//│ def c₀(x¹) = 
+//│ 	case x¹ of {
+//│ 		Wrap a¹ => if (a¹ > 0) then c₀([Wrap (a¹ - 1)]) else [Wrap 0]}
 //│ def p₀ = 
 //│ 	[Wrap 3]
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [Wrap 3]: 26 --->
-//│ 	case x¹ of {Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]}: 44
+//│ 	case x¹ of {Wrap a¹ => if (a¹ > 0) then c₀([Wrap (a¹ - 1)]) else [Wrap 0]}: 44
 //│ [Wrap (a¹ - 1)]: 39 --->
-//│ 	case x¹ of {Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]}: 44
+//│ 	case x¹ of {Wrap a¹ => if (a¹ > 0) then c₀([Wrap (a¹ - 1)]) else [Wrap 0]}: 44
 //│ ------------------
-//│ case x¹ of {Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]}: 44 --->
+//│ case x¹ of {Wrap a¹ => if (a¹ > 0) then c₀([Wrap (a¹ - 1)]) else [Wrap 0]}: 44 --->
 //│ 	[Wrap 3]: 26
 //│ 	[Wrap (a¹ - 1)]: 39
 //│ <<<<<<< fusion matches <<<<<<<
@@ -116,10 +116,10 @@ c(p)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (c₀ p₀)
-//│ def c₀ = 
-//│ 	(fun x² -> case x² of {
-//│ 		Wrap a¹ => if (a¹ > 0) then (c₀ [Wrap (a¹ - 1)]) else [Wrap 0]})
+//│ c₀(p₀)
+//│ def c₀(x²) = 
+//│ 	case x² of {
+//│ 		Wrap a¹ => if (a¹ > 0) then c₀([Wrap (a¹ - 1)]) else [Wrap 0]}
 //│ def p₀ = 
 //│ 	[Wrap 3]
 //│ <<<<<<< after fusion <<<<<<<
@@ -133,11 +133,11 @@ f(C(A))
 //│ |#fun| |f|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |f|(|C|(|a|)|)|←|↵|#fun| |g|(|y|)| |#=| |#if| |y| |is|→|D|(|b|)| |#then| |f|(|C|(|b|)|)|←|↵|f|(|C|(|A|)|)|
 //│ Parsed: {fun f = x, => if x is ‹(C (a,)) then f (C (a,),)›; fun g = y, => if y is ‹(D (b,)) then f (C (b,),)›; f (C (A,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (f^15 [C [A]])
-//│ def f = (fun x⁰ -> case x⁰ of {
-//│ 	C a⁰ => (f^2 [C a⁰])})
-//│ def g = (fun y⁰ -> case y⁰ of {
-//│ 	D b⁰ => (f^9 [C b⁰])})
+//│ f^15([C [A]])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	C a⁰ => f^2([C a⁰])}
+//│ def g(y⁰) = case y⁰ of {
+//│ 	D b⁰ => f^9([C b⁰])}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -146,19 +146,19 @@ f(C(A))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (f₀ [C [A]])
-//│ def f₀ = 
-//│ 	(fun x¹ -> case x¹ of {
-//│ 		C a¹ => (f₀ [C a¹])})
+//│ f₀([C [A]])
+//│ def f₀(x¹) = 
+//│ 	case x¹ of {
+//│ 		C a¹ => f₀([C a¹])}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C a¹]: 22 --->
-//│ 	case x¹ of {C a¹ => (f₀ [C a¹])}: 24
+//│ 	case x¹ of {C a¹ => f₀([C a¹])}: 24
 //│ [C [A]]: 28 --->
-//│ 	case x¹ of {C a¹ => (f₀ [C a¹])}: 24
+//│ 	case x¹ of {C a¹ => f₀([C a¹])}: 24
 //│ ------------------
-//│ case x¹ of {C a¹ => (f₀ [C a¹])}: 24 --->
+//│ case x¹ of {C a¹ => f₀([C a¹])}: 24 --->
 //│ 	[C a¹]: 22
 //│ 	[C [A]]: 28
 //│ <<<<<<< fusion matches <<<<<<<
@@ -170,10 +170,10 @@ f(C(A))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (f₀ [C [A]])
-//│ def f₀ = 
-//│ 	(fun x² -> case x² of {
-//│ 		C a¹ => (f₀ [C a¹])})
+//│ f₀([C [A]])
+//│ def f₀(x²) = 
+//│ 	case x² of {
+//│ 		C a¹ => f₀([C a¹])}
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -186,11 +186,11 @@ f(C(D(A)))
 //│ |#fun| |f|(|x|)| |#=| |#if| |x| |is|→|C|(|a|)| |#then| |#if| |a| |is|→|D|(|d|)| |#then| |d|↵|C|(|b|)| |#then| |f|(|C|(|C|(|b|)|)|)|←|←|↵|f|(|C|(|D|(|A|)|)|)|
 //│ Parsed: {fun f = x, => if x is ‹(C (a,)) then if a is ‹(D (d,)) then d; (C (b,)) then f (C (C (b,),),)››; f (C (D (A,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (f^12 [C [D [A]]])
-//│ def f = (fun x⁰ -> case x⁰ of {
+//│ f^12([C [D [A]]])
+//│ def f(x⁰) = case x⁰ of {
 //│ 	C a⁰ => case a⁰ of {
 //│ 		D d⁰ => d⁰
-//│ 		| C b⁰ => (f^4 [C [C b⁰]])}})
+//│ 		| C b⁰ => f^4([C [C b⁰]])}}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -199,56 +199,56 @@ f(C(D(A)))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (f₀ [C [D [A]]])
-//│ def f₀ = 
-//│ 	(fun x¹ -> case x¹ of {
+//│ f₀([C [D [A]]])
+//│ def f₀(x¹) = 
+//│ 	case x¹ of {
 //│ 		C a¹ => case a¹ of {
 //│ 			D d¹ => d¹
-//│ 			| C b¹ => (f₀ [C [C b¹]])}})
+//│ 			| C b¹ => f₀([C [C b¹]])}}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C b¹]: 22 --->
-//│ 	case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}: 25
+//│ 	case a¹ of {D d¹ => d¹ | C b¹ => f₀([C [C b¹]])}: 25
 //│ [C [C b¹]]: 23 --->
-//│ 	case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}}: 26
+//│ 	case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => f₀([C [C b¹]])}}: 26
 //│ [D [A]]: 30 --->
-//│ 	case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}: 25
+//│ 	case a¹ of {D d¹ => d¹ | C b¹ => f₀([C [C b¹]])}: 25
 //│ [C [D [A]]]: 31 --->
-//│ 	case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}}: 26
+//│ 	case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => f₀([C [C b¹]])}}: 26
 //│ ------------------
-//│ case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}: 25 --->
+//│ case a¹ of {D d¹ => d¹ | C b¹ => f₀([C [C b¹]])}: 25 --->
 //│ 	[C b¹]: 22
 //│ 	[D [A]]: 30
-//│ case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}}: 26 --->
+//│ case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => f₀([C [C b¹]])}}: 26 --->
 //│ 	[C [C b¹]]: 23
 //│ 	[C [D [A]]]: 31
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [C b¹]: 22 --->
-//│ 	case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}: 25
+//│ 	case a¹ of {D d¹ => d¹ | C b¹ => f₀([C [C b¹]])}: 25
 //│ [C [C b¹]]: 23 --->
-//│ 	case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}}: 26
+//│ 	case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => f₀([C [C b¹]])}}: 26
 //│ [D [A]]: 30 --->
-//│ 	case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}: 25
+//│ 	case a¹ of {D d¹ => d¹ | C b¹ => f₀([C [C b¹]])}: 25
 //│ [C [D [A]]]: 31 --->
-//│ 	case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}}: 26
+//│ 	case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => f₀([C [C b¹]])}}: 26
 //│ ------------------
-//│ case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}: 25 --->
+//│ case a¹ of {D d¹ => d¹ | C b¹ => f₀([C [C b¹]])}: 25 --->
 //│ 	[C b¹]: 22
 //│ 	[D [A]]: 30
-//│ case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => (f₀ [C [C b¹]])}}: 26 --->
+//│ case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => f₀([C [C b¹]])}}: 26 --->
 //│ 	[C [C b¹]]: 23
 //│ 	[C [D [A]]]: 31
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (f₀ 
+//│ f₀(
 //│ 	let a² = 	
 //│ 		let d² = [A]
 //│ 		in d²
 //│ 	in a²)
-//│ def f₀ = 
-//│ 	(fun x² -> x²)
+//│ def f₀(x²) = 
+//│ 	x²
 //│ <<<<<<< after fusion <<<<<<<

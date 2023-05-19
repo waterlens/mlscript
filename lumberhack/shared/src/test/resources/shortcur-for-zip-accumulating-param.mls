@@ -15,16 +15,16 @@ main(3)
 //│ |_LUMBERHACK_EVAL|↵|#fun| |zip|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|hx|,| |tx|)| |#then| |#if| |ys| |is|→|C|(|hy|,| |ty|)| |#then| |C|(|P2|(|hx|,| |hy|)|,| |zip|(|tx|,| |ty|)|)|↵|N| |#then| |N|←|↵|N| |#then| |N|←|↵|#fun| |fromTo|(|a|,| |b|)| |#=| |#if| |a| |<| |(|b| |+| |1|)| |#then| |C|(|a|,| |fromTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |main|(|n|)| |#=|→|zip|(|fromTo|(|1|,| |n|)|,| |fromTo|(|1| |+| |2|,| |n| |+| |2|)|)|↵|n|←|↵|main|(|3|)|
 //│ Parsed: {_LUMBERHACK_EVAL; fun zip = xs, ys, => if xs is ‹(C (hx, tx,)) then if ys is ‹(C (hy, ty,)) then C (P2 (hx, hy,), zip (tx, ty,),); (N) then N›; (N) then N›; fun fromTo = a, b, => if (< (a,) (+ (b,) (1,),)) then C (a, fromTo (+ (a,) (1,), b,),) else N; fun main = n, => {zip (fromTo (1, n,), fromTo (+ (1,) (2,), + (n,) (2,),),); n}; main (3,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (main^66 3)
-//│ def fromTo = (fun a⁰ -> (fun b⁰ -> if (a⁰ < (b⁰ + 1)) then [C a⁰ ((fromTo^28 (a⁰ + 1)) b⁰)] else [N]))
-//│ def main = (fun n⁰ -> 
-//│ 	((zip^42 ((fromTo^43 1) n⁰)) ((fromTo^49 (1 + 2)) (n⁰ + 2)))
-//│ 	n⁰)
-//│ def zip = (fun xs⁰ -> (fun ys⁰ -> case xs⁰ of {
+//│ main^66(3)
+//│ def fromTo(a⁰, b⁰) = if (a⁰ < (b⁰ + 1)) then [C a⁰ fromTo^28((a⁰ + 1), b⁰)] else [N]
+//│ def main(n⁰) = 
+//│ 	zip^42(fromTo^43(1, n⁰), fromTo^49((1 + 2), (n⁰ + 2)))
+//│ 	n⁰
+//│ def zip(xs⁰, ys⁰) = case xs⁰ of {
 //│ 	C hx⁰ tx⁰ => case ys⁰ of {
-//│ 		C hy⁰ ty⁰ => [C [P2 hx⁰ hy⁰] ((zip^6 tx⁰) ty⁰)]
+//│ 		C hy⁰ ty⁰ => [C [P2 hx⁰ hy⁰] zip^6(tx⁰, ty⁰)]
 //│ 		| N  => [N]}
-//│ 	| N  => [N]}))
+//│ 	| N  => [N]}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
@@ -44,79 +44,77 @@ main(3)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (main₀ 3)
-//│ def main₀ = 
-//│ 	(fun n¹ -> 
-//│ 		((zip₀ ((fromTo₀ 1) n¹)) ((fromTo₁ (1 + 2)) (n¹ + 2)))
-//│ 		n¹)
+//│ main₀(3)
+//│ def main₀(n¹) = 
+//│ 	zip₀(fromTo₀(1, n¹), fromTo₁((1 + 2), (n¹ + 2)))
+//│ 	n¹
 //│ 	where
-//│ 	def fromTo₀ = 
-//│ 		(fun a¹ -> (fun b¹ -> if (a¹ < (b¹ + 1)) then [C a¹ ((fromTo₀ (a¹ + 1)) b¹)] else [N]))
-//│ 	def fromTo₁ = 
-//│ 		(fun a² -> (fun b² -> if (a² < (b² + 1)) then [C a² ((fromTo₁ (a² + 1)) b²)] else [N]))
-//│ 	def zip₀ = 
-//│ 		(fun xs¹ -> (fun ys¹ -> case xs¹ of {
+//│ 	def fromTo₀(a¹, b¹) = 
+//│ 		if (a¹ < (b¹ + 1)) then [C a¹ fromTo₀((a¹ + 1), b¹)] else [N]
+//│ 	def fromTo₁(a², b²) = 
+//│ 		if (a² < (b² + 1)) then [C a² fromTo₁((a² + 1), b²)] else [N]
+//│ 	def zip₀(xs¹, ys¹) = 
+//│ 		case xs¹ of {
 //│ 			C hx¹ tx¹ => case ys¹ of {
-//│ 				C hy¹ ty¹ => [C [P2 hx¹ hy¹] ((zip₀ tx¹) ty¹)]
+//│ 				C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)]
 //│ 				| N  => [N]}
-//│ 			| N  => [N]}))
+//│ 			| N  => [N]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C a¹ ((fromTo₀ (a¹ + 1)) b¹)]: 112 --->
-//│ 	case xs¹ of {C hx¹ tx¹ => case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] ((zip₀ tx¹) ty¹)] | N  => [N]} | N  => [N]}: 155
+//│ [C a¹ fromTo₀((a¹ + 1), b¹)]: 112 --->
+//│ 	case xs¹ of {C hx¹ tx¹ => case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]} | N  => [N]}: 155
 //│ [N]: 113 --->
-//│ 	case xs¹ of {C hx¹ tx¹ => case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] ((zip₀ tx¹) ty¹)] | N  => [N]} | N  => [N]}: 155
-//│ [C a² ((fromTo₁ (a² + 1)) b²)]: 136 --->
-//│ 	case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] ((zip₀ tx¹) ty¹)] | N  => [N]}: 153
+//│ 	case xs¹ of {C hx¹ tx¹ => case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]} | N  => [N]}: 155
+//│ [C a² fromTo₁((a² + 1), b²)]: 136 --->
+//│ 	case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]}: 153
 //│ [N]: 137 --->
-//│ 	case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] ((zip₀ tx¹) ty¹)] | N  => [N]}: 153
+//│ 	case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]}: 153
 //│ ------------------
-//│ case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] ((zip₀ tx¹) ty¹)] | N  => [N]}: 153 --->
-//│ 	[C a² ((fromTo₁ (a² + 1)) b²)]: 136
+//│ case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]}: 153 --->
+//│ 	[C a² fromTo₁((a² + 1), b²)]: 136
 //│ 	[N]: 137
-//│ case xs¹ of {C hx¹ tx¹ => case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] ((zip₀ tx¹) ty¹)] | N  => [N]} | N  => [N]}: 155 --->
-//│ 	[C a¹ ((fromTo₀ (a¹ + 1)) b¹)]: 112
+//│ case xs¹ of {C hx¹ tx¹ => case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]} | N  => [N]}: 155 --->
+//│ 	[C a¹ fromTo₀((a¹ + 1), b¹)]: 112
 //│ 	[N]: 113
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C a¹ ((fromTo₀ (a¹ + 1)) b¹)]: 112 --->
-//│ 	case xs¹ of {C hx¹ tx¹ => case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] ((zip₀ tx¹) ty¹)] | N  => [N]} | N  => [N]}: 155
+//│ [C a¹ fromTo₀((a¹ + 1), b¹)]: 112 --->
+//│ 	case xs¹ of {C hx¹ tx¹ => case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]} | N  => [N]}: 155
 //│ [N]: 113 --->
-//│ 	case xs¹ of {C hx¹ tx¹ => case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] ((zip₀ tx¹) ty¹)] | N  => [N]} | N  => [N]}: 155
-//│ [C a² ((fromTo₁ (a² + 1)) b²)]: 136 --->
-//│ 	case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] ((zip₀ tx¹) ty¹)] | N  => [N]}: 153
+//│ 	case xs¹ of {C hx¹ tx¹ => case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]} | N  => [N]}: 155
+//│ [C a² fromTo₁((a² + 1), b²)]: 136 --->
+//│ 	case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]}: 153
 //│ [N]: 137 --->
-//│ 	case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] ((zip₀ tx¹) ty¹)] | N  => [N]}: 153
+//│ 	case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]}: 153
 //│ ------------------
-//│ case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] ((zip₀ tx¹) ty¹)] | N  => [N]}: 153 --->
-//│ 	[C a² ((fromTo₁ (a² + 1)) b²)]: 136
+//│ case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]}: 153 --->
+//│ 	[C a² fromTo₁((a² + 1), b²)]: 136
 //│ 	[N]: 137
-//│ case xs¹ of {C hx¹ tx¹ => case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] ((zip₀ tx¹) ty¹)] | N  => [N]} | N  => [N]}: 155 --->
-//│ 	[C a¹ ((fromTo₀ (a¹ + 1)) b¹)]: 112
+//│ case xs¹ of {C hx¹ tx¹ => case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]} | N  => [N]}: 155 --->
+//│ 	[C a¹ fromTo₀((a¹ + 1), b¹)]: 112
 //│ 	[N]: 113
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (main₀ 3)
-//│ def main₀ = 
-//│ 	(fun n² -> 
-//│ 		((zip₀ ((fromTo₀ 1) n²)) ((fromTo₁ (1 + 2)) (n² + 2)))
-//│ 		n²)
+//│ main₀(3)
+//│ def main₀(n²) = 
+//│ 	zip₀(fromTo₀(1, n²), fromTo₁((1 + 2), (n² + 2)))
+//│ 	n²
 //│ 	where
-//│ 	def fromTo₀ = 
-//│ 		(fun a³ -> (fun b³ -> if (a³ < (b³ + 1)) then 
+//│ 	def fromTo₀(a³, b³) = 
+//│ 		if (a³ < (b³ + 1)) then 
 //│ 			let hx² = a³
-//│ 			in let tx² = ((fromTo₀ (a³ + 1)) b³)
-//│ 			in (fun ys² -> ((ys² hx²) tx²)) else (fun ys³ -> [N])))
-//│ 	def fromTo₁ = 
-//│ 		(fun a⁴ -> (fun b⁴ -> if (a⁴ < (b⁴ + 1)) then 
+//│ 			in let tx² = fromTo₀((a³ + 1), b³)
+//│ 			in (fun ys² -> ys²(hx², tx²)) else (fun ys³ -> [N])
+//│ 	def fromTo₁(a⁴, b⁴) = 
+//│ 		if (a⁴ < (b⁴ + 1)) then 
 //│ 			let hy² = a⁴
-//│ 			in let ty² = ((fromTo₁ (a⁴ + 1)) b⁴)
-//│ 			in (fun hx³ -> (fun tx³ -> [C [P2 hx³ hy²] ((zip₀ tx³) ty²)])) else (fun hx⁴ -> (fun tx⁴ -> [N]))))
-//│ 	def zip₀ = 
-//│ 		(fun xs² -> (fun ys⁴ -> (xs² ys⁴)))
+//│ 			in let ty² = fromTo₁((a⁴ + 1), b⁴)
+//│ 			in (fun hx³ -> (fun tx³ -> [C [P2 hx³ hy²] zip₀(tx³, ty²)])) else (fun hx⁴ -> (fun tx⁴ -> [N]))
+//│ 	def zip₀(xs², ys⁴) = 
+//│ 		xs²(ys⁴)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>

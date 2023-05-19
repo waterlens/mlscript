@@ -9,10 +9,10 @@ max(C(1, N))(0)
 //│ |#fun| |max|(|ms|)| |#=| |#if| |ms| |is|→|C|(|h|,| |t|)| |#then| |m| |=>| |#if| |h| |>| |m| |#then| |max|(|t|)|(|h|)| |#else| |max|(|t|)|(|m|)|↵|N| |#then| |m| |=>| |m|←|↵|max|(|C|(|1|,| |N|)|)|(|0|)|
 //│ Parsed: {fun max = ms, => if ms is ‹(C (h, t,)) then m, => if (> (h,) (m,)) then max (t,) (h,) else max (t,) (m,); (N) then m, => m›; max (C (1, N,),) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ ((max^23 [C 1 [N]]) 0)
-//│ def max = (fun ms⁰ -> case ms⁰ of {
-//│ 	C h⁰ t⁰ => (fun m⁰ -> if (h⁰ > m⁰) then ((max^7 t⁰) h⁰) else ((max^12 t⁰) m⁰))
-//│ 	| N  => (fun m¹ -> m¹)})
+//│ max^23([C 1 [N]], 0)
+//│ def max(ms⁰) = case ms⁰ of {
+//│ 	C h⁰ t⁰ => (fun m⁰ -> if (h⁰ > m⁰) then max^7(t⁰, h⁰) else max^12(t⁰, m⁰))
+//│ 	| N  => (fun m¹ -> m¹)}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -22,42 +22,42 @@ max(C(1, N))(0)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ ((max₀ [C 1 [N]]) 0)
-//│ def max₀ = 
-//│ 	(fun ms¹ -> case ms¹ of {
-//│ 		C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²))
-//│ 		| N  => (fun m³ -> m³)})
+//│ max₀([C 1 [N]], 0)
+//│ def max₀(ms¹) = 
+//│ 	case ms¹ of {
+//│ 		C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²))
+//│ 		| N  => (fun m³ -> m³)}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 54 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 50
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 50
 //│ [C 1 [N]]: 55 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 50
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 50
 //│ ------------------
-//│ case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 50 --->
+//│ case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 50 --->
 //│ 	[N]: 54
 //│ 	[C 1 [N]]: 55
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [N]: 54 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 50
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 50
 //│ [C 1 [N]]: 55 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 50
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 50
 //│ ------------------
-//│ case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 50 --->
+//│ case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 50 --->
 //│ 	[N]: 54
 //│ 	[C 1 [N]]: 55
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((max₀ 
+//│ max₀(
 //│ 	let h² = 1
 //│ 	in let t² = (fun m⁵ -> m⁵)
-//│ 	in (fun m⁴ -> if (h² > m⁴) then ((max₀ t²) h²) else ((max₀ t²) m⁴))) 0)
-//│ def max₀ = 
-//│ 	(fun ms² -> ms²)
+//│ 	in (fun m⁴ -> if (h² > m⁴) then max₀(t², h²) else max₀(t², m⁴)), 0)
+//│ def max₀(ms²) = 
+//│ 	ms²
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -71,10 +71,10 @@ max(C(1, C(3, C(2, N))))(0)
 //│ |#fun| |max|(|ms|)| |#=| |#if| |ms| |is|→|C|(|h|,| |t|)| |#then| |m| |=>| |#if| |h| |>| |m| |#then| |max|(|t|)|(|h|)| |#else| |max|(|t|)|(|m|)|↵|N| |#then| |m| |=>| |m|←|↵|max|(|C|(|1|,| |C|(|3|,| |C|(|2|,| |N|)|)|)|)|(|0|)|
 //│ Parsed: {fun max = ms, => if ms is ‹(C (h, t,)) then m, => if (> (h,) (m,)) then max (t,) (h,) else max (t,) (m,); (N) then m, => m›; max (C (1, C (3, C (2, N,),),),) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ ((max^23 [C 1 [C 3 [C 2 [N]]]]) 0)
-//│ def max = (fun ms⁰ -> case ms⁰ of {
-//│ 	C h⁰ t⁰ => (fun m⁰ -> if (h⁰ > m⁰) then ((max^7 t⁰) h⁰) else ((max^12 t⁰) m⁰))
-//│ 	| N  => (fun m¹ -> m¹)})
+//│ max^23([C 1 [C 3 [C 2 [N]]]], 0)
+//│ def max(ms⁰) = case ms⁰ of {
+//│ 	C h⁰ t⁰ => (fun m⁰ -> if (h⁰ > m⁰) then max^7(t⁰, h⁰) else max^12(t⁰, m⁰))
+//│ 	| N  => (fun m¹ -> m¹)}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -84,24 +84,24 @@ max(C(1, C(3, C(2, N))))(0)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ ((max₀ [C 1 [C 3 [C 2 [N]]]]) 0)
-//│ def max₀ = 
-//│ 	(fun ms¹ -> case ms¹ of {
-//│ 		C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²))
-//│ 		| N  => (fun m³ -> m³)})
+//│ max₀([C 1 [C 3 [C 2 [N]]]], 0)
+//│ def max₀(ms¹) = 
+//│ 	case ms¹ of {
+//│ 		C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²))
+//│ 		| N  => (fun m³ -> m³)}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 60 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 54
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 54
 //│ [C 2 [N]]: 61 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 54
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 54
 //│ [C 3 [C 2 [N]]]: 62 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 54
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 54
 //│ [C 1 [C 3 [C 2 [N]]]]: 63 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 54
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 54
 //│ ------------------
-//│ case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 54 --->
+//│ case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 54 --->
 //│ 	[N]: 60
 //│ 	[C 2 [N]]: 61
 //│ 	[C 3 [C 2 [N]]]: 62
@@ -110,15 +110,15 @@ max(C(1, C(3, C(2, N))))(0)
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [N]: 60 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 54
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 54
 //│ [C 2 [N]]: 61 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 54
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 54
 //│ [C 3 [C 2 [N]]]: 62 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 54
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 54
 //│ [C 1 [C 3 [C 2 [N]]]]: 63 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 54
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 54
 //│ ------------------
-//│ case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 54 --->
+//│ case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 54 --->
 //│ 	[N]: 60
 //│ 	[C 2 [N]]: 61
 //│ 	[C 3 [C 2 [N]]]: 62
@@ -126,18 +126,18 @@ max(C(1, C(3, C(2, N))))(0)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((max₀ 
+//│ max₀(
 //│ 	let h² = 1
 //│ 	in let t² = 	
 //│ 		let h³ = 3
 //│ 		in let t³ = 	
 //│ 			let h⁴ = 2
 //│ 			in let t⁴ = (fun m⁷ -> m⁷)
-//│ 			in (fun m⁶ -> if (h⁴ > m⁶) then ((max₀ t⁴) h⁴) else ((max₀ t⁴) m⁶))
-//│ 		in (fun m⁵ -> if (h³ > m⁵) then ((max₀ t³) h³) else ((max₀ t³) m⁵))
-//│ 	in (fun m⁴ -> if (h² > m⁴) then ((max₀ t²) h²) else ((max₀ t²) m⁴))) 0)
-//│ def max₀ = 
-//│ 	(fun ms² -> ms²)
+//│ 			in (fun m⁶ -> if (h⁴ > m⁶) then max₀(t⁴, h⁴) else max₀(t⁴, m⁶))
+//│ 		in (fun m⁵ -> if (h³ > m⁵) then max₀(t³, h³) else max₀(t³, m⁵))
+//│ 	in (fun m⁴ -> if (h² > m⁴) then max₀(t², h²) else max₀(t², m⁴)), 0)
+//│ def max₀(ms²) = 
+//│ 	ms²
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -160,17 +160,17 @@ max(
 //│ |_LUMBERHACK_EVAL|↵|#fun| |max| |#=| |x| |=>| |x|↵|max|(|→|#let| |h| |#=| |1|↵|#let| |t| |#=| |(|→|#let| |h| |#=| |3|↵|#let| |t| |#=| |(|→|#let| |h| |#=| |2|↵|#let| |t| |#=| |m| |=>| |m|↵|m| |=>| |#if| |(|h| |>| |m|)| |#then| |max|(|t|)|(|h|)| |#else| |max|(|t|)|(|m|)|←|↵|)|↵|(|m| |=>| |#if| |h| |>| |m| |#then| |max|(|t|)|(|h|)| |#else| |max|(|t|)|(|m|)|)|←|↵|)|↵|(|m| |=>| |#if| |(|h| |>| |m|)| |#then| |max|(|t|)|(|h|)| |#else| |max|(|t|)|(|m|)|)|←|↵|)|(|0|)|
 //│ Parsed: {_LUMBERHACK_EVAL; fun max = x, => x; max (let h = 1 in let t = '(' let h = 3 in let t = '(' let h = 2 in let t = m, => m in m, => if ('(' > (h,) (m,), ')') then max (t,) (h,) else max (t,) (m,), ')' in '(' m, => if (> (h,) (m,)) then max (t,) (h,) else max (t,) (m,), ')', ')' in '(' m, => if ('(' > (h,) (m,), ')') then max (t,) (h,) else max (t,) (m,), ')',) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ ((max^3 
+//│ max^3(
 //│ 	let h⁰ = 1
 //│ 	in let t⁰ = 	
 //│ 		let h¹ = 3
 //│ 		in let t¹ = 	
 //│ 			let h² = 2
 //│ 			in let t² = (fun m⁰ -> m⁰)
-//│ 			in (fun m¹ -> if (h² > m¹) then ((max^14 t²) h²) else ((max^19 t²) m¹))
-//│ 		in (fun m² -> if (h¹ > m²) then ((max^33 t¹) h¹) else ((max^38 t¹) m²))
-//│ 	in (fun m³ -> if (h⁰ > m³) then ((max^52 t⁰) h⁰) else ((max^57 t⁰) m³))) 0)
-//│ def max = (fun x⁰ -> x⁰)
+//│ 			in (fun m¹ -> if (h² > m¹) then max^14(t², h²) else max^19(t², m¹))
+//│ 		in (fun m² -> if (h¹ > m²) then max^33(t¹, h¹) else max^38(t¹, m²))
+//│ 	in (fun m³ -> if (h⁰ > m³) then max^52(t⁰, h⁰) else max^57(t⁰, m³)), 0)
+//│ def max(x⁰) = x⁰
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
@@ -188,30 +188,30 @@ max(
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ ((max₄ 
+//│ max₄(
 //│ 	let h³ = 1
 //│ 	in let t³ = 	
 //│ 		let h⁴ = 3
 //│ 		in let t⁴ = 	
 //│ 			let h⁵ = 2
 //│ 			in let t⁵ = (fun m⁴ -> m⁴)
-//│ 			in (fun m⁵ -> if (h⁵ > m⁵) then ((max₀ t⁵) h⁵) else ((max₁ t⁵) m⁵))
-//│ 		in (fun m⁶ -> if (h⁴ > m⁶) then ((max₂ t⁴) h⁴) else ((max₃ t⁴) m⁶))
-//│ 	in (fun m⁷ -> if (h³ > m⁷) then ((max₅ t³) h³) else ((max₆ t³) m⁷))) 0)
-//│ def max₀ = 
-//│ 	(fun x³ -> x³)
-//│ def max₁ = 
-//│ 	(fun x⁵ -> x⁵)
-//│ def max₂ = 
-//│ 	(fun x⁷ -> x⁷)
-//│ def max₃ = 
-//│ 	(fun x⁴ -> x⁴)
-//│ def max₄ = 
-//│ 	(fun x¹ -> x¹)
-//│ def max₅ = 
-//│ 	(fun x² -> x²)
-//│ def max₆ = 
-//│ 	(fun x⁶ -> x⁶)
+//│ 			in (fun m⁵ -> if (h⁵ > m⁵) then max₀(t⁵, h⁵) else max₁(t⁵, m⁵))
+//│ 		in (fun m⁶ -> if (h⁴ > m⁶) then max₂(t⁴, h⁴) else max₃(t⁴, m⁶))
+//│ 	in (fun m⁷ -> if (h³ > m⁷) then max₅(t³, h³) else max₆(t³, m⁷)), 0)
+//│ def max₀(x³) = 
+//│ 	x³
+//│ def max₁(x⁵) = 
+//│ 	x⁵
+//│ def max₂(x⁷) = 
+//│ 	x⁷
+//│ def max₃(x⁴) = 
+//│ 	x⁴
+//│ def max₄(x¹) = 
+//│ 	x¹
+//│ def max₅(x²) = 
+//│ 	x²
+//│ def max₆(x⁶) = 
+//│ 	x⁶
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
@@ -227,30 +227,30 @@ max(
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((max₄ 
+//│ max₄(
 //│ 	let h⁶ = 1
 //│ 	in let t⁶ = 	
 //│ 		let h⁷ = 3
 //│ 		in let t⁷ = 	
 //│ 			let h⁸ = 2
 //│ 			in let t⁸ = (fun m⁸ -> m⁸)
-//│ 			in (fun m⁹ -> if (h⁸ > m⁹) then ((max₀ t⁸) h⁸) else ((max₁ t⁸) m⁹))
-//│ 		in (fun m¹⁰ -> if (h⁷ > m¹⁰) then ((max₂ t⁷) h⁷) else ((max₃ t⁷) m¹⁰))
-//│ 	in (fun m¹¹ -> if (h⁶ > m¹¹) then ((max₅ t⁶) h⁶) else ((max₆ t⁶) m¹¹))) 0)
-//│ def max₀ = 
-//│ 	(fun x¹³ -> x¹³)
-//│ def max₁ = 
-//│ 	(fun x¹⁰ -> x¹⁰)
-//│ def max₂ = 
-//│ 	(fun x¹⁴ -> x¹⁴)
-//│ def max₃ = 
-//│ 	(fun x¹² -> x¹²)
-//│ def max₄ = 
-//│ 	(fun x⁹ -> x⁹)
-//│ def max₅ = 
-//│ 	(fun x⁸ -> x⁸)
-//│ def max₆ = 
-//│ 	(fun x¹¹ -> x¹¹)
+//│ 			in (fun m⁹ -> if (h⁸ > m⁹) then max₀(t⁸, h⁸) else max₁(t⁸, m⁹))
+//│ 		in (fun m¹⁰ -> if (h⁷ > m¹⁰) then max₂(t⁷, h⁷) else max₃(t⁷, m¹⁰))
+//│ 	in (fun m¹¹ -> if (h⁶ > m¹¹) then max₅(t⁶, h⁶) else max₆(t⁶, m¹¹)), 0)
+//│ def max₀(x¹³) = 
+//│ 	x¹³
+//│ def max₁(x¹⁰) = 
+//│ 	x¹⁰
+//│ def max₂(x¹⁴) = 
+//│ 	x¹⁴
+//│ def max₃(x¹²) = 
+//│ 	x¹²
+//│ def max₄(x⁹) = 
+//│ 	x⁹
+//│ def max₅(x⁸) = 
+//│ 	x⁸
+//│ def max₆(x¹¹) = 
+//│ 	x¹¹
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -283,23 +283,23 @@ max(
 //│ |#fun| |max| |#=| |y| |=>| |y|↵|#fun| |max0| |#=| |x| |=>| |x|↵|#fun| |max1| |#=| |x| |=>| |x|↵|#fun| |max2| |#=| |x| |=>| |x|↵|#fun| |max3| |#=| |x| |=>| |x|↵|#fun| |max4| |#=| |x| |=>| |x|↵|#fun| |max5| |#=| |x| |=>| |x|↵|max|(|→|#let| |h| |#=| |1|↵|#let| |t| |#=| |(|→|#let| |h| |#=| |3|↵|#let| |t| |#=| |(|→|#let| |h| |#=| |2|↵|#let| |t| |#=| |m| |=>| |m|↵|m| |=>| |#if| |(|h| |>| |m|)| |#then| |max0|(|t|)|(|h|)| |#else| |max1|(|t|)|(|m|)|←|↵|)|↵|(|m| |=>| |#if| |h| |>| |m| |#then| |max2|(|t|)|(|h|)| |#else| |max3|(|t|)|(|m|)|)|←|↵|)|↵|(|m| |=>| |#if| |(|h| |>| |m|)| |#then| |max4|(|t|)|(|h|)| |#else| |max5|(|t|)|(|m|)|)|←|↵|)|(|0|)|
 //│ Parsed: {fun max = y, => y; fun max0 = x, => x; fun max1 = x, => x; fun max2 = x, => x; fun max3 = x, => x; fun max4 = x, => x; fun max5 = x, => x; max (let h = 1 in let t = '(' let h = 3 in let t = '(' let h = 2 in let t = m, => m in m, => if ('(' > (h,) (m,), ')') then max0 (t,) (h,) else max1 (t,) (m,), ')' in '(' m, => if (> (h,) (m,)) then max2 (t,) (h,) else max3 (t,) (m,), ')', ')' in '(' m, => if ('(' > (h,) (m,), ')') then max4 (t,) (h,) else max5 (t,) (m,), ')',) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ ((max^15 
+//│ max^15(
 //│ 	let h⁰ = 1
 //│ 	in let t⁰ = 	
 //│ 		let h¹ = 3
 //│ 		in let t¹ = 	
 //│ 			let h² = 2
 //│ 			in let t² = (fun m⁰ -> m⁰)
-//│ 			in (fun m¹ -> if (h² > m¹) then ((max0^26 t²) h²) else ((max1^31 t²) m¹))
-//│ 		in (fun m² -> if (h¹ > m²) then ((max2^45 t¹) h¹) else ((max3^50 t¹) m²))
-//│ 	in (fun m³ -> if (h⁰ > m³) then ((max4^64 t⁰) h⁰) else ((max5^69 t⁰) m³))) 0)
-//│ def max = (fun y⁰ -> y⁰)
-//│ def max0 = (fun x⁰ -> x⁰)
-//│ def max1 = (fun x¹ -> x¹)
-//│ def max2 = (fun x² -> x²)
-//│ def max3 = (fun x³ -> x³)
-//│ def max4 = (fun x⁴ -> x⁴)
-//│ def max5 = (fun x⁵ -> x⁵)
+//│ 			in (fun m¹ -> if (h² > m¹) then max0^26(t², h²) else max1^31(t², m¹))
+//│ 		in (fun m² -> if (h¹ > m²) then max2^45(t¹, h¹) else max3^50(t¹, m²))
+//│ 	in (fun m³ -> if (h⁰ > m³) then max4^64(t⁰, h⁰) else max5^69(t⁰, m³)), 0)
+//│ def max(y⁰) = y⁰
+//│ def max0(x⁰) = x⁰
+//│ def max1(x¹) = x¹
+//│ def max2(x²) = x²
+//│ def max3(x³) = x³
+//│ def max4(x⁴) = x⁴
+//│ def max5(x⁵) = x⁵
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -313,30 +313,30 @@ max(
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ ((max₀ 
+//│ max₀(
 //│ 	let h³ = 1
 //│ 	in let t³ = 	
 //│ 		let h⁴ = 3
 //│ 		in let t⁴ = 	
 //│ 			let h⁵ = 2
 //│ 			in let t⁵ = (fun m⁴ -> m⁴)
-//│ 			in (fun m⁵ -> if (h⁵ > m⁵) then ((max0₀ t⁵) h⁵) else ((max1₀ t⁵) m⁵))
-//│ 		in (fun m⁶ -> if (h⁴ > m⁶) then ((max2₀ t⁴) h⁴) else ((max3₀ t⁴) m⁶))
-//│ 	in (fun m⁷ -> if (h³ > m⁷) then ((max4₀ t³) h³) else ((max5₀ t³) m⁷))) 0)
-//│ def max0₀ = 
-//│ 	(fun x⁸ -> x⁸)
-//│ def max1₀ = 
-//│ 	(fun x¹¹ -> x¹¹)
-//│ def max2₀ = 
-//│ 	(fun x⁶ -> x⁶)
-//│ def max3₀ = 
-//│ 	(fun x⁷ -> x⁷)
-//│ def max4₀ = 
-//│ 	(fun x⁹ -> x⁹)
-//│ def max5₀ = 
-//│ 	(fun x¹⁰ -> x¹⁰)
-//│ def max₀ = 
-//│ 	(fun y¹ -> y¹)
+//│ 			in (fun m⁵ -> if (h⁵ > m⁵) then max0₀(t⁵, h⁵) else max1₀(t⁵, m⁵))
+//│ 		in (fun m⁶ -> if (h⁴ > m⁶) then max2₀(t⁴, h⁴) else max3₀(t⁴, m⁶))
+//│ 	in (fun m⁷ -> if (h³ > m⁷) then max4₀(t³, h³) else max5₀(t³, m⁷)), 0)
+//│ def max0₀(x⁸) = 
+//│ 	x⁸
+//│ def max1₀(x¹¹) = 
+//│ 	x¹¹
+//│ def max2₀(x⁶) = 
+//│ 	x⁶
+//│ def max3₀(x⁷) = 
+//│ 	x⁷
+//│ def max4₀(x⁹) = 
+//│ 	x⁹
+//│ def max5₀(x¹⁰) = 
+//│ 	x¹⁰
+//│ def max₀(y¹) = 
+//│ 	y¹
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
@@ -352,30 +352,30 @@ max(
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((max₀ 
+//│ max₀(
 //│ 	let h⁶ = 1
 //│ 	in let t⁶ = 	
 //│ 		let h⁷ = 3
 //│ 		in let t⁷ = 	
 //│ 			let h⁸ = 2
 //│ 			in let t⁸ = (fun m⁸ -> m⁸)
-//│ 			in (fun m⁹ -> if (h⁸ > m⁹) then ((max0₀ t⁸) h⁸) else ((max1₀ t⁸) m⁹))
-//│ 		in (fun m¹⁰ -> if (h⁷ > m¹⁰) then ((max2₀ t⁷) h⁷) else ((max3₀ t⁷) m¹⁰))
-//│ 	in (fun m¹¹ -> if (h⁶ > m¹¹) then ((max4₀ t⁶) h⁶) else ((max5₀ t⁶) m¹¹))) 0)
-//│ def max0₀ = 
-//│ 	(fun x¹⁷ -> x¹⁷)
-//│ def max1₀ = 
-//│ 	(fun x¹² -> x¹²)
-//│ def max2₀ = 
-//│ 	(fun x¹⁴ -> x¹⁴)
-//│ def max3₀ = 
-//│ 	(fun x¹⁵ -> x¹⁵)
-//│ def max4₀ = 
-//│ 	(fun x¹³ -> x¹³)
-//│ def max5₀ = 
-//│ 	(fun x¹⁶ -> x¹⁶)
-//│ def max₀ = 
-//│ 	(fun y² -> y²)
+//│ 			in (fun m⁹ -> if (h⁸ > m⁹) then max0₀(t⁸, h⁸) else max1₀(t⁸, m⁹))
+//│ 		in (fun m¹⁰ -> if (h⁷ > m¹⁰) then max2₀(t⁷, h⁷) else max3₀(t⁷, m¹⁰))
+//│ 	in (fun m¹¹ -> if (h⁶ > m¹¹) then max4₀(t⁶, h⁶) else max5₀(t⁶, m¹¹)), 0)
+//│ def max0₀(x¹⁷) = 
+//│ 	x¹⁷
+//│ def max1₀(x¹²) = 
+//│ 	x¹²
+//│ def max2₀(x¹⁴) = 
+//│ 	x¹⁴
+//│ def max3₀(x¹⁵) = 
+//│ 	x¹⁵
+//│ def max4₀(x¹³) = 
+//│ 	x¹³
+//│ def max5₀(x¹⁶) = 
+//│ 	x¹⁶
+//│ def max₀(y²) = 
+//│ 	y²
 //│ <<<<<<< after fusion <<<<<<<
 
 // infinite list
@@ -387,11 +387,11 @@ max(l)(0)
 //│ |#fun| |max|(|ms|)| |#=| |#if| |ms| |is|→|C|(|h|,| |t|)| |#then| |m| |=>| |#if| |h| |>| |m| |#then| |max|(|t|)|(|h|)| |#else| |max|(|t|)|(|m|)|↵|N| |#then| |m| |=>| |m|←|↵|#let| |l| |#=| |C|(|1|,| |C|(|3|,| |C|(|2|,| |C|(|5|,| |l|)|)|)|)|↵|max|(|l|)|(|0|)|
 //│ Parsed: {fun max = ms, => if ms is ‹(C (h, t,)) then m, => if (> (h,) (m,)) then max (t,) (h,) else max (t,) (m,); (N) then m, => m›; let l = C (1, C (3, C (2, C (5, l,),),),); max (l,) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ ((max^32 l^33) 0)
+//│ max^32(l^33, 0)
 //│ def l = [C 1 [C 3 [C 2 [C 5 l^27]]]]
-//│ def max = (fun ms⁰ -> case ms⁰ of {
-//│ 	C h⁰ t⁰ => (fun m⁰ -> if (h⁰ > m⁰) then ((max^7 t⁰) h⁰) else ((max^12 t⁰) m⁰))
-//│ 	| N  => (fun m¹ -> m¹)})
+//│ def max(ms⁰) = case ms⁰ of {
+//│ 	C h⁰ t⁰ => (fun m⁰ -> if (h⁰ > m⁰) then max^7(t⁰, h⁰) else max^12(t⁰, m⁰))
+//│ 	| N  => (fun m¹ -> m¹)}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -403,26 +403,26 @@ max(l)(0)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ ((max₀ l₀) 0)
+//│ max₀(l₀, 0)
 //│ def l₀ = 
 //│ 	[C 1 [C 3 [C 2 [C 5 l₀]]]]
-//│ def max₀ = 
-//│ 	(fun ms¹ -> case ms¹ of {
-//│ 		C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²))
-//│ 		| N  => (fun m³ -> m³)})
+//│ def max₀(ms¹) = 
+//│ 	case ms¹ of {
+//│ 		C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²))
+//│ 		| N  => (fun m³ -> m³)}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 5 l₀]: 42 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 66
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 66
 //│ [C 2 [C 5 l₀]]: 43 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 66
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 66
 //│ [C 3 [C 2 [C 5 l₀]]]: 44 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 66
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 66
 //│ [C 1 [C 3 [C 2 [C 5 l₀]]]]: 45 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 66
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 66
 //│ ------------------
-//│ case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 66 --->
+//│ case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 66 --->
 //│ 	[C 5 l₀]: 42
 //│ 	[C 2 [C 5 l₀]]: 43
 //│ 	[C 3 [C 2 [C 5 l₀]]]: 44
@@ -431,15 +431,15 @@ max(l)(0)
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [C 5 l₀]: 42 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 66
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 66
 //│ [C 2 [C 5 l₀]]: 43 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 66
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 66
 //│ [C 3 [C 2 [C 5 l₀]]]: 44 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 66
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 66
 //│ [C 1 [C 3 [C 2 [C 5 l₀]]]]: 45 --->
-//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 66
+//│ 	case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 66
 //│ ------------------
-//│ case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then ((max₀ t¹) h¹) else ((max₀ t¹) m²)) | N  => (fun m³ -> m³)}: 66 --->
+//│ case ms¹ of {C h¹ t¹ => (fun m² -> if (h¹ > m²) then max₀(t¹, h¹) else max₀(t¹, m²)) | N  => (fun m³ -> m³)}: 66 --->
 //│ 	[C 5 l₀]: 42
 //│ 	[C 2 [C 5 l₀]]: 43
 //│ 	[C 3 [C 2 [C 5 l₀]]]: 44
@@ -447,7 +447,7 @@ max(l)(0)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((max₀ l₀) 0)
+//│ max₀(l₀, 0)
 //│ def l₀ = 
 //│ 	let h² = 1
 //│ 	in let t² = 	
@@ -457,10 +457,10 @@ max(l)(0)
 //│ 			in let t⁴ = 	
 //│ 				let h⁵ = 5
 //│ 				in let t⁵ = l₀
-//│ 				in (fun m⁷ -> if (h⁵ > m⁷) then ((max₀ t⁵) h⁵) else ((max₀ t⁵) m⁷))
-//│ 			in (fun m⁶ -> if (h⁴ > m⁶) then ((max₀ t⁴) h⁴) else ((max₀ t⁴) m⁶))
-//│ 		in (fun m⁵ -> if (h³ > m⁵) then ((max₀ t³) h³) else ((max₀ t³) m⁵))
-//│ 	in (fun m⁴ -> if (h² > m⁴) then ((max₀ t²) h²) else ((max₀ t²) m⁴))
-//│ def max₀ = 
-//│ 	(fun ms² -> ms²)
+//│ 				in (fun m⁷ -> if (h⁵ > m⁷) then max₀(t⁵, h⁵) else max₀(t⁵, m⁷))
+//│ 			in (fun m⁶ -> if (h⁴ > m⁶) then max₀(t⁴, h⁴) else max₀(t⁴, m⁶))
+//│ 		in (fun m⁵ -> if (h³ > m⁵) then max₀(t³, h³) else max₀(t³, m⁵))
+//│ 	in (fun m⁴ -> if (h² > m⁴) then max₀(t², h²) else max₀(t², m⁴))
+//│ def max₀(ms²) = 
+//│ 	ms²
 //│ <<<<<<< after fusion <<<<<<<

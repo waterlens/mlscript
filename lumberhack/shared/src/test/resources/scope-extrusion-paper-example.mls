@@ -10,9 +10,9 @@ f(C(1, C(2, N)))
 //│ |#fun| |f|(|xs|,| |a|)| |#=| |primitive|(|→|#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |primitive|(|h|)|(|t|)|(|a|)|←|←|↵|)|↵|f|(|C|(|1|,| |C|(|2|,| |N|)|)|)|
 //│ Parsed: {fun f = xs, a, => primitive (if xs is ‹(C (h, t,)) then primitive (h,) (t,) (a,)›,); f (C (1, C (2, N,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (f^14 [C 1 [C 2 [N]]])
-//│ def f = (fun xs⁰ -> (fun a⁰ -> (primitive⁰ case xs⁰ of {
-//│ 	C h⁰ t⁰ => (((primitive⁰ h⁰) t⁰) a⁰)})))
+//│ f^14([C 1 [C 2 [N]]])
+//│ def f(xs⁰, a⁰) = primitive⁰(case xs⁰ of {
+//│ 	C h⁰ t⁰ => primitive⁰(h⁰, t⁰, a⁰)})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -20,35 +20,35 @@ f(C(1, C(2, N)))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (f₀ [C 1 [C 2 [N]]])
-//│ def f₀ = 
-//│ 	(fun xs¹ -> (fun a¹ -> (primitive⁰ case xs¹ of {
-//│ 		C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹)})))
+//│ f₀([C 1 [C 2 [N]]])
+//│ def f₀(xs¹, a¹) = 
+//│ 	primitive⁰(case xs¹ of {
+//│ 		C h¹ t¹ => primitive⁰(h¹, t¹, a¹)})
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 1 [C 2 [N]]]: 39 --->
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹)}: 30
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, t¹, a¹)}: 30
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹)}: 30 --->
+//│ case xs¹ of {C h¹ t¹ => primitive⁰(h¹, t¹, a¹)}: 30 --->
 //│ 	[C 1 [C 2 [N]]]: 39
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [C 1 [C 2 [N]]]: 39 --->
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹)}: 30
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, t¹, a¹)}: 30
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹)}: 30 --->
+//│ case xs¹ of {C h¹ t¹ => primitive⁰(h¹, t¹, a¹)}: 30 --->
 //│ 	[C 1 [C 2 [N]]]: 39
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (f₀ 
+//│ f₀(
 //│ 	let h² = 1
 //│ 	in let t² = [C 2 [N]]
-//│ 	in (fun a² -> (((primitive⁰ h²) t²) a²)))
-//│ def f₀ = 
-//│ 	(fun xs² -> (fun a³ -> (primitive⁰ (xs² a³))))
+//│ 	in (fun a² -> primitive⁰(h², t², a²)))
+//│ def f₀(xs², a³) = 
+//│ 	primitive⁰(xs²(a³))
 //│ <<<<<<< after fusion <<<<<<<
 
 fun f(xs, a) = primitive(
@@ -60,10 +60,10 @@ f(cs)
 //│ |#fun| |f|(|xs|,| |a|)| |#=| |primitive|(|→|#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |primitive|(|h|)|(|t|)|(|a|)|←|←|↵|)|↵|#let| |cs| |#=| |C|(|1|,| |C|(|2|,| |cs|)|)|↵|f|(|cs|)|
 //│ Parsed: {fun f = xs, a, => primitive (if xs is ‹(C (h, t,)) then primitive (h,) (t,) (a,)›,); let cs = C (1, C (2, cs,),); f (cs,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (f^19 cs^20)
+//│ f^19(cs^20)
 //│ def cs = [C 1 [C 2 cs^16]]
-//│ def f = (fun xs⁰ -> (fun a⁰ -> (primitive⁰ case xs⁰ of {
-//│ 	C h⁰ t⁰ => (((primitive⁰ h⁰) t⁰) a⁰)})))
+//│ def f(xs⁰, a⁰) = primitive⁰(case xs⁰ of {
+//│ 	C h⁰ t⁰ => primitive⁰(h⁰, t⁰, a⁰)})
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -73,20 +73,20 @@ f(cs)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (f₀ cs₀)
+//│ f₀(cs₀)
 //│ def cs₀ = 
 //│ 	[C 1 [C 2 cs₀]]
-//│ def f₀ = 
-//│ 	(fun xs¹ -> (fun a¹ -> (primitive⁰ case xs¹ of {
-//│ 		C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹)})))
+//│ def f₀(xs¹, a¹) = 
+//│ 	primitive⁰(case xs¹ of {
+//│ 		C h¹ t¹ => primitive⁰(h¹, t¹, a¹)})
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 1 [C 2 cs₀]]: 26 --->
 //│ 	NoCons
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹)}: 36
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, t¹, a¹)}: 36
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹)}: 36 --->
+//│ case xs¹ of {C h¹ t¹ => primitive⁰(h¹, t¹, a¹)}: 36 --->
 //│ 	[C 1 [C 2 cs₀]]: 26
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -97,12 +97,12 @@ f(cs)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (f₀ cs₀)
+//│ f₀(cs₀)
 //│ def cs₀ = 
 //│ 	[C 1 [C 2 cs₀]]
-//│ def f₀ = 
-//│ 	(fun xs² -> (fun a² -> (primitive⁰ case xs² of {
-//│ 		C h¹ t¹ => (((primitive⁰ h¹) t¹) a²)})))
+//│ def f₀(xs², a²) = 
+//│ 	primitive⁰(case xs² of {
+//│ 		C h¹ t¹ => primitive⁰(h¹, t¹, a²)})
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -119,15 +119,15 @@ f(g(42))(0)
 //│ |_LUMBERHACK_EVAL|↵|#fun| |f|(|xs|,| |a|)| |#=| |primitive|(|→|#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |primitive|(|h|)|(|f|(|t|,| |a|)|)|(|a|)|↵|N| |#then| |primitive|(|a|)|←|←|↵|)|↵|#fun| |g|(|init|)| |#=| |#if| |init| |>| |0|→|#then| |C|(|1|,| |g|(|init| |-| |1|)|)|↵|#else| |N| |←|↵|f|(|g|(|42|)|)|(|0|)|
 //│ Parsed: {_LUMBERHACK_EVAL; fun f = xs, a, => primitive (if xs is ‹(C (h, t,)) then primitive (h,) (f (t, a,),) (a,); (N) then primitive (a,)›,); fun g = init, => if (> (init,) (0,)) then C (1, g (- (init,) (1,),),) else N; f (g (42,),) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ ((f^38 (g^39 42)) 0)
-//│ def f = (fun xs⁰ -> (fun a⁰ -> (primitive⁰ case xs⁰ of {
-//│ 	C h⁰ t⁰ => (((primitive⁰ h⁰) ((f^6 t⁰) a⁰)) a⁰)
-//│ 	| N  => (primitive⁰ a⁰)})))
-//│ def g = (fun init⁰ -> if (init⁰ > 0) then [C 1 (g^27 (init⁰ - 1))] else [N])
+//│ f^38(g^39(42), 0)
+//│ def f(xs⁰, a⁰) = primitive⁰(case xs⁰ of {
+//│ 	C h⁰ t⁰ => primitive⁰(h⁰, f^6(t⁰, a⁰), a⁰)
+//│ 	| N  => primitive⁰(a⁰)})
+//│ def g(init⁰) = if (init⁰ > 0) then [C 1 g^27((init⁰ - 1))] else [N]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
-//│ (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (primitive⁰ 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))
+//│ primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0))
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -138,50 +138,50 @@ f(g(42))(0)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ ((f₀ (g₀ 42)) 0)
-//│ def f₀ = 
-//│ 	(fun xs¹ -> (fun a¹ -> (primitive⁰ case xs¹ of {
-//│ 		C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹)
-//│ 		| N  => (primitive⁰ a¹)})))
-//│ def g₀ = 
-//│ 	(fun init¹ -> if (init¹ > 0) then [C 1 (g₀ (init¹ - 1))] else [N])
+//│ f₀(g₀(42), 0)
+//│ def f₀(xs¹, a¹) = 
+//│ 	primitive⁰(case xs¹ of {
+//│ 		C h¹ t¹ => primitive⁰(h¹, f₀(t¹, a¹), a¹)
+//│ 		| N  => primitive⁰(a¹)})
+//│ def g₀(init¹) = 
+//│ 	if (init¹ > 0) then [C 1 g₀((init¹ - 1))] else [N]
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 (g₀ (init¹ - 1))]: 78 --->
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹) | N  => (primitive⁰ a¹)}: 61
+//│ [C 1 g₀((init¹ - 1))]: 78 --->
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, a¹), a¹) | N  => primitive⁰(a¹)}: 61
 //│ [N]: 79 --->
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹) | N  => (primitive⁰ a¹)}: 61
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, a¹), a¹) | N  => primitive⁰(a¹)}: 61
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹) | N  => (primitive⁰ a¹)}: 61 --->
-//│ 	[C 1 (g₀ (init¹ - 1))]: 78
+//│ case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, a¹), a¹) | N  => primitive⁰(a¹)}: 61 --->
+//│ 	[C 1 g₀((init¹ - 1))]: 78
 //│ 	[N]: 79
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C 1 (g₀ (init¹ - 1))]: 78 --->
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹) | N  => (primitive⁰ a¹)}: 61
+//│ [C 1 g₀((init¹ - 1))]: 78 --->
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, a¹), a¹) | N  => primitive⁰(a¹)}: 61
 //│ [N]: 79 --->
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹) | N  => (primitive⁰ a¹)}: 61
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, a¹), a¹) | N  => primitive⁰(a¹)}: 61
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) a¹)) a¹) | N  => (primitive⁰ a¹)}: 61 --->
-//│ 	[C 1 (g₀ (init¹ - 1))]: 78
+//│ case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, a¹), a¹) | N  => primitive⁰(a¹)}: 61 --->
+//│ 	[C 1 g₀((init¹ - 1))]: 78
 //│ 	[N]: 79
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((f₀ (g₀ 42)) 0)
-//│ def f₀ = 
-//│ 	(fun xs² -> (fun a² -> (primitive⁰ (xs² a²))))
-//│ def g₀ = 
-//│ 	(fun init² -> if (init² > 0) then 
+//│ f₀(g₀(42), 0)
+//│ def f₀(xs², a²) = 
+//│ 	primitive⁰(xs²(a²))
+//│ def g₀(init²) = 
+//│ 	if (init² > 0) then 
 //│ 		let h² = 1
-//│ 		in let t² = (g₀ (init² - 1))
-//│ 		in (fun a³ -> (((primitive⁰ h²) ((f₀ t²) a³)) a³)) else (fun a⁴ -> (primitive⁰ a⁴)))
+//│ 		in let t² = g₀((init² - 1))
+//│ 		in (fun a³ -> primitive⁰(h², f₀(t², a³), a³)) else (fun a⁴ -> primitive⁰(a⁴))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
-//│ (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (primitive⁰ 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))) 0))
+//│ primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0)), 0))
 //│ <<<<<<< evaluate <<<<<<<
 
 _LUMBERHACK_EVAL
@@ -197,15 +197,15 @@ f(g(42))(0)
 //│ |_LUMBERHACK_EVAL|↵|#fun| |f|(|xs|,| |a|)| |#=| |primitive|(|→|#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |primitive|(|h|)|(|f|(|t|,| |a| |+| |1|)|)|(|a|)|↵|N| |#then| |primitive|(|a|)|←|←|↵|)|↵|#fun| |g|(|init|)| |#=| |#if| |init| |>| |0|→|#then| |C|(|1|,| |g|(|init| |-| |1|)|)|↵|#else| |N|←|↵|f|(|g|(|42|)|)|(|0|)|
 //│ Parsed: {_LUMBERHACK_EVAL; fun f = xs, a, => primitive (if xs is ‹(C (h, t,)) then primitive (h,) (f (t, + (a,) (1,),),) (a,); (N) then primitive (a,)›,); fun g = init, => if (> (init,) (0,)) then C (1, g (- (init,) (1,),),) else N; f (g (42,),) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ ((f^42 (g^43 42)) 0)
-//│ def f = (fun xs⁰ -> (fun a⁰ -> (primitive⁰ case xs⁰ of {
-//│ 	C h⁰ t⁰ => (((primitive⁰ h⁰) ((f^6 t⁰) (a⁰ + 1))) a⁰)
-//│ 	| N  => (primitive⁰ a⁰)})))
-//│ def g = (fun init⁰ -> if (init⁰ > 0) then [C 1 (g^31 (init⁰ - 1))] else [N])
+//│ f^42(g^43(42), 0)
+//│ def f(xs⁰, a⁰) = primitive⁰(case xs⁰ of {
+//│ 	C h⁰ t⁰ => primitive⁰(h⁰, f^6(t⁰, (a⁰ + 1)), a⁰)
+//│ 	| N  => primitive⁰(a⁰)})
+//│ def g(init⁰) = if (init⁰ > 0) then [C 1 g^31((init⁰ - 1))] else [N]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
-//│ (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (primitive⁰ 42))) 41))) 40))) 39))) 38))) 37))) 36))) 35))) 34))) 33))) 32))) 31))) 30))) 29))) 28))) 27))) 26))) 25))) 24))) 23))) 22))) 21))) 20))) 19))) 18))) 17))) 16))) 15))) 14))) 13))) 12))) 11))) 10))) 9))) 8))) 7))) 6))) 5))) 4))) 3))) 2))) 1))) 0))
+//│ primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(42)), 41)), 40)), 39)), 38)), 37)), 36)), 35)), 34)), 33)), 32)), 31)), 30)), 29)), 28)), 27)), 26)), 25)), 24)), 23)), 22)), 21)), 20)), 19)), 18)), 17)), 16)), 15)), 14)), 13)), 12)), 11)), 10)), 9)), 8)), 7)), 6)), 5)), 4)), 3)), 2)), 1)), 0))
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -216,50 +216,50 @@ f(g(42))(0)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ ((f₀ (g₀ 42)) 0)
-//│ def f₀ = 
-//│ 	(fun xs¹ -> (fun a¹ -> (primitive⁰ case xs¹ of {
-//│ 		C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹)
-//│ 		| N  => (primitive⁰ a¹)})))
-//│ def g₀ = 
-//│ 	(fun init¹ -> if (init¹ > 0) then [C 1 (g₀ (init¹ - 1))] else [N])
+//│ f₀(g₀(42), 0)
+//│ def f₀(xs¹, a¹) = 
+//│ 	primitive⁰(case xs¹ of {
+//│ 		C h¹ t¹ => primitive⁰(h¹, f₀(t¹, (a¹ + 1)), a¹)
+//│ 		| N  => primitive⁰(a¹)})
+//│ def g₀(init¹) = 
+//│ 	if (init¹ > 0) then [C 1 g₀((init¹ - 1))] else [N]
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 (g₀ (init¹ - 1))]: 86 --->
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹) | N  => (primitive⁰ a¹)}: 69
+//│ [C 1 g₀((init¹ - 1))]: 86 --->
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, (a¹ + 1)), a¹) | N  => primitive⁰(a¹)}: 69
 //│ [N]: 87 --->
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹) | N  => (primitive⁰ a¹)}: 69
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, (a¹ + 1)), a¹) | N  => primitive⁰(a¹)}: 69
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹) | N  => (primitive⁰ a¹)}: 69 --->
-//│ 	[C 1 (g₀ (init¹ - 1))]: 86
+//│ case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, (a¹ + 1)), a¹) | N  => primitive⁰(a¹)}: 69 --->
+//│ 	[C 1 g₀((init¹ - 1))]: 86
 //│ 	[N]: 87
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C 1 (g₀ (init¹ - 1))]: 86 --->
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹) | N  => (primitive⁰ a¹)}: 69
+//│ [C 1 g₀((init¹ - 1))]: 86 --->
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, (a¹ + 1)), a¹) | N  => primitive⁰(a¹)}: 69
 //│ [N]: 87 --->
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹) | N  => (primitive⁰ a¹)}: 69
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, (a¹ + 1)), a¹) | N  => primitive⁰(a¹)}: 69
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) ((f₀ t¹) (a¹ + 1))) a¹) | N  => (primitive⁰ a¹)}: 69 --->
-//│ 	[C 1 (g₀ (init¹ - 1))]: 86
+//│ case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, (a¹ + 1)), a¹) | N  => primitive⁰(a¹)}: 69 --->
+//│ 	[C 1 g₀((init¹ - 1))]: 86
 //│ 	[N]: 87
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((f₀ (g₀ 42)) 0)
-//│ def f₀ = 
-//│ 	(fun xs² -> (fun a² -> (primitive⁰ (xs² a²))))
-//│ def g₀ = 
-//│ 	(fun init² -> if (init² > 0) then 
+//│ f₀(g₀(42), 0)
+//│ def f₀(xs², a²) = 
+//│ 	primitive⁰(xs²(a²))
+//│ def g₀(init²) = 
+//│ 	if (init² > 0) then 
 //│ 		let h² = 1
-//│ 		in let t² = (g₀ (init² - 1))
-//│ 		in (fun a³ -> (((primitive⁰ h²) ((f₀ t²) (a³ + 1))) a³)) else (fun a⁴ -> (primitive⁰ a⁴)))
+//│ 		in let t² = g₀((init² - 1))
+//│ 		in (fun a³ -> primitive⁰(h², f₀(t², (a³ + 1)), a³)) else (fun a⁴ -> primitive⁰(a⁴))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
-//│ (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (((primitive⁰ 1) (primitive⁰ (primitive⁰ 42))) 41))) 40))) 39))) 38))) 37))) 36))) 35))) 34))) 33))) 32))) 31))) 30))) 29))) 28))) 27))) 26))) 25))) 24))) 23))) 22))) 21))) 20))) 19))) 18))) 17))) 16))) 15))) 14))) 13))) 12))) 11))) 10))) 9))) 8))) 7))) 6))) 5))) 4))) 3))) 2))) 1))) 0))
+//│ primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(1, primitive⁰(primitive⁰(42)), 41)), 40)), 39)), 38)), 37)), 36)), 35)), 34)), 33)), 32)), 31)), 30)), 29)), 28)), 27)), 26)), 25)), 24)), 23)), 22)), 21)), 20)), 19)), 18)), 17)), 16)), 15)), 14)), 13)), 12)), 11)), 10)), 9)), 8)), 7)), 6)), 5)), 4)), 3)), 2)), 1)), 0))
 //│ <<<<<<< evaluate <<<<<<<
 
 
@@ -277,15 +277,15 @@ f(g(42))(0)
 //│ |_LUMBERHACK_EVAL|↵|#fun| |f|(|xs|,| |a|)| |#=| |primitive|(|→|#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |primitive|(|h|)|(|t|)|(|a|)|↵|N| |#then| |primitive|(|a|)|←|←|↵|)|↵|#fun| |g|(|init|)| |#=| |#if| |init| |>| |0|→|#then| |C|(|1|,| |C|(|2|,| |g|(|init| |-| |1|)|)|)|↵|#else| |N|←|↵|f|(|g|(|42|)|)|(|0|)|
 //│ Parsed: {_LUMBERHACK_EVAL; fun f = xs, a, => primitive (if xs is ‹(C (h, t,)) then primitive (h,) (t,) (a,); (N) then primitive (a,)›,); fun g = init, => if (> (init,) (0,)) then C (1, C (2, g (- (init,) (1,),),),) else N; f (g (42,),) (0,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ ((f^36 (g^37 42)) 0)
-//│ def f = (fun xs⁰ -> (fun a⁰ -> (primitive⁰ case xs⁰ of {
-//│ 	C h⁰ t⁰ => (((primitive⁰ h⁰) t⁰) a⁰)
-//│ 	| N  => (primitive⁰ a⁰)})))
-//│ def g = (fun init⁰ -> if (init⁰ > 0) then [C 1 [C 2 (g^24 (init⁰ - 1))]] else [N])
+//│ f^36(g^37(42), 0)
+//│ def f(xs⁰, a⁰) = primitive⁰(case xs⁰ of {
+//│ 	C h⁰ t⁰ => primitive⁰(h⁰, t⁰, a⁰)
+//│ 	| N  => primitive⁰(a⁰)})
+//│ def g(init⁰) = if (init⁰ > 0) then [C 1 [C 2 g^24((init⁰ - 1))]] else [N]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
-//│ (primitive⁰ (((primitive⁰ 1) [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]) 0))
+//│ primitive⁰(primitive⁰(1, [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]], 0))
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -295,25 +295,25 @@ f(g(42))(0)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ ((f₀ (g₀ 42)) 0)
-//│ def f₀ = 
-//│ 	(fun xs¹ -> (fun a¹ -> (primitive⁰ case xs¹ of {
-//│ 		C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹)
-//│ 		| N  => (primitive⁰ a¹)})))
-//│ def g₀ = 
-//│ 	(fun init¹ -> if (init¹ > 0) then [C 1 [C 2 (g₀ (init¹ - 1))]] else [N])
+//│ f₀(g₀(42), 0)
+//│ def f₀(xs¹, a¹) = 
+//│ 	primitive⁰(case xs¹ of {
+//│ 		C h¹ t¹ => primitive⁰(h¹, t¹, a¹)
+//│ 		| N  => primitive⁰(a¹)})
+//│ def g₀(init¹) = 
+//│ 	if (init¹ > 0) then [C 1 [C 2 g₀((init¹ - 1))]] else [N]
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [C 2 (g₀ (init¹ - 1))]]: 58 --->
+//│ [C 1 [C 2 g₀((init¹ - 1))]]: 58 --->
 //│ 	NoCons
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹) | N  => (primitive⁰ a¹)}: 74
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, t¹, a¹) | N  => primitive⁰(a¹)}: 74
 //│ [N]: 59 --->
 //│ 	NoCons
-//│ 	case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹) | N  => (primitive⁰ a¹)}: 74
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, t¹, a¹) | N  => primitive⁰(a¹)}: 74
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => (((primitive⁰ h¹) t¹) a¹) | N  => (primitive⁰ a¹)}: 74 --->
-//│ 	[C 1 [C 2 (g₀ (init¹ - 1))]]: 58
+//│ case xs¹ of {C h¹ t¹ => primitive⁰(h¹, t¹, a¹) | N  => primitive⁰(a¹)}: 74 --->
+//│ 	[C 1 [C 2 g₀((init¹ - 1))]]: 58
 //│ 	[N]: 59
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -324,17 +324,17 @@ f(g(42))(0)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ((f₀ (g₀ 42)) 0)
-//│ def f₀ = 
-//│ 	(fun xs² -> (fun a² -> (primitive⁰ case xs² of {
-//│ 		C h¹ t¹ => (((primitive⁰ h¹) t¹) a²)
-//│ 		| N  => (primitive⁰ a²)})))
-//│ def g₀ = 
-//│ 	(fun init² -> if (init² > 0) then [C 1 [C 2 (g₀ (init² - 1))]] else [N])
+//│ f₀(g₀(42), 0)
+//│ def f₀(xs², a²) = 
+//│ 	primitive⁰(case xs² of {
+//│ 		C h¹ t¹ => primitive⁰(h¹, t¹, a²)
+//│ 		| N  => primitive⁰(a²)})
+//│ def g₀(init²) = 
+//│ 	if (init² > 0) then [C 1 [C 2 g₀((init² - 1))]] else [N]
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
-//│ (primitive⁰ (((primitive⁰ 1) [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]) 0))
+//│ primitive⁰(primitive⁰(1, [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]], 0))
 //│ <<<<<<< evaluate <<<<<<<
 
 

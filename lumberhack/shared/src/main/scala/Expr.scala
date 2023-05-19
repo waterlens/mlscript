@@ -12,12 +12,21 @@ case class Ident(isDef: Bool, tree: Var, uid: Uid[Ident]) {
 case class ProgDef(id: Ident, body: Expr)
 case class Program(contents: Ls[ProgDef \/ Expr])(using d: Deforest) extends ProgramRewrite {
   d.prgm = Some(this)
+  private def takeParamsOut(e: Expr): List[Ident] -> Expr = e match {
+    case Expr.Function(p, b) => takeParamsOut(b).mapFirst(p :: _)
+    case _ => Nil -> e
+  }
   def pp(using config: PrettyPrintConfig): Str =
     contents.sortBy{
       case Left(pdef) => pdef.id.pp(using InitPpConfig)
       case Right(expr) => ""
     }.map {
-      case L(pd) => s"def ${pd.id.pp(using InitPpConfig)} = ${pd.body.pp}"
+      case L(pd) =>
+        val (params, body) = takeParamsOut(pd.body)
+        s"def ${pd.id.pp(using InitPpConfig)}${
+          val ps = params.map(_.pp).mkString(", ")
+          if ps.nonEmpty then s"($ps)" else ""
+        } = ${body.pp}"
       case R(e: Expr.LetIn) => e.pp.linesIterator.filter(_.nonEmpty).map(_.drop(1)).mkString("\n")
       case R(e) => e.pp
     }.mkString("\n")
@@ -31,13 +40,16 @@ case class Program(contents: Ls[ProgDef \/ Expr])(using d: Deforest) extends Pro
           assert(tmp.size == 1)
           tmp.head
         }
-
-        val currentFunPp = currentFunBody._2 match {
-          case e: Expr.LetIn => e.pp.linesIterator.filter(_.nonEmpty).map(_.drop(1)).mkString("\n")
+        val (currentFunParam, currentFunInnerBody) = takeParamsOut(currentFunBody._2)
+        val currentFunPp = currentFunInnerBody match {
+          case e: (Expr.LetIn | Expr.Sequence) => e.pp.linesIterator.filter(_.nonEmpty).map(_.drop(1)).mkString("\n")
           case e => e.pp
         }
         val nextMods = calls.calls.map(rec(_, defs)).filter(_.nonEmpty).mkString("\n").linesIterator.map("\t" + _).mkString("\n")
-        s"def ${currentIdentStr.pp(using InitPpConfig)} = \n" +
+        s"def ${currentIdentStr.pp(using InitPpConfig)}${
+          val ps = currentFunParam.map(_.pp).mkString(", ")
+          if ps.nonEmpty then s"($ps)" else ""
+        } = \n" +
         s"${currentFunPp.linesIterator.map("\t" + _).mkString("\n")}" +
         (if nextMods.isEmpty() then "" else s"\n\twhere\n$nextMods")
       }
@@ -110,6 +122,12 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
   val uid: Uid[Expr] = deforest.euid.nextUid
   deforest.exprs += uid -> this
   
+  private def getAllCallParams(c: Call): Expr -> List[Expr] = {
+    c.lhs match {
+      case cc: Call => getAllCallParams(cc).mapSecond(_ ::: (c.rhs :: Nil))
+      case _ => c.lhs -> (c.rhs :: Nil)
+    }
+  }
   def pp(using config: PrettyPrintConfig): Str =
     val res: fansi.Str = (if (config.showEuid) Console.CYAN + uid.toString + ": " + Console.RESET else "") + (
       this match
@@ -118,7 +136,10 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
           then id.tree.name + (if config.showRefEuid then s"^$uid" else "")
           else id.pp
         case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackIntBinOps(op) => s"(${fst.pp} $op ${snd.pp})"
-        case Call(lhs, rhs) => s"(${lhs.pp} ${rhs.pp})"
+        // case Call(lhs, rhs) => s"(${lhs.pp} ${rhs.pp})"
+        case c: Call =>
+          val (f, ps) = getAllCallParams(c)
+          s"${f.pp}(${ps.map(_.pp).mkString(", ")})"
         case Sequence(fst, snd) if config.multiline =>
           val sndStr = snd match {
             case b: MultiLineExprs => b.pp.dropWhile(c => c == '\n' || c.isWhitespace)

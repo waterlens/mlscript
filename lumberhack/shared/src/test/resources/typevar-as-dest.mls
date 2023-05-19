@@ -9,9 +9,9 @@ Ok(f(C(A)))
 //│ |_LUMBERHACK_EVAL|↵|#fun| |f|(|a|)| |#=| |#if| |a| |is|→|C|(|d|)| |#then| |a|←|↵|Ok|(|f|(|C|(|A|)|)|)|
 //│ Parsed: {_LUMBERHACK_EVAL; fun f = a, => if a is ‹(C (d,)) then a›; Ok (f (C (A,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ [Ok (f^5 [C [A]])]
-//│ def f = (fun a⁰ -> case a⁰ of {
-//│ 	C d⁰ => a⁰})
+//│ [Ok f^5([C [A]])]
+//│ def f(a⁰) = case a⁰ of {
+//│ 	C d⁰ => a⁰}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
@@ -23,10 +23,10 @@ Ok(f(C(A)))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ [Ok (f₀ [C [A]])]
-//│ def f₀ = 
-//│ 	(fun a¹ -> case a¹ of {
-//│ 		C d¹ => a¹})
+//│ [Ok f₀([C [A]])]
+//│ def f₀(a¹) = 
+//│ 	case a¹ of {
+//│ 		C d¹ => a¹}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
@@ -45,10 +45,10 @@ Ok(f(C(A)))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ [Ok (f₀ [C [A]])]
-//│ def f₀ = 
-//│ 	(fun a² -> case a² of {
-//│ 		C d¹ => a²})
+//│ [Ok f₀([C [A]])]
+//│ def f₀(a²) = 
+//│ 	case a² of {
+//│ 		C d¹ => a²}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -67,14 +67,14 @@ wrapInRes(f(C(A)))
 //│ |#fun| |f|(|x|)| |#=|→|primitive|(|x|)|↵|#if| |x| |is|→|C|(|a|)| |#then| |x|←|←|↵|#fun| |wrapInRes|(|y|)| |#=|→|Res1|(|y|)|↵|Res2|(|y|)|←|↵|wrapInRes|(|f|(|C|(|A|)|)|)|
 //│ Parsed: {fun f = x, => {primitive (x,); if x is ‹(C (a,)) then x›}; fun wrapInRes = y, => {Res1 (y,); Res2 (y,)}; wrapInRes (f (C (A,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ (wrapInRes^15 (f^16 [C [A]]))
-//│ def f = (fun x⁰ -> 
-//│ 	(primitive⁰ x⁰)
+//│ wrapInRes^15(f^16([C [A]]))
+//│ def f(x⁰) = 
+//│ 	primitive⁰(x⁰)
 //│ 	case x⁰ of {
-//│ 		C a⁰ => x⁰})
-//│ def wrapInRes = (fun y⁰ -> 
+//│ 		C a⁰ => x⁰}
+//│ def wrapInRes(y⁰) = 
 //│ 	[Res1 y⁰]
-//│ 	[Res2 y⁰])
+//│ 	[Res2 y⁰]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
@@ -83,16 +83,14 @@ wrapInRes(f(C(A)))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (wrapInRes₀ (f₀ [C [A]]))
-//│ def f₀ = 
-//│ 	(fun x¹ -> 
-//│ 		(primitive⁰ x¹)
-//│ 		case x¹ of {
-//│ 			C a¹ => x¹})
-//│ def wrapInRes₀ = 
-//│ 	(fun y¹ -> 
-//│ 		[Res1 y¹]
-//│ 		[Res2 y¹])
+//│ wrapInRes₀(f₀([C [A]]))
+//│ def f₀(x¹) = 
+//│ 	primitive⁰(x¹)
+//│ 	case x¹ of {
+//│ 		C a¹ => x¹}
+//│ def wrapInRes₀(y¹) = 
+//│ 	[Res1 y¹]
+//│ 	[Res2 y¹]
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
@@ -111,14 +109,12 @@ wrapInRes(f(C(A)))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (wrapInRes₀ (f₀ [C [A]]))
-//│ def f₀ = 
-//│ 	(fun x² -> 
-//│ 		(primitive⁰ x²)
-//│ 		case x² of {
-//│ 			C a¹ => x²})
-//│ def wrapInRes₀ = 
-//│ 	(fun y² -> 
-//│ 		[Res1 y²]
-//│ 		[Res2 y²])
+//│ wrapInRes₀(f₀([C [A]]))
+//│ def f₀(x²) = 
+//│ 	primitive⁰(x²)
+//│ 	case x² of {
+//│ 		C a¹ => x²}
+//│ def wrapInRes₀(y²) = 
+//│ 	[Res1 y²]
+//│ 	[Res2 y²]
 //│ <<<<<<< after fusion <<<<<<<

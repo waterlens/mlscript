@@ -10,15 +10,18 @@ import mlscript.utils.lastWords
 
 
 // NOTE: "/Users/<name>/Library/Java/Extensions/libjava-tree-sitter.dylib" should exist
-object FromHaskell extends NativeLoader("java-tree-sitter") {
-  def f(program: Str)(using d: Deforest, output: Str => Unit) = {
+object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
+  def apply(program: Str)(using d: Deforest, output: Str => Unit) = {
     val parser = new Parser()
     parser.setLanguage(Languages.haskell())
+    // parser.setLanguage(Languages.ocaml())
     val tree = parser.parseString(program)
     val treeRootNode = tree.getRootNode()
     output(treeRootNode.pp)
     // output(treeRootNode.getNodeString())
-    // fromHaskellToPrgm(treeRootNode)(using program)
+    // val res = fromHaskellToPrgm(treeRootNode)(using program)
+    // output(res.pp(using InitPpConfig.showIuidOn.multilineOn))
+    // res
   }
   extension (n: Node) {
     def getSrcContent(using prgmStr: Str): Str = prgmStr.slice(n.getStartByte(), n.getEndByte())
@@ -49,6 +52,19 @@ object FromHaskell extends NativeLoader("java-tree-sitter") {
             case "integer" => Const(IntLit(child.getSrcContent.toInt))
             case "string" => Const(StrLit(child.getSrcContent.drop(1).dropRight(1)))
           }
+        }
+        case "exp_infix" => {
+          val childs = n.getAllChilds
+          assert(childs.length == 3)
+          val l = childs(0)
+          val op = childs(1)
+          val r = childs(2)
+          op.getSrcContent match {
+            case "$" => Call(l.toExpr, r.toExpr)
+            // case op if Deforest.lumberhackIntBinOps(op) => Call(Call())
+            case _ => ???
+          }
+          
         }
 
       }
@@ -107,7 +123,9 @@ object HaskellGen extends CodeGen {
 
   val primitives = Map("add" -> "(+)", "sub" -> "(-)")
 
-  def transform_progdef(pd: ProgDef): Document = {
+
+  override def transform_id(id: Ident): Document = id.pp(using InitPpConfig.showIuidOn)
+  override def transform_progdef(pd: ProgDef): Document = {
     pd.body match {
       case Ref(Ident(_, mlscript.Var("primitive"), _)) => Raw("")
       case Function(param, body) => transform_id(pd.id) <:> " " <:>
@@ -116,8 +134,8 @@ object HaskellGen extends CodeGen {
     }
   }
 
-  val headers = Raw("")
-  def rec(e: Expr): Document = e match {
+  override val headers = Raw("")
+  override def rec(e: Expr): Document = e match {
     case Const(lit) => Raw(lit.idStr)
     case Ref(id) => transform_id(id)
     case Call(lhs, rhs) =>
@@ -141,6 +159,8 @@ object HaskellGen extends CodeGen {
         "\\ " <:> transform_id(param) <:> " -> ",
         Indented(rec(body))
       )
+    case IfThenElse(s, t, e) => "if " <:> rec(s) <:> " then " <:> rec(t) <:> " else " <:> rec(e)
+    case _ => lastWords("unsupported: " + e.pp(using InitPpConfig.showIuidOn))
   }
 }
 

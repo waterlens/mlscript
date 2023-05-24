@@ -750,22 +750,22 @@ object CallTree {
         case Some(s) if s.size > 1 =>
           Some(s.head) -> s.map(_.pp(using InitPpConfig)).mkString(" OR ")  // the result will not be an empty path
         // we can always tie the knot back to its definition before expansion if it is hopeless to keep expanding
-        // case None => if knots.keys.exists(_.p.startsWith(p.p)) then None -> "" else None -> "hopeless to continue"
-        case None => {
-          val commonPrefixedMatch = knotsUnfiltered.filter(m => p.p.endsWith(m._1.p)).map { case (k, vs) =>
-            val prefix = p.p.take(p.p.length - k.p.length)
-            // vs.map(v => Path(prefix ::: v.p)).filter(v => cache.exists(_.p == v.p) || v.reachable(d.callsInfo))
-            vs.map(v => Path(prefix ::: v.p)).filter(v => cache.exists(_.p == v.p))
-          }.flatten.toSet
-          if commonPrefixedMatch.size == 1 then
-            Some(commonPrefixedMatch.head) -> "only one"
-          else if commonPrefixedMatch.size > 1 then
-            Some(commonPrefixedMatch.head) -> commonPrefixedMatch.map(_.pp(using InitPpConfig)).mkString(" OR ")
-          else if knots.keys.exists(_.p.startsWith(p.p)) then
-            None -> ""
-          else
-            None -> "hopeless to continue"
-        }
+        case None => if knots.keys.exists(_.p.startsWith(p.p)) then None -> "" else None -> "hopeless to continue"
+        // case None => {
+        //   val commonPrefixedMatch = knotsUnfiltered.filter(m => p.p.endsWith(m._1.p)).map { case (k, vs) =>
+        //     val prefix = p.p.take(p.p.length - k.p.length)
+        //     // vs.map(v => Path(prefix ::: v.p)).filter(v => cache.exists(_.p == v.p) || v.reachable(d.callsInfo))
+        //     vs.map(v => Path(prefix ::: v.p)).filter(v => cache.exists(_.p == v.p))
+        //   }.flatten.toSet
+        //   if commonPrefixedMatch.size == 1 then
+        //     Some(commonPrefixedMatch.head) -> "only one"
+        //   else if commonPrefixedMatch.size > 1 then
+        //     Some(commonPrefixedMatch.head) -> commonPrefixedMatch.map(_.pp(using InitPpConfig)).mkString(" OR ")
+        //   else if knots.keys.exists(_.p.startsWith(p.p)) then
+        //     None -> ""
+        //   else
+        //     None -> "hopeless to continue"
+        // }
 
         case _ => ??? // cannot be empty set
       }

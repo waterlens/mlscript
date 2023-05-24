@@ -1,0 +1,289 @@
+:NewParser
+:ParseOnly
+
+// original one with all parameters provided: can tie the good knot and everything fused
+_LUMBERHACK_EVAL
+fun max(ls, n) = if ls is
+  C(h, t) then if h > n then max(t, h) else max(t, n)
+  N then n
+max(C(1, C(2, N)), 0)
+//│ |_LUMBERHACK_EVAL|↵|#fun| |max|(|ls|,| |n|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |h| |>| |n| |#then| |max|(|t|,| |h|)| |#else| |max|(|t|,| |n|)|↵|N| |#then| |n|←|↵|max|(|C|(|1|,| |C|(|2|,| |N|)|)|,| |0|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun max = ls, n, => if ls is ‹(C (h, t,)) then if (> (h,) (n,)) then max (t, h,) else max (t, n,); (N) then n›; max (C (1, C (2, N,),), 0,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ max^22([C 1 [C 2 [N]]], 0)
+//│ def max(ls⁰, n⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => if (h⁰ > n⁰) then max^7(t⁰, h⁰) else max^12(t⁰, n⁰)
+//│ 	| N  => n⁰}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ 2
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [max^22]
+//│ 	[max^22 · max^12] ---> [max^22] (only one)
+//│ 	[max^22 · max^7] ---> [max^22] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ max₀([C 1 [C 2 [N]]], 0)
+//│ def max₀(ls¹, n¹) = 
+//│ 	case ls¹ of {
+//│ 		C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹)
+//│ 		| N  => n¹}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [N]: 55 --->
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹) | N  => n¹}: 49
+//│ [C 2 [N]]: 56 --->
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹) | N  => n¹}: 49
+//│ [C 1 [C 2 [N]]]: 57 --->
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹) | N  => n¹}: 49
+//│ ------------------
+//│ case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹) | N  => n¹}: 49 --->
+//│ 	[N]: 55
+//│ 	[C 2 [N]]: 56
+//│ 	[C 1 [C 2 [N]]]: 57
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [N]: 55 --->
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹) | N  => n¹}: 49
+//│ [C 2 [N]]: 56 --->
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹) | N  => n¹}: 49
+//│ [C 1 [C 2 [N]]]: 57 --->
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹) | N  => n¹}: 49
+//│ ------------------
+//│ case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹) | N  => n¹}: 49 --->
+//│ 	[N]: 55
+//│ 	[C 2 [N]]: 56
+//│ 	[C 1 [C 2 [N]]]: 57
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ max₀(
+//│ 	let h² = 1
+//│ 	in let t² = 	
+//│ 		let h³ = 2
+//│ 		in let t³ = (fun n⁴ -> n⁴)
+//│ 		in (fun n³ -> if (h³ > n³) then max₀(t³, h³) else max₀(t³, n³))
+//│ 	in (fun n² -> if (h² > n²) then max₀(t², h²) else max₀(t², n²)), 0)
+//│ def max₀(ls², n⁵) = 
+//│ 	ls²(n⁵)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ 2
+//│ <<<<<<< evaluate <<<<<<<
+
+
+// original max with the initial `n` not provided: excessive expansion and no fusion due to strategy clash
+_LUMBERHACK_EVAL
+fun max(ls, n) = if ls is
+  C(h, t) then if h > n then max(t, h) else max(t, n)
+  N then n
+max(C(1, C(2, N)), primId(0))
+//│ |_LUMBERHACK_EVAL|↵|#fun| |max|(|ls|,| |n|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |h| |>| |n| |#then| |max|(|t|,| |h|)| |#else| |max|(|t|,| |n|)|↵|N| |#then| |n|←|↵|max|(|C|(|1|,| |C|(|2|,| |N|)|)|,| |primId|(|0|)|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun max = ls, n, => if ls is ‹(C (h, t,)) then if (> (h,) (n,)) then max (t, h,) else max (t, n,); (N) then n›; max (C (1, C (2, N,),), primId (0,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ max^22([C 1 [C 2 [N]]], primId⁰(0))
+//│ def max(ls⁰, n⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => if (h⁰ > n⁰) then max^7(t⁰, h⁰) else max^12(t⁰, n⁰)
+//│ 	| N  => n⁰}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ 2
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [max^22]
+//│ 	[max^22 · max^12] ---> [max^22] (only one)
+//│ 	[max^22 · max^7] (hopeless to continue)
+//│ 		[max^22 · max^7 · max^12] ---> [max^22 · max^7] (using original def)
+//│ 		[max^22 · max^7 · max^7] ---> [max^22 · max^7] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ max₀([C 1 [C 2 [N]]], primId⁰(0))
+//│ def max₀(ls², n²) = 
+//│ 	case ls² of {
+//│ 		C h² t² => if (h² > n²) then max₁(t², h²) else max₀(t², n²)
+//│ 		| N  => n²}
+//│ 	where
+//│ 	def max₁(ls¹, n¹) = 
+//│ 		case ls¹ of {
+//│ 			C h¹ t¹ => if (h¹ > n¹) then max₁(t¹, h¹) else max₁(t¹, n¹)
+//│ 			| N  => n¹}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [N]: 78 --->
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₁(t¹, h¹) else max₁(t¹, n¹) | N  => n¹}: 51
+//│ 	case ls² of {C h² t² => if (h² > n²) then max₁(t², h²) else max₀(t², n²) | N  => n²}: 72
+//│ [C 2 [N]]: 79 --->
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₁(t¹, h¹) else max₁(t¹, n¹) | N  => n¹}: 51
+//│ 	case ls² of {C h² t² => if (h² > n²) then max₁(t², h²) else max₀(t², n²) | N  => n²}: 72
+//│ [C 1 [C 2 [N]]]: 80 --->
+//│ 	case ls² of {C h² t² => if (h² > n²) then max₁(t², h²) else max₀(t², n²) | N  => n²}: 72
+//│ ------------------
+//│ case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₁(t¹, h¹) else max₁(t¹, n¹) | N  => n¹}: 51 --->
+//│ 	[N]: 78
+//│ 	[C 2 [N]]: 79
+//│ case ls² of {C h² t² => if (h² > n²) then max₁(t², h²) else max₀(t², n²) | N  => n²}: 72 --->
+//│ 	[N]: 78
+//│ 	[C 2 [N]]: 79
+//│ 	[C 1 [C 2 [N]]]: 80
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ max₀([C 1 [C 2 [N]]], primId⁰(0))
+//│ def max₀(ls⁴, n⁴) = 
+//│ 	case ls⁴ of {
+//│ 		C h² t² => if (h² > n⁴) then max₁(t², h²) else max₀(t², n⁴)
+//│ 		| N  => n⁴}
+//│ 	where
+//│ 	def max₁(ls³, n³) = 
+//│ 		case ls³ of {
+//│ 			C h¹ t¹ => if (h¹ > n³) then max₁(t¹, h¹) else max₁(t¹, n³)
+//│ 			| N  => n³}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ 2
+//│ <<<<<<< evaluate <<<<<<<
+
+
+// original max with the initial list provided as primitive: excessive expansion
+_LUMBERHACK_EVAL
+fun max(ls, n) = if ls is
+  C(h, t) then if h > n then max(t, h) else max(t, n)
+  N then n
+max(primId(C(1, C(2, N))), 0)
+//│ |_LUMBERHACK_EVAL|↵|#fun| |max|(|ls|,| |n|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |h| |>| |n| |#then| |max|(|t|,| |h|)| |#else| |max|(|t|,| |n|)|↵|N| |#then| |n|←|↵|max|(|primId|(|C|(|1|,| |C|(|2|,| |N|)|)|)|,| |0|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun max = ls, n, => if ls is ‹(C (h, t,)) then if (> (h,) (n,)) then max (t, h,) else max (t, n,); (N) then n›; max (primId (C (1, C (2, N,),),), 0,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ max^22(primId⁰([C 1 [C 2 [N]]]), 0)
+//│ def max(ls⁰, n⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => if (h⁰ > n⁰) then max^7(t⁰, h⁰) else max^12(t⁰, n⁰)
+//│ 	| N  => n⁰}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ 2
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [max^22]
+//│ 	[max^22 · max^12] ---> [max^22] (only one)
+//│ 	[max^22 · max^7] (hopeless to continue)
+//│ 		[max^22 · max^7 · max^12] ---> [max^22 · max^7] (using original def)
+//│ 		[max^22 · max^7 · max^7] ---> [max^22 · max^7] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ max₀(primId⁰([C 1 [C 2 [N]]]), 0)
+//│ def max₀(ls², n²) = 
+//│ 	case ls² of {
+//│ 		C h² t² => if (h² > n²) then max₁(t², h²) else max₀(t², n²)
+//│ 		| N  => n²}
+//│ 	where
+//│ 	def max₁(ls¹, n¹) = 
+//│ 		case ls¹ of {
+//│ 			C h¹ t¹ => if (h¹ > n¹) then max₁(t¹, h¹) else max₁(t¹, n¹)
+//│ 			| N  => n¹}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ max₀(primId⁰([C 1 [C 2 [N]]]), 0)
+//│ def max₀(ls⁴, n⁴) = 
+//│ 	case ls⁴ of {
+//│ 		C h² t² => if (h² > n⁴) then max₁(t², h²) else max₀(t², n⁴)
+//│ 		| N  => n⁴}
+//│ 	where
+//│ 	def max₁(ls³, n³) = 
+//│ 		case ls³ of {
+//│ 			C h¹ t¹ => if (h¹ > n³) then max₁(t¹, h¹) else max₁(t¹, n³)
+//│ 			| N  => n³}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ 2
+//│ <<<<<<< evaluate <<<<<<<
+
+// original max with nothing provided (equivalent to provide all parameters as NoProd): can tie the good knot
+_LUMBERHACK_EVAL
+fun max(ls, n) = if ls is
+  C(h, t) then if h > n then max(t, h) else max(t, n)
+  N then n
+max(primId(C(1, C(2, N))), primId(0))
+//│ |_LUMBERHACK_EVAL|↵|#fun| |max|(|ls|,| |n|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |h| |>| |n| |#then| |max|(|t|,| |h|)| |#else| |max|(|t|,| |n|)|↵|N| |#then| |n|←|↵|max|(|primId|(|C|(|1|,| |C|(|2|,| |N|)|)|)|,| |primId|(|0|)|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun max = ls, n, => if ls is ‹(C (h, t,)) then if (> (h,) (n,)) then max (t, h,) else max (t, n,); (N) then n›; max (primId (C (1, C (2, N,),),), primId (0,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ max^22(primId⁰([C 1 [C 2 [N]]]), primId⁰(0))
+//│ def max(ls⁰, n⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => if (h⁰ > n⁰) then max^7(t⁰, h⁰) else max^12(t⁰, n⁰)
+//│ 	| N  => n⁰}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ 2
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [max^22]
+//│ 	[max^22 · max^12] ---> [max^22] (only one)
+//│ 	[max^22 · max^7] ---> [max^22] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ max₀(primId⁰([C 1 [C 2 [N]]]), primId⁰(0))
+//│ def max₀(ls¹, n¹) = 
+//│ 	case ls¹ of {
+//│ 		C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹)
+//│ 		| N  => n¹}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ max₀(primId⁰([C 1 [C 2 [N]]]), primId⁰(0))
+//│ def max₀(ls², n²) = 
+//│ 	case ls² of {
+//│ 		C h¹ t¹ => if (h¹ > n²) then max₀(t¹, h¹) else max₀(t¹, n²)
+//│ 		| N  => n²}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ 2
+//│ <<<<<<< evaluate <<<<<<<

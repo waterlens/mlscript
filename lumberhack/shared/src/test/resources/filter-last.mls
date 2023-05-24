@@ -32,7 +32,11 @@ lastFilter
 //│ [lastFilter^51]
 //│ 	[lastFilter^51 · filter^43]
 //│ 		[lastFilter^51 · filter^43 · filter^12] ---> [lastFilter^51 · filter^43] (only one)
-//│ 		[lastFilter^51 · filter^43 · filter^6] ---> [lastFilter^51 · filter^43 · filter^12] (only one; NOT PREFIX)
+//│ 		[lastFilter^51 · filter^43 · filter^6]
+//│ 			[lastFilter^51 · filter^43 · filter^6 · filter^12] (hopeless to continue)
+//│ 				[lastFilter^51 · filter^43 · filter^6 · filter^12 · filter^12] ---> [lastFilter^51 · filter^43 · filter^6 · filter^12] (using original def)
+//│ 				[lastFilter^51 · filter^43 · filter^6 · filter^12 · filter^6] ---> [lastFilter^51 · filter^43 · filter^6 · filter^12] (using original def)
+//│ 			[lastFilter^51 · filter^43 · filter^6 · filter^6] ---> [lastFilter^51 · filter^43 · filter^6] (only one)
 //│ 	[lastFilter^51 · lastDrive^42]
 //│ 		[lastFilter^51 · lastDrive^42 · last^23]
 //│ 			[lastFilter^51 · lastDrive^42 · last^23 · last^34] ---> [lastFilter^51 · lastDrive^42 · last^23] (only one)
@@ -43,10 +47,20 @@ lastFilter
 //│ def lastFilter₀(ls⁴, f²) = 
 //│ 	lastDrive₀(filter₀(ls⁴, f²))
 //│ 	where
-//│ 	def filter₀(ls⁷, f³) = 
-//│ 		case ls⁷ of {
-//│ 			C h⁵ t⁵ => if f³(h⁵) then [C h⁵ filter₀(t⁵, f³)] else filter₀(t⁵, f³)
+//│ 	def filter₀(ls⁸, f⁴) = 
+//│ 		case ls⁸ of {
+//│ 			C h⁶ t⁶ => if f⁴(h⁶) then [C h⁶ filter₁(t⁶, f⁴)] else filter₀(t⁶, f⁴)
 //│ 			| N  => [N]}
+//│ 		where
+//│ 		def filter₁(ls⁷, f³) = 
+//│ 			case ls⁷ of {
+//│ 				C h⁵ t⁵ => if f³(h⁵) then [C h⁵ filter₁(t⁵, f³)] else filter₂(t⁵, f³)
+//│ 				| N  => [N]}
+//│ 			where
+//│ 			def filter₂(ls⁹, f⁵) = 
+//│ 				case ls⁹ of {
+//│ 					C h⁷ t⁷ => if f⁵(h⁷) then [C h⁷ filter₂(t⁷, f⁵)] else filter₂(t⁷, f⁵)
+//│ 					| N  => [N]}
 //│ 	def lastDrive₀(ls⁶) = 
 //│ 		case ls⁶ of {
 //│ 			C h⁴ t⁴ => [Some last₀(t⁴, h⁴)]
@@ -59,40 +73,54 @@ lastFilter
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h⁵ filter₀(t⁵, f³)]: 91 --->
-//│ 	NoCons
+//│ [C h⁶ filter₁(t⁶, f⁴)]: 112 --->
 //│ 	case ls⁶ of {C h⁴ t⁴ => [Some last₀(t⁴, h⁴)] | N  => [None]}: 79
-//│ [N]: 98 --->
-//│ 	NoCons
+//│ [N]: 119 --->
 //│ 	case ls⁶ of {C h⁴ t⁴ => [Some last₀(t⁴, h⁴)] | N  => [None]}: 79
 //│ ------------------
 //│ case ls⁶ of {C h⁴ t⁴ => [Some last₀(t⁴, h⁴)] | N  => [None]}: 79 --->
-//│ 	[C h⁵ filter₀(t⁵, f³)]: 91
-//│ 	[N]: 98
+//│ 	[C h⁶ filter₁(t⁶, f⁴)]: 112
+//│ 	[N]: 119
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
+//│ [C h⁶ filter₁(t⁶, f⁴)]: 112 --->
+//│ 	case ls⁶ of {C h⁴ t⁴ => [Some last₀(t⁴, h⁴)] | N  => [None]}: 79
+//│ [N]: 119 --->
+//│ 	case ls⁶ of {C h⁴ t⁴ => [Some last₀(t⁴, h⁴)] | N  => [None]}: 79
 //│ ------------------
-//│ 
+//│ case ls⁶ of {C h⁴ t⁴ => [Some last₀(t⁴, h⁴)] | N  => [None]}: 79 --->
+//│ 	[C h⁶ filter₁(t⁶, f⁴)]: 112
+//│ 	[N]: 119
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ lastFilter₀
-//│ def lastFilter₀(ls⁸, f⁴) = 
-//│ 	lastDrive₀(filter₀(ls⁸, f⁴))
+//│ def lastFilter₀(ls¹⁰, f⁶) = 
+//│ 	lastDrive₀(filter₀(ls¹⁰, f⁶))
 //│ 	where
-//│ 	def filter₀(ls¹¹, f⁵) = 
-//│ 		case ls¹¹ of {
-//│ 			C h⁵ t⁵ => if f⁵(h⁵) then [C h⁵ filter₀(t⁵, f⁵)] else filter₀(t⁵, f⁵)
-//│ 			| N  => [N]}
-//│ 	def lastDrive₀(ls¹⁰) = 
-//│ 		case ls¹⁰ of {
-//│ 			C h⁴ t⁴ => [Some last₀(t⁴, h⁴)]
+//│ 	def filter₀(ls¹⁵, f⁹) = 
+//│ 		case ls¹⁵ of {
+//│ 			C h⁶ t⁶ => if f⁹(h⁶) then 
+//│ 				let h⁸ = h⁶
+//│ 				in let t⁸ = filter₁(t⁶, f⁹)
+//│ 				in [Some last₀(t⁸, h⁸)] else filter₀(t⁶, f⁹)
 //│ 			| N  => [None]}
 //│ 		where
-//│ 		def last₀(a², ls⁹) = 
-//│ 			case ls⁹ of {
+//│ 		def filter₁(ls¹³, f⁸) = 
+//│ 			case ls¹³ of {
+//│ 				C h⁵ t⁵ => if f⁸(h⁵) then [C h⁵ filter₁(t⁵, f⁸)] else filter₂(t⁵, f⁸)
+//│ 				| N  => [N]}
+//│ 			where
+//│ 			def filter₂(ls¹², f⁷) = 
+//│ 				case ls¹² of {
+//│ 					C h⁷ t⁷ => if f⁷(h⁷) then [C h⁷ filter₂(t⁷, f⁷)] else filter₂(t⁷, f⁷)
+//│ 					| N  => [N]}
+//│ 	def lastDrive₀(ls¹¹) = 
+//│ 		ls¹¹
+//│ 		where
+//│ 		def last₀(a², ls¹⁴) = 
+//│ 			case ls¹⁴ of {
 //│ 				N  => a²
 //│ 				| C h³ t³ => last₀(h³, t³)}
 //│ <<<<<<< after fusion <<<<<<<

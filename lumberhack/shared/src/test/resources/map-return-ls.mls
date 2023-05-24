@@ -1,0 +1,72 @@
+:NewParser
+:ParseOnly
+
+
+_LUMBERHACK_EVAL
+fun map(ls, f) = if ls is
+  C(h, t) then C(f(h), map(t, f))
+  N then ls
+map(map(primId(C(1, C(2, N))), x => x * x), x => x + x)
+//│ |_LUMBERHACK_EVAL|↵|#fun| |map|(|ls|,| |f|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|t|,| |f|)|)|↵|N| |#then| |ls|←|↵|map|(|map|(|primId|(|C|(|1|,| |C|(|2|,| |N|)|)|)|,| |x| |=>| |x| |*| |x|)|,| |x| |=>| |x| |+| |x|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun map = ls, f, => if ls is ‹(C (h, t,)) then C (f (h,), map (t, f,),); (N) then ls›; map (map (primId (C (1, C (2, N,),),), x, => * (x,) (x,),), x, => + (x,) (x,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ map^15(map^16(primId⁰([C 1 [C 2 [N]]]), (fun x⁰ -> (x⁰ * x⁰))), (fun x¹ -> (x¹ + x¹)))
+//│ def map(ls⁰, f⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => [C f⁰(h⁰) map^5(t⁰, f⁰)]
+//│ 	| N  => ls⁰}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [C 2 [C 8 [N]]]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [map^15]
+//│ 	[map^15 · map^5] ---> [map^15] (only one)
+//│ [map^16]
+//│ 	[map^16 · map^5] ---> [map^16] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ map₀(map₁(primId⁰([C 1 [C 2 [N]]]), (fun x² -> (x² * x²))), (fun x³ -> (x³ + x³)))
+//│ def map₀(ls¹, f¹) = 
+//│ 	case ls¹ of {
+//│ 		C h¹ t¹ => [C f¹(h¹) map₀(t¹, f¹)]
+//│ 		| N  => ls¹}
+//│ def map₁(ls², f²) = 
+//│ 	case ls² of {
+//│ 		C h² t² => [C f²(h²) map₁(t², f²)]
+//│ 		| N  => ls²}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C f²(h²) map₁(t², f²)]: 63 --->
+//│ 	NoCons
+//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₀(t¹, f¹)] | N  => ls¹}: 51
+//│ ------------------
+//│ case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₀(t¹, f¹)] | N  => ls¹}: 51 --->
+//│ 	NoProd
+//│ 	[C f²(h²) map₁(t², f²)]: 63
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ map₀(map₁(primId⁰([C 1 [C 2 [N]]]), (fun x⁴ -> (x⁴ * x⁴))), (fun x⁵ -> (x⁵ + x⁵)))
+//│ def map₀(ls³, f³) = 
+//│ 	case ls³ of {
+//│ 		C h¹ t¹ => [C f³(h¹) map₀(t¹, f³)]
+//│ 		| N  => ls³}
+//│ def map₁(ls⁴, f⁴) = 
+//│ 	case ls⁴ of {
+//│ 		C h² t² => [C f⁴(h²) map₁(t², f⁴)]
+//│ 		| N  => ls⁴}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [C 2 [C 8 [N]]]
+//│ <<<<<<< evaluate <<<<<<<

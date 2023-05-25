@@ -22,8 +22,6 @@ class DiffTestLumberhack extends DiffTests {
     // output("Parsed AST:\n")
     // output(Pgrm(unit.entities).toString())
     // output("Parsed AST:\n")
-    if mode.isHaskell then
-      FromHaskell(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output)
 
 
     output(">>>>>>>>>> Original >>>>>>>>>>")
@@ -49,7 +47,11 @@ class DiffTestLumberhack extends DiffTests {
       )
       case l => (false, false, l)
     }
-    val originalProgram = Program.fromPgrm(Pgrm(filteredEntities))
+    val originalProgram = if mode.isHaskell then
+      FromHaskell(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output)
+    else
+      Program.fromPgrm(Pgrm(filteredEntities))
+
     if mode.stdout || mode.verbose then {
       output(originalProgram.pp(using InitPpConfig.multilineOn.showIuidOn.showEuidOn)) 
     }

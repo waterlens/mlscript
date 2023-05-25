@@ -72,9 +72,7 @@ case class Program(contents: Ls[ProgDef \/ Expr])(using d: Deforest) extends Pro
 object Program {
   def fromPgrm(p: Pgrm)(using d: Deforest): Program = {
     val (_, (typeDefs, stmts)) = p.desugared
-    given ctx: Expr.Ctx = Deforest.lumberhackKeywords.map {
-      n => n -> d.nextIdent(false, Var(n))
-    } ++ stmts.iterator.collect {
+    given ctx: Expr.Ctx = d.lumberhackKeywordsIds ++ stmts.iterator.collect {
       case Def(_, nme, _, _) => nme.name -> d.nextIdent(true, nme)
     } |> (_.toMap)
     Program(stmts.map {
@@ -106,6 +104,12 @@ trait MatchTrait { this: Expr.Match =>
       this.alphaRenamingCheck(other)(using renamingMap.to(MutMap))
     }
 }
+trait FunctionTrait { this: Expr.Function =>
+  lazy val takeParamsOut: List[Ident] -> Expr = (this.body match {
+    case f: Expr.Function => f.takeParamsOut
+    case b => Nil -> b
+  }).mapFirst(this.param :: _)
+}
 enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRewrite {
   case Const(lit: Lit)(using Deforest, Option[Ident])
   case Ref(id: Ident)(using Deforest, Option[Ident]) extends Expr with RefTrait
@@ -114,7 +118,7 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
   case LetIn(id: Ident, rhs: Expr, body: Expr)(using Deforest, Option[Ident])
   case Match(scrut: Expr, arms: Ls[(Var, Ls[Ident], Expr)])(using Deforest, Option[Ident])
   case IfThenElse(scrut: Expr, thenn: Expr, elze: Expr)(using Deforest, Option[Ident])
-  case Function(param: Ident, body: Expr)(using Deforest, Option[Ident])
+  case Function(param: Ident, body: Expr)(using Deforest, Option[Ident]) extends Expr with FunctionTrait
   case Sequence(fst: Expr, snd: Expr)(using Deforest, Option[Ident])
   
   type MultiLineExprs = LetIn | Sequence

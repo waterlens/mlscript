@@ -351,7 +351,7 @@ class DiffTests
             val origin = Origin(testName, globalStartLineNum, fph)
             val lexer = new NewLexer(origin, raise, dbg = mode.dbgParsing)
             
-            val tokens = lexer.bracketedTokens
+            val tokens = if (!mode.isHaskell) { lexer.bracketedTokens } else { Nil }
             
             if (mode.showParse || mode.dbgParsing || parseOnly)
               output(NewLexer.printTokens(tokens))
@@ -359,7 +359,7 @@ class DiffTests
             val p = new NewParser(origin, tokens, raise, dbg = mode.dbgParsing, N) {
               def doPrintDbg(msg: => Str): Unit = if (dbg) output(msg)
             }
-            val res = if (!mode.isHaskell) { p.parseAll(p.typingUnit) } else { TypingUnit(Nil) }
+            val res = p.parseAll(p.typingUnit)
             
             if (parseOnly)
               output("Parsed: " + res.show)

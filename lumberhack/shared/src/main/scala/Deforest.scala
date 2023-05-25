@@ -552,6 +552,9 @@ class Deforest(var debug: Boolean) {
     (allKnotsMapFiltered, allKnotsMapUnfiltered, afterSplit)
   }
 
+  lazy val lumberhackKeywordsIds = Deforest.lumberhackKeywords.map {
+    n => n -> this.nextIdent(false, Var(n))
+  }
 
   def resolveConstraintsImmutableCache: Unit = {
     type CacheImmutable = Map[Cnstr, Cnstr -> Int]

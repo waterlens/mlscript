@@ -13,8 +13,6 @@ case class PrettyPrintConfig(
   showPath: Boolean,
   pathAsIdent: Boolean,
 ) {
-  import scala.collection.mutable
-  val vs = mutable.Map.empty[Ident, String]
   lazy val multilineOn = copy(multiline = true)
   lazy val showEuidOn = copy(showEuid = true)
   lazy val showIuidOn = copy(showIuid = true)
@@ -24,12 +22,6 @@ case class PrettyPrintConfig(
   lazy val showVboundaryOn = copy(showVboundary = true)
   lazy val showPathOn = copy(showPath = true)
   lazy val pathAsIdentOn = copy(pathAsIdent = true)
-  def prtinIdent(id: Ident): String = {
-    vs.getOrElseUpdate(id, {
-      val cnt = vs.count{ (existId, _) => existId.tree.name == id.tree.name }
-      id.tree.name + (if cnt == 0 then "" else s"$cnt")
-    })
-  }
 }
 object InitPpConfig extends PrettyPrintConfig(false, false, false, false, false, false, false, false, false)
 

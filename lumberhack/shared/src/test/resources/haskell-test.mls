@@ -1,90 +1,153 @@
 :NewParser
 :ParseOnly
 
+
 :haskell
-// \x -> x + 1
-f :: S -> T -> L -> K
-f a b c = b + c
-f "3" 2 3 + 3
-//│ |f| |::| |S| |#->| |T| |#->| |L| |#->| |K|↵|f| |a| |b| |c| |#=| |b| |+| |c|↵|f| |"3"| |2| |3| |+| |3|
+map (\x -> x * x) $ map (\x -> x + 1) [1,2,3,4,5,6]
+//│ ||
 //│ Parsed: {}
-//│ "haskell" (
-//│ 	"signature" (
-//│ 		"variable" ()
-//│ 		"::" ()
-//│ 		"fun" (
-//│ 			"type_name" (
-//│ 				"type" ())
-//│ 			"->" ()
-//│ 			"fun" (
-//│ 				"type_name" (
-//│ 					"type" ())
-//│ 				"->" ()
-//│ 				"fun" (
-//│ 					"type_name" (
-//│ 						"type" ())
-//│ 					"->" ()
-//│ 					"type_name" (
-//│ 						"type" ())))))
-//│ 	"function" (
-//│ 		"variable" ()
-//│ 		"patterns" (
-//│ 			"pat_name" (
-//│ 				"variable" ())
-//│ 			"pat_name" (
-//│ 				"variable" ())
-//│ 			"pat_name" (
-//│ 				"variable" ()))
-//│ 		"=" ()
-//│ 		"exp_infix" (
-//│ 			"exp_name" (
-//│ 				"variable" ())
-//│ 			"operator" ()
-//│ 			"exp_name" (
-//│ 				"variable" ())))
-//│ 	"top_splice" (
-//│ 		"exp_infix" (
-//│ 			"exp_apply" (
-//│ 				"exp_name" (
-//│ 					"variable" ())
-//│ 				"exp_literal" (
-//│ 					"string" ())
-//│ 				"exp_literal" (
-//│ 					"integer" ())
-//│ 				"exp_literal" (
-//│ 					"integer" ()))
-//│ 			"operator" ()
-//│ 			"exp_literal" (
-//│ 				"integer" ()))))
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ 
+//│ map^15((fun x⁰ -> (x⁰ * x⁰)), map^23((fun x¹ -> (x¹ + 1)), [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]))
+//│ def map(f⁰, ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => [C f⁰(h⁰) map^5(f⁰, t⁰)]
+//│ 	| N  => [N]}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ 
+//│ [map^15]
+//│ 	[map^15 · map^5] ---> [map^15] (only one)
+//│ [map^23]
+//│ 	[map^23 · map^5] ---> [map^23] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ 
-//│ 
+//│ map₀((fun x² -> (x² * x²)), map₁((fun x³ -> (x³ + 1)), [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]))
+//│ def map₀(f², ls²) = 
+//│ 	case ls² of {
+//│ 		C h² t² => [C f²(h²) map₀(f², t²)]
+//│ 		| N  => [N]}
+//│ def map₁(f¹, ls¹) = 
+//│ 	case ls¹ of {
+//│ 		C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)]
+//│ 		| N  => [N]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 
+//│ [C f¹(h¹) map₁(f¹, t¹)]: 55 --->
+//│ 	case ls² of {C h² t² => [C f²(h²) map₀(f², t²)] | N  => [N]}: 71
+//│ [N]: 56 --->
+//│ 	case ls² of {C h² t² => [C f²(h²) map₀(f², t²)] | N  => [N]}: 71
+//│ [N]: 96 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
+//│ [C 6 [N]]: 97 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
+//│ [C 5 [C 6 [N]]]: 98 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
+//│ [C 4 [C 5 [C 6 [N]]]]: 99 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
+//│ [C 3 [C 4 [C 5 [C 6 [N]]]]]: 100 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
+//│ [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]: 101 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
+//│ [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]: 102 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
 //│ ------------------
-//│ 
+//│ case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57 --->
+//│ 	[N]: 96
+//│ 	[C 6 [N]]: 97
+//│ 	[C 5 [C 6 [N]]]: 98
+//│ 	[C 4 [C 5 [C 6 [N]]]]: 99
+//│ 	[C 3 [C 4 [C 5 [C 6 [N]]]]]: 100
+//│ 	[C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]: 101
+//│ 	[C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]: 102
+//│ case ls² of {C h² t² => [C f²(h²) map₀(f², t²)] | N  => [N]}: 71 --->
+//│ 	[C f¹(h¹) map₁(f¹, t¹)]: 55
+//│ 	[N]: 56
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
+//│ [C f¹(h¹) map₁(f¹, t¹)]: 55 --->
+//│ 	case ls² of {C h² t² => [C f²(h²) map₀(f², t²)] | N  => [N]}: 71
+//│ [N]: 56 --->
+//│ 	case ls² of {C h² t² => [C f²(h²) map₀(f², t²)] | N  => [N]}: 71
+//│ [N]: 96 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
+//│ [C 6 [N]]: 97 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
+//│ [C 5 [C 6 [N]]]: 98 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
+//│ [C 4 [C 5 [C 6 [N]]]]: 99 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
+//│ [C 3 [C 4 [C 5 [C 6 [N]]]]]: 100 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
+//│ [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]: 101 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
+//│ [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]: 102 --->
+//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
 //│ ------------------
-//│ 
+//│ case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57 --->
+//│ 	[N]: 96
+//│ 	[C 6 [N]]: 97
+//│ 	[C 5 [C 6 [N]]]: 98
+//│ 	[C 4 [C 5 [C 6 [N]]]]: 99
+//│ 	[C 3 [C 4 [C 5 [C 6 [N]]]]]: 100
+//│ 	[C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]: 101
+//│ 	[C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]: 102
+//│ case ls² of {C h² t² => [C f²(h²) map₀(f², t²)] | N  => [N]}: 71 --->
+//│ 	[C f¹(h¹) map₁(f¹, t¹)]: 55
+//│ 	[N]: 56
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ 
-//│ 
+//│ map₀((fun x⁴ -> (x⁴ * x⁴)), map₁((fun x⁵ -> (x⁵ + 1)), 
+//│ 	let h³ = 1
+//│ 	in let t³ = 	
+//│ 		let h⁵ = 2
+//│ 		in let t⁵ = 	
+//│ 			let h⁷ = 3
+//│ 			in let t⁷ = 	
+//│ 				let h⁹ = 4
+//│ 				in let t⁹ = 	
+//│ 					let h¹¹ = 5
+//│ 					in let t¹¹ = 	
+//│ 						let h¹³ = 6
+//│ 						in let t¹³ = (fun f¹⁵ -> (fun f¹⁶ -> [N]))
+//│ 						in (fun f¹³ -> 
+//│ 							let h¹⁴ = f¹³(h¹³)
+//│ 							in let t¹⁴ = map₁(f¹³, t¹³)
+//│ 							in (fun f¹⁴ -> [C f¹⁴(h¹⁴) map₀(f¹⁴, t¹⁴)]))
+//│ 					in (fun f¹¹ -> 
+//│ 						let h¹² = f¹¹(h¹¹)
+//│ 						in let t¹² = map₁(f¹¹, t¹¹)
+//│ 						in (fun f¹² -> [C f¹²(h¹²) map₀(f¹², t¹²)]))
+//│ 				in (fun f⁹ -> 
+//│ 					let h¹⁰ = f⁹(h⁹)
+//│ 					in let t¹⁰ = map₁(f⁹, t⁹)
+//│ 					in (fun f¹⁰ -> [C f¹⁰(h¹⁰) map₀(f¹⁰, t¹⁰)]))
+//│ 			in (fun f⁷ -> 
+//│ 				let h⁸ = f⁷(h⁷)
+//│ 				in let t⁸ = map₁(f⁷, t⁷)
+//│ 				in (fun f⁸ -> [C f⁸(h⁸) map₀(f⁸, t⁸)]))
+//│ 		in (fun f⁵ -> 
+//│ 			let h⁶ = f⁵(h⁵)
+//│ 			in let t⁶ = map₁(f⁵, t⁵)
+//│ 			in (fun f⁶ -> [C f⁶(h⁶) map₀(f⁶, t⁶)]))
+//│ 	in (fun f³ -> 
+//│ 		let h⁴ = f³(h³)
+//│ 		in let t⁴ = map₁(f³, t³)
+//│ 		in (fun f⁴ -> [C f⁴(h⁴) map₀(f⁴, t⁴)]))))
+//│ def map₀(f¹⁸, ls⁴) = 
+//│ 	ls⁴(f¹⁸)
+//│ def map₁(f¹⁷, ls³) = 
+//│ 	ls³(f¹⁷)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated Haskell Code >>>>>>>>>>
+//│ 
+//│ map₁ f¹⁴ ls⁰ = (ls⁰ f¹⁴)
+//│ map₀ f¹⁵ ls¹ = (ls¹ f¹⁵)
+//│ ((map₀ (\x⁰ -> (x⁰ * x⁰))) ((map₁ (\x¹ -> (x¹ + 1))) (let h⁰ = 1 in (let t⁰ = (let h¹ = 2 in (let t¹ = (let h² = 3 in (let t² = (let h³ = 4 in (let t³ = (let h⁴ = 5 in (let t⁴ = (let h⁵ = 6 in (let t⁵ = (\f⁰ f¹ -> []) in (\f² -> (let h⁶ = (f² h⁵) in (let t⁶ = ((map₁ f²) t⁵) in (\f³ -> ((f³ h⁶):((map₀ f³) t⁶)))))))) in (\f⁴ -> (let h⁷ = (f⁴ h⁴) in (let t⁷ = ((map₁ f⁴) t⁴) in (\f⁵ -> ((f⁵ h⁷):((map₀ f⁵) t⁷)))))))) in (\f⁶ -> (let h⁸ = (f⁶ h³) in (let t⁸ = ((map₁ f⁶) t³) in (\f⁷ -> ((f⁷ h⁸):((map₀ f⁷) t⁸)))))))) in (\f⁸ -> (let h⁹ = (f⁸ h²) in (let t⁹ = ((map₁ f⁸) t²) in (\f⁹ -> ((f⁹ h⁹):((map₀ f⁹) t⁹)))))))) in (\f¹⁰ -> (let h¹⁰ = (f¹⁰ h¹) in (let t¹⁰ = ((map₁ f¹⁰) t¹) in (\f¹¹ -> ((f¹¹ h¹⁰):((map₀ f¹¹) t¹⁰)))))))) in (\f¹² -> (let h¹¹ = (f¹² h⁰) in (let t¹¹ = ((map₁ f¹²) t⁰) in (\f¹³ -> ((f¹³ h¹¹):((map₀ f¹³) t¹¹))))))))))
+//│ <<<<<<<<<< Generated Haskell Code <<<<<<<<<<
 
 
 

@@ -18,7 +18,7 @@ enum NestedPat {
 
 // NOTE: "/Users/<name>/Library/Java/Extensions/libjava-tree-sitter-ocaml-haskell.dylib" should exist
 object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
-  def apply(program: Str)(using d: Deforest, output: Str => Unit) = {
+  def apply(program: Str)(using d: Deforest, output: Str => Unit): Program = {
     val parser = new Parser()
     parser.setLanguage(Languages.haskell())
     // parser.setLanguage(Languages.ocaml())
@@ -28,6 +28,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
     // output(treeRootNode.getNodeString())
     fromHaskellToPrgm(treeRootNode)(using program)
   }
+  
   extension (n: Node) {
     def getSrcContent(using prgmStr: Str): Str = prgmStr.slice(n.getStartByte(), n.getEndByte())
     def getAllChilds = (0 until n.getChildCount()).map(n.getChild(_))
@@ -116,11 +117,16 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
 
   val supportedTopLevelHaskellNodeType = Set("top_splice", "function")
   def haskellBuiltinFunsList(using d: Deforest): Program = {
-    val haskellBuiltinFuns = Set("map", "filter", "foldl", "foldr", "zip", "zipWith", "head", "tail", "fromTo", "fromToBy")
+    val haskellBuiltinFuns = Set("map", "filter", "foldl", "foldr", "zip", "zipWith", "head", "tail", "enumFromTo", "enumFromThenTo")
     val builtins = """
 fun map(f, ls) = if ls is
   C(h, t) then C(f(h), map(f, t))
   N then N
+fun filter(f, ls) = if ls is
+  C(h, t) then if f(h) then C(h, filter(f, t)) else filter(f, t)
+  N then N
+fun enumFromTo(a, b) = if a <= b then C(a, enumFromTo(a + 1, b)) else N
+fun enumFromThenTo(a, t, b) = if a <= b then C(a, enumFromThenTo(t, 2 * t - a, b), b) else N
     """
     val builtinPrgms = {
       val lumberhackBuiltinFph = new FastParseHelpers(builtins)
@@ -193,7 +199,7 @@ trait CodeGen {
         content match
           case R(e) => rec(e)
       },
-      emptyLines=true
+      emptyLines = false
     ).print
   }
 }
@@ -215,13 +221,21 @@ object HaskellGen extends CodeGen {
       case _ => transform_id(pd.id) <:> " = " <:> rec(pd.body)
     }
   }
+  
+  def transformMatchArmToHaskellType(dtor: Var, params: List[Ident]): Document = dtor.name -> params match {
+    case "C" -> (h :: t :: Nil) => "(" <:> transform_id(h) <:> " : " <:> transform_id(t) <:> ") -> "
+    case "N" -> Nil => "[] -> "
+    case _ => dtor.name <:> " " <:> Lined(params.map(arg => transform_id(arg)) :+ Raw("-> "), " ")
+  }
 
   override val headers = Raw("")
+
+  // one-line, indentation is hard
   override def rec(e: Expr): Document = e match {
     case Const(lit) => Raw(lit.idStr)
     case Ref(id) => transform_id(id)
     case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackIntBinOps(op) =>
-      rec(fst) <:> s" $op " <:> rec(snd)
+      "(" <:> rec(fst) <:> s" $op " <:> rec(snd) <:> ")"
     case Call(lhs, rhs) =>
       "(" <:> rec(lhs) <:> " " <:> rec(rhs) <:> ")"
     case Ctor(name, args) if lumberhackPrimitiveCtors(name.name) => name.name match {
@@ -232,24 +246,56 @@ object HaskellGen extends CodeGen {
     case Ctor(name, args) =>
       "(" <:> name.name <:> " " <:> Lined(args.map(arg => rec(arg)), " ") <:> ")"
     case LetIn(id, rhs, body) => 
+      "(let " <:> transform_id(id) <:> " = " <:> rec(rhs) <:> " in " <:> rec(body) <:> ")"
+    case Match(scrut, arms) => 
+      "(case " <:> rec(scrut) <:> " of {" <:> 
+      Lined(arms.map{ case (v, args, body) => transformMatchArmToHaskellType(v, args) <:> rec(body) }, "; ") <:> "})"
+    case f: Function =>
+      val (params, body) = f.takeParamsOut
+      "(\\" <:> Lined(params.map(transform_id), " ") <:> " -> " <:> rec(body) <:> ")"
+    case IfThenElse(s, t, e) => "(if " <:> rec(s) <:> " then " <:> rec(t) <:> " else " <:> rec(e) <:> ")"
+    case _ => lastWords("unsupported: " + e.pp(using InitPpConfig.showIuidOn))
+  }
+
+  def recMultiline(e: Expr): Document = e match {
+    case Const(lit) => Raw(lit.idStr)
+    case Ref(id) => transform_id(id)
+    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackIntBinOps(op) =>
+      recMultiline(fst) <:> s" $op " <:> recMultiline(snd)
+    case Call(lhs, rhs) =>
+      // "(" <:> recMultiline(lhs) <:> " " <:> recMultiline(rhs) <:> ")"
       stack(
-        "let " <:> transform_id(id) <:> " = " <:> rec(rhs) <:> " in",
-        rec(body)
+        "(" <:> recMultiline(lhs),
+        Indented(recMultiline(rhs)) <:> ")"
+      )
+    case Ctor(name, args) if lumberhackPrimitiveCtors(name.name) => name.name match {
+      case "C" => "(" <:> recMultiline(args(0)) <:> ":" <:> recMultiline(args(1)) <:> ")"
+      case "N" => "[]"
+      case _ => lastWords("not supported")
+    }
+    case Ctor(name, args) =>
+      "(" <:> name.name <:> " " <:> Lined(args.map(arg => recMultiline(arg)), " ") <:> ")"
+    case LetIn(id, rhs, body) => 
+      stack(
+        "(let " <:> transform_id(id) <:> " = " <:> recMultiline(rhs) <:> " in",
+        Indented(recMultiline(body)),
+        ")"
       )
     case Match(scrut, arms) => 
       Stacked(
-        ("case " <:> rec(scrut) <:> " of") :: 
+        ("case " <:> recMultiline(scrut) <:> " of") :: 
         arms.map{case (v, args, body) => stack(
-          Indented(v.name <:> " " <:> Lined(args.map(arg => transform_id(arg)) :+ Raw("-> "), " ") <:> rec(body))
+          // Indented(v.name <:> " " <:> Lined(args.map(arg => transform_id(arg)) :+ Raw("-> "), " ") <:> recMultiline(body))
+          Indented(transformMatchArmToHaskellType(v, args) <:> recMultiline(body))
         )}
       )
     case f: Function =>
       val (params, body) = f.takeParamsOut
       stack(
         "(\\" <:> Lined(params.map(transform_id), " ") <:> " -> ",
-        Indented(rec(body) <:> ")")
+        Indented(recMultiline(body) <:> ")")
       )
-    case IfThenElse(s, t, e) => "if " <:> rec(s) <:> " then " <:> rec(t) <:> " else " <:> rec(e)
+    case IfThenElse(s, t, e) => "if " <:> recMultiline(s) <:> " then " <:> recMultiline(t) <:> " else " <:> recMultiline(e)
     case _ => lastWords("unsupported: " + e.pp(using InitPpConfig.showIuidOn))
   }
 }

@@ -3,150 +3,119 @@
 
 
 :haskell
-map (\x -> x * x) $ map (\x -> x + 1) [1,2,3,4,5,6]
+map (\x -> x + 1) $ map (\x -> x + x) [1,3..11]
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ map^15((fun x⁰ -> (x⁰ * x⁰)), map^23((fun x¹ -> (x¹ + 1)), [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]))
+//│ map^144((fun x⁰ -> (x⁰ + 1)), map^152((fun x¹ -> (x¹ + x¹)), enumFromThenTo^163(1, 3, 11)))
+//│ def enumFromThenTo(a¹, t⁶, b¹) = if (a¹ <= b¹) then [LH_C a¹ enumFromThenTo^123(t⁶, ((2 * t⁶) - a¹), b¹)] else [LH_N]
+//│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [LH_C a⁰ enumFromTo^103((a⁰ + 1), b⁰)] else [LH_N]
+//│ def filter(f¹, ls¹) = case ls¹ of {
+//│ 	LH_C h¹ t¹ => if f¹(h¹) then [LH_C h¹ filter^20(f¹, t¹)] else filter^26(f¹, t¹)
+//│ 	| LH_N  => [LH_N]}
+//│ def foldl(f², i⁰, ls²) = case ls² of {
+//│ 	LH_C h² t² => foldl^37(f², f²(i⁰, h²), t²)
+//│ 	| LH_N  => i⁰}
+//│ def foldr(f³, i¹, ls³) = case ls³ of {
+//│ 	LH_C h³ t³ => f³(h³, foldr^57(f³, i¹, t³))
+//│ 	| LH_N  => i¹}
+//│ def head(ls⁴) = case ls⁴ of {
+//│ 	LH_C h⁴ t⁴ => h⁴
+//│ 	| LH_N  => primitive⁰}
 //│ def map(f⁰, ls⁰) = case ls⁰ of {
-//│ 	C h⁰ t⁰ => [C f⁰(h⁰) map^5(f⁰, t⁰)]
-//│ 	| N  => [N]}
+//│ 	LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map^5(f⁰, t⁰)]
+//│ 	| LH_N  => [LH_N]}
+//│ def tail(ls⁵) = case ls⁵ of {
+//│ 	LH_C h⁵ t⁵ => t⁵
+//│ 	| LH_N  => primitive⁰}
+//│ def zip(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	LH_C hx⁰ tx⁰ => case ys⁰ of {
+//│ 		LH_C hy⁰ ty⁰ => [LH_C [LH_P2 hx⁰ hy⁰] zip^75(tx⁰, ty⁰)]
+//│ 		| LH_N  => [LH_N]}
+//│ 	| LH_N  => [LH_N]}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [map^15]
-//│ 	[map^15 · map^5] ---> [map^15] (only one)
-//│ [map^23]
-//│ 	[map^23 · map^5] ---> [map^23] (only one)
+//│ [enumFromThenTo^163]
+//│ 	[enumFromThenTo^163 · enumFromThenTo^123] ---> [enumFromThenTo^163] (only one)
+//│ [map^144]
+//│ 	[map^144 · map^5] ---> [map^144] (only one)
+//│ [map^152]
+//│ 	[map^152 · map^5] ---> [map^152] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ map₀((fun x² -> (x² * x²)), map₁((fun x³ -> (x³ + 1)), [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]))
-//│ def map₀(f², ls²) = 
-//│ 	case ls² of {
-//│ 		C h² t² => [C f²(h²) map₀(f², t²)]
-//│ 		| N  => [N]}
-//│ def map₁(f¹, ls¹) = 
-//│ 	case ls¹ of {
-//│ 		C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)]
-//│ 		| N  => [N]}
+//│ map₀((fun x² -> (x² + 1)), map₁((fun x³ -> (x³ + x³)), enumFromThenTo₀(1, 3, 11)))
+//│ def enumFromThenTo₀(a², t⁸, b²) = 
+//│ 	if (a² <= b²) then [LH_C a² enumFromThenTo₀(t⁸, ((2 * t⁸) - a²), b²)] else [LH_N]
+//│ def map₀(f⁴, ls⁶) = 
+//│ 	case ls⁶ of {
+//│ 		LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)]
+//│ 		| LH_N  => [LH_N]}
+//│ def map₁(f⁵, ls⁷) = 
+//│ 	case ls⁷ of {
+//│ 		LH_C h⁷ t⁹ => [LH_C f⁵(h⁷) map₁(f⁵, t⁹)]
+//│ 		| LH_N  => [LH_N]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C f¹(h¹) map₁(f¹, t¹)]: 55 --->
-//│ 	case ls² of {C h² t² => [C f²(h²) map₀(f², t²)] | N  => [N]}: 71
-//│ [N]: 56 --->
-//│ 	case ls² of {C h² t² => [C f²(h²) map₀(f², t²)] | N  => [N]}: 71
-//│ [N]: 96 --->
-//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
-//│ [C 6 [N]]: 97 --->
-//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
-//│ [C 5 [C 6 [N]]]: 98 --->
-//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
-//│ [C 4 [C 5 [C 6 [N]]]]: 99 --->
-//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
-//│ [C 3 [C 4 [C 5 [C 6 [N]]]]]: 100 --->
-//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
-//│ [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]: 101 --->
-//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
-//│ [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]: 102 --->
-//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
+//│ [LH_C a² enumFromThenTo₀(t⁸, ((2 * t⁸) - a²), b²)]: 204 --->
+//│ 	case ls⁷ of {LH_C h⁷ t⁹ => [LH_C f⁵(h⁷) map₁(f⁵, t⁹)] | LH_N  => [LH_N]}: 221
+//│ [LH_N]: 205 --->
+//│ 	case ls⁷ of {LH_C h⁷ t⁹ => [LH_C f⁵(h⁷) map₁(f⁵, t⁹)] | LH_N  => [LH_N]}: 221
+//│ [LH_C f⁵(h⁷) map₁(f⁵, t⁹)]: 219 --->
+//│ 	case ls⁶ of {LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)] | LH_N  => [LH_N]}: 180
+//│ [LH_N]: 220 --->
+//│ 	case ls⁶ of {LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)] | LH_N  => [LH_N]}: 180
 //│ ------------------
-//│ case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57 --->
-//│ 	[N]: 96
-//│ 	[C 6 [N]]: 97
-//│ 	[C 5 [C 6 [N]]]: 98
-//│ 	[C 4 [C 5 [C 6 [N]]]]: 99
-//│ 	[C 3 [C 4 [C 5 [C 6 [N]]]]]: 100
-//│ 	[C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]: 101
-//│ 	[C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]: 102
-//│ case ls² of {C h² t² => [C f²(h²) map₀(f², t²)] | N  => [N]}: 71 --->
-//│ 	[C f¹(h¹) map₁(f¹, t¹)]: 55
-//│ 	[N]: 56
+//│ case ls⁶ of {LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)] | LH_N  => [LH_N]}: 180 --->
+//│ 	[LH_C f⁵(h⁷) map₁(f⁵, t⁹)]: 219
+//│ 	[LH_N]: 220
+//│ case ls⁷ of {LH_C h⁷ t⁹ => [LH_C f⁵(h⁷) map₁(f⁵, t⁹)] | LH_N  => [LH_N]}: 221 --->
+//│ 	[LH_C a² enumFromThenTo₀(t⁸, ((2 * t⁸) - a²), b²)]: 204
+//│ 	[LH_N]: 205
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C f¹(h¹) map₁(f¹, t¹)]: 55 --->
-//│ 	case ls² of {C h² t² => [C f²(h²) map₀(f², t²)] | N  => [N]}: 71
-//│ [N]: 56 --->
-//│ 	case ls² of {C h² t² => [C f²(h²) map₀(f², t²)] | N  => [N]}: 71
-//│ [N]: 96 --->
-//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
-//│ [C 6 [N]]: 97 --->
-//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
-//│ [C 5 [C 6 [N]]]: 98 --->
-//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
-//│ [C 4 [C 5 [C 6 [N]]]]: 99 --->
-//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
-//│ [C 3 [C 4 [C 5 [C 6 [N]]]]]: 100 --->
-//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
-//│ [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]: 101 --->
-//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
-//│ [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]: 102 --->
-//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57
+//│ [LH_C a² enumFromThenTo₀(t⁸, ((2 * t⁸) - a²), b²)]: 204 --->
+//│ 	case ls⁷ of {LH_C h⁷ t⁹ => [LH_C f⁵(h⁷) map₁(f⁵, t⁹)] | LH_N  => [LH_N]}: 221
+//│ [LH_N]: 205 --->
+//│ 	case ls⁷ of {LH_C h⁷ t⁹ => [LH_C f⁵(h⁷) map₁(f⁵, t⁹)] | LH_N  => [LH_N]}: 221
+//│ [LH_C f⁵(h⁷) map₁(f⁵, t⁹)]: 219 --->
+//│ 	case ls⁶ of {LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)] | LH_N  => [LH_N]}: 180
+//│ [LH_N]: 220 --->
+//│ 	case ls⁶ of {LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)] | LH_N  => [LH_N]}: 180
 //│ ------------------
-//│ case ls¹ of {C h¹ t¹ => [C f¹(h¹) map₁(f¹, t¹)] | N  => [N]}: 57 --->
-//│ 	[N]: 96
-//│ 	[C 6 [N]]: 97
-//│ 	[C 5 [C 6 [N]]]: 98
-//│ 	[C 4 [C 5 [C 6 [N]]]]: 99
-//│ 	[C 3 [C 4 [C 5 [C 6 [N]]]]]: 100
-//│ 	[C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]: 101
-//│ 	[C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]: 102
-//│ case ls² of {C h² t² => [C f²(h²) map₀(f², t²)] | N  => [N]}: 71 --->
-//│ 	[C f¹(h¹) map₁(f¹, t¹)]: 55
-//│ 	[N]: 56
+//│ case ls⁶ of {LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)] | LH_N  => [LH_N]}: 180 --->
+//│ 	[LH_C f⁵(h⁷) map₁(f⁵, t⁹)]: 219
+//│ 	[LH_N]: 220
+//│ case ls⁷ of {LH_C h⁷ t⁹ => [LH_C f⁵(h⁷) map₁(f⁵, t⁹)] | LH_N  => [LH_N]}: 221 --->
+//│ 	[LH_C a² enumFromThenTo₀(t⁸, ((2 * t⁸) - a²), b²)]: 204
+//│ 	[LH_N]: 205
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ map₀((fun x⁴ -> (x⁴ * x⁴)), map₁((fun x⁵ -> (x⁵ + 1)), 
-//│ 	let h³ = 1
-//│ 	in let t³ = 	
-//│ 		let h⁵ = 2
-//│ 		in let t⁵ = 	
-//│ 			let h⁷ = 3
-//│ 			in let t⁷ = 	
-//│ 				let h⁹ = 4
-//│ 				in let t⁹ = 	
-//│ 					let h¹¹ = 5
-//│ 					in let t¹¹ = 	
-//│ 						let h¹³ = 6
-//│ 						in let t¹³ = (fun f¹⁵ -> (fun f¹⁶ -> [N]))
-//│ 						in (fun f¹³ -> 
-//│ 							let h¹⁴ = f¹³(h¹³)
-//│ 							in let t¹⁴ = map₁(f¹³, t¹³)
-//│ 							in (fun f¹⁴ -> [C f¹⁴(h¹⁴) map₀(f¹⁴, t¹⁴)]))
-//│ 					in (fun f¹¹ -> 
-//│ 						let h¹² = f¹¹(h¹¹)
-//│ 						in let t¹² = map₁(f¹¹, t¹¹)
-//│ 						in (fun f¹² -> [C f¹²(h¹²) map₀(f¹², t¹²)]))
-//│ 				in (fun f⁹ -> 
-//│ 					let h¹⁰ = f⁹(h⁹)
-//│ 					in let t¹⁰ = map₁(f⁹, t⁹)
-//│ 					in (fun f¹⁰ -> [C f¹⁰(h¹⁰) map₀(f¹⁰, t¹⁰)]))
-//│ 			in (fun f⁷ -> 
-//│ 				let h⁸ = f⁷(h⁷)
-//│ 				in let t⁸ = map₁(f⁷, t⁷)
-//│ 				in (fun f⁸ -> [C f⁸(h⁸) map₀(f⁸, t⁸)]))
-//│ 		in (fun f⁵ -> 
-//│ 			let h⁶ = f⁵(h⁵)
-//│ 			in let t⁶ = map₁(f⁵, t⁵)
-//│ 			in (fun f⁶ -> [C f⁶(h⁶) map₀(f⁶, t⁶)]))
-//│ 	in (fun f³ -> 
-//│ 		let h⁴ = f³(h³)
-//│ 		in let t⁴ = map₁(f³, t³)
-//│ 		in (fun f⁴ -> [C f⁴(h⁴) map₀(f⁴, t⁴)]))))
-//│ def map₀(f¹⁸, ls⁴) = 
-//│ 	ls⁴(f¹⁸)
-//│ def map₁(f¹⁷, ls³) = 
-//│ 	ls³(f¹⁷)
+//│ map₀((fun x⁴ -> (x⁴ + 1)), map₁((fun x⁵ -> (x⁵ + x⁵)), enumFromThenTo₀(1, 3, 11)))
+//│ def enumFromThenTo₀(a³, t¹⁰, b³) = 
+//│ 	if (a³ <= b³) then 
+//│ 		let h⁸ = a³
+//│ 		in let t¹¹ = enumFromThenTo₀(t¹⁰, ((2 * t¹⁰) - a³), b³)
+//│ 		in (fun f⁷ -> 
+//│ 			let h⁹ = f⁷(h⁸)
+//│ 			in let t¹² = map₁(f⁷, t¹¹)
+//│ 			in (fun f⁸ -> [LH_C f⁸(h⁹) map₀(f⁸, t¹²)])) else (fun f⁹ -> (fun f¹⁰ -> [LH_N]))
+//│ def map₀(f⁶, ls⁸) = 
+//│ 	ls⁸(f⁶)
+//│ def map₁(f¹¹, ls⁹) = 
+//│ 	ls⁹(f¹¹)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated Haskell Code >>>>>>>>>>
 //│ 
-//│ map₁ f¹⁴ ls⁰ = (ls⁰ f¹⁴)
-//│ map₀ f¹⁵ ls¹ = (ls¹ f¹⁵)
-//│ ((map₀ (\x⁰ -> (x⁰ * x⁰))) ((map₁ (\x¹ -> (x¹ + 1))) (let h⁰ = 1 in (let t⁰ = (let h¹ = 2 in (let t¹ = (let h² = 3 in (let t² = (let h³ = 4 in (let t³ = (let h⁴ = 5 in (let t⁴ = (let h⁵ = 6 in (let t⁵ = (\f⁰ f¹ -> []) in (\f² -> (let h⁶ = (f² h⁵) in (let t⁶ = ((map₁ f²) t⁵) in (\f³ -> ((f³ h⁶):((map₀ f³) t⁶)))))))) in (\f⁴ -> (let h⁷ = (f⁴ h⁴) in (let t⁷ = ((map₁ f⁴) t⁴) in (\f⁵ -> ((f⁵ h⁷):((map₀ f⁵) t⁷)))))))) in (\f⁶ -> (let h⁸ = (f⁶ h³) in (let t⁸ = ((map₁ f⁶) t³) in (\f⁷ -> ((f⁷ h⁸):((map₀ f⁷) t⁸)))))))) in (\f⁸ -> (let h⁹ = (f⁸ h²) in (let t⁹ = ((map₁ f⁸) t²) in (\f⁹ -> ((f⁹ h⁹):((map₀ f⁹) t⁹)))))))) in (\f¹⁰ -> (let h¹⁰ = (f¹⁰ h¹) in (let t¹⁰ = ((map₁ f¹⁰) t¹) in (\f¹¹ -> ((f¹¹ h¹⁰):((map₀ f¹¹) t¹⁰)))))))) in (\f¹² -> (let h¹¹ = (f¹² h⁰) in (let t¹¹ = ((map₁ f¹²) t⁰) in (\f¹³ -> ((f¹³ h¹¹):((map₀ f¹³) t¹¹))))))))))
+//│ map₀ f⁰ ls⁰ = (ls⁰ f⁰)
+//│ enumFromThenTo₀ a⁰ t⁰ b⁰ = (if (a⁰ <= b⁰) then (let h⁰ = a⁰ in (let t¹ = (((enumFromThenTo₀ t⁰) ((2 * t⁰) - a⁰)) b⁰) in (\f¹ -> (let h¹ = (f¹ h⁰) in (let t² = ((map₁ f¹) t¹) in (\f² -> ((f² h¹):((map₀ f²) t²)))))))) else (\f³ f⁴ -> []))
+//│ map₁ f⁵ ls¹ = (ls¹ f⁵)
+//│ ((map₀ (\x⁰ -> (x⁰ + 1))) ((map₁ (\x¹ -> (x¹ + x¹))) (((enumFromThenTo₀ 1) 3) 11)))
 //│ <<<<<<<<<< Generated Haskell Code <<<<<<<<<<
 
 

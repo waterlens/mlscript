@@ -56,7 +56,13 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
     def toExpr(using ctx: Expr.Ctx, inDef: Option[Ident], d: Deforest, output: Str => Unit, prgmStr: Str): Expr = {
       n.getType() match {
         case "ERROR" => lastWords("haskell parse error")
-        case "exp_arithmetic_sequence" => ???
+        case "exp_arithmetic_sequence" => {
+          val args = (1 until n.getChildCount() by 2).map(i => n.getChild(i).toExpr)
+          if args.length == 2 then
+            Call(Call(Ref(ctx("enumFromTo")), args(0)), args(1))
+          else // must be 3 then
+            Call(Call(Call(Ref(ctx("enumFromThenTo")), args(0)), args(1)), args(2))
+        }
         case "exp_lambda" => {
           val allChilds = n.getAllChilds
           assert(allChilds.head.getType() == "\\")
@@ -68,9 +74,13 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
           val bodyExpr = allChilds.last.toExpr(using ctx ++ paramIds)
           paramIds.unzip._2.foldRight(bodyExpr)(Expr.Function(_, _))
         }
+        case "exp_tuple" => {
+          val args = (1 until n.getChildCount() by 2).map(i => n.getChild(i).toExpr)
+          Ctor(Var(s"LH_P${args.length}"), args.toList)
+        }
         case "exp_list" => {
-          val res = (1 until n.getChildCount() by 2).foldRight(Ctor(Var("N"), Nil)) {case (head, tail) =>
-            Ctor(Var("C"), n.getChild(head).toExpr :: tail :: Nil)
+          val res = (1 until n.getChildCount() by 2).foldRight(Ctor(Var("LH_N"), Nil)) {case (head, tail) =>
+            Ctor(Var("LH_C"), n.getChild(head).toExpr :: tail :: Nil)
           }
           res
         }
@@ -117,16 +127,33 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
 
   val supportedTopLevelHaskellNodeType = Set("top_splice", "function")
   def haskellBuiltinFunsList(using d: Deforest): Program = {
-    val haskellBuiltinFuns = Set("map", "filter", "foldl", "foldr", "zip", "zipWith", "head", "tail", "enumFromTo", "enumFromThenTo")
+    val haskellBuiltinFuns = Set("map", "filter", "foldl", "foldr", "zip", "head", "tail", "enumFromTo", "enumFromThenTo")
     val builtins = """
 fun map(f, ls) = if ls is
-  C(h, t) then C(f(h), map(f, t))
-  N then N
+  LH_C(h, t) then LH_C(f(h), map(f, t))
+  LH_N then LH_N
 fun filter(f, ls) = if ls is
-  C(h, t) then if f(h) then C(h, filter(f, t)) else filter(f, t)
-  N then N
-fun enumFromTo(a, b) = if a <= b then C(a, enumFromTo(a + 1, b)) else N
-fun enumFromThenTo(a, t, b) = if a <= b then C(a, enumFromThenTo(t, 2 * t - a, b), b) else N
+  LH_C(h, t) then if f(h) then LH_C(h, filter(f, t)) else filter(f, t)
+  LH_N then LH_N
+fun foldl(f, i, ls) = if ls is
+  LH_C(h, t) then foldl(f, f(i, h), t)
+  LH_N then i
+fun foldr(f, i, ls) = if ls is
+  LH_C(h, t) then f(h, foldr(f, i, t))
+  LH_N then i
+fun zip(xs, ys) = if xs is
+  LH_C(hx, tx) then if ys is
+    LH_C(hy, ty) then LH_C(LH_P2(hx, hy), zip(tx, ty))
+    LH_N then LH_N
+  LH_N then LH_N
+fun head(ls) = if ls is
+  LH_C(h, t) then h
+  LH_N then primitive
+fun tail(ls) = if ls is
+  LH_C(h, t) then t
+  LH_N then primitive
+fun enumFromTo(a, b) = if a <= b then LH_C(a, enumFromTo(a + 1, b)) else LH_N
+fun enumFromThenTo(a, t, b) = if a <= b then LH_C(a, enumFromThenTo(t, 2 * t - a, b)) else LH_N
     """
     val builtinPrgms = {
       val lumberhackBuiltinFph = new FastParseHelpers(builtins)
@@ -208,7 +235,8 @@ object HaskellGen extends CodeGen {
   def validate(p: Program): Unit = ??? //maybe we should check if the program can be translated at all
 
   val primitives = Map("add" -> "(+)", "sub" -> "(-)")
-  val lumberhackPrimitiveCtors = Set("C", "N", "P2", "P3")
+  def lumberhackPrimitiveCtors(c: String) =
+    c.startsWith("LH_") || Set("LH_C", "LH_N", "LH_P2", "LH_P3")(c)
 
   override def transform_id(id: Ident): Document =
     if id.isDef then id.pp(using InitPpConfig) else id.pp(using InitPpConfig.showIuidOn)
@@ -223,8 +251,8 @@ object HaskellGen extends CodeGen {
   }
   
   def transformMatchArmToHaskellType(dtor: Var, params: List[Ident]): Document = dtor.name -> params match {
-    case "C" -> (h :: t :: Nil) => "(" <:> transform_id(h) <:> " : " <:> transform_id(t) <:> ") -> "
-    case "N" -> Nil => "[] -> "
+    case "LH_C" -> (h :: t :: Nil) => "(" <:> transform_id(h) <:> " : " <:> transform_id(t) <:> ") -> "
+    case "LH_N" -> Nil => "[] -> "
     case _ => dtor.name <:> " " <:> Lined(params.map(arg => transform_id(arg)) :+ Raw("-> "), " ")
   }
 
@@ -239,8 +267,12 @@ object HaskellGen extends CodeGen {
     case Call(lhs, rhs) =>
       "(" <:> rec(lhs) <:> " " <:> rec(rhs) <:> ")"
     case Ctor(name, args) if lumberhackPrimitiveCtors(name.name) => name.name match {
-      case "C" => "(" <:> rec(args(0)) <:> ":" <:> rec(args(1)) <:> ")"
-      case "N" => "[]"
+      case "LH_C" => "(" <:> rec(args(0)) <:> ":" <:> rec(args(1)) <:> ")"
+      case "LH_N" => "[]"
+      case pair if pair.startsWith("LH_P") => {
+        val num = pair.drop(4).toInt
+        "(" <:> Lined((0 until num).map(i => rec(args(i))).toList, " ") <:> ")"
+      }
       case _ => lastWords("not supported")
     }
     case Ctor(name, args) =>

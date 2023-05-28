@@ -16,6 +16,27 @@ enum NestedPat {
   case CtorPat(c: Str, field: Ls[NestedPat])
 }
 
+enum BuiltInTypes {
+  case ListCons
+  case ListNil
+  case Tuple(n: Int)
+
+  lazy val toLumberhackType = this match {
+    case ListCons => "LH_C"
+    case ListNil => "LH_N"
+    case Tuple(n) => s"LH_P$n"
+  }
+}
+object BuiltInTypes {
+  def contains(c: Str) = c.matches("LH_P\\d+") || Set("LH_C", "LH_N")(c)
+  def fromStr(c: Str) = c match {
+    case "LH_C" => Some(ListCons)
+    case "LH_N" => Some(ListNil)
+    case tup if tup.matches("LH_P\\d+") => Some(Tuple(tup.drop(4).toInt))
+    case _ => None
+  }
+}
+
 // NOTE: "/Users/<name>/Library/Java/Extensions/libjava-tree-sitter-ocaml-haskell.dylib" should exist
 object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
   def apply(program: Str)(using d: Deforest, output: Str => Unit): Program = {
@@ -76,11 +97,11 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
         }
         case "exp_tuple" => {
           val args = (1 until n.getChildCount() by 2).map(i => n.getChild(i).toExpr)
-          Ctor(Var(s"LH_P${args.length}"), args.toList)
+          Ctor(Var(BuiltInTypes.Tuple(args.length).toLumberhackType), args.toList)
         }
         case "exp_list" => {
-          val res = (1 until n.getChildCount() by 2).foldRight(Ctor(Var("LH_N"), Nil)) {case (head, tail) =>
-            Ctor(Var("LH_C"), n.getChild(head).toExpr :: tail :: Nil)
+          val res = (1 until n.getChildCount() by 2).foldRight(Ctor(Var(BuiltInTypes.ListNil.toLumberhackType), Nil)) {case (head, tail) =>
+            Ctor(Var(BuiltInTypes.ListCons.toLumberhackType), n.getChild(head).toExpr :: tail :: Nil)
           }
           res
         }
@@ -212,6 +233,7 @@ trait CodeGen {
   def transform_progdef(pd: ProgDef): Document
 
   def rec(e: Expr): Document
+  def recMultiline(e: Expr): Document
   def binOp(e1: Expr, op: String, e2: Expr) = "(" <:> rec(e1) <:> " " + op + " " <:> rec(e2) <:> ")"
   
   val headers: Document
@@ -235,9 +257,18 @@ object HaskellGen extends CodeGen {
   def validate(p: Program): Unit = ??? //maybe we should check if the program can be translated at all
 
   val primitives = Map("add" -> "(+)", "sub" -> "(-)")
-  def lumberhackPrimitiveCtors(c: String) =
-    c.startsWith("LH_") || Set("LH_C", "LH_N", "LH_P2", "LH_P3")(c)
 
+  override def apply(p: Program): String = {
+    Stacked( 
+      headers ::
+      p.contents.collect{ content =>
+        content match
+          case L(pd) => transform_progdef(pd)
+          case R(e) => rec(e)
+      },
+      emptyLines = false
+    ).print
+  }
   override def transform_id(id: Ident): Document =
     if id.isDef then id.pp(using InitPpConfig) else id.pp(using InitPpConfig.showIuidOn)
   override def transform_progdef(pd: ProgDef): Document = {
@@ -256,7 +287,10 @@ object HaskellGen extends CodeGen {
     case _ => dtor.name <:> " " <:> Lined(params.map(arg => transform_id(arg)) :+ Raw("-> "), " ")
   }
 
-  override val headers = Raw("")
+  override val headers = stack(
+    "module Main where",
+    "import Criterion.Main"
+  )
 
   // one-line, indentation is hard
   override def rec(e: Expr): Document = e match {
@@ -264,19 +298,19 @@ object HaskellGen extends CodeGen {
     case Ref(id) => transform_id(id)
     case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackIntBinOps(op) =>
       "(" <:> rec(fst) <:> s" $op " <:> rec(snd) <:> ")"
+    case Call(Ref(Ident(_, Var("primId"), _)), arg) => rec(arg)
     case Call(lhs, rhs) =>
       "(" <:> rec(lhs) <:> " " <:> rec(rhs) <:> ")"
-    case Ctor(name, args) if lumberhackPrimitiveCtors(name.name) => name.name match {
-      case "LH_C" => "(" <:> rec(args(0)) <:> ":" <:> rec(args(1)) <:> ")"
-      case "LH_N" => "[]"
-      case pair if pair.startsWith("LH_P") => {
-        val num = pair.drop(4).toInt
-        "(" <:> Lined((0 until num).map(i => rec(args(i))).toList, " ") <:> ")"
-      }
-      case _ => lastWords("not supported")
-    }
     case Ctor(name, args) =>
-      "(" <:> name.name <:> " " <:> Lined(args.map(arg => rec(arg)), " ") <:> ")"
+      (BuiltInTypes.fromStr(name.name).map {
+        case BuiltInTypes.ListCons => "(" <:> rec(args(0)) <:> ":" <:> rec(args(1)) <:> ")"
+        case BuiltInTypes.ListNil => Raw("[]")
+        case BuiltInTypes.Tuple(n) =>
+          assert(n == args.length)
+          "(" <:> Lined(args.map(rec(_)).toList, " ") <:> ")"
+      }).getOrElse(
+        "(" <:> name.name <:> " " <:> Lined(args.map(arg => rec(arg)), " ") <:> ")"
+      )
     case LetIn(id, rhs, body) => 
       "(let " <:> transform_id(id) <:> " = " <:> rec(rhs) <:> " in " <:> rec(body) <:> ")"
     case Match(scrut, arms) => 
@@ -300,13 +334,16 @@ object HaskellGen extends CodeGen {
         "(" <:> recMultiline(lhs),
         Indented(recMultiline(rhs)) <:> ")"
       )
-    case Ctor(name, args) if lumberhackPrimitiveCtors(name.name) => name.name match {
-      case "C" => "(" <:> recMultiline(args(0)) <:> ":" <:> recMultiline(args(1)) <:> ")"
-      case "N" => "[]"
-      case _ => lastWords("not supported")
-    }
     case Ctor(name, args) =>
-      "(" <:> name.name <:> " " <:> Lined(args.map(arg => recMultiline(arg)), " ") <:> ")"
+      (BuiltInTypes.fromStr(name.name).map {
+        case BuiltInTypes.ListCons => "(" <:> rec(args(0)) <:> ":" <:> rec(args(1)) <:> ")"
+        case BuiltInTypes.ListNil => Raw("[]")
+        case BuiltInTypes.Tuple(n) =>
+          assert(n == args.length)
+          "(" <:> Lined(args.map(rec(_)).toList, " ") <:> ")"
+      }).getOrElse(
+        "(" <:> name.name <:> " " <:> Lined(args.map(arg => rec(arg)), " ") <:> ")"
+      )
     case LetIn(id, rhs, body) => 
       stack(
         "(let " <:> transform_id(id) <:> " = " <:> recMultiline(rhs) <:> " in",
@@ -374,4 +411,5 @@ object OCamlGen extends CodeGen {
       )
     case e => lastWords(s"not supported: ${e.pp(using InitPpConfig.showIuidOn)}")
   }
+  def recMultiline(e: Expr): Document = ???
 }

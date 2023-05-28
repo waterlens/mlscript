@@ -2,12 +2,13 @@
 :ParseOnly
 
 
+
 :haskell
-map (\x -> x + 1) $ map (\x -> x + x) [1,3..11]
+map (\x -> x + 1) $ map (\x -> x + x) (primId [1..100])
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ map^144((fun x⁰ -> (x⁰ + 1)), map^152((fun x¹ -> (x¹ + x¹)), enumFromThenTo^163(1, 3, 11)))
+//│ map^144((fun x⁰ -> (x⁰ + 1)), map^152((fun x¹ -> (x¹ + x¹)), primId⁰(enumFromTo^163(1, 100))))
 //│ def enumFromThenTo(a¹, t⁶, b¹) = if (a¹ <= b¹) then [LH_C a¹ enumFromThenTo^123(t⁶, ((2 * t⁶) - a¹), b¹)] else [LH_N]
 //│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [LH_C a⁰ enumFromTo^103((a⁰ + 1), b⁰)] else [LH_N]
 //│ def filter(f¹, ls¹) = case ls¹ of {
@@ -36,8 +37,8 @@ map (\x -> x + 1) $ map (\x -> x + x) [1,3..11]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [enumFromThenTo^163]
-//│ 	[enumFromThenTo^163 · enumFromThenTo^123] ---> [enumFromThenTo^163] (only one)
+//│ [enumFromTo^163]
+//│ 	[enumFromTo^163 · enumFromTo^103] ---> [enumFromTo^163] (only one)
 //│ [map^144]
 //│ 	[map^144 · map^5] ---> [map^144] (only one)
 //│ [map^152]
@@ -45,77 +46,63 @@ map (\x -> x + 1) $ map (\x -> x + x) [1,3..11]
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ map₀((fun x² -> (x² + 1)), map₁((fun x³ -> (x³ + x³)), enumFromThenTo₀(1, 3, 11)))
-//│ def enumFromThenTo₀(a², t⁸, b²) = 
-//│ 	if (a² <= b²) then [LH_C a² enumFromThenTo₀(t⁸, ((2 * t⁸) - a²), b²)] else [LH_N]
+//│ map₀((fun x² -> (x² + 1)), map₁((fun x³ -> (x³ + x³)), primId⁰(enumFromTo₀(1, 100))))
+//│ def enumFromTo₀(a², b²) = 
+//│ 	if (a² <= b²) then [LH_C a² enumFromTo₀((a² + 1), b²)] else [LH_N]
 //│ def map₀(f⁴, ls⁶) = 
 //│ 	case ls⁶ of {
 //│ 		LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)]
 //│ 		| LH_N  => [LH_N]}
 //│ def map₁(f⁵, ls⁷) = 
 //│ 	case ls⁷ of {
-//│ 		LH_C h⁷ t⁹ => [LH_C f⁵(h⁷) map₁(f⁵, t⁹)]
+//│ 		LH_C h⁷ t⁸ => [LH_C f⁵(h⁷) map₁(f⁵, t⁸)]
 //│ 		| LH_N  => [LH_N]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [LH_C a² enumFromThenTo₀(t⁸, ((2 * t⁸) - a²), b²)]: 204 --->
-//│ 	case ls⁷ of {LH_C h⁷ t⁹ => [LH_C f⁵(h⁷) map₁(f⁵, t⁹)] | LH_N  => [LH_N]}: 221
-//│ [LH_N]: 205 --->
-//│ 	case ls⁷ of {LH_C h⁷ t⁹ => [LH_C f⁵(h⁷) map₁(f⁵, t⁹)] | LH_N  => [LH_N]}: 221
-//│ [LH_C f⁵(h⁷) map₁(f⁵, t⁹)]: 219 --->
+//│ [LH_C f⁵(h⁷) map₁(f⁵, t⁸)]: 192 --->
 //│ 	case ls⁶ of {LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)] | LH_N  => [LH_N]}: 180
-//│ [LH_N]: 220 --->
+//│ [LH_N]: 193 --->
 //│ 	case ls⁶ of {LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)] | LH_N  => [LH_N]}: 180
 //│ ------------------
 //│ case ls⁶ of {LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)] | LH_N  => [LH_N]}: 180 --->
-//│ 	[LH_C f⁵(h⁷) map₁(f⁵, t⁹)]: 219
-//│ 	[LH_N]: 220
-//│ case ls⁷ of {LH_C h⁷ t⁹ => [LH_C f⁵(h⁷) map₁(f⁵, t⁹)] | LH_N  => [LH_N]}: 221 --->
-//│ 	[LH_C a² enumFromThenTo₀(t⁸, ((2 * t⁸) - a²), b²)]: 204
-//│ 	[LH_N]: 205
+//│ 	[LH_C f⁵(h⁷) map₁(f⁵, t⁸)]: 192
+//│ 	[LH_N]: 193
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [LH_C a² enumFromThenTo₀(t⁸, ((2 * t⁸) - a²), b²)]: 204 --->
-//│ 	case ls⁷ of {LH_C h⁷ t⁹ => [LH_C f⁵(h⁷) map₁(f⁵, t⁹)] | LH_N  => [LH_N]}: 221
-//│ [LH_N]: 205 --->
-//│ 	case ls⁷ of {LH_C h⁷ t⁹ => [LH_C f⁵(h⁷) map₁(f⁵, t⁹)] | LH_N  => [LH_N]}: 221
-//│ [LH_C f⁵(h⁷) map₁(f⁵, t⁹)]: 219 --->
+//│ [LH_C f⁵(h⁷) map₁(f⁵, t⁸)]: 192 --->
 //│ 	case ls⁶ of {LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)] | LH_N  => [LH_N]}: 180
-//│ [LH_N]: 220 --->
+//│ [LH_N]: 193 --->
 //│ 	case ls⁶ of {LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)] | LH_N  => [LH_N]}: 180
 //│ ------------------
 //│ case ls⁶ of {LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)] | LH_N  => [LH_N]}: 180 --->
-//│ 	[LH_C f⁵(h⁷) map₁(f⁵, t⁹)]: 219
-//│ 	[LH_N]: 220
-//│ case ls⁷ of {LH_C h⁷ t⁹ => [LH_C f⁵(h⁷) map₁(f⁵, t⁹)] | LH_N  => [LH_N]}: 221 --->
-//│ 	[LH_C a² enumFromThenTo₀(t⁸, ((2 * t⁸) - a²), b²)]: 204
-//│ 	[LH_N]: 205
+//│ 	[LH_C f⁵(h⁷) map₁(f⁵, t⁸)]: 192
+//│ 	[LH_N]: 193
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ map₀((fun x⁴ -> (x⁴ + 1)), map₁((fun x⁵ -> (x⁵ + x⁵)), enumFromThenTo₀(1, 3, 11)))
-//│ def enumFromThenTo₀(a³, t¹⁰, b³) = 
-//│ 	if (a³ <= b³) then 
-//│ 		let h⁸ = a³
-//│ 		in let t¹¹ = enumFromThenTo₀(t¹⁰, ((2 * t¹⁰) - a³), b³)
-//│ 		in (fun f⁷ -> 
-//│ 			let h⁹ = f⁷(h⁸)
-//│ 			in let t¹² = map₁(f⁷, t¹¹)
-//│ 			in (fun f⁸ -> [LH_C f⁸(h⁹) map₀(f⁸, t¹²)])) else (fun f⁹ -> (fun f¹⁰ -> [LH_N]))
+//│ map₀((fun x⁴ -> (x⁴ + 1)), map₁((fun x⁵ -> (x⁵ + x⁵)), primId⁰(enumFromTo₀(1, 100))))
+//│ def enumFromTo₀(a³, b³) = 
+//│ 	if (a³ <= b³) then [LH_C a³ enumFromTo₀((a³ + 1), b³)] else [LH_N]
 //│ def map₀(f⁶, ls⁸) = 
 //│ 	ls⁸(f⁶)
-//│ def map₁(f¹¹, ls⁹) = 
-//│ 	ls⁹(f¹¹)
+//│ def map₁(f⁷, ls⁹) = 
+//│ 	case ls⁹ of {
+//│ 		LH_C h⁷ t⁸ => 
+//│ 			let h⁸ = f⁷(h⁷)
+//│ 			in let t⁹ = map₁(f⁷, t⁸)
+//│ 			in (fun f⁸ -> [LH_C f⁸(h⁸) map₀(f⁸, t⁹)])
+//│ 		| LH_N  => (fun f⁹ -> [LH_N])}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated Haskell Code >>>>>>>>>>
-//│ 
+//│ module Main where
+//│ import Criterion.Main
+//│ ((map₀ (\x⁰ -> (x⁰ + 1))) ((map₁ (\x¹ -> (x¹ + x¹))) ((enumFromTo₀ 1) 100)))
 //│ map₀ f⁰ ls⁰ = (ls⁰ f⁰)
-//│ enumFromThenTo₀ a⁰ t⁰ b⁰ = (if (a⁰ <= b⁰) then (let h⁰ = a⁰ in (let t¹ = (((enumFromThenTo₀ t⁰) ((2 * t⁰) - a⁰)) b⁰) in (\f¹ -> (let h¹ = (f¹ h⁰) in (let t² = ((map₁ f¹) t¹) in (\f² -> ((f² h¹):((map₀ f²) t²)))))))) else (\f³ f⁴ -> []))
-//│ map₁ f⁵ ls¹ = (ls¹ f⁵)
-//│ ((map₀ (\x⁰ -> (x⁰ + 1))) ((map₁ (\x¹ -> (x¹ + x¹))) (((enumFromThenTo₀ 1) 3) 11)))
+//│ map₁ f¹ ls¹ = (case ls¹ of {(h⁰ : t⁰) -> (let h¹ = (f¹ h⁰) in (let t¹ = ((map₁ f¹) t⁰) in (\f² -> ((f² h¹):((map₀ f²) t¹))))); [] -> (\f³ -> [])})
+//│ enumFromTo₀ a⁰ b⁰ = (if (a⁰ <= b⁰) then (a⁰:((enumFromTo₀ (a⁰ + 1)) b⁰)) else [])
 //│ <<<<<<<<<< Generated Haskell Code <<<<<<<<<<
 
 

@@ -1,109 +1,168 @@
 :NewParser
 :ParseOnly
 
+_LUMBERHACK_EVAL
+if "sdf" is
+  "sdf" then L
+  A then B
+//│ |_LUMBERHACK_EVAL|↵|#if| |"sdf"| |is|→|"sdf"| |#then| |L|↵|A| |#then| |B|←|
+//│ Parsed: {_LUMBERHACK_EVAL; if "sdf" is ‹("sdf") then L; (A) then B›}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ case "sdf" of {
+//│ 	"sdf"  => [L]
+//│ 	| A  => [B]}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [L]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ 
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ case "sdf" of {
+//│ 	"sdf"  => [L]
+//│ 	| A  => [B]}
+//│ 
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ case "sdf" of {
+//│ 	"sdf"  => [L]
+//│ 	| A  => [B]}
+//│ 
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [L]
+//│ <<<<<<< evaluate <<<<<<<
 
+:haskell
+test 3 ls = map f ls
+test a ls = ls
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ "haskell" (
+//│ 	"function" (
+//│ 		"variable" ()
+//│ 		"patterns" (
+//│ 			"pat_literal" (
+//│ 				"integer" ())
+//│ 			"pat_name" (
+//│ 				"variable" ()))
+//│ 		"=" ()
+//│ 		"exp_apply" (
+//│ 			"exp_name" (
+//│ 				"variable" ())
+//│ 			"exp_name" (
+//│ 				"variable" ())
+//│ 			"exp_name" (
+//│ 				"variable" ())))
+//│ 	"function" (
+//│ 		"variable" ()
+//│ 		"patterns" (
+//│ 			"pat_name" (
+//│ 				"variable" ())
+//│ 			"pat_name" (
+//│ 				"variable" ()))
+//│ 		"=" ()
+//│ 		"exp_name" (
+//│ 			"variable" ())))
+//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
+//│ 	at: scala.Predef$.$qmark$qmark$qmark(Predef.scala:344)
+//│ 	at: mlscript.lumberhack.FromHaskell$.apply(CodeGen.scala:50)
+//│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTestLumberhack.scala:51)
+//│ 	at: mlscript.DiffTests.rec$1(DiffTests.scala:367)
+//│ 	at: mlscript.DiffTests.$anonfun$new$3(DiffTests.scala:774)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
+//│ 	at: org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
+//│ 	at: org.scalatest.Transformer.apply(Transformer.scala:22)
+//│ 	at: org.scalatest.Transformer.apply(Transformer.scala:20)
 
 :haskell
 map (\x -> x + 1) $ map (\x -> x + x) (primId [1..100])
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ map^144((fun x⁰ -> (x⁰ + 1)), map^152((fun x¹ -> (x¹ + x¹)), primId⁰(enumFromTo^163(1, 100))))
-//│ def enumFromThenTo(a¹, t⁶, b¹) = if (a¹ <= b¹) then [LH_C a¹ enumFromThenTo^123(t⁶, ((2 * t⁶) - a¹), b¹)] else [LH_N]
-//│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [LH_C a⁰ enumFromTo^103((a⁰ + 1), b⁰)] else [LH_N]
-//│ def filter(f¹, ls¹) = case ls¹ of {
-//│ 	LH_C h¹ t¹ => if f¹(h¹) then [LH_C h¹ filter^20(f¹, t¹)] else filter^26(f¹, t¹)
-//│ 	| LH_N  => [LH_N]}
-//│ def foldl(f², i⁰, ls²) = case ls² of {
-//│ 	LH_C h² t² => foldl^37(f², f²(i⁰, h²), t²)
-//│ 	| LH_N  => i⁰}
-//│ def foldr(f³, i¹, ls³) = case ls³ of {
-//│ 	LH_C h³ t³ => f³(h³, foldr^57(f³, i¹, t³))
-//│ 	| LH_N  => i¹}
-//│ def head(ls⁴) = case ls⁴ of {
-//│ 	LH_C h⁴ t⁴ => h⁴
-//│ 	| LH_N  => primitive⁰}
-//│ def map(f⁰, ls⁰) = case ls⁰ of {
-//│ 	LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map^5(f⁰, t⁰)]
-//│ 	| LH_N  => [LH_N]}
-//│ def tail(ls⁵) = case ls⁵ of {
-//│ 	LH_C h⁵ t⁵ => t⁵
-//│ 	| LH_N  => primitive⁰}
-//│ def zip(xs⁰, ys⁰) = case xs⁰ of {
-//│ 	LH_C hx⁰ tx⁰ => case ys⁰ of {
-//│ 		LH_C hy⁰ ty⁰ => [LH_C [LH_P2 hx⁰ hy⁰] zip^75(tx⁰, ty⁰)]
-//│ 		| LH_N  => [LH_N]}
-//│ 	| LH_N  => [LH_N]}
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [enumFromTo^163]
-//│ 	[enumFromTo^163 · enumFromTo^103] ---> [enumFromTo^163] (only one)
-//│ [map^144]
-//│ 	[map^144 · map^5] ---> [map^144] (only one)
-//│ [map^152]
-//│ 	[map^152 · map^5] ---> [map^152] (only one)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ map₀((fun x² -> (x² + 1)), map₁((fun x³ -> (x³ + x³)), primId⁰(enumFromTo₀(1, 100))))
-//│ def enumFromTo₀(a², b²) = 
-//│ 	if (a² <= b²) then [LH_C a² enumFromTo₀((a² + 1), b²)] else [LH_N]
-//│ def map₀(f⁴, ls⁶) = 
-//│ 	case ls⁶ of {
-//│ 		LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)]
-//│ 		| LH_N  => [LH_N]}
-//│ def map₁(f⁵, ls⁷) = 
-//│ 	case ls⁷ of {
-//│ 		LH_C h⁷ t⁸ => [LH_C f⁵(h⁷) map₁(f⁵, t⁸)]
-//│ 		| LH_N  => [LH_N]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ [LH_C f⁵(h⁷) map₁(f⁵, t⁸)]: 192 --->
-//│ 	case ls⁶ of {LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)] | LH_N  => [LH_N]}: 180
-//│ [LH_N]: 193 --->
-//│ 	case ls⁶ of {LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)] | LH_N  => [LH_N]}: 180
-//│ ------------------
-//│ case ls⁶ of {LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)] | LH_N  => [LH_N]}: 180 --->
-//│ 	[LH_C f⁵(h⁷) map₁(f⁵, t⁸)]: 192
-//│ 	[LH_N]: 193
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ [LH_C f⁵(h⁷) map₁(f⁵, t⁸)]: 192 --->
-//│ 	case ls⁶ of {LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)] | LH_N  => [LH_N]}: 180
-//│ [LH_N]: 193 --->
-//│ 	case ls⁶ of {LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)] | LH_N  => [LH_N]}: 180
-//│ ------------------
-//│ case ls⁶ of {LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀(f⁴, t⁷)] | LH_N  => [LH_N]}: 180 --->
-//│ 	[LH_C f⁵(h⁷) map₁(f⁵, t⁸)]: 192
-//│ 	[LH_N]: 193
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ map₀((fun x⁴ -> (x⁴ + 1)), map₁((fun x⁵ -> (x⁵ + x⁵)), primId⁰(enumFromTo₀(1, 100))))
-//│ def enumFromTo₀(a³, b³) = 
-//│ 	if (a³ <= b³) then [LH_C a³ enumFromTo₀((a³ + 1), b³)] else [LH_N]
-//│ def map₀(f⁶, ls⁸) = 
-//│ 	ls⁸(f⁶)
-//│ def map₁(f⁷, ls⁹) = 
-//│ 	case ls⁹ of {
-//│ 		LH_C h⁷ t⁸ => 
-//│ 			let h⁸ = f⁷(h⁷)
-//│ 			in let t⁹ = map₁(f⁷, t⁸)
-//│ 			in (fun f⁸ -> [LH_C f⁸(h⁸) map₀(f⁸, t⁹)])
-//│ 		| LH_N  => (fun f⁹ -> [LH_N])}
-//│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>>>>> Generated Haskell Code >>>>>>>>>>
-//│ module Main where
-//│ import Criterion.Main
-//│ ((map₀ (\x⁰ -> (x⁰ + 1))) ((map₁ (\x¹ -> (x¹ + x¹))) ((enumFromTo₀ 1) 100)))
-//│ map₀ f⁰ ls⁰ = (ls⁰ f⁰)
-//│ map₁ f¹ ls¹ = (case ls¹ of {(h⁰ : t⁰) -> (let h¹ = (f¹ h⁰) in (let t¹ = ((map₁ f¹) t⁰) in (\f² -> ((f² h¹):((map₀ f²) t¹))))); [] -> (\f³ -> [])})
-//│ enumFromTo₀ a⁰ b⁰ = (if (a⁰ <= b⁰) then (a⁰:((enumFromTo₀ (a⁰ + 1)) b⁰)) else [])
-//│ <<<<<<<<<< Generated Haskell Code <<<<<<<<<<
+//│ "haskell" (
+//│ 	"top_splice" (
+//│ 		"exp_infix" (
+//│ 			"exp_apply" (
+//│ 				"exp_name" (
+//│ 					"variable" ())
+//│ 				"exp_parens" (
+//│ 					"(" ()
+//│ 					"exp_lambda" (
+//│ 						"\" ()
+//│ 						"pat_name" (
+//│ 							"variable" ())
+//│ 						"->" ()
+//│ 						"exp_infix" (
+//│ 							"exp_name" (
+//│ 								"variable" ())
+//│ 							"operator" ()
+//│ 							"exp_literal" (
+//│ 								"integer" ())))
+//│ 					")" ()))
+//│ 			"operator" ()
+//│ 			"exp_apply" (
+//│ 				"exp_name" (
+//│ 					"variable" ())
+//│ 				"exp_parens" (
+//│ 					"(" ()
+//│ 					"exp_lambda" (
+//│ 						"\" ()
+//│ 						"pat_name" (
+//│ 							"variable" ())
+//│ 						"->" ()
+//│ 						"exp_infix" (
+//│ 							"exp_name" (
+//│ 								"variable" ())
+//│ 							"operator" ()
+//│ 							"exp_name" (
+//│ 								"variable" ())))
+//│ 					")" ())
+//│ 				"exp_parens" (
+//│ 					"(" ()
+//│ 					"exp_apply" (
+//│ 						"exp_name" (
+//│ 							"variable" ())
+//│ 						"exp_arithmetic_sequence" (
+//│ 							"[" ()
+//│ 							"exp_literal" (
+//│ 								"integer" ())
+//│ 							".." ()
+//│ 							"exp_literal" (
+//│ 								"integer" ())
+//│ 							"]" ()))
+//│ 					")" ())))))
+//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
+//│ 	at: scala.Predef$.$qmark$qmark$qmark(Predef.scala:344)
+//│ 	at: mlscript.lumberhack.FromHaskell$.apply(CodeGen.scala:50)
+//│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTestLumberhack.scala:51)
+//│ 	at: mlscript.DiffTests.rec$1(DiffTests.scala:367)
+//│ 	at: mlscript.DiffTests.$anonfun$new$3(DiffTests.scala:774)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
+//│ 	at: org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
+//│ 	at: org.scalatest.Transformer.apply(Transformer.scala:22)
+//│ 	at: org.scalatest.Transformer.apply(Transformer.scala:20)
 
 
 

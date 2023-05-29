@@ -185,7 +185,10 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
         case LetIn(id, rhs, body) => s"${Console.BOLD}let${Console.RESET} ${id.pp} = ${rhs.pp}" + s"\n${Console.BOLD}in${Console.RESET} ${body.pp}"
         case Match(scrut, arms) if config.multiline => s"${Console.BOLD}case${Console.RESET} ${scrut.pp} ${Console.BOLD}of${Console.RESET} {${
           "\n\t" + arms.map { case (v, ids, e) =>
-            s"${if (v.name == "_" && ids.isEmpty) || v.name.isCapitalized then Console.BLUE + v.name + Console.RESET + " " else ""}" +
+            s"${if ((v.name == "_" && ids.isEmpty) // wildcard pattern
+                  || v.name.isCapitalized // normal pattern
+                  || (v.name.startsWith("\"") || v.name.toIntOption.isDefined) // literal pattern
+                ) then Console.BLUE + v.name + Console.RESET + " " else ""}" +
             s"${ids.map(_.pp).mkString(" ")} => ${
               e.pp.linesIterator.map("\t" + _).mkString("\n").dropWhile(_ == '\t')
             }"
@@ -193,7 +196,10 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
         }}"
         case Match(scrut, arms) => s"${Console.BOLD}case${Console.RESET} ${scrut.pp} ${Console.BOLD}of${Console.RESET} {${
           arms.map { case (v, ids, e) =>
-            s"${if (v.name == "_" && ids.isEmpty) || v.name.isCapitalized then Console.BLUE + v.name + Console.RESET + " " else ""}" +
+            s"${if ((v.name == "_" && ids.isEmpty) // wildcard pattern
+                  || v.name.isCapitalized // normal pattern
+                  || (v.name.startsWith("\"") || v.name.toIntOption.isDefined) // literal pattern
+                ) then Console.BLUE + v.name + Console.RESET + " " else ""}" +
             s"${ids.map(_.pp).mkString(" ")} => ${e.pp}"
           }.mkString(" | ")
         }}"
@@ -267,8 +273,13 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
           }
           branch._3.subst(using bindings.toMap).evaluate
         }
-        case c@Const(IntLit(i)) => { // only wildcard or id pattern will match
-          val branch = arms.find(a => a._1.name == "_").get
+        case c@Const(IntLit(i)) => { // only wildcard or id pattern will match int
+          val branch = arms.find(a => a._1.name == "_" || a._1.name.toIntOption.map(_ == i) == Some(true)).get
+          val bindings = branch._2.zip(c :: Nil)
+          branch._3.subst(using bindings.toMap).evaluate
+        }
+        case c@Const(StrLit(s)) => { // only wildcard or id pattern will match str
+          val branch = arms.find(a => a._1.name == "_" || a._1.name == s"\"$s\"").get
           val bindings = branch._2.zip(c :: Nil)
           branch._3.subst(using bindings.toMap).evaluate
         }
@@ -416,7 +427,8 @@ object Expr {
     case If(IfOpApp(lhs, Var("is"), IfBlock(lines)), N)
       if lines.forall { _ match {
         case L(IfThen(App(Var(ctor), Tup((N -> Fld(false, false, _: Var)) :: _)), _)) => ctor.isCapitalized
-        case L(IfThen(Var(ctor), _)) => true
+        case L(IfThen(Var(ctor), _)) => ctor != "Int" && ctor != "String"
+        case L(IfThen(l: Lit, _)) => true
         case _ => false
       } } => Match(
         fromTerm(lhs),
@@ -425,11 +437,17 @@ object Expr {
             val argMap = args.map { case (N -> Fld(false, false, a: Var)) => (a.name, d.nextIdent(false, a)); case _ => ??? };
             (ctorName, argMap.unzip._2, fromTerm(rhs)(using d, ctx ++ argMap))
           }
-          case L(IfThen(name: Var, rhs)) if name.name.isCapitalized => (name, Nil, fromTerm(rhs))  // constructor with no field
+          case L(IfThen(name: Var, rhs)) if name.name.isCapitalized => (name, Nil, fromTerm(rhs))  // constructor with no field (including True and False)
           case L(IfThen(name: Var, rhs)) if name.name == "_" => (name, Nil, fromTerm(rhs))         // wildcard pattern
           case L(IfThen(name: Var, rhs)) =>                                                        // id pattern
             val newId = d.nextIdent(false, name)
             (Var("_"), newId :: Nil, fromTerm(rhs)(using d, ctx + (name.name -> newId)))
+          // literal pattern
+          case L(IfThen(lit: Lit, rhs)) => lit match {
+            case IntLit(value) => (Var(value.toString()), Nil, fromTerm(rhs))
+            case StrLit(value) => (Var(s"\"$value\""), Nil, fromTerm(rhs))
+            case _ => lastWords(s"unsupported pattern: ${lit}")
+          }
           case _ => ???
         }
       )

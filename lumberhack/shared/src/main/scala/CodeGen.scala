@@ -13,6 +13,7 @@ import mlscript.utils.lastWords
 enum NestedPat {
   case WildcardPat
   case IdPat(n: Str)
+  case LitPat(n: Lit)
   case CtorPat(c: Str, field: Ls[NestedPat])
 }
 
@@ -45,9 +46,10 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
     // parser.setLanguage(Languages.ocaml())
     val tree = parser.parseString(program)
     val treeRootNode = tree.getRootNode()
-    // output(treeRootNode.pp)
+    output(treeRootNode.pp)
+    ???
     // output(treeRootNode.getNodeString())
-    fromHaskellToPrgm(treeRootNode)(using program)
+    // fromHaskellToPrgm(treeRootNode)(using program)
   }
   
   extension (n: Node) {
@@ -88,7 +90,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
           val allChilds = n.getAllChilds
           assert(allChilds.head.getType() == "\\")
           val paramPat = allChilds.tail.takeWhile(_.getType().startsWith("pat_")).map(_.toPattern)
-          val paramIds = paramPat.map {
+          val paramIds = paramPat.map { // for lambdas, only id patterns are supported for now
             case NestedPat.IdPat(n) => n -> d.nextIdent(false, Var(n))
             case _ => lastWords("not supported")
           }

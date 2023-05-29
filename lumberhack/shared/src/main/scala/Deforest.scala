@@ -198,6 +198,7 @@ object ProdStratEnum {
     MkCtor(Var("True"), Nil).toStrat() :: MkCtor(Var("False"), Nil).toStrat() :: Nil
   )
   def prodInt(using ExprId) = MkCtor(Var("Int"), Nil)
+  def prodString(using ExprId) = MkCtor(Var("String"), Nil)
   def prodIntBinOp(using ExprId) = ProdFun(
     consInt.toStrat(),
     ProdFun(consInt.toStrat(), prodInt.toStrat()).toStrat()
@@ -276,6 +277,7 @@ class Deforest(var debug: Boolean) {
   def process(e: Expr)(using ctx: Ctx, calls: mutable.Set[Ref]): ProdStrat = trace(s"process ${e.uid}: ${e.pp(using InitPpConfig)}") {
     val res: ProdStratEnum = e match
       case Const(IntLit(_)) => prodInt(using noExprId) // Ints must use noExprId, since it's a MkCtor type
+      case Const(StrLit(_)) => prodString(using noExprId) // Strings must use noExprId, since it's a MkCtor type
       case Const(l) => NoProd()(using e.uid)
       case Ref(Ident(_, Var(primitive), _)) if Deforest.lumberhackKeywords(primitive) => {
         if (Deforest.lumberhackIntFun(primitive) || Deforest.lumberhackIntBinOps(primitive)) then
@@ -303,7 +305,7 @@ class Deforest(var debug: Boolean) {
       case me@Match(scrut, arms) =>
         val sp = process(scrut)
         val (detrs, bodies) = arms.map { (v, as, e) =>
-          if v.name.isCapitalized then {
+          if v.name.isCapitalized then { // normal pattern
             val as_tys = as.map(a => a -> freshVar(a)(using noExprId))
             val ep = process(e)(using ctx ++ as_tys.map(v => v._1 -> v._2._1.toStrat()))
             (Destructor(v, as_tys.map(a_ty => a_ty._2._2.toStrat())), ep)
@@ -314,6 +316,12 @@ class Deforest(var debug: Boolean) {
             }
             val ep = process(e)(using ctx ++ newIdCtx.map(_._1))
             (Destructor(v, newIdCtx.map(_._2).toList), ep)
+          } else if v.name.toIntOption.isDefined then { // int literal pattern
+            val ep = process(e)
+            (Destructor(Var("Int"), Nil), ep)
+          } else if v.name.startsWith("\"") then { // str literal pattern
+            val ep = process(e)
+            (Destructor(Var("String"), Nil), ep)
           } else { lastWords("unreachable") }
         }.unzip
         val dtorType = Destruct(detrs)(using e.uid).toStrat()

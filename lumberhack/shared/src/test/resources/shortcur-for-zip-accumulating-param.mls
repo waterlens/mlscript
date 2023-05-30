@@ -122,3 +122,183 @@ main(3)
 //│ 	[C [P2 1 3] [C [P2 2 4] [C [P2 3 5] [N]]]]
 //│ 	3
 //│ <<<<<<< evaluate <<<<<<<
+
+
+_LUMBERHACK_EVAL
+fun zip(xs, ys) = if xs is
+  C(hx, tx) then if ys is
+    C(hy, ty) then C(P2(hx, hy), zip(tx, ty))
+    N then N
+  N then N
+fun map(f, ls) = if ls is
+  C(h, t) then C(f(h), map(f, t))
+  N then N
+fun mapZip(f, ls) = if ls is
+  C(h, t) then C(f(h), mapZip(f, t))
+  N then N
+fun fp2(p) = if p is
+  P2(a, b) then a + b
+mapZip(
+  fp2,
+  zip(
+    map(x => x + 1, primId(C(1, C(2, N)))),
+    map(x => x + 2, primId(C(3, C(4, N))))
+  )
+)
+//│ |_LUMBERHACK_EVAL|↵|#fun| |zip|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|hx|,| |tx|)| |#then| |#if| |ys| |is|→|C|(|hy|,| |ty|)| |#then| |C|(|P2|(|hx|,| |hy|)|,| |zip|(|tx|,| |ty|)|)|↵|N| |#then| |N|←|↵|N| |#then| |N|←|↵|#fun| |map|(|f|,| |ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#fun| |mapZip|(|f|,| |ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |mapZip|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#fun| |fp2|(|p|)| |#=| |#if| |p| |is|→|P2|(|a|,| |b|)| |#then| |a| |+| |b|←|↵|mapZip|(|→|fp2|,|↵|zip|(|→|map|(|x| |=>| |x| |+| |1|,| |primId|(|C|(|1|,| |C|(|2|,| |N|)|)|)|)|,|↵|map|(|x| |=>| |x| |+| |2|,| |primId|(|C|(|3|,| |C|(|4|,| |N|)|)|)|)|←|↵|)|←|↵|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun zip = xs, ys, => if xs is ‹(C (hx, tx,)) then if ys is ‹(C (hy, ty,)) then C (P2 (hx, hy,), zip (tx, ty,),); (N) then N›; (N) then N›; fun map = f, ls, => if ls is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; fun mapZip = f, ls, => if ls is ‹(C (h, t,)) then C (f (h,), mapZip (f, t,),); (N) then N›; fun fp2 = p, => if p is ‹(P2 (a, b,)) then + (a,) (b,)›; mapZip (fp2, zip (map (x, => + (x,) (1,), primId (C (1, C (2, N,),),),), map (x, => + (x,) (2,), primId (C (3, C (4, N,),),),),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ mapZip^54(fp2^55, zip^57(map^58((fun x⁰ -> (x⁰ + 1)), primId⁰([C 1 [C 2 [N]]])), map^75((fun x¹ -> (x¹ + 2)), primId⁰([C 3 [C 4 [N]]]))))
+//│ def fp2(p⁰) = case p⁰ of {
+//│ 	P2 a⁰ b⁰ => (a⁰ + b⁰)}
+//│ def map(f⁰, ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => [C f⁰(h⁰) map^22(f⁰, t⁰)]
+//│ 	| N  => [N]}
+//│ def mapZip(f¹, ls¹) = case ls¹ of {
+//│ 	C h¹ t¹ => [C f¹(h¹) mapZip^36(f¹, t¹)]
+//│ 	| N  => [N]}
+//│ def zip(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C hx⁰ tx⁰ => case ys⁰ of {
+//│ 		C hy⁰ ty⁰ => [C [P2 hx⁰ hy⁰] zip^6(tx⁰, ty⁰)]
+//│ 		| N  => [N]}
+//│ 	| N  => [N]}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [C 7 [C 9 [N]]]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [fp2^55] (hopeless to continue)
+//│ [mapZip^54]
+//│ 	[mapZip^54 · mapZip^36] ---> [mapZip^54] (only one)
+//│ [map^58]
+//│ 	[map^58 · map^22] ---> [map^58] (only one)
+//│ [map^75]
+//│ 	[map^75 · map^22] ---> [map^75] (only one)
+//│ [zip^57]
+//│ 	[zip^57 · zip^6] ---> [zip^57] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ mapZip₀(fp2₀, zip₀(map₀((fun x² -> (x² + 1)), primId⁰([C 1 [C 2 [N]]])), map₁((fun x³ -> (x³ + 2)), primId⁰([C 3 [C 4 [N]]]))))
+//│ def fp2₀(p¹) = 
+//│ 	case p¹ of {
+//│ 		P2 a¹ b¹ => (a¹ + b¹)}
+//│ def mapZip₀(f², ls²) = 
+//│ 	case ls² of {
+//│ 		C h² t² => [C f²(h²) mapZip₀(f², t²)]
+//│ 		| N  => [N]}
+//│ def map₀(f⁴, ls⁴) = 
+//│ 	case ls⁴ of {
+//│ 		C h⁴ t⁴ => [C f⁴(h⁴) map₀(f⁴, t⁴)]
+//│ 		| N  => [N]}
+//│ def map₁(f³, ls³) = 
+//│ 	case ls³ of {
+//│ 		C h³ t³ => [C f³(h³) map₁(f³, t³)]
+//│ 		| N  => [N]}
+//│ def zip₀(xs¹, ys¹) = 
+//│ 	case xs¹ of {
+//│ 		C hx¹ tx¹ => case ys¹ of {
+//│ 			C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)]
+//│ 			| N  => [N]}
+//│ 		| N  => [N]}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C f³(h³) map₁(f³, t³)]: 116 --->
+//│ 	case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]}: 133
+//│ [N]: 117 --->
+//│ 	case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]}: 133
+//│ [P2 hx¹ hy¹]: 125 --->
+//│ 	case p¹ of {P2 a¹ b¹ => (a¹ + b¹)}: 158
+//│ [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)]: 131 --->
+//│ 	case ls² of {C h² t² => [C f²(h²) mapZip₀(f², t²)] | N  => [N]}: 104
+//│ [N]: 132 --->
+//│ 	case ls² of {C h² t² => [C f²(h²) mapZip₀(f², t²)] | N  => [N]}: 104
+//│ [N]: 134 --->
+//│ 	case ls² of {C h² t² => [C f²(h²) mapZip₀(f², t²)] | N  => [N]}: 104
+//│ [C f⁴(h⁴) map₀(f⁴, t⁴)]: 147 --->
+//│ 	case xs¹ of {C hx¹ tx¹ => case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]} | N  => [N]}: 135
+//│ [N]: 148 --->
+//│ 	case xs¹ of {C hx¹ tx¹ => case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]} | N  => [N]}: 135
+//│ ------------------
+//│ case ls² of {C h² t² => [C f²(h²) mapZip₀(f², t²)] | N  => [N]}: 104 --->
+//│ 	[C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)]: 131
+//│ 	[N]: 132
+//│ 	[N]: 134
+//│ case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]}: 133 --->
+//│ 	[C f³(h³) map₁(f³, t³)]: 116
+//│ 	[N]: 117
+//│ case xs¹ of {C hx¹ tx¹ => case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]} | N  => [N]}: 135 --->
+//│ 	[C f⁴(h⁴) map₀(f⁴, t⁴)]: 147
+//│ 	[N]: 148
+//│ case p¹ of {P2 a¹ b¹ => (a¹ + b¹)}: 158 --->
+//│ 	[P2 hx¹ hy¹]: 125
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C f³(h³) map₁(f³, t³)]: 116 --->
+//│ 	case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]}: 133
+//│ [N]: 117 --->
+//│ 	case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]}: 133
+//│ [P2 hx¹ hy¹]: 125 --->
+//│ 	case p¹ of {P2 a¹ b¹ => (a¹ + b¹)}: 158
+//│ [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)]: 131 --->
+//│ 	case ls² of {C h² t² => [C f²(h²) mapZip₀(f², t²)] | N  => [N]}: 104
+//│ [N]: 132 --->
+//│ 	case ls² of {C h² t² => [C f²(h²) mapZip₀(f², t²)] | N  => [N]}: 104
+//│ [N]: 134 --->
+//│ 	case ls² of {C h² t² => [C f²(h²) mapZip₀(f², t²)] | N  => [N]}: 104
+//│ [C f⁴(h⁴) map₀(f⁴, t⁴)]: 147 --->
+//│ 	case xs¹ of {C hx¹ tx¹ => case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]} | N  => [N]}: 135
+//│ [N]: 148 --->
+//│ 	case xs¹ of {C hx¹ tx¹ => case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]} | N  => [N]}: 135
+//│ ------------------
+//│ case ls² of {C h² t² => [C f²(h²) mapZip₀(f², t²)] | N  => [N]}: 104 --->
+//│ 	[C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)]: 131
+//│ 	[N]: 132
+//│ 	[N]: 134
+//│ case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]}: 133 --->
+//│ 	[C f³(h³) map₁(f³, t³)]: 116
+//│ 	[N]: 117
+//│ case xs¹ of {C hx¹ tx¹ => case ys¹ of {C hy¹ ty¹ => [C [P2 hx¹ hy¹] zip₀(tx¹, ty¹)] | N  => [N]} | N  => [N]}: 135 --->
+//│ 	[C f⁴(h⁴) map₀(f⁴, t⁴)]: 147
+//│ 	[N]: 148
+//│ case p¹ of {P2 a¹ b¹ => (a¹ + b¹)}: 158 --->
+//│ 	[P2 hx¹ hy¹]: 125
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ mapZip₀(fp2₀, zip₀(map₀((fun x⁴ -> (x⁴ + 1)), primId⁰([C 1 [C 2 [N]]])), map₁((fun x⁵ -> (x⁵ + 2)), primId⁰([C 3 [C 4 [N]]]))))
+//│ def fp2₀(p²) = 
+//│ 	p²
+//│ def mapZip₀(f⁵, ls⁵) = 
+//│ 	ls⁵(f⁵)
+//│ def map₀(f⁶, ls⁶) = 
+//│ 	case ls⁶ of {
+//│ 		C h⁴ t⁴ => 
+//│ 			let hx² = f⁶(h⁴)
+//│ 			in let tx² = map₀(f⁶, t⁴)
+//│ 			in (fun ys³ -> ys³(hx², tx²))
+//│ 		| N  => (fun ys⁴ -> (fun f⁷ -> [N]))}
+//│ def map₁(f⁸, ls⁷) = 
+//│ 	case ls⁷ of {
+//│ 		C h³ t³ => 
+//│ 			let hy² = f⁸(h³)
+//│ 			in let ty² = map₁(f⁸, t³)
+//│ 			in (fun hx³ -> (fun tx³ -> 
+//│ 				let h⁵ = 	
+//│ 					let a² = hx³
+//│ 					in let b² = hy²
+//│ 					in (a² + b²)
+//│ 				in let t⁵ = zip₀(tx³, ty²)
+//│ 				in (fun f⁹ -> [C f⁹(h⁵) mapZip₀(f⁹, t⁵)])))
+//│ 		| N  => (fun hx⁴ -> (fun tx⁴ -> (fun f¹⁰ -> [N])))}
+//│ def zip₀(xs², ys²) = 
+//│ 	xs²(ys²)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [C 7 [C 9 [N]]]
+//│ <<<<<<< evaluate <<<<<<<

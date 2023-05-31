@@ -59,13 +59,19 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
     }
 
     def toPattern(using prgmStr: Str): NestedPat = n.getType() match {
-      case "pat_apply" => ???
       case "pat_as" => ???
       case "pat_irrefutable" => ???
       case "pat_negation" => ???
       case "pat_record" => ???
       case "pat_strict" => ???
       case "pat_unboxed_tuple" => ???
+      case "pat_apply" => {
+        val childs = n.getAllChilds
+        NestedPat.CtorPat(
+          childs(0).getSrcContent,
+          childs.tail.map(_.toPattern).toList
+        )
+      }
       case "pat_infix" => {
         val childs = n.getAllChilds
         assert(childs.length == 3)
@@ -168,6 +174,18 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
             case op => Call(Call(Ref(ctx(op)), l.toExpr), r.toExpr)
           }
         }
+        case "exp_list_comprehension" => {
+          val allChilds = n.getAllChilds
+          val elemGenerationNode = allChilds(1)
+          assert(elemGenerationNode.getType().startsWith("exp_"))
+          val allQualifiers = allChilds.filter(_.getType() == "qual")
+          handleListComprehension(
+            elemGenerationNode,
+            allQualifiers.toList,
+            Expr.Ctor(Var(BuiltInTypes.ListNil.toLumberhackType), Nil),
+            Map.empty
+          )
+        }
       }
     }
   }
@@ -224,8 +242,9 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
           Ref(vars.head),
           reorderedCtors.map { sameCtorPatList =>
             assert(sameCtorPatList.nonEmpty)
-            val currentCtor = sameCtorPatList.head._1.head.asInstanceOf[NestedPat.CtorPat].c
-            val newPatParams = sameCtorPatList.head._1.head.asInstanceOf[NestedPat.CtorPat].field.zipWithIndex.map { case (pat, idx) =>
+            val sampleFirstCtorPat = sameCtorPatList.head._1.head.asInstanceOf[NestedPat.CtorPat]
+            val currentCtor = sampleFirstCtorPat.c
+            val newPatParams = sampleFirstCtorPat.field.zipWithIndex.map { case (pat, idx) =>
               d.nextIdent(false, Var(s"_lh${inDef.map("_" + _.tree.name).getOrElse("")}_${currentCtor}_$idx"))
             }
             val body = mergeMatchPatterns(
@@ -250,6 +269,78 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
       } else {
         lastWords(s"unsupported (mostly will also be a type error to mix ctor patterns and literal patterns): $firstPatterns")
       }
+    }
+  }
+
+  def handleListComprehension(
+    elemGen: Node, quals: List[Node], rest: Expr, comprehCtx: Expr.Ctx
+  )(using
+    ctx: Expr.Ctx, inDef: Option[Ident], d: Deforest, output: Str => Unit, prgmStr: Str
+  ): Expr = {
+    if quals.isEmpty then {
+      Expr.Ctor(
+        Var(BuiltInTypes.ListCons.toLumberhackType),
+        elemGen.toExpr(using ctx ++ comprehCtx) :: rest :: Nil
+      )
+    } else quals.head.getChild(0).getType() match {
+      case "bind_pattern" => {
+        val childs = quals.head.getChild(0).getAllChilds
+        assert(childs.length == 3)
+        val pat = childs(0).toPattern
+        val srcList = childs(2).toExpr(using ctx ++ comprehCtx)
+        val recFunName = d.nextIdent(false, Var(s"_lh_listcomp_fun"))
+        val recFunPara = d.nextIdent(false, Var(s"_lh_listcomp_fun_para"))
+        val recFunLsH = d.nextIdent(false, Var(s"_lh_listcomp_fun_ls_h"))
+        val recFunLsT = d.nextIdent(false, Var(s"_lh_listcomp_fun_ls_t"))
+        val recFunBody = Expr.Function(
+          recFunPara,
+          Expr.Match(
+            Expr.Ref(recFunPara),
+            (
+              Var(BuiltInTypes.ListCons.toLumberhackType),
+              recFunLsH :: recFunLsT :: Nil,
+              handleListComprehension(
+                elemGen,
+                quals.tail,
+                Expr.Call(Ref(recFunName), Ref(recFunLsT)),
+                comprehCtx + (
+                  pat.asInstanceOf[NestedPat.IdPat].n -> recFunLsH
+                )
+              )
+              // mergeMatchPatterns(
+              //   recFunLsH :: Nil,
+              //   (
+              //     pat :: Nil,
+              //     handleListComprehension(
+              //       elemGen,
+              //       quals.tail,
+              //       Expr.Call(Ref(recFunName), Ref(recFunLsT)),
+              //       ???
+              //     ),
+              //     ???
+              //   ) :: Nil,
+              //   None, // FIXME:
+              // ) // FIXME:
+            ) :: (
+              Var(BuiltInTypes.ListNil.toLumberhackType),
+              Nil,
+              rest
+            ) :: Nil
+          )
+        )
+        Expr.LetIn(
+          recFunName,
+          recFunBody,
+          Expr.Call(Ref(recFunName), srcList)
+        )
+      }
+      case exp if exp.startsWith("exp_") => Expr.IfThenElse(
+        quals.head.getChild(0).toExpr(using ctx ++ comprehCtx),
+        handleListComprehension(elemGen, quals.tail, rest, comprehCtx),
+        rest
+      )
+      case "let" => lastWords(s"unsupported: ${quals.head.getNodeString()}")
+      case _ => lastWords(s"unsupported: ${quals.head.getNodeString()}")
     }
   }
 

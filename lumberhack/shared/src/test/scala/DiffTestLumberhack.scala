@@ -39,7 +39,7 @@ class DiffTestLumberhack extends DiffTests {
     // val (originalProgram, d) = originalOriginalProgram.expandedWithNewDeforest(originalOriginalProgramCallTree)
 
     val originalD = Deforest(mode.stdout)
-    val (allowErr, evaluate, filteredEntities) = unit.entities match {
+    var (allowErr, evaluate, filteredEntities) = unit.entities match {
       case Var(flags) :: t if flags.startsWith("_LUMBERHACK") => (
         flags.contains("_LUMBERHACK_ERROR"),
         flags.contains("_LUMBERHACK_EVAL"),

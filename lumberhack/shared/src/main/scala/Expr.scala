@@ -139,7 +139,7 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
         case Ref(id) => if id.isDef
           then id.tree.name + (if config.showRefEuid then s"^$uid" else "")
           else id.pp
-        case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackIntBinOps(op) => s"(${fst.pp} $op ${snd.pp})"
+        case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackBinOps(op) => s"(${fst.pp} $op ${snd.pp})"
         // case Call(lhs, rhs) => s"(${lhs.pp} ${rhs.pp})"
         case c: Call =>
           val (f, ps) = getAllCallParams(c)
@@ -243,8 +243,8 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
         case Ref(primId) if primId.tree.name == "primId" => p.evaluate // `primId` as identity function, but to block fusion
         case Function(arg, body) => body.subst(using Map(arg -> p.evaluate)).evaluate
         case c: Ctor => throw Exception("\n" + c.pp(using InitPpConfig.showIuidOn.multilineOn))
-        case ff@Call(Ref(id), Const(IntLit(fst))) => p.evaluate match {
-          case Const(IntLit(snd)) =>  id.tree.name match {
+        case ff@Call(Ref(id), fst: (Const | Ctor)) => (fst, p.evaluate) match {
+          case (Const(IntLit(fst)), Const(IntLit(snd))) => id.tree.name match {
             case "+" | "add" => Const(IntLit(fst + snd))
             case "-" | "minus" => Const(IntLit(fst - snd))
             case "*" | "mult" => Const(IntLit(fst * snd))
@@ -255,8 +255,13 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
             case "<" | "lt" => Ctor(Var(if fst < snd then "True" else "False"), Nil)
             case ">=" | "geq" => Ctor(Var(if fst >= snd then "True" else "False"), Nil)
             case "<=" | "leq" => Ctor(Var(if fst <= snd then "True" else "False"), Nil)
+            case "/=" | "neq" => Ctor(Var(if fst != snd then "True" else "False"), Nil)
           }
-          case p => Call(ff, p)
+          case (Ctor(Var(fst), Nil), Ctor(Var(snd), Nil)) if Set(fst, snd).subsetOf(Set("True", "False")) => id.tree.name match {
+            case "&&" => Ctor(Var(if fst == snd && fst == "True" then "True" else "False"), Nil)
+            case "||" => Ctor(Var(if fst == "True" || snd == "True" then "True" else "False"), Nil)
+          }
+          case p => Call(ff, p._2)
         }
         case newF => Call(newF, p.evaluate)
       }

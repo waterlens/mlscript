@@ -207,6 +207,10 @@ object ProdStratEnum {
     consInt.toStrat(),
     ProdFun(consInt.toStrat(), prodBool.toStrat()).toStrat()
   )
+  def prodBoolOp(using ExprId) = ProdFun(
+    consBool.toStrat(),
+    ProdFun(consBool.toStrat(), prodBool.toStrat()).toStrat()
+  )
 }
 object ConsStratEnum {
   def consBool(using ExprId) = Destruct(
@@ -283,6 +287,7 @@ class Deforest(var debug: Boolean) {
         if (Deforest.lumberhackIntFun(primitive) || Deforest.lumberhackIntBinOps(primitive)) then
           primitive match {
             case a if (Deforest.lumberhackIntComparisonFun(a) || Deforest.lumberhackIntComparisonOps(a)) => prodIntEq(using noExprId)
+            case boolOp if Deforest.lumberhackBoolBinOps(boolOp) => prodBoolOp(using noExprId)
             case _ => prodIntBinOp(using noExprId)
           }
         else
@@ -520,6 +525,7 @@ class Deforest(var debug: Boolean) {
               }
             }
           }
+        case (Sum(ctors), NoCons()) => ctors.foreach(handle(_, cons))
         case _ => lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
     }()
     
@@ -881,11 +887,14 @@ object CallTree {
 }
 
 object Deforest {
-  lazy val lumberhackKeywords: Set[String] = (lumberhackIntFun ++ lumberhackIntBinOps) + "primitive" + "primId"
+  lazy val lumberhackKeywords: Set[String] =
+    (lumberhackIntFun ++ lumberhackIntBinOps ++ lumberhackBoolBinOps) + "primitive" + "primId"
   lazy val lumberhackIntFun: Set[String] = Set("add", "minus", "mult", "div") ++ lumberhackIntComparisonFun 
-  lazy val lumberhackIntComparisonFun: Set[String] = Set("eq", "lt", "gt", "leq", "geq")
+  lazy val lumberhackIntComparisonFun: Set[String] = Set("eq", "lt", "gt", "leq", "geq", "neq")
+  lazy val lumberhackBinOps = lumberhackIntBinOps ++ lumberhackBoolBinOps
   lazy val lumberhackIntBinOps: Set[String] = Set("+", "-", "*", "/", "%") ++ lumberhackIntComparisonOps
-  lazy val lumberhackIntComparisonOps: Set[String] = Set("==", ">", "<", ">=", "<=")
+  lazy val lumberhackIntComparisonOps: Set[String] = Set("==", ">", "<", ">=", "<=", "/=")
+  lazy val lumberhackBoolBinOps: Set[String] = Set("&&", "||")
 
   def filterKnots(k: Path, v: Path)(using d: Deforest) = v.reachable(d.callsInfo) &&
     v.p.nonEmpty && k.p.nonEmpty &&

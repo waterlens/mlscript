@@ -144,15 +144,22 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
         case "exp_apply" => {
           // must have two or more childs
           val res = n.getAllChilds.toList match {
+            case ctor :: rest if ctor.getType() == "constructor" =>
+              Ctor(Var(ctor.getSrcContent), rest.map(_.toExpr))
             case f :: a :: rest => rest.foldLeft(Call(f.toExpr, a.toExpr))((e, n) => Call(e, n.toExpr))
             case _ => lastWords("cannot be single")
           }
           res
         }
         case "exp_name" => {
-          val nameStr = n.getSrcContent
-          val res = Ref(ctx(nameStr))
-          res
+          val child = n.getChild(0)
+          child.getType() match {
+            case "constructor" => Ctor(Var(child.getSrcContent), Nil)
+            case "variable" =>
+              val nameStr = n.getSrcContent
+              val res = Ref(ctx(nameStr))
+              res
+          }
         }
         case "exp_literal" => {
           val child = n.getChild(0)
@@ -521,7 +528,7 @@ object HaskellGen extends CodeGen {
   override def rec(e: Expr): Document = e match {
     case Const(lit) => Raw(lit.idStr)
     case Ref(id) => transform_id(id)
-    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackIntBinOps(op) =>
+    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackBinOps(op) =>
       "(" <:> rec(fst) <:> s" $op " <:> rec(snd) <:> ")"
     case Call(Ref(Ident(_, Var("primId"), _)), arg) => rec(arg)
     case Call(lhs, rhs) =>

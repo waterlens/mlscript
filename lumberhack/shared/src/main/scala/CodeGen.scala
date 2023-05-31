@@ -47,9 +47,8 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
     val tree = parser.parseString(program)
     val treeRootNode = tree.getRootNode()
     output(treeRootNode.pp)
-    ???
     // output(treeRootNode.getNodeString())
-    // fromHaskellToPrgm(treeRootNode)(using program)
+    fromHaskellToPrgm(treeRootNode)(using program)
   }
   
   extension (n: Node) {
@@ -58,22 +57,47 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
     def pp: Str = {
        s"\"${n.getType()}\" (" + n.getAllChilds.map(c => c.pp).mkString("\n").linesIterator.map("\n\t" + _).mkString + ")"
     }
-    
+
     def toPattern(using prgmStr: Str): NestedPat = n.getType() match {
       case "pat_apply" => ???
       case "pat_as" => ???
-      case "pat_infix" => ???
       case "pat_irrefutable" => ???
-      case "pat_list" => ???
-      case "pat_literal" => ???
-      case "pat_name" => NestedPat.IdPat(n.getSrcContent)
       case "pat_negation" => ???
-      case "pat_parens" => ???
       case "pat_record" => ???
       case "pat_strict" => ???
-      case "pat_tuple" => ???
       case "pat_unboxed_tuple" => ???
-      case "pat_wildcard" => ???
+      case "pat_infix" => {
+        val childs = n.getAllChilds
+        assert(childs.length == 3)
+        childs(1).getType() match {
+          case "constructor_operator" => NestedPat.CtorPat(
+            BuiltInTypes.ListCons.toLumberhackType, childs(0).toPattern :: childs(2).toPattern :: Nil
+          )
+          case other => lastWords(s"unsupported: $other")
+        }
+      }
+      case "pat_list" => {
+        val elems = (1 until n.getChildCount() by 2).map(i => n.getChild(i).toPattern)
+        elems.foldRight(NestedPat.CtorPat(BuiltInTypes.ListNil.toLumberhackType, Nil)) { case (e, acc) =>
+          NestedPat.CtorPat(BuiltInTypes.ListCons.toLumberhackType, e :: acc :: Nil)
+        }
+      }
+      case "pat_literal" => n.getChild(0).getType() match {
+        case "integer" => NestedPat.LitPat(IntLit(n.getSrcContent.toInt))
+        case "string" => NestedPat.LitPat(StrLit(n.getSrcContent))
+        case "con_list" => NestedPat.CtorPat(BuiltInTypes.ListNil.toLumberhackType, Nil)
+      }
+      case "pat_name" => NestedPat.IdPat(n.getSrcContent)
+      case "pat_parens" => {
+        val childs = n.getAllChilds
+        assert(childs.length == 3)
+        childs(1).toPattern
+      }
+      case "pat_tuple" => {
+        val args = (1 until n.getChildCount() by 2).map(i => n.getChild(i).toPattern)
+        NestedPat.CtorPat(BuiltInTypes.Tuple(args.length).toLumberhackType, args.toList)
+      }
+      case "pat_wildcard" => NestedPat.WildcardPat
     }
 
     def toExpr(using ctx: Expr.Ctx, inDef: Option[Ident], d: Deforest, output: Str => Unit, prgmStr: Str): Expr = {
@@ -148,6 +172,87 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
     }
   }
 
+  def mergeMatchPatterns(
+    vars: List[Ident], patList: List[(List[NestedPat], Node, Expr.Ctx)], elze: Option[Expr]
+  )(using
+    ctx: Expr.Ctx, inDef: Option[Ident], d: Deforest, output: Str => Unit, prgmStr: Str
+  ): Expr = {
+    if vars.isEmpty then {
+      if patList.isEmpty then
+        elze.get
+      else
+        val h = patList.head
+        assert(h._1.isEmpty)
+        h._2.toExpr(using ctx ++ h._3)
+    } else {
+      assert(patList.nonEmpty)
+      assert(vars.length == patList.head._1.length && patList.forall(_._1.length == patList.head._1.length))
+  
+      val firstPatterns = patList.map(_._1.head)
+      
+      if firstPatterns.forall(
+        fstPat => fstPat.isInstanceOf[NestedPat.IdPat]
+        || fstPat.isInstanceOf[NestedPat.WildcardPat.type]
+      ) then { // the var and wildcard rule
+        val newPats = patList.map { case (pats, n, matchCtx) => (
+          pats.tail,
+          n,
+          matchCtx ++ (pats.head match {
+            case NestedPat.IdPat(n) => Some(n -> vars.head)
+            case NestedPat.WildcardPat => None
+            case _ => lastWords(s"unreachable: ${pats.head}")
+          })
+        )}
+        mergeMatchPatterns(vars.tail, newPats, elze)
+      } else if firstPatterns.forall(_.isInstanceOf[NestedPat.CtorPat]) then { // the ctor rule
+        val reorderedCtors = {
+          var ctorOrder: List[String] = Nil
+          val tempStore = scala.collection.mutable.Map.empty[String, List[(List[NestedPat], Node, Expr.Ctx)]]
+          patList.foreach { case (ps, n, matchCtx) =>
+            val ctorPat = ps.head.asInstanceOf[NestedPat.CtorPat]
+            val ctorName = ctorPat.c
+            tempStore.updateWith(ctorName) {
+              case None =>
+                ctorOrder = ctorName :: ctorOrder
+                Some((ps, n, matchCtx) :: Nil)
+              case Some(value) => Some((ps, n, matchCtx) :: value)
+            }
+          }
+          ctorOrder.reverse.map(c => tempStore(c).reverse)
+        }
+        Expr.Match(
+          Ref(vars.head),
+          reorderedCtors.map { sameCtorPatList =>
+            assert(sameCtorPatList.nonEmpty)
+            val currentCtor = sameCtorPatList.head._1.head.asInstanceOf[NestedPat.CtorPat].c
+            val newPatParams = sameCtorPatList.head._1.head.asInstanceOf[NestedPat.CtorPat].field.zipWithIndex.map { case (pat, idx) =>
+              d.nextIdent(false, Var(s"_lh${inDef.map("_" + _.tree.name).getOrElse("")}_${currentCtor}_$idx"))
+            }
+            val body = mergeMatchPatterns(
+              newPatParams ::: vars.tail,
+              sameCtorPatList.map { case (ctorPatAndMore, n, matchCtx) =>
+                val newPats = ctorPatAndMore.head.asInstanceOf[NestedPat.CtorPat].field ::: ctorPatAndMore.tail
+                (newPats, n, matchCtx)
+              },
+              elze
+            )
+            (
+              Var(currentCtor),
+              newPatParams,
+              body
+            )
+          }
+        )
+      } else if firstPatterns.forall(!_.isInstanceOf[NestedPat.LitPat]) then { // the mix rule: ctor, var, wildcards can exists at the same time
+        lastWords(s"unsupported: $firstPatterns")
+      } else if firstPatterns.forall(!_.isInstanceOf[NestedPat.CtorPat]) then { // only consists of var, wildcards or lit patterns
+        lastWords(s"unsupported: $firstPatterns")
+      } else {
+        lastWords(s"unsupported (mostly will also be a type error to mix ctor patterns and literal patterns): $firstPatterns")
+      }
+    }
+  }
+
   val supportedTopLevelHaskellNodeType = Set("top_splice", "function")
   def haskellBuiltinFunsList(using d: Deforest): Program = {
     val haskellBuiltinFuns = Set("map", "filter", "foldl", "foldr", "zip", "head", "tail", "enumFromTo", "enumFromThenTo")
@@ -194,7 +299,10 @@ fun enumFromThenTo(a, t, b) = if a <= b then LH_C(a, enumFromThenTo(t, 2 * t - a
   }
   def fromHaskellToPrgm(rootNode: Node)(using prgmStr: Str, d: Deforest, output: Str => Unit): Program = {
     val haskellBuiltinPrgm = haskellBuiltinFunsList
-    val (defs, main) = rootNode.getAllChilds.filter(n => supportedTopLevelHaskellNodeType(n.getType())).partition(_.getType() == "function")
+    val (defs, main) = rootNode.getAllChilds
+      .filter(n => supportedTopLevelHaskellNodeType(n.getType()))
+      .partition(_.getType() == "function")
+
     given initCtx: Expr.Ctx = {
       val res = MutMap.empty[String, Ident]
       defs.foreach { deff =>
@@ -206,17 +314,41 @@ fun enumFromThenTo(a, t, b) = if a <= b then LH_C(a, enumFromThenTo(t, 2 * t - a
       res
     } ++ d.lumberhackKeywordsIds ++ haskellBuiltinPrgm.defAndExpr._1.map { case (funDef, _) =>
       funDef.tree.name -> funDef
-    }|> (_.toMap)
-    val content = rootNode.getAllChilds.flatMap { c => c.getType() match {
-      case "signature" => None
-      case "function" => None // TODO:
+    } |> (_.toMap)
+
+    val funcDefs = defs.groupBy(_.getChild(0).getSrcContent).map { case (name, defNodes) =>
+      val funName = initCtx(name)
+      val patsAndBodies = defNodes.map { n =>
+        val patsOrEqNode = n.getChild(1)
+        patsOrEqNode.getType() match {
+          case "patterns" => {
+            val pats = patsOrEqNode.getAllChilds.map(_.toPattern)
+            assert(n.getChild(2).getSrcContent == "=") // do not support guard equation for now
+            (pats.toList, n.getChild(3), Map.empty[String, Ident])
+          }
+          case "=" => { // top level def without parameters
+            (Nil, n.getChild(2), Map.empty[String, Ident])
+          }
+        }
+      }
+      val funArgNames = {
+        val numOfArgs = patsAndBodies.map(_._1.length).toSet
+        assert(numOfArgs.size == 1)
+        (1 to numOfArgs.head).map(idx => d.nextIdent(false, Var(s"_lh_${name}_arg$idx")))
+      }
+      val body = mergeMatchPatterns(funArgNames.toList, patsAndBodies.toList, None)(using initCtx, Some(funName))
+      val funDef = funArgNames.foldRight(body) { case (arg, acc) => Expr.Function(arg, acc)(using d, Some(funName)) }
+      Left(ProgDef(funName, funDef))
+    }
+
+    val content = main.flatMap { c => c.getType() match {
       case "top_splice" =>
         assert(c.getChildCount() == 1)
         Some(Right(c.getChild(0).toExpr(using initCtx, None)))
       case _ => lastWords("unsupported")
     }}
 
-    Program(haskellBuiltinPrgm.contents ::: content.toList)
+    Program(haskellBuiltinPrgm.contents ::: funcDefs.toList ::: content.toList)
   }
 
 }

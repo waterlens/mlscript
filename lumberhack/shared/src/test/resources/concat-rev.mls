@@ -530,7 +530,6 @@ rev(C(1, C(2, C(3, N))))
 
 
 // NOTE: if there is no concrete list provided as input, no fusion will be done
-_LUMBERHACK_EVAL
 fun concat(xs, ys) = if xs is
   N then ys
   C(h, t) then C(h, concat(t, ys))
@@ -538,8 +537,8 @@ fun rev(ls) = if ls is
   C(h, t) then concat(rev(t), C(h, N))
   N then N
 rev(primitive)
-//│ |_LUMBERHACK_EVAL|↵|#fun| |concat|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|N| |#then| |ys|↵|C|(|h|,| |t|)| |#then| |C|(|h|,| |concat|(|t|,| |ys|)|)|←|↵|#fun| |rev|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |concat|(|rev|(|t|)|,| |C|(|h|,| |N|)|)|↵|N| |#then| |N|←|↵|rev|(|primitive|)|
-//│ Parsed: {_LUMBERHACK_EVAL; fun concat = xs, ys, => if xs is ‹(N) then ys; (C (h, t,)) then C (h, concat (t, ys,),)›; fun rev = ls, => if ls is ‹(C (h, t,)) then concat (rev (t,), C (h, N,),); (N) then N›; rev (primitive,)}
+//│ |#fun| |concat|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|N| |#then| |ys|↵|C|(|h|,| |t|)| |#then| |C|(|h|,| |concat|(|t|,| |ys|)|)|←|↵|#fun| |rev|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |concat|(|rev|(|t|)|,| |C|(|h|,| |N|)|)|↵|N| |#then| |N|←|↵|rev|(|primitive|)|
+//│ Parsed: {fun concat = xs, ys, => if xs is ‹(N) then ys; (C (h, t,)) then C (h, concat (t, ys,),)›; fun rev = ls, => if ls is ‹(C (h, t,)) then concat (rev (t,), C (h, N,),); (N) then N›; rev (primitive,)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ rev^26(primitive⁰)
 //│ def concat(xs⁰, ys⁰) = case xs⁰ of {
@@ -549,12 +548,6 @@ rev(primitive)
 //│ 	C h¹ t¹ => concat^14(rev^15(t¹), [C h¹ [N]])
 //│ 	| N  => [N]}
 //│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
-//│ case primitive⁰ of {
-//│ 	C h¹ t¹ => concat(rev(t¹), [C h¹ [N]])
-//│ 	| N  => [N]}
-//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [rev^26]
@@ -615,16 +608,9 @@ rev(primitive)
 //│ 			N  => ys²
 //│ 			| C h² t² => [C h² concat₀(t², ys²)]}
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ case primitive⁰ of {
-//│ 	C h³ t³ => concat₀(rev₀(t³), [C h³ [N]])
-//│ 	| N  => [N]}
-//│ <<<<<<< evaluate <<<<<<<
 
 
 // NOTE: if there is no concrete list provided as input, no fusion will be done
-_LUMBERHACK_EVAL
 fun concat(xs, ys) = if xs is
   N then ys
   C(h, t) then C(h, concat(t, ys))
@@ -632,8 +618,8 @@ fun rev(ls) = if ls is
   C(h, t) then concat(rev(t), C(h, N))
   N then N
 rev
-//│ |_LUMBERHACK_EVAL|↵|#fun| |concat|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|N| |#then| |ys|↵|C|(|h|,| |t|)| |#then| |C|(|h|,| |concat|(|t|,| |ys|)|)|←|↵|#fun| |rev|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |concat|(|rev|(|t|)|,| |C|(|h|,| |N|)|)|↵|N| |#then| |N|←|↵|rev|
-//│ Parsed: {_LUMBERHACK_EVAL; fun concat = xs, ys, => if xs is ‹(N) then ys; (C (h, t,)) then C (h, concat (t, ys,),)›; fun rev = ls, => if ls is ‹(C (h, t,)) then concat (rev (t,), C (h, N,),); (N) then N›; rev}
+//│ |#fun| |concat|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|N| |#then| |ys|↵|C|(|h|,| |t|)| |#then| |C|(|h|,| |concat|(|t|,| |ys|)|)|←|↵|#fun| |rev|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |concat|(|rev|(|t|)|,| |C|(|h|,| |N|)|)|↵|N| |#then| |N|←|↵|rev|
+//│ Parsed: {fun concat = xs, ys, => if xs is ‹(N) then ys; (C (h, t,)) then C (h, concat (t, ys,),)›; fun rev = ls, => if ls is ‹(C (h, t,)) then concat (rev (t,), C (h, N,),); (N) then N›; rev}
 //│ >>>>>>>>>> Original >>>>>>>>>>
 //│ rev^26
 //│ def concat(xs⁰, ys⁰) = case xs⁰ of {
@@ -643,12 +629,6 @@ rev
 //│ 	C h¹ t¹ => concat^14(rev^15(t¹), [C h¹ [N]])
 //│ 	| N  => [N]}
 //│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
-//│ (fun ls⁰ -> case ls⁰ of {
-//│ 	C h¹ t¹ => concat(rev(t¹), [C h¹ [N]])
-//│ 	| N  => [N]})
-//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [rev^26]
@@ -709,9 +689,3 @@ rev
 //│ 			N  => ys²
 //│ 			| C h² t² => [C h² concat₀(t², ys²)]}
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ (fun ls² -> case ls² of {
-//│ 	C h³ t³ => concat₀(rev₀(t³), [C h³ [N]])
-//│ 	| N  => [N]})
-//│ <<<<<<< evaluate <<<<<<<

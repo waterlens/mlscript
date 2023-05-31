@@ -309,17 +309,17 @@ class Deforest(var debug: Boolean) {
             val as_tys = as.map(a => a -> freshVar(a)(using noExprId))
             val ep = process(e)(using ctx ++ as_tys.map(v => v._1 -> v._2._1.toStrat()))
             (Destructor(v, as_tys.map(a_ty => a_ty._2._2.toStrat())), ep)
-          } else if v.name == "_" then { // id pattern or wildcard pattern
+          } else if v.name == "_" then { // id pattern or wildcard pattern ("_", id :: Nil (or Nil), armBodyExpr)
             val newIdCtx = as.headOption.map { newId =>
               val idVar = freshVar(newId)(using noExprId)
               (newId -> idVar._1.toStrat(), idVar._2.toStrat())
             }
             val ep = process(e)(using ctx ++ newIdCtx.map(_._1))
             (Destructor(v, newIdCtx.map(_._2).toList), ep)
-          } else if v.name.toIntOption.isDefined then { // int literal pattern
+          } else if v.name.toIntOption.isDefined then { // int literal pattern: ("3", Nil, armBodyExpr)
             val ep = process(e)
             (Destructor(Var("Int"), Nil), ep)
-          } else if v.name.startsWith("\"") then { // str literal pattern
+          } else if v.name.startsWith("\"") then { // str literal pattern: ("\"str\"", Nil, armBodyExpr)
             val ep = process(e)
             (Destructor(Var("String"), Nil), ep)
           } else { lastWords("unreachable") }

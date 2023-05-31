@@ -38,7 +38,7 @@ class DiffTestLumberhack extends DiffTests {
     // output("-------------------------------")
     // val (originalProgram, d) = originalOriginalProgram.expandedWithNewDeforest(originalOriginalProgramCallTree)
 
-    given d: Deforest(mode.stdout)
+    val originalD = Deforest(mode.stdout)
     val (allowErr, evaluate, filteredEntities) = unit.entities match {
       case Var(flags) :: t if flags.startsWith("_LUMBERHACK") => (
         flags.contains("_LUMBERHACK_ERROR"),
@@ -47,11 +47,16 @@ class DiffTestLumberhack extends DiffTests {
       )
       case l => (false, false, l)
     }
-    val originalProgram = if mode.isHaskell then
-      FromHaskell(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output)
+    val (originalProgram, newD) = if mode.isHaskell then
+      val p = FromHaskell(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output)
+      p.d(p) // duplicate multiple usages here to enbale polymorphism
+      val initCallTree = CallTree.callTreeUsingSplitKnot(p.d)
+      p.expandedWithNewDeforest(initCallTree)
     else
-      Program.fromPgrm(Pgrm(filteredEntities))
-
+      val p = Program.fromPgrm(Pgrm(filteredEntities))(using originalD)
+      (p, p.d)
+    given d: Deforest = newD
+    
     if mode.stdout || mode.verbose then {
       output(originalProgram.pp(using InitPpConfig.multilineOn.showIuidOn.showEuidOn)) 
     }

@@ -10,7 +10,7 @@ case class Ident(isDef: Bool, tree: Var, uid: Uid[Ident]) {
   def copyToNewDeforest(using newd: Deforest): Ident = newd.nextIdent(isDef, tree)
 }
 case class ProgDef(id: Ident, body: Expr)
-case class Program(contents: Ls[ProgDef \/ Expr])(using d: Deforest) extends ProgramRewrite {
+case class Program(contents: Ls[ProgDef \/ Expr])(using val d: Deforest) extends ProgramRewrite {
   d.prgm = Some(this)
   private def takeParamsOut(e: Expr): List[Ident] -> Expr = e match {
     case Expr.Function(p, b) => takeParamsOut(b).mapFirst(p :: _)

@@ -369,3 +369,160 @@ f(C(A))
 //│ 	def c₀(x²) = 
 //│ 		x²
 //│ <<<<<<< after fusion <<<<<<<
+
+
+
+
+
+
+// FIXME: still have type error
+_LUMBERHACK_ERROR_LUMBERHACK_EVAL
+fun f(xs, ys) = if xs is
+  N then 0
+  _ then if xs is
+    C(h, t) then if ys is
+      C(hh, yt) then h + hh
+      _ then h
+    _ then error("match error")
+f(C(1, N), C(2, N))
+//│ |_LUMBERHACK_ERROR_LUMBERHACK_EVAL|↵|#fun| |f|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|N| |#then| |0|↵|_| |#then| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |#if| |ys| |is|→|C|(|hh|,| |yt|)| |#then| |h| |+| |hh|↵|_| |#then| |h|←|↵|_| |#then| |error|(|"match error"|)|←|←|↵|f|(|C|(|1|,| |N|)|,| |C|(|2|,| |N|)|)|
+//│ Parsed: {_LUMBERHACK_ERROR_LUMBERHACK_EVAL; fun f = xs, ys, => if xs is ‹(N) then 0; (_) then if xs is ‹(C (h, t,)) then if ys is ‹(C (hh, yt,)) then + (h,) (hh,); (_) then h›; (_) then error ("match error",)››; f (C (1, N,), C (2, N,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ f^19([C 1 [N]], [C 2 [N]])
+//│ def f(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => 0
+//│ 	| _  => case xs⁰ of {
+//│ 		C h⁰ t⁰ => case ys⁰ of {
+//│ 			C hh⁰ yt⁰ => (h⁰ + hh⁰)
+//│ 			| _  => h⁰}
+//│ 		| _  => error⁰("match error")}}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ 3
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^19] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀([C 1 [N]], [C 2 [N]])
+//│ def f₀(xs¹, ys¹) = 
+//│ 	case xs¹ of {
+//│ 		N  => 0
+//│ 		| _  => case xs¹ of {
+//│ 			C h¹ t¹ => case ys¹ of {
+//│ 				C hh¹ yt¹ => (h¹ + hh¹)
+//│ 				| _  => h¹}
+//│ 			| _  => error⁰("match error")}}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [N]]: 49 --->
+//│ 	case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰("match error")}: 42
+//│ [C 2 [N]]: 53 --->
+//│ 	case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 38
+//│ ------------------
+//│ case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 38 --->
+//│ 	[C 2 [N]]: 53
+//│ case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰("match error")}: 42 --->
+//│ 	[C 1 [N]]: 49
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 1 [N]]: 49 --->
+//│ 	case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰("match error")}: 42
+//│ [C 2 [N]]: 53 --->
+//│ 	case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 38
+//│ ------------------
+//│ case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 38 --->
+//│ 	[C 2 [N]]: 53
+//│ case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰("match error")}: 42 --->
+//│ 	[C 1 [N]]: 49
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀(
+//│ 	let h² = 1
+//│ 	in let t² = [N]
+//│ 	in (fun ys² -> ys²(h²)), 
+//│ 	let hh² = 2
+//│ 	in let yt² = [N]
+//│ 	in (fun h³ -> (h³ + hh²)))
+//│ def f₀(xs², ys³) = 
+//│ 	case xs² of {
+//│ 		N  => 0
+//│ 		| _  => xs²(ys³)}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ 3
+//│ <<<<<<< evaluate <<<<<<<
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: Internal Error: type error 'ys⁰ => '6_callres <: Destruct(N, _)
+//│ !!!!!!ERROR!!!!!!
+
+
+// FIXME: still have type error
+_LUMBERHACK_ERROR
+fun f(xs) = if xs is
+  N then 0
+  _ then if xs is
+    C(h, t) then h
+    _ then error("match error")
+f(C(1, N))
+//│ |_LUMBERHACK_ERROR|↵|#fun| |f|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |0|↵|_| |#then| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |h|↵|_| |#then| |error|(|"match error"|)|←|←|↵|f|(|C|(|1|,| |N|)|)|
+//│ Parsed: {_LUMBERHACK_ERROR; fun f = xs, => if xs is ‹(N) then 0; (_) then if xs is ‹(C (h, t,)) then h; (_) then error ("match error",)››; f (C (1, N,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ f^11([C 1 [N]])
+//│ def f(xs⁰) = case xs⁰ of {
+//│ 	N  => 0
+//│ 	| _  => case xs⁰ of {
+//│ 		C h⁰ t⁰ => h⁰
+//│ 		| _  => error⁰("match error")}}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^11] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀([C 1 [N]])
+//│ def f₀(xs¹) = 
+//│ 	case xs¹ of {
+//│ 		N  => 0
+//│ 		| _  => case xs¹ of {
+//│ 			C h¹ t¹ => h¹
+//│ 			| _  => error⁰("match error")}}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [N]]: 29 --->
+//│ 	case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰("match error")}: 23
+//│ ------------------
+//│ case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰("match error")}: 23 --->
+//│ 	[C 1 [N]]: 29
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 1 [N]]: 29 --->
+//│ 	case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰("match error")}: 23
+//│ ------------------
+//│ case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰("match error")}: 23 --->
+//│ 	[C 1 [N]]: 29
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀(
+//│ 	let h² = 1
+//│ 	in let t² = [N]
+//│ 	in h²)
+//│ def f₀(xs²) = 
+//│ 	case xs² of {
+//│ 		N  => 0
+//│ 		| _  => xs²}
+//│ <<<<<<< after fusion <<<<<<<
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception: expect to fail but pass
+//│ !!!!!!ERROR!!!!!!

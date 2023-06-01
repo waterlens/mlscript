@@ -289,7 +289,14 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
           val bindings = branch._2.zip(c :: Nil)
           branch._3.subst(using bindings.toMap).evaluate
         }
-        case s: Function => throw Exception("\n" + s.pp(using InitPpConfig.showIuidOn.multilineOn))
+        case s: Function => {
+          // NOTE: should we allow this?
+          // throw Exception("\n" + s.pp(using InitPpConfig.showIuidOn.multilineOn))
+          val branch = arms.find(a => a._1.name == "_").get
+          val bindings = branch._2.zip(s :: Nil)
+          branch._3.subst(using bindings.toMap).evaluate
+          // ???
+        }
         // case s if s == scrut => Match(s, arms.map((v, args, body) => (v, args, body.evaluate)))
         case s => this
       }

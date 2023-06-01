@@ -505,6 +505,11 @@ class Deforest(var debug: Boolean) {
               }
             } else if ds_ctor.name == "_" then { // both wildcard pattern and id pattern
               found = true
+              if (prod.s.euid =/= noExprId && cons.s.euid =/= noExprId) then {
+                fusionMatch.updateWith(prod.s.euid)(_.map(_ + cons.s.euid).orElse(Some(Set(cons.s.euid))))
+                dtorSources += cons.s.asInstanceOf[Destruct] -> (dtorSources(cons.s.asInstanceOf[Destruct]) + prod.s)
+                ctorDestinations += prod.s.asInstanceOf[MkCtor] -> (ctorDestinations(prod.s.asInstanceOf[MkCtor]) + cons.s)
+              }
               (prod :: Nil) lazyZip argCons foreach { case (a, c) =>
                 handle(a.addPath(prod.path), c.addPath(cons.path))
               }

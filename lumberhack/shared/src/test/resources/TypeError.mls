@@ -421,46 +421,44 @@ f(C(1, N), C(2, N))
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 1 [N]]: 49 --->
 //│ 	case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰("match error")}: 42
+//│ 	case xs¹ of {N  => 0 | _  => case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰("match error")}}: 43
 //│ [C 2 [N]]: 53 --->
 //│ 	case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 38
 //│ ------------------
 //│ case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 38 --->
 //│ 	[C 2 [N]]: 53
 //│ case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰("match error")}: 42 --->
+//│ 	[C 1 [N]]: 49
+//│ case xs¹ of {N  => 0 | _  => case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰("match error")}}: 43 --->
 //│ 	[C 1 [N]]: 49
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C 1 [N]]: 49 --->
-//│ 	case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰("match error")}: 42
 //│ [C 2 [N]]: 53 --->
 //│ 	case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 38
 //│ ------------------
 //│ case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 38 --->
 //│ 	[C 2 [N]]: 53
-//│ case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰("match error")}: 42 --->
-//│ 	[C 1 [N]]: 49
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀(
-//│ 	let h² = 1
-//│ 	in let t² = [N]
-//│ 	in (fun ys² -> ys²(h²)), 
+//│ f₀([C 1 [N]], 
 //│ 	let hh² = 2
 //│ 	in let yt² = [N]
-//│ 	in (fun h³ -> (h³ + hh²)))
-//│ def f₀(xs², ys³) = 
+//│ 	in (fun h² -> (h² + hh²)))
+//│ def f₀(xs², ys²) = 
 //│ 	case xs² of {
 //│ 		N  => 0
-//│ 		| _  => xs²(ys³)}
+//│ 		| _  => case xs² of {
+//│ 			C h¹ t¹ => ys²(h¹)
+//│ 			| _  => error⁰("match error")}}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
 //│ 3
 //│ <<<<<<< evaluate <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: type error 'ys⁰ => '6_callres <: Destruct(N, _)
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 
@@ -500,29 +498,497 @@ f(C(1, N))
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C 1 [N]]: 29 --->
 //│ 	case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰("match error")}: 23
+//│ 	case xs¹ of {N  => 0 | _  => case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰("match error")}}: 24
 //│ ------------------
 //│ case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰("match error")}: 23 --->
+//│ 	[C 1 [N]]: 29
+//│ case xs¹ of {N  => 0 | _  => case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰("match error")}}: 24 --->
 //│ 	[C 1 [N]]: 29
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C 1 [N]]: 29 --->
-//│ 	case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰("match error")}: 23
+//│ 
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰("match error")}: 23 --->
-//│ 	[C 1 [N]]: 29
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀(
-//│ 	let h² = 1
-//│ 	in let t² = [N]
-//│ 	in h²)
+//│ f₀([C 1 [N]])
 //│ def f₀(xs²) = 
 //│ 	case xs² of {
 //│ 		N  => 0
-//│ 		| _  => xs²}
+//│ 		| _  => case xs² of {
+//│ 			C h¹ t¹ => h¹
+//│ 			| _  => error⁰("match error")}}
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
 //│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
+
+// FIXME: can filter out then we will not have multiple iterations
+fun f(x, y) = if x is
+  N then y
+  _ then y + 1
+f(C(1, N), 0)
+//│ |#fun| |f|(|x|,| |y|)| |#=| |#if| |x| |is|→|N| |#then| |y|↵|_| |#then| |y| |+| |1|←|↵|f|(|C|(|1|,| |N|)|,| |0|)|
+//│ Parsed: {fun f = x, y, => if x is ‹(N) then y; (_) then + (y,) (1,)›; f (C (1, N,), 0,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ f^11([C 1 [N]], 0)
+//│ def f(x⁰, y⁰) = case x⁰ of {
+//│ 	N  => y⁰
+//│ 	| _  => (y⁰ + 1)}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^11] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀([C 1 [N]], 0)
+//│ def f₀(x¹, y¹) = 
+//│ 	case x¹ of {
+//│ 		N  => y¹
+//│ 		| _  => (y¹ + 1)}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀([C 1 [N]], 0)
+//│ def f₀(x², y²) = 
+//│ 	case x² of {
+//│ 		N  => y²
+//│ 		| _  => (y² + 1)}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀₀([C 1 [N]], 0)
+//│ def f₀₀(x¹, y¹) = 
+//│ 	case x¹ of {
+//│ 		N  => y¹
+//│ 		| _  => (y¹ + 1)}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀₀([C 1 [N]], 0)
+//│ def f₀₀(x², y²) = 
+//│ 	case x² of {
+//│ 		N  => y²
+//│ 		| _  => (y² + 1)}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀(x¹, y¹) = 
+//│ 	case x¹ of {
+//│ 		N  => y¹
+//│ 		| _  => (y¹ + 1)}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀(x², y²) = 
+//│ 	case x² of {
+//│ 		N  => y²
+//│ 		| _  => (y² + 1)}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀₀₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀₀(x¹, y¹) = 
+//│ 	case x¹ of {
+//│ 		N  => y¹
+//│ 		| _  => (y¹ + 1)}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀₀(x², y²) = 
+//│ 	case x² of {
+//│ 		N  => y²
+//│ 		| _  => (y² + 1)}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀₀₀₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀₀₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀₀₀(x¹, y¹) = 
+//│ 	case x¹ of {
+//│ 		N  => y¹
+//│ 		| _  => (y¹ + 1)}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀₀₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀₀₀(x², y²) = 
+//│ 	case x² of {
+//│ 		N  => y²
+//│ 		| _  => (y² + 1)}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀₀₀₀₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀₀₀₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀₀₀₀(x¹, y¹) = 
+//│ 	case x¹ of {
+//│ 		N  => y¹
+//│ 		| _  => (y¹ + 1)}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀₀₀₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀₀₀₀(x², y²) = 
+//│ 	case x² of {
+//│ 		N  => y²
+//│ 		| _  => (y² + 1)}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀₀₀₀₀₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀₀₀₀₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀₀₀₀₀(x¹, y¹) = 
+//│ 	case x¹ of {
+//│ 		N  => y¹
+//│ 		| _  => (y¹ + 1)}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀₀₀₀₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀₀₀₀₀(x², y²) = 
+//│ 	case x² of {
+//│ 		N  => y²
+//│ 		| _  => (y² + 1)}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀₀₀₀₀₀₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀₀₀₀₀₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀₀₀₀₀₀(x¹, y¹) = 
+//│ 	case x¹ of {
+//│ 		N  => y¹
+//│ 		| _  => (y¹ + 1)}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀₀₀₀₀₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀₀₀₀₀₀(x², y²) = 
+//│ 	case x² of {
+//│ 		N  => y²
+//│ 		| _  => (y² + 1)}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀₀₀₀₀₀₀₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀₀₀₀₀₀₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀₀₀₀₀₀₀(x¹, y¹) = 
+//│ 	case x¹ of {
+//│ 		N  => y¹
+//│ 		| _  => (y¹ + 1)}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀₀₀₀₀₀₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀₀₀₀₀₀₀(x², y²) = 
+//│ 	case x² of {
+//│ 		N  => y²
+//│ 		| _  => (y² + 1)}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀₀₀₀₀₀₀₀₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀₀₀₀₀₀₀₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀₀₀₀₀₀₀₀(x¹, y¹) = 
+//│ 	case x¹ of {
+//│ 		N  => y¹
+//│ 		| _  => (y¹ + 1)}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀₀₀₀₀₀₀₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀₀₀₀₀₀₀₀(x², y²) = 
+//│ 	case x² of {
+//│ 		N  => y²
+//│ 		| _  => (y² + 1)}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀₀₀₀₀₀₀₀₀₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀₀₀₀₀₀₀₀₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀₀₀₀₀₀₀₀₀(x¹, y¹) = 
+//│ 	case x¹ of {
+//│ 		N  => y¹
+//│ 		| _  => (y¹ + 1)}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀₀₀₀₀₀₀₀₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀₀₀₀₀₀₀₀₀(x², y²) = 
+//│ 	case x² of {
+//│ 		N  => y²
+//│ 		| _  => (y² + 1)}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀₀₀₀₀₀₀₀₀₀₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀₀₀₀₀₀₀₀₀₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀₀₀₀₀₀₀₀₀₀(x¹, y¹) = 
+//│ 	case x¹ of {
+//│ 		N  => y¹
+//│ 		| _  => (y¹ + 1)}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 1 [N]]: 31 --->
+//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ ------------------
+//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
+//│ 	[C 1 [N]]: 31
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀₀₀₀₀₀₀₀₀₀₀₀([C 1 [N]], 0)
+//│ def f₀₀₀₀₀₀₀₀₀₀₀₀(x², y²) = 
+//│ 	case x² of {
+//│ 		N  => y²
+//│ 		| _  => (y² + 1)}
+//│ <<<<<<< after fusion <<<<<<<

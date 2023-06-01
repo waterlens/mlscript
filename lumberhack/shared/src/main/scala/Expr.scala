@@ -241,6 +241,7 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
       }
       case Call(f, p) => f.evaluate match {
         case Ref(primId) if primId.tree.name == "primId" => p.evaluate // `primId` as identity function, but to block fusion
+        case Ref(errorId) if errorId.tree.name == "error" => Call(Ref(errorId), p.evaluate)
         case Function(arg, body) => body.subst(using Map(arg -> p.evaluate)).evaluate
         case c: Ctor => throw Exception("\n" + c.pp(using InitPpConfig.showIuidOn.multilineOn))
         case ff@Call(Ref(id), fst: (Const | Ctor)) => (fst, p.evaluate) match {

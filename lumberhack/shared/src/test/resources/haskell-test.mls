@@ -1,59 +1,10 @@
 :NewParser
 :ParseOnly
 
-_LUMBERHACK_EVAL
-if "sdf" is
-  "sdf" then L
-  A then B
-//│ |_LUMBERHACK_EVAL|↵|#if| |"sdf"| |is|→|"sdf"| |#then| |L|↵|A| |#then| |B|←|
-//│ Parsed: {_LUMBERHACK_EVAL; if "sdf" is ‹("sdf") then L; (A) then B›}
-//│ >>>>>>>>>> Original >>>>>>>>>>
-//│ case "sdf" of {
-//│ 	"sdf"  => [L]
-//│ 	| A  => [B]}
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
-//│ [L]
-//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
-//│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ 
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ case "sdf" of {
-//│ 	"sdf"  => [L]
-//│ 	| A  => [B]}
-//│ 
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ case "sdf" of {
-//│ 	"sdf"  => [L]
-//│ 	| A  => [B]}
-//│ 
-//│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ [L]
-//│ <<<<<<< evaluate <<<<<<<
 
 :haskell
-test 3 ls = map f ls
-test a ls = ls
+f (a, b) = a + b
+f (3, 4)
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
@@ -61,42 +12,295 @@ test a ls = ls
 //│ 	"function" (
 //│ 		"variable" ()
 //│ 		"patterns" (
-//│ 			"pat_literal" (
-//│ 				"integer" ())
-//│ 			"pat_name" (
-//│ 				"variable" ()))
+//│ 			"pat_tuple" (
+//│ 				"(" ()
+//│ 				"pat_name" (
+//│ 					"variable" ())
+//│ 				"comma" ()
+//│ 				"pat_name" (
+//│ 					"variable" ())
+//│ 				")" ()))
 //│ 		"=" ()
+//│ 		"exp_infix" (
+//│ 			"exp_name" (
+//│ 				"variable" ())
+//│ 			"operator" ()
+//│ 			"exp_name" (
+//│ 				"variable" ())))
+//│ 	"top_splice" (
 //│ 		"exp_apply" (
 //│ 			"exp_name" (
 //│ 				"variable" ())
-//│ 			"exp_name" (
-//│ 				"variable" ())
-//│ 			"exp_name" (
-//│ 				"variable" ())))
-//│ 	"function" (
-//│ 		"variable" ()
-//│ 		"patterns" (
-//│ 			"pat_name" (
-//│ 				"variable" ())
-//│ 			"pat_name" (
-//│ 				"variable" ()))
-//│ 		"=" ()
-//│ 		"exp_name" (
-//│ 			"variable" ())))
-//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
-//│ 	at: scala.Predef$.$qmark$qmark$qmark(Predef.scala:344)
-//│ 	at: mlscript.lumberhack.FromHaskell$.apply(CodeGen.scala:50)
-//│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTestLumberhack.scala:51)
-//│ 	at: mlscript.DiffTests.rec$1(DiffTests.scala:367)
-//│ 	at: mlscript.DiffTests.$anonfun$new$3(DiffTests.scala:774)
-//│ 	at: org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
-//│ 	at: org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
-//│ 	at: org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
-//│ 	at: org.scalatest.Transformer.apply(Transformer.scala:22)
-//│ 	at: org.scalatest.Transformer.apply(Transformer.scala:20)
+//│ 			"exp_tuple" (
+//│ 				"(" ()
+//│ 				"exp_literal" (
+//│ 					"integer" ())
+//│ 				"comma" ()
+//│ 				"exp_literal" (
+//│ 					"integer" ())
+//│ 				")" ()))))
+//│ f₀^165([LH_P2 3 4])
+//│ def f₀(_lh_f_arg1¹) = case _lh_f_arg1¹ of {
+//│ 	LH_P2 _lh_f_LH_P2_0¹ _lh_f_LH_P2_1¹ => (_lh_f_LH_P2_0¹ + _lh_f_LH_P2_1¹)}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀^165] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀₀([LH_P2 3 4])
+//│ def f₀₀(_lh_f_arg1¹) = 
+//│ 	case _lh_f_arg1¹ of {
+//│ 		LH_P2 _lh_f_LH_P2_0¹ _lh_f_LH_P2_1¹ => (_lh_f_LH_P2_0¹ + _lh_f_LH_P2_1¹)}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_P2 3 4]: 25 --->
+//│ 	case _lh_f_arg1¹ of {LH_P2 _lh_f_LH_P2_0¹ _lh_f_LH_P2_1¹ => (_lh_f_LH_P2_0¹ + _lh_f_LH_P2_1¹)}: 20
+//│ ------------------
+//│ case _lh_f_arg1¹ of {LH_P2 _lh_f_LH_P2_0¹ _lh_f_LH_P2_1¹ => (_lh_f_LH_P2_0¹ + _lh_f_LH_P2_1¹)}: 20 --->
+//│ 	[LH_P2 3 4]: 25
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_P2 3 4]: 25 --->
+//│ 	case _lh_f_arg1¹ of {LH_P2 _lh_f_LH_P2_0¹ _lh_f_LH_P2_1¹ => (_lh_f_LH_P2_0¹ + _lh_f_LH_P2_1¹)}: 20
+//│ ------------------
+//│ case _lh_f_arg1¹ of {LH_P2 _lh_f_LH_P2_0¹ _lh_f_LH_P2_1¹ => (_lh_f_LH_P2_0¹ + _lh_f_LH_P2_1¹)}: 20 --->
+//│ 	[LH_P2 3 4]: 25
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀₀(
+//│ 	let _lh_f_LH_P2_0² = 3
+//│ 	in let _lh_f_LH_P2_1² = 4
+//│ 	in (_lh_f_LH_P2_0² + _lh_f_LH_P2_1²))
+//│ def f₀₀(_lh_f_arg1²) = 
+//│ 	_lh_f_arg1²
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated Haskell Code >>>>>>>>>>
+//│ module Main where
+//│ import Criterion.Main
+//│ (f₀₀ (let _lh_f_LH_P2_0⁰ = 3 in (let _lh_f_LH_P2_1⁰ = 4 in (_lh_f_LH_P2_0⁰ + _lh_f_LH_P2_1⁰))))
+//│ f₀₀ _lh_f_arg1⁰ = _lh_f_arg1⁰
+//│ <<<<<<<<<< Generated Haskell Code <<<<<<<<<<
 
 :haskell
-map (\x -> x + 1) $ map (\x -> x + x) (primId [1..100])
+[ (a, b) | b <- [1, 4, 10], a <- [2, 3, 5], a < b ]
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ "haskell" (
+//│ 	"top_splice" (
+//│ 		"exp_list_comprehension" (
+//│ 			"[" ()
+//│ 			"exp_tuple" (
+//│ 				"(" ()
+//│ 				"exp_name" (
+//│ 					"variable" ())
+//│ 				"comma" ()
+//│ 				"exp_name" (
+//│ 					"variable" ())
+//│ 				")" ())
+//│ 			"|" ()
+//│ 			"qual" (
+//│ 				"bind_pattern" (
+//│ 					"pat_name" (
+//│ 						"variable" ())
+//│ 					"<-" ()
+//│ 					"exp_list" (
+//│ 						"[" ()
+//│ 						"exp_literal" (
+//│ 							"integer" ())
+//│ 						"comma" ()
+//│ 						"exp_literal" (
+//│ 							"integer" ())
+//│ 						"comma" ()
+//│ 						"exp_literal" (
+//│ 							"integer" ())
+//│ 						"]" ())))
+//│ 			"comma" ()
+//│ 			"qual" (
+//│ 				"bind_pattern" (
+//│ 					"pat_name" (
+//│ 						"variable" ())
+//│ 					"<-" ()
+//│ 					"exp_list" (
+//│ 						"[" ()
+//│ 						"exp_literal" (
+//│ 							"integer" ())
+//│ 						"comma" ()
+//│ 						"exp_literal" (
+//│ 							"integer" ())
+//│ 						"comma" ()
+//│ 						"exp_literal" (
+//│ 							"integer" ())
+//│ 						"]" ())))
+//│ 			"comma" ()
+//│ 			"qual" (
+//│ 				"exp_infix" (
+//│ 					"exp_name" (
+//│ 						"variable" ())
+//│ 					"operator" ()
+//│ 					"exp_name" (
+//│ 						"variable" ())))
+//│ 			"]" ())))
+//│ let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> case _lh_listcomp_fun_para² of {
+//│ 	LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => 
+//│ 		let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)
+//│ 			| LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ 		in _lh_listcomp_fun³([LH_C 2 [LH_C 3 [LH_C 5 [LH_N]]]])
+//│ 	| LH_N  => [LH_N]})
+//│ in _lh_listcomp_fun²([LH_C 1 [LH_C 4 [LH_C 10 [LH_N]]]])
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ 
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ 
+//│ 	let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> case _lh_listcomp_fun_para² of {
+//│ 		LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => 
+//│ 			let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {
+//│ 				LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)
+//│ 				| LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ 			in _lh_listcomp_fun³([LH_C 2 [LH_C 3 [LH_C 5 [LH_N]]]])
+//│ 		| LH_N  => [LH_N]})
+//│ 	in _lh_listcomp_fun²([LH_C 1 [LH_C 4 [LH_C 10 [LH_N]]]])
+//│ 
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_N]: 74 --->
+//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 68
+//│ [LH_C 5 [LH_N]]: 75 --->
+//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 68
+//│ [LH_C 3 [LH_C 5 [LH_N]]]: 76 --->
+//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 68
+//│ [LH_C 2 [LH_C 3 [LH_C 5 [LH_N]]]]: 77 --->
+//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 68
+//│ [LH_N]: 87 --->
+//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ in _lh_listcomp_fun³([LH_C 2 [LH_C 3 [LH_C 5 [LH_N]]]]) | LH_N  => [LH_N]}: 81
+//│ [LH_C 10 [LH_N]]: 88 --->
+//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ in _lh_listcomp_fun³([LH_C 2 [LH_C 3 [LH_C 5 [LH_N]]]]) | LH_N  => [LH_N]}: 81
+//│ [LH_C 4 [LH_C 10 [LH_N]]]: 89 --->
+//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ in _lh_listcomp_fun³([LH_C 2 [LH_C 3 [LH_C 5 [LH_N]]]]) | LH_N  => [LH_N]}: 81
+//│ [LH_C 1 [LH_C 4 [LH_C 10 [LH_N]]]]: 90 --->
+//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ in _lh_listcomp_fun³([LH_C 2 [LH_C 3 [LH_C 5 [LH_N]]]]) | LH_N  => [LH_N]}: 81
+//│ ------------------
+//│ case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 68 --->
+//│ 	[LH_N]: 74
+//│ 	[LH_C 5 [LH_N]]: 75
+//│ 	[LH_C 3 [LH_C 5 [LH_N]]]: 76
+//│ 	[LH_C 2 [LH_C 3 [LH_C 5 [LH_N]]]]: 77
+//│ case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ in _lh_listcomp_fun³([LH_C 2 [LH_C 3 [LH_C 5 [LH_N]]]]) | LH_N  => [LH_N]}: 81 --->
+//│ 	[LH_N]: 87
+//│ 	[LH_C 10 [LH_N]]: 88
+//│ 	[LH_C 4 [LH_C 10 [LH_N]]]: 89
+//│ 	[LH_C 1 [LH_C 4 [LH_C 10 [LH_N]]]]: 90
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_N]: 74 --->
+//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 68
+//│ [LH_C 5 [LH_N]]: 75 --->
+//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 68
+//│ [LH_C 3 [LH_C 5 [LH_N]]]: 76 --->
+//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 68
+//│ [LH_C 2 [LH_C 3 [LH_C 5 [LH_N]]]]: 77 --->
+//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 68
+//│ [LH_N]: 87 --->
+//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ in _lh_listcomp_fun³([LH_C 2 [LH_C 3 [LH_C 5 [LH_N]]]]) | LH_N  => [LH_N]}: 81
+//│ [LH_C 10 [LH_N]]: 88 --->
+//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ in _lh_listcomp_fun³([LH_C 2 [LH_C 3 [LH_C 5 [LH_N]]]]) | LH_N  => [LH_N]}: 81
+//│ [LH_C 4 [LH_C 10 [LH_N]]]: 89 --->
+//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ in _lh_listcomp_fun³([LH_C 2 [LH_C 3 [LH_C 5 [LH_N]]]]) | LH_N  => [LH_N]}: 81
+//│ [LH_C 1 [LH_C 4 [LH_C 10 [LH_N]]]]: 90 --->
+//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ in _lh_listcomp_fun³([LH_C 2 [LH_C 3 [LH_C 5 [LH_N]]]]) | LH_N  => [LH_N]}: 81
+//│ ------------------
+//│ case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 68 --->
+//│ 	[LH_N]: 74
+//│ 	[LH_C 5 [LH_N]]: 75
+//│ 	[LH_C 3 [LH_C 5 [LH_N]]]: 76
+//│ 	[LH_C 2 [LH_C 3 [LH_C 5 [LH_N]]]]: 77
+//│ case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ in _lh_listcomp_fun³([LH_C 2 [LH_C 3 [LH_C 5 [LH_N]]]]) | LH_N  => [LH_N]}: 81 --->
+//│ 	[LH_N]: 87
+//│ 	[LH_C 10 [LH_N]]: 88
+//│ 	[LH_C 4 [LH_C 10 [LH_N]]]: 89
+//│ 	[LH_C 1 [LH_C 4 [LH_C 10 [LH_N]]]]: 90
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ 
+//│ 	let _lh_listcomp_fun⁴ = (fun _lh_listcomp_fun_para⁴ -> _lh_listcomp_fun_para⁴(_lh_listcomp_fun⁴))
+//│ 	in _lh_listcomp_fun⁴(
+//│ 		let _lh_listcomp_fun_ls_h⁴ = 1
+//│ 		in let _lh_listcomp_fun_ls_t⁴ = 	
+//│ 			let _lh_listcomp_fun_ls_h¹² = 4
+//│ 			in let _lh_listcomp_fun_ls_t¹² = 	
+//│ 				let _lh_listcomp_fun_ls_h²⁰ = 10
+//│ 				in let _lh_listcomp_fun_ls_t²⁰ = (fun _lh_listcomp_fun³⁵ -> [LH_N])
+//│ 				in (fun _lh_listcomp_fun²⁵ -> 
+//│ 					let _lh_listcomp_fun²⁶ = (fun _lh_listcomp_fun_para⁷ -> _lh_listcomp_fun_para⁷(_lh_listcomp_fun_ls_h²⁰, _lh_listcomp_fun²⁶, _lh_listcomp_fun²⁵, _lh_listcomp_fun_ls_t²⁰))
+//│ 					in _lh_listcomp_fun²⁶(
+//│ 						let _lh_listcomp_fun_ls_h²¹ = 2
+//│ 						in let _lh_listcomp_fun_ls_t²¹ = 	
+//│ 							let _lh_listcomp_fun_ls_h²³ = 3
+//│ 							in let _lh_listcomp_fun_ls_t²³ = 	
+//│ 								let _lh_listcomp_fun_ls_h²⁵ = 5
+//│ 								in let _lh_listcomp_fun_ls_t²⁵ = (fun _lh_listcomp_fun_ls_h²⁷ -> (fun _lh_listcomp_fun³³ -> (fun _lh_listcomp_fun³⁴ -> (fun _lh_listcomp_fun_ls_t²⁷ -> _lh_listcomp_fun³⁴(_lh_listcomp_fun_ls_t²⁷)))))
+//│ 								in (fun _lh_listcomp_fun_ls_h²⁶ -> (fun _lh_listcomp_fun³¹ -> (fun _lh_listcomp_fun³² -> (fun _lh_listcomp_fun_ls_t²⁶ -> if (_lh_listcomp_fun_ls_h²⁵ < _lh_listcomp_fun_ls_h²⁶) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h²⁵ _lh_listcomp_fun_ls_h²⁶] _lh_listcomp_fun³¹(_lh_listcomp_fun_ls_t²⁵)] else _lh_listcomp_fun³¹(_lh_listcomp_fun_ls_t²⁵)))))
+//│ 							in (fun _lh_listcomp_fun_ls_h²⁴ -> (fun _lh_listcomp_fun²⁹ -> (fun _lh_listcomp_fun³⁰ -> (fun _lh_listcomp_fun_ls_t²⁴ -> if (_lh_listcomp_fun_ls_h²³ < _lh_listcomp_fun_ls_h²⁴) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h²³ _lh_listcomp_fun_ls_h²⁴] _lh_listcomp_fun²⁹(_lh_listcomp_fun_ls_t²³)] else _lh_listcomp_fun²⁹(_lh_listcomp_fun_ls_t²³)))))
+//│ 						in (fun _lh_listcomp_fun_ls_h²² -> (fun _lh_listcomp_fun²⁷ -> (fun _lh_listcomp_fun²⁸ -> (fun _lh_listcomp_fun_ls_t²² -> if (_lh_listcomp_fun_ls_h²¹ < _lh_listcomp_fun_ls_h²²) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h²¹ _lh_listcomp_fun_ls_h²²] _lh_listcomp_fun²⁷(_lh_listcomp_fun_ls_t²¹)] else _lh_listcomp_fun²⁷(_lh_listcomp_fun_ls_t²¹)))))))
+//│ 			in (fun _lh_listcomp_fun¹⁵ -> 
+//│ 				let _lh_listcomp_fun¹⁶ = (fun _lh_listcomp_fun_para⁶ -> _lh_listcomp_fun_para⁶(_lh_listcomp_fun_ls_h¹², _lh_listcomp_fun¹⁶, _lh_listcomp_fun¹⁵, _lh_listcomp_fun_ls_t¹²))
+//│ 				in _lh_listcomp_fun¹⁶(
+//│ 					let _lh_listcomp_fun_ls_h¹³ = 2
+//│ 					in let _lh_listcomp_fun_ls_t¹³ = 	
+//│ 						let _lh_listcomp_fun_ls_h¹⁵ = 3
+//│ 						in let _lh_listcomp_fun_ls_t¹⁵ = 	
+//│ 							let _lh_listcomp_fun_ls_h¹⁷ = 5
+//│ 							in let _lh_listcomp_fun_ls_t¹⁷ = (fun _lh_listcomp_fun_ls_h¹⁹ -> (fun _lh_listcomp_fun²³ -> (fun _lh_listcomp_fun²⁴ -> (fun _lh_listcomp_fun_ls_t¹⁹ -> _lh_listcomp_fun²⁴(_lh_listcomp_fun_ls_t¹⁹)))))
+//│ 							in (fun _lh_listcomp_fun_ls_h¹⁸ -> (fun _lh_listcomp_fun²¹ -> (fun _lh_listcomp_fun²² -> (fun _lh_listcomp_fun_ls_t¹⁸ -> if (_lh_listcomp_fun_ls_h¹⁷ < _lh_listcomp_fun_ls_h¹⁸) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h¹⁷ _lh_listcomp_fun_ls_h¹⁸] _lh_listcomp_fun²¹(_lh_listcomp_fun_ls_t¹⁷)] else _lh_listcomp_fun²¹(_lh_listcomp_fun_ls_t¹⁷)))))
+//│ 						in (fun _lh_listcomp_fun_ls_h¹⁶ -> (fun _lh_listcomp_fun¹⁹ -> (fun _lh_listcomp_fun²⁰ -> (fun _lh_listcomp_fun_ls_t¹⁶ -> if (_lh_listcomp_fun_ls_h¹⁵ < _lh_listcomp_fun_ls_h¹⁶) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h¹⁵ _lh_listcomp_fun_ls_h¹⁶] _lh_listcomp_fun¹⁹(_lh_listcomp_fun_ls_t¹⁵)] else _lh_listcomp_fun¹⁹(_lh_listcomp_fun_ls_t¹⁵)))))
+//│ 					in (fun _lh_listcomp_fun_ls_h¹⁴ -> (fun _lh_listcomp_fun¹⁷ -> (fun _lh_listcomp_fun¹⁸ -> (fun _lh_listcomp_fun_ls_t¹⁴ -> if (_lh_listcomp_fun_ls_h¹³ < _lh_listcomp_fun_ls_h¹⁴) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h¹³ _lh_listcomp_fun_ls_h¹⁴] _lh_listcomp_fun¹⁷(_lh_listcomp_fun_ls_t¹³)] else _lh_listcomp_fun¹⁷(_lh_listcomp_fun_ls_t¹³)))))))
+//│ 		in (fun _lh_listcomp_fun⁵ -> 
+//│ 			let _lh_listcomp_fun⁶ = (fun _lh_listcomp_fun_para⁵ -> _lh_listcomp_fun_para⁵(_lh_listcomp_fun_ls_h⁴, _lh_listcomp_fun⁶, _lh_listcomp_fun⁵, _lh_listcomp_fun_ls_t⁴))
+//│ 			in _lh_listcomp_fun⁶(
+//│ 				let _lh_listcomp_fun_ls_h⁵ = 2
+//│ 				in let _lh_listcomp_fun_ls_t⁵ = 	
+//│ 					let _lh_listcomp_fun_ls_h⁷ = 3
+//│ 					in let _lh_listcomp_fun_ls_t⁷ = 	
+//│ 						let _lh_listcomp_fun_ls_h⁹ = 5
+//│ 						in let _lh_listcomp_fun_ls_t⁹ = (fun _lh_listcomp_fun_ls_h¹¹ -> (fun _lh_listcomp_fun¹³ -> (fun _lh_listcomp_fun¹⁴ -> (fun _lh_listcomp_fun_ls_t¹¹ -> _lh_listcomp_fun¹⁴(_lh_listcomp_fun_ls_t¹¹)))))
+//│ 						in (fun _lh_listcomp_fun_ls_h¹⁰ -> (fun _lh_listcomp_fun¹¹ -> (fun _lh_listcomp_fun¹² -> (fun _lh_listcomp_fun_ls_t¹⁰ -> if (_lh_listcomp_fun_ls_h⁹ < _lh_listcomp_fun_ls_h¹⁰) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h⁹ _lh_listcomp_fun_ls_h¹⁰] _lh_listcomp_fun¹¹(_lh_listcomp_fun_ls_t⁹)] else _lh_listcomp_fun¹¹(_lh_listcomp_fun_ls_t⁹)))))
+//│ 					in (fun _lh_listcomp_fun_ls_h⁸ -> (fun _lh_listcomp_fun⁹ -> (fun _lh_listcomp_fun¹⁰ -> (fun _lh_listcomp_fun_ls_t⁸ -> if (_lh_listcomp_fun_ls_h⁷ < _lh_listcomp_fun_ls_h⁸) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h⁷ _lh_listcomp_fun_ls_h⁸] _lh_listcomp_fun⁹(_lh_listcomp_fun_ls_t⁷)] else _lh_listcomp_fun⁹(_lh_listcomp_fun_ls_t⁷)))))
+//│ 				in (fun _lh_listcomp_fun_ls_h⁶ -> (fun _lh_listcomp_fun⁷ -> (fun _lh_listcomp_fun⁸ -> (fun _lh_listcomp_fun_ls_t⁶ -> if (_lh_listcomp_fun_ls_h⁵ < _lh_listcomp_fun_ls_h⁶) then [LH_C [LH_P2 _lh_listcomp_fun_ls_h⁵ _lh_listcomp_fun_ls_h⁶] _lh_listcomp_fun⁷(_lh_listcomp_fun_ls_t⁵)] else _lh_listcomp_fun⁷(_lh_listcomp_fun_ls_t⁵))))))))
+//│ 
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated Haskell Code >>>>>>>>>>
+//│ module Main where
+//│ import Criterion.Main
+//│ (let _lh_listcomp_fun⁰ = (\_lh_listcomp_fun_para⁰ -> (_lh_listcomp_fun_para⁰ _lh_listcomp_fun⁰)) in (_lh_listcomp_fun⁰ (let _lh_listcomp_fun_ls_h⁰ = 1 in (let _lh_listcomp_fun_ls_t⁰ = (let _lh_listcomp_fun_ls_h¹ = 4 in (let _lh_listcomp_fun_ls_t¹ = (let _lh_listcomp_fun_ls_h² = 10 in (let _lh_listcomp_fun_ls_t² = (\_lh_listcomp_fun¹ -> []) in (\_lh_listcomp_fun² -> (let _lh_listcomp_fun³ = (\_lh_listcomp_fun_para¹ -> ((((_lh_listcomp_fun_para¹ _lh_listcomp_fun_ls_h²) _lh_listcomp_fun³) _lh_listcomp_fun²) _lh_listcomp_fun_ls_t²)) in (_lh_listcomp_fun³ (let _lh_listcomp_fun_ls_h³ = 2 in (let _lh_listcomp_fun_ls_t³ = (let _lh_listcomp_fun_ls_h⁴ = 3 in (let _lh_listcomp_fun_ls_t⁴ = (let _lh_listcomp_fun_ls_h⁵ = 5 in (let _lh_listcomp_fun_ls_t⁵ = (\_lh_listcomp_fun_ls_h⁶ _lh_listcomp_fun⁴ _lh_listcomp_fun⁵ _lh_listcomp_fun_ls_t⁶ -> (_lh_listcomp_fun⁵ _lh_listcomp_fun_ls_t⁶)) in (\_lh_listcomp_fun_ls_h⁷ _lh_listcomp_fun⁶ _lh_listcomp_fun⁷ _lh_listcomp_fun_ls_t⁷ -> (if (_lh_listcomp_fun_ls_h⁵ < _lh_listcomp_fun_ls_h⁷) then ((_lh_listcomp_fun_ls_h⁵ _lh_listcomp_fun_ls_h⁷):(_lh_listcomp_fun⁶ _lh_listcomp_fun_ls_t⁵)) else (_lh_listcomp_fun⁶ _lh_listcomp_fun_ls_t⁵))))) in (\_lh_listcomp_fun_ls_h⁸ _lh_listcomp_fun⁸ _lh_listcomp_fun⁹ _lh_listcomp_fun_ls_t⁸ -> (if (_lh_listcomp_fun_ls_h⁴ < _lh_listcomp_fun_ls_h⁸) then ((_lh_listcomp_fun_ls_h⁴ _lh_listcomp_fun_ls_h⁸):(_lh_listcomp_fun⁸ _lh_listcomp_fun_ls_t⁴)) else (_lh_listcomp_fun⁸ _lh_listcomp_fun_ls_t⁴))))) in (\_lh_listcomp_fun_ls_h⁹ _lh_listcomp_fun¹⁰ _lh_listcomp_fun¹¹ _lh_listcomp_fun_ls_t⁹ -> (if (_lh_listcomp_fun_ls_h³ < _lh_listcomp_fun_ls_h⁹) then ((_lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h⁹):(_lh_listcomp_fun¹⁰ _lh_listcomp_fun_ls_t³)) else (_lh_listcomp_fun¹⁰ _lh_listcomp_fun_ls_t³)))))))))) in (\_lh_listcomp_fun¹² -> (let _lh_listcomp_fun¹³ = (\_lh_listcomp_fun_para² -> ((((_lh_listcomp_fun_para² _lh_listcomp_fun_ls_h¹) _lh_listcomp_fun¹³) _lh_listcomp_fun¹²) _lh_listcomp_fun_ls_t¹)) in (_lh_listcomp_fun¹³ (let _lh_listcomp_fun_ls_h¹⁰ = 2 in (let _lh_listcomp_fun_ls_t¹⁰ = (let _lh_listcomp_fun_ls_h¹¹ = 3 in (let _lh_listcomp_fun_ls_t¹¹ = (let _lh_listcomp_fun_ls_h¹² = 5 in (let _lh_listcomp_fun_ls_t¹² = (\_lh_listcomp_fun_ls_h¹³ _lh_listcomp_fun¹⁴ _lh_listcomp_fun¹⁵ _lh_listcomp_fun_ls_t¹³ -> (_lh_listcomp_fun¹⁵ _lh_listcomp_fun_ls_t¹³)) in (\_lh_listcomp_fun_ls_h¹⁴ _lh_listcomp_fun¹⁶ _lh_listcomp_fun¹⁷ _lh_listcomp_fun_ls_t¹⁴ -> (if (_lh_listcomp_fun_ls_h¹² < _lh_listcomp_fun_ls_h¹⁴) then ((_lh_listcomp_fun_ls_h¹² _lh_listcomp_fun_ls_h¹⁴):(_lh_listcomp_fun¹⁶ _lh_listcomp_fun_ls_t¹²)) else (_lh_listcomp_fun¹⁶ _lh_listcomp_fun_ls_t¹²))))) in (\_lh_listcomp_fun_ls_h¹⁵ _lh_listcomp_fun¹⁸ _lh_listcomp_fun¹⁹ _lh_listcomp_fun_ls_t¹⁵ -> (if (_lh_listcomp_fun_ls_h¹¹ < _lh_listcomp_fun_ls_h¹⁵) then ((_lh_listcomp_fun_ls_h¹¹ _lh_listcomp_fun_ls_h¹⁵):(_lh_listcomp_fun¹⁸ _lh_listcomp_fun_ls_t¹¹)) else (_lh_listcomp_fun¹⁸ _lh_listcomp_fun_ls_t¹¹))))) in (\_lh_listcomp_fun_ls_h¹⁶ _lh_listcomp_fun²⁰ _lh_listcomp_fun²¹ _lh_listcomp_fun_ls_t¹⁶ -> (if (_lh_listcomp_fun_ls_h¹⁰ < _lh_listcomp_fun_ls_h¹⁶) then ((_lh_listcomp_fun_ls_h¹⁰ _lh_listcomp_fun_ls_h¹⁶):(_lh_listcomp_fun²⁰ _lh_listcomp_fun_ls_t¹⁰)) else (_lh_listcomp_fun²⁰ _lh_listcomp_fun_ls_t¹⁰)))))))))) in (\_lh_listcomp_fun²² -> (let _lh_listcomp_fun²³ = (\_lh_listcomp_fun_para³ -> ((((_lh_listcomp_fun_para³ _lh_listcomp_fun_ls_h⁰) _lh_listcomp_fun²³) _lh_listcomp_fun²²) _lh_listcomp_fun_ls_t⁰)) in (_lh_listcomp_fun²³ (let _lh_listcomp_fun_ls_h¹⁷ = 2 in (let _lh_listcomp_fun_ls_t¹⁷ = (let _lh_listcomp_fun_ls_h¹⁸ = 3 in (let _lh_listcomp_fun_ls_t¹⁸ = (let _lh_listcomp_fun_ls_h¹⁹ = 5 in (let _lh_listcomp_fun_ls_t¹⁹ = (\_lh_listcomp_fun_ls_h²⁰ _lh_listcomp_fun²⁴ _lh_listcomp_fun²⁵ _lh_listcomp_fun_ls_t²⁰ -> (_lh_listcomp_fun²⁵ _lh_listcomp_fun_ls_t²⁰)) in (\_lh_listcomp_fun_ls_h²¹ _lh_listcomp_fun²⁶ _lh_listcomp_fun²⁷ _lh_listcomp_fun_ls_t²¹ -> (if (_lh_listcomp_fun_ls_h¹⁹ < _lh_listcomp_fun_ls_h²¹) then ((_lh_listcomp_fun_ls_h¹⁹ _lh_listcomp_fun_ls_h²¹):(_lh_listcomp_fun²⁶ _lh_listcomp_fun_ls_t¹⁹)) else (_lh_listcomp_fun²⁶ _lh_listcomp_fun_ls_t¹⁹))))) in (\_lh_listcomp_fun_ls_h²² _lh_listcomp_fun²⁸ _lh_listcomp_fun²⁹ _lh_listcomp_fun_ls_t²² -> (if (_lh_listcomp_fun_ls_h¹⁸ < _lh_listcomp_fun_ls_h²²) then ((_lh_listcomp_fun_ls_h¹⁸ _lh_listcomp_fun_ls_h²²):(_lh_listcomp_fun²⁸ _lh_listcomp_fun_ls_t¹⁸)) else (_lh_listcomp_fun²⁸ _lh_listcomp_fun_ls_t¹⁸))))) in (\_lh_listcomp_fun_ls_h²³ _lh_listcomp_fun³⁰ _lh_listcomp_fun³¹ _lh_listcomp_fun_ls_t²³ -> (if (_lh_listcomp_fun_ls_h¹⁷ < _lh_listcomp_fun_ls_h²³) then ((_lh_listcomp_fun_ls_h¹⁷ _lh_listcomp_fun_ls_h²³):(_lh_listcomp_fun³⁰ _lh_listcomp_fun_ls_t¹⁷)) else (_lh_listcomp_fun³⁰ _lh_listcomp_fun_ls_t¹⁷))))))))))))
+//│ <<<<<<<<<< Generated Haskell Code <<<<<<<<<<
+
+:haskell
+map (\x -> x + 1) $ map (\x -> x + x) (primId [1..10])
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
@@ -152,10 +356,273 @@ map (\x -> x + 1) $ map (\x -> x + x) (primId [1..100])
 //│ 								"integer" ())
 //│ 							"]" ()))
 //│ 					")" ())))))
-//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
-//│ 	at: scala.Predef$.$qmark$qmark$qmark(Predef.scala:344)
-//│ 	at: mlscript.lumberhack.FromHaskell$.apply(CodeGen.scala:50)
-//│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTestLumberhack.scala:51)
+//│ map₀^217((fun x² -> (x² + 1)), map₁^225((fun x³ -> (x³ + x³)), primId⁰(enumFromTo₀^234(1, 10))))
+//│ def enumFromTo₀(a², b²) = if (a² <= b²) then [LH_C a² enumFromTo₀^203((a² + 1), b²)] else [LH_N]
+//│ def map₀(f⁴, ls⁶) = case ls⁶ of {
+//│ 	LH_C h⁶ t⁷ => [LH_C f⁴(h⁶) map₀^173(f⁴, t⁷)]
+//│ 	| LH_N  => [LH_N]}
+//│ def map₁(f⁵, ls⁷) = case ls⁷ of {
+//│ 	LH_C h⁷ t⁸ => [LH_C f⁵(h⁷) map₁^187(f⁵, t⁸)]
+//│ 	| LH_N  => [LH_N]}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [enumFromTo₀^234]
+//│ 	[enumFromTo₀^234 · enumFromTo₀^203] ---> [enumFromTo₀^234] (only one)
+//│ [map₀^217]
+//│ 	[map₀^217 · map₀^173] ---> [map₀^217] (only one)
+//│ [map₁^225]
+//│ 	[map₁^225 · map₁^187] ---> [map₁^225] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ map₀₀((fun x² -> (x² + 1)), map₁₀((fun x³ -> (x³ + x³)), primId⁰(enumFromTo₀₀(1, 10))))
+//│ def enumFromTo₀₀(a¹, b¹) = 
+//│ 	if (a¹ <= b¹) then [LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)] else [LH_N]
+//│ def map₀₀(f³, ls³) = 
+//│ 	case ls³ of {
+//│ 		LH_C h³ t³ => [LH_C f³(h³) map₀₀(f³, t³)]
+//│ 		| LH_N  => [LH_N]}
+//│ def map₁₀(f², ls²) = 
+//│ 	case ls² of {
+//│ 		LH_C h² t² => [LH_C f²(h²) map₁₀(f², t²)]
+//│ 		| LH_N  => [LH_N]}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_C f²(h²) map₁₀(f², t²)]: 83 --->
+//│ 	case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map₀₀(f³, t³)] | LH_N  => [LH_N]}: 99
+//│ [LH_N]: 84 --->
+//│ 	case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map₀₀(f³, t³)] | LH_N  => [LH_N]}: 99
+//│ ------------------
+//│ case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map₀₀(f³, t³)] | LH_N  => [LH_N]}: 99 --->
+//│ 	[LH_C f²(h²) map₁₀(f², t²)]: 83
+//│ 	[LH_N]: 84
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_C f²(h²) map₁₀(f², t²)]: 83 --->
+//│ 	case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map₀₀(f³, t³)] | LH_N  => [LH_N]}: 99
+//│ [LH_N]: 84 --->
+//│ 	case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map₀₀(f³, t³)] | LH_N  => [LH_N]}: 99
+//│ ------------------
+//│ case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map₀₀(f³, t³)] | LH_N  => [LH_N]}: 99 --->
+//│ 	[LH_C f²(h²) map₁₀(f², t²)]: 83
+//│ 	[LH_N]: 84
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ map₀₀((fun x⁴ -> (x⁴ + 1)), map₁₀((fun x⁵ -> (x⁵ + x⁵)), primId⁰(enumFromTo₀₀(1, 10))))
+//│ def enumFromTo₀₀(a², b²) = 
+//│ 	if (a² <= b²) then [LH_C a² enumFromTo₀₀((a² + 1), b²)] else [LH_N]
+//│ def map₀₀(f⁷, ls⁵) = 
+//│ 	ls⁵(f⁷)
+//│ def map₁₀(f⁴, ls⁴) = 
+//│ 	case ls⁴ of {
+//│ 		LH_C h² t² => 
+//│ 			let h⁴ = f⁴(h²)
+//│ 			in let t⁴ = map₁₀(f⁴, t²)
+//│ 			in (fun f⁵ -> [LH_C f⁵(h⁴) map₀₀(f⁵, t⁴)])
+//│ 		| LH_N  => (fun f⁶ -> [LH_N])}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated Haskell Code >>>>>>>>>>
+//│ module Main where
+//│ import Criterion.Main
+//│ ((map₀₀ (\x⁰ -> (x⁰ + 1))) ((map₁₀ (\x¹ -> (x¹ + x¹))) ((enumFromTo₀₀ 1) 10)))
+//│ map₁₀ f⁰ ls⁰ = (case ls⁰ of {(h⁰ : t⁰) -> (let h¹ = (f⁰ h⁰) in (let t¹ = ((map₁₀ f⁰) t⁰) in (\f¹ -> ((f¹ h¹):((map₀₀ f¹) t¹))))); [] -> (\f² -> [])})
+//│ map₀₀ f³ ls¹ = (ls¹ f³)
+//│ enumFromTo₀₀ a⁰ b⁰ = (if (a⁰ <= b⁰) then (a⁰:((enumFromTo₀₀ (a⁰ + 1)) b⁰)) else [])
+//│ <<<<<<<<<< Generated Haskell Code <<<<<<<<<<
+
+
+
+
+// :haskell
+// nsoln nq = length (gen nq)
+//  where
+//     safe :: Int -> Int -> [Int] -> Bool
+//     safe x d []    = True
+//     safe x d (q:l) = x /= q && x /= q+d && x /= q-d && safe x (d+1) l
+//     gen :: Int -> [[Int]]
+//     gen 0 = [[]]
+//     gen n = [ (q:b) | b <- gen (n-1), q <- [1..nq], safe q 1 b]
+
+:haskell
+// f 0 (h:t) = 0
+// f x (h:t) = 1
+// f 1 [] = 0
+// f x [] = 3
+// f 0 l = l
+// f x [] = []
+// f x (h:t) = f (x-1) t 
+// f 2 []
+
+
+:haskell
+f 0 = error("no")
+f n = error("yes")
+f 9
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ "haskell" (
+//│ 	"function" (
+//│ 		"variable" ()
+//│ 		"patterns" (
+//│ 			"pat_literal" (
+//│ 				"integer" ()))
+//│ 		"=" ()
+//│ 		"exp_apply" (
+//│ 			"exp_name" (
+//│ 				"variable" ())
+//│ 			"exp_parens" (
+//│ 				"(" ()
+//│ 				"exp_literal" (
+//│ 					"string" ())
+//│ 				")" ())))
+//│ 	"function" (
+//│ 		"variable" ()
+//│ 		"patterns" (
+//│ 			"pat_name" (
+//│ 				"variable" ()))
+//│ 		"=" ()
+//│ 		"exp_apply" (
+//│ 			"exp_name" (
+//│ 				"variable" ())
+//│ 			"exp_parens" (
+//│ 				"(" ()
+//│ 				"exp_literal" (
+//│ 					"string" ())
+//│ 				")" ())))
+//│ 	"top_splice" (
+//│ 		"exp_apply" (
+//│ 			"exp_name" (
+//│ 				"variable" ())
+//│ 			"exp_literal" (
+//│ 				"integer" ()))))
+//│ f₀^165(9)
+//│ def f₀(_lh_f_arg1¹) = case _lh_f_arg1¹ of {
+//│ 	0  => error⁰("no")
+//│ 	| n¹ => error⁰("yes")}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀^165] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀₀(9)
+//│ def f₀₀(_lh_f_arg1¹) = 
+//│ 	case _lh_f_arg1¹ of {
+//│ 		0  => error⁰("no")
+//│ 		| n¹ => error⁰("yes")}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀₀(9)
+//│ def f₀₀(_lh_f_arg1²) = 
+//│ 	case _lh_f_arg1² of {
+//│ 		0  => error⁰("no")
+//│ 		| n¹ => error⁰("yes")}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated Haskell Code >>>>>>>>>>
+//│ module Main where
+//│ import Criterion.Main
+//│ (f₀₀ 9)
+//│ f₀₀ _lh_f_arg1⁰ = (case _lh_f_arg1⁰ of {0 -> (error⁰ "no"); _ n⁰ -> (error⁰ "yes")})
+//│ <<<<<<<<<< Generated Haskell Code <<<<<<<<<<
+
+
+fun len(x) = if x is
+  C(h, t) then 1 + len(t)
+  N then 0
+fun tail(ls) = if ls is
+  C(h, t) then t
+  N then error("no tail")
+len(tail(N))
+//│ |_LUMBERHACK_EVAL|↵|#fun| |len|(|x|)| |#=| |#if| |x| |is|→|C|(|h|,| |t|)| |#then| |1| |+| |len|(|t|)|↵|N| |#then| |0|←|↵|#fun| |tail|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |t|↵|N| |#then| |error|(|"no tail"|)|←|↵|len|(|tail|(|N|)|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun len = x, => if x is ‹(C (h, t,)) then + (1,) (len (t,),); (N) then 0›; fun tail = ls, => if ls is ‹(C (h, t,)) then t; (N) then error ("no tail",)›; len (tail (N,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ len^19(tail^20([N]))
+//│ def len(x⁰) = case x⁰ of {
+//│ 	C h⁰ t⁰ => (1 + len^5(t⁰))
+//│ 	| N  => 0}
+//│ def tail(ls⁰) = case ls⁰ of {
+//│ 	C h¹ t¹ => t¹
+//│ 	| N  => error⁰("no tail")}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ case error⁰("no tail") of {
+//│ 	C h⁰ t⁰ => (1 + len(t⁰))
+//│ 	| N  => 0}
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [len^19] (hopeless to continue)
+//│ 	[len^19 · len^5] ---> [len^19] (using original def)
+//│ [tail^20] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ len₀(tail₀([N]))
+//│ def len₀(x¹) = 
+//│ 	case x¹ of {
+//│ 		C h² t² => (1 + len₀(t²))
+//│ 		| N  => 0}
+//│ def tail₀(ls¹) = 
+//│ 	case ls¹ of {
+//│ 		C h³ t³ => t³
+//│ 		| N  => error⁰("no tail")}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [N]: 44 --->
+//│ 	case ls¹ of {C h³ t³ => t³ | N  => error⁰("no tail")}: 40
+//│ ------------------
+//│ case ls¹ of {C h³ t³ => t³ | N  => error⁰("no tail")}: 40 --->
+//│ 	[N]: 44
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [N]: 44 --->
+//│ 	case ls¹ of {C h³ t³ => t³ | N  => error⁰("no tail")}: 40
+//│ ------------------
+//│ case ls¹ of {C h³ t³ => t³ | N  => error⁰("no tail")}: 40 --->
+//│ 	[N]: 44
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ len₀(tail₀(error⁰("no tail")))
+//│ def len₀(x²) = 
+//│ 	case x² of {
+//│ 		C h² t² => (1 + len₀(t²))
+//│ 		| N  => 0}
+//│ def tail₀(ls²) = 
+//│ 	ls²
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ case error⁰("no tail") of {
+//│ 	C h² t² => (1 + len₀(t²))
+//│ 	| N  => 0}
+//│ <<<<<<< evaluate <<<<<<<
+//│ /!!!\ Uncaught error: java.lang.Exception: output different!
+//│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTestLumberhack.scala:80)
 //│ 	at: mlscript.DiffTests.rec$1(DiffTests.scala:367)
 //│ 	at: mlscript.DiffTests.$anonfun$new$3(DiffTests.scala:774)
 //│ 	at: org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
@@ -163,20 +630,5 @@ map (\x -> x + 1) $ map (\x -> x + x) (primId [1..100])
 //│ 	at: org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
 //│ 	at: org.scalatest.Transformer.apply(Transformer.scala:22)
 //│ 	at: org.scalatest.Transformer.apply(Transformer.scala:20)
-
-
-
-
-// :haskell
-// main = (print . sum . concat . queens) 10
-//   where
-//     queens :: Int -> [[Int]]
-//     queens 0 = [[]]
-//     queens m = [ p ++ [n] | p <- queens (m-1) , n <- [1..10], safe p n]
-//    
-//     safe : : [Int] -> Int -> Bool
-//     safe p n = and [ (j /= n) && (i+j /= m + n) && (i - j /= m - n) | (i, j) <- zip [1 ..] p]
-//       where
-//         m = length p + 1
-
-
+//│ 	at: org.scalatest.funsuite.AnyFunSuiteLike$$anon$1.apply(AnyFunSuiteLike.scala:226)
+//│ 	at: org.scalatest.TestSuite.withFixture(TestSuite.scala:196)

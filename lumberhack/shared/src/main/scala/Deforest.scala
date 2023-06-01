@@ -290,6 +290,8 @@ class Deforest(var debug: Boolean) {
             case boolOp if Deforest.lumberhackBoolBinOps(boolOp) => prodBoolOp(using noExprId)
             case _ => prodIntBinOp(using noExprId)
           }
+        else if primitive == "error" then
+          freshVar("_lh_rigid_error_var")(using noExprId)._1
         else
           NoProd()(using e.uid)
       }
@@ -433,7 +435,8 @@ class Deforest(var debug: Boolean) {
       cache += (c -> (c -> numOfTypeCtor))
 
       (prod.s, cons.s) match
-        case (ProdVar(v, _), ConsVar(w, _)) if v === w => ()
+        case (ProdVar(v, pn), ConsVar(w, cn))
+          if v === w || pn == "_lh_rigid_error_var" || cn == "_lh_rigid_error_var" => ()
         case (NoProd(), NoCons()) => ()
         case (NoProd(), ConsFun(l, r)) =>
           given Int = numOfTypeCtor + 1
@@ -457,6 +460,8 @@ class Deforest(var debug: Boolean) {
             ctorDestinations += ctorType -> (ctorDestinations(ctorType) + cons.s)
           }
           args foreach { p => handle(p.addPath(prod.path), cons) }
+        case (pv@ProdVar(v, n), _) if n == "_lh_rigid_error_var" => ()
+        case (_, cv@ConsVar(v, n)) if n == "_lh_rigid_error_var" => ()
         case (pv@ProdVar(v, _), _) =>
           cons.s match {
             case dtor: Destruct if lowerBounds(v).isEmpty && dtor.euid != noExprId => dtorSources += dtor -> (dtorSources(dtor) + pv)
@@ -888,7 +893,7 @@ object CallTree {
 
 object Deforest {
   lazy val lumberhackKeywords: Set[String] =
-    (lumberhackIntFun ++ lumberhackIntBinOps ++ lumberhackBoolBinOps) + "primitive" + "primId"
+    (lumberhackIntFun ++ lumberhackIntBinOps ++ lumberhackBoolBinOps) + "primitive" + "primId" + "error"
   lazy val lumberhackIntFun: Set[String] = Set("add", "minus", "mult", "div") ++ lumberhackIntComparisonFun 
   lazy val lumberhackIntComparisonFun: Set[String] = Set("eq", "lt", "gt", "leq", "geq", "neq")
   lazy val lumberhackBinOps = lumberhackIntBinOps ++ lumberhackBoolBinOps

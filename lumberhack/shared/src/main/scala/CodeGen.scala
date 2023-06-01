@@ -46,7 +46,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
     // parser.setLanguage(Languages.ocaml())
     val tree = parser.parseString(program)
     val treeRootNode = tree.getRootNode()
-    output(treeRootNode.pp)
+    // output(treeRootNode.pp)
     // output(treeRootNode.getNodeString())
     fromHaskellToPrgm(treeRootNode)(using program)
   }
@@ -460,7 +460,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
 
   val supportedTopLevelHaskellNodeType = Set("top_splice", "function")
   def haskellBuiltinFunsList(using d: Deforest): Program = {
-    val haskellBuiltinFuns = Set("map", "filter", "foldl", "foldr", "zip", "head", "tail", "enumFromTo", "enumFromThenTo")
+    val haskellBuiltinFuns = Set("map", "filter", "foldl", "foldr", "zip", "head", "tail", "enumFromTo", "enumFromThenTo", "length")
     val builtins = """
 fun map(f, ls) = if ls is
   LH_C(h, t) then LH_C(f(h), map(f, t))
@@ -487,6 +487,9 @@ fun tail(ls) = if ls is
   LH_N then primitive
 fun enumFromTo(a, b) = if a <= b then LH_C(a, enumFromTo(a + 1, b)) else LH_N
 fun enumFromThenTo(a, t, b) = if a <= b then LH_C(a, enumFromThenTo(t, 2 * t - a, b)) else LH_N
+fun length(ls) = if ls is
+  LH_C(h, t) then 1 + length(t)
+  LH_N then 0
     """
     val builtinPrgms = {
       val lumberhackBuiltinFph = new FastParseHelpers(builtins)

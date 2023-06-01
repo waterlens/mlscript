@@ -166,7 +166,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
           child.getType() match {
             case "integer" => Const(IntLit(child.getSrcContent.toInt))
             case "string" => Const(StrLit(child.getSrcContent.drop(1).dropRight(1)))
-            // case "con_list" => 
+            case "con_list" => Ctor(Var(BuiltInTypes.ListNil.toLumberhackType), Nil)
           }
         }
         case "exp_infix" => {
@@ -178,6 +178,13 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
           }
           op.getSrcContent match {
             case "$" => Call(l.toExpr, r.toExpr)
+            case ":" => Ctor(Var(BuiltInTypes.ListCons.toLumberhackType), l.toExpr :: r.toExpr :: Nil)
+            case "." =>
+              val param = d.nextIdent(false, Var("_lh_funcomp_x"))
+              Function(
+                param,
+                Call(l.toExpr, Call(r.toExpr, Ref(param)))
+              )
             case op => Call(Call(Ref(ctx(op)), l.toExpr), r.toExpr)
           }
         }
@@ -198,13 +205,13 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
   }
 
   def mergeMatchPatterns(
-    vars: List[Ident], patList: List[(List[NestedPat], Node, Expr.Ctx)], elze: Option[Expr]
+    vars: List[Ident], patList: List[(List[NestedPat], Node, Expr.Ctx)], elze: Expr
   )(using
     ctx: Expr.Ctx, inDef: Option[Ident], d: Deforest, output: Str => Unit, prgmStr: Str
   ): Expr = {
     if vars.isEmpty then {
       if patList.isEmpty then
-        elze.get
+        elze
       else
         val h = patList.head
         assert(h._1.isEmpty)
@@ -229,7 +236,49 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
           })
         )}
         mergeMatchPatterns(vars.tail, newPats, elze)
-      } else if firstPatterns.forall(_.isInstanceOf[NestedPat.CtorPat]) then { // the ctor rule
+      } else if firstPatterns.forall(_.isInstanceOf[NestedPat.LitPat]) then {
+        // literal, similar to the ctor
+        val reorderedLits = {
+          var litsOrder: List[Lit] = Nil
+          val tempStore = scala.collection.mutable.Map.empty[Lit, List[(List[NestedPat], Node, Expr.Ctx)]]
+          patList.foreach { case (ps, n, matchCtx) =>
+            val litPat = ps.head.asInstanceOf[NestedPat.LitPat]
+            val lit = litPat.n
+            tempStore.updateWith(lit) {
+              case None =>
+                litsOrder = lit :: litsOrder
+                Some((ps, n, matchCtx) :: Nil)
+              case Some(value) => Some((ps, n, matchCtx) :: value)
+            }
+          }
+          litsOrder.reverse.map(l => tempStore(l).reverse)
+        }
+        Expr.Match(
+          Ref(vars.head),
+          (reorderedLits.map { sameLitPatList =>
+            assert(sameLitPatList.nonEmpty)
+            val sampleFirstLitPat = sameLitPatList.head._1.head.asInstanceOf[NestedPat.LitPat]
+            val currentLit = sampleFirstLitPat.n
+            val body = mergeMatchPatterns(
+              vars.tail,
+              sameLitPatList.map { case (litPatAndMore, n, matchCtx) =>
+                (litPatAndMore.tail, n, matchCtx)
+              },
+              elze
+            )
+            (
+              Var(currentLit match {
+                case IntLit(value) => s"$value"
+                case StrLit(value) => s"\"$value\""
+                case l => lastWords(s"unsupported: $l")
+              }),
+              Nil,
+              body
+            )
+          }) :+ (Var("_"), Nil, elze)
+        )
+      } else if firstPatterns.forall(_.isInstanceOf[NestedPat.CtorPat]) then {
+        // the ctor rule
         val reorderedCtors = {
           var ctorOrder: List[String] = Nil
           val tempStore = scala.collection.mutable.Map.empty[String, List[(List[NestedPat], Node, Expr.Ctx)]]
@@ -247,7 +296,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
         }
         Expr.Match(
           Ref(vars.head),
-          reorderedCtors.map { sameCtorPatList =>
+          (reorderedCtors.map { sameCtorPatList =>
             assert(sameCtorPatList.nonEmpty)
             val sampleFirstCtorPat = sameCtorPatList.head._1.head.asInstanceOf[NestedPat.CtorPat]
             val currentCtor = sampleFirstCtorPat.c
@@ -267,14 +316,72 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
               newPatParams,
               body
             )
-          }
+          }) :+ (Var("_"), Nil, elze)
         )
-      } else if firstPatterns.forall(!_.isInstanceOf[NestedPat.LitPat]) then { // the mix rule: ctor, var, wildcards can exists at the same time
-        lastWords(s"unsupported: $firstPatterns")
-      } else if firstPatterns.forall(!_.isInstanceOf[NestedPat.CtorPat]) then { // only consists of var, wildcards or lit patterns
-        lastWords(s"unsupported: $firstPatterns")
+      } else if firstPatterns.forall(!_.isInstanceOf[NestedPat.LitPat]) then {
+        // the mix of ctors, vars or wildcards
+        val groupedPats = {
+          var prev = patList.head._1.head
+          var res: List[List[(List[NestedPat], Node, Expr.Ctx)]] = (patList.head :: Nil) :: Nil
+          patList.tail.foreach { p =>
+            if (
+              (p._1.head.isInstanceOf[NestedPat.CtorPat] && prev.isInstanceOf[NestedPat.CtorPat])
+              || (
+                (p._1.head.isInstanceOf[NestedPat.IdPat] || p._1.head.isInstanceOf[NestedPat.WildcardPat.type])
+                && (prev.isInstanceOf[NestedPat.IdPat] || prev.isInstanceOf[NestedPat.WildcardPat.type])
+              )
+            ) then {
+              prev = p._1.head
+              res = (p :: res.head) :: res.tail
+            } else {
+              res = (p :: Nil) :: res
+            }
+          }
+          res.map(_.reverse).reverse
+        }
+        groupedPats.foldRight(elze) { case (patGroup, accElse) =>
+          mergeMatchPatterns(
+            vars,
+            patGroup,
+            accElse
+          )
+        }
+        // lastWords(s"unsupported: $firstPatterns")
+      } else if firstPatterns.forall(!_.isInstanceOf[NestedPat.CtorPat]) then {
+        // the mix of literals, vars or wildcards
+        val groupedPats = {
+          // grouped such that the original order is preserved, and all the members of each group
+          // either start with either the same literal pattern or, idpattern or wildcard pattern
+          var prev = patList.head._1.head
+          var res: List[List[(List[NestedPat], Node, Expr.Ctx)]] = (patList.head :: Nil) :: Nil
+          patList.tail.foreach { p =>
+            if (
+              (p._1.head.isInstanceOf[NestedPat.LitPat] && prev.isInstanceOf[NestedPat.LitPat])
+              || (
+                (p._1.head.isInstanceOf[NestedPat.IdPat] || p._1.head.isInstanceOf[NestedPat.WildcardPat.type])
+                && (prev.isInstanceOf[NestedPat.IdPat] || prev.isInstanceOf[NestedPat.WildcardPat.type])
+              )
+            ) then {
+              prev = p._1.head
+              res = (p :: res.head) :: res.tail
+            }
+            else {
+              res = (p :: Nil) :: res
+            }
+          }
+          res.map(_.reverse).reverse
+        }
+        groupedPats.foldRight(elze) { case (patGroup, accElse) =>
+          mergeMatchPatterns(
+            vars,
+            patGroup,
+            accElse
+          )
+        }
       } else {
-        lastWords(s"unsupported (mostly will also be a type error to mix ctor patterns and literal patterns): $firstPatterns")
+        lastWords(
+          s"unsupported (mostly will also be a type error to mix ctor patterns and literal patterns): $firstPatterns"
+        )
       }
     }
   }
@@ -434,7 +541,14 @@ fun enumFromThenTo(a, t, b) = if a <= b then LH_C(a, enumFromThenTo(t, 2 * t - a
         assert(numOfArgs.size == 1)
         (1 to numOfArgs.head).map(idx => d.nextIdent(false, Var(s"_lh_${name}_arg$idx")))
       }
-      val body = mergeMatchPatterns(funArgNames.toList, patsAndBodies.toList, None)(using initCtx, Some(funName))
+      val body = mergeMatchPatterns(
+        funArgNames.toList,
+        patsAndBodies.toList,
+        {
+          given Option[Ident] = Some(funName)
+          Expr.Call(Expr.Ref(initCtx("error")), Expr.Const(StrLit("match error")))
+        }
+      )(using initCtx, Some(funName))
       val funDef = funArgNames.foldRight(body) { case (arg, acc) => Expr.Function(arg, acc)(using d, Some(funName)) }
       Left(ProgDef(funName, funDef))
     }
@@ -516,6 +630,8 @@ object HaskellGen extends CodeGen {
   def transformMatchArmToHaskellType(dtor: Var, params: List[Ident]): Document = dtor.name -> params match {
     case "LH_C" -> (h :: t :: Nil) => "(" <:> transform_id(h) <:> " : " <:> transform_id(t) <:> ") -> "
     case "LH_N" -> Nil => "[] -> "
+    case "_" -> (idPat :: Nil) => transform_id(idPat) <:> " -> "
+    case "_" -> Nil => "_ -> "
     case _ => dtor.name <:> " " <:> Lined(params.map(arg => transform_id(arg)) :+ Raw("-> "), " ")
   }
 
@@ -527,6 +643,7 @@ object HaskellGen extends CodeGen {
   // one-line, indentation is hard
   override def rec(e: Expr): Document = e match {
     case Const(lit) => Raw(lit.idStr)
+    case Ref(id) if Deforest.lumberhackKeywords(id.tree.name) => id.tree.name
     case Ref(id) => transform_id(id)
     case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackBinOps(op) =>
       "(" <:> rec(fst) <:> s" $op " <:> rec(snd) <:> ")"

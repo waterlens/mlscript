@@ -992,3 +992,97 @@ f(C(1, N), 0)
 //│ 		N  => y²
 //│ 		| _  => (y² + 1)}
 //│ <<<<<<< after fusion <<<<<<<
+
+
+// NOTE: after registering wildcard and id match, no type error
+fun zip(xs, ys) = if xs is
+  N then N
+  _ then if ys is
+    N then N
+    _ then if xs is
+      C(xs, xt) then if ys is
+        C(ys, yt) then C(P2(xs, ys), zip(xt, yt))
+        _ then N
+      _ then N
+zip(C(1,N), C(2,N))
+//│ |#fun| |zip|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|N| |#then| |N|↵|_| |#then| |#if| |ys| |is|→|N| |#then| |N|↵|_| |#then| |#if| |xs| |is|→|C|(|xs|,| |xt|)| |#then| |#if| |ys| |is|→|C|(|ys|,| |yt|)| |#then| |C|(|P2|(|xs|,| |ys|)|,| |zip|(|xt|,| |yt|)|)|↵|_| |#then| |N|←|↵|_| |#then| |N|←|←|←|↵|zip|(|C|(|1|,|N|)|,| |C|(|2|,|N|)|)|
+//│ Parsed: {fun zip = xs, ys, => if xs is ‹(N) then N; (_) then if ys is ‹(N) then N; (_) then if xs is ‹(C (xs, xt,)) then if ys is ‹(C (ys, yt,)) then C (P2 (xs, ys,), zip (xt, yt,),); (_) then N›; (_) then N›››; zip (C (1, N,), C (2, N,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ zip^24([C 1 [N]], [C 2 [N]])
+//│ def zip(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => [N]
+//│ 	| _  => case ys⁰ of {
+//│ 		N  => [N]
+//│ 		| _  => case xs⁰ of {
+//│ 			C xs¹ xt⁰ => case ys⁰ of {
+//│ 				C ys¹ yt⁰ => [C [P2 xs¹ ys¹] zip^10(xt⁰, yt⁰)]
+//│ 				| _  => [N]}
+//│ 			| _  => [N]}}}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [zip^24]
+//│ 	[zip^24 · zip^10] ---> [zip^24] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ zip₀([C 1 [N]], [C 2 [N]])
+//│ def zip₀(xs², ys²) = 
+//│ 	case xs² of {
+//│ 		N  => [N]
+//│ 		| _  => case ys² of {
+//│ 			N  => [N]
+//│ 			| _  => case xs² of {
+//│ 				C xs³ xt¹ => case ys² of {
+//│ 					C ys³ yt¹ => [C [P2 xs³ ys³] zip₀(xt¹, yt¹)]
+//│ 					| _  => [N]}
+//│ 				| _  => [N]}}}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [N]: 58 --->
+//│ 	case xs² of {C xs³ xt¹ => case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip₀(xt¹, yt¹)] | _  => [N]} | _  => [N]}: 51
+//│ 	case xs² of {N  => [N] | _  => case ys² of {N  => [N] | _  => case xs² of {C xs³ xt¹ => case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip₀(xt¹, yt¹)] | _  => [N]} | _  => [N]}}}: 53
+//│ [C 1 [N]]: 59 --->
+//│ 	case xs² of {C xs³ xt¹ => case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip₀(xt¹, yt¹)] | _  => [N]} | _  => [N]}: 51
+//│ 	case xs² of {N  => [N] | _  => case ys² of {N  => [N] | _  => case xs² of {C xs³ xt¹ => case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip₀(xt¹, yt¹)] | _  => [N]} | _  => [N]}}}: 53
+//│ [N]: 62 --->
+//│ 	case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip₀(xt¹, yt¹)] | _  => [N]}: 49
+//│ 	case ys² of {N  => [N] | _  => case xs² of {C xs³ xt¹ => case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip₀(xt¹, yt¹)] | _  => [N]} | _  => [N]}}: 52
+//│ [C 2 [N]]: 63 --->
+//│ 	case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip₀(xt¹, yt¹)] | _  => [N]}: 49
+//│ 	case ys² of {N  => [N] | _  => case xs² of {C xs³ xt¹ => case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip₀(xt¹, yt¹)] | _  => [N]} | _  => [N]}}: 52
+//│ ------------------
+//│ case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip₀(xt¹, yt¹)] | _  => [N]}: 49 --->
+//│ 	[N]: 62
+//│ 	[C 2 [N]]: 63
+//│ case xs² of {C xs³ xt¹ => case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip₀(xt¹, yt¹)] | _  => [N]} | _  => [N]}: 51 --->
+//│ 	[N]: 58
+//│ 	[C 1 [N]]: 59
+//│ case ys² of {N  => [N] | _  => case xs² of {C xs³ xt¹ => case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip₀(xt¹, yt¹)] | _  => [N]} | _  => [N]}}: 52 --->
+//│ 	[N]: 62
+//│ 	[C 2 [N]]: 63
+//│ case xs² of {N  => [N] | _  => case ys² of {N  => [N] | _  => case xs² of {C xs³ xt¹ => case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip₀(xt¹, yt¹)] | _  => [N]} | _  => [N]}}}: 53 --->
+//│ 	[N]: 58
+//│ 	[C 1 [N]]: 59
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ zip₀([C 1 [N]], [C 2 [N]])
+//│ def zip₀(xs⁴, ys⁴) = 
+//│ 	case xs⁴ of {
+//│ 		N  => [N]
+//│ 		| _  => case ys⁴ of {
+//│ 			N  => [N]
+//│ 			| _  => case xs⁴ of {
+//│ 				C xs³ xt¹ => case ys⁴ of {
+//│ 					C ys³ yt¹ => [C [P2 xs³ ys³] zip₀(xt¹, yt¹)]
+//│ 					| _  => [N]}
+//│ 				| _  => [N]}}}
+//│ <<<<<<< after fusion <<<<<<<

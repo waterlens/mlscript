@@ -536,6 +536,12 @@ class Deforest(var debug: Boolean) {
             }
           }
         case (Sum(ctors), NoCons()) => ctors.foreach(handle(_, cons))
+        // allow function to be the scrutinee, haskell and ocaml also allows it
+        case (f: ProdFun, Destruct(ds)) if ds.find(_.ctor.name == "_").isDefined =>
+          val dtor = ds.find(_.ctor.name == "_").get
+          (prod :: Nil) lazyZip dtor.argCons foreach { case (a, c) =>
+            handle(a.addPath(prod.path), c.addPath(cons.path))
+          }
         case _ => lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
     }()
     

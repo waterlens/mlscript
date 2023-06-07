@@ -231,9 +231,18 @@ class FusionStrategy(d: Deforest) {
     }
     removeCtor(afterRemoveMultipleMatch._1, afterRemoveMultipleMatch._2, toRmCtor.toSet)
   }
+
+  val afterRemoveIdpatternAndWildcardPattern = {
+    val toRmCtor = afterRemoveRecursiveStrategies._1.filterNot { case (ctor, dtors) =>
+      assert(dtors.size == 1)
+      dtors.forall(ds => ds.asInstanceOf[ConsStratEnum.Destruct].destrs.exists(d => d.ctor == ctor.ctor))
+    }.keys
+    removeCtor(afterRemoveRecursiveStrategies._1, afterRemoveRecursiveStrategies._2, toRmCtor.toSet)
+  }
   
+  val finallyFilteredStrategies = afterRemoveIdpatternAndWildcardPattern
   val scopeExtrusionInfo: Map[ExprId, List[Ident]] = {
-    // val dtorExprs = afterRemoveRecursiveStrategies._2.keys.flatMap { de =>
+    // val dtorExprs = finallyFilteredStrategies._2.keys.flatMap { de =>
     //   val expr = d.exprs(de.euid).asInstanceOf[Expr.Match]
     //   expr.inDef.map(expr -> d.prgm.get.defAndExpr._1(_))
     // }
@@ -242,7 +251,7 @@ class FusionStrategy(d: Deforest) {
     //     body.outOfScopeIds(using (ids ++ d.prgm.get.defAndExpr._1.keys).toSet)
     //   }
     // }.toMap
-    afterRemoveRecursiveStrategies._2.keys.map { de =>
+    finallyFilteredStrategies._2.keys.map { de =>
       val expr = d.exprs(de.euid).asInstanceOf[Expr.Match]
       expr.uid -> (expr.arms.flatMap { (_, ids, body) =>
         body.outOfScopeIds(using (ids ++ d.prgm.get.defAndExpr._1.keys).toSet)
@@ -306,65 +315,34 @@ trait ExprRewrite { this: Expr =>
       case Ref(id) => Ref(ctx.getOrElse(id, id))
       case Match(scrut, arms) => {
         if fusionMatch.valuesIterator.contains(this.uid) then {
-          val allMatchCtor = fusionMatch.filter(_._2 == this.uid).keySet.map(newd.exprs(_).asInstanceOf[Ctor].name)
-          if allMatchCtor.forall(c => newd.exprs(this.uid).asInstanceOf[Match].arms.find(_._1 == c).nonEmpty) then {
-            val extrudedIds = scopeExtrusionInfo(this.uid)
-            // val extrudedIds = scopeExtrusionInfo.getOrElse(this.uid, Nil)
-            extrudedIds.foldLeft(scrut.rewriteFusion){
-              (acc, id) => Call(acc, Ref(ctx.getOrElse(id, id)))
-            }
-            // scrut.rewriteFusion
-          } else {
-            Match(scrut.rewriteFusion, arms.map{(n, args, body) => (n, args, body.rewriteFusion)})  
+          val extrudedIds = scopeExtrusionInfo(this.uid)
+          // val extrudedIds = scopeExtrusionInfo.getOrElse(this.uid, Nil)
+          extrudedIds.foldLeft(scrut.rewriteFusion){
+            (acc, id) => Call(acc, Ref(ctx.getOrElse(id, id)))
           }
         } else {
           Match(scrut.rewriteFusion, arms.map{(n, args, body) => (n, args, body.rewriteFusion)})
         }
       }
       case Ctor(name, args) => fusionMatch.get(this.uid).map { matchId =>
-        newd.exprs(matchId).asInstanceOf[Match].arms.find(_._1 == name) match {
-          case Some(matchArm) => {
-            val newIds = matchArm._2.map(i => i -> i.copyToNewDeforest)
-            val newCtx = ctx ++ newIds.toMap
-              
-            val extrudedIds = scopeExtrusionInfo(matchId).map(original =>
-              newCtx.getOrElse(original, original) -> Ref(original.copyToNewDeforest)
-              // original -> Ref(original.copyToNewDeforest)
-            ).reverse
-            // val extrudedIds =
-            //   scopeExtrusionInfo.getOrElse(matchId, Nil).map(original => original -> Ref(original.copyToNewDeforest)).reverse
-            val innerAfterExtrusionHandling =
-              matchArm._3.rewriteFusion(using newCtx).subst(using extrudedIds.toMap)
-            val inner = extrudedIds.foldLeft(innerAfterExtrusionHandling){ (acc, newId) =>
-              Function(newId._2.id, acc)
-            }
-            (newIds zip args).foldRight(inner){(t_i, acc) => 
-              LetIn(t_i._1._2, t_i._2.rewriteFusion, acc)
-            }
-          }
-          case None => Ctor(name, args.map(_.rewriteFusion))
-        }
-        // val matchArm = newd.exprs(matchId).asInstanceOf[Match].arms.find(_._1 == name).get
-        // val newIds = matchArm._2.map(i => i -> i.copyToNewDeforest)
-        // val newCtx = ctx ++ newIds.toMap
+        val matchArm = newd.exprs(matchId).asInstanceOf[Match].arms.find(_._1 == name).get
+        val newIds = matchArm._2.map(i => i -> i.copyToNewDeforest)
+        val newCtx = ctx ++ newIds.toMap
         
-        // val extrudedIds = scopeExtrusionInfo(matchId).map(original =>
-        //   newCtx.getOrElse(original, original) -> Ref(original.copyToNewDeforest)
-        //   // original -> Ref(original.copyToNewDeforest)
-        // ).reverse
-        // // val extrudedIds =
-        // //   scopeExtrusionInfo.getOrElse(matchId, Nil).map(original => original -> Ref(original.copyToNewDeforest)).reverse
-        // val innerAfterExtrusionHandling =
-        //   matchArm._3.rewriteFusion(using newCtx).subst(using extrudedIds.toMap)
-        // val inner = extrudedIds.foldLeft(innerAfterExtrusionHandling){ (acc, newId) =>
-        //   Function(newId._2.id, acc)
-        // }
-        // (newIds zip args).foldRight(inner){(t_i, acc) => 
-        //   LetIn(t_i._1._2, t_i._2.rewriteFusion, acc)
-        // }
-        // (newIds zip args).foldRight(matchArm._3.rewriteFusion(using newCtx)){(t_i, acc) => 
-        //   LetIn(t_i._1, t_i._2.rewriteFusion, acc)
-        // }
+        val extrudedIds = scopeExtrusionInfo(matchId).map(original =>
+          newCtx.getOrElse(original, original) -> Ref(original.copyToNewDeforest)
+          // original -> Ref(original.copyToNewDeforest)
+        ).reverse
+        // val extrudedIds =
+        //   scopeExtrusionInfo.getOrElse(matchId, Nil).map(original => original -> Ref(original.copyToNewDeforest)).reverse
+        val innerAfterExtrusionHandling =
+          matchArm._3.rewriteFusion(using newCtx).subst(using extrudedIds.toMap)
+        val inner = extrudedIds.foldLeft(innerAfterExtrusionHandling){ (acc, newId) =>
+          Function(newId._2.id, acc)
+        }
+        (newIds zip args).foldRight(inner){(t_i, acc) => 
+          LetIn(t_i._1._2, t_i._2.rewriteFusion, acc)
+        }
       }.orElse(Some(Ctor(name, args.map(_.rewriteFusion)))).get
     }
   }
@@ -473,7 +451,7 @@ trait ProgramRewrite { this: Program =>
     // given Map[ExprId, ExprId] = d.fusionMatch.map { (p, cs) => p -> cs.head }.toMap
     val fusionStrategy = FusionStrategy(d)
     given Deforest = d
-    given Map[ExprId, ExprId] = fusionStrategy.afterRemoveRecursiveStrategies._1.map { (ctor, dtors) =>
+    given Map[ExprId, ExprId] = fusionStrategy.finallyFilteredStrategies._1.map { (ctor, dtors) =>
       assert(dtors.size == 1 && dtors.head.isInstanceOf[Destruct])
       ctor.euid -> dtors.head.euid
     }

@@ -52,7 +52,11 @@ class DiffTestLumberhack extends DiffTests {
       val p = FromHaskell(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output)
       p.d(p) // duplicate multiple usages here to enbale polymorphism
       val initCallTree = CallTree.callTreeUsingSplitKnot(p.d)
-      p.expandedWithNewDeforest(initCallTree)
+      val res = p.expandedWithNewDeforest(initCallTree)
+      // output(">>>>>>>>>>>>>>>>> init haskell gen >>>>>>>>>>>>>>>")
+      // output(HaskellGen(res._1))
+      // output(">>>>>>>>>>>>>>>>> init haskell gen >>>>>>>>>>>>>>>")
+      res
     else
       val p = Program.fromPgrm(Pgrm(filteredEntities))(using originalD)
       (p, p.d)
@@ -249,9 +253,9 @@ class DiffTestLumberhack extends DiffTests {
     output("<<<<<<< fusion matches <<<<<<<")
 
     output("\n>>>>>>> new fusion strategy >>>>>>>")
-    output(fusionStrategy.ppCtorMap(fusionStrategy.afterRemoveRecursiveStrategies._1))
+    output(fusionStrategy.ppCtorMap(fusionStrategy.finallyFilteredStrategies._1))
     output("------------------")
-    output(fusionStrategy.ppDtorMap(fusionStrategy.afterRemoveRecursiveStrategies._2))
+    output(fusionStrategy.ppDtorMap(fusionStrategy.finallyFilteredStrategies._2))
     // output(fusionStrategy.ppCtorMap(fusionStrategy.afterRemoveMultipleMatch._1))
     // output("------------------")
     // output(fusionStrategy.ppDtorMap(fusionStrategy.afterRemoveMultipleMatch._2))
@@ -286,7 +290,7 @@ class DiffTestLumberhack extends DiffTests {
     }
     newD(newP)
     newD.resolveConstraints
-    (newP, newD, fusionStrategy.afterRemoveRecursiveStrategies._1.isEmpty, evaluatedExpr) // if is empty, stop the iterative process
+    (newP, newD, fusionStrategy.finallyFilteredStrategies._1.isEmpty, evaluatedExpr) // if is empty, stop the iterative process
   }
 }
 

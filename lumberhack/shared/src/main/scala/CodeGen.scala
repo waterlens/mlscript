@@ -152,7 +152,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
         case "exp_apply" => {
           // must have two or more childs
           val res = n.getAllChilds.toList match {
-            case ctor :: rest if ctor.getType() == "constructor" =>
+            case ctor :: rest if ctor.getType() == "exp_name" && ctor.getChild(0).getType() == "constructor" =>
               Ctor(Var(ctor.getSrcContent), rest.map(_.toExpr))
             case f :: a :: rest => rest.foldLeft(Call(f.toExpr, a.toExpr))((e, n) => Call(e, n.toExpr))
             case _ => lastWords("cannot be single")

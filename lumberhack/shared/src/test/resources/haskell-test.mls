@@ -58,6 +58,7 @@ f (3, 4)
 //│ f₀₀ _lh_f_arg1⁰ = _lh_f_arg1⁰
 //│ <<<<<<<<<< Generated Haskell Code <<<<<<<<<<
 
+// WRONG: not well-typed in haskell
 :haskell
 [ (a, b) | b <- [1, 4, 10], a <- [2, 3, 5], a < b ]
 //│ ||
@@ -635,7 +636,7 @@ nsoln 3
 
 
 
-// NOTE: type error in haskell?
+// WRONG: type error in haskell?
 :haskell
 [a | (Just a) <- [Nothing, Just 3]]
 //│ ||
@@ -782,6 +783,7 @@ nsoln 3
 //│ (let _lh_listcomp_fun⁰ = (\_lh_listcomp_fun_para⁰ -> (_lh_listcomp_fun_para⁰ _lh_listcomp_fun⁰)) in (_lh_listcomp_fun⁰ (let _lh_listcomp_fun_ls_h⁰ = (Nothing ) in (let _lh_listcomp_fun_ls_t⁰ = (let _lh_listcomp_fun_ls_h¹ = (let _lh_Just_0⁰ = 3 in (\_lh_listcomp_fun_ls_t¹ _lh_listcomp_fun¹ -> (_lh_Just_0⁰:(_lh_listcomp_fun¹ _lh_listcomp_fun_ls_t¹)))) in (let _lh_listcomp_fun_ls_t² = (\_lh_listcomp_fun² -> []) in (\_lh_listcomp_fun³ -> ((_lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t²) _lh_listcomp_fun³)))) in (\_lh_listcomp_fun⁴ -> (case _lh_listcomp_fun_ls_h⁰ of {Just _lh_Just_0¹ -> (_lh_Just_0¹:(_lh_listcomp_fun⁴ _lh_listcomp_fun_ls_t⁰)); _ -> (_lh_listcomp_fun⁴ _lh_listcomp_fun_ls_t⁰)}))))))
 //│ <<<<<<<<<< Generated Haskell Code <<<<<<<<<<
 
+// WRONG: not well-typed in haskell
 :haskell
 [a | a <- [3]]
 //│ ||
@@ -844,63 +846,3 @@ nsoln 3
 //│ (let _lh_listcomp_fun⁰ = (\_lh_listcomp_fun_para⁰ -> (_lh_listcomp_fun_para⁰ _lh_listcomp_fun⁰)) in (_lh_listcomp_fun⁰ (let _lh_listcomp_fun_ls_h⁰ = 3 in (let _lh_listcomp_fun_ls_t⁰ = (\_lh_listcomp_fun¹ -> []) in (\_lh_listcomp_fun² -> (_lh_listcomp_fun_ls_h⁰:(_lh_listcomp_fun² _lh_listcomp_fun_ls_t⁰)))))))
 //│ <<<<<<<<<< Generated Haskell Code <<<<<<<<<<
 
-
-fun f(x) =
-  (
-    if x is
-      C(h, t) then ff => C(h, ff(t))
-      N then ff => N
-  )(f)
-f(C(3, N))
-//│ |#fun| |f|(|x|)| |#=|→|(|→|#if| |x| |is|→|C|(|h|,| |t|)| |#then| |ff| |=>| |C|(|h|,| |ff|(|t|)|)|↵|N| |#then| |ff| |=>| |N|←|←|↵|)|(|f|)|←|↵|f|(|C|(|3|,| |N|)|)|
-//│ Parsed: {fun f = x, => {'(' if x is ‹(C (h, t,)) then ff, => C (h, ff (t,),); (N) then ff, => N›, ')' (f,)}; f (C (3, N,),)}
-//│ >>>>>>>>>> Original >>>>>>>>>>
-//│ f^14([C 3 [N]])
-//│ def f(x⁰) = case x⁰ of {
-//│ 	C h⁰ t⁰ => (fun ff⁰ -> [C h⁰ ff⁰(t⁰)])
-//│ 	| N  => (fun ff¹ -> [N])}(f^11)
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^14]
-//│ 	[f^14 · f^11] ---> [f^14] (only one)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f₀([C 3 [N]])
-//│ def f₀(x¹) = 
-//│ 	case x¹ of {
-//│ 		C h¹ t¹ => (fun ff² -> [C h¹ ff²(t¹)])
-//│ 		| N  => (fun ff³ -> [N])}(f₀)
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 34 --->
-//│ 	case x¹ of {C h¹ t¹ => (fun ff² -> [C h¹ ff²(t¹)]) | N  => (fun ff³ -> [N])}: 28
-//│ [C 3 [N]]: 35 --->
-//│ 	case x¹ of {C h¹ t¹ => (fun ff² -> [C h¹ ff²(t¹)]) | N  => (fun ff³ -> [N])}: 28
-//│ ------------------
-//│ case x¹ of {C h¹ t¹ => (fun ff² -> [C h¹ ff²(t¹)]) | N  => (fun ff³ -> [N])}: 28 --->
-//│ 	[N]: 34
-//│ 	[C 3 [N]]: 35
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ [N]: 34 --->
-//│ 	case x¹ of {C h¹ t¹ => (fun ff² -> [C h¹ ff²(t¹)]) | N  => (fun ff³ -> [N])}: 28
-//│ [C 3 [N]]: 35 --->
-//│ 	case x¹ of {C h¹ t¹ => (fun ff² -> [C h¹ ff²(t¹)]) | N  => (fun ff³ -> [N])}: 28
-//│ ------------------
-//│ case x¹ of {C h¹ t¹ => (fun ff² -> [C h¹ ff²(t¹)]) | N  => (fun ff³ -> [N])}: 28 --->
-//│ 	[N]: 34
-//│ 	[C 3 [N]]: 35
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ f₀(
-//│ 	let h² = 3
-//│ 	in let t² = (fun ff⁵ -> [N])
-//│ 	in (fun ff⁴ -> [C h² ff⁴(t²)]))
-//│ def f₀(x²) = 
-//│ 	x²(f₀)
-//│ <<<<<<< after fusion <<<<<<<

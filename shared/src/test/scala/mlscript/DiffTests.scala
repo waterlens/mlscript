@@ -39,7 +39,7 @@ abstract class ModeType {
   def expectCodeGenErrors: Bool
   def showRepl: Bool
   def allowEscape: Bool
-  def isHaskell: Bool
+  def lhIsHaskell: Bool
 }
 
 class DiffTests
@@ -153,7 +153,7 @@ class DiffTests
       showRepl: Bool = false,
       allowEscape: Bool = false,
       // noProvs: Bool = false,
-      isHaskell: Bool = false,
+      lhIsHaskell: Bool = false,
     ) extends ModeType {
       def isDebugging: Bool = dbg || dbgSimplif
     }
@@ -208,7 +208,7 @@ class DiffTests
           case "re" => mode.copy(expectRuntimeErrors = true)
           case "ShowRepl" => mode.copy(showRepl = true)
           case "escape" => mode.copy(allowEscape = true)
-          case "haskell" => mode.copy(isHaskell = true)
+          case "lhhaskell" => mode.copy(lhIsHaskell = true)
           case _ =>
             failures += allLines.size - lines.size
             output("/!\\ Unrecognized option " + line)
@@ -351,7 +351,7 @@ class DiffTests
             val origin = Origin(testName, globalStartLineNum, fph)
             val lexer = new NewLexer(origin, raise, dbg = mode.dbgParsing)
             
-            val tokens = if (!mode.isHaskell) { lexer.bracketedTokens } else { Nil }
+            val tokens = if (!mode.lhIsHaskell) { lexer.bracketedTokens } else { Nil }
             
             if (mode.showParse || mode.dbgParsing || parseOnly)
               output(NewLexer.printTokens(tokens))

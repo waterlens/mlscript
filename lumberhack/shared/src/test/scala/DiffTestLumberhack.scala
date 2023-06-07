@@ -47,7 +47,7 @@ class DiffTestLumberhack extends DiffTests {
       )
       case l => (false, false, l)
     }
-    val (originalProgram, newD) = if mode.isHaskell then
+    val (originalProgram, newD) = if mode.lhIsHaskell then
       // evaluate = true
       val p = FromHaskell(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output)
       p.d(p) // duplicate multiple usages here to enbale polymorphism
@@ -86,7 +86,7 @@ class DiffTestLumberhack extends DiffTests {
         ) then throw Exception("output different!")
       }
 
-      if mode.isHaskell then
+      if mode.lhIsHaskell then
         output("\n>>>>>>>>>> Generated Haskell Code >>>>>>>>>>")
         output(HaskellGen(iterativeProcessRes._1))
         output("<<<<<<<<<< Generated Haskell Code <<<<<<<<<<")

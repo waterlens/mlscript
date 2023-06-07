@@ -38,6 +38,20 @@ object BuiltInTypes {
   }
 }
 
+trait NodeExtension {
+  extension (n: Node) {
+    def getSrcContent(using prgmStr: Str): Str = prgmStr.slice(n.getStartByte(), n.getEndByte())
+    def getAllChilds = (0 until n.getChildCount()).map(n.getChild(_))
+    def pp: Str = {
+       s"\"${n.getType()}\" (" + n.getAllChilds.map(c => c.pp).mkString("\n").linesIterator.map("\n\t" + _).mkString + ")"
+    }
+    def toPattern(using prgmStr: Str): NestedPat
+  }
+}
+trait ToExprable {
+  def toExpr(using ctx: Expr.Ctx, inDef: Option[Ident], d: Deforest, output: Str => Unit, prgmStr: Str): Expr
+}
+
 // NOTE: "/Users/<name>/Library/Java/Extensions/libjava-tree-sitter-ocaml-haskell.dylib" should exist
 object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
   def apply(program: Str)(using d: Deforest, output: Str => Unit): Program = {
@@ -50,15 +64,8 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
     // output(treeRootNode.getNodeString())
     fromHaskellToPrgm(treeRootNode)(using program)
   }
-  
-  extension (n: Node) {
-    def getSrcContent(using prgmStr: Str): Str = prgmStr.slice(n.getStartByte(), n.getEndByte())
-    def getAllChilds = (0 until n.getChildCount()).map(n.getChild(_))
-    def pp: Str = {
-       s"\"${n.getType()}\" (" + n.getAllChilds.map(c => c.pp).mkString("\n").linesIterator.map("\n\t" + _).mkString + ")"
-    }
-
-    def toPattern(using prgmStr: Str): NestedPat = n.getType() match {
+  given NodeExtension with {
+    extension (n: Node) override def toPattern(using prgmStr: Str): NestedPat = n.getType() match {
       case "pat_as" => ???
       case "pat_irrefutable" => ???
       case "pat_negation" => ???
@@ -105,9 +112,10 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
       }
       case "pat_wildcard" => NestedPat.WildcardPat
     }
-
-    def toExpr(using ctx: Expr.Ctx, inDef: Option[Ident], d: Deforest, output: Str => Unit, prgmStr: Str): Expr = {
-      n.getType() match {
+  }
+  given node2ToExprableHs: Conversion[Node, ToExprable] with {
+    override def apply(n: Node): ToExprable = new ToExprable {
+      override def toExpr(using ctx: Ctx, inDef: Option[Ident], d: Deforest, output: Str => Unit, prgmStr: Str): Expr = n.getType() match {
         case "ERROR" => lastWords("haskell parse error")
         case "exp_arithmetic_sequence" => {
           val args = (1 until n.getChildCount() by 2).map(i => n.getChild(i).toExpr)
@@ -205,7 +213,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
   }
 
   def mergeMatchPatterns(
-    vars: List[Ident], patList: List[(List[NestedPat], Node, Expr.Ctx)], elze: Expr
+    vars: List[Ident], patList: List[(List[NestedPat], ToExprable, Expr.Ctx)], elze: Expr
   )(using
     ctx: Expr.Ctx, inDef: Option[Ident], d: Deforest, output: Str => Unit, prgmStr: Str
   ): Expr = {
@@ -240,7 +248,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
         // literal, similar to the ctor
         val reorderedLits = {
           var litsOrder: List[Lit] = Nil
-          val tempStore = scala.collection.mutable.Map.empty[Lit, List[(List[NestedPat], Node, Expr.Ctx)]]
+          val tempStore = scala.collection.mutable.Map.empty[Lit, List[(List[NestedPat], ToExprable, Expr.Ctx)]]
           patList.foreach { case (ps, n, matchCtx) =>
             val litPat = ps.head.asInstanceOf[NestedPat.LitPat]
             val lit = litPat.n
@@ -281,7 +289,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
         // the ctor rule
         val reorderedCtors = {
           var ctorOrder: List[String] = Nil
-          val tempStore = scala.collection.mutable.Map.empty[String, List[(List[NestedPat], Node, Expr.Ctx)]]
+          val tempStore = scala.collection.mutable.Map.empty[String, List[(List[NestedPat], ToExprable, Expr.Ctx)]]
           patList.foreach { case (ps, n, matchCtx) =>
             val ctorPat = ps.head.asInstanceOf[NestedPat.CtorPat]
             val ctorName = ctorPat.c
@@ -322,7 +330,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
         // the mix of ctors, vars or wildcards
         val groupedPats = {
           var prev = patList.head._1.head
-          var res: List[List[(List[NestedPat], Node, Expr.Ctx)]] = (patList.head :: Nil) :: Nil
+          var res: List[List[(List[NestedPat], ToExprable, Expr.Ctx)]] = (patList.head :: Nil) :: Nil
           patList.tail.foreach { p =>
             if (
               (p._1.head.isInstanceOf[NestedPat.CtorPat] && prev.isInstanceOf[NestedPat.CtorPat])
@@ -353,7 +361,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
           // grouped such that the original order is preserved, and all the members of each group
           // either start with either the same literal pattern or, idpattern or wildcard pattern
           var prev = patList.head._1.head
-          var res: List[List[(List[NestedPat], Node, Expr.Ctx)]] = (patList.head :: Nil) :: Nil
+          var res: List[List[(List[NestedPat], ToExprable, Expr.Ctx)]] = (patList.head :: Nil) :: Nil
           patList.tail.foreach { p =>
             if (
               (p._1.head.isInstanceOf[NestedPat.LitPat] && prev.isInstanceOf[NestedPat.LitPat])
@@ -413,28 +421,36 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
             (
               Var(BuiltInTypes.ListCons.toLumberhackType),
               recFunLsH :: recFunLsT :: Nil,
-              handleListComprehension(
-                elemGen,
-                quals.tail,
+              // handleListComprehension(
+              //   elemGen,
+              //   quals.tail,
+              //   Expr.Call(Ref(recFunName), Ref(recFunLsT)),
+              //   comprehCtx + (
+              //     pat.asInstanceOf[NestedPat.IdPat].n -> recFunLsH
+              //   )
+              // )
+              mergeMatchPatterns(
+                recFunLsH :: Nil,
+                (
+                  pat :: Nil,
+                  new ToExprable {
+                    override def toExpr(using
+                      ctx: Ctx,
+                      inDef: Option[Ident],
+                      d: Deforest,
+                      output: Str => Unit,
+                      prgmStr: Str
+                    ): Expr = handleListComprehension(
+                      elemGen,
+                      quals.tail,
+                      Expr.Call(Ref(recFunName), Ref(recFunLsT)),
+                      comprehCtx
+                    )
+                  },
+                  comprehCtx
+                ) :: Nil,
                 Expr.Call(Ref(recFunName), Ref(recFunLsT)),
-                comprehCtx + (
-                  pat.asInstanceOf[NestedPat.IdPat].n -> recFunLsH
-                )
               )
-              // mergeMatchPatterns(
-              //   recFunLsH :: Nil,
-              //   (
-              //     pat :: Nil,
-              //     handleListComprehension(
-              //       elemGen,
-              //       quals.tail,
-              //       Expr.Call(Ref(recFunName), Ref(recFunLsT)),
-              //       ???
-              //     ),
-              //     ???
-              //   ) :: Nil,
-              //   None, // FIXME:
-              // ) // FIXME:
             ) :: (
               Var(BuiltInTypes.ListNil.toLumberhackType),
               Nil,
@@ -532,10 +548,10 @@ fun length(ls) = if ls is
           case "patterns" => {
             val pats = patsOrEqNode.getAllChilds.map(_.toPattern)
             assert(n.getChild(2).getSrcContent == "=") // do not support guard equation for now
-            (pats.toList, n.getChild(3), Map.empty[String, Ident])
+            (pats.toList, node2ToExprableHs(n.getChild(3)), Map.empty[String, Ident])
           }
           case "=" => { // top level def without parameters
-            (Nil, n.getChild(2), Map.empty[String, Ident])
+            (Nil, node2ToExprableHs(n.getChild(2)), Map.empty[String, Ident])
           }
         }
       }
@@ -630,12 +646,18 @@ object HaskellGen extends CodeGen {
     }
   }
   
-  def transformMatchArmToHaskellType(dtor: Var, params: List[Ident]): Document = dtor.name -> params match {
-    case "LH_C" -> (h :: t :: Nil) => "(" <:> transform_id(h) <:> " : " <:> transform_id(t) <:> ") -> "
-    case "LH_N" -> Nil => "[] -> "
-    case "_" -> (idPat :: Nil) => transform_id(idPat) <:> " -> "
-    case "_" -> Nil => "_ -> "
-    case _ => dtor.name <:> " " <:> Lined(params.map(arg => transform_id(arg)) :+ Raw("-> "), " ")
+  def transformMatchArmToHaskellType(dtor: Var, params: List[Ident]): Document = {
+    BuiltInTypes.fromStr(dtor.name) -> params match {
+      case Some(BuiltInTypes.ListCons) -> (h :: t :: Nil) => "(" <:> transform_id(h) <:> " : " <:> transform_id(t) <:> ") -> "
+      case Some(BuiltInTypes.ListNil) -> Nil => "[] -> "
+      case Some(BuiltInTypes.Tuple(n)) -> fields => {
+        assert(fields.length == n)
+        "(" <:> Lined(fields.map(f => transform_id(f)), ", ") <:> ") -> "
+      }
+      case None -> (idPat :: Nil) if dtor.name == "_" => transform_id(idPat) <:> " -> "
+      case None -> Nil if dtor.name == "_" => "_ -> "
+      case _ => dtor.name <:> " " <:> Lined(params.map(arg => transform_id(arg)) :+ Raw("-> "), " ")
+    }
   }
 
   override val headers = stack(
@@ -659,7 +681,7 @@ object HaskellGen extends CodeGen {
         case BuiltInTypes.ListNil => Raw("[]")
         case BuiltInTypes.Tuple(n) =>
           assert(n == args.length)
-          "(" <:> Lined(args.map(rec(_)).toList, " ") <:> ")"
+          "(" <:> Lined(args.map(rec(_)).toList, ", ") <:> ")"
       }).getOrElse(
         "(" <:> name.name <:> " " <:> Lined(args.map(arg => rec(arg)), " ") <:> ")"
       )

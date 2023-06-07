@@ -16,6 +16,6 @@ testDefault n = nsoln n
 
 main :: IO ()
 main = defaultMain [ bgroup "queen" [
-                                   bench "our" $ nf testOur 12
-                                 , bench "default" $ nf testDefault 12 ] ]
+                                      bench "our" $ nf testOur 12
+                                    , bench "default" $ nf testDefault 12 ] ]
 

@@ -12,15 +12,15 @@ testOur s t e = (map₀ (\x⁰ -> (x⁰ + 1))) ((map₁ (\x¹ -> (x¹ + x¹))) (
 testDefault s t e = (map (+ 1)) $ map (\x -> x + x) $ myFromThenTo s t e
 testMannual s t e = map (\x -> x + x + 1) $ myFromThenTo s t e
 
-testDefault1 s t e = (map (+ 1)) $ map (\x -> x + x) [s, t .. e]
-testMannual1 s t e = map (\x -> x + x + 1) [s, t .. e]
+testDefaultHsBuiltIn s t e = (map (+ 1)) $ map (\x -> x + x) [s, t .. e]
+testMannualHsBuiltIn s t e = map (\x -> x + x + 1) [s, t .. e]
 
 
 main :: IO ()
 main = defaultMain [ bgroup "f1" [
-                                   bench "our" $ nf (testOur 1 3) 1000000
-                                 , bench "ourFloatOut" $ nf (testOurFloatOut 1 3) 1000000
+                                   bench "lumberhack" $ nf (testOur 1 3) 1000000
+                                 , bench "lumberhackFloatOut" $ nf (testOurFloatOut 1 3) 1000000
                                  , bench "default" $ nf (testDefault 1 3) 1000000
                                  , bench "manual" $ nf (testMannual 1 3) 1000000
-                                 , bench "default1" $ nf (testDefault1 1 3) 1000000
-                                 , bench "manual1" $ nf (testMannual1 1 3) 1000000 ] ]
+                                 , bench "defaultHsBuiltIn" $ nf (testDefaultHsBuiltIn 1 3) 1000000
+                                 , bench "manualHsBuiltIn" $ nf (testMannualHsBuiltIn 1 3) 1000000 ] ]

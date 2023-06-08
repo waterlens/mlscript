@@ -531,7 +531,7 @@ concatMap(ok1, C(P2(5, 10), N))
 
 
 // [(x, z) | (x, y1) <- zip [1 .. 3] [2 .. 4], (y2, z) <- zip [x .. x + 2] [y1 .. y1 + 1] , y1 == y2]
-// WRONG: more efficient desugaring, but requires recursive local let binding
+// more efficient desugaring, but requires recursive local let binding
 _LUMBERHACK_EVAL
 fun zip(xs, ys) = if xs is
   C(h, t) then if ys is
@@ -923,4 +923,336 @@ ok1(zip(fromTo(1,3), fromTo(2,4)))
 //│ <<<<<<< evaluate <<<<<<<
 
 
+// NOTE: what if we lift the inner mutual recursive lambdas out?
+// [(x, y) | x <- [1..2], y <- [3..4]]
+_LUMBERHACK_EVAL
+fun go1(ls1, ls2) = if ls1 is
+  C(h1, t1) then go2(ls2, h1, t1)
+  N then N
+fun go2(ls2, h1, t1) = if ls2 is
+  C(h2, t2) then C(P2(h1, h2), go2(t2, h1, t1))
+  N then go1(t1, ls2)
+go1(C(1, C(2, N)), C(3, C(4, N)))
+//│ |_LUMBERHACK_EVAL|↵|#fun| |go1|(|ls1|,| |ls2|)| |#=| |#if| |ls1| |is|→|C|(|h1|,| |t1|)| |#then| |go2|(|ls2|,| |h1|,| |t1|)|↵|N| |#then| |N|←|↵|#fun| |go2|(|ls2|,| |h1|,| |t1|)| |#=| |#if| |ls2| |is|→|C|(|h2|,| |t2|)| |#then| |C|(|P2|(|h1|,| |h2|)|,| |go2|(|t2|,| |h1|,| |t1|)|)|↵|N| |#then| |go1|(|t1|,| |ls2|)|←|↵|go1|(|C|(|1|,| |C|(|2|,| |N|)|)|,| |C|(|3|,| |C|(|4|,| |N|)|)|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun go1 = ls1, ls2, => if ls1 is ‹(C (h1, t1,)) then go2 (ls2, h1, t1,); (N) then N›; fun go2 = ls2, h1, t1, => if ls2 is ‹(C (h2, t2,)) then C (P2 (h1, h2,), go2 (t2, h1, t1,),); (N) then go1 (t1, ls2,)›; go1 (C (1, C (2, N,),), C (3, C (4, N,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ go1^34([C 1 [C 2 [N]]], [C 3 [C 4 [N]]])
+//│ def go1(ls1⁰, ls2⁰) = case ls1⁰ of {
+//│ 	C h1⁰ t1⁰ => go2^2(ls2⁰, h1⁰, t1⁰)
+//│ 	| N  => [N]}
+//│ def go2(ls2¹, h1¹, t1¹) = case ls2¹ of {
+//│ 	C h2⁰ t2⁰ => [C [P2 h1¹ h2⁰] go2^17(t2⁰, h1¹, t1¹)]
+//│ 	| N  => go1^25(t1¹, ls2¹)}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [C [P2 1 3] [C [P2 1 4] [N]]]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [go1^34]
+//│ 	[go1^34 · go2^2]
+//│ 		[go1^34 · go2^2 · go1^25] ---> [go1^34] (only one)
+//│ 		[go1^34 · go2^2 · go2^17] ---> [go1^34 · go2^2] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ go1₀([C 1 [C 2 [N]]], [C 3 [C 4 [N]]])
+//│ def go1₀(ls1¹, ls2³) = 
+//│ 	case ls1¹ of {
+//│ 		C h1³ t1³ => go2₀(ls2³, h1³, t1³)
+//│ 		| N  => [N]}
+//│ 	where
+//│ 	def go2₀(ls2², h1², t1²) = 
+//│ 		case ls2² of {
+//│ 			C h2¹ t2¹ => [C [P2 h1² h2¹] go2₀(t2¹, h1², t1²)]
+//│ 			| N  => go1₀(t1², ls2²)}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [N]: 83 --->
+//│ 	case ls1¹ of {C h1³ t1³ => go2₀(ls2³, h1³, t1³) | N  => [N]}: 77
+//│ [C 2 [N]]: 84 --->
+//│ 	case ls1¹ of {C h1³ t1³ => go2₀(ls2³, h1³, t1³) | N  => [N]}: 77
+//│ [C 1 [C 2 [N]]]: 85 --->
+//│ 	case ls1¹ of {C h1³ t1³ => go2₀(ls2³, h1³, t1³) | N  => [N]}: 77
+//│ [N]: 89 --->
+//│ 	case ls2² of {C h2¹ t2¹ => [C [P2 h1² h2¹] go2₀(t2¹, h1², t1²)] | N  => go1₀(t1², ls2²)}: 64
+//│ [C 4 [N]]: 90 --->
+//│ 	case ls2² of {C h2¹ t2¹ => [C [P2 h1² h2¹] go2₀(t2¹, h1², t1²)] | N  => go1₀(t1², ls2²)}: 64
+//│ [C 3 [C 4 [N]]]: 91 --->
+//│ 	case ls2² of {C h2¹ t2¹ => [C [P2 h1² h2¹] go2₀(t2¹, h1², t1²)] | N  => go1₀(t1², ls2²)}: 64
+//│ ------------------
+//│ case ls2² of {C h2¹ t2¹ => [C [P2 h1² h2¹] go2₀(t2¹, h1², t1²)] | N  => go1₀(t1², ls2²)}: 64 --->
+//│ 	[N]: 89
+//│ 	[C 4 [N]]: 90
+//│ 	[C 3 [C 4 [N]]]: 91
+//│ case ls1¹ of {C h1³ t1³ => go2₀(ls2³, h1³, t1³) | N  => [N]}: 77 --->
+//│ 	[N]: 83
+//│ 	[C 2 [N]]: 84
+//│ 	[C 1 [C 2 [N]]]: 85
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [N]: 83 --->
+//│ 	case ls1¹ of {C h1³ t1³ => go2₀(ls2³, h1³, t1³) | N  => [N]}: 77
+//│ [C 2 [N]]: 84 --->
+//│ 	case ls1¹ of {C h1³ t1³ => go2₀(ls2³, h1³, t1³) | N  => [N]}: 77
+//│ [C 1 [C 2 [N]]]: 85 --->
+//│ 	case ls1¹ of {C h1³ t1³ => go2₀(ls2³, h1³, t1³) | N  => [N]}: 77
+//│ [N]: 89 --->
+//│ 	case ls2² of {C h2¹ t2¹ => [C [P2 h1² h2¹] go2₀(t2¹, h1², t1²)] | N  => go1₀(t1², ls2²)}: 64
+//│ [C 4 [N]]: 90 --->
+//│ 	case ls2² of {C h2¹ t2¹ => [C [P2 h1² h2¹] go2₀(t2¹, h1², t1²)] | N  => go1₀(t1², ls2²)}: 64
+//│ [C 3 [C 4 [N]]]: 91 --->
+//│ 	case ls2² of {C h2¹ t2¹ => [C [P2 h1² h2¹] go2₀(t2¹, h1², t1²)] | N  => go1₀(t1², ls2²)}: 64
+//│ ------------------
+//│ case ls2² of {C h2¹ t2¹ => [C [P2 h1² h2¹] go2₀(t2¹, h1², t1²)] | N  => go1₀(t1², ls2²)}: 64 --->
+//│ 	[N]: 89
+//│ 	[C 4 [N]]: 90
+//│ 	[C 3 [C 4 [N]]]: 91
+//│ case ls1¹ of {C h1³ t1³ => go2₀(ls2³, h1³, t1³) | N  => [N]}: 77 --->
+//│ 	[N]: 83
+//│ 	[C 2 [N]]: 84
+//│ 	[C 1 [C 2 [N]]]: 85
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ go1₀(
+//│ 	let h1⁴ = 1
+//│ 	in let t1⁴ = 	
+//│ 		let h1⁵ = 2
+//│ 		in let t1⁵ = (fun ls2⁶ -> [N])
+//│ 		in (fun ls2⁵ -> go2₀(ls2⁵, h1⁵, t1⁵))
+//│ 	in (fun ls2⁴ -> go2₀(ls2⁴, h1⁴, t1⁴)), 
+//│ 	let h2² = 3
+//│ 	in let t2² = 	
+//│ 		let h2³ = 4
+//│ 		in let t2³ = (fun h1⁸ -> (fun t1⁸ -> (fun ls2⁹ -> go1₀(t1⁸, ls2⁹))))
+//│ 		in (fun h1⁷ -> (fun t1⁷ -> (fun ls2⁸ -> [C [P2 h1⁷ h2³] go2₀(t2³, h1⁷, t1⁷)])))
+//│ 	in (fun h1⁶ -> (fun t1⁶ -> (fun ls2⁷ -> [C [P2 h1⁶ h2²] go2₀(t2², h1⁶, t1⁶)]))))
+//│ def go1₀(ls1², ls2¹¹) = 
+//│ 	ls1²(ls2¹¹)
+//│ 	where
+//│ 	def go2₀(ls2¹⁰, h1⁹, t1⁹) = 
+//│ 		ls2¹⁰(h1⁹, t1⁹, ls2¹⁰)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [C [P2 1 3] [C [P2 1 4] [N]]]
+//│ <<<<<<< evaluate <<<<<<<
 
+
+// [(x, y) | x <- [1, 2], y <- [3, 4]]
+// NOTE: change `ls2` to `N` and we need two iteration to fully fuse
+_LUMBERHACK_EVAL
+fun go1(ls1, ls2) = if ls1 is
+  C(h1, t1) then go2(ls2, h1, t1)
+  N then N
+fun go2(ls2, h1, t1) = if ls2 is
+  C(h2, t2) then C(P2(h1, h2), go2(t2, h1, t1))
+  N then go1(t1, N)
+go1(C(1, C(2, N)), C(3, C(4, N)))
+//│ |_LUMBERHACK_EVAL|↵|#fun| |go1|(|ls1|,| |ls2|)| |#=| |#if| |ls1| |is|→|C|(|h1|,| |t1|)| |#then| |go2|(|ls2|,| |h1|,| |t1|)|↵|N| |#then| |N|←|↵|#fun| |go2|(|ls2|,| |h1|,| |t1|)| |#=| |#if| |ls2| |is|→|C|(|h2|,| |t2|)| |#then| |C|(|P2|(|h1|,| |h2|)|,| |go2|(|t2|,| |h1|,| |t1|)|)|↵|N| |#then| |go1|(|t1|,| |N|)|←|↵|go1|(|C|(|1|,| |C|(|2|,| |N|)|)|,| |C|(|3|,| |C|(|4|,| |N|)|)|)|
+//│ Parsed: {_LUMBERHACK_EVAL; fun go1 = ls1, ls2, => if ls1 is ‹(C (h1, t1,)) then go2 (ls2, h1, t1,); (N) then N›; fun go2 = ls2, h1, t1, => if ls2 is ‹(C (h2, t2,)) then C (P2 (h1, h2,), go2 (t2, h1, t1,),); (N) then go1 (t1, N,)›; go1 (C (1, C (2, N,),), C (3, C (4, N,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ go1^34([C 1 [C 2 [N]]], [C 3 [C 4 [N]]])
+//│ def go1(ls1⁰, ls2⁰) = case ls1⁰ of {
+//│ 	C h1⁰ t1⁰ => go2^2(ls2⁰, h1⁰, t1⁰)
+//│ 	| N  => [N]}
+//│ def go2(ls2¹, h1¹, t1¹) = case ls2¹ of {
+//│ 	C h2⁰ t2⁰ => [C [P2 h1¹ h2⁰] go2^17(t2⁰, h1¹, t1¹)]
+//│ 	| N  => go1^25(t1¹, [N])}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [C [P2 1 3] [C [P2 1 4] [N]]]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [go1^34]
+//│ 	[go1^34 · go2^2]
+//│ 		[go1^34 · go2^2 · go1^25] ---> [go1^34] (only one)
+//│ 		[go1^34 · go2^2 · go2^17] ---> [go1^34 · go2^2] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ go1₀([C 1 [C 2 [N]]], [C 3 [C 4 [N]]])
+//│ def go1₀(ls1¹, ls2³) = 
+//│ 	case ls1¹ of {
+//│ 		C h1³ t1³ => go2₀(ls2³, h1³, t1³)
+//│ 		| N  => [N]}
+//│ 	where
+//│ 	def go2₀(ls2², h1², t1²) = 
+//│ 		case ls2² of {
+//│ 			C h2¹ t2¹ => [C [P2 h1² h2¹] go2₀(t2¹, h1², t1²)]
+//│ 			| N  => go1₀(t1², [N])}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [N]: 62 --->
+//│ 	case ls2² of {C h2¹ t2¹ => [C [P2 h1² h2¹] go2₀(t2¹, h1², t1²)] | N  => go1₀(t1², [N])}: 64
+//│ [N]: 83 --->
+//│ 	case ls1¹ of {C h1³ t1³ => go2₀(ls2³, h1³, t1³) | N  => [N]}: 77
+//│ [C 2 [N]]: 84 --->
+//│ 	case ls1¹ of {C h1³ t1³ => go2₀(ls2³, h1³, t1³) | N  => [N]}: 77
+//│ [C 1 [C 2 [N]]]: 85 --->
+//│ 	case ls1¹ of {C h1³ t1³ => go2₀(ls2³, h1³, t1³) | N  => [N]}: 77
+//│ [N]: 89 --->
+//│ 	case ls2² of {C h2¹ t2¹ => [C [P2 h1² h2¹] go2₀(t2¹, h1², t1²)] | N  => go1₀(t1², [N])}: 64
+//│ [C 4 [N]]: 90 --->
+//│ 	case ls2² of {C h2¹ t2¹ => [C [P2 h1² h2¹] go2₀(t2¹, h1², t1²)] | N  => go1₀(t1², [N])}: 64
+//│ [C 3 [C 4 [N]]]: 91 --->
+//│ 	case ls2² of {C h2¹ t2¹ => [C [P2 h1² h2¹] go2₀(t2¹, h1², t1²)] | N  => go1₀(t1², [N])}: 64
+//│ ------------------
+//│ case ls2² of {C h2¹ t2¹ => [C [P2 h1² h2¹] go2₀(t2¹, h1², t1²)] | N  => go1₀(t1², [N])}: 64 --->
+//│ 	[N]: 62
+//│ 	[N]: 89
+//│ 	[C 4 [N]]: 90
+//│ 	[C 3 [C 4 [N]]]: 91
+//│ case ls1¹ of {C h1³ t1³ => go2₀(ls2³, h1³, t1³) | N  => [N]}: 77 --->
+//│ 	[N]: 83
+//│ 	[C 2 [N]]: 84
+//│ 	[C 1 [C 2 [N]]]: 85
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [N]: 83 --->
+//│ 	case ls1¹ of {C h1³ t1³ => go2₀(ls2³, h1³, t1³) | N  => [N]}: 77
+//│ [C 2 [N]]: 84 --->
+//│ 	case ls1¹ of {C h1³ t1³ => go2₀(ls2³, h1³, t1³) | N  => [N]}: 77
+//│ [C 1 [C 2 [N]]]: 85 --->
+//│ 	case ls1¹ of {C h1³ t1³ => go2₀(ls2³, h1³, t1³) | N  => [N]}: 77
+//│ ------------------
+//│ case ls1¹ of {C h1³ t1³ => go2₀(ls2³, h1³, t1³) | N  => [N]}: 77 --->
+//│ 	[N]: 83
+//│ 	[C 2 [N]]: 84
+//│ 	[C 1 [C 2 [N]]]: 85
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ go1₀(
+//│ 	let h1⁴ = 1
+//│ 	in let t1⁴ = 	
+//│ 		let h1⁵ = 2
+//│ 		in let t1⁵ = (fun ls2⁶ -> [N])
+//│ 		in (fun ls2⁵ -> go2₀(ls2⁵, h1⁵, t1⁵))
+//│ 	in (fun ls2⁴ -> go2₀(ls2⁴, h1⁴, t1⁴)), [C 3 [C 4 [N]]])
+//│ def go1₀(ls1², ls2⁸) = 
+//│ 	ls1²(ls2⁸)
+//│ 	where
+//│ 	def go2₀(ls2⁷, h1⁶, t1⁶) = 
+//│ 		case ls2⁷ of {
+//│ 			C h2¹ t2¹ => [C [P2 h1⁶ h2¹] go2₀(t2¹, h1⁶, t1⁶)]
+//│ 			| N  => go1₀(t1⁶, [N])}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [C [P2 1 3] [C [P2 1 4] [N]]]
+//│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [go1₀^1] (hopeless to continue)
+//│ [go2₀^16]
+//│ 	[go2₀^16 · go1₀^45] (hopeless to continue)
+//│ 	[go2₀^16 · go2₀^37] ---> [go2₀^16] (only one)
+//│ [go2₀^6] (hopeless to continue)
+//│ 	[go2₀^6 · go1₀^45] (using original def)
+//│ 	[go2₀^6 · go2₀^37] ---> [go2₀^6] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ go1₀₀(
+//│ 	let h1⁵ = 1
+//│ 	in let t1⁵ = 	
+//│ 		let h1⁶ = 2
+//│ 		in let t1⁶ = (fun ls2¹⁰ -> [N])
+//│ 		in (fun ls2¹¹ -> go2₀₁(ls2¹¹, h1⁶, t1⁶))
+//│ 	in (fun ls2¹² -> go2₀₀(ls2¹², h1⁵, t1⁵)), [C 3 [C 4 [N]]])
+//│ def go1₀₀(ls1¹, ls2⁷) = 
+//│ 	ls1¹(ls2⁷)
+//│ def go2₀₀(ls2⁶, h1⁴, t1⁴) = 
+//│ 	case ls2⁶ of {
+//│ 		C h2² t2² => [C [P2 h1⁴ h2²] go2₀₀(t2², h1⁴, t1⁴)]
+//│ 		| N  => go1₀₁(t1⁴, [N])}
+//│ 	where
+//│ 	def go1₀₁(ls1², ls2⁸) = 
+//│ 		ls1²(ls2⁸)
+//│ def go2₀₁(ls2⁵, h1³, t1³) = 
+//│ 	case ls2⁵ of {
+//│ 		C h2¹ t2¹ => [C [P2 h1³ h2¹] go2₀₁(t2¹, h1³, t1³)]
+//│ 		| N  => go1₀₂(t1³, [N])}
+//│ 	where
+//│ 	def go1₀₂(ls1³, ls2⁹) = 
+//│ 		ls1³(ls2⁹)
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [N]: 95 --->
+//│ 	case ls2⁵ of {C h2¹ t2¹ => [C [P2 h1³ h2¹] go2₀₁(t2¹, h1³, t1³)] | N  => go1₀₂(t1³, [N])}: 76
+//│ [N]: 144 --->
+//│ 	case ls2⁶ of {C h2² t2² => [C [P2 h1⁴ h2²] go2₀₀(t2², h1⁴, t1⁴)] | N  => go1₀₁(t1⁴, [N])}: 97
+//│ [C 4 [N]]: 145 --->
+//│ 	case ls2⁶ of {C h2² t2² => [C [P2 h1⁴ h2²] go2₀₀(t2², h1⁴, t1⁴)] | N  => go1₀₁(t1⁴, [N])}: 97
+//│ [C 3 [C 4 [N]]]: 146 --->
+//│ 	case ls2⁶ of {C h2² t2² => [C [P2 h1⁴ h2²] go2₀₀(t2², h1⁴, t1⁴)] | N  => go1₀₁(t1⁴, [N])}: 97
+//│ ------------------
+//│ case ls2⁵ of {C h2¹ t2¹ => [C [P2 h1³ h2¹] go2₀₁(t2¹, h1³, t1³)] | N  => go1₀₂(t1³, [N])}: 76 --->
+//│ 	[N]: 95
+//│ case ls2⁶ of {C h2² t2² => [C [P2 h1⁴ h2²] go2₀₀(t2², h1⁴, t1⁴)] | N  => go1₀₁(t1⁴, [N])}: 97 --->
+//│ 	[N]: 144
+//│ 	[C 4 [N]]: 145
+//│ 	[C 3 [C 4 [N]]]: 146
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [N]: 95 --->
+//│ 	case ls2⁵ of {C h2¹ t2¹ => [C [P2 h1³ h2¹] go2₀₁(t2¹, h1³, t1³)] | N  => go1₀₂(t1³, [N])}: 76
+//│ [N]: 144 --->
+//│ 	case ls2⁶ of {C h2² t2² => [C [P2 h1⁴ h2²] go2₀₀(t2², h1⁴, t1⁴)] | N  => go1₀₁(t1⁴, [N])}: 97
+//│ [C 4 [N]]: 145 --->
+//│ 	case ls2⁶ of {C h2² t2² => [C [P2 h1⁴ h2²] go2₀₀(t2², h1⁴, t1⁴)] | N  => go1₀₁(t1⁴, [N])}: 97
+//│ [C 3 [C 4 [N]]]: 146 --->
+//│ 	case ls2⁶ of {C h2² t2² => [C [P2 h1⁴ h2²] go2₀₀(t2², h1⁴, t1⁴)] | N  => go1₀₁(t1⁴, [N])}: 97
+//│ ------------------
+//│ case ls2⁵ of {C h2¹ t2¹ => [C [P2 h1³ h2¹] go2₀₁(t2¹, h1³, t1³)] | N  => go1₀₂(t1³, [N])}: 76 --->
+//│ 	[N]: 95
+//│ case ls2⁶ of {C h2² t2² => [C [P2 h1⁴ h2²] go2₀₀(t2², h1⁴, t1⁴)] | N  => go1₀₁(t1⁴, [N])}: 97 --->
+//│ 	[N]: 144
+//│ 	[C 4 [N]]: 145
+//│ 	[C 3 [C 4 [N]]]: 146
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ go1₀₀(
+//│ 	let h1⁷ = 1
+//│ 	in let t1⁷ = 	
+//│ 		let h1⁸ = 2
+//│ 		in let t1⁸ = (fun ls2¹³ -> [N])
+//│ 		in (fun ls2¹⁴ -> go2₀₁(ls2¹⁴, h1⁸, t1⁸))
+//│ 	in (fun ls2¹⁵ -> go2₀₀(ls2¹⁵, h1⁷, t1⁷)), 
+//│ 	let h2³ = 3
+//│ 	in let t2³ = 	
+//│ 		let h2⁴ = 4
+//│ 		in let t2⁴ = (fun h1¹¹ -> (fun t1¹¹ -> go1₀₁(t1¹¹, (fun h1¹² -> (fun t1¹² -> go1₀₂(t1¹², [N]))))))
+//│ 		in (fun h1¹⁰ -> (fun t1¹⁰ -> [C [P2 h1¹⁰ h2⁴] go2₀₀(t2⁴, h1¹⁰, t1¹⁰)]))
+//│ 	in (fun h1⁹ -> (fun t1⁹ -> [C [P2 h1⁹ h2³] go2₀₀(t2³, h1⁹, t1⁹)])))
+//│ def go1₀₀(ls1⁶, ls2¹⁸) = 
+//│ 	ls1⁶(ls2¹⁸)
+//│ def go2₀₀(ls2¹⁹, h1¹³, t1¹³) = 
+//│ 	ls2¹⁹(h1¹³, t1¹³)
+//│ 	where
+//│ 	def go1₀₁(ls1⁵, ls2¹⁷) = 
+//│ 		ls1⁵(ls2¹⁷)
+//│ def go2₀₁(ls2²⁰, h1¹⁴, t1¹⁴) = 
+//│ 	ls2²⁰(h1¹⁴, t1¹⁴)
+//│ 	where
+//│ 	def go1₀₂(ls1⁴, ls2¹⁶) = 
+//│ 		ls1⁴(ls2¹⁶)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [C [P2 1 3] [C [P2 1 4] [N]]]
+//│ <<<<<<< evaluate <<<<<<<

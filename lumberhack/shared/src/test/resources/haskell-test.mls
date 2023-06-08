@@ -136,6 +136,11 @@ testMapmap $ primId 5000000
 //│ <<<<<<<<<< Generated Haskell Bench <<<<<<<<<<
 
 
+// fusion clash due to: the thing returned by `gen` will be consumed
+// by both `gen` itself (`b <- gen (n-1) nq`) and `length`
+// NOTE: being slower (than the desugared version, faster than the most original version) may be because
+// originally the type of `gen` is `Int -> Int -> [[Int]]`
+// after the fusion the type of `gen` is `Int -> Int -> [Int -> Int -> Bool]`
 :lhbench
 :lhhaskell
 safe x d []    = True

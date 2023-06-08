@@ -1,44 +1,45 @@
 :NewParser
 :ParseOnly
 
+:lhbench
 :lhhaskell
-test len = map (\x -> x + 1) $ map (\x -> x + x) [1..len]
-test $ primId 10
+testMapmap len = map (\x -> x + 1) $ map (\x -> x + x) [1..len]
+testMapmap $ primId 5000000
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ test₀^256(primId⁰(10))
-//│ def enumFromTo₀(a², b²) = if (a² <= b²) then [LH_C a² enumFromTo₀^218((a² + 1), b²)] else [LH_N]
+//│ testMapmap₀^256(primId⁰(5000000))
+//│ def enumFromTo₀(a², b²) = if (a² <= b²) then [LH_C a² enumFromTo₀^204((a² + 1), b²)] else [LH_N]
 //│ def map₀(f⁴, ls⁷) = case ls⁷ of {
 //│ 	LH_C h⁷ t⁸ => [LH_C f⁴(h⁷) map₀^188(f⁴, t⁸)]
 //│ 	| LH_N  => [LH_N]}
 //│ def map₁(f⁵, ls⁸) = case ls⁸ of {
-//│ 	LH_C h⁸ t⁹ => [LH_C f⁵(h⁸) map₁^202(f⁵, t⁹)]
+//│ 	LH_C h⁸ t⁹ => [LH_C f⁵(h⁸) map₁^246(f⁵, t⁹)]
 //│ 	| LH_N  => [LH_N]}
-//│ def test₀(_lh_test_arg1¹) = map₀^232((fun x² -> (x² + 1)), map₁^240((fun x³ -> (x³ + x³)), enumFromTo₀^248(1, _lh_test_arg1¹)))
+//│ def testMapmap₀(_lh_testMapmap_arg1¹) = map₀^218((fun x² -> (x² + 1)), map₁^226((fun x³ -> (x³ + x³)), enumFromTo₀^234(1, _lh_testMapmap_arg1¹)))
 //│ 		---------- unoptimized haskell gen ----------
-//│ 		(test₀ 10)
+//│ 		(testMapmap₀ 5000000)
 //│ 		map₀ f⁴ ls⁷ = (case ls⁷ of {(h⁷ : t⁸) -> ((f⁴ h⁷):((map₀ f⁴) t⁸)); [] -> []})
-//│ 		map₁ f⁵ ls⁸ = (case ls⁸ of {(h⁸ : t⁹) -> ((f⁵ h⁸):((map₁ f⁵) t⁹)); [] -> []})
 //│ 		enumFromTo₀ a² b² = (if (a² <= b²) then (a²:((enumFromTo₀ (a² + 1)) b²)) else [])
-//│ 		test₀ _lh_test_arg1¹ = ((map₀ (\x² -> (x² + 1))) ((map₁ (\x³ -> (x³ + x³))) ((enumFromTo₀ 1) _lh_test_arg1¹)))
+//│ 		testMapmap₀ _lh_testMapmap_arg1¹ = ((map₀ (\x² -> (x² + 1))) ((map₁ (\x³ -> (x³ + x³))) ((enumFromTo₀ 1) _lh_testMapmap_arg1¹)))
+//│ 		map₁ f⁵ ls⁸ = (case ls⁸ of {(h⁸ : t⁹) -> ((f⁵ h⁸):((map₁ f⁵) t⁹)); [] -> []})
 //│ 		---------- unoptimized haskell gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [test₀^256]
-//│ 	[test₀^256 · enumFromTo₀^248] (hopeless to continue)
-//│ 		[test₀^256 · enumFromTo₀^248 · enumFromTo₀^218] ---> [test₀^256 · enumFromTo₀^248] (using original def)
-//│ 	[test₀^256 · map₀^232]
-//│ 		[test₀^256 · map₀^232 · map₀^188] ---> [test₀^256 · map₀^232] (only one)
-//│ 	[test₀^256 · map₁^240] (hopeless to continue)
-//│ 		[test₀^256 · map₁^240 · map₁^202] ---> [test₀^256 · map₁^240] (using original def)
+//│ [testMapmap₀^256]
+//│ 	[testMapmap₀^256 · enumFromTo₀^234] (hopeless to continue)
+//│ 		[testMapmap₀^256 · enumFromTo₀^234 · enumFromTo₀^204] ---> [testMapmap₀^256 · enumFromTo₀^234] (using original def)
+//│ 	[testMapmap₀^256 · map₀^218]
+//│ 		[testMapmap₀^256 · map₀^218 · map₀^188] ---> [testMapmap₀^256 · map₀^218] (only one)
+//│ 	[testMapmap₀^256 · map₁^226] (hopeless to continue)
+//│ 		[testMapmap₀^256 · map₁^226 · map₁^246] ---> [testMapmap₀^256 · map₁^226] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ test₀₀(primId⁰(10))
-//│ def test₀₀(_lh_test_arg1¹) = 
-//│ 	map₀₀((fun x² -> (x² + 1)), map₁₀((fun x³ -> (x³ + x³)), enumFromTo₀₀(1, _lh_test_arg1¹)))
+//│ testMapmap₀₀(primId⁰(5000000))
+//│ def testMapmap₀₀(_lh_testMapmap_arg1¹) = 
+//│ 	map₀₀((fun x² -> (x² + 1)), map₁₀((fun x³ -> (x³ + x³)), enumFromTo₀₀(1, _lh_testMapmap_arg1¹)))
 //│ 	where
 //│ 	def enumFromTo₀₀(a¹, b¹) = 
 //│ 		if (a¹ <= b¹) then [LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)] else [LH_N]
@@ -54,66 +55,85 @@ test $ primId 10
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [LH_C f²(h²) map₁₀(f², t²)]: 87 --->
-//│ 	case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map₀₀(f³, t³)] | LH_N  => [LH_N]}: 103
+//│ 	case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map₀₀(f³, t³)] | LH_N  => [LH_N]}: 147
 //│ [LH_N]: 88 --->
-//│ 	case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map₀₀(f³, t³)] | LH_N  => [LH_N]}: 103
-//│ [LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)]: 145 --->
+//│ 	case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map₀₀(f³, t³)] | LH_N  => [LH_N]}: 147
+//│ [LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)]: 131 --->
 //│ 	case ls² of {LH_C h² t² => [LH_C f²(h²) map₁₀(f², t²)] | LH_N  => [LH_N]}: 89
-//│ [LH_N]: 146 --->
+//│ [LH_N]: 132 --->
 //│ 	case ls² of {LH_C h² t² => [LH_C f²(h²) map₁₀(f², t²)] | LH_N  => [LH_N]}: 89
 //│ ------------------
 //│ case ls² of {LH_C h² t² => [LH_C f²(h²) map₁₀(f², t²)] | LH_N  => [LH_N]}: 89 --->
-//│ 	[LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)]: 145
-//│ 	[LH_N]: 146
-//│ case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map₀₀(f³, t³)] | LH_N  => [LH_N]}: 103 --->
+//│ 	[LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)]: 131
+//│ 	[LH_N]: 132
+//│ case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map₀₀(f³, t³)] | LH_N  => [LH_N]}: 147 --->
 //│ 	[LH_C f²(h²) map₁₀(f², t²)]: 87
 //│ 	[LH_N]: 88
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [LH_C f²(h²) map₁₀(f², t²)]: 87 --->
-//│ 	case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map₀₀(f³, t³)] | LH_N  => [LH_N]}: 103
+//│ 	case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map₀₀(f³, t³)] | LH_N  => [LH_N]}: 147
 //│ [LH_N]: 88 --->
-//│ 	case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map₀₀(f³, t³)] | LH_N  => [LH_N]}: 103
-//│ [LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)]: 145 --->
+//│ 	case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map₀₀(f³, t³)] | LH_N  => [LH_N]}: 147
+//│ [LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)]: 131 --->
 //│ 	case ls² of {LH_C h² t² => [LH_C f²(h²) map₁₀(f², t²)] | LH_N  => [LH_N]}: 89
-//│ [LH_N]: 146 --->
+//│ [LH_N]: 132 --->
 //│ 	case ls² of {LH_C h² t² => [LH_C f²(h²) map₁₀(f², t²)] | LH_N  => [LH_N]}: 89
 //│ ------------------
 //│ case ls² of {LH_C h² t² => [LH_C f²(h²) map₁₀(f², t²)] | LH_N  => [LH_N]}: 89 --->
-//│ 	[LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)]: 145
-//│ 	[LH_N]: 146
-//│ case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map₀₀(f³, t³)] | LH_N  => [LH_N]}: 103 --->
+//│ 	[LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)]: 131
+//│ 	[LH_N]: 132
+//│ case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map₀₀(f³, t³)] | LH_N  => [LH_N]}: 147 --->
 //│ 	[LH_C f²(h²) map₁₀(f², t²)]: 87
 //│ 	[LH_N]: 88
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ test₀₀(primId⁰(10))
-//│ def test₀₀(_lh_test_arg1²) = 
-//│ 	map₀₀((fun x⁴ -> (x⁴ + 1)), map₁₀((fun x⁵ -> (x⁵ + x⁵)), enumFromTo₀₀(1, _lh_test_arg1²)))
+//│ testMapmap₀₀(primId⁰(5000000))
+//│ def testMapmap₀₀(_lh_testMapmap_arg1²) = 
+//│ 	map₀₀((fun x⁴ -> (x⁴ + 1)), map₁₀((fun x⁵ -> (x⁵ + x⁵)), enumFromTo₀₀(1, _lh_testMapmap_arg1²)))
 //│ 	where
 //│ 	def enumFromTo₀₀(a², b²) = 
 //│ 		if (a² <= b²) then 
 //│ 			let h⁴ = a²
 //│ 			in let t⁴ = enumFromTo₀₀((a² + 1), b²)
-//│ 			in (fun f⁶ -> 
-//│ 				let h⁵ = f⁶(h⁴)
-//│ 				in let t⁵ = map₁₀(f⁶, t⁴)
-//│ 				in (fun f⁷ -> [LH_C f⁷(h⁵) map₀₀(f⁷, t⁵)])) else (fun f⁸ -> (fun f⁹ -> [LH_N]))
-//│ 	def map₀₀(f⁵, ls⁵) = 
-//│ 		ls⁵(f⁵)
+//│ 			in (fun f⁵ -> 
+//│ 				let h⁵ = f⁵(h⁴)
+//│ 				in let t⁵ = map₁₀(f⁵, t⁴)
+//│ 				in (fun f⁶ -> [LH_C f⁶(h⁵) map₀₀(f⁶, t⁵)])) else (fun f⁷ -> (fun f⁸ -> [LH_N]))
+//│ 	def map₀₀(f⁹, ls⁵) = 
+//│ 		ls⁵(f⁹)
 //│ 	def map₁₀(f⁴, ls⁴) = 
 //│ 		ls⁴(f⁴)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated Haskell Code >>>>>>>>>>
-//│ (test₀₀ 10)
+//│ (testMapmap₀₀ 5000000)
 //│ map₁₀ f⁰ ls⁰ = (ls⁰ f⁰)
-//│ map₀₀ f¹ ls¹ = (ls¹ f¹)
-//│ test₀₀ _lh_test_arg1⁰ = ((map₀₀ (\x⁰ -> (x⁰ + 1))) ((map₁₀ (\x¹ -> (x¹ + x¹))) ((enumFromTo₀₀ 1) _lh_test_arg1⁰)))
-//│ enumFromTo₀₀ a⁰ b⁰ = (if (a⁰ <= b⁰) then (let h⁰ = a⁰ in (let t⁰ = ((enumFromTo₀₀ (a⁰ + 1)) b⁰) in (\f² -> (let h¹ = (f² h⁰) in (let t¹ = ((map₁₀ f²) t⁰) in (\f³ -> ((f³ h¹):((map₀₀ f³) t¹)))))))) else (\f⁴ f⁵ -> []))
+//│ testMapmap₀₀ _lh_testMapmap_arg1⁰ = ((map₀₀ (\x⁰ -> (x⁰ + 1))) ((map₁₀ (\x¹ -> (x¹ + x¹))) ((enumFromTo₀₀ 1) _lh_testMapmap_arg1⁰)))
+//│ enumFromTo₀₀ a⁰ b⁰ = (if (a⁰ <= b⁰) then (let h⁰ = a⁰ in (let t⁰ = ((enumFromTo₀₀ (a⁰ + 1)) b⁰) in (\f¹ -> (let h¹ = (f¹ h⁰) in (let t¹ = ((map₁₀ f¹) t⁰) in (\f² -> ((f² h¹):((map₀₀ f²) t¹)))))))) else (\f³ f⁴ -> []))
+//│ map₀₀ f⁵ ls¹ = (ls¹ f⁵)
 //│ <<<<<<<<<< Generated Haskell Code <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated Haskell Bench >>>>>>>>>>
+//│ import Criterion.Main
+//│ 
+//│ map₀ f⁴ ls⁷ = (case ls⁷ of {(h⁷ : t⁸) -> ((f⁴ h⁷):((map₀ f⁴) t⁸)); [] -> []})
+//│ enumFromTo₀ a² b² = (if (a² <= b²) then (a²:((enumFromTo₀ (a² + 1)) b²)) else [])
+//│ testMapmap₀ _lh_testMapmap_arg1¹ = ((map₀ (\x² -> (x² + 1))) ((map₁ (\x³ -> (x³ + x³))) ((enumFromTo₀ 1) _lh_testMapmap_arg1¹)))
+//│ map₁ f⁵ ls⁸ = (case ls⁸ of {(h⁸ : t⁹) -> ((f⁵ h⁸):((map₁ f⁵) t⁹)); [] -> []})
+//│ 
+//│ map₁₀ f⁰ ls⁰ = (ls⁰ f⁰)
+//│ testMapmap₀₀ _lh_testMapmap_arg1⁰ = ((map₀₀ (\x⁰ -> (x⁰ + 1))) ((map₁₀ (\x¹ -> (x¹ + x¹))) ((enumFromTo₀₀ 1) _lh_testMapmap_arg1⁰)))
+//│ enumFromTo₀₀ a⁰ b⁰ = (if (a⁰ <= b⁰) then (let h⁰ = a⁰ in (let t⁰ = ((enumFromTo₀₀ (a⁰ + 1)) b⁰) in (\f¹ -> (let h¹ = (f¹ h⁰) in (let t¹ = ((map₁₀ f¹) t⁰) in (\f² -> ((f² h¹):((map₀₀ f²) t¹)))))))) else (\f³ f⁴ -> []))
+//│ map₀₀ f⁵ ls¹ = (ls¹ f⁵)
+//│ 
+//│ main :: IO ()
+//│ main = defaultMain [ bgroup "Mapmap" [
+//│     bench "lumberhack_Mapmap" $ nf testMapmap₀₀ 5000000
+//│   , bench "original_Mapmap" $ nf testMapmap₀ 5000000 ] ]
+//│ <<<<<<<<<< Generated Haskell Bench <<<<<<<<<<
 
 
 :lhhaskell

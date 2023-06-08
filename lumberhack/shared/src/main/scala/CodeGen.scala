@@ -598,7 +598,6 @@ trait CodeGen {
   def transform_progdef(pd: ProgDef): Document
 
   def rec(e: Expr): Document
-  def recMultiline(e: Expr): Document
   def binOp(e1: Expr, op: String, e2: Expr) = "(" <:> rec(e1) <:> " " + op + " " <:> rec(e2) <:> ")"
   
   val headers: Document

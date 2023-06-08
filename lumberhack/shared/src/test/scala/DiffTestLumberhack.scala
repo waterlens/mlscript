@@ -53,9 +53,6 @@ class DiffTestLumberhack extends DiffTests {
       p.d(p) // duplicate multiple usages here to enbale polymorphism
       val initCallTree = CallTree.callTreeUsingSplitKnot(p.d)
       val res = p.expandedWithNewDeforest(initCallTree)
-      // output(">>>>>>>>>>>>>>>>> init haskell gen >>>>>>>>>>>>>>>")
-      // output(HaskellGen(res._1))
-      // output(">>>>>>>>>>>>>>>>> init haskell gen >>>>>>>>>>>>>>>")
       res
     else
       val p = Program.fromPgrm(Pgrm(filteredEntities))(using originalD)
@@ -67,6 +64,10 @@ class DiffTestLumberhack extends DiffTests {
       output(originalProgram.pp(using InitPpConfig.multilineOn.showIuidOn.showEuidOn)) 
     }
     output(originalProgram.pp(using InitPpConfig.multilineOn.showIuidOn.showRefEuidOn))
+    if mode.lhIsHaskell then
+      output("\t\t---------- unoptimized haskell gen ----------")
+      output(HaskellGen(originalProgram).linesIterator.map("\t\t" + _).mkString("\n"))
+      output("\t\t---------- unoptimized haskell gen ----------")
     output("<<<<<<<<<< Original <<<<<<<<<<")
     
     try {

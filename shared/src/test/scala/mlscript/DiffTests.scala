@@ -40,6 +40,7 @@ abstract class ModeType {
   def showRepl: Bool
   def allowEscape: Bool
   def lhIsHaskell: Bool
+  def lhIsBench: Bool
 }
 
 class DiffTests
@@ -154,6 +155,7 @@ class DiffTests
       allowEscape: Bool = false,
       // noProvs: Bool = false,
       lhIsHaskell: Bool = false,
+      lhIsBench: Bool = false,
     ) extends ModeType {
       def isDebugging: Bool = dbg || dbgSimplif
     }
@@ -209,6 +211,7 @@ class DiffTests
           case "ShowRepl" => mode.copy(showRepl = true)
           case "escape" => mode.copy(allowEscape = true)
           case "lhhaskell" => mode.copy(lhIsHaskell = true)
+          case "lhbench" => mode.copy(lhIsBench = true)
           case _ =>
             failures += allLines.size - lines.size
             output("/!\\ Unrecognized option " + line)

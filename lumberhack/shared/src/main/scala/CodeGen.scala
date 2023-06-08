@@ -624,8 +624,7 @@ object HaskellGen extends CodeGen {
   val primitives = Map("add" -> "(+)", "sub" -> "(-)")
 
   override def apply(p: Program): String = {
-    Stacked( 
-      headers ::
+    Stacked(
       p.contents.collect{ content =>
         content match
           case L(pd) => transform_progdef(pd)
@@ -666,34 +665,36 @@ object HaskellGen extends CodeGen {
   )
 
   // one-line, indentation is hard
-  override def rec(e: Expr): Document = e match {
+  override def rec(e: Expr): Document = recSingleline(e)
+
+  def recSingleline(e: Expr): Document = e match {
     case Const(lit) => Raw(lit.idStr)
     case Ref(id) if Deforest.lumberhackKeywords(id.tree.name) => id.tree.name
     case Ref(id) => transform_id(id)
     case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackBinOps(op) =>
-      "(" <:> rec(fst) <:> s" $op " <:> rec(snd) <:> ")"
-    case Call(Ref(Ident(_, Var("primId"), _)), arg) => rec(arg)
+      "(" <:> recSingleline(fst) <:> s" $op " <:> recSingleline(snd) <:> ")"
+    case Call(Ref(Ident(_, Var("primId"), _)), arg) => recSingleline(arg)
     case Call(lhs, rhs) =>
-      "(" <:> rec(lhs) <:> " " <:> rec(rhs) <:> ")"
+      "(" <:> recSingleline(lhs) <:> " " <:> recSingleline(rhs) <:> ")"
     case Ctor(name, args) =>
       (BuiltInTypes.fromStr(name.name).map {
-        case BuiltInTypes.ListCons => "(" <:> rec(args(0)) <:> ":" <:> rec(args(1)) <:> ")"
+        case BuiltInTypes.ListCons => "(" <:> recSingleline(args(0)) <:> ":" <:> recSingleline(args(1)) <:> ")"
         case BuiltInTypes.ListNil => Raw("[]")
         case BuiltInTypes.Tuple(n) =>
           assert(n == args.length)
-          "(" <:> Lined(args.map(rec(_)).toList, ", ") <:> ")"
+          "(" <:> Lined(args.map(recSingleline(_)).toList, ", ") <:> ")"
       }).getOrElse(
-        "(" <:> name.name <:> " " <:> Lined(args.map(arg => rec(arg)), " ") <:> ")"
+        "(" <:> name.name <:> " " <:> Lined(args.map(arg => recSingleline(arg)), " ") <:> ")"
       )
     case LetIn(id, rhs, body) => 
-      "(let " <:> transform_id(id) <:> " = " <:> rec(rhs) <:> " in " <:> rec(body) <:> ")"
+      "(let " <:> transform_id(id) <:> " = " <:> recSingleline(rhs) <:> " in " <:> recSingleline(body) <:> ")"
     case Match(scrut, arms) => 
-      "(case " <:> rec(scrut) <:> " of {" <:> 
-      Lined(arms.map{ case (v, args, body) => transformMatchArmToHaskellType(v, args) <:> rec(body) }, "; ") <:> "})"
+      "(case " <:> recSingleline(scrut) <:> " of {" <:> 
+      Lined(arms.map{ case (v, args, body) => transformMatchArmToHaskellType(v, args) <:> recSingleline(body) }, "; ") <:> "})"
     case f: Function =>
       val (params, body) = f.takeParamsOut
-      "(\\" <:> Lined(params.map(transform_id), " ") <:> " -> " <:> rec(body) <:> ")"
-    case IfThenElse(s, t, e) => "(if " <:> rec(s) <:> " then " <:> rec(t) <:> " else " <:> rec(e) <:> ")"
+      "(\\" <:> Lined(params.map(transform_id), " ") <:> " -> " <:> recSingleline(body) <:> ")"
+    case IfThenElse(s, t, e) => "(if " <:> recSingleline(s) <:> " then " <:> recSingleline(t) <:> " else " <:> recSingleline(e) <:> ")"
     case _ => lastWords("unsupported: " + e.pp(using InitPpConfig.showIuidOn))
   }
 

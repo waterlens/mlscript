@@ -624,7 +624,10 @@ object HaskellGen extends CodeGen {
 
   override def apply(p: Program): String = {
     Stacked(
-      p.contents.collect{ content =>
+      p.contents.sortBy {
+        case Left(progDef) => progDef.id.tree.name
+        case Right(expr) => ""
+      }.collect{ content =>
         content match
           case L(pd) => transform_progdef(pd)
           case R(e) => rec(e)

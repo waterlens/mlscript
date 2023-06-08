@@ -3,7 +3,7 @@ package lumberhack
 
 import mlscript.{DiffTests, ModeType, TypingUnit, Term, Pgrm}
 import mlscript.utils.shorthands.Str
-import mlscript.utils.lastWords
+import mlscript.utils.*
 import mlscript.codegen.Helpers.inspect as showStructure
 import scala.collection.mutable.StringBuilder
 import mlscript.lumberhack.utils.*
@@ -300,12 +300,12 @@ class DiffTestLumberhack extends DiffTests {
 
   // rely on the fact that toplevel expressions are always in the front of the program
   def makeHaskellBenchFiles(optimized: Program, original: Program): String = {
-    val benchName = original.defAndExpr._2 match {
+    val benchName = (original.defAndExpr._2 match {
       case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId), _)) :: Nil
         if test.tree.name.startsWith("test") && primId.tree.name == "primId" =>
         test.tree.name.drop(4).filter(_ <= 0x7f) // keep only valid ASCII characters
       case _ => lastWords("benchmark requires a method of name `testxxx` calling a value wrapped in `primId`")
-    }
+    }).emptyOrElse(optimized.hashCode().toString())
     val originalDefs = Program(
       original.contents.tail
     )(using original.d) // the deforest instance does not matter here

@@ -43,6 +43,7 @@ package object utils {
       if (quantity > 1) self + (if (es) "es" else "s") else self
     @SuppressWarnings(Array("org.wartremover.warts.Equals"))
     def ===(other: String): Bool = self.equals(other)
+    def emptyOrElse(elze: => String): String = if (self.isEmpty()) { elze } else { self }
   }
   
   implicit class IterableOps[A](private val self: IterableOnce[A]) extends AnyVal {

@@ -596,7 +596,7 @@ trait CodeGen {
     primitives.getOrElse(id.tree.toString, Raw(id.tree.toString + "_" + id.uid.toString))
     
   def transform_progdef(pd: ProgDef): Document
-
+  def generateTypeInfo(d: Deforest): String
   def rec(e: Expr): Document
   def binOp(e1: Expr, op: String, e2: Expr) = "(" <:> rec(e1) <:> " " + op + " " <:> rec(e2) <:> ")"
   
@@ -621,6 +621,47 @@ object HaskellGen extends CodeGen {
   def validate(p: Program): Unit = ??? //maybe we should check if the program can be translated at all
 
   val primitives = Map("add" -> "(+)", "sub" -> "(-)")
+
+  override def generateTypeInfo(d: Deforest): String = {
+    // def getCtorFieldTypes(ctor: Var, d: Defoest) = 
+    
+    val allCtors = d.ctorExprToType.values
+    val allDtors = d.dtorExprToType.values
+    val ctorFileds = {
+      val res = MutMap.empty[String, List[Set[Either[ProdStrat, Strat[ConsStratEnum.ConsVar]]]]]
+      allCtors.foreach { case ProdStratEnum.MkCtor(ctor, args) => 
+        res.updateWith(ctor.name) {
+          case None => Some(args.map(a => Set(Left(a))))
+          case Some(fieldsInfo) => {
+            assert(fieldsInfo.length == args.length)
+            Some((fieldsInfo lazyZip args).map { case (s, e) =>
+              s + Left(e)
+            })
+          }
+        }
+      }
+      var tvarCount = -1
+      val tmp = res.collect { case (ctorName, fields) if !Set("True", "False")(ctorName) => ctorName -> {
+        fields.zipWithIndex.map { case (a, index) =>
+          if (
+            a.forall(_.asInstanceOf[Left[ProdStrat, Nothing]].value.s.isInstanceOf[ProdStratEnum.MkCtor])
+            || (ctorName == "LH_C" && index == 1)
+          ) then
+            "LH_BIGADT_PLACEHOLDER"
+          else
+            s"t${tvarCount += 1; tvarCount}"
+        }
+      }}
+      val bigADTFullName = "LH_BIGADT" + (0 to tvarCount).map(i => s" t$i").mkString
+      val finalRes = "data " + bigADTFullName + " = " + tmp.map { case (ctorName, fields) => ctorName -> { fields.map {
+        case "LH_BIGADT_PLACEHOLDER" => s"($bigADTFullName)"
+        case v => v
+      }}}.map { case (ctorName, fields) => s"$ctorName${fields.map(f => s" $f").mkString}" }.mkString(" | ")
+      finalRes
+    }
+    ctorFileds
+
+  }
 
   override def apply(p: Program): String = {
     Stacked(
@@ -679,6 +720,7 @@ object HaskellGen extends CodeGen {
     case Call(lhs, rhs) =>
       "(" <:> recSingleline(lhs) <:> " " <:> recSingleline(rhs) <:> ")"
     case Ctor(name, args) =>
+      // "(" <:> name.name <:> " " <:> Lined(args.map(arg => recSingleline(arg)), " ") <:> ")"
       (BuiltInTypes.fromStr(name.name).map {
         case BuiltInTypes.ListCons => "(" <:> recSingleline(args(0)) <:> ":" <:> recSingleline(args(1)) <:> ")"
         case BuiltInTypes.ListNil => Raw("[]")
@@ -750,7 +792,7 @@ object OCamlGen extends CodeGen {
   def validate(p: Program): Unit = ??? //maybe we should check if the program can be translated at all
 
   val primitives = Map("add" -> "(+)", "sub" -> "(-)")
-
+  override def generateTypeInfo(d: Deforest): String = ???
   def transform_progdef(pd: ProgDef): Document = {
     pd.body match {
       case Ref(Ident(_, mlscript.Var("primitive"), _)) => Raw("")

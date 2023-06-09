@@ -306,6 +306,7 @@ class DiffTestLumberhack extends DiffTests {
         test.tree.name.drop(4).filter(_ <= 0x7f) // keep only valid ASCII characters
       case _ => lastWords("benchmark requires a method of name `testxxx` calling a value wrapped in `primId`")
     }).emptyOrElse(optimized.hashCode().toString())
+    // val bigADT = HaskellGen.generateTypeInfo(original.d)
     val originalDefs = Program(
       original.contents.tail
     )(using original.d) // the deforest instance does not matter here
@@ -328,6 +329,7 @@ class DiffTestLumberhack extends DiffTests {
     val header = "import Criterion.Main\n"
     val hsFileContent = stack(
       Raw(header),
+      // Raw(bigADT + "\n"),
       Raw(mergedDefsGen),
       mainGen
     ).print

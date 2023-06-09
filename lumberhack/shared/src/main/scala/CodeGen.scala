@@ -21,11 +21,15 @@ enum BuiltInTypes {
   case ListCons
   case ListNil
   case Tuple(n: Int)
+  case BoolTrue
+  case BoolFalse
 
   lazy val toLumberhackType = this match {
     case ListCons => "LH_C"
     case ListNil => "LH_N"
     case Tuple(n) => s"LH_P$n"
+    case BoolTrue => "True"
+    case BoolFalse => "False"
   }
 }
 object BuiltInTypes {
@@ -33,6 +37,8 @@ object BuiltInTypes {
   def fromStr(c: Str) = c match {
     case "LH_C" => Some(ListCons)
     case "LH_N" => Some(ListNil)
+    case "True" => Some(BoolTrue)
+    case "False" => Some(BoolFalse)
     case tup if tup.matches("LH_P\\d+") => Some(Tuple(tup.drop(4).toInt))
     case _ => None
   }
@@ -707,14 +713,15 @@ trait CodeGen {
   protected implicit def stringToDoc(s: String): Raw = Raw(s)
 
   val primitives: Map[String, String]
-  def transform_id(id: Ident): Document
+  def transfromId(id: Ident): Document
     
-  def transform_progdef(pd: ProgDef): Document
+  def transFromProgDef(pd: ProgDef): Document
   def generateTypeInfo(d: Deforest): String
   def rec(e: Expr): Document
   val headers: Document
   def apply(p: Program): String
   def makeBenchFiles(optimized: Program, original: Program): String
+  def transformMatchArm(dtor: Var, params: List[Ident]): Document
 }
 
 object HaskellGen extends CodeGen {
@@ -769,35 +776,37 @@ object HaskellGen extends CodeGen {
         case Left(progDef) => progDef.id.tree.name
         case Right(expr) => ""
       }.map {
-        case L(pd) => transform_progdef(pd)
+        case L(pd) => transFromProgDef(pd)
         case R(e) => rec(e)
       },
       emptyLines = false
     ).print
   }
-  override def transform_id(id: Ident): Document =
+  override def transfromId(id: Ident): Document =
     if id.isDef then id.pp(using InitPpConfig) else id.pp(using InitPpConfig.showIuidOn)
-  override def transform_progdef(pd: ProgDef): Document = {
+  override def transFromProgDef(pd: ProgDef): Document = {
     pd.body match {
       case bodyFun@Function(param, body) => {
         val (params, innerBody) = bodyFun.takeParamsOut
-        transform_id(pd.id) <:> " " <:> Lined(params.map(transform_id), " ") <:> " = " <:> rec(innerBody)
+        transfromId(pd.id) <:> " " <:> Lined(params.map(transfromId), " ") <:> " = " <:> rec(innerBody)
       }
-      case _ => transform_id(pd.id) <:> " = " <:> rec(pd.body)
+      case _ => transfromId(pd.id) <:> " = " <:> rec(pd.body)
     }
   }
   
-  def transformMatchArmToHaskellType(dtor: Var, params: List[Ident]): Document = {
+  override def transformMatchArm(dtor: Var, params: List[Ident]): Document = {
     BuiltInTypes.fromStr(dtor.name) -> params match {
-      case Some(BuiltInTypes.ListCons) -> (h :: t :: Nil) => "(" <:> transform_id(h) <:> " : " <:> transform_id(t) <:> ") -> "
+      case Some(BuiltInTypes.ListCons) -> (h :: t :: Nil) => "(" <:> transfromId(h) <:> " : " <:> transfromId(t) <:> ") -> "
       case Some(BuiltInTypes.ListNil) -> Nil => "[] -> "
       case Some(BuiltInTypes.Tuple(n)) -> fields => {
         assert(fields.length == n)
-        "(" <:> Lined(fields.map(f => transform_id(f)), ", ") <:> ") -> "
+        "(" <:> Lined(fields.map(f => transfromId(f)), ", ") <:> ") -> "
       }
-      case None -> (idPat :: Nil) if dtor.name == "_" => transform_id(idPat) <:> " -> "
+      case Some(BuiltInTypes.BoolTrue) -> Nil => "True -> "
+      case Some(BuiltInTypes.BoolFalse) -> Nil => "False -> "
+      case None -> (idPat :: Nil) if dtor.name == "_" => transfromId(idPat) <:> " -> "
       case None -> Nil if dtor.name == "_" => "_ -> "
-      case _ => dtor.name <:> " " <:> Lined(params.map(arg => transform_id(arg)) :+ Raw("-> "), " ")
+      case _ => dtor.name <:> " " <:> Lined(params.map(arg => transfromId(arg)) :+ Raw("-> "), " ")
     }
   }
 
@@ -809,7 +818,7 @@ object HaskellGen extends CodeGen {
   def recSingleline(e: Expr): Document = e match {
     case Const(lit) => Raw(lit.idStr)
     case Ref(id) if Deforest.lumberhackKeywords(id.tree.name) => id.tree.name
-    case Ref(id) => transform_id(id)
+    case Ref(id) => transfromId(id)
     case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackBinOps(op) =>
       "(" <:> recSingleline(fst) <:> s" $op " <:> recSingleline(snd) <:> ")"
     case Call(Ref(Ident(_, Var("primId"), _)), arg) => recSingleline(arg)
@@ -820,6 +829,8 @@ object HaskellGen extends CodeGen {
       (BuiltInTypes.fromStr(name.name).map {
         case BuiltInTypes.ListCons => "(" <:> recSingleline(args(0)) <:> ":" <:> recSingleline(args(1)) <:> ")"
         case BuiltInTypes.ListNil => Raw("[]")
+        case BuiltInTypes.BoolTrue => Raw("True")
+        case BuiltInTypes.BoolFalse => Raw("False")
         case BuiltInTypes.Tuple(n) =>
           assert(n == args.length)
           "(" <:> Lined(args.map(recSingleline(_)).toList, ", ") <:> ")"
@@ -827,20 +838,20 @@ object HaskellGen extends CodeGen {
         "(" <:> name.name <:> " " <:> Lined(args.map(arg => recSingleline(arg)), " ") <:> ")"
       )
     case LetIn(id, rhs, body) => 
-      "(let " <:> transform_id(id) <:> " = " <:> recSingleline(rhs) <:> " in " <:> recSingleline(body) <:> ")"
+      "(let " <:> transfromId(id) <:> " = " <:> recSingleline(rhs) <:> " in " <:> recSingleline(body) <:> ")"
     case Match(scrut, arms) => 
       "(case " <:> recSingleline(scrut) <:> " of {" <:> 
-      Lined(arms.map{ case (v, args, body) => transformMatchArmToHaskellType(v, args) <:> recSingleline(body) }, "; ") <:> "})"
+      Lined(arms.map{ case (v, args, body) => transformMatchArm(v, args) <:> recSingleline(body) }, "; ") <:> "})"
     case f: Function =>
       val (params, body) = f.takeParamsOut
-      "(\\" <:> Lined(params.map(transform_id), " ") <:> " -> " <:> recSingleline(body) <:> ")"
+      "(\\" <:> Lined(params.map(transfromId), " ") <:> " -> " <:> recSingleline(body) <:> ")"
     case IfThenElse(s, t, e) => "(if " <:> recSingleline(s) <:> " then " <:> recSingleline(t) <:> " else " <:> recSingleline(e) <:> ")"
     case _ => lastWords("unsupported: " + e.pp(using InitPpConfig.showIuidOn))
   }
 
   def recMultiline(e: Expr): Document = e match {
     case Const(lit) => Raw(lit.idStr)
-    case Ref(id) => transform_id(id)
+    case Ref(id) => transfromId(id)
     case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackIntBinOps(op) =>
       recMultiline(fst) <:> s" $op " <:> recMultiline(snd)
     case Call(lhs, rhs) =>
@@ -861,7 +872,7 @@ object HaskellGen extends CodeGen {
       )
     case LetIn(id, rhs, body) => 
       stack(
-        "(let " <:> transform_id(id) <:> " = " <:> recMultiline(rhs) <:> " in",
+        "(let " <:> transfromId(id) <:> " = " <:> recMultiline(rhs) <:> " in",
         Indented(recMultiline(body)),
         ")"
       )
@@ -869,14 +880,14 @@ object HaskellGen extends CodeGen {
       Stacked(
         ("case " <:> recMultiline(scrut) <:> " of") :: 
         arms.map{case (v, args, body) => stack(
-          // Indented(v.name <:> " " <:> Lined(args.map(arg => transform_id(arg)) :+ Raw("-> "), " ") <:> recMultiline(body))
-          Indented(transformMatchArmToHaskellType(v, args) <:> recMultiline(body))
+          // Indented(v.name <:> " " <:> Lined(args.map(arg => transfromId(arg)) :+ Raw("-> "), " ") <:> recMultiline(body))
+          Indented(transformMatchArm(v, args) <:> recMultiline(body))
         )}
       )
     case f: Function =>
       val (params, body) = f.takeParamsOut
       stack(
-        "(\\" <:> Lined(params.map(transform_id), " ") <:> " -> ",
+        "(\\" <:> Lined(params.map(transfromId), " ") <:> " -> ",
         Indented(recMultiline(body) <:> ")")
       )
     case IfThenElse(s, t, e) => "if " <:> recMultiline(s) <:> " then " <:> recMultiline(t) <:> " else " <:> recMultiline(e)
@@ -954,17 +965,19 @@ object OCamlGen extends CodeGen {
   )
   def transformPrimitive(p: String): String = primitives.getOrElse(p, p)
   override def generateTypeInfo(d: Deforest): String = ???
-  override def transform_progdef(pd: ProgDef): Document = {
+  override def transFromProgDef(pd: ProgDef): Document = {
+    // need to add `let rec` and `;;` in the front and the end, the whole thing
+    // as a big group of mutually recursive let bindings
     pd.body match {
       case bodyFun@Function(param, body) => {
         val (params, innerBody) = bodyFun.takeParamsOut
         stack(
-          "let rec " <:> transform_id(pd.id) <:> Lined(params.map(p => " " <:> transform_id(p)), "") <:> " =",
+          transfromId(pd.id) <:> Lined(params.map(p => " " <:> transfromId(p)), "") <:> " =",
           Indented(rec(innerBody))
         )
       }
       case _ => stack(
-        "let rec " <:> transform_id(pd.id) <:> " =",
+        transfromId(pd.id) <:> " =",
         Indented(rec(pd.body))
       )
     }
@@ -974,17 +987,20 @@ object OCamlGen extends CodeGen {
 
   def transformMatchArm(dtor: Var, params: List[Ident]): Document = {
     BuiltInTypes.fromStr(dtor.name) -> params match {
-      case Some(BuiltInTypes.ListCons) -> (h :: t :: Nil) => "(" <:> transform_id(h) <:> " :: " <:> transform_id(t) <:> ") -> "
+      case Some(BuiltInTypes.ListCons) -> (h :: t :: Nil) => "(" <:> transfromId(h) <:> " :: " <:> transfromId(t) <:> ") -> "
       case Some(BuiltInTypes.ListNil) -> Nil => "[] -> "
+      case Some(BuiltInTypes.BoolTrue) -> Nil => "true -> "
+      case Some(BuiltInTypes.BoolFalse) -> Nil => "false -> "
       case Some(BuiltInTypes.Tuple(n)) -> fields => {
         assert(fields.length == n)
-        "(" <:> Lined(fields.map(f => transform_id(f)), ", ") <:> ") -> "
+        "(" <:> Lined(fields.map(f => transfromId(f)), ", ") <:> ") -> "
       }
-      case None -> (idPat :: Nil) if dtor.name == "_" => transform_id(idPat) <:> " -> "
+      case None -> (idPat :: Nil) if dtor.name == "_" => transfromId(idPat) <:> " -> "
       case None -> Nil if dtor.name == "_" => "_ -> "
+      case None -> Nil if dtor.name.matches("\\d+|\".*\"") => s"${dtor.name} -> "
       case _ => s"`${dtor.name}" <:> {
         if params.nonEmpty then
-          "(" <:> Lined(params.map(arg => transform_id(arg)), ", ") <:> ")"
+          "(" <:> Lined(params.map(arg => transfromId(arg)), ", ") <:> ")"
         else
           ""
       } <:> Raw(" -> ")
@@ -996,7 +1012,7 @@ object OCamlGen extends CodeGen {
     case Const(lit) => Raw(lit.idStr)
     case Ref(id) if Deforest.lumberhackKeywords(id.tree.name) =>
       transformPrimitive(id.tree.name)
-    case Ref(id) => transform_id(id)
+    case Ref(id) => transfromId(id)
     case Call(Ref(Ident(_, Var("primId"), _)), arg) => rec(arg)
     case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackBinOps(op) =>
       "(" <:> rec(fst) <:> s" ${transformPrimitive(op)} " <:> rec(snd) <:> ")"
@@ -1006,6 +1022,8 @@ object OCamlGen extends CodeGen {
       (BuiltInTypes.fromStr(name.name).map {
         case BuiltInTypes.ListCons => "(" <:> rec(args(0)) <:> "::" <:> rec(args(1)) <:> ")"
         case BuiltInTypes.ListNil => Raw("[]")
+        case BuiltInTypes.BoolTrue => Raw("true")
+        case BuiltInTypes.BoolFalse => Raw("false")
         case BuiltInTypes.Tuple(n) =>
           assert(n == args.length)
           "(" <:> Lined(args.map(rec(_)).toList, ", ") <:> ")"
@@ -1019,52 +1037,65 @@ object OCamlGen extends CodeGen {
       )
     case LetIn(id, rhs, body) => 
       stack(
-        "(let rec " <:> transform_id(id) <:> " = " <:> rec(rhs) <:> " in",
+        "(let rec " <:> transfromId(id) <:> " = " <:> rec(rhs) <:> " in",
         Indented(rec(body)) <:> ")"
       )
     case Match(scrut, arms) => 
       Stacked(
-        ("match " <:> rec(scrut) <:> " with") ::
+        ("(match " <:> rec(scrut) <:> " with") ::
         arms.map { case (v, args, body) => stack(
           Indented("| " <:> transformMatchArm(v, args)),
           Indented(Indented(rec(body)))
         )}
-      )
+      ) <:> ")"
     case f: Function =>
       val (params, body) = f.takeParamsOut
       stack(
-        "(fun " <:> Lined(params.map(transform_id), " ") <:> " -> ",
+        "(fun " <:> Lined(params.map(transfromId), " ") <:> " -> ",
         Indented(rec(body)) <:> ")"
       )
-    case IfThenElse(s, t, e) => "(if " <:> rec(s) <:> " then " <:> rec(t) <:> " else " <:> rec(e) <:> ")"
+    case IfThenElse(s, t, e) => stack(
+      "(if " <:> rec(s) <:> " then",
+      Indented(rec(t)),
+      "else",
+      Indented(rec(e)) <:> ")"
+    )
     case e => lastWords(s"not supported: ${e.pp(using InitPpConfig.showIuidOn)}")
   }
 
   override def makeBenchFiles(optimized: Program, original: Program): String = ???
   override def apply(p: Program): String = {
+    val sortedContent = p.contents.sortBy {
+      case Left(progDef) => progDef.id.tree.name
+      case Right(expr) => ""
+    }
+    val defs = sortedContent.collect {
+      case Left(df) => transFromProgDef(df).print
+    }.mkString("\nand ")
     Stacked(
-      p.contents.sortBy {
-        case Left(progDef) => progDef.id.tree.name
-        case Right(expr) => ""
-      }.map {
-        case L(pd) => transform_progdef(pd)
+      { if defs.nonEmpty then
+        ("let rec " <:> Raw(defs) <:> ";;") :: Nil
+      else
+        Nil
+      } :::
+      sortedContent.collect {
         case R(e) => rec(e)
       },
       emptyLines = false
     ).print
   }
-  override def transform_id(id: Ident): Document = {
+  override def transfromId(id: Ident): Document = {
     def fromSubscript(i: String) = i.flatMap {
-      case '₀' => "_0"; case '₁' => "_1"; case '₂' => "_2"
-      case '₃' => "_3"; case '₄' => "_4"; case '₅' => "_5"
-      case '₆' => "_6"; case '₇' => "_7"; case '₈' => "_8"
-      case '₉' => "_9"; case c => c.toString()
+      case '₀' => "_d0"; case '₁' => "_d1"; case '₂' => "_d2"
+      case '₃' => "_d3"; case '₄' => "_d4"; case '₅' => "_d5"
+      case '₆' => "_d6"; case '₇' => "_d7"; case '₈' => "_d8"
+      case '₉' => "_d9"; case c => c.toString()
     }
     def fromSuperscript(i: String) = i.flatMap {
-      case '⁰' => "_u0"; case '¹' => "_u1"; case '²' => "_u2"
-      case '³' => "_u3"; case '⁴' => "_u4"; case '⁵' => "_u5"
-      case '⁶' => "_u6"; case '⁷' => "_u7"; case '⁸' => "_u8"
-      case '⁹' => "_u9"; case c => c.toString()
+      case '⁰' => "_0"; case '¹' => "_1"; case '²' => "_2"
+      case '³' => "_3"; case '⁴' => "_4"; case '⁵' => "_5"
+      case '⁶' => "_6"; case '⁷' => "_7"; case '⁸' => "_8"
+      case '⁹' => "_9"; case c => c.toString()
     }
     fromSuperscript(fromSubscript(
       if id.isDef then id.pp(using InitPpConfig) else id.pp(using InitPpConfig.showIuidOn)

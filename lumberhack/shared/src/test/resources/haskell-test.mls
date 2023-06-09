@@ -1,8 +1,8 @@
 :NewParser
 :ParseOnly
 
-:lhbench
-:lhhaskell
+:lhGenHaskell
+:lhInHaskell
 testMapmap len = map (\x -> x + 1) $ map (\x -> x + x) [1..len]
 testMapmap $ primId 5000000
 //│ ||
@@ -108,15 +108,7 @@ testMapmap $ primId 5000000
 //│ 		ls⁴(f⁴)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
-//│ >>>>>>>>>> Generated Haskell Code >>>>>>>>>>
-//│ (testMapmap₀₀ 5000000)
-//│ enumFromTo₀₀ a⁰ b⁰ = (if (a⁰ <= b⁰) then (let h⁰ = a⁰ in (let t⁰ = ((enumFromTo₀₀ (a⁰ + 1)) b⁰) in (\f¹ -> (let h¹ = (f¹ h⁰) in (let t¹ = ((map₁₀ f¹) t⁰) in (\f² -> ((f² h¹):((map₀₀ f²) t¹)))))))) else (\f³ f⁴ -> []))
-//│ map₀₀ f⁵ ls¹ = (ls¹ f⁵)
-//│ map₁₀ f⁰ ls⁰ = (ls⁰ f⁰)
-//│ testMapmap₀₀ _lh_testMapmap_arg1⁰ = ((map₀₀ (\x⁰ -> (x⁰ + 1))) ((map₁₀ (\x¹ -> (x¹ + x¹))) ((enumFromTo₀₀ 1) _lh_testMapmap_arg1⁰)))
-//│ <<<<<<<<<< Generated Haskell Code <<<<<<<<<<
-//│ 
-//│ >>>>>>>>>> Generated Haskell Bench >>>>>>>>>>
+//│ >>>>>>>>>> Generated Haskell >>>>>>>>>>
 //│ import Criterion.Main
 //│ 
 //│ enumFromTo₀ a² b² = (if (a² <= b²) then (a²:((enumFromTo₀ (a² + 1)) b²)) else [])
@@ -133,7 +125,7 @@ testMapmap $ primId 5000000
 //│ main = defaultMain [ bgroup "Mapmap" [
 //│     bench "lumberhack_Mapmap" $ nf testMapmap₀₀ 5000000
 //│   , bench "original_Mapmap" $ nf testMapmap₀ 5000000 ] ]
-//│ <<<<<<<<<< Generated Haskell Bench <<<<<<<<<<
+//│ <<<<<<<<<< Generated Haskell <<<<<<<<<<
 
 
 // fusion clash due to: the thing returned by `gen` will be consumed
@@ -141,8 +133,8 @@ testMapmap $ primId 5000000
 // NOTE: being slower (than the desugared version, faster than the most original version) may be because
 // originally the type of `gen` is `Int -> Int -> [[Int]]`
 // after the fusion the type of `gen` is `Int -> Int -> [Int -> Int -> Bool]`
-:lhbench
-:lhhaskell
+:lhGenHaskell
+:lhInHaskell
 safe x d []    = True
 safe x d (q:l) = (x /= q) && (x /= (q+d)) && (x /= (q-d)) && (safe x (d+1) l)
 gen 0 nq = [[]]
@@ -316,17 +308,7 @@ testQueen $ primId 12
 //│ 				| LH_N  => 0}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
-//│ >>>>>>>>>> Generated Haskell Code >>>>>>>>>>
-//│ (testQueen₀₀ 12)
-//│ enumFromTo₀₀ a⁰ b⁰ = (if (a⁰ <= b⁰) then (a⁰:((enumFromTo₀₀ (a⁰ + 1)) b⁰)) else [])
-//│ gen₀₀ _lh_gen_arg1⁰ _lh_gen_arg2⁰ = (case _lh_gen_arg1⁰ of {0 -> ((\_lh_safe_arg1¹ _lh_safe_arg2¹ -> (True )):[]); _ -> (let _lh_listcomp_fun⁰ = (\_lh_listcomp_fun_para⁰ -> (case _lh_listcomp_fun_para⁰ of {(_lh_listcomp_fun_ls_h⁰ : _lh_listcomp_fun_ls_t⁰) -> (let _lh_listcomp_fun¹ = (\_lh_listcomp_fun_para¹ -> (case _lh_listcomp_fun_para¹ of {(_lh_listcomp_fun_ls_h¹ : _lh_listcomp_fun_ls_t¹) -> (if (((safe₀₀ _lh_listcomp_fun_ls_h¹) 1) _lh_listcomp_fun_ls_h⁰) then ((let _lh_safe_LH_C_0⁰ = _lh_listcomp_fun_ls_h¹ in (let _lh_safe_LH_C_1⁰ = _lh_listcomp_fun_ls_h⁰ in (\_lh_safe_arg1² _lh_safe_arg2² -> ((((_lh_safe_arg1² /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1² /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2²))) && (_lh_safe_arg1² /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2²))) && (((safe₀₀ _lh_safe_arg1²) (_lh_safe_arg2² + 1)) _lh_safe_LH_C_1⁰))))):(_lh_listcomp_fun¹ _lh_listcomp_fun_ls_t¹)) else (_lh_listcomp_fun¹ _lh_listcomp_fun_ls_t¹)); [] -> (_lh_listcomp_fun⁰ _lh_listcomp_fun_ls_t⁰)})) in (_lh_listcomp_fun¹ ((enumFromTo₀₀ 1) _lh_gen_arg2⁰))); [] -> []})) in (_lh_listcomp_fun⁰ ((gen₀₀ (_lh_gen_arg1⁰ - 1)) _lh_gen_arg2⁰)))})
-//│ length₀₀ ls⁰ = (case ls⁰ of {(h⁰ : t⁰) -> (1 + (length₀₀ t⁰)); [] -> 0})
-//│ nsoln₀₀ _lh_nsoln_arg1⁰ = (length₀₀ ((gen₀₀ _lh_nsoln_arg1⁰) _lh_nsoln_arg1⁰))
-//│ safe₀₀ _lh_safe_arg1⁰ _lh_safe_arg2⁰ _lh_safe_arg3⁰ = ((_lh_safe_arg3⁰ _lh_safe_arg1⁰) _lh_safe_arg2⁰)
-//│ testQueen₀₀ _lh_testQueen_arg1⁰ = (nsoln₀₀ _lh_testQueen_arg1⁰)
-//│ <<<<<<<<<< Generated Haskell Code <<<<<<<<<<
-//│ 
-//│ >>>>>>>>>> Generated Haskell Bench >>>>>>>>>>
+//│ >>>>>>>>>> Generated Haskell >>>>>>>>>>
 //│ import Criterion.Main
 //│ 
 //│ enumFromTo₀ a² b² = (if (a² <= b²) then (a²:((enumFromTo₀ (a² + 1)) b²)) else [])
@@ -347,11 +329,11 @@ testQueen $ primId 12
 //│ main = defaultMain [ bgroup "Queen" [
 //│     bench "lumberhack_Queen" $ nf testQueen₀₀ 12
 //│   , bench "original_Queen" $ nf testQueen₀ 12 ] ]
-//│ <<<<<<<<<< Generated Haskell Bench <<<<<<<<<<
+//│ <<<<<<<<<< Generated Haskell <<<<<<<<<<
 
 
 // WRONG: haskell also cannot handle `[1..nq]` in list comprehension, type error
-:lhhaskell
+:lhInHaskell
 safe x d []    = True
 safe x d (q:l) = (x /= q) && (x /= (q+d)) && (x /= (q-d)) && (safe x (d+1) l)
 gen 0 nq = [[]]
@@ -539,20 +521,10 @@ test $ primId 4
 //│ 				LH_C h¹ t¹ => (1 + length₀₀(t¹))
 //│ 				| LH_N  => 0}
 //│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>>>>> Generated Haskell Code >>>>>>>>>>
-//│ (test₀₀ 4)
-//│ enumFromTo₀₀ a⁰ b⁰ = (if (a⁰ <= b⁰) then (let _lh_listcomp_fun_ls_h⁰ = a⁰ in (let _lh_listcomp_fun_ls_t⁰ = ((enumFromTo₀₀ (a⁰ + 1)) b⁰) in (\_lh_listcomp_fun_ls_h¹ _lh_listcomp_fun⁰ _lh_listcomp_fun¹ _lh_listcomp_fun_ls_t¹ -> (if (((safe₀₀ _lh_listcomp_fun_ls_h⁰) 1) _lh_listcomp_fun_ls_h¹) then ((let _lh_safe_LH_C_0⁰ = _lh_listcomp_fun_ls_h⁰ in (let _lh_safe_LH_C_1⁰ = _lh_listcomp_fun_ls_h¹ in (\_lh_safe_arg1⁰ _lh_safe_arg2⁰ -> ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && (((safe₀₀ _lh_safe_arg1⁰) (_lh_safe_arg2⁰ + 1)) _lh_safe_LH_C_1⁰))))):(_lh_listcomp_fun⁰ _lh_listcomp_fun_ls_t⁰)) else (_lh_listcomp_fun⁰ _lh_listcomp_fun_ls_t⁰))))) else (\_lh_listcomp_fun_ls_h² _lh_listcomp_fun² _lh_listcomp_fun³ _lh_listcomp_fun_ls_t² -> (_lh_listcomp_fun³ _lh_listcomp_fun_ls_t²)))
-//│ gen₀₀ _lh_gen_arg1⁰ _lh_gen_arg2⁰ = (case _lh_gen_arg1⁰ of {0 -> ((\_lh_safe_arg1² _lh_safe_arg2² -> (True )):[]); _ -> (let _lh_listcomp_fun⁴ = (\_lh_listcomp_fun_para⁰ -> (case _lh_listcomp_fun_para⁰ of {(_lh_listcomp_fun_ls_h³ : _lh_listcomp_fun_ls_t³) -> (let _lh_listcomp_fun⁵ = (\_lh_listcomp_fun_para¹ -> ((((_lh_listcomp_fun_para¹ _lh_listcomp_fun_ls_h³) _lh_listcomp_fun⁵) _lh_listcomp_fun⁴) _lh_listcomp_fun_ls_t³)) in (_lh_listcomp_fun⁵ ((enumFromTo₀₀ 1) _lh_gen_arg2⁰))); [] -> []})) in (_lh_listcomp_fun⁴ ((gen₀₀ (_lh_gen_arg1⁰ - 1)) _lh_gen_arg2⁰)))})
-//│ length₀₀ ls⁰ = (case ls⁰ of {(h⁰ : t⁰) -> (1 + (length₀₀ t⁰)); [] -> 0})
-//│ nsoln₀₀ _lh_nsoln_arg1⁰ = (length₀₀ ((gen₀₀ _lh_nsoln_arg1⁰) _lh_nsoln_arg1⁰))
-//│ safe₀₀ _lh_safe_arg1¹ _lh_safe_arg2¹ _lh_safe_arg3⁰ = ((_lh_safe_arg3⁰ _lh_safe_arg1¹) _lh_safe_arg2¹)
-//│ test₀₀ _lh_test_arg1⁰ = (nsoln₀₀ _lh_test_arg1⁰)
-//│ <<<<<<<<<< Generated Haskell Code <<<<<<<<<<
 
 
 // WRONG: not well-typed in haskell
-:lhhaskell
+:lhInHaskell
 // [ (a, b) | b <- [1, 4, 10], a <- [2, 3, 5], a < b ]
 
 // TODO: support where, but cannot be local mutual recursive let bindings
@@ -566,30 +538,30 @@ test $ primId 4
 //     gen 0 = [[]]
 //     gen n = [ (q:b) | b <- gen (n-1), q <- [1..nq], safe q 1 b]
 
-:lhhaskell
+:lhInHaskell
 // gen 0 nq = [[]]
 // gen n nq = [ (q:b) | b <- gen (n-1) nq, q <- (primId [1..nq])]
 // nsoln nq = length (gen nq nq)
 // nsoln 3
 
-:lhhaskell
+:lhInHaskell
 // f 0 = error("no")
 // f n = n + error("yes")
 // f 9
 
-:lhhaskell
+:lhInHaskell
 // f [] ys = []
 // f xs [] = []
 // f (x:xs) (y:ys) = (x,y):(f xs ys)
 // f [1,2] [2,3]
 
 // WRONG: type error after fusion in haskell: f x = x f
-:lhhaskell
+:lhInHaskell
 // [a | (Just a) <- [Nothing, Just 3]]
 
 // WRONG: not well-typed in haskell after fusion
-:lhhaskell
-:lhbench
+:lhInHaskell
+:lhGenHaskell
 testSimpleRecursiveTypeExample x = [a | a <- [x]]
 testSimpleRecursiveTypeExample $ primId 3
 //│ ||
@@ -652,12 +624,7 @@ testSimpleRecursiveTypeExample $ primId 3
 //│ 		in (fun _lh_listcomp_fun³ -> [LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun³(_lh_listcomp_fun_ls_t²)]))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
-//│ >>>>>>>>>> Generated Haskell Code >>>>>>>>>>
-//│ (testSimpleRecursiveTypeExample₀₀ 3)
-//│ testSimpleRecursiveTypeExample₀₀ _lh_testSimpleRecursiveTypeExample_arg1⁰ = (let _lh_listcomp_fun⁰ = (\_lh_listcomp_fun_para⁰ -> (_lh_listcomp_fun_para⁰ _lh_listcomp_fun⁰)) in (_lh_listcomp_fun⁰ (let _lh_listcomp_fun_ls_h⁰ = _lh_testSimpleRecursiveTypeExample_arg1⁰ in (let _lh_listcomp_fun_ls_t⁰ = (\_lh_listcomp_fun¹ -> []) in (\_lh_listcomp_fun² -> (_lh_listcomp_fun_ls_h⁰:(_lh_listcomp_fun² _lh_listcomp_fun_ls_t⁰)))))))
-//│ <<<<<<<<<< Generated Haskell Code <<<<<<<<<<
-//│ 
-//│ >>>>>>>>>> Generated Haskell Bench >>>>>>>>>>
+//│ >>>>>>>>>> Generated Haskell >>>>>>>>>>
 //│ import Criterion.Main
 //│ 
 //│ testSimpleRecursiveTypeExample₀ _lh_testSimpleRecursiveTypeExample_arg1¹ = (let _lh_listcomp_fun¹ = (\_lh_listcomp_fun_para¹ -> (case _lh_listcomp_fun_para¹ of {(_lh_listcomp_fun_ls_h¹ : _lh_listcomp_fun_ls_t¹) -> (_lh_listcomp_fun_ls_h¹:(_lh_listcomp_fun¹ _lh_listcomp_fun_ls_t¹)); [] -> []})) in (_lh_listcomp_fun¹ (_lh_testSimpleRecursiveTypeExample_arg1¹:[])))
@@ -668,8 +635,8 @@ testSimpleRecursiveTypeExample $ primId 3
 //│ main = defaultMain [ bgroup "SimpleRecursiveTypeExample" [
 //│     bench "lumberhack_SimpleRecursiveTypeExample" $ nf testSimpleRecursiveTypeExample₀₀ 3
 //│   , bench "original_SimpleRecursiveTypeExample" $ nf testSimpleRecursiveTypeExample₀ 3 ] ]
-//│ <<<<<<<<<< Generated Haskell Bench <<<<<<<<<<
+//│ <<<<<<<<<< Generated Haskell <<<<<<<<<<
 
 // WRONG: not well-typed in haskell
-:lhhaskell
+:lhInHaskell
 // [a | a <- [1..2]]

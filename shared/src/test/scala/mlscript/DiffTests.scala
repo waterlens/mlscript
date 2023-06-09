@@ -39,9 +39,12 @@ abstract class ModeType {
   def expectCodeGenErrors: Bool
   def showRepl: Bool
   def allowEscape: Bool
-  def lhIsHaskell: Bool
-  def lhIsOcaml: Bool
-  def lhIsBench: Bool
+  def lhError: Bool
+  def lhEval: Bool
+  def lhInHaskell: Bool
+  def lhInOCaml: Bool
+  def lhGenHaskell: Bool
+  def lhGenOCaml: Bool
 }
 
 class DiffTests
@@ -155,9 +158,13 @@ class DiffTests
       showRepl: Bool = false,
       allowEscape: Bool = false,
       // noProvs: Bool = false,
-      lhIsHaskell: Bool = false,
-      lhIsOcaml: Bool = false,
-      lhIsBench: Bool = false,
+      lhError: Bool = false,
+      lhEval: Bool = false,
+      lhInHaskell: Bool = false,
+      lhInOCaml: Bool = false,
+      lhGenHaskell: Bool = false,
+      lhGenOCaml: Bool = false,
+      
     ) extends ModeType {
       def isDebugging: Bool = dbg || dbgSimplif
     }
@@ -212,9 +219,12 @@ class DiffTests
           case "re" => mode.copy(expectRuntimeErrors = true)
           case "ShowRepl" => mode.copy(showRepl = true)
           case "escape" => mode.copy(allowEscape = true)
-          case "lhhaskell" => mode.copy(lhIsHaskell = true)
-          case "lhocaml" => mode.copy(lhIsOcaml = true)
-          case "lhbench" => mode.copy(lhIsBench = true)
+          case "lhError" => mode.copy(lhError = true)
+          case "lhEval" => mode.copy(lhEval = true)
+          case "lhInHaskell" => mode.copy(lhInHaskell = true)
+          case "lhInOCaml" => mode.copy(lhInOCaml = true)
+          case "lhGenHaskell" => mode.copy(lhGenHaskell = true)
+          case "lhGenOCaml" => mode.copy(lhGenOCaml = true)
           case _ =>
             failures += allLines.size - lines.size
             output("/!\\ Unrecognized option " + line)
@@ -357,7 +367,7 @@ class DiffTests
             val origin = Origin(testName, globalStartLineNum, fph)
             val lexer = new NewLexer(origin, raise, dbg = mode.dbgParsing)
             
-            val tokens = if (!(mode.lhIsHaskell || mode.lhIsOcaml)) { lexer.bracketedTokens } else { Nil }
+            val tokens = if (!(mode.lhInHaskell || mode.lhInOCaml)) { lexer.bracketedTokens } else { Nil }
             
             if (mode.showParse || mode.dbgParsing || parseOnly)
               output(NewLexer.printTokens(tokens))

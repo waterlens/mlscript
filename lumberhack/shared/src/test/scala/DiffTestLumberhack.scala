@@ -39,22 +39,21 @@ class DiffTestLumberhack extends DiffTests {
     // val (originalProgram, d) = originalOriginalProgram.expandedWithNewDeforest(originalOriginalProgramCallTree)
 
     val originalD = Deforest(mode.stdout)
-    var (allowErr, evaluate, filteredEntities) = unit.entities match {
+    val (allowErr, evaluate, filteredEntities) = unit.entities match {
       case Var(flags) :: t if flags.startsWith("_LUMBERHACK") => (
-        flags.contains("_LUMBERHACK_ERROR"),
-        flags.contains("_LUMBERHACK_EVAL"),
+        flags.contains("_LUMBERHACK_ERROR") || mode.lhError,
+        flags.contains("_LUMBERHACK_EVAL") || mode.lhEval,
         t
       )
-      case l => (false, false, l)
+      case l => (mode.lhError, mode.lhEval, l)
     }
-    val (originalProgram, newD) = if mode.lhIsHaskell then
-      // evaluate = true
+    val (originalProgram, newD) = if mode.lhInHaskell then
       val p = FromHaskell(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output)
       p.d(p) // duplicate multiple usages here to enbale polymorphism
       val initCallTree = CallTree.callTreeUsingSplitKnot(p.d)
       val res = p.expandedWithNewDeforest(initCallTree)
       res
-    else if mode.lhIsOcaml then
+    else if mode.lhInOCaml then
       val p = FromOcaml(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output)
       p.d(p) // duplicate multiple usages here to enbale polymorphism
       val initCallTree = CallTree.callTreeUsingSplitKnot(p.d)
@@ -70,11 +69,11 @@ class DiffTestLumberhack extends DiffTests {
       output(originalProgram.pp(using InitPpConfig.multilineOn.showIuidOn.showEuidOn)) 
     }
     output(originalProgram.pp(using InitPpConfig.multilineOn.showIuidOn.showRefEuidOn))
-    if mode.lhIsHaskell then
+    if mode.lhInHaskell then
       output("\t\t---------- unoptimized haskell gen ----------")
       output(HaskellGen(originalProgram).linesIterator.map("\t\t" + _).mkString("\n"))
       output("\t\t---------- unoptimized haskell gen ----------")
-    else if mode.lhIsOcaml then
+    else if mode.lhInOCaml then
       output("\t\t---------- unoptimized ocaml gen ----------")
       output(OCamlGen(originalProgram).linesIterator.map("\t\t" + _).mkString("\n"))
       output("\t\t---------- unoptimized ocaml gen ----------")
@@ -98,22 +97,22 @@ class DiffTestLumberhack extends DiffTests {
         ) then throw Exception("output different!")
       }
 
-      if mode.lhIsHaskell then
-        output("\n>>>>>>>>>> Generated Haskell Code >>>>>>>>>>")
-        output(HaskellGen(iterativeProcessRes._1))
-        output("<<<<<<<<<< Generated Haskell Code <<<<<<<<<<")
-        if mode.lhIsBench then
-          output("\n>>>>>>>>>> Generated Haskell Bench >>>>>>>>>>")
+      if mode.lhGenHaskell then
+        output("\n>>>>>>>>>> Generated Haskell >>>>>>>>>>")
+        try {
           output(HaskellGen.makeBenchFiles(iterativeProcessRes._1, originalProgram))
-          output("<<<<<<<<<< Generated Haskell Bench <<<<<<<<<<")
-      else if mode.lhIsOcaml then
-        output("\n>>>>>>>>>> Generated OCaml Code >>>>>>>>>>")
-        output(OCamlGen(iterativeProcessRes._1))
-        output("<<<<<<<<<< Generated OCaml Code <<<<<<<<<<")
-        if mode.lhIsBench then
-          output("\n>>>>>>>>>> Generated OCaml Bench >>>>>>>>>>")
+        } catch { case _ => 
+          output(HaskellGen(iterativeProcessRes._1))
+        }
+        output("<<<<<<<<<< Generated Haskell <<<<<<<<<<")
+      if mode.lhGenOCaml then
+        output("\n>>>>>>>>>> Generated OCaml >>>>>>>>>>")
+        try {
           output(OCamlGen.makeBenchFiles(iterativeProcessRes._1, originalProgram))
-          output("<<<<<<<<<< Generated OCaml Bench <<<<<<<<<<")
+        } catch { case _ =>
+          output(OCamlGen(iterativeProcessRes._1))
+        }
+        output("<<<<<<<<<< Generated OCaml <<<<<<<<<<")
 
       if allowErr then throw Exception("expect to fail but pass")
     } catch {

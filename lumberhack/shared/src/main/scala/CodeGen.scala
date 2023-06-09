@@ -113,7 +113,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
       case "pat_wildcard" => NestedPat.WildcardPat
     }
   }
-  given node2ToExprableHs: Conversion[Node, ToExprable] with {
+  given nodeToExprableHs: Conversion[Node, ToExprable] with {
     override def apply(n: Node): ToExprable = new ToExprable {
       override def toExpr(using ctx: Ctx, inDef: Option[Ident], d: Deforest, output: Str => Unit, prgmStr: Str): Expr = n.getType() match {
         case "ERROR" => lastWords("haskell parse error")
@@ -548,10 +548,10 @@ fun length(ls) = if ls is
           case "patterns" => {
             val pats = patsOrEqNode.getAllChilds.map(_.toPattern)
             assert(n.getChild(2).getSrcContent == "=") // do not support guard equation for now
-            (pats.toList, node2ToExprableHs(n.getChild(3)), Map.empty[String, Ident])
+            (pats.toList, nodeToExprableHs(n.getChild(3)), Map.empty[String, Ident])
           }
           case "=" => { // top level def without parameters
-            (Nil, node2ToExprableHs(n.getChild(2)), Map.empty[String, Ident])
+            (Nil, nodeToExprableHs(n.getChild(2)), Map.empty[String, Ident])
           }
         }
       }
@@ -584,37 +584,137 @@ fun length(ls) = if ls is
 
 }
 
+object FromOcaml extends NativeLoader("java-tree-sitter-ocaml-haskell") {
+  def apply(program: Str)(using d: Deforest, output: Str => Unit): Program = {
+    val parser = new Parser()
+    parser.setLanguage(Languages.ocaml())
+    val tree = parser.parseString(program)
+    val treeRootNode = tree.getRootNode()
+    output(treeRootNode.pp)
+    ???
+  }
+
+  given NodeExtension with {
+    extension (n: Node) override def toPattern(using prgmStr: Str): NestedPat = ???
+  }
+  given nodeToExprableOcaml: Conversion[Node, ToExprable] with {
+    override def apply(x: Node): ToExprable = ???
+  }
+
+  def ocamlBuiltinFunsList(using d: Deforest): Program = {
+    val ocamlBuiltinFuns = Set("map", "filter", "fold_left", "fold_right", "combine", "head", "tail", "enumFromTo", "enumFromThenTo", "length")
+    val builtins = """
+fun map(f, ls) = if ls is
+  LH_C(h, t) then LH_C(f(h), map(f, t))
+  LH_N then LH_N
+fun filter(f, ls) = if ls is
+  LH_C(h, t) then if f(h) then LH_C(h, filter(f, t)) else filter(f, t)
+  LH_N then LH_N
+fun fold_left(f, i, ls) = if ls is
+  LH_C(h, t) then foldl(f, f(i, h), t)
+  LH_N then i
+fun fold_right(f, i, ls) = if ls is
+  LH_C(h, t) then f(h, foldr(f, i, t))
+  LH_N then i
+fun combine(xs, ys) = if xs is
+  LH_C(hx, tx) then if ys is
+    LH_C(hy, ty) then LH_C(LH_P2(hx, hy), zip(tx, ty))
+    LH_N then LH_N
+  LH_N then LH_N
+fun length(ls) = if ls is
+  LH_C(h, t) then 1 + length(t)
+  LH_N then 0
+    """
+    val builtinPrgms = {
+      val lumberhackBuiltinFph = new FastParseHelpers(builtins)
+      val origin = Origin("_lumberhack_builtin", 0, lumberhackBuiltinFph)
+      val lexer = new NewLexer(origin, _ => (), dbg = false)
+      val tokens = lexer.bracketedTokens
+      val p = new NewParser(origin, tokens, _ => (), dbg = false, N) {
+        def doPrintDbg(msg: => Str): Unit = ()
+      }
+      val res = p.parseAll(p.typingUnit).entities
+      val prgm = Program.fromPgrm(Pgrm(res))
+      prgm
+    }
+    builtinPrgms
+  }
+  // def fromOCamlToPrgm(rootNode: Node)(using prgmStr: Str, d: Deforest, output: Str => Unit): Program = {
+  //   val ocamlBuiltinPrgm = ocamlBuiltinFunsList
+  //   val (defs, main) = rootNode.getAllChilds
+  //     .filter(n => supportedTopLevelHaskellNodeType(n.getType()))
+  //     .partition(_.getType() == "function")
+
+  //   given initCtx: Expr.Ctx = {
+  //     val res = MutMap.empty[String, Ident]
+  //     defs.foreach { deff =>
+  //       val defNameNode = deff.getAllChilds.head
+  //       assert(defNameNode.getType() == "variable")
+  //       val defName = defNameNode.getSrcContent
+  //       res.getOrElseUpdate(defNameNode.getSrcContent, d.nextIdent(true, Var(defName)))
+  //     }
+  //     res
+  //   } ++ d.lumberhackKeywordsIds ++ haskellBuiltinPrgm.defAndExpr._1.map { case (funDef, _) =>
+  //     funDef.tree.name -> funDef
+  //   } |> (_.toMap)
+
+  //   val funcDefs = defs.groupBy(_.getChild(0).getSrcContent).map { case (name, defNodes) =>
+  //     val funName = initCtx(name)
+  //     val patsAndBodies = defNodes.map { n =>
+  //       val patsOrEqNode = n.getChild(1)
+  //       patsOrEqNode.getType() match {
+  //         case "patterns" => {
+  //           val pats = patsOrEqNode.getAllChilds.map(_.toPattern)
+  //           assert(n.getChild(2).getSrcContent == "=") // do not support guard equation for now
+  //           (pats.toList, nodeToExprableHs(n.getChild(3)), Map.empty[String, Ident])
+  //         }
+  //         case "=" => { // top level def without parameters
+  //           (Nil, nodeToExprableHs(n.getChild(2)), Map.empty[String, Ident])
+  //         }
+  //       }
+  //     }
+  //     val funArgNames = {
+  //       val numOfArgs = patsAndBodies.map(_._1.length).toSet
+  //       assert(numOfArgs.size == 1)
+  //       (1 to numOfArgs.head).map(idx => d.nextIdent(false, Var(s"_lh_${name}_arg$idx")))
+  //     }
+  //     val body = mergeMatchPatterns(
+  //       funArgNames.toList,
+  //       patsAndBodies.toList,
+  //       {
+  //         given Option[Ident] = Some(funName)
+  //         Expr.Call(Expr.Ref(initCtx("error")), Expr.Const(StrLit("match error")))
+  //       }
+  //     )(using initCtx, Some(funName))
+  //     val funDef = funArgNames.foldRight(body) { case (arg, acc) => Expr.Function(arg, acc)(using d, Some(funName)) }
+  //     Left(ProgDef(funName, funDef))
+  //   }
+
+  //   val content = main.flatMap { c => c.getType() match {
+  //     case "top_splice" =>
+  //       assert(c.getChildCount() == 1)
+  //       Some(Right(c.getChild(0).toExpr(using initCtx, None)))
+  //     case _ => lastWords("unsupported")
+  //   }}
+
+  //   Program(haskellBuiltinPrgm.contents ::: funcDefs.toList ::: content.toList)
+  // }
+}
+
 
 
 trait CodeGen {
-  //implicit def printName(name: Name)(implicit printUniqueIds: Boolean): Document
-
   protected implicit def stringToDoc(s: String): Raw = Raw(s)
 
   val primitives: Map[String, Document]
-  def transform_id(id: Ident): Document = 
-    primitives.getOrElse(id.tree.toString, Raw(id.tree.toString + "_" + id.uid.toString))
+  def transform_id(id: Ident): Document
     
   def transform_progdef(pd: ProgDef): Document
   def generateTypeInfo(d: Deforest): String
   def rec(e: Expr): Document
-  def binOp(e1: Expr, op: String, e2: Expr) = "(" <:> rec(e1) <:> " " + op + " " <:> rec(e2) <:> ")"
-  
   val headers: Document
-  def apply(p: Program): String = {
-    Stacked( 
-      headers ::
-      p.contents.collect{ content =>
-        content match
-          case L(pd) => transform_progdef(pd)
-      } ++ 
-      p.contents.collect{ content =>
-        content match
-          case R(e) => rec(e)
-      },
-      emptyLines = false
-    ).print
-  }
+  def apply(p: Program): String
+  def makeBenchFiles(optimized: Program, original: Program): String
 }
 
 object HaskellGen extends CodeGen {
@@ -668,10 +768,9 @@ object HaskellGen extends CodeGen {
       p.contents.sortBy {
         case Left(progDef) => progDef.id.tree.name
         case Right(expr) => ""
-      }.collect{ content =>
-        content match
-          case L(pd) => transform_progdef(pd)
-          case R(e) => rec(e)
+      }.map {
+        case L(pd) => transform_progdef(pd)
+        case R(e) => rec(e)
       },
       emptyLines = false
     ).print
@@ -702,10 +801,7 @@ object HaskellGen extends CodeGen {
     }
   }
 
-  override val headers = stack(
-    "module Main where",
-    "import Criterion.Main"
-  )
+  override val headers = stack("import Criterion.Main\n")
 
   // one-line, indentation is hard
   override def rec(e: Expr): Document = recSingleline(e)
@@ -786,6 +882,68 @@ object HaskellGen extends CodeGen {
     case IfThenElse(s, t, e) => "if " <:> recMultiline(s) <:> " then " <:> recMultiline(t) <:> " else " <:> recMultiline(e)
     case _ => lastWords("unsupported: " + e.pp(using InitPpConfig.showIuidOn))
   }
+
+  // rely on the fact that toplevel expressions are always in the front of the program
+  override def makeBenchFiles(optimized: Program, original: Program): String = {
+    val benchName = (original.defAndExpr._2 match {
+      case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId), _)) :: Nil
+        if test.tree.name.startsWith("test") && primId.tree.name == "primId" =>
+        test.tree.name.drop(4).filter(_ <= 0x7f) // keep only valid ASCII characters
+      case _ => lastWords("benchmark requires a method of name `testxxx` calling a value wrapped in `primId`")
+    }).emptyOrElse(optimized.hashCode().toString())
+    // val bigADT = HaskellGen.generateTypeInfo(original.d)
+    val originalDefs = Program(
+      original.contents.tail
+    )(using original.d) // the deforest instance does not matter here
+    val optimizedDefs = Program(
+      optimized.contents.tail
+    )(using original.d) // the deforest instance does not matter here
+    val mergedDefsGen = HaskellGen(originalDefs) + "\n\n" + HaskellGen(optimizedDefs) + "\n"
+
+    val mainTestGen = stack(
+      Raw(s"  bench $"lumberhack_$benchName$" $$ nf ")
+        <:> Raw((HaskellGen.rec(optimized.defAndExpr._2.head).print).drop(1).dropRight(1)),
+      Raw(s", bench $"original_$benchName$" $$ nf ")
+        <:> Raw((HaskellGen.rec(original.defAndExpr._2.head).print).drop(1).dropRight(1)) <:> Raw(" ] ]")
+    )
+    val mainGen = stack(
+      Raw("main :: IO ()"),
+      Raw(s"main = defaultMain [ bgroup \"$benchName\" ["),
+      Indented(mainTestGen)
+    )
+    val hsFileContent = stack(
+      headers,
+      // Raw(bigADT + "\n"),
+      Raw(mergedDefsGen),
+      mainGen
+    ).print
+    val cabalFileContent = s"""name: lumberhack-bench-$benchName
+                              |version: 0
+                              |build-type: Simple
+                              |cabal-version: >= 1.6
+                              |
+                              |executable $benchName
+                              |  main-is: $benchName.hs
+                              |  extensions: ExtendedDefaultRules
+                              |  ghc-options: -fno-strictness -O2
+                              |  build-depends:
+                              |    base == 4.*,
+                              |    criterion
+                              |    """.stripMargin
+
+    import sys.process.*
+    import java.io._
+    s"mkdir -p ./lumberhack-haskell-benchmark/$benchName".!
+    val hsFw = new FileWriter(s"./lumberhack-haskell-benchmark/$benchName/$benchName.hs", false)
+    hsFw.write(hsFileContent + "\n")
+    hsFw.close()
+    val cabalFw = new FileWriter(s"./lumberhack-haskell-benchmark/$benchName/$benchName.cabal", false)
+    cabalFw.write(cabalFileContent)
+    cabalFw.close()
+
+    hsFileContent
+  }
+
 }
 
 object OCamlGen extends CodeGen {
@@ -793,17 +951,25 @@ object OCamlGen extends CodeGen {
 
   val primitives = Map("add" -> "(+)", "sub" -> "(-)")
   override def generateTypeInfo(d: Deforest): String = ???
-  def transform_progdef(pd: ProgDef): Document = {
+  override def transform_progdef(pd: ProgDef): Document = {
     pd.body match {
-      case Ref(Ident(_, mlscript.Var("primitive"), _)) => Raw("")
-      case Function(param, body) => "let "<:> transform_id(pd.id) <:> " " <:>
-        transform_id(param) <:> " = " <:> rec(body)
-      case _ => "let " <:> transform_id(pd.id) <:> " = " <:> rec(pd.body)
+      case bodyFun@Function(param, body) => {
+        val (params, innerBody) = bodyFun.takeParamsOut
+        stack(
+          "let rec " <:> transform_id(pd.id) <:> Lined(params.map(p => " " <:> transform_id(p)), "") <:> " =",
+          Indented(rec(innerBody))
+        )
+      }
+      case _ => stack(
+        "let rec " <:> transform_id(pd.id) <:> " =",
+        Indented(rec(pd.body))
+      )
     }
   }
 
   val headers = Raw("")
-  def rec(e: Expr): Document = e match {
+  override def rec(e: Expr): Document = recMultiline(e)
+  def recMultiline(e: Expr): Document = e match {
     case Const(lit) => Raw(lit.idStr)
     case Ref(id) => transform_id(id)
     case Call(lhs, rhs) =>
@@ -830,5 +996,24 @@ object OCamlGen extends CodeGen {
       )
     case e => lastWords(s"not supported: ${e.pp(using InitPpConfig.showIuidOn)}")
   }
-  def recMultiline(e: Expr): Document = ???
+
+  override def makeBenchFiles(optimized: Program, original: Program): String = ???
+  def apply(p: Program): String = ???
+  def transform_id(id: Ident): Document = {
+    def fromSubscript(i: String) = i.flatMap {
+      case '₀' => "_0"; case '₁' => "_1"; case '₂' => "_2"
+      case '₃' => "_3"; case '₄' => "_4"; case '₅' => "_5"
+      case '₆' => "_6"; case '₇' => "_7"; case '₈' => "_8"
+      case '₉' => "_9"; case c => c.toString()
+    }
+    def fromSuperscript(i: String) = i.flatMap {
+      case '⁰' => "_u0"; case '¹' => "_u1"; case '²' => "_u2"
+      case '³' => "_u3"; case '⁴' => "_u4"; case '⁵' => "_u5"
+      case '⁶' => "_u6"; case '⁷' => "_u7"; case '⁸' => "_u8"
+      case '⁹' => "_u9"; case c => c.toString()
+    }
+    fromSuperscript(fromSubscript(
+      if id.isDef then id.pp(using InitPpConfig) else id.pp(using InitPpConfig.showIuidOn)
+    ))
+  }
 }

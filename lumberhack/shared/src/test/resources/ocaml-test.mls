@@ -1,0 +1,142 @@
+:NewParser
+:ParseOnly
+
+:lhocaml
+let rec a = 4;;
+let rec f = function A -> B | C -> D;;
+let rec d a b = match a with
+  | `A(s, d) -> `D
+  | _ -> `S
+  | k -> `D;;
+let rec f (h:t) = h;;
+let val = [false;true;false];;
+f val
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ "compilation_unit" (
+//│ 	"value_definition" (
+//│ 		"let" ()
+//│ 		"rec" ()
+//│ 		"let_binding" (
+//│ 			"value_name" ()
+//│ 			"=" ()
+//│ 			"number" ()))
+//│ 	";;" ()
+//│ 	"value_definition" (
+//│ 		"let" ()
+//│ 		"rec" ()
+//│ 		"let_binding" (
+//│ 			"value_name" ()
+//│ 			"=" ()
+//│ 			"function_expression" (
+//│ 				"function" ()
+//│ 				"match_case" (
+//│ 					"constructor_path" (
+//│ 						"constructor_name" ())
+//│ 					"->" ()
+//│ 					"constructor_path" (
+//│ 						"constructor_name" ()))
+//│ 				"|" ()
+//│ 				"match_case" (
+//│ 					"constructor_path" (
+//│ 						"constructor_name" ())
+//│ 					"->" ()
+//│ 					"constructor_path" (
+//│ 						"constructor_name" ())))))
+//│ 	";;" ()
+//│ 	"value_definition" (
+//│ 		"let" ()
+//│ 		"rec" ()
+//│ 		"let_binding" (
+//│ 			"value_name" ()
+//│ 			"parameter" (
+//│ 				"value_pattern" ())
+//│ 			"parameter" (
+//│ 				"value_pattern" ())
+//│ 			"=" ()
+//│ 			"match_expression" (
+//│ 				"match" ()
+//│ 				"value_path" (
+//│ 					"value_name" ())
+//│ 				"with" ()
+//│ 				"|" ()
+//│ 				"match_case" (
+//│ 					"tag_pattern" (
+//│ 						"tag" (
+//│ 							"`" ())
+//│ 						"parenthesized_pattern" (
+//│ 							"(" ()
+//│ 							"tuple_pattern" (
+//│ 								"value_pattern" ()
+//│ 								"," ()
+//│ 								"value_pattern" ())
+//│ 							")" ()))
+//│ 					"->" ()
+//│ 					"tag" (
+//│ 						"`" ()))
+//│ 				"|" ()
+//│ 				"match_case" (
+//│ 					"value_pattern" ()
+//│ 					"->" ()
+//│ 					"tag" (
+//│ 						"`" ()))
+//│ 				"|" ()
+//│ 				"match_case" (
+//│ 					"value_pattern" ()
+//│ 					"->" ()
+//│ 					"tag" (
+//│ 						"`" ())))))
+//│ 	";;" ()
+//│ 	"value_definition" (
+//│ 		"let" ()
+//│ 		"rec" ()
+//│ 		"let_binding" (
+//│ 			"value_name" ()
+//│ 			"parameter" (
+//│ 				"typed_pattern" (
+//│ 					"(" ()
+//│ 					"value_pattern" ()
+//│ 					":" ()
+//│ 					"type_constructor_path" (
+//│ 						"type_constructor" ())
+//│ 					")" ()))
+//│ 			"=" ()
+//│ 			"value_path" (
+//│ 				"value_name" ())))
+//│ 	";;" ()
+//│ 	"value_definition" (
+//│ 		"let" ()
+//│ 		"let_binding" (
+//│ 			"value_name" ()
+//│ 			"=" ()
+//│ 			"list_expression" (
+//│ 				"[" ()
+//│ 				"boolean" (
+//│ 					"false" ())
+//│ 				";" ()
+//│ 				"boolean" (
+//│ 					"true" ())
+//│ 				";" ()
+//│ 				"boolean" (
+//│ 					"false" ())
+//│ 				"]" ())))
+//│ 	";;" ()
+//│ 	"expression_item" (
+//│ 		"application_expression" (
+//│ 			"value_path" (
+//│ 				"value_name" ())
+//│ 			"value_path" (
+//│ 				"value_name" ()))))
+//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
+//│ 	at: scala.Predef$.$qmark$qmark$qmark(Predef.scala:344)
+//│ 	at: mlscript.lumberhack.FromOcaml$.apply(CodeGen.scala:594)
+//│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTestLumberhack.scala:58)
+//│ 	at: mlscript.DiffTests.rec$1(DiffTests.scala:373)
+//│ 	at: mlscript.DiffTests.$anonfun$new$3(DiffTests.scala:780)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
+//│ 	at: org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
+//│ 	at: org.scalatest.Transformer.apply(Transformer.scala:22)
+//│ 	at: org.scalatest.Transformer.apply(Transformer.scala:20)
+

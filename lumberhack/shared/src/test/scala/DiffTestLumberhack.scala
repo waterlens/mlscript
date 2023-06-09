@@ -54,6 +54,12 @@ class DiffTestLumberhack extends DiffTests {
       val initCallTree = CallTree.callTreeUsingSplitKnot(p.d)
       val res = p.expandedWithNewDeforest(initCallTree)
       res
+    else if mode.lhIsOcaml then
+      val p = FromOcaml(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output)
+      p.d(p) // duplicate multiple usages here to enbale polymorphism
+      val initCallTree = CallTree.callTreeUsingSplitKnot(p.d)
+      val res = p.expandedWithNewDeforest(initCallTree)
+      res
     else
       val p = Program.fromPgrm(Pgrm(filteredEntities))(using originalD)
       (p, p.d)
@@ -68,6 +74,11 @@ class DiffTestLumberhack extends DiffTests {
       output("\t\t---------- unoptimized haskell gen ----------")
       output(HaskellGen(originalProgram).linesIterator.map("\t\t" + _).mkString("\n"))
       output("\t\t---------- unoptimized haskell gen ----------")
+    else if mode.lhIsOcaml then
+      output("\t\t---------- unoptimized ocaml gen ----------")
+      output(OCamlGen(originalProgram).linesIterator.map("\t\t" + _).mkString("\n"))
+      output("\t\t---------- unoptimized ocaml gen ----------")
+
     output("<<<<<<<<<< Original <<<<<<<<<<")
     
     try {
@@ -93,8 +104,16 @@ class DiffTestLumberhack extends DiffTests {
         output("<<<<<<<<<< Generated Haskell Code <<<<<<<<<<")
         if mode.lhIsBench then
           output("\n>>>>>>>>>> Generated Haskell Bench >>>>>>>>>>")
-          output(makeHaskellBenchFiles(iterativeProcessRes._1, originalProgram))
+          output(HaskellGen.makeBenchFiles(iterativeProcessRes._1, originalProgram))
           output("<<<<<<<<<< Generated Haskell Bench <<<<<<<<<<")
+      else if mode.lhIsOcaml then
+        output("\n>>>>>>>>>> Generated OCaml Code >>>>>>>>>>")
+        output(OCamlGen(iterativeProcessRes._1))
+        output("<<<<<<<<<< Generated OCaml Code <<<<<<<<<<")
+        if mode.lhIsBench then
+          output("\n>>>>>>>>>> Generated OCaml Bench >>>>>>>>>>")
+          output(OCamlGen.makeBenchFiles(iterativeProcessRes._1, originalProgram))
+          output("<<<<<<<<<< Generated OCaml Bench <<<<<<<<<<")
 
       if allowErr then throw Exception("expect to fail but pass")
     } catch {
@@ -298,67 +317,6 @@ class DiffTestLumberhack extends DiffTests {
     (newP, newD, fusionStrategy.finallyFilteredStrategies._1.isEmpty, evaluatedExpr) // if is empty, stop the iterative process
   }
 
-  // rely on the fact that toplevel expressions are always in the front of the program
-  def makeHaskellBenchFiles(optimized: Program, original: Program): String = {
-    val benchName = (original.defAndExpr._2 match {
-      case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId), _)) :: Nil
-        if test.tree.name.startsWith("test") && primId.tree.name == "primId" =>
-        test.tree.name.drop(4).filter(_ <= 0x7f) // keep only valid ASCII characters
-      case _ => lastWords("benchmark requires a method of name `testxxx` calling a value wrapped in `primId`")
-    }).emptyOrElse(optimized.hashCode().toString())
-    // val bigADT = HaskellGen.generateTypeInfo(original.d)
-    val originalDefs = Program(
-      original.contents.tail
-    )(using original.d) // the deforest instance does not matter here
-    val optimizedDefs = Program(
-      optimized.contents.tail
-    )(using original.d) // the deforest instance does not matter here
-    val mergedDefsGen = HaskellGen(originalDefs) + "\n\n" + HaskellGen(optimizedDefs) + "\n"
-
-    val mainTestGen = stack(
-      Raw(s"  bench $"lumberhack_$benchName$" $$ nf ")
-        <:> Raw((HaskellGen.rec(optimized.defAndExpr._2.head).print).drop(1).dropRight(1)),
-      Raw(s", bench $"original_$benchName$" $$ nf ")
-        <:> Raw((HaskellGen.rec(original.defAndExpr._2.head).print).drop(1).dropRight(1)) <:> Raw(" ] ]")
-    )
-    val mainGen = stack(
-      Raw("main :: IO ()"),
-      Raw(s"main = defaultMain [ bgroup \"$benchName\" ["),
-      Indented(mainTestGen)
-    )
-    val header = "import Criterion.Main\n"
-    val hsFileContent = stack(
-      Raw(header),
-      // Raw(bigADT + "\n"),
-      Raw(mergedDefsGen),
-      mainGen
-    ).print
-    val cabalFileContent = s"""name: lumberhack-bench-$benchName
-                              |version: 0
-                              |build-type: Simple
-                              |cabal-version: >= 1.6
-                              |
-                              |executable $benchName
-                              |  main-is: $benchName.hs
-                              |  extensions: ExtendedDefaultRules
-                              |  ghc-options: -fno-strictness -O2
-                              |  build-depends:
-                              |    base == 4.*,
-                              |    criterion
-                              |    """.stripMargin
-
-    import sys.process.*
-    import java.io._
-    s"mkdir -p ./lumberhack-haskell-benchmark/$benchName".!
-    val hsFw = new FileWriter(s"./lumberhack-haskell-benchmark/$benchName/$benchName.hs", false)
-    hsFw.write(hsFileContent + "\n")
-    hsFw.close()
-    val cabalFw = new FileWriter(s"./lumberhack-haskell-benchmark/$benchName/$benchName.cabal", false)
-    cabalFw.write(cabalFileContent)
-    cabalFw.close()
-
-    hsFileContent
-  }
 }
 
 object DiffTestLumberhack {

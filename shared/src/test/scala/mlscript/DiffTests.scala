@@ -40,6 +40,7 @@ abstract class ModeType {
   def showRepl: Bool
   def allowEscape: Bool
   def lhIsHaskell: Bool
+  def lhIsOcaml: Bool
   def lhIsBench: Bool
 }
 
@@ -155,6 +156,7 @@ class DiffTests
       allowEscape: Bool = false,
       // noProvs: Bool = false,
       lhIsHaskell: Bool = false,
+      lhIsOcaml: Bool = false,
       lhIsBench: Bool = false,
     ) extends ModeType {
       def isDebugging: Bool = dbg || dbgSimplif
@@ -211,6 +213,7 @@ class DiffTests
           case "ShowRepl" => mode.copy(showRepl = true)
           case "escape" => mode.copy(allowEscape = true)
           case "lhhaskell" => mode.copy(lhIsHaskell = true)
+          case "lhocaml" => mode.copy(lhIsOcaml = true)
           case "lhbench" => mode.copy(lhIsBench = true)
           case _ =>
             failures += allLines.size - lines.size
@@ -354,7 +357,7 @@ class DiffTests
             val origin = Origin(testName, globalStartLineNum, fph)
             val lexer = new NewLexer(origin, raise, dbg = mode.dbgParsing)
             
-            val tokens = if (!mode.lhIsHaskell) { lexer.bracketedTokens } else { Nil }
+            val tokens = if (!(mode.lhIsHaskell || mode.lhIsOcaml)) { lexer.bracketedTokens } else { Nil }
             
             if (mode.showParse || mode.dbgParsing || parseOnly)
               output(NewLexer.printTokens(tokens))

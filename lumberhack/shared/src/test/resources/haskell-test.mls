@@ -589,7 +589,86 @@ test $ primId 4
 
 // WRONG: not well-typed in haskell after fusion
 :lhhaskell
-// [a | a <- [3]]
+:lhbench
+testSimpleRecursiveTypeExample x = [a | a <- [x]]
+testSimpleRecursiveTypeExample $ primId 3
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testSimpleRecursiveTypeExample₀^192(primId⁰(3))
+//│ def testSimpleRecursiveTypeExample₀(_lh_testSimpleRecursiveTypeExample_arg1¹) = 
+//│ 	let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {
+//│ 		LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)]
+//│ 		| LH_N  => [LH_N]})
+//│ 	in _lh_listcomp_fun¹([LH_C _lh_testSimpleRecursiveTypeExample_arg1¹ [LH_N]])
+//│ 		---------- unoptimized haskell gen ----------
+//│ 		(testSimpleRecursiveTypeExample₀ 3)
+//│ 		testSimpleRecursiveTypeExample₀ _lh_testSimpleRecursiveTypeExample_arg1¹ = (let _lh_listcomp_fun¹ = (\_lh_listcomp_fun_para¹ -> (case _lh_listcomp_fun_para¹ of {(_lh_listcomp_fun_ls_h¹ : _lh_listcomp_fun_ls_t¹) -> (_lh_listcomp_fun_ls_h¹:(_lh_listcomp_fun¹ _lh_listcomp_fun_ls_t¹)); [] -> []})) in (_lh_listcomp_fun¹ (_lh_testSimpleRecursiveTypeExample_arg1¹:[])))
+//│ 		---------- unoptimized haskell gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testSimpleRecursiveTypeExample₀^192] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testSimpleRecursiveTypeExample₀₀(primId⁰(3))
+//│ def testSimpleRecursiveTypeExample₀₀(_lh_testSimpleRecursiveTypeExample_arg1¹) = 
+//│ 	let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {
+//│ 		LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)]
+//│ 		| LH_N  => [LH_N]})
+//│ 	in _lh_listcomp_fun¹([LH_C _lh_testSimpleRecursiveTypeExample_arg1¹ [LH_N]])
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_N]: 33 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 29
+//│ [LH_C _lh_testSimpleRecursiveTypeExample_arg1¹ [LH_N]]: 34 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 29
+//│ ------------------
+//│ case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 29 --->
+//│ 	[LH_N]: 33
+//│ 	[LH_C _lh_testSimpleRecursiveTypeExample_arg1¹ [LH_N]]: 34
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_N]: 33 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 29
+//│ [LH_C _lh_testSimpleRecursiveTypeExample_arg1¹ [LH_N]]: 34 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 29
+//│ ------------------
+//│ case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 29 --->
+//│ 	[LH_N]: 33
+//│ 	[LH_C _lh_testSimpleRecursiveTypeExample_arg1¹ [LH_N]]: 34
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testSimpleRecursiveTypeExample₀₀(primId⁰(3))
+//│ def testSimpleRecursiveTypeExample₀₀(_lh_testSimpleRecursiveTypeExample_arg1²) = 
+//│ 	let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> _lh_listcomp_fun_para²(_lh_listcomp_fun²))
+//│ 	in _lh_listcomp_fun²(
+//│ 		let _lh_listcomp_fun_ls_h² = _lh_testSimpleRecursiveTypeExample_arg1²
+//│ 		in let _lh_listcomp_fun_ls_t² = (fun _lh_listcomp_fun⁴ -> [LH_N])
+//│ 		in (fun _lh_listcomp_fun³ -> [LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun³(_lh_listcomp_fun_ls_t²)]))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated Haskell Code >>>>>>>>>>
+//│ (testSimpleRecursiveTypeExample₀₀ 3)
+//│ testSimpleRecursiveTypeExample₀₀ _lh_testSimpleRecursiveTypeExample_arg1⁰ = (let _lh_listcomp_fun⁰ = (\_lh_listcomp_fun_para⁰ -> (_lh_listcomp_fun_para⁰ _lh_listcomp_fun⁰)) in (_lh_listcomp_fun⁰ (let _lh_listcomp_fun_ls_h⁰ = _lh_testSimpleRecursiveTypeExample_arg1⁰ in (let _lh_listcomp_fun_ls_t⁰ = (\_lh_listcomp_fun¹ -> []) in (\_lh_listcomp_fun² -> (_lh_listcomp_fun_ls_h⁰:(_lh_listcomp_fun² _lh_listcomp_fun_ls_t⁰)))))))
+//│ <<<<<<<<<< Generated Haskell Code <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated Haskell Bench >>>>>>>>>>
+//│ import Criterion.Main
+//│ 
+//│ testSimpleRecursiveTypeExample₀ _lh_testSimpleRecursiveTypeExample_arg1¹ = (let _lh_listcomp_fun¹ = (\_lh_listcomp_fun_para¹ -> (case _lh_listcomp_fun_para¹ of {(_lh_listcomp_fun_ls_h¹ : _lh_listcomp_fun_ls_t¹) -> (_lh_listcomp_fun_ls_h¹:(_lh_listcomp_fun¹ _lh_listcomp_fun_ls_t¹)); [] -> []})) in (_lh_listcomp_fun¹ (_lh_testSimpleRecursiveTypeExample_arg1¹:[])))
+//│ 
+//│ testSimpleRecursiveTypeExample₀₀ _lh_testSimpleRecursiveTypeExample_arg1⁰ = (let _lh_listcomp_fun⁰ = (\_lh_listcomp_fun_para⁰ -> (_lh_listcomp_fun_para⁰ _lh_listcomp_fun⁰)) in (_lh_listcomp_fun⁰ (let _lh_listcomp_fun_ls_h⁰ = _lh_testSimpleRecursiveTypeExample_arg1⁰ in (let _lh_listcomp_fun_ls_t⁰ = (\_lh_listcomp_fun¹ -> []) in (\_lh_listcomp_fun² -> (_lh_listcomp_fun_ls_h⁰:(_lh_listcomp_fun² _lh_listcomp_fun_ls_t⁰)))))))
+//│ 
+//│ main :: IO ()
+//│ main = defaultMain [ bgroup "SimpleRecursiveTypeExample" [
+//│     bench "lumberhack_SimpleRecursiveTypeExample" $ nf testSimpleRecursiveTypeExample₀₀ 3
+//│   , bench "original_SimpleRecursiveTypeExample" $ nf testSimpleRecursiveTypeExample₀ 3 ] ]
+//│ <<<<<<<<<< Generated Haskell Bench <<<<<<<<<<
 
 // WRONG: not well-typed in haskell
 :lhhaskell

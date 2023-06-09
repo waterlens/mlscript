@@ -712,3 +712,52 @@ f(C(3, N))
 //│ def f₀(x²) = 
 //│ 	x²(f₀)
 //│ <<<<<<< after fusion <<<<<<<
+
+// a more minimal example requiring recursive type after fusion
+fun f(x) =
+  (
+    if x is
+      N then ff => 1
+  )(f)
+f(N)
+//│ |#fun| |f|(|x|)| |#=|→|(|→|#if| |x| |is|→|N| |#then| |ff| |=>| |1|←|←|↵|)|(|f|)|←|↵|f|(|N|)|
+//│ Parsed: {fun f = x, => {'(' if x is ‹(N) then ff, => 1›, ')' (f,)}; f (N,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ f^8([N])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	N  => (fun ff⁰ -> 1)}(f^5)
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^8] (hopeless to continue)
+//│ 	[f^8 · f^5] ---> [f^8] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀([N])
+//│ def f₀(x¹) = 
+//│ 	case x¹ of {
+//│ 		N  => (fun ff¹ -> 1)}(f₀)
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [N]: 19 --->
+//│ 	case x¹ of {N  => (fun ff¹ -> 1)}: 14
+//│ ------------------
+//│ case x¹ of {N  => (fun ff¹ -> 1)}: 14 --->
+//│ 	[N]: 19
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [N]: 19 --->
+//│ 	case x¹ of {N  => (fun ff¹ -> 1)}: 14
+//│ ------------------
+//│ case x¹ of {N  => (fun ff¹ -> 1)}: 14 --->
+//│ 	[N]: 19
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀((fun ff² -> 1))
+//│ def f₀(x²) = 
+//│ 	x²(f₀)
+//│ <<<<<<< after fusion <<<<<<<

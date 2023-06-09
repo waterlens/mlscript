@@ -1,6 +1,7 @@
 :NewParser
 :ParseOnly
 
+:lhError
 :lhInOCaml
 let rec a = 4;;
 let rec f = function A -> B | C -> D;;
@@ -128,15 +129,96 @@ f val
 //│ 				"value_name" ())
 //│ 			"value_path" (
 //│ 				"value_name" ()))))
-//│ /!!!\ Uncaught error: scala.NotImplementedError: an implementation is missing
-//│ 	at: scala.Predef$.$qmark$qmark$qmark(Predef.scala:344)
-//│ 	at: mlscript.lumberhack.FromOcaml$.apply(CodeGen.scala:594)
-//│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTestLumberhack.scala:57)
-//│ 	at: mlscript.DiffTests.rec$1(DiffTests.scala:383)
-//│ 	at: mlscript.DiffTests.$anonfun$new$3(DiffTests.scala:790)
-//│ 	at: org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
-//│ 	at: org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
-//│ 	at: org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
-//│ 	at: org.scalatest.Transformer.apply(Transformer.scala:22)
-//│ 	at: org.scalatest.Transformer.apply(Transformer.scala:20)
+//│ !!!!!!ERROR!!!!!!
+//│ scala.NotImplementedError: an implementation is missing
+//│ !!!!!!ERROR!!!!!!
 
+
+
+:lhInHaskell
+:lhGenOCaml
+[x | x <- [1,2]]
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {
+//│ 	LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)]
+//│ 	| LH_N  => [LH_N]})
+//│ in _lh_listcomp_fun¹([LH_C 1 [LH_C 2 [LH_N]]])
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		(let rec _lh_listcomp_fun_u1 = (fun _lh_listcomp_fun_para_u1 -> 
+//│ 		  match _lh_listcomp_fun_para_u1 with
+//│ 		    | (_lh_listcomp_fun_ls_h_u1 :: _lh_listcomp_fun_ls_t_u1) -> 
+//│ 		      (_lh_listcomp_fun_ls_h_u1::(_lh_listcomp_fun_u1 _lh_listcomp_fun_ls_t_u1))
+//│ 		    | [] -> 
+//│ 		      []) in
+//│ 		  (_lh_listcomp_fun_u1 (1::(2::[]))))
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ 
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ 
+//│ 	let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {
+//│ 		LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)]
+//│ 		| LH_N  => [LH_N]})
+//│ 	in _lh_listcomp_fun¹([LH_C 1 [LH_C 2 [LH_N]]])
+//│ 
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_N]: 30 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 25
+//│ [LH_C 2 [LH_N]]: 31 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 25
+//│ [LH_C 1 [LH_C 2 [LH_N]]]: 32 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 25
+//│ ------------------
+//│ case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 25 --->
+//│ 	[LH_N]: 30
+//│ 	[LH_C 2 [LH_N]]: 31
+//│ 	[LH_C 1 [LH_C 2 [LH_N]]]: 32
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_N]: 30 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 25
+//│ [LH_C 2 [LH_N]]: 31 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 25
+//│ [LH_C 1 [LH_C 2 [LH_N]]]: 32 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 25
+//│ ------------------
+//│ case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 25 --->
+//│ 	[LH_N]: 30
+//│ 	[LH_C 2 [LH_N]]: 31
+//│ 	[LH_C 1 [LH_C 2 [LH_N]]]: 32
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ 
+//│ 	let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> _lh_listcomp_fun_para²(_lh_listcomp_fun²))
+//│ 	in _lh_listcomp_fun²(
+//│ 		let _lh_listcomp_fun_ls_h² = 1
+//│ 		in let _lh_listcomp_fun_ls_t² = 	
+//│ 			let _lh_listcomp_fun_ls_h³ = 2
+//│ 			in let _lh_listcomp_fun_ls_t³ = (fun _lh_listcomp_fun⁵ -> [LH_N])
+//│ 			in (fun _lh_listcomp_fun⁴ -> [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun⁴(_lh_listcomp_fun_ls_t³)])
+//│ 		in (fun _lh_listcomp_fun³ -> [LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun³(_lh_listcomp_fun_ls_t²)]))
+//│ 
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ (let rec _lh_listcomp_fun_u0 = (fun _lh_listcomp_fun_para_u0 -> 
+//│   (_lh_listcomp_fun_para_u0 _lh_listcomp_fun_u0)) in
+//│   (_lh_listcomp_fun_u0 (let rec _lh_listcomp_fun_ls_h_u0 = 1 in
+//│     (let rec _lh_listcomp_fun_ls_t_u0 = (let rec _lh_listcomp_fun_ls_h_u1 = 2 in
+//│       (let rec _lh_listcomp_fun_ls_t_u1 = (fun _lh_listcomp_fun_u1 -> 
+//│         []) in
+//│         (fun _lh_listcomp_fun_u2 -> 
+//│           (_lh_listcomp_fun_ls_h_u1::(_lh_listcomp_fun_u2 _lh_listcomp_fun_ls_t_u1))))) in
+//│       (fun _lh_listcomp_fun_u3 -> 
+//│         (_lh_listcomp_fun_ls_h_u0::(_lh_listcomp_fun_u3 _lh_listcomp_fun_ls_t_u0)))))))
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

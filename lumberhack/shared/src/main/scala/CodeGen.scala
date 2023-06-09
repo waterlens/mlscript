@@ -706,7 +706,7 @@ fun length(ls) = if ls is
 trait CodeGen {
   protected implicit def stringToDoc(s: String): Raw = Raw(s)
 
-  val primitives: Map[String, Document]
+  val primitives: Map[String, String]
   def transform_id(id: Ident): Document
     
   def transform_progdef(pd: ProgDef): Document
@@ -949,7 +949,10 @@ object HaskellGen extends CodeGen {
 object OCamlGen extends CodeGen {
   def validate(p: Program): Unit = ??? //maybe we should check if the program can be translated at all
 
-  val primitives = Map("add" -> "(+)", "sub" -> "(-)")
+  override val primitives = Map(
+    "add" -> "(+)", "sub" -> "(-)", "%" -> "mod", "==" -> "=", "error" -> "failwith", "/=" -> "!="
+  )
+  def transformPrimitive(p: String): String = primitives.getOrElse(p, p)
   override def generateTypeInfo(d: Deforest): String = ???
   override def transform_progdef(pd: ProgDef): Document = {
     pd.body match {
@@ -968,38 +971,89 @@ object OCamlGen extends CodeGen {
   }
 
   val headers = Raw("")
+
+  def transformMatchArm(dtor: Var, params: List[Ident]): Document = {
+    BuiltInTypes.fromStr(dtor.name) -> params match {
+      case Some(BuiltInTypes.ListCons) -> (h :: t :: Nil) => "(" <:> transform_id(h) <:> " :: " <:> transform_id(t) <:> ") -> "
+      case Some(BuiltInTypes.ListNil) -> Nil => "[] -> "
+      case Some(BuiltInTypes.Tuple(n)) -> fields => {
+        assert(fields.length == n)
+        "(" <:> Lined(fields.map(f => transform_id(f)), ", ") <:> ") -> "
+      }
+      case None -> (idPat :: Nil) if dtor.name == "_" => transform_id(idPat) <:> " -> "
+      case None -> Nil if dtor.name == "_" => "_ -> "
+      case _ => s"`${dtor.name}" <:> {
+        if params.nonEmpty then
+          "(" <:> Lined(params.map(arg => transform_id(arg)), ", ") <:> ")"
+        else
+          ""
+      } <:> Raw(" -> ")
+    }
+  }
+
   override def rec(e: Expr): Document = recMultiline(e)
   def recMultiline(e: Expr): Document = e match {
     case Const(lit) => Raw(lit.idStr)
+    case Ref(id) if Deforest.lumberhackKeywords(id.tree.name) =>
+      transformPrimitive(id.tree.name)
     case Ref(id) => transform_id(id)
+    case Call(Ref(Ident(_, Var("primId"), _)), arg) => rec(arg)
+    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackBinOps(op) =>
+      "(" <:> rec(fst) <:> s" ${transformPrimitive(op)} " <:> rec(snd) <:> ")"
     case Call(lhs, rhs) =>
       "(" <:> rec(lhs) <:> " " <:> rec(rhs) <:> ")"
     case Ctor(name, args) => //All constructors are polymorphic variants with tuple arguments
-      "`" <:> name.name <:> " " <:> "(" <:> Lined(args.map(arg => rec(arg)), ", ") <:> ")"
+      (BuiltInTypes.fromStr(name.name).map {
+        case BuiltInTypes.ListCons => "(" <:> rec(args(0)) <:> "::" <:> rec(args(1)) <:> ")"
+        case BuiltInTypes.ListNil => Raw("[]")
+        case BuiltInTypes.Tuple(n) =>
+          assert(n == args.length)
+          "(" <:> Lined(args.map(rec(_)).toList, ", ") <:> ")"
+      }).getOrElse(
+        "(`" <:> name.name <:> {
+          if args.nonEmpty then
+            "(" <:> Lined(args.map(arg => rec(arg)), ", ") <:> ")"
+          else
+            ""
+        } <:> ")"
+      )
     case LetIn(id, rhs, body) => 
       stack(
-        "let " <:> transform_id(id) <:> " = " <:> rec(rhs) <:> " in",
-        rec(body)
+        "(let rec " <:> transform_id(id) <:> " = " <:> rec(rhs) <:> " in",
+        Indented(rec(body)) <:> ")"
       )
     case Match(scrut, arms) => 
       Stacked(
-        ("match " <:> rec(scrut) <:> " with") :: 
-        arms.map{case (v, args, body) => stack(
-          "| " <:> "`" <:> v.name <:> " " <:> "(" <:> Lined(args.map(arg => transform_id(arg)), ", ") <:> ")" <:> " ->",
-          Indented(rec(body))
+        ("match " <:> rec(scrut) <:> " with") ::
+        arms.map { case (v, args, body) => stack(
+          Indented("| " <:> transformMatchArm(v, args)),
+          Indented(Indented(rec(body)))
         )}
       )
-    case Function(param, body) => 
+    case f: Function =>
+      val (params, body) = f.takeParamsOut
       stack(
-        "fun " <:> transform_id(param) <:> " -> ",
-        Indented(rec(body))
+        "(fun " <:> Lined(params.map(transform_id), " ") <:> " -> ",
+        Indented(rec(body)) <:> ")"
       )
+    case IfThenElse(s, t, e) => "(if " <:> rec(s) <:> " then " <:> rec(t) <:> " else " <:> rec(e) <:> ")"
     case e => lastWords(s"not supported: ${e.pp(using InitPpConfig.showIuidOn)}")
   }
 
   override def makeBenchFiles(optimized: Program, original: Program): String = ???
-  def apply(p: Program): String = ???
-  def transform_id(id: Ident): Document = {
+  override def apply(p: Program): String = {
+    Stacked(
+      p.contents.sortBy {
+        case Left(progDef) => progDef.id.tree.name
+        case Right(expr) => ""
+      }.map {
+        case L(pd) => transform_progdef(pd)
+        case R(e) => rec(e)
+      },
+      emptyLines = false
+    ).print
+  }
+  override def transform_id(id: Ident): Document = {
     def fromSubscript(i: String) = i.flatMap {
       case '₀' => "_0"; case '₁' => "_1"; case '₂' => "_2"
       case '₃' => "_3"; case '₄' => "_4"; case '₅' => "_5"

@@ -47,40 +47,41 @@ class DiffTestLumberhack extends DiffTests {
       )
       case l => (mode.lhError, mode.lhEval, l)
     }
-    val (originalProgram, newD) = if mode.lhInHaskell then
-      val p = FromHaskell(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output)
-      p.d(p) // duplicate multiple usages here to enbale polymorphism
-      val initCallTree = CallTree.callTreeUsingSplitKnot(p.d)
-      val res = p.expandedWithNewDeforest(initCallTree)
-      res
-    else if mode.lhInOCaml then
-      val p = FromOcaml(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output)
-      p.d(p) // duplicate multiple usages here to enbale polymorphism
-      val initCallTree = CallTree.callTreeUsingSplitKnot(p.d)
-      val res = p.expandedWithNewDeforest(initCallTree)
-      res
-    else
-      val p = Program.fromPgrm(Pgrm(filteredEntities))(using originalD)
-      (p, p.d)
-    given d: Deforest = newD
-    d.debug = mode.stdout || mode.verbose
-    
-    if mode.stdout || mode.verbose then {
-      output(originalProgram.pp(using InitPpConfig.multilineOn.showIuidOn.showEuidOn)) 
-    }
-    output(originalProgram.pp(using InitPpConfig.multilineOn.showIuidOn.showRefEuidOn))
-    if mode.lhInHaskell then
-      output("\t\t---------- unoptimized haskell gen ----------")
-      output(HaskellGen(originalProgram).linesIterator.map("\t\t" + _).mkString("\n"))
-      output("\t\t---------- unoptimized haskell gen ----------")
-    else if mode.lhInOCaml then
-      output("\t\t---------- unoptimized ocaml gen ----------")
-      output(OCamlGen(originalProgram).linesIterator.map("\t\t" + _).mkString("\n"))
-      output("\t\t---------- unoptimized ocaml gen ----------")
-
-    output("<<<<<<<<<< Original <<<<<<<<<<")
-    
     try {
+      val (originalProgram, newD) = if mode.lhInHaskell then
+        val p = FromHaskell(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output)
+        p.d(p) // duplicate multiple usages here to enbale polymorphism
+        val initCallTree = CallTree.callTreeUsingSplitKnot(p.d)
+        val res = p.expandedWithNewDeforest(initCallTree)
+        res
+      else if mode.lhInOCaml then
+        val p = FromOcaml(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output)
+        p.d(p) // duplicate multiple usages here to enbale polymorphism
+        val initCallTree = CallTree.callTreeUsingSplitKnot(p.d)
+        val res = p.expandedWithNewDeforest(initCallTree)
+        res
+      else
+        val p = Program.fromPgrm(Pgrm(filteredEntities))(using originalD)
+        (p, p.d)
+      given d: Deforest = newD
+      d.debug = mode.stdout || mode.verbose
+      
+      if mode.stdout || mode.verbose then {
+        output(originalProgram.pp(using InitPpConfig.multilineOn.showIuidOn.showEuidOn)) 
+      }
+      output(originalProgram.pp(using InitPpConfig.multilineOn.showIuidOn.showRefEuidOn))
+      if mode.lhGenHaskell then
+        output("\t\t---------- unoptimized haskell gen ----------")
+        output(HaskellGen(originalProgram).linesIterator.map("\t\t" + _).mkString("\n"))
+        output("\t\t---------- unoptimized haskell gen ----------")
+      else if mode.lhGenOCaml then
+        output("\t\t---------- unoptimized ocaml gen ----------")
+        output(OCamlGen(originalProgram).linesIterator.map("\t\t" + _).mkString("\n"))
+        output("\t\t---------- unoptimized ocaml gen ----------")
+
+      output("<<<<<<<<<< Original <<<<<<<<<<")
+    
+    
       if evaluate then {
         output("\n>>>>>>>>>> Original Eval Res >>>>>>>>>>")
         output(originalProgram.evaluated.map(_.pp(using InitPpConfig.multilineOn.showIuidOn)).mkString("\n"))

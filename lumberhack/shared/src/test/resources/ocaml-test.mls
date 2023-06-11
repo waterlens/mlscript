@@ -484,3 +484,169 @@ nsoln 10
 //│   ((_lh_safe_arg3_0 _lh_safe_arg1_1) _lh_safe_arg2_1);;
 //│ (nsoln_d0_d0 10)
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
+
+
+:lhInHaskell
+:lhGenOCaml
+testMapmap ls = map (\x -> x + 1) $ map (\x -> x + x) ls
+testMapmap $ primId [1..4000]
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testMapmap₀^252(primId⁰(enumFromTo₀^254(1, 4000)))
+//│ def enumFromTo₀(a², b²) = if (a² <= b²) then [LH_C a² enumFromTo₀^210((a² + 1), b²)] else [LH_N]
+//│ def map₀(f⁴, ls⁷) = case ls⁷ of {
+//│ 	LH_C h⁷ t⁸ => [LH_C f⁴(h⁷) map₀^228(f⁴, t⁸)]
+//│ 	| LH_N  => [LH_N]}
+//│ def map₁(f⁵, ls⁸) = case ls⁸ of {
+//│ 	LH_C h⁸ t⁹ => [LH_C f⁵(h⁸) map₁^242(f⁵, t⁹)]
+//│ 	| LH_N  => [LH_N]}
+//│ def testMapmap₀(_lh_testMapmap_arg1¹) = map₀^184((fun x² -> (x² + 1)), map₁^192((fun x³ -> (x³ + x³)), _lh_testMapmap_arg1¹))
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec enumFromTo_d0 a_2 b_2 =
+//│ 		  (if (a_2 <= b_2) then
+//│ 		    (a_2::((enumFromTo_d0 (a_2 + 1)) b_2))
+//│ 		  else
+//│ 		    [])
+//│ 		and map_d0 f_4 ls_7 =
+//│ 		  (match ls_7 with
+//│ 		    | (h_7 :: t_8) -> 
+//│ 		      ((f_4 h_7)::((map_d0 f_4) t_8))
+//│ 		    | [] -> 
+//│ 		      [])
+//│ 		and map_d1 f_5 ls_8 =
+//│ 		  (match ls_8 with
+//│ 		    | (h_8 :: t_9) -> 
+//│ 		      ((f_5 h_8)::((map_d1 f_5) t_9))
+//│ 		    | [] -> 
+//│ 		      [])
+//│ 		and testMapmap_d0 _lh_testMapmap_arg1_1 =
+//│ 		  ((map_d0 (fun x_2 -> 
+//│ 		    (x_2 + 1))) ((map_d1 (fun x_3 -> 
+//│ 		    (x_3 + x_3))) _lh_testMapmap_arg1_1));;
+//│ 		(testMapmap_d0 ((enumFromTo_d0 1) 4000))
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [enumFromTo₀^254]
+//│ 	[enumFromTo₀^254 · enumFromTo₀^210] ---> [enumFromTo₀^254] (only one)
+//│ [testMapmap₀^252]
+//│ 	[testMapmap₀^252 · map₀^184]
+//│ 		[testMapmap₀^252 · map₀^184 · map₀^228] ---> [testMapmap₀^252 · map₀^184] (only one)
+//│ 	[testMapmap₀^252 · map₁^192]
+//│ 		[testMapmap₀^252 · map₁^192 · map₁^242] ---> [testMapmap₀^252 · map₁^192] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testMapmap₀₀(primId⁰(enumFromTo₀₀(1, 4000)))
+//│ def enumFromTo₀₀(a¹, b¹) = 
+//│ 	if (a¹ <= b¹) then [LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)] else [LH_N]
+//│ def testMapmap₀₀(_lh_testMapmap_arg1¹) = 
+//│ 	map₀₀((fun x² -> (x² + 1)), map₁₀((fun x³ -> (x³ + x³)), _lh_testMapmap_arg1¹))
+//│ 	where
+//│ 	def map₀₀(f², ls²) = 
+//│ 		case ls² of {
+//│ 			LH_C h² t² => [LH_C f²(h²) map₀₀(f², t²)]
+//│ 			| LH_N  => [LH_N]}
+//│ 	def map₁₀(f³, ls³) = 
+//│ 		case ls³ of {
+//│ 			LH_C h³ t³ => [LH_C f³(h³) map₁₀(f³, t³)]
+//│ 			| LH_N  => [LH_N]}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_C f³(h³) map₁₀(f³, t³)]: 101 --->
+//│ 	case ls² of {LH_C h² t² => [LH_C f²(h²) map₀₀(f², t²)] | LH_N  => [LH_N]}: 89
+//│ [LH_N]: 102 --->
+//│ 	case ls² of {LH_C h² t² => [LH_C f²(h²) map₀₀(f², t²)] | LH_N  => [LH_N]}: 89
+//│ ------------------
+//│ case ls² of {LH_C h² t² => [LH_C f²(h²) map₀₀(f², t²)] | LH_N  => [LH_N]}: 89 --->
+//│ 	[LH_C f³(h³) map₁₀(f³, t³)]: 101
+//│ 	[LH_N]: 102
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_C f³(h³) map₁₀(f³, t³)]: 101 --->
+//│ 	case ls² of {LH_C h² t² => [LH_C f²(h²) map₀₀(f², t²)] | LH_N  => [LH_N]}: 89
+//│ [LH_N]: 102 --->
+//│ 	case ls² of {LH_C h² t² => [LH_C f²(h²) map₀₀(f², t²)] | LH_N  => [LH_N]}: 89
+//│ ------------------
+//│ case ls² of {LH_C h² t² => [LH_C f²(h²) map₀₀(f², t²)] | LH_N  => [LH_N]}: 89 --->
+//│ 	[LH_C f³(h³) map₁₀(f³, t³)]: 101
+//│ 	[LH_N]: 102
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testMapmap₀₀(primId⁰(enumFromTo₀₀(1, 4000)))
+//│ def enumFromTo₀₀(a², b²) = 
+//│ 	if (a² <= b²) then [LH_C a² enumFromTo₀₀((a² + 1), b²)] else [LH_N]
+//│ def testMapmap₀₀(_lh_testMapmap_arg1²) = 
+//│ 	map₀₀((fun x⁴ -> (x⁴ + 1)), map₁₀((fun x⁵ -> (x⁵ + x⁵)), _lh_testMapmap_arg1²))
+//│ 	where
+//│ 	def map₀₀(f⁴, ls⁴) = 
+//│ 		ls⁴(f⁴)
+//│ 	def map₁₀(f⁵, ls⁵) = 
+//│ 		case ls⁵ of {
+//│ 			LH_C h³ t³ => 
+//│ 				let h⁴ = f⁵(h³)
+//│ 				in let t⁴ = map₁₀(f⁵, t³)
+//│ 				in (fun f⁶ -> [LH_C f⁶(h⁴) map₀₀(f⁶, t⁴)])
+//│ 			| LH_N  => (fun f⁷ -> [LH_N])}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ (* #use "topfind";;
+//│ #require "benchmark";; *)
+//│ open Benchmark;;
+//│ 
+//│ (* optimized *)
+//│ let rec enumFromTo_d0 a_2 b_2 =
+//│   (if (a_2 <= b_2) then
+//│     (a_2::((enumFromTo_d0 (a_2 + 1)) b_2))
+//│   else
+//│     [])
+//│ and map_d0 f_4 ls_7 =
+//│   (match ls_7 with
+//│     | (h_7 :: t_8) -> 
+//│       ((f_4 h_7)::((map_d0 f_4) t_8))
+//│     | [] -> 
+//│       [])
+//│ and map_d1 f_5 ls_8 =
+//│   (match ls_8 with
+//│     | (h_8 :: t_9) -> 
+//│       ((f_5 h_8)::((map_d1 f_5) t_9))
+//│     | [] -> 
+//│       [])
+//│ and testMapmap_d0 _lh_testMapmap_arg1_1 =
+//│   ((map_d0 (fun x_2 -> 
+//│     (x_2 + 1))) ((map_d1 (fun x_3 -> 
+//│     (x_3 + x_3))) _lh_testMapmap_arg1_1));;
+//│ 
+//│ (* optimized *)
+//│ let rec enumFromTo_d0_d0 a_0 b_0 =
+//│   (if (a_0 <= b_0) then
+//│     (a_0::((enumFromTo_d0_d0 (a_0 + 1)) b_0))
+//│   else
+//│     [])
+//│ and map_d0_d0 f_0 ls_0 =
+//│   (ls_0 f_0)
+//│ and map_d1_d0 f_1 ls_1 =
+//│   (match ls_1 with
+//│     | (h_0 :: t_0) -> 
+//│       (let rec h_1 = (f_1 h_0) in
+//│         (let rec t_1 = ((map_d1_d0 f_1) t_0) in
+//│           (fun f_2 -> 
+//│             ((f_2 h_1)::((map_d0_d0 f_2) t_1)))))
+//│     | [] -> 
+//│       (fun f_3 -> 
+//│         []))
+//│ and testMapmap_d0_d0 _lh_testMapmap_arg1_0 =
+//│   ((map_d0_d0 (fun x_0 -> 
+//│     (x_0 + 1))) ((map_d1_d0 (fun x_1 -> 
+//│     (x_1 + x_1))) _lh_testMapmap_arg1_0));;
+//│ 
+//│ latency1 10L ~name:"lumberhack_Mapmap" testMapmap_d0_d0 ((enumFromTo_d0_d0 1) 4000);;
+//│ latency1 10L ~name:"original_Mapmap" testMapmap_d0 ((enumFromTo_d0 1) 4000);;
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

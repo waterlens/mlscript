@@ -711,23 +711,23 @@ fun length(ls) = if ls is
 
 trait CodeGen {
   protected implicit def stringToDoc(s: String): Raw = Raw(s)
-
+  
   val primitives: Map[String, String]
-  def transfromId(id: Ident): Document
-    
-  def transFromProgDef(pd: ProgDef): Document
-  def generateTypeInfo(d: Deforest): String
-  def rec(e: Expr): Document
   val headers: Document
-  def apply(p: Program): String
-  def makeBenchFiles(optimized: Program, original: Program): String
+  
+  def transfromId(id: Ident): Document
+  def transFromProgDef(pd: ProgDef): Document
   def transformMatchArm(dtor: Var, params: List[Ident]): Document
+  
+  def rec(e: Expr): Document
+
+  def generateTypeInfo(d: Deforest): String
+  def makeBenchFiles(optimized: Program, original: Program): String
+  def apply(p: Program): String
 }
 
 object HaskellGen extends CodeGen {
-  def validate(p: Program): Unit = ??? //maybe we should check if the program can be translated at all
-
-  val primitives = Map("add" -> "(+)", "sub" -> "(-)")
+  override val primitives = Map("add" -> "(+)", "sub" -> "(-)")
 
   override def generateTypeInfo(d: Deforest): String = {
     // def getCtorFieldTypes(ctor: Var, d: Defoest) = 
@@ -909,7 +909,7 @@ object HaskellGen extends CodeGen {
     val optimizedDefs = Program(
       optimized.contents.tail
     )(using original.d) // the deforest instance does not matter here
-    val mergedDefsGen = HaskellGen(originalDefs) + "\n\n" + HaskellGen(optimizedDefs) + "\n"
+    val mergedDefsGen = "\n--- original ---\n" + HaskellGen(originalDefs) + "\n\n--- optimized ---\n" + HaskellGen(optimizedDefs) + "\n"
 
     val mainTestGen = stack(
       Raw(s"  bench $"lumberhack_$benchName$" $$ nf ")
@@ -958,8 +958,6 @@ object HaskellGen extends CodeGen {
 }
 
 object OCamlGen extends CodeGen {
-  def validate(p: Program): Unit = ??? //maybe we should check if the program can be translated at all
-
   override val primitives = Map(
     "add" -> "(+)", "sub" -> "(-)", "%" -> "mod", "==" -> "=", "error" -> "failwith", "/=" -> "!="
   )
@@ -983,9 +981,12 @@ object OCamlGen extends CodeGen {
     }
   }
 
-  val headers = Raw("")
+  override val headers = stack(
+    Raw("(* #use \"topfind\";;\n#require \"benchmark\";; *)"),
+    Raw("open Benchmark;;"),
+  )
 
-  def transformMatchArm(dtor: Var, params: List[Ident]): Document = {
+  override def transformMatchArm(dtor: Var, params: List[Ident]): Document = {
     BuiltInTypes.fromStr(dtor.name) -> params match {
       case Some(BuiltInTypes.ListCons) -> (h :: t :: Nil) => "(" <:> transfromId(h) <:> " :: " <:> transfromId(t) <:> ") -> "
       case Some(BuiltInTypes.ListNil) -> Nil => "[] -> "
@@ -1063,7 +1064,67 @@ object OCamlGen extends CodeGen {
     case e => lastWords(s"not supported: ${e.pp(using InitPpConfig.showIuidOn)}")
   }
 
-  override def makeBenchFiles(optimized: Program, original: Program): String = ???
+  override def makeBenchFiles(optimized: Program, original: Program): String = {
+    val benchName = (original.defAndExpr._2 match {
+      case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId), _)) :: Nil
+        if test.tree.name.startsWith("test") && primId.tree.name == "primId" =>
+        test.tree.name.drop(4).filter(_ <= 0x7f) // keep only valid ASCII characters
+      case _ => lastWords("benchmark requires a method of name `testxxx` calling a value wrapped in `primId`")
+    }).emptyOrElse(optimized.hashCode().toString())
+
+    val originalDefs = Program(
+      original.contents.tail
+    )(using original.d) // the deforest instance does not matter here
+    val optimizedDefs = Program(
+      optimized.contents.tail
+    )(using original.d) // the deforest instance does not matter here
+    val mergedDefsGen = "\n(* optimized *)\n" + OCamlGen(originalDefs) + "\n\n(* optimized *)\n" + OCamlGen(optimizedDefs) + "\n"
+
+    // val mainTestGen = stack(
+    //   Raw(s"  bench $"lumberhack_$benchName$" $$ nf ")
+    //     <:> Raw((HaskellGen.rec(optimized.defAndExpr._2.head).print).drop(1).dropRight(1)),
+    //   Raw(s", bench $"original_$benchName$" $$ nf ")
+    //     <:> Raw((HaskellGen.rec(original.defAndExpr._2.head).print).drop(1).dropRight(1)) <:> Raw(" ] ]")
+    // )
+    val mainGen = stack(
+      Raw(s"latency1 10L ~name:$"lumberhack_$benchName$" ")
+        <:> Raw((OCamlGen.rec(optimized.defAndExpr._2.head).print).drop(1).dropRight(1))
+        <:> Raw(";;"),
+      Raw(s"latency1 10L ~name:$"original_$benchName$" ")
+        <:> Raw((OCamlGen.rec(original.defAndExpr._2.head).print).drop(1).dropRight(1))
+        <:> Raw(";;")
+    )
+    val hsFileContent = stack(
+      headers,
+      Raw(mergedDefsGen),
+      mainGen
+    ).print
+    // val cabalFileContent = s"""name: lumberhack-bench-$benchName
+    //                           |version: 0
+    //                           |build-type: Simple
+    //                           |cabal-version: >= 1.6
+    //                           |
+    //                           |executable $benchName
+    //                           |  main-is: $benchName.hs
+    //                           |  extensions: ExtendedDefaultRules
+    //                           |  ghc-options: -fno-strictness -O2
+    //                           |  build-depends:
+    //                           |    base == 4.*,
+    //                           |    criterion
+    //                           |    """.stripMargin
+
+    // import sys.process.*
+    // import java.io._
+    // s"mkdir -p ./lumberhack-haskell-benchmark/$benchName".!
+    // val hsFw = new FileWriter(s"./lumberhack-haskell-benchmark/$benchName/$benchName.hs", false)
+    // hsFw.write(hsFileContent + "\n")
+    // hsFw.close()
+    // val cabalFw = new FileWriter(s"./lumberhack-haskell-benchmark/$benchName/$benchName.cabal", false)
+    // cabalFw.write(cabalFileContent)
+    // cabalFw.close()
+
+    hsFileContent
+  }
   override def apply(p: Program): String = {
     val sortedContent = p.contents.sortBy {
       case Left(progDef) => progDef.id.tree.name

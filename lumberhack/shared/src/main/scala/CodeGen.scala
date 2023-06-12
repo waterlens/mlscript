@@ -330,8 +330,8 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
               newPatParams,
               body
             )
-          }) :+ (Var("_"), Nil, elze)
-        )
+          })
+        ) // :+ (Var("_"), Nil, elze) // no need for this match error pattern
       } else if firstPatterns.forall(!_.isInstanceOf[NestedPat.LitPat]) then {
         // the mix of ctors, vars or wildcards
         val groupedPats = {
@@ -1078,7 +1078,7 @@ object OCamlGen extends CodeGen {
     val optimizedDefs = Program(
       optimized.contents.tail
     )(using original.d) // the deforest instance does not matter here
-    val mergedDefsGen = "\n(* optimized *)\n" + OCamlGen(originalDefs) + "\n\n(* optimized *)\n" + OCamlGen(optimizedDefs) + "\n"
+    val mergedDefsGen = "\n(* original *)\n" + OCamlGen(originalDefs) + "\n\n(* optimized *)\n" + OCamlGen(optimizedDefs) + "\n"
 
     // val mainTestGen = stack(
     //   Raw(s"  bench $"lumberhack_$benchName$" $$ nf ")

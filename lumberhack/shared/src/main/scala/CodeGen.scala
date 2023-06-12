@@ -1085,21 +1085,33 @@ object OCamlGen extends CodeGen {
     val mainGen = stack(
       // Raw("let _lh_bench_res = latencyN ~repeat:10 10L ["),
       // Indented(stack(
-      //   Raw(s"(\"lumberhack_$benchName\", ${
+        //   Raw(s"(\"original_${benchName}_1\", ${
+        //     (OCamlGen.rec(original.defAndExpr._2.head).print).drop(1).dropRight(1).replaceFirst(" ", ", ")
+        //   })") <:> Raw(";")
+      //   Raw(s"(\"lumberhack_${benchName}_1\", ${
       //     (OCamlGen.rec(optimized.defAndExpr._2.head).print).drop(1).dropRight(1).replaceFirst(" ", ", ")
       //   })") <:> Raw(";"),
-      //   Raw(s"(\"original_$benchName\", ${
+      //   Raw(s"(\"original_${benchName}_2\", ${
       //     (OCamlGen.rec(original.defAndExpr._2.head).print).drop(1).dropRight(1).replaceFirst(" ", ", ")
       //   })") <:> Raw(";")
+      //   Raw(s"(\"lumberhack_${benchName}_2\", ${
+      //     (OCamlGen.rec(optimized.defAndExpr._2.head).print).drop(1).dropRight(1).replaceFirst(" ", ", ")
+      //   })") <:> Raw(";"),
       // )),
       // Raw("] in tabulate _lh_bench_res;;"),
       Raw("Command_unix.run (Bench.make_command ["),
       Indented(stack(
-        Raw(s"Bench.Test.create ~name:\"lumberhack_$benchName\" (fun () -> ignore (${
+        Raw(s"Bench.Test.create ~name:\"original_${benchName}_1\" (fun () -> ignore (${
+          OCamlGen.rec(original.defAndExpr._2.head).print
+         }));"),
+        Raw(s"Bench.Test.create ~name:\"lumberhack_${benchName}_1\" (fun () -> ignore (${
           OCamlGen.rec(optimized.defAndExpr._2.head).print
          }));"),
-        Raw(s"Bench.Test.create ~name:\"original_$benchName\" (fun () -> ignore (${
-          OCamlGen.rec(original.defAndExpr._2.head).print
+         Raw(s"Bench.Test.create ~name:\"original_${benchName}_2\" (fun () -> ignore (${
+           OCamlGen.rec(original.defAndExpr._2.head).print
+          }));"),
+        Raw(s"Bench.Test.create ~name:\"lumberhack_${benchName}_2\" (fun () -> ignore (${
+          OCamlGen.rec(optimized.defAndExpr._2.head).print
          }));"),
       )),
       Raw("])")

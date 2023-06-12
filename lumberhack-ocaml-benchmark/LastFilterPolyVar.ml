@@ -80,6 +80,8 @@ and testLastFilterPolyVar_d0 ls_4 =
     (x_0 < 1000)));;
 
 Command_unix.run (Bench.make_command [
-  Bench.Test.create ~name:"lumberhack_LastFilterPolyVar" (fun () -> ignore ((testLastFilterPolyVar_d0 ((enumFromTo_d0 1) 100000))));
-  Bench.Test.create ~name:"original_LastFilterPolyVar" (fun () -> ignore ((testLastFilterPolyVar ((enumFromTo 1) 100000))));
+  Bench.Test.create ~name:"original_LastFilterPolyVar_1" (fun () -> ignore ((testLastFilterPolyVar ((enumFromTo 1) 100000))));
+  Bench.Test.create ~name:"lumberhack_LastFilterPolyVar_1" (fun () -> ignore ((testLastFilterPolyVar_d0 ((enumFromTo_d0 1) 100000))));
+  Bench.Test.create ~name:"original_LastFilterPolyVar_2" (fun () -> ignore ((testLastFilterPolyVar ((enumFromTo 1) 100000))));
+  Bench.Test.create ~name:"lumberhack_LastFilterPolyVar_2" (fun () -> ignore ((testLastFilterPolyVar_d0 ((enumFromTo_d0 1) 100000))));
 ])

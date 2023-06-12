@@ -47,6 +47,8 @@ and testMapmapPolyVar_d0 ls_0 =
     (x_1 * x_1)));;
 
 Command_unix.run (Bench.make_command [
-  Bench.Test.create ~name:"lumberhack_MapmapPolyVar" (fun () -> ignore ((testMapmapPolyVar_d0 ((enumFromTo_d0 1) 100000))));
-  Bench.Test.create ~name:"original_MapmapPolyVar" (fun () -> ignore ((testMapmapPolyVar ((enumFromTo 1) 100000))));
+  Bench.Test.create ~name:"original_MapmapPolyVar_1" (fun () -> ignore ((testMapmapPolyVar ((enumFromTo 1) 100000))));
+  Bench.Test.create ~name:"lumberhack_MapmapPolyVar_1" (fun () -> ignore ((testMapmapPolyVar_d0 ((enumFromTo_d0 1) 100000))));
+  Bench.Test.create ~name:"original_MapmapPolyVar_2" (fun () -> ignore ((testMapmapPolyVar ((enumFromTo 1) 100000))));
+  Bench.Test.create ~name:"lumberhack_MapmapPolyVar_2" (fun () -> ignore ((testMapmapPolyVar_d0 ((enumFromTo_d0 1) 100000))));
 ])

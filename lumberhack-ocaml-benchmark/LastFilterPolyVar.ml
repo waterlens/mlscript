@@ -7,7 +7,16 @@ ocamlfind ocamlopt -rectypes -thread -O3 ./LastFilterPolyVar.ml -o "./LastFilter
 open Core_bench;;
 
 (* original *)
-let rec enumFromTo a_0 b_0 =
+let rec _lhManualLastFilter ls_4 f_1 a_2 =
+  (match ls_4 with
+    | `C(h_3, t_3) -> 
+      (if (f_1 h_3) then
+        (((_lhManualLastFilter t_3) f_1) (`Some(h_3)))
+      else
+        (((_lhManualLastFilter t_3) f_1) a_2))
+    | `N -> 
+      a_2)
+and enumFromTo a_0 b_0 =
   (if (a_0 < b_0) then
     (`C(a_0, ((enumFromTo (a_0 + 1)) b_0)))
   else
@@ -33,16 +42,22 @@ and lastDrive ls_1 =
       (`Some(((last h_1) t_1)))
     | `N -> 
       (`None))
-and lastFilter ls_3 f_1 =
-  (lastDrive ((filter ls_3) f_1))
-and testLastFilterPolyVar ls_4 =
-  ((lastFilter ls_4) (fun x_0 -> 
-    (x_0 < 1000)));;
+and testLastFilterPolyVar ls_3 =
+  (lastDrive ((filter ls_3) (fun x_0 -> 
+    (x_0 < 1000))))
+and testManual ls_5 =
+  (((_lhManualLastFilter ls_5) (fun x_1 -> 
+    (x_1 < 1000))) (`None));;
 
 (* optimized *)
 let rec enumFromTo_d0 a_3 b_0 =
   (if (a_3 < b_0) then
     (`C(a_3, ((enumFromTo_d0 (a_3 + 1)) b_0)))
+  else
+    (`N))
+and enumFromTo_d1 a_4 b_1 =
+  (if (a_4 < b_1) then
+    (`C(a_4, ((enumFromTo_d1 (a_4 + 1)) b_1)))
   else
     (`N))
 and filter_d0 ls_3 f_1 =
@@ -71,17 +86,14 @@ and filter_d1 ls_1 f_0 =
         a_1))
 and lastDrive_d0 ls_0 =
   ls_0
-and lastFilter_d0 ls_5 f_2 =
-  (lastDrive_d0 ((filter_d0 ls_5) f_2))
 and last_d0 a_2 ls_2 =
   (ls_2 a_2)
-and testLastFilterPolyVar_d0 ls_4 =
-  ((lastFilter_d0 ls_4) (fun x_0 -> 
-    (x_0 < 1000)));;
+and testLastFilterPolyVar_d0 ls_6 =
+  (lastDrive_d0 ((filter_d0 ls_6) (fun x_1 -> 
+    (x_1 < 1000))));;
 
 Command_unix.run (Bench.make_command [
-  Bench.Test.create ~name:"original_LastFilterPolyVar_1" (fun () -> ignore ((testLastFilterPolyVar ((enumFromTo 1) 100000))));
-  Bench.Test.create ~name:"lumberhack_LastFilterPolyVar_1" (fun () -> ignore ((testLastFilterPolyVar_d0 ((enumFromTo_d0 1) 100000))));
-  Bench.Test.create ~name:"original_LastFilterPolyVar_2" (fun () -> ignore ((testLastFilterPolyVar ((enumFromTo 1) 100000))));
-  Bench.Test.create ~name:"lumberhack_LastFilterPolyVar_2" (fun () -> ignore ((testLastFilterPolyVar_d0 ((enumFromTo_d0 1) 100000))));
+  Bench.Test.create ~name:"original_LastFilterPolyVar" (fun () -> ignore ((testLastFilterPolyVar ((enumFromTo 1) 100000))));
+  Bench.Test.create ~name:"manual_LastFilterPolyVar" (fun () -> ignore ((testManual ((enumFromTo 1) 100000))));
+  Bench.Test.create ~name:"lumberhack_LastFilterPolyVar" (fun () -> ignore ((testLastFilterPolyVar_d0 ((enumFromTo_d0 1) 100000))));
 ])

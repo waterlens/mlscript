@@ -211,6 +211,9 @@ f val
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
+//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter.
+//│ 
 //│ (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
 //│   (_lh_listcomp_fun_para_0 _lh_listcomp_fun_0)) in
 //│   (_lh_listcomp_fun_0 (let rec _lh_listcomp_fun_ls_h_0 = 1 in
@@ -438,6 +441,9 @@ nsoln 10
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
+//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter.
+//│ 
 //│ let rec enumFromTo_d0_d0 a_0 b_0 =
 //│   (if (a_0 <= b_0) then
 //│     (let rec _lh_listcomp_fun_ls_h_0 = a_0 in
@@ -648,10 +654,8 @@ testMapmap $ primId [1..1000000]
 //│     (x_1 + x_1))) _lh_testMapmap_arg1_0));;
 //│ 
 //│ Command_unix.run (Bench.make_command [
-//│   Bench.Test.create ~name:"original_Mapmap_1" (fun () -> ignore ((testMapmap_d0 ((enumFromTo_d0 1) 1000000))));
-//│   Bench.Test.create ~name:"lumberhack_Mapmap_1" (fun () -> ignore ((testMapmap_d0_d0 ((enumFromTo_d0_d0 1) 1000000))));
-//│   Bench.Test.create ~name:"original_Mapmap_2" (fun () -> ignore ((testMapmap_d0 ((enumFromTo_d0 1) 1000000))));
-//│   Bench.Test.create ~name:"lumberhack_Mapmap_2" (fun () -> ignore ((testMapmap_d0_d0 ((enumFromTo_d0_d0 1) 1000000))));
+//│   Bench.Test.create ~name:"original_Mapmap" (fun () -> ignore ((testMapmap_d0 ((enumFromTo_d0 1) 1000000))));
+//│   Bench.Test.create ~name:"lumberhack_Mapmap" (fun () -> ignore ((testMapmap_d0_d0 ((enumFromTo_d0_d0 1) 1000000))));
 //│ ])
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
 
@@ -669,13 +673,21 @@ fun lastDrive(ls) = if ls is
 fun last(a, ls) = if ls is
   N then a
   C(h, t) then last(h, t)
-fun lastFilter(ls, f) = lastDrive(filter(ls, f))
-fun testLastFilterPolyVar(ls) = lastFilter(ls, x => x < 1000)
+fun testLastFilterPolyVar(ls) = lastDrive(filter(ls, x => x < 1000))
+fun _lhManualLastFilter(ls, f, a) = if ls is
+  C(h, t) then if f(h) then _lhManualLastFilter(t, f, Some(h)) else _lhManualLastFilter(t, f, a)
+  N then a
+fun testManual(ls) = _lhManualLastFilter(ls, x => x < 1000, None)
 testLastFilterPolyVar(primId(enumFromTo(1, 100000)))
-//│ |#fun| |enumFromTo|(|a|,| |b|)| |#=| |#if| |a| |<| |b| |#then| |C|(|a|,| |enumFromTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |filter|(|ls|,| |f|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |f|(|h|)| |#then| |C|(|h|,| |filter|(|t|,| |f|)|)| |#else| |filter|(|t|,| |f|)|↵|N| |#then| |N|←|↵|#fun| |lastDrive|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |Some|(|last|(|h|,| |t|)|)|↵|N| |#then| |None|←|↵|#fun| |last|(|a|,| |ls|)| |#=| |#if| |ls| |is|→|N| |#then| |a|↵|C|(|h|,| |t|)| |#then| |last|(|h|,| |t|)|←|↵|#fun| |lastFilter|(|ls|,| |f|)| |#=| |lastDrive|(|filter|(|ls|,| |f|)|)|↵|#fun| |testLastFilterPolyVar|(|ls|)| |#=| |lastFilter|(|ls|,| |x| |=>| |x| |<| |1000|)|↵|testLastFilterPolyVar|(|primId|(|enumFromTo|(|1|,| |100000|)|)|)|
-//│ Parsed: {fun enumFromTo = a, b, => if (< (a,) (b,)) then C (a, enumFromTo (+ (a,) (1,), b,),) else N; fun filter = ls, f, => if ls is ‹(C (h, t,)) then if (f (h,)) then C (h, filter (t, f,),) else filter (t, f,); (N) then N›; fun lastDrive = ls, => if ls is ‹(C (h, t,)) then Some (last (h, t,),); (N) then None›; fun last = a, ls, => if ls is ‹(N) then a; (C (h, t,)) then last (h, t,)›; fun lastFilter = ls, f, => lastDrive (filter (ls, f,),); fun testLastFilterPolyVar = ls, => lastFilter (ls, x, => < (x,) (1000,),); testLastFilterPolyVar (primId (enumFromTo (1, 100000,),),)}
+testManual(primId(enumFromTo(1, 100000)))
+//│ |#fun| |enumFromTo|(|a|,| |b|)| |#=| |#if| |a| |<| |b| |#then| |C|(|a|,| |enumFromTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |filter|(|ls|,| |f|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |f|(|h|)| |#then| |C|(|h|,| |filter|(|t|,| |f|)|)| |#else| |filter|(|t|,| |f|)|↵|N| |#then| |N|←|↵|#fun| |lastDrive|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |Some|(|last|(|h|,| |t|)|)|↵|N| |#then| |None|←|↵|#fun| |last|(|a|,| |ls|)| |#=| |#if| |ls| |is|→|N| |#then| |a|↵|C|(|h|,| |t|)| |#then| |last|(|h|,| |t|)|←|↵|#fun| |testLastFilterPolyVar|(|ls|)| |#=| |lastDrive|(|filter|(|ls|,| |x| |=>| |x| |<| |1000|)|)|↵|#fun| |_lhManualLastFilter|(|ls|,| |f|,| |a|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |f|(|h|)| |#then| |_lhManualLastFilter|(|t|,| |f|,| |Some|(|h|)|)| |#else| |_lhManualLastFilter|(|t|,| |f|,| |a|)|↵|N| |#then| |a|←|↵|#fun| |testManual|(|ls|)| |#=| |_lhManualLastFilter|(|ls|,| |x| |=>| |x| |<| |1000|,| |None|)|↵|testLastFilterPolyVar|(|primId|(|enumFromTo|(|1|,| |100000|)|)|)|↵|testManual|(|primId|(|enumFromTo|(|1|,| |100000|)|)|)|
+//│ Parsed: {fun enumFromTo = a, b, => if (< (a,) (b,)) then C (a, enumFromTo (+ (a,) (1,), b,),) else N; fun filter = ls, f, => if ls is ‹(C (h, t,)) then if (f (h,)) then C (h, filter (t, f,),) else filter (t, f,); (N) then N›; fun lastDrive = ls, => if ls is ‹(C (h, t,)) then Some (last (h, t,),); (N) then None›; fun last = a, ls, => if ls is ‹(N) then a; (C (h, t,)) then last (h, t,)›; fun testLastFilterPolyVar = ls, => lastDrive (filter (ls, x, => < (x,) (1000,),),); fun _lhManualLastFilter = ls, f, a, => if ls is ‹(C (h, t,)) then if (f (h,)) then _lhManualLastFilter (t, f, Some (h,),) else _lhManualLastFilter (t, f, a,); (N) then a›; fun testManual = ls, => _lhManualLastFilter (ls, x, => < (x,) (1000,), None,); testLastFilterPolyVar (primId (enumFromTo (1, 100000,),),); testManual (primId (enumFromTo (1, 100000,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ testLastFilterPolyVar^82(primId⁰(enumFromTo^84(1, 100000)))
+//│ testLastFilterPolyVar^113(primId⁰(enumFromTo^115(1, 100000)))
+//│ testManual^122(primId⁰(enumFromTo^124(1, 100000)))
+//│ def _lhManualLastFilter(ls⁴, f¹, a²) = case ls⁴ of {
+//│ 	C h³ t³ => if f¹(h³) then _lhManualLastFilter^79(t³, f¹, [Some h³]) else _lhManualLastFilter^87(t³, f¹, a²)
+//│ 	| N  => a²}
 //│ def enumFromTo(a⁰, b⁰) = if (a⁰ < b⁰) then [C a⁰ enumFromTo^7((a⁰ + 1), b⁰)] else [N]
 //│ def filter(ls⁰, f⁰) = case ls⁰ of {
 //│ 	C h⁰ t⁰ => if f⁰(h⁰) then [C h⁰ filter^26(t⁰, f⁰)] else filter^32(t⁰, f⁰)
@@ -686,10 +698,19 @@ testLastFilterPolyVar(primId(enumFromTo(1, 100000)))
 //│ def lastDrive(ls¹) = case ls¹ of {
 //│ 	C h¹ t¹ => [Some last^43(h¹, t¹)]
 //│ 	| N  => [None]}
-//│ def lastFilter(ls³, f¹) = lastDrive^62(filter^63(ls³, f¹))
-//│ def testLastFilterPolyVar(ls⁴) = lastFilter^71(ls⁴, (fun x⁰ -> (x⁰ < 1000)))
+//│ def testLastFilterPolyVar(ls³) = lastDrive^62(filter^63(ls³, (fun x⁰ -> (x⁰ < 1000))))
+//│ def testManual(ls⁵) = _lhManualLastFilter^100(ls⁵, (fun x¹ -> (x¹ < 1000)), [None])
 //│ 		---------- unoptimized ocaml gen ----------
-//│ 		let rec enumFromTo a_0 b_0 =
+//│ 		let rec _lhManualLastFilter ls_4 f_1 a_2 =
+//│ 		  (match ls_4 with
+//│ 		    | `C(h_3, t_3) -> 
+//│ 		      (if (f_1 h_3) then
+//│ 		        (((_lhManualLastFilter t_3) f_1) (`Some(h_3)))
+//│ 		      else
+//│ 		        (((_lhManualLastFilter t_3) f_1) a_2))
+//│ 		    | `N -> 
+//│ 		      a_2)
+//│ 		and enumFromTo a_0 b_0 =
 //│ 		  (if (a_0 < b_0) then
 //│ 		    (`C(a_0, ((enumFromTo (a_0 + 1)) b_0)))
 //│ 		  else
@@ -715,126 +736,159 @@ testLastFilterPolyVar(primId(enumFromTo(1, 100000)))
 //│ 		      (`Some(((last h_1) t_1)))
 //│ 		    | `N -> 
 //│ 		      (`None))
-//│ 		and lastFilter ls_3 f_1 =
-//│ 		  (lastDrive ((filter ls_3) f_1))
-//│ 		and testLastFilterPolyVar ls_4 =
-//│ 		  ((lastFilter ls_4) (fun x_0 -> 
-//│ 		    (x_0 < 1000)));;
+//│ 		and testLastFilterPolyVar ls_3 =
+//│ 		  (lastDrive ((filter ls_3) (fun x_0 -> 
+//│ 		    (x_0 < 1000))))
+//│ 		and testManual ls_5 =
+//│ 		  (((_lhManualLastFilter ls_5) (fun x_1 -> 
+//│ 		    (x_1 < 1000))) (`None));;
 //│ 		(testLastFilterPolyVar ((enumFromTo 1) 100000))
+//│ 		(testManual ((enumFromTo 1) 100000))
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [enumFromTo^84]
-//│ 	[enumFromTo^84 · enumFromTo^7] ---> [enumFromTo^84] (only one)
-//│ [testLastFilterPolyVar^82]
-//│ 	[testLastFilterPolyVar^82 · lastFilter^71]
-//│ 		[testLastFilterPolyVar^82 · lastFilter^71 · filter^63]
-//│ 			[testLastFilterPolyVar^82 · lastFilter^71 · filter^63 · filter^26] (hopeless to continue)
-//│ 				[testLastFilterPolyVar^82 · lastFilter^71 · filter^63 · filter^26 · filter^26] ---> [testLastFilterPolyVar^82 · lastFilter^71 · filter^63 · filter^26] (using original def)
-//│ 				[testLastFilterPolyVar^82 · lastFilter^71 · filter^63 · filter^26 · filter^32] ---> [testLastFilterPolyVar^82 · lastFilter^71 · filter^63 · filter^26] (using original def)
-//│ 			[testLastFilterPolyVar^82 · lastFilter^71 · filter^63 · filter^32] ---> [testLastFilterPolyVar^82 · lastFilter^71 · filter^63] (only one)
-//│ 		[testLastFilterPolyVar^82 · lastFilter^71 · lastDrive^62] (hopeless to continue)
-//│ 			[testLastFilterPolyVar^82 · lastFilter^71 · lastDrive^62 · last^43] (using original def)
-//│ 				[testLastFilterPolyVar^82 · lastFilter^71 · lastDrive^62 · last^43 · last^54] ---> [testLastFilterPolyVar^82 · lastFilter^71 · lastDrive^62 · last^43] (using original def)
+//│ [enumFromTo^115] (hopeless to continue)
+//│ 	[enumFromTo^115 · enumFromTo^7] ---> [enumFromTo^115] (using original def)
+//│ [enumFromTo^124]
+//│ 	[enumFromTo^124 · enumFromTo^7] ---> [enumFromTo^124] (only one)
+//│ [testLastFilterPolyVar^113]
+//│ 	[testLastFilterPolyVar^113 · filter^63]
+//│ 		[testLastFilterPolyVar^113 · filter^63 · filter^26] (hopeless to continue)
+//│ 			[testLastFilterPolyVar^113 · filter^63 · filter^26 · filter^26] ---> [testLastFilterPolyVar^113 · filter^63 · filter^26] (using original def)
+//│ 			[testLastFilterPolyVar^113 · filter^63 · filter^26 · filter^32] ---> [testLastFilterPolyVar^113 · filter^63 · filter^26] (using original def)
+//│ 		[testLastFilterPolyVar^113 · filter^63 · filter^32] ---> [testLastFilterPolyVar^113 · filter^63] (only one)
+//│ 	[testLastFilterPolyVar^113 · lastDrive^62] (hopeless to continue)
+//│ 		[testLastFilterPolyVar^113 · lastDrive^62 · last^43] (using original def)
+//│ 			[testLastFilterPolyVar^113 · lastDrive^62 · last^43 · last^54] ---> [testLastFilterPolyVar^113 · lastDrive^62 · last^43] (using original def)
+//│ [testManual^122]
+//│ 	[testManual^122 · _lhManualLastFilter^100]
+//│ 		[testManual^122 · _lhManualLastFilter^100 · _lhManualLastFilter^79] (hopeless to continue)
+//│ 			[testManual^122 · _lhManualLastFilter^100 · _lhManualLastFilter^79 · _lhManualLastFilter^79] ---> [testManual^122 · _lhManualLastFilter^100 · _lhManualLastFilter^79] (using original def)
+//│ 			[testManual^122 · _lhManualLastFilter^100 · _lhManualLastFilter^79 · _lhManualLastFilter^87] ---> [testManual^122 · _lhManualLastFilter^100 · _lhManualLastFilter^79] (using original def)
+//│ 		[testManual^122 · _lhManualLastFilter^100 · _lhManualLastFilter^87] ---> [testManual^122 · _lhManualLastFilter^100] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
 //│ testLastFilterPolyVar₀(primId⁰(enumFromTo₀(1, 100000)))
-//│ def enumFromTo₀(a², b¹) = 
-//│ 	if (a² < b¹) then [C a² enumFromTo₀((a² + 1), b¹)] else [N]
-//│ def testLastFilterPolyVar₀(ls¹⁰) = 
-//│ 	lastFilter₀(ls¹⁰, (fun x¹ -> (x¹ < 1000)))
+//│ testManual₀(primId⁰(enumFromTo₁(1, 100000)))
+//│ def enumFromTo₀(a⁴, b¹) = 
+//│ 	if (a⁴ < b¹) then [C a⁴ enumFromTo₀((a⁴ + 1), b¹)] else [N]
+//│ def enumFromTo₁(a⁵, b²) = 
+//│ 	if (a⁵ < b²) then [C a⁵ enumFromTo₁((a⁵ + 1), b²)] else [N]
+//│ def testLastFilterPolyVar₀(ls¹¹) = 
+//│ 	lastDrive₀(filter₀(ls¹¹, (fun x³ -> (x³ < 1000))))
 //│ 	where
-//│ 	def lastFilter₀(ls⁹, f⁴) = 
-//│ 		lastDrive₀(filter₀(ls⁹, f⁴))
+//│ 	def filter₀(ls⁶, f²) = 
+//│ 		case ls⁶ of {
+//│ 			C h⁴ t⁴ => if f²(h⁴) then [C h⁴ filter₁(t⁴, f²)] else filter₀(t⁴, f²)
+//│ 			| N  => [N]}
 //│ 		where
-//│ 		def filter₀(ls⁶, f²) = 
-//│ 			case ls⁶ of {
-//│ 				C h⁴ t⁴ => if f²(h⁴) then [C h⁴ filter₁(t⁴, f²)] else filter₀(t⁴, f²)
+//│ 		def filter₁(ls⁹, f³) = 
+//│ 			case ls⁹ of {
+//│ 				C h⁶ t⁶ => if f³(h⁶) then [C h⁶ filter₁(t⁶, f³)] else filter₁(t⁶, f³)
 //│ 				| N  => [N]}
-//│ 			where
-//│ 			def filter₁(ls⁷, f³) = 
-//│ 				case ls⁷ of {
-//│ 					C h⁵ t⁵ => if f³(h⁵) then [C h⁵ filter₁(t⁵, f³)] else filter₁(t⁵, f³)
-//│ 					| N  => [N]}
-//│ 		def lastDrive₀(ls⁸) = 
-//│ 			case ls⁸ of {
-//│ 				C h⁶ t⁶ => [Some last₀(h⁶, t⁶)]
-//│ 				| N  => [None]}
-//│ 			where
-//│ 			def last₀(a³, ls⁵) = 
-//│ 				case ls⁵ of {
-//│ 					N  => a³
-//│ 					| C h³ t³ => last₀(h³, t³)}
+//│ 	def lastDrive₀(ls¹³) = 
+//│ 		case ls¹³ of {
+//│ 			C h⁹ t⁹ => [Some last₀(h⁹, t⁹)]
+//│ 			| N  => [None]}
+//│ 		where
+//│ 		def last₀(a³, ls⁷) = 
+//│ 			case ls⁷ of {
+//│ 				N  => a³
+//│ 				| C h⁵ t⁵ => last₀(h⁵, t⁵)}
+//│ def testManual₀(ls⁸) = 
+//│ 	_lhManualLastFilter₀(ls⁸, (fun x² -> (x² < 1000)), [None])
+//│ 	where
+//│ 	def _lhManualLastFilter₀(ls¹², f⁵, a⁷) = 
+//│ 		case ls¹² of {
+//│ 			C h⁸ t⁸ => if f⁵(h⁸) then _lhManualLastFilter₁(t⁸, f⁵, [Some h⁸]) else _lhManualLastFilter₀(t⁸, f⁵, a⁷)
+//│ 			| N  => a⁷}
+//│ 		where
+//│ 		def _lhManualLastFilter₁(ls¹⁰, f⁴, a⁶) = 
+//│ 			case ls¹⁰ of {
+//│ 				C h⁷ t⁷ => if f⁴(h⁷) then _lhManualLastFilter₁(t⁷, f⁴, [Some h⁷]) else _lhManualLastFilter₁(t⁷, f⁴, a⁶)
+//│ 				| N  => a⁶}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h⁴ filter₁(t⁴, f²)]: 131 --->
-//│ 	case ls⁸ of {C h⁶ t⁶ => [Some last₀(h⁶, t⁶)] | N  => [None]}: 171
-//│ [N]: 138 --->
-//│ 	case ls⁸ of {C h⁶ t⁶ => [Some last₀(h⁶, t⁶)] | N  => [None]}: 171
-//│ [C h⁵ filter₁(t⁵, f³)]: 152 --->
-//│ 	case ls⁵ of {N  => a³ | C h³ t³ => last₀(h³, t³)}: 118
-//│ [N]: 159 --->
-//│ 	case ls⁵ of {N  => a³ | C h³ t³ => last₀(h³, t³)}: 118
+//│ [C h⁴ filter₁(t⁴, f²)]: 141 --->
+//│ 	case ls¹³ of {C h⁹ t⁹ => [Some last₀(h⁹, t⁹)] | N  => [None]}: 307
+//│ [N]: 148 --->
+//│ 	case ls¹³ of {C h⁹ t⁹ => [Some last₀(h⁹, t⁹)] | N  => [None]}: 307
+//│ [C h⁶ filter₁(t⁶, f³)]: 185 --->
+//│ 	case ls⁷ of {N  => a³ | C h⁵ t⁵ => last₀(h⁵, t⁵)}: 159
+//│ [N]: 192 --->
+//│ 	case ls⁷ of {N  => a³ | C h⁵ t⁵ => last₀(h⁵, t⁵)}: 159
 //│ ------------------
-//│ case ls⁵ of {N  => a³ | C h³ t³ => last₀(h³, t³)}: 118 --->
-//│ 	[C h⁵ filter₁(t⁵, f³)]: 152
-//│ 	[N]: 159
-//│ case ls⁸ of {C h⁶ t⁶ => [Some last₀(h⁶, t⁶)] | N  => [None]}: 171 --->
-//│ 	[C h⁴ filter₁(t⁴, f²)]: 131
-//│ 	[N]: 138
+//│ case ls⁷ of {N  => a³ | C h⁵ t⁵ => last₀(h⁵, t⁵)}: 159 --->
+//│ 	[C h⁶ filter₁(t⁶, f³)]: 185
+//│ 	[N]: 192
+//│ case ls¹³ of {C h⁹ t⁹ => [Some last₀(h⁹, t⁹)] | N  => [None]}: 307 --->
+//│ 	[C h⁴ filter₁(t⁴, f²)]: 141
+//│ 	[N]: 148
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C h⁴ filter₁(t⁴, f²)]: 131 --->
-//│ 	case ls⁸ of {C h⁶ t⁶ => [Some last₀(h⁶, t⁶)] | N  => [None]}: 171
-//│ [N]: 138 --->
-//│ 	case ls⁸ of {C h⁶ t⁶ => [Some last₀(h⁶, t⁶)] | N  => [None]}: 171
-//│ [C h⁵ filter₁(t⁵, f³)]: 152 --->
-//│ 	case ls⁵ of {N  => a³ | C h³ t³ => last₀(h³, t³)}: 118
-//│ [N]: 159 --->
-//│ 	case ls⁵ of {N  => a³ | C h³ t³ => last₀(h³, t³)}: 118
+//│ [C h⁴ filter₁(t⁴, f²)]: 141 --->
+//│ 	case ls¹³ of {C h⁹ t⁹ => [Some last₀(h⁹, t⁹)] | N  => [None]}: 307
+//│ [N]: 148 --->
+//│ 	case ls¹³ of {C h⁹ t⁹ => [Some last₀(h⁹, t⁹)] | N  => [None]}: 307
+//│ [C h⁶ filter₁(t⁶, f³)]: 185 --->
+//│ 	case ls⁷ of {N  => a³ | C h⁵ t⁵ => last₀(h⁵, t⁵)}: 159
+//│ [N]: 192 --->
+//│ 	case ls⁷ of {N  => a³ | C h⁵ t⁵ => last₀(h⁵, t⁵)}: 159
 //│ ------------------
-//│ case ls⁵ of {N  => a³ | C h³ t³ => last₀(h³, t³)}: 118 --->
-//│ 	[C h⁵ filter₁(t⁵, f³)]: 152
-//│ 	[N]: 159
-//│ case ls⁸ of {C h⁶ t⁶ => [Some last₀(h⁶, t⁶)] | N  => [None]}: 171 --->
-//│ 	[C h⁴ filter₁(t⁴, f²)]: 131
-//│ 	[N]: 138
+//│ case ls⁷ of {N  => a³ | C h⁵ t⁵ => last₀(h⁵, t⁵)}: 159 --->
+//│ 	[C h⁶ filter₁(t⁶, f³)]: 185
+//│ 	[N]: 192
+//│ case ls¹³ of {C h⁹ t⁹ => [Some last₀(h⁹, t⁹)] | N  => [None]}: 307 --->
+//│ 	[C h⁴ filter₁(t⁴, f²)]: 141
+//│ 	[N]: 148
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ testLastFilterPolyVar₀(primId⁰(enumFromTo₀(1, 100000)))
-//│ def enumFromTo₀(a⁷, b²) = 
-//│ 	if (a⁷ < b²) then [C a⁷ enumFromTo₀((a⁷ + 1), b²)] else [N]
-//│ def testLastFilterPolyVar₀(ls¹⁵) = 
-//│ 	lastFilter₀(ls¹⁵, (fun x² -> (x² < 1000)))
+//│ testManual₀(primId⁰(enumFromTo₁(1, 100000)))
+//│ def enumFromTo₀(a¹¹, b³) = 
+//│ 	if (a¹¹ < b³) then [C a¹¹ enumFromTo₀((a¹¹ + 1), b³)] else [N]
+//│ def enumFromTo₁(a¹², b⁴) = 
+//│ 	if (a¹² < b⁴) then [C a¹² enumFromTo₁((a¹² + 1), b⁴)] else [N]
+//│ def testLastFilterPolyVar₀(ls²⁰) = 
+//│ 	lastDrive₀(filter₀(ls²⁰, (fun x⁵ -> (x⁵ < 1000))))
 //│ 	where
-//│ 	def lastFilter₀(ls¹⁶, f⁷) = 
-//│ 		lastDrive₀(filter₀(ls¹⁶, f⁷))
+//│ 	def filter₀(ls¹⁷, f⁷) = 
+//│ 		case ls¹⁷ of {
+//│ 			C h⁴ t⁴ => if f⁷(h⁴) then 
+//│ 				let h¹¹ = h⁴
+//│ 				in let t¹¹ = filter₁(t⁴, f⁷)
+//│ 				in [Some last₀(h¹¹, t¹¹)] else filter₀(t⁴, f⁷)
+//│ 			| N  => [None]}
 //│ 		where
-//│ 		def filter₀(ls¹⁴, f⁶) = 
-//│ 			case ls¹⁴ of {
-//│ 				C h⁴ t⁴ => if f⁶(h⁴) then 
-//│ 					let h⁸ = h⁴
-//│ 					in let t⁸ = filter₁(t⁴, f⁶)
-//│ 					in [Some last₀(h⁸, t⁸)] else filter₀(t⁴, f⁶)
-//│ 				| N  => [None]}
-//│ 			where
-//│ 			def filter₁(ls¹², f⁵) = 
-//│ 				case ls¹² of {
-//│ 					C h⁵ t⁵ => if f⁵(h⁵) then 
-//│ 						let h⁷ = h⁵
-//│ 						in let t⁷ = filter₁(t⁵, f⁵)
-//│ 						in (fun a⁴ -> last₀(h⁷, t⁷)) else filter₁(t⁵, f⁵)
-//│ 					| N  => (fun a⁵ -> a⁵)}
-//│ 		def lastDrive₀(ls¹¹) = 
-//│ 			ls¹¹
-//│ 			where
-//│ 			def last₀(a⁶, ls¹³) = 
-//│ 				ls¹³(a⁶)
+//│ 		def filter₁(ls¹⁵, f⁶) = 
+//│ 			case ls¹⁵ of {
+//│ 				C h⁶ t⁶ => if f⁶(h⁶) then 
+//│ 					let h¹⁰ = h⁶
+//│ 					in let t¹⁰ = filter₁(t⁶, f⁶)
+//│ 					in (fun a⁸ -> last₀(h¹⁰, t¹⁰)) else filter₁(t⁶, f⁶)
+//│ 				| N  => (fun a⁹ -> a⁹)}
+//│ 	def lastDrive₀(ls¹⁴) = 
+//│ 		ls¹⁴
+//│ 		where
+//│ 		def last₀(a¹⁰, ls¹⁶) = 
+//│ 			ls¹⁶(a¹⁰)
+//│ def testManual₀(ls¹⁸) = 
+//│ 	_lhManualLastFilter₀(ls¹⁸, (fun x⁴ -> (x⁴ < 1000)), [None])
+//│ 	where
+//│ 	def _lhManualLastFilter₀(ls²¹, f⁹, a¹⁴) = 
+//│ 		case ls²¹ of {
+//│ 			C h⁸ t⁸ => if f⁹(h⁸) then _lhManualLastFilter₁(t⁸, f⁹, [Some h⁸]) else _lhManualLastFilter₀(t⁸, f⁹, a¹⁴)
+//│ 			| N  => a¹⁴}
+//│ 		where
+//│ 		def _lhManualLastFilter₁(ls¹⁹, f⁸, a¹³) = 
+//│ 			case ls¹⁹ of {
+//│ 				C h⁷ t⁷ => if f⁸(h⁷) then _lhManualLastFilter₁(t⁷, f⁸, [Some h⁷]) else _lhManualLastFilter₁(t⁷, f⁸, a¹³)
+//│ 				| N  => a¹³}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
@@ -847,7 +901,16 @@ testLastFilterPolyVar(primId(enumFromTo(1, 100000)))
 //│ open Core_bench;;
 //│ 
 //│ (* original *)
-//│ let rec enumFromTo a_0 b_0 =
+//│ let rec _lhManualLastFilter ls_4 f_1 a_2 =
+//│   (match ls_4 with
+//│     | `C(h_3, t_3) -> 
+//│       (if (f_1 h_3) then
+//│         (((_lhManualLastFilter t_3) f_1) (`Some(h_3)))
+//│       else
+//│         (((_lhManualLastFilter t_3) f_1) a_2))
+//│     | `N -> 
+//│       a_2)
+//│ and enumFromTo a_0 b_0 =
 //│   (if (a_0 < b_0) then
 //│     (`C(a_0, ((enumFromTo (a_0 + 1)) b_0)))
 //│   else
@@ -873,16 +936,22 @@ testLastFilterPolyVar(primId(enumFromTo(1, 100000)))
 //│       (`Some(((last h_1) t_1)))
 //│     | `N -> 
 //│       (`None))
-//│ and lastFilter ls_3 f_1 =
-//│   (lastDrive ((filter ls_3) f_1))
-//│ and testLastFilterPolyVar ls_4 =
-//│   ((lastFilter ls_4) (fun x_0 -> 
-//│     (x_0 < 1000)));;
+//│ and testLastFilterPolyVar ls_3 =
+//│   (lastDrive ((filter ls_3) (fun x_0 -> 
+//│     (x_0 < 1000))))
+//│ and testManual ls_5 =
+//│   (((_lhManualLastFilter ls_5) (fun x_1 -> 
+//│     (x_1 < 1000))) (`None));;
 //│ 
 //│ (* optimized *)
 //│ let rec enumFromTo_d0 a_3 b_0 =
 //│   (if (a_3 < b_0) then
 //│     (`C(a_3, ((enumFromTo_d0 (a_3 + 1)) b_0)))
+//│   else
+//│     (`N))
+//│ and enumFromTo_d1 a_4 b_1 =
+//│   (if (a_4 < b_1) then
+//│     (`C(a_4, ((enumFromTo_d1 (a_4 + 1)) b_1)))
 //│   else
 //│     (`N))
 //│ and filter_d0 ls_3 f_1 =
@@ -911,19 +980,16 @@ testLastFilterPolyVar(primId(enumFromTo(1, 100000)))
 //│         a_1))
 //│ and lastDrive_d0 ls_0 =
 //│   ls_0
-//│ and lastFilter_d0 ls_5 f_2 =
-//│   (lastDrive_d0 ((filter_d0 ls_5) f_2))
 //│ and last_d0 a_2 ls_2 =
 //│   (ls_2 a_2)
-//│ and testLastFilterPolyVar_d0 ls_4 =
-//│   ((lastFilter_d0 ls_4) (fun x_0 -> 
-//│     (x_0 < 1000)));;
+//│ and testLastFilterPolyVar_d0 ls_6 =
+//│   (lastDrive_d0 ((filter_d0 ls_6) (fun x_1 -> 
+//│     (x_1 < 1000))));;
 //│ 
 //│ Command_unix.run (Bench.make_command [
-//│   Bench.Test.create ~name:"original_LastFilterPolyVar_1" (fun () -> ignore ((testLastFilterPolyVar ((enumFromTo 1) 100000))));
-//│   Bench.Test.create ~name:"lumberhack_LastFilterPolyVar_1" (fun () -> ignore ((testLastFilterPolyVar_d0 ((enumFromTo_d0 1) 100000))));
-//│   Bench.Test.create ~name:"original_LastFilterPolyVar_2" (fun () -> ignore ((testLastFilterPolyVar ((enumFromTo 1) 100000))));
-//│   Bench.Test.create ~name:"lumberhack_LastFilterPolyVar_2" (fun () -> ignore ((testLastFilterPolyVar_d0 ((enumFromTo_d0 1) 100000))));
+//│   Bench.Test.create ~name:"original_LastFilterPolyVar" (fun () -> ignore ((testLastFilterPolyVar ((enumFromTo 1) 100000))));
+//│   Bench.Test.create ~name:"manual_LastFilterPolyVar" (fun () -> ignore ((testManual ((enumFromTo 1) 100000))));
+//│   Bench.Test.create ~name:"lumberhack_LastFilterPolyVar" (fun () -> ignore ((testLastFilterPolyVar_d0 ((enumFromTo_d0 1) 100000))));
 //│ ])
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
 
@@ -933,15 +999,19 @@ fun map(ls, f) = if ls is
   C(h, t) then C(f(h), map(t, f))
   N then N
 fun testMapmapPolyVar(ls) = map(map(ls, x => x + 1), x => x * x)
+fun testManual(ls) = map(ls, x => (x + 1) * (x + 1))
 testMapmapPolyVar(primId(enumFromTo(1, 100000)))
-//│ |#fun| |enumFromTo|(|a|,| |b|)| |#=| |#if| |a| |<| |b| |#then| |C|(|a|,| |enumFromTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |map|(|ls|,| |f|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|t|,| |f|)|)|↵|N| |#then| |N|←|↵|#fun| |testMapmapPolyVar|(|ls|)| |#=| |map|(|map|(|ls|,| |x| |=>| |x| |+| |1|)|,| |x| |=>| |x| |*| |x|)|↵|testMapmapPolyVar|(|primId|(|enumFromTo|(|1|,| |100000|)|)|)|
-//│ Parsed: {fun enumFromTo = a, b, => if (< (a,) (b,)) then C (a, enumFromTo (+ (a,) (1,), b,),) else N; fun map = ls, f, => if ls is ‹(C (h, t,)) then C (f (h,), map (t, f,),); (N) then N›; fun testMapmapPolyVar = ls, => map (map (ls, x, => + (x,) (1,),), x, => * (x,) (x,),); testMapmapPolyVar (primId (enumFromTo (1, 100000,),),)}
+testManual(primId(enumFromTo(1, 100000)))
+//│ |#fun| |enumFromTo|(|a|,| |b|)| |#=| |#if| |a| |<| |b| |#then| |C|(|a|,| |enumFromTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |map|(|ls|,| |f|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|t|,| |f|)|)|↵|N| |#then| |N|←|↵|#fun| |testMapmapPolyVar|(|ls|)| |#=| |map|(|map|(|ls|,| |x| |=>| |x| |+| |1|)|,| |x| |=>| |x| |*| |x|)|↵|#fun| |testManual|(|ls|)| |#=| |map|(|ls|,| |x| |=>| |(|x| |+| |1|)| |*| |(|x| |+| |1|)|)|↵|testMapmapPolyVar|(|primId|(|enumFromTo|(|1|,| |100000|)|)|)|↵|testManual|(|primId|(|enumFromTo|(|1|,| |100000|)|)|)|
+//│ Parsed: {fun enumFromTo = a, b, => if (< (a,) (b,)) then C (a, enumFromTo (+ (a,) (1,), b,),) else N; fun map = ls, f, => if ls is ‹(C (h, t,)) then C (f (h,), map (t, f,),); (N) then N›; fun testMapmapPolyVar = ls, => map (map (ls, x, => + (x,) (1,),), x, => * (x,) (x,),); fun testManual = ls, => map (ls, x, => * (+ (x,) (1,),) (+ (x,) (1,),),); testMapmapPolyVar (primId (enumFromTo (1, 100000,),),); testManual (primId (enumFromTo (1, 100000,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ testMapmapPolyVar^55(primId⁰(enumFromTo^57(1, 100000)))
+//│ testMapmapPolyVar^74(primId⁰(enumFromTo^76(1, 100000)))
+//│ testManual^83(primId⁰(enumFromTo^85(1, 100000)))
 //│ def enumFromTo(a⁰, b⁰) = if (a⁰ < b⁰) then [C a⁰ enumFromTo^7((a⁰ + 1), b⁰)] else [N]
 //│ def map(ls⁰, f⁰) = case ls⁰ of {
 //│ 	C h⁰ t⁰ => [C f⁰(h⁰) map^25(t⁰, f⁰)]
 //│ 	| N  => [N]}
+//│ def testManual(ls²) = map^55(ls², (fun x² -> ((x² + 1) * (x² + 1))))
 //│ def testMapmapPolyVar(ls¹) = map^35(map^36(ls¹, (fun x⁰ -> (x⁰ + 1))), (fun x¹ -> (x¹ * x¹)))
 //│ 		---------- unoptimized ocaml gen ----------
 //│ 		let rec enumFromTo a_0 b_0 =
@@ -955,78 +1025,107 @@ testMapmapPolyVar(primId(enumFromTo(1, 100000)))
 //│ 		      (`C((f_0 h_0), ((map t_0) f_0)))
 //│ 		    | `N -> 
 //│ 		      (`N))
+//│ 		and testManual ls_2 =
+//│ 		  ((map ls_2) (fun x_2 -> 
+//│ 		    ((x_2 + 1) * (x_2 + 1))))
 //│ 		and testMapmapPolyVar ls_1 =
 //│ 		  ((map ((map ls_1) (fun x_0 -> 
 //│ 		    (x_0 + 1)))) (fun x_1 -> 
 //│ 		    (x_1 * x_1)));;
 //│ 		(testMapmapPolyVar ((enumFromTo 1) 100000))
+//│ 		(testManual ((enumFromTo 1) 100000))
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [enumFromTo^57]
-//│ 	[enumFromTo^57 · enumFromTo^7] ---> [enumFromTo^57] (only one)
-//│ [testMapmapPolyVar^55]
-//│ 	[testMapmapPolyVar^55 · map^35]
-//│ 		[testMapmapPolyVar^55 · map^35 · map^25] ---> [testMapmapPolyVar^55 · map^35] (only one)
-//│ 	[testMapmapPolyVar^55 · map^36]
-//│ 		[testMapmapPolyVar^55 · map^36 · map^25] ---> [testMapmapPolyVar^55 · map^36] (only one)
+//│ [enumFromTo^76] (hopeless to continue)
+//│ 	[enumFromTo^76 · enumFromTo^7] ---> [enumFromTo^76] (using original def)
+//│ [enumFromTo^85]
+//│ 	[enumFromTo^85 · enumFromTo^7] ---> [enumFromTo^85] (only one)
+//│ [testManual^83]
+//│ 	[testManual^83 · map^55]
+//│ 		[testManual^83 · map^55 · map^25] ---> [testManual^83 · map^55] (only one)
+//│ [testMapmapPolyVar^74]
+//│ 	[testMapmapPolyVar^74 · map^35] (hopeless to continue)
+//│ 		[testMapmapPolyVar^74 · map^35 · map^25] ---> [testMapmapPolyVar^74 · map^35] (using original def)
+//│ 	[testMapmapPolyVar^74 · map^36]
+//│ 		[testMapmapPolyVar^74 · map^36 · map^25] ---> [testMapmapPolyVar^74 · map^36] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
 //│ testMapmapPolyVar₀(primId⁰(enumFromTo₀(1, 100000)))
-//│ def enumFromTo₀(a¹, b¹) = 
-//│ 	if (a¹ < b¹) then [C a¹ enumFromTo₀((a¹ + 1), b¹)] else [N]
-//│ def testMapmapPolyVar₀(ls²) = 
-//│ 	map₀(map₁(ls², (fun x² -> (x² + 1))), (fun x³ -> (x³ * x³)))
+//│ testManual₀(primId⁰(enumFromTo₁(1, 100000)))
+//│ def enumFromTo₀(a², b²) = 
+//│ 	if (a² < b²) then [C a² enumFromTo₀((a² + 1), b²)] else [N]
+//│ def enumFromTo₁(a¹, b¹) = 
+//│ 	if (a¹ < b¹) then [C a¹ enumFromTo₁((a¹ + 1), b¹)] else [N]
+//│ def testManual₀(ls³) = 
+//│ 	map₀(ls³, (fun x³ -> ((x³ + 1) * (x³ + 1))))
 //│ 	where
-//│ 	def map₀(ls³, f¹) = 
-//│ 		case ls³ of {
-//│ 			C h¹ t¹ => [C f¹(h¹) map₀(t¹, f¹)]
+//│ 	def map₀(ls⁷, f³) = 
+//│ 		case ls⁷ of {
+//│ 			C h³ t³ => [C f³(h³) map₀(t³, f³)]
 //│ 			| N  => [N]}
-//│ 	def map₁(ls⁴, f²) = 
-//│ 		case ls⁴ of {
-//│ 			C h² t² => [C f²(h²) map₁(t², f²)]
+//│ def testMapmapPolyVar₀(ls⁴) = 
+//│ 	map₁(map₂(ls⁴, (fun x⁴ -> (x⁴ + 1))), (fun x⁵ -> (x⁵ * x⁵)))
+//│ 	where
+//│ 	def map₁(ls⁵, f¹) = 
+//│ 		case ls⁵ of {
+//│ 			C h¹ t¹ => [C f¹(h¹) map₁(t¹, f¹)]
+//│ 			| N  => [N]}
+//│ 	def map₂(ls⁶, f²) = 
+//│ 		case ls⁶ of {
+//│ 			C h² t² => [C f²(h²) map₂(t², f²)]
 //│ 			| N  => [N]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C f²(h²) map₁(t², f²)]: 127 --->
-//│ 	case ls³ of {C h¹ t¹ => [C f¹(h¹) map₀(t¹, f¹)] | N  => [N]}: 115
-//│ [N]: 128 --->
-//│ 	case ls³ of {C h¹ t¹ => [C f¹(h¹) map₀(t¹, f¹)] | N  => [N]}: 115
+//│ [C f²(h²) map₂(t², f²)]: 194 --->
+//│ 	case ls⁵ of {C h¹ t¹ => [C f¹(h¹) map₁(t¹, f¹)] | N  => [N]}: 162
+//│ [N]: 195 --->
+//│ 	case ls⁵ of {C h¹ t¹ => [C f¹(h¹) map₁(t¹, f¹)] | N  => [N]}: 162
 //│ ------------------
-//│ case ls³ of {C h¹ t¹ => [C f¹(h¹) map₀(t¹, f¹)] | N  => [N]}: 115 --->
-//│ 	[C f²(h²) map₁(t², f²)]: 127
-//│ 	[N]: 128
+//│ case ls⁵ of {C h¹ t¹ => [C f¹(h¹) map₁(t¹, f¹)] | N  => [N]}: 162 --->
+//│ 	[C f²(h²) map₂(t², f²)]: 194
+//│ 	[N]: 195
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C f²(h²) map₁(t², f²)]: 127 --->
-//│ 	case ls³ of {C h¹ t¹ => [C f¹(h¹) map₀(t¹, f¹)] | N  => [N]}: 115
-//│ [N]: 128 --->
-//│ 	case ls³ of {C h¹ t¹ => [C f¹(h¹) map₀(t¹, f¹)] | N  => [N]}: 115
+//│ [C f²(h²) map₂(t², f²)]: 194 --->
+//│ 	case ls⁵ of {C h¹ t¹ => [C f¹(h¹) map₁(t¹, f¹)] | N  => [N]}: 162
+//│ [N]: 195 --->
+//│ 	case ls⁵ of {C h¹ t¹ => [C f¹(h¹) map₁(t¹, f¹)] | N  => [N]}: 162
 //│ ------------------
-//│ case ls³ of {C h¹ t¹ => [C f¹(h¹) map₀(t¹, f¹)] | N  => [N]}: 115 --->
-//│ 	[C f²(h²) map₁(t², f²)]: 127
-//│ 	[N]: 128
+//│ case ls⁵ of {C h¹ t¹ => [C f¹(h¹) map₁(t¹, f¹)] | N  => [N]}: 162 --->
+//│ 	[C f²(h²) map₂(t², f²)]: 194
+//│ 	[N]: 195
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ testMapmapPolyVar₀(primId⁰(enumFromTo₀(1, 100000)))
-//│ def enumFromTo₀(a², b²) = 
-//│ 	if (a² < b²) then [C a² enumFromTo₀((a² + 1), b²)] else [N]
-//│ def testMapmapPolyVar₀(ls⁵) = 
-//│ 	map₀(map₁(ls⁵, (fun x⁴ -> (x⁴ + 1))), (fun x⁵ -> (x⁵ * x⁵)))
+//│ testManual₀(primId⁰(enumFromTo₁(1, 100000)))
+//│ def enumFromTo₀(a⁴, b⁴) = 
+//│ 	if (a⁴ < b⁴) then [C a⁴ enumFromTo₀((a⁴ + 1), b⁴)] else [N]
+//│ def enumFromTo₁(a³, b³) = 
+//│ 	if (a³ < b³) then [C a³ enumFromTo₁((a³ + 1), b³)] else [N]
+//│ def testManual₀(ls¹²) = 
+//│ 	map₀(ls¹², (fun x⁸ -> ((x⁸ + 1) * (x⁸ + 1))))
 //│ 	where
-//│ 	def map₀(ls⁶, f³) = 
-//│ 		ls⁶(f³)
-//│ 	def map₁(ls⁷, f⁴) = 
-//│ 		case ls⁷ of {
+//│ 	def map₀(ls¹⁰, f⁷) = 
+//│ 		case ls¹⁰ of {
+//│ 			C h³ t³ => [C f⁷(h³) map₀(t³, f⁷)]
+//│ 			| N  => [N]}
+//│ def testMapmapPolyVar₀(ls⁸) = 
+//│ 	map₁(map₂(ls⁸, (fun x⁶ -> (x⁶ + 1))), (fun x⁷ -> (x⁷ * x⁷)))
+//│ 	where
+//│ 	def map₁(ls¹¹, f⁸) = 
+//│ 		ls¹¹(f⁸)
+//│ 	def map₂(ls⁹, f⁴) = 
+//│ 		case ls⁹ of {
 //│ 			C h² t² => 
-//│ 				let h³ = f⁴(h²)
-//│ 				in let t³ = map₁(t², f⁴)
-//│ 				in (fun f⁵ -> [C f⁵(h³) map₀(t³, f⁵)])
+//│ 				let h⁴ = f⁴(h²)
+//│ 				in let t⁴ = map₂(t², f⁴)
+//│ 				in (fun f⁵ -> [C f⁵(h⁴) map₁(t⁴, f⁵)])
 //│ 			| N  => (fun f⁶ -> [N])}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
@@ -1051,39 +1150,52 @@ testMapmapPolyVar(primId(enumFromTo(1, 100000)))
 //│       (`C((f_0 h_0), ((map t_0) f_0)))
 //│     | `N -> 
 //│       (`N))
+//│ and testManual ls_2 =
+//│   ((map ls_2) (fun x_2 -> 
+//│     ((x_2 + 1) * (x_2 + 1))))
 //│ and testMapmapPolyVar ls_1 =
 //│   ((map ((map ls_1) (fun x_0 -> 
 //│     (x_0 + 1)))) (fun x_1 -> 
 //│     (x_1 * x_1)));;
 //│ 
 //│ (* optimized *)
-//│ let rec enumFromTo_d0 a_0 b_0 =
-//│   (if (a_0 < b_0) then
-//│     (`C(a_0, ((enumFromTo_d0 (a_0 + 1)) b_0)))
+//│ let rec enumFromTo_d0 a_1 b_1 =
+//│   (if (a_1 < b_1) then
+//│     (`C(a_1, ((enumFromTo_d0 (a_1 + 1)) b_1)))
 //│   else
 //│     (`N))
-//│ and map_d0 ls_1 f_0 =
-//│   (ls_1 f_0)
-//│ and map_d1 ls_2 f_1 =
+//│ and enumFromTo_d1 a_0 b_0 =
+//│   (if (a_0 < b_0) then
+//│     (`C(a_0, ((enumFromTo_d1 (a_0 + 1)) b_0)))
+//│   else
+//│     (`N))
+//│ and map_d0 ls_2 f_3 =
 //│   (match ls_2 with
-//│     | `C(h_0, t_0) -> 
-//│       (let rec h_1 = (f_1 h_0) in
-//│         (let rec t_1 = ((map_d1 t_0) f_1) in
-//│           (fun f_2 -> 
-//│             (`C((f_2 h_1), ((map_d0 t_1) f_2))))))
+//│     | `C(h_2, t_2) -> 
+//│       (`C((f_3 h_2), ((map_d0 t_2) f_3)))
 //│     | `N -> 
-//│       (fun f_3 -> 
+//│       (`N))
+//│ and map_d1 ls_3 f_4 =
+//│   (ls_3 f_4)
+//│ and map_d2 ls_1 f_0 =
+//│   (match ls_1 with
+//│     | `C(h_0, t_0) -> 
+//│       (let rec h_1 = (f_0 h_0) in
+//│         (let rec t_1 = ((map_d2 t_0) f_0) in
+//│           (fun f_1 -> 
+//│             (`C((f_1 h_1), ((map_d1 t_1) f_1))))))
+//│     | `N -> 
+//│       (fun f_2 -> 
 //│         (`N)))
 //│ and testMapmapPolyVar_d0 ls_0 =
-//│   ((map_d0 ((map_d1 ls_0) (fun x_0 -> 
+//│   ((map_d1 ((map_d2 ls_0) (fun x_0 -> 
 //│     (x_0 + 1)))) (fun x_1 -> 
 //│     (x_1 * x_1)));;
 //│ 
 //│ Command_unix.run (Bench.make_command [
-//│   Bench.Test.create ~name:"original_MapmapPolyVar_1" (fun () -> ignore ((testMapmapPolyVar ((enumFromTo 1) 100000))));
-//│   Bench.Test.create ~name:"lumberhack_MapmapPolyVar_1" (fun () -> ignore ((testMapmapPolyVar_d0 ((enumFromTo_d0 1) 100000))));
-//│   Bench.Test.create ~name:"original_MapmapPolyVar_2" (fun () -> ignore ((testMapmapPolyVar ((enumFromTo 1) 100000))));
-//│   Bench.Test.create ~name:"lumberhack_MapmapPolyVar_2" (fun () -> ignore ((testMapmapPolyVar_d0 ((enumFromTo_d0 1) 100000))));
+//│   Bench.Test.create ~name:"original_MapmapPolyVar" (fun () -> ignore ((testMapmapPolyVar ((enumFromTo 1) 100000))));
+//│   Bench.Test.create ~name:"manual_MapmapPolyVar" (fun () -> ignore ((testManual ((enumFromTo 1) 100000))));
+//│   Bench.Test.create ~name:"lumberhack_MapmapPolyVar" (fun () -> ignore ((testMapmapPolyVar_d0 ((enumFromTo_d0 1) 100000))));
 //│ ])
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
 
@@ -1261,9 +1373,7 @@ testMapmapPolyVarLet(primId(enumFromTo(1, 100000)))
 //│     (x_1 * x_1)));;
 //│ 
 //│ Command_unix.run (Bench.make_command [
-//│   Bench.Test.create ~name:"original_MapmapPolyVarLet_1" (fun () -> ignore ((testMapmapPolyVarLet ((enumFromTo 1) 100000))));
-//│   Bench.Test.create ~name:"lumberhack_MapmapPolyVarLet_1" (fun () -> ignore ((testMapmapPolyVarLet_d0 ((enumFromTo_d0 1) 100000))));
-//│   Bench.Test.create ~name:"original_MapmapPolyVarLet_2" (fun () -> ignore ((testMapmapPolyVarLet ((enumFromTo 1) 100000))));
-//│   Bench.Test.create ~name:"lumberhack_MapmapPolyVarLet_2" (fun () -> ignore ((testMapmapPolyVarLet_d0 ((enumFromTo_d0 1) 100000))));
+//│   Bench.Test.create ~name:"original_MapmapPolyVarLet" (fun () -> ignore ((testMapmapPolyVarLet ((enumFromTo 1) 100000))));
+//│   Bench.Test.create ~name:"lumberhack_MapmapPolyVarLet" (fun () -> ignore ((testMapmapPolyVarLet_d0 ((enumFromTo_d0 1) 100000))));
 //│ ])
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

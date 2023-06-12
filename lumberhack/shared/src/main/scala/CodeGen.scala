@@ -1071,48 +1071,57 @@ object OCamlGen extends CodeGen {
       case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId), _)) :: Nil
         if test.tree.name.startsWith("test") && primId.tree.name == "primId" =>
         test.tree.name.drop(4).filter(_ <= 0x7f) // keep only valid ASCII characters
-      case _ => lastWords("benchmark requires a method of name `testxxx` calling a value wrapped in `primId`")
+      // with manually fuse tests
+      case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId1), arg1))
+        :: Expr.Call(Expr.Ref(testManual), Expr.Call(Expr.Ref(primId2), arg2))
+        :: Nil
+        if test.tree.name.startsWith("test") && primId1.tree.name == "primId"
+          && testManual.tree.name.startsWith("testManual") && primId1 == primId2
+          && arg1.pp(using InitPpConfig) == arg2.pp(using InitPpConfig) =>
+        test.tree.name.drop(4).filter(_ <= 0x7f) // keep only valid ASCII characters
+      case _ => lastWords(
+        "benchmark requires a method of name `testxxx` calling a value wrapped in `primId`"
+          + "\n and if there are manually fused benchmarks, there should be a call to `testManual`"
+          + "with exact the same parameter."
+      )
     }).emptyOrElse(optimized.hashCode().toString())
 
     val originalDefs = Program(
       original.contents.filter(_.isLeft)
     )(using original.d) // the deforest instance does not matter here
     val optimizedDefs = Program(
-      optimized.contents.filter(_.isLeft)
+      optimized.contents.filter {
+        case Left(ProgDef(id, _)) =>
+          !(id.tree.name.startsWith("_lhManual") || id.tree.name.startsWith("testManual"))
+        case _ => false
+      }
     )(using original.d) // the deforest instance does not matter here
     val mergedDefsGen = "\n(* original *)\n" + OCamlGen(originalDefs) + "\n\n(* optimized *)\n" + OCamlGen(optimizedDefs) + "\n"
-
+    val benchRunGen = (original.defAndExpr._2 ::: optimized.defAndExpr._2) match {
+      case e :: o :: Nil =>
+        (s"original_${benchName}" -> OCamlGen.rec(e)) :: (s"lumberhack_${benchName}" -> OCamlGen.rec(o)) :: Nil
+      case e :: m :: o :: _ :: Nil =>
+        (s"original_${benchName}" -> OCamlGen.rec(e))
+          :: (s"manual_${benchName}" -> OCamlGen.rec(m))
+          :: (s"lumberhack_${benchName}" -> OCamlGen.rec(o))
+          :: Nil
+      case _ => lastWords("invalid format to generate benchmark files")
+    }
     val mainGen = stack(
       // Raw("let _lh_bench_res = latencyN ~repeat:10 10L ["),
-      // Indented(stack(
-        //   Raw(s"(\"original_${benchName}_1\", ${
-        //     (OCamlGen.rec(original.defAndExpr._2.head).print).drop(1).dropRight(1).replaceFirst(" ", ", ")
-        //   })") <:> Raw(";")
-      //   Raw(s"(\"lumberhack_${benchName}_1\", ${
-      //     (OCamlGen.rec(optimized.defAndExpr._2.head).print).drop(1).dropRight(1).replaceFirst(" ", ", ")
-      //   })") <:> Raw(";"),
-      //   Raw(s"(\"original_${benchName}_2\", ${
-      //     (OCamlGen.rec(original.defAndExpr._2.head).print).drop(1).dropRight(1).replaceFirst(" ", ", ")
-      //   })") <:> Raw(";")
-      //   Raw(s"(\"lumberhack_${benchName}_2\", ${
-      //     (OCamlGen.rec(optimized.defAndExpr._2.head).print).drop(1).dropRight(1).replaceFirst(" ", ", ")
-      //   })") <:> Raw(";"),
+      // Indented(Stacked(
+      //   benchRunGen.map { case (name, doc) =>
+      //     Raw(s"\"$name\", ${doc.print.drop(1).dropRight(1).replaceFirst(" ", ", ")}")
+      //   },
+      //   false
       // )),
       // Raw("] in tabulate _lh_bench_res;;"),
       Raw("Command_unix.run (Bench.make_command ["),
-      Indented(stack(
-        Raw(s"Bench.Test.create ~name:\"original_${benchName}_1\" (fun () -> ignore (${
-          OCamlGen.rec(original.defAndExpr._2.head).print
-         }));"),
-        Raw(s"Bench.Test.create ~name:\"lumberhack_${benchName}_1\" (fun () -> ignore (${
-          OCamlGen.rec(optimized.defAndExpr._2.head).print
-         }));"),
-         Raw(s"Bench.Test.create ~name:\"original_${benchName}_2\" (fun () -> ignore (${
-           OCamlGen.rec(original.defAndExpr._2.head).print
-          }));"),
-        Raw(s"Bench.Test.create ~name:\"lumberhack_${benchName}_2\" (fun () -> ignore (${
-          OCamlGen.rec(optimized.defAndExpr._2.head).print
-         }));"),
+      Indented(Stacked(
+        benchRunGen.map { case (name, doc) =>
+          Raw(s"Bench.Test.create ~name:\"$name\" (fun () -> ignore (${doc.print}));")
+        },
+        false
       )),
       Raw("])")
     )

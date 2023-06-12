@@ -53,8 +53,6 @@ and testMapmap_d0_d0 _lh_testMapmap_arg1_0 =
     (x_1 + x_1))) _lh_testMapmap_arg1_0));;
 
 Command_unix.run (Bench.make_command [
-  Bench.Test.create ~name:"original_Mapmap_1" (fun () -> ignore ((testMapmap_d0 ((enumFromTo_d0 1) 1000000))));
-  Bench.Test.create ~name:"lumberhack_Mapmap_1" (fun () -> ignore ((testMapmap_d0_d0 ((enumFromTo_d0_d0 1) 1000000))));
-  Bench.Test.create ~name:"original_Mapmap_2" (fun () -> ignore ((testMapmap_d0 ((enumFromTo_d0 1) 1000000))));
-  Bench.Test.create ~name:"lumberhack_Mapmap_2" (fun () -> ignore ((testMapmap_d0_d0 ((enumFromTo_d0_d0 1) 1000000))));
+  Bench.Test.create ~name:"original_Mapmap" (fun () -> ignore ((testMapmap_d0 ((enumFromTo_d0 1) 1000000))));
+  Bench.Test.create ~name:"lumberhack_Mapmap" (fun () -> ignore ((testMapmap_d0_d0 ((enumFromTo_d0_d0 1) 1000000))));
 ])

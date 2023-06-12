@@ -1075,10 +1075,10 @@ object OCamlGen extends CodeGen {
     }).emptyOrElse(optimized.hashCode().toString())
 
     val originalDefs = Program(
-      original.contents.tail
+      original.contents.filter(_.isLeft)
     )(using original.d) // the deforest instance does not matter here
     val optimizedDefs = Program(
-      optimized.contents.tail
+      optimized.contents.filter(_.isLeft)
     )(using original.d) // the deforest instance does not matter here
     val mergedDefsGen = "\n(* original *)\n" + OCamlGen(originalDefs) + "\n\n(* optimized *)\n" + OCamlGen(optimizedDefs) + "\n"
 

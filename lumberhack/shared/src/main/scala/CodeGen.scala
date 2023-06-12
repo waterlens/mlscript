@@ -981,11 +981,6 @@ object OCamlGen extends CodeGen {
     }
   }
 
-  override val headers = stack(
-    Raw("(* #use \"topfind\";;\n#require \"benchmark\";; *)"),
-    Raw("open Benchmark;;"),
-  )
-
   override def transformMatchArm(dtor: Var, params: List[Ident]): Document = {
     BuiltInTypes.fromStr(dtor.name) -> params match {
       case Some(BuiltInTypes.ListCons) -> (h :: t :: Nil) => "(" <:> transfromId(h) <:> " :: " <:> transfromId(t) <:> ") -> "
@@ -1064,6 +1059,13 @@ object OCamlGen extends CodeGen {
     case e => lastWords(s"not supported: ${e.pp(using InitPpConfig.showIuidOn)}")
   }
 
+
+  override val headers = stack(
+    // Raw("(* #use \"topfind\";;\n#require \"benchmark\";; *)"),
+    // Raw("open Benchmark;;"),
+    Raw("(* #use \"topfind\";;\n#require \"core_unix.command_unix\";;\n#require \"core_bench\";; *)"),
+    Raw("open Core_bench;;"),
+  )
   override def makeBenchFiles(optimized: Program, original: Program): String = {
     val benchName = (original.defAndExpr._2 match {
       case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId), _)) :: Nil
@@ -1080,48 +1082,47 @@ object OCamlGen extends CodeGen {
     )(using original.d) // the deforest instance does not matter here
     val mergedDefsGen = "\n(* original *)\n" + OCamlGen(originalDefs) + "\n\n(* optimized *)\n" + OCamlGen(optimizedDefs) + "\n"
 
-    // val mainTestGen = stack(
-    //   Raw(s"  bench $"lumberhack_$benchName$" $$ nf ")
-    //     <:> Raw((HaskellGen.rec(optimized.defAndExpr._2.head).print).drop(1).dropRight(1)),
-    //   Raw(s", bench $"original_$benchName$" $$ nf ")
-    //     <:> Raw((HaskellGen.rec(original.defAndExpr._2.head).print).drop(1).dropRight(1)) <:> Raw(" ] ]")
-    // )
     val mainGen = stack(
-      Raw(s"latency1 10L ~name:$"lumberhack_$benchName$" ")
-        <:> Raw((OCamlGen.rec(optimized.defAndExpr._2.head).print).drop(1).dropRight(1))
-        <:> Raw(";;"),
-      Raw(s"latency1 10L ~name:$"original_$benchName$" ")
-        <:> Raw((OCamlGen.rec(original.defAndExpr._2.head).print).drop(1).dropRight(1))
-        <:> Raw(";;")
+      // Raw("let _lh_bench_res = latencyN ~repeat:10 10L ["),
+      // Indented(stack(
+      //   Raw(s"(\"lumberhack_$benchName\", ${
+      //     (OCamlGen.rec(optimized.defAndExpr._2.head).print).drop(1).dropRight(1).replaceFirst(" ", ", ")
+      //   })") <:> Raw(";"),
+      //   Raw(s"(\"original_$benchName\", ${
+      //     (OCamlGen.rec(original.defAndExpr._2.head).print).drop(1).dropRight(1).replaceFirst(" ", ", ")
+      //   })") <:> Raw(";")
+      // )),
+      // Raw("] in tabulate _lh_bench_res;;"),
+      Raw("Command_unix.run (Bench.make_command ["),
+      Indented(stack(
+        Raw(s"Bench.Test.create ~name:\"lumberhack_$benchName\" (fun () -> ignore (${
+          OCamlGen.rec(optimized.defAndExpr._2.head).print
+         }));"),
+        Raw(s"Bench.Test.create ~name:\"original_$benchName\" (fun () -> ignore (${
+          OCamlGen.rec(original.defAndExpr._2.head).print
+         }));"),
+      )),
+      Raw("])")
     )
+    val compileAndRunCommand =
+      // s"ocamlfind ocamlopt -rectypes -O3 ./$benchName.ml -o $benchName.out"
+      //   + s" -linkpkg -package \"benchmark\" && ./$benchName.out"
+      s"ocamlfind ocamlopt -rectypes -thread -O3 ./$benchName.ml -o \"./$benchName.out\""
+        + s" -linkpkg -package \"core_unix.command_unix\" -linkpkg -package \"core_bench\" && ./$benchName.out"
     val hsFileContent = stack(
+      Raw(s"(*\n$compileAndRunCommand\n*)"),
       headers,
       Raw(mergedDefsGen),
       mainGen
     ).print
-    // val cabalFileContent = s"""name: lumberhack-bench-$benchName
-    //                           |version: 0
-    //                           |build-type: Simple
-    //                           |cabal-version: >= 1.6
-    //                           |
-    //                           |executable $benchName
-    //                           |  main-is: $benchName.hs
-    //                           |  extensions: ExtendedDefaultRules
-    //                           |  ghc-options: -fno-strictness -O2
-    //                           |  build-depends:
-    //                           |    base == 4.*,
-    //                           |    criterion
-    //                           |    """.stripMargin
+    
 
-    // import sys.process.*
-    // import java.io._
-    // s"mkdir -p ./lumberhack-haskell-benchmark/$benchName".!
-    // val hsFw = new FileWriter(s"./lumberhack-haskell-benchmark/$benchName/$benchName.hs", false)
-    // hsFw.write(hsFileContent + "\n")
-    // hsFw.close()
-    // val cabalFw = new FileWriter(s"./lumberhack-haskell-benchmark/$benchName/$benchName.cabal", false)
-    // cabalFw.write(cabalFileContent)
-    // cabalFw.close()
+    import sys.process.*
+    import java.io._
+    s"mkdir -p ./lumberhack-ocaml-benchmark/".!
+    val hsFw = new FileWriter(s"./lumberhack-ocaml-benchmark/$benchName.ml", false)
+    hsFw.write(hsFileContent + "\n")
+    hsFw.close()
 
     hsFileContent
   }

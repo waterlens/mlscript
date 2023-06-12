@@ -1,6 +1,10 @@
+(*
+ocamlfind ocamlopt -rectypes -thread -O3 ./Mapmap.ml -o "./Mapmap.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Mapmap.out
+*)
 (* #use "topfind";;
-#require "benchmark";; *)
-open Benchmark;;
+#require "core_unix.command_unix";;
+#require "core_bench";; *)
+open Core_bench;;
 
 (* original *)
 let rec enumFromTo_d0 a_2 b_2 =
@@ -48,7 +52,7 @@ and testMapmap_d0_d0 _lh_testMapmap_arg1_0 =
     (x_0 + 1))) ((map_d1_d0 (fun x_1 -> 
     (x_1 + x_1))) _lh_testMapmap_arg1_0));;
 
-let _lh_bench_res = latencyN ~repeat:10 10L [
-  ("lumberhack_Mapmap", testMapmap_d0_d0, ((enumFromTo_d0_d0 1) 4000));;
-  ("original_Mapmap", testMapmap_d0, ((enumFromTo_d0 1) 4000));;
-] in tabulate _lh_bench_res;;
+Command_unix.run (Bench.make_command [
+  Bench.Test.create ~name:"lumberhack_Mapmap" (fun () -> ignore ((testMapmap_d0_d0 ((enumFromTo_d0_d0 1) 4000))));
+  Bench.Test.create ~name:"original_Mapmap" (fun () -> ignore ((testMapmap_d0 ((enumFromTo_d0 1) 4000))));
+])

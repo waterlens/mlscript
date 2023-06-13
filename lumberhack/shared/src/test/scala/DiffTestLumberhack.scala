@@ -113,11 +113,12 @@ class DiffTestLumberhack extends DiffTests {
       if mode.lhGenOCaml then
         output("\n>>>>>>>>>> Generated OCaml >>>>>>>>>>")
         try {
-          output(OCamlGen.makeBenchFiles(List(
+          OCamlGen.makeBenchFiles(List(
             ("original" -> originalProgram),
             ("lumberhack" -> iterativeProcessRes._1),
             ("lumberhack_pop_out" -> iterativeProcessRes._1.popOutLambdas._1),
-          )))
+          ))
+          output("benchmark file generated")
         } catch { case e =>
           output(s"cannot generate benchmark files: ${e.getMessage()}\n")
           output(OCamlGen(iterativeProcessRes._1))

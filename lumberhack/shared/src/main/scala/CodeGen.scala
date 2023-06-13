@@ -722,7 +722,7 @@ trait CodeGen {
   def rec(e: Expr): Document
 
   def generateTypeInfo(d: Deforest): String
-  def makeBenchFiles(optimized: Program, original: Program): String
+  def makeBenchFiles(programs: List[String -> Program]): String
   def apply(p: Program): String
 }
 
@@ -895,32 +895,36 @@ object HaskellGen extends CodeGen {
   }
 
   // rely on the fact that toplevel expressions are always in the front of the program
-  override def makeBenchFiles(optimized: Program, original: Program): String = {
-    val benchName = (original.defAndExpr._2 match {
+  override def makeBenchFiles(programs: List[String -> Program]): String = {
+    assert(programs.length >= 2)
+    assert(programs.head._1 == "original")
+    val benchName = (programs.head._2.defAndExpr._2 match {
       case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId), _)) :: Nil
         if test.tree.name.startsWith("test") && primId.tree.name == "primId" =>
         test.tree.name.drop(4).filter(_ <= 0x7f) // keep only valid ASCII characters
       case _ => lastWords("benchmark requires a method of name `testxxx` calling a value wrapped in `primId`")
-    }).emptyOrElse(optimized.hashCode().toString())
+    }).emptyOrElse(programs.hashCode().toString())
     // val bigADT = HaskellGen.generateTypeInfo(original.d)
-    val originalDefs = Program(
-      original.contents.tail
-    )(using original.d) // the deforest instance does not matter here
-    val optimizedDefs = Program(
-      optimized.contents.tail
-    )(using original.d) // the deforest instance does not matter here
-    val mergedDefsGen = "\n--- original ---\n" + HaskellGen(originalDefs) + "\n\n--- optimized ---\n" + HaskellGen(optimizedDefs) + "\n"
 
-    val mainTestGen = stack(
-      Raw(s"  bench $"lumberhack_$benchName$" $$ nf ")
-        <:> Raw((HaskellGen.rec(optimized.defAndExpr._2.head).print).drop(1).dropRight(1)),
-      Raw(s", bench $"original_$benchName$" $$ nf ")
-        <:> Raw((HaskellGen.rec(original.defAndExpr._2.head).print).drop(1).dropRight(1)) <:> Raw(" ] ]")
-    )
+    val mergedDefsGen = programs.map { case (name -> prgm) =>
+      val defsPrgm = Program(prgm.contents.tail)(using prgm.d)
+      s"\n\n--- $name ---\n" + HaskellGen(defsPrgm)
+    }.mkString.drop(1) + "\n"
+
+    val mainTestGen = (Indented(Stacked(programs.reverse.zipWithIndex.map { case (name -> prgm) -> idx =>
+      Raw(s"${if idx == 0 then "  " else ", "}bench \"${name}_${benchName}\" $$ nf ")
+        <:> Raw((HaskellGen.rec(prgm.defAndExpr._2.head).print).drop(1).dropRight(1))
+    })) <:> Raw(" ] ]"))
+    // val mainTestGen = stack(
+    //   Raw(s"  bench $"lumberhack_$benchName$" $$ nf ")
+    //     <:> Raw((HaskellGen.rec(optimized.defAndExpr._2.head).print).drop(1).dropRight(1)),
+    //   Raw(s", bench $"original_$benchName$" $$ nf ")
+    //     <:> Raw((HaskellGen.rec(original.defAndExpr._2.head).print).drop(1).dropRight(1)) <:> Raw(" ] ]")
+    // )
     val mainGen = stack(
       Raw("main :: IO ()"),
       Raw(s"main = defaultMain [ bgroup \"$benchName\" ["),
-      Indented(mainTestGen)
+      mainTestGen
     )
     val hsFileContent = stack(
       headers,
@@ -1066,8 +1070,10 @@ object OCamlGen extends CodeGen {
     Raw("(* #use \"topfind\";;\n#require \"core_unix.command_unix\";;\n#require \"core_bench\";; *)"),
     Raw("open Core_bench;;"),
   )
-  override def makeBenchFiles(optimized: Program, original: Program): String = {
-    val benchName = (original.defAndExpr._2 match {
+  override def makeBenchFiles(programs: List[String -> Program]): String = {
+    assert(programs.length >= 2)
+    assert(programs.head._1 == "original")
+    val benchName = (programs.head._2.defAndExpr._2 match {
       case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId), _)) :: Nil
         if test.tree.name.startsWith("test") && primId.tree.name == "primId" =>
         test.tree.name.drop(4).filter(_ <= 0x7f) // keep only valid ASCII characters
@@ -1082,31 +1088,52 @@ object OCamlGen extends CodeGen {
       case _ => lastWords(
         "benchmark requires a method of name `testxxx` calling a value wrapped in `primId`"
           + "\n and if there are manually fused benchmarks, there should be a call to `testManual`"
-          + "with exact the same parameter."
+          + "with exact the same parameter following the `testxxx`"
       )
-    }).emptyOrElse(optimized.hashCode().toString())
+    }).emptyOrElse(programs.hashCode().toString())
 
-    val originalDefs = Program(
-      original.contents.filter(_.isLeft)
-    )(using original.d) // the deforest instance does not matter here
-    val optimizedDefs = Program(
-      optimized.contents.filter {
-        case Left(ProgDef(id, _)) =>
-          !(id.tree.name.startsWith("_lhManual") || id.tree.name.startsWith("testManual"))
-        case _ => false
-      }
-    )(using original.d) // the deforest instance does not matter here
-    val mergedDefsGen = "\n(* original *)\n" + OCamlGen(originalDefs) + "\n\n(* optimized *)\n" + OCamlGen(optimizedDefs) + "\n"
-    val benchRunGen = (original.defAndExpr._2 ::: optimized.defAndExpr._2) match {
-      case e :: o :: Nil =>
-        (s"original_${benchName}" -> OCamlGen.rec(e)) :: (s"lumberhack_${benchName}" -> OCamlGen.rec(o)) :: Nil
-      case e :: m :: o :: _ :: Nil =>
-        (s"original_${benchName}" -> OCamlGen.rec(e))
-          :: (s"manual_${benchName}" -> OCamlGen.rec(m))
-          :: (s"lumberhack_${benchName}" -> OCamlGen.rec(o))
-          :: Nil
-      case _ => lastWords("invalid format to generate benchmark files")
-    }
+    val originalDefsString = "\n(* original *)\n" + OCamlGen(Program(
+      programs.head._2.contents.filter(_.isLeft)
+    )(using programs.head._2.d))
+
+    val restMergedDefsString = programs.tail.map { case (name, prgm) =>
+      s"\n\n(* $name *)\n" + OCamlGen(Program(
+        prgm.contents.filter {
+          case Left(ProgDef(id, _)) =>
+            !(id.tree.name.startsWith("_lhManual") || id.tree.name.startsWith("testManual"))
+          case _ => false
+        }
+      )(using prgm.d))
+    }.mkString + "\n"
+
+    // val optimizedDefs = Program(
+    //   optimized.contents.filter {
+    //     case Left(ProgDef(id, _)) =>
+    //       !(id.tree.name.startsWith("_lhManual") || id.tree.name.startsWith("testManual"))
+    //     case _ => false
+    //   }
+    // )(using original.d)
+    // val mergedDefsGen = "\n(* original *)\n" + OCamlGen(originalDefs) + "\n\n(* optimized *)\n" + OCamlGen(optimizedDefs) + "\n"
+    val mergedDefsGen = originalDefsString + restMergedDefsString
+
+    val benchRunGen = (programs.head._2.defAndExpr._2 match {
+      case e :: Nil => (s"original_${benchName}" -> OCamlGen.rec(e)) :: Nil
+      case e :: m :: Nil => (s"original_${benchName}" -> OCamlGen.rec(e))
+        :: (s"manual_${benchName}" -> OCamlGen.rec(m)) :: Nil
+      case _ => lastWords("unreachable")
+    }).appendedAll(programs.tail.map { case (name, prgm) =>
+      s"${name}_${benchName}" -> OCamlGen.rec(prgm.defAndExpr._2.head)
+    })
+    // val benchRunGen = (original.defAndExpr._2 ::: optimized.defAndExpr._2) match {
+    //   case e :: o :: Nil =>
+    //     (s"original_${benchName}" -> OCamlGen.rec(e)) :: (s"lumberhack_${benchName}" -> OCamlGen.rec(o)) :: Nil
+    //   case e :: m :: o :: _ :: Nil =>
+    //     (s"original_${benchName}" -> OCamlGen.rec(e))
+    //       :: (s"manual_${benchName}" -> OCamlGen.rec(m))
+    //       :: (s"lumberhack_${benchName}" -> OCamlGen.rec(o))
+    //       :: Nil
+    //   case _ => lastWords("invalid format to generate benchmark files")
+    // }
     val mainGen = stack(
       // Raw("let _lh_bench_res = latencyN ~repeat:10 10L ["),
       // Indented(Stacked(

@@ -364,6 +364,70 @@ trait ExprRewrite { this: Expr =>
   def outOfScopeIds(using set: Set[Ident]): List[Ident] = {
     this.outOfScopeIdsSet.toList.sortBy(_.uid.asInstanceOf[Int])
   }
+  def substId(using ctx: RewriteCtx, d: Deforest, inDef: Option[Ident]): Expr = this match {
+    case c: Const => c
+    case Ref(id) => Ref(ctx.getOrElse(id, id))
+    case Call(f, p) => Call(f.substId, p.substId)
+    case Ctor(n, args) => Ctor(n, args.map(_.substId))
+    case LetIn(id, value, body) => LetIn(id, value.substId, body.substId)
+    case Match(scrut, arms) => Match(scrut.substId, arms.map((n, args, body) => (n, args, body.substId)))
+    case IfThenElse(cond, thenn, elze) => IfThenElse(cond.substId, thenn.substId, elze.substId)
+    case Sequence(f, s) => Sequence(f.substId, s.substId)
+    case Function(p, body) => Function(p, body.substId(using ctx.filterKeys(_ != p).toMap))
+  }
+  def popOutLambdas(using
+    newd: Deforest,
+    inDef: Option[Ident],
+  ): Expr = {
+    def mergeFunctionsInDifferentBranches(fs: List[Function]): List[Ident] -> List[Expr] = {
+      val fsWithParamOut = fs.map(_.takeParamsOut)
+      val minLength = fsWithParamOut.map(_._1.length).min
+      val popOutParamIds = (0 until minLength).map(i => newd.nextIdent(false, Var(s"_lh_popOutId_$i")))
+      val newBodies = fsWithParamOut.map { case (ps, body) =>
+        val psSplit = ps.splitAt(minLength)
+        val mapping = psSplit._1.zip(popOutParamIds).toMap
+        val newBody = body.substId(using mapping)
+        psSplit._2.foldRight(newBody)(Function(_, _))
+      }
+      popOutParamIds.toList -> newBodies
+    }
+    this match {
+      case e: (Call | Const | Ref | Ctor) => e
+      case Function(param, body) => Function(param, body.popOutLambdas)
+      case LetIn(id, v, body) => body.popOutLambdas match {
+        case f: Function => {
+          val (allArg, fBody) = f.takeParamsOut
+          allArg.foldRight[Expr](LetIn(id, v, fBody))(Function(_, _))
+        }
+        case _ => this
+      }
+      case Sequence(fst, snd) => snd.popOutLambdas match {
+        case f: Function => {
+          val (allArg, fBody) = f.takeParamsOut
+          allArg.foldRight[Expr](Sequence(fst, fBody))(Function(_, _))
+        }
+        case _ => this
+      }
+      case IfThenElse(b, t, e) => (t.popOutLambdas, e.popOutLambdas) match {
+        case (f1: Function, f2: Function) => {
+          val mergeRes = mergeFunctionsInDifferentBranches(f1 :: f2 :: Nil)
+          mergeRes._1.foldRight[Expr](IfThenElse(b, mergeRes._2(0), mergeRes._2(1)))(Function(_, _))
+        }
+        case (t, e) => IfThenElse(b, t, e)
+      }
+      case Match(s, arms) => {
+        val armsPoppedOut = arms.map(_._3.popOutLambdas)
+        if armsPoppedOut.forall(_.isInstanceOf[Function]) then
+          val mergeRes = mergeFunctionsInDifferentBranches(armsPoppedOut.asInstanceOf[List[Function]])
+          val newMatchArms = arms.zip(mergeRes._2).map { case (ctor, vars, _) -> newBody =>
+            (ctor, vars, newBody)
+          }
+          mergeRes._1.foldRight[Expr](Match(s, newMatchArms))(Function(_, _))
+        else
+          this
+      }
+    }  
+  }
 }
 
 trait ProgramRewrite { this: Program =>
@@ -464,5 +528,20 @@ trait ProgramRewrite { this: Program =>
         L(ProgDef(id, body.rewriteFusion(using Map.empty)))
       }.toList
     )
+  }
+
+  def popOutLambdas: Program -> Deforest = {
+    given newd: Deforest = Deforest(false)
+    val copied -> _ -> _ = this.copyDefsToNewDeforest
+    newd(copied)
+    val (newProg, finalD) =
+      copied.expandedWithNewDeforest(CallTree.callTreeUsingNonSplitKnot(newd))
+    Program(
+      newProg.defAndExpr._2.map { e => given Option[Ident] = None; R(e.popOutLambdas) }
+      ::: newProg.defAndExpr._1.map { case (id, body) =>
+        given Option[Ident] = Some(id)
+        L(ProgDef(id, body.popOutLambdas))
+      }.toList
+    ) -> finalD
   }
 }

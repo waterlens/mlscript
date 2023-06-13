@@ -33,7 +33,7 @@ and testMapmapPolyVar ls_1 =
     (x_0 + 1)))) (fun x_1 -> 
     (x_1 * x_1)));;
 
-(* optimized *)
+(* lumberhack *)
 let rec enumFromTo_d0 a_1 b_1 =
   (if (a_1 < b_1) then
     (`C(a_1, ((enumFromTo_d0 (a_1 + 1)) b_1)))
@@ -61,8 +61,37 @@ and testMapmapPolyVar_d0 ls_1 =
     (x_0 + 1)))) (fun x_1 -> 
     (x_1 * x_1)));;
 
+(* lumberhack_pop_out *)
+let rec enumFromTo_d0_d0 a_3 b_3 =
+  (if (a_3 < b_3) then
+    (`C(a_3, ((enumFromTo_d0_d0 (a_3 + 1)) b_3)))
+  else
+    (`N))
+and enumFromTo_d1_d0 a_2 b_2 =
+  (if (a_2 < b_2) then
+    (`C(a_2, ((enumFromTo_d1_d0 (a_2 + 1)) b_2)))
+  else
+    (`N))
+and map_d0_d0 ls_9 f_8 =
+  (ls_9 f_8)
+and map_d0_d1 ls_6 f_4 =
+  (ls_6 f_4)
+and map_d1_d0 ls_7 f_5 _lh_popOutId_0_0 =
+  (match ls_7 with
+    | `C(h_4, t_4) -> 
+      (let rec h_5 = (f_5 h_4) in
+        (let rec t_5 = ((map_d1_d0 t_4) f_5) in
+          (`C((_lh_popOutId_0_0 h_5), ((map_d0_d1 t_5) _lh_popOutId_0_0)))))
+    | `N -> 
+      (`N))
+and testMapmapPolyVar_d0_d0 ls_1_0 =
+  ((map_d0_d0 ((map_d1_d0 ls_1_0) (fun x_6 -> 
+    (x_6 + 1)))) (fun x_7 -> 
+    (x_7 * x_7)));;
+
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_MapmapPolyVar" (fun () -> ignore ((testMapmapPolyVar ((enumFromTo 1) 100000))));
   Bench.Test.create ~name:"manual_MapmapPolyVar" (fun () -> ignore ((testManual ((enumFromTo 1) 100000))));
   Bench.Test.create ~name:"lumberhack_MapmapPolyVar" (fun () -> ignore ((testMapmapPolyVar_d0 ((enumFromTo_d1 1) 100000))));
+  Bench.Test.create ~name:"lumberhack_pop_out_MapmapPolyVar" (fun () -> ignore ((testMapmapPolyVar_d0_d0 ((enumFromTo_d1_d0 1) 100000))));
 ])

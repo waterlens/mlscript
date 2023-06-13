@@ -101,7 +101,10 @@ class DiffTestLumberhack extends DiffTests {
       if mode.lhGenHaskell then
         output("\n>>>>>>>>>> Generated Haskell >>>>>>>>>>")
         try {
-          output(HaskellGen.makeBenchFiles(iterativeProcessRes._1, originalProgram))
+          output(HaskellGen.makeBenchFiles(List(
+            ("original" -> originalProgram),
+            ("lumberhack" -> iterativeProcessRes._1)
+          )))
         } catch { case e =>
           output(s"cannot generate benchmark files: ${e.getMessage()}\n")
           output(HaskellGen(iterativeProcessRes._1))
@@ -110,7 +113,11 @@ class DiffTestLumberhack extends DiffTests {
       if mode.lhGenOCaml then
         output("\n>>>>>>>>>> Generated OCaml >>>>>>>>>>")
         try {
-          output(OCamlGen.makeBenchFiles(iterativeProcessRes._1, originalProgram))
+          output(OCamlGen.makeBenchFiles(List(
+            ("original" -> originalProgram),
+            ("lumberhack" -> iterativeProcessRes._1),
+            ("lumberhack_pop_out" -> iterativeProcessRes._1.popOutLambdas._1),
+          )))
         } catch { case e =>
           output(s"cannot generate benchmark files: ${e.getMessage()}\n")
           output(OCamlGen(iterativeProcessRes._1))

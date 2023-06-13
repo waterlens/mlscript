@@ -49,7 +49,7 @@ and testManual ls_5 =
   (((_lhManualLastFilter ls_5) (fun x_1 -> 
     (x_1 < 1000))) (`None));;
 
-(* optimized *)
+(* lumberhack *)
 let rec enumFromTo_d0 a_3 b_0 =
   (if (a_3 < b_0) then
     (`C(a_3, ((enumFromTo_d0 (a_3 + 1)) b_0)))
@@ -92,8 +92,54 @@ and testLastFilterPolyVar_d0 ls_6 =
   (lastDrive_d0 ((filter_d0 ls_6) (fun x_1 -> 
     (x_1 < 1000))));;
 
+(* lumberhack_pop_out *)
+let rec enumFromTo_d0_d0 a_1_0 b_3 =
+  (if (a_1_0 < b_3) then
+    (`C(a_1_0, ((enumFromTo_d0_d0 (a_1_0 + 1)) b_3)))
+  else
+    (`N))
+and enumFromTo_d1_d0 a_7 b_2 =
+  (if (a_7 < b_2) then
+    (`C(a_7, ((enumFromTo_d1_d0 (a_7 + 1)) b_2)))
+  else
+    (`N))
+and filter_d0_d0 ls_1_3 f_6 =
+  (match ls_1_3 with
+    | `C(h_8, t_8) -> 
+      (if (f_6 h_8) then
+        (let rec h_9 = h_8 in
+          (let rec t_9 = ((filter_d1_d0 t_8) f_6) in
+            (`Some(((last_d0_d1 h_9) t_9)))))
+      else
+        ((filter_d0_d0 t_8) f_6))
+    | `N -> 
+      (`None))
+and filter_d1_d0 ls_1_4 f_7 =
+  (match ls_1_4 with
+    | `C(h_1_0, t_1_0) -> 
+      (if (f_7 h_1_0) then
+        (let rec h_1_1 = h_1_0 in
+          (let rec t_1_1 = ((filter_d1_d0 t_1_0) f_7) in
+            (fun a_1_2 -> 
+              ((last_d0_d0 h_1_1) t_1_1))))
+      else
+        ((filter_d1_d0 t_1_0) f_7))
+    | `N -> 
+      (fun a_1_3 -> 
+        a_1_3))
+and lastDrive_d0_d0 ls_1_5 =
+  ls_1_5
+and last_d0_d0 a_8 ls_8 =
+  (ls_8 a_8)
+and last_d0_d1 a_1_4 ls_1_6 =
+  (ls_1_6 a_1_4)
+and testLastFilterPolyVar_d0_d0 ls_1_1 =
+  (lastDrive_d0_d0 ((filter_d0_d0 ls_1_1) (fun x_3 -> 
+    (x_3 < 1000))));;
+
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_LastFilterPolyVar" (fun () -> ignore ((testLastFilterPolyVar ((enumFromTo 1) 100000))));
   Bench.Test.create ~name:"manual_LastFilterPolyVar" (fun () -> ignore ((testManual ((enumFromTo 1) 100000))));
   Bench.Test.create ~name:"lumberhack_LastFilterPolyVar" (fun () -> ignore ((testLastFilterPolyVar_d0 ((enumFromTo_d0 1) 100000))));
+  Bench.Test.create ~name:"lumberhack_pop_out_LastFilterPolyVar" (fun () -> ignore ((testLastFilterPolyVar_d0_d0 ((enumFromTo_d0_d0 1) 100000))));
 ])

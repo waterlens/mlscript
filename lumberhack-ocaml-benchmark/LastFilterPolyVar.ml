@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 ./LastFilterPolyVar.ml -o "./LastFilterPolyVar.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./LastFilterPolyVar.out
+ocamlfind ocamlopt -rectypes -thread -O3 ./LastFilterPolyVar.ml -o "./LastFilterPolyVar.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./LastFilterPolyVar.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;
@@ -138,8 +138,8 @@ and testLastFilterPolyVar_d0_d0 ls_1_1 =
     (x_3 < 1000))));;
 
 Command_unix.run (Bench.make_command [
-  Bench.Test.create ~name:"original_LastFilterPolyVar" (fun () -> ignore ((testLastFilterPolyVar ((enumFromTo 1) 100000))));
-  Bench.Test.create ~name:"manual_LastFilterPolyVar" (fun () -> ignore ((testManual ((enumFromTo 1) 100000))));
-  Bench.Test.create ~name:"lumberhack_LastFilterPolyVar" (fun () -> ignore ((testLastFilterPolyVar_d0 ((enumFromTo_d0 1) 100000))));
-  Bench.Test.create ~name:"lumberhack_pop_out_LastFilterPolyVar" (fun () -> ignore ((testLastFilterPolyVar_d0_d0 ((enumFromTo_d0_d0 1) 100000))));
+  Bench.Test.create ~name:"original_LastFilterPolyVar" (fun () -> ignore ((testLastFilterPolyVar ((enumFromTo 1) 500000))));
+  Bench.Test.create ~name:"manual_LastFilterPolyVar" (fun () -> ignore ((testManual ((enumFromTo 1) 500000))));
+  Bench.Test.create ~name:"lumberhack_LastFilterPolyVar" (fun () -> ignore ((testLastFilterPolyVar_d0 ((enumFromTo_d0 1) 500000))));
+  Bench.Test.create ~name:"lumberhack_pop_out_LastFilterPolyVar" (fun () -> ignore ((testLastFilterPolyVar_d0_d0 ((enumFromTo_d0_d0 1) 500000))));
 ])

@@ -1156,7 +1156,9 @@ object OCamlGen extends CodeGen {
       // s"ocamlfind ocamlopt -rectypes -O3 ./$benchName.ml -o $benchName.out"
       //   + s" -linkpkg -package \"benchmark\" && ./$benchName.out"
       s"ocamlfind ocamlopt -rectypes -thread -O3 ./$benchName.ml -o \"./$benchName.out\""
-        + s" -linkpkg -package \"core_unix.command_unix\" -linkpkg -package \"core_bench\" && ./$benchName.out"
+        + s" -linkpkg -package \"core_unix.command_unix\" -linkpkg -package \"core_bench\" "
+        + s"&& ./$benchName.out "
+        + "&& rm ./*.cmx ./*.out ./*.cmi ./*.o"
     val hsFileContent = stack(
       Raw(s"(*\n$compileAndRunCommand\n*)"),
       headers,

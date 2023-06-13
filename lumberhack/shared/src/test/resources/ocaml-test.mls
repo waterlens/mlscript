@@ -999,22 +999,34 @@ fun map(ls, f) = if ls is
   C(h, t) then C(f(h), map(t, f))
   N then N
 fun testMapmapPolyVar(ls) = map(map(ls, x => x + 1), x => x * x)
-fun testManual(ls) = map(ls, x => (x + 1) * (x + 1))
+fun _lhManual(ls, f1, f2) = if ls is
+  C(h, t) then C(f2(f1(h)), _lhManual(t, f1, f2))
+  N then N
+fun testManual(ls) = _lhManual(ls, x => x + 1, x => x * x)
 testMapmapPolyVar(primId(enumFromTo(1, 100000)))
 testManual(primId(enumFromTo(1, 100000)))
-//│ |#fun| |enumFromTo|(|a|,| |b|)| |#=| |#if| |a| |<| |b| |#then| |C|(|a|,| |enumFromTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |map|(|ls|,| |f|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|t|,| |f|)|)|↵|N| |#then| |N|←|↵|#fun| |testMapmapPolyVar|(|ls|)| |#=| |map|(|map|(|ls|,| |x| |=>| |x| |+| |1|)|,| |x| |=>| |x| |*| |x|)|↵|#fun| |testManual|(|ls|)| |#=| |map|(|ls|,| |x| |=>| |(|x| |+| |1|)| |*| |(|x| |+| |1|)|)|↵|testMapmapPolyVar|(|primId|(|enumFromTo|(|1|,| |100000|)|)|)|↵|testManual|(|primId|(|enumFromTo|(|1|,| |100000|)|)|)|
-//│ Parsed: {fun enumFromTo = a, b, => if (< (a,) (b,)) then C (a, enumFromTo (+ (a,) (1,), b,),) else N; fun map = ls, f, => if ls is ‹(C (h, t,)) then C (f (h,), map (t, f,),); (N) then N›; fun testMapmapPolyVar = ls, => map (map (ls, x, => + (x,) (1,),), x, => * (x,) (x,),); fun testManual = ls, => map (ls, x, => * (+ (x,) (1,),) (+ (x,) (1,),),); testMapmapPolyVar (primId (enumFromTo (1, 100000,),),); testManual (primId (enumFromTo (1, 100000,),),)}
+//│ |#fun| |enumFromTo|(|a|,| |b|)| |#=| |#if| |a| |<| |b| |#then| |C|(|a|,| |enumFromTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |map|(|ls|,| |f|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|t|,| |f|)|)|↵|N| |#then| |N|←|↵|#fun| |testMapmapPolyVar|(|ls|)| |#=| |map|(|map|(|ls|,| |x| |=>| |x| |+| |1|)|,| |x| |=>| |x| |*| |x|)|↵|#fun| |_lhManual|(|ls|,| |f1|,| |f2|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f2|(|f1|(|h|)|)|,| |_lhManual|(|t|,| |f1|,| |f2|)|)|↵|N| |#then| |N|←|↵|#fun| |testManual|(|ls|)| |#=| |_lhManual|(|ls|,| |x| |=>| |x| |+| |1|,| |x| |=>| |x| |*| |x|)|↵|testMapmapPolyVar|(|primId|(|enumFromTo|(|1|,| |100000|)|)|)|↵|testManual|(|primId|(|enumFromTo|(|1|,| |100000|)|)|)|
+//│ Parsed: {fun enumFromTo = a, b, => if (< (a,) (b,)) then C (a, enumFromTo (+ (a,) (1,), b,),) else N; fun map = ls, f, => if ls is ‹(C (h, t,)) then C (f (h,), map (t, f,),); (N) then N›; fun testMapmapPolyVar = ls, => map (map (ls, x, => + (x,) (1,),), x, => * (x,) (x,),); fun _lhManual = ls, f1, f2, => if ls is ‹(C (h, t,)) then C (f2 (f1 (h,),), _lhManual (t, f1, f2,),); (N) then N›; fun testManual = ls, => _lhManual (ls, x, => + (x,) (1,), x, => * (x,) (x,),); testMapmapPolyVar (primId (enumFromTo (1, 100000,),),); testManual (primId (enumFromTo (1, 100000,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ testMapmapPolyVar^74(primId⁰(enumFromTo^76(1, 100000)))
-//│ testManual^83(primId⁰(enumFromTo^85(1, 100000)))
+//│ testMapmapPolyVar^92(primId⁰(enumFromTo^94(1, 100000)))
+//│ testManual^101(primId⁰(enumFromTo^103(1, 100000)))
+//│ def _lhManual(ls², f1⁰, f2⁰) = case ls² of {
+//│ 	C h¹ t¹ => [C f2⁰(f1⁰(h¹)) _lhManual^61(t¹, f1⁰, f2⁰)]
+//│ 	| N  => [N]}
 //│ def enumFromTo(a⁰, b⁰) = if (a⁰ < b⁰) then [C a⁰ enumFromTo^7((a⁰ + 1), b⁰)] else [N]
 //│ def map(ls⁰, f⁰) = case ls⁰ of {
 //│ 	C h⁰ t⁰ => [C f⁰(h⁰) map^25(t⁰, f⁰)]
 //│ 	| N  => [N]}
-//│ def testManual(ls²) = map^55(ls², (fun x² -> ((x² + 1) * (x² + 1))))
+//│ def testManual(ls³) = _lhManual^74(ls³, (fun x² -> (x² + 1)), (fun x³ -> (x³ * x³)))
 //│ def testMapmapPolyVar(ls¹) = map^35(map^36(ls¹, (fun x⁰ -> (x⁰ + 1))), (fun x¹ -> (x¹ * x¹)))
 //│ 		---------- unoptimized ocaml gen ----------
-//│ 		let rec enumFromTo a_0 b_0 =
+//│ 		let rec _lhManual ls_2 f1_0 f2_0 =
+//│ 		  (match ls_2 with
+//│ 		    | `C(h_1, t_1) -> 
+//│ 		      (`C((f2_0 (f1_0 h_1)), (((_lhManual t_1) f1_0) f2_0)))
+//│ 		    | `N -> 
+//│ 		      (`N))
+//│ 		and enumFromTo a_0 b_0 =
 //│ 		  (if (a_0 < b_0) then
 //│ 		    (`C(a_0, ((enumFromTo (a_0 + 1)) b_0)))
 //│ 		  else
@@ -1025,9 +1037,10 @@ testManual(primId(enumFromTo(1, 100000)))
 //│ 		      (`C((f_0 h_0), ((map t_0) f_0)))
 //│ 		    | `N -> 
 //│ 		      (`N))
-//│ 		and testManual ls_2 =
-//│ 		  ((map ls_2) (fun x_2 -> 
-//│ 		    ((x_2 + 1) * (x_2 + 1))))
+//│ 		and testManual ls_3 =
+//│ 		  (((_lhManual ls_3) (fun x_2 -> 
+//│ 		    (x_2 + 1))) (fun x_3 -> 
+//│ 		    (x_3 * x_3)))
 //│ 		and testMapmapPolyVar ls_1 =
 //│ 		  ((map ((map ls_1) (fun x_0 -> 
 //│ 		    (x_0 + 1)))) (fun x_1 -> 
@@ -1038,94 +1051,94 @@ testManual(primId(enumFromTo(1, 100000)))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [enumFromTo^76] (hopeless to continue)
-//│ 	[enumFromTo^76 · enumFromTo^7] ---> [enumFromTo^76] (using original def)
-//│ [enumFromTo^85]
-//│ 	[enumFromTo^85 · enumFromTo^7] ---> [enumFromTo^85] (only one)
-//│ [testManual^83]
-//│ 	[testManual^83 · map^55]
-//│ 		[testManual^83 · map^55 · map^25] ---> [testManual^83 · map^55] (only one)
-//│ [testMapmapPolyVar^74]
-//│ 	[testMapmapPolyVar^74 · map^35] (hopeless to continue)
-//│ 		[testMapmapPolyVar^74 · map^35 · map^25] ---> [testMapmapPolyVar^74 · map^35] (using original def)
-//│ 	[testMapmapPolyVar^74 · map^36]
-//│ 		[testMapmapPolyVar^74 · map^36 · map^25] ---> [testMapmapPolyVar^74 · map^36] (only one)
+//│ [enumFromTo^103]
+//│ 	[enumFromTo^103 · enumFromTo^7] ---> [enumFromTo^103] (only one)
+//│ [enumFromTo^94] (hopeless to continue)
+//│ 	[enumFromTo^94 · enumFromTo^7] ---> [enumFromTo^94] (using original def)
+//│ [testManual^101]
+//│ 	[testManual^101 · _lhManual^74]
+//│ 		[testManual^101 · _lhManual^74 · _lhManual^61] ---> [testManual^101 · _lhManual^74] (only one)
+//│ [testMapmapPolyVar^92]
+//│ 	[testMapmapPolyVar^92 · map^35]
+//│ 		[testMapmapPolyVar^92 · map^35 · map^25] ---> [testMapmapPolyVar^92 · map^35] (only one)
+//│ 	[testMapmapPolyVar^92 · map^36]
+//│ 		[testMapmapPolyVar^92 · map^36 · map^25] ---> [testMapmapPolyVar^92 · map^36] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ testMapmapPolyVar₀(primId⁰(enumFromTo₀(1, 100000)))
-//│ testManual₀(primId⁰(enumFromTo₁(1, 100000)))
-//│ def enumFromTo₀(a², b²) = 
-//│ 	if (a² < b²) then [C a² enumFromTo₀((a² + 1), b²)] else [N]
-//│ def enumFromTo₁(a¹, b¹) = 
-//│ 	if (a¹ < b¹) then [C a¹ enumFromTo₁((a¹ + 1), b¹)] else [N]
-//│ def testManual₀(ls³) = 
-//│ 	map₀(ls³, (fun x³ -> ((x³ + 1) * (x³ + 1))))
+//│ testMapmapPolyVar₀(primId⁰(enumFromTo₁(1, 100000)))
+//│ testManual₀(primId⁰(enumFromTo₀(1, 100000)))
+//│ def enumFromTo₀(a¹, b¹) = 
+//│ 	if (a¹ < b¹) then [C a¹ enumFromTo₀((a¹ + 1), b¹)] else [N]
+//│ def enumFromTo₁(a², b²) = 
+//│ 	if (a² < b²) then [C a² enumFromTo₁((a² + 1), b²)] else [N]
+//│ def testManual₀(ls⁴) = 
+//│ 	_lhManual₀(ls⁴, (fun x⁴ -> (x⁴ + 1)), (fun x⁵ -> (x⁵ * x⁵)))
 //│ 	where
-//│ 	def map₀(ls⁷, f³) = 
-//│ 		case ls⁷ of {
-//│ 			C h³ t³ => [C f³(h³) map₀(t³, f³)]
-//│ 			| N  => [N]}
-//│ def testMapmapPolyVar₀(ls⁴) = 
-//│ 	map₁(map₂(ls⁴, (fun x⁴ -> (x⁴ + 1))), (fun x⁵ -> (x⁵ * x⁵)))
-//│ 	where
-//│ 	def map₁(ls⁵, f¹) = 
-//│ 		case ls⁵ of {
-//│ 			C h¹ t¹ => [C f¹(h¹) map₁(t¹, f¹)]
-//│ 			| N  => [N]}
-//│ 	def map₂(ls⁶, f²) = 
+//│ 	def _lhManual₀(ls⁶, f1¹, f2¹) = 
 //│ 		case ls⁶ of {
-//│ 			C h² t² => [C f²(h²) map₂(t², f²)]
+//│ 			C h³ t³ => [C f2¹(f1¹(h³)) _lhManual₀(t³, f1¹, f2¹)]
+//│ 			| N  => [N]}
+//│ def testMapmapPolyVar₀(ls⁷) = 
+//│ 	map₀(map₁(ls⁷, (fun x⁶ -> (x⁶ + 1))), (fun x⁷ -> (x⁷ * x⁷)))
+//│ 	where
+//│ 	def map₀(ls⁵, f¹) = 
+//│ 		case ls⁵ of {
+//│ 			C h² t² => [C f¹(h²) map₀(t², f¹)]
+//│ 			| N  => [N]}
+//│ 	def map₁(ls⁸, f²) = 
+//│ 		case ls⁸ of {
+//│ 			C h⁴ t⁴ => [C f²(h⁴) map₁(t⁴, f²)]
 //│ 			| N  => [N]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C f²(h²) map₂(t², f²)]: 194 --->
-//│ 	case ls⁵ of {C h¹ t¹ => [C f¹(h¹) map₁(t¹, f¹)] | N  => [N]}: 162
-//│ [N]: 195 --->
-//│ 	case ls⁵ of {C h¹ t¹ => [C f¹(h¹) map₁(t¹, f¹)] | N  => [N]}: 162
+//│ [C f²(h⁴) map₁(t⁴, f²)]: 210 --->
+//│ 	case ls⁵ of {C h² t² => [C f¹(h²) map₀(t², f¹)] | N  => [N]}: 139
+//│ [N]: 211 --->
+//│ 	case ls⁵ of {C h² t² => [C f¹(h²) map₀(t², f¹)] | N  => [N]}: 139
 //│ ------------------
-//│ case ls⁵ of {C h¹ t¹ => [C f¹(h¹) map₁(t¹, f¹)] | N  => [N]}: 162 --->
-//│ 	[C f²(h²) map₂(t², f²)]: 194
-//│ 	[N]: 195
+//│ case ls⁵ of {C h² t² => [C f¹(h²) map₀(t², f¹)] | N  => [N]}: 139 --->
+//│ 	[C f²(h⁴) map₁(t⁴, f²)]: 210
+//│ 	[N]: 211
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C f²(h²) map₂(t², f²)]: 194 --->
-//│ 	case ls⁵ of {C h¹ t¹ => [C f¹(h¹) map₁(t¹, f¹)] | N  => [N]}: 162
-//│ [N]: 195 --->
-//│ 	case ls⁵ of {C h¹ t¹ => [C f¹(h¹) map₁(t¹, f¹)] | N  => [N]}: 162
+//│ [C f²(h⁴) map₁(t⁴, f²)]: 210 --->
+//│ 	case ls⁵ of {C h² t² => [C f¹(h²) map₀(t², f¹)] | N  => [N]}: 139
+//│ [N]: 211 --->
+//│ 	case ls⁵ of {C h² t² => [C f¹(h²) map₀(t², f¹)] | N  => [N]}: 139
 //│ ------------------
-//│ case ls⁵ of {C h¹ t¹ => [C f¹(h¹) map₁(t¹, f¹)] | N  => [N]}: 162 --->
-//│ 	[C f²(h²) map₂(t², f²)]: 194
-//│ 	[N]: 195
+//│ case ls⁵ of {C h² t² => [C f¹(h²) map₀(t², f¹)] | N  => [N]}: 139 --->
+//│ 	[C f²(h⁴) map₁(t⁴, f²)]: 210
+//│ 	[N]: 211
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testMapmapPolyVar₀(primId⁰(enumFromTo₀(1, 100000)))
-//│ testManual₀(primId⁰(enumFromTo₁(1, 100000)))
+//│ testMapmapPolyVar₀(primId⁰(enumFromTo₁(1, 100000)))
+//│ testManual₀(primId⁰(enumFromTo₀(1, 100000)))
 //│ def enumFromTo₀(a⁴, b⁴) = 
 //│ 	if (a⁴ < b⁴) then [C a⁴ enumFromTo₀((a⁴ + 1), b⁴)] else [N]
 //│ def enumFromTo₁(a³, b³) = 
 //│ 	if (a³ < b³) then [C a³ enumFromTo₁((a³ + 1), b³)] else [N]
-//│ def testManual₀(ls¹²) = 
-//│ 	map₀(ls¹², (fun x⁸ -> ((x⁸ + 1) * (x⁸ + 1))))
+//│ def testManual₀(ls¹³) = 
+//│ 	_lhManual₀(ls¹³, (fun x¹⁰ -> (x¹⁰ + 1)), (fun x¹¹ -> (x¹¹ * x¹¹)))
 //│ 	where
-//│ 	def map₀(ls¹⁰, f⁷) = 
-//│ 		case ls¹⁰ of {
-//│ 			C h³ t³ => [C f⁷(h³) map₀(t³, f⁷)]
-//│ 			| N  => [N]}
-//│ def testMapmapPolyVar₀(ls⁸) = 
-//│ 	map₁(map₂(ls⁸, (fun x⁶ -> (x⁶ + 1))), (fun x⁷ -> (x⁷ * x⁷)))
-//│ 	where
-//│ 	def map₁(ls¹¹, f⁸) = 
-//│ 		ls¹¹(f⁸)
-//│ 	def map₂(ls⁹, f⁴) = 
+//│ 	def _lhManual₀(ls⁹, f1², f2²) = 
 //│ 		case ls⁹ of {
-//│ 			C h² t² => 
-//│ 				let h⁴ = f⁴(h²)
-//│ 				in let t⁴ = map₂(t², f⁴)
-//│ 				in (fun f⁵ -> [C f⁵(h⁴) map₁(t⁴, f⁵)])
+//│ 			C h³ t³ => [C f2²(f1²(h³)) _lhManual₀(t³, f1², f2²)]
+//│ 			| N  => [N]}
+//│ def testMapmapPolyVar₀(ls¹⁰) = 
+//│ 	map₀(map₁(ls¹⁰, (fun x⁸ -> (x⁸ + 1))), (fun x⁹ -> (x⁹ * x⁹)))
+//│ 	where
+//│ 	def map₀(ls¹¹, f³) = 
+//│ 		ls¹¹(f³)
+//│ 	def map₁(ls¹², f⁴) = 
+//│ 		case ls¹² of {
+//│ 			C h⁴ t⁴ => 
+//│ 				let h⁵ = f⁴(h⁴)
+//│ 				in let t⁵ = map₁(t⁴, f⁴)
+//│ 				in (fun f⁵ -> [C f⁵(h⁵) map₀(t⁵, f⁵)])
 //│ 			| N  => (fun f⁶ -> [N])}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
@@ -1139,7 +1152,13 @@ testManual(primId(enumFromTo(1, 100000)))
 //│ open Core_bench;;
 //│ 
 //│ (* original *)
-//│ let rec enumFromTo a_0 b_0 =
+//│ let rec _lhManual ls_2 f1_0 f2_0 =
+//│   (match ls_2 with
+//│     | `C(h_1, t_1) -> 
+//│       (`C((f2_0 (f1_0 h_1)), (((_lhManual t_1) f1_0) f2_0)))
+//│     | `N -> 
+//│       (`N))
+//│ and enumFromTo a_0 b_0 =
 //│   (if (a_0 < b_0) then
 //│     (`C(a_0, ((enumFromTo (a_0 + 1)) b_0)))
 //│   else
@@ -1150,9 +1169,10 @@ testManual(primId(enumFromTo(1, 100000)))
 //│       (`C((f_0 h_0), ((map t_0) f_0)))
 //│     | `N -> 
 //│       (`N))
-//│ and testManual ls_2 =
-//│   ((map ls_2) (fun x_2 -> 
-//│     ((x_2 + 1) * (x_2 + 1))))
+//│ and testManual ls_3 =
+//│   (((_lhManual ls_3) (fun x_2 -> 
+//│     (x_2 + 1))) (fun x_3 -> 
+//│     (x_3 * x_3)))
 //│ and testMapmapPolyVar ls_1 =
 //│   ((map ((map ls_1) (fun x_0 -> 
 //│     (x_0 + 1)))) (fun x_1 -> 
@@ -1169,33 +1189,27 @@ testManual(primId(enumFromTo(1, 100000)))
 //│     (`C(a_0, ((enumFromTo_d1 (a_0 + 1)) b_0)))
 //│   else
 //│     (`N))
-//│ and map_d0 ls_2 f_3 =
-//│   (match ls_2 with
-//│     | `C(h_2, t_2) -> 
-//│       (`C((f_3 h_2), ((map_d0 t_2) f_3)))
+//│ and map_d0 ls_2 f_0 =
+//│   (ls_2 f_0)
+//│ and map_d1 ls_3 f_1 =
+//│   (match ls_3 with
+//│     | `C(h_1, t_1) -> 
+//│       (let rec h_2 = (f_1 h_1) in
+//│         (let rec t_2 = ((map_d1 t_1) f_1) in
+//│           (fun f_2 -> 
+//│             (`C((f_2 h_2), ((map_d0 t_2) f_2))))))
 //│     | `N -> 
-//│       (`N))
-//│ and map_d1 ls_3 f_4 =
-//│   (ls_3 f_4)
-//│ and map_d2 ls_1 f_0 =
-//│   (match ls_1 with
-//│     | `C(h_0, t_0) -> 
-//│       (let rec h_1 = (f_0 h_0) in
-//│         (let rec t_1 = ((map_d2 t_0) f_0) in
-//│           (fun f_1 -> 
-//│             (`C((f_1 h_1), ((map_d1 t_1) f_1))))))
-//│     | `N -> 
-//│       (fun f_2 -> 
+//│       (fun f_3 -> 
 //│         (`N)))
-//│ and testMapmapPolyVar_d0 ls_0 =
-//│   ((map_d1 ((map_d2 ls_0) (fun x_0 -> 
+//│ and testMapmapPolyVar_d0 ls_1 =
+//│   ((map_d0 ((map_d1 ls_1) (fun x_0 -> 
 //│     (x_0 + 1)))) (fun x_1 -> 
 //│     (x_1 * x_1)));;
 //│ 
 //│ Command_unix.run (Bench.make_command [
 //│   Bench.Test.create ~name:"original_MapmapPolyVar" (fun () -> ignore ((testMapmapPolyVar ((enumFromTo 1) 100000))));
 //│   Bench.Test.create ~name:"manual_MapmapPolyVar" (fun () -> ignore ((testManual ((enumFromTo 1) 100000))));
-//│   Bench.Test.create ~name:"lumberhack_MapmapPolyVar" (fun () -> ignore ((testMapmapPolyVar_d0 ((enumFromTo_d0 1) 100000))));
+//│   Bench.Test.create ~name:"lumberhack_MapmapPolyVar" (fun () -> ignore ((testMapmapPolyVar_d0 ((enumFromTo_d1 1) 100000))));
 //│ ])
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
 

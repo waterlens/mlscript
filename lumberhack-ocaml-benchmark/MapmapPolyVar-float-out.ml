@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 ./MapmapPolyVar.ml -o "./MapmapPolyVar.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./MapmapPolyVar.out
+ocamlfind ocamlopt -rectypes -thread -O3 ./MapmapPolyVar-float-out.ml -o "./MapmapPolyVar-float-out.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./MapmapPolyVar-float-out.out
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;
@@ -56,8 +56,19 @@ and map_d1 ls_3 f_1 =
     | `N -> 
       (fun f_3 -> 
         (`N)))
+and map_d1_float_out ls_3 f_1 f_2 =
+  (match ls_3 with
+    | `C(h_1, t_1) -> 
+      (let rec h_2 = (f_1 h_1) in
+        (let rec t_2 = ((map_d1_float_out t_1) f_1) in
+          ((`C((f_2 h_2), ((map_d0 t_2) f_2))))))
+    | `N -> `N)
 and testMapmapPolyVar_d0 ls_1 =
   ((map_d0 ((map_d1 ls_1) (fun x_0 -> 
+    (x_0 + 1)))) (fun x_1 -> 
+    (x_1 * x_1)))
+and testMapmapPolyVar_float_out ls_1 =
+  ((map_d0 ((map_d1_float_out ls_1) (fun x_0 -> 
     (x_0 + 1)))) (fun x_1 -> 
     (x_1 * x_1)));;
 
@@ -65,4 +76,5 @@ Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_MapmapPolyVar" (fun () -> ignore ((testMapmapPolyVar ((enumFromTo 1) 100000))));
   Bench.Test.create ~name:"manual_MapmapPolyVar" (fun () -> ignore ((testManual ((enumFromTo 1) 100000))));
   Bench.Test.create ~name:"lumberhack_MapmapPolyVar" (fun () -> ignore ((testMapmapPolyVar_d0 ((enumFromTo_d1 1) 100000))));
+  Bench.Test.create ~name:"lumberhack_MapmapPolyVar_float_out" (fun () -> ignore ((testMapmapPolyVar_float_out ((enumFromTo_d1 1) 100000))));
 ])

@@ -1344,3 +1344,281 @@ testQueen $ primId 11
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
+:lhGenOCaml
+fun map(f, ls) = if ls is
+  C(h, t) then C(f(h), map(f, t))
+  N then N
+fun upto(a, b) = if a > b then N else C(a, upto(a + 1, b))
+fun sum(ls) = summ(0, ls)
+fun summ(acc, ls) = if ls is
+  N then acc
+  C(h, t) then summ(acc + h, t)
+fun testSumMap(n) = sum(map(x => x * x, upto(1, n)))
+testSumMap(primId(300000))
+//│ |#fun| |map|(|f|,| |ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#fun| |upto|(|a|,| |b|)| |#=| |#if| |a| |>| |b| |#then| |N| |#else| |C|(|a|,| |upto|(|a| |+| |1|,| |b|)|)|↵|#fun| |sum|(|ls|)| |#=| |summ|(|0|,| |ls|)|↵|#fun| |summ|(|acc|,| |ls|)| |#=| |#if| |ls| |is|→|N| |#then| |acc|↵|C|(|h|,| |t|)| |#then| |summ|(|acc| |+| |h|,| |t|)|←|↵|#fun| |testSumMap|(|n|)| |#=| |sum|(|map|(|x| |=>| |x| |*| |x|,| |upto|(|1|,| |n|)|)|)|↵|testSumMap|(|primId|(|300000|)|)|
+//│ Parsed: {fun map = f, ls, => if ls is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; fun upto = a, b, => if (> (a,) (b,)) then N else C (a, upto (+ (a,) (1,), b,),); fun sum = ls, => summ (0, ls,); fun summ = acc, ls, => if ls is ‹(N) then acc; (C (h, t,)) then summ (+ (acc,) (h,), t,)›; fun testSumMap = n, => sum (map (x, => * (x,) (x,), upto (1, n,),),); testSumMap (primId (300000,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testSumMap^72(primId⁰(300000))
+//│ def map(f⁰, ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => [C f⁰(h⁰) map^5(f⁰, t⁰)]
+//│ 	| N  => [N]}
+//│ def sum(ls¹) = summ^35(0, ls¹)
+//│ def summ(acc⁰, ls²) = case ls² of {
+//│ 	N  => acc⁰
+//│ 	| C h¹ t¹ => summ^43((acc⁰ + h¹), t¹)}
+//│ def testSumMap(n⁰) = sum^55(map^56((fun x⁰ -> (x⁰ * x⁰)), upto^64(1, n⁰)))
+//│ def upto(a⁰, b⁰) = if (a⁰ > b⁰) then [N] else [C a⁰ upto^22((a⁰ + 1), b⁰)]
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec map f_0 ls_0 =
+//│ 		  (match ls_0 with
+//│ 		    | `C(h_0, t_0) -> 
+//│ 		      (`C((f_0 h_0), ((map f_0) t_0)))
+//│ 		    | `N -> 
+//│ 		      (`N))
+//│ 		and sum ls_1 =
+//│ 		  ((summ 0) ls_1)
+//│ 		and summ acc_0 ls_2 =
+//│ 		  (match ls_2 with
+//│ 		    | `N -> 
+//│ 		      acc_0
+//│ 		    | `C(h_1, t_1) -> 
+//│ 		      ((summ (acc_0 + h_1)) t_1))
+//│ 		and testSumMap n_0 =
+//│ 		  (sum ((map (fun x_0 -> 
+//│ 		    (x_0 * x_0))) ((upto 1) n_0)))
+//│ 		and upto a_0 b_0 =
+//│ 		  (if (a_0 > b_0) then
+//│ 		    (`N)
+//│ 		  else
+//│ 		    (`C(a_0, ((upto (a_0 + 1)) b_0))));;
+//│ 		(testSumMap 300000)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testSumMap^72] (hopeless to continue)
+//│ 	[testSumMap^72 · map^56] (using original def)
+//│ 		[testSumMap^72 · map^56 · map^5] ---> [testSumMap^72 · map^56] (using original def)
+//│ 	[testSumMap^72 · sum^55] (using original def)
+//│ 		[testSumMap^72 · sum^55 · summ^35] (using original def)
+//│ 			[testSumMap^72 · sum^55 · summ^35 · summ^43] ---> [testSumMap^72 · sum^55 · summ^35] (using original def)
+//│ 	[testSumMap^72 · upto^64] (using original def)
+//│ 		[testSumMap^72 · upto^64 · upto^22] ---> [testSumMap^72 · upto^64] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testSumMap₀(primId⁰(300000))
+//│ def testSumMap₀(n¹) = 
+//│ 	sum₀(map₀((fun x¹ -> (x¹ * x¹)), upto₀(1, n¹)))
+//│ 	where
+//│ 	def map₀(f¹, ls³) = 
+//│ 		case ls³ of {
+//│ 			C h² t² => [C f¹(h²) map₀(f¹, t²)]
+//│ 			| N  => [N]}
+//│ 	def sum₀(ls⁵) = 
+//│ 		summ₀(0, ls⁵)
+//│ 		where
+//│ 		def summ₀(acc¹, ls⁴) = 
+//│ 			case ls⁴ of {
+//│ 				N  => acc¹
+//│ 				| C h³ t³ => summ₀((acc¹ + h³), t³)}
+//│ 	def upto₀(a¹, b¹) = 
+//│ 		if (a¹ > b¹) then [N] else [C a¹ upto₀((a¹ + 1), b¹)]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C f¹(h²) map₀(f¹, t²)]: 103 --->
+//│ 	case ls⁴ of {N  => acc¹ | C h³ t³ => summ₀((acc¹ + h³), t³)}: 139
+//│ [N]: 104 --->
+//│ 	case ls⁴ of {N  => acc¹ | C h³ t³ => summ₀((acc¹ + h³), t³)}: 139
+//│ [N]: 113 --->
+//│ 	case ls³ of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 105
+//│ [C a¹ upto₀((a¹ + 1), b¹)]: 124 --->
+//│ 	case ls³ of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 105
+//│ ------------------
+//│ case ls³ of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 105 --->
+//│ 	[N]: 113
+//│ 	[C a¹ upto₀((a¹ + 1), b¹)]: 124
+//│ case ls⁴ of {N  => acc¹ | C h³ t³ => summ₀((acc¹ + h³), t³)}: 139 --->
+//│ 	[C f¹(h²) map₀(f¹, t²)]: 103
+//│ 	[N]: 104
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C f¹(h²) map₀(f¹, t²)]: 103 --->
+//│ 	case ls⁴ of {N  => acc¹ | C h³ t³ => summ₀((acc¹ + h³), t³)}: 139
+//│ [N]: 104 --->
+//│ 	case ls⁴ of {N  => acc¹ | C h³ t³ => summ₀((acc¹ + h³), t³)}: 139
+//│ [N]: 113 --->
+//│ 	case ls³ of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 105
+//│ [C a¹ upto₀((a¹ + 1), b¹)]: 124 --->
+//│ 	case ls³ of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 105
+//│ ------------------
+//│ case ls³ of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 105 --->
+//│ 	[N]: 113
+//│ 	[C a¹ upto₀((a¹ + 1), b¹)]: 124
+//│ case ls⁴ of {N  => acc¹ | C h³ t³ => summ₀((acc¹ + h³), t³)}: 139 --->
+//│ 	[C f¹(h²) map₀(f¹, t²)]: 103
+//│ 	[N]: 104
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testSumMap₀(primId⁰(300000))
+//│ def testSumMap₀(n²) = 
+//│ 	sum₀(map₀((fun x² -> (x² * x²)), upto₀(1, n²)))
+//│ 	where
+//│ 	def map₀(f⁴, ls⁸) = 
+//│ 		ls⁸(f⁴)
+//│ 	def sum₀(ls⁶) = 
+//│ 		summ₀(0, ls⁶)
+//│ 		where
+//│ 		def summ₀(acc⁴, ls⁷) = 
+//│ 			ls⁷(acc⁴)
+//│ 	def upto₀(a², b²) = 
+//│ 		if (a² > b²) then (fun f² -> (fun acc² -> acc²)) else 
+//│ 			let h⁴ = a²
+//│ 			in let t⁴ = upto₀((a² + 1), b²)
+//│ 			in (fun f³ -> 
+//│ 				let h⁵ = f³(h⁴)
+//│ 				in let t⁵ = map₀(f³, t⁴)
+//│ 				in (fun acc³ -> summ₀((acc³ + h⁵), t⁵)))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
+
+:lhGenOCaml
+fun map(f, ls) = if ls is
+  C(h, t) then C(f(h), map(f, t))
+  N then N
+fun upto(a, b) = if a > b then N else C(a, upto(a + 1, b))
+fun sum(ls) = if ls is
+  C(h, t) then h + sum(t)
+  N then 0
+fun testSumMapNonTailRec(n) = sum(map(x => x * x, upto(1, n)))
+testSumMapNonTailRec(primId(300000))
+//│ |#fun| |map|(|f|,| |ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#fun| |upto|(|a|,| |b|)| |#=| |#if| |a| |>| |b| |#then| |N| |#else| |C|(|a|,| |upto|(|a| |+| |1|,| |b|)|)|↵|#fun| |sum|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |h| |+| |sum|(|t|)|↵|N| |#then| |0|←|↵|#fun| |testSumMapNonTailRec|(|n|)| |#=| |sum|(|map|(|x| |=>| |x| |*| |x|,| |upto|(|1|,| |n|)|)|)|↵|testSumMapNonTailRec|(|primId|(|300000|)|)|
+//│ Parsed: {fun map = f, ls, => if ls is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; fun upto = a, b, => if (> (a,) (b,)) then N else C (a, upto (+ (a,) (1,), b,),); fun sum = ls, => if ls is ‹(C (h, t,)) then + (h,) (sum (t,),); (N) then 0›; fun testSumMapNonTailRec = n, => sum (map (x, => * (x,) (x,), upto (1, n,),),); testSumMapNonTailRec (primId (300000,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testSumMapNonTailRec^63(primId⁰(300000))
+//│ def map(f⁰, ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => [C f⁰(h⁰) map^5(f⁰, t⁰)]
+//│ 	| N  => [N]}
+//│ def sum(ls¹) = case ls¹ of {
+//│ 	C h¹ t¹ => (h¹ + sum^39(t¹))
+//│ 	| N  => 0}
+//│ def testSumMapNonTailRec(n⁰) = sum^46(map^47((fun x⁰ -> (x⁰ * x⁰)), upto^55(1, n⁰)))
+//│ def upto(a⁰, b⁰) = if (a⁰ > b⁰) then [N] else [C a⁰ upto^22((a⁰ + 1), b⁰)]
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec map f_0 ls_0 =
+//│ 		  (match ls_0 with
+//│ 		    | `C(h_0, t_0) -> 
+//│ 		      (`C((f_0 h_0), ((map f_0) t_0)))
+//│ 		    | `N -> 
+//│ 		      (`N))
+//│ 		and sum ls_1 =
+//│ 		  (match ls_1 with
+//│ 		    | `C(h_1, t_1) -> 
+//│ 		      (h_1 + (sum t_1))
+//│ 		    | `N -> 
+//│ 		      0)
+//│ 		and testSumMapNonTailRec n_0 =
+//│ 		  (sum ((map (fun x_0 -> 
+//│ 		    (x_0 * x_0))) ((upto 1) n_0)))
+//│ 		and upto a_0 b_0 =
+//│ 		  (if (a_0 > b_0) then
+//│ 		    (`N)
+//│ 		  else
+//│ 		    (`C(a_0, ((upto (a_0 + 1)) b_0))));;
+//│ 		(testSumMapNonTailRec 300000)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testSumMapNonTailRec^63] (hopeless to continue)
+//│ 	[testSumMapNonTailRec^63 · map^47] (using original def)
+//│ 		[testSumMapNonTailRec^63 · map^47 · map^5] ---> [testSumMapNonTailRec^63 · map^47] (using original def)
+//│ 	[testSumMapNonTailRec^63 · sum^46] (using original def)
+//│ 		[testSumMapNonTailRec^63 · sum^46 · sum^39] ---> [testSumMapNonTailRec^63 · sum^46] (using original def)
+//│ 	[testSumMapNonTailRec^63 · upto^55] (using original def)
+//│ 		[testSumMapNonTailRec^63 · upto^55 · upto^22] ---> [testSumMapNonTailRec^63 · upto^55] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testSumMapNonTailRec₀(primId⁰(300000))
+//│ def testSumMapNonTailRec₀(n¹) = 
+//│ 	sum₀(map₀((fun x¹ -> (x¹ * x¹)), upto₀(1, n¹)))
+//│ 	where
+//│ 	def map₀(f¹, ls²) = 
+//│ 		case ls² of {
+//│ 			C h² t² => [C f¹(h²) map₀(f¹, t²)]
+//│ 			| N  => [N]}
+//│ 	def sum₀(ls³) = 
+//│ 		case ls³ of {
+//│ 			C h³ t³ => (h³ + sum₀(t³))
+//│ 			| N  => 0}
+//│ 	def upto₀(a¹, b¹) = 
+//│ 		if (a¹ > b¹) then [N] else [C a¹ upto₀((a¹ + 1), b¹)]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C f¹(h²) map₀(f¹, t²)]: 77 --->
+//│ 	case ls³ of {C h³ t³ => (h³ + sum₀(t³)) | N  => 0}: 111
+//│ [N]: 78 --->
+//│ 	case ls³ of {C h³ t³ => (h³ + sum₀(t³)) | N  => 0}: 111
+//│ [N]: 87 --->
+//│ 	case ls² of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 79
+//│ [C a¹ upto₀((a¹ + 1), b¹)]: 98 --->
+//│ 	case ls² of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 79
+//│ ------------------
+//│ case ls² of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 79 --->
+//│ 	[N]: 87
+//│ 	[C a¹ upto₀((a¹ + 1), b¹)]: 98
+//│ case ls³ of {C h³ t³ => (h³ + sum₀(t³)) | N  => 0}: 111 --->
+//│ 	[C f¹(h²) map₀(f¹, t²)]: 77
+//│ 	[N]: 78
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C f¹(h²) map₀(f¹, t²)]: 77 --->
+//│ 	case ls³ of {C h³ t³ => (h³ + sum₀(t³)) | N  => 0}: 111
+//│ [N]: 78 --->
+//│ 	case ls³ of {C h³ t³ => (h³ + sum₀(t³)) | N  => 0}: 111
+//│ [N]: 87 --->
+//│ 	case ls² of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 79
+//│ [C a¹ upto₀((a¹ + 1), b¹)]: 98 --->
+//│ 	case ls² of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 79
+//│ ------------------
+//│ case ls² of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 79 --->
+//│ 	[N]: 87
+//│ 	[C a¹ upto₀((a¹ + 1), b¹)]: 98
+//│ case ls³ of {C h³ t³ => (h³ + sum₀(t³)) | N  => 0}: 111 --->
+//│ 	[C f¹(h²) map₀(f¹, t²)]: 77
+//│ 	[N]: 78
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testSumMapNonTailRec₀(primId⁰(300000))
+//│ def testSumMapNonTailRec₀(n²) = 
+//│ 	sum₀(map₀((fun x² -> (x² * x²)), upto₀(1, n²)))
+//│ 	where
+//│ 	def map₀(f², ls⁴) = 
+//│ 		ls⁴(f²)
+//│ 	def sum₀(ls⁵) = 
+//│ 		ls⁵
+//│ 	def upto₀(a², b²) = 
+//│ 		if (a² > b²) then (fun f³ -> 0) else 
+//│ 			let h⁴ = a²
+//│ 			in let t⁴ = upto₀((a² + 1), b²)
+//│ 			in (fun f⁴ -> 
+//│ 				let h⁵ = f⁴(h⁴)
+//│ 				in let t⁵ = map₀(f⁴, t⁴)
+//│ 				in (h⁵ + sum₀(t⁵)))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

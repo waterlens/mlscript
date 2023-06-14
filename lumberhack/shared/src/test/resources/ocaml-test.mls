@@ -2195,3 +2195,411 @@ testSumMapNonTailRecNonPolyVar $ primId 500000
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
+:lhGenOCaml
+fun genTree(n, i) = if n <= 0 then N(i) else T(genTree(n - 1, i), genTree(n - 1, i + 1))
+fun flip(t) = if t is
+  T(l, r) then T(flip(r), flip(l))
+  N(v) then N(v)
+fun ff(t) = flip(flip(t))
+fun testFlipFlip(t) = ff(t)
+testFlipFlip(primId(genTree(17, 0)))
+//│ |#fun| |genTree|(|n|,| |i|)| |#=| |#if| |n| |<=| |0| |#then| |N|(|i|)| |#else| |T|(|genTree|(|n| |-| |1|,| |i|)|,| |genTree|(|n| |-| |1|,| |i| |+| |1|)|)|↵|#fun| |flip|(|t|)| |#=| |#if| |t| |is|→|T|(|l|,| |r|)| |#then| |T|(|flip|(|r|)|,| |flip|(|l|)|)|↵|N|(|v|)| |#then| |N|(|v|)|←|↵|#fun| |ff|(|t|)| |#=| |flip|(|flip|(|t|)|)|↵|#fun| |testFlipFlip|(|t|)| |#=| |ff|(|t|)|↵|testFlipFlip|(|primId|(|genTree|(|17|,| |0|)|)|)|
+//│ Parsed: {fun genTree = n, i, => if (<= (n,) (0,)) then N (i,) else T (genTree (- (n,) (1,), i,), genTree (- (n,) (1,), + (i,) (1,),),); fun flip = t, => if t is ‹(T (l, r,)) then T (flip (r,), flip (l,),); (N (v,)) then N (v,)›; fun ff = t, => flip (flip (t,),); fun testFlipFlip = t, => ff (t,); testFlipFlip (primId (genTree (17, 0,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testFlipFlip^56(primId⁰(genTree^58(17, 0)))
+//│ def ff(t¹) = flip^46(flip^47(t¹))
+//│ def flip(t⁰) = case t⁰ of {
+//│ 	T l⁰ r⁰ => [T flip^35(r⁰) flip^38(l⁰)]
+//│ 	| N v⁰ => [N v⁰]}
+//│ def genTree(n⁰, i⁰) = if (n⁰ <= 0) then [N i⁰] else [T genTree^8((n⁰ - 1), i⁰) genTree^17((n⁰ - 1), (i⁰ + 1))]
+//│ def testFlipFlip(t²) = ff^52(t²)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec ff t_1 =
+//│ 		  (flip (flip t_1))
+//│ 		and flip t_0 =
+//│ 		  (match t_0 with
+//│ 		    | `T(l_0, r_0) -> 
+//│ 		      (`T((flip r_0), (flip l_0)))
+//│ 		    | `N(v_0) -> 
+//│ 		      (`N(v_0)))
+//│ 		and genTree n_0 i_0 =
+//│ 		  (if (n_0 <= 0) then
+//│ 		    (`N(i_0))
+//│ 		  else
+//│ 		    (`T(((genTree (n_0 - 1)) i_0), ((genTree (n_0 - 1)) (i_0 + 1)))))
+//│ 		and testFlipFlip t_2 =
+//│ 		  (ff t_2);;
+//│ 		(testFlipFlip ((genTree 17) 0))
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [genTree^58]
+//│ 	[genTree^58 · genTree^17] ---> [genTree^58] (only one)
+//│ 	[genTree^58 · genTree^8] ---> [genTree^58] (only one)
+//│ [testFlipFlip^56]
+//│ 	[testFlipFlip^56 · ff^52]
+//│ 		[testFlipFlip^56 · ff^52 · flip^46]
+//│ 			[testFlipFlip^56 · ff^52 · flip^46 · flip^35] ---> [testFlipFlip^56 · ff^52 · flip^46] (only one)
+//│ 			[testFlipFlip^56 · ff^52 · flip^46 · flip^38] ---> [testFlipFlip^56 · ff^52 · flip^46] (only one)
+//│ 		[testFlipFlip^56 · ff^52 · flip^47]
+//│ 			[testFlipFlip^56 · ff^52 · flip^47 · flip^35] ---> [testFlipFlip^56 · ff^52 · flip^47] (only one)
+//│ 			[testFlipFlip^56 · ff^52 · flip^47 · flip^38] ---> [testFlipFlip^56 · ff^52 · flip^47] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testFlipFlip₀(primId⁰(genTree₀(17, 0)))
+//│ def genTree₀(n¹, i¹) = 
+//│ 	if (n¹ <= 0) then [N i¹] else [T genTree₀((n¹ - 1), i¹) genTree₀((n¹ - 1), (i¹ + 1))]
+//│ def testFlipFlip₀(t⁶) = 
+//│ 	ff₀(t⁶)
+//│ 	where
+//│ 	def ff₀(t⁴) = 
+//│ 		flip₀(flip₁(t⁴))
+//│ 		where
+//│ 		def flip₀(t³) = 
+//│ 			case t³ of {
+//│ 				T l¹ r¹ => [T flip₀(r¹) flip₀(l¹)]
+//│ 				| N v¹ => [N v¹]}
+//│ 		def flip₁(t⁵) = 
+//│ 			case t⁵ of {
+//│ 				T l² r² => [T flip₁(r²) flip₁(l²)]
+//│ 				| N v² => [N v²]}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [T flip₁(r²) flip₁(l²)]: 123 --->
+//│ 	case t³ of {T l¹ r¹ => [T flip₀(r¹) flip₀(l¹)] | N v¹ => [N v¹]}: 75
+//│ [N v²]: 125 --->
+//│ 	case t³ of {T l¹ r¹ => [T flip₀(r¹) flip₀(l¹)] | N v¹ => [N v¹]}: 75
+//│ ------------------
+//│ case t³ of {T l¹ r¹ => [T flip₀(r¹) flip₀(l¹)] | N v¹ => [N v¹]}: 75 --->
+//│ 	[T flip₁(r²) flip₁(l²)]: 123
+//│ 	[N v²]: 125
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [T flip₁(r²) flip₁(l²)]: 123 --->
+//│ 	case t³ of {T l¹ r¹ => [T flip₀(r¹) flip₀(l¹)] | N v¹ => [N v¹]}: 75
+//│ [N v²]: 125 --->
+//│ 	case t³ of {T l¹ r¹ => [T flip₀(r¹) flip₀(l¹)] | N v¹ => [N v¹]}: 75
+//│ ------------------
+//│ case t³ of {T l¹ r¹ => [T flip₀(r¹) flip₀(l¹)] | N v¹ => [N v¹]}: 75 --->
+//│ 	[T flip₁(r²) flip₁(l²)]: 123
+//│ 	[N v²]: 125
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testFlipFlip₀(primId⁰(genTree₀(17, 0)))
+//│ def genTree₀(n², i²) = 
+//│ 	if (n² <= 0) then [N i²] else [T genTree₀((n² - 1), i²) genTree₀((n² - 1), (i² + 1))]
+//│ def testFlipFlip₀(t¹⁰) = 
+//│ 	ff₀(t¹⁰)
+//│ 	where
+//│ 	def ff₀(t⁷) = 
+//│ 		flip₀(flip₁(t⁷))
+//│ 		where
+//│ 		def flip₀(t⁹) = 
+//│ 			t⁹
+//│ 		def flip₁(t⁸) = 
+//│ 			case t⁸ of {
+//│ 				T l² r² => 
+//│ 					let l³ = flip₁(r²)
+//│ 					in let r³ = flip₁(l²)
+//│ 					in [T flip₀(r³) flip₀(l³)]
+//│ 				| N v² => 
+//│ 					let v³ = v²
+//│ 					in [N v³]}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
+
+:lhGenOCaml
+fun map(f, ls) = if ls is
+  C(h, t) then C(f(h), map(f, t))
+  N then N
+fun foldl(f, s, ls) = if ls is
+  C(h, t) then foldl(f, f(s, h), t)
+  N then s
+fun fromEnumTo(a, b) = if a <= b then C(a, fromEnumTo(a + 1, b)) else N
+fun testFoldMapPolyVar(n) = foldl(
+  i => x => i + x,
+  0,
+  map(x => x * x, primId(fromEnumTo(1, n)))
+)
+testFoldMapPolyVar(primId(300000))
+//│ |#fun| |map|(|f|,| |ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#fun| |foldl|(|f|,| |s|,| |ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |foldl|(|f|,| |f|(|s|,| |h|)|,| |t|)|↵|N| |#then| |s|←|↵|#fun| |fromEnumTo|(|a|,| |b|)| |#=| |#if| |a| |<=| |b| |#then| |C|(|a|,| |fromEnumTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |testFoldMapPolyVar|(|n|)| |#=| |foldl|(|→|i| |=>| |x| |=>| |i| |+| |x|,|↵|0|,|↵|map|(|x| |=>| |x| |*| |x|,| |primId|(|fromEnumTo|(|1|,| |n|)|)|)|←|↵|)|↵|testFoldMapPolyVar|(|primId|(|300000|)|)|
+//│ Parsed: {fun map = f, ls, => if ls is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; fun foldl = f, s, ls, => if ls is ‹(C (h, t,)) then foldl (f, f (s, h,), t,); (N) then s›; fun fromEnumTo = a, b, => if (<= (a,) (b,)) then C (a, fromEnumTo (+ (a,) (1,), b,),) else N; fun testFoldMapPolyVar = n, => foldl (i, => x, => + (i,) (x,), 0, map (x, => * (x,) (x,), primId (fromEnumTo (1, n,),),),); testFoldMapPolyVar (primId (300000,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testFoldMapPolyVar^81(primId⁰(300000))
+//│ def foldl(f¹, s⁰, ls¹) = case ls¹ of {
+//│ 	C h¹ t¹ => foldl^16(f¹, f¹(s⁰, h¹), t¹)
+//│ 	| N  => s⁰}
+//│ def fromEnumTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ fromEnumTo^38((a⁰ + 1), b⁰)] else [N]
+//│ def map(f⁰, ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => [C f⁰(h⁰) map^5(f⁰, t⁰)]
+//│ 	| N  => [N]}
+//│ def testFoldMapPolyVar(n⁰) = foldl^52((fun i⁰ -> (fun x⁰ -> (i⁰ + x⁰))), 0, map^63((fun x¹ -> (x¹ * x¹)), primId⁰(fromEnumTo^72(1, n⁰))))
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec foldl f_1 s_0 ls_1 =
+//│ 		  (match ls_1 with
+//│ 		    | `C(h_1, t_1) -> 
+//│ 		      (((foldl f_1) ((f_1 s_0) h_1)) t_1)
+//│ 		    | `N -> 
+//│ 		      s_0)
+//│ 		and fromEnumTo a_0 b_0 =
+//│ 		  (if (a_0 <= b_0) then
+//│ 		    (`C(a_0, ((fromEnumTo (a_0 + 1)) b_0)))
+//│ 		  else
+//│ 		    (`N))
+//│ 		and map f_0 ls_0 =
+//│ 		  (match ls_0 with
+//│ 		    | `C(h_0, t_0) -> 
+//│ 		      (`C((f_0 h_0), ((map f_0) t_0)))
+//│ 		    | `N -> 
+//│ 		      (`N))
+//│ 		and testFoldMapPolyVar n_0 =
+//│ 		  (((foldl (fun i_0 x_0 -> 
+//│ 		    (i_0 + x_0))) 0) ((map (fun x_1 -> 
+//│ 		    (x_1 * x_1))) ((fromEnumTo 1) n_0)));;
+//│ 		(testFoldMapPolyVar 300000)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testFoldMapPolyVar^81] (hopeless to continue)
+//│ 	[testFoldMapPolyVar^81 · foldl^52] (using original def)
+//│ 		[testFoldMapPolyVar^81 · foldl^52 · foldl^16] ---> [testFoldMapPolyVar^81 · foldl^52] (using original def)
+//│ 	[testFoldMapPolyVar^81 · fromEnumTo^72] (using original def)
+//│ 		[testFoldMapPolyVar^81 · fromEnumTo^72 · fromEnumTo^38] ---> [testFoldMapPolyVar^81 · fromEnumTo^72] (using original def)
+//│ 	[testFoldMapPolyVar^81 · map^63] (using original def)
+//│ 		[testFoldMapPolyVar^81 · map^63 · map^5] ---> [testFoldMapPolyVar^81 · map^63] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testFoldMapPolyVar₀(primId⁰(300000))
+//│ def testFoldMapPolyVar₀(n¹) = 
+//│ 	foldl₀((fun i¹ -> (fun x² -> (i¹ + x²))), 0, map₀((fun x³ -> (x³ * x³)), primId⁰(fromEnumTo₀(1, n¹))))
+//│ 	where
+//│ 	def foldl₀(f², s¹, ls²) = 
+//│ 		case ls² of {
+//│ 			C h² t² => foldl₀(f², f²(s¹, h²), t²)
+//│ 			| N  => s¹}
+//│ 	def fromEnumTo₀(a¹, b¹) = 
+//│ 		if (a¹ <= b¹) then [C a¹ fromEnumTo₀((a¹ + 1), b¹)] else [N]
+//│ 	def map₀(f³, ls³) = 
+//│ 		case ls³ of {
+//│ 			C h³ t³ => [C f³(h³) map₀(f³, t³)]
+//│ 			| N  => [N]}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C f³(h³) map₀(f³, t³)]: 161 --->
+//│ 	case ls² of {C h² t² => foldl₀(f², f²(s¹, h²), t²) | N  => s¹}: 99
+//│ [N]: 162 --->
+//│ 	case ls² of {C h² t² => foldl₀(f², f²(s¹, h²), t²) | N  => s¹}: 99
+//│ ------------------
+//│ case ls² of {C h² t² => foldl₀(f², f²(s¹, h²), t²) | N  => s¹}: 99 --->
+//│ 	[C f³(h³) map₀(f³, t³)]: 161
+//│ 	[N]: 162
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C f³(h³) map₀(f³, t³)]: 161 --->
+//│ 	case ls² of {C h² t² => foldl₀(f², f²(s¹, h²), t²) | N  => s¹}: 99
+//│ [N]: 162 --->
+//│ 	case ls² of {C h² t² => foldl₀(f², f²(s¹, h²), t²) | N  => s¹}: 99
+//│ ------------------
+//│ case ls² of {C h² t² => foldl₀(f², f²(s¹, h²), t²) | N  => s¹}: 99 --->
+//│ 	[C f³(h³) map₀(f³, t³)]: 161
+//│ 	[N]: 162
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testFoldMapPolyVar₀(primId⁰(300000))
+//│ def testFoldMapPolyVar₀(n²) = 
+//│ 	foldl₀((fun i² -> (fun x⁴ -> (i² + x⁴))), 0, map₀((fun x⁵ -> (x⁵ * x⁵)), primId⁰(fromEnumTo₀(1, n²))))
+//│ 	where
+//│ 	def foldl₀(f⁴, s², ls⁴) = 
+//│ 		ls⁴(s², f⁴)
+//│ 	def fromEnumTo₀(a², b²) = 
+//│ 		if (a² <= b²) then [C a² fromEnumTo₀((a² + 1), b²)] else [N]
+//│ 	def map₀(f⁵, ls⁵) = 
+//│ 		case ls⁵ of {
+//│ 			C h³ t³ => 
+//│ 				let h⁴ = f⁵(h³)
+//│ 				in let t⁴ = map₀(f⁵, t³)
+//│ 				in (fun s³ -> (fun f⁶ -> foldl₀(f⁶, f⁶(s³, h⁴), t⁴)))
+//│ 			| N  => (fun s⁴ -> (fun f⁷ -> s⁴))}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
+:lhGenOCaml
+fun fromEnumTo(a, b) = if a <= b then C(a, fromEnumTo(a + 1, b)) else N
+fun map(f, xs) = if xs is
+  C(h, t) then C(f(h), map(f, t))
+  N then N
+fun qrev(a, ys) = if ys is
+  C(h, t) then qrev(C(h, a), t)
+  N then a
+fun _lhManualMapQrev(f, xs, a) = if xs is
+  C(h, t) then _lhManualMapQrev(f, t, C(f(h), a))
+  N then a
+fun testMapQrevPolyVar(ls) = map(x => x + 1, qrev(N, ls))
+fun testManual(ls) = _lhManualMapQrev(x => x + 1, ls, N)
+testMapQrevPolyVar(primId(fromEnumTo(1, 10000)))
+testManual(primId(fromEnumTo(1, 10000)))
+//│ |#fun| |fromEnumTo|(|a|,| |b|)| |#=| |#if| |a| |<=| |b| |#then| |C|(|a|,| |fromEnumTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |map|(|f|,| |xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#fun| |qrev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h|,| |t|)| |#then| |qrev|(|C|(|h|,| |a|)|,| |t|)|↵|N| |#then| |a|←|↵|#fun| |_lhManualMapQrev|(|f|,| |xs|,| |a|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |_lhManualMapQrev|(|f|,| |t|,| |C|(|f|(|h|)|,| |a|)|)|↵|N| |#then| |a|←|↵|#fun| |testMapQrevPolyVar|(|ls|)| |#=| |map|(|x| |=>| |x| |+| |1|,| |qrev|(|N|,| |ls|)|)|↵|#fun| |testManual|(|ls|)| |#=| |_lhManualMapQrev|(|x| |=>| |x| |+| |1|,| |ls|,| |N|)|↵|testMapQrevPolyVar|(|primId|(|fromEnumTo|(|1|,| |10000|)|)|)|↵|testManual|(|primId|(|fromEnumTo|(|1|,| |10000|)|)|)|
+//│ Parsed: {fun fromEnumTo = a, b, => if (<= (a,) (b,)) then C (a, fromEnumTo (+ (a,) (1,), b,),) else N; fun map = f, xs, => if xs is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; fun qrev = a, ys, => if ys is ‹(C (h, t,)) then qrev (C (h, a,), t,); (N) then a›; fun _lhManualMapQrev = f, xs, a, => if xs is ‹(C (h, t,)) then _lhManualMapQrev (f, t, C (f (h,), a,),); (N) then a›; fun testMapQrevPolyVar = ls, => map (x, => + (x,) (1,), qrev (N, ls,),); fun testManual = ls, => _lhManualMapQrev (x, => + (x,) (1,), ls, N,); testMapQrevPolyVar (primId (fromEnumTo (1, 10000,),),); testManual (primId (fromEnumTo (1, 10000,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testMapQrevPolyVar^92(primId⁰(fromEnumTo^94(1, 10000)))
+//│ testManual^101(primId⁰(fromEnumTo^103(1, 10000)))
+//│ def _lhManualMapQrev(f¹, xs¹, a²) = case xs¹ of {
+//│ 	C h² t² => _lhManualMapQrev^48(f¹, t², [C f¹(h²) a²])
+//│ 	| N  => a²}
+//│ def fromEnumTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ fromEnumTo^7((a⁰ + 1), b⁰)] else [N]
+//│ def map(f⁰, xs⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C f⁰(h⁰) map^25(f⁰, t⁰)]
+//│ 	| N  => [N]}
+//│ def qrev(a¹, ys⁰) = case ys⁰ of {
+//│ 	C h¹ t¹ => qrev^36([C h¹ a¹], t¹)
+//│ 	| N  => a¹}
+//│ def testManual(ls¹) = _lhManualMapQrev^79((fun x¹ -> (x¹ + 1)), ls¹, [N])
+//│ def testMapQrevPolyVar(ls⁰) = map^64((fun x⁰ -> (x⁰ + 1)), qrev^72([N], ls⁰))
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec _lhManualMapQrev f_1 xs_1 a_2 =
+//│ 		  (match xs_1 with
+//│ 		    | `C(h_2, t_2) -> 
+//│ 		      (((_lhManualMapQrev f_1) t_2) (`C((f_1 h_2), a_2)))
+//│ 		    | `N -> 
+//│ 		      a_2)
+//│ 		and fromEnumTo a_0 b_0 =
+//│ 		  (if (a_0 <= b_0) then
+//│ 		    (`C(a_0, ((fromEnumTo (a_0 + 1)) b_0)))
+//│ 		  else
+//│ 		    (`N))
+//│ 		and map f_0 xs_0 =
+//│ 		  (match xs_0 with
+//│ 		    | `C(h_0, t_0) -> 
+//│ 		      (`C((f_0 h_0), ((map f_0) t_0)))
+//│ 		    | `N -> 
+//│ 		      (`N))
+//│ 		and qrev a_1 ys_0 =
+//│ 		  (match ys_0 with
+//│ 		    | `C(h_1, t_1) -> 
+//│ 		      ((qrev (`C(h_1, a_1))) t_1)
+//│ 		    | `N -> 
+//│ 		      a_1)
+//│ 		and testManual ls_1 =
+//│ 		  (((_lhManualMapQrev (fun x_1 -> 
+//│ 		    (x_1 + 1))) ls_1) (`N))
+//│ 		and testMapQrevPolyVar ls_0 =
+//│ 		  ((map (fun x_0 -> 
+//│ 		    (x_0 + 1))) ((qrev (`N)) ls_0));;
+//│ 		(testMapQrevPolyVar ((fromEnumTo 1) 10000))
+//│ 		(testManual ((fromEnumTo 1) 10000))
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [fromEnumTo^103]
+//│ 	[fromEnumTo^103 · fromEnumTo^7] ---> [fromEnumTo^103] (only one)
+//│ [fromEnumTo^94] (hopeless to continue)
+//│ 	[fromEnumTo^94 · fromEnumTo^7] ---> [fromEnumTo^94] (using original def)
+//│ [testManual^101]
+//│ 	[testManual^101 · _lhManualMapQrev^79]
+//│ 		[testManual^101 · _lhManualMapQrev^79 · _lhManualMapQrev^48] ---> [testManual^101 · _lhManualMapQrev^79] (only one)
+//│ [testMapQrevPolyVar^92]
+//│ 	[testMapQrevPolyVar^92 · map^64]
+//│ 		[testMapQrevPolyVar^92 · map^64 · map^25] ---> [testMapQrevPolyVar^92 · map^64] (only one)
+//│ 	[testMapQrevPolyVar^92 · qrev^72]
+//│ 		[testMapQrevPolyVar^92 · qrev^72 · qrev^36] ---> [testMapQrevPolyVar^92 · qrev^72] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testMapQrevPolyVar₀(primId⁰(fromEnumTo₁(1, 10000)))
+//│ testManual₀(primId⁰(fromEnumTo₀(1, 10000)))
+//│ def fromEnumTo₀(a⁵, b¹) = 
+//│ 	if (a⁵ <= b¹) then [C a⁵ fromEnumTo₀((a⁵ + 1), b¹)] else [N]
+//│ def fromEnumTo₁(a⁶, b²) = 
+//│ 	if (a⁶ <= b²) then [C a⁶ fromEnumTo₁((a⁶ + 1), b²)] else [N]
+//│ def testManual₀(ls³) = 
+//│ 	_lhManualMapQrev₀((fun x³ -> (x³ + 1)), ls³, [N])
+//│ 	where
+//│ 	def _lhManualMapQrev₀(f², xs², a⁴) = 
+//│ 		case xs² of {
+//│ 			C h⁴ t⁴ => _lhManualMapQrev₀(f², t⁴, [C f²(h⁴) a⁴])
+//│ 			| N  => a⁴}
+//│ def testMapQrevPolyVar₀(ls²) = 
+//│ 	map₀((fun x² -> (x² + 1)), qrev₀([N], ls²))
+//│ 	where
+//│ 	def map₀(f³, xs³) = 
+//│ 		case xs³ of {
+//│ 			C h⁵ t⁵ => [C f³(h⁵) map₀(f³, t⁵)]
+//│ 			| N  => [N]}
+//│ 	def qrev₀(a³, ys¹) = 
+//│ 		case ys¹ of {
+//│ 			C h³ t³ => qrev₀([C h³ a³], t³)
+//│ 			| N  => a³}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C h³ a³]: 114 --->
+//│ 	case xs³ of {C h⁵ t⁵ => [C f³(h⁵) map₀(f³, t⁵)] | N  => [N]}: 185
+//│ [N]: 131 --->
+//│ 	case xs³ of {C h⁵ t⁵ => [C f³(h⁵) map₀(f³, t⁵)] | N  => [N]}: 185
+//│ ------------------
+//│ case xs³ of {C h⁵ t⁵ => [C f³(h⁵) map₀(f³, t⁵)] | N  => [N]}: 185 --->
+//│ 	[C h³ a³]: 114
+//│ 	[N]: 131
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C h³ a³]: 114 --->
+//│ 	case xs³ of {C h⁵ t⁵ => [C f³(h⁵) map₀(f³, t⁵)] | N  => [N]}: 185
+//│ [N]: 131 --->
+//│ 	case xs³ of {C h⁵ t⁵ => [C f³(h⁵) map₀(f³, t⁵)] | N  => [N]}: 185
+//│ ------------------
+//│ case xs³ of {C h⁵ t⁵ => [C f³(h⁵) map₀(f³, t⁵)] | N  => [N]}: 185 --->
+//│ 	[C h³ a³]: 114
+//│ 	[N]: 131
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testMapQrevPolyVar₀(primId⁰(fromEnumTo₁(1, 10000)))
+//│ testManual₀(primId⁰(fromEnumTo₀(1, 10000)))
+//│ def fromEnumTo₀(a¹⁰, b⁴) = 
+//│ 	if (a¹⁰ <= b⁴) then [C a¹⁰ fromEnumTo₀((a¹⁰ + 1), b⁴)] else [N]
+//│ def fromEnumTo₁(a⁷, b³) = 
+//│ 	if (a⁷ <= b³) then [C a⁷ fromEnumTo₁((a⁷ + 1), b³)] else [N]
+//│ def testManual₀(ls⁴) = 
+//│ 	_lhManualMapQrev₀((fun x⁴ -> (x⁴ + 1)), ls⁴, [N])
+//│ 	where
+//│ 	def _lhManualMapQrev₀(f⁵, xs⁴, a⁹) = 
+//│ 		case xs⁴ of {
+//│ 			C h⁴ t⁴ => _lhManualMapQrev₀(f⁵, t⁴, [C f⁵(h⁴) a⁹])
+//│ 			| N  => a⁹}
+//│ def testMapQrevPolyVar₀(ls⁵) = 
+//│ 	map₀((fun x⁵ -> (x⁵ + 1)), qrev₀((fun f⁶ -> [N]), ls⁵))
+//│ 	where
+//│ 	def map₀(f⁷, xs⁵) = 
+//│ 		xs⁵(f⁷)
+//│ 	def qrev₀(a⁸, ys²) = 
+//│ 		case ys² of {
+//│ 			C h³ t³ => qrev₀(
+//│ 				let h⁶ = h³
+//│ 				in let t⁶ = a⁸
+//│ 				in (fun f⁴ -> [C f⁴(h⁶) map₀(f⁴, t⁶)]), t³)
+//│ 			| N  => a⁸}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

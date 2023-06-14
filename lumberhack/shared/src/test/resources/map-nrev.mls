@@ -1,0 +1,391 @@
+:NewParser
+:ParseOnly
+
+
+// WRONG: no fusion done, even after adding `idList`
+:lhEval
+fun fromEnumTo(a, b) = if a <= b then C(a, fromEnumTo(a + 1, b)) else N
+fun append(xs, ys) = if xs is
+  N then ys
+  C(h, t) then C(h, append(t, ys))
+fun nrev(ls) = if ls is
+  C(h, t) then append(nrev(t), C(h, N))
+  N then N
+fun map(f, ls) = if ls is
+  C(h, t) then C(f(h), map(f, t))
+  N then N
+map(x => x + 1, nrev(primId(fromEnumTo(1, 4))))
+//│ |#fun| |fromEnumTo|(|a|,| |b|)| |#=| |#if| |a| |<=| |b| |#then| |C|(|a|,| |fromEnumTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |append|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|N| |#then| |ys|↵|C|(|h|,| |t|)| |#then| |C|(|h|,| |append|(|t|,| |ys|)|)|←|↵|#fun| |nrev|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |append|(|nrev|(|t|)|,| |C|(|h|,| |N|)|)|↵|N| |#then| |N|←|↵|#fun| |map|(|f|,| |ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|map|(|x| |=>| |x| |+| |1|,| |nrev|(|primId|(|fromEnumTo|(|1|,| |4|)|)|)|)|
+//│ Parsed: {fun fromEnumTo = a, b, => if (<= (a,) (b,)) then C (a, fromEnumTo (+ (a,) (1,), b,),) else N; fun append = xs, ys, => if xs is ‹(N) then ys; (C (h, t,)) then C (h, append (t, ys,),)›; fun nrev = ls, => if ls is ‹(C (h, t,)) then append (nrev (t,), C (h, N,),); (N) then N›; fun map = f, ls, => if ls is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; map (x, => + (x,) (1,), nrev (primId (fromEnumTo (1, 4,),),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ map^60((fun x⁰ -> (x⁰ + 1)), nrev^68(primId⁰(fromEnumTo^70(1, 4))))
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h⁰ t⁰ => [C h⁰ append^24(t⁰, ys⁰)]}
+//│ def fromEnumTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ fromEnumTo^7((a⁰ + 1), b⁰)] else [N]
+//│ def map(f⁰, ls¹) = case ls¹ of {
+//│ 	C h² t² => [C f⁰(h²) map^50(f⁰, t²)]
+//│ 	| N  => [N]}
+//│ def nrev(ls⁰) = case ls⁰ of {
+//│ 	C h¹ t¹ => append^34(nrev^35(t¹), [C h¹ [N]])
+//│ 	| N  => [N]}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [C 5 [C 4 [C 3 [C 2 [N]]]]]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [fromEnumTo^70]
+//│ 	[fromEnumTo^70 · fromEnumTo^7] ---> [fromEnumTo^70] (only one)
+//│ [map^60]
+//│ 	[map^60 · map^50] ---> [map^60] (only one)
+//│ [nrev^68]
+//│ 	[nrev^68 · append^34]
+//│ 		[nrev^68 · append^34 · append^24] ---> [nrev^68 · append^34] (only one)
+//│ 	[nrev^68 · nrev^35] ---> [nrev^68] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ map₀((fun x¹ -> (x¹ + 1)), nrev₀(primId⁰(fromEnumTo₀(1, 4))))
+//│ def fromEnumTo₀(a¹, b¹) = 
+//│ 	if (a¹ <= b¹) then [C a¹ fromEnumTo₀((a¹ + 1), b¹)] else [N]
+//│ def map₀(f¹, ls³) = 
+//│ 	case ls³ of {
+//│ 		C h⁵ t⁵ => [C f¹(h⁵) map₀(f¹, t⁵)]
+//│ 		| N  => [N]}
+//│ def nrev₀(ls²) = 
+//│ 	case ls² of {
+//│ 		C h⁴ t⁴ => append₀(nrev₀(t⁴), [C h⁴ [N]])
+//│ 		| N  => [N]}
+//│ 	where
+//│ 	def append₀(xs¹, ys¹) = 
+//│ 		case xs¹ of {
+//│ 			N  => ys¹
+//│ 			| C h³ t³ => [C h³ append₀(t³, ys¹)]}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C h³ append₀(t³, ys¹)]: 86 --->
+//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ append₀(t³, ys¹)]}: 87
+//│ 	case ls³ of {C h⁵ t⁵ => [C f¹(h⁵) map₀(f¹, t⁵)] | N  => [N]}: 114
+//│ [N]: 97 --->
+//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ append₀(t³, ys¹)]}: 87
+//│ 	case ls³ of {C h⁵ t⁵ => [C f¹(h⁵) map₀(f¹, t⁵)] | N  => [N]}: 114
+//│ [C h⁴ [N]]: 98 --->
+//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ append₀(t³, ys¹)]}: 87
+//│ 	case ls³ of {C h⁵ t⁵ => [C f¹(h⁵) map₀(f¹, t⁵)] | N  => [N]}: 114
+//│ [N]: 100 --->
+//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ append₀(t³, ys¹)]}: 87
+//│ 	case ls³ of {C h⁵ t⁵ => [C f¹(h⁵) map₀(f¹, t⁵)] | N  => [N]}: 114
+//│ ------------------
+//│ case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ append₀(t³, ys¹)]}: 87 --->
+//│ 	[C h³ append₀(t³, ys¹)]: 86
+//│ 	[N]: 97
+//│ 	[C h⁴ [N]]: 98
+//│ 	[N]: 100
+//│ case ls³ of {C h⁵ t⁵ => [C f¹(h⁵) map₀(f¹, t⁵)] | N  => [N]}: 114 --->
+//│ 	[C h³ append₀(t³, ys¹)]: 86
+//│ 	[N]: 97
+//│ 	[C h⁴ [N]]: 98
+//│ 	[N]: 100
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ map₀((fun x² -> (x² + 1)), nrev₀(primId⁰(fromEnumTo₀(1, 4))))
+//│ def fromEnumTo₀(a², b²) = 
+//│ 	if (a² <= b²) then [C a² fromEnumTo₀((a² + 1), b²)] else [N]
+//│ def map₀(f², ls⁵) = 
+//│ 	case ls⁵ of {
+//│ 		C h⁵ t⁵ => [C f²(h⁵) map₀(f², t⁵)]
+//│ 		| N  => [N]}
+//│ def nrev₀(ls⁴) = 
+//│ 	case ls⁴ of {
+//│ 		C h⁴ t⁴ => append₀(nrev₀(t⁴), [C h⁴ [N]])
+//│ 		| N  => [N]}
+//│ 	where
+//│ 	def append₀(xs², ys²) = 
+//│ 		case xs² of {
+//│ 			N  => ys²
+//│ 			| C h³ t³ => [C h³ append₀(t³, ys²)]}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [C 5 [C 4 [C 3 [C 2 [N]]]]]
+//│ <<<<<<< evaluate <<<<<<<
+
+
+// CORRECT: can get some simple fusion done
+fun fromEnumTo(a, b) = if a <= b then C(a, fromEnumTo(a + 1, b)) else N
+fun append(xs, ys) = if xs is
+  N then ys
+  C(h, t) then C(h, append(t, ys))
+fun nrev(ls) = if ls is
+  C(h, t) then append(nrev(t), C(h, N))
+  N then N
+fun map(f, ls) = if ls is
+  C(h, t) then C(f(h), map(f, t))
+  N then N
+nrev(map(x => x + 1, primId(fromEnumTo(1, 6))))
+//│ |#fun| |fromEnumTo|(|a|,| |b|)| |#=| |#if| |a| |<=| |b| |#then| |C|(|a|,| |fromEnumTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |append|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|N| |#then| |ys|↵|C|(|h|,| |t|)| |#then| |C|(|h|,| |append|(|t|,| |ys|)|)|←|↵|#fun| |nrev|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |append|(|nrev|(|t|)|,| |C|(|h|,| |N|)|)|↵|N| |#then| |N|←|↵|#fun| |map|(|f|,| |ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|nrev|(|map|(|x| |=>| |x| |+| |1|,| |primId|(|fromEnumTo|(|1|,| |6|)|)|)|)|
+//│ Parsed: {fun fromEnumTo = a, b, => if (<= (a,) (b,)) then C (a, fromEnumTo (+ (a,) (1,), b,),) else N; fun append = xs, ys, => if xs is ‹(N) then ys; (C (h, t,)) then C (h, append (t, ys,),)›; fun nrev = ls, => if ls is ‹(C (h, t,)) then append (nrev (t,), C (h, N,),); (N) then N›; fun map = f, ls, => if ls is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; nrev (map (x, => + (x,) (1,), primId (fromEnumTo (1, 6,),),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ nrev^60(map^61((fun x⁰ -> (x⁰ + 1)), primId⁰(fromEnumTo^70(1, 6))))
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h⁰ t⁰ => [C h⁰ append^24(t⁰, ys⁰)]}
+//│ def fromEnumTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ fromEnumTo^7((a⁰ + 1), b⁰)] else [N]
+//│ def map(f⁰, ls¹) = case ls¹ of {
+//│ 	C h² t² => [C f⁰(h²) map^50(f⁰, t²)]
+//│ 	| N  => [N]}
+//│ def nrev(ls⁰) = case ls⁰ of {
+//│ 	C h¹ t¹ => append^34(nrev^35(t¹), [C h¹ [N]])
+//│ 	| N  => [N]}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [fromEnumTo^70]
+//│ 	[fromEnumTo^70 · fromEnumTo^7] ---> [fromEnumTo^70] (only one)
+//│ [map^61]
+//│ 	[map^61 · map^50] ---> [map^61] (only one)
+//│ [nrev^60]
+//│ 	[nrev^60 · append^34]
+//│ 		[nrev^60 · append^34 · append^24] ---> [nrev^60 · append^34] (only one)
+//│ 	[nrev^60 · nrev^35] ---> [nrev^60] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ nrev₀(map₀((fun x¹ -> (x¹ + 1)), primId⁰(fromEnumTo₀(1, 6))))
+//│ def fromEnumTo₀(a¹, b¹) = 
+//│ 	if (a¹ <= b¹) then [C a¹ fromEnumTo₀((a¹ + 1), b¹)] else [N]
+//│ def map₀(f¹, ls³) = 
+//│ 	case ls³ of {
+//│ 		C h⁴ t⁴ => [C f¹(h⁴) map₀(f¹, t⁴)]
+//│ 		| N  => [N]}
+//│ def nrev₀(ls²) = 
+//│ 	case ls² of {
+//│ 		C h³ t³ => append₀(nrev₀(t³), [C h³ [N]])
+//│ 		| N  => [N]}
+//│ 	where
+//│ 	def append₀(xs¹, ys¹) = 
+//│ 		case xs¹ of {
+//│ 			N  => ys¹
+//│ 			| C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys¹)]}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [N]: 85 --->
+//│ 	NoCons
+//│ 	case xs¹ of {N  => ys¹ | C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys¹)]}: 134
+//│ [C h³ [N]]: 86 --->
+//│ 	NoCons
+//│ 	case xs¹ of {N  => ys¹ | C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys¹)]}: 134
+//│ [N]: 88 --->
+//│ 	NoCons
+//│ 	case xs¹ of {N  => ys¹ | C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys¹)]}: 134
+//│ [C f¹(h⁴) map₀(f¹, t⁴)]: 100 --->
+//│ 	case ls² of {C h³ t³ => append₀(nrev₀(t³), [C h³ [N]]) | N  => [N]}: 89
+//│ [N]: 101 --->
+//│ 	case ls² of {C h³ t³ => append₀(nrev₀(t³), [C h³ [N]]) | N  => [N]}: 89
+//│ [C h⁵ append₀(t⁵, ys¹)]: 133 --->
+//│ 	NoCons
+//│ 	case xs¹ of {N  => ys¹ | C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys¹)]}: 134
+//│ ------------------
+//│ case ls² of {C h³ t³ => append₀(nrev₀(t³), [C h³ [N]]) | N  => [N]}: 89 --->
+//│ 	[C f¹(h⁴) map₀(f¹, t⁴)]: 100
+//│ 	[N]: 101
+//│ case xs¹ of {N  => ys¹ | C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys¹)]}: 134 --->
+//│ 	[N]: 85
+//│ 	[C h³ [N]]: 86
+//│ 	[N]: 88
+//│ 	[C h⁵ append₀(t⁵, ys¹)]: 133
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C f¹(h⁴) map₀(f¹, t⁴)]: 100 --->
+//│ 	case ls² of {C h³ t³ => append₀(nrev₀(t³), [C h³ [N]]) | N  => [N]}: 89
+//│ [N]: 101 --->
+//│ 	case ls² of {C h³ t³ => append₀(nrev₀(t³), [C h³ [N]]) | N  => [N]}: 89
+//│ ------------------
+//│ case ls² of {C h³ t³ => append₀(nrev₀(t³), [C h³ [N]]) | N  => [N]}: 89 --->
+//│ 	[C f¹(h⁴) map₀(f¹, t⁴)]: 100
+//│ 	[N]: 101
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ nrev₀(map₀((fun x² -> (x² + 1)), primId⁰(fromEnumTo₀(1, 6))))
+//│ def fromEnumTo₀(a², b²) = 
+//│ 	if (a² <= b²) then [C a² fromEnumTo₀((a² + 1), b²)] else [N]
+//│ def map₀(f², ls⁵) = 
+//│ 	case ls⁵ of {
+//│ 		C h⁴ t⁴ => 
+//│ 			let h⁶ = f²(h⁴)
+//│ 			in let t⁶ = map₀(f², t⁴)
+//│ 			in append₀(nrev₀(t⁶), [C h⁶ [N]])
+//│ 		| N  => [N]}
+//│ def nrev₀(ls⁴) = 
+//│ 	ls⁴
+//│ 	where
+//│ 	def append₀(xs², ys²) = 
+//│ 		case xs² of {
+//│ 			N  => ys²
+//│ 			| C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys²)]}
+//│ <<<<<<< after fusion <<<<<<<
+
+
+// WRONG: just adding another call the knot tier will not tie the ideal knots!
+fun fromEnumTo(a, b) = if a <= b then C(a, fromEnumTo(a + 1, b)) else N
+fun append(xs, ys) = if xs is
+  N then ys
+  C(h, t) then C(h, append(t, ys))
+fun nrev(ls) = if ls is
+  C(h, t) then append(nrev(t), C(h, N))
+  N then N
+fun map(f, ls) = if ls is
+  C(h, t) then C(f(h), map(f, t))
+  N then N
+fun t(n) = nrev(map(x => x + 1, primId(fromEnumTo(1, n))))
+t(4)
+//│ |#fun| |fromEnumTo|(|a|,| |b|)| |#=| |#if| |a| |<=| |b| |#then| |C|(|a|,| |fromEnumTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |append|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|N| |#then| |ys|↵|C|(|h|,| |t|)| |#then| |C|(|h|,| |append|(|t|,| |ys|)|)|←|↵|#fun| |nrev|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |append|(|nrev|(|t|)|,| |C|(|h|,| |N|)|)|↵|N| |#then| |N|←|↵|#fun| |map|(|f|,| |ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#fun| |t|(|n|)| |#=| |nrev|(|map|(|x| |=>| |x| |+| |1|,| |primId|(|fromEnumTo|(|1|,| |n|)|)|)|)|↵|t|(|4|)|
+//│ Parsed: {fun fromEnumTo = a, b, => if (<= (a,) (b,)) then C (a, fromEnumTo (+ (a,) (1,), b,),) else N; fun append = xs, ys, => if xs is ‹(N) then ys; (C (h, t,)) then C (h, append (t, ys,),)›; fun nrev = ls, => if ls is ‹(C (h, t,)) then append (nrev (t,), C (h, N,),); (N) then N›; fun map = f, ls, => if ls is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; fun t = n, => nrev (map (x, => + (x,) (1,), primId (fromEnumTo (1, n,),),),); t (4,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ t^79(4)
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h⁰ t¹ => [C h⁰ append^24(t¹, ys⁰)]}
+//│ def fromEnumTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ fromEnumTo^7((a⁰ + 1), b⁰)] else [N]
+//│ def map(f⁰, ls¹) = case ls¹ of {
+//│ 	C h² t³ => [C f⁰(h²) map^50(f⁰, t³)]
+//│ 	| N  => [N]}
+//│ def nrev(ls⁰) = case ls⁰ of {
+//│ 	C h¹ t² => append^34(nrev^35(t²), [C h¹ [N]])
+//│ 	| N  => [N]}
+//│ def t(n⁰) = nrev^60(map^61((fun x⁰ -> (x⁰ + 1)), primId⁰(fromEnumTo^70(1, n⁰))))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [t^79]
+//│ 	[t^79 · fromEnumTo^70] (hopeless to continue)
+//│ 		[t^79 · fromEnumTo^70 · fromEnumTo^7] ---> [t^79 · fromEnumTo^70] (using original def)
+//│ 	[t^79 · map^61] (hopeless to continue)
+//│ 		[t^79 · map^61 · map^50] ---> [t^79 · map^61] (using original def)
+//│ 	[t^79 · nrev^60]
+//│ 		[t^79 · nrev^60 · append^34]
+//│ 			[t^79 · nrev^60 · append^34 · append^24] ---> [t^79 · nrev^60 · append^34] (only one)
+//│ 		[t^79 · nrev^60 · nrev^35] (hopeless to continue)
+//│ 			[t^79 · nrev^60 · nrev^35 · append^34] (using original def)
+//│ 				[t^79 · nrev^60 · nrev^35 · append^34 · append^24] ---> [t^79 · nrev^60 · nrev^35 · append^34] (using original def)
+//│ 			[t^79 · nrev^60 · nrev^35 · nrev^35] ---> [t^79 · nrev^60 · nrev^35] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ t₀(4)
+//│ def t₀(n¹) = 
+//│ 	nrev₀(map₀((fun x¹ -> (x¹ + 1)), primId⁰(fromEnumTo₀(1, n¹))))
+//│ 	where
+//│ 	def fromEnumTo₀(a¹, b¹) = 
+//│ 		if (a¹ <= b¹) then [C a¹ fromEnumTo₀((a¹ + 1), b¹)] else [N]
+//│ 	def map₀(f¹, ls³) = 
+//│ 		case ls³ of {
+//│ 			C h⁵ t⁶ => [C f¹(h⁵) map₀(f¹, t⁶)]
+//│ 			| N  => [N]}
+//│ 	def nrev₀(ls²) = 
+//│ 		case ls² of {
+//│ 			C h³ t⁴ => append₀(nrev₁(t⁴), [C h³ [N]])
+//│ 			| N  => [N]}
+//│ 		where
+//│ 		def append₀(xs¹, ys¹) = 
+//│ 			case xs¹ of {
+//│ 				N  => ys¹
+//│ 				| C h⁴ t⁵ => [C h⁴ append₀(t⁵, ys¹)]}
+//│ 		def nrev₁(ls⁴) = 
+//│ 			case ls⁴ of {
+//│ 				C h⁶ t⁷ => append₁(nrev₁(t⁷), [C h⁶ [N]])
+//│ 				| N  => [N]}
+//│ 			where
+//│ 			def append₁(xs², ys²) = 
+//│ 				case xs² of {
+//│ 					N  => ys²
+//│ 					| C h⁷ t⁸ => [C h⁷ append₁(t⁸, ys²)]}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C f¹(h⁵) map₀(f¹, t⁶)]: 155 --->
+//│ 	case ls² of {C h³ t⁴ => append₀(nrev₁(t⁴), [C h³ [N]]) | N  => [N]}: 112
+//│ 	case ls⁴ of {C h⁶ t⁷ => append₁(nrev₁(t⁷), [C h⁶ [N]]) | N  => [N]}: 171
+//│ [N]: 156 --->
+//│ 	case ls² of {C h³ t⁴ => append₀(nrev₁(t⁴), [C h³ [N]]) | N  => [N]}: 112
+//│ 	case ls⁴ of {C h⁶ t⁷ => append₁(nrev₁(t⁷), [C h⁶ [N]]) | N  => [N]}: 171
+//│ [N]: 167 --->
+//│ 	case xs¹ of {N  => ys¹ | C h⁴ t⁵ => [C h⁴ append₀(t⁵, ys¹)]}: 143
+//│ 	case xs² of {N  => ys² | C h⁷ t⁸ => [C h⁷ append₁(t⁸, ys²)]}: 182
+//│ [C h⁶ [N]]: 168 --->
+//│ 	case xs¹ of {N  => ys¹ | C h⁴ t⁵ => [C h⁴ append₀(t⁵, ys¹)]}: 143
+//│ 	case xs² of {N  => ys² | C h⁷ t⁸ => [C h⁷ append₁(t⁸, ys²)]}: 182
+//│ [N]: 170 --->
+//│ 	case xs¹ of {N  => ys¹ | C h⁴ t⁵ => [C h⁴ append₀(t⁵, ys¹)]}: 143
+//│ 	case xs² of {N  => ys² | C h⁷ t⁸ => [C h⁷ append₁(t⁸, ys²)]}: 182
+//│ [C h⁷ append₁(t⁸, ys²)]: 181 --->
+//│ 	case xs¹ of {N  => ys¹ | C h⁴ t⁵ => [C h⁴ append₀(t⁵, ys¹)]}: 143
+//│ 	case xs² of {N  => ys² | C h⁷ t⁸ => [C h⁷ append₁(t⁸, ys²)]}: 182
+//│ ------------------
+//│ case ls² of {C h³ t⁴ => append₀(nrev₁(t⁴), [C h³ [N]]) | N  => [N]}: 112 --->
+//│ 	[C f¹(h⁵) map₀(f¹, t⁶)]: 155
+//│ 	[N]: 156
+//│ case xs¹ of {N  => ys¹ | C h⁴ t⁵ => [C h⁴ append₀(t⁵, ys¹)]}: 143 --->
+//│ 	[N]: 167
+//│ 	[C h⁶ [N]]: 168
+//│ 	[N]: 170
+//│ 	[C h⁷ append₁(t⁸, ys²)]: 181
+//│ case ls⁴ of {C h⁶ t⁷ => append₁(nrev₁(t⁷), [C h⁶ [N]]) | N  => [N]}: 171 --->
+//│ 	[C f¹(h⁵) map₀(f¹, t⁶)]: 155
+//│ 	[N]: 156
+//│ case xs² of {N  => ys² | C h⁷ t⁸ => [C h⁷ append₁(t⁸, ys²)]}: 182 --->
+//│ 	[N]: 167
+//│ 	[C h⁶ [N]]: 168
+//│ 	[N]: 170
+//│ 	[C h⁷ append₁(t⁸, ys²)]: 181
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ t₀(4)
+//│ def t₀(n²) = 
+//│ 	nrev₀(map₀((fun x² -> (x² + 1)), primId⁰(fromEnumTo₀(1, n²))))
+//│ 	where
+//│ 	def fromEnumTo₀(a², b²) = 
+//│ 		if (a² <= b²) then [C a² fromEnumTo₀((a² + 1), b²)] else [N]
+//│ 	def map₀(f², ls⁷) = 
+//│ 		case ls⁷ of {
+//│ 			C h⁵ t⁶ => [C f²(h⁵) map₀(f², t⁶)]
+//│ 			| N  => [N]}
+//│ 	def nrev₀(ls⁶) = 
+//│ 		case ls⁶ of {
+//│ 			C h³ t⁴ => append₀(nrev₁(t⁴), [C h³ [N]])
+//│ 			| N  => [N]}
+//│ 		where
+//│ 		def append₀(xs⁴, ys⁴) = 
+//│ 			case xs⁴ of {
+//│ 				N  => ys⁴
+//│ 				| C h⁴ t⁵ => [C h⁴ append₀(t⁵, ys⁴)]}
+//│ 		def nrev₁(ls⁵) = 
+//│ 			case ls⁵ of {
+//│ 				C h⁶ t⁷ => append₁(nrev₁(t⁷), [C h⁶ [N]])
+//│ 				| N  => [N]}
+//│ 			where
+//│ 			def append₁(xs³, ys³) = 
+//│ 				case xs³ of {
+//│ 					N  => ys³
+//│ 					| C h⁷ t⁸ => [C h⁷ append₁(t⁸, ys³)]}
+//│ <<<<<<< after fusion <<<<<<<

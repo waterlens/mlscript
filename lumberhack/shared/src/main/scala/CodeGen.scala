@@ -106,7 +106,10 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
         case "string" => NestedPat.LitPat(StrLit(n.getSrcContent))
         case "con_list" => NestedPat.CtorPat(BuiltInTypes.ListNil.toLumberhackType, Nil)
       }
-      case "pat_name" => NestedPat.IdPat(n.getSrcContent)
+      case "pat_name" => n.getChild(0).getType() match {
+        case "variable" => NestedPat.IdPat(n.getSrcContent)
+        case "constructor" => NestedPat.CtorPat(n.getSrcContent, Nil)
+      }
       case "pat_parens" => {
         val childs = n.getAllChilds
         assert(childs.length == 3)
@@ -212,6 +215,56 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
             allQualifiers.toList,
             Expr.Ctor(Var(BuiltInTypes.ListNil.toLumberhackType), Nil),
             Map.empty
+          )
+        }
+        case "exp_let_in" => {
+          val allChilds = n.getAllChilds
+          val defNode = allChilds(0).getChild(1).getChild(0)
+          assert(defNode.getType() == "function")
+          val letId = defNode.getChild(0).getType() match {
+            case "variable" =>
+              d.nextIdent(false, Var(defNode.getChild(0).getSrcContent))
+            case t => lastWords(s"unsupported: $t for let decl")
+          }
+          val newCtx = ctx + (letId.tree.name -> letId)
+          val value = defNode.getChild(2).toExpr(using newCtx)
+          val body = allChilds(1).getChild(1).toExpr(using newCtx)
+          LetIn(letId, value, body)
+        }
+        case "exp_cond" => {
+          IfThenElse(
+            n.getChild(1).toExpr,
+            n.getChild(3).toExpr,
+            n.getChild(5).toExpr,
+          )
+        }
+        case "exp_case" => {
+          val allChilds = n.getAllChilds
+          val scrut = allChilds(1).toExpr
+          val arms = allChilds(3).getAllChilds.filter(_.getType() == "alt").map { altNode =>
+            val pat = altNode.getChild(0).toPattern :: Nil
+            val body = new ToExprable {
+              override def toExpr(using
+                ctx: Ctx,
+                inDef: Option[Ident],
+                d: Deforest,
+                output: Str => Unit,
+                prgmStr: Str
+              ): Expr = {
+                altNode.getChild(2).toExpr
+              }
+            }
+            (pat, body, Map.empty[String, Ident])
+          }
+          val matchIdent = d.nextIdent(false, Var("_lh_matchIdent"))
+          LetIn(
+            matchIdent,
+            scrut,
+            mergeMatchPatterns(
+              matchIdent :: Nil,
+              arms.toList,
+              Expr.Call(Expr.Ref(ctx("error")), Expr.Const(StrLit("match error")))
+            )
           )
         }
       }
@@ -608,7 +661,7 @@ object FromOcaml extends NativeLoader("java-tree-sitter-ocaml-haskell") {
   }
 
   def ocamlBuiltinFunsList(using d: Deforest): Program = {
-    val ocamlBuiltinFuns = Set("map", "filter", "fold_left", "fold_right", "combine", "head", "tail", "enumFromTo", "enumFromThenTo", "length")
+    val ocamlBuiltinFuns = Set("map", "filter", "zip", "fold_left", "fold_right", "combine", "head", "tail", "enumFromTo", "enumFromThenTo", "length")
     val builtins = """
 fun map(f, ls) = if ls is
   LH_C(h, t) then LH_C(f(h), map(f, t))
@@ -630,6 +683,11 @@ fun combine(xs, ys) = if xs is
 fun length(ls) = if ls is
   LH_C(h, t) then 1 + length(t)
   LH_N then 0
+fun zip(xs, yx) = if xs is
+  LH_C(hx, tx) then if ys is
+    LH_C(hy, ty) then LH_C(LH_P2(hx, hy), zip(tx, ty))
+    LH_N then LH_N
+  LH_M then LH_N
     """
     val builtinPrgms = {
       val lumberhackBuiltinFph = new FastParseHelpers(builtins)

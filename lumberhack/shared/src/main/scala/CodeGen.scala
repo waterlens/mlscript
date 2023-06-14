@@ -383,8 +383,12 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
               newPatParams,
               body
             )
-          })
-        ) // :+ (Var("_"), Nil, elze) // no need for this match error pattern
+          }) ++ { elze match {
+            // case Call(Ref(id), Const(StrLit(lit)))
+            //   if id.tree.name == "error" && lit == "match error" => None
+            case _ => Some((Var("_"), Nil, elze))
+          }} // else branch is still needed, otherwise there maybe type error
+        )
       } else if firstPatterns.forall(!_.isInstanceOf[NestedPat.LitPat]) then {
         // the mix of ctors, vars or wildcards
         val groupedPats = {

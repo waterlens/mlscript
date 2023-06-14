@@ -1,0 +1,121 @@
+:NewParser
+:ParseOnly
+
+// WRONG: no fusion done
+:lhEval
+fun intToNat(x) = if x <= 0 then Z else S(intToNat(x - 1))
+fun natAdd(x, y) = if x is
+  Z then y
+  S(x) then S(natAdd(x, y))
+fun natMinus(x, y) = if y is
+  Z then x
+  S(y) then if x is
+    Z then Z
+    S(x) then natMinus(x, y)
+fun testMinusAdd(x) = natMinus(
+  natAdd(
+    primId(intToNat(x)),
+    primId(intToNat(3 * x))
+  ),
+  primId(intToNat(3 * x))
+)
+testMinusAdd(4)
+//│ |#fun| |intToNat|(|x|)| |#=| |#if| |x| |<=| |0| |#then| |Z| |#else| |S|(|intToNat|(|x| |-| |1|)|)|↵|#fun| |natAdd|(|x|,| |y|)| |#=| |#if| |x| |is|→|Z| |#then| |y|↵|S|(|x|)| |#then| |S|(|natAdd|(|x|,| |y|)|)|←|↵|#fun| |natMinus|(|x|,| |y|)| |#=| |#if| |y| |is|→|Z| |#then| |x|↵|S|(|y|)| |#then| |#if| |x| |is|→|Z| |#then| |Z|↵|S|(|x|)| |#then| |natMinus|(|x|,| |y|)|←|←|↵|#fun| |testMinusAdd|(|x|)| |#=| |natMinus|(|→|natAdd|(|→|primId|(|intToNat|(|x|)|)|,|↵|primId|(|intToNat|(|3| |*| |x|)|)|←|↵|)|,|↵|primId|(|intToNat|(|3| |*| |x|)|)|←|↵|)|↵|testMinusAdd|(|4|)|
+//│ Parsed: {fun intToNat = x, => if (<= (x,) (0,)) then Z else S (intToNat (- (x,) (1,),),); fun natAdd = x, y, => if x is ‹(Z) then y; (S (x,)) then S (natAdd (x, y,),)›; fun natMinus = x, y, => if y is ‹(Z) then x; (S (y,)) then if x is ‹(Z) then Z; (S (x,)) then natMinus (x, y,)››; fun testMinusAdd = x, => natMinus (natAdd (primId (intToNat (x,),), primId (intToNat (* (3,) (x,),),),), primId (intToNat (* (3,) (x,),),),); testMinusAdd (4,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testMinusAdd^71(4)
+//│ def intToNat(x⁰) = if (x⁰ <= 0) then [Z] else [S intToNat^7((x⁰ - 1))]
+//│ def natAdd(x¹, y⁰) = case x¹ of {
+//│ 	Z  => y⁰
+//│ 	| S x² => [S natAdd^19(x², y⁰)]}
+//│ def natMinus(x³, y¹) = case y¹ of {
+//│ 	Z  => x³
+//│ 	| S y² => case x³ of {
+//│ 		Z  => [Z]
+//│ 		| S x⁴ => natMinus^32(x⁴, y²)}}
+//│ def testMinusAdd(x⁵) = natMinus^41(natAdd^42(primId⁰(intToNat^44(x⁵)), primId⁰(intToNat^50((3 * x⁵)))), primId⁰(intToNat^61((3 * x⁵))))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [S [S [S [S [Z]]]]]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testMinusAdd^71]
+//│ 	[testMinusAdd^71 · intToNat^44] (hopeless to continue)
+//│ 		[testMinusAdd^71 · intToNat^44 · intToNat^7] ---> [testMinusAdd^71 · intToNat^44] (using original def)
+//│ 	[testMinusAdd^71 · intToNat^50] (hopeless to continue)
+//│ 		[testMinusAdd^71 · intToNat^50 · intToNat^7] ---> [testMinusAdd^71 · intToNat^50] (using original def)
+//│ 	[testMinusAdd^71 · intToNat^61] (hopeless to continue)
+//│ 		[testMinusAdd^71 · intToNat^61 · intToNat^7] ---> [testMinusAdd^71 · intToNat^61] (using original def)
+//│ 	[testMinusAdd^71 · natAdd^42]
+//│ 		[testMinusAdd^71 · natAdd^42 · natAdd^19] ---> [testMinusAdd^71 · natAdd^42] (only one)
+//│ 	[testMinusAdd^71 · natMinus^41] (hopeless to continue)
+//│ 		[testMinusAdd^71 · natMinus^41 · natMinus^32] ---> [testMinusAdd^71 · natMinus^41] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testMinusAdd₀(4)
+//│ def testMinusAdd₀(x⁹) = 
+//│ 	natMinus₀(natAdd₀(primId⁰(intToNat₀(x⁹)), primId⁰(intToNat₁((3 * x⁹)))), primId⁰(intToNat₂((3 * x⁹))))
+//│ 	where
+//│ 	def intToNat₀(x¹⁰) = 
+//│ 		if (x¹⁰ <= 0) then [Z] else [S intToNat₀((x¹⁰ - 1))]
+//│ 	def intToNat₁(x¹¹) = 
+//│ 		if (x¹¹ <= 0) then [Z] else [S intToNat₁((x¹¹ - 1))]
+//│ 	def intToNat₂(x⁸) = 
+//│ 		if (x⁸ <= 0) then [Z] else [S intToNat₂((x⁸ - 1))]
+//│ 	def natAdd₀(x¹², y⁵) = 
+//│ 		case x¹² of {
+//│ 			Z  => y⁵
+//│ 			| S x¹³ => [S natAdd₀(x¹³, y⁵)]}
+//│ 	def natMinus₀(x⁶, y³) = 
+//│ 		case y³ of {
+//│ 			Z  => x⁶
+//│ 			| S y⁴ => case x⁶ of {
+//│ 				Z  => [Z]
+//│ 				| S x⁷ => natMinus₀(x⁷, y⁴)}}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [S natAdd₀(x¹³, y⁵)]: 172 --->
+//│ 	NoCons
+//│ 	case x⁶ of {Z  => [Z] | S x⁷ => natMinus₀(x⁷, y⁴)}: 83
+//│ ------------------
+//│ case x⁶ of {Z  => [Z] | S x⁷ => natMinus₀(x⁷, y⁴)}: 83 --->
+//│ 	NoProd
+//│ 	[S natAdd₀(x¹³, y⁵)]: 172
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testMinusAdd₀(4)
+//│ def testMinusAdd₀(x¹⁶) = 
+//│ 	natMinus₀(natAdd₀(primId⁰(intToNat₀(x¹⁶)), primId⁰(intToNat₁((3 * x¹⁶)))), primId⁰(intToNat₂((3 * x¹⁶))))
+//│ 	where
+//│ 	def intToNat₀(x¹⁵) = 
+//│ 		if (x¹⁵ <= 0) then [Z] else [S intToNat₀((x¹⁵ - 1))]
+//│ 	def intToNat₁(x¹⁷) = 
+//│ 		if (x¹⁷ <= 0) then [Z] else [S intToNat₁((x¹⁷ - 1))]
+//│ 	def intToNat₂(x¹⁹) = 
+//│ 		if (x¹⁹ <= 0) then [Z] else [S intToNat₂((x¹⁹ - 1))]
+//│ 	def natAdd₀(x¹⁸, y⁷) = 
+//│ 		case x¹⁸ of {
+//│ 			Z  => y⁷
+//│ 			| S x¹³ => [S natAdd₀(x¹³, y⁷)]}
+//│ 	def natMinus₀(x¹⁴, y⁶) = 
+//│ 		case y⁶ of {
+//│ 			Z  => x¹⁴
+//│ 			| S y⁴ => case x¹⁴ of {
+//│ 				Z  => [Z]
+//│ 				| S x⁷ => natMinus₀(x⁷, y⁴)}}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [S [S [S [S [Z]]]]]
+//│ <<<<<<< evaluate <<<<<<<

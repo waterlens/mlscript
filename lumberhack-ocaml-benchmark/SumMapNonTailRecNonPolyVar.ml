@@ -23,7 +23,9 @@ and sum_d0 _lh_sum_arg1_1 =
     | [] -> 
       0
     | (_lh_sum_LH_C_0_1 :: _lh_sum_LH_C_1_1) -> 
-      (_lh_sum_LH_C_0_1 + (sum_d0 _lh_sum_LH_C_1_1)))
+      (_lh_sum_LH_C_0_1 + (sum_d0 _lh_sum_LH_C_1_1))
+    | _ -> 
+      (failwith "match error"))
 and testSumMapNonTailRecNonPolyVar_d0 _lh_testSumMapNonTailRecNonPolyVar_arg1_1 =
   (sum_d0 ((map_d0 (fun x_1 -> 
     (x_1 * x_1))) ((enumFromTo_d0 1) _lh_testSumMapNonTailRecNonPolyVar_arg1_1)));;
@@ -33,15 +35,15 @@ let rec enumFromTo_d0_d0 a_0 b_0 =
   (if (a_0 <= b_0) then
     (let rec h_0 = a_0 in
       (let rec t_0 = ((enumFromTo_d0_d0 (a_0 + 1)) b_0) in
-        (fun f_1 -> 
-          (let rec _lh_sum_LH_C_0_0 = (f_1 h_0) in
-            (let rec _lh_sum_LH_C_1_0 = ((map_d0_d0 f_1) t_0) in
+        (fun f_0 -> 
+          (let rec _lh_sum_LH_C_0_0 = (f_0 h_0) in
+            (let rec _lh_sum_LH_C_1_0 = ((map_d0_d0 f_0) t_0) in
               (_lh_sum_LH_C_0_0 + (sum_d0_d0 _lh_sum_LH_C_1_0)))))))
   else
-    (fun f_2 -> 
+    (fun f_1 -> 
       0))
-and map_d0_d0 f_0 ls_0 =
-  (ls_0 f_0)
+and map_d0_d0 f_2 ls_0 =
+  (ls_0 f_2)
 and sum_d0_d0 _lh_sum_arg1_0 =
   _lh_sum_arg1_0
 and testSumMapNonTailRecNonPolyVar_d0_d0 _lh_testSumMapNonTailRecNonPolyVar_arg1_0 =
@@ -58,10 +60,10 @@ let rec enumFromTo_d0_d0_d0 a_1 b_1 _lh_popOutId_0_0 =
             (_lh_sum_LH_C_0_1 + (sum_d0_d0_d0 _lh_sum_LH_C_1_1))))))
   else
     0)
-and map_d0_d0_d0 f_3 ls_1 =
-  (ls_1 f_3)
-and map_d0_d0_d1 f_4 ls_2 =
-  (ls_2 f_4)
+and map_d0_d0_d0 f_6 ls_2 =
+  (ls_2 f_6)
+and map_d0_d0_d1 f_5 ls_1 =
+  (ls_1 f_5)
 and sum_d0_d0_d0 _lh_sum_arg1_1 =
   _lh_sum_arg1_1
 and sum_d0_d0_d1 _lh_sum_arg1_2 =

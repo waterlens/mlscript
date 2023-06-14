@@ -15,13 +15,17 @@ let rec and_d0 _lh_and_arg1_1 =
       (if _lh_and_LH_C_0_1 then
         (and_d0 _lh_and_LH_C_1_1)
       else
-        false))
+        false)
+    | _ -> 
+      (failwith "match error"))
 and append_d0 _lh_append_arg1_1 _lh_append_arg2_1 =
   (match _lh_append_arg1_1 with
     | [] -> 
       _lh_append_arg2_1
     | (_lh_append_LH_C_0_1 :: _lh_append_LH_C_1_1) -> 
-      (_lh_append_LH_C_0_1::((append_d0 _lh_append_LH_C_1_1) _lh_append_arg2_1)))
+      (_lh_append_LH_C_0_1::((append_d0 _lh_append_LH_C_1_1) _lh_append_arg2_1))
+    | _ -> 
+      (failwith "match error"))
 and enumFromTo_d0 a_3 b_3 =
   (if (a_3 <= b_3) then
     (a_3::((enumFromTo_d0 (a_3 + 1)) b_3))
@@ -72,7 +76,9 @@ and safe_d0 _lh_safe_arg1_1 _lh_safe_arg2_1 =
         | (_lh_listcomp_fun_ls_h_5 :: _lh_listcomp_fun_ls_t_5) -> 
           (match _lh_listcomp_fun_ls_h_5 with
             | (_lh_safe_LH_P2_0_1, _lh_safe_LH_P2_1_1) -> 
-              ((((_lh_safe_LH_P2_1_1 != _lh_safe_arg2_1) && ((_lh_safe_LH_P2_0_1 + _lh_safe_LH_P2_1_1) != (m_1 + _lh_safe_arg2_1))) && ((_lh_safe_LH_P2_0_1 - _lh_safe_LH_P2_1_1) != (m_1 - _lh_safe_arg2_1)))::(_lh_listcomp_fun_5 _lh_listcomp_fun_ls_t_5)))
+              ((((_lh_safe_LH_P2_1_1 != _lh_safe_arg2_1) && ((_lh_safe_LH_P2_0_1 + _lh_safe_LH_P2_1_1) != (m_1 + _lh_safe_arg2_1))) && ((_lh_safe_LH_P2_0_1 - _lh_safe_LH_P2_1_1) != (m_1 - _lh_safe_arg2_1)))::(_lh_listcomp_fun_5 _lh_listcomp_fun_ls_t_5))
+            | _ -> 
+              (_lh_listcomp_fun_5 _lh_listcomp_fun_ls_t_5))
         | [] -> 
           [])) in
       (_lh_listcomp_fun_5 ((zip_d0 ((enumFromTo_d1 1) (m_1 - 1))) _lh_safe_arg1_1)))))
@@ -97,7 +103,9 @@ and append_d0_d0 _lh_append_arg1_0 _lh_append_arg2_0 =
     | [] -> 
       _lh_append_arg2_0
     | (_lh_append_LH_C_0_0 :: _lh_append_LH_C_1_0) -> 
-      (_lh_append_LH_C_0_0::((append_d0_d0 _lh_append_LH_C_1_0) _lh_append_arg2_0)))
+      (_lh_append_LH_C_0_0::((append_d0_d0 _lh_append_LH_C_1_0) _lh_append_arg2_0))
+    | _ -> 
+      (failwith "match error"))
 and enumFromTo_d0_d0 a_1 b_1 =
   (if (a_1 <= b_1) then
     (let rec _lh_listcomp_fun_ls_h_2 = a_1 in
@@ -172,16 +180,18 @@ and zip_d0_d0 xs_0 ys_0 =
   (xs_0 ys_0);;
 
 (* lumberhack_pop_out *)
-let rec and_d0_d0_d0 _lh_and_arg1_2 =
-  _lh_and_arg1_2
-and and_d0_d0_d1 _lh_and_arg1_1 =
+let rec and_d0_d0_d0 _lh_and_arg1_1 =
   _lh_and_arg1_1
+and and_d0_d0_d1 _lh_and_arg1_2 =
+  _lh_and_arg1_2
 and append_d0_d0_d0 _lh_append_arg1_1 _lh_append_arg2_1 =
   (match _lh_append_arg1_1 with
     | [] -> 
       _lh_append_arg2_1
     | (_lh_append_LH_C_0_1 :: _lh_append_LH_C_1_1) -> 
-      (_lh_append_LH_C_0_1::((append_d0_d0_d0 _lh_append_LH_C_1_1) _lh_append_arg2_1)))
+      (_lh_append_LH_C_0_1::((append_d0_d0_d0 _lh_append_LH_C_1_1) _lh_append_arg2_1))
+    | _ -> 
+      (failwith "match error"))
 and enumFromTo_d0_d0_d0 a_3 b_3 _lh_popOutId_0_0 _lh_popOutId_1_0 _lh_popOutId_2_0 _lh_popOutId_3_0 =
   (if (a_3 <= b_3) then
     (let rec _lh_listcomp_fun_ls_h_7 = a_3 in
@@ -213,16 +223,16 @@ and enumFromTo_d1_d0_d0 a_2 b_2 _lh_popOutId_0_2 _lh_popOutId_1_2 _lh_popOutId_2
             true)))
   else
     true)
-and length_d0_d0_d0 ls_3 =
-  (match ls_3 with
-    | (h_3 :: t_3) -> 
-      (1 + (length_d0_d0_d0 t_3))
-    | [] -> 
-      0)
-and length_d1_d0_d0 ls_2 =
+and length_d0_d0_d0 ls_2 =
   (match ls_2 with
     | (h_2 :: t_2) -> 
-      (1 + (length_d1_d0_d0 t_2))
+      (1 + (length_d0_d0_d0 t_2))
+    | [] -> 
+      0)
+and length_d1_d0_d0 ls_3 =
+  (match ls_3 with
+    | (h_3 :: t_3) -> 
+      (1 + (length_d1_d0_d0 t_3))
     | [] -> 
       0)
 and queens_d0_d0_d0 _lh_queens_arg1_1 =
@@ -241,15 +251,15 @@ and queens_d0_d0_d0 _lh_queens_arg1_1 =
         (_lh_listcomp_fun_1_5 (queens_d0_d0_d0 (_lh_queens_arg1_1 - 1)))))
 and safe_d0_d0_d0 _lh_safe_arg1_1 _lh_safe_arg2_9 =
   (let rec m_9 = ((length_d1_d0_d0 _lh_safe_arg1_1) + 1) in
-    (and_d0_d0_d0 (let rec _lh_listcomp_fun_1_7 = (fun _lh_listcomp_fun_para_5 -> 
-      (((_lh_listcomp_fun_para_5 _lh_safe_arg2_9) m_9) _lh_listcomp_fun_1_7)) in
-      (_lh_listcomp_fun_1_7 ((zip_d0_d0_d1 ((enumFromTo_d1_d0_d0 1) (m_9 - 1))) _lh_safe_arg1_1)))))
+    (and_d0_d0_d0 (let rec _lh_listcomp_fun_2_1 = (fun _lh_listcomp_fun_para_5 -> 
+      (((_lh_listcomp_fun_para_5 _lh_safe_arg2_9) m_9) _lh_listcomp_fun_2_1)) in
+      (_lh_listcomp_fun_2_1 ((zip_d0_d0_d1 ((enumFromTo_d1_d0_d0 1) (m_9 - 1))) _lh_safe_arg1_1)))))
 and testAnotherQueenNine_d0_d0_d0 _lh_testAnotherQueenNine_arg1_1 =
   (length_d0_d0_d0 (queens_d0_d0_d0 _lh_testAnotherQueenNine_arg1_1))
-and zip_d0_d0_d0 xs_1 ys_5 =
-  (xs_1 ys_5)
-and zip_d0_d0_d1 xs_2 ys_6 =
-  (xs_2 ys_6);;
+and zip_d0_d0_d0 xs_2 ys_4 =
+  (xs_2 ys_4)
+and zip_d0_d0_d1 xs_1 ys_3 =
+  (xs_1 ys_3);;
 
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_AnotherQueenNine" (fun () -> ignore ((testAnotherQueenNine_d0 9)));

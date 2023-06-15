@@ -707,66 +707,6 @@ fun zip(xs, yx) = if xs is
     }
     builtinPrgms
   }
-  // def fromOCamlToPrgm(rootNode: Node)(using prgmStr: Str, d: Deforest, output: Str => Unit): Program = {
-  //   val ocamlBuiltinPrgm = ocamlBuiltinFunsList
-  //   val (defs, main) = rootNode.getAllChilds
-  //     .filter(n => supportedTopLevelHaskellNodeType(n.getType()))
-  //     .partition(_.getType() == "function")
-
-  //   given initCtx: Expr.Ctx = {
-  //     val res = MutMap.empty[String, Ident]
-  //     defs.foreach { deff =>
-  //       val defNameNode = deff.getAllChilds.head
-  //       assert(defNameNode.getType() == "variable")
-  //       val defName = defNameNode.getSrcContent
-  //       res.getOrElseUpdate(defNameNode.getSrcContent, d.nextIdent(true, Var(defName)))
-  //     }
-  //     res
-  //   } ++ d.lumberhackKeywordsIds ++ haskellBuiltinPrgm.defAndExpr._1.map { case (funDef, _) =>
-  //     funDef.tree.name -> funDef
-  //   } |> (_.toMap)
-
-  //   val funcDefs = defs.groupBy(_.getChild(0).getSrcContent).map { case (name, defNodes) =>
-  //     val funName = initCtx(name)
-  //     val patsAndBodies = defNodes.map { n =>
-  //       val patsOrEqNode = n.getChild(1)
-  //       patsOrEqNode.getType() match {
-  //         case "patterns" => {
-  //           val pats = patsOrEqNode.getAllChilds.map(_.toPattern)
-  //           assert(n.getChild(2).getSrcContent == "=") // do not support guard equation for now
-  //           (pats.toList, nodeToExprableHs(n.getChild(3)), Map.empty[String, Ident])
-  //         }
-  //         case "=" => { // top level def without parameters
-  //           (Nil, nodeToExprableHs(n.getChild(2)), Map.empty[String, Ident])
-  //         }
-  //       }
-  //     }
-  //     val funArgNames = {
-  //       val numOfArgs = patsAndBodies.map(_._1.length).toSet
-  //       assert(numOfArgs.size == 1)
-  //       (1 to numOfArgs.head).map(idx => d.nextIdent(false, Var(s"_lh_${name}_arg$idx")))
-  //     }
-  //     val body = mergeMatchPatterns(
-  //       funArgNames.toList,
-  //       patsAndBodies.toList,
-  //       {
-  //         given Option[Ident] = Some(funName)
-  //         Expr.Call(Expr.Ref(initCtx("error")), Expr.Const(StrLit("match error")))
-  //       }
-  //     )(using initCtx, Some(funName))
-  //     val funDef = funArgNames.foldRight(body) { case (arg, acc) => Expr.Function(arg, acc)(using d, Some(funName)) }
-  //     Left(ProgDef(funName, funDef))
-  //   }
-
-  //   val content = main.flatMap { c => c.getType() match {
-  //     case "top_splice" =>
-  //       assert(c.getChildCount() == 1)
-  //       Some(Right(c.getChild(0).toExpr(using initCtx, None)))
-  //     case _ => lastWords("unsupported")
-  //   }}
-
-  //   Program(haskellBuiltinPrgm.contents ::: funcDefs.toList ::: content.toList)
-  // }
 }
 
 

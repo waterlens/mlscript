@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 ./SumMapNonTailRecNonPolyVar.ml -o "./SumMapNonTailRecNonPolyVar.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./SumMapNonTailRecNonPolyVar.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+ocamlfind ocamlopt -rectypes -thread -O3 ./SumMapBuiltInType.ml -o "./SumMapBuiltInType.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./SumMapBuiltInType.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;
@@ -26,29 +26,29 @@ and sum_d0 _lh_sum_arg1_1 =
       (_lh_sum_LH_C_0_1 + (sum_d0 _lh_sum_LH_C_1_1))
     | _ -> 
       (failwith "match error"))
-and testSumMapNonTailRecNonPolyVar_d0 _lh_testSumMapNonTailRecNonPolyVar_arg1_1 =
+and testSumMapBuiltInType_d0 _lh_testSumMapBuiltInType_arg1_1 =
   (sum_d0 ((map_d0 (fun x_1 -> 
-    (x_1 * x_1))) ((enumFromTo_d0 1) _lh_testSumMapNonTailRecNonPolyVar_arg1_1)));;
+    (x_1 * x_1))) ((enumFromTo_d0 1) _lh_testSumMapBuiltInType_arg1_1)));;
 
 (* lumberhack *)
 let rec enumFromTo_d0_d0 a_0 b_0 =
   (if (a_0 <= b_0) then
     (let rec h_0 = a_0 in
       (let rec t_0 = ((enumFromTo_d0_d0 (a_0 + 1)) b_0) in
-        (fun f_0 -> 
-          (let rec _lh_sum_LH_C_0_0 = (f_0 h_0) in
-            (let rec _lh_sum_LH_C_1_0 = ((map_d0_d0 f_0) t_0) in
+        (fun f_1 -> 
+          (let rec _lh_sum_LH_C_0_0 = (f_1 h_0) in
+            (let rec _lh_sum_LH_C_1_0 = ((map_d0_d0 f_1) t_0) in
               (_lh_sum_LH_C_0_0 + (sum_d0_d0 _lh_sum_LH_C_1_0)))))))
   else
-    (fun f_1 -> 
+    (fun f_2 -> 
       0))
-and map_d0_d0 f_2 ls_0 =
-  (ls_0 f_2)
+and map_d0_d0 f_0 ls_0 =
+  (ls_0 f_0)
 and sum_d0_d0 _lh_sum_arg1_0 =
   _lh_sum_arg1_0
-and testSumMapNonTailRecNonPolyVar_d0_d0 _lh_testSumMapNonTailRecNonPolyVar_arg1_0 =
+and testSumMapBuiltInType_d0_d0 _lh_testSumMapBuiltInType_arg1_0 =
   (sum_d0_d0 ((map_d0_d0 (fun x_0 -> 
-    (x_0 * x_0))) ((enumFromTo_d0_d0 1) _lh_testSumMapNonTailRecNonPolyVar_arg1_0)));;
+    (x_0 * x_0))) ((enumFromTo_d0_d0 1) _lh_testSumMapBuiltInType_arg1_0)));;
 
 (* lumberhack_pop_out *)
 let rec enumFromTo_d0_d0_d0 a_1 b_1 _lh_popOutId_0_0 =
@@ -62,18 +62,18 @@ let rec enumFromTo_d0_d0_d0 a_1 b_1 _lh_popOutId_0_0 =
     0)
 and map_d0_d0_d0 f_6 ls_2 =
   (ls_2 f_6)
-and map_d0_d0_d1 f_5 ls_1 =
-  (ls_1 f_5)
+and map_d0_d0_d1 f_3 ls_1 =
+  (ls_1 f_3)
 and sum_d0_d0_d0 _lh_sum_arg1_1 =
   _lh_sum_arg1_1
 and sum_d0_d0_d1 _lh_sum_arg1_2 =
   _lh_sum_arg1_2
-and testSumMapNonTailRecNonPolyVar_d0_d0_d0 _lh_testSumMapNonTailRecNonPolyVar_arg1_1 =
+and testSumMapBuiltInType_d0_d0_d0 _lh_testSumMapBuiltInType_arg1_1 =
   (sum_d0_d0_d1 ((map_d0_d0_d1 (fun x_1 -> 
-    (x_1 * x_1))) ((enumFromTo_d0_d0_d0 1) _lh_testSumMapNonTailRecNonPolyVar_arg1_1)));;
+    (x_1 * x_1))) ((enumFromTo_d0_d0_d0 1) _lh_testSumMapBuiltInType_arg1_1)));;
 
 Command_unix.run (Bench.make_command [
-  Bench.Test.create ~name:"original_SumMapNonTailRecNonPolyVar" (fun () -> ignore ((testSumMapNonTailRecNonPolyVar_d0 300000)));
-  Bench.Test.create ~name:"lumberhack_SumMapNonTailRecNonPolyVar" (fun () -> ignore ((testSumMapNonTailRecNonPolyVar_d0_d0 300000)));
-  Bench.Test.create ~name:"lumberhack_pop_out_SumMapNonTailRecNonPolyVar" (fun () -> ignore ((testSumMapNonTailRecNonPolyVar_d0_d0_d0 300000)));
+  Bench.Test.create ~name:"original_SumMapBuiltInType" (fun () -> ignore ((testSumMapBuiltInType_d0 300000)));
+  Bench.Test.create ~name:"lumberhack_SumMapBuiltInType" (fun () -> ignore ((testSumMapBuiltInType_d0_d0 300000)));
+  Bench.Test.create ~name:"lumberhack_pop_out_SumMapBuiltInType" (fun () -> ignore ((testSumMapBuiltInType_d0_d0_d0 300000)));
 ])

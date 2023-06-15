@@ -76,7 +76,7 @@ class DiffTestLumberhack extends DiffTests {
         output("\t\t---------- unoptimized haskell gen ----------")
       else if mode.lhGenOCaml then
         output("\t\t---------- unoptimized ocaml gen ----------")
-        output(OCamlGen(originalProgram).linesIterator.map("\t\t" + _).mkString("\n"))
+        output((new OCamlGen(true))(originalProgram).linesIterator.map("\t\t" + _).mkString("\n"))
         output("\t\t---------- unoptimized ocaml gen ----------")
 
       output("<<<<<<<<<< Original <<<<<<<<<<")
@@ -112,8 +112,9 @@ class DiffTestLumberhack extends DiffTests {
         output("<<<<<<<<<< Generated Haskell <<<<<<<<<<")
       if mode.lhGenOCaml then
         output("\n>>>>>>>>>> Generated OCaml >>>>>>>>>>")
+        val ocamlGen = new OCamlGen(true)
         try {
-          OCamlGen.makeBenchFiles(List(
+          ocamlGen.makeBenchFiles(List(
             ("original" -> originalProgram),
             ("lumberhack" -> iterativeProcessRes._1),
             ("lumberhack_pop_out" -> iterativeProcessRes._1.popOutLambdas._1),
@@ -121,7 +122,7 @@ class DiffTestLumberhack extends DiffTests {
           output("benchmark file generated")
         } catch { case e =>
           output(s"cannot generate benchmark files: ${e.getMessage()}\n")
-          output(OCamlGen(iterativeProcessRes._1))
+          output(ocamlGen(iterativeProcessRes._1))
         }
         output("<<<<<<<<<< Generated OCaml <<<<<<<<<<")
 

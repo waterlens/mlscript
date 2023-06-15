@@ -796,7 +796,7 @@ object HaskellGen extends CodeGen {
     
     val allCtors = d.ctorExprToType.values
     val allDtors = d.dtorExprToType.values
-    val ctorFileds = {
+    val ctorFields = {
       val res = MutMap.empty[String, List[Set[Either[ProdStrat, Strat[ConsStratEnum.ConsVar]]]]]
       allCtors.foreach { case ProdStratEnum.MkCtor(ctor, args) => 
         res.updateWith(ctor.name) {
@@ -828,7 +828,7 @@ object HaskellGen extends CodeGen {
       }}}.map { case (ctorName, fields) => s"$ctorName${fields.map(f => s" $f").mkString}" }.mkString(" | ")
       finalRes
     }
-    ctorFileds
+    ctorFields
 
   }
 
@@ -1023,12 +1023,51 @@ object HaskellGen extends CodeGen {
 
 }
 
-object OCamlGen extends CodeGen {
+class OCamlGen(val usePolymorphicVariant: Bool) extends CodeGen {
   override val primitives = Map(
     "add" -> "(+)", "sub" -> "(-)", "%" -> "mod", "==" -> "=", "error" -> "failwith", "/=" -> "!="
   )
   def transformPrimitive(p: String): String = primitives.getOrElse(p, p)
-  override def generateTypeInfo(d: Deforest): String = ???
+
+  override def generateTypeInfo(d: Deforest): String = {
+    // the type of every field is generic as this seems does not affect the run time and allocation
+    // evaluation result in ocaml
+    val allCtors = d.ctorExprToType.values
+    val allDtors = d.dtorExprToType.values
+    var tvarCount = -1
+    val ctorFields = {
+      val res = MutMap.empty[String, List[String]]
+      allCtors.collect { case ProdStratEnum.MkCtor(ctor, args)
+        if !(Set("True", "False", "Int", "_")(ctor.name) || ctor.name.startsWith("LH_")) => 
+        val fields = res.getOrElseUpdate(
+          ctor.name,
+          args.map { _ =>
+            tvarCount += 1
+            s"'t$tvarCount"
+          }
+        )
+        assert(fields.length == args.length)
+      }
+      allDtors.collect { case ConsStratEnum.Destruct(dtors) => dtors.collect {
+        case Destructor(ctor, args) if !(Set("True", "False", "Int", "_")(ctor.name) || ctor.name.startsWith("LH_")) =>
+          val fields = res.getOrElseUpdate(
+            ctor.name,
+            args.map { _ =>
+              tvarCount += 1
+              s"'t$tvarCount"
+            }
+          )
+          assert(fields.length == args.length)
+      }}
+      res.toMap
+    }
+    val vars = (0 to tvarCount).map(i => s"'t$i").mkString(", ")
+    val bigADTFullName = (if vars.nonEmpty then s"($vars) " else "") + "lh_bigadt"
+    val finalRes = "\ntype " + bigADTFullName + " = " + ctorFields.map { case (ctorName, fields) =>
+      s"$ctorName ${if fields.isEmpty then "" else ("of " + fields.mkString(" * "))}"
+    }.mkString(" | ")
+    if ctorFields.nonEmpty then (finalRes + ";;") else ""
+  }
   override def transFromProgDef(pd: ProgDef): Document = {
     // need to add `let rec` and `;;` in the front and the end, the whole thing
     // as a big group of mutually recursive let bindings
@@ -1060,7 +1099,7 @@ object OCamlGen extends CodeGen {
       case None -> (idPat :: Nil) if dtor.name == "_" => transfromId(idPat) <:> " -> "
       case None -> Nil if dtor.name == "_" => "_ -> "
       case None -> Nil if dtor.name.matches("\\d+|\".*\"") => s"${dtor.name} -> "
-      case _ => s"`${dtor.name}" <:> {
+      case _ => (if this.usePolymorphicVariant then "`" else "") <:> s"${dtor.name}" <:> {
         if params.nonEmpty then
           "(" <:> Lined(params.map(arg => transfromId(arg)), ", ") <:> ")"
         else
@@ -1090,7 +1129,7 @@ object OCamlGen extends CodeGen {
           assert(n == args.length)
           "(" <:> Lined(args.map(rec(_)).toList, ", ") <:> ")"
       }).getOrElse(
-        "(`" <:> name.name <:> {
+        (if this.usePolymorphicVariant then "(`" else "(") <:> name.name <:> {
           if args.nonEmpty then
             "(" <:> Lined(args.map(arg => rec(arg)), ", ") <:> ")"
           else
@@ -1154,12 +1193,12 @@ object OCamlGen extends CodeGen {
       )
     }).emptyOrElse(programs.hashCode().toString())
 
-    val originalDefsString = "\n(* original *)\n" + OCamlGen(Program(
+    val originalDefsString = "\n(* original *)\n" + apply(Program(
       programs.head._2.contents.filter(_.isLeft)
     )(using programs.head._2.d))
 
     val restMergedDefsString = programs.tail.map { case (name, prgm) =>
-      s"\n\n(* $name *)\n" + OCamlGen(Program(
+      s"\n\n(* $name *)\n" + apply(Program(
         prgm.contents.filter {
           case Left(ProgDef(id, _)) =>
             !(id.tree.name.startsWith("_lhManual") || id.tree.name.startsWith("testManual"))
@@ -1179,12 +1218,12 @@ object OCamlGen extends CodeGen {
     val mergedDefsGen = originalDefsString + restMergedDefsString
 
     val benchRunGen = (programs.head._2.defAndExpr._2 match {
-      case e :: Nil => (s"original_${benchName}" -> OCamlGen.rec(e)) :: Nil
-      case e :: m :: Nil => (s"original_${benchName}" -> OCamlGen.rec(e))
-        :: (s"manual_${benchName}" -> OCamlGen.rec(m)) :: Nil
+      case e :: Nil => (s"original_${benchName}" -> this.rec(e)) :: Nil
+      case e :: m :: Nil => (s"original_${benchName}" -> this.rec(e))
+        :: (s"manual_${benchName}" -> this.rec(m)) :: Nil
       case _ => lastWords("unreachable")
     }).appendedAll(programs.tail.map { case (name, prgm) =>
-      s"${name}_${benchName}" -> OCamlGen.rec(prgm.defAndExpr._2.head)
+      s"${name}_${benchName}" -> this.rec(prgm.defAndExpr._2.head)
     })
     // val benchRunGen = (original.defAndExpr._2 ::: optimized.defAndExpr._2) match {
     //   case e :: o :: Nil =>
@@ -1221,11 +1260,11 @@ object OCamlGen extends CodeGen {
         + s" -linkpkg -package \"core_unix.command_unix\" -linkpkg -package \"core_bench\" "
         + s"&& ./$benchName.out "
         + "&& rm ./*.cmx ./*.out ./*.cmi ./*.o"
-    val hsFileContent = stack(
-      Raw(s"(*\n$compileAndRunCommand\n*)"),
-      headers,
-      Raw(mergedDefsGen),
-      mainGen
+    val hsFileContent = Stacked(
+      Raw(s"(*\n$compileAndRunCommand\n*)") :: headers :: Nil
+        ::: (if this.usePolymorphicVariant then Nil else (Raw(generateTypeInfo(programs.head._2.d)) :: Nil))
+        ::: (Raw(mergedDefsGen) :: mainGen :: Nil),
+      false
     ).print
     
 

@@ -7,6 +7,7 @@ ocamlfind ocamlopt -rectypes -thread -O3 ./MapQrevPolyVar-with-type-decl.ml -o "
 open Core_bench;;
 
 type l = N | C of int * l;;
+(* type ('a, 'b) l = N | C of 'a * 'b;; *)
 
 (* original *)
 let rec _lhManualMapQrev f_1 xs_1 a_2 =

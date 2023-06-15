@@ -6,7 +6,8 @@ ocamlfind ocamlopt -rectypes -thread -O3 ./FlipFlip-with-type-decl.ml -o "./Flip
 #require "core_bench";; *)
 open Core_bench;;
 
-type t = N of int | T of t * t;;
+(* type t = N of int | T of t * t;; *)
+type ('a, 'b, 'c) t = N of 'a | T of 'b * 'c;;
 
 (* original *)
 let rec ff t_1 =

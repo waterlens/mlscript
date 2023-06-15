@@ -2,6 +2,7 @@
 #require "core_unix.command_unix";;
 #require "core_bench";; *)
 open Core_bench;;
+open Benchmark;;
 
 let rec enumFromTo_d0_d0 a_0 b_0 =
   (if (a_0 <= b_0) then
@@ -88,10 +89,14 @@ and safe_d0 _lh_safe_arg1_1 _lh_safe_arg2_1 _lh_safe_arg3_1 =
     | _ -> 
       (failwith "match error"));;
 
+let _lh_bench_res = latencyN ~repeat:3 10L [
+  ("lumberhack_", nsoln_d0_d0, 11);
+  ("original_", nsoln_d0, 11);
+] in tabulate _lh_bench_res;;
 
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"lumberhack" (fun () ->
-    ignore (nsoln_d0_d0 12));
+    ignore (nsoln_d0_d0 11));
   Bench.Test.create ~name:"original" (fun () ->
-    ignore (nsoln_d0 12));
+    ignore (nsoln_d0 11));
 ])

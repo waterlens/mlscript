@@ -73,7 +73,7 @@ and testSumMapNonTailRecNonPolyVar_d0_d0_d0 _lh_testSumMapNonTailRecNonPolyVar_a
     (x_1 * x_1))) ((enumFromTo_d0_d0_d0 1) _lh_testSumMapNonTailRecNonPolyVar_arg1_1)));;
 
 Command_unix.run (Bench.make_command [
-  Bench.Test.create ~name:"original_SumMapNonTailRecNonPolyVar" (fun () -> ignore ((testSumMapNonTailRecNonPolyVar_d0 500000)));
-  Bench.Test.create ~name:"lumberhack_SumMapNonTailRecNonPolyVar" (fun () -> ignore ((testSumMapNonTailRecNonPolyVar_d0_d0 500000)));
-  Bench.Test.create ~name:"lumberhack_pop_out_SumMapNonTailRecNonPolyVar" (fun () -> ignore ((testSumMapNonTailRecNonPolyVar_d0_d0_d0 500000)));
+  Bench.Test.create ~name:"original_SumMapNonTailRecNonPolyVar" (fun () -> ignore ((testSumMapNonTailRecNonPolyVar_d0 300000)));
+  Bench.Test.create ~name:"lumberhack_SumMapNonTailRecNonPolyVar" (fun () -> ignore ((testSumMapNonTailRecNonPolyVar_d0_d0 300000)));
+  Bench.Test.create ~name:"lumberhack_pop_out_SumMapNonTailRecNonPolyVar" (fun () -> ignore ((testSumMapNonTailRecNonPolyVar_d0_d0_d0 300000)));
 ])

@@ -6,7 +6,6 @@ ocamlfind ocamlopt -rectypes -thread -O3 ./QueenUsingFlatMap.ml -o "./QueenUsing
 #require "core_bench";; *)
 open Core_bench;;
 
-
 (* original *)
 let rec append_d0 _lh_append_arg1_1 _lh_append_arg2_1 =
   (match _lh_append_arg1_1 with

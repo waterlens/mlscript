@@ -6,25 +6,23 @@ ocamlfind ocamlopt -rectypes -thread -O3 ./SumMap.ml -o "./SumMap.out" -linkpkg 
 #require "core_bench";; *)
 open Core_bench;;
 
-type ('t0, 't1) lh_bigadt = C of 't0 * 't1 | N ;;
-
 (* original *)
 let rec enumFromTo a_0 b_0 =
   (if (a_0 <= b_0) then
-    (C(a_0, ((enumFromTo (a_0 + 1)) b_0)))
+    (`C(a_0, ((enumFromTo (a_0 + 1)) b_0)))
   else
-    (N))
+    (`N))
 and map f_0 ls_0 =
   (match ls_0 with
-    | C(h_0, t_0) -> 
-      (C((f_0 h_0), ((map f_0) t_0)))
-    | N -> 
-      (N))
+    | `C(h_0, t_0) -> 
+      (`C((f_0 h_0), ((map f_0) t_0)))
+    | `N -> 
+      (`N))
 and sum ls_1 =
   (match ls_1 with
-    | C(h_1, t_1) -> 
+    | `C(h_1, t_1) -> 
       (h_1 + (sum t_1))
-    | N -> 
+    | `N -> 
       0)
 and testSumMap n_0 =
   (sum ((map (fun x_0 -> 

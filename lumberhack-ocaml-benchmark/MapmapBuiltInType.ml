@@ -6,7 +6,6 @@ ocamlfind ocamlopt -rectypes -thread -O3 ./MapmapBuiltInType.ml -o "./MapmapBuil
 #require "core_bench";; *)
 open Core_bench;;
 
-
 (* original *)
 let rec enumFromTo_d0 a_2 b_2 =
   (if (a_2 <= b_2) then

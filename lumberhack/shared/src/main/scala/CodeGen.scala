@@ -1106,8 +1106,6 @@ class OCamlGen(val usePolymorphicVariant: Bool) extends CodeGen {
 
 
   override val headers = stack(
-    // Raw("(* #use \"topfind\";;\n#require \"benchmark\";; *)"),
-    // Raw("open Benchmark;;"),
     Raw("(* #use \"topfind\";;\n#require \"core_unix.command_unix\";;\n#require \"core_bench\";; *)"),
     Raw("open Core_bench;;"),
   )
@@ -1147,14 +1145,6 @@ class OCamlGen(val usePolymorphicVariant: Bool) extends CodeGen {
       )(using prgm.d))
     }.mkString + "\n"
 
-    // val optimizedDefs = Program(
-    //   optimized.contents.filter {
-    //     case Left(ProgDef(id, _)) =>
-    //       !(id.tree.name.startsWith("_lhManual") || id.tree.name.startsWith("testManual"))
-    //     case _ => false
-    //   }
-    // )(using original.d)
-    // val mergedDefsGen = "\n(* original *)\n" + OCamlGen(originalDefs) + "\n\n(* optimized *)\n" + OCamlGen(optimizedDefs) + "\n"
     val mergedDefsGen = originalDefsString + restMergedDefsString
 
     val benchRunGen = (programs.head._2.defAndExpr._2 match {
@@ -1165,25 +1155,7 @@ class OCamlGen(val usePolymorphicVariant: Bool) extends CodeGen {
     }).appendedAll(programs.tail.map { case (name, prgm) =>
       s"${name}_${benchName}" -> this.rec(prgm.defAndExpr._2.head)
     })
-    // val benchRunGen = (original.defAndExpr._2 ::: optimized.defAndExpr._2) match {
-    //   case e :: o :: Nil =>
-    //     (s"original_${benchName}" -> OCamlGen.rec(e)) :: (s"lumberhack_${benchName}" -> OCamlGen.rec(o)) :: Nil
-    //   case e :: m :: o :: _ :: Nil =>
-    //     (s"original_${benchName}" -> OCamlGen.rec(e))
-    //       :: (s"manual_${benchName}" -> OCamlGen.rec(m))
-    //       :: (s"lumberhack_${benchName}" -> OCamlGen.rec(o))
-    //       :: Nil
-    //   case _ => lastWords("invalid format to generate benchmark files")
-    // }
     val mainGen = stack(
-      // Raw("let _lh_bench_res = latencyN ~repeat:10 10L ["),
-      // Indented(Stacked(
-      //   benchRunGen.map { case (name, doc) =>
-      //     Raw(s"\"$name\", ${doc.print.drop(1).dropRight(1).replaceFirst(" ", ", ")}")
-      //   },
-      //   false
-      // )),
-      // Raw("] in tabulate _lh_bench_res;;"),
       Raw("Command_unix.run (Bench.make_command ["),
       Indented(Stacked(
         benchRunGen.map { case (name, doc) =>
@@ -1194,8 +1166,6 @@ class OCamlGen(val usePolymorphicVariant: Bool) extends CodeGen {
       Raw("])")
     )
     val compileAndRunCommand =
-      // s"ocamlfind ocamlopt -rectypes -O3 ./$benchName.ml -o $benchName.out"
-      //   + s" -linkpkg -package \"benchmark\" && ./$benchName.out"
       s"ocamlfind ocamlopt -rectypes -thread -O3 ./$benchName.ml -o \"./$benchName.out\""
         + s" -linkpkg -package \"core_unix.command_unix\" -linkpkg -package \"core_bench\" "
         + s"&& ./$benchName.out "

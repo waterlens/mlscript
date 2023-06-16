@@ -112,7 +112,7 @@ class DiffTestLumberhack extends DiffTests {
         output("<<<<<<<<<< Generated Haskell <<<<<<<<<<")
       if mode.lhGenOCaml then
         output("\n>>>>>>>>>> Generated OCaml >>>>>>>>>>")
-        val ocamlGen = new OCamlGen(false)
+        val ocamlGen = new OCamlGen(true)
         try {
           ocamlGen.makeBenchFiles(List(
             ("original" -> originalProgram),

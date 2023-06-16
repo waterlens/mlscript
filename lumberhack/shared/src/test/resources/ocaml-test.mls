@@ -844,6 +844,163 @@ testManual(primId(enumFromTo(1, 500000)))
 
 :lhGenOCaml
 fun enumFromTo(a, b) = if a <= b then C(a, enumFromTo(a + 1, b)) else N
+fun filter(ls, f) = if ls is
+  C(h, t) then if f(h) then C(h, filter(t, f)) else filter(t, f)
+  N then N
+fun lastDrive(ls) = if ls is
+  C(h, t) then Some(last(h, t))
+  N then None
+fun last(a, ls) = if ls is
+  N then a
+  C(h, t) then last(h, t)
+fun testLastFilterEnum(n) = lastDrive(filter(enumFromTo(1, n), x => x < 1000))
+testLastFilterEnum(primId(500000))
+//│ |#fun| |enumFromTo|(|a|,| |b|)| |#=| |#if| |a| |<=| |b| |#then| |C|(|a|,| |enumFromTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |filter|(|ls|,| |f|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |f|(|h|)| |#then| |C|(|h|,| |filter|(|t|,| |f|)|)| |#else| |filter|(|t|,| |f|)|↵|N| |#then| |N|←|↵|#fun| |lastDrive|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |Some|(|last|(|h|,| |t|)|)|↵|N| |#then| |None|←|↵|#fun| |last|(|a|,| |ls|)| |#=| |#if| |ls| |is|→|N| |#then| |a|↵|C|(|h|,| |t|)| |#then| |last|(|h|,| |t|)|←|↵|#fun| |testLastFilterEnum|(|n|)| |#=| |lastDrive|(|filter|(|enumFromTo|(|1|,| |n|)|,| |x| |=>| |x| |<| |1000|)|)|↵|testLastFilterEnum|(|primId|(|500000|)|)|
+//│ Parsed: {fun enumFromTo = a, b, => if (<= (a,) (b,)) then C (a, enumFromTo (+ (a,) (1,), b,),) else N; fun filter = ls, f, => if ls is ‹(C (h, t,)) then if (f (h,)) then C (h, filter (t, f,),) else filter (t, f,); (N) then N›; fun lastDrive = ls, => if ls is ‹(C (h, t,)) then Some (last (h, t,),); (N) then None›; fun last = a, ls, => if ls is ‹(N) then a; (C (h, t,)) then last (h, t,)›; fun testLastFilterEnum = n, => lastDrive (filter (enumFromTo (1, n,), x, => < (x,) (1000,),),); testLastFilterEnum (primId (500000,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testLastFilterEnum^79(primId⁰(500000))
+//│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ enumFromTo^7((a⁰ + 1), b⁰)] else [N]
+//│ def filter(ls⁰, f⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => if f⁰(h⁰) then [C h⁰ filter^26(t⁰, f⁰)] else filter^32(t⁰, f⁰)
+//│ 	| N  => [N]}
+//│ def last(a¹, ls²) = case ls² of {
+//│ 	N  => a¹
+//│ 	| C h² t² => last^54(h², t²)}
+//│ def lastDrive(ls¹) = case ls¹ of {
+//│ 	C h¹ t¹ => [Some last^43(h¹, t¹)]
+//│ 	| N  => [None]}
+//│ def testLastFilterEnum(n⁰) = lastDrive^62(filter^63(enumFromTo^64(1, n⁰), (fun x⁰ -> (x⁰ < 1000))))
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec enumFromTo a_0 b_0 =
+//│ 		  (if (a_0 <= b_0) then
+//│ 		    (`C(a_0, ((enumFromTo (a_0 + 1)) b_0)))
+//│ 		  else
+//│ 		    (`N))
+//│ 		and filter ls_0 f_0 =
+//│ 		  (match ls_0 with
+//│ 		    | `C(h_0, t_0) -> 
+//│ 		      (if (f_0 h_0) then
+//│ 		        (`C(h_0, ((filter t_0) f_0)))
+//│ 		      else
+//│ 		        ((filter t_0) f_0))
+//│ 		    | `N -> 
+//│ 		      (`N))
+//│ 		and last a_1 ls_2 =
+//│ 		  (match ls_2 with
+//│ 		    | `N -> 
+//│ 		      a_1
+//│ 		    | `C(h_2, t_2) -> 
+//│ 		      ((last h_2) t_2))
+//│ 		and lastDrive ls_1 =
+//│ 		  (match ls_1 with
+//│ 		    | `C(h_1, t_1) -> 
+//│ 		      (`Some(((last h_1) t_1)))
+//│ 		    | `N -> 
+//│ 		      (`None))
+//│ 		and testLastFilterEnum n_0 =
+//│ 		  (lastDrive ((filter ((enumFromTo 1) n_0)) (fun x_0 -> 
+//│ 		    (x_0 < 1000))));;
+//│ 		(testLastFilterEnum 500000)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testLastFilterEnum^79] (hopeless to continue)
+//│ 	[testLastFilterEnum^79 · enumFromTo^64] (using original def)
+//│ 		[testLastFilterEnum^79 · enumFromTo^64 · enumFromTo^7] ---> [testLastFilterEnum^79 · enumFromTo^64] (using original def)
+//│ 	[testLastFilterEnum^79 · filter^63] (using original def)
+//│ 		[testLastFilterEnum^79 · filter^63 · filter^26] ---> [testLastFilterEnum^79 · filter^63] (using original def)
+//│ 		[testLastFilterEnum^79 · filter^63 · filter^32] ---> [testLastFilterEnum^79 · filter^63] (using original def)
+//│ 	[testLastFilterEnum^79 · lastDrive^62] (using original def)
+//│ 		[testLastFilterEnum^79 · lastDrive^62 · last^43] (using original def)
+//│ 			[testLastFilterEnum^79 · lastDrive^62 · last^43 · last^54] ---> [testLastFilterEnum^79 · lastDrive^62 · last^43] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testLastFilterEnum₀(primId⁰(500000))
+//│ def testLastFilterEnum₀(n¹) = 
+//│ 	lastDrive₀(filter₀(enumFromTo₀(1, n¹), (fun x¹ -> (x¹ < 1000))))
+//│ 	where
+//│ 	def enumFromTo₀(a², b¹) = 
+//│ 		if (a² <= b¹) then [C a² enumFromTo₀((a² + 1), b¹)] else [N]
+//│ 	def filter₀(ls⁴, f¹) = 
+//│ 		case ls⁴ of {
+//│ 			C h⁴ t⁴ => if f¹(h⁴) then [C h⁴ filter₀(t⁴, f¹)] else filter₀(t⁴, f¹)
+//│ 			| N  => [N]}
+//│ 	def lastDrive₀(ls³) = 
+//│ 		case ls³ of {
+//│ 			C h³ t³ => [Some last₀(h³, t³)]
+//│ 			| N  => [None]}
+//│ 		where
+//│ 		def last₀(a³, ls⁵) = 
+//│ 			case ls⁵ of {
+//│ 				N  => a³
+//│ 				| C h⁵ t⁵ => last₀(h⁵, t⁵)}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C a² enumFromTo₀((a² + 1), b¹)]: 99 --->
+//│ 	case ls⁴ of {C h⁴ t⁴ => if f¹(h⁴) then [C h⁴ filter₀(t⁴, f¹)] else filter₀(t⁴, f¹) | N  => [N]}: 132
+//│ [N]: 100 --->
+//│ 	case ls⁴ of {C h⁴ t⁴ => if f¹(h⁴) then [C h⁴ filter₀(t⁴, f¹)] else filter₀(t⁴, f¹) | N  => [N]}: 132
+//│ [C h⁴ filter₀(t⁴, f¹)]: 124 --->
+//│ 	case ls³ of {C h³ t³ => [Some last₀(h³, t³)] | N  => [None]}: 112
+//│ 	case ls⁵ of {N  => a³ | C h⁵ t⁵ => last₀(h⁵, t⁵)}: 159
+//│ [N]: 131 --->
+//│ 	case ls³ of {C h³ t³ => [Some last₀(h³, t³)] | N  => [None]}: 112
+//│ 	case ls⁵ of {N  => a³ | C h⁵ t⁵ => last₀(h⁵, t⁵)}: 159
+//│ ------------------
+//│ case ls³ of {C h³ t³ => [Some last₀(h³, t³)] | N  => [None]}: 112 --->
+//│ 	[C h⁴ filter₀(t⁴, f¹)]: 124
+//│ 	[N]: 131
+//│ case ls⁴ of {C h⁴ t⁴ => if f¹(h⁴) then [C h⁴ filter₀(t⁴, f¹)] else filter₀(t⁴, f¹) | N  => [N]}: 132 --->
+//│ 	[C a² enumFromTo₀((a² + 1), b¹)]: 99
+//│ 	[N]: 100
+//│ case ls⁵ of {N  => a³ | C h⁵ t⁵ => last₀(h⁵, t⁵)}: 159 --->
+//│ 	[C h⁴ filter₀(t⁴, f¹)]: 124
+//│ 	[N]: 131
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C a² enumFromTo₀((a² + 1), b¹)]: 99 --->
+//│ 	case ls⁴ of {C h⁴ t⁴ => if f¹(h⁴) then [C h⁴ filter₀(t⁴, f¹)] else filter₀(t⁴, f¹) | N  => [N]}: 132
+//│ [N]: 100 --->
+//│ 	case ls⁴ of {C h⁴ t⁴ => if f¹(h⁴) then [C h⁴ filter₀(t⁴, f¹)] else filter₀(t⁴, f¹) | N  => [N]}: 132
+//│ ------------------
+//│ case ls⁴ of {C h⁴ t⁴ => if f¹(h⁴) then [C h⁴ filter₀(t⁴, f¹)] else filter₀(t⁴, f¹) | N  => [N]}: 132 --->
+//│ 	[C a² enumFromTo₀((a² + 1), b¹)]: 99
+//│ 	[N]: 100
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testLastFilterEnum₀(primId⁰(500000))
+//│ def testLastFilterEnum₀(n²) = 
+//│ 	lastDrive₀(filter₀(enumFromTo₀(1, n²), (fun x² -> (x² < 1000))))
+//│ 	where
+//│ 	def enumFromTo₀(a⁴, b²) = 
+//│ 		if (a⁴ <= b²) then 
+//│ 			let h⁶ = a⁴
+//│ 			in let t⁶ = enumFromTo₀((a⁴ + 1), b²)
+//│ 			in (fun f² -> if f²(h⁶) then [C h⁶ filter₀(t⁶, f²)] else filter₀(t⁶, f²)) else (fun f³ -> [N])
+//│ 	def filter₀(ls⁸, f⁴) = 
+//│ 		ls⁸(f⁴)
+//│ 	def lastDrive₀(ls⁶) = 
+//│ 		case ls⁶ of {
+//│ 			C h³ t³ => [Some last₀(h³, t³)]
+//│ 			| N  => [None]}
+//│ 		where
+//│ 		def last₀(a⁵, ls⁷) = 
+//│ 			case ls⁷ of {
+//│ 				N  => a⁵
+//│ 				| C h⁵ t⁵ => last₀(h⁵, t⁵)}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
+:lhGenOCaml
+fun enumFromTo(a, b) = if a <= b then C(a, enumFromTo(a + 1, b)) else N
 fun map(f, ls) = if ls is
   C(h, t) then C(f(h), map(f, t))
   N then N
@@ -1119,6 +1276,340 @@ testMapmapLet(primId(enumFromTo(1, 100000)))
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
+
+:lhGenOCaml
+:lhInHaskell
+safe x d []    = True
+safe x d (q:l) = (x /= q) && (x /= (q+d)) && (x /= (q-d)) && (safe x (d+1) l)
+gen 0 nq = [[]]
+gen n nq = flatMap (\b ->
+              flatMap (\q -> if (safe q 1 b) then [q:b] else []) [1..nq]
+            ) (gen (n-1) nq)
+flatMap f [] = []
+flatMap f (h:t) = append (f h) (flatMap f t)
+append [] ys = ys
+append (h:t) ys = h:(append t ys)
+nsoln nq = length (gen nq nq)
+testQueenUsingFlatMap n = nsoln n
+testQueenUsingFlatMap $ primId 11
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testQueenUsingFlatMap₀^507(primId⁰(11))
+//│ def append₀(_lh_append_arg1¹, _lh_append_arg2¹) = case _lh_append_arg1¹ of {
+//│ 	LH_N  => _lh_append_arg2¹
+//│ 	| LH_C _lh_append_LH_C_0¹ _lh_append_LH_C_1¹ => [LH_C _lh_append_LH_C_0¹ append₀^304(_lh_append_LH_C_1¹, _lh_append_arg2¹)]
+//│ 	| _  => error⁰("match error")}
+//│ def append₁(_lh_append_arg1², _lh_append_arg2²) = case _lh_append_arg1² of {
+//│ 	LH_N  => _lh_append_arg2²
+//│ 	| LH_C _lh_append_LH_C_0² _lh_append_LH_C_1² => [LH_C _lh_append_LH_C_0² append₁^495(_lh_append_LH_C_1², _lh_append_arg2²)]
+//│ 	| _  => error⁰("match error")}
+//│ def enumFromTo₀(a², b⁴) = if (a² <= b⁴) then [LH_C a² enumFromTo₀^455((a² + 1), b⁴)] else [LH_N]
+//│ def flatMap₀(_lh_flatMap_arg1², _lh_flatMap_arg2²) = case _lh_flatMap_arg2² of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_flatMap_LH_C_0² _lh_flatMap_LH_C_1² => append₀^475(_lh_flatMap_arg1²(_lh_flatMap_LH_C_0²), flatMap₀^480(_lh_flatMap_arg1², _lh_flatMap_LH_C_1²))
+//│ 	| _  => error⁰("match error")}
+//│ def flatMap₁(_lh_flatMap_arg1¹, _lh_flatMap_arg2¹) = case _lh_flatMap_arg2¹ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_flatMap_LH_C_0¹ _lh_flatMap_LH_C_1¹ => append₁^389(_lh_flatMap_arg1¹(_lh_flatMap_LH_C_0¹), flatMap₁^394(_lh_flatMap_arg1¹, _lh_flatMap_LH_C_1¹))
+//│ 	| _  => error⁰("match error")}
+//│ def gen₀(_lh_gen_arg1¹, _lh_gen_arg2¹) = case _lh_gen_arg1¹ of {
+//│ 	0  => [LH_C [LH_N] [LH_N]]
+//│ 	| _  => flatMap₀^410((fun b³ -> flatMap₁^411((fun q¹ -> if safe₀^412(q¹, 1, b³) then [LH_C [LH_C q¹ b³] [LH_N]] else [LH_N]), enumFromTo₀^428(1, _lh_gen_arg2¹))), gen₀^436((_lh_gen_arg1¹ - 1), _lh_gen_arg2¹))}
+//│ def length₀(ls⁷) = case ls⁷ of {
+//│ 	LH_C h⁷ t⁸ => (1 + length₀^380(t⁸))
+//│ 	| LH_N  => 0}
+//│ def nsoln₀(_lh_nsoln_arg1¹) = length₀^316(gen₀^317(_lh_nsoln_arg1¹, _lh_nsoln_arg1¹))
+//│ def safe₀(_lh_safe_arg1¹, _lh_safe_arg2¹, _lh_safe_arg3¹) = case _lh_safe_arg3¹ of {
+//│ 	LH_N  => [True]
+//│ 	| LH_C _lh_safe_LH_C_0¹ _lh_safe_LH_C_1¹ => ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0¹) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ - _lh_safe_arg2¹))) && safe₀^357(_lh_safe_arg1¹, (_lh_safe_arg2¹ + 1), _lh_safe_LH_C_1¹))
+//│ 	| _  => error⁰("match error")}
+//│ def testQueenUsingFlatMap₀(_lh_testQueenUsingFlatMap_arg1¹) = nsoln₀^469(_lh_testQueenUsingFlatMap_arg1¹)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec append_d0 _lh_append_arg1_1 _lh_append_arg2_1 =
+//│ 		  (match _lh_append_arg1_1 with
+//│ 		    | [] -> 
+//│ 		      _lh_append_arg2_1
+//│ 		    | (_lh_append_LH_C_0_1 :: _lh_append_LH_C_1_1) -> 
+//│ 		      (_lh_append_LH_C_0_1::((append_d0 _lh_append_LH_C_1_1) _lh_append_arg2_1))
+//│ 		    | _ -> 
+//│ 		      (failwith "match error"))
+//│ 		and append_d1 _lh_append_arg1_2 _lh_append_arg2_2 =
+//│ 		  (match _lh_append_arg1_2 with
+//│ 		    | [] -> 
+//│ 		      _lh_append_arg2_2
+//│ 		    | (_lh_append_LH_C_0_2 :: _lh_append_LH_C_1_2) -> 
+//│ 		      (_lh_append_LH_C_0_2::((append_d1 _lh_append_LH_C_1_2) _lh_append_arg2_2))
+//│ 		    | _ -> 
+//│ 		      (failwith "match error"))
+//│ 		and enumFromTo_d0 a_2 b_4 =
+//│ 		  (if (a_2 <= b_4) then
+//│ 		    (a_2::((enumFromTo_d0 (a_2 + 1)) b_4))
+//│ 		  else
+//│ 		    [])
+//│ 		and flatMap_d0 _lh_flatMap_arg1_2 _lh_flatMap_arg2_2 =
+//│ 		  (match _lh_flatMap_arg2_2 with
+//│ 		    | [] -> 
+//│ 		      []
+//│ 		    | (_lh_flatMap_LH_C_0_2 :: _lh_flatMap_LH_C_1_2) -> 
+//│ 		      ((append_d0 (_lh_flatMap_arg1_2 _lh_flatMap_LH_C_0_2)) ((flatMap_d0 _lh_flatMap_arg1_2) _lh_flatMap_LH_C_1_2))
+//│ 		    | _ -> 
+//│ 		      (failwith "match error"))
+//│ 		and flatMap_d1 _lh_flatMap_arg1_1 _lh_flatMap_arg2_1 =
+//│ 		  (match _lh_flatMap_arg2_1 with
+//│ 		    | [] -> 
+//│ 		      []
+//│ 		    | (_lh_flatMap_LH_C_0_1 :: _lh_flatMap_LH_C_1_1) -> 
+//│ 		      ((append_d1 (_lh_flatMap_arg1_1 _lh_flatMap_LH_C_0_1)) ((flatMap_d1 _lh_flatMap_arg1_1) _lh_flatMap_LH_C_1_1))
+//│ 		    | _ -> 
+//│ 		      (failwith "match error"))
+//│ 		and gen_d0 _lh_gen_arg1_1 _lh_gen_arg2_1 =
+//│ 		  (match _lh_gen_arg1_1 with
+//│ 		    | 0 -> 
+//│ 		      ([]::[])
+//│ 		    | _ -> 
+//│ 		      ((flatMap_d0 (fun b_3 -> 
+//│ 		        ((flatMap_d1 (fun q_1 -> 
+//│ 		          (if (((safe_d0 q_1) 1) b_3) then
+//│ 		            ((q_1::b_3)::[])
+//│ 		          else
+//│ 		            []))) ((enumFromTo_d0 1) _lh_gen_arg2_1)))) ((gen_d0 (_lh_gen_arg1_1 - 1)) _lh_gen_arg2_1)))
+//│ 		and length_d0 ls_7 =
+//│ 		  (match ls_7 with
+//│ 		    | (h_7 :: t_8) -> 
+//│ 		      (1 + (length_d0 t_8))
+//│ 		    | [] -> 
+//│ 		      0)
+//│ 		and nsoln_d0 _lh_nsoln_arg1_1 =
+//│ 		  (length_d0 ((gen_d0 _lh_nsoln_arg1_1) _lh_nsoln_arg1_1))
+//│ 		and safe_d0 _lh_safe_arg1_1 _lh_safe_arg2_1 _lh_safe_arg3_1 =
+//│ 		  (match _lh_safe_arg3_1 with
+//│ 		    | [] -> 
+//│ 		      true
+//│ 		    | (_lh_safe_LH_C_0_1 :: _lh_safe_LH_C_1_1) -> 
+//│ 		      ((((_lh_safe_arg1_1 != _lh_safe_LH_C_0_1) && (_lh_safe_arg1_1 != (_lh_safe_LH_C_0_1 + _lh_safe_arg2_1))) && (_lh_safe_arg1_1 != (_lh_safe_LH_C_0_1 - _lh_safe_arg2_1))) && (((safe_d0 _lh_safe_arg1_1) (_lh_safe_arg2_1 + 1)) _lh_safe_LH_C_1_1))
+//│ 		    | _ -> 
+//│ 		      (failwith "match error"))
+//│ 		and testQueenUsingFlatMap_d0 _lh_testQueenUsingFlatMap_arg1_1 =
+//│ 		  (nsoln_d0 _lh_testQueenUsingFlatMap_arg1_1);;
+//│ 		(testQueenUsingFlatMap_d0 11)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testQueenUsingFlatMap₀^507] (hopeless to continue)
+//│ 	[testQueenUsingFlatMap₀^507 · nsoln₀^469] (using original def)
+//│ 		[testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317] (using original def)
+//│ 			[testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317 · enumFromTo₀^428] (using original def)
+//│ 				[testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317 · enumFromTo₀^428 · enumFromTo₀^455] ---> [testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317 · enumFromTo₀^428] (using original def)
+//│ 			[testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317 · flatMap₀^410] (using original def)
+//│ 				[testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317 · flatMap₀^410 · append₀^475] (using original def)
+//│ 					[testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317 · flatMap₀^410 · append₀^475 · append₀^304] ---> [testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317 · flatMap₀^410 · append₀^475] (using original def)
+//│ 				[testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317 · flatMap₀^410 · flatMap₀^480] ---> [testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317 · flatMap₀^410] (using original def)
+//│ 			[testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317 · flatMap₁^411] (using original def)
+//│ 				[testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317 · flatMap₁^411 · append₁^389] (using original def)
+//│ 					[testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317 · flatMap₁^411 · append₁^389 · append₁^495] ---> [testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317 · flatMap₁^411 · append₁^389] (using original def)
+//│ 				[testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317 · flatMap₁^411 · flatMap₁^394] ---> [testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317 · flatMap₁^411] (using original def)
+//│ 			[testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317 · gen₀^436] ---> [testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317] (using original def)
+//│ 			[testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317 · safe₀^412] (using original def)
+//│ 				[testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317 · safe₀^412 · safe₀^357] ---> [testQueenUsingFlatMap₀^507 · nsoln₀^469 · gen₀^317 · safe₀^412] (using original def)
+//│ 		[testQueenUsingFlatMap₀^507 · nsoln₀^469 · length₀^316] (using original def)
+//│ 			[testQueenUsingFlatMap₀^507 · nsoln₀^469 · length₀^316 · length₀^380] ---> [testQueenUsingFlatMap₀^507 · nsoln₀^469 · length₀^316] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testQueenUsingFlatMap₀₀(primId⁰(11))
+//│ def testQueenUsingFlatMap₀₀(_lh_testQueenUsingFlatMap_arg1¹) = 
+//│ 	nsoln₀₀(_lh_testQueenUsingFlatMap_arg1¹)
+//│ 	where
+//│ 	def nsoln₀₀(_lh_nsoln_arg1¹) = 
+//│ 		length₀₀(gen₀₀(_lh_nsoln_arg1¹, _lh_nsoln_arg1¹))
+//│ 		where
+//│ 		def gen₀₀(_lh_gen_arg1¹, _lh_gen_arg2¹) = 
+//│ 			case _lh_gen_arg1¹ of {
+//│ 				0  => [LH_C [LH_N] [LH_N]]
+//│ 				| _  => flatMap₀₀((fun b³ -> flatMap₁₀((fun q¹ -> if safe₀₀(q¹, 1, b³) then [LH_C [LH_C q¹ b³] [LH_N]] else [LH_N]), enumFromTo₀₀(1, _lh_gen_arg2¹))), gen₀₀((_lh_gen_arg1¹ - 1), _lh_gen_arg2¹))}
+//│ 			where
+//│ 			def enumFromTo₀₀(a¹, b²) = 
+//│ 				if (a¹ <= b²) then [LH_C a¹ enumFromTo₀₀((a¹ + 1), b²)] else [LH_N]
+//│ 			def flatMap₀₀(_lh_flatMap_arg1³, _lh_flatMap_arg2³) = 
+//│ 				case _lh_flatMap_arg2³ of {
+//│ 					LH_N  => [LH_N]
+//│ 					| LH_C _lh_flatMap_LH_C_0³ _lh_flatMap_LH_C_1³ => append₀₀(_lh_flatMap_arg1³(_lh_flatMap_LH_C_0³), flatMap₀₀(_lh_flatMap_arg1³, _lh_flatMap_LH_C_1³))
+//│ 					| _  => error⁰("match error")}
+//│ 				where
+//│ 				def append₀₀(_lh_append_arg1², _lh_append_arg2²) = 
+//│ 					case _lh_append_arg1² of {
+//│ 						LH_N  => _lh_append_arg2²
+//│ 						| LH_C _lh_append_LH_C_0² _lh_append_LH_C_1² => [LH_C _lh_append_LH_C_0² append₀₀(_lh_append_LH_C_1², _lh_append_arg2²)]
+//│ 						| _  => error⁰("match error")}
+//│ 			def flatMap₁₀(_lh_flatMap_arg1², _lh_flatMap_arg2²) = 
+//│ 				case _lh_flatMap_arg2² of {
+//│ 					LH_N  => [LH_N]
+//│ 					| LH_C _lh_flatMap_LH_C_0² _lh_flatMap_LH_C_1² => append₁₀(_lh_flatMap_arg1²(_lh_flatMap_LH_C_0²), flatMap₁₀(_lh_flatMap_arg1², _lh_flatMap_LH_C_1²))
+//│ 					| _  => error⁰("match error")}
+//│ 				where
+//│ 				def append₁₀(_lh_append_arg1³, _lh_append_arg2³) = 
+//│ 					case _lh_append_arg1³ of {
+//│ 						LH_N  => _lh_append_arg2³
+//│ 						| LH_C _lh_append_LH_C_0³ _lh_append_LH_C_1³ => [LH_C _lh_append_LH_C_0³ append₁₀(_lh_append_LH_C_1³, _lh_append_arg2³)]
+//│ 						| _  => error⁰("match error")}
+//│ 			def safe₀₀(_lh_safe_arg1¹, _lh_safe_arg2¹, _lh_safe_arg3¹) = 
+//│ 				case _lh_safe_arg3¹ of {
+//│ 					LH_N  => [True]
+//│ 					| LH_C _lh_safe_LH_C_0¹ _lh_safe_LH_C_1¹ => ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0¹) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ - _lh_safe_arg2¹))) && safe₀₀(_lh_safe_arg1¹, (_lh_safe_arg2¹ + 1), _lh_safe_LH_C_1¹))
+//│ 					| _  => error⁰("match error")}
+//│ 		def length₀₀(ls¹) = 
+//│ 			case ls¹ of {
+//│ 				LH_C h¹ t¹ => (1 + length₀₀(t¹))
+//│ 				| LH_N  => 0}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_C a¹ enumFromTo₀₀((a¹ + 1), b²)]: 235 --->
+//│ 	case _lh_flatMap_arg2² of {LH_N  => [LH_N] | LH_C _lh_flatMap_LH_C_0² _lh_flatMap_LH_C_1² => append₁₀(_lh_flatMap_arg1²(_lh_flatMap_LH_C_0²), flatMap₁₀(_lh_flatMap_arg1², _lh_flatMap_LH_C_1²)) | _  => error⁰("match error")}: 290
+//│ [LH_N]: 236 --->
+//│ 	case _lh_flatMap_arg2² of {LH_N  => [LH_N] | LH_C _lh_flatMap_LH_C_0² _lh_flatMap_LH_C_1² => append₁₀(_lh_flatMap_arg1²(_lh_flatMap_LH_C_0²), flatMap₁₀(_lh_flatMap_arg1², _lh_flatMap_LH_C_1²)) | _  => error⁰("match error")}: 290
+//│ [LH_C _lh_append_LH_C_0² append₀₀(_lh_append_LH_C_1², _lh_append_arg2²)]: 248 --->
+//│ 	case _lh_flatMap_arg2³ of {LH_N  => [LH_N] | LH_C _lh_flatMap_LH_C_0³ _lh_flatMap_LH_C_1³ => append₀₀(_lh_flatMap_arg1³(_lh_flatMap_LH_C_0³), flatMap₀₀(_lh_flatMap_arg1³, _lh_flatMap_LH_C_1³)) | _  => error⁰("match error")}: 309
+//│ 	case ls¹ of {LH_C h¹ t¹ => (1 + length₀₀(t¹)) | LH_N  => 0}: 373
+//│ [LH_C _lh_append_LH_C_0³ append₁₀(_lh_append_LH_C_1³, _lh_append_arg2³)]: 263 --->
+//│ 	case _lh_append_arg1² of {LH_N  => _lh_append_arg2² | LH_C _lh_append_LH_C_0² _lh_append_LH_C_1² => [LH_C _lh_append_LH_C_0² append₀₀(_lh_append_LH_C_1², _lh_append_arg2²)] | _  => error⁰("match error")}: 252
+//│ [LH_N]: 275 --->
+//│ 	case _lh_append_arg1² of {LH_N  => _lh_append_arg2² | LH_C _lh_append_LH_C_0² _lh_append_LH_C_1² => [LH_C _lh_append_LH_C_0² append₀₀(_lh_append_LH_C_1², _lh_append_arg2²)] | _  => error⁰("match error")}: 252
+//│ [LH_N]: 294 --->
+//│ 	case _lh_flatMap_arg2³ of {LH_N  => [LH_N] | LH_C _lh_flatMap_LH_C_0³ _lh_flatMap_LH_C_1³ => append₀₀(_lh_flatMap_arg1³(_lh_flatMap_LH_C_0³), flatMap₀₀(_lh_flatMap_arg1³, _lh_flatMap_LH_C_1³)) | _  => error⁰("match error")}: 309
+//│ 	case ls¹ of {LH_C h¹ t¹ => (1 + length₀₀(t¹)) | LH_N  => 0}: 373
+//│ [LH_N]: 376 --->
+//│ 	case _lh_safe_arg3¹ of {LH_N  => [True] | LH_C _lh_safe_LH_C_0¹ _lh_safe_LH_C_1¹ => ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0¹) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ - _lh_safe_arg2¹))) && safe₀₀(_lh_safe_arg1¹, (_lh_safe_arg2¹ + 1), _lh_safe_LH_C_1¹)) | _  => error⁰("match error")}: 360
+//│ [LH_N]: 377 --->
+//│ 	case _lh_flatMap_arg2³ of {LH_N  => [LH_N] | LH_C _lh_flatMap_LH_C_0³ _lh_flatMap_LH_C_1³ => append₀₀(_lh_flatMap_arg1³(_lh_flatMap_LH_C_0³), flatMap₀₀(_lh_flatMap_arg1³, _lh_flatMap_LH_C_1³)) | _  => error⁰("match error")}: 309
+//│ 	case ls¹ of {LH_C h¹ t¹ => (1 + length₀₀(t¹)) | LH_N  => 0}: 373
+//│ [LH_C [LH_N] [LH_N]]: 378 --->
+//│ 	case _lh_flatMap_arg2³ of {LH_N  => [LH_N] | LH_C _lh_flatMap_LH_C_0³ _lh_flatMap_LH_C_1³ => append₀₀(_lh_flatMap_arg1³(_lh_flatMap_LH_C_0³), flatMap₀₀(_lh_flatMap_arg1³, _lh_flatMap_LH_C_1³)) | _  => error⁰("match error")}: 309
+//│ 	case ls¹ of {LH_C h¹ t¹ => (1 + length₀₀(t¹)) | LH_N  => 0}: 373
+//│ [LH_C q¹ b³]: 390 --->
+//│ 	case _lh_safe_arg3¹ of {LH_N  => [True] | LH_C _lh_safe_LH_C_0¹ _lh_safe_LH_C_1¹ => ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0¹) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ - _lh_safe_arg2¹))) && safe₀₀(_lh_safe_arg1¹, (_lh_safe_arg2¹ + 1), _lh_safe_LH_C_1¹)) | _  => error⁰("match error")}: 360
+//│ [LH_N]: 391 --->
+//│ 	case _lh_append_arg1³ of {LH_N  => _lh_append_arg2³ | LH_C _lh_append_LH_C_0³ _lh_append_LH_C_1³ => [LH_C _lh_append_LH_C_0³ append₁₀(_lh_append_LH_C_1³, _lh_append_arg2³)] | _  => error⁰("match error")}: 267
+//│ [LH_C [LH_C q¹ b³] [LH_N]]: 392 --->
+//│ 	case _lh_append_arg1³ of {LH_N  => _lh_append_arg2³ | LH_C _lh_append_LH_C_0³ _lh_append_LH_C_1³ => [LH_C _lh_append_LH_C_0³ append₁₀(_lh_append_LH_C_1³, _lh_append_arg2³)] | _  => error⁰("match error")}: 267
+//│ [LH_N]: 393 --->
+//│ 	case _lh_append_arg1³ of {LH_N  => _lh_append_arg2³ | LH_C _lh_append_LH_C_0³ _lh_append_LH_C_1³ => [LH_C _lh_append_LH_C_0³ append₁₀(_lh_append_LH_C_1³, _lh_append_arg2³)] | _  => error⁰("match error")}: 267
+//│ ------------------
+//│ case _lh_append_arg1² of {LH_N  => _lh_append_arg2² | LH_C _lh_append_LH_C_0² _lh_append_LH_C_1² => [LH_C _lh_append_LH_C_0² append₀₀(_lh_append_LH_C_1², _lh_append_arg2²)] | _  => error⁰("match error")}: 252 --->
+//│ 	[LH_C _lh_append_LH_C_0³ append₁₀(_lh_append_LH_C_1³, _lh_append_arg2³)]: 263
+//│ 	[LH_N]: 275
+//│ case _lh_append_arg1³ of {LH_N  => _lh_append_arg2³ | LH_C _lh_append_LH_C_0³ _lh_append_LH_C_1³ => [LH_C _lh_append_LH_C_0³ append₁₀(_lh_append_LH_C_1³, _lh_append_arg2³)] | _  => error⁰("match error")}: 267 --->
+//│ 	[LH_N]: 391
+//│ 	[LH_C [LH_C q¹ b³] [LH_N]]: 392
+//│ 	[LH_N]: 393
+//│ case _lh_flatMap_arg2² of {LH_N  => [LH_N] | LH_C _lh_flatMap_LH_C_0² _lh_flatMap_LH_C_1² => append₁₀(_lh_flatMap_arg1²(_lh_flatMap_LH_C_0²), flatMap₁₀(_lh_flatMap_arg1², _lh_flatMap_LH_C_1²)) | _  => error⁰("match error")}: 290 --->
+//│ 	[LH_C a¹ enumFromTo₀₀((a¹ + 1), b²)]: 235
+//│ 	[LH_N]: 236
+//│ case _lh_flatMap_arg2³ of {LH_N  => [LH_N] | LH_C _lh_flatMap_LH_C_0³ _lh_flatMap_LH_C_1³ => append₀₀(_lh_flatMap_arg1³(_lh_flatMap_LH_C_0³), flatMap₀₀(_lh_flatMap_arg1³, _lh_flatMap_LH_C_1³)) | _  => error⁰("match error")}: 309 --->
+//│ 	[LH_C _lh_append_LH_C_0² append₀₀(_lh_append_LH_C_1², _lh_append_arg2²)]: 248
+//│ 	[LH_N]: 294
+//│ 	[LH_N]: 377
+//│ 	[LH_C [LH_N] [LH_N]]: 378
+//│ case _lh_safe_arg3¹ of {LH_N  => [True] | LH_C _lh_safe_LH_C_0¹ _lh_safe_LH_C_1¹ => ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0¹) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ - _lh_safe_arg2¹))) && safe₀₀(_lh_safe_arg1¹, (_lh_safe_arg2¹ + 1), _lh_safe_LH_C_1¹)) | _  => error⁰("match error")}: 360 --->
+//│ 	[LH_N]: 376
+//│ 	[LH_C q¹ b³]: 390
+//│ case ls¹ of {LH_C h¹ t¹ => (1 + length₀₀(t¹)) | LH_N  => 0}: 373 --->
+//│ 	[LH_C _lh_append_LH_C_0² append₀₀(_lh_append_LH_C_1², _lh_append_arg2²)]: 248
+//│ 	[LH_N]: 294
+//│ 	[LH_N]: 377
+//│ 	[LH_C [LH_N] [LH_N]]: 378
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_C a¹ enumFromTo₀₀((a¹ + 1), b²)]: 235 --->
+//│ 	case _lh_flatMap_arg2² of {LH_N  => [LH_N] | LH_C _lh_flatMap_LH_C_0² _lh_flatMap_LH_C_1² => append₁₀(_lh_flatMap_arg1²(_lh_flatMap_LH_C_0²), flatMap₁₀(_lh_flatMap_arg1², _lh_flatMap_LH_C_1²)) | _  => error⁰("match error")}: 290
+//│ [LH_N]: 236 --->
+//│ 	case _lh_flatMap_arg2² of {LH_N  => [LH_N] | LH_C _lh_flatMap_LH_C_0² _lh_flatMap_LH_C_1² => append₁₀(_lh_flatMap_arg1²(_lh_flatMap_LH_C_0²), flatMap₁₀(_lh_flatMap_arg1², _lh_flatMap_LH_C_1²)) | _  => error⁰("match error")}: 290
+//│ [LH_C _lh_append_LH_C_0³ append₁₀(_lh_append_LH_C_1³, _lh_append_arg2³)]: 263 --->
+//│ 	case _lh_append_arg1² of {LH_N  => _lh_append_arg2² | LH_C _lh_append_LH_C_0² _lh_append_LH_C_1² => [LH_C _lh_append_LH_C_0² append₀₀(_lh_append_LH_C_1², _lh_append_arg2²)] | _  => error⁰("match error")}: 252
+//│ [LH_N]: 275 --->
+//│ 	case _lh_append_arg1² of {LH_N  => _lh_append_arg2² | LH_C _lh_append_LH_C_0² _lh_append_LH_C_1² => [LH_C _lh_append_LH_C_0² append₀₀(_lh_append_LH_C_1², _lh_append_arg2²)] | _  => error⁰("match error")}: 252
+//│ [LH_N]: 376 --->
+//│ 	case _lh_safe_arg3¹ of {LH_N  => [True] | LH_C _lh_safe_LH_C_0¹ _lh_safe_LH_C_1¹ => ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0¹) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ - _lh_safe_arg2¹))) && safe₀₀(_lh_safe_arg1¹, (_lh_safe_arg2¹ + 1), _lh_safe_LH_C_1¹)) | _  => error⁰("match error")}: 360
+//│ [LH_C q¹ b³]: 390 --->
+//│ 	case _lh_safe_arg3¹ of {LH_N  => [True] | LH_C _lh_safe_LH_C_0¹ _lh_safe_LH_C_1¹ => ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0¹) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ - _lh_safe_arg2¹))) && safe₀₀(_lh_safe_arg1¹, (_lh_safe_arg2¹ + 1), _lh_safe_LH_C_1¹)) | _  => error⁰("match error")}: 360
+//│ [LH_N]: 391 --->
+//│ 	case _lh_append_arg1³ of {LH_N  => _lh_append_arg2³ | LH_C _lh_append_LH_C_0³ _lh_append_LH_C_1³ => [LH_C _lh_append_LH_C_0³ append₁₀(_lh_append_LH_C_1³, _lh_append_arg2³)] | _  => error⁰("match error")}: 267
+//│ [LH_C [LH_C q¹ b³] [LH_N]]: 392 --->
+//│ 	case _lh_append_arg1³ of {LH_N  => _lh_append_arg2³ | LH_C _lh_append_LH_C_0³ _lh_append_LH_C_1³ => [LH_C _lh_append_LH_C_0³ append₁₀(_lh_append_LH_C_1³, _lh_append_arg2³)] | _  => error⁰("match error")}: 267
+//│ [LH_N]: 393 --->
+//│ 	case _lh_append_arg1³ of {LH_N  => _lh_append_arg2³ | LH_C _lh_append_LH_C_0³ _lh_append_LH_C_1³ => [LH_C _lh_append_LH_C_0³ append₁₀(_lh_append_LH_C_1³, _lh_append_arg2³)] | _  => error⁰("match error")}: 267
+//│ ------------------
+//│ case _lh_append_arg1² of {LH_N  => _lh_append_arg2² | LH_C _lh_append_LH_C_0² _lh_append_LH_C_1² => [LH_C _lh_append_LH_C_0² append₀₀(_lh_append_LH_C_1², _lh_append_arg2²)] | _  => error⁰("match error")}: 252 --->
+//│ 	[LH_C _lh_append_LH_C_0³ append₁₀(_lh_append_LH_C_1³, _lh_append_arg2³)]: 263
+//│ 	[LH_N]: 275
+//│ case _lh_append_arg1³ of {LH_N  => _lh_append_arg2³ | LH_C _lh_append_LH_C_0³ _lh_append_LH_C_1³ => [LH_C _lh_append_LH_C_0³ append₁₀(_lh_append_LH_C_1³, _lh_append_arg2³)] | _  => error⁰("match error")}: 267 --->
+//│ 	[LH_N]: 391
+//│ 	[LH_C [LH_C q¹ b³] [LH_N]]: 392
+//│ 	[LH_N]: 393
+//│ case _lh_flatMap_arg2² of {LH_N  => [LH_N] | LH_C _lh_flatMap_LH_C_0² _lh_flatMap_LH_C_1² => append₁₀(_lh_flatMap_arg1²(_lh_flatMap_LH_C_0²), flatMap₁₀(_lh_flatMap_arg1², _lh_flatMap_LH_C_1²)) | _  => error⁰("match error")}: 290 --->
+//│ 	[LH_C a¹ enumFromTo₀₀((a¹ + 1), b²)]: 235
+//│ 	[LH_N]: 236
+//│ case _lh_safe_arg3¹ of {LH_N  => [True] | LH_C _lh_safe_LH_C_0¹ _lh_safe_LH_C_1¹ => ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0¹) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ - _lh_safe_arg2¹))) && safe₀₀(_lh_safe_arg1¹, (_lh_safe_arg2¹ + 1), _lh_safe_LH_C_1¹)) | _  => error⁰("match error")}: 360 --->
+//│ 	[LH_N]: 376
+//│ 	[LH_C q¹ b³]: 390
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testQueenUsingFlatMap₀₀(primId⁰(11))
+//│ def testQueenUsingFlatMap₀₀(_lh_testQueenUsingFlatMap_arg1²) = 
+//│ 	nsoln₀₀(_lh_testQueenUsingFlatMap_arg1²)
+//│ 	where
+//│ 	def nsoln₀₀(_lh_nsoln_arg1²) = 
+//│ 		length₀₀(gen₀₀(_lh_nsoln_arg1², _lh_nsoln_arg1²))
+//│ 		where
+//│ 		def gen₀₀(_lh_gen_arg1², _lh_gen_arg2²) = 
+//│ 			case _lh_gen_arg1² of {
+//│ 				0  => [LH_C (fun _lh_safe_arg1³ -> (fun _lh_safe_arg2³ -> [True])) [LH_N]]
+//│ 				| _  => flatMap₀₀((fun b⁵ -> flatMap₁₀((fun q² -> if safe₀₀(q², 1, b⁵) then 
+//│ 					let _lh_append_LH_C_0⁴ = 	
+//│ 						let _lh_safe_LH_C_0² = q²
+//│ 						in let _lh_safe_LH_C_1² = b⁵
+//│ 						in (fun _lh_safe_arg1⁴ -> (fun _lh_safe_arg2⁴ -> ((((_lh_safe_arg1⁴ /= _lh_safe_LH_C_0²) && (_lh_safe_arg1⁴ /= (_lh_safe_LH_C_0² + _lh_safe_arg2⁴))) && (_lh_safe_arg1⁴ /= (_lh_safe_LH_C_0² - _lh_safe_arg2⁴))) && safe₀₀(_lh_safe_arg1⁴, (_lh_safe_arg2⁴ + 1), _lh_safe_LH_C_1²))))
+//│ 					in let _lh_append_LH_C_1⁴ = (fun _lh_append_arg2⁹ -> _lh_append_arg2⁹)
+//│ 					in (fun _lh_append_arg2⁷ -> 
+//│ 						let _lh_append_LH_C_0⁵ = _lh_append_LH_C_0⁴
+//│ 						in let _lh_append_LH_C_1⁵ = append₁₀(_lh_append_LH_C_1⁴, _lh_append_arg2⁷)
+//│ 						in (fun _lh_append_arg2⁸ -> [LH_C _lh_append_LH_C_0⁵ append₀₀(_lh_append_LH_C_1⁵, _lh_append_arg2⁸)])) else (fun _lh_append_arg2¹⁰ -> _lh_append_arg2¹⁰)), enumFromTo₀₀(1, _lh_gen_arg2²))), gen₀₀((_lh_gen_arg1² - 1), _lh_gen_arg2²))}
+//│ 			where
+//│ 			def enumFromTo₀₀(a², b⁴) = 
+//│ 				if (a² <= b⁴) then 
+//│ 					let _lh_flatMap_LH_C_0⁴ = a²
+//│ 					in let _lh_flatMap_LH_C_1⁴ = enumFromTo₀₀((a² + 1), b⁴)
+//│ 					in (fun _lh_flatMap_arg1⁴ -> append₁₀(_lh_flatMap_arg1⁴(_lh_flatMap_LH_C_0⁴), flatMap₁₀(_lh_flatMap_arg1⁴, _lh_flatMap_LH_C_1⁴))) else (fun _lh_flatMap_arg1⁵ -> (fun _lh_append_arg2⁵ -> _lh_append_arg2⁵))
+//│ 			def flatMap₀₀(_lh_flatMap_arg1⁶, _lh_flatMap_arg2⁴) = 
+//│ 				case _lh_flatMap_arg2⁴ of {
+//│ 					LH_N  => [LH_N]
+//│ 					| LH_C _lh_flatMap_LH_C_0³ _lh_flatMap_LH_C_1³ => append₀₀(_lh_flatMap_arg1⁶(_lh_flatMap_LH_C_0³), flatMap₀₀(_lh_flatMap_arg1⁶, _lh_flatMap_LH_C_1³))
+//│ 					| _  => error⁰("match error")}
+//│ 				where
+//│ 				def append₀₀(_lh_append_arg1⁵, _lh_append_arg2⁶) = 
+//│ 					_lh_append_arg1⁵(_lh_append_arg2⁶)
+//│ 			def flatMap₁₀(_lh_flatMap_arg1⁷, _lh_flatMap_arg2⁵) = 
+//│ 				_lh_flatMap_arg2⁵(_lh_flatMap_arg1⁷)
+//│ 				where
+//│ 				def append₁₀(_lh_append_arg1⁴, _lh_append_arg2⁴) = 
+//│ 					_lh_append_arg1⁴(_lh_append_arg2⁴)
+//│ 			def safe₀₀(_lh_safe_arg1², _lh_safe_arg2², _lh_safe_arg3²) = 
+//│ 				_lh_safe_arg3²(_lh_safe_arg1², _lh_safe_arg2²)
+//│ 		def length₀₀(ls²) = 
+//│ 			case ls² of {
+//│ 				LH_C h¹ t¹ => (1 + length₀₀(t¹))
+//│ 				| LH_N  => 0}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
 
 
 :lhGenOCaml

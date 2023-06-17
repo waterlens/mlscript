@@ -621,20 +621,32 @@ fun last(a, ls) = if ls is
   N then a
   C(h, t) then last(h, t)
 fun testLastFilter(ls) = lastDrive(filter(ls, x => x < 1000))
+fun _lhManualLastFilterDrive(ls, f) = if ls is
+  C(h, t) then if f(h) then
+    let a = _lhManualLastFilter(t, f, h)
+    Some(a)
+  else
+    _lhManualLastFilterDrive(t, f)
+  N then None
 fun _lhManualLastFilter(ls, f, a) = if ls is
-  C(h, t) then if f(h) then _lhManualLastFilter(t, f, Some(h)) else _lhManualLastFilter(t, f, a)
+  C(h, t) then if f(h) then _lhManualLastFilter(t, f, h) else _lhManualLastFilter(t, f, a)
   N then a
-fun testManual(ls) = _lhManualLastFilter(ls, x => x < 1000, None)
+fun testManual(ls) = _lhManualLastFilterDrive(ls, x => x < 1000)
 testLastFilter(primId(enumFromTo(1, 500000)))
 testManual(primId(enumFromTo(1, 500000)))
-//│ |#fun| |enumFromTo|(|a|,| |b|)| |#=| |#if| |a| |<=| |b| |#then| |C|(|a|,| |enumFromTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |filter|(|ls|,| |f|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |f|(|h|)| |#then| |C|(|h|,| |filter|(|t|,| |f|)|)| |#else| |filter|(|t|,| |f|)|↵|N| |#then| |N|←|↵|#fun| |lastDrive|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |Some|(|last|(|h|,| |t|)|)|↵|N| |#then| |None|←|↵|#fun| |last|(|a|,| |ls|)| |#=| |#if| |ls| |is|→|N| |#then| |a|↵|C|(|h|,| |t|)| |#then| |last|(|h|,| |t|)|←|↵|#fun| |testLastFilter|(|ls|)| |#=| |lastDrive|(|filter|(|ls|,| |x| |=>| |x| |<| |1000|)|)|↵|#fun| |_lhManualLastFilter|(|ls|,| |f|,| |a|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |f|(|h|)| |#then| |_lhManualLastFilter|(|t|,| |f|,| |Some|(|h|)|)| |#else| |_lhManualLastFilter|(|t|,| |f|,| |a|)|↵|N| |#then| |a|←|↵|#fun| |testManual|(|ls|)| |#=| |_lhManualLastFilter|(|ls|,| |x| |=>| |x| |<| |1000|,| |None|)|↵|testLastFilter|(|primId|(|enumFromTo|(|1|,| |500000|)|)|)|↵|testManual|(|primId|(|enumFromTo|(|1|,| |500000|)|)|)|
-//│ Parsed: {fun enumFromTo = a, b, => if (<= (a,) (b,)) then C (a, enumFromTo (+ (a,) (1,), b,),) else N; fun filter = ls, f, => if ls is ‹(C (h, t,)) then if (f (h,)) then C (h, filter (t, f,),) else filter (t, f,); (N) then N›; fun lastDrive = ls, => if ls is ‹(C (h, t,)) then Some (last (h, t,),); (N) then None›; fun last = a, ls, => if ls is ‹(N) then a; (C (h, t,)) then last (h, t,)›; fun testLastFilter = ls, => lastDrive (filter (ls, x, => < (x,) (1000,),),); fun _lhManualLastFilter = ls, f, a, => if ls is ‹(C (h, t,)) then if (f (h,)) then _lhManualLastFilter (t, f, Some (h,),) else _lhManualLastFilter (t, f, a,); (N) then a›; fun testManual = ls, => _lhManualLastFilter (ls, x, => < (x,) (1000,), None,); testLastFilter (primId (enumFromTo (1, 500000,),),); testManual (primId (enumFromTo (1, 500000,),),)}
+//│ |#fun| |enumFromTo|(|a|,| |b|)| |#=| |#if| |a| |<=| |b| |#then| |C|(|a|,| |enumFromTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |filter|(|ls|,| |f|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |f|(|h|)| |#then| |C|(|h|,| |filter|(|t|,| |f|)|)| |#else| |filter|(|t|,| |f|)|↵|N| |#then| |N|←|↵|#fun| |lastDrive|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |Some|(|last|(|h|,| |t|)|)|↵|N| |#then| |None|←|↵|#fun| |last|(|a|,| |ls|)| |#=| |#if| |ls| |is|→|N| |#then| |a|↵|C|(|h|,| |t|)| |#then| |last|(|h|,| |t|)|←|↵|#fun| |testLastFilter|(|ls|)| |#=| |lastDrive|(|filter|(|ls|,| |x| |=>| |x| |<| |1000|)|)|↵|#fun| |_lhManualLastFilterDrive|(|ls|,| |f|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |f|(|h|)| |#then|→|#let| |a| |#=| |_lhManualLastFilter|(|t|,| |f|,| |h|)|↵|Some|(|a|)|←|↵|#else|→|_lhManualLastFilterDrive|(|t|,| |f|)|←|↵|N| |#then| |None|←|↵|#fun| |_lhManualLastFilter|(|ls|,| |f|,| |a|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |f|(|h|)| |#then| |_lhManualLastFilter|(|t|,| |f|,| |h|)| |#else| |_lhManualLastFilter|(|t|,| |f|,| |a|)|↵|N| |#then| |a|←|↵|#fun| |testManual|(|ls|)| |#=| |_lhManualLastFilterDrive|(|ls|,| |x| |=>| |x| |<| |1000|)|↵|testLastFilter|(|primId|(|enumFromTo|(|1|,| |500000|)|)|)|↵|testManual|(|primId|(|enumFromTo|(|1|,| |500000|)|)|)|
+//│ Parsed: {fun enumFromTo = a, b, => if (<= (a,) (b,)) then C (a, enumFromTo (+ (a,) (1,), b,),) else N; fun filter = ls, f, => if ls is ‹(C (h, t,)) then if (f (h,)) then C (h, filter (t, f,),) else filter (t, f,); (N) then N›; fun lastDrive = ls, => if ls is ‹(C (h, t,)) then Some (last (h, t,),); (N) then None›; fun last = a, ls, => if ls is ‹(N) then a; (C (h, t,)) then last (h, t,)›; fun testLastFilter = ls, => lastDrive (filter (ls, x, => < (x,) (1000,),),); fun _lhManualLastFilterDrive = ls, f, => if ls is ‹(C (h, t,)) then if (f (h,)) then {let a = _lhManualLastFilter (t, f, h,); Some (a,)} else {_lhManualLastFilterDrive (t, f,)}; (N) then None›; fun _lhManualLastFilter = ls, f, a, => if ls is ‹(C (h, t,)) then if (f (h,)) then _lhManualLastFilter (t, f, h,) else _lhManualLastFilter (t, f, a,); (N) then a›; fun testManual = ls, => _lhManualLastFilterDrive (ls, x, => < (x,) (1000,),); testLastFilter (primId (enumFromTo (1, 500000,),),); testManual (primId (enumFromTo (1, 500000,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ testLastFilter^113(primId⁰(enumFromTo^115(1, 500000)))
-//│ testManual^122(primId⁰(enumFromTo^124(1, 500000)))
-//│ def _lhManualLastFilter(ls⁴, f¹, a²) = case ls⁴ of {
-//│ 	C h³ t³ => if f¹(h³) then _lhManualLastFilter^79(t³, f¹, [Some h³]) else _lhManualLastFilter^87(t³, f¹, a²)
-//│ 	| N  => a²}
+//│ testLastFilter^134(primId⁰(enumFromTo^136(1, 500000)))
+//│ testManual^143(primId⁰(enumFromTo^145(1, 500000)))
+//│ def _lhManualLastFilter(ls⁵, f², a³) = case ls⁵ of {
+//│ 	C h⁴ t⁴ => if f²(h⁴) then _lhManualLastFilter^103(t⁴, f², h⁴) else _lhManualLastFilter^110(t⁴, f², a³)
+//│ 	| N  => a³}
+//│ def _lhManualLastFilterDrive(ls⁴, f¹) = case ls⁴ of {
+//│ 	C h³ t³ => if f¹(h³) then 
+//│ 		let a² = _lhManualLastFilter^79(t³, f¹, h³)
+//│ 		in [Some a²] else _lhManualLastFilterDrive^89(t³, f¹)
+//│ 	| N  => [None]}
 //│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ enumFromTo^7((a⁰ + 1), b⁰)] else [N]
 //│ def filter(ls⁰, f⁰) = case ls⁰ of {
 //│ 	C h⁰ t⁰ => if f⁰(h⁰) then [C h⁰ filter^26(t⁰, f⁰)] else filter^32(t⁰, f⁰)
@@ -646,17 +658,17 @@ testManual(primId(enumFromTo(1, 500000)))
 //│ 	C h¹ t¹ => [Some last^43(h¹, t¹)]
 //│ 	| N  => [None]}
 //│ def testLastFilter(ls³) = lastDrive^62(filter^63(ls³, (fun x⁰ -> (x⁰ < 1000))))
-//│ def testManual(ls⁵) = _lhManualLastFilter^100(ls⁵, (fun x¹ -> (x¹ < 1000)), [None])
+//│ def testManual(ls⁶) = _lhManualLastFilterDrive^123(ls⁶, (fun x¹ -> (x¹ < 1000)))
 //│ 		---------- unoptimized ocaml gen ----------
-//│ 		let rec _lhManualLastFilter ls_4 f_1 a_2 =
-//│ 		  (match ls_4 with
-//│ 		    | `C(h_3, t_3) -> 
-//│ 		      (if (f_1 h_3) then
-//│ 		        (((_lhManualLastFilter t_3) f_1) (`Some(h_3)))
+//│ 		let rec _lhManualLastFilter ls_5 f_2 a_3 =
+//│ 		  (match ls_5 with
+//│ 		    | `C(h_4, t_4) -> 
+//│ 		      (if (f_2 h_4) then
+//│ 		        (((_lhManualLastFilter t_4) f_2) h_4)
 //│ 		      else
-//│ 		        (((_lhManualLastFilter t_3) f_1) a_2))
+//│ 		        (((_lhManualLastFilter t_4) f_2) a_3))
 //│ 		    | `N -> 
-//│ 		      a_2);;
+//│ 		      a_3);;
 //│ 		let rec enumFromTo a_0 b_0 =
 //│ 		  (if (a_0 <= b_0) then
 //│ 		    (`C(a_0, ((enumFromTo (a_0 + 1)) b_0)))
@@ -677,7 +689,17 @@ testManual(primId(enumFromTo(1, 500000)))
 //│ 		      a_1
 //│ 		    | `C(h_2, t_2) -> 
 //│ 		      ((last h_2) t_2));;
-//│ 		let rec lastDrive ls_1 =
+//│ 		let rec _lhManualLastFilterDrive ls_4 f_1 =
+//│ 		  (match ls_4 with
+//│ 		    | `C(h_3, t_3) -> 
+//│ 		      (if (f_1 h_3) then
+//│ 		        (let rec a_2 = (((_lhManualLastFilter t_3) f_1) h_3) in
+//│ 		          (`Some(a_2)))
+//│ 		      else
+//│ 		        ((_lhManualLastFilterDrive t_3) f_1))
+//│ 		    | `N -> 
+//│ 		      (`None))
+//│ 		and lastDrive ls_1 =
 //│ 		  (match ls_1 with
 //│ 		    | `C(h_1, t_1) -> 
 //│ 		      (`Some(((last h_1) t_1)))
@@ -686,34 +708,34 @@ testManual(primId(enumFromTo(1, 500000)))
 //│ 		and testLastFilter ls_3 =
 //│ 		  (lastDrive ((filter ls_3) (fun x_0 -> 
 //│ 		    (x_0 < 1000))))
-//│ 		and testManual ls_5 =
-//│ 		  (((_lhManualLastFilter ls_5) (fun x_1 -> 
-//│ 		    (x_1 < 1000))) (`None));;
+//│ 		and testManual ls_6 =
+//│ 		  ((_lhManualLastFilterDrive ls_6) (fun x_1 -> 
+//│ 		    (x_1 < 1000)));;
 //│ 		(testLastFilter ((enumFromTo 1) 500000))
 //│ 		(testManual ((enumFromTo 1) 500000))
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [enumFromTo^115] (hopeless to continue)
-//│ 	[enumFromTo^115 · enumFromTo^7] ---> [enumFromTo^115] (using original def)
-//│ [enumFromTo^124]
-//│ 	[enumFromTo^124 · enumFromTo^7] ---> [enumFromTo^124] (only one)
-//│ [testLastFilter^113]
-//│ 	[testLastFilter^113 · filter^63]
-//│ 		[testLastFilter^113 · filter^63 · filter^26] (hopeless to continue)
-//│ 			[testLastFilter^113 · filter^63 · filter^26 · filter^26] ---> [testLastFilter^113 · filter^63 · filter^26] (using original def)
-//│ 			[testLastFilter^113 · filter^63 · filter^26 · filter^32] ---> [testLastFilter^113 · filter^63 · filter^26] (using original def)
-//│ 		[testLastFilter^113 · filter^63 · filter^32] ---> [testLastFilter^113 · filter^63] (only one)
-//│ 	[testLastFilter^113 · lastDrive^62] (hopeless to continue)
-//│ 		[testLastFilter^113 · lastDrive^62 · last^43] (using original def)
-//│ 			[testLastFilter^113 · lastDrive^62 · last^43 · last^54] ---> [testLastFilter^113 · lastDrive^62 · last^43] (using original def)
-//│ [testManual^122]
-//│ 	[testManual^122 · _lhManualLastFilter^100]
-//│ 		[testManual^122 · _lhManualLastFilter^100 · _lhManualLastFilter^79] (hopeless to continue)
-//│ 			[testManual^122 · _lhManualLastFilter^100 · _lhManualLastFilter^79 · _lhManualLastFilter^79] ---> [testManual^122 · _lhManualLastFilter^100 · _lhManualLastFilter^79] (using original def)
-//│ 			[testManual^122 · _lhManualLastFilter^100 · _lhManualLastFilter^79 · _lhManualLastFilter^87] ---> [testManual^122 · _lhManualLastFilter^100 · _lhManualLastFilter^79] (using original def)
-//│ 		[testManual^122 · _lhManualLastFilter^100 · _lhManualLastFilter^87] ---> [testManual^122 · _lhManualLastFilter^100] (only one)
+//│ [enumFromTo^136] (hopeless to continue)
+//│ 	[enumFromTo^136 · enumFromTo^7] ---> [enumFromTo^136] (using original def)
+//│ [enumFromTo^145]
+//│ 	[enumFromTo^145 · enumFromTo^7] ---> [enumFromTo^145] (only one)
+//│ [testLastFilter^134]
+//│ 	[testLastFilter^134 · filter^63]
+//│ 		[testLastFilter^134 · filter^63 · filter^26] (hopeless to continue)
+//│ 			[testLastFilter^134 · filter^63 · filter^26 · filter^26] ---> [testLastFilter^134 · filter^63 · filter^26] (using original def)
+//│ 			[testLastFilter^134 · filter^63 · filter^26 · filter^32] ---> [testLastFilter^134 · filter^63 · filter^26] (using original def)
+//│ 		[testLastFilter^134 · filter^63 · filter^32] ---> [testLastFilter^134 · filter^63] (only one)
+//│ 	[testLastFilter^134 · lastDrive^62] (hopeless to continue)
+//│ 		[testLastFilter^134 · lastDrive^62 · last^43] (using original def)
+//│ 			[testLastFilter^134 · lastDrive^62 · last^43 · last^54] ---> [testLastFilter^134 · lastDrive^62 · last^43] (using original def)
+//│ [testManual^143]
+//│ 	[testManual^143 · _lhManualLastFilterDrive^123]
+//│ 		[testManual^143 · _lhManualLastFilterDrive^123 · _lhManualLastFilterDrive^89] ---> [testManual^143 · _lhManualLastFilterDrive^123] (only one)
+//│ 		[testManual^143 · _lhManualLastFilterDrive^123 · _lhManualLastFilter^79]
+//│ 			[testManual^143 · _lhManualLastFilterDrive^123 · _lhManualLastFilter^79 · _lhManualLastFilter^103] ---> [testManual^143 · _lhManualLastFilterDrive^123 · _lhManualLastFilter^79] (only one)
+//│ 			[testManual^143 · _lhManualLastFilterDrive^123 · _lhManualLastFilter^79 · _lhManualLastFilter^110] ---> [testManual^143 · _lhManualLastFilterDrive^123 · _lhManualLastFilter^79] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -721,120 +743,124 @@ testManual(primId(enumFromTo(1, 500000)))
 //│ testManual₀(primId⁰(enumFromTo₁(1, 500000)))
 //│ def enumFromTo₀(a⁷, b²) = 
 //│ 	if (a⁷ <= b²) then [C a⁷ enumFromTo₀((a⁷ + 1), b²)] else [N]
-//│ def enumFromTo₁(a³, b¹) = 
-//│ 	if (a³ <= b¹) then [C a³ enumFromTo₁((a³ + 1), b¹)] else [N]
-//│ def testLastFilter₀(ls¹⁰) = 
-//│ 	lastDrive₀(filter₀(ls¹⁰, (fun x² -> (x² < 1000))))
+//│ def enumFromTo₁(a⁵, b¹) = 
+//│ 	if (a⁵ <= b¹) then [C a⁵ enumFromTo₁((a⁵ + 1), b¹)] else [N]
+//│ def testLastFilter₀(ls⁹) = 
+//│ 	lastDrive₀(filter₀(ls⁹, (fun x² -> (x² < 1000))))
 //│ 	where
 //│ 	def filter₀(ls¹³, f⁵) = 
 //│ 		case ls¹³ of {
 //│ 			C h⁹ t⁹ => if f⁵(h⁹) then [C h⁹ filter₁(t⁹, f⁵)] else filter₀(t⁹, f⁵)
 //│ 			| N  => [N]}
 //│ 		where
-//│ 		def filter₁(ls⁶, f²) = 
-//│ 			case ls⁶ of {
-//│ 				C h⁴ t⁴ => if f²(h⁴) then [C h⁴ filter₁(t⁴, f²)] else filter₁(t⁴, f²)
+//│ 		def filter₁(ls¹⁴, f⁶) = 
+//│ 			case ls¹⁴ of {
+//│ 				C h¹⁰ t¹⁰ => if f⁶(h¹⁰) then [C h¹⁰ filter₁(t¹⁰, f⁶)] else filter₁(t¹⁰, f⁶)
 //│ 				| N  => [N]}
-//│ 	def lastDrive₀(ls¹¹) = 
-//│ 		case ls¹¹ of {
-//│ 			C h⁸ t⁸ => [Some last₀(h⁸, t⁸)]
+//│ 	def lastDrive₀(ls⁸) = 
+//│ 		case ls⁸ of {
+//│ 			C h⁶ t⁶ => [Some last₀(h⁶, t⁶)]
 //│ 			| N  => [None]}
 //│ 		where
-//│ 		def last₀(a⁵, ls⁸) = 
-//│ 			case ls⁸ of {
-//│ 				N  => a⁵
-//│ 				| C h⁶ t⁶ => last₀(h⁶, t⁶)}
-//│ def testManual₀(ls¹²) = 
-//│ 	_lhManualLastFilter₀(ls¹², (fun x³ -> (x³ < 1000)), [None])
+//│ 		def last₀(a⁶, ls¹¹) = 
+//│ 			case ls¹¹ of {
+//│ 				N  => a⁶
+//│ 				| C h⁷ t⁷ => last₀(h⁷, t⁷)}
+//│ def testManual₀(ls¹⁰) = 
+//│ 	_lhManualLastFilterDrive₀(ls¹⁰, (fun x³ -> (x³ < 1000)))
 //│ 	where
-//│ 	def _lhManualLastFilter₀(ls⁹, f⁴, a⁶) = 
-//│ 		case ls⁹ of {
-//│ 			C h⁷ t⁷ => if f⁴(h⁷) then _lhManualLastFilter₁(t⁷, f⁴, [Some h⁷]) else _lhManualLastFilter₀(t⁷, f⁴, a⁶)
-//│ 			| N  => a⁶}
+//│ 	def _lhManualLastFilterDrive₀(ls⁷, f³) = 
+//│ 		case ls⁷ of {
+//│ 			C h⁵ t⁵ => if f³(h⁵) then 
+//│ 				let a⁴ = _lhManualLastFilter₀(t⁵, f³, h⁵)
+//│ 				in [Some a⁴] else _lhManualLastFilterDrive₀(t⁵, f³)
+//│ 			| N  => [None]}
 //│ 		where
-//│ 		def _lhManualLastFilter₁(ls⁷, f³, a⁴) = 
-//│ 			case ls⁷ of {
-//│ 				C h⁵ t⁵ => if f³(h⁵) then _lhManualLastFilter₁(t⁵, f³, [Some h⁵]) else _lhManualLastFilter₁(t⁵, f³, a⁴)
-//│ 				| N  => a⁴}
+//│ 		def _lhManualLastFilter₀(ls¹², f⁴, a⁸) = 
+//│ 			case ls¹² of {
+//│ 				C h⁸ t⁸ => if f⁴(h⁸) then _lhManualLastFilter₀(t⁸, f⁴, h⁸) else _lhManualLastFilter₀(t⁸, f⁴, a⁸)
+//│ 				| N  => a⁸}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h⁴ filter₁(t⁴, f²)]: 161 --->
-//│ 	case ls⁸ of {N  => a⁵ | C h⁶ t⁶ => last₀(h⁶, t⁶)}: 204
-//│ [N]: 168 --->
-//│ 	case ls⁸ of {N  => a⁵ | C h⁶ t⁶ => last₀(h⁶, t⁶)}: 204
-//│ [C h⁹ filter₁(t⁹, f⁵)]: 298 --->
-//│ 	case ls¹¹ of {C h⁸ t⁸ => [Some last₀(h⁸, t⁸)] | N  => [None]}: 273
-//│ [N]: 305 --->
-//│ 	case ls¹¹ of {C h⁸ t⁸ => [Some last₀(h⁸, t⁸)] | N  => [None]}: 273
+//│ [C h⁹ filter₁(t⁹, f⁵)]: 294 --->
+//│ 	case ls⁸ of {C h⁶ t⁶ => [Some last₀(h⁶, t⁶)] | N  => [None]}: 204
+//│ [N]: 301 --->
+//│ 	case ls⁸ of {C h⁶ t⁶ => [Some last₀(h⁶, t⁶)] | N  => [None]}: 204
+//│ [C h¹⁰ filter₁(t¹⁰, f⁶)]: 315 --->
+//│ 	case ls¹¹ of {N  => a⁶ | C h⁷ t⁷ => last₀(h⁷, t⁷)}: 237
+//│ [N]: 322 --->
+//│ 	case ls¹¹ of {N  => a⁶ | C h⁷ t⁷ => last₀(h⁷, t⁷)}: 237
 //│ ------------------
-//│ case ls⁸ of {N  => a⁵ | C h⁶ t⁶ => last₀(h⁶, t⁶)}: 204 --->
-//│ 	[C h⁴ filter₁(t⁴, f²)]: 161
-//│ 	[N]: 168
-//│ case ls¹¹ of {C h⁸ t⁸ => [Some last₀(h⁸, t⁸)] | N  => [None]}: 273 --->
-//│ 	[C h⁹ filter₁(t⁹, f⁵)]: 298
-//│ 	[N]: 305
+//│ case ls⁸ of {C h⁶ t⁶ => [Some last₀(h⁶, t⁶)] | N  => [None]}: 204 --->
+//│ 	[C h⁹ filter₁(t⁹, f⁵)]: 294
+//│ 	[N]: 301
+//│ case ls¹¹ of {N  => a⁶ | C h⁷ t⁷ => last₀(h⁷, t⁷)}: 237 --->
+//│ 	[C h¹⁰ filter₁(t¹⁰, f⁶)]: 315
+//│ 	[N]: 322
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C h⁴ filter₁(t⁴, f²)]: 161 --->
-//│ 	case ls⁸ of {N  => a⁵ | C h⁶ t⁶ => last₀(h⁶, t⁶)}: 204
-//│ [N]: 168 --->
-//│ 	case ls⁸ of {N  => a⁵ | C h⁶ t⁶ => last₀(h⁶, t⁶)}: 204
-//│ [C h⁹ filter₁(t⁹, f⁵)]: 298 --->
-//│ 	case ls¹¹ of {C h⁸ t⁸ => [Some last₀(h⁸, t⁸)] | N  => [None]}: 273
-//│ [N]: 305 --->
-//│ 	case ls¹¹ of {C h⁸ t⁸ => [Some last₀(h⁸, t⁸)] | N  => [None]}: 273
+//│ [C h⁹ filter₁(t⁹, f⁵)]: 294 --->
+//│ 	case ls⁸ of {C h⁶ t⁶ => [Some last₀(h⁶, t⁶)] | N  => [None]}: 204
+//│ [N]: 301 --->
+//│ 	case ls⁸ of {C h⁶ t⁶ => [Some last₀(h⁶, t⁶)] | N  => [None]}: 204
+//│ [C h¹⁰ filter₁(t¹⁰, f⁶)]: 315 --->
+//│ 	case ls¹¹ of {N  => a⁶ | C h⁷ t⁷ => last₀(h⁷, t⁷)}: 237
+//│ [N]: 322 --->
+//│ 	case ls¹¹ of {N  => a⁶ | C h⁷ t⁷ => last₀(h⁷, t⁷)}: 237
 //│ ------------------
-//│ case ls⁸ of {N  => a⁵ | C h⁶ t⁶ => last₀(h⁶, t⁶)}: 204 --->
-//│ 	[C h⁴ filter₁(t⁴, f²)]: 161
-//│ 	[N]: 168
-//│ case ls¹¹ of {C h⁸ t⁸ => [Some last₀(h⁸, t⁸)] | N  => [None]}: 273 --->
-//│ 	[C h⁹ filter₁(t⁹, f⁵)]: 298
-//│ 	[N]: 305
+//│ case ls⁸ of {C h⁶ t⁶ => [Some last₀(h⁶, t⁶)] | N  => [None]}: 204 --->
+//│ 	[C h⁹ filter₁(t⁹, f⁵)]: 294
+//│ 	[N]: 301
+//│ case ls¹¹ of {N  => a⁶ | C h⁷ t⁷ => last₀(h⁷, t⁷)}: 237 --->
+//│ 	[C h¹⁰ filter₁(t¹⁰, f⁶)]: 315
+//│ 	[N]: 322
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ testLastFilter₀(primId⁰(enumFromTo₀(1, 500000)))
 //│ testManual₀(primId⁰(enumFromTo₁(1, 500000)))
-//│ def enumFromTo₀(a¹², b³) = 
-//│ 	if (a¹² <= b³) then [C a¹² enumFromTo₀((a¹² + 1), b³)] else [N]
-//│ def enumFromTo₁(a¹³, b⁴) = 
-//│ 	if (a¹³ <= b⁴) then [C a¹³ enumFromTo₁((a¹³ + 1), b⁴)] else [N]
-//│ def testLastFilter₀(ls¹⁷) = 
-//│ 	lastDrive₀(filter₀(ls¹⁷, (fun x⁴ -> (x⁴ < 1000))))
+//│ def enumFromTo₀(a¹⁵, b⁴) = 
+//│ 	if (a¹⁵ <= b⁴) then [C a¹⁵ enumFromTo₀((a¹⁵ + 1), b⁴)] else [N]
+//│ def enumFromTo₁(a¹², b³) = 
+//│ 	if (a¹² <= b³) then [C a¹² enumFromTo₁((a¹² + 1), b³)] else [N]
+//│ def testLastFilter₀(ls¹⁸) = 
+//│ 	lastDrive₀(filter₀(ls¹⁸, (fun x⁴ -> (x⁴ < 1000))))
 //│ 	where
-//│ 	def filter₀(ls¹⁸, f⁷) = 
-//│ 		case ls¹⁸ of {
-//│ 			C h⁹ t⁹ => if f⁷(h⁹) then 
-//│ 				let h¹¹ = h⁹
-//│ 				in let t¹¹ = filter₁(t⁹, f⁷)
-//│ 				in [Some last₀(h¹¹, t¹¹)] else filter₀(t⁹, f⁷)
+//│ 	def filter₀(ls²⁰, f⁹) = 
+//│ 		case ls²⁰ of {
+//│ 			C h⁹ t⁹ => if f⁹(h⁹) then 
+//│ 				let h¹² = h⁹
+//│ 				in let t¹² = filter₁(t⁹, f⁹)
+//│ 				in [Some last₀(h¹², t¹²)] else filter₀(t⁹, f⁹)
 //│ 			| N  => [None]}
 //│ 		where
-//│ 		def filter₁(ls¹⁵, f⁶) = 
-//│ 			case ls¹⁵ of {
-//│ 				C h⁴ t⁴ => if f⁶(h⁴) then 
-//│ 					let h¹⁰ = h⁴
-//│ 					in let t¹⁰ = filter₁(t⁴, f⁶)
-//│ 					in (fun a⁸ -> last₀(h¹⁰, t¹⁰)) else filter₁(t⁴, f⁶)
-//│ 				| N  => (fun a⁹ -> a⁹)}
-//│ 	def lastDrive₀(ls¹⁴) = 
-//│ 		ls¹⁴
+//│ 		def filter₁(ls¹⁶, f⁷) = 
+//│ 			case ls¹⁶ of {
+//│ 				C h¹⁰ t¹⁰ => if f⁷(h¹⁰) then 
+//│ 					let h¹¹ = h¹⁰
+//│ 					in let t¹¹ = filter₁(t¹⁰, f⁷)
+//│ 					in (fun a⁹ -> last₀(h¹¹, t¹¹)) else filter₁(t¹⁰, f⁷)
+//│ 				| N  => (fun a¹⁰ -> a¹⁰)}
+//│ 	def lastDrive₀(ls¹⁵) = 
+//│ 		ls¹⁵
 //│ 		where
-//│ 		def last₀(a¹⁰, ls¹⁶) = 
-//│ 			ls¹⁶(a¹⁰)
-//│ def testManual₀(ls²⁰) = 
-//│ 	_lhManualLastFilter₀(ls²⁰, (fun x⁵ -> (x⁵ < 1000)), [None])
+//│ 		def last₀(a¹¹, ls¹⁷) = 
+//│ 			ls¹⁷(a¹¹)
+//│ def testManual₀(ls²²) = 
+//│ 	_lhManualLastFilterDrive₀(ls²², (fun x⁵ -> (x⁵ < 1000)))
 //│ 	where
-//│ 	def _lhManualLastFilter₀(ls¹⁹, f⁸, a¹¹) = 
+//│ 	def _lhManualLastFilterDrive₀(ls¹⁹, f⁸) = 
 //│ 		case ls¹⁹ of {
-//│ 			C h⁷ t⁷ => if f⁸(h⁷) then _lhManualLastFilter₁(t⁷, f⁸, [Some h⁷]) else _lhManualLastFilter₀(t⁷, f⁸, a¹¹)
-//│ 			| N  => a¹¹}
+//│ 			C h⁵ t⁵ => if f⁸(h⁵) then 
+//│ 				let a¹³ = _lhManualLastFilter₀(t⁵, f⁸, h⁵)
+//│ 				in [Some a¹³] else _lhManualLastFilterDrive₀(t⁵, f⁸)
+//│ 			| N  => [None]}
 //│ 		where
-//│ 		def _lhManualLastFilter₁(ls²¹, f⁹, a¹⁴) = 
+//│ 		def _lhManualLastFilter₀(ls²¹, f¹⁰, a¹⁴) = 
 //│ 			case ls²¹ of {
-//│ 				C h⁵ t⁵ => if f⁹(h⁵) then _lhManualLastFilter₁(t⁵, f⁹, [Some h⁵]) else _lhManualLastFilter₁(t⁵, f⁹, a¹⁴)
+//│ 				C h⁸ t⁸ => if f¹⁰(h⁸) then _lhManualLastFilter₀(t⁸, f¹⁰, h⁸) else _lhManualLastFilter₀(t⁸, f¹⁰, a¹⁴)
 //│ 				| N  => a¹⁴}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 

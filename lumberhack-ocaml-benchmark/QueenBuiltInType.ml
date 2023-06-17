@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 ./Queen.ml -o "./Queen.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Queen.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+ocamlfind ocamlopt -rectypes -thread -O3 ./QueenBuiltInType.ml -o "./QueenBuiltInType.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./QueenBuiltInType.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;
@@ -49,8 +49,8 @@ let rec gen_d0 _lh_gen_arg1_1 _lh_gen_arg2_1 =
         (_lh_listcomp_fun_2 ((gen_d0 (_lh_gen_arg1_1 - 1)) _lh_gen_arg2_1))))
 and nsoln_d0 _lh_nsoln_arg1_1 =
   (length_d0 ((gen_d0 _lh_nsoln_arg1_1) _lh_nsoln_arg1_1))
-and testQueen_d0 _lh_testQueen_arg1_1 =
-  (nsoln_d0 _lh_testQueen_arg1_1);;
+and testQueenBuiltInType_d0 _lh_testQueenBuiltInType_arg1_1 =
+  (nsoln_d0 _lh_testQueenBuiltInType_arg1_1);;
 
 (* lumberhack *)
 let rec length_d0_d0 ls_0 =
@@ -93,8 +93,8 @@ and gen_d0_d0 _lh_gen_arg1_0 _lh_gen_arg2_0 =
         (_lh_listcomp_fun_4 ((gen_d0_d0 (_lh_gen_arg1_0 - 1)) _lh_gen_arg2_0))))
 and nsoln_d0_d0 _lh_nsoln_arg1_0 =
   (length_d0_d0 ((gen_d0_d0 _lh_nsoln_arg1_0) _lh_nsoln_arg1_0))
-and testQueen_d0_d0 _lh_testQueen_arg1_0 =
-  (nsoln_d0_d0 _lh_testQueen_arg1_0);;
+and testQueenBuiltInType_d0_d0 _lh_testQueenBuiltInType_arg1_0 =
+  (nsoln_d0_d0 _lh_testQueenBuiltInType_arg1_0);;
 
 (* lumberhack_pop_out *)
 let rec length_d0_d0_d0 ls_1 =
@@ -103,10 +103,10 @@ let rec length_d0_d0_d0 ls_1 =
       (1 + (length_d0_d0_d0 t_1))
     | [] -> 
       0);;
-let rec safe_d0_d0_d0 _lh_safe_arg1_5 _lh_safe_arg2_5 _lh_safe_arg3_2 =
-  ((_lh_safe_arg3_2 _lh_safe_arg1_5) _lh_safe_arg2_5);;
-let rec safe_d0_d0_d1 _lh_safe_arg1_3 _lh_safe_arg2_3 _lh_safe_arg3_1 =
+let rec safe_d0_d0_d0 _lh_safe_arg1_3 _lh_safe_arg2_3 _lh_safe_arg3_1 =
   ((_lh_safe_arg3_1 _lh_safe_arg1_3) _lh_safe_arg2_3);;
+let rec safe_d0_d0_d1 _lh_safe_arg1_5 _lh_safe_arg2_5 _lh_safe_arg3_2 =
+  ((_lh_safe_arg3_2 _lh_safe_arg1_5) _lh_safe_arg2_5);;
 let rec enumFromTo_d0_d0_d0 a_1 b_1 _lh_popOutId_0_0 _lh_popOutId_1_0 _lh_popOutId_2_0 _lh_popOutId_3_0 =
   (if (a_1 <= b_1) then
     (let rec _lh_listcomp_fun_ls_h_4 = a_1 in
@@ -137,11 +137,11 @@ and gen_d0_d0_d0 _lh_gen_arg1_1 _lh_gen_arg2_1 =
         (_lh_listcomp_fun_1_0 ((gen_d0_d0_d0 (_lh_gen_arg1_1 - 1)) _lh_gen_arg2_1))))
 and nsoln_d0_d0_d0 _lh_nsoln_arg1_1 =
   (length_d0_d0_d0 ((gen_d0_d0_d0 _lh_nsoln_arg1_1) _lh_nsoln_arg1_1))
-and testQueen_d0_d0_d0 _lh_testQueen_arg1_1 =
-  (nsoln_d0_d0_d0 _lh_testQueen_arg1_1);;
+and testQueenBuiltInType_d0_d0_d0 _lh_testQueenBuiltInType_arg1_1 =
+  (nsoln_d0_d0_d0 _lh_testQueenBuiltInType_arg1_1);;
 
 Command_unix.run (Bench.make_command [
-  Bench.Test.create ~name:"original_Queen" (fun () -> ignore ((testQueen_d0 11)));
-  Bench.Test.create ~name:"lumberhack_Queen" (fun () -> ignore ((testQueen_d0_d0 11)));
-  Bench.Test.create ~name:"lumberhack_pop_out_Queen" (fun () -> ignore ((testQueen_d0_d0_d0 11)));
+  Bench.Test.create ~name:"original_QueenBuiltInType" (fun () -> ignore ((testQueenBuiltInType_d0 11)));
+  Bench.Test.create ~name:"lumberhack_QueenBuiltInType" (fun () -> ignore ((testQueenBuiltInType_d0_d0 11)));
+  Bench.Test.create ~name:"lumberhack_pop_out_QueenBuiltInType" (fun () -> ignore ((testQueenBuiltInType_d0_d0_d0 11)));
 ])

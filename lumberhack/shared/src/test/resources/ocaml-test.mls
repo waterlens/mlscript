@@ -2940,20 +2940,139 @@ fun map(f, xs) = if xs is
 fun qrev(a, ys) = if ys is
   C(h, t) then qrev(C(h, a), t)
   N then a
-fun _lhManualMapQrev(f, xs, a) = if xs is
-  C(h, t) then _lhManualMapQrev(f, t, C(f(h), a))
-  N then a
 fun testMapQrev(ls) = map(x => x + 1, qrev(N, ls))
-fun testManual(ls) = _lhManualMapQrev(x => x + 1, ls, N)
 testMapQrev(primId(enumFromTo(1, 10000)))
-testManual(primId(enumFromTo(1, 10000)))
-//│ |#fun| |enumFromTo|(|a|,| |b|)| |#=| |#if| |a| |<=| |b| |#then| |C|(|a|,| |enumFromTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |map|(|f|,| |xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#fun| |qrev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h|,| |t|)| |#then| |qrev|(|C|(|h|,| |a|)|,| |t|)|↵|N| |#then| |a|←|↵|#fun| |_lhManualMapQrev|(|f|,| |xs|,| |a|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |_lhManualMapQrev|(|f|,| |t|,| |C|(|f|(|h|)|,| |a|)|)|↵|N| |#then| |a|←|↵|#fun| |testMapQrev|(|ls|)| |#=| |map|(|x| |=>| |x| |+| |1|,| |qrev|(|N|,| |ls|)|)|↵|#fun| |testManual|(|ls|)| |#=| |_lhManualMapQrev|(|x| |=>| |x| |+| |1|,| |ls|,| |N|)|↵|testMapQrev|(|primId|(|enumFromTo|(|1|,| |10000|)|)|)|↵|testManual|(|primId|(|enumFromTo|(|1|,| |10000|)|)|)|
-//│ Parsed: {fun enumFromTo = a, b, => if (<= (a,) (b,)) then C (a, enumFromTo (+ (a,) (1,), b,),) else N; fun map = f, xs, => if xs is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; fun qrev = a, ys, => if ys is ‹(C (h, t,)) then qrev (C (h, a,), t,); (N) then a›; fun _lhManualMapQrev = f, xs, a, => if xs is ‹(C (h, t,)) then _lhManualMapQrev (f, t, C (f (h,), a,),); (N) then a›; fun testMapQrev = ls, => map (x, => + (x,) (1,), qrev (N, ls,),); fun testManual = ls, => _lhManualMapQrev (x, => + (x,) (1,), ls, N,); testMapQrev (primId (enumFromTo (1, 10000,),),); testManual (primId (enumFromTo (1, 10000,),),)}
+//│ |#fun| |enumFromTo|(|a|,| |b|)| |#=| |#if| |a| |<=| |b| |#then| |C|(|a|,| |enumFromTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |map|(|f|,| |xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#fun| |qrev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h|,| |t|)| |#then| |qrev|(|C|(|h|,| |a|)|,| |t|)|↵|N| |#then| |a|←|↵|#fun| |testMapQrev|(|ls|)| |#=| |map|(|x| |=>| |x| |+| |1|,| |qrev|(|N|,| |ls|)|)|↵|testMapQrev|(|primId|(|enumFromTo|(|1|,| |10000|)|)|)|
+//│ Parsed: {fun enumFromTo = a, b, => if (<= (a,) (b,)) then C (a, enumFromTo (+ (a,) (1,), b,),) else N; fun map = f, xs, => if xs is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; fun qrev = a, ys, => if ys is ‹(C (h, t,)) then qrev (C (h, a,), t,); (N) then a›; fun testMapQrev = ls, => map (x, => + (x,) (1,), qrev (N, ls,),); testMapQrev (primId (enumFromTo (1, 10000,),),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ testMapQrev^92(primId⁰(enumFromTo^94(1, 10000)))
+//│ testMapQrev^62(primId⁰(enumFromTo^64(1, 10000)))
+//│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ enumFromTo^7((a⁰ + 1), b⁰)] else [N]
+//│ def map(f⁰, xs⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C f⁰(h⁰) map^25(f⁰, t⁰)]
+//│ 	| N  => [N]}
+//│ def qrev(a¹, ys⁰) = case ys⁰ of {
+//│ 	C h¹ t¹ => qrev^36([C h¹ a¹], t¹)
+//│ 	| N  => a¹}
+//│ def testMapQrev(ls⁰) = map^47((fun x⁰ -> (x⁰ + 1)), qrev^55([N], ls⁰))
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec enumFromTo a_0 b_0 =
+//│ 		  (if (a_0 <= b_0) then
+//│ 		    (`C(a_0, ((enumFromTo (a_0 + 1)) b_0)))
+//│ 		  else
+//│ 		    (`N));;
+//│ 		let rec map f_0 xs_0 =
+//│ 		  (match xs_0 with
+//│ 		    | `C(h_0, t_0) -> 
+//│ 		      (`C((f_0 h_0), ((map f_0) t_0)))
+//│ 		    | `N -> 
+//│ 		      (`N));;
+//│ 		let rec qrev a_1 ys_0 =
+//│ 		  (match ys_0 with
+//│ 		    | `C(h_1, t_1) -> 
+//│ 		      ((qrev (`C(h_1, a_1))) t_1)
+//│ 		    | `N -> 
+//│ 		      a_1);;
+//│ 		let rec testMapQrev ls_0 =
+//│ 		  ((map (fun x_0 -> 
+//│ 		    (x_0 + 1))) ((qrev (`N)) ls_0));;
+//│ 		(testMapQrev ((enumFromTo 1) 10000))
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [enumFromTo^64]
+//│ 	[enumFromTo^64 · enumFromTo^7] ---> [enumFromTo^64] (only one)
+//│ [testMapQrev^62]
+//│ 	[testMapQrev^62 · map^47]
+//│ 		[testMapQrev^62 · map^47 · map^25] ---> [testMapQrev^62 · map^47] (only one)
+//│ 	[testMapQrev^62 · qrev^55]
+//│ 		[testMapQrev^62 · qrev^55 · qrev^36] ---> [testMapQrev^62 · qrev^55] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testMapQrev₀(primId⁰(enumFromTo₀(1, 10000)))
+//│ def enumFromTo₀(a², b¹) = 
+//│ 	if (a² <= b¹) then [C a² enumFromTo₀((a² + 1), b¹)] else [N]
+//│ def testMapQrev₀(ls¹) = 
+//│ 	map₀((fun x¹ -> (x¹ + 1)), qrev₀([N], ls¹))
+//│ 	where
+//│ 	def map₀(f¹, xs¹) = 
+//│ 		case xs¹ of {
+//│ 			C h³ t³ => [C f¹(h³) map₀(f¹, t³)]
+//│ 			| N  => [N]}
+//│ 	def qrev₀(a³, ys¹) = 
+//│ 		case ys¹ of {
+//│ 			C h² t² => qrev₀([C h² a³], t²)
+//│ 			| N  => a³}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [N]: 80 --->
+//│ 	case xs¹ of {C h³ t³ => [C f¹(h³) map₀(f¹, t³)] | N  => [N]}: 129
+//│ [C h² a³]: 110 --->
+//│ 	case xs¹ of {C h³ t³ => [C f¹(h³) map₀(f¹, t³)] | N  => [N]}: 129
+//│ ------------------
+//│ case xs¹ of {C h³ t³ => [C f¹(h³) map₀(f¹, t³)] | N  => [N]}: 129 --->
+//│ 	[N]: 80
+//│ 	[C h² a³]: 110
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [N]: 80 --->
+//│ 	case xs¹ of {C h³ t³ => [C f¹(h³) map₀(f¹, t³)] | N  => [N]}: 129
+//│ [C h² a³]: 110 --->
+//│ 	case xs¹ of {C h³ t³ => [C f¹(h³) map₀(f¹, t³)] | N  => [N]}: 129
+//│ ------------------
+//│ case xs¹ of {C h³ t³ => [C f¹(h³) map₀(f¹, t³)] | N  => [N]}: 129 --->
+//│ 	[N]: 80
+//│ 	[C h² a³]: 110
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testMapQrev₀(primId⁰(enumFromTo₀(1, 10000)))
+//│ def enumFromTo₀(a⁴, b²) = 
+//│ 	if (a⁴ <= b²) then [C a⁴ enumFromTo₀((a⁴ + 1), b²)] else [N]
+//│ def testMapQrev₀(ls²) = 
+//│ 	map₀((fun x² -> (x² + 1)), qrev₀((fun f² -> [N]), ls²))
+//│ 	where
+//│ 	def map₀(f⁴, xs²) = 
+//│ 		xs²(f⁴)
+//│ 	def qrev₀(a⁵, ys²) = 
+//│ 		case ys² of {
+//│ 			C h² t² => qrev₀(
+//│ 				let h⁴ = h²
+//│ 				in let t⁴ = a⁵
+//│ 				in (fun f³ -> [C f³(h⁴) map₀(f³, t⁴)]), t²)
+//│ 			| N  => a⁵}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
+
+:lhGenOCaml
+fun enumFromTo(a, b) = if a <= b then C(a, enumFromTo(a + 1, b)) else N
+fun map(f, xs) = if xs is
+  C(h, t) then C(f(h), map(f, t))
+  N then N
+fun qrev(a, ys) = if ys is
+  C(h, t) then qrev(C(h, a), t)
+  N then a
+fun _lhManualQrevMap(f, xs, a) = if xs is
+  C(h, t) then _lhManualQrevMap(f, t, C(f(h), a))
+  N then a
+fun testQrevMap(ls) = qrev(N, map(x => x + 1, ls))
+fun testManual(ls) = _lhManualQrevMap(x => x + 1, ls, N)
+testQrevMap(primId(enumFromTo(1, 10000)))
+testManual(primId(enumFromTo(1, 10000)))
+//│ |#fun| |enumFromTo|(|a|,| |b|)| |#=| |#if| |a| |<=| |b| |#then| |C|(|a|,| |enumFromTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |map|(|f|,| |xs|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#fun| |qrev|(|a|,| |ys|)| |#=| |#if| |ys| |is|→|C|(|h|,| |t|)| |#then| |qrev|(|C|(|h|,| |a|)|,| |t|)|↵|N| |#then| |a|←|↵|#fun| |_lhManualQrevMap|(|f|,| |xs|,| |a|)| |#=| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |_lhManualQrevMap|(|f|,| |t|,| |C|(|f|(|h|)|,| |a|)|)|↵|N| |#then| |a|←|↵|#fun| |testQrevMap|(|ls|)| |#=| |qrev|(|N|,| |map|(|x| |=>| |x| |+| |1|,| |ls|)|)|↵|#fun| |testManual|(|ls|)| |#=| |_lhManualQrevMap|(|x| |=>| |x| |+| |1|,| |ls|,| |N|)|↵|testQrevMap|(|primId|(|enumFromTo|(|1|,| |10000|)|)|)|↵|testManual|(|primId|(|enumFromTo|(|1|,| |10000|)|)|)|
+//│ Parsed: {fun enumFromTo = a, b, => if (<= (a,) (b,)) then C (a, enumFromTo (+ (a,) (1,), b,),) else N; fun map = f, xs, => if xs is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; fun qrev = a, ys, => if ys is ‹(C (h, t,)) then qrev (C (h, a,), t,); (N) then a›; fun _lhManualQrevMap = f, xs, a, => if xs is ‹(C (h, t,)) then _lhManualQrevMap (f, t, C (f (h,), a,),); (N) then a›; fun testQrevMap = ls, => qrev (N, map (x, => + (x,) (1,), ls,),); fun testManual = ls, => _lhManualQrevMap (x, => + (x,) (1,), ls, N,); testQrevMap (primId (enumFromTo (1, 10000,),),); testManual (primId (enumFromTo (1, 10000,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testQrevMap^92(primId⁰(enumFromTo^94(1, 10000)))
 //│ testManual^101(primId⁰(enumFromTo^103(1, 10000)))
-//│ def _lhManualMapQrev(f¹, xs¹, a²) = case xs¹ of {
-//│ 	C h² t² => _lhManualMapQrev^48(f¹, t², [C f¹(h²) a²])
+//│ def _lhManualQrevMap(f¹, xs¹, a²) = case xs¹ of {
+//│ 	C h² t² => _lhManualQrevMap^48(f¹, t², [C f¹(h²) a²])
 //│ 	| N  => a²}
 //│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ enumFromTo^7((a⁰ + 1), b⁰)] else [N]
 //│ def map(f⁰, xs⁰) = case xs⁰ of {
@@ -2962,13 +3081,13 @@ testManual(primId(enumFromTo(1, 10000)))
 //│ def qrev(a¹, ys⁰) = case ys⁰ of {
 //│ 	C h¹ t¹ => qrev^36([C h¹ a¹], t¹)
 //│ 	| N  => a¹}
-//│ def testManual(ls¹) = _lhManualMapQrev^79((fun x¹ -> (x¹ + 1)), ls¹, [N])
-//│ def testMapQrev(ls⁰) = map^64((fun x⁰ -> (x⁰ + 1)), qrev^72([N], ls⁰))
+//│ def testManual(ls¹) = _lhManualQrevMap^79((fun x¹ -> (x¹ + 1)), ls¹, [N])
+//│ def testQrevMap(ls⁰) = qrev^64([N], map^67((fun x⁰ -> (x⁰ + 1)), ls⁰))
 //│ 		---------- unoptimized ocaml gen ----------
-//│ 		let rec _lhManualMapQrev f_1 xs_1 a_2 =
+//│ 		let rec _lhManualQrevMap f_1 xs_1 a_2 =
 //│ 		  (match xs_1 with
 //│ 		    | `C(h_2, t_2) -> 
-//│ 		      (((_lhManualMapQrev f_1) t_2) (`C((f_1 h_2), a_2)))
+//│ 		      (((_lhManualQrevMap f_1) t_2) (`C((f_1 h_2), a_2)))
 //│ 		    | `N -> 
 //│ 		      a_2);;
 //│ 		let rec enumFromTo a_0 b_0 =
@@ -2989,12 +3108,12 @@ testManual(primId(enumFromTo(1, 10000)))
 //│ 		    | `N -> 
 //│ 		      a_1);;
 //│ 		let rec testManual ls_1 =
-//│ 		  (((_lhManualMapQrev (fun x_1 -> 
+//│ 		  (((_lhManualQrevMap (fun x_1 -> 
 //│ 		    (x_1 + 1))) ls_1) (`N))
-//│ 		and testMapQrev ls_0 =
-//│ 		  ((map (fun x_0 -> 
-//│ 		    (x_0 + 1))) ((qrev (`N)) ls_0));;
-//│ 		(testMapQrev ((enumFromTo 1) 10000))
+//│ 		and testQrevMap ls_0 =
+//│ 		  ((qrev (`N)) ((map (fun x_0 -> 
+//│ 		    (x_0 + 1))) ls_0));;
+//│ 		(testQrevMap ((enumFromTo 1) 10000))
 //│ 		(testManual ((enumFromTo 1) 10000))
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
@@ -3005,90 +3124,90 @@ testManual(primId(enumFromTo(1, 10000)))
 //│ [enumFromTo^94] (hopeless to continue)
 //│ 	[enumFromTo^94 · enumFromTo^7] ---> [enumFromTo^94] (using original def)
 //│ [testManual^101]
-//│ 	[testManual^101 · _lhManualMapQrev^79]
-//│ 		[testManual^101 · _lhManualMapQrev^79 · _lhManualMapQrev^48] ---> [testManual^101 · _lhManualMapQrev^79] (only one)
-//│ [testMapQrev^92]
-//│ 	[testMapQrev^92 · map^64]
-//│ 		[testMapQrev^92 · map^64 · map^25] ---> [testMapQrev^92 · map^64] (only one)
-//│ 	[testMapQrev^92 · qrev^72]
-//│ 		[testMapQrev^92 · qrev^72 · qrev^36] ---> [testMapQrev^92 · qrev^72] (only one)
+//│ 	[testManual^101 · _lhManualQrevMap^79]
+//│ 		[testManual^101 · _lhManualQrevMap^79 · _lhManualQrevMap^48] ---> [testManual^101 · _lhManualQrevMap^79] (only one)
+//│ [testQrevMap^92]
+//│ 	[testQrevMap^92 · map^67]
+//│ 		[testQrevMap^92 · map^67 · map^25] ---> [testQrevMap^92 · map^67] (only one)
+//│ 	[testQrevMap^92 · qrev^64] (hopeless to continue)
+//│ 		[testQrevMap^92 · qrev^64 · qrev^36] ---> [testQrevMap^92 · qrev^64] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ testMapQrev₀(primId⁰(enumFromTo₁(1, 10000)))
+//│ testQrevMap₀(primId⁰(enumFromTo₁(1, 10000)))
 //│ testManual₀(primId⁰(enumFromTo₀(1, 10000)))
-//│ def enumFromTo₀(a⁴, b²) = 
-//│ 	if (a⁴ <= b²) then [C a⁴ enumFromTo₀((a⁴ + 1), b²)] else [N]
-//│ def enumFromTo₁(a³, b¹) = 
-//│ 	if (a³ <= b¹) then [C a³ enumFromTo₁((a³ + 1), b¹)] else [N]
+//│ def enumFromTo₀(a⁴, b¹) = 
+//│ 	if (a⁴ <= b¹) then [C a⁴ enumFromTo₀((a⁴ + 1), b¹)] else [N]
+//│ def enumFromTo₁(a⁵, b²) = 
+//│ 	if (a⁵ <= b²) then [C a⁵ enumFromTo₁((a⁵ + 1), b²)] else [N]
 //│ def testManual₀(ls²) = 
-//│ 	_lhManualMapQrev₀((fun x² -> (x² + 1)), ls², [N])
+//│ 	_lhManualQrevMap₀((fun x² -> (x² + 1)), ls², [N])
 //│ 	where
-//│ 	def _lhManualMapQrev₀(f³, xs³, a⁵) = 
+//│ 	def _lhManualQrevMap₀(f³, xs³, a⁶) = 
 //│ 		case xs³ of {
-//│ 			C h⁴ t⁴ => _lhManualMapQrev₀(f³, t⁴, [C f³(h⁴) a⁵])
-//│ 			| N  => a⁵}
-//│ def testMapQrev₀(ls³) = 
-//│ 	map₀((fun x³ -> (x³ + 1)), qrev₀([N], ls³))
+//│ 			C h⁵ t⁵ => _lhManualQrevMap₀(f³, t⁵, [C f³(h⁵) a⁶])
+//│ 			| N  => a⁶}
+//│ def testQrevMap₀(ls³) = 
+//│ 	qrev₀([N], map₀((fun x³ -> (x³ + 1)), ls³))
 //│ 	where
 //│ 	def map₀(f², xs²) = 
 //│ 		case xs² of {
-//│ 			C h³ t³ => [C f²(h³) map₀(f², t³)]
+//│ 			C h⁴ t⁴ => [C f²(h⁴) map₀(f², t⁴)]
 //│ 			| N  => [N]}
-//│ 	def qrev₀(a⁶, ys¹) = 
+//│ 	def qrev₀(a³, ys¹) = 
 //│ 		case ys¹ of {
-//│ 			C h⁵ t⁵ => qrev₀([C h⁵ a⁶], t⁵)
-//│ 			| N  => a⁶}
+//│ 			C h³ t³ => qrev₀([C h³ a³], t³)
+//│ 			| N  => a³}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 152 --->
-//│ 	case xs² of {C h³ t³ => [C f²(h³) map₀(f², t³)] | N  => [N]}: 189
-//│ [C h⁵ a⁶]: 213 --->
-//│ 	case xs² of {C h³ t³ => [C f²(h³) map₀(f², t³)] | N  => [N]}: 189
+//│ [C f²(h⁴) map₀(f², t⁴)]: 164 --->
+//│ 	case ys¹ of {C h³ t³ => qrev₀([C h³ a³], t³) | N  => a³}: 119
+//│ [N]: 165 --->
+//│ 	case ys¹ of {C h³ t³ => qrev₀([C h³ a³], t³) | N  => a³}: 119
 //│ ------------------
-//│ case xs² of {C h³ t³ => [C f²(h³) map₀(f², t³)] | N  => [N]}: 189 --->
-//│ 	[N]: 152
-//│ 	[C h⁵ a⁶]: 213
+//│ case ys¹ of {C h³ t³ => qrev₀([C h³ a³], t³) | N  => a³}: 119 --->
+//│ 	[C f²(h⁴) map₀(f², t⁴)]: 164
+//│ 	[N]: 165
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [N]: 152 --->
-//│ 	case xs² of {C h³ t³ => [C f²(h³) map₀(f², t³)] | N  => [N]}: 189
-//│ [C h⁵ a⁶]: 213 --->
-//│ 	case xs² of {C h³ t³ => [C f²(h³) map₀(f², t³)] | N  => [N]}: 189
+//│ [C f²(h⁴) map₀(f², t⁴)]: 164 --->
+//│ 	case ys¹ of {C h³ t³ => qrev₀([C h³ a³], t³) | N  => a³}: 119
+//│ [N]: 165 --->
+//│ 	case ys¹ of {C h³ t³ => qrev₀([C h³ a³], t³) | N  => a³}: 119
 //│ ------------------
-//│ case xs² of {C h³ t³ => [C f²(h³) map₀(f², t³)] | N  => [N]}: 189 --->
-//│ 	[N]: 152
-//│ 	[C h⁵ a⁶]: 213
+//│ case ys¹ of {C h³ t³ => qrev₀([C h³ a³], t³) | N  => a³}: 119 --->
+//│ 	[C f²(h⁴) map₀(f², t⁴)]: 164
+//│ 	[N]: 165
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testMapQrev₀(primId⁰(enumFromTo₁(1, 10000)))
+//│ testQrevMap₀(primId⁰(enumFromTo₁(1, 10000)))
 //│ testManual₀(primId⁰(enumFromTo₀(1, 10000)))
-//│ def enumFromTo₀(a¹⁰, b⁴) = 
-//│ 	if (a¹⁰ <= b⁴) then [C a¹⁰ enumFromTo₀((a¹⁰ + 1), b⁴)] else [N]
-//│ def enumFromTo₁(a⁸, b³) = 
-//│ 	if (a⁸ <= b³) then [C a⁸ enumFromTo₁((a⁸ + 1), b³)] else [N]
+//│ def enumFromTo₀(a¹², b⁴) = 
+//│ 	if (a¹² <= b⁴) then [C a¹² enumFromTo₀((a¹² + 1), b⁴)] else [N]
+//│ def enumFromTo₁(a⁹, b³) = 
+//│ 	if (a⁹ <= b³) then [C a⁹ enumFromTo₁((a⁹ + 1), b³)] else [N]
 //│ def testManual₀(ls⁵) = 
-//│ 	_lhManualMapQrev₀((fun x⁵ -> (x⁵ + 1)), ls⁵, [N])
+//│ 	_lhManualQrevMap₀((fun x⁵ -> (x⁵ + 1)), ls⁵, [N])
 //│ 	where
-//│ 	def _lhManualMapQrev₀(f⁶, xs⁴, a⁹) = 
+//│ 	def _lhManualQrevMap₀(f⁴, xs⁴, a⁷) = 
 //│ 		case xs⁴ of {
-//│ 			C h⁴ t⁴ => _lhManualMapQrev₀(f⁶, t⁴, [C f⁶(h⁴) a⁹])
-//│ 			| N  => a⁹}
-//│ def testMapQrev₀(ls⁴) = 
-//│ 	map₀((fun x⁴ -> (x⁴ + 1)), qrev₀((fun f⁵ -> [N]), ls⁴))
-//│ 	where
-//│ 	def map₀(f⁷, xs⁵) = 
-//│ 		xs⁵(f⁷)
-//│ 	def qrev₀(a⁷, ys²) = 
-//│ 		case ys² of {
-//│ 			C h⁵ t⁵ => qrev₀(
-//│ 				let h⁶ = h⁵
-//│ 				in let t⁶ = a⁷
-//│ 				in (fun f⁴ -> [C f⁴(h⁶) map₀(f⁴, t⁶)]), t⁵)
+//│ 			C h⁵ t⁵ => _lhManualQrevMap₀(f⁴, t⁵, [C f⁴(h⁵) a⁷])
 //│ 			| N  => a⁷}
+//│ def testQrevMap₀(ls⁴) = 
+//│ 	qrev₀([N], map₀((fun x⁴ -> (x⁴ + 1)), ls⁴))
+//│ 	where
+//│ 	def map₀(f⁵, xs⁵) = 
+//│ 		case xs⁵ of {
+//│ 			C h⁴ t⁴ => 
+//│ 				let h⁶ = f⁵(h⁴)
+//│ 				in let t⁶ = map₀(f⁵, t⁴)
+//│ 				in (fun a¹⁰ -> qrev₀([C h⁶ a¹⁰], t⁶))
+//│ 			| N  => (fun a¹¹ -> a¹¹)}
+//│ 	def qrev₀(a⁸, ys²) = 
+//│ 		ys²(a⁸)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>

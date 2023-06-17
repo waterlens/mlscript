@@ -12,25 +12,25 @@ let rec _lhManualMapQrev f_1 xs_1 a_2 =
     | `C(h_2, t_2) -> 
       (((_lhManualMapQrev f_1) t_2) (`C((f_1 h_2), a_2)))
     | `N -> 
-      a_2)
-and enumFromTo a_0 b_0 =
+      a_2);;
+let rec enumFromTo a_0 b_0 =
   (if (a_0 <= b_0) then
     (`C(a_0, ((enumFromTo (a_0 + 1)) b_0)))
   else
-    (`N))
-and map f_0 xs_0 =
+    (`N));;
+let rec map f_0 xs_0 =
   (match xs_0 with
     | `C(h_0, t_0) -> 
       (`C((f_0 h_0), ((map f_0) t_0)))
     | `N -> 
-      (`N))
-and qrev a_1 ys_0 =
+      (`N));;
+let rec qrev a_1 ys_0 =
   (match ys_0 with
     | `C(h_1, t_1) -> 
       ((qrev (`C(h_1, a_1))) t_1)
     | `N -> 
-      a_1)
-and testManual ls_1 =
+      a_1);;
+let rec testManual ls_1 =
   (((_lhManualMapQrev (fun x_1 -> 
     (x_1 + 1))) ls_1) (`N))
 and testMapQrev ls_0 =
@@ -42,15 +42,15 @@ let rec enumFromTo_d0 a_3 b_1 =
   (if (a_3 <= b_1) then
     (`C(a_3, ((enumFromTo_d0 (a_3 + 1)) b_1)))
   else
-    (`N))
-and enumFromTo_d1 a_1 b_0 =
+    (`N));;
+let rec enumFromTo_d1 a_1 b_0 =
   (if (a_1 <= b_0) then
     (`C(a_1, ((enumFromTo_d1 (a_1 + 1)) b_0)))
   else
-    (`N))
-and map_d0 f_3 xs_1 =
-  (xs_1 f_3)
-and qrev_d0 a_0 ys_0 =
+    (`N));;
+let rec map_d0 f_3 xs_1 =
+  (xs_1 f_3);;
+let rec qrev_d0 a_0 ys_0 =
   (match ys_0 with
     | `C(h_0, t_0) -> 
       ((qrev_d0 (let rec h_1 = h_0 in
@@ -69,17 +69,17 @@ let rec enumFromTo_d0_d0 a_4 b_2 =
   (if (a_4 <= b_2) then
     (`C(a_4, ((enumFromTo_d0_d0 (a_4 + 1)) b_2)))
   else
-    (`N))
-and enumFromTo_d1_d0 a_5 b_3 =
+    (`N));;
+let rec enumFromTo_d1_d0 a_5 b_3 =
   (if (a_5 <= b_3) then
     (`C(a_5, ((enumFromTo_d1_d0 (a_5 + 1)) b_3)))
   else
-    (`N))
-and map_d0_d0 f_4 xs_2 =
-  (xs_2 f_4)
-and map_d0_d1 f_6 xs_3 =
-  (xs_3 f_6)
-and qrev_d0_d0 a_7 ys_1 =
+    (`N));;
+let rec map_d0_d0 f_4 xs_2 =
+  (xs_2 f_4);;
+let rec map_d0_d1 f_6 xs_3 =
+  (xs_3 f_6);;
+let rec qrev_d0_d0 a_7 ys_1 =
   (match ys_1 with
     | `C(h_4, t_4) -> 
       ((qrev_d0_d0 (let rec h_5 = h_4 in

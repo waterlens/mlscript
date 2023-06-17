@@ -1188,16 +1188,31 @@ class OCamlGen(val usePolymorphicVariant: Bool) extends CodeGen {
     hsFileContent
   }
   override def apply(p: Program): String = {
+    val callsInfo = p.d.callsInfo._2.toMap
+    def isIndependent(id: Ident): Boolean = {
+      val callees = callsInfo(id)
+      callees.isEmpty || callees.forall(_.id == id)
+    }
+
     val sortedContent = p.contents.sortBy {
       case Left(progDef) => progDef.id.tree.name
       case Right(expr) => ""
     }
-    val defs = sortedContent.collect {
-      case Left(df) => transFromProgDef(df).print
+
+    val independentDefs = sortedContent.collect {
+      case Left(df) if isIndependent(df.id) => (Raw("let rec ") <:> transFromProgDef(df) <:> Raw(";;")).print
+    }.mkString("\n")
+    val laterDefs = sortedContent.collect {
+      case Left(df) if !isIndependent(df.id) => transFromProgDef(df).print
     }.mkString("\nand ")
     Stacked(
-      { if defs.nonEmpty then
-        ("let rec " <:> Raw(defs) <:> ";;") :: Nil
+      { if independentDefs.nonEmpty then 
+        Raw(independentDefs) :: Nil
+      else
+        Nil
+      } :::
+      { if laterDefs.nonEmpty then
+        ("let rec " <:> Raw(laterDefs) <:> ";;") :: Nil
       else
         Nil
       } :::

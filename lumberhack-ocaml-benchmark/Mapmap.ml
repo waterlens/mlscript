@@ -12,19 +12,19 @@ let rec _lhManual ls_2 f1_0 f2_0 =
     | `C(h_1, t_1) -> 
       (`C((f2_0 (f1_0 h_1)), (((_lhManual t_1) f1_0) f2_0)))
     | `N -> 
-      (`N))
-and enumFromTo a_0 b_0 =
+      (`N));;
+let rec enumFromTo a_0 b_0 =
   (if (a_0 <= b_0) then
     (`C(a_0, ((enumFromTo (a_0 + 1)) b_0)))
   else
-    (`N))
-and map f_0 ls_0 =
+    (`N));;
+let rec map f_0 ls_0 =
   (match ls_0 with
     | `C(h_0, t_0) -> 
       (`C((f_0 h_0), ((map f_0) t_0)))
     | `N -> 
-      (`N))
-and testManual ls_3 =
+      (`N));;
+let rec testManual ls_3 =
   (((_lhManual ls_3) (fun x_2 -> 
     (x_2 * x_2))) (fun x_3 -> 
     (x_3 + 1)))
@@ -38,15 +38,15 @@ let rec enumFromTo_d0 a_1 b_1 =
   (if (a_1 <= b_1) then
     (`C(a_1, ((enumFromTo_d0 (a_1 + 1)) b_1)))
   else
-    (`N))
-and enumFromTo_d1 a_0 b_0 =
+    (`N));;
+let rec enumFromTo_d1 a_0 b_0 =
   (if (a_0 <= b_0) then
     (`C(a_0, ((enumFromTo_d1 (a_0 + 1)) b_0)))
   else
-    (`N))
-and map_d0 f_0 ls_2 =
-  (ls_2 f_0)
-and map_d1 f_1 ls_3 =
+    (`N));;
+let rec map_d0 f_0 ls_2 =
+  (ls_2 f_0);;
+let rec map_d1 f_1 ls_3 =
   (match ls_3 with
     | `C(h_1, t_1) -> 
       (let rec h_2 = (f_1 h_1) in
@@ -66,17 +66,17 @@ let rec enumFromTo_d0_d0 a_3 b_3 =
   (if (a_3 <= b_3) then
     (`C(a_3, ((enumFromTo_d0_d0 (a_3 + 1)) b_3)))
   else
-    (`N))
-and enumFromTo_d1_d0 a_2 b_2 =
+    (`N));;
+let rec enumFromTo_d1_d0 a_2 b_2 =
   (if (a_2 <= b_2) then
     (`C(a_2, ((enumFromTo_d1_d0 (a_2 + 1)) b_2)))
   else
-    (`N))
-and map_d0_d0 f_7 ls_7 =
-  (ls_7 f_7)
-and map_d0_d1 f_8 ls_1_0 =
-  (ls_1_0 f_8)
-and map_d1_d0 f_4 ls_5 _lh_popOutId_0_0 =
+    (`N));;
+let rec map_d0_d0 f_7 ls_7 =
+  (ls_7 f_7);;
+let rec map_d0_d1 f_8 ls_1_0 =
+  (ls_1_0 f_8);;
+let rec map_d1_d0 f_4 ls_5 _lh_popOutId_0_0 =
   (match ls_5 with
     | `C(h_3, t_3) -> 
       (let rec h_4 = (f_4 h_3) in

@@ -535,13 +535,16 @@ trait ProgramRewrite { this: Program =>
     val copied -> _ -> _ = this.copyDefsToNewDeforest
     newd(copied)
     val (newProg, finalD) =
-      copied.expandedWithNewDeforest(CallTree.callTreeUsingNonSplitKnot(newd))
-    Program(
+      copied.expandedWithNewDeforest(CallTree.callTreeWithoutKnotTying(newd))
+    
+    val prgm = Program(
       newProg.defAndExpr._2.map { e => given Option[Ident] = None; R(e.popOutLambdas) }
       ::: newProg.defAndExpr._1.map { case (id, body) =>
         given Option[Ident] = Some(id)
         L(ProgDef(id, body.popOutLambdas))
       }.toList
-    ) -> finalD
+    )(using finalD)
+    finalD(prgm)
+    prgm -> finalD
   }
 }

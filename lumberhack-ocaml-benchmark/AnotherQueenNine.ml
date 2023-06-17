@@ -17,38 +17,48 @@ let rec and_d0 _lh_and_arg1_1 =
       else
         false)
     | _ -> 
-      (failwith "match error"))
-and append_d0 _lh_append_arg1_1 _lh_append_arg2_1 =
+      (failwith "match error"));;
+let rec append_d0 _lh_append_arg1_1 _lh_append_arg2_1 =
   (match _lh_append_arg1_1 with
     | [] -> 
       _lh_append_arg2_1
     | (_lh_append_LH_C_0_1 :: _lh_append_LH_C_1_1) -> 
       (_lh_append_LH_C_0_1::((append_d0 _lh_append_LH_C_1_1) _lh_append_arg2_1))
     | _ -> 
-      (failwith "match error"))
-and enumFromTo_d0 a_3 b_3 =
+      (failwith "match error"));;
+let rec enumFromTo_d0 a_3 b_3 =
   (if (a_3 <= b_3) then
     (a_3::((enumFromTo_d0 (a_3 + 1)) b_3))
   else
-    [])
-and enumFromTo_d1 a_2 b_2 =
+    []);;
+let rec enumFromTo_d1 a_2 b_2 =
   (if (a_2 <= b_2) then
     (a_2::((enumFromTo_d1 (a_2 + 1)) b_2))
   else
-    [])
-and length_d0 ls_7 =
+    []);;
+let rec length_d0 ls_7 =
   (match ls_7 with
     | (h_7 :: t_8) -> 
       (1 + (length_d0 t_8))
     | [] -> 
-      0)
-and length_d1 ls_8 =
+      0);;
+let rec length_d1 ls_8 =
   (match ls_8 with
     | (h_8 :: t_9) -> 
       (1 + (length_d1 t_9))
     | [] -> 
-      0)
-and queens_d0 _lh_queens_arg1_1 =
+      0);;
+let rec zip_d0 xs_1 ys_1 =
+  (match xs_1 with
+    | (hx_1 :: tx_1) -> 
+      (match ys_1 with
+        | (hy_1 :: ty_1) -> 
+          ((hx_1, hy_1)::((zip_d0 tx_1) ty_1))
+        | [] -> 
+          [])
+    | [] -> 
+      []);;
+let rec queens_d0 _lh_queens_arg1_1 =
   (match _lh_queens_arg1_1 with
     | 0 -> 
       ([]::[])
@@ -83,30 +93,34 @@ and safe_d0 _lh_safe_arg1_1 _lh_safe_arg2_1 =
           [])) in
       (_lh_listcomp_fun_5 ((zip_d0 ((enumFromTo_d1 1) (m_1 - 1))) _lh_safe_arg1_1)))))
 and testAnotherQueenNine_d0 _lh_testAnotherQueenNine_arg1_1 =
-  (length_d0 (queens_d0 _lh_testAnotherQueenNine_arg1_1))
-and zip_d0 xs_1 ys_1 =
-  (match xs_1 with
-    | (hx_1 :: tx_1) -> 
-      (match ys_1 with
-        | (hy_1 :: ty_1) -> 
-          ((hx_1, hy_1)::((zip_d0 tx_1) ty_1))
-        | [] -> 
-          [])
-    | [] -> 
-      []);;
+  (length_d0 (queens_d0 _lh_testAnotherQueenNine_arg1_1));;
 
 (* lumberhack *)
 let rec and_d0_d0 _lh_and_arg1_0 =
-  _lh_and_arg1_0
-and append_d0_d0 _lh_append_arg1_0 _lh_append_arg2_0 =
+  _lh_and_arg1_0;;
+let rec append_d0_d0 _lh_append_arg1_0 _lh_append_arg2_0 =
   (match _lh_append_arg1_0 with
     | [] -> 
       _lh_append_arg2_0
     | (_lh_append_LH_C_0_0 :: _lh_append_LH_C_1_0) -> 
       (_lh_append_LH_C_0_0::((append_d0_d0 _lh_append_LH_C_1_0) _lh_append_arg2_0))
     | _ -> 
-      (failwith "match error"))
-and enumFromTo_d0_d0 a_1 b_1 =
+      (failwith "match error"));;
+let rec length_d0_d0 ls_0 =
+  (match ls_0 with
+    | (h_0 :: t_0) -> 
+      (1 + (length_d0_d0 t_0))
+    | [] -> 
+      0);;
+let rec length_d1_d0 ls_1 =
+  (match ls_1 with
+    | (h_1 :: t_1) -> 
+      (1 + (length_d1_d0 t_1))
+    | [] -> 
+      0);;
+let rec zip_d0_d0 xs_0 ys_0 =
+  (xs_0 ys_0);;
+let rec enumFromTo_d0_d0 a_1 b_1 =
   (if (a_1 <= b_1) then
     (let rec _lh_listcomp_fun_ls_h_2 = a_1 in
       (let rec _lh_listcomp_fun_ls_t_3 = ((enumFromTo_d0_d0 (a_1 + 1)) b_1) in
@@ -143,18 +157,6 @@ and enumFromTo_d1_d0 a_0 b_0 =
   else
     (fun ys_2 _lh_safe_arg2_4 m_4 _lh_listcomp_fun_6 -> 
       true))
-and length_d0_d0 ls_0 =
-  (match ls_0 with
-    | (h_0 :: t_0) -> 
-      (1 + (length_d0_d0 t_0))
-    | [] -> 
-      0)
-and length_d1_d0 ls_1 =
-  (match ls_1 with
-    | (h_1 :: t_1) -> 
-      (1 + (length_d1_d0 t_1))
-    | [] -> 
-      0)
 and queens_d0_d0 _lh_queens_arg1_0 =
   (match _lh_queens_arg1_0 with
     | 0 -> 
@@ -175,24 +177,38 @@ and safe_d0_d0 _lh_safe_arg1_0 _lh_safe_arg2_0 =
       (((_lh_listcomp_fun_para_2 _lh_safe_arg2_0) m_0) _lh_listcomp_fun_2)) in
       (_lh_listcomp_fun_2 ((zip_d0_d0 ((enumFromTo_d1_d0 1) (m_0 - 1))) _lh_safe_arg1_0)))))
 and testAnotherQueenNine_d0_d0 _lh_testAnotherQueenNine_arg1_0 =
-  (length_d0_d0 (queens_d0_d0 _lh_testAnotherQueenNine_arg1_0))
-and zip_d0_d0 xs_0 ys_0 =
-  (xs_0 ys_0);;
+  (length_d0_d0 (queens_d0_d0 _lh_testAnotherQueenNine_arg1_0));;
 
 (* lumberhack_pop_out *)
 let rec and_d0_d0_d0 _lh_and_arg1_1 =
-  _lh_and_arg1_1
-and and_d0_d0_d1 _lh_and_arg1_2 =
-  _lh_and_arg1_2
-and append_d0_d0_d0 _lh_append_arg1_1 _lh_append_arg2_1 =
+  _lh_and_arg1_1;;
+let rec and_d0_d0_d1 _lh_and_arg1_2 =
+  _lh_and_arg1_2;;
+let rec append_d0_d0_d0 _lh_append_arg1_1 _lh_append_arg2_1 =
   (match _lh_append_arg1_1 with
     | [] -> 
       _lh_append_arg2_1
     | (_lh_append_LH_C_0_1 :: _lh_append_LH_C_1_1) -> 
       (_lh_append_LH_C_0_1::((append_d0_d0_d0 _lh_append_LH_C_1_1) _lh_append_arg2_1))
     | _ -> 
-      (failwith "match error"))
-and enumFromTo_d0_d0_d0 a_3 b_3 _lh_popOutId_0_0 _lh_popOutId_1_0 _lh_popOutId_2_0 _lh_popOutId_3_0 =
+      (failwith "match error"));;
+let rec length_d0_d0_d0 ls_2 =
+  (match ls_2 with
+    | (h_2 :: t_2) -> 
+      (1 + (length_d0_d0_d0 t_2))
+    | [] -> 
+      0);;
+let rec length_d1_d0_d0 ls_3 =
+  (match ls_3 with
+    | (h_3 :: t_3) -> 
+      (1 + (length_d1_d0_d0 t_3))
+    | [] -> 
+      0);;
+let rec zip_d0_d0_d0 xs_2 ys_4 =
+  (xs_2 ys_4);;
+let rec zip_d0_d0_d1 xs_1 ys_3 =
+  (xs_1 ys_3);;
+let rec enumFromTo_d0_d0_d0 a_3 b_3 _lh_popOutId_0_0 _lh_popOutId_1_0 _lh_popOutId_2_0 _lh_popOutId_3_0 =
   (if (a_3 <= b_3) then
     (let rec _lh_listcomp_fun_ls_h_7 = a_3 in
       (let rec _lh_listcomp_fun_ls_t_9 = ((enumFromTo_d0_d0_d0 (a_3 + 1)) b_3) in
@@ -223,18 +239,6 @@ and enumFromTo_d1_d0_d0 a_2 b_2 _lh_popOutId_0_2 _lh_popOutId_1_2 _lh_popOutId_2
             true)))
   else
     true)
-and length_d0_d0_d0 ls_2 =
-  (match ls_2 with
-    | (h_2 :: t_2) -> 
-      (1 + (length_d0_d0_d0 t_2))
-    | [] -> 
-      0)
-and length_d1_d0_d0 ls_3 =
-  (match ls_3 with
-    | (h_3 :: t_3) -> 
-      (1 + (length_d1_d0_d0 t_3))
-    | [] -> 
-      0)
 and queens_d0_d0_d0 _lh_queens_arg1_1 =
   (match _lh_queens_arg1_1 with
     | 0 -> 
@@ -255,11 +259,7 @@ and safe_d0_d0_d0 _lh_safe_arg1_1 _lh_safe_arg2_9 =
       (((_lh_listcomp_fun_para_5 _lh_safe_arg2_9) m_9) _lh_listcomp_fun_2_1)) in
       (_lh_listcomp_fun_2_1 ((zip_d0_d0_d1 ((enumFromTo_d1_d0_d0 1) (m_9 - 1))) _lh_safe_arg1_1)))))
 and testAnotherQueenNine_d0_d0_d0 _lh_testAnotherQueenNine_arg1_1 =
-  (length_d0_d0_d0 (queens_d0_d0_d0 _lh_testAnotherQueenNine_arg1_1))
-and zip_d0_d0_d0 xs_2 ys_4 =
-  (xs_2 ys_4)
-and zip_d0_d0_d1 xs_1 ys_3 =
-  (xs_1 ys_3);;
+  (length_d0_d0_d0 (queens_d0_d0_d0 _lh_testAnotherQueenNine_arg1_1));;
 
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_AnotherQueenNine" (fun () -> ignore ((testAnotherQueenNine_d0 9)));

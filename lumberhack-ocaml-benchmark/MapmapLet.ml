@@ -11,15 +11,15 @@ let rec enumFromTo a_0 b_0 =
   (if (a_0 <= b_0) then
     (`C(a_0, ((enumFromTo (a_0 + 1)) b_0)))
   else
-    (`N))
-and map f_0 ls_0 =
+    (`N));;
+let rec map f_0 ls_0 =
   (match ls_0 with
     | `C(h_0, t_0) -> 
       (let rec r_0 = (f_0 h_0) in
         (`C(r_0, ((map f_0) t_0))))
     | `N -> 
-      (`N))
-and testMapmapLet ls_1 =
+      (`N));;
+let rec testMapmapLet ls_1 =
   ((map (fun x_0 -> 
     (x_0 + 1))) ((map (fun x_1 -> 
     (x_1 * x_1))) ls_1));;
@@ -29,10 +29,10 @@ let rec enumFromTo_d0 a_0 b_0 =
   (if (a_0 <= b_0) then
     (`C(a_0, ((enumFromTo_d0 (a_0 + 1)) b_0)))
   else
-    (`N))
-and map_d0 f_3 ls_2 =
-  (ls_2 f_3)
-and map_d1 f_0 ls_0 =
+    (`N));;
+let rec map_d0 f_3 ls_2 =
+  (ls_2 f_3);;
+let rec map_d1 f_0 ls_0 =
   (match ls_0 with
     | `C(h_0, t_0) -> 
       (let rec r_0 = (f_0 h_0) in
@@ -54,12 +54,12 @@ let rec enumFromTo_d0_d0 a_1 b_1 =
   (if (a_1 <= b_1) then
     (`C(a_1, ((enumFromTo_d0_d0 (a_1 + 1)) b_1)))
   else
-    (`N))
-and map_d0_d0 f_4 ls_3 =
-  (ls_3 f_4)
-and map_d0_d1 f_8 ls_5 =
-  (ls_5 f_8)
-and map_d1_d0 f_5 ls_4 _lh_popOutId_0_0 =
+    (`N));;
+let rec map_d0_d0 f_4 ls_3 =
+  (ls_3 f_4);;
+let rec map_d0_d1 f_8 ls_5 =
+  (ls_5 f_8);;
+let rec map_d1_d0 f_5 ls_4 _lh_popOutId_0_0 =
   (match ls_4 with
     | `C(h_2, t_2) -> 
       (let rec r_2 = (f_5 h_2) in

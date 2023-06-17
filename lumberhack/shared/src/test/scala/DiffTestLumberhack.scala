@@ -64,6 +64,7 @@ class DiffTestLumberhack extends DiffTests {
         val p = Program.fromPgrm(Pgrm(filteredEntities))(using originalD)
         (p, p.d)
       given d: Deforest = newD
+      d(originalProgram)
       d.debug = mode.stdout || mode.verbose
       
       if mode.stdout || mode.verbose then {
@@ -88,7 +89,7 @@ class DiffTestLumberhack extends DiffTests {
         output("<<<<<<<<<< Original Eval Res <<<<<<<<<<")
       }
       
-      d(originalProgram)
+      
       d.resolveConstraints
       val iterativeProcessRes = keepFuse(originalProgram, d, mode, evaluate, output)
       
@@ -336,5 +337,6 @@ object DiffTestLumberhack {
   private val allFiles = os.walk(dir)
   private val validExt = Set("mls")
   private val modified: Set[os.RelPath] = DiffTests.findModifiedFiles(dir)
-  private val lumberhackLocalTest = Set[Str]("_LocalTest")
+  // private val lumberhackLocalTest = Set[Str]("_LocalTest")
+  private val lumberhackLocalTest = Set[Str]()
 }

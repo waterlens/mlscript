@@ -2746,3 +2746,185 @@ testManual(primId(enumFromTo(1, 10000)))
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
+:lhInHaskell
+:lhGenOCaml
+sum [] = 0
+sum (h:t) = h + sum(t)
+testSumListComprehensionBuiltInType n = sum [ k * m | k <- [1..n], m <- [1..k] ]
+testSumListComprehensionBuiltInType $ primId 1000
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testSumListComprehensionBuiltInType₀^304(primId⁰(1000))
+//│ def enumFromTo₀(a², b²) = if (a² <= b²) then [LH_C a² enumFromTo₀^232((a² + 1), b²)] else [LH_N]
+//│ def enumFromTo₁(a³, b³) = if (a³ <= b³) then [LH_C a³ enumFromTo₁^252((a³ + 1), b³)] else [LH_N]
+//│ def sum₀(_lh_sum_arg1¹) = case _lh_sum_arg1¹ of {
+//│ 	LH_N  => 0
+//│ 	| LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => (_lh_sum_LH_C_0¹ + sum₀^217(_lh_sum_LH_C_1¹))
+//│ 	| _  => error⁰("match error")}
+//│ def testSumListComprehensionBuiltInType₀(_lh_testSumListComprehensionBuiltInType_arg1¹) = sum₀^266(
+//│ 	let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> case _lh_listcomp_fun_para² of {
+//│ 		LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => 
+//│ 			let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {
+//│ 				LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C (_lh_listcomp_fun_ls_h² * _lh_listcomp_fun_ls_h³) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]
+//│ 				| LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ 			in _lh_listcomp_fun³(enumFromTo₁^284(1, _lh_listcomp_fun_ls_h²))
+//│ 		| LH_N  => [LH_N]})
+//│ 	in _lh_listcomp_fun²(enumFromTo₀^295(1, _lh_testSumListComprehensionBuiltInType_arg1¹)))
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec enumFromTo_d0 a_2 b_2 =
+//│ 		  (if (a_2 <= b_2) then
+//│ 		    (a_2::((enumFromTo_d0 (a_2 + 1)) b_2))
+//│ 		  else
+//│ 		    []);;
+//│ 		let rec enumFromTo_d1 a_3 b_3 =
+//│ 		  (if (a_3 <= b_3) then
+//│ 		    (a_3::((enumFromTo_d1 (a_3 + 1)) b_3))
+//│ 		  else
+//│ 		    []);;
+//│ 		let rec sum_d0 _lh_sum_arg1_1 =
+//│ 		  (match _lh_sum_arg1_1 with
+//│ 		    | [] -> 
+//│ 		      0
+//│ 		    | (_lh_sum_LH_C_0_1 :: _lh_sum_LH_C_1_1) -> 
+//│ 		      (_lh_sum_LH_C_0_1 + (sum_d0 _lh_sum_LH_C_1_1))
+//│ 		    | _ -> 
+//│ 		      (failwith "match error"));;
+//│ 		let rec testSumListComprehensionBuiltInType_d0 _lh_testSumListComprehensionBuiltInType_arg1_1 =
+//│ 		  (sum_d0 (let rec _lh_listcomp_fun_2 = (fun _lh_listcomp_fun_para_2 -> 
+//│ 		    (match _lh_listcomp_fun_para_2 with
+//│ 		      | (_lh_listcomp_fun_ls_h_2 :: _lh_listcomp_fun_ls_t_2) -> 
+//│ 		        (let rec _lh_listcomp_fun_3 = (fun _lh_listcomp_fun_para_3 -> 
+//│ 		          (match _lh_listcomp_fun_para_3 with
+//│ 		            | (_lh_listcomp_fun_ls_h_3 :: _lh_listcomp_fun_ls_t_3) -> 
+//│ 		              ((_lh_listcomp_fun_ls_h_2 * _lh_listcomp_fun_ls_h_3)::(_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3))
+//│ 		            | [] -> 
+//│ 		              (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_2))) in
+//│ 		          (_lh_listcomp_fun_3 ((enumFromTo_d1 1) _lh_listcomp_fun_ls_h_2)))
+//│ 		      | [] -> 
+//│ 		        [])) in
+//│ 		    (_lh_listcomp_fun_2 ((enumFromTo_d0 1) _lh_testSumListComprehensionBuiltInType_arg1_1))));;
+//│ 		(testSumListComprehensionBuiltInType_d0 1000)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testSumListComprehensionBuiltInType₀^304] (hopeless to continue)
+//│ 	[testSumListComprehensionBuiltInType₀^304 · enumFromTo₀^295] (using original def)
+//│ 		[testSumListComprehensionBuiltInType₀^304 · enumFromTo₀^295 · enumFromTo₀^232] ---> [testSumListComprehensionBuiltInType₀^304 · enumFromTo₀^295] (using original def)
+//│ 	[testSumListComprehensionBuiltInType₀^304 · enumFromTo₁^284] (using original def)
+//│ 		[testSumListComprehensionBuiltInType₀^304 · enumFromTo₁^284 · enumFromTo₁^252] ---> [testSumListComprehensionBuiltInType₀^304 · enumFromTo₁^284] (using original def)
+//│ 	[testSumListComprehensionBuiltInType₀^304 · sum₀^266] (using original def)
+//│ 		[testSumListComprehensionBuiltInType₀^304 · sum₀^266 · sum₀^217] ---> [testSumListComprehensionBuiltInType₀^304 · sum₀^266] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testSumListComprehensionBuiltInType₀₀(primId⁰(1000))
+//│ def testSumListComprehensionBuiltInType₀₀(_lh_testSumListComprehensionBuiltInType_arg1¹) = 
+//│ 	sum₀₀(
+//│ 		let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> case _lh_listcomp_fun_para² of {
+//│ 			LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => 
+//│ 				let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {
+//│ 					LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C (_lh_listcomp_fun_ls_h² * _lh_listcomp_fun_ls_h³) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]
+//│ 					| LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ 				in _lh_listcomp_fun³(enumFromTo₁₀(1, _lh_listcomp_fun_ls_h²))
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun²(enumFromTo₀₀(1, _lh_testSumListComprehensionBuiltInType_arg1¹)))
+//│ 	where
+//│ 	def enumFromTo₀₀(a³, b³) = 
+//│ 		if (a³ <= b³) then [LH_C a³ enumFromTo₀₀((a³ + 1), b³)] else [LH_N]
+//│ 	def enumFromTo₁₀(a², b²) = 
+//│ 		if (a² <= b²) then [LH_C a² enumFromTo₁₀((a² + 1), b²)] else [LH_N]
+//│ 	def sum₀₀(_lh_sum_arg1¹) = 
+//│ 		case _lh_sum_arg1¹ of {
+//│ 			LH_N  => 0
+//│ 			| LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => (_lh_sum_LH_C_0¹ + sum₀₀(_lh_sum_LH_C_1¹))
+//│ 			| _  => error⁰("match error")}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_C (_lh_listcomp_fun_ls_h² * _lh_listcomp_fun_ls_h³) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]: 109 --->
+//│ 	case _lh_sum_arg1¹ of {LH_N  => 0 | LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => (_lh_sum_LH_C_0¹ + sum₀₀(_lh_sum_LH_C_1¹)) | _  => error⁰("match error")}: 148
+//│ [LH_N]: 123 --->
+//│ 	case _lh_sum_arg1¹ of {LH_N  => 0 | LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => (_lh_sum_LH_C_0¹ + sum₀₀(_lh_sum_LH_C_1¹)) | _  => error⁰("match error")}: 148
+//│ [LH_C a² enumFromTo₁₀((a² + 1), b²)]: 165 --->
+//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C (_lh_listcomp_fun_ls_h² * _lh_listcomp_fun_ls_h³) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 113
+//│ [LH_N]: 166 --->
+//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C (_lh_listcomp_fun_ls_h² * _lh_listcomp_fun_ls_h³) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 113
+//│ [LH_C a³ enumFromTo₀₀((a³ + 1), b³)]: 185 --->
+//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C (_lh_listcomp_fun_ls_h² * _lh_listcomp_fun_ls_h³) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ in _lh_listcomp_fun³(enumFromTo₁₀(1, _lh_listcomp_fun_ls_h²)) | LH_N  => [LH_N]}: 124
+//│ [LH_N]: 186 --->
+//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C (_lh_listcomp_fun_ls_h² * _lh_listcomp_fun_ls_h³) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ in _lh_listcomp_fun³(enumFromTo₁₀(1, _lh_listcomp_fun_ls_h²)) | LH_N  => [LH_N]}: 124
+//│ ------------------
+//│ case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C (_lh_listcomp_fun_ls_h² * _lh_listcomp_fun_ls_h³) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 113 --->
+//│ 	[LH_C a² enumFromTo₁₀((a² + 1), b²)]: 165
+//│ 	[LH_N]: 166
+//│ case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C (_lh_listcomp_fun_ls_h² * _lh_listcomp_fun_ls_h³) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ in _lh_listcomp_fun³(enumFromTo₁₀(1, _lh_listcomp_fun_ls_h²)) | LH_N  => [LH_N]}: 124 --->
+//│ 	[LH_C a³ enumFromTo₀₀((a³ + 1), b³)]: 185
+//│ 	[LH_N]: 186
+//│ case _lh_sum_arg1¹ of {LH_N  => 0 | LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => (_lh_sum_LH_C_0¹ + sum₀₀(_lh_sum_LH_C_1¹)) | _  => error⁰("match error")}: 148 --->
+//│ 	[LH_C (_lh_listcomp_fun_ls_h² * _lh_listcomp_fun_ls_h³) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]: 109
+//│ 	[LH_N]: 123
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_C (_lh_listcomp_fun_ls_h² * _lh_listcomp_fun_ls_h³) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]: 109 --->
+//│ 	case _lh_sum_arg1¹ of {LH_N  => 0 | LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => (_lh_sum_LH_C_0¹ + sum₀₀(_lh_sum_LH_C_1¹)) | _  => error⁰("match error")}: 148
+//│ [LH_N]: 123 --->
+//│ 	case _lh_sum_arg1¹ of {LH_N  => 0 | LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => (_lh_sum_LH_C_0¹ + sum₀₀(_lh_sum_LH_C_1¹)) | _  => error⁰("match error")}: 148
+//│ [LH_C a² enumFromTo₁₀((a² + 1), b²)]: 165 --->
+//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C (_lh_listcomp_fun_ls_h² * _lh_listcomp_fun_ls_h³) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 113
+//│ [LH_N]: 166 --->
+//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C (_lh_listcomp_fun_ls_h² * _lh_listcomp_fun_ls_h³) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 113
+//│ [LH_C a³ enumFromTo₀₀((a³ + 1), b³)]: 185 --->
+//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C (_lh_listcomp_fun_ls_h² * _lh_listcomp_fun_ls_h³) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ in _lh_listcomp_fun³(enumFromTo₁₀(1, _lh_listcomp_fun_ls_h²)) | LH_N  => [LH_N]}: 124
+//│ [LH_N]: 186 --->
+//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C (_lh_listcomp_fun_ls_h² * _lh_listcomp_fun_ls_h³) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ in _lh_listcomp_fun³(enumFromTo₁₀(1, _lh_listcomp_fun_ls_h²)) | LH_N  => [LH_N]}: 124
+//│ ------------------
+//│ case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C (_lh_listcomp_fun_ls_h² * _lh_listcomp_fun_ls_h³) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 113 --->
+//│ 	[LH_C a² enumFromTo₁₀((a² + 1), b²)]: 165
+//│ 	[LH_N]: 166
+//│ case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C (_lh_listcomp_fun_ls_h² * _lh_listcomp_fun_ls_h³) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
+//│ in _lh_listcomp_fun³(enumFromTo₁₀(1, _lh_listcomp_fun_ls_h²)) | LH_N  => [LH_N]}: 124 --->
+//│ 	[LH_C a³ enumFromTo₀₀((a³ + 1), b³)]: 185
+//│ 	[LH_N]: 186
+//│ case _lh_sum_arg1¹ of {LH_N  => 0 | LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => (_lh_sum_LH_C_0¹ + sum₀₀(_lh_sum_LH_C_1¹)) | _  => error⁰("match error")}: 148 --->
+//│ 	[LH_C (_lh_listcomp_fun_ls_h² * _lh_listcomp_fun_ls_h³) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]: 109
+//│ 	[LH_N]: 123
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testSumListComprehensionBuiltInType₀₀(primId⁰(1000))
+//│ def testSumListComprehensionBuiltInType₀₀(_lh_testSumListComprehensionBuiltInType_arg1²) = 
+//│ 	sum₀₀(
+//│ 		let _lh_listcomp_fun⁴ = (fun _lh_listcomp_fun_para⁴ -> _lh_listcomp_fun_para⁴(_lh_listcomp_fun⁴))
+//│ 		in _lh_listcomp_fun⁴(enumFromTo₀₀(1, _lh_testSumListComprehensionBuiltInType_arg1²)))
+//│ 	where
+//│ 	def enumFromTo₀₀(a⁵, b⁵) = 
+//│ 		if (a⁵ <= b⁵) then 
+//│ 			let _lh_listcomp_fun_ls_h⁷ = a⁵
+//│ 			in let _lh_listcomp_fun_ls_t⁷ = enumFromTo₀₀((a⁵ + 1), b⁵)
+//│ 			in (fun _lh_listcomp_fun⁹ -> 
+//│ 				let _lh_listcomp_fun¹⁰ = (fun _lh_listcomp_fun_para⁵ -> _lh_listcomp_fun_para⁵(_lh_listcomp_fun_ls_h⁷, _lh_listcomp_fun¹⁰, _lh_listcomp_fun⁹, _lh_listcomp_fun_ls_t⁷))
+//│ 				in _lh_listcomp_fun¹⁰(enumFromTo₁₀(1, _lh_listcomp_fun_ls_h⁷))) else (fun _lh_listcomp_fun¹¹ -> 0)
+//│ 	def enumFromTo₁₀(a⁴, b⁴) = 
+//│ 		if (a⁴ <= b⁴) then 
+//│ 			let _lh_listcomp_fun_ls_h⁴ = a⁴
+//│ 			in let _lh_listcomp_fun_ls_t⁴ = enumFromTo₁₀((a⁴ + 1), b⁴)
+//│ 			in (fun _lh_listcomp_fun_ls_h⁵ -> (fun _lh_listcomp_fun⁵ -> (fun _lh_listcomp_fun⁶ -> (fun _lh_listcomp_fun_ls_t⁵ -> 
+//│ 				let _lh_sum_LH_C_0² = (_lh_listcomp_fun_ls_h⁵ * _lh_listcomp_fun_ls_h⁴)
+//│ 				in let _lh_sum_LH_C_1² = _lh_listcomp_fun⁵(_lh_listcomp_fun_ls_t⁴)
+//│ 				in (_lh_sum_LH_C_0² + sum₀₀(_lh_sum_LH_C_1²)))))) else (fun _lh_listcomp_fun_ls_h⁶ -> (fun _lh_listcomp_fun⁷ -> (fun _lh_listcomp_fun⁸ -> (fun _lh_listcomp_fun_ls_t⁶ -> _lh_listcomp_fun⁸(_lh_listcomp_fun_ls_t⁶)))))
+//│ 	def sum₀₀(_lh_sum_arg1²) = 
+//│ 		_lh_sum_arg1²
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

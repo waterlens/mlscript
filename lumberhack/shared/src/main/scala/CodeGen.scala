@@ -963,7 +963,7 @@ object HaskellGen extends CodeGen {
 
 }
 
-class OCamlGen(val usePolymorphicVariant: Bool) extends CodeGen {
+class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = false) extends CodeGen {
   override val primitives = Map(
     "add" -> "(+)", "sub" -> "(-)", "%" -> "mod", "==" -> "=", "error" -> "failwith", "/=" -> "!="
   )
@@ -1028,14 +1028,17 @@ class OCamlGen(val usePolymorphicVariant: Bool) extends CodeGen {
 
   override def transformMatchArm(dtor: Var, params: List[Ident]): Document = {
     BuiltInTypes.fromStr(dtor.name) -> params match {
-      case Some(BuiltInTypes.ListCons) -> (h :: t :: Nil) => "(" <:> transfromId(h) <:> " :: " <:> transfromId(t) <:> ") -> "
-      case Some(BuiltInTypes.ListNil) -> Nil => "[] -> "
       case Some(BuiltInTypes.BoolTrue) -> Nil => "true -> "
       case Some(BuiltInTypes.BoolFalse) -> Nil => "false -> "
-      case Some(BuiltInTypes.Tuple(n)) -> fields => {
-        assert(fields.length == n)
-        "(" <:> Lined(fields.map(f => transfromId(f)), ", ") <:> ") -> "
-      }
+      case Some(otherBuiltInTypes) -> params if backToBuiltInType =>
+        otherBuiltInTypes -> params match {
+          case BuiltInTypes.ListCons -> (h :: t :: Nil) => "(" <:> transfromId(h) <:> " :: " <:> transfromId(t) <:> ") -> "
+          case BuiltInTypes.ListNil -> Nil => "[] -> "
+          case BuiltInTypes.Tuple(n) -> fields => {
+            assert(fields.length == n)
+            "(" <:> Lined(fields.map(f => transfromId(f)), ", ") <:> ") -> "
+          }
+        }
       case None -> (idPat :: Nil) if dtor.name == "_" => transfromId(idPat) <:> " -> "
       case None -> Nil if dtor.name == "_" => "_ -> "
       case None -> Nil if dtor.name.matches("\\d+|\".*\"") => s"${dtor.name} -> "
@@ -1060,14 +1063,15 @@ class OCamlGen(val usePolymorphicVariant: Bool) extends CodeGen {
     case Call(lhs, rhs) =>
       "(" <:> rec(lhs) <:> " " <:> rec(rhs) <:> ")"
     case Ctor(name, args) => //All constructors are polymorphic variants with tuple arguments
-      (BuiltInTypes.fromStr(name.name).map {
-        case BuiltInTypes.ListCons => "(" <:> rec(args(0)) <:> "::" <:> rec(args(1)) <:> ")"
-        case BuiltInTypes.ListNil => Raw("[]")
-        case BuiltInTypes.BoolTrue => Raw("true")
-        case BuiltInTypes.BoolFalse => Raw("false")
+      (BuiltInTypes.fromStr(name.name).flatMap {
+        case BuiltInTypes.BoolTrue => Some(Raw("true"))
+        case BuiltInTypes.BoolFalse => Some(Raw("false"))
+        case otherBuiltInTypes if !backToBuiltInType => None
+        case BuiltInTypes.ListCons => Some("(" <:> rec(args(0)) <:> "::" <:> rec(args(1)) <:> ")")
+        case BuiltInTypes.ListNil => Some(Raw("[]"))
         case BuiltInTypes.Tuple(n) =>
           assert(n == args.length)
-          "(" <:> Lined(args.map(rec(_)).toList, ", ") <:> ")"
+          Some("(" <:> Lined(args.map(rec(_)).toList, ", ") <:> ")")
       }).getOrElse(
         (if this.usePolymorphicVariant then "(`" else "(") <:> name.name <:> {
           if args.nonEmpty then

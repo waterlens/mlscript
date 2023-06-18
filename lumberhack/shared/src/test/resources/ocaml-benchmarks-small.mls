@@ -21,21 +21,21 @@ testMapmapBuiltInType $ primId [1..100000]
 //│ 		---------- unoptimized ocaml gen ----------
 //│ 		let rec enumFromTo_d0 a_2 b_2 =
 //│ 		  (if (a_2 <= b_2) then
-//│ 		    (a_2::((enumFromTo_d0 (a_2 + 1)) b_2))
+//│ 		    (`LH_C(a_2, ((enumFromTo_d0 (a_2 + 1)) b_2)))
 //│ 		  else
-//│ 		    []);;
+//│ 		    (`LH_N));;
 //│ 		let rec map_d0 f_4 ls_7 =
 //│ 		  (match ls_7 with
-//│ 		    | (h_7 :: t_8) -> 
-//│ 		      ((f_4 h_7)::((map_d0 f_4) t_8))
-//│ 		    | [] -> 
-//│ 		      []);;
+//│ 		    | `LH_C(h_7, t_8) -> 
+//│ 		      (`LH_C((f_4 h_7), ((map_d0 f_4) t_8)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N));;
 //│ 		let rec map_d1 f_5 ls_8 =
 //│ 		  (match ls_8 with
-//│ 		    | (h_8 :: t_9) -> 
-//│ 		      ((f_5 h_8)::((map_d1 f_5) t_9))
-//│ 		    | [] -> 
-//│ 		      []);;
+//│ 		    | `LH_C(h_8, t_9) -> 
+//│ 		      (`LH_C((f_5 h_8), ((map_d1 f_5) t_9)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N));;
 //│ 		let rec testMapmapBuiltInType_d0 _lh_testMapmapBuiltInType_arg1_1 =
 //│ 		  ((map_d0 (fun x_2 -> 
 //│ 		    (x_2 + 1))) ((map_d1 (fun x_3 -> 
@@ -862,66 +862,66 @@ testQueenUsingFlatMapBuiltInType $ primId 11
 //│ 		---------- unoptimized ocaml gen ----------
 //│ 		let rec append_d0 _lh_append_arg1_2 _lh_append_arg2_2 =
 //│ 		  (match _lh_append_arg1_2 with
-//│ 		    | [] -> 
+//│ 		    | `LH_N -> 
 //│ 		      _lh_append_arg2_2
-//│ 		    | (_lh_append_LH_C_0_2 :: _lh_append_LH_C_1_2) -> 
-//│ 		      (_lh_append_LH_C_0_2::((append_d0 _lh_append_LH_C_1_2) _lh_append_arg2_2))
+//│ 		    | `LH_C(_lh_append_LH_C_0_2, _lh_append_LH_C_1_2) -> 
+//│ 		      (`LH_C(_lh_append_LH_C_0_2, ((append_d0 _lh_append_LH_C_1_2) _lh_append_arg2_2)))
 //│ 		    | _ -> 
 //│ 		      (failwith "match error"));;
 //│ 		let rec append_d1 _lh_append_arg1_1 _lh_append_arg2_1 =
 //│ 		  (match _lh_append_arg1_1 with
-//│ 		    | [] -> 
+//│ 		    | `LH_N -> 
 //│ 		      _lh_append_arg2_1
-//│ 		    | (_lh_append_LH_C_0_1 :: _lh_append_LH_C_1_1) -> 
-//│ 		      (_lh_append_LH_C_0_1::((append_d1 _lh_append_LH_C_1_1) _lh_append_arg2_1))
+//│ 		    | `LH_C(_lh_append_LH_C_0_1, _lh_append_LH_C_1_1) -> 
+//│ 		      (`LH_C(_lh_append_LH_C_0_1, ((append_d1 _lh_append_LH_C_1_1) _lh_append_arg2_1)))
 //│ 		    | _ -> 
 //│ 		      (failwith "match error"));;
 //│ 		let rec enumFromTo_d0 a_2 b_4 =
 //│ 		  (if (a_2 <= b_4) then
-//│ 		    (a_2::((enumFromTo_d0 (a_2 + 1)) b_4))
+//│ 		    (`LH_C(a_2, ((enumFromTo_d0 (a_2 + 1)) b_4)))
 //│ 		  else
-//│ 		    []);;
+//│ 		    (`LH_N));;
 //│ 		let rec length_d0 ls_7 =
 //│ 		  (match ls_7 with
-//│ 		    | (h_7 :: t_8) -> 
+//│ 		    | `LH_C(h_7, t_8) -> 
 //│ 		      (1 + (length_d0 t_8))
-//│ 		    | [] -> 
+//│ 		    | `LH_N -> 
 //│ 		      0);;
 //│ 		let rec safe_d0 _lh_safe_arg1_1 _lh_safe_arg2_1 _lh_safe_arg3_1 =
 //│ 		  (match _lh_safe_arg3_1 with
-//│ 		    | [] -> 
+//│ 		    | `LH_N -> 
 //│ 		      true
-//│ 		    | (_lh_safe_LH_C_0_1 :: _lh_safe_LH_C_1_1) -> 
+//│ 		    | `LH_C(_lh_safe_LH_C_0_1, _lh_safe_LH_C_1_1) -> 
 //│ 		      ((((_lh_safe_arg1_1 != _lh_safe_LH_C_0_1) && (_lh_safe_arg1_1 != (_lh_safe_LH_C_0_1 + _lh_safe_arg2_1))) && (_lh_safe_arg1_1 != (_lh_safe_LH_C_0_1 - _lh_safe_arg2_1))) && (((safe_d0 _lh_safe_arg1_1) (_lh_safe_arg2_1 + 1)) _lh_safe_LH_C_1_1))
 //│ 		    | _ -> 
 //│ 		      (failwith "match error"));;
 //│ 		let rec flatMap_d0 _lh_flatMap_arg1_1 _lh_flatMap_arg2_1 =
 //│ 		  (match _lh_flatMap_arg2_1 with
-//│ 		    | [] -> 
-//│ 		      []
-//│ 		    | (_lh_flatMap_LH_C_0_1 :: _lh_flatMap_LH_C_1_1) -> 
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)
+//│ 		    | `LH_C(_lh_flatMap_LH_C_0_1, _lh_flatMap_LH_C_1_1) -> 
 //│ 		      ((append_d0 (_lh_flatMap_arg1_1 _lh_flatMap_LH_C_0_1)) ((flatMap_d0 _lh_flatMap_arg1_1) _lh_flatMap_LH_C_1_1))
 //│ 		    | _ -> 
 //│ 		      (failwith "match error"))
 //│ 		and flatMap_d1 _lh_flatMap_arg1_2 _lh_flatMap_arg2_2 =
 //│ 		  (match _lh_flatMap_arg2_2 with
-//│ 		    | [] -> 
-//│ 		      []
-//│ 		    | (_lh_flatMap_LH_C_0_2 :: _lh_flatMap_LH_C_1_2) -> 
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)
+//│ 		    | `LH_C(_lh_flatMap_LH_C_0_2, _lh_flatMap_LH_C_1_2) -> 
 //│ 		      ((append_d1 (_lh_flatMap_arg1_2 _lh_flatMap_LH_C_0_2)) ((flatMap_d1 _lh_flatMap_arg1_2) _lh_flatMap_LH_C_1_2))
 //│ 		    | _ -> 
 //│ 		      (failwith "match error"))
 //│ 		and gen_d0 _lh_gen_arg1_1 _lh_gen_arg2_1 =
 //│ 		  (match _lh_gen_arg1_1 with
 //│ 		    | 0 -> 
-//│ 		      ([]::[])
+//│ 		      (`LH_C((`LH_N), (`LH_N)))
 //│ 		    | _ -> 
 //│ 		      ((flatMap_d0 (fun b_3 -> 
 //│ 		        ((flatMap_d1 (fun q_1 -> 
 //│ 		          (if (((safe_d0 q_1) 1) b_3) then
-//│ 		            ((q_1::b_3)::[])
+//│ 		            (`LH_C((`LH_C(q_1, b_3)), (`LH_N)))
 //│ 		          else
-//│ 		            []))) ((enumFromTo_d0 1) _lh_gen_arg2_1)))) ((gen_d0 (_lh_gen_arg1_1 - 1)) _lh_gen_arg2_1)))
+//│ 		            (`LH_N)))) ((enumFromTo_d0 1) _lh_gen_arg2_1)))) ((gen_d0 (_lh_gen_arg1_1 - 1)) _lh_gen_arg2_1)))
 //│ 		and nsoln_d0 _lh_nsoln_arg1_1 =
 //│ 		  (length_d0 ((gen_d0 _lh_nsoln_arg1_1) _lh_nsoln_arg1_1))
 //│ 		and testQueenUsingFlatMapBuiltInType_d0 _lh_testQueenUsingFlatMapBuiltInType_arg1_1 =
@@ -1182,43 +1182,43 @@ testQueenBuiltInType $ primId 11
 //│ 		---------- unoptimized ocaml gen ----------
 //│ 		let rec enumFromTo_d0 a_2 b_2 =
 //│ 		  (if (a_2 <= b_2) then
-//│ 		    (a_2::((enumFromTo_d0 (a_2 + 1)) b_2))
+//│ 		    (`LH_C(a_2, ((enumFromTo_d0 (a_2 + 1)) b_2)))
 //│ 		  else
-//│ 		    []);;
+//│ 		    (`LH_N));;
 //│ 		let rec length_d0 ls_7 =
 //│ 		  (match ls_7 with
-//│ 		    | (h_7 :: t_8) -> 
+//│ 		    | `LH_C(h_7, t_8) -> 
 //│ 		      (1 + (length_d0 t_8))
-//│ 		    | [] -> 
+//│ 		    | `LH_N -> 
 //│ 		      0);;
 //│ 		let rec safe_d0 _lh_safe_arg1_1 _lh_safe_arg2_1 _lh_safe_arg3_1 =
 //│ 		  (match _lh_safe_arg3_1 with
-//│ 		    | [] -> 
+//│ 		    | `LH_N -> 
 //│ 		      true
-//│ 		    | (_lh_safe_LH_C_0_1 :: _lh_safe_LH_C_1_1) -> 
+//│ 		    | `LH_C(_lh_safe_LH_C_0_1, _lh_safe_LH_C_1_1) -> 
 //│ 		      ((((_lh_safe_arg1_1 != _lh_safe_LH_C_0_1) && (_lh_safe_arg1_1 != (_lh_safe_LH_C_0_1 + _lh_safe_arg2_1))) && (_lh_safe_arg1_1 != (_lh_safe_LH_C_0_1 - _lh_safe_arg2_1))) && (((safe_d0 _lh_safe_arg1_1) (_lh_safe_arg2_1 + 1)) _lh_safe_LH_C_1_1))
 //│ 		    | _ -> 
 //│ 		      (failwith "match error"));;
 //│ 		let rec gen_d0 _lh_gen_arg1_1 _lh_gen_arg2_1 =
 //│ 		  (match _lh_gen_arg1_1 with
 //│ 		    | 0 -> 
-//│ 		      ([]::[])
+//│ 		      (`LH_C((`LH_N), (`LH_N)))
 //│ 		    | _ -> 
 //│ 		      (let rec _lh_listcomp_fun_2 = (fun _lh_listcomp_fun_para_2 -> 
 //│ 		        (match _lh_listcomp_fun_para_2 with
-//│ 		          | (_lh_listcomp_fun_ls_h_2 :: _lh_listcomp_fun_ls_t_2) -> 
+//│ 		          | `LH_C(_lh_listcomp_fun_ls_h_2, _lh_listcomp_fun_ls_t_2) -> 
 //│ 		            (let rec _lh_listcomp_fun_3 = (fun _lh_listcomp_fun_para_3 -> 
 //│ 		              (match _lh_listcomp_fun_para_3 with
-//│ 		                | (_lh_listcomp_fun_ls_h_3 :: _lh_listcomp_fun_ls_t_3) -> 
+//│ 		                | `LH_C(_lh_listcomp_fun_ls_h_3, _lh_listcomp_fun_ls_t_3) -> 
 //│ 		                  (if (((safe_d0 _lh_listcomp_fun_ls_h_3) 1) _lh_listcomp_fun_ls_h_2) then
-//│ 		                    ((_lh_listcomp_fun_ls_h_3::_lh_listcomp_fun_ls_h_2)::(_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3))
+//│ 		                    (`LH_C((`LH_C(_lh_listcomp_fun_ls_h_3, _lh_listcomp_fun_ls_h_2)), (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3)))
 //│ 		                  else
 //│ 		                    (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3))
-//│ 		                | [] -> 
+//│ 		                | `LH_N -> 
 //│ 		                  (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_2))) in
 //│ 		              (_lh_listcomp_fun_3 ((enumFromTo_d0 1) _lh_gen_arg2_1)))
-//│ 		          | [] -> 
-//│ 		            [])) in
+//│ 		          | `LH_N -> 
+//│ 		            (`LH_N))) in
 //│ 		        (_lh_listcomp_fun_2 ((gen_d0 (_lh_gen_arg1_1 - 1)) _lh_gen_arg2_1))))
 //│ 		and nsoln_d0 _lh_nsoln_arg1_1 =
 //│ 		  (length_d0 ((gen_d0 _lh_nsoln_arg1_1) _lh_nsoln_arg1_1))
@@ -1715,9 +1715,9 @@ testAnotherQueenNineBuiltInType $ primId 9
 //│ 		---------- unoptimized ocaml gen ----------
 //│ 		let rec and_d0 _lh_and_arg1_1 =
 //│ 		  (match _lh_and_arg1_1 with
-//│ 		    | [] -> 
+//│ 		    | `LH_N -> 
 //│ 		      true
-//│ 		    | (_lh_and_LH_C_0_1 :: _lh_and_LH_C_1_1) -> 
+//│ 		    | `LH_C(_lh_and_LH_C_0_1, _lh_and_LH_C_1_1) -> 
 //│ 		      (if _lh_and_LH_C_0_1 then
 //│ 		        (and_d0 _lh_and_LH_C_1_1)
 //│ 		      else
@@ -1726,77 +1726,77 @@ testAnotherQueenNineBuiltInType $ primId 9
 //│ 		      (failwith "match error"));;
 //│ 		let rec append_d0 _lh_append_arg1_1 _lh_append_arg2_1 =
 //│ 		  (match _lh_append_arg1_1 with
-//│ 		    | [] -> 
+//│ 		    | `LH_N -> 
 //│ 		      _lh_append_arg2_1
-//│ 		    | (_lh_append_LH_C_0_1 :: _lh_append_LH_C_1_1) -> 
-//│ 		      (_lh_append_LH_C_0_1::((append_d0 _lh_append_LH_C_1_1) _lh_append_arg2_1))
+//│ 		    | `LH_C(_lh_append_LH_C_0_1, _lh_append_LH_C_1_1) -> 
+//│ 		      (`LH_C(_lh_append_LH_C_0_1, ((append_d0 _lh_append_LH_C_1_1) _lh_append_arg2_1)))
 //│ 		    | _ -> 
 //│ 		      (failwith "match error"));;
 //│ 		let rec enumFromTo_d0 a_3 b_3 =
 //│ 		  (if (a_3 <= b_3) then
-//│ 		    (a_3::((enumFromTo_d0 (a_3 + 1)) b_3))
+//│ 		    (`LH_C(a_3, ((enumFromTo_d0 (a_3 + 1)) b_3)))
 //│ 		  else
-//│ 		    []);;
+//│ 		    (`LH_N));;
 //│ 		let rec enumFromTo_d1 a_2 b_2 =
 //│ 		  (if (a_2 <= b_2) then
-//│ 		    (a_2::((enumFromTo_d1 (a_2 + 1)) b_2))
+//│ 		    (`LH_C(a_2, ((enumFromTo_d1 (a_2 + 1)) b_2)))
 //│ 		  else
-//│ 		    []);;
+//│ 		    (`LH_N));;
 //│ 		let rec length_d0 ls_7 =
 //│ 		  (match ls_7 with
-//│ 		    | (h_7 :: t_8) -> 
+//│ 		    | `LH_C(h_7, t_8) -> 
 //│ 		      (1 + (length_d0 t_8))
-//│ 		    | [] -> 
+//│ 		    | `LH_N -> 
 //│ 		      0);;
 //│ 		let rec length_d1 ls_8 =
 //│ 		  (match ls_8 with
-//│ 		    | (h_8 :: t_9) -> 
+//│ 		    | `LH_C(h_8, t_9) -> 
 //│ 		      (1 + (length_d1 t_9))
-//│ 		    | [] -> 
+//│ 		    | `LH_N -> 
 //│ 		      0);;
 //│ 		let rec zip_d0 xs_1 ys_1 =
 //│ 		  (match xs_1 with
-//│ 		    | (hx_1 :: tx_1) -> 
+//│ 		    | `LH_C(hx_1, tx_1) -> 
 //│ 		      (match ys_1 with
-//│ 		        | (hy_1 :: ty_1) -> 
-//│ 		          ((hx_1, hy_1)::((zip_d0 tx_1) ty_1))
-//│ 		        | [] -> 
-//│ 		          [])
-//│ 		    | [] -> 
-//│ 		      []);;
+//│ 		        | `LH_C(hy_1, ty_1) -> 
+//│ 		          (`LH_C((`LH_P2(hx_1, hy_1)), ((zip_d0 tx_1) ty_1)))
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_N))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N));;
 //│ 		let rec queens_d0 _lh_queens_arg1_1 =
 //│ 		  (match _lh_queens_arg1_1 with
 //│ 		    | 0 -> 
-//│ 		      ([]::[])
+//│ 		      (`LH_C((`LH_N), (`LH_N)))
 //│ 		    | _ -> 
 //│ 		      (let rec _lh_listcomp_fun_4 = (fun _lh_listcomp_fun_para_4 -> 
 //│ 		        (match _lh_listcomp_fun_para_4 with
-//│ 		          | (_lh_listcomp_fun_ls_h_4 :: _lh_listcomp_fun_ls_t_4) -> 
+//│ 		          | `LH_C(_lh_listcomp_fun_ls_h_4, _lh_listcomp_fun_ls_t_4) -> 
 //│ 		            (let rec _lh_listcomp_fun_5 = (fun _lh_listcomp_fun_para_5 -> 
 //│ 		              (match _lh_listcomp_fun_para_5 with
-//│ 		                | (_lh_listcomp_fun_ls_h_5 :: _lh_listcomp_fun_ls_t_5) -> 
+//│ 		                | `LH_C(_lh_listcomp_fun_ls_h_5, _lh_listcomp_fun_ls_t_5) -> 
 //│ 		                  (if ((safe_d0 _lh_listcomp_fun_ls_h_4) _lh_listcomp_fun_ls_h_5) then
-//│ 		                    (((append_d0 _lh_listcomp_fun_ls_h_4) (_lh_listcomp_fun_ls_h_5::[]))::(_lh_listcomp_fun_5 _lh_listcomp_fun_ls_t_5))
+//│ 		                    (`LH_C(((append_d0 _lh_listcomp_fun_ls_h_4) (`LH_C(_lh_listcomp_fun_ls_h_5, (`LH_N)))), (_lh_listcomp_fun_5 _lh_listcomp_fun_ls_t_5)))
 //│ 		                  else
 //│ 		                    (_lh_listcomp_fun_5 _lh_listcomp_fun_ls_t_5))
-//│ 		                | [] -> 
+//│ 		                | `LH_N -> 
 //│ 		                  (_lh_listcomp_fun_4 _lh_listcomp_fun_ls_t_4))) in
 //│ 		              (_lh_listcomp_fun_5 ((enumFromTo_d0 1) 9)))
-//│ 		          | [] -> 
-//│ 		            [])) in
+//│ 		          | `LH_N -> 
+//│ 		            (`LH_N))) in
 //│ 		        (_lh_listcomp_fun_4 (queens_d0 (_lh_queens_arg1_1 - 1)))))
 //│ 		and safe_d0 _lh_safe_arg1_1 _lh_safe_arg2_1 =
 //│ 		  (let rec m_1 = ((length_d1 _lh_safe_arg1_1) + 1) in
 //│ 		    (and_d0 (let rec _lh_listcomp_fun_3 = (fun _lh_listcomp_fun_para_3 -> 
 //│ 		      (match _lh_listcomp_fun_para_3 with
-//│ 		        | (_lh_listcomp_fun_ls_h_3 :: _lh_listcomp_fun_ls_t_3) -> 
+//│ 		        | `LH_C(_lh_listcomp_fun_ls_h_3, _lh_listcomp_fun_ls_t_3) -> 
 //│ 		          (match _lh_listcomp_fun_ls_h_3 with
-//│ 		            | (_lh_safe_LH_P2_0_1, _lh_safe_LH_P2_1_1) -> 
-//│ 		              ((((_lh_safe_LH_P2_1_1 != _lh_safe_arg2_1) && ((_lh_safe_LH_P2_0_1 + _lh_safe_LH_P2_1_1) != (m_1 + _lh_safe_arg2_1))) && ((_lh_safe_LH_P2_0_1 - _lh_safe_LH_P2_1_1) != (m_1 - _lh_safe_arg2_1)))::(_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3))
+//│ 		            | `LH_P2(_lh_safe_LH_P2_0_1, _lh_safe_LH_P2_1_1) -> 
+//│ 		              (`LH_C((((_lh_safe_LH_P2_1_1 != _lh_safe_arg2_1) && ((_lh_safe_LH_P2_0_1 + _lh_safe_LH_P2_1_1) != (m_1 + _lh_safe_arg2_1))) && ((_lh_safe_LH_P2_0_1 - _lh_safe_LH_P2_1_1) != (m_1 - _lh_safe_arg2_1))), (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3)))
 //│ 		            | _ -> 
 //│ 		              (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3))
-//│ 		        | [] -> 
-//│ 		          [])) in
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_N))) in
 //│ 		      (_lh_listcomp_fun_3 ((zip_d0 ((enumFromTo_d1 1) (m_1 - 1))) _lh_safe_arg1_1)))))
 //│ 		and testAnotherQueenNineBuiltInType_d0 _lh_testAnotherQueenNineBuiltInType_arg1_1 =
 //│ 		  (length_d0 (queens_d0 _lh_testAnotherQueenNineBuiltInType_arg1_1));;
@@ -2109,20 +2109,20 @@ testSumMapEnumBuiltInType $ primId 300000
 //│ 		---------- unoptimized ocaml gen ----------
 //│ 		let rec enumFromTo_d0 a_2 b_2 =
 //│ 		  (if (a_2 <= b_2) then
-//│ 		    (a_2::((enumFromTo_d0 (a_2 + 1)) b_2))
+//│ 		    (`LH_C(a_2, ((enumFromTo_d0 (a_2 + 1)) b_2)))
 //│ 		  else
-//│ 		    []);;
+//│ 		    (`LH_N));;
 //│ 		let rec map_d0 f_4 ls_7 =
 //│ 		  (match ls_7 with
-//│ 		    | (h_7 :: t_8) -> 
-//│ 		      ((f_4 h_7)::((map_d0 f_4) t_8))
-//│ 		    | [] -> 
-//│ 		      []);;
+//│ 		    | `LH_C(h_7, t_8) -> 
+//│ 		      (`LH_C((f_4 h_7), ((map_d0 f_4) t_8)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N));;
 //│ 		let rec sum_d0 _lh_sum_arg1_1 =
 //│ 		  (match _lh_sum_arg1_1 with
-//│ 		    | [] -> 
+//│ 		    | `LH_N -> 
 //│ 		      0
-//│ 		    | (_lh_sum_LH_C_0_1 :: _lh_sum_LH_C_1_1) -> 
+//│ 		    | `LH_C(_lh_sum_LH_C_0_1, _lh_sum_LH_C_1_1) -> 
 //│ 		      (_lh_sum_LH_C_0_1 + (sum_d0 _lh_sum_LH_C_1_1))
 //│ 		    | _ -> 
 //│ 		      (failwith "match error"));;
@@ -2775,35 +2775,35 @@ testSumListComprehensionBuiltInType $ primId 1000
 //│ 		---------- unoptimized ocaml gen ----------
 //│ 		let rec enumFromTo_d0 a_2 b_2 =
 //│ 		  (if (a_2 <= b_2) then
-//│ 		    (a_2::((enumFromTo_d0 (a_2 + 1)) b_2))
+//│ 		    (`LH_C(a_2, ((enumFromTo_d0 (a_2 + 1)) b_2)))
 //│ 		  else
-//│ 		    []);;
+//│ 		    (`LH_N));;
 //│ 		let rec enumFromTo_d1 a_3 b_3 =
 //│ 		  (if (a_3 <= b_3) then
-//│ 		    (a_3::((enumFromTo_d1 (a_3 + 1)) b_3))
+//│ 		    (`LH_C(a_3, ((enumFromTo_d1 (a_3 + 1)) b_3)))
 //│ 		  else
-//│ 		    []);;
+//│ 		    (`LH_N));;
 //│ 		let rec sum_d0 _lh_sum_arg1_1 =
 //│ 		  (match _lh_sum_arg1_1 with
-//│ 		    | [] -> 
+//│ 		    | `LH_N -> 
 //│ 		      0
-//│ 		    | (_lh_sum_LH_C_0_1 :: _lh_sum_LH_C_1_1) -> 
+//│ 		    | `LH_C(_lh_sum_LH_C_0_1, _lh_sum_LH_C_1_1) -> 
 //│ 		      (_lh_sum_LH_C_0_1 + (sum_d0 _lh_sum_LH_C_1_1))
 //│ 		    | _ -> 
 //│ 		      (failwith "match error"));;
 //│ 		let rec testSumListComprehensionBuiltInType_d0 _lh_testSumListComprehensionBuiltInType_arg1_1 =
 //│ 		  (sum_d0 (let rec _lh_listcomp_fun_2 = (fun _lh_listcomp_fun_para_2 -> 
 //│ 		    (match _lh_listcomp_fun_para_2 with
-//│ 		      | (_lh_listcomp_fun_ls_h_2 :: _lh_listcomp_fun_ls_t_2) -> 
+//│ 		      | `LH_C(_lh_listcomp_fun_ls_h_2, _lh_listcomp_fun_ls_t_2) -> 
 //│ 		        (let rec _lh_listcomp_fun_3 = (fun _lh_listcomp_fun_para_3 -> 
 //│ 		          (match _lh_listcomp_fun_para_3 with
-//│ 		            | (_lh_listcomp_fun_ls_h_3 :: _lh_listcomp_fun_ls_t_3) -> 
-//│ 		              ((_lh_listcomp_fun_ls_h_2 * _lh_listcomp_fun_ls_h_3)::(_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3))
-//│ 		            | [] -> 
+//│ 		            | `LH_C(_lh_listcomp_fun_ls_h_3, _lh_listcomp_fun_ls_t_3) -> 
+//│ 		              (`LH_C((_lh_listcomp_fun_ls_h_2 * _lh_listcomp_fun_ls_h_3), (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3)))
+//│ 		            | `LH_N -> 
 //│ 		              (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_2))) in
 //│ 		          (_lh_listcomp_fun_3 ((enumFromTo_d1 1) _lh_listcomp_fun_ls_h_2)))
-//│ 		      | [] -> 
-//│ 		        [])) in
+//│ 		      | `LH_N -> 
+//│ 		        (`LH_N))) in
 //│ 		    (_lh_listcomp_fun_2 ((enumFromTo_d0 1) _lh_testSumListComprehensionBuiltInType_arg1_1))));;
 //│ 		(testSumListComprehensionBuiltInType_d0 1000)
 //│ 		---------- unoptimized ocaml gen ----------

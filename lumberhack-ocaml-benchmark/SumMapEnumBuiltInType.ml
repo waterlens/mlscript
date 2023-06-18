@@ -9,20 +9,20 @@ open Core_bench;;
 (* original *)
 let rec enumFromTo_d0 a_2 b_2 =
   (if (a_2 <= b_2) then
-    (a_2::((enumFromTo_d0 (a_2 + 1)) b_2))
+    (`LH_C(a_2, ((enumFromTo_d0 (a_2 + 1)) b_2)))
   else
-    []);;
+    (`LH_N));;
 let rec map_d0 f_4 ls_7 =
   (match ls_7 with
-    | (h_7 :: t_8) -> 
-      ((f_4 h_7)::((map_d0 f_4) t_8))
-    | [] -> 
-      []);;
+    | `LH_C(h_7, t_8) -> 
+      (`LH_C((f_4 h_7), ((map_d0 f_4) t_8)))
+    | `LH_N -> 
+      (`LH_N));;
 let rec sum_d0 _lh_sum_arg1_1 =
   (match _lh_sum_arg1_1 with
-    | [] -> 
+    | `LH_N -> 
       0
-    | (_lh_sum_LH_C_0_1 :: _lh_sum_LH_C_1_1) -> 
+    | `LH_C(_lh_sum_LH_C_0_1, _lh_sum_LH_C_1_1) -> 
       (_lh_sum_LH_C_0_1 + (sum_d0 _lh_sum_LH_C_1_1))
     | _ -> 
       (failwith "match error"));;

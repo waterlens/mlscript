@@ -9,35 +9,35 @@ open Core_bench;;
 (* original *)
 let rec enumFromTo_d0 a_2 b_2 =
   (if (a_2 <= b_2) then
-    (a_2::((enumFromTo_d0 (a_2 + 1)) b_2))
+    (`LH_C(a_2, ((enumFromTo_d0 (a_2 + 1)) b_2)))
   else
-    []);;
+    (`LH_N));;
 let rec enumFromTo_d1 a_3 b_3 =
   (if (a_3 <= b_3) then
-    (a_3::((enumFromTo_d1 (a_3 + 1)) b_3))
+    (`LH_C(a_3, ((enumFromTo_d1 (a_3 + 1)) b_3)))
   else
-    []);;
+    (`LH_N));;
 let rec sum_d0 _lh_sum_arg1_1 =
   (match _lh_sum_arg1_1 with
-    | [] -> 
+    | `LH_N -> 
       0
-    | (_lh_sum_LH_C_0_1 :: _lh_sum_LH_C_1_1) -> 
+    | `LH_C(_lh_sum_LH_C_0_1, _lh_sum_LH_C_1_1) -> 
       (_lh_sum_LH_C_0_1 + (sum_d0 _lh_sum_LH_C_1_1))
     | _ -> 
       (failwith "match error"));;
 let rec testSumListComprehensionBuiltInType_d0 _lh_testSumListComprehensionBuiltInType_arg1_1 =
   (sum_d0 (let rec _lh_listcomp_fun_2 = (fun _lh_listcomp_fun_para_2 -> 
     (match _lh_listcomp_fun_para_2 with
-      | (_lh_listcomp_fun_ls_h_2 :: _lh_listcomp_fun_ls_t_2) -> 
+      | `LH_C(_lh_listcomp_fun_ls_h_2, _lh_listcomp_fun_ls_t_2) -> 
         (let rec _lh_listcomp_fun_3 = (fun _lh_listcomp_fun_para_3 -> 
           (match _lh_listcomp_fun_para_3 with
-            | (_lh_listcomp_fun_ls_h_3 :: _lh_listcomp_fun_ls_t_3) -> 
-              ((_lh_listcomp_fun_ls_h_2 * _lh_listcomp_fun_ls_h_3)::(_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3))
-            | [] -> 
+            | `LH_C(_lh_listcomp_fun_ls_h_3, _lh_listcomp_fun_ls_t_3) -> 
+              (`LH_C((_lh_listcomp_fun_ls_h_2 * _lh_listcomp_fun_ls_h_3), (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3)))
+            | `LH_N -> 
               (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_2))) in
           (_lh_listcomp_fun_3 ((enumFromTo_d1 1) _lh_listcomp_fun_ls_h_2)))
-      | [] -> 
-        [])) in
+      | `LH_N -> 
+        (`LH_N))) in
     (_lh_listcomp_fun_2 ((enumFromTo_d0 1) _lh_testSumListComprehensionBuiltInType_arg1_1))));;
 
 (* lumberhack *)

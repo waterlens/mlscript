@@ -9,66 +9,66 @@ open Core_bench;;
 (* original *)
 let rec append_d0 _lh_append_arg1_2 _lh_append_arg2_2 =
   (match _lh_append_arg1_2 with
-    | [] -> 
+    | `LH_N -> 
       _lh_append_arg2_2
-    | (_lh_append_LH_C_0_2 :: _lh_append_LH_C_1_2) -> 
-      (_lh_append_LH_C_0_2::((append_d0 _lh_append_LH_C_1_2) _lh_append_arg2_2))
+    | `LH_C(_lh_append_LH_C_0_2, _lh_append_LH_C_1_2) -> 
+      (`LH_C(_lh_append_LH_C_0_2, ((append_d0 _lh_append_LH_C_1_2) _lh_append_arg2_2)))
     | _ -> 
       (failwith "match error"));;
 let rec append_d1 _lh_append_arg1_1 _lh_append_arg2_1 =
   (match _lh_append_arg1_1 with
-    | [] -> 
+    | `LH_N -> 
       _lh_append_arg2_1
-    | (_lh_append_LH_C_0_1 :: _lh_append_LH_C_1_1) -> 
-      (_lh_append_LH_C_0_1::((append_d1 _lh_append_LH_C_1_1) _lh_append_arg2_1))
+    | `LH_C(_lh_append_LH_C_0_1, _lh_append_LH_C_1_1) -> 
+      (`LH_C(_lh_append_LH_C_0_1, ((append_d1 _lh_append_LH_C_1_1) _lh_append_arg2_1)))
     | _ -> 
       (failwith "match error"));;
 let rec enumFromTo_d0 a_2 b_4 =
   (if (a_2 <= b_4) then
-    (a_2::((enumFromTo_d0 (a_2 + 1)) b_4))
+    (`LH_C(a_2, ((enumFromTo_d0 (a_2 + 1)) b_4)))
   else
-    []);;
+    (`LH_N));;
 let rec length_d0 ls_7 =
   (match ls_7 with
-    | (h_7 :: t_8) -> 
+    | `LH_C(h_7, t_8) -> 
       (1 + (length_d0 t_8))
-    | [] -> 
+    | `LH_N -> 
       0);;
 let rec safe_d0 _lh_safe_arg1_1 _lh_safe_arg2_1 _lh_safe_arg3_1 =
   (match _lh_safe_arg3_1 with
-    | [] -> 
+    | `LH_N -> 
       true
-    | (_lh_safe_LH_C_0_1 :: _lh_safe_LH_C_1_1) -> 
+    | `LH_C(_lh_safe_LH_C_0_1, _lh_safe_LH_C_1_1) -> 
       ((((_lh_safe_arg1_1 != _lh_safe_LH_C_0_1) && (_lh_safe_arg1_1 != (_lh_safe_LH_C_0_1 + _lh_safe_arg2_1))) && (_lh_safe_arg1_1 != (_lh_safe_LH_C_0_1 - _lh_safe_arg2_1))) && (((safe_d0 _lh_safe_arg1_1) (_lh_safe_arg2_1 + 1)) _lh_safe_LH_C_1_1))
     | _ -> 
       (failwith "match error"));;
 let rec flatMap_d0 _lh_flatMap_arg1_1 _lh_flatMap_arg2_1 =
   (match _lh_flatMap_arg2_1 with
-    | [] -> 
-      []
-    | (_lh_flatMap_LH_C_0_1 :: _lh_flatMap_LH_C_1_1) -> 
+    | `LH_N -> 
+      (`LH_N)
+    | `LH_C(_lh_flatMap_LH_C_0_1, _lh_flatMap_LH_C_1_1) -> 
       ((append_d0 (_lh_flatMap_arg1_1 _lh_flatMap_LH_C_0_1)) ((flatMap_d0 _lh_flatMap_arg1_1) _lh_flatMap_LH_C_1_1))
     | _ -> 
       (failwith "match error"))
 and flatMap_d1 _lh_flatMap_arg1_2 _lh_flatMap_arg2_2 =
   (match _lh_flatMap_arg2_2 with
-    | [] -> 
-      []
-    | (_lh_flatMap_LH_C_0_2 :: _lh_flatMap_LH_C_1_2) -> 
+    | `LH_N -> 
+      (`LH_N)
+    | `LH_C(_lh_flatMap_LH_C_0_2, _lh_flatMap_LH_C_1_2) -> 
       ((append_d1 (_lh_flatMap_arg1_2 _lh_flatMap_LH_C_0_2)) ((flatMap_d1 _lh_flatMap_arg1_2) _lh_flatMap_LH_C_1_2))
     | _ -> 
       (failwith "match error"))
 and gen_d0 _lh_gen_arg1_1 _lh_gen_arg2_1 =
   (match _lh_gen_arg1_1 with
     | 0 -> 
-      ([]::[])
+      (`LH_C((`LH_N), (`LH_N)))
     | _ -> 
       ((flatMap_d0 (fun b_3 -> 
         ((flatMap_d1 (fun q_1 -> 
           (if (((safe_d0 q_1) 1) b_3) then
-            ((q_1::b_3)::[])
+            (`LH_C((`LH_C(q_1, b_3)), (`LH_N)))
           else
-            []))) ((enumFromTo_d0 1) _lh_gen_arg2_1)))) ((gen_d0 (_lh_gen_arg1_1 - 1)) _lh_gen_arg2_1)))
+            (`LH_N)))) ((enumFromTo_d0 1) _lh_gen_arg2_1)))) ((gen_d0 (_lh_gen_arg1_1 - 1)) _lh_gen_arg2_1)))
 and nsoln_d0 _lh_nsoln_arg1_1 =
   (length_d0 ((gen_d0 _lh_nsoln_arg1_1) _lh_nsoln_arg1_1))
 and testQueenUsingFlatMapBuiltInType_d0 _lh_testQueenUsingFlatMapBuiltInType_arg1_1 =
@@ -83,9 +83,9 @@ let rec flatMap_d1_d0 _lh_flatMap_arg1_3 _lh_flatMap_arg2_1 =
   (_lh_flatMap_arg2_1 _lh_flatMap_arg1_3);;
 let rec length_d0_d0 ls_0 =
   (match ls_0 with
-    | (h_0 :: t_0) -> 
+    | `LH_C(h_0, t_0) -> 
       (1 + (length_d0_d0 t_0))
-    | [] -> 
+    | `LH_N -> 
       0);;
 let rec safe_d0_d0 _lh_safe_arg1_0 _lh_safe_arg2_0 _lh_safe_arg3_0 =
   ((_lh_safe_arg3_0 _lh_safe_arg1_0) _lh_safe_arg2_0);;
@@ -100,17 +100,17 @@ let rec enumFromTo_d0_d0 a_0 b_0 =
       _lh_append_arg2_1))
 and flatMap_d0_d0 _lh_flatMap_arg1_2 _lh_flatMap_arg2_0 =
   (match _lh_flatMap_arg2_0 with
-    | [] -> 
-      []
-    | (_lh_flatMap_LH_C_0_1 :: _lh_flatMap_LH_C_1_1) -> 
+    | `LH_N -> 
+      (`LH_N)
+    | `LH_C(_lh_flatMap_LH_C_0_1, _lh_flatMap_LH_C_1_1) -> 
       ((append_d0_d0 (_lh_flatMap_arg1_2 _lh_flatMap_LH_C_0_1)) ((flatMap_d0_d0 _lh_flatMap_arg1_2) _lh_flatMap_LH_C_1_1))
     | _ -> 
       (failwith "match error"))
 and gen_d0_d0 _lh_gen_arg1_0 _lh_gen_arg2_0 =
   (match _lh_gen_arg1_0 with
     | 0 -> 
-      ((fun _lh_safe_arg1_1 _lh_safe_arg2_1 -> 
-        true)::[])
+      (`LH_C((fun _lh_safe_arg1_1 _lh_safe_arg2_1 -> 
+        true), (`LH_N)))
     | _ -> 
       ((flatMap_d0_d0 (fun b_1 -> 
         ((flatMap_d1_d0 (fun q_0 -> 
@@ -125,7 +125,7 @@ and gen_d0_d0 _lh_gen_arg1_0 _lh_gen_arg2_0 =
                   (let rec _lh_append_LH_C_0_1 = _lh_append_LH_C_0_0 in
                     (let rec _lh_append_LH_C_1_1 = ((append_d1_d0 _lh_append_LH_C_1_0) _lh_append_arg2_4) in
                       (fun _lh_append_arg2_5 -> 
-                        (_lh_append_LH_C_0_1::((append_d0_d0 _lh_append_LH_C_1_1) _lh_append_arg2_5))))))))
+                        (`LH_C(_lh_append_LH_C_0_1, ((append_d0_d0 _lh_append_LH_C_1_1) _lh_append_arg2_5)))))))))
           else
             (fun _lh_append_arg2_6 -> 
               _lh_append_arg2_6)))) ((enumFromTo_d0_d0 1) _lh_gen_arg2_0)))) ((gen_d0_d0 (_lh_gen_arg1_0 - 1)) _lh_gen_arg2_0)))
@@ -149,9 +149,9 @@ let rec flatMap_d1_d0_d1 _lh_flatMap_arg1_7 _lh_flatMap_arg2_3 =
   (_lh_flatMap_arg2_3 _lh_flatMap_arg1_7);;
 let rec length_d0_d0_d0 ls_1 =
   (match ls_1 with
-    | (h_1 :: t_1) -> 
+    | `LH_C(h_1, t_1) -> 
       (1 + (length_d0_d0_d0 t_1))
-    | [] -> 
+    | `LH_N -> 
       0);;
 let rec safe_d0_d0_d0 _lh_safe_arg1_6 _lh_safe_arg2_6 _lh_safe_arg3_2 =
   ((_lh_safe_arg3_2 _lh_safe_arg1_6) _lh_safe_arg2_6);;
@@ -167,17 +167,17 @@ let rec enumFromTo_d0_d0_d0 a_1 b_3 _lh_popOutId_0_0 =
       _lh_append_arg2_1_5))
 and flatMap_d0_d0_d0 _lh_flatMap_arg1_4 _lh_flatMap_arg2_2 =
   (match _lh_flatMap_arg2_2 with
-    | [] -> 
-      []
-    | (_lh_flatMap_LH_C_0_2 :: _lh_flatMap_LH_C_1_2) -> 
+    | `LH_N -> 
+      (`LH_N)
+    | `LH_C(_lh_flatMap_LH_C_0_2, _lh_flatMap_LH_C_1_2) -> 
       ((append_d0_d0_d1 (_lh_flatMap_arg1_4 _lh_flatMap_LH_C_0_2)) ((flatMap_d0_d0_d0 _lh_flatMap_arg1_4) _lh_flatMap_LH_C_1_2))
     | _ -> 
       (failwith "match error"))
 and gen_d0_d0_d0 _lh_gen_arg1_1 _lh_gen_arg2_1 =
   (match _lh_gen_arg1_1 with
     | 0 -> 
-      ((fun _lh_safe_arg1_4 _lh_safe_arg2_4 -> 
-        true)::[])
+      (`LH_C((fun _lh_safe_arg1_4 _lh_safe_arg2_4 -> 
+        true), (`LH_N)))
     | _ -> 
       ((flatMap_d0_d0_d0 (fun b_2 -> 
         ((flatMap_d1_d0_d1 (fun q_1 -> 
@@ -192,7 +192,7 @@ and gen_d0_d0_d0 _lh_gen_arg1_1 _lh_gen_arg2_1 =
                   (let rec _lh_append_LH_C_0_3 = _lh_append_LH_C_0_2 in
                     (let rec _lh_append_LH_C_1_3 = ((append_d1_d0_d0 _lh_append_LH_C_1_2) _lh_append_arg2_1_2) in
                       (fun _lh_append_arg2_1_3 -> 
-                        (_lh_append_LH_C_0_3::((append_d0_d0_d0 _lh_append_LH_C_1_3) _lh_append_arg2_1_3))))))))
+                        (`LH_C(_lh_append_LH_C_0_3, ((append_d0_d0_d0 _lh_append_LH_C_1_3) _lh_append_arg2_1_3)))))))))
           else
             (fun _lh_append_arg2_1_4 -> 
               _lh_append_arg2_1_4)))) ((enumFromTo_d0_d0_d0 1) _lh_gen_arg2_1)))) ((gen_d0_d0_d0 (_lh_gen_arg1_1 - 1)) _lh_gen_arg2_1)))

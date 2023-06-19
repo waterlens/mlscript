@@ -1009,8 +1009,6 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
     if ctorFields.nonEmpty then (finalRes + ";;") else ""
   }
   override def transFromProgDef(pd: ProgDef): Document = {
-    // need to add `let rec` and `;;` in the front and the end, the whole thing
-    // as a big group of mutually recursive let bindings
     pd.body match {
       case bodyFun@Function(param, body) => {
         val (params, innerBody) = bodyFun.takeParamsOut

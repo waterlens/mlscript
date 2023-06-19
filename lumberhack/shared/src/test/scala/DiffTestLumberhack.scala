@@ -11,6 +11,11 @@ import scala.collection.mutable.Buffer
 
 class DiffTestLumberhack extends DiffTests {
   import DiffTestLumberhack.*
+  override protected lazy val files = allFiles.filter { file =>
+    val fileName = file.baseName
+    validExt(file.ext) && ((modified.isEmpty || modified(file.relativeTo(pwd))) || lumberhackLocalTest(fileName))
+  }
+
   override def postProcess(
     mode: ModeType,
     basePath: List[Str],
@@ -138,11 +143,6 @@ class DiffTestLumberhack extends DiffTests {
         output("!!!!!!ERROR!!!!!!")
       } else { throw e }
     }
-  }
-  
-  override protected lazy val files = allFiles.filter { file =>
-    val fileName = file.baseName
-    validExt(file.ext) && ((modified.isEmpty || modified(file.relativeTo(pwd))) || lumberhackLocalTest(fileName))
   }
 
   def keepFuse(

@@ -207,9 +207,13 @@ object ProdStratEnum {
     consInt.toStrat(),
     ProdFun(consInt.toStrat(), prodBool.toStrat()).toStrat()
   )
-  def prodBoolOp(using ExprId) = ProdFun(
+  def prodBoolBinOp(using ExprId) = ProdFun(
     consBool.toStrat(),
     ProdFun(consBool.toStrat(), prodBool.toStrat()).toStrat()
+  )
+  def prodBoolUnaryOp(using ExprId) = ProdFun(
+    consBool.toStrat(),
+    prodBool.toStrat()
   )
 }
 object ConsStratEnum {
@@ -284,16 +288,18 @@ class Deforest(var debug: Boolean) {
       case Const(StrLit(_)) => prodString(using noExprId) // Strings must use noExprId, since it's a MkCtor type
       case Const(l) => NoProd()(using e.uid)
       case Ref(Ident(_, Var(primitive), _)) if Deforest.lumberhackKeywords(primitive) => {
-        if (Deforest.lumberhackIntFun(primitive) || Deforest.lumberhackIntBinOps(primitive)) then
-          primitive match {
-            case a if (Deforest.lumberhackIntComparisonFun(a) || Deforest.lumberhackIntComparisonOps(a)) => prodIntEq(using noExprId)
-            case boolOp if Deforest.lumberhackBoolBinOps(boolOp) => prodBoolOp(using noExprId)
-            case _ => prodIntBinOp(using noExprId)
-          }
+        if Deforest.lumberhackIntComparisonFun(primitive) || Deforest.lumberhackIntComparisonOps(primitive) then
+          prodIntEq(using noExprId)
+        else if Deforest.lumberhackIntValueFun(primitive) || Deforest.lumberhackIntValueBinOps(primitive) then
+          prodIntBinOp(using noExprId)
+        else if Deforest.lumberhackBoolBinOps(primitive) then
+          prodBoolBinOp(using noExprId)
+        else if Deforest.lumberhackBoolUnaryOps(primitive) then
+          prodBoolUnaryOp(using noExprId)
         else if primitive == "error" then
           freshVar("_lh_rigid_error_var")(using noExprId)._1
         else
-          NoProd()(using e.uid)
+          NoProd()(using e.uid) // `primitive`, `primId`
       }
       case r @ Ref(id) => if id.isDef then {
         calls.add(r)
@@ -904,13 +910,17 @@ object CallTree {
 
 object Deforest {
   lazy val lumberhackKeywords: Set[String] =
-    (lumberhackIntFun ++ lumberhackIntBinOps ++ lumberhackBoolBinOps) + "primitive" + "primId" + "error"
-  lazy val lumberhackIntFun: Set[String] = Set("add", "minus", "mult", "div") ++ lumberhackIntComparisonFun 
-  lazy val lumberhackIntComparisonFun: Set[String] = Set("eq", "lt", "gt", "leq", "geq", "neq")
+    (lumberhackIntFun ++ lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackBoolUnaryOps)
+      + "primitive" + "primId" + "error"
   lazy val lumberhackBinOps = lumberhackIntBinOps ++ lumberhackBoolBinOps
-  lazy val lumberhackIntBinOps: Set[String] = Set("+", "-", "*", "/", "%") ++ lumberhackIntComparisonOps
+  lazy val lumberhackIntFun: Set[String] = lumberhackIntValueFun ++ lumberhackIntComparisonFun
+  lazy val lumberhackIntValueFun: Set[String] = Set("add", "minus", "mult", "div")
+  lazy val lumberhackIntComparisonFun: Set[String] = Set("eq", "lt", "gt", "leq", "geq", "neq")
+  lazy val lumberhackIntBinOps: Set[String] = lumberhackIntValueBinOps ++ lumberhackIntComparisonOps
+  lazy val lumberhackIntValueBinOps: Set[String] = Set("+", "-", "*", "/", "%")
   lazy val lumberhackIntComparisonOps: Set[String] = Set("==", ">", "<", ">=", "<=", "/=")
   lazy val lumberhackBoolBinOps: Set[String] = Set("&&", "||")
+  lazy val lumberhackBoolUnaryOps: Set[String] = Set("not")
 
   def filterKnots(k: Path, v: Path)(using d: Deforest) = v.reachable(d.callsInfo) &&
     v.p.nonEmpty && k.p.nonEmpty &&

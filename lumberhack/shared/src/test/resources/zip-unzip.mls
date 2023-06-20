@@ -1,8 +1,7 @@
 :NewParser
 :ParseOnly
 
-
-// NOTE: no intermediate lists are created, but intermediate tuples are not eliminated
+:lhGenOCaml
 fun zip(xs, ys) = if xs is
   C(x, xt) then if ys is
     C(y, yt) then C(Pair(x, y), zip(xt, yt))
@@ -13,43 +12,83 @@ fun unzip(ls) = if ls is
     Pair(a, b) then if unzip(t) is
       Pair(atail, btail) then Pair(C(a, atail), C(b, btail))
   N then Pair(N, N)
-fun unzipZip(fst, snd) = unzip(zip(fst, snd))
-unzipZip
-//│ |#fun| |zip|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|x|,| |xt|)| |#then| |#if| |ys| |is|→|C|(|y|,| |yt|)| |#then| |C|(|Pair|(|x|,| |y|)|,| |zip|(|xt|,| |yt|)|)|↵|N| |#then| |N|←|↵|N| |#then| |N|←|↵|#fun| |unzip|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |h| |is|→|Pair|(|a|,| |b|)| |#then| |#if| |unzip|(|t|)| |is|→|Pair|(|atail|,| |btail|)| |#then| |Pair|(|C|(|a|,| |atail|)|,| |C|(|b|,| |btail|)|)|←|←|↵|N| |#then| |Pair|(|N|,| |N|)|←|↵|#fun| |unzipZip|(|fst|,| |snd|)| |#=| |unzip|(|zip|(|fst|,| |snd|)|)|↵|unzipZip|
-//│ Parsed: {fun zip = xs, ys, => if xs is ‹(C (x, xt,)) then if ys is ‹(C (y, yt,)) then C (Pair (x, y,), zip (xt, yt,),); (N) then N›; (N) then N›; fun unzip = ls, => if ls is ‹(C (h, t,)) then if h is ‹(Pair (a, b,)) then if unzip (t,) is ‹(Pair (atail, btail,)) then Pair (C (a, atail,), C (b, btail,),)››; (N) then Pair (N, N,)›; fun unzipZip = fst, snd, => unzip (zip (fst, snd,),); unzipZip}
+fun enumFromTo(a, b) = if a < b then C(a, enumFromTo(a + 1, b)) else N
+fun testUnzipZip(n) = unzip(zip(primId(enumFromTo(1, n)), primId(enumFromTo(2, n + 3))))
+testUnzipZip(primId(50000))
+//│ |#fun| |zip|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|x|,| |xt|)| |#then| |#if| |ys| |is|→|C|(|y|,| |yt|)| |#then| |C|(|Pair|(|x|,| |y|)|,| |zip|(|xt|,| |yt|)|)|↵|N| |#then| |N|←|↵|N| |#then| |N|←|↵|#fun| |unzip|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |h| |is|→|Pair|(|a|,| |b|)| |#then| |#if| |unzip|(|t|)| |is|→|Pair|(|atail|,| |btail|)| |#then| |Pair|(|C|(|a|,| |atail|)|,| |C|(|b|,| |btail|)|)|←|←|↵|N| |#then| |Pair|(|N|,| |N|)|←|↵|#fun| |enumFromTo|(|a|,| |b|)| |#=| |#if| |a| |<| |b| |#then| |C|(|a|,| |enumFromTo|(|a| |+| |1|,| |b|)|)| |#else| |N|↵|#fun| |testUnzipZip|(|n|)| |#=| |unzip|(|zip|(|primId|(|enumFromTo|(|1|,| |n|)|)|,| |primId|(|enumFromTo|(|2|,| |n| |+| |3|)|)|)|)|↵|testUnzipZip|(|primId|(|50000|)|)|
+//│ Parsed: {fun zip = xs, ys, => if xs is ‹(C (x, xt,)) then if ys is ‹(C (y, yt,)) then C (Pair (x, y,), zip (xt, yt,),); (N) then N›; (N) then N›; fun unzip = ls, => if ls is ‹(C (h, t,)) then if h is ‹(Pair (a, b,)) then if unzip (t,) is ‹(Pair (atail, btail,)) then Pair (C (a, atail,), C (b, btail,),)››; (N) then Pair (N, N,)›; fun enumFromTo = a, b, => if (< (a,) (b,)) then C (a, enumFromTo (+ (a,) (1,), b,),) else N; fun testUnzipZip = n, => unzip (zip (primId (enumFromTo (1, n,),), primId (enumFromTo (2, + (n,) (3,),),),),); testUnzipZip (primId (50000,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ unzipZip^46
+//│ testUnzipZip^81(primId⁰(50000))
+//│ def enumFromTo(a¹, b¹) = if (a¹ < b¹) then [C a¹ enumFromTo^43((a¹ + 1), b¹)] else [N]
+//│ def testUnzipZip(n⁰) = unzip^57(zip^58(primId⁰(enumFromTo^60(1, n⁰)), primId⁰(enumFromTo^68(2, (n⁰ + 3)))))
 //│ def unzip(ls⁰) = case ls⁰ of {
 //│ 	C h⁰ t⁰ => case h⁰ of {
 //│ 		Pair a⁰ b⁰ => case unzip^20(t⁰) of {
 //│ 			Pair atail⁰ btail⁰ => [Pair [C a⁰ atail⁰] [C b⁰ btail⁰]]}}
 //│ 	| N  => [Pair [N] [N]]}
-//│ def unzipZip(fst⁰, snd⁰) = unzip^37(zip^38(fst⁰, snd⁰))
 //│ def zip(xs⁰, ys⁰) = case xs⁰ of {
 //│ 	C x⁰ xt⁰ => case ys⁰ of {
 //│ 		C y⁰ yt⁰ => [C [Pair x⁰ y⁰] zip^6(xt⁰, yt⁰)]
 //│ 		| N  => [N]}
 //│ 	| N  => [N]}
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec enumFromTo a_1 b_1 =
+//│ 		  (if (a_1 < b_1) then
+//│ 		    (`C(a_1, ((enumFromTo (a_1 + 1)) b_1)))
+//│ 		  else
+//│ 		    (`N));;
+//│ 		let rec unzip ls_0 =
+//│ 		  (match ls_0 with
+//│ 		    | `C(h_0, t_0) -> 
+//│ 		      (match h_0 with
+//│ 		        | `Pair(a_0, b_0) -> 
+//│ 		          (match (unzip t_0) with
+//│ 		            | `Pair(atail_0, btail_0) -> 
+//│ 		              (`Pair((`C(a_0, atail_0)), (`C(b_0, btail_0))))))
+//│ 		    | `N -> 
+//│ 		      (`Pair((`N), (`N))));;
+//│ 		let rec zip xs_0 ys_0 =
+//│ 		  (match xs_0 with
+//│ 		    | `C(x_0, xt_0) -> 
+//│ 		      (match ys_0 with
+//│ 		        | `C(y_0, yt_0) -> 
+//│ 		          (`C((`Pair(x_0, y_0)), ((zip xt_0) yt_0)))
+//│ 		        | `N -> 
+//│ 		          (`N))
+//│ 		    | `N -> 
+//│ 		      (`N));;
+//│ 		let rec testUnzipZip n_0 =
+//│ 		  (unzip ((zip ((enumFromTo 1) n_0)) ((enumFromTo 2) (n_0 + 3))));;
+//│ 		(testUnzipZip 50000)
+//│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [unzipZip^46]
-//│ 	[unzipZip^46 · unzip^37]
-//│ 		[unzipZip^46 · unzip^37 · unzip^20] ---> [unzipZip^46 · unzip^37] (only one)
-//│ 	[unzipZip^46 · zip^38]
-//│ 		[unzipZip^46 · zip^38 · zip^6] ---> [unzipZip^46 · zip^38] (only one)
+//│ [testUnzipZip^81]
+//│ 	[testUnzipZip^81 · enumFromTo^60] (hopeless to continue)
+//│ 		[testUnzipZip^81 · enumFromTo^60 · enumFromTo^43] ---> [testUnzipZip^81 · enumFromTo^60] (using original def)
+//│ 	[testUnzipZip^81 · enumFromTo^68] (hopeless to continue)
+//│ 		[testUnzipZip^81 · enumFromTo^68 · enumFromTo^43] ---> [testUnzipZip^81 · enumFromTo^68] (using original def)
+//│ 	[testUnzipZip^81 · unzip^57]
+//│ 		[testUnzipZip^81 · unzip^57 · unzip^20] ---> [testUnzipZip^81 · unzip^57] (only one)
+//│ 	[testUnzipZip^81 · zip^58] (hopeless to continue)
+//│ 		[testUnzipZip^81 · zip^58 · zip^6] ---> [testUnzipZip^81 · zip^58] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ unzipZip₀
-//│ def unzipZip₀(fst¹, snd¹) = 
-//│ 	unzip₀(zip₀(fst¹, snd¹))
+//│ testUnzipZip₀(primId⁰(50000))
+//│ def testUnzipZip₀(n¹) = 
+//│ 	unzip₀(zip₀(primId⁰(enumFromTo₀(1, n¹)), primId⁰(enumFromTo₁(2, (n¹ + 3)))))
 //│ 	where
+//│ 	def enumFromTo₀(a³, b³) = 
+//│ 		if (a³ < b³) then [C a³ enumFromTo₀((a³ + 1), b³)] else [N]
+//│ 	def enumFromTo₁(a², b²) = 
+//│ 		if (a² < b²) then [C a² enumFromTo₁((a² + 1), b²)] else [N]
 //│ 	def unzip₀(ls¹) = 
 //│ 		case ls¹ of {
 //│ 			C h¹ t¹ => case h¹ of {
-//│ 				Pair a¹ b¹ => case unzip₀(t¹) of {
-//│ 					Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}}
+//│ 				Pair a⁴ b⁴ => case unzip₀(t¹) of {
+//│ 					Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}}
 //│ 			| N  => [Pair [N] [N]]}
 //│ 	def zip₀(xs¹, ys¹) = 
 //│ 		case xs¹ of {
@@ -60,55 +99,59 @@ unzipZip
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [Pair [C a¹ atail¹] [C b¹ btail¹]]: 58 --->
+//│ [Pair [C a⁴ atail¹] [C b⁴ btail¹]]: 161 --->
 //│ 	NoCons
-//│ 	case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 59
-//│ [Pair [N] [N]]: 63 --->
+//│ 	case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}: 162
+//│ [Pair [N] [N]]: 166 --->
 //│ 	NoCons
-//│ 	case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 59
-//│ [Pair x¹ y¹]: 70 --->
-//│ 	case h¹ of {Pair a¹ b¹ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}}: 60
-//│ [C [Pair x¹ y¹] zip₀(xt¹, yt¹)]: 76 --->
-//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N  => [Pair [N] [N]]}: 64
-//│ [N]: 77 --->
-//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N  => [Pair [N] [N]]}: 64
-//│ [N]: 79 --->
-//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N  => [Pair [N] [N]]}: 64
+//│ 	case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}: 162
+//│ [Pair x¹ y¹]: 173 --->
+//│ 	case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}}: 163
+//│ [C [Pair x¹ y¹] zip₀(xt¹, yt¹)]: 179 --->
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167
+//│ [N]: 180 --->
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167
+//│ [N]: 182 --->
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167
 //│ ------------------
-//│ case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 59 --->
-//│ 	[Pair [C a¹ atail¹] [C b¹ btail¹]]: 58
-//│ 	[Pair [N] [N]]: 63
-//│ case h¹ of {Pair a¹ b¹ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}}: 60 --->
-//│ 	[Pair x¹ y¹]: 70
-//│ case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N  => [Pair [N] [N]]}: 64 --->
-//│ 	[C [Pair x¹ y¹] zip₀(xt¹, yt¹)]: 76
-//│ 	[N]: 77
-//│ 	[N]: 79
+//│ case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}: 162 --->
+//│ 	[Pair [C a⁴ atail¹] [C b⁴ btail¹]]: 161
+//│ 	[Pair [N] [N]]: 166
+//│ case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}}: 163 --->
+//│ 	[Pair x¹ y¹]: 173
+//│ case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167 --->
+//│ 	[C [Pair x¹ y¹] zip₀(xt¹, yt¹)]: 179
+//│ 	[N]: 180
+//│ 	[N]: 182
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [Pair x¹ y¹]: 70 --->
-//│ 	case h¹ of {Pair a¹ b¹ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}}: 60
-//│ [C [Pair x¹ y¹] zip₀(xt¹, yt¹)]: 76 --->
-//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N  => [Pair [N] [N]]}: 64
-//│ [N]: 77 --->
-//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N  => [Pair [N] [N]]}: 64
-//│ [N]: 79 --->
-//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N  => [Pair [N] [N]]}: 64
+//│ [Pair x¹ y¹]: 173 --->
+//│ 	case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}}: 163
+//│ [C [Pair x¹ y¹] zip₀(xt¹, yt¹)]: 179 --->
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167
+//│ [N]: 180 --->
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167
+//│ [N]: 182 --->
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167
 //│ ------------------
-//│ case h¹ of {Pair a¹ b¹ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}}: 60 --->
-//│ 	[Pair x¹ y¹]: 70
-//│ case ls¹ of {C h¹ t¹ => case h¹ of {Pair a¹ b¹ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}} | N  => [Pair [N] [N]]}: 64 --->
-//│ 	[C [Pair x¹ y¹] zip₀(xt¹, yt¹)]: 76
-//│ 	[N]: 77
-//│ 	[N]: 79
+//│ case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}}: 163 --->
+//│ 	[Pair x¹ y¹]: 173
+//│ case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167 --->
+//│ 	[C [Pair x¹ y¹] zip₀(xt¹, yt¹)]: 179
+//│ 	[N]: 180
+//│ 	[N]: 182
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ unzipZip₀
-//│ def unzipZip₀(fst², snd²) = 
-//│ 	unzip₀(zip₀(fst², snd²))
+//│ testUnzipZip₀(primId⁰(50000))
+//│ def testUnzipZip₀(n²) = 
+//│ 	unzip₀(zip₀(primId⁰(enumFromTo₀(1, n²)), primId⁰(enumFromTo₁(2, (n² + 3)))))
 //│ 	where
+//│ 	def enumFromTo₀(a⁵, b⁵) = 
+//│ 		if (a⁵ < b⁵) then [C a⁵ enumFromTo₀((a⁵ + 1), b⁵)] else [N]
+//│ 	def enumFromTo₁(a⁶, b⁶) = 
+//│ 		if (a⁶ < b⁶) then [C a⁶ enumFromTo₁((a⁶ + 1), b⁶)] else [N]
 //│ 	def unzip₀(ls²) = 
 //│ 		ls²
 //│ 	def zip₀(xs², ys²) = 
@@ -116,12 +159,434 @@ unzipZip
 //│ 			C x¹ xt¹ => case ys² of {
 //│ 				C y¹ yt¹ => 
 //│ 					let h² = 	
-//│ 						let a² = x¹
-//│ 						in let b² = y¹
+//│ 						let a⁷ = x¹
+//│ 						in let b⁷ = y¹
 //│ 						in (fun t³ -> case unzip₀(t³) of {
-//│ 							Pair atail¹ btail¹ => [Pair [C a² atail¹] [C b² btail¹]]})
+//│ 							Pair atail¹ btail¹ => [Pair [C a⁷ atail¹] [C b⁷ btail¹]]})
 //│ 					in let t² = zip₀(xt¹, yt¹)
 //│ 					in h²(t²)
 //│ 				| N  => [Pair [N] [N]]}
 //│ 			| N  => [Pair [N] [N]]}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
+
+
+:lhGenOCaml
+fun zip(xs, ys) = if xs is
+  C(x, xt) then if ys is
+    C(y, yt) then C(Pair(x, y), zip(xt, yt))
+    N then N
+  N then N
+fun unzip(ls) = if ls is
+  C(h, t) then if h is
+    Pair(a, b) then if unzip(t) is
+      Pair(atail, btail) then Pair(C(a, atail), C(b, btail))
+  N then Pair(N, N)
+fun makeZippedList(n) = if n > 0 then C(Pair(n, n + 1), makeZippedList(n - 1)) else N
+fun testZipUnzip(n) = if unzip(primId(makeZippedList(n))) is
+  Pair(xs, ys) then zip(xs, ys)
+testZipUnzip(primId(50000))
+//│ |#fun| |zip|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|x|,| |xt|)| |#then| |#if| |ys| |is|→|C|(|y|,| |yt|)| |#then| |C|(|Pair|(|x|,| |y|)|,| |zip|(|xt|,| |yt|)|)|↵|N| |#then| |N|←|↵|N| |#then| |N|←|↵|#fun| |unzip|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |h| |is|→|Pair|(|a|,| |b|)| |#then| |#if| |unzip|(|t|)| |is|→|Pair|(|atail|,| |btail|)| |#then| |Pair|(|C|(|a|,| |atail|)|,| |C|(|b|,| |btail|)|)|←|←|↵|N| |#then| |Pair|(|N|,| |N|)|←|↵|#fun| |makeZippedList|(|n|)| |#=| |#if| |n| |>| |0| |#then| |C|(|Pair|(|n|,| |n| |+| |1|)|,| |makeZippedList|(|n| |-| |1|)|)| |#else| |N|↵|#fun| |testZipUnzip|(|n|)| |#=| |#if| |unzip|(|primId|(|makeZippedList|(|n|)|)|)| |is|→|Pair|(|xs|,| |ys|)| |#then| |zip|(|xs|,| |ys|)|←|↵|testZipUnzip|(|primId|(|50000|)|)|
+//│ Parsed: {fun zip = xs, ys, => if xs is ‹(C (x, xt,)) then if ys is ‹(C (y, yt,)) then C (Pair (x, y,), zip (xt, yt,),); (N) then N›; (N) then N›; fun unzip = ls, => if ls is ‹(C (h, t,)) then if h is ‹(Pair (a, b,)) then if unzip (t,) is ‹(Pair (atail, btail,)) then Pair (C (a, atail,), C (b, btail,),)››; (N) then Pair (N, N,)›; fun makeZippedList = n, => if (> (n,) (0,)) then C (Pair (n, + (n,) (1,),), makeZippedList (- (n,) (1,),),) else N; fun testZipUnzip = n, => if unzip (primId (makeZippedList (n,),),) is ‹(Pair (xs, ys,)) then zip (xs, ys,)›; testZipUnzip (primId (50000,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testZipUnzip^74(primId⁰(50000))
+//│ def makeZippedList(n⁰) = if (n⁰ > 0) then [C [Pair n⁰ (n⁰ + 1)] makeZippedList^49((n⁰ - 1))] else [N]
+//│ def testZipUnzip(n¹) = case unzip^60(primId⁰(makeZippedList^62(n¹))) of {
+//│ 	Pair xs¹ ys¹ => zip^67(xs¹, ys¹)}
+//│ def unzip(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => case h⁰ of {
+//│ 		Pair a⁰ b⁰ => case unzip^20(t⁰) of {
+//│ 			Pair atail⁰ btail⁰ => [Pair [C a⁰ atail⁰] [C b⁰ btail⁰]]}}
+//│ 	| N  => [Pair [N] [N]]}
+//│ def zip(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C x⁰ xt⁰ => case ys⁰ of {
+//│ 		C y⁰ yt⁰ => [C [Pair x⁰ y⁰] zip^6(xt⁰, yt⁰)]
+//│ 		| N  => [N]}
+//│ 	| N  => [N]}
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec makeZippedList n_0 =
+//│ 		  (if (n_0 > 0) then
+//│ 		    (`C((`Pair(n_0, (n_0 + 1))), (makeZippedList (n_0 - 1))))
+//│ 		  else
+//│ 		    (`N));;
+//│ 		let rec unzip ls_0 =
+//│ 		  (match ls_0 with
+//│ 		    | `C(h_0, t_0) -> 
+//│ 		      (match h_0 with
+//│ 		        | `Pair(a_0, b_0) -> 
+//│ 		          (match (unzip t_0) with
+//│ 		            | `Pair(atail_0, btail_0) -> 
+//│ 		              (`Pair((`C(a_0, atail_0)), (`C(b_0, btail_0))))))
+//│ 		    | `N -> 
+//│ 		      (`Pair((`N), (`N))));;
+//│ 		let rec zip xs_0 ys_0 =
+//│ 		  (match xs_0 with
+//│ 		    | `C(x_0, xt_0) -> 
+//│ 		      (match ys_0 with
+//│ 		        | `C(y_0, yt_0) -> 
+//│ 		          (`C((`Pair(x_0, y_0)), ((zip xt_0) yt_0)))
+//│ 		        | `N -> 
+//│ 		          (`N))
+//│ 		    | `N -> 
+//│ 		      (`N));;
+//│ 		let rec testZipUnzip n_1 =
+//│ 		  (match (unzip (makeZippedList n_1)) with
+//│ 		    | `Pair(xs_1, ys_1) -> 
+//│ 		      ((zip xs_1) ys_1));;
+//│ 		(testZipUnzip 50000)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testZipUnzip^74]
+//│ 	[testZipUnzip^74 · makeZippedList^62] (hopeless to continue)
+//│ 		[testZipUnzip^74 · makeZippedList^62 · makeZippedList^49] ---> [testZipUnzip^74 · makeZippedList^62] (using original def)
+//│ 	[testZipUnzip^74 · unzip^60] (hopeless to continue)
+//│ 		[testZipUnzip^74 · unzip^60 · unzip^20] ---> [testZipUnzip^74 · unzip^60] (using original def)
+//│ 	[testZipUnzip^74 · zip^67]
+//│ 		[testZipUnzip^74 · zip^67 · zip^6] ---> [testZipUnzip^74 · zip^67] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testZipUnzip₀(primId⁰(50000))
+//│ def testZipUnzip₀(n²) = 
+//│ 	case unzip₀(primId⁰(makeZippedList₀(n²))) of {
+//│ 		Pair xs² ys² => zip₀(xs², ys²)}
+//│ 	where
+//│ 	def makeZippedList₀(n³) = 
+//│ 		if (n³ > 0) then [C [Pair n³ (n³ + 1)] makeZippedList₀((n³ - 1))] else [N]
+//│ 	def unzip₀(ls¹) = 
+//│ 		case ls¹ of {
+//│ 			C h¹ t¹ => case h¹ of {
+//│ 				Pair a¹ b¹ => case unzip₀(t¹) of {
+//│ 					Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}}
+//│ 			| N  => [Pair [N] [N]]}
+//│ 	def zip₀(xs³, ys³) = 
+//│ 		case xs³ of {
+//│ 			C x¹ xt¹ => case ys³ of {
+//│ 				C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)]
+//│ 				| N  => [N]}
+//│ 			| N  => [N]}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C a¹ atail¹]: 123 --->
+//│ 	case xs³ of {C x¹ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 149
+//│ [C b¹ btail¹]: 126 --->
+//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 147
+//│ [Pair [C a¹ atail¹] [C b¹ btail¹]]: 127 --->
+//│ 	case unzip₀(primId⁰(makeZippedList₀(n²))) of {Pair xs² ys² => zip₀(xs², ys²)}: 91
+//│ 	case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 128
+//│ [N]: 130 --->
+//│ 	case xs³ of {C x¹ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 149
+//│ [N]: 131 --->
+//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 147
+//│ [Pair [N] [N]]: 132 --->
+//│ 	case unzip₀(primId⁰(makeZippedList₀(n²))) of {Pair xs² ys² => zip₀(xs², ys²)}: 91
+//│ 	case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 128
+//│ ------------------
+//│ case unzip₀(primId⁰(makeZippedList₀(n²))) of {Pair xs² ys² => zip₀(xs², ys²)}: 91 --->
+//│ 	[Pair [C a¹ atail¹] [C b¹ btail¹]]: 127
+//│ 	[Pair [N] [N]]: 132
+//│ case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 128 --->
+//│ 	[Pair [C a¹ atail¹] [C b¹ btail¹]]: 127
+//│ 	[Pair [N] [N]]: 132
+//│ case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 147 --->
+//│ 	[C b¹ btail¹]: 126
+//│ 	[N]: 131
+//│ case xs³ of {C x¹ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 149 --->
+//│ 	[C a¹ atail¹]: 123
+//│ 	[N]: 130
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C a¹ atail¹]: 123 --->
+//│ 	case xs³ of {C x¹ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 149
+//│ [C b¹ btail¹]: 126 --->
+//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 147
+//│ [N]: 130 --->
+//│ 	case xs³ of {C x¹ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 149
+//│ [N]: 131 --->
+//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 147
+//│ ------------------
+//│ case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 147 --->
+//│ 	[C b¹ btail¹]: 126
+//│ 	[N]: 131
+//│ case xs³ of {C x¹ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 149 --->
+//│ 	[C a¹ atail¹]: 123
+//│ 	[N]: 130
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testZipUnzip₀(primId⁰(50000))
+//│ def testZipUnzip₀(n⁴) = 
+//│ 	case unzip₀(primId⁰(makeZippedList₀(n⁴))) of {
+//│ 		Pair xs² ys² => zip₀(xs², ys²)}
+//│ 	where
+//│ 	def makeZippedList₀(n⁵) = 
+//│ 		if (n⁵ > 0) then [C [Pair n⁵ (n⁵ + 1)] makeZippedList₀((n⁵ - 1))] else [N]
+//│ 	def unzip₀(ls²) = 
+//│ 		case ls² of {
+//│ 			C h¹ t¹ => case h¹ of {
+//│ 				Pair a¹ b¹ => case unzip₀(t¹) of {
+//│ 					Pair atail¹ btail¹ => [Pair 
+//│ 						let x² = a¹
+//│ 						in let xt² = atail¹
+//│ 						in (fun ys⁴ -> ys⁴(x², xt²)) 
+//│ 						let y² = b¹
+//│ 						in let yt² = btail¹
+//│ 						in (fun x³ -> (fun xt³ -> [C [Pair x³ y²] zip₀(xt³, yt²)]))]}}
+//│ 			| N  => [Pair (fun ys⁵ -> [N]) (fun x⁴ -> (fun xt⁴ -> [N]))]}
+//│ 	def zip₀(xs⁴, ys⁶) = 
+//│ 		xs⁴(ys⁶)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
+
+:lhGenOCaml
+fun zip(xs, ys) = if xs is
+  C(x, xt) then if ys is
+    C(y, yt) then C(Pair(x, y), zip(xt, yt))
+    N then N
+  N then N
+fun unzip(ls) = if ls is
+  C(h, t) then if h is
+    Pair(a, b) then if unzip(t) is
+      Pair(atail, btail) then Pair(C(a, atail), C(b, btail))
+  N then Pair(N, N)
+fun map(f, ls) = if ls is
+  C(h, t) then C(f(h), map(f, t))
+  N then N
+fun makeZippedList(n) = if n > 0 then C(Pair(n, n + 1), makeZippedList(n - 1)) else N
+fun testZipMapBothUnzip(n) = if unzip(primId(makeZippedList(n))) is
+  Pair(xs, ys) then zip(
+    map(x => x + 1, xs),
+    map(x => x * x, ys)
+  )
+testZipMapBothUnzip(primId(50000))
+//│ |#fun| |zip|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|C|(|x|,| |xt|)| |#then| |#if| |ys| |is|→|C|(|y|,| |yt|)| |#then| |C|(|Pair|(|x|,| |y|)|,| |zip|(|xt|,| |yt|)|)|↵|N| |#then| |N|←|↵|N| |#then| |N|←|↵|#fun| |unzip|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |#if| |h| |is|→|Pair|(|a|,| |b|)| |#then| |#if| |unzip|(|t|)| |is|→|Pair|(|atail|,| |btail|)| |#then| |Pair|(|C|(|a|,| |atail|)|,| |C|(|b|,| |btail|)|)|←|←|↵|N| |#then| |Pair|(|N|,| |N|)|←|↵|#fun| |map|(|f|,| |ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |C|(|f|(|h|)|,| |map|(|f|,| |t|)|)|↵|N| |#then| |N|←|↵|#fun| |makeZippedList|(|n|)| |#=| |#if| |n| |>| |0| |#then| |C|(|Pair|(|n|,| |n| |+| |1|)|,| |makeZippedList|(|n| |-| |1|)|)| |#else| |N|↵|#fun| |testZipMapBothUnzip|(|n|)| |#=| |#if| |unzip|(|primId|(|makeZippedList|(|n|)|)|)| |is|→|Pair|(|xs|,| |ys|)| |#then| |zip|(|→|map|(|x| |=>| |x| |+| |1|,| |xs|)|,|↵|map|(|x| |=>| |x| |*| |x|,| |ys|)|←|↵|)|←|↵|testZipMapBothUnzip|(|primId|(|50000|)|)|
+//│ Parsed: {fun zip = xs, ys, => if xs is ‹(C (x, xt,)) then if ys is ‹(C (y, yt,)) then C (Pair (x, y,), zip (xt, yt,),); (N) then N›; (N) then N›; fun unzip = ls, => if ls is ‹(C (h, t,)) then if h is ‹(Pair (a, b,)) then if unzip (t,) is ‹(Pair (atail, btail,)) then Pair (C (a, atail,), C (b, btail,),)››; (N) then Pair (N, N,)›; fun map = f, ls, => if ls is ‹(C (h, t,)) then C (f (h,), map (f, t,),); (N) then N›; fun makeZippedList = n, => if (> (n,) (0,)) then C (Pair (n, + (n,) (1,),), makeZippedList (- (n,) (1,),),) else N; fun testZipMapBothUnzip = n, => if unzip (primId (makeZippedList (n,),),) is ‹(Pair (xs, ys,)) then zip (map (x, => + (x,) (1,), xs,), map (x, => * (x,) (x,), ys,),)›; testZipMapBothUnzip (primId (50000,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testZipMapBothUnzip^106(primId⁰(50000))
+//│ def makeZippedList(n⁰) = if (n⁰ > 0) then [C [Pair n⁰ (n⁰ + 1)] makeZippedList^63((n⁰ - 1))] else [N]
+//│ def map(f⁰, ls¹) = case ls¹ of {
+//│ 	C h¹ t¹ => [C f⁰(h¹) map^41(f⁰, t¹)]
+//│ 	| N  => [N]}
+//│ def testZipMapBothUnzip(n¹) = case unzip^74(primId⁰(makeZippedList^76(n¹))) of {
+//│ 	Pair xs¹ ys¹ => zip^81(map^82((fun x¹ -> (x¹ + 1)), xs¹), map^93((fun x² -> (x² * x²)), ys¹))}
+//│ def unzip(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => case h⁰ of {
+//│ 		Pair a⁰ b⁰ => case unzip^20(t⁰) of {
+//│ 			Pair atail⁰ btail⁰ => [Pair [C a⁰ atail⁰] [C b⁰ btail⁰]]}}
+//│ 	| N  => [Pair [N] [N]]}
+//│ def zip(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C x⁰ xt⁰ => case ys⁰ of {
+//│ 		C y⁰ yt⁰ => [C [Pair x⁰ y⁰] zip^6(xt⁰, yt⁰)]
+//│ 		| N  => [N]}
+//│ 	| N  => [N]}
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec makeZippedList n_0 =
+//│ 		  (if (n_0 > 0) then
+//│ 		    (`C((`Pair(n_0, (n_0 + 1))), (makeZippedList (n_0 - 1))))
+//│ 		  else
+//│ 		    (`N));;
+//│ 		let rec map f_0 ls_1 =
+//│ 		  (match ls_1 with
+//│ 		    | `C(h_1, t_1) -> 
+//│ 		      (`C((f_0 h_1), ((map f_0) t_1)))
+//│ 		    | `N -> 
+//│ 		      (`N));;
+//│ 		let rec unzip ls_0 =
+//│ 		  (match ls_0 with
+//│ 		    | `C(h_0, t_0) -> 
+//│ 		      (match h_0 with
+//│ 		        | `Pair(a_0, b_0) -> 
+//│ 		          (match (unzip t_0) with
+//│ 		            | `Pair(atail_0, btail_0) -> 
+//│ 		              (`Pair((`C(a_0, atail_0)), (`C(b_0, btail_0))))))
+//│ 		    | `N -> 
+//│ 		      (`Pair((`N), (`N))));;
+//│ 		let rec zip xs_0 ys_0 =
+//│ 		  (match xs_0 with
+//│ 		    | `C(x_0, xt_0) -> 
+//│ 		      (match ys_0 with
+//│ 		        | `C(y_0, yt_0) -> 
+//│ 		          (`C((`Pair(x_0, y_0)), ((zip xt_0) yt_0)))
+//│ 		        | `N -> 
+//│ 		          (`N))
+//│ 		    | `N -> 
+//│ 		      (`N));;
+//│ 		let rec testZipMapBothUnzip n_1 =
+//│ 		  (match (unzip (makeZippedList n_1)) with
+//│ 		    | `Pair(xs_1, ys_1) -> 
+//│ 		      ((zip ((map (fun x_1 -> 
+//│ 		        (x_1 + 1))) xs_1)) ((map (fun x_2 -> 
+//│ 		        (x_2 * x_2))) ys_1)));;
+//│ 		(testZipMapBothUnzip 50000)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testZipMapBothUnzip^106]
+//│ 	[testZipMapBothUnzip^106 · makeZippedList^76] (hopeless to continue)
+//│ 		[testZipMapBothUnzip^106 · makeZippedList^76 · makeZippedList^63] ---> [testZipMapBothUnzip^106 · makeZippedList^76] (using original def)
+//│ 	[testZipMapBothUnzip^106 · map^82] (hopeless to continue)
+//│ 		[testZipMapBothUnzip^106 · map^82 · map^41] ---> [testZipMapBothUnzip^106 · map^82] (using original def)
+//│ 	[testZipMapBothUnzip^106 · map^93] (hopeless to continue)
+//│ 		[testZipMapBothUnzip^106 · map^93 · map^41] ---> [testZipMapBothUnzip^106 · map^93] (using original def)
+//│ 	[testZipMapBothUnzip^106 · unzip^74] (hopeless to continue)
+//│ 		[testZipMapBothUnzip^106 · unzip^74 · unzip^20] ---> [testZipMapBothUnzip^106 · unzip^74] (using original def)
+//│ 	[testZipMapBothUnzip^106 · zip^81]
+//│ 		[testZipMapBothUnzip^106 · zip^81 · zip^6] ---> [testZipMapBothUnzip^106 · zip^81] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testZipMapBothUnzip₀(primId⁰(50000))
+//│ def testZipMapBothUnzip₀(n²) = 
+//│ 	case unzip₀(primId⁰(makeZippedList₀(n²))) of {
+//│ 		Pair xs² ys² => zip₀(map₀((fun x³ -> (x³ + 1)), xs²), map₁((fun x⁴ -> (x⁴ * x⁴)), ys²))}
+//│ 	where
+//│ 	def makeZippedList₀(n³) = 
+//│ 		if (n³ > 0) then [C [Pair n³ (n³ + 1)] makeZippedList₀((n³ - 1))] else [N]
+//│ 	def map₀(f¹, ls²) = 
+//│ 		case ls² of {
+//│ 			C h² t² => [C f¹(h²) map₀(f¹, t²)]
+//│ 			| N  => [N]}
+//│ 	def map₁(f², ls⁴) = 
+//│ 		case ls⁴ of {
+//│ 			C h⁴ t⁴ => [C f²(h⁴) map₁(f², t⁴)]
+//│ 			| N  => [N]}
+//│ 	def unzip₀(ls³) = 
+//│ 		case ls³ of {
+//│ 			C h³ t³ => case h³ of {
+//│ 				Pair a¹ b¹ => case unzip₀(t³) of {
+//│ 					Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}}
+//│ 			| N  => [Pair [N] [N]]}
+//│ 	def zip₀(xs³, ys³) = 
+//│ 		case xs³ of {
+//│ 			C x⁵ xt¹ => case ys³ of {
+//│ 				C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)]
+//│ 				| N  => [N]}
+//│ 			| N  => [N]}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C f¹(h²) map₀(f¹, t²)]: 120 --->
+//│ 	case xs³ of {C x⁵ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 171
+//│ [N]: 121 --->
+//│ 	case xs³ of {C x⁵ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 171
+//│ [C a¹ atail¹]: 181 --->
+//│ 	case ls² of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 122
+//│ [C b¹ btail¹]: 184 --->
+//│ 	case ls⁴ of {C h⁴ t⁴ => [C f²(h⁴) map₁(f², t⁴)] | N  => [N]}: 227
+//│ [Pair [C a¹ atail¹] [C b¹ btail¹]]: 185 --->
+//│ 	case unzip₀(primId⁰(makeZippedList₀(n²))) of {Pair xs² ys² => zip₀(map₀((fun x³ -> (x³ + 1)), xs²), map₁((fun x⁴ -> (x⁴ * x⁴)), ys²))}: 155
+//│ 	case unzip₀(t³) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 186
+//│ [N]: 188 --->
+//│ 	case ls² of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 122
+//│ [N]: 189 --->
+//│ 	case ls⁴ of {C h⁴ t⁴ => [C f²(h⁴) map₁(f², t⁴)] | N  => [N]}: 227
+//│ [Pair [N] [N]]: 190 --->
+//│ 	case unzip₀(primId⁰(makeZippedList₀(n²))) of {Pair xs² ys² => zip₀(map₀((fun x³ -> (x³ + 1)), xs²), map₁((fun x⁴ -> (x⁴ * x⁴)), ys²))}: 155
+//│ 	case unzip₀(t³) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 186
+//│ [C f²(h⁴) map₁(f², t⁴)]: 225 --->
+//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 169
+//│ [N]: 226 --->
+//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 169
+//│ ------------------
+//│ case ls² of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 122 --->
+//│ 	[C a¹ atail¹]: 181
+//│ 	[N]: 188
+//│ case unzip₀(primId⁰(makeZippedList₀(n²))) of {Pair xs² ys² => zip₀(map₀((fun x³ -> (x³ + 1)), xs²), map₁((fun x⁴ -> (x⁴ * x⁴)), ys²))}: 155 --->
+//│ 	[Pair [C a¹ atail¹] [C b¹ btail¹]]: 185
+//│ 	[Pair [N] [N]]: 190
+//│ case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 169 --->
+//│ 	[C f²(h⁴) map₁(f², t⁴)]: 225
+//│ 	[N]: 226
+//│ case xs³ of {C x⁵ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 171 --->
+//│ 	[C f¹(h²) map₀(f¹, t²)]: 120
+//│ 	[N]: 121
+//│ case unzip₀(t³) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 186 --->
+//│ 	[Pair [C a¹ atail¹] [C b¹ btail¹]]: 185
+//│ 	[Pair [N] [N]]: 190
+//│ case ls⁴ of {C h⁴ t⁴ => [C f²(h⁴) map₁(f², t⁴)] | N  => [N]}: 227 --->
+//│ 	[C b¹ btail¹]: 184
+//│ 	[N]: 189
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C f¹(h²) map₀(f¹, t²)]: 120 --->
+//│ 	case xs³ of {C x⁵ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 171
+//│ [N]: 121 --->
+//│ 	case xs³ of {C x⁵ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 171
+//│ [C a¹ atail¹]: 181 --->
+//│ 	case ls² of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 122
+//│ [C b¹ btail¹]: 184 --->
+//│ 	case ls⁴ of {C h⁴ t⁴ => [C f²(h⁴) map₁(f², t⁴)] | N  => [N]}: 227
+//│ [N]: 188 --->
+//│ 	case ls² of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 122
+//│ [N]: 189 --->
+//│ 	case ls⁴ of {C h⁴ t⁴ => [C f²(h⁴) map₁(f², t⁴)] | N  => [N]}: 227
+//│ [C f²(h⁴) map₁(f², t⁴)]: 225 --->
+//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 169
+//│ [N]: 226 --->
+//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 169
+//│ ------------------
+//│ case ls² of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 122 --->
+//│ 	[C a¹ atail¹]: 181
+//│ 	[N]: 188
+//│ case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 169 --->
+//│ 	[C f²(h⁴) map₁(f², t⁴)]: 225
+//│ 	[N]: 226
+//│ case xs³ of {C x⁵ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 171 --->
+//│ 	[C f¹(h²) map₀(f¹, t²)]: 120
+//│ 	[N]: 121
+//│ case ls⁴ of {C h⁴ t⁴ => [C f²(h⁴) map₁(f², t⁴)] | N  => [N]}: 227 --->
+//│ 	[C b¹ btail¹]: 184
+//│ 	[N]: 189
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testZipMapBothUnzip₀(primId⁰(50000))
+//│ def testZipMapBothUnzip₀(n⁵) = 
+//│ 	case unzip₀(primId⁰(makeZippedList₀(n⁵))) of {
+//│ 		Pair xs² ys² => zip₀(map₀((fun x⁹ -> (x⁹ + 1)), xs²), map₁((fun x¹⁰ -> (x¹⁰ * x¹⁰)), ys²))}
+//│ 	where
+//│ 	def makeZippedList₀(n⁴) = 
+//│ 		if (n⁴ > 0) then [C [Pair n⁴ (n⁴ + 1)] makeZippedList₀((n⁴ - 1))] else [N]
+//│ 	def map₀(f⁸, ls⁷) = 
+//│ 		ls⁷(f⁸)
+//│ 	def map₁(f⁷, ls⁶) = 
+//│ 		ls⁶(f⁷)
+//│ 	def unzip₀(ls⁵) = 
+//│ 		case ls⁵ of {
+//│ 			C h³ t³ => case h³ of {
+//│ 				Pair a¹ b¹ => case unzip₀(t³) of {
+//│ 					Pair atail¹ btail¹ => [Pair 
+//│ 						let h⁵ = a¹
+//│ 						in let t⁵ = atail¹
+//│ 						in (fun f³ -> 
+//│ 							let x⁶ = f³(h⁵)
+//│ 							in let xt² = map₀(f³, t⁵)
+//│ 							in (fun ys⁵ -> ys⁵(xt², x⁶))) 
+//│ 						let h⁶ = b¹
+//│ 						in let t⁶ = btail¹
+//│ 						in (fun f⁴ -> 
+//│ 							let y² = f⁴(h⁶)
+//│ 							in let yt² = map₁(f⁴, t⁶)
+//│ 							in (fun xt³ -> (fun x⁷ -> [C [Pair x⁷ y²] zip₀(xt³, yt²)])))]}}
+//│ 			| N  => [Pair (fun f⁵ -> (fun ys⁶ -> [N])) (fun f⁶ -> (fun xt⁴ -> (fun x⁸ -> [N])))]}
+//│ 	def zip₀(xs⁴, ys⁴) = 
+//│ 		xs⁴(ys⁴)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

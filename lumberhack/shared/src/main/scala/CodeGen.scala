@@ -103,8 +103,8 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
       }
       case "pat_literal" => n.getChild(0).getType() match {
         case "integer" => NestedPat.LitPat(IntLit(n.getSrcContent.toInt))
-        case "string" => NestedPat.LitPat(StrLit(n.getSrcContent))
         case "con_list" => NestedPat.CtorPat(BuiltInTypes.ListNil.toLumberhackType, Nil)
+        // case "string" => NestedPat.LitPat(StrLit(n.getSrcContent))
       }
       case "pat_name" => n.getChild(0).getType() match {
         case "variable" => NestedPat.IdPat(n.getSrcContent)
@@ -182,8 +182,11 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
           val child = n.getChild(0)
           child.getType() match {
             case "integer" => Const(IntLit(child.getSrcContent.toInt))
-            case "string" => Const(StrLit(child.getSrcContent.drop(1).dropRight(1)))
             case "con_list" => Ctor(Var(BuiltInTypes.ListNil.toLumberhackType), Nil)
+            case "char" => Const(CharLit(child.getSrcContent(1)))
+            case "string" => child.getSrcContent.drop(1).dropRight(1).foldRight(Ctor(Var("LH_N"), Nil)) {
+              case (c, acc) => Ctor(Var("LH_C"), Const(CharLit(c)) :: acc :: Nil)
+            }
           }
         }
         case "exp_infix" => {
@@ -965,7 +968,7 @@ object HaskellGen extends CodeGen {
 
 class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = false) extends CodeGen {
   override val primitives = Map(
-    "add" -> "(+)", "sub" -> "(-)", "%" -> "mod", "==" -> "=", "error" -> "failwith", "/=" -> "!="
+    "add" -> "(+)", "sub" -> "(-)", "%" -> "mod", "==" -> "=", "error" -> "(failwith \"error\")", "/=" -> "!="
   )
   def transformPrimitive(p: String): String = primitives.getOrElse(p, p)
 

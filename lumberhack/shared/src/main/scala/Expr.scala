@@ -415,8 +415,13 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
 }
 object Expr {
   type Ctx = Map[Str, Ident]
-
+  def fromStrLit(s: Str)(using deforest: Deforest, inDef: Option[Ident]): Ctor = s.headOption match {
+    case Some(a) => Ctor(Var("LH_C"), Const(CharLit(a)) :: fromStrLit(s.tail) :: Nil)
+    case None => Ctor(Var("LH_N"), Nil)
+  }
   def fromTerm(t: Term)(using d: Deforest, ctx: Ctx, inDef: Option[Ident]): Expr = t match
+    case Var(char) if char.matches("'.'") => Const(CharLit(char(1)))
+    case StrLit(str) => fromStrLit(str)
     case lit: Lit => Const(lit)
     case v @ Var(nme) =>
       if (nme.isCapitalized) Ctor(v, Nil)
@@ -458,7 +463,7 @@ object Expr {
           // literal pattern
           case L(IfThen(lit: Lit, rhs)) => lit match {
             case IntLit(value) => (Var(value.toString()), Nil, fromTerm(rhs))
-            case StrLit(value) => (Var(s"\"$value\""), Nil, fromTerm(rhs))
+            // case StrLit(value) => (Var(s"\"$value\""), Nil, fromTerm(rhs))
             case _ => lastWords(s"unsupported pattern: ${lit}")
           }
           case _ => ???

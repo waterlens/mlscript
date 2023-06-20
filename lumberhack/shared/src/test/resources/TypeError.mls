@@ -384,23 +384,23 @@ fun f(xs, ys) = if xs is
     C(h, t) then if ys is
       C(hh, yt) then h + hh
       _ then h
-    _ then error("match error")
+    _ then error
 f(C(1, N), C(2, N))
-//│ |#fun| |f|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|N| |#then| |0|↵|_| |#then| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |#if| |ys| |is|→|C|(|hh|,| |yt|)| |#then| |h| |+| |hh|↵|_| |#then| |h|←|↵|_| |#then| |error|(|"match error"|)|←|←|↵|f|(|C|(|1|,| |N|)|,| |C|(|2|,| |N|)|)|
-//│ Parsed: {fun f = xs, ys, => if xs is ‹(N) then 0; (_) then if xs is ‹(C (h, t,)) then if ys is ‹(C (hh, yt,)) then + (h,) (hh,); (_) then h›; (_) then error ("match error",)››; f (C (1, N,), C (2, N,),)}
+//│ |#fun| |f|(|xs|,| |ys|)| |#=| |#if| |xs| |is|→|N| |#then| |0|↵|_| |#then| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |#if| |ys| |is|→|C|(|hh|,| |yt|)| |#then| |h| |+| |hh|↵|_| |#then| |h|←|↵|_| |#then| |error|←|←|↵|f|(|C|(|1|,| |N|)|,| |C|(|2|,| |N|)|)|
+//│ Parsed: {fun f = xs, ys, => if xs is ‹(N) then 0; (_) then if xs is ‹(C (h, t,)) then if ys is ‹(C (hh, yt,)) then + (h,) (hh,); (_) then h›; (_) then error››; f (C (1, N,), C (2, N,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ f^19([C 1 [N]], [C 2 [N]])
+//│ f^17([C 1 [N]], [C 2 [N]])
 //│ def f(xs⁰, ys⁰) = case xs⁰ of {
 //│ 	N  => 0
 //│ 	| _  => case xs⁰ of {
 //│ 		C h⁰ t⁰ => case ys⁰ of {
 //│ 			C hh⁰ yt⁰ => (h⁰ + hh⁰)
 //│ 			| _  => h⁰}
-//│ 		| _  => error⁰("match error")}}
+//│ 		| _  => error⁰}}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [f^19] (hopeless to continue)
+//│ [f^17] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -412,30 +412,30 @@ f(C(1, N), C(2, N))
 //│ 			C h¹ t¹ => case ys¹ of {
 //│ 				C hh¹ yt¹ => (h¹ + hh¹)
 //│ 				| _  => h¹}
-//│ 			| _  => error⁰("match error")}}
+//│ 			| _  => error⁰}}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [N]]: 49 --->
-//│ 	case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰("match error")}: 42
-//│ 	case xs¹ of {N  => 0 | _  => case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰("match error")}}: 43
-//│ [C 2 [N]]: 53 --->
-//│ 	case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 38
+//│ [C 1 [N]]: 45 --->
+//│ 	case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰}: 38
+//│ 	case xs¹ of {N  => 0 | _  => case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰}}: 39
+//│ [C 2 [N]]: 49 --->
+//│ 	case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 36
 //│ ------------------
-//│ case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 38 --->
-//│ 	[C 2 [N]]: 53
-//│ case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰("match error")}: 42 --->
-//│ 	[C 1 [N]]: 49
-//│ case xs¹ of {N  => 0 | _  => case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰("match error")}}: 43 --->
-//│ 	[C 1 [N]]: 49
+//│ case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 36 --->
+//│ 	[C 2 [N]]: 49
+//│ case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰}: 38 --->
+//│ 	[C 1 [N]]: 45
+//│ case xs¹ of {N  => 0 | _  => case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰}}: 39 --->
+//│ 	[C 1 [N]]: 45
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C 2 [N]]: 53 --->
-//│ 	case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 38
+//│ [C 2 [N]]: 49 --->
+//│ 	case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 36
 //│ ------------------
-//│ case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 38 --->
-//│ 	[C 2 [N]]: 53
+//│ case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 36 --->
+//│ 	[C 2 [N]]: 49
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -448,7 +448,7 @@ f(C(1, N), C(2, N))
 //│ 		N  => 0
 //│ 		| _  => case xs² of {
 //│ 			C h¹ t¹ => ys²(h¹)
-//│ 			| _  => error⁰("match error")}}
+//│ 			| _  => error⁰}}
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -461,16 +461,16 @@ f(C(1, N))
 //│ |#fun| |f|(|xs|)| |#=| |#if| |xs| |is|→|N| |#then| |0|↵|_| |#then| |#if| |xs| |is|→|C|(|h|,| |t|)| |#then| |h|↵|_| |#then| |error|(|"match error"|)|←|←|↵|f|(|C|(|1|,| |N|)|)|
 //│ Parsed: {fun f = xs, => if xs is ‹(N) then 0; (_) then if xs is ‹(C (h, t,)) then h; (_) then error ("match error",)››; f (C (1, N,),)}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ f^11([C 1 [N]])
+//│ f^33([C 1 [N]])
 //│ def f(xs⁰) = case xs⁰ of {
 //│ 	N  => 0
 //│ 	| _  => case xs⁰ of {
 //│ 		C h⁰ t⁰ => h⁰
-//│ 		| _  => error⁰("match error")}}
+//│ 		| _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [f^11] (hopeless to continue)
+//│ [f^33] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -480,18 +480,18 @@ f(C(1, N))
 //│ 		N  => 0
 //│ 		| _  => case xs¹ of {
 //│ 			C h¹ t¹ => h¹
-//│ 			| _  => error⁰("match error")}}
+//│ 			| _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [N]]: 29 --->
-//│ 	case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰("match error")}: 23
-//│ 	case xs¹ of {N  => 0 | _  => case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰("match error")}}: 24
+//│ [C 1 [N]]: 73 --->
+//│ 	case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}: 67
+//│ 	case xs¹ of {N  => 0 | _  => case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}}: 68
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰("match error")}: 23 --->
-//│ 	[C 1 [N]]: 29
-//│ case xs¹ of {N  => 0 | _  => case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰("match error")}}: 24 --->
-//│ 	[C 1 [N]]: 29
+//│ case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}: 67 --->
+//│ 	[C 1 [N]]: 73
+//│ case xs¹ of {N  => 0 | _  => case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}}: 68 --->
+//│ 	[C 1 [N]]: 73
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -507,7 +507,7 @@ f(C(1, N))
 //│ 		N  => 0
 //│ 		| _  => case xs² of {
 //│ 			C h¹ t¹ => h¹
-//│ 			| _  => error⁰("match error")}}
+//│ 			| _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}}
 //│ <<<<<<< after fusion <<<<<<<
 
 

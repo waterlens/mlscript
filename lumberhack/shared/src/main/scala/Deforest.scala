@@ -198,7 +198,11 @@ object ProdStratEnum {
     MkCtor(Var("True"), Nil).toStrat() :: MkCtor(Var("False"), Nil).toStrat() :: Nil
   )
   def prodInt(using ExprId) = MkCtor(Var("Int"), Nil)
-  def prodString(using ExprId) = MkCtor(Var("String"), Nil)
+  def prodChar(using ExprId) = MkCtor(Var("Char"), Nil)
+  def prodString(s: Str)(using ExprId): MkCtor = s.headOption match {
+    case Some(_) => MkCtor(Var("LH_C"), prodChar.toStrat() :: prodString(s.tail).toStrat() :: Nil)
+    case None => MkCtor(Var("LH_N"), Nil)
+  }
   def prodIntBinOp(using ExprId) = ProdFun(
     consInt.toStrat(),
     ProdFun(consInt.toStrat(), prodInt.toStrat()).toStrat()
@@ -285,7 +289,8 @@ class Deforest(var debug: Boolean) {
   def process(e: Expr)(using ctx: Ctx, calls: mutable.Set[Ref]): ProdStrat = trace(s"process ${e.uid}: ${e.pp(using InitPpConfig)}") {
     val res: ProdStratEnum = e match
       case Const(IntLit(_)) => prodInt(using noExprId) // Ints must use noExprId, since it's a MkCtor type
-      case Const(StrLit(_)) => prodString(using noExprId) // Strings must use noExprId, since it's a MkCtor type
+      case Const(CharLit(_)) => prodChar(using noExprId)
+      case Const(StrLit(strLit)) => prodString(strLit)(using noExprId) // Strings must use noExprId, since it's a MkCtor type
       case Const(l) => NoProd()(using e.uid)
       case Ref(Ident(_, Var(primitive), _)) if Deforest.lumberhackKeywords(primitive) => {
         if Deforest.lumberhackIntComparisonFun(primitive) || Deforest.lumberhackIntComparisonOps(primitive) then
@@ -332,9 +337,6 @@ class Deforest(var debug: Boolean) {
           } else if v.name.toIntOption.isDefined then { // int literal pattern: ("3", Nil, armBodyExpr)
             val ep = process(e)
             (Destructor(Var("Int"), Nil), ep)
-          } else if v.name.startsWith("\"") then { // str literal pattern: ("\"str\"", Nil, armBodyExpr)
-            val ep = process(e)
-            (Destructor(Var("String"), Nil), ep)
           } else { lastWords("unreachable") }
         }.unzip
         val dtorType = Destruct(detrs)(using e.uid).toStrat()

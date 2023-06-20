@@ -391,6 +391,7 @@ trait TermImpl extends StatementImpl { self: Term =>
     case IntLit(value) => value.toString
     case DecLit(value) => value.toString
     case StrLit(value) => '"'.toString + value + '"'
+    case CharLit(value) => s"'$value'"
     case UnitLit(value) => if (value) "undefined" else "null"
     case Var(name) => name
     case Asc(trm, ty) => s"$trm : $ty"  |> bra

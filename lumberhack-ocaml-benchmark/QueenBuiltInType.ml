@@ -25,7 +25,7 @@ let rec safe_d0 _lh_safe_arg1_1 _lh_safe_arg2_1 _lh_safe_arg3_1 =
     | `LH_C(_lh_safe_LH_C_0_1, _lh_safe_LH_C_1_1) -> 
       ((((_lh_safe_arg1_1 != _lh_safe_LH_C_0_1) && (_lh_safe_arg1_1 != (_lh_safe_LH_C_0_1 + _lh_safe_arg2_1))) && (_lh_safe_arg1_1 != (_lh_safe_LH_C_0_1 - _lh_safe_arg2_1))) && (((safe_d0 _lh_safe_arg1_1) (_lh_safe_arg2_1 + 1)) _lh_safe_LH_C_1_1))
     | _ -> 
-      (failwith "match error"));;
+      (failwith "error"));;
 let rec gen_d0 _lh_gen_arg1_1 _lh_gen_arg2_1 =
   (match _lh_gen_arg1_1 with
     | 0 -> 

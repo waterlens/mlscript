@@ -17,7 +17,7 @@ let rec and_d0 _lh_and_arg1_1 =
       else
         false)
     | _ -> 
-      (failwith "match error"));;
+      (failwith "error"));;
 let rec append_d0 _lh_append_arg1_1 _lh_append_arg2_1 =
   (match _lh_append_arg1_1 with
     | `LH_N -> 
@@ -25,27 +25,27 @@ let rec append_d0 _lh_append_arg1_1 _lh_append_arg2_1 =
     | `LH_C(_lh_append_LH_C_0_1, _lh_append_LH_C_1_1) -> 
       (`LH_C(_lh_append_LH_C_0_1, ((append_d0 _lh_append_LH_C_1_1) _lh_append_arg2_1)))
     | _ -> 
-      (failwith "match error"));;
-let rec enumFromTo_d0 a_3 b_3 =
-  (if (a_3 <= b_3) then
-    (`LH_C(a_3, ((enumFromTo_d0 (a_3 + 1)) b_3)))
-  else
-    (`LH_N));;
-let rec enumFromTo_d1 a_2 b_2 =
+      (failwith "error"));;
+let rec enumFromTo_d0 a_2 b_2 =
   (if (a_2 <= b_2) then
-    (`LH_C(a_2, ((enumFromTo_d1 (a_2 + 1)) b_2)))
+    (`LH_C(a_2, ((enumFromTo_d0 (a_2 + 1)) b_2)))
   else
     (`LH_N));;
-let rec length_d0 ls_7 =
-  (match ls_7 with
-    | `LH_C(h_7, t_8) -> 
-      (1 + (length_d0 t_8))
-    | `LH_N -> 
-      0);;
-let rec length_d1 ls_8 =
+let rec enumFromTo_d1 a_3 b_3 =
+  (if (a_3 <= b_3) then
+    (`LH_C(a_3, ((enumFromTo_d1 (a_3 + 1)) b_3)))
+  else
+    (`LH_N));;
+let rec length_d0 ls_8 =
   (match ls_8 with
     | `LH_C(h_8, t_9) -> 
-      (1 + (length_d1 t_9))
+      (1 + (length_d0 t_9))
+    | `LH_N -> 
+      0);;
+let rec length_d1 ls_7 =
+  (match ls_7 with
+    | `LH_C(h_7, t_8) -> 
+      (1 + (length_d1 t_8))
     | `LH_N -> 
       0);;
 let rec zip_d0 xs_1 ys_1 =
@@ -105,7 +105,7 @@ let rec append_d0_d0 _lh_append_arg1_0 _lh_append_arg2_0 =
     | `LH_C(_lh_append_LH_C_0_0, _lh_append_LH_C_1_0) -> 
       (`LH_C(_lh_append_LH_C_0_0, ((append_d0_d0 _lh_append_LH_C_1_0) _lh_append_arg2_0)))
     | _ -> 
-      (failwith "match error"));;
+      (failwith "error"));;
 let rec length_d0_d0 ls_0 =
   (match ls_0 with
     | `LH_C(h_0, t_0) -> 
@@ -180,10 +180,10 @@ and testAnotherQueenNineBuiltInType_d0_d0 _lh_testAnotherQueenNineBuiltInType_ar
   (length_d0_d0 (queens_d0_d0 _lh_testAnotherQueenNineBuiltInType_arg1_0));;
 
 (* lumberhack_pop_out *)
-let rec and_d0_d0_d0 _lh_and_arg1_1 =
-  _lh_and_arg1_1;;
-let rec and_d0_d0_d1 _lh_and_arg1_2 =
+let rec and_d0_d0_d0 _lh_and_arg1_2 =
   _lh_and_arg1_2;;
+let rec and_d0_d0_d1 _lh_and_arg1_1 =
+  _lh_and_arg1_1;;
 let rec append_d0_d0_d0 _lh_append_arg1_1 _lh_append_arg2_1 =
   (match _lh_append_arg1_1 with
     | `LH_N -> 
@@ -191,7 +191,7 @@ let rec append_d0_d0_d0 _lh_append_arg1_1 _lh_append_arg2_1 =
     | `LH_C(_lh_append_LH_C_0_1, _lh_append_LH_C_1_1) -> 
       (`LH_C(_lh_append_LH_C_0_1, ((append_d0_d0_d0 _lh_append_LH_C_1_1) _lh_append_arg2_1)))
     | _ -> 
-      (failwith "match error"));;
+      (failwith "error"));;
 let rec length_d0_d0_d0 ls_2 =
   (match ls_2 with
     | `LH_C(h_2, t_2) -> 
@@ -204,10 +204,10 @@ let rec length_d1_d0_d0 ls_3 =
       (1 + (length_d1_d0_d0 t_3))
     | `LH_N -> 
       0);;
-let rec zip_d0_d0_d0 xs_2 ys_6 =
-  (xs_2 ys_6);;
-let rec zip_d0_d0_d1 xs_1 ys_5 =
+let rec zip_d0_d0_d0 xs_1 ys_5 =
   (xs_1 ys_5);;
+let rec zip_d0_d0_d1 xs_2 ys_6 =
+  (xs_2 ys_6);;
 let rec enumFromTo_d0_d0_d0 a_3 b_3 _lh_popOutId_0_0 _lh_popOutId_1_0 _lh_popOutId_2_0 _lh_popOutId_3_0 =
   (if (a_3 <= b_3) then
     (let rec _lh_listcomp_fun_ls_h_6 = a_3 in
@@ -244,20 +244,20 @@ and queens_d0_d0_d0 _lh_queens_arg1_1 =
     | 0 -> 
       (`LH_C((`LH_N), (`LH_N)))
     | _ -> 
-      (let rec _lh_listcomp_fun_2_0 = (fun _lh_listcomp_fun_para_4 -> 
-        (match _lh_listcomp_fun_para_4 with
+      (let rec _lh_listcomp_fun_1_9 = (fun _lh_listcomp_fun_para_3 -> 
+        (match _lh_listcomp_fun_para_3 with
           | `LH_C(_lh_listcomp_fun_ls_h_9, _lh_listcomp_fun_ls_t_1_1) -> 
-            (let rec _lh_listcomp_fun_2_1 = (fun _lh_listcomp_fun_para_5 -> 
-              ((((_lh_listcomp_fun_para_5 _lh_listcomp_fun_ls_h_9) _lh_listcomp_fun_2_1) _lh_listcomp_fun_2_0) _lh_listcomp_fun_ls_t_1_1)) in
-              (_lh_listcomp_fun_2_1 ((enumFromTo_d0_d0_d0 1) 9)))
+            (let rec _lh_listcomp_fun_2_0 = (fun _lh_listcomp_fun_para_4 -> 
+              ((((_lh_listcomp_fun_para_4 _lh_listcomp_fun_ls_h_9) _lh_listcomp_fun_2_0) _lh_listcomp_fun_1_9) _lh_listcomp_fun_ls_t_1_1)) in
+              (_lh_listcomp_fun_2_0 ((enumFromTo_d0_d0_d0 1) 9)))
           | `LH_N -> 
             (`LH_N))) in
-        (_lh_listcomp_fun_2_0 (queens_d0_d0_d0 (_lh_queens_arg1_1 - 1)))))
+        (_lh_listcomp_fun_1_9 (queens_d0_d0_d0 (_lh_queens_arg1_1 - 1)))))
 and safe_d0_d0_d0 _lh_safe_arg1_1 _lh_safe_arg2_9 =
   (let rec m_9 = ((length_d1_d0_d0 _lh_safe_arg1_1) + 1) in
-    (and_d0_d0_d0 (let rec _lh_listcomp_fun_1_5 = (fun _lh_listcomp_fun_para_3 -> 
-      (((_lh_listcomp_fun_para_3 _lh_safe_arg2_9) m_9) _lh_listcomp_fun_1_5)) in
-      (_lh_listcomp_fun_1_5 ((zip_d0_d0_d1 ((enumFromTo_d1_d0_d0 1) (m_9 - 1))) _lh_safe_arg1_1)))))
+    (and_d0_d0_d0 (let rec _lh_listcomp_fun_2_1 = (fun _lh_listcomp_fun_para_5 -> 
+      (((_lh_listcomp_fun_para_5 _lh_safe_arg2_9) m_9) _lh_listcomp_fun_2_1)) in
+      (_lh_listcomp_fun_2_1 ((zip_d0_d0_d1 ((enumFromTo_d1_d0_d0 1) (m_9 - 1))) _lh_safe_arg1_1)))))
 and testAnotherQueenNineBuiltInType_d0_d0_d0 _lh_testAnotherQueenNineBuiltInType_arg1_1 =
   (length_d0_d0_d0 (queens_d0_d0_d0 _lh_testAnotherQueenNineBuiltInType_arg1_1));;
 

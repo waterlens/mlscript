@@ -266,7 +266,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
             mergeMatchPatterns(
               matchIdent :: Nil,
               arms.toList,
-              Expr.Call(Expr.Ref(ctx("error")), Expr.Const(StrLit("match error")))
+              Expr.Ref(ctx("error"))
             )
           )
         }
@@ -631,7 +631,7 @@ fun length(ls) = if ls is
         patsAndBodies.toList,
         {
           given Option[Ident] = Some(funName)
-          Expr.Call(Expr.Ref(initCtx("error")), Expr.Const(StrLit("match error")))
+          Expr.Ref(initCtx("error"))
         }
       )(using initCtx, Some(funName))
       val funDef = funArgNames.foldRight(body) { case (arg, acc) => Expr.Function(arg, acc)(using d, Some(funName)) }

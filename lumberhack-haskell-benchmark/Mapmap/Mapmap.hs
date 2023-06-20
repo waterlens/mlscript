@@ -9,8 +9,8 @@ testMapmap₀ _lh_testMapmap_arg1¹ = ((map₀ (\x² -> (x² + 1))) ((map₁ (\x
 
 --- lumberhack ---
 enumFromTo₀₀ a⁰ b⁰ = (if (a⁰ <= b⁰) then (let h⁰ = a⁰ in (let t⁰ = ((enumFromTo₀₀ (a⁰ + 1)) b⁰) in (\f¹ -> (let h¹ = (f¹ h⁰) in (let t¹ = ((map₁₀ f¹) t⁰) in (\f² -> ((f² h¹):((map₀₀ f²) t¹)))))))) else (\f³ f⁴ -> []))
-map₀₀ f⁵ ls¹ = (ls¹ f⁵)
-map₁₀ f⁰ ls⁰ = (ls⁰ f⁰)
+map₀₀ f⁰ ls⁰ = (ls⁰ f⁰)
+map₁₀ f⁵ ls¹ = (ls¹ f⁵)
 testMapmap₀₀ _lh_testMapmap_arg1⁰ = ((map₀₀ (\x⁰ -> (x⁰ + 1))) ((map₁₀ (\x¹ -> (x¹ + x¹))) ((enumFromTo₀₀ 1) _lh_testMapmap_arg1⁰)))
 
 main :: IO ()

@@ -11,6 +11,7 @@ import scala.collection.mutable.Buffer
 
 class DiffTestLumberhack extends DiffTests {
   import DiffTestLumberhack.*
+  override val timeLimit = TimeLimit
   override protected lazy val files = allFiles.filter { file =>
     val fileName = file.baseName
     validExt(file.ext) && ((modified.isEmpty || modified(file.relativeTo(pwd))) || lumberhackLocalTest(fileName))
@@ -332,6 +333,10 @@ class DiffTestLumberhack extends DiffTests {
 }
 
 object DiffTestLumberhack {
+  import org.scalatest.time._
+  private val TimeLimit =
+    if (sys.env.get("CI").isDefined) Span(25, Seconds)
+    else Span(25, Seconds)
   private val pwd = os.pwd
   private val dir = pwd/"lumberhack"/"shared"/"src"/"test"/"resources"
   private val allFiles = os.walk(dir)

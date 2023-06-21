@@ -199,6 +199,14 @@ object ProdStratEnum {
   )
   def prodInt(using ExprId) = MkCtor(Var("Int"), Nil)
   def prodChar(using ExprId) = MkCtor(Var("Char"), Nil)
+  def prodString(using d: Deforest, euid: ExprId): ProdStratEnum = {
+    val v = d.freshVar("_lh_string")
+    val nil = MkCtor(Var("LH_N"), Nil)
+    val cons = MkCtor(Var("LH_C"), prodChar.toStrat() :: v._1.toStrat() :: Nil)
+    d.constrain(nil.toStrat(), v._2.toStrat())
+    d.constrain(cons.toStrat(), v._2.toStrat())
+    v._1
+  }
   def prodString(s: Str)(using ExprId): MkCtor = s.headOption match {
     case Some(_) => MkCtor(Var("LH_C"), prodChar.toStrat() :: prodString(s.tail).toStrat() :: Nil)
     case None => MkCtor(Var("LH_N"), Nil)
@@ -225,6 +233,7 @@ object ConsStratEnum {
     Destructor(Var("True"), Nil) :: Destructor(Var("False"), Nil) :: Nil
   )
   def consInt(using ExprId) = Destruct(Destructor(Var("Int"), Nil) :: Nil)
+  def consChar(using ExprId) = Destruct(Destructor(Var("Char"), Nil) :: Nil)
 }
 case class Ctx(bindings: Map[Ident, Strat[ProdVar]]) {
   def apply(id: Ident): Strat[ProdVar] =
@@ -306,6 +315,8 @@ class Deforest(var debug: Boolean) {
           freshVar("_lh_rigid_error_var")(using noExprId)._1
         else if Set("primitive", "primId")(primitive) then
           NoProd()(using e.uid) // `primitive`, `primId`
+        else if primitive == "string_of_int" then
+          ProdFun(consInt(using noExprId).toStrat(), prodString(using this, noExprId).toStrat())(using noExprId)
         else
           lastWords("lazy and force should not be handled here")
       }
@@ -340,7 +351,10 @@ class Deforest(var debug: Boolean) {
           } else if v.name.toIntOption.isDefined then { // int literal pattern: ("3", Nil, armBodyExpr)
             val ep = process(e)
             (Destructor(Var("Int"), Nil), ep)
-          } else { lastWords("unreachable") }
+          } else if v.name.matches("'.'") then {
+            val ep = process(e)
+            (Destructor(Var("Char"), Nil), ep)
+          } else { lastWords(s"unreachable: unknown kind of match arm: ${v.name}") }
         }.unzip
         val dtorType = Destruct(detrs)(using e.uid).toStrat()
         constrain(sp, dtorType)
@@ -916,6 +930,7 @@ object CallTree {
 object Deforest {
   lazy val lumberhackKeywords: Set[String] =
     (lumberhackIntFun ++ lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackBoolUnaryOps)
+      + "string_of_int"
       + "primitive" + "primId" + "error" + "lazy" + "force"
   lazy val lumberhackBinOps = lumberhackIntBinOps ++ lumberhackBoolBinOps
   lazy val lumberhackIntFun: Set[String] = lumberhackIntValueFun ++ lumberhackIntComparisonFun

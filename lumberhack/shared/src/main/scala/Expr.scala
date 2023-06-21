@@ -187,7 +187,7 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
           "\n\t" + arms.map { case (v, ids, e) =>
             s"${if ((v.name == "_" && ids.isEmpty) // wildcard pattern
                   || v.name.isCapitalized // normal pattern
-                  || (v.name.startsWith("\"") || v.name.toIntOption.isDefined) // literal pattern
+                  || (v.name.matches("'.'") || v.name.toIntOption.isDefined) // literal pattern
                 ) then Console.BLUE + v.name + Console.RESET + " " else ""}" +
             s"${ids.map(_.pp).mkString(" ")} => ${
               e.pp.linesIterator.map("\t" + _).mkString("\n").dropWhile(_ == '\t')
@@ -198,7 +198,7 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
           arms.map { case (v, ids, e) =>
             s"${if ((v.name == "_" && ids.isEmpty) // wildcard pattern
                   || v.name.isCapitalized // normal pattern
-                  || (v.name.startsWith("\"") || v.name.toIntOption.isDefined) // literal pattern
+                  || (v.name.matches("'.'") || v.name.toIntOption.isDefined) // literal pattern
                 ) then Console.BLUE + v.name + Console.RESET + " " else ""}" +
             s"${ids.map(_.pp).mkString(" ")} => ${e.pp}"
           }.mkString(" | ")
@@ -461,6 +461,8 @@ object Expr {
             val newId = d.nextIdent(false, name)
             (Var("_"), newId :: Nil, fromTerm(rhs)(using d, ctx + (name.name -> newId)))
           // literal pattern
+          case L(IfThen(name: Var, rhs)) if name.name.matches("'.'") =>                            // char literal pattern
+            (name, Nil, fromTerm(rhs))
           case L(IfThen(lit: Lit, rhs)) => lit match {
             case IntLit(value) => (Var(value.toString()), Nil, fromTerm(rhs))
             // case StrLit(value) => (Var(s"\"$value\""), Nil, fromTerm(rhs))

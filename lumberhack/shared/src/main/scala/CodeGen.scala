@@ -104,6 +104,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
       case "pat_literal" => n.getChild(0).getType() match {
         case "integer" => NestedPat.LitPat(IntLit(n.getSrcContent.toInt))
         case "con_list" => NestedPat.CtorPat(BuiltInTypes.ListNil.toLumberhackType, Nil)
+        case "char" => NestedPat.LitPat(CharLit(n.getSrcContent(1)))
         // case "string" => NestedPat.LitPat(StrLit(n.getSrcContent))
       }
       case "pat_name" => n.getChild(0).getType() match {
@@ -125,7 +126,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
   given nodeToExprableHs: Conversion[Node, ToExprable] with {
     override def apply(n: Node): ToExprable = new ToExprable {
       override def toExpr(using ctx: Ctx, inDef: Option[Ident], d: Deforest, output: Str => Unit, prgmStr: Str): Expr = n.getType() match {
-        case "ERROR" => lastWords("haskell parse error")
+        case "ERROR" => lastWords(s"haskell parse error: `${n.getSrcContent}`")
         case "exp_arithmetic_sequence" => {
           val args = n.getAllChilds.drop(1).dropRight(1)
           args.map(_.getType()).toList match {
@@ -217,6 +218,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
                 Call(l.toExpr, Call(r.toExpr, Ref(param)))
               )
             case "mod" => Call(Call(Ref(ctx("%")), l.toExpr), r.toExpr)
+            case "++" => Call(Call(Ref(ctx("mappend")), l.toExpr), r.toExpr)
             case op => Call(Call(Ref(ctx(op)), l.toExpr), r.toExpr)
           }
         }
@@ -352,6 +354,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
               Var(currentLit match {
                 case IntLit(value) => s"$value"
                 case StrLit(value) => s"\"$value\""
+                case CharLit(value) => s"'$value'"
                 case l => lastWords(s"unsupported: $l")
               }),
               Nil,
@@ -569,13 +572,16 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
       "length", "length_lz",
       "mappend",
       "sum",
-      "atIndex", "atIndex_lz"
+      "atIndex", "atIndex_lz",
+      "concat",
+      "reverse"
     )
     // be careful, for example `map_lz` cannot be defined as
     // fun map_lz(f, lz) = if force(ls) is
     //    LH_C(h, t) then lazy(LH_C(f(h), map_lz(f, t)))
     //    LH_N then lazy(LH_N)
     // as this will cause map_lz to *eagerly force* `ls` everytime it is called
+    // and all `force` not wrapped by `lazy` should cause error
     val builtins = """
 fun map(f, ls) = if ls is
   LH_C(h, t) then LH_C(f(h), map(f, t))
@@ -705,6 +711,14 @@ fun atIndex_lz(n, ls) =
       LH_C(h, t) then
         if n == 0 then h else atIndex_lz(n - 1, t)
       LH_N then error
+fun concat(lss) = if lss is
+  LH_C(h, t) then mappend(h, concat(t))
+  LH_N then LH_N
+
+fun reverse(ls) = reverse_helper(ls, LH_N)
+fun reverse_helper(ls, a) = if ls is
+  LH_C(h, t) then reverse_helper(t, LH_C(h, a))
+  LH_N then a
     """
     val builtinPrgms = {
       val lumberhackBuiltinFph = new FastParseHelpers(builtins)
@@ -1176,7 +1190,7 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
         }
       case None -> (idPat :: Nil) if dtor.name == "_" => transfromId(idPat) <:> " -> "
       case None -> Nil if dtor.name == "_" => "_ -> "
-      case None -> Nil if dtor.name.matches("\\d+|\".*\"") => s"${dtor.name} -> "
+      case None -> Nil if dtor.name.matches("\\d+|'.'") => s"${dtor.name} -> " // int or char literal pattern
       case _ => (if this.usePolymorphicVariant then "`" else "") <:> s"${dtor.name}" <:> {
         if params.nonEmpty then
           "(" <:> Lined(params.map(arg => transfromId(arg)), ", ") <:> ")"

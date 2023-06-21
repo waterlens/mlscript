@@ -2,9 +2,9 @@ import Criterion.Main
 
 
 --- original ---
-enumFromTo₀ a² b² = (if (a² <= b²) then (a²:((enumFromTo₀ (a² + 1)) b²)) else [])
+enumFromTo₀ a⁵ b² = (if (a⁵ <= b²) then (a⁵:((enumFromTo₀ (a⁵ + 1)) b²)) else [])
 gen₀ _lh_gen_arg1¹ _lh_gen_arg2¹ = (case _lh_gen_arg1¹ of {0 -> ([]:[]); _ -> (let _lh_listcomp_fun² = (\_lh_listcomp_fun_para² -> (case _lh_listcomp_fun_para² of {(_lh_listcomp_fun_ls_h² : _lh_listcomp_fun_ls_t²) -> (let _lh_listcomp_fun³ = (\_lh_listcomp_fun_para³ -> (case _lh_listcomp_fun_para³ of {(_lh_listcomp_fun_ls_h³ : _lh_listcomp_fun_ls_t³) -> (if (((safe₀ _lh_listcomp_fun_ls_h³) 1) _lh_listcomp_fun_ls_h²) then ((_lh_listcomp_fun_ls_h³:_lh_listcomp_fun_ls_h²):(_lh_listcomp_fun³ _lh_listcomp_fun_ls_t³)) else (_lh_listcomp_fun³ _lh_listcomp_fun_ls_t³)); [] -> (_lh_listcomp_fun² _lh_listcomp_fun_ls_t²)})) in (_lh_listcomp_fun³ ((enumFromTo₀ 1) _lh_gen_arg2¹))); [] -> []})) in (_lh_listcomp_fun² ((gen₀ (_lh_gen_arg1¹ - 1)) _lh_gen_arg2¹)))})
-length₀ ls⁷ = (case ls⁷ of {(h⁷ : t⁸) -> (1 + (length₀ t⁸)); [] -> 0})
+length₀ ls¹⁹ = (case ls¹⁹ of {(h²⁰ : t²²) -> (1 + (length₀ t²²)); [] -> 0})
 nsoln₀ _lh_nsoln_arg1¹ = (length₀ ((gen₀ _lh_nsoln_arg1¹) _lh_nsoln_arg1¹))
 safe₀ _lh_safe_arg1¹ _lh_safe_arg2¹ _lh_safe_arg3¹ = (case _lh_safe_arg3¹ of {[] -> True; (_lh_safe_LH_C_0¹ : _lh_safe_LH_C_1¹) -> ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0¹) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ - _lh_safe_arg2¹))) && (((safe₀ _lh_safe_arg1¹) (_lh_safe_arg2¹ + 1)) _lh_safe_LH_C_1¹)); _ -> error})
 testQueen₀ _lh_testQueen_arg1¹ = (nsoln₀ _lh_testQueen_arg1¹)

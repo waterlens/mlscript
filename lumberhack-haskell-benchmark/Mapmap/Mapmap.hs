@@ -2,15 +2,15 @@ import Criterion.Main
 
 
 --- original ---
-enumFromTo₀ a² b² = (if (a² <= b²) then (a²:((enumFromTo₀ (a² + 1)) b²)) else [])
-map₀ f⁴ ls⁷ = (case ls⁷ of {(h⁷ : t⁸) -> ((f⁴ h⁷):((map₀ f⁴) t⁸)); [] -> []})
-map₁ f⁵ ls⁸ = (case ls⁸ of {(h⁸ : t⁹) -> ((f⁵ h⁸):((map₁ f⁵) t⁹)); [] -> []})
-testMapmap₀ _lh_testMapmap_arg1¹ = ((map₀ (\x² -> (x² + 1))) ((map₁ (\x³ -> (x³ + x³))) ((enumFromTo₀ 1) _lh_testMapmap_arg1¹)))
+enumFromTo₀ a⁵ b² = (if (a⁵ <= b²) then (a⁵:((enumFromTo₀ (a⁵ + 1)) b²)) else [])
+map₀ f¹³ ls²⁰ = (case ls²⁰ of {(h²¹ : t²³) -> ((f¹³ h²¹):((map₀ f¹³) t²³)); [] -> []})
+map₁ f¹² ls¹⁹ = (case ls¹⁹ of {(h²⁰ : t²²) -> ((f¹² h²⁰):((map₁ f¹²) t²²)); [] -> []})
+testMapmap₀ _lh_testMapmap_arg1¹ = ((map₀ (\x⁴ -> (x⁴ + 1))) ((map₁ (\x⁵ -> (x⁵ + x⁵))) ((enumFromTo₀ 1) _lh_testMapmap_arg1¹)))
 
 --- lumberhack ---
-enumFromTo₀₀ a⁰ b⁰ = (if (a⁰ <= b⁰) then (let h⁰ = a⁰ in (let t⁰ = ((enumFromTo₀₀ (a⁰ + 1)) b⁰) in (\f¹ -> (let h¹ = (f¹ h⁰) in (let t¹ = ((map₁₀ f¹) t⁰) in (\f² -> ((f² h¹):((map₀₀ f²) t¹)))))))) else (\f³ f⁴ -> []))
+enumFromTo₀₀ a⁰ b⁰ = (if (a⁰ <= b⁰) then (let h⁰ = a⁰ in (let t⁰ = ((enumFromTo₀₀ (a⁰ + 1)) b⁰) in (\f² -> (let h¹ = (f² h⁰) in (let t¹ = ((map₁₀ f²) t⁰) in (\f³ -> ((f³ h¹):((map₀₀ f³) t¹)))))))) else (\f⁴ f⁵ -> []))
 map₀₀ f⁰ ls⁰ = (ls⁰ f⁰)
-map₁₀ f⁵ ls¹ = (ls¹ f⁵)
+map₁₀ f¹ ls¹ = (ls¹ f¹)
 testMapmap₀₀ _lh_testMapmap_arg1⁰ = ((map₀₀ (\x⁰ -> (x⁰ + 1))) ((map₁₀ (\x¹ -> (x¹ + x¹))) ((enumFromTo₀₀ 1) _lh_testMapmap_arg1⁰)))
 
 main :: IO ()

@@ -64,26 +64,26 @@ and testBinaryTrees_d0_d0 _lh_testBinaryTrees_arg1_0 =
   (check_d0_d0 ((make_d0_d0 0) _lh_testBinaryTrees_arg1_0));;
 
 (* lumberhack_pop_out *)
-let rec check'_d0_d0_d0 _lh_check'_arg1_1_2 _lh_check'_arg2_1_2 _lh_check'_arg3_4 =
+let rec check'_d0_d0_d0 _lh_check'_arg1_1_0 _lh_check'_arg2_1_0 _lh_check'_arg3_2 =
+  ((_lh_check'_arg3_2 _lh_check'_arg2_1_0) _lh_check'_arg1_1_0);;
+let rec check'_d0_d0_d1 _lh_check'_arg1_1_2 _lh_check'_arg2_1_2 _lh_check'_arg3_4 =
   ((_lh_check'_arg3_4 _lh_check'_arg2_1_2) _lh_check'_arg1_1_2);;
-let rec check'_d0_d0_d1 _lh_check'_arg1_5 _lh_check'_arg2_5 _lh_check'_arg3_1 =
-  ((_lh_check'_arg3_1 _lh_check'_arg2_5) _lh_check'_arg1_5);;
-let rec check'_d0_d0_d2 _lh_check'_arg1_6 _lh_check'_arg2_6 _lh_check'_arg3_2 =
-  ((_lh_check'_arg3_2 _lh_check'_arg2_6) _lh_check'_arg1_6);;
-let rec check'_d0_d0_d3 _lh_check'_arg1_1_1 _lh_check'_arg2_1_1 _lh_check'_arg3_3 =
-  ((_lh_check'_arg3_3 _lh_check'_arg2_1_1) _lh_check'_arg1_1_1);;
-let rec check'_d0_d0_d4 _lh_check'_arg1_1_3 _lh_check'_arg2_1_3 _lh_check'_arg3_5 =
+let rec check'_d0_d0_d2 _lh_check'_arg1_1_3 _lh_check'_arg2_1_3 _lh_check'_arg3_5 =
   ((_lh_check'_arg3_5 _lh_check'_arg2_1_3) _lh_check'_arg1_1_3);;
+let rec check'_d0_d0_d3 _lh_check'_arg1_9 _lh_check'_arg2_9 _lh_check'_arg3_1 =
+  ((_lh_check'_arg3_1 _lh_check'_arg2_9) _lh_check'_arg1_9);;
+let rec check'_d0_d0_d4 _lh_check'_arg1_1_1 _lh_check'_arg2_1_1 _lh_check'_arg3_3 =
+  ((_lh_check'_arg3_3 _lh_check'_arg2_1_1) _lh_check'_arg1_1_1);;
 let rec check_d0_d0_d0 _lh_check_arg1_1 =
   (((check'_d0_d0_d0 true) 0) _lh_check_arg1_1)
 and make_d0_d0_d0 _lh_make_arg1_1 _lh_make_arg2_1 _lh_popOutId_0_0 _lh_popOutId_1_0 =
   (match _lh_make_arg2_1 with
     | 0 -> 
       (let rec _lh_check'_Node_0_2 = _lh_make_arg1_1 in
-        (let rec _lh_check'_Node_1_2 = (fun _lh_check'_arg2_7 _lh_check'_arg1_7 -> 
-          _lh_check'_arg2_7) in
-          (let rec _lh_check'_Node_2_2 = (fun _lh_check'_arg2_8 _lh_check'_arg1_8 -> 
-            _lh_check'_arg2_8) in
+        (let rec _lh_check'_Node_1_2 = (fun _lh_check'_arg2_5 _lh_check'_arg1_5 -> 
+          _lh_check'_arg2_5) in
+          (let rec _lh_check'_Node_2_2 = (fun _lh_check'_arg2_6 _lh_check'_arg1_6 -> 
+            _lh_check'_arg2_6) in
             (((check'_d0_d0_d1 (not _lh_popOutId_1_0)) (((check'_d0_d0_d2 _lh_popOutId_1_0) (if _lh_popOutId_1_0 then
               (_lh_popOutId_0_0 + _lh_check'_Node_0_2)
             else

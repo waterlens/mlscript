@@ -23,15 +23,15 @@ let rec append_d1 _lh_append_arg1_1 _lh_append_arg2_1 =
       (`LH_C(_lh_append_LH_C_0_1, ((append_d1 _lh_append_LH_C_1_1) _lh_append_arg2_1)))
     | _ -> 
       (failwith "error"));;
-let rec enumFromTo_d0 a_2 b_3 =
-  (if (a_2 <= b_3) then
-    (`LH_C(a_2, ((enumFromTo_d0 (a_2 + 1)) b_3)))
+let rec enumFromTo_d0 a_5 b_3 =
+  (if (a_5 <= b_3) then
+    (`LH_C(a_5, ((enumFromTo_d0 (a_5 + 1)) b_3)))
   else
     (`LH_N));;
-let rec length_d0 ls_7 =
-  (match ls_7 with
-    | `LH_C(h_7, t_8) -> 
-      (1 + (length_d0 t_8))
+let rec length_d0 ls_1_9 =
+  (match ls_1_9 with
+    | `LH_C(h_2_0, t_2_2) -> 
+      (1 + (length_d0 t_2_2))
     | `LH_N -> 
       0);;
 let rec safe_d0 _lh_safe_arg1_1 _lh_safe_arg2_1 _lh_safe_arg3_1 =

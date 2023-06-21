@@ -216,6 +216,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
                 param,
                 Call(l.toExpr, Call(r.toExpr, Ref(param)))
               )
+            case "mod" => Call(Call(Ref(ctx("%")), l.toExpr), r.toExpr)
             case op => Call(Call(Ref(ctx(op)), l.toExpr), r.toExpr)
           }
         }
@@ -566,7 +567,9 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
       "iterate",
       "take", "take_lz",
       "length", "length_lz",
-      "mappend"
+      "mappend",
+      "sum",
+      "atIndex", "atIndex_lz"
     )
     // be careful, for example `map_lz` cannot be defined as
     // fun map_lz(f, lz) = if force(ls) is
@@ -681,6 +684,27 @@ fun length(ls) = if ls is
 fun mappend(xs, ys) = if xs is
   LH_C(h, t) then LH_C(h, mappend(t, ys))
   LH_N then ys
+
+fun sum(ls) = if ls is
+  LH_C(h, t) then h + (sum(t))
+  LH_N then 0
+
+fun atIndex(n, ls) =
+  if n < 0 then
+    error
+  else
+    if ls is
+      LH_C(h, t) then
+        if n == 0 then h else atIndex(n - 1, t)
+      LH_N then error
+fun atIndex_lz(n, ls) =
+  if n < 0 then
+    error
+  else
+    if force(ls) is
+      LH_C(h, t) then
+        if n == 0 then h else atIndex_lz(n - 1, t)
+      LH_N then error
     """
     val builtinPrgms = {
       val lumberhackBuiltinFph = new FastParseHelpers(builtins)

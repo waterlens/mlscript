@@ -1,0 +1,977 @@
+:NewParser
+:ParseOnly
+
+// NOTE: memory allocation negative numbers??
+// -- powers = [[r^n | r<-[2..]] | n<-1..]
+// powers :: [[Integer]]
+// -- powers = [[(-1)^r * r^n | r<-[2..]] | n<-1..]
+// neg_powers :: [[Integer]]
+// pascal:: [[Integer]]
+:lhInHaskell
+:lhGenOCaml
+powers = lazy ([2..] : (map_lz (zipWith_lz_lz (\a b -> a * b) [2..]) powers))
+neg_powers =
+  lazy (map_lz (zipWith_lz_lz (\n x -> if n then x else (0-x)) (iterate not True)) powers)
+pascal = lazy ([1,2,1] : map_lz (\line -> zipWith (\a b -> a + b) (mappend line [0]) (0:line)) pascal)
+bernoulli 0 = 1
+bernoulli 1 = 0 - (1 / 2)
+bernoulli n =
+  if ((n `mod` 2) == 1) then
+    0
+  else
+    let powers = (atIndex_lz (n - 1) (force neg_powers)) in
+      ((0-1)/2) + sum [ ((sum $ zipWith_lz_nl (\a b -> a * b) powers (tail $ tail combs)) - k) / (k+1) | (k,combs) <- zip_nl_lz [2..n] pascal ]
+testBernoulli n = bernoulli n
+testBernoulli $ 1000
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testBernoulli₀^1268(1000)
+//│ def atIndex_lz₀(n⁵, ls²⁰) = if (n⁵ < 0) then error⁰ else case force⁰(ls²⁰) of {
+//│ 	LH_C h²¹ t²³ => if (n⁵ == 0) then h²¹ else atIndex_lz₀^1093((n⁵ - 1), t²³)
+//│ 	| LH_N  => error⁰}
+//│ def bernoulli₀(_lh_bernoulli_arg1¹) = case _lh_bernoulli_arg1¹ of {
+//│ 	0  => 1
+//│ 	| 1  => (0 - (1 / 2))
+//│ 	| _  => if ((_lh_bernoulli_arg1¹ % 2) == 1) then 0 else 
+//│ 		let powers² = atIndex_lz₀^975((_lh_bernoulli_arg1¹ - 1), force⁰(neg_powers₀^983))
+//│ 		in (((0 - 1) / 2) + sum₀^997(
+//│ 			let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {
+//│ 				LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => case _lh_listcomp_fun_ls_h¹ of {
+//│ 					LH_P2 _lh_bernoulli_LH_P2_0¹ _lh_bernoulli_LH_P2_1¹ => [LH_C ((sum₁^1002(zipWith_lz_nl₀^1003((fun a¹¹ -> (fun b⁷ -> (a¹¹ * b⁷))), powers², tail₀^1014(tail₁^1015(_lh_bernoulli_LH_P2_1¹)))) - _lh_bernoulli_LH_P2_0¹) / (_lh_bernoulli_LH_P2_0¹ + 1)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)]
+//│ 					| _  => _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)}
+//│ 				| LH_N  => [LH_N]})
+//│ 			in _lh_listcomp_fun¹(zip_nl_lz₀^1043(enumFromTo₀^1044(2, _lh_bernoulli_arg1¹), pascal₀^1050))))}
+//│ def enumFromTo₀(a⁷, b⁵) = if (a⁷ <= b⁵) then [LH_C a⁷ enumFromTo₀^775((a⁷ + 1), b⁵)] else [LH_N]
+//│ def enumFrom₀(a⁹) = lazy⁰([LH_C a⁹ enumFrom₀^808((a⁹ + 1))])
+//│ def enumFrom₁(a⁸) = lazy⁰([LH_C a⁸ enumFrom₁^796((a⁸ + 1))])
+//│ def iterate₀(f¹⁵, x³) = lazy⁰([LH_C x³ iterate₀^925(f¹⁵, f¹⁵(x³))])
+//│ def map_lz₀(f¹⁹, ls²¹) = lazy⁰(case force⁰(ls²¹) of {
+//│ 	LH_C h²² t²⁴ => [LH_C f¹⁹(h²²) map_lz₀^1194(f¹⁹, t²⁴)]
+//│ 	| LH_N  => [LH_N]})
+//│ def map_lz₁(f¹⁶, ls¹⁸) = lazy⁰(case force⁰(ls¹⁸) of {
+//│ 	LH_C h¹⁹ t²¹ => [LH_C f¹⁶(h¹⁹) map_lz₁^943(f¹⁶, t²¹)]
+//│ 	| LH_N  => [LH_N]})
+//│ def map_lz₂(f¹⁷, ls¹⁹) = lazy⁰(case force⁰(ls¹⁹) of {
+//│ 	LH_C h²⁰ t²² => [LH_C f¹⁷(h²⁰) map_lz₂^1067(f¹⁷, t²²)]
+//│ 	| LH_N  => [LH_N]})
+//│ def mappend₀(xs¹⁴, ys¹⁴) = case xs¹⁴ of {
+//│ 	LH_C h²⁴ t²⁶ => [LH_C h²⁴ mappend₀^1218(t²⁶, ys¹⁴)]
+//│ 	| LH_N  => ys¹⁴}
+//│ def neg_powers₀ = lazy⁰(map_lz₀^1229(zipWith_lz_lz₁^1230((fun n⁶ -> (fun x⁴ -> if n⁶ then x⁴ else (0 - x⁴))), iterate₀^1242(not⁰, [True])), powers₀^1249))
+//│ def pascal₀ = lazy⁰([LH_C [LH_C 1 [LH_C 2 [LH_C 1 [LH_N]]]] map_lz₂^1159((fun line¹ -> zipWith₀^1160((fun a¹² -> (fun b⁸ -> (a¹² + b⁸))), mappend₀^1169(line¹, [LH_C 0 [LH_N]]), [LH_C 0 line¹])), pascal₀^1183)])
+//│ def powers₀ = lazy⁰([LH_C enumFrom₀^819(2) map_lz₁^822(zipWith_lz_lz₀^823((fun a¹⁰ -> (fun b⁶ -> (a¹⁰ * b⁶))), enumFrom₁^832(2)), powers₀^837)])
+//│ def sum₀(ls²⁴) = case ls²⁴ of {
+//│ 	LH_C h²⁶ t²⁸ => (h²⁶ + sum₀^1261(t²⁸))
+//│ 	| LH_N  => 0}
+//│ def sum₁(ls²²) = case ls²² of {
+//│ 	LH_C h²³ t²⁵ => (h²³ + sum₁^1209(t²⁵))
+//│ 	| LH_N  => 0}
+//│ def tail₀(ls¹⁷) = case ls¹⁷ of {
+//│ 	LH_C h¹⁸ t²⁰ => t²⁰
+//│ 	| LH_N  => error⁰}
+//│ def tail₁(ls²³) = case ls²³ of {
+//│ 	LH_C h²⁵ t²⁷ => t²⁷
+//│ 	| LH_N  => error⁰}
+//│ def testBernoulli₀(_lh_testBernoulli_arg1¹) = bernoulli₀^869(_lh_testBernoulli_arg1¹)
+//│ def zipWith_lz_lz₀(f¹², xs⁹, ys⁹) = lazy⁰(case force⁰(xs⁹) of {
+//│ 	LH_C hx⁸ tx⁸ => case force⁰(ys⁹) of {
+//│ 		LH_C hy⁸ ty⁸ => [LH_C f¹²(hx⁸, hy⁸) zipWith_lz_lz₀^853(f¹², tx⁸, ty⁸)]
+//│ 		| LH_N  => [LH_N]}
+//│ 	| LH_N  => [LH_N]})
+//│ def zipWith_lz_lz₁(f¹⁴, xs¹¹, ys¹¹) = lazy⁰(case force⁰(xs¹¹) of {
+//│ 	LH_C hx¹⁰ tx¹⁰ => case force⁰(ys¹¹) of {
+//│ 		LH_C hy¹⁰ ty¹⁰ => [LH_C f¹⁴(hx¹⁰, hy¹⁰) zipWith_lz_lz₁^907(f¹⁴, tx¹⁰, ty¹⁰)]
+//│ 		| LH_N  => [LH_N]}
+//│ 	| LH_N  => [LH_N]})
+//│ def zipWith_lz_nl₀(f¹⁸, xs¹², ys¹²) = case ys¹² of {
+//│ 	LH_C hy¹¹ ty¹¹ => case force⁰(xs¹²) of {
+//│ 		LH_C hx¹¹ tx¹¹ => [LH_C f¹⁸(hx¹¹, hy¹¹) zipWith_lz_nl₀^1117(f¹⁸, tx¹¹, ty¹¹)]
+//│ 		| LH_N  => [LH_N]}
+//│ 	| LH_N  => [LH_N]}
+//│ def zipWith₀(f¹³, xs¹⁰, ys¹⁰) = case xs¹⁰ of {
+//│ 	LH_C hx⁹ tx⁹ => case ys¹⁰ of {
+//│ 		LH_C hy⁹ ty⁹ => [LH_C f¹³(hx⁹, hy⁹) zipWith₀^880(f¹³, tx⁹, ty⁹)]
+//│ 		| LH_N  => [LH_N]}
+//│ 	| LH_N  => [LH_N]}
+//│ def zip_nl_lz₀(xs¹³, ys¹³) = case xs¹³ of {
+//│ 	LH_C hx¹² tx¹² => case force⁰(ys¹³) of {
+//│ 		LH_C hy¹² ty¹² => [LH_C [LH_P2 hx¹² hy¹²] zip_nl_lz₀^1139(tx¹², ty¹²)]
+//│ 		| LH_N  => [LH_N]}
+//│ 	| LH_N  => [LH_N]}
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec atIndex_lz_d0 n_5 ls_2_0 =
+//│ 		  (if (n_5 < 0) then
+//│ 		    (failwith "error")
+//│ 		  else
+//│ 		    (match (Lazy.force ls_2_0) with
+//│ 		      | `LH_C(h_2_1, t_2_3) -> 
+//│ 		        (if (n_5 = 0) then
+//│ 		          h_2_1
+//│ 		        else
+//│ 		          ((atIndex_lz_d0 (n_5 - 1)) t_2_3))
+//│ 		      | `LH_N -> 
+//│ 		        (failwith "error")))
+//│ 		and bernoulli_d0 _lh_bernoulli_arg1_1 =
+//│ 		  (match _lh_bernoulli_arg1_1 with
+//│ 		    | 0 -> 
+//│ 		      1
+//│ 		    | 1 -> 
+//│ 		      (0 - (1 / 2))
+//│ 		    | _ -> 
+//│ 		      (if ((_lh_bernoulli_arg1_1 mod 2) = 1) then
+//│ 		        0
+//│ 		      else
+//│ 		        (let rec powers_2 = ((atIndex_lz_d0 (_lh_bernoulli_arg1_1 - 1)) (Lazy.force neg_powers_d0)) in
+//│ 		          (((0 - 1) / 2) + (sum_d0 (let rec _lh_listcomp_fun_1 = (fun _lh_listcomp_fun_para_1 -> 
+//│ 		            (match _lh_listcomp_fun_para_1 with
+//│ 		              | `LH_C(_lh_listcomp_fun_ls_h_1, _lh_listcomp_fun_ls_t_1) -> 
+//│ 		                (match _lh_listcomp_fun_ls_h_1 with
+//│ 		                  | `LH_P2(_lh_bernoulli_LH_P2_0_1, _lh_bernoulli_LH_P2_1_1) -> 
+//│ 		                    (`LH_C((((sum_d1 (((zipWith_lz_nl_d0 (fun a_1_1 b_7 -> 
+//│ 		                      (a_1_1 * b_7))) powers_2) (tail_d0 (tail_d1 _lh_bernoulli_LH_P2_1_1)))) - _lh_bernoulli_LH_P2_0_1) / (_lh_bernoulli_LH_P2_0_1 + 1)), (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_1)))
+//│ 		                  | _ -> 
+//│ 		                    (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_1))
+//│ 		              | `LH_N -> 
+//│ 		                (`LH_N))) in
+//│ 		            (_lh_listcomp_fun_1 ((zip_nl_lz_d0 ((enumFromTo_d0 2) _lh_bernoulli_arg1_1)) pascal_d0))))))))
+//│ 		and enumFromTo_d0 a_7 b_5 =
+//│ 		  (if (a_7 <= b_5) then
+//│ 		    (`LH_C(a_7, ((enumFromTo_d0 (a_7 + 1)) b_5)))
+//│ 		  else
+//│ 		    (`LH_N))
+//│ 		and enumFrom_d0 a_9 =
+//│ 		  (lazy (`LH_C(a_9, (enumFrom_d0 (a_9 + 1)))))
+//│ 		and enumFrom_d1 a_8 =
+//│ 		  (lazy (`LH_C(a_8, (enumFrom_d1 (a_8 + 1)))))
+//│ 		and iterate_d0 f_1_5 x_3 =
+//│ 		  (lazy (`LH_C(x_3, ((iterate_d0 f_1_5) (f_1_5 x_3)))))
+//│ 		and map_lz_d0 f_1_9 ls_2_1 =
+//│ 		  (lazy (match (Lazy.force ls_2_1) with
+//│ 		    | `LH_C(h_2_2, t_2_4) -> 
+//│ 		      (`LH_C((f_1_9 h_2_2), ((map_lz_d0 f_1_9) t_2_4)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)))
+//│ 		and map_lz_d1 f_1_6 ls_1_8 =
+//│ 		  (lazy (match (Lazy.force ls_1_8) with
+//│ 		    | `LH_C(h_1_9, t_2_1) -> 
+//│ 		      (`LH_C((f_1_6 h_1_9), ((map_lz_d1 f_1_6) t_2_1)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)))
+//│ 		and map_lz_d2 f_1_7 ls_1_9 =
+//│ 		  (lazy (match (Lazy.force ls_1_9) with
+//│ 		    | `LH_C(h_2_0, t_2_2) -> 
+//│ 		      (`LH_C((f_1_7 h_2_0), ((map_lz_d2 f_1_7) t_2_2)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)))
+//│ 		and mappend_d0 xs_1_4 ys_1_4 =
+//│ 		  (match xs_1_4 with
+//│ 		    | `LH_C(h_2_4, t_2_6) -> 
+//│ 		      (`LH_C(h_2_4, ((mappend_d0 t_2_6) ys_1_4)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_1_4)
+//│ 		and neg_powers_d0 =
+//│ 		  (lazy ((map_lz_d0 ((zipWith_lz_lz_d1 (fun n_6 x_4 -> 
+//│ 		    (if n_6 then
+//│ 		      x_4
+//│ 		    else
+//│ 		      (0 - x_4)))) ((iterate_d0 not) true))) powers_d0))
+//│ 		and pascal_d0 =
+//│ 		  (lazy (`LH_C((`LH_C(1, (`LH_C(2, (`LH_C(1, (`LH_N))))))), ((map_lz_d2 (fun line_1 -> 
+//│ 		    (((zipWith_d0 (fun a_1_2 b_8 -> 
+//│ 		      (a_1_2 + b_8))) ((mappend_d0 line_1) (`LH_C(0, (`LH_N))))) (`LH_C(0, line_1))))) pascal_d0))))
+//│ 		and powers_d0 =
+//│ 		  (lazy (`LH_C((enumFrom_d0 2), ((map_lz_d1 ((zipWith_lz_lz_d0 (fun a_1_0 b_6 -> 
+//│ 		    (a_1_0 * b_6))) (enumFrom_d1 2))) powers_d0))))
+//│ 		and sum_d0 ls_2_4 =
+//│ 		  (match ls_2_4 with
+//│ 		    | `LH_C(h_2_6, t_2_8) -> 
+//│ 		      (h_2_6 + (sum_d0 t_2_8))
+//│ 		    | `LH_N -> 
+//│ 		      0)
+//│ 		and sum_d1 ls_2_2 =
+//│ 		  (match ls_2_2 with
+//│ 		    | `LH_C(h_2_3, t_2_5) -> 
+//│ 		      (h_2_3 + (sum_d1 t_2_5))
+//│ 		    | `LH_N -> 
+//│ 		      0)
+//│ 		and tail_d0 ls_1_7 =
+//│ 		  (match ls_1_7 with
+//│ 		    | `LH_C(h_1_8, t_2_0) -> 
+//│ 		      t_2_0
+//│ 		    | `LH_N -> 
+//│ 		      (failwith "error"))
+//│ 		and tail_d1 ls_2_3 =
+//│ 		  (match ls_2_3 with
+//│ 		    | `LH_C(h_2_5, t_2_7) -> 
+//│ 		      t_2_7
+//│ 		    | `LH_N -> 
+//│ 		      (failwith "error"))
+//│ 		and testBernoulli_d0 _lh_testBernoulli_arg1_1 =
+//│ 		  (bernoulli_d0 _lh_testBernoulli_arg1_1)
+//│ 		and zipWith_lz_lz_d0 f_1_2 xs_9 ys_9 =
+//│ 		  (lazy (match (Lazy.force xs_9) with
+//│ 		    | `LH_C(hx_8, tx_8) -> 
+//│ 		      (match (Lazy.force ys_9) with
+//│ 		        | `LH_C(hy_8, ty_8) -> 
+//│ 		          (`LH_C(((f_1_2 hx_8) hy_8), (((zipWith_lz_lz_d0 f_1_2) tx_8) ty_8)))
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_N))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)))
+//│ 		and zipWith_lz_lz_d1 f_1_4 xs_1_1 ys_1_1 =
+//│ 		  (lazy (match (Lazy.force xs_1_1) with
+//│ 		    | `LH_C(hx_1_0, tx_1_0) -> 
+//│ 		      (match (Lazy.force ys_1_1) with
+//│ 		        | `LH_C(hy_1_0, ty_1_0) -> 
+//│ 		          (`LH_C(((f_1_4 hx_1_0) hy_1_0), (((zipWith_lz_lz_d1 f_1_4) tx_1_0) ty_1_0)))
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_N))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)))
+//│ 		and zipWith_lz_nl_d0 f_1_8 xs_1_2 ys_1_2 =
+//│ 		  (match ys_1_2 with
+//│ 		    | `LH_C(hy_1_1, ty_1_1) -> 
+//│ 		      (match (Lazy.force xs_1_2) with
+//│ 		        | `LH_C(hx_1_1, tx_1_1) -> 
+//│ 		          (`LH_C(((f_1_8 hx_1_1) hy_1_1), (((zipWith_lz_nl_d0 f_1_8) tx_1_1) ty_1_1)))
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_N))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N))
+//│ 		and zipWith_d0 f_1_3 xs_1_0 ys_1_0 =
+//│ 		  (match xs_1_0 with
+//│ 		    | `LH_C(hx_9, tx_9) -> 
+//│ 		      (match ys_1_0 with
+//│ 		        | `LH_C(hy_9, ty_9) -> 
+//│ 		          (`LH_C(((f_1_3 hx_9) hy_9), (((zipWith_d0 f_1_3) tx_9) ty_9)))
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_N))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N))
+//│ 		and zip_nl_lz_d0 xs_1_3 ys_1_3 =
+//│ 		  (match xs_1_3 with
+//│ 		    | `LH_C(hx_1_2, tx_1_2) -> 
+//│ 		      (match (Lazy.force ys_1_3) with
+//│ 		        | `LH_C(hy_1_2, ty_1_2) -> 
+//│ 		          (`LH_C((`LH_P2(hx_1_2, hy_1_2)), ((zip_nl_lz_d0 tx_1_2) ty_1_2)))
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_N))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N));;
+//│ 		(testBernoulli_d0 1000)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testBernoulli₀^1268] (hopeless to continue)
+//│ 	[testBernoulli₀^1268 · bernoulli₀^869] (using original def)
+//│ 		[testBernoulli₀^1268 · bernoulli₀^869 · atIndex_lz₀^975] (using original def)
+//│ 			[testBernoulli₀^1268 · bernoulli₀^869 · atIndex_lz₀^975 · atIndex_lz₀^1093] ---> [testBernoulli₀^1268 · bernoulli₀^869 · atIndex_lz₀^975] (using original def)
+//│ 		[testBernoulli₀^1268 · bernoulli₀^869 · enumFromTo₀^1044] (using original def)
+//│ 			[testBernoulli₀^1268 · bernoulli₀^869 · enumFromTo₀^1044 · enumFromTo₀^775] ---> [testBernoulli₀^1268 · bernoulli₀^869 · enumFromTo₀^1044] (using original def)
+//│ 		[testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983] (using original def)
+//│ 			[testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · iterate₀^1242] (using original def)
+//│ 				[testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · iterate₀^1242 · iterate₀^925] ---> [testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · iterate₀^1242] (using original def)
+//│ 			[testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · map_lz₀^1229] (using original def)
+//│ 				[testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · map_lz₀^1229 · map_lz₀^1194] ---> [testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · map_lz₀^1229] (using original def)
+//│ 			[testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · powers₀^1249] (using original def)
+//│ 				[testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · powers₀^1249 · enumFrom₀^819] (using original def)
+//│ 					[testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · powers₀^1249 · enumFrom₀^819 · enumFrom₀^808] ---> [testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · powers₀^1249 · enumFrom₀^819] (using original def)
+//│ 				[testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · powers₀^1249 · enumFrom₁^832] (using original def)
+//│ 					[testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · powers₀^1249 · enumFrom₁^832 · enumFrom₁^796] ---> [testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · powers₀^1249 · enumFrom₁^832] (using original def)
+//│ 				[testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · powers₀^1249 · map_lz₁^822] (using original def)
+//│ 					[testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · powers₀^1249 · map_lz₁^822 · map_lz₁^943] ---> [testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · powers₀^1249 · map_lz₁^822] (using original def)
+//│ 				[testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · powers₀^1249 · powers₀^837] ---> [testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · powers₀^1249] (using original def)
+//│ 				[testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · powers₀^1249 · zipWith_lz_lz₀^823] (using original def)
+//│ 					[testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · powers₀^1249 · zipWith_lz_lz₀^823 · zipWith_lz_lz₀^853] ---> [testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · powers₀^1249 · zipWith_lz_lz₀^823] (using original def)
+//│ 			[testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · zipWith_lz_lz₁^1230] (using original def)
+//│ 				[testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · zipWith_lz_lz₁^1230 · zipWith_lz_lz₁^907] ---> [testBernoulli₀^1268 · bernoulli₀^869 · neg_powers₀^983 · zipWith_lz_lz₁^1230] (using original def)
+//│ 		[testBernoulli₀^1268 · bernoulli₀^869 · pascal₀^1050] (using original def)
+//│ 			[testBernoulli₀^1268 · bernoulli₀^869 · pascal₀^1050 · map_lz₂^1159] (using original def)
+//│ 				[testBernoulli₀^1268 · bernoulli₀^869 · pascal₀^1050 · map_lz₂^1159 · map_lz₂^1067] ---> [testBernoulli₀^1268 · bernoulli₀^869 · pascal₀^1050 · map_lz₂^1159] (using original def)
+//│ 			[testBernoulli₀^1268 · bernoulli₀^869 · pascal₀^1050 · mappend₀^1169] (using original def)
+//│ 				[testBernoulli₀^1268 · bernoulli₀^869 · pascal₀^1050 · mappend₀^1169 · mappend₀^1218] ---> [testBernoulli₀^1268 · bernoulli₀^869 · pascal₀^1050 · mappend₀^1169] (using original def)
+//│ 			[testBernoulli₀^1268 · bernoulli₀^869 · pascal₀^1050 · pascal₀^1183] ---> [testBernoulli₀^1268 · bernoulli₀^869 · pascal₀^1050] (using original def)
+//│ 			[testBernoulli₀^1268 · bernoulli₀^869 · pascal₀^1050 · zipWith₀^1160] (using original def)
+//│ 				[testBernoulli₀^1268 · bernoulli₀^869 · pascal₀^1050 · zipWith₀^1160 · zipWith₀^880] ---> [testBernoulli₀^1268 · bernoulli₀^869 · pascal₀^1050 · zipWith₀^1160] (using original def)
+//│ 		[testBernoulli₀^1268 · bernoulli₀^869 · sum₀^997] (using original def)
+//│ 			[testBernoulli₀^1268 · bernoulli₀^869 · sum₀^997 · sum₀^1261] ---> [testBernoulli₀^1268 · bernoulli₀^869 · sum₀^997] (using original def)
+//│ 		[testBernoulli₀^1268 · bernoulli₀^869 · sum₁^1002] (using original def)
+//│ 			[testBernoulli₀^1268 · bernoulli₀^869 · sum₁^1002 · sum₁^1209] ---> [testBernoulli₀^1268 · bernoulli₀^869 · sum₁^1002] (using original def)
+//│ 		[testBernoulli₀^1268 · bernoulli₀^869 · tail₀^1014] (using original def)
+//│ 		[testBernoulli₀^1268 · bernoulli₀^869 · tail₁^1015] (using original def)
+//│ 		[testBernoulli₀^1268 · bernoulli₀^869 · zipWith_lz_nl₀^1003] (using original def)
+//│ 			[testBernoulli₀^1268 · bernoulli₀^869 · zipWith_lz_nl₀^1003 · zipWith_lz_nl₀^1117] ---> [testBernoulli₀^1268 · bernoulli₀^869 · zipWith_lz_nl₀^1003] (using original def)
+//│ 		[testBernoulli₀^1268 · bernoulli₀^869 · zip_nl_lz₀^1043] (using original def)
+//│ 			[testBernoulli₀^1268 · bernoulli₀^869 · zip_nl_lz₀^1043 · zip_nl_lz₀^1139] ---> [testBernoulli₀^1268 · bernoulli₀^869 · zip_nl_lz₀^1043] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testBernoulli₀₀(1000)
+//│ def testBernoulli₀₀(_lh_testBernoulli_arg1¹) = 
+//│ 	bernoulli₀₀(_lh_testBernoulli_arg1¹)
+//│ 	where
+//│ 	def bernoulli₀₀(_lh_bernoulli_arg1¹) = 
+//│ 		case _lh_bernoulli_arg1¹ of {
+//│ 			0  => 1
+//│ 			| 1  => (0 - (1 / 2))
+//│ 			| _  => if ((_lh_bernoulli_arg1¹ % 2) == 1) then 0 else 
+//│ 				let powers¹ = atIndex_lz₀₀((_lh_bernoulli_arg1¹ - 1), force⁰(neg_powers₀₀))
+//│ 				in (((0 - 1) / 2) + sum₀₀(
+//│ 					let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {
+//│ 						LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => case _lh_listcomp_fun_ls_h¹ of {
+//│ 							LH_P2 _lh_bernoulli_LH_P2_0¹ _lh_bernoulli_LH_P2_1¹ => [LH_C ((sum₁₀(zipWith_lz_nl₀₀((fun a⁶ -> (fun b⁴ -> (a⁶ * b⁴))), powers¹, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1¹)))) - _lh_bernoulli_LH_P2_0¹) / (_lh_bernoulli_LH_P2_0¹ + 1)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)]
+//│ 							| _  => _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)}
+//│ 						| LH_N  => [LH_N]})
+//│ 					in _lh_listcomp_fun¹(zip_nl_lz₀₀(enumFromTo₀₀(2, _lh_bernoulli_arg1¹), pascal₀₀))))}
+//│ 		where
+//│ 		def atIndex_lz₀₀(n², ls⁹) = 
+//│ 			if (n² < 0) then error⁰ else case force⁰(ls⁹) of {
+//│ 				LH_C h¹¹ t¹¹ => if (n² == 0) then h¹¹ else atIndex_lz₀₀((n² - 1), t¹¹)
+//│ 				| LH_N  => error⁰}
+//│ 		def enumFromTo₀₀(a⁹, b⁶) = 
+//│ 			if (a⁹ <= b⁶) then [LH_C a⁹ enumFromTo₀₀((a⁹ + 1), b⁶)] else [LH_N]
+//│ 		def neg_powers₀₀ = 
+//│ 			lazy⁰(map_lz₀₀(zipWith_lz_lz₁₀((fun n³ -> (fun x³ -> if n³ then x³ else (0 - x³))), iterate₀₀(not⁰, [True])), powers₀₀))
+//│ 			where
+//│ 			def iterate₀₀(f⁹, x²) = 
+//│ 				lazy⁰([LH_C x² iterate₀₀(f⁹, f⁹(x²))])
+//│ 			def map_lz₀₀(f¹¹, ls¹¹) = 
+//│ 				lazy⁰(case force⁰(ls¹¹) of {
+//│ 					LH_C h¹³ t¹³ => [LH_C f¹¹(h¹³) map_lz₀₀(f¹¹, t¹³)]
+//│ 					| LH_N  => [LH_N]})
+//│ 			def powers₀₀ = 
+//│ 				lazy⁰([LH_C enumFrom₀₀(2) map_lz₁₀(zipWith_lz_lz₀₀((fun a¹¹ -> (fun b⁷ -> (a¹¹ * b⁷))), enumFrom₁₀(2)), powers₀₀)])
+//│ 				where
+//│ 				def enumFrom₀₀(a⁸) = 
+//│ 					lazy⁰([LH_C a⁸ enumFrom₀₀((a⁸ + 1))])
+//│ 				def enumFrom₁₀(a¹⁰) = 
+//│ 					lazy⁰([LH_C a¹⁰ enumFrom₁₀((a¹⁰ + 1))])
+//│ 				def map_lz₁₀(f⁸, ls⁸) = 
+//│ 					lazy⁰(case force⁰(ls⁸) of {
+//│ 						LH_C h⁹ t⁹ => [LH_C f⁸(h⁹) map_lz₁₀(f⁸, t⁹)]
+//│ 						| LH_N  => [LH_N]})
+//│ 				def zipWith_lz_lz₀₀(f¹⁴, xs¹⁰, ys¹⁰) = 
+//│ 					lazy⁰(case force⁰(xs¹⁰) of {
+//│ 						LH_C hx⁸ tx⁸ => case force⁰(ys¹⁰) of {
+//│ 							LH_C hy⁸ ty⁸ => [LH_C f¹⁴(hx⁸, hy⁸) zipWith_lz_lz₀₀(f¹⁴, tx⁸, ty⁸)]
+//│ 							| LH_N  => [LH_N]}
+//│ 						| LH_N  => [LH_N]})
+//│ 			def zipWith_lz_lz₁₀(f¹³, xs⁹, ys⁹) = 
+//│ 				lazy⁰(case force⁰(xs⁹) of {
+//│ 					LH_C hx⁷ tx⁷ => case force⁰(ys⁹) of {
+//│ 						LH_C hy⁷ ty⁷ => [LH_C f¹³(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹³, tx⁷, ty⁷)]
+//│ 						| LH_N  => [LH_N]}
+//│ 					| LH_N  => [LH_N]})
+//│ 		def pascal₀₀ = 
+//│ 			lazy⁰([LH_C [LH_C 1 [LH_C 2 [LH_C 1 [LH_N]]]] map_lz₂₀((fun line¹ -> zipWith₀₀((fun a⁷ -> (fun b⁵ -> (a⁷ + b⁵))), mappend₀₀(line¹, [LH_C 0 [LH_N]]), [LH_C 0 line¹])), pascal₀₀)])
+//│ 			where
+//│ 			def map_lz₂₀(f¹², ls¹²) = 
+//│ 				lazy⁰(case force⁰(ls¹²) of {
+//│ 					LH_C h¹⁴ t¹⁴ => [LH_C f¹²(h¹⁴) map_lz₂₀(f¹², t¹⁴)]
+//│ 					| LH_N  => [LH_N]})
+//│ 			def mappend₀₀(xs⁶, ys⁶) = 
+//│ 				case xs⁶ of {
+//│ 					LH_C h¹⁰ t¹⁰ => [LH_C h¹⁰ mappend₀₀(t¹⁰, ys⁶)]
+//│ 					| LH_N  => ys⁶}
+//│ 			def zipWith₀₀(f¹⁵, xs¹¹, ys¹¹) = 
+//│ 				case xs¹¹ of {
+//│ 					LH_C hx⁹ tx⁹ => case ys¹¹ of {
+//│ 						LH_C hy⁹ ty⁹ => [LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)]
+//│ 						| LH_N  => [LH_N]}
+//│ 					| LH_N  => [LH_N]}
+//│ 		def sum₀₀(ls¹⁵) = 
+//│ 			case ls¹⁵ of {
+//│ 				LH_C h¹⁷ t¹⁷ => (h¹⁷ + sum₀₀(t¹⁷))
+//│ 				| LH_N  => 0}
+//│ 		def sum₁₀(ls¹⁰) = 
+//│ 			case ls¹⁰ of {
+//│ 				LH_C h¹² t¹² => (h¹² + sum₁₀(t¹²))
+//│ 				| LH_N  => 0}
+//│ 		def tail₀₀(ls¹³) = 
+//│ 			case ls¹³ of {
+//│ 				LH_C h¹⁵ t¹⁵ => t¹⁵
+//│ 				| LH_N  => error⁰}
+//│ 		def tail₁₀(ls¹⁴) = 
+//│ 			case ls¹⁴ of {
+//│ 				LH_C h¹⁶ t¹⁶ => t¹⁶
+//│ 				| LH_N  => error⁰}
+//│ 		def zipWith_lz_nl₀₀(f¹⁰, xs⁸, ys⁸) = 
+//│ 			case ys⁸ of {
+//│ 				LH_C hy⁶ ty⁶ => case force⁰(xs⁸) of {
+//│ 					LH_C hx⁶ tx⁶ => [LH_C f¹⁰(hx⁶, hy⁶) zipWith_lz_nl₀₀(f¹⁰, tx⁶, ty⁶)]
+//│ 					| LH_N  => [LH_N]}
+//│ 				| LH_N  => [LH_N]}
+//│ 		def zip_nl_lz₀₀(xs⁷, ys⁷) = 
+//│ 			case xs⁷ of {
+//│ 				LH_C hx⁵ tx⁵ => case force⁰(ys⁷) of {
+//│ 					LH_C hy⁵ ty⁵ => [LH_C [LH_P2 hx⁵ hy⁵] zip_nl_lz₀₀(tx⁵, ty⁵)]
+//│ 					| LH_N  => [LH_N]}
+//│ 				| LH_N  => [LH_N]}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_C f⁸(h⁹) map_lz₁₀(f⁸, t⁹)]: 515 --->
+//│ 	case force⁰(ls⁸) of {LH_C h⁹ t⁹ => [LH_C f⁸(h⁹) map_lz₁₀(f⁸, t⁹)] | LH_N  => [LH_N]}: 517
+//│ 	case force⁰(ls¹¹) of {LH_C h¹³ t¹³ => [LH_C f¹¹(h¹³) map_lz₀₀(f¹¹, t¹³)] | LH_N  => [LH_N]}: 830
+//│ [LH_N]: 516 --->
+//│ 	case force⁰(ls⁸) of {LH_C h⁹ t⁹ => [LH_C f⁸(h⁹) map_lz₁₀(f⁸, t⁹)] | LH_N  => [LH_N]}: 517
+//│ 	case force⁰(ls¹¹) of {LH_C h¹³ t¹³ => [LH_C f¹¹(h¹³) map_lz₀₀(f¹¹, t¹³)] | LH_N  => [LH_N]}: 830
+//│ [LH_C ((sum₁₀(zipWith_lz_nl₀₀((fun a⁶ -> (fun b⁴ -> (a⁶ * b⁴))), powers¹, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1¹)))) - _lh_bernoulli_LH_P2_0¹) / (_lh_bernoulli_LH_P2_0¹ + 1)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)]: 601 --->
+//│ 	case ls¹⁵ of {LH_C h¹⁷ t¹⁷ => (h¹⁷ + sum₀₀(t¹⁷)) | LH_N  => 0}: 977
+//│ [LH_N]: 606 --->
+//│ 	case ls¹⁵ of {LH_C h¹⁷ t¹⁷ => (h¹⁷ + sum₀₀(t¹⁷)) | LH_N  => 0}: 977
+//│ [LH_C h¹⁰ mappend₀₀(t¹⁰, ys⁶)]: 634 --->
+//│ 	case xs¹¹ of {LH_C hx⁹ tx⁹ => case ys¹¹ of {LH_C hy⁹ ty⁹ => [LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 940
+//│ [LH_C x² iterate₀₀(f⁹, f⁹(x²))]: 648 --->
+//│ 	case force⁰(xs⁹) of {LH_C hx⁷ tx⁷ => case force⁰(ys⁹) of {LH_C hy⁷ ty⁷ => [LH_C f¹³(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹³, tx⁷, ty⁷)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 875
+//│ [LH_P2 hx⁵ hy⁵]: 688 --->
+//│ 	case _lh_listcomp_fun_ls_h¹ of {LH_P2 _lh_bernoulli_LH_P2_0¹ _lh_bernoulli_LH_P2_1¹ => [LH_C ((sum₁₀(zipWith_lz_nl₀₀((fun a⁶ -> (fun b⁴ -> (a⁶ * b⁴))), powers¹, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1¹)))) - _lh_bernoulli_LH_P2_0¹) / (_lh_bernoulli_LH_P2_0¹ + 1)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | _  => _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)}: 605
+//│ [LH_C [LH_P2 hx⁵ hy⁵] zip_nl_lz₀₀(tx⁵, ty⁵)]: 694 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => case _lh_listcomp_fun_ls_h¹ of {LH_P2 _lh_bernoulli_LH_P2_0¹ _lh_bernoulli_LH_P2_1¹ => [LH_C ((sum₁₀(zipWith_lz_nl₀₀((fun a⁶ -> (fun b⁴ -> (a⁶ * b⁴))), powers¹, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1¹)))) - _lh_bernoulli_LH_P2_0¹) / (_lh_bernoulli_LH_P2_0¹ + 1)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | _  => _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)} | LH_N  => [LH_N]}: 607
+//│ [LH_N]: 695 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => case _lh_listcomp_fun_ls_h¹ of {LH_P2 _lh_bernoulli_LH_P2_0¹ _lh_bernoulli_LH_P2_1¹ => [LH_C ((sum₁₀(zipWith_lz_nl₀₀((fun a⁶ -> (fun b⁴ -> (a⁶ * b⁴))), powers¹, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1¹)))) - _lh_bernoulli_LH_P2_0¹) / (_lh_bernoulli_LH_P2_0¹ + 1)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | _  => _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)} | LH_N  => [LH_N]}: 607
+//│ [LH_N]: 697 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => case _lh_listcomp_fun_ls_h¹ of {LH_P2 _lh_bernoulli_LH_P2_0¹ _lh_bernoulli_LH_P2_1¹ => [LH_C ((sum₁₀(zipWith_lz_nl₀₀((fun a⁶ -> (fun b⁴ -> (a⁶ * b⁴))), powers¹, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1¹)))) - _lh_bernoulli_LH_P2_0¹) / (_lh_bernoulli_LH_P2_0¹ + 1)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | _  => _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)} | LH_N  => [LH_N]}: 607
+//│ [LH_N]: 705 --->
+//│ 	case xs⁶ of {LH_C h¹⁰ t¹⁰ => [LH_C h¹⁰ mappend₀₀(t¹⁰, ys⁶)] | LH_N  => ys⁶}: 636
+//│ 	case ys⁸ of {LH_C hy⁶ ty⁶ => case force⁰(xs⁸) of {LH_C hx⁶ tx⁶ => [LH_C f¹⁰(hx⁶, hy⁶) zipWith_lz_nl₀₀(f¹⁰, tx⁶, ty⁶)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 812
+//│ 	case ys¹¹ of {LH_C hy⁹ ty⁹ => [LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)] | LH_N  => [LH_N]}: 938
+//│ [LH_C 1 [LH_N]]: 706 --->
+//│ 	case xs⁶ of {LH_C h¹⁰ t¹⁰ => [LH_C h¹⁰ mappend₀₀(t¹⁰, ys⁶)] | LH_N  => ys⁶}: 636
+//│ 	case ys⁸ of {LH_C hy⁶ ty⁶ => case force⁰(xs⁸) of {LH_C hx⁶ tx⁶ => [LH_C f¹⁰(hx⁶, hy⁶) zipWith_lz_nl₀₀(f¹⁰, tx⁶, ty⁶)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 812
+//│ 	case ys¹¹ of {LH_C hy⁹ ty⁹ => [LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)] | LH_N  => [LH_N]}: 938
+//│ [LH_C 2 [LH_C 1 [LH_N]]]: 707 --->
+//│ 	case xs⁶ of {LH_C h¹⁰ t¹⁰ => [LH_C h¹⁰ mappend₀₀(t¹⁰, ys⁶)] | LH_N  => ys⁶}: 636
+//│ 	case ls¹³ of {LH_C h¹⁵ t¹⁵ => t¹⁵ | LH_N  => error⁰}: 911
+//│ 	case ys¹¹ of {LH_C hy⁹ ty⁹ => [LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)] | LH_N  => [LH_N]}: 938
+//│ [LH_C 1 [LH_C 2 [LH_C 1 [LH_N]]]]: 708 --->
+//│ 	case xs⁶ of {LH_C h¹⁰ t¹⁰ => [LH_C h¹⁰ mappend₀₀(t¹⁰, ys⁶)] | LH_N  => ys⁶}: 636
+//│ 	case ls¹⁴ of {LH_C h¹⁶ t¹⁶ => t¹⁶ | LH_N  => error⁰}: 920
+//│ 	case ys¹¹ of {LH_C hy⁹ ty⁹ => [LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)] | LH_N  => [LH_N]}: 938
+//│ [LH_N]: 723 --->
+//│ 	case xs¹¹ of {LH_C hx⁹ tx⁹ => case ys¹¹ of {LH_C hy⁹ ty⁹ => [LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 940
+//│ [LH_C 0 [LH_N]]: 724 --->
+//│ 	case xs¹¹ of {LH_C hx⁹ tx⁹ => case ys¹¹ of {LH_C hy⁹ ty⁹ => [LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 940
+//│ [LH_C 0 line¹]: 729 --->
+//│ 	case ys¹¹ of {LH_C hy⁹ ty⁹ => [LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)] | LH_N  => [LH_N]}: 938
+//│ [LH_C [LH_C 1 [LH_C 2 [LH_C 1 [LH_N]]]] map_lz₂₀((fun line¹ -> zipWith₀₀((fun a⁷ -> (fun b⁵ -> (a⁷ + b⁵))), mappend₀₀(line¹, [LH_C 0 [LH_N]]), [LH_C 0 line¹])), pascal₀₀)]: 735 --->
+//│ 	case force⁰(ys⁷) of {LH_C hy⁵ ty⁵ => [LH_C [LH_P2 hx⁵ hy⁵] zip_nl_lz₀₀(tx⁵, ty⁵)] | LH_N  => [LH_N]}: 696
+//│ 	case force⁰(ls¹²) of {LH_C h¹⁴ t¹⁴ => [LH_C f¹²(h¹⁴) map_lz₂₀(f¹², t¹⁴)] | LH_N  => [LH_N]}: 848
+//│ [LH_C a⁸ enumFrom₀₀((a⁸ + 1))]: 746 --->
+//│ 	case force⁰(ys⁹) of {LH_C hy⁷ ty⁷ => [LH_C f¹³(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹³, tx⁷, ty⁷)] | LH_N  => [LH_N]}: 873
+//│ 	case force⁰(ys¹⁰) of {LH_C hy⁸ ty⁸ => [LH_C f¹⁴(hx⁸, hy⁸) zipWith_lz_lz₀₀(f¹⁴, tx⁸, ty⁸)] | LH_N  => [LH_N]}: 901
+//│ [LH_C a⁹ enumFromTo₀₀((a⁹ + 1), b⁶)]: 764 --->
+//│ 	case xs⁷ of {LH_C hx⁵ tx⁵ => case force⁰(ys⁷) of {LH_C hy⁵ ty⁵ => [LH_C [LH_P2 hx⁵ hy⁵] zip_nl_lz₀₀(tx⁵, ty⁵)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 698
+//│ [LH_N]: 765 --->
+//│ 	case xs⁷ of {LH_C hx⁵ tx⁵ => case force⁰(ys⁷) of {LH_C hy⁵ ty⁵ => [LH_C [LH_P2 hx⁵ hy⁵] zip_nl_lz₀₀(tx⁵, ty⁵)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 698
+//│ [LH_C a¹⁰ enumFrom₁₀((a¹⁰ + 1))]: 778 --->
+//│ 	case force⁰(xs¹⁰) of {LH_C hx⁸ tx⁸ => case force⁰(ys¹⁰) of {LH_C hy⁸ ty⁸ => [LH_C f¹⁴(hx⁸, hy⁸) zipWith_lz_lz₀₀(f¹⁴, tx⁸, ty⁸)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 903
+//│ [LH_C f¹⁰(hx⁶, hy⁶) zipWith_lz_nl₀₀(f¹⁰, tx⁶, ty⁶)]: 808 --->
+//│ 	case ls¹⁰ of {LH_C h¹² t¹² => (h¹² + sum₁₀(t¹²)) | LH_N  => 0}: 790
+//│ [LH_N]: 809 --->
+//│ 	case ls¹⁰ of {LH_C h¹² t¹² => (h¹² + sum₁₀(t¹²)) | LH_N  => 0}: 790
+//│ [LH_N]: 811 --->
+//│ 	case ls¹⁰ of {LH_C h¹² t¹² => (h¹² + sum₁₀(t¹²)) | LH_N  => 0}: 790
+//│ [LH_C f¹¹(h¹³) map_lz₀₀(f¹¹, t¹³)]: 828 --->
+//│ 	case force⁰(ls⁹) of {LH_C h¹¹ t¹¹ => if (n² == 0) then h¹¹ else atIndex_lz₀₀((n² - 1), t¹¹) | LH_N  => error⁰}: 678
+//│ [LH_N]: 829 --->
+//│ 	case force⁰(ls⁹) of {LH_C h¹¹ t¹¹ => if (n² == 0) then h¹¹ else atIndex_lz₀₀((n² - 1), t¹¹) | LH_N  => error⁰}: 678
+//│ [LH_C f¹²(h¹⁴) map_lz₂₀(f¹², t¹⁴)]: 846 --->
+//│ 	case force⁰(ys⁷) of {LH_C hy⁵ ty⁵ => [LH_C [LH_P2 hx⁵ hy⁵] zip_nl_lz₀₀(tx⁵, ty⁵)] | LH_N  => [LH_N]}: 696
+//│ 	case force⁰(ls¹²) of {LH_C h¹⁴ t¹⁴ => [LH_C f¹²(h¹⁴) map_lz₂₀(f¹², t¹⁴)] | LH_N  => [LH_N]}: 848
+//│ [LH_N]: 847 --->
+//│ 	case force⁰(ys⁷) of {LH_C hy⁵ ty⁵ => [LH_C [LH_P2 hx⁵ hy⁵] zip_nl_lz₀₀(tx⁵, ty⁵)] | LH_N  => [LH_N]}: 696
+//│ 	case force⁰(ls¹²) of {LH_C h¹⁴ t¹⁴ => [LH_C f¹²(h¹⁴) map_lz₂₀(f¹², t¹⁴)] | LH_N  => [LH_N]}: 848
+//│ [LH_C f¹³(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹³, tx⁷, ty⁷)]: 871 --->
+//│ 	case force⁰(xs⁸) of {LH_C hx⁶ tx⁶ => [LH_C f¹⁰(hx⁶, hy⁶) zipWith_lz_nl₀₀(f¹⁰, tx⁶, ty⁶)] | LH_N  => [LH_N]}: 810
+//│ [LH_N]: 872 --->
+//│ 	case force⁰(xs⁸) of {LH_C hx⁶ tx⁶ => [LH_C f¹⁰(hx⁶, hy⁶) zipWith_lz_nl₀₀(f¹⁰, tx⁶, ty⁶)] | LH_N  => [LH_N]}: 810
+//│ [LH_N]: 874 --->
+//│ 	case force⁰(xs⁸) of {LH_C hx⁶ tx⁶ => [LH_C f¹⁰(hx⁶, hy⁶) zipWith_lz_nl₀₀(f¹⁰, tx⁶, ty⁶)] | LH_N  => [LH_N]}: 810
+//│ [LH_C f¹⁴(hx⁸, hy⁸) zipWith_lz_lz₀₀(f¹⁴, tx⁸, ty⁸)]: 899 --->
+//│ 	case force⁰(ys⁹) of {LH_C hy⁷ ty⁷ => [LH_C f¹³(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹³, tx⁷, ty⁷)] | LH_N  => [LH_N]}: 873
+//│ 	case force⁰(ys¹⁰) of {LH_C hy⁸ ty⁸ => [LH_C f¹⁴(hx⁸, hy⁸) zipWith_lz_lz₀₀(f¹⁴, tx⁸, ty⁸)] | LH_N  => [LH_N]}: 901
+//│ [LH_N]: 900 --->
+//│ 	case force⁰(ys⁹) of {LH_C hy⁷ ty⁷ => [LH_C f¹³(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹³, tx⁷, ty⁷)] | LH_N  => [LH_N]}: 873
+//│ 	case force⁰(ys¹⁰) of {LH_C hy⁸ ty⁸ => [LH_C f¹⁴(hx⁸, hy⁸) zipWith_lz_lz₀₀(f¹⁴, tx⁸, ty⁸)] | LH_N  => [LH_N]}: 901
+//│ [LH_N]: 902 --->
+//│ 	case force⁰(ys⁹) of {LH_C hy⁷ ty⁷ => [LH_C f¹³(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹³, tx⁷, ty⁷)] | LH_N  => [LH_N]}: 873
+//│ 	case force⁰(ys¹⁰) of {LH_C hy⁸ ty⁸ => [LH_C f¹⁴(hx⁸, hy⁸) zipWith_lz_lz₀₀(f¹⁴, tx⁸, ty⁸)] | LH_N  => [LH_N]}: 901
+//│ [LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)]: 936 --->
+//│ 	case xs⁶ of {LH_C h¹⁰ t¹⁰ => [LH_C h¹⁰ mappend₀₀(t¹⁰, ys⁶)] | LH_N  => ys⁶}: 636
+//│ 	case ys⁸ of {LH_C hy⁶ ty⁶ => case force⁰(xs⁸) of {LH_C hx⁶ tx⁶ => [LH_C f¹⁰(hx⁶, hy⁶) zipWith_lz_nl₀₀(f¹⁰, tx⁶, ty⁶)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 812
+//│ 	case ls¹³ of {LH_C h¹⁵ t¹⁵ => t¹⁵ | LH_N  => error⁰}: 911
+//│ 	case ls¹⁴ of {LH_C h¹⁶ t¹⁶ => t¹⁶ | LH_N  => error⁰}: 920
+//│ 	case ys¹¹ of {LH_C hy⁹ ty⁹ => [LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)] | LH_N  => [LH_N]}: 938
+//│ [LH_N]: 937 --->
+//│ 	case xs⁶ of {LH_C h¹⁰ t¹⁰ => [LH_C h¹⁰ mappend₀₀(t¹⁰, ys⁶)] | LH_N  => ys⁶}: 636
+//│ 	case ys⁸ of {LH_C hy⁶ ty⁶ => case force⁰(xs⁸) of {LH_C hx⁶ tx⁶ => [LH_C f¹⁰(hx⁶, hy⁶) zipWith_lz_nl₀₀(f¹⁰, tx⁶, ty⁶)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 812
+//│ 	case ls¹³ of {LH_C h¹⁵ t¹⁵ => t¹⁵ | LH_N  => error⁰}: 911
+//│ 	case ls¹⁴ of {LH_C h¹⁶ t¹⁶ => t¹⁶ | LH_N  => error⁰}: 920
+//│ 	case ys¹¹ of {LH_C hy⁹ ty⁹ => [LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)] | LH_N  => [LH_N]}: 938
+//│ [LH_N]: 939 --->
+//│ 	case xs⁶ of {LH_C h¹⁰ t¹⁰ => [LH_C h¹⁰ mappend₀₀(t¹⁰, ys⁶)] | LH_N  => ys⁶}: 636
+//│ 	case ys⁸ of {LH_C hy⁶ ty⁶ => case force⁰(xs⁸) of {LH_C hx⁶ tx⁶ => [LH_C f¹⁰(hx⁶, hy⁶) zipWith_lz_nl₀₀(f¹⁰, tx⁶, ty⁶)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 812
+//│ 	case ls¹³ of {LH_C h¹⁵ t¹⁵ => t¹⁵ | LH_N  => error⁰}: 911
+//│ 	case ls¹⁴ of {LH_C h¹⁶ t¹⁶ => t¹⁶ | LH_N  => error⁰}: 920
+//│ 	case ys¹¹ of {LH_C hy⁹ ty⁹ => [LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)] | LH_N  => [LH_N]}: 938
+//│ [LH_C enumFrom₀₀(2) map_lz₁₀(zipWith_lz_lz₀₀((fun a¹¹ -> (fun b⁷ -> (a¹¹ * b⁷))), enumFrom₁₀(2)), powers₀₀)]: 1000 --->
+//│ 	case force⁰(ls⁸) of {LH_C h⁹ t⁹ => [LH_C f⁸(h⁹) map_lz₁₀(f⁸, t⁹)] | LH_N  => [LH_N]}: 517
+//│ 	case force⁰(ls¹¹) of {LH_C h¹³ t¹³ => [LH_C f¹¹(h¹³) map_lz₀₀(f¹¹, t¹³)] | LH_N  => [LH_N]}: 830
+//│ ------------------
+//│ case force⁰(ls⁸) of {LH_C h⁹ t⁹ => [LH_C f⁸(h⁹) map_lz₁₀(f⁸, t⁹)] | LH_N  => [LH_N]}: 517 --->
+//│ 	[LH_C f⁸(h⁹) map_lz₁₀(f⁸, t⁹)]: 515
+//│ 	[LH_N]: 516
+//│ 	[LH_C enumFrom₀₀(2) map_lz₁₀(zipWith_lz_lz₀₀((fun a¹¹ -> (fun b⁷ -> (a¹¹ * b⁷))), enumFrom₁₀(2)), powers₀₀)]: 1000
+//│ case _lh_listcomp_fun_ls_h¹ of {LH_P2 _lh_bernoulli_LH_P2_0¹ _lh_bernoulli_LH_P2_1¹ => [LH_C ((sum₁₀(zipWith_lz_nl₀₀((fun a⁶ -> (fun b⁴ -> (a⁶ * b⁴))), powers¹, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1¹)))) - _lh_bernoulli_LH_P2_0¹) / (_lh_bernoulli_LH_P2_0¹ + 1)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | _  => _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)}: 605 --->
+//│ 	[LH_P2 hx⁵ hy⁵]: 688
+//│ case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => case _lh_listcomp_fun_ls_h¹ of {LH_P2 _lh_bernoulli_LH_P2_0¹ _lh_bernoulli_LH_P2_1¹ => [LH_C ((sum₁₀(zipWith_lz_nl₀₀((fun a⁶ -> (fun b⁴ -> (a⁶ * b⁴))), powers¹, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1¹)))) - _lh_bernoulli_LH_P2_0¹) / (_lh_bernoulli_LH_P2_0¹ + 1)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | _  => _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)} | LH_N  => [LH_N]}: 607 --->
+//│ 	[LH_C [LH_P2 hx⁵ hy⁵] zip_nl_lz₀₀(tx⁵, ty⁵)]: 694
+//│ 	[LH_N]: 695
+//│ 	[LH_N]: 697
+//│ case xs⁶ of {LH_C h¹⁰ t¹⁰ => [LH_C h¹⁰ mappend₀₀(t¹⁰, ys⁶)] | LH_N  => ys⁶}: 636 --->
+//│ 	[LH_N]: 705
+//│ 	[LH_C 1 [LH_N]]: 706
+//│ 	[LH_C 2 [LH_C 1 [LH_N]]]: 707
+//│ 	[LH_C 1 [LH_C 2 [LH_C 1 [LH_N]]]]: 708
+//│ 	[LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)]: 936
+//│ 	[LH_N]: 937
+//│ 	[LH_N]: 939
+//│ case force⁰(ls⁹) of {LH_C h¹¹ t¹¹ => if (n² == 0) then h¹¹ else atIndex_lz₀₀((n² - 1), t¹¹) | LH_N  => error⁰}: 678 --->
+//│ 	[LH_C f¹¹(h¹³) map_lz₀₀(f¹¹, t¹³)]: 828
+//│ 	[LH_N]: 829
+//│ case force⁰(ys⁷) of {LH_C hy⁵ ty⁵ => [LH_C [LH_P2 hx⁵ hy⁵] zip_nl_lz₀₀(tx⁵, ty⁵)] | LH_N  => [LH_N]}: 696 --->
+//│ 	[LH_C [LH_C 1 [LH_C 2 [LH_C 1 [LH_N]]]] map_lz₂₀((fun line¹ -> zipWith₀₀((fun a⁷ -> (fun b⁵ -> (a⁷ + b⁵))), mappend₀₀(line¹, [LH_C 0 [LH_N]]), [LH_C 0 line¹])), pascal₀₀)]: 735
+//│ 	[LH_C f¹²(h¹⁴) map_lz₂₀(f¹², t¹⁴)]: 846
+//│ 	[LH_N]: 847
+//│ case xs⁷ of {LH_C hx⁵ tx⁵ => case force⁰(ys⁷) of {LH_C hy⁵ ty⁵ => [LH_C [LH_P2 hx⁵ hy⁵] zip_nl_lz₀₀(tx⁵, ty⁵)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 698 --->
+//│ 	[LH_C a⁹ enumFromTo₀₀((a⁹ + 1), b⁶)]: 764
+//│ 	[LH_N]: 765
+//│ case ls¹⁰ of {LH_C h¹² t¹² => (h¹² + sum₁₀(t¹²)) | LH_N  => 0}: 790 --->
+//│ 	[LH_C f¹⁰(hx⁶, hy⁶) zipWith_lz_nl₀₀(f¹⁰, tx⁶, ty⁶)]: 808
+//│ 	[LH_N]: 809
+//│ 	[LH_N]: 811
+//│ case force⁰(xs⁸) of {LH_C hx⁶ tx⁶ => [LH_C f¹⁰(hx⁶, hy⁶) zipWith_lz_nl₀₀(f¹⁰, tx⁶, ty⁶)] | LH_N  => [LH_N]}: 810 --->
+//│ 	[LH_C f¹³(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹³, tx⁷, ty⁷)]: 871
+//│ 	[LH_N]: 872
+//│ 	[LH_N]: 874
+//│ case ys⁸ of {LH_C hy⁶ ty⁶ => case force⁰(xs⁸) of {LH_C hx⁶ tx⁶ => [LH_C f¹⁰(hx⁶, hy⁶) zipWith_lz_nl₀₀(f¹⁰, tx⁶, ty⁶)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 812 --->
+//│ 	[LH_N]: 705
+//│ 	[LH_C 1 [LH_N]]: 706
+//│ 	[LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)]: 936
+//│ 	[LH_N]: 937
+//│ 	[LH_N]: 939
+//│ case force⁰(ls¹¹) of {LH_C h¹³ t¹³ => [LH_C f¹¹(h¹³) map_lz₀₀(f¹¹, t¹³)] | LH_N  => [LH_N]}: 830 --->
+//│ 	[LH_C f⁸(h⁹) map_lz₁₀(f⁸, t⁹)]: 515
+//│ 	[LH_N]: 516
+//│ 	[LH_C enumFrom₀₀(2) map_lz₁₀(zipWith_lz_lz₀₀((fun a¹¹ -> (fun b⁷ -> (a¹¹ * b⁷))), enumFrom₁₀(2)), powers₀₀)]: 1000
+//│ case force⁰(ls¹²) of {LH_C h¹⁴ t¹⁴ => [LH_C f¹²(h¹⁴) map_lz₂₀(f¹², t¹⁴)] | LH_N  => [LH_N]}: 848 --->
+//│ 	[LH_C [LH_C 1 [LH_C 2 [LH_C 1 [LH_N]]]] map_lz₂₀((fun line¹ -> zipWith₀₀((fun a⁷ -> (fun b⁵ -> (a⁷ + b⁵))), mappend₀₀(line¹, [LH_C 0 [LH_N]]), [LH_C 0 line¹])), pascal₀₀)]: 735
+//│ 	[LH_C f¹²(h¹⁴) map_lz₂₀(f¹², t¹⁴)]: 846
+//│ 	[LH_N]: 847
+//│ case force⁰(ys⁹) of {LH_C hy⁷ ty⁷ => [LH_C f¹³(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹³, tx⁷, ty⁷)] | LH_N  => [LH_N]}: 873 --->
+//│ 	[LH_C a⁸ enumFrom₀₀((a⁸ + 1))]: 746
+//│ 	[LH_C f¹⁴(hx⁸, hy⁸) zipWith_lz_lz₀₀(f¹⁴, tx⁸, ty⁸)]: 899
+//│ 	[LH_N]: 900
+//│ 	[LH_N]: 902
+//│ case force⁰(xs⁹) of {LH_C hx⁷ tx⁷ => case force⁰(ys⁹) of {LH_C hy⁷ ty⁷ => [LH_C f¹³(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹³, tx⁷, ty⁷)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 875 --->
+//│ 	[LH_C x² iterate₀₀(f⁹, f⁹(x²))]: 648
+//│ case force⁰(ys¹⁰) of {LH_C hy⁸ ty⁸ => [LH_C f¹⁴(hx⁸, hy⁸) zipWith_lz_lz₀₀(f¹⁴, tx⁸, ty⁸)] | LH_N  => [LH_N]}: 901 --->
+//│ 	[LH_C a⁸ enumFrom₀₀((a⁸ + 1))]: 746
+//│ 	[LH_C f¹⁴(hx⁸, hy⁸) zipWith_lz_lz₀₀(f¹⁴, tx⁸, ty⁸)]: 899
+//│ 	[LH_N]: 900
+//│ 	[LH_N]: 902
+//│ case force⁰(xs¹⁰) of {LH_C hx⁸ tx⁸ => case force⁰(ys¹⁰) of {LH_C hy⁸ ty⁸ => [LH_C f¹⁴(hx⁸, hy⁸) zipWith_lz_lz₀₀(f¹⁴, tx⁸, ty⁸)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 903 --->
+//│ 	[LH_C a¹⁰ enumFrom₁₀((a¹⁰ + 1))]: 778
+//│ case ls¹³ of {LH_C h¹⁵ t¹⁵ => t¹⁵ | LH_N  => error⁰}: 911 --->
+//│ 	[LH_C 2 [LH_C 1 [LH_N]]]: 707
+//│ 	[LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)]: 936
+//│ 	[LH_N]: 937
+//│ 	[LH_N]: 939
+//│ case ls¹⁴ of {LH_C h¹⁶ t¹⁶ => t¹⁶ | LH_N  => error⁰}: 920 --->
+//│ 	[LH_C 1 [LH_C 2 [LH_C 1 [LH_N]]]]: 708
+//│ 	[LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)]: 936
+//│ 	[LH_N]: 937
+//│ 	[LH_N]: 939
+//│ case ys¹¹ of {LH_C hy⁹ ty⁹ => [LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)] | LH_N  => [LH_N]}: 938 --->
+//│ 	[LH_N]: 705
+//│ 	[LH_C 1 [LH_N]]: 706
+//│ 	[LH_C 2 [LH_C 1 [LH_N]]]: 707
+//│ 	[LH_C 1 [LH_C 2 [LH_C 1 [LH_N]]]]: 708
+//│ 	[LH_C 0 line¹]: 729
+//│ 	[LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)]: 936
+//│ 	[LH_N]: 937
+//│ 	[LH_N]: 939
+//│ case xs¹¹ of {LH_C hx⁹ tx⁹ => case ys¹¹ of {LH_C hy⁹ ty⁹ => [LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 940 --->
+//│ 	[LH_C h¹⁰ mappend₀₀(t¹⁰, ys⁶)]: 634
+//│ 	[LH_N]: 723
+//│ 	[LH_C 0 [LH_N]]: 724
+//│ case ls¹⁵ of {LH_C h¹⁷ t¹⁷ => (h¹⁷ + sum₀₀(t¹⁷)) | LH_N  => 0}: 977 --->
+//│ 	[LH_C ((sum₁₀(zipWith_lz_nl₀₀((fun a⁶ -> (fun b⁴ -> (a⁶ * b⁴))), powers¹, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1¹)))) - _lh_bernoulli_LH_P2_0¹) / (_lh_bernoulli_LH_P2_0¹ + 1)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)]: 601
+//│ 	[LH_N]: 606
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_C ((sum₁₀(zipWith_lz_nl₀₀((fun a⁶ -> (fun b⁴ -> (a⁶ * b⁴))), powers¹, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1¹)))) - _lh_bernoulli_LH_P2_0¹) / (_lh_bernoulli_LH_P2_0¹ + 1)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)]: 601 --->
+//│ 	case ls¹⁵ of {LH_C h¹⁷ t¹⁷ => (h¹⁷ + sum₀₀(t¹⁷)) | LH_N  => 0}: 977
+//│ [LH_N]: 606 --->
+//│ 	case ls¹⁵ of {LH_C h¹⁷ t¹⁷ => (h¹⁷ + sum₀₀(t¹⁷)) | LH_N  => 0}: 977
+//│ [LH_C h¹⁰ mappend₀₀(t¹⁰, ys⁶)]: 634 --->
+//│ 	case xs¹¹ of {LH_C hx⁹ tx⁹ => case ys¹¹ of {LH_C hy⁹ ty⁹ => [LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 940
+//│ [LH_C x² iterate₀₀(f⁹, f⁹(x²))]: 648 --->
+//│ 	case force⁰(xs⁹) of {LH_C hx⁷ tx⁷ => case force⁰(ys⁹) of {LH_C hy⁷ ty⁷ => [LH_C f¹³(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹³, tx⁷, ty⁷)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 875
+//│ [LH_P2 hx⁵ hy⁵]: 688 --->
+//│ 	case _lh_listcomp_fun_ls_h¹ of {LH_P2 _lh_bernoulli_LH_P2_0¹ _lh_bernoulli_LH_P2_1¹ => [LH_C ((sum₁₀(zipWith_lz_nl₀₀((fun a⁶ -> (fun b⁴ -> (a⁶ * b⁴))), powers¹, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1¹)))) - _lh_bernoulli_LH_P2_0¹) / (_lh_bernoulli_LH_P2_0¹ + 1)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | _  => _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)}: 605
+//│ [LH_C [LH_P2 hx⁵ hy⁵] zip_nl_lz₀₀(tx⁵, ty⁵)]: 694 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => case _lh_listcomp_fun_ls_h¹ of {LH_P2 _lh_bernoulli_LH_P2_0¹ _lh_bernoulli_LH_P2_1¹ => [LH_C ((sum₁₀(zipWith_lz_nl₀₀((fun a⁶ -> (fun b⁴ -> (a⁶ * b⁴))), powers¹, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1¹)))) - _lh_bernoulli_LH_P2_0¹) / (_lh_bernoulli_LH_P2_0¹ + 1)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | _  => _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)} | LH_N  => [LH_N]}: 607
+//│ [LH_N]: 695 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => case _lh_listcomp_fun_ls_h¹ of {LH_P2 _lh_bernoulli_LH_P2_0¹ _lh_bernoulli_LH_P2_1¹ => [LH_C ((sum₁₀(zipWith_lz_nl₀₀((fun a⁶ -> (fun b⁴ -> (a⁶ * b⁴))), powers¹, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1¹)))) - _lh_bernoulli_LH_P2_0¹) / (_lh_bernoulli_LH_P2_0¹ + 1)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | _  => _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)} | LH_N  => [LH_N]}: 607
+//│ [LH_N]: 697 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => case _lh_listcomp_fun_ls_h¹ of {LH_P2 _lh_bernoulli_LH_P2_0¹ _lh_bernoulli_LH_P2_1¹ => [LH_C ((sum₁₀(zipWith_lz_nl₀₀((fun a⁶ -> (fun b⁴ -> (a⁶ * b⁴))), powers¹, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1¹)))) - _lh_bernoulli_LH_P2_0¹) / (_lh_bernoulli_LH_P2_0¹ + 1)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | _  => _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)} | LH_N  => [LH_N]}: 607
+//│ [LH_N]: 723 --->
+//│ 	case xs¹¹ of {LH_C hx⁹ tx⁹ => case ys¹¹ of {LH_C hy⁹ ty⁹ => [LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 940
+//│ [LH_C 0 [LH_N]]: 724 --->
+//│ 	case xs¹¹ of {LH_C hx⁹ tx⁹ => case ys¹¹ of {LH_C hy⁹ ty⁹ => [LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 940
+//│ [LH_C a⁹ enumFromTo₀₀((a⁹ + 1), b⁶)]: 764 --->
+//│ 	case xs⁷ of {LH_C hx⁵ tx⁵ => case force⁰(ys⁷) of {LH_C hy⁵ ty⁵ => [LH_C [LH_P2 hx⁵ hy⁵] zip_nl_lz₀₀(tx⁵, ty⁵)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 698
+//│ [LH_N]: 765 --->
+//│ 	case xs⁷ of {LH_C hx⁵ tx⁵ => case force⁰(ys⁷) of {LH_C hy⁵ ty⁵ => [LH_C [LH_P2 hx⁵ hy⁵] zip_nl_lz₀₀(tx⁵, ty⁵)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 698
+//│ [LH_C a¹⁰ enumFrom₁₀((a¹⁰ + 1))]: 778 --->
+//│ 	case force⁰(xs¹⁰) of {LH_C hx⁸ tx⁸ => case force⁰(ys¹⁰) of {LH_C hy⁸ ty⁸ => [LH_C f¹⁴(hx⁸, hy⁸) zipWith_lz_lz₀₀(f¹⁴, tx⁸, ty⁸)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 903
+//│ [LH_C f¹⁰(hx⁶, hy⁶) zipWith_lz_nl₀₀(f¹⁰, tx⁶, ty⁶)]: 808 --->
+//│ 	case ls¹⁰ of {LH_C h¹² t¹² => (h¹² + sum₁₀(t¹²)) | LH_N  => 0}: 790
+//│ [LH_N]: 809 --->
+//│ 	case ls¹⁰ of {LH_C h¹² t¹² => (h¹² + sum₁₀(t¹²)) | LH_N  => 0}: 790
+//│ [LH_N]: 811 --->
+//│ 	case ls¹⁰ of {LH_C h¹² t¹² => (h¹² + sum₁₀(t¹²)) | LH_N  => 0}: 790
+//│ [LH_C f¹¹(h¹³) map_lz₀₀(f¹¹, t¹³)]: 828 --->
+//│ 	case force⁰(ls⁹) of {LH_C h¹¹ t¹¹ => if (n² == 0) then h¹¹ else atIndex_lz₀₀((n² - 1), t¹¹) | LH_N  => error⁰}: 678
+//│ [LH_N]: 829 --->
+//│ 	case force⁰(ls⁹) of {LH_C h¹¹ t¹¹ => if (n² == 0) then h¹¹ else atIndex_lz₀₀((n² - 1), t¹¹) | LH_N  => error⁰}: 678
+//│ [LH_C f¹³(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹³, tx⁷, ty⁷)]: 871 --->
+//│ 	case force⁰(xs⁸) of {LH_C hx⁶ tx⁶ => [LH_C f¹⁰(hx⁶, hy⁶) zipWith_lz_nl₀₀(f¹⁰, tx⁶, ty⁶)] | LH_N  => [LH_N]}: 810
+//│ [LH_N]: 872 --->
+//│ 	case force⁰(xs⁸) of {LH_C hx⁶ tx⁶ => [LH_C f¹⁰(hx⁶, hy⁶) zipWith_lz_nl₀₀(f¹⁰, tx⁶, ty⁶)] | LH_N  => [LH_N]}: 810
+//│ [LH_N]: 874 --->
+//│ 	case force⁰(xs⁸) of {LH_C hx⁶ tx⁶ => [LH_C f¹⁰(hx⁶, hy⁶) zipWith_lz_nl₀₀(f¹⁰, tx⁶, ty⁶)] | LH_N  => [LH_N]}: 810
+//│ ------------------
+//│ case _lh_listcomp_fun_ls_h¹ of {LH_P2 _lh_bernoulli_LH_P2_0¹ _lh_bernoulli_LH_P2_1¹ => [LH_C ((sum₁₀(zipWith_lz_nl₀₀((fun a⁶ -> (fun b⁴ -> (a⁶ * b⁴))), powers¹, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1¹)))) - _lh_bernoulli_LH_P2_0¹) / (_lh_bernoulli_LH_P2_0¹ + 1)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | _  => _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)}: 605 --->
+//│ 	[LH_P2 hx⁵ hy⁵]: 688
+//│ case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => case _lh_listcomp_fun_ls_h¹ of {LH_P2 _lh_bernoulli_LH_P2_0¹ _lh_bernoulli_LH_P2_1¹ => [LH_C ((sum₁₀(zipWith_lz_nl₀₀((fun a⁶ -> (fun b⁴ -> (a⁶ * b⁴))), powers¹, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1¹)))) - _lh_bernoulli_LH_P2_0¹) / (_lh_bernoulli_LH_P2_0¹ + 1)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | _  => _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)} | LH_N  => [LH_N]}: 607 --->
+//│ 	[LH_C [LH_P2 hx⁵ hy⁵] zip_nl_lz₀₀(tx⁵, ty⁵)]: 694
+//│ 	[LH_N]: 695
+//│ 	[LH_N]: 697
+//│ case force⁰(ls⁹) of {LH_C h¹¹ t¹¹ => if (n² == 0) then h¹¹ else atIndex_lz₀₀((n² - 1), t¹¹) | LH_N  => error⁰}: 678 --->
+//│ 	[LH_C f¹¹(h¹³) map_lz₀₀(f¹¹, t¹³)]: 828
+//│ 	[LH_N]: 829
+//│ case xs⁷ of {LH_C hx⁵ tx⁵ => case force⁰(ys⁷) of {LH_C hy⁵ ty⁵ => [LH_C [LH_P2 hx⁵ hy⁵] zip_nl_lz₀₀(tx⁵, ty⁵)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 698 --->
+//│ 	[LH_C a⁹ enumFromTo₀₀((a⁹ + 1), b⁶)]: 764
+//│ 	[LH_N]: 765
+//│ case ls¹⁰ of {LH_C h¹² t¹² => (h¹² + sum₁₀(t¹²)) | LH_N  => 0}: 790 --->
+//│ 	[LH_C f¹⁰(hx⁶, hy⁶) zipWith_lz_nl₀₀(f¹⁰, tx⁶, ty⁶)]: 808
+//│ 	[LH_N]: 809
+//│ 	[LH_N]: 811
+//│ case force⁰(xs⁸) of {LH_C hx⁶ tx⁶ => [LH_C f¹⁰(hx⁶, hy⁶) zipWith_lz_nl₀₀(f¹⁰, tx⁶, ty⁶)] | LH_N  => [LH_N]}: 810 --->
+//│ 	[LH_C f¹³(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹³, tx⁷, ty⁷)]: 871
+//│ 	[LH_N]: 872
+//│ 	[LH_N]: 874
+//│ case force⁰(xs⁹) of {LH_C hx⁷ tx⁷ => case force⁰(ys⁹) of {LH_C hy⁷ ty⁷ => [LH_C f¹³(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹³, tx⁷, ty⁷)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 875 --->
+//│ 	[LH_C x² iterate₀₀(f⁹, f⁹(x²))]: 648
+//│ case force⁰(xs¹⁰) of {LH_C hx⁸ tx⁸ => case force⁰(ys¹⁰) of {LH_C hy⁸ ty⁸ => [LH_C f¹⁴(hx⁸, hy⁸) zipWith_lz_lz₀₀(f¹⁴, tx⁸, ty⁸)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 903 --->
+//│ 	[LH_C a¹⁰ enumFrom₁₀((a¹⁰ + 1))]: 778
+//│ case xs¹¹ of {LH_C hx⁹ tx⁹ => case ys¹¹ of {LH_C hy⁹ ty⁹ => [LH_C f¹⁵(hx⁹, hy⁹) zipWith₀₀(f¹⁵, tx⁹, ty⁹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 940 --->
+//│ 	[LH_C h¹⁰ mappend₀₀(t¹⁰, ys⁶)]: 634
+//│ 	[LH_N]: 723
+//│ 	[LH_C 0 [LH_N]]: 724
+//│ case ls¹⁵ of {LH_C h¹⁷ t¹⁷ => (h¹⁷ + sum₀₀(t¹⁷)) | LH_N  => 0}: 977 --->
+//│ 	[LH_C ((sum₁₀(zipWith_lz_nl₀₀((fun a⁶ -> (fun b⁴ -> (a⁶ * b⁴))), powers¹, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1¹)))) - _lh_bernoulli_LH_P2_0¹) / (_lh_bernoulli_LH_P2_0¹ + 1)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)]: 601
+//│ 	[LH_N]: 606
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testBernoulli₀₀(1000)
+//│ def testBernoulli₀₀(_lh_testBernoulli_arg1²) = 
+//│ 	bernoulli₀₀(_lh_testBernoulli_arg1²)
+//│ 	where
+//│ 	def bernoulli₀₀(_lh_bernoulli_arg1²) = 
+//│ 		case _lh_bernoulli_arg1² of {
+//│ 			0  => 1
+//│ 			| 1  => (0 - (1 / 2))
+//│ 			| _  => if ((_lh_bernoulli_arg1² % 2) == 1) then 0 else 
+//│ 				let powers⁶ = atIndex_lz₀₀((_lh_bernoulli_arg1² - 1), force⁰(neg_powers₀₀))
+//│ 				in (((0 - 1) / 2) + sum₀₀(
+//│ 					let _lh_listcomp_fun⁶ = (fun _lh_listcomp_fun_para² -> _lh_listcomp_fun_para²(powers⁶, _lh_listcomp_fun⁶))
+//│ 					in _lh_listcomp_fun⁶(zip_nl_lz₀₀(enumFromTo₀₀(2, _lh_bernoulli_arg1²), pascal₀₀))))}
+//│ 		where
+//│ 		def atIndex_lz₀₀(n⁷, ls²³) = 
+//│ 			if (n⁷ < 0) then error⁰ else force⁰(ls²³, n⁷)
+//│ 		def enumFromTo₀₀(a¹³, b⁹) = 
+//│ 			if (a¹³ <= b⁹) then 
+//│ 				let hx¹¹ = a¹³
+//│ 				in let tx¹¹ = enumFromTo₀₀((a¹³ + 1), b⁹)
+//│ 				in (fun ys¹⁶ -> case force⁰(ys¹⁶) of {
+//│ 					LH_C hy⁵ ty⁵ => 
+//│ 						let _lh_listcomp_fun_ls_h² = 	
+//│ 							let _lh_bernoulli_LH_P2_0² = hx¹¹
+//│ 							in let _lh_bernoulli_LH_P2_1² = hy⁵
+//│ 							in (fun powers³ -> (fun _lh_listcomp_fun³ -> (fun _lh_listcomp_fun_ls_t³ -> 
+//│ 								let h¹⁸ = ((sum₁₀(zipWith_lz_nl₀₀((fun a¹⁴ -> (fun b¹⁰ -> (a¹⁴ * b¹⁰))), powers³, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1²)))) - _lh_bernoulli_LH_P2_0²) / (_lh_bernoulli_LH_P2_0² + 1))
+//│ 								in let t¹⁸ = _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)
+//│ 								in (h¹⁸ + sum₀₀(t¹⁸)))))
+//│ 						in let _lh_listcomp_fun_ls_t² = zip_nl_lz₀₀(tx¹¹, ty⁵)
+//│ 						in (fun powers² -> (fun _lh_listcomp_fun² -> _lh_listcomp_fun_ls_h²(powers², _lh_listcomp_fun², _lh_listcomp_fun_ls_t²)))
+//│ 					| LH_N  => (fun powers⁴ -> (fun _lh_listcomp_fun⁴ -> 0))}) else (fun ys¹⁷ -> (fun powers⁵ -> (fun _lh_listcomp_fun⁵ -> 0)))
+//│ 		def neg_powers₀₀ = 
+//│ 			lazy⁰(map_lz₀₀(zipWith_lz_lz₁₀((fun n⁶ -> (fun x⁴ -> if n⁶ then x⁴ else (0 - x⁴))), iterate₀₀(not⁰, [True])), powers₀₀))
+//│ 			where
+//│ 			def iterate₀₀(f²⁷, x⁵) = 
+//│ 				lazy⁰(
+//│ 					let hx¹⁴ = x⁵
+//│ 					in let tx¹⁴ = iterate₀₀(f²⁷, f²⁷(x⁵))
+//│ 					in (fun ys²⁴ -> (fun f²⁸ -> case force⁰(ys²⁴) of {
+//│ 						LH_C hy⁷ ty⁷ => 
+//│ 							let hx¹⁵ = f²⁸(hx¹⁴, hy⁷)
+//│ 							in let tx¹⁵ = zipWith_lz_lz₁₀(f²⁸, tx¹⁴, ty⁷)
+//│ 							in (fun hy¹⁰ -> (fun ty¹⁰ -> (fun f²⁹ -> 
+//│ 								let h²⁰ = f²⁹(hx¹⁵, hy¹⁰)
+//│ 								in let t²⁰ = zipWith_lz_nl₀₀(f²⁹, tx¹⁵, ty¹⁰)
+//│ 								in (h²⁰ + sum₁₀(t²⁰)))))
+//│ 						| LH_N  => (fun hy¹¹ -> (fun ty¹¹ -> (fun f³⁰ -> 0)))})))
+//│ 			def map_lz₀₀(f¹⁹, ls¹⁷) = 
+//│ 				lazy⁰(case force⁰(ls¹⁷) of {
+//│ 					LH_C h¹³ t¹³ => 
+//│ 						let h¹⁹ = f¹⁹(h¹³)
+//│ 						in let t¹⁹ = map_lz₀₀(f¹⁹, t¹³)
+//│ 						in (fun n⁴ -> if (n⁴ == 0) then h¹⁹ else atIndex_lz₀₀((n⁴ - 1), t¹⁹))
+//│ 					| LH_N  => (fun n⁵ -> error⁰)})
+//│ 			def powers₀₀ = 
+//│ 				lazy⁰([LH_C enumFrom₀₀(2) map_lz₁₀(zipWith_lz_lz₀₀((fun a¹⁷ -> (fun b¹¹ -> (a¹⁷ * b¹¹))), enumFrom₁₀(2)), powers₀₀)])
+//│ 				where
+//│ 				def enumFrom₀₀(a¹⁵) = 
+//│ 					lazy⁰([LH_C a¹⁵ enumFrom₀₀((a¹⁵ + 1))])
+//│ 				def enumFrom₁₀(a¹⁶) = 
+//│ 					lazy⁰(
+//│ 						let hx¹³ = a¹⁶
+//│ 						in let tx¹³ = enumFrom₁₀((a¹⁶ + 1))
+//│ 						in (fun ys²³ -> (fun f²⁶ -> case force⁰(ys²³) of {
+//│ 							LH_C hy⁸ ty⁸ => [LH_C f²⁶(hx¹³, hy⁸) zipWith_lz_lz₀₀(f²⁶, tx¹³, ty⁸)]
+//│ 							| LH_N  => [LH_N]})))
+//│ 				def map_lz₁₀(f²⁰, ls¹⁸) = 
+//│ 					lazy⁰(case force⁰(ls¹⁸) of {
+//│ 						LH_C h⁹ t⁹ => [LH_C f²⁰(h⁹) map_lz₁₀(f²⁰, t⁹)]
+//│ 						| LH_N  => [LH_N]})
+//│ 				def zipWith_lz_lz₀₀(f²⁴, xs¹⁶, ys²⁰) = 
+//│ 					lazy⁰(force⁰(xs¹⁶, ys²⁰, f²⁴))
+//│ 			def zipWith_lz_lz₁₀(f²¹, xs¹⁴, ys¹⁸) = 
+//│ 				lazy⁰(force⁰(xs¹⁴, ys¹⁸, f²¹))
+//│ 		def pascal₀₀ = 
+//│ 			lazy⁰([LH_C [LH_C 1 [LH_C 2 [LH_C 1 [LH_N]]]] map_lz₂₀((fun line² -> zipWith₀₀((fun a¹² -> (fun b⁸ -> (a¹² + b⁸))), mappend₀₀(line², 
+//│ 				let hx¹⁰ = 0
+//│ 				in let tx¹⁰ = (fun ys¹⁵ -> (fun f¹⁸ -> [LH_N]))
+//│ 				in (fun ys¹⁴ -> (fun f¹⁷ -> case ys¹⁴ of {
+//│ 					LH_C hy⁹ ty⁹ => [LH_C f¹⁷(hx¹⁰, hy⁹) zipWith₀₀(f¹⁷, tx¹⁰, ty⁹)]
+//│ 					| LH_N  => [LH_N]}))), [LH_C 0 line²])), pascal₀₀)])
+//│ 			where
+//│ 			def map_lz₂₀(f²³, ls²¹) = 
+//│ 				lazy⁰(case force⁰(ls²¹) of {
+//│ 					LH_C h¹⁴ t¹⁴ => [LH_C f²³(h¹⁴) map_lz₂₀(f²³, t¹⁴)]
+//│ 					| LH_N  => [LH_N]})
+//│ 			def mappend₀₀(xs¹⁷, ys²¹) = 
+//│ 				case xs¹⁷ of {
+//│ 					LH_C h¹⁰ t¹⁰ => 
+//│ 						let hx¹² = h¹⁰
+//│ 						in let tx¹² = mappend₀₀(t¹⁰, ys²¹)
+//│ 						in (fun ys²² -> (fun f²⁵ -> case ys²² of {
+//│ 							LH_C hy⁹ ty⁹ => [LH_C f²⁵(hx¹², hy⁹) zipWith₀₀(f²⁵, tx¹², ty⁹)]
+//│ 							| LH_N  => [LH_N]}))
+//│ 					| LH_N  => ys²¹}
+//│ 			def zipWith₀₀(f¹⁶, xs¹², ys¹²) = 
+//│ 				xs¹²(ys¹², f¹⁶)
+//│ 		def sum₀₀(ls¹⁹) = 
+//│ 			ls¹⁹
+//│ 		def sum₁₀(ls²⁰) = 
+//│ 			ls²⁰
+//│ 		def tail₀₀(ls²²) = 
+//│ 			case ls²² of {
+//│ 				LH_C h¹⁵ t¹⁵ => t¹⁵
+//│ 				| LH_N  => error⁰}
+//│ 		def tail₁₀(ls¹⁶) = 
+//│ 			case ls¹⁶ of {
+//│ 				LH_C h¹⁶ t¹⁶ => t¹⁶
+//│ 				| LH_N  => error⁰}
+//│ 		def zipWith_lz_nl₀₀(f²², xs¹⁵, ys¹⁹) = 
+//│ 			case ys¹⁹ of {
+//│ 				LH_C hy⁶ ty⁶ => force⁰(xs¹⁵, hy⁶, ty⁶, f²²)
+//│ 				| LH_N  => 0}
+//│ 		def zip_nl_lz₀₀(xs¹³, ys¹³) = 
+//│ 			xs¹³(ys¹³)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
+//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
+//│ 
+//│ let rec atIndex_lz_d0_d0 n_3 ls_7 =
+//│   (if (n_3 < 0) then
+//│     (failwith "error")
+//│   else
+//│     ((Lazy.force ls_7) n_3))
+//│ and bernoulli_d0_d0 _lh_bernoulli_arg1_0 =
+//│   (match _lh_bernoulli_arg1_0 with
+//│     | 0 -> 
+//│       1
+//│     | 1 -> 
+//│       (0 - (1 / 2))
+//│     | _ -> 
+//│       (if ((_lh_bernoulli_arg1_0 mod 2) = 1) then
+//│         0
+//│       else
+//│         (let rec powers_4 = ((atIndex_lz_d0_d0 (_lh_bernoulli_arg1_0 - 1)) (Lazy.force neg_powers_d0_d0)) in
+//│           (((0 - 1) / 2) + (sum_d0_d0 (let rec _lh_listcomp_fun_4 = (fun _lh_listcomp_fun_para_0 -> 
+//│             ((_lh_listcomp_fun_para_0 powers_4) _lh_listcomp_fun_4)) in
+//│             (_lh_listcomp_fun_4 ((zip_nl_lz_d0_d0 ((enumFromTo_d0_d0 2) _lh_bernoulli_arg1_0)) pascal_d0_d0))))))))
+//│ and enumFromTo_d0_d0 a_1 b_1 =
+//│   (if (a_1 <= b_1) then
+//│     (let rec hx_1 = a_1 in
+//│       (let rec tx_1 = ((enumFromTo_d0_d0 (a_1 + 1)) b_1) in
+//│         (fun ys_4 -> 
+//│           (match (Lazy.force ys_4) with
+//│             | `LH_C(hy_1, ty_1) -> 
+//│               (let rec _lh_listcomp_fun_ls_h_0 = (let rec _lh_bernoulli_LH_P2_0_0 = hx_1 in
+//│                 (let rec _lh_bernoulli_LH_P2_1_0 = hy_1 in
+//│                   (fun powers_0 _lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0 -> 
+//│                     (let rec h_1 = (((sum_d1_d0 (((zipWith_lz_nl_d0_d0 (fun a_2 b_2 -> 
+//│                       (a_2 * b_2))) powers_0) (tail_d0_d0 (tail_d1_d0 _lh_bernoulli_LH_P2_1_0)))) - _lh_bernoulli_LH_P2_0_0) / (_lh_bernoulli_LH_P2_0_0 + 1)) in
+//│                       (let rec t_1 = (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0) in
+//│                         (h_1 + (sum_d0_d0 t_1))))))) in
+//│                 (let rec _lh_listcomp_fun_ls_t_1 = ((zip_nl_lz_d0_d0 tx_1) ty_1) in
+//│                   (fun powers_1 _lh_listcomp_fun_1 -> 
+//│                     (((_lh_listcomp_fun_ls_h_0 powers_1) _lh_listcomp_fun_1) _lh_listcomp_fun_ls_t_1))))
+//│             | `LH_N -> 
+//│               (fun powers_2 _lh_listcomp_fun_2 -> 
+//│                 0)))))
+//│   else
+//│     (fun ys_5 powers_3 _lh_listcomp_fun_3 -> 
+//│       0))
+//│ and enumFrom_d0_d0 a_3 =
+//│   (lazy (`LH_C(a_3, (enumFrom_d0_d0 (a_3 + 1)))))
+//│ and enumFrom_d1_d0 a_4 =
+//│   (lazy (let rec hx_3 = a_4 in
+//│     (let rec tx_3 = (enumFrom_d1_d0 (a_4 + 1)) in
+//│       (fun ys_1_1 f_1_0 -> 
+//│         (match (Lazy.force ys_1_1) with
+//│           | `LH_C(hy_4, ty_4) -> 
+//│             (`LH_C(((f_1_0 hx_3) hy_4), (((zipWith_lz_lz_d0_d0 f_1_0) tx_3) ty_4)))
+//│           | `LH_N -> 
+//│             (`LH_N))))))
+//│ and iterate_d0_d0 f_1_1 x_1 =
+//│   (lazy (let rec hx_4 = x_1 in
+//│     (let rec tx_4 = ((iterate_d0_d0 f_1_1) (f_1_1 x_1)) in
+//│       (fun ys_1_2 f_1_2 -> 
+//│         (match (Lazy.force ys_1_2) with
+//│           | `LH_C(hy_5, ty_5) -> 
+//│             (let rec hx_5 = ((f_1_2 hx_4) hy_5) in
+//│               (let rec tx_5 = (((zipWith_lz_lz_d1_d0 f_1_2) tx_4) ty_5) in
+//│                 (fun hy_6 ty_6 f_1_3 -> 
+//│                   (let rec h_8 = ((f_1_3 hx_5) hy_6) in
+//│                     (let rec t_8 = (((zipWith_lz_nl_d0_d0 f_1_3) tx_5) ty_6) in
+//│                       (h_8 + (sum_d1_d0 t_8)))))))
+//│           | `LH_N -> 
+//│             (fun hy_7 ty_7 f_1_4 -> 
+//│               0))))))
+//│ and map_lz_d0_d0 f_3 ls_1 =
+//│   (lazy (match (Lazy.force ls_1) with
+//│     | `LH_C(h_2, t_2) -> 
+//│       (let rec h_3 = (f_3 h_2) in
+//│         (let rec t_3 = ((map_lz_d0_d0 f_3) t_2) in
+//│           (fun n_0 -> 
+//│             (if (n_0 = 0) then
+//│               h_3
+//│             else
+//│               ((atIndex_lz_d0_d0 (n_0 - 1)) t_3)))))
+//│     | `LH_N -> 
+//│       (fun n_1 -> 
+//│         (failwith "error"))))
+//│ and map_lz_d1_d0 f_4 ls_2 =
+//│   (lazy (match (Lazy.force ls_2) with
+//│     | `LH_C(h_4, t_4) -> 
+//│       (`LH_C((f_4 h_4), ((map_lz_d1_d0 f_4) t_4)))
+//│     | `LH_N -> 
+//│       (`LH_N)))
+//│ and map_lz_d2_d0 f_7 ls_5 =
+//│   (lazy (match (Lazy.force ls_5) with
+//│     | `LH_C(h_5, t_5) -> 
+//│       (`LH_C((f_7 h_5), ((map_lz_d2_d0 f_7) t_5)))
+//│     | `LH_N -> 
+//│       (`LH_N)))
+//│ and mappend_d0_d0 xs_5 ys_9 =
+//│   (match xs_5 with
+//│     | `LH_C(h_7, t_7) -> 
+//│       (let rec hx_2 = h_7 in
+//│         (let rec tx_2 = ((mappend_d0_d0 t_7) ys_9) in
+//│           (fun ys_1_0 f_9 -> 
+//│             (match ys_1_0 with
+//│               | `LH_C(hy_3, ty_3) -> 
+//│                 (`LH_C(((f_9 hx_2) hy_3), (((zipWith_d0_d0 f_9) tx_2) ty_3)))
+//│               | `LH_N -> 
+//│                 (`LH_N)))))
+//│     | `LH_N -> 
+//│       ys_9)
+//│ and neg_powers_d0_d0 =
+//│   (lazy ((map_lz_d0_d0 ((zipWith_lz_lz_d1_d0 (fun n_2 x_0 -> 
+//│     (if n_2 then
+//│       x_0
+//│     else
+//│       (0 - x_0)))) ((iterate_d0_d0 not) true))) powers_d0_d0))
+//│ and pascal_d0_d0 =
+//│   (lazy (`LH_C((`LH_C(1, (`LH_C(2, (`LH_C(1, (`LH_N))))))), ((map_lz_d2_d0 (fun line_0 -> 
+//│     (((zipWith_d0_d0 (fun a_0 b_0 -> 
+//│       (a_0 + b_0))) ((mappend_d0_d0 line_0) (let rec hx_0 = 0 in
+//│       (let rec tx_0 = (fun ys_2 f_1 -> 
+//│         (`LH_N)) in
+//│         (fun ys_3 f_2 -> 
+//│           (match ys_3 with
+//│             | `LH_C(hy_0, ty_0) -> 
+//│               (`LH_C(((f_2 hx_0) hy_0), (((zipWith_d0_d0 f_2) tx_0) ty_0)))
+//│             | `LH_N -> 
+//│               (`LH_N))))))) (`LH_C(0, line_0))))) pascal_d0_d0))))
+//│ and powers_d0_d0 =
+//│   (lazy (`LH_C((enumFrom_d0_d0 2), ((map_lz_d1_d0 ((zipWith_lz_lz_d0_d0 (fun a_5 b_3 -> 
+//│     (a_5 * b_3))) (enumFrom_d1_d0 2))) powers_d0_d0))))
+//│ and sum_d0_d0 ls_3 =
+//│   ls_3
+//│ and sum_d1_d0 ls_4 =
+//│   ls_4
+//│ and tail_d0_d0 ls_6 =
+//│   (match ls_6 with
+//│     | `LH_C(h_6, t_6) -> 
+//│       t_6
+//│     | `LH_N -> 
+//│       (failwith "error"))
+//│ and tail_d1_d0 ls_0 =
+//│   (match ls_0 with
+//│     | `LH_C(h_0, t_0) -> 
+//│       t_0
+//│     | `LH_N -> 
+//│       (failwith "error"))
+//│ and testBernoulli_d0_d0 _lh_testBernoulli_arg1_0 =
+//│   (bernoulli_d0_d0 _lh_testBernoulli_arg1_0)
+//│ and zipWith_lz_lz_d0_d0 f_8 xs_4 ys_8 =
+//│   (lazy (((Lazy.force xs_4) ys_8) f_8))
+//│ and zipWith_lz_lz_d1_d0 f_5 xs_2 ys_6 =
+//│   (lazy (((Lazy.force xs_2) ys_6) f_5))
+//│ and zipWith_lz_nl_d0_d0 f_6 xs_3 ys_7 =
+//│   (match ys_7 with
+//│     | `LH_C(hy_2, ty_2) -> 
+//│       ((((Lazy.force xs_3) hy_2) ty_2) f_6)
+//│     | `LH_N -> 
+//│       0)
+//│ and zipWith_d0_d0 f_0 xs_0 ys_0 =
+//│   ((xs_0 ys_0) f_0)
+//│ and zip_nl_lz_d0_d0 xs_1 ys_1 =
+//│   (xs_1 ys_1);;
+//│ (testBernoulli_d0_d0 1000)
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+

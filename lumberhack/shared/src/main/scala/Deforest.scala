@@ -919,10 +919,10 @@ object Deforest {
       + "primitive" + "primId" + "error" + "lazy" + "force"
   lazy val lumberhackBinOps = lumberhackIntBinOps ++ lumberhackBoolBinOps
   lazy val lumberhackIntFun: Set[String] = lumberhackIntValueFun ++ lumberhackIntComparisonFun
-  lazy val lumberhackIntValueFun: Set[String] = Set("add", "minus", "mult", "div")
+  lazy val lumberhackIntValueFun: Set[String] = Set("add", "minus", "mult", "div", "mod")
   lazy val lumberhackIntComparisonFun: Set[String] = Set("eq", "lt", "gt", "leq", "geq", "neq")
   lazy val lumberhackIntBinOps: Set[String] = lumberhackIntValueBinOps ++ lumberhackIntComparisonOps
-  lazy val lumberhackIntValueBinOps: Set[String] = Set("+", "-", "*", "/", "%")
+  lazy val lumberhackIntValueBinOps: Set[String] = Set("+", "-", "*", "/", "%", "mod")
   lazy val lumberhackIntComparisonOps: Set[String] = Set("==", ">", "<", ">=", "<=", "/=")
   lazy val lumberhackBoolBinOps: Set[String] = Set("&&", "||")
   lazy val lumberhackBoolUnaryOps: Set[String] = Set("not")

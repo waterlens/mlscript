@@ -288,6 +288,7 @@ class Deforest(var debug: Boolean) {
   // type check, we need to do the duplication of multiple-usage definitions, so seems that these two things has to be done in two steps
   def process(e: Expr)(using ctx: Ctx, calls: mutable.Set[Ref]): ProdStrat = trace(s"process ${e.uid}: ${e.pp(using InitPpConfig)}") {
     val res: ProdStratEnum = e match
+      case Call(Ref(lazyOrForce), e) if Set("lazy", "force")(lazyOrForce.tree.name) => process(e).s
       case Const(IntLit(_)) => prodInt(using noExprId) // Ints must use noExprId, since it's a MkCtor type
       case Const(CharLit(_)) => prodChar(using noExprId)
       case Const(StrLit(strLit)) => prodString(strLit)(using noExprId) // Strings must use noExprId, since it's a MkCtor type
@@ -303,8 +304,10 @@ class Deforest(var debug: Boolean) {
           prodBoolUnaryOp(using noExprId)
         else if primitive == "error" then
           freshVar("_lh_rigid_error_var")(using noExprId)._1
-        else
+        else if Set("primitive", "primId")(primitive) then
           NoProd()(using e.uid) // `primitive`, `primId`
+        else
+          lastWords("lazy and force should not be handled here")
       }
       case r @ Ref(id) => if id.isDef then {
         calls.add(r)
@@ -913,7 +916,7 @@ object CallTree {
 object Deforest {
   lazy val lumberhackKeywords: Set[String] =
     (lumberhackIntFun ++ lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackBoolUnaryOps)
-      + "primitive" + "primId" + "error"
+      + "primitive" + "primId" + "error" + "lazy" + "force"
   lazy val lumberhackBinOps = lumberhackIntBinOps ++ lumberhackBoolBinOps
   lazy val lumberhackIntFun: Set[String] = lumberhackIntValueFun ++ lumberhackIntComparisonFun
   lazy val lumberhackIntValueFun: Set[String] = Set("add", "minus", "mult", "div")

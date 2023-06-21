@@ -127,11 +127,17 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
       override def toExpr(using ctx: Ctx, inDef: Option[Ident], d: Deforest, output: Str => Unit, prgmStr: Str): Expr = n.getType() match {
         case "ERROR" => lastWords("haskell parse error")
         case "exp_arithmetic_sequence" => {
-          val args = (1 until n.getChildCount() by 2).map(i => n.getChild(i).toExpr)
-          if args.length == 2 then
-            Call(Call(Ref(ctx("enumFromTo")), args(0)), args(1))
-          else // must be 3 then
-            Call(Call(Call(Ref(ctx("enumFromThenTo")), args(0)), args(1)), args(2))
+          val args = n.getAllChilds.drop(1).dropRight(1)
+          args.map(_.getType()).toList match {
+            case _ :: ".." :: Nil =>
+              Call(Ref(ctx("enumFrom")), args(0).toExpr)
+            case _ :: "comma" :: _ :: ".." :: Nil =>
+              Call(Call(Ref(ctx("enumFromThen")), args(0).toExpr), args(2).toExpr)
+            case _ :: ".." :: _ :: Nil =>
+              Call(Call(Ref(ctx("enumFromTo")), args(0).toExpr), args(2).toExpr)
+            case _ :: "comma" :: _ :: ".." :: _ :: Nil =>
+              Call(Call(Call(Ref(ctx("enumFromThenTo")), args(0).toExpr), args(2).toExpr), args(4).toExpr)
+          }
         }
         case "exp_lambda" => {
           val allChilds = n.getAllChilds
@@ -176,6 +182,11 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
               val nameStr = n.getSrcContent
               val res = Ref(ctx(nameStr))
               res
+            case "(" => {
+              val op = n.getChild(1)
+              assert(op.getType() == "operator")
+              Ref(ctx(op.getSrcContent))
+            }
           }
         }
         case "exp_literal" => {
@@ -542,36 +553,134 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
 
   val supportedTopLevelHaskellNodeType = Set("top_splice", "function")
   def haskellBuiltinFunsList(using d: Deforest): Program = {
-    val haskellBuiltinFuns = Set("map", "filter", "foldl", "foldr", "zip", "head", "tail", "enumFromTo", "enumFromThenTo", "length")
+    val haskellBuiltinFuns = Set(
+      "map", "map_lz",
+      "filter", "filter_lz",
+      "foldl", "foldr", "foldr_lz",
+      "zip", "zip_nl_lz", "zip_lz_nl", "zip_lz_lz",
+      "zipWith", "zipWith_nl_lz", "zipWith_lz_nl", "zipWith_lz_lz",
+      "head", "head_lz",
+      "tail", "tail_lz",
+      "enumFromTo", "enumFromThenTo", "enumFrom", "enumFromThen",
+      "repeat",
+      "iterate",
+      "take", "take_lz",
+      "length", "length_lz",
+      "mappend"
+    )
+    // be careful, for example `map_lz` cannot be defined as
+    // fun map_lz(f, lz) = if force(ls) is
+    //    LH_C(h, t) then lazy(LH_C(f(h), map_lz(f, t)))
+    //    LH_N then lazy(LH_N)
+    // as this will cause map_lz to *eagerly force* `ls` everytime it is called
     val builtins = """
 fun map(f, ls) = if ls is
   LH_C(h, t) then LH_C(f(h), map(f, t))
   LH_N then LH_N
+fun map_lz(f, ls) = lazy(if force(ls) is
+  LH_C(h, t) then LH_C(f(h), map_lz(f, t))
+  LH_N then LH_N)
+
 fun filter(f, ls) = if ls is
   LH_C(h, t) then if f(h) then LH_C(h, filter(f, t)) else filter(f, t)
   LH_N then LH_N
+fun filter_lz(f, ls) = lazy(if force(ls) is
+  LH_C(h, t) then if f(h) then LH_C(h, filter_lz(f, t)) else filter_lz(f, t)
+  LH_N then LH_N)
+
 fun foldl(f, i, ls) = if ls is
   LH_C(h, t) then foldl(f, f(i, h), t)
   LH_N then i
 fun foldr(f, i, ls) = if ls is
   LH_C(h, t) then f(h, foldr(f, i, t))
   LH_N then i
+fun foldr_lz(f, i, ls) = lazy(if force(ls) is
+  LH_C(h, t) then f(h, foldr_lz(f, i, t))
+  LH_N then i)
+
 fun zip(xs, ys) = if xs is
   LH_C(hx, tx) then if ys is
     LH_C(hy, ty) then LH_C(LH_P2(hx, hy), zip(tx, ty))
     LH_N then LH_N
   LH_N then LH_N
+fun zip_nl_lz(xs, ys) = if xs is
+  LH_C(hx, tx) then if force(ys) is
+    LH_C(hy, ty) then LH_C(LH_P2(hx, hy), zip_nl_lz(tx, ty))
+    LH_N then LH_N
+  LH_N then LH_N
+fun zip_lz_nl(xs, ys) = if ys is
+  LH_C(hy, ty) then if force(xs) is
+    LH_C(hx, tx) then LH_C(LH_P2(hx, hy), zip_lz_nl(tx, ty))
+    LH_N then LH_N
+  LH_N then LH_N
+fun zip_lz_lz(xs, ys) = lazy(if force(xs) is
+  LH_C(hx, tx) then if force(ys) is
+    LH_C(hy, ty) then LH_C(LH_P2(hx, hy), zip_lz_lz(tx, ty))
+    LH_N then LH_N
+  LH_N then LH_N)
+
+fun zipWith(f, xs, ys) = if xs is
+  LH_C(hx, tx) then if ys is
+    LH_C(hy, ty) then LH_C(f(hx, hy), zipWith(f, tx, ty))
+    LH_N then LH_N
+  LH_N then LH_N
+fun zipWith_nl_lz(f, xs, ys) = if xs is
+  LH_C(hx, tx) then if force(ys) is
+    LH_C(hy, ty) then LH_C(f(hx, hy), zipWith_nl_lz(f, tx, ty))
+    LH_N then LH_N
+  LH_N then LH_N
+fun zipWith_lz_nl(f, xs, ys) = if ys is
+  LH_C(hy, ty) then if force(xs) is
+    LH_C(hx, tx) then LH_C(f(hx, hy), zipWith_lz_nl(f, tx, ty))
+    LH_N then LH_N
+  LH_N then LH_N
+fun zipWith_lz_lz(f, xs, ys) = lazy(if force(xs) is
+  LH_C(hx, tx) then if force(ys) is
+    LH_C(hy, ty) then LH_C(f(hx, hy), zipWith_lz_lz(f, tx, ty))
+    LH_N then LH_N
+  LH_N then LH_N)
+
 fun head(ls) = if ls is
   LH_C(h, t) then h
-  LH_N then primitive
+  LH_N then error
+fun head_lz(ls) = if force(ls) is
+  LH_C(h, t) then h
+  LH_N then error
+
 fun tail(ls) = if ls is
   LH_C(h, t) then t
-  LH_N then primitive
+  LH_N then error
+fun tail_lz(ls) = if force(ls) is
+  LH_C(h, t) then t
+  LH_N then error
+
 fun enumFromTo(a, b) = if a <= b then LH_C(a, enumFromTo(a + 1, b)) else LH_N
 fun enumFromThenTo(a, t, b) = if a <= b then LH_C(a, enumFromThenTo(t, 2 * t - a, b)) else LH_N
+fun enumFrom(a) = lazy(LH_C(a, enumFrom(a + 1)))
+fun enumFromThen(a, t) = lazy(LH_C(a, enumFromThen(t, 2 * t - a)))
+
+fun repeat(x) = lazy(LH_C(x, repeat(x)))
+
+fun iterate(f, x) = lazy(LH_C(x, iterate(f, f(x))))
+
+fun take(n, ls) = if n > 0 then (
+  if ls is
+    LH_C(h, t) then LH_C(h, take(n - 1, t))
+    LH_N then LH_N
+) else LH_N
+fun take_lz(n, ls) = if n > 0 then (
+  if force(ls) is
+    LH_C(h, t) then LH_C(h, take_lz(n - 1, t))
+    LH_N then LH_N
+) else LH_N
+
 fun length(ls) = if ls is
   LH_C(h, t) then 1 + length(t)
   LH_N then 0
+
+fun mappend(xs, ys) = if xs is
+  LH_C(h, t) then LH_C(h, mappend(t, ys))
+  LH_N then ys
     """
     val builtinPrgms = {
       val lumberhackBuiltinFph = new FastParseHelpers(builtins)
@@ -728,7 +837,7 @@ trait CodeGen {
 
   def generateTypeInfo(d: Deforest): String
   def makeBenchFiles(programs: List[String -> Program]): String
-  def apply(p: Program): String
+  def apply(p: Program, bigLetRec: Boolean = true): String
 }
 
 object HaskellGen extends CodeGen {
@@ -775,7 +884,7 @@ object HaskellGen extends CodeGen {
 
   }
 
-  override def apply(p: Program): String = {
+  override def apply(p: Program, bigLetRec: Boolean = true): String = {
     Stacked(
       p.contents.sortBy {
         case Left(progDef) => progDef.id.tree.name
@@ -968,7 +1077,8 @@ object HaskellGen extends CodeGen {
 
 class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = false) extends CodeGen {
   override val primitives = Map(
-    "add" -> "(+)", "sub" -> "(-)", "%" -> "mod", "==" -> "=", "error" -> "(failwith \"error\")", "/=" -> "!="
+    "add" -> "(+)", "sub" -> "(-)", "%" -> "mod", "==" -> "=", "error" -> "(failwith \"error\")", "/=" -> "!=",
+    "force" -> "Lazy.force",
   )
   def transformPrimitive(p: String): String = primitives.getOrElse(p, p)
 
@@ -1136,18 +1246,24 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
       )
     }).emptyOrElse(programs.hashCode().toString())
 
-    val originalDefsString = "\n(* original *)\n" + apply(Program(
-      programs.head._2.contents.filter(_.isLeft)
-    )(using programs.head._2.d))
+    val originalDefsString = "\n(* original *)\n" + apply(
+      Program(
+        programs.head._2.contents.filter(_.isLeft)
+      )(using programs.head._2.d),
+      false
+    )
 
     val restMergedDefsString = programs.tail.map { case (name, prgm) =>
-      s"\n\n(* $name *)\n" + apply(Program(
-        prgm.contents.filter {
-          case Left(ProgDef(id, _)) =>
-            !(id.tree.name.startsWith("_lhManual") || id.tree.name.startsWith("testManual"))
-          case _ => false
-        }
-      )(using prgm.d))
+      s"\n\n(* $name *)\n" + apply(
+        Program(
+          prgm.contents.filter {
+            case Left(ProgDef(id, _)) =>
+              !(id.tree.name.startsWith("_lhManual") || id.tree.name.startsWith("testManual"))
+            case _ => false
+          }
+        )(using prgm.d),
+        false
+      )
     }.mkString + "\n"
 
     val mergedDefsGen = originalDefsString + restMergedDefsString
@@ -1192,11 +1308,12 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
 
     hsFileContent
   }
-  override def apply(p: Program): String = {
+  override def apply(p: Program, bigLetRec: Boolean = true): String = {
     val callsInfo = p.d.callsInfo._2.toMap
     def isIndependent(id: Ident): Boolean = {
       val callees = callsInfo(id)
-      callees.isEmpty || callees.forall(_.id == id)
+      // if want to use big let rec, should always return false
+      (callees.isEmpty || callees.forall(_.id == id)) && (!bigLetRec)
     }
 
     val sortedContent = p.contents.sortBy {

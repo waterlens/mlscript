@@ -6,6 +6,12 @@ ocamlfind ocamlopt -rectypes -thread -O3 ./Mapmap.ml -o "./Mapmap.out" -linkpkg 
 #require "core_bench";; *)
 open Core_bench;;
 
+let explode_string s = List.init (String.length s) (String.get s);;
+let rec listToTaggedList s = match s with
+  | h::t -> `LH_C(h, listToTaggedList(t))
+  | [] -> `LH_N;;
+let string_of_int i = listToTaggedList (explode_string (string_of_int i));;
+
 (* original *)
 let rec _lhManual ls_2 f1_0 f2_0 =
   (match ls_2 with

@@ -6,6 +6,12 @@ ocamlfind ocamlopt -rectypes -thread -O3 ./QrevMap.ml -o "./QrevMap.out" -linkpk
 #require "core_bench";; *)
 open Core_bench;;
 
+let explode_string s = List.init (String.length s) (String.get s);;
+let rec listToTaggedList s = match s with
+  | h::t -> `LH_C(h, listToTaggedList(t))
+  | [] -> `LH_N;;
+let string_of_int i = listToTaggedList (explode_string (string_of_int i));;
+
 (* original *)
 let rec _lhManualQrevMap f_1 xs_1 a_2 =
   (match xs_1 with

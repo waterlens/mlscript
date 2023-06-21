@@ -6,6 +6,12 @@ ocamlfind ocamlopt -rectypes -thread -O3 ./BinaryTrees.ml -o "./BinaryTrees.out"
 #require "core_bench";; *)
 open Core_bench;;
 
+let explode_string s = List.init (String.length s) (String.get s);;
+let rec listToTaggedList s = match s with
+  | h::t -> `LH_C(h, listToTaggedList(t))
+  | [] -> `LH_N;;
+let string_of_int i = listToTaggedList (explode_string (string_of_int i));;
+
 (* original *)
 let rec check'_d0 _lh_check'_arg1_1 _lh_check'_arg2_1 _lh_check'_arg3_1 =
   (match _lh_check'_arg3_1 with

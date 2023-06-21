@@ -6,6 +6,12 @@ ocamlfind ocamlopt -rectypes -thread -O3 ./LastFilterEnum.ml -o "./LastFilterEnu
 #require "core_bench";; *)
 open Core_bench;;
 
+let explode_string s = List.init (String.length s) (String.get s);;
+let rec listToTaggedList s = match s with
+  | h::t -> `LH_C(h, listToTaggedList(t))
+  | [] -> `LH_N;;
+let string_of_int i = listToTaggedList (explode_string (string_of_int i));;
+
 (* original *)
 let rec enumFromTo a_0 b_0 =
   (if (a_0 <= b_0) then

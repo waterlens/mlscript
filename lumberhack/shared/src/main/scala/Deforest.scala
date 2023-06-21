@@ -547,7 +547,10 @@ class Deforest(var debug: Boolean) {
           given Int = numOfTypeCtor + 1
           ctors.foreach { ctorStrat => ctorStrat.s match
             case MkCtor(ctor, args) => {
-              val d = ds.find(d => d.ctor == ctor || d.ctor.name == "_").get
+              val d = ds.find(d => d.ctor == ctor || d.ctor.name == "_") match {
+                case Some(value) => value
+                case None => lastWords(s"${ctor.name} cannot be found in $ds")
+              }
               assert(args.size == d.argCons.size && d.ctor.name != "_")
               if d.ctor.name == "_" then {
                 args lazyZip d.argCons foreach {

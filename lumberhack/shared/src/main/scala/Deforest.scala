@@ -313,7 +313,7 @@ class Deforest(var debug: Boolean) {
           prodBoolUnaryOp(using noExprId)
         else if primitive == "error" then
           freshVar("_lh_rigid_error_var")(using noExprId)._1
-        else if Set("primitive", "primId")(primitive) then
+        else if (Set("primitive", "primId") ++ Deforest.lumberhackPolyOps)(primitive) then
           NoProd()(using e.uid) // `primitive`, `primId`
         else if primitive == "string_of_int" then
           ProdFun(consInt(using noExprId).toStrat(), prodString(using this, noExprId).toStrat())(using noExprId)
@@ -929,9 +929,10 @@ object CallTree {
 
 object Deforest {
   lazy val lumberhackKeywords: Set[String] =
-    (lumberhackIntFun ++ lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackBoolUnaryOps)
+    (lumberhackIntFun ++ lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackBoolUnaryOps ++ lumberhackPolyOps)
       + "string_of_int"
       + "primitive" + "primId" + "error" + "lazy" + "force"
+  lazy val lumberhackPolyOps: Set[String] = Set("polyEq", "polyLt", "polyGt", "polyLeq", "polyGeq", "polyNeq")
   lazy val lumberhackBinOps = lumberhackIntBinOps ++ lumberhackBoolBinOps
   lazy val lumberhackIntFun: Set[String] = lumberhackIntValueFun ++ lumberhackIntComparisonFun
   lazy val lumberhackIntValueFun: Set[String] = Set("add", "minus", "mult", "div", "mod")

@@ -1207,6 +1207,20 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
       transformPrimitive(id.tree.name)
     case Ref(id) => transfromId(id)
     case Call(Ref(Ident(_, Var("primId"), _)), arg) => rec(arg)
+    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if op == "polyEq" =>
+      "(" <:> rec(fst) <:> " = " <:> rec(snd) <:> ")"
+    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if op == "polyLt" =>
+      "(" <:> rec(fst) <:> " < " <:> rec(snd) <:> ")"
+    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if op == "polyGt" =>
+      "(" <:> rec(fst) <:> " > " <:> rec(snd) <:> ")"
+    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if op == "polyLeq" =>
+      "(" <:> rec(fst) <:> " <= " <:> rec(snd) <:> ")"
+    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if op == "polyGeq" =>
+      "(" <:> rec(fst) <:> " >= " <:> rec(snd) <:> ")"
+    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if op == "polyNeq" =>
+      "(" <:> rec(fst) <:> " != " <:> rec(snd) <:> ")"
+    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if op == "div" =>
+      "(" <:> rec(fst) <:> " / " <:> rec(snd) <:> ")"
     case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackBinOps(op) =>
       "(" <:> rec(fst) <:> s" ${transformPrimitive(op)} " <:> rec(snd) <:> ")"
     case Call(lhs, rhs) =>

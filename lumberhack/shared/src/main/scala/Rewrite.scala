@@ -426,7 +426,7 @@ trait ExprRewrite { this: Expr =>
         else
           this
       }
-    }  
+    }
   }
 }
 

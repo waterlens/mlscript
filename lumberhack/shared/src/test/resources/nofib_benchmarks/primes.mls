@@ -1,0 +1,264 @@
+:NewParser
+:ParseOnly
+
+// isdivs :: Int  -> Int -> Bool
+// isdivs n x = mod x n /= 0
+
+// the_filter :: [Int] -> [Int]
+// the_filter (n:ns) = filter (isdivs n) ns
+
+// prime :: Int -> Int
+// prime n = map head (iterate the_filter [2..n*n]) !! n
+
+// main = forM_ [1..100] $ const $ do
+// 	[arg] <- getArgs
+// 	print $ prime (read arg)
+
+
+:lhInHaskell
+:lhGenOCaml
+isdivs n x = (x `mod` n) /= 0
+the_filter (n:ns) = filter (isdivs n) ns
+prime n = atIndex_lz n (map_lz head (iterate the_filter [2..(n*n)]))
+testPrime_nofib n = prime n
+testPrime_nofib $ primId 100
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testPrime_nofib₀^810(primId⁰(100))
+//│ def atIndex_lz₀(n⁴, ls²¹) = if (n⁴ < 0) then error⁰ else case force⁰(ls²¹) of {
+//│ 	LH_C h²² t²⁴ => if (n⁴ == 0) then h²² else atIndex_lz₀^743((n⁴ - 1), t²⁴)
+//│ 	| LH_N  => error⁰}
+//│ def enumFromTo₀(a⁵, b²) = if (a⁵ <= b²) then [LH_C a⁵ enumFromTo₀^764((a⁵ + 1), b²)] else [LH_N]
+//│ def filter₀(f¹⁴, ls²²) = case ls²² of {
+//│ 	LH_C h²³ t²⁵ => if f¹⁴(h²³) then [LH_C h²³ filter₀^783(f¹⁴, t²⁵)] else filter₀^789(f¹⁴, t²⁵)
+//│ 	| LH_N  => [LH_N]}
+//│ def head₀(ls²⁰) = case ls²⁰ of {
+//│ 	LH_C h²¹ t²³ => h²¹
+//│ 	| LH_N  => error⁰}
+//│ def isdivs₀(_lh_isdivs_arg1¹, _lh_isdivs_arg2¹) = ((_lh_isdivs_arg2¹ % _lh_isdivs_arg1¹) /= 0)
+//│ def iterate₀(f¹³, x²) = lazy⁰([LH_C x² iterate₀^708(f¹³, f¹³(x²))])
+//│ def map_lz₀(f¹², ls¹⁹) = lazy⁰(case force⁰(ls¹⁹) of {
+//│ 	LH_C h²⁰ t²² => [LH_C f¹²(h²⁰) map_lz₀^684(f¹², t²²)]
+//│ 	| LH_N  => [LH_N]})
+//│ def prime₀(_lh_prime_arg1¹) = atIndex_lz₀^655(_lh_prime_arg1¹, map_lz₀^658(head₀^659, iterate₀^661(the_filter₀^662, enumFromTo₀^664(2, (_lh_prime_arg1¹ * _lh_prime_arg1¹)))))
+//│ def testPrime_nofib₀(_lh_testPrime_nofib_arg1¹) = prime₀^724(_lh_testPrime_nofib_arg1¹)
+//│ def the_filter₀(_lh_the_filter_arg1¹) = case _lh_the_filter_arg1¹ of {
+//│ 	LH_C _lh_the_filter_LH_C_0¹ _lh_the_filter_LH_C_1¹ => filter₀^696(isdivs₀^697(_lh_the_filter_LH_C_0¹), _lh_the_filter_LH_C_1¹)
+//│ 	| _  => error⁰}
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec atIndex_lz_d0 n_4 ls_2_1 =
+//│ 		  (if (n_4 < 0) then
+//│ 		    (failwith "error")
+//│ 		  else
+//│ 		    (match (Lazy.force ls_2_1) with
+//│ 		      | `LH_C(h_2_2, t_2_4) -> 
+//│ 		        (if (n_4 = 0) then
+//│ 		          h_2_2
+//│ 		        else
+//│ 		          ((atIndex_lz_d0 (n_4 - 1)) t_2_4))
+//│ 		      | `LH_N -> 
+//│ 		        (failwith "error")))
+//│ 		and enumFromTo_d0 a_5 b_2 =
+//│ 		  (if (a_5 <= b_2) then
+//│ 		    (`LH_C(a_5, ((enumFromTo_d0 (a_5 + 1)) b_2)))
+//│ 		  else
+//│ 		    (`LH_N))
+//│ 		and filter_d0 f_1_4 ls_2_2 =
+//│ 		  (match ls_2_2 with
+//│ 		    | `LH_C(h_2_3, t_2_5) -> 
+//│ 		      (if (f_1_4 h_2_3) then
+//│ 		        (`LH_C(h_2_3, ((filter_d0 f_1_4) t_2_5)))
+//│ 		      else
+//│ 		        ((filter_d0 f_1_4) t_2_5))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N))
+//│ 		and head_d0 ls_2_0 =
+//│ 		  (match ls_2_0 with
+//│ 		    | `LH_C(h_2_1, t_2_3) -> 
+//│ 		      h_2_1
+//│ 		    | `LH_N -> 
+//│ 		      (failwith "error"))
+//│ 		and isdivs_d0 _lh_isdivs_arg1_1 _lh_isdivs_arg2_1 =
+//│ 		  ((_lh_isdivs_arg2_1 mod _lh_isdivs_arg1_1) != 0)
+//│ 		and iterate_d0 f_1_3 x_2 =
+//│ 		  (lazy (`LH_C(x_2, ((iterate_d0 f_1_3) (f_1_3 x_2)))))
+//│ 		and map_lz_d0 f_1_2 ls_1_9 =
+//│ 		  (lazy (match (Lazy.force ls_1_9) with
+//│ 		    | `LH_C(h_2_0, t_2_2) -> 
+//│ 		      (`LH_C((f_1_2 h_2_0), ((map_lz_d0 f_1_2) t_2_2)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)))
+//│ 		and prime_d0 _lh_prime_arg1_1 =
+//│ 		  ((atIndex_lz_d0 _lh_prime_arg1_1) ((map_lz_d0 head_d0) ((iterate_d0 the_filter_d0) ((enumFromTo_d0 2) (_lh_prime_arg1_1 * _lh_prime_arg1_1)))))
+//│ 		and testPrime_nofib_d0 _lh_testPrime_nofib_arg1_1 =
+//│ 		  (prime_d0 _lh_testPrime_nofib_arg1_1)
+//│ 		and the_filter_d0 _lh_the_filter_arg1_1 =
+//│ 		  (match _lh_the_filter_arg1_1 with
+//│ 		    | `LH_C(_lh_the_filter_LH_C_0_1, _lh_the_filter_LH_C_1_1) -> 
+//│ 		      ((filter_d0 (isdivs_d0 _lh_the_filter_LH_C_0_1)) _lh_the_filter_LH_C_1_1)
+//│ 		    | _ -> 
+//│ 		      (failwith "error"));;
+//│ 		(testPrime_nofib_d0 100)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testPrime_nofib₀^810] (hopeless to continue)
+//│ 	[testPrime_nofib₀^810 · prime₀^724] (using original def)
+//│ 		[testPrime_nofib₀^810 · prime₀^724 · atIndex_lz₀^655] (using original def)
+//│ 			[testPrime_nofib₀^810 · prime₀^724 · atIndex_lz₀^655 · atIndex_lz₀^743] ---> [testPrime_nofib₀^810 · prime₀^724 · atIndex_lz₀^655] (using original def)
+//│ 		[testPrime_nofib₀^810 · prime₀^724 · enumFromTo₀^664] (using original def)
+//│ 			[testPrime_nofib₀^810 · prime₀^724 · enumFromTo₀^664 · enumFromTo₀^764] ---> [testPrime_nofib₀^810 · prime₀^724 · enumFromTo₀^664] (using original def)
+//│ 		[testPrime_nofib₀^810 · prime₀^724 · head₀^659] (using original def)
+//│ 		[testPrime_nofib₀^810 · prime₀^724 · iterate₀^661] (using original def)
+//│ 			[testPrime_nofib₀^810 · prime₀^724 · iterate₀^661 · iterate₀^708] ---> [testPrime_nofib₀^810 · prime₀^724 · iterate₀^661] (using original def)
+//│ 		[testPrime_nofib₀^810 · prime₀^724 · map_lz₀^658] (using original def)
+//│ 			[testPrime_nofib₀^810 · prime₀^724 · map_lz₀^658 · map_lz₀^684] ---> [testPrime_nofib₀^810 · prime₀^724 · map_lz₀^658] (using original def)
+//│ 		[testPrime_nofib₀^810 · prime₀^724 · the_filter₀^662] (using original def)
+//│ 			[testPrime_nofib₀^810 · prime₀^724 · the_filter₀^662 · filter₀^696] (using original def)
+//│ 				[testPrime_nofib₀^810 · prime₀^724 · the_filter₀^662 · filter₀^696 · filter₀^783] ---> [testPrime_nofib₀^810 · prime₀^724 · the_filter₀^662 · filter₀^696] (using original def)
+//│ 				[testPrime_nofib₀^810 · prime₀^724 · the_filter₀^662 · filter₀^696 · filter₀^789] ---> [testPrime_nofib₀^810 · prime₀^724 · the_filter₀^662 · filter₀^696] (using original def)
+//│ 			[testPrime_nofib₀^810 · prime₀^724 · the_filter₀^662 · isdivs₀^697] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testPrime_nofib₀₀(primId⁰(100))
+//│ def testPrime_nofib₀₀(_lh_testPrime_nofib_arg1¹) = 
+//│ 	prime₀₀(_lh_testPrime_nofib_arg1¹)
+//│ 	where
+//│ 	def prime₀₀(_lh_prime_arg1¹) = 
+//│ 		atIndex_lz₀₀(_lh_prime_arg1¹, map_lz₀₀(head₀₀, iterate₀₀(the_filter₀₀, enumFromTo₀₀(2, (_lh_prime_arg1¹ * _lh_prime_arg1¹)))))
+//│ 		where
+//│ 		def atIndex_lz₀₀(n¹, ls⁶) = 
+//│ 			if (n¹ < 0) then error⁰ else case force⁰(ls⁶) of {
+//│ 				LH_C h⁶ t⁶ => if (n¹ == 0) then h⁶ else atIndex_lz₀₀((n¹ - 1), t⁶)
+//│ 				| LH_N  => error⁰}
+//│ 		def enumFromTo₀₀(a¹, b¹) = 
+//│ 			if (a¹ <= b¹) then [LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)] else [LH_N]
+//│ 		def head₀₀(ls⁴) = 
+//│ 			case ls⁴ of {
+//│ 				LH_C h⁴ t⁴ => h⁴
+//│ 				| LH_N  => error⁰}
+//│ 		def iterate₀₀(f³, x¹) = 
+//│ 			lazy⁰([LH_C x¹ iterate₀₀(f³, f³(x¹))])
+//│ 		def map_lz₀₀(f⁵, ls⁷) = 
+//│ 			lazy⁰(case force⁰(ls⁷) of {
+//│ 				LH_C h⁷ t⁷ => [LH_C f⁵(h⁷) map_lz₀₀(f⁵, t⁷)]
+//│ 				| LH_N  => [LH_N]})
+//│ 		def the_filter₀₀(_lh_the_filter_arg1¹) = 
+//│ 			case _lh_the_filter_arg1¹ of {
+//│ 				LH_C _lh_the_filter_LH_C_0¹ _lh_the_filter_LH_C_1¹ => filter₀₀(isdivs₀₀(_lh_the_filter_LH_C_0¹), _lh_the_filter_LH_C_1¹)
+//│ 				| _  => error⁰}
+//│ 			where
+//│ 			def filter₀₀(f⁴, ls⁵) = 
+//│ 				case ls⁵ of {
+//│ 					LH_C h⁵ t⁵ => if f⁴(h⁵) then [LH_C h⁵ filter₀₀(f⁴, t⁵)] else filter₀₀(f⁴, t⁵)
+//│ 					| LH_N  => [LH_N]}
+//│ 			def isdivs₀₀(_lh_isdivs_arg1¹, _lh_isdivs_arg2¹) = 
+//│ 				((_lh_isdivs_arg2¹ % _lh_isdivs_arg1¹) /= 0)
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_C x¹ iterate₀₀(f³, f³(x¹))]: 175 --->
+//│ 	case force⁰(ls⁷) of {LH_C h⁷ t⁷ => [LH_C f⁵(h⁷) map_lz₀₀(f⁵, t⁷)] | LH_N  => [LH_N]}: 248
+//│ [LH_C h⁵ filter₀₀(f⁴, t⁵)]: 193 --->
+//│ 	case ls⁴ of {LH_C h⁴ t⁴ => h⁴ | LH_N  => error⁰}: 164
+//│ 	case ls⁵ of {LH_C h⁵ t⁵ => if f⁴(h⁵) then [LH_C h⁵ filter₀₀(f⁴, t⁵)] else filter₀₀(f⁴, t⁵) | LH_N  => [LH_N]}: 201
+//│ 	case _lh_the_filter_arg1¹ of {LH_C _lh_the_filter_LH_C_0¹ _lh_the_filter_LH_C_1¹ => filter₀₀(isdivs₀₀(_lh_the_filter_LH_C_0¹), _lh_the_filter_LH_C_1¹) | _  => error⁰}: 314
+//│ [LH_N]: 200 --->
+//│ 	case ls⁴ of {LH_C h⁴ t⁴ => h⁴ | LH_N  => error⁰}: 164
+//│ 	case ls⁵ of {LH_C h⁵ t⁵ => if f⁴(h⁵) then [LH_C h⁵ filter₀₀(f⁴, t⁵)] else filter₀₀(f⁴, t⁵) | LH_N  => [LH_N]}: 201
+//│ 	case _lh_the_filter_arg1¹ of {LH_C _lh_the_filter_LH_C_0¹ _lh_the_filter_LH_C_1¹ => filter₀₀(isdivs₀₀(_lh_the_filter_LH_C_0¹), _lh_the_filter_LH_C_1¹) | _  => error⁰}: 314
+//│ [LH_C f⁵(h⁷) map_lz₀₀(f⁵, t⁷)]: 246 --->
+//│ 	case force⁰(ls⁶) of {LH_C h⁶ t⁶ => if (n¹ == 0) then h⁶ else atIndex_lz₀₀((n¹ - 1), t⁶) | LH_N  => error⁰}: 230
+//│ [LH_N]: 247 --->
+//│ 	case force⁰(ls⁶) of {LH_C h⁶ t⁶ => if (n¹ == 0) then h⁶ else atIndex_lz₀₀((n¹ - 1), t⁶) | LH_N  => error⁰}: 230
+//│ [LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)]: 278 --->
+//│ 	case ls⁴ of {LH_C h⁴ t⁴ => h⁴ | LH_N  => error⁰}: 164
+//│ 	case ls⁵ of {LH_C h⁵ t⁵ => if f⁴(h⁵) then [LH_C h⁵ filter₀₀(f⁴, t⁵)] else filter₀₀(f⁴, t⁵) | LH_N  => [LH_N]}: 201
+//│ 	case _lh_the_filter_arg1¹ of {LH_C _lh_the_filter_LH_C_0¹ _lh_the_filter_LH_C_1¹ => filter₀₀(isdivs₀₀(_lh_the_filter_LH_C_0¹), _lh_the_filter_LH_C_1¹) | _  => error⁰}: 314
+//│ [LH_N]: 279 --->
+//│ 	case ls⁴ of {LH_C h⁴ t⁴ => h⁴ | LH_N  => error⁰}: 164
+//│ 	case ls⁵ of {LH_C h⁵ t⁵ => if f⁴(h⁵) then [LH_C h⁵ filter₀₀(f⁴, t⁵)] else filter₀₀(f⁴, t⁵) | LH_N  => [LH_N]}: 201
+//│ 	case _lh_the_filter_arg1¹ of {LH_C _lh_the_filter_LH_C_0¹ _lh_the_filter_LH_C_1¹ => filter₀₀(isdivs₀₀(_lh_the_filter_LH_C_0¹), _lh_the_filter_LH_C_1¹) | _  => error⁰}: 314
+//│ ------------------
+//│ case ls⁴ of {LH_C h⁴ t⁴ => h⁴ | LH_N  => error⁰}: 164 --->
+//│ 	[LH_C h⁵ filter₀₀(f⁴, t⁵)]: 193
+//│ 	[LH_N]: 200
+//│ 	[LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)]: 278
+//│ 	[LH_N]: 279
+//│ case ls⁵ of {LH_C h⁵ t⁵ => if f⁴(h⁵) then [LH_C h⁵ filter₀₀(f⁴, t⁵)] else filter₀₀(f⁴, t⁵) | LH_N  => [LH_N]}: 201 --->
+//│ 	[LH_C h⁵ filter₀₀(f⁴, t⁵)]: 193
+//│ 	[LH_N]: 200
+//│ 	[LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)]: 278
+//│ 	[LH_N]: 279
+//│ case force⁰(ls⁶) of {LH_C h⁶ t⁶ => if (n¹ == 0) then h⁶ else atIndex_lz₀₀((n¹ - 1), t⁶) | LH_N  => error⁰}: 230 --->
+//│ 	[LH_C f⁵(h⁷) map_lz₀₀(f⁵, t⁷)]: 246
+//│ 	[LH_N]: 247
+//│ case force⁰(ls⁷) of {LH_C h⁷ t⁷ => [LH_C f⁵(h⁷) map_lz₀₀(f⁵, t⁷)] | LH_N  => [LH_N]}: 248 --->
+//│ 	[LH_C x¹ iterate₀₀(f³, f³(x¹))]: 175
+//│ case _lh_the_filter_arg1¹ of {LH_C _lh_the_filter_LH_C_0¹ _lh_the_filter_LH_C_1¹ => filter₀₀(isdivs₀₀(_lh_the_filter_LH_C_0¹), _lh_the_filter_LH_C_1¹) | _  => error⁰}: 314 --->
+//│ 	[LH_C h⁵ filter₀₀(f⁴, t⁵)]: 193
+//│ 	[LH_N]: 200
+//│ 	[LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)]: 278
+//│ 	[LH_N]: 279
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_C x¹ iterate₀₀(f³, f³(x¹))]: 175 --->
+//│ 	case force⁰(ls⁷) of {LH_C h⁷ t⁷ => [LH_C f⁵(h⁷) map_lz₀₀(f⁵, t⁷)] | LH_N  => [LH_N]}: 248
+//│ [LH_C f⁵(h⁷) map_lz₀₀(f⁵, t⁷)]: 246 --->
+//│ 	case force⁰(ls⁶) of {LH_C h⁶ t⁶ => if (n¹ == 0) then h⁶ else atIndex_lz₀₀((n¹ - 1), t⁶) | LH_N  => error⁰}: 230
+//│ [LH_N]: 247 --->
+//│ 	case force⁰(ls⁶) of {LH_C h⁶ t⁶ => if (n¹ == 0) then h⁶ else atIndex_lz₀₀((n¹ - 1), t⁶) | LH_N  => error⁰}: 230
+//│ ------------------
+//│ case force⁰(ls⁶) of {LH_C h⁶ t⁶ => if (n¹ == 0) then h⁶ else atIndex_lz₀₀((n¹ - 1), t⁶) | LH_N  => error⁰}: 230 --->
+//│ 	[LH_C f⁵(h⁷) map_lz₀₀(f⁵, t⁷)]: 246
+//│ 	[LH_N]: 247
+//│ case force⁰(ls⁷) of {LH_C h⁷ t⁷ => [LH_C f⁵(h⁷) map_lz₀₀(f⁵, t⁷)] | LH_N  => [LH_N]}: 248 --->
+//│ 	[LH_C x¹ iterate₀₀(f³, f³(x¹))]: 175
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testPrime_nofib₀₀(primId⁰(100))
+//│ def testPrime_nofib₀₀(_lh_testPrime_nofib_arg1²) = 
+//│ 	prime₀₀(_lh_testPrime_nofib_arg1²)
+//│ 	where
+//│ 	def prime₀₀(_lh_prime_arg1²) = 
+//│ 		atIndex_lz₀₀(_lh_prime_arg1², map_lz₀₀(head₀₀, iterate₀₀(the_filter₀₀, enumFromTo₀₀(2, (_lh_prime_arg1² * _lh_prime_arg1²)))))
+//│ 		where
+//│ 		def atIndex_lz₀₀(n², ls⁹) = 
+//│ 			if (n² < 0) then error⁰ else force⁰(ls⁹, n²)
+//│ 		def enumFromTo₀₀(a², b²) = 
+//│ 			if (a² <= b²) then [LH_C a² enumFromTo₀₀((a² + 1), b²)] else [LH_N]
+//│ 		def head₀₀(ls¹¹) = 
+//│ 			case ls¹¹ of {
+//│ 				LH_C h⁴ t⁴ => h⁴
+//│ 				| LH_N  => error⁰}
+//│ 		def iterate₀₀(f⁸, x²) = 
+//│ 			lazy⁰(
+//│ 				let h⁸ = x²
+//│ 				in let t⁸ = iterate₀₀(f⁸, f⁸(x²))
+//│ 				in (fun f⁹ -> 
+//│ 					let h⁹ = f⁹(h⁸)
+//│ 					in let t⁹ = map_lz₀₀(f⁹, t⁸)
+//│ 					in (fun n³ -> if (n³ == 0) then h⁹ else atIndex_lz₀₀((n³ - 1), t⁹))))
+//│ 		def map_lz₀₀(f⁶, ls⁸) = 
+//│ 			lazy⁰(force⁰(ls⁸, f⁶))
+//│ 		def the_filter₀₀(_lh_the_filter_arg1²) = 
+//│ 			case _lh_the_filter_arg1² of {
+//│ 				LH_C _lh_the_filter_LH_C_0¹ _lh_the_filter_LH_C_1¹ => filter₀₀(isdivs₀₀(_lh_the_filter_LH_C_0¹), _lh_the_filter_LH_C_1¹)
+//│ 				| _  => error⁰}
+//│ 			where
+//│ 			def filter₀₀(f⁷, ls¹⁰) = 
+//│ 				case ls¹⁰ of {
+//│ 					LH_C h⁵ t⁵ => if f⁷(h⁵) then [LH_C h⁵ filter₀₀(f⁷, t⁵)] else filter₀₀(f⁷, t⁵)
+//│ 					| LH_N  => [LH_N]}
+//│ 			def isdivs₀₀(_lh_isdivs_arg1², _lh_isdivs_arg2²) = 
+//│ 				((_lh_isdivs_arg2² % _lh_isdivs_arg1²) /= 0)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

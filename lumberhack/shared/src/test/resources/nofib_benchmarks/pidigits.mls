@@ -1,0 +1,2911 @@
+:NewParser
+:ParseOnly
+
+// pidgits n = 0 % (0 # (1,0,1)) where
+//   i%ds
+//      | i >= n = []
+//      | True = (concat h ++ "\t:" ++ show j ++ "\n") ++ j%t
+//      where k = i+10;
+//            j = min n k;
+//            (h,t) | k > n = (take (n`mod`10) ds ++ replicate (k-n) " ",[])
+//                  | True = splitAt 10 ds
+//   j # s
+//      | n>a || r+n>=d = k # t
+//      | True = show q : k # (n*10,(a-(q*d))*10,d)
+//      where k = j+1; 
+//            t@(n,a,d) = k&s; 
+//            (q,r) = (n*3+a) `divMod` d
+//   j&(n,a,d) = (n*j,(a+n*2)*y,d*y) where y=(j*2+1)
+
+:lhInHaskell
+:lhGenOCaml
+drop n [] = []
+drop n (h:t) = if n > 0 then (drop (n - 1) t) else (h:t)
+splitAt n xs = (take n xs, drop n xs)
+min a b = if a > b then b else a
+replicate n x = if n > 0 then (x:(replicate (n - 1) x)) else []
+divmod a b = ((a `div` b), (a `mod` b))
+percOp i ds n =
+  if i >= n then
+    []
+  else
+    let k = (i + 10) in
+          let j = (min n k) in
+                case (if k > n then ((take (n `mod` 10) ds) ++ (replicate (k-n) " "), []) else (splitAt 10 ds)) of {
+                  (h, t) -> (concat h) ++ ("t:" ++ ((string_of_int j) ++ "n")) ++ (percOp j t n)
+                }
+hashOp j s =
+  let k = j + 1 in
+      case (ampOp k s) of {
+        (n, a, d) -> case (divmod ((n * 3) + a) d) of {
+          (q, r) -> if ((n > a) || ((r + n) >= d)) then (hashOp k (n, a, d)) else ((string_of_int q) : (hashOp k (n*10, (a-(q*d))*10, d)))
+        }
+      }
+ampOp j (n,a,d) = let y = ((j * 2) + 1) in (n * j, (a + (n * 2)) * y, d * y)
+pidgits n = percOp 0 (hashOp 0 (1,0,1)) n
+testPiDigits_nofib n = pidgits n
+testPiDigits_nofib $ primId 100
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testPiDigits_nofib₀^1378(primId⁰(100))
+//│ def ampOp₀(_lh_ampOp_arg1¹, _lh_ampOp_arg2¹) = case _lh_ampOp_arg2¹ of {
+//│ 	LH_P3 _lh_ampOp_LH_P3_0¹ _lh_ampOp_LH_P3_1¹ _lh_ampOp_LH_P3_2¹ => 
+//│ 		let y¹ = ((_lh_ampOp_arg1¹ * 2) + 1)
+//│ 		in [LH_P3 (_lh_ampOp_LH_P3_0¹ * _lh_ampOp_arg1¹) ((_lh_ampOp_LH_P3_1¹ + (_lh_ampOp_LH_P3_0¹ * 2)) * y¹) (_lh_ampOp_LH_P3_2¹ * y¹)]
+//│ 	| _  => error⁰}
+//│ def concat₀(lss¹) = case lss¹ of {
+//│ 	LH_C h²⁸ t³⁰ => mappend₀^1368(h²⁸, concat₀^1371(t³⁰))
+//│ 	| LH_N  => [LH_N]}
+//│ def divmod₀(_lh_divmod_arg1¹, _lh_divmod_arg2¹) = [LH_P2 div⁰(_lh_divmod_arg1¹, _lh_divmod_arg2¹) (_lh_divmod_arg1¹ % _lh_divmod_arg2¹)]
+//│ def drop₀(_lh_drop_arg1¹, _lh_drop_arg2¹) = case _lh_drop_arg2¹ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹ => if (_lh_drop_arg1¹ > 0) then drop₀^1216((_lh_drop_arg1¹ - 1), _lh_drop_LH_C_1¹) else [LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹]
+//│ 	| _  => error⁰}
+//│ def hashOp₀(_lh_hashOp_arg1¹, _lh_hashOp_arg2¹) = 
+//│ 	let k² = (_lh_hashOp_arg1¹ + 1)
+//│ 	in let _lh_matchIdent³ = ampOp₀^1114(k², _lh_hashOp_arg2¹)
+//│ 	in case _lh_matchIdent³ of {
+//│ 		LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹ => 
+//│ 			let _lh_matchIdent⁴ = divmod₀^1120(((_lh_hashOp_LH_P3_0¹ * 3) + _lh_hashOp_LH_P3_1¹), _lh_hashOp_LH_P3_2¹)
+//│ 			in case _lh_matchIdent⁴ of {
+//│ 				LH_P2 _lh_hashOp_LH_P2_0¹ _lh_hashOp_LH_P2_1¹ => if ((_lh_hashOp_LH_P3_0¹ > _lh_hashOp_LH_P3_1¹) || ((_lh_hashOp_LH_P2_1¹ + _lh_hashOp_LH_P3_0¹) >= _lh_hashOp_LH_P3_2¹)) then hashOp₀^1151(k², [LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹]) else [LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀^1162(k², [LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹])]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ def mappend₀(xs¹⁰, ys¹⁰) = case xs¹⁰ of {
+//│ 	LH_C h²¹ t²³ => [LH_C h²¹ mappend₀^955(t²³, ys¹⁰)]
+//│ 	| LH_N  => ys¹⁰}
+//│ def mappend₁(xs¹³, ys¹³) = case xs¹³ of {
+//│ 	LH_C h²⁶ t²⁸ => [LH_C h²⁶ mappend₁^1067(t²⁸, ys¹³)]
+//│ 	| LH_N  => ys¹³}
+//│ def mappend₂(xs¹², ys¹²) = case xs¹² of {
+//│ 	LH_C h²⁵ t²⁷ => [LH_C h²⁵ mappend₂^1055(t²⁷, ys¹²)]
+//│ 	| LH_N  => ys¹²}
+//│ def mappend₃(xs¹¹, ys¹¹) = case xs¹¹ of {
+//│ 	LH_C h²² t²⁴ => [LH_C h²² mappend₃^987(t²⁴, ys¹¹)]
+//│ 	| LH_N  => ys¹¹}
+//│ def mappend₄(xs¹⁴, ys¹⁴) = case xs¹⁴ of {
+//│ 	LH_C h²⁷ t²⁹ => [LH_C h²⁷ mappend₄^1199(t²⁹, ys¹⁴)]
+//│ 	| LH_N  => ys¹⁴}
+//│ def mappend₅(xs⁹, ys⁹) = case xs⁹ of {
+//│ 	LH_C h²⁰ t²² => [LH_C h²⁰ mappend₅^930(t²², ys⁹)]
+//│ 	| LH_N  => ys⁹}
+//│ def min₀(_lh_min_arg1¹, _lh_min_arg2¹) = if (_lh_min_arg1¹ > _lh_min_arg2¹) then _lh_min_arg2¹ else _lh_min_arg1¹
+//│ def percOp₀(_lh_percOp_arg1¹, _lh_percOp_arg2¹, _lh_percOp_arg3¹) = if (_lh_percOp_arg1¹ >= _lh_percOp_arg3¹) then [LH_N] else 
+//│ 	let k³ = (_lh_percOp_arg1¹ + 10)
+//│ 	in let j¹ = min₀^1283(_lh_percOp_arg3¹, k³)
+//│ 	in let _lh_matchIdent⁵ = if (k³ > _lh_percOp_arg3¹) then [LH_P2 mappend₁^1293(take₁^1294((_lh_percOp_arg3¹ % 10), _lh_percOp_arg2¹), replicate₀^1304((k³ - _lh_percOp_arg3¹), [LH_C ' ' [LH_N]])) [LH_N]] else splitAt₀^1318(10, _lh_percOp_arg2¹)
+//│ 	in case _lh_matchIdent⁵ of {
+//│ 		LH_P2 _lh_percOp_LH_P2_0¹ _lh_percOp_LH_P2_1¹ => mappend₂^1325(mappend₃^1326(concat₀^1327(_lh_percOp_LH_P2_0¹), mappend₄^1331([LH_C 't' [LH_C ':' [LH_N]]], mappend₅^1338(string_of_int⁰(j¹), [LH_C 'n' [LH_N]]))), percOp₀^1350(j¹, _lh_percOp_LH_P2_1¹, _lh_percOp_arg3¹))
+//│ 		| _  => error⁰}
+//│ def pidgits₀(_lh_pidgits_arg1¹) = percOp₀^1090(0, hashOp₀^1093(0, [LH_P3 1 0 1]), _lh_pidgits_arg1¹)
+//│ def replicate₀(_lh_replicate_arg1¹, _lh_replicate_arg2¹) = if (_lh_replicate_arg1¹ > 0) then [LH_C _lh_replicate_arg2¹ replicate₀^971((_lh_replicate_arg1¹ - 1), _lh_replicate_arg2¹)] else [LH_N]
+//│ def splitAt₀(_lh_splitAt_arg1¹, _lh_splitAt_arg2¹) = [LH_P2 take₀^940(_lh_splitAt_arg1¹, _lh_splitAt_arg2¹) drop₀^945(_lh_splitAt_arg1¹, _lh_splitAt_arg2¹)]
+//│ def take₀(n⁴, ls¹⁹) = if (n⁴ > 0) then case ls¹⁹ of {
+//│ 	LH_C h²³ t²⁵ => [LH_C h²³ take₀^1004((n⁴ - 1), t²⁵)]
+//│ 	| LH_N  => [LH_N]} else [LH_N]
+//│ def take₁(n⁵, ls²⁰) = if (n⁵ > 0) then case ls²⁰ of {
+//│ 	LH_C h²⁴ t²⁶ => [LH_C h²⁴ take₁^1027((n⁵ - 1), t²⁶)]
+//│ 	| LH_N  => [LH_N]} else [LH_N]
+//│ def testPiDigits_nofib₀(_lh_testPiDigits_nofib_arg1¹) = pidgits₀^1105(_lh_testPiDigits_nofib_arg1¹)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec ampOp_d0 _lh_ampOp_arg1_1 _lh_ampOp_arg2_1 =
+//│ 		  (match _lh_ampOp_arg2_1 with
+//│ 		    | `LH_P3(_lh_ampOp_LH_P3_0_1, _lh_ampOp_LH_P3_1_1, _lh_ampOp_LH_P3_2_1) -> 
+//│ 		      (let rec y_1 = ((_lh_ampOp_arg1_1 * 2) + 1) in
+//│ 		        (`LH_P3((_lh_ampOp_LH_P3_0_1 * _lh_ampOp_arg1_1), ((_lh_ampOp_LH_P3_1_1 + (_lh_ampOp_LH_P3_0_1 * 2)) * y_1), (_lh_ampOp_LH_P3_2_1 * y_1))))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and concat_d0 lss_1 =
+//│ 		  (match lss_1 with
+//│ 		    | `LH_C(h_2_8, t_3_0) -> 
+//│ 		      ((mappend_d0 h_2_8) (concat_d0 t_3_0))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N))
+//│ 		and divmod_d0 _lh_divmod_arg1_1 _lh_divmod_arg2_1 =
+//│ 		  (`LH_P2((_lh_divmod_arg1_1 / _lh_divmod_arg2_1), (_lh_divmod_arg1_1 mod _lh_divmod_arg2_1)))
+//│ 		and drop_d0 _lh_drop_arg1_1 _lh_drop_arg2_1 =
+//│ 		  (match _lh_drop_arg2_1 with
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)
+//│ 		    | `LH_C(_lh_drop_LH_C_0_1, _lh_drop_LH_C_1_1) -> 
+//│ 		      (if (_lh_drop_arg1_1 > 0) then
+//│ 		        ((drop_d0 (_lh_drop_arg1_1 - 1)) _lh_drop_LH_C_1_1)
+//│ 		      else
+//│ 		        (`LH_C(_lh_drop_LH_C_0_1, _lh_drop_LH_C_1_1)))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and hashOp_d0 _lh_hashOp_arg1_1 _lh_hashOp_arg2_1 =
+//│ 		  (let rec k_2 = (_lh_hashOp_arg1_1 + 1) in
+//│ 		    (let rec _lh_matchIdent_3 = ((ampOp_d0 k_2) _lh_hashOp_arg2_1) in
+//│ 		      (match _lh_matchIdent_3 with
+//│ 		        | `LH_P3(_lh_hashOp_LH_P3_0_1, _lh_hashOp_LH_P3_1_1, _lh_hashOp_LH_P3_2_1) -> 
+//│ 		          (let rec _lh_matchIdent_4 = ((divmod_d0 ((_lh_hashOp_LH_P3_0_1 * 3) + _lh_hashOp_LH_P3_1_1)) _lh_hashOp_LH_P3_2_1) in
+//│ 		            (match _lh_matchIdent_4 with
+//│ 		              | `LH_P2(_lh_hashOp_LH_P2_0_1, _lh_hashOp_LH_P2_1_1) -> 
+//│ 		                (if ((_lh_hashOp_LH_P3_0_1 > _lh_hashOp_LH_P3_1_1) || ((_lh_hashOp_LH_P2_1_1 + _lh_hashOp_LH_P3_0_1) >= _lh_hashOp_LH_P3_2_1)) then
+//│ 		                  ((hashOp_d0 k_2) (`LH_P3(_lh_hashOp_LH_P3_0_1, _lh_hashOp_LH_P3_1_1, _lh_hashOp_LH_P3_2_1)))
+//│ 		                else
+//│ 		                  (`LH_C((string_of_int _lh_hashOp_LH_P2_0_1), ((hashOp_d0 k_2) (`LH_P3((_lh_hashOp_LH_P3_0_1 * 10), ((_lh_hashOp_LH_P3_1_1 - (_lh_hashOp_LH_P2_0_1 * _lh_hashOp_LH_P3_2_1)) * 10), _lh_hashOp_LH_P3_2_1))))))
+//│ 		              | _ -> 
+//│ 		                (failwith "error")))
+//│ 		        | _ -> 
+//│ 		          (failwith "error"))))
+//│ 		and mappend_d0 xs_1_0 ys_1_0 =
+//│ 		  (match xs_1_0 with
+//│ 		    | `LH_C(h_2_1, t_2_3) -> 
+//│ 		      (`LH_C(h_2_1, ((mappend_d0 t_2_3) ys_1_0)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_1_0)
+//│ 		and mappend_d1 xs_1_3 ys_1_3 =
+//│ 		  (match xs_1_3 with
+//│ 		    | `LH_C(h_2_6, t_2_8) -> 
+//│ 		      (`LH_C(h_2_6, ((mappend_d1 t_2_8) ys_1_3)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_1_3)
+//│ 		and mappend_d2 xs_1_2 ys_1_2 =
+//│ 		  (match xs_1_2 with
+//│ 		    | `LH_C(h_2_5, t_2_7) -> 
+//│ 		      (`LH_C(h_2_5, ((mappend_d2 t_2_7) ys_1_2)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_1_2)
+//│ 		and mappend_d3 xs_1_1 ys_1_1 =
+//│ 		  (match xs_1_1 with
+//│ 		    | `LH_C(h_2_2, t_2_4) -> 
+//│ 		      (`LH_C(h_2_2, ((mappend_d3 t_2_4) ys_1_1)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_1_1)
+//│ 		and mappend_d4 xs_1_4 ys_1_4 =
+//│ 		  (match xs_1_4 with
+//│ 		    | `LH_C(h_2_7, t_2_9) -> 
+//│ 		      (`LH_C(h_2_7, ((mappend_d4 t_2_9) ys_1_4)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_1_4)
+//│ 		and mappend_d5 xs_9 ys_9 =
+//│ 		  (match xs_9 with
+//│ 		    | `LH_C(h_2_0, t_2_2) -> 
+//│ 		      (`LH_C(h_2_0, ((mappend_d5 t_2_2) ys_9)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_9)
+//│ 		and min_d0 _lh_min_arg1_1 _lh_min_arg2_1 =
+//│ 		  (if (_lh_min_arg1_1 > _lh_min_arg2_1) then
+//│ 		    _lh_min_arg2_1
+//│ 		  else
+//│ 		    _lh_min_arg1_1)
+//│ 		and percOp_d0 _lh_percOp_arg1_1 _lh_percOp_arg2_1 _lh_percOp_arg3_1 =
+//│ 		  (if (_lh_percOp_arg1_1 >= _lh_percOp_arg3_1) then
+//│ 		    (`LH_N)
+//│ 		  else
+//│ 		    (let rec k_3 = (_lh_percOp_arg1_1 + 10) in
+//│ 		      (let rec j_1 = ((min_d0 _lh_percOp_arg3_1) k_3) in
+//│ 		        (let rec _lh_matchIdent_5 = (if (k_3 > _lh_percOp_arg3_1) then
+//│ 		          (`LH_P2(((mappend_d1 ((take_d1 (_lh_percOp_arg3_1 mod 10)) _lh_percOp_arg2_1)) ((replicate_d0 (k_3 - _lh_percOp_arg3_1)) (`LH_C(' ', (`LH_N))))), (`LH_N)))
+//│ 		        else
+//│ 		          ((splitAt_d0 10) _lh_percOp_arg2_1)) in
+//│ 		          (match _lh_matchIdent_5 with
+//│ 		            | `LH_P2(_lh_percOp_LH_P2_0_1, _lh_percOp_LH_P2_1_1) -> 
+//│ 		              ((mappend_d2 ((mappend_d3 (concat_d0 _lh_percOp_LH_P2_0_1)) ((mappend_d4 (`LH_C('t', (`LH_C(':', (`LH_N)))))) ((mappend_d5 (string_of_int j_1)) (`LH_C('n', (`LH_N))))))) (((percOp_d0 j_1) _lh_percOp_LH_P2_1_1) _lh_percOp_arg3_1))
+//│ 		            | _ -> 
+//│ 		              (failwith "error"))))))
+//│ 		and pidgits_d0 _lh_pidgits_arg1_1 =
+//│ 		  (((percOp_d0 0) ((hashOp_d0 0) (`LH_P3(1, 0, 1)))) _lh_pidgits_arg1_1)
+//│ 		and replicate_d0 _lh_replicate_arg1_1 _lh_replicate_arg2_1 =
+//│ 		  (if (_lh_replicate_arg1_1 > 0) then
+//│ 		    (`LH_C(_lh_replicate_arg2_1, ((replicate_d0 (_lh_replicate_arg1_1 - 1)) _lh_replicate_arg2_1)))
+//│ 		  else
+//│ 		    (`LH_N))
+//│ 		and splitAt_d0 _lh_splitAt_arg1_1 _lh_splitAt_arg2_1 =
+//│ 		  (`LH_P2(((take_d0 _lh_splitAt_arg1_1) _lh_splitAt_arg2_1), ((drop_d0 _lh_splitAt_arg1_1) _lh_splitAt_arg2_1)))
+//│ 		and take_d0 n_4 ls_1_9 =
+//│ 		  (if (n_4 > 0) then
+//│ 		    (match ls_1_9 with
+//│ 		      | `LH_C(h_2_3, t_2_5) -> 
+//│ 		        (`LH_C(h_2_3, ((take_d0 (n_4 - 1)) t_2_5)))
+//│ 		      | `LH_N -> 
+//│ 		        (`LH_N))
+//│ 		  else
+//│ 		    (`LH_N))
+//│ 		and take_d1 n_5 ls_2_0 =
+//│ 		  (if (n_5 > 0) then
+//│ 		    (match ls_2_0 with
+//│ 		      | `LH_C(h_2_4, t_2_6) -> 
+//│ 		        (`LH_C(h_2_4, ((take_d1 (n_5 - 1)) t_2_6)))
+//│ 		      | `LH_N -> 
+//│ 		        (`LH_N))
+//│ 		  else
+//│ 		    (`LH_N))
+//│ 		and testPiDigits_nofib_d0 _lh_testPiDigits_nofib_arg1_1 =
+//│ 		  (pidgits_d0 _lh_testPiDigits_nofib_arg1_1);;
+//│ 		(testPiDigits_nofib_d0 100)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testPiDigits_nofib₀^1378]
+//│ 	[testPiDigits_nofib₀^1378 · pidgits₀^1105]
+//│ 		[testPiDigits_nofib₀^1378 · pidgits₀^1105 · hashOp₀^1093] (hopeless to continue)
+//│ 			[testPiDigits_nofib₀^1378 · pidgits₀^1105 · hashOp₀^1093 · ampOp₀^1114] (using original def)
+//│ 			[testPiDigits_nofib₀^1378 · pidgits₀^1105 · hashOp₀^1093 · divmod₀^1120] (using original def)
+//│ 			[testPiDigits_nofib₀^1378 · pidgits₀^1105 · hashOp₀^1093 · hashOp₀^1151] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · hashOp₀^1093] (using original def)
+//│ 			[testPiDigits_nofib₀^1378 · pidgits₀^1105 · hashOp₀^1093 · hashOp₀^1162] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · hashOp₀^1093] (using original def)
+//│ 		[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090]
+//│ 			[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · concat₀^1327] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · concat₀^1327 · concat₀^1371] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · concat₀^1327] (using original def)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · concat₀^1327 · mappend₀^1368] (using original def)
+//│ 					[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · concat₀^1327 · mappend₀^1368 · mappend₀^955] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · concat₀^1327 · mappend₀^1368] (using original def)
+//│ 			[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · mappend₁^1293] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · mappend₁^1293 · mappend₁^1067] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · mappend₁^1293] (using original def)
+//│ 			[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · mappend₂^1325]
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · mappend₂^1325 · mappend₂^1055] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · mappend₂^1325] (only one)
+//│ 			[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · mappend₃^1326] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · mappend₃^1326 · mappend₃^987] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · mappend₃^1326] (using original def)
+//│ 			[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · mappend₄^1331] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · mappend₄^1331 · mappend₄^1199] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · mappend₄^1331] (using original def)
+//│ 			[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · mappend₅^1338] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · mappend₅^1338 · mappend₅^930] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · mappend₅^1338] (using original def)
+//│ 			[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · min₀^1283] (hopeless to continue)
+//│ 			[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · concat₀^1327] (using original def)
+//│ 					[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · concat₀^1327 · concat₀^1371] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · concat₀^1327] (using original def)
+//│ 					[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · concat₀^1327 · mappend₀^1368] (using original def)
+//│ 						[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · concat₀^1327 · mappend₀^1368 · mappend₀^955] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · concat₀^1327 · mappend₀^1368] (using original def)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · mappend₁^1293] (using original def)
+//│ 					[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · mappend₁^1293 · mappend₁^1067] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · mappend₁^1293] (using original def)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · mappend₂^1325] (using original def)
+//│ 					[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · mappend₂^1325 · mappend₂^1055] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · mappend₂^1325] (using original def)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · mappend₃^1326] (using original def)
+//│ 					[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · mappend₃^1326 · mappend₃^987] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · mappend₃^1326] (using original def)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · mappend₄^1331] (using original def)
+//│ 					[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · mappend₄^1331 · mappend₄^1199] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · mappend₄^1331] (using original def)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · mappend₅^1338] (using original def)
+//│ 					[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · mappend₅^1338 · mappend₅^930] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · mappend₅^1338] (using original def)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · min₀^1283] (using original def)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · percOp₀^1350] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350] (using original def)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · replicate₀^1304] (using original def)
+//│ 					[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · replicate₀^1304 · replicate₀^971] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · replicate₀^1304] (using original def)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · splitAt₀^1318] (using original def)
+//│ 					[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · splitAt₀^1318 · drop₀^945] (using original def)
+//│ 						[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · splitAt₀^1318 · drop₀^945 · drop₀^1216] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · splitAt₀^1318 · drop₀^945] (using original def)
+//│ 					[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · splitAt₀^1318 · take₀^940] (using original def)
+//│ 						[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · splitAt₀^1318 · take₀^940 · take₀^1004] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · splitAt₀^1318 · take₀^940] (using original def)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · take₁^1294] (using original def)
+//│ 					[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · take₁^1294 · take₁^1027] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · percOp₀^1350 · take₁^1294] (using original def)
+//│ 			[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · replicate₀^1304] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · replicate₀^1304 · replicate₀^971] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · replicate₀^1304] (using original def)
+//│ 			[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · splitAt₀^1318] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · splitAt₀^1318 · drop₀^945] (using original def)
+//│ 					[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · splitAt₀^1318 · drop₀^945 · drop₀^1216] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · splitAt₀^1318 · drop₀^945] (using original def)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · splitAt₀^1318 · take₀^940] (using original def)
+//│ 					[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · splitAt₀^1318 · take₀^940 · take₀^1004] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · splitAt₀^1318 · take₀^940] (using original def)
+//│ 			[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · take₁^1294] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · take₁^1294 · take₁^1027] ---> [testPiDigits_nofib₀^1378 · pidgits₀^1105 · percOp₀^1090 · take₁^1294] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testPiDigits_nofib₀₀(primId⁰(100))
+//│ def testPiDigits_nofib₀₀(_lh_testPiDigits_nofib_arg1¹) = 
+//│ 	pidgits₀₀(_lh_testPiDigits_nofib_arg1¹)
+//│ 	where
+//│ 	def pidgits₀₀(_lh_pidgits_arg1¹) = 
+//│ 		percOp₀₀(0, hashOp₀₀(0, [LH_P3 1 0 1]), _lh_pidgits_arg1¹)
+//│ 		where
+//│ 		def hashOp₀₀(_lh_hashOp_arg1¹, _lh_hashOp_arg2¹) = 
+//│ 			let k³ = (_lh_hashOp_arg1¹ + 1)
+//│ 			in let _lh_matchIdent⁴ = ampOp₀₀(k³, _lh_hashOp_arg2¹)
+//│ 			in case _lh_matchIdent⁴ of {
+//│ 				LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹ => 
+//│ 					let _lh_matchIdent⁵ = divmod₀₀(((_lh_hashOp_LH_P3_0¹ * 3) + _lh_hashOp_LH_P3_1¹), _lh_hashOp_LH_P3_2¹)
+//│ 					in case _lh_matchIdent⁵ of {
+//│ 						LH_P2 _lh_hashOp_LH_P2_0¹ _lh_hashOp_LH_P2_1¹ => if ((_lh_hashOp_LH_P3_0¹ > _lh_hashOp_LH_P3_1¹) || ((_lh_hashOp_LH_P2_1¹ + _lh_hashOp_LH_P3_0¹) >= _lh_hashOp_LH_P3_2¹)) then hashOp₀₀(k³, [LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹]) else [LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀(k³, [LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹])]
+//│ 						| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 			where
+//│ 			def ampOp₀₀(_lh_ampOp_arg1¹, _lh_ampOp_arg2¹) = 
+//│ 				case _lh_ampOp_arg2¹ of {
+//│ 					LH_P3 _lh_ampOp_LH_P3_0¹ _lh_ampOp_LH_P3_1¹ _lh_ampOp_LH_P3_2¹ => 
+//│ 						let y¹ = ((_lh_ampOp_arg1¹ * 2) + 1)
+//│ 						in [LH_P3 (_lh_ampOp_LH_P3_0¹ * _lh_ampOp_arg1¹) ((_lh_ampOp_LH_P3_1¹ + (_lh_ampOp_LH_P3_0¹ * 2)) * y¹) (_lh_ampOp_LH_P3_2¹ * y¹)]
+//│ 					| _  => error⁰}
+//│ 			def divmod₀₀(_lh_divmod_arg1¹, _lh_divmod_arg2¹) = 
+//│ 				[LH_P2 div⁰(_lh_divmod_arg1¹, _lh_divmod_arg2¹) (_lh_divmod_arg1¹ % _lh_divmod_arg2¹)]
+//│ 		def percOp₀₀(_lh_percOp_arg1¹, _lh_percOp_arg2¹, _lh_percOp_arg3¹) = 
+//│ 			if (_lh_percOp_arg1¹ >= _lh_percOp_arg3¹) then [LH_N] else 
+//│ 				let k² = (_lh_percOp_arg1¹ + 10)
+//│ 				in let j¹ = min₀₀(_lh_percOp_arg3¹, k²)
+//│ 				in let _lh_matchIdent³ = if (k² > _lh_percOp_arg3¹) then [LH_P2 mappend₁₀(take₁₁((_lh_percOp_arg3¹ % 10), _lh_percOp_arg2¹), replicate₀₁((k² - _lh_percOp_arg3¹), [LH_C ' ' [LH_N]])) [LH_N]] else splitAt₀₁(10, _lh_percOp_arg2¹)
+//│ 				in case _lh_matchIdent³ of {
+//│ 					LH_P2 _lh_percOp_LH_P2_0¹ _lh_percOp_LH_P2_1¹ => mappend₂₀(mappend₃₀(concat₀₀(_lh_percOp_LH_P2_0¹), mappend₄₀([LH_C 't' [LH_C ':' [LH_N]]], mappend₅₀(string_of_int⁰(j¹), [LH_C 'n' [LH_N]]))), percOp₀₁(j¹, _lh_percOp_LH_P2_1¹, _lh_percOp_arg3¹))
+//│ 					| _  => error⁰}
+//│ 			where
+//│ 			def concat₀₀(lss¹) = 
+//│ 				case lss¹ of {
+//│ 					LH_C h²² t²² => mappend₀₀(h²², concat₀₀(t²²))
+//│ 					| LH_N  => [LH_N]}
+//│ 				where
+//│ 				def mappend₀₀(xs¹⁶, ys¹⁶) = 
+//│ 					case xs¹⁶ of {
+//│ 						LH_C h²³ t²³ => [LH_C h²³ mappend₀₀(t²³, ys¹⁶)]
+//│ 						| LH_N  => ys¹⁶}
+//│ 			def mappend₁₀(xs¹³, ys¹³) = 
+//│ 				case xs¹³ of {
+//│ 					LH_C h¹⁷ t¹⁷ => [LH_C h¹⁷ mappend₁₀(t¹⁷, ys¹³)]
+//│ 					| LH_N  => ys¹³}
+//│ 			def mappend₂₀(xs¹⁴, ys¹⁴) = 
+//│ 				case xs¹⁴ of {
+//│ 					LH_C h²⁰ t²⁰ => [LH_C h²⁰ mappend₂₀(t²⁰, ys¹⁴)]
+//│ 					| LH_N  => ys¹⁴}
+//│ 			def mappend₃₀(xs¹⁰, ys¹⁰) = 
+//│ 				case xs¹⁰ of {
+//│ 					LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ mappend₃₀(t¹⁴, ys¹⁰)]
+//│ 					| LH_N  => ys¹⁰}
+//│ 			def mappend₄₀(xs¹¹, ys¹¹) = 
+//│ 				case xs¹¹ of {
+//│ 					LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ mappend₄₀(t¹⁵, ys¹¹)]
+//│ 					| LH_N  => ys¹¹}
+//│ 			def mappend₅₀(xs⁸, ys⁸) = 
+//│ 				case xs⁸ of {
+//│ 					LH_C h¹² t¹² => [LH_C h¹² mappend₅₀(t¹², ys⁸)]
+//│ 					| LH_N  => ys⁸}
+//│ 			def min₀₀(_lh_min_arg1², _lh_min_arg2²) = 
+//│ 				if (_lh_min_arg1² > _lh_min_arg2²) then _lh_min_arg2² else _lh_min_arg1²
+//│ 			def percOp₀₁(_lh_percOp_arg1², _lh_percOp_arg2², _lh_percOp_arg3²) = 
+//│ 				if (_lh_percOp_arg1² >= _lh_percOp_arg3²) then [LH_N] else 
+//│ 					let k⁴ = (_lh_percOp_arg1² + 10)
+//│ 					in let j² = min₀₁(_lh_percOp_arg3², k⁴)
+//│ 					in let _lh_matchIdent⁶ = if (k⁴ > _lh_percOp_arg3²) then [LH_P2 mappend₁₁(take₁₀((_lh_percOp_arg3² % 10), _lh_percOp_arg2²), replicate₀₀((k⁴ - _lh_percOp_arg3²), [LH_C ' ' [LH_N]])) [LH_N]] else splitAt₀₀(10, _lh_percOp_arg2²)
+//│ 					in case _lh_matchIdent⁶ of {
+//│ 						LH_P2 _lh_percOp_LH_P2_0² _lh_percOp_LH_P2_1² => mappend₂₁(mappend₃₁(concat₀₁(_lh_percOp_LH_P2_0²), mappend₄₁([LH_C 't' [LH_C ':' [LH_N]]], mappend₅₁(string_of_int⁰(j²), [LH_C 'n' [LH_N]]))), percOp₀₁(j², _lh_percOp_LH_P2_1², _lh_percOp_arg3²))
+//│ 						| _  => error⁰}
+//│ 				where
+//│ 				def concat₀₁(lss²) = 
+//│ 					case lss² of {
+//│ 						LH_C h²⁶ t²⁶ => mappend₀₁(h²⁶, concat₀₁(t²⁶))
+//│ 						| LH_N  => [LH_N]}
+//│ 					where
+//│ 					def mappend₀₁(xs⁶, ys⁶) = 
+//│ 						case xs⁶ of {
+//│ 							LH_C h¹⁰ t¹⁰ => [LH_C h¹⁰ mappend₀₁(t¹⁰, ys⁶)]
+//│ 							| LH_N  => ys⁶}
+//│ 				def mappend₁₁(xs¹⁷, ys¹⁷) = 
+//│ 					case xs¹⁷ of {
+//│ 						LH_C h²⁵ t²⁵ => [LH_C h²⁵ mappend₁₁(t²⁵, ys¹⁷)]
+//│ 						| LH_N  => ys¹⁷}
+//│ 				def mappend₂₁(xs¹⁵, ys¹⁵) = 
+//│ 					case xs¹⁵ of {
+//│ 						LH_C h²¹ t²¹ => [LH_C h²¹ mappend₂₁(t²¹, ys¹⁵)]
+//│ 						| LH_N  => ys¹⁵}
+//│ 				def mappend₃₁(xs¹², ys¹²) = 
+//│ 					case xs¹² of {
+//│ 						LH_C h¹⁶ t¹⁶ => [LH_C h¹⁶ mappend₃₁(t¹⁶, ys¹²)]
+//│ 						| LH_N  => ys¹²}
+//│ 				def mappend₄₁(xs⁷, ys⁷) = 
+//│ 					case xs⁷ of {
+//│ 						LH_C h¹¹ t¹¹ => [LH_C h¹¹ mappend₄₁(t¹¹, ys⁷)]
+//│ 						| LH_N  => ys⁷}
+//│ 				def mappend₅₁(xs⁹, ys⁹) = 
+//│ 					case xs⁹ of {
+//│ 						LH_C h¹³ t¹³ => [LH_C h¹³ mappend₅₁(t¹³, ys⁹)]
+//│ 						| LH_N  => ys⁹}
+//│ 				def min₀₁(_lh_min_arg1¹, _lh_min_arg2¹) = 
+//│ 					if (_lh_min_arg1¹ > _lh_min_arg2¹) then _lh_min_arg2¹ else _lh_min_arg1¹
+//│ 				def replicate₀₀(_lh_replicate_arg1¹, _lh_replicate_arg2¹) = 
+//│ 					if (_lh_replicate_arg1¹ > 0) then [LH_C _lh_replicate_arg2¹ replicate₀₀((_lh_replicate_arg1¹ - 1), _lh_replicate_arg2¹)] else [LH_N]
+//│ 				def splitAt₀₀(_lh_splitAt_arg1², _lh_splitAt_arg2²) = 
+//│ 					[LH_P2 take₀₀(_lh_splitAt_arg1², _lh_splitAt_arg2²) drop₀₀(_lh_splitAt_arg1², _lh_splitAt_arg2²)]
+//│ 					where
+//│ 					def drop₀₀(_lh_drop_arg1², _lh_drop_arg2²) = 
+//│ 						case _lh_drop_arg2² of {
+//│ 							LH_N  => [LH_N]
+//│ 							| LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1² => if (_lh_drop_arg1² > 0) then drop₀₀((_lh_drop_arg1² - 1), _lh_drop_LH_C_1²) else [LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²]
+//│ 							| _  => error⁰}
+//│ 					def take₀₀(n², ls²) = 
+//│ 						if (n² > 0) then case ls² of {
+//│ 							LH_C h⁹ t⁹ => [LH_C h⁹ take₀₀((n² - 1), t⁹)]
+//│ 							| LH_N  => [LH_N]} else [LH_N]
+//│ 				def take₁₀(n⁵, ls⁵) = 
+//│ 					if (n⁵ > 0) then case ls⁵ of {
+//│ 						LH_C h²⁴ t²⁴ => [LH_C h²⁴ take₁₀((n⁵ - 1), t²⁴)]
+//│ 						| LH_N  => [LH_N]} else [LH_N]
+//│ 			def replicate₀₁(_lh_replicate_arg1², _lh_replicate_arg2²) = 
+//│ 				if (_lh_replicate_arg1² > 0) then [LH_C _lh_replicate_arg2² replicate₀₁((_lh_replicate_arg1² - 1), _lh_replicate_arg2²)] else [LH_N]
+//│ 			def splitAt₀₁(_lh_splitAt_arg1¹, _lh_splitAt_arg2¹) = 
+//│ 				[LH_P2 take₀₁(_lh_splitAt_arg1¹, _lh_splitAt_arg2¹) drop₀₁(_lh_splitAt_arg1¹, _lh_splitAt_arg2¹)]
+//│ 				where
+//│ 				def drop₀₁(_lh_drop_arg1¹, _lh_drop_arg2¹) = 
+//│ 					case _lh_drop_arg2¹ of {
+//│ 						LH_N  => [LH_N]
+//│ 						| LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹ => if (_lh_drop_arg1¹ > 0) then drop₀₁((_lh_drop_arg1¹ - 1), _lh_drop_LH_C_1¹) else [LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹]
+//│ 						| _  => error⁰}
+//│ 				def take₀₁(n³, ls³) = 
+//│ 					if (n³ > 0) then case ls³ of {
+//│ 						LH_C h¹⁸ t¹⁸ => [LH_C h¹⁸ take₀₁((n³ - 1), t¹⁸)]
+//│ 						| LH_N  => [LH_N]} else [LH_N]
+//│ 			def take₁₁(n⁴, ls⁴) = 
+//│ 				if (n⁴ > 0) then case ls⁴ of {
+//│ 					LH_C h¹⁹ t¹⁹ => [LH_C h¹⁹ take₁₁((n⁴ - 1), t¹⁹)]
+//│ 					| LH_N  => [LH_N]} else [LH_N]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_N]: 457 --->
+//│ 	case ls² of {LH_C h⁹ t⁹ => [LH_C h⁹ take₀₀((n² - 1), t⁹)] | LH_N  => [LH_N]}: 498
+//│ 	case _lh_drop_arg2² of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1² => if (_lh_drop_arg1² > 0) then drop₀₀((_lh_drop_arg1² - 1), _lh_drop_LH_C_1²) else [LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²] | _  => error⁰}: 812
+//│ 	case ls⁵ of {LH_C h²⁴ t²⁴ => [LH_C h²⁴ take₁₀((n⁵ - 1), t²⁴)] | LH_N  => [LH_N]}: 1169
+//│ [LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹]: 474 --->
+//│ 	case ls² of {LH_C h⁹ t⁹ => [LH_C h⁹ take₀₀((n² - 1), t⁹)] | LH_N  => [LH_N]}: 498
+//│ 	case _lh_drop_arg2² of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1² => if (_lh_drop_arg1² > 0) then drop₀₀((_lh_drop_arg1² - 1), _lh_drop_LH_C_1²) else [LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²] | _  => error⁰}: 812
+//│ 	case ls⁵ of {LH_C h²⁴ t²⁴ => [LH_C h²⁴ take₁₀((n⁵ - 1), t²⁴)] | LH_N  => [LH_N]}: 1169
+//│ [LH_C h⁹ take₀₀((n² - 1), t⁹)]: 496 --->
+//│ 	case lss² of {LH_C h²⁶ t²⁶ => mappend₀₁(h²⁶, concat₀₁(t²⁶)) | LH_N  => [LH_N]}: 1195
+//│ [LH_N]: 497 --->
+//│ 	case lss² of {LH_C h²⁶ t²⁶ => mappend₀₁(h²⁶, concat₀₁(t²⁶)) | LH_N  => [LH_N]}: 1195
+//│ [LH_N]: 499 --->
+//│ 	case lss² of {LH_C h²⁶ t²⁶ => mappend₀₁(h²⁶, concat₀₁(t²⁶)) | LH_N  => [LH_N]}: 1195
+//│ [LH_N]: 543 --->
+//│ 	case xs¹⁶ of {LH_C h²³ t²³ => [LH_C h²³ mappend₀₀(t²³, ys¹⁶)] | LH_N  => ys¹⁶}: 1115
+//│ [LH_C ' ' [LH_N]]: 544 --->
+//│ 	case xs¹⁶ of {LH_C h²³ t²³ => [LH_C h²³ mappend₀₀(t²³, ys¹⁶)] | LH_N  => ys¹⁶}: 1115
+//│ [LH_N]: 547 --->
+//│ 	case ls² of {LH_C h⁹ t⁹ => [LH_C h⁹ take₀₀((n² - 1), t⁹)] | LH_N  => [LH_N]}: 498
+//│ 	case _lh_drop_arg2² of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1² => if (_lh_drop_arg1² > 0) then drop₀₀((_lh_drop_arg1² - 1), _lh_drop_LH_C_1²) else [LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²] | _  => error⁰}: 812
+//│ 	case ls⁵ of {LH_C h²⁴ t²⁴ => [LH_C h²⁴ take₁₀((n⁵ - 1), t²⁴)] | LH_N  => [LH_N]}: 1169
+//│ [LH_P2 mappend₁₀(take₁₁((_lh_percOp_arg3¹ % 10), _lh_percOp_arg2¹), replicate₀₁((k² - _lh_percOp_arg3¹), [LH_C ' ' [LH_N]])) [LH_N]]: 548 --->
+//│ 	case _lh_matchIdent³ of {LH_P2 _lh_percOp_LH_P2_0¹ _lh_percOp_LH_P2_1¹ => mappend₂₀(mappend₃₀(concat₀₀(_lh_percOp_LH_P2_0¹), mappend₄₀([LH_C 't' [LH_C ':' [LH_N]]], mappend₅₀(string_of_int⁰(j¹), [LH_C 'n' [LH_N]]))), percOp₀₁(j¹, _lh_percOp_LH_P2_1¹, _lh_percOp_arg3¹)) | _  => error⁰}: 590
+//│ [LH_N]: 565 --->
+//│ 	case xs¹¹ of {LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ mappend₄₀(t¹⁵, ys¹¹)] | LH_N  => ys¹¹}: 824
+//│ [LH_C ':' [LH_N]]: 566 --->
+//│ 	case xs¹¹ of {LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ mappend₄₀(t¹⁵, ys¹¹)] | LH_N  => ys¹¹}: 824
+//│ [LH_C 't' [LH_C ':' [LH_N]]]: 567 --->
+//│ 	case xs¹¹ of {LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ mappend₄₀(t¹⁵, ys¹¹)] | LH_N  => ys¹¹}: 824
+//│ [LH_N]: 575 --->
+//│ 	case xs¹⁴ of {LH_C h²⁰ t²⁰ => [LH_C h²⁰ mappend₂₀(t²⁰, ys¹⁴)] | LH_N  => ys¹⁴}: 985
+//│ [LH_C 'n' [LH_N]]: 576 --->
+//│ 	case xs¹⁴ of {LH_C h²⁰ t²⁰ => [LH_C h²⁰ mappend₂₀(t²⁰, ys¹⁴)] | LH_N  => ys¹⁴}: 985
+//│ [LH_C h¹⁰ mappend₀₁(t¹⁰, ys⁶)]: 605 --->
+//│ 	case xs¹² of {LH_C h¹⁶ t¹⁶ => [LH_C h¹⁶ mappend₃₁(t¹⁶, ys¹²)] | LH_N  => ys¹²}: 849
+//│ [LH_C _lh_replicate_arg2¹ replicate₀₀((_lh_replicate_arg1¹ - 1), _lh_replicate_arg2¹)]: 625 --->
+//│ 	case lss² of {LH_C h²⁶ t²⁶ => mappend₀₁(h²⁶, concat₀₁(t²⁶)) | LH_N  => [LH_N]}: 1195
+//│ [LH_N]: 626 --->
+//│ 	case lss² of {LH_C h²⁶ t²⁶ => mappend₀₁(h²⁶, concat₀₁(t²⁶)) | LH_N  => [LH_N]}: 1195
+//│ [LH_P3 1 0 1]: 639 --->
+//│ 	case _lh_ampOp_arg2¹ of {LH_P3 _lh_ampOp_LH_P3_0¹ _lh_ampOp_LH_P3_1¹ _lh_ampOp_LH_P3_2¹ => let y¹ = ((_lh_ampOp_arg1¹ * 2) + 1)
+//│ in [LH_P3 (_lh_ampOp_LH_P3_0¹ * _lh_ampOp_arg1¹) ((_lh_ampOp_LH_P3_1¹ + (_lh_ampOp_LH_P3_0¹ * 2)) * y¹) (_lh_ampOp_LH_P3_2¹ * y¹)] | _  => error⁰}: 973
+//│ [LH_C h¹¹ mappend₄₁(t¹¹, ys⁷)]: 652 --->
+//│ 	case xs¹⁵ of {LH_C h²¹ t²¹ => [LH_C h²¹ mappend₂₁(t²¹, ys¹⁵)] | LH_N  => ys¹⁵}: 997
+//│ [LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹]: 705 --->
+//│ 	case _lh_ampOp_arg2¹ of {LH_P3 _lh_ampOp_LH_P3_0¹ _lh_ampOp_LH_P3_1¹ _lh_ampOp_LH_P3_2¹ => let y¹ = ((_lh_ampOp_arg1¹ * 2) + 1)
+//│ in [LH_P3 (_lh_ampOp_LH_P3_0¹ * _lh_ampOp_arg1¹) ((_lh_ampOp_LH_P3_1¹ + (_lh_ampOp_LH_P3_0¹ * 2)) * y¹) (_lh_ampOp_LH_P3_2¹ * y¹)] | _  => error⁰}: 973
+//│ [LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹]: 732 --->
+//│ 	case _lh_ampOp_arg2¹ of {LH_P3 _lh_ampOp_LH_P3_0¹ _lh_ampOp_LH_P3_1¹ _lh_ampOp_LH_P3_2¹ => let y¹ = ((_lh_ampOp_arg1¹ * 2) + 1)
+//│ in [LH_P3 (_lh_ampOp_LH_P3_0¹ * _lh_ampOp_arg1¹) ((_lh_ampOp_LH_P3_1¹ + (_lh_ampOp_LH_P3_0¹ * 2)) * y¹) (_lh_ampOp_LH_P3_2¹ * y¹)] | _  => error⁰}: 973
+//│ [LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀(k³, [LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹])]: 734 --->
+//│ 	case _lh_drop_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹ => if (_lh_drop_arg1¹ > 0) then drop₀₁((_lh_drop_arg1¹ - 1), _lh_drop_LH_C_1¹) else [LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹] | _  => error⁰}: 477
+//│ 	case ls² of {LH_C h⁹ t⁹ => [LH_C h⁹ take₀₀((n² - 1), t⁹)] | LH_N  => [LH_N]}: 498
+//│ 	case _lh_drop_arg2² of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1² => if (_lh_drop_arg1² > 0) then drop₀₀((_lh_drop_arg1² - 1), _lh_drop_LH_C_1²) else [LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²] | _  => error⁰}: 812
+//│ 	case ls³ of {LH_C h¹⁸ t¹⁸ => [LH_C h¹⁸ take₀₁((n³ - 1), t¹⁸)] | LH_N  => [LH_N]}: 895
+//│ 	case ls⁴ of {LH_C h¹⁹ t¹⁹ => [LH_C h¹⁹ take₁₁((n⁴ - 1), t¹⁹)] | LH_N  => [LH_N]}: 918
+//│ 	case ls⁵ of {LH_C h²⁴ t²⁴ => [LH_C h²⁴ take₁₀((n⁵ - 1), t²⁴)] | LH_N  => [LH_N]}: 1169
+//│ [LH_C h¹² mappend₅₀(t¹², ys⁸)]: 752 --->
+//│ 	case xs¹⁴ of {LH_C h²⁰ t²⁰ => [LH_C h²⁰ mappend₂₀(t²⁰, ys¹⁴)] | LH_N  => ys¹⁴}: 985
+//│ [LH_C h¹³ mappend₅₁(t¹³, ys⁹)]: 774 --->
+//│ 	case xs¹⁵ of {LH_C h²¹ t²¹ => [LH_C h²¹ mappend₂₁(t²¹, ys¹⁵)] | LH_N  => ys¹⁵}: 997
+//│ [LH_C h¹⁴ mappend₃₀(t¹⁴, ys¹⁰)]: 786 --->
+//│ 	case xs¹⁴ of {LH_C h²⁰ t²⁰ => [LH_C h²⁰ mappend₂₀(t²⁰, ys¹⁴)] | LH_N  => ys¹⁴}: 985
+//│ [LH_N]: 792 --->
+//│ 	case ls² of {LH_C h⁹ t⁹ => [LH_C h⁹ take₀₀((n² - 1), t⁹)] | LH_N  => [LH_N]}: 498
+//│ 	case _lh_drop_arg2² of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1² => if (_lh_drop_arg1² > 0) then drop₀₀((_lh_drop_arg1² - 1), _lh_drop_LH_C_1²) else [LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²] | _  => error⁰}: 812
+//│ 	case ls⁵ of {LH_C h²⁴ t²⁴ => [LH_C h²⁴ take₁₀((n⁵ - 1), t²⁴)] | LH_N  => [LH_N]}: 1169
+//│ [LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²]: 809 --->
+//│ 	case ls² of {LH_C h⁹ t⁹ => [LH_C h⁹ take₀₀((n² - 1), t⁹)] | LH_N  => [LH_N]}: 498
+//│ 	case _lh_drop_arg2² of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1² => if (_lh_drop_arg1² > 0) then drop₀₀((_lh_drop_arg1² - 1), _lh_drop_LH_C_1²) else [LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²] | _  => error⁰}: 812
+//│ 	case ls⁵ of {LH_C h²⁴ t²⁴ => [LH_C h²⁴ take₁₀((n⁵ - 1), t²⁴)] | LH_N  => [LH_N]}: 1169
+//│ [LH_C h¹⁵ mappend₄₀(t¹⁵, ys¹¹)]: 822 --->
+//│ 	case xs¹⁴ of {LH_C h²⁰ t²⁰ => [LH_C h²⁰ mappend₂₀(t²⁰, ys¹⁴)] | LH_N  => ys¹⁴}: 985
+//│ [LH_P2 div⁰(_lh_divmod_arg1¹, _lh_divmod_arg2¹) (_lh_divmod_arg1¹ % _lh_divmod_arg2¹)]: 837 --->
+//│ 	case _lh_matchIdent⁵ of {LH_P2 _lh_hashOp_LH_P2_0¹ _lh_hashOp_LH_P2_1¹ => if ((_lh_hashOp_LH_P3_0¹ > _lh_hashOp_LH_P3_1¹) || ((_lh_hashOp_LH_P2_1¹ + _lh_hashOp_LH_P3_0¹) >= _lh_hashOp_LH_P3_2¹)) then hashOp₀₀(k³, [LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹]) else [LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀(k³, [LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹])] | _  => error⁰}: 737
+//│ [LH_C h¹⁶ mappend₃₁(t¹⁶, ys¹²)]: 847 --->
+//│ 	case xs¹⁵ of {LH_C h²¹ t²¹ => [LH_C h²¹ mappend₂₁(t²¹, ys¹⁵)] | LH_N  => ys¹⁵}: 997
+//│ [LH_C h¹⁷ mappend₁₀(t¹⁷, ys¹³)]: 859 --->
+//│ 	case lss¹ of {LH_C h²² t²² => mappend₀₀(h²², concat₀₀(t²²)) | LH_N  => [LH_N]}: 1104
+//│ [LH_P2 take₀₁(_lh_splitAt_arg1¹, _lh_splitAt_arg2¹) drop₀₁(_lh_splitAt_arg1¹, _lh_splitAt_arg2¹)]: 874 --->
+//│ 	case _lh_matchIdent³ of {LH_P2 _lh_percOp_LH_P2_0¹ _lh_percOp_LH_P2_1¹ => mappend₂₀(mappend₃₀(concat₀₀(_lh_percOp_LH_P2_0¹), mappend₄₀([LH_C 't' [LH_C ':' [LH_N]]], mappend₅₀(string_of_int⁰(j¹), [LH_C 'n' [LH_N]]))), percOp₀₁(j¹, _lh_percOp_LH_P2_1¹, _lh_percOp_arg3¹)) | _  => error⁰}: 590
+//│ [LH_C h¹⁸ take₀₁((n³ - 1), t¹⁸)]: 893 --->
+//│ 	case lss¹ of {LH_C h²² t²² => mappend₀₀(h²², concat₀₀(t²²)) | LH_N  => [LH_N]}: 1104
+//│ [LH_N]: 894 --->
+//│ 	case lss¹ of {LH_C h²² t²² => mappend₀₀(h²², concat₀₀(t²²)) | LH_N  => [LH_N]}: 1104
+//│ [LH_N]: 896 --->
+//│ 	case lss¹ of {LH_C h²² t²² => mappend₀₀(h²², concat₀₀(t²²)) | LH_N  => [LH_N]}: 1104
+//│ [LH_C h¹⁹ take₁₁((n⁴ - 1), t¹⁹)]: 916 --->
+//│ 	case xs¹³ of {LH_C h¹⁷ t¹⁷ => [LH_C h¹⁷ mappend₁₀(t¹⁷, ys¹³)] | LH_N  => ys¹³}: 861
+//│ [LH_N]: 917 --->
+//│ 	case xs¹³ of {LH_C h¹⁷ t¹⁷ => [LH_C h¹⁷ mappend₁₀(t¹⁷, ys¹³)] | LH_N  => ys¹³}: 861
+//│ [LH_N]: 919 --->
+//│ 	case xs¹³ of {LH_C h¹⁷ t¹⁷ => [LH_C h¹⁷ mappend₁₀(t¹⁷, ys¹³)] | LH_N  => ys¹³}: 861
+//│ [LH_P3 (_lh_ampOp_LH_P3_0¹ * _lh_ampOp_arg1¹) ((_lh_ampOp_LH_P3_1¹ + (_lh_ampOp_LH_P3_0¹ * 2)) * y¹) (_lh_ampOp_LH_P3_2¹ * y¹)]: 970 --->
+//│ 	case _lh_matchIdent⁴ of {LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹ => let _lh_matchIdent⁵ = divmod₀₀(((_lh_hashOp_LH_P3_0¹ * 3) + _lh_hashOp_LH_P3_1¹), _lh_hashOp_LH_P3_2¹)
+//│ in case _lh_matchIdent⁵ of {LH_P2 _lh_hashOp_LH_P2_0¹ _lh_hashOp_LH_P2_1¹ => if ((_lh_hashOp_LH_P3_0¹ > _lh_hashOp_LH_P3_1¹) || ((_lh_hashOp_LH_P2_1¹ + _lh_hashOp_LH_P3_0¹) >= _lh_hashOp_LH_P3_2¹)) then hashOp₀₀(k³, [LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹]) else [LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀(k³, [LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹])] | _  => error⁰} | _  => error⁰}: 740
+//│ [LH_N]: 1040 --->
+//│ 	case xs⁶ of {LH_C h¹⁰ t¹⁰ => [LH_C h¹⁰ mappend₀₁(t¹⁰, ys⁶)] | LH_N  => ys⁶}: 607
+//│ [LH_C ' ' [LH_N]]: 1041 --->
+//│ 	case xs⁶ of {LH_C h¹⁰ t¹⁰ => [LH_C h¹⁰ mappend₀₁(t¹⁰, ys⁶)] | LH_N  => ys⁶}: 607
+//│ [LH_N]: 1044 --->
+//│ 	case ls² of {LH_C h⁹ t⁹ => [LH_C h⁹ take₀₀((n² - 1), t⁹)] | LH_N  => [LH_N]}: 498
+//│ 	case _lh_drop_arg2² of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1² => if (_lh_drop_arg1² > 0) then drop₀₀((_lh_drop_arg1² - 1), _lh_drop_LH_C_1²) else [LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²] | _  => error⁰}: 812
+//│ 	case ls⁵ of {LH_C h²⁴ t²⁴ => [LH_C h²⁴ take₁₀((n⁵ - 1), t²⁴)] | LH_N  => [LH_N]}: 1169
+//│ [LH_P2 mappend₁₁(take₁₀((_lh_percOp_arg3² % 10), _lh_percOp_arg2²), replicate₀₀((k⁴ - _lh_percOp_arg3²), [LH_C ' ' [LH_N]])) [LH_N]]: 1045 --->
+//│ 	case _lh_matchIdent⁶ of {LH_P2 _lh_percOp_LH_P2_0² _lh_percOp_LH_P2_1² => mappend₂₁(mappend₃₁(concat₀₁(_lh_percOp_LH_P2_0²), mappend₄₁([LH_C 't' [LH_C ':' [LH_N]]], mappend₅₁(string_of_int⁰(j²), [LH_C 'n' [LH_N]]))), percOp₀₁(j², _lh_percOp_LH_P2_1², _lh_percOp_arg3²)) | _  => error⁰}: 1087
+//│ [LH_N]: 1062 --->
+//│ 	case xs⁷ of {LH_C h¹¹ t¹¹ => [LH_C h¹¹ mappend₄₁(t¹¹, ys⁷)] | LH_N  => ys⁷}: 654
+//│ [LH_C ':' [LH_N]]: 1063 --->
+//│ 	case xs⁷ of {LH_C h¹¹ t¹¹ => [LH_C h¹¹ mappend₄₁(t¹¹, ys⁷)] | LH_N  => ys⁷}: 654
+//│ [LH_C 't' [LH_C ':' [LH_N]]]: 1064 --->
+//│ 	case xs⁷ of {LH_C h¹¹ t¹¹ => [LH_C h¹¹ mappend₄₁(t¹¹, ys⁷)] | LH_N  => ys⁷}: 654
+//│ [LH_N]: 1072 --->
+//│ 	case xs¹⁵ of {LH_C h²¹ t²¹ => [LH_C h²¹ mappend₂₁(t²¹, ys¹⁵)] | LH_N  => ys¹⁵}: 997
+//│ [LH_C 'n' [LH_N]]: 1073 --->
+//│ 	case xs¹⁵ of {LH_C h²¹ t²¹ => [LH_C h²¹ mappend₂₁(t²¹, ys¹⁵)] | LH_N  => ys¹⁵}: 997
+//│ [LH_N]: 1103 --->
+//│ 	case xs¹⁰ of {LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ mappend₃₀(t¹⁴, ys¹⁰)] | LH_N  => ys¹⁰}: 788
+//│ [LH_C h²³ mappend₀₀(t²³, ys¹⁶)]: 1113 --->
+//│ 	case xs¹⁰ of {LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ mappend₃₀(t¹⁴, ys¹⁰)] | LH_N  => ys¹⁰}: 788
+//│ [LH_C _lh_replicate_arg2² replicate₀₁((_lh_replicate_arg1² - 1), _lh_replicate_arg2²)]: 1133 --->
+//│ 	case lss¹ of {LH_C h²² t²² => mappend₀₀(h²², concat₀₀(t²²)) | LH_N  => [LH_N]}: 1104
+//│ [LH_N]: 1134 --->
+//│ 	case lss¹ of {LH_C h²² t²² => mappend₀₀(h²², concat₀₀(t²²)) | LH_N  => [LH_N]}: 1104
+//│ [LH_P2 take₀₀(_lh_splitAt_arg1², _lh_splitAt_arg2²) drop₀₀(_lh_splitAt_arg1², _lh_splitAt_arg2²)]: 1148 --->
+//│ 	case _lh_matchIdent⁶ of {LH_P2 _lh_percOp_LH_P2_0² _lh_percOp_LH_P2_1² => mappend₂₁(mappend₃₁(concat₀₁(_lh_percOp_LH_P2_0²), mappend₄₁([LH_C 't' [LH_C ':' [LH_N]]], mappend₅₁(string_of_int⁰(j²), [LH_C 'n' [LH_N]]))), percOp₀₁(j², _lh_percOp_LH_P2_1², _lh_percOp_arg3²)) | _  => error⁰}: 1087
+//│ [LH_C h²⁴ take₁₀((n⁵ - 1), t²⁴)]: 1167 --->
+//│ 	case xs¹⁷ of {LH_C h²⁵ t²⁵ => [LH_C h²⁵ mappend₁₁(t²⁵, ys¹⁷)] | LH_N  => ys¹⁷}: 1183
+//│ [LH_N]: 1168 --->
+//│ 	case xs¹⁷ of {LH_C h²⁵ t²⁵ => [LH_C h²⁵ mappend₁₁(t²⁵, ys¹⁷)] | LH_N  => ys¹⁷}: 1183
+//│ [LH_N]: 1170 --->
+//│ 	case xs¹⁷ of {LH_C h²⁵ t²⁵ => [LH_C h²⁵ mappend₁₁(t²⁵, ys¹⁷)] | LH_N  => ys¹⁷}: 1183
+//│ [LH_C h²⁵ mappend₁₁(t²⁵, ys¹⁷)]: 1181 --->
+//│ 	case lss² of {LH_C h²⁶ t²⁶ => mappend₀₁(h²⁶, concat₀₁(t²⁶)) | LH_N  => [LH_N]}: 1195
+//│ [LH_N]: 1194 --->
+//│ 	case xs¹² of {LH_C h¹⁶ t¹⁶ => [LH_C h¹⁶ mappend₃₁(t¹⁶, ys¹²)] | LH_N  => ys¹²}: 849
+//│ ------------------
+//│ case _lh_drop_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹ => if (_lh_drop_arg1¹ > 0) then drop₀₁((_lh_drop_arg1¹ - 1), _lh_drop_LH_C_1¹) else [LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹] | _  => error⁰}: 477 --->
+//│ 	[LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀(k³, [LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹])]: 734
+//│ case ls² of {LH_C h⁹ t⁹ => [LH_C h⁹ take₀₀((n² - 1), t⁹)] | LH_N  => [LH_N]}: 498 --->
+//│ 	[LH_N]: 457
+//│ 	[LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹]: 474
+//│ 	[LH_N]: 547
+//│ 	[LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀(k³, [LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹])]: 734
+//│ 	[LH_N]: 792
+//│ 	[LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²]: 809
+//│ 	[LH_N]: 1044
+//│ case _lh_matchIdent³ of {LH_P2 _lh_percOp_LH_P2_0¹ _lh_percOp_LH_P2_1¹ => mappend₂₀(mappend₃₀(concat₀₀(_lh_percOp_LH_P2_0¹), mappend₄₀([LH_C 't' [LH_C ':' [LH_N]]], mappend₅₀(string_of_int⁰(j¹), [LH_C 'n' [LH_N]]))), percOp₀₁(j¹, _lh_percOp_LH_P2_1¹, _lh_percOp_arg3¹)) | _  => error⁰}: 590 --->
+//│ 	[LH_P2 mappend₁₀(take₁₁((_lh_percOp_arg3¹ % 10), _lh_percOp_arg2¹), replicate₀₁((k² - _lh_percOp_arg3¹), [LH_C ' ' [LH_N]])) [LH_N]]: 548
+//│ 	[LH_P2 take₀₁(_lh_splitAt_arg1¹, _lh_splitAt_arg2¹) drop₀₁(_lh_splitAt_arg1¹, _lh_splitAt_arg2¹)]: 874
+//│ case xs⁶ of {LH_C h¹⁰ t¹⁰ => [LH_C h¹⁰ mappend₀₁(t¹⁰, ys⁶)] | LH_N  => ys⁶}: 607 --->
+//│ 	NoProd
+//│ 	[LH_N]: 1040
+//│ 	[LH_C ' ' [LH_N]]: 1041
+//│ case xs⁷ of {LH_C h¹¹ t¹¹ => [LH_C h¹¹ mappend₄₁(t¹¹, ys⁷)] | LH_N  => ys⁷}: 654 --->
+//│ 	[LH_N]: 1062
+//│ 	[LH_C ':' [LH_N]]: 1063
+//│ 	[LH_C 't' [LH_C ':' [LH_N]]]: 1064
+//│ case _lh_matchIdent⁵ of {LH_P2 _lh_hashOp_LH_P2_0¹ _lh_hashOp_LH_P2_1¹ => if ((_lh_hashOp_LH_P3_0¹ > _lh_hashOp_LH_P3_1¹) || ((_lh_hashOp_LH_P2_1¹ + _lh_hashOp_LH_P3_0¹) >= _lh_hashOp_LH_P3_2¹)) then hashOp₀₀(k³, [LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹]) else [LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀(k³, [LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹])] | _  => error⁰}: 737 --->
+//│ 	[LH_P2 div⁰(_lh_divmod_arg1¹, _lh_divmod_arg2¹) (_lh_divmod_arg1¹ % _lh_divmod_arg2¹)]: 837
+//│ case _lh_matchIdent⁴ of {LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹ => let _lh_matchIdent⁵ = divmod₀₀(((_lh_hashOp_LH_P3_0¹ * 3) + _lh_hashOp_LH_P3_1¹), _lh_hashOp_LH_P3_2¹)
+//│ in case _lh_matchIdent⁵ of {LH_P2 _lh_hashOp_LH_P2_0¹ _lh_hashOp_LH_P2_1¹ => if ((_lh_hashOp_LH_P3_0¹ > _lh_hashOp_LH_P3_1¹) || ((_lh_hashOp_LH_P2_1¹ + _lh_hashOp_LH_P3_0¹) >= _lh_hashOp_LH_P3_2¹)) then hashOp₀₀(k³, [LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹]) else [LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀(k³, [LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹])] | _  => error⁰} | _  => error⁰}: 740 --->
+//│ 	[LH_P3 (_lh_ampOp_LH_P3_0¹ * _lh_ampOp_arg1¹) ((_lh_ampOp_LH_P3_1¹ + (_lh_ampOp_LH_P3_0¹ * 2)) * y¹) (_lh_ampOp_LH_P3_2¹ * y¹)]: 970
+//│ case xs¹⁰ of {LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ mappend₃₀(t¹⁴, ys¹⁰)] | LH_N  => ys¹⁰}: 788 --->
+//│ 	[LH_N]: 1103
+//│ 	[LH_C h²³ mappend₀₀(t²³, ys¹⁶)]: 1113
+//│ case _lh_drop_arg2² of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1² => if (_lh_drop_arg1² > 0) then drop₀₀((_lh_drop_arg1² - 1), _lh_drop_LH_C_1²) else [LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²] | _  => error⁰}: 812 --->
+//│ 	[LH_N]: 457
+//│ 	[LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹]: 474
+//│ 	[LH_N]: 547
+//│ 	[LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀(k³, [LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹])]: 734
+//│ 	[LH_N]: 792
+//│ 	[LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²]: 809
+//│ 	[LH_N]: 1044
+//│ case xs¹¹ of {LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ mappend₄₀(t¹⁵, ys¹¹)] | LH_N  => ys¹¹}: 824 --->
+//│ 	[LH_N]: 565
+//│ 	[LH_C ':' [LH_N]]: 566
+//│ 	[LH_C 't' [LH_C ':' [LH_N]]]: 567
+//│ case xs¹² of {LH_C h¹⁶ t¹⁶ => [LH_C h¹⁶ mappend₃₁(t¹⁶, ys¹²)] | LH_N  => ys¹²}: 849 --->
+//│ 	[LH_C h¹⁰ mappend₀₁(t¹⁰, ys⁶)]: 605
+//│ 	[LH_N]: 1194
+//│ case xs¹³ of {LH_C h¹⁷ t¹⁷ => [LH_C h¹⁷ mappend₁₀(t¹⁷, ys¹³)] | LH_N  => ys¹³}: 861 --->
+//│ 	[LH_C h¹⁹ take₁₁((n⁴ - 1), t¹⁹)]: 916
+//│ 	[LH_N]: 917
+//│ 	[LH_N]: 919
+//│ case ls³ of {LH_C h¹⁸ t¹⁸ => [LH_C h¹⁸ take₀₁((n³ - 1), t¹⁸)] | LH_N  => [LH_N]}: 895 --->
+//│ 	[LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀(k³, [LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹])]: 734
+//│ case ls⁴ of {LH_C h¹⁹ t¹⁹ => [LH_C h¹⁹ take₁₁((n⁴ - 1), t¹⁹)] | LH_N  => [LH_N]}: 918 --->
+//│ 	[LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀(k³, [LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹])]: 734
+//│ case _lh_ampOp_arg2¹ of {LH_P3 _lh_ampOp_LH_P3_0¹ _lh_ampOp_LH_P3_1¹ _lh_ampOp_LH_P3_2¹ => let y¹ = ((_lh_ampOp_arg1¹ * 2) + 1)
+//│ in [LH_P3 (_lh_ampOp_LH_P3_0¹ * _lh_ampOp_arg1¹) ((_lh_ampOp_LH_P3_1¹ + (_lh_ampOp_LH_P3_0¹ * 2)) * y¹) (_lh_ampOp_LH_P3_2¹ * y¹)] | _  => error⁰}: 973 --->
+//│ 	[LH_P3 1 0 1]: 639
+//│ 	[LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹]: 705
+//│ 	[LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹]: 732
+//│ case xs¹⁴ of {LH_C h²⁰ t²⁰ => [LH_C h²⁰ mappend₂₀(t²⁰, ys¹⁴)] | LH_N  => ys¹⁴}: 985 --->
+//│ 	[LH_N]: 575
+//│ 	[LH_C 'n' [LH_N]]: 576
+//│ 	[LH_C h¹² mappend₅₀(t¹², ys⁸)]: 752
+//│ 	[LH_C h¹⁴ mappend₃₀(t¹⁴, ys¹⁰)]: 786
+//│ 	[LH_C h¹⁵ mappend₄₀(t¹⁵, ys¹¹)]: 822
+//│ case xs¹⁵ of {LH_C h²¹ t²¹ => [LH_C h²¹ mappend₂₁(t²¹, ys¹⁵)] | LH_N  => ys¹⁵}: 997 --->
+//│ 	[LH_C h¹¹ mappend₄₁(t¹¹, ys⁷)]: 652
+//│ 	[LH_C h¹³ mappend₅₁(t¹³, ys⁹)]: 774
+//│ 	[LH_C h¹⁶ mappend₃₁(t¹⁶, ys¹²)]: 847
+//│ 	[LH_N]: 1072
+//│ 	[LH_C 'n' [LH_N]]: 1073
+//│ case _lh_matchIdent⁶ of {LH_P2 _lh_percOp_LH_P2_0² _lh_percOp_LH_P2_1² => mappend₂₁(mappend₃₁(concat₀₁(_lh_percOp_LH_P2_0²), mappend₄₁([LH_C 't' [LH_C ':' [LH_N]]], mappend₅₁(string_of_int⁰(j²), [LH_C 'n' [LH_N]]))), percOp₀₁(j², _lh_percOp_LH_P2_1², _lh_percOp_arg3²)) | _  => error⁰}: 1087 --->
+//│ 	[LH_P2 mappend₁₁(take₁₀((_lh_percOp_arg3² % 10), _lh_percOp_arg2²), replicate₀₀((k⁴ - _lh_percOp_arg3²), [LH_C ' ' [LH_N]])) [LH_N]]: 1045
+//│ 	[LH_P2 take₀₀(_lh_splitAt_arg1², _lh_splitAt_arg2²) drop₀₀(_lh_splitAt_arg1², _lh_splitAt_arg2²)]: 1148
+//│ case lss¹ of {LH_C h²² t²² => mappend₀₀(h²², concat₀₀(t²²)) | LH_N  => [LH_N]}: 1104 --->
+//│ 	[LH_C h¹⁷ mappend₁₀(t¹⁷, ys¹³)]: 859
+//│ 	[LH_C h¹⁸ take₀₁((n³ - 1), t¹⁸)]: 893
+//│ 	[LH_N]: 894
+//│ 	[LH_N]: 896
+//│ 	[LH_C _lh_replicate_arg2² replicate₀₁((_lh_replicate_arg1² - 1), _lh_replicate_arg2²)]: 1133
+//│ 	[LH_N]: 1134
+//│ case xs¹⁶ of {LH_C h²³ t²³ => [LH_C h²³ mappend₀₀(t²³, ys¹⁶)] | LH_N  => ys¹⁶}: 1115 --->
+//│ 	NoProd
+//│ 	[LH_N]: 543
+//│ 	[LH_C ' ' [LH_N]]: 544
+//│ case ls⁵ of {LH_C h²⁴ t²⁴ => [LH_C h²⁴ take₁₀((n⁵ - 1), t²⁴)] | LH_N  => [LH_N]}: 1169 --->
+//│ 	[LH_N]: 457
+//│ 	[LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹]: 474
+//│ 	[LH_N]: 547
+//│ 	[LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀(k³, [LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹])]: 734
+//│ 	[LH_N]: 792
+//│ 	[LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²]: 809
+//│ 	[LH_N]: 1044
+//│ case xs¹⁷ of {LH_C h²⁵ t²⁵ => [LH_C h²⁵ mappend₁₁(t²⁵, ys¹⁷)] | LH_N  => ys¹⁷}: 1183 --->
+//│ 	[LH_C h²⁴ take₁₀((n⁵ - 1), t²⁴)]: 1167
+//│ 	[LH_N]: 1168
+//│ 	[LH_N]: 1170
+//│ case lss² of {LH_C h²⁶ t²⁶ => mappend₀₁(h²⁶, concat₀₁(t²⁶)) | LH_N  => [LH_N]}: 1195 --->
+//│ 	[LH_C h⁹ take₀₀((n² - 1), t⁹)]: 496
+//│ 	[LH_N]: 497
+//│ 	[LH_N]: 499
+//│ 	[LH_C _lh_replicate_arg2¹ replicate₀₀((_lh_replicate_arg1¹ - 1), _lh_replicate_arg2¹)]: 625
+//│ 	[LH_N]: 626
+//│ 	[LH_C h²⁵ mappend₁₁(t²⁵, ys¹⁷)]: 1181
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_C h⁹ take₀₀((n² - 1), t⁹)]: 496 --->
+//│ 	case lss² of {LH_C h²⁶ t²⁶ => mappend₀₁(h²⁶, concat₀₁(t²⁶)) | LH_N  => [LH_N]}: 1195
+//│ [LH_N]: 497 --->
+//│ 	case lss² of {LH_C h²⁶ t²⁶ => mappend₀₁(h²⁶, concat₀₁(t²⁶)) | LH_N  => [LH_N]}: 1195
+//│ [LH_N]: 499 --->
+//│ 	case lss² of {LH_C h²⁶ t²⁶ => mappend₀₁(h²⁶, concat₀₁(t²⁶)) | LH_N  => [LH_N]}: 1195
+//│ [LH_P2 mappend₁₀(take₁₁((_lh_percOp_arg3¹ % 10), _lh_percOp_arg2¹), replicate₀₁((k² - _lh_percOp_arg3¹), [LH_C ' ' [LH_N]])) [LH_N]]: 548 --->
+//│ 	case _lh_matchIdent³ of {LH_P2 _lh_percOp_LH_P2_0¹ _lh_percOp_LH_P2_1¹ => mappend₂₀(mappend₃₀(concat₀₀(_lh_percOp_LH_P2_0¹), mappend₄₀([LH_C 't' [LH_C ':' [LH_N]]], mappend₅₀(string_of_int⁰(j¹), [LH_C 'n' [LH_N]]))), percOp₀₁(j¹, _lh_percOp_LH_P2_1¹, _lh_percOp_arg3¹)) | _  => error⁰}: 590
+//│ [LH_N]: 565 --->
+//│ 	case xs¹¹ of {LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ mappend₄₀(t¹⁵, ys¹¹)] | LH_N  => ys¹¹}: 824
+//│ [LH_C ':' [LH_N]]: 566 --->
+//│ 	case xs¹¹ of {LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ mappend₄₀(t¹⁵, ys¹¹)] | LH_N  => ys¹¹}: 824
+//│ [LH_C 't' [LH_C ':' [LH_N]]]: 567 --->
+//│ 	case xs¹¹ of {LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ mappend₄₀(t¹⁵, ys¹¹)] | LH_N  => ys¹¹}: 824
+//│ [LH_N]: 575 --->
+//│ 	case xs¹⁴ of {LH_C h²⁰ t²⁰ => [LH_C h²⁰ mappend₂₀(t²⁰, ys¹⁴)] | LH_N  => ys¹⁴}: 985
+//│ [LH_C 'n' [LH_N]]: 576 --->
+//│ 	case xs¹⁴ of {LH_C h²⁰ t²⁰ => [LH_C h²⁰ mappend₂₀(t²⁰, ys¹⁴)] | LH_N  => ys¹⁴}: 985
+//│ [LH_C h¹⁰ mappend₀₁(t¹⁰, ys⁶)]: 605 --->
+//│ 	case xs¹² of {LH_C h¹⁶ t¹⁶ => [LH_C h¹⁶ mappend₃₁(t¹⁶, ys¹²)] | LH_N  => ys¹²}: 849
+//│ [LH_C _lh_replicate_arg2¹ replicate₀₀((_lh_replicate_arg1¹ - 1), _lh_replicate_arg2¹)]: 625 --->
+//│ 	case lss² of {LH_C h²⁶ t²⁶ => mappend₀₁(h²⁶, concat₀₁(t²⁶)) | LH_N  => [LH_N]}: 1195
+//│ [LH_N]: 626 --->
+//│ 	case lss² of {LH_C h²⁶ t²⁶ => mappend₀₁(h²⁶, concat₀₁(t²⁶)) | LH_N  => [LH_N]}: 1195
+//│ [LH_P3 1 0 1]: 639 --->
+//│ 	case _lh_ampOp_arg2¹ of {LH_P3 _lh_ampOp_LH_P3_0¹ _lh_ampOp_LH_P3_1¹ _lh_ampOp_LH_P3_2¹ => let y¹ = ((_lh_ampOp_arg1¹ * 2) + 1)
+//│ in [LH_P3 (_lh_ampOp_LH_P3_0¹ * _lh_ampOp_arg1¹) ((_lh_ampOp_LH_P3_1¹ + (_lh_ampOp_LH_P3_0¹ * 2)) * y¹) (_lh_ampOp_LH_P3_2¹ * y¹)] | _  => error⁰}: 973
+//│ [LH_C h¹¹ mappend₄₁(t¹¹, ys⁷)]: 652 --->
+//│ 	case xs¹⁵ of {LH_C h²¹ t²¹ => [LH_C h²¹ mappend₂₁(t²¹, ys¹⁵)] | LH_N  => ys¹⁵}: 997
+//│ [LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹]: 705 --->
+//│ 	case _lh_ampOp_arg2¹ of {LH_P3 _lh_ampOp_LH_P3_0¹ _lh_ampOp_LH_P3_1¹ _lh_ampOp_LH_P3_2¹ => let y¹ = ((_lh_ampOp_arg1¹ * 2) + 1)
+//│ in [LH_P3 (_lh_ampOp_LH_P3_0¹ * _lh_ampOp_arg1¹) ((_lh_ampOp_LH_P3_1¹ + (_lh_ampOp_LH_P3_0¹ * 2)) * y¹) (_lh_ampOp_LH_P3_2¹ * y¹)] | _  => error⁰}: 973
+//│ [LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹]: 732 --->
+//│ 	case _lh_ampOp_arg2¹ of {LH_P3 _lh_ampOp_LH_P3_0¹ _lh_ampOp_LH_P3_1¹ _lh_ampOp_LH_P3_2¹ => let y¹ = ((_lh_ampOp_arg1¹ * 2) + 1)
+//│ in [LH_P3 (_lh_ampOp_LH_P3_0¹ * _lh_ampOp_arg1¹) ((_lh_ampOp_LH_P3_1¹ + (_lh_ampOp_LH_P3_0¹ * 2)) * y¹) (_lh_ampOp_LH_P3_2¹ * y¹)] | _  => error⁰}: 973
+//│ [LH_C h¹² mappend₅₀(t¹², ys⁸)]: 752 --->
+//│ 	case xs¹⁴ of {LH_C h²⁰ t²⁰ => [LH_C h²⁰ mappend₂₀(t²⁰, ys¹⁴)] | LH_N  => ys¹⁴}: 985
+//│ [LH_C h¹³ mappend₅₁(t¹³, ys⁹)]: 774 --->
+//│ 	case xs¹⁵ of {LH_C h²¹ t²¹ => [LH_C h²¹ mappend₂₁(t²¹, ys¹⁵)] | LH_N  => ys¹⁵}: 997
+//│ [LH_C h¹⁴ mappend₃₀(t¹⁴, ys¹⁰)]: 786 --->
+//│ 	case xs¹⁴ of {LH_C h²⁰ t²⁰ => [LH_C h²⁰ mappend₂₀(t²⁰, ys¹⁴)] | LH_N  => ys¹⁴}: 985
+//│ [LH_C h¹⁵ mappend₄₀(t¹⁵, ys¹¹)]: 822 --->
+//│ 	case xs¹⁴ of {LH_C h²⁰ t²⁰ => [LH_C h²⁰ mappend₂₀(t²⁰, ys¹⁴)] | LH_N  => ys¹⁴}: 985
+//│ [LH_P2 div⁰(_lh_divmod_arg1¹, _lh_divmod_arg2¹) (_lh_divmod_arg1¹ % _lh_divmod_arg2¹)]: 837 --->
+//│ 	case _lh_matchIdent⁵ of {LH_P2 _lh_hashOp_LH_P2_0¹ _lh_hashOp_LH_P2_1¹ => if ((_lh_hashOp_LH_P3_0¹ > _lh_hashOp_LH_P3_1¹) || ((_lh_hashOp_LH_P2_1¹ + _lh_hashOp_LH_P3_0¹) >= _lh_hashOp_LH_P3_2¹)) then hashOp₀₀(k³, [LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹]) else [LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀(k³, [LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹])] | _  => error⁰}: 737
+//│ [LH_C h¹⁶ mappend₃₁(t¹⁶, ys¹²)]: 847 --->
+//│ 	case xs¹⁵ of {LH_C h²¹ t²¹ => [LH_C h²¹ mappend₂₁(t²¹, ys¹⁵)] | LH_N  => ys¹⁵}: 997
+//│ [LH_C h¹⁷ mappend₁₀(t¹⁷, ys¹³)]: 859 --->
+//│ 	case lss¹ of {LH_C h²² t²² => mappend₀₀(h²², concat₀₀(t²²)) | LH_N  => [LH_N]}: 1104
+//│ [LH_P2 take₀₁(_lh_splitAt_arg1¹, _lh_splitAt_arg2¹) drop₀₁(_lh_splitAt_arg1¹, _lh_splitAt_arg2¹)]: 874 --->
+//│ 	case _lh_matchIdent³ of {LH_P2 _lh_percOp_LH_P2_0¹ _lh_percOp_LH_P2_1¹ => mappend₂₀(mappend₃₀(concat₀₀(_lh_percOp_LH_P2_0¹), mappend₄₀([LH_C 't' [LH_C ':' [LH_N]]], mappend₅₀(string_of_int⁰(j¹), [LH_C 'n' [LH_N]]))), percOp₀₁(j¹, _lh_percOp_LH_P2_1¹, _lh_percOp_arg3¹)) | _  => error⁰}: 590
+//│ [LH_C h¹⁸ take₀₁((n³ - 1), t¹⁸)]: 893 --->
+//│ 	case lss¹ of {LH_C h²² t²² => mappend₀₀(h²², concat₀₀(t²²)) | LH_N  => [LH_N]}: 1104
+//│ [LH_N]: 894 --->
+//│ 	case lss¹ of {LH_C h²² t²² => mappend₀₀(h²², concat₀₀(t²²)) | LH_N  => [LH_N]}: 1104
+//│ [LH_N]: 896 --->
+//│ 	case lss¹ of {LH_C h²² t²² => mappend₀₀(h²², concat₀₀(t²²)) | LH_N  => [LH_N]}: 1104
+//│ [LH_C h¹⁹ take₁₁((n⁴ - 1), t¹⁹)]: 916 --->
+//│ 	case xs¹³ of {LH_C h¹⁷ t¹⁷ => [LH_C h¹⁷ mappend₁₀(t¹⁷, ys¹³)] | LH_N  => ys¹³}: 861
+//│ [LH_N]: 917 --->
+//│ 	case xs¹³ of {LH_C h¹⁷ t¹⁷ => [LH_C h¹⁷ mappend₁₀(t¹⁷, ys¹³)] | LH_N  => ys¹³}: 861
+//│ [LH_N]: 919 --->
+//│ 	case xs¹³ of {LH_C h¹⁷ t¹⁷ => [LH_C h¹⁷ mappend₁₀(t¹⁷, ys¹³)] | LH_N  => ys¹³}: 861
+//│ [LH_P3 (_lh_ampOp_LH_P3_0¹ * _lh_ampOp_arg1¹) ((_lh_ampOp_LH_P3_1¹ + (_lh_ampOp_LH_P3_0¹ * 2)) * y¹) (_lh_ampOp_LH_P3_2¹ * y¹)]: 970 --->
+//│ 	case _lh_matchIdent⁴ of {LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹ => let _lh_matchIdent⁵ = divmod₀₀(((_lh_hashOp_LH_P3_0¹ * 3) + _lh_hashOp_LH_P3_1¹), _lh_hashOp_LH_P3_2¹)
+//│ in case _lh_matchIdent⁵ of {LH_P2 _lh_hashOp_LH_P2_0¹ _lh_hashOp_LH_P2_1¹ => if ((_lh_hashOp_LH_P3_0¹ > _lh_hashOp_LH_P3_1¹) || ((_lh_hashOp_LH_P2_1¹ + _lh_hashOp_LH_P3_0¹) >= _lh_hashOp_LH_P3_2¹)) then hashOp₀₀(k³, [LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹]) else [LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀(k³, [LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹])] | _  => error⁰} | _  => error⁰}: 740
+//│ [LH_P2 mappend₁₁(take₁₀((_lh_percOp_arg3² % 10), _lh_percOp_arg2²), replicate₀₀((k⁴ - _lh_percOp_arg3²), [LH_C ' ' [LH_N]])) [LH_N]]: 1045 --->
+//│ 	case _lh_matchIdent⁶ of {LH_P2 _lh_percOp_LH_P2_0² _lh_percOp_LH_P2_1² => mappend₂₁(mappend₃₁(concat₀₁(_lh_percOp_LH_P2_0²), mappend₄₁([LH_C 't' [LH_C ':' [LH_N]]], mappend₅₁(string_of_int⁰(j²), [LH_C 'n' [LH_N]]))), percOp₀₁(j², _lh_percOp_LH_P2_1², _lh_percOp_arg3²)) | _  => error⁰}: 1087
+//│ [LH_N]: 1062 --->
+//│ 	case xs⁷ of {LH_C h¹¹ t¹¹ => [LH_C h¹¹ mappend₄₁(t¹¹, ys⁷)] | LH_N  => ys⁷}: 654
+//│ [LH_C ':' [LH_N]]: 1063 --->
+//│ 	case xs⁷ of {LH_C h¹¹ t¹¹ => [LH_C h¹¹ mappend₄₁(t¹¹, ys⁷)] | LH_N  => ys⁷}: 654
+//│ [LH_C 't' [LH_C ':' [LH_N]]]: 1064 --->
+//│ 	case xs⁷ of {LH_C h¹¹ t¹¹ => [LH_C h¹¹ mappend₄₁(t¹¹, ys⁷)] | LH_N  => ys⁷}: 654
+//│ [LH_N]: 1072 --->
+//│ 	case xs¹⁵ of {LH_C h²¹ t²¹ => [LH_C h²¹ mappend₂₁(t²¹, ys¹⁵)] | LH_N  => ys¹⁵}: 997
+//│ [LH_C 'n' [LH_N]]: 1073 --->
+//│ 	case xs¹⁵ of {LH_C h²¹ t²¹ => [LH_C h²¹ mappend₂₁(t²¹, ys¹⁵)] | LH_N  => ys¹⁵}: 997
+//│ [LH_N]: 1103 --->
+//│ 	case xs¹⁰ of {LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ mappend₃₀(t¹⁴, ys¹⁰)] | LH_N  => ys¹⁰}: 788
+//│ [LH_C h²³ mappend₀₀(t²³, ys¹⁶)]: 1113 --->
+//│ 	case xs¹⁰ of {LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ mappend₃₀(t¹⁴, ys¹⁰)] | LH_N  => ys¹⁰}: 788
+//│ [LH_C _lh_replicate_arg2² replicate₀₁((_lh_replicate_arg1² - 1), _lh_replicate_arg2²)]: 1133 --->
+//│ 	case lss¹ of {LH_C h²² t²² => mappend₀₀(h²², concat₀₀(t²²)) | LH_N  => [LH_N]}: 1104
+//│ [LH_N]: 1134 --->
+//│ 	case lss¹ of {LH_C h²² t²² => mappend₀₀(h²², concat₀₀(t²²)) | LH_N  => [LH_N]}: 1104
+//│ [LH_P2 take₀₀(_lh_splitAt_arg1², _lh_splitAt_arg2²) drop₀₀(_lh_splitAt_arg1², _lh_splitAt_arg2²)]: 1148 --->
+//│ 	case _lh_matchIdent⁶ of {LH_P2 _lh_percOp_LH_P2_0² _lh_percOp_LH_P2_1² => mappend₂₁(mappend₃₁(concat₀₁(_lh_percOp_LH_P2_0²), mappend₄₁([LH_C 't' [LH_C ':' [LH_N]]], mappend₅₁(string_of_int⁰(j²), [LH_C 'n' [LH_N]]))), percOp₀₁(j², _lh_percOp_LH_P2_1², _lh_percOp_arg3²)) | _  => error⁰}: 1087
+//│ [LH_C h²⁴ take₁₀((n⁵ - 1), t²⁴)]: 1167 --->
+//│ 	case xs¹⁷ of {LH_C h²⁵ t²⁵ => [LH_C h²⁵ mappend₁₁(t²⁵, ys¹⁷)] | LH_N  => ys¹⁷}: 1183
+//│ [LH_N]: 1168 --->
+//│ 	case xs¹⁷ of {LH_C h²⁵ t²⁵ => [LH_C h²⁵ mappend₁₁(t²⁵, ys¹⁷)] | LH_N  => ys¹⁷}: 1183
+//│ [LH_N]: 1170 --->
+//│ 	case xs¹⁷ of {LH_C h²⁵ t²⁵ => [LH_C h²⁵ mappend₁₁(t²⁵, ys¹⁷)] | LH_N  => ys¹⁷}: 1183
+//│ [LH_C h²⁵ mappend₁₁(t²⁵, ys¹⁷)]: 1181 --->
+//│ 	case lss² of {LH_C h²⁶ t²⁶ => mappend₀₁(h²⁶, concat₀₁(t²⁶)) | LH_N  => [LH_N]}: 1195
+//│ [LH_N]: 1194 --->
+//│ 	case xs¹² of {LH_C h¹⁶ t¹⁶ => [LH_C h¹⁶ mappend₃₁(t¹⁶, ys¹²)] | LH_N  => ys¹²}: 849
+//│ ------------------
+//│ case _lh_matchIdent³ of {LH_P2 _lh_percOp_LH_P2_0¹ _lh_percOp_LH_P2_1¹ => mappend₂₀(mappend₃₀(concat₀₀(_lh_percOp_LH_P2_0¹), mappend₄₀([LH_C 't' [LH_C ':' [LH_N]]], mappend₅₀(string_of_int⁰(j¹), [LH_C 'n' [LH_N]]))), percOp₀₁(j¹, _lh_percOp_LH_P2_1¹, _lh_percOp_arg3¹)) | _  => error⁰}: 590 --->
+//│ 	[LH_P2 mappend₁₀(take₁₁((_lh_percOp_arg3¹ % 10), _lh_percOp_arg2¹), replicate₀₁((k² - _lh_percOp_arg3¹), [LH_C ' ' [LH_N]])) [LH_N]]: 548
+//│ 	[LH_P2 take₀₁(_lh_splitAt_arg1¹, _lh_splitAt_arg2¹) drop₀₁(_lh_splitAt_arg1¹, _lh_splitAt_arg2¹)]: 874
+//│ case xs⁷ of {LH_C h¹¹ t¹¹ => [LH_C h¹¹ mappend₄₁(t¹¹, ys⁷)] | LH_N  => ys⁷}: 654 --->
+//│ 	[LH_N]: 1062
+//│ 	[LH_C ':' [LH_N]]: 1063
+//│ 	[LH_C 't' [LH_C ':' [LH_N]]]: 1064
+//│ case _lh_matchIdent⁵ of {LH_P2 _lh_hashOp_LH_P2_0¹ _lh_hashOp_LH_P2_1¹ => if ((_lh_hashOp_LH_P3_0¹ > _lh_hashOp_LH_P3_1¹) || ((_lh_hashOp_LH_P2_1¹ + _lh_hashOp_LH_P3_0¹) >= _lh_hashOp_LH_P3_2¹)) then hashOp₀₀(k³, [LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹]) else [LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀(k³, [LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹])] | _  => error⁰}: 737 --->
+//│ 	[LH_P2 div⁰(_lh_divmod_arg1¹, _lh_divmod_arg2¹) (_lh_divmod_arg1¹ % _lh_divmod_arg2¹)]: 837
+//│ case _lh_matchIdent⁴ of {LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹ => let _lh_matchIdent⁵ = divmod₀₀(((_lh_hashOp_LH_P3_0¹ * 3) + _lh_hashOp_LH_P3_1¹), _lh_hashOp_LH_P3_2¹)
+//│ in case _lh_matchIdent⁵ of {LH_P2 _lh_hashOp_LH_P2_0¹ _lh_hashOp_LH_P2_1¹ => if ((_lh_hashOp_LH_P3_0¹ > _lh_hashOp_LH_P3_1¹) || ((_lh_hashOp_LH_P2_1¹ + _lh_hashOp_LH_P3_0¹) >= _lh_hashOp_LH_P3_2¹)) then hashOp₀₀(k³, [LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹]) else [LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀(k³, [LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹])] | _  => error⁰} | _  => error⁰}: 740 --->
+//│ 	[LH_P3 (_lh_ampOp_LH_P3_0¹ * _lh_ampOp_arg1¹) ((_lh_ampOp_LH_P3_1¹ + (_lh_ampOp_LH_P3_0¹ * 2)) * y¹) (_lh_ampOp_LH_P3_2¹ * y¹)]: 970
+//│ case xs¹⁰ of {LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ mappend₃₀(t¹⁴, ys¹⁰)] | LH_N  => ys¹⁰}: 788 --->
+//│ 	[LH_N]: 1103
+//│ 	[LH_C h²³ mappend₀₀(t²³, ys¹⁶)]: 1113
+//│ case xs¹¹ of {LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ mappend₄₀(t¹⁵, ys¹¹)] | LH_N  => ys¹¹}: 824 --->
+//│ 	[LH_N]: 565
+//│ 	[LH_C ':' [LH_N]]: 566
+//│ 	[LH_C 't' [LH_C ':' [LH_N]]]: 567
+//│ case xs¹² of {LH_C h¹⁶ t¹⁶ => [LH_C h¹⁶ mappend₃₁(t¹⁶, ys¹²)] | LH_N  => ys¹²}: 849 --->
+//│ 	[LH_C h¹⁰ mappend₀₁(t¹⁰, ys⁶)]: 605
+//│ 	[LH_N]: 1194
+//│ case xs¹³ of {LH_C h¹⁷ t¹⁷ => [LH_C h¹⁷ mappend₁₀(t¹⁷, ys¹³)] | LH_N  => ys¹³}: 861 --->
+//│ 	[LH_C h¹⁹ take₁₁((n⁴ - 1), t¹⁹)]: 916
+//│ 	[LH_N]: 917
+//│ 	[LH_N]: 919
+//│ case _lh_ampOp_arg2¹ of {LH_P3 _lh_ampOp_LH_P3_0¹ _lh_ampOp_LH_P3_1¹ _lh_ampOp_LH_P3_2¹ => let y¹ = ((_lh_ampOp_arg1¹ * 2) + 1)
+//│ in [LH_P3 (_lh_ampOp_LH_P3_0¹ * _lh_ampOp_arg1¹) ((_lh_ampOp_LH_P3_1¹ + (_lh_ampOp_LH_P3_0¹ * 2)) * y¹) (_lh_ampOp_LH_P3_2¹ * y¹)] | _  => error⁰}: 973 --->
+//│ 	[LH_P3 1 0 1]: 639
+//│ 	[LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹]: 705
+//│ 	[LH_P3 (_lh_hashOp_LH_P3_0¹ * 10) ((_lh_hashOp_LH_P3_1¹ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2¹)) * 10) _lh_hashOp_LH_P3_2¹]: 732
+//│ case xs¹⁴ of {LH_C h²⁰ t²⁰ => [LH_C h²⁰ mappend₂₀(t²⁰, ys¹⁴)] | LH_N  => ys¹⁴}: 985 --->
+//│ 	[LH_N]: 575
+//│ 	[LH_C 'n' [LH_N]]: 576
+//│ 	[LH_C h¹² mappend₅₀(t¹², ys⁸)]: 752
+//│ 	[LH_C h¹⁴ mappend₃₀(t¹⁴, ys¹⁰)]: 786
+//│ 	[LH_C h¹⁵ mappend₄₀(t¹⁵, ys¹¹)]: 822
+//│ case xs¹⁵ of {LH_C h²¹ t²¹ => [LH_C h²¹ mappend₂₁(t²¹, ys¹⁵)] | LH_N  => ys¹⁵}: 997 --->
+//│ 	[LH_C h¹¹ mappend₄₁(t¹¹, ys⁷)]: 652
+//│ 	[LH_C h¹³ mappend₅₁(t¹³, ys⁹)]: 774
+//│ 	[LH_C h¹⁶ mappend₃₁(t¹⁶, ys¹²)]: 847
+//│ 	[LH_N]: 1072
+//│ 	[LH_C 'n' [LH_N]]: 1073
+//│ case _lh_matchIdent⁶ of {LH_P2 _lh_percOp_LH_P2_0² _lh_percOp_LH_P2_1² => mappend₂₁(mappend₃₁(concat₀₁(_lh_percOp_LH_P2_0²), mappend₄₁([LH_C 't' [LH_C ':' [LH_N]]], mappend₅₁(string_of_int⁰(j²), [LH_C 'n' [LH_N]]))), percOp₀₁(j², _lh_percOp_LH_P2_1², _lh_percOp_arg3²)) | _  => error⁰}: 1087 --->
+//│ 	[LH_P2 mappend₁₁(take₁₀((_lh_percOp_arg3² % 10), _lh_percOp_arg2²), replicate₀₀((k⁴ - _lh_percOp_arg3²), [LH_C ' ' [LH_N]])) [LH_N]]: 1045
+//│ 	[LH_P2 take₀₀(_lh_splitAt_arg1², _lh_splitAt_arg2²) drop₀₀(_lh_splitAt_arg1², _lh_splitAt_arg2²)]: 1148
+//│ case lss¹ of {LH_C h²² t²² => mappend₀₀(h²², concat₀₀(t²²)) | LH_N  => [LH_N]}: 1104 --->
+//│ 	[LH_C h¹⁷ mappend₁₀(t¹⁷, ys¹³)]: 859
+//│ 	[LH_C h¹⁸ take₀₁((n³ - 1), t¹⁸)]: 893
+//│ 	[LH_N]: 894
+//│ 	[LH_N]: 896
+//│ 	[LH_C _lh_replicate_arg2² replicate₀₁((_lh_replicate_arg1² - 1), _lh_replicate_arg2²)]: 1133
+//│ 	[LH_N]: 1134
+//│ case xs¹⁷ of {LH_C h²⁵ t²⁵ => [LH_C h²⁵ mappend₁₁(t²⁵, ys¹⁷)] | LH_N  => ys¹⁷}: 1183 --->
+//│ 	[LH_C h²⁴ take₁₀((n⁵ - 1), t²⁴)]: 1167
+//│ 	[LH_N]: 1168
+//│ 	[LH_N]: 1170
+//│ case lss² of {LH_C h²⁶ t²⁶ => mappend₀₁(h²⁶, concat₀₁(t²⁶)) | LH_N  => [LH_N]}: 1195 --->
+//│ 	[LH_C h⁹ take₀₀((n² - 1), t⁹)]: 496
+//│ 	[LH_N]: 497
+//│ 	[LH_N]: 499
+//│ 	[LH_C _lh_replicate_arg2¹ replicate₀₀((_lh_replicate_arg1¹ - 1), _lh_replicate_arg2¹)]: 625
+//│ 	[LH_N]: 626
+//│ 	[LH_C h²⁵ mappend₁₁(t²⁵, ys¹⁷)]: 1181
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testPiDigits_nofib₀₀(primId⁰(100))
+//│ def testPiDigits_nofib₀₀(_lh_testPiDigits_nofib_arg1²) = 
+//│ 	pidgits₀₀(_lh_testPiDigits_nofib_arg1²)
+//│ 	where
+//│ 	def pidgits₀₀(_lh_pidgits_arg1²) = 
+//│ 		percOp₀₀(0, hashOp₀₀(0, 
+//│ 			let _lh_ampOp_LH_P3_0⁴ = 1
+//│ 			in let _lh_ampOp_LH_P3_1⁴ = 0
+//│ 			in let _lh_ampOp_LH_P3_2⁴ = 1
+//│ 			in (fun _lh_ampOp_arg1⁵ -> 
+//│ 				let y⁴ = ((_lh_ampOp_arg1⁵ * 2) + 1)
+//│ 				in let _lh_hashOp_LH_P3_0⁵ = (_lh_ampOp_LH_P3_0⁴ * _lh_ampOp_arg1⁵)
+//│ 				in let _lh_hashOp_LH_P3_1⁵ = ((_lh_ampOp_LH_P3_1⁴ + (_lh_ampOp_LH_P3_0⁴ * 2)) * y⁴)
+//│ 				in let _lh_hashOp_LH_P3_2⁵ = (_lh_ampOp_LH_P3_2⁴ * y⁴)
+//│ 				in (fun k¹⁰ -> 
+//│ 					let _lh_matchIdent¹¹ = divmod₀₀(((_lh_hashOp_LH_P3_0⁵ * 3) + _lh_hashOp_LH_P3_1⁵), _lh_hashOp_LH_P3_2⁵)
+//│ 					in _lh_matchIdent¹¹(_lh_hashOp_LH_P3_0⁵, _lh_hashOp_LH_P3_1⁵, _lh_hashOp_LH_P3_2⁵, k¹⁰)))), _lh_pidgits_arg1²)
+//│ 		where
+//│ 		def hashOp₀₀(_lh_hashOp_arg1², _lh_hashOp_arg2²) = 
+//│ 			let k¹¹ = (_lh_hashOp_arg1² + 1)
+//│ 			in let _lh_matchIdent¹² = ampOp₀₀(k¹¹, _lh_hashOp_arg2²)
+//│ 			in _lh_matchIdent¹²(k¹¹)
+//│ 			where
+//│ 			def ampOp₀₀(_lh_ampOp_arg1², _lh_ampOp_arg2²) = 
+//│ 				_lh_ampOp_arg2²(_lh_ampOp_arg1²)
+//│ 			def divmod₀₀(_lh_divmod_arg1², _lh_divmod_arg2²) = 
+//│ 				let _lh_hashOp_LH_P2_0² = div⁰(_lh_divmod_arg1², _lh_divmod_arg2²)
+//│ 				in let _lh_hashOp_LH_P2_1² = (_lh_divmod_arg1² % _lh_divmod_arg2²)
+//│ 				in (fun _lh_hashOp_LH_P3_0² -> (fun _lh_hashOp_LH_P3_1² -> (fun _lh_hashOp_LH_P3_2² -> (fun k⁶ -> if ((_lh_hashOp_LH_P3_0² > _lh_hashOp_LH_P3_1²) || ((_lh_hashOp_LH_P2_1² + _lh_hashOp_LH_P3_0²) >= _lh_hashOp_LH_P3_2²)) then hashOp₀₀(k⁶, 
+//│ 					let _lh_ampOp_LH_P3_0² = _lh_hashOp_LH_P3_0²
+//│ 					in let _lh_ampOp_LH_P3_1² = _lh_hashOp_LH_P3_1²
+//│ 					in let _lh_ampOp_LH_P3_2² = _lh_hashOp_LH_P3_2²
+//│ 					in (fun _lh_ampOp_arg1³ -> 
+//│ 						let y² = ((_lh_ampOp_arg1³ * 2) + 1)
+//│ 						in let _lh_hashOp_LH_P3_0³ = (_lh_ampOp_LH_P3_0² * _lh_ampOp_arg1³)
+//│ 						in let _lh_hashOp_LH_P3_1³ = ((_lh_ampOp_LH_P3_1² + (_lh_ampOp_LH_P3_0² * 2)) * y²)
+//│ 						in let _lh_hashOp_LH_P3_2³ = (_lh_ampOp_LH_P3_2² * y²)
+//│ 						in (fun k⁷ -> 
+//│ 							let _lh_matchIdent⁸ = divmod₀₀(((_lh_hashOp_LH_P3_0³ * 3) + _lh_hashOp_LH_P3_1³), _lh_hashOp_LH_P3_2³)
+//│ 							in _lh_matchIdent⁸(_lh_hashOp_LH_P3_0³, _lh_hashOp_LH_P3_1³, _lh_hashOp_LH_P3_2³, k⁷)))) else [LH_C string_of_int⁰(_lh_hashOp_LH_P2_0²) hashOp₀₀(k⁶, 
+//│ 					let _lh_ampOp_LH_P3_0³ = (_lh_hashOp_LH_P3_0² * 10)
+//│ 					in let _lh_ampOp_LH_P3_1³ = ((_lh_hashOp_LH_P3_1² - (_lh_hashOp_LH_P2_0² * _lh_hashOp_LH_P3_2²)) * 10)
+//│ 					in let _lh_ampOp_LH_P3_2³ = _lh_hashOp_LH_P3_2²
+//│ 					in (fun _lh_ampOp_arg1⁴ -> 
+//│ 						let y³ = ((_lh_ampOp_arg1⁴ * 2) + 1)
+//│ 						in let _lh_hashOp_LH_P3_0⁴ = (_lh_ampOp_LH_P3_0³ * _lh_ampOp_arg1⁴)
+//│ 						in let _lh_hashOp_LH_P3_1⁴ = ((_lh_ampOp_LH_P3_1³ + (_lh_ampOp_LH_P3_0³ * 2)) * y³)
+//│ 						in let _lh_hashOp_LH_P3_2⁴ = (_lh_ampOp_LH_P3_2³ * y³)
+//│ 						in (fun k⁸ -> 
+//│ 							let _lh_matchIdent⁹ = divmod₀₀(((_lh_hashOp_LH_P3_0⁴ * 3) + _lh_hashOp_LH_P3_1⁴), _lh_hashOp_LH_P3_2⁴)
+//│ 							in _lh_matchIdent⁹(_lh_hashOp_LH_P3_0⁴, _lh_hashOp_LH_P3_1⁴, _lh_hashOp_LH_P3_2⁴, k⁸))))]))))
+//│ 		def percOp₀₀(_lh_percOp_arg1³, _lh_percOp_arg2³, _lh_percOp_arg3³) = 
+//│ 			if (_lh_percOp_arg1³ >= _lh_percOp_arg3³) then [LH_N] else 
+//│ 				let k⁵ = (_lh_percOp_arg1³ + 10)
+//│ 				in let j³ = min₀₀(_lh_percOp_arg3³, k⁵)
+//│ 				in let _lh_matchIdent⁷ = if (k⁵ > _lh_percOp_arg3³) then 
+//│ 					let _lh_percOp_LH_P2_0³ = mappend₁₀(take₁₁((_lh_percOp_arg3³ % 10), _lh_percOp_arg2³), replicate₀₁((k⁵ - _lh_percOp_arg3³), [LH_C ' ' [LH_N]]))
+//│ 					in let _lh_percOp_LH_P2_1³ = [LH_N]
+//│ 					in (fun j⁴ -> (fun _lh_percOp_arg3⁴ -> mappend₂₀(mappend₃₀(concat₀₀(_lh_percOp_LH_P2_0³), mappend₄₀(
+//│ 						let h²⁸ = 't'
+//│ 						in let t²⁸ = 	
+//│ 							let h³⁰ = ':'
+//│ 							in let t³⁰ = (fun ys²⁵ -> ys²⁵)
+//│ 							in (fun ys²³ -> 
+//│ 								let h³¹ = h³⁰
+//│ 								in let t³¹ = mappend₄₀(t³⁰, ys²³)
+//│ 								in (fun ys²⁴ -> [LH_C h³¹ mappend₂₀(t³¹, ys²⁴)]))
+//│ 						in (fun ys²¹ -> 
+//│ 							let h²⁹ = h²⁸
+//│ 							in let t²⁹ = mappend₄₀(t²⁸, ys²¹)
+//│ 							in (fun ys²² -> [LH_C h²⁹ mappend₂₀(t²⁹, ys²²)])), mappend₅₀(string_of_int⁰(j⁴), 
+//│ 						let h³² = 'n'
+//│ 						in let t³² = (fun ys²⁷ -> ys²⁷)
+//│ 						in (fun ys²⁶ -> [LH_C h³² mappend₂₀(t³², ys²⁶)])))), percOp₀₁(j⁴, _lh_percOp_LH_P2_1³, _lh_percOp_arg3⁴)))) else splitAt₀₁(10, _lh_percOp_arg2³)
+//│ 				in _lh_matchIdent⁷(j³, _lh_percOp_arg3³)
+//│ 			where
+//│ 			def concat₀₀(lss³) = 
+//│ 				lss³
+//│ 				where
+//│ 				def mappend₀₀(xs²², ys⁴⁰) = 
+//│ 					case xs²² of {
+//│ 						LH_C h²³ t²³ => 
+//│ 							let h⁴⁰ = h²³
+//│ 							in let t⁴⁰ = mappend₀₀(t²³, ys⁴⁰)
+//│ 							in (fun ys⁴¹ -> 
+//│ 								let h⁴¹ = h⁴⁰
+//│ 								in let t⁴¹ = mappend₃₀(t⁴⁰, ys⁴¹)
+//│ 								in (fun ys⁴² -> [LH_C h⁴¹ mappend₂₀(t⁴¹, ys⁴²)]))
+//│ 						| LH_N  => ys⁴⁰}
+//│ 			def mappend₁₀(xs²⁵, ys⁵²) = 
+//│ 				xs²⁵(ys⁵²)
+//│ 			def mappend₂₀(xs²³, ys⁴⁶) = 
+//│ 				xs²³(ys⁴⁶)
+//│ 			def mappend₃₀(xs²⁶, ys⁶⁰) = 
+//│ 				xs²⁶(ys⁶⁰)
+//│ 			def mappend₄₀(xs²⁰, ys³⁰) = 
+//│ 				xs²⁰(ys³⁰)
+//│ 			def mappend₅₀(xs²¹, ys³¹) = 
+//│ 				case xs²¹ of {
+//│ 					LH_C h¹² t¹² => 
+//│ 						let h³⁴ = h¹²
+//│ 						in let t³⁴ = mappend₅₀(t¹², ys³¹)
+//│ 						in (fun ys³² -> [LH_C h³⁴ mappend₂₀(t³⁴, ys³²)])
+//│ 					| LH_N  => ys³¹}
+//│ 			def min₀₀(_lh_min_arg1⁴, _lh_min_arg2⁴) = 
+//│ 				if (_lh_min_arg1⁴ > _lh_min_arg2⁴) then _lh_min_arg2⁴ else _lh_min_arg1⁴
+//│ 			def percOp₀₁(_lh_percOp_arg1⁴, _lh_percOp_arg2⁴, _lh_percOp_arg3⁷) = 
+//│ 				if (_lh_percOp_arg1⁴ >= _lh_percOp_arg3⁷) then [LH_N] else 
+//│ 					let k⁹ = (_lh_percOp_arg1⁴ + 10)
+//│ 					in let j⁷ = min₀₁(_lh_percOp_arg3⁷, k⁹)
+//│ 					in let _lh_matchIdent¹⁰ = if (k⁹ > _lh_percOp_arg3⁷) then 
+//│ 						let _lh_percOp_LH_P2_0⁶ = mappend₁₁(take₁₀((_lh_percOp_arg3⁷ % 10), _lh_percOp_arg2⁴), replicate₀₀((k⁹ - _lh_percOp_arg3⁷), [LH_C ' ' [LH_N]]))
+//│ 						in let _lh_percOp_LH_P2_1⁶ = [LH_N]
+//│ 						in (fun j⁸ -> (fun _lh_percOp_arg3⁸ -> mappend₂₁(mappend₃₁(concat₀₁(_lh_percOp_LH_P2_0⁶), mappend₄₁(
+//│ 							let h⁵³ = 't'
+//│ 							in let t⁵³ = 	
+//│ 								let h⁵⁵ = ':'
+//│ 								in let t⁵⁵ = (fun ys⁶⁶ -> ys⁶⁶)
+//│ 								in (fun ys⁶⁴ -> 
+//│ 									let h⁵⁶ = h⁵⁵
+//│ 									in let t⁵⁶ = mappend₄₁(t⁵⁵, ys⁶⁴)
+//│ 									in (fun ys⁶⁵ -> [LH_C h⁵⁶ mappend₂₁(t⁵⁶, ys⁶⁵)]))
+//│ 							in (fun ys⁶² -> 
+//│ 								let h⁵⁴ = h⁵³
+//│ 								in let t⁵⁴ = mappend₄₁(t⁵³, ys⁶²)
+//│ 								in (fun ys⁶³ -> [LH_C h⁵⁴ mappend₂₁(t⁵⁴, ys⁶³)])), mappend₅₁(string_of_int⁰(j⁸), 
+//│ 							let h⁵⁷ = 'n'
+//│ 							in let t⁵⁷ = (fun ys⁶⁸ -> ys⁶⁸)
+//│ 							in (fun ys⁶⁷ -> [LH_C h⁵⁷ mappend₂₁(t⁵⁷, ys⁶⁷)])))), percOp₀₁(j⁸, _lh_percOp_LH_P2_1⁶, _lh_percOp_arg3⁸)))) else splitAt₀₀(10, _lh_percOp_arg2⁴)
+//│ 					in _lh_matchIdent¹⁰(j⁷, _lh_percOp_arg3⁷)
+//│ 				where
+//│ 				def concat₀₁(lss⁴) = 
+//│ 					lss⁴
+//│ 					where
+//│ 					def mappend₀₁(xs²⁴, ys⁴⁷) = 
+//│ 						case xs²⁴ of {
+//│ 							LH_C h¹⁰ t¹⁰ => 
+//│ 								let h⁴⁴ = h¹⁰
+//│ 								in let t⁴⁴ = mappend₀₁(t¹⁰, ys⁴⁷)
+//│ 								in (fun ys⁴⁸ -> 
+//│ 									let h⁴⁵ = h⁴⁴
+//│ 									in let t⁴⁵ = mappend₃₁(t⁴⁴, ys⁴⁸)
+//│ 									in (fun ys⁴⁹ -> [LH_C h⁴⁵ mappend₂₁(t⁴⁵, ys⁴⁹)]))
+//│ 							| LH_N  => ys⁴⁷}
+//│ 				def mappend₁₁(xs²⁸, ys⁶⁹) = 
+//│ 					xs²⁸(ys⁶⁹)
+//│ 				def mappend₂₁(xs¹⁸, ys¹⁸) = 
+//│ 					xs¹⁸(ys¹⁸)
+//│ 				def mappend₃₁(xs²⁷, ys⁶¹) = 
+//│ 					xs²⁷(ys⁶¹)
+//│ 				def mappend₄₁(xs²⁹, ys⁷⁰) = 
+//│ 					xs²⁹(ys⁷⁰)
+//│ 				def mappend₅₁(xs¹⁹, ys¹⁹) = 
+//│ 					case xs¹⁹ of {
+//│ 						LH_C h¹³ t¹³ => 
+//│ 							let h²⁷ = h¹³
+//│ 							in let t²⁷ = mappend₅₁(t¹³, ys¹⁹)
+//│ 							in (fun ys²⁰ -> [LH_C h²⁷ mappend₂₁(t²⁷, ys²⁰)])
+//│ 						| LH_N  => ys¹⁹}
+//│ 				def min₀₁(_lh_min_arg1³, _lh_min_arg2³) = 
+//│ 					if (_lh_min_arg1³ > _lh_min_arg2³) then _lh_min_arg2³ else _lh_min_arg1³
+//│ 				def replicate₀₀(_lh_replicate_arg1³, _lh_replicate_arg2³) = 
+//│ 					if (_lh_replicate_arg1³ > 0) then 
+//│ 						let h⁴⁶ = _lh_replicate_arg2³
+//│ 						in let t⁴⁶ = replicate₀₀((_lh_replicate_arg1³ - 1), _lh_replicate_arg2³)
+//│ 						in mappend₀₁(h⁴⁶, concat₀₁(t⁴⁶)) else (fun ys⁵⁰ -> ys⁵⁰)
+//│ 				def splitAt₀₀(_lh_splitAt_arg1⁴, _lh_splitAt_arg2⁴) = 
+//│ 					let _lh_percOp_LH_P2_0⁵ = take₀₀(_lh_splitAt_arg1⁴, _lh_splitAt_arg2⁴)
+//│ 					in let _lh_percOp_LH_P2_1⁵ = drop₀₀(_lh_splitAt_arg1⁴, _lh_splitAt_arg2⁴)
+//│ 					in (fun j⁶ -> (fun _lh_percOp_arg3⁶ -> mappend₂₁(mappend₃₁(concat₀₁(_lh_percOp_LH_P2_0⁵), mappend₄₁(
+//│ 						let h⁴⁸ = 't'
+//│ 						in let t⁴⁸ = 	
+//│ 							let h⁵⁰ = ':'
+//│ 							in let t⁵⁰ = (fun ys⁵⁷ -> ys⁵⁷)
+//│ 							in (fun ys⁵⁵ -> 
+//│ 								let h⁵¹ = h⁵⁰
+//│ 								in let t⁵¹ = mappend₄₁(t⁵⁰, ys⁵⁵)
+//│ 								in (fun ys⁵⁶ -> [LH_C h⁵¹ mappend₂₁(t⁵¹, ys⁵⁶)]))
+//│ 						in (fun ys⁵³ -> 
+//│ 							let h⁴⁹ = h⁴⁸
+//│ 							in let t⁴⁹ = mappend₄₁(t⁴⁸, ys⁵³)
+//│ 							in (fun ys⁵⁴ -> [LH_C h⁴⁹ mappend₂₁(t⁴⁹, ys⁵⁴)])), mappend₅₁(string_of_int⁰(j⁶), 
+//│ 						let h⁵² = 'n'
+//│ 						in let t⁵² = (fun ys⁵⁹ -> ys⁵⁹)
+//│ 						in (fun ys⁵⁸ -> [LH_C h⁵² mappend₂₁(t⁵², ys⁵⁸)])))), percOp₀₁(j⁶, _lh_percOp_LH_P2_1⁵, _lh_percOp_arg3⁶))))
+//│ 					where
+//│ 					def drop₀₀(_lh_drop_arg1³, _lh_drop_arg2³) = 
+//│ 						case _lh_drop_arg2³ of {
+//│ 							LH_N  => [LH_N]
+//│ 							| LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1² => if (_lh_drop_arg1³ > 0) then drop₀₀((_lh_drop_arg1³ - 1), _lh_drop_LH_C_1²) else [LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²]
+//│ 							| _  => error⁰}
+//│ 					def take₀₀(n⁸, ls⁸) = 
+//│ 						if (n⁸ > 0) then case ls⁸ of {
+//│ 							LH_C h⁹ t⁹ => 
+//│ 								let h⁵⁸ = h⁹
+//│ 								in let t⁵⁸ = take₀₀((n⁸ - 1), t⁹)
+//│ 								in mappend₀₁(h⁵⁸, concat₀₁(t⁵⁸))
+//│ 							| LH_N  => (fun ys⁷¹ -> ys⁷¹)} else (fun ys⁷² -> ys⁷²)
+//│ 				def take₁₀(n⁷, ls⁷) = 
+//│ 					if (n⁷ > 0) then case ls⁷ of {
+//│ 						LH_C h²⁴ t²⁴ => 
+//│ 							let h⁴² = h²⁴
+//│ 							in let t⁴² = take₁₀((n⁷ - 1), t²⁴)
+//│ 							in (fun ys⁴³ -> 
+//│ 								let h⁴³ = h⁴²
+//│ 								in let t⁴³ = mappend₁₁(t⁴², ys⁴³)
+//│ 								in mappend₀₁(h⁴³, concat₀₁(t⁴³)))
+//│ 						| LH_N  => (fun ys⁴⁴ -> ys⁴⁴)} else (fun ys⁴⁵ -> ys⁴⁵)
+//│ 			def replicate₀₁(_lh_replicate_arg1⁴, _lh_replicate_arg2⁴) = 
+//│ 				if (_lh_replicate_arg1⁴ > 0) then 
+//│ 					let h⁴⁷ = _lh_replicate_arg2⁴
+//│ 					in let t⁴⁷ = replicate₀₁((_lh_replicate_arg1⁴ - 1), _lh_replicate_arg2⁴)
+//│ 					in mappend₀₀(h⁴⁷, concat₀₀(t⁴⁷)) else (fun ys⁵¹ -> ys⁵¹)
+//│ 			def splitAt₀₁(_lh_splitAt_arg1³, _lh_splitAt_arg2³) = 
+//│ 				let _lh_percOp_LH_P2_0⁴ = take₀₁(_lh_splitAt_arg1³, _lh_splitAt_arg2³)
+//│ 				in let _lh_percOp_LH_P2_1⁴ = drop₀₁(_lh_splitAt_arg1³, _lh_splitAt_arg2³)
+//│ 				in (fun j⁵ -> (fun _lh_percOp_arg3⁵ -> mappend₂₀(mappend₃₀(concat₀₀(_lh_percOp_LH_P2_0⁴), mappend₄₀(
+//│ 					let h³⁵ = 't'
+//│ 					in let t³⁵ = 	
+//│ 						let h³⁷ = ':'
+//│ 						in let t³⁷ = (fun ys³⁷ -> ys³⁷)
+//│ 						in (fun ys³⁵ -> 
+//│ 							let h³⁸ = h³⁷
+//│ 							in let t³⁸ = mappend₄₀(t³⁷, ys³⁵)
+//│ 							in (fun ys³⁶ -> [LH_C h³⁸ mappend₂₀(t³⁸, ys³⁶)]))
+//│ 					in (fun ys³³ -> 
+//│ 						let h³⁶ = h³⁵
+//│ 						in let t³⁶ = mappend₄₀(t³⁵, ys³³)
+//│ 						in (fun ys³⁴ -> [LH_C h³⁶ mappend₂₀(t³⁶, ys³⁴)])), mappend₅₀(string_of_int⁰(j⁵), 
+//│ 					let h³⁹ = 'n'
+//│ 					in let t³⁹ = (fun ys³⁹ -> ys³⁹)
+//│ 					in (fun ys³⁸ -> [LH_C h³⁹ mappend₂₀(t³⁹, ys³⁸)])))), percOp₀₁(j⁵, _lh_percOp_LH_P2_1⁴, _lh_percOp_arg3⁵))))
+//│ 				where
+//│ 				def drop₀₁(_lh_drop_arg1⁴, _lh_drop_arg2⁴) = 
+//│ 					case _lh_drop_arg2⁴ of {
+//│ 						LH_N  => [LH_N]
+//│ 						| LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹ => if (_lh_drop_arg1⁴ > 0) then drop₀₁((_lh_drop_arg1⁴ - 1), _lh_drop_LH_C_1¹) else [LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹]
+//│ 						| _  => error⁰}
+//│ 				def take₀₁(n⁶, ls⁶) = 
+//│ 					if (n⁶ > 0) then case ls⁶ of {
+//│ 						LH_C h¹⁸ t¹⁸ => 
+//│ 							let h³³ = h¹⁸
+//│ 							in let t³³ = take₀₁((n⁶ - 1), t¹⁸)
+//│ 							in mappend₀₀(h³³, concat₀₀(t³³))
+//│ 						| LH_N  => (fun ys²⁸ -> ys²⁸)} else (fun ys²⁹ -> ys²⁹)
+//│ 			def take₁₁(n⁹, ls⁹) = 
+//│ 				if (n⁹ > 0) then case ls⁹ of {
+//│ 					LH_C h¹⁹ t¹⁹ => 
+//│ 						let h⁵⁹ = h¹⁹
+//│ 						in let t⁵⁹ = take₁₁((n⁹ - 1), t¹⁹)
+//│ 						in (fun ys⁷³ -> 
+//│ 							let h⁶⁰ = h⁵⁹
+//│ 							in let t⁶⁰ = mappend₁₀(t⁵⁹, ys⁷³)
+//│ 							in mappend₀₀(h⁶⁰, concat₀₀(t⁶⁰)))
+//│ 					| LH_N  => (fun ys⁷⁴ -> ys⁷⁴)} else (fun ys⁷⁵ -> ys⁷⁵)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testPiDigits_nofib₀₀^1]
+//│ 	[testPiDigits_nofib₀₀^1 · pidgits₀₀^234]
+//│ 		[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · divmod₀₀^1138] (hopeless to continue)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · divmod₀₀^1138 · divmod₀₀^504] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · divmod₀₀^1138] (using original def)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · divmod₀₀^1138 · divmod₀₀^594] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · divmod₀₀^1138] (using original def)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · divmod₀₀^1138 · hashOp₀₀^466] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · divmod₀₀^1138 · hashOp₀₀^466 · ampOp₀₀^1180] (using original def)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · divmod₀₀^1138 · hashOp₀₀^540] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · divmod₀₀^1138 · hashOp₀₀^540 · ampOp₀₀^1180] (using original def)
+//│ 		[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · hashOp₀₀^1100] (hopeless to continue)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · hashOp₀₀^1100 · ampOp₀₀^1180] (using original def)
+//│ 		[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097]
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · concat₀₀^96] (hopeless to continue)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · mappend₁₀^70] (hopeless to continue)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · mappend₂₀^112] (hopeless to continue)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · mappend₂₀^131] (hopeless to continue)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · mappend₂₀^153] (hopeless to continue)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · mappend₂₀^94] (hopeless to continue)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · mappend₃₀^95] (hopeless to continue)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · mappend₄₀^100] (hopeless to continue)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · mappend₄₀^106] (hopeless to continue)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · mappend₄₀^125] (hopeless to continue)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · mappend₅₀^144] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · mappend₅₀^144 · mappend₂₀^246] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · mappend₅₀^144 · mappend₅₀^240] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · mappend₅₀^144] (using original def)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · min₀₀^60] (hopeless to continue)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166]
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · concat₀₁^912] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · mappend₁₁^886] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · mappend₂₁^910] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · mappend₂₁^928] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · mappend₂₁^947] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · mappend₂₁^969] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · mappend₃₁^911] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · mappend₄₁^916] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · mappend₄₁^922] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · mappend₄₁^941] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · mappend₅₁^960] (hopeless to continue)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · mappend₅₁^960 · mappend₂₁^36] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · mappend₅₁^960 · mappend₅₁^30] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · mappend₅₁^960] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · min₀₁^876] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · percOp₀₁^982] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166] (only one)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · replicate₀₀^897] (hopeless to continue)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · replicate₀₀^897 · concat₀₁^714] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · replicate₀₀^897 · mappend₀₁^711] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · replicate₀₀^897 · mappend₀₁^711 · mappend₀₁^668] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · replicate₀₀^897 · mappend₀₁^711] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · replicate₀₀^897 · mappend₀₁^711 · mappend₂₁^680] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · replicate₀₀^897 · mappend₀₁^711 · mappend₃₁^674] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · replicate₀₀^897 · replicate₀₀^702] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · replicate₀₀^897] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994]
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · concat₀₁^771] (hopeless to continue)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · drop₀₀^764] (hopeless to continue)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · drop₀₀^764 · drop₀₀^649] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · drop₀₀^764] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · mappend₂₁^769] (hopeless to continue)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · mappend₂₁^787] (hopeless to continue)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · mappend₂₁^806] (hopeless to continue)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · mappend₂₁^828] (hopeless to continue)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · mappend₃₁^770] (hopeless to continue)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · mappend₄₁^775] (hopeless to continue)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · mappend₄₁^781] (hopeless to continue)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · mappend₄₁^800] (hopeless to continue)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · mappend₅₁^819] (hopeless to continue)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · mappend₅₁^819 · mappend₂₁^36] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · mappend₅₁^819 · mappend₅₁^30] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · mappend₅₁^819] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · percOp₀₁^841] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166] (only one)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · take₀₀^759] (hopeless to continue)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · take₀₀^759 · concat₀₁^1041] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · take₀₀^759 · mappend₀₁^1038] (using original def)
+//│ 							[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · take₀₀^759 · mappend₀₁^1038 · mappend₀₁^668] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · take₀₀^759 · mappend₀₁^1038] (using original def)
+//│ 							[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · take₀₀^759 · mappend₀₁^1038 · mappend₂₁^680] (using original def)
+//│ 							[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · take₀₀^759 · mappend₀₁^1038 · mappend₃₁^674] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · take₀₀^759 · take₀₀^1029] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · splitAt₀₀^994 · take₀₀^759] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · take₁₀^887] (hopeless to continue)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · take₁₀^887 · concat₀₁^422] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · take₁₀^887 · mappend₀₁^419] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · take₁₀^887 · mappend₀₁^419 · mappend₀₁^668] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · take₁₀^887 · mappend₀₁^419] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · take₁₀^887 · mappend₀₁^419 · mappend₂₁^680] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · take₁₀^887 · mappend₀₁^419 · mappend₃₁^674] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · take₁₀^887 · mappend₁₁^414] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · take₁₀^887 · take₁₀^404] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · percOp₀₁^166 · take₁₀^887] (using original def)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · replicate₀₁^81] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · replicate₀₁^81 · concat₀₀^743] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · replicate₀₁^81 · mappend₀₀^740] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · replicate₀₁^81 · mappend₀₀^740 · mappend₀₀^357] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · replicate₀₁^81 · mappend₀₀^740] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · replicate₀₁^81 · mappend₀₀^740 · mappend₂₀^369] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · replicate₀₁^81 · mappend₀₀^740 · mappend₃₀^363] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · replicate₀₁^81 · replicate₀₁^731] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · replicate₀₁^81] (using original def)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · concat₀₀^271] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · drop₀₁^264] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · drop₀₁^264 · drop₀₁^1199] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · drop₀₁^264] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · mappend₂₀^269] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · mappend₂₀^287] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · mappend₂₀^306] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · mappend₂₀^328] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · mappend₃₀^270] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · mappend₄₀^275] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · mappend₄₀^281] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · mappend₄₀^300] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · mappend₅₀^319] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · mappend₅₀^319 · mappend₂₀^246] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · mappend₅₀^319 · mappend₅₀^240] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · mappend₅₀^319] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · concat₀₁^912] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · mappend₁₁^886] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · mappend₂₁^910] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · mappend₂₁^928] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · mappend₂₁^947] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · mappend₂₁^969] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · mappend₃₁^911] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · mappend₄₁^916] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · mappend₄₁^922] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · mappend₄₁^941] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · mappend₅₁^960] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · mappend₅₁^960 · mappend₂₁^36] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · mappend₅₁^960 · mappend₅₁^30] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · mappend₅₁^960] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · min₀₁^876] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · percOp₀₁^982] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · replicate₀₀^897] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · replicate₀₀^897 · concat₀₁^714] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · replicate₀₀^897 · mappend₀₁^711] (using original def)
+//│ 							[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · replicate₀₀^897 · mappend₀₁^711 · mappend₀₁^668] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · replicate₀₀^897 · mappend₀₁^711] (using original def)
+//│ 							[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · replicate₀₀^897 · mappend₀₁^711 · mappend₂₁^680] (using original def)
+//│ 							[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · replicate₀₀^897 · mappend₀₁^711 · mappend₃₁^674] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · replicate₀₀^897 · replicate₀₀^702] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · replicate₀₀^897] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · concat₀₁^771] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · drop₀₀^764] (using original def)
+//│ 							[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · drop₀₀^764 · drop₀₀^649] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · drop₀₀^764] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · mappend₂₁^769] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · mappend₂₁^787] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · mappend₂₁^806] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · mappend₂₁^828] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · mappend₃₁^770] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · mappend₄₁^775] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · mappend₄₁^781] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · mappend₄₁^800] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · mappend₅₁^819] (using original def)
+//│ 							[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · mappend₅₁^819 · mappend₂₁^36] (using original def)
+//│ 							[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · mappend₅₁^819 · mappend₅₁^30] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · mappend₅₁^819] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · percOp₀₁^841] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · take₀₀^759] (using original def)
+//│ 							[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · take₀₀^759 · concat₀₁^1041] (using original def)
+//│ 							[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · take₀₀^759 · mappend₀₁^1038] (using original def)
+//│ 								[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · take₀₀^759 · mappend₀₁^1038 · mappend₀₁^668] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · take₀₀^759 · mappend₀₁^1038] (using original def)
+//│ 								[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · take₀₀^759 · mappend₀₁^1038 · mappend₂₁^680] (using original def)
+//│ 								[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · take₀₀^759 · mappend₀₁^1038 · mappend₃₁^674] (using original def)
+//│ 							[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · take₀₀^759 · take₀₀^1029] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · splitAt₀₀^994 · take₀₀^759] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · take₁₀^887] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · take₁₀^887 · concat₀₁^422] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · take₁₀^887 · mappend₀₁^419] (using original def)
+//│ 							[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · take₁₀^887 · mappend₀₁^419 · mappend₀₁^668] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · take₁₀^887 · mappend₀₁^419] (using original def)
+//│ 							[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · take₁₀^887 · mappend₀₁^419 · mappend₂₁^680] (using original def)
+//│ 							[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · take₁₀^887 · mappend₀₁^419 · mappend₃₁^674] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · take₁₀^887 · mappend₁₁^414] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · take₁₀^887 · take₁₀^404] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · percOp₀₁^341 · take₁₀^887] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · take₀₁^259] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · take₀₁^259 · concat₀₀^215] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · take₀₁^259 · mappend₀₀^212] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · take₀₁^259 · mappend₀₀^212 · mappend₀₀^357] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · take₀₁^259 · mappend₀₀^212] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · take₀₁^259 · mappend₀₀^212 · mappend₂₀^369] (using original def)
+//│ 						[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · take₀₁^259 · mappend₀₀^212 · mappend₃₀^363] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · take₀₁^259 · take₀₁^203] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · splitAt₀₁^178 · take₀₁^259] (using original def)
+//│ 			[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · take₁₁^71] (hopeless to continue)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · take₁₁^71 · concat₀₀^1080] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · take₁₁^71 · mappend₀₀^1077] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · take₁₁^71 · mappend₀₀^1077 · mappend₀₀^357] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · take₁₁^71 · mappend₀₀^1077] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · take₁₁^71 · mappend₀₀^1077 · mappend₂₀^369] (using original def)
+//│ 					[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · take₁₁^71 · mappend₀₀^1077 · mappend₃₀^363] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · take₁₁^71 · mappend₁₀^1072] (using original def)
+//│ 				[testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · take₁₁^71 · take₁₁^1062] ---> [testPiDigits_nofib₀₀^1 · pidgits₀₀^234 · percOp₀₀^1097 · take₁₁^71] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testPiDigits_nofib₀₀₀(primId⁰(100))
+//│ def testPiDigits_nofib₀₀₀(_lh_testPiDigits_nofib_arg1¹) = 
+//│ 	pidgits₀₀₀(_lh_testPiDigits_nofib_arg1¹)
+//│ 	where
+//│ 	def pidgits₀₀₀(_lh_pidgits_arg1¹) = 
+//│ 		percOp₀₀₀(0, hashOp₀₀₂(0, 
+//│ 			let _lh_ampOp_LH_P3_0⁵ = 1
+//│ 			in let _lh_ampOp_LH_P3_1⁵ = 0
+//│ 			in let _lh_ampOp_LH_P3_2⁵ = 1
+//│ 			in (fun _lh_ampOp_arg1⁷ -> 
+//│ 				let y⁵ = ((_lh_ampOp_arg1⁷ * 2) + 1)
+//│ 				in let _lh_hashOp_LH_P3_0⁷ = (_lh_ampOp_LH_P3_0⁵ * _lh_ampOp_arg1⁷)
+//│ 				in let _lh_hashOp_LH_P3_1⁷ = ((_lh_ampOp_LH_P3_1⁵ + (_lh_ampOp_LH_P3_0⁵ * 2)) * y⁵)
+//│ 				in let _lh_hashOp_LH_P3_2⁷ = (_lh_ampOp_LH_P3_2⁵ * y⁵)
+//│ 				in (fun k¹⁵ -> 
+//│ 					let _lh_matchIdent¹³ = divmod₀₀₀(((_lh_hashOp_LH_P3_0⁷ * 3) + _lh_hashOp_LH_P3_1⁷), _lh_hashOp_LH_P3_2⁷)
+//│ 					in _lh_matchIdent¹³(_lh_hashOp_LH_P3_0⁷, _lh_hashOp_LH_P3_1⁷, _lh_hashOp_LH_P3_2⁷, k¹⁵)))), _lh_pidgits_arg1¹)
+//│ 		where
+//│ 		def divmod₀₀₀(_lh_divmod_arg1¹, _lh_divmod_arg2¹) = 
+//│ 			let _lh_hashOp_LH_P2_0¹ = div⁰(_lh_divmod_arg1¹, _lh_divmod_arg2¹)
+//│ 			in let _lh_hashOp_LH_P2_1¹ = (_lh_divmod_arg1¹ % _lh_divmod_arg2¹)
+//│ 			in (fun _lh_hashOp_LH_P3_0⁴ -> (fun _lh_hashOp_LH_P3_1⁴ -> (fun _lh_hashOp_LH_P3_2⁴ -> (fun k¹² -> if ((_lh_hashOp_LH_P3_0⁴ > _lh_hashOp_LH_P3_1⁴) || ((_lh_hashOp_LH_P2_1¹ + _lh_hashOp_LH_P3_0⁴) >= _lh_hashOp_LH_P3_2⁴)) then hashOp₀₀₀(k¹², 
+//│ 				let _lh_ampOp_LH_P3_0³ = _lh_hashOp_LH_P3_0⁴
+//│ 				in let _lh_ampOp_LH_P3_1³ = _lh_hashOp_LH_P3_1⁴
+//│ 				in let _lh_ampOp_LH_P3_2³ = _lh_hashOp_LH_P3_2⁴
+//│ 				in (fun _lh_ampOp_arg1⁵ -> 
+//│ 					let y³ = ((_lh_ampOp_arg1⁵ * 2) + 1)
+//│ 					in let _lh_hashOp_LH_P3_0⁵ = (_lh_ampOp_LH_P3_0³ * _lh_ampOp_arg1⁵)
+//│ 					in let _lh_hashOp_LH_P3_1⁵ = ((_lh_ampOp_LH_P3_1³ + (_lh_ampOp_LH_P3_0³ * 2)) * y³)
+//│ 					in let _lh_hashOp_LH_P3_2⁵ = (_lh_ampOp_LH_P3_2³ * y³)
+//│ 					in (fun k¹³ -> 
+//│ 						let _lh_matchIdent¹¹ = divmod₀₀₀(((_lh_hashOp_LH_P3_0⁵ * 3) + _lh_hashOp_LH_P3_1⁵), _lh_hashOp_LH_P3_2⁵)
+//│ 						in _lh_matchIdent¹¹(_lh_hashOp_LH_P3_0⁵, _lh_hashOp_LH_P3_1⁵, _lh_hashOp_LH_P3_2⁵, k¹³)))) else [LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀₁(k¹², 
+//│ 				let _lh_ampOp_LH_P3_0⁴ = (_lh_hashOp_LH_P3_0⁴ * 10)
+//│ 				in let _lh_ampOp_LH_P3_1⁴ = ((_lh_hashOp_LH_P3_1⁴ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2⁴)) * 10)
+//│ 				in let _lh_ampOp_LH_P3_2⁴ = _lh_hashOp_LH_P3_2⁴
+//│ 				in (fun _lh_ampOp_arg1⁶ -> 
+//│ 					let y⁴ = ((_lh_ampOp_arg1⁶ * 2) + 1)
+//│ 					in let _lh_hashOp_LH_P3_0⁶ = (_lh_ampOp_LH_P3_0⁴ * _lh_ampOp_arg1⁶)
+//│ 					in let _lh_hashOp_LH_P3_1⁶ = ((_lh_ampOp_LH_P3_1⁴ + (_lh_ampOp_LH_P3_0⁴ * 2)) * y⁴)
+//│ 					in let _lh_hashOp_LH_P3_2⁶ = (_lh_ampOp_LH_P3_2⁴ * y⁴)
+//│ 					in (fun k¹⁴ -> 
+//│ 						let _lh_matchIdent¹² = divmod₀₀₀(((_lh_hashOp_LH_P3_0⁶ * 3) + _lh_hashOp_LH_P3_1⁶), _lh_hashOp_LH_P3_2⁶)
+//│ 						in _lh_matchIdent¹²(_lh_hashOp_LH_P3_0⁶, _lh_hashOp_LH_P3_1⁶, _lh_hashOp_LH_P3_2⁶, k¹⁴))))]))))
+//│ 			where
+//│ 			def hashOp₀₀₀(_lh_hashOp_arg1², _lh_hashOp_arg2²) = 
+//│ 				let k¹⁰ = (_lh_hashOp_arg1² + 1)
+//│ 				in let _lh_matchIdent⁹ = ampOp₀₀₀(k¹⁰, _lh_hashOp_arg2²)
+//│ 				in _lh_matchIdent⁹(k¹⁰)
+//│ 				where
+//│ 				def ampOp₀₀₀(_lh_ampOp_arg1⁹, _lh_ampOp_arg2³) = 
+//│ 					_lh_ampOp_arg2³(_lh_ampOp_arg1⁹)
+//│ 			def hashOp₀₀₁(_lh_hashOp_arg1¹, _lh_hashOp_arg2¹) = 
+//│ 				let k⁷ = (_lh_hashOp_arg1¹ + 1)
+//│ 				in let _lh_matchIdent⁶ = ampOp₀₀₁(k⁷, _lh_hashOp_arg2¹)
+//│ 				in _lh_matchIdent⁶(k⁷)
+//│ 				where
+//│ 				def ampOp₀₀₁(_lh_ampOp_arg1⁸, _lh_ampOp_arg2²) = 
+//│ 					_lh_ampOp_arg2²(_lh_ampOp_arg1⁸)
+//│ 		def hashOp₀₀₂(_lh_hashOp_arg1³, _lh_hashOp_arg2³) = 
+//│ 			let k¹⁶ = (_lh_hashOp_arg1³ + 1)
+//│ 			in let _lh_matchIdent¹⁴ = ampOp₀₀₂(k¹⁶, _lh_hashOp_arg2³)
+//│ 			in _lh_matchIdent¹⁴(k¹⁶)
+//│ 			where
+//│ 			def ampOp₀₀₂(_lh_ampOp_arg1⁴, _lh_ampOp_arg2¹) = 
+//│ 				_lh_ampOp_arg2¹(_lh_ampOp_arg1⁴)
+//│ 		def percOp₀₀₀(_lh_percOp_arg1², _lh_percOp_arg2², _lh_percOp_arg3⁷) = 
+//│ 			if (_lh_percOp_arg1² >= _lh_percOp_arg3⁷) then [LH_N] else 
+//│ 				let k⁸ = (_lh_percOp_arg1² + 10)
+//│ 				in let j⁷ = min₀₀₀(_lh_percOp_arg3⁷, k⁸)
+//│ 				in let _lh_matchIdent⁷ = if (k⁸ > _lh_percOp_arg3⁷) then 
+//│ 					let _lh_percOp_LH_P2_0⁵ = mappend₁₀₀(take₁₁₀((_lh_percOp_arg3⁷ % 10), _lh_percOp_arg2²), replicate₀₁₀((k⁸ - _lh_percOp_arg3⁷), [LH_C ' ' [LH_N]]))
+//│ 					in let _lh_percOp_LH_P2_1⁵ = [LH_N]
+//│ 					in (fun j⁸ -> (fun _lh_percOp_arg3⁸ -> mappend₂₀₃(mappend₃₀₀(concat₀₀₀(_lh_percOp_LH_P2_0⁵), mappend₄₀₀(
+//│ 						let h⁷⁹ = 't'
+//│ 						in let t⁷⁹ = 	
+//│ 							let h⁸⁰ = ':'
+//│ 							in let t⁸⁰ = (fun ys¹³⁹ -> ys¹³⁹)
+//│ 							in (fun ys¹⁴⁰ -> 
+//│ 								let h⁸¹ = h⁸⁰
+//│ 								in let t⁸¹ = mappend₄₀₁(t⁸⁰, ys¹⁴⁰)
+//│ 								in (fun ys¹⁴¹ -> [LH_C h⁸¹ mappend₂₀₀(t⁸¹, ys¹⁴¹)]))
+//│ 						in (fun ys¹⁴² -> 
+//│ 							let h⁸² = h⁷⁹
+//│ 							in let t⁸² = mappend₄₀₂(t⁷⁹, ys¹⁴²)
+//│ 							in (fun ys¹⁴³ -> [LH_C h⁸² mappend₂₀₁(t⁸², ys¹⁴³)])), mappend₅₀₀(string_of_int⁰(j⁸), 
+//│ 						let h⁸³ = 'n'
+//│ 						in let t⁸³ = (fun ys¹⁴⁴ -> ys¹⁴⁴)
+//│ 						in (fun ys¹⁴⁵ -> [LH_C h⁸³ mappend₂₀₂(t⁸³, ys¹⁴⁵)])))), percOp₀₁₀(j⁸, _lh_percOp_LH_P2_1⁵, _lh_percOp_arg3⁸)))) else splitAt₀₁₀(10, _lh_percOp_arg2²)
+//│ 				in _lh_matchIdent⁷(j⁷, _lh_percOp_arg3⁷)
+//│ 			where
+//│ 			def concat₀₀₀(lss⁵) = 
+//│ 				lss⁵
+//│ 			def mappend₁₀₀(xs⁷⁶, ys¹⁷⁵) = 
+//│ 				xs⁷⁶(ys¹⁷⁵)
+//│ 			def mappend₂₀₀(xs³¹, ys⁹¹) = 
+//│ 				xs³¹(ys⁹¹)
+//│ 			def mappend₂₀₁(xs⁴⁰, ys¹⁰²) = 
+//│ 				xs⁴⁰(ys¹⁰²)
+//│ 			def mappend₂₀₂(xs¹⁷, ys⁶⁵) = 
+//│ 				xs¹⁷(ys⁶⁵)
+//│ 			def mappend₂₀₃(xs⁶⁰, ys¹³³) = 
+//│ 				xs⁶⁰(ys¹³³)
+//│ 			def mappend₃₀₀(xs⁶⁹, ys¹⁶⁵) = 
+//│ 				xs⁶⁹(ys¹⁶⁵)
+//│ 			def mappend₄₀₀(xs²², ys⁷⁴) = 
+//│ 				xs²²(ys⁷⁴)
+//│ 			def mappend₄₀₁(xs⁶³, ys¹³⁸) = 
+//│ 				xs⁶³(ys¹³⁸)
+//│ 			def mappend₄₀₂(xs²⁷, ys⁸⁷) = 
+//│ 				xs²⁷(ys⁸⁷)
+//│ 			def mappend₅₀₀(xs³³, ys⁹³) = 
+//│ 				case xs³³ of {
+//│ 					LH_C h⁵⁷ t⁵⁷ => 
+//│ 						let h⁵⁸ = h⁵⁷
+//│ 						in let t⁵⁸ = mappend₅₀₀(t⁵⁷, ys⁹³)
+//│ 						in (fun ys⁹⁴ -> [LH_C h⁵⁸ mappend₂₀₄(t⁵⁸, ys⁹⁴)])
+//│ 					| LH_N  => ys⁹³}
+//│ 				where
+//│ 				def mappend₂₀₄(xs⁸¹, ys¹⁹⁷) = 
+//│ 					xs⁸¹(ys¹⁹⁷)
+//│ 			def min₀₀₀(_lh_min_arg1⁴, _lh_min_arg2⁴) = 
+//│ 				if (_lh_min_arg1⁴ > _lh_min_arg2⁴) then _lh_min_arg2⁴ else _lh_min_arg1⁴
+//│ 			def percOp₀₁₀(_lh_percOp_arg1³, _lh_percOp_arg2³, _lh_percOp_arg3⁹) = 
+//│ 				if (_lh_percOp_arg1³ >= _lh_percOp_arg3⁹) then [LH_N] else 
+//│ 					let k⁹ = (_lh_percOp_arg1³ + 10)
+//│ 					in let j⁹ = min₀₁₀(_lh_percOp_arg3⁹, k⁹)
+//│ 					in let _lh_matchIdent⁸ = if (k⁹ > _lh_percOp_arg3⁹) then 
+//│ 						let _lh_percOp_LH_P2_0⁶ = mappend₁₁₀(take₁₀₀((_lh_percOp_arg3⁹ % 10), _lh_percOp_arg2³), replicate₀₀₀((k⁹ - _lh_percOp_arg3⁹), [LH_C ' ' [LH_N]]))
+//│ 						in let _lh_percOp_LH_P2_1⁶ = [LH_N]
+//│ 						in (fun j¹⁰ -> (fun _lh_percOp_arg3¹⁰ -> mappend₂₁₀(mappend₃₁₀(concat₀₁₀(_lh_percOp_LH_P2_0⁶), mappend₄₁₀(
+//│ 							let h⁸⁴ = 't'
+//│ 							in let t⁸⁴ = 	
+//│ 								let h⁸⁵ = ':'
+//│ 								in let t⁸⁵ = (fun ys¹⁴⁶ -> ys¹⁴⁶)
+//│ 								in (fun ys¹⁴⁷ -> 
+//│ 									let h⁸⁶ = h⁸⁵
+//│ 									in let t⁸⁶ = mappend₄₁₁(t⁸⁵, ys¹⁴⁷)
+//│ 									in (fun ys¹⁴⁸ -> [LH_C h⁸⁶ mappend₂₁₁(t⁸⁶, ys¹⁴⁸)]))
+//│ 							in (fun ys¹⁴⁹ -> 
+//│ 								let h⁸⁷ = h⁸⁴
+//│ 								in let t⁸⁷ = mappend₄₁₂(t⁸⁴, ys¹⁴⁹)
+//│ 								in (fun ys¹⁵⁰ -> [LH_C h⁸⁷ mappend₂₁₂(t⁸⁷, ys¹⁵⁰)])), mappend₅₁₀(string_of_int⁰(j¹⁰), 
+//│ 							let h⁸⁸ = 'n'
+//│ 							in let t⁸⁸ = (fun ys¹⁵¹ -> ys¹⁵¹)
+//│ 							in (fun ys¹⁵² -> [LH_C h⁸⁸ mappend₂₁₃(t⁸⁸, ys¹⁵²)])))), percOp₀₁₀(j¹⁰, _lh_percOp_LH_P2_1⁶, _lh_percOp_arg3¹⁰)))) else splitAt₀₀₀(10, _lh_percOp_arg2³)
+//│ 					in _lh_matchIdent⁸(j⁹, _lh_percOp_arg3⁹)
+//│ 				where
+//│ 				def concat₀₁₀(lss³) = 
+//│ 					lss³
+//│ 				def mappend₁₁₀(xs⁹⁷, ys²²⁴) = 
+//│ 					xs⁹⁷(ys²²⁴)
+//│ 				def mappend₂₁₀(xs⁷⁵, ys¹⁷⁴) = 
+//│ 					xs⁷⁵(ys¹⁷⁴)
+//│ 				def mappend₂₁₁(xs⁸⁷, ys²⁰³) = 
+//│ 					xs⁸⁷(ys²⁰³)
+//│ 				def mappend₂₁₂(xs²³, ys⁷⁵) = 
+//│ 					xs²³(ys⁷⁵)
+//│ 				def mappend₂₁₃(xs⁶¹, ys¹³⁴) = 
+//│ 					xs⁶¹(ys¹³⁴)
+//│ 				def mappend₃₁₀(xs⁸⁹, ys²¹²) = 
+//│ 					xs⁸⁹(ys²¹²)
+//│ 				def mappend₄₁₀(xs⁷⁹, ys¹⁷⁸) = 
+//│ 					xs⁷⁹(ys¹⁷⁸)
+//│ 				def mappend₄₁₁(xs²⁸, ys⁸⁸) = 
+//│ 					xs²⁸(ys⁸⁸)
+//│ 				def mappend₄₁₂(xs³², ys⁹²) = 
+//│ 					xs³²(ys⁹²)
+//│ 				def mappend₅₁₀(xs⁵⁹, ys¹³¹) = 
+//│ 					case xs⁵⁹ of {
+//│ 						LH_C h⁷⁴ t⁷⁴ => 
+//│ 							let h⁷⁵ = h⁷⁴
+//│ 							in let t⁷⁵ = mappend₅₁₀(t⁷⁴, ys¹³¹)
+//│ 							in (fun ys¹³² -> [LH_C h⁷⁵ mappend₂₁₄(t⁷⁵, ys¹³²)])
+//│ 						| LH_N  => ys¹³¹}
+//│ 					where
+//│ 					def mappend₂₁₄(xs¹³, ys⁵⁹) = 
+//│ 						xs¹³(ys⁵⁹)
+//│ 				def min₀₁₀(_lh_min_arg1³, _lh_min_arg2³) = 
+//│ 					if (_lh_min_arg1³ > _lh_min_arg2³) then _lh_min_arg2³ else _lh_min_arg1³
+//│ 				def replicate₀₀₀(_lh_replicate_arg1⁴, _lh_replicate_arg2⁴) = 
+//│ 					if (_lh_replicate_arg1⁴ > 0) then 
+//│ 						let h⁹⁸ = _lh_replicate_arg2⁴
+//│ 						in let t⁹⁸ = replicate₀₀₀((_lh_replicate_arg1⁴ - 1), _lh_replicate_arg2⁴)
+//│ 						in mappend₀₁₀(h⁹⁸, concat₀₁₁(t⁹⁸)) else (fun ys¹⁶⁶ -> ys¹⁶⁶)
+//│ 					where
+//│ 					def concat₀₁₁(lss⁶) = 
+//│ 						lss⁶
+//│ 					def mappend₀₁₀(xs⁷⁴, ys¹⁷¹) = 
+//│ 						case xs⁷⁴ of {
+//│ 							LH_C h⁹⁹ t⁹⁹ => 
+//│ 								let h¹⁰⁰ = h⁹⁹
+//│ 								in let t¹⁰⁰ = mappend₀₁₀(t⁹⁹, ys¹⁷¹)
+//│ 								in (fun ys¹⁷² -> 
+//│ 									let h¹⁰¹ = h¹⁰⁰
+//│ 									in let t¹⁰¹ = mappend₃₁₁(t¹⁰⁰, ys¹⁷²)
+//│ 									in (fun ys¹⁷³ -> [LH_C h¹⁰¹ mappend₂₁₅(t¹⁰¹, ys¹⁷³)]))
+//│ 							| LH_N  => ys¹⁷¹}
+//│ 						where
+//│ 						def mappend₂₁₅(xs³⁷, ys⁹⁸) = 
+//│ 							xs³⁷(ys⁹⁸)
+//│ 						def mappend₃₁₁(xs⁷⁷, ys¹⁷⁶) = 
+//│ 							xs⁷⁷(ys¹⁷⁶)
+//│ 				def splitAt₀₀₀(_lh_splitAt_arg1⁴, _lh_splitAt_arg2⁴) = 
+//│ 					let _lh_percOp_LH_P2_0⁹ = take₀₀₀(_lh_splitAt_arg1⁴, _lh_splitAt_arg2⁴)
+//│ 					in let _lh_percOp_LH_P2_1⁹ = drop₀₀₀(_lh_splitAt_arg1⁴, _lh_splitAt_arg2⁴)
+//│ 					in (fun j¹⁴ -> (fun _lh_percOp_arg3¹⁴ -> mappend₂₁₆(mappend₃₁₂(concat₀₁₂(_lh_percOp_LH_P2_0⁹), mappend₄₁₃(
+//│ 						let h¹¹⁵ = 't'
+//│ 						in let t¹¹⁵ = 	
+//│ 							let h¹¹⁶ = ':'
+//│ 							in let t¹¹⁶ = (fun ys²⁰⁴ -> ys²⁰⁴)
+//│ 							in (fun ys²⁰⁵ -> 
+//│ 								let h¹¹⁷ = h¹¹⁶
+//│ 								in let t¹¹⁷ = mappend₄₁₄(t¹¹⁶, ys²⁰⁵)
+//│ 								in (fun ys²⁰⁶ -> [LH_C h¹¹⁷ mappend₂₁₇(t¹¹⁷, ys²⁰⁶)]))
+//│ 						in (fun ys²⁰⁷ -> 
+//│ 							let h¹¹⁸ = h¹¹⁵
+//│ 							in let t¹¹⁸ = mappend₄₁₅(t¹¹⁵, ys²⁰⁷)
+//│ 							in (fun ys²⁰⁸ -> [LH_C h¹¹⁸ mappend₂₁₈(t¹¹⁸, ys²⁰⁸)])), mappend₅₁₁(string_of_int⁰(j¹⁴), 
+//│ 						let h¹¹⁹ = 'n'
+//│ 						in let t¹¹⁹ = (fun ys²⁰⁹ -> ys²⁰⁹)
+//│ 						in (fun ys²¹⁰ -> [LH_C h¹¹⁹ mappend₂₁₉(t¹¹⁹, ys²¹⁰)])))), percOp₀₁₀(j¹⁴, _lh_percOp_LH_P2_1⁹, _lh_percOp_arg3¹⁴))))
+//│ 					where
+//│ 					def concat₀₁₂(lss²) = 
+//│ 						lss²
+//│ 					def drop₀₀₀(_lh_drop_arg1², _lh_drop_arg2²) = 
+//│ 						case _lh_drop_arg2² of {
+//│ 							LH_N  => [LH_N]
+//│ 							| LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1² => if (_lh_drop_arg1² > 0) then drop₀₀₀((_lh_drop_arg1² - 1), _lh_drop_LH_C_1²) else [LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²]
+//│ 							| _  => error⁰}
+//│ 					def mappend₂₁₆(xs⁸², ys¹⁹⁸) = 
+//│ 						xs⁸²(ys¹⁹⁸)
+//│ 					def mappend₂₁₇(xs¹², ys⁵⁸) = 
+//│ 						xs¹²(ys⁵⁸)
+//│ 					def mappend₂₁₈(xs⁵¹, ys¹²⁰) = 
+//│ 						xs⁵¹(ys¹²⁰)
+//│ 					def mappend₂₁₉(xs⁹⁹, ys²²⁶) = 
+//│ 						xs⁹⁹(ys²²⁶)
+//│ 					def mappend₃₁₂(xs⁴⁷, ys¹¹⁶) = 
+//│ 						xs⁴⁷(ys¹¹⁶)
+//│ 					def mappend₄₁₃(xs⁴¹, ys¹⁰⁵) = 
+//│ 						xs⁴¹(ys¹⁰⁵)
+//│ 					def mappend₄₁₄(xs⁸⁴, ys²⁰⁰) = 
+//│ 						xs⁸⁴(ys²⁰⁰)
+//│ 					def mappend₄₁₅(xs⁴⁸, ys¹¹⁷) = 
+//│ 						xs⁴⁸(ys¹¹⁷)
+//│ 					def mappend₅₁₁(xs²⁵, ys⁸⁴) = 
+//│ 						case xs²⁵ of {
+//│ 							LH_C h⁵⁵ t⁵⁵ => 
+//│ 								let h⁵⁶ = h⁵⁵
+//│ 								in let t⁵⁶ = mappend₅₁₁(t⁵⁵, ys⁸⁴)
+//│ 								in (fun ys⁸⁵ -> [LH_C h⁵⁶ mappend₂₁₁₀(t⁵⁶, ys⁸⁵)])
+//│ 							| LH_N  => ys⁸⁴}
+//│ 						where
+//│ 						def mappend₂₁₁₀(xs¹⁰¹, ys²²⁸) = 
+//│ 							xs¹⁰¹(ys²²⁸)
+//│ 					def take₀₀₀(n⁸, ls⁸) = 
+//│ 						if (n⁸ > 0) then case ls⁸ of {
+//│ 							LH_C h¹²² t¹²² => 
+//│ 								let h¹²³ = h¹²²
+//│ 								in let t¹²³ = take₀₀₀((n⁸ - 1), t¹²²)
+//│ 								in mappend₀₁₁(h¹²³, concat₀₁₃(t¹²³))
+//│ 							| LH_N  => (fun ys²¹⁵ -> ys²¹⁵)} else (fun ys²¹⁶ -> ys²¹⁶)
+//│ 						where
+//│ 						def concat₀₁₃(lss¹⁵) = 
+//│ 							lss¹⁵
+//│ 						def mappend₀₁₁(xs¹⁴, ys⁶⁰) = 
+//│ 							case xs¹⁴ of {
+//│ 								LH_C h⁴² t⁴² => 
+//│ 									let h⁴³ = h⁴²
+//│ 									in let t⁴³ = mappend₀₁₁(t⁴², ys⁶⁰)
+//│ 									in (fun ys⁶¹ -> 
+//│ 										let h⁴⁴ = h⁴³
+//│ 										in let t⁴⁴ = mappend₃₁₃(t⁴³, ys⁶¹)
+//│ 										in (fun ys⁶² -> [LH_C h⁴⁴ mappend₂₁₁₁(t⁴⁴, ys⁶²)]))
+//│ 								| LH_N  => ys⁶⁰}
+//│ 							where
+//│ 							def mappend₂₁₁₁(xs⁷⁸, ys¹⁷⁷) = 
+//│ 								xs⁷⁸(ys¹⁷⁷)
+//│ 							def mappend₃₁₃(xs⁴⁹, ys¹¹⁸) = 
+//│ 								xs⁴⁹(ys¹¹⁸)
+//│ 				def take₁₀₀(n⁷, ls⁷) = 
+//│ 					if (n⁷ > 0) then case ls⁷ of {
+//│ 						LH_C h¹⁰⁷ t¹⁰⁷ => 
+//│ 							let h¹⁰⁸ = h¹⁰⁷
+//│ 							in let t¹⁰⁸ = take₁₀₀((n⁷ - 1), t¹⁰⁷)
+//│ 							in (fun ys¹⁸⁷ -> 
+//│ 								let h¹⁰⁹ = h¹⁰⁸
+//│ 								in let t¹⁰⁹ = mappend₁₁₁(t¹⁰⁸, ys¹⁸⁷)
+//│ 								in mappend₀₁₂(h¹⁰⁹, concat₀₁₄(t¹⁰⁹)))
+//│ 						| LH_N  => (fun ys¹⁸⁸ -> ys¹⁸⁸)} else (fun ys¹⁸⁹ -> ys¹⁸⁹)
+//│ 					where
+//│ 					def concat₀₁₄(lss⁷) = 
+//│ 						lss⁷
+//│ 					def mappend₀₁₂(xs⁴⁵, ys¹¹⁰) = 
+//│ 						case xs⁴⁵ of {
+//│ 							LH_C h⁶⁴ t⁶⁴ => 
+//│ 								let h⁶⁵ = h⁶⁴
+//│ 								in let t⁶⁵ = mappend₀₁₂(t⁶⁴, ys¹¹⁰)
+//│ 								in (fun ys¹¹¹ -> 
+//│ 									let h⁶⁶ = h⁶⁵
+//│ 									in let t⁶⁶ = mappend₃₁₄(t⁶⁵, ys¹¹¹)
+//│ 									in (fun ys¹¹² -> [LH_C h⁶⁶ mappend₂₁₁₂(t⁶⁶, ys¹¹²)]))
+//│ 							| LH_N  => ys¹¹⁰}
+//│ 						where
+//│ 						def mappend₂₁₁₂(xs⁸⁵, ys²⁰¹) = 
+//│ 							xs⁸⁵(ys²⁰¹)
+//│ 						def mappend₃₁₄(xs¹⁹, ys⁶⁹) = 
+//│ 							xs¹⁹(ys⁶⁹)
+//│ 					def mappend₁₁₁(xs¹⁰³, ys²³³) = 
+//│ 						xs¹⁰³(ys²³³)
+//│ 			def replicate₀₁₀(_lh_replicate_arg1³, _lh_replicate_arg2³) = 
+//│ 				if (_lh_replicate_arg1³ > 0) then 
+//│ 					let h⁷³ = _lh_replicate_arg2³
+//│ 					in let t⁷³ = replicate₀₁₀((_lh_replicate_arg1³ - 1), _lh_replicate_arg2³)
+//│ 					in mappend₀₀₀(h⁷³, concat₀₀₁(t⁷³)) else (fun ys¹²⁸ -> ys¹²⁸)
+//│ 				where
+//│ 				def concat₀₀₁(lss⁸) = 
+//│ 					lss⁸
+//│ 				def mappend₀₀₀(xs⁵⁶, ys¹²⁵) = 
+//│ 					case xs⁵⁶ of {
+//│ 						LH_C h⁷⁰ t⁷⁰ => 
+//│ 							let h⁷¹ = h⁷⁰
+//│ 							in let t⁷¹ = mappend₀₀₀(t⁷⁰, ys¹²⁵)
+//│ 							in (fun ys¹²⁶ -> 
+//│ 								let h⁷² = h⁷¹
+//│ 								in let t⁷² = mappend₃₀₁(t⁷¹, ys¹²⁶)
+//│ 								in (fun ys¹²⁷ -> [LH_C h⁷² mappend₂₀₅(t⁷², ys¹²⁷)]))
+//│ 						| LH_N  => ys¹²⁵}
+//│ 					where
+//│ 					def mappend₂₀₅(xs⁹¹, ys²¹⁷) = 
+//│ 						xs⁹¹(ys²¹⁷)
+//│ 					def mappend₃₀₁(xs¹⁰², ys²³²) = 
+//│ 						xs¹⁰²(ys²³²)
+//│ 			def splitAt₀₁₀(_lh_splitAt_arg1², _lh_splitAt_arg2²) = 
+//│ 				let _lh_percOp_LH_P2_0⁴ = take₀₁₀(_lh_splitAt_arg1², _lh_splitAt_arg2²)
+//│ 				in let _lh_percOp_LH_P2_1⁴ = drop₀₁₀(_lh_splitAt_arg1², _lh_splitAt_arg2²)
+//│ 				in (fun j⁶ -> (fun _lh_percOp_arg3⁶ -> mappend₂₀₆(mappend₃₀₂(concat₀₀₂(_lh_percOp_LH_P2_0⁴), mappend₄₀₃(
+//│ 					let h⁵⁰ = 't'
+//│ 					in let t⁵⁰ = 	
+//│ 						let h⁵¹ = ':'
+//│ 						in let t⁵¹ = (fun ys⁷⁷ -> ys⁷⁷)
+//│ 						in (fun ys⁷⁸ -> 
+//│ 							let h⁵² = h⁵¹
+//│ 							in let t⁵² = mappend₄₀₄(t⁵¹, ys⁷⁸)
+//│ 							in (fun ys⁷⁹ -> [LH_C h⁵² mappend₂₀₇(t⁵², ys⁷⁹)]))
+//│ 					in (fun ys⁸⁰ -> 
+//│ 						let h⁵³ = h⁵⁰
+//│ 						in let t⁵³ = mappend₄₀₅(t⁵⁰, ys⁸⁰)
+//│ 						in (fun ys⁸¹ -> [LH_C h⁵³ mappend₂₀₈(t⁵³, ys⁸¹)])), mappend₅₀₁(string_of_int⁰(j⁶), 
+//│ 					let h⁵⁴ = 'n'
+//│ 					in let t⁵⁴ = (fun ys⁸² -> ys⁸²)
+//│ 					in (fun ys⁸³ -> [LH_C h⁵⁴ mappend₂₀₉(t⁵⁴, ys⁸³)])))), percOp₀₁₁(j⁶, _lh_percOp_LH_P2_1⁴, _lh_percOp_arg3⁶))))
+//│ 				where
+//│ 				def concat₀₀₂(lss¹⁴) = 
+//│ 					lss¹⁴
+//│ 				def drop₀₁₀(_lh_drop_arg1⁴, _lh_drop_arg2⁴) = 
+//│ 					case _lh_drop_arg2⁴ of {
+//│ 						LH_N  => [LH_N]
+//│ 						| LH_C _lh_drop_LH_C_0⁴ _lh_drop_LH_C_1⁴ => if (_lh_drop_arg1⁴ > 0) then drop₀₁₀((_lh_drop_arg1⁴ - 1), _lh_drop_LH_C_1⁴) else [LH_C _lh_drop_LH_C_0⁴ _lh_drop_LH_C_1⁴]
+//│ 						| _  => error⁰}
+//│ 				def mappend₂₀₆(xs⁵², ys¹²¹) = 
+//│ 					xs⁵²(ys¹²¹)
+//│ 				def mappend₂₀₇(xs¹⁵, ys⁶³) = 
+//│ 					xs¹⁵(ys⁶³)
+//│ 				def mappend₂₀₈(xs⁵⁵, ys¹²⁴) = 
+//│ 					xs⁵⁵(ys¹²⁴)
+//│ 				def mappend₂₀₉(xs⁹⁶, ys²²³) = 
+//│ 					xs⁹⁶(ys²²³)
+//│ 				def mappend₃₀₂(xs³⁶, ys⁹⁷) = 
+//│ 					xs³⁶(ys⁹⁷)
+//│ 				def mappend₄₀₃(xs¹⁶, ys⁶⁴) = 
+//│ 					xs¹⁶(ys⁶⁴)
+//│ 				def mappend₄₀₄(xs³⁸, ys⁹⁹) = 
+//│ 					xs³⁸(ys⁹⁹)
+//│ 				def mappend₄₀₅(xs²⁶, ys⁸⁶) = 
+//│ 					xs²⁶(ys⁸⁶)
+//│ 				def mappend₅₀₁(xs⁹², ys²¹⁸) = 
+//│ 					case xs⁹² of {
+//│ 						LH_C h¹²⁴ t¹²⁴ => 
+//│ 							let h¹²⁵ = h¹²⁴
+//│ 							in let t¹²⁵ = mappend₅₀₁(t¹²⁴, ys²¹⁸)
+//│ 							in (fun ys²¹⁹ -> [LH_C h¹²⁵ mappend₂₀₁₀(t¹²⁵, ys²¹⁹)])
+//│ 						| LH_N  => ys²¹⁸}
+//│ 					where
+//│ 					def mappend₂₀₁₀(xs⁷¹, ys¹⁶⁸) = 
+//│ 						xs⁷¹(ys¹⁶⁸)
+//│ 				def percOp₀₁₁(_lh_percOp_arg1⁴, _lh_percOp_arg2⁴, _lh_percOp_arg3¹¹) = 
+//│ 					if (_lh_percOp_arg1⁴ >= _lh_percOp_arg3¹¹) then [LH_N] else 
+//│ 						let k¹¹ = (_lh_percOp_arg1⁴ + 10)
+//│ 						in let j¹¹ = min₀₁₁(_lh_percOp_arg3¹¹, k¹¹)
+//│ 						in let _lh_matchIdent¹⁰ = if (k¹¹ > _lh_percOp_arg3¹¹) then 
+//│ 							let _lh_percOp_LH_P2_0⁷ = mappend₁₁₂(take₁₀₁((_lh_percOp_arg3¹¹ % 10), _lh_percOp_arg2⁴), replicate₀₀₁((k¹¹ - _lh_percOp_arg3¹¹), [LH_C ' ' [LH_N]]))
+//│ 							in let _lh_percOp_LH_P2_1⁷ = [LH_N]
+//│ 							in (fun j¹² -> (fun _lh_percOp_arg3¹² -> mappend₂₁₁₃(mappend₃₁₅(concat₀₁₅(_lh_percOp_LH_P2_0⁷), mappend₄₁₆(
+//│ 								let h¹⁰² = 't'
+//│ 								in let t¹⁰² = 	
+//│ 									let h¹⁰³ = ':'
+//│ 									in let t¹⁰³ = (fun ys¹⁷⁹ -> ys¹⁷⁹)
+//│ 									in (fun ys¹⁸⁰ -> 
+//│ 										let h¹⁰⁴ = h¹⁰³
+//│ 										in let t¹⁰⁴ = mappend₄₁₇(t¹⁰³, ys¹⁸⁰)
+//│ 										in (fun ys¹⁸¹ -> [LH_C h¹⁰⁴ mappend₂₁₁₄(t¹⁰⁴, ys¹⁸¹)]))
+//│ 								in (fun ys¹⁸² -> 
+//│ 									let h¹⁰⁵ = h¹⁰²
+//│ 									in let t¹⁰⁵ = mappend₄₁₈(t¹⁰², ys¹⁸²)
+//│ 									in (fun ys¹⁸³ -> [LH_C h¹⁰⁵ mappend₂₁₁₅(t¹⁰⁵, ys¹⁸³)])), mappend₅₁₂(string_of_int⁰(j¹²), 
+//│ 								let h¹⁰⁶ = 'n'
+//│ 								in let t¹⁰⁶ = (fun ys¹⁸⁴ -> ys¹⁸⁴)
+//│ 								in (fun ys¹⁸⁵ -> [LH_C h¹⁰⁶ mappend₂₁₁₆(t¹⁰⁶, ys¹⁸⁵)])))), percOp₀₁₁(j¹², _lh_percOp_LH_P2_1⁷, _lh_percOp_arg3¹²)))) else splitAt₀₀₁(10, _lh_percOp_arg2⁴)
+//│ 						in _lh_matchIdent¹⁰(j¹¹, _lh_percOp_arg3¹¹)
+//│ 					where
+//│ 					def concat₀₁₅(lss¹³) = 
+//│ 						lss¹³
+//│ 					def mappend₁₁₂(xs⁵⁸, ys¹³⁰) = 
+//│ 						xs⁵⁸(ys¹³⁰)
+//│ 					def mappend₂₁₁₃(xs⁵⁴, ys¹²³) = 
+//│ 						xs⁵⁴(ys¹²³)
+//│ 					def mappend₂₁₁₄(xs⁸³, ys¹⁹⁹) = 
+//│ 						xs⁸³(ys¹⁹⁹)
+//│ 					def mappend₂₁₁₅(xs³⁴, ys⁹⁵) = 
+//│ 						xs³⁴(ys⁹⁵)
+//│ 					def mappend₂₁₁₆(xs⁶⁵, ys¹⁵⁶) = 
+//│ 						xs⁶⁵(ys¹⁵⁶)
+//│ 					def mappend₃₁₅(xs²⁴, ys⁷⁶) = 
+//│ 						xs²⁴(ys⁷⁶)
+//│ 					def mappend₄₁₆(xs⁷³, ys¹⁷⁰) = 
+//│ 						xs⁷³(ys¹⁷⁰)
+//│ 					def mappend₄₁₇(xs⁸⁰, ys¹⁸⁶) = 
+//│ 						xs⁸⁰(ys¹⁸⁶)
+//│ 					def mappend₄₁₈(xs⁵⁷, ys¹²⁹) = 
+//│ 						xs⁵⁷(ys¹²⁹)
+//│ 					def mappend₅₁₂(xs⁴³, ys¹⁰⁷) = 
+//│ 						case xs⁴³ of {
+//│ 							LH_C h⁶² t⁶² => 
+//│ 								let h⁶³ = h⁶²
+//│ 								in let t⁶³ = mappend₅₁₂(t⁶², ys¹⁰⁷)
+//│ 								in (fun ys¹⁰⁸ -> [LH_C h⁶³ mappend₂₁₁₇(t⁶³, ys¹⁰⁸)])
+//│ 							| LH_N  => ys¹⁰⁷}
+//│ 						where
+//│ 						def mappend₂₁₁₇(xs³⁵, ys⁹⁶) = 
+//│ 							xs³⁵(ys⁹⁶)
+//│ 					def min₀₁₁(_lh_min_arg1², _lh_min_arg2²) = 
+//│ 						if (_lh_min_arg1² > _lh_min_arg2²) then _lh_min_arg2² else _lh_min_arg1²
+//│ 					def replicate₀₀₁(_lh_replicate_arg1², _lh_replicate_arg2²) = 
+//│ 						if (_lh_replicate_arg1² > 0) then 
+//│ 							let h⁵⁹ = _lh_replicate_arg2²
+//│ 							in let t⁵⁹ = replicate₀₀₁((_lh_replicate_arg1² - 1), _lh_replicate_arg2²)
+//│ 							in mappend₀₁₃(h⁵⁹, concat₀₁₆(t⁵⁹)) else (fun ys¹⁰⁰ -> ys¹⁰⁰)
+//│ 						where
+//│ 						def concat₀₁₆(lss⁴) = 
+//│ 							lss⁴
+//│ 						def mappend₀₁₃(xs⁶⁴, ys¹⁵³) = 
+//│ 							case xs⁶⁴ of {
+//│ 								LH_C h⁸⁹ t⁸⁹ => 
+//│ 									let h⁹⁰ = h⁸⁹
+//│ 									in let t⁹⁰ = mappend₀₁₃(t⁸⁹, ys¹⁵³)
+//│ 									in (fun ys¹⁵⁴ -> 
+//│ 										let h⁹¹ = h⁹⁰
+//│ 										in let t⁹¹ = mappend₃₁₆(t⁹⁰, ys¹⁵⁴)
+//│ 										in (fun ys¹⁵⁵ -> [LH_C h⁹¹ mappend₂₁₁₈(t⁹¹, ys¹⁵⁵)]))
+//│ 								| LH_N  => ys¹⁵³}
+//│ 							where
+//│ 							def mappend₂₁₁₈(xs⁷⁰, ys¹⁶⁷) = 
+//│ 								xs⁷⁰(ys¹⁶⁷)
+//│ 							def mappend₃₁₆(xs²⁰, ys⁷⁰) = 
+//│ 								xs²⁰(ys⁷⁰)
+//│ 					def splitAt₀₀₁(_lh_splitAt_arg1³, _lh_splitAt_arg2³) = 
+//│ 						let _lh_percOp_LH_P2_0⁸ = take₀₀₁(_lh_splitAt_arg1³, _lh_splitAt_arg2³)
+//│ 						in let _lh_percOp_LH_P2_1⁸ = drop₀₀₁(_lh_splitAt_arg1³, _lh_splitAt_arg2³)
+//│ 						in (fun j¹³ -> (fun _lh_percOp_arg3¹³ -> mappend₂₁₁₉(mappend₃₁₇(concat₀₁₇(_lh_percOp_LH_P2_0⁸), mappend₄₁₉(
+//│ 							let h¹¹⁰ = 't'
+//│ 							in let t¹¹⁰ = 	
+//│ 								let h¹¹¹ = ':'
+//│ 								in let t¹¹¹ = (fun ys¹⁹⁰ -> ys¹⁹⁰)
+//│ 								in (fun ys¹⁹¹ -> 
+//│ 									let h¹¹² = h¹¹¹
+//│ 									in let t¹¹² = mappend₄₁₁₀(t¹¹¹, ys¹⁹¹)
+//│ 									in (fun ys¹⁹² -> [LH_C h¹¹² mappend₂₁₂₀(t¹¹², ys¹⁹²)]))
+//│ 							in (fun ys¹⁹³ -> 
+//│ 								let h¹¹³ = h¹¹⁰
+//│ 								in let t¹¹³ = mappend₄₁₁₁(t¹¹⁰, ys¹⁹³)
+//│ 								in (fun ys¹⁹⁴ -> [LH_C h¹¹³ mappend₂₁₂₁(t¹¹³, ys¹⁹⁴)])), mappend₅₁₃(string_of_int⁰(j¹³), 
+//│ 							let h¹¹⁴ = 'n'
+//│ 							in let t¹¹⁴ = (fun ys¹⁹⁵ -> ys¹⁹⁵)
+//│ 							in (fun ys¹⁹⁶ -> [LH_C h¹¹⁴ mappend₂₁₂₂(t¹¹⁴, ys¹⁹⁶)])))), percOp₀₁₁(j¹³, _lh_percOp_LH_P2_1⁸, _lh_percOp_arg3¹³))))
+//│ 						where
+//│ 						def concat₀₁₇(lss¹¹) = 
+//│ 							lss¹¹
+//│ 						def drop₀₀₁(_lh_drop_arg1³, _lh_drop_arg2³) = 
+//│ 							case _lh_drop_arg2³ of {
+//│ 								LH_N  => [LH_N]
+//│ 								| LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³ => if (_lh_drop_arg1³ > 0) then drop₀₀₁((_lh_drop_arg1³ - 1), _lh_drop_LH_C_1³) else [LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³]
+//│ 								| _  => error⁰}
+//│ 						def mappend₂₁₁₉(xs⁷², ys¹⁶⁹) = 
+//│ 							xs⁷²(ys¹⁶⁹)
+//│ 						def mappend₂₁₂₀(xs⁹⁵, ys²²²) = 
+//│ 							xs⁹⁵(ys²²²)
+//│ 						def mappend₂₁₂₁(xs¹⁸, ys⁶⁸) = 
+//│ 							xs¹⁸(ys⁶⁸)
+//│ 						def mappend₂₁₂₂(xs²⁹, ys⁸⁹) = 
+//│ 							xs²⁹(ys⁸⁹)
+//│ 						def mappend₃₁₇(xs⁸⁶, ys²⁰²) = 
+//│ 							xs⁸⁶(ys²⁰²)
+//│ 						def mappend₄₁₉(xs⁶⁸, ys¹⁶⁴) = 
+//│ 							xs⁶⁸(ys¹⁶⁴)
+//│ 						def mappend₄₁₁₀(xs⁴⁴, ys¹⁰⁹) = 
+//│ 							xs⁴⁴(ys¹⁰⁹)
+//│ 						def mappend₄₁₁₁(xs⁵³, ys¹²²) = 
+//│ 							xs⁵³(ys¹²²)
+//│ 						def mappend₅₁₃(xs⁹⁰, ys²¹³) = 
+//│ 							case xs⁹⁰ of {
+//│ 								LH_C h¹²⁰ t¹²⁰ => 
+//│ 									let h¹²¹ = h¹²⁰
+//│ 									in let t¹²¹ = mappend₅₁₃(t¹²⁰, ys²¹³)
+//│ 									in (fun ys²¹⁴ -> [LH_C h¹²¹ mappend₂₁₂₃(t¹²¹, ys²¹⁴)])
+//│ 								| LH_N  => ys²¹³}
+//│ 							where
+//│ 							def mappend₂₁₂₃(xs⁴², ys¹⁰⁶) = 
+//│ 								xs⁴²(ys¹⁰⁶)
+//│ 						def take₀₀₁(n⁵, ls⁵) = 
+//│ 							if (n⁵ > 0) then case ls⁵ of {
+//│ 								LH_C h⁶⁰ t⁶⁰ => 
+//│ 									let h⁶¹ = h⁶⁰
+//│ 									in let t⁶¹ = take₀₀₁((n⁵ - 1), t⁶⁰)
+//│ 									in mappend₀₁₄(h⁶¹, concat₀₁₈(t⁶¹))
+//│ 								| LH_N  => (fun ys¹⁰³ -> ys¹⁰³)} else (fun ys¹⁰⁴ -> ys¹⁰⁴)
+//│ 							where
+//│ 							def concat₀₁₈(lss¹⁰) = 
+//│ 								lss¹⁰
+//│ 							def mappend₀₁₄(xs⁴⁶, ys¹¹³) = 
+//│ 								case xs⁴⁶ of {
+//│ 									LH_C h⁶⁷ t⁶⁷ => 
+//│ 										let h⁶⁸ = h⁶⁷
+//│ 										in let t⁶⁸ = mappend₀₁₄(t⁶⁷, ys¹¹³)
+//│ 										in (fun ys¹¹⁴ -> 
+//│ 											let h⁶⁹ = h⁶⁸
+//│ 											in let t⁶⁹ = mappend₃₁₈(t⁶⁸, ys¹¹⁴)
+//│ 											in (fun ys¹¹⁵ -> [LH_C h⁶⁹ mappend₂₁₂₄(t⁶⁹, ys¹¹⁵)]))
+//│ 									| LH_N  => ys¹¹³}
+//│ 								where
+//│ 								def mappend₂₁₂₄(xs³⁰, ys⁹⁰) = 
+//│ 									xs³⁰(ys⁹⁰)
+//│ 								def mappend₃₁₈(xs¹⁰⁴, ys²³⁴) = 
+//│ 									xs¹⁰⁴(ys²³⁴)
+//│ 					def take₁₀₁(n⁹, ls⁹) = 
+//│ 						if (n⁹ > 0) then case ls⁹ of {
+//│ 							LH_C h¹²⁶ t¹²⁶ => 
+//│ 								let h¹²⁷ = h¹²⁶
+//│ 								in let t¹²⁷ = take₁₀₁((n⁹ - 1), t¹²⁶)
+//│ 								in (fun ys²²⁹ -> 
+//│ 									let h¹²⁸ = h¹²⁷
+//│ 									in let t¹²⁸ = mappend₁₁₃(t¹²⁷, ys²²⁹)
+//│ 									in mappend₀₁₅(h¹²⁸, concat₀₁₉(t¹²⁸)))
+//│ 							| LH_N  => (fun ys²³⁰ -> ys²³⁰)} else (fun ys²³¹ -> ys²³¹)
+//│ 						where
+//│ 						def concat₀₁₉(lss⁹) = 
+//│ 							lss⁹
+//│ 						def mappend₀₁₅(xs²¹, ys⁷¹) = 
+//│ 							case xs²¹ of {
+//│ 								LH_C h⁴⁷ t⁴⁷ => 
+//│ 									let h⁴⁸ = h⁴⁷
+//│ 									in let t⁴⁸ = mappend₀₁₅(t⁴⁷, ys⁷¹)
+//│ 									in (fun ys⁷² -> 
+//│ 										let h⁴⁹ = h⁴⁸
+//│ 										in let t⁴⁹ = mappend₃₁₉(t⁴⁸, ys⁷²)
+//│ 										in (fun ys⁷³ -> [LH_C h⁴⁹ mappend₂₁₂₅(t⁴⁹, ys⁷³)]))
+//│ 								| LH_N  => ys⁷¹}
+//│ 							where
+//│ 							def mappend₂₁₂₅(xs⁹³, ys²²⁰) = 
+//│ 								xs⁹³(ys²²⁰)
+//│ 							def mappend₃₁₉(xs⁵⁰, ys¹¹⁹) = 
+//│ 								xs⁵⁰(ys¹¹⁹)
+//│ 						def mappend₁₁₃(xs⁹⁴, ys²²¹) = 
+//│ 							xs⁹⁴(ys²²¹)
+//│ 				def take₀₁₀(n⁴, ls⁴) = 
+//│ 					if (n⁴ > 0) then case ls⁴ of {
+//│ 						LH_C h⁴⁵ t⁴⁵ => 
+//│ 							let h⁴⁶ = h⁴⁵
+//│ 							in let t⁴⁶ = take₀₁₀((n⁴ - 1), t⁴⁵)
+//│ 							in mappend₀₀₁(h⁴⁶, concat₀₀₃(t⁴⁶))
+//│ 						| LH_N  => (fun ys⁶⁶ -> ys⁶⁶)} else (fun ys⁶⁷ -> ys⁶⁷)
+//│ 					where
+//│ 					def concat₀₀₃(lss¹⁶) = 
+//│ 						lss¹⁶
+//│ 					def mappend₀₀₁(xs⁶², ys¹³⁵) = 
+//│ 						case xs⁶² of {
+//│ 							LH_C h⁷⁶ t⁷⁶ => 
+//│ 								let h⁷⁷ = h⁷⁶
+//│ 								in let t⁷⁷ = mappend₀₀₁(t⁷⁶, ys¹³⁵)
+//│ 								in (fun ys¹³⁶ -> 
+//│ 									let h⁷⁸ = h⁷⁷
+//│ 									in let t⁷⁸ = mappend₃₀₃(t⁷⁷, ys¹³⁶)
+//│ 									in (fun ys¹³⁷ -> [LH_C h⁷⁸ mappend₂₀₁₁(t⁷⁸, ys¹³⁷)]))
+//│ 							| LH_N  => ys¹³⁵}
+//│ 						where
+//│ 						def mappend₂₀₁₁(xs⁶⁷, ys¹⁶³) = 
+//│ 							xs⁶⁷(ys¹⁶³)
+//│ 						def mappend₃₀₃(xs⁹⁸, ys²²⁵) = 
+//│ 							xs⁹⁸(ys²²⁵)
+//│ 			def take₁₁₀(n⁶, ls⁶) = 
+//│ 				if (n⁶ > 0) then case ls⁶ of {
+//│ 					LH_C h⁹⁵ t⁹⁵ => 
+//│ 						let h⁹⁶ = h⁹⁵
+//│ 						in let t⁹⁶ = take₁₁₀((n⁶ - 1), t⁹⁵)
+//│ 						in (fun ys¹⁶⁰ -> 
+//│ 							let h⁹⁷ = h⁹⁶
+//│ 							in let t⁹⁷ = mappend₁₀₁(t⁹⁶, ys¹⁶⁰)
+//│ 							in mappend₀₀₂(h⁹⁷, concat₀₀₄(t⁹⁷)))
+//│ 					| LH_N  => (fun ys¹⁶¹ -> ys¹⁶¹)} else (fun ys¹⁶² -> ys¹⁶²)
+//│ 				where
+//│ 				def concat₀₀₄(lss¹²) = 
+//│ 					lss¹²
+//│ 				def mappend₀₀₂(xs⁶⁶, ys¹⁵⁷) = 
+//│ 					case xs⁶⁶ of {
+//│ 						LH_C h⁹² t⁹² => 
+//│ 							let h⁹³ = h⁹²
+//│ 							in let t⁹³ = mappend₀₀₂(t⁹², ys¹⁵⁷)
+//│ 							in (fun ys¹⁵⁸ -> 
+//│ 								let h⁹⁴ = h⁹³
+//│ 								in let t⁹⁴ = mappend₃₀₄(t⁹³, ys¹⁵⁸)
+//│ 								in (fun ys¹⁵⁹ -> [LH_C h⁹⁴ mappend₂₀₁₂(t⁹⁴, ys¹⁵⁹)]))
+//│ 						| LH_N  => ys¹⁵⁷}
+//│ 					where
+//│ 					def mappend₂₀₁₂(xs³⁹, ys¹⁰¹) = 
+//│ 						xs³⁹(ys¹⁰¹)
+//│ 					def mappend₃₀₄(xs⁸⁸, ys²¹¹) = 
+//│ 						xs⁸⁸(ys²¹¹)
+//│ 				def mappend₁₀₁(xs¹⁰⁰, ys²²⁷) = 
+//│ 					xs¹⁰⁰(ys²²⁷)
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_N]: 1922 --->
+//│ 	case _lh_drop_arg2² of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1² => if (_lh_drop_arg1² > 0) then drop₀₀₀((_lh_drop_arg1² - 1), _lh_drop_LH_C_1²) else [LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²] | _  => error⁰}: 1942
+//│ 	case ls⁷ of {LH_C h¹⁰⁷ t¹⁰⁷ => let h¹⁰⁸ = h¹⁰⁷
+//│ in let t¹⁰⁸ = take₁₀₀((n⁷ - 1), t¹⁰⁷)
+//│ in (fun ys¹⁸⁷ -> let h¹⁰⁹ = h¹⁰⁸
+//│ in let t¹⁰⁹ = mappend₁₁₁(t¹⁰⁸, ys¹⁸⁷)
+//│ in mappend₀₁₂(h¹⁰⁹, concat₀₁₄(t¹⁰⁹))) | LH_N  => (fun ys¹⁸⁸ -> ys¹⁸⁸)}: 2761
+//│ 	case ls⁸ of {LH_C h¹²² t¹²² => let h¹²³ = h¹²²
+//│ in let t¹²³ = take₀₀₀((n⁸ - 1), t¹²²)
+//│ in mappend₀₁₁(h¹²³, concat₀₁₃(t¹²³)) | LH_N  => (fun ys²¹⁵ -> ys²¹⁵)}: 3349
+//│ [LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²]: 1939 --->
+//│ 	case _lh_drop_arg2² of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1² => if (_lh_drop_arg1² > 0) then drop₀₀₀((_lh_drop_arg1² - 1), _lh_drop_LH_C_1²) else [LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²] | _  => error⁰}: 1942
+//│ 	case ls⁷ of {LH_C h¹⁰⁷ t¹⁰⁷ => let h¹⁰⁸ = h¹⁰⁷
+//│ in let t¹⁰⁸ = take₁₀₀((n⁷ - 1), t¹⁰⁷)
+//│ in (fun ys¹⁸⁷ -> let h¹⁰⁹ = h¹⁰⁸
+//│ in let t¹⁰⁹ = mappend₁₁₁(t¹⁰⁸, ys¹⁸⁷)
+//│ in mappend₀₁₂(h¹⁰⁹, concat₀₁₄(t¹⁰⁹))) | LH_N  => (fun ys¹⁸⁸ -> ys¹⁸⁸)}: 2761
+//│ 	case ls⁸ of {LH_C h¹²² t¹²² => let h¹²³ = h¹²²
+//│ in let t¹²³ = take₀₀₀((n⁸ - 1), t¹²²)
+//│ in mappend₀₁₁(h¹²³, concat₀₁₃(t¹²³)) | LH_N  => (fun ys²¹⁵ -> ys²¹⁵)}: 3349
+//│ [LH_N]: 2022 --->
+//│ 	case xs⁵⁶ of {LH_C h⁷⁰ t⁷⁰ => let h⁷¹ = h⁷⁰
+//│ in let t⁷¹ = mappend₀₀₀(t⁷⁰, ys¹²⁵)
+//│ in (fun ys¹²⁶ -> let h⁷² = h⁷¹
+//│ in let t⁷² = mappend₃₀₁(t⁷¹, ys¹²⁶)
+//│ in (fun ys¹²⁷ -> [LH_C h⁷² mappend₂₀₅(t⁷², ys¹²⁷)])) | LH_N  => ys¹²⁵}: 1846
+//│ [LH_C ' ' [LH_N]]: 2023 --->
+//│ 	case xs⁵⁶ of {LH_C h⁷⁰ t⁷⁰ => let h⁷¹ = h⁷⁰
+//│ in let t⁷¹ = mappend₀₀₀(t⁷⁰, ys¹²⁵)
+//│ in (fun ys¹²⁶ -> let h⁷² = h⁷¹
+//│ in let t⁷² = mappend₃₀₁(t⁷¹, ys¹²⁶)
+//│ in (fun ys¹²⁷ -> [LH_C h⁷² mappend₂₀₅(t⁷², ys¹²⁷)])) | LH_N  => ys¹²⁵}: 1846
+//│ [LH_N]: 2026 --->
+//│ 	case _lh_drop_arg2² of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1² => if (_lh_drop_arg1² > 0) then drop₀₀₀((_lh_drop_arg1² - 1), _lh_drop_LH_C_1²) else [LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²] | _  => error⁰}: 1942
+//│ 	case ls⁷ of {LH_C h¹⁰⁷ t¹⁰⁷ => let h¹⁰⁸ = h¹⁰⁷
+//│ in let t¹⁰⁸ = take₁₀₀((n⁷ - 1), t¹⁰⁷)
+//│ in (fun ys¹⁸⁷ -> let h¹⁰⁹ = h¹⁰⁸
+//│ in let t¹⁰⁹ = mappend₁₁₁(t¹⁰⁸, ys¹⁸⁷)
+//│ in mappend₀₁₂(h¹⁰⁹, concat₀₁₄(t¹⁰⁹))) | LH_N  => (fun ys¹⁸⁸ -> ys¹⁸⁸)}: 2761
+//│ 	case ls⁸ of {LH_C h¹²² t¹²² => let h¹²³ = h¹²²
+//│ in let t¹²³ = take₀₀₀((n⁸ - 1), t¹²²)
+//│ in mappend₀₁₁(h¹²³, concat₀₁₃(t¹²³)) | LH_N  => (fun ys²¹⁵ -> ys²¹⁵)}: 3349
+//│ [LH_N]: 2169 --->
+//│ 	case xs⁷⁴ of {LH_C h⁹⁹ t⁹⁹ => let h¹⁰⁰ = h⁹⁹
+//│ in let t¹⁰⁰ = mappend₀₁₀(t⁹⁹, ys¹⁷¹)
+//│ in (fun ys¹⁷² -> let h¹⁰¹ = h¹⁰⁰
+//│ in let t¹⁰¹ = mappend₃₁₁(t¹⁰⁰, ys¹⁷²)
+//│ in (fun ys¹⁷³ -> [LH_C h¹⁰¹ mappend₂₁₅(t¹⁰¹, ys¹⁷³)])) | LH_N  => ys¹⁷¹}: 2543
+//│ [LH_C ' ' [LH_N]]: 2170 --->
+//│ 	case xs⁷⁴ of {LH_C h⁹⁹ t⁹⁹ => let h¹⁰⁰ = h⁹⁹
+//│ in let t¹⁰⁰ = mappend₀₁₀(t⁹⁹, ys¹⁷¹)
+//│ in (fun ys¹⁷² -> let h¹⁰¹ = h¹⁰⁰
+//│ in let t¹⁰¹ = mappend₃₁₁(t¹⁰⁰, ys¹⁷²)
+//│ in (fun ys¹⁷³ -> [LH_C h¹⁰¹ mappend₂₁₅(t¹⁰¹, ys¹⁷³)])) | LH_N  => ys¹⁷¹}: 2543
+//│ [LH_N]: 2173 --->
+//│ 	case _lh_drop_arg2² of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1² => if (_lh_drop_arg1² > 0) then drop₀₀₀((_lh_drop_arg1² - 1), _lh_drop_LH_C_1²) else [LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²] | _  => error⁰}: 1942
+//│ 	case ls⁷ of {LH_C h¹⁰⁷ t¹⁰⁷ => let h¹⁰⁸ = h¹⁰⁷
+//│ in let t¹⁰⁸ = take₁₀₀((n⁷ - 1), t¹⁰⁷)
+//│ in (fun ys¹⁸⁷ -> let h¹⁰⁹ = h¹⁰⁸
+//│ in let t¹⁰⁹ = mappend₁₁₁(t¹⁰⁸, ys¹⁸⁷)
+//│ in mappend₀₁₂(h¹⁰⁹, concat₀₁₄(t¹⁰⁹))) | LH_N  => (fun ys¹⁸⁸ -> ys¹⁸⁸)}: 2761
+//│ 	case ls⁸ of {LH_C h¹²² t¹²² => let h¹²³ = h¹²²
+//│ in let t¹²³ = take₀₀₀((n⁸ - 1), t¹²²)
+//│ in mappend₀₁₁(h¹²³, concat₀₁₃(t¹²³)) | LH_N  => (fun ys²¹⁵ -> ys²¹⁵)}: 3349
+//│ [LH_N]: 2405 --->
+//│ 	case ls⁵ of {LH_C h⁶⁰ t⁶⁰ => let h⁶¹ = h⁶⁰
+//│ in let t⁶¹ = take₀₀₁((n⁵ - 1), t⁶⁰)
+//│ in mappend₀₁₄(h⁶¹, concat₀₁₈(t⁶¹)) | LH_N  => (fun ys¹⁰³ -> ys¹⁰³)}: 1655
+//│ 	case _lh_drop_arg2³ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³ => if (_lh_drop_arg1³ > 0) then drop₀₀₁((_lh_drop_arg1³ - 1), _lh_drop_LH_C_1³) else [LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³] | _  => error⁰}: 2425
+//│ 	case ls⁹ of {LH_C h¹²⁶ t¹²⁶ => let h¹²⁷ = h¹²⁶
+//│ in let t¹²⁷ = take₁₀₁((n⁹ - 1), t¹²⁶)
+//│ in (fun ys²²⁹ -> let h¹²⁸ = h¹²⁷
+//│ in let t¹²⁸ = mappend₁₁₃(t¹²⁷, ys²²⁹)
+//│ in mappend₀₁₅(h¹²⁸, concat₀₁₉(t¹²⁸))) | LH_N  => (fun ys²³⁰ -> ys²³⁰)}: 3500
+//│ [LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³]: 2422 --->
+//│ 	case ls⁵ of {LH_C h⁶⁰ t⁶⁰ => let h⁶¹ = h⁶⁰
+//│ in let t⁶¹ = take₀₀₁((n⁵ - 1), t⁶⁰)
+//│ in mappend₀₁₄(h⁶¹, concat₀₁₈(t⁶¹)) | LH_N  => (fun ys¹⁰³ -> ys¹⁰³)}: 1655
+//│ 	case _lh_drop_arg2³ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³ => if (_lh_drop_arg1³ > 0) then drop₀₀₁((_lh_drop_arg1³ - 1), _lh_drop_LH_C_1³) else [LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³] | _  => error⁰}: 2425
+//│ 	case ls⁹ of {LH_C h¹²⁶ t¹²⁶ => let h¹²⁷ = h¹²⁶
+//│ in let t¹²⁷ = take₁₀₁((n⁹ - 1), t¹²⁶)
+//│ in (fun ys²²⁹ -> let h¹²⁸ = h¹²⁷
+//│ in let t¹²⁸ = mappend₁₁₃(t¹²⁷, ys²²⁹)
+//│ in mappend₀₁₅(h¹²⁸, concat₀₁₉(t¹²⁸))) | LH_N  => (fun ys²³⁰ -> ys²³⁰)}: 3500
+//│ [LH_N]: 2493 --->
+//│ 	case ls⁵ of {LH_C h⁶⁰ t⁶⁰ => let h⁶¹ = h⁶⁰
+//│ in let t⁶¹ = take₀₀₁((n⁵ - 1), t⁶⁰)
+//│ in mappend₀₁₄(h⁶¹, concat₀₁₈(t⁶¹)) | LH_N  => (fun ys¹⁰³ -> ys¹⁰³)}: 1655
+//│ 	case _lh_drop_arg2³ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³ => if (_lh_drop_arg1³ > 0) then drop₀₀₁((_lh_drop_arg1³ - 1), _lh_drop_LH_C_1³) else [LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³] | _  => error⁰}: 2425
+//│ 	case ls⁹ of {LH_C h¹²⁶ t¹²⁶ => let h¹²⁷ = h¹²⁶
+//│ in let t¹²⁷ = take₁₀₁((n⁹ - 1), t¹²⁶)
+//│ in (fun ys²²⁹ -> let h¹²⁸ = h¹²⁷
+//│ in let t¹²⁸ = mappend₁₁₃(t¹²⁷, ys²²⁹)
+//│ in mappend₀₁₅(h¹²⁸, concat₀₁₉(t¹²⁸))) | LH_N  => (fun ys²³⁰ -> ys²³⁰)}: 3500
+//│ [LH_C _lh_drop_LH_C_0⁴ _lh_drop_LH_C_1⁴]: 2510 --->
+//│ 	case ls⁵ of {LH_C h⁶⁰ t⁶⁰ => let h⁶¹ = h⁶⁰
+//│ in let t⁶¹ = take₀₀₁((n⁵ - 1), t⁶⁰)
+//│ in mappend₀₁₄(h⁶¹, concat₀₁₈(t⁶¹)) | LH_N  => (fun ys¹⁰³ -> ys¹⁰³)}: 1655
+//│ 	case _lh_drop_arg2³ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³ => if (_lh_drop_arg1³ > 0) then drop₀₀₁((_lh_drop_arg1³ - 1), _lh_drop_LH_C_1³) else [LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³] | _  => error⁰}: 2425
+//│ 	case ls⁹ of {LH_C h¹²⁶ t¹²⁶ => let h¹²⁷ = h¹²⁶
+//│ in let t¹²⁷ = take₁₀₁((n⁹ - 1), t¹²⁶)
+//│ in (fun ys²²⁹ -> let h¹²⁸ = h¹²⁷
+//│ in let t¹²⁸ = mappend₁₁₃(t¹²⁷, ys²²⁹)
+//│ in mappend₀₁₅(h¹²⁸, concat₀₁₉(t¹²⁸))) | LH_N  => (fun ys²³⁰ -> ys²³⁰)}: 3500
+//│ [LH_N]: 2611 --->
+//│ 	case xs⁶⁴ of {LH_C h⁸⁹ t⁸⁹ => let h⁹⁰ = h⁸⁹
+//│ in let t⁹⁰ = mappend₀₁₃(t⁸⁹, ys¹⁵³)
+//│ in (fun ys¹⁵⁴ -> let h⁹¹ = h⁹⁰
+//│ in let t⁹¹ = mappend₃₁₆(t⁹⁰, ys¹⁵⁴)
+//│ in (fun ys¹⁵⁵ -> [LH_C h⁹¹ mappend₂₁₁₈(t⁹¹, ys¹⁵⁵)])) | LH_N  => ys¹⁵³}: 2303
+//│ [LH_C ' ' [LH_N]]: 2612 --->
+//│ 	case xs⁶⁴ of {LH_C h⁸⁹ t⁸⁹ => let h⁹⁰ = h⁸⁹
+//│ in let t⁹⁰ = mappend₀₁₃(t⁸⁹, ys¹⁵³)
+//│ in (fun ys¹⁵⁴ -> let h⁹¹ = h⁹⁰
+//│ in let t⁹¹ = mappend₃₁₆(t⁹⁰, ys¹⁵⁴)
+//│ in (fun ys¹⁵⁵ -> [LH_C h⁹¹ mappend₂₁₁₈(t⁹¹, ys¹⁵⁵)])) | LH_N  => ys¹⁵³}: 2303
+//│ [LH_N]: 2615 --->
+//│ 	case ls⁵ of {LH_C h⁶⁰ t⁶⁰ => let h⁶¹ = h⁶⁰
+//│ in let t⁶¹ = take₀₀₁((n⁵ - 1), t⁶⁰)
+//│ in mappend₀₁₄(h⁶¹, concat₀₁₈(t⁶¹)) | LH_N  => (fun ys¹⁰³ -> ys¹⁰³)}: 1655
+//│ 	case _lh_drop_arg2³ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³ => if (_lh_drop_arg1³ > 0) then drop₀₀₁((_lh_drop_arg1³ - 1), _lh_drop_LH_C_1³) else [LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³] | _  => error⁰}: 2425
+//│ 	case ls⁹ of {LH_C h¹²⁶ t¹²⁶ => let h¹²⁷ = h¹²⁶
+//│ in let t¹²⁷ = take₁₀₁((n⁹ - 1), t¹²⁶)
+//│ in (fun ys²²⁹ -> let h¹²⁸ = h¹²⁷
+//│ in let t¹²⁸ = mappend₁₁₃(t¹²⁷, ys²²⁹)
+//│ in mappend₀₁₅(h¹²⁸, concat₀₁₉(t¹²⁸))) | LH_N  => (fun ys²³⁰ -> ys²³⁰)}: 3500
+//│ [LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀₁(k¹², let _lh_ampOp_LH_P3_0⁴ = (_lh_hashOp_LH_P3_0⁴ * 10)
+//│ in let _lh_ampOp_LH_P3_1⁴ = ((_lh_hashOp_LH_P3_1⁴ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2⁴)) * 10)
+//│ in let _lh_ampOp_LH_P3_2⁴ = _lh_hashOp_LH_P3_2⁴
+//│ in (fun _lh_ampOp_arg1⁶ -> let y⁴ = ((_lh_ampOp_arg1⁶ * 2) + 1)
+//│ in let _lh_hashOp_LH_P3_0⁶ = (_lh_ampOp_LH_P3_0⁴ * _lh_ampOp_arg1⁶)
+//│ in let _lh_hashOp_LH_P3_1⁶ = ((_lh_ampOp_LH_P3_1⁴ + (_lh_ampOp_LH_P3_0⁴ * 2)) * y⁴)
+//│ in let _lh_hashOp_LH_P3_2⁶ = (_lh_ampOp_LH_P3_2⁴ * y⁴)
+//│ in (fun k¹⁴ -> let _lh_matchIdent¹² = divmod₀₀₀(((_lh_hashOp_LH_P3_0⁶ * 3) + _lh_hashOp_LH_P3_1⁶), _lh_hashOp_LH_P3_2⁶)
+//│ in _lh_matchIdent¹²(_lh_hashOp_LH_P3_0⁶, _lh_hashOp_LH_P3_1⁶, _lh_hashOp_LH_P3_2⁶, k¹⁴))))]: 2955 --->
+//│ 	case ls⁴ of {LH_C h⁴⁵ t⁴⁵ => let h⁴⁶ = h⁴⁵
+//│ in let t⁴⁶ = take₀₁₀((n⁴ - 1), t⁴⁵)
+//│ in mappend₀₀₁(h⁴⁶, concat₀₀₃(t⁴⁶)) | LH_N  => (fun ys⁶⁶ -> ys⁶⁶)}: 1300
+//│ 	case ls⁵ of {LH_C h⁶⁰ t⁶⁰ => let h⁶¹ = h⁶⁰
+//│ in let t⁶¹ = take₀₀₁((n⁵ - 1), t⁶⁰)
+//│ in mappend₀₁₄(h⁶¹, concat₀₁₈(t⁶¹)) | LH_N  => (fun ys¹⁰³ -> ys¹⁰³)}: 1655
+//│ 	case ls⁶ of {LH_C h⁹⁵ t⁹⁵ => let h⁹⁶ = h⁹⁵
+//│ in let t⁹⁶ = take₁₁₀((n⁶ - 1), t⁹⁵)
+//│ in (fun ys¹⁶⁰ -> let h⁹⁷ = h⁹⁶
+//│ in let t⁹⁷ = mappend₁₀₁(t⁹⁶, ys¹⁶⁰)
+//│ in mappend₀₀₂(h⁹⁷, concat₀₀₄(t⁹⁷))) | LH_N  => (fun ys¹⁶¹ -> ys¹⁶¹)}: 2398
+//│ 	case _lh_drop_arg2³ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³ => if (_lh_drop_arg1³ > 0) then drop₀₀₁((_lh_drop_arg1³ - 1), _lh_drop_LH_C_1³) else [LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³] | _  => error⁰}: 2425
+//│ 	case _lh_drop_arg2⁴ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0⁴ _lh_drop_LH_C_1⁴ => if (_lh_drop_arg1⁴ > 0) then drop₀₁₀((_lh_drop_arg1⁴ - 1), _lh_drop_LH_C_1⁴) else [LH_C _lh_drop_LH_C_0⁴ _lh_drop_LH_C_1⁴] | _  => error⁰}: 2513
+//│ 	case ls⁹ of {LH_C h¹²⁶ t¹²⁶ => let h¹²⁷ = h¹²⁶
+//│ in let t¹²⁷ = take₁₀₁((n⁹ - 1), t¹²⁶)
+//│ in (fun ys²²⁹ -> let h¹²⁸ = h¹²⁷
+//│ in let t¹²⁸ = mappend₁₁₃(t¹²⁷, ys²²⁹)
+//│ in mappend₀₁₅(h¹²⁸, concat₀₁₉(t¹²⁸))) | LH_N  => (fun ys²³⁰ -> ys²³⁰)}: 3500
+//│ ------------------
+//│ case ls⁴ of {LH_C h⁴⁵ t⁴⁵ => let h⁴⁶ = h⁴⁵
+//│ in let t⁴⁶ = take₀₁₀((n⁴ - 1), t⁴⁵)
+//│ in mappend₀₀₁(h⁴⁶, concat₀₀₃(t⁴⁶)) | LH_N  => (fun ys⁶⁶ -> ys⁶⁶)}: 1300 --->
+//│ 	[LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀₁(k¹², let _lh_ampOp_LH_P3_0⁴ = (_lh_hashOp_LH_P3_0⁴ * 10)
+//│ in let _lh_ampOp_LH_P3_1⁴ = ((_lh_hashOp_LH_P3_1⁴ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2⁴)) * 10)
+//│ in let _lh_ampOp_LH_P3_2⁴ = _lh_hashOp_LH_P3_2⁴
+//│ in (fun _lh_ampOp_arg1⁶ -> let y⁴ = ((_lh_ampOp_arg1⁶ * 2) + 1)
+//│ in let _lh_hashOp_LH_P3_0⁶ = (_lh_ampOp_LH_P3_0⁴ * _lh_ampOp_arg1⁶)
+//│ in let _lh_hashOp_LH_P3_1⁶ = ((_lh_ampOp_LH_P3_1⁴ + (_lh_ampOp_LH_P3_0⁴ * 2)) * y⁴)
+//│ in let _lh_hashOp_LH_P3_2⁶ = (_lh_ampOp_LH_P3_2⁴ * y⁴)
+//│ in (fun k¹⁴ -> let _lh_matchIdent¹² = divmod₀₀₀(((_lh_hashOp_LH_P3_0⁶ * 3) + _lh_hashOp_LH_P3_1⁶), _lh_hashOp_LH_P3_2⁶)
+//│ in _lh_matchIdent¹²(_lh_hashOp_LH_P3_0⁶, _lh_hashOp_LH_P3_1⁶, _lh_hashOp_LH_P3_2⁶, k¹⁴))))]: 2955
+//│ case ls⁵ of {LH_C h⁶⁰ t⁶⁰ => let h⁶¹ = h⁶⁰
+//│ in let t⁶¹ = take₀₀₁((n⁵ - 1), t⁶⁰)
+//│ in mappend₀₁₄(h⁶¹, concat₀₁₈(t⁶¹)) | LH_N  => (fun ys¹⁰³ -> ys¹⁰³)}: 1655 --->
+//│ 	[LH_N]: 2405
+//│ 	[LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³]: 2422
+//│ 	[LH_N]: 2493
+//│ 	[LH_C _lh_drop_LH_C_0⁴ _lh_drop_LH_C_1⁴]: 2510
+//│ 	[LH_N]: 2615
+//│ 	[LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀₁(k¹², let _lh_ampOp_LH_P3_0⁴ = (_lh_hashOp_LH_P3_0⁴ * 10)
+//│ in let _lh_ampOp_LH_P3_1⁴ = ((_lh_hashOp_LH_P3_1⁴ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2⁴)) * 10)
+//│ in let _lh_ampOp_LH_P3_2⁴ = _lh_hashOp_LH_P3_2⁴
+//│ in (fun _lh_ampOp_arg1⁶ -> let y⁴ = ((_lh_ampOp_arg1⁶ * 2) + 1)
+//│ in let _lh_hashOp_LH_P3_0⁶ = (_lh_ampOp_LH_P3_0⁴ * _lh_ampOp_arg1⁶)
+//│ in let _lh_hashOp_LH_P3_1⁶ = ((_lh_ampOp_LH_P3_1⁴ + (_lh_ampOp_LH_P3_0⁴ * 2)) * y⁴)
+//│ in let _lh_hashOp_LH_P3_2⁶ = (_lh_ampOp_LH_P3_2⁴ * y⁴)
+//│ in (fun k¹⁴ -> let _lh_matchIdent¹² = divmod₀₀₀(((_lh_hashOp_LH_P3_0⁶ * 3) + _lh_hashOp_LH_P3_1⁶), _lh_hashOp_LH_P3_2⁶)
+//│ in _lh_matchIdent¹²(_lh_hashOp_LH_P3_0⁶, _lh_hashOp_LH_P3_1⁶, _lh_hashOp_LH_P3_2⁶, k¹⁴))))]: 2955
+//│ case xs⁵⁶ of {LH_C h⁷⁰ t⁷⁰ => let h⁷¹ = h⁷⁰
+//│ in let t⁷¹ = mappend₀₀₀(t⁷⁰, ys¹²⁵)
+//│ in (fun ys¹²⁶ -> let h⁷² = h⁷¹
+//│ in let t⁷² = mappend₃₀₁(t⁷¹, ys¹²⁶)
+//│ in (fun ys¹²⁷ -> [LH_C h⁷² mappend₂₀₅(t⁷², ys¹²⁷)])) | LH_N  => ys¹²⁵}: 1846 --->
+//│ 	[LH_N]: 2022
+//│ 	[LH_C ' ' [LH_N]]: 2023
+//│ case _lh_drop_arg2² of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1² => if (_lh_drop_arg1² > 0) then drop₀₀₀((_lh_drop_arg1² - 1), _lh_drop_LH_C_1²) else [LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²] | _  => error⁰}: 1942 --->
+//│ 	[LH_N]: 1922
+//│ 	[LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²]: 1939
+//│ 	[LH_N]: 2026
+//│ 	[LH_N]: 2173
+//│ case xs⁶⁴ of {LH_C h⁸⁹ t⁸⁹ => let h⁹⁰ = h⁸⁹
+//│ in let t⁹⁰ = mappend₀₁₃(t⁸⁹, ys¹⁵³)
+//│ in (fun ys¹⁵⁴ -> let h⁹¹ = h⁹⁰
+//│ in let t⁹¹ = mappend₃₁₆(t⁹⁰, ys¹⁵⁴)
+//│ in (fun ys¹⁵⁵ -> [LH_C h⁹¹ mappend₂₁₁₈(t⁹¹, ys¹⁵⁵)])) | LH_N  => ys¹⁵³}: 2303 --->
+//│ 	[LH_N]: 2611
+//│ 	[LH_C ' ' [LH_N]]: 2612
+//│ case ls⁶ of {LH_C h⁹⁵ t⁹⁵ => let h⁹⁶ = h⁹⁵
+//│ in let t⁹⁶ = take₁₁₀((n⁶ - 1), t⁹⁵)
+//│ in (fun ys¹⁶⁰ -> let h⁹⁷ = h⁹⁶
+//│ in let t⁹⁷ = mappend₁₀₁(t⁹⁶, ys¹⁶⁰)
+//│ in mappend₀₀₂(h⁹⁷, concat₀₀₄(t⁹⁷))) | LH_N  => (fun ys¹⁶¹ -> ys¹⁶¹)}: 2398 --->
+//│ 	[LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀₁(k¹², let _lh_ampOp_LH_P3_0⁴ = (_lh_hashOp_LH_P3_0⁴ * 10)
+//│ in let _lh_ampOp_LH_P3_1⁴ = ((_lh_hashOp_LH_P3_1⁴ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2⁴)) * 10)
+//│ in let _lh_ampOp_LH_P3_2⁴ = _lh_hashOp_LH_P3_2⁴
+//│ in (fun _lh_ampOp_arg1⁶ -> let y⁴ = ((_lh_ampOp_arg1⁶ * 2) + 1)
+//│ in let _lh_hashOp_LH_P3_0⁶ = (_lh_ampOp_LH_P3_0⁴ * _lh_ampOp_arg1⁶)
+//│ in let _lh_hashOp_LH_P3_1⁶ = ((_lh_ampOp_LH_P3_1⁴ + (_lh_ampOp_LH_P3_0⁴ * 2)) * y⁴)
+//│ in let _lh_hashOp_LH_P3_2⁶ = (_lh_ampOp_LH_P3_2⁴ * y⁴)
+//│ in (fun k¹⁴ -> let _lh_matchIdent¹² = divmod₀₀₀(((_lh_hashOp_LH_P3_0⁶ * 3) + _lh_hashOp_LH_P3_1⁶), _lh_hashOp_LH_P3_2⁶)
+//│ in _lh_matchIdent¹²(_lh_hashOp_LH_P3_0⁶, _lh_hashOp_LH_P3_1⁶, _lh_hashOp_LH_P3_2⁶, k¹⁴))))]: 2955
+//│ case _lh_drop_arg2³ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³ => if (_lh_drop_arg1³ > 0) then drop₀₀₁((_lh_drop_arg1³ - 1), _lh_drop_LH_C_1³) else [LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³] | _  => error⁰}: 2425 --->
+//│ 	[LH_N]: 2405
+//│ 	[LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³]: 2422
+//│ 	[LH_N]: 2493
+//│ 	[LH_C _lh_drop_LH_C_0⁴ _lh_drop_LH_C_1⁴]: 2510
+//│ 	[LH_N]: 2615
+//│ 	[LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀₁(k¹², let _lh_ampOp_LH_P3_0⁴ = (_lh_hashOp_LH_P3_0⁴ * 10)
+//│ in let _lh_ampOp_LH_P3_1⁴ = ((_lh_hashOp_LH_P3_1⁴ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2⁴)) * 10)
+//│ in let _lh_ampOp_LH_P3_2⁴ = _lh_hashOp_LH_P3_2⁴
+//│ in (fun _lh_ampOp_arg1⁶ -> let y⁴ = ((_lh_ampOp_arg1⁶ * 2) + 1)
+//│ in let _lh_hashOp_LH_P3_0⁶ = (_lh_ampOp_LH_P3_0⁴ * _lh_ampOp_arg1⁶)
+//│ in let _lh_hashOp_LH_P3_1⁶ = ((_lh_ampOp_LH_P3_1⁴ + (_lh_ampOp_LH_P3_0⁴ * 2)) * y⁴)
+//│ in let _lh_hashOp_LH_P3_2⁶ = (_lh_ampOp_LH_P3_2⁴ * y⁴)
+//│ in (fun k¹⁴ -> let _lh_matchIdent¹² = divmod₀₀₀(((_lh_hashOp_LH_P3_0⁶ * 3) + _lh_hashOp_LH_P3_1⁶), _lh_hashOp_LH_P3_2⁶)
+//│ in _lh_matchIdent¹²(_lh_hashOp_LH_P3_0⁶, _lh_hashOp_LH_P3_1⁶, _lh_hashOp_LH_P3_2⁶, k¹⁴))))]: 2955
+//│ case _lh_drop_arg2⁴ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0⁴ _lh_drop_LH_C_1⁴ => if (_lh_drop_arg1⁴ > 0) then drop₀₁₀((_lh_drop_arg1⁴ - 1), _lh_drop_LH_C_1⁴) else [LH_C _lh_drop_LH_C_0⁴ _lh_drop_LH_C_1⁴] | _  => error⁰}: 2513 --->
+//│ 	[LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀₁(k¹², let _lh_ampOp_LH_P3_0⁴ = (_lh_hashOp_LH_P3_0⁴ * 10)
+//│ in let _lh_ampOp_LH_P3_1⁴ = ((_lh_hashOp_LH_P3_1⁴ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2⁴)) * 10)
+//│ in let _lh_ampOp_LH_P3_2⁴ = _lh_hashOp_LH_P3_2⁴
+//│ in (fun _lh_ampOp_arg1⁶ -> let y⁴ = ((_lh_ampOp_arg1⁶ * 2) + 1)
+//│ in let _lh_hashOp_LH_P3_0⁶ = (_lh_ampOp_LH_P3_0⁴ * _lh_ampOp_arg1⁶)
+//│ in let _lh_hashOp_LH_P3_1⁶ = ((_lh_ampOp_LH_P3_1⁴ + (_lh_ampOp_LH_P3_0⁴ * 2)) * y⁴)
+//│ in let _lh_hashOp_LH_P3_2⁶ = (_lh_ampOp_LH_P3_2⁴ * y⁴)
+//│ in (fun k¹⁴ -> let _lh_matchIdent¹² = divmod₀₀₀(((_lh_hashOp_LH_P3_0⁶ * 3) + _lh_hashOp_LH_P3_1⁶), _lh_hashOp_LH_P3_2⁶)
+//│ in _lh_matchIdent¹²(_lh_hashOp_LH_P3_0⁶, _lh_hashOp_LH_P3_1⁶, _lh_hashOp_LH_P3_2⁶, k¹⁴))))]: 2955
+//│ case xs⁷⁴ of {LH_C h⁹⁹ t⁹⁹ => let h¹⁰⁰ = h⁹⁹
+//│ in let t¹⁰⁰ = mappend₀₁₀(t⁹⁹, ys¹⁷¹)
+//│ in (fun ys¹⁷² -> let h¹⁰¹ = h¹⁰⁰
+//│ in let t¹⁰¹ = mappend₃₁₁(t¹⁰⁰, ys¹⁷²)
+//│ in (fun ys¹⁷³ -> [LH_C h¹⁰¹ mappend₂₁₅(t¹⁰¹, ys¹⁷³)])) | LH_N  => ys¹⁷¹}: 2543 --->
+//│ 	[LH_N]: 2169
+//│ 	[LH_C ' ' [LH_N]]: 2170
+//│ case ls⁷ of {LH_C h¹⁰⁷ t¹⁰⁷ => let h¹⁰⁸ = h¹⁰⁷
+//│ in let t¹⁰⁸ = take₁₀₀((n⁷ - 1), t¹⁰⁷)
+//│ in (fun ys¹⁸⁷ -> let h¹⁰⁹ = h¹⁰⁸
+//│ in let t¹⁰⁹ = mappend₁₁₁(t¹⁰⁸, ys¹⁸⁷)
+//│ in mappend₀₁₂(h¹⁰⁹, concat₀₁₄(t¹⁰⁹))) | LH_N  => (fun ys¹⁸⁸ -> ys¹⁸⁸)}: 2761 --->
+//│ 	[LH_N]: 1922
+//│ 	[LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²]: 1939
+//│ 	[LH_N]: 2026
+//│ 	[LH_N]: 2173
+//│ case ls⁸ of {LH_C h¹²² t¹²² => let h¹²³ = h¹²²
+//│ in let t¹²³ = take₀₀₀((n⁸ - 1), t¹²²)
+//│ in mappend₀₁₁(h¹²³, concat₀₁₃(t¹²³)) | LH_N  => (fun ys²¹⁵ -> ys²¹⁵)}: 3349 --->
+//│ 	[LH_N]: 1922
+//│ 	[LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²]: 1939
+//│ 	[LH_N]: 2026
+//│ 	[LH_N]: 2173
+//│ case ls⁹ of {LH_C h¹²⁶ t¹²⁶ => let h¹²⁷ = h¹²⁶
+//│ in let t¹²⁷ = take₁₀₁((n⁹ - 1), t¹²⁶)
+//│ in (fun ys²²⁹ -> let h¹²⁸ = h¹²⁷
+//│ in let t¹²⁸ = mappend₁₁₃(t¹²⁷, ys²²⁹)
+//│ in mappend₀₁₅(h¹²⁸, concat₀₁₉(t¹²⁸))) | LH_N  => (fun ys²³⁰ -> ys²³⁰)}: 3500 --->
+//│ 	[LH_N]: 2405
+//│ 	[LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³]: 2422
+//│ 	[LH_N]: 2493
+//│ 	[LH_C _lh_drop_LH_C_0⁴ _lh_drop_LH_C_1⁴]: 2510
+//│ 	[LH_N]: 2615
+//│ 	[LH_C string_of_int⁰(_lh_hashOp_LH_P2_0¹) hashOp₀₀₁(k¹², let _lh_ampOp_LH_P3_0⁴ = (_lh_hashOp_LH_P3_0⁴ * 10)
+//│ in let _lh_ampOp_LH_P3_1⁴ = ((_lh_hashOp_LH_P3_1⁴ - (_lh_hashOp_LH_P2_0¹ * _lh_hashOp_LH_P3_2⁴)) * 10)
+//│ in let _lh_ampOp_LH_P3_2⁴ = _lh_hashOp_LH_P3_2⁴
+//│ in (fun _lh_ampOp_arg1⁶ -> let y⁴ = ((_lh_ampOp_arg1⁶ * 2) + 1)
+//│ in let _lh_hashOp_LH_P3_0⁶ = (_lh_ampOp_LH_P3_0⁴ * _lh_ampOp_arg1⁶)
+//│ in let _lh_hashOp_LH_P3_1⁶ = ((_lh_ampOp_LH_P3_1⁴ + (_lh_ampOp_LH_P3_0⁴ * 2)) * y⁴)
+//│ in let _lh_hashOp_LH_P3_2⁶ = (_lh_ampOp_LH_P3_2⁴ * y⁴)
+//│ in (fun k¹⁴ -> let _lh_matchIdent¹² = divmod₀₀₀(((_lh_hashOp_LH_P3_0⁶ * 3) + _lh_hashOp_LH_P3_1⁶), _lh_hashOp_LH_P3_2⁶)
+//│ in _lh_matchIdent¹²(_lh_hashOp_LH_P3_0⁶, _lh_hashOp_LH_P3_1⁶, _lh_hashOp_LH_P3_2⁶, k¹⁴))))]: 2955
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_N]: 2022 --->
+//│ 	case xs⁵⁶ of {LH_C h⁷⁰ t⁷⁰ => let h⁷¹ = h⁷⁰
+//│ in let t⁷¹ = mappend₀₀₀(t⁷⁰, ys¹²⁵)
+//│ in (fun ys¹²⁶ -> let h⁷² = h⁷¹
+//│ in let t⁷² = mappend₃₀₁(t⁷¹, ys¹²⁶)
+//│ in (fun ys¹²⁷ -> [LH_C h⁷² mappend₂₀₅(t⁷², ys¹²⁷)])) | LH_N  => ys¹²⁵}: 1846
+//│ [LH_C ' ' [LH_N]]: 2023 --->
+//│ 	case xs⁵⁶ of {LH_C h⁷⁰ t⁷⁰ => let h⁷¹ = h⁷⁰
+//│ in let t⁷¹ = mappend₀₀₀(t⁷⁰, ys¹²⁵)
+//│ in (fun ys¹²⁶ -> let h⁷² = h⁷¹
+//│ in let t⁷² = mappend₃₀₁(t⁷¹, ys¹²⁶)
+//│ in (fun ys¹²⁷ -> [LH_C h⁷² mappend₂₀₅(t⁷², ys¹²⁷)])) | LH_N  => ys¹²⁵}: 1846
+//│ [LH_N]: 2169 --->
+//│ 	case xs⁷⁴ of {LH_C h⁹⁹ t⁹⁹ => let h¹⁰⁰ = h⁹⁹
+//│ in let t¹⁰⁰ = mappend₀₁₀(t⁹⁹, ys¹⁷¹)
+//│ in (fun ys¹⁷² -> let h¹⁰¹ = h¹⁰⁰
+//│ in let t¹⁰¹ = mappend₃₁₁(t¹⁰⁰, ys¹⁷²)
+//│ in (fun ys¹⁷³ -> [LH_C h¹⁰¹ mappend₂₁₅(t¹⁰¹, ys¹⁷³)])) | LH_N  => ys¹⁷¹}: 2543
+//│ [LH_C ' ' [LH_N]]: 2170 --->
+//│ 	case xs⁷⁴ of {LH_C h⁹⁹ t⁹⁹ => let h¹⁰⁰ = h⁹⁹
+//│ in let t¹⁰⁰ = mappend₀₁₀(t⁹⁹, ys¹⁷¹)
+//│ in (fun ys¹⁷² -> let h¹⁰¹ = h¹⁰⁰
+//│ in let t¹⁰¹ = mappend₃₁₁(t¹⁰⁰, ys¹⁷²)
+//│ in (fun ys¹⁷³ -> [LH_C h¹⁰¹ mappend₂₁₅(t¹⁰¹, ys¹⁷³)])) | LH_N  => ys¹⁷¹}: 2543
+//│ [LH_N]: 2611 --->
+//│ 	case xs⁶⁴ of {LH_C h⁸⁹ t⁸⁹ => let h⁹⁰ = h⁸⁹
+//│ in let t⁹⁰ = mappend₀₁₃(t⁸⁹, ys¹⁵³)
+//│ in (fun ys¹⁵⁴ -> let h⁹¹ = h⁹⁰
+//│ in let t⁹¹ = mappend₃₁₆(t⁹⁰, ys¹⁵⁴)
+//│ in (fun ys¹⁵⁵ -> [LH_C h⁹¹ mappend₂₁₁₈(t⁹¹, ys¹⁵⁵)])) | LH_N  => ys¹⁵³}: 2303
+//│ [LH_C ' ' [LH_N]]: 2612 --->
+//│ 	case xs⁶⁴ of {LH_C h⁸⁹ t⁸⁹ => let h⁹⁰ = h⁸⁹
+//│ in let t⁹⁰ = mappend₀₁₃(t⁸⁹, ys¹⁵³)
+//│ in (fun ys¹⁵⁴ -> let h⁹¹ = h⁹⁰
+//│ in let t⁹¹ = mappend₃₁₆(t⁹⁰, ys¹⁵⁴)
+//│ in (fun ys¹⁵⁵ -> [LH_C h⁹¹ mappend₂₁₁₈(t⁹¹, ys¹⁵⁵)])) | LH_N  => ys¹⁵³}: 2303
+//│ ------------------
+//│ case xs⁵⁶ of {LH_C h⁷⁰ t⁷⁰ => let h⁷¹ = h⁷⁰
+//│ in let t⁷¹ = mappend₀₀₀(t⁷⁰, ys¹²⁵)
+//│ in (fun ys¹²⁶ -> let h⁷² = h⁷¹
+//│ in let t⁷² = mappend₃₀₁(t⁷¹, ys¹²⁶)
+//│ in (fun ys¹²⁷ -> [LH_C h⁷² mappend₂₀₅(t⁷², ys¹²⁷)])) | LH_N  => ys¹²⁵}: 1846 --->
+//│ 	[LH_N]: 2022
+//│ 	[LH_C ' ' [LH_N]]: 2023
+//│ case xs⁶⁴ of {LH_C h⁸⁹ t⁸⁹ => let h⁹⁰ = h⁸⁹
+//│ in let t⁹⁰ = mappend₀₁₃(t⁸⁹, ys¹⁵³)
+//│ in (fun ys¹⁵⁴ -> let h⁹¹ = h⁹⁰
+//│ in let t⁹¹ = mappend₃₁₆(t⁹⁰, ys¹⁵⁴)
+//│ in (fun ys¹⁵⁵ -> [LH_C h⁹¹ mappend₂₁₁₈(t⁹¹, ys¹⁵⁵)])) | LH_N  => ys¹⁵³}: 2303 --->
+//│ 	[LH_N]: 2611
+//│ 	[LH_C ' ' [LH_N]]: 2612
+//│ case xs⁷⁴ of {LH_C h⁹⁹ t⁹⁹ => let h¹⁰⁰ = h⁹⁹
+//│ in let t¹⁰⁰ = mappend₀₁₀(t⁹⁹, ys¹⁷¹)
+//│ in (fun ys¹⁷² -> let h¹⁰¹ = h¹⁰⁰
+//│ in let t¹⁰¹ = mappend₃₁₁(t¹⁰⁰, ys¹⁷²)
+//│ in (fun ys¹⁷³ -> [LH_C h¹⁰¹ mappend₂₁₅(t¹⁰¹, ys¹⁷³)])) | LH_N  => ys¹⁷¹}: 2543 --->
+//│ 	[LH_N]: 2169
+//│ 	[LH_C ' ' [LH_N]]: 2170
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testPiDigits_nofib₀₀₀(primId⁰(100))
+//│ def testPiDigits_nofib₀₀₀(_lh_testPiDigits_nofib_arg1²) = 
+//│ 	pidgits₀₀₀(_lh_testPiDigits_nofib_arg1²)
+//│ 	where
+//│ 	def pidgits₀₀₀(_lh_pidgits_arg1²) = 
+//│ 		percOp₀₀₀(0, hashOp₀₀₂(0, 
+//│ 			let _lh_ampOp_LH_P3_0⁸ = 1
+//│ 			in let _lh_ampOp_LH_P3_1⁸ = 0
+//│ 			in let _lh_ampOp_LH_P3_2⁸ = 1
+//│ 			in (fun _lh_ampOp_arg1¹⁵ -> 
+//│ 				let y⁸ = ((_lh_ampOp_arg1¹⁵ * 2) + 1)
+//│ 				in let _lh_hashOp_LH_P3_0¹¹ = (_lh_ampOp_LH_P3_0⁸ * _lh_ampOp_arg1¹⁵)
+//│ 				in let _lh_hashOp_LH_P3_1¹¹ = ((_lh_ampOp_LH_P3_1⁸ + (_lh_ampOp_LH_P3_0⁸ * 2)) * y⁸)
+//│ 				in let _lh_hashOp_LH_P3_2¹¹ = (_lh_ampOp_LH_P3_2⁸ * y⁸)
+//│ 				in (fun k²³ -> 
+//│ 					let _lh_matchIdent²⁰ = divmod₀₀₀(((_lh_hashOp_LH_P3_0¹¹ * 3) + _lh_hashOp_LH_P3_1¹¹), _lh_hashOp_LH_P3_2¹¹)
+//│ 					in _lh_matchIdent²⁰(_lh_hashOp_LH_P3_0¹¹, _lh_hashOp_LH_P3_1¹¹, _lh_hashOp_LH_P3_2¹¹, k²³)))), _lh_pidgits_arg1²)
+//│ 		where
+//│ 		def divmod₀₀₀(_lh_divmod_arg1², _lh_divmod_arg2²) = 
+//│ 			let _lh_hashOp_LH_P2_0² = div⁰(_lh_divmod_arg1², _lh_divmod_arg2²)
+//│ 			in let _lh_hashOp_LH_P2_1² = (_lh_divmod_arg1² % _lh_divmod_arg2²)
+//│ 			in (fun _lh_hashOp_LH_P3_0⁸ -> (fun _lh_hashOp_LH_P3_1⁸ -> (fun _lh_hashOp_LH_P3_2⁸ -> (fun k¹⁸ -> if ((_lh_hashOp_LH_P3_0⁸ > _lh_hashOp_LH_P3_1⁸) || ((_lh_hashOp_LH_P2_1² + _lh_hashOp_LH_P3_0⁸) >= _lh_hashOp_LH_P3_2⁸)) then hashOp₀₀₀(k¹⁸, 
+//│ 				let _lh_ampOp_LH_P3_0⁶ = _lh_hashOp_LH_P3_0⁸
+//│ 				in let _lh_ampOp_LH_P3_1⁶ = _lh_hashOp_LH_P3_1⁸
+//│ 				in let _lh_ampOp_LH_P3_2⁶ = _lh_hashOp_LH_P3_2⁸
+//│ 				in (fun _lh_ampOp_arg1¹² -> 
+//│ 					let y⁶ = ((_lh_ampOp_arg1¹² * 2) + 1)
+//│ 					in let _lh_hashOp_LH_P3_0⁹ = (_lh_ampOp_LH_P3_0⁶ * _lh_ampOp_arg1¹²)
+//│ 					in let _lh_hashOp_LH_P3_1⁹ = ((_lh_ampOp_LH_P3_1⁶ + (_lh_ampOp_LH_P3_0⁶ * 2)) * y⁶)
+//│ 					in let _lh_hashOp_LH_P3_2⁹ = (_lh_ampOp_LH_P3_2⁶ * y⁶)
+//│ 					in (fun k¹⁹ -> 
+//│ 						let _lh_matchIdent¹⁶ = divmod₀₀₀(((_lh_hashOp_LH_P3_0⁹ * 3) + _lh_hashOp_LH_P3_1⁹), _lh_hashOp_LH_P3_2⁹)
+//│ 						in _lh_matchIdent¹⁶(_lh_hashOp_LH_P3_0⁹, _lh_hashOp_LH_P3_1⁹, _lh_hashOp_LH_P3_2⁹, k¹⁹)))) else [LH_C string_of_int⁰(_lh_hashOp_LH_P2_0²) hashOp₀₀₁(k¹⁸, 
+//│ 				let _lh_ampOp_LH_P3_0⁷ = (_lh_hashOp_LH_P3_0⁸ * 10)
+//│ 				in let _lh_ampOp_LH_P3_1⁷ = ((_lh_hashOp_LH_P3_1⁸ - (_lh_hashOp_LH_P2_0² * _lh_hashOp_LH_P3_2⁸)) * 10)
+//│ 				in let _lh_ampOp_LH_P3_2⁷ = _lh_hashOp_LH_P3_2⁸
+//│ 				in (fun _lh_ampOp_arg1¹³ -> 
+//│ 					let y⁷ = ((_lh_ampOp_arg1¹³ * 2) + 1)
+//│ 					in let _lh_hashOp_LH_P3_0¹⁰ = (_lh_ampOp_LH_P3_0⁷ * _lh_ampOp_arg1¹³)
+//│ 					in let _lh_hashOp_LH_P3_1¹⁰ = ((_lh_ampOp_LH_P3_1⁷ + (_lh_ampOp_LH_P3_0⁷ * 2)) * y⁷)
+//│ 					in let _lh_hashOp_LH_P3_2¹⁰ = (_lh_ampOp_LH_P3_2⁷ * y⁷)
+//│ 					in (fun k²⁰ -> 
+//│ 						let _lh_matchIdent¹⁷ = divmod₀₀₀(((_lh_hashOp_LH_P3_0¹⁰ * 3) + _lh_hashOp_LH_P3_1¹⁰), _lh_hashOp_LH_P3_2¹⁰)
+//│ 						in _lh_matchIdent¹⁷(_lh_hashOp_LH_P3_0¹⁰, _lh_hashOp_LH_P3_1¹⁰, _lh_hashOp_LH_P3_2¹⁰, k²⁰))))]))))
+//│ 			where
+//│ 			def hashOp₀₀₀(_lh_hashOp_arg1⁵, _lh_hashOp_arg2⁵) = 
+//│ 				let k²⁴ = (_lh_hashOp_arg1⁵ + 1)
+//│ 				in let _lh_matchIdent²¹ = ampOp₀₀₀(k²⁴, _lh_hashOp_arg2⁵)
+//│ 				in _lh_matchIdent²¹(k²⁴)
+//│ 				where
+//│ 				def ampOp₀₀₀(_lh_ampOp_arg1¹⁰, _lh_ampOp_arg2⁴) = 
+//│ 					_lh_ampOp_arg2⁴(_lh_ampOp_arg1¹⁰)
+//│ 			def hashOp₀₀₁(_lh_hashOp_arg1⁴, _lh_hashOp_arg2⁴) = 
+//│ 				let k²² = (_lh_hashOp_arg1⁴ + 1)
+//│ 				in let _lh_matchIdent¹⁹ = ampOp₀₀₁(k²², _lh_hashOp_arg2⁴)
+//│ 				in _lh_matchIdent¹⁹(k²²)
+//│ 				where
+//│ 				def ampOp₀₀₁(_lh_ampOp_arg1¹¹, _lh_ampOp_arg2⁵) = 
+//│ 					_lh_ampOp_arg2⁵(_lh_ampOp_arg1¹¹)
+//│ 		def hashOp₀₀₂(_lh_hashOp_arg1⁶, _lh_hashOp_arg2⁶) = 
+//│ 			let k²⁵ = (_lh_hashOp_arg1⁶ + 1)
+//│ 			in let _lh_matchIdent²² = ampOp₀₀₂(k²⁵, _lh_hashOp_arg2⁶)
+//│ 			in _lh_matchIdent²²(k²⁵)
+//│ 			where
+//│ 			def ampOp₀₀₂(_lh_ampOp_arg1¹⁴, _lh_ampOp_arg2⁶) = 
+//│ 				_lh_ampOp_arg2⁶(_lh_ampOp_arg1¹⁴)
+//│ 		def percOp₀₀₀(_lh_percOp_arg1⁷, _lh_percOp_arg2⁷, _lh_percOp_arg3²²) = 
+//│ 			if (_lh_percOp_arg1⁷ >= _lh_percOp_arg3²²) then [LH_N] else 
+//│ 				let k²⁶ = (_lh_percOp_arg1⁷ + 10)
+//│ 				in let j²² = min₀₀₀(_lh_percOp_arg3²², k²⁶)
+//│ 				in let _lh_matchIdent²³ = if (k²⁶ > _lh_percOp_arg3²²) then 
+//│ 					let _lh_percOp_LH_P2_0¹⁵ = mappend₁₀₀(take₁₁₀((_lh_percOp_arg3²² % 10), _lh_percOp_arg2⁷), replicate₀₁₀((k²⁶ - _lh_percOp_arg3²²), 
+//│ 						let h¹⁸⁷ = ' '
+//│ 						in let t¹⁸⁷ = (fun ys³⁹⁶ -> ys³⁹⁶)
+//│ 						in (fun ys³⁹³ -> 
+//│ 							let h¹⁸⁸ = h¹⁸⁷
+//│ 							in let t¹⁸⁸ = mappend₀₀₀(t¹⁸⁷, ys³⁹³)
+//│ 							in (fun ys³⁹⁴ -> 
+//│ 								let h¹⁸⁹ = h¹⁸⁸
+//│ 								in let t¹⁸⁹ = mappend₃₀₁(t¹⁸⁸, ys³⁹⁴)
+//│ 								in (fun ys³⁹⁵ -> [LH_C h¹⁸⁹ mappend₂₀₅(t¹⁸⁹, ys³⁹⁵)])))))
+//│ 					in let _lh_percOp_LH_P2_1¹⁵ = [LH_N]
+//│ 					in (fun j²³ -> (fun _lh_percOp_arg3²³ -> mappend₂₀₃(mappend₃₀₀(concat₀₀₀(_lh_percOp_LH_P2_0¹⁵), mappend₄₀₀(
+//│ 						let h¹⁹⁰ = 't'
+//│ 						in let t¹⁹⁰ = 	
+//│ 							let h¹⁹¹ = ':'
+//│ 							in let t¹⁹¹ = (fun ys³⁹⁷ -> ys³⁹⁷)
+//│ 							in (fun ys³⁹⁸ -> 
+//│ 								let h¹⁹² = h¹⁹¹
+//│ 								in let t¹⁹² = mappend₄₀₁(t¹⁹¹, ys³⁹⁸)
+//│ 								in (fun ys³⁹⁹ -> [LH_C h¹⁹² mappend₂₀₀(t¹⁹², ys³⁹⁹)]))
+//│ 						in (fun ys⁴⁰⁰ -> 
+//│ 							let h¹⁹³ = h¹⁹⁰
+//│ 							in let t¹⁹³ = mappend₄₀₂(t¹⁹⁰, ys⁴⁰⁰)
+//│ 							in (fun ys⁴⁰¹ -> [LH_C h¹⁹³ mappend₂₀₁(t¹⁹³, ys⁴⁰¹)])), mappend₅₀₀(string_of_int⁰(j²³), 
+//│ 						let h¹⁹⁴ = 'n'
+//│ 						in let t¹⁹⁴ = (fun ys⁴⁰² -> ys⁴⁰²)
+//│ 						in (fun ys⁴⁰³ -> [LH_C h¹⁹⁴ mappend₂₀₂(t¹⁹⁴, ys⁴⁰³)])))), percOp₀₁₀(j²³, _lh_percOp_LH_P2_1¹⁵, _lh_percOp_arg3²³)))) else splitAt₀₁₀(10, _lh_percOp_arg2⁷)
+//│ 				in _lh_matchIdent²³(j²², _lh_percOp_arg3²²)
+//│ 			where
+//│ 			def concat₀₀₀(lss²¹) = 
+//│ 				lss²¹
+//│ 			def mappend₁₀₀(xs¹⁰⁷, ys²³⁹) = 
+//│ 				xs¹⁰⁷(ys²³⁹)
+//│ 			def mappend₂₀₀(xs¹⁵³, ys³²¹) = 
+//│ 				xs¹⁵³(ys³²¹)
+//│ 			def mappend₂₀₁(xs¹⁸⁷, ys⁴⁰⁴) = 
+//│ 				xs¹⁸⁷(ys⁴⁰⁴)
+//│ 			def mappend₂₀₂(xs¹⁶⁵, ys³⁵⁴) = 
+//│ 				xs¹⁶⁵(ys³⁵⁴)
+//│ 			def mappend₂₀₃(xs¹⁷⁸, ys³⁷¹) = 
+//│ 				xs¹⁷⁸(ys³⁷¹)
+//│ 			def mappend₃₀₀(xs¹⁷⁹, ys³⁷⁹) = 
+//│ 				xs¹⁷⁹(ys³⁷⁹)
+//│ 			def mappend₄₀₀(xs¹³⁶, ys²⁹⁸) = 
+//│ 				xs¹³⁶(ys²⁹⁸)
+//│ 			def mappend₄₀₁(xs¹²⁷, ys²⁷²) = 
+//│ 				xs¹²⁷(ys²⁷²)
+//│ 			def mappend₄₀₂(xs¹⁷⁵, ys³⁶⁵) = 
+//│ 				xs¹⁷⁵(ys³⁶⁵)
+//│ 			def mappend₅₀₀(xs¹⁸¹, ys³⁸¹) = 
+//│ 				case xs¹⁸¹ of {
+//│ 					LH_C h⁵⁷ t⁵⁷ => 
+//│ 						let h¹⁸¹ = h⁵⁷
+//│ 						in let t¹⁸¹ = mappend₅₀₀(t⁵⁷, ys³⁸¹)
+//│ 						in (fun ys³⁸² -> [LH_C h¹⁸¹ mappend₂₀₄(t¹⁸¹, ys³⁸²)])
+//│ 					| LH_N  => ys³⁸¹}
+//│ 				where
+//│ 				def mappend₂₀₄(xs¹⁹⁴, ys⁴¹¹) = 
+//│ 					xs¹⁹⁴(ys⁴¹¹)
+//│ 			def min₀₀₀(_lh_min_arg1⁵, _lh_min_arg2⁵) = 
+//│ 				if (_lh_min_arg1⁵ > _lh_min_arg2⁵) then _lh_min_arg2⁵ else _lh_min_arg1⁵
+//│ 			def percOp₀₁₀(_lh_percOp_arg1⁶, _lh_percOp_arg2⁶, _lh_percOp_arg3¹⁸) = 
+//│ 				if (_lh_percOp_arg1⁶ >= _lh_percOp_arg3¹⁸) then [LH_N] else 
+//│ 					let k²¹ = (_lh_percOp_arg1⁶ + 10)
+//│ 					in let j¹⁸ = min₀₁₀(_lh_percOp_arg3¹⁸, k²¹)
+//│ 					in let _lh_matchIdent¹⁸ = if (k²¹ > _lh_percOp_arg3¹⁸) then 
+//│ 						let _lh_percOp_LH_P2_0¹² = mappend₁₁₀(take₁₀₀((_lh_percOp_arg3¹⁸ % 10), _lh_percOp_arg2⁶), replicate₀₀₀((k²¹ - _lh_percOp_arg3¹⁸), 
+//│ 							let h¹⁵⁸ = ' '
+//│ 							in let t¹⁵⁸ = (fun ys³²⁸ -> ys³²⁸)
+//│ 							in (fun ys³²⁵ -> 
+//│ 								let h¹⁵⁹ = h¹⁵⁸
+//│ 								in let t¹⁵⁹ = mappend₀₁₀(t¹⁵⁸, ys³²⁵)
+//│ 								in (fun ys³²⁶ -> 
+//│ 									let h¹⁶⁰ = h¹⁵⁹
+//│ 									in let t¹⁶⁰ = mappend₃₁₁(t¹⁵⁹, ys³²⁶)
+//│ 									in (fun ys³²⁷ -> [LH_C h¹⁶⁰ mappend₂₁₅(t¹⁶⁰, ys³²⁷)])))))
+//│ 						in let _lh_percOp_LH_P2_1¹² = [LH_N]
+//│ 						in (fun j¹⁹ -> (fun _lh_percOp_arg3¹⁹ -> mappend₂₁₀(mappend₃₁₀(concat₀₁₀(_lh_percOp_LH_P2_0¹²), mappend₄₁₀(
+//│ 							let h¹⁶¹ = 't'
+//│ 							in let t¹⁶¹ = 	
+//│ 								let h¹⁶² = ':'
+//│ 								in let t¹⁶² = (fun ys³²⁹ -> ys³²⁹)
+//│ 								in (fun ys³³⁰ -> 
+//│ 									let h¹⁶³ = h¹⁶²
+//│ 									in let t¹⁶³ = mappend₄₁₁(t¹⁶², ys³³⁰)
+//│ 									in (fun ys³³¹ -> [LH_C h¹⁶³ mappend₂₁₁(t¹⁶³, ys³³¹)]))
+//│ 							in (fun ys³³² -> 
+//│ 								let h¹⁶⁴ = h¹⁶¹
+//│ 								in let t¹⁶⁴ = mappend₄₁₂(t¹⁶¹, ys³³²)
+//│ 								in (fun ys³³³ -> [LH_C h¹⁶⁴ mappend₂₁₂(t¹⁶⁴, ys³³³)])), mappend₅₁₀(string_of_int⁰(j¹⁹), 
+//│ 							let h¹⁶⁵ = 'n'
+//│ 							in let t¹⁶⁵ = (fun ys³³⁴ -> ys³³⁴)
+//│ 							in (fun ys³³⁵ -> [LH_C h¹⁶⁵ mappend₂₁₃(t¹⁶⁵, ys³³⁵)])))), percOp₀₁₀(j¹⁹, _lh_percOp_LH_P2_1¹², _lh_percOp_arg3¹⁹)))) else splitAt₀₀₀(10, _lh_percOp_arg2⁶)
+//│ 					in _lh_matchIdent¹⁸(j¹⁸, _lh_percOp_arg3¹⁸)
+//│ 				where
+//│ 				def concat₀₁₀(lss²⁵) = 
+//│ 					lss²⁵
+//│ 				def mappend₁₁₀(xs¹⁴², ys³⁰⁵) = 
+//│ 					xs¹⁴²(ys³⁰⁵)
+//│ 				def mappend₂₁₀(xs¹⁸⁹, ys⁴⁰⁶) = 
+//│ 					xs¹⁸⁹(ys⁴⁰⁶)
+//│ 				def mappend₂₁₁(xs¹⁴³, ys³⁰⁶) = 
+//│ 					xs¹⁴³(ys³⁰⁶)
+//│ 				def mappend₂₁₂(xs¹²⁸, ys²⁷³) = 
+//│ 					xs¹²⁸(ys²⁷³)
+//│ 				def mappend₂₁₃(xs¹⁵⁰, ys³¹⁸) = 
+//│ 					xs¹⁵⁰(ys³¹⁸)
+//│ 				def mappend₃₁₀(xs¹²², ys²⁶⁰) = 
+//│ 					xs¹²²(ys²⁶⁰)
+//│ 				def mappend₄₁₀(xs¹⁷², ys³⁶²) = 
+//│ 					xs¹⁷²(ys³⁶²)
+//│ 				def mappend₄₁₁(xs¹⁷⁷, ys³⁶⁷) = 
+//│ 					xs¹⁷⁷(ys³⁶⁷)
+//│ 				def mappend₄₁₂(xs¹¹², ys²⁴⁴) = 
+//│ 					xs¹¹²(ys²⁴⁴)
+//│ 				def mappend₅₁₀(xs¹³⁷, ys²⁹⁹) = 
+//│ 					case xs¹³⁷ of {
+//│ 						LH_C h⁷⁴ t⁷⁴ => 
+//│ 							let h¹⁵⁴ = h⁷⁴
+//│ 							in let t¹⁵⁴ = mappend₅₁₀(t⁷⁴, ys²⁹⁹)
+//│ 							in (fun ys³⁰⁰ -> [LH_C h¹⁵⁴ mappend₂₁₄(t¹⁵⁴, ys³⁰⁰)])
+//│ 						| LH_N  => ys²⁹⁹}
+//│ 					where
+//│ 					def mappend₂₁₄(xs¹²⁰, ys²⁵⁶) = 
+//│ 						xs¹²⁰(ys²⁵⁶)
+//│ 				def min₀₁₀(_lh_min_arg1⁶, _lh_min_arg2⁶) = 
+//│ 					if (_lh_min_arg1⁶ > _lh_min_arg2⁶) then _lh_min_arg2⁶ else _lh_min_arg1⁶
+//│ 				def replicate₀₀₀(_lh_replicate_arg1⁶, _lh_replicate_arg2⁶) = 
+//│ 					if (_lh_replicate_arg1⁶ > 0) then 
+//│ 						let h¹⁶⁶ = _lh_replicate_arg2⁶
+//│ 						in let t¹⁶⁶ = replicate₀₀₀((_lh_replicate_arg1⁶ - 1), _lh_replicate_arg2⁶)
+//│ 						in mappend₀₁₀(h¹⁶⁶, concat₀₁₁(t¹⁶⁶)) else (fun ys³³⁹ -> ys³³⁹)
+//│ 					where
+//│ 					def concat₀₁₁(lss²⁹) = 
+//│ 						lss²⁹
+//│ 					def mappend₀₁₀(xs¹⁸⁸, ys⁴⁰⁵) = 
+//│ 						xs¹⁸⁸(ys⁴⁰⁵)
+//│ 						where
+//│ 						def mappend₂₁₅(xs¹⁴⁴, ys³⁰⁷) = 
+//│ 							xs¹⁴⁴(ys³⁰⁷)
+//│ 						def mappend₃₁₁(xs¹⁸³, ys³⁸⁵) = 
+//│ 							xs¹⁸³(ys³⁸⁵)
+//│ 				def splitAt₀₀₀(_lh_splitAt_arg1⁶, _lh_splitAt_arg2⁶) = 
+//│ 					let _lh_percOp_LH_P2_0¹³ = take₀₀₀(_lh_splitAt_arg1⁶, _lh_splitAt_arg2⁶)
+//│ 					in let _lh_percOp_LH_P2_1¹³ = drop₀₀₀(_lh_splitAt_arg1⁶, _lh_splitAt_arg2⁶)
+//│ 					in (fun j²⁰ -> (fun _lh_percOp_arg3²⁰ -> mappend₂₁₆(mappend₃₁₂(concat₀₁₂(_lh_percOp_LH_P2_0¹³), mappend₄₁₃(
+//│ 						let h¹⁶⁷ = 't'
+//│ 						in let t¹⁶⁷ = 	
+//│ 							let h¹⁶⁸ = ':'
+//│ 							in let t¹⁶⁸ = (fun ys³⁴⁵ -> ys³⁴⁵)
+//│ 							in (fun ys³⁴⁶ -> 
+//│ 								let h¹⁶⁹ = h¹⁶⁸
+//│ 								in let t¹⁶⁹ = mappend₄₁₄(t¹⁶⁸, ys³⁴⁶)
+//│ 								in (fun ys³⁴⁷ -> [LH_C h¹⁶⁹ mappend₂₁₇(t¹⁶⁹, ys³⁴⁷)]))
+//│ 						in (fun ys³⁴⁸ -> 
+//│ 							let h¹⁷⁰ = h¹⁶⁷
+//│ 							in let t¹⁷⁰ = mappend₄₁₅(t¹⁶⁷, ys³⁴⁸)
+//│ 							in (fun ys³⁴⁹ -> [LH_C h¹⁷⁰ mappend₂₁₈(t¹⁷⁰, ys³⁴⁹)])), mappend₅₁₁(string_of_int⁰(j²⁰), 
+//│ 						let h¹⁷¹ = 'n'
+//│ 						in let t¹⁷¹ = (fun ys³⁵⁰ -> ys³⁵⁰)
+//│ 						in (fun ys³⁵¹ -> [LH_C h¹⁷¹ mappend₂₁₉(t¹⁷¹, ys³⁵¹)])))), percOp₀₁₀(j²⁰, _lh_percOp_LH_P2_1¹³, _lh_percOp_arg3²⁰))))
+//│ 					where
+//│ 					def concat₀₁₂(lss²³) = 
+//│ 						lss²³
+//│ 					def drop₀₀₀(_lh_drop_arg1⁵, _lh_drop_arg2⁵) = 
+//│ 						case _lh_drop_arg2⁵ of {
+//│ 							LH_N  => [LH_N]
+//│ 							| LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1² => if (_lh_drop_arg1⁵ > 0) then drop₀₀₀((_lh_drop_arg1⁵ - 1), _lh_drop_LH_C_1²) else [LH_C _lh_drop_LH_C_0² _lh_drop_LH_C_1²]
+//│ 							| _  => error⁰}
+//│ 					def mappend₂₁₆(xs¹⁶⁶, ys³⁵⁵) = 
+//│ 						xs¹⁶⁶(ys³⁵⁵)
+//│ 					def mappend₂₁₇(xs¹²³, ys²⁶¹) = 
+//│ 						xs¹²³(ys²⁶¹)
+//│ 					def mappend₂₁₈(xs¹⁰⁵, ys²³⁵) = 
+//│ 						xs¹⁰⁵(ys²³⁵)
+//│ 					def mappend₂₁₉(xs¹³⁰, ys²⁷⁵) = 
+//│ 						xs¹³⁰(ys²⁷⁵)
+//│ 					def mappend₃₁₂(xs¹⁶⁰, ys³⁴⁰) = 
+//│ 						xs¹⁶⁰(ys³⁴⁰)
+//│ 					def mappend₄₁₃(xs¹³⁹, ys³⁰²) = 
+//│ 						xs¹³⁹(ys³⁰²)
+//│ 					def mappend₄₁₄(xs¹⁰⁶, ys²³⁶) = 
+//│ 						xs¹⁰⁶(ys²³⁶)
+//│ 					def mappend₄₁₅(xs¹⁵⁴, ys³²²) = 
+//│ 						xs¹⁵⁴(ys³²²)
+//│ 					def mappend₅₁₁(xs¹⁸², ys³⁸³) = 
+//│ 						case xs¹⁸² of {
+//│ 							LH_C h⁵⁵ t⁵⁵ => 
+//│ 								let h¹⁸² = h⁵⁵
+//│ 								in let t¹⁸² = mappend₅₁₁(t⁵⁵, ys³⁸³)
+//│ 								in (fun ys³⁸⁴ -> [LH_C h¹⁸² mappend₂₁₁₀(t¹⁸², ys³⁸⁴)])
+//│ 							| LH_N  => ys³⁸³}
+//│ 						where
+//│ 						def mappend₂₁₁₀(xs¹⁵¹, ys³¹⁹) = 
+//│ 							xs¹⁵¹(ys³¹⁹)
+//│ 					def take₀₀₀(n¹⁰, ls¹⁰) = 
+//│ 						if (n¹⁰ > 0) then case ls¹⁰ of {
+//│ 							LH_C h¹²² t¹²² => 
+//│ 								let h¹²⁹ = h¹²²
+//│ 								in let t¹²⁹ = take₀₀₀((n¹⁰ - 1), t¹²²)
+//│ 								in mappend₀₁₁(h¹²⁹, concat₀₁₃(t¹²⁹))
+//│ 							| LH_N  => (fun ys²³⁷ -> ys²³⁷)} else (fun ys²³⁸ -> ys²³⁸)
+//│ 						where
+//│ 						def concat₀₁₃(lss¹⁷) = 
+//│ 							lss¹⁷
+//│ 						def mappend₀₁₁(xs¹¹⁸, ys²⁵²) = 
+//│ 							case xs¹¹⁸ of {
+//│ 								LH_C h⁴² t⁴² => 
+//│ 									let h¹³² = h⁴²
+//│ 									in let t¹³² = mappend₀₁₁(t⁴², ys²⁵²)
+//│ 									in (fun ys²⁵³ -> 
+//│ 										let h¹³³ = h¹³²
+//│ 										in let t¹³³ = mappend₃₁₃(t¹³², ys²⁵³)
+//│ 										in (fun ys²⁵⁴ -> [LH_C h¹³³ mappend₂₁₁₁(t¹³³, ys²⁵⁴)]))
+//│ 								| LH_N  => ys²⁵²}
+//│ 							where
+//│ 							def mappend₂₁₁₁(xs¹⁷⁴, ys³⁶⁴) = 
+//│ 								xs¹⁷⁴(ys³⁶⁴)
+//│ 							def mappend₃₁₃(xs¹⁹⁷, ys⁴¹⁷) = 
+//│ 								xs¹⁹⁷(ys⁴¹⁷)
+//│ 				def take₁₀₀(n¹¹, ls¹¹) = 
+//│ 					if (n¹¹ > 0) then case ls¹¹ of {
+//│ 						LH_C h¹⁰⁷ t¹⁰⁷ => 
+//│ 							let h¹⁵² = h¹⁰⁷
+//│ 							in let t¹⁵² = take₁₀₀((n¹¹ - 1), t¹⁰⁷)
+//│ 							in (fun ys²⁹⁵ -> 
+//│ 								let h¹⁵³ = h¹⁵²
+//│ 								in let t¹⁵³ = mappend₁₁₁(t¹⁵², ys²⁹⁵)
+//│ 								in mappend₀₁₂(h¹⁵³, concat₀₁₄(t¹⁵³)))
+//│ 						| LH_N  => (fun ys²⁹⁶ -> ys²⁹⁶)} else (fun ys²⁹⁷ -> ys²⁹⁷)
+//│ 					where
+//│ 					def concat₀₁₄(lss²⁷) = 
+//│ 						lss²⁷
+//│ 					def mappend₀₁₂(xs¹⁸⁴, ys³⁸⁶) = 
+//│ 						case xs¹⁸⁴ of {
+//│ 							LH_C h⁶⁴ t⁶⁴ => 
+//│ 								let h¹⁸³ = h⁶⁴
+//│ 								in let t¹⁸³ = mappend₀₁₂(t⁶⁴, ys³⁸⁶)
+//│ 								in (fun ys³⁸⁷ -> 
+//│ 									let h¹⁸⁴ = h¹⁸³
+//│ 									in let t¹⁸⁴ = mappend₃₁₄(t¹⁸³, ys³⁸⁷)
+//│ 									in (fun ys³⁸⁸ -> [LH_C h¹⁸⁴ mappend₂₁₁₂(t¹⁸⁴, ys³⁸⁸)]))
+//│ 							| LH_N  => ys³⁸⁶}
+//│ 						where
+//│ 						def mappend₂₁₁₂(xs¹¹¹, ys²⁴³) = 
+//│ 							xs¹¹¹(ys²⁴³)
+//│ 						def mappend₃₁₄(xs¹²⁶, ys²⁷¹) = 
+//│ 							xs¹²⁶(ys²⁷¹)
+//│ 					def mappend₁₁₁(xs¹⁹³, ys⁴¹⁰) = 
+//│ 						xs¹⁹³(ys⁴¹⁰)
+//│ 			def replicate₀₁₀(_lh_replicate_arg1⁷, _lh_replicate_arg2⁷) = 
+//│ 				if (_lh_replicate_arg1⁷ > 0) then 
+//│ 					let h¹⁹⁷ = _lh_replicate_arg2⁷
+//│ 					in let t¹⁹⁷ = replicate₀₁₀((_lh_replicate_arg1⁷ - 1), _lh_replicate_arg2⁷)
+//│ 					in mappend₀₀₀(h¹⁹⁷, concat₀₀₁(t¹⁹⁷)) else (fun ys⁴¹⁶ -> ys⁴¹⁶)
+//│ 				where
+//│ 				def concat₀₀₁(lss²⁴) = 
+//│ 					lss²⁴
+//│ 				def mappend₀₀₀(xs¹⁹², ys⁴⁰⁹) = 
+//│ 					xs¹⁹²(ys⁴⁰⁹)
+//│ 					where
+//│ 					def mappend₂₀₅(xs¹³⁸, ys³⁰¹) = 
+//│ 						xs¹³⁸(ys³⁰¹)
+//│ 					def mappend₃₀₁(xs¹⁴⁹, ys³¹²) = 
+//│ 						xs¹⁴⁹(ys³¹²)
+//│ 			def splitAt₀₁₀(_lh_splitAt_arg1⁷, _lh_splitAt_arg2⁷) = 
+//│ 				let _lh_percOp_LH_P2_0¹⁴ = take₀₁₀(_lh_splitAt_arg1⁷, _lh_splitAt_arg2⁷)
+//│ 				in let _lh_percOp_LH_P2_1¹⁴ = drop₀₁₀(_lh_splitAt_arg1⁷, _lh_splitAt_arg2⁷)
+//│ 				in (fun j²¹ -> (fun _lh_percOp_arg3²¹ -> mappend₂₀₆(mappend₃₀₂(concat₀₀₂(_lh_percOp_LH_P2_0¹⁴), mappend₄₀₃(
+//│ 					let h¹⁷⁶ = 't'
+//│ 					in let t¹⁷⁶ = 	
+//│ 						let h¹⁷⁷ = ':'
+//│ 						in let t¹⁷⁷ = (fun ys³⁷² -> ys³⁷²)
+//│ 						in (fun ys³⁷³ -> 
+//│ 							let h¹⁷⁸ = h¹⁷⁷
+//│ 							in let t¹⁷⁸ = mappend₄₀₄(t¹⁷⁷, ys³⁷³)
+//│ 							in (fun ys³⁷⁴ -> [LH_C h¹⁷⁸ mappend₂₀₇(t¹⁷⁸, ys³⁷⁴)]))
+//│ 					in (fun ys³⁷⁵ -> 
+//│ 						let h¹⁷⁹ = h¹⁷⁶
+//│ 						in let t¹⁷⁹ = mappend₄₀₅(t¹⁷⁶, ys³⁷⁵)
+//│ 						in (fun ys³⁷⁶ -> [LH_C h¹⁷⁹ mappend₂₀₈(t¹⁷⁹, ys³⁷⁶)])), mappend₅₀₁(string_of_int⁰(j²¹), 
+//│ 					let h¹⁸⁰ = 'n'
+//│ 					in let t¹⁸⁰ = (fun ys³⁷⁷ -> ys³⁷⁷)
+//│ 					in (fun ys³⁷⁸ -> [LH_C h¹⁸⁰ mappend₂₀₉(t¹⁸⁰, ys³⁷⁸)])))), percOp₀₁₁(j²¹, _lh_percOp_LH_P2_1¹⁴, _lh_percOp_arg3²¹))))
+//│ 				where
+//│ 				def concat₀₀₂(lss³¹) = 
+//│ 					lss³¹
+//│ 				def drop₀₁₀(_lh_drop_arg1⁶, _lh_drop_arg2⁶) = 
+//│ 					case _lh_drop_arg2⁶ of {
+//│ 						LH_N  => [LH_N]
+//│ 						| LH_C _lh_drop_LH_C_0⁴ _lh_drop_LH_C_1⁴ => if (_lh_drop_arg1⁶ > 0) then drop₀₁₀((_lh_drop_arg1⁶ - 1), _lh_drop_LH_C_1⁴) else [LH_C _lh_drop_LH_C_0⁴ _lh_drop_LH_C_1⁴]
+//│ 						| _  => error⁰}
+//│ 				def mappend₂₀₆(xs¹¹⁷, ys²⁵¹) = 
+//│ 					xs¹¹⁷(ys²⁵¹)
+//│ 				def mappend₂₀₇(xs¹¹⁶, ys²⁵⁰) = 
+//│ 					xs¹¹⁶(ys²⁵⁰)
+//│ 				def mappend₂₀₈(xs¹⁴⁶, ys³⁰⁹) = 
+//│ 					xs¹⁴⁶(ys³⁰⁹)
+//│ 				def mappend₂₀₉(xs¹⁴⁵, ys³⁰⁸) = 
+//│ 					xs¹⁴⁵(ys³⁰⁸)
+//│ 				def mappend₃₀₂(xs¹³³, ys²⁹¹) = 
+//│ 					xs¹³³(ys²⁹¹)
+//│ 				def mappend₄₀₃(xs¹⁶³, ys³⁴³) = 
+//│ 					xs¹⁶³(ys³⁴³)
+//│ 				def mappend₄₀₄(xs¹⁷³, ys³⁶³) = 
+//│ 					xs¹⁷³(ys³⁶³)
+//│ 				def mappend₄₀₅(xs¹⁰⁹, ys²⁴¹) = 
+//│ 					xs¹⁰⁹(ys²⁴¹)
+//│ 				def mappend₅₀₁(xs¹³⁴, ys²⁹²) = 
+//│ 					case xs¹³⁴ of {
+//│ 						LH_C h¹²⁴ t¹²⁴ => 
+//│ 							let h¹⁵¹ = h¹²⁴
+//│ 							in let t¹⁵¹ = mappend₅₀₁(t¹²⁴, ys²⁹²)
+//│ 							in (fun ys²⁹³ -> [LH_C h¹⁵¹ mappend₂₀₁₀(t¹⁵¹, ys²⁹³)])
+//│ 						| LH_N  => ys²⁹²}
+//│ 					where
+//│ 					def mappend₂₀₁₀(xs¹¹⁰, ys²⁴²) = 
+//│ 						xs¹¹⁰(ys²⁴²)
+//│ 				def percOp₀₁₁(_lh_percOp_arg1⁵, _lh_percOp_arg2⁵, _lh_percOp_arg3¹⁶) = 
+//│ 					if (_lh_percOp_arg1⁵ >= _lh_percOp_arg3¹⁶) then [LH_N] else 
+//│ 						let k¹⁷ = (_lh_percOp_arg1⁵ + 10)
+//│ 						in let j¹⁶ = min₀₁₁(_lh_percOp_arg3¹⁶, k¹⁷)
+//│ 						in let _lh_matchIdent¹⁵ = if (k¹⁷ > _lh_percOp_arg3¹⁶) then 
+//│ 							let _lh_percOp_LH_P2_0¹¹ = mappend₁₁₂(take₁₀₁((_lh_percOp_arg3¹⁶ % 10), _lh_percOp_arg2⁵), replicate₀₀₁((k¹⁷ - _lh_percOp_arg3¹⁶), 
+//│ 								let h¹⁴¹ = ' '
+//│ 								in let t¹⁴¹ = (fun ys²⁷⁹ -> ys²⁷⁹)
+//│ 								in (fun ys²⁷⁶ -> 
+//│ 									let h¹⁴² = h¹⁴¹
+//│ 									in let t¹⁴² = mappend₀₁₃(t¹⁴¹, ys²⁷⁶)
+//│ 									in (fun ys²⁷⁷ -> 
+//│ 										let h¹⁴³ = h¹⁴²
+//│ 										in let t¹⁴³ = mappend₃₁₆(t¹⁴², ys²⁷⁷)
+//│ 										in (fun ys²⁷⁸ -> [LH_C h¹⁴³ mappend₂₁₁₈(t¹⁴³, ys²⁷⁸)])))))
+//│ 							in let _lh_percOp_LH_P2_1¹¹ = [LH_N]
+//│ 							in (fun j¹⁷ -> (fun _lh_percOp_arg3¹⁷ -> mappend₂₁₁₃(mappend₃₁₅(concat₀₁₅(_lh_percOp_LH_P2_0¹¹), mappend₄₁₆(
+//│ 								let h¹⁴⁴ = 't'
+//│ 								in let t¹⁴⁴ = 	
+//│ 									let h¹⁴⁵ = ':'
+//│ 									in let t¹⁴⁵ = (fun ys²⁸⁰ -> ys²⁸⁰)
+//│ 									in (fun ys²⁸¹ -> 
+//│ 										let h¹⁴⁶ = h¹⁴⁵
+//│ 										in let t¹⁴⁶ = mappend₄₁₇(t¹⁴⁵, ys²⁸¹)
+//│ 										in (fun ys²⁸² -> [LH_C h¹⁴⁶ mappend₂₁₁₄(t¹⁴⁶, ys²⁸²)]))
+//│ 								in (fun ys²⁸³ -> 
+//│ 									let h¹⁴⁷ = h¹⁴⁴
+//│ 									in let t¹⁴⁷ = mappend₄₁₈(t¹⁴⁴, ys²⁸³)
+//│ 									in (fun ys²⁸⁴ -> [LH_C h¹⁴⁷ mappend₂₁₁₅(t¹⁴⁷, ys²⁸⁴)])), mappend₅₁₂(string_of_int⁰(j¹⁷), 
+//│ 								let h¹⁴⁸ = 'n'
+//│ 								in let t¹⁴⁸ = (fun ys²⁸⁵ -> ys²⁸⁵)
+//│ 								in (fun ys²⁸⁶ -> [LH_C h¹⁴⁸ mappend₂₁₁₆(t¹⁴⁸, ys²⁸⁶)])))), percOp₀₁₁(j¹⁷, _lh_percOp_LH_P2_1¹¹, _lh_percOp_arg3¹⁷)))) else splitAt₀₀₁(10, _lh_percOp_arg2⁵)
+//│ 						in _lh_matchIdent¹⁵(j¹⁶, _lh_percOp_arg3¹⁶)
+//│ 					where
+//│ 					def concat₀₁₅(lss²⁶) = 
+//│ 						lss²⁶
+//│ 					def mappend₁₁₂(xs¹⁶⁴, ys³⁴⁴) = 
+//│ 						xs¹⁶⁴(ys³⁴⁴)
+//│ 					def mappend₂₁₁₃(xs¹⁴⁰, ys³⁰³) = 
+//│ 						xs¹⁴⁰(ys³⁰³)
+//│ 					def mappend₂₁₁₄(xs¹⁵⁵, ys³²³) = 
+//│ 						xs¹⁵⁵(ys³²³)
+//│ 					def mappend₂₁₁₅(xs¹⁶⁷, ys³⁵⁶) = 
+//│ 						xs¹⁶⁷(ys³⁵⁶)
+//│ 					def mappend₂₁₁₆(xs¹⁸⁵, ys³⁸⁹) = 
+//│ 						xs¹⁸⁵(ys³⁸⁹)
+//│ 					def mappend₃₁₅(xs¹³², ys²⁹⁰) = 
+//│ 						xs¹³²(ys²⁹⁰)
+//│ 					def mappend₄₁₆(xs¹¹³, ys²⁴⁵) = 
+//│ 						xs¹¹³(ys²⁴⁵)
+//│ 					def mappend₄₁₇(xs¹⁹⁰, ys⁴⁰⁷) = 
+//│ 						xs¹⁹⁰(ys⁴⁰⁷)
+//│ 					def mappend₄₁₈(xs¹⁵⁷, ys³³⁶) = 
+//│ 						xs¹⁵⁷(ys³³⁶)
+//│ 					def mappend₅₁₂(xs¹⁶⁹, ys³⁵⁸) = 
+//│ 						case xs¹⁶⁹ of {
+//│ 							LH_C h⁶² t⁶² => 
+//│ 								let h¹⁷³ = h⁶²
+//│ 								in let t¹⁷³ = mappend₅₁₂(t⁶², ys³⁵⁸)
+//│ 								in (fun ys³⁵⁹ -> [LH_C h¹⁷³ mappend₂₁₁₇(t¹⁷³, ys³⁵⁹)])
+//│ 							| LH_N  => ys³⁵⁸}
+//│ 						where
+//│ 						def mappend₂₁₁₇(xs¹⁷⁶, ys³⁶⁶) = 
+//│ 							xs¹⁷⁶(ys³⁶⁶)
+//│ 					def min₀₁₁(_lh_min_arg1⁷, _lh_min_arg2⁷) = 
+//│ 						if (_lh_min_arg1⁷ > _lh_min_arg2⁷) then _lh_min_arg2⁷ else _lh_min_arg1⁷
+//│ 					def replicate₀₀₁(_lh_replicate_arg1⁵, _lh_replicate_arg2⁵) = 
+//│ 						if (_lh_replicate_arg1⁵ > 0) then 
+//│ 							let h¹³¹ = _lh_replicate_arg2⁵
+//│ 							in let t¹³¹ = replicate₀₀₁((_lh_replicate_arg1⁵ - 1), _lh_replicate_arg2⁵)
+//│ 							in mappend₀₁₃(h¹³¹, concat₀₁₆(t¹³¹)) else (fun ys²⁴⁹ -> ys²⁴⁹)
+//│ 						where
+//│ 						def concat₀₁₆(lss¹⁹) = 
+//│ 							lss¹⁹
+//│ 						def mappend₀₁₃(xs¹⁰⁸, ys²⁴⁰) = 
+//│ 							xs¹⁰⁸(ys²⁴⁰)
+//│ 							where
+//│ 							def mappend₂₁₁₈(xs¹¹⁴, ys²⁴⁶) = 
+//│ 								xs¹¹⁴(ys²⁴⁶)
+//│ 							def mappend₃₁₆(xs¹⁶², ys³⁴²) = 
+//│ 								xs¹⁶²(ys³⁴²)
+//│ 					def splitAt₀₀₁(_lh_splitAt_arg1⁵, _lh_splitAt_arg2⁵) = 
+//│ 						let _lh_percOp_LH_P2_0¹⁰ = take₀₀₁(_lh_splitAt_arg1⁵, _lh_splitAt_arg2⁵)
+//│ 						in let _lh_percOp_LH_P2_1¹⁰ = drop₀₀₁(_lh_splitAt_arg1⁵, _lh_splitAt_arg2⁵)
+//│ 						in (fun j¹⁵ -> (fun _lh_percOp_arg3¹⁵ -> mappend₂₁₁₉(mappend₃₁₇(concat₀₁₇(_lh_percOp_LH_P2_0¹⁰), mappend₄₁₉(
+//│ 							let h¹³⁶ = 't'
+//│ 							in let t¹³⁶ = 	
+//│ 								let h¹³⁷ = ':'
+//│ 								in let t¹³⁷ = (fun ys²⁶² -> ys²⁶²)
+//│ 								in (fun ys²⁶³ -> 
+//│ 									let h¹³⁸ = h¹³⁷
+//│ 									in let t¹³⁸ = mappend₄₁₁₀(t¹³⁷, ys²⁶³)
+//│ 									in (fun ys²⁶⁴ -> [LH_C h¹³⁸ mappend₂₁₂₀(t¹³⁸, ys²⁶⁴)]))
+//│ 							in (fun ys²⁶⁵ -> 
+//│ 								let h¹³⁹ = h¹³⁶
+//│ 								in let t¹³⁹ = mappend₄₁₁₁(t¹³⁶, ys²⁶⁵)
+//│ 								in (fun ys²⁶⁶ -> [LH_C h¹³⁹ mappend₂₁₂₁(t¹³⁹, ys²⁶⁶)])), mappend₅₁₃(string_of_int⁰(j¹⁵), 
+//│ 							let h¹⁴⁰ = 'n'
+//│ 							in let t¹⁴⁰ = (fun ys²⁶⁷ -> ys²⁶⁷)
+//│ 							in (fun ys²⁶⁸ -> [LH_C h¹⁴⁰ mappend₂₁₂₂(t¹⁴⁰, ys²⁶⁸)])))), percOp₀₁₁(j¹⁵, _lh_percOp_LH_P2_1¹⁰, _lh_percOp_arg3¹⁵))))
+//│ 						where
+//│ 						def concat₀₁₇(lss²²) = 
+//│ 							lss²²
+//│ 						def drop₀₀₁(_lh_drop_arg1⁷, _lh_drop_arg2⁷) = 
+//│ 							case _lh_drop_arg2⁷ of {
+//│ 								LH_N  => [LH_N]
+//│ 								| LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³ => if (_lh_drop_arg1⁷ > 0) then drop₀₀₁((_lh_drop_arg1⁷ - 1), _lh_drop_LH_C_1³) else [LH_C _lh_drop_LH_C_0³ _lh_drop_LH_C_1³]
+//│ 								| _  => error⁰}
+//│ 						def mappend₂₁₁₉(xs¹¹⁹, ys²⁵⁵) = 
+//│ 							xs¹¹⁹(ys²⁵⁵)
+//│ 						def mappend₂₁₂₀(xs¹²⁴, ys²⁶⁹) = 
+//│ 							xs¹²⁴(ys²⁶⁹)
+//│ 						def mappend₂₁₂₁(xs¹⁹⁵, ys⁴¹²) = 
+//│ 							xs¹⁹⁵(ys⁴¹²)
+//│ 						def mappend₂₁₂₂(xs¹⁵⁹, ys³³⁸) = 
+//│ 							xs¹⁵⁹(ys³³⁸)
+//│ 						def mappend₃₁₇(xs¹⁵⁸, ys³³⁷) = 
+//│ 							xs¹⁵⁸(ys³³⁷)
+//│ 						def mappend₄₁₉(xs¹⁵⁶, ys³²⁴) = 
+//│ 							xs¹⁵⁶(ys³²⁴)
+//│ 						def mappend₄₁₁₀(xs¹⁷⁰, ys³⁶⁰) = 
+//│ 							xs¹⁷⁰(ys³⁶⁰)
+//│ 						def mappend₄₁₁₁(xs¹⁹¹, ys⁴⁰⁸) = 
+//│ 							xs¹⁹¹(ys⁴⁰⁸)
+//│ 						def mappend₅₁₃(xs¹¹⁵, ys²⁴⁷) = 
+//│ 							case xs¹¹⁵ of {
+//│ 								LH_C h¹²⁰ t¹²⁰ => 
+//│ 									let h¹³⁰ = h¹²⁰
+//│ 									in let t¹³⁰ = mappend₅₁₃(t¹²⁰, ys²⁴⁷)
+//│ 									in (fun ys²⁴⁸ -> [LH_C h¹³⁰ mappend₂₁₂₃(t¹³⁰, ys²⁴⁸)])
+//│ 								| LH_N  => ys²⁴⁷}
+//│ 							where
+//│ 							def mappend₂₁₂₃(xs¹⁴⁸, ys³¹¹) = 
+//│ 								xs¹⁴⁸(ys³¹¹)
+//│ 						def take₀₀₁(n¹⁴, ls¹⁴) = 
+//│ 							if (n¹⁴ > 0) then case ls¹⁴ of {
+//│ 								LH_C h⁶⁰ t⁶⁰ => 
+//│ 									let h¹⁷² = h⁶⁰
+//│ 									in let t¹⁷² = take₀₀₁((n¹⁴ - 1), t⁶⁰)
+//│ 									in mappend₀₁₄(h¹⁷², concat₀₁₈(t¹⁷²))
+//│ 								| LH_N  => (fun ys³⁵² -> ys³⁵²)} else (fun ys³⁵³ -> ys³⁵³)
+//│ 							where
+//│ 							def concat₀₁₈(lss²⁸) = 
+//│ 								lss²⁸
+//│ 							def mappend₀₁₄(xs¹²¹, ys²⁵⁷) = 
+//│ 								case xs¹²¹ of {
+//│ 									LH_C h⁶⁷ t⁶⁷ => 
+//│ 										let h¹³⁴ = h⁶⁷
+//│ 										in let t¹³⁴ = mappend₀₁₄(t⁶⁷, ys²⁵⁷)
+//│ 										in (fun ys²⁵⁸ -> 
+//│ 											let h¹³⁵ = h¹³⁴
+//│ 											in let t¹³⁵ = mappend₃₁₈(t¹³⁴, ys²⁵⁸)
+//│ 											in (fun ys²⁵⁹ -> [LH_C h¹³⁵ mappend₂₁₂₄(t¹³⁵, ys²⁵⁹)]))
+//│ 									| LH_N  => ys²⁵⁷}
+//│ 								where
+//│ 								def mappend₂₁₂₄(xs¹⁸⁰, ys³⁸⁰) = 
+//│ 									xs¹⁸⁰(ys³⁸⁰)
+//│ 								def mappend₃₁₈(xs¹²⁵, ys²⁷⁰) = 
+//│ 									xs¹²⁵(ys²⁷⁰)
+//│ 					def take₁₀₁(n¹⁵, ls¹⁵) = 
+//│ 						if (n¹⁵ > 0) then case ls¹⁵ of {
+//│ 							LH_C h¹²⁶ t¹²⁶ => 
+//│ 								let h¹⁷⁴ = h¹²⁶
+//│ 								in let t¹⁷⁴ = take₁₀₁((n¹⁵ - 1), t¹²⁶)
+//│ 								in (fun ys³⁶⁸ -> 
+//│ 									let h¹⁷⁵ = h¹⁷⁴
+//│ 									in let t¹⁷⁵ = mappend₁₁₃(t¹⁷⁴, ys³⁶⁸)
+//│ 									in mappend₀₁₅(h¹⁷⁵, concat₀₁₉(t¹⁷⁵)))
+//│ 							| LH_N  => (fun ys³⁶⁹ -> ys³⁶⁹)} else (fun ys³⁷⁰ -> ys³⁷⁰)
+//│ 						where
+//│ 						def concat₀₁₉(lss³⁰) = 
+//│ 							lss³⁰
+//│ 						def mappend₀₁₅(xs¹⁹⁶, ys⁴¹³) = 
+//│ 							case xs¹⁹⁶ of {
+//│ 								LH_C h⁴⁷ t⁴⁷ => 
+//│ 									let h¹⁹⁵ = h⁴⁷
+//│ 									in let t¹⁹⁵ = mappend₀₁₅(t⁴⁷, ys⁴¹³)
+//│ 									in (fun ys⁴¹⁴ -> 
+//│ 										let h¹⁹⁶ = h¹⁹⁵
+//│ 										in let t¹⁹⁶ = mappend₃₁₉(t¹⁹⁵, ys⁴¹⁴)
+//│ 										in (fun ys⁴¹⁵ -> [LH_C h¹⁹⁶ mappend₂₁₂₅(t¹⁹⁶, ys⁴¹⁵)]))
+//│ 								| LH_N  => ys⁴¹³}
+//│ 							where
+//│ 							def mappend₂₁₂₅(xs¹⁵², ys³²⁰) = 
+//│ 								xs¹⁵²(ys³²⁰)
+//│ 							def mappend₃₁₉(xs¹³⁵, ys²⁹⁴) = 
+//│ 								xs¹³⁵(ys²⁹⁴)
+//│ 						def mappend₁₁₃(xs¹⁷¹, ys³⁶¹) = 
+//│ 							xs¹⁷¹(ys³⁶¹)
+//│ 				def take₀₁₀(n¹², ls¹²) = 
+//│ 					if (n¹² > 0) then case ls¹² of {
+//│ 						LH_C h⁴⁵ t⁴⁵ => 
+//│ 							let h¹⁵⁵ = h⁴⁵
+//│ 							in let t¹⁵⁵ = take₀₁₀((n¹² - 1), t⁴⁵)
+//│ 							in mappend₀₀₁(h¹⁵⁵, concat₀₀₃(t¹⁵⁵))
+//│ 						| LH_N  => (fun ys³¹³ -> ys³¹³)} else (fun ys³¹⁴ -> ys³¹⁴)
+//│ 					where
+//│ 					def concat₀₀₃(lss²⁰) = 
+//│ 						lss²⁰
+//│ 					def mappend₀₀₁(xs¹⁸⁶, ys³⁹⁰) = 
+//│ 						case xs¹⁸⁶ of {
+//│ 							LH_C h⁷⁶ t⁷⁶ => 
+//│ 								let h¹⁸⁵ = h⁷⁶
+//│ 								in let t¹⁸⁵ = mappend₀₀₁(t⁷⁶, ys³⁹⁰)
+//│ 								in (fun ys³⁹¹ -> 
+//│ 									let h¹⁸⁶ = h¹⁸⁵
+//│ 									in let t¹⁸⁶ = mappend₃₀₃(t¹⁸⁵, ys³⁹¹)
+//│ 									in (fun ys³⁹² -> [LH_C h¹⁸⁶ mappend₂₀₁₁(t¹⁸⁶, ys³⁹²)]))
+//│ 							| LH_N  => ys³⁹⁰}
+//│ 						where
+//│ 						def mappend₂₀₁₁(xs¹⁶⁸, ys³⁵⁷) = 
+//│ 							xs¹⁶⁸(ys³⁵⁷)
+//│ 						def mappend₃₀₃(xs¹⁶¹, ys³⁴¹) = 
+//│ 							xs¹⁶¹(ys³⁴¹)
+//│ 			def take₁₁₀(n¹³, ls¹³) = 
+//│ 				if (n¹³ > 0) then case ls¹³ of {
+//│ 					LH_C h⁹⁵ t⁹⁵ => 
+//│ 						let h¹⁵⁶ = h⁹⁵
+//│ 						in let t¹⁵⁶ = take₁₁₀((n¹³ - 1), t⁹⁵)
+//│ 						in (fun ys³¹⁵ -> 
+//│ 							let h¹⁵⁷ = h¹⁵⁶
+//│ 							in let t¹⁵⁷ = mappend₁₀₁(t¹⁵⁶, ys³¹⁵)
+//│ 							in mappend₀₀₂(h¹⁵⁷, concat₀₀₄(t¹⁵⁷)))
+//│ 					| LH_N  => (fun ys³¹⁶ -> ys³¹⁶)} else (fun ys³¹⁷ -> ys³¹⁷)
+//│ 				where
+//│ 				def concat₀₀₄(lss¹⁸) = 
+//│ 					lss¹⁸
+//│ 				def mappend₀₀₂(xs¹³¹, ys²⁸⁷) = 
+//│ 					case xs¹³¹ of {
+//│ 						LH_C h⁹² t⁹² => 
+//│ 							let h¹⁴⁹ = h⁹²
+//│ 							in let t¹⁴⁹ = mappend₀₀₂(t⁹², ys²⁸⁷)
+//│ 							in (fun ys²⁸⁸ -> 
+//│ 								let h¹⁵⁰ = h¹⁴⁹
+//│ 								in let t¹⁵⁰ = mappend₃₀₄(t¹⁴⁹, ys²⁸⁸)
+//│ 								in (fun ys²⁸⁹ -> [LH_C h¹⁵⁰ mappend₂₀₁₂(t¹⁵⁰, ys²⁸⁹)]))
+//│ 						| LH_N  => ys²⁸⁷}
+//│ 					where
+//│ 					def mappend₂₀₁₂(xs¹⁴¹, ys³⁰⁴) = 
+//│ 						xs¹⁴¹(ys³⁰⁴)
+//│ 					def mappend₃₀₄(xs¹⁴⁷, ys³¹⁰) = 
+//│ 						xs¹⁴⁷(ys³¹⁰)
+//│ 				def mappend₁₀₁(xs¹²⁹, ys²⁷⁴) = 
+//│ 					xs¹²⁹(ys²⁷⁴)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+

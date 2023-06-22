@@ -200,12 +200,12 @@ object ProdStratEnum {
   def prodInt(using ExprId) = MkCtor(Var("Int"), Nil)
   def prodChar(using ExprId) = MkCtor(Var("Char"), Nil)
   def prodString(using d: Deforest, euid: ExprId): ProdStratEnum = {
-    val v = d.freshVar("_lh_string")
-    val nil = MkCtor(Var("LH_N"), Nil)
-    val cons = MkCtor(Var("LH_C"), prodChar.toStrat() :: v._1.toStrat() :: Nil)
-    d.constrain(nil.toStrat(), v._2.toStrat())
-    d.constrain(cons.toStrat(), v._2.toStrat())
-    v._1
+    // val v = d.freshVar("_lh_string")
+    // val nil = MkCtor(Var("LH_N"), Nil)
+    // val cons = MkCtor(Var("LH_C"), prodChar.toStrat() :: v._1.toStrat() :: Nil)
+    // d.constrain(nil.toStrat(), v._2.toStrat())
+    // d.constrain(cons.toStrat(), v._2.toStrat())
+    NoProd()(using euid)
   }
   def prodString(s: Str)(using ExprId): MkCtor = s.headOption match {
     case Some(_) => MkCtor(Var("LH_C"), prodChar.toStrat() :: prodString(s.tail).toStrat() :: Nil)
@@ -317,6 +317,10 @@ class Deforest(var debug: Boolean) {
           NoProd()(using e.uid) // `primitive`, `primId`
         else if primitive == "string_of_int" then
           ProdFun(consInt(using noExprId).toStrat(), prodString(using this, noExprId).toStrat())(using noExprId)
+        else if primitive == "char_of_int" then
+          ProdFun(consInt(using noExprId).toStrat(), prodChar(using noExprId).toStrat())(using noExprId)
+        else if primitive == "int_of_char" then
+          ProdFun(consChar(using noExprId).toStrat(), prodInt(using noExprId).toStrat())(using noExprId)
         else
           lastWords("lazy and force should not be handled here")
       }
@@ -933,7 +937,7 @@ object CallTree {
 object Deforest {
   lazy val lumberhackKeywords: Set[String] =
     (lumberhackIntFun ++ lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackBoolUnaryOps ++ lumberhackPolyOps)
-      + "string_of_int"
+      + "string_of_int" + "int_of_char" + "char_of_int"
       + "primitive" + "primId" + "error" + "lazy" + "force"
   lazy val lumberhackPolyOps: Set[String] = Set("polyEq", "polyLt", "polyGt", "polyLeq", "polyGeq", "polyNeq")
   lazy val lumberhackBinOps = lumberhackIntBinOps ++ lumberhackBoolBinOps

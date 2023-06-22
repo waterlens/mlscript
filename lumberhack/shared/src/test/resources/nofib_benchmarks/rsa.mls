@@ -1,0 +1,526 @@
+:NewParser
+:ParseOnly
+
+:lhInHaskell
+:lhGenOCaml
+and [] = True
+and (h:t) = if h then (and t) else False
+copy 0 a = []
+copy n a = a:(copy (n - 1) a)
+unlines ls = concat (map (\l -> l ++ ['n']) ls)
+even a = (a `mod` 2) == 0
+drop n [] = []
+drop n (h:t) = if n > 0 then (drop (n - 1) t) else (h:t)
+encrypt n e = unlines . map (string_of_int . power e n . code) . collect (size n)
+code ls = foldl (\x y -> (128 * x) + (int_of_char y)) 0 ls
+decode n = reverse (expand n)
+expand 0 = []
+expand x = (x `mod` 128) : (expand (x `div` 128))
+collect 0 xs = []
+collect n [] = []
+collect n xs = (take n xs) : collect n (drop n xs)
+size n = (length (string_of_int n) * 47) `div` 100
+prime p = and [power (p-1) p x == 1 | x <- [3,5,7]]
+nextPrime a = let odd = (if (even a) then (a + 1) else a) in (head_lz (filter_lz prime [odd,odd+2..]))
+iter g v 0  w = v
+iter g v h w = let fact = (g `div` h) in (iter h w (g - (fact * h)) (v - (fact * w)))
+invert n a = let e = (iter n 0 a 1) in (if e < 0 then e + n else e)
+power 0 m x = 1
+power n m x = if (even n) then ((sqr (power (n `div` 2) m x)) `mod` m) else ((x * (power (n-1) m x)) `mod` m)
+sqr x = x * x
+makeKeys p' q' = let p = (nextPrime p') in (let q = (nextPrime q') in (let d = (nextPrime (p+q+1)) in (p * q, invert ((p-1) * (q-1)) d, d)))
+testRsa_nofib n = encrypt 6367 5189 (primId $ copy n 'l')
+testRsa_nofib $ primId 50520
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testRsa_nofib₀^1368(primId⁰(50520))
+//│ def code₀(_lh_code_arg1¹) = foldl₀^1160((fun x³ -> (fun y¹ -> ((128 * x³) + int_of_char⁰(y¹)))), 0, _lh_code_arg1¹)
+//│ def collect₀(_lh_collect_arg1¹, _lh_collect_arg2¹) = case _lh_collect_arg1¹ of {
+//│ 	0  => [LH_N]
+//│ 	| _  => case _lh_collect_arg2¹ of {
+//│ 		LH_N  => [LH_N]
+//│ 		| _  => [LH_C take₀^1184(_lh_collect_arg1¹, _lh_collect_arg2¹) collect₀^1189(_lh_collect_arg1¹, drop₀^1192(_lh_collect_arg1¹, _lh_collect_arg2¹))]}}
+//│ def concat₀(lss¹) = case lss¹ of {
+//│ 	LH_C h²⁴ t²⁶ => mappend₀^1297(h²⁴, concat₀^1300(t²⁶))
+//│ 	| LH_N  => [LH_N]}
+//│ def copy₀(_lh_copy_arg1¹, _lh_copy_arg2¹) = case _lh_copy_arg1¹ of {
+//│ 	0  => [LH_N]
+//│ 	| _  => [LH_C _lh_copy_arg2¹ copy₀^1059((_lh_copy_arg1¹ - 1), _lh_copy_arg2¹)]}
+//│ def drop₀(_lh_drop_arg1¹, _lh_drop_arg2¹) = case _lh_drop_arg2¹ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹ => if (_lh_drop_arg1¹ > 0) then drop₀^1340((_lh_drop_arg1¹ - 1), _lh_drop_LH_C_1¹) else [LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹]
+//│ 	| _  => error⁰}
+//│ def encrypt₀(_lh_encrypt_arg1¹, _lh_encrypt_arg2¹, _lh_funcomp_x⁴) = (fun _lh_funcomp_x⁵ -> unlines₀^1087(map₀^1088((fun _lh_funcomp_x⁶ -> (fun _lh_funcomp_x⁷ -> string_of_int⁰(power₀^1090(_lh_encrypt_arg2¹, _lh_encrypt_arg1¹, _lh_funcomp_x⁷)))(code₀^1099(_lh_funcomp_x⁶))), _lh_funcomp_x⁵)))(collect₀^1109(size₀^1110(_lh_encrypt_arg1¹), _lh_funcomp_x⁴))
+//│ def even₀(_lh_even_arg1¹) = ((_lh_even_arg1¹ % 2) == 0)
+//│ def foldl₀(f¹³, i³, ls²¹) = case ls²¹ of {
+//│ 	LH_C h²³ t²⁵ => foldl₀^1280(f¹³, f¹³(i³, h²³), t²⁵)
+//│ 	| LH_N  => i³}
+//│ def length₀(ls²³) = case ls²³ of {
+//│ 	LH_C h²⁷ t²⁹ => (1 + length₀^1361(t²⁹))
+//│ 	| LH_N  => 0}
+//│ def mappend₀(xs⁹, ys⁹) = case xs⁹ of {
+//│ 	LH_C h²¹ t²³ => [LH_C h²¹ mappend₀^1122(t²³, ys⁹)]
+//│ 	| LH_N  => ys⁹}
+//│ def mappend₁(xs¹⁰, ys¹⁰) = case xs¹⁰ of {
+//│ 	LH_C h²⁶ t²⁸ => [LH_C h²⁶ mappend₁^1323(t²⁸, ys¹⁰)]
+//│ 	| LH_N  => ys¹⁰}
+//│ def map₀(f¹², ls²⁰) = case ls²⁰ of {
+//│ 	LH_C h²² t²⁴ => [LH_C f¹²(h²²) map₀^1269(f¹², t²⁴)]
+//│ 	| LH_N  => [LH_N]}
+//│ def map₁(f¹⁴, ls²²) = case ls²² of {
+//│ 	LH_C h²⁵ t²⁷ => [LH_C f¹⁴(h²⁵) map₁^1311(f¹⁴, t²⁷)]
+//│ 	| LH_N  => [LH_N]}
+//│ def power₀(_lh_power_arg1¹, _lh_power_arg2¹, _lh_power_arg3¹) = case _lh_power_arg1¹ of {
+//│ 	0  => 1
+//│ 	| _  => if even₀^1205(_lh_power_arg1¹) then (sqr₀^1209(power₀^1210(div⁰(_lh_power_arg1¹, 2), _lh_power_arg2¹, _lh_power_arg3¹)) % _lh_power_arg2¹) else ((_lh_power_arg3¹ * power₀^1229((_lh_power_arg1¹ - 1), _lh_power_arg2¹, _lh_power_arg3¹)) % _lh_power_arg2¹)}
+//│ def size₀(_lh_size_arg1¹) = div⁰((length₀^1134(string_of_int⁰(_lh_size_arg1¹)) * 47), 100)
+//│ def sqr₀(_lh_sqr_arg1¹) = (_lh_sqr_arg1¹ * _lh_sqr_arg1¹)
+//│ def take₀(n⁴, ls¹⁹) = if (n⁴ > 0) then case ls¹⁹ of {
+//│ 	LH_C h²⁰ t²² => [LH_C h²⁰ take₀^1040((n⁴ - 1), t²²)]
+//│ 	| LH_N  => [LH_N]} else [LH_N]
+//│ def testRsa_nofib₀(_lh_testRsa_nofib_arg1¹) = encrypt₀^1146(6367, 5189, primId⁰(copy₀^1152(_lh_testRsa_nofib_arg1¹, 'l')))
+//│ def unlines₀(_lh_unlines_arg1¹) = concat₀^1072(map₁^1073((fun l¹ -> mappend₁^1074(l¹, [LH_C 'n' [LH_N]])), _lh_unlines_arg1¹))
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec code_d0 _lh_code_arg1_1 =
+//│ 		  (((foldl_d0 (fun x_3 y_1 -> 
+//│ 		    ((128 * x_3) + (int_of_char y_1)))) 0) _lh_code_arg1_1)
+//│ 		and collect_d0 _lh_collect_arg1_1 _lh_collect_arg2_1 =
+//│ 		  (match _lh_collect_arg1_1 with
+//│ 		    | 0 -> 
+//│ 		      (`LH_N)
+//│ 		    | _ -> 
+//│ 		      (match _lh_collect_arg2_1 with
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_N)
+//│ 		        | _ -> 
+//│ 		          (`LH_C(((take_d0 _lh_collect_arg1_1) _lh_collect_arg2_1), ((collect_d0 _lh_collect_arg1_1) ((drop_d0 _lh_collect_arg1_1) _lh_collect_arg2_1))))))
+//│ 		and concat_d0 lss_1 =
+//│ 		  (match lss_1 with
+//│ 		    | `LH_C(h_2_4, t_2_6) -> 
+//│ 		      ((mappend_d0 h_2_4) (concat_d0 t_2_6))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N))
+//│ 		and copy_d0 _lh_copy_arg1_1 _lh_copy_arg2_1 =
+//│ 		  (match _lh_copy_arg1_1 with
+//│ 		    | 0 -> 
+//│ 		      (`LH_N)
+//│ 		    | _ -> 
+//│ 		      (`LH_C(_lh_copy_arg2_1, ((copy_d0 (_lh_copy_arg1_1 - 1)) _lh_copy_arg2_1))))
+//│ 		and drop_d0 _lh_drop_arg1_1 _lh_drop_arg2_1 =
+//│ 		  (match _lh_drop_arg2_1 with
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)
+//│ 		    | `LH_C(_lh_drop_LH_C_0_1, _lh_drop_LH_C_1_1) -> 
+//│ 		      (if (_lh_drop_arg1_1 > 0) then
+//│ 		        ((drop_d0 (_lh_drop_arg1_1 - 1)) _lh_drop_LH_C_1_1)
+//│ 		      else
+//│ 		        (`LH_C(_lh_drop_LH_C_0_1, _lh_drop_LH_C_1_1)))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and encrypt_d0 _lh_encrypt_arg1_1 _lh_encrypt_arg2_1 _lh_funcomp_x_4 =
+//│ 		  ((fun _lh_funcomp_x_5 -> 
+//│ 		    (unlines_d0 ((map_d0 (fun _lh_funcomp_x_6 -> 
+//│ 		      ((fun _lh_funcomp_x_7 -> 
+//│ 		        (string_of_int (((power_d0 _lh_encrypt_arg2_1) _lh_encrypt_arg1_1) _lh_funcomp_x_7))) (code_d0 _lh_funcomp_x_6)))) _lh_funcomp_x_5))) ((collect_d0 (size_d0 _lh_encrypt_arg1_1)) _lh_funcomp_x_4))
+//│ 		and even_d0 _lh_even_arg1_1 =
+//│ 		  ((_lh_even_arg1_1 mod 2) = 0)
+//│ 		and foldl_d0 f_1_3 i_3 ls_2_1 =
+//│ 		  (match ls_2_1 with
+//│ 		    | `LH_C(h_2_3, t_2_5) -> 
+//│ 		      (((foldl_d0 f_1_3) ((f_1_3 i_3) h_2_3)) t_2_5)
+//│ 		    | `LH_N -> 
+//│ 		      i_3)
+//│ 		and length_d0 ls_2_3 =
+//│ 		  (match ls_2_3 with
+//│ 		    | `LH_C(h_2_7, t_2_9) -> 
+//│ 		      (1 + (length_d0 t_2_9))
+//│ 		    | `LH_N -> 
+//│ 		      0)
+//│ 		and mappend_d0 xs_9 ys_9 =
+//│ 		  (match xs_9 with
+//│ 		    | `LH_C(h_2_1, t_2_3) -> 
+//│ 		      (`LH_C(h_2_1, ((mappend_d0 t_2_3) ys_9)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_9)
+//│ 		and mappend_d1 xs_1_0 ys_1_0 =
+//│ 		  (match xs_1_0 with
+//│ 		    | `LH_C(h_2_6, t_2_8) -> 
+//│ 		      (`LH_C(h_2_6, ((mappend_d1 t_2_8) ys_1_0)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_1_0)
+//│ 		and map_d0 f_1_2 ls_2_0 =
+//│ 		  (match ls_2_0 with
+//│ 		    | `LH_C(h_2_2, t_2_4) -> 
+//│ 		      (`LH_C((f_1_2 h_2_2), ((map_d0 f_1_2) t_2_4)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N))
+//│ 		and map_d1 f_1_4 ls_2_2 =
+//│ 		  (match ls_2_2 with
+//│ 		    | `LH_C(h_2_5, t_2_7) -> 
+//│ 		      (`LH_C((f_1_4 h_2_5), ((map_d1 f_1_4) t_2_7)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N))
+//│ 		and power_d0 _lh_power_arg1_1 _lh_power_arg2_1 _lh_power_arg3_1 =
+//│ 		  (match _lh_power_arg1_1 with
+//│ 		    | 0 -> 
+//│ 		      1
+//│ 		    | _ -> 
+//│ 		      (if (even_d0 _lh_power_arg1_1) then
+//│ 		        ((sqr_d0 (((power_d0 (_lh_power_arg1_1 / 2)) _lh_power_arg2_1) _lh_power_arg3_1)) mod _lh_power_arg2_1)
+//│ 		      else
+//│ 		        ((_lh_power_arg3_1 * (((power_d0 (_lh_power_arg1_1 - 1)) _lh_power_arg2_1) _lh_power_arg3_1)) mod _lh_power_arg2_1)))
+//│ 		and size_d0 _lh_size_arg1_1 =
+//│ 		  (((length_d0 (string_of_int _lh_size_arg1_1)) * 47) / 100)
+//│ 		and sqr_d0 _lh_sqr_arg1_1 =
+//│ 		  (_lh_sqr_arg1_1 * _lh_sqr_arg1_1)
+//│ 		and take_d0 n_4 ls_1_9 =
+//│ 		  (if (n_4 > 0) then
+//│ 		    (match ls_1_9 with
+//│ 		      | `LH_C(h_2_0, t_2_2) -> 
+//│ 		        (`LH_C(h_2_0, ((take_d0 (n_4 - 1)) t_2_2)))
+//│ 		      | `LH_N -> 
+//│ 		        (`LH_N))
+//│ 		  else
+//│ 		    (`LH_N))
+//│ 		and testRsa_nofib_d0 _lh_testRsa_nofib_arg1_1 =
+//│ 		  (((encrypt_d0 6367) 5189) ((copy_d0 _lh_testRsa_nofib_arg1_1) 'l'))
+//│ 		and unlines_d0 _lh_unlines_arg1_1 =
+//│ 		  (concat_d0 ((map_d1 (fun l_1 -> 
+//│ 		    ((mappend_d1 l_1) (`LH_C('n', (`LH_N)))))) _lh_unlines_arg1_1));;
+//│ 		(testRsa_nofib_d0 50520)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testRsa_nofib₀^1368]
+//│ 	[testRsa_nofib₀^1368 · copy₀^1152] (hopeless to continue)
+//│ 		[testRsa_nofib₀^1368 · copy₀^1152 · copy₀^1059] ---> [testRsa_nofib₀^1368 · copy₀^1152] (using original def)
+//│ 	[testRsa_nofib₀^1368 · encrypt₀^1146]
+//│ 		[testRsa_nofib₀^1368 · encrypt₀^1146 · code₀^1099] (hopeless to continue)
+//│ 			[testRsa_nofib₀^1368 · encrypt₀^1146 · code₀^1099 · foldl₀^1160] (using original def)
+//│ 				[testRsa_nofib₀^1368 · encrypt₀^1146 · code₀^1099 · foldl₀^1160 · foldl₀^1280] ---> [testRsa_nofib₀^1368 · encrypt₀^1146 · code₀^1099 · foldl₀^1160] (using original def)
+//│ 		[testRsa_nofib₀^1368 · encrypt₀^1146 · collect₀^1109] (hopeless to continue)
+//│ 			[testRsa_nofib₀^1368 · encrypt₀^1146 · collect₀^1109 · collect₀^1189] ---> [testRsa_nofib₀^1368 · encrypt₀^1146 · collect₀^1109] (using original def)
+//│ 			[testRsa_nofib₀^1368 · encrypt₀^1146 · collect₀^1109 · drop₀^1192] (using original def)
+//│ 				[testRsa_nofib₀^1368 · encrypt₀^1146 · collect₀^1109 · drop₀^1192 · drop₀^1340] ---> [testRsa_nofib₀^1368 · encrypt₀^1146 · collect₀^1109 · drop₀^1192] (using original def)
+//│ 			[testRsa_nofib₀^1368 · encrypt₀^1146 · collect₀^1109 · take₀^1184] (using original def)
+//│ 				[testRsa_nofib₀^1368 · encrypt₀^1146 · collect₀^1109 · take₀^1184 · take₀^1040] ---> [testRsa_nofib₀^1368 · encrypt₀^1146 · collect₀^1109 · take₀^1184] (using original def)
+//│ 		[testRsa_nofib₀^1368 · encrypt₀^1146 · map₀^1088] (hopeless to continue)
+//│ 			[testRsa_nofib₀^1368 · encrypt₀^1146 · map₀^1088 · map₀^1269] ---> [testRsa_nofib₀^1368 · encrypt₀^1146 · map₀^1088] (using original def)
+//│ 		[testRsa_nofib₀^1368 · encrypt₀^1146 · power₀^1090] (hopeless to continue)
+//│ 			[testRsa_nofib₀^1368 · encrypt₀^1146 · power₀^1090 · even₀^1205] (using original def)
+//│ 			[testRsa_nofib₀^1368 · encrypt₀^1146 · power₀^1090 · power₀^1210] ---> [testRsa_nofib₀^1368 · encrypt₀^1146 · power₀^1090] (using original def)
+//│ 			[testRsa_nofib₀^1368 · encrypt₀^1146 · power₀^1090 · power₀^1229] ---> [testRsa_nofib₀^1368 · encrypt₀^1146 · power₀^1090] (using original def)
+//│ 			[testRsa_nofib₀^1368 · encrypt₀^1146 · power₀^1090 · sqr₀^1209] (using original def)
+//│ 		[testRsa_nofib₀^1368 · encrypt₀^1146 · size₀^1110] (hopeless to continue)
+//│ 			[testRsa_nofib₀^1368 · encrypt₀^1146 · size₀^1110 · length₀^1134] (using original def)
+//│ 				[testRsa_nofib₀^1368 · encrypt₀^1146 · size₀^1110 · length₀^1134 · length₀^1361] ---> [testRsa_nofib₀^1368 · encrypt₀^1146 · size₀^1110 · length₀^1134] (using original def)
+//│ 		[testRsa_nofib₀^1368 · encrypt₀^1146 · unlines₀^1087]
+//│ 			[testRsa_nofib₀^1368 · encrypt₀^1146 · unlines₀^1087 · concat₀^1072]
+//│ 				[testRsa_nofib₀^1368 · encrypt₀^1146 · unlines₀^1087 · concat₀^1072 · concat₀^1300] (hopeless to continue)
+//│ 					[testRsa_nofib₀^1368 · encrypt₀^1146 · unlines₀^1087 · concat₀^1072 · concat₀^1300 · concat₀^1300] ---> [testRsa_nofib₀^1368 · encrypt₀^1146 · unlines₀^1087 · concat₀^1072 · concat₀^1300] (using original def)
+//│ 					[testRsa_nofib₀^1368 · encrypt₀^1146 · unlines₀^1087 · concat₀^1072 · concat₀^1300 · mappend₀^1297] (using original def)
+//│ 						[testRsa_nofib₀^1368 · encrypt₀^1146 · unlines₀^1087 · concat₀^1072 · concat₀^1300 · mappend₀^1297 · mappend₀^1122] ---> [testRsa_nofib₀^1368 · encrypt₀^1146 · unlines₀^1087 · concat₀^1072 · concat₀^1300 · mappend₀^1297] (using original def)
+//│ 				[testRsa_nofib₀^1368 · encrypt₀^1146 · unlines₀^1087 · concat₀^1072 · mappend₀^1297]
+//│ 					[testRsa_nofib₀^1368 · encrypt₀^1146 · unlines₀^1087 · concat₀^1072 · mappend₀^1297 · mappend₀^1122] ---> [testRsa_nofib₀^1368 · encrypt₀^1146 · unlines₀^1087 · concat₀^1072 · mappend₀^1297] (only one)
+//│ 			[testRsa_nofib₀^1368 · encrypt₀^1146 · unlines₀^1087 · mappend₁^1074] (hopeless to continue)
+//│ 				[testRsa_nofib₀^1368 · encrypt₀^1146 · unlines₀^1087 · mappend₁^1074 · mappend₁^1323] ---> [testRsa_nofib₀^1368 · encrypt₀^1146 · unlines₀^1087 · mappend₁^1074] (using original def)
+//│ 			[testRsa_nofib₀^1368 · encrypt₀^1146 · unlines₀^1087 · map₁^1073] (hopeless to continue)
+//│ 				[testRsa_nofib₀^1368 · encrypt₀^1146 · unlines₀^1087 · map₁^1073 · map₁^1311] ---> [testRsa_nofib₀^1368 · encrypt₀^1146 · unlines₀^1087 · map₁^1073] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testRsa_nofib₀₀(primId⁰(50520))
+//│ def testRsa_nofib₀₀(_lh_testRsa_nofib_arg1¹) = 
+//│ 	encrypt₀₀(6367, 5189, primId⁰(copy₀₀(_lh_testRsa_nofib_arg1¹, 'l')))
+//│ 	where
+//│ 	def copy₀₀(_lh_copy_arg1¹, _lh_copy_arg2¹) = 
+//│ 		case _lh_copy_arg1¹ of {
+//│ 			0  => [LH_N]
+//│ 			| _  => [LH_C _lh_copy_arg2¹ copy₀₀((_lh_copy_arg1¹ - 1), _lh_copy_arg2¹)]}
+//│ 	def encrypt₀₀(_lh_encrypt_arg1¹, _lh_encrypt_arg2¹, _lh_funcomp_x⁴) = 
+//│ 		(fun _lh_funcomp_x⁵ -> unlines₀₀(map₀₀((fun _lh_funcomp_x⁶ -> (fun _lh_funcomp_x⁷ -> string_of_int⁰(power₀₀(_lh_encrypt_arg2¹, _lh_encrypt_arg1¹, _lh_funcomp_x⁷)))(code₀₀(_lh_funcomp_x⁶))), _lh_funcomp_x⁵)))(collect₀₀(size₀₀(_lh_encrypt_arg1¹), _lh_funcomp_x⁴))
+//│ 		where
+//│ 		def code₀₀(_lh_code_arg1¹) = 
+//│ 			foldl₀₀((fun x¹ -> (fun y¹ -> ((128 * x¹) + int_of_char⁰(y¹)))), 0, _lh_code_arg1¹)
+//│ 			where
+//│ 			def foldl₀₀(f³, i¹, ls⁵) = 
+//│ 				case ls⁵ of {
+//│ 					LH_C h⁹ t⁹ => foldl₀₀(f³, f³(i¹, h⁹), t⁹)
+//│ 					| LH_N  => i¹}
+//│ 		def collect₀₀(_lh_collect_arg1¹, _lh_collect_arg2¹) = 
+//│ 			case _lh_collect_arg1¹ of {
+//│ 				0  => [LH_N]
+//│ 				| _  => case _lh_collect_arg2¹ of {
+//│ 					LH_N  => [LH_N]
+//│ 					| _  => [LH_C take₀₀(_lh_collect_arg1¹, _lh_collect_arg2¹) collect₀₀(_lh_collect_arg1¹, drop₀₀(_lh_collect_arg1¹, _lh_collect_arg2¹))]}}
+//│ 			where
+//│ 			def drop₀₀(_lh_drop_arg1¹, _lh_drop_arg2¹) = 
+//│ 				case _lh_drop_arg2¹ of {
+//│ 					LH_N  => [LH_N]
+//│ 					| LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹ => if (_lh_drop_arg1¹ > 0) then drop₀₀((_lh_drop_arg1¹ - 1), _lh_drop_LH_C_1¹) else [LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹]
+//│ 					| _  => error⁰}
+//│ 			def take₀₀(n¹, ls⁶) = 
+//│ 				if (n¹ > 0) then case ls⁶ of {
+//│ 					LH_C h¹¹ t¹¹ => [LH_C h¹¹ take₀₀((n¹ - 1), t¹¹)]
+//│ 					| LH_N  => [LH_N]} else [LH_N]
+//│ 		def map₀₀(f⁵, ls⁸) = 
+//│ 			case ls⁸ of {
+//│ 				LH_C h¹³ t¹³ => [LH_C f⁵(h¹³) map₀₀(f⁵, t¹³)]
+//│ 				| LH_N  => [LH_N]}
+//│ 		def power₀₀(_lh_power_arg1¹, _lh_power_arg2¹, _lh_power_arg3¹) = 
+//│ 			case _lh_power_arg1¹ of {
+//│ 				0  => 1
+//│ 				| _  => if even₀₀(_lh_power_arg1¹) then (sqr₀₀(power₀₀(div⁰(_lh_power_arg1¹, 2), _lh_power_arg2¹, _lh_power_arg3¹)) % _lh_power_arg2¹) else ((_lh_power_arg3¹ * power₀₀((_lh_power_arg1¹ - 1), _lh_power_arg2¹, _lh_power_arg3¹)) % _lh_power_arg2¹)}
+//│ 			where
+//│ 			def even₀₀(_lh_even_arg1¹) = 
+//│ 				((_lh_even_arg1¹ % 2) == 0)
+//│ 			def sqr₀₀(_lh_sqr_arg1¹) = 
+//│ 				(_lh_sqr_arg1¹ * _lh_sqr_arg1¹)
+//│ 		def size₀₀(_lh_size_arg1¹) = 
+//│ 			div⁰((length₀₀(string_of_int⁰(_lh_size_arg1¹)) * 47), 100)
+//│ 			where
+//│ 			def length₀₀(ls⁹) = 
+//│ 				case ls⁹ of {
+//│ 					LH_C h¹⁶ t¹⁶ => (1 + length₀₀(t¹⁶))
+//│ 					| LH_N  => 0}
+//│ 		def unlines₀₀(_lh_unlines_arg1¹) = 
+//│ 			concat₀₀(map₁₀((fun l¹ -> mappend₁₀(l¹, [LH_C 'n' [LH_N]])), _lh_unlines_arg1¹))
+//│ 			where
+//│ 			def concat₀₀(lss²) = 
+//│ 				case lss² of {
+//│ 					LH_C h¹⁷ t¹⁷ => mappend₀₁(h¹⁷, concat₀₁(t¹⁷))
+//│ 					| LH_N  => [LH_N]}
+//│ 				where
+//│ 				def concat₀₁(lss¹) = 
+//│ 					case lss¹ of {
+//│ 						LH_C h¹⁰ t¹⁰ => mappend₀₀(h¹⁰, concat₀₁(t¹⁰))
+//│ 						| LH_N  => [LH_N]}
+//│ 					where
+//│ 					def mappend₀₀(xs⁴, ys⁴) = 
+//│ 						case xs⁴ of {
+//│ 							LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ mappend₀₀(t¹⁵, ys⁴)]
+//│ 							| LH_N  => ys⁴}
+//│ 				def mappend₀₁(xs³, ys³) = 
+//│ 					case xs³ of {
+//│ 						LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ mappend₀₁(t¹⁴, ys³)]
+//│ 						| LH_N  => ys³}
+//│ 			def mappend₁₀(xs², ys²) = 
+//│ 				case xs² of {
+//│ 					LH_C h⁸ t⁸ => [LH_C h⁸ mappend₁₀(t⁸, ys²)]
+//│ 					| LH_N  => ys²}
+//│ 			def map₁₀(f⁴, ls⁷) = 
+//│ 				case ls⁷ of {
+//│ 					LH_C h¹² t¹² => [LH_C f⁴(h¹²) map₁₀(f⁴, t¹²)]
+//│ 					| LH_N  => [LH_N]}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_C h⁸ mappend₁₀(t⁸, ys²)]: 348 --->
+//│ 	case xs³ of {LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ mappend₀₁(t¹⁴, ys³)] | LH_N  => ys³}: 637
+//│ 	case xs⁴ of {LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ mappend₀₀(t¹⁵, ys⁴)] | LH_N  => ys⁴}: 649
+//│ [LH_C h¹¹ take₀₀((n¹ - 1), t¹¹)]: 411 --->
+//│ 	case ls⁵ of {LH_C h⁹ t⁹ => foldl₀₀(f³, f³(i¹, h⁹), t⁹) | LH_N  => i¹}: 380
+//│ [LH_N]: 412 --->
+//│ 	case ls⁵ of {LH_C h⁹ t⁹ => foldl₀₀(f³, f³(i¹, h⁹), t⁹) | LH_N  => i¹}: 380
+//│ [LH_N]: 414 --->
+//│ 	case ls⁵ of {LH_C h⁹ t⁹ => foldl₀₀(f³, f³(i¹, h⁹), t⁹) | LH_N  => i¹}: 380
+//│ [LH_N]: 465 --->
+//│ 	case ls⁸ of {LH_C h¹³ t¹³ => [LH_C f⁵(h¹³) map₀₀(f⁵, t¹³)] | LH_N  => [LH_N]}: 595
+//│ [LH_N]: 467 --->
+//│ 	case ls⁸ of {LH_C h¹³ t¹³ => [LH_C f⁵(h¹³) map₀₀(f⁵, t¹³)] | LH_N  => [LH_N]}: 595
+//│ [LH_C take₀₀(_lh_collect_arg1¹, _lh_collect_arg2¹) collect₀₀(_lh_collect_arg1¹, drop₀₀(_lh_collect_arg1¹, _lh_collect_arg2¹))]: 482 --->
+//│ 	case ls⁸ of {LH_C h¹³ t¹³ => [LH_C f⁵(h¹³) map₀₀(f⁵, t¹³)] | LH_N  => [LH_N]}: 595
+//│ [LH_N]: 514 --->
+//│ 	case ls⁶ of {LH_C h¹¹ t¹¹ => [LH_C h¹¹ take₀₀((n¹ - 1), t¹¹)] | LH_N  => [LH_N]}: 413
+//│ 	case _lh_collect_arg2¹ of {LH_N  => [LH_N] | _  => [LH_C take₀₀(_lh_collect_arg1¹, _lh_collect_arg2¹) collect₀₀(_lh_collect_arg1¹, drop₀₀(_lh_collect_arg1¹, _lh_collect_arg2¹))]}: 483
+//│ 	case _lh_drop_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹ => if (_lh_drop_arg1¹ > 0) then drop₀₀((_lh_drop_arg1¹ - 1), _lh_drop_LH_C_1¹) else [LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹] | _  => error⁰}: 534
+//│ [LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹]: 531 --->
+//│ 	case ls⁶ of {LH_C h¹¹ t¹¹ => [LH_C h¹¹ take₀₀((n¹ - 1), t¹¹)] | LH_N  => [LH_N]}: 413
+//│ 	case _lh_collect_arg2¹ of {LH_N  => [LH_N] | _  => [LH_C take₀₀(_lh_collect_arg1¹, _lh_collect_arg2¹) collect₀₀(_lh_collect_arg1¹, drop₀₀(_lh_collect_arg1¹, _lh_collect_arg2¹))]}: 483
+//│ 	case _lh_drop_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹ => if (_lh_drop_arg1¹ > 0) then drop₀₀((_lh_drop_arg1¹ - 1), _lh_drop_LH_C_1¹) else [LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹] | _  => error⁰}: 534
+//│ [LH_C f⁴(h¹²) map₁₀(f⁴, t¹²)]: 546 --->
+//│ 	case lss¹ of {LH_C h¹⁰ t¹⁰ => mappend₀₀(h¹⁰, concat₀₁(t¹⁰)) | LH_N  => [LH_N]}: 393
+//│ 	case lss² of {LH_C h¹⁷ t¹⁷ => mappend₀₁(h¹⁷, concat₀₁(t¹⁷)) | LH_N  => [LH_N]}: 697
+//│ [LH_N]: 547 --->
+//│ 	case lss¹ of {LH_C h¹⁰ t¹⁰ => mappend₀₀(h¹⁰, concat₀₁(t¹⁰)) | LH_N  => [LH_N]}: 393
+//│ 	case lss² of {LH_C h¹⁷ t¹⁷ => mappend₀₁(h¹⁷, concat₀₁(t¹⁷)) | LH_N  => [LH_N]}: 697
+//│ [LH_C f⁵(h¹³) map₀₀(f⁵, t¹³)]: 593 --->
+//│ 	case ls⁷ of {LH_C h¹² t¹² => [LH_C f⁴(h¹²) map₁₀(f⁴, t¹²)] | LH_N  => [LH_N]}: 548
+//│ [LH_N]: 594 --->
+//│ 	case ls⁷ of {LH_C h¹² t¹² => [LH_C f⁴(h¹²) map₁₀(f⁴, t¹²)] | LH_N  => [LH_N]}: 548
+//│ [LH_N]: 658 --->
+//│ 	case xs³ of {LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ mappend₀₁(t¹⁴, ys³)] | LH_N  => ys³}: 637
+//│ 	case xs⁴ of {LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ mappend₀₀(t¹⁵, ys⁴)] | LH_N  => ys⁴}: 649
+//│ [LH_C 'n' [LH_N]]: 659 --->
+//│ 	case xs³ of {LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ mappend₀₁(t¹⁴, ys³)] | LH_N  => ys³}: 637
+//│ 	case xs⁴ of {LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ mappend₀₀(t¹⁵, ys⁴)] | LH_N  => ys⁴}: 649
+//│ ------------------
+//│ case ls⁵ of {LH_C h⁹ t⁹ => foldl₀₀(f³, f³(i¹, h⁹), t⁹) | LH_N  => i¹}: 380 --->
+//│ 	[LH_C h¹¹ take₀₀((n¹ - 1), t¹¹)]: 411
+//│ 	[LH_N]: 412
+//│ 	[LH_N]: 414
+//│ case lss¹ of {LH_C h¹⁰ t¹⁰ => mappend₀₀(h¹⁰, concat₀₁(t¹⁰)) | LH_N  => [LH_N]}: 393 --->
+//│ 	[LH_C f⁴(h¹²) map₁₀(f⁴, t¹²)]: 546
+//│ 	[LH_N]: 547
+//│ case ls⁶ of {LH_C h¹¹ t¹¹ => [LH_C h¹¹ take₀₀((n¹ - 1), t¹¹)] | LH_N  => [LH_N]}: 413 --->
+//│ 	NoProd
+//│ 	[LH_N]: 514
+//│ 	[LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹]: 531
+//│ case _lh_collect_arg2¹ of {LH_N  => [LH_N] | _  => [LH_C take₀₀(_lh_collect_arg1¹, _lh_collect_arg2¹) collect₀₀(_lh_collect_arg1¹, drop₀₀(_lh_collect_arg1¹, _lh_collect_arg2¹))]}: 483 --->
+//│ 	NoProd
+//│ 	[LH_N]: 514
+//│ 	[LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹]: 531
+//│ case _lh_drop_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹ => if (_lh_drop_arg1¹ > 0) then drop₀₀((_lh_drop_arg1¹ - 1), _lh_drop_LH_C_1¹) else [LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹] | _  => error⁰}: 534 --->
+//│ 	NoProd
+//│ 	[LH_N]: 514
+//│ 	[LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹]: 531
+//│ case ls⁷ of {LH_C h¹² t¹² => [LH_C f⁴(h¹²) map₁₀(f⁴, t¹²)] | LH_N  => [LH_N]}: 548 --->
+//│ 	[LH_C f⁵(h¹³) map₀₀(f⁵, t¹³)]: 593
+//│ 	[LH_N]: 594
+//│ case ls⁸ of {LH_C h¹³ t¹³ => [LH_C f⁵(h¹³) map₀₀(f⁵, t¹³)] | LH_N  => [LH_N]}: 595 --->
+//│ 	[LH_N]: 465
+//│ 	[LH_N]: 467
+//│ 	[LH_C take₀₀(_lh_collect_arg1¹, _lh_collect_arg2¹) collect₀₀(_lh_collect_arg1¹, drop₀₀(_lh_collect_arg1¹, _lh_collect_arg2¹))]: 482
+//│ case xs³ of {LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ mappend₀₁(t¹⁴, ys³)] | LH_N  => ys³}: 637 --->
+//│ 	[LH_C h⁸ mappend₁₀(t⁸, ys²)]: 348
+//│ 	[LH_N]: 658
+//│ 	[LH_C 'n' [LH_N]]: 659
+//│ case xs⁴ of {LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ mappend₀₀(t¹⁵, ys⁴)] | LH_N  => ys⁴}: 649 --->
+//│ 	[LH_C h⁸ mappend₁₀(t⁸, ys²)]: 348
+//│ 	[LH_N]: 658
+//│ 	[LH_C 'n' [LH_N]]: 659
+//│ case lss² of {LH_C h¹⁷ t¹⁷ => mappend₀₁(h¹⁷, concat₀₁(t¹⁷)) | LH_N  => [LH_N]}: 697 --->
+//│ 	[LH_C f⁴(h¹²) map₁₀(f⁴, t¹²)]: 546
+//│ 	[LH_N]: 547
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_C h¹¹ take₀₀((n¹ - 1), t¹¹)]: 411 --->
+//│ 	case ls⁵ of {LH_C h⁹ t⁹ => foldl₀₀(f³, f³(i¹, h⁹), t⁹) | LH_N  => i¹}: 380
+//│ [LH_N]: 412 --->
+//│ 	case ls⁵ of {LH_C h⁹ t⁹ => foldl₀₀(f³, f³(i¹, h⁹), t⁹) | LH_N  => i¹}: 380
+//│ [LH_N]: 414 --->
+//│ 	case ls⁵ of {LH_C h⁹ t⁹ => foldl₀₀(f³, f³(i¹, h⁹), t⁹) | LH_N  => i¹}: 380
+//│ [LH_N]: 465 --->
+//│ 	case ls⁸ of {LH_C h¹³ t¹³ => [LH_C f⁵(h¹³) map₀₀(f⁵, t¹³)] | LH_N  => [LH_N]}: 595
+//│ [LH_N]: 467 --->
+//│ 	case ls⁸ of {LH_C h¹³ t¹³ => [LH_C f⁵(h¹³) map₀₀(f⁵, t¹³)] | LH_N  => [LH_N]}: 595
+//│ [LH_C take₀₀(_lh_collect_arg1¹, _lh_collect_arg2¹) collect₀₀(_lh_collect_arg1¹, drop₀₀(_lh_collect_arg1¹, _lh_collect_arg2¹))]: 482 --->
+//│ 	case ls⁸ of {LH_C h¹³ t¹³ => [LH_C f⁵(h¹³) map₀₀(f⁵, t¹³)] | LH_N  => [LH_N]}: 595
+//│ [LH_C f⁵(h¹³) map₀₀(f⁵, t¹³)]: 593 --->
+//│ 	case ls⁷ of {LH_C h¹² t¹² => [LH_C f⁴(h¹²) map₁₀(f⁴, t¹²)] | LH_N  => [LH_N]}: 548
+//│ [LH_N]: 594 --->
+//│ 	case ls⁷ of {LH_C h¹² t¹² => [LH_C f⁴(h¹²) map₁₀(f⁴, t¹²)] | LH_N  => [LH_N]}: 548
+//│ ------------------
+//│ case ls⁵ of {LH_C h⁹ t⁹ => foldl₀₀(f³, f³(i¹, h⁹), t⁹) | LH_N  => i¹}: 380 --->
+//│ 	[LH_C h¹¹ take₀₀((n¹ - 1), t¹¹)]: 411
+//│ 	[LH_N]: 412
+//│ 	[LH_N]: 414
+//│ case ls⁷ of {LH_C h¹² t¹² => [LH_C f⁴(h¹²) map₁₀(f⁴, t¹²)] | LH_N  => [LH_N]}: 548 --->
+//│ 	[LH_C f⁵(h¹³) map₀₀(f⁵, t¹³)]: 593
+//│ 	[LH_N]: 594
+//│ case ls⁸ of {LH_C h¹³ t¹³ => [LH_C f⁵(h¹³) map₀₀(f⁵, t¹³)] | LH_N  => [LH_N]}: 595 --->
+//│ 	[LH_N]: 465
+//│ 	[LH_N]: 467
+//│ 	[LH_C take₀₀(_lh_collect_arg1¹, _lh_collect_arg2¹) collect₀₀(_lh_collect_arg1¹, drop₀₀(_lh_collect_arg1¹, _lh_collect_arg2¹))]: 482
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testRsa_nofib₀₀(primId⁰(50520))
+//│ def testRsa_nofib₀₀(_lh_testRsa_nofib_arg1²) = 
+//│ 	encrypt₀₀(6367, 5189, primId⁰(copy₀₀(_lh_testRsa_nofib_arg1², 'l')))
+//│ 	where
+//│ 	def copy₀₀(_lh_copy_arg1², _lh_copy_arg2²) = 
+//│ 		case _lh_copy_arg1² of {
+//│ 			0  => [LH_N]
+//│ 			| _  => [LH_C _lh_copy_arg2² copy₀₀((_lh_copy_arg1² - 1), _lh_copy_arg2²)]}
+//│ 	def encrypt₀₀(_lh_encrypt_arg1², _lh_encrypt_arg2², _lh_funcomp_x⁸) = 
+//│ 		(fun _lh_funcomp_x⁹ -> unlines₀₀(map₀₀((fun _lh_funcomp_x¹⁰ -> (fun _lh_funcomp_x¹¹ -> string_of_int⁰(power₀₀(_lh_encrypt_arg2², _lh_encrypt_arg1², _lh_funcomp_x¹¹)))(code₀₀(_lh_funcomp_x¹⁰))), _lh_funcomp_x⁹)))(collect₀₀(size₀₀(_lh_encrypt_arg1²), _lh_funcomp_x⁸))
+//│ 		where
+//│ 		def code₀₀(_lh_code_arg1²) = 
+//│ 			foldl₀₀((fun x² -> (fun y² -> ((128 * x²) + int_of_char⁰(y²)))), 0, _lh_code_arg1²)
+//│ 			where
+//│ 			def foldl₀₀(f¹⁷, i⁵, ls¹⁴) = 
+//│ 				ls¹⁴(i⁵, f¹⁷)
+//│ 		def collect₀₀(_lh_collect_arg1², _lh_collect_arg2²) = 
+//│ 			case _lh_collect_arg1² of {
+//│ 				0  => (fun f¹⁰ -> (fun f¹¹ -> [LH_N]))
+//│ 				| _  => case _lh_collect_arg2² of {
+//│ 					LH_N  => (fun f¹² -> (fun f¹³ -> [LH_N]))
+//│ 					| _  => 
+//│ 						let h¹⁹ = take₀₀(_lh_collect_arg1², _lh_collect_arg2²)
+//│ 						in let t¹⁹ = collect₀₀(_lh_collect_arg1², drop₀₀(_lh_collect_arg1², _lh_collect_arg2²))
+//│ 						in (fun f¹⁴ -> 
+//│ 							let h²⁰ = f¹⁴(h¹⁹)
+//│ 							in let t²⁰ = map₀₀(f¹⁴, t¹⁹)
+//│ 							in (fun f¹⁵ -> [LH_C f¹⁵(h²⁰) map₁₀(f¹⁵, t²⁰)]))}}
+//│ 			where
+//│ 			def drop₀₀(_lh_drop_arg1², _lh_drop_arg2²) = 
+//│ 				case _lh_drop_arg2² of {
+//│ 					LH_N  => [LH_N]
+//│ 					| LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹ => if (_lh_drop_arg1² > 0) then drop₀₀((_lh_drop_arg1² - 1), _lh_drop_LH_C_1¹) else [LH_C _lh_drop_LH_C_0¹ _lh_drop_LH_C_1¹]
+//│ 					| _  => error⁰}
+//│ 			def take₀₀(n², ls¹¹) = 
+//│ 				if (n² > 0) then case ls¹¹ of {
+//│ 					LH_C h¹¹ t¹¹ => 
+//│ 						let h¹⁸ = h¹¹
+//│ 						in let t¹⁸ = take₀₀((n² - 1), t¹¹)
+//│ 						in (fun i² -> (fun f⁷ -> foldl₀₀(f⁷, f⁷(i², h¹⁸), t¹⁸)))
+//│ 					| LH_N  => (fun i³ -> (fun f⁸ -> i³))} else (fun i⁴ -> (fun f⁹ -> i⁴))
+//│ 		def map₀₀(f¹⁶, ls¹³) = 
+//│ 			ls¹³(f¹⁶)
+//│ 		def power₀₀(_lh_power_arg1², _lh_power_arg2², _lh_power_arg3²) = 
+//│ 			case _lh_power_arg1² of {
+//│ 				0  => 1
+//│ 				| _  => if even₀₀(_lh_power_arg1²) then (sqr₀₀(power₀₀(div⁰(_lh_power_arg1², 2), _lh_power_arg2², _lh_power_arg3²)) % _lh_power_arg2²) else ((_lh_power_arg3² * power₀₀((_lh_power_arg1² - 1), _lh_power_arg2², _lh_power_arg3²)) % _lh_power_arg2²)}
+//│ 			where
+//│ 			def even₀₀(_lh_even_arg1²) = 
+//│ 				((_lh_even_arg1² % 2) == 0)
+//│ 			def sqr₀₀(_lh_sqr_arg1²) = 
+//│ 				(_lh_sqr_arg1² * _lh_sqr_arg1²)
+//│ 		def size₀₀(_lh_size_arg1²) = 
+//│ 			div⁰((length₀₀(string_of_int⁰(_lh_size_arg1²)) * 47), 100)
+//│ 			where
+//│ 			def length₀₀(ls¹²) = 
+//│ 				case ls¹² of {
+//│ 					LH_C h¹⁶ t¹⁶ => (1 + length₀₀(t¹⁶))
+//│ 					| LH_N  => 0}
+//│ 		def unlines₀₀(_lh_unlines_arg1²) = 
+//│ 			concat₀₀(map₁₀((fun l² -> mappend₁₀(l², [LH_C 'n' [LH_N]])), _lh_unlines_arg1²))
+//│ 			where
+//│ 			def concat₀₀(lss⁴) = 
+//│ 				case lss⁴ of {
+//│ 					LH_C h¹⁷ t¹⁷ => mappend₀₁(h¹⁷, concat₀₁(t¹⁷))
+//│ 					| LH_N  => [LH_N]}
+//│ 				where
+//│ 				def concat₀₁(lss³) = 
+//│ 					case lss³ of {
+//│ 						LH_C h¹⁰ t¹⁰ => mappend₀₀(h¹⁰, concat₀₁(t¹⁰))
+//│ 						| LH_N  => [LH_N]}
+//│ 					where
+//│ 					def mappend₀₀(xs⁷, ys⁷) = 
+//│ 						case xs⁷ of {
+//│ 							LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ mappend₀₀(t¹⁵, ys⁷)]
+//│ 							| LH_N  => ys⁷}
+//│ 				def mappend₀₁(xs⁶, ys⁶) = 
+//│ 					case xs⁶ of {
+//│ 						LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ mappend₀₁(t¹⁴, ys⁶)]
+//│ 						| LH_N  => ys⁶}
+//│ 			def mappend₁₀(xs⁵, ys⁵) = 
+//│ 				case xs⁵ of {
+//│ 					LH_C h⁸ t⁸ => [LH_C h⁸ mappend₁₀(t⁸, ys⁵)]
+//│ 					| LH_N  => ys⁵}
+//│ 			def map₁₀(f⁶, ls¹⁰) = 
+//│ 				ls¹⁰(f⁶)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
+
+
+
+

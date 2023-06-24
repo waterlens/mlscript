@@ -59,7 +59,7 @@ program _ = writes [ cls,
           (pressAnyKey
           (promptReadAt (17,15) 18 (primId "P") (\name ->
           (let reply = "Hello " ++ name ++ "!" in
-           writeAt (40-((length reply) / 2),18) reply
+           writeAt (40-((length reply) `div` 2),18) reply
           (moveTo (1,23)
           (writeString (primId "w")
           (pressAnyKey
@@ -270,7 +270,7 @@ testAnsi_nofib $ primId 10
 //│ def pressAnyKey₁(_lh_pressAnyKey_arg1²) = readChar₁^2951(_lh_pressAnyKey_arg1², (fun c⁵ -> _lh_pressAnyKey_arg1²))
 //│ def program₀(_lh_program_arg1¹) = writes₀^2159([LH_C cls₀^2160 [LH_C at₅^2161([LH_P2 17 5], highlight₀^2166(primId⁰([LH_C 'D' [LH_C 'e' [LH_C 'm' [LH_C 'a' [LH_C 'm' [LH_N]]]]]]))) [LH_C at₄^2182([LH_P2 48 5], primId⁰([LH_C 'V' [LH_C 'e' [LH_C 'r' [LH_C 's' [LH_C 'i' [LH_C 'o' [LH_C 'n' [LH_C ' ' [LH_C '1' [LH_C '0' [LH_N]]]]]]]]]]])) [LH_C at₃^2211([LH_P2 17 7], primId⁰([LH_C 'T' [LH_C 'h' [LH_C 'p' [LH_C 'p' [LH_C 'r' [LH_C 'o' [LH_C 'a' [LH_C 'c' [LH_C 'h' [LH_N]]]]]]]]]])) [LH_C at₂^2238([LH_P2 17 8], primId⁰([LH_C 't' [LH_C 'o' [LH_C 's' [LH_C ' ' [LH_C 'u' [LH_C 's' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_N]]]]]]]]]])) [LH_C at₁^2265([LH_P2 17 9], primId⁰([LH_C 't' [LH_C 'h' [LH_C 't' [LH_C 'e' [LH_C 'm' [LH_C '.' [LH_N]]]]]]])) [LH_C at₀^2286([LH_P2 17 11], primId⁰([LH_C 'P' [LH_C 'l' [LH_C '.' [LH_N]]]])) [LH_N]]]]]]]], pressAnyKey₁^2310(promptReadAt₀^2311([LH_P2 17 15], 18, primId⁰([LH_C 'P' [LH_N]]), (fun name¹ -> 
 //│ 	let reply¹ = mappend₂₀^2324(mappend₂₁^2325([LH_C 'H' [LH_C 'e' [LH_C 'l' [LH_C 'l' [LH_C 'o' [LH_C ' ' [LH_N]]]]]]], name¹), [LH_C '!' [LH_N]])
-//│ 	in writeAt₂^2347([LH_P2 (40 - (length₀^2352(reply¹) / 2)) 18], reply¹, moveTo₀^2364([LH_P2 1 23], writeString₇^2369(primId⁰([LH_C 'w' [LH_N]]), pressAnyKey₀^2376(end₀^2377))))))))
+//│ 	in writeAt₂^2347([LH_P2 (40 - div⁰(length₀^2352(reply¹), 2)) 18], reply¹, moveTo₀^2364([LH_P2 1 23], writeString₇^2369(primId⁰([LH_C 'w' [LH_N]]), pressAnyKey₀^2376(end₀^2377))))))))
 //│ def promptReadAt₀(_lh_promptReadAt_arg1¹, _lh_promptReadAt_arg2¹, _lh_promptReadAt_arg3¹, _lh_promptReadAt_arg4¹) = case _lh_promptReadAt_arg1¹ of {
 //│ 	LH_P2 _lh_promptReadAt_LH_P2_0¹ _lh_promptReadAt_LH_P2_1¹ => writeAt₁^1626([LH_P2 _lh_promptReadAt_LH_P2_0¹ _lh_promptReadAt_LH_P2_1¹], _lh_promptReadAt_arg3¹, readAt₀^1633([LH_P2 (_lh_promptReadAt_LH_P2_0¹ + length₁^1637(_lh_promptReadAt_arg3¹)) _lh_promptReadAt_LH_P2_1¹], _lh_promptReadAt_arg2¹, _lh_promptReadAt_arg4¹))
 //│ 	| _  => error⁰}
@@ -1065,7 +1065,7 @@ testAnsi_nofib $ primId 10
 //│ 	def program₀₀(_lh_program_arg1¹) = 
 //│ 		writes₀₀([LH_C cls₀₀ [LH_C at₅₀([LH_P2 17 5], highlight₀₀(primId⁰([LH_C 'D' [LH_C 'e' [LH_C 'm' [LH_C 'a' [LH_C 'm' [LH_N]]]]]]))) [LH_C at₄₀([LH_P2 48 5], primId⁰([LH_C 'V' [LH_C 'e' [LH_C 'r' [LH_C 's' [LH_C 'i' [LH_C 'o' [LH_C 'n' [LH_C ' ' [LH_C '1' [LH_C '0' [LH_N]]]]]]]]]]])) [LH_C at₃₀([LH_P2 17 7], primId⁰([LH_C 'T' [LH_C 'h' [LH_C 'p' [LH_C 'p' [LH_C 'r' [LH_C 'o' [LH_C 'a' [LH_C 'c' [LH_C 'h' [LH_N]]]]]]]]]])) [LH_C at₂₀([LH_P2 17 8], primId⁰([LH_C 't' [LH_C 'o' [LH_C 's' [LH_C ' ' [LH_C 'u' [LH_C 's' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_N]]]]]]]]]])) [LH_C at₁₀([LH_P2 17 9], primId⁰([LH_C 't' [LH_C 'h' [LH_C 't' [LH_C 'e' [LH_C 'm' [LH_C '.' [LH_N]]]]]]])) [LH_C at₀₀([LH_P2 17 11], primId⁰([LH_C 'P' [LH_C 'l' [LH_C '.' [LH_N]]]])) [LH_N]]]]]]]], pressAnyKey₁₀(promptReadAt₀₀([LH_P2 17 15], 18, primId⁰([LH_C 'P' [LH_N]]), (fun name¹ -> 
 //│ 			let reply¹ = mappend₂₀₀(mappend₂₁₀([LH_C 'H' [LH_C 'e' [LH_C 'l' [LH_C 'l' [LH_C 'o' [LH_C ' ' [LH_N]]]]]]], name¹), [LH_C '!' [LH_N]])
-//│ 			in writeAt₂₀([LH_P2 (40 - (length₀₀(reply¹) / 2)) 18], reply¹, moveTo₀₀([LH_P2 1 23], writeString₇₀(primId⁰([LH_C 'w' [LH_N]]), pressAnyKey₀₀(end₀₀))))))))
+//│ 			in writeAt₂₀([LH_P2 (40 - div⁰(length₀₀(reply¹), 2)) 18], reply¹, moveTo₀₀([LH_P2 1 23], writeString₇₀(primId⁰([LH_C 'w' [LH_N]]), pressAnyKey₀₀(end₀₀))))))))
 //│ 		where
 //│ 		def at₀₀(_lh_at_arg1¹⁰, _lh_at_arg2¹⁰) = 
 //│ 			case _lh_at_arg1¹⁰ of {
@@ -1669,7 +1669,7 @@ testAnsi_nofib $ primId 10
 //│ [LH_C '!' [LH_N]]: 2572 --->
 //│ 	case xs⁵³ of {LH_C h⁶² t⁶² => [LH_C h⁶² mappend₄₁₀(t⁶², ys⁵³)] | LH_N  => ys⁵³}: 1999
 //│ 	case ls¹⁶ of {LH_C h⁹⁹ t⁹⁹ => (1 + length₀₀(t⁹⁹)) | LH_N  => 0}: 3460
-//│ [LH_P2 (40 - (length₀₀(reply¹) / 2)) 18]: 2587 --->
+//│ [LH_P2 (40 - div⁰(length₀₀(reply¹), 2)) 18]: 2587 --->
 //│ 	case _lh_writeAt_arg1⁵ of {LH_P2 _lh_writeAt_LH_P2_0⁵ _lh_writeAt_LH_P2_1⁵ => writeString₆₀(mappend₄₀₀(goto₁₀₀(_lh_writeAt_LH_P2_0⁵, _lh_writeAt_LH_P2_1⁵), _lh_writeAt_arg2⁵)) | _  => error⁰}: 3153
 //│ [LH_P2 1 23]: 2594 --->
 //│ 	case _lh_moveTo_arg1² of {LH_P2 _lh_moveTo_LH_P2_0² _lh_moveTo_LH_P2_1² => writeString₀₀(goto₆₀(_lh_moveTo_LH_P2_0², _lh_moveTo_LH_P2_1²)) | _  => error⁰}: 2900
@@ -2095,7 +2095,7 @@ testAnsi_nofib $ primId 10
 //│ 	[LH_C '[' mappend₃₈₀(string_of_int⁰(_lh_goto_arg2¹⁸), [LH_C ';' mappend₃₉₀(string_of_int⁰(_lh_goto_arg1¹⁸), [LH_C 'H' [LH_N]])])]: 3287
 //│ 	[LH_C 'E' [LH_C '[' mappend₃₈₀(string_of_int⁰(_lh_goto_arg2¹⁸), [LH_C ';' mappend₃₉₀(string_of_int⁰(_lh_goto_arg1¹⁸), [LH_C 'H' [LH_N]])])]]: 3288
 //│ case _lh_writeAt_arg1⁵ of {LH_P2 _lh_writeAt_LH_P2_0⁵ _lh_writeAt_LH_P2_1⁵ => writeString₆₀(mappend₄₀₀(goto₁₀₀(_lh_writeAt_LH_P2_0⁵, _lh_writeAt_LH_P2_1⁵), _lh_writeAt_arg2⁵)) | _  => error⁰}: 3153 --->
-//│ 	[LH_P2 (40 - (length₀₀(reply¹) / 2)) 18]: 2587
+//│ 	[LH_P2 (40 - div⁰(length₀₀(reply¹), 2)) 18]: 2587
 //│ case xs⁸⁰ of {LH_C h⁹³ t⁹³ => [LH_C h⁹³ mappend₁₄₀(t⁹³, ys⁸⁰)] | LH_N  => ys⁸⁰}: 3165 --->
 //│ 	[LH_C h⁸⁰ mappend₁₃₀(t⁸⁰, ys⁶⁸)]: 2859
 //│ 	[LH_C h⁹⁰ mappend₁₂₀(t⁹⁰, ys⁷⁷)]: 3101
@@ -2304,7 +2304,7 @@ testAnsi_nofib $ primId 10
 //│ 	case xs⁶³ of {LH_C h⁷³ t⁷³ => [LH_C h⁷³ mappend₂₁₀(t⁷³, ys⁶³)] | LH_N  => ys⁶³}: 2371
 //│ [LH_C 'H' [LH_C 'e' [LH_C 'l' [LH_C 'l' [LH_C 'o' [LH_C ' ' [LH_N]]]]]]]: 2565 --->
 //│ 	case xs⁶³ of {LH_C h⁷³ t⁷³ => [LH_C h⁷³ mappend₂₁₀(t⁷³, ys⁶³)] | LH_N  => ys⁶³}: 2371
-//│ [LH_P2 (40 - (length₀₀(reply¹) / 2)) 18]: 2587 --->
+//│ [LH_P2 (40 - div⁰(length₀₀(reply¹), 2)) 18]: 2587 --->
 //│ 	case _lh_writeAt_arg1⁵ of {LH_P2 _lh_writeAt_LH_P2_0⁵ _lh_writeAt_LH_P2_1⁵ => writeString₆₀(mappend₄₀₀(goto₁₀₀(_lh_writeAt_LH_P2_0⁵, _lh_writeAt_LH_P2_1⁵), _lh_writeAt_arg2⁵)) | _  => error⁰}: 3153
 //│ [LH_P2 1 23]: 2594 --->
 //│ 	case _lh_moveTo_arg1² of {LH_P2 _lh_moveTo_LH_P2_0² _lh_moveTo_LH_P2_1² => writeString₀₀(goto₆₀(_lh_moveTo_LH_P2_0², _lh_moveTo_LH_P2_1²)) | _  => error⁰}: 2900
@@ -2568,7 +2568,7 @@ testAnsi_nofib $ primId 10
 //│ 	[LH_C '[' mappend₃₈₀(string_of_int⁰(_lh_goto_arg2¹⁸), [LH_C ';' mappend₃₉₀(string_of_int⁰(_lh_goto_arg1¹⁸), [LH_C 'H' [LH_N]])])]: 3287
 //│ 	[LH_C 'E' [LH_C '[' mappend₃₈₀(string_of_int⁰(_lh_goto_arg2¹⁸), [LH_C ';' mappend₃₉₀(string_of_int⁰(_lh_goto_arg1¹⁸), [LH_C 'H' [LH_N]])])]]: 3288
 //│ case _lh_writeAt_arg1⁵ of {LH_P2 _lh_writeAt_LH_P2_0⁵ _lh_writeAt_LH_P2_1⁵ => writeString₆₀(mappend₄₀₀(goto₁₀₀(_lh_writeAt_LH_P2_0⁵, _lh_writeAt_LH_P2_1⁵), _lh_writeAt_arg2⁵)) | _  => error⁰}: 3153 --->
-//│ 	[LH_P2 (40 - (length₀₀(reply¹) / 2)) 18]: 2587
+//│ 	[LH_P2 (40 - div⁰(length₀₀(reply¹), 2)) 18]: 2587
 //│ case xs⁸⁰ of {LH_C h⁹³ t⁹³ => [LH_C h⁹³ mappend₁₄₀(t⁹³, ys⁸⁰)] | LH_N  => ys⁸⁰}: 3165 --->
 //│ 	[LH_C h⁸⁰ mappend₁₃₀(t⁸⁰, ys⁶⁸)]: 2859
 //│ 	[LH_C h⁹⁰ mappend₁₂₀(t⁹⁰, ys⁷⁷)]: 3101
@@ -2738,7 +2738,7 @@ testAnsi_nofib $ primId 10
 //│ 					in let t¹⁷³ = mappend₂₁₀(t¹⁷², ys¹⁹²)
 //│ 					in (fun ys¹⁹³ -> [LH_C h¹⁷³ mappend₂₀₀(t¹⁷³, ys¹⁹³)])), name²), [LH_C '!' [LH_N]])
 //│ 			in writeAt₂₀(
-//│ 				let _lh_writeAt_LH_P2_0⁸ = (40 - (length₀₀(reply²) / 2))
+//│ 				let _lh_writeAt_LH_P2_0⁸ = (40 - div⁰(length₀₀(reply²), 2))
 //│ 				in let _lh_writeAt_LH_P2_1⁸ = 18
 //│ 				in (fun _lh_writeAt_arg2¹⁰ -> writeString₆₀(mappend₄₀₀(goto₁₀₀(_lh_writeAt_LH_P2_0⁸, _lh_writeAt_LH_P2_1⁸), _lh_writeAt_arg2¹⁰))), reply², moveTo₀₀(
 //│ 				let _lh_moveTo_LH_P2_0⁵ = 1
@@ -3755,7 +3755,7 @@ testAnsi_nofib $ primId 10
 //│ 					in let t²⁶⁹ = mappend₂₁₀₆(t²⁵⁸, ys³⁸⁰)
 //│ 					in (fun ys³⁸¹ -> [LH_C h²⁶⁹ mappend₂₀₀₈(t²⁶⁹, ys³⁸¹)])), name¹), [LH_C '!' [LH_N]])
 //│ 			in writeAt₂₀₀(
-//│ 				let _lh_writeAt_LH_P2_0⁵ = (40 - (length₀₀₀(reply¹) / 2))
+//│ 				let _lh_writeAt_LH_P2_0⁵ = (40 - div⁰(length₀₀₀(reply¹), 2))
 //│ 				in let _lh_writeAt_LH_P2_1⁵ = 18
 //│ 				in (fun _lh_writeAt_arg2¹¹ -> writeString₆₀₀(mappend₄₀₀₆(goto₁₀₀₀(_lh_writeAt_LH_P2_0⁵, _lh_writeAt_LH_P2_1⁵), _lh_writeAt_arg2¹¹))), reply¹, moveTo₀₀₀(
 //│ 				let _lh_moveTo_LH_P2_0³ = 1
@@ -5622,7 +5622,7 @@ testAnsi_nofib $ primId 10
 //│ 					in let t³⁶⁷ = mappend₂₁₀₆(t³⁵⁶, ys⁵⁸³)
 //│ 					in (fun ys⁵⁸⁴ -> [LH_C h³⁶⁷ mappend₂₀₀₈(t³⁶⁷, ys⁵⁸⁴)])), name²), [LH_C '!' [LH_N]])
 //│ 			in writeAt₂₀₀(
-//│ 				let _lh_writeAt_LH_P2_0⁸ = (40 - (length₀₀₀(reply²) / 2))
+//│ 				let _lh_writeAt_LH_P2_0⁸ = (40 - div⁰(length₀₀₀(reply²), 2))
 //│ 				in let _lh_writeAt_LH_P2_1⁸ = 18
 //│ 				in (fun _lh_writeAt_arg2¹⁵ -> writeString₆₀₀(mappend₄₀₀₆(goto₁₀₀₀(_lh_writeAt_LH_P2_0⁸, _lh_writeAt_LH_P2_1⁸), _lh_writeAt_arg2¹⁵))), reply², moveTo₀₀₀(
 //│ 				let _lh_moveTo_LH_P2_0⁵ = 1

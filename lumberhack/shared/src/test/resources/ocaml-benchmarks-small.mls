@@ -2928,3 +2928,486 @@ testSumListComprehensionBuiltInType $ primId 1000
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
+
+:lhInHaskell
+:lhGenOCaml
+flatMap f [] = []
+flatMap f (h:t) = (f h) ++ (flatMap f t)
+sum s [] = s
+sum s (h:t) = sum (s+h) t
+testSumFlatmapEnum n = sum 0 $ flatMap (\a -> [a, a]) [1..n]
+testSumFlatmapEnum $ primId 100000
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testSumFlatmapEnum₀^730(primId⁰(100000))
+//│ def enumFromTo₀(a⁷, b²) = if (a⁷ <= b²) then [LH_C a⁷ enumFromTo₀^704((a⁷ + 1), b²)] else [LH_N]
+//│ def flatMap₀(_lh_flatMap_arg1¹, _lh_flatMap_arg2¹) = case _lh_flatMap_arg2¹ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_flatMap_LH_C_0¹ _lh_flatMap_LH_C_1¹ => mappend₀^649(_lh_flatMap_arg1¹(_lh_flatMap_LH_C_0¹), flatMap₀^654(_lh_flatMap_arg1¹, _lh_flatMap_LH_C_1¹))
+//│ 	| _  => error⁰}
+//│ def mappend₀(xs⁹, ys⁹) = case xs⁹ of {
+//│ 	LH_C h¹⁹ t²¹ => [LH_C h¹⁹ mappend₀^720(t²¹, ys⁹)]
+//│ 	| LH_N  => ys⁹}
+//│ def sum₀(_lh_sum_arg1¹, _lh_sum_arg2¹) = case _lh_sum_arg2¹ of {
+//│ 	LH_N  => _lh_sum_arg1¹
+//│ 	| LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => sum₀^685((_lh_sum_arg1¹ + _lh_sum_LH_C_0¹), _lh_sum_LH_C_1¹)
+//│ 	| _  => error⁰}
+//│ def testSumFlatmapEnum₀(_lh_testSumFlatmapEnum_arg1¹) = sum₀^664(0, flatMap₀^667((fun a⁶ -> [LH_C a⁶ [LH_C a⁶ [LH_N]]]), enumFromTo₀^675(1, _lh_testSumFlatmapEnum_arg1¹)))
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec enumFromTo_d0 a_7 b_2 =
+//│ 		  (if (a_7 <= b_2) then
+//│ 		    (`LH_C(a_7, ((enumFromTo_d0 (a_7 + 1)) b_2)))
+//│ 		  else
+//│ 		    (`LH_N))
+//│ 		and flatMap_d0 _lh_flatMap_arg1_1 _lh_flatMap_arg2_1 =
+//│ 		  (match _lh_flatMap_arg2_1 with
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)
+//│ 		    | `LH_C(_lh_flatMap_LH_C_0_1, _lh_flatMap_LH_C_1_1) -> 
+//│ 		      ((mappend_d0 (_lh_flatMap_arg1_1 _lh_flatMap_LH_C_0_1)) ((flatMap_d0 _lh_flatMap_arg1_1) _lh_flatMap_LH_C_1_1))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and mappend_d0 xs_9 ys_9 =
+//│ 		  (match xs_9 with
+//│ 		    | `LH_C(h_1_9, t_2_1) -> 
+//│ 		      (`LH_C(h_1_9, ((mappend_d0 t_2_1) ys_9)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_9)
+//│ 		and sum_d0 _lh_sum_arg1_1 _lh_sum_arg2_1 =
+//│ 		  (match _lh_sum_arg2_1 with
+//│ 		    | `LH_N -> 
+//│ 		      _lh_sum_arg1_1
+//│ 		    | `LH_C(_lh_sum_LH_C_0_1, _lh_sum_LH_C_1_1) -> 
+//│ 		      ((sum_d0 (_lh_sum_arg1_1 + _lh_sum_LH_C_0_1)) _lh_sum_LH_C_1_1)
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and testSumFlatmapEnum_d0 _lh_testSumFlatmapEnum_arg1_1 =
+//│ 		  ((sum_d0 0) ((flatMap_d0 (fun a_6 -> 
+//│ 		    (`LH_C(a_6, (`LH_C(a_6, (`LH_N))))))) ((enumFromTo_d0 1) _lh_testSumFlatmapEnum_arg1_1)));;
+//│ 		(testSumFlatmapEnum_d0 100000)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testSumFlatmapEnum₀^730] (hopeless to continue)
+//│ 	[testSumFlatmapEnum₀^730 · enumFromTo₀^675] (using original def)
+//│ 		[testSumFlatmapEnum₀^730 · enumFromTo₀^675 · enumFromTo₀^704] ---> [testSumFlatmapEnum₀^730 · enumFromTo₀^675] (using original def)
+//│ 	[testSumFlatmapEnum₀^730 · flatMap₀^667] (using original def)
+//│ 		[testSumFlatmapEnum₀^730 · flatMap₀^667 · flatMap₀^654] ---> [testSumFlatmapEnum₀^730 · flatMap₀^667] (using original def)
+//│ 		[testSumFlatmapEnum₀^730 · flatMap₀^667 · mappend₀^649] (using original def)
+//│ 			[testSumFlatmapEnum₀^730 · flatMap₀^667 · mappend₀^649 · mappend₀^720] ---> [testSumFlatmapEnum₀^730 · flatMap₀^667 · mappend₀^649] (using original def)
+//│ 	[testSumFlatmapEnum₀^730 · sum₀^664] (using original def)
+//│ 		[testSumFlatmapEnum₀^730 · sum₀^664 · sum₀^685] ---> [testSumFlatmapEnum₀^730 · sum₀^664] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testSumFlatmapEnum₀₀(primId⁰(100000))
+//│ def testSumFlatmapEnum₀₀(_lh_testSumFlatmapEnum_arg1¹) = 
+//│ 	sum₀₀(0, flatMap₀₀((fun a³ -> [LH_C a³ [LH_C a³ [LH_N]]]), enumFromTo₀₀(1, _lh_testSumFlatmapEnum_arg1¹)))
+//│ 	where
+//│ 	def enumFromTo₀₀(a², b¹) = 
+//│ 		if (a² <= b¹) then [LH_C a² enumFromTo₀₀((a² + 1), b¹)] else [LH_N]
+//│ 	def flatMap₀₀(_lh_flatMap_arg1¹, _lh_flatMap_arg2¹) = 
+//│ 		case _lh_flatMap_arg2¹ of {
+//│ 			LH_N  => [LH_N]
+//│ 			| LH_C _lh_flatMap_LH_C_0¹ _lh_flatMap_LH_C_1¹ => mappend₀₀(_lh_flatMap_arg1¹(_lh_flatMap_LH_C_0¹), flatMap₀₀(_lh_flatMap_arg1¹, _lh_flatMap_LH_C_1¹))
+//│ 			| _  => error⁰}
+//│ 		where
+//│ 		def mappend₀₀(xs¹, ys¹) = 
+//│ 			case xs¹ of {
+//│ 				LH_C h¹ t¹ => [LH_C h¹ mappend₀₀(t¹, ys¹)]
+//│ 				| LH_N  => ys¹}
+//│ 	def sum₀₀(_lh_sum_arg1¹, _lh_sum_arg2¹) = 
+//│ 		case _lh_sum_arg2¹ of {
+//│ 			LH_N  => _lh_sum_arg1¹
+//│ 			| LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => sum₀₀((_lh_sum_arg1¹ + _lh_sum_LH_C_0¹), _lh_sum_LH_C_1¹)
+//│ 			| _  => error⁰}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_C a² enumFromTo₀₀((a² + 1), b¹)]: 104 --->
+//│ 	case _lh_flatMap_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_flatMap_LH_C_0¹ _lh_flatMap_LH_C_1¹ => mappend₀₀(_lh_flatMap_arg1¹(_lh_flatMap_LH_C_0¹), flatMap₀₀(_lh_flatMap_arg1¹, _lh_flatMap_LH_C_1¹)) | _  => error⁰}: 169
+//│ [LH_N]: 105 --->
+//│ 	case _lh_flatMap_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_flatMap_LH_C_0¹ _lh_flatMap_LH_C_1¹ => mappend₀₀(_lh_flatMap_arg1¹(_lh_flatMap_LH_C_0¹), flatMap₀₀(_lh_flatMap_arg1¹, _lh_flatMap_LH_C_1¹)) | _  => error⁰}: 169
+//│ [LH_C h¹ mappend₀₀(t¹, ys¹)]: 116 --->
+//│ 	case _lh_sum_arg2¹ of {LH_N  => _lh_sum_arg1¹ | LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => sum₀₀((_lh_sum_arg1¹ + _lh_sum_LH_C_0¹), _lh_sum_LH_C_1¹) | _  => error⁰}: 152
+//│ [LH_N]: 127 --->
+//│ 	case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend₀₀(t¹, ys¹)] | LH_N  => ys¹}: 118
+//│ [LH_C a³ [LH_N]]: 128 --->
+//│ 	case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend₀₀(t¹, ys¹)] | LH_N  => ys¹}: 118
+//│ [LH_C a³ [LH_C a³ [LH_N]]]: 129 --->
+//│ 	case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend₀₀(t¹, ys¹)] | LH_N  => ys¹}: 118
+//│ [LH_N]: 156 --->
+//│ 	case _lh_sum_arg2¹ of {LH_N  => _lh_sum_arg1¹ | LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => sum₀₀((_lh_sum_arg1¹ + _lh_sum_LH_C_0¹), _lh_sum_LH_C_1¹) | _  => error⁰}: 152
+//│ ------------------
+//│ case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend₀₀(t¹, ys¹)] | LH_N  => ys¹}: 118 --->
+//│ 	[LH_N]: 127
+//│ 	[LH_C a³ [LH_N]]: 128
+//│ 	[LH_C a³ [LH_C a³ [LH_N]]]: 129
+//│ case _lh_sum_arg2¹ of {LH_N  => _lh_sum_arg1¹ | LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => sum₀₀((_lh_sum_arg1¹ + _lh_sum_LH_C_0¹), _lh_sum_LH_C_1¹) | _  => error⁰}: 152 --->
+//│ 	[LH_C h¹ mappend₀₀(t¹, ys¹)]: 116
+//│ 	[LH_N]: 156
+//│ case _lh_flatMap_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_flatMap_LH_C_0¹ _lh_flatMap_LH_C_1¹ => mappend₀₀(_lh_flatMap_arg1¹(_lh_flatMap_LH_C_0¹), flatMap₀₀(_lh_flatMap_arg1¹, _lh_flatMap_LH_C_1¹)) | _  => error⁰}: 169 --->
+//│ 	[LH_C a² enumFromTo₀₀((a² + 1), b¹)]: 104
+//│ 	[LH_N]: 105
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_C a² enumFromTo₀₀((a² + 1), b¹)]: 104 --->
+//│ 	case _lh_flatMap_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_flatMap_LH_C_0¹ _lh_flatMap_LH_C_1¹ => mappend₀₀(_lh_flatMap_arg1¹(_lh_flatMap_LH_C_0¹), flatMap₀₀(_lh_flatMap_arg1¹, _lh_flatMap_LH_C_1¹)) | _  => error⁰}: 169
+//│ [LH_N]: 105 --->
+//│ 	case _lh_flatMap_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_flatMap_LH_C_0¹ _lh_flatMap_LH_C_1¹ => mappend₀₀(_lh_flatMap_arg1¹(_lh_flatMap_LH_C_0¹), flatMap₀₀(_lh_flatMap_arg1¹, _lh_flatMap_LH_C_1¹)) | _  => error⁰}: 169
+//│ [LH_C h¹ mappend₀₀(t¹, ys¹)]: 116 --->
+//│ 	case _lh_sum_arg2¹ of {LH_N  => _lh_sum_arg1¹ | LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => sum₀₀((_lh_sum_arg1¹ + _lh_sum_LH_C_0¹), _lh_sum_LH_C_1¹) | _  => error⁰}: 152
+//│ [LH_N]: 127 --->
+//│ 	case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend₀₀(t¹, ys¹)] | LH_N  => ys¹}: 118
+//│ [LH_C a³ [LH_N]]: 128 --->
+//│ 	case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend₀₀(t¹, ys¹)] | LH_N  => ys¹}: 118
+//│ [LH_C a³ [LH_C a³ [LH_N]]]: 129 --->
+//│ 	case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend₀₀(t¹, ys¹)] | LH_N  => ys¹}: 118
+//│ [LH_N]: 156 --->
+//│ 	case _lh_sum_arg2¹ of {LH_N  => _lh_sum_arg1¹ | LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => sum₀₀((_lh_sum_arg1¹ + _lh_sum_LH_C_0¹), _lh_sum_LH_C_1¹) | _  => error⁰}: 152
+//│ ------------------
+//│ case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend₀₀(t¹, ys¹)] | LH_N  => ys¹}: 118 --->
+//│ 	[LH_N]: 127
+//│ 	[LH_C a³ [LH_N]]: 128
+//│ 	[LH_C a³ [LH_C a³ [LH_N]]]: 129
+//│ case _lh_sum_arg2¹ of {LH_N  => _lh_sum_arg1¹ | LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => sum₀₀((_lh_sum_arg1¹ + _lh_sum_LH_C_0¹), _lh_sum_LH_C_1¹) | _  => error⁰}: 152 --->
+//│ 	[LH_C h¹ mappend₀₀(t¹, ys¹)]: 116
+//│ 	[LH_N]: 156
+//│ case _lh_flatMap_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_flatMap_LH_C_0¹ _lh_flatMap_LH_C_1¹ => mappend₀₀(_lh_flatMap_arg1¹(_lh_flatMap_LH_C_0¹), flatMap₀₀(_lh_flatMap_arg1¹, _lh_flatMap_LH_C_1¹)) | _  => error⁰}: 169 --->
+//│ 	[LH_C a² enumFromTo₀₀((a² + 1), b¹)]: 104
+//│ 	[LH_N]: 105
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testSumFlatmapEnum₀₀(primId⁰(100000))
+//│ def testSumFlatmapEnum₀₀(_lh_testSumFlatmapEnum_arg1²) = 
+//│ 	sum₀₀(0, flatMap₀₀((fun a⁴ -> 
+//│ 		let h² = a⁴
+//│ 		in let t² = 	
+//│ 			let h³ = a⁴
+//│ 			in let t³ = (fun ys⁴ -> ys⁴)
+//│ 			in (fun ys³ -> 
+//│ 				let _lh_sum_LH_C_0³ = h³
+//│ 				in let _lh_sum_LH_C_1³ = mappend₀₀(t³, ys³)
+//│ 				in (fun _lh_sum_arg1³ -> sum₀₀((_lh_sum_arg1³ + _lh_sum_LH_C_0³), _lh_sum_LH_C_1³)))
+//│ 		in (fun ys² -> 
+//│ 			let _lh_sum_LH_C_0² = h²
+//│ 			in let _lh_sum_LH_C_1² = mappend₀₀(t², ys²)
+//│ 			in (fun _lh_sum_arg1² -> sum₀₀((_lh_sum_arg1² + _lh_sum_LH_C_0²), _lh_sum_LH_C_1²)))), enumFromTo₀₀(1, _lh_testSumFlatmapEnum_arg1²)))
+//│ 	where
+//│ 	def enumFromTo₀₀(a⁵, b²) = 
+//│ 		if (a⁵ <= b²) then 
+//│ 			let _lh_flatMap_LH_C_0² = a⁵
+//│ 			in let _lh_flatMap_LH_C_1² = enumFromTo₀₀((a⁵ + 1), b²)
+//│ 			in (fun _lh_flatMap_arg1² -> mappend₀₀(_lh_flatMap_arg1²(_lh_flatMap_LH_C_0²), flatMap₀₀(_lh_flatMap_arg1², _lh_flatMap_LH_C_1²))) else (fun _lh_flatMap_arg1³ -> (fun _lh_sum_arg1⁴ -> _lh_sum_arg1⁴))
+//│ 	def flatMap₀₀(_lh_flatMap_arg1⁴, _lh_flatMap_arg2²) = 
+//│ 		_lh_flatMap_arg2²(_lh_flatMap_arg1⁴)
+//│ 		where
+//│ 		def mappend₀₀(xs², ys⁵) = 
+//│ 			xs²(ys⁵)
+//│ 	def sum₀₀(_lh_sum_arg1⁵, _lh_sum_arg2²) = 
+//│ 		_lh_sum_arg2²(_lh_sum_arg1⁵)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
+:lhInHaskell
+:lhGenOCaml
+flatMap f [] = []
+flatMap f (h:t) = (f h) ++ (flatMap f t)
+sum s [] = s
+sum s (h:t) = sum (s+h) t
+testSumFlatmap n = sum 0 $ flatMap (\a -> [a, a]) (primId [1..n])
+testSumFlatmap $ primId 100000
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testSumFlatmap₀^734(primId⁰(100000))
+//│ def enumFromTo₀(a⁷, b²) = if (a⁷ <= b²) then [LH_C a⁷ enumFromTo₀^688((a⁷ + 1), b²)] else [LH_N]
+//│ def flatMap₀(_lh_flatMap_arg1¹, _lh_flatMap_arg2¹) = case _lh_flatMap_arg2¹ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_flatMap_LH_C_0¹ _lh_flatMap_LH_C_1¹ => mappend₀^704(_lh_flatMap_arg1¹(_lh_flatMap_LH_C_0¹), flatMap₀^709(_lh_flatMap_arg1¹, _lh_flatMap_LH_C_1¹))
+//│ 	| _  => error⁰}
+//│ def mappend₀(xs⁹, ys⁹) = case xs⁹ of {
+//│ 	LH_C h¹⁹ t²¹ => [LH_C h¹⁹ mappend₀^672(t²¹, ys⁹)]
+//│ 	| LH_N  => ys⁹}
+//│ def sum₀(_lh_sum_arg1¹, _lh_sum_arg2¹) = case _lh_sum_arg2¹ of {
+//│ 	LH_N  => _lh_sum_arg1¹
+//│ 	| LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => sum₀^721((_lh_sum_arg1¹ + _lh_sum_LH_C_0¹), _lh_sum_LH_C_1¹)
+//│ 	| _  => error⁰}
+//│ def testSumFlatmap₀(_lh_testSumFlatmap_arg1¹) = sum₀^649(0, flatMap₀^652((fun a⁶ -> [LH_C a⁶ [LH_C a⁶ [LH_N]]]), primId⁰(enumFromTo₀^661(1, _lh_testSumFlatmap_arg1¹))))
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec enumFromTo_d0 a_7 b_2 =
+//│ 		  (if (a_7 <= b_2) then
+//│ 		    (`LH_C(a_7, ((enumFromTo_d0 (a_7 + 1)) b_2)))
+//│ 		  else
+//│ 		    (`LH_N))
+//│ 		and flatMap_d0 _lh_flatMap_arg1_1 _lh_flatMap_arg2_1 =
+//│ 		  (match _lh_flatMap_arg2_1 with
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)
+//│ 		    | `LH_C(_lh_flatMap_LH_C_0_1, _lh_flatMap_LH_C_1_1) -> 
+//│ 		      ((mappend_d0 (_lh_flatMap_arg1_1 _lh_flatMap_LH_C_0_1)) ((flatMap_d0 _lh_flatMap_arg1_1) _lh_flatMap_LH_C_1_1))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and mappend_d0 xs_9 ys_9 =
+//│ 		  (match xs_9 with
+//│ 		    | `LH_C(h_1_9, t_2_1) -> 
+//│ 		      (`LH_C(h_1_9, ((mappend_d0 t_2_1) ys_9)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_9)
+//│ 		and sum_d0 _lh_sum_arg1_1 _lh_sum_arg2_1 =
+//│ 		  (match _lh_sum_arg2_1 with
+//│ 		    | `LH_N -> 
+//│ 		      _lh_sum_arg1_1
+//│ 		    | `LH_C(_lh_sum_LH_C_0_1, _lh_sum_LH_C_1_1) -> 
+//│ 		      ((sum_d0 (_lh_sum_arg1_1 + _lh_sum_LH_C_0_1)) _lh_sum_LH_C_1_1)
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and testSumFlatmap_d0 _lh_testSumFlatmap_arg1_1 =
+//│ 		  ((sum_d0 0) ((flatMap_d0 (fun a_6 -> 
+//│ 		    (`LH_C(a_6, (`LH_C(a_6, (`LH_N))))))) ((enumFromTo_d0 1) _lh_testSumFlatmap_arg1_1)));;
+//│ 		(testSumFlatmap_d0 100000)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testSumFlatmap₀^734] (hopeless to continue)
+//│ 	[testSumFlatmap₀^734 · enumFromTo₀^661] (using original def)
+//│ 		[testSumFlatmap₀^734 · enumFromTo₀^661 · enumFromTo₀^688] ---> [testSumFlatmap₀^734 · enumFromTo₀^661] (using original def)
+//│ 	[testSumFlatmap₀^734 · flatMap₀^652] (using original def)
+//│ 		[testSumFlatmap₀^734 · flatMap₀^652 · flatMap₀^709] ---> [testSumFlatmap₀^734 · flatMap₀^652] (using original def)
+//│ 		[testSumFlatmap₀^734 · flatMap₀^652 · mappend₀^704] (using original def)
+//│ 			[testSumFlatmap₀^734 · flatMap₀^652 · mappend₀^704 · mappend₀^672] ---> [testSumFlatmap₀^734 · flatMap₀^652 · mappend₀^704] (using original def)
+//│ 	[testSumFlatmap₀^734 · sum₀^649] (using original def)
+//│ 		[testSumFlatmap₀^734 · sum₀^649 · sum₀^721] ---> [testSumFlatmap₀^734 · sum₀^649] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testSumFlatmap₀₀(primId⁰(100000))
+//│ def testSumFlatmap₀₀(_lh_testSumFlatmap_arg1¹) = 
+//│ 	sum₀₀(0, flatMap₀₀((fun a² -> [LH_C a² [LH_C a² [LH_N]]]), primId⁰(enumFromTo₀₀(1, _lh_testSumFlatmap_arg1¹))))
+//│ 	where
+//│ 	def enumFromTo₀₀(a³, b¹) = 
+//│ 		if (a³ <= b¹) then [LH_C a³ enumFromTo₀₀((a³ + 1), b¹)] else [LH_N]
+//│ 	def flatMap₀₀(_lh_flatMap_arg1¹, _lh_flatMap_arg2¹) = 
+//│ 		case _lh_flatMap_arg2¹ of {
+//│ 			LH_N  => [LH_N]
+//│ 			| LH_C _lh_flatMap_LH_C_0¹ _lh_flatMap_LH_C_1¹ => mappend₀₀(_lh_flatMap_arg1¹(_lh_flatMap_LH_C_0¹), flatMap₀₀(_lh_flatMap_arg1¹, _lh_flatMap_LH_C_1¹))
+//│ 			| _  => error⁰}
+//│ 		where
+//│ 		def mappend₀₀(xs¹, ys¹) = 
+//│ 			case xs¹ of {
+//│ 				LH_C h¹ t¹ => [LH_C h¹ mappend₀₀(t¹, ys¹)]
+//│ 				| LH_N  => ys¹}
+//│ 	def sum₀₀(_lh_sum_arg1¹, _lh_sum_arg2¹) = 
+//│ 		case _lh_sum_arg2¹ of {
+//│ 			LH_N  => _lh_sum_arg1¹
+//│ 			| LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => sum₀₀((_lh_sum_arg1¹ + _lh_sum_LH_C_0¹), _lh_sum_LH_C_1¹)
+//│ 			| _  => error⁰}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_C h¹ mappend₀₀(t¹, ys¹)]: 98 --->
+//│ 	case _lh_sum_arg2¹ of {LH_N  => _lh_sum_arg1¹ | LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => sum₀₀((_lh_sum_arg1¹ + _lh_sum_LH_C_0¹), _lh_sum_LH_C_1¹) | _  => error⁰}: 156
+//│ [LH_N]: 109 --->
+//│ 	case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend₀₀(t¹, ys¹)] | LH_N  => ys¹}: 100
+//│ [LH_C a² [LH_N]]: 110 --->
+//│ 	case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend₀₀(t¹, ys¹)] | LH_N  => ys¹}: 100
+//│ [LH_C a² [LH_C a² [LH_N]]]: 111 --->
+//│ 	case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend₀₀(t¹, ys¹)] | LH_N  => ys¹}: 100
+//│ [LH_N]: 160 --->
+//│ 	case _lh_sum_arg2¹ of {LH_N  => _lh_sum_arg1¹ | LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => sum₀₀((_lh_sum_arg1¹ + _lh_sum_LH_C_0¹), _lh_sum_LH_C_1¹) | _  => error⁰}: 156
+//│ ------------------
+//│ case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend₀₀(t¹, ys¹)] | LH_N  => ys¹}: 100 --->
+//│ 	[LH_N]: 109
+//│ 	[LH_C a² [LH_N]]: 110
+//│ 	[LH_C a² [LH_C a² [LH_N]]]: 111
+//│ case _lh_sum_arg2¹ of {LH_N  => _lh_sum_arg1¹ | LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => sum₀₀((_lh_sum_arg1¹ + _lh_sum_LH_C_0¹), _lh_sum_LH_C_1¹) | _  => error⁰}: 156 --->
+//│ 	[LH_C h¹ mappend₀₀(t¹, ys¹)]: 98
+//│ 	[LH_N]: 160
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_C h¹ mappend₀₀(t¹, ys¹)]: 98 --->
+//│ 	case _lh_sum_arg2¹ of {LH_N  => _lh_sum_arg1¹ | LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => sum₀₀((_lh_sum_arg1¹ + _lh_sum_LH_C_0¹), _lh_sum_LH_C_1¹) | _  => error⁰}: 156
+//│ [LH_N]: 109 --->
+//│ 	case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend₀₀(t¹, ys¹)] | LH_N  => ys¹}: 100
+//│ [LH_C a² [LH_N]]: 110 --->
+//│ 	case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend₀₀(t¹, ys¹)] | LH_N  => ys¹}: 100
+//│ [LH_C a² [LH_C a² [LH_N]]]: 111 --->
+//│ 	case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend₀₀(t¹, ys¹)] | LH_N  => ys¹}: 100
+//│ [LH_N]: 160 --->
+//│ 	case _lh_sum_arg2¹ of {LH_N  => _lh_sum_arg1¹ | LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => sum₀₀((_lh_sum_arg1¹ + _lh_sum_LH_C_0¹), _lh_sum_LH_C_1¹) | _  => error⁰}: 156
+//│ ------------------
+//│ case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend₀₀(t¹, ys¹)] | LH_N  => ys¹}: 100 --->
+//│ 	[LH_N]: 109
+//│ 	[LH_C a² [LH_N]]: 110
+//│ 	[LH_C a² [LH_C a² [LH_N]]]: 111
+//│ case _lh_sum_arg2¹ of {LH_N  => _lh_sum_arg1¹ | LH_C _lh_sum_LH_C_0¹ _lh_sum_LH_C_1¹ => sum₀₀((_lh_sum_arg1¹ + _lh_sum_LH_C_0¹), _lh_sum_LH_C_1¹) | _  => error⁰}: 156 --->
+//│ 	[LH_C h¹ mappend₀₀(t¹, ys¹)]: 98
+//│ 	[LH_N]: 160
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testSumFlatmap₀₀(primId⁰(100000))
+//│ def testSumFlatmap₀₀(_lh_testSumFlatmap_arg1²) = 
+//│ 	sum₀₀(0, flatMap₀₀((fun a⁵ -> 
+//│ 		let h² = a⁵
+//│ 		in let t² = 	
+//│ 			let h³ = a⁵
+//│ 			in let t³ = (fun ys⁴ -> ys⁴)
+//│ 			in (fun ys³ -> 
+//│ 				let _lh_sum_LH_C_0³ = h³
+//│ 				in let _lh_sum_LH_C_1³ = mappend₀₀(t³, ys³)
+//│ 				in (fun _lh_sum_arg1⁴ -> sum₀₀((_lh_sum_arg1⁴ + _lh_sum_LH_C_0³), _lh_sum_LH_C_1³)))
+//│ 		in (fun ys² -> 
+//│ 			let _lh_sum_LH_C_0² = h²
+//│ 			in let _lh_sum_LH_C_1² = mappend₀₀(t², ys²)
+//│ 			in (fun _lh_sum_arg1³ -> sum₀₀((_lh_sum_arg1³ + _lh_sum_LH_C_0²), _lh_sum_LH_C_1²)))), primId⁰(enumFromTo₀₀(1, _lh_testSumFlatmap_arg1²))))
+//│ 	where
+//│ 	def enumFromTo₀₀(a⁴, b²) = 
+//│ 		if (a⁴ <= b²) then [LH_C a⁴ enumFromTo₀₀((a⁴ + 1), b²)] else [LH_N]
+//│ 	def flatMap₀₀(_lh_flatMap_arg1², _lh_flatMap_arg2²) = 
+//│ 		case _lh_flatMap_arg2² of {
+//│ 			LH_N  => (fun _lh_sum_arg1² -> _lh_sum_arg1²)
+//│ 			| LH_C _lh_flatMap_LH_C_0¹ _lh_flatMap_LH_C_1¹ => mappend₀₀(_lh_flatMap_arg1²(_lh_flatMap_LH_C_0¹), flatMap₀₀(_lh_flatMap_arg1², _lh_flatMap_LH_C_1¹))
+//│ 			| _  => error⁰}
+//│ 		where
+//│ 		def mappend₀₀(xs², ys⁵) = 
+//│ 			xs²(ys⁵)
+//│ 	def sum₀₀(_lh_sum_arg1⁵, _lh_sum_arg2²) = 
+//│ 		_lh_sum_arg2²(_lh_sum_arg1⁵)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
+
+:lhGenOCaml
+fun sqTree(t) = if t is
+  T(v, l, r) then T(v * v, sqTree(l), sqTree(r))
+  L then L
+fun sumTree(t) = if t is
+  T(v, l, r) then v + sumTree(l) + sumTree(r)
+  L then 0
+fun genTree(n) = if n > 0 then T(n, genTree(n - 1), genTree(n - 1)) else L
+fun testSumSquareTree(n) = sumTree(sqTree(primId(genTree(n))))
+testSumSquareTree(primId(18))
+//│ |#fun| |sqTree|(|t|)| |#=| |#if| |t| |is|→|T|(|v|,| |l|,| |r|)| |#then| |T|(|v| |*| |v|,| |sqTree|(|l|)|,| |sqTree|(|r|)|)|↵|L| |#then| |L|←|↵|#fun| |sumTree|(|t|)| |#=| |#if| |t| |is|→|T|(|v|,| |l|,| |r|)| |#then| |v| |+| |sumTree|(|l|)| |+| |sumTree|(|r|)|↵|L| |#then| |0|←|↵|#fun| |genTree|(|n|)| |#=| |#if| |n| |>| |0| |#then| |T|(|n|,| |genTree|(|n| |-| |1|)|,| |genTree|(|n| |-| |1|)|)| |#else| |L|↵|#fun| |testSumSquareTree|(|n|)| |#=| |sumTree|(|sqTree|(|primId|(|genTree|(|n|)|)|)|)|↵|testSumSquareTree|(|primId|(|18|)|)|
+//│ Parsed: {fun sqTree = t, => if t is ‹(T (v, l, r,)) then T (* (v,) (v,), sqTree (l,), sqTree (r,),); (L) then L›; fun sumTree = t, => if t is ‹(T (v, l, r,)) then + (+ (v,) (sumTree (l,),),) (sumTree (r,),); (L) then 0›; fun genTree = n, => if (> (n,) (0,)) then T (n, genTree (- (n,) (1,),), genTree (- (n,) (1,),),) else L; fun testSumSquareTree = n, => sumTree (sqTree (primId (genTree (n,),),),); testSumSquareTree (primId (18,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testSumSquareTree^68(primId⁰(18))
+//│ def genTree(n⁰) = if (n⁰ > 0) then [T n⁰ genTree^40((n⁰ - 1)) genTree^47((n⁰ - 1))] else [L]
+//│ def sqTree(t⁰) = case t⁰ of {
+//│ 	T v⁰ l⁰ r⁰ => [T (v⁰ * v⁰) sqTree^7(l⁰) sqTree^10(r⁰)]
+//│ 	| L  => [L]}
+//│ def sumTree(t¹) = case t¹ of {
+//│ 	T v¹ l¹ r¹ => ((v¹ + sumTree^22(l¹)) + sumTree^27(r¹))
+//│ 	| L  => 0}
+//│ def testSumSquareTree(n¹) = sumTree^58(sqTree^59(primId⁰(genTree^61(n¹))))
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec genTree n_0 =
+//│ 		  (if (n_0 > 0) then
+//│ 		    (`T(n_0, (genTree (n_0 - 1)), (genTree (n_0 - 1))))
+//│ 		  else
+//│ 		    (`L))
+//│ 		and sqTree t_0 =
+//│ 		  (match t_0 with
+//│ 		    | `T(v_0, l_0, r_0) -> 
+//│ 		      (`T((v_0 * v_0), (sqTree l_0), (sqTree r_0)))
+//│ 		    | `L -> 
+//│ 		      (`L))
+//│ 		and sumTree t_1 =
+//│ 		  (match t_1 with
+//│ 		    | `T(v_1, l_1, r_1) -> 
+//│ 		      ((v_1 + (sumTree l_1)) + (sumTree r_1))
+//│ 		    | `L -> 
+//│ 		      0)
+//│ 		and testSumSquareTree n_1 =
+//│ 		  (sumTree (sqTree (genTree n_1)));;
+//│ 		(testSumSquareTree 18)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testSumSquareTree^68] (hopeless to continue)
+//│ 	[testSumSquareTree^68 · genTree^61] (using original def)
+//│ 		[testSumSquareTree^68 · genTree^61 · genTree^40] ---> [testSumSquareTree^68 · genTree^61] (using original def)
+//│ 		[testSumSquareTree^68 · genTree^61 · genTree^47] ---> [testSumSquareTree^68 · genTree^61] (using original def)
+//│ 	[testSumSquareTree^68 · sqTree^59] (using original def)
+//│ 		[testSumSquareTree^68 · sqTree^59 · sqTree^10] ---> [testSumSquareTree^68 · sqTree^59] (using original def)
+//│ 		[testSumSquareTree^68 · sqTree^59 · sqTree^7] ---> [testSumSquareTree^68 · sqTree^59] (using original def)
+//│ 	[testSumSquareTree^68 · sumTree^58] (using original def)
+//│ 		[testSumSquareTree^68 · sumTree^58 · sumTree^22] ---> [testSumSquareTree^68 · sumTree^58] (using original def)
+//│ 		[testSumSquareTree^68 · sumTree^58 · sumTree^27] ---> [testSumSquareTree^68 · sumTree^58] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testSumSquareTree₀(primId⁰(18))
+//│ def testSumSquareTree₀(n²) = 
+//│ 	sumTree₀(sqTree₀(primId⁰(genTree₀(n²))))
+//│ 	where
+//│ 	def genTree₀(n³) = 
+//│ 		if (n³ > 0) then [T n³ genTree₀((n³ - 1)) genTree₀((n³ - 1))] else [L]
+//│ 	def sqTree₀(t³) = 
+//│ 		case t³ of {
+//│ 			T v³ l³ r³ => [T (v³ * v³) sqTree₀(l³) sqTree₀(r³)]
+//│ 			| L  => [L]}
+//│ 	def sumTree₀(t²) = 
+//│ 		case t² of {
+//│ 			T v² l² r² => ((v² + sumTree₀(l²)) + sumTree₀(r²))
+//│ 			| L  => 0}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [T (v³ * v³) sqTree₀(l³) sqTree₀(r³)]: 102 --->
+//│ 	case t² of {T v² l² r² => ((v² + sumTree₀(l²)) + sumTree₀(r²)) | L  => 0}: 88
+//│ [L]: 103 --->
+//│ 	case t² of {T v² l² r² => ((v² + sumTree₀(l²)) + sumTree₀(r²)) | L  => 0}: 88
+//│ ------------------
+//│ case t² of {T v² l² r² => ((v² + sumTree₀(l²)) + sumTree₀(r²)) | L  => 0}: 88 --->
+//│ 	[T (v³ * v³) sqTree₀(l³) sqTree₀(r³)]: 102
+//│ 	[L]: 103
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [T (v³ * v³) sqTree₀(l³) sqTree₀(r³)]: 102 --->
+//│ 	case t² of {T v² l² r² => ((v² + sumTree₀(l²)) + sumTree₀(r²)) | L  => 0}: 88
+//│ [L]: 103 --->
+//│ 	case t² of {T v² l² r² => ((v² + sumTree₀(l²)) + sumTree₀(r²)) | L  => 0}: 88
+//│ ------------------
+//│ case t² of {T v² l² r² => ((v² + sumTree₀(l²)) + sumTree₀(r²)) | L  => 0}: 88 --->
+//│ 	[T (v³ * v³) sqTree₀(l³) sqTree₀(r³)]: 102
+//│ 	[L]: 103
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testSumSquareTree₀(primId⁰(18))
+//│ def testSumSquareTree₀(n⁴) = 
+//│ 	sumTree₀(sqTree₀(primId⁰(genTree₀(n⁴))))
+//│ 	where
+//│ 	def genTree₀(n⁵) = 
+//│ 		if (n⁵ > 0) then [T n⁵ genTree₀((n⁵ - 1)) genTree₀((n⁵ - 1))] else [L]
+//│ 	def sqTree₀(t⁵) = 
+//│ 		case t⁵ of {
+//│ 			T v³ l³ r³ => 
+//│ 				let v⁴ = (v³ * v³)
+//│ 				in let l⁴ = sqTree₀(l³)
+//│ 				in let r⁴ = sqTree₀(r³)
+//│ 				in ((v⁴ + sumTree₀(l⁴)) + sumTree₀(r⁴))
+//│ 			| L  => 0}
+//│ 	def sumTree₀(t⁴) = 
+//│ 		t⁴
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

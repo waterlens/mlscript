@@ -3019,3 +3019,997 @@ g(f(1), 2)
 //│ def g₀(scrut², y²) = 
 //│ 	scrut²(y²)
 //│ <<<<<<< after fusion <<<<<<<
+
+
+:lhInHaskell
+ack m n = case m of
+          Z -> S n
+          S m' -> case n of
+                    Z -> ack m' (S Z)
+                    S n' -> ack m' (ack m n')
+ack (S (S (S Z))) (S (S Z))
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ ack₀^670([S [S [S [Z]]]], [S [S [Z]]])
+//│ def ack₀(_lh_ack_arg1¹, _lh_ack_arg2¹) = 
+//│ 	let _lh_matchIdent² = _lh_ack_arg1¹
+//│ 	in case _lh_matchIdent² of {
+//│ 		Z  => [S _lh_ack_arg2¹]
+//│ 		| S _lh_ack_S_0² => 
+//│ 			let _lh_matchIdent³ = _lh_ack_arg2¹
+//│ 			in case _lh_matchIdent³ of {
+//│ 				Z  => ack₀^647(_lh_ack_S_0², [S [Z]])
+//│ 				| S _lh_ack_S_0³ => ack₀^653(_lh_ack_S_0², ack₀^656(_lh_ack_arg1¹, _lh_ack_S_0³))
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [ack₀^670]
+//│ 	[ack₀^670 · ack₀^647] (hopeless to continue)
+//│ 		[ack₀^670 · ack₀^647 · ack₀^647] ---> [ack₀^670 · ack₀^647] (using original def)
+//│ 		[ack₀^670 · ack₀^647 · ack₀^653] ---> [ack₀^670 · ack₀^647] (using original def)
+//│ 		[ack₀^670 · ack₀^647 · ack₀^656] ---> [ack₀^670 · ack₀^647] (using original def)
+//│ 	[ack₀^670 · ack₀^653] ---> [ack₀^670] (only one)
+//│ 	[ack₀^670 · ack₀^656] ---> [ack₀^670] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ ack₀₀([S [S [S [Z]]]], [S [S [Z]]])
+//│ def ack₀₀(_lh_ack_arg1¹, _lh_ack_arg2¹) = 
+//│ 	let _lh_matchIdent² = _lh_ack_arg1¹
+//│ 	in case _lh_matchIdent² of {
+//│ 		Z  => [S _lh_ack_arg2¹]
+//│ 		| S _lh_ack_S_0² => 
+//│ 			let _lh_matchIdent³ = _lh_ack_arg2¹
+//│ 			in case _lh_matchIdent³ of {
+//│ 				Z  => ack₀₁(_lh_ack_S_0², [S [Z]])
+//│ 				| S _lh_ack_S_0³ => ack₀₀(_lh_ack_S_0², ack₀₀(_lh_ack_arg1¹, _lh_ack_S_0³))
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ 	where
+//│ 	def ack₀₁(_lh_ack_arg1², _lh_ack_arg2²) = 
+//│ 		let _lh_matchIdent⁴ = _lh_ack_arg1²
+//│ 		in case _lh_matchIdent⁴ of {
+//│ 			Z  => [S _lh_ack_arg2²]
+//│ 			| S _lh_ack_S_0⁴ => 
+//│ 				let _lh_matchIdent⁵ = _lh_ack_arg2²
+//│ 				in case _lh_matchIdent⁵ of {
+//│ 					Z  => ack₀₁(_lh_ack_S_0⁴, [S [Z]])
+//│ 					| S _lh_ack_S_0⁵ => ack₀₁(_lh_ack_S_0⁴, ack₀₁(_lh_ack_arg1², _lh_ack_S_0⁵))
+//│ 					| _  => error⁰}
+//│ 			| _  => error⁰}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [S _lh_ack_arg2¹]: 43 --->
+//│ 	NoCons
+//│ 	case _lh_matchIdent³ of {Z  => ack₀₁(_lh_ack_S_0², [S [Z]]) | S _lh_ack_S_0³ => ack₀₀(_lh_ack_S_0², ack₀₀(_lh_ack_arg1¹, _lh_ack_S_0³)) | _  => error⁰}: 62
+//│ [Z]: 49 --->
+//│ 	NoCons
+//│ 	case _lh_matchIdent³ of {Z  => ack₀₁(_lh_ack_S_0², [S [Z]]) | S _lh_ack_S_0³ => ack₀₀(_lh_ack_S_0², ack₀₀(_lh_ack_arg1¹, _lh_ack_S_0³)) | _  => error⁰}: 62
+//│ 	case _lh_matchIdent⁵ of {Z  => ack₀₁(_lh_ack_S_0⁴, [S [Z]]) | S _lh_ack_S_0⁵ => ack₀₁(_lh_ack_S_0⁴, ack₀₁(_lh_ack_arg1², _lh_ack_S_0⁵)) | _  => error⁰}: 91
+//│ [S [Z]]: 50 --->
+//│ 	NoCons
+//│ 	case _lh_matchIdent³ of {Z  => ack₀₁(_lh_ack_S_0², [S [Z]]) | S _lh_ack_S_0³ => ack₀₀(_lh_ack_S_0², ack₀₀(_lh_ack_arg1¹, _lh_ack_S_0³)) | _  => error⁰}: 62
+//│ 	case _lh_matchIdent⁵ of {Z  => ack₀₁(_lh_ack_S_0⁴, [S [Z]]) | S _lh_ack_S_0⁵ => ack₀₁(_lh_ack_S_0⁴, ack₀₁(_lh_ack_arg1², _lh_ack_S_0⁵)) | _  => error⁰}: 91
+//│ [S _lh_ack_arg2²]: 72 --->
+//│ 	NoCons
+//│ 	case _lh_matchIdent³ of {Z  => ack₀₁(_lh_ack_S_0², [S [Z]]) | S _lh_ack_S_0³ => ack₀₀(_lh_ack_S_0², ack₀₀(_lh_ack_arg1¹, _lh_ack_S_0³)) | _  => error⁰}: 62
+//│ 	case _lh_matchIdent⁵ of {Z  => ack₀₁(_lh_ack_S_0⁴, [S [Z]]) | S _lh_ack_S_0⁵ => ack₀₁(_lh_ack_S_0⁴, ack₀₁(_lh_ack_arg1², _lh_ack_S_0⁵)) | _  => error⁰}: 91
+//│ [Z]: 78 --->
+//│ 	NoCons
+//│ 	case _lh_matchIdent³ of {Z  => ack₀₁(_lh_ack_S_0², [S [Z]]) | S _lh_ack_S_0³ => ack₀₀(_lh_ack_S_0², ack₀₀(_lh_ack_arg1¹, _lh_ack_S_0³)) | _  => error⁰}: 62
+//│ 	case _lh_matchIdent⁵ of {Z  => ack₀₁(_lh_ack_S_0⁴, [S [Z]]) | S _lh_ack_S_0⁵ => ack₀₁(_lh_ack_S_0⁴, ack₀₁(_lh_ack_arg1², _lh_ack_S_0⁵)) | _  => error⁰}: 91
+//│ [S [Z]]: 79 --->
+//│ 	NoCons
+//│ 	case _lh_matchIdent³ of {Z  => ack₀₁(_lh_ack_S_0², [S [Z]]) | S _lh_ack_S_0³ => ack₀₀(_lh_ack_S_0², ack₀₀(_lh_ack_arg1¹, _lh_ack_S_0³)) | _  => error⁰}: 62
+//│ 	case _lh_matchIdent⁵ of {Z  => ack₀₁(_lh_ack_S_0⁴, [S [Z]]) | S _lh_ack_S_0⁵ => ack₀₁(_lh_ack_S_0⁴, ack₀₁(_lh_ack_arg1², _lh_ack_S_0⁵)) | _  => error⁰}: 91
+//│ [Z]: 99 --->
+//│ 	case _lh_matchIdent² of {Z  => [S _lh_ack_arg2¹] | S _lh_ack_S_0² => let _lh_matchIdent³ = _lh_ack_arg2¹
+//│ in case _lh_matchIdent³ of {Z  => ack₀₁(_lh_ack_S_0², [S [Z]]) | S _lh_ack_S_0³ => ack₀₀(_lh_ack_S_0², ack₀₀(_lh_ack_arg1¹, _lh_ack_S_0³)) | _  => error⁰} | _  => error⁰}: 65
+//│ 	case _lh_matchIdent⁴ of {Z  => [S _lh_ack_arg2²] | S _lh_ack_S_0⁴ => let _lh_matchIdent⁵ = _lh_ack_arg2²
+//│ in case _lh_matchIdent⁵ of {Z  => ack₀₁(_lh_ack_S_0⁴, [S [Z]]) | S _lh_ack_S_0⁵ => ack₀₁(_lh_ack_S_0⁴, ack₀₁(_lh_ack_arg1², _lh_ack_S_0⁵)) | _  => error⁰} | _  => error⁰}: 94
+//│ [S [Z]]: 100 --->
+//│ 	case _lh_matchIdent² of {Z  => [S _lh_ack_arg2¹] | S _lh_ack_S_0² => let _lh_matchIdent³ = _lh_ack_arg2¹
+//│ in case _lh_matchIdent³ of {Z  => ack₀₁(_lh_ack_S_0², [S [Z]]) | S _lh_ack_S_0³ => ack₀₀(_lh_ack_S_0², ack₀₀(_lh_ack_arg1¹, _lh_ack_S_0³)) | _  => error⁰} | _  => error⁰}: 65
+//│ 	case _lh_matchIdent⁴ of {Z  => [S _lh_ack_arg2²] | S _lh_ack_S_0⁴ => let _lh_matchIdent⁵ = _lh_ack_arg2²
+//│ in case _lh_matchIdent⁵ of {Z  => ack₀₁(_lh_ack_S_0⁴, [S [Z]]) | S _lh_ack_S_0⁵ => ack₀₁(_lh_ack_S_0⁴, ack₀₁(_lh_ack_arg1², _lh_ack_S_0⁵)) | _  => error⁰} | _  => error⁰}: 94
+//│ [S [S [Z]]]: 101 --->
+//│ 	case _lh_matchIdent² of {Z  => [S _lh_ack_arg2¹] | S _lh_ack_S_0² => let _lh_matchIdent³ = _lh_ack_arg2¹
+//│ in case _lh_matchIdent³ of {Z  => ack₀₁(_lh_ack_S_0², [S [Z]]) | S _lh_ack_S_0³ => ack₀₀(_lh_ack_S_0², ack₀₀(_lh_ack_arg1¹, _lh_ack_S_0³)) | _  => error⁰} | _  => error⁰}: 65
+//│ 	case _lh_matchIdent⁴ of {Z  => [S _lh_ack_arg2²] | S _lh_ack_S_0⁴ => let _lh_matchIdent⁵ = _lh_ack_arg2²
+//│ in case _lh_matchIdent⁵ of {Z  => ack₀₁(_lh_ack_S_0⁴, [S [Z]]) | S _lh_ack_S_0⁵ => ack₀₁(_lh_ack_S_0⁴, ack₀₁(_lh_ack_arg1², _lh_ack_S_0⁵)) | _  => error⁰} | _  => error⁰}: 94
+//│ [S [S [S [Z]]]]: 102 --->
+//│ 	case _lh_matchIdent² of {Z  => [S _lh_ack_arg2¹] | S _lh_ack_S_0² => let _lh_matchIdent³ = _lh_ack_arg2¹
+//│ in case _lh_matchIdent³ of {Z  => ack₀₁(_lh_ack_S_0², [S [Z]]) | S _lh_ack_S_0³ => ack₀₀(_lh_ack_S_0², ack₀₀(_lh_ack_arg1¹, _lh_ack_S_0³)) | _  => error⁰} | _  => error⁰}: 65
+//│ [Z]: 104 --->
+//│ 	NoCons
+//│ 	case _lh_matchIdent³ of {Z  => ack₀₁(_lh_ack_S_0², [S [Z]]) | S _lh_ack_S_0³ => ack₀₀(_lh_ack_S_0², ack₀₀(_lh_ack_arg1¹, _lh_ack_S_0³)) | _  => error⁰}: 62
+//│ [S [Z]]: 105 --->
+//│ 	NoCons
+//│ 	case _lh_matchIdent³ of {Z  => ack₀₁(_lh_ack_S_0², [S [Z]]) | S _lh_ack_S_0³ => ack₀₀(_lh_ack_S_0², ack₀₀(_lh_ack_arg1¹, _lh_ack_S_0³)) | _  => error⁰}: 62
+//│ [S [S [Z]]]: 106 --->
+//│ 	NoCons
+//│ 	case _lh_matchIdent³ of {Z  => ack₀₁(_lh_ack_S_0², [S [Z]]) | S _lh_ack_S_0³ => ack₀₀(_lh_ack_S_0², ack₀₀(_lh_ack_arg1¹, _lh_ack_S_0³)) | _  => error⁰}: 62
+//│ ------------------
+//│ case _lh_matchIdent³ of {Z  => ack₀₁(_lh_ack_S_0², [S [Z]]) | S _lh_ack_S_0³ => ack₀₀(_lh_ack_S_0², ack₀₀(_lh_ack_arg1¹, _lh_ack_S_0³)) | _  => error⁰}: 62 --->
+//│ 	[S _lh_ack_arg2¹]: 43
+//│ 	[Z]: 49
+//│ 	[S [Z]]: 50
+//│ 	[S _lh_ack_arg2²]: 72
+//│ 	[Z]: 78
+//│ 	[S [Z]]: 79
+//│ 	[Z]: 104
+//│ 	[S [Z]]: 105
+//│ 	[S [S [Z]]]: 106
+//│ case _lh_matchIdent² of {Z  => [S _lh_ack_arg2¹] | S _lh_ack_S_0² => let _lh_matchIdent³ = _lh_ack_arg2¹
+//│ in case _lh_matchIdent³ of {Z  => ack₀₁(_lh_ack_S_0², [S [Z]]) | S _lh_ack_S_0³ => ack₀₀(_lh_ack_S_0², ack₀₀(_lh_ack_arg1¹, _lh_ack_S_0³)) | _  => error⁰} | _  => error⁰}: 65 --->
+//│ 	[Z]: 99
+//│ 	[S [Z]]: 100
+//│ 	[S [S [Z]]]: 101
+//│ 	[S [S [S [Z]]]]: 102
+//│ case _lh_matchIdent⁵ of {Z  => ack₀₁(_lh_ack_S_0⁴, [S [Z]]) | S _lh_ack_S_0⁵ => ack₀₁(_lh_ack_S_0⁴, ack₀₁(_lh_ack_arg1², _lh_ack_S_0⁵)) | _  => error⁰}: 91 --->
+//│ 	[Z]: 49
+//│ 	[S [Z]]: 50
+//│ 	[S _lh_ack_arg2²]: 72
+//│ 	[Z]: 78
+//│ 	[S [Z]]: 79
+//│ case _lh_matchIdent⁴ of {Z  => [S _lh_ack_arg2²] | S _lh_ack_S_0⁴ => let _lh_matchIdent⁵ = _lh_ack_arg2²
+//│ in case _lh_matchIdent⁵ of {Z  => ack₀₁(_lh_ack_S_0⁴, [S [Z]]) | S _lh_ack_S_0⁵ => ack₀₁(_lh_ack_S_0⁴, ack₀₁(_lh_ack_arg1², _lh_ack_S_0⁵)) | _  => error⁰} | _  => error⁰}: 94 --->
+//│ 	[Z]: 99
+//│ 	[S [Z]]: 100
+//│ 	[S [S [Z]]]: 101
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ ack₀₀([S [S [S [Z]]]], [S [S [Z]]])
+//│ def ack₀₀(_lh_ack_arg1³, _lh_ack_arg2³) = 
+//│ 	let _lh_matchIdent⁶ = _lh_ack_arg1³
+//│ 	in case _lh_matchIdent⁶ of {
+//│ 		Z  => [S _lh_ack_arg2³]
+//│ 		| S _lh_ack_S_0² => 
+//│ 			let _lh_matchIdent⁷ = _lh_ack_arg2³
+//│ 			in case _lh_matchIdent⁷ of {
+//│ 				Z  => ack₀₁(_lh_ack_S_0², [S [Z]])
+//│ 				| S _lh_ack_S_0³ => ack₀₀(_lh_ack_S_0², ack₀₀(_lh_ack_arg1³, _lh_ack_S_0³))
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ 	where
+//│ 	def ack₀₁(_lh_ack_arg1⁴, _lh_ack_arg2⁴) = 
+//│ 		let _lh_matchIdent⁸ = _lh_ack_arg1⁴
+//│ 		in case _lh_matchIdent⁸ of {
+//│ 			Z  => [S _lh_ack_arg2⁴]
+//│ 			| S _lh_ack_S_0⁴ => 
+//│ 				let _lh_matchIdent⁹ = _lh_ack_arg2⁴
+//│ 				in case _lh_matchIdent⁹ of {
+//│ 					Z  => ack₀₁(_lh_ack_S_0⁴, [S [Z]])
+//│ 					| S _lh_ack_S_0⁵ => ack₀₁(_lh_ack_S_0⁴, ack₀₁(_lh_ack_arg1⁴, _lh_ack_S_0⁵))
+//│ 					| _  => error⁰}
+//│ 			| _  => error⁰}
+//│ <<<<<<< after fusion <<<<<<<
+
+:lhInHaskell
+:lhEval
+test n = foldl (\a b -> a + b) 0 [1..n]
+test $ primId 10
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ test₀^680(primId⁰(10))
+//│ def enumFromTo₀(a⁷, b⁴) = if (a⁷ <= b⁴) then [LH_C a⁷ enumFromTo₀^649((a⁷ + 1), b⁴)] else [LH_N]
+//│ def foldl₀(f¹², i³, ls¹⁹) = case ls¹⁹ of {
+//│ 	LH_C h²⁰ t²² => foldl₀^664(f¹², f¹²(i³, h²⁰), t²²)
+//│ 	| LH_N  => i³}
+//│ def test₀(_lh_test_arg1¹) = foldl₀^625((fun a⁶ -> (fun b³ -> (a⁶ + b³))), 0, enumFromTo₀^636(1, _lh_test_arg1¹))
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ 55
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [test₀^680] (hopeless to continue)
+//│ 	[test₀^680 · enumFromTo₀^636] (using original def)
+//│ 		[test₀^680 · enumFromTo₀^636 · enumFromTo₀^649] ---> [test₀^680 · enumFromTo₀^636] (using original def)
+//│ 	[test₀^680 · foldl₀^625] (using original def)
+//│ 		[test₀^680 · foldl₀^625 · foldl₀^664] ---> [test₀^680 · foldl₀^625] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ test₀₀(primId⁰(10))
+//│ def test₀₀(_lh_test_arg1¹) = 
+//│ 	foldl₀₀((fun a³ -> (fun b³ -> (a³ + b³))), 0, enumFromTo₀₀(1, _lh_test_arg1¹))
+//│ 	where
+//│ 	def enumFromTo₀₀(a², b²) = 
+//│ 		if (a² <= b²) then [LH_C a² enumFromTo₀₀((a² + 1), b²)] else [LH_N]
+//│ 	def foldl₀₀(f¹, i¹, ls¹) = 
+//│ 		case ls¹ of {
+//│ 			LH_C h¹ t¹ => foldl₀₀(f¹, f¹(i¹, h¹), t¹)
+//│ 			| LH_N  => i¹}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_C a² enumFromTo₀₀((a² + 1), b²)]: 93 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => foldl₀₀(f¹, f¹(i¹, h¹), t¹) | LH_N  => i¹}: 74
+//│ [LH_N]: 94 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => foldl₀₀(f¹, f¹(i¹, h¹), t¹) | LH_N  => i¹}: 74
+//│ ------------------
+//│ case ls¹ of {LH_C h¹ t¹ => foldl₀₀(f¹, f¹(i¹, h¹), t¹) | LH_N  => i¹}: 74 --->
+//│ 	[LH_C a² enumFromTo₀₀((a² + 1), b²)]: 93
+//│ 	[LH_N]: 94
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_C a² enumFromTo₀₀((a² + 1), b²)]: 93 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => foldl₀₀(f¹, f¹(i¹, h¹), t¹) | LH_N  => i¹}: 74
+//│ [LH_N]: 94 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => foldl₀₀(f¹, f¹(i¹, h¹), t¹) | LH_N  => i¹}: 74
+//│ ------------------
+//│ case ls¹ of {LH_C h¹ t¹ => foldl₀₀(f¹, f¹(i¹, h¹), t¹) | LH_N  => i¹}: 74 --->
+//│ 	[LH_C a² enumFromTo₀₀((a² + 1), b²)]: 93
+//│ 	[LH_N]: 94
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ test₀₀(primId⁰(10))
+//│ def test₀₀(_lh_test_arg1²) = 
+//│ 	foldl₀₀((fun a⁵ -> (fun b⁵ -> (a⁵ + b⁵))), 0, enumFromTo₀₀(1, _lh_test_arg1²))
+//│ 	where
+//│ 	def enumFromTo₀₀(a⁴, b⁴) = 
+//│ 		if (a⁴ <= b⁴) then 
+//│ 			let h² = a⁴
+//│ 			in let t² = enumFromTo₀₀((a⁴ + 1), b⁴)
+//│ 			in (fun f³ -> (fun i³ -> foldl₀₀(f³, f³(i³, h²), t²))) else (fun f⁴ -> (fun i⁴ -> i⁴))
+//│ 	def foldl₀₀(f², i², ls²) = 
+//│ 		ls²(f², i²)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ 55
+//│ <<<<<<< evaluate <<<<<<<
+
+:lhInHaskell
+:lhEval
+test n = sum $ zipWith (\a b -> a * b) (primId [1..n]) (primId [n..(2*n)])
+test $ primId 10
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ test₀^744(primId⁰(10))
+//│ def enumFromTo₀(a⁷, b⁴) = if (a⁷ <= b⁴) then [LH_C a⁷ enumFromTo₀^710((a⁷ + 1), b⁴)] else [LH_N]
+//│ def enumFromTo₁(a⁸, b⁵) = if (a⁸ <= b⁵) then [LH_C a⁸ enumFromTo₁^730((a⁸ + 1), b⁵)] else [LH_N]
+//│ def sum₀(ls¹⁹) = case ls¹⁹ of {
+//│ 	LH_C h²⁰ t²² => (h²⁰ + sum₀^665(t²²))
+//│ 	| LH_N  => 0}
+//│ def test₀(_lh_test_arg1¹) = sum₀^672(zipWith₀^673((fun a⁶ -> (fun b³ -> (a⁶ * b³))), primId⁰(enumFromTo₀^683(1, _lh_test_arg1¹)), primId⁰(enumFromTo₁^691(_lh_test_arg1¹, (2 * _lh_test_arg1¹)))))
+//│ def zipWith₀(f¹², xs⁹, ys⁹) = case xs⁹ of {
+//│ 	LH_C hx⁸ tx⁸ => case ys⁹ of {
+//│ 		LH_C hy⁸ ty⁸ => [LH_C f¹²(hx⁸, hy⁸) zipWith₀^646(f¹², tx⁸, ty⁸)]
+//│ 		| LH_N  => [LH_N]}
+//│ 	| LH_N  => [LH_N]}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ 880
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [test₀^744] (hopeless to continue)
+//│ 	[test₀^744 · enumFromTo₀^683] (using original def)
+//│ 		[test₀^744 · enumFromTo₀^683 · enumFromTo₀^710] ---> [test₀^744 · enumFromTo₀^683] (using original def)
+//│ 	[test₀^744 · enumFromTo₁^691] (using original def)
+//│ 		[test₀^744 · enumFromTo₁^691 · enumFromTo₁^730] ---> [test₀^744 · enumFromTo₁^691] (using original def)
+//│ 	[test₀^744 · sum₀^672] (using original def)
+//│ 		[test₀^744 · sum₀^672 · sum₀^665] ---> [test₀^744 · sum₀^672] (using original def)
+//│ 	[test₀^744 · zipWith₀^673] (using original def)
+//│ 		[test₀^744 · zipWith₀^673 · zipWith₀^646] ---> [test₀^744 · zipWith₀^673] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ test₀₀(primId⁰(10))
+//│ def test₀₀(_lh_test_arg1¹) = 
+//│ 	sum₀₀(zipWith₀₀((fun a⁴ -> (fun b⁴ -> (a⁴ * b⁴))), primId⁰(enumFromTo₀₀(1, _lh_test_arg1¹)), primId⁰(enumFromTo₁₀(_lh_test_arg1¹, (2 * _lh_test_arg1¹)))))
+//│ 	where
+//│ 	def enumFromTo₀₀(a³, b³) = 
+//│ 		if (a³ <= b³) then [LH_C a³ enumFromTo₀₀((a³ + 1), b³)] else [LH_N]
+//│ 	def enumFromTo₁₀(a⁵, b⁵) = 
+//│ 		if (a⁵ <= b⁵) then [LH_C a⁵ enumFromTo₁₀((a⁵ + 1), b⁵)] else [LH_N]
+//│ 	def sum₀₀(ls¹) = 
+//│ 		case ls¹ of {
+//│ 			LH_C h¹ t¹ => (h¹ + sum₀₀(t¹))
+//│ 			| LH_N  => 0}
+//│ 	def zipWith₀₀(f¹, xs¹, ys¹) = 
+//│ 		case xs¹ of {
+//│ 			LH_C hx¹ tx¹ => case ys¹ of {
+//│ 				LH_C hy¹ ty¹ => [LH_C f¹(hx¹, hy¹) zipWith₀₀(f¹, tx¹, ty¹)]
+//│ 				| LH_N  => [LH_N]}
+//│ 			| LH_N  => [LH_N]}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_C f¹(hx¹, hy¹) zipWith₀₀(f¹, tx¹, ty¹)]: 177 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => (h¹ + sum₀₀(t¹)) | LH_N  => 0}: 194
+//│ [LH_N]: 178 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => (h¹ + sum₀₀(t¹)) | LH_N  => 0}: 194
+//│ [LH_N]: 180 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => (h¹ + sum₀₀(t¹)) | LH_N  => 0}: 194
+//│ ------------------
+//│ case ls¹ of {LH_C h¹ t¹ => (h¹ + sum₀₀(t¹)) | LH_N  => 0}: 194 --->
+//│ 	[LH_C f¹(hx¹, hy¹) zipWith₀₀(f¹, tx¹, ty¹)]: 177
+//│ 	[LH_N]: 178
+//│ 	[LH_N]: 180
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_C f¹(hx¹, hy¹) zipWith₀₀(f¹, tx¹, ty¹)]: 177 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => (h¹ + sum₀₀(t¹)) | LH_N  => 0}: 194
+//│ [LH_N]: 178 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => (h¹ + sum₀₀(t¹)) | LH_N  => 0}: 194
+//│ [LH_N]: 180 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => (h¹ + sum₀₀(t¹)) | LH_N  => 0}: 194
+//│ ------------------
+//│ case ls¹ of {LH_C h¹ t¹ => (h¹ + sum₀₀(t¹)) | LH_N  => 0}: 194 --->
+//│ 	[LH_C f¹(hx¹, hy¹) zipWith₀₀(f¹, tx¹, ty¹)]: 177
+//│ 	[LH_N]: 178
+//│ 	[LH_N]: 180
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ test₀₀(primId⁰(10))
+//│ def test₀₀(_lh_test_arg1²) = 
+//│ 	sum₀₀(zipWith₀₀((fun a⁶ -> (fun b⁶ -> (a⁶ * b⁶))), primId⁰(enumFromTo₀₀(1, _lh_test_arg1²)), primId⁰(enumFromTo₁₀(_lh_test_arg1², (2 * _lh_test_arg1²)))))
+//│ 	where
+//│ 	def enumFromTo₀₀(a⁷, b⁷) = 
+//│ 		if (a⁷ <= b⁷) then [LH_C a⁷ enumFromTo₀₀((a⁷ + 1), b⁷)] else [LH_N]
+//│ 	def enumFromTo₁₀(a⁸, b⁸) = 
+//│ 		if (a⁸ <= b⁸) then [LH_C a⁸ enumFromTo₁₀((a⁸ + 1), b⁸)] else [LH_N]
+//│ 	def sum₀₀(ls²) = 
+//│ 		ls²
+//│ 	def zipWith₀₀(f², xs², ys²) = 
+//│ 		case xs² of {
+//│ 			LH_C hx¹ tx¹ => case ys² of {
+//│ 				LH_C hy¹ ty¹ => 
+//│ 					let h² = f²(hx¹, hy¹)
+//│ 					in let t² = zipWith₀₀(f², tx¹, ty¹)
+//│ 					in (h² + sum₀₀(t²))
+//│ 				| LH_N  => 0}
+//│ 			| LH_N  => 0}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ 880
+//│ <<<<<<< evaluate <<<<<<<
+
+:lhInHaskell
+:lhEval
+fact r Z = S Z
+fact r (S a) = mmul (S a) (r (mmin (S a) (S Z)))
+pplus Z b = b
+pplus (S a) b = S (pplus a b)
+mmul Z b = Z
+mmul (S a) b = pplus b (mmul a b)
+mmin a b = case b of {
+  Z -> a;
+  (S bb) -> case a of {
+    Z -> Z;
+    (S aa) -> mmin aa bb
+  }
+}
+let mainFact = (\x -> fact (\y -> x x y)) (\x -> fact (\y -> x x y)) in mainFact (primId (S (S (S Z))))
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ let mainFact¹ = (fun x⁴ -> fact₀^831((fun y² -> x⁴(x⁴, y²))))((fun x⁵ -> fact₁^840((fun y³ -> x⁵(x⁵, y³)))))
+//│ in mainFact¹(primId⁰([S [S [S [Z]]]]))
+//│ def fact₀(_lh_fact_arg1², _lh_fact_arg2²) = case _lh_fact_arg2² of {
+//│ 	Z  => [S [Z]]
+//│ 	| S _lh_fact_S_0² => mmul₀^813([S _lh_fact_S_0²], _lh_fact_arg1²(mmin₀^818([S _lh_fact_S_0²], [S [Z]])))
+//│ 	| _  => error⁰}
+//│ def fact₁(_lh_fact_arg1¹, _lh_fact_arg2¹) = case _lh_fact_arg2¹ of {
+//│ 	Z  => [S [Z]]
+//│ 	| S _lh_fact_S_0¹ => mmul₁^715([S _lh_fact_S_0¹], _lh_fact_arg1¹(mmin₁^720([S _lh_fact_S_0¹], [S [Z]])))
+//│ 	| _  => error⁰}
+//│ def mmin₀(_lh_mmin_arg1², _lh_mmin_arg2²) = 
+//│ 	let _lh_matchIdent⁴ = _lh_mmin_arg2²
+//│ 	in case _lh_matchIdent⁴ of {
+//│ 		Z  => _lh_mmin_arg1²
+//│ 		| S _lh_mmin_S_0⁴ => 
+//│ 			let _lh_matchIdent⁵ = _lh_mmin_arg1²
+//│ 			in case _lh_matchIdent⁵ of {
+//│ 				Z  => [Z]
+//│ 				| S _lh_mmin_S_0⁵ => mmin₀^797(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴)
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ def mmin₁(_lh_mmin_arg1¹, _lh_mmin_arg2¹) = 
+//│ 	let _lh_matchIdent² = _lh_mmin_arg2¹
+//│ 	in case _lh_matchIdent² of {
+//│ 		Z  => _lh_mmin_arg1¹
+//│ 		| S _lh_mmin_S_0² => 
+//│ 			let _lh_matchIdent³ = _lh_mmin_arg1¹
+//│ 			in case _lh_matchIdent³ of {
+//│ 				Z  => [Z]
+//│ 				| S _lh_mmin_S_0³ => mmin₁^739(_lh_mmin_S_0³, _lh_mmin_S_0²)
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ def mmul₀(_lh_mmul_arg1¹, _lh_mmul_arg2¹) = case _lh_mmul_arg1¹ of {
+//│ 	Z  => [Z]
+//│ 	| S _lh_mmul_S_0¹ => pplus₀^699(_lh_mmul_arg2¹, mmul₀^702(_lh_mmul_S_0¹, _lh_mmul_arg2¹))
+//│ 	| _  => error⁰}
+//│ def mmul₁(_lh_mmul_arg1², _lh_mmul_arg2²) = case _lh_mmul_arg1² of {
+//│ 	Z  => [Z]
+//│ 	| S _lh_mmul_S_0² => pplus₁^766(_lh_mmul_arg2², mmul₁^769(_lh_mmul_S_0², _lh_mmul_arg2²))
+//│ 	| _  => error⁰}
+//│ def pplus₀(_lh_pplus_arg1¹, _lh_pplus_arg2¹) = case _lh_pplus_arg1¹ of {
+//│ 	Z  => _lh_pplus_arg2¹
+//│ 	| S _lh_pplus_S_0¹ => [S pplus₀^754(_lh_pplus_S_0¹, _lh_pplus_arg2¹)]
+//│ 	| _  => error⁰}
+//│ def pplus₁(_lh_pplus_arg1², _lh_pplus_arg2²) = case _lh_pplus_arg1² of {
+//│ 	Z  => _lh_pplus_arg2²
+//│ 	| S _lh_pplus_S_0² => [S pplus₁^781(_lh_pplus_S_0², _lh_pplus_arg2²)]
+//│ 	| _  => error⁰}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [S [S [S [S [S [S [Z]]]]]]]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [fact₀^831]
+//│ 	[fact₀^831 · mmin₀^818]
+//│ 		[fact₀^831 · mmin₀^818 · mmin₀^797] ---> [fact₀^831 · mmin₀^818] (only one)
+//│ 	[fact₀^831 · mmul₀^813]
+//│ 		[fact₀^831 · mmul₀^813 · mmul₀^702] ---> [fact₀^831 · mmul₀^813] (only one)
+//│ 		[fact₀^831 · mmul₀^813 · pplus₀^699]
+//│ 			[fact₀^831 · mmul₀^813 · pplus₀^699 · pplus₀^754] ---> [fact₀^831 · mmul₀^813 · pplus₀^699] (only one)
+//│ [fact₁^840]
+//│ 	[fact₁^840 · mmin₁^720] (hopeless to continue)
+//│ 		[fact₁^840 · mmin₁^720 · mmin₁^739] ---> [fact₁^840 · mmin₁^720] (using original def)
+//│ 	[fact₁^840 · mmul₁^715]
+//│ 		[fact₁^840 · mmul₁^715 · mmul₁^769] (hopeless to continue)
+//│ 			[fact₁^840 · mmul₁^715 · mmul₁^769 · mmul₁^769] ---> [fact₁^840 · mmul₁^715 · mmul₁^769] (using original def)
+//│ 			[fact₁^840 · mmul₁^715 · mmul₁^769 · pplus₁^766] (using original def)
+//│ 				[fact₁^840 · mmul₁^715 · mmul₁^769 · pplus₁^766 · pplus₁^781] ---> [fact₁^840 · mmul₁^715 · mmul₁^769 · pplus₁^766] (using original def)
+//│ 		[fact₁^840 · mmul₁^715 · pplus₁^766]
+//│ 			[fact₁^840 · mmul₁^715 · pplus₁^766 · pplus₁^781] ---> [fact₁^840 · mmul₁^715 · pplus₁^766] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ 
+//│ 	let mainFact¹ = (fun x² -> fact₀₀((fun y² -> x²(x², y²))))((fun x³ -> fact₁₀((fun y³ -> x³(x³, y³)))))
+//│ 	in mainFact¹(primId⁰([S [S [S [Z]]]]))
+//│ def fact₀₀(_lh_fact_arg1², _lh_fact_arg2²) = 
+//│ 	case _lh_fact_arg2² of {
+//│ 		Z  => [S [Z]]
+//│ 		| S _lh_fact_S_0² => mmul₀₀([S _lh_fact_S_0²], _lh_fact_arg1²(mmin₀₀([S _lh_fact_S_0²], [S [Z]])))
+//│ 		| _  => error⁰}
+//│ 	where
+//│ 	def mmin₀₀(_lh_mmin_arg1², _lh_mmin_arg2²) = 
+//│ 		let _lh_matchIdent⁴ = _lh_mmin_arg2²
+//│ 		in case _lh_matchIdent⁴ of {
+//│ 			Z  => _lh_mmin_arg1²
+//│ 			| S _lh_mmin_S_0⁴ => 
+//│ 				let _lh_matchIdent⁵ = _lh_mmin_arg1²
+//│ 				in case _lh_matchIdent⁵ of {
+//│ 					Z  => [Z]
+//│ 					| S _lh_mmin_S_0⁵ => mmin₀₀(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴)
+//│ 					| _  => error⁰}
+//│ 			| _  => error⁰}
+//│ 	def mmul₀₀(_lh_mmul_arg1⁴, _lh_mmul_arg2⁴) = 
+//│ 		case _lh_mmul_arg1⁴ of {
+//│ 			Z  => [Z]
+//│ 			| S _lh_mmul_S_0⁴ => pplus₀₀(_lh_mmul_arg2⁴, mmul₀₀(_lh_mmul_S_0⁴, _lh_mmul_arg2⁴))
+//│ 			| _  => error⁰}
+//│ 		where
+//│ 		def pplus₀₀(_lh_pplus_arg1², _lh_pplus_arg2²) = 
+//│ 			case _lh_pplus_arg1² of {
+//│ 				Z  => _lh_pplus_arg2²
+//│ 				| S _lh_pplus_S_0² => [S pplus₀₀(_lh_pplus_S_0², _lh_pplus_arg2²)]
+//│ 				| _  => error⁰}
+//│ def fact₁₀(_lh_fact_arg1³, _lh_fact_arg2³) = 
+//│ 	case _lh_fact_arg2³ of {
+//│ 		Z  => [S [Z]]
+//│ 		| S _lh_fact_S_0³ => mmul₁₀([S _lh_fact_S_0³], _lh_fact_arg1³(mmin₁₀([S _lh_fact_S_0³], [S [Z]])))
+//│ 		| _  => error⁰}
+//│ 	where
+//│ 	def mmin₁₀(_lh_mmin_arg1³, _lh_mmin_arg2³) = 
+//│ 		let _lh_matchIdent⁶ = _lh_mmin_arg2³
+//│ 		in case _lh_matchIdent⁶ of {
+//│ 			Z  => _lh_mmin_arg1³
+//│ 			| S _lh_mmin_S_0⁶ => 
+//│ 				let _lh_matchIdent⁷ = _lh_mmin_arg1³
+//│ 				in case _lh_matchIdent⁷ of {
+//│ 					Z  => [Z]
+//│ 					| S _lh_mmin_S_0⁷ => mmin₁₀(_lh_mmin_S_0⁷, _lh_mmin_S_0⁶)
+//│ 					| _  => error⁰}
+//│ 			| _  => error⁰}
+//│ 	def mmul₁₀(_lh_mmul_arg1³, _lh_mmul_arg2³) = 
+//│ 		case _lh_mmul_arg1³ of {
+//│ 			Z  => [Z]
+//│ 			| S _lh_mmul_S_0³ => pplus₁₁(_lh_mmul_arg2³, mmul₁₁(_lh_mmul_S_0³, _lh_mmul_arg2³))
+//│ 			| _  => error⁰}
+//│ 		where
+//│ 		def mmul₁₁(_lh_mmul_arg1², _lh_mmul_arg2²) = 
+//│ 			case _lh_mmul_arg1² of {
+//│ 				Z  => [Z]
+//│ 				| S _lh_mmul_S_0² => pplus₁₀(_lh_mmul_arg2², mmul₁₁(_lh_mmul_S_0², _lh_mmul_arg2²))
+//│ 				| _  => error⁰}
+//│ 			where
+//│ 			def pplus₁₀(_lh_pplus_arg1⁴, _lh_pplus_arg2⁴) = 
+//│ 				case _lh_pplus_arg1⁴ of {
+//│ 					Z  => _lh_pplus_arg2⁴
+//│ 					| S _lh_pplus_S_0⁴ => [S pplus₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)]
+//│ 					| _  => error⁰}
+//│ 		def pplus₁₁(_lh_pplus_arg1³, _lh_pplus_arg2³) = 
+//│ 			case _lh_pplus_arg1³ of {
+//│ 				Z  => _lh_pplus_arg2³
+//│ 				| S _lh_pplus_S_0³ => [S pplus₁₁(_lh_pplus_S_0³, _lh_pplus_arg2³)]
+//│ 				| _  => error⁰}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [S pplus₁₁(_lh_pplus_S_0³, _lh_pplus_arg2³)]: 182 --->
+//│ 	case _lh_pplus_arg1² of {Z  => _lh_pplus_arg2² | S _lh_pplus_S_0² => [S pplus₀₀(_lh_pplus_S_0², _lh_pplus_arg2²)] | _  => error⁰}: 172
+//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₁(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 184
+//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 196
+//│ [S pplus₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)]: 194 --->
+//│ 	case _lh_pplus_arg1² of {Z  => _lh_pplus_arg2² | S _lh_pplus_S_0² => [S pplus₀₀(_lh_pplus_S_0², _lh_pplus_arg2²)] | _  => error⁰}: 172
+//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₁(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 184
+//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 196
+//│ [Z]: 200 --->
+//│ 	case _lh_pplus_arg1² of {Z  => _lh_pplus_arg2² | S _lh_pplus_S_0² => [S pplus₀₀(_lh_pplus_S_0², _lh_pplus_arg2²)] | _  => error⁰}: 172
+//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₁(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 184
+//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 196
+//│ [S _lh_fact_S_0²]: 219 --->
+//│ 	case _lh_mmul_arg1⁴ of {Z  => [Z] | S _lh_mmul_S_0⁴ => pplus₀₀(_lh_mmul_arg2⁴, mmul₀₀(_lh_mmul_S_0⁴, _lh_mmul_arg2⁴)) | _  => error⁰}: 321
+//│ [S _lh_fact_S_0²]: 224 --->
+//│ 	case _lh_fact_arg2³ of {Z  => [S [Z]] | S _lh_fact_S_0³ => mmul₁₀([S _lh_fact_S_0³], _lh_fact_arg1³(mmin₁₀([S _lh_fact_S_0³], [S [Z]]))) | _  => error⁰}: 253
+//│ 	case _lh_matchIdent⁵ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₀₀(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰}: 283
+//│ [Z]: 226 --->
+//│ 	case _lh_matchIdent⁴ of {Z  => _lh_mmin_arg1² | S _lh_mmin_S_0⁴ => let _lh_matchIdent⁵ = _lh_mmin_arg1²
+//│ in case _lh_matchIdent⁵ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₀₀(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰} | _  => error⁰}: 286
+//│ [S [Z]]: 227 --->
+//│ 	case _lh_matchIdent⁴ of {Z  => _lh_mmin_arg1² | S _lh_mmin_S_0⁴ => let _lh_matchIdent⁵ = _lh_mmin_arg1²
+//│ in case _lh_matchIdent⁵ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₀₀(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰} | _  => error⁰}: 286
+//│ [Z]: 236 --->
+//│ 	case _lh_pplus_arg1² of {Z  => _lh_pplus_arg2² | S _lh_pplus_S_0² => [S pplus₀₀(_lh_pplus_S_0², _lh_pplus_arg2²)] | _  => error⁰}: 172
+//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₁(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 184
+//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 196
+//│ [S [Z]]: 237 --->
+//│ 	case _lh_pplus_arg1² of {Z  => _lh_pplus_arg2² | S _lh_pplus_S_0² => [S pplus₀₀(_lh_pplus_S_0², _lh_pplus_arg2²)] | _  => error⁰}: 172
+//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₁(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 184
+//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 196
+//│ [S _lh_fact_S_0³]: 240 --->
+//│ 	case _lh_mmul_arg1³ of {Z  => [Z] | S _lh_mmul_S_0³ => pplus₁₁(_lh_mmul_arg2³, mmul₁₁(_lh_mmul_S_0³, _lh_mmul_arg2³)) | _  => error⁰}: 268
+//│ [S _lh_fact_S_0³]: 245 --->
+//│ 	case _lh_fact_arg2³ of {Z  => [S [Z]] | S _lh_fact_S_0³ => mmul₁₀([S _lh_fact_S_0³], _lh_fact_arg1³(mmin₁₀([S _lh_fact_S_0³], [S [Z]]))) | _  => error⁰}: 253
+//│ 	case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₁₀(_lh_mmin_S_0⁷, _lh_mmin_S_0⁶) | _  => error⁰}: 302
+//│ [Z]: 247 --->
+//│ 	case _lh_matchIdent⁶ of {Z  => _lh_mmin_arg1³ | S _lh_mmin_S_0⁶ => let _lh_matchIdent⁷ = _lh_mmin_arg1³
+//│ in case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₁₀(_lh_mmin_S_0⁷, _lh_mmin_S_0⁶) | _  => error⁰} | _  => error⁰}: 305
+//│ [S [Z]]: 248 --->
+//│ 	case _lh_matchIdent⁶ of {Z  => _lh_mmin_arg1³ | S _lh_mmin_S_0⁶ => let _lh_matchIdent⁷ = _lh_mmin_arg1³
+//│ in case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₁₀(_lh_mmin_S_0⁷, _lh_mmin_S_0⁶) | _  => error⁰} | _  => error⁰}: 305
+//│ [Z]: 257 --->
+//│ 	case _lh_pplus_arg1² of {Z  => _lh_pplus_arg2² | S _lh_pplus_S_0² => [S pplus₀₀(_lh_pplus_S_0², _lh_pplus_arg2²)] | _  => error⁰}: 172
+//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₁(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 184
+//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 196
+//│ [Z]: 276 --->
+//│ 	case _lh_fact_arg2³ of {Z  => [S [Z]] | S _lh_fact_S_0³ => mmul₁₀([S _lh_fact_S_0³], _lh_fact_arg1³(mmin₁₀([S _lh_fact_S_0³], [S [Z]]))) | _  => error⁰}: 253
+//│ [Z]: 295 --->
+//│ 	case _lh_fact_arg2³ of {Z  => [S [Z]] | S _lh_fact_S_0³ => mmul₁₀([S _lh_fact_S_0³], _lh_fact_arg1³(mmin₁₀([S _lh_fact_S_0³], [S [Z]]))) | _  => error⁰}: 253
+//│ ------------------
+//│ case _lh_pplus_arg1² of {Z  => _lh_pplus_arg2² | S _lh_pplus_S_0² => [S pplus₀₀(_lh_pplus_S_0², _lh_pplus_arg2²)] | _  => error⁰}: 172 --->
+//│ 	[S pplus₁₁(_lh_pplus_S_0³, _lh_pplus_arg2³)]: 182
+//│ 	[S pplus₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)]: 194
+//│ 	[Z]: 200
+//│ 	[Z]: 236
+//│ 	[S [Z]]: 237
+//│ 	[Z]: 257
+//│ case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₁(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 184 --->
+//│ 	[S pplus₁₁(_lh_pplus_S_0³, _lh_pplus_arg2³)]: 182
+//│ 	[S pplus₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)]: 194
+//│ 	[Z]: 200
+//│ 	[Z]: 236
+//│ 	[S [Z]]: 237
+//│ 	[Z]: 257
+//│ case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 196 --->
+//│ 	[S pplus₁₁(_lh_pplus_S_0³, _lh_pplus_arg2³)]: 182
+//│ 	[S pplus₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)]: 194
+//│ 	[Z]: 200
+//│ 	[Z]: 236
+//│ 	[S [Z]]: 237
+//│ 	[Z]: 257
+//│ case _lh_fact_arg2³ of {Z  => [S [Z]] | S _lh_fact_S_0³ => mmul₁₀([S _lh_fact_S_0³], _lh_fact_arg1³(mmin₁₀([S _lh_fact_S_0³], [S [Z]]))) | _  => error⁰}: 253 --->
+//│ 	NoProd
+//│ 	[S _lh_fact_S_0²]: 224
+//│ 	[S _lh_fact_S_0³]: 245
+//│ 	[Z]: 276
+//│ 	[Z]: 295
+//│ case _lh_mmul_arg1³ of {Z  => [Z] | S _lh_mmul_S_0³ => pplus₁₁(_lh_mmul_arg2³, mmul₁₁(_lh_mmul_S_0³, _lh_mmul_arg2³)) | _  => error⁰}: 268 --->
+//│ 	[S _lh_fact_S_0³]: 240
+//│ case _lh_matchIdent⁵ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₀₀(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰}: 283 --->
+//│ 	NoProd
+//│ 	[S _lh_fact_S_0²]: 224
+//│ case _lh_matchIdent⁴ of {Z  => _lh_mmin_arg1² | S _lh_mmin_S_0⁴ => let _lh_matchIdent⁵ = _lh_mmin_arg1²
+//│ in case _lh_matchIdent⁵ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₀₀(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰} | _  => error⁰}: 286 --->
+//│ 	[Z]: 226
+//│ 	[S [Z]]: 227
+//│ case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₁₀(_lh_mmin_S_0⁷, _lh_mmin_S_0⁶) | _  => error⁰}: 302 --->
+//│ 	NoProd
+//│ 	[S _lh_fact_S_0³]: 245
+//│ case _lh_matchIdent⁶ of {Z  => _lh_mmin_arg1³ | S _lh_mmin_S_0⁶ => let _lh_matchIdent⁷ = _lh_mmin_arg1³
+//│ in case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₁₀(_lh_mmin_S_0⁷, _lh_mmin_S_0⁶) | _  => error⁰} | _  => error⁰}: 305 --->
+//│ 	[Z]: 247
+//│ 	[S [Z]]: 248
+//│ case _lh_mmul_arg1⁴ of {Z  => [Z] | S _lh_mmul_S_0⁴ => pplus₀₀(_lh_mmul_arg2⁴, mmul₀₀(_lh_mmul_S_0⁴, _lh_mmul_arg2⁴)) | _  => error⁰}: 321 --->
+//│ 	NoProd
+//│ 	[S _lh_fact_S_0²]: 219
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [Z]: 226 --->
+//│ 	case _lh_matchIdent⁴ of {Z  => _lh_mmin_arg1² | S _lh_mmin_S_0⁴ => let _lh_matchIdent⁵ = _lh_mmin_arg1²
+//│ in case _lh_matchIdent⁵ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₀₀(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰} | _  => error⁰}: 286
+//│ [S [Z]]: 227 --->
+//│ 	case _lh_matchIdent⁴ of {Z  => _lh_mmin_arg1² | S _lh_mmin_S_0⁴ => let _lh_matchIdent⁵ = _lh_mmin_arg1²
+//│ in case _lh_matchIdent⁵ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₀₀(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰} | _  => error⁰}: 286
+//│ [S _lh_fact_S_0³]: 240 --->
+//│ 	case _lh_mmul_arg1³ of {Z  => [Z] | S _lh_mmul_S_0³ => pplus₁₁(_lh_mmul_arg2³, mmul₁₁(_lh_mmul_S_0³, _lh_mmul_arg2³)) | _  => error⁰}: 268
+//│ [Z]: 247 --->
+//│ 	case _lh_matchIdent⁶ of {Z  => _lh_mmin_arg1³ | S _lh_mmin_S_0⁶ => let _lh_matchIdent⁷ = _lh_mmin_arg1³
+//│ in case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₁₀(_lh_mmin_S_0⁷, _lh_mmin_S_0⁶) | _  => error⁰} | _  => error⁰}: 305
+//│ [S [Z]]: 248 --->
+//│ 	case _lh_matchIdent⁶ of {Z  => _lh_mmin_arg1³ | S _lh_mmin_S_0⁶ => let _lh_matchIdent⁷ = _lh_mmin_arg1³
+//│ in case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₁₀(_lh_mmin_S_0⁷, _lh_mmin_S_0⁶) | _  => error⁰} | _  => error⁰}: 305
+//│ ------------------
+//│ case _lh_mmul_arg1³ of {Z  => [Z] | S _lh_mmul_S_0³ => pplus₁₁(_lh_mmul_arg2³, mmul₁₁(_lh_mmul_S_0³, _lh_mmul_arg2³)) | _  => error⁰}: 268 --->
+//│ 	[S _lh_fact_S_0³]: 240
+//│ case _lh_matchIdent⁴ of {Z  => _lh_mmin_arg1² | S _lh_mmin_S_0⁴ => let _lh_matchIdent⁵ = _lh_mmin_arg1²
+//│ in case _lh_matchIdent⁵ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₀₀(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰} | _  => error⁰}: 286 --->
+//│ 	[Z]: 226
+//│ 	[S [Z]]: 227
+//│ case _lh_matchIdent⁶ of {Z  => _lh_mmin_arg1³ | S _lh_mmin_S_0⁶ => let _lh_matchIdent⁷ = _lh_mmin_arg1³
+//│ in case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₁₀(_lh_mmin_S_0⁷, _lh_mmin_S_0⁶) | _  => error⁰} | _  => error⁰}: 305 --->
+//│ 	[Z]: 247
+//│ 	[S [Z]]: 248
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ 
+//│ 	let mainFact² = (fun x⁴ -> fact₀₀((fun y⁴ -> x⁴(x⁴, y⁴))))((fun x⁵ -> fact₁₀((fun y⁵ -> x⁵(x⁵, y⁵)))))
+//│ 	in mainFact²(primId⁰([S [S [S [Z]]]]))
+//│ def fact₀₀(_lh_fact_arg1⁵, _lh_fact_arg2⁵) = 
+//│ 	case _lh_fact_arg2⁵ of {
+//│ 		Z  => [S [Z]]
+//│ 		| S _lh_fact_S_0² => mmul₀₀([S _lh_fact_S_0²], _lh_fact_arg1⁵(mmin₀₀([S _lh_fact_S_0²], 
+//│ 			let _lh_mmin_S_0⁹ = (fun _lh_mmin_arg1⁹ -> _lh_mmin_arg1⁹)
+//│ 			in (fun _lh_mmin_arg1⁸ -> 
+//│ 				let _lh_matchIdent¹¹ = _lh_mmin_arg1⁸
+//│ 				in case _lh_matchIdent¹¹ of {
+//│ 					Z  => [Z]
+//│ 					| S _lh_mmin_S_0⁵ => mmin₀₀(_lh_mmin_S_0⁵, _lh_mmin_S_0⁹)
+//│ 					| _  => error⁰}))))
+//│ 		| _  => error⁰}
+//│ 	where
+//│ 	def mmin₀₀(_lh_mmin_arg1⁴, _lh_mmin_arg2⁴) = 
+//│ 		let _lh_matchIdent⁸ = _lh_mmin_arg2⁴
+//│ 		in _lh_matchIdent⁸(_lh_mmin_arg1⁴)
+//│ 	def mmul₀₀(_lh_mmul_arg1⁷, _lh_mmul_arg2⁸) = 
+//│ 		case _lh_mmul_arg1⁷ of {
+//│ 			Z  => [Z]
+//│ 			| S _lh_mmul_S_0⁴ => pplus₀₀(_lh_mmul_arg2⁸, mmul₀₀(_lh_mmul_S_0⁴, _lh_mmul_arg2⁸))
+//│ 			| _  => error⁰}
+//│ 		where
+//│ 		def pplus₀₀(_lh_pplus_arg1⁵, _lh_pplus_arg2⁵) = 
+//│ 			case _lh_pplus_arg1⁵ of {
+//│ 				Z  => _lh_pplus_arg2⁵
+//│ 				| S _lh_pplus_S_0² => [S pplus₀₀(_lh_pplus_S_0², _lh_pplus_arg2⁵)]
+//│ 				| _  => error⁰}
+//│ def fact₁₀(_lh_fact_arg1⁴, _lh_fact_arg2⁴) = 
+//│ 	case _lh_fact_arg2⁴ of {
+//│ 		Z  => [S [Z]]
+//│ 		| S _lh_fact_S_0³ => mmul₁₀(
+//│ 			let _lh_mmul_S_0⁵ = _lh_fact_S_0³
+//│ 			in (fun _lh_mmul_arg2⁶ -> pplus₁₁(_lh_mmul_arg2⁶, mmul₁₁(_lh_mmul_S_0⁵, _lh_mmul_arg2⁶))), _lh_fact_arg1⁴(mmin₁₀([S _lh_fact_S_0³], 
+//│ 			let _lh_mmin_S_0⁸ = (fun _lh_mmin_arg1⁶ -> _lh_mmin_arg1⁶)
+//│ 			in (fun _lh_mmin_arg1⁵ -> 
+//│ 				let _lh_matchIdent⁹ = _lh_mmin_arg1⁵
+//│ 				in case _lh_matchIdent⁹ of {
+//│ 					Z  => [Z]
+//│ 					| S _lh_mmin_S_0⁷ => mmin₁₀(_lh_mmin_S_0⁷, _lh_mmin_S_0⁸)
+//│ 					| _  => error⁰}))))
+//│ 		| _  => error⁰}
+//│ 	where
+//│ 	def mmin₁₀(_lh_mmin_arg1⁷, _lh_mmin_arg2⁵) = 
+//│ 		let _lh_matchIdent¹⁰ = _lh_mmin_arg2⁵
+//│ 		in _lh_matchIdent¹⁰(_lh_mmin_arg1⁷)
+//│ 	def mmul₁₀(_lh_mmul_arg1⁵, _lh_mmul_arg2⁵) = 
+//│ 		_lh_mmul_arg1⁵(_lh_mmul_arg2⁵)
+//│ 		where
+//│ 		def mmul₁₁(_lh_mmul_arg1⁶, _lh_mmul_arg2⁷) = 
+//│ 			case _lh_mmul_arg1⁶ of {
+//│ 				Z  => [Z]
+//│ 				| S _lh_mmul_S_0² => pplus₁₀(_lh_mmul_arg2⁷, mmul₁₁(_lh_mmul_S_0², _lh_mmul_arg2⁷))
+//│ 				| _  => error⁰}
+//│ 			where
+//│ 			def pplus₁₀(_lh_pplus_arg1⁶, _lh_pplus_arg2⁶) = 
+//│ 				case _lh_pplus_arg1⁶ of {
+//│ 					Z  => _lh_pplus_arg2⁶
+//│ 					| S _lh_pplus_S_0⁴ => [S pplus₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁶)]
+//│ 					| _  => error⁰}
+//│ 		def pplus₁₁(_lh_pplus_arg1⁷, _lh_pplus_arg2⁷) = 
+//│ 			case _lh_pplus_arg1⁷ of {
+//│ 				Z  => _lh_pplus_arg2⁷
+//│ 				| S _lh_pplus_S_0³ => [S pplus₁₁(_lh_pplus_S_0³, _lh_pplus_arg2⁷)]
+//│ 				| _  => error⁰}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [S [S [S [S [S [S [Z]]]]]]]
+//│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [fact₀₀^1]
+//│ 	[fact₀₀^1 · mmin₀₀^166] (hopeless to continue)
+//│ 	[fact₀₀^1 · mmin₀₀^175] (hopeless to continue)
+//│ 	[fact₀₀^1 · mmul₀₀^161]
+//│ 		[fact₀₀^1 · mmul₀₀^161 · mmul₀₀^148] ---> [fact₀₀^1 · mmul₀₀^161] (only one)
+//│ 		[fact₀₀^1 · mmul₀₀^161 · pplus₀₀^145]
+//│ 			[fact₀₀^1 · mmul₀₀^161 · pplus₀₀^145 · pplus₀₀^36] ---> [fact₀₀^1 · mmul₀₀^161 · pplus₀₀^145] (only one)
+//│ [fact₁₀^10]
+//│ 	[fact₁₀^10 · mmin₁₀^83] (hopeless to continue)
+//│ 	[fact₁₀^10 · mmin₁₀^92] (hopeless to continue)
+//│ 	[fact₁₀^10 · mmul₁₀^68] (hopeless to continue)
+//│ 	[fact₁₀^10 · mmul₁₁^73] (hopeless to continue)
+//│ 		[fact₁₀^10 · mmul₁₁^73 · mmul₁₁^121] ---> [fact₁₀^10 · mmul₁₁^73] (using original def)
+//│ 		[fact₁₀^10 · mmul₁₁^73 · pplus₁₀^118] (using original def)
+//│ 			[fact₁₀^10 · mmul₁₁^73 · pplus₁₀^118 · pplus₁₀^48] ---> [fact₁₀^10 · mmul₁₁^73 · pplus₁₀^118] (using original def)
+//│ 	[fact₁₀^10 · pplus₁₁^70]
+//│ 		[fact₁₀^10 · pplus₁₁^70 · pplus₁₁^133] ---> [fact₁₀^10 · pplus₁₁^70] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ 
+//│ 	let mainFact¹ = (fun x² -> fact₀₀₀((fun y² -> x²(x², y²))))((fun x³ -> fact₁₀₀((fun y³ -> x³(x³, y³)))))
+//│ 	in mainFact¹(primId⁰([S [S [S [Z]]]]))
+//│ def fact₀₀₀(_lh_fact_arg1³, _lh_fact_arg2³) = 
+//│ 	case _lh_fact_arg2³ of {
+//│ 		Z  => [S [Z]]
+//│ 		| S _lh_fact_S_0³ => mmul₀₀₀([S _lh_fact_S_0³], _lh_fact_arg1³(mmin₀₀₀([S _lh_fact_S_0³], 
+//│ 			let _lh_mmin_S_0⁶ = (fun _lh_mmin_arg1¹¹ -> _lh_mmin_arg1¹¹)
+//│ 			in (fun _lh_mmin_arg1¹² -> 
+//│ 				let _lh_matchIdent⁸ = _lh_mmin_arg1¹²
+//│ 				in case _lh_matchIdent⁸ of {
+//│ 					Z  => [Z]
+//│ 					| S _lh_mmin_S_0⁷ => mmin₀₀₁(_lh_mmin_S_0⁷, _lh_mmin_S_0⁶)
+//│ 					| _  => error⁰}))))
+//│ 		| _  => error⁰}
+//│ 	where
+//│ 	def mmin₀₀₀(_lh_mmin_arg1¹³, _lh_mmin_arg2⁵) = 
+//│ 		let _lh_matchIdent⁹ = _lh_mmin_arg2⁵
+//│ 		in _lh_matchIdent⁹(_lh_mmin_arg1¹³)
+//│ 	def mmin₀₀₁(_lh_mmin_arg1⁷, _lh_mmin_arg2³) = 
+//│ 		let _lh_matchIdent⁵ = _lh_mmin_arg2³
+//│ 		in _lh_matchIdent⁵(_lh_mmin_arg1⁷)
+//│ 	def mmul₀₀₀(_lh_mmul_arg1⁵, _lh_mmul_arg2⁶) = 
+//│ 		case _lh_mmul_arg1⁵ of {
+//│ 			Z  => [Z]
+//│ 			| S _lh_mmul_S_0⁴ => pplus₀₀₀(_lh_mmul_arg2⁶, mmul₀₀₀(_lh_mmul_S_0⁴, _lh_mmul_arg2⁶))
+//│ 			| _  => error⁰}
+//│ 		where
+//│ 		def pplus₀₀₀(_lh_pplus_arg1⁴, _lh_pplus_arg2⁴) = 
+//│ 			case _lh_pplus_arg1⁴ of {
+//│ 				Z  => _lh_pplus_arg2⁴
+//│ 				| S _lh_pplus_S_0⁴ => [S pplus₀₀₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)]
+//│ 				| _  => error⁰}
+//│ def fact₁₀₀(_lh_fact_arg1², _lh_fact_arg2²) = 
+//│ 	case _lh_fact_arg2² of {
+//│ 		Z  => [S [Z]]
+//│ 		| S _lh_fact_S_0² => mmul₁₀₀(
+//│ 			let _lh_mmul_S_0⁵ = _lh_fact_S_0²
+//│ 			in (fun _lh_mmul_arg2⁷ -> pplus₁₁₀(_lh_mmul_arg2⁷, mmul₁₁₀(_lh_mmul_S_0⁵, _lh_mmul_arg2⁷))), _lh_fact_arg1²(mmin₁₀₀([S _lh_fact_S_0²], 
+//│ 			let _lh_mmin_S_0⁴ = (fun _lh_mmin_arg1⁹ -> _lh_mmin_arg1⁹)
+//│ 			in (fun _lh_mmin_arg1¹⁰ -> 
+//│ 				let _lh_matchIdent⁷ = _lh_mmin_arg1¹⁰
+//│ 				in case _lh_matchIdent⁷ of {
+//│ 					Z  => [Z]
+//│ 					| S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴)
+//│ 					| _  => error⁰}))))
+//│ 		| _  => error⁰}
+//│ 	where
+//│ 	def mmin₁₀₀(_lh_mmin_arg1⁶, _lh_mmin_arg2²) = 
+//│ 		let _lh_matchIdent⁴ = _lh_mmin_arg2²
+//│ 		in _lh_matchIdent⁴(_lh_mmin_arg1⁶)
+//│ 	def mmin₁₀₁(_lh_mmin_arg1⁸, _lh_mmin_arg2⁴) = 
+//│ 		let _lh_matchIdent⁶ = _lh_mmin_arg2⁴
+//│ 		in _lh_matchIdent⁶(_lh_mmin_arg1⁸)
+//│ 	def mmul₁₀₀(_lh_mmul_arg1³, _lh_mmul_arg2⁴) = 
+//│ 		_lh_mmul_arg1³(_lh_mmul_arg2⁴)
+//│ 	def mmul₁₁₀(_lh_mmul_arg1⁴, _lh_mmul_arg2⁵) = 
+//│ 		case _lh_mmul_arg1⁴ of {
+//│ 			Z  => [Z]
+//│ 			| S _lh_mmul_S_0³ => pplus₁₀₀(_lh_mmul_arg2⁵, mmul₁₁₀(_lh_mmul_S_0³, _lh_mmul_arg2⁵))
+//│ 			| _  => error⁰}
+//│ 		where
+//│ 		def pplus₁₀₀(_lh_pplus_arg1³, _lh_pplus_arg2³) = 
+//│ 			case _lh_pplus_arg1³ of {
+//│ 				Z  => _lh_pplus_arg2³
+//│ 				| S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)]
+//│ 				| _  => error⁰}
+//│ 	def pplus₁₁₀(_lh_pplus_arg1⁵, _lh_pplus_arg2⁵) = 
+//│ 		case _lh_pplus_arg1⁵ of {
+//│ 			Z  => _lh_pplus_arg2⁵
+//│ 			| S _lh_pplus_S_0⁵ => [S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)]
+//│ 			| _  => error⁰}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [Z]: 212 --->
+//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 235
+//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₀₀₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 254
+//│ 	case _lh_pplus_arg1⁵ of {Z  => _lh_pplus_arg2⁵ | S _lh_pplus_S_0⁵ => [S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)] | _  => error⁰}: 325
+//│ [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)]: 233 --->
+//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 235
+//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₀₀₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 254
+//│ 	case _lh_pplus_arg1⁵ of {Z  => _lh_pplus_arg2⁵ | S _lh_pplus_S_0⁵ => [S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)] | _  => error⁰}: 325
+//│ [Z]: 273 --->
+//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 235
+//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₀₀₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 254
+//│ 	case _lh_pplus_arg1⁵ of {Z  => _lh_pplus_arg2⁵ | S _lh_pplus_S_0⁵ => [S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)] | _  => error⁰}: 325
+//│ [S [Z]]: 274 --->
+//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 235
+//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₀₀₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 254
+//│ 	case _lh_pplus_arg1⁵ of {Z  => _lh_pplus_arg2⁵ | S _lh_pplus_S_0⁵ => [S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)] | _  => error⁰}: 325
+//│ [S _lh_fact_S_0²]: 292 --->
+//│ 	case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰}: 305
+//│ [Z]: 298 --->
+//│ 	case _lh_fact_arg2² of {Z  => [S [Z]] | S _lh_fact_S_0² => mmul₁₀₀(let _lh_mmul_S_0⁵ = _lh_fact_S_0²
+//│ in (fun _lh_mmul_arg2⁷ -> pplus₁₁₀(_lh_mmul_arg2⁷, mmul₁₁₀(_lh_mmul_S_0⁵, _lh_mmul_arg2⁷))), _lh_fact_arg1²(mmin₁₀₀([S _lh_fact_S_0²], let _lh_mmin_S_0⁴ = (fun _lh_mmin_arg1⁹ -> _lh_mmin_arg1⁹)
+//│ in (fun _lh_mmin_arg1¹⁰ -> let _lh_matchIdent⁷ = _lh_mmin_arg1¹⁰
+//│ in case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰})))) | _  => error⁰}: 313
+//│ [S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)]: 323 --->
+//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 235
+//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₀₀₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 254
+//│ 	case _lh_pplus_arg1⁵ of {Z  => _lh_pplus_arg2⁵ | S _lh_pplus_S_0⁵ => [S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)] | _  => error⁰}: 325
+//│ [S _lh_fact_S_0³]: 333 --->
+//│ 	case _lh_mmul_arg1⁵ of {Z  => [Z] | S _lh_mmul_S_0⁴ => pplus₀₀₀(_lh_mmul_arg2⁶, mmul₀₀₀(_lh_mmul_S_0⁴, _lh_mmul_arg2⁶)) | _  => error⁰}: 269
+//│ [S _lh_fact_S_0³]: 338 --->
+//│ 	case _lh_matchIdent⁸ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₀₀₁(_lh_mmin_S_0⁷, _lh_mmin_S_0⁶) | _  => error⁰}: 351
+//│ [Z]: 344 --->
+//│ 	case _lh_fact_arg2² of {Z  => [S [Z]] | S _lh_fact_S_0² => mmul₁₀₀(let _lh_mmul_S_0⁵ = _lh_fact_S_0²
+//│ in (fun _lh_mmul_arg2⁷ -> pplus₁₁₀(_lh_mmul_arg2⁷, mmul₁₁₀(_lh_mmul_S_0⁵, _lh_mmul_arg2⁷))), _lh_fact_arg1²(mmin₁₀₀([S _lh_fact_S_0²], let _lh_mmin_S_0⁴ = (fun _lh_mmin_arg1⁹ -> _lh_mmin_arg1⁹)
+//│ in (fun _lh_mmin_arg1¹⁰ -> let _lh_matchIdent⁷ = _lh_mmin_arg1¹⁰
+//│ in case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰})))) | _  => error⁰}: 313
+//│ ------------------
+//│ case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 235 --->
+//│ 	[Z]: 212
+//│ 	[S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)]: 233
+//│ 	[Z]: 273
+//│ 	[S [Z]]: 274
+//│ 	[S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)]: 323
+//│ case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₀₀₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 254 --->
+//│ 	[Z]: 212
+//│ 	[S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)]: 233
+//│ 	[Z]: 273
+//│ 	[S [Z]]: 274
+//│ 	[S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)]: 323
+//│ case _lh_mmul_arg1⁵ of {Z  => [Z] | S _lh_mmul_S_0⁴ => pplus₀₀₀(_lh_mmul_arg2⁶, mmul₀₀₀(_lh_mmul_S_0⁴, _lh_mmul_arg2⁶)) | _  => error⁰}: 269 --->
+//│ 	NoProd
+//│ 	[S _lh_fact_S_0³]: 333
+//│ case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰}: 305 --->
+//│ 	[S _lh_fact_S_0²]: 292
+//│ case _lh_fact_arg2² of {Z  => [S [Z]] | S _lh_fact_S_0² => mmul₁₀₀(let _lh_mmul_S_0⁵ = _lh_fact_S_0²
+//│ in (fun _lh_mmul_arg2⁷ -> pplus₁₁₀(_lh_mmul_arg2⁷, mmul₁₁₀(_lh_mmul_S_0⁵, _lh_mmul_arg2⁷))), _lh_fact_arg1²(mmin₁₀₀([S _lh_fact_S_0²], let _lh_mmin_S_0⁴ = (fun _lh_mmin_arg1⁹ -> _lh_mmin_arg1⁹)
+//│ in (fun _lh_mmin_arg1¹⁰ -> let _lh_matchIdent⁷ = _lh_mmin_arg1¹⁰
+//│ in case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰})))) | _  => error⁰}: 313 --->
+//│ 	NoProd
+//│ 	[Z]: 298
+//│ 	[Z]: 344
+//│ case _lh_pplus_arg1⁵ of {Z  => _lh_pplus_arg2⁵ | S _lh_pplus_S_0⁵ => [S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)] | _  => error⁰}: 325 --->
+//│ 	[Z]: 212
+//│ 	[S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)]: 233
+//│ 	[Z]: 273
+//│ 	[S [Z]]: 274
+//│ 	[S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)]: 323
+//│ case _lh_matchIdent⁸ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₀₀₁(_lh_mmin_S_0⁷, _lh_mmin_S_0⁶) | _  => error⁰}: 351 --->
+//│ 	[S _lh_fact_S_0³]: 338
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [S _lh_fact_S_0²]: 292 --->
+//│ 	case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰}: 305
+//│ [S _lh_fact_S_0³]: 338 --->
+//│ 	case _lh_matchIdent⁸ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₀₀₁(_lh_mmin_S_0⁷, _lh_mmin_S_0⁶) | _  => error⁰}: 351
+//│ ------------------
+//│ case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰}: 305 --->
+//│ 	[S _lh_fact_S_0²]: 292
+//│ case _lh_matchIdent⁸ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₀₀₁(_lh_mmin_S_0⁷, _lh_mmin_S_0⁶) | _  => error⁰}: 351 --->
+//│ 	[S _lh_fact_S_0³]: 338
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ 
+//│ 	let mainFact² = (fun x⁴ -> fact₀₀₀((fun y⁴ -> x⁴(x⁴, y⁴))))((fun x⁵ -> fact₁₀₀((fun y⁵ -> x⁵(x⁵, y⁵)))))
+//│ 	in mainFact²(primId⁰([S [S [S [Z]]]]))
+//│ def fact₀₀₀(_lh_fact_arg1⁴, _lh_fact_arg2⁴) = 
+//│ 	case _lh_fact_arg2⁴ of {
+//│ 		Z  => [S [Z]]
+//│ 		| S _lh_fact_S_0³ => mmul₀₀₀([S _lh_fact_S_0³], _lh_fact_arg1⁴(mmin₀₀₀(
+//│ 			let _lh_mmin_S_0⁸ = _lh_fact_S_0³
+//│ 			in (fun _lh_mmin_S_0⁹ -> mmin₀₀₁(_lh_mmin_S_0⁸, _lh_mmin_S_0⁹)), 
+//│ 			let _lh_mmin_S_0¹⁰ = (fun _lh_mmin_arg1¹⁵ -> _lh_mmin_arg1¹⁵)
+//│ 			in (fun _lh_mmin_arg1¹⁶ -> 
+//│ 				let _lh_matchIdent¹¹ = _lh_mmin_arg1¹⁶
+//│ 				in _lh_matchIdent¹¹(_lh_mmin_S_0¹⁰)))))
+//│ 		| _  => error⁰}
+//│ 	where
+//│ 	def mmin₀₀₀(_lh_mmin_arg1²¹, _lh_mmin_arg2⁹) = 
+//│ 		let _lh_matchIdent¹⁵ = _lh_mmin_arg2⁹
+//│ 		in _lh_matchIdent¹⁵(_lh_mmin_arg1²¹)
+//│ 	def mmin₀₀₁(_lh_mmin_arg1¹⁸, _lh_mmin_arg2⁸) = 
+//│ 		let _lh_matchIdent¹³ = _lh_mmin_arg2⁸
+//│ 		in _lh_matchIdent¹³(_lh_mmin_arg1¹⁸)
+//│ 	def mmul₀₀₀(_lh_mmul_arg1⁶, _lh_mmul_arg2⁸) = 
+//│ 		case _lh_mmul_arg1⁶ of {
+//│ 			Z  => [Z]
+//│ 			| S _lh_mmul_S_0⁴ => pplus₀₀₀(_lh_mmul_arg2⁸, mmul₀₀₀(_lh_mmul_S_0⁴, _lh_mmul_arg2⁸))
+//│ 			| _  => error⁰}
+//│ 		where
+//│ 		def pplus₀₀₀(_lh_pplus_arg1⁸, _lh_pplus_arg2⁸) = 
+//│ 			case _lh_pplus_arg1⁸ of {
+//│ 				Z  => _lh_pplus_arg2⁸
+//│ 				| S _lh_pplus_S_0⁴ => [S pplus₀₀₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁸)]
+//│ 				| _  => error⁰}
+//│ def fact₁₀₀(_lh_fact_arg1⁵, _lh_fact_arg2⁵) = 
+//│ 	case _lh_fact_arg2⁵ of {
+//│ 		Z  => [S [Z]]
+//│ 		| S _lh_fact_S_0² => mmul₁₀₀(
+//│ 			let _lh_mmul_S_0⁶ = _lh_fact_S_0²
+//│ 			in (fun _lh_mmul_arg2¹⁰ -> pplus₁₁₀(_lh_mmul_arg2¹⁰, mmul₁₁₀(_lh_mmul_S_0⁶, _lh_mmul_arg2¹⁰))), _lh_fact_arg1⁵(mmin₁₀₀(
+//│ 			let _lh_mmin_S_0¹¹ = _lh_fact_S_0²
+//│ 			in (fun _lh_mmin_S_0¹² -> mmin₁₀₁(_lh_mmin_S_0¹¹, _lh_mmin_S_0¹²)), 
+//│ 			let _lh_mmin_S_0¹³ = (fun _lh_mmin_arg1¹⁹ -> _lh_mmin_arg1¹⁹)
+//│ 			in (fun _lh_mmin_arg1²⁰ -> 
+//│ 				let _lh_matchIdent¹⁴ = _lh_mmin_arg1²⁰
+//│ 				in _lh_matchIdent¹⁴(_lh_mmin_S_0¹³)))))
+//│ 		| _  => error⁰}
+//│ 	where
+//│ 	def mmin₁₀₀(_lh_mmin_arg1¹⁴, _lh_mmin_arg2⁶) = 
+//│ 		let _lh_matchIdent¹⁰ = _lh_mmin_arg2⁶
+//│ 		in _lh_matchIdent¹⁰(_lh_mmin_arg1¹⁴)
+//│ 	def mmin₁₀₁(_lh_mmin_arg1¹⁷, _lh_mmin_arg2⁷) = 
+//│ 		let _lh_matchIdent¹² = _lh_mmin_arg2⁷
+//│ 		in _lh_matchIdent¹²(_lh_mmin_arg1¹⁷)
+//│ 	def mmul₁₀₀(_lh_mmul_arg1⁷, _lh_mmul_arg2⁹) = 
+//│ 		_lh_mmul_arg1⁷(_lh_mmul_arg2⁹)
+//│ 	def mmul₁₁₀(_lh_mmul_arg1⁸, _lh_mmul_arg2¹¹) = 
+//│ 		case _lh_mmul_arg1⁸ of {
+//│ 			Z  => [Z]
+//│ 			| S _lh_mmul_S_0³ => pplus₁₀₀(_lh_mmul_arg2¹¹, mmul₁₁₀(_lh_mmul_S_0³, _lh_mmul_arg2¹¹))
+//│ 			| _  => error⁰}
+//│ 		where
+//│ 		def pplus₁₀₀(_lh_pplus_arg1⁷, _lh_pplus_arg2⁷) = 
+//│ 			case _lh_pplus_arg1⁷ of {
+//│ 				Z  => _lh_pplus_arg2⁷
+//│ 				| S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2⁷)]
+//│ 				| _  => error⁰}
+//│ 	def pplus₁₁₀(_lh_pplus_arg1⁶, _lh_pplus_arg2⁶) = 
+//│ 		case _lh_pplus_arg1⁶ of {
+//│ 			Z  => _lh_pplus_arg2⁶
+//│ 			| S _lh_pplus_S_0⁵ => [S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁶)]
+//│ 			| _  => error⁰}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [S [S [S [S [S [S [Z]]]]]]]
+//│ <<<<<<< evaluate <<<<<<<

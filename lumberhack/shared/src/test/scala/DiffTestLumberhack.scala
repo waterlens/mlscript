@@ -81,10 +81,15 @@ class DiffTestLumberhack extends DiffTests {
         output("\t\t---------- unoptimized haskell gen ----------")
         output(HaskellGen(originalProgram).linesIterator.map("\t\t" + _).mkString("\n"))
         output("\t\t---------- unoptimized haskell gen ----------")
-      else if mode.lhGenOCaml then
+      if mode.lhGenOCaml then
         output("\t\t---------- unoptimized ocaml gen ----------")
         output((new OCamlGen(true))(originalProgram).linesIterator.map("\t\t" + _).mkString("\n"))
         output("\t\t---------- unoptimized ocaml gen ----------")
+      if mode.lhGenDistill then
+        output("\t\t---------- unoptimized distiller gen ----------")
+        output(DistillerGen(originalProgram).linesIterator.map("\t\t" + _).mkString("\n"))
+        output("\t\t---------- unoptimized distiller gen ----------")
+
 
       output("<<<<<<<<<< Original <<<<<<<<<<")
     

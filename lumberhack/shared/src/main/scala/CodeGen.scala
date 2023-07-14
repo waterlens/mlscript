@@ -9,6 +9,7 @@ import ai.serenade.treesitter.{Parser, Node, Tree, Languages}
 import com.github.sbt.jni.syntax.NativeLoader
 import scala.collection.mutable.{Map => MutMap}
 import mlscript.utils.lastWords
+import scala.collection.immutable
 
 enum NestedPat {
   case WildcardPat
@@ -1420,5 +1421,104 @@ let string_of_int i = listToTaggedList (explode_string (string_of_int i));;""")
     fromSuperscript(fromSubscript(
       if id.isDef then id.pp(using InitPpConfig) else id.pp(using InitPpConfig.showIuidOn)
     ))
+  }
+}
+
+object DistillerGen extends CodeGen {
+  override def generateTypeInfo(d: Deforest): String = ???
+  override def makeBenchFiles(programs: List[(String, Program)]): String = ???
+  override val headers: Document = ""
+  override val primitives: Map[String, String] = Map(
+    "+" -> "plus", "-" -> "minus", "*" -> "mul", "mult" -> "mul", "/" -> "div",
+    ">" -> "gt", "<" -> "lt", "==" -> "eqNat",
+    "<=" -> "le", ">=" -> "ge"
+  )
+
+  override def rec(e: Expr): Document = recSingleline(e)
+  def recSingleline(e: Expr): Document = e match {
+    case Const(lit) => Raw(lit.idStr)
+    case Ref(id) if Deforest.lumberhackKeywords(id.tree.name) => id.tree.name
+    case Ref(id) => transfromId(id)
+    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackBinOps(op) =>
+      "(" <:> s"${primitives.getOrElse(op, op)} " <:> recSingleline(fst) <:> " " <:> recSingleline(snd) <:> ")"
+    case Call(Ref(Ident(_, Var("primId"), _)), arg) => recSingleline(arg)
+    case Call(lhs, rhs) =>
+      "(" <:> recSingleline(lhs) <:> " " <:> recSingleline(rhs) <:> ")"
+    case Ctor(name, args) if args.length > 0 =>
+      "(" <:> name.name <:> "(" <:> Lined(args.map(arg => recSingleline(arg)), ", ") <:> "))"
+    case Ctor(name, args) => 
+      "(" <:> name.name <:> ")"
+    case LetIn(id, rhs, body) => 
+      "(let " <:> transfromId(id) <:> " = " <:> recSingleline(rhs) <:> " in " <:> recSingleline(body) <:> ")"
+    case Match(scrut, arms) => 
+      "(case " <:> recSingleline(scrut) <:> " of " <:> 
+      Lined(arms.map{ case (v, args, body) => transformMatchArm(v, args) <:> recSingleline(body) }, " | ") <:> ")"
+    case f: Function =>
+      val (params, body) = f.takeParamsOut
+      "(\\" <:> Lined(params.map(transfromId), " ") <:> " -> " <:> recSingleline(body) <:> ")"
+    case IfThenElse(s, t, e) =>
+      "(case " <:> recSingleline(s) <:> " of True -> (" <:> recSingleline(t) <:> ") | False -> (" <:> recSingleline(e) <:> "))"
+    case _ => lastWords("unsupported: " + e.pp(using InitPpConfig.showIuidOn))
+  }
+  override def transFromProgDef(pd: ProgDef): Document = {
+    pd.body match {
+      case bodyFun@Function(param, body) => {
+        val (params, innerBody) = bodyFun.takeParamsOut
+        stack(
+          transfromId(pd.id) <:> Lined(params.map(p => " " <:> transfromId(p)), "") <:> " =",
+          Indented(rec(innerBody))
+        )
+      }
+      case _ => stack(
+        transfromId(pd.id) <:> " =",
+        Indented(rec(pd.body))
+      )
+    }
+  }
+  override def transformMatchArm(dtor: Var, params: List[Ident]): Document = {
+    BuiltInTypes.fromStr(dtor.name) -> params match {
+      // case Some(BuiltInTypes.ListCons) -> (h :: t :: Nil) => "(" <:> transfromId(h) <:> " : " <:> transfromId(t) <:> ") -> "
+      // case Some(BuiltInTypes.ListNil) -> Nil => "[] -> "
+      // case Some(BuiltInTypes.Tuple(n)) -> fields => {
+      //   assert(fields.length == n)
+      //   "(" <:> Lined(fields.map(f => transfromId(f)), ", ") <:> ") -> "
+      // }
+      // case Some(BuiltInTypes.BoolTrue) -> Nil => "True -> "
+      // case Some(BuiltInTypes.BoolFalse) -> Nil => "False -> "
+      // case None -> (idPat :: Nil) if dtor.name == "_" => transfromId(idPat) <:> " -> "
+      // case None -> Nil if dtor.name == "_" => "_ -> "
+      case _ if params.length > 0 => dtor.name <:> "(" <:> Lined(params.map(arg => transfromId(arg)), ", ") <:> ") -> "
+      case _ => dtor.name <:> " -> "
+    }
+  }
+  override def transfromId(id: Ident): Document = {
+    def fromSubscript(i: String) = i.flatMap {
+      case '₀' => "_d0"; case '₁' => "_d1"; case '₂' => "_d2"
+      case '₃' => "_d3"; case '₄' => "_d4"; case '₅' => "_d5"
+      case '₆' => "_d6"; case '₇' => "_d7"; case '₈' => "_d8"
+      case '₉' => "_d9"; case c => c.toString()
+    }
+    def fromSuperscript(i: String) = i.flatMap {
+      case '⁰' => "_0"; case '¹' => "_1"; case '²' => "_2"
+      case '³' => "_3"; case '⁴' => "_4"; case '⁵' => "_5"
+      case '⁶' => "_6"; case '⁷' => "_7"; case '⁸' => "_8"
+      case '⁹' => "_9"; case c => c.toString()
+    }
+    fromSuperscript(fromSubscript(
+      if id.isDef then id.pp(using InitPpConfig) else id.pp(using InitPpConfig.showIuidOn)
+    ))
+  }
+
+  override def apply(p: Program, bigLetRec: Boolean): String = {
+    Stacked(
+      p.contents.sortBy {
+        case Left(progDef) => progDef.id.tree.name
+        case Right(expr) => ""
+      }.map {
+        case R(e) => "main = " <:> rec(e) <:> ";"
+        case L(pd) => transFromProgDef(pd) <:> ";"
+      },
+      emptyLines = false
+    ).print.dropRight(1)
   }
 }

@@ -1,0 +1,1422 @@
+:NewParser
+:ParseOnly
+
+:lhInHaskell
+:lhGenOCaml
+sumFloat [] = 0.0
+sumFloat (h:t) = h +. (sumFloat t)
+enumFromFloat a = lazy (a:(enumFromFloat (a +. 1.0)))
+integrate1D l u f =
+  let d = (u -. l) /. 8.0 in
+     d *. (sumFloat
+      [ (f l) *. 0.5,
+        f (l +. d),
+        f (l +. (2.0 *. d)),
+        f (l +. (3.0 *. d)),
+        f (l +. (4.0 *. d)),
+        f (u -. (3.0 *. d)),
+        f (u -. (2.0 *. d)),
+        f (u -. d),
+        (f u) *. 0.5])
+integrate2D l1 u1 l2 u2 f = integrate1D l2 u2
+            (\y -> integrate1D l1 u1
+              (\x -> f x y))
+zark u v = integrate2D 0.0 u 0.0 v (\x -> (\y -> x *. y))
+ints _ = enumFromFloat 1.0
+zarks _ = zipWith_lz_lz zark (ints 0) (map_lz (\n -> 2.0 *. n) (ints 0))
+rtotals _ = lazy ((head_lz (zarks 0)) : (zipWith_lz_lz (\a b -> a +. b) (tail_lz (zarks 0)) (rtotals 0)))
+rtotal n = atIndex_lz n (rtotals 0)
+is _ = map_lz (\a -> a *. a *. a *. a) (ints 0)
+itotals _ = lazy ((head_lz (is 0)) : (zipWith_lz_lz (\a b -> a +. b) (tail_lz (is 0)) (itotals 0)))
+itotal n = atIndex_lz n (itotals 0)
+etotal n = sumFloat (take_lz n (map_lz (\a -> a *. a) (zipWith_lz_lz (\a b -> a -. b) (rtotals 0) (itotals 0))))
+testIntegrate_nofib n = etotal n
+testIntegrate_nofib $ primId 100
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testIntegrate_nofib₀^2091(primId⁰(100))
+//│ def enumFromFloat₀(_lh_enumFromFloat_arg1²) = lazy⁰([LH_C _lh_enumFromFloat_arg1² enumFromFloat₀^1173((_lh_enumFromFloat_arg1² +. 1.0))])
+//│ def enumFromFloat₁(_lh_enumFromFloat_arg1¹) = lazy⁰([LH_C _lh_enumFromFloat_arg1¹ enumFromFloat₁^1090((_lh_enumFromFloat_arg1¹ +. 1.0))])
+//│ def enumFromFloat₂(_lh_enumFromFloat_arg1⁵) = lazy⁰([LH_C _lh_enumFromFloat_arg1⁵ enumFromFloat₂^1808((_lh_enumFromFloat_arg1⁵ +. 1.0))])
+//│ def enumFromFloat₃(_lh_enumFromFloat_arg1³) = lazy⁰([LH_C _lh_enumFromFloat_arg1³ enumFromFloat₃^1189((_lh_enumFromFloat_arg1³ +. 1.0))])
+//│ def enumFromFloat₄(_lh_enumFromFloat_arg1⁶) = lazy⁰([LH_C _lh_enumFromFloat_arg1⁶ enumFromFloat₄^1944((_lh_enumFromFloat_arg1⁶ +. 1.0))])
+//│ def enumFromFloat₅(_lh_enumFromFloat_arg1⁴) = lazy⁰([LH_C _lh_enumFromFloat_arg1⁴ enumFromFloat₅^1741((_lh_enumFromFloat_arg1⁴ +. 1.0))])
+//│ def etotal₀(_lh_etotal_arg1¹) = sumFloat₄^1773(take_lz₀^1774(_lh_etotal_arg1¹, map_lz₂^1777((fun a¹² -> (a¹² *. a¹²)), zipWith_lz_lz₄^1785((fun a¹³ -> (fun b⁶ -> (a¹³ -. b⁶))), rtotals₀^1794(0), itotals₀^1798(0)))))
+//│ def head_lz₀(ls²²) = case force⁰(ls²²) of {
+//│ 	LH_C h²³ t²⁵ => h²³
+//│ 	| LH_N  => error⁰}
+//│ def head_lz₁(ls²³) = case force⁰(ls²³) of {
+//│ 	LH_C h²⁴ t²⁶ => h²⁴
+//│ 	| LH_N  => error⁰}
+//│ def integrate1D₀(_lh_integrate1D_arg1¹, _lh_integrate1D_arg2¹, _lh_integrate1D_arg3¹) = 
+//│ 	let d¹ = ((_lh_integrate1D_arg2¹ -. _lh_integrate1D_arg1¹) /. 8.0)
+//│ 	in (d¹ *. sumFloat₀^953([LH_C (_lh_integrate1D_arg3¹(_lh_integrate1D_arg1¹) *. 0.5) [LH_C _lh_integrate1D_arg3¹((_lh_integrate1D_arg1¹ +. d¹)) [LH_C _lh_integrate1D_arg3¹((_lh_integrate1D_arg1¹ +. (2.0 *. d¹))) [LH_C _lh_integrate1D_arg3¹((_lh_integrate1D_arg1¹ +. (3.0 *. d¹))) [LH_C _lh_integrate1D_arg3¹((_lh_integrate1D_arg1¹ +. (4.0 *. d¹))) [LH_C _lh_integrate1D_arg3¹((_lh_integrate1D_arg2¹ -. (3.0 *. d¹))) [LH_C _lh_integrate1D_arg3¹((_lh_integrate1D_arg2¹ -. (2.0 *. d¹))) [LH_C _lh_integrate1D_arg3¹((_lh_integrate1D_arg2¹ -. d¹)) [LH_C (_lh_integrate1D_arg3¹(_lh_integrate1D_arg2¹) *. 0.5) [LH_N]]]]]]]]]]))
+//│ def integrate1D₁(_lh_integrate1D_arg1⁴, _lh_integrate1D_arg2⁴, _lh_integrate1D_arg3⁴) = 
+//│ 	let d⁴ = ((_lh_integrate1D_arg2⁴ -. _lh_integrate1D_arg1⁴) /. 8.0)
+//│ 	in (d⁴ *. sumFloat₁^1966([LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg1⁴) *. 0.5) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. d⁴)) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]]]]]))
+//│ def integrate1D₂(_lh_integrate1D_arg1², _lh_integrate1D_arg2², _lh_integrate1D_arg3²) = 
+//│ 	let d² = ((_lh_integrate1D_arg2² -. _lh_integrate1D_arg1²) /. 8.0)
+//│ 	in (d² *. sumFloat₂^1222([LH_C (_lh_integrate1D_arg3²(_lh_integrate1D_arg1²) *. 0.5) [LH_C _lh_integrate1D_arg3²((_lh_integrate1D_arg1² +. d²)) [LH_C _lh_integrate1D_arg3²((_lh_integrate1D_arg1² +. (2.0 *. d²))) [LH_C _lh_integrate1D_arg3²((_lh_integrate1D_arg1² +. (3.0 *. d²))) [LH_C _lh_integrate1D_arg3²((_lh_integrate1D_arg1² +. (4.0 *. d²))) [LH_C _lh_integrate1D_arg3²((_lh_integrate1D_arg2² -. (3.0 *. d²))) [LH_C _lh_integrate1D_arg3²((_lh_integrate1D_arg2² -. (2.0 *. d²))) [LH_C _lh_integrate1D_arg3²((_lh_integrate1D_arg2² -. d²)) [LH_C (_lh_integrate1D_arg3²(_lh_integrate1D_arg2²) *. 0.5) [LH_N]]]]]]]]]]))
+//│ def integrate1D₃(_lh_integrate1D_arg1³, _lh_integrate1D_arg2³, _lh_integrate1D_arg3³) = 
+//│ 	let d³ = ((_lh_integrate1D_arg2³ -. _lh_integrate1D_arg1³) /. 8.0)
+//│ 	in (d³ *. sumFloat₃^1533([LH_C (_lh_integrate1D_arg3³(_lh_integrate1D_arg1³) *. 0.5) [LH_C _lh_integrate1D_arg3³((_lh_integrate1D_arg1³ +. d³)) [LH_C _lh_integrate1D_arg3³((_lh_integrate1D_arg1³ +. (2.0 *. d³))) [LH_C _lh_integrate1D_arg3³((_lh_integrate1D_arg1³ +. (3.0 *. d³))) [LH_C _lh_integrate1D_arg3³((_lh_integrate1D_arg1³ +. (4.0 *. d³))) [LH_C _lh_integrate1D_arg3³((_lh_integrate1D_arg2³ -. (3.0 *. d³))) [LH_C _lh_integrate1D_arg3³((_lh_integrate1D_arg2³ -. (2.0 *. d³))) [LH_C _lh_integrate1D_arg3³((_lh_integrate1D_arg2³ -. d³)) [LH_C (_lh_integrate1D_arg3³(_lh_integrate1D_arg2³) *. 0.5) [LH_N]]]]]]]]]]))
+//│ def integrate2D₀(_lh_integrate2D_arg1², _lh_integrate2D_arg2², _lh_integrate2D_arg3², _lh_integrate2D_arg4², _lh_integrate2D_arg5²) = integrate1D₀^1914(_lh_integrate2D_arg3², _lh_integrate2D_arg4², (fun y⁵ -> integrate1D₁^1919(_lh_integrate2D_arg1², _lh_integrate2D_arg2², (fun x⁷ -> _lh_integrate2D_arg5²(x⁷, y⁵)))))
+//│ def integrate2D₁(_lh_integrate2D_arg1¹, _lh_integrate2D_arg2¹, _lh_integrate2D_arg3¹, _lh_integrate2D_arg4¹, _lh_integrate2D_arg5¹) = integrate1D₂^1685(_lh_integrate2D_arg3¹, _lh_integrate2D_arg4¹, (fun y³ -> integrate1D₃^1690(_lh_integrate2D_arg1¹, _lh_integrate2D_arg2¹, (fun x⁵ -> _lh_integrate2D_arg5¹(x⁵, y³)))))
+//│ def ints₀(_lh_ints_arg1³) = enumFromFloat₀^1484(1.0)
+//│ def ints₁(_lh_ints_arg1⁶) = enumFromFloat₁^1938(1.0)
+//│ def ints₂(_lh_ints_arg1⁴) = enumFromFloat₂^1633(1.0)
+//│ def ints₃(_lh_ints_arg1⁵) = enumFromFloat₃^1655(1.0)
+//│ def ints₄(_lh_ints_arg1¹) = enumFromFloat₄^1183(1.0)
+//│ def ints₅(_lh_ints_arg1²) = enumFromFloat₅^1199(1.0)
+//│ def is₀(_lh_is_arg1²) = map_lz₀^1865((fun a¹⁵ -> (((a¹⁵ *. a¹⁵) *. a¹⁵) *. a¹⁵)), ints₀^1881(0))
+//│ def is₁(_lh_is_arg1¹) = map_lz₁^1355((fun a¹⁰ -> (((a¹⁰ *. a¹⁰) *. a¹⁰) *. a¹⁰)), ints₁^1371(0))
+//│ def itotals₀(_lh_itotals_arg1¹) = lazy⁰([LH_C head_lz₀^1819(is₀^1820(0)) zipWith_lz_lz₀^1824((fun a¹⁴ -> (fun b⁷ -> (a¹⁴ +. b⁷))), tail_lz₀^1833(is₁^1834(0)), itotals₀^1839(0))])
+//│ def map_lz₀(f¹⁴, ls²¹) = lazy⁰(case force⁰(ls²¹) of {
+//│ 	LH_C h²² t²⁴ => [LH_C f¹⁴(h²²) map_lz₀^1125(f¹⁴, t²⁴)]
+//│ 	| LH_N  => [LH_N]})
+//│ def map_lz₁(f¹³, ls²⁰) = lazy⁰(case force⁰(ls²⁰) of {
+//│ 	LH_C h²¹ t²³ => [LH_C f¹³(h²¹) map_lz₁^1107(f¹³, t²³)]
+//│ 	| LH_N  => [LH_N]})
+//│ def map_lz₂(f¹⁸, ls²⁴) = lazy⁰(case force⁰(ls²⁴) of {
+//│ 	LH_C h²⁵ t²⁷ => [LH_C f¹⁸(h²⁵) map_lz₂^1644(f¹⁸, t²⁷)]
+//│ 	| LH_N  => [LH_N]})
+//│ def map_lz₃(f²⁰, ls²⁷) = lazy⁰(case force⁰(ls²⁷) of {
+//│ 	LH_C h²⁸ t³⁰ => [LH_C f²⁰(h²⁸) map_lz₃^1762(f²⁰, t³⁰)]
+//│ 	| LH_N  => [LH_N]})
+//│ def map_lz₄(f¹⁹, ls²⁶) = lazy⁰(case force⁰(ls²⁶) of {
+//│ 	LH_C h²⁷ t²⁹ => [LH_C f¹⁹(h²⁷) map_lz₄^1716(f¹⁹, t²⁹)]
+//│ 	| LH_N  => [LH_N]})
+//│ def rtotals₀(_lh_rtotals_arg1¹) = lazy⁰([LH_C head_lz₁^1417(zarks₀^1418(0)) zipWith_lz_lz₃^1422((fun a¹¹ -> (fun b⁵ -> (a¹¹ +. b⁵))), tail_lz₁^1431(zarks₁^1432(0)), rtotals₀^1437(0))])
+//│ def sumFloat₀(_lh_sumFloat_arg1¹) = case _lh_sumFloat_arg1¹ of {
+//│ 	LH_N  => 0.0
+//│ 	| LH_C _lh_sumFloat_LH_C_0¹ _lh_sumFloat_LH_C_1¹ => (_lh_sumFloat_LH_C_0¹ +. sumFloat₀^1327(_lh_sumFloat_LH_C_1¹))
+//│ 	| _  => error⁰}
+//│ def sumFloat₁(_lh_sumFloat_arg1⁴) = case _lh_sumFloat_arg1⁴ of {
+//│ 	LH_N  => 0.0
+//│ 	| LH_C _lh_sumFloat_LH_C_0⁴ _lh_sumFloat_LH_C_1⁴ => (_lh_sumFloat_LH_C_0⁴ +. sumFloat₁^1493(_lh_sumFloat_LH_C_1⁴))
+//│ 	| _  => error⁰}
+//│ def sumFloat₂(_lh_sumFloat_arg1³) = case _lh_sumFloat_arg1³ of {
+//│ 	LH_N  => 0.0
+//│ 	| LH_C _lh_sumFloat_LH_C_0³ _lh_sumFloat_LH_C_1³ => (_lh_sumFloat_LH_C_0³ +. sumFloat₂^1449(_lh_sumFloat_LH_C_1³))
+//│ 	| _  => error⁰}
+//│ def sumFloat₃(_lh_sumFloat_arg1²) = case _lh_sumFloat_arg1² of {
+//│ 	LH_N  => 0.0
+//│ 	| LH_C _lh_sumFloat_LH_C_0² _lh_sumFloat_LH_C_1² => (_lh_sumFloat_LH_C_0² +. sumFloat₃^1409(_lh_sumFloat_LH_C_1²))
+//│ 	| _  => error⁰}
+//│ def sumFloat₄(_lh_sumFloat_arg1⁵) = case _lh_sumFloat_arg1⁵ of {
+//│ 	LH_N  => 0.0
+//│ 	| LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₄^1732(_lh_sumFloat_LH_C_1⁵))
+//│ 	| _  => error⁰}
+//│ def tail_lz₀(ls²⁵) = case force⁰(ls²⁵) of {
+//│ 	LH_C h²⁶ t²⁸ => t²⁸
+//│ 	| LH_N  => error⁰}
+//│ def tail_lz₁(ls¹⁹) = case force⁰(ls¹⁹) of {
+//│ 	LH_C h²⁰ t²² => t²²
+//│ 	| LH_N  => error⁰}
+//│ def take_lz₀(n⁷, ls²⁸) = if (n⁷ > 0) then case force⁰(ls²⁸) of {
+//│ 	LH_C h²⁹ t³¹ => [LH_C h²⁹ take_lz₀^2075((n⁷ - 1), t³¹)]
+//│ 	| LH_N  => [LH_N]} else [LH_N]
+//│ def testIntegrate_nofib₀(_lh_testIntegrate_nofib_arg1¹) = etotal₀^1751(_lh_testIntegrate_nofib_arg1¹)
+//│ def zarks₀(_lh_zarks_arg1²) = zipWith_lz_lz₁^1500(zark₀^1501, ints₂^1503(0), map_lz₃^1507((fun n⁶ -> (2.0 *. n⁶)), ints₃^1515(0)))
+//│ def zarks₁(_lh_zarks_arg1¹) = zipWith_lz_lz₂^1334(zark₁^1335, ints₄^1337(0), map_lz₄^1341((fun n⁵ -> (2.0 *. n⁵)), ints₅^1349(0)))
+//│ def zark₀(_lh_zark_arg1², _lh_zark_arg2²) = integrate2D₀^1846(0.0, _lh_zark_arg1², 0.0, _lh_zark_arg2², (fun x⁶ -> (fun y⁴ -> (x⁶ *. y⁴))))
+//│ def zark₁(_lh_zark_arg1¹, _lh_zark_arg2¹) = integrate2D₁^1666(0.0, _lh_zark_arg1¹, 0.0, _lh_zark_arg2¹, (fun x⁴ -> (fun y² -> (x⁴ *. y²))))
+//│ def zipWith_lz_lz₀(f¹², xs⁹, ys⁹) = lazy⁰(case force⁰(xs⁹) of {
+//│ 	LH_C hx⁸ tx⁸ => case force⁰(ys⁹) of {
+//│ 		LH_C hy⁸ ty⁸ => [LH_C f¹²(hx⁸, hy⁸) zipWith_lz_lz₀^1072(f¹², tx⁸, ty⁸)]
+//│ 		| LH_N  => [LH_N]}
+//│ 	| LH_N  => [LH_N]})
+//│ def zipWith_lz_lz₁(f²¹, xs¹³, ys¹³) = lazy⁰(case force⁰(xs¹³) of {
+//│ 	LH_C hx¹² tx¹² => case force⁰(ys¹³) of {
+//│ 		LH_C hy¹² ty¹² => [LH_C f²¹(hx¹², hy¹²) zipWith_lz_lz₁^1898(f²¹, tx¹², ty¹²)]
+//│ 		| LH_N  => [LH_N]}
+//│ 	| LH_N  => [LH_N]})
+//│ def zipWith_lz_lz₂(f¹⁶, xs¹¹, ys¹¹) = lazy⁰(case force⁰(xs¹¹) of {
+//│ 	LH_C hx¹⁰ tx¹⁰ => case force⁰(ys¹¹) of {
+//│ 		LH_C hy¹⁰ ty¹⁰ => [LH_C f¹⁶(hx¹⁰, hy¹⁰) zipWith_lz_lz₂^1388(f¹⁶, tx¹⁰, ty¹⁰)]
+//│ 		| LH_N  => [LH_N]}
+//│ 	| LH_N  => [LH_N]})
+//│ def zipWith_lz_lz₃(f¹⁷, xs¹², ys¹²) = lazy⁰(case force⁰(xs¹²) of {
+//│ 	LH_C hx¹¹ tx¹¹ => case force⁰(ys¹²) of {
+//│ 		LH_C hy¹¹ ty¹¹ => [LH_C f¹⁷(hx¹¹, hy¹¹) zipWith_lz_lz₃^1468(f¹⁷, tx¹¹, ty¹¹)]
+//│ 		| LH_N  => [LH_N]}
+//│ 	| LH_N  => [LH_N]})
+//│ def zipWith_lz_lz₄(f¹⁵, xs¹⁰, ys¹⁰) = lazy⁰(case force⁰(xs¹⁰) of {
+//│ 	LH_C hx⁹ tx⁹ => case force⁰(ys¹⁰) of {
+//│ 		LH_C hy⁹ ty⁹ => [LH_C f¹⁵(hx⁹, hy⁹) zipWith_lz_lz₄^1148(f¹⁵, tx⁹, ty⁹)]
+//│ 		| LH_N  => [LH_N]}
+//│ 	| LH_N  => [LH_N]})
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec enumFromFloat_d0 _lh_enumFromFloat_arg1_2 =
+//│ 		  (lazy (`LH_C(_lh_enumFromFloat_arg1_2, (enumFromFloat_d0 (_lh_enumFromFloat_arg1_2 +. 1.0)))))
+//│ 		and enumFromFloat_d1 _lh_enumFromFloat_arg1_1 =
+//│ 		  (lazy (`LH_C(_lh_enumFromFloat_arg1_1, (enumFromFloat_d1 (_lh_enumFromFloat_arg1_1 +. 1.0)))))
+//│ 		and enumFromFloat_d2 _lh_enumFromFloat_arg1_5 =
+//│ 		  (lazy (`LH_C(_lh_enumFromFloat_arg1_5, (enumFromFloat_d2 (_lh_enumFromFloat_arg1_5 +. 1.0)))))
+//│ 		and enumFromFloat_d3 _lh_enumFromFloat_arg1_3 =
+//│ 		  (lazy (`LH_C(_lh_enumFromFloat_arg1_3, (enumFromFloat_d3 (_lh_enumFromFloat_arg1_3 +. 1.0)))))
+//│ 		and enumFromFloat_d4 _lh_enumFromFloat_arg1_6 =
+//│ 		  (lazy (`LH_C(_lh_enumFromFloat_arg1_6, (enumFromFloat_d4 (_lh_enumFromFloat_arg1_6 +. 1.0)))))
+//│ 		and enumFromFloat_d5 _lh_enumFromFloat_arg1_4 =
+//│ 		  (lazy (`LH_C(_lh_enumFromFloat_arg1_4, (enumFromFloat_d5 (_lh_enumFromFloat_arg1_4 +. 1.0)))))
+//│ 		and etotal_d0 _lh_etotal_arg1_1 =
+//│ 		  (sumFloat_d4 ((take_lz_d0 _lh_etotal_arg1_1) ((map_lz_d2 (fun a_1_2 -> 
+//│ 		    (a_1_2 *. a_1_2))) (((zipWith_lz_lz_d4 (fun a_1_3 b_6 -> 
+//│ 		    (a_1_3 -. b_6))) (rtotals_d0 0)) (itotals_d0 0)))))
+//│ 		and head_lz_d0 ls_2_2 =
+//│ 		  (match (Lazy.force ls_2_2) with
+//│ 		    | `LH_C(h_2_3, t_2_5) -> 
+//│ 		      h_2_3
+//│ 		    | `LH_N -> 
+//│ 		      (failwith "error"))
+//│ 		and head_lz_d1 ls_2_3 =
+//│ 		  (match (Lazy.force ls_2_3) with
+//│ 		    | `LH_C(h_2_4, t_2_6) -> 
+//│ 		      h_2_4
+//│ 		    | `LH_N -> 
+//│ 		      (failwith "error"))
+//│ 		and integrate1D_d0 _lh_integrate1D_arg1_1 _lh_integrate1D_arg2_1 _lh_integrate1D_arg3_1 =
+//│ 		  (let rec d_1 = ((_lh_integrate1D_arg2_1 -. _lh_integrate1D_arg1_1) /. 8.0) in
+//│ 		    (d_1 *. (sumFloat_d0 (`LH_C(((_lh_integrate1D_arg3_1 _lh_integrate1D_arg1_1) *. 0.5), (`LH_C((_lh_integrate1D_arg3_1 (_lh_integrate1D_arg1_1 +. d_1)), (`LH_C((_lh_integrate1D_arg3_1 (_lh_integrate1D_arg1_1 +. (2.0 *. d_1))), (`LH_C((_lh_integrate1D_arg3_1 (_lh_integrate1D_arg1_1 +. (3.0 *. d_1))), (`LH_C((_lh_integrate1D_arg3_1 (_lh_integrate1D_arg1_1 +. (4.0 *. d_1))), (`LH_C((_lh_integrate1D_arg3_1 (_lh_integrate1D_arg2_1 -. (3.0 *. d_1))), (`LH_C((_lh_integrate1D_arg3_1 (_lh_integrate1D_arg2_1 -. (2.0 *. d_1))), (`LH_C((_lh_integrate1D_arg3_1 (_lh_integrate1D_arg2_1 -. d_1)), (`LH_C(((_lh_integrate1D_arg3_1 _lh_integrate1D_arg2_1) *. 0.5), (`LH_N))))))))))))))))))))))
+//│ 		and integrate1D_d1 _lh_integrate1D_arg1_4 _lh_integrate1D_arg2_4 _lh_integrate1D_arg3_4 =
+//│ 		  (let rec d_4 = ((_lh_integrate1D_arg2_4 -. _lh_integrate1D_arg1_4) /. 8.0) in
+//│ 		    (d_4 *. (sumFloat_d1 (`LH_C(((_lh_integrate1D_arg3_4 _lh_integrate1D_arg1_4) *. 0.5), (`LH_C((_lh_integrate1D_arg3_4 (_lh_integrate1D_arg1_4 +. d_4)), (`LH_C((_lh_integrate1D_arg3_4 (_lh_integrate1D_arg1_4 +. (2.0 *. d_4))), (`LH_C((_lh_integrate1D_arg3_4 (_lh_integrate1D_arg1_4 +. (3.0 *. d_4))), (`LH_C((_lh_integrate1D_arg3_4 (_lh_integrate1D_arg1_4 +. (4.0 *. d_4))), (`LH_C((_lh_integrate1D_arg3_4 (_lh_integrate1D_arg2_4 -. (3.0 *. d_4))), (`LH_C((_lh_integrate1D_arg3_4 (_lh_integrate1D_arg2_4 -. (2.0 *. d_4))), (`LH_C((_lh_integrate1D_arg3_4 (_lh_integrate1D_arg2_4 -. d_4)), (`LH_C(((_lh_integrate1D_arg3_4 _lh_integrate1D_arg2_4) *. 0.5), (`LH_N))))))))))))))))))))))
+//│ 		and integrate1D_d2 _lh_integrate1D_arg1_2 _lh_integrate1D_arg2_2 _lh_integrate1D_arg3_2 =
+//│ 		  (let rec d_2 = ((_lh_integrate1D_arg2_2 -. _lh_integrate1D_arg1_2) /. 8.0) in
+//│ 		    (d_2 *. (sumFloat_d2 (`LH_C(((_lh_integrate1D_arg3_2 _lh_integrate1D_arg1_2) *. 0.5), (`LH_C((_lh_integrate1D_arg3_2 (_lh_integrate1D_arg1_2 +. d_2)), (`LH_C((_lh_integrate1D_arg3_2 (_lh_integrate1D_arg1_2 +. (2.0 *. d_2))), (`LH_C((_lh_integrate1D_arg3_2 (_lh_integrate1D_arg1_2 +. (3.0 *. d_2))), (`LH_C((_lh_integrate1D_arg3_2 (_lh_integrate1D_arg1_2 +. (4.0 *. d_2))), (`LH_C((_lh_integrate1D_arg3_2 (_lh_integrate1D_arg2_2 -. (3.0 *. d_2))), (`LH_C((_lh_integrate1D_arg3_2 (_lh_integrate1D_arg2_2 -. (2.0 *. d_2))), (`LH_C((_lh_integrate1D_arg3_2 (_lh_integrate1D_arg2_2 -. d_2)), (`LH_C(((_lh_integrate1D_arg3_2 _lh_integrate1D_arg2_2) *. 0.5), (`LH_N))))))))))))))))))))))
+//│ 		and integrate1D_d3 _lh_integrate1D_arg1_3 _lh_integrate1D_arg2_3 _lh_integrate1D_arg3_3 =
+//│ 		  (let rec d_3 = ((_lh_integrate1D_arg2_3 -. _lh_integrate1D_arg1_3) /. 8.0) in
+//│ 		    (d_3 *. (sumFloat_d3 (`LH_C(((_lh_integrate1D_arg3_3 _lh_integrate1D_arg1_3) *. 0.5), (`LH_C((_lh_integrate1D_arg3_3 (_lh_integrate1D_arg1_3 +. d_3)), (`LH_C((_lh_integrate1D_arg3_3 (_lh_integrate1D_arg1_3 +. (2.0 *. d_3))), (`LH_C((_lh_integrate1D_arg3_3 (_lh_integrate1D_arg1_3 +. (3.0 *. d_3))), (`LH_C((_lh_integrate1D_arg3_3 (_lh_integrate1D_arg1_3 +. (4.0 *. d_3))), (`LH_C((_lh_integrate1D_arg3_3 (_lh_integrate1D_arg2_3 -. (3.0 *. d_3))), (`LH_C((_lh_integrate1D_arg3_3 (_lh_integrate1D_arg2_3 -. (2.0 *. d_3))), (`LH_C((_lh_integrate1D_arg3_3 (_lh_integrate1D_arg2_3 -. d_3)), (`LH_C(((_lh_integrate1D_arg3_3 _lh_integrate1D_arg2_3) *. 0.5), (`LH_N))))))))))))))))))))))
+//│ 		and integrate2D_d0 _lh_integrate2D_arg1_2 _lh_integrate2D_arg2_2 _lh_integrate2D_arg3_2 _lh_integrate2D_arg4_2 _lh_integrate2D_arg5_2 =
+//│ 		  (((integrate1D_d0 _lh_integrate2D_arg3_2) _lh_integrate2D_arg4_2) (fun y_5 -> 
+//│ 		    (((integrate1D_d1 _lh_integrate2D_arg1_2) _lh_integrate2D_arg2_2) (fun x_7 -> 
+//│ 		      ((_lh_integrate2D_arg5_2 x_7) y_5)))))
+//│ 		and integrate2D_d1 _lh_integrate2D_arg1_1 _lh_integrate2D_arg2_1 _lh_integrate2D_arg3_1 _lh_integrate2D_arg4_1 _lh_integrate2D_arg5_1 =
+//│ 		  (((integrate1D_d2 _lh_integrate2D_arg3_1) _lh_integrate2D_arg4_1) (fun y_3 -> 
+//│ 		    (((integrate1D_d3 _lh_integrate2D_arg1_1) _lh_integrate2D_arg2_1) (fun x_5 -> 
+//│ 		      ((_lh_integrate2D_arg5_1 x_5) y_3)))))
+//│ 		and ints_d0 _lh_ints_arg1_3 =
+//│ 		  (enumFromFloat_d0 1.0)
+//│ 		and ints_d1 _lh_ints_arg1_6 =
+//│ 		  (enumFromFloat_d1 1.0)
+//│ 		and ints_d2 _lh_ints_arg1_4 =
+//│ 		  (enumFromFloat_d2 1.0)
+//│ 		and ints_d3 _lh_ints_arg1_5 =
+//│ 		  (enumFromFloat_d3 1.0)
+//│ 		and ints_d4 _lh_ints_arg1_1 =
+//│ 		  (enumFromFloat_d4 1.0)
+//│ 		and ints_d5 _lh_ints_arg1_2 =
+//│ 		  (enumFromFloat_d5 1.0)
+//│ 		and is_d0 _lh_is_arg1_2 =
+//│ 		  ((map_lz_d0 (fun a_1_5 -> 
+//│ 		    (((a_1_5 *. a_1_5) *. a_1_5) *. a_1_5))) (ints_d0 0))
+//│ 		and is_d1 _lh_is_arg1_1 =
+//│ 		  ((map_lz_d1 (fun a_1_0 -> 
+//│ 		    (((a_1_0 *. a_1_0) *. a_1_0) *. a_1_0))) (ints_d1 0))
+//│ 		and itotals_d0 _lh_itotals_arg1_1 =
+//│ 		  (lazy (`LH_C((head_lz_d0 (is_d0 0)), (((zipWith_lz_lz_d0 (fun a_1_4 b_7 -> 
+//│ 		    (a_1_4 +. b_7))) (tail_lz_d0 (is_d1 0))) (itotals_d0 0)))))
+//│ 		and map_lz_d0 f_1_4 ls_2_1 =
+//│ 		  (lazy (match (Lazy.force ls_2_1) with
+//│ 		    | `LH_C(h_2_2, t_2_4) -> 
+//│ 		      (`LH_C((f_1_4 h_2_2), ((map_lz_d0 f_1_4) t_2_4)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)))
+//│ 		and map_lz_d1 f_1_3 ls_2_0 =
+//│ 		  (lazy (match (Lazy.force ls_2_0) with
+//│ 		    | `LH_C(h_2_1, t_2_3) -> 
+//│ 		      (`LH_C((f_1_3 h_2_1), ((map_lz_d1 f_1_3) t_2_3)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)))
+//│ 		and map_lz_d2 f_1_8 ls_2_4 =
+//│ 		  (lazy (match (Lazy.force ls_2_4) with
+//│ 		    | `LH_C(h_2_5, t_2_7) -> 
+//│ 		      (`LH_C((f_1_8 h_2_5), ((map_lz_d2 f_1_8) t_2_7)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)))
+//│ 		and map_lz_d3 f_2_0 ls_2_7 =
+//│ 		  (lazy (match (Lazy.force ls_2_7) with
+//│ 		    | `LH_C(h_2_8, t_3_0) -> 
+//│ 		      (`LH_C((f_2_0 h_2_8), ((map_lz_d3 f_2_0) t_3_0)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)))
+//│ 		and map_lz_d4 f_1_9 ls_2_6 =
+//│ 		  (lazy (match (Lazy.force ls_2_6) with
+//│ 		    | `LH_C(h_2_7, t_2_9) -> 
+//│ 		      (`LH_C((f_1_9 h_2_7), ((map_lz_d4 f_1_9) t_2_9)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)))
+//│ 		and rtotals_d0 _lh_rtotals_arg1_1 =
+//│ 		  (lazy (`LH_C((head_lz_d1 (zarks_d0 0)), (((zipWith_lz_lz_d3 (fun a_1_1 b_5 -> 
+//│ 		    (a_1_1 +. b_5))) (tail_lz_d1 (zarks_d1 0))) (rtotals_d0 0)))))
+//│ 		and sumFloat_d0 _lh_sumFloat_arg1_1 =
+//│ 		  (match _lh_sumFloat_arg1_1 with
+//│ 		    | `LH_N -> 
+//│ 		      0.0
+//│ 		    | `LH_C(_lh_sumFloat_LH_C_0_1, _lh_sumFloat_LH_C_1_1) -> 
+//│ 		      (_lh_sumFloat_LH_C_0_1 +. (sumFloat_d0 _lh_sumFloat_LH_C_1_1))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and sumFloat_d1 _lh_sumFloat_arg1_4 =
+//│ 		  (match _lh_sumFloat_arg1_4 with
+//│ 		    | `LH_N -> 
+//│ 		      0.0
+//│ 		    | `LH_C(_lh_sumFloat_LH_C_0_4, _lh_sumFloat_LH_C_1_4) -> 
+//│ 		      (_lh_sumFloat_LH_C_0_4 +. (sumFloat_d1 _lh_sumFloat_LH_C_1_4))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and sumFloat_d2 _lh_sumFloat_arg1_3 =
+//│ 		  (match _lh_sumFloat_arg1_3 with
+//│ 		    | `LH_N -> 
+//│ 		      0.0
+//│ 		    | `LH_C(_lh_sumFloat_LH_C_0_3, _lh_sumFloat_LH_C_1_3) -> 
+//│ 		      (_lh_sumFloat_LH_C_0_3 +. (sumFloat_d2 _lh_sumFloat_LH_C_1_3))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and sumFloat_d3 _lh_sumFloat_arg1_2 =
+//│ 		  (match _lh_sumFloat_arg1_2 with
+//│ 		    | `LH_N -> 
+//│ 		      0.0
+//│ 		    | `LH_C(_lh_sumFloat_LH_C_0_2, _lh_sumFloat_LH_C_1_2) -> 
+//│ 		      (_lh_sumFloat_LH_C_0_2 +. (sumFloat_d3 _lh_sumFloat_LH_C_1_2))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and sumFloat_d4 _lh_sumFloat_arg1_5 =
+//│ 		  (match _lh_sumFloat_arg1_5 with
+//│ 		    | `LH_N -> 
+//│ 		      0.0
+//│ 		    | `LH_C(_lh_sumFloat_LH_C_0_5, _lh_sumFloat_LH_C_1_5) -> 
+//│ 		      (_lh_sumFloat_LH_C_0_5 +. (sumFloat_d4 _lh_sumFloat_LH_C_1_5))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and tail_lz_d0 ls_2_5 =
+//│ 		  (match (Lazy.force ls_2_5) with
+//│ 		    | `LH_C(h_2_6, t_2_8) -> 
+//│ 		      t_2_8
+//│ 		    | `LH_N -> 
+//│ 		      (failwith "error"))
+//│ 		and tail_lz_d1 ls_1_9 =
+//│ 		  (match (Lazy.force ls_1_9) with
+//│ 		    | `LH_C(h_2_0, t_2_2) -> 
+//│ 		      t_2_2
+//│ 		    | `LH_N -> 
+//│ 		      (failwith "error"))
+//│ 		and take_lz_d0 n_7 ls_2_8 =
+//│ 		  (if (n_7 > 0) then
+//│ 		    (match (Lazy.force ls_2_8) with
+//│ 		      | `LH_C(h_2_9, t_3_1) -> 
+//│ 		        (`LH_C(h_2_9, ((take_lz_d0 (n_7 - 1)) t_3_1)))
+//│ 		      | `LH_N -> 
+//│ 		        (`LH_N))
+//│ 		  else
+//│ 		    (`LH_N))
+//│ 		and testIntegrate_nofib_d0 _lh_testIntegrate_nofib_arg1_1 =
+//│ 		  (etotal_d0 _lh_testIntegrate_nofib_arg1_1)
+//│ 		and zarks_d0 _lh_zarks_arg1_2 =
+//│ 		  (((zipWith_lz_lz_d1 zark_d0) (ints_d2 0)) ((map_lz_d3 (fun n_6 -> 
+//│ 		    (2.0 *. n_6))) (ints_d3 0)))
+//│ 		and zarks_d1 _lh_zarks_arg1_1 =
+//│ 		  (((zipWith_lz_lz_d2 zark_d1) (ints_d4 0)) ((map_lz_d4 (fun n_5 -> 
+//│ 		    (2.0 *. n_5))) (ints_d5 0)))
+//│ 		and zark_d0 _lh_zark_arg1_2 _lh_zark_arg2_2 =
+//│ 		  (((((integrate2D_d0 0.0) _lh_zark_arg1_2) 0.0) _lh_zark_arg2_2) (fun x_6 y_4 -> 
+//│ 		    (x_6 *. y_4)))
+//│ 		and zark_d1 _lh_zark_arg1_1 _lh_zark_arg2_1 =
+//│ 		  (((((integrate2D_d1 0.0) _lh_zark_arg1_1) 0.0) _lh_zark_arg2_1) (fun x_4 y_2 -> 
+//│ 		    (x_4 *. y_2)))
+//│ 		and zipWith_lz_lz_d0 f_1_2 xs_9 ys_9 =
+//│ 		  (lazy (match (Lazy.force xs_9) with
+//│ 		    | `LH_C(hx_8, tx_8) -> 
+//│ 		      (match (Lazy.force ys_9) with
+//│ 		        | `LH_C(hy_8, ty_8) -> 
+//│ 		          (`LH_C(((f_1_2 hx_8) hy_8), (((zipWith_lz_lz_d0 f_1_2) tx_8) ty_8)))
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_N))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)))
+//│ 		and zipWith_lz_lz_d1 f_2_1 xs_1_3 ys_1_3 =
+//│ 		  (lazy (match (Lazy.force xs_1_3) with
+//│ 		    | `LH_C(hx_1_2, tx_1_2) -> 
+//│ 		      (match (Lazy.force ys_1_3) with
+//│ 		        | `LH_C(hy_1_2, ty_1_2) -> 
+//│ 		          (`LH_C(((f_2_1 hx_1_2) hy_1_2), (((zipWith_lz_lz_d1 f_2_1) tx_1_2) ty_1_2)))
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_N))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)))
+//│ 		and zipWith_lz_lz_d2 f_1_6 xs_1_1 ys_1_1 =
+//│ 		  (lazy (match (Lazy.force xs_1_1) with
+//│ 		    | `LH_C(hx_1_0, tx_1_0) -> 
+//│ 		      (match (Lazy.force ys_1_1) with
+//│ 		        | `LH_C(hy_1_0, ty_1_0) -> 
+//│ 		          (`LH_C(((f_1_6 hx_1_0) hy_1_0), (((zipWith_lz_lz_d2 f_1_6) tx_1_0) ty_1_0)))
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_N))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)))
+//│ 		and zipWith_lz_lz_d3 f_1_7 xs_1_2 ys_1_2 =
+//│ 		  (lazy (match (Lazy.force xs_1_2) with
+//│ 		    | `LH_C(hx_1_1, tx_1_1) -> 
+//│ 		      (match (Lazy.force ys_1_2) with
+//│ 		        | `LH_C(hy_1_1, ty_1_1) -> 
+//│ 		          (`LH_C(((f_1_7 hx_1_1) hy_1_1), (((zipWith_lz_lz_d3 f_1_7) tx_1_1) ty_1_1)))
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_N))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)))
+//│ 		and zipWith_lz_lz_d4 f_1_5 xs_1_0 ys_1_0 =
+//│ 		  (lazy (match (Lazy.force xs_1_0) with
+//│ 		    | `LH_C(hx_9, tx_9) -> 
+//│ 		      (match (Lazy.force ys_1_0) with
+//│ 		        | `LH_C(hy_9, ty_9) -> 
+//│ 		          (`LH_C(((f_1_5 hx_9) hy_9), (((zipWith_lz_lz_d4 f_1_5) tx_9) ty_9)))
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_N))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)));;
+//│ 		(testIntegrate_nofib_d0 100)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testIntegrate_nofib₀^2091] (hopeless to continue)
+//│ 	[testIntegrate_nofib₀^2091 · etotal₀^1751] (using original def)
+//│ 		[testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798] (using original def)
+//│ 			[testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · head_lz₀^1819] (using original def)
+//│ 			[testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · is₀^1820] (using original def)
+//│ 				[testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · is₀^1820 · ints₀^1881] (using original def)
+//│ 					[testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · is₀^1820 · ints₀^1881 · enumFromFloat₀^1484] (using original def)
+//│ 						[testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · is₀^1820 · ints₀^1881 · enumFromFloat₀^1484 · enumFromFloat₀^1173] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · is₀^1820 · ints₀^1881 · enumFromFloat₀^1484] (using original def)
+//│ 				[testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · is₀^1820 · map_lz₀^1865] (using original def)
+//│ 					[testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · is₀^1820 · map_lz₀^1865 · map_lz₀^1125] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · is₀^1820 · map_lz₀^1865] (using original def)
+//│ 			[testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · is₁^1834] (using original def)
+//│ 				[testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · is₁^1834 · ints₁^1371] (using original def)
+//│ 					[testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · is₁^1834 · ints₁^1371 · enumFromFloat₁^1938] (using original def)
+//│ 						[testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · is₁^1834 · ints₁^1371 · enumFromFloat₁^1938 · enumFromFloat₁^1090] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · is₁^1834 · ints₁^1371 · enumFromFloat₁^1938] (using original def)
+//│ 				[testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · is₁^1834 · map_lz₁^1355] (using original def)
+//│ 					[testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · is₁^1834 · map_lz₁^1355 · map_lz₁^1107] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · is₁^1834 · map_lz₁^1355] (using original def)
+//│ 			[testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · itotals₀^1839] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798] (using original def)
+//│ 			[testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · tail_lz₀^1833] (using original def)
+//│ 			[testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · zipWith_lz_lz₀^1824] (using original def)
+//│ 				[testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · zipWith_lz_lz₀^1824 · zipWith_lz_lz₀^1072] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · itotals₀^1798 · zipWith_lz_lz₀^1824] (using original def)
+//│ 		[testIntegrate_nofib₀^2091 · etotal₀^1751 · map_lz₂^1777] (using original def)
+//│ 			[testIntegrate_nofib₀^2091 · etotal₀^1751 · map_lz₂^1777 · map_lz₂^1644] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · map_lz₂^1777] (using original def)
+//│ 		[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794] (using original def)
+//│ 			[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · head_lz₁^1417] (using original def)
+//│ 			[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · rtotals₀^1437] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794] (using original def)
+//│ 			[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · tail_lz₁^1431] (using original def)
+//│ 			[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418] (using original def)
+//│ 				[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · ints₂^1503] (using original def)
+//│ 					[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · ints₂^1503 · enumFromFloat₂^1633] (using original def)
+//│ 						[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · ints₂^1503 · enumFromFloat₂^1633 · enumFromFloat₂^1808] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · ints₂^1503 · enumFromFloat₂^1633] (using original def)
+//│ 				[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · ints₃^1515] (using original def)
+//│ 					[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · ints₃^1515 · enumFromFloat₃^1655] (using original def)
+//│ 						[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · ints₃^1515 · enumFromFloat₃^1655 · enumFromFloat₃^1189] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · ints₃^1515 · enumFromFloat₃^1655] (using original def)
+//│ 				[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · map_lz₃^1507] (using original def)
+//│ 					[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · map_lz₃^1507 · map_lz₃^1762] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · map_lz₃^1507] (using original def)
+//│ 				[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · zark₀^1501] (using original def)
+//│ 					[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · zark₀^1501 · integrate2D₀^1846] (using original def)
+//│ 						[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · zark₀^1501 · integrate2D₀^1846 · integrate1D₀^1914] (using original def)
+//│ 							[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · zark₀^1501 · integrate2D₀^1846 · integrate1D₀^1914 · sumFloat₀^953] (using original def)
+//│ 								[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · zark₀^1501 · integrate2D₀^1846 · integrate1D₀^1914 · sumFloat₀^953 · sumFloat₀^1327] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · zark₀^1501 · integrate2D₀^1846 · integrate1D₀^1914 · sumFloat₀^953] (using original def)
+//│ 						[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · zark₀^1501 · integrate2D₀^1846 · integrate1D₁^1919] (using original def)
+//│ 							[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · zark₀^1501 · integrate2D₀^1846 · integrate1D₁^1919 · sumFloat₁^1966] (using original def)
+//│ 								[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · zark₀^1501 · integrate2D₀^1846 · integrate1D₁^1919 · sumFloat₁^1966 · sumFloat₁^1493] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · zark₀^1501 · integrate2D₀^1846 · integrate1D₁^1919 · sumFloat₁^1966] (using original def)
+//│ 				[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · zipWith_lz_lz₁^1500] (using original def)
+//│ 					[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · zipWith_lz_lz₁^1500 · zipWith_lz_lz₁^1898] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₀^1418 · zipWith_lz_lz₁^1500] (using original def)
+//│ 			[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432] (using original def)
+//│ 				[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · ints₄^1337] (using original def)
+//│ 					[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · ints₄^1337 · enumFromFloat₄^1183] (using original def)
+//│ 						[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · ints₄^1337 · enumFromFloat₄^1183 · enumFromFloat₄^1944] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · ints₄^1337 · enumFromFloat₄^1183] (using original def)
+//│ 				[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · ints₅^1349] (using original def)
+//│ 					[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · ints₅^1349 · enumFromFloat₅^1199] (using original def)
+//│ 						[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · ints₅^1349 · enumFromFloat₅^1199 · enumFromFloat₅^1741] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · ints₅^1349 · enumFromFloat₅^1199] (using original def)
+//│ 				[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · map_lz₄^1341] (using original def)
+//│ 					[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · map_lz₄^1341 · map_lz₄^1716] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · map_lz₄^1341] (using original def)
+//│ 				[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · zark₁^1335] (using original def)
+//│ 					[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · zark₁^1335 · integrate2D₁^1666] (using original def)
+//│ 						[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · zark₁^1335 · integrate2D₁^1666 · integrate1D₂^1685] (using original def)
+//│ 							[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · zark₁^1335 · integrate2D₁^1666 · integrate1D₂^1685 · sumFloat₂^1222] (using original def)
+//│ 								[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · zark₁^1335 · integrate2D₁^1666 · integrate1D₂^1685 · sumFloat₂^1222 · sumFloat₂^1449] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · zark₁^1335 · integrate2D₁^1666 · integrate1D₂^1685 · sumFloat₂^1222] (using original def)
+//│ 						[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · zark₁^1335 · integrate2D₁^1666 · integrate1D₃^1690] (using original def)
+//│ 							[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · zark₁^1335 · integrate2D₁^1666 · integrate1D₃^1690 · sumFloat₃^1533] (using original def)
+//│ 								[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · zark₁^1335 · integrate2D₁^1666 · integrate1D₃^1690 · sumFloat₃^1533 · sumFloat₃^1409] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · zark₁^1335 · integrate2D₁^1666 · integrate1D₃^1690 · sumFloat₃^1533] (using original def)
+//│ 				[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · zipWith_lz_lz₂^1334] (using original def)
+//│ 					[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · zipWith_lz_lz₂^1334 · zipWith_lz_lz₂^1388] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zarks₁^1432 · zipWith_lz_lz₂^1334] (using original def)
+//│ 			[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zipWith_lz_lz₃^1422] (using original def)
+//│ 				[testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zipWith_lz_lz₃^1422 · zipWith_lz_lz₃^1468] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · rtotals₀^1794 · zipWith_lz_lz₃^1422] (using original def)
+//│ 		[testIntegrate_nofib₀^2091 · etotal₀^1751 · sumFloat₄^1773] (using original def)
+//│ 			[testIntegrate_nofib₀^2091 · etotal₀^1751 · sumFloat₄^1773 · sumFloat₄^1732] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · sumFloat₄^1773] (using original def)
+//│ 		[testIntegrate_nofib₀^2091 · etotal₀^1751 · take_lz₀^1774] (using original def)
+//│ 			[testIntegrate_nofib₀^2091 · etotal₀^1751 · take_lz₀^1774 · take_lz₀^2075] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · take_lz₀^1774] (using original def)
+//│ 		[testIntegrate_nofib₀^2091 · etotal₀^1751 · zipWith_lz_lz₄^1785] (using original def)
+//│ 			[testIntegrate_nofib₀^2091 · etotal₀^1751 · zipWith_lz_lz₄^1785 · zipWith_lz_lz₄^1148] ---> [testIntegrate_nofib₀^2091 · etotal₀^1751 · zipWith_lz_lz₄^1785] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testIntegrate_nofib₀₀(primId⁰(100))
+//│ def testIntegrate_nofib₀₀(_lh_testIntegrate_nofib_arg1¹) = 
+//│ 	etotal₀₀(_lh_testIntegrate_nofib_arg1¹)
+//│ 	where
+//│ 	def etotal₀₀(_lh_etotal_arg1¹) = 
+//│ 		sumFloat₄₀(take_lz₀₀(_lh_etotal_arg1¹, map_lz₂₀((fun a¹⁰ -> (a¹⁰ *. a¹⁰)), zipWith_lz_lz₄₀((fun a¹¹ -> (fun b⁵ -> (a¹¹ -. b⁵))), rtotals₀₀(0), itotals₀₀(0)))))
+//│ 		where
+//│ 		def itotals₀₀(_lh_itotals_arg1¹) = 
+//│ 			lazy⁰([LH_C head_lz₀₀(is₀₀(0)) zipWith_lz_lz₀₀((fun a⁷ -> (fun b³ -> (a⁷ +. b³))), tail_lz₀₀(is₁₀(0)), itotals₀₀(0))])
+//│ 			where
+//│ 			def head_lz₀₀(ls¹³) = 
+//│ 				case force⁰(ls¹³) of {
+//│ 					LH_C h¹³ t¹³ => h¹³
+//│ 					| LH_N  => error⁰}
+//│ 			def is₀₀(_lh_is_arg1²) = 
+//│ 				map_lz₀₀((fun a⁶ -> (((a⁶ *. a⁶) *. a⁶) *. a⁶)), ints₀₀(0))
+//│ 				where
+//│ 				def ints₀₀(_lh_ints_arg1⁷) = 
+//│ 					enumFromFloat₀₀(1.0)
+//│ 					where
+//│ 					def enumFromFloat₀₀(_lh_enumFromFloat_arg1⁷) = 
+//│ 						lazy⁰([LH_C _lh_enumFromFloat_arg1⁷ enumFromFloat₀₀((_lh_enumFromFloat_arg1⁷ +. 1.0))])
+//│ 				def map_lz₀₀(f¹⁹, ls¹⁹) = 
+//│ 					lazy⁰(case force⁰(ls¹⁹) of {
+//│ 						LH_C h¹⁹ t¹⁹ => [LH_C f¹⁹(h¹⁹) map_lz₀₀(f¹⁹, t¹⁹)]
+//│ 						| LH_N  => [LH_N]})
+//│ 			def is₁₀(_lh_is_arg1³) = 
+//│ 				map_lz₁₀((fun a⁹ -> (((a⁹ *. a⁹) *. a⁹) *. a⁹)), ints₁₀(0))
+//│ 				where
+//│ 				def ints₁₀(_lh_ints_arg1¹⁰) = 
+//│ 					enumFromFloat₁₀(1.0)
+//│ 					where
+//│ 					def enumFromFloat₁₀(_lh_enumFromFloat_arg1⁹) = 
+//│ 						lazy⁰([LH_C _lh_enumFromFloat_arg1⁹ enumFromFloat₁₀((_lh_enumFromFloat_arg1⁹ +. 1.0))])
+//│ 				def map_lz₁₀(f¹⁵, ls¹⁵) = 
+//│ 					lazy⁰(case force⁰(ls¹⁵) of {
+//│ 						LH_C h¹⁵ t¹⁵ => [LH_C f¹⁵(h¹⁵) map_lz₁₀(f¹⁵, t¹⁵)]
+//│ 						| LH_N  => [LH_N]})
+//│ 			def tail_lz₀₀(ls¹⁸) = 
+//│ 				case force⁰(ls¹⁸) of {
+//│ 					LH_C h¹⁸ t¹⁸ => t¹⁸
+//│ 					| LH_N  => error⁰}
+//│ 			def zipWith_lz_lz₀₀(f¹⁸, xs⁹, ys⁹) = 
+//│ 				lazy⁰(case force⁰(xs⁹) of {
+//│ 					LH_C hx⁹ tx⁹ => case force⁰(ys⁹) of {
+//│ 						LH_C hy⁹ ty⁹ => [LH_C f¹⁸(hx⁹, hy⁹) zipWith_lz_lz₀₀(f¹⁸, tx⁹, ty⁹)]
+//│ 						| LH_N  => [LH_N]}
+//│ 					| LH_N  => [LH_N]})
+//│ 		def map_lz₂₀(f¹⁶, ls¹⁶) = 
+//│ 			lazy⁰(case force⁰(ls¹⁶) of {
+//│ 				LH_C h¹⁶ t¹⁶ => [LH_C f¹⁶(h¹⁶) map_lz₂₀(f¹⁶, t¹⁶)]
+//│ 				| LH_N  => [LH_N]})
+//│ 		def rtotals₀₀(_lh_rtotals_arg1¹) = 
+//│ 			lazy⁰([LH_C head_lz₁₀(zarks₀₀(0)) zipWith_lz_lz₃₀((fun a⁸ -> (fun b⁴ -> (a⁸ +. b⁴))), tail_lz₁₀(zarks₁₀(0)), rtotals₀₀(0))])
+//│ 			where
+//│ 			def head_lz₁₀(ls¹¹) = 
+//│ 				case force⁰(ls¹¹) of {
+//│ 					LH_C h¹¹ t¹¹ => h¹¹
+//│ 					| LH_N  => error⁰}
+//│ 			def tail_lz₁₀(ls¹⁷) = 
+//│ 				case force⁰(ls¹⁷) of {
+//│ 					LH_C h¹⁷ t¹⁷ => t¹⁷
+//│ 					| LH_N  => error⁰}
+//│ 			def zarks₀₀(_lh_zarks_arg1²) = 
+//│ 				zipWith_lz_lz₁₀(zark₀₀, ints₂₀(0), map_lz₃₀((fun n³ -> (2.0 *. n³)), ints₃₀(0)))
+//│ 				where
+//│ 				def ints₂₀(_lh_ints_arg1⁹) = 
+//│ 					enumFromFloat₂₀(1.0)
+//│ 					where
+//│ 					def enumFromFloat₂₀(_lh_enumFromFloat_arg1¹¹) = 
+//│ 						lazy⁰([LH_C _lh_enumFromFloat_arg1¹¹ enumFromFloat₂₀((_lh_enumFromFloat_arg1¹¹ +. 1.0))])
+//│ 				def ints₃₀(_lh_ints_arg1¹¹) = 
+//│ 					enumFromFloat₃₀(1.0)
+//│ 					where
+//│ 					def enumFromFloat₃₀(_lh_enumFromFloat_arg1¹⁰) = 
+//│ 						lazy⁰([LH_C _lh_enumFromFloat_arg1¹⁰ enumFromFloat₃₀((_lh_enumFromFloat_arg1¹⁰ +. 1.0))])
+//│ 				def map_lz₃₀(f¹³, ls¹²) = 
+//│ 					lazy⁰(case force⁰(ls¹²) of {
+//│ 						LH_C h¹² t¹² => [LH_C f¹³(h¹²) map_lz₃₀(f¹³, t¹²)]
+//│ 						| LH_N  => [LH_N]})
+//│ 				def zark₀₀(_lh_zark_arg1², _lh_zark_arg2²) = 
+//│ 					integrate2D₀₀(0.0, _lh_zark_arg1², 0.0, _lh_zark_arg2², (fun x⁵ -> (fun y⁵ -> (x⁵ *. y⁵))))
+//│ 					where
+//│ 					def integrate2D₀₀(_lh_integrate2D_arg1², _lh_integrate2D_arg2², _lh_integrate2D_arg3², _lh_integrate2D_arg4², _lh_integrate2D_arg5²) = 
+//│ 						integrate1D₀₀(_lh_integrate2D_arg3², _lh_integrate2D_arg4², (fun y⁴ -> integrate1D₁₀(_lh_integrate2D_arg1², _lh_integrate2D_arg2², (fun x⁴ -> _lh_integrate2D_arg5²(x⁴, y⁴)))))
+//│ 						where
+//│ 						def integrate1D₀₀(_lh_integrate1D_arg1⁵, _lh_integrate1D_arg2⁵, _lh_integrate1D_arg3⁵) = 
+//│ 							let d⁵ = ((_lh_integrate1D_arg2⁵ -. _lh_integrate1D_arg1⁵) /. 8.0)
+//│ 							in (d⁵ *. sumFloat₀₀([LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg1⁵) *. 0.5) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. d⁵)) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]]]]]))
+//│ 							where
+//│ 							def sumFloat₀₀(_lh_sumFloat_arg1⁶) = 
+//│ 								case _lh_sumFloat_arg1⁶ of {
+//│ 									LH_N  => 0.0
+//│ 									| LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶))
+//│ 									| _  => error⁰}
+//│ 						def integrate1D₁₀(_lh_integrate1D_arg1⁶, _lh_integrate1D_arg2⁶, _lh_integrate1D_arg3⁶) = 
+//│ 							let d⁶ = ((_lh_integrate1D_arg2⁶ -. _lh_integrate1D_arg1⁶) /. 8.0)
+//│ 							in (d⁶ *. sumFloat₁₀([LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg1⁶) *. 0.5) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. d⁶)) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]]]]]))
+//│ 							where
+//│ 							def sumFloat₁₀(_lh_sumFloat_arg1⁵) = 
+//│ 								case _lh_sumFloat_arg1⁵ of {
+//│ 									LH_N  => 0.0
+//│ 									| LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵))
+//│ 									| _  => error⁰}
+//│ 				def zipWith_lz_lz₁₀(f¹⁴, xs⁷, ys⁷) = 
+//│ 					lazy⁰(case force⁰(xs⁷) of {
+//│ 						LH_C hx⁷ tx⁷ => case force⁰(ys⁷) of {
+//│ 							LH_C hy⁷ ty⁷ => [LH_C f¹⁴(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹⁴, tx⁷, ty⁷)]
+//│ 							| LH_N  => [LH_N]}
+//│ 						| LH_N  => [LH_N]})
+//│ 			def zarks₁₀(_lh_zarks_arg1³) = 
+//│ 				zipWith_lz_lz₂₀(zark₁₀, ints₄₀(0), map_lz₄₀((fun n⁵ -> (2.0 *. n⁵)), ints₅₀(0)))
+//│ 				where
+//│ 				def ints₄₀(_lh_ints_arg1⁶) = 
+//│ 					enumFromFloat₄₀(1.0)
+//│ 					where
+//│ 					def enumFromFloat₄₀(_lh_enumFromFloat_arg1⁸) = 
+//│ 						lazy⁰([LH_C _lh_enumFromFloat_arg1⁸ enumFromFloat₄₀((_lh_enumFromFloat_arg1⁸ +. 1.0))])
+//│ 				def ints₅₀(_lh_ints_arg1⁸) = 
+//│ 					enumFromFloat₅₀(1.0)
+//│ 					where
+//│ 					def enumFromFloat₅₀(_lh_enumFromFloat_arg1⁶) = 
+//│ 						lazy⁰([LH_C _lh_enumFromFloat_arg1⁶ enumFromFloat₅₀((_lh_enumFromFloat_arg1⁶ +. 1.0))])
+//│ 				def map_lz₄₀(f¹¹, ls¹⁰) = 
+//│ 					lazy⁰(case force⁰(ls¹⁰) of {
+//│ 						LH_C h¹⁰ t¹⁰ => [LH_C f¹¹(h¹⁰) map_lz₄₀(f¹¹, t¹⁰)]
+//│ 						| LH_N  => [LH_N]})
+//│ 				def zark₁₀(_lh_zark_arg1³, _lh_zark_arg2³) = 
+//│ 					integrate2D₁₀(0.0, _lh_zark_arg1³, 0.0, _lh_zark_arg2³, (fun x⁷ -> (fun y⁷ -> (x⁷ *. y⁷))))
+//│ 					where
+//│ 					def integrate2D₁₀(_lh_integrate2D_arg1³, _lh_integrate2D_arg2³, _lh_integrate2D_arg3³, _lh_integrate2D_arg4³, _lh_integrate2D_arg5³) = 
+//│ 						integrate1D₂₀(_lh_integrate2D_arg3³, _lh_integrate2D_arg4³, (fun y⁶ -> integrate1D₃₀(_lh_integrate2D_arg1³, _lh_integrate2D_arg2³, (fun x⁶ -> _lh_integrate2D_arg5³(x⁶, y⁶)))))
+//│ 						where
+//│ 						def integrate1D₂₀(_lh_integrate1D_arg1⁷, _lh_integrate1D_arg2⁷, _lh_integrate1D_arg3⁷) = 
+//│ 							let d⁷ = ((_lh_integrate1D_arg2⁷ -. _lh_integrate1D_arg1⁷) /. 8.0)
+//│ 							in (d⁷ *. sumFloat₂₀([LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg1⁷) *. 0.5) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. d⁷)) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]]]]]))
+//│ 							where
+//│ 							def sumFloat₂₀(_lh_sumFloat_arg1⁹) = 
+//│ 								case _lh_sumFloat_arg1⁹ of {
+//│ 									LH_N  => 0.0
+//│ 									| LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹))
+//│ 									| _  => error⁰}
+//│ 						def integrate1D₃₀(_lh_integrate1D_arg1⁴, _lh_integrate1D_arg2⁴, _lh_integrate1D_arg3⁴) = 
+//│ 							let d⁴ = ((_lh_integrate1D_arg2⁴ -. _lh_integrate1D_arg1⁴) /. 8.0)
+//│ 							in (d⁴ *. sumFloat₃₀([LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg1⁴) *. 0.5) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. d⁴)) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]]]]]))
+//│ 							where
+//│ 							def sumFloat₃₀(_lh_sumFloat_arg1⁷) = 
+//│ 								case _lh_sumFloat_arg1⁷ of {
+//│ 									LH_N  => 0.0
+//│ 									| LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷))
+//│ 									| _  => error⁰}
+//│ 				def zipWith_lz_lz₂₀(f¹², xs⁶, ys⁶) = 
+//│ 					lazy⁰(case force⁰(xs⁶) of {
+//│ 						LH_C hx⁶ tx⁶ => case force⁰(ys⁶) of {
+//│ 							LH_C hy⁶ ty⁶ => [LH_C f¹²(hx⁶, hy⁶) zipWith_lz_lz₂₀(f¹², tx⁶, ty⁶)]
+//│ 							| LH_N  => [LH_N]}
+//│ 						| LH_N  => [LH_N]})
+//│ 			def zipWith_lz_lz₃₀(f¹⁰, xs⁵, ys⁵) = 
+//│ 				lazy⁰(case force⁰(xs⁵) of {
+//│ 					LH_C hx⁵ tx⁵ => case force⁰(ys⁵) of {
+//│ 						LH_C hy⁵ ty⁵ => [LH_C f¹⁰(hx⁵, hy⁵) zipWith_lz_lz₃₀(f¹⁰, tx⁵, ty⁵)]
+//│ 						| LH_N  => [LH_N]}
+//│ 					| LH_N  => [LH_N]})
+//│ 		def sumFloat₄₀(_lh_sumFloat_arg1⁸) = 
+//│ 			case _lh_sumFloat_arg1⁸ of {
+//│ 				LH_N  => 0.0
+//│ 				| LH_C _lh_sumFloat_LH_C_0⁸ _lh_sumFloat_LH_C_1⁸ => (_lh_sumFloat_LH_C_0⁸ +. sumFloat₄₀(_lh_sumFloat_LH_C_1⁸))
+//│ 				| _  => error⁰}
+//│ 		def take_lz₀₀(n⁴, ls¹⁴) = 
+//│ 			if (n⁴ > 0) then case force⁰(ls¹⁴) of {
+//│ 				LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ take_lz₀₀((n⁴ - 1), t¹⁴)]
+//│ 				| LH_N  => [LH_N]} else [LH_N]
+//│ 		def zipWith_lz_lz₄₀(f¹⁷, xs⁸, ys⁸) = 
+//│ 			lazy⁰(case force⁰(xs⁸) of {
+//│ 				LH_C hx⁸ tx⁸ => case force⁰(ys⁸) of {
+//│ 					LH_C hy⁸ ty⁸ => [LH_C f¹⁷(hx⁸, hy⁸) zipWith_lz_lz₄₀(f¹⁷, tx⁸, ty⁸)]
+//│ 					| LH_N  => [LH_N]}
+//│ 				| LH_N  => [LH_N]})
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_N]: 1252 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]: 1253 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]: 1254 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]: 1255 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]: 1256 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]: 1257 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]]: 1258 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]]]: 1259 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. d⁴)) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]]]]: 1260 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg1⁴) *. 0.5) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. d⁴)) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]]]]]: 1261 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C _lh_enumFromFloat_arg1⁶ enumFromFloat₅₀((_lh_enumFromFloat_arg1⁶ +. 1.0))]: 1277 --->
+//│ 	case force⁰(ls¹⁰) of {LH_C h¹⁰ t¹⁰ => [LH_C f¹¹(h¹⁰) map_lz₄₀(f¹¹, t¹⁰)] | LH_N  => [LH_N]}: 1530
+//│ [LH_N]: 1392 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]: 1393 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]: 1394 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]: 1395 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]: 1396 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]: 1397 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]]: 1398 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]]]: 1399 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. d⁵)) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]]]]: 1400 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg1⁵) *. 0.5) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. d⁵)) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]]]]]: 1401 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C f¹⁰(hx⁵, hy⁵) zipWith_lz_lz₃₀(f¹⁰, tx⁵, ty⁵)]: 1427 --->
+//│ 	case force⁰(ys⁵) of {LH_C hy⁵ ty⁵ => [LH_C f¹⁰(hx⁵, hy⁵) zipWith_lz_lz₃₀(f¹⁰, tx⁵, ty⁵)] | LH_N  => [LH_N]}: 1429
+//│ 	case force⁰(xs⁸) of {LH_C hx⁸ tx⁸ => case force⁰(ys⁸) of {LH_C hy⁸ ty⁸ => [LH_C f¹⁷(hx⁸, hy⁸) zipWith_lz_lz₄₀(f¹⁷, tx⁸, ty⁸)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 2191
+//│ [LH_N]: 1428 --->
+//│ 	case force⁰(ys⁵) of {LH_C hy⁵ ty⁵ => [LH_C f¹⁰(hx⁵, hy⁵) zipWith_lz_lz₃₀(f¹⁰, tx⁵, ty⁵)] | LH_N  => [LH_N]}: 1429
+//│ 	case force⁰(xs⁸) of {LH_C hx⁸ tx⁸ => case force⁰(ys⁸) of {LH_C hy⁸ ty⁸ => [LH_C f¹⁷(hx⁸, hy⁸) zipWith_lz_lz₄₀(f¹⁷, tx⁸, ty⁸)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 2191
+//│ [LH_N]: 1430 --->
+//│ 	case force⁰(ys⁵) of {LH_C hy⁵ ty⁵ => [LH_C f¹⁰(hx⁵, hy⁵) zipWith_lz_lz₃₀(f¹⁰, tx⁵, ty⁵)] | LH_N  => [LH_N]}: 1429
+//│ 	case force⁰(xs⁸) of {LH_C hx⁸ tx⁸ => case force⁰(ys⁸) of {LH_C hy⁸ ty⁸ => [LH_C f¹⁷(hx⁸, hy⁸) zipWith_lz_lz₄₀(f¹⁷, tx⁸, ty⁸)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 2191
+//│ [LH_C _lh_enumFromFloat_arg1⁷ enumFromFloat₀₀((_lh_enumFromFloat_arg1⁷ +. 1.0))]: 1481 --->
+//│ 	case force⁰(ls¹⁹) of {LH_C h¹⁹ t¹⁹ => [LH_C f¹⁹(h¹⁹) map_lz₀₀(f¹⁹, t¹⁹)] | LH_N  => [LH_N]}: 2278
+//│ [LH_C _lh_enumFromFloat_arg1⁸ enumFromFloat₄₀((_lh_enumFromFloat_arg1⁸ +. 1.0))]: 1497 --->
+//│ 	case force⁰(xs⁶) of {LH_C hx⁶ tx⁶ => case force⁰(ys⁶) of {LH_C hy⁶ ty⁶ => [LH_C f¹²(hx⁶, hy⁶) zipWith_lz_lz₂₀(f¹², tx⁶, ty⁶)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 1595
+//│ [LH_C f¹¹(h¹⁰) map_lz₄₀(f¹¹, t¹⁰)]: 1528 --->
+//│ 	case force⁰(ys⁶) of {LH_C hy⁶ ty⁶ => [LH_C f¹²(hx⁶, hy⁶) zipWith_lz_lz₂₀(f¹², tx⁶, ty⁶)] | LH_N  => [LH_N]}: 1593
+//│ [LH_N]: 1529 --->
+//│ 	case force⁰(ys⁶) of {LH_C hy⁶ ty⁶ => [LH_C f¹²(hx⁶, hy⁶) zipWith_lz_lz₂₀(f¹², tx⁶, ty⁶)] | LH_N  => [LH_N]}: 1593
+//│ [LH_C _lh_enumFromFloat_arg1⁹ enumFromFloat₁₀((_lh_enumFromFloat_arg1⁹ +. 1.0))]: 1569 --->
+//│ 	case force⁰(ls¹⁵) of {LH_C h¹⁵ t¹⁵ => [LH_C f¹⁵(h¹⁵) map_lz₁₀(f¹⁵, t¹⁵)] | LH_N  => [LH_N]}: 1876
+//│ [LH_C f¹²(hx⁶, hy⁶) zipWith_lz_lz₂₀(f¹², tx⁶, ty⁶)]: 1591 --->
+//│ 	case force⁰(xs⁵) of {LH_C hx⁵ tx⁵ => case force⁰(ys⁵) of {LH_C hy⁵ ty⁵ => [LH_C f¹⁰(hx⁵, hy⁵) zipWith_lz_lz₃₀(f¹⁰, tx⁵, ty⁵)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 1431
+//│ 	case force⁰(ls¹⁷) of {LH_C h¹⁷ t¹⁷ => t¹⁷ | LH_N  => error⁰}: 1989
+//│ [LH_N]: 1592 --->
+//│ 	case force⁰(xs⁵) of {LH_C hx⁵ tx⁵ => case force⁰(ys⁵) of {LH_C hy⁵ ty⁵ => [LH_C f¹⁰(hx⁵, hy⁵) zipWith_lz_lz₃₀(f¹⁰, tx⁵, ty⁵)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 1431
+//│ 	case force⁰(ls¹⁷) of {LH_C h¹⁷ t¹⁷ => t¹⁷ | LH_N  => error⁰}: 1989
+//│ [LH_N]: 1594 --->
+//│ 	case force⁰(xs⁵) of {LH_C hx⁵ tx⁵ => case force⁰(ys⁵) of {LH_C hy⁵ ty⁵ => [LH_C f¹⁰(hx⁵, hy⁵) zipWith_lz_lz₃₀(f¹⁰, tx⁵, ty⁵)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 1431
+//│ 	case force⁰(ls¹⁷) of {LH_C h¹⁷ t¹⁷ => t¹⁷ | LH_N  => error⁰}: 1989
+//│ [LH_N]: 1696 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]: 1697 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]: 1698 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]: 1699 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]: 1700 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]: 1701 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]]: 1702 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]]]: 1703 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. d⁶)) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]]]]: 1704 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg1⁶) *. 0.5) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. d⁶)) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]]]]]: 1705 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C f¹³(h¹²) map_lz₃₀(f¹³, t¹²)]: 1756 --->
+//│ 	case force⁰(ys⁷) of {LH_C hy⁷ ty⁷ => [LH_C f¹⁴(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹⁴, tx⁷, ty⁷)] | LH_N  => [LH_N]}: 1809
+//│ [LH_N]: 1757 --->
+//│ 	case force⁰(ys⁷) of {LH_C hy⁷ ty⁷ => [LH_C f¹⁴(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹⁴, tx⁷, ty⁷)] | LH_N  => [LH_N]}: 1809
+//│ [LH_C f¹⁴(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹⁴, tx⁷, ty⁷)]: 1807 --->
+//│ 	case force⁰(ls¹¹) of {LH_C h¹¹ t¹¹ => h¹¹ | LH_N  => error⁰}: 1558
+//│ [LH_N]: 1808 --->
+//│ 	case force⁰(ls¹¹) of {LH_C h¹¹ t¹¹ => h¹¹ | LH_N  => error⁰}: 1558
+//│ [LH_N]: 1810 --->
+//│ 	case force⁰(ls¹¹) of {LH_C h¹¹ t¹¹ => h¹¹ | LH_N  => error⁰}: 1558
+//│ [LH_C h¹⁴ take_lz₀₀((n⁴ - 1), t¹⁴)]: 1855 --->
+//│ 	case _lh_sumFloat_arg1⁸ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁸ _lh_sumFloat_LH_C_1⁸ => (_lh_sumFloat_LH_C_0⁸ +. sumFloat₄₀(_lh_sumFloat_LH_C_1⁸)) | _  => error⁰}: 2029
+//│ [LH_N]: 1856 --->
+//│ 	case _lh_sumFloat_arg1⁸ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁸ _lh_sumFloat_LH_C_1⁸ => (_lh_sumFloat_LH_C_0⁸ +. sumFloat₄₀(_lh_sumFloat_LH_C_1⁸)) | _  => error⁰}: 2029
+//│ [LH_N]: 1858 --->
+//│ 	case _lh_sumFloat_arg1⁸ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁸ _lh_sumFloat_LH_C_1⁸ => (_lh_sumFloat_LH_C_0⁸ +. sumFloat₄₀(_lh_sumFloat_LH_C_1⁸)) | _  => error⁰}: 2029
+//│ [LH_C f¹⁵(h¹⁵) map_lz₁₀(f¹⁵, t¹⁵)]: 1874 --->
+//│ 	case force⁰(ls¹⁸) of {LH_C h¹⁸ t¹⁸ => t¹⁸ | LH_N  => error⁰}: 2234
+//│ 	case force⁰(xs⁹) of {LH_C hx⁹ tx⁹ => case force⁰(ys⁹) of {LH_C hy⁹ ty⁹ => [LH_C f¹⁸(hx⁹, hy⁹) zipWith_lz_lz₀₀(f¹⁸, tx⁹, ty⁹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 2259
+//│ [LH_N]: 1875 --->
+//│ 	case force⁰(ls¹⁸) of {LH_C h¹⁸ t¹⁸ => t¹⁸ | LH_N  => error⁰}: 2234
+//│ 	case force⁰(xs⁹) of {LH_C hx⁹ tx⁹ => case force⁰(ys⁹) of {LH_C hy⁹ ty⁹ => [LH_C f¹⁸(hx⁹, hy⁹) zipWith_lz_lz₀₀(f¹⁸, tx⁹, ty⁹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 2259
+//│ [LH_C f¹⁶(h¹⁶) map_lz₂₀(f¹⁶, t¹⁶)]: 1913 --->
+//│ 	case force⁰(ls¹⁴) of {LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ take_lz₀₀((n⁴ - 1), t¹⁴)] | LH_N  => [LH_N]}: 1857
+//│ [LH_N]: 1914 --->
+//│ 	case force⁰(ls¹⁴) of {LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ take_lz₀₀((n⁴ - 1), t¹⁴)] | LH_N  => [LH_N]}: 1857
+//│ [LH_C _lh_enumFromFloat_arg1¹⁰ enumFromFloat₃₀((_lh_enumFromFloat_arg1¹⁰ +. 1.0))]: 1928 --->
+//│ 	case force⁰(ls¹²) of {LH_C h¹² t¹² => [LH_C f¹³(h¹²) map_lz₃₀(f¹³, t¹²)] | LH_N  => [LH_N]}: 1758
+//│ [LH_C head_lz₀₀(is₀₀(0)) zipWith_lz_lz₀₀((fun a⁷ -> (fun b³ -> (a⁷ +. b³))), tail_lz₀₀(is₁₀(0)), itotals₀₀(0))]: 1960 --->
+//│ 	case force⁰(ys⁸) of {LH_C hy⁸ ty⁸ => [LH_C f¹⁷(hx⁸, hy⁸) zipWith_lz_lz₄₀(f¹⁷, tx⁸, ty⁸)] | LH_N  => [LH_N]}: 2189
+//│ 	case force⁰(ys⁹) of {LH_C hy⁹ ty⁹ => [LH_C f¹⁸(hx⁹, hy⁹) zipWith_lz_lz₀₀(f¹⁸, tx⁹, ty⁹)] | LH_N  => [LH_N]}: 2257
+//│ [LH_C head_lz₁₀(zarks₀₀(0)) zipWith_lz_lz₃₀((fun a⁸ -> (fun b⁴ -> (a⁸ +. b⁴))), tail_lz₁₀(zarks₁₀(0)), rtotals₀₀(0))]: 2016 --->
+//│ 	case force⁰(ys⁵) of {LH_C hy⁵ ty⁵ => [LH_C f¹⁰(hx⁵, hy⁵) zipWith_lz_lz₃₀(f¹⁰, tx⁵, ty⁵)] | LH_N  => [LH_N]}: 1429
+//│ 	case force⁰(xs⁸) of {LH_C hx⁸ tx⁸ => case force⁰(ys⁸) of {LH_C hy⁸ ty⁸ => [LH_C f¹⁷(hx⁸, hy⁸) zipWith_lz_lz₄₀(f¹⁷, tx⁸, ty⁸)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 2191
+//│ [LH_N]: 2148 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]: 2149 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]: 2150 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]: 2151 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]: 2152 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]: 2153 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]]: 2154 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]]]: 2155 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. d⁷)) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]]]]: 2156 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg1⁷) *. 0.5) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. d⁷)) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]]]]]: 2157 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C f¹⁷(hx⁸, hy⁸) zipWith_lz_lz₄₀(f¹⁷, tx⁸, ty⁸)]: 2187 --->
+//│ 	case force⁰(ls¹⁶) of {LH_C h¹⁶ t¹⁶ => [LH_C f¹⁶(h¹⁶) map_lz₂₀(f¹⁶, t¹⁶)] | LH_N  => [LH_N]}: 1915
+//│ [LH_N]: 2188 --->
+//│ 	case force⁰(ls¹⁶) of {LH_C h¹⁶ t¹⁶ => [LH_C f¹⁶(h¹⁶) map_lz₂₀(f¹⁶, t¹⁶)] | LH_N  => [LH_N]}: 1915
+//│ [LH_N]: 2190 --->
+//│ 	case force⁰(ls¹⁶) of {LH_C h¹⁶ t¹⁶ => [LH_C f¹⁶(h¹⁶) map_lz₂₀(f¹⁶, t¹⁶)] | LH_N  => [LH_N]}: 1915
+//│ [LH_C f¹⁸(hx⁹, hy⁹) zipWith_lz_lz₀₀(f¹⁸, tx⁹, ty⁹)]: 2255 --->
+//│ 	case force⁰(ys⁸) of {LH_C hy⁸ ty⁸ => [LH_C f¹⁷(hx⁸, hy⁸) zipWith_lz_lz₄₀(f¹⁷, tx⁸, ty⁸)] | LH_N  => [LH_N]}: 2189
+//│ 	case force⁰(ys⁹) of {LH_C hy⁹ ty⁹ => [LH_C f¹⁸(hx⁹, hy⁹) zipWith_lz_lz₀₀(f¹⁸, tx⁹, ty⁹)] | LH_N  => [LH_N]}: 2257
+//│ [LH_N]: 2256 --->
+//│ 	case force⁰(ys⁸) of {LH_C hy⁸ ty⁸ => [LH_C f¹⁷(hx⁸, hy⁸) zipWith_lz_lz₄₀(f¹⁷, tx⁸, ty⁸)] | LH_N  => [LH_N]}: 2189
+//│ 	case force⁰(ys⁹) of {LH_C hy⁹ ty⁹ => [LH_C f¹⁸(hx⁹, hy⁹) zipWith_lz_lz₀₀(f¹⁸, tx⁹, ty⁹)] | LH_N  => [LH_N]}: 2257
+//│ [LH_N]: 2258 --->
+//│ 	case force⁰(ys⁸) of {LH_C hy⁸ ty⁸ => [LH_C f¹⁷(hx⁸, hy⁸) zipWith_lz_lz₄₀(f¹⁷, tx⁸, ty⁸)] | LH_N  => [LH_N]}: 2189
+//│ 	case force⁰(ys⁹) of {LH_C hy⁹ ty⁹ => [LH_C f¹⁸(hx⁹, hy⁹) zipWith_lz_lz₀₀(f¹⁸, tx⁹, ty⁹)] | LH_N  => [LH_N]}: 2257
+//│ [LH_C f¹⁹(h¹⁹) map_lz₀₀(f¹⁹, t¹⁹)]: 2276 --->
+//│ 	case force⁰(ls¹³) of {LH_C h¹³ t¹³ => h¹³ | LH_N  => error⁰}: 1767
+//│ [LH_N]: 2277 --->
+//│ 	case force⁰(ls¹³) of {LH_C h¹³ t¹³ => h¹³ | LH_N  => error⁰}: 1767
+//│ [LH_C _lh_enumFromFloat_arg1¹¹ enumFromFloat₂₀((_lh_enumFromFloat_arg1¹¹ +. 1.0))]: 2291 --->
+//│ 	case force⁰(xs⁷) of {LH_C hx⁷ tx⁷ => case force⁰(ys⁷) of {LH_C hy⁷ ty⁷ => [LH_C f¹⁴(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹⁴, tx⁷, ty⁷)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 1811
+//│ ------------------
+//│ case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294 --->
+//│ 	[LH_N]: 1696
+//│ 	[LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]: 1697
+//│ 	[LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]: 1698
+//│ 	[LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]: 1699
+//│ 	[LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]: 1700
+//│ 	[LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]: 1701
+//│ 	[LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]]: 1702
+//│ 	[LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]]]: 1703
+//│ 	[LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. d⁶)) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]]]]: 1704
+//│ 	[LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg1⁶) *. 0.5) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. d⁶)) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]]]]]: 1705
+//│ case force⁰(ys⁵) of {LH_C hy⁵ ty⁵ => [LH_C f¹⁰(hx⁵, hy⁵) zipWith_lz_lz₃₀(f¹⁰, tx⁵, ty⁵)] | LH_N  => [LH_N]}: 1429 --->
+//│ 	[LH_C f¹⁰(hx⁵, hy⁵) zipWith_lz_lz₃₀(f¹⁰, tx⁵, ty⁵)]: 1427
+//│ 	[LH_N]: 1428
+//│ 	[LH_N]: 1430
+//│ 	[LH_C head_lz₁₀(zarks₀₀(0)) zipWith_lz_lz₃₀((fun a⁸ -> (fun b⁴ -> (a⁸ +. b⁴))), tail_lz₁₀(zarks₁₀(0)), rtotals₀₀(0))]: 2016
+//│ case force⁰(xs⁵) of {LH_C hx⁵ tx⁵ => case force⁰(ys⁵) of {LH_C hy⁵ ty⁵ => [LH_C f¹⁰(hx⁵, hy⁵) zipWith_lz_lz₃₀(f¹⁰, tx⁵, ty⁵)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 1431 --->
+//│ 	[LH_C f¹²(hx⁶, hy⁶) zipWith_lz_lz₂₀(f¹², tx⁶, ty⁶)]: 1591
+//│ 	[LH_N]: 1592
+//│ 	[LH_N]: 1594
+//│ case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446 --->
+//│ 	[LH_N]: 1392
+//│ 	[LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]: 1393
+//│ 	[LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]: 1394
+//│ 	[LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]: 1395
+//│ 	[LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]: 1396
+//│ 	[LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]: 1397
+//│ 	[LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]]: 1398
+//│ 	[LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]]]: 1399
+//│ 	[LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. d⁵)) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]]]]: 1400
+//│ 	[LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg1⁵) *. 0.5) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. d⁵)) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]]]]]: 1401
+//│ case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510 --->
+//│ 	[LH_N]: 1252
+//│ 	[LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]: 1253
+//│ 	[LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]: 1254
+//│ 	[LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]: 1255
+//│ 	[LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]: 1256
+//│ 	[LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]: 1257
+//│ 	[LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]]: 1258
+//│ 	[LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]]]: 1259
+//│ 	[LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. d⁴)) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]]]]: 1260
+//│ 	[LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg1⁴) *. 0.5) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. d⁴)) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]]]]]: 1261
+//│ case force⁰(ls¹⁰) of {LH_C h¹⁰ t¹⁰ => [LH_C f¹¹(h¹⁰) map_lz₄₀(f¹¹, t¹⁰)] | LH_N  => [LH_N]}: 1530 --->
+//│ 	[LH_C _lh_enumFromFloat_arg1⁶ enumFromFloat₅₀((_lh_enumFromFloat_arg1⁶ +. 1.0))]: 1277
+//│ case force⁰(ls¹¹) of {LH_C h¹¹ t¹¹ => h¹¹ | LH_N  => error⁰}: 1558 --->
+//│ 	[LH_C f¹⁴(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹⁴, tx⁷, ty⁷)]: 1807
+//│ 	[LH_N]: 1808
+//│ 	[LH_N]: 1810
+//│ case force⁰(ys⁶) of {LH_C hy⁶ ty⁶ => [LH_C f¹²(hx⁶, hy⁶) zipWith_lz_lz₂₀(f¹², tx⁶, ty⁶)] | LH_N  => [LH_N]}: 1593 --->
+//│ 	[LH_C f¹¹(h¹⁰) map_lz₄₀(f¹¹, t¹⁰)]: 1528
+//│ 	[LH_N]: 1529
+//│ case force⁰(xs⁶) of {LH_C hx⁶ tx⁶ => case force⁰(ys⁶) of {LH_C hy⁶ ty⁶ => [LH_C f¹²(hx⁶, hy⁶) zipWith_lz_lz₂₀(f¹², tx⁶, ty⁶)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 1595 --->
+//│ 	[LH_C _lh_enumFromFloat_arg1⁸ enumFromFloat₄₀((_lh_enumFromFloat_arg1⁸ +. 1.0))]: 1497
+//│ case force⁰(ls¹²) of {LH_C h¹² t¹² => [LH_C f¹³(h¹²) map_lz₃₀(f¹³, t¹²)] | LH_N  => [LH_N]}: 1758 --->
+//│ 	[LH_C _lh_enumFromFloat_arg1¹⁰ enumFromFloat₃₀((_lh_enumFromFloat_arg1¹⁰ +. 1.0))]: 1928
+//│ case force⁰(ls¹³) of {LH_C h¹³ t¹³ => h¹³ | LH_N  => error⁰}: 1767 --->
+//│ 	[LH_C f¹⁹(h¹⁹) map_lz₀₀(f¹⁹, t¹⁹)]: 2276
+//│ 	[LH_N]: 2277
+//│ case force⁰(ys⁷) of {LH_C hy⁷ ty⁷ => [LH_C f¹⁴(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹⁴, tx⁷, ty⁷)] | LH_N  => [LH_N]}: 1809 --->
+//│ 	[LH_C f¹³(h¹²) map_lz₃₀(f¹³, t¹²)]: 1756
+//│ 	[LH_N]: 1757
+//│ case force⁰(xs⁷) of {LH_C hx⁷ tx⁷ => case force⁰(ys⁷) of {LH_C hy⁷ ty⁷ => [LH_C f¹⁴(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹⁴, tx⁷, ty⁷)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 1811 --->
+//│ 	[LH_C _lh_enumFromFloat_arg1¹¹ enumFromFloat₂₀((_lh_enumFromFloat_arg1¹¹ +. 1.0))]: 2291
+//│ case force⁰(ls¹⁴) of {LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ take_lz₀₀((n⁴ - 1), t¹⁴)] | LH_N  => [LH_N]}: 1857 --->
+//│ 	[LH_C f¹⁶(h¹⁶) map_lz₂₀(f¹⁶, t¹⁶)]: 1913
+//│ 	[LH_N]: 1914
+//│ case force⁰(ls¹⁵) of {LH_C h¹⁵ t¹⁵ => [LH_C f¹⁵(h¹⁵) map_lz₁₀(f¹⁵, t¹⁵)] | LH_N  => [LH_N]}: 1876 --->
+//│ 	[LH_C _lh_enumFromFloat_arg1⁹ enumFromFloat₁₀((_lh_enumFromFloat_arg1⁹ +. 1.0))]: 1569
+//│ case force⁰(ls¹⁶) of {LH_C h¹⁶ t¹⁶ => [LH_C f¹⁶(h¹⁶) map_lz₂₀(f¹⁶, t¹⁶)] | LH_N  => [LH_N]}: 1915 --->
+//│ 	[LH_C f¹⁷(hx⁸, hy⁸) zipWith_lz_lz₄₀(f¹⁷, tx⁸, ty⁸)]: 2187
+//│ 	[LH_N]: 2188
+//│ 	[LH_N]: 2190
+//│ case force⁰(ls¹⁷) of {LH_C h¹⁷ t¹⁷ => t¹⁷ | LH_N  => error⁰}: 1989 --->
+//│ 	[LH_C f¹²(hx⁶, hy⁶) zipWith_lz_lz₂₀(f¹², tx⁶, ty⁶)]: 1591
+//│ 	[LH_N]: 1592
+//│ 	[LH_N]: 1594
+//│ case _lh_sumFloat_arg1⁸ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁸ _lh_sumFloat_LH_C_1⁸ => (_lh_sumFloat_LH_C_0⁸ +. sumFloat₄₀(_lh_sumFloat_LH_C_1⁸)) | _  => error⁰}: 2029 --->
+//│ 	[LH_C h¹⁴ take_lz₀₀((n⁴ - 1), t¹⁴)]: 1855
+//│ 	[LH_N]: 1856
+//│ 	[LH_N]: 1858
+//│ case force⁰(ys⁸) of {LH_C hy⁸ ty⁸ => [LH_C f¹⁷(hx⁸, hy⁸) zipWith_lz_lz₄₀(f¹⁷, tx⁸, ty⁸)] | LH_N  => [LH_N]}: 2189 --->
+//│ 	[LH_C head_lz₀₀(is₀₀(0)) zipWith_lz_lz₀₀((fun a⁷ -> (fun b³ -> (a⁷ +. b³))), tail_lz₀₀(is₁₀(0)), itotals₀₀(0))]: 1960
+//│ 	[LH_C f¹⁸(hx⁹, hy⁹) zipWith_lz_lz₀₀(f¹⁸, tx⁹, ty⁹)]: 2255
+//│ 	[LH_N]: 2256
+//│ 	[LH_N]: 2258
+//│ case force⁰(xs⁸) of {LH_C hx⁸ tx⁸ => case force⁰(ys⁸) of {LH_C hy⁸ ty⁸ => [LH_C f¹⁷(hx⁸, hy⁸) zipWith_lz_lz₄₀(f¹⁷, tx⁸, ty⁸)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 2191 --->
+//│ 	[LH_C f¹⁰(hx⁵, hy⁵) zipWith_lz_lz₃₀(f¹⁰, tx⁵, ty⁵)]: 1427
+//│ 	[LH_N]: 1428
+//│ 	[LH_N]: 1430
+//│ 	[LH_C head_lz₁₀(zarks₀₀(0)) zipWith_lz_lz₃₀((fun a⁸ -> (fun b⁴ -> (a⁸ +. b⁴))), tail_lz₁₀(zarks₁₀(0)), rtotals₀₀(0))]: 2016
+//│ case force⁰(ls¹⁸) of {LH_C h¹⁸ t¹⁸ => t¹⁸ | LH_N  => error⁰}: 2234 --->
+//│ 	[LH_C f¹⁵(h¹⁵) map_lz₁₀(f¹⁵, t¹⁵)]: 1874
+//│ 	[LH_N]: 1875
+//│ case force⁰(ys⁹) of {LH_C hy⁹ ty⁹ => [LH_C f¹⁸(hx⁹, hy⁹) zipWith_lz_lz₀₀(f¹⁸, tx⁹, ty⁹)] | LH_N  => [LH_N]}: 2257 --->
+//│ 	[LH_C head_lz₀₀(is₀₀(0)) zipWith_lz_lz₀₀((fun a⁷ -> (fun b³ -> (a⁷ +. b³))), tail_lz₀₀(is₁₀(0)), itotals₀₀(0))]: 1960
+//│ 	[LH_C f¹⁸(hx⁹, hy⁹) zipWith_lz_lz₀₀(f¹⁸, tx⁹, ty⁹)]: 2255
+//│ 	[LH_N]: 2256
+//│ 	[LH_N]: 2258
+//│ case force⁰(xs⁹) of {LH_C hx⁹ tx⁹ => case force⁰(ys⁹) of {LH_C hy⁹ ty⁹ => [LH_C f¹⁸(hx⁹, hy⁹) zipWith_lz_lz₀₀(f¹⁸, tx⁹, ty⁹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 2259 --->
+//│ 	[LH_C f¹⁵(h¹⁵) map_lz₁₀(f¹⁵, t¹⁵)]: 1874
+//│ 	[LH_N]: 1875
+//│ case force⁰(ls¹⁹) of {LH_C h¹⁹ t¹⁹ => [LH_C f¹⁹(h¹⁹) map_lz₀₀(f¹⁹, t¹⁹)] | LH_N  => [LH_N]}: 2278 --->
+//│ 	[LH_C _lh_enumFromFloat_arg1⁷ enumFromFloat₀₀((_lh_enumFromFloat_arg1⁷ +. 1.0))]: 1481
+//│ case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304 --->
+//│ 	[LH_N]: 2148
+//│ 	[LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]: 2149
+//│ 	[LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]: 2150
+//│ 	[LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]: 2151
+//│ 	[LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]: 2152
+//│ 	[LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]: 2153
+//│ 	[LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]]: 2154
+//│ 	[LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]]]: 2155
+//│ 	[LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. d⁷)) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]]]]: 2156
+//│ 	[LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg1⁷) *. 0.5) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. d⁷)) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]]]]]: 2157
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_N]: 1252 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]: 1253 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]: 1254 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]: 1255 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]: 1256 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]: 1257 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]]: 1258 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]]]: 1259 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. d⁴)) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]]]]: 1260 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg1⁴) *. 0.5) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. d⁴)) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]]]]]: 1261 --->
+//│ 	case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510
+//│ [LH_C _lh_enumFromFloat_arg1⁶ enumFromFloat₅₀((_lh_enumFromFloat_arg1⁶ +. 1.0))]: 1277 --->
+//│ 	case force⁰(ls¹⁰) of {LH_C h¹⁰ t¹⁰ => [LH_C f¹¹(h¹⁰) map_lz₄₀(f¹¹, t¹⁰)] | LH_N  => [LH_N]}: 1530
+//│ [LH_N]: 1392 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]: 1393 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]: 1394 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]: 1395 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]: 1396 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]: 1397 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]]: 1398 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]]]: 1399 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. d⁵)) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]]]]: 1400 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg1⁵) *. 0.5) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. d⁵)) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]]]]]: 1401 --->
+//│ 	case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446
+//│ [LH_C _lh_enumFromFloat_arg1⁷ enumFromFloat₀₀((_lh_enumFromFloat_arg1⁷ +. 1.0))]: 1481 --->
+//│ 	case force⁰(ls¹⁹) of {LH_C h¹⁹ t¹⁹ => [LH_C f¹⁹(h¹⁹) map_lz₀₀(f¹⁹, t¹⁹)] | LH_N  => [LH_N]}: 2278
+//│ [LH_C _lh_enumFromFloat_arg1⁸ enumFromFloat₄₀((_lh_enumFromFloat_arg1⁸ +. 1.0))]: 1497 --->
+//│ 	case force⁰(xs⁶) of {LH_C hx⁶ tx⁶ => case force⁰(ys⁶) of {LH_C hy⁶ ty⁶ => [LH_C f¹²(hx⁶, hy⁶) zipWith_lz_lz₂₀(f¹², tx⁶, ty⁶)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 1595
+//│ [LH_C f¹¹(h¹⁰) map_lz₄₀(f¹¹, t¹⁰)]: 1528 --->
+//│ 	case force⁰(ys⁶) of {LH_C hy⁶ ty⁶ => [LH_C f¹²(hx⁶, hy⁶) zipWith_lz_lz₂₀(f¹², tx⁶, ty⁶)] | LH_N  => [LH_N]}: 1593
+//│ [LH_N]: 1529 --->
+//│ 	case force⁰(ys⁶) of {LH_C hy⁶ ty⁶ => [LH_C f¹²(hx⁶, hy⁶) zipWith_lz_lz₂₀(f¹², tx⁶, ty⁶)] | LH_N  => [LH_N]}: 1593
+//│ [LH_C _lh_enumFromFloat_arg1⁹ enumFromFloat₁₀((_lh_enumFromFloat_arg1⁹ +. 1.0))]: 1569 --->
+//│ 	case force⁰(ls¹⁵) of {LH_C h¹⁵ t¹⁵ => [LH_C f¹⁵(h¹⁵) map_lz₁₀(f¹⁵, t¹⁵)] | LH_N  => [LH_N]}: 1876
+//│ [LH_N]: 1696 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]: 1697 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]: 1698 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]: 1699 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]: 1700 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]: 1701 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]]: 1702 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]]]: 1703 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. d⁶)) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]]]]: 1704 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg1⁶) *. 0.5) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. d⁶)) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]]]]]: 1705 --->
+//│ 	case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294
+//│ [LH_C f¹³(h¹²) map_lz₃₀(f¹³, t¹²)]: 1756 --->
+//│ 	case force⁰(ys⁷) of {LH_C hy⁷ ty⁷ => [LH_C f¹⁴(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹⁴, tx⁷, ty⁷)] | LH_N  => [LH_N]}: 1809
+//│ [LH_N]: 1757 --->
+//│ 	case force⁰(ys⁷) of {LH_C hy⁷ ty⁷ => [LH_C f¹⁴(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹⁴, tx⁷, ty⁷)] | LH_N  => [LH_N]}: 1809
+//│ [LH_C f¹⁴(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹⁴, tx⁷, ty⁷)]: 1807 --->
+//│ 	case force⁰(ls¹¹) of {LH_C h¹¹ t¹¹ => h¹¹ | LH_N  => error⁰}: 1558
+//│ [LH_N]: 1808 --->
+//│ 	case force⁰(ls¹¹) of {LH_C h¹¹ t¹¹ => h¹¹ | LH_N  => error⁰}: 1558
+//│ [LH_N]: 1810 --->
+//│ 	case force⁰(ls¹¹) of {LH_C h¹¹ t¹¹ => h¹¹ | LH_N  => error⁰}: 1558
+//│ [LH_C h¹⁴ take_lz₀₀((n⁴ - 1), t¹⁴)]: 1855 --->
+//│ 	case _lh_sumFloat_arg1⁸ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁸ _lh_sumFloat_LH_C_1⁸ => (_lh_sumFloat_LH_C_0⁸ +. sumFloat₄₀(_lh_sumFloat_LH_C_1⁸)) | _  => error⁰}: 2029
+//│ [LH_N]: 1856 --->
+//│ 	case _lh_sumFloat_arg1⁸ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁸ _lh_sumFloat_LH_C_1⁸ => (_lh_sumFloat_LH_C_0⁸ +. sumFloat₄₀(_lh_sumFloat_LH_C_1⁸)) | _  => error⁰}: 2029
+//│ [LH_N]: 1858 --->
+//│ 	case _lh_sumFloat_arg1⁸ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁸ _lh_sumFloat_LH_C_1⁸ => (_lh_sumFloat_LH_C_0⁸ +. sumFloat₄₀(_lh_sumFloat_LH_C_1⁸)) | _  => error⁰}: 2029
+//│ [LH_C f¹⁶(h¹⁶) map_lz₂₀(f¹⁶, t¹⁶)]: 1913 --->
+//│ 	case force⁰(ls¹⁴) of {LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ take_lz₀₀((n⁴ - 1), t¹⁴)] | LH_N  => [LH_N]}: 1857
+//│ [LH_N]: 1914 --->
+//│ 	case force⁰(ls¹⁴) of {LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ take_lz₀₀((n⁴ - 1), t¹⁴)] | LH_N  => [LH_N]}: 1857
+//│ [LH_C _lh_enumFromFloat_arg1¹⁰ enumFromFloat₃₀((_lh_enumFromFloat_arg1¹⁰ +. 1.0))]: 1928 --->
+//│ 	case force⁰(ls¹²) of {LH_C h¹² t¹² => [LH_C f¹³(h¹²) map_lz₃₀(f¹³, t¹²)] | LH_N  => [LH_N]}: 1758
+//│ [LH_N]: 2148 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]: 2149 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]: 2150 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]: 2151 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]: 2152 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]: 2153 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]]: 2154 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]]]: 2155 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. d⁷)) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]]]]: 2156 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg1⁷) *. 0.5) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. d⁷)) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]]]]]: 2157 --->
+//│ 	case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304
+//│ [LH_C f¹⁷(hx⁸, hy⁸) zipWith_lz_lz₄₀(f¹⁷, tx⁸, ty⁸)]: 2187 --->
+//│ 	case force⁰(ls¹⁶) of {LH_C h¹⁶ t¹⁶ => [LH_C f¹⁶(h¹⁶) map_lz₂₀(f¹⁶, t¹⁶)] | LH_N  => [LH_N]}: 1915
+//│ [LH_N]: 2188 --->
+//│ 	case force⁰(ls¹⁶) of {LH_C h¹⁶ t¹⁶ => [LH_C f¹⁶(h¹⁶) map_lz₂₀(f¹⁶, t¹⁶)] | LH_N  => [LH_N]}: 1915
+//│ [LH_N]: 2190 --->
+//│ 	case force⁰(ls¹⁶) of {LH_C h¹⁶ t¹⁶ => [LH_C f¹⁶(h¹⁶) map_lz₂₀(f¹⁶, t¹⁶)] | LH_N  => [LH_N]}: 1915
+//│ [LH_C f¹⁹(h¹⁹) map_lz₀₀(f¹⁹, t¹⁹)]: 2276 --->
+//│ 	case force⁰(ls¹³) of {LH_C h¹³ t¹³ => h¹³ | LH_N  => error⁰}: 1767
+//│ [LH_N]: 2277 --->
+//│ 	case force⁰(ls¹³) of {LH_C h¹³ t¹³ => h¹³ | LH_N  => error⁰}: 1767
+//│ [LH_C _lh_enumFromFloat_arg1¹¹ enumFromFloat₂₀((_lh_enumFromFloat_arg1¹¹ +. 1.0))]: 2291 --->
+//│ 	case force⁰(xs⁷) of {LH_C hx⁷ tx⁷ => case force⁰(ys⁷) of {LH_C hy⁷ ty⁷ => [LH_C f¹⁴(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹⁴, tx⁷, ty⁷)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 1811
+//│ ------------------
+//│ case _lh_sumFloat_arg1⁵ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁵ _lh_sumFloat_LH_C_1⁵ => (_lh_sumFloat_LH_C_0⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1⁵)) | _  => error⁰}: 1294 --->
+//│ 	[LH_N]: 1696
+//│ 	[LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]: 1697
+//│ 	[LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]: 1698
+//│ 	[LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]: 1699
+//│ 	[LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]: 1700
+//│ 	[LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]: 1701
+//│ 	[LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]]: 1702
+//│ 	[LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]]]: 1703
+//│ 	[LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. d⁶)) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]]]]: 1704
+//│ 	[LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg1⁶) *. 0.5) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. d⁶)) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg1⁶ +. (4.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (3.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. (2.0 *. d⁶))) [LH_C _lh_integrate1D_arg3⁶((_lh_integrate1D_arg2⁶ -. d⁶)) [LH_C (_lh_integrate1D_arg3⁶(_lh_integrate1D_arg2⁶) *. 0.5) [LH_N]]]]]]]]]]: 1705
+//│ case _lh_sumFloat_arg1⁶ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁶ _lh_sumFloat_LH_C_1⁶ => (_lh_sumFloat_LH_C_0⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁶)) | _  => error⁰}: 1446 --->
+//│ 	[LH_N]: 1392
+//│ 	[LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]: 1393
+//│ 	[LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]: 1394
+//│ 	[LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]: 1395
+//│ 	[LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]: 1396
+//│ 	[LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]: 1397
+//│ 	[LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]]: 1398
+//│ 	[LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]]]: 1399
+//│ 	[LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. d⁵)) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]]]]: 1400
+//│ 	[LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg1⁵) *. 0.5) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. d⁵)) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg1⁵ +. (4.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (3.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. (2.0 *. d⁵))) [LH_C _lh_integrate1D_arg3⁵((_lh_integrate1D_arg2⁵ -. d⁵)) [LH_C (_lh_integrate1D_arg3⁵(_lh_integrate1D_arg2⁵) *. 0.5) [LH_N]]]]]]]]]]: 1401
+//│ case _lh_sumFloat_arg1⁷ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁷ _lh_sumFloat_LH_C_1⁷ => (_lh_sumFloat_LH_C_0⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1⁷)) | _  => error⁰}: 1510 --->
+//│ 	[LH_N]: 1252
+//│ 	[LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]: 1253
+//│ 	[LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]: 1254
+//│ 	[LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]: 1255
+//│ 	[LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]: 1256
+//│ 	[LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]: 1257
+//│ 	[LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]]: 1258
+//│ 	[LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]]]: 1259
+//│ 	[LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. d⁴)) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]]]]: 1260
+//│ 	[LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg1⁴) *. 0.5) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. d⁴)) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg1⁴ +. (4.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (3.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. (2.0 *. d⁴))) [LH_C _lh_integrate1D_arg3⁴((_lh_integrate1D_arg2⁴ -. d⁴)) [LH_C (_lh_integrate1D_arg3⁴(_lh_integrate1D_arg2⁴) *. 0.5) [LH_N]]]]]]]]]]: 1261
+//│ case force⁰(ls¹⁰) of {LH_C h¹⁰ t¹⁰ => [LH_C f¹¹(h¹⁰) map_lz₄₀(f¹¹, t¹⁰)] | LH_N  => [LH_N]}: 1530 --->
+//│ 	[LH_C _lh_enumFromFloat_arg1⁶ enumFromFloat₅₀((_lh_enumFromFloat_arg1⁶ +. 1.0))]: 1277
+//│ case force⁰(ls¹¹) of {LH_C h¹¹ t¹¹ => h¹¹ | LH_N  => error⁰}: 1558 --->
+//│ 	[LH_C f¹⁴(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹⁴, tx⁷, ty⁷)]: 1807
+//│ 	[LH_N]: 1808
+//│ 	[LH_N]: 1810
+//│ case force⁰(ys⁶) of {LH_C hy⁶ ty⁶ => [LH_C f¹²(hx⁶, hy⁶) zipWith_lz_lz₂₀(f¹², tx⁶, ty⁶)] | LH_N  => [LH_N]}: 1593 --->
+//│ 	[LH_C f¹¹(h¹⁰) map_lz₄₀(f¹¹, t¹⁰)]: 1528
+//│ 	[LH_N]: 1529
+//│ case force⁰(xs⁶) of {LH_C hx⁶ tx⁶ => case force⁰(ys⁶) of {LH_C hy⁶ ty⁶ => [LH_C f¹²(hx⁶, hy⁶) zipWith_lz_lz₂₀(f¹², tx⁶, ty⁶)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 1595 --->
+//│ 	[LH_C _lh_enumFromFloat_arg1⁸ enumFromFloat₄₀((_lh_enumFromFloat_arg1⁸ +. 1.0))]: 1497
+//│ case force⁰(ls¹²) of {LH_C h¹² t¹² => [LH_C f¹³(h¹²) map_lz₃₀(f¹³, t¹²)] | LH_N  => [LH_N]}: 1758 --->
+//│ 	[LH_C _lh_enumFromFloat_arg1¹⁰ enumFromFloat₃₀((_lh_enumFromFloat_arg1¹⁰ +. 1.0))]: 1928
+//│ case force⁰(ls¹³) of {LH_C h¹³ t¹³ => h¹³ | LH_N  => error⁰}: 1767 --->
+//│ 	[LH_C f¹⁹(h¹⁹) map_lz₀₀(f¹⁹, t¹⁹)]: 2276
+//│ 	[LH_N]: 2277
+//│ case force⁰(ys⁷) of {LH_C hy⁷ ty⁷ => [LH_C f¹⁴(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹⁴, tx⁷, ty⁷)] | LH_N  => [LH_N]}: 1809 --->
+//│ 	[LH_C f¹³(h¹²) map_lz₃₀(f¹³, t¹²)]: 1756
+//│ 	[LH_N]: 1757
+//│ case force⁰(xs⁷) of {LH_C hx⁷ tx⁷ => case force⁰(ys⁷) of {LH_C hy⁷ ty⁷ => [LH_C f¹⁴(hx⁷, hy⁷) zipWith_lz_lz₁₀(f¹⁴, tx⁷, ty⁷)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 1811 --->
+//│ 	[LH_C _lh_enumFromFloat_arg1¹¹ enumFromFloat₂₀((_lh_enumFromFloat_arg1¹¹ +. 1.0))]: 2291
+//│ case force⁰(ls¹⁴) of {LH_C h¹⁴ t¹⁴ => [LH_C h¹⁴ take_lz₀₀((n⁴ - 1), t¹⁴)] | LH_N  => [LH_N]}: 1857 --->
+//│ 	[LH_C f¹⁶(h¹⁶) map_lz₂₀(f¹⁶, t¹⁶)]: 1913
+//│ 	[LH_N]: 1914
+//│ case force⁰(ls¹⁵) of {LH_C h¹⁵ t¹⁵ => [LH_C f¹⁵(h¹⁵) map_lz₁₀(f¹⁵, t¹⁵)] | LH_N  => [LH_N]}: 1876 --->
+//│ 	[LH_C _lh_enumFromFloat_arg1⁹ enumFromFloat₁₀((_lh_enumFromFloat_arg1⁹ +. 1.0))]: 1569
+//│ case force⁰(ls¹⁶) of {LH_C h¹⁶ t¹⁶ => [LH_C f¹⁶(h¹⁶) map_lz₂₀(f¹⁶, t¹⁶)] | LH_N  => [LH_N]}: 1915 --->
+//│ 	[LH_C f¹⁷(hx⁸, hy⁸) zipWith_lz_lz₄₀(f¹⁷, tx⁸, ty⁸)]: 2187
+//│ 	[LH_N]: 2188
+//│ 	[LH_N]: 2190
+//│ case _lh_sumFloat_arg1⁸ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁸ _lh_sumFloat_LH_C_1⁸ => (_lh_sumFloat_LH_C_0⁸ +. sumFloat₄₀(_lh_sumFloat_LH_C_1⁸)) | _  => error⁰}: 2029 --->
+//│ 	[LH_C h¹⁴ take_lz₀₀((n⁴ - 1), t¹⁴)]: 1855
+//│ 	[LH_N]: 1856
+//│ 	[LH_N]: 1858
+//│ case force⁰(ls¹⁹) of {LH_C h¹⁹ t¹⁹ => [LH_C f¹⁹(h¹⁹) map_lz₀₀(f¹⁹, t¹⁹)] | LH_N  => [LH_N]}: 2278 --->
+//│ 	[LH_C _lh_enumFromFloat_arg1⁷ enumFromFloat₀₀((_lh_enumFromFloat_arg1⁷ +. 1.0))]: 1481
+//│ case _lh_sumFloat_arg1⁹ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁹ _lh_sumFloat_LH_C_1⁹ => (_lh_sumFloat_LH_C_0⁹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1⁹)) | _  => error⁰}: 2304 --->
+//│ 	[LH_N]: 2148
+//│ 	[LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]: 2149
+//│ 	[LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]: 2150
+//│ 	[LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]: 2151
+//│ 	[LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]: 2152
+//│ 	[LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]: 2153
+//│ 	[LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]]: 2154
+//│ 	[LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]]]: 2155
+//│ 	[LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. d⁷)) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]]]]: 2156
+//│ 	[LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg1⁷) *. 0.5) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. d⁷)) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg1⁷ +. (4.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (3.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. (2.0 *. d⁷))) [LH_C _lh_integrate1D_arg3⁷((_lh_integrate1D_arg2⁷ -. d⁷)) [LH_C (_lh_integrate1D_arg3⁷(_lh_integrate1D_arg2⁷) *. 0.5) [LH_N]]]]]]]]]]: 2157
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testIntegrate_nofib₀₀(primId⁰(100))
+//│ def testIntegrate_nofib₀₀(_lh_testIntegrate_nofib_arg1²) = 
+//│ 	etotal₀₀(_lh_testIntegrate_nofib_arg1²)
+//│ 	where
+//│ 	def etotal₀₀(_lh_etotal_arg1²) = 
+//│ 		sumFloat₄₀(take_lz₀₀(_lh_etotal_arg1², map_lz₂₀((fun a¹⁴ -> (a¹⁴ *. a¹⁴)), zipWith_lz_lz₄₀((fun a¹⁵ -> (fun b⁷ -> (a¹⁵ -. b⁷))), rtotals₀₀(0), itotals₀₀(0)))))
+//│ 		where
+//│ 		def itotals₀₀(_lh_itotals_arg1²) = 
+//│ 			lazy⁰([LH_C head_lz₀₀(is₀₀(0)) zipWith_lz_lz₀₀((fun a¹³ -> (fun b⁶ -> (a¹³ +. b⁶))), tail_lz₀₀(is₁₀(0)), itotals₀₀(0))])
+//│ 			where
+//│ 			def head_lz₀₀(ls²⁴) = 
+//│ 				force⁰(ls²⁴)
+//│ 			def is₀₀(_lh_is_arg1⁴) = 
+//│ 				map_lz₀₀((fun a¹² -> (((a¹² *. a¹²) *. a¹²) *. a¹²)), ints₀₀(0))
+//│ 				where
+//│ 				def ints₀₀(_lh_ints_arg1¹⁵) = 
+//│ 					enumFromFloat₀₀(1.0)
+//│ 					where
+//│ 					def enumFromFloat₀₀(_lh_enumFromFloat_arg1¹⁵) = 
+//│ 						lazy⁰(
+//│ 							let h²⁵ = _lh_enumFromFloat_arg1¹⁵
+//│ 							in let t²⁵ = enumFromFloat₀₀((_lh_enumFromFloat_arg1¹⁵ +. 1.0))
+//│ 							in (fun f³⁴ -> 
+//│ 								let h²⁶ = f³⁴(h²⁵)
+//│ 								in let t²⁶ = map_lz₀₀(f³⁴, t²⁵)
+//│ 								in h²⁶))
+//│ 				def map_lz₀₀(f²⁹, ls²³) = 
+//│ 					lazy⁰(force⁰(ls²³, f²⁹))
+//│ 			def is₁₀(_lh_is_arg1⁵) = 
+//│ 				map_lz₁₀((fun a¹⁶ -> (((a¹⁶ *. a¹⁶) *. a¹⁶) *. a¹⁶)), ints₁₀(0))
+//│ 				where
+//│ 				def ints₁₀(_lh_ints_arg1¹⁷) = 
+//│ 					enumFromFloat₁₀(1.0)
+//│ 					where
+//│ 					def enumFromFloat₁₀(_lh_enumFromFloat_arg1¹³) = 
+//│ 						lazy⁰(
+//│ 							let h²⁰ = _lh_enumFromFloat_arg1¹³
+//│ 							in let t²⁰ = enumFromFloat₁₀((_lh_enumFromFloat_arg1¹³ +. 1.0))
+//│ 							in (fun f²² -> [LH_C f²²(h²⁰) map_lz₁₀(f²², t²⁰)]))
+//│ 				def map_lz₁₀(f²⁰, ls²⁰) = 
+//│ 					lazy⁰(force⁰(ls²⁰, f²⁰))
+//│ 			def tail_lz₀₀(ls²⁶) = 
+//│ 				case force⁰(ls²⁶) of {
+//│ 					LH_C h¹⁸ t¹⁸ => t¹⁸
+//│ 					| LH_N  => error⁰}
+//│ 			def zipWith_lz_lz₀₀(f³⁹, xs¹⁴, ys¹⁶) = 
+//│ 				lazy⁰(case force⁰(xs¹⁴) of {
+//│ 					LH_C hx⁹ tx⁹ => case force⁰(ys¹⁶) of {
+//│ 						LH_C hy⁹ ty⁹ => [LH_C f³⁹(hx⁹, hy⁹) zipWith_lz_lz₀₀(f³⁹, tx⁹, ty⁹)]
+//│ 						| LH_N  => [LH_N]}
+//│ 					| LH_N  => [LH_N]})
+//│ 		def map_lz₂₀(f³⁶, ls²⁸) = 
+//│ 			lazy⁰(force⁰(ls²⁸, f³⁶))
+//│ 		def rtotals₀₀(_lh_rtotals_arg1²) = 
+//│ 			lazy⁰([LH_C head_lz₁₀(zarks₀₀(0)) zipWith_lz_lz₃₀((fun a¹⁷ -> (fun b⁸ -> (a¹⁷ +. b⁸))), tail_lz₁₀(zarks₁₀(0)), rtotals₀₀(0))])
+//│ 			where
+//│ 			def head_lz₁₀(ls²²) = 
+//│ 				force⁰(ls²²)
+//│ 			def tail_lz₁₀(ls²¹) = 
+//│ 				case force⁰(ls²¹) of {
+//│ 					LH_C h¹⁷ t¹⁷ => t¹⁷
+//│ 					| LH_N  => error⁰}
+//│ 			def zarks₀₀(_lh_zarks_arg1⁴) = 
+//│ 				zipWith_lz_lz₁₀(zark₀₀, ints₂₀(0), map_lz₃₀((fun n⁹ -> (2.0 *. n⁹)), ints₃₀(0)))
+//│ 				where
+//│ 				def ints₂₀(_lh_ints_arg1¹³) = 
+//│ 					enumFromFloat₂₀(1.0)
+//│ 					where
+//│ 					def enumFromFloat₂₀(_lh_enumFromFloat_arg1¹²) = 
+//│ 						lazy⁰(
+//│ 							let hx¹⁰ = _lh_enumFromFloat_arg1¹²
+//│ 							in let tx¹⁰ = enumFromFloat₂₀((_lh_enumFromFloat_arg1¹² +. 1.0))
+//│ 							in (fun ys¹⁰ -> (fun f²¹ -> force⁰(ys¹⁰, hx¹⁰, tx¹⁰, f²¹))))
+//│ 				def ints₃₀(_lh_ints_arg1¹²) = 
+//│ 					enumFromFloat₃₀(1.0)
+//│ 					where
+//│ 					def enumFromFloat₃₀(_lh_enumFromFloat_arg1¹⁴) = 
+//│ 						lazy⁰(
+//│ 							let h²³ = _lh_enumFromFloat_arg1¹⁴
+//│ 							in let t²³ = enumFromFloat₃₀((_lh_enumFromFloat_arg1¹⁴ +. 1.0))
+//│ 							in (fun f³⁰ -> 
+//│ 								let hy¹⁰ = f³⁰(h²³)
+//│ 								in let ty¹⁰ = map_lz₃₀(f³⁰, t²³)
+//│ 								in (fun hx¹¹ -> (fun tx¹¹ -> (fun f³¹ -> 
+//│ 									let h²⁴ = f³¹(hx¹¹, hy¹⁰)
+//│ 									in let t²⁴ = zipWith_lz_lz₁₀(f³¹, tx¹¹, ty¹⁰)
+//│ 									in h²⁴)))))
+//│ 				def map_lz₃₀(f⁴⁰, ls²⁹) = 
+//│ 					lazy⁰(force⁰(ls²⁹, f⁴⁰))
+//│ 				def zark₀₀(_lh_zark_arg1⁵, _lh_zark_arg2⁵) = 
+//│ 					integrate2D₀₀(0.0, _lh_zark_arg1⁵, 0.0, _lh_zark_arg2⁵, (fun x⁹ -> (fun y⁹ -> (x⁹ *. y⁹))))
+//│ 					where
+//│ 					def integrate2D₀₀(_lh_integrate2D_arg1⁴, _lh_integrate2D_arg2⁴, _lh_integrate2D_arg3⁴, _lh_integrate2D_arg4⁴, _lh_integrate2D_arg5⁴) = 
+//│ 						integrate1D₀₀(_lh_integrate2D_arg3⁴, _lh_integrate2D_arg4⁴, (fun y¹⁰ -> integrate1D₁₀(_lh_integrate2D_arg1⁴, _lh_integrate2D_arg2⁴, (fun x¹⁰ -> _lh_integrate2D_arg5⁴(x¹⁰, y¹⁰)))))
+//│ 						where
+//│ 						def integrate1D₀₀(_lh_integrate1D_arg1¹¹, _lh_integrate1D_arg2¹¹, _lh_integrate1D_arg3¹¹) = 
+//│ 							let d¹¹ = ((_lh_integrate1D_arg2¹¹ -. _lh_integrate1D_arg1¹¹) /. 8.0)
+//│ 							in (d¹¹ *. sumFloat₀₀(
+//│ 								let _lh_sumFloat_LH_C_0³⁸ = (_lh_integrate1D_arg3¹¹(_lh_integrate1D_arg1¹¹) *. 0.5)
+//│ 								in let _lh_sumFloat_LH_C_1³⁸ = 	
+//│ 									let _lh_sumFloat_LH_C_0³⁹ = _lh_integrate1D_arg3¹¹((_lh_integrate1D_arg1¹¹ +. d¹¹))
+//│ 									in let _lh_sumFloat_LH_C_1³⁹ = 	
+//│ 										let _lh_sumFloat_LH_C_0⁴⁰ = _lh_integrate1D_arg3¹¹((_lh_integrate1D_arg1¹¹ +. (2.0 *. d¹¹)))
+//│ 										in let _lh_sumFloat_LH_C_1⁴⁰ = 	
+//│ 											let _lh_sumFloat_LH_C_0⁴¹ = _lh_integrate1D_arg3¹¹((_lh_integrate1D_arg1¹¹ +. (3.0 *. d¹¹)))
+//│ 											in let _lh_sumFloat_LH_C_1⁴¹ = 	
+//│ 												let _lh_sumFloat_LH_C_0⁴² = _lh_integrate1D_arg3¹¹((_lh_integrate1D_arg1¹¹ +. (4.0 *. d¹¹)))
+//│ 												in let _lh_sumFloat_LH_C_1⁴² = 	
+//│ 													let _lh_sumFloat_LH_C_0⁴³ = _lh_integrate1D_arg3¹¹((_lh_integrate1D_arg2¹¹ -. (3.0 *. d¹¹)))
+//│ 													in let _lh_sumFloat_LH_C_1⁴³ = 	
+//│ 														let _lh_sumFloat_LH_C_0⁴⁴ = _lh_integrate1D_arg3¹¹((_lh_integrate1D_arg2¹¹ -. (2.0 *. d¹¹)))
+//│ 														in let _lh_sumFloat_LH_C_1⁴⁴ = 	
+//│ 															let _lh_sumFloat_LH_C_0⁴⁵ = _lh_integrate1D_arg3¹¹((_lh_integrate1D_arg2¹¹ -. d¹¹))
+//│ 															in let _lh_sumFloat_LH_C_1⁴⁵ = 	
+//│ 																let _lh_sumFloat_LH_C_0⁴⁶ = (_lh_integrate1D_arg3¹¹(_lh_integrate1D_arg2¹¹) *. 0.5)
+//│ 																in let _lh_sumFloat_LH_C_1⁴⁶ = 0.0
+//│ 																in (_lh_sumFloat_LH_C_0⁴⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁴⁶))
+//│ 															in (_lh_sumFloat_LH_C_0⁴⁵ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁴⁵))
+//│ 														in (_lh_sumFloat_LH_C_0⁴⁴ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁴⁴))
+//│ 													in (_lh_sumFloat_LH_C_0⁴³ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁴³))
+//│ 												in (_lh_sumFloat_LH_C_0⁴² +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁴²))
+//│ 											in (_lh_sumFloat_LH_C_0⁴¹ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁴¹))
+//│ 										in (_lh_sumFloat_LH_C_0⁴⁰ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁴⁰))
+//│ 									in (_lh_sumFloat_LH_C_0³⁹ +. sumFloat₀₀(_lh_sumFloat_LH_C_1³⁹))
+//│ 								in (_lh_sumFloat_LH_C_0³⁸ +. sumFloat₀₀(_lh_sumFloat_LH_C_1³⁸))))
+//│ 							where
+//│ 							def sumFloat₀₀(_lh_sumFloat_arg1¹³) = 
+//│ 								_lh_sumFloat_arg1¹³
+//│ 						def integrate1D₁₀(_lh_integrate1D_arg1⁹, _lh_integrate1D_arg2⁹, _lh_integrate1D_arg3⁹) = 
+//│ 							let d⁹ = ((_lh_integrate1D_arg2⁹ -. _lh_integrate1D_arg1⁹) /. 8.0)
+//│ 							in (d⁹ *. sumFloat₁₀(
+//│ 								let _lh_sumFloat_LH_C_0¹⁹ = (_lh_integrate1D_arg3⁹(_lh_integrate1D_arg1⁹) *. 0.5)
+//│ 								in let _lh_sumFloat_LH_C_1¹⁹ = 	
+//│ 									let _lh_sumFloat_LH_C_0²⁰ = _lh_integrate1D_arg3⁹((_lh_integrate1D_arg1⁹ +. d⁹))
+//│ 									in let _lh_sumFloat_LH_C_1²⁰ = 	
+//│ 										let _lh_sumFloat_LH_C_0²¹ = _lh_integrate1D_arg3⁹((_lh_integrate1D_arg1⁹ +. (2.0 *. d⁹)))
+//│ 										in let _lh_sumFloat_LH_C_1²¹ = 	
+//│ 											let _lh_sumFloat_LH_C_0²² = _lh_integrate1D_arg3⁹((_lh_integrate1D_arg1⁹ +. (3.0 *. d⁹)))
+//│ 											in let _lh_sumFloat_LH_C_1²² = 	
+//│ 												let _lh_sumFloat_LH_C_0²³ = _lh_integrate1D_arg3⁹((_lh_integrate1D_arg1⁹ +. (4.0 *. d⁹)))
+//│ 												in let _lh_sumFloat_LH_C_1²³ = 	
+//│ 													let _lh_sumFloat_LH_C_0²⁴ = _lh_integrate1D_arg3⁹((_lh_integrate1D_arg2⁹ -. (3.0 *. d⁹)))
+//│ 													in let _lh_sumFloat_LH_C_1²⁴ = 	
+//│ 														let _lh_sumFloat_LH_C_0²⁵ = _lh_integrate1D_arg3⁹((_lh_integrate1D_arg2⁹ -. (2.0 *. d⁹)))
+//│ 														in let _lh_sumFloat_LH_C_1²⁵ = 	
+//│ 															let _lh_sumFloat_LH_C_0²⁶ = _lh_integrate1D_arg3⁹((_lh_integrate1D_arg2⁹ -. d⁹))
+//│ 															in let _lh_sumFloat_LH_C_1²⁶ = 	
+//│ 																let _lh_sumFloat_LH_C_0²⁷ = (_lh_integrate1D_arg3⁹(_lh_integrate1D_arg2⁹) *. 0.5)
+//│ 																in let _lh_sumFloat_LH_C_1²⁷ = 0.0
+//│ 																in (_lh_sumFloat_LH_C_0²⁷ +. sumFloat₁₀(_lh_sumFloat_LH_C_1²⁷))
+//│ 															in (_lh_sumFloat_LH_C_0²⁶ +. sumFloat₁₀(_lh_sumFloat_LH_C_1²⁶))
+//│ 														in (_lh_sumFloat_LH_C_0²⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1²⁵))
+//│ 													in (_lh_sumFloat_LH_C_0²⁴ +. sumFloat₁₀(_lh_sumFloat_LH_C_1²⁴))
+//│ 												in (_lh_sumFloat_LH_C_0²³ +. sumFloat₁₀(_lh_sumFloat_LH_C_1²³))
+//│ 											in (_lh_sumFloat_LH_C_0²² +. sumFloat₁₀(_lh_sumFloat_LH_C_1²²))
+//│ 										in (_lh_sumFloat_LH_C_0²¹ +. sumFloat₁₀(_lh_sumFloat_LH_C_1²¹))
+//│ 									in (_lh_sumFloat_LH_C_0²⁰ +. sumFloat₁₀(_lh_sumFloat_LH_C_1²⁰))
+//│ 								in (_lh_sumFloat_LH_C_0¹⁹ +. sumFloat₁₀(_lh_sumFloat_LH_C_1¹⁹))))
+//│ 							where
+//│ 							def sumFloat₁₀(_lh_sumFloat_arg1¹⁰) = 
+//│ 								_lh_sumFloat_arg1¹⁰
+//│ 				def zipWith_lz_lz₁₀(f³³, xs¹³, ys¹⁴) = 
+//│ 					lazy⁰(force⁰(xs¹³, ys¹⁴, f³³))
+//│ 			def zarks₁₀(_lh_zarks_arg1⁵) = 
+//│ 				zipWith_lz_lz₂₀(zark₁₀, ints₄₀(0), map_lz₄₀((fun n¹⁰ -> (2.0 *. n¹⁰)), ints₅₀(0)))
+//│ 				where
+//│ 				def ints₄₀(_lh_ints_arg1¹⁴) = 
+//│ 					enumFromFloat₄₀(1.0)
+//│ 					where
+//│ 					def enumFromFloat₄₀(_lh_enumFromFloat_arg1¹⁶) = 
+//│ 						lazy⁰(
+//│ 							let hx¹² = _lh_enumFromFloat_arg1¹⁶
+//│ 							in let tx¹² = enumFromFloat₄₀((_lh_enumFromFloat_arg1¹⁶ +. 1.0))
+//│ 							in (fun ys¹⁵ -> (fun f³⁵ -> force⁰(ys¹⁵, hx¹², tx¹², f³⁵))))
+//│ 				def ints₅₀(_lh_ints_arg1¹⁶) = 
+//│ 					enumFromFloat₅₀(1.0)
+//│ 					where
+//│ 					def enumFromFloat₅₀(_lh_enumFromFloat_arg1¹⁷) = 
+//│ 						lazy⁰(
+//│ 							let h²⁷ = _lh_enumFromFloat_arg1¹⁷
+//│ 							in let t²⁷ = enumFromFloat₅₀((_lh_enumFromFloat_arg1¹⁷ +. 1.0))
+//│ 							in (fun f³⁷ -> 
+//│ 								let hy¹¹ = f³⁷(h²⁷)
+//│ 								in let ty¹¹ = map_lz₄₀(f³⁷, t²⁷)
+//│ 								in (fun hx¹³ -> (fun tx¹³ -> (fun f³⁸ -> [LH_C f³⁸(hx¹³, hy¹¹) zipWith_lz_lz₂₀(f³⁸, tx¹³, ty¹¹)])))))
+//│ 				def map_lz₄₀(f³², ls²⁵) = 
+//│ 					lazy⁰(force⁰(ls²⁵, f³²))
+//│ 				def zark₁₀(_lh_zark_arg1⁴, _lh_zark_arg2⁴) = 
+//│ 					integrate2D₁₀(0.0, _lh_zark_arg1⁴, 0.0, _lh_zark_arg2⁴, (fun x⁸ -> (fun y⁸ -> (x⁸ *. y⁸))))
+//│ 					where
+//│ 					def integrate2D₁₀(_lh_integrate2D_arg1⁵, _lh_integrate2D_arg2⁵, _lh_integrate2D_arg3⁵, _lh_integrate2D_arg4⁵, _lh_integrate2D_arg5⁵) = 
+//│ 						integrate1D₂₀(_lh_integrate2D_arg3⁵, _lh_integrate2D_arg4⁵, (fun y¹¹ -> integrate1D₃₀(_lh_integrate2D_arg1⁵, _lh_integrate2D_arg2⁵, (fun x¹¹ -> _lh_integrate2D_arg5⁵(x¹¹, y¹¹)))))
+//│ 						where
+//│ 						def integrate1D₂₀(_lh_integrate1D_arg1⁸, _lh_integrate1D_arg2⁸, _lh_integrate1D_arg3⁸) = 
+//│ 							let d⁸ = ((_lh_integrate1D_arg2⁸ -. _lh_integrate1D_arg1⁸) /. 8.0)
+//│ 							in (d⁸ *. sumFloat₂₀(
+//│ 								let _lh_sumFloat_LH_C_0¹⁰ = (_lh_integrate1D_arg3⁸(_lh_integrate1D_arg1⁸) *. 0.5)
+//│ 								in let _lh_sumFloat_LH_C_1¹⁰ = 	
+//│ 									let _lh_sumFloat_LH_C_0¹¹ = _lh_integrate1D_arg3⁸((_lh_integrate1D_arg1⁸ +. d⁸))
+//│ 									in let _lh_sumFloat_LH_C_1¹¹ = 	
+//│ 										let _lh_sumFloat_LH_C_0¹² = _lh_integrate1D_arg3⁸((_lh_integrate1D_arg1⁸ +. (2.0 *. d⁸)))
+//│ 										in let _lh_sumFloat_LH_C_1¹² = 	
+//│ 											let _lh_sumFloat_LH_C_0¹³ = _lh_integrate1D_arg3⁸((_lh_integrate1D_arg1⁸ +. (3.0 *. d⁸)))
+//│ 											in let _lh_sumFloat_LH_C_1¹³ = 	
+//│ 												let _lh_sumFloat_LH_C_0¹⁴ = _lh_integrate1D_arg3⁸((_lh_integrate1D_arg1⁸ +. (4.0 *. d⁸)))
+//│ 												in let _lh_sumFloat_LH_C_1¹⁴ = 	
+//│ 													let _lh_sumFloat_LH_C_0¹⁵ = _lh_integrate1D_arg3⁸((_lh_integrate1D_arg2⁸ -. (3.0 *. d⁸)))
+//│ 													in let _lh_sumFloat_LH_C_1¹⁵ = 	
+//│ 														let _lh_sumFloat_LH_C_0¹⁶ = _lh_integrate1D_arg3⁸((_lh_integrate1D_arg2⁸ -. (2.0 *. d⁸)))
+//│ 														in let _lh_sumFloat_LH_C_1¹⁶ = 	
+//│ 															let _lh_sumFloat_LH_C_0¹⁷ = _lh_integrate1D_arg3⁸((_lh_integrate1D_arg2⁸ -. d⁸))
+//│ 															in let _lh_sumFloat_LH_C_1¹⁷ = 	
+//│ 																let _lh_sumFloat_LH_C_0¹⁸ = (_lh_integrate1D_arg3⁸(_lh_integrate1D_arg2⁸) *. 0.5)
+//│ 																in let _lh_sumFloat_LH_C_1¹⁸ = 0.0
+//│ 																in (_lh_sumFloat_LH_C_0¹⁸ +. sumFloat₂₀(_lh_sumFloat_LH_C_1¹⁸))
+//│ 															in (_lh_sumFloat_LH_C_0¹⁷ +. sumFloat₂₀(_lh_sumFloat_LH_C_1¹⁷))
+//│ 														in (_lh_sumFloat_LH_C_0¹⁶ +. sumFloat₂₀(_lh_sumFloat_LH_C_1¹⁶))
+//│ 													in (_lh_sumFloat_LH_C_0¹⁵ +. sumFloat₂₀(_lh_sumFloat_LH_C_1¹⁵))
+//│ 												in (_lh_sumFloat_LH_C_0¹⁴ +. sumFloat₂₀(_lh_sumFloat_LH_C_1¹⁴))
+//│ 											in (_lh_sumFloat_LH_C_0¹³ +. sumFloat₂₀(_lh_sumFloat_LH_C_1¹³))
+//│ 										in (_lh_sumFloat_LH_C_0¹² +. sumFloat₂₀(_lh_sumFloat_LH_C_1¹²))
+//│ 									in (_lh_sumFloat_LH_C_0¹¹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1¹¹))
+//│ 								in (_lh_sumFloat_LH_C_0¹⁰ +. sumFloat₂₀(_lh_sumFloat_LH_C_1¹⁰))))
+//│ 							where
+//│ 							def sumFloat₂₀(_lh_sumFloat_arg1¹¹) = 
+//│ 								_lh_sumFloat_arg1¹¹
+//│ 						def integrate1D₃₀(_lh_integrate1D_arg1¹⁰, _lh_integrate1D_arg2¹⁰, _lh_integrate1D_arg3¹⁰) = 
+//│ 							let d¹⁰ = ((_lh_integrate1D_arg2¹⁰ -. _lh_integrate1D_arg1¹⁰) /. 8.0)
+//│ 							in (d¹⁰ *. sumFloat₃₀(
+//│ 								let _lh_sumFloat_LH_C_0²⁹ = (_lh_integrate1D_arg3¹⁰(_lh_integrate1D_arg1¹⁰) *. 0.5)
+//│ 								in let _lh_sumFloat_LH_C_1²⁹ = 	
+//│ 									let _lh_sumFloat_LH_C_0³⁰ = _lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg1¹⁰ +. d¹⁰))
+//│ 									in let _lh_sumFloat_LH_C_1³⁰ = 	
+//│ 										let _lh_sumFloat_LH_C_0³¹ = _lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg1¹⁰ +. (2.0 *. d¹⁰)))
+//│ 										in let _lh_sumFloat_LH_C_1³¹ = 	
+//│ 											let _lh_sumFloat_LH_C_0³² = _lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg1¹⁰ +. (3.0 *. d¹⁰)))
+//│ 											in let _lh_sumFloat_LH_C_1³² = 	
+//│ 												let _lh_sumFloat_LH_C_0³³ = _lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg1¹⁰ +. (4.0 *. d¹⁰)))
+//│ 												in let _lh_sumFloat_LH_C_1³³ = 	
+//│ 													let _lh_sumFloat_LH_C_0³⁴ = _lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg2¹⁰ -. (3.0 *. d¹⁰)))
+//│ 													in let _lh_sumFloat_LH_C_1³⁴ = 	
+//│ 														let _lh_sumFloat_LH_C_0³⁵ = _lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg2¹⁰ -. (2.0 *. d¹⁰)))
+//│ 														in let _lh_sumFloat_LH_C_1³⁵ = 	
+//│ 															let _lh_sumFloat_LH_C_0³⁶ = _lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg2¹⁰ -. d¹⁰))
+//│ 															in let _lh_sumFloat_LH_C_1³⁶ = 	
+//│ 																let _lh_sumFloat_LH_C_0³⁷ = (_lh_integrate1D_arg3¹⁰(_lh_integrate1D_arg2¹⁰) *. 0.5)
+//│ 																in let _lh_sumFloat_LH_C_1³⁷ = 0.0
+//│ 																in (_lh_sumFloat_LH_C_0³⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1³⁷))
+//│ 															in (_lh_sumFloat_LH_C_0³⁶ +. sumFloat₃₀(_lh_sumFloat_LH_C_1³⁶))
+//│ 														in (_lh_sumFloat_LH_C_0³⁵ +. sumFloat₃₀(_lh_sumFloat_LH_C_1³⁵))
+//│ 													in (_lh_sumFloat_LH_C_0³⁴ +. sumFloat₃₀(_lh_sumFloat_LH_C_1³⁴))
+//│ 												in (_lh_sumFloat_LH_C_0³³ +. sumFloat₃₀(_lh_sumFloat_LH_C_1³³))
+//│ 											in (_lh_sumFloat_LH_C_0³² +. sumFloat₃₀(_lh_sumFloat_LH_C_1³²))
+//│ 										in (_lh_sumFloat_LH_C_0³¹ +. sumFloat₃₀(_lh_sumFloat_LH_C_1³¹))
+//│ 									in (_lh_sumFloat_LH_C_0³⁰ +. sumFloat₃₀(_lh_sumFloat_LH_C_1³⁰))
+//│ 								in (_lh_sumFloat_LH_C_0²⁹ +. sumFloat₃₀(_lh_sumFloat_LH_C_1²⁹))))
+//│ 							where
+//│ 							def sumFloat₃₀(_lh_sumFloat_arg1¹²) = 
+//│ 								_lh_sumFloat_arg1¹²
+//│ 				def zipWith_lz_lz₂₀(f²⁷, xs¹¹, ys¹²) = 
+//│ 					lazy⁰(force⁰(xs¹¹, ys¹², f²⁷))
+//│ 			def zipWith_lz_lz₃₀(f²⁸, xs¹², ys¹³) = 
+//│ 				lazy⁰(case force⁰(xs¹²) of {
+//│ 					LH_C hx⁵ tx⁵ => case force⁰(ys¹³) of {
+//│ 						LH_C hy⁵ ty⁵ => [LH_C f²⁸(hx⁵, hy⁵) zipWith_lz_lz₃₀(f²⁸, tx⁵, ty⁵)]
+//│ 						| LH_N  => [LH_N]}
+//│ 					| LH_N  => [LH_N]})
+//│ 		def sumFloat₄₀(_lh_sumFloat_arg1¹⁴) = 
+//│ 			_lh_sumFloat_arg1¹⁴
+//│ 		def take_lz₀₀(n¹¹, ls²⁷) = 
+//│ 			if (n¹¹ > 0) then force⁰(ls²⁷, n¹¹) else 0.0
+//│ 		def zipWith_lz_lz₄₀(f²³, xs¹⁰, ys¹¹) = 
+//│ 			lazy⁰(case force⁰(xs¹⁰) of {
+//│ 				LH_C hx⁸ tx⁸ => case force⁰(ys¹¹) of {
+//│ 					LH_C hy⁸ ty⁸ => 
+//│ 						let h²¹ = f²³(hx⁸, hy⁸)
+//│ 						in let t²¹ = zipWith_lz_lz₄₀(f²³, tx⁸, ty⁸)
+//│ 						in (fun f²⁴ -> 
+//│ 							let h²² = f²⁴(h²¹)
+//│ 							in let t²² = map_lz₂₀(f²⁴, t²¹)
+//│ 							in (fun n⁶ -> 
+//│ 								let _lh_sumFloat_LH_C_0²⁸ = h²²
+//│ 								in let _lh_sumFloat_LH_C_1²⁸ = take_lz₀₀((n⁶ - 1), t²²)
+//│ 								in (_lh_sumFloat_LH_C_0²⁸ +. sumFloat₄₀(_lh_sumFloat_LH_C_1²⁸))))
+//│ 					| LH_N  => (fun f²⁵ -> (fun n⁷ -> 0.0))}
+//│ 				| LH_N  => (fun f²⁶ -> (fun n⁸ -> 0.0))})
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

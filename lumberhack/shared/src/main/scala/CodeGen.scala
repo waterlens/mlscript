@@ -202,6 +202,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
             case "string" => child.getSrcContent.drop(1).dropRight(1).foldRight(Ctor(Var("LH_N"), Nil)) {
               case (c, acc) => Ctor(Var("LH_C"), Const(CharLit(c)) :: acc :: Nil)
             }
+            case "float" => Const(DecLit(BigDecimal(child.getSrcContent)))
           }
         }
         case "exp_infix" => {
@@ -1119,7 +1120,8 @@ object HaskellGen extends CodeGen {
 class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = false) extends CodeGen {
   override val primitives = Map(
     "add" -> "(+)", "sub" -> "(-)", "%" -> "mod", "==" -> "=", "error" -> "(failwith \"error\")", "/=" -> "!=",
-    "force" -> "Lazy.force",
+    "force" -> "Lazy.force", "polyEq" -> "=", "polyLt" -> "<", "polyGt" -> ">", "polyLeq" -> "<=",
+    "polyGeq" -> ">=", "polyNeq" -> "!=", "div" -> "/"
   )
   def transformPrimitive(p: String): String = primitives.getOrElse(p, p)
 
@@ -1210,21 +1212,8 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
       transformPrimitive(id.tree.name)
     case Ref(id) => transfromId(id)
     case Call(Ref(Ident(_, Var("primId"), _)), arg) => rec(arg)
-    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if op == "polyEq" =>
-      "(" <:> rec(fst) <:> " = " <:> rec(snd) <:> ")"
-    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if op == "polyLt" =>
-      "(" <:> rec(fst) <:> " < " <:> rec(snd) <:> ")"
-    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if op == "polyGt" =>
-      "(" <:> rec(fst) <:> " > " <:> rec(snd) <:> ")"
-    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if op == "polyLeq" =>
-      "(" <:> rec(fst) <:> " <= " <:> rec(snd) <:> ")"
-    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if op == "polyGeq" =>
-      "(" <:> rec(fst) <:> " >= " <:> rec(snd) <:> ")"
-    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if op == "polyNeq" =>
-      "(" <:> rec(fst) <:> " != " <:> rec(snd) <:> ")"
-    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if op == "div" =>
-      "(" <:> rec(fst) <:> " / " <:> rec(snd) <:> ")"
-    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackBinOps(op) =>
+    case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd)
+      if Deforest.lumberhackBinOps(op) || Deforest.lumberhackPolyOps(op) || (op == "div") =>
       "(" <:> rec(fst) <:> s" ${transformPrimitive(op)} " <:> rec(snd) <:> ")"
     case Call(lhs, rhs) =>
       "(" <:> rec(lhs) <:> " " <:> rec(rhs) <:> ")"

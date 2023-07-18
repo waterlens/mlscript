@@ -433,6 +433,8 @@ object Expr {
         case Nil => Function(id, fromTerm(b))
         case _ :: _ => Function(id, fromTerm(Lam(Tup(args), b)))
       }
+    // NOTE: for floating point numbers need to modify parser to handle `1.02` where the `02` will be presented as `2`
+    // case App(App(Var("."), IntLit(a)), IntLit(b)) => DecLit()
     case App(v: Var, Tup(args)) if v.name.isCapitalized => Ctor(v, args.map(a => fromTerm(a._2.value)))
     case App(l, Tup((N -> Fld(_, _, a)) :: args)) => args.foldLeft(Call(fromTerm(l), fromTerm(a))) {
       case (c, (N -> Fld(_, _, a))) => Call(c, fromTerm(a))

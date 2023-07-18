@@ -198,6 +198,7 @@ object ProdStratEnum {
     MkCtor(Var("True"), Nil).toStrat() :: MkCtor(Var("False"), Nil).toStrat() :: Nil
   )
   def prodInt(using ExprId) = MkCtor(Var("Int"), Nil)
+  def prodFloat(using ExprId) = MkCtor(Var("Float"), Nil)
   def prodChar(using ExprId) = MkCtor(Var("Char"), Nil)
   def prodString(using d: Deforest, euid: ExprId): ProdStratEnum = {
     // val v = d.freshVar("_lh_string")
@@ -214,6 +215,10 @@ object ProdStratEnum {
   def prodIntBinOp(using ExprId) = ProdFun(
     consInt.toStrat(),
     ProdFun(consInt.toStrat(), prodInt.toStrat()).toStrat()
+  )
+  def prodFloatBinOp(using ExprId) = ProdFun(
+    consFloat.toStrat(),
+    ProdFun(consFloat.toStrat(), prodFloat.toStrat()).toStrat()
   )
   def prodIntEq(using ExprId) = ProdFun(
     consInt.toStrat(),
@@ -233,6 +238,7 @@ object ConsStratEnum {
     Destructor(Var("True"), Nil) :: Destructor(Var("False"), Nil) :: Nil
   )
   def consInt(using ExprId) = Destruct(Destructor(Var("Int"), Nil) :: Nil)
+  def consFloat(using ExprId) = Destruct(Destructor(Var("Float"), Nil) :: Nil)
   def consChar(using ExprId) = Destruct(Destructor(Var("Char"), Nil) :: Nil)
 }
 case class Ctx(bindings: Map[Ident, Strat[ProdVar]]) {
@@ -298,9 +304,10 @@ class Deforest(var debug: Boolean) {
   def process(e: Expr)(using ctx: Ctx, calls: mutable.Set[Ref]): ProdStrat = trace(s"process ${e.uid}: ${e.pp(using InitPpConfig)}") {
     val res: ProdStratEnum = e match
       case Call(Ref(lazyOrForce), e) if Set("lazy", "force")(lazyOrForce.tree.name) => process(e).s
-      case Const(IntLit(_)) => prodInt(using noExprId) // Ints must use noExprId, since it's a MkCtor type
+      case Const(IntLit(_)) => prodInt(using noExprId)
+      case Const(DecLit(_)) => prodFloat(using noExprId) // floating point numbers as integers type
       case Const(CharLit(_)) => prodChar(using noExprId)
-      case Const(StrLit(strLit)) => prodString(strLit)(using noExprId) // Strings must use noExprId, since it's a MkCtor type
+      case Const(StrLit(strLit)) => prodString(strLit)(using noExprId) // Strings constants are lists of chars
       case Const(l) => NoProd()(using e.uid)
       case Ref(Ident(_, Var(primitive), _)) if Deforest.lumberhackKeywords(primitive) => {
         if Deforest.lumberhackIntComparisonFun(primitive) || Deforest.lumberhackIntComparisonOps(primitive) then
@@ -311,6 +318,8 @@ class Deforest(var debug: Boolean) {
           prodBoolBinOp(using noExprId)
         else if Deforest.lumberhackBoolUnaryOps(primitive) then
           prodBoolUnaryOp(using noExprId)
+        else if Deforest.lumberhackFloatBinOps(primitive) then
+          prodFloatBinOp(using noExprId)
         else if primitive == "error" then
           freshVar("_lh_rigid_error_var")(using noExprId)._1
         else if (Set("primitive", "primId") ++ Deforest.lumberhackPolyOps)(primitive) then
@@ -936,11 +945,12 @@ object CallTree {
 
 object Deforest {
   lazy val lumberhackKeywords: Set[String] =
-    (lumberhackIntFun ++ lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackBoolUnaryOps ++ lumberhackPolyOps)
+    (lumberhackIntFun ++ lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackBoolUnaryOps ++ lumberhackPolyOps
+      ++ lumberhackFloatBinOps)
       + "string_of_int" + "int_of_char" + "char_of_int"
       + "primitive" + "primId" + "error" + "lazy" + "force"
   lazy val lumberhackPolyOps: Set[String] = Set("polyEq", "polyLt", "polyGt", "polyLeq", "polyGeq", "polyNeq")
-  lazy val lumberhackBinOps = lumberhackIntBinOps ++ lumberhackBoolBinOps
+  lazy val lumberhackBinOps = lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackFloatBinOps
   lazy val lumberhackIntFun: Set[String] = lumberhackIntValueFun ++ lumberhackIntComparisonFun
   lazy val lumberhackIntValueFun: Set[String] = Set("add", "minus", "mult", "div", "mod")
   lazy val lumberhackIntComparisonFun: Set[String] = Set("eq", "lt", "gt", "leq", "geq", "neq")
@@ -949,6 +959,7 @@ object Deforest {
   lazy val lumberhackIntComparisonOps: Set[String] = Set("==", ">", "<", ">=", "<=", "/=")
   lazy val lumberhackBoolBinOps: Set[String] = Set("&&", "||")
   lazy val lumberhackBoolUnaryOps: Set[String] = Set("not")
+  lazy val lumberhackFloatBinOps: Set[String] = Set("+.", "-.", "*.", "/.")
 
   def filterKnots(k: Path, v: Path)(using d: Deforest) = v.reachable(d.callsInfo) &&
     v.p.nonEmpty && k.p.nonEmpty &&

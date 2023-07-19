@@ -11,6 +11,7 @@ let rec listToTaggedList s = match s with
   | h::t -> `LH_C(h, listToTaggedList(t))
   | [] -> `LH_N;;
 let string_of_int i = listToTaggedList (explode_string (string_of_int i));;
+let string_of_float f = listToTaggedList (explode_string (string_of_float f))
 
 (* original *)
 let rec _lhManual ls_2 f1_0 f2_0 =

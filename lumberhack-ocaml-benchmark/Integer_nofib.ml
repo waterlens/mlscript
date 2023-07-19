@@ -11,6 +11,7 @@ let rec listToTaggedList s = match s with
   | h::t -> `LH_C(h, listToTaggedList(t))
   | [] -> `LH_N;;
 let string_of_int i = listToTaggedList (explode_string (string_of_int i));;
+let string_of_float f = listToTaggedList (explode_string (string_of_float f))
 
 (* original *)
 let rec enumFromThenTo_d0 a_4_5 t_4_2 b_4_2 =

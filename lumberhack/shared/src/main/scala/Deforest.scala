@@ -330,6 +330,12 @@ class Deforest(var debug: Boolean) {
           ProdFun(consInt(using noExprId).toStrat(), prodChar(using noExprId).toStrat())(using noExprId)
         else if primitive == "int_of_char" then
           ProdFun(consChar(using noExprId).toStrat(), prodInt(using noExprId).toStrat())(using noExprId)
+        else if primitive == "float_of_int" then
+          ProdFun(consInt(using noExprId).toStrat(), prodFloat(using noExprId).toStrat())(using noExprId)
+        else if primitive == "int_of_float" then
+          ProdFun(consFloat(using noExprId).toStrat(), prodInt(using noExprId).toStrat())(using noExprId)
+        else if primitive == "ceiling" then
+          ProdFun(consFloat(using noExprId).toStrat(), prodFloat(using noExprId).toStrat())(using noExprId)
         else
           lastWords("lazy and force should not be handled here")
       }
@@ -947,7 +953,7 @@ object Deforest {
   lazy val lumberhackKeywords: Set[String] =
     (lumberhackIntFun ++ lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackBoolUnaryOps ++ lumberhackPolyOps
       ++ lumberhackFloatBinOps)
-      + "string_of_int" + "int_of_char" + "char_of_int"
+      + "string_of_int" + "int_of_char" + "char_of_int" + "ceiling" + "float_of_int" + "int_of_float"
       + "primitive" + "primId" + "error" + "lazy" + "force"
   lazy val lumberhackPolyOps: Set[String] = Set("polyEq", "polyLt", "polyGt", "polyLeq", "polyGeq", "polyNeq")
   lazy val lumberhackBinOps = lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackFloatBinOps

@@ -173,6 +173,19 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
           val res = n.getAllChilds.toList match {
             case ctor :: rest if ctor.getType() == "exp_name" && ctor.getChild(0).getType() == "constructor" =>
               Ctor(Var(ctor.getSrcContent), rest.map(_.toExpr))
+            // NOTE: special case for list comprehension generating lazy lists
+            case f :: a :: Nil if f.getSrcContent == "lazy" && (a.getType() == "exp_list_comprehension") =>
+              val allChilds = a.getAllChilds
+              val elemGenerationNode = allChilds(1)
+              assert(elemGenerationNode.getType().startsWith("exp_"))
+              val allQualifiers = allChilds.filter(_.getType() == "qual")
+              handleListComprehension(
+                elemGenerationNode,
+                allQualifiers.toList,
+                Expr.Call(Expr.Ref(ctx("lazy")), Expr.Ctor(Var(BuiltInTypes.ListNil.toLumberhackType), Nil)),
+                Map.empty,
+                produceLazyList = true
+              )
             case f :: a :: rest => rest.foldLeft(Call(f.toExpr, a.toExpr))((e, n) => Call(e, n.toExpr))
             case _ => lastWords("cannot be single")
           }
@@ -480,15 +493,24 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
   }
 
   def handleListComprehension(
-    elemGen: Node, quals: List[Node], rest: Expr, comprehCtx: Expr.Ctx
+    elemGen: Node, quals: List[Node], rest: Expr, comprehCtx: Expr.Ctx, produceLazyList: Bool = false
   )(using
     ctx: Expr.Ctx, inDef: Option[Ident], d: Deforest, output: Str => Unit, prgmStr: Str
   ): Expr = {
     if quals.isEmpty then {
-      Expr.Ctor(
-        Var(BuiltInTypes.ListCons.toLumberhackType),
-        elemGen.toExpr(using ctx ++ comprehCtx) :: rest :: Nil
-      )
+      if produceLazyList then
+        Expr.Call(
+          Expr.Ref(ctx("lazy")),
+          Expr.Ctor(
+            Var(BuiltInTypes.ListCons.toLumberhackType),
+            elemGen.toExpr(using ctx ++ comprehCtx) :: rest :: Nil
+          )
+        )
+      else
+        Expr.Ctor(
+          Var(BuiltInTypes.ListCons.toLumberhackType),
+          elemGen.toExpr(using ctx ++ comprehCtx) :: rest :: Nil
+        )
     } else quals.head.getChild(0).getType() match {
       case "bind_pattern" => {
         val childs = quals.head.getChild(0).getAllChilds
@@ -529,7 +551,8 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
                       elemGen,
                       quals.tail,
                       Expr.Call(Ref(recFunName), Ref(recFunLsT)),
-                      comprehCtx
+                      comprehCtx,
+                      produceLazyList = produceLazyList
                     )
                   },
                   comprehCtx
@@ -551,7 +574,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
       }
       case exp if exp.startsWith("exp_") => Expr.IfThenElse(
         quals.head.getChild(0).toExpr(using ctx ++ comprehCtx),
-        handleListComprehension(elemGen, quals.tail, rest, comprehCtx),
+        handleListComprehension(elemGen, quals.tail, rest, comprehCtx, produceLazyList = produceLazyList),
         rest
       )
       case "let" => lastWords(s"unsupported: ${quals.head.getNodeString()}")
@@ -1121,7 +1144,7 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
   override val primitives = Map(
     "add" -> "(+)", "sub" -> "(-)", "%" -> "mod", "==" -> "=", "error" -> "(failwith \"error\")", "/=" -> "!=",
     "force" -> "Lazy.force", "polyEq" -> "=", "polyLt" -> "<", "polyGt" -> ">", "polyLeq" -> "<=",
-    "polyGeq" -> ">=", "polyNeq" -> "!=", "div" -> "/"
+    "polyGeq" -> ">=", "polyNeq" -> "!=", "div" -> "/", "ceiling" -> "ceil"
   )
   def transformPrimitive(p: String): String = primitives.getOrElse(p, p)
 

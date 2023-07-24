@@ -1,0 +1,1594 @@
+:NewParser
+:ParseOnly
+
+:lhInHaskell
+:lhGenOCaml
+compareTuple2 (a, b) (c, d) = a <= c
+delete (x:xs) e = if polyEq x e then delete xs e else x:(delete xs e)
+delete [] e = []
+listDiff = foldl delete
+sort :: (Ord a) => [a] -> [a]
+sort  l = qsort (\a b -> compareTuple2 a b) l []
+qsort le []     r = r
+qsort le [x]    r = x:r
+qsort le (x:xs) r = qpart le x xs [] [] r
+qpart le x [] rlt rge r =
+    rqsort le rlt (x:rqsort le rge r)
+qpart le x (y:ys) rlt rge r =
+    if le x y then
+    qpart le x ys rlt (y:rge) r
+    else
+    qpart le x ys (y:rlt) rge r
+rqsort le []     r = r
+rqsort le [x]    r = x:r
+rqsort le (x:xs) r = rqpart le x xs [] [] r
+rqpart le x [] rle rgt r =
+    qsort le rle (x:qsort le rgt r)
+rqpart le x (y:ys) rle rgt r =
+    if le y x then
+    rqpart le x ys (y:rle) rgt r
+    else
+    rqpart le x ys rle (y:rgt) r
+perms m [] = []
+perms 1 l  = map (\x -> x:[]) l
+perms m (n:ns) = map (\x -> n:x) (perms (m-1) ns) ++ perms m ns
+awards scores = 
+  let sumscores = map (\p -> (sum p, p)) (perms 3 scores) in
+  let atleast = \threshold -> (filter (\sum_p -> case sum_p of { (sum, p) -> sum >= threshold }) sumscores) in
+  let award = \name_threshold -> case name_threshold of { (name, threshold) -> map (\ps -> (name,ps)) (sort (atleast threshold)) } in
+    award ("Gold",70) ++ award ("Silver",60) ++ award ("Bronze",50)
+findawards scores = case (awards scores) of {
+  [] -> [];
+  head:tail -> case head of  {
+    (award,(sum,perm)) -> (award,(sum,perm)) : (findawards (listDiff scores perm))
+  }
+}
+findallawards competitors =
+    map (\name_scores -> case name_scores of { (name, scores) -> (name, findawards scores) }) competitors
+competitors i =
+  [ ("Simon",[35,27,40,i,34,21])
+  , ("Hans",[23,19,45,i,17,10,5,8,14])
+  , ("Phil",[1,18,i,20,21,19,34,8,16,21])
+  , ("Kevin",[9,23,17,54,i,41,9,18,14])
+  ]
+testAwards_nofib n = map (\x -> findallawards (competitors (x `mod` 100))) [1..n]
+testAwards_nofib $ primId 500
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testAwards_nofib₀^1997(primId⁰(500))
+//│ def awards₀(_lh_awards_arg1¹) = 
+//│ 	let sumscores¹ = map₀^1237((fun p¹ -> [LH_P2 sum₀^1238(p¹) p¹]), perms₀^1245(3, _lh_awards_arg1¹))
+//│ 	in let atleast¹ = (fun threshold¹ -> filter₀^1251((fun sum_p¹ -> 
+//│ 		let _lh_matchIdent⁵ = sum_p¹
+//│ 		in case _lh_matchIdent⁵ of {
+//│ 			LH_P2 _lh_awards_LH_P2_0² _lh_awards_LH_P2_1² => (_lh_awards_LH_P2_0² >= threshold¹)
+//│ 			| _  => error⁰}), sumscores¹))
+//│ 	in let award¹ = (fun name_threshold¹ -> 
+//│ 		let _lh_matchIdent⁶ = name_threshold¹
+//│ 		in case _lh_matchIdent⁶ of {
+//│ 			LH_P2 _lh_awards_LH_P2_0³ _lh_awards_LH_P2_1³ => map₁^1269((fun ps¹ -> [LH_P2 _lh_awards_LH_P2_0³ ps¹]), sort₀^1275(atleast¹(_lh_awards_LH_P2_1³)))
+//│ 			| _  => error⁰})
+//│ 	in mappend₀^1285(mappend₁^1286(award¹([LH_P2 [LH_C 'G' [LH_C 'o' [LH_C 'l' [LH_C 'd' [LH_N]]]]] 70]), award¹([LH_P2 [LH_C 'S' [LH_C 'i' [LH_C 'l' [LH_C 'v' [LH_C 'e' [LH_C 'r' [LH_N]]]]]]] 60])), award¹([LH_P2 [LH_C 'B' [LH_C 'r' [LH_C 'o' [LH_C 'n' [LH_C 'z' [LH_C 'e' [LH_N]]]]]]] 50]))
+//│ def compareTuple2₀(_lh_compareTuple2_arg1¹, _lh_compareTuple2_arg2¹) = case _lh_compareTuple2_arg1¹ of {
+//│ 	LH_P2 _lh_compareTuple2_LH_P2_0² _lh_compareTuple2_LH_P2_1² => case _lh_compareTuple2_arg2¹ of {
+//│ 		LH_P2 _lh_compareTuple2_LH_P2_0³ _lh_compareTuple2_LH_P2_1³ => (_lh_compareTuple2_LH_P2_0² <= _lh_compareTuple2_LH_P2_0³)
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def competitors₀(_lh_competitors_arg1¹) = [LH_C [LH_P2 [LH_C 'S' [LH_C 'i' [LH_C 'm' [LH_C 'o' [LH_C 'n' [LH_N]]]]]] [LH_C 35 [LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]]] [LH_C [LH_P2 [LH_C 'H' [LH_C 'a' [LH_C 'n' [LH_C 's' [LH_N]]]]] [LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'P' [LH_C 'h' [LH_C 'i' [LH_C 'l' [LH_N]]]]] [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]] [LH_N]]]]]
+//│ def delete₀(_lh_delete_arg1¹, _lh_delete_arg2¹) = case _lh_delete_arg1¹ of {
+//│ 	LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀^1919(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀^1925(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)]
+//│ 	| LH_N  => [LH_N]
+//│ 	| _  => error⁰}
+//│ def enumFromTo₀(a⁶, b³) = if (a⁶ <= b³) then [LH_C a⁶ enumFromTo₀^1565((a⁶ + 1), b³)] else [LH_N]
+//│ def filter₀(f¹⁹, ls²⁷) = case ls²⁷ of {
+//│ 	LH_C h³¹ t³³ => if f¹⁹(h³¹) then [LH_C h³¹ filter₀^1956(f¹⁹, t³³)] else filter₀^1962(f¹⁹, t³³)
+//│ 	| LH_N  => [LH_N]}
+//│ def findallawards₀(_lh_findallawards_arg1¹) = map₄^1897((fun name_scores¹ -> 
+//│ 	let _lh_matchIdent⁹ = name_scores¹
+//│ 	in case _lh_matchIdent⁹ of {
+//│ 		LH_P2 _lh_findallawards_LH_P2_0¹ _lh_findallawards_LH_P2_1¹ => [LH_P2 _lh_findallawards_LH_P2_0¹ findawards₀^1901(_lh_findallawards_LH_P2_1¹)]
+//│ 		| _  => error⁰}), _lh_findallawards_arg1¹)
+//│ def findawards₀(_lh_findawards_arg1¹) = 
+//│ 	let _lh_matchIdent⁷ = awards₀^1386(_lh_findawards_arg1¹)
+//│ 	in case _lh_matchIdent⁷ of {
+//│ 		LH_N  => [LH_N]
+//│ 		| LH_C _lh_findawards_LH_C_0¹ _lh_findawards_LH_C_1¹ => 
+//│ 			let _lh_matchIdent⁸ = _lh_findawards_LH_C_0¹
+//│ 			in case _lh_matchIdent⁸ of {
+//│ 				LH_P2 _lh_findawards_LH_P2_0² _lh_findawards_LH_P2_1² => case _lh_findawards_LH_P2_1² of {
+//│ 					LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³ => [LH_C [LH_P2 _lh_findawards_LH_P2_0² [LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³]] findawards₀^1399(listDiff₀^1400(_lh_findawards_arg1¹, _lh_findawards_LH_P2_1³))]
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ def foldl₀(f¹², i³, ls²⁰) = case ls²⁰ of {
+//│ 	LH_C h²² t²⁴ => foldl₀^1428(f¹², f¹²(i³, h²²), t²⁴)
+//│ 	| LH_N  => i³}
+//│ def listDiff₀ = foldl₀^1556(delete₀^1557)
+//│ def mappend₀(xs¹⁰, ys¹⁰) = case xs¹⁰ of {
+//│ 	LH_C h²⁵ t²⁷ => [LH_C h²⁵ mappend₀^1595(t²⁷, ys¹⁰)]
+//│ 	| LH_N  => ys¹⁰}
+//│ def mappend₁(xs¹¹, ys¹¹) = case xs¹¹ of {
+//│ 	LH_C h²⁷ t²⁹ => [LH_C h²⁷ mappend₁^1737(t²⁹, ys¹¹)]
+//│ 	| LH_N  => ys¹¹}
+//│ def mappend₂(xs⁹, ys⁹) = case xs⁹ of {
+//│ 	LH_C h²⁰ t²² => [LH_C h²⁰ mappend₂^1227(t²², ys⁹)]
+//│ 	| LH_N  => ys⁹}
+//│ def map₀(f¹⁷, ls²⁵) = case ls²⁵ of {
+//│ 	LH_C h²⁹ t³¹ => [LH_C f¹⁷(h²⁹) map₀^1887(f¹⁷, t³¹)]
+//│ 	| LH_N  => [LH_N]}
+//│ def map₁(f¹³, ls²¹) = case ls²¹ of {
+//│ 	LH_C h²³ t²⁵ => [LH_C f¹³(h²³) map₁^1546(f¹³, t²⁵)]
+//│ 	| LH_N  => [LH_N]}
+//│ def map₂(f¹⁵, ls²³) = case ls²³ of {
+//│ 	LH_C h²⁶ t²⁸ => [LH_C f¹⁵(h²⁶) map₂^1609(f¹⁵, t²⁸)]
+//│ 	| LH_N  => [LH_N]}
+//│ def map₃(f¹⁴, ls²²) = case ls²² of {
+//│ 	LH_C h²⁴ t²⁶ => [LH_C f¹⁴(h²⁴) map₃^1583(f¹⁴, t²⁶)]
+//│ 	| LH_N  => [LH_N]}
+//│ def map₄(f¹⁶, ls²⁴) = case ls²⁴ of {
+//│ 	LH_C h²⁸ t³⁰ => [LH_C f¹⁶(h²⁸) map₄^1751(f¹⁶, t³⁰)]
+//│ 	| LH_N  => [LH_N]}
+//│ def map₅(f¹⁸, ls²⁶) = case ls²⁶ of {
+//│ 	LH_C h³⁰ t³² => [LH_C f¹⁸(h³⁰) map₅^1941(f¹⁸, t³²)]
+//│ 	| LH_N  => [LH_N]}
+//│ def perms₀(_lh_perms_arg1¹, _lh_perms_arg2¹) = case _lh_perms_arg2¹ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| _  => case _lh_perms_arg1¹ of {
+//│ 		1  => map₃^1696((fun x⁶ -> [LH_C x⁶ [LH_N]]), _lh_perms_arg2¹)
+//│ 		| _  => case _lh_perms_arg2¹ of {
+//│ 			LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂^1705(map₂^1706((fun x⁷ -> [LH_C _lh_perms_LH_C_0¹ x⁷]), perms₀^1712((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀^1723(_lh_perms_arg1¹, _lh_perms_LH_C_1¹))
+//│ 			| _  => error⁰}}}
+//│ def qpart₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_arg3¹, _lh_qpart_arg4¹, _lh_qpart_arg5¹, _lh_qpart_arg6¹) = case _lh_qpart_arg3¹ of {
+//│ 	LH_N  => rqsort₀^1620(_lh_qpart_arg1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_arg2¹ rqsort₁^1626(_lh_qpart_arg1¹, _lh_qpart_arg5¹, _lh_qpart_arg6¹)])
+//│ 	| LH_C _lh_qpart_LH_C_0¹ _lh_qpart_LH_C_1¹ => if _lh_qpart_arg1¹(_lh_qpart_arg2¹, _lh_qpart_LH_C_0¹) then qpart₀^1640(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg5¹], _lh_qpart_arg6¹) else qpart₀^1655(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg4¹], _lh_qpart_arg5¹, _lh_qpart_arg6¹)
+//│ 	| _  => error⁰}
+//│ def qsort₀(_lh_qsort_arg1¹, _lh_qsort_arg2¹, _lh_qsort_arg3¹) = case _lh_qsort_arg2¹ of {
+//│ 	LH_N  => _lh_qsort_arg3¹
+//│ 	| LH_C _lh_qsort_LH_C_0¹ _lh_qsort_LH_C_1¹ => case _lh_qsort_LH_C_1¹ of {
+//│ 		LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹]
+//│ 		| _  => qpart₀^1367(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)}
+//│ 	| _  => error⁰}
+//│ def rqpart₀(_lh_rqpart_arg1¹, _lh_rqpart_arg2¹, _lh_rqpart_arg3¹, _lh_rqpart_arg4¹, _lh_rqpart_arg5¹, _lh_rqpart_arg6¹) = case _lh_rqpart_arg3¹ of {
+//│ 	LH_N  => qsort₀^1166(_lh_rqpart_arg1¹, _lh_rqpart_arg4¹, [LH_C _lh_rqpart_arg2¹ qsort₀^1172(_lh_rqpart_arg1¹, _lh_rqpart_arg5¹, _lh_rqpart_arg6¹)])
+//│ 	| LH_C _lh_rqpart_LH_C_0¹ _lh_rqpart_LH_C_1¹ => if _lh_rqpart_arg1¹(_lh_rqpart_LH_C_0¹, _lh_rqpart_arg2¹) then rqpart₀^1186(_lh_rqpart_arg1¹, _lh_rqpart_arg2¹, _lh_rqpart_LH_C_1¹, [LH_C _lh_rqpart_LH_C_0¹ _lh_rqpart_arg4¹], _lh_rqpart_arg5¹, _lh_rqpart_arg6¹) else rqpart₀^1201(_lh_rqpart_arg1¹, _lh_rqpart_arg2¹, _lh_rqpart_LH_C_1¹, _lh_rqpart_arg4¹, [LH_C _lh_rqpart_LH_C_0¹ _lh_rqpart_arg5¹], _lh_rqpart_arg6¹)
+//│ 	| _  => error⁰}
+//│ def rqpart₁(_lh_rqpart_arg1², _lh_rqpart_arg2², _lh_rqpart_arg3², _lh_rqpart_arg4², _lh_rqpart_arg5², _lh_rqpart_arg6²) = case _lh_rqpart_arg3² of {
+//│ 	LH_N  => qsort₀^1483(_lh_rqpart_arg1², _lh_rqpart_arg4², [LH_C _lh_rqpart_arg2² qsort₀^1489(_lh_rqpart_arg1², _lh_rqpart_arg5², _lh_rqpart_arg6²)])
+//│ 	| LH_C _lh_rqpart_LH_C_0² _lh_rqpart_LH_C_1² => if _lh_rqpart_arg1²(_lh_rqpart_LH_C_0², _lh_rqpart_arg2²) then rqpart₁^1503(_lh_rqpart_arg1², _lh_rqpart_arg2², _lh_rqpart_LH_C_1², [LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg4²], _lh_rqpart_arg5², _lh_rqpart_arg6²) else rqpart₁^1518(_lh_rqpart_arg1², _lh_rqpart_arg2², _lh_rqpart_LH_C_1², _lh_rqpart_arg4², [LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg5²], _lh_rqpart_arg6²)
+//│ 	| _  => error⁰}
+//│ def rqsort₀(_lh_rqsort_arg1¹, _lh_rqsort_arg2¹, _lh_rqsort_arg3¹) = case _lh_rqsort_arg2¹ of {
+//│ 	LH_N  => _lh_rqsort_arg3¹
+//│ 	| LH_C _lh_rqsort_LH_C_0¹ _lh_rqsort_LH_C_1¹ => case _lh_rqsort_LH_C_1¹ of {
+//│ 		LH_N  => [LH_C _lh_rqsort_LH_C_0¹ _lh_rqsort_arg3¹]
+//│ 		| _  => rqpart₀^1463(_lh_rqsort_arg1¹, _lh_rqsort_LH_C_0¹, _lh_rqsort_LH_C_1¹, [LH_N], [LH_N], _lh_rqsort_arg3¹)}
+//│ 	| _  => error⁰}
+//│ def rqsort₁(_lh_rqsort_arg1², _lh_rqsort_arg2², _lh_rqsort_arg3²) = case _lh_rqsort_arg2² of {
+//│ 	LH_N  => _lh_rqsort_arg3²
+//│ 	| LH_C _lh_rqsort_LH_C_0² _lh_rqsort_LH_C_1² => case _lh_rqsort_LH_C_1² of {
+//│ 		LH_N  => [LH_C _lh_rqsort_LH_C_0² _lh_rqsort_arg3²]
+//│ 		| _  => rqpart₁^1978(_lh_rqsort_arg1², _lh_rqsort_LH_C_0², _lh_rqsort_LH_C_1², [LH_N], [LH_N], _lh_rqsort_arg3²)}
+//│ 	| _  => error⁰}
+//│ def sort₀(_lh_sort_arg1¹) = qsort₀^1679((fun a⁷ -> (fun b⁴ -> compareTuple2₀^1680(a⁷, b⁴))), _lh_sort_arg1¹, [LH_N])
+//│ def sum₀(ls¹⁹) = case ls¹⁹ of {
+//│ 	LH_C h²¹ t²³ => (h²¹ + sum₀^1420(t²³))
+//│ 	| LH_N  => 0}
+//│ def testAwards_nofib₀(_lh_testAwards_nofib_arg1¹) = map₅^1342((fun x⁵ -> findallawards₀^1343(competitors₀^1344((x⁵ % 100)))), enumFromTo₀^1354(1, _lh_testAwards_nofib_arg1¹))
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec awards_d0 _lh_awards_arg1_1 =
+//│ 		  (let rec sumscores_1 = ((map_d0 (fun p_1 -> 
+//│ 		    (`LH_P2((sum_d0 p_1), p_1)))) ((perms_d0 3) _lh_awards_arg1_1)) in
+//│ 		    (let rec atleast_1 = (fun threshold_1 -> 
+//│ 		      ((filter_d0 (fun sum_p_1 -> 
+//│ 		        (let rec _lh_matchIdent_5 = sum_p_1 in
+//│ 		          (match _lh_matchIdent_5 with
+//│ 		            | `LH_P2(_lh_awards_LH_P2_0_2, _lh_awards_LH_P2_1_2) -> 
+//│ 		              (_lh_awards_LH_P2_0_2 >= threshold_1)
+//│ 		            | _ -> 
+//│ 		              (failwith "error"))))) sumscores_1)) in
+//│ 		      (let rec award_1 = (fun name_threshold_1 -> 
+//│ 		        (let rec _lh_matchIdent_6 = name_threshold_1 in
+//│ 		          (match _lh_matchIdent_6 with
+//│ 		            | `LH_P2(_lh_awards_LH_P2_0_3, _lh_awards_LH_P2_1_3) -> 
+//│ 		              ((map_d1 (fun ps_1 -> 
+//│ 		                (`LH_P2(_lh_awards_LH_P2_0_3, ps_1)))) (sort_d0 (atleast_1 _lh_awards_LH_P2_1_3)))
+//│ 		            | _ -> 
+//│ 		              (failwith "error")))) in
+//│ 		        ((mappend_d0 ((mappend_d1 (award_1 (`LH_P2((`LH_C('G', (`LH_C('o', (`LH_C('l', (`LH_C('d', (`LH_N))))))))), 70)))) (award_1 (`LH_P2((`LH_C('S', (`LH_C('i', (`LH_C('l', (`LH_C('v', (`LH_C('e', (`LH_C('r', (`LH_N))))))))))))), 60))))) (award_1 (`LH_P2((`LH_C('B', (`LH_C('r', (`LH_C('o', (`LH_C('n', (`LH_C('z', (`LH_C('e', (`LH_N))))))))))))), 50)))))))
+//│ 		and compareTuple2_d0 _lh_compareTuple2_arg1_1 _lh_compareTuple2_arg2_1 =
+//│ 		  (match _lh_compareTuple2_arg1_1 with
+//│ 		    | `LH_P2(_lh_compareTuple2_LH_P2_0_2, _lh_compareTuple2_LH_P2_1_2) -> 
+//│ 		      (match _lh_compareTuple2_arg2_1 with
+//│ 		        | `LH_P2(_lh_compareTuple2_LH_P2_0_3, _lh_compareTuple2_LH_P2_1_3) -> 
+//│ 		          (_lh_compareTuple2_LH_P2_0_2 <= _lh_compareTuple2_LH_P2_0_3)
+//│ 		        | _ -> 
+//│ 		          (failwith "error"))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and competitors_d0 _lh_competitors_arg1_1 =
+//│ 		  (`LH_C((`LH_P2((`LH_C('S', (`LH_C('i', (`LH_C('m', (`LH_C('o', (`LH_C('n', (`LH_N))))))))))), (`LH_C(35, (`LH_C(27, (`LH_C(40, (`LH_C(_lh_competitors_arg1_1, (`LH_C(34, (`LH_C(21, (`LH_N))))))))))))))), (`LH_C((`LH_P2((`LH_C('H', (`LH_C('a', (`LH_C('n', (`LH_C('s', (`LH_N))))))))), (`LH_C(23, (`LH_C(19, (`LH_C(45, (`LH_C(_lh_competitors_arg1_1, (`LH_C(17, (`LH_C(10, (`LH_C(5, (`LH_C(8, (`LH_C(14, (`LH_N))))))))))))))))))))), (`LH_C((`LH_P2((`LH_C('P', (`LH_C('h', (`LH_C('i', (`LH_C('l', (`LH_N))))))))), (`LH_C(1, (`LH_C(18, (`LH_C(_lh_competitors_arg1_1, (`LH_C(20, (`LH_C(21, (`LH_C(19, (`LH_C(34, (`LH_C(8, (`LH_C(16, (`LH_C(21, (`LH_N))))))))))))))))))))))), (`LH_C((`LH_P2((`LH_C('K', (`LH_C('e', (`LH_C('v', (`LH_C('i', (`LH_C('n', (`LH_N))))))))))), (`LH_C(9, (`LH_C(23, (`LH_C(17, (`LH_C(54, (`LH_C(_lh_competitors_arg1_1, (`LH_C(41, (`LH_C(9, (`LH_C(18, (`LH_C(14, (`LH_N))))))))))))))))))))), (`LH_N)))))))))
+//│ 		and delete_d0 _lh_delete_arg1_1 _lh_delete_arg2_1 =
+//│ 		  (match _lh_delete_arg1_1 with
+//│ 		    | `LH_C(_lh_delete_LH_C_0_1, _lh_delete_LH_C_1_1) -> 
+//│ 		      (if (_lh_delete_LH_C_0_1 = _lh_delete_arg2_1) then
+//│ 		        ((delete_d0 _lh_delete_LH_C_1_1) _lh_delete_arg2_1)
+//│ 		      else
+//│ 		        (`LH_C(_lh_delete_LH_C_0_1, ((delete_d0 _lh_delete_LH_C_1_1) _lh_delete_arg2_1))))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and enumFromTo_d0 a_6 b_3 =
+//│ 		  (if (a_6 <= b_3) then
+//│ 		    (`LH_C(a_6, ((enumFromTo_d0 (a_6 + 1)) b_3)))
+//│ 		  else
+//│ 		    (`LH_N))
+//│ 		and filter_d0 f_1_9 ls_2_7 =
+//│ 		  (match ls_2_7 with
+//│ 		    | `LH_C(h_3_1, t_3_3) -> 
+//│ 		      (if (f_1_9 h_3_1) then
+//│ 		        (`LH_C(h_3_1, ((filter_d0 f_1_9) t_3_3)))
+//│ 		      else
+//│ 		        ((filter_d0 f_1_9) t_3_3))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N))
+//│ 		and findallawards_d0 _lh_findallawards_arg1_1 =
+//│ 		  ((map_d4 (fun name_scores_1 -> 
+//│ 		    (let rec _lh_matchIdent_9 = name_scores_1 in
+//│ 		      (match _lh_matchIdent_9 with
+//│ 		        | `LH_P2(_lh_findallawards_LH_P2_0_1, _lh_findallawards_LH_P2_1_1) -> 
+//│ 		          (`LH_P2(_lh_findallawards_LH_P2_0_1, (findawards_d0 _lh_findallawards_LH_P2_1_1)))
+//│ 		        | _ -> 
+//│ 		          (failwith "error"))))) _lh_findallawards_arg1_1)
+//│ 		and findawards_d0 _lh_findawards_arg1_1 =
+//│ 		  (let rec _lh_matchIdent_7 = (awards_d0 _lh_findawards_arg1_1) in
+//│ 		    (match _lh_matchIdent_7 with
+//│ 		      | `LH_N -> 
+//│ 		        (`LH_N)
+//│ 		      | `LH_C(_lh_findawards_LH_C_0_1, _lh_findawards_LH_C_1_1) -> 
+//│ 		        (let rec _lh_matchIdent_8 = _lh_findawards_LH_C_0_1 in
+//│ 		          (match _lh_matchIdent_8 with
+//│ 		            | `LH_P2(_lh_findawards_LH_P2_0_2, _lh_findawards_LH_P2_1_2) -> 
+//│ 		              (match _lh_findawards_LH_P2_1_2 with
+//│ 		                | `LH_P2(_lh_findawards_LH_P2_0_3, _lh_findawards_LH_P2_1_3) -> 
+//│ 		                  (`LH_C((`LH_P2(_lh_findawards_LH_P2_0_2, (`LH_P2(_lh_findawards_LH_P2_0_3, _lh_findawards_LH_P2_1_3)))), (findawards_d0 ((listDiff_d0 _lh_findawards_arg1_1) _lh_findawards_LH_P2_1_3))))
+//│ 		                | _ -> 
+//│ 		                  (failwith "error"))
+//│ 		            | _ -> 
+//│ 		              (failwith "error")))
+//│ 		      | _ -> 
+//│ 		        (failwith "error")))
+//│ 		and foldl_d0 f_1_2 i_3 ls_2_0 =
+//│ 		  (match ls_2_0 with
+//│ 		    | `LH_C(h_2_2, t_2_4) -> 
+//│ 		      (((foldl_d0 f_1_2) ((f_1_2 i_3) h_2_2)) t_2_4)
+//│ 		    | `LH_N -> 
+//│ 		      i_3)
+//│ 		and listDiff_d0 =
+//│ 		  (foldl_d0 delete_d0)
+//│ 		and mappend_d0 xs_1_0 ys_1_0 =
+//│ 		  (match xs_1_0 with
+//│ 		    | `LH_C(h_2_5, t_2_7) -> 
+//│ 		      (`LH_C(h_2_5, ((mappend_d0 t_2_7) ys_1_0)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_1_0)
+//│ 		and mappend_d1 xs_1_1 ys_1_1 =
+//│ 		  (match xs_1_1 with
+//│ 		    | `LH_C(h_2_7, t_2_9) -> 
+//│ 		      (`LH_C(h_2_7, ((mappend_d1 t_2_9) ys_1_1)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_1_1)
+//│ 		and mappend_d2 xs_9 ys_9 =
+//│ 		  (match xs_9 with
+//│ 		    | `LH_C(h_2_0, t_2_2) -> 
+//│ 		      (`LH_C(h_2_0, ((mappend_d2 t_2_2) ys_9)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_9)
+//│ 		and map_d0 f_1_7 ls_2_5 =
+//│ 		  (match ls_2_5 with
+//│ 		    | `LH_C(h_2_9, t_3_1) -> 
+//│ 		      (`LH_C((f_1_7 h_2_9), ((map_d0 f_1_7) t_3_1)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N))
+//│ 		and map_d1 f_1_3 ls_2_1 =
+//│ 		  (match ls_2_1 with
+//│ 		    | `LH_C(h_2_3, t_2_5) -> 
+//│ 		      (`LH_C((f_1_3 h_2_3), ((map_d1 f_1_3) t_2_5)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N))
+//│ 		and map_d2 f_1_5 ls_2_3 =
+//│ 		  (match ls_2_3 with
+//│ 		    | `LH_C(h_2_6, t_2_8) -> 
+//│ 		      (`LH_C((f_1_5 h_2_6), ((map_d2 f_1_5) t_2_8)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N))
+//│ 		and map_d3 f_1_4 ls_2_2 =
+//│ 		  (match ls_2_2 with
+//│ 		    | `LH_C(h_2_4, t_2_6) -> 
+//│ 		      (`LH_C((f_1_4 h_2_4), ((map_d3 f_1_4) t_2_6)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N))
+//│ 		and map_d4 f_1_6 ls_2_4 =
+//│ 		  (match ls_2_4 with
+//│ 		    | `LH_C(h_2_8, t_3_0) -> 
+//│ 		      (`LH_C((f_1_6 h_2_8), ((map_d4 f_1_6) t_3_0)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N))
+//│ 		and map_d5 f_1_8 ls_2_6 =
+//│ 		  (match ls_2_6 with
+//│ 		    | `LH_C(h_3_0, t_3_2) -> 
+//│ 		      (`LH_C((f_1_8 h_3_0), ((map_d5 f_1_8) t_3_2)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N))
+//│ 		and perms_d0 _lh_perms_arg1_1 _lh_perms_arg2_1 =
+//│ 		  (match _lh_perms_arg2_1 with
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)
+//│ 		    | _ -> 
+//│ 		      (match _lh_perms_arg1_1 with
+//│ 		        | 1 -> 
+//│ 		          ((map_d3 (fun x_6 -> 
+//│ 		            (`LH_C(x_6, (`LH_N))))) _lh_perms_arg2_1)
+//│ 		        | _ -> 
+//│ 		          (match _lh_perms_arg2_1 with
+//│ 		            | `LH_C(_lh_perms_LH_C_0_1, _lh_perms_LH_C_1_1) -> 
+//│ 		              ((mappend_d2 ((map_d2 (fun x_7 -> 
+//│ 		                (`LH_C(_lh_perms_LH_C_0_1, x_7)))) ((perms_d0 (_lh_perms_arg1_1 - 1)) _lh_perms_LH_C_1_1))) ((perms_d0 _lh_perms_arg1_1) _lh_perms_LH_C_1_1))
+//│ 		            | _ -> 
+//│ 		              (failwith "error"))))
+//│ 		and qpart_d0 _lh_qpart_arg1_1 _lh_qpart_arg2_1 _lh_qpart_arg3_1 _lh_qpart_arg4_1 _lh_qpart_arg5_1 _lh_qpart_arg6_1 =
+//│ 		  (match _lh_qpart_arg3_1 with
+//│ 		    | `LH_N -> 
+//│ 		      (((rqsort_d0 _lh_qpart_arg1_1) _lh_qpart_arg4_1) (`LH_C(_lh_qpart_arg2_1, (((rqsort_d1 _lh_qpart_arg1_1) _lh_qpart_arg5_1) _lh_qpart_arg6_1))))
+//│ 		    | `LH_C(_lh_qpart_LH_C_0_1, _lh_qpart_LH_C_1_1) -> 
+//│ 		      (if ((_lh_qpart_arg1_1 _lh_qpart_arg2_1) _lh_qpart_LH_C_0_1) then
+//│ 		        ((((((qpart_d0 _lh_qpart_arg1_1) _lh_qpart_arg2_1) _lh_qpart_LH_C_1_1) _lh_qpart_arg4_1) (`LH_C(_lh_qpart_LH_C_0_1, _lh_qpart_arg5_1))) _lh_qpart_arg6_1)
+//│ 		      else
+//│ 		        ((((((qpart_d0 _lh_qpart_arg1_1) _lh_qpart_arg2_1) _lh_qpart_LH_C_1_1) (`LH_C(_lh_qpart_LH_C_0_1, _lh_qpart_arg4_1))) _lh_qpart_arg5_1) _lh_qpart_arg6_1))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and qsort_d0 _lh_qsort_arg1_1 _lh_qsort_arg2_1 _lh_qsort_arg3_1 =
+//│ 		  (match _lh_qsort_arg2_1 with
+//│ 		    | `LH_N -> 
+//│ 		      _lh_qsort_arg3_1
+//│ 		    | `LH_C(_lh_qsort_LH_C_0_1, _lh_qsort_LH_C_1_1) -> 
+//│ 		      (match _lh_qsort_LH_C_1_1 with
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_C(_lh_qsort_LH_C_0_1, _lh_qsort_arg3_1))
+//│ 		        | _ -> 
+//│ 		          ((((((qpart_d0 _lh_qsort_arg1_1) _lh_qsort_LH_C_0_1) _lh_qsort_LH_C_1_1) (`LH_N)) (`LH_N)) _lh_qsort_arg3_1))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and rqpart_d0 _lh_rqpart_arg1_1 _lh_rqpart_arg2_1 _lh_rqpart_arg3_1 _lh_rqpart_arg4_1 _lh_rqpart_arg5_1 _lh_rqpart_arg6_1 =
+//│ 		  (match _lh_rqpart_arg3_1 with
+//│ 		    | `LH_N -> 
+//│ 		      (((qsort_d0 _lh_rqpart_arg1_1) _lh_rqpart_arg4_1) (`LH_C(_lh_rqpart_arg2_1, (((qsort_d0 _lh_rqpart_arg1_1) _lh_rqpart_arg5_1) _lh_rqpart_arg6_1))))
+//│ 		    | `LH_C(_lh_rqpart_LH_C_0_1, _lh_rqpart_LH_C_1_1) -> 
+//│ 		      (if ((_lh_rqpart_arg1_1 _lh_rqpart_LH_C_0_1) _lh_rqpart_arg2_1) then
+//│ 		        ((((((rqpart_d0 _lh_rqpart_arg1_1) _lh_rqpart_arg2_1) _lh_rqpart_LH_C_1_1) (`LH_C(_lh_rqpart_LH_C_0_1, _lh_rqpart_arg4_1))) _lh_rqpart_arg5_1) _lh_rqpart_arg6_1)
+//│ 		      else
+//│ 		        ((((((rqpart_d0 _lh_rqpart_arg1_1) _lh_rqpart_arg2_1) _lh_rqpart_LH_C_1_1) _lh_rqpart_arg4_1) (`LH_C(_lh_rqpart_LH_C_0_1, _lh_rqpart_arg5_1))) _lh_rqpart_arg6_1))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and rqpart_d1 _lh_rqpart_arg1_2 _lh_rqpart_arg2_2 _lh_rqpart_arg3_2 _lh_rqpart_arg4_2 _lh_rqpart_arg5_2 _lh_rqpart_arg6_2 =
+//│ 		  (match _lh_rqpart_arg3_2 with
+//│ 		    | `LH_N -> 
+//│ 		      (((qsort_d0 _lh_rqpart_arg1_2) _lh_rqpart_arg4_2) (`LH_C(_lh_rqpart_arg2_2, (((qsort_d0 _lh_rqpart_arg1_2) _lh_rqpart_arg5_2) _lh_rqpart_arg6_2))))
+//│ 		    | `LH_C(_lh_rqpart_LH_C_0_2, _lh_rqpart_LH_C_1_2) -> 
+//│ 		      (if ((_lh_rqpart_arg1_2 _lh_rqpart_LH_C_0_2) _lh_rqpart_arg2_2) then
+//│ 		        ((((((rqpart_d1 _lh_rqpart_arg1_2) _lh_rqpart_arg2_2) _lh_rqpart_LH_C_1_2) (`LH_C(_lh_rqpart_LH_C_0_2, _lh_rqpart_arg4_2))) _lh_rqpart_arg5_2) _lh_rqpart_arg6_2)
+//│ 		      else
+//│ 		        ((((((rqpart_d1 _lh_rqpart_arg1_2) _lh_rqpart_arg2_2) _lh_rqpart_LH_C_1_2) _lh_rqpart_arg4_2) (`LH_C(_lh_rqpart_LH_C_0_2, _lh_rqpart_arg5_2))) _lh_rqpart_arg6_2))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and rqsort_d0 _lh_rqsort_arg1_1 _lh_rqsort_arg2_1 _lh_rqsort_arg3_1 =
+//│ 		  (match _lh_rqsort_arg2_1 with
+//│ 		    | `LH_N -> 
+//│ 		      _lh_rqsort_arg3_1
+//│ 		    | `LH_C(_lh_rqsort_LH_C_0_1, _lh_rqsort_LH_C_1_1) -> 
+//│ 		      (match _lh_rqsort_LH_C_1_1 with
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_C(_lh_rqsort_LH_C_0_1, _lh_rqsort_arg3_1))
+//│ 		        | _ -> 
+//│ 		          ((((((rqpart_d0 _lh_rqsort_arg1_1) _lh_rqsort_LH_C_0_1) _lh_rqsort_LH_C_1_1) (`LH_N)) (`LH_N)) _lh_rqsort_arg3_1))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and rqsort_d1 _lh_rqsort_arg1_2 _lh_rqsort_arg2_2 _lh_rqsort_arg3_2 =
+//│ 		  (match _lh_rqsort_arg2_2 with
+//│ 		    | `LH_N -> 
+//│ 		      _lh_rqsort_arg3_2
+//│ 		    | `LH_C(_lh_rqsort_LH_C_0_2, _lh_rqsort_LH_C_1_2) -> 
+//│ 		      (match _lh_rqsort_LH_C_1_2 with
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_C(_lh_rqsort_LH_C_0_2, _lh_rqsort_arg3_2))
+//│ 		        | _ -> 
+//│ 		          ((((((rqpart_d1 _lh_rqsort_arg1_2) _lh_rqsort_LH_C_0_2) _lh_rqsort_LH_C_1_2) (`LH_N)) (`LH_N)) _lh_rqsort_arg3_2))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and sort_d0 _lh_sort_arg1_1 =
+//│ 		  (((qsort_d0 (fun a_7 b_4 -> 
+//│ 		    ((compareTuple2_d0 a_7) b_4))) _lh_sort_arg1_1) (`LH_N))
+//│ 		and sum_d0 ls_1_9 =
+//│ 		  (match ls_1_9 with
+//│ 		    | `LH_C(h_2_1, t_2_3) -> 
+//│ 		      (h_2_1 + (sum_d0 t_2_3))
+//│ 		    | `LH_N -> 
+//│ 		      0)
+//│ 		and testAwards_nofib_d0 _lh_testAwards_nofib_arg1_1 =
+//│ 		  ((map_d5 (fun x_5 -> 
+//│ 		    (findallawards_d0 (competitors_d0 (x_5 mod 100))))) ((enumFromTo_d0 1) _lh_testAwards_nofib_arg1_1));;
+//│ 		(testAwards_nofib_d0 500)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testAwards_nofib₀^1997]
+//│ 	[testAwards_nofib₀^1997 · competitors₀^1344] (hopeless to continue)
+//│ 	[testAwards_nofib₀^1997 · enumFromTo₀^1354] (hopeless to continue)
+//│ 		[testAwards_nofib₀^1997 · enumFromTo₀^1354 · enumFromTo₀^1565] ---> [testAwards_nofib₀^1997 · enumFromTo₀^1354] (using original def)
+//│ 	[testAwards_nofib₀^1997 · findallawards₀^1343]
+//│ 		[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901]
+//│ 			[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386] (hopeless to continue)
+//│ 				[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · filter₀^1251] (using original def)
+//│ 					[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · filter₀^1251 · filter₀^1956] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · filter₀^1251] (using original def)
+//│ 					[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · filter₀^1251 · filter₀^1962] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · filter₀^1251] (using original def)
+//│ 				[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · mappend₀^1285] (using original def)
+//│ 					[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · mappend₀^1285 · mappend₀^1595] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · mappend₀^1285] (using original def)
+//│ 				[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · mappend₁^1286] (using original def)
+//│ 					[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · mappend₁^1286 · mappend₁^1737] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · mappend₁^1286] (using original def)
+//│ 				[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · map₀^1237] (using original def)
+//│ 					[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · map₀^1237 · map₀^1887] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · map₀^1237] (using original def)
+//│ 				[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · map₁^1269] (using original def)
+//│ 					[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · map₁^1269 · map₁^1546] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · map₁^1269] (using original def)
+//│ 				[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · perms₀^1245] (using original def)
+//│ 					[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · perms₀^1245 · mappend₂^1705] (using original def)
+//│ 						[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · perms₀^1245 · mappend₂^1705 · mappend₂^1227] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · perms₀^1245 · mappend₂^1705] (using original def)
+//│ 					[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · perms₀^1245 · map₂^1706] (using original def)
+//│ 						[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · perms₀^1245 · map₂^1706 · map₂^1609] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · perms₀^1245 · map₂^1706] (using original def)
+//│ 					[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · perms₀^1245 · map₃^1696] (using original def)
+//│ 						[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · perms₀^1245 · map₃^1696 · map₃^1583] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · perms₀^1245 · map₃^1696] (using original def)
+//│ 					[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · perms₀^1245 · perms₀^1712] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · perms₀^1245] (using original def)
+//│ 					[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · perms₀^1245 · perms₀^1723] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · perms₀^1245] (using original def)
+//│ 				[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275] (using original def)
+//│ 					[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · compareTuple2₀^1680] (using original def)
+//│ 					[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679] (using original def)
+//│ 						[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367] (using original def)
+//│ 							[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367 · qpart₀^1640] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367] (using original def)
+//│ 							[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367 · qpart₀^1655] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367] (using original def)
+//│ 							[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367 · rqsort₀^1620] (using original def)
+//│ 								[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367 · rqsort₀^1620 · rqpart₀^1463] (using original def)
+//│ 									[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367 · rqsort₀^1620 · rqpart₀^1463 · qsort₀^1166] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679] (using original def)
+//│ 									[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367 · rqsort₀^1620 · rqpart₀^1463 · qsort₀^1172] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679] (using original def)
+//│ 									[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367 · rqsort₀^1620 · rqpart₀^1463 · rqpart₀^1186] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367 · rqsort₀^1620 · rqpart₀^1463] (using original def)
+//│ 									[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367 · rqsort₀^1620 · rqpart₀^1463 · rqpart₀^1201] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367 · rqsort₀^1620 · rqpart₀^1463] (using original def)
+//│ 							[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367 · rqsort₁^1626] (using original def)
+//│ 								[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367 · rqsort₁^1626 · rqpart₁^1978] (using original def)
+//│ 									[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367 · rqsort₁^1626 · rqpart₁^1978 · qsort₀^1483] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679] (using original def)
+//│ 									[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367 · rqsort₁^1626 · rqpart₁^1978 · qsort₀^1489] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679] (using original def)
+//│ 									[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367 · rqsort₁^1626 · rqpart₁^1978 · rqpart₁^1503] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367 · rqsort₁^1626 · rqpart₁^1978] (using original def)
+//│ 									[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367 · rqsort₁^1626 · rqpart₁^1978 · rqpart₁^1518] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sort₀^1275 · qsort₀^1679 · qpart₀^1367 · rqsort₁^1626 · rqpart₁^1978] (using original def)
+//│ 				[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sum₀^1238] (using original def)
+//│ 					[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sum₀^1238 · sum₀^1420] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · awards₀^1386 · sum₀^1238] (using original def)
+//│ 			[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · findawards₀^1399] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901] (only one)
+//│ 			[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · listDiff₀^1400] (hopeless to continue)
+//│ 				[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · listDiff₀^1400 · delete₀^1557] (using original def)
+//│ 					[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · listDiff₀^1400 · delete₀^1557 · delete₀^1919] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · listDiff₀^1400 · delete₀^1557] (using original def)
+//│ 					[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · listDiff₀^1400 · delete₀^1557 · delete₀^1925] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · listDiff₀^1400 · delete₀^1557] (using original def)
+//│ 				[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · listDiff₀^1400 · foldl₀^1556] (using original def)
+//│ 					[testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · listDiff₀^1400 · foldl₀^1556 · foldl₀^1428] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · findawards₀^1901 · listDiff₀^1400 · foldl₀^1556] (using original def)
+//│ 		[testAwards_nofib₀^1997 · findallawards₀^1343 · map₄^1897]
+//│ 			[testAwards_nofib₀^1997 · findallawards₀^1343 · map₄^1897 · map₄^1751] ---> [testAwards_nofib₀^1997 · findallawards₀^1343 · map₄^1897] (only one)
+//│ 	[testAwards_nofib₀^1997 · map₅^1342]
+//│ 		[testAwards_nofib₀^1997 · map₅^1342 · map₅^1941] ---> [testAwards_nofib₀^1997 · map₅^1342] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testAwards_nofib₀₀(primId⁰(500))
+//│ def testAwards_nofib₀₀(_lh_testAwards_nofib_arg1¹) = 
+//│ 	map₅₀((fun x⁵ -> findallawards₀₀(competitors₀₀((x⁵ % 100)))), enumFromTo₀₀(1, _lh_testAwards_nofib_arg1¹))
+//│ 	where
+//│ 	def competitors₀₀(_lh_competitors_arg1¹) = 
+//│ 		[LH_C [LH_P2 [LH_C 'S' [LH_C 'i' [LH_C 'm' [LH_C 'o' [LH_C 'n' [LH_N]]]]]] [LH_C 35 [LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]]] [LH_C [LH_P2 [LH_C 'H' [LH_C 'a' [LH_C 'n' [LH_C 's' [LH_N]]]]] [LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'P' [LH_C 'h' [LH_C 'i' [LH_C 'l' [LH_N]]]]] [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]] [LH_N]]]]]
+//│ 	def enumFromTo₀₀(a³, b³) = 
+//│ 		if (a³ <= b³) then [LH_C a³ enumFromTo₀₀((a³ + 1), b³)] else [LH_N]
+//│ 	def findallawards₀₀(_lh_findallawards_arg1¹) = 
+//│ 		map₄₀((fun name_scores¹ -> 
+//│ 			let _lh_matchIdent⁷ = name_scores¹
+//│ 			in case _lh_matchIdent⁷ of {
+//│ 				LH_P2 _lh_findallawards_LH_P2_0¹ _lh_findallawards_LH_P2_1¹ => [LH_P2 _lh_findallawards_LH_P2_0¹ findawards₀₀(_lh_findallawards_LH_P2_1¹)]
+//│ 				| _  => error⁰}), _lh_findallawards_arg1¹)
+//│ 		where
+//│ 		def findawards₀₀(_lh_findawards_arg1¹) = 
+//│ 			let _lh_matchIdent⁵ = awards₀₀(_lh_findawards_arg1¹)
+//│ 			in case _lh_matchIdent⁵ of {
+//│ 				LH_N  => [LH_N]
+//│ 				| LH_C _lh_findawards_LH_C_0¹ _lh_findawards_LH_C_1¹ => 
+//│ 					let _lh_matchIdent⁶ = _lh_findawards_LH_C_0¹
+//│ 					in case _lh_matchIdent⁶ of {
+//│ 						LH_P2 _lh_findawards_LH_P2_0² _lh_findawards_LH_P2_1² => case _lh_findawards_LH_P2_1² of {
+//│ 							LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³ => [LH_C [LH_P2 _lh_findawards_LH_P2_0² [LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³]] findawards₀₀(listDiff₀₀(_lh_findawards_arg1¹, _lh_findawards_LH_P2_1³))]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 			where
+//│ 			def awards₀₀(_lh_awards_arg1¹) = 
+//│ 				let sumscores¹ = map₀₀((fun p¹ -> [LH_P2 sum₀₀(p¹) p¹]), perms₀₀(3, _lh_awards_arg1¹))
+//│ 				in let atleast¹ = (fun threshold¹ -> filter₀₀((fun sum_p¹ -> 
+//│ 					let _lh_matchIdent⁸ = sum_p¹
+//│ 					in case _lh_matchIdent⁸ of {
+//│ 						LH_P2 _lh_awards_LH_P2_0² _lh_awards_LH_P2_1² => (_lh_awards_LH_P2_0² >= threshold¹)
+//│ 						| _  => error⁰}), sumscores¹))
+//│ 				in let award¹ = (fun name_threshold¹ -> 
+//│ 					let _lh_matchIdent⁹ = name_threshold¹
+//│ 					in case _lh_matchIdent⁹ of {
+//│ 						LH_P2 _lh_awards_LH_P2_0³ _lh_awards_LH_P2_1³ => map₁₀((fun ps¹ -> [LH_P2 _lh_awards_LH_P2_0³ ps¹]), sort₀₀(atleast¹(_lh_awards_LH_P2_1³)))
+//│ 						| _  => error⁰})
+//│ 				in mappend₀₀(mappend₁₀(award¹([LH_P2 [LH_C 'G' [LH_C 'o' [LH_C 'l' [LH_C 'd' [LH_N]]]]] 70]), award¹([LH_P2 [LH_C 'S' [LH_C 'i' [LH_C 'l' [LH_C 'v' [LH_C 'e' [LH_C 'r' [LH_N]]]]]]] 60])), award¹([LH_P2 [LH_C 'B' [LH_C 'r' [LH_C 'o' [LH_C 'n' [LH_C 'z' [LH_C 'e' [LH_N]]]]]]] 50]))
+//│ 				where
+//│ 				def filter₀₀(f¹⁴, ls¹⁶) = 
+//│ 					case ls¹⁶ of {
+//│ 						LH_C h²² t²² => if f¹⁴(h²²) then [LH_C h²² filter₀₀(f¹⁴, t²²)] else filter₀₀(f¹⁴, t²²)
+//│ 						| LH_N  => [LH_N]}
+//│ 				def mappend₀₀(xs⁵, ys⁵) = 
+//│ 					case xs⁵ of {
+//│ 						LH_C h²⁰ t²⁰ => [LH_C h²⁰ mappend₀₀(t²⁰, ys⁵)]
+//│ 						| LH_N  => ys⁵}
+//│ 				def mappend₁₀(xs³, ys³) = 
+//│ 					case xs³ of {
+//│ 						LH_C h¹⁶ t¹⁶ => [LH_C h¹⁶ mappend₁₀(t¹⁶, ys³)]
+//│ 						| LH_N  => ys³}
+//│ 				def map₀₀(f¹⁰, ls¹²) = 
+//│ 					case ls¹² of {
+//│ 						LH_C h¹⁵ t¹⁵ => [LH_C f¹⁰(h¹⁵) map₀₀(f¹⁰, t¹⁵)]
+//│ 						| LH_N  => [LH_N]}
+//│ 				def map₁₀(f⁸, ls¹⁰) = 
+//│ 					case ls¹⁰ of {
+//│ 						LH_C h¹³ t¹³ => [LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)]
+//│ 						| LH_N  => [LH_N]}
+//│ 				def perms₀₀(_lh_perms_arg1¹, _lh_perms_arg2¹) = 
+//│ 					case _lh_perms_arg2¹ of {
+//│ 						LH_N  => [LH_N]
+//│ 						| _  => case _lh_perms_arg1¹ of {
+//│ 							1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹)
+//│ 							| _  => case _lh_perms_arg2¹ of {
+//│ 								LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹))
+//│ 								| _  => error⁰}}}
+//│ 					where
+//│ 					def mappend₂₀(xs⁴, ys⁴) = 
+//│ 						case xs⁴ of {
+//│ 							LH_C h¹⁷ t¹⁷ => [LH_C h¹⁷ mappend₂₀(t¹⁷, ys⁴)]
+//│ 							| LH_N  => ys⁴}
+//│ 					def map₂₀(f¹⁵, ls¹⁷) = 
+//│ 						case ls¹⁷ of {
+//│ 							LH_C h²³ t²³ => [LH_C f¹⁵(h²³) map₂₀(f¹⁵, t²³)]
+//│ 							| LH_N  => [LH_N]}
+//│ 					def map₃₀(f⁹, ls¹¹) = 
+//│ 						case ls¹¹ of {
+//│ 							LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)]
+//│ 							| LH_N  => [LH_N]}
+//│ 				def sort₀₀(_lh_sort_arg1¹) = 
+//│ 					qsort₀₀((fun a² -> (fun b² -> compareTuple2₀₀(a², b²))), _lh_sort_arg1¹, [LH_N])
+//│ 					where
+//│ 					def compareTuple2₀₀(_lh_compareTuple2_arg1¹, _lh_compareTuple2_arg2¹) = 
+//│ 						case _lh_compareTuple2_arg1¹ of {
+//│ 							LH_P2 _lh_compareTuple2_LH_P2_0² _lh_compareTuple2_LH_P2_1² => case _lh_compareTuple2_arg2¹ of {
+//│ 								LH_P2 _lh_compareTuple2_LH_P2_0³ _lh_compareTuple2_LH_P2_1³ => (_lh_compareTuple2_LH_P2_0² <= _lh_compareTuple2_LH_P2_0³)
+//│ 								| _  => error⁰}
+//│ 							| _  => error⁰}
+//│ 					def qsort₀₀(_lh_qsort_arg1¹, _lh_qsort_arg2¹, _lh_qsort_arg3¹) = 
+//│ 						case _lh_qsort_arg2¹ of {
+//│ 							LH_N  => _lh_qsort_arg3¹
+//│ 							| LH_C _lh_qsort_LH_C_0¹ _lh_qsort_LH_C_1¹ => case _lh_qsort_LH_C_1¹ of {
+//│ 								LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹]
+//│ 								| _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)}
+//│ 							| _  => error⁰}
+//│ 						where
+//│ 						def qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_arg3¹, _lh_qpart_arg4¹, _lh_qpart_arg5¹, _lh_qpart_arg6¹) = 
+//│ 							case _lh_qpart_arg3¹ of {
+//│ 								LH_N  => rqsort₀₀(_lh_qpart_arg1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_arg2¹ rqsort₁₀(_lh_qpart_arg1¹, _lh_qpart_arg5¹, _lh_qpart_arg6¹)])
+//│ 								| LH_C _lh_qpart_LH_C_0¹ _lh_qpart_LH_C_1¹ => if _lh_qpart_arg1¹(_lh_qpart_arg2¹, _lh_qpart_LH_C_0¹) then qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg5¹], _lh_qpart_arg6¹) else qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg4¹], _lh_qpart_arg5¹, _lh_qpart_arg6¹)
+//│ 								| _  => error⁰}
+//│ 							where
+//│ 							def rqsort₀₀(_lh_rqsort_arg1³, _lh_rqsort_arg2³, _lh_rqsort_arg3³) = 
+//│ 								case _lh_rqsort_arg2³ of {
+//│ 									LH_N  => _lh_rqsort_arg3³
+//│ 									| LH_C _lh_rqsort_LH_C_0³ _lh_rqsort_LH_C_1³ => case _lh_rqsort_LH_C_1³ of {
+//│ 										LH_N  => [LH_C _lh_rqsort_LH_C_0³ _lh_rqsort_arg3³]
+//│ 										| _  => rqpart₀₀(_lh_rqsort_arg1³, _lh_rqsort_LH_C_0³, _lh_rqsort_LH_C_1³, [LH_N], [LH_N], _lh_rqsort_arg3³)}
+//│ 									| _  => error⁰}
+//│ 								where
+//│ 								def rqpart₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg2³, _lh_rqpart_arg3³, _lh_rqpart_arg4³, _lh_rqpart_arg5³, _lh_rqpart_arg6³) = 
+//│ 									case _lh_rqpart_arg3³ of {
+//│ 										LH_N  => qsort₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg4³, [LH_C _lh_rqpart_arg2³ qsort₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg5³, _lh_rqpart_arg6³)])
+//│ 										| LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_LH_C_1³ => if _lh_rqpart_arg1³(_lh_rqpart_LH_C_0³, _lh_rqpart_arg2³) then rqpart₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg2³, _lh_rqpart_LH_C_1³, [LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_arg4³], _lh_rqpart_arg5³, _lh_rqpart_arg6³) else rqpart₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg2³, _lh_rqpart_LH_C_1³, _lh_rqpart_arg4³, [LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_arg5³], _lh_rqpart_arg6³)
+//│ 										| _  => error⁰}
+//│ 							def rqsort₁₀(_lh_rqsort_arg1², _lh_rqsort_arg2², _lh_rqsort_arg3²) = 
+//│ 								case _lh_rqsort_arg2² of {
+//│ 									LH_N  => _lh_rqsort_arg3²
+//│ 									| LH_C _lh_rqsort_LH_C_0² _lh_rqsort_LH_C_1² => case _lh_rqsort_LH_C_1² of {
+//│ 										LH_N  => [LH_C _lh_rqsort_LH_C_0² _lh_rqsort_arg3²]
+//│ 										| _  => rqpart₁₀(_lh_rqsort_arg1², _lh_rqsort_LH_C_0², _lh_rqsort_LH_C_1², [LH_N], [LH_N], _lh_rqsort_arg3²)}
+//│ 									| _  => error⁰}
+//│ 								where
+//│ 								def rqpart₁₀(_lh_rqpart_arg1², _lh_rqpart_arg2², _lh_rqpart_arg3², _lh_rqpart_arg4², _lh_rqpart_arg5², _lh_rqpart_arg6²) = 
+//│ 									case _lh_rqpart_arg3² of {
+//│ 										LH_N  => qsort₀₀(_lh_rqpart_arg1², _lh_rqpart_arg4², [LH_C _lh_rqpart_arg2² qsort₀₀(_lh_rqpart_arg1², _lh_rqpart_arg5², _lh_rqpart_arg6²)])
+//│ 										| LH_C _lh_rqpart_LH_C_0² _lh_rqpart_LH_C_1² => if _lh_rqpart_arg1²(_lh_rqpart_LH_C_0², _lh_rqpart_arg2²) then rqpart₁₀(_lh_rqpart_arg1², _lh_rqpart_arg2², _lh_rqpart_LH_C_1², [LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg4²], _lh_rqpart_arg5², _lh_rqpart_arg6²) else rqpart₁₀(_lh_rqpart_arg1², _lh_rqpart_arg2², _lh_rqpart_LH_C_1², _lh_rqpart_arg4², [LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg5²], _lh_rqpart_arg6²)
+//│ 										| _  => error⁰}
+//│ 				def sum₀₀(ls⁹) = 
+//│ 					case ls⁹ of {
+//│ 						LH_C h¹² t¹² => (h¹² + sum₀₀(t¹²))
+//│ 						| LH_N  => 0}
+//│ 			def listDiff₀₀ = 
+//│ 				foldl₀₀(delete₀₀)
+//│ 				where
+//│ 				def delete₀₀(_lh_delete_arg1¹, _lh_delete_arg2¹) = 
+//│ 					case _lh_delete_arg1¹ of {
+//│ 						LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)]
+//│ 						| LH_N  => [LH_N]
+//│ 						| _  => error⁰}
+//│ 				def foldl₀₀(f¹², i¹, ls¹⁴) = 
+//│ 					case ls¹⁴ of {
+//│ 						LH_C h¹⁹ t¹⁹ => foldl₀₀(f¹², f¹²(i¹, h¹⁹), t¹⁹)
+//│ 						| LH_N  => i¹}
+//│ 		def map₄₀(f¹³, ls¹⁵) = 
+//│ 			case ls¹⁵ of {
+//│ 				LH_C h²¹ t²¹ => [LH_C f¹³(h²¹) map₄₀(f¹³, t²¹)]
+//│ 				| LH_N  => [LH_N]}
+//│ 	def map₅₀(f¹¹, ls¹³) = 
+//│ 		case ls¹³ of {
+//│ 			LH_C h¹⁸ t¹⁸ => [LH_C f¹¹(h¹⁸) map₅₀(f¹¹, t¹⁸)]
+//│ 			| LH_N  => [LH_N]}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_N]: 860 --->
+//│ 	case ls¹⁰ of {LH_C h¹³ t¹³ => [LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)] | LH_N  => [LH_N]}: 934
+//│ [LH_C _lh_qpart_arg2¹ rqsort₁₀(_lh_qpart_arg1¹, _lh_qpart_arg5¹, _lh_qpart_arg6¹)]: 877 --->
+//│ 	case ls¹⁰ of {LH_C h¹³ t¹³ => [LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)] | LH_N  => [LH_N]}: 934
+//│ [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg5¹]: 895 --->
+//│ 	case _lh_rqsort_LH_C_1² of {LH_N  => [LH_C _lh_rqsort_LH_C_0² _lh_rqsort_arg3²] | _  => rqpart₁₀(_lh_rqsort_arg1², _lh_rqsort_LH_C_0², _lh_rqsort_LH_C_1², [LH_N], [LH_N], _lh_rqsort_arg3²)}: 1000
+//│ 	case _lh_rqsort_arg2² of {LH_N  => _lh_rqsort_arg3² | LH_C _lh_rqsort_LH_C_0² _lh_rqsort_LH_C_1² => case _lh_rqsort_LH_C_1² of {LH_N  => [LH_C _lh_rqsort_LH_C_0² _lh_rqsort_arg3²] | _  => rqpart₁₀(_lh_rqsort_arg1², _lh_rqsort_LH_C_0², _lh_rqsort_LH_C_1², [LH_N], [LH_N], _lh_rqsort_arg3²)} | _  => error⁰}: 1002
+//│ 	case _lh_rqpart_arg3² of {LH_N  => qsort₀₀(_lh_rqpart_arg1², _lh_rqpart_arg4², [LH_C _lh_rqpart_arg2² qsort₀₀(_lh_rqpart_arg1², _lh_rqpart_arg5², _lh_rqpart_arg6²)]) | LH_C _lh_rqpart_LH_C_0² _lh_rqpart_LH_C_1² => if _lh_rqpart_arg1²(_lh_rqpart_LH_C_0², _lh_rqpart_arg2²) then rqpart₁₀(_lh_rqpart_arg1², _lh_rqpart_arg2², _lh_rqpart_LH_C_1², [LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg4²], _lh_rqpart_arg5², _lh_rqpart_arg6²) else rqpart₁₀(_lh_rqpart_arg1², _lh_rqpart_arg2², _lh_rqpart_LH_C_1², _lh_rqpart_arg4², [LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg5²], _lh_rqpart_arg6²) | _  => error⁰}: 1059
+//│ [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg4¹]: 908 --->
+//│ 	case _lh_rqsort_LH_C_1³ of {LH_N  => [LH_C _lh_rqsort_LH_C_0³ _lh_rqsort_arg3³] | _  => rqpart₀₀(_lh_rqsort_arg1³, _lh_rqsort_LH_C_0³, _lh_rqsort_LH_C_1³, [LH_N], [LH_N], _lh_rqsort_arg3³)}: 1281
+//│ 	case _lh_rqsort_arg2³ of {LH_N  => _lh_rqsort_arg3³ | LH_C _lh_rqsort_LH_C_0³ _lh_rqsort_LH_C_1³ => case _lh_rqsort_LH_C_1³ of {LH_N  => [LH_C _lh_rqsort_LH_C_0³ _lh_rqsort_arg3³] | _  => rqpart₀₀(_lh_rqsort_arg1³, _lh_rqsort_LH_C_0³, _lh_rqsort_LH_C_1³, [LH_N], [LH_N], _lh_rqsort_arg3³)} | _  => error⁰}: 1283
+//│ 	case _lh_rqpart_arg3³ of {LH_N  => qsort₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg4³, [LH_C _lh_rqpart_arg2³ qsort₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg5³, _lh_rqpart_arg6³)]) | LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_LH_C_1³ => if _lh_rqpart_arg1³(_lh_rqpart_LH_C_0³, _lh_rqpart_arg2³) then rqpart₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg2³, _lh_rqpart_LH_C_1³, [LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_arg4³], _lh_rqpart_arg5³, _lh_rqpart_arg6³) else rqpart₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg2³, _lh_rqpart_LH_C_1³, _lh_rqpart_arg4³, [LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_arg5³], _lh_rqpart_arg6³) | _  => error⁰}: 1663
+//│ [LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)]: 932 --->
+//│ 	case _lh_matchIdent⁵ of {LH_N  => [LH_N] | LH_C _lh_findawards_LH_C_0¹ _lh_findawards_LH_C_1¹ => let _lh_matchIdent⁶ = _lh_findawards_LH_C_0¹
+//│ in case _lh_matchIdent⁶ of {LH_P2 _lh_findawards_LH_P2_0² _lh_findawards_LH_P2_1² => case _lh_findawards_LH_P2_1² of {LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³ => [LH_C [LH_P2 _lh_findawards_LH_P2_0² [LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³]] findawards₀₀(listDiff₀₀(_lh_findawards_arg1¹, _lh_findawards_LH_P2_1³))] | _  => error⁰} | _  => error⁰} | _  => error⁰}: 964
+//│ 	case xs³ of {LH_C h¹⁶ t¹⁶ => [LH_C h¹⁶ mappend₁₀(t¹⁶, ys³)] | LH_N  => ys³}: 1299
+//│ 	case xs⁵ of {LH_C h²⁰ t²⁰ => [LH_C h²⁰ mappend₀₀(t²⁰, ys⁵)] | LH_N  => ys⁵}: 1415
+//│ [LH_N]: 933 --->
+//│ 	case _lh_matchIdent⁵ of {LH_N  => [LH_N] | LH_C _lh_findawards_LH_C_0¹ _lh_findawards_LH_C_1¹ => let _lh_matchIdent⁶ = _lh_findawards_LH_C_0¹
+//│ in case _lh_matchIdent⁶ of {LH_P2 _lh_findawards_LH_P2_0² _lh_findawards_LH_P2_1² => case _lh_findawards_LH_P2_1² of {LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³ => [LH_C [LH_P2 _lh_findawards_LH_P2_0² [LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³]] findawards₀₀(listDiff₀₀(_lh_findawards_arg1¹, _lh_findawards_LH_P2_1³))] | _  => error⁰} | _  => error⁰} | _  => error⁰}: 964
+//│ 	case xs³ of {LH_C h¹⁶ t¹⁶ => [LH_C h¹⁶ mappend₁₀(t¹⁶, ys³)] | LH_N  => ys³}: 1299
+//│ 	case xs⁵ of {LH_C h²⁰ t²⁰ => [LH_C h²⁰ mappend₀₀(t²⁰, ys⁵)] | LH_N  => ys⁵}: 1415
+//│ [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)]: 976 --->
+//│ 	case ls¹² of {LH_C h¹⁵ t¹⁵ => [LH_C f¹⁰(h¹⁵) map₀₀(f¹⁰, t¹⁵)] | LH_N  => [LH_N]}: 1137
+//│ 	case ls¹⁷ of {LH_C h²³ t²³ => [LH_C f¹⁵(h²³) map₂₀(f¹⁵, t²³)] | LH_N  => [LH_N]}: 1477
+//│ [LH_N]: 977 --->
+//│ 	case ls¹² of {LH_C h¹⁵ t¹⁵ => [LH_C f¹⁰(h¹⁵) map₀₀(f¹⁰, t¹⁵)] | LH_N  => [LH_N]}: 1137
+//│ 	case ls¹⁷ of {LH_C h²³ t²³ => [LH_C f¹⁵(h²³) map₂₀(f¹⁵, t²³)] | LH_N  => [LH_N]}: 1477
+//│ [LH_C _lh_rqsort_LH_C_0² _lh_rqsort_arg3²]: 986 --->
+//│ 	case ls¹⁰ of {LH_C h¹³ t¹³ => [LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)] | LH_N  => [LH_N]}: 934
+//│ [LH_N]: 994 --->
+//│ 	case _lh_qpart_arg3¹ of {LH_N  => rqsort₀₀(_lh_qpart_arg1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_arg2¹ rqsort₁₀(_lh_qpart_arg1¹, _lh_qpart_arg5¹, _lh_qpart_arg6¹)]) | LH_C _lh_qpart_LH_C_0¹ _lh_qpart_LH_C_1¹ => if _lh_qpart_arg1¹(_lh_qpart_arg2¹, _lh_qpart_LH_C_0¹) then qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg5¹], _lh_qpart_arg6¹) else qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg4¹], _lh_qpart_arg5¹, _lh_qpart_arg6¹) | _  => error⁰}: 916
+//│ 	case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)}: 1604
+//│ 	case _lh_qsort_arg2¹ of {LH_N  => _lh_qsort_arg3¹ | LH_C _lh_qsort_LH_C_0¹ _lh_qsort_LH_C_1¹ => case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)} | _  => error⁰}: 1606
+//│ [LH_N]: 996 --->
+//│ 	case _lh_qpart_arg3¹ of {LH_N  => rqsort₀₀(_lh_qpart_arg1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_arg2¹ rqsort₁₀(_lh_qpart_arg1¹, _lh_qpart_arg5¹, _lh_qpart_arg6¹)]) | LH_C _lh_qpart_LH_C_0¹ _lh_qpart_LH_C_1¹ => if _lh_qpart_arg1¹(_lh_qpart_arg2¹, _lh_qpart_LH_C_0¹) then qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg5¹], _lh_qpart_arg6¹) else qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg4¹], _lh_qpart_arg5¹, _lh_qpart_arg6¹) | _  => error⁰}: 916
+//│ 	case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)}: 1604
+//│ 	case _lh_qsort_arg2¹ of {LH_N  => _lh_qsort_arg3¹ | LH_C _lh_qsort_LH_C_0¹ _lh_qsort_LH_C_1¹ => case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)} | _  => error⁰}: 1606
+//│ [LH_C _lh_rqpart_arg2² qsort₀₀(_lh_rqpart_arg1², _lh_rqpart_arg5², _lh_rqpart_arg6²)]: 1020 --->
+//│ 	case ls¹⁰ of {LH_C h¹³ t¹³ => [LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)] | LH_N  => [LH_N]}: 934
+//│ [LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg4²]: 1036 --->
+//│ 	case _lh_qpart_arg3¹ of {LH_N  => rqsort₀₀(_lh_qpart_arg1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_arg2¹ rqsort₁₀(_lh_qpart_arg1¹, _lh_qpart_arg5¹, _lh_qpart_arg6¹)]) | LH_C _lh_qpart_LH_C_0¹ _lh_qpart_LH_C_1¹ => if _lh_qpart_arg1¹(_lh_qpart_arg2¹, _lh_qpart_LH_C_0¹) then qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg5¹], _lh_qpart_arg6¹) else qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg4¹], _lh_qpart_arg5¹, _lh_qpart_arg6¹) | _  => error⁰}: 916
+//│ 	case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)}: 1604
+//│ 	case _lh_qsort_arg2¹ of {LH_N  => _lh_qsort_arg3¹ | LH_C _lh_qsort_LH_C_0¹ _lh_qsort_LH_C_1¹ => case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)} | _  => error⁰}: 1606
+//│ [LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg5²]: 1053 --->
+//│ 	case _lh_qpart_arg3¹ of {LH_N  => rqsort₀₀(_lh_qpart_arg1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_arg2¹ rqsort₁₀(_lh_qpart_arg1¹, _lh_qpart_arg5¹, _lh_qpart_arg6¹)]) | LH_C _lh_qpart_LH_C_0¹ _lh_qpart_LH_C_1¹ => if _lh_qpart_arg1¹(_lh_qpart_arg2¹, _lh_qpart_LH_C_0¹) then qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg5¹], _lh_qpart_arg6¹) else qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg4¹], _lh_qpart_arg5¹, _lh_qpart_arg6¹) | _  => error⁰}: 916
+//│ 	case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)}: 1604
+//│ 	case _lh_qsort_arg2¹ of {LH_N  => _lh_qsort_arg3¹ | LH_C _lh_qsort_LH_C_0¹ _lh_qsort_LH_C_1¹ => case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)} | _  => error⁰}: 1606
+//│ [LH_C a³ enumFromTo₀₀((a³ + 1), b³)]: 1081 --->
+//│ 	case ls¹³ of {LH_C h¹⁸ t¹⁸ => [LH_C f¹¹(h¹⁸) map₅₀(f¹¹, t¹⁸)] | LH_N  => [LH_N]}: 1325
+//│ [LH_N]: 1082 --->
+//│ 	case ls¹³ of {LH_C h¹⁸ t¹⁸ => [LH_C f¹¹(h¹⁸) map₅₀(f¹¹, t¹⁸)] | LH_N  => [LH_N]}: 1325
+//│ [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)]: 1103 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_N]: 1105 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C f¹⁰(h¹⁵) map₀₀(f¹⁰, t¹⁵)]: 1135 --->
+//│ 	case ls¹⁶ of {LH_C h²² t²² => if f¹⁴(h²²) then [LH_C h²² filter₀₀(f¹⁴, t²²)] else filter₀₀(f¹⁴, t²²) | LH_N  => [LH_N]}: 1450
+//│ [LH_N]: 1136 --->
+//│ 	case ls¹⁶ of {LH_C h²² t²² => if f¹⁴(h²²) then [LH_C h²² filter₀₀(f¹⁴, t²²)] else filter₀₀(f¹⁴, t²²) | LH_N  => [LH_N]}: 1450
+//│ [LH_N]: 1157 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 21 [LH_N]]: 1158 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 34 [LH_C 21 [LH_N]]]: 1159 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]: 1160 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]: 1161 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]: 1162 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 35 [LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]]: 1163 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_P2 [LH_C 'S' [LH_C 'i' [LH_C 'm' [LH_C 'o' [LH_C 'n' [LH_N]]]]]] [LH_C 35 [LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]]]: 1164 --->
+//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_findallawards_LH_P2_0¹ _lh_findallawards_LH_P2_1¹ => [LH_P2 _lh_findallawards_LH_P2_0¹ findawards₀₀(_lh_findallawards_LH_P2_1¹)] | _  => error⁰}: 1119
+//│ [LH_N]: 1183 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 14 [LH_N]]: 1184 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 8 [LH_C 14 [LH_N]]]: 1185 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]: 1186 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]: 1187 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]: 1188 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]: 1189 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]: 1190 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]: 1191 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]: 1192 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_P2 [LH_C 'H' [LH_C 'a' [LH_C 'n' [LH_C 's' [LH_N]]]]] [LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]]: 1193 --->
+//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_findallawards_LH_P2_0¹ _lh_findallawards_LH_P2_1¹ => [LH_P2 _lh_findallawards_LH_P2_0¹ findawards₀₀(_lh_findallawards_LH_P2_1¹)] | _  => error⁰}: 1119
+//│ [LH_N]: 1213 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 21 [LH_N]]: 1214 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 16 [LH_C 21 [LH_N]]]: 1215 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]: 1216 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]: 1217 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]: 1218 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]: 1219 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]: 1220 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]: 1221 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]: 1222 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]: 1223 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_P2 [LH_C 'P' [LH_C 'h' [LH_C 'i' [LH_C 'l' [LH_N]]]]] [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]]: 1224 --->
+//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_findallawards_LH_P2_0¹ _lh_findallawards_LH_P2_1¹ => [LH_P2 _lh_findallawards_LH_P2_0¹ findawards₀₀(_lh_findallawards_LH_P2_1¹)] | _  => error⁰}: 1119
+//│ [LH_N]: 1245 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 14 [LH_N]]: 1246 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 18 [LH_C 14 [LH_N]]]: 1247 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]: 1248 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]: 1249 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]: 1250 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]: 1251 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]: 1252 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]: 1253 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]: 1254 --->
+//│ 	case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978
+//│ 	case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107
+//│ 	case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365
+//│ 	case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367
+//│ [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]]: 1255 --->
+//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_findallawards_LH_P2_0¹ _lh_findallawards_LH_P2_1¹ => [LH_P2 _lh_findallawards_LH_P2_0¹ findawards₀₀(_lh_findallawards_LH_P2_1¹)] | _  => error⁰}: 1119
+//│ [LH_N]: 1256 --->
+//│ 	case ls¹⁵ of {LH_C h²¹ t²¹ => [LH_C f¹³(h²¹) map₄₀(f¹³, t²¹)] | LH_N  => [LH_N]}: 1429
+//│ [LH_C [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]] [LH_N]]: 1257 --->
+//│ 	case ls¹⁵ of {LH_C h²¹ t²¹ => [LH_C f¹³(h²¹) map₄₀(f¹³, t²¹)] | LH_N  => [LH_N]}: 1429
+//│ [LH_C [LH_P2 [LH_C 'P' [LH_C 'h' [LH_C 'i' [LH_C 'l' [LH_N]]]]] [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]] [LH_N]]]: 1258 --->
+//│ 	case ls¹⁵ of {LH_C h²¹ t²¹ => [LH_C f¹³(h²¹) map₄₀(f¹³, t²¹)] | LH_N  => [LH_N]}: 1429
+//│ [LH_C [LH_P2 [LH_C 'H' [LH_C 'a' [LH_C 'n' [LH_C 's' [LH_N]]]]] [LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'P' [LH_C 'h' [LH_C 'i' [LH_C 'l' [LH_N]]]]] [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]] [LH_N]]]]: 1259 --->
+//│ 	case ls¹⁵ of {LH_C h²¹ t²¹ => [LH_C f¹³(h²¹) map₄₀(f¹³, t²¹)] | LH_N  => [LH_N]}: 1429
+//│ [LH_C [LH_P2 [LH_C 'S' [LH_C 'i' [LH_C 'm' [LH_C 'o' [LH_C 'n' [LH_N]]]]]] [LH_C 35 [LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]]] [LH_C [LH_P2 [LH_C 'H' [LH_C 'a' [LH_C 'n' [LH_C 's' [LH_N]]]]] [LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'P' [LH_C 'h' [LH_C 'i' [LH_C 'l' [LH_N]]]]] [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]] [LH_N]]]]]: 1260 --->
+//│ 	case ls¹⁵ of {LH_C h²¹ t²¹ => [LH_C f¹³(h²¹) map₄₀(f¹³, t²¹)] | LH_N  => [LH_N]}: 1429
+//│ [LH_C _lh_rqsort_LH_C_0³ _lh_rqsort_arg3³]: 1267 --->
+//│ 	case ls¹⁰ of {LH_C h¹³ t¹³ => [LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)] | LH_N  => [LH_N]}: 934
+//│ [LH_N]: 1275 --->
+//│ 	case _lh_qpart_arg3¹ of {LH_N  => rqsort₀₀(_lh_qpart_arg1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_arg2¹ rqsort₁₀(_lh_qpart_arg1¹, _lh_qpart_arg5¹, _lh_qpart_arg6¹)]) | LH_C _lh_qpart_LH_C_0¹ _lh_qpart_LH_C_1¹ => if _lh_qpart_arg1¹(_lh_qpart_arg2¹, _lh_qpart_LH_C_0¹) then qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg5¹], _lh_qpart_arg6¹) else qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg4¹], _lh_qpart_arg5¹, _lh_qpart_arg6¹) | _  => error⁰}: 916
+//│ 	case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)}: 1604
+//│ 	case _lh_qsort_arg2¹ of {LH_N  => _lh_qsort_arg3¹ | LH_C _lh_qsort_LH_C_0¹ _lh_qsort_LH_C_1¹ => case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)} | _  => error⁰}: 1606
+//│ [LH_N]: 1277 --->
+//│ 	case _lh_qpart_arg3¹ of {LH_N  => rqsort₀₀(_lh_qpart_arg1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_arg2¹ rqsort₁₀(_lh_qpart_arg1¹, _lh_qpart_arg5¹, _lh_qpart_arg6¹)]) | LH_C _lh_qpart_LH_C_0¹ _lh_qpart_LH_C_1¹ => if _lh_qpart_arg1¹(_lh_qpart_arg2¹, _lh_qpart_LH_C_0¹) then qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg5¹], _lh_qpart_arg6¹) else qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg4¹], _lh_qpart_arg5¹, _lh_qpart_arg6¹) | _  => error⁰}: 916
+//│ 	case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)}: 1604
+//│ 	case _lh_qsort_arg2¹ of {LH_N  => _lh_qsort_arg3¹ | LH_C _lh_qsort_LH_C_0¹ _lh_qsort_LH_C_1¹ => case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)} | _  => error⁰}: 1606
+//│ [LH_C h¹⁶ mappend₁₀(t¹⁶, ys³)]: 1297 --->
+//│ 	case xs⁵ of {LH_C h²⁰ t²⁰ => [LH_C h²⁰ mappend₀₀(t²⁰, ys⁵)] | LH_N  => ys⁵}: 1415
+//│ [LH_C h¹⁷ mappend₂₀(t¹⁷, ys⁴)]: 1309 --->
+//│ 	case ls¹² of {LH_C h¹⁵ t¹⁵ => [LH_C f¹⁰(h¹⁵) map₀₀(f¹⁰, t¹⁵)] | LH_N  => [LH_N]}: 1137
+//│ 	case ls¹⁷ of {LH_C h²³ t²³ => [LH_C f¹⁵(h²³) map₂₀(f¹⁵, t²³)] | LH_N  => [LH_N]}: 1477
+//│ [LH_N]: 1329 --->
+//│ 	case ls¹² of {LH_C h¹⁵ t¹⁵ => [LH_C f¹⁰(h¹⁵) map₀₀(f¹⁰, t¹⁵)] | LH_N  => [LH_N]}: 1137
+//│ 	case ls¹⁷ of {LH_C h²³ t²³ => [LH_C f¹⁵(h²³) map₂₀(f¹⁵, t²³)] | LH_N  => [LH_N]}: 1477
+//│ [LH_N]: 1333 --->
+//│ 	NoCons
+//│ 	case ls⁹ of {LH_C h¹² t¹² => (h¹² + sum₀₀(t¹²)) | LH_N  => 0}: 847
+//│ 	case ls¹⁴ of {LH_C h¹⁹ t¹⁹ => foldl₀₀(f¹², f¹²(i¹, h¹⁹), t¹⁹) | LH_N  => i¹}: 1383
+//│ [LH_C x³ [LH_N]]: 1334 --->
+//│ 	NoCons
+//│ 	case ls⁹ of {LH_C h¹² t¹² => (h¹² + sum₀₀(t¹²)) | LH_N  => 0}: 847
+//│ 	case ls¹⁴ of {LH_C h¹⁹ t¹⁹ => foldl₀₀(f¹², f¹²(i¹, h¹⁹), t¹⁹) | LH_N  => i¹}: 1383
+//│ [LH_C _lh_perms_LH_C_0¹ x⁴]: 1344 --->
+//│ 	NoCons
+//│ 	case ls⁹ of {LH_C h¹² t¹² => (h¹² + sum₀₀(t¹²)) | LH_N  => 0}: 847
+//│ 	case ls¹⁴ of {LH_C h¹⁹ t¹⁹ => foldl₀₀(f¹², f¹²(i¹, h¹⁹), t¹⁹) | LH_N  => i¹}: 1383
+//│ [LH_C h²⁰ mappend₀₀(t²⁰, ys⁵)]: 1413 --->
+//│ 	case _lh_matchIdent⁵ of {LH_N  => [LH_N] | LH_C _lh_findawards_LH_C_0¹ _lh_findawards_LH_C_1¹ => let _lh_matchIdent⁶ = _lh_findawards_LH_C_0¹
+//│ in case _lh_matchIdent⁶ of {LH_P2 _lh_findawards_LH_P2_0² _lh_findawards_LH_P2_1² => case _lh_findawards_LH_P2_1² of {LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³ => [LH_C [LH_P2 _lh_findawards_LH_P2_0² [LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³]] findawards₀₀(listDiff₀₀(_lh_findawards_arg1¹, _lh_findawards_LH_P2_1³))] | _  => error⁰} | _  => error⁰} | _  => error⁰}: 964
+//│ [LH_C h²² filter₀₀(f¹⁴, t²²)]: 1442 --->
+//│ 	case _lh_qpart_arg3¹ of {LH_N  => rqsort₀₀(_lh_qpart_arg1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_arg2¹ rqsort₁₀(_lh_qpart_arg1¹, _lh_qpart_arg5¹, _lh_qpart_arg6¹)]) | LH_C _lh_qpart_LH_C_0¹ _lh_qpart_LH_C_1¹ => if _lh_qpart_arg1¹(_lh_qpart_arg2¹, _lh_qpart_LH_C_0¹) then qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg5¹], _lh_qpart_arg6¹) else qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg4¹], _lh_qpart_arg5¹, _lh_qpart_arg6¹) | _  => error⁰}: 916
+//│ 	case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)}: 1604
+//│ 	case _lh_qsort_arg2¹ of {LH_N  => _lh_qsort_arg3¹ | LH_C _lh_qsort_LH_C_0¹ _lh_qsort_LH_C_1¹ => case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)} | _  => error⁰}: 1606
+//│ [LH_N]: 1449 --->
+//│ 	case _lh_qpart_arg3¹ of {LH_N  => rqsort₀₀(_lh_qpart_arg1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_arg2¹ rqsort₁₀(_lh_qpart_arg1¹, _lh_qpart_arg5¹, _lh_qpart_arg6¹)]) | LH_C _lh_qpart_LH_C_0¹ _lh_qpart_LH_C_1¹ => if _lh_qpart_arg1¹(_lh_qpart_arg2¹, _lh_qpart_LH_C_0¹) then qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg5¹], _lh_qpart_arg6¹) else qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg4¹], _lh_qpart_arg5¹, _lh_qpart_arg6¹) | _  => error⁰}: 916
+//│ 	case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)}: 1604
+//│ 	case _lh_qsort_arg2¹ of {LH_N  => _lh_qsort_arg3¹ | LH_C _lh_qsort_LH_C_0¹ _lh_qsort_LH_C_1¹ => case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)} | _  => error⁰}: 1606
+//│ [LH_C f¹⁵(h²³) map₂₀(f¹⁵, t²³)]: 1475 --->
+//│ 	case xs⁴ of {LH_C h¹⁷ t¹⁷ => [LH_C h¹⁷ mappend₂₀(t¹⁷, ys⁴)] | LH_N  => ys⁴}: 1311
+//│ [LH_N]: 1476 --->
+//│ 	case xs⁴ of {LH_C h¹⁷ t¹⁷ => [LH_C h¹⁷ mappend₂₀(t¹⁷, ys⁴)] | LH_N  => ys⁴}: 1311
+//│ [LH_P2 sum₀₀(p¹) p¹]: 1485 --->
+//│ 	case _lh_findawards_LH_P2_1² of {LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³ => [LH_C [LH_P2 _lh_findawards_LH_P2_0² [LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³]] findawards₀₀(listDiff₀₀(_lh_findawards_arg1¹, _lh_findawards_LH_P2_1³))] | _  => error⁰}: 959
+//│ 	case _lh_compareTuple2_arg2¹ of {LH_P2 _lh_compareTuple2_LH_P2_0³ _lh_compareTuple2_LH_P2_1³ => (_lh_compareTuple2_LH_P2_0² <= _lh_compareTuple2_LH_P2_0³) | _  => error⁰}: 1461
+//│ 	case _lh_compareTuple2_arg1¹ of {LH_P2 _lh_compareTuple2_LH_P2_0² _lh_compareTuple2_LH_P2_1² => case _lh_compareTuple2_arg2¹ of {LH_P2 _lh_compareTuple2_LH_P2_0³ _lh_compareTuple2_LH_P2_1³ => (_lh_compareTuple2_LH_P2_0² <= _lh_compareTuple2_LH_P2_0³) | _  => error⁰} | _  => error⁰}: 1463
+//│ 	case _lh_matchIdent⁸ of {LH_P2 _lh_awards_LH_P2_0² _lh_awards_LH_P2_1² => (_lh_awards_LH_P2_0² >= threshold¹) | _  => error⁰}: 1503
+//│ [LH_P2 _lh_awards_LH_P2_0³ ps¹]: 1515 --->
+//│ 	case _lh_matchIdent⁶ of {LH_P2 _lh_findawards_LH_P2_0² _lh_findawards_LH_P2_1² => case _lh_findawards_LH_P2_1² of {LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³ => [LH_C [LH_P2 _lh_findawards_LH_P2_0² [LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³]] findawards₀₀(listDiff₀₀(_lh_findawards_arg1¹, _lh_findawards_LH_P2_1³))] | _  => error⁰} | _  => error⁰}: 961
+//│ [LH_P2 [LH_C 'G' [LH_C 'o' [LH_C 'l' [LH_C 'd' [LH_N]]]]] 70]: 1541 --->
+//│ 	case _lh_matchIdent⁹ of {LH_P2 _lh_awards_LH_P2_0³ _lh_awards_LH_P2_1³ => map₁₀((fun ps¹ -> [LH_P2 _lh_awards_LH_P2_0³ ps¹]), sort₀₀(atleast¹(_lh_awards_LH_P2_1³))) | _  => error⁰}: 1525
+//│ [LH_P2 [LH_C 'S' [LH_C 'i' [LH_C 'l' [LH_C 'v' [LH_C 'e' [LH_C 'r' [LH_N]]]]]]] 60]: 1559 --->
+//│ 	case _lh_matchIdent⁹ of {LH_P2 _lh_awards_LH_P2_0³ _lh_awards_LH_P2_1³ => map₁₀((fun ps¹ -> [LH_P2 _lh_awards_LH_P2_0³ ps¹]), sort₀₀(atleast¹(_lh_awards_LH_P2_1³))) | _  => error⁰}: 1525
+//│ [LH_P2 [LH_C 'B' [LH_C 'r' [LH_C 'o' [LH_C 'n' [LH_C 'z' [LH_C 'e' [LH_N]]]]]]] 50]: 1578 --->
+//│ 	case _lh_matchIdent⁹ of {LH_P2 _lh_awards_LH_P2_0³ _lh_awards_LH_P2_1³ => map₁₀((fun ps¹ -> [LH_P2 _lh_awards_LH_P2_0³ ps¹]), sort₀₀(atleast¹(_lh_awards_LH_P2_1³))) | _  => error⁰}: 1525
+//│ [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹]: 1590 --->
+//│ 	case ls¹⁰ of {LH_C h¹³ t¹³ => [LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)] | LH_N  => [LH_N]}: 934
+//│ [LH_N]: 1598 --->
+//│ 	case _lh_rqsort_LH_C_1³ of {LH_N  => [LH_C _lh_rqsort_LH_C_0³ _lh_rqsort_arg3³] | _  => rqpart₀₀(_lh_rqsort_arg1³, _lh_rqsort_LH_C_0³, _lh_rqsort_LH_C_1³, [LH_N], [LH_N], _lh_rqsort_arg3³)}: 1281
+//│ 	case _lh_rqsort_arg2³ of {LH_N  => _lh_rqsort_arg3³ | LH_C _lh_rqsort_LH_C_0³ _lh_rqsort_LH_C_1³ => case _lh_rqsort_LH_C_1³ of {LH_N  => [LH_C _lh_rqsort_LH_C_0³ _lh_rqsort_arg3³] | _  => rqpart₀₀(_lh_rqsort_arg1³, _lh_rqsort_LH_C_0³, _lh_rqsort_LH_C_1³, [LH_N], [LH_N], _lh_rqsort_arg3³)} | _  => error⁰}: 1283
+//│ 	case _lh_rqpart_arg3³ of {LH_N  => qsort₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg4³, [LH_C _lh_rqpart_arg2³ qsort₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg5³, _lh_rqpart_arg6³)]) | LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_LH_C_1³ => if _lh_rqpart_arg1³(_lh_rqpart_LH_C_0³, _lh_rqpart_arg2³) then rqpart₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg2³, _lh_rqpart_LH_C_1³, [LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_arg4³], _lh_rqpart_arg5³, _lh_rqpart_arg6³) else rqpart₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg2³, _lh_rqpart_LH_C_1³, _lh_rqpart_arg4³, [LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_arg5³], _lh_rqpart_arg6³) | _  => error⁰}: 1663
+//│ [LH_N]: 1600 --->
+//│ 	case _lh_rqsort_LH_C_1² of {LH_N  => [LH_C _lh_rqsort_LH_C_0² _lh_rqsort_arg3²] | _  => rqpart₁₀(_lh_rqsort_arg1², _lh_rqsort_LH_C_0², _lh_rqsort_LH_C_1², [LH_N], [LH_N], _lh_rqsort_arg3²)}: 1000
+//│ 	case _lh_rqsort_arg2² of {LH_N  => _lh_rqsort_arg3² | LH_C _lh_rqsort_LH_C_0² _lh_rqsort_LH_C_1² => case _lh_rqsort_LH_C_1² of {LH_N  => [LH_C _lh_rqsort_LH_C_0² _lh_rqsort_arg3²] | _  => rqpart₁₀(_lh_rqsort_arg1², _lh_rqsort_LH_C_0², _lh_rqsort_LH_C_1², [LH_N], [LH_N], _lh_rqsort_arg3²)} | _  => error⁰}: 1002
+//│ 	case _lh_rqpart_arg3² of {LH_N  => qsort₀₀(_lh_rqpart_arg1², _lh_rqpart_arg4², [LH_C _lh_rqpart_arg2² qsort₀₀(_lh_rqpart_arg1², _lh_rqpart_arg5², _lh_rqpart_arg6²)]) | LH_C _lh_rqpart_LH_C_0² _lh_rqpart_LH_C_1² => if _lh_rqpart_arg1²(_lh_rqpart_LH_C_0², _lh_rqpart_arg2²) then rqpart₁₀(_lh_rqpart_arg1², _lh_rqpart_arg2², _lh_rqpart_LH_C_1², [LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg4²], _lh_rqpart_arg5², _lh_rqpart_arg6²) else rqpart₁₀(_lh_rqpart_arg1², _lh_rqpart_arg2², _lh_rqpart_LH_C_1², _lh_rqpart_arg4², [LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg5²], _lh_rqpart_arg6²) | _  => error⁰}: 1059
+//│ [LH_C _lh_rqpart_arg2³ qsort₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg5³, _lh_rqpart_arg6³)]: 1624 --->
+//│ 	case ls¹⁰ of {LH_C h¹³ t¹³ => [LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)] | LH_N  => [LH_N]}: 934
+//│ [LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_arg4³]: 1640 --->
+//│ 	case _lh_qpart_arg3¹ of {LH_N  => rqsort₀₀(_lh_qpart_arg1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_arg2¹ rqsort₁₀(_lh_qpart_arg1¹, _lh_qpart_arg5¹, _lh_qpart_arg6¹)]) | LH_C _lh_qpart_LH_C_0¹ _lh_qpart_LH_C_1¹ => if _lh_qpart_arg1¹(_lh_qpart_arg2¹, _lh_qpart_LH_C_0¹) then qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg5¹], _lh_qpart_arg6¹) else qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg4¹], _lh_qpart_arg5¹, _lh_qpart_arg6¹) | _  => error⁰}: 916
+//│ 	case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)}: 1604
+//│ 	case _lh_qsort_arg2¹ of {LH_N  => _lh_qsort_arg3¹ | LH_C _lh_qsort_LH_C_0¹ _lh_qsort_LH_C_1¹ => case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)} | _  => error⁰}: 1606
+//│ [LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_arg5³]: 1657 --->
+//│ 	case _lh_qpart_arg3¹ of {LH_N  => rqsort₀₀(_lh_qpart_arg1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_arg2¹ rqsort₁₀(_lh_qpart_arg1¹, _lh_qpart_arg5¹, _lh_qpart_arg6¹)]) | LH_C _lh_qpart_LH_C_0¹ _lh_qpart_LH_C_1¹ => if _lh_qpart_arg1¹(_lh_qpart_arg2¹, _lh_qpart_LH_C_0¹) then qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg5¹], _lh_qpart_arg6¹) else qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg4¹], _lh_qpart_arg5¹, _lh_qpart_arg6¹) | _  => error⁰}: 916
+//│ 	case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)}: 1604
+//│ 	case _lh_qsort_arg2¹ of {LH_N  => _lh_qsort_arg3¹ | LH_C _lh_qsort_LH_C_0¹ _lh_qsort_LH_C_1¹ => case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)} | _  => error⁰}: 1606
+//│ ------------------
+//│ case ls⁹ of {LH_C h¹² t¹² => (h¹² + sum₀₀(t¹²)) | LH_N  => 0}: 847 --->
+//│ 	[LH_N]: 1333
+//│ 	[LH_C x³ [LH_N]]: 1334
+//│ 	[LH_C _lh_perms_LH_C_0¹ x⁴]: 1344
+//│ case _lh_qpart_arg3¹ of {LH_N  => rqsort₀₀(_lh_qpart_arg1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_arg2¹ rqsort₁₀(_lh_qpart_arg1¹, _lh_qpart_arg5¹, _lh_qpart_arg6¹)]) | LH_C _lh_qpart_LH_C_0¹ _lh_qpart_LH_C_1¹ => if _lh_qpart_arg1¹(_lh_qpart_arg2¹, _lh_qpart_LH_C_0¹) then qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, _lh_qpart_arg4¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg5¹], _lh_qpart_arg6¹) else qpart₀₀(_lh_qpart_arg1¹, _lh_qpart_arg2¹, _lh_qpart_LH_C_1¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg4¹], _lh_qpart_arg5¹, _lh_qpart_arg6¹) | _  => error⁰}: 916 --->
+//│ 	[LH_N]: 994
+//│ 	[LH_N]: 996
+//│ 	[LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg4²]: 1036
+//│ 	[LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg5²]: 1053
+//│ 	[LH_N]: 1275
+//│ 	[LH_N]: 1277
+//│ 	[LH_C h²² filter₀₀(f¹⁴, t²²)]: 1442
+//│ 	[LH_N]: 1449
+//│ 	[LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_arg4³]: 1640
+//│ 	[LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_arg5³]: 1657
+//│ case ls¹⁰ of {LH_C h¹³ t¹³ => [LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)] | LH_N  => [LH_N]}: 934 --->
+//│ 	[LH_N]: 860
+//│ 	[LH_C _lh_qpart_arg2¹ rqsort₁₀(_lh_qpart_arg1¹, _lh_qpart_arg5¹, _lh_qpart_arg6¹)]: 877
+//│ 	[LH_C _lh_rqsort_LH_C_0² _lh_rqsort_arg3²]: 986
+//│ 	[LH_C _lh_rqpart_arg2² qsort₀₀(_lh_rqpart_arg1², _lh_rqpart_arg5², _lh_rqpart_arg6²)]: 1020
+//│ 	[LH_C _lh_rqsort_LH_C_0³ _lh_rqsort_arg3³]: 1267
+//│ 	[LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹]: 1590
+//│ 	[LH_C _lh_rqpart_arg2³ qsort₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg5³, _lh_rqpart_arg6³)]: 1624
+//│ case _lh_findawards_LH_P2_1² of {LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³ => [LH_C [LH_P2 _lh_findawards_LH_P2_0² [LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³]] findawards₀₀(listDiff₀₀(_lh_findawards_arg1¹, _lh_findawards_LH_P2_1³))] | _  => error⁰}: 959 --->
+//│ 	[LH_P2 sum₀₀(p¹) p¹]: 1485
+//│ case _lh_matchIdent⁶ of {LH_P2 _lh_findawards_LH_P2_0² _lh_findawards_LH_P2_1² => case _lh_findawards_LH_P2_1² of {LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³ => [LH_C [LH_P2 _lh_findawards_LH_P2_0² [LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³]] findawards₀₀(listDiff₀₀(_lh_findawards_arg1¹, _lh_findawards_LH_P2_1³))] | _  => error⁰} | _  => error⁰}: 961 --->
+//│ 	[LH_P2 _lh_awards_LH_P2_0³ ps¹]: 1515
+//│ case _lh_matchIdent⁵ of {LH_N  => [LH_N] | LH_C _lh_findawards_LH_C_0¹ _lh_findawards_LH_C_1¹ => let _lh_matchIdent⁶ = _lh_findawards_LH_C_0¹
+//│ in case _lh_matchIdent⁶ of {LH_P2 _lh_findawards_LH_P2_0² _lh_findawards_LH_P2_1² => case _lh_findawards_LH_P2_1² of {LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³ => [LH_C [LH_P2 _lh_findawards_LH_P2_0² [LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³]] findawards₀₀(listDiff₀₀(_lh_findawards_arg1¹, _lh_findawards_LH_P2_1³))] | _  => error⁰} | _  => error⁰} | _  => error⁰}: 964 --->
+//│ 	[LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)]: 932
+//│ 	[LH_N]: 933
+//│ 	[LH_C h²⁰ mappend₀₀(t²⁰, ys⁵)]: 1413
+//│ case ls¹¹ of {LH_C h¹⁴ t¹⁴ => [LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)] | LH_N  => [LH_N]}: 978 --->
+//│ 	[LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)]: 1103
+//│ 	[LH_N]: 1105
+//│ 	[LH_N]: 1157
+//│ 	[LH_C 21 [LH_N]]: 1158
+//│ 	[LH_C 34 [LH_C 21 [LH_N]]]: 1159
+//│ 	[LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]: 1160
+//│ 	[LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]: 1161
+//│ 	[LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]: 1162
+//│ 	[LH_C 35 [LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]]: 1163
+//│ 	[LH_N]: 1183
+//│ 	[LH_C 14 [LH_N]]: 1184
+//│ 	[LH_C 8 [LH_C 14 [LH_N]]]: 1185
+//│ 	[LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]: 1186
+//│ 	[LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]: 1187
+//│ 	[LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]: 1188
+//│ 	[LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]: 1189
+//│ 	[LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]: 1190
+//│ 	[LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]: 1191
+//│ 	[LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]: 1192
+//│ 	[LH_N]: 1213
+//│ 	[LH_C 21 [LH_N]]: 1214
+//│ 	[LH_C 16 [LH_C 21 [LH_N]]]: 1215
+//│ 	[LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]: 1216
+//│ 	[LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]: 1217
+//│ 	[LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]: 1218
+//│ 	[LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]: 1219
+//│ 	[LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]: 1220
+//│ 	[LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]: 1221
+//│ 	[LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]: 1222
+//│ 	[LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]: 1223
+//│ 	[LH_N]: 1245
+//│ 	[LH_C 14 [LH_N]]: 1246
+//│ 	[LH_C 18 [LH_C 14 [LH_N]]]: 1247
+//│ 	[LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]: 1248
+//│ 	[LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]: 1249
+//│ 	[LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]: 1250
+//│ 	[LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]: 1251
+//│ 	[LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]: 1252
+//│ 	[LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]: 1253
+//│ 	[LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]: 1254
+//│ case _lh_rqsort_LH_C_1² of {LH_N  => [LH_C _lh_rqsort_LH_C_0² _lh_rqsort_arg3²] | _  => rqpart₁₀(_lh_rqsort_arg1², _lh_rqsort_LH_C_0², _lh_rqsort_LH_C_1², [LH_N], [LH_N], _lh_rqsort_arg3²)}: 1000 --->
+//│ 	[LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg5¹]: 895
+//│ 	[LH_N]: 1600
+//│ case _lh_rqsort_arg2² of {LH_N  => _lh_rqsort_arg3² | LH_C _lh_rqsort_LH_C_0² _lh_rqsort_LH_C_1² => case _lh_rqsort_LH_C_1² of {LH_N  => [LH_C _lh_rqsort_LH_C_0² _lh_rqsort_arg3²] | _  => rqpart₁₀(_lh_rqsort_arg1², _lh_rqsort_LH_C_0², _lh_rqsort_LH_C_1², [LH_N], [LH_N], _lh_rqsort_arg3²)} | _  => error⁰}: 1002 --->
+//│ 	[LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg5¹]: 895
+//│ 	[LH_N]: 1600
+//│ case _lh_rqpart_arg3² of {LH_N  => qsort₀₀(_lh_rqpart_arg1², _lh_rqpart_arg4², [LH_C _lh_rqpart_arg2² qsort₀₀(_lh_rqpart_arg1², _lh_rqpart_arg5², _lh_rqpart_arg6²)]) | LH_C _lh_rqpart_LH_C_0² _lh_rqpart_LH_C_1² => if _lh_rqpart_arg1²(_lh_rqpart_LH_C_0², _lh_rqpart_arg2²) then rqpart₁₀(_lh_rqpart_arg1², _lh_rqpart_arg2², _lh_rqpart_LH_C_1², [LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg4²], _lh_rqpart_arg5², _lh_rqpart_arg6²) else rqpart₁₀(_lh_rqpart_arg1², _lh_rqpart_arg2², _lh_rqpart_LH_C_1², _lh_rqpart_arg4², [LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg5²], _lh_rqpart_arg6²) | _  => error⁰}: 1059 --->
+//│ 	[LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg5¹]: 895
+//│ 	[LH_N]: 1600
+//│ case _lh_delete_arg1¹ of {LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2¹) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)] | LH_N  => [LH_N] | _  => error⁰}: 1107 --->
+//│ 	[LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)]: 1103
+//│ 	[LH_N]: 1105
+//│ 	[LH_N]: 1157
+//│ 	[LH_C 21 [LH_N]]: 1158
+//│ 	[LH_C 34 [LH_C 21 [LH_N]]]: 1159
+//│ 	[LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]: 1160
+//│ 	[LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]: 1161
+//│ 	[LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]: 1162
+//│ 	[LH_C 35 [LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]]: 1163
+//│ 	[LH_N]: 1183
+//│ 	[LH_C 14 [LH_N]]: 1184
+//│ 	[LH_C 8 [LH_C 14 [LH_N]]]: 1185
+//│ 	[LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]: 1186
+//│ 	[LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]: 1187
+//│ 	[LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]: 1188
+//│ 	[LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]: 1189
+//│ 	[LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]: 1190
+//│ 	[LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]: 1191
+//│ 	[LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]: 1192
+//│ 	[LH_N]: 1213
+//│ 	[LH_C 21 [LH_N]]: 1214
+//│ 	[LH_C 16 [LH_C 21 [LH_N]]]: 1215
+//│ 	[LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]: 1216
+//│ 	[LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]: 1217
+//│ 	[LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]: 1218
+//│ 	[LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]: 1219
+//│ 	[LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]: 1220
+//│ 	[LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]: 1221
+//│ 	[LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]: 1222
+//│ 	[LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]: 1223
+//│ 	[LH_N]: 1245
+//│ 	[LH_C 14 [LH_N]]: 1246
+//│ 	[LH_C 18 [LH_C 14 [LH_N]]]: 1247
+//│ 	[LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]: 1248
+//│ 	[LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]: 1249
+//│ 	[LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]: 1250
+//│ 	[LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]: 1251
+//│ 	[LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]: 1252
+//│ 	[LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]: 1253
+//│ 	[LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]: 1254
+//│ case _lh_matchIdent⁷ of {LH_P2 _lh_findallawards_LH_P2_0¹ _lh_findallawards_LH_P2_1¹ => [LH_P2 _lh_findallawards_LH_P2_0¹ findawards₀₀(_lh_findallawards_LH_P2_1¹)] | _  => error⁰}: 1119 --->
+//│ 	[LH_P2 [LH_C 'S' [LH_C 'i' [LH_C 'm' [LH_C 'o' [LH_C 'n' [LH_N]]]]]] [LH_C 35 [LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]]]: 1164
+//│ 	[LH_P2 [LH_C 'H' [LH_C 'a' [LH_C 'n' [LH_C 's' [LH_N]]]]] [LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]]: 1193
+//│ 	[LH_P2 [LH_C 'P' [LH_C 'h' [LH_C 'i' [LH_C 'l' [LH_N]]]]] [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]]: 1224
+//│ 	[LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]]: 1255
+//│ case ls¹² of {LH_C h¹⁵ t¹⁵ => [LH_C f¹⁰(h¹⁵) map₀₀(f¹⁰, t¹⁵)] | LH_N  => [LH_N]}: 1137 --->
+//│ 	[LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)]: 976
+//│ 	[LH_N]: 977
+//│ 	[LH_C h¹⁷ mappend₂₀(t¹⁷, ys⁴)]: 1309
+//│ 	[LH_N]: 1329
+//│ case _lh_rqsort_LH_C_1³ of {LH_N  => [LH_C _lh_rqsort_LH_C_0³ _lh_rqsort_arg3³] | _  => rqpart₀₀(_lh_rqsort_arg1³, _lh_rqsort_LH_C_0³, _lh_rqsort_LH_C_1³, [LH_N], [LH_N], _lh_rqsort_arg3³)}: 1281 --->
+//│ 	[LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg4¹]: 908
+//│ 	[LH_N]: 1598
+//│ case _lh_rqsort_arg2³ of {LH_N  => _lh_rqsort_arg3³ | LH_C _lh_rqsort_LH_C_0³ _lh_rqsort_LH_C_1³ => case _lh_rqsort_LH_C_1³ of {LH_N  => [LH_C _lh_rqsort_LH_C_0³ _lh_rqsort_arg3³] | _  => rqpart₀₀(_lh_rqsort_arg1³, _lh_rqsort_LH_C_0³, _lh_rqsort_LH_C_1³, [LH_N], [LH_N], _lh_rqsort_arg3³)} | _  => error⁰}: 1283 --->
+//│ 	[LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg4¹]: 908
+//│ 	[LH_N]: 1598
+//│ case xs³ of {LH_C h¹⁶ t¹⁶ => [LH_C h¹⁶ mappend₁₀(t¹⁶, ys³)] | LH_N  => ys³}: 1299 --->
+//│ 	[LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)]: 932
+//│ 	[LH_N]: 933
+//│ case xs⁴ of {LH_C h¹⁷ t¹⁷ => [LH_C h¹⁷ mappend₂₀(t¹⁷, ys⁴)] | LH_N  => ys⁴}: 1311 --->
+//│ 	[LH_C f¹⁵(h²³) map₂₀(f¹⁵, t²³)]: 1475
+//│ 	[LH_N]: 1476
+//│ case ls¹³ of {LH_C h¹⁸ t¹⁸ => [LH_C f¹¹(h¹⁸) map₅₀(f¹¹, t¹⁸)] | LH_N  => [LH_N]}: 1325 --->
+//│ 	[LH_C a³ enumFromTo₀₀((a³ + 1), b³)]: 1081
+//│ 	[LH_N]: 1082
+//│ case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}: 1365 --->
+//│ 	[LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)]: 1103
+//│ 	[LH_N]: 1105
+//│ 	[LH_N]: 1157
+//│ 	[LH_C 21 [LH_N]]: 1158
+//│ 	[LH_C 34 [LH_C 21 [LH_N]]]: 1159
+//│ 	[LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]: 1160
+//│ 	[LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]: 1161
+//│ 	[LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]: 1162
+//│ 	[LH_C 35 [LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]]: 1163
+//│ 	[LH_N]: 1183
+//│ 	[LH_C 14 [LH_N]]: 1184
+//│ 	[LH_C 8 [LH_C 14 [LH_N]]]: 1185
+//│ 	[LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]: 1186
+//│ 	[LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]: 1187
+//│ 	[LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]: 1188
+//│ 	[LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]: 1189
+//│ 	[LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]: 1190
+//│ 	[LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]: 1191
+//│ 	[LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]: 1192
+//│ 	[LH_N]: 1213
+//│ 	[LH_C 21 [LH_N]]: 1214
+//│ 	[LH_C 16 [LH_C 21 [LH_N]]]: 1215
+//│ 	[LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]: 1216
+//│ 	[LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]: 1217
+//│ 	[LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]: 1218
+//│ 	[LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]: 1219
+//│ 	[LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]: 1220
+//│ 	[LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]: 1221
+//│ 	[LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]: 1222
+//│ 	[LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]: 1223
+//│ 	[LH_N]: 1245
+//│ 	[LH_C 14 [LH_N]]: 1246
+//│ 	[LH_C 18 [LH_C 14 [LH_N]]]: 1247
+//│ 	[LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]: 1248
+//│ 	[LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]: 1249
+//│ 	[LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]: 1250
+//│ 	[LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]: 1251
+//│ 	[LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]: 1252
+//│ 	[LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]: 1253
+//│ 	[LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]: 1254
+//│ case _lh_perms_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_perms_arg1¹ of {1  => map₃₀((fun x³ -> [LH_C x³ [LH_N]]), _lh_perms_arg2¹) | _  => case _lh_perms_arg2¹ of {LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁴ -> [LH_C _lh_perms_LH_C_0¹ x⁴]), perms₀₀((_lh_perms_arg1¹ - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1¹, _lh_perms_LH_C_1¹)) | _  => error⁰}}}: 1367 --->
+//│ 	[LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2¹)]: 1103
+//│ 	[LH_N]: 1105
+//│ 	[LH_N]: 1157
+//│ 	[LH_C 21 [LH_N]]: 1158
+//│ 	[LH_C 34 [LH_C 21 [LH_N]]]: 1159
+//│ 	[LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]: 1160
+//│ 	[LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]: 1161
+//│ 	[LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]: 1162
+//│ 	[LH_C 35 [LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]]: 1163
+//│ 	[LH_N]: 1183
+//│ 	[LH_C 14 [LH_N]]: 1184
+//│ 	[LH_C 8 [LH_C 14 [LH_N]]]: 1185
+//│ 	[LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]: 1186
+//│ 	[LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]: 1187
+//│ 	[LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]: 1188
+//│ 	[LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]: 1189
+//│ 	[LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]: 1190
+//│ 	[LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]: 1191
+//│ 	[LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]: 1192
+//│ 	[LH_N]: 1213
+//│ 	[LH_C 21 [LH_N]]: 1214
+//│ 	[LH_C 16 [LH_C 21 [LH_N]]]: 1215
+//│ 	[LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]: 1216
+//│ 	[LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]: 1217
+//│ 	[LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]: 1218
+//│ 	[LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]: 1219
+//│ 	[LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]: 1220
+//│ 	[LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]: 1221
+//│ 	[LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]: 1222
+//│ 	[LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]: 1223
+//│ 	[LH_N]: 1245
+//│ 	[LH_C 14 [LH_N]]: 1246
+//│ 	[LH_C 18 [LH_C 14 [LH_N]]]: 1247
+//│ 	[LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]: 1248
+//│ 	[LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]: 1249
+//│ 	[LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]: 1250
+//│ 	[LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]: 1251
+//│ 	[LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]: 1252
+//│ 	[LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]: 1253
+//│ 	[LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]: 1254
+//│ case ls¹⁴ of {LH_C h¹⁹ t¹⁹ => foldl₀₀(f¹², f¹²(i¹, h¹⁹), t¹⁹) | LH_N  => i¹}: 1383 --->
+//│ 	[LH_N]: 1333
+//│ 	[LH_C x³ [LH_N]]: 1334
+//│ 	[LH_C _lh_perms_LH_C_0¹ x⁴]: 1344
+//│ case xs⁵ of {LH_C h²⁰ t²⁰ => [LH_C h²⁰ mappend₀₀(t²⁰, ys⁵)] | LH_N  => ys⁵}: 1415 --->
+//│ 	[LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)]: 932
+//│ 	[LH_N]: 933
+//│ 	[LH_C h¹⁶ mappend₁₀(t¹⁶, ys³)]: 1297
+//│ case ls¹⁵ of {LH_C h²¹ t²¹ => [LH_C f¹³(h²¹) map₄₀(f¹³, t²¹)] | LH_N  => [LH_N]}: 1429 --->
+//│ 	[LH_N]: 1256
+//│ 	[LH_C [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]] [LH_N]]: 1257
+//│ 	[LH_C [LH_P2 [LH_C 'P' [LH_C 'h' [LH_C 'i' [LH_C 'l' [LH_N]]]]] [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]] [LH_N]]]: 1258
+//│ 	[LH_C [LH_P2 [LH_C 'H' [LH_C 'a' [LH_C 'n' [LH_C 's' [LH_N]]]]] [LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'P' [LH_C 'h' [LH_C 'i' [LH_C 'l' [LH_N]]]]] [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]] [LH_N]]]]: 1259
+//│ 	[LH_C [LH_P2 [LH_C 'S' [LH_C 'i' [LH_C 'm' [LH_C 'o' [LH_C 'n' [LH_N]]]]]] [LH_C 35 [LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]]] [LH_C [LH_P2 [LH_C 'H' [LH_C 'a' [LH_C 'n' [LH_C 's' [LH_N]]]]] [LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'P' [LH_C 'h' [LH_C 'i' [LH_C 'l' [LH_N]]]]] [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]] [LH_N]]]]]: 1260
+//│ case ls¹⁶ of {LH_C h²² t²² => if f¹⁴(h²²) then [LH_C h²² filter₀₀(f¹⁴, t²²)] else filter₀₀(f¹⁴, t²²) | LH_N  => [LH_N]}: 1450 --->
+//│ 	[LH_C f¹⁰(h¹⁵) map₀₀(f¹⁰, t¹⁵)]: 1135
+//│ 	[LH_N]: 1136
+//│ case _lh_compareTuple2_arg2¹ of {LH_P2 _lh_compareTuple2_LH_P2_0³ _lh_compareTuple2_LH_P2_1³ => (_lh_compareTuple2_LH_P2_0² <= _lh_compareTuple2_LH_P2_0³) | _  => error⁰}: 1461 --->
+//│ 	[LH_P2 sum₀₀(p¹) p¹]: 1485
+//│ case _lh_compareTuple2_arg1¹ of {LH_P2 _lh_compareTuple2_LH_P2_0² _lh_compareTuple2_LH_P2_1² => case _lh_compareTuple2_arg2¹ of {LH_P2 _lh_compareTuple2_LH_P2_0³ _lh_compareTuple2_LH_P2_1³ => (_lh_compareTuple2_LH_P2_0² <= _lh_compareTuple2_LH_P2_0³) | _  => error⁰} | _  => error⁰}: 1463 --->
+//│ 	[LH_P2 sum₀₀(p¹) p¹]: 1485
+//│ case ls¹⁷ of {LH_C h²³ t²³ => [LH_C f¹⁵(h²³) map₂₀(f¹⁵, t²³)] | LH_N  => [LH_N]}: 1477 --->
+//│ 	[LH_C f⁹(h¹⁴) map₃₀(f⁹, t¹⁴)]: 976
+//│ 	[LH_N]: 977
+//│ 	[LH_C h¹⁷ mappend₂₀(t¹⁷, ys⁴)]: 1309
+//│ 	[LH_N]: 1329
+//│ case _lh_matchIdent⁸ of {LH_P2 _lh_awards_LH_P2_0² _lh_awards_LH_P2_1² => (_lh_awards_LH_P2_0² >= threshold¹) | _  => error⁰}: 1503 --->
+//│ 	[LH_P2 sum₀₀(p¹) p¹]: 1485
+//│ case _lh_matchIdent⁹ of {LH_P2 _lh_awards_LH_P2_0³ _lh_awards_LH_P2_1³ => map₁₀((fun ps¹ -> [LH_P2 _lh_awards_LH_P2_0³ ps¹]), sort₀₀(atleast¹(_lh_awards_LH_P2_1³))) | _  => error⁰}: 1525 --->
+//│ 	[LH_P2 [LH_C 'G' [LH_C 'o' [LH_C 'l' [LH_C 'd' [LH_N]]]]] 70]: 1541
+//│ 	[LH_P2 [LH_C 'S' [LH_C 'i' [LH_C 'l' [LH_C 'v' [LH_C 'e' [LH_C 'r' [LH_N]]]]]]] 60]: 1559
+//│ 	[LH_P2 [LH_C 'B' [LH_C 'r' [LH_C 'o' [LH_C 'n' [LH_C 'z' [LH_C 'e' [LH_N]]]]]]] 50]: 1578
+//│ case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)}: 1604 --->
+//│ 	[LH_N]: 994
+//│ 	[LH_N]: 996
+//│ 	[LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg4²]: 1036
+//│ 	[LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg5²]: 1053
+//│ 	[LH_N]: 1275
+//│ 	[LH_N]: 1277
+//│ 	[LH_C h²² filter₀₀(f¹⁴, t²²)]: 1442
+//│ 	[LH_N]: 1449
+//│ 	[LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_arg4³]: 1640
+//│ 	[LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_arg5³]: 1657
+//│ case _lh_qsort_arg2¹ of {LH_N  => _lh_qsort_arg3¹ | LH_C _lh_qsort_LH_C_0¹ _lh_qsort_LH_C_1¹ => case _lh_qsort_LH_C_1¹ of {LH_N  => [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹] | _  => qpart₀₀(_lh_qsort_arg1¹, _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3¹)} | _  => error⁰}: 1606 --->
+//│ 	[LH_N]: 994
+//│ 	[LH_N]: 996
+//│ 	[LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg4²]: 1036
+//│ 	[LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg5²]: 1053
+//│ 	[LH_N]: 1275
+//│ 	[LH_N]: 1277
+//│ 	[LH_C h²² filter₀₀(f¹⁴, t²²)]: 1442
+//│ 	[LH_N]: 1449
+//│ 	[LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_arg4³]: 1640
+//│ 	[LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_arg5³]: 1657
+//│ case _lh_rqpart_arg3³ of {LH_N  => qsort₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg4³, [LH_C _lh_rqpart_arg2³ qsort₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg5³, _lh_rqpart_arg6³)]) | LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_LH_C_1³ => if _lh_rqpart_arg1³(_lh_rqpart_LH_C_0³, _lh_rqpart_arg2³) then rqpart₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg2³, _lh_rqpart_LH_C_1³, [LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_arg4³], _lh_rqpart_arg5³, _lh_rqpart_arg6³) else rqpart₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg2³, _lh_rqpart_LH_C_1³, _lh_rqpart_arg4³, [LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_arg5³], _lh_rqpart_arg6³) | _  => error⁰}: 1663 --->
+//│ 	[LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg4¹]: 908
+//│ 	[LH_N]: 1598
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_N]: 860 --->
+//│ 	case ls¹⁰ of {LH_C h¹³ t¹³ => [LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)] | LH_N  => [LH_N]}: 934
+//│ [LH_C _lh_qpart_arg2¹ rqsort₁₀(_lh_qpart_arg1¹, _lh_qpart_arg5¹, _lh_qpart_arg6¹)]: 877 --->
+//│ 	case ls¹⁰ of {LH_C h¹³ t¹³ => [LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)] | LH_N  => [LH_N]}: 934
+//│ [LH_C _lh_rqsort_LH_C_0² _lh_rqsort_arg3²]: 986 --->
+//│ 	case ls¹⁰ of {LH_C h¹³ t¹³ => [LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)] | LH_N  => [LH_N]}: 934
+//│ [LH_C _lh_rqpart_arg2² qsort₀₀(_lh_rqpart_arg1², _lh_rqpart_arg5², _lh_rqpart_arg6²)]: 1020 --->
+//│ 	case ls¹⁰ of {LH_C h¹³ t¹³ => [LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)] | LH_N  => [LH_N]}: 934
+//│ [LH_C a³ enumFromTo₀₀((a³ + 1), b³)]: 1081 --->
+//│ 	case ls¹³ of {LH_C h¹⁸ t¹⁸ => [LH_C f¹¹(h¹⁸) map₅₀(f¹¹, t¹⁸)] | LH_N  => [LH_N]}: 1325
+//│ [LH_N]: 1082 --->
+//│ 	case ls¹³ of {LH_C h¹⁸ t¹⁸ => [LH_C f¹¹(h¹⁸) map₅₀(f¹¹, t¹⁸)] | LH_N  => [LH_N]}: 1325
+//│ [LH_C f¹⁰(h¹⁵) map₀₀(f¹⁰, t¹⁵)]: 1135 --->
+//│ 	case ls¹⁶ of {LH_C h²² t²² => if f¹⁴(h²²) then [LH_C h²² filter₀₀(f¹⁴, t²²)] else filter₀₀(f¹⁴, t²²) | LH_N  => [LH_N]}: 1450
+//│ [LH_N]: 1136 --->
+//│ 	case ls¹⁶ of {LH_C h²² t²² => if f¹⁴(h²²) then [LH_C h²² filter₀₀(f¹⁴, t²²)] else filter₀₀(f¹⁴, t²²) | LH_N  => [LH_N]}: 1450
+//│ [LH_P2 [LH_C 'S' [LH_C 'i' [LH_C 'm' [LH_C 'o' [LH_C 'n' [LH_N]]]]]] [LH_C 35 [LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]]]: 1164 --->
+//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_findallawards_LH_P2_0¹ _lh_findallawards_LH_P2_1¹ => [LH_P2 _lh_findallawards_LH_P2_0¹ findawards₀₀(_lh_findallawards_LH_P2_1¹)] | _  => error⁰}: 1119
+//│ [LH_P2 [LH_C 'H' [LH_C 'a' [LH_C 'n' [LH_C 's' [LH_N]]]]] [LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]]: 1193 --->
+//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_findallawards_LH_P2_0¹ _lh_findallawards_LH_P2_1¹ => [LH_P2 _lh_findallawards_LH_P2_0¹ findawards₀₀(_lh_findallawards_LH_P2_1¹)] | _  => error⁰}: 1119
+//│ [LH_P2 [LH_C 'P' [LH_C 'h' [LH_C 'i' [LH_C 'l' [LH_N]]]]] [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]]: 1224 --->
+//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_findallawards_LH_P2_0¹ _lh_findallawards_LH_P2_1¹ => [LH_P2 _lh_findallawards_LH_P2_0¹ findawards₀₀(_lh_findallawards_LH_P2_1¹)] | _  => error⁰}: 1119
+//│ [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]]: 1255 --->
+//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_findallawards_LH_P2_0¹ _lh_findallawards_LH_P2_1¹ => [LH_P2 _lh_findallawards_LH_P2_0¹ findawards₀₀(_lh_findallawards_LH_P2_1¹)] | _  => error⁰}: 1119
+//│ [LH_N]: 1256 --->
+//│ 	case ls¹⁵ of {LH_C h²¹ t²¹ => [LH_C f¹³(h²¹) map₄₀(f¹³, t²¹)] | LH_N  => [LH_N]}: 1429
+//│ [LH_C [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]] [LH_N]]: 1257 --->
+//│ 	case ls¹⁵ of {LH_C h²¹ t²¹ => [LH_C f¹³(h²¹) map₄₀(f¹³, t²¹)] | LH_N  => [LH_N]}: 1429
+//│ [LH_C [LH_P2 [LH_C 'P' [LH_C 'h' [LH_C 'i' [LH_C 'l' [LH_N]]]]] [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]] [LH_N]]]: 1258 --->
+//│ 	case ls¹⁵ of {LH_C h²¹ t²¹ => [LH_C f¹³(h²¹) map₄₀(f¹³, t²¹)] | LH_N  => [LH_N]}: 1429
+//│ [LH_C [LH_P2 [LH_C 'H' [LH_C 'a' [LH_C 'n' [LH_C 's' [LH_N]]]]] [LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'P' [LH_C 'h' [LH_C 'i' [LH_C 'l' [LH_N]]]]] [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]] [LH_N]]]]: 1259 --->
+//│ 	case ls¹⁵ of {LH_C h²¹ t²¹ => [LH_C f¹³(h²¹) map₄₀(f¹³, t²¹)] | LH_N  => [LH_N]}: 1429
+//│ [LH_C [LH_P2 [LH_C 'S' [LH_C 'i' [LH_C 'm' [LH_C 'o' [LH_C 'n' [LH_N]]]]]] [LH_C 35 [LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]]] [LH_C [LH_P2 [LH_C 'H' [LH_C 'a' [LH_C 'n' [LH_C 's' [LH_N]]]]] [LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'P' [LH_C 'h' [LH_C 'i' [LH_C 'l' [LH_N]]]]] [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]] [LH_N]]]]]: 1260 --->
+//│ 	case ls¹⁵ of {LH_C h²¹ t²¹ => [LH_C f¹³(h²¹) map₄₀(f¹³, t²¹)] | LH_N  => [LH_N]}: 1429
+//│ [LH_C _lh_rqsort_LH_C_0³ _lh_rqsort_arg3³]: 1267 --->
+//│ 	case ls¹⁰ of {LH_C h¹³ t¹³ => [LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)] | LH_N  => [LH_N]}: 934
+//│ [LH_C f¹⁵(h²³) map₂₀(f¹⁵, t²³)]: 1475 --->
+//│ 	case xs⁴ of {LH_C h¹⁷ t¹⁷ => [LH_C h¹⁷ mappend₂₀(t¹⁷, ys⁴)] | LH_N  => ys⁴}: 1311
+//│ [LH_N]: 1476 --->
+//│ 	case xs⁴ of {LH_C h¹⁷ t¹⁷ => [LH_C h¹⁷ mappend₂₀(t¹⁷, ys⁴)] | LH_N  => ys⁴}: 1311
+//│ [LH_P2 _lh_awards_LH_P2_0³ ps¹]: 1515 --->
+//│ 	case _lh_matchIdent⁶ of {LH_P2 _lh_findawards_LH_P2_0² _lh_findawards_LH_P2_1² => case _lh_findawards_LH_P2_1² of {LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³ => [LH_C [LH_P2 _lh_findawards_LH_P2_0² [LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³]] findawards₀₀(listDiff₀₀(_lh_findawards_arg1¹, _lh_findawards_LH_P2_1³))] | _  => error⁰} | _  => error⁰}: 961
+//│ [LH_P2 [LH_C 'G' [LH_C 'o' [LH_C 'l' [LH_C 'd' [LH_N]]]]] 70]: 1541 --->
+//│ 	case _lh_matchIdent⁹ of {LH_P2 _lh_awards_LH_P2_0³ _lh_awards_LH_P2_1³ => map₁₀((fun ps¹ -> [LH_P2 _lh_awards_LH_P2_0³ ps¹]), sort₀₀(atleast¹(_lh_awards_LH_P2_1³))) | _  => error⁰}: 1525
+//│ [LH_P2 [LH_C 'S' [LH_C 'i' [LH_C 'l' [LH_C 'v' [LH_C 'e' [LH_C 'r' [LH_N]]]]]]] 60]: 1559 --->
+//│ 	case _lh_matchIdent⁹ of {LH_P2 _lh_awards_LH_P2_0³ _lh_awards_LH_P2_1³ => map₁₀((fun ps¹ -> [LH_P2 _lh_awards_LH_P2_0³ ps¹]), sort₀₀(atleast¹(_lh_awards_LH_P2_1³))) | _  => error⁰}: 1525
+//│ [LH_P2 [LH_C 'B' [LH_C 'r' [LH_C 'o' [LH_C 'n' [LH_C 'z' [LH_C 'e' [LH_N]]]]]]] 50]: 1578 --->
+//│ 	case _lh_matchIdent⁹ of {LH_P2 _lh_awards_LH_P2_0³ _lh_awards_LH_P2_1³ => map₁₀((fun ps¹ -> [LH_P2 _lh_awards_LH_P2_0³ ps¹]), sort₀₀(atleast¹(_lh_awards_LH_P2_1³))) | _  => error⁰}: 1525
+//│ [LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹]: 1590 --->
+//│ 	case ls¹⁰ of {LH_C h¹³ t¹³ => [LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)] | LH_N  => [LH_N]}: 934
+//│ [LH_C _lh_rqpart_arg2³ qsort₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg5³, _lh_rqpart_arg6³)]: 1624 --->
+//│ 	case ls¹⁰ of {LH_C h¹³ t¹³ => [LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)] | LH_N  => [LH_N]}: 934
+//│ ------------------
+//│ case ls¹⁰ of {LH_C h¹³ t¹³ => [LH_C f⁸(h¹³) map₁₀(f⁸, t¹³)] | LH_N  => [LH_N]}: 934 --->
+//│ 	[LH_N]: 860
+//│ 	[LH_C _lh_qpart_arg2¹ rqsort₁₀(_lh_qpart_arg1¹, _lh_qpart_arg5¹, _lh_qpart_arg6¹)]: 877
+//│ 	[LH_C _lh_rqsort_LH_C_0² _lh_rqsort_arg3²]: 986
+//│ 	[LH_C _lh_rqpart_arg2² qsort₀₀(_lh_rqpart_arg1², _lh_rqpart_arg5², _lh_rqpart_arg6²)]: 1020
+//│ 	[LH_C _lh_rqsort_LH_C_0³ _lh_rqsort_arg3³]: 1267
+//│ 	[LH_C _lh_qsort_LH_C_0¹ _lh_qsort_arg3¹]: 1590
+//│ 	[LH_C _lh_rqpart_arg2³ qsort₀₀(_lh_rqpart_arg1³, _lh_rqpart_arg5³, _lh_rqpart_arg6³)]: 1624
+//│ case _lh_matchIdent⁶ of {LH_P2 _lh_findawards_LH_P2_0² _lh_findawards_LH_P2_1² => case _lh_findawards_LH_P2_1² of {LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³ => [LH_C [LH_P2 _lh_findawards_LH_P2_0² [LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³]] findawards₀₀(listDiff₀₀(_lh_findawards_arg1¹, _lh_findawards_LH_P2_1³))] | _  => error⁰} | _  => error⁰}: 961 --->
+//│ 	[LH_P2 _lh_awards_LH_P2_0³ ps¹]: 1515
+//│ case _lh_matchIdent⁷ of {LH_P2 _lh_findallawards_LH_P2_0¹ _lh_findallawards_LH_P2_1¹ => [LH_P2 _lh_findallawards_LH_P2_0¹ findawards₀₀(_lh_findallawards_LH_P2_1¹)] | _  => error⁰}: 1119 --->
+//│ 	[LH_P2 [LH_C 'S' [LH_C 'i' [LH_C 'm' [LH_C 'o' [LH_C 'n' [LH_N]]]]]] [LH_C 35 [LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]]]: 1164
+//│ 	[LH_P2 [LH_C 'H' [LH_C 'a' [LH_C 'n' [LH_C 's' [LH_N]]]]] [LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]]: 1193
+//│ 	[LH_P2 [LH_C 'P' [LH_C 'h' [LH_C 'i' [LH_C 'l' [LH_N]]]]] [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]]: 1224
+//│ 	[LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]]: 1255
+//│ case xs⁴ of {LH_C h¹⁷ t¹⁷ => [LH_C h¹⁷ mappend₂₀(t¹⁷, ys⁴)] | LH_N  => ys⁴}: 1311 --->
+//│ 	[LH_C f¹⁵(h²³) map₂₀(f¹⁵, t²³)]: 1475
+//│ 	[LH_N]: 1476
+//│ case ls¹³ of {LH_C h¹⁸ t¹⁸ => [LH_C f¹¹(h¹⁸) map₅₀(f¹¹, t¹⁸)] | LH_N  => [LH_N]}: 1325 --->
+//│ 	[LH_C a³ enumFromTo₀₀((a³ + 1), b³)]: 1081
+//│ 	[LH_N]: 1082
+//│ case ls¹⁵ of {LH_C h²¹ t²¹ => [LH_C f¹³(h²¹) map₄₀(f¹³, t²¹)] | LH_N  => [LH_N]}: 1429 --->
+//│ 	[LH_N]: 1256
+//│ 	[LH_C [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]] [LH_N]]: 1257
+//│ 	[LH_C [LH_P2 [LH_C 'P' [LH_C 'h' [LH_C 'i' [LH_C 'l' [LH_N]]]]] [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]] [LH_N]]]: 1258
+//│ 	[LH_C [LH_P2 [LH_C 'H' [LH_C 'a' [LH_C 'n' [LH_C 's' [LH_N]]]]] [LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'P' [LH_C 'h' [LH_C 'i' [LH_C 'l' [LH_N]]]]] [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]] [LH_N]]]]: 1259
+//│ 	[LH_C [LH_P2 [LH_C 'S' [LH_C 'i' [LH_C 'm' [LH_C 'o' [LH_C 'n' [LH_N]]]]]] [LH_C 35 [LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1¹ [LH_C 34 [LH_C 21 [LH_N]]]]]]]] [LH_C [LH_P2 [LH_C 'H' [LH_C 'a' [LH_C 'n' [LH_C 's' [LH_N]]]]] [LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1¹ [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'P' [LH_C 'h' [LH_C 'i' [LH_C 'l' [LH_N]]]]] [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1¹ [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]] [LH_C [LH_P2 [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]] [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1¹ [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]] [LH_N]]]]]: 1260
+//│ case ls¹⁶ of {LH_C h²² t²² => if f¹⁴(h²²) then [LH_C h²² filter₀₀(f¹⁴, t²²)] else filter₀₀(f¹⁴, t²²) | LH_N  => [LH_N]}: 1450 --->
+//│ 	[LH_C f¹⁰(h¹⁵) map₀₀(f¹⁰, t¹⁵)]: 1135
+//│ 	[LH_N]: 1136
+//│ case _lh_matchIdent⁹ of {LH_P2 _lh_awards_LH_P2_0³ _lh_awards_LH_P2_1³ => map₁₀((fun ps¹ -> [LH_P2 _lh_awards_LH_P2_0³ ps¹]), sort₀₀(atleast¹(_lh_awards_LH_P2_1³))) | _  => error⁰}: 1525 --->
+//│ 	[LH_P2 [LH_C 'G' [LH_C 'o' [LH_C 'l' [LH_C 'd' [LH_N]]]]] 70]: 1541
+//│ 	[LH_P2 [LH_C 'S' [LH_C 'i' [LH_C 'l' [LH_C 'v' [LH_C 'e' [LH_C 'r' [LH_N]]]]]]] 60]: 1559
+//│ 	[LH_P2 [LH_C 'B' [LH_C 'r' [LH_C 'o' [LH_C 'n' [LH_C 'z' [LH_C 'e' [LH_N]]]]]]] 50]: 1578
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testAwards_nofib₀₀(primId⁰(500))
+//│ def testAwards_nofib₀₀(_lh_testAwards_nofib_arg1²) = 
+//│ 	map₅₀((fun x⁸ -> findallawards₀₀(competitors₀₀((x⁸ % 100)))), enumFromTo₀₀(1, _lh_testAwards_nofib_arg1²))
+//│ 	where
+//│ 	def competitors₀₀(_lh_competitors_arg1²) = 
+//│ 		let h²⁶ = 	
+//│ 			let _lh_findallawards_LH_P2_0⁵ = [LH_C 'S' [LH_C 'i' [LH_C 'm' [LH_C 'o' [LH_C 'n' [LH_N]]]]]]
+//│ 			in let _lh_findallawards_LH_P2_1⁵ = [LH_C 35 [LH_C 27 [LH_C 40 [LH_C _lh_competitors_arg1² [LH_C 34 [LH_C 21 [LH_N]]]]]]]
+//│ 			in [LH_P2 _lh_findallawards_LH_P2_0⁵ findawards₀₀(_lh_findallawards_LH_P2_1⁵)]
+//│ 		in let t²⁶ = 	
+//│ 			let h²⁷ = 	
+//│ 				let _lh_findallawards_LH_P2_0⁴ = [LH_C 'H' [LH_C 'a' [LH_C 'n' [LH_C 's' [LH_N]]]]]
+//│ 				in let _lh_findallawards_LH_P2_1⁴ = [LH_C 23 [LH_C 19 [LH_C 45 [LH_C _lh_competitors_arg1² [LH_C 17 [LH_C 10 [LH_C 5 [LH_C 8 [LH_C 14 [LH_N]]]]]]]]]]
+//│ 				in [LH_P2 _lh_findallawards_LH_P2_0⁴ findawards₀₀(_lh_findallawards_LH_P2_1⁴)]
+//│ 			in let t²⁷ = 	
+//│ 				let h²⁸ = 	
+//│ 					let _lh_findallawards_LH_P2_0³ = [LH_C 'P' [LH_C 'h' [LH_C 'i' [LH_C 'l' [LH_N]]]]]
+//│ 					in let _lh_findallawards_LH_P2_1³ = [LH_C 1 [LH_C 18 [LH_C _lh_competitors_arg1² [LH_C 20 [LH_C 21 [LH_C 19 [LH_C 34 [LH_C 8 [LH_C 16 [LH_C 21 [LH_N]]]]]]]]]]]
+//│ 					in [LH_P2 _lh_findallawards_LH_P2_0³ findawards₀₀(_lh_findallawards_LH_P2_1³)]
+//│ 				in let t²⁸ = 	
+//│ 					let h²⁹ = 	
+//│ 						let _lh_findallawards_LH_P2_0² = [LH_C 'K' [LH_C 'e' [LH_C 'v' [LH_C 'i' [LH_C 'n' [LH_N]]]]]]
+//│ 						in let _lh_findallawards_LH_P2_1² = [LH_C 9 [LH_C 23 [LH_C 17 [LH_C 54 [LH_C _lh_competitors_arg1² [LH_C 41 [LH_C 9 [LH_C 18 [LH_C 14 [LH_N]]]]]]]]]]
+//│ 						in [LH_P2 _lh_findallawards_LH_P2_0² findawards₀₀(_lh_findallawards_LH_P2_1²)]
+//│ 					in let t²⁹ = (fun f²⁵ -> [LH_N])
+//│ 					in (fun f²⁴ -> [LH_C f²⁴(h²⁹) map₄₀(f²⁴, t²⁹)])
+//│ 				in (fun f²³ -> [LH_C f²³(h²⁸) map₄₀(f²³, t²⁸)])
+//│ 			in (fun f²² -> [LH_C f²²(h²⁷) map₄₀(f²², t²⁷)])
+//│ 		in (fun f²¹ -> [LH_C f²¹(h²⁶) map₄₀(f²¹, t²⁶)])
+//│ 	def enumFromTo₀₀(a⁴, b⁴) = 
+//│ 		if (a⁴ <= b⁴) then 
+//│ 			let h³⁰ = a⁴
+//│ 			in let t³⁰ = enumFromTo₀₀((a⁴ + 1), b⁴)
+//│ 			in (fun f²⁷ -> [LH_C f²⁷(h³⁰) map₅₀(f²⁷, t³⁰)]) else (fun f²⁸ -> [LH_N])
+//│ 	def findallawards₀₀(_lh_findallawards_arg1²) = 
+//│ 		map₄₀((fun name_scores² -> 
+//│ 			let _lh_matchIdent¹⁴ = name_scores²
+//│ 			in _lh_matchIdent¹⁴), _lh_findallawards_arg1²)
+//│ 		where
+//│ 		def findawards₀₀(_lh_findawards_arg1²) = 
+//│ 			let _lh_matchIdent¹⁰ = awards₀₀(_lh_findawards_arg1²)
+//│ 			in case _lh_matchIdent¹⁰ of {
+//│ 				LH_N  => [LH_N]
+//│ 				| LH_C _lh_findawards_LH_C_0¹ _lh_findawards_LH_C_1¹ => 
+//│ 					let _lh_matchIdent¹¹ = _lh_findawards_LH_C_0¹
+//│ 					in _lh_matchIdent¹¹(_lh_findawards_arg1²)
+//│ 				| _  => error⁰}
+//│ 			where
+//│ 			def awards₀₀(_lh_awards_arg1²) = 
+//│ 				let sumscores² = map₀₀((fun p² -> [LH_P2 sum₀₀(p²) p²]), perms₀₀(3, _lh_awards_arg1²))
+//│ 				in let atleast² = (fun threshold² -> filter₀₀((fun sum_p² -> 
+//│ 					let _lh_matchIdent¹² = sum_p²
+//│ 					in case _lh_matchIdent¹² of {
+//│ 						LH_P2 _lh_awards_LH_P2_0² _lh_awards_LH_P2_1² => (_lh_awards_LH_P2_0² >= threshold²)
+//│ 						| _  => error⁰}), sumscores²))
+//│ 				in let award² = (fun name_threshold² -> 
+//│ 					let _lh_matchIdent¹³ = name_threshold²
+//│ 					in _lh_matchIdent¹³(atleast²))
+//│ 				in mappend₀₀(mappend₁₀(award²(
+//│ 					let _lh_awards_LH_P2_0⁴ = [LH_C 'G' [LH_C 'o' [LH_C 'l' [LH_C 'd' [LH_N]]]]]
+//│ 					in let _lh_awards_LH_P2_1⁴ = 70
+//│ 					in (fun atleast³ -> map₁₀((fun ps² -> 
+//│ 						let _lh_findawards_LH_P2_0⁴ = _lh_awards_LH_P2_0⁴
+//│ 						in let _lh_findawards_LH_P2_1⁴ = ps²
+//│ 						in (fun _lh_findawards_arg1³ -> case _lh_findawards_LH_P2_1⁴ of {
+//│ 							LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³ => [LH_C [LH_P2 _lh_findawards_LH_P2_0⁴ [LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³]] findawards₀₀(listDiff₀₀(_lh_findawards_arg1³, _lh_findawards_LH_P2_1³))]
+//│ 							| _  => error⁰})), sort₀₀(atleast³(_lh_awards_LH_P2_1⁴))))), award²(
+//│ 					let _lh_awards_LH_P2_0⁵ = [LH_C 'S' [LH_C 'i' [LH_C 'l' [LH_C 'v' [LH_C 'e' [LH_C 'r' [LH_N]]]]]]]
+//│ 					in let _lh_awards_LH_P2_1⁵ = 60
+//│ 					in (fun atleast⁴ -> map₁₀((fun ps³ -> 
+//│ 						let _lh_findawards_LH_P2_0⁵ = _lh_awards_LH_P2_0⁵
+//│ 						in let _lh_findawards_LH_P2_1⁵ = ps³
+//│ 						in (fun _lh_findawards_arg1⁴ -> case _lh_findawards_LH_P2_1⁵ of {
+//│ 							LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³ => [LH_C [LH_P2 _lh_findawards_LH_P2_0⁵ [LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³]] findawards₀₀(listDiff₀₀(_lh_findawards_arg1⁴, _lh_findawards_LH_P2_1³))]
+//│ 							| _  => error⁰})), sort₀₀(atleast⁴(_lh_awards_LH_P2_1⁵)))))), award²(
+//│ 					let _lh_awards_LH_P2_0⁶ = [LH_C 'B' [LH_C 'r' [LH_C 'o' [LH_C 'n' [LH_C 'z' [LH_C 'e' [LH_N]]]]]]]
+//│ 					in let _lh_awards_LH_P2_1⁶ = 50
+//│ 					in (fun atleast⁵ -> map₁₀((fun ps⁴ -> 
+//│ 						let _lh_findawards_LH_P2_0⁶ = _lh_awards_LH_P2_0⁶
+//│ 						in let _lh_findawards_LH_P2_1⁶ = ps⁴
+//│ 						in (fun _lh_findawards_arg1⁵ -> case _lh_findawards_LH_P2_1⁶ of {
+//│ 							LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³ => [LH_C [LH_P2 _lh_findawards_LH_P2_0⁶ [LH_P2 _lh_findawards_LH_P2_0³ _lh_findawards_LH_P2_1³]] findawards₀₀(listDiff₀₀(_lh_findawards_arg1⁵, _lh_findawards_LH_P2_1³))]
+//│ 							| _  => error⁰})), sort₀₀(atleast⁵(_lh_awards_LH_P2_1⁶))))))
+//│ 				where
+//│ 				def filter₀₀(f³⁸, ls²⁵) = 
+//│ 					ls²⁵(f³⁸)
+//│ 				def mappend₀₀(xs⁸, ys⁸) = 
+//│ 					case xs⁸ of {
+//│ 						LH_C h²⁰ t²⁰ => [LH_C h²⁰ mappend₀₀(t²⁰, ys⁸)]
+//│ 						| LH_N  => ys⁸}
+//│ 				def mappend₁₀(xs⁷, ys⁷) = 
+//│ 					case xs⁷ of {
+//│ 						LH_C h¹⁶ t¹⁶ => [LH_C h¹⁶ mappend₁₀(t¹⁶, ys⁷)]
+//│ 						| LH_N  => ys⁷}
+//│ 				def map₀₀(f³⁰, ls²³) = 
+//│ 					case ls²³ of {
+//│ 						LH_C h¹⁵ t¹⁵ => 
+//│ 							let h³² = f³⁰(h¹⁵)
+//│ 							in let t³² = map₀₀(f³⁰, t¹⁵)
+//│ 							in (fun f³¹ -> if f³¹(h³²) then [LH_C h³² filter₀₀(f³¹, t³²)] else filter₀₀(f³¹, t³²))
+//│ 						| LH_N  => (fun f³² -> [LH_N])}
+//│ 				def map₁₀(f³⁶, ls²⁴) = 
+//│ 					ls²⁴(f³⁶)
+//│ 				def perms₀₀(_lh_perms_arg1², _lh_perms_arg2²) = 
+//│ 					case _lh_perms_arg2² of {
+//│ 						LH_N  => [LH_N]
+//│ 						| _  => case _lh_perms_arg1² of {
+//│ 							1  => map₃₀((fun x⁶ -> [LH_C x⁶ [LH_N]]), _lh_perms_arg2²)
+//│ 							| _  => case _lh_perms_arg2² of {
+//│ 								LH_C _lh_perms_LH_C_0¹ _lh_perms_LH_C_1¹ => mappend₂₀(map₂₀((fun x⁷ -> [LH_C _lh_perms_LH_C_0¹ x⁷]), perms₀₀((_lh_perms_arg1² - 1), _lh_perms_LH_C_1¹)), perms₀₀(_lh_perms_arg1², _lh_perms_LH_C_1¹))
+//│ 								| _  => error⁰}}}
+//│ 					where
+//│ 					def mappend₂₀(xs⁶, ys⁶) = 
+//│ 						xs⁶(ys⁶)
+//│ 					def map₂₀(f³⁹, ls²⁶) = 
+//│ 						case ls²⁶ of {
+//│ 							LH_C h²³ t²³ => 
+//│ 								let h³⁶ = f³⁹(h²³)
+//│ 								in let t³⁶ = map₂₀(f³⁹, t²³)
+//│ 								in (fun ys⁹ -> [LH_C h³⁶ mappend₂₀(t³⁶, ys⁹)])
+//│ 							| LH_N  => (fun ys¹⁰ -> ys¹⁰)}
+//│ 					def map₃₀(f¹⁶, ls¹⁸) = 
+//│ 						case ls¹⁸ of {
+//│ 							LH_C h¹⁴ t¹⁴ => [LH_C f¹⁶(h¹⁴) map₃₀(f¹⁶, t¹⁴)]
+//│ 							| LH_N  => [LH_N]}
+//│ 				def sort₀₀(_lh_sort_arg1²) = 
+//│ 					qsort₀₀((fun a⁵ -> (fun b⁵ -> compareTuple2₀₀(a⁵, b⁵))), _lh_sort_arg1², (fun f³⁷ -> [LH_N]))
+//│ 					where
+//│ 					def compareTuple2₀₀(_lh_compareTuple2_arg1², _lh_compareTuple2_arg2²) = 
+//│ 						case _lh_compareTuple2_arg1² of {
+//│ 							LH_P2 _lh_compareTuple2_LH_P2_0² _lh_compareTuple2_LH_P2_1² => case _lh_compareTuple2_arg2² of {
+//│ 								LH_P2 _lh_compareTuple2_LH_P2_0³ _lh_compareTuple2_LH_P2_1³ => (_lh_compareTuple2_LH_P2_0² <= _lh_compareTuple2_LH_P2_0³)
+//│ 								| _  => error⁰}
+//│ 							| _  => error⁰}
+//│ 					def qsort₀₀(_lh_qsort_arg1², _lh_qsort_arg2², _lh_qsort_arg3²) = 
+//│ 						case _lh_qsort_arg2² of {
+//│ 							LH_N  => _lh_qsort_arg3²
+//│ 							| LH_C _lh_qsort_LH_C_0¹ _lh_qsort_LH_C_1¹ => case _lh_qsort_LH_C_1¹ of {
+//│ 								LH_N  => 
+//│ 									let h³⁴ = _lh_qsort_LH_C_0¹
+//│ 									in let t³⁴ = _lh_qsort_arg3²
+//│ 									in (fun f³⁴ -> [LH_C f³⁴(h³⁴) map₁₀(f³⁴, t³⁴)])
+//│ 								| _  => qpart₀₀(_lh_qsort_arg1², _lh_qsort_LH_C_0¹, _lh_qsort_LH_C_1¹, [LH_N], [LH_N], _lh_qsort_arg3²)}
+//│ 							| _  => error⁰}
+//│ 						where
+//│ 						def qpart₀₀(_lh_qpart_arg1², _lh_qpart_arg2², _lh_qpart_arg3², _lh_qpart_arg4², _lh_qpart_arg5², _lh_qpart_arg6²) = 
+//│ 							case _lh_qpart_arg3² of {
+//│ 								LH_N  => rqsort₀₀(_lh_qpart_arg1², _lh_qpart_arg4², 
+//│ 									let h²⁴ = _lh_qpart_arg2²
+//│ 									in let t²⁴ = rqsort₁₀(_lh_qpart_arg1², _lh_qpart_arg5², _lh_qpart_arg6²)
+//│ 									in (fun f¹⁸ -> [LH_C f¹⁸(h²⁴) map₁₀(f¹⁸, t²⁴)]))
+//│ 								| LH_C _lh_qpart_LH_C_0¹ _lh_qpart_LH_C_1¹ => if _lh_qpart_arg1²(_lh_qpart_arg2², _lh_qpart_LH_C_0¹) then qpart₀₀(_lh_qpart_arg1², _lh_qpart_arg2², _lh_qpart_LH_C_1¹, _lh_qpart_arg4², [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg5²], _lh_qpart_arg6²) else qpart₀₀(_lh_qpart_arg1², _lh_qpart_arg2², _lh_qpart_LH_C_1¹, [LH_C _lh_qpart_LH_C_0¹ _lh_qpart_arg4²], _lh_qpart_arg5², _lh_qpart_arg6²)
+//│ 								| _  => error⁰}
+//│ 							where
+//│ 							def rqsort₀₀(_lh_rqsort_arg1⁵, _lh_rqsort_arg2⁵, _lh_rqsort_arg3⁵) = 
+//│ 								case _lh_rqsort_arg2⁵ of {
+//│ 									LH_N  => _lh_rqsort_arg3⁵
+//│ 									| LH_C _lh_rqsort_LH_C_0³ _lh_rqsort_LH_C_1³ => case _lh_rqsort_LH_C_1³ of {
+//│ 										LH_N  => 
+//│ 											let h³¹ = _lh_rqsort_LH_C_0³
+//│ 											in let t³¹ = _lh_rqsort_arg3⁵
+//│ 											in (fun f²⁹ -> [LH_C f²⁹(h³¹) map₁₀(f²⁹, t³¹)])
+//│ 										| _  => rqpart₀₀(_lh_rqsort_arg1⁵, _lh_rqsort_LH_C_0³, _lh_rqsort_LH_C_1³, [LH_N], [LH_N], _lh_rqsort_arg3⁵)}
+//│ 									| _  => error⁰}
+//│ 								where
+//│ 								def rqpart₀₀(_lh_rqpart_arg1⁴, _lh_rqpart_arg2⁴, _lh_rqpart_arg3⁴, _lh_rqpart_arg4⁴, _lh_rqpart_arg5⁴, _lh_rqpart_arg6⁴) = 
+//│ 									case _lh_rqpart_arg3⁴ of {
+//│ 										LH_N  => qsort₀₀(_lh_rqpart_arg1⁴, _lh_rqpart_arg4⁴, 
+//│ 											let h³³ = _lh_rqpart_arg2⁴
+//│ 											in let t³³ = qsort₀₀(_lh_rqpart_arg1⁴, _lh_rqpart_arg5⁴, _lh_rqpart_arg6⁴)
+//│ 											in (fun f³³ -> [LH_C f³³(h³³) map₁₀(f³³, t³³)]))
+//│ 										| LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_LH_C_1³ => if _lh_rqpart_arg1⁴(_lh_rqpart_LH_C_0³, _lh_rqpart_arg2⁴) then rqpart₀₀(_lh_rqpart_arg1⁴, _lh_rqpart_arg2⁴, _lh_rqpart_LH_C_1³, [LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_arg4⁴], _lh_rqpart_arg5⁴, _lh_rqpart_arg6⁴) else rqpart₀₀(_lh_rqpart_arg1⁴, _lh_rqpart_arg2⁴, _lh_rqpart_LH_C_1³, _lh_rqpart_arg4⁴, [LH_C _lh_rqpart_LH_C_0³ _lh_rqpart_arg5⁴], _lh_rqpart_arg6⁴)
+//│ 										| _  => error⁰}
+//│ 							def rqsort₁₀(_lh_rqsort_arg1⁴, _lh_rqsort_arg2⁴, _lh_rqsort_arg3⁴) = 
+//│ 								case _lh_rqsort_arg2⁴ of {
+//│ 									LH_N  => _lh_rqsort_arg3⁴
+//│ 									| LH_C _lh_rqsort_LH_C_0² _lh_rqsort_LH_C_1² => case _lh_rqsort_LH_C_1² of {
+//│ 										LH_N  => 
+//│ 											let h²⁵ = _lh_rqsort_LH_C_0²
+//│ 											in let t²⁵ = _lh_rqsort_arg3⁴
+//│ 											in (fun f¹⁹ -> [LH_C f¹⁹(h²⁵) map₁₀(f¹⁹, t²⁵)])
+//│ 										| _  => rqpart₁₀(_lh_rqsort_arg1⁴, _lh_rqsort_LH_C_0², _lh_rqsort_LH_C_1², [LH_N], [LH_N], _lh_rqsort_arg3⁴)}
+//│ 									| _  => error⁰}
+//│ 								where
+//│ 								def rqpart₁₀(_lh_rqpart_arg1⁵, _lh_rqpart_arg2⁵, _lh_rqpart_arg3⁵, _lh_rqpart_arg4⁵, _lh_rqpart_arg5⁵, _lh_rqpart_arg6⁵) = 
+//│ 									case _lh_rqpart_arg3⁵ of {
+//│ 										LH_N  => qsort₀₀(_lh_rqpart_arg1⁵, _lh_rqpart_arg4⁵, 
+//│ 											let h³⁵ = _lh_rqpart_arg2⁵
+//│ 											in let t³⁵ = qsort₀₀(_lh_rqpart_arg1⁵, _lh_rqpart_arg5⁵, _lh_rqpart_arg6⁵)
+//│ 											in (fun f³⁵ -> [LH_C f³⁵(h³⁵) map₁₀(f³⁵, t³⁵)]))
+//│ 										| LH_C _lh_rqpart_LH_C_0² _lh_rqpart_LH_C_1² => if _lh_rqpart_arg1⁵(_lh_rqpart_LH_C_0², _lh_rqpart_arg2⁵) then rqpart₁₀(_lh_rqpart_arg1⁵, _lh_rqpart_arg2⁵, _lh_rqpart_LH_C_1², [LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg4⁵], _lh_rqpart_arg5⁵, _lh_rqpart_arg6⁵) else rqpart₁₀(_lh_rqpart_arg1⁵, _lh_rqpart_arg2⁵, _lh_rqpart_LH_C_1², _lh_rqpart_arg4⁵, [LH_C _lh_rqpart_LH_C_0² _lh_rqpart_arg5⁵], _lh_rqpart_arg6⁵)
+//│ 										| _  => error⁰}
+//│ 				def sum₀₀(ls²²) = 
+//│ 					case ls²² of {
+//│ 						LH_C h¹² t¹² => (h¹² + sum₀₀(t¹²))
+//│ 						| LH_N  => 0}
+//│ 			def listDiff₀₀ = 
+//│ 				foldl₀₀(delete₀₀)
+//│ 				where
+//│ 				def delete₀₀(_lh_delete_arg1², _lh_delete_arg2²) = 
+//│ 					case _lh_delete_arg1² of {
+//│ 						LH_C _lh_delete_LH_C_0¹ _lh_delete_LH_C_1¹ => if polyEq⁰(_lh_delete_LH_C_0¹, _lh_delete_arg2²) then delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2²) else [LH_C _lh_delete_LH_C_0¹ delete₀₀(_lh_delete_LH_C_1¹, _lh_delete_arg2²)]
+//│ 						| LH_N  => [LH_N]
+//│ 						| _  => error⁰}
+//│ 				def foldl₀₀(f²⁰, i², ls²⁰) = 
+//│ 					case ls²⁰ of {
+//│ 						LH_C h¹⁹ t¹⁹ => foldl₀₀(f²⁰, f²⁰(i², h¹⁹), t¹⁹)
+//│ 						| LH_N  => i²}
+//│ 		def map₄₀(f¹⁷, ls¹⁹) = 
+//│ 			ls¹⁹(f¹⁷)
+//│ 	def map₅₀(f²⁶, ls²¹) = 
+//│ 		ls²¹(f²⁶)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

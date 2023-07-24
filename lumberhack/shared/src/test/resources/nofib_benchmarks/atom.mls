@@ -1,0 +1,945 @@
+:NewParser
+:ParseOnly
+
+:lhInHaskell
+:lhGenOCaml
+data AtomState = State Position Velocity
+type Position   = [Float]
+type Velocity   = [Float]
+type Force  = [Float]
+type StateStream = [AtomState]
+type ForceLaw a = a -> StateStream -> [Force]
+test :: StateStream
+test = runExperiment testforce 0.02 [1.0] (State [1.0] [0.0])
+testforce :: ForceLaw [Float]
+testforce k ss = lazy (case (force ss) of ((State pos vel):atoms) -> (dotMult (scalarMut (0.0 -. 1.0) k) pos) : (testforce k atoms))
+show (State pos vel) = concat [ (string_of_float component) ++ "t"  | component <- pos ]
+runExperiment :: ForceLaw a -> Float -> a -> AtomState -> StateStream
+runExperiment law dt param init = lazy (let stream = (runExperiment law dt param init) in init : (zipWith_lz_lz (propagate dt) (law param stream) stream))
+propagate :: Float -> Force -> AtomState -> AtomState
+propagate dt aforce (State pos vel) = State (dotPlus pos (scalarMut dt vel)) (dotPlus vel (scalarMut dt aforce))
+dotPlus l [] = l
+dotPlus [] l = l
+dotPlus (f:fs) (g:gs) = (f +. g):(dotPlus fs gs)
+dotMult _ [] = []
+dotMult [] _ = []
+dotMult (f:fs) (g:gs) = (f *. g) : (dotMult fs gs)
+scalarMut:: Num a => a-> [a] -> [a]
+scalarMut c []     = []
+scalarMut c (f:fs) = (c *. f) : (scalarMut c fs)
+testAtom n = concat [(show state) ++ "n" | state <- (take_lz n $ runExperiment testforce 0.02 [1.0] (State [1.0] [0.0]))]
+testAtom $ primId 500
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testAtom₀^1260(primId⁰(500))
+//│ def concat₀(lss²) = case lss² of {
+//│ 	LH_C h²⁵ t²⁷ => mappend₀^1221(h²⁵, concat₀^1224(t²⁷))
+//│ 	| LH_N  => [LH_N]}
+//│ def concat₁(lss¹) = case lss¹ of {
+//│ 	LH_C h²² t²⁴ => mappend₂^935(h²², concat₁^938(t²⁴))
+//│ 	| LH_N  => [LH_N]}
+//│ def dotMult₀(_lh_dotMult_arg1¹, _lh_dotMult_arg2¹) = case _lh_dotMult_arg2¹ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| _  => case _lh_dotMult_arg1¹ of {
+//│ 		LH_N  => [LH_N]
+//│ 		| _  => case _lh_dotMult_arg1¹ of {
+//│ 			LH_C _lh_dotMult_LH_C_0² _lh_dotMult_LH_C_1² => case _lh_dotMult_arg2¹ of {
+//│ 				LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀^874(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)]
+//│ 				| _  => error⁰}
+//│ 			| _  => error⁰}}}
+//│ def dotPlus₀(_lh_dotPlus_arg1², _lh_dotPlus_arg2²) = case _lh_dotPlus_arg2² of {
+//│ 	LH_N  => _lh_dotPlus_arg1²
+//│ 	| _  => case _lh_dotPlus_arg1² of {
+//│ 		LH_N  => _lh_dotPlus_arg2²
+//│ 		| _  => case _lh_dotPlus_arg1² of {
+//│ 			LH_C _lh_dotPlus_LH_C_0⁴ _lh_dotPlus_LH_C_1⁴ => case _lh_dotPlus_arg2² of {
+//│ 				LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₀^1206(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)]
+//│ 				| _  => error⁰}
+//│ 			| _  => error⁰}}}
+//│ def dotPlus₁(_lh_dotPlus_arg1¹, _lh_dotPlus_arg2¹) = case _lh_dotPlus_arg2¹ of {
+//│ 	LH_N  => _lh_dotPlus_arg1¹
+//│ 	| _  => case _lh_dotPlus_arg1¹ of {
+//│ 		LH_N  => _lh_dotPlus_arg2¹
+//│ 		| _  => case _lh_dotPlus_arg1¹ of {
+//│ 			LH_C _lh_dotPlus_LH_C_0² _lh_dotPlus_LH_C_1² => case _lh_dotPlus_arg2¹ of {
+//│ 				LH_C _lh_dotPlus_LH_C_0³ _lh_dotPlus_LH_C_1³ => [LH_C (_lh_dotPlus_LH_C_0² +. _lh_dotPlus_LH_C_0³) dotPlus₁^1039(_lh_dotPlus_LH_C_1², _lh_dotPlus_LH_C_1³)]
+//│ 				| _  => error⁰}
+//│ 			| _  => error⁰}}}
+//│ def mappend₀(xs¹⁰, ys¹⁰) = case xs¹⁰ of {
+//│ 	LH_C h²¹ t²³ => [LH_C h²¹ mappend₀^890(t²³, ys¹⁰)]
+//│ 	| LH_N  => ys¹⁰}
+//│ def mappend₁(xs¹³, ys¹³) = case xs¹³ of {
+//│ 	LH_C h²⁶ t²⁸ => [LH_C h²⁶ mappend₁^1250(t²⁸, ys¹³)]
+//│ 	| LH_N  => ys¹³}
+//│ def mappend₂(xs⁹, ys⁹) = case xs⁹ of {
+//│ 	LH_C h²⁰ t²² => [LH_C h²⁰ mappend₂^853(t²², ys⁹)]
+//│ 	| LH_N  => ys⁹}
+//│ def mappend₃(xs¹¹, ys¹¹) = case xs¹¹ of {
+//│ 	LH_C h²³ t²⁵ => [LH_C h²³ mappend₃^974(t²⁵, ys¹¹)]
+//│ 	| LH_N  => ys¹¹}
+//│ def propagate₀(_lh_propagate_arg1¹, _lh_propagate_arg2¹, _lh_propagate_arg3¹) = case _lh_propagate_arg3¹ of {
+//│ 	State _lh_propagate_State_0¹ _lh_propagate_State_1¹ => [State dotPlus₀^1054(_lh_propagate_State_0¹, scalarMut₀^1057(_lh_propagate_arg1¹, _lh_propagate_State_1¹)) dotPlus₁^1063(_lh_propagate_State_1¹, scalarMut₁^1066(_lh_propagate_arg1¹, _lh_propagate_arg2¹))]
+//│ 	| _  => error⁰}
+//│ def runExperiment₀(_lh_runExperiment_arg1¹, _lh_runExperiment_arg2¹, _lh_runExperiment_arg3¹, _lh_runExperiment_arg4¹) = lazy⁰(
+//│ 	let stream¹ = runExperiment₀^1165(_lh_runExperiment_arg1¹, _lh_runExperiment_arg2¹, _lh_runExperiment_arg3¹, _lh_runExperiment_arg4¹)
+//│ 	in [LH_C _lh_runExperiment_arg4¹ zipWith_lz_lz₀^1175(propagate₀^1176(_lh_runExperiment_arg2¹), _lh_runExperiment_arg1¹(_lh_runExperiment_arg3¹, stream¹), stream¹)])
+//│ def scalarMut₀(_lh_scalarMut_arg1¹, _lh_scalarMut_arg2¹) = case _lh_scalarMut_arg2¹ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_scalarMut_LH_C_0¹ _lh_scalarMut_LH_C_1¹ => [LH_C (_lh_scalarMut_arg1¹ *. _lh_scalarMut_LH_C_0¹) scalarMut₀^907(_lh_scalarMut_arg1¹, _lh_scalarMut_LH_C_1¹)]
+//│ 	| _  => error⁰}
+//│ def scalarMut₁(_lh_scalarMut_arg1², _lh_scalarMut_arg2²) = case _lh_scalarMut_arg2² of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_scalarMut_LH_C_0² _lh_scalarMut_LH_C_1² => [LH_C (_lh_scalarMut_arg1² *. _lh_scalarMut_LH_C_0²) scalarMut₁^924(_lh_scalarMut_arg1², _lh_scalarMut_LH_C_1²)]
+//│ 	| _  => error⁰}
+//│ def scalarMut₂(_lh_scalarMut_arg1³, _lh_scalarMut_arg2³) = case _lh_scalarMut_arg2³ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_scalarMut_LH_C_0³ _lh_scalarMut_LH_C_1³ => [LH_C (_lh_scalarMut_arg1³ *. _lh_scalarMut_LH_C_0³) scalarMut₂^1238(_lh_scalarMut_arg1³, _lh_scalarMut_LH_C_1³)]
+//│ 	| _  => error⁰}
+//│ def show₀(_lh_show_arg1¹) = case _lh_show_arg1¹ of {
+//│ 	State _lh_show_State_0¹ _lh_show_State_1¹ => concat₁^946(
+//│ 		let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> case _lh_listcomp_fun_para² of {
+//│ 			LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => [LH_C mappend₃^948(string_of_float⁰(_lh_listcomp_fun_ls_h²), [LH_C 't' [LH_N]]) _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)]
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun²(_lh_show_State_0¹))
+//│ 	| _  => error⁰}
+//│ def take_lz₀(n⁴, ls¹⁹) = if (n⁴ > 0) then case force⁰(ls¹⁹) of {
+//│ 	LH_C h²⁴ t²⁶ => [LH_C h²⁴ take_lz₀^1087((n⁴ - 1), t²⁶)]
+//│ 	| LH_N  => [LH_N]} else [LH_N]
+//│ def testAtom₀(_lh_testAtom_arg1¹) = concat₀^984(
+//│ 	let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {
+//│ 		LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C mappend₁^986(show₀^987(_lh_listcomp_fun_ls_h³), [LH_C 'n' [LH_N]]) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]
+//│ 		| LH_N  => [LH_N]})
+//│ 	in _lh_listcomp_fun³(take_lz₀^1003(_lh_testAtom_arg1¹, runExperiment₀^1006(testforce₀^1007, 0.02, [LH_C 1.0 [LH_N]], [State [LH_C 1.0 [LH_N]] [LH_C 0.0 [LH_N]]]))))
+//│ def testforce₀(_lh_testforce_arg1¹, _lh_testforce_arg2¹) = lazy⁰(
+//│ 	let _lh_matchIdent¹ = force⁰(_lh_testforce_arg2¹)
+//│ 	in case _lh_matchIdent¹ of {
+//│ 		LH_C _lh_testforce_LH_C_0¹ _lh_testforce_LH_C_1¹ => case _lh_testforce_LH_C_0¹ of {
+//│ 			State _lh_testforce_State_0¹ _lh_testforce_State_1¹ => [LH_C dotMult₀^1109(scalarMut₂^1110((0.0 -. 1.0), _lh_testforce_arg1¹), _lh_testforce_State_0¹) testforce₀^1122(_lh_testforce_arg1¹, _lh_testforce_LH_C_1¹)]
+//│ 			| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def zipWith_lz_lz₀(f¹², xs¹², ys¹²) = lazy⁰(case force⁰(xs¹²) of {
+//│ 	LH_C hx⁸ tx⁸ => case force⁰(ys¹²) of {
+//│ 		LH_C hy⁸ ty⁸ => [LH_C f¹²(hx⁸, hy⁸) zipWith_lz_lz₀^1148(f¹², tx⁸, ty⁸)]
+//│ 		| LH_N  => [LH_N]}
+//│ 	| LH_N  => [LH_N]})
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec concat_d0 lss_2 =
+//│ 		  (match lss_2 with
+//│ 		    | `LH_C(h_2_5, t_2_7) -> 
+//│ 		      ((mappend_d0 h_2_5) (concat_d0 t_2_7))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N))
+//│ 		and concat_d1 lss_1 =
+//│ 		  (match lss_1 with
+//│ 		    | `LH_C(h_2_2, t_2_4) -> 
+//│ 		      ((mappend_d2 h_2_2) (concat_d1 t_2_4))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N))
+//│ 		and dotMult_d0 _lh_dotMult_arg1_1 _lh_dotMult_arg2_1 =
+//│ 		  (match _lh_dotMult_arg2_1 with
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)
+//│ 		    | _ -> 
+//│ 		      (match _lh_dotMult_arg1_1 with
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_N)
+//│ 		        | _ -> 
+//│ 		          (match _lh_dotMult_arg1_1 with
+//│ 		            | `LH_C(_lh_dotMult_LH_C_0_2, _lh_dotMult_LH_C_1_2) -> 
+//│ 		              (match _lh_dotMult_arg2_1 with
+//│ 		                | `LH_C(_lh_dotMult_LH_C_0_3, _lh_dotMult_LH_C_1_3) -> 
+//│ 		                  (`LH_C((_lh_dotMult_LH_C_0_2 *. _lh_dotMult_LH_C_0_3), ((dotMult_d0 _lh_dotMult_LH_C_1_2) _lh_dotMult_LH_C_1_3)))
+//│ 		                | _ -> 
+//│ 		                  (failwith "error"))
+//│ 		            | _ -> 
+//│ 		              (failwith "error"))))
+//│ 		and dotPlus_d0 _lh_dotPlus_arg1_2 _lh_dotPlus_arg2_2 =
+//│ 		  (match _lh_dotPlus_arg2_2 with
+//│ 		    | `LH_N -> 
+//│ 		      _lh_dotPlus_arg1_2
+//│ 		    | _ -> 
+//│ 		      (match _lh_dotPlus_arg1_2 with
+//│ 		        | `LH_N -> 
+//│ 		          _lh_dotPlus_arg2_2
+//│ 		        | _ -> 
+//│ 		          (match _lh_dotPlus_arg1_2 with
+//│ 		            | `LH_C(_lh_dotPlus_LH_C_0_4, _lh_dotPlus_LH_C_1_4) -> 
+//│ 		              (match _lh_dotPlus_arg2_2 with
+//│ 		                | `LH_C(_lh_dotPlus_LH_C_0_5, _lh_dotPlus_LH_C_1_5) -> 
+//│ 		                  (`LH_C((_lh_dotPlus_LH_C_0_4 +. _lh_dotPlus_LH_C_0_5), ((dotPlus_d0 _lh_dotPlus_LH_C_1_4) _lh_dotPlus_LH_C_1_5)))
+//│ 		                | _ -> 
+//│ 		                  (failwith "error"))
+//│ 		            | _ -> 
+//│ 		              (failwith "error"))))
+//│ 		and dotPlus_d1 _lh_dotPlus_arg1_1 _lh_dotPlus_arg2_1 =
+//│ 		  (match _lh_dotPlus_arg2_1 with
+//│ 		    | `LH_N -> 
+//│ 		      _lh_dotPlus_arg1_1
+//│ 		    | _ -> 
+//│ 		      (match _lh_dotPlus_arg1_1 with
+//│ 		        | `LH_N -> 
+//│ 		          _lh_dotPlus_arg2_1
+//│ 		        | _ -> 
+//│ 		          (match _lh_dotPlus_arg1_1 with
+//│ 		            | `LH_C(_lh_dotPlus_LH_C_0_2, _lh_dotPlus_LH_C_1_2) -> 
+//│ 		              (match _lh_dotPlus_arg2_1 with
+//│ 		                | `LH_C(_lh_dotPlus_LH_C_0_3, _lh_dotPlus_LH_C_1_3) -> 
+//│ 		                  (`LH_C((_lh_dotPlus_LH_C_0_2 +. _lh_dotPlus_LH_C_0_3), ((dotPlus_d1 _lh_dotPlus_LH_C_1_2) _lh_dotPlus_LH_C_1_3)))
+//│ 		                | _ -> 
+//│ 		                  (failwith "error"))
+//│ 		            | _ -> 
+//│ 		              (failwith "error"))))
+//│ 		and mappend_d0 xs_1_0 ys_1_0 =
+//│ 		  (match xs_1_0 with
+//│ 		    | `LH_C(h_2_1, t_2_3) -> 
+//│ 		      (`LH_C(h_2_1, ((mappend_d0 t_2_3) ys_1_0)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_1_0)
+//│ 		and mappend_d1 xs_1_3 ys_1_3 =
+//│ 		  (match xs_1_3 with
+//│ 		    | `LH_C(h_2_6, t_2_8) -> 
+//│ 		      (`LH_C(h_2_6, ((mappend_d1 t_2_8) ys_1_3)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_1_3)
+//│ 		and mappend_d2 xs_9 ys_9 =
+//│ 		  (match xs_9 with
+//│ 		    | `LH_C(h_2_0, t_2_2) -> 
+//│ 		      (`LH_C(h_2_0, ((mappend_d2 t_2_2) ys_9)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_9)
+//│ 		and mappend_d3 xs_1_1 ys_1_1 =
+//│ 		  (match xs_1_1 with
+//│ 		    | `LH_C(h_2_3, t_2_5) -> 
+//│ 		      (`LH_C(h_2_3, ((mappend_d3 t_2_5) ys_1_1)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_1_1)
+//│ 		and propagate_d0 _lh_propagate_arg1_1 _lh_propagate_arg2_1 _lh_propagate_arg3_1 =
+//│ 		  (match _lh_propagate_arg3_1 with
+//│ 		    | `State(_lh_propagate_State_0_1, _lh_propagate_State_1_1) -> 
+//│ 		      (`State(((dotPlus_d0 _lh_propagate_State_0_1) ((scalarMut_d0 _lh_propagate_arg1_1) _lh_propagate_State_1_1)), ((dotPlus_d1 _lh_propagate_State_1_1) ((scalarMut_d1 _lh_propagate_arg1_1) _lh_propagate_arg2_1))))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and runExperiment_d0 _lh_runExperiment_arg1_1 _lh_runExperiment_arg2_1 _lh_runExperiment_arg3_1 _lh_runExperiment_arg4_1 =
+//│ 		  (lazy (let rec stream_1 = ((((runExperiment_d0 _lh_runExperiment_arg1_1) _lh_runExperiment_arg2_1) _lh_runExperiment_arg3_1) _lh_runExperiment_arg4_1) in
+//│ 		    (`LH_C(_lh_runExperiment_arg4_1, (((zipWith_lz_lz_d0 (propagate_d0 _lh_runExperiment_arg2_1)) ((_lh_runExperiment_arg1_1 _lh_runExperiment_arg3_1) stream_1)) stream_1)))))
+//│ 		and scalarMut_d0 _lh_scalarMut_arg1_1 _lh_scalarMut_arg2_1 =
+//│ 		  (match _lh_scalarMut_arg2_1 with
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)
+//│ 		    | `LH_C(_lh_scalarMut_LH_C_0_1, _lh_scalarMut_LH_C_1_1) -> 
+//│ 		      (`LH_C((_lh_scalarMut_arg1_1 *. _lh_scalarMut_LH_C_0_1), ((scalarMut_d0 _lh_scalarMut_arg1_1) _lh_scalarMut_LH_C_1_1)))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and scalarMut_d1 _lh_scalarMut_arg1_2 _lh_scalarMut_arg2_2 =
+//│ 		  (match _lh_scalarMut_arg2_2 with
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)
+//│ 		    | `LH_C(_lh_scalarMut_LH_C_0_2, _lh_scalarMut_LH_C_1_2) -> 
+//│ 		      (`LH_C((_lh_scalarMut_arg1_2 *. _lh_scalarMut_LH_C_0_2), ((scalarMut_d1 _lh_scalarMut_arg1_2) _lh_scalarMut_LH_C_1_2)))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and scalarMut_d2 _lh_scalarMut_arg1_3 _lh_scalarMut_arg2_3 =
+//│ 		  (match _lh_scalarMut_arg2_3 with
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)
+//│ 		    | `LH_C(_lh_scalarMut_LH_C_0_3, _lh_scalarMut_LH_C_1_3) -> 
+//│ 		      (`LH_C((_lh_scalarMut_arg1_3 *. _lh_scalarMut_LH_C_0_3), ((scalarMut_d2 _lh_scalarMut_arg1_3) _lh_scalarMut_LH_C_1_3)))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and show_d0 _lh_show_arg1_1 =
+//│ 		  (match _lh_show_arg1_1 with
+//│ 		    | `State(_lh_show_State_0_1, _lh_show_State_1_1) -> 
+//│ 		      (concat_d1 (let rec _lh_listcomp_fun_2 = (fun _lh_listcomp_fun_para_2 -> 
+//│ 		        (match _lh_listcomp_fun_para_2 with
+//│ 		          | `LH_C(_lh_listcomp_fun_ls_h_2, _lh_listcomp_fun_ls_t_2) -> 
+//│ 		            (`LH_C(((mappend_d3 (string_of_float _lh_listcomp_fun_ls_h_2)) (`LH_C('t', (`LH_N)))), (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_2)))
+//│ 		          | `LH_N -> 
+//│ 		            (`LH_N))) in
+//│ 		        (_lh_listcomp_fun_2 _lh_show_State_0_1)))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and take_lz_d0 n_4 ls_1_9 =
+//│ 		  (if (n_4 > 0) then
+//│ 		    (match (Lazy.force ls_1_9) with
+//│ 		      | `LH_C(h_2_4, t_2_6) -> 
+//│ 		        (`LH_C(h_2_4, ((take_lz_d0 (n_4 - 1)) t_2_6)))
+//│ 		      | `LH_N -> 
+//│ 		        (`LH_N))
+//│ 		  else
+//│ 		    (`LH_N))
+//│ 		and testAtom_d0 _lh_testAtom_arg1_1 =
+//│ 		  (concat_d0 (let rec _lh_listcomp_fun_3 = (fun _lh_listcomp_fun_para_3 -> 
+//│ 		    (match _lh_listcomp_fun_para_3 with
+//│ 		      | `LH_C(_lh_listcomp_fun_ls_h_3, _lh_listcomp_fun_ls_t_3) -> 
+//│ 		        (`LH_C(((mappend_d1 (show_d0 _lh_listcomp_fun_ls_h_3)) (`LH_C('n', (`LH_N)))), (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3)))
+//│ 		      | `LH_N -> 
+//│ 		        (`LH_N))) in
+//│ 		    (_lh_listcomp_fun_3 ((take_lz_d0 _lh_testAtom_arg1_1) ((((runExperiment_d0 testforce_d0) 0.02) (`LH_C(1.0, (`LH_N)))) (`State((`LH_C(1.0, (`LH_N))), (`LH_C(0.0, (`LH_N))))))))))
+//│ 		and testforce_d0 _lh_testforce_arg1_1 _lh_testforce_arg2_1 =
+//│ 		  (lazy (let rec _lh_matchIdent_1 = (Lazy.force _lh_testforce_arg2_1) in
+//│ 		    (match _lh_matchIdent_1 with
+//│ 		      | `LH_C(_lh_testforce_LH_C_0_1, _lh_testforce_LH_C_1_1) -> 
+//│ 		        (match _lh_testforce_LH_C_0_1 with
+//│ 		          | `State(_lh_testforce_State_0_1, _lh_testforce_State_1_1) -> 
+//│ 		            (`LH_C(((dotMult_d0 ((scalarMut_d2 (0.0 -. 1.0)) _lh_testforce_arg1_1)) _lh_testforce_State_0_1), ((testforce_d0 _lh_testforce_arg1_1) _lh_testforce_LH_C_1_1)))
+//│ 		          | _ -> 
+//│ 		            (failwith "error"))
+//│ 		      | _ -> 
+//│ 		        (failwith "error"))))
+//│ 		and zipWith_lz_lz_d0 f_1_2 xs_1_2 ys_1_2 =
+//│ 		  (lazy (match (Lazy.force xs_1_2) with
+//│ 		    | `LH_C(hx_8, tx_8) -> 
+//│ 		      (match (Lazy.force ys_1_2) with
+//│ 		        | `LH_C(hy_8, ty_8) -> 
+//│ 		          (`LH_C(((f_1_2 hx_8) hy_8), (((zipWith_lz_lz_d0 f_1_2) tx_8) ty_8)))
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_N))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)));;
+//│ 		(testAtom_d0 500)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testAtom₀^1260]
+//│ 	[testAtom₀^1260 · concat₀^984]
+//│ 		[testAtom₀^1260 · concat₀^984 · concat₀^1224] (hopeless to continue)
+//│ 			[testAtom₀^1260 · concat₀^984 · concat₀^1224 · concat₀^1224] ---> [testAtom₀^1260 · concat₀^984 · concat₀^1224] (using original def)
+//│ 			[testAtom₀^1260 · concat₀^984 · concat₀^1224 · mappend₀^1221] (using original def)
+//│ 				[testAtom₀^1260 · concat₀^984 · concat₀^1224 · mappend₀^1221 · mappend₀^890] ---> [testAtom₀^1260 · concat₀^984 · concat₀^1224 · mappend₀^1221] (using original def)
+//│ 		[testAtom₀^1260 · concat₀^984 · mappend₀^1221]
+//│ 			[testAtom₀^1260 · concat₀^984 · mappend₀^1221 · mappend₀^890] ---> [testAtom₀^1260 · concat₀^984 · mappend₀^1221] (only one)
+//│ 	[testAtom₀^1260 · mappend₁^986] (hopeless to continue)
+//│ 		[testAtom₀^1260 · mappend₁^986 · mappend₁^1250] ---> [testAtom₀^1260 · mappend₁^986] (using original def)
+//│ 	[testAtom₀^1260 · runExperiment₀^1006] (hopeless to continue)
+//│ 		[testAtom₀^1260 · runExperiment₀^1006 · propagate₀^1176] (using original def)
+//│ 			[testAtom₀^1260 · runExperiment₀^1006 · propagate₀^1176 · dotPlus₀^1054] (using original def)
+//│ 				[testAtom₀^1260 · runExperiment₀^1006 · propagate₀^1176 · dotPlus₀^1054 · dotPlus₀^1206] ---> [testAtom₀^1260 · runExperiment₀^1006 · propagate₀^1176 · dotPlus₀^1054] (using original def)
+//│ 			[testAtom₀^1260 · runExperiment₀^1006 · propagate₀^1176 · dotPlus₁^1063] (using original def)
+//│ 				[testAtom₀^1260 · runExperiment₀^1006 · propagate₀^1176 · dotPlus₁^1063 · dotPlus₁^1039] ---> [testAtom₀^1260 · runExperiment₀^1006 · propagate₀^1176 · dotPlus₁^1063] (using original def)
+//│ 			[testAtom₀^1260 · runExperiment₀^1006 · propagate₀^1176 · scalarMut₀^1057] (using original def)
+//│ 				[testAtom₀^1260 · runExperiment₀^1006 · propagate₀^1176 · scalarMut₀^1057 · scalarMut₀^907] ---> [testAtom₀^1260 · runExperiment₀^1006 · propagate₀^1176 · scalarMut₀^1057] (using original def)
+//│ 			[testAtom₀^1260 · runExperiment₀^1006 · propagate₀^1176 · scalarMut₁^1066] (using original def)
+//│ 				[testAtom₀^1260 · runExperiment₀^1006 · propagate₀^1176 · scalarMut₁^1066 · scalarMut₁^924] ---> [testAtom₀^1260 · runExperiment₀^1006 · propagate₀^1176 · scalarMut₁^1066] (using original def)
+//│ 		[testAtom₀^1260 · runExperiment₀^1006 · runExperiment₀^1165] ---> [testAtom₀^1260 · runExperiment₀^1006] (using original def)
+//│ 		[testAtom₀^1260 · runExperiment₀^1006 · zipWith_lz_lz₀^1175] (using original def)
+//│ 			[testAtom₀^1260 · runExperiment₀^1006 · zipWith_lz_lz₀^1175 · zipWith_lz_lz₀^1148] ---> [testAtom₀^1260 · runExperiment₀^1006 · zipWith_lz_lz₀^1175] (using original def)
+//│ 	[testAtom₀^1260 · show₀^987] (hopeless to continue)
+//│ 		[testAtom₀^1260 · show₀^987 · concat₁^946] (using original def)
+//│ 			[testAtom₀^1260 · show₀^987 · concat₁^946 · concat₁^938] ---> [testAtom₀^1260 · show₀^987 · concat₁^946] (using original def)
+//│ 			[testAtom₀^1260 · show₀^987 · concat₁^946 · mappend₂^935] (using original def)
+//│ 				[testAtom₀^1260 · show₀^987 · concat₁^946 · mappend₂^935 · mappend₂^853] ---> [testAtom₀^1260 · show₀^987 · concat₁^946 · mappend₂^935] (using original def)
+//│ 		[testAtom₀^1260 · show₀^987 · mappend₃^948] (using original def)
+//│ 			[testAtom₀^1260 · show₀^987 · mappend₃^948 · mappend₃^974] ---> [testAtom₀^1260 · show₀^987 · mappend₃^948] (using original def)
+//│ 	[testAtom₀^1260 · take_lz₀^1003] (hopeless to continue)
+//│ 		[testAtom₀^1260 · take_lz₀^1003 · take_lz₀^1087] ---> [testAtom₀^1260 · take_lz₀^1003] (using original def)
+//│ 	[testAtom₀^1260 · testforce₀^1007] (hopeless to continue)
+//│ 		[testAtom₀^1260 · testforce₀^1007 · dotMult₀^1109] (using original def)
+//│ 			[testAtom₀^1260 · testforce₀^1007 · dotMult₀^1109 · dotMult₀^874] ---> [testAtom₀^1260 · testforce₀^1007 · dotMult₀^1109] (using original def)
+//│ 		[testAtom₀^1260 · testforce₀^1007 · scalarMut₂^1110] (using original def)
+//│ 			[testAtom₀^1260 · testforce₀^1007 · scalarMut₂^1110 · scalarMut₂^1238] ---> [testAtom₀^1260 · testforce₀^1007 · scalarMut₂^1110] (using original def)
+//│ 		[testAtom₀^1260 · testforce₀^1007 · testforce₀^1122] ---> [testAtom₀^1260 · testforce₀^1007] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testAtom₀₀(primId⁰(500))
+//│ def testAtom₀₀(_lh_testAtom_arg1¹) = 
+//│ 	concat₀₀(
+//│ 		let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C mappend₁₀(show₀₀(_lh_listcomp_fun_ls_h³), [LH_C 'n' [LH_N]]) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun³(take_lz₀₀(_lh_testAtom_arg1¹, runExperiment₀₀(testforce₀₀, 0.02, [LH_C 1.0 [LH_N]], [State [LH_C 1.0 [LH_N]] [LH_C 0.0 [LH_N]]]))))
+//│ 	where
+//│ 	def concat₀₀(lss⁴) = 
+//│ 		case lss⁴ of {
+//│ 			LH_C h¹⁴ t¹⁴ => mappend₀₁(h¹⁴, concat₀₁(t¹⁴))
+//│ 			| LH_N  => [LH_N]}
+//│ 		where
+//│ 		def concat₀₁(lss²) = 
+//│ 			case lss² of {
+//│ 				LH_C h⁹ t⁹ => mappend₀₀(h⁹, concat₀₁(t⁹))
+//│ 				| LH_N  => [LH_N]}
+//│ 			where
+//│ 			def mappend₀₀(xs⁷, ys⁷) = 
+//│ 				case xs⁷ of {
+//│ 					LH_C h¹⁰ t¹⁰ => [LH_C h¹⁰ mappend₀₀(t¹⁰, ys⁷)]
+//│ 					| LH_N  => ys⁷}
+//│ 		def mappend₀₁(xs⁸, ys⁸) = 
+//│ 			case xs⁸ of {
+//│ 				LH_C h¹¹ t¹¹ => [LH_C h¹¹ mappend₀₁(t¹¹, ys⁸)]
+//│ 				| LH_N  => ys⁸}
+//│ 	def mappend₁₀(xs⁹, ys⁹) = 
+//│ 		case xs⁹ of {
+//│ 			LH_C h¹³ t¹³ => [LH_C h¹³ mappend₁₀(t¹³, ys⁹)]
+//│ 			| LH_N  => ys⁹}
+//│ 	def runExperiment₀₀(_lh_runExperiment_arg1¹, _lh_runExperiment_arg2¹, _lh_runExperiment_arg3¹, _lh_runExperiment_arg4¹) = 
+//│ 		lazy⁰(
+//│ 			let stream¹ = runExperiment₀₀(_lh_runExperiment_arg1¹, _lh_runExperiment_arg2¹, _lh_runExperiment_arg3¹, _lh_runExperiment_arg4¹)
+//│ 			in [LH_C _lh_runExperiment_arg4¹ zipWith_lz_lz₀₀(propagate₀₀(_lh_runExperiment_arg2¹), _lh_runExperiment_arg1¹(_lh_runExperiment_arg3¹, stream¹), stream¹)])
+//│ 		where
+//│ 		def propagate₀₀(_lh_propagate_arg1¹, _lh_propagate_arg2¹, _lh_propagate_arg3¹) = 
+//│ 			case _lh_propagate_arg3¹ of {
+//│ 				State _lh_propagate_State_0¹ _lh_propagate_State_1¹ => [State dotPlus₀₀(_lh_propagate_State_0¹, scalarMut₀₀(_lh_propagate_arg1¹, _lh_propagate_State_1¹)) dotPlus₁₀(_lh_propagate_State_1¹, scalarMut₁₀(_lh_propagate_arg1¹, _lh_propagate_arg2¹))]
+//│ 				| _  => error⁰}
+//│ 			where
+//│ 			def dotPlus₀₀(_lh_dotPlus_arg1³, _lh_dotPlus_arg2³) = 
+//│ 				case _lh_dotPlus_arg2³ of {
+//│ 					LH_N  => _lh_dotPlus_arg1³
+//│ 					| _  => case _lh_dotPlus_arg1³ of {
+//│ 						LH_N  => _lh_dotPlus_arg2³
+//│ 						| _  => case _lh_dotPlus_arg1³ of {
+//│ 							LH_C _lh_dotPlus_LH_C_0⁶ _lh_dotPlus_LH_C_1⁶ => case _lh_dotPlus_arg2³ of {
+//│ 								LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)]
+//│ 								| _  => error⁰}
+//│ 							| _  => error⁰}}}
+//│ 			def dotPlus₁₀(_lh_dotPlus_arg1², _lh_dotPlus_arg2²) = 
+//│ 				case _lh_dotPlus_arg2² of {
+//│ 					LH_N  => _lh_dotPlus_arg1²
+//│ 					| _  => case _lh_dotPlus_arg1² of {
+//│ 						LH_N  => _lh_dotPlus_arg2²
+//│ 						| _  => case _lh_dotPlus_arg1² of {
+//│ 							LH_C _lh_dotPlus_LH_C_0⁴ _lh_dotPlus_LH_C_1⁴ => case _lh_dotPlus_arg2² of {
+//│ 								LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)]
+//│ 								| _  => error⁰}
+//│ 							| _  => error⁰}}}
+//│ 			def scalarMut₀₀(_lh_scalarMut_arg1³, _lh_scalarMut_arg2³) = 
+//│ 				case _lh_scalarMut_arg2³ of {
+//│ 					LH_N  => [LH_N]
+//│ 					| LH_C _lh_scalarMut_LH_C_0³ _lh_scalarMut_LH_C_1³ => [LH_C (_lh_scalarMut_arg1³ *. _lh_scalarMut_LH_C_0³) scalarMut₀₀(_lh_scalarMut_arg1³, _lh_scalarMut_LH_C_1³)]
+//│ 					| _  => error⁰}
+//│ 			def scalarMut₁₀(_lh_scalarMut_arg1⁴, _lh_scalarMut_arg2⁴) = 
+//│ 				case _lh_scalarMut_arg2⁴ of {
+//│ 					LH_N  => [LH_N]
+//│ 					| LH_C _lh_scalarMut_LH_C_0⁴ _lh_scalarMut_LH_C_1⁴ => [LH_C (_lh_scalarMut_arg1⁴ *. _lh_scalarMut_LH_C_0⁴) scalarMut₁₀(_lh_scalarMut_arg1⁴, _lh_scalarMut_LH_C_1⁴)]
+//│ 					| _  => error⁰}
+//│ 		def zipWith_lz_lz₀₀(f¹, xs¹⁰, ys¹⁰) = 
+//│ 			lazy⁰(case force⁰(xs¹⁰) of {
+//│ 				LH_C hx¹ tx¹ => case force⁰(ys¹⁰) of {
+//│ 					LH_C hy¹ ty¹ => [LH_C f¹(hx¹, hy¹) zipWith_lz_lz₀₀(f¹, tx¹, ty¹)]
+//│ 					| LH_N  => [LH_N]}
+//│ 				| LH_N  => [LH_N]})
+//│ 	def show₀₀(_lh_show_arg1¹) = 
+//│ 		case _lh_show_arg1¹ of {
+//│ 			State _lh_show_State_0¹ _lh_show_State_1¹ => concat₁₀(
+//│ 				let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> case _lh_listcomp_fun_para² of {
+//│ 					LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => [LH_C mappend₃₀(string_of_float⁰(_lh_listcomp_fun_ls_h²), [LH_C 't' [LH_N]]) _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)]
+//│ 					| LH_N  => [LH_N]})
+//│ 				in _lh_listcomp_fun²(_lh_show_State_0¹))
+//│ 			| _  => error⁰}
+//│ 		where
+//│ 		def concat₁₀(lss³) = 
+//│ 			case lss³ of {
+//│ 				LH_C h¹² t¹² => mappend₂₀(h¹², concat₁₀(t¹²))
+//│ 				| LH_N  => [LH_N]}
+//│ 			where
+//│ 			def mappend₂₀(xs⁵, ys⁵) = 
+//│ 				case xs⁵ of {
+//│ 					LH_C h⁷ t⁷ => [LH_C h⁷ mappend₂₀(t⁷, ys⁵)]
+//│ 					| LH_N  => ys⁵}
+//│ 		def mappend₃₀(xs⁶, ys⁶) = 
+//│ 			case xs⁶ of {
+//│ 				LH_C h⁸ t⁸ => [LH_C h⁸ mappend₃₀(t⁸, ys⁶)]
+//│ 				| LH_N  => ys⁶}
+//│ 	def take_lz₀₀(n¹, ls¹) = 
+//│ 		if (n¹ > 0) then case force⁰(ls¹) of {
+//│ 			LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ take_lz₀₀((n¹ - 1), t¹⁵)]
+//│ 			| LH_N  => [LH_N]} else [LH_N]
+//│ 	def testforce₀₀(_lh_testforce_arg1¹, _lh_testforce_arg2¹) = 
+//│ 		lazy⁰(
+//│ 			let _lh_matchIdent¹ = force⁰(_lh_testforce_arg2¹)
+//│ 			in case _lh_matchIdent¹ of {
+//│ 				LH_C _lh_testforce_LH_C_0¹ _lh_testforce_LH_C_1¹ => case _lh_testforce_LH_C_0¹ of {
+//│ 					State _lh_testforce_State_0¹ _lh_testforce_State_1¹ => [LH_C dotMult₀₀(scalarMut₂₀((0.0 -. 1.0), _lh_testforce_arg1¹), _lh_testforce_State_0¹) testforce₀₀(_lh_testforce_arg1¹, _lh_testforce_LH_C_1¹)]
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰})
+//│ 		where
+//│ 		def dotMult₀₀(_lh_dotMult_arg1¹, _lh_dotMult_arg2¹) = 
+//│ 			case _lh_dotMult_arg2¹ of {
+//│ 				LH_N  => [LH_N]
+//│ 				| _  => case _lh_dotMult_arg1¹ of {
+//│ 					LH_N  => [LH_N]
+//│ 					| _  => case _lh_dotMult_arg1¹ of {
+//│ 						LH_C _lh_dotMult_LH_C_0² _lh_dotMult_LH_C_1² => case _lh_dotMult_arg2¹ of {
+//│ 							LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}}}
+//│ 		def scalarMut₂₀(_lh_scalarMut_arg1⁵, _lh_scalarMut_arg2⁵) = 
+//│ 			case _lh_scalarMut_arg2⁵ of {
+//│ 				LH_N  => [LH_N]
+//│ 				| LH_C _lh_scalarMut_LH_C_0⁵ _lh_scalarMut_LH_C_1⁵ => [LH_C (_lh_scalarMut_arg1⁵ *. _lh_scalarMut_LH_C_0⁵) scalarMut₂₀(_lh_scalarMut_arg1⁵, _lh_scalarMut_LH_C_1⁵)]
+//│ 				| _  => error⁰}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_C h⁷ mappend₂₀(t⁷, ys⁵)]: 422 --->
+//│ 	case xs⁹ of {LH_C h¹³ t¹³ => [LH_C h¹³ mappend₁₀(t¹³, ys⁹)] | LH_N  => ys⁹}: 736
+//│ [LH_C dotMult₀₀(scalarMut₂₀((0.0 -. 1.0), _lh_testforce_arg1¹), _lh_testforce_State_0¹) testforce₀₀(_lh_testforce_arg1¹, _lh_testforce_LH_C_1¹)]: 451 --->
+//│ 	case force⁰(xs¹⁰) of {LH_C hx¹ tx¹ => case force⁰(ys¹⁰) of {LH_C hy¹ ty¹ => [LH_C f¹(hx¹, hy¹) zipWith_lz_lz₀₀(f¹, tx¹, ty¹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 842
+//│ [LH_C h⁸ mappend₃₀(t⁸, ys⁶)]: 467 --->
+//│ 	case xs⁵ of {LH_C h⁷ t⁷ => [LH_C h⁷ mappend₂₀(t⁷, ys⁵)] | LH_N  => ys⁵}: 424
+//│ [LH_N]: 473 --->
+//│ 	case _lh_dotPlus_arg2³ of {LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)] | _  => error⁰}: 532
+//│ 	case _lh_dotPlus_arg1³ of {LH_C _lh_dotPlus_LH_C_0⁶ _lh_dotPlus_LH_C_1⁶ => case _lh_dotPlus_arg2³ of {LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)] | _  => error⁰} | _  => error⁰}: 534
+//│ 	case _lh_dotPlus_arg1³ of {LH_N  => _lh_dotPlus_arg2³ | _  => case _lh_dotPlus_arg1³ of {LH_C _lh_dotPlus_LH_C_0⁶ _lh_dotPlus_LH_C_1⁶ => case _lh_dotPlus_arg2³ of {LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)] | _  => error⁰} | _  => error⁰}}: 535
+//│ 	case _lh_dotPlus_arg2³ of {LH_N  => _lh_dotPlus_arg1³ | _  => case _lh_dotPlus_arg1³ of {LH_N  => _lh_dotPlus_arg2³ | _  => case _lh_dotPlus_arg1³ of {LH_C _lh_dotPlus_LH_C_0⁶ _lh_dotPlus_LH_C_1⁶ => case _lh_dotPlus_arg2³ of {LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)] | _  => error⁰} | _  => error⁰}}}: 536
+//│ 	case _lh_dotMult_arg2¹ of {LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)] | _  => error⁰}: 557
+//│ 	case _lh_dotMult_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_dotMult_arg1¹ of {LH_N  => [LH_N] | _  => case _lh_dotMult_arg1¹ of {LH_C _lh_dotMult_LH_C_0² _lh_dotMult_LH_C_1² => case _lh_dotMult_arg2¹ of {LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)] | _  => error⁰} | _  => error⁰}}}: 561
+//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => [LH_C mappend₃₀(string_of_float⁰(_lh_listcomp_fun_ls_h²), [LH_C 't' [LH_N]]) _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)] | LH_N  => [LH_N]}: 581
+//│ [LH_C (_lh_scalarMut_arg1³ *. _lh_scalarMut_LH_C_0³) scalarMut₀₀(_lh_scalarMut_arg1³, _lh_scalarMut_LH_C_1³)]: 484 --->
+//│ 	case _lh_dotPlus_arg2³ of {LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)] | _  => error⁰}: 532
+//│ 	case _lh_dotPlus_arg1³ of {LH_C _lh_dotPlus_LH_C_0⁶ _lh_dotPlus_LH_C_1⁶ => case _lh_dotPlus_arg2³ of {LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)] | _  => error⁰} | _  => error⁰}: 534
+//│ 	case _lh_dotPlus_arg1³ of {LH_N  => _lh_dotPlus_arg2³ | _  => case _lh_dotPlus_arg1³ of {LH_C _lh_dotPlus_LH_C_0⁶ _lh_dotPlus_LH_C_1⁶ => case _lh_dotPlus_arg2³ of {LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)] | _  => error⁰} | _  => error⁰}}: 535
+//│ 	case _lh_dotPlus_arg2³ of {LH_N  => _lh_dotPlus_arg1³ | _  => case _lh_dotPlus_arg1³ of {LH_N  => _lh_dotPlus_arg2³ | _  => case _lh_dotPlus_arg1³ of {LH_C _lh_dotPlus_LH_C_0⁶ _lh_dotPlus_LH_C_1⁶ => case _lh_dotPlus_arg2³ of {LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)] | _  => error⁰} | _  => error⁰}}}: 536
+//│ 	case _lh_dotMult_arg2¹ of {LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)] | _  => error⁰}: 557
+//│ 	case _lh_dotMult_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_dotMult_arg1¹ of {LH_N  => [LH_N] | _  => case _lh_dotMult_arg1¹ of {LH_C _lh_dotMult_LH_C_0² _lh_dotMult_LH_C_1² => case _lh_dotMult_arg2¹ of {LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)] | _  => error⁰} | _  => error⁰}}}: 561
+//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => [LH_C mappend₃₀(string_of_float⁰(_lh_listcomp_fun_ls_h²), [LH_C 't' [LH_N]]) _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)] | LH_N  => [LH_N]}: 581
+//│ [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)]: 505 --->
+//│ 	case _lh_scalarMut_arg2³ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0³ _lh_scalarMut_LH_C_1³ => [LH_C (_lh_scalarMut_arg1³ *. _lh_scalarMut_LH_C_0³) scalarMut₀₀(_lh_scalarMut_arg1³, _lh_scalarMut_LH_C_1³)] | _  => error⁰}: 486
+//│ 	case _lh_dotPlus_arg1² of {LH_C _lh_dotPlus_LH_C_0⁴ _lh_dotPlus_LH_C_1⁴ => case _lh_dotPlus_arg2² of {LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)] | _  => error⁰} | _  => error⁰}: 509
+//│ 	case _lh_dotPlus_arg1² of {LH_N  => _lh_dotPlus_arg2² | _  => case _lh_dotPlus_arg1² of {LH_C _lh_dotPlus_LH_C_0⁴ _lh_dotPlus_LH_C_1⁴ => case _lh_dotPlus_arg2² of {LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)] | _  => error⁰} | _  => error⁰}}: 510
+//│ [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)]: 530 --->
+//│ 	case _lh_dotPlus_arg1³ of {LH_C _lh_dotPlus_LH_C_0⁶ _lh_dotPlus_LH_C_1⁶ => case _lh_dotPlus_arg2³ of {LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)] | _  => error⁰} | _  => error⁰}: 534
+//│ 	case _lh_dotPlus_arg1³ of {LH_N  => _lh_dotPlus_arg2³ | _  => case _lh_dotPlus_arg1³ of {LH_C _lh_dotPlus_LH_C_0⁶ _lh_dotPlus_LH_C_1⁶ => case _lh_dotPlus_arg2³ of {LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)] | _  => error⁰} | _  => error⁰}}: 535
+//│ 	case _lh_dotMult_arg2¹ of {LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)] | _  => error⁰}: 557
+//│ 	case _lh_dotMult_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_dotMult_arg1¹ of {LH_N  => [LH_N] | _  => case _lh_dotMult_arg1¹ of {LH_C _lh_dotMult_LH_C_0² _lh_dotMult_LH_C_1² => case _lh_dotMult_arg2¹ of {LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)] | _  => error⁰} | _  => error⁰}}}: 561
+//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => [LH_C mappend₃₀(string_of_float⁰(_lh_listcomp_fun_ls_h²), [LH_C 't' [LH_N]]) _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)] | LH_N  => [LH_N]}: 581
+//│ [LH_N]: 540 --->
+//│ 	case _lh_scalarMut_arg2⁴ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0⁴ _lh_scalarMut_LH_C_1⁴ => [LH_C (_lh_scalarMut_arg1⁴ *. _lh_scalarMut_LH_C_0⁴) scalarMut₁₀(_lh_scalarMut_arg1⁴, _lh_scalarMut_LH_C_1⁴)] | _  => error⁰}: 605
+//│ [LH_N]: 542 --->
+//│ 	case _lh_scalarMut_arg2⁴ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0⁴ _lh_scalarMut_LH_C_1⁴ => [LH_C (_lh_scalarMut_arg1⁴ *. _lh_scalarMut_LH_C_0⁴) scalarMut₁₀(_lh_scalarMut_arg1⁴, _lh_scalarMut_LH_C_1⁴)] | _  => error⁰}: 605
+//│ [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)]: 555 --->
+//│ 	case _lh_scalarMut_arg2⁴ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0⁴ _lh_scalarMut_LH_C_1⁴ => [LH_C (_lh_scalarMut_arg1⁴ *. _lh_scalarMut_LH_C_0⁴) scalarMut₁₀(_lh_scalarMut_arg1⁴, _lh_scalarMut_LH_C_1⁴)] | _  => error⁰}: 605
+//│ [LH_N]: 573 --->
+//│ 	case xs⁵ of {LH_C h⁷ t⁷ => [LH_C h⁷ mappend₂₀(t⁷, ys⁵)] | LH_N  => ys⁵}: 424
+//│ [LH_C 't' [LH_N]]: 574 --->
+//│ 	case xs⁵ of {LH_C h⁷ t⁷ => [LH_C h⁷ mappend₂₀(t⁷, ys⁵)] | LH_N  => ys⁵}: 424
+//│ [LH_C mappend₃₀(string_of_float⁰(_lh_listcomp_fun_ls_h²), [LH_C 't' [LH_N]]) _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)]: 579 --->
+//│ 	case lss³ of {LH_C h¹² t¹² => mappend₂₀(h¹², concat₁₀(t¹²)) | LH_N  => [LH_N]}: 694
+//│ [LH_N]: 580 --->
+//│ 	case lss³ of {LH_C h¹² t¹² => mappend₂₀(h¹², concat₁₀(t¹²)) | LH_N  => [LH_N]}: 694
+//│ [LH_N]: 592 --->
+//│ 	case _lh_scalarMut_arg2³ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0³ _lh_scalarMut_LH_C_1³ => [LH_C (_lh_scalarMut_arg1³ *. _lh_scalarMut_LH_C_0³) scalarMut₀₀(_lh_scalarMut_arg1³, _lh_scalarMut_LH_C_1³)] | _  => error⁰}: 486
+//│ 	case _lh_dotPlus_arg2² of {LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)] | _  => error⁰}: 507
+//│ 	case _lh_dotPlus_arg1² of {LH_C _lh_dotPlus_LH_C_0⁴ _lh_dotPlus_LH_C_1⁴ => case _lh_dotPlus_arg2² of {LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)] | _  => error⁰} | _  => error⁰}: 509
+//│ 	case _lh_dotPlus_arg1² of {LH_N  => _lh_dotPlus_arg2² | _  => case _lh_dotPlus_arg1² of {LH_C _lh_dotPlus_LH_C_0⁴ _lh_dotPlus_LH_C_1⁴ => case _lh_dotPlus_arg2² of {LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)] | _  => error⁰} | _  => error⁰}}: 510
+//│ 	case _lh_dotPlus_arg2² of {LH_N  => _lh_dotPlus_arg1² | _  => case _lh_dotPlus_arg1² of {LH_N  => _lh_dotPlus_arg2² | _  => case _lh_dotPlus_arg1² of {LH_C _lh_dotPlus_LH_C_0⁴ _lh_dotPlus_LH_C_1⁴ => case _lh_dotPlus_arg2² of {LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)] | _  => error⁰} | _  => error⁰}}}: 511
+//│ [LH_C (_lh_scalarMut_arg1⁴ *. _lh_scalarMut_LH_C_0⁴) scalarMut₁₀(_lh_scalarMut_arg1⁴, _lh_scalarMut_LH_C_1⁴)]: 603 --->
+//│ 	case _lh_scalarMut_arg2³ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0³ _lh_scalarMut_LH_C_1³ => [LH_C (_lh_scalarMut_arg1³ *. _lh_scalarMut_LH_C_0³) scalarMut₀₀(_lh_scalarMut_arg1³, _lh_scalarMut_LH_C_1³)] | _  => error⁰}: 486
+//│ 	case _lh_dotPlus_arg2² of {LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)] | _  => error⁰}: 507
+//│ 	case _lh_dotPlus_arg1² of {LH_C _lh_dotPlus_LH_C_0⁴ _lh_dotPlus_LH_C_1⁴ => case _lh_dotPlus_arg2² of {LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)] | _  => error⁰} | _  => error⁰}: 509
+//│ 	case _lh_dotPlus_arg1² of {LH_N  => _lh_dotPlus_arg2² | _  => case _lh_dotPlus_arg1² of {LH_C _lh_dotPlus_LH_C_0⁴ _lh_dotPlus_LH_C_1⁴ => case _lh_dotPlus_arg2² of {LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)] | _  => error⁰} | _  => error⁰}}: 510
+//│ 	case _lh_dotPlus_arg2² of {LH_N  => _lh_dotPlus_arg1² | _  => case _lh_dotPlus_arg1² of {LH_N  => _lh_dotPlus_arg2² | _  => case _lh_dotPlus_arg1² of {LH_C _lh_dotPlus_LH_C_0⁴ _lh_dotPlus_LH_C_1⁴ => case _lh_dotPlus_arg2² of {LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)] | _  => error⁰} | _  => error⁰}}}: 511
+//│ [State dotPlus₀₀(_lh_propagate_State_0¹, scalarMut₀₀(_lh_propagate_arg1¹, _lh_propagate_State_1¹)) dotPlus₁₀(_lh_propagate_State_1¹, scalarMut₁₀(_lh_propagate_arg1¹, _lh_propagate_arg2¹))]: 650 --->
+//│ 	case _lh_testforce_LH_C_0¹ of {State _lh_testforce_State_0¹ _lh_testforce_State_1¹ => [LH_C dotMult₀₀(scalarMut₂₀((0.0 -. 1.0), _lh_testforce_arg1¹), _lh_testforce_State_0¹) testforce₀₀(_lh_testforce_arg1¹, _lh_testforce_LH_C_1¹)] | _  => error⁰}: 453
+//│ 	case _lh_show_arg1¹ of {State _lh_show_State_0¹ _lh_show_State_1¹ => concat₁₀(let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => [LH_C mappend₃₀(string_of_float⁰(_lh_listcomp_fun_ls_h²), [LH_C 't' [LH_N]]) _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)] | LH_N  => [LH_N]})
+//│ in _lh_listcomp_fun²(_lh_show_State_0¹)) | _  => error⁰}: 589
+//│ 	case _lh_propagate_arg3¹ of {State _lh_propagate_State_0¹ _lh_propagate_State_1¹ => [State dotPlus₀₀(_lh_propagate_State_0¹, scalarMut₀₀(_lh_propagate_arg1¹, _lh_propagate_State_1¹)) dotPlus₁₀(_lh_propagate_State_1¹, scalarMut₁₀(_lh_propagate_arg1¹, _lh_propagate_arg2¹))] | _  => error⁰}: 652
+//│ [LH_N]: 669 --->
+//│ 	case _lh_dotMult_arg1¹ of {LH_C _lh_dotMult_LH_C_0² _lh_dotMult_LH_C_1² => case _lh_dotMult_arg2¹ of {LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)] | _  => error⁰} | _  => error⁰}: 559
+//│ 	case _lh_dotMult_arg1¹ of {LH_N  => [LH_N] | _  => case _lh_dotMult_arg1¹ of {LH_C _lh_dotMult_LH_C_0² _lh_dotMult_LH_C_1² => case _lh_dotMult_arg2¹ of {LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)] | _  => error⁰} | _  => error⁰}}: 560
+//│ [LH_C (_lh_scalarMut_arg1⁵ *. _lh_scalarMut_LH_C_0⁵) scalarMut₂₀(_lh_scalarMut_arg1⁵, _lh_scalarMut_LH_C_1⁵)]: 680 --->
+//│ 	case _lh_dotMult_arg1¹ of {LH_C _lh_dotMult_LH_C_0² _lh_dotMult_LH_C_1² => case _lh_dotMult_arg2¹ of {LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)] | _  => error⁰} | _  => error⁰}: 559
+//│ 	case _lh_dotMult_arg1¹ of {LH_N  => [LH_N] | _  => case _lh_dotMult_arg1¹ of {LH_C _lh_dotMult_LH_C_0² _lh_dotMult_LH_C_1² => case _lh_dotMult_arg2¹ of {LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)] | _  => error⁰} | _  => error⁰}}: 560
+//│ [LH_N]: 693 --->
+//│ 	case xs⁹ of {LH_C h¹³ t¹³ => [LH_C h¹³ mappend₁₀(t¹³, ys⁹)] | LH_N  => ys⁹}: 736
+//│ [LH_C _lh_runExperiment_arg4¹ zipWith_lz_lz₀₀(propagate₀₀(_lh_runExperiment_arg2¹), _lh_runExperiment_arg1¹(_lh_runExperiment_arg3¹, stream¹), stream¹)]: 720 --->
+//│ 	case _lh_matchIdent¹ of {LH_C _lh_testforce_LH_C_0¹ _lh_testforce_LH_C_1¹ => case _lh_testforce_LH_C_0¹ of {State _lh_testforce_State_0¹ _lh_testforce_State_1¹ => [LH_C dotMult₀₀(scalarMut₂₀((0.0 -. 1.0), _lh_testforce_arg1¹), _lh_testforce_State_0¹) testforce₀₀(_lh_testforce_arg1¹, _lh_testforce_LH_C_1¹)] | _  => error⁰} | _  => error⁰}: 455
+//│ 	case force⁰(ls¹) of {LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ take_lz₀₀((n¹ - 1), t¹⁵)] | LH_N  => [LH_N]}: 770
+//│ 	case force⁰(ys¹⁰) of {LH_C hy¹ ty¹ => [LH_C f¹(hx¹, hy¹) zipWith_lz_lz₀₀(f¹, tx¹, ty¹)] | LH_N  => [LH_N]}: 840
+//│ [LH_C h¹³ mappend₁₀(t¹³, ys⁹)]: 734 --->
+//│ 	case xs⁷ of {LH_C h¹⁰ t¹⁰ => [LH_C h¹⁰ mappend₀₀(t¹⁰, ys⁷)] | LH_N  => ys⁷}: 628
+//│ 	case xs⁸ of {LH_C h¹¹ t¹¹ => [LH_C h¹¹ mappend₀₁(t¹¹, ys⁸)] | LH_N  => ys⁸}: 665
+//│ [LH_C h¹⁵ take_lz₀₀((n¹ - 1), t¹⁵)]: 768 --->
+//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C mappend₁₀(show₀₀(_lh_listcomp_fun_ls_h³), [LH_C 'n' [LH_N]]) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => [LH_N]}: 791
+//│ [LH_N]: 769 --->
+//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C mappend₁₀(show₀₀(_lh_listcomp_fun_ls_h³), [LH_C 'n' [LH_N]]) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => [LH_N]}: 791
+//│ [LH_N]: 771 --->
+//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C mappend₁₀(show₀₀(_lh_listcomp_fun_ls_h³), [LH_C 'n' [LH_N]]) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => [LH_N]}: 791
+//│ [LH_N]: 783 --->
+//│ 	case xs⁷ of {LH_C h¹⁰ t¹⁰ => [LH_C h¹⁰ mappend₀₀(t¹⁰, ys⁷)] | LH_N  => ys⁷}: 628
+//│ 	case xs⁸ of {LH_C h¹¹ t¹¹ => [LH_C h¹¹ mappend₀₁(t¹¹, ys⁸)] | LH_N  => ys⁸}: 665
+//│ [LH_C 'n' [LH_N]]: 784 --->
+//│ 	case xs⁷ of {LH_C h¹⁰ t¹⁰ => [LH_C h¹⁰ mappend₀₀(t¹⁰, ys⁷)] | LH_N  => ys⁷}: 628
+//│ 	case xs⁸ of {LH_C h¹¹ t¹¹ => [LH_C h¹¹ mappend₀₁(t¹¹, ys⁸)] | LH_N  => ys⁸}: 665
+//│ [LH_C mappend₁₀(show₀₀(_lh_listcomp_fun_ls_h³), [LH_C 'n' [LH_N]]) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]: 789 --->
+//│ 	case lss² of {LH_C h⁹ t⁹ => mappend₀₀(h⁹, concat₀₁(t⁹)) | LH_N  => [LH_N]}: 617
+//│ 	case lss⁴ of {LH_C h¹⁴ t¹⁴ => mappend₀₁(h¹⁴, concat₀₁(t¹⁴)) | LH_N  => [LH_N]}: 748
+//│ [LH_N]: 790 --->
+//│ 	case lss² of {LH_C h⁹ t⁹ => mappend₀₀(h⁹, concat₀₁(t⁹)) | LH_N  => [LH_N]}: 617
+//│ 	case lss⁴ of {LH_C h¹⁴ t¹⁴ => mappend₀₁(h¹⁴, concat₀₁(t¹⁴)) | LH_N  => [LH_N]}: 748
+//│ [LH_N]: 803 --->
+//│ 	case _lh_scalarMut_arg2⁵ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0⁵ _lh_scalarMut_LH_C_1⁵ => [LH_C (_lh_scalarMut_arg1⁵ *. _lh_scalarMut_LH_C_0⁵) scalarMut₂₀(_lh_scalarMut_arg1⁵, _lh_scalarMut_LH_C_1⁵)] | _  => error⁰}: 682
+//│ [LH_C 1.0 [LH_N]]: 804 --->
+//│ 	case _lh_scalarMut_arg2⁵ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0⁵ _lh_scalarMut_LH_C_1⁵ => [LH_C (_lh_scalarMut_arg1⁵ *. _lh_scalarMut_LH_C_0⁵) scalarMut₂₀(_lh_scalarMut_arg1⁵, _lh_scalarMut_LH_C_1⁵)] | _  => error⁰}: 682
+//│ [LH_N]: 807 --->
+//│ 	case _lh_dotPlus_arg1³ of {LH_C _lh_dotPlus_LH_C_0⁶ _lh_dotPlus_LH_C_1⁶ => case _lh_dotPlus_arg2³ of {LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)] | _  => error⁰} | _  => error⁰}: 534
+//│ 	case _lh_dotPlus_arg1³ of {LH_N  => _lh_dotPlus_arg2³ | _  => case _lh_dotPlus_arg1³ of {LH_C _lh_dotPlus_LH_C_0⁶ _lh_dotPlus_LH_C_1⁶ => case _lh_dotPlus_arg2³ of {LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)] | _  => error⁰} | _  => error⁰}}: 535
+//│ 	case _lh_dotMult_arg2¹ of {LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)] | _  => error⁰}: 557
+//│ 	case _lh_dotMult_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_dotMult_arg1¹ of {LH_N  => [LH_N] | _  => case _lh_dotMult_arg1¹ of {LH_C _lh_dotMult_LH_C_0² _lh_dotMult_LH_C_1² => case _lh_dotMult_arg2¹ of {LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)] | _  => error⁰} | _  => error⁰}}}: 561
+//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => [LH_C mappend₃₀(string_of_float⁰(_lh_listcomp_fun_ls_h²), [LH_C 't' [LH_N]]) _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)] | LH_N  => [LH_N]}: 581
+//│ [LH_C 1.0 [LH_N]]: 808 --->
+//│ 	case _lh_dotPlus_arg1³ of {LH_C _lh_dotPlus_LH_C_0⁶ _lh_dotPlus_LH_C_1⁶ => case _lh_dotPlus_arg2³ of {LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)] | _  => error⁰} | _  => error⁰}: 534
+//│ 	case _lh_dotPlus_arg1³ of {LH_N  => _lh_dotPlus_arg2³ | _  => case _lh_dotPlus_arg1³ of {LH_C _lh_dotPlus_LH_C_0⁶ _lh_dotPlus_LH_C_1⁶ => case _lh_dotPlus_arg2³ of {LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)] | _  => error⁰} | _  => error⁰}}: 535
+//│ 	case _lh_dotMult_arg2¹ of {LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)] | _  => error⁰}: 557
+//│ 	case _lh_dotMult_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_dotMult_arg1¹ of {LH_N  => [LH_N] | _  => case _lh_dotMult_arg1¹ of {LH_C _lh_dotMult_LH_C_0² _lh_dotMult_LH_C_1² => case _lh_dotMult_arg2¹ of {LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)] | _  => error⁰} | _  => error⁰}}}: 561
+//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => [LH_C mappend₃₀(string_of_float⁰(_lh_listcomp_fun_ls_h²), [LH_C 't' [LH_N]]) _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)] | LH_N  => [LH_N]}: 581
+//│ [LH_N]: 810 --->
+//│ 	case _lh_scalarMut_arg2³ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0³ _lh_scalarMut_LH_C_1³ => [LH_C (_lh_scalarMut_arg1³ *. _lh_scalarMut_LH_C_0³) scalarMut₀₀(_lh_scalarMut_arg1³, _lh_scalarMut_LH_C_1³)] | _  => error⁰}: 486
+//│ 	case _lh_dotPlus_arg1² of {LH_C _lh_dotPlus_LH_C_0⁴ _lh_dotPlus_LH_C_1⁴ => case _lh_dotPlus_arg2² of {LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)] | _  => error⁰} | _  => error⁰}: 509
+//│ 	case _lh_dotPlus_arg1² of {LH_N  => _lh_dotPlus_arg2² | _  => case _lh_dotPlus_arg1² of {LH_C _lh_dotPlus_LH_C_0⁴ _lh_dotPlus_LH_C_1⁴ => case _lh_dotPlus_arg2² of {LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)] | _  => error⁰} | _  => error⁰}}: 510
+//│ [LH_C 0.0 [LH_N]]: 811 --->
+//│ 	case _lh_scalarMut_arg2³ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0³ _lh_scalarMut_LH_C_1³ => [LH_C (_lh_scalarMut_arg1³ *. _lh_scalarMut_LH_C_0³) scalarMut₀₀(_lh_scalarMut_arg1³, _lh_scalarMut_LH_C_1³)] | _  => error⁰}: 486
+//│ 	case _lh_dotPlus_arg1² of {LH_C _lh_dotPlus_LH_C_0⁴ _lh_dotPlus_LH_C_1⁴ => case _lh_dotPlus_arg2² of {LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)] | _  => error⁰} | _  => error⁰}: 509
+//│ 	case _lh_dotPlus_arg1² of {LH_N  => _lh_dotPlus_arg2² | _  => case _lh_dotPlus_arg1² of {LH_C _lh_dotPlus_LH_C_0⁴ _lh_dotPlus_LH_C_1⁴ => case _lh_dotPlus_arg2² of {LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)] | _  => error⁰} | _  => error⁰}}: 510
+//│ [State [LH_C 1.0 [LH_N]] [LH_C 0.0 [LH_N]]]: 812 --->
+//│ 	case _lh_testforce_LH_C_0¹ of {State _lh_testforce_State_0¹ _lh_testforce_State_1¹ => [LH_C dotMult₀₀(scalarMut₂₀((0.0 -. 1.0), _lh_testforce_arg1¹), _lh_testforce_State_0¹) testforce₀₀(_lh_testforce_arg1¹, _lh_testforce_LH_C_1¹)] | _  => error⁰}: 453
+//│ 	case _lh_show_arg1¹ of {State _lh_show_State_0¹ _lh_show_State_1¹ => concat₁₀(let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => [LH_C mappend₃₀(string_of_float⁰(_lh_listcomp_fun_ls_h²), [LH_C 't' [LH_N]]) _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)] | LH_N  => [LH_N]})
+//│ in _lh_listcomp_fun²(_lh_show_State_0¹)) | _  => error⁰}: 589
+//│ 	case _lh_propagate_arg3¹ of {State _lh_propagate_State_0¹ _lh_propagate_State_1¹ => [State dotPlus₀₀(_lh_propagate_State_0¹, scalarMut₀₀(_lh_propagate_arg1¹, _lh_propagate_State_1¹)) dotPlus₁₀(_lh_propagate_State_1¹, scalarMut₁₀(_lh_propagate_arg1¹, _lh_propagate_arg2¹))] | _  => error⁰}: 652
+//│ [LH_C f¹(hx¹, hy¹) zipWith_lz_lz₀₀(f¹, tx¹, ty¹)]: 838 --->
+//│ 	case _lh_matchIdent¹ of {LH_C _lh_testforce_LH_C_0¹ _lh_testforce_LH_C_1¹ => case _lh_testforce_LH_C_0¹ of {State _lh_testforce_State_0¹ _lh_testforce_State_1¹ => [LH_C dotMult₀₀(scalarMut₂₀((0.0 -. 1.0), _lh_testforce_arg1¹), _lh_testforce_State_0¹) testforce₀₀(_lh_testforce_arg1¹, _lh_testforce_LH_C_1¹)] | _  => error⁰} | _  => error⁰}: 455
+//│ 	case force⁰(ls¹) of {LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ take_lz₀₀((n¹ - 1), t¹⁵)] | LH_N  => [LH_N]}: 770
+//│ 	case force⁰(ys¹⁰) of {LH_C hy¹ ty¹ => [LH_C f¹(hx¹, hy¹) zipWith_lz_lz₀₀(f¹, tx¹, ty¹)] | LH_N  => [LH_N]}: 840
+//│ [LH_N]: 839 --->
+//│ 	case _lh_matchIdent¹ of {LH_C _lh_testforce_LH_C_0¹ _lh_testforce_LH_C_1¹ => case _lh_testforce_LH_C_0¹ of {State _lh_testforce_State_0¹ _lh_testforce_State_1¹ => [LH_C dotMult₀₀(scalarMut₂₀((0.0 -. 1.0), _lh_testforce_arg1¹), _lh_testforce_State_0¹) testforce₀₀(_lh_testforce_arg1¹, _lh_testforce_LH_C_1¹)] | _  => error⁰} | _  => error⁰}: 455
+//│ 	case force⁰(ls¹) of {LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ take_lz₀₀((n¹ - 1), t¹⁵)] | LH_N  => [LH_N]}: 770
+//│ 	case force⁰(ys¹⁰) of {LH_C hy¹ ty¹ => [LH_C f¹(hx¹, hy¹) zipWith_lz_lz₀₀(f¹, tx¹, ty¹)] | LH_N  => [LH_N]}: 840
+//│ [LH_N]: 841 --->
+//│ 	case _lh_matchIdent¹ of {LH_C _lh_testforce_LH_C_0¹ _lh_testforce_LH_C_1¹ => case _lh_testforce_LH_C_0¹ of {State _lh_testforce_State_0¹ _lh_testforce_State_1¹ => [LH_C dotMult₀₀(scalarMut₂₀((0.0 -. 1.0), _lh_testforce_arg1¹), _lh_testforce_State_0¹) testforce₀₀(_lh_testforce_arg1¹, _lh_testforce_LH_C_1¹)] | _  => error⁰} | _  => error⁰}: 455
+//│ 	case force⁰(ls¹) of {LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ take_lz₀₀((n¹ - 1), t¹⁵)] | LH_N  => [LH_N]}: 770
+//│ 	case force⁰(ys¹⁰) of {LH_C hy¹ ty¹ => [LH_C f¹(hx¹, hy¹) zipWith_lz_lz₀₀(f¹, tx¹, ty¹)] | LH_N  => [LH_N]}: 840
+//│ ------------------
+//│ case xs⁵ of {LH_C h⁷ t⁷ => [LH_C h⁷ mappend₂₀(t⁷, ys⁵)] | LH_N  => ys⁵}: 424 --->
+//│ 	[LH_C h⁸ mappend₃₀(t⁸, ys⁶)]: 467
+//│ 	[LH_N]: 573
+//│ 	[LH_C 't' [LH_N]]: 574
+//│ case _lh_testforce_LH_C_0¹ of {State _lh_testforce_State_0¹ _lh_testforce_State_1¹ => [LH_C dotMult₀₀(scalarMut₂₀((0.0 -. 1.0), _lh_testforce_arg1¹), _lh_testforce_State_0¹) testforce₀₀(_lh_testforce_arg1¹, _lh_testforce_LH_C_1¹)] | _  => error⁰}: 453 --->
+//│ 	[State dotPlus₀₀(_lh_propagate_State_0¹, scalarMut₀₀(_lh_propagate_arg1¹, _lh_propagate_State_1¹)) dotPlus₁₀(_lh_propagate_State_1¹, scalarMut₁₀(_lh_propagate_arg1¹, _lh_propagate_arg2¹))]: 650
+//│ 	[State [LH_C 1.0 [LH_N]] [LH_C 0.0 [LH_N]]]: 812
+//│ case _lh_matchIdent¹ of {LH_C _lh_testforce_LH_C_0¹ _lh_testforce_LH_C_1¹ => case _lh_testforce_LH_C_0¹ of {State _lh_testforce_State_0¹ _lh_testforce_State_1¹ => [LH_C dotMult₀₀(scalarMut₂₀((0.0 -. 1.0), _lh_testforce_arg1¹), _lh_testforce_State_0¹) testforce₀₀(_lh_testforce_arg1¹, _lh_testforce_LH_C_1¹)] | _  => error⁰} | _  => error⁰}: 455 --->
+//│ 	[LH_C _lh_runExperiment_arg4¹ zipWith_lz_lz₀₀(propagate₀₀(_lh_runExperiment_arg2¹), _lh_runExperiment_arg1¹(_lh_runExperiment_arg3¹, stream¹), stream¹)]: 720
+//│ 	[LH_C f¹(hx¹, hy¹) zipWith_lz_lz₀₀(f¹, tx¹, ty¹)]: 838
+//│ 	[LH_N]: 839
+//│ 	[LH_N]: 841
+//│ case _lh_scalarMut_arg2³ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0³ _lh_scalarMut_LH_C_1³ => [LH_C (_lh_scalarMut_arg1³ *. _lh_scalarMut_LH_C_0³) scalarMut₀₀(_lh_scalarMut_arg1³, _lh_scalarMut_LH_C_1³)] | _  => error⁰}: 486 --->
+//│ 	[LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)]: 505
+//│ 	[LH_N]: 592
+//│ 	[LH_C (_lh_scalarMut_arg1⁴ *. _lh_scalarMut_LH_C_0⁴) scalarMut₁₀(_lh_scalarMut_arg1⁴, _lh_scalarMut_LH_C_1⁴)]: 603
+//│ 	[LH_N]: 810
+//│ 	[LH_C 0.0 [LH_N]]: 811
+//│ case _lh_dotPlus_arg2² of {LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)] | _  => error⁰}: 507 --->
+//│ 	[LH_N]: 592
+//│ 	[LH_C (_lh_scalarMut_arg1⁴ *. _lh_scalarMut_LH_C_0⁴) scalarMut₁₀(_lh_scalarMut_arg1⁴, _lh_scalarMut_LH_C_1⁴)]: 603
+//│ case _lh_dotPlus_arg1² of {LH_C _lh_dotPlus_LH_C_0⁴ _lh_dotPlus_LH_C_1⁴ => case _lh_dotPlus_arg2² of {LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)] | _  => error⁰} | _  => error⁰}: 509 --->
+//│ 	[LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)]: 505
+//│ 	[LH_N]: 592
+//│ 	[LH_C (_lh_scalarMut_arg1⁴ *. _lh_scalarMut_LH_C_0⁴) scalarMut₁₀(_lh_scalarMut_arg1⁴, _lh_scalarMut_LH_C_1⁴)]: 603
+//│ 	[LH_N]: 810
+//│ 	[LH_C 0.0 [LH_N]]: 811
+//│ case _lh_dotPlus_arg1² of {LH_N  => _lh_dotPlus_arg2² | _  => case _lh_dotPlus_arg1² of {LH_C _lh_dotPlus_LH_C_0⁴ _lh_dotPlus_LH_C_1⁴ => case _lh_dotPlus_arg2² of {LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)] | _  => error⁰} | _  => error⁰}}: 510 --->
+//│ 	[LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)]: 505
+//│ 	[LH_N]: 592
+//│ 	[LH_C (_lh_scalarMut_arg1⁴ *. _lh_scalarMut_LH_C_0⁴) scalarMut₁₀(_lh_scalarMut_arg1⁴, _lh_scalarMut_LH_C_1⁴)]: 603
+//│ 	[LH_N]: 810
+//│ 	[LH_C 0.0 [LH_N]]: 811
+//│ case _lh_dotPlus_arg2² of {LH_N  => _lh_dotPlus_arg1² | _  => case _lh_dotPlus_arg1² of {LH_N  => _lh_dotPlus_arg2² | _  => case _lh_dotPlus_arg1² of {LH_C _lh_dotPlus_LH_C_0⁴ _lh_dotPlus_LH_C_1⁴ => case _lh_dotPlus_arg2² of {LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)] | _  => error⁰} | _  => error⁰}}}: 511 --->
+//│ 	[LH_N]: 592
+//│ 	[LH_C (_lh_scalarMut_arg1⁴ *. _lh_scalarMut_LH_C_0⁴) scalarMut₁₀(_lh_scalarMut_arg1⁴, _lh_scalarMut_LH_C_1⁴)]: 603
+//│ case _lh_dotPlus_arg2³ of {LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)] | _  => error⁰}: 532 --->
+//│ 	[LH_N]: 473
+//│ 	[LH_C (_lh_scalarMut_arg1³ *. _lh_scalarMut_LH_C_0³) scalarMut₀₀(_lh_scalarMut_arg1³, _lh_scalarMut_LH_C_1³)]: 484
+//│ case _lh_dotPlus_arg1³ of {LH_C _lh_dotPlus_LH_C_0⁶ _lh_dotPlus_LH_C_1⁶ => case _lh_dotPlus_arg2³ of {LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)] | _  => error⁰} | _  => error⁰}: 534 --->
+//│ 	[LH_N]: 473
+//│ 	[LH_C (_lh_scalarMut_arg1³ *. _lh_scalarMut_LH_C_0³) scalarMut₀₀(_lh_scalarMut_arg1³, _lh_scalarMut_LH_C_1³)]: 484
+//│ 	[LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)]: 530
+//│ 	[LH_N]: 807
+//│ 	[LH_C 1.0 [LH_N]]: 808
+//│ case _lh_dotPlus_arg1³ of {LH_N  => _lh_dotPlus_arg2³ | _  => case _lh_dotPlus_arg1³ of {LH_C _lh_dotPlus_LH_C_0⁶ _lh_dotPlus_LH_C_1⁶ => case _lh_dotPlus_arg2³ of {LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)] | _  => error⁰} | _  => error⁰}}: 535 --->
+//│ 	[LH_N]: 473
+//│ 	[LH_C (_lh_scalarMut_arg1³ *. _lh_scalarMut_LH_C_0³) scalarMut₀₀(_lh_scalarMut_arg1³, _lh_scalarMut_LH_C_1³)]: 484
+//│ 	[LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)]: 530
+//│ 	[LH_N]: 807
+//│ 	[LH_C 1.0 [LH_N]]: 808
+//│ case _lh_dotPlus_arg2³ of {LH_N  => _lh_dotPlus_arg1³ | _  => case _lh_dotPlus_arg1³ of {LH_N  => _lh_dotPlus_arg2³ | _  => case _lh_dotPlus_arg1³ of {LH_C _lh_dotPlus_LH_C_0⁶ _lh_dotPlus_LH_C_1⁶ => case _lh_dotPlus_arg2³ of {LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)] | _  => error⁰} | _  => error⁰}}}: 536 --->
+//│ 	[LH_N]: 473
+//│ 	[LH_C (_lh_scalarMut_arg1³ *. _lh_scalarMut_LH_C_0³) scalarMut₀₀(_lh_scalarMut_arg1³, _lh_scalarMut_LH_C_1³)]: 484
+//│ case _lh_dotMult_arg2¹ of {LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)] | _  => error⁰}: 557 --->
+//│ 	[LH_N]: 473
+//│ 	[LH_C (_lh_scalarMut_arg1³ *. _lh_scalarMut_LH_C_0³) scalarMut₀₀(_lh_scalarMut_arg1³, _lh_scalarMut_LH_C_1³)]: 484
+//│ 	[LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)]: 530
+//│ 	[LH_N]: 807
+//│ 	[LH_C 1.0 [LH_N]]: 808
+//│ case _lh_dotMult_arg1¹ of {LH_C _lh_dotMult_LH_C_0² _lh_dotMult_LH_C_1² => case _lh_dotMult_arg2¹ of {LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)] | _  => error⁰} | _  => error⁰}: 559 --->
+//│ 	[LH_N]: 669
+//│ 	[LH_C (_lh_scalarMut_arg1⁵ *. _lh_scalarMut_LH_C_0⁵) scalarMut₂₀(_lh_scalarMut_arg1⁵, _lh_scalarMut_LH_C_1⁵)]: 680
+//│ case _lh_dotMult_arg1¹ of {LH_N  => [LH_N] | _  => case _lh_dotMult_arg1¹ of {LH_C _lh_dotMult_LH_C_0² _lh_dotMult_LH_C_1² => case _lh_dotMult_arg2¹ of {LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)] | _  => error⁰} | _  => error⁰}}: 560 --->
+//│ 	[LH_N]: 669
+//│ 	[LH_C (_lh_scalarMut_arg1⁵ *. _lh_scalarMut_LH_C_0⁵) scalarMut₂₀(_lh_scalarMut_arg1⁵, _lh_scalarMut_LH_C_1⁵)]: 680
+//│ case _lh_dotMult_arg2¹ of {LH_N  => [LH_N] | _  => case _lh_dotMult_arg1¹ of {LH_N  => [LH_N] | _  => case _lh_dotMult_arg1¹ of {LH_C _lh_dotMult_LH_C_0² _lh_dotMult_LH_C_1² => case _lh_dotMult_arg2¹ of {LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)] | _  => error⁰} | _  => error⁰}}}: 561 --->
+//│ 	[LH_N]: 473
+//│ 	[LH_C (_lh_scalarMut_arg1³ *. _lh_scalarMut_LH_C_0³) scalarMut₀₀(_lh_scalarMut_arg1³, _lh_scalarMut_LH_C_1³)]: 484
+//│ 	[LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)]: 530
+//│ 	[LH_N]: 807
+//│ 	[LH_C 1.0 [LH_N]]: 808
+//│ case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => [LH_C mappend₃₀(string_of_float⁰(_lh_listcomp_fun_ls_h²), [LH_C 't' [LH_N]]) _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)] | LH_N  => [LH_N]}: 581 --->
+//│ 	[LH_N]: 473
+//│ 	[LH_C (_lh_scalarMut_arg1³ *. _lh_scalarMut_LH_C_0³) scalarMut₀₀(_lh_scalarMut_arg1³, _lh_scalarMut_LH_C_1³)]: 484
+//│ 	[LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)]: 530
+//│ 	[LH_N]: 807
+//│ 	[LH_C 1.0 [LH_N]]: 808
+//│ case _lh_show_arg1¹ of {State _lh_show_State_0¹ _lh_show_State_1¹ => concat₁₀(let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => [LH_C mappend₃₀(string_of_float⁰(_lh_listcomp_fun_ls_h²), [LH_C 't' [LH_N]]) _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)] | LH_N  => [LH_N]})
+//│ in _lh_listcomp_fun²(_lh_show_State_0¹)) | _  => error⁰}: 589 --->
+//│ 	[State dotPlus₀₀(_lh_propagate_State_0¹, scalarMut₀₀(_lh_propagate_arg1¹, _lh_propagate_State_1¹)) dotPlus₁₀(_lh_propagate_State_1¹, scalarMut₁₀(_lh_propagate_arg1¹, _lh_propagate_arg2¹))]: 650
+//│ 	[State [LH_C 1.0 [LH_N]] [LH_C 0.0 [LH_N]]]: 812
+//│ case _lh_scalarMut_arg2⁴ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0⁴ _lh_scalarMut_LH_C_1⁴ => [LH_C (_lh_scalarMut_arg1⁴ *. _lh_scalarMut_LH_C_0⁴) scalarMut₁₀(_lh_scalarMut_arg1⁴, _lh_scalarMut_LH_C_1⁴)] | _  => error⁰}: 605 --->
+//│ 	[LH_N]: 540
+//│ 	[LH_N]: 542
+//│ 	[LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)]: 555
+//│ case lss² of {LH_C h⁹ t⁹ => mappend₀₀(h⁹, concat₀₁(t⁹)) | LH_N  => [LH_N]}: 617 --->
+//│ 	[LH_C mappend₁₀(show₀₀(_lh_listcomp_fun_ls_h³), [LH_C 'n' [LH_N]]) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]: 789
+//│ 	[LH_N]: 790
+//│ case xs⁷ of {LH_C h¹⁰ t¹⁰ => [LH_C h¹⁰ mappend₀₀(t¹⁰, ys⁷)] | LH_N  => ys⁷}: 628 --->
+//│ 	[LH_C h¹³ mappend₁₀(t¹³, ys⁹)]: 734
+//│ 	[LH_N]: 783
+//│ 	[LH_C 'n' [LH_N]]: 784
+//│ case _lh_propagate_arg3¹ of {State _lh_propagate_State_0¹ _lh_propagate_State_1¹ => [State dotPlus₀₀(_lh_propagate_State_0¹, scalarMut₀₀(_lh_propagate_arg1¹, _lh_propagate_State_1¹)) dotPlus₁₀(_lh_propagate_State_1¹, scalarMut₁₀(_lh_propagate_arg1¹, _lh_propagate_arg2¹))] | _  => error⁰}: 652 --->
+//│ 	[State dotPlus₀₀(_lh_propagate_State_0¹, scalarMut₀₀(_lh_propagate_arg1¹, _lh_propagate_State_1¹)) dotPlus₁₀(_lh_propagate_State_1¹, scalarMut₁₀(_lh_propagate_arg1¹, _lh_propagate_arg2¹))]: 650
+//│ 	[State [LH_C 1.0 [LH_N]] [LH_C 0.0 [LH_N]]]: 812
+//│ case xs⁸ of {LH_C h¹¹ t¹¹ => [LH_C h¹¹ mappend₀₁(t¹¹, ys⁸)] | LH_N  => ys⁸}: 665 --->
+//│ 	[LH_C h¹³ mappend₁₀(t¹³, ys⁹)]: 734
+//│ 	[LH_N]: 783
+//│ 	[LH_C 'n' [LH_N]]: 784
+//│ case _lh_scalarMut_arg2⁵ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0⁵ _lh_scalarMut_LH_C_1⁵ => [LH_C (_lh_scalarMut_arg1⁵ *. _lh_scalarMut_LH_C_0⁵) scalarMut₂₀(_lh_scalarMut_arg1⁵, _lh_scalarMut_LH_C_1⁵)] | _  => error⁰}: 682 --->
+//│ 	[LH_N]: 803
+//│ 	[LH_C 1.0 [LH_N]]: 804
+//│ case lss³ of {LH_C h¹² t¹² => mappend₂₀(h¹², concat₁₀(t¹²)) | LH_N  => [LH_N]}: 694 --->
+//│ 	[LH_C mappend₃₀(string_of_float⁰(_lh_listcomp_fun_ls_h²), [LH_C 't' [LH_N]]) _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)]: 579
+//│ 	[LH_N]: 580
+//│ case xs⁹ of {LH_C h¹³ t¹³ => [LH_C h¹³ mappend₁₀(t¹³, ys⁹)] | LH_N  => ys⁹}: 736 --->
+//│ 	[LH_C h⁷ mappend₂₀(t⁷, ys⁵)]: 422
+//│ 	[LH_N]: 693
+//│ case lss⁴ of {LH_C h¹⁴ t¹⁴ => mappend₀₁(h¹⁴, concat₀₁(t¹⁴)) | LH_N  => [LH_N]}: 748 --->
+//│ 	[LH_C mappend₁₀(show₀₀(_lh_listcomp_fun_ls_h³), [LH_C 'n' [LH_N]]) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]: 789
+//│ 	[LH_N]: 790
+//│ case force⁰(ls¹) of {LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ take_lz₀₀((n¹ - 1), t¹⁵)] | LH_N  => [LH_N]}: 770 --->
+//│ 	[LH_C _lh_runExperiment_arg4¹ zipWith_lz_lz₀₀(propagate₀₀(_lh_runExperiment_arg2¹), _lh_runExperiment_arg1¹(_lh_runExperiment_arg3¹, stream¹), stream¹)]: 720
+//│ 	[LH_C f¹(hx¹, hy¹) zipWith_lz_lz₀₀(f¹, tx¹, ty¹)]: 838
+//│ 	[LH_N]: 839
+//│ 	[LH_N]: 841
+//│ case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C mappend₁₀(show₀₀(_lh_listcomp_fun_ls_h³), [LH_C 'n' [LH_N]]) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => [LH_N]}: 791 --->
+//│ 	[LH_C h¹⁵ take_lz₀₀((n¹ - 1), t¹⁵)]: 768
+//│ 	[LH_N]: 769
+//│ 	[LH_N]: 771
+//│ case force⁰(ys¹⁰) of {LH_C hy¹ ty¹ => [LH_C f¹(hx¹, hy¹) zipWith_lz_lz₀₀(f¹, tx¹, ty¹)] | LH_N  => [LH_N]}: 840 --->
+//│ 	[LH_C _lh_runExperiment_arg4¹ zipWith_lz_lz₀₀(propagate₀₀(_lh_runExperiment_arg2¹), _lh_runExperiment_arg1¹(_lh_runExperiment_arg3¹, stream¹), stream¹)]: 720
+//│ 	[LH_C f¹(hx¹, hy¹) zipWith_lz_lz₀₀(f¹, tx¹, ty¹)]: 838
+//│ 	[LH_N]: 839
+//│ 	[LH_N]: 841
+//│ case force⁰(xs¹⁰) of {LH_C hx¹ tx¹ => case force⁰(ys¹⁰) of {LH_C hy¹ ty¹ => [LH_C f¹(hx¹, hy¹) zipWith_lz_lz₀₀(f¹, tx¹, ty¹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 842 --->
+//│ 	[LH_C dotMult₀₀(scalarMut₂₀((0.0 -. 1.0), _lh_testforce_arg1¹), _lh_testforce_State_0¹) testforce₀₀(_lh_testforce_arg1¹, _lh_testforce_LH_C_1¹)]: 451
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_C h⁷ mappend₂₀(t⁷, ys⁵)]: 422 --->
+//│ 	case xs⁹ of {LH_C h¹³ t¹³ => [LH_C h¹³ mappend₁₀(t¹³, ys⁹)] | LH_N  => ys⁹}: 736
+//│ [LH_C dotMult₀₀(scalarMut₂₀((0.0 -. 1.0), _lh_testforce_arg1¹), _lh_testforce_State_0¹) testforce₀₀(_lh_testforce_arg1¹, _lh_testforce_LH_C_1¹)]: 451 --->
+//│ 	case force⁰(xs¹⁰) of {LH_C hx¹ tx¹ => case force⁰(ys¹⁰) of {LH_C hy¹ ty¹ => [LH_C f¹(hx¹, hy¹) zipWith_lz_lz₀₀(f¹, tx¹, ty¹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 842
+//│ [LH_C h⁸ mappend₃₀(t⁸, ys⁶)]: 467 --->
+//│ 	case xs⁵ of {LH_C h⁷ t⁷ => [LH_C h⁷ mappend₂₀(t⁷, ys⁵)] | LH_N  => ys⁵}: 424
+//│ [LH_N]: 540 --->
+//│ 	case _lh_scalarMut_arg2⁴ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0⁴ _lh_scalarMut_LH_C_1⁴ => [LH_C (_lh_scalarMut_arg1⁴ *. _lh_scalarMut_LH_C_0⁴) scalarMut₁₀(_lh_scalarMut_arg1⁴, _lh_scalarMut_LH_C_1⁴)] | _  => error⁰}: 605
+//│ [LH_N]: 542 --->
+//│ 	case _lh_scalarMut_arg2⁴ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0⁴ _lh_scalarMut_LH_C_1⁴ => [LH_C (_lh_scalarMut_arg1⁴ *. _lh_scalarMut_LH_C_0⁴) scalarMut₁₀(_lh_scalarMut_arg1⁴, _lh_scalarMut_LH_C_1⁴)] | _  => error⁰}: 605
+//│ [LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)]: 555 --->
+//│ 	case _lh_scalarMut_arg2⁴ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0⁴ _lh_scalarMut_LH_C_1⁴ => [LH_C (_lh_scalarMut_arg1⁴ *. _lh_scalarMut_LH_C_0⁴) scalarMut₁₀(_lh_scalarMut_arg1⁴, _lh_scalarMut_LH_C_1⁴)] | _  => error⁰}: 605
+//│ [LH_N]: 573 --->
+//│ 	case xs⁵ of {LH_C h⁷ t⁷ => [LH_C h⁷ mappend₂₀(t⁷, ys⁵)] | LH_N  => ys⁵}: 424
+//│ [LH_C 't' [LH_N]]: 574 --->
+//│ 	case xs⁵ of {LH_C h⁷ t⁷ => [LH_C h⁷ mappend₂₀(t⁷, ys⁵)] | LH_N  => ys⁵}: 424
+//│ [LH_C mappend₃₀(string_of_float⁰(_lh_listcomp_fun_ls_h²), [LH_C 't' [LH_N]]) _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)]: 579 --->
+//│ 	case lss³ of {LH_C h¹² t¹² => mappend₂₀(h¹², concat₁₀(t¹²)) | LH_N  => [LH_N]}: 694
+//│ [LH_N]: 580 --->
+//│ 	case lss³ of {LH_C h¹² t¹² => mappend₂₀(h¹², concat₁₀(t¹²)) | LH_N  => [LH_N]}: 694
+//│ [LH_N]: 693 --->
+//│ 	case xs⁹ of {LH_C h¹³ t¹³ => [LH_C h¹³ mappend₁₀(t¹³, ys⁹)] | LH_N  => ys⁹}: 736
+//│ [LH_C h¹⁵ take_lz₀₀((n¹ - 1), t¹⁵)]: 768 --->
+//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C mappend₁₀(show₀₀(_lh_listcomp_fun_ls_h³), [LH_C 'n' [LH_N]]) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => [LH_N]}: 791
+//│ [LH_N]: 769 --->
+//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C mappend₁₀(show₀₀(_lh_listcomp_fun_ls_h³), [LH_C 'n' [LH_N]]) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => [LH_N]}: 791
+//│ [LH_N]: 771 --->
+//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C mappend₁₀(show₀₀(_lh_listcomp_fun_ls_h³), [LH_C 'n' [LH_N]]) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => [LH_N]}: 791
+//│ [LH_N]: 803 --->
+//│ 	case _lh_scalarMut_arg2⁵ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0⁵ _lh_scalarMut_LH_C_1⁵ => [LH_C (_lh_scalarMut_arg1⁵ *. _lh_scalarMut_LH_C_0⁵) scalarMut₂₀(_lh_scalarMut_arg1⁵, _lh_scalarMut_LH_C_1⁵)] | _  => error⁰}: 682
+//│ [LH_C 1.0 [LH_N]]: 804 --->
+//│ 	case _lh_scalarMut_arg2⁵ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0⁵ _lh_scalarMut_LH_C_1⁵ => [LH_C (_lh_scalarMut_arg1⁵ *. _lh_scalarMut_LH_C_0⁵) scalarMut₂₀(_lh_scalarMut_arg1⁵, _lh_scalarMut_LH_C_1⁵)] | _  => error⁰}: 682
+//│ ------------------
+//│ case xs⁵ of {LH_C h⁷ t⁷ => [LH_C h⁷ mappend₂₀(t⁷, ys⁵)] | LH_N  => ys⁵}: 424 --->
+//│ 	[LH_C h⁸ mappend₃₀(t⁸, ys⁶)]: 467
+//│ 	[LH_N]: 573
+//│ 	[LH_C 't' [LH_N]]: 574
+//│ case _lh_scalarMut_arg2⁴ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0⁴ _lh_scalarMut_LH_C_1⁴ => [LH_C (_lh_scalarMut_arg1⁴ *. _lh_scalarMut_LH_C_0⁴) scalarMut₁₀(_lh_scalarMut_arg1⁴, _lh_scalarMut_LH_C_1⁴)] | _  => error⁰}: 605 --->
+//│ 	[LH_N]: 540
+//│ 	[LH_N]: 542
+//│ 	[LH_C (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³) dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)]: 555
+//│ case _lh_scalarMut_arg2⁵ of {LH_N  => [LH_N] | LH_C _lh_scalarMut_LH_C_0⁵ _lh_scalarMut_LH_C_1⁵ => [LH_C (_lh_scalarMut_arg1⁵ *. _lh_scalarMut_LH_C_0⁵) scalarMut₂₀(_lh_scalarMut_arg1⁵, _lh_scalarMut_LH_C_1⁵)] | _  => error⁰}: 682 --->
+//│ 	[LH_N]: 803
+//│ 	[LH_C 1.0 [LH_N]]: 804
+//│ case lss³ of {LH_C h¹² t¹² => mappend₂₀(h¹², concat₁₀(t¹²)) | LH_N  => [LH_N]}: 694 --->
+//│ 	[LH_C mappend₃₀(string_of_float⁰(_lh_listcomp_fun_ls_h²), [LH_C 't' [LH_N]]) _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)]: 579
+//│ 	[LH_N]: 580
+//│ case xs⁹ of {LH_C h¹³ t¹³ => [LH_C h¹³ mappend₁₀(t¹³, ys⁹)] | LH_N  => ys⁹}: 736 --->
+//│ 	[LH_C h⁷ mappend₂₀(t⁷, ys⁵)]: 422
+//│ 	[LH_N]: 693
+//│ case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C mappend₁₀(show₀₀(_lh_listcomp_fun_ls_h³), [LH_C 'n' [LH_N]]) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] | LH_N  => [LH_N]}: 791 --->
+//│ 	[LH_C h¹⁵ take_lz₀₀((n¹ - 1), t¹⁵)]: 768
+//│ 	[LH_N]: 769
+//│ 	[LH_N]: 771
+//│ case force⁰(xs¹⁰) of {LH_C hx¹ tx¹ => case force⁰(ys¹⁰) of {LH_C hy¹ ty¹ => [LH_C f¹(hx¹, hy¹) zipWith_lz_lz₀₀(f¹, tx¹, ty¹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 842 --->
+//│ 	[LH_C dotMult₀₀(scalarMut₂₀((0.0 -. 1.0), _lh_testforce_arg1¹), _lh_testforce_State_0¹) testforce₀₀(_lh_testforce_arg1¹, _lh_testforce_LH_C_1¹)]: 451
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testAtom₀₀(primId⁰(500))
+//│ def testAtom₀₀(_lh_testAtom_arg1²) = 
+//│ 	concat₀₀(
+//│ 		let _lh_listcomp_fun⁸ = (fun _lh_listcomp_fun_para⁵ -> _lh_listcomp_fun_para⁵(_lh_listcomp_fun⁸))
+//│ 		in _lh_listcomp_fun⁸(take_lz₀₀(_lh_testAtom_arg1², runExperiment₀₀(testforce₀₀, 0.02, 
+//│ 			let _lh_scalarMut_LH_C_0⁶ = 1.0
+//│ 			in let _lh_scalarMut_LH_C_1⁶ = (fun _lh_scalarMut_arg1⁹ -> [LH_N])
+//│ 			in (fun _lh_scalarMut_arg1⁸ -> [LH_C (_lh_scalarMut_arg1⁸ *. _lh_scalarMut_LH_C_0⁶) scalarMut₂₀(_lh_scalarMut_arg1⁸, _lh_scalarMut_LH_C_1⁶)]), [State [LH_C 1.0 [LH_N]] [LH_C 0.0 [LH_N]]]))))
+//│ 	where
+//│ 	def concat₀₀(lss⁵) = 
+//│ 		case lss⁵ of {
+//│ 			LH_C h¹⁴ t¹⁴ => mappend₀₁(h¹⁴, concat₀₁(t¹⁴))
+//│ 			| LH_N  => [LH_N]}
+//│ 		where
+//│ 		def concat₀₁(lss⁶) = 
+//│ 			case lss⁶ of {
+//│ 				LH_C h⁹ t⁹ => mappend₀₀(h⁹, concat₀₁(t⁹))
+//│ 				| LH_N  => [LH_N]}
+//│ 			where
+//│ 			def mappend₀₀(xs¹³, ys¹³) = 
+//│ 				case xs¹³ of {
+//│ 					LH_C h¹⁰ t¹⁰ => [LH_C h¹⁰ mappend₀₀(t¹⁰, ys¹³)]
+//│ 					| LH_N  => ys¹³}
+//│ 		def mappend₀₁(xs¹¹, ys¹¹) = 
+//│ 			case xs¹¹ of {
+//│ 				LH_C h¹¹ t¹¹ => [LH_C h¹¹ mappend₀₁(t¹¹, ys¹¹)]
+//│ 				| LH_N  => ys¹¹}
+//│ 	def mappend₁₀(xs¹⁵, ys²⁰) = 
+//│ 		xs¹⁵(ys²⁰)
+//│ 	def runExperiment₀₀(_lh_runExperiment_arg1², _lh_runExperiment_arg2², _lh_runExperiment_arg3², _lh_runExperiment_arg4²) = 
+//│ 		lazy⁰(
+//│ 			let stream² = runExperiment₀₀(_lh_runExperiment_arg1², _lh_runExperiment_arg2², _lh_runExperiment_arg3², _lh_runExperiment_arg4²)
+//│ 			in [LH_C _lh_runExperiment_arg4² zipWith_lz_lz₀₀(propagate₀₀(_lh_runExperiment_arg2²), _lh_runExperiment_arg1²(_lh_runExperiment_arg3², stream²), stream²)])
+//│ 		where
+//│ 		def propagate₀₀(_lh_propagate_arg1², _lh_propagate_arg2², _lh_propagate_arg3²) = 
+//│ 			case _lh_propagate_arg3² of {
+//│ 				State _lh_propagate_State_0¹ _lh_propagate_State_1¹ => [State dotPlus₀₀(_lh_propagate_State_0¹, scalarMut₀₀(_lh_propagate_arg1², _lh_propagate_State_1¹)) dotPlus₁₀(_lh_propagate_State_1¹, scalarMut₁₀(_lh_propagate_arg1², _lh_propagate_arg2²))]
+//│ 				| _  => error⁰}
+//│ 			where
+//│ 			def dotPlus₀₀(_lh_dotPlus_arg1⁴, _lh_dotPlus_arg2⁴) = 
+//│ 				case _lh_dotPlus_arg2⁴ of {
+//│ 					LH_N  => _lh_dotPlus_arg1⁴
+//│ 					| _  => case _lh_dotPlus_arg1⁴ of {
+//│ 						LH_N  => _lh_dotPlus_arg2⁴
+//│ 						| _  => case _lh_dotPlus_arg1⁴ of {
+//│ 							LH_C _lh_dotPlus_LH_C_0⁶ _lh_dotPlus_LH_C_1⁶ => case _lh_dotPlus_arg2⁴ of {
+//│ 								LH_C _lh_dotPlus_LH_C_0⁷ _lh_dotPlus_LH_C_1⁷ => [LH_C (_lh_dotPlus_LH_C_0⁶ +. _lh_dotPlus_LH_C_0⁷) dotPlus₀₀(_lh_dotPlus_LH_C_1⁶, _lh_dotPlus_LH_C_1⁷)]
+//│ 								| _  => error⁰}
+//│ 							| _  => error⁰}}}
+//│ 			def dotPlus₁₀(_lh_dotPlus_arg1⁵, _lh_dotPlus_arg2⁵) = 
+//│ 				case _lh_dotPlus_arg2⁵ of {
+//│ 					LH_N  => _lh_dotPlus_arg1⁵
+//│ 					| _  => case _lh_dotPlus_arg1⁵ of {
+//│ 						LH_N  => _lh_dotPlus_arg2⁵
+//│ 						| _  => case _lh_dotPlus_arg1⁵ of {
+//│ 							LH_C _lh_dotPlus_LH_C_0⁴ _lh_dotPlus_LH_C_1⁴ => case _lh_dotPlus_arg2⁵ of {
+//│ 								LH_C _lh_dotPlus_LH_C_0⁵ _lh_dotPlus_LH_C_1⁵ => [LH_C (_lh_dotPlus_LH_C_0⁴ +. _lh_dotPlus_LH_C_0⁵) dotPlus₁₀(_lh_dotPlus_LH_C_1⁴, _lh_dotPlus_LH_C_1⁵)]
+//│ 								| _  => error⁰}
+//│ 							| _  => error⁰}}}
+//│ 			def scalarMut₀₀(_lh_scalarMut_arg1¹³, _lh_scalarMut_arg2⁸) = 
+//│ 				case _lh_scalarMut_arg2⁸ of {
+//│ 					LH_N  => [LH_N]
+//│ 					| LH_C _lh_scalarMut_LH_C_0³ _lh_scalarMut_LH_C_1³ => [LH_C (_lh_scalarMut_arg1¹³ *. _lh_scalarMut_LH_C_0³) scalarMut₀₀(_lh_scalarMut_arg1¹³, _lh_scalarMut_LH_C_1³)]
+//│ 					| _  => error⁰}
+//│ 			def scalarMut₁₀(_lh_scalarMut_arg1⁷, _lh_scalarMut_arg2⁷) = 
+//│ 				_lh_scalarMut_arg2⁷(_lh_scalarMut_arg1⁷)
+//│ 		def zipWith_lz_lz₀₀(f², xs¹², ys¹²) = 
+//│ 			lazy⁰(force⁰(xs¹², f², ys¹²))
+//│ 	def show₀₀(_lh_show_arg1²) = 
+//│ 		case _lh_show_arg1² of {
+//│ 			State _lh_show_State_0¹ _lh_show_State_1¹ => concat₁₀(
+//│ 				let _lh_listcomp_fun⁷ = (fun _lh_listcomp_fun_para⁴ -> case _lh_listcomp_fun_para⁴ of {
+//│ 					LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => 
+//│ 						let h¹⁶ = mappend₃₀(string_of_float⁰(_lh_listcomp_fun_ls_h²), 
+//│ 							let h¹⁷ = 't'
+//│ 							in let t¹⁷ = (fun ys¹⁶ -> ys¹⁶)
+//│ 							in (fun ys¹⁴ -> 
+//│ 								let h¹⁸ = h¹⁷
+//│ 								in let t¹⁸ = mappend₂₀(t¹⁷, ys¹⁴)
+//│ 								in (fun ys¹⁵ -> [LH_C h¹⁸ mappend₁₀(t¹⁸, ys¹⁵)])))
+//│ 						in let t¹⁶ = _lh_listcomp_fun⁷(_lh_listcomp_fun_ls_t²)
+//│ 						in mappend₂₀(h¹⁶, concat₁₀(t¹⁶))
+//│ 					| LH_N  => (fun ys¹⁷ -> ys¹⁷)})
+//│ 				in _lh_listcomp_fun⁷(_lh_show_State_0¹))
+//│ 			| _  => error⁰}
+//│ 		where
+//│ 		def concat₁₀(lss⁷) = 
+//│ 			lss⁷
+//│ 			where
+//│ 			def mappend₂₀(xs¹⁴, ys¹⁸) = 
+//│ 				xs¹⁴(ys¹⁸)
+//│ 		def mappend₃₀(xs¹⁶, ys²¹) = 
+//│ 			case xs¹⁶ of {
+//│ 				LH_C h⁸ t⁸ => 
+//│ 					let h¹⁹ = h⁸
+//│ 					in let t¹⁹ = mappend₃₀(t⁸, ys²¹)
+//│ 					in (fun ys²² -> 
+//│ 						let h²⁰ = h¹⁹
+//│ 						in let t²⁰ = mappend₂₀(t¹⁹, ys²²)
+//│ 						in (fun ys²³ -> [LH_C h²⁰ mappend₁₀(t²⁰, ys²³)]))
+//│ 				| LH_N  => ys²¹}
+//│ 	def take_lz₀₀(n², ls²) = 
+//│ 		if (n² > 0) then case force⁰(ls²) of {
+//│ 			LH_C h¹⁵ t¹⁵ => 
+//│ 				let _lh_listcomp_fun_ls_h⁴ = h¹⁵
+//│ 				in let _lh_listcomp_fun_ls_t⁴ = take_lz₀₀((n² - 1), t¹⁵)
+//│ 				in (fun _lh_listcomp_fun⁴ -> [LH_C mappend₁₀(show₀₀(_lh_listcomp_fun_ls_h⁴), [LH_C 'n' [LH_N]]) _lh_listcomp_fun⁴(_lh_listcomp_fun_ls_t⁴)])
+//│ 			| LH_N  => (fun _lh_listcomp_fun⁵ -> [LH_N])} else (fun _lh_listcomp_fun⁶ -> [LH_N])
+//│ 	def testforce₀₀(_lh_testforce_arg1², _lh_testforce_arg2²) = 
+//│ 		lazy⁰(
+//│ 			let _lh_matchIdent² = force⁰(_lh_testforce_arg2²)
+//│ 			in case _lh_matchIdent² of {
+//│ 				LH_C _lh_testforce_LH_C_0¹ _lh_testforce_LH_C_1¹ => case _lh_testforce_LH_C_0¹ of {
+//│ 					State _lh_testforce_State_0¹ _lh_testforce_State_1¹ => 
+//│ 						let hx² = dotMult₀₀(scalarMut₂₀((0.0 -. 1.0), _lh_testforce_arg1²), _lh_testforce_State_0¹)
+//│ 						in let tx² = testforce₀₀(_lh_testforce_arg1², _lh_testforce_LH_C_1¹)
+//│ 						in (fun f³ -> (fun ys¹⁹ -> case force⁰(ys¹⁹) of {
+//│ 							LH_C hy¹ ty¹ => [LH_C f³(hx², hy¹) zipWith_lz_lz₀₀(f³, tx², ty¹)]
+//│ 							| LH_N  => [LH_N]}))
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰})
+//│ 		where
+//│ 		def dotMult₀₀(_lh_dotMult_arg1², _lh_dotMult_arg2²) = 
+//│ 			case _lh_dotMult_arg2² of {
+//│ 				LH_N  => (fun _lh_scalarMut_arg1¹⁰ -> [LH_N])
+//│ 				| _  => case _lh_dotMult_arg1² of {
+//│ 					LH_N  => (fun _lh_scalarMut_arg1¹¹ -> [LH_N])
+//│ 					| _  => case _lh_dotMult_arg1² of {
+//│ 						LH_C _lh_dotMult_LH_C_0² _lh_dotMult_LH_C_1² => case _lh_dotMult_arg2² of {
+//│ 							LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => 
+//│ 								let _lh_scalarMut_LH_C_0⁷ = (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³)
+//│ 								in let _lh_scalarMut_LH_C_1⁷ = dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)
+//│ 								in (fun _lh_scalarMut_arg1¹² -> [LH_C (_lh_scalarMut_arg1¹² *. _lh_scalarMut_LH_C_0⁷) scalarMut₁₀(_lh_scalarMut_arg1¹², _lh_scalarMut_LH_C_1⁷)])
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}}}
+//│ 		def scalarMut₂₀(_lh_scalarMut_arg1⁶, _lh_scalarMut_arg2⁶) = 
+//│ 			_lh_scalarMut_arg2⁶(_lh_scalarMut_arg1⁶)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+

@@ -96,7 +96,7 @@ lazy val lumberhack = crossProject(JSPlatform, JVMPlatform).in(file("lumberhack"
   .settings(
     resolvers += "jitpack" at "https://jitpack.io",
     name := "lumberhack",
-    scalaVersion := "3.2.0",
+    scalaVersion := "3.3.0",
     sbtJniCoreScope := Compile,
     sourceDirectory := baseDirectory.value.getParentFile()/"shared"/"src",
     watchSources += WatchSource(

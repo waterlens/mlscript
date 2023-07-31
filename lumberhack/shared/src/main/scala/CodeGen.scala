@@ -894,7 +894,7 @@ trait CodeGen {
   val primitives: Map[String, String]
   val headers: Document
   
-  def transfromId(id: Ident): Document
+  def transformId(id: Ident): Document
   def transFromProgDef(pd: ProgDef): Document
   def transformMatchArm(dtor: Var, params: List[Ident]): Document
   
@@ -961,31 +961,31 @@ object HaskellGen extends CodeGen {
       emptyLines = false
     ).print
   }
-  override def transfromId(id: Ident): Document =
+  override def transformId(id: Ident): Document =
     if id.isDef then id.pp(using InitPpConfig) else id.pp(using InitPpConfig.showIuidOn)
   override def transFromProgDef(pd: ProgDef): Document = {
     pd.body match {
       case bodyFun@Function(param, body) => {
         val (params, innerBody) = bodyFun.takeParamsOut
-        transfromId(pd.id) <:> " " <:> Lined(params.map(transfromId), " ") <:> " = " <:> rec(innerBody)
+        transformId(pd.id) <:> " " <:> Lined(params.map(transformId), " ") <:> " = " <:> rec(innerBody)
       }
-      case _ => transfromId(pd.id) <:> " = " <:> rec(pd.body)
+      case _ => transformId(pd.id) <:> " = " <:> rec(pd.body)
     }
   }
   
   override def transformMatchArm(dtor: Var, params: List[Ident]): Document = {
     BuiltInTypes.fromStr(dtor.name) -> params match {
-      case Some(BuiltInTypes.ListCons) -> (h :: t :: Nil) => "(" <:> transfromId(h) <:> " : " <:> transfromId(t) <:> ") -> "
+      case Some(BuiltInTypes.ListCons) -> (h :: t :: Nil) => "(" <:> transformId(h) <:> " : " <:> transformId(t) <:> ") -> "
       case Some(BuiltInTypes.ListNil) -> Nil => "[] -> "
       case Some(BuiltInTypes.Tuple(n)) -> fields => {
         assert(fields.length == n)
-        "(" <:> Lined(fields.map(f => transfromId(f)), ", ") <:> ") -> "
+        "(" <:> Lined(fields.map(f => transformId(f)), ", ") <:> ") -> "
       }
       case Some(BuiltInTypes.BoolTrue) -> Nil => "True -> "
       case Some(BuiltInTypes.BoolFalse) -> Nil => "False -> "
-      case None -> (idPat :: Nil) if dtor.name == "_" => transfromId(idPat) <:> " -> "
+      case None -> (idPat :: Nil) if dtor.name == "_" => transformId(idPat) <:> " -> "
       case None -> Nil if dtor.name == "_" => "_ -> "
-      case _ => dtor.name <:> " " <:> Lined(params.map(arg => transfromId(arg)) :+ Raw("-> "), " ")
+      case _ => dtor.name <:> " " <:> Lined(params.map(arg => transformId(arg)) :+ Raw("-> "), " ")
     }
   }
 
@@ -997,7 +997,7 @@ object HaskellGen extends CodeGen {
   def recSingleline(e: Expr): Document = e match {
     case Const(lit) => Raw(lit.idStr)
     case Ref(id) if Deforest.lumberhackKeywords(id.tree.name) => id.tree.name
-    case Ref(id) => transfromId(id)
+    case Ref(id) => transformId(id)
     case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackBinOps(op) =>
       "(" <:> recSingleline(fst) <:> s" $op " <:> recSingleline(snd) <:> ")"
     case Call(Ref(Ident(_, Var("primId"), _)), arg) => recSingleline(arg)
@@ -1017,20 +1017,20 @@ object HaskellGen extends CodeGen {
         "(" <:> name.name <:> " " <:> Lined(args.map(arg => recSingleline(arg)), " ") <:> ")"
       )
     case LetIn(id, rhs, body) => 
-      "(let " <:> transfromId(id) <:> " = " <:> recSingleline(rhs) <:> " in " <:> recSingleline(body) <:> ")"
+      "(let " <:> transformId(id) <:> " = " <:> recSingleline(rhs) <:> " in " <:> recSingleline(body) <:> ")"
     case Match(scrut, arms) => 
       "(case " <:> recSingleline(scrut) <:> " of {" <:> 
       Lined(arms.map{ case (v, args, body) => transformMatchArm(v, args) <:> recSingleline(body) }, "; ") <:> "})"
     case f: Function =>
       val (params, body) = f.takeParamsOut
-      "(\\" <:> Lined(params.map(transfromId), " ") <:> " -> " <:> recSingleline(body) <:> ")"
+      "(\\" <:> Lined(params.map(transformId), " ") <:> " -> " <:> recSingleline(body) <:> ")"
     case IfThenElse(s, t, e) => "(if " <:> recSingleline(s) <:> " then " <:> recSingleline(t) <:> " else " <:> recSingleline(e) <:> ")"
     case _ => lastWords("unsupported: " + e.pp(using InitPpConfig.showIuidOn))
   }
 
   def recMultiline(e: Expr): Document = e match {
     case Const(lit) => Raw(lit.idStr)
-    case Ref(id) => transfromId(id)
+    case Ref(id) => transformId(id)
     case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackIntBinOps(op) =>
       recMultiline(fst) <:> s" $op " <:> recMultiline(snd)
     case Call(lhs, rhs) =>
@@ -1051,7 +1051,7 @@ object HaskellGen extends CodeGen {
       )
     case LetIn(id, rhs, body) => 
       stack(
-        "(let " <:> transfromId(id) <:> " = " <:> recMultiline(rhs) <:> " in",
+        "(let " <:> transformId(id) <:> " = " <:> recMultiline(rhs) <:> " in",
         Indented(recMultiline(body)),
         ")"
       )
@@ -1059,14 +1059,14 @@ object HaskellGen extends CodeGen {
       Stacked(
         ("case " <:> recMultiline(scrut) <:> " of") :: 
         arms.map{case (v, args, body) => stack(
-          // Indented(v.name <:> " " <:> Lined(args.map(arg => transfromId(arg)) :+ Raw("-> "), " ") <:> recMultiline(body))
+          // Indented(v.name <:> " " <:> Lined(args.map(arg => transformId(arg)) :+ Raw("-> "), " ") <:> recMultiline(body))
           Indented(transformMatchArm(v, args) <:> recMultiline(body))
         )}
       )
     case f: Function =>
       val (params, body) = f.takeParamsOut
       stack(
-        "(\\" <:> Lined(params.map(transfromId), " ") <:> " -> ",
+        "(\\" <:> Lined(params.map(transformId), " ") <:> " -> ",
         Indented(recMultiline(body) <:> ")")
       )
     case IfThenElse(s, t, e) => "if " <:> recMultiline(s) <:> " then " <:> recMultiline(t) <:> " else " <:> recMultiline(e)
@@ -1192,12 +1192,12 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
       case bodyFun@Function(param, body) => {
         val (params, innerBody) = bodyFun.takeParamsOut
         stack(
-          transfromId(pd.id) <:> Lined(params.map(p => " " <:> transfromId(p)), "") <:> " =",
+          transformId(pd.id) <:> Lined(params.map(p => " " <:> transformId(p)), "") <:> " =",
           Indented(rec(innerBody))
         )
       }
       case _ => stack(
-        transfromId(pd.id) <:> " =",
+        transformId(pd.id) <:> " =",
         Indented(rec(pd.body))
       )
     }
@@ -1209,19 +1209,19 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
       case Some(BuiltInTypes.BoolFalse) -> Nil => "false -> "
       case Some(otherBuiltInTypes) -> params if backToBuiltInType =>
         otherBuiltInTypes -> params match {
-          case BuiltInTypes.ListCons -> (h :: t :: Nil) => "(" <:> transfromId(h) <:> " :: " <:> transfromId(t) <:> ") -> "
+          case BuiltInTypes.ListCons -> (h :: t :: Nil) => "(" <:> transformId(h) <:> " :: " <:> transformId(t) <:> ") -> "
           case BuiltInTypes.ListNil -> Nil => "[] -> "
           case BuiltInTypes.Tuple(n) -> fields => {
             assert(fields.length == n)
-            "(" <:> Lined(fields.map(f => transfromId(f)), ", ") <:> ") -> "
+            "(" <:> Lined(fields.map(f => transformId(f)), ", ") <:> ") -> "
           }
         }
-      case None -> (idPat :: Nil) if dtor.name == "_" => transfromId(idPat) <:> " -> "
+      case None -> (idPat :: Nil) if dtor.name == "_" => transformId(idPat) <:> " -> "
       case None -> Nil if dtor.name == "_" => "_ -> "
       case None -> Nil if dtor.name.matches("\\d+|'.'") => s"${dtor.name} -> " // int or char literal pattern
       case _ => (if this.usePolymorphicVariant then "`" else "") <:> s"${dtor.name}" <:> {
         if params.nonEmpty then
-          "(" <:> Lined(params.map(arg => transfromId(arg)), ", ") <:> ")"
+          "(" <:> Lined(params.map(arg => transformId(arg)), ", ") <:> ")"
         else
           ""
       } <:> Raw(" -> ")
@@ -1233,7 +1233,7 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
     case Const(lit) => Raw(lit.idStr)
     case Ref(id) if Deforest.lumberhackKeywords(id.tree.name) =>
       transformPrimitive(id.tree.name)
-    case Ref(id) => transfromId(id)
+    case Ref(id) => transformId(id)
     case Call(Ref(Ident(_, Var("primId"), _)), arg) => rec(arg)
     case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd)
       if Deforest.lumberhackBinOps(op) || Deforest.lumberhackPolyOps(op) || (op == "div") =>
@@ -1260,9 +1260,14 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
       )
     case LetIn(id, rhs, body) => 
       stack(
-        "(let rec " <:> transfromId(id) <:> " = " <:> rec(rhs) <:> " in",
+        "(let rec " <:> transformId(id) <:> " = " <:> rec(rhs) <:> " in",
         Indented(rec(body)) <:> ")"
       )
+    case LetGroup(defs, body) =>
+      defs.map { case (d, r) =>
+        transformId(d) <:> ???
+      }
+      ???
     case Match(scrut, arms) => 
       Stacked(
         ("(match " <:> rec(scrut) <:> " with") ::
@@ -1274,7 +1279,7 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
     case f: Function =>
       val (params, body) = f.takeParamsOut
       stack(
-        "(fun " <:> Lined(params.map(transfromId), " ") <:> " -> ",
+        "(fun " <:> Lined(params.map(transformId), " ") <:> " -> ",
         Indented(rec(body)) <:> ")"
       )
     case IfThenElse(s, t, e) => stack(
@@ -1418,7 +1423,7 @@ let string_of_float f = listToTaggedList (explode_string (string_of_float f))"""
       emptyLines = false
     ).print
   }
-  override def transfromId(id: Ident): Document = {
+  override def transformId(id: Ident): Document = {
     def fromSubscript(i: String) = i.flatMap {
       case '₀' => "_d0"; case '₁' => "_d1"; case '₂' => "_d2"
       case '₃' => "_d3"; case '₄' => "_d4"; case '₅' => "_d5"
@@ -1451,7 +1456,7 @@ object DistillerGen extends CodeGen {
   def recSingleline(e: Expr): Document = e match {
     case Const(lit) => Raw(lit.idStr)
     case Ref(id) if Deforest.lumberhackKeywords(id.tree.name) => id.tree.name
-    case Ref(id) => transfromId(id)
+    case Ref(id) => transformId(id)
     case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd) if Deforest.lumberhackBinOps(op) =>
       "(" <:> s"${primitives.getOrElse(op, op)} " <:> recSingleline(fst) <:> " " <:> recSingleline(snd) <:> ")"
     case Call(Ref(Ident(_, Var("primId"), _)), arg) => recSingleline(arg)
@@ -1462,13 +1467,14 @@ object DistillerGen extends CodeGen {
     case Ctor(name, args) => 
       "(" <:> name.name <:> ")"
     case LetIn(id, rhs, body) => 
-      "(let " <:> transfromId(id) <:> " = " <:> recSingleline(rhs) <:> " in " <:> recSingleline(body) <:> ")"
+      "(let " <:> transformId(id) <:> " = " <:> recSingleline(rhs) <:> " in " <:> recSingleline(body) <:> ")"
+    case LetGroup(_, _) => lastWords("mutual recursive let groups not supported")
     case Match(scrut, arms) => 
       "(case " <:> recSingleline(scrut) <:> " of " <:> 
       Lined(arms.map{ case (v, args, body) => transformMatchArm(v, args) <:> recSingleline(body) }, " | ") <:> ")"
     case f: Function =>
       val (params, body) = f.takeParamsOut
-      "(\\" <:> Lined(params.map(transfromId), " ") <:> " -> " <:> recSingleline(body) <:> ")"
+      "(\\" <:> Lined(params.map(transformId), " ") <:> " -> " <:> recSingleline(body) <:> ")"
     case IfThenElse(s, t, e) =>
       "(case " <:> recSingleline(s) <:> " of True -> (" <:> recSingleline(t) <:> ") | False -> (" <:> recSingleline(e) <:> "))"
     case _ => lastWords("unsupported: " + e.pp(using InitPpConfig.showIuidOn))
@@ -1478,33 +1484,33 @@ object DistillerGen extends CodeGen {
       case bodyFun@Function(param, body) => {
         val (params, innerBody) = bodyFun.takeParamsOut
         stack(
-          transfromId(pd.id) <:> Lined(params.map(p => " " <:> transfromId(p)), "") <:> " =",
+          transformId(pd.id) <:> Lined(params.map(p => " " <:> transformId(p)), "") <:> " =",
           Indented(rec(innerBody))
         )
       }
       case _ => stack(
-        transfromId(pd.id) <:> " =",
+        transformId(pd.id) <:> " =",
         Indented(rec(pd.body))
       )
     }
   }
   override def transformMatchArm(dtor: Var, params: List[Ident]): Document = {
     BuiltInTypes.fromStr(dtor.name) -> params match {
-      // case Some(BuiltInTypes.ListCons) -> (h :: t :: Nil) => "(" <:> transfromId(h) <:> " : " <:> transfromId(t) <:> ") -> "
+      // case Some(BuiltInTypes.ListCons) -> (h :: t :: Nil) => "(" <:> transformId(h) <:> " : " <:> transformId(t) <:> ") -> "
       // case Some(BuiltInTypes.ListNil) -> Nil => "[] -> "
       // case Some(BuiltInTypes.Tuple(n)) -> fields => {
       //   assert(fields.length == n)
-      //   "(" <:> Lined(fields.map(f => transfromId(f)), ", ") <:> ") -> "
+      //   "(" <:> Lined(fields.map(f => transformId(f)), ", ") <:> ") -> "
       // }
       // case Some(BuiltInTypes.BoolTrue) -> Nil => "True -> "
       // case Some(BuiltInTypes.BoolFalse) -> Nil => "False -> "
-      // case None -> (idPat :: Nil) if dtor.name == "_" => transfromId(idPat) <:> " -> "
+      // case None -> (idPat :: Nil) if dtor.name == "_" => transformId(idPat) <:> " -> "
       // case None -> Nil if dtor.name == "_" => "_ -> "
-      case _ if params.length > 0 => dtor.name <:> "(" <:> Lined(params.map(arg => transfromId(arg)), ", ") <:> ") -> "
+      case _ if params.length > 0 => dtor.name <:> "(" <:> Lined(params.map(arg => transformId(arg)), ", ") <:> ") -> "
       case _ => dtor.name <:> " -> "
     }
   }
-  override def transfromId(id: Ident): Document = {
+  override def transformId(id: Ident): Document = {
     def fromSubscript(i: String) = i.flatMap {
       case '₀' => "_d0"; case '₁' => "_d1"; case '₂' => "_d2"
       case '₃' => "_d3"; case '₄' => "_d4"; case '₅' => "_d5"

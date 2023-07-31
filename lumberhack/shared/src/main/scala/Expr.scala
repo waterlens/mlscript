@@ -116,12 +116,13 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
   case Call(lhs: Expr, rhs: Expr)(using Deforest, Option[Ident])
   case Ctor(name: Var, args: Ls[Expr])(using Deforest, Option[Ident])
   case LetIn(id: Ident, rhs: Expr, body: Expr)(using Deforest, Option[Ident])
+  case LetGroup(defs: Map[Ident, Expr], body: Expr)(using Deforest, Option[Ident])
   case Match(scrut: Expr, arms: Ls[(Var, Ls[Ident], Expr)])(using Deforest, Option[Ident])
   case IfThenElse(scrut: Expr, thenn: Expr, elze: Expr)(using Deforest, Option[Ident])
   case Function(param: Ident, body: Expr)(using Deforest, Option[Ident]) extends Expr with FunctionTrait
   case Sequence(fst: Expr, snd: Expr)(using Deforest, Option[Ident])
   
-  type MultiLineExprs = LetIn | Sequence
+  type MultiLineExprs = LetIn | Sequence | LetGroup
 
   val uid: Uid[Expr] = deforest.euid.nextUid
   deforest.exprs += uid -> this
@@ -459,12 +460,12 @@ object Expr {
           }
           case L(IfThen(name: Var, rhs)) if name.name.isCapitalized => (name, Nil, fromTerm(rhs))  // constructor with no field (including True and False)
           case L(IfThen(name: Var, rhs)) if name.name == "_" => (name, Nil, fromTerm(rhs))         // wildcard pattern
+          case L(IfThen(name: Var, rhs)) if name.name.matches("'.'") =>                            // char literal pattern
+            (name, Nil, fromTerm(rhs))
           case L(IfThen(name: Var, rhs)) =>                                                        // id pattern
             val newId = d.nextIdent(false, name)
             (Var("_"), newId :: Nil, fromTerm(rhs)(using d, ctx + (name.name -> newId)))
-          // literal pattern
-          case L(IfThen(name: Var, rhs)) if name.name.matches("'.'") =>                            // char literal pattern
-            (name, Nil, fromTerm(rhs))
+          // other literal pattern
           case L(IfThen(lit: Lit, rhs)) => lit match {
             case IntLit(value) => (Var(value.toString()), Nil, fromTerm(rhs))
             // case StrLit(value) => (Var(s"\"$value\""), Nil, fromTerm(rhs))

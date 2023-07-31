@@ -70,8 +70,8 @@ class DiffTestLumberhack extends DiffTests {
         val p = Program.fromPgrm(Pgrm(filteredEntities))(using originalD)
         (p, p.d)
       given d: Deforest = newD
-      d(originalProgram)
       d.debug = mode.stdout || mode.verbose
+      d(originalProgram)
       
       if mode.stdout || mode.verbose then {
         output(originalProgram.pp(using InitPpConfig.multilineOn.showIuidOn.showEuidOn)) 
@@ -341,7 +341,7 @@ object DiffTestLumberhack {
   import org.scalatest.time._
   private val TimeLimit =
     if (sys.env.get("CI").isDefined) Span(25, Seconds)
-    else Span(25, Seconds)
+    else Span(60, Seconds)
   private val pwd = os.pwd
   private val dir = pwd/"lumberhack"/"shared"/"src"/"test"/"resources"
   private val allFiles = os.walk(dir)

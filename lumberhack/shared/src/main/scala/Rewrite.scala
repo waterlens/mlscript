@@ -181,6 +181,7 @@ class FusionStrategy(d: Deforest) {
           case Call(lhs: Expr, rhs: Expr) => getCtorsInExpr(lhs) ++ getCtorsInExpr(rhs)
           case ce@Ctor(name: Var, args: Ls[Expr]) => d.ctorExprToType.get(ce.uid).toSet
           case LetIn(id: Ident, rhs: Expr, body: Expr) => getCtorsInExpr(rhs) ++ getCtorsInExpr(body)
+          case LetGroup(defs, body) => defs.values.flatMap(getCtorsInExpr(_)).toSet ++ getCtorsInExpr(body)
           case me@Match(scrut: Expr, arms: Ls[(Var, Ls[Ident], Expr)]) => {
             val dtorType = d.dtorExprToType(me.uid)
             afterRemoveMultipleMatch._2.get(dtorType) match {
@@ -273,6 +274,15 @@ trait ExprRewrite { this: Expr =>
       case LetIn(id, rhs, body) =>
         val newId = id.copyToNewDeforest
         LetIn(newId, rhs.rewriteExpand(using ctx + (id -> newId)), body.rewriteExpand(using ctx + (id -> newId)))
+      case LetGroup(defs, body) =>
+        val newIdsMap = (defs.keys.map(i => i -> i.copyToNewDeforest)).toMap
+        val newCtx = ctx ++ newIdsMap
+        LetGroup(
+          defs.map { case (d, rhs) =>
+            newIdsMap(d) -> rhs.rewriteExpand(using newCtx)
+          },
+          body.rewriteExpand(using newCtx)
+        )
       case Match(scrut, arms) =>
         Match(scrut.rewriteExpand, arms.map {(ctor, args, body) =>
           val newArgs = args.map(a => a -> a.copyToNewDeforest)
@@ -307,6 +317,15 @@ trait ExprRewrite { this: Expr =>
         val newId = id.copyToNewDeforest
         val newCtx = ctx + (id -> newId)
         LetIn(newId, rhs.rewriteFusion(using newCtx), body.rewriteFusion(using newCtx))
+      case LetGroup(defs, body) =>
+        val newIdsMap = (defs.keys.map(i => i -> i.copyToNewDeforest)).toMap
+        val newCtx = ctx ++ newIdsMap
+        LetGroup(
+          defs.map { case (d, rhs) =>
+            newIdsMap(d) -> rhs.rewriteFusion(using newCtx)
+          },
+          body.rewriteFusion(using newCtx)
+        )
       case IfThenElse(s, t, e) => IfThenElse(s.rewriteFusion, t.rewriteFusion, e.rewriteFusion)
       case Function(param, body) =>
         val newParamId = param.copyToNewDeforest
@@ -354,6 +373,9 @@ trait ExprRewrite { this: Expr =>
     case Call(lhs: Expr, rhs: Expr) => lhs.outOfScopeIdsSet ++ rhs.outOfScopeIdsSet
     case Ctor(name: Var, args: Ls[Expr]) => args.flatMap(_.outOfScopeIdsSet).toSet
     case LetIn(id: Ident, rhs: Expr, body: Expr) => rhs.outOfScopeIdsSet(using set + id) ++ body.outOfScopeIdsSet(using set + id)
+    case LetGroup(defs, body) =>
+      val newIds = defs.keySet ++ set
+      defs.values.flatMap(_.outOfScopeIds(using newIds)).toSet ++ body.outOfScopeIds(using newIds)
     case Match(scrut: Expr, arms: Ls[(Var, Ls[Ident], Expr)]) =>
       scrut.outOfScopeIdsSet ++ (arms.flatMap { (_, newIds, body) => body.outOfScopeIdsSet(using set ++ newIds) })
     case IfThenElse(scrut: Expr, thenn: Expr, elze: Expr) =>
@@ -370,6 +392,8 @@ trait ExprRewrite { this: Expr =>
     case Call(f, p) => Call(f.substId, p.substId)
     case Ctor(n, args) => Ctor(n, args.map(_.substId))
     case LetIn(id, value, body) => LetIn(id, value.substId, body.substId)
+    case LetGroup(defs, body) =>
+      LetGroup(defs.mapValues(_.substId).toMap, body.substId)
     case Match(scrut, arms) => Match(scrut.substId, arms.map((n, args, body) => (n, args, body.substId)))
     case IfThenElse(cond, thenn, elze) => IfThenElse(cond.substId, thenn.substId, elze.substId)
     case Sequence(f, s) => Sequence(f.substId, s.substId)
@@ -398,6 +422,13 @@ trait ExprRewrite { this: Expr =>
         case f: Function => {
           val (allArg, fBody) = f.takeParamsOut
           allArg.foldRight[Expr](LetIn(id, v, fBody))(Function(_, _))
+        }
+        case _ => this
+      }
+      case LetGroup(defs, body) => body.popOutLambdas match {
+        case f: Function => {
+          val (allArg, fBody) = f.takeParamsOut
+          allArg.foldRight[Expr](LetGroup(defs, fBody))(Function(_, _))
         }
         case _ => this
       }
@@ -446,6 +477,14 @@ trait ProgramRewrite { this: Program =>
       case Expr.LetIn(id: Ident, rhs: Expr, body: Expr) =>
         val newId = id.copyToNewDeforest
         Expr.LetIn(newId, copyExpr(rhs)(using ctx + (id -> newId)), copyExpr(body)(using ctx + (id -> newId)))
+      case Expr.LetGroup(defs: Map[Ident, Expr], body: Expr) => {
+        val newDefIds = defs.map { case (id, rhs) => id -> id.copyToNewDeforest }
+        val newDefs = defs.map { case (id, rhs) => newDefIds(id) -> copyExpr(rhs)(using ctx ++ newDefIds) }
+        Expr.LetGroup(
+          newDefs,
+          copyExpr(body)(using ctx ++ newDefIds)
+        )
+      }
       case Expr.Match(scrut: Expr, arms: Ls[(Var, Ls[Ident], Expr)]) =>
         Expr.Match(copyExpr(scrut), arms.map {(ctor, args, body) =>
           val newArgs = args.map(a => a -> a.copyToNewDeforest)

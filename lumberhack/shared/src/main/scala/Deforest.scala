@@ -400,10 +400,12 @@ class Deforest(var debug: Boolean) {
         constrain(process(rhs)(using ctx + (id -> v._1.toStrat())), v._2.toStrat())
         process(body)(using ctx + (id -> v._1.toStrat())).s
       case LetGroup(defs, body) =>
+        assert(defs.nonEmpty)
         val vs = defs.keys.map(k => k -> freshVar(k)(using noExprId)).toMap
         given newCtx: Ctx = ctx ++ vs.mapValues(_._1.toStrat()).toMap
-        defs.values.foreach { rhs =>
-          process(rhs)(using newCtx)
+        defs.foreach { case (id, rhs) =>
+          val t = process(rhs)(using newCtx)
+          constrain(t, vs(id)._2.toStrat())
         }
         process(body)(using newCtx).s
       case Sequence(fst, snd) =>

@@ -42,7 +42,7 @@ case class Program(contents: Ls[ProgDef \/ Expr])(using val d: Deforest) extends
         }
         val (currentFunParam, currentFunInnerBody) = takeParamsOut(currentFunBody._2)
         val currentFunPp = currentFunInnerBody match {
-          case e: (Expr.LetIn | Expr.Sequence) => e.pp.linesIterator.filter(_.nonEmpty).map(_.drop(1)).mkString("\n")
+          case e: (Expr.LetIn | Expr.Sequence | Expr.LetGroup) => e.pp.linesIterator.filter(_.nonEmpty).map(_.drop(1)).mkString("\n")
           case e => e.pp
         }
         val nextMods = calls.calls.map(rec(_, defs)).filter(_.nonEmpty).mkString("\n").linesIterator.map("\t" + _).mkString("\n")
@@ -160,6 +160,47 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
         case Sequence(fst, snd) => s"${fst.pp}; ${snd.pp}"
         case Ctor(name, args) =>
           s"${Console.BLUE}[$name${Console.RESET}${args.map(" " + _.pp).mkString + Console.BLUE}]${Console.RESET}"
+        case LetGroup(defs, body) if config.multiline => {
+          val lets = ({
+            val firstRhs = defs.head._2 match {
+              case r: MultiLineExprs => r.pp.linesIterator.map("\t" + _).mkString("\n")
+              case r => {
+                val res = r.pp
+                val resLines = res.linesIterator.toSeq
+                if resLines.length > 1 then {
+                  resLines.map("\t" + _).mkString("\n").dropWhile(c => c == '\n' || c.isWhitespace)
+                } else { res }
+              }
+            }
+            s"let ${defs.head._1.pp} = $firstRhs"
+          } :: (defs.tail.map { case (d, rhs) =>
+            val rhsStr = rhs match {
+              case r: MultiLineExprs => rhs.pp.linesIterator.map("\t" + _).mkString("\n")
+              case _ => {
+                val res = rhs.pp
+                val resLines = res.linesIterator.toSeq
+                if resLines.length > 1 then {
+                  resLines.map("\t" + _).mkString("\n").dropWhile(c => c == '\n' || c.isWhitespace)
+                } else { res }
+              }
+            }
+            s"and ${d.pp} = $rhsStr"
+          }.toList)).mkString("\n").linesIterator.map("\t" + _).mkString("\n")
+          val bodyStr = body match {
+            case b: MultiLineExprs => b.pp.dropWhile(c => c == '\n' || c.isWhitespace)
+            case _ => {
+              val res = body.pp
+              val resLines = res.linesIterator.toSeq
+              if resLines.length > 1 then {
+                resLines.map("\t" + _).mkString("\n").dropWhile(c => c == '\n' || c.isWhitespace)
+              } else { res }
+            }
+          }
+          s"\n$lets \n\tin $bodyStr"
+        }
+        case LetGroup(defs, body) => {
+          "SINGLE_LINE_LET_GROUP_STUB"
+        }
         case LetIn(id, rhs, body) if config.multiline => {
           val rhsStr = rhs match {
             case r: MultiLineExprs => rhs.pp.linesIterator.map("\t" + _).mkString("\n")
@@ -269,6 +310,7 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
       }
       case Ctor(name, args) => Ctor(name, args.map(_.evaluate))
       case LetIn(id, value, body) => body.subst(using Map(id -> value)).evaluate(using ctx + (id -> value))
+      case LetGroup(defs, body) => ???
       case Match(scrut, arms) => scrut.evaluate match {
         case c@Ctor(name, args) => {
           val branch = arms.find((n, _, _) => n == name || n.name == "_").get
@@ -399,6 +441,7 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
       renamming += (idOther -> id)
       body.alphaRenamingCheck(bodyOther)
     }
+    case (LetGroup(_, _), _) => lastWords("unimplemented")
     case Match(scrut, arms) -> Match(scrutOther, armsOther) => scrut.alphaRenamingCheck(scrutOther) && arms.zip(armsOther).forall { case ((v, args, body), (vOther, argsOther, bodyOther)) =>
       v == vOther && args.length == argsOther.length && {
         renamming ++= argsOther.zip(args)

@@ -141,6 +141,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
               Call(Call(Ref(ctx("enumFromTo")), args(0).toExpr), args(2).toExpr)
             case _ :: "comma" :: _ :: ".." :: _ :: Nil =>
               Call(Call(Call(Ref(ctx("enumFromThenTo")), args(0).toExpr), args(2).toExpr), args(4).toExpr)
+            case _ => lastWords(s"not supported: ${n.getSrcContent}")
           }
         }
         case "exp_lambda" => {
@@ -761,6 +762,78 @@ fun reverse_helper(ls, a) = if ls is
     }
     builtinPrgms
   }
+
+  def handleFunDefs(
+    name: String,
+    defNodes: IndexedSeq[Node]
+  )(using initCtx: Expr.Ctx,
+    prgmStr: Str,
+    d: Deforest,
+    output: Str => Unit
+  ): (Ident, Expr) = {
+    val funName = initCtx(name)
+    val patsAndBodies = defNodes.map { n =>
+      val patsOrEqNode = n.getChild(1)
+      val declsNode = n.getAllChilds.find(_.getType() == "decls")
+      val (whereDecls, newCtx) = declsNode match {
+        case Some(declsNode) => {
+          val allWhereDecls = declsNode.getAllChilds
+          assert(allWhereDecls.forall(_.getType() == "function"))
+          val allWhereDeclsGrouped = allWhereDecls.groupBy(_.getChild(0).getSrcContent)
+          val decledCtx = allWhereDeclsGrouped.keys.map(n => n -> d.nextIdent(false, Var(n)))
+          val newInitCtx = initCtx ++ decledCtx
+          (
+            allWhereDeclsGrouped.map { case (name, defNodes) =>
+              (handleFunDefs(name, defNodes)(using newInitCtx))
+            },
+            decledCtx
+          )
+        }
+        case None => (Map.empty, Map.empty)
+      }
+      val (patterns, innerMainBodyIdx) = patsOrEqNode.getType() match {
+        case "patterns" => (patsOrEqNode.getAllChilds.map(_.toPattern).toList, 3)
+        case "=" => (Nil, 2)
+      }
+      val innerMainBodyToExprable = whereDecls.size match {
+        case 0 => nodeToExprableHs(n.getChild(innerMainBodyIdx))
+        case 1 => new ToExprable {
+          val name = whereDecls.head._1
+          val rhs = whereDecls.head._2
+          val inner = nodeToExprableHs(n.getChild(innerMainBodyIdx))
+          override def toExpr(using ctx: Ctx, inDef: Option[Ident], d: Deforest, output: Str => Unit, prgmStr: Str): Expr = {
+            LetIn(name, rhs, inner.toExpr(using ctx ++ newCtx))
+          }
+        }
+        case _ => new ToExprable {
+          val inner = nodeToExprableHs(n.getChild(innerMainBodyIdx))
+          override def toExpr(using ctx: Ctx, inDef: Option[Ident], d: Deforest, output: Str => Unit, prgmStr: Str): Expr = {
+            LetGroup(whereDecls, inner.toExpr(using ctx ++ newCtx))
+          }
+        }
+      }
+      (
+        patterns,
+        innerMainBodyToExprable,
+        Map.empty[String, Ident]
+      )
+    }
+    val funArgNames = {
+      val numOfArgs = patsAndBodies.map(_._1.length).toSet
+      assert(numOfArgs.size == 1)
+      (1 to numOfArgs.head).map(idx => d.nextIdent(false, Var(s"_lh_${name}_arg$idx")))
+    }
+    val body = mergeMatchPatterns(
+      funArgNames.toList,
+      patsAndBodies.toList,
+      {
+        given Option[Ident] = Some(funName)
+        Expr.Ref(initCtx("error"))
+      }
+    )(using initCtx, Some(funName))
+    val funDef = funArgNames.foldRight(body) { case (arg, acc) => Expr.Function(arg, acc)(using d, Some(funName)) }
+    (funName, funDef)
+  }
   def fromHaskellToPrgm(rootNode: Node)(using prgmStr: Str, d: Deforest, output: Str => Unit): Program = {
     val haskellBuiltinPrgm = haskellBuiltinFunsList
     val (defs, main) = rootNode.getAllChilds
@@ -780,35 +853,9 @@ fun reverse_helper(ls, a) = if ls is
       funDef.tree.name -> funDef
     } |> (_.toMap)
 
+    // NOTE: `where` is not fully handled, it cannot refer to parameters of the outer function
     val funcDefs = defs.groupBy(_.getChild(0).getSrcContent).map { case (name, defNodes) =>
-      val funName = initCtx(name)
-      val patsAndBodies = defNodes.map { n =>
-        val patsOrEqNode = n.getChild(1)
-        patsOrEqNode.getType() match {
-          case "patterns" => {
-            val pats = patsOrEqNode.getAllChilds.map(_.toPattern)
-            assert(n.getChild(2).getSrcContent == "=") // do not support guard equation for now
-            (pats.toList, nodeToExprableHs(n.getChild(3)), Map.empty[String, Ident])
-          }
-          case "=" => { // top level def without parameters
-            (Nil, nodeToExprableHs(n.getChild(2)), Map.empty[String, Ident])
-          }
-        }
-      }
-      val funArgNames = {
-        val numOfArgs = patsAndBodies.map(_._1.length).toSet
-        assert(numOfArgs.size == 1)
-        (1 to numOfArgs.head).map(idx => d.nextIdent(false, Var(s"_lh_${name}_arg$idx")))
-      }
-      val body = mergeMatchPatterns(
-        funArgNames.toList,
-        patsAndBodies.toList,
-        {
-          given Option[Ident] = Some(funName)
-          Expr.Ref(initCtx("error"))
-        }
-      )(using initCtx, Some(funName))
-      val funDef = funArgNames.foldRight(body) { case (arg, acc) => Expr.Function(arg, acc)(using d, Some(funName)) }
+      val (funName, funDef) = handleFunDefs(name, defNodes)
       Left(ProgDef(funName, funDef))
     }
 
@@ -1264,10 +1311,11 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
         Indented(rec(body)) <:> ")"
       )
     case LetGroup(defs, body) =>
-      defs.map { case (d, r) =>
-        transformId(d) <:> ???
+      val first = "let rec " <:> transformId(defs.head._1) <:> " = " <:> rec(defs.head._2)
+      val rest = defs.tail.map { case (d, r) =>
+        "and " <:> transformId(d) <:> " = " <:> rec(r)
       }
-      ???
+      Stacked((first :: rest.toList) :+ ("in " <:> rec(body)))
     case Match(scrut, arms) => 
       Stacked(
         ("(match " <:> rec(scrut) <:> " with") ::

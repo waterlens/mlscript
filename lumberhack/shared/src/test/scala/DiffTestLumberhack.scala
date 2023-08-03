@@ -174,7 +174,7 @@ class DiffTestLumberhack extends DiffTests {
 
     val newEvalRess = evalRes.flatMap(r => evalRess.map(rs => r :: rs))
     if stop then return if count > 0 then (p, d, evalRess) else (fusedP, fusedD, newEvalRess)
-    if count > 10 then return (fusedP, fusedD, newEvalRess)
+    if count > 10 || mode.lhNoIter then return (fusedP, fusedD, newEvalRess)
     
     keepFuse(fusedP, fusedD, mode, evaluate, output, count + 1, newEvalRess)
   }

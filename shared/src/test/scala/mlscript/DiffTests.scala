@@ -46,6 +46,7 @@ abstract class ModeType {
   def lhGenHaskell: Bool
   def lhGenOCaml: Bool
   def lhGenDistill: Bool
+  def lhNoIter: Bool
 }
 
 class DiffTests
@@ -166,6 +167,7 @@ class DiffTests
       lhGenHaskell: Bool = false,
       lhGenOCaml: Bool = false,
       lhGenDistill: Bool = false,
+      lhNoIter: Bool = false,
       
     ) extends ModeType {
       def isDebugging: Bool = dbg || dbgSimplif
@@ -228,6 +230,7 @@ class DiffTests
           case "lhGenHaskell" => mode.copy(lhGenHaskell = true)
           case "lhGenOCaml" => mode.copy(lhGenOCaml = true)
           case "lhGenDistill" => mode.copy(lhGenDistill = true)
+          case "lhNoIter" => mode.copy(lhNoIter = true)
           case _ =>
             failures += allLines.size - lines.size
             output("/!\\ Unrecognized option " + line)

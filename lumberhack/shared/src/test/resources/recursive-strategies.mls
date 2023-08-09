@@ -177,7 +177,9 @@ f(C(A))
 //│ <<<<<<< after fusion <<<<<<<
 
 
-// CORRECT: there is recursive strategies, but it is not triggered
+
+// NOTE: there is recursive strategies, but it is not triggered at the call site
+// but we still filter those strategies out
 fun f(x) = if x is
   C(a) then if a is
     D(d) then d
@@ -226,29 +228,16 @@ f(C(D(A)))
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C b¹]: 22 --->
-//│ 	case a¹ of {D d¹ => d¹ | C b¹ => f₀([C [C b¹]])}: 25
-//│ [C [C b¹]]: 23 --->
-//│ 	case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => f₀([C [C b¹]])}}: 26
-//│ [D [A]]: 30 --->
-//│ 	case a¹ of {D d¹ => d¹ | C b¹ => f₀([C [C b¹]])}: 25
-//│ [C [D [A]]]: 31 --->
-//│ 	case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => f₀([C [C b¹]])}}: 26
+//│ 
 //│ ------------------
-//│ case a¹ of {D d¹ => d¹ | C b¹ => f₀([C [C b¹]])}: 25 --->
-//│ 	[C b¹]: 22
-//│ 	[D [A]]: 30
-//│ case x¹ of {C a¹ => case a¹ of {D d¹ => d¹ | C b¹ => f₀([C [C b¹]])}}: 26 --->
-//│ 	[C [C b¹]]: 23
-//│ 	[C [D [A]]]: 31
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀(
-//│ 	let a² = 	
-//│ 		let d² = [A]
-//│ 		in d²
-//│ 	in a²)
+//│ f₀([C [D [A]]])
 //│ def f₀(x²) = 
-//│ 	x²
+//│ 	case x² of {
+//│ 		C a¹ => case a¹ of {
+//│ 			D d¹ => d¹
+//│ 			| C b¹ => f₀([C [C b¹]])}}
 //│ <<<<<<< after fusion <<<<<<<

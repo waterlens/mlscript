@@ -108,7 +108,12 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
         case "integer" => NestedPat.LitPat(IntLit(n.getSrcContent.toInt))
         case "con_list" => NestedPat.CtorPat(BuiltInTypes.ListNil.toLumberhackType, Nil)
         case "char" => NestedPat.LitPat(CharLit(n.getSrcContent(1)))
-        // case "string" => NestedPat.LitPat(StrLit(n.getSrcContent))
+        case "string" => {
+          val content = n.getSrcContent.drop(1).dropRight(1)
+          content.foldRight(NestedPat.CtorPat(BuiltInTypes.ListNil.toLumberhackType, Nil)){ case (x, i) =>
+            NestedPat.CtorPat(BuiltInTypes.ListCons.toLumberhackType, NestedPat.LitPat(CharLit(x)) :: i :: Nil)
+          }
+        }
       }
       case "pat_name" => n.getChild(0).getType() match {
         case "variable" => NestedPat.IdPat(n.getSrcContent)

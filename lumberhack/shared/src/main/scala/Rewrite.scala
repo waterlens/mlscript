@@ -179,19 +179,21 @@ class FusionStrategy(d: Deforest) {
           case Const(lit: Lit) => Set.empty
           case Ref(id: Ident) => Set.empty
           case Call(lhs: Expr, rhs: Expr) => getCtorsInExpr(lhs) ++ getCtorsInExpr(rhs)
-          case ce@Ctor(name: Var, args: Ls[Expr]) => d.ctorExprToType.get(ce.uid).toSet
+          case ce@Ctor(name: Var, args: Ls[Expr]) => args.flatMap(a => getCtorsInExpr(a)).toSet ++ d.ctorExprToType.get(ce.uid)
           case LetIn(id: Ident, rhs: Expr, body: Expr) => getCtorsInExpr(rhs) ++ getCtorsInExpr(body)
           case LetGroup(defs, body) => defs.values.flatMap(getCtorsInExpr(_)).toSet ++ getCtorsInExpr(body)
           case me@Match(scrut: Expr, arms: Ls[(Var, Ls[Ident], Expr)]) => {
             val dtorType = d.dtorExprToType(me.uid)
             afterRemoveMultipleMatch._2.get(dtorType) match {
               // if there is a match, only the scrut will be possibly exposed to further fusion possibilities
-              case Some(_) => getCtorsInExpr(scrut)
+              // case Some(_) => getCtorsInExpr(scrut)
               // case Some(ctors) => getCtorsInExpr(scrut) ++ (ctors.flatMap { ctor =>
               //   val alsoCheckedCtor = ctor.asInstanceOf[MkCtor]
+              //   // val ctorExpr = d.
               //   getCtorsInExpr(arms.find(_._1 == alsoCheckedCtor.ctor).get._3)
+              //   // arms.find(_._1 == alsoCheckedCtor.ctor).flat
               // })
-              case None => getCtorsInExpr(scrut) ++ arms.flatMap(a => getCtorsInExpr(a._3))
+              case _ => getCtorsInExpr(scrut) ++ arms.flatMap(a => getCtorsInExpr(a._3))
             }
           }
           case IfThenElse(scrut: Expr, thenn: Expr, elze: Expr) => getCtorsInExpr(scrut) ++ getCtorsInExpr(thenn) ++ getCtorsInExpr(elze)
@@ -230,7 +232,9 @@ class FusionStrategy(d: Deforest) {
       assert(ds.size == 1)
       findCycle(c, ds.head.asInstanceOf[Destruct])
     }
-    removeCtor(afterRemoveMultipleMatch._1, afterRemoveMultipleMatch._2, toRmCtor.toSet)
+    val res = removeCtor(afterRemoveMultipleMatch._1, afterRemoveMultipleMatch._2, toRmCtor.toSet)
+    d.Trace.log("remove cycle done")
+    res
   }
 
   val afterRemoveIdpatternAndWildcardPattern = {
@@ -308,7 +312,7 @@ trait ExprRewrite { this: Expr =>
     newd: Deforest,
     inDef: Option[Ident],
     scopeExtrusionInfo: Map[ExprId, List[Ident]]
-  ): Expr = {
+  ): Expr = this.deforest.Trace.trace(s"fusion handling ${this.pp(using InitPpConfig)}"){
     this match {
       case Const(lit) => Const(lit)
       case Call(lhs, rhs) => Call(lhs.rewriteFusion, rhs.rewriteFusion)
@@ -362,9 +366,9 @@ trait ExprRewrite { this: Expr =>
         (newIds zip args).foldRight(inner){(t_i, acc) => 
           LetIn(t_i._1._2, t_i._2.rewriteFusion, acc)
         }
-      }.orElse(Some(Ctor(name, args.map(_.rewriteFusion)))).get
+      }.getOrElse(Ctor(name, args.map(_.rewriteFusion)))
     }
-  }
+  }(res => s"done handling fusion with result: ${res.pp(using InitPpConfig)}")
 
   def outOfScopeIdsSet(using set: Set[Ident]): Set[Ident] = this match {
     case Const(lit: Lit) => Set.empty
@@ -375,7 +379,7 @@ trait ExprRewrite { this: Expr =>
     case LetIn(id: Ident, rhs: Expr, body: Expr) => rhs.outOfScopeIdsSet(using set + id) ++ body.outOfScopeIdsSet(using set + id)
     case LetGroup(defs, body) =>
       val newIds = defs.keySet ++ set
-      defs.values.flatMap(_.outOfScopeIds(using newIds)).toSet ++ body.outOfScopeIds(using newIds)
+      defs.values.flatMap(_.outOfScopeIdsSet(using newIds)).toSet ++ body.outOfScopeIdsSet(using newIds)
     case Match(scrut: Expr, arms: Ls[(Var, Ls[Ident], Expr)]) =>
       scrut.outOfScopeIdsSet ++ (arms.flatMap { (_, newIds, body) => body.outOfScopeIdsSet(using set ++ newIds) })
     case IfThenElse(scrut: Expr, thenn: Expr, elze: Expr) =>

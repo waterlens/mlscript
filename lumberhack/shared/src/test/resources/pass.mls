@@ -2910,45 +2910,138 @@ last(C(1, C(2, C(3, N))))
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C hh¹ tt¹]: 35 --->
-//│ 	case ls¹ of {C h³ t¹ => case t¹ of {N  => (fun h⁴ -> [Some h⁴]) | C hh¹ tt¹ => (fun h⁵ -> last₀([C hh¹ tt¹]))}(h³) | N  => [None]}: 42
 //│ [N]: 48 --->
 //│ 	case t¹ of {N  => (fun h⁴ -> [Some h⁴]) | C hh¹ tt¹ => (fun h⁵ -> last₀([C hh¹ tt¹]))}: 38
 //│ [C 3 [N]]: 49 --->
 //│ 	case t¹ of {N  => (fun h⁴ -> [Some h⁴]) | C hh¹ tt¹ => (fun h⁵ -> last₀([C hh¹ tt¹]))}: 38
 //│ [C 2 [C 3 [N]]]: 50 --->
 //│ 	case t¹ of {N  => (fun h⁴ -> [Some h⁴]) | C hh¹ tt¹ => (fun h⁵ -> last₀([C hh¹ tt¹]))}: 38
-//│ [C 1 [C 2 [C 3 [N]]]]: 51 --->
-//│ 	case ls¹ of {C h³ t¹ => case t¹ of {N  => (fun h⁴ -> [Some h⁴]) | C hh¹ tt¹ => (fun h⁵ -> last₀([C hh¹ tt¹]))}(h³) | N  => [None]}: 42
 //│ ------------------
 //│ case t¹ of {N  => (fun h⁴ -> [Some h⁴]) | C hh¹ tt¹ => (fun h⁵ -> last₀([C hh¹ tt¹]))}: 38 --->
 //│ 	[N]: 48
 //│ 	[C 3 [N]]: 49
 //│ 	[C 2 [C 3 [N]]]: 50
-//│ case ls¹ of {C h³ t¹ => case t¹ of {N  => (fun h⁴ -> [Some h⁴]) | C hh¹ tt¹ => (fun h⁵ -> last₀([C hh¹ tt¹]))}(h³) | N  => [None]}: 42 --->
-//│ 	[C hh¹ tt¹]: 35
-//│ 	[C 1 [C 2 [C 3 [N]]]]: 51
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ last₀(
-//│ 	let h⁶ = 1
-//│ 	in let t² = 	
-//│ 		let hh² = 2
-//│ 		in let tt² = 	
-//│ 			let hh³ = 3
-//│ 			in let tt³ = (fun h¹¹ -> [Some h¹¹])
-//│ 			in (fun h⁹ -> last₀(
-//│ 				let h¹⁰ = hh³
-//│ 				in let t⁴ = tt³
-//│ 				in t⁴(h¹⁰)))
-//│ 		in (fun h⁷ -> last₀(
-//│ 			let h⁸ = hh²
-//│ 			in let t³ = tt²
-//│ 			in t³(h⁸)))
-//│ 	in t²(h⁶))
+//│ last₀([C 1 
+//│ 	let hh² = 2
+//│ 	in let tt² = 	
+//│ 		let hh³ = 3
+//│ 		in let tt³ = (fun h⁸ -> [Some h⁸])
+//│ 		in (fun h⁷ -> last₀([C hh³ tt³]))
+//│ 	in (fun h⁶ -> last₀([C hh² tt²]))])
 //│ def last₀(ls²) = 
-//│ 	ls²
+//│ 	case ls² of {
+//│ 		C h³ t¹ => t¹(h³)
+//│ 		| N  => [None]}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [Some 3]
+//│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [last₀^16] (hopeless to continue)
+//│ [last₀^1] (hopeless to continue)
+//│ [last₀^8] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ last₀₁([C 1 
+//│ 	let hh² = 2
+//│ 	in let tt² = 	
+//│ 		let hh³ = 3
+//│ 		in let tt³ = (fun h⁷ -> [Some h⁷])
+//│ 		in (fun h⁸ -> last₀₂([C hh³ tt³]))
+//│ 	in (fun h⁹ -> last₀₀([C hh² tt²]))])
+//│ def last₀₀(ls¹) = 
+//│ 	case ls¹ of {
+//│ 		C h⁴ t¹ => t¹(h⁴)
+//│ 		| N  => [None]}
+//│ def last₀₁(ls²) = 
+//│ 	case ls² of {
+//│ 		C h⁵ t² => t²(h⁵)
+//│ 		| N  => [None]}
+//│ def last₀₂(ls³) = 
+//│ 	case ls³ of {
+//│ 		C h⁶ t³ => t³(h⁶)
+//│ 		| N  => [None]}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C hh³ tt³]: 64 --->
+//│ 	case ls³ of {C h⁶ t³ => t³(h⁶) | N  => [None]}: 52
+//│ [C hh² tt²]: 72 --->
+//│ 	case ls¹ of {C h⁴ t¹ => t¹(h⁴) | N  => [None]}: 38
+//│ [C 1 let hh² = 2
+//│ in let tt² = let hh³ = 3
+//│ in let tt³ = (fun h⁷ -> [Some h⁷])
+//│ in (fun h⁸ -> last₀₂([C hh³ tt³]))
+//│ in (fun h⁹ -> last₀₀([C hh² tt²]))]: 77 --->
+//│ 	case ls² of {C h⁵ t² => t²(h⁵) | N  => [None]}: 45
+//│ ------------------
+//│ case ls¹ of {C h⁴ t¹ => t¹(h⁴) | N  => [None]}: 38 --->
+//│ 	[C hh² tt²]: 72
+//│ case ls² of {C h⁵ t² => t²(h⁵) | N  => [None]}: 45 --->
+//│ 	[C 1 let hh² = 2
+//│ in let tt² = let hh³ = 3
+//│ in let tt³ = (fun h⁷ -> [Some h⁷])
+//│ in (fun h⁸ -> last₀₂([C hh³ tt³]))
+//│ in (fun h⁹ -> last₀₀([C hh² tt²]))]: 77
+//│ case ls³ of {C h⁶ t³ => t³(h⁶) | N  => [None]}: 52 --->
+//│ 	[C hh³ tt³]: 64
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C hh³ tt³]: 64 --->
+//│ 	case ls³ of {C h⁶ t³ => t³(h⁶) | N  => [None]}: 52
+//│ [C hh² tt²]: 72 --->
+//│ 	case ls¹ of {C h⁴ t¹ => t¹(h⁴) | N  => [None]}: 38
+//│ [C 1 let hh² = 2
+//│ in let tt² = let hh³ = 3
+//│ in let tt³ = (fun h⁷ -> [Some h⁷])
+//│ in (fun h⁸ -> last₀₂([C hh³ tt³]))
+//│ in (fun h⁹ -> last₀₀([C hh² tt²]))]: 77 --->
+//│ 	case ls² of {C h⁵ t² => t²(h⁵) | N  => [None]}: 45
+//│ ------------------
+//│ case ls¹ of {C h⁴ t¹ => t¹(h⁴) | N  => [None]}: 38 --->
+//│ 	[C hh² tt²]: 72
+//│ case ls² of {C h⁵ t² => t²(h⁵) | N  => [None]}: 45 --->
+//│ 	[C 1 let hh² = 2
+//│ in let tt² = let hh³ = 3
+//│ in let tt³ = (fun h⁷ -> [Some h⁷])
+//│ in (fun h⁸ -> last₀₂([C hh³ tt³]))
+//│ in (fun h⁹ -> last₀₀([C hh² tt²]))]: 77
+//│ case ls³ of {C h⁶ t³ => t³(h⁶) | N  => [None]}: 52 --->
+//│ 	[C hh³ tt³]: 64
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ last₀₁(
+//│ 	let h¹⁰ = 1
+//│ 	in let t⁴ = 	
+//│ 		let hh⁴ = 2
+//│ 		in let tt⁴ = 	
+//│ 			let hh⁵ = 3
+//│ 			in let tt⁵ = (fun h¹¹ -> [Some h¹¹])
+//│ 			in (fun h¹² -> last₀₂(
+//│ 				let h¹³ = hh⁵
+//│ 				in let t⁵ = tt⁵
+//│ 				in t⁵(h¹³)))
+//│ 		in (fun h¹⁴ -> last₀₀(
+//│ 			let h¹⁵ = hh⁴
+//│ 			in let t⁶ = tt⁴
+//│ 			in t⁶(h¹⁵)))
+//│ 	in t⁴(h¹⁰))
+//│ def last₀₀(ls⁴) = 
+//│ 	ls⁴
+//│ def last₀₁(ls⁵) = 
+//│ 	ls⁵
+//│ def last₀₂(ls⁶) = 
+//│ 	ls⁶
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>

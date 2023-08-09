@@ -257,7 +257,7 @@ class Deforest(var debug: Boolean) {
   object Trace {
     private val noPostTrace: Any => String = _ => ""
     private var indent = 0
-    private[lumberhack] def trace[T](pre: String)(thunk: => T)(post: T => String = noPostTrace): T = {
+    private[lumberhack] def trace[T](pre: => String)(thunk: => T)(post: T => String = noPostTrace): T = {
       log(pre, color = Console.CYAN)
       indent += 1
       val res =

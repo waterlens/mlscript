@@ -100,8 +100,7 @@ class DiffTestLumberhack extends DiffTests {
         output("<<<<<<<<<< Original Eval Res <<<<<<<<<<")
       }
       
-      
-      d.resolveConstraints
+      // d.resolveConstraints
       val iterativeProcessRes = keepFuse(originalProgram, d, mode, evaluate, output)
       
       if evaluate then {
@@ -185,7 +184,7 @@ class DiffTestLumberhack extends DiffTests {
     mode: ModeType,
     output: Str => Unit
   ): (Program, Deforest, CallTrees) = {
-    // d.resolveConstraints
+    d.resolveConstraints
     // d.resolveConstraintsImmutableCache
     if mode.stdout || mode.verbose then {
       output("\n>>>>>>>>>> initial constraints >>>>>>>>>>")
@@ -323,7 +322,7 @@ class DiffTestLumberhack extends DiffTests {
       output("<<<<<<< evaluate <<<<<<<")
     }
 
-    val newD = Deforest(false)
+    val newD = Deforest(mode.stdout || mode.verbose)
     val newP = prgmAfterFusion.copyDefsToNewDeforest(using newD)._1._1
     if mode.stdout || mode.verbose then {
       output("\n>>>>>>> program after copying to new deforest >>>>>>>")
@@ -331,7 +330,7 @@ class DiffTestLumberhack extends DiffTests {
       output("<<<<<<< program after copying to new deforest <<<<<<<")
     }
     newD(newP)
-    newD.resolveConstraints
+    // newD.resolveConstraints
     (newP, newD, fusionStrategy.finallyFilteredStrategies._1.isEmpty, evaluatedExpr) // if is empty, stop the iterative process
   }
 
@@ -341,7 +340,7 @@ object DiffTestLumberhack {
   import org.scalatest.time._
   private val TimeLimit =
     if (sys.env.get("CI").isDefined) Span(25, Seconds)
-    else Span(60, Seconds)
+    else Span(90, Seconds)
   private val pwd = os.pwd
   private val dir = pwd/"lumberhack"/"shared"/"src"/"test"/"resources"
   private val allFiles = os.walk(dir)

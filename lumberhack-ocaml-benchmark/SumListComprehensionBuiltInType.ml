@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 ./SumListComprehensionBuiltInType.ml -o "./SumListComprehensionBuiltInType.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./SumListComprehensionBuiltInType.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./SumListComprehensionBuiltInType.ml -o "./SumListComprehensionBuiltInType.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./SumListComprehensionBuiltInType.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;
@@ -56,7 +56,7 @@ let rec enumFromTo_d0_d0 a_1 b_1 =
       (let rec _lh_listcomp_fun_ls_t_3 = ((enumFromTo_d0_d0 (a_1 + 1)) b_1) in
         (fun _lh_listcomp_fun_5 -> 
           (let rec _lh_listcomp_fun_6 = (fun _lh_listcomp_fun_para_1 -> 
-            ((((_lh_listcomp_fun_para_1 _lh_listcomp_fun_ls_h_3) _lh_listcomp_fun_6) _lh_listcomp_fun_5) _lh_listcomp_fun_ls_t_3)) in
+            ((((_lh_listcomp_fun_para_1 _lh_listcomp_fun_ls_h_3) _lh_listcomp_fun_6) _lh_listcomp_fun_ls_t_3) _lh_listcomp_fun_5)) in
             (_lh_listcomp_fun_6 ((enumFromTo_d1_d0 1) _lh_listcomp_fun_ls_h_3))))))
   else
     (fun _lh_listcomp_fun_7 -> 
@@ -65,12 +65,12 @@ and enumFromTo_d1_d0 a_0 b_0 =
   (if (a_0 <= b_0) then
     (let rec _lh_listcomp_fun_ls_h_0 = a_0 in
       (let rec _lh_listcomp_fun_ls_t_0 = ((enumFromTo_d1_d0 (a_0 + 1)) b_0) in
-        (fun _lh_listcomp_fun_ls_h_1 _lh_listcomp_fun_0 _lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_1 -> 
+        (fun _lh_listcomp_fun_ls_h_1 _lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_1 _lh_listcomp_fun_1 -> 
           (let rec _lh_sum_LH_C_0_0 = (_lh_listcomp_fun_ls_h_1 * _lh_listcomp_fun_ls_h_0) in
             (let rec _lh_sum_LH_C_1_0 = (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0) in
               (_lh_sum_LH_C_0_0 + (sum_d0_d0 _lh_sum_LH_C_1_0)))))))
   else
-    (fun _lh_listcomp_fun_ls_h_2 _lh_listcomp_fun_2 _lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_2 -> 
+    (fun _lh_listcomp_fun_ls_h_2 _lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_2 _lh_listcomp_fun_3 -> 
       (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_2)))
 and testSumListComprehensionBuiltInType_d0_d0 _lh_testSumListComprehensionBuiltInType_arg1_0 =
   (sum_d0_d0 (let rec _lh_listcomp_fun_4 = (fun _lh_listcomp_fun_para_0 -> 
@@ -87,7 +87,7 @@ let rec enumFromTo_d0_d0_d0 a_3 b_3 _lh_popOutId_0_0 =
     (let rec _lh_listcomp_fun_ls_h_7 = a_3 in
       (let rec _lh_listcomp_fun_ls_t_7 = ((enumFromTo_d0_d0_d0 (a_3 + 1)) b_3) in
         (let rec _lh_listcomp_fun_1_3 = (fun _lh_listcomp_fun_para_2 -> 
-          ((((_lh_listcomp_fun_para_2 _lh_listcomp_fun_ls_h_7) _lh_listcomp_fun_1_3) _lh_popOutId_0_0) _lh_listcomp_fun_ls_t_7)) in
+          ((((_lh_listcomp_fun_para_2 _lh_listcomp_fun_ls_h_7) _lh_listcomp_fun_1_3) _lh_listcomp_fun_ls_t_7) _lh_popOutId_0_0)) in
           (_lh_listcomp_fun_1_3 ((enumFromTo_d1_d0_d0 1) _lh_listcomp_fun_ls_h_7)))))
   else
     0)
@@ -99,7 +99,7 @@ and enumFromTo_d1_d0_d0 a_2 b_2 _lh_popOutId_0_1 _lh_popOutId_1_0 _lh_popOutId_2
           (let rec _lh_sum_LH_C_1_1 = (_lh_popOutId_1_0 _lh_listcomp_fun_ls_t_4) in
             (_lh_sum_LH_C_0_1 + (sum_d0_d0_d0 _lh_sum_LH_C_1_1))))))
   else
-    (_lh_popOutId_2_0 _lh_popOutId_3_0))
+    (_lh_popOutId_3_0 _lh_popOutId_2_0))
 and testSumListComprehensionBuiltInType_d0_d0_d0 _lh_testSumListComprehensionBuiltInType_arg1_1 =
   (sum_d0_d0_d1 (let rec _lh_listcomp_fun_1_5 = (fun _lh_listcomp_fun_para_3 -> 
     (_lh_listcomp_fun_para_3 _lh_listcomp_fun_1_5)) in

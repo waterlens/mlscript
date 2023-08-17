@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 ./Ansi_nofib.ml -o "./Ansi_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Ansi_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Ansi_nofib.ml -o "./Ansi_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Ansi_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;
@@ -586,9 +586,9 @@ let rec concat_d0_d0_d7 lss_5 =
 let rec end_d0_d0_d0 _lh_end_arg1_0 =
   (`LH_N);;
 let rec foldr_d0_d0_d0 f_4 i_3 ls_4_1 =
-  ((ls_4_1 i_3) f_4);;
+  ((ls_4_1 f_4) i_3);;
 let rec foldr_d0_d0_d1 f_0 i_0 ls_1_3 =
-  ((ls_1_3 i_0) f_0);;
+  ((ls_1_3 f_0) i_0);;
 let rec length_d0_d0_d0 ls_0 =
   (match ls_0 with
     | `LH_C(h_2, t_2) -> 
@@ -956,7 +956,7 @@ let rec moveTo_d0_d0_d0 _lh_moveTo_arg1_0 =
 let rec moveTo_d1_d0_d0 _lh_moveTo_arg1_1 =
   _lh_moveTo_arg1_1;;
 let rec promptReadAt_d0_d0_d0 _lh_promptReadAt_arg1_0 _lh_promptReadAt_arg2_1 _lh_promptReadAt_arg3_1 _lh_promptReadAt_arg4_1 =
-  (((_lh_promptReadAt_arg1_0 _lh_promptReadAt_arg3_1) _lh_promptReadAt_arg2_1) _lh_promptReadAt_arg4_1);;
+  (((_lh_promptReadAt_arg1_0 _lh_promptReadAt_arg2_1) _lh_promptReadAt_arg3_1) _lh_promptReadAt_arg4_1);;
 let rec readAt_d0_d0_d0 _lh_readAt_arg1_0 _lh_readAt_arg2_0 _lh_readAt_arg3_0 =
   ((_lh_readAt_arg1_0 _lh_readAt_arg2_0) _lh_readAt_arg3_0);;
 let rec readChar_d0_d0_d0 _lh_readChar_arg1_5 _lh_readChar_arg2_5 _lh_readChar_arg3_5 =
@@ -1174,10 +1174,10 @@ and copy_d0_d0_d0 _lh_copy_arg1_0 _lh_copy_arg2_0 =
   (if (_lh_copy_arg1_0 > 0) then
     (let rec h_4_8 = _lh_copy_arg2_0 in
       (let rec t_4_8 = ((copy_d0_d0_d0 (_lh_copy_arg1_0 - 1)) _lh_copy_arg2_0) in
-        (fun i_1 f_1 -> 
+        (fun f_1 i_1 -> 
           ((f_1 h_4_8) (((foldr_d0_d0_d0 f_1) i_1) t_4_8)))))
   else
-    (fun i_2 f_2 -> 
+    (fun f_2 i_2 -> 
       i_2))
 and copy_d1_d0_d0 _lh_copy_arg1_1 _lh_copy_arg2_1 =
   (if (_lh_copy_arg1_1 > 0) then
@@ -1491,7 +1491,7 @@ and program_d0_d0_d0 _lh_program_arg1_0 =
         ((mappend_d4_d3_d0_d5 h_5_0) (concat_d0_d0_d5 t_5_0)))) in
       ((mappend_d4_d3_d0_d6 h_4_9) (concat_d0_d0_d6 t_4_9))))) (pressAnyKey_d0_d0_d0 ((((promptReadAt_d0_d0_d0 (let rec _lh_promptReadAt_LH_P2_0_0 = 17 in
     (let rec _lh_promptReadAt_LH_P2_1_0 = 15 in
-      (fun _lh_promptReadAt_arg3_0 _lh_promptReadAt_arg2_0 _lh_promptReadAt_arg4_0 -> 
+      (fun _lh_promptReadAt_arg2_0 _lh_promptReadAt_arg3_0 _lh_promptReadAt_arg4_0 -> 
         (((writeAt_d1_d0_d0 (let rec _lh_writeAt_LH_P2_0_0 = _lh_promptReadAt_LH_P2_0_0 in
           (let rec _lh_writeAt_LH_P2_1_0 = _lh_promptReadAt_LH_P2_1_0 in
             (fun _lh_writeAt_arg2_1 -> 
@@ -1822,9 +1822,9 @@ let rec concat_d0_d0_d7_d0 lss_1_5 =
 let rec end_d0_d0_d0_d0 _lh_end_arg1_1 =
   (`LH_N);;
 let rec foldr_d0_d0_d0_d0 f_6 i_4 ls_5_2 =
-  ((ls_5_2 i_4) f_6);;
+  ((ls_5_2 f_6) i_4);;
 let rec foldr_d0_d0_d1_d0 f_9 i_7 ls_8_7 =
-  ((ls_8_7 i_7) f_9);;
+  ((ls_8_7 f_9) i_7);;
 let rec length_d0_d0_d0_d0 ls_5_7 =
   (match ls_5_7 with
     | `LH_C(h_1_5_3, t_1_5_3) -> 
@@ -2194,7 +2194,7 @@ let rec moveTo_d0_d0_d0_d0 _lh_moveTo_arg1_2 =
 let rec moveTo_d1_d0_d0_d0 _lh_moveTo_arg1_3 =
   _lh_moveTo_arg1_3;;
 let rec promptReadAt_d0_d0_d0_d0 _lh_promptReadAt_arg1_1 _lh_promptReadAt_arg2_3 _lh_promptReadAt_arg3_3 _lh_promptReadAt_arg4_3 =
-  (((_lh_promptReadAt_arg1_1 _lh_promptReadAt_arg3_3) _lh_promptReadAt_arg2_3) _lh_promptReadAt_arg4_3);;
+  (((_lh_promptReadAt_arg1_1 _lh_promptReadAt_arg2_3) _lh_promptReadAt_arg3_3) _lh_promptReadAt_arg4_3);;
 let rec readAt_d0_d0_d0_d0 _lh_readAt_arg1_1 _lh_readAt_arg2_2 _lh_readAt_arg3_2 =
   ((_lh_readAt_arg1_1 _lh_readAt_arg2_2) _lh_readAt_arg3_2);;
 let rec readChar_d0_d0_d0_d0 _lh_readChar_arg1_9 _lh_readChar_arg2_9 _lh_readChar_arg3_9 =
@@ -2410,9 +2410,9 @@ and copy_d0_d0_d0_d0 _lh_copy_arg1_2 _lh_copy_arg2_2 _lh_popOutId_0_0 _lh_popOut
   (if (_lh_copy_arg1_2 > 0) then
     (let rec h_1_9_3 = _lh_copy_arg2_2 in
       (let rec t_1_9_3 = ((copy_d0_d0_d0_d0 (_lh_copy_arg1_2 - 1)) _lh_copy_arg2_2) in
-        ((_lh_popOutId_1_0 h_1_9_3) (((foldr_d0_d0_d0_d0 _lh_popOutId_1_0) _lh_popOutId_0_0) t_1_9_3))))
+        ((_lh_popOutId_0_0 h_1_9_3) (((foldr_d0_d0_d0_d0 _lh_popOutId_0_0) _lh_popOutId_1_0) t_1_9_3))))
   else
-    _lh_popOutId_0_0)
+    _lh_popOutId_1_0)
 and copy_d1_d0_d0_d0 _lh_copy_arg1_3 _lh_copy_arg2_3 _lh_popOutId_0_1 =
   (if (_lh_copy_arg1_3 > 0) then
     (let rec h_2_0_0 = _lh_copy_arg2_3 in
@@ -2723,7 +2723,7 @@ and program_d0_d0_d0_d0 _lh_program_arg1_1 =
         ((mappend_d4_d3_d0_d5_d0 h_1_3_4) (concat_d0_d0_d5_d0 t_1_3_4)))) in
       ((mappend_d4_d3_d0_d6_d1 h_1_3_3) (concat_d0_d0_d6_d0 t_1_3_3))))) (pressAnyKey_d0_d0_d0_d0 ((((promptReadAt_d0_d0_d0_d0 (let rec _lh_promptReadAt_LH_P2_0_1 = 17 in
     (let rec _lh_promptReadAt_LH_P2_1_1 = 15 in
-      (fun _lh_promptReadAt_arg3_2 _lh_promptReadAt_arg2_2 _lh_promptReadAt_arg4_2 -> 
+      (fun _lh_promptReadAt_arg2_2 _lh_promptReadAt_arg3_2 _lh_promptReadAt_arg4_2 -> 
         (((writeAt_d1_d0_d0_d0 (let rec _lh_writeAt_LH_P2_0_3 = _lh_promptReadAt_LH_P2_0_1 in
           (let rec _lh_writeAt_LH_P2_1_3 = _lh_promptReadAt_LH_P2_1_1 in
             (fun _lh_writeAt_arg2_7 -> 

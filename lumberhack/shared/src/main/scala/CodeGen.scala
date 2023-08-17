@@ -1419,7 +1419,7 @@ let string_of_float f = listToTaggedList (explode_string (string_of_float f))"""
       Raw("])")
     )
     val compileAndRunCommand =
-      s"ocamlfind ocamlopt -rectypes -thread -O3 ./$benchName.ml -o \"./$benchName.out\""
+      s"ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./$benchName.ml -o \"./$benchName.out\""
         + s" -linkpkg -package \"core_unix.command_unix\" -linkpkg -package \"core_bench\" "
         + s"&& ./$benchName.out "
         + "&& rm ./*.cmx ./*.out ./*.cmi ./*.o"

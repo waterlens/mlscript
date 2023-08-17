@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 ./PiDigits_nofib.ml -o "./PiDigits_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./PiDigits_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./PiDigits_nofib.ml -o "./PiDigits_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./PiDigits_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;
@@ -566,7 +566,7 @@ and percOp_d0_d0_d0 _lh_percOp_arg1_2 _lh_percOp_arg2_2 _lh_percOp_arg3_7 =
                           (fun ys_1_6_1 -> 
                             (`LH_C(h_7_7, ((mappend_d2_d0_d5 t_7_7) ys_1_6_1)))))))))))))) in
             (let rec _lh_percOp_LH_P2_1_5 = (lazy (`LH_N)) in
-              (fun j_8 _lh_percOp_arg3_8 -> 
+              (fun _lh_percOp_arg3_8 j_8 -> 
                 ((mappend_d2_d0_d0 ((mappend_d3_d0_d0 (concat_d0_d0_d0 _lh_percOp_LH_P2_0_5)) ((mappend_d4_d0_d0 (let rec h_7_8 = 't' in
                   (let rec t_7_8 = (let rec h_7_9 = ':' in
                     (let rec t_7_9 = (fun ys_1_6_2 -> 
@@ -587,7 +587,7 @@ and percOp_d0_d0_d0 _lh_percOp_arg1_2 _lh_percOp_arg2_2 _lh_percOp_arg3_7 =
                       (`LH_C(h_8_2, ((mappend_d2_d0_d3 t_8_2) ys_1_6_8)))))))))) (((percOp_d0_d1_d0 j_8) _lh_percOp_LH_P2_1_5) _lh_percOp_arg3_8)))))
         else
           ((splitAt_lz_d0_d1_d0 10) _lh_percOp_arg2_2)) in
-          ((_lh_matchIdent_9 j_7) _lh_percOp_arg3_7)))))
+          ((_lh_matchIdent_9 _lh_percOp_arg3_7) j_7)))))
 and percOp_d0_d1_d0 _lh_percOp_arg1_1 _lh_percOp_arg2_1 _lh_percOp_arg3_5 =
   (if (_lh_percOp_arg1_1 >= _lh_percOp_arg3_5) then
     (`LH_N)
@@ -607,7 +607,7 @@ and percOp_d0_d1_d0 _lh_percOp_arg1_1 _lh_percOp_arg2_1 _lh_percOp_arg3_5 =
                           (fun ys_1_0_7 -> 
                             (`LH_C(h_5_1, ((mappend_d2_d1_d5 t_5_1) ys_1_0_7)))))))))))))) in
             (let rec _lh_percOp_LH_P2_1_4 = (lazy (`LH_N)) in
-              (fun j_6 _lh_percOp_arg3_6 -> 
+              (fun _lh_percOp_arg3_6 j_6 -> 
                 ((mappend_d2_d1_d1 ((mappend_d3_d1_d0 (concat_d0_d1_d0 _lh_percOp_LH_P2_0_4)) ((mappend_d4_d1_d0 (let rec h_5_2 = 't' in
                   (let rec t_5_2 = (let rec h_5_3 = ':' in
                     (let rec t_5_3 = (fun ys_1_0_8 -> 
@@ -628,7 +628,7 @@ and percOp_d0_d1_d0 _lh_percOp_arg1_1 _lh_percOp_arg2_1 _lh_percOp_arg3_5 =
                       (`LH_C(h_5_6, ((mappend_d2_d1_d0 t_5_6) ys_1_1_4)))))))))) (((percOp_d0_d1_d0 j_6) _lh_percOp_LH_P2_1_4) _lh_percOp_arg3_6)))))
         else
           ((splitAt_lz_d0_d0_d0 10) _lh_percOp_arg2_1)) in
-          ((_lh_matchIdent_5 j_5) _lh_percOp_arg3_5)))))
+          ((_lh_matchIdent_5 _lh_percOp_arg3_5) j_5)))))
 and percOp_d0_d1_d1 _lh_percOp_arg1_0 _lh_percOp_arg2_0 _lh_percOp_arg3_1 =
   (if (_lh_percOp_arg1_0 >= _lh_percOp_arg3_1) then
     (`LH_N)
@@ -648,7 +648,7 @@ and percOp_d0_d1_d1 _lh_percOp_arg1_0 _lh_percOp_arg2_0 _lh_percOp_arg3_1 =
                           (fun ys_5_3 -> 
                             (`LH_C(h_2_6, ((mappend_d2_d1_d1_d8 t_2_6) ys_5_3)))))))))))))) in
             (let rec _lh_percOp_LH_P2_1_1 = (lazy (`LH_N)) in
-              (fun j_2 _lh_percOp_arg3_2 -> 
+              (fun _lh_percOp_arg3_2 j_2 -> 
                 ((mappend_d2_d1_d1_d4 ((mappend_d3_d1_d5 (concat_d0_d1_d5 _lh_percOp_LH_P2_0_1)) ((mappend_d4_d1_d6 (let rec h_2_7 = 't' in
                   (let rec t_2_7 = (let rec h_2_8 = ':' in
                     (let rec t_2_8 = (fun ys_5_4 -> 
@@ -669,7 +669,7 @@ and percOp_d0_d1_d1 _lh_percOp_arg1_0 _lh_percOp_arg2_0 _lh_percOp_arg3_1 =
                       (`LH_C(h_3_1, ((mappend_d2_d1_d1_d3 t_3_1) ys_6_0)))))))))) (((percOp_d0_d1_d1 j_2) _lh_percOp_LH_P2_1_1) _lh_percOp_arg3_2)))))
         else
           ((splitAt_lz_d0_d0_d1 10) _lh_percOp_arg2_0)) in
-          ((_lh_matchIdent_1 j_1) _lh_percOp_arg3_1)))))
+          ((_lh_matchIdent_1 _lh_percOp_arg3_1) j_1)))))
 and pidgits_d0_d0_d0 _lh_pidgits_arg1_0 =
   (((percOp_d0_d0_d0 0) ((hashOp_d0_d0_d0 0) (let rec _lh_ampOp_LH_P3_0_2 = 1 in
     (let rec _lh_ampOp_LH_P3_1_2 = 0 in
@@ -709,7 +709,7 @@ and replicate_d0_d1_d0 _lh_replicate_arg1_2 _lh_replicate_arg2_2 =
 and splitAt_lz_d0_d0_d0 _lh_splitAt_lz_arg1_2 _lh_splitAt_lz_arg2_2 =
   (let rec _lh_percOp_LH_P2_0_3 = ((take_lz_d0_d0_d0 _lh_splitAt_lz_arg1_2) _lh_splitAt_lz_arg2_2) in
     (let rec _lh_percOp_LH_P2_1_3 = ((drop_lz_d0_d0_d0 _lh_splitAt_lz_arg1_2) _lh_splitAt_lz_arg2_2) in
-      (fun j_4 _lh_percOp_arg3_4 -> 
+      (fun _lh_percOp_arg3_4 j_4 -> 
         ((mappend_d2_d1_d6 ((mappend_d3_d1_d2 (concat_d0_d1_d2 _lh_percOp_LH_P2_0_3)) ((mappend_d4_d1_d3 (let rec h_4_4 = 't' in
           (let rec t_4_4 = (let rec h_4_5 = ':' in
             (let rec t_4_5 = (fun ys_8_6 -> 
@@ -731,7 +731,7 @@ and splitAt_lz_d0_d0_d0 _lh_splitAt_lz_arg1_2 _lh_splitAt_lz_arg2_2 =
 and splitAt_lz_d0_d0_d1 _lh_splitAt_lz_arg1_1 _lh_splitAt_lz_arg2_1 =
   (let rec _lh_percOp_LH_P2_0_2 = ((take_lz_d0_d0_d1 _lh_splitAt_lz_arg1_1) _lh_splitAt_lz_arg2_1) in
     (let rec _lh_percOp_LH_P2_1_2 = ((drop_lz_d0_d0_d1 _lh_splitAt_lz_arg1_1) _lh_splitAt_lz_arg2_1) in
-      (fun j_3 _lh_percOp_arg3_3 -> 
+      (fun _lh_percOp_arg3_3 j_3 -> 
         ((mappend_d2_d1_d1_d9 ((mappend_d3_d1_d7 (concat_d0_d1_d7 _lh_percOp_LH_P2_0_2)) ((mappend_d4_d1_d9 (let rec h_3_9 = 't' in
           (let rec t_3_9 = (let rec h_4_0 = ':' in
             (let rec t_4_0 = (fun ys_7_9 -> 
@@ -753,7 +753,7 @@ and splitAt_lz_d0_d0_d1 _lh_splitAt_lz_arg1_1 _lh_splitAt_lz_arg2_1 =
 and splitAt_lz_d0_d1_d0 _lh_splitAt_lz_arg1_0 _lh_splitAt_lz_arg2_0 =
   (let rec _lh_percOp_LH_P2_0_0 = ((take_lz_d0_d1_d0 _lh_splitAt_lz_arg1_0) _lh_splitAt_lz_arg2_0) in
     (let rec _lh_percOp_LH_P2_1_0 = ((drop_lz_d0_d1_d0 _lh_splitAt_lz_arg1_0) _lh_splitAt_lz_arg2_0) in
-      (fun j_0 _lh_percOp_arg3_0 -> 
+      (fun _lh_percOp_arg3_0 j_0 -> 
         ((mappend_d2_d0_d6 ((mappend_d3_d0_d2 (concat_d0_d0_d2 _lh_percOp_LH_P2_0_0)) ((mappend_d4_d0_d3 (let rec h_1_9 = 't' in
           (let rec t_1_9 = (let rec h_2_0 = ':' in
             (let rec t_2_0 = (fun ys_4_3 -> 
@@ -1302,7 +1302,7 @@ and percOp_d0_d0_d0_d0 _lh_percOp_arg1_4 _lh_percOp_arg2_4 _lh_percOp_arg3_1_2 =
                           (fun ys_2_4_0 -> 
                             (`LH_C(h_1_1_4, ((mappend_d2_d0_d5_d0 t_1_1_4) ys_2_4_0)))))))))))))) in
             (let rec _lh_percOp_LH_P2_1_8 = (lazy (`LH_N)) in
-              (fun j_1_3 _lh_percOp_arg3_1_3 -> 
+              (fun _lh_percOp_arg3_1_3 j_1_3 -> 
                 ((mappend_d2_d0_d0_d0 ((mappend_d3_d0_d0_d0 (concat_d0_d0_d0_d0 _lh_percOp_LH_P2_0_8)) ((mappend_d4_d0_d0_d0 (let rec h_1_1_5 = 't' in
                   (let rec t_1_1_5 = (let rec h_1_1_6 = ':' in
                     (let rec t_1_1_6 = (fun ys_2_4_1 -> 
@@ -1323,7 +1323,7 @@ and percOp_d0_d0_d0_d0 _lh_percOp_arg1_4 _lh_percOp_arg2_4 _lh_percOp_arg3_1_2 =
                       (`LH_C(h_1_1_9, ((mappend_d2_d0_d3_d0 t_1_1_9) ys_2_4_7)))))))))) (((percOp_d0_d1_d0_d0 j_1_3) _lh_percOp_LH_P2_1_8) _lh_percOp_arg3_1_3)))))
         else
           ((splitAt_lz_d0_d1_d0_d0 10) _lh_percOp_arg2_4)) in
-          ((_lh_matchIdent_1_5 j_1_2) _lh_percOp_arg3_1_2)))))
+          ((_lh_matchIdent_1_5 _lh_percOp_arg3_1_2) j_1_2)))))
 and percOp_d0_d1_d0_d0 _lh_percOp_arg1_5 _lh_percOp_arg2_5 _lh_percOp_arg3_1_4 =
   (if (_lh_percOp_arg1_5 >= _lh_percOp_arg3_1_4) then
     (`LH_N)
@@ -1343,7 +1343,7 @@ and percOp_d0_d1_d0_d0 _lh_percOp_arg1_5 _lh_percOp_arg2_5 _lh_percOp_arg3_1_4 =
                           (fun ys_2_7_3 -> 
                             (`LH_C(h_1_3_3, ((mappend_d2_d1_d5_d0 t_1_3_3) ys_2_7_3)))))))))))))) in
             (let rec _lh_percOp_LH_P2_1_9 = (lazy (`LH_N)) in
-              (fun j_1_5 _lh_percOp_arg3_1_5 -> 
+              (fun _lh_percOp_arg3_1_5 j_1_5 -> 
                 ((mappend_d2_d1_d1_d0 ((mappend_d3_d1_d0_d0 (concat_d0_d1_d0_d0 _lh_percOp_LH_P2_0_9)) ((mappend_d4_d1_d0_d0 (let rec h_1_3_4 = 't' in
                   (let rec t_1_3_4 = (let rec h_1_3_5 = ':' in
                     (let rec t_1_3_5 = (fun ys_2_7_4 -> 
@@ -1364,7 +1364,7 @@ and percOp_d0_d1_d0_d0 _lh_percOp_arg1_5 _lh_percOp_arg2_5 _lh_percOp_arg3_1_4 =
                       (`LH_C(h_1_3_8, ((mappend_d2_d1_d0_d0 t_1_3_8) ys_2_8_0)))))))))) (((percOp_d0_d1_d0_d0 j_1_5) _lh_percOp_LH_P2_1_9) _lh_percOp_arg3_1_5)))))
         else
           ((splitAt_lz_d0_d0_d0_d0 10) _lh_percOp_arg2_5)) in
-          ((_lh_matchIdent_1_7 j_1_4) _lh_percOp_arg3_1_4)))))
+          ((_lh_matchIdent_1_7 _lh_percOp_arg3_1_4) j_1_4)))))
 and percOp_d0_d1_d1_d0 _lh_percOp_arg1_3 _lh_percOp_arg2_3 _lh_percOp_arg3_9 =
   (if (_lh_percOp_arg1_3 >= _lh_percOp_arg3_9) then
     (`LH_N)
@@ -1384,7 +1384,7 @@ and percOp_d0_d1_d1_d0 _lh_percOp_arg1_3 _lh_percOp_arg2_3 _lh_percOp_arg3_9 =
                           (fun ys_1_9_2 -> 
                             (`LH_C(h_8_9, ((mappend_d2_d1_d1_d8_d0 t_8_9) ys_1_9_2)))))))))))))) in
             (let rec _lh_percOp_LH_P2_1_6 = (lazy (`LH_N)) in
-              (fun j_1_0 _lh_percOp_arg3_1_0 -> 
+              (fun _lh_percOp_arg3_1_0 j_1_0 -> 
                 ((mappend_d2_d1_d1_d4_d0 ((mappend_d3_d1_d5_d0 (concat_d0_d1_d5_d0 _lh_percOp_LH_P2_0_6)) ((mappend_d4_d1_d6_d0 (let rec h_9_0 = 't' in
                   (let rec t_9_0 = (let rec h_9_1 = ':' in
                     (let rec t_9_1 = (fun ys_1_9_3 -> 
@@ -1405,7 +1405,7 @@ and percOp_d0_d1_d1_d0 _lh_percOp_arg1_3 _lh_percOp_arg2_3 _lh_percOp_arg3_9 =
                       (`LH_C(h_9_4, ((mappend_d2_d1_d1_d3_d0 t_9_4) ys_1_9_9)))))))))) (((percOp_d0_d1_d1_d0 j_1_0) _lh_percOp_LH_P2_1_6) _lh_percOp_arg3_1_0)))))
         else
           ((splitAt_lz_d0_d0_d1_d0 10) _lh_percOp_arg2_3)) in
-          ((_lh_matchIdent_1_0 j_9) _lh_percOp_arg3_9)))))
+          ((_lh_matchIdent_1_0 _lh_percOp_arg3_9) j_9)))))
 and pidgits_d0_d0_d0_d0 _lh_pidgits_arg1_1 =
   (((percOp_d0_d0_d0_d0 0) ((hashOp_d0_d0_d0_d2 0) (let rec _lh_ampOp_LH_P3_0_3 = 1 in
     (let rec _lh_ampOp_LH_P3_1_3 = 0 in
@@ -1442,7 +1442,7 @@ and replicate_d0_d1_d0_d0 _lh_replicate_arg1_3 _lh_replicate_arg2_3 =
   else
     (fun ys_3_0_8 -> 
       ys_3_0_8))
-and splitAt_lz_d0_d0_d0_d0 _lh_splitAt_lz_arg1_5 _lh_splitAt_lz_arg2_5 j_1_7 _lh_percOp_arg3_1_7 =
+and splitAt_lz_d0_d0_d0_d0 _lh_splitAt_lz_arg1_5 _lh_splitAt_lz_arg2_5 _lh_percOp_arg3_1_7 j_1_7 =
   (let rec _lh_percOp_LH_P2_0_1_1 = ((take_lz_d0_d0_d0_d0 _lh_splitAt_lz_arg1_5) _lh_splitAt_lz_arg2_5) in
     (let rec _lh_percOp_LH_P2_1_1_1 = ((drop_lz_d0_d0_d0_d0 _lh_splitAt_lz_arg1_5) _lh_splitAt_lz_arg2_5) in
       ((mappend_d2_d1_d6_d0 ((mappend_d3_d1_d2_d0 (concat_d0_d1_d2_d0 _lh_percOp_LH_P2_0_1_1)) ((mappend_d4_d1_d3_d0 (let rec h_1_5_9 = 't' in
@@ -1463,7 +1463,7 @@ and splitAt_lz_d0_d0_d0_d0 _lh_splitAt_lz_arg1_5 _lh_splitAt_lz_arg2_5 j_1_7 _lh
           ys_3_4_2) in
           (fun ys_3_4_3 -> 
             (`LH_C(h_1_6_3, ((mappend_d2_d1_d9_d0 t_1_6_3) ys_3_4_3)))))))))) (((percOp_d0_d1_d0_d0 j_1_7) _lh_percOp_LH_P2_1_1_1) _lh_percOp_arg3_1_7))))
-and splitAt_lz_d0_d0_d1_d0 _lh_splitAt_lz_arg1_3 _lh_splitAt_lz_arg2_3 j_1_1 _lh_percOp_arg3_1_1 =
+and splitAt_lz_d0_d0_d1_d0 _lh_splitAt_lz_arg1_3 _lh_splitAt_lz_arg2_3 _lh_percOp_arg3_1_1 j_1_1 =
   (let rec _lh_percOp_LH_P2_0_7 = ((take_lz_d0_d0_d1_d0 _lh_splitAt_lz_arg1_3) _lh_splitAt_lz_arg2_3) in
     (let rec _lh_percOp_LH_P2_1_7 = ((drop_lz_d0_d0_d1_d0 _lh_splitAt_lz_arg1_3) _lh_splitAt_lz_arg2_3) in
       ((mappend_d2_d1_d1_d9_d0 ((mappend_d3_d1_d7_d0 (concat_d0_d1_d7_d0 _lh_percOp_LH_P2_0_7)) ((mappend_d4_d1_d9_d0 (let rec h_9_7 = 't' in
@@ -1484,7 +1484,7 @@ and splitAt_lz_d0_d0_d1_d0 _lh_splitAt_lz_arg1_3 _lh_splitAt_lz_arg2_3 j_1_1 _lh
           ys_2_1_2) in
           (fun ys_2_1_3 -> 
             (`LH_C(h_1_0_1, ((mappend_d2_d1_d2_d2_d0 t_1_0_1) ys_2_1_3)))))))))) (((percOp_d0_d1_d1_d0 j_1_1) _lh_percOp_LH_P2_1_7) _lh_percOp_arg3_1_1))))
-and splitAt_lz_d0_d1_d0_d0 _lh_splitAt_lz_arg1_4 _lh_splitAt_lz_arg2_4 j_1_6 _lh_percOp_arg3_1_6 =
+and splitAt_lz_d0_d1_d0_d0 _lh_splitAt_lz_arg1_4 _lh_splitAt_lz_arg2_4 _lh_percOp_arg3_1_6 j_1_6 =
   (let rec _lh_percOp_LH_P2_0_1_0 = ((take_lz_d0_d1_d0_d0 _lh_splitAt_lz_arg1_4) _lh_splitAt_lz_arg2_4) in
     (let rec _lh_percOp_LH_P2_1_1_0 = ((drop_lz_d0_d1_d0_d0 _lh_splitAt_lz_arg1_4) _lh_splitAt_lz_arg2_4) in
       ((mappend_d2_d0_d6_d0 ((mappend_d3_d0_d2_d0 (concat_d0_d0_d2_d0 _lh_percOp_LH_P2_0_1_0)) ((mappend_d4_d0_d3_d0 (let rec h_1_4_2 = 't' in

@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 ./Rsa_nofib.ml -o "./Rsa_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Rsa_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Rsa_nofib.ml -o "./Rsa_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Rsa_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;
@@ -142,7 +142,7 @@ let rec drop_d0_d0 _lh_drop_arg1_0 _lh_drop_arg2_0 =
 let rec even_d0_d0 _lh_even_arg1_0 =
   ((_lh_even_arg1_0 mod 2) = 0);;
 let rec foldl_d0_d0 f_1_1 i_3 ls_4 =
-  ((ls_4 i_3) f_1_1);;
+  ((ls_4 f_1_1) i_3);;
 let rec length_d0_d0 ls_2 =
   (match ls_2 with
     | `LH_C(h_4, t_4) -> 
@@ -228,13 +228,13 @@ and take_d0_d0 n_0 ls_1 =
       | `LH_C(h_1, t_1) -> 
         (let rec h_2 = h_1 in
           (let rec t_2 = ((take_d0_d0 (n_0 - 1)) t_1) in
-            (fun i_0 f_1 -> 
+            (fun f_1 i_0 -> 
               (((foldl_d0_d0 f_1) ((f_1 i_0) h_2)) t_2))))
       | `LH_N -> 
-        (fun i_1 f_2 -> 
+        (fun f_2 i_1 -> 
           i_1))
   else
-    (fun i_2 f_3 -> 
+    (fun f_3 i_2 -> 
       i_2))
 and testRsa_nofib_d0_d0 _lh_testRsa_nofib_arg1_0 =
   (((encrypt_d0_d0 6367) 5189) ((copy_d0_d0 _lh_testRsa_nofib_arg1_0) 'l'))
@@ -263,9 +263,9 @@ let rec drop_d0_d0_d0 _lh_drop_arg1_1 _lh_drop_arg2_1 =
 let rec even_d0_d0_d0 _lh_even_arg1_1 =
   ((_lh_even_arg1_1 mod 2) = 0);;
 let rec foldl_d0_d0_d0 f_1_2 i_4 ls_5 =
-  ((ls_5 i_4) f_1_2);;
+  ((ls_5 f_1_2) i_4);;
 let rec foldl_d0_d0_d1 f_2_5 i_8 ls_1_1 =
-  ((ls_1_1 i_8) f_2_5);;
+  ((ls_1_1 f_2_5) i_8);;
 let rec length_d0_d0_d0 ls_9 =
   (match ls_9 with
     | `LH_C(h_1_7, t_1_7) -> 
@@ -351,11 +351,11 @@ and take_d0_d0_d0 n_1 ls_1_0 _lh_popOutId_0_1 _lh_popOutId_1_1 =
       | `LH_C(h_1_8, t_1_8) -> 
         (let rec h_1_9 = h_1_8 in
           (let rec t_1_9 = ((take_d0_d0_d0 (n_1 - 1)) t_1_8) in
-            (((foldl_d0_d0_d1 _lh_popOutId_1_1) ((_lh_popOutId_1_1 _lh_popOutId_0_1) h_1_9)) t_1_9)))
+            (((foldl_d0_d0_d1 _lh_popOutId_0_1) ((_lh_popOutId_0_1 _lh_popOutId_1_1) h_1_9)) t_1_9)))
       | `LH_N -> 
-        _lh_popOutId_0_1)
+        _lh_popOutId_1_1)
   else
-    _lh_popOutId_0_1)
+    _lh_popOutId_1_1)
 and testRsa_nofib_d0_d0_d0 _lh_testRsa_nofib_arg1_1 =
   (((encrypt_d0_d0_d0 6367) 5189) ((copy_d0_d0_d0 _lh_testRsa_nofib_arg1_1) 'l'))
 and unlines_d0_d0_d0 _lh_unlines_arg1_1 =

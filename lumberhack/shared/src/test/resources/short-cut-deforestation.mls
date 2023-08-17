@@ -159,7 +159,7 @@ f
 //│ >>>>>>> after fusion >>>>>>>
 //│ f₀
 //│ def f₀(xs², g², f⁵) = 
-//│ 	let ok² = (fun ls⁴ -> ls⁴(ok², f⁵))
+//│ 	let ok² = (fun ls⁴ -> ls⁴(f⁵, ok²))
 //│ 	in ok²(map₀(xs², f⁵))
 //│ 	where
 //│ 	def map₀(ls⁵, f⁶) = 
@@ -167,9 +167,9 @@ f
 //│ 			C h³ t³ => 
 //│ 				let h⁴ = f⁶(h³)
 //│ 				in let t⁴ = map₀(t³, f⁶)
-//│ 				in (fun ok³ -> (fun f⁷ -> case h⁴ of {
+//│ 				in (fun f⁷ -> (fun ok³ -> case h⁴ of {
 //│ 					x² => if odd₀(x²) then [C f⁷(x²) ok³(t⁴)] else ok³(t⁴)}))
-//│ 			| N  => (fun ok⁴ -> (fun f⁸ -> [N]))}
+//│ 			| N  => (fun f⁸ -> (fun ok⁴ -> [N]))}
 //│ 	def odd₀(x⁴) = 
 //│ 		if ((x⁴ % 2) == 0) then [True] else [False]
 //│ <<<<<<< after fusion <<<<<<<
@@ -284,7 +284,7 @@ f(C(1, C(2, C(3, C(4, N)))), x => x + 1, x => x * 2)
 //│ >>>>>>> after fusion >>>>>>>
 //│ f₀([C 1 [C 2 [C 3 [C 4 [N]]]]], (fun x⁸ -> (x⁸ + 1)), (fun x⁹ -> (x⁹ * 2)))
 //│ def f₀(xs², g², f⁵) = 
-//│ 	let ok² = (fun ls⁴ -> ls⁴(ok², f⁵))
+//│ 	let ok² = (fun ls⁴ -> ls⁴(f⁵, ok²))
 //│ 	in ok²(map₀(xs², g²))
 //│ 	xs²
 //│ 	where
@@ -293,9 +293,9 @@ f(C(1, C(2, C(3, C(4, N)))), x => x + 1, x => x * 2)
 //│ 			C h³ t³ => 
 //│ 				let h⁴ = f⁶(h³)
 //│ 				in let t⁴ = map₀(t³, f⁶)
-//│ 				in (fun ok³ -> (fun f⁷ -> case h⁴ of {
+//│ 				in (fun f⁷ -> (fun ok³ -> case h⁴ of {
 //│ 					x⁵ => if odd₀(x⁵) then [C f⁷(x⁵) ok³(t⁴)] else ok³(t⁴)}))
-//│ 			| N  => (fun ok⁴ -> (fun f⁸ -> [N]))}
+//│ 			| N  => (fun f⁸ -> (fun ok⁴ -> [N]))}
 //│ 	def odd₀(x¹⁰) = 
 //│ 		if ((x¹⁰ % 2) == 0) then [True] else [False]
 //│ <<<<<<< after fusion <<<<<<<

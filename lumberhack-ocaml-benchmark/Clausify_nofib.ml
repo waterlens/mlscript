@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 ./Clausify_nofib.ml -o "./Clausify_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Clausify_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Clausify_nofib.ml -o "./Clausify_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Clausify_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;
@@ -722,7 +722,7 @@ let rec copy_d1_d0 _lh_copy_arg1_0 _lh_copy_arg2_0 =
 let rec elim_d0_d0 _lh_elim_arg1_0 =
   _lh_elim_arg1_0;;
 let rec foldr_d0_d0 f_5 i_1 ls_3 =
-  ((ls_3 i_1) f_5);;
+  ((ls_3 f_5) i_1);;
 let rec insert_d0_d0 _lh_insert_arg1_1 _lh_insert_arg2_1 =
   (match _lh_insert_arg2_1 with
     | `LH_N -> 
@@ -1327,10 +1327,10 @@ and splitHelper_d0_d0 _lh_splitHelper_arg1_0 _lh_splitHelper_arg2_0 =
     | _ -> 
       (let rec h_1_9 = _lh_splitHelper_arg1_0 in
         (let rec t_1_9 = _lh_splitHelper_arg2_0 in
-          (fun i_2 f_6 -> 
+          (fun f_6 i_2 -> 
             ((f_6 h_1_9) (((foldr_d0_d0 f_6) i_2) t_1_9))))))
 and split_d0_d0 _lh_split_arg1_0 =
-  ((splitHelper_d0_d0 _lh_split_arg1_0) (fun i_0 f_1 -> 
+  ((splitHelper_d0_d0 _lh_split_arg1_0) (fun f_1 i_0 -> 
     i_0))
 and spri_d0_d0 _lh_spri_arg1_0 =
   (match _lh_spri_arg1_0 with
@@ -1529,9 +1529,9 @@ let rec elim_d0_d0_d8 _lh_elim_arg1_1_0 =
 let rec elim_d0_d0_d9 _lh_elim_arg1_2_2 =
   _lh_elim_arg1_2_2;;
 let rec foldr_d0_d0_d0 f_9 i_5 ls_6 =
-  ((ls_6 i_5) f_9);;
+  ((ls_6 f_9) i_5);;
 let rec foldr_d0_d0_d1 f_8 i_4 ls_5 =
-  ((ls_5 i_4) f_8);;
+  ((ls_5 f_8) i_4);;
 let rec insert_d0_d0_d0 _lh_insert_arg1_3 _lh_insert_arg2_3 =
   (match _lh_insert_arg2_3 with
     | `LH_N -> 
@@ -2156,10 +2156,10 @@ and splitHelper_d0_d0_d0 _lh_splitHelper_arg1_1 _lh_splitHelper_arg2_1 =
     | _ -> 
       (let rec h_3_9 = _lh_splitHelper_arg1_1 in
         (let rec t_3_9 = _lh_splitHelper_arg2_1 in
-          (fun i_6 f_1_4 -> 
+          (fun f_1_4 i_6 -> 
             ((f_1_4 h_3_9) (((foldr_d0_d0_d0 f_1_4) i_6) t_3_9))))))
 and split_d0_d0_d0 _lh_split_arg1_1 =
-  ((splitHelper_d0_d0_d0 _lh_split_arg1_1) (fun i_3 f_7 -> 
+  ((splitHelper_d0_d0_d0 _lh_split_arg1_1) (fun f_7 i_3 -> 
     i_3))
 and spri_d0_d0_d0 _lh_spri_arg1_5 =
   (match _lh_spri_arg1_5 with

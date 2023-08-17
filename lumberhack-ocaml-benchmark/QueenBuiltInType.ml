@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 ./QueenBuiltInType.ml -o "./QueenBuiltInType.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./QueenBuiltInType.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./QueenBuiltInType.ml -o "./QueenBuiltInType.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./QueenBuiltInType.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;
@@ -72,7 +72,7 @@ let rec enumFromTo_d0_d0 a_0 b_0 =
   (if (a_0 <= b_0) then
     (let rec _lh_listcomp_fun_ls_h_0 = a_0 in
       (let rec _lh_listcomp_fun_ls_t_0 = ((enumFromTo_d0_d0 (a_0 + 1)) b_0) in
-        (fun _lh_listcomp_fun_ls_h_1 _lh_listcomp_fun_0 _lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_1 -> 
+        (fun _lh_listcomp_fun_ls_h_1 _lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_1 _lh_listcomp_fun_1 -> 
           (if (((safe_d0_d0 _lh_listcomp_fun_ls_h_0) 1) _lh_listcomp_fun_ls_h_1) then
             (`LH_C((let rec _lh_safe_LH_C_0_0 = _lh_listcomp_fun_ls_h_0 in
               (let rec _lh_safe_LH_C_1_0 = _lh_listcomp_fun_ls_h_1 in
@@ -81,7 +81,7 @@ let rec enumFromTo_d0_d0 a_0 b_0 =
           else
             (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0)))))
   else
-    (fun _lh_listcomp_fun_ls_h_2 _lh_listcomp_fun_2 _lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_2 -> 
+    (fun _lh_listcomp_fun_ls_h_2 _lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_2 _lh_listcomp_fun_3 -> 
       (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_2)))
 and gen_d0_d0 _lh_gen_arg1_0 _lh_gen_arg2_0 =
   (match _lh_gen_arg1_0 with
@@ -93,7 +93,7 @@ and gen_d0_d0 _lh_gen_arg1_0 _lh_gen_arg2_0 =
         (match _lh_listcomp_fun_para_0 with
           | `LH_C(_lh_listcomp_fun_ls_h_3, _lh_listcomp_fun_ls_t_3) -> 
             (let rec _lh_listcomp_fun_5 = (fun _lh_listcomp_fun_para_1 -> 
-              ((((_lh_listcomp_fun_para_1 _lh_listcomp_fun_ls_h_3) _lh_listcomp_fun_5) _lh_listcomp_fun_4) _lh_listcomp_fun_ls_t_3)) in
+              ((((_lh_listcomp_fun_para_1 _lh_listcomp_fun_ls_h_3) _lh_listcomp_fun_5) _lh_listcomp_fun_ls_t_3) _lh_listcomp_fun_4)) in
               (_lh_listcomp_fun_5 ((enumFromTo_d0_d0 1) _lh_gen_arg2_0)))
           | `LH_N -> 
             (`LH_N))) in
@@ -126,7 +126,7 @@ let rec enumFromTo_d0_d0_d0 a_1 b_1 _lh_popOutId_0_0 _lh_popOutId_1_0 _lh_popOut
         else
           (_lh_popOutId_1_0 _lh_listcomp_fun_ls_t_4))))
   else
-    (_lh_popOutId_2_0 _lh_popOutId_3_0))
+    (_lh_popOutId_3_0 _lh_popOutId_2_0))
 and gen_d0_d0_d0 _lh_gen_arg1_1 _lh_gen_arg2_1 =
   (match _lh_gen_arg1_1 with
     | 0 -> 
@@ -137,7 +137,7 @@ and gen_d0_d0_d0 _lh_gen_arg1_1 _lh_gen_arg2_1 =
         (match _lh_listcomp_fun_para_2 with
           | `LH_C(_lh_listcomp_fun_ls_h_7, _lh_listcomp_fun_ls_t_7) -> 
             (let rec _lh_listcomp_fun_1_1 = (fun _lh_listcomp_fun_para_3 -> 
-              ((((_lh_listcomp_fun_para_3 _lh_listcomp_fun_ls_h_7) _lh_listcomp_fun_1_1) _lh_listcomp_fun_1_0) _lh_listcomp_fun_ls_t_7)) in
+              ((((_lh_listcomp_fun_para_3 _lh_listcomp_fun_ls_h_7) _lh_listcomp_fun_1_1) _lh_listcomp_fun_ls_t_7) _lh_listcomp_fun_1_0)) in
               (_lh_listcomp_fun_1_1 ((enumFromTo_d0_d0_d0 1) _lh_gen_arg2_1)))
           | `LH_N -> 
             (`LH_N))) in

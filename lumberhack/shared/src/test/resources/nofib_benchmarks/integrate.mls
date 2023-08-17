@@ -1150,10 +1150,9 @@ testIntegrate_nofib $ primId 100
 //│ 					def enumFromFloat₀₀(_lh_enumFromFloat_arg1¹⁵) = 
 //│ 						lazy⁰(
 //│ 							let h²⁵ = _lh_enumFromFloat_arg1¹⁵
-//│ 							in let t²⁵ = enumFromFloat₀₀((_lh_enumFromFloat_arg1¹⁵ +. 1.0))
+//│ 							in let t²⁴ = enumFromFloat₀₀((_lh_enumFromFloat_arg1¹⁵ +. 1.0))
 //│ 							in (fun f³⁴ -> 
 //│ 								let h²⁶ = f³⁴(h²⁵)
-//│ 								in let t²⁶ = map_lz₀₀(f³⁴, t²⁵)
 //│ 								in h²⁶))
 //│ 				def map_lz₀₀(f²⁹, ls²³) = 
 //│ 					lazy⁰(force⁰(ls²³, f²⁹))
@@ -1201,7 +1200,7 @@ testIntegrate_nofib $ primId 100
 //│ 						lazy⁰(
 //│ 							let hx¹⁰ = _lh_enumFromFloat_arg1¹²
 //│ 							in let tx¹⁰ = enumFromFloat₂₀((_lh_enumFromFloat_arg1¹² +. 1.0))
-//│ 							in (fun ys¹⁰ -> (fun f²¹ -> force⁰(ys¹⁰, hx¹⁰, tx¹⁰, f²¹))))
+//│ 							in (fun f²¹ -> (fun ys¹⁰ -> force⁰(ys¹⁰, f²¹, hx¹⁰, tx¹⁰))))
 //│ 				def ints₃₀(_lh_ints_arg1¹²) = 
 //│ 					enumFromFloat₃₀(1.0)
 //│ 					where
@@ -1212,9 +1211,8 @@ testIntegrate_nofib $ primId 100
 //│ 							in (fun f³⁰ -> 
 //│ 								let hy¹⁰ = f³⁰(h²³)
 //│ 								in let ty¹⁰ = map_lz₃₀(f³⁰, t²³)
-//│ 								in (fun hx¹¹ -> (fun tx¹¹ -> (fun f³¹ -> 
+//│ 								in (fun f³¹ -> (fun hx¹¹ -> (fun tx¹¹ -> 
 //│ 									let h²⁴ = f³¹(hx¹¹, hy¹⁰)
-//│ 									in let t²⁴ = zipWith_lz_lz₁₀(f³¹, tx¹¹, ty¹⁰)
 //│ 									in h²⁴)))))
 //│ 				def map_lz₃₀(f⁴⁰, ls²⁹) = 
 //│ 					lazy⁰(force⁰(ls²⁹, f⁴⁰))
@@ -1291,7 +1289,7 @@ testIntegrate_nofib $ primId 100
 //│ 							def sumFloat₁₀(_lh_sumFloat_arg1¹⁰) = 
 //│ 								_lh_sumFloat_arg1¹⁰
 //│ 				def zipWith_lz_lz₁₀(f³³, xs¹³, ys¹⁴) = 
-//│ 					lazy⁰(force⁰(xs¹³, ys¹⁴, f³³))
+//│ 					lazy⁰(force⁰(xs¹³, f³³, ys¹⁴))
 //│ 			def zarks₁₀(_lh_zarks_arg1⁵) = 
 //│ 				zipWith_lz_lz₂₀(zark₁₀, ints₄₀(0), map_lz₄₀((fun n¹⁰ -> (2.0 *. n¹⁰)), ints₅₀(0)))
 //│ 				where
@@ -1302,18 +1300,18 @@ testIntegrate_nofib $ primId 100
 //│ 						lazy⁰(
 //│ 							let hx¹² = _lh_enumFromFloat_arg1¹⁶
 //│ 							in let tx¹² = enumFromFloat₄₀((_lh_enumFromFloat_arg1¹⁶ +. 1.0))
-//│ 							in (fun ys¹⁵ -> (fun f³⁵ -> force⁰(ys¹⁵, hx¹², tx¹², f³⁵))))
+//│ 							in (fun f³⁵ -> (fun ys¹⁵ -> force⁰(ys¹⁵, f³⁵, hx¹², tx¹²))))
 //│ 				def ints₅₀(_lh_ints_arg1¹⁶) = 
 //│ 					enumFromFloat₅₀(1.0)
 //│ 					where
 //│ 					def enumFromFloat₅₀(_lh_enumFromFloat_arg1¹⁷) = 
 //│ 						lazy⁰(
 //│ 							let h²⁷ = _lh_enumFromFloat_arg1¹⁷
-//│ 							in let t²⁷ = enumFromFloat₅₀((_lh_enumFromFloat_arg1¹⁷ +. 1.0))
+//│ 							in let t²⁵ = enumFromFloat₅₀((_lh_enumFromFloat_arg1¹⁷ +. 1.0))
 //│ 							in (fun f³⁷ -> 
 //│ 								let hy¹¹ = f³⁷(h²⁷)
-//│ 								in let ty¹¹ = map_lz₄₀(f³⁷, t²⁷)
-//│ 								in (fun hx¹³ -> (fun tx¹³ -> (fun f³⁸ -> [LH_C f³⁸(hx¹³, hy¹¹) zipWith_lz_lz₂₀(f³⁸, tx¹³, ty¹¹)])))))
+//│ 								in let ty¹¹ = map_lz₄₀(f³⁷, t²⁵)
+//│ 								in (fun f³⁸ -> (fun hx¹³ -> (fun tx¹³ -> [LH_C f³⁸(hx¹³, hy¹¹) zipWith_lz_lz₂₀(f³⁸, tx¹³, ty¹¹)])))))
 //│ 				def map_lz₄₀(f³², ls²⁵) = 
 //│ 					lazy⁰(force⁰(ls²⁵, f³²))
 //│ 				def zark₁₀(_lh_zark_arg1⁴, _lh_zark_arg2⁴) = 
@@ -1389,7 +1387,7 @@ testIntegrate_nofib $ primId 100
 //│ 							def sumFloat₃₀(_lh_sumFloat_arg1¹²) = 
 //│ 								_lh_sumFloat_arg1¹²
 //│ 				def zipWith_lz_lz₂₀(f²⁷, xs¹¹, ys¹²) = 
-//│ 					lazy⁰(force⁰(xs¹¹, ys¹², f²⁷))
+//│ 					lazy⁰(force⁰(xs¹¹, f²⁷, ys¹²))
 //│ 			def zipWith_lz_lz₃₀(f²⁸, xs¹², ys¹³) = 
 //│ 				lazy⁰(case force⁰(xs¹²) of {
 //│ 					LH_C hx⁵ tx⁵ => case force⁰(ys¹³) of {

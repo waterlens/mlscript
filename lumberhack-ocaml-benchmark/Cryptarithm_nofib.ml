@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 ./Cryptarithm_nofib.ml -o "./Cryptarithm_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Cryptarithm_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Cryptarithm_nofib.ml -o "./Cryptarithm_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Cryptarithm_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;
@@ -305,18 +305,18 @@ let rec addj_d0_d1_d1_d0_d0_d0 _lh_addj_arg1_1_0 _lh_addj_arg2_9 =
   (match _lh_addj_arg2_9 with
     | `LH_N -> 
       (let rec _lh_listcomp_fun_ls_h_1_1 = (`LH_C(_lh_addj_arg1_1_0, (`LH_N))) in
-        (let rec _lh_listcomp_fun_ls_t_1_3 = (fun _lh_listcomp_fun_1_7 _lh_listcomp_fun_1_8 _lh_listcomp_fun_ls_t_1_4 -> 
+        (let rec _lh_listcomp_fun_ls_t_1_3 = (fun _lh_listcomp_fun_1_7 _lh_listcomp_fun_ls_t_1_4 _lh_listcomp_fun_1_8 -> 
           (_lh_listcomp_fun_1_8 _lh_listcomp_fun_ls_t_1_4)) in
-          (fun _lh_listcomp_fun_1_9 _lh_listcomp_fun_2_0 _lh_listcomp_fun_ls_t_1_5 -> 
+          (fun _lh_listcomp_fun_1_9 _lh_listcomp_fun_ls_t_1_5 _lh_listcomp_fun_2_0 -> 
             (let rec _lh_listcomp_fun_ls_h_1_2 = _lh_listcomp_fun_ls_h_1_1 in
               (let rec _lh_listcomp_fun_ls_t_1_6 = (_lh_listcomp_fun_1_9 _lh_listcomp_fun_ls_t_1_3) in
-                (fun _lh_permutations_LH_C_0_3 _lh_listcomp_fun_2_1 -> 
+                (fun _lh_listcomp_fun_2_1 _lh_permutations_LH_C_0_3 -> 
                   (let rec _lh_listcomp_fun_2_2 = (fun _lh_listcomp_fun_para_1_1 -> 
                     (match _lh_listcomp_fun_para_1_1 with
                       | `LH_C(_lh_listcomp_fun_ls_h_1_3, _lh_listcomp_fun_ls_t_1_7) -> 
                         (let rec _lh_listcomp_fun_ls_h_1_4 = _lh_listcomp_fun_ls_h_1_3 in
                           (let rec _lh_listcomp_fun_ls_t_1_8 = (_lh_listcomp_fun_2_2 _lh_listcomp_fun_ls_t_1_7) in
-                            (fun _lh_permutations_LH_C_0_4 _lh_listcomp_fun_2_3 -> 
+                            (fun _lh_listcomp_fun_2_3 _lh_permutations_LH_C_0_4 -> 
                               (let rec _lh_listcomp_fun_2_4 = (fun _lh_listcomp_fun_para_1_2 -> 
                                 (match _lh_listcomp_fun_para_1_2 with
                                   | `LH_C(_lh_listcomp_fun_ls_h_1_5, _lh_listcomp_fun_ls_t_1_9) -> 
@@ -344,7 +344,7 @@ let rec addj_d0_d1_d1_d0_d0_d0 _lh_addj_arg1_1_0 _lh_addj_arg2_9 =
                                 (fun _lh_listcomp_fun_2_7 _lh_listcomp_fun_ls_t_2_5 _lh_listcomp_fun_2_8 -> 
                                   (let rec _lh_listcomp_fun_ls_h_2_2 = _lh_listcomp_fun_ls_h_2_1 in
                                     (let rec _lh_listcomp_fun_ls_t_2_6 = (_lh_listcomp_fun_2_7 _lh_listcomp_fun_ls_t_2_4) in
-                                      (fun _lh_permutations_LH_C_0_5 _lh_listcomp_fun_2_9 -> 
+                                      (fun _lh_listcomp_fun_2_9 _lh_permutations_LH_C_0_5 -> 
                                         (let rec _lh_listcomp_fun_3_0 = (fun _lh_listcomp_fun_para_1_5 -> 
                                           (match _lh_listcomp_fun_para_1_5 with
                                             | `LH_C(_lh_listcomp_fun_ls_h_2_3, _lh_listcomp_fun_ls_t_2_7) -> 
@@ -359,7 +359,7 @@ let rec addj_d0_d1_d1_d0_d0_d0 _lh_addj_arg1_1_0 _lh_addj_arg2_9 =
                         (fun _lh_listcomp_fun_3_3 _lh_listcomp_fun_ls_t_2_9 _lh_listcomp_fun_3_4 -> 
                           (let rec _lh_listcomp_fun_ls_h_2_4 = _lh_listcomp_fun_ls_h_1_9 in
                             (let rec _lh_listcomp_fun_ls_t_3_0 = (_lh_listcomp_fun_3_3 _lh_listcomp_fun_ls_t_2_2) in
-                              (fun _lh_permutations_LH_C_0_6 _lh_listcomp_fun_3_5 -> 
+                              (fun _lh_listcomp_fun_3_5 _lh_permutations_LH_C_0_6 -> 
                                 (let rec _lh_listcomp_fun_3_6 = (fun _lh_listcomp_fun_para_1_6 -> 
                                   (match _lh_listcomp_fun_para_1_6 with
                                     | `LH_C(_lh_listcomp_fun_ls_h_2_5, _lh_listcomp_fun_ls_t_3_1) -> 
@@ -368,27 +368,27 @@ let rec addj_d0_d1_d1_d0_d0_d0 _lh_addj_arg1_1_0 _lh_addj_arg2_9 =
                                       (_lh_listcomp_fun_3_5 _lh_listcomp_fun_ls_t_3_0))) in
                                   (_lh_listcomp_fun_3_6 ((addj_d0_d0_d0_d3_d0_d0 _lh_permutations_LH_C_0_6) _lh_listcomp_fun_ls_h_2_4)))))))))))) in
                 (let rec _lh_listcomp_fun_ls_t_3_2 = (_lh_listcomp_fun_2_5 _lh_listcomp_fun_ls_t_2_1) in
-                  (fun _lh_listcomp_fun_3_7 _lh_listcomp_fun_3_8 _lh_listcomp_fun_ls_t_3_3 -> 
+                  (fun _lh_listcomp_fun_3_7 _lh_listcomp_fun_ls_t_3_3 _lh_listcomp_fun_3_8 -> 
                     (let rec _lh_listcomp_fun_ls_h_2_6 = _lh_listcomp_fun_ls_h_1_8 in
                       (let rec _lh_listcomp_fun_ls_t_3_4 = (_lh_listcomp_fun_3_7 _lh_listcomp_fun_ls_t_3_2) in
-                        (fun _lh_permutations_LH_C_0_7 _lh_listcomp_fun_3_9 -> 
+                        (fun _lh_listcomp_fun_3_9 _lh_permutations_LH_C_0_7 -> 
                           (let rec _lh_listcomp_fun_4_0 = (fun _lh_listcomp_fun_para_1_7 -> 
                             (((_lh_listcomp_fun_para_1_7 _lh_listcomp_fun_4_0) _lh_listcomp_fun_ls_t_3_4) _lh_listcomp_fun_3_9)) in
                             (_lh_listcomp_fun_4_0 ((addj_d0_d1_d0_d2_d0_d0 _lh_permutations_LH_C_0_7) _lh_listcomp_fun_ls_h_2_6)))))))))
             | `LH_N -> 
-              (fun _lh_listcomp_fun_4_1 _lh_listcomp_fun_4_2 _lh_listcomp_fun_ls_t_3_5 -> 
+              (fun _lh_listcomp_fun_4_1 _lh_listcomp_fun_ls_t_3_5 _lh_listcomp_fun_4_2 -> 
                 (_lh_listcomp_fun_4_2 _lh_listcomp_fun_ls_t_3_5)))) in
           (_lh_listcomp_fun_2_5 ((addj_d0_d1_d2_d0_d0_d0 _lh_addj_arg1_1_0) _lh_addj_LH_C_1_9))) in
-          (fun _lh_listcomp_fun_4_3 _lh_listcomp_fun_4_4 _lh_listcomp_fun_ls_t_3_6 -> 
+          (fun _lh_listcomp_fun_4_3 _lh_listcomp_fun_ls_t_3_6 _lh_listcomp_fun_4_4 -> 
             (let rec _lh_listcomp_fun_ls_h_2_7 = _lh_listcomp_fun_ls_h_1_6 in
               (let rec _lh_listcomp_fun_ls_t_3_7 = (_lh_listcomp_fun_4_3 _lh_listcomp_fun_ls_t_2_0) in
-                (fun _lh_permutations_LH_C_0_8 _lh_listcomp_fun_4_5 -> 
+                (fun _lh_listcomp_fun_4_5 _lh_permutations_LH_C_0_8 -> 
                   (let rec _lh_listcomp_fun_4_6 = (fun _lh_listcomp_fun_para_1_8 -> 
                     (match _lh_listcomp_fun_para_1_8 with
                       | `LH_C(_lh_listcomp_fun_ls_h_2_8, _lh_listcomp_fun_ls_t_3_8) -> 
                         (let rec _lh_listcomp_fun_ls_h_2_9 = _lh_listcomp_fun_ls_h_2_8 in
                           (let rec _lh_listcomp_fun_ls_t_3_9 = (_lh_listcomp_fun_4_6 _lh_listcomp_fun_ls_t_3_8) in
-                            (fun _lh_permutations_LH_C_0_9 _lh_listcomp_fun_4_7 -> 
+                            (fun _lh_listcomp_fun_4_7 _lh_permutations_LH_C_0_9 -> 
                               (let rec _lh_listcomp_fun_4_8 = (fun _lh_listcomp_fun_para_1_9 -> 
                                 (match _lh_listcomp_fun_para_1_9 with
                                   | `LH_C(_lh_listcomp_fun_ls_h_3_0, _lh_listcomp_fun_ls_t_4_0) -> 
@@ -489,7 +489,7 @@ and permutations_d0_d0_d0_d0_d0_d0 _lh_permutations_arg1_3 =
       (`LH_C((`LH_N), (`LH_N)))
     | `LH_C(_lh_permutations_LH_C_0_1_8, _lh_permutations_LH_C_1_3) -> 
       (let rec _lh_listcomp_fun_6_5 = (fun _lh_listcomp_fun_para_2_6 -> 
-        ((_lh_listcomp_fun_para_2_6 _lh_permutations_LH_C_0_1_8) _lh_listcomp_fun_6_5)) in
+        ((_lh_listcomp_fun_para_2_6 _lh_listcomp_fun_6_5) _lh_permutations_LH_C_0_1_8)) in
         (_lh_listcomp_fun_6_5 (permutations_d0_d1_d0_d0_d0_d0 _lh_permutations_LH_C_1_3)))
     | _ -> 
       (failwith "error"))
@@ -502,15 +502,15 @@ and permutations_d0_d1_d0_d0_d0_d0 _lh_permutations_arg1_0 =
             (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3)) in
             (fun _lh_listcomp_fun_4 _lh_listcomp_fun_ls_t_4 _lh_listcomp_fun_5 -> 
               (`LH_C(_lh_listcomp_fun_ls_h_3, (_lh_listcomp_fun_4 _lh_listcomp_fun_ls_t_2))))))) in
-        (let rec _lh_listcomp_fun_ls_t_5 = (fun _lh_permutations_LH_C_0_0 _lh_listcomp_fun_6 -> 
+        (let rec _lh_listcomp_fun_ls_t_5 = (fun _lh_listcomp_fun_6 _lh_permutations_LH_C_0_0 -> 
           (`LH_N)) in
-          (fun _lh_permutations_LH_C_0_1 _lh_listcomp_fun_7 -> 
+          (fun _lh_listcomp_fun_7 _lh_permutations_LH_C_0_1 -> 
             (let rec _lh_listcomp_fun_8 = (fun _lh_listcomp_fun_para_2 -> 
               (((_lh_listcomp_fun_para_2 _lh_listcomp_fun_8) _lh_listcomp_fun_ls_t_5) _lh_listcomp_fun_7)) in
               (_lh_listcomp_fun_8 ((addj_d0_d0_d0_d0_d0_d0 _lh_permutations_LH_C_0_1) _lh_listcomp_fun_ls_h_2))))))
     | `LH_C(_lh_permutations_LH_C_0_2, _lh_permutations_LH_C_1_0) -> 
       (let rec _lh_listcomp_fun_9 = (fun _lh_listcomp_fun_para_3 -> 
-        ((_lh_listcomp_fun_para_3 _lh_permutations_LH_C_0_2) _lh_listcomp_fun_9)) in
+        ((_lh_listcomp_fun_para_3 _lh_listcomp_fun_9) _lh_permutations_LH_C_0_2)) in
         (_lh_listcomp_fun_9 (permutations_d0_d1_d1_d0_d0_d0 _lh_permutations_LH_C_1_0)))
     | _ -> 
       (failwith "error"))
@@ -524,7 +524,7 @@ and permutations_d0_d1_d1_d0_d0_d0 _lh_permutations_arg1_2 =
             (fun _lh_listcomp_fun_5_3 _lh_listcomp_fun_ls_t_4_5 _lh_listcomp_fun_5_4 -> 
               (let rec _lh_listcomp_fun_ls_h_3_5 = _lh_listcomp_fun_ls_h_3_4 in
                 (let rec _lh_listcomp_fun_ls_t_4_6 = (_lh_listcomp_fun_5_3 _lh_listcomp_fun_ls_t_4_3) in
-                  (fun _lh_permutations_LH_C_0_1_1 _lh_listcomp_fun_5_5 -> 
+                  (fun _lh_listcomp_fun_5_5 _lh_permutations_LH_C_0_1_1 -> 
                     (let rec _lh_listcomp_fun_5_6 = (fun _lh_listcomp_fun_para_2_2 -> 
                       (match _lh_listcomp_fun_para_2_2 with
                         | `LH_C(_lh_listcomp_fun_ls_h_3_6, _lh_listcomp_fun_ls_t_4_7) -> 
@@ -532,9 +532,9 @@ and permutations_d0_d1_d1_d0_d0_d0 _lh_permutations_arg1_2 =
                         | `LH_N -> 
                           (_lh_listcomp_fun_5_5 _lh_listcomp_fun_ls_t_4_6))) in
                       (_lh_listcomp_fun_5_6 ((addj_d0_d0_d0_d1_d0_d0 _lh_permutations_LH_C_0_1_1) _lh_listcomp_fun_ls_h_3_5)))))))))) in
-        (let rec _lh_listcomp_fun_ls_t_4_8 = (fun _lh_permutations_LH_C_0_1_2 _lh_listcomp_fun_5_7 _lh_permutations_LH_C_0_1_3 _lh_listcomp_fun_5_8 -> 
+        (let rec _lh_listcomp_fun_ls_t_4_8 = (fun _lh_listcomp_fun_5_7 _lh_permutations_LH_C_0_1_2 _lh_listcomp_fun_5_8 _lh_permutations_LH_C_0_1_3 -> 
           (`LH_N)) in
-          (fun _lh_permutations_LH_C_0_1_4 _lh_listcomp_fun_5_9 -> 
+          (fun _lh_listcomp_fun_5_9 _lh_permutations_LH_C_0_1_4 -> 
             (let rec _lh_listcomp_fun_6_0 = (fun _lh_listcomp_fun_para_2_3 -> 
               (((_lh_listcomp_fun_para_2_3 _lh_listcomp_fun_6_0) _lh_listcomp_fun_ls_t_4_8) _lh_listcomp_fun_5_9)) in
               (_lh_listcomp_fun_6_0 ((addj_d0_d1_d0_d0_d0_d0 _lh_permutations_LH_C_0_1_4) _lh_listcomp_fun_ls_h_3_3))))))
@@ -543,10 +543,10 @@ and permutations_d0_d1_d1_d0_d0_d0 _lh_permutations_arg1_2 =
         (match _lh_listcomp_fun_para_2_4 with
           | `LH_C(_lh_listcomp_fun_ls_h_3_7, _lh_listcomp_fun_ls_t_4_9) -> 
             (let rec _lh_listcomp_fun_6_2 = (fun _lh_listcomp_fun_para_2_5 -> 
-              (((_lh_listcomp_fun_para_2_5 _lh_listcomp_fun_6_2) _lh_listcomp_fun_6_1) _lh_listcomp_fun_ls_t_4_9)) in
+              (((_lh_listcomp_fun_para_2_5 _lh_listcomp_fun_6_2) _lh_listcomp_fun_ls_t_4_9) _lh_listcomp_fun_6_1)) in
               (_lh_listcomp_fun_6_2 ((addj_d0_d1_d1_d0_d0_d0 _lh_permutations_LH_C_0_1_5) _lh_listcomp_fun_ls_h_3_7)))
           | `LH_N -> 
-            (fun _lh_permutations_LH_C_0_1_6 _lh_listcomp_fun_6_3 _lh_permutations_LH_C_0_1_7 _lh_listcomp_fun_6_4 -> 
+            (fun _lh_listcomp_fun_6_3 _lh_permutations_LH_C_0_1_6 _lh_listcomp_fun_6_4 _lh_permutations_LH_C_0_1_7 -> 
               (`LH_N)))) in
         (_lh_listcomp_fun_6_1 (permutations_d0_d1_d2_d0_d0_d0 _lh_permutations_LH_C_1_2)))
     | _ -> 
@@ -756,18 +756,18 @@ let rec addj_d0_d1_d1_d0_d0_d0_d0 _lh_addj_arg1_2_6 _lh_addj_arg2_2_2 =
   (match _lh_addj_arg2_2_2 with
     | `LH_N -> 
       (let rec _lh_listcomp_fun_ls_h_5_1 = (`LH_C(_lh_addj_arg1_2_6, (`LH_N))) in
-        (let rec _lh_listcomp_fun_ls_t_6_5 = (fun _lh_listcomp_fun_8_9 _lh_listcomp_fun_9_0 _lh_listcomp_fun_ls_t_6_6 -> 
+        (let rec _lh_listcomp_fun_ls_t_6_5 = (fun _lh_listcomp_fun_8_9 _lh_listcomp_fun_ls_t_6_6 _lh_listcomp_fun_9_0 -> 
           (_lh_listcomp_fun_9_0 _lh_listcomp_fun_ls_t_6_6)) in
-          (fun _lh_listcomp_fun_9_1 _lh_listcomp_fun_9_2 _lh_listcomp_fun_ls_t_6_7 -> 
+          (fun _lh_listcomp_fun_9_1 _lh_listcomp_fun_ls_t_6_7 _lh_listcomp_fun_9_2 -> 
             (let rec _lh_listcomp_fun_ls_h_5_2 = _lh_listcomp_fun_ls_h_5_1 in
               (let rec _lh_listcomp_fun_ls_t_6_8 = (_lh_listcomp_fun_9_1 _lh_listcomp_fun_ls_t_6_5) in
-                (fun _lh_permutations_LH_C_0_2_8 _lh_listcomp_fun_9_3 -> 
+                (fun _lh_listcomp_fun_9_3 _lh_permutations_LH_C_0_2_8 -> 
                   (let rec _lh_listcomp_fun_9_4 = (fun _lh_listcomp_fun_para_4_0 -> 
                     (match _lh_listcomp_fun_para_4_0 with
                       | `LH_C(_lh_listcomp_fun_ls_h_5_3, _lh_listcomp_fun_ls_t_6_9) -> 
                         (let rec _lh_listcomp_fun_ls_h_5_4 = _lh_listcomp_fun_ls_h_5_3 in
                           (let rec _lh_listcomp_fun_ls_t_7_0 = (_lh_listcomp_fun_9_4 _lh_listcomp_fun_ls_t_6_9) in
-                            (fun _lh_permutations_LH_C_0_2_9 _lh_listcomp_fun_9_5 -> 
+                            (fun _lh_listcomp_fun_9_5 _lh_permutations_LH_C_0_2_9 -> 
                               (let rec _lh_listcomp_fun_9_6 = (fun _lh_listcomp_fun_para_4_1 -> 
                                 (match _lh_listcomp_fun_para_4_1 with
                                   | `LH_C(_lh_listcomp_fun_ls_h_5_5, _lh_listcomp_fun_ls_t_7_1) -> 
@@ -795,7 +795,7 @@ let rec addj_d0_d1_d1_d0_d0_d0_d0 _lh_addj_arg1_2_6 _lh_addj_arg2_2_2 =
                                 (fun _lh_listcomp_fun_9_9 _lh_listcomp_fun_ls_t_7_7 _lh_listcomp_fun_1_0_0 -> 
                                   (let rec _lh_listcomp_fun_ls_h_6_2 = _lh_listcomp_fun_ls_h_6_1 in
                                     (let rec _lh_listcomp_fun_ls_t_7_8 = (_lh_listcomp_fun_9_9 _lh_listcomp_fun_ls_t_7_6) in
-                                      (fun _lh_permutations_LH_C_0_3_0 _lh_listcomp_fun_1_0_1 -> 
+                                      (fun _lh_listcomp_fun_1_0_1 _lh_permutations_LH_C_0_3_0 -> 
                                         (let rec _lh_listcomp_fun_1_0_2 = (fun _lh_listcomp_fun_para_4_4 -> 
                                           (match _lh_listcomp_fun_para_4_4 with
                                             | `LH_C(_lh_listcomp_fun_ls_h_6_3, _lh_listcomp_fun_ls_t_7_9) -> 
@@ -810,7 +810,7 @@ let rec addj_d0_d1_d1_d0_d0_d0_d0 _lh_addj_arg1_2_6 _lh_addj_arg2_2_2 =
                         (fun _lh_listcomp_fun_1_0_5 _lh_listcomp_fun_ls_t_8_1 _lh_listcomp_fun_1_0_6 -> 
                           (let rec _lh_listcomp_fun_ls_h_6_4 = _lh_listcomp_fun_ls_h_5_9 in
                             (let rec _lh_listcomp_fun_ls_t_8_2 = (_lh_listcomp_fun_1_0_5 _lh_listcomp_fun_ls_t_7_4) in
-                              (fun _lh_permutations_LH_C_0_3_1 _lh_listcomp_fun_1_0_7 -> 
+                              (fun _lh_listcomp_fun_1_0_7 _lh_permutations_LH_C_0_3_1 -> 
                                 (let rec _lh_listcomp_fun_1_0_8 = (fun _lh_listcomp_fun_para_4_5 -> 
                                   (match _lh_listcomp_fun_para_4_5 with
                                     | `LH_C(_lh_listcomp_fun_ls_h_6_5, _lh_listcomp_fun_ls_t_8_3) -> 
@@ -819,27 +819,27 @@ let rec addj_d0_d1_d1_d0_d0_d0_d0 _lh_addj_arg1_2_6 _lh_addj_arg2_2_2 =
                                       (_lh_listcomp_fun_1_0_7 _lh_listcomp_fun_ls_t_8_2))) in
                                   (_lh_listcomp_fun_1_0_8 ((addj_d0_d0_d0_d3_d0_d0_d1 _lh_permutations_LH_C_0_3_1) _lh_listcomp_fun_ls_h_6_4)))))))))))) in
                 (let rec _lh_listcomp_fun_ls_t_8_4 = (_lh_listcomp_fun_9_7 _lh_listcomp_fun_ls_t_7_3) in
-                  (fun _lh_listcomp_fun_1_0_9 _lh_listcomp_fun_1_1_0 _lh_listcomp_fun_ls_t_8_5 -> 
+                  (fun _lh_listcomp_fun_1_0_9 _lh_listcomp_fun_ls_t_8_5 _lh_listcomp_fun_1_1_0 -> 
                     (let rec _lh_listcomp_fun_ls_h_6_6 = _lh_listcomp_fun_ls_h_5_8 in
                       (let rec _lh_listcomp_fun_ls_t_8_6 = (_lh_listcomp_fun_1_0_9 _lh_listcomp_fun_ls_t_8_4) in
-                        (fun _lh_permutations_LH_C_0_3_2 _lh_listcomp_fun_1_1_1 -> 
+                        (fun _lh_listcomp_fun_1_1_1 _lh_permutations_LH_C_0_3_2 -> 
                           (let rec _lh_listcomp_fun_1_1_2 = (fun _lh_listcomp_fun_para_4_6 -> 
                             (((_lh_listcomp_fun_para_4_6 _lh_listcomp_fun_1_1_2) _lh_listcomp_fun_ls_t_8_6) _lh_listcomp_fun_1_1_1)) in
                             (_lh_listcomp_fun_1_1_2 ((addj_d0_d1_d0_d2_d0_d0_d0 _lh_permutations_LH_C_0_3_2) _lh_listcomp_fun_ls_h_6_6)))))))))
             | `LH_N -> 
-              (fun _lh_listcomp_fun_1_1_3 _lh_listcomp_fun_1_1_4 _lh_listcomp_fun_ls_t_8_7 -> 
+              (fun _lh_listcomp_fun_1_1_3 _lh_listcomp_fun_ls_t_8_7 _lh_listcomp_fun_1_1_4 -> 
                 (_lh_listcomp_fun_1_1_4 _lh_listcomp_fun_ls_t_8_7)))) in
           (_lh_listcomp_fun_9_7 ((addj_d0_d1_d2_d0_d0_d0_d0 _lh_addj_arg1_2_6) _lh_addj_LH_C_1_1_7))) in
-          (fun _lh_listcomp_fun_1_1_5 _lh_listcomp_fun_1_1_6 _lh_listcomp_fun_ls_t_8_8 -> 
+          (fun _lh_listcomp_fun_1_1_5 _lh_listcomp_fun_ls_t_8_8 _lh_listcomp_fun_1_1_6 -> 
             (let rec _lh_listcomp_fun_ls_h_6_7 = _lh_listcomp_fun_ls_h_5_6 in
               (let rec _lh_listcomp_fun_ls_t_8_9 = (_lh_listcomp_fun_1_1_5 _lh_listcomp_fun_ls_t_7_2) in
-                (fun _lh_permutations_LH_C_0_3_3 _lh_listcomp_fun_1_1_7 -> 
+                (fun _lh_listcomp_fun_1_1_7 _lh_permutations_LH_C_0_3_3 -> 
                   (let rec _lh_listcomp_fun_1_1_8 = (fun _lh_listcomp_fun_para_4_7 -> 
                     (match _lh_listcomp_fun_para_4_7 with
                       | `LH_C(_lh_listcomp_fun_ls_h_6_8, _lh_listcomp_fun_ls_t_9_0) -> 
                         (let rec _lh_listcomp_fun_ls_h_6_9 = _lh_listcomp_fun_ls_h_6_8 in
                           (let rec _lh_listcomp_fun_ls_t_9_1 = (_lh_listcomp_fun_1_1_8 _lh_listcomp_fun_ls_t_9_0) in
-                            (fun _lh_permutations_LH_C_0_3_4 _lh_listcomp_fun_1_1_9 -> 
+                            (fun _lh_listcomp_fun_1_1_9 _lh_permutations_LH_C_0_3_4 -> 
                               (let rec _lh_listcomp_fun_1_2_0 = (fun _lh_listcomp_fun_para_4_8 -> 
                                 (match _lh_listcomp_fun_para_4_8 with
                                   | `LH_C(_lh_listcomp_fun_ls_h_7_0, _lh_listcomp_fun_ls_t_9_2) -> 
@@ -936,7 +936,7 @@ and permutations_d0_d0_d0_d0_d0_d0_d0 _lh_permutations_arg1_6 =
       (`LH_C((`LH_N), (`LH_N)))
     | `LH_C(_lh_permutations_LH_C_0_2_7, _lh_permutations_LH_C_1_6) -> 
       (let rec _lh_listcomp_fun_8_4 = (fun _lh_listcomp_fun_para_3_5 -> 
-        ((_lh_listcomp_fun_para_3_5 _lh_permutations_LH_C_0_2_7) _lh_listcomp_fun_8_4)) in
+        ((_lh_listcomp_fun_para_3_5 _lh_listcomp_fun_8_4) _lh_permutations_LH_C_0_2_7)) in
         (_lh_listcomp_fun_8_4 (permutations_d0_d1_d0_d0_d0_d0_d0 _lh_permutations_LH_C_1_6)))
     | _ -> 
       (failwith "error"))
@@ -949,15 +949,15 @@ and permutations_d0_d1_d0_d0_d0_d0_d0 _lh_permutations_arg1_7 =
             (_lh_listcomp_fun_1_2_6 _lh_listcomp_fun_ls_t_9_8)) in
             (fun _lh_listcomp_fun_1_2_7 _lh_listcomp_fun_ls_t_9_9 _lh_listcomp_fun_1_2_8 -> 
               (`LH_C(_lh_listcomp_fun_ls_h_7_6, (_lh_listcomp_fun_1_2_7 _lh_listcomp_fun_ls_t_9_7))))))) in
-        (let rec _lh_listcomp_fun_ls_t_1_0_0 = (fun _lh_permutations_LH_C_0_3_5 _lh_listcomp_fun_1_2_9 -> 
+        (let rec _lh_listcomp_fun_ls_t_1_0_0 = (fun _lh_listcomp_fun_1_2_9 _lh_permutations_LH_C_0_3_5 -> 
           (`LH_N)) in
-          (fun _lh_permutations_LH_C_0_3_6 _lh_listcomp_fun_1_3_0 -> 
+          (fun _lh_listcomp_fun_1_3_0 _lh_permutations_LH_C_0_3_6 -> 
             (let rec _lh_listcomp_fun_1_3_1 = (fun _lh_listcomp_fun_para_5_3 -> 
               (((_lh_listcomp_fun_para_5_3 _lh_listcomp_fun_1_3_1) _lh_listcomp_fun_ls_t_1_0_0) _lh_listcomp_fun_1_3_0)) in
               (_lh_listcomp_fun_1_3_1 ((addj_d0_d0_d0_d0_d0_d0_d0 _lh_permutations_LH_C_0_3_6) _lh_listcomp_fun_ls_h_7_5))))))
     | `LH_C(_lh_permutations_LH_C_0_3_7, _lh_permutations_LH_C_1_7) -> 
       (let rec _lh_listcomp_fun_1_3_2 = (fun _lh_listcomp_fun_para_5_4 -> 
-        ((_lh_listcomp_fun_para_5_4 _lh_permutations_LH_C_0_3_7) _lh_listcomp_fun_1_3_2)) in
+        ((_lh_listcomp_fun_para_5_4 _lh_listcomp_fun_1_3_2) _lh_permutations_LH_C_0_3_7)) in
         (_lh_listcomp_fun_1_3_2 (permutations_d0_d1_d1_d0_d0_d0_d0 _lh_permutations_LH_C_1_7)))
     | _ -> 
       (failwith "error"))
@@ -971,7 +971,7 @@ and permutations_d0_d1_d1_d0_d0_d0_d0 _lh_permutations_arg1_5 =
             (fun _lh_listcomp_fun_7_1 _lh_listcomp_fun_ls_t_5_5 _lh_listcomp_fun_7_2 -> 
               (let rec _lh_listcomp_fun_ls_h_4_3 = _lh_listcomp_fun_ls_h_4_2 in
                 (let rec _lh_listcomp_fun_ls_t_5_6 = (_lh_listcomp_fun_7_1 _lh_listcomp_fun_ls_t_5_3) in
-                  (fun _lh_permutations_LH_C_0_2_0 _lh_listcomp_fun_7_3 -> 
+                  (fun _lh_listcomp_fun_7_3 _lh_permutations_LH_C_0_2_0 -> 
                     (let rec _lh_listcomp_fun_7_4 = (fun _lh_listcomp_fun_para_3_0 -> 
                       (match _lh_listcomp_fun_para_3_0 with
                         | `LH_C(_lh_listcomp_fun_ls_h_4_4, _lh_listcomp_fun_ls_t_5_7) -> 
@@ -979,9 +979,9 @@ and permutations_d0_d1_d1_d0_d0_d0_d0 _lh_permutations_arg1_5 =
                         | `LH_N -> 
                           (_lh_listcomp_fun_7_3 _lh_listcomp_fun_ls_t_5_6))) in
                       (_lh_listcomp_fun_7_4 ((addj_d0_d0_d0_d1_d0_d0_d0 _lh_permutations_LH_C_0_2_0) _lh_listcomp_fun_ls_h_4_3)))))))))) in
-        (let rec _lh_listcomp_fun_ls_t_5_8 = (fun _lh_permutations_LH_C_0_2_1 _lh_listcomp_fun_7_5 _lh_permutations_LH_C_0_2_2 _lh_listcomp_fun_7_6 -> 
+        (let rec _lh_listcomp_fun_ls_t_5_8 = (fun _lh_listcomp_fun_7_5 _lh_permutations_LH_C_0_2_1 _lh_listcomp_fun_7_6 _lh_permutations_LH_C_0_2_2 -> 
           (`LH_N)) in
-          (fun _lh_permutations_LH_C_0_2_3 _lh_listcomp_fun_7_7 -> 
+          (fun _lh_listcomp_fun_7_7 _lh_permutations_LH_C_0_2_3 -> 
             (let rec _lh_listcomp_fun_7_8 = (fun _lh_listcomp_fun_para_3_1 -> 
               (((_lh_listcomp_fun_para_3_1 _lh_listcomp_fun_7_8) _lh_listcomp_fun_ls_t_5_8) _lh_listcomp_fun_7_7)) in
               (_lh_listcomp_fun_7_8 ((addj_d0_d1_d0_d0_d0_d0_d0 _lh_permutations_LH_C_0_2_3) _lh_listcomp_fun_ls_h_4_1))))))
@@ -990,10 +990,10 @@ and permutations_d0_d1_d1_d0_d0_d0_d0 _lh_permutations_arg1_5 =
         (match _lh_listcomp_fun_para_3_2 with
           | `LH_C(_lh_listcomp_fun_ls_h_4_5, _lh_listcomp_fun_ls_t_5_9) -> 
             (let rec _lh_listcomp_fun_8_0 = (fun _lh_listcomp_fun_para_3_3 -> 
-              (((_lh_listcomp_fun_para_3_3 _lh_listcomp_fun_8_0) _lh_listcomp_fun_7_9) _lh_listcomp_fun_ls_t_5_9)) in
+              (((_lh_listcomp_fun_para_3_3 _lh_listcomp_fun_8_0) _lh_listcomp_fun_ls_t_5_9) _lh_listcomp_fun_7_9)) in
               (_lh_listcomp_fun_8_0 ((addj_d0_d1_d1_d0_d0_d0_d0 _lh_permutations_LH_C_0_2_4) _lh_listcomp_fun_ls_h_4_5)))
           | `LH_N -> 
-            (fun _lh_permutations_LH_C_0_2_5 _lh_listcomp_fun_8_1 _lh_permutations_LH_C_0_2_6 _lh_listcomp_fun_8_2 -> 
+            (fun _lh_listcomp_fun_8_1 _lh_permutations_LH_C_0_2_5 _lh_listcomp_fun_8_2 _lh_permutations_LH_C_0_2_6 -> 
               (`LH_N)))) in
         (_lh_listcomp_fun_7_9 (permutations_d0_d1_d2_d0_d0_d0_d0 _lh_permutations_LH_C_1_5)))
     | _ -> 

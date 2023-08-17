@@ -101,10 +101,8 @@ c(p)
 //│ 		def e₀(z²) = 
 //│ 			z²
 //│ def p₀ = 
-//│ 	let a² = 1
-//│ 	in let b² = 	
-//│ 		let aa² = 2
-//│ 		in let bb² = 7
+//│ 	let b² = 	
+//│ 		let bb² = 7
 //│ 		in e₀(bb²)
 //│ 	in d₀(b²)
 //│ <<<<<<< after fusion <<<<<<<
@@ -186,7 +184,6 @@ sum(mapa(mapb(primitive)))
 //│ 		C hb¹ tb¹ => 
 //│ 			let ha² = primitive⁰(hb¹)
 //│ 			in let ta² = mapb₀(tb¹)
-//│ 			in let h² = primitive⁰(ha²)
 //│ 			in let t² = mapa₀(ta²)
 //│ 			in [S [N] sum₀(t²)]}
 //│ def sum₀(ls²) = 
@@ -231,8 +228,7 @@ if C(A, B(C)) is
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ 
-//│ 	let a² = [A]
-//│ 	in let b² = [B [C]]
+//│ 	let b² = [B [C]]
 //│ 	in [D b²]
 //│ 
 //│ <<<<<<< after fusion <<<<<<<
@@ -584,7 +580,6 @@ sum(mapa(mapb(primitive)))
 //│ 		C hb¹ tb¹ => 
 //│ 			let ha² = primitive⁰(hb¹)
 //│ 			in let ta² = mapb₀(tb¹)
-//│ 			in let h² = primitive⁰(ha²)
 //│ 			in let t² = mapa₀(ta²)
 //│ 			in [S [N] sum₀(t²)]
 //│ 		| N  => [N]}
@@ -1767,12 +1762,10 @@ len(map(C(A, C(B, N))))
 //│ len₀(map₀(
 //│ 	let h⁴ = [AA]
 //│ 	in let t⁴ = 	
-//│ 		let h⁶ = [BB]
+//│ 		let h⁵ = [BB]
 //│ 		in let t⁶ = 0
-//│ 		in let h⁷ = h⁶
 //│ 		in let t⁷ = map₀(t⁶)
 //│ 		in (1 + len₀(t⁷))
-//│ 	in let h⁵ = h⁴
 //│ 	in let t⁵ = map₀(t⁴)
 //│ 	in (1 + len₀(t⁵))))
 //│ def len₀(ls⁵) = 
@@ -1853,13 +1846,7 @@ f(C(A))(C(B))(C(D))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀(
-//│ 	let a⁵ = [A]
-//│ 	in f₁, 
-//│ 	let a⁶ = [B]
-//│ 	in f₂, 
-//│ 	let a⁷ = [D]
-//│ 	in f₃)
+//│ f₀(f₁, f₂, f₃)
 //│ def f₀(x⁶) = 
 //│ 	x⁶
 //│ 	where
@@ -2838,13 +2825,10 @@ f(C(1, N))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ f₀(
-//│ 	let h² = 1
-//│ 	in let t² = [N]
+//│ 	let t² = [N]
 //│ 	in t²)
 //│ def f₀(x²) = 
-//│ 	
-//│ 		let y² = x²
-//│ 		in (fun x³ -> x³)(x²)
+//│ 	(fun x³ -> x³)(x²)
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: after using `last(C(hh, tt))` instead of `last(t)` and pushing in of parameters

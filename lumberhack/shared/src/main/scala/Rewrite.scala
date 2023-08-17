@@ -349,7 +349,11 @@ trait ExprRewrite { this: Expr =>
       }
       case Ctor(name, args) => fusionMatch.get(this.uid).map { matchId =>
         val matchArm = newd.exprs(matchId).asInstanceOf[Match].arms.find(_._1 == name).get
-        val newIds = matchArm._2.map(i => i -> i.copyToNewDeforest)
+        // ignore unused fields
+        val allFvs = matchArm._3.getFreeVarsInExpr
+        val usedFieldsWithArgs = (matchArm._2 zip args).filter(ida => allFvs(ida._1))
+
+        val (newIds, newArgs) = usedFieldsWithArgs.unzip.mapFirst(_.map(i => i -> i.copyToNewDeforest))
         val newCtx = ctx ++ newIds.toMap
         
         val extrudedIds = scopeExtrusionInfo(matchId).map(original =>
@@ -363,33 +367,33 @@ trait ExprRewrite { this: Expr =>
         val inner = extrudedIds.foldLeft(innerAfterExtrusionHandling){ (acc, newId) =>
           Function(newId._2.id, acc)
         }
-        (newIds zip args).foldRight(inner){(t_i, acc) => 
+        (newIds zip newArgs).foldRight(inner){(t_i, acc) => 
           LetIn(t_i._1._2, t_i._2.rewriteFusion, acc)
         }
       }.getOrElse(Ctor(name, args.map(_.rewriteFusion)))
     }
   }(res => s"done handling fusion with result: ${res.pp(using InitPpConfig)}")
 
-  def outOfScopeIdsSet(using set: Set[Ident]): Set[Ident] = this match {
+  lazy val getFreeVarsInExpr: Set[Ident] = this match {
     case Const(lit: Lit) => Set.empty
-    case Ref(id: Ident) if Deforest.lumberhackKeywords(id.tree.name) => Set.empty
-    case Ref(id: Ident) => if set(id) then Set.empty else Set(id)
-    case Call(lhs: Expr, rhs: Expr) => lhs.outOfScopeIdsSet ++ rhs.outOfScopeIdsSet
-    case Ctor(name: Var, args: Ls[Expr]) => args.flatMap(_.outOfScopeIdsSet).toSet
-    case LetIn(id: Ident, rhs: Expr, body: Expr) => rhs.outOfScopeIdsSet(using set + id) ++ body.outOfScopeIdsSet(using set + id)
+    case Ref(id) => if Deforest.lumberhackKeywords(id.tree.name) then Set.empty else Set(id)
+    case Call(lhs: Expr, rhs: Expr) => lhs.getFreeVarsInExpr ++ rhs.getFreeVarsInExpr
+    case Ctor(name: Var, args: Ls[Expr]) => args.flatMap(_.getFreeVarsInExpr).toSet
+    case LetIn(id: Ident, rhs: Expr, body: Expr) => (rhs.getFreeVarsInExpr ++ body.getFreeVarsInExpr) - id
     case LetGroup(defs, body) =>
-      val newIds = defs.keySet ++ set
-      defs.values.flatMap(_.outOfScopeIdsSet(using newIds)).toSet ++ body.outOfScopeIdsSet(using newIds)
+      (defs.values.flatMap(_.getFreeVarsInExpr).toSet ++ body.getFreeVarsInExpr) -- defs.keys
     case Match(scrut: Expr, arms: Ls[(Var, Ls[Ident], Expr)]) =>
-      scrut.outOfScopeIdsSet ++ (arms.flatMap { (_, newIds, body) => body.outOfScopeIdsSet(using set ++ newIds) })
+      scrut.getFreeVarsInExpr ++ (arms.flatMap {(_, newIds, body) => body.getFreeVarsInExpr -- newIds})
     case IfThenElse(scrut: Expr, thenn: Expr, elze: Expr) =>
-      scrut.outOfScopeIdsSet ++ thenn.outOfScopeIdsSet ++ elze.outOfScopeIdsSet
-    case Function(param: Ident, body: Expr) => body.outOfScopeIdsSet(using set + param)
-    case Sequence(fst: Expr, snd: Expr) => fst.outOfScopeIdsSet ++ snd.outOfScopeIdsSet
+      scrut.getFreeVarsInExpr ++ thenn.getFreeVarsInExpr ++ elze.getFreeVarsInExpr
+    case Function(param: Ident, body: Expr) => body.getFreeVarsInExpr - param
+    case Sequence(fst: Expr, snd: Expr) => fst.getFreeVarsInExpr ++ snd.getFreeVarsInExpr
   }
+  def outOfScopeIdsSet(using set: Set[Ident]): Set[Ident] = this.getFreeVarsInExpr -- set
   def outOfScopeIds(using set: Set[Ident]): List[Ident] = {
-    this.outOfScopeIdsSet.toList.sortBy(_.uid.asInstanceOf[Int])
+    this.outOfScopeIdsSet.toList.sortBy(_.pp(using InitPpConfig.showIuidOn))
   }
+
   def substId(using ctx: RewriteCtx, d: Deforest, inDef: Option[Ident]): Expr = this match {
     case c: Const => c
     case Ref(id) => Ref(ctx.getOrElse(id, id))

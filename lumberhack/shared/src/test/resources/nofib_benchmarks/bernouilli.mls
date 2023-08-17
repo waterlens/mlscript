@@ -709,7 +709,7 @@ testBernoulli_nofib $ primId 1500
 //│ 			| _  => if ((_lh_bernoulli_arg1² % 2) == 1) then 0 else 
 //│ 				let powers⁶ = atIndex_lz₀₀((_lh_bernoulli_arg1² - 1), force⁰(neg_powers₀₀))
 //│ 				in (((0 - 1) / 2) + sum₀₀(
-//│ 					let _lh_listcomp_fun⁶ = (fun _lh_listcomp_fun_para² -> _lh_listcomp_fun_para²(powers⁶, _lh_listcomp_fun⁶))
+//│ 					let _lh_listcomp_fun⁶ = (fun _lh_listcomp_fun_para² -> _lh_listcomp_fun_para²(_lh_listcomp_fun⁶, powers⁶))
 //│ 					in _lh_listcomp_fun⁶(zip_nl_lz₀₀(enumFromTo₀₀(2, _lh_bernoulli_arg1²), pascal₀₀))))}
 //│ 		where
 //│ 		def atIndex_lz₀₀(n⁷, ls²⁶) = 
@@ -723,13 +723,13 @@ testBernoulli_nofib $ primId 1500
 //│ 						let _lh_listcomp_fun_ls_h² = 	
 //│ 							let _lh_bernoulli_LH_P2_0² = hx¹¹
 //│ 							in let _lh_bernoulli_LH_P2_1² = hy⁹
-//│ 							in (fun powers³ -> (fun _lh_listcomp_fun³ -> (fun _lh_listcomp_fun_ls_t³ -> 
+//│ 							in (fun _lh_listcomp_fun_ls_t³ -> (fun _lh_listcomp_fun³ -> (fun powers³ -> 
 //│ 								let h²⁰ = ((sum₁₀(zipWith_lz_nl₀₀((fun a¹² -> (fun b¹⁰ -> (a¹² * b¹⁰))), powers³, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1²)))) - _lh_bernoulli_LH_P2_0²) / (_lh_bernoulli_LH_P2_0² + 1))
 //│ 								in let t²⁰ = _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)
 //│ 								in (h²⁰ + sum₀₀(t²⁰)))))
 //│ 						in let _lh_listcomp_fun_ls_t² = zip_nl_lz₀₀(tx¹¹, ty⁹)
-//│ 						in (fun powers² -> (fun _lh_listcomp_fun² -> _lh_listcomp_fun_ls_h²(powers², _lh_listcomp_fun², _lh_listcomp_fun_ls_t²)))
-//│ 					| LH_N  => (fun powers⁴ -> (fun _lh_listcomp_fun⁴ -> 0))}) else (fun ys¹⁷ -> (fun powers⁵ -> (fun _lh_listcomp_fun⁵ -> 0)))
+//│ 						in (fun _lh_listcomp_fun² -> (fun powers² -> _lh_listcomp_fun_ls_h²(_lh_listcomp_fun_ls_t², _lh_listcomp_fun², powers²)))
+//│ 					| LH_N  => (fun _lh_listcomp_fun⁴ -> (fun powers⁴ -> 0))}) else (fun ys¹⁷ -> (fun _lh_listcomp_fun⁵ -> (fun powers⁵ -> 0)))
 //│ 		def neg_powers₀₀ = 
 //│ 			lazy⁰(map_lz₀₀(zipWith_lz_lz₁₀((fun n⁶ -> (fun x⁴ -> if n⁶ then x⁴ else (0 - x⁴))), iterate₀₀(not⁰, [True])), powers₀₀))
 //│ 			where
@@ -737,15 +737,15 @@ testBernoulli_nofib $ primId 1500
 //│ 				lazy⁰(
 //│ 					let hx¹³ = x⁵
 //│ 					in let tx¹³ = iterate₀₀(f²⁶, f²⁶(x⁵))
-//│ 					in (fun ys²³ -> (fun f²⁷ -> case force⁰(ys²³) of {
+//│ 					in (fun f²⁷ -> (fun ys²³ -> case force⁰(ys²³) of {
 //│ 						LH_C hy⁷ ty⁷ => 
 //│ 							let hx¹⁴ = f²⁷(hx¹³, hy⁷)
 //│ 							in let tx¹⁴ = zipWith_lz_lz₁₀(f²⁷, tx¹³, ty⁷)
-//│ 							in (fun hy¹⁰ -> (fun ty¹⁰ -> (fun f²⁸ -> 
+//│ 							in (fun f²⁸ -> (fun hy¹⁰ -> (fun ty¹⁰ -> 
 //│ 								let h²² = f²⁸(hx¹⁴, hy¹⁰)
 //│ 								in let t²² = zipWith_lz_nl₀₀(f²⁸, tx¹⁴, ty¹⁰)
 //│ 								in (h²² + sum₁₀(t²²)))))
-//│ 						| LH_N  => (fun hy¹¹ -> (fun ty¹¹ -> (fun f²⁹ -> 0)))})))
+//│ 						| LH_N  => (fun f²⁹ -> (fun hy¹¹ -> (fun ty¹¹ -> 0)))})))
 //│ 			def map_lz₀₀(f¹⁹, ls¹⁹) = 
 //│ 				lazy⁰(case force⁰(ls¹⁹) of {
 //│ 					LH_C h¹⁴ t¹⁴ => 
@@ -773,12 +773,12 @@ testBernoulli_nofib $ primId 1500
 //│ 							| LH_N  => [LH_N]}
 //│ 						| LH_N  => [LH_N]})
 //│ 			def zipWith_lz_lz₁₀(f²¹, xs¹⁴, ys¹⁸) = 
-//│ 				lazy⁰(force⁰(xs¹⁴, ys¹⁸, f²¹))
+//│ 				lazy⁰(force⁰(xs¹⁴, f²¹, ys¹⁸))
 //│ 		def pascal₀₀ = 
 //│ 			lazy⁰([LH_C [LH_C 1 [LH_C 2 [LH_C 1 [LH_N]]]] map_lz₂₀((fun line² -> zipWith₀₀((fun a¹⁰ -> (fun b⁸ -> (a¹⁰ + b⁸))), mappend₀₀(line², 
 //│ 				let hx¹⁰ = 0
-//│ 				in let tx¹⁰ = (fun ys¹⁵ -> (fun f¹⁸ -> [LH_N]))
-//│ 				in (fun ys¹⁴ -> (fun f¹⁷ -> case ys¹⁴ of {
+//│ 				in let tx¹⁰ = (fun f¹⁸ -> (fun ys¹⁵ -> [LH_N]))
+//│ 				in (fun f¹⁷ -> (fun ys¹⁴ -> case ys¹⁴ of {
 //│ 					LH_C hy⁸ ty⁸ => [LH_C f¹⁷(hx¹⁰, hy⁸) zipWith₀₀(f¹⁷, tx¹⁰, ty⁸)]
 //│ 					| LH_N  => [LH_N]}))), [LH_C 0 line²])), pascal₀₀)])
 //│ 			where
@@ -791,12 +791,12 @@ testBernoulli_nofib $ primId 1500
 //│ 					LH_C h¹⁶ t¹⁶ => 
 //│ 						let hx¹² = h¹⁶
 //│ 						in let tx¹² = mappend₀₀(t¹⁶, ys²¹)
-//│ 						in (fun ys²² -> (fun f²⁵ -> case ys²² of {
+//│ 						in (fun f²⁵ -> (fun ys²² -> case ys²² of {
 //│ 							LH_C hy⁸ ty⁸ => [LH_C f²⁵(hx¹², hy⁸) zipWith₀₀(f²⁵, tx¹², ty⁸)]
 //│ 							| LH_N  => [LH_N]}))
 //│ 					| LH_N  => ys²¹}
 //│ 			def zipWith₀₀(f¹⁶, xs¹², ys¹²) = 
-//│ 				xs¹²(ys¹², f¹⁶)
+//│ 				xs¹²(f¹⁶, ys¹²)
 //│ 		def sum₀₀(ls²¹) = 
 //│ 			ls²¹
 //│ 		def sum₁₀(ls²²) = 
@@ -811,7 +811,7 @@ testBernoulli_nofib $ primId 1500
 //│ 				| LH_N  => error⁰}
 //│ 		def zipWith_lz_nl₀₀(f²², xs¹⁵, ys¹⁹) = 
 //│ 			case ys¹⁹ of {
-//│ 				LH_C hy⁶ ty⁶ => force⁰(xs¹⁵, hy⁶, ty⁶, f²²)
+//│ 				LH_C hy⁶ ty⁶ => force⁰(xs¹⁵, f²², hy⁶, ty⁶)
 //│ 				| LH_N  => 0}
 //│ 		def zip_nl_lz₀₀(xs¹³, ys¹³) = 
 //│ 			xs¹³(ys¹³)

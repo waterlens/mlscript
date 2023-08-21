@@ -5555,719 +5555,719 @@ testBoyer_nofib $ primId 5
 //│ 		_lh_all_arg2²(_lh_all_arg1⁴)
 //│ 	def replicate₀₀(_lh_replicate_arg1², _lh_replicate_arg2²) = 
 //│ 		if (_lh_replicate_arg1² == 0) then (fun _lh_all_arg1² -> [True]) else 
-//│ 			let _lh_all_LH_C_0² = _lh_replicate_arg2²
-//│ 			in let _lh_all_LH_C_1² = replicate₀₀((_lh_replicate_arg1² - 1), _lh_replicate_arg2²)
-//│ 			in (fun _lh_all_arg1³ -> if _lh_all_arg1³(_lh_all_LH_C_0²) then all₀₀(_lh_all_arg1³, _lh_all_LH_C_1²) else [False])
+//│ 			let _lh_all_LH_C_0² = lazy⁰(_lh_replicate_arg2²)
+//│ 			in let _lh_all_LH_C_1² = lazy⁰(replicate₀₀((_lh_replicate_arg1² - 1), _lh_replicate_arg2²))
+//│ 			in (fun _lh_all_arg1³ -> if _lh_all_arg1³(force⁰(_lh_all_LH_C_0²)) then all₀₀(_lh_all_arg1³, force⁰(_lh_all_LH_C_1²)) else [False])
 //│ 	def test0₀₀(_lh_test0_arg1²) = 
 //│ 		let b² = [Var [B]]
 //│ 		and four² = [Fun [FOUR] [LH_N] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁹ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵¹ = four²
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵¹ = add1²(add1²(two²))
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁹ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵¹ = lazy⁰(four²)
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵¹ = lazy⁰(add1²(add1²(two²)))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁹⁷ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹²³ -> 
-//│ 						let _lh_matchIdent⁶⁸ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹²³, _lh_rewrite_with_lemmas_helper_LH_P2_0⁵¹)
+//│ 						let _lh_matchIdent⁶⁸ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹²³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁵¹))
 //│ 						in case _lh_matchIdent⁶⁸ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁵¹)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹²³, _lh_rewrite_with_lemmas_helper_LH_C_1⁹⁷)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁹⁶ = (fun _lh_rewrite_with_lemmas_helper_arg1¹²² -> _lh_rewrite_with_lemmas_helper_arg1¹²²)
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹²¹ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁹(_lh_rewrite_with_lemmas_helper_LH_C_1⁹⁶, _lh_rewrite_with_lemmas_helper_arg1¹²¹)))]
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁵¹))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹²³, _lh_rewrite_with_lemmas_helper_LH_C_1⁹⁷)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁹⁶ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1¹²² -> _lh_rewrite_with_lemmas_helper_arg1¹²²))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹²¹ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁴⁹, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁹⁶), _lh_rewrite_with_lemmas_helper_arg1¹²¹)))]
 //│ 		and times² = (fun _lh_times_arg1² -> (fun _lh_times_arg2² -> [Fun [TIMES] [LH_C _lh_times_arg1² [LH_C _lh_times_arg2² [LH_N]]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁹ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁴ = times²(x², plus²(y², z²))
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁴ = plus²(times²(x², y²), times²(x², z²))
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁹ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁴ = lazy⁰(times²(x², plus²(y², z²)))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁴ = lazy⁰(plus²(times²(x², y²), times²(x², z²)))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1²³ -> (fun _lh_rewrite_with_lemmas_helper_arg1²⁵ -> 
-//│ 						let _lh_matchIdent³¹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1²⁵, _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁴)
+//│ 						let _lh_matchIdent³¹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1²⁵, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0¹⁴))
 //│ 						in case _lh_matchIdent³¹ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁴)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1²⁵, _lh_rewrite_with_lemmas_helper_LH_C_1²³)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1¹⁶ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0¹⁰ = 	
-//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0¹³ = times²(times²(x², y²), z²)
-//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹³ = times²(x², times²(y², z²))
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1¹⁴))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1²⁵, _lh_rewrite_with_lemmas_helper_LH_C_1²³)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1¹⁶ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0¹⁰ = lazy⁰(
+//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0¹³ = lazy⁰(times²(times²(x², y²), z²))
+//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹³ = lazy⁰(times²(x², times²(y², z²)))
 //│ 						in (fun _lh_rewrite_with_lemmas_helper_LH_C_1²² -> (fun _lh_rewrite_with_lemmas_helper_arg1²⁴ -> 
-//│ 							let _lh_matchIdent³⁰ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1²⁴, _lh_rewrite_with_lemmas_helper_LH_P2_0¹³)
+//│ 							let _lh_matchIdent³⁰ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1²⁴, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0¹³))
 //│ 							in case _lh_matchIdent³⁰ of {
-//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1¹³)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1²⁴, _lh_rewrite_with_lemmas_helper_LH_C_1²²)
-//│ 								| _  => error⁰}))
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1¹⁷ = 	
-//│ 						let _lh_rewrite_with_lemmas_helper_LH_C_0¹¹ = 	
-//│ 							let _lh_rewrite_with_lemmas_helper_LH_P2_0¹² = times²(x², difference²(y², z²))
-//│ 							in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹² = difference²(times²(y², x²), times²(z², x²))
+//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1¹³))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1²⁴, _lh_rewrite_with_lemmas_helper_LH_C_1²²)
+//│ 								| _  => error⁰})))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1¹⁷ = lazy⁰(
+//│ 						let _lh_rewrite_with_lemmas_helper_LH_C_0¹¹ = lazy⁰(
+//│ 							let _lh_rewrite_with_lemmas_helper_LH_P2_0¹² = lazy⁰(times²(x², difference²(y², z²)))
+//│ 							in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹² = lazy⁰(difference²(times²(y², x²), times²(z², x²)))
 //│ 							in (fun _lh_rewrite_with_lemmas_helper_LH_C_1²¹ -> (fun _lh_rewrite_with_lemmas_helper_arg1²³ -> 
-//│ 								let _lh_matchIdent²⁹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1²³, _lh_rewrite_with_lemmas_helper_LH_P2_0¹²)
+//│ 								let _lh_matchIdent²⁹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1²³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0¹²))
 //│ 								in case _lh_matchIdent²⁹ of {
-//│ 									LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1¹²)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1²³, _lh_rewrite_with_lemmas_helper_LH_C_1²¹)
-//│ 									| _  => error⁰}))
-//│ 						in let _lh_rewrite_with_lemmas_helper_LH_C_1¹⁸ = 	
-//│ 							let _lh_rewrite_with_lemmas_helper_LH_C_0¹² = 	
-//│ 								let _lh_rewrite_with_lemmas_helper_LH_P2_0¹¹ = times²(x², add1²(y²))
-//│ 								in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹¹ = plus²(x², times²(x², y²))
+//│ 									LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1¹²))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1²³, _lh_rewrite_with_lemmas_helper_LH_C_1²¹)
+//│ 									| _  => error⁰})))
+//│ 						in let _lh_rewrite_with_lemmas_helper_LH_C_1¹⁸ = lazy⁰(
+//│ 							let _lh_rewrite_with_lemmas_helper_LH_C_0¹² = lazy⁰(
+//│ 								let _lh_rewrite_with_lemmas_helper_LH_P2_0¹¹ = lazy⁰(times²(x², add1²(y²)))
+//│ 								in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹¹ = lazy⁰(plus²(x², times²(x², y²)))
 //│ 								in (fun _lh_rewrite_with_lemmas_helper_LH_C_1²⁰ -> (fun _lh_rewrite_with_lemmas_helper_arg1²² -> 
-//│ 									let _lh_matchIdent²⁸ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1²², _lh_rewrite_with_lemmas_helper_LH_P2_0¹¹)
+//│ 									let _lh_matchIdent²⁸ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1²², force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0¹¹))
 //│ 									in case _lh_matchIdent²⁸ of {
-//│ 										LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1¹¹)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1²², _lh_rewrite_with_lemmas_helper_LH_C_1²⁰)
-//│ 										| _  => error⁰}))
-//│ 							in let _lh_rewrite_with_lemmas_helper_LH_C_1¹⁹ = (fun _lh_rewrite_with_lemmas_helper_arg1²¹ -> _lh_rewrite_with_lemmas_helper_arg1²¹)
-//│ 							in (fun _lh_rewrite_with_lemmas_helper_arg1²⁰ -> _lh_rewrite_with_lemmas_helper_LH_C_0¹²(_lh_rewrite_with_lemmas_helper_LH_C_1¹⁹, _lh_rewrite_with_lemmas_helper_arg1²⁰))
-//│ 						in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁹ -> _lh_rewrite_with_lemmas_helper_LH_C_0¹¹(_lh_rewrite_with_lemmas_helper_LH_C_1¹⁸, _lh_rewrite_with_lemmas_helper_arg1¹⁹))
-//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁸ -> _lh_rewrite_with_lemmas_helper_LH_C_0¹⁰(_lh_rewrite_with_lemmas_helper_LH_C_1¹⁷, _lh_rewrite_with_lemmas_helper_arg1¹⁸))
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁷ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁹(_lh_rewrite_with_lemmas_helper_LH_C_1¹⁶, _lh_rewrite_with_lemmas_helper_arg1¹⁷)))]))
+//│ 										LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1¹¹))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1²², _lh_rewrite_with_lemmas_helper_LH_C_1²⁰)
+//│ 										| _  => error⁰})))
+//│ 							in let _lh_rewrite_with_lemmas_helper_LH_C_1¹⁹ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1²¹ -> _lh_rewrite_with_lemmas_helper_arg1²¹))
+//│ 							in (fun _lh_rewrite_with_lemmas_helper_arg1²⁰ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0¹², force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1¹⁹), _lh_rewrite_with_lemmas_helper_arg1²⁰)))
+//│ 						in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁹ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0¹¹, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1¹⁸), _lh_rewrite_with_lemmas_helper_arg1¹⁹)))
+//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁸ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0¹⁰, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1¹⁷), _lh_rewrite_with_lemmas_helper_arg1¹⁸)))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁷ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁹, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1¹⁶), _lh_rewrite_with_lemmas_helper_arg1¹⁷)))]))
 //│ 		and divides² = (fun _lh_divides_arg1² -> (fun _lh_divides_arg2² -> [Fun [DIVIDES] [LH_C _lh_divides_arg1² [LH_C _lh_divides_arg2² [LH_N]]] lazy⁰([LH_C [LH_P2 divides²(x², y²) zerop²(remainder²(y², x²))] [LH_N]])]))
 //│ 		and iff² = (fun _lh_iff_arg1² -> (fun _lh_iff_arg2² -> [Fun [IFF] [LH_C _lh_iff_arg1² [LH_C _lh_iff_arg2² [LH_N]]] lazy⁰([LH_C [LH_P2 iff²(x², y²) and_²(implies²(x², y²), implies²(y², x²))] [LH_N]])]))
 //│ 		and implies² = (fun _lh_implies_arg1² -> (fun _lh_implies_arg2² -> [Fun [IMPLIES] [LH_C _lh_implies_arg1² [LH_C _lh_implies_arg2² [LH_N]]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁰ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵² = implies²(x², y²)
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵² = if_²(x², if_²(y², boyerTrue², boyerFalse²), boyerTrue²)
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁰ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵² = lazy⁰(implies²(x², y²))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵² = lazy⁰(if_²(x², if_²(y², boyerTrue², boyerFalse²), boyerTrue²))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁹⁹ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹²⁶ -> 
-//│ 						let _lh_matchIdent⁶⁹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹²⁶, _lh_rewrite_with_lemmas_helper_LH_P2_0⁵²)
+//│ 						let _lh_matchIdent⁶⁹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹²⁶, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁵²))
 //│ 						in case _lh_matchIdent⁶⁹ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁵²)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹²⁶, _lh_rewrite_with_lemmas_helper_LH_C_1⁹⁹)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁹⁸ = (fun _lh_rewrite_with_lemmas_helper_arg1¹²⁵ -> _lh_rewrite_with_lemmas_helper_arg1¹²⁵)
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹²⁴ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁹⁸, _lh_rewrite_with_lemmas_helper_arg1¹²⁴)))]))
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁵²))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹²⁶, _lh_rewrite_with_lemmas_helper_LH_C_1⁹⁹)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁹⁸ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1¹²⁵ -> _lh_rewrite_with_lemmas_helper_arg1¹²⁵))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹²⁴ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁵⁰, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁹⁸), _lh_rewrite_with_lemmas_helper_arg1¹²⁴)))]))
 //│ 		and x² = [Var [X]]
 //│ 		and cons² = (fun _lh_cons_arg1² -> (fun _lh_cons_arg2² -> [Fun [CONS] [LH_C _lh_cons_arg1² [LH_C _lh_cons_arg2² [LH_N]]] lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1²⁹ -> _lh_rewrite_with_lemmas_helper_arg1²⁹))]))
 //│ 		and exp_² = (fun _lh_exp__arg1² -> (fun _lh_exp__arg2² -> [Fun [EXP] [LH_C _lh_exp__arg1² [LH_C _lh_exp__arg2² [LH_N]]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁶ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁹ = exp_²(x², plus²(y², z²))
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁹ = times²(exp_²(x², y²), exp_²(x², z²))
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁶ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁹ = lazy⁰(exp_²(x², plus²(y², z²)))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁹ = lazy⁰(times²(exp_²(x², y²), exp_²(x², z²)))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁹³ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹¹⁷ -> 
-//│ 						let _lh_matchIdent⁶⁶ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹¹⁷, _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁹)
+//│ 						let _lh_matchIdent⁶⁶ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹¹⁷, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁹))
 //│ 						in case _lh_matchIdent⁶⁶ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁹)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹¹⁷, _lh_rewrite_with_lemmas_helper_LH_C_1⁹³)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁹⁰ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁷ = 	
-//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁸ = exp_²(x², times²(y², z²))
-//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁸ = exp_²(exp_²(x², y²), z²)
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁹))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹¹⁷, _lh_rewrite_with_lemmas_helper_LH_C_1⁹³)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁹⁰ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁷ = lazy⁰(
+//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁸ = lazy⁰(exp_²(x², times²(y², z²)))
+//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁸ = lazy⁰(exp_²(exp_²(x², y²), z²))
 //│ 						in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁹² -> (fun _lh_rewrite_with_lemmas_helper_arg1¹¹⁶ -> 
-//│ 							let _lh_matchIdent⁶⁵ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹¹⁶, _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁸)
+//│ 							let _lh_matchIdent⁶⁵ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹¹⁶, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁸))
 //│ 							in case _lh_matchIdent⁶⁵ of {
-//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁸)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹¹⁶, _lh_rewrite_with_lemmas_helper_LH_C_1⁹²)
-//│ 								| _  => error⁰}))
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1⁹¹ = (fun _lh_rewrite_with_lemmas_helper_arg1¹¹⁵ -> _lh_rewrite_with_lemmas_helper_arg1¹¹⁵)
-//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1¹¹⁴ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁷(_lh_rewrite_with_lemmas_helper_LH_C_1⁹¹, _lh_rewrite_with_lemmas_helper_arg1¹¹⁴))
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹¹³ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁶(_lh_rewrite_with_lemmas_helper_LH_C_1⁹⁰, _lh_rewrite_with_lemmas_helper_arg1¹¹³)))]))
+//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁸))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹¹⁶, _lh_rewrite_with_lemmas_helper_LH_C_1⁹²)
+//│ 								| _  => error⁰})))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1⁹¹ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1¹¹⁵ -> _lh_rewrite_with_lemmas_helper_arg1¹¹⁵))
+//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1¹¹⁴ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁴⁷, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁹¹), _lh_rewrite_with_lemmas_helper_arg1¹¹⁴)))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹¹³ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁴⁶, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁹⁰), _lh_rewrite_with_lemmas_helper_arg1¹¹³)))]))
 //│ 		and boyerFalse² = [Fun [FALSE] [LH_N] lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1¹⁰² -> _lh_rewrite_with_lemmas_helper_arg1¹⁰²))]
 //│ 		and plus² = (fun _lh_plus_arg1² -> (fun _lh_plus_arg2² -> [Fun [PLUS] [LH_C _lh_plus_arg1² [LH_C _lh_plus_arg2² [LH_N]]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁴² = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁶ = plus²(plus²(x², y²), z²)
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁶ = plus²(x², plus²(y², z²))
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁴² = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁶ = lazy⁰(plus²(plus²(x², y²), z²))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁶ = lazy⁰(plus²(x², plus²(y², z²)))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁸⁷ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹⁰⁹ -> 
-//│ 						let _lh_matchIdent⁶³ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰⁹, _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁶)
+//│ 						let _lh_matchIdent⁶³ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰⁹, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁶))
 //│ 						in case _lh_matchIdent⁶³ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁶)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰⁹, _lh_rewrite_with_lemmas_helper_LH_C_1⁸⁷)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁸² = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0⁴³ = 	
-//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁵ = plus²(remainder²(x², y²), times²(y², quotient²(x², y²)))
-//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁵ = x²
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁶))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰⁹, _lh_rewrite_with_lemmas_helper_LH_C_1⁸⁷)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁸² = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0⁴³ = lazy⁰(
+//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁵ = lazy⁰(plus²(remainder²(x², y²), times²(y², quotient²(x², y²))))
+//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁵ = lazy⁰(x²)
 //│ 						in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁸⁶ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹⁰⁸ -> 
-//│ 							let _lh_matchIdent⁶² = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰⁸, _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁵)
+//│ 							let _lh_matchIdent⁶² = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰⁸, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁵))
 //│ 							in case _lh_matchIdent⁶² of {
-//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁵)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰⁸, _lh_rewrite_with_lemmas_helper_LH_C_1⁸⁶)
-//│ 								| _  => error⁰}))
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1⁸³ = 	
-//│ 						let _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁴ = 	
-//│ 							let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁴ = plus²(x², add1²(y²))
-//│ 							in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁴ = add1²(plus²(x², y²))
+//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁵))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰⁸, _lh_rewrite_with_lemmas_helper_LH_C_1⁸⁶)
+//│ 								| _  => error⁰})))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1⁸³ = lazy⁰(
+//│ 						let _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁴ = lazy⁰(
+//│ 							let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁴ = lazy⁰(plus²(x², add1²(y²)))
+//│ 							in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁴ = lazy⁰(add1²(plus²(x², y²)))
 //│ 							in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁸⁵ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹⁰⁷ -> 
-//│ 								let _lh_matchIdent⁶¹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰⁷, _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁴)
+//│ 								let _lh_matchIdent⁶¹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰⁷, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁴))
 //│ 								in case _lh_matchIdent⁶¹ of {
-//│ 									LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁴)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰⁷, _lh_rewrite_with_lemmas_helper_LH_C_1⁸⁵)
-//│ 									| _  => error⁰}))
-//│ 						in let _lh_rewrite_with_lemmas_helper_LH_C_1⁸⁴ = (fun _lh_rewrite_with_lemmas_helper_arg1¹⁰⁶ -> _lh_rewrite_with_lemmas_helper_arg1¹⁰⁶)
-//│ 						in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁰⁵ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁴(_lh_rewrite_with_lemmas_helper_LH_C_1⁸⁴, _lh_rewrite_with_lemmas_helper_arg1¹⁰⁵))
-//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁰⁴ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁴³(_lh_rewrite_with_lemmas_helper_LH_C_1⁸³, _lh_rewrite_with_lemmas_helper_arg1¹⁰⁴))
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁰³ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁴²(_lh_rewrite_with_lemmas_helper_LH_C_1⁸², _lh_rewrite_with_lemmas_helper_arg1¹⁰³)))]))
+//│ 									LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁴))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰⁷, _lh_rewrite_with_lemmas_helper_LH_C_1⁸⁵)
+//│ 									| _  => error⁰})))
+//│ 						in let _lh_rewrite_with_lemmas_helper_LH_C_1⁸⁴ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1¹⁰⁶ -> _lh_rewrite_with_lemmas_helper_arg1¹⁰⁶))
+//│ 						in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁰⁵ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁴⁴, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁸⁴), _lh_rewrite_with_lemmas_helper_arg1¹⁰⁵)))
+//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁰⁴ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁴³, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁸³), _lh_rewrite_with_lemmas_helper_arg1¹⁰⁴)))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁰³ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁴², force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁸²), _lh_rewrite_with_lemmas_helper_arg1¹⁰³)))]))
 //│ 		and two² = [Fun [TWO] [LH_N] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁰ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴² = two²
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴² = add1²(one²)
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁰ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴² = lazy⁰(two²)
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴² = lazy⁰(add1²(one²))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁹ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁹⁸ -> 
-//│ 						let _lh_matchIdent⁵⁹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹⁸, _lh_rewrite_with_lemmas_helper_LH_P2_0⁴²)
+//│ 						let _lh_matchIdent⁵⁹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹⁸, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁴²))
 //│ 						in case _lh_matchIdent⁵⁹ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁴²)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹⁸, _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁹)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁸ = (fun _lh_rewrite_with_lemmas_helper_arg1⁹⁷ -> _lh_rewrite_with_lemmas_helper_arg1⁹⁷)
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁹⁶ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁷⁸, _lh_rewrite_with_lemmas_helper_arg1⁹⁶)))]
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁴²))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹⁸, _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁹)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁸ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1⁹⁷ -> _lh_rewrite_with_lemmas_helper_arg1⁹⁷))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁹⁶ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁴⁰, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁷⁸), _lh_rewrite_with_lemmas_helper_arg1⁹⁶)))]
 //│ 		and boyerTrue² = [Fun [TRUE] [LH_N] lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1¹³⁹ -> _lh_rewrite_with_lemmas_helper_arg1¹³⁹))]
 //│ 		and f⁸ = (fun _lh_f_arg1² -> [Fun [F] [LH_C _lh_f_arg1² [LH_N]] lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1¹²⁷ -> _lh_rewrite_with_lemmas_helper_arg1¹²⁷))])
 //│ 		and remainder² = (fun _lh_remainder_arg1² -> (fun _lh_remainder_arg2² -> [Fun [REMAINDER] [LH_C _lh_remainder_arg1² [LH_C _lh_remainder_arg2² [LH_N]]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0¹⁴ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁹ = remainder²(x², one²)
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁹ = zero²
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0¹⁴ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁹ = lazy⁰(remainder²(x², one²))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁹ = lazy⁰(zero²)
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1³³ -> (fun _lh_rewrite_with_lemmas_helper_arg1³⁸ -> 
-//│ 						let _lh_matchIdent³⁶ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1³⁸, _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁹)
+//│ 						let _lh_matchIdent³⁶ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1³⁸, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0¹⁹))
 //│ 						in case _lh_matchIdent³⁶ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁹)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1³⁸, _lh_rewrite_with_lemmas_helper_LH_C_1³³)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1²⁶ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0¹⁵ = 	
-//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁸ = remainder²(x², x²)
-//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁸ = zero²
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1¹⁹))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1³⁸, _lh_rewrite_with_lemmas_helper_LH_C_1³³)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1²⁶ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0¹⁵ = lazy⁰(
+//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁸ = lazy⁰(remainder²(x², x²))
+//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁸ = lazy⁰(zero²)
 //│ 						in (fun _lh_rewrite_with_lemmas_helper_LH_C_1³² -> (fun _lh_rewrite_with_lemmas_helper_arg1³⁷ -> 
-//│ 							let _lh_matchIdent³⁵ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1³⁷, _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁸)
+//│ 							let _lh_matchIdent³⁵ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1³⁷, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0¹⁸))
 //│ 							in case _lh_matchIdent³⁵ of {
-//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁸)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1³⁷, _lh_rewrite_with_lemmas_helper_LH_C_1³²)
-//│ 								| _  => error⁰}))
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1²⁷ = 	
-//│ 						let _lh_rewrite_with_lemmas_helper_LH_C_0¹⁶ = 	
-//│ 							let _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁷ = remainder²(times²(x², y²), x²)
-//│ 							in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁷ = zero²
+//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1¹⁸))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1³⁷, _lh_rewrite_with_lemmas_helper_LH_C_1³²)
+//│ 								| _  => error⁰})))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1²⁷ = lazy⁰(
+//│ 						let _lh_rewrite_with_lemmas_helper_LH_C_0¹⁶ = lazy⁰(
+//│ 							let _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁷ = lazy⁰(remainder²(times²(x², y²), x²))
+//│ 							in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁷ = lazy⁰(zero²)
 //│ 							in (fun _lh_rewrite_with_lemmas_helper_LH_C_1³¹ -> (fun _lh_rewrite_with_lemmas_helper_arg1³⁶ -> 
-//│ 								let _lh_matchIdent³⁴ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1³⁶, _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁷)
+//│ 								let _lh_matchIdent³⁴ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1³⁶, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0¹⁷))
 //│ 								in case _lh_matchIdent³⁴ of {
-//│ 									LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁷)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1³⁶, _lh_rewrite_with_lemmas_helper_LH_C_1³¹)
-//│ 									| _  => error⁰}))
-//│ 						in let _lh_rewrite_with_lemmas_helper_LH_C_1²⁸ = 	
-//│ 							let _lh_rewrite_with_lemmas_helper_LH_C_0¹⁷ = 	
-//│ 								let _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁶ = remainder²(times²(x², y²), y²)
-//│ 								in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁶ = zero²
+//│ 									LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1¹⁷))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1³⁶, _lh_rewrite_with_lemmas_helper_LH_C_1³¹)
+//│ 									| _  => error⁰})))
+//│ 						in let _lh_rewrite_with_lemmas_helper_LH_C_1²⁸ = lazy⁰(
+//│ 							let _lh_rewrite_with_lemmas_helper_LH_C_0¹⁷ = lazy⁰(
+//│ 								let _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁶ = lazy⁰(remainder²(times²(x², y²), y²))
+//│ 								in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁶ = lazy⁰(zero²)
 //│ 								in (fun _lh_rewrite_with_lemmas_helper_LH_C_1³⁰ -> (fun _lh_rewrite_with_lemmas_helper_arg1³⁵ -> 
-//│ 									let _lh_matchIdent³³ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1³⁵, _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁶)
+//│ 									let _lh_matchIdent³³ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1³⁵, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0¹⁶))
 //│ 									in case _lh_matchIdent³³ of {
-//│ 										LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁶)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1³⁵, _lh_rewrite_with_lemmas_helper_LH_C_1³⁰)
-//│ 										| _  => error⁰}))
-//│ 							in let _lh_rewrite_with_lemmas_helper_LH_C_1²⁹ = (fun _lh_rewrite_with_lemmas_helper_arg1³⁴ -> _lh_rewrite_with_lemmas_helper_arg1³⁴)
-//│ 							in (fun _lh_rewrite_with_lemmas_helper_arg1³³ -> _lh_rewrite_with_lemmas_helper_LH_C_0¹⁷(_lh_rewrite_with_lemmas_helper_LH_C_1²⁹, _lh_rewrite_with_lemmas_helper_arg1³³))
-//│ 						in (fun _lh_rewrite_with_lemmas_helper_arg1³² -> _lh_rewrite_with_lemmas_helper_LH_C_0¹⁶(_lh_rewrite_with_lemmas_helper_LH_C_1²⁸, _lh_rewrite_with_lemmas_helper_arg1³²))
-//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1³¹ -> _lh_rewrite_with_lemmas_helper_LH_C_0¹⁵(_lh_rewrite_with_lemmas_helper_LH_C_1²⁷, _lh_rewrite_with_lemmas_helper_arg1³¹))
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1³⁰ -> _lh_rewrite_with_lemmas_helper_LH_C_0¹⁴(_lh_rewrite_with_lemmas_helper_LH_C_1²⁶, _lh_rewrite_with_lemmas_helper_arg1³⁰)))]))
+//│ 										LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1¹⁶))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1³⁵, _lh_rewrite_with_lemmas_helper_LH_C_1³⁰)
+//│ 										| _  => error⁰})))
+//│ 							in let _lh_rewrite_with_lemmas_helper_LH_C_1²⁹ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1³⁴ -> _lh_rewrite_with_lemmas_helper_arg1³⁴))
+//│ 							in (fun _lh_rewrite_with_lemmas_helper_arg1³³ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0¹⁷, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1²⁹), _lh_rewrite_with_lemmas_helper_arg1³³)))
+//│ 						in (fun _lh_rewrite_with_lemmas_helper_arg1³² -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0¹⁶, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1²⁸), _lh_rewrite_with_lemmas_helper_arg1³²)))
+//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1³¹ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0¹⁵, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1²⁷), _lh_rewrite_with_lemmas_helper_arg1³¹)))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1³⁰ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0¹⁴, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1²⁶), _lh_rewrite_with_lemmas_helper_arg1³⁰)))]))
 //│ 		and add1² = (fun _lh_add1_arg1² -> [Fun [ADD1] [LH_C _lh_add1_arg1² [LH_N]] lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1⁶⁸ -> _lh_rewrite_with_lemmas_helper_arg1⁶⁸))])
 //│ 		and z² = [Var [Z]]
 //│ 		and nilp² = (fun _lh_nilp_arg1² -> [Fun [NILP] [LH_C _lh_nilp_arg1² [LH_N]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0²⁰ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0²² = nilp²(x²)
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1²² = equal²(x², nil²)
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0²⁰ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0²² = lazy⁰(nilp²(x²))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1²² = lazy⁰(equal²(x², nil²))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1³⁹ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁴⁷ -> 
-//│ 						let _lh_matchIdent³⁹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁴⁷, _lh_rewrite_with_lemmas_helper_LH_P2_0²²)
+//│ 						let _lh_matchIdent³⁹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁴⁷, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0²²))
 //│ 						in case _lh_matchIdent³⁹ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1²²)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁴⁷, _lh_rewrite_with_lemmas_helper_LH_C_1³⁹)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1³⁸ = (fun _lh_rewrite_with_lemmas_helper_arg1⁴⁶ -> _lh_rewrite_with_lemmas_helper_arg1⁴⁶)
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁴⁵ -> _lh_rewrite_with_lemmas_helper_LH_C_0²⁰(_lh_rewrite_with_lemmas_helper_LH_C_1³⁸, _lh_rewrite_with_lemmas_helper_arg1⁴⁵)))])
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1²²))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁴⁷, _lh_rewrite_with_lemmas_helper_LH_C_1³⁹)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1³⁸ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1⁴⁶ -> _lh_rewrite_with_lemmas_helper_arg1⁴⁶))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁴⁵ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0²⁰, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1³⁸), _lh_rewrite_with_lemmas_helper_arg1⁴⁵)))])
 //│ 		and difference² = (fun _lh_difference_arg1² -> (fun _lh_difference_arg2² -> [Fun [DIFFERENCE] [LH_C _lh_difference_arg1² [LH_C _lh_difference_arg2² [LH_N]]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0² = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁰ = difference²(x², x²)
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁰ = zero²
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0² = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁰ = lazy⁰(difference²(x², x²))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁰ = lazy⁰(zero²)
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1¹⁵ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹⁶ -> 
-//│ 						let _lh_matchIdent²⁷ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁶, _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁰)
+//│ 						let _lh_matchIdent²⁷ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁶, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0¹⁰))
 //│ 						in case _lh_matchIdent²⁷ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁰)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁶, _lh_rewrite_with_lemmas_helper_LH_C_1¹⁵)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1² = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0³ = 	
-//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0⁹ = difference²(plus²(x², y²), x²)
-//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁹ = y²
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1¹⁰))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁶, _lh_rewrite_with_lemmas_helper_LH_C_1¹⁵)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1² = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0³ = lazy⁰(
+//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0⁹ = lazy⁰(difference²(plus²(x², y²), x²))
+//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁹ = lazy⁰(y²)
 //│ 						in (fun _lh_rewrite_with_lemmas_helper_LH_C_1¹⁴ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹⁵ -> 
-//│ 							let _lh_matchIdent²⁶ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵, _lh_rewrite_with_lemmas_helper_LH_P2_0⁹)
+//│ 							let _lh_matchIdent²⁶ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁹))
 //│ 							in case _lh_matchIdent²⁶ of {
-//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁹)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵, _lh_rewrite_with_lemmas_helper_LH_C_1¹⁴)
-//│ 								| _  => error⁰}))
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1³ = 	
-//│ 						let _lh_rewrite_with_lemmas_helper_LH_C_0⁴ = 	
-//│ 							let _lh_rewrite_with_lemmas_helper_LH_P2_0⁸ = difference²(plus²(y², x²), x²)
-//│ 							in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁸ = y²
+//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁹))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵, _lh_rewrite_with_lemmas_helper_LH_C_1¹⁴)
+//│ 								| _  => error⁰})))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1³ = lazy⁰(
+//│ 						let _lh_rewrite_with_lemmas_helper_LH_C_0⁴ = lazy⁰(
+//│ 							let _lh_rewrite_with_lemmas_helper_LH_P2_0⁸ = lazy⁰(difference²(plus²(y², x²), x²))
+//│ 							in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁸ = lazy⁰(y²)
 //│ 							in (fun _lh_rewrite_with_lemmas_helper_LH_C_1¹³ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹⁴ -> 
-//│ 								let _lh_matchIdent²⁵ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁴, _lh_rewrite_with_lemmas_helper_LH_P2_0⁸)
+//│ 								let _lh_matchIdent²⁵ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁴, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁸))
 //│ 								in case _lh_matchIdent²⁵ of {
-//│ 									LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁸)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁴, _lh_rewrite_with_lemmas_helper_LH_C_1¹³)
-//│ 									| _  => error⁰}))
-//│ 						in let _lh_rewrite_with_lemmas_helper_LH_C_1⁴ = 	
-//│ 							let _lh_rewrite_with_lemmas_helper_LH_C_0⁵ = 	
-//│ 								let _lh_rewrite_with_lemmas_helper_LH_P2_0⁷ = difference²(plus²(x², y²), plus²(x², z²))
-//│ 								in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁷ = difference²(y², z²)
+//│ 									LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁸))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁴, _lh_rewrite_with_lemmas_helper_LH_C_1¹³)
+//│ 									| _  => error⁰})))
+//│ 						in let _lh_rewrite_with_lemmas_helper_LH_C_1⁴ = lazy⁰(
+//│ 							let _lh_rewrite_with_lemmas_helper_LH_C_0⁵ = lazy⁰(
+//│ 								let _lh_rewrite_with_lemmas_helper_LH_P2_0⁷ = lazy⁰(difference²(plus²(x², y²), plus²(x², z²)))
+//│ 								in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁷ = lazy⁰(difference²(y², z²))
 //│ 								in (fun _lh_rewrite_with_lemmas_helper_LH_C_1¹² -> (fun _lh_rewrite_with_lemmas_helper_arg1¹³ -> 
-//│ 									let _lh_matchIdent²⁴ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³, _lh_rewrite_with_lemmas_helper_LH_P2_0⁷)
+//│ 									let _lh_matchIdent²⁴ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁷))
 //│ 									in case _lh_matchIdent²⁴ of {
-//│ 										LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁷)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³, _lh_rewrite_with_lemmas_helper_LH_C_1¹²)
-//│ 										| _  => error⁰}))
-//│ 							in let _lh_rewrite_with_lemmas_helper_LH_C_1⁵ = 	
-//│ 								let _lh_rewrite_with_lemmas_helper_LH_C_0⁶ = 	
-//│ 									let _lh_rewrite_with_lemmas_helper_LH_P2_0⁶ = difference²(plus²(y², plus²(x², z²)), x²)
-//│ 									in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁶ = plus²(y², z²)
+//│ 										LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁷))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³, _lh_rewrite_with_lemmas_helper_LH_C_1¹²)
+//│ 										| _  => error⁰})))
+//│ 							in let _lh_rewrite_with_lemmas_helper_LH_C_1⁵ = lazy⁰(
+//│ 								let _lh_rewrite_with_lemmas_helper_LH_C_0⁶ = lazy⁰(
+//│ 									let _lh_rewrite_with_lemmas_helper_LH_P2_0⁶ = lazy⁰(difference²(plus²(y², plus²(x², z²)), x²))
+//│ 									in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁶ = lazy⁰(plus²(y², z²))
 //│ 									in (fun _lh_rewrite_with_lemmas_helper_LH_C_1¹¹ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹² -> 
-//│ 										let _lh_matchIdent²³ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹², _lh_rewrite_with_lemmas_helper_LH_P2_0⁶)
+//│ 										let _lh_matchIdent²³ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹², force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁶))
 //│ 										in case _lh_matchIdent²³ of {
-//│ 											LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁶)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹², _lh_rewrite_with_lemmas_helper_LH_C_1¹¹)
-//│ 											| _  => error⁰}))
-//│ 								in let _lh_rewrite_with_lemmas_helper_LH_C_1⁶ = 	
-//│ 									let _lh_rewrite_with_lemmas_helper_LH_C_0⁷ = 	
-//│ 										let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵ = difference²(add1²(plus²(y², z²)), z²)
-//│ 										in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵ = add1²(y²)
+//│ 											LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁶))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹², _lh_rewrite_with_lemmas_helper_LH_C_1¹¹)
+//│ 											| _  => error⁰})))
+//│ 								in let _lh_rewrite_with_lemmas_helper_LH_C_1⁶ = lazy⁰(
+//│ 									let _lh_rewrite_with_lemmas_helper_LH_C_0⁷ = lazy⁰(
+//│ 										let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵ = lazy⁰(difference²(add1²(plus²(y², z²)), z²))
+//│ 										in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵ = lazy⁰(add1²(y²))
 //│ 										in (fun _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹¹ -> 
-//│ 											let _lh_matchIdent²² = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹¹, _lh_rewrite_with_lemmas_helper_LH_P2_0⁵)
+//│ 											let _lh_matchIdent²² = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹¹, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁵))
 //│ 											in case _lh_matchIdent²² of {
-//│ 												LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁵)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹¹, _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰)
-//│ 												| _  => error⁰}))
-//│ 									in let _lh_rewrite_with_lemmas_helper_LH_C_1⁷ = 	
-//│ 										let _lh_rewrite_with_lemmas_helper_LH_C_0⁸ = 	
-//│ 											let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴ = difference²(add1²(add1²(x²)), two²)
-//│ 											in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴ = x²
+//│ 												LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁵))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹¹, _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰)
+//│ 												| _  => error⁰})))
+//│ 									in let _lh_rewrite_with_lemmas_helper_LH_C_1⁷ = lazy⁰(
+//│ 										let _lh_rewrite_with_lemmas_helper_LH_C_0⁸ = lazy⁰(
+//│ 											let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴ = lazy⁰(difference²(add1²(add1²(x²)), two²))
+//│ 											in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴ = lazy⁰(x²)
 //│ 											in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁹ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹⁰ -> 
-//│ 												let _lh_matchIdent²¹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰, _lh_rewrite_with_lemmas_helper_LH_P2_0⁴)
+//│ 												let _lh_matchIdent²¹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁴))
 //│ 												in case _lh_matchIdent²¹ of {
-//│ 													LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁴)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰, _lh_rewrite_with_lemmas_helper_LH_C_1⁹)
-//│ 													| _  => error⁰}))
-//│ 										in let _lh_rewrite_with_lemmas_helper_LH_C_1⁸ = (fun _lh_rewrite_with_lemmas_helper_arg1⁹ -> _lh_rewrite_with_lemmas_helper_arg1⁹)
-//│ 										in (fun _lh_rewrite_with_lemmas_helper_arg1⁸ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁸(_lh_rewrite_with_lemmas_helper_LH_C_1⁸, _lh_rewrite_with_lemmas_helper_arg1⁸))
-//│ 									in (fun _lh_rewrite_with_lemmas_helper_arg1⁷ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁷(_lh_rewrite_with_lemmas_helper_LH_C_1⁷, _lh_rewrite_with_lemmas_helper_arg1⁷))
-//│ 								in (fun _lh_rewrite_with_lemmas_helper_arg1⁶ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁶(_lh_rewrite_with_lemmas_helper_LH_C_1⁶, _lh_rewrite_with_lemmas_helper_arg1⁶))
-//│ 							in (fun _lh_rewrite_with_lemmas_helper_arg1⁵ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁵(_lh_rewrite_with_lemmas_helper_LH_C_1⁵, _lh_rewrite_with_lemmas_helper_arg1⁵))
-//│ 						in (fun _lh_rewrite_with_lemmas_helper_arg1⁴ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁴(_lh_rewrite_with_lemmas_helper_LH_C_1⁴, _lh_rewrite_with_lemmas_helper_arg1⁴))
-//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1³ -> _lh_rewrite_with_lemmas_helper_LH_C_0³(_lh_rewrite_with_lemmas_helper_LH_C_1³, _lh_rewrite_with_lemmas_helper_arg1³))
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1² -> _lh_rewrite_with_lemmas_helper_LH_C_0²(_lh_rewrite_with_lemmas_helper_LH_C_1², _lh_rewrite_with_lemmas_helper_arg1²)))]))
+//│ 													LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁴))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰, _lh_rewrite_with_lemmas_helper_LH_C_1⁹)
+//│ 													| _  => error⁰})))
+//│ 										in let _lh_rewrite_with_lemmas_helper_LH_C_1⁸ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1⁹ -> _lh_rewrite_with_lemmas_helper_arg1⁹))
+//│ 										in (fun _lh_rewrite_with_lemmas_helper_arg1⁸ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁸, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁸), _lh_rewrite_with_lemmas_helper_arg1⁸)))
+//│ 									in (fun _lh_rewrite_with_lemmas_helper_arg1⁷ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁷, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁷), _lh_rewrite_with_lemmas_helper_arg1⁷)))
+//│ 								in (fun _lh_rewrite_with_lemmas_helper_arg1⁶ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁶, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁶), _lh_rewrite_with_lemmas_helper_arg1⁶)))
+//│ 							in (fun _lh_rewrite_with_lemmas_helper_arg1⁵ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁵, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁵), _lh_rewrite_with_lemmas_helper_arg1⁵)))
+//│ 						in (fun _lh_rewrite_with_lemmas_helper_arg1⁴ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁴, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁴), _lh_rewrite_with_lemmas_helper_arg1⁴)))
+//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1³ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0³, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1³), _lh_rewrite_with_lemmas_helper_arg1³)))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1² -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0², force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1²), _lh_rewrite_with_lemmas_helper_arg1²)))]))
 //│ 		and and_² = (fun _lh_and__arg1² -> (fun _lh_and__arg2² -> [Fun [AND] [LH_C _lh_and__arg1² [LH_C _lh_and__arg2² [LH_N]]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁶⁰ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁶² = and_²(x², y²)
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁶² = if_²(x², if_²(y², boyerTrue², boyerFalse²), boyerFalse²)
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁶⁰ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁶² = lazy⁰(and_²(x², y²))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁶² = lazy⁰(if_²(x², if_²(y², boyerTrue², boyerFalse²), boyerFalse²))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁹ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹⁵³ -> 
-//│ 						let _lh_matchIdent⁷⁹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵³, _lh_rewrite_with_lemmas_helper_LH_P2_0⁶²)
+//│ 						let _lh_matchIdent⁷⁹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁶²))
 //│ 						in case _lh_matchIdent⁷⁹ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁶²)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵³, _lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁹)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁸ = (fun _lh_rewrite_with_lemmas_helper_arg1¹⁵² -> _lh_rewrite_with_lemmas_helper_arg1¹⁵²)
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁵¹ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁶⁰(_lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁸, _lh_rewrite_with_lemmas_helper_arg1¹⁵¹)))]))
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁶²))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵³, _lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁹)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁸ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1¹⁵² -> _lh_rewrite_with_lemmas_helper_arg1¹⁵²))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁵¹ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁶⁰, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁸), _lh_rewrite_with_lemmas_helper_arg1¹⁵¹)))]))
 //│ 		and nlistp² = (fun _lh_nlistp_arg1² -> [Fun [NLISTP] [LH_C _lh_nlistp_arg1² [LH_N]] lazy⁰([LH_C [LH_P2 nlistp²(x²) not_²(listp²(x²))] [LH_N]])])
 //│ 		and listp² = (fun _lh_listp_arg1² -> [Fun [LISTP] [LH_C _lh_listp_arg1² [LH_N]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁶ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁸ = listp²(x²)
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁸ = or_²(nilp²(x²), consp²(x²))
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁶ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁸ = lazy⁰(listp²(x²))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁸ = lazy⁰(or_²(nilp²(x²), consp²(x²)))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1¹¹¹ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹⁴² -> 
-//│ 						let _lh_matchIdent⁷⁵ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁴², _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁸)
+//│ 						let _lh_matchIdent⁷⁵ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁴², force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁸))
 //│ 						in case _lh_matchIdent⁷⁵ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁸)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁴², _lh_rewrite_with_lemmas_helper_LH_C_1¹¹¹)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁰ = (fun _lh_rewrite_with_lemmas_helper_arg1¹⁴¹ -> _lh_rewrite_with_lemmas_helper_arg1¹⁴¹)
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁴⁰ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁶(_lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁰, _lh_rewrite_with_lemmas_helper_arg1¹⁴⁰)))])
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁸))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁴², _lh_rewrite_with_lemmas_helper_LH_C_1¹¹¹)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁰ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1¹⁴¹ -> _lh_rewrite_with_lemmas_helper_arg1¹⁴¹))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁴⁰ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁵⁶, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁰), _lh_rewrite_with_lemmas_helper_arg1¹⁴⁰)))])
 //│ 		and a² = [Var [A]]
 //│ 		and u² = [Var [U]]
 //│ 		and c² = [Var [C]]
 //│ 		and odd_² = (fun _lh_odd__arg1² -> [Fun [ODD] [LH_C _lh_odd__arg1² [LH_N]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0¹⁸ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0²⁰ = odd_²(x²)
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1²⁰ = even_²(sub1²(x²))
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0¹⁸ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0²⁰ = lazy⁰(odd_²(x²))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1²⁰ = lazy⁰(even_²(sub1²(x²)))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1³⁵ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁴¹ -> 
-//│ 						let _lh_matchIdent³⁷ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁴¹, _lh_rewrite_with_lemmas_helper_LH_P2_0²⁰)
+//│ 						let _lh_matchIdent³⁷ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁴¹, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0²⁰))
 //│ 						in case _lh_matchIdent³⁷ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1²⁰)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁴¹, _lh_rewrite_with_lemmas_helper_LH_C_1³⁵)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1³⁴ = (fun _lh_rewrite_with_lemmas_helper_arg1⁴⁰ -> _lh_rewrite_with_lemmas_helper_arg1⁴⁰)
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1³⁹ -> _lh_rewrite_with_lemmas_helper_LH_C_0¹⁸(_lh_rewrite_with_lemmas_helper_LH_C_1³⁴, _lh_rewrite_with_lemmas_helper_arg1³⁹)))])
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1²⁰))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁴¹, _lh_rewrite_with_lemmas_helper_LH_C_1³⁵)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1³⁴ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1⁴⁰ -> _lh_rewrite_with_lemmas_helper_arg1⁴⁰))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1³⁹ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0¹⁸, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1³⁴), _lh_rewrite_with_lemmas_helper_arg1³⁹)))])
 //│ 		and quotient² = (fun _lh_quotient_arg1² -> (fun _lh_quotient_arg2² -> [Fun [QUOTIENT] [LH_C _lh_quotient_arg1² [LH_C _lh_quotient_arg2² [LH_N]]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁶¹ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁶⁴ = quotient²(plus²(x², plus²(x², y²)), two²)
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁶⁴ = plus²(x², quotient²(y², two²))
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁶¹ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁶⁴ = lazy⁰(quotient²(plus²(x², plus²(x², y²)), two²))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁶⁴ = lazy⁰(plus²(x², quotient²(y², two²)))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1¹²³ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹⁵⁸ -> 
-//│ 						let _lh_matchIdent⁸¹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵⁸, _lh_rewrite_with_lemmas_helper_LH_P2_0⁶⁴)
+//│ 						let _lh_matchIdent⁸¹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵⁸, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁶⁴))
 //│ 						in case _lh_matchIdent⁸¹ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁶⁴)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵⁸, _lh_rewrite_with_lemmas_helper_LH_C_1¹²³)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1¹²⁰ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0⁶² = 	
-//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0⁶³ = quotient²(times²(y², x²), y²)
-//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁶³ = if_²(zerop²(y²), zero², x²)
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁶⁴))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵⁸, _lh_rewrite_with_lemmas_helper_LH_C_1¹²³)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1¹²⁰ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0⁶² = lazy⁰(
+//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0⁶³ = lazy⁰(quotient²(times²(y², x²), y²))
+//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁶³ = lazy⁰(if_²(zerop²(y²), zero², x²))
 //│ 						in (fun _lh_rewrite_with_lemmas_helper_LH_C_1¹²² -> (fun _lh_rewrite_with_lemmas_helper_arg1¹⁵⁷ -> 
-//│ 							let _lh_matchIdent⁸⁰ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵⁷, _lh_rewrite_with_lemmas_helper_LH_P2_0⁶³)
+//│ 							let _lh_matchIdent⁸⁰ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵⁷, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁶³))
 //│ 							in case _lh_matchIdent⁸⁰ of {
-//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁶³)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵⁷, _lh_rewrite_with_lemmas_helper_LH_C_1¹²²)
-//│ 								| _  => error⁰}))
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1¹²¹ = (fun _lh_rewrite_with_lemmas_helper_arg1¹⁵⁶ -> _lh_rewrite_with_lemmas_helper_arg1¹⁵⁶)
-//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁵⁵ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁶²(_lh_rewrite_with_lemmas_helper_LH_C_1¹²¹, _lh_rewrite_with_lemmas_helper_arg1¹⁵⁵))
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁵⁴ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁶¹(_lh_rewrite_with_lemmas_helper_LH_C_1¹²⁰, _lh_rewrite_with_lemmas_helper_arg1¹⁵⁴)))]))
+//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁶³))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵⁷, _lh_rewrite_with_lemmas_helper_LH_C_1¹²²)
+//│ 								| _  => error⁰})))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1¹²¹ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1¹⁵⁶ -> _lh_rewrite_with_lemmas_helper_arg1¹⁵⁶))
+//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁵⁵ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁶², force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1¹²¹), _lh_rewrite_with_lemmas_helper_arg1¹⁵⁵)))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁵⁴ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁶¹, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1¹²⁰), _lh_rewrite_with_lemmas_helper_arg1¹⁵⁴)))]))
 //│ 		and if_² = (fun _lh_if__arg1² -> (fun _lh_if__arg2² -> (fun _lh_if__arg3² -> [Fun [IF] [LH_C _lh_if__arg1² [LH_C _lh_if__arg2² [LH_C _lh_if__arg3² [LH_N]]]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁴¹ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴³ = if_²(if_²(x², y², z²), u², w²)
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴³ = if_²(x², if_²(y², u², w²), if_²(z², u², w²))
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁴¹ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴³ = lazy⁰(if_²(if_²(x², y², z²), u², w²))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴³ = lazy⁰(if_²(x², if_²(y², u², w²), if_²(z², u², w²)))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁸¹ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹⁰¹ -> 
-//│ 						let _lh_matchIdent⁶⁰ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰¹, _lh_rewrite_with_lemmas_helper_LH_P2_0⁴³)
+//│ 						let _lh_matchIdent⁶⁰ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰¹, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁴³))
 //│ 						in case _lh_matchIdent⁶⁰ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁴³)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰¹, _lh_rewrite_with_lemmas_helper_LH_C_1⁸¹)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁸⁰ = (fun _lh_rewrite_with_lemmas_helper_arg1¹⁰⁰ -> _lh_rewrite_with_lemmas_helper_arg1¹⁰⁰)
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁹⁹ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁴¹(_lh_rewrite_with_lemmas_helper_LH_C_1⁸⁰, _lh_rewrite_with_lemmas_helper_arg1⁹⁹)))])))
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁴³))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁰¹, _lh_rewrite_with_lemmas_helper_LH_C_1⁸¹)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁸⁰ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1¹⁰⁰ -> _lh_rewrite_with_lemmas_helper_arg1¹⁰⁰))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁹⁹ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁴¹, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁸⁰), _lh_rewrite_with_lemmas_helper_arg1⁹⁹)))])))
 //│ 		and reverse_² = (fun _lh_reverse__arg1² -> [Fun [REVERSE] [LH_C _lh_reverse__arg1² [LH_N]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0²⁸ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0³⁰ = reverse_²(append²(x², y²))
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1³⁰ = append²(reverse_²(y²), reverse_²(x²))
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0²⁸ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0³⁰ = lazy⁰(reverse_²(append²(x², y²)))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1³⁰ = lazy⁰(append²(reverse_²(y²), reverse_²(x²)))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁵⁵ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁷¹ -> 
-//│ 						let _lh_matchIdent⁴⁷ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁷¹, _lh_rewrite_with_lemmas_helper_LH_P2_0³⁰)
+//│ 						let _lh_matchIdent⁴⁷ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁷¹, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0³⁰))
 //│ 						in case _lh_matchIdent⁴⁷ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1³⁰)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁷¹, _lh_rewrite_with_lemmas_helper_LH_C_1⁵⁵)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁵⁴ = (fun _lh_rewrite_with_lemmas_helper_arg1⁷⁰ -> _lh_rewrite_with_lemmas_helper_arg1⁷⁰)
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁶⁹ -> _lh_rewrite_with_lemmas_helper_LH_C_0²⁸(_lh_rewrite_with_lemmas_helper_LH_C_1⁵⁴, _lh_rewrite_with_lemmas_helper_arg1⁶⁹)))])
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1³⁰))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁷¹, _lh_rewrite_with_lemmas_helper_LH_C_1⁵⁵)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁵⁴ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1⁷⁰ -> _lh_rewrite_with_lemmas_helper_arg1⁷⁰))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁶⁹ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0²⁸, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁵⁴), _lh_rewrite_with_lemmas_helper_arg1⁶⁹)))])
 //│ 		and d² = [Var [D]]
 //│ 		and one² = [Fun [ONE] [LH_N] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁷ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁹ = one²
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁹ = add1²(zero²)
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁷ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁹ = lazy⁰(one²)
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁹ = lazy⁰(add1²(zero²))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1¹¹³ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹⁴⁵ -> 
-//│ 						let _lh_matchIdent⁷⁶ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁴⁵, _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁹)
+//│ 						let _lh_matchIdent⁷⁶ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁴⁵, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁹))
 //│ 						in case _lh_matchIdent⁷⁶ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁹)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁴⁵, _lh_rewrite_with_lemmas_helper_LH_C_1¹¹³)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1¹¹² = (fun _lh_rewrite_with_lemmas_helper_arg1¹⁴⁴ -> _lh_rewrite_with_lemmas_helper_arg1¹⁴⁴)
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁴³ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁷(_lh_rewrite_with_lemmas_helper_LH_C_1¹¹², _lh_rewrite_with_lemmas_helper_arg1¹⁴³)))]
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁹))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁴⁵, _lh_rewrite_with_lemmas_helper_LH_C_1¹¹³)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1¹¹² = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1¹⁴⁴ -> _lh_rewrite_with_lemmas_helper_arg1¹⁴⁴))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁴³ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁵⁷, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1¹¹²), _lh_rewrite_with_lemmas_helper_arg1¹⁴³)))]
 //│ 		and or_² = (fun _lh_or__arg1² -> (fun _lh_or__arg2² -> [Fun [OR] [LH_C _lh_or__arg1² [LH_C _lh_or__arg2² [LH_N]]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0²² = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0²⁴ = or_²(x², y²)
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1²⁴ = if_²(x², boyerTrue², if_²(y², boyerTrue², boyerFalse²))
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0²² = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0²⁴ = lazy⁰(or_²(x², y²))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1²⁴ = lazy⁰(if_²(x², boyerTrue², if_²(y², boyerTrue², boyerFalse²)))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁴³ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁵³ -> 
-//│ 						let _lh_matchIdent⁴¹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁵³, _lh_rewrite_with_lemmas_helper_LH_P2_0²⁴)
+//│ 						let _lh_matchIdent⁴¹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁵³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0²⁴))
 //│ 						in case _lh_matchIdent⁴¹ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1²⁴)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁵³, _lh_rewrite_with_lemmas_helper_LH_C_1⁴³)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁴² = (fun _lh_rewrite_with_lemmas_helper_arg1⁵² -> _lh_rewrite_with_lemmas_helper_arg1⁵²)
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁵¹ -> _lh_rewrite_with_lemmas_helper_LH_C_0²²(_lh_rewrite_with_lemmas_helper_LH_C_1⁴², _lh_rewrite_with_lemmas_helper_arg1⁵¹)))]))
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1²⁴))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁵³, _lh_rewrite_with_lemmas_helper_LH_C_1⁴³)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁴² = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1⁵² -> _lh_rewrite_with_lemmas_helper_arg1⁵²))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁵¹ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0²², force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁴²), _lh_rewrite_with_lemmas_helper_arg1⁵¹)))]))
 //│ 		and lessp² = (fun _lh_lessp_arg1² -> (fun _lh_lessp_arg2² -> [Fun [LESSP] [LH_C _lh_lessp_arg1² [LH_C _lh_lessp_arg2² [LH_N]]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁵¹ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁷ = lessp²(remainder²(x², y²), y²)
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁷ = not_²(zerop²(y²))
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁵¹ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁷ = lazy⁰(lessp²(remainder²(x², y²), y²))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁷ = lazy⁰(not_²(zerop²(y²)))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁹ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹³⁸ -> 
-//│ 						let _lh_matchIdent⁷⁴ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁸, _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁷)
+//│ 						let _lh_matchIdent⁷⁴ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁸, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁷))
 //│ 						in case _lh_matchIdent⁷⁴ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁷)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁸, _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁹)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁰ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0⁵² = 	
-//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁶ = lessp²(quotient²(x², y²), x²)
-//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁶ = and_²(not_²(zerop²(x²)), lessp²(one², y²))
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁷))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁸, _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁹)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁰ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0⁵² = lazy⁰(
+//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁶ = lazy⁰(lessp²(quotient²(x², y²), x²))
+//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁶ = lazy⁰(and_²(not_²(zerop²(x²)), lessp²(one², y²)))
 //│ 						in (fun _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁸ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹³⁷ -> 
-//│ 							let _lh_matchIdent⁷³ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁷, _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁶)
+//│ 							let _lh_matchIdent⁷³ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁷, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁶))
 //│ 							in case _lh_matchIdent⁷³ of {
-//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁶)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁷, _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁸)
-//│ 								| _  => error⁰}))
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰¹ = 	
-//│ 						let _lh_rewrite_with_lemmas_helper_LH_C_0⁵³ = 	
-//│ 							let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁵ = lessp²(plus²(x², y²), plus²(x², z²))
-//│ 							in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁵ = lessp²(y², z²)
+//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁶))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁷, _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁸)
+//│ 								| _  => error⁰})))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰¹ = lazy⁰(
+//│ 						let _lh_rewrite_with_lemmas_helper_LH_C_0⁵³ = lazy⁰(
+//│ 							let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁵ = lazy⁰(lessp²(plus²(x², y²), plus²(x², z²)))
+//│ 							in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁵ = lazy⁰(lessp²(y², z²))
 //│ 							in (fun _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁷ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹³⁶ -> 
-//│ 								let _lh_matchIdent⁷² = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁶, _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁵)
+//│ 								let _lh_matchIdent⁷² = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁶, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁵))
 //│ 								in case _lh_matchIdent⁷² of {
-//│ 									LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁵)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁶, _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁷)
-//│ 									| _  => error⁰}))
-//│ 						in let _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰² = 	
-//│ 							let _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁴ = 	
-//│ 								let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁴ = lessp²(times²(x², z²), times²(y², z²))
-//│ 								in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁴ = and_²(not_²(zerop²(z²)), lessp²(x², y²))
+//│ 									LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁵))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁶, _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁷)
+//│ 									| _  => error⁰})))
+//│ 						in let _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰² = lazy⁰(
+//│ 							let _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁴ = lazy⁰(
+//│ 								let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁴ = lazy⁰(lessp²(times²(x², z²), times²(y², z²)))
+//│ 								in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁴ = lazy⁰(and_²(not_²(zerop²(z²)), lessp²(x², y²)))
 //│ 								in (fun _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁶ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹³⁵ -> 
-//│ 									let _lh_matchIdent⁷¹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁵, _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁴)
+//│ 									let _lh_matchIdent⁷¹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁵, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁴))
 //│ 									in case _lh_matchIdent⁷¹ of {
-//│ 										LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁴)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁵, _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁶)
-//│ 										| _  => error⁰}))
-//│ 							in let _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰³ = 	
-//│ 								let _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁵ = 	
-//│ 									let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵³ = lessp²(y², plus²(x², y²))
-//│ 									in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵³ = not_²(zerop²(x²))
+//│ 										LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁴))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁵, _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁶)
+//│ 										| _  => error⁰})))
+//│ 							in let _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰³ = lazy⁰(
+//│ 								let _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁵ = lazy⁰(
+//│ 									let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵³ = lazy⁰(lessp²(y², plus²(x², y²)))
+//│ 									in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵³ = lazy⁰(not_²(zerop²(x²)))
 //│ 									in (fun _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁵ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹³⁴ -> 
-//│ 										let _lh_matchIdent⁷⁰ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁴, _lh_rewrite_with_lemmas_helper_LH_P2_0⁵³)
+//│ 										let _lh_matchIdent⁷⁰ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁴, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁵³))
 //│ 										in case _lh_matchIdent⁷⁰ of {
-//│ 											LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁵³)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁴, _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁵)
-//│ 											| _  => error⁰}))
-//│ 								in let _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁴ = (fun _lh_rewrite_with_lemmas_helper_arg1¹³³ -> _lh_rewrite_with_lemmas_helper_arg1¹³³)
-//│ 								in (fun _lh_rewrite_with_lemmas_helper_arg1¹³² -> _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁵(_lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁴, _lh_rewrite_with_lemmas_helper_arg1¹³²))
-//│ 							in (fun _lh_rewrite_with_lemmas_helper_arg1¹³¹ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁴(_lh_rewrite_with_lemmas_helper_LH_C_1¹⁰³, _lh_rewrite_with_lemmas_helper_arg1¹³¹))
-//│ 						in (fun _lh_rewrite_with_lemmas_helper_arg1¹³⁰ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁵³(_lh_rewrite_with_lemmas_helper_LH_C_1¹⁰², _lh_rewrite_with_lemmas_helper_arg1¹³⁰))
-//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1¹²⁹ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁵²(_lh_rewrite_with_lemmas_helper_LH_C_1¹⁰¹, _lh_rewrite_with_lemmas_helper_arg1¹²⁹))
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹²⁸ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁵¹(_lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁰, _lh_rewrite_with_lemmas_helper_arg1¹²⁸)))]))
+//│ 											LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁵³))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹³⁴, _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁵)
+//│ 											| _  => error⁰})))
+//│ 								in let _lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁴ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1¹³³ -> _lh_rewrite_with_lemmas_helper_arg1¹³³))
+//│ 								in (fun _lh_rewrite_with_lemmas_helper_arg1¹³² -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁵⁵, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁴), _lh_rewrite_with_lemmas_helper_arg1¹³²)))
+//│ 							in (fun _lh_rewrite_with_lemmas_helper_arg1¹³¹ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁵⁴, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1¹⁰³), _lh_rewrite_with_lemmas_helper_arg1¹³¹)))
+//│ 						in (fun _lh_rewrite_with_lemmas_helper_arg1¹³⁰ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁵³, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1¹⁰²), _lh_rewrite_with_lemmas_helper_arg1¹³⁰)))
+//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1¹²⁹ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁵², force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1¹⁰¹), _lh_rewrite_with_lemmas_helper_arg1¹²⁹)))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹²⁸ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁵¹, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1¹⁰⁰), _lh_rewrite_with_lemmas_helper_arg1¹²⁸)))]))
 //│ 		and even_² = (fun _lh_even__arg1² -> [Fun [EVEN] [LH_C _lh_even__arg1² [LH_N]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁵ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁷ = even_²(x²)
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁷ = if_²(zerop²(x²), boyerTrue², odd_²(sub1²(x²)))
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁵ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁷ = lazy⁰(even_²(x²))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁷ = lazy⁰(if_²(zerop²(x²), boyerTrue², odd_²(sub1²(x²))))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁸⁹ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹¹² -> 
-//│ 						let _lh_matchIdent⁶⁴ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹¹², _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁷)
+//│ 						let _lh_matchIdent⁶⁴ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹¹², force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁷))
 //│ 						in case _lh_matchIdent⁶⁴ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁷)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹¹², _lh_rewrite_with_lemmas_helper_LH_C_1⁸⁹)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁸⁸ = (fun _lh_rewrite_with_lemmas_helper_arg1¹¹¹ -> _lh_rewrite_with_lemmas_helper_arg1¹¹¹)
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹¹⁰ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁵(_lh_rewrite_with_lemmas_helper_LH_C_1⁸⁸, _lh_rewrite_with_lemmas_helper_arg1¹¹⁰)))])
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁷))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹¹², _lh_rewrite_with_lemmas_helper_LH_C_1⁸⁹)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁸⁸ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1¹¹¹ -> _lh_rewrite_with_lemmas_helper_arg1¹¹¹))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹¹⁰ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁴⁵, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁸⁸), _lh_rewrite_with_lemmas_helper_arg1¹¹⁰)))])
 //│ 		and not_² = (fun _lh_not__arg1² -> [Fun [NOT] [LH_C _lh_not__arg1² [LH_N]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0²¹ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0²³ = not_²(x²)
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1²³ = if_²(x², boyerFalse², boyerTrue²)
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0²¹ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0²³ = lazy⁰(not_²(x²))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1²³ = lazy⁰(if_²(x², boyerFalse², boyerTrue²))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁴¹ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁵⁰ -> 
-//│ 						let _lh_matchIdent⁴⁰ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁵⁰, _lh_rewrite_with_lemmas_helper_LH_P2_0²³)
+//│ 						let _lh_matchIdent⁴⁰ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁵⁰, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0²³))
 //│ 						in case _lh_matchIdent⁴⁰ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1²³)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁵⁰, _lh_rewrite_with_lemmas_helper_LH_C_1⁴¹)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁴⁰ = (fun _lh_rewrite_with_lemmas_helper_arg1⁴⁹ -> _lh_rewrite_with_lemmas_helper_arg1⁴⁹)
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁴⁸ -> _lh_rewrite_with_lemmas_helper_LH_C_0²¹(_lh_rewrite_with_lemmas_helper_LH_C_1⁴⁰, _lh_rewrite_with_lemmas_helper_arg1⁴⁸)))])
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1²³))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁵⁰, _lh_rewrite_with_lemmas_helper_LH_C_1⁴¹)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁴⁰ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1⁴⁹ -> _lh_rewrite_with_lemmas_helper_arg1⁴⁹))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁴⁸ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0²¹, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁴⁰), _lh_rewrite_with_lemmas_helper_arg1⁴⁸)))])
 //│ 		and greaterp² = (fun _lh_greaterp_arg1² -> (fun _lh_greaterp_arg2² -> [Fun [GREATERP] [LH_C _lh_greaterp_arg1² [LH_C _lh_greaterp_arg2² [LH_N]]] lazy⁰([LH_C [LH_P2 greaterp²(x², y²) lessp²(y², x²)] [LH_N]])]))
 //│ 		and greatereqp² = (fun _lh_greatereqp_arg1² -> (fun _lh_greatereqp_arg2² -> [Fun [GREATEREQP] [LH_C _lh_greatereqp_arg1² [LH_C _lh_greatereqp_arg2² [LH_N]]] lazy⁰([LH_C [LH_P2 greatereqp²(x², y²) not_²(lessp²(x², y²))] [LH_N]])]))
 //│ 		and gcd_² = (fun _lh_gcd__arg1² -> (fun _lh_gcd__arg2² -> [Fun [GCD] [LH_C _lh_gcd__arg1² [LH_C _lh_gcd__arg2² [LH_N]]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁸ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁶¹ = gcd_²(x², y²)
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁶¹ = gcd_²(y², x²)
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁸ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁶¹ = lazy⁰(gcd_²(x², y²))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁶¹ = lazy⁰(gcd_²(y², x²))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁷ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹⁵⁰ -> 
-//│ 						let _lh_matchIdent⁷⁸ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵⁰, _lh_rewrite_with_lemmas_helper_LH_P2_0⁶¹)
+//│ 						let _lh_matchIdent⁷⁸ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵⁰, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁶¹))
 //│ 						in case _lh_matchIdent⁷⁸ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁶¹)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵⁰, _lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁷)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁴ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁹ = 	
-//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0⁶⁰ = gcd_²(times²(x², z²), times²(y², z²))
-//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁶⁰ = times²(z², gcd_²(x², y²))
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁶¹))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁵⁰, _lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁷)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁴ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁹ = lazy⁰(
+//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0⁶⁰ = lazy⁰(gcd_²(times²(x², z²), times²(y², z²)))
+//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁶⁰ = lazy⁰(times²(z², gcd_²(x², y²)))
 //│ 						in (fun _lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁶ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹⁴⁹ -> 
-//│ 							let _lh_matchIdent⁷⁷ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁴⁹, _lh_rewrite_with_lemmas_helper_LH_P2_0⁶⁰)
+//│ 							let _lh_matchIdent⁷⁷ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁴⁹, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁶⁰))
 //│ 							in case _lh_matchIdent⁷⁷ of {
-//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁶⁰)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁴⁹, _lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁶)
-//│ 								| _  => error⁰}))
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁵ = (fun _lh_rewrite_with_lemmas_helper_arg1¹⁴⁸ -> _lh_rewrite_with_lemmas_helper_arg1¹⁴⁸)
-//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁴⁷ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁹(_lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁵, _lh_rewrite_with_lemmas_helper_arg1¹⁴⁷))
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁴⁶ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁵⁸(_lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁴, _lh_rewrite_with_lemmas_helper_arg1¹⁴⁶)))]))
+//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁶⁰))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹⁴⁹, _lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁶)
+//│ 								| _  => error⁰})))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁵ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1¹⁴⁸ -> _lh_rewrite_with_lemmas_helper_arg1¹⁴⁸))
+//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁴⁷ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁵⁹, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁵), _lh_rewrite_with_lemmas_helper_arg1¹⁴⁷)))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹⁴⁶ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁵⁸, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1¹¹⁴), _lh_rewrite_with_lemmas_helper_arg1¹⁴⁶)))]))
 //│ 		and equal² = (fun _lh_equal_arg1² -> (fun _lh_equal_arg2² -> [Fun [EQUAL] [LH_C _lh_equal_arg1² [LH_C _lh_equal_arg2² [LH_N]]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0²⁹ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴¹ = equal²(plus²(x², y²), zero²)
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴¹ = and_²(zerop²(x²), zerop²(y²))
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0²⁹ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴¹ = lazy⁰(equal²(plus²(x², y²), zero²))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴¹ = lazy⁰(and_²(zerop²(x²), zerop²(y²)))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁷ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁹⁴ -> 
-//│ 						let _lh_matchIdent⁵⁸ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹⁴, _lh_rewrite_with_lemmas_helper_LH_P2_0⁴¹)
+//│ 						let _lh_matchIdent⁵⁸ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹⁴, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁴¹))
 //│ 						in case _lh_matchIdent⁵⁸ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁴¹)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹⁴, _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁷)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁵⁶ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0³⁰ = 	
-//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁰ = equal²(plus²(x², y²), plus²(x², z²))
-//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁰ = equal²(y², z²)
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁴¹))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹⁴, _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁷)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁵⁶ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0³⁰ = lazy⁰(
+//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁰ = lazy⁰(equal²(plus²(x², y²), plus²(x², z²)))
+//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁰ = lazy⁰(equal²(y², z²))
 //│ 						in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁶ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁹³ -> 
-//│ 							let _lh_matchIdent⁵⁷ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹³, _lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁰)
+//│ 							let _lh_matchIdent⁵⁷ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁴⁰))
 //│ 							in case _lh_matchIdent⁵⁷ of {
-//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁰)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹³, _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁶)
-//│ 								| _  => error⁰}))
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1⁵⁷ = 	
-//│ 						let _lh_rewrite_with_lemmas_helper_LH_C_0³¹ = 	
-//│ 							let _lh_rewrite_with_lemmas_helper_LH_P2_0³⁹ = equal²(zero², difference²(x², y²))
-//│ 							in let _lh_rewrite_with_lemmas_helper_LH_P2_1³⁹ = not_²(lessp²(y², x²))
+//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁴⁰))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹³, _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁶)
+//│ 								| _  => error⁰})))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1⁵⁷ = lazy⁰(
+//│ 						let _lh_rewrite_with_lemmas_helper_LH_C_0³¹ = lazy⁰(
+//│ 							let _lh_rewrite_with_lemmas_helper_LH_P2_0³⁹ = lazy⁰(equal²(zero², difference²(x², y²)))
+//│ 							in let _lh_rewrite_with_lemmas_helper_LH_P2_1³⁹ = lazy⁰(not_²(lessp²(y², x²)))
 //│ 							in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁵ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁹² -> 
-//│ 								let _lh_matchIdent⁵⁶ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹², _lh_rewrite_with_lemmas_helper_LH_P2_0³⁹)
+//│ 								let _lh_matchIdent⁵⁶ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹², force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0³⁹))
 //│ 								in case _lh_matchIdent⁵⁶ of {
-//│ 									LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1³⁹)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹², _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁵)
-//│ 									| _  => error⁰}))
-//│ 						in let _lh_rewrite_with_lemmas_helper_LH_C_1⁵⁸ = 	
-//│ 							let _lh_rewrite_with_lemmas_helper_LH_C_0³² = 	
-//│ 								let _lh_rewrite_with_lemmas_helper_LH_P2_0³⁸ = equal²(x², difference²(x², y²))
-//│ 								in let _lh_rewrite_with_lemmas_helper_LH_P2_1³⁸ = or_²(equal²(x², zero²), zerop²(y²))
+//│ 									LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1³⁹))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹², _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁵)
+//│ 									| _  => error⁰})))
+//│ 						in let _lh_rewrite_with_lemmas_helper_LH_C_1⁵⁸ = lazy⁰(
+//│ 							let _lh_rewrite_with_lemmas_helper_LH_C_0³² = lazy⁰(
+//│ 								let _lh_rewrite_with_lemmas_helper_LH_P2_0³⁸ = lazy⁰(equal²(x², difference²(x², y²)))
+//│ 								in let _lh_rewrite_with_lemmas_helper_LH_P2_1³⁸ = lazy⁰(or_²(equal²(x², zero²), zerop²(y²)))
 //│ 								in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁴ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁹¹ -> 
-//│ 									let _lh_matchIdent⁵⁵ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹¹, _lh_rewrite_with_lemmas_helper_LH_P2_0³⁸)
+//│ 									let _lh_matchIdent⁵⁵ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹¹, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0³⁸))
 //│ 									in case _lh_matchIdent⁵⁵ of {
-//│ 										LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1³⁸)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹¹, _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁴)
-//│ 										| _  => error⁰}))
-//│ 							in let _lh_rewrite_with_lemmas_helper_LH_C_1⁵⁹ = 	
-//│ 								let _lh_rewrite_with_lemmas_helper_LH_C_0³³ = 	
-//│ 									let _lh_rewrite_with_lemmas_helper_LH_P2_0³⁷ = equal²(times²(x², y²), zero²)
-//│ 									in let _lh_rewrite_with_lemmas_helper_LH_P2_1³⁷ = or_²(zerop²(x²), zerop²(y²))
+//│ 										LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1³⁸))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹¹, _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁴)
+//│ 										| _  => error⁰})))
+//│ 							in let _lh_rewrite_with_lemmas_helper_LH_C_1⁵⁹ = lazy⁰(
+//│ 								let _lh_rewrite_with_lemmas_helper_LH_C_0³³ = lazy⁰(
+//│ 									let _lh_rewrite_with_lemmas_helper_LH_P2_0³⁷ = lazy⁰(equal²(times²(x², y²), zero²))
+//│ 									in let _lh_rewrite_with_lemmas_helper_LH_P2_1³⁷ = lazy⁰(or_²(zerop²(x²), zerop²(y²)))
 //│ 									in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁷³ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁹⁰ -> 
-//│ 										let _lh_matchIdent⁵⁴ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹⁰, _lh_rewrite_with_lemmas_helper_LH_P2_0³⁷)
+//│ 										let _lh_matchIdent⁵⁴ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹⁰, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0³⁷))
 //│ 										in case _lh_matchIdent⁵⁴ of {
-//│ 											LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1³⁷)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹⁰, _lh_rewrite_with_lemmas_helper_LH_C_1⁷³)
-//│ 											| _  => error⁰}))
-//│ 								in let _lh_rewrite_with_lemmas_helper_LH_C_1⁶⁰ = 	
-//│ 									let _lh_rewrite_with_lemmas_helper_LH_C_0³⁴ = 	
-//│ 										let _lh_rewrite_with_lemmas_helper_LH_P2_0³⁶ = equal²(append²(x², y²), append²(x², z²))
-//│ 										in let _lh_rewrite_with_lemmas_helper_LH_P2_1³⁶ = equal²(y², z²)
+//│ 											LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1³⁷))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁹⁰, _lh_rewrite_with_lemmas_helper_LH_C_1⁷³)
+//│ 											| _  => error⁰})))
+//│ 								in let _lh_rewrite_with_lemmas_helper_LH_C_1⁶⁰ = lazy⁰(
+//│ 									let _lh_rewrite_with_lemmas_helper_LH_C_0³⁴ = lazy⁰(
+//│ 										let _lh_rewrite_with_lemmas_helper_LH_P2_0³⁶ = lazy⁰(equal²(append²(x², y²), append²(x², z²)))
+//│ 										in let _lh_rewrite_with_lemmas_helper_LH_P2_1³⁶ = lazy⁰(equal²(y², z²))
 //│ 										in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁷² -> (fun _lh_rewrite_with_lemmas_helper_arg1⁸⁹ -> 
-//│ 											let _lh_matchIdent⁵³ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁹, _lh_rewrite_with_lemmas_helper_LH_P2_0³⁶)
+//│ 											let _lh_matchIdent⁵³ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁹, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0³⁶))
 //│ 											in case _lh_matchIdent⁵³ of {
-//│ 												LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1³⁶)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁹, _lh_rewrite_with_lemmas_helper_LH_C_1⁷²)
-//│ 												| _  => error⁰}))
-//│ 									in let _lh_rewrite_with_lemmas_helper_LH_C_1⁶¹ = 	
-//│ 										let _lh_rewrite_with_lemmas_helper_LH_C_0³⁵ = 	
-//│ 											let _lh_rewrite_with_lemmas_helper_LH_P2_0³⁵ = equal²(y², times²(x², y²))
-//│ 											in let _lh_rewrite_with_lemmas_helper_LH_P2_1³⁵ = or_²(equal²(y², zero²), equal²(x², one²))
+//│ 												LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1³⁶))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁹, _lh_rewrite_with_lemmas_helper_LH_C_1⁷²)
+//│ 												| _  => error⁰})))
+//│ 									in let _lh_rewrite_with_lemmas_helper_LH_C_1⁶¹ = lazy⁰(
+//│ 										let _lh_rewrite_with_lemmas_helper_LH_C_0³⁵ = lazy⁰(
+//│ 											let _lh_rewrite_with_lemmas_helper_LH_P2_0³⁵ = lazy⁰(equal²(y², times²(x², y²)))
+//│ 											in let _lh_rewrite_with_lemmas_helper_LH_P2_1³⁵ = lazy⁰(or_²(equal²(y², zero²), equal²(x², one²)))
 //│ 											in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁷¹ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁸⁸ -> 
-//│ 												let _lh_matchIdent⁵² = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁸, _lh_rewrite_with_lemmas_helper_LH_P2_0³⁵)
+//│ 												let _lh_matchIdent⁵² = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁸, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0³⁵))
 //│ 												in case _lh_matchIdent⁵² of {
-//│ 													LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1³⁵)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁸, _lh_rewrite_with_lemmas_helper_LH_C_1⁷¹)
-//│ 													| _  => error⁰}))
-//│ 										in let _lh_rewrite_with_lemmas_helper_LH_C_1⁶² = 	
-//│ 											let _lh_rewrite_with_lemmas_helper_LH_C_0³⁶ = 	
-//│ 												let _lh_rewrite_with_lemmas_helper_LH_P2_0³⁴ = equal²(x², times²(x², y²))
-//│ 												in let _lh_rewrite_with_lemmas_helper_LH_P2_1³⁴ = or_²(equal²(x², zero²), equal²(y², one²))
+//│ 													LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1³⁵))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁸, _lh_rewrite_with_lemmas_helper_LH_C_1⁷¹)
+//│ 													| _  => error⁰})))
+//│ 										in let _lh_rewrite_with_lemmas_helper_LH_C_1⁶² = lazy⁰(
+//│ 											let _lh_rewrite_with_lemmas_helper_LH_C_0³⁶ = lazy⁰(
+//│ 												let _lh_rewrite_with_lemmas_helper_LH_P2_0³⁴ = lazy⁰(equal²(x², times²(x², y²)))
+//│ 												in let _lh_rewrite_with_lemmas_helper_LH_P2_1³⁴ = lazy⁰(or_²(equal²(x², zero²), equal²(y², one²)))
 //│ 												in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁰ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁸⁷ -> 
-//│ 													let _lh_matchIdent⁵¹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁷, _lh_rewrite_with_lemmas_helper_LH_P2_0³⁴)
+//│ 													let _lh_matchIdent⁵¹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁷, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0³⁴))
 //│ 													in case _lh_matchIdent⁵¹ of {
-//│ 														LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1³⁴)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁷, _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁰)
-//│ 														| _  => error⁰}))
-//│ 											in let _lh_rewrite_with_lemmas_helper_LH_C_1⁶³ = 	
-//│ 												let _lh_rewrite_with_lemmas_helper_LH_C_0³⁷ = 	
-//│ 													let _lh_rewrite_with_lemmas_helper_LH_P2_0³³ = equal²(times²(x², y²), one²)
-//│ 													in let _lh_rewrite_with_lemmas_helper_LH_P2_1³³ = and_²(equal²(x², one²), equal²(y², one²))
+//│ 														LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1³⁴))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁷, _lh_rewrite_with_lemmas_helper_LH_C_1⁷⁰)
+//│ 														| _  => error⁰})))
+//│ 											in let _lh_rewrite_with_lemmas_helper_LH_C_1⁶³ = lazy⁰(
+//│ 												let _lh_rewrite_with_lemmas_helper_LH_C_0³⁷ = lazy⁰(
+//│ 													let _lh_rewrite_with_lemmas_helper_LH_P2_0³³ = lazy⁰(equal²(times²(x², y²), one²))
+//│ 													in let _lh_rewrite_with_lemmas_helper_LH_P2_1³³ = lazy⁰(and_²(equal²(x², one²), equal²(y², one²)))
 //│ 													in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁶⁹ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁸⁶ -> 
-//│ 														let _lh_matchIdent⁵⁰ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁶, _lh_rewrite_with_lemmas_helper_LH_P2_0³³)
+//│ 														let _lh_matchIdent⁵⁰ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁶, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0³³))
 //│ 														in case _lh_matchIdent⁵⁰ of {
-//│ 															LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1³³)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁶, _lh_rewrite_with_lemmas_helper_LH_C_1⁶⁹)
-//│ 															| _  => error⁰}))
-//│ 												in let _lh_rewrite_with_lemmas_helper_LH_C_1⁶⁴ = 	
-//│ 													let _lh_rewrite_with_lemmas_helper_LH_C_0³⁸ = 	
-//│ 														let _lh_rewrite_with_lemmas_helper_LH_P2_0³² = equal²(difference²(x², y²), difference²(z², y²))
-//│ 														in let _lh_rewrite_with_lemmas_helper_LH_P2_1³² = if_²(lessp²(x², y²), not_²(lessp²(y², z²)), if_²(lessp²(z², y²), not_²(lessp²(y², x²)), equal²(x², z²)))
+//│ 															LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1³³))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁶, _lh_rewrite_with_lemmas_helper_LH_C_1⁶⁹)
+//│ 															| _  => error⁰})))
+//│ 												in let _lh_rewrite_with_lemmas_helper_LH_C_1⁶⁴ = lazy⁰(
+//│ 													let _lh_rewrite_with_lemmas_helper_LH_C_0³⁸ = lazy⁰(
+//│ 														let _lh_rewrite_with_lemmas_helper_LH_P2_0³² = lazy⁰(equal²(difference²(x², y²), difference²(z², y²)))
+//│ 														in let _lh_rewrite_with_lemmas_helper_LH_P2_1³² = lazy⁰(if_²(lessp²(x², y²), not_²(lessp²(y², z²)), if_²(lessp²(z², y²), not_²(lessp²(y², x²)), equal²(x², z²))))
 //│ 														in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁶⁸ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁸⁵ -> 
-//│ 															let _lh_matchIdent⁴⁹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁵, _lh_rewrite_with_lemmas_helper_LH_P2_0³²)
+//│ 															let _lh_matchIdent⁴⁹ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁵, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0³²))
 //│ 															in case _lh_matchIdent⁴⁹ of {
-//│ 																LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1³²)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁵, _lh_rewrite_with_lemmas_helper_LH_C_1⁶⁸)
-//│ 																| _  => error⁰}))
-//│ 													in let _lh_rewrite_with_lemmas_helper_LH_C_1⁶⁵ = 	
-//│ 														let _lh_rewrite_with_lemmas_helper_LH_C_0³⁹ = 	
-//│ 															let _lh_rewrite_with_lemmas_helper_LH_P2_0³¹ = equal²(lessp²(x², y²), z²)
-//│ 															in let _lh_rewrite_with_lemmas_helper_LH_P2_1³¹ = if_²(lessp²(x², y²), equal²(boyerTrue², z²), equal²(boyerFalse², z²))
+//│ 																LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1³²))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁵, _lh_rewrite_with_lemmas_helper_LH_C_1⁶⁸)
+//│ 																| _  => error⁰})))
+//│ 													in let _lh_rewrite_with_lemmas_helper_LH_C_1⁶⁵ = lazy⁰(
+//│ 														let _lh_rewrite_with_lemmas_helper_LH_C_0³⁹ = lazy⁰(
+//│ 															let _lh_rewrite_with_lemmas_helper_LH_P2_0³¹ = lazy⁰(equal²(lessp²(x², y²), z²))
+//│ 															in let _lh_rewrite_with_lemmas_helper_LH_P2_1³¹ = lazy⁰(if_²(lessp²(x², y²), equal²(boyerTrue², z²), equal²(boyerFalse², z²)))
 //│ 															in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁶⁷ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁸⁴ -> 
-//│ 																let _lh_matchIdent⁴⁸ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁴, _lh_rewrite_with_lemmas_helper_LH_P2_0³¹)
+//│ 																let _lh_matchIdent⁴⁸ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁴, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0³¹))
 //│ 																in case _lh_matchIdent⁴⁸ of {
-//│ 																	LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1³¹)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁴, _lh_rewrite_with_lemmas_helper_LH_C_1⁶⁷)
-//│ 																	| _  => error⁰}))
-//│ 														in let _lh_rewrite_with_lemmas_helper_LH_C_1⁶⁶ = (fun _lh_rewrite_with_lemmas_helper_arg1⁸³ -> _lh_rewrite_with_lemmas_helper_arg1⁸³)
-//│ 														in (fun _lh_rewrite_with_lemmas_helper_arg1⁸² -> _lh_rewrite_with_lemmas_helper_LH_C_0³⁹(_lh_rewrite_with_lemmas_helper_LH_C_1⁶⁶, _lh_rewrite_with_lemmas_helper_arg1⁸²))
-//│ 													in (fun _lh_rewrite_with_lemmas_helper_arg1⁸¹ -> _lh_rewrite_with_lemmas_helper_LH_C_0³⁸(_lh_rewrite_with_lemmas_helper_LH_C_1⁶⁵, _lh_rewrite_with_lemmas_helper_arg1⁸¹))
-//│ 												in (fun _lh_rewrite_with_lemmas_helper_arg1⁸⁰ -> _lh_rewrite_with_lemmas_helper_LH_C_0³⁷(_lh_rewrite_with_lemmas_helper_LH_C_1⁶⁴, _lh_rewrite_with_lemmas_helper_arg1⁸⁰))
-//│ 											in (fun _lh_rewrite_with_lemmas_helper_arg1⁷⁹ -> _lh_rewrite_with_lemmas_helper_LH_C_0³⁶(_lh_rewrite_with_lemmas_helper_LH_C_1⁶³, _lh_rewrite_with_lemmas_helper_arg1⁷⁹))
-//│ 										in (fun _lh_rewrite_with_lemmas_helper_arg1⁷⁸ -> _lh_rewrite_with_lemmas_helper_LH_C_0³⁵(_lh_rewrite_with_lemmas_helper_LH_C_1⁶², _lh_rewrite_with_lemmas_helper_arg1⁷⁸))
-//│ 									in (fun _lh_rewrite_with_lemmas_helper_arg1⁷⁷ -> _lh_rewrite_with_lemmas_helper_LH_C_0³⁴(_lh_rewrite_with_lemmas_helper_LH_C_1⁶¹, _lh_rewrite_with_lemmas_helper_arg1⁷⁷))
-//│ 								in (fun _lh_rewrite_with_lemmas_helper_arg1⁷⁶ -> _lh_rewrite_with_lemmas_helper_LH_C_0³³(_lh_rewrite_with_lemmas_helper_LH_C_1⁶⁰, _lh_rewrite_with_lemmas_helper_arg1⁷⁶))
-//│ 							in (fun _lh_rewrite_with_lemmas_helper_arg1⁷⁵ -> _lh_rewrite_with_lemmas_helper_LH_C_0³²(_lh_rewrite_with_lemmas_helper_LH_C_1⁵⁹, _lh_rewrite_with_lemmas_helper_arg1⁷⁵))
-//│ 						in (fun _lh_rewrite_with_lemmas_helper_arg1⁷⁴ -> _lh_rewrite_with_lemmas_helper_LH_C_0³¹(_lh_rewrite_with_lemmas_helper_LH_C_1⁵⁸, _lh_rewrite_with_lemmas_helper_arg1⁷⁴))
-//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1⁷³ -> _lh_rewrite_with_lemmas_helper_LH_C_0³⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁵⁷, _lh_rewrite_with_lemmas_helper_arg1⁷³))
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁷² -> _lh_rewrite_with_lemmas_helper_LH_C_0²⁹(_lh_rewrite_with_lemmas_helper_LH_C_1⁵⁶, _lh_rewrite_with_lemmas_helper_arg1⁷²)))]))
+//│ 																	LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1³¹))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁸⁴, _lh_rewrite_with_lemmas_helper_LH_C_1⁶⁷)
+//│ 																	| _  => error⁰})))
+//│ 														in let _lh_rewrite_with_lemmas_helper_LH_C_1⁶⁶ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1⁸³ -> _lh_rewrite_with_lemmas_helper_arg1⁸³))
+//│ 														in (fun _lh_rewrite_with_lemmas_helper_arg1⁸² -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0³⁹, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁶⁶), _lh_rewrite_with_lemmas_helper_arg1⁸²)))
+//│ 													in (fun _lh_rewrite_with_lemmas_helper_arg1⁸¹ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0³⁸, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁶⁵), _lh_rewrite_with_lemmas_helper_arg1⁸¹)))
+//│ 												in (fun _lh_rewrite_with_lemmas_helper_arg1⁸⁰ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0³⁷, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁶⁴), _lh_rewrite_with_lemmas_helper_arg1⁸⁰)))
+//│ 											in (fun _lh_rewrite_with_lemmas_helper_arg1⁷⁹ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0³⁶, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁶³), _lh_rewrite_with_lemmas_helper_arg1⁷⁹)))
+//│ 										in (fun _lh_rewrite_with_lemmas_helper_arg1⁷⁸ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0³⁵, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁶²), _lh_rewrite_with_lemmas_helper_arg1⁷⁸)))
+//│ 									in (fun _lh_rewrite_with_lemmas_helper_arg1⁷⁷ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0³⁴, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁶¹), _lh_rewrite_with_lemmas_helper_arg1⁷⁷)))
+//│ 								in (fun _lh_rewrite_with_lemmas_helper_arg1⁷⁶ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0³³, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁶⁰), _lh_rewrite_with_lemmas_helper_arg1⁷⁶)))
+//│ 							in (fun _lh_rewrite_with_lemmas_helper_arg1⁷⁵ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0³², force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁵⁹), _lh_rewrite_with_lemmas_helper_arg1⁷⁵)))
+//│ 						in (fun _lh_rewrite_with_lemmas_helper_arg1⁷⁴ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0³¹, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁵⁸), _lh_rewrite_with_lemmas_helper_arg1⁷⁴)))
+//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1⁷³ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0³⁰, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁵⁷), _lh_rewrite_with_lemmas_helper_arg1⁷³)))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁷² -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0²⁹, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁵⁶), _lh_rewrite_with_lemmas_helper_arg1⁷²)))]))
 //│ 		and y² = [Var [Y]]
 //│ 		and consp² = (fun _lh_consp_arg1² -> [Fun [CONSP] [LH_C _lh_consp_arg1² [LH_N]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁸ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁰ = consp²(cons²(x², y²))
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁰ = boyerTrue²
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁸ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁰ = lazy⁰(consp²(cons²(x², y²)))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁰ = lazy⁰(boyerTrue²)
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁹⁵ -> (fun _lh_rewrite_with_lemmas_helper_arg1¹²⁰ -> 
-//│ 						let _lh_matchIdent⁶⁷ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹²⁰, _lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁰)
+//│ 						let _lh_matchIdent⁶⁷ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1¹²⁰, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0⁵⁰))
 //│ 						in case _lh_matchIdent⁶⁷ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁰)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹²⁰, _lh_rewrite_with_lemmas_helper_LH_C_1⁹⁵)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁹⁴ = (fun _lh_rewrite_with_lemmas_helper_arg1¹¹⁹ -> _lh_rewrite_with_lemmas_helper_arg1¹¹⁹)
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹¹⁸ -> _lh_rewrite_with_lemmas_helper_LH_C_0⁴⁸(_lh_rewrite_with_lemmas_helper_LH_C_1⁹⁴, _lh_rewrite_with_lemmas_helper_arg1¹¹⁸)))])
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1⁵⁰))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1¹²⁰, _lh_rewrite_with_lemmas_helper_LH_C_1⁹⁵)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁹⁴ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1¹¹⁹ -> _lh_rewrite_with_lemmas_helper_arg1¹¹⁹))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1¹¹⁸ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0⁴⁸, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁹⁴), _lh_rewrite_with_lemmas_helper_arg1¹¹⁸)))])
 //│ 		and append² = (fun _lh_append_arg1² -> (fun _lh_append_arg2² -> [Fun [APPEND] [LH_C _lh_append_arg1² [LH_C _lh_append_arg2² [LH_N]]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0²³ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0²⁵ = append²(append²(x², y²), z²)
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1²⁵ = append²(x², append²(y², z²))
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0²³ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0²⁵ = lazy⁰(append²(append²(x², y²), z²))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1²⁵ = lazy⁰(append²(x², append²(y², z²)))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁴⁵ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁵⁶ -> 
-//│ 						let _lh_matchIdent⁴² = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁵⁶, _lh_rewrite_with_lemmas_helper_LH_P2_0²⁵)
+//│ 						let _lh_matchIdent⁴² = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁵⁶, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0²⁵))
 //│ 						in case _lh_matchIdent⁴² of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1²⁵)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁵⁶, _lh_rewrite_with_lemmas_helper_LH_C_1⁴⁵)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁴⁴ = (fun _lh_rewrite_with_lemmas_helper_arg1⁵⁵ -> _lh_rewrite_with_lemmas_helper_arg1⁵⁵)
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁵⁴ -> _lh_rewrite_with_lemmas_helper_LH_C_0²³(_lh_rewrite_with_lemmas_helper_LH_C_1⁴⁴, _lh_rewrite_with_lemmas_helper_arg1⁵⁴)))]))
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1²⁵))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁵⁶, _lh_rewrite_with_lemmas_helper_LH_C_1⁴⁵)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁴⁴ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1⁵⁵ -> _lh_rewrite_with_lemmas_helper_arg1⁵⁵))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁵⁴ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0²³, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁴⁴), _lh_rewrite_with_lemmas_helper_arg1⁵⁴)))]))
 //│ 		and zerop² = (fun _lh_zerop_arg1² -> [Fun [ZEROP] [LH_C _lh_zerop_arg1² [LH_N]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0¹⁹ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0²¹ = zerop²(x²)
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1²¹ = equal²(x², zero²)
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0¹⁹ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0²¹ = lazy⁰(zerop²(x²))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1²¹ = lazy⁰(equal²(x², zero²))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1³⁷ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁴⁴ -> 
-//│ 						let _lh_matchIdent³⁸ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁴⁴, _lh_rewrite_with_lemmas_helper_LH_P2_0²¹)
+//│ 						let _lh_matchIdent³⁸ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁴⁴, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0²¹))
 //│ 						in case _lh_matchIdent³⁸ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1²¹)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁴⁴, _lh_rewrite_with_lemmas_helper_LH_C_1³⁷)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1³⁶ = (fun _lh_rewrite_with_lemmas_helper_arg1⁴³ -> _lh_rewrite_with_lemmas_helper_arg1⁴³)
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁴² -> _lh_rewrite_with_lemmas_helper_LH_C_0¹⁹(_lh_rewrite_with_lemmas_helper_LH_C_1³⁶, _lh_rewrite_with_lemmas_helper_arg1⁴²)))])
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1²¹))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁴⁴, _lh_rewrite_with_lemmas_helper_LH_C_1³⁷)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1³⁶ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1⁴³ -> _lh_rewrite_with_lemmas_helper_arg1⁴³))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁴² -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0¹⁹, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1³⁶), _lh_rewrite_with_lemmas_helper_arg1⁴²)))])
 //│ 		and nil² = [Fun [NIL] [LH_N] lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1⁶² -> _lh_rewrite_with_lemmas_helper_arg1⁶²))]
 //│ 		and sub1² = (fun _lh_sub1_arg1² -> [Fun [SUB1] [LH_C _lh_sub1_arg1² [LH_N]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0¹³ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁵ = sub1²(add1²(x²))
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁵ = x²
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0¹³ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁵ = lazy⁰(sub1²(add1²(x²)))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁵ = lazy⁰(x²)
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1²⁵ -> (fun _lh_rewrite_with_lemmas_helper_arg1²⁸ -> 
-//│ 						let _lh_matchIdent³² = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1²⁸, _lh_rewrite_with_lemmas_helper_LH_P2_0¹⁵)
+//│ 						let _lh_matchIdent³² = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1²⁸, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0¹⁵))
 //│ 						in case _lh_matchIdent³² of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1¹⁵)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1²⁸, _lh_rewrite_with_lemmas_helper_LH_C_1²⁵)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1²⁴ = (fun _lh_rewrite_with_lemmas_helper_arg1²⁷ -> _lh_rewrite_with_lemmas_helper_arg1²⁷)
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1²⁶ -> _lh_rewrite_with_lemmas_helper_LH_C_0¹³(_lh_rewrite_with_lemmas_helper_LH_C_1²⁴, _lh_rewrite_with_lemmas_helper_arg1²⁶)))])
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1¹⁵))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1²⁸, _lh_rewrite_with_lemmas_helper_LH_C_1²⁵)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1²⁴ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1²⁷ -> _lh_rewrite_with_lemmas_helper_arg1²⁷))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1²⁶ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0¹³, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1²⁴), _lh_rewrite_with_lemmas_helper_arg1²⁶)))])
 //│ 		and w² = [Var [W]]
 //│ 		and lesseqp² = (fun _lh_lesseqp_arg1² -> (fun _lh_lesseqp_arg2² -> [Fun [LESSEQP] [LH_C _lh_lesseqp_arg1² [LH_C _lh_lesseqp_arg2² [LH_N]]] lazy⁰([LH_C [LH_P2 lesseqp²(x², y²) not_²(lessp²(y², x²))] [LH_N]])]))
 //│ 		and member² = (fun _lh_member_arg1² -> (fun _lh_member_arg2² -> [Fun [MEMBER] [LH_C _lh_member_arg1² [LH_C _lh_member_arg2² [LH_N]]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0²⁴ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0²⁷ = member²(x², append²(y², z²))
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1²⁷ = or_²(member²(x², y²), member²(x², z²))
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0²⁴ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0²⁷ = lazy⁰(member²(x², append²(y², z²)))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1²⁷ = lazy⁰(or_²(member²(x², y²), member²(x², z²)))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁴⁹ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁶¹ -> 
-//│ 						let _lh_matchIdent⁴⁴ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁶¹, _lh_rewrite_with_lemmas_helper_LH_P2_0²⁷)
+//│ 						let _lh_matchIdent⁴⁴ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁶¹, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0²⁷))
 //│ 						in case _lh_matchIdent⁴⁴ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1²⁷)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁶¹, _lh_rewrite_with_lemmas_helper_LH_C_1⁴⁹)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁴⁶ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0²⁵ = 	
-//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0²⁶ = member²(x², reverse_²(y²))
-//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1²⁶ = member²(x², y²)
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1²⁷))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁶¹, _lh_rewrite_with_lemmas_helper_LH_C_1⁴⁹)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁴⁶ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0²⁵ = lazy⁰(
+//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0²⁶ = lazy⁰(member²(x², reverse_²(y²)))
+//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1²⁶ = lazy⁰(member²(x², y²))
 //│ 						in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁴⁸ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁶⁰ -> 
-//│ 							let _lh_matchIdent⁴³ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁶⁰, _lh_rewrite_with_lemmas_helper_LH_P2_0²⁶)
+//│ 							let _lh_matchIdent⁴³ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁶⁰, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0²⁶))
 //│ 							in case _lh_matchIdent⁴³ of {
-//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1²⁶)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁶⁰, _lh_rewrite_with_lemmas_helper_LH_C_1⁴⁸)
-//│ 								| _  => error⁰}))
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1⁴⁷ = (fun _lh_rewrite_with_lemmas_helper_arg1⁵⁹ -> _lh_rewrite_with_lemmas_helper_arg1⁵⁹)
-//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1⁵⁸ -> _lh_rewrite_with_lemmas_helper_LH_C_0²⁵(_lh_rewrite_with_lemmas_helper_LH_C_1⁴⁷, _lh_rewrite_with_lemmas_helper_arg1⁵⁸))
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁵⁷ -> _lh_rewrite_with_lemmas_helper_LH_C_0²⁴(_lh_rewrite_with_lemmas_helper_LH_C_1⁴⁶, _lh_rewrite_with_lemmas_helper_arg1⁵⁷)))]))
+//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1²⁶))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁶⁰, _lh_rewrite_with_lemmas_helper_LH_C_1⁴⁸)
+//│ 								| _  => error⁰})))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1⁴⁷ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1⁵⁹ -> _lh_rewrite_with_lemmas_helper_arg1⁵⁹))
+//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1⁵⁸ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0²⁵, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁴⁷), _lh_rewrite_with_lemmas_helper_arg1⁵⁸)))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁵⁷ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0²⁴, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁴⁶), _lh_rewrite_with_lemmas_helper_arg1⁵⁷)))]))
 //│ 		and length_² = (fun _lh_length__arg1² -> [Fun [LENGTH] [LH_C _lh_length__arg1² [LH_N]] lazy⁰(
-//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0²⁶ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0²⁹ = length_²(reverse_²(x²))
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1²⁹ = length_²(x²)
+//│ 				let _lh_rewrite_with_lemmas_helper_LH_C_0²⁶ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_P2_0²⁹ = lazy⁰(length_²(reverse_²(x²)))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_P2_1²⁹ = lazy⁰(length_²(x²))
 //│ 					in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁵³ -> (fun _lh_rewrite_with_lemmas_helper_arg1⁶⁷ -> 
-//│ 						let _lh_matchIdent⁴⁶ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁶⁷, _lh_rewrite_with_lemmas_helper_LH_P2_0²⁹)
+//│ 						let _lh_matchIdent⁴⁶ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁶⁷, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0²⁹))
 //│ 						in case _lh_matchIdent⁴⁶ of {
-//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1²⁹)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁶⁷, _lh_rewrite_with_lemmas_helper_LH_C_1⁵³)
-//│ 							| _  => error⁰}))
-//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁵⁰ = 	
-//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0²⁷ = 	
-//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0²⁸ = length_²(cons²(x², cons²(y², cons²(z², cons²(u², w²)))))
-//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1²⁸ = plus²(four², length_²(w²))
+//│ 							LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1²⁹))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁶⁷, _lh_rewrite_with_lemmas_helper_LH_C_1⁵³)
+//│ 							| _  => error⁰})))
+//│ 				in let _lh_rewrite_with_lemmas_helper_LH_C_1⁵⁰ = lazy⁰(
+//│ 					let _lh_rewrite_with_lemmas_helper_LH_C_0²⁷ = lazy⁰(
+//│ 						let _lh_rewrite_with_lemmas_helper_LH_P2_0²⁸ = lazy⁰(length_²(cons²(x², cons²(y², cons²(z², cons²(u², w²))))))
+//│ 						in let _lh_rewrite_with_lemmas_helper_LH_P2_1²⁸ = lazy⁰(plus²(four², length_²(w²)))
 //│ 						in (fun _lh_rewrite_with_lemmas_helper_LH_C_1⁵² -> (fun _lh_rewrite_with_lemmas_helper_arg1⁶⁶ -> 
-//│ 							let _lh_matchIdent⁴⁵ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁶⁶, _lh_rewrite_with_lemmas_helper_LH_P2_0²⁸)
+//│ 							let _lh_matchIdent⁴⁵ = one_way_unify₀₀(_lh_rewrite_with_lemmas_helper_arg1⁶⁶, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_0²⁸))
 //│ 							in case _lh_matchIdent⁴⁵ of {
-//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, _lh_rewrite_with_lemmas_helper_LH_P2_1²⁸)) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁶⁶, _lh_rewrite_with_lemmas_helper_LH_C_1⁵²)
-//│ 								| _  => error⁰}))
-//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1⁵¹ = (fun _lh_rewrite_with_lemmas_helper_arg1⁶⁵ -> _lh_rewrite_with_lemmas_helper_arg1⁶⁵)
-//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1⁶⁴ -> _lh_rewrite_with_lemmas_helper_LH_C_0²⁷(_lh_rewrite_with_lemmas_helper_LH_C_1⁵¹, _lh_rewrite_with_lemmas_helper_arg1⁶⁴))
-//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁶³ -> _lh_rewrite_with_lemmas_helper_LH_C_0²⁶(_lh_rewrite_with_lemmas_helper_LH_C_1⁵⁰, _lh_rewrite_with_lemmas_helper_arg1⁶³)))])
+//│ 								LH_P2 _lh_rewrite_with_lemmas_helper_LH_P2_0³ _lh_rewrite_with_lemmas_helper_LH_P2_1³ => if _lh_rewrite_with_lemmas_helper_LH_P2_0³ then rewrite₀₀(apply_subst₁₀(_lh_rewrite_with_lemmas_helper_LH_P2_1³, force⁰(_lh_rewrite_with_lemmas_helper_LH_P2_1²⁸))) else rewrite_with_lemmas_helper₀₀(_lh_rewrite_with_lemmas_helper_arg1⁶⁶, _lh_rewrite_with_lemmas_helper_LH_C_1⁵²)
+//│ 								| _  => error⁰})))
+//│ 					in let _lh_rewrite_with_lemmas_helper_LH_C_1⁵¹ = lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1⁶⁵ -> _lh_rewrite_with_lemmas_helper_arg1⁶⁵))
+//│ 					in (fun _lh_rewrite_with_lemmas_helper_arg1⁶⁴ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0²⁷, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁵¹), _lh_rewrite_with_lemmas_helper_arg1⁶⁴)))
+//│ 				in (fun _lh_rewrite_with_lemmas_helper_arg1⁶³ -> force⁰(_lh_rewrite_with_lemmas_helper_LH_C_0²⁶, force⁰(_lh_rewrite_with_lemmas_helper_LH_C_1⁵⁰), _lh_rewrite_with_lemmas_helper_arg1⁶³)))])
 //│ 		and zero² = [Fun [ZERO] [LH_N] lazy⁰((fun _lh_rewrite_with_lemmas_helper_arg1⁹⁵ -> _lh_rewrite_with_lemmas_helper_arg1⁹⁵))] 
 //│ 		in let subst0² = 	
-//│ 			let _lh_find_LH_C_0⁶ = 	
-//│ 				let _lh_find_LH_P2_0¹⁰ = [X]
-//│ 				in let _lh_find_LH_P2_1¹⁰ = f⁸(plus²(plus²(a², b²), plus²(c², zero²)))
-//│ 				in (fun _lh_find_LH_C_1¹⁵ -> (fun _lh_find_arg1¹⁶ -> if polyEq⁰(_lh_find_arg1¹⁶, _lh_find_LH_P2_0¹⁰) then 
-//│ 					let _lh_apply_subst_LH_P2_0⁹ = [True]
-//│ 					in let _lh_apply_subst_LH_P2_1⁹ = _lh_find_LH_P2_1¹⁰
-//│ 					in (fun _lh_apply_subst_Var_0⁹ -> if _lh_apply_subst_LH_P2_0⁹ then _lh_apply_subst_LH_P2_1⁹ else [Var _lh_apply_subst_Var_0⁹]) else find₀₀(_lh_find_arg1¹⁶, _lh_find_LH_C_1¹⁵)))
-//│ 			in let _lh_find_LH_C_1⁶ = 	
-//│ 				let _lh_find_LH_C_0⁷ = 	
-//│ 					let _lh_find_LH_P2_0⁹ = [Y]
-//│ 					in let _lh_find_LH_P2_1⁹ = f⁸(times²(times²(a², b²), plus²(c², d²)))
-//│ 					in (fun _lh_find_LH_C_1¹⁴ -> (fun _lh_find_arg1¹⁵ -> if polyEq⁰(_lh_find_arg1¹⁵, _lh_find_LH_P2_0⁹) then 
-//│ 						let _lh_apply_subst_LH_P2_0⁸ = [True]
-//│ 						in let _lh_apply_subst_LH_P2_1⁸ = _lh_find_LH_P2_1⁹
-//│ 						in (fun _lh_apply_subst_Var_0⁸ -> if _lh_apply_subst_LH_P2_0⁸ then _lh_apply_subst_LH_P2_1⁸ else [Var _lh_apply_subst_Var_0⁸]) else find₀₀(_lh_find_arg1¹⁵, _lh_find_LH_C_1¹⁴)))
-//│ 				in let _lh_find_LH_C_1⁷ = 	
-//│ 					let _lh_find_LH_C_0⁸ = 	
-//│ 						let _lh_find_LH_P2_0⁸ = [Z]
-//│ 						in let _lh_find_LH_P2_1⁸ = f⁸(reverse_²(append²(append²(a², b²), nil²)))
-//│ 						in (fun _lh_find_LH_C_1¹³ -> (fun _lh_find_arg1¹⁴ -> if polyEq⁰(_lh_find_arg1¹⁴, _lh_find_LH_P2_0⁸) then 
-//│ 							let _lh_apply_subst_LH_P2_0⁷ = [True]
-//│ 							in let _lh_apply_subst_LH_P2_1⁷ = _lh_find_LH_P2_1⁸
-//│ 							in (fun _lh_apply_subst_Var_0⁷ -> if _lh_apply_subst_LH_P2_0⁷ then _lh_apply_subst_LH_P2_1⁷ else [Var _lh_apply_subst_Var_0⁷]) else find₀₀(_lh_find_arg1¹⁴, _lh_find_LH_C_1¹³)))
-//│ 					in let _lh_find_LH_C_1⁸ = 	
-//│ 						let _lh_find_LH_C_0⁹ = 	
-//│ 							let _lh_find_LH_P2_0⁷ = [U]
-//│ 							in let _lh_find_LH_P2_1⁷ = equal²(plus²(a², b²), difference²(x², y²))
-//│ 							in (fun _lh_find_LH_C_1¹² -> (fun _lh_find_arg1¹³ -> if polyEq⁰(_lh_find_arg1¹³, _lh_find_LH_P2_0⁷) then 
-//│ 								let _lh_apply_subst_LH_P2_0⁶ = [True]
-//│ 								in let _lh_apply_subst_LH_P2_1⁶ = _lh_find_LH_P2_1⁷
-//│ 								in (fun _lh_apply_subst_Var_0⁶ -> if _lh_apply_subst_LH_P2_0⁶ then _lh_apply_subst_LH_P2_1⁶ else [Var _lh_apply_subst_Var_0⁶]) else find₀₀(_lh_find_arg1¹³, _lh_find_LH_C_1¹²)))
-//│ 						in let _lh_find_LH_C_1⁹ = 	
-//│ 							let _lh_find_LH_C_0¹⁰ = 	
-//│ 								let _lh_find_LH_P2_0⁶ = [W]
-//│ 								in let _lh_find_LH_P2_1⁶ = lessp²(remainder²(a², b²), member²(a², length_²(b²)))
-//│ 								in (fun _lh_find_LH_C_1¹¹ -> (fun _lh_find_arg1¹² -> if polyEq⁰(_lh_find_arg1¹², _lh_find_LH_P2_0⁶) then 
-//│ 									let _lh_apply_subst_LH_P2_0⁵ = [True]
-//│ 									in let _lh_apply_subst_LH_P2_1⁵ = _lh_find_LH_P2_1⁶
-//│ 									in (fun _lh_apply_subst_Var_0⁵ -> if _lh_apply_subst_LH_P2_0⁵ then _lh_apply_subst_LH_P2_1⁵ else [Var _lh_apply_subst_Var_0⁵]) else find₀₀(_lh_find_arg1¹², _lh_find_LH_C_1¹¹)))
-//│ 							in let _lh_find_LH_C_1¹⁰ = (fun _lh_find_arg1¹¹ -> 
-//│ 								let _lh_apply_subst_LH_P2_0⁴ = [False]
-//│ 								in let _lh_apply_subst_LH_P2_1⁴ = [ERROR]
-//│ 								in (fun _lh_apply_subst_Var_0⁴ -> if _lh_apply_subst_LH_P2_0⁴ then _lh_apply_subst_LH_P2_1⁴ else [Var _lh_apply_subst_Var_0⁴]))
-//│ 							in (fun _lh_find_arg1¹⁰ -> _lh_find_LH_C_0¹⁰(_lh_find_LH_C_1¹⁰, _lh_find_arg1¹⁰))
-//│ 						in (fun _lh_find_arg1⁹ -> _lh_find_LH_C_0⁹(_lh_find_LH_C_1⁹, _lh_find_arg1⁹))
-//│ 					in (fun _lh_find_arg1⁸ -> _lh_find_LH_C_0⁸(_lh_find_LH_C_1⁸, _lh_find_arg1⁸))
-//│ 				in (fun _lh_find_arg1⁷ -> _lh_find_LH_C_0⁷(_lh_find_LH_C_1⁷, _lh_find_arg1⁷))
-//│ 			in (fun _lh_find_arg1⁶ -> _lh_find_LH_C_0⁶(_lh_find_LH_C_1⁶, _lh_find_arg1⁶))
+//│ 			let _lh_find_LH_C_0⁶ = lazy⁰(
+//│ 				let _lh_find_LH_P2_0¹⁰ = lazy⁰([X])
+//│ 				in let _lh_find_LH_P2_1¹⁰ = lazy⁰(f⁸(plus²(plus²(a², b²), plus²(c², zero²))))
+//│ 				in (fun _lh_find_LH_C_1¹⁵ -> (fun _lh_find_arg1¹⁶ -> if polyEq⁰(_lh_find_arg1¹⁶, force⁰(_lh_find_LH_P2_0¹⁰)) then 
+//│ 					let _lh_apply_subst_LH_P2_0⁹ = lazy⁰([True])
+//│ 					in let _lh_apply_subst_LH_P2_1⁹ = lazy⁰(force⁰(_lh_find_LH_P2_1¹⁰))
+//│ 					in (fun _lh_apply_subst_Var_0⁹ -> if force⁰(_lh_apply_subst_LH_P2_0⁹) then force⁰(_lh_apply_subst_LH_P2_1⁹) else [Var _lh_apply_subst_Var_0⁹]) else find₀₀(_lh_find_arg1¹⁶, _lh_find_LH_C_1¹⁵))))
+//│ 			in let _lh_find_LH_C_1⁶ = lazy⁰(
+//│ 				let _lh_find_LH_C_0⁷ = lazy⁰(
+//│ 					let _lh_find_LH_P2_0⁹ = lazy⁰([Y])
+//│ 					in let _lh_find_LH_P2_1⁹ = lazy⁰(f⁸(times²(times²(a², b²), plus²(c², d²))))
+//│ 					in (fun _lh_find_LH_C_1¹⁴ -> (fun _lh_find_arg1¹⁵ -> if polyEq⁰(_lh_find_arg1¹⁵, force⁰(_lh_find_LH_P2_0⁹)) then 
+//│ 						let _lh_apply_subst_LH_P2_0⁸ = lazy⁰([True])
+//│ 						in let _lh_apply_subst_LH_P2_1⁸ = lazy⁰(force⁰(_lh_find_LH_P2_1⁹))
+//│ 						in (fun _lh_apply_subst_Var_0⁸ -> if force⁰(_lh_apply_subst_LH_P2_0⁸) then force⁰(_lh_apply_subst_LH_P2_1⁸) else [Var _lh_apply_subst_Var_0⁸]) else find₀₀(_lh_find_arg1¹⁵, _lh_find_LH_C_1¹⁴))))
+//│ 				in let _lh_find_LH_C_1⁷ = lazy⁰(
+//│ 					let _lh_find_LH_C_0⁸ = lazy⁰(
+//│ 						let _lh_find_LH_P2_0⁸ = lazy⁰([Z])
+//│ 						in let _lh_find_LH_P2_1⁸ = lazy⁰(f⁸(reverse_²(append²(append²(a², b²), nil²))))
+//│ 						in (fun _lh_find_LH_C_1¹³ -> (fun _lh_find_arg1¹⁴ -> if polyEq⁰(_lh_find_arg1¹⁴, force⁰(_lh_find_LH_P2_0⁸)) then 
+//│ 							let _lh_apply_subst_LH_P2_0⁷ = lazy⁰([True])
+//│ 							in let _lh_apply_subst_LH_P2_1⁷ = lazy⁰(force⁰(_lh_find_LH_P2_1⁸))
+//│ 							in (fun _lh_apply_subst_Var_0⁷ -> if force⁰(_lh_apply_subst_LH_P2_0⁷) then force⁰(_lh_apply_subst_LH_P2_1⁷) else [Var _lh_apply_subst_Var_0⁷]) else find₀₀(_lh_find_arg1¹⁴, _lh_find_LH_C_1¹³))))
+//│ 					in let _lh_find_LH_C_1⁸ = lazy⁰(
+//│ 						let _lh_find_LH_C_0⁹ = lazy⁰(
+//│ 							let _lh_find_LH_P2_0⁷ = lazy⁰([U])
+//│ 							in let _lh_find_LH_P2_1⁷ = lazy⁰(equal²(plus²(a², b²), difference²(x², y²)))
+//│ 							in (fun _lh_find_LH_C_1¹² -> (fun _lh_find_arg1¹³ -> if polyEq⁰(_lh_find_arg1¹³, force⁰(_lh_find_LH_P2_0⁷)) then 
+//│ 								let _lh_apply_subst_LH_P2_0⁶ = lazy⁰([True])
+//│ 								in let _lh_apply_subst_LH_P2_1⁶ = lazy⁰(force⁰(_lh_find_LH_P2_1⁷))
+//│ 								in (fun _lh_apply_subst_Var_0⁶ -> if force⁰(_lh_apply_subst_LH_P2_0⁶) then force⁰(_lh_apply_subst_LH_P2_1⁶) else [Var _lh_apply_subst_Var_0⁶]) else find₀₀(_lh_find_arg1¹³, _lh_find_LH_C_1¹²))))
+//│ 						in let _lh_find_LH_C_1⁹ = lazy⁰(
+//│ 							let _lh_find_LH_C_0¹⁰ = lazy⁰(
+//│ 								let _lh_find_LH_P2_0⁶ = lazy⁰([W])
+//│ 								in let _lh_find_LH_P2_1⁶ = lazy⁰(lessp²(remainder²(a², b²), member²(a², length_²(b²))))
+//│ 								in (fun _lh_find_LH_C_1¹¹ -> (fun _lh_find_arg1¹² -> if polyEq⁰(_lh_find_arg1¹², force⁰(_lh_find_LH_P2_0⁶)) then 
+//│ 									let _lh_apply_subst_LH_P2_0⁵ = lazy⁰([True])
+//│ 									in let _lh_apply_subst_LH_P2_1⁵ = lazy⁰(force⁰(_lh_find_LH_P2_1⁶))
+//│ 									in (fun _lh_apply_subst_Var_0⁵ -> if force⁰(_lh_apply_subst_LH_P2_0⁵) then force⁰(_lh_apply_subst_LH_P2_1⁵) else [Var _lh_apply_subst_Var_0⁵]) else find₀₀(_lh_find_arg1¹², _lh_find_LH_C_1¹¹))))
+//│ 							in let _lh_find_LH_C_1¹⁰ = lazy⁰((fun _lh_find_arg1¹¹ -> 
+//│ 								let _lh_apply_subst_LH_P2_0⁴ = lazy⁰([False])
+//│ 								in let _lh_apply_subst_LH_P2_1⁴ = lazy⁰([ERROR])
+//│ 								in (fun _lh_apply_subst_Var_0⁴ -> if force⁰(_lh_apply_subst_LH_P2_0⁴) then force⁰(_lh_apply_subst_LH_P2_1⁴) else [Var _lh_apply_subst_Var_0⁴])))
+//│ 							in (fun _lh_find_arg1¹⁰ -> force⁰(_lh_find_LH_C_0¹⁰, force⁰(_lh_find_LH_C_1¹⁰), _lh_find_arg1¹⁰)))
+//│ 						in (fun _lh_find_arg1⁹ -> force⁰(_lh_find_LH_C_0⁹, force⁰(_lh_find_LH_C_1⁹), _lh_find_arg1⁹)))
+//│ 					in (fun _lh_find_arg1⁸ -> force⁰(_lh_find_LH_C_0⁸, force⁰(_lh_find_LH_C_1⁸), _lh_find_arg1⁸)))
+//│ 				in (fun _lh_find_arg1⁷ -> force⁰(_lh_find_LH_C_0⁷, force⁰(_lh_find_LH_C_1⁷), _lh_find_arg1⁷)))
+//│ 			in (fun _lh_find_arg1⁶ -> force⁰(_lh_find_LH_C_0⁶, force⁰(_lh_find_LH_C_1⁶), _lh_find_arg1⁶))
 //│ 		in let theorem² = implies²(and_²(implies²(_lh_test0_arg1², y²), and_²(implies²(y², z²), and_²(implies²(z², u²), implies²(u², w²)))), implies²(x², w²))
 //│ 		in tautp₀₀(apply_subst₀₀(subst0², theorem²))
 //│ 		where
@@ -6316,14 +6316,14 @@ testBoyer_nofib $ primId 5
 //│ 							def find₁₀(_lh_find_arg1¹⁸, _lh_find_arg2⁷) = 
 //│ 								case _lh_find_arg2⁷ of {
 //│ 									LH_N  => 
-//│ 										let _lh_apply_subst_LH_P2_0¹⁰ = [False]
-//│ 										in let _lh_apply_subst_LH_P2_1¹⁰ = [ERROR]
-//│ 										in (fun _lh_apply_subst_Var_0¹⁰ -> if _lh_apply_subst_LH_P2_0¹⁰ then _lh_apply_subst_LH_P2_1¹⁰ else [Var _lh_apply_subst_Var_0¹⁰])
+//│ 										let _lh_apply_subst_LH_P2_0¹⁰ = lazy⁰([False])
+//│ 										in let _lh_apply_subst_LH_P2_1¹⁰ = lazy⁰([ERROR])
+//│ 										in (fun _lh_apply_subst_Var_0¹⁰ -> if force⁰(_lh_apply_subst_LH_P2_0¹⁰) then force⁰(_lh_apply_subst_LH_P2_1¹⁰) else [Var _lh_apply_subst_Var_0¹⁰])
 //│ 									| LH_C _lh_find_LH_C_0³ _lh_find_LH_C_1³ => case _lh_find_LH_C_0³ of {
 //│ 										LH_P2 _lh_find_LH_P2_0³ _lh_find_LH_P2_1³ => if polyEq⁰(_lh_find_arg1¹⁸, _lh_find_LH_P2_0³) then 
-//│ 											let _lh_apply_subst_LH_P2_0¹¹ = [True]
-//│ 											in let _lh_apply_subst_LH_P2_1¹¹ = _lh_find_LH_P2_1³
-//│ 											in (fun _lh_apply_subst_Var_0¹¹ -> if _lh_apply_subst_LH_P2_0¹¹ then _lh_apply_subst_LH_P2_1¹¹ else [Var _lh_apply_subst_Var_0¹¹]) else find₁₀(_lh_find_arg1¹⁸, _lh_find_LH_C_1³)
+//│ 											let _lh_apply_subst_LH_P2_0¹¹ = lazy⁰([True])
+//│ 											in let _lh_apply_subst_LH_P2_1¹¹ = lazy⁰(_lh_find_LH_P2_1³)
+//│ 											in (fun _lh_apply_subst_Var_0¹¹ -> if force⁰(_lh_apply_subst_LH_P2_0¹¹) then force⁰(_lh_apply_subst_LH_P2_1¹¹) else [Var _lh_apply_subst_Var_0¹¹]) else find₁₀(_lh_find_arg1¹⁸, _lh_find_LH_C_1³)
 //│ 										| _  => error⁰}
 //│ 									| _  => error⁰}
 //│ 							def map₂₀(f¹¹, ls⁸) = 
@@ -6347,14 +6347,14 @@ testBoyer_nofib $ primId 5
 //│ 								def find₂₀(_lh_find_arg1¹⁷, _lh_find_arg2⁶) = 
 //│ 									case _lh_find_arg2⁶ of {
 //│ 										LH_N  => 
-//│ 											let _lh_one_way_unify1_LH_P2_0² = [False]
-//│ 											in let _lh_one_way_unify1_LH_P2_1² = [ERROR]
-//│ 											in (fun _lh_one_way_unify1_Var_0² -> (fun _lh_one_way_unify1_arg1³ -> (fun _lh_one_way_unify1_arg3³ -> if _lh_one_way_unify1_LH_P2_0² then [LH_P2 termEq₀₀(_lh_one_way_unify1_arg1³, _lh_one_way_unify1_LH_P2_1²) _lh_one_way_unify1_arg3³] else [LH_P2 [True] [LH_C [LH_P2 _lh_one_way_unify1_Var_0² _lh_one_way_unify1_arg1³] _lh_one_way_unify1_arg3³]])))
+//│ 											let _lh_one_way_unify1_LH_P2_0² = lazy⁰([False])
+//│ 											in let _lh_one_way_unify1_LH_P2_1² = lazy⁰([ERROR])
+//│ 											in (fun _lh_one_way_unify1_Var_0² -> (fun _lh_one_way_unify1_arg1³ -> (fun _lh_one_way_unify1_arg3³ -> if force⁰(_lh_one_way_unify1_LH_P2_0²) then [LH_P2 termEq₀₀(_lh_one_way_unify1_arg1³, force⁰(_lh_one_way_unify1_LH_P2_1²)) _lh_one_way_unify1_arg3³] else [LH_P2 [True] [LH_C [LH_P2 _lh_one_way_unify1_Var_0² _lh_one_way_unify1_arg1³] _lh_one_way_unify1_arg3³]])))
 //│ 										| LH_C _lh_find_LH_C_0⁵ _lh_find_LH_C_1⁵ => case _lh_find_LH_C_0⁵ of {
 //│ 											LH_P2 _lh_find_LH_P2_0⁵ _lh_find_LH_P2_1⁵ => if polyEq⁰(_lh_find_arg1¹⁷, _lh_find_LH_P2_0⁵) then 
-//│ 												let _lh_one_way_unify1_LH_P2_0³ = [True]
-//│ 												in let _lh_one_way_unify1_LH_P2_1³ = _lh_find_LH_P2_1⁵
-//│ 												in (fun _lh_one_way_unify1_Var_0³ -> (fun _lh_one_way_unify1_arg1⁴ -> (fun _lh_one_way_unify1_arg3⁴ -> if _lh_one_way_unify1_LH_P2_0³ then [LH_P2 termEq₀₀(_lh_one_way_unify1_arg1⁴, _lh_one_way_unify1_LH_P2_1³) _lh_one_way_unify1_arg3⁴] else [LH_P2 [True] [LH_C [LH_P2 _lh_one_way_unify1_Var_0³ _lh_one_way_unify1_arg1⁴] _lh_one_way_unify1_arg3⁴]]))) else find₂₀(_lh_find_arg1¹⁷, _lh_find_LH_C_1⁵)
+//│ 												let _lh_one_way_unify1_LH_P2_0³ = lazy⁰([True])
+//│ 												in let _lh_one_way_unify1_LH_P2_1³ = lazy⁰(_lh_find_LH_P2_1⁵)
+//│ 												in (fun _lh_one_way_unify1_Var_0³ -> (fun _lh_one_way_unify1_arg1⁴ -> (fun _lh_one_way_unify1_arg3⁴ -> if force⁰(_lh_one_way_unify1_LH_P2_0³) then [LH_P2 termEq₀₀(_lh_one_way_unify1_arg1⁴, force⁰(_lh_one_way_unify1_LH_P2_1³)) _lh_one_way_unify1_arg3⁴] else [LH_P2 [True] [LH_C [LH_P2 _lh_one_way_unify1_Var_0³ _lh_one_way_unify1_arg1⁴] _lh_one_way_unify1_arg3⁴]]))) else find₂₀(_lh_find_arg1¹⁷, _lh_find_LH_C_1⁵)
 //│ 											| _  => error⁰}
 //│ 										| _  => error⁰}
 //│ 								def one_way_unify1_lst₀₀(_lh_one_way_unify1_lst_arg1², _lh_one_way_unify1_lst_arg2², _lh_one_way_unify1_lst_arg3²) = 

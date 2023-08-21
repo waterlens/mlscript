@@ -300,17 +300,17 @@ main(11, 22)
 //│ 			xs⁸(ys¹³)
 //│ 	def fromTo₀(a⁹, b⁹) = 
 //│ 		if (a⁹ < b⁹) then 
-//│ 			let h⁵ = a⁹
-//│ 			in let t⁵ = fromTo₀((a⁹ + 1), b⁹)
+//│ 			let h⁵ = lazy⁰(a⁹)
+//│ 			in let t⁵ = lazy⁰(fromTo₀((a⁹ + 1), b⁹))
 //│ 			in (fun ys¹⁰ -> 
-//│ 				let h⁶ = h⁵
-//│ 				in let t⁶ = append'₀(t⁵, ys¹⁰)
-//│ 				in (fun ys¹¹ -> [C h⁶ append₀(t⁶, ys¹¹)])) else (fun ys¹² -> ys¹²)
+//│ 				let h⁶ = lazy⁰(force⁰(h⁵))
+//│ 				in let t⁶ = lazy⁰(append'₀(force⁰(t⁵), ys¹⁰))
+//│ 				in (fun ys¹¹ -> [C force⁰(h⁶) append₀(force⁰(t⁶), ys¹¹)])) else (fun ys¹² -> ys¹²)
 //│ 	def fromTo₁(a⁸, b⁸) = 
 //│ 		if (a⁸ < b⁸) then 
-//│ 			let h⁴ = a⁸
-//│ 			in let t⁴ = fromTo₁((a⁸ + 1), b⁸)
-//│ 			in (fun ys⁸ -> [C h⁴ append₀(t⁴, ys⁸)]) else (fun ys⁹ -> ys⁹)
+//│ 			let h⁴ = lazy⁰(a⁸)
+//│ 			in let t⁴ = lazy⁰(fromTo₁((a⁸ + 1), b⁸))
+//│ 			in (fun ys⁸ -> [C force⁰(h⁴) append₀(force⁰(t⁴), ys⁸)]) else (fun ys⁹ -> ys⁹)
 //│ 	def fromTo₂(a⁷, b⁷) = 
 //│ 		if (a⁷ < b⁷) then [C a⁷ fromTo₂((a⁷ + 1), b⁷)] else [N]
 //│ <<<<<<< after fusion <<<<<<<
@@ -435,17 +435,17 @@ appendThree(
 //│ 	def append₁(xs⁵, ys⁵) = 
 //│ 		case xs⁵ of {
 //│ 			C h⁴ t⁴ => 
-//│ 				let h⁶ = h⁴
-//│ 				in let t⁶ = append₁(t⁴, ys⁵)
-//│ 				in (fun ys⁶ -> [C h⁶ append₀(t⁶, ys⁶)])
+//│ 				let h⁶ = lazy⁰(h⁴)
+//│ 				in let t⁶ = lazy⁰(append₁(t⁴, ys⁵))
+//│ 				in (fun ys⁶ -> [C force⁰(h⁶) append₀(force⁰(t⁶), ys⁶)])
 //│ 			| N  => idList₁(ys⁵)}
 //│ 		where
 //│ 		def idList₁(l³) = 
 //│ 			case l³ of {
 //│ 				C h³ t³ => 
-//│ 					let h⁷ = h³
-//│ 					in let t⁷ = idList₁(t³)
-//│ 					in (fun ys⁷ -> [C h⁷ append₀(t⁷, ys⁷)])
+//│ 					let h⁷ = lazy⁰(h³)
+//│ 					in let t⁷ = lazy⁰(idList₁(t³))
+//│ 					in (fun ys⁷ -> [C force⁰(h⁷) append₀(force⁰(t⁷), ys⁷)])
 //│ 				| N  => (fun ys⁸ -> idList₀(ys⁸))}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 

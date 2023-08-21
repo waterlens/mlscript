@@ -287,16 +287,16 @@ idxSum(rev(C(1, C(2, N)))(N))(0)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ idxSum₀(rev₀(
-//│ 	let hh² = 1
-//│ 	in let tt² = 	
-//│ 		let hh³ = 2
-//│ 		in let tt³ = (fun a⁶ -> a⁶)
-//│ 		in (fun a⁵ -> rev₀(tt³, 
-//│ 			let t³ = a⁵
-//│ 			in (fun acc⁵ -> (acc⁵ + idxSum₀(t³, (acc⁵ + 1))))))
-//│ 	in (fun a⁴ -> rev₀(tt², 
-//│ 		let t² = a⁴
-//│ 		in (fun acc⁴ -> (acc⁴ + idxSum₀(t², (acc⁴ + 1)))))), (fun acc⁶ -> 0)), 0)
+//│ 	let hh² = lazy⁰(1)
+//│ 	in let tt² = lazy⁰(
+//│ 		let hh³ = lazy⁰(2)
+//│ 		in let tt³ = lazy⁰((fun a⁶ -> a⁶))
+//│ 		in (fun a⁵ -> rev₀(force⁰(tt³), 
+//│ 			let t³ = lazy⁰(a⁵)
+//│ 			in (fun acc⁵ -> (acc⁵ + idxSum₀(force⁰(t³), (acc⁵ + 1)))))))
+//│ 	in (fun a⁴ -> rev₀(force⁰(tt²), 
+//│ 		let t² = lazy⁰(a⁴)
+//│ 		in (fun acc⁴ -> (acc⁴ + idxSum₀(force⁰(t²), (acc⁴ + 1)))))), (fun acc⁶ -> 0)), 0)
 //│ def idxSum₀(ls²) = 
 //│ 	ls²
 //│ def rev₀(lss²) = 
@@ -435,8 +435,8 @@ minuss(fst)(snd)
 //│ >>>>>>> after fusion >>>>>>>
 //│ minuss₀₀(fst₀₀, snd₀₀)
 //│ def fst₀₀ = 
-//│ 	let aa⁴ = [S [Z]]
-//│ 	in (fun b² -> b²(aa⁴))
+//│ 	let aa⁴ = lazy⁰([S [Z]])
+//│ 	in (fun b² -> b²(force⁰(aa⁴)))
 //│ def minuss₀₀(a²) = 
 //│ 	a²
 //│ def snd₀₀(aa⁵) = 
@@ -592,8 +592,8 @@ minuss(fst)(snd)
 //│ >>>>>>> after fusion >>>>>>>
 //│ minuss₀₀(fst₀₀, snd₀₀)
 //│ def fst₀₀ = 
-//│ 	let aa² = [S [Z]]
-//│ 	in (fun b⁴ -> checkb₀₀(b⁴, aa²))
+//│ 	let aa² = lazy⁰([S [Z]])
+//│ 	in (fun b⁴ -> checkb₀₀(b⁴, force⁰(aa²)))
 //│ def minuss₀₀(a²) = 
 //│ 	a²
 //│ 	where
@@ -854,26 +854,26 @@ f(xx, yy)
 //│ 	def f₁(xs³) = 
 //│ 		xs³
 //│ def xx₀ = 
-//│ 	let x1⁴ = 	
-//│ 		let x2⁴ = xx₁
-//│ 		in x2⁴
-//│ 	in x1⁴
+//│ 	let x1⁴ = lazy⁰(
+//│ 		let x2⁴ = lazy⁰(xx₁)
+//│ 		in force⁰(x2⁴))
+//│ 	in force⁰(x1⁴)
 //│ 	where
 //│ 	def xx₁ = 
-//│ 		let x3³ = 	
-//│ 			let x1³ = xx₂
-//│ 			in x1³
+//│ 		let x3³ = lazy⁰(
+//│ 			let x1³ = lazy⁰(xx₂)
+//│ 			in force⁰(x1³))
 //│ 		in (fun ys³ -> case ys³ of {
 //│ 			Y y1² => case y1² of {
-//│ 				Y y2² => f₁(x3³, y2²)}})
+//│ 				Y y2² => f₁(force⁰(x3³), y2²)}})
 //│ 		where
 //│ 		def xx₂ = 
-//│ 			let x2³ = 	
-//│ 				let x3⁴ = xx₀
+//│ 			let x2³ = lazy⁰(
+//│ 				let x3⁴ = lazy⁰(xx₀)
 //│ 				in (fun ys⁴ -> case ys⁴ of {
 //│ 					Y y1¹ => case y1¹ of {
-//│ 						Y y2¹ => f₀(x3⁴, y2¹)}})
-//│ 			in x2³
+//│ 						Y y2¹ => f₀(force⁰(x3⁴), y2¹)}}))
+//│ 			in force⁰(x2³)
 //│ def yy₀ = 
 //│ 	[Y [Y [Y yy₁]]]
 //│ 	where

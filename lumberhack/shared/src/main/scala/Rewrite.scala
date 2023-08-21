@@ -307,8 +307,9 @@ trait ExprRewrite { this: Expr =>
   }
 
   // TODO: add lazy to let bindings introduced by fusion
-  def rewriteFusion(
-    using ctx: RewriteCtx,
+  def rewriteFusion(using
+    ctx: RewriteCtx,
+    needForce: Set[Ident],
     fusionMatch: Map[ExprId, ExprId],
     newd: Deforest,
     inDef: Option[Ident],
@@ -336,13 +337,24 @@ trait ExprRewrite { this: Expr =>
         val newParamId = param.copyToNewDeforest
         val newCtx = ctx + (param -> newParamId)
         Function(newParamId, body.rewriteFusion(using newCtx))
-      case Ref(id) => Ref(ctx.getOrElse(id, id))
+      case Ref(id) => 
+        val mappedId = ctx.getOrElse(id, id)
+        if needForce(mappedId) then
+          Call(Ref(newd.lumberhackKeywordsIds("force")), Ref(mappedId))
+        else
+          Ref(mappedId)
       case Match(scrut, arms) => {
         if fusionMatch.valuesIterator.contains(this.uid) then {
           val extrudedIds = scopeExtrusionInfo(this.uid)
           // val extrudedIds = scopeExtrusionInfo.getOrElse(this.uid, Nil)
           extrudedIds.foldLeft(scrut.rewriteFusion){
-            (acc, id) => Call(acc, Ref(ctx.getOrElse(id, id)))
+            (acc, id) =>
+              val mappedId = ctx.getOrElse(id, id)
+              val maybeForcedId = if needForce(mappedId) then
+                Call(Ref(newd.lumberhackKeywordsIds("force")), Ref(mappedId))
+              else
+                Ref(mappedId)
+              Call(acc, maybeForcedId)
           }
         } else {
           Match(scrut.rewriteFusion, arms.map{(n, args, body) => (n, args, body.rewriteFusion)})
@@ -362,12 +374,12 @@ trait ExprRewrite { this: Expr =>
         )
         val innerAfterExtrusionHandling =
           // NOTE: extrudedIds may contain same keys as in newCtx, need to override those entries
-          matchArm._3.rewriteFusion(using newCtx ++ extrudedIds)
+          matchArm._3.rewriteFusion(using newCtx ++ extrudedIds, needForce ++ newIds.map(_._2).toSet)
         val inner = extrudedIds.foldRight(innerAfterExtrusionHandling){ (newId, acc) =>
           Function(newId._2, acc)
         }
-        (newIds zip newArgs).foldRight(inner){(t_i, acc) => 
-          LetIn(t_i._1._2, t_i._2.rewriteFusion, acc)
+        (newIds zip newArgs).foldRight(inner){case (((_, param), argExpr), acc) => 
+          LetIn(param, Call(Ref(newd.lumberhackKeywordsIds("lazy")), argExpr.rewriteFusion), acc)
         }
       }.getOrElse(Ctor(name, args.map(_.rewriteFusion)))
     }
@@ -503,13 +515,8 @@ trait ProgramRewrite { this: Program =>
         Expr.Function(newParam, copyExpr(body)(using ctx + (param -> newParam)))
     }
     
-    given ctx: RewriteCtx = Deforest.lumberhackKeywords.map {
-      n => {
-        // new and old identifier ids for the primitives should be the same
-        val newAndOldId = newd.nextIdent(false, Var(n))
-        newAndOldId -> newAndOldId
-      }
-    } ++ this.defAndExpr._1.keySet.map(id => id -> id.copyToNewDeforest) |> (_.toMap)
+    given ctx: RewriteCtx = newd.lumberhackKeywordsIds.values.map(id => id -> id)
+      ++ this.defAndExpr._1.keySet.map(id => id -> id.copyToNewDeforest) |> (_.toMap)
 
     Program(
       this.defAndExpr._2.map { e => given Option[Ident] = None; R(copyExpr(e)) }
@@ -567,10 +574,10 @@ trait ProgramRewrite { this: Program =>
     // given Map[ExprId, List[Ident]] = Map.empty.withDefaultValue(Nil)
     given Map[ExprId, List[Ident]] = fusionStrategy.scopeExtrusionInfo
     Program(
-      this.defAndExpr._2.map { e => given Option[Ident] = None; R(e.rewriteFusion(using Map.empty)) }
+      this.defAndExpr._2.map { e => given Option[Ident] = None; R(e.rewriteFusion(using Map.empty, Set.empty)) }
       ::: this.defAndExpr._1.map { (id, body) =>
         given Option[Ident] = Some(id)
-        L(ProgDef(id, body.rewriteFusion(using Map.empty)))
+        L(ProgDef(id, body.rewriteFusion(using Map.empty, Set.empty)))
       }.toList
     )
   }

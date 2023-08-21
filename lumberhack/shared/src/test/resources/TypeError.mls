@@ -366,8 +366,8 @@ f(C(A))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ f₀(
-//│ 	let a⁴ = [A]
-//│ 	in primitive⁰(a⁴))
+//│ 	let a⁴ = lazy⁰([A])
+//│ 	in primitive⁰(force⁰(a⁴)))
 //│ def f₀(a⁵) = 
 //│ 	if [False] then c₀(a⁵) else [Unit]
 //│ 	where
@@ -440,8 +440,8 @@ f(C(1, N), C(2, N))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ f₀([C 1 [N]], 
-//│ 	let hh² = 2
-//│ 	in (fun h² -> (h² + hh²)))
+//│ 	let hh² = lazy⁰(2)
+//│ 	in (fun h² -> (h² + force⁰(hh²))))
 //│ def f₀(xs², ys²) = 
 //│ 	case xs² of {
 //│ 		N  => 0
@@ -705,9 +705,9 @@ f(C(3, N))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ f₀(
-//│ 	let h² = 3
-//│ 	in let t² = (fun ff⁵ -> [N])
-//│ 	in (fun ff⁴ -> [C h² ff⁴(t²)]))
+//│ 	let h² = lazy⁰(3)
+//│ 	in let t² = lazy⁰((fun ff⁵ -> [N]))
+//│ 	in (fun ff⁴ -> [C force⁰(h²) ff⁴(force⁰(t²))]))
 //│ def f₀(x²) = 
 //│ 	x²(f₀)
 //│ <<<<<<< after fusion <<<<<<<

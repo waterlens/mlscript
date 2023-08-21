@@ -42,12 +42,12 @@ let rec sum_d0 ls_1 =
   ls_1;;
 let rec enumFromTo_d0 a_0 b_0 =
   (if (a_0 <= b_0) then
-    (let rec h_0 = a_0 in
-      (let rec t_0 = ((enumFromTo_d0 (a_0 + 1)) b_0) in
+    (let rec h_0 = (lazy a_0) in
+      (let rec t_0 = (lazy ((enumFromTo_d0 (a_0 + 1)) b_0)) in
         (fun f_1 -> 
-          (let rec h_1 = (f_1 h_0) in
-            (let rec t_1 = ((map_d0 f_1) t_0) in
-              (h_1 + (sum_d0 t_1)))))))
+          (let rec h_1 = (lazy (f_1 (Lazy.force h_0))) in
+            (let rec t_1 = (lazy ((map_d0 f_1) (Lazy.force t_0))) in
+              ((Lazy.force h_1) + (sum_d0 (Lazy.force t_1))))))))
   else
     (fun f_2 -> 
       0))
@@ -66,11 +66,11 @@ let rec sum_d0_d1 ls_4 =
   ls_4;;
 let rec enumFromTo_d0_d0 a_1 b_1 _lh_popOutId_0_0 =
   (if (a_1 <= b_1) then
-    (let rec h_2 = a_1 in
-      (let rec t_2 = ((enumFromTo_d0_d0 (a_1 + 1)) b_1) in
-        (let rec h_3 = (_lh_popOutId_0_0 h_2) in
-          (let rec t_3 = ((map_d0_d0 _lh_popOutId_0_0) t_2) in
-            (h_3 + (sum_d0_d0 t_3))))))
+    (let rec h_2 = (lazy a_1) in
+      (let rec t_2 = (lazy ((enumFromTo_d0_d0 (a_1 + 1)) b_1)) in
+        (let rec h_3 = (lazy (_lh_popOutId_0_0 (Lazy.force h_2))) in
+          (let rec t_3 = (lazy ((map_d0_d0 _lh_popOutId_0_0) (Lazy.force t_2))) in
+            ((Lazy.force h_3) + (sum_d0_d0 (Lazy.force t_3)))))))
   else
     0)
 and testSumMapEnum_d0_d0 n_1 =

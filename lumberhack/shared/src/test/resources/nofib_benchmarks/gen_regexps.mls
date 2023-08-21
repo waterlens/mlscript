@@ -3150,24 +3150,24 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 			where
 //│ 			def enumFromTo₀₀(a⁴², b³²) = 
 //│ 				if (a⁴² <= b³²) then 
-//│ 					let _lh_listcomp_fun_ls_h⁴⁸ = a⁴²
-//│ 					in let _lh_listcomp_fun_ls_t⁴⁹ = enumFromTo₀₀((a⁴² + 1), b³²)
+//│ 					let _lh_listcomp_fun_ls_h⁴⁸ = lazy⁰(a⁴²)
+//│ 					in let _lh_listcomp_fun_ls_t⁴⁹ = lazy⁰(enumFromTo₀₀((a⁴² + 1), b³²))
 //│ 					in (fun _lh_alphabeticRule_LH_C_1²⁶ -> (fun _lh_listcomp_fun⁶⁶ -> 
 //│ 						let _lh_listcomp_fun⁶⁷ = (fun _lh_listcomp_fun_para⁵⁴ -> case _lh_listcomp_fun_para⁵⁴ of {
-//│ 							LH_C _lh_listcomp_fun_ls_h²⁸ _lh_listcomp_fun_ls_t²⁸ => [LH_C [LH_C char_of_int⁰(_lh_listcomp_fun_ls_h⁴⁸) _lh_listcomp_fun_ls_h²⁸] _lh_listcomp_fun⁶⁷(_lh_listcomp_fun_ls_t²⁸)]
-//│ 							| LH_N  => _lh_listcomp_fun⁶⁶(_lh_listcomp_fun_ls_t⁴⁹)})
+//│ 							LH_C _lh_listcomp_fun_ls_h²⁸ _lh_listcomp_fun_ls_t²⁸ => [LH_C [LH_C char_of_int⁰(force⁰(_lh_listcomp_fun_ls_h⁴⁸)) _lh_listcomp_fun_ls_h²⁸] _lh_listcomp_fun⁶⁷(_lh_listcomp_fun_ls_t²⁸)]
+//│ 							| LH_N  => _lh_listcomp_fun⁶⁶(force⁰(_lh_listcomp_fun_ls_t⁴⁹))})
 //│ 						in _lh_listcomp_fun⁶⁷(expand₀₀(_lh_alphabeticRule_LH_C_1²⁶)))) else (fun _lh_alphabeticRule_LH_C_1²⁷ -> (fun _lh_listcomp_fun⁶⁸ -> [LH_N]))
 //│ 			def enumFromTo₁₀(a⁵⁵, b⁴²) = 
 //│ 				if (a⁵⁵ <= b⁴²) then 
-//│ 					let h⁵⁹ = a⁵⁵
-//│ 					in let t⁶⁸ = enumFromTo₁₀((a⁵⁵ + 1), b⁴²)
-//│ 					in (fun a⁵⁶ -> reverse_helper₀₁(t⁶⁸, 
-//│ 						let _lh_listcomp_fun_ls_h⁵⁵ = h⁵⁹
-//│ 						in let _lh_listcomp_fun_ls_t⁵⁹ = a⁵⁶
+//│ 					let h⁵⁹ = lazy⁰(a⁵⁵)
+//│ 					in let t⁶⁸ = lazy⁰(enumFromTo₁₀((a⁵⁵ + 1), b⁴²))
+//│ 					in (fun a⁵⁶ -> reverse_helper₀₁(force⁰(t⁶⁸), 
+//│ 						let _lh_listcomp_fun_ls_h⁵⁵ = lazy⁰(force⁰(h⁵⁹))
+//│ 						in let _lh_listcomp_fun_ls_t⁵⁹ = lazy⁰(a⁵⁶)
 //│ 						in (fun _lh_alphabeticRule_LH_C_1³³ -> (fun _lh_listcomp_fun¹⁰⁴ -> 
 //│ 							let _lh_listcomp_fun¹⁰⁵ = (fun _lh_listcomp_fun_para⁶⁹ -> case _lh_listcomp_fun_para⁶⁹ of {
-//│ 								LH_C _lh_listcomp_fun_ls_h³⁰ _lh_listcomp_fun_ls_t³⁰ => [LH_C [LH_C char_of_int⁰(_lh_listcomp_fun_ls_h⁵⁵) _lh_listcomp_fun_ls_h³⁰] _lh_listcomp_fun¹⁰⁵(_lh_listcomp_fun_ls_t³⁰)]
-//│ 								| LH_N  => _lh_listcomp_fun¹⁰⁴(_lh_listcomp_fun_ls_t⁵⁹)})
+//│ 								LH_C _lh_listcomp_fun_ls_h³⁰ _lh_listcomp_fun_ls_t³⁰ => [LH_C [LH_C char_of_int⁰(force⁰(_lh_listcomp_fun_ls_h⁵⁵)) _lh_listcomp_fun_ls_h³⁰] _lh_listcomp_fun¹⁰⁵(_lh_listcomp_fun_ls_t³⁰)]
+//│ 								| LH_N  => _lh_listcomp_fun¹⁰⁴(force⁰(_lh_listcomp_fun_ls_t⁵⁹))})
 //│ 							in _lh_listcomp_fun¹⁰⁵(expand₀₁(_lh_alphabeticRule_LH_C_1³³)))))) else (fun a⁵⁷ -> a⁵⁷)
 //│ 			def expand₀₁(_lh_expand_arg1⁵) = 
 //│ 				case _lh_expand_arg1⁵ of {
@@ -3199,24 +3199,24 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 					where
 //│ 					def enumFromTo₀₁(a³⁸, b³⁰) = 
 //│ 						if (a³⁸ <= b³⁰) then 
-//│ 							let _lh_listcomp_fun_ls_h⁴⁶ = a³⁸
-//│ 							in let _lh_listcomp_fun_ls_t⁴⁷ = enumFromTo₀₁((a³⁸ + 1), b³⁰)
+//│ 							let _lh_listcomp_fun_ls_h⁴⁶ = lazy⁰(a³⁸)
+//│ 							in let _lh_listcomp_fun_ls_t⁴⁷ = lazy⁰(enumFromTo₀₁((a³⁸ + 1), b³⁰))
 //│ 							in (fun _lh_alphabeticRule_LH_C_1²³ -> (fun _lh_listcomp_fun⁶⁰ -> 
 //│ 								let _lh_listcomp_fun⁶¹ = (fun _lh_listcomp_fun_para⁵¹ -> case _lh_listcomp_fun_para⁵¹ of {
-//│ 									LH_C _lh_listcomp_fun_ls_h³² _lh_listcomp_fun_ls_t³² => [LH_C [LH_C char_of_int⁰(_lh_listcomp_fun_ls_h⁴⁶) _lh_listcomp_fun_ls_h³²] _lh_listcomp_fun⁶¹(_lh_listcomp_fun_ls_t³²)]
-//│ 									| LH_N  => _lh_listcomp_fun⁶⁰(_lh_listcomp_fun_ls_t⁴⁷)})
+//│ 									LH_C _lh_listcomp_fun_ls_h³² _lh_listcomp_fun_ls_t³² => [LH_C [LH_C char_of_int⁰(force⁰(_lh_listcomp_fun_ls_h⁴⁶)) _lh_listcomp_fun_ls_h³²] _lh_listcomp_fun⁶¹(_lh_listcomp_fun_ls_t³²)]
+//│ 									| LH_N  => _lh_listcomp_fun⁶⁰(force⁰(_lh_listcomp_fun_ls_t⁴⁷))})
 //│ 								in _lh_listcomp_fun⁶¹(expand₀₁(_lh_alphabeticRule_LH_C_1²³)))) else (fun _lh_alphabeticRule_LH_C_1²⁴ -> (fun _lh_listcomp_fun⁶² -> [LH_N]))
 //│ 					def enumFromTo₁₁(a³⁰, b²⁵) = 
 //│ 						if (a³⁰ <= b²⁵) then 
-//│ 							let h⁴⁶ = a³⁰
-//│ 							in let t⁵¹ = enumFromTo₁₁((a³⁰ + 1), b²⁵)
-//│ 							in (fun a³¹ -> reverse_helper₀₀(t⁵¹, 
-//│ 								let _lh_listcomp_fun_ls_h⁴² = h⁴⁶
-//│ 								in let _lh_listcomp_fun_ls_t⁴² = a³¹
+//│ 							let h⁴⁶ = lazy⁰(a³⁰)
+//│ 							in let t⁵¹ = lazy⁰(enumFromTo₁₁((a³⁰ + 1), b²⁵))
+//│ 							in (fun a³¹ -> reverse_helper₀₀(force⁰(t⁵¹), 
+//│ 								let _lh_listcomp_fun_ls_h⁴² = lazy⁰(force⁰(h⁴⁶))
+//│ 								in let _lh_listcomp_fun_ls_t⁴² = lazy⁰(a³¹)
 //│ 								in (fun _lh_alphabeticRule_LH_C_1²⁰ -> (fun _lh_listcomp_fun⁴² -> 
 //│ 									let _lh_listcomp_fun⁴³ = (fun _lh_listcomp_fun_para⁴² -> case _lh_listcomp_fun_para⁴² of {
-//│ 										LH_C _lh_listcomp_fun_ls_h³⁴ _lh_listcomp_fun_ls_t³⁴ => [LH_C [LH_C char_of_int⁰(_lh_listcomp_fun_ls_h⁴²) _lh_listcomp_fun_ls_h³⁴] _lh_listcomp_fun⁴³(_lh_listcomp_fun_ls_t³⁴)]
-//│ 										| LH_N  => _lh_listcomp_fun⁴²(_lh_listcomp_fun_ls_t⁴²)})
+//│ 										LH_C _lh_listcomp_fun_ls_h³⁴ _lh_listcomp_fun_ls_t³⁴ => [LH_C [LH_C char_of_int⁰(force⁰(_lh_listcomp_fun_ls_h⁴²)) _lh_listcomp_fun_ls_h³⁴] _lh_listcomp_fun⁴³(_lh_listcomp_fun_ls_t³⁴)]
+//│ 										| LH_N  => _lh_listcomp_fun⁴²(force⁰(_lh_listcomp_fun_ls_t⁴²))})
 //│ 									in _lh_listcomp_fun⁴³(expand₀₁(_lh_alphabeticRule_LH_C_1²⁰)))))) else (fun a³² -> a³²)
 //│ 					def reverse₀₀(ls⁴¹) = 
 //│ 						reverse_helper₀₀(ls⁴¹, (fun _lh_alphabeticRule_LH_C_1²⁹ -> (fun _lh_listcomp_fun⁷⁶ -> [LH_N])))
@@ -3249,12 +3249,12 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 									LH_P2 _lh_numericRule_LH_P2_0¹⁰ _lh_numericRule_LH_P2_1¹⁰ => case _lh_numericRule_LH_P2_1¹⁰ of {
 //│ 										LH_C _lh_numericRule_LH_C_0⁷ _lh_numericRule_LH_C_1⁷ => 
 //│ 											let _lh_matchIdent³¹ = 	
-//│ 												let _lh_numericRule_LH_P2_0¹⁶ = mknum₀₀(_lh_numericRule_LH_P2_0⁹)
-//│ 												in let _lh_numericRule_LH_P2_1¹⁶ = mknum₁₀(_lh_numericRule_LH_P2_0¹⁰)
+//│ 												let _lh_numericRule_LH_P2_0¹⁶ = lazy⁰(mknum₀₀(_lh_numericRule_LH_P2_0⁹))
+//│ 												in let _lh_numericRule_LH_P2_1¹⁶ = lazy⁰(mknum₁₀(_lh_numericRule_LH_P2_0¹⁰))
 //│ 												in (fun _lh_numericRule_LH_C_1¹⁷ -> 
-//│ 													let width¹² = max₀₀(length₀₀(string_of_int⁰(_lh_numericRule_LH_P2_0¹⁶)), length₁₀(string_of_int⁰(_lh_numericRule_LH_P2_1¹⁶)))
+//│ 													let width¹² = max₀₀(length₀₀(string_of_int⁰(force⁰(_lh_numericRule_LH_P2_0¹⁶))), length₁₀(string_of_int⁰(force⁰(_lh_numericRule_LH_P2_1¹⁶))))
 //│ 													in let _lh_listcomp_fun⁷⁷ = (fun _lh_listcomp_fun_para⁵⁹ -> _lh_listcomp_fun_para⁵⁹(_lh_listcomp_fun⁷⁷, _lh_numericRule_LH_C_1¹⁷, width¹²))
-//│ 													in _lh_listcomp_fun⁷⁷(if (_lh_numericRule_LH_P2_0¹⁶ < _lh_numericRule_LH_P2_1¹⁶) then enumFromTo₂₀(_lh_numericRule_LH_P2_0¹⁶, _lh_numericRule_LH_P2_1¹⁶) else enumFromThenTo₀₀(_lh_numericRule_LH_P2_0¹⁶, (_lh_numericRule_LH_P2_0¹⁶ - 1), _lh_numericRule_LH_P2_1¹⁶)))
+//│ 													in _lh_listcomp_fun⁷⁷(if (force⁰(_lh_numericRule_LH_P2_0¹⁶) < force⁰(_lh_numericRule_LH_P2_1¹⁶)) then enumFromTo₂₀(force⁰(_lh_numericRule_LH_P2_0¹⁶), force⁰(_lh_numericRule_LH_P2_1¹⁶)) else enumFromThenTo₀₀(force⁰(_lh_numericRule_LH_P2_0¹⁶), (force⁰(_lh_numericRule_LH_P2_0¹⁶) - 1), force⁰(_lh_numericRule_LH_P2_1¹⁶))))
 //│ 											in _lh_matchIdent³¹(_lh_numericRule_LH_C_1⁷)
 //│ 										| _  => error⁰}
 //│ 									| _  => error⁰}
@@ -3263,21 +3263,21 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 					where
 //│ 					def enumFromThenTo₀₀(a³³, t⁵², b²⁶) = 
 //│ 						if (a³³ <= b²⁶) then 
-//│ 							let _lh_listcomp_fun_ls_h⁴³ = a³³
-//│ 							in let _lh_listcomp_fun_ls_t⁴³ = enumFromThenTo₀₀(t⁵², ((2 * t⁵²) - a³³), b²⁶)
+//│ 							let _lh_listcomp_fun_ls_h⁴³ = lazy⁰(a³³)
+//│ 							in let _lh_listcomp_fun_ls_t⁴³ = lazy⁰(enumFromThenTo₀₀(t⁵², ((2 * t⁵²) - a³³), b²⁶))
 //│ 							in (fun _lh_listcomp_fun⁴⁵ -> (fun _lh_numericRule_LH_C_1¹⁰ -> (fun width⁵ -> 
 //│ 								let _lh_listcomp_fun⁴⁶ = (fun _lh_listcomp_fun_para⁴⁴ -> case _lh_listcomp_fun_para⁴⁴ of {
-//│ 									LH_C _lh_listcomp_fun_ls_h²³ _lh_listcomp_fun_ls_t²³ => [LH_C mappend₁₀(pad₀₀(string_of_int⁰(_lh_listcomp_fun_ls_h⁴³), width⁵), _lh_listcomp_fun_ls_h²³) _lh_listcomp_fun⁴⁶(_lh_listcomp_fun_ls_t²³)]
-//│ 									| LH_N  => _lh_listcomp_fun⁴⁵(_lh_listcomp_fun_ls_t⁴³)})
+//│ 									LH_C _lh_listcomp_fun_ls_h²³ _lh_listcomp_fun_ls_t²³ => [LH_C mappend₁₀(pad₀₀(string_of_int⁰(force⁰(_lh_listcomp_fun_ls_h⁴³)), width⁵), _lh_listcomp_fun_ls_h²³) _lh_listcomp_fun⁴⁶(_lh_listcomp_fun_ls_t²³)]
+//│ 									| LH_N  => _lh_listcomp_fun⁴⁵(force⁰(_lh_listcomp_fun_ls_t⁴³))})
 //│ 								in _lh_listcomp_fun⁴⁶(expand₀₁(_lh_numericRule_LH_C_1¹⁰))))) else (fun _lh_listcomp_fun⁴⁷ -> (fun _lh_numericRule_LH_C_1¹¹ -> (fun width⁶ -> [LH_N])))
 //│ 					def enumFromTo₂₀(a⁶¹, b⁴⁴) = 
 //│ 						if (a⁶¹ <= b⁴⁴) then 
-//│ 							let _lh_listcomp_fun_ls_h⁵⁷ = a⁶¹
-//│ 							in let _lh_listcomp_fun_ls_t⁶¹ = enumFromTo₂₀((a⁶¹ + 1), b⁴⁴)
+//│ 							let _lh_listcomp_fun_ls_h⁵⁷ = lazy⁰(a⁶¹)
+//│ 							in let _lh_listcomp_fun_ls_t⁶¹ = lazy⁰(enumFromTo₂₀((a⁶¹ + 1), b⁴⁴))
 //│ 							in (fun _lh_listcomp_fun¹¹⁷ -> (fun _lh_numericRule_LH_C_1²⁸ -> (fun width²³ -> 
 //│ 								let _lh_listcomp_fun¹¹⁸ = (fun _lh_listcomp_fun_para⁷⁹ -> case _lh_listcomp_fun_para⁷⁹ of {
-//│ 									LH_C _lh_listcomp_fun_ls_h²³ _lh_listcomp_fun_ls_t²³ => [LH_C mappend₁₀(pad₀₀(string_of_int⁰(_lh_listcomp_fun_ls_h⁵⁷), width²³), _lh_listcomp_fun_ls_h²³) _lh_listcomp_fun¹¹⁸(_lh_listcomp_fun_ls_t²³)]
-//│ 									| LH_N  => _lh_listcomp_fun¹¹⁷(_lh_listcomp_fun_ls_t⁶¹)})
+//│ 									LH_C _lh_listcomp_fun_ls_h²³ _lh_listcomp_fun_ls_t²³ => [LH_C mappend₁₀(pad₀₀(string_of_int⁰(force⁰(_lh_listcomp_fun_ls_h⁵⁷)), width²³), _lh_listcomp_fun_ls_h²³) _lh_listcomp_fun¹¹⁸(_lh_listcomp_fun_ls_t²³)]
+//│ 									| LH_N  => _lh_listcomp_fun¹¹⁷(force⁰(_lh_listcomp_fun_ls_t⁶¹))})
 //│ 								in _lh_listcomp_fun¹¹⁸(expand₀₁(_lh_numericRule_LH_C_1²⁸))))) else (fun _lh_listcomp_fun¹¹⁹ -> (fun _lh_numericRule_LH_C_1²⁹ -> (fun width²⁴ -> [LH_N])))
 //│ 					def length₀₀(ls³⁶) = 
 //│ 						case ls³⁶ of {
@@ -3310,11 +3310,11 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 						where
 //│ 						def enumFromTo₃₀(a⁵⁰, b⁴⁰) = 
 //│ 							if (a⁵⁰ <= b⁴⁰) then 
-//│ 								let _lh_listcomp_fun_ls_t⁵⁷ = enumFromTo₃₀((a⁵⁰ + 1), b⁴⁰)
+//│ 								let _lh_listcomp_fun_ls_t⁵⁷ = lazy⁰(enumFromTo₃₀((a⁵⁰ + 1), b⁴⁰))
 //│ 								in (fun _lh_listcomp_fun⁹⁸ -> 
-//│ 									let h⁵⁶ = '0'
-//│ 									in let t⁶⁵ = _lh_listcomp_fun⁹⁸(_lh_listcomp_fun_ls_t⁵⁷)
-//│ 									in (fun ys²⁵ -> [LH_C h⁵⁶ mappend₂₀(t⁶⁵, ys²⁵)])) else (fun _lh_listcomp_fun⁹⁹ -> (fun ys²⁶ -> ys²⁶))
+//│ 									let h⁵⁶ = lazy⁰('0')
+//│ 									in let t⁶⁵ = lazy⁰(_lh_listcomp_fun⁹⁸(force⁰(_lh_listcomp_fun_ls_t⁵⁷)))
+//│ 									in (fun ys²⁵ -> [LH_C force⁰(h⁵⁶) mappend₂₀(force⁰(t⁶⁵), ys²⁵)])) else (fun _lh_listcomp_fun⁹⁹ -> (fun ys²⁶ -> ys²⁶))
 //│ 						def length₂₀(ls⁴⁵) = 
 //│ 							case ls⁴⁵ of {
 //│ 								LH_C h¹⁷ t²¹ => (1 + length₂₀(t²¹))
@@ -3328,9 +3328,9 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 								let _lh_matchIdent³³ = span₀₀(_lh_span_arg1¹², _lh_span_LH_C_1⁵)
 //│ 								in case _lh_matchIdent³³ of {
 //│ 									LH_P2 _lh_span_LH_P2_0⁵ _lh_span_LH_P2_1⁵ => [LH_P2 
-//│ 										let h⁵² = _lh_span_LH_C_0⁵
-//│ 										in let t⁶⁰ = _lh_span_LH_P2_0⁵
-//│ 										in (fun f¹⁹ -> (fun i¹⁹ -> foldl₀₀(f¹⁹, f¹⁹(i¹⁹, h⁵²), t⁶⁰))) _lh_span_LH_P2_1⁵]
+//│ 										let h⁵² = lazy⁰(_lh_span_LH_C_0⁵)
+//│ 										in let t⁶⁰ = lazy⁰(_lh_span_LH_P2_0⁵)
+//│ 										in (fun f¹⁹ -> (fun i¹⁹ -> foldl₀₀(f¹⁹, f¹⁹(i¹⁹, force⁰(h⁵²)), force⁰(t⁶⁰)))) _lh_span_LH_P2_1⁵]
 //│ 									| _  => error⁰} else [LH_P2 (fun f²⁰ -> (fun i²⁰ -> i²⁰)) [LH_C _lh_span_LH_C_0⁵ _lh_span_LH_C_1⁵]]
 //│ 							| _  => error⁰}
 //│ 					def span₁₀(_lh_span_arg1¹¹, _lh_span_arg2¹¹) = 
@@ -3340,9 +3340,9 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 								let _lh_matchIdent³² = span₁₀(_lh_span_arg1¹¹, _lh_span_LH_C_1⁸)
 //│ 								in case _lh_matchIdent³² of {
 //│ 									LH_P2 _lh_span_LH_P2_0⁸ _lh_span_LH_P2_1⁸ => [LH_P2 
-//│ 										let h⁵¹ = _lh_span_LH_C_0⁸
-//│ 										in let t⁵⁹ = _lh_span_LH_P2_0⁸
-//│ 										in (fun f¹⁶ -> (fun i¹⁶ -> foldl₁₀(f¹⁶, f¹⁶(i¹⁶, h⁵¹), t⁵⁹))) _lh_span_LH_P2_1⁸]
+//│ 										let h⁵¹ = lazy⁰(_lh_span_LH_C_0⁸)
+//│ 										in let t⁵⁹ = lazy⁰(_lh_span_LH_P2_0⁸)
+//│ 										in (fun f¹⁶ -> (fun i¹⁶ -> foldl₁₀(f¹⁶, f¹⁶(i¹⁶, force⁰(h⁵¹)), force⁰(t⁵⁹)))) _lh_span_LH_P2_1⁸]
 //│ 									| _  => error⁰} else [LH_P2 (fun f¹⁷ -> (fun i¹⁷ -> i¹⁷)) [LH_C _lh_span_LH_C_0⁸ _lh_span_LH_C_1⁸]]
 //│ 							| _  => error⁰}
 //│ 			def reverse₀₁(ls⁵⁴) = 
@@ -3397,24 +3397,24 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 					where
 //│ 					def enumFromTo₀₂(a³⁶, b²⁹) = 
 //│ 						if (a³⁶ <= b²⁹) then 
-//│ 							let _lh_listcomp_fun_ls_h⁴⁵ = a³⁶
-//│ 							in let _lh_listcomp_fun_ls_t⁴⁶ = enumFromTo₀₂((a³⁶ + 1), b²⁹)
+//│ 							let _lh_listcomp_fun_ls_h⁴⁵ = lazy⁰(a³⁶)
+//│ 							in let _lh_listcomp_fun_ls_t⁴⁶ = lazy⁰(enumFromTo₀₂((a³⁶ + 1), b²⁹))
 //│ 							in (fun _lh_alphabeticRule_LH_C_1²¹ -> (fun _lh_listcomp_fun⁵⁴ -> 
 //│ 								let _lh_listcomp_fun⁵⁵ = (fun _lh_listcomp_fun_para⁴⁷ -> case _lh_listcomp_fun_para⁴⁷ of {
-//│ 									LH_C _lh_listcomp_fun_ls_h¹³ _lh_listcomp_fun_ls_t¹³ => [LH_C [LH_C char_of_int⁰(_lh_listcomp_fun_ls_h⁴⁵) _lh_listcomp_fun_ls_h¹³] _lh_listcomp_fun⁵⁵(_lh_listcomp_fun_ls_t¹³)]
-//│ 									| LH_N  => _lh_listcomp_fun⁵⁴(_lh_listcomp_fun_ls_t⁴⁶)})
+//│ 									LH_C _lh_listcomp_fun_ls_h¹³ _lh_listcomp_fun_ls_t¹³ => [LH_C [LH_C char_of_int⁰(force⁰(_lh_listcomp_fun_ls_h⁴⁵)) _lh_listcomp_fun_ls_h¹³] _lh_listcomp_fun⁵⁵(_lh_listcomp_fun_ls_t¹³)]
+//│ 									| LH_N  => _lh_listcomp_fun⁵⁴(force⁰(_lh_listcomp_fun_ls_t⁴⁶))})
 //│ 								in _lh_listcomp_fun⁵⁵(expand₀₂(_lh_alphabeticRule_LH_C_1²¹)))) else (fun _lh_alphabeticRule_LH_C_1²² -> (fun _lh_listcomp_fun⁵⁶ -> [LH_N]))
 //│ 					def enumFromTo₁₂(a⁵², b⁴¹) = 
 //│ 						if (a⁵² <= b⁴¹) then 
-//│ 							let h⁵⁸ = a⁵²
-//│ 							in let t⁶⁷ = enumFromTo₁₂((a⁵² + 1), b⁴¹)
-//│ 							in (fun a⁵³ -> reverse_helper₀₂(t⁶⁷, 
-//│ 								let _lh_listcomp_fun_ls_h⁵⁴ = h⁵⁸
-//│ 								in let _lh_listcomp_fun_ls_t⁵⁸ = a⁵³
+//│ 							let h⁵⁸ = lazy⁰(a⁵²)
+//│ 							in let t⁶⁷ = lazy⁰(enumFromTo₁₂((a⁵² + 1), b⁴¹))
+//│ 							in (fun a⁵³ -> reverse_helper₀₂(force⁰(t⁶⁷), 
+//│ 								let _lh_listcomp_fun_ls_h⁵⁴ = lazy⁰(force⁰(h⁵⁸))
+//│ 								in let _lh_listcomp_fun_ls_t⁵⁸ = lazy⁰(a⁵³)
 //│ 								in (fun _lh_alphabeticRule_LH_C_1³¹ -> (fun _lh_listcomp_fun¹⁰⁰ -> 
 //│ 									let _lh_listcomp_fun¹⁰¹ = (fun _lh_listcomp_fun_para⁶⁷ -> case _lh_listcomp_fun_para⁶⁷ of {
-//│ 										LH_C _lh_listcomp_fun_ls_h¹⁵ _lh_listcomp_fun_ls_t¹⁵ => [LH_C [LH_C char_of_int⁰(_lh_listcomp_fun_ls_h⁵⁴) _lh_listcomp_fun_ls_h¹⁵] _lh_listcomp_fun¹⁰¹(_lh_listcomp_fun_ls_t¹⁵)]
-//│ 										| LH_N  => _lh_listcomp_fun¹⁰⁰(_lh_listcomp_fun_ls_t⁵⁸)})
+//│ 										LH_C _lh_listcomp_fun_ls_h¹⁵ _lh_listcomp_fun_ls_t¹⁵ => [LH_C [LH_C char_of_int⁰(force⁰(_lh_listcomp_fun_ls_h⁵⁴)) _lh_listcomp_fun_ls_h¹⁵] _lh_listcomp_fun¹⁰¹(_lh_listcomp_fun_ls_t¹⁵)]
+//│ 										| LH_N  => _lh_listcomp_fun¹⁰⁰(force⁰(_lh_listcomp_fun_ls_t⁵⁸))})
 //│ 									in _lh_listcomp_fun¹⁰¹(expand₀₂(_lh_alphabeticRule_LH_C_1³¹)))))) else (fun a⁵⁴ -> a⁵⁴)
 //│ 					def reverse₀₂(ls³⁸) = 
 //│ 						reverse_helper₀₂(ls³⁸, (fun _lh_alphabeticRule_LH_C_1²⁸ -> (fun _lh_listcomp_fun⁷³ -> [LH_N])))
@@ -3431,12 +3431,12 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 									LH_P2 _lh_numericRule_LH_P2_0⁴ _lh_numericRule_LH_P2_1⁴ => case _lh_numericRule_LH_P2_1⁴ of {
 //│ 										LH_C _lh_numericRule_LH_C_0³ _lh_numericRule_LH_C_1³ => 
 //│ 											let _lh_matchIdent³⁹ = 	
-//│ 												let _lh_numericRule_LH_P2_0¹⁷ = mknum₀₁(_lh_numericRule_LH_P2_0³)
-//│ 												in let _lh_numericRule_LH_P2_1¹⁷ = mknum₁₁(_lh_numericRule_LH_P2_0⁴)
+//│ 												let _lh_numericRule_LH_P2_0¹⁷ = lazy⁰(mknum₀₁(_lh_numericRule_LH_P2_0³))
+//│ 												in let _lh_numericRule_LH_P2_1¹⁷ = lazy⁰(mknum₁₁(_lh_numericRule_LH_P2_0⁴))
 //│ 												in (fun _lh_numericRule_LH_C_1²⁶ -> 
-//│ 													let width²¹ = max₀₁(length₀₁(string_of_int⁰(_lh_numericRule_LH_P2_0¹⁷)), length₁₁(string_of_int⁰(_lh_numericRule_LH_P2_1¹⁷)))
+//│ 													let width²¹ = max₀₁(length₀₁(string_of_int⁰(force⁰(_lh_numericRule_LH_P2_0¹⁷))), length₁₁(string_of_int⁰(force⁰(_lh_numericRule_LH_P2_1¹⁷))))
 //│ 													in let _lh_listcomp_fun¹⁰² = (fun _lh_listcomp_fun_para⁶⁸ -> _lh_listcomp_fun_para⁶⁸(_lh_listcomp_fun¹⁰², _lh_numericRule_LH_C_1²⁶, width²¹))
-//│ 													in _lh_listcomp_fun¹⁰²(if (_lh_numericRule_LH_P2_0¹⁷ < _lh_numericRule_LH_P2_1¹⁷) then enumFromTo₂₁(_lh_numericRule_LH_P2_0¹⁷, _lh_numericRule_LH_P2_1¹⁷) else enumFromThenTo₀₁(_lh_numericRule_LH_P2_0¹⁷, (_lh_numericRule_LH_P2_0¹⁷ - 1), _lh_numericRule_LH_P2_1¹⁷)))
+//│ 													in _lh_listcomp_fun¹⁰²(if (force⁰(_lh_numericRule_LH_P2_0¹⁷) < force⁰(_lh_numericRule_LH_P2_1¹⁷)) then enumFromTo₂₁(force⁰(_lh_numericRule_LH_P2_0¹⁷), force⁰(_lh_numericRule_LH_P2_1¹⁷)) else enumFromThenTo₀₁(force⁰(_lh_numericRule_LH_P2_0¹⁷), (force⁰(_lh_numericRule_LH_P2_0¹⁷) - 1), force⁰(_lh_numericRule_LH_P2_1¹⁷))))
 //│ 											in _lh_matchIdent³⁹(_lh_numericRule_LH_C_1³)
 //│ 										| _  => error⁰}
 //│ 									| _  => error⁰}
@@ -3445,21 +3445,21 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 					where
 //│ 					def enumFromThenTo₀₁(a³⁴, t⁵³, b²⁷) = 
 //│ 						if (a³⁴ <= b²⁷) then 
-//│ 							let _lh_listcomp_fun_ls_h⁴⁴ = a³⁴
-//│ 							in let _lh_listcomp_fun_ls_t⁴⁴ = enumFromThenTo₀₁(t⁵³, ((2 * t⁵³) - a³⁴), b²⁷)
+//│ 							let _lh_listcomp_fun_ls_h⁴⁴ = lazy⁰(a³⁴)
+//│ 							in let _lh_listcomp_fun_ls_t⁴⁴ = lazy⁰(enumFromThenTo₀₁(t⁵³, ((2 * t⁵³) - a³⁴), b²⁷))
 //│ 							in (fun _lh_listcomp_fun⁴⁸ -> (fun _lh_numericRule_LH_C_1¹² -> (fun width⁷ -> 
 //│ 								let _lh_listcomp_fun⁴⁹ = (fun _lh_listcomp_fun_para⁴⁵ -> case _lh_listcomp_fun_para⁴⁵ of {
-//│ 									LH_C _lh_listcomp_fun_ls_h¹⁷ _lh_listcomp_fun_ls_t¹⁷ => [LH_C mappend₁₁(pad₀₁(string_of_int⁰(_lh_listcomp_fun_ls_h⁴⁴), width⁷), _lh_listcomp_fun_ls_h¹⁷) _lh_listcomp_fun⁴⁹(_lh_listcomp_fun_ls_t¹⁷)]
-//│ 									| LH_N  => _lh_listcomp_fun⁴⁸(_lh_listcomp_fun_ls_t⁴⁴)})
+//│ 									LH_C _lh_listcomp_fun_ls_h¹⁷ _lh_listcomp_fun_ls_t¹⁷ => [LH_C mappend₁₁(pad₀₁(string_of_int⁰(force⁰(_lh_listcomp_fun_ls_h⁴⁴)), width⁷), _lh_listcomp_fun_ls_h¹⁷) _lh_listcomp_fun⁴⁹(_lh_listcomp_fun_ls_t¹⁷)]
+//│ 									| LH_N  => _lh_listcomp_fun⁴⁸(force⁰(_lh_listcomp_fun_ls_t⁴⁴))})
 //│ 								in _lh_listcomp_fun⁴⁹(expand₀₂(_lh_numericRule_LH_C_1¹²))))) else (fun _lh_listcomp_fun⁵⁰ -> (fun _lh_numericRule_LH_C_1¹³ -> (fun width⁸ -> [LH_N])))
 //│ 					def enumFromTo₂₁(a⁴³, b³³) = 
 //│ 						if (a⁴³ <= b³³) then 
-//│ 							let _lh_listcomp_fun_ls_h⁴⁹ = a⁴³
-//│ 							in let _lh_listcomp_fun_ls_t⁵⁰ = enumFromTo₂₁((a⁴³ + 1), b³³)
+//│ 							let _lh_listcomp_fun_ls_h⁴⁹ = lazy⁰(a⁴³)
+//│ 							in let _lh_listcomp_fun_ls_t⁵⁰ = lazy⁰(enumFromTo₂₁((a⁴³ + 1), b³³))
 //│ 							in (fun _lh_listcomp_fun⁶⁹ -> (fun _lh_numericRule_LH_C_1¹⁵ -> (fun width¹⁰ -> 
 //│ 								let _lh_listcomp_fun⁷⁰ = (fun _lh_listcomp_fun_para⁵⁵ -> case _lh_listcomp_fun_para⁵⁵ of {
-//│ 									LH_C _lh_listcomp_fun_ls_h¹⁷ _lh_listcomp_fun_ls_t¹⁷ => [LH_C mappend₁₁(pad₀₁(string_of_int⁰(_lh_listcomp_fun_ls_h⁴⁹), width¹⁰), _lh_listcomp_fun_ls_h¹⁷) _lh_listcomp_fun⁷⁰(_lh_listcomp_fun_ls_t¹⁷)]
-//│ 									| LH_N  => _lh_listcomp_fun⁶⁹(_lh_listcomp_fun_ls_t⁵⁰)})
+//│ 									LH_C _lh_listcomp_fun_ls_h¹⁷ _lh_listcomp_fun_ls_t¹⁷ => [LH_C mappend₁₁(pad₀₁(string_of_int⁰(force⁰(_lh_listcomp_fun_ls_h⁴⁹)), width¹⁰), _lh_listcomp_fun_ls_h¹⁷) _lh_listcomp_fun⁷⁰(_lh_listcomp_fun_ls_t¹⁷)]
+//│ 									| LH_N  => _lh_listcomp_fun⁶⁹(force⁰(_lh_listcomp_fun_ls_t⁵⁰))})
 //│ 								in _lh_listcomp_fun⁷⁰(expand₀₂(_lh_numericRule_LH_C_1¹⁵))))) else (fun _lh_listcomp_fun⁷¹ -> (fun _lh_numericRule_LH_C_1¹⁶ -> (fun width¹¹ -> [LH_N])))
 //│ 					def length₀₁(ls⁵²) = 
 //│ 						case ls⁵² of {
@@ -3492,11 +3492,11 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 						where
 //│ 						def enumFromTo₃₁(a⁴⁵, b³⁵) = 
 //│ 							if (a⁴⁵ <= b³⁵) then 
-//│ 								let _lh_listcomp_fun_ls_t⁵² = enumFromTo₃₁((a⁴⁵ + 1), b³⁵)
+//│ 								let _lh_listcomp_fun_ls_t⁵² = lazy⁰(enumFromTo₃₁((a⁴⁵ + 1), b³⁵))
 //│ 								in (fun _lh_listcomp_fun⁸¹ -> 
-//│ 									let h⁵⁰ = '0'
-//│ 									in let t⁵⁸ = _lh_listcomp_fun⁸¹(_lh_listcomp_fun_ls_t⁵²)
-//│ 									in (fun ys¹⁸ -> [LH_C h⁵⁰ mappend₂₁(t⁵⁸, ys¹⁸)])) else (fun _lh_listcomp_fun⁸² -> (fun ys¹⁹ -> ys¹⁹))
+//│ 									let h⁵⁰ = lazy⁰('0')
+//│ 									in let t⁵⁸ = lazy⁰(_lh_listcomp_fun⁸¹(force⁰(_lh_listcomp_fun_ls_t⁵²)))
+//│ 									in (fun ys¹⁸ -> [LH_C force⁰(h⁵⁰) mappend₂₁(force⁰(t⁵⁸), ys¹⁸)])) else (fun _lh_listcomp_fun⁸² -> (fun ys¹⁹ -> ys¹⁹))
 //│ 						def length₂₁(ls⁴⁸) = 
 //│ 							case ls⁴⁸ of {
 //│ 								LH_C h²¹ t²⁶ => (1 + length₂₁(t²⁶))
@@ -3510,9 +3510,9 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 								let _lh_matchIdent³⁴ = span₀₁(_lh_span_arg1¹³, _lh_span_LH_C_1⁶)
 //│ 								in case _lh_matchIdent³⁴ of {
 //│ 									LH_P2 _lh_span_LH_P2_0⁶ _lh_span_LH_P2_1⁶ => [LH_P2 
-//│ 										let h⁵³ = _lh_span_LH_C_0⁶
-//│ 										in let t⁶¹ = _lh_span_LH_P2_0⁶
-//│ 										in (fun f²² -> (fun i²² -> foldl₀₁(f²², f²²(i²², h⁵³), t⁶¹))) _lh_span_LH_P2_1⁶]
+//│ 										let h⁵³ = lazy⁰(_lh_span_LH_C_0⁶)
+//│ 										in let t⁶¹ = lazy⁰(_lh_span_LH_P2_0⁶)
+//│ 										in (fun f²² -> (fun i²² -> foldl₀₁(f²², f²²(i²², force⁰(h⁵³)), force⁰(t⁶¹)))) _lh_span_LH_P2_1⁶]
 //│ 									| _  => error⁰} else [LH_P2 (fun f²³ -> (fun i²³ -> i²³)) [LH_C _lh_span_LH_C_0⁶ _lh_span_LH_C_1⁶]]
 //│ 							| _  => error⁰}
 //│ 					def span₁₁(_lh_span_arg1¹⁰, _lh_span_arg2¹⁰) = 
@@ -3522,9 +3522,9 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 								let _lh_matchIdent²⁸ = span₁₁(_lh_span_arg1¹⁰, _lh_span_LH_C_1³)
 //│ 								in case _lh_matchIdent²⁸ of {
 //│ 									LH_P2 _lh_span_LH_P2_0³ _lh_span_LH_P2_1³ => [LH_P2 
-//│ 										let h⁴⁸ = _lh_span_LH_C_0³
-//│ 										in let t⁵⁵ = _lh_span_LH_P2_0³
-//│ 										in (fun f¹² -> (fun i¹² -> foldl₁₁(f¹², f¹²(i¹², h⁴⁸), t⁵⁵))) _lh_span_LH_P2_1³]
+//│ 										let h⁴⁸ = lazy⁰(_lh_span_LH_C_0³)
+//│ 										in let t⁵⁵ = lazy⁰(_lh_span_LH_P2_0³)
+//│ 										in (fun f¹² -> (fun i¹² -> foldl₁₁(f¹², f¹²(i¹², force⁰(h⁴⁸)), force⁰(t⁵⁵)))) _lh_span_LH_P2_1³]
 //│ 									| _  => error⁰} else [LH_P2 (fun f¹³ -> (fun i¹³ -> i¹³)) [LH_C _lh_span_LH_C_0³ _lh_span_LH_C_1³]]
 //│ 							| _  => error⁰}
 //│ 		def numericRule₀₂(_lh_numericRule_arg1⁵) = 
@@ -3537,12 +3537,12 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 							LH_P2 _lh_numericRule_LH_P2_0¹³ _lh_numericRule_LH_P2_1¹³ => case _lh_numericRule_LH_P2_1¹³ of {
 //│ 								LH_C _lh_numericRule_LH_C_0⁹ _lh_numericRule_LH_C_1⁹ => 
 //│ 									let _lh_matchIdent²⁷ = 	
-//│ 										let _lh_numericRule_LH_P2_0¹⁵ = mknum₀₃(_lh_numericRule_LH_P2_0¹²)
-//│ 										in let _lh_numericRule_LH_P2_1¹⁵ = mknum₁₃(_lh_numericRule_LH_P2_0¹³)
+//│ 										let _lh_numericRule_LH_P2_0¹⁵ = lazy⁰(mknum₀₃(_lh_numericRule_LH_P2_0¹²))
+//│ 										in let _lh_numericRule_LH_P2_1¹⁵ = lazy⁰(mknum₁₃(_lh_numericRule_LH_P2_0¹³))
 //│ 										in (fun _lh_numericRule_LH_C_1¹⁴ -> 
-//│ 											let width⁹ = max₀₃(length₀₃(string_of_int⁰(_lh_numericRule_LH_P2_0¹⁵)), length₁₃(string_of_int⁰(_lh_numericRule_LH_P2_1¹⁵)))
+//│ 											let width⁹ = max₀₃(length₀₃(string_of_int⁰(force⁰(_lh_numericRule_LH_P2_0¹⁵))), length₁₃(string_of_int⁰(force⁰(_lh_numericRule_LH_P2_1¹⁵))))
 //│ 											in let _lh_listcomp_fun⁵⁹ = (fun _lh_listcomp_fun_para⁵⁰ -> _lh_listcomp_fun_para⁵⁰(_lh_listcomp_fun⁵⁹, _lh_numericRule_LH_C_1¹⁴, width⁹))
-//│ 											in _lh_listcomp_fun⁵⁹(if (_lh_numericRule_LH_P2_0¹⁵ < _lh_numericRule_LH_P2_1¹⁵) then enumFromTo₂₂(_lh_numericRule_LH_P2_0¹⁵, _lh_numericRule_LH_P2_1¹⁵) else enumFromThenTo₀₂(_lh_numericRule_LH_P2_0¹⁵, (_lh_numericRule_LH_P2_0¹⁵ - 1), _lh_numericRule_LH_P2_1¹⁵)))
+//│ 											in _lh_listcomp_fun⁵⁹(if (force⁰(_lh_numericRule_LH_P2_0¹⁵) < force⁰(_lh_numericRule_LH_P2_1¹⁵)) then enumFromTo₂₂(force⁰(_lh_numericRule_LH_P2_0¹⁵), force⁰(_lh_numericRule_LH_P2_1¹⁵)) else enumFromThenTo₀₂(force⁰(_lh_numericRule_LH_P2_0¹⁵), (force⁰(_lh_numericRule_LH_P2_0¹⁵) - 1), force⁰(_lh_numericRule_LH_P2_1¹⁵))))
 //│ 									in _lh_matchIdent²⁷(_lh_numericRule_LH_C_1⁹)
 //│ 								| _  => error⁰}
 //│ 							| _  => error⁰}
@@ -3551,21 +3551,21 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 			where
 //│ 			def enumFromThenTo₀₂(a⁴⁴, t⁵⁷, b³⁴) = 
 //│ 				if (a⁴⁴ <= b³⁴) then 
-//│ 					let _lh_listcomp_fun_ls_h⁵⁰ = a⁴⁴
-//│ 					in let _lh_listcomp_fun_ls_t⁵¹ = enumFromThenTo₀₂(t⁵⁷, ((2 * t⁵⁷) - a⁴⁴), b³⁴)
+//│ 					let _lh_listcomp_fun_ls_h⁵⁰ = lazy⁰(a⁴⁴)
+//│ 					in let _lh_listcomp_fun_ls_t⁵¹ = lazy⁰(enumFromThenTo₀₂(t⁵⁷, ((2 * t⁵⁷) - a⁴⁴), b³⁴))
 //│ 					in (fun _lh_listcomp_fun⁷⁸ -> (fun _lh_numericRule_LH_C_1¹⁸ -> (fun width¹³ -> 
 //│ 						let _lh_listcomp_fun⁷⁹ = (fun _lh_listcomp_fun_para⁶⁰ -> case _lh_listcomp_fun_para⁶⁰ of {
-//│ 							LH_C _lh_listcomp_fun_ls_h²⁶ _lh_listcomp_fun_ls_t²⁶ => [LH_C mappend₁₃(pad₀₃(string_of_int⁰(_lh_listcomp_fun_ls_h⁵⁰), width¹³), _lh_listcomp_fun_ls_h²⁶) _lh_listcomp_fun⁷⁹(_lh_listcomp_fun_ls_t²⁶)]
-//│ 							| LH_N  => _lh_listcomp_fun⁷⁸(_lh_listcomp_fun_ls_t⁵¹)})
+//│ 							LH_C _lh_listcomp_fun_ls_h²⁶ _lh_listcomp_fun_ls_t²⁶ => [LH_C mappend₁₃(pad₀₃(string_of_int⁰(force⁰(_lh_listcomp_fun_ls_h⁵⁰)), width¹³), _lh_listcomp_fun_ls_h²⁶) _lh_listcomp_fun⁷⁹(_lh_listcomp_fun_ls_t²⁶)]
+//│ 							| LH_N  => _lh_listcomp_fun⁷⁸(force⁰(_lh_listcomp_fun_ls_t⁵¹))})
 //│ 						in _lh_listcomp_fun⁷⁹(expand₀₃(_lh_numericRule_LH_C_1¹⁸))))) else (fun _lh_listcomp_fun⁸⁰ -> (fun _lh_numericRule_LH_C_1¹⁹ -> (fun width¹⁴ -> [LH_N])))
 //│ 			def enumFromTo₂₂(a⁴⁷, b³⁷) = 
 //│ 				if (a⁴⁷ <= b³⁷) then 
-//│ 					let _lh_listcomp_fun_ls_h⁵¹ = a⁴⁷
-//│ 					in let _lh_listcomp_fun_ls_t⁵⁴ = enumFromTo₂₂((a⁴⁷ + 1), b³⁷)
+//│ 					let _lh_listcomp_fun_ls_h⁵¹ = lazy⁰(a⁴⁷)
+//│ 					in let _lh_listcomp_fun_ls_t⁵⁴ = lazy⁰(enumFromTo₂₂((a⁴⁷ + 1), b³⁷))
 //│ 					in (fun _lh_listcomp_fun⁸⁹ -> (fun _lh_numericRule_LH_C_1²⁰ -> (fun width¹⁵ -> 
 //│ 						let _lh_listcomp_fun⁹⁰ = (fun _lh_listcomp_fun_para⁶⁴ -> case _lh_listcomp_fun_para⁶⁴ of {
-//│ 							LH_C _lh_listcomp_fun_ls_h²⁶ _lh_listcomp_fun_ls_t²⁶ => [LH_C mappend₁₃(pad₀₃(string_of_int⁰(_lh_listcomp_fun_ls_h⁵¹), width¹⁵), _lh_listcomp_fun_ls_h²⁶) _lh_listcomp_fun⁹⁰(_lh_listcomp_fun_ls_t²⁶)]
-//│ 							| LH_N  => _lh_listcomp_fun⁸⁹(_lh_listcomp_fun_ls_t⁵⁴)})
+//│ 							LH_C _lh_listcomp_fun_ls_h²⁶ _lh_listcomp_fun_ls_t²⁶ => [LH_C mappend₁₃(pad₀₃(string_of_int⁰(force⁰(_lh_listcomp_fun_ls_h⁵¹)), width¹⁵), _lh_listcomp_fun_ls_h²⁶) _lh_listcomp_fun⁹⁰(_lh_listcomp_fun_ls_t²⁶)]
+//│ 							| LH_N  => _lh_listcomp_fun⁸⁹(force⁰(_lh_listcomp_fun_ls_t⁵⁴))})
 //│ 						in _lh_listcomp_fun⁹⁰(expand₀₃(_lh_numericRule_LH_C_1²⁰))))) else (fun _lh_listcomp_fun⁹¹ -> (fun _lh_numericRule_LH_C_1²¹ -> (fun width¹⁶ -> [LH_N])))
 //│ 			def expand₀₃(_lh_expand_arg1⁸) = 
 //│ 				case _lh_expand_arg1⁸ of {
@@ -3597,24 +3597,24 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 					where
 //│ 					def enumFromTo₀₃(a⁵⁹, b⁴³) = 
 //│ 						if (a⁵⁹ <= b⁴³) then 
-//│ 							let _lh_listcomp_fun_ls_h⁵⁶ = a⁵⁹
-//│ 							in let _lh_listcomp_fun_ls_t⁶⁰ = enumFromTo₀₃((a⁵⁹ + 1), b⁴³)
+//│ 							let _lh_listcomp_fun_ls_h⁵⁶ = lazy⁰(a⁵⁹)
+//│ 							in let _lh_listcomp_fun_ls_t⁶⁰ = lazy⁰(enumFromTo₀₃((a⁵⁹ + 1), b⁴³))
 //│ 							in (fun _lh_alphabeticRule_LH_C_1³⁴ -> (fun _lh_listcomp_fun¹⁰⁸ -> 
 //│ 								let _lh_listcomp_fun¹⁰⁹ = (fun _lh_listcomp_fun_para⁷² -> case _lh_listcomp_fun_para⁷² of {
-//│ 									LH_C _lh_listcomp_fun_ls_h³⁸ _lh_listcomp_fun_ls_t³⁸ => [LH_C [LH_C char_of_int⁰(_lh_listcomp_fun_ls_h⁵⁶) _lh_listcomp_fun_ls_h³⁸] _lh_listcomp_fun¹⁰⁹(_lh_listcomp_fun_ls_t³⁸)]
-//│ 									| LH_N  => _lh_listcomp_fun¹⁰⁸(_lh_listcomp_fun_ls_t⁶⁰)})
+//│ 									LH_C _lh_listcomp_fun_ls_h³⁸ _lh_listcomp_fun_ls_t³⁸ => [LH_C [LH_C char_of_int⁰(force⁰(_lh_listcomp_fun_ls_h⁵⁶)) _lh_listcomp_fun_ls_h³⁸] _lh_listcomp_fun¹⁰⁹(_lh_listcomp_fun_ls_t³⁸)]
+//│ 									| LH_N  => _lh_listcomp_fun¹⁰⁸(force⁰(_lh_listcomp_fun_ls_t⁶⁰))})
 //│ 								in _lh_listcomp_fun¹⁰⁹(expand₀₃(_lh_alphabeticRule_LH_C_1³⁴)))) else (fun _lh_alphabeticRule_LH_C_1³⁵ -> (fun _lh_listcomp_fun¹¹⁰ -> [LH_N]))
 //│ 					def enumFromTo₁₃(a³⁹, b³¹) = 
 //│ 						if (a³⁹ <= b³¹) then 
-//│ 							let h⁴⁹ = a³⁹
-//│ 							in let t⁵⁶ = enumFromTo₁₃((a³⁹ + 1), b³¹)
-//│ 							in (fun a⁴⁰ -> reverse_helper₀₃(t⁵⁶, 
-//│ 								let _lh_listcomp_fun_ls_h⁴⁷ = h⁴⁹
-//│ 								in let _lh_listcomp_fun_ls_t⁴⁸ = a⁴⁰
+//│ 							let h⁴⁹ = lazy⁰(a³⁹)
+//│ 							in let t⁵⁶ = lazy⁰(enumFromTo₁₃((a³⁹ + 1), b³¹))
+//│ 							in (fun a⁴⁰ -> reverse_helper₀₃(force⁰(t⁵⁶), 
+//│ 								let _lh_listcomp_fun_ls_h⁴⁷ = lazy⁰(force⁰(h⁴⁹))
+//│ 								in let _lh_listcomp_fun_ls_t⁴⁸ = lazy⁰(a⁴⁰)
 //│ 								in (fun _lh_alphabeticRule_LH_C_1²⁵ -> (fun _lh_listcomp_fun⁶³ -> 
 //│ 									let _lh_listcomp_fun⁶⁴ = (fun _lh_listcomp_fun_para⁵² -> case _lh_listcomp_fun_para⁵² of {
-//│ 										LH_C _lh_listcomp_fun_ls_h⁴⁰ _lh_listcomp_fun_ls_t⁴⁰ => [LH_C [LH_C char_of_int⁰(_lh_listcomp_fun_ls_h⁴⁷) _lh_listcomp_fun_ls_h⁴⁰] _lh_listcomp_fun⁶⁴(_lh_listcomp_fun_ls_t⁴⁰)]
-//│ 										| LH_N  => _lh_listcomp_fun⁶³(_lh_listcomp_fun_ls_t⁴⁸)})
+//│ 										LH_C _lh_listcomp_fun_ls_h⁴⁰ _lh_listcomp_fun_ls_t⁴⁰ => [LH_C [LH_C char_of_int⁰(force⁰(_lh_listcomp_fun_ls_h⁴⁷)) _lh_listcomp_fun_ls_h⁴⁰] _lh_listcomp_fun⁶⁴(_lh_listcomp_fun_ls_t⁴⁰)]
+//│ 										| LH_N  => _lh_listcomp_fun⁶³(force⁰(_lh_listcomp_fun_ls_t⁴⁸))})
 //│ 									in _lh_listcomp_fun⁶⁴(expand₀₃(_lh_alphabeticRule_LH_C_1²⁵)))))) else (fun a⁴¹ -> a⁴¹)
 //│ 					def reverse₀₃(ls⁴³) = 
 //│ 						reverse_helper₀₃(ls⁴³, (fun _lh_alphabeticRule_LH_C_1³⁰ -> (fun _lh_listcomp_fun⁸⁸ -> [LH_N])))
@@ -3647,12 +3647,12 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 									LH_P2 _lh_numericRule_LH_P2_0⁷ _lh_numericRule_LH_P2_1⁷ => case _lh_numericRule_LH_P2_1⁷ of {
 //│ 										LH_C _lh_numericRule_LH_C_0⁵ _lh_numericRule_LH_C_1⁵ => 
 //│ 											let _lh_matchIdent⁴⁴ = 	
-//│ 												let _lh_numericRule_LH_P2_0¹⁸ = mknum₀₂(_lh_numericRule_LH_P2_0⁶)
-//│ 												in let _lh_numericRule_LH_P2_1¹⁸ = mknum₁₂(_lh_numericRule_LH_P2_0⁷)
+//│ 												let _lh_numericRule_LH_P2_0¹⁸ = lazy⁰(mknum₀₂(_lh_numericRule_LH_P2_0⁶))
+//│ 												in let _lh_numericRule_LH_P2_1¹⁸ = lazy⁰(mknum₁₂(_lh_numericRule_LH_P2_0⁷))
 //│ 												in (fun _lh_numericRule_LH_C_1²⁷ -> 
-//│ 													let width²² = max₀₂(length₀₂(string_of_int⁰(_lh_numericRule_LH_P2_0¹⁸)), length₁₂(string_of_int⁰(_lh_numericRule_LH_P2_1¹⁸)))
+//│ 													let width²² = max₀₂(length₀₂(string_of_int⁰(force⁰(_lh_numericRule_LH_P2_0¹⁸))), length₁₂(string_of_int⁰(force⁰(_lh_numericRule_LH_P2_1¹⁸))))
 //│ 													in let _lh_listcomp_fun¹¹⁵ = (fun _lh_listcomp_fun_para⁷⁷ -> _lh_listcomp_fun_para⁷⁷(_lh_listcomp_fun¹¹⁵, _lh_numericRule_LH_C_1²⁷, width²²))
-//│ 													in _lh_listcomp_fun¹¹⁵(if (_lh_numericRule_LH_P2_0¹⁸ < _lh_numericRule_LH_P2_1¹⁸) then enumFromTo₂₃(_lh_numericRule_LH_P2_0¹⁸, _lh_numericRule_LH_P2_1¹⁸) else enumFromThenTo₀₃(_lh_numericRule_LH_P2_0¹⁸, (_lh_numericRule_LH_P2_0¹⁸ - 1), _lh_numericRule_LH_P2_1¹⁸)))
+//│ 													in _lh_listcomp_fun¹¹⁵(if (force⁰(_lh_numericRule_LH_P2_0¹⁸) < force⁰(_lh_numericRule_LH_P2_1¹⁸)) then enumFromTo₂₃(force⁰(_lh_numericRule_LH_P2_0¹⁸), force⁰(_lh_numericRule_LH_P2_1¹⁸)) else enumFromThenTo₀₃(force⁰(_lh_numericRule_LH_P2_0¹⁸), (force⁰(_lh_numericRule_LH_P2_0¹⁸) - 1), force⁰(_lh_numericRule_LH_P2_1¹⁸))))
 //│ 											in _lh_matchIdent⁴⁴(_lh_numericRule_LH_C_1⁵)
 //│ 										| _  => error⁰}
 //│ 									| _  => error⁰}
@@ -3661,21 +3661,21 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 					where
 //│ 					def enumFromThenTo₀₃(a⁴⁹, t⁶⁴, b³⁹) = 
 //│ 						if (a⁴⁹ <= b³⁹) then 
-//│ 							let _lh_listcomp_fun_ls_h⁵³ = a⁴⁹
-//│ 							in let _lh_listcomp_fun_ls_t⁵⁶ = enumFromThenTo₀₃(t⁶⁴, ((2 * t⁶⁴) - a⁴⁹), b³⁹)
+//│ 							let _lh_listcomp_fun_ls_h⁵³ = lazy⁰(a⁴⁹)
+//│ 							in let _lh_listcomp_fun_ls_t⁵⁶ = lazy⁰(enumFromThenTo₀₃(t⁶⁴, ((2 * t⁶⁴) - a⁴⁹), b³⁹))
 //│ 							in (fun _lh_listcomp_fun⁹⁵ -> (fun _lh_numericRule_LH_C_1²⁴ -> (fun width¹⁹ -> 
 //│ 								let _lh_listcomp_fun⁹⁶ = (fun _lh_listcomp_fun_para⁶⁶ -> case _lh_listcomp_fun_para⁶⁶ of {
-//│ 									LH_C _lh_listcomp_fun_ls_h¹⁹ _lh_listcomp_fun_ls_t¹⁹ => [LH_C mappend₁₂(pad₀₂(string_of_int⁰(_lh_listcomp_fun_ls_h⁵³), width¹⁹), _lh_listcomp_fun_ls_h¹⁹) _lh_listcomp_fun⁹⁶(_lh_listcomp_fun_ls_t¹⁹)]
-//│ 									| LH_N  => _lh_listcomp_fun⁹⁵(_lh_listcomp_fun_ls_t⁵⁶)})
+//│ 									LH_C _lh_listcomp_fun_ls_h¹⁹ _lh_listcomp_fun_ls_t¹⁹ => [LH_C mappend₁₂(pad₀₂(string_of_int⁰(force⁰(_lh_listcomp_fun_ls_h⁵³)), width¹⁹), _lh_listcomp_fun_ls_h¹⁹) _lh_listcomp_fun⁹⁶(_lh_listcomp_fun_ls_t¹⁹)]
+//│ 									| LH_N  => _lh_listcomp_fun⁹⁵(force⁰(_lh_listcomp_fun_ls_t⁵⁶))})
 //│ 								in _lh_listcomp_fun⁹⁶(expand₀₃(_lh_numericRule_LH_C_1²⁴))))) else (fun _lh_listcomp_fun⁹⁷ -> (fun _lh_numericRule_LH_C_1²⁵ -> (fun width²⁰ -> [LH_N])))
 //│ 					def enumFromTo₂₃(a⁴⁸, b³⁸) = 
 //│ 						if (a⁴⁸ <= b³⁸) then 
-//│ 							let _lh_listcomp_fun_ls_h⁵² = a⁴⁸
-//│ 							in let _lh_listcomp_fun_ls_t⁵⁵ = enumFromTo₂₃((a⁴⁸ + 1), b³⁸)
+//│ 							let _lh_listcomp_fun_ls_h⁵² = lazy⁰(a⁴⁸)
+//│ 							in let _lh_listcomp_fun_ls_t⁵⁵ = lazy⁰(enumFromTo₂₃((a⁴⁸ + 1), b³⁸))
 //│ 							in (fun _lh_listcomp_fun⁹² -> (fun _lh_numericRule_LH_C_1²² -> (fun width¹⁷ -> 
 //│ 								let _lh_listcomp_fun⁹³ = (fun _lh_listcomp_fun_para⁶⁵ -> case _lh_listcomp_fun_para⁶⁵ of {
-//│ 									LH_C _lh_listcomp_fun_ls_h¹⁹ _lh_listcomp_fun_ls_t¹⁹ => [LH_C mappend₁₂(pad₀₂(string_of_int⁰(_lh_listcomp_fun_ls_h⁵²), width¹⁷), _lh_listcomp_fun_ls_h¹⁹) _lh_listcomp_fun⁹³(_lh_listcomp_fun_ls_t¹⁹)]
-//│ 									| LH_N  => _lh_listcomp_fun⁹²(_lh_listcomp_fun_ls_t⁵⁵)})
+//│ 									LH_C _lh_listcomp_fun_ls_h¹⁹ _lh_listcomp_fun_ls_t¹⁹ => [LH_C mappend₁₂(pad₀₂(string_of_int⁰(force⁰(_lh_listcomp_fun_ls_h⁵²)), width¹⁷), _lh_listcomp_fun_ls_h¹⁹) _lh_listcomp_fun⁹³(_lh_listcomp_fun_ls_t¹⁹)]
+//│ 									| LH_N  => _lh_listcomp_fun⁹²(force⁰(_lh_listcomp_fun_ls_t⁵⁵))})
 //│ 								in _lh_listcomp_fun⁹³(expand₀₃(_lh_numericRule_LH_C_1²²))))) else (fun _lh_listcomp_fun⁹⁴ -> (fun _lh_numericRule_LH_C_1²³ -> (fun width¹⁸ -> [LH_N])))
 //│ 					def length₀₂(ls⁴²) = 
 //│ 						case ls⁴² of {
@@ -3708,11 +3708,11 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 						where
 //│ 						def enumFromTo₃₂(a⁴⁶, b³⁶) = 
 //│ 							if (a⁴⁶ <= b³⁶) then 
-//│ 								let _lh_listcomp_fun_ls_t⁵³ = enumFromTo₃₂((a⁴⁶ + 1), b³⁶)
+//│ 								let _lh_listcomp_fun_ls_t⁵³ = lazy⁰(enumFromTo₃₂((a⁴⁶ + 1), b³⁶))
 //│ 								in (fun _lh_listcomp_fun⁸⁴ -> 
-//│ 									let h⁵⁵ = '0'
-//│ 									in let t⁶³ = _lh_listcomp_fun⁸⁴(_lh_listcomp_fun_ls_t⁵³)
-//│ 									in (fun ys²¹ -> [LH_C h⁵⁵ mappend₂₂(t⁶³, ys²¹)])) else (fun _lh_listcomp_fun⁸⁵ -> (fun ys²² -> ys²²))
+//│ 									let h⁵⁵ = lazy⁰('0')
+//│ 									in let t⁶³ = lazy⁰(_lh_listcomp_fun⁸⁴(force⁰(_lh_listcomp_fun_ls_t⁵³)))
+//│ 									in (fun ys²¹ -> [LH_C force⁰(h⁵⁵) mappend₂₂(force⁰(t⁶³), ys²¹)])) else (fun _lh_listcomp_fun⁸⁵ -> (fun ys²² -> ys²²))
 //│ 						def length₂₂(ls³⁹) = 
 //│ 							case ls³⁹ of {
 //│ 								LH_C h²³ t²⁸ => (1 + length₂₂(t²⁸))
@@ -3726,9 +3726,9 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 								let _lh_matchIdent³⁶ = span₀₂(_lh_span_arg1¹⁵, _lh_span_LH_C_1⁷)
 //│ 								in case _lh_matchIdent³⁶ of {
 //│ 									LH_P2 _lh_span_LH_P2_0⁷ _lh_span_LH_P2_1⁷ => [LH_P2 
-//│ 										let h⁵⁷ = _lh_span_LH_C_0⁷
-//│ 										in let t⁶⁶ = _lh_span_LH_P2_0⁷
-//│ 										in (fun f²⁸ -> (fun i²⁸ -> foldl₀₂(f²⁸, f²⁸(i²⁸, h⁵⁷), t⁶⁶))) _lh_span_LH_P2_1⁷]
+//│ 										let h⁵⁷ = lazy⁰(_lh_span_LH_C_0⁷)
+//│ 										in let t⁶⁶ = lazy⁰(_lh_span_LH_P2_0⁷)
+//│ 										in (fun f²⁸ -> (fun i²⁸ -> foldl₀₂(f²⁸, f²⁸(i²⁸, force⁰(h⁵⁷)), force⁰(t⁶⁶)))) _lh_span_LH_P2_1⁷]
 //│ 									| _  => error⁰} else [LH_P2 (fun f²⁹ -> (fun i²⁹ -> i²⁹)) [LH_C _lh_span_LH_C_0⁷ _lh_span_LH_C_1⁷]]
 //│ 							| _  => error⁰}
 //│ 					def span₁₂(_lh_span_arg1¹⁷, _lh_span_arg2¹⁷) = 
@@ -3738,9 +3738,9 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 								let _lh_matchIdent⁴¹ = span₁₂(_lh_span_arg1¹⁷, _lh_span_LH_C_1⁹)
 //│ 								in case _lh_matchIdent⁴¹ of {
 //│ 									LH_P2 _lh_span_LH_P2_0⁹ _lh_span_LH_P2_1⁹ => [LH_P2 
-//│ 										let h⁶¹ = _lh_span_LH_C_0⁹
-//│ 										in let t⁷⁰ = _lh_span_LH_P2_0⁹
-//│ 										in (fun f³⁷ -> (fun i³⁷ -> foldl₁₂(f³⁷, f³⁷(i³⁷, h⁶¹), t⁷⁰))) _lh_span_LH_P2_1⁹]
+//│ 										let h⁶¹ = lazy⁰(_lh_span_LH_C_0⁹)
+//│ 										in let t⁷⁰ = lazy⁰(_lh_span_LH_P2_0⁹)
+//│ 										in (fun f³⁷ -> (fun i³⁷ -> foldl₁₂(f³⁷, f³⁷(i³⁷, force⁰(h⁶¹)), force⁰(t⁷⁰)))) _lh_span_LH_P2_1⁹]
 //│ 									| _  => error⁰} else [LH_P2 (fun f³⁸ -> (fun i³⁸ -> i³⁸)) [LH_C _lh_span_LH_C_0⁹ _lh_span_LH_C_1⁹]]
 //│ 							| _  => error⁰}
 //│ 			def length₀₃(ls⁴⁷) = 
@@ -3774,11 +3774,11 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 				where
 //│ 				def enumFromTo₃₃(a³⁵, b²⁸) = 
 //│ 					if (a³⁵ <= b²⁸) then 
-//│ 						let _lh_listcomp_fun_ls_t⁴⁵ = enumFromTo₃₃((a³⁵ + 1), b²⁸)
+//│ 						let _lh_listcomp_fun_ls_t⁴⁵ = lazy⁰(enumFromTo₃₃((a³⁵ + 1), b²⁸))
 //│ 						in (fun _lh_listcomp_fun⁵¹ -> 
-//│ 							let h⁴⁷ = '0'
-//│ 							in let t⁵⁴ = _lh_listcomp_fun⁵¹(_lh_listcomp_fun_ls_t⁴⁵)
-//│ 							in (fun ys¹³ -> [LH_C h⁴⁷ mappend₂₃(t⁵⁴, ys¹³)])) else (fun _lh_listcomp_fun⁵² -> (fun ys¹⁴ -> ys¹⁴))
+//│ 							let h⁴⁷ = lazy⁰('0')
+//│ 							in let t⁵⁴ = lazy⁰(_lh_listcomp_fun⁵¹(force⁰(_lh_listcomp_fun_ls_t⁴⁵)))
+//│ 							in (fun ys¹³ -> [LH_C force⁰(h⁴⁷) mappend₂₃(force⁰(t⁵⁴), ys¹³)])) else (fun _lh_listcomp_fun⁵² -> (fun ys¹⁴ -> ys¹⁴))
 //│ 				def length₂₃(ls⁴⁴) = 
 //│ 					case ls⁴⁴ of {
 //│ 						LH_C h¹⁸ t²² => (1 + length₂₃(t²²))
@@ -3792,9 +3792,9 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 						let _lh_matchIdent³⁵ = span₀₃(_lh_span_arg1¹⁴, _lh_span_LH_C_1²)
 //│ 						in case _lh_matchIdent³⁵ of {
 //│ 							LH_P2 _lh_span_LH_P2_0² _lh_span_LH_P2_1² => [LH_P2 
-//│ 								let h⁵⁴ = _lh_span_LH_C_0²
-//│ 								in let t⁶² = _lh_span_LH_P2_0²
-//│ 								in (fun f²⁵ -> (fun i²⁵ -> foldl₀₃(f²⁵, f²⁵(i²⁵, h⁵⁴), t⁶²))) _lh_span_LH_P2_1²]
+//│ 								let h⁵⁴ = lazy⁰(_lh_span_LH_C_0²)
+//│ 								in let t⁶² = lazy⁰(_lh_span_LH_P2_0²)
+//│ 								in (fun f²⁵ -> (fun i²⁵ -> foldl₀₃(f²⁵, f²⁵(i²⁵, force⁰(h⁵⁴)), force⁰(t⁶²)))) _lh_span_LH_P2_1²]
 //│ 							| _  => error⁰} else [LH_P2 (fun f²⁶ -> (fun i²⁶ -> i²⁶)) [LH_C _lh_span_LH_C_0² _lh_span_LH_C_1²]]
 //│ 					| _  => error⁰}
 //│ 			def span₁₃(_lh_span_arg1¹⁶, _lh_span_arg2¹⁶) = 
@@ -3804,9 +3804,9 @@ testGenRegexs_nofib $ primId "[a-j][a-j][a-j][0-9]"
 //│ 						let _lh_matchIdent⁴⁰ = span₁₃(_lh_span_arg1¹⁶, _lh_span_LH_C_1⁴)
 //│ 						in case _lh_matchIdent⁴⁰ of {
 //│ 							LH_P2 _lh_span_LH_P2_0⁴ _lh_span_LH_P2_1⁴ => [LH_P2 
-//│ 								let h⁶⁰ = _lh_span_LH_C_0⁴
-//│ 								in let t⁶⁹ = _lh_span_LH_P2_0⁴
-//│ 								in (fun f³⁴ -> (fun i³⁴ -> foldl₁₃(f³⁴, f³⁴(i³⁴, h⁶⁰), t⁶⁹))) _lh_span_LH_P2_1⁴]
+//│ 								let h⁶⁰ = lazy⁰(_lh_span_LH_C_0⁴)
+//│ 								in let t⁶⁹ = lazy⁰(_lh_span_LH_P2_0⁴)
+//│ 								in (fun f³⁴ -> (fun i³⁴ -> foldl₁₃(f³⁴, f³⁴(i³⁴, force⁰(h⁶⁰)), force⁰(t⁶⁹)))) _lh_span_LH_P2_1⁴]
 //│ 							| _  => error⁰} else [LH_P2 (fun f³⁵ -> (fun i³⁵ -> i³⁵)) [LH_C _lh_span_LH_C_0⁴ _lh_span_LH_C_1⁴]]
 //│ 					| _  => error⁰}
 //│ <<<<<<< after fusion <<<<<<<

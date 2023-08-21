@@ -127,12 +127,12 @@ lastMap(C(A, C(B, N)), ff)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ lastMap₀(
-//│ 	let h⁴ = [AA]
-//│ 	in let t⁴ = 	
-//│ 		let h⁵ = [BB]
-//│ 		in let t⁵ = (fun f⁶ -> [N])
-//│ 		in (fun f⁵ -> [C f⁵(h⁵) map₀(t⁵, f⁵)])
-//│ 	in (fun f⁴ -> [C f⁴(h⁴) map₀(t⁴, f⁴)]), ff₀)
+//│ 	let h⁴ = lazy⁰([AA])
+//│ 	in let t⁴ = lazy⁰(
+//│ 		let h⁵ = lazy⁰([BB])
+//│ 		in let t⁵ = lazy⁰((fun f⁶ -> [N]))
+//│ 		in (fun f⁵ -> [C f⁵(force⁰(h⁵)) map₀(force⁰(t⁵), f⁵)]))
+//│ 	in (fun f⁴ -> [C f⁴(force⁰(h⁴)) map₀(force⁰(t⁴), f⁴)]), ff₀)
 //│ def ff₀(x²) = 
 //│ 	x²
 //│ def lastMap₀(ls⁵, f⁸) = 
@@ -155,23 +155,23 @@ lastMap(C(A, C(B, N)), ff)
 //│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [ff₀^31] (hopeless to continue)
+//│ [ff₀^47] (hopeless to continue)
 //│ [lastMap₀^1] (hopeless to continue)
-//│ 	[lastMap₀^1 · last₀^40] (using original def)
-//│ 		[lastMap₀^1 · last₀^40 · last₀^51] ---> [lastMap₀^1 · last₀^40] (using original def)
-//│ 	[lastMap₀^1 · map₀^41] (using original def)
-//│ [map₀^21] (hopeless to continue)
-//│ [map₀^9] (hopeless to continue)
+//│ 	[lastMap₀^1 · last₀^56] (using original def)
+//│ 		[lastMap₀^1 · last₀^56 · last₀^67] ---> [lastMap₀^1 · last₀^56] (using original def)
+//│ 	[lastMap₀^1 · map₀^57] (using original def)
+//│ [map₀^18] (hopeless to continue)
+//│ [map₀^35] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
 //│ lastMap₀₀(
-//│ 	let h⁴ = [AA]
-//│ 	in let t⁴ = 	
-//│ 		let h⁵ = [BB]
-//│ 		in let t⁵ = (fun f⁹ -> [N])
-//│ 		in (fun f¹⁰ -> [C f¹⁰(h⁵) map₀₂(t⁵, f¹⁰)])
-//│ 	in (fun f¹¹ -> [C f¹¹(h⁴) map₀₁(t⁴, f¹¹)]), ff₀₀)
+//│ 	let h⁴ = lazy⁰([AA])
+//│ 	in let t⁴ = lazy⁰(
+//│ 		let h⁵ = lazy⁰([BB])
+//│ 		in let t⁵ = lazy⁰((fun f⁹ -> [N]))
+//│ 		in (fun f¹⁰ -> [C f¹⁰(force⁰(h⁵)) map₀₁(force⁰(t⁵), f¹⁰)]))
+//│ 	in (fun f¹¹ -> [C f¹¹(force⁰(h⁴)) map₀₂(force⁰(t⁴), f¹¹)]), ff₀₀)
 //│ def ff₀₀(x¹) = 
 //│ 	x¹
 //│ def lastMap₀₀(ls², f⁵) = 
@@ -183,54 +183,54 @@ lastMap(C(A, C(B, N)), ff)
 //│ 				C hh¹ tt¹ => last₀₀([C hh¹ tt¹])
 //│ 				| N  => [Some h³]}
 //│ 			| N  => [None]}
-//│ 	def map₀₀(ls⁵, f⁸) = 
-//│ 		ls⁵(f⁸)
-//│ def map₀₁(ls⁴, f⁷) = 
+//│ 	def map₀₀(ls³, f⁶) = 
+//│ 		ls³(f⁶)
+//│ def map₀₁(ls⁵, f⁸) = 
+//│ 	ls⁵(f⁸)
+//│ def map₀₂(ls⁴, f⁷) = 
 //│ 	ls⁴(f⁷)
-//│ def map₀₂(ls³, f⁶) = 
-//│ 	ls³(f⁶)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C hh¹ tt¹]: 81 --->
-//│ 	case xs¹ of {C h³ t³ => case t³ of {C hh¹ tt¹ => last₀₀([C hh¹ tt¹]) | N  => [Some h³]} | N  => [None]}: 87
-//│ [N]: 104 --->
-//│ 	case t³ of {C hh¹ tt¹ => last₀₀([C hh¹ tt¹]) | N  => [Some h³]}: 85
-//│ [C f¹⁰(h⁵) map₀₂(t⁵, f¹⁰)]: 114 --->
-//│ 	case t³ of {C hh¹ tt¹ => last₀₀([C hh¹ tt¹]) | N  => [Some h³]}: 85
-//│ [C f¹¹(h⁴) map₀₁(t⁴, f¹¹)]: 126 --->
-//│ 	case xs¹ of {C h³ t³ => case t³ of {C hh¹ tt¹ => last₀₀([C hh¹ tt¹]) | N  => [Some h³]} | N  => [None]}: 87
+//│ [C hh¹ tt¹]: 83 --->
+//│ 	case xs¹ of {C h³ t³ => case t³ of {C hh¹ tt¹ => last₀₀([C hh¹ tt¹]) | N  => [Some h³]} | N  => [None]}: 89
+//│ [N]: 126 --->
+//│ 	case t³ of {C hh¹ tt¹ => last₀₀([C hh¹ tt¹]) | N  => [Some h³]}: 87
+//│ [C f¹⁰(force⁰(h⁵)) map₀₁(force⁰(t⁵), f¹⁰)]: 141 --->
+//│ 	case t³ of {C hh¹ tt¹ => last₀₀([C hh¹ tt¹]) | N  => [Some h³]}: 87
+//│ [C f¹¹(force⁰(h⁴)) map₀₂(force⁰(t⁴), f¹¹)]: 158 --->
+//│ 	case xs¹ of {C h³ t³ => case t³ of {C hh¹ tt¹ => last₀₀([C hh¹ tt¹]) | N  => [Some h³]} | N  => [None]}: 89
 //│ ------------------
-//│ case t³ of {C hh¹ tt¹ => last₀₀([C hh¹ tt¹]) | N  => [Some h³]}: 85 --->
-//│ 	[N]: 104
-//│ 	[C f¹⁰(h⁵) map₀₂(t⁵, f¹⁰)]: 114
-//│ case xs¹ of {C h³ t³ => case t³ of {C hh¹ tt¹ => last₀₀([C hh¹ tt¹]) | N  => [Some h³]} | N  => [None]}: 87 --->
-//│ 	[C hh¹ tt¹]: 81
-//│ 	[C f¹¹(h⁴) map₀₁(t⁴, f¹¹)]: 126
+//│ case t³ of {C hh¹ tt¹ => last₀₀([C hh¹ tt¹]) | N  => [Some h³]}: 87 --->
+//│ 	[N]: 126
+//│ 	[C f¹⁰(force⁰(h⁵)) map₀₁(force⁰(t⁵), f¹⁰)]: 141
+//│ case xs¹ of {C h³ t³ => case t³ of {C hh¹ tt¹ => last₀₀([C hh¹ tt¹]) | N  => [Some h³]} | N  => [None]}: 89 --->
+//│ 	[C hh¹ tt¹]: 83
+//│ 	[C f¹¹(force⁰(h⁴)) map₀₂(force⁰(t⁴), f¹¹)]: 158
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [N]: 104 --->
-//│ 	case t³ of {C hh¹ tt¹ => last₀₀([C hh¹ tt¹]) | N  => [Some h³]}: 85
-//│ [C f¹⁰(h⁵) map₀₂(t⁵, f¹⁰)]: 114 --->
-//│ 	case t³ of {C hh¹ tt¹ => last₀₀([C hh¹ tt¹]) | N  => [Some h³]}: 85
+//│ [N]: 126 --->
+//│ 	case t³ of {C hh¹ tt¹ => last₀₀([C hh¹ tt¹]) | N  => [Some h³]}: 87
+//│ [C f¹⁰(force⁰(h⁵)) map₀₁(force⁰(t⁵), f¹⁰)]: 141 --->
+//│ 	case t³ of {C hh¹ tt¹ => last₀₀([C hh¹ tt¹]) | N  => [Some h³]}: 87
 //│ ------------------
-//│ case t³ of {C hh¹ tt¹ => last₀₀([C hh¹ tt¹]) | N  => [Some h³]}: 85 --->
-//│ 	[N]: 104
-//│ 	[C f¹⁰(h⁵) map₀₂(t⁵, f¹⁰)]: 114
+//│ case t³ of {C hh¹ tt¹ => last₀₀([C hh¹ tt¹]) | N  => [Some h³]}: 87 --->
+//│ 	[N]: 126
+//│ 	[C f¹⁰(force⁰(h⁵)) map₀₁(force⁰(t⁵), f¹⁰)]: 141
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ lastMap₀₀(
-//│ 	let h⁶ = [AA]
-//│ 	in let t⁶ = 	
-//│ 		let h⁷ = [BB]
-//│ 		in let t⁷ = (fun f¹² -> (fun h⁸ -> [Some h⁸]))
+//│ 	let h⁶ = lazy⁰([AA])
+//│ 	in let t⁶ = lazy⁰(
+//│ 		let h⁷ = lazy⁰([BB])
+//│ 		in let t⁷ = lazy⁰((fun f¹² -> (fun h⁸ -> [Some h⁸])))
 //│ 		in (fun f¹³ -> 
-//│ 			let hh² = f¹³(h⁷)
-//│ 			in let tt² = map₀₂(t⁷, f¹³)
-//│ 			in (fun h⁹ -> last₀₀([C hh² tt²])))
-//│ 	in (fun f¹⁴ -> [C f¹⁴(h⁶) map₀₁(t⁶, f¹⁴)]), ff₀₀)
+//│ 			let hh² = lazy⁰(f¹³(force⁰(h⁷)))
+//│ 			in let tt² = lazy⁰(map₀₁(force⁰(t⁷), f¹³))
+//│ 			in (fun h⁹ -> last₀₀([C force⁰(hh²) force⁰(tt²)]))))
+//│ 	in (fun f¹⁴ -> [C f¹⁴(force⁰(h⁶)) map₀₂(force⁰(t⁶), f¹⁴)]), ff₀₀)
 //│ def ff₀₀(x²) = 
 //│ 	x²
 //│ def lastMap₀₀(ls⁶, f¹⁵) = 
@@ -255,88 +255,88 @@ lastMap(C(A, C(B, N)), ff)
 //│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [ff₀₀^40] (hopeless to continue)
+//│ [ff₀₀^64] (hopeless to continue)
 //│ [lastMap₀₀^1] (hopeless to continue)
-//│ 	[lastMap₀₀^1 · last₀₀^44] (using original def)
-//│ 	[lastMap₀₀^1 · map₀₀^45] (using original def)
-//│ [last₀₀^16] (hopeless to continue)
-//│ [map₀₁^30] (hopeless to continue)
-//│ [map₀₂^11] (hopeless to continue)
+//│ 	[lastMap₀₀^1 · last₀₀^68] (using original def)
+//│ 	[lastMap₀₀^1 · map₀₀^69] (using original def)
+//│ [last₀₀^31] (hopeless to continue)
+//│ [map₀₁^23] (hopeless to continue)
+//│ [map₀₂^52] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
 //│ lastMap₀₀₀(
-//│ 	let h⁷ = [AA]
-//│ 	in let t⁵ = 	
-//│ 		let h⁸ = [BB]
-//│ 		in let t⁶ = (fun f¹¹ -> (fun h⁹ -> [Some h⁹]))
+//│ 	let h⁷ = lazy⁰([AA])
+//│ 	in let t⁵ = lazy⁰(
+//│ 		let h⁸ = lazy⁰([BB])
+//│ 		in let t⁶ = lazy⁰((fun f¹¹ -> (fun h⁹ -> [Some h⁹])))
 //│ 		in (fun f¹² -> 
-//│ 			let hh¹ = f¹²(h⁸)
-//│ 			in let tt¹ = map₀₂₀(t⁶, f¹²)
-//│ 			in (fun h¹⁰ -> last₀₀₁([C hh¹ tt¹])))
-//│ 	in (fun f¹³ -> [C f¹³(h⁷) map₀₁₀(t⁵, f¹³)]), ff₀₀₀)
+//│ 			let hh¹ = lazy⁰(f¹²(force⁰(h⁸)))
+//│ 			in let tt¹ = lazy⁰(map₀₁₀(force⁰(t⁶), f¹²))
+//│ 			in (fun h¹⁰ -> last₀₀₁([C force⁰(hh¹) force⁰(tt¹)]))))
+//│ 	in (fun f¹³ -> [C f¹³(force⁰(h⁷)) map₀₂₀(force⁰(t⁵), f¹³)]), ff₀₀₀)
 //│ def ff₀₀₀(x¹) = 
 //│ 	x¹
-//│ def lastMap₀₀₀(ls⁵, f⁸) = 
-//│ 	last₀₀₀(map₀₀₀(ls⁵, f⁸))
+//│ def lastMap₀₀₀(ls⁶, f⁹) = 
+//│ 	last₀₀₀(map₀₀₀(ls⁶, f⁹))
 //│ 	where
 //│ 	def last₀₀₀(xs²) = 
 //│ 		case xs² of {
 //│ 			C h⁶ t⁴ => t⁴(h⁶)
 //│ 			| N  => [None]}
-//│ 	def map₀₀₀(ls⁶, f⁹) = 
-//│ 		ls⁶(f⁹)
+//│ 	def map₀₀₀(ls⁴, f⁷) = 
+//│ 		ls⁴(f⁷)
 //│ def last₀₀₁(xs¹) = 
 //│ 	case xs¹ of {
 //│ 		C h⁵ t³ => t³(h⁵)
 //│ 		| N  => [None]}
-//│ def map₀₁₀(ls⁷, f¹⁰) = 
+//│ def map₀₁₀(ls⁵, f⁸) = 
+//│ 	ls⁵(f⁸)
+//│ def map₀₂₀(ls⁷, f¹⁰) = 
 //│ 	ls⁷(f¹⁰)
-//│ def map₀₂₀(ls⁴, f⁷) = 
-//│ 	ls⁴(f⁷)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C hh¹ tt¹]: 133 --->
-//│ 	case xs¹ of {C h⁵ t³ => t³(h⁵) | N  => [None]}: 87
-//│ [C f¹³(h⁷) map₀₁₀(t⁵, f¹³)]: 149 --->
-//│ 	case xs² of {C h⁶ t⁴ => t⁴(h⁶) | N  => [None]}: 113
+//│ [C force⁰(hh¹) force⁰(tt¹)]: 176 --->
+//│ 	case xs¹ of {C h⁵ t³ => t³(h⁵) | N  => [None]}: 104
+//│ [C f¹³(force⁰(h⁷)) map₀₂₀(force⁰(t⁵), f¹³)]: 197 --->
+//│ 	case xs² of {C h⁶ t⁴ => t⁴(h⁶) | N  => [None]}: 132
 //│ ------------------
-//│ case xs¹ of {C h⁵ t³ => t³(h⁵) | N  => [None]}: 87 --->
-//│ 	[C hh¹ tt¹]: 133
-//│ case xs² of {C h⁶ t⁴ => t⁴(h⁶) | N  => [None]}: 113 --->
-//│ 	[C f¹³(h⁷) map₀₁₀(t⁵, f¹³)]: 149
+//│ case xs¹ of {C h⁵ t³ => t³(h⁵) | N  => [None]}: 104 --->
+//│ 	[C force⁰(hh¹) force⁰(tt¹)]: 176
+//│ case xs² of {C h⁶ t⁴ => t⁴(h⁶) | N  => [None]}: 132 --->
+//│ 	[C f¹³(force⁰(h⁷)) map₀₂₀(force⁰(t⁵), f¹³)]: 197
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C hh¹ tt¹]: 133 --->
-//│ 	case xs¹ of {C h⁵ t³ => t³(h⁵) | N  => [None]}: 87
-//│ [C f¹³(h⁷) map₀₁₀(t⁵, f¹³)]: 149 --->
-//│ 	case xs² of {C h⁶ t⁴ => t⁴(h⁶) | N  => [None]}: 113
+//│ [C force⁰(hh¹) force⁰(tt¹)]: 176 --->
+//│ 	case xs¹ of {C h⁵ t³ => t³(h⁵) | N  => [None]}: 104
+//│ [C f¹³(force⁰(h⁷)) map₀₂₀(force⁰(t⁵), f¹³)]: 197 --->
+//│ 	case xs² of {C h⁶ t⁴ => t⁴(h⁶) | N  => [None]}: 132
 //│ ------------------
-//│ case xs¹ of {C h⁵ t³ => t³(h⁵) | N  => [None]}: 87 --->
-//│ 	[C hh¹ tt¹]: 133
-//│ case xs² of {C h⁶ t⁴ => t⁴(h⁶) | N  => [None]}: 113 --->
-//│ 	[C f¹³(h⁷) map₀₁₀(t⁵, f¹³)]: 149
+//│ case xs¹ of {C h⁵ t³ => t³(h⁵) | N  => [None]}: 104 --->
+//│ 	[C force⁰(hh¹) force⁰(tt¹)]: 176
+//│ case xs² of {C h⁶ t⁴ => t⁴(h⁶) | N  => [None]}: 132 --->
+//│ 	[C f¹³(force⁰(h⁷)) map₀₂₀(force⁰(t⁵), f¹³)]: 197
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ lastMap₀₀₀(
-//│ 	let h¹¹ = [AA]
-//│ 	in let t⁷ = 	
-//│ 		let h¹² = [BB]
-//│ 		in let t⁸ = (fun f¹⁴ -> (fun h¹³ -> [Some h¹³]))
+//│ 	let h¹¹ = lazy⁰([AA])
+//│ 	in let t⁷ = lazy⁰(
+//│ 		let h¹² = lazy⁰([BB])
+//│ 		in let t⁸ = lazy⁰((fun f¹⁴ -> (fun h¹³ -> [Some h¹³])))
 //│ 		in (fun f¹⁵ -> 
-//│ 			let hh² = f¹⁵(h¹²)
-//│ 			in let tt² = map₀₂₀(t⁸, f¹⁵)
+//│ 			let hh² = lazy⁰(f¹⁵(force⁰(h¹²)))
+//│ 			in let tt² = lazy⁰(map₀₁₀(force⁰(t⁸), f¹⁵))
 //│ 			in (fun h¹⁴ -> last₀₀₁(
-//│ 				let h¹⁵ = hh²
-//│ 				in let t⁹ = tt²
-//│ 				in t⁹(h¹⁵))))
+//│ 				let h¹⁵ = lazy⁰(force⁰(hh²))
+//│ 				in let t⁹ = lazy⁰(force⁰(tt²))
+//│ 				in force⁰(t⁹, force⁰(h¹⁵))))))
 //│ 	in (fun f¹⁶ -> 
-//│ 		let h¹⁶ = f¹⁶(h¹¹)
-//│ 		in let t¹⁰ = map₀₁₀(t⁷, f¹⁶)
-//│ 		in t¹⁰(h¹⁶)), ff₀₀₀)
+//│ 		let h¹⁶ = lazy⁰(f¹⁶(force⁰(h¹¹)))
+//│ 		in let t¹⁰ = lazy⁰(map₀₂₀(force⁰(t⁷), f¹⁶))
+//│ 		in force⁰(t¹⁰, force⁰(h¹⁶))), ff₀₀₀)
 //│ def ff₀₀₀(x²) = 
 //│ 	x²
 //│ def lastMap₀₀₀(ls⁸, f¹⁷) = 

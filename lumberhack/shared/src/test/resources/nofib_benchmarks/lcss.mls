@@ -12099,13 +12099,13 @@ testLCSS_nofib $ primId 0
 //│ 							in (fun _lh_funcomp_x³³ -> algc₀₆(m2³³, k³³, xs1³³, take₁₁₅(k³³, _lh_algc_arg4¹⁶), algc₀₇((_lh_algc_arg1¹⁶ - m2³³), (_lh_algc_arg2¹⁶ - k³³), xs2³³, drop₁₁₅(k³³, _lh_algc_arg4¹⁶), _lh_funcomp_x³³)))}}
 //│ 				where
 //│ 				def algb₀₀(_lh_algb_arg1⁴², _lh_algb_arg2⁴²) = 
-//│ 					let hx³⁸ = 0
-//│ 					in let tx³⁸ = algb1₀₀(_lh_algb_arg1⁴², 
+//│ 					let hx³⁸ = lazy⁰(0)
+//│ 					in let tx³⁸ = lazy⁰(algb1₀₀(_lh_algb_arg1⁴², 
 //│ 						let _lh_listcomp_fun⁴⁹ = (fun _lh_listcomp_fun_para⁴² -> case _lh_listcomp_fun_para⁴² of {
 //│ 							LH_C _lh_listcomp_fun_ls_h⁷ _lh_listcomp_fun_ls_t⁷ => [LH_C [LH_P2 _lh_listcomp_fun_ls_h⁷ 0] _lh_listcomp_fun⁴⁹(_lh_listcomp_fun_ls_t⁷)]
 //│ 							| LH_N  => [LH_N]})
-//│ 						in _lh_listcomp_fun⁴⁹(_lh_algb_arg2⁴²))
-//│ 					in (fun ys³² -> ys³²(hx³⁸, tx³⁸))
+//│ 						in _lh_listcomp_fun⁴⁹(_lh_algb_arg2⁴²)))
+//│ 					in (fun ys³² -> ys³²(force⁰(hx³⁸), force⁰(tx³⁸)))
 //│ 					where
 //│ 					def algb1₀₀(_lh_algb1_arg1³⁶, _lh_algb1_arg2⁴¹) = 
 //│ 						case _lh_algb1_arg1³⁶ of {
@@ -12128,22 +12128,22 @@ testLCSS_nofib $ primId 0
 //│ 						def map₀₀(f⁴⁵, ls²³⁵) = 
 //│ 							case ls²³⁵ of {
 //│ 								LH_C h⁷⁰ t⁷⁹ => 
-//│ 									let hx⁵¹ = f⁴⁵(h⁷⁰)
-//│ 									in let tx⁵¹ = map₀₀(f⁴⁵, t⁷⁹)
-//│ 									in (fun ys³⁷ -> ys³⁷(hx⁵¹, tx⁵¹))
+//│ 									let hx⁵¹ = lazy⁰(f⁴⁵(h⁷⁰))
+//│ 									in let tx⁵¹ = lazy⁰(map₀₀(f⁴⁵, t⁷⁹))
+//│ 									in (fun ys³⁷ -> ys³⁷(force⁰(hx⁵¹), force⁰(tx⁵¹)))
 //│ 								| LH_N  => (fun ys³⁸ -> (fun _lh_findk_arg2⁶⁵ -> (fun _lh_findk_arg1⁶⁵ -> (fun _lh_findk_arg3⁶⁵ -> _lh_findk_arg2⁶⁵))))}
 //│ 						def snd₀₀(_lh_snd_arg1⁴⁰) = 
 //│ 							case _lh_snd_arg1⁴⁰ of {
 //│ 								LH_P2 _lh_snd_LH_P2_0²⁹ _lh_snd_LH_P2_1²⁹ => _lh_snd_LH_P2_1²⁹
 //│ 								| _  => error⁰}
 //│ 				def algb₀₁(_lh_algb_arg1⁶⁴, _lh_algb_arg2⁶⁴) = 
-//│ 					let hx⁹³ = 0
-//│ 					in let tx⁹³ = algb1₀₁(_lh_algb_arg1⁶⁴, 
+//│ 					let hx⁹³ = lazy⁰(0)
+//│ 					in let tx⁹³ = lazy⁰(algb1₀₁(_lh_algb_arg1⁶⁴, 
 //│ 						let _lh_listcomp_fun⁹⁴ = (fun _lh_listcomp_fun_para⁶⁴ -> case _lh_listcomp_fun_para⁶⁴ of {
 //│ 							LH_C _lh_listcomp_fun_ls_h³⁰ _lh_listcomp_fun_ls_t³⁰ => [LH_C [LH_P2 _lh_listcomp_fun_ls_h³⁰ 0] _lh_listcomp_fun⁹⁴(_lh_listcomp_fun_ls_t³⁰)]
 //│ 							| LH_N  => [LH_N]})
-//│ 						in _lh_listcomp_fun⁹⁴(_lh_algb_arg2⁶⁴))
-//│ 					in (fun ys⁸⁰ -> ys⁸⁰(hx⁹³, tx⁹³))
+//│ 						in _lh_listcomp_fun⁹⁴(_lh_algb_arg2⁶⁴)))
+//│ 					in (fun ys⁸⁰ -> ys⁸⁰(force⁰(hx⁹³), force⁰(tx⁹³)))
 //│ 					where
 //│ 					def algb1₀₁(_lh_algb1_arg1³⁵, _lh_algb1_arg2³⁹) = 
 //│ 						case _lh_algb1_arg1³⁵ of {
@@ -12166,29 +12166,29 @@ testLCSS_nofib $ primId 0
 //│ 						def map₀₁(f⁴⁸, ls²⁴⁴) = 
 //│ 							case ls²⁴⁴ of {
 //│ 								LH_C h³¹ t³⁸ => 
-//│ 									let hx⁵⁴ = f⁴⁸(h³¹)
-//│ 									in let tx⁵⁴ = map₀₁(f⁴⁸, t³⁸)
-//│ 									in (fun ys⁴¹ -> ys⁴¹(hx⁵⁴, tx⁵⁴))
+//│ 									let hx⁵⁴ = lazy⁰(f⁴⁸(h³¹))
+//│ 									in let tx⁵⁴ = lazy⁰(map₀₁(f⁴⁸, t³⁸))
+//│ 									in (fun ys⁴¹ -> ys⁴¹(force⁰(hx⁵⁴), force⁰(tx⁵⁴)))
 //│ 								| LH_N  => (fun ys⁴² -> (fun _lh_findk_arg2⁶⁹ -> (fun _lh_findk_arg1⁶⁹ -> (fun _lh_findk_arg3⁶⁹ -> _lh_findk_arg2⁶⁹))))}
 //│ 						def snd₀₁(_lh_snd_arg1⁵⁵) = 
 //│ 							case _lh_snd_arg1⁵⁵ of {
 //│ 								LH_P2 _lh_snd_LH_P2_0¹¹ _lh_snd_LH_P2_1¹¹ => _lh_snd_LH_P2_1¹¹
 //│ 								| _  => error⁰}
 //│ 				def algb₁₀(_lh_algb_arg1⁶², _lh_algb_arg2⁶²) = 
-//│ 					let h¹⁵¹ = 0
-//│ 					in let t¹⁷⁴ = algb1₁₀(_lh_algb_arg1⁶², 
+//│ 					let h¹⁵¹ = lazy⁰(0)
+//│ 					in let t¹⁷⁴ = lazy⁰(algb1₁₀(_lh_algb_arg1⁶², 
 //│ 						let _lh_listcomp_fun⁸⁹ = (fun _lh_listcomp_fun_para⁶² -> _lh_listcomp_fun_para⁶²(_lh_listcomp_fun⁸⁹))
-//│ 						in _lh_listcomp_fun⁸⁹(_lh_algb_arg2⁶²))
-//│ 					in (fun a¹⁴² -> reverse_helper₀₁₄(t¹⁷⁴, 
-//│ 						let hy⁴⁵ = h¹⁵¹
-//│ 						in let ty⁴⁵ = a¹⁴²
+//│ 						in _lh_listcomp_fun⁸⁹(_lh_algb_arg2⁶²)))
+//│ 					in (fun a¹⁴² -> reverse_helper₀₁₄(force⁰(t¹⁷⁴), 
+//│ 						let hy⁴⁵ = lazy⁰(force⁰(h¹⁵¹))
+//│ 						in let ty⁴⁵ = lazy⁰(a¹⁴²)
 //│ 						in (fun hx⁹¹ -> (fun tx⁹¹ -> 
-//│ 							let _lh_findk_LH_C_0⁴⁵ = 	
-//│ 								let _lh_findk_LH_P2_0⁴⁵ = hx⁹¹
-//│ 								in let _lh_findk_LH_P2_1⁴⁵ = hy⁴⁵
-//│ 								in (fun _lh_findk_LH_C_1⁷⁴ -> (fun _lh_findk_arg1¹²¹ -> (fun _lh_findk_arg2¹²¹ -> (fun _lh_findk_arg3¹²¹ -> if ((_lh_findk_LH_P2_0⁴⁵ + _lh_findk_LH_P2_1⁴⁵) >= _lh_findk_arg3¹²¹) then findk₀₁₄((_lh_findk_arg1¹²¹ + 1), _lh_findk_arg1¹²¹, (_lh_findk_LH_P2_0⁴⁵ + _lh_findk_LH_P2_1⁴⁵), _lh_findk_LH_C_1⁷⁴) else findk₀₁₄((_lh_findk_arg1¹²¹ + 1), _lh_findk_arg2¹²¹, _lh_findk_arg3¹²¹, _lh_findk_LH_C_1⁷⁴)))))
-//│ 							in let _lh_findk_LH_C_1⁷³ = zip₀₁₄(tx⁹¹, ty⁴⁵)
-//│ 							in (fun _lh_findk_arg2¹²⁰ -> (fun _lh_findk_arg1¹²⁰ -> (fun _lh_findk_arg3¹²⁰ -> _lh_findk_LH_C_0⁴⁵(_lh_findk_LH_C_1⁷³, _lh_findk_arg1¹²⁰, _lh_findk_arg2¹²⁰, _lh_findk_arg3¹²⁰))))))))
+//│ 							let _lh_findk_LH_C_0⁴⁵ = lazy⁰(
+//│ 								let _lh_findk_LH_P2_0⁴⁵ = lazy⁰(hx⁹¹)
+//│ 								in let _lh_findk_LH_P2_1⁴⁵ = lazy⁰(force⁰(hy⁴⁵))
+//│ 								in (fun _lh_findk_LH_C_1⁷⁴ -> (fun _lh_findk_arg1¹²¹ -> (fun _lh_findk_arg2¹²¹ -> (fun _lh_findk_arg3¹²¹ -> if ((force⁰(_lh_findk_LH_P2_0⁴⁵) + force⁰(_lh_findk_LH_P2_1⁴⁵)) >= _lh_findk_arg3¹²¹) then findk₀₁₄((_lh_findk_arg1¹²¹ + 1), _lh_findk_arg1¹²¹, (force⁰(_lh_findk_LH_P2_0⁴⁵) + force⁰(_lh_findk_LH_P2_1⁴⁵)), _lh_findk_LH_C_1⁷⁴) else findk₀₁₄((_lh_findk_arg1¹²¹ + 1), _lh_findk_arg2¹²¹, _lh_findk_arg3¹²¹, _lh_findk_LH_C_1⁷⁴))))))
+//│ 							in let _lh_findk_LH_C_1⁷³ = lazy⁰(zip₀₁₄(tx⁹¹, force⁰(ty⁴⁵)))
+//│ 							in (fun _lh_findk_arg2¹²⁰ -> (fun _lh_findk_arg1¹²⁰ -> (fun _lh_findk_arg3¹²⁰ -> force⁰(_lh_findk_LH_C_0⁴⁵, force⁰(_lh_findk_LH_C_1⁷³), _lh_findk_arg1¹²⁰, _lh_findk_arg2¹²⁰, _lh_findk_arg3¹²⁰))))))))
 //│ 					where
 //│ 					def algb1₁₀(_lh_algb1_arg1³⁹, _lh_algb1_arg2⁴⁴) = 
 //│ 						_lh_algb1_arg1³⁹(_lh_algb1_arg2⁴⁴)
@@ -12208,38 +12208,38 @@ testLCSS_nofib $ primId 0
 //│ 						def map₁₀(f⁵⁴, ls²⁸¹) = 
 //│ 							case ls²⁸¹ of {
 //│ 								LH_C h³⁰ t³⁷ => 
-//│ 									let h¹⁴² = f⁵⁴(h³⁰)
-//│ 									in let t¹⁶⁴ = map₁₀(f⁵⁴, t³⁷)
-//│ 									in (fun a¹¹⁷ -> reverse_helper₀₁₄(t¹⁶⁴, 
-//│ 										let hy³⁶ = h¹⁴²
-//│ 										in let ty³⁶ = a¹¹⁷
+//│ 									let h¹⁴² = lazy⁰(f⁵⁴(h³⁰))
+//│ 									in let t¹⁶⁴ = lazy⁰(map₁₀(f⁵⁴, t³⁷))
+//│ 									in (fun a¹¹⁷ -> reverse_helper₀₁₄(force⁰(t¹⁶⁴), 
+//│ 										let hy³⁶ = lazy⁰(force⁰(h¹⁴²))
+//│ 										in let ty³⁶ = lazy⁰(a¹¹⁷)
 //│ 										in (fun hx⁶⁸ -> (fun tx⁶⁸ -> 
-//│ 											let _lh_findk_LH_C_0³⁶ = 	
-//│ 												let _lh_findk_LH_P2_0³⁶ = hx⁶⁸
-//│ 												in let _lh_findk_LH_P2_1³⁶ = hy³⁶
-//│ 												in (fun _lh_findk_LH_C_1⁵⁶ -> (fun _lh_findk_arg1⁸⁸ -> (fun _lh_findk_arg2⁸⁸ -> (fun _lh_findk_arg3⁸⁸ -> if ((_lh_findk_LH_P2_0³⁶ + _lh_findk_LH_P2_1³⁶) >= _lh_findk_arg3⁸⁸) then findk₀₁₄((_lh_findk_arg1⁸⁸ + 1), _lh_findk_arg1⁸⁸, (_lh_findk_LH_P2_0³⁶ + _lh_findk_LH_P2_1³⁶), _lh_findk_LH_C_1⁵⁶) else findk₀₁₄((_lh_findk_arg1⁸⁸ + 1), _lh_findk_arg2⁸⁸, _lh_findk_arg3⁸⁸, _lh_findk_LH_C_1⁵⁶)))))
-//│ 											in let _lh_findk_LH_C_1⁵⁵ = zip₀₁₄(tx⁶⁸, ty³⁶)
-//│ 											in (fun _lh_findk_arg2⁸⁷ -> (fun _lh_findk_arg1⁸⁷ -> (fun _lh_findk_arg3⁸⁷ -> _lh_findk_LH_C_0³⁶(_lh_findk_LH_C_1⁵⁵, _lh_findk_arg1⁸⁷, _lh_findk_arg2⁸⁷, _lh_findk_arg3⁸⁷))))))))
+//│ 											let _lh_findk_LH_C_0³⁶ = lazy⁰(
+//│ 												let _lh_findk_LH_P2_0³⁶ = lazy⁰(hx⁶⁸)
+//│ 												in let _lh_findk_LH_P2_1³⁶ = lazy⁰(force⁰(hy³⁶))
+//│ 												in (fun _lh_findk_LH_C_1⁵⁶ -> (fun _lh_findk_arg1⁸⁸ -> (fun _lh_findk_arg2⁸⁸ -> (fun _lh_findk_arg3⁸⁸ -> if ((force⁰(_lh_findk_LH_P2_0³⁶) + force⁰(_lh_findk_LH_P2_1³⁶)) >= _lh_findk_arg3⁸⁸) then findk₀₁₄((_lh_findk_arg1⁸⁸ + 1), _lh_findk_arg1⁸⁸, (force⁰(_lh_findk_LH_P2_0³⁶) + force⁰(_lh_findk_LH_P2_1³⁶)), _lh_findk_LH_C_1⁵⁶) else findk₀₁₄((_lh_findk_arg1⁸⁸ + 1), _lh_findk_arg2⁸⁸, _lh_findk_arg3⁸⁸, _lh_findk_LH_C_1⁵⁶))))))
+//│ 											in let _lh_findk_LH_C_1⁵⁵ = lazy⁰(zip₀₁₄(tx⁶⁸, force⁰(ty³⁶)))
+//│ 											in (fun _lh_findk_arg2⁸⁷ -> (fun _lh_findk_arg1⁸⁷ -> (fun _lh_findk_arg3⁸⁷ -> force⁰(_lh_findk_LH_C_0³⁶, force⁰(_lh_findk_LH_C_1⁵⁵), _lh_findk_arg1⁸⁷, _lh_findk_arg2⁸⁷, _lh_findk_arg3⁸⁷))))))))
 //│ 								| LH_N  => (fun a¹¹⁸ -> a¹¹⁸)}
 //│ 						def snd₁₀(_lh_snd_arg1⁴⁵) = 
 //│ 							case _lh_snd_arg1⁴⁵ of {
 //│ 								LH_P2 _lh_snd_LH_P2_0²⁴ _lh_snd_LH_P2_1²⁴ => _lh_snd_LH_P2_1²⁴
 //│ 								| _  => error⁰}
 //│ 				def algb₁₁(_lh_algb_arg1⁴¹, _lh_algb_arg2⁴¹) = 
-//│ 					let h¹³⁵ = 0
-//│ 					in let t¹⁵³ = algb1₁₁(_lh_algb_arg1⁴¹, 
+//│ 					let h¹³⁵ = lazy⁰(0)
+//│ 					in let t¹⁵³ = lazy⁰(algb1₁₁(_lh_algb_arg1⁴¹, 
 //│ 						let _lh_listcomp_fun⁴⁸ = (fun _lh_listcomp_fun_para⁴¹ -> _lh_listcomp_fun_para⁴¹(_lh_listcomp_fun⁴⁸))
-//│ 						in _lh_listcomp_fun⁴⁸(_lh_algb_arg2⁴¹))
-//│ 					in (fun a⁹⁰ -> reverse_helper₀₁₅(t¹⁵³, 
-//│ 						let hy²⁹ = h¹³⁵
-//│ 						in let ty²⁹ = a⁹⁰
+//│ 						in _lh_listcomp_fun⁴⁸(_lh_algb_arg2⁴¹)))
+//│ 					in (fun a⁹⁰ -> reverse_helper₀₁₅(force⁰(t¹⁵³), 
+//│ 						let hy²⁹ = lazy⁰(force⁰(h¹³⁵))
+//│ 						in let ty²⁹ = lazy⁰(a⁹⁰)
 //│ 						in (fun hx³⁷ -> (fun tx³⁷ -> 
-//│ 							let _lh_findk_LH_C_0²⁹ = 	
-//│ 								let _lh_findk_LH_P2_0²⁹ = hx³⁷
-//│ 								in let _lh_findk_LH_P2_1²⁹ = hy²⁹
-//│ 								in (fun _lh_findk_LH_C_1⁴² -> (fun _lh_findk_arg1⁴⁹ -> (fun _lh_findk_arg2⁴⁹ -> (fun _lh_findk_arg3⁴⁹ -> if ((_lh_findk_LH_P2_0²⁹ + _lh_findk_LH_P2_1²⁹) >= _lh_findk_arg3⁴⁹) then findk₀₁₅((_lh_findk_arg1⁴⁹ + 1), _lh_findk_arg1⁴⁹, (_lh_findk_LH_P2_0²⁹ + _lh_findk_LH_P2_1²⁹), _lh_findk_LH_C_1⁴²) else findk₀₁₅((_lh_findk_arg1⁴⁹ + 1), _lh_findk_arg2⁴⁹, _lh_findk_arg3⁴⁹, _lh_findk_LH_C_1⁴²)))))
-//│ 							in let _lh_findk_LH_C_1⁴¹ = zip₀₁₅(tx³⁷, ty²⁹)
-//│ 							in (fun _lh_findk_arg2⁴⁸ -> (fun _lh_findk_arg1⁴⁸ -> (fun _lh_findk_arg3⁴⁸ -> _lh_findk_LH_C_0²⁹(_lh_findk_LH_C_1⁴¹, _lh_findk_arg1⁴⁸, _lh_findk_arg2⁴⁸, _lh_findk_arg3⁴⁸))))))))
+//│ 							let _lh_findk_LH_C_0²⁹ = lazy⁰(
+//│ 								let _lh_findk_LH_P2_0²⁹ = lazy⁰(hx³⁷)
+//│ 								in let _lh_findk_LH_P2_1²⁹ = lazy⁰(force⁰(hy²⁹))
+//│ 								in (fun _lh_findk_LH_C_1⁴² -> (fun _lh_findk_arg1⁴⁹ -> (fun _lh_findk_arg2⁴⁹ -> (fun _lh_findk_arg3⁴⁹ -> if ((force⁰(_lh_findk_LH_P2_0²⁹) + force⁰(_lh_findk_LH_P2_1²⁹)) >= _lh_findk_arg3⁴⁹) then findk₀₁₅((_lh_findk_arg1⁴⁹ + 1), _lh_findk_arg1⁴⁹, (force⁰(_lh_findk_LH_P2_0²⁹) + force⁰(_lh_findk_LH_P2_1²⁹)), _lh_findk_LH_C_1⁴²) else findk₀₁₅((_lh_findk_arg1⁴⁹ + 1), _lh_findk_arg2⁴⁹, _lh_findk_arg3⁴⁹, _lh_findk_LH_C_1⁴²))))))
+//│ 							in let _lh_findk_LH_C_1⁴¹ = lazy⁰(zip₀₁₅(tx³⁷, force⁰(ty²⁹)))
+//│ 							in (fun _lh_findk_arg2⁴⁸ -> (fun _lh_findk_arg1⁴⁸ -> (fun _lh_findk_arg3⁴⁸ -> force⁰(_lh_findk_LH_C_0²⁹, force⁰(_lh_findk_LH_C_1⁴¹), _lh_findk_arg1⁴⁸, _lh_findk_arg2⁴⁸, _lh_findk_arg3⁴⁸))))))))
 //│ 					where
 //│ 					def algb1₁₁(_lh_algb1_arg1⁶², _lh_algb1_arg2⁹⁴) = 
 //│ 						_lh_algb1_arg1⁶²(_lh_algb1_arg2⁹⁴)
@@ -12259,18 +12259,18 @@ testLCSS_nofib $ primId 0
 //│ 						def map₁₁(f⁴³, ls²¹³) = 
 //│ 							case ls²¹³ of {
 //│ 								LH_C h⁴⁴ t⁵³ => 
-//│ 									let h¹³⁴ = f⁴³(h⁴⁴)
-//│ 									in let t¹⁵¹ = map₁₁(f⁴³, t⁵³)
-//│ 									in (fun a⁸⁸ -> reverse_helper₀₁₅(t¹⁵¹, 
-//│ 										let hy²⁸ = h¹³⁴
-//│ 										in let ty²⁸ = a⁸⁸
+//│ 									let h¹³⁴ = lazy⁰(f⁴³(h⁴⁴))
+//│ 									in let t¹⁵¹ = lazy⁰(map₁₁(f⁴³, t⁵³))
+//│ 									in (fun a⁸⁸ -> reverse_helper₀₁₅(force⁰(t¹⁵¹), 
+//│ 										let hy²⁸ = lazy⁰(force⁰(h¹³⁴))
+//│ 										in let ty²⁸ = lazy⁰(a⁸⁸)
 //│ 										in (fun hx³⁶ -> (fun tx³⁶ -> 
-//│ 											let _lh_findk_LH_C_0²⁸ = 	
-//│ 												let _lh_findk_LH_P2_0²⁸ = hx³⁶
-//│ 												in let _lh_findk_LH_P2_1²⁸ = hy²⁸
-//│ 												in (fun _lh_findk_LH_C_1⁴⁰ -> (fun _lh_findk_arg1⁴⁷ -> (fun _lh_findk_arg2⁴⁷ -> (fun _lh_findk_arg3⁴⁷ -> if ((_lh_findk_LH_P2_0²⁸ + _lh_findk_LH_P2_1²⁸) >= _lh_findk_arg3⁴⁷) then findk₀₁₅((_lh_findk_arg1⁴⁷ + 1), _lh_findk_arg1⁴⁷, (_lh_findk_LH_P2_0²⁸ + _lh_findk_LH_P2_1²⁸), _lh_findk_LH_C_1⁴⁰) else findk₀₁₅((_lh_findk_arg1⁴⁷ + 1), _lh_findk_arg2⁴⁷, _lh_findk_arg3⁴⁷, _lh_findk_LH_C_1⁴⁰)))))
-//│ 											in let _lh_findk_LH_C_1³⁹ = zip₀₁₅(tx³⁶, ty²⁸)
-//│ 											in (fun _lh_findk_arg2⁴⁶ -> (fun _lh_findk_arg1⁴⁶ -> (fun _lh_findk_arg3⁴⁶ -> _lh_findk_LH_C_0²⁸(_lh_findk_LH_C_1³⁹, _lh_findk_arg1⁴⁶, _lh_findk_arg2⁴⁶, _lh_findk_arg3⁴⁶))))))))
+//│ 											let _lh_findk_LH_C_0²⁸ = lazy⁰(
+//│ 												let _lh_findk_LH_P2_0²⁸ = lazy⁰(hx³⁶)
+//│ 												in let _lh_findk_LH_P2_1²⁸ = lazy⁰(force⁰(hy²⁸))
+//│ 												in (fun _lh_findk_LH_C_1⁴⁰ -> (fun _lh_findk_arg1⁴⁷ -> (fun _lh_findk_arg2⁴⁷ -> (fun _lh_findk_arg3⁴⁷ -> if ((force⁰(_lh_findk_LH_P2_0²⁸) + force⁰(_lh_findk_LH_P2_1²⁸)) >= _lh_findk_arg3⁴⁷) then findk₀₁₅((_lh_findk_arg1⁴⁷ + 1), _lh_findk_arg1⁴⁷, (force⁰(_lh_findk_LH_P2_0²⁸) + force⁰(_lh_findk_LH_P2_1²⁸)), _lh_findk_LH_C_1⁴⁰) else findk₀₁₅((_lh_findk_arg1⁴⁷ + 1), _lh_findk_arg2⁴⁷, _lh_findk_arg3⁴⁷, _lh_findk_LH_C_1⁴⁰))))))
+//│ 											in let _lh_findk_LH_C_1³⁹ = lazy⁰(zip₀₁₅(tx³⁶, force⁰(ty²⁸)))
+//│ 											in (fun _lh_findk_arg2⁴⁶ -> (fun _lh_findk_arg1⁴⁶ -> (fun _lh_findk_arg3⁴⁶ -> force⁰(_lh_findk_LH_C_0²⁸, force⁰(_lh_findk_LH_C_1³⁹), _lh_findk_arg1⁴⁶, _lh_findk_arg2⁴⁶, _lh_findk_arg3⁴⁶))))))))
 //│ 								| LH_N  => (fun a⁸⁹ -> a⁸⁹)}
 //│ 						def snd₁₁(_lh_snd_arg1⁶¹) = 
 //│ 							case _lh_snd_arg1⁶¹ of {
@@ -12300,13 +12300,13 @@ testLCSS_nofib $ primId 0
 //│ 								in (fun _lh_funcomp_x²³ -> algc₀₁(m2²³, k²³, xs1²³, take₁₁(k²³, _lh_algc_arg4¹¹), algc₀₁((_lh_algc_arg1¹¹ - m2²³), (_lh_algc_arg2¹¹ - k²³), xs2²³, drop₁₁(k²³, _lh_algc_arg4¹¹), _lh_funcomp_x²³)))}}
 //│ 					where
 //│ 					def algb₀₂(_lh_algb_arg1⁵⁶, _lh_algb_arg2⁵⁶) = 
-//│ 						let hx⁷⁵ = 0
-//│ 						in let tx⁷⁵ = algb1₀₂(_lh_algb_arg1⁵⁶, 
+//│ 						let hx⁷⁵ = lazy⁰(0)
+//│ 						in let tx⁷⁵ = lazy⁰(algb1₀₂(_lh_algb_arg1⁵⁶, 
 //│ 							let _lh_listcomp_fun⁷⁹ = (fun _lh_listcomp_fun_para⁵⁶ -> case _lh_listcomp_fun_para⁵⁶ of {
 //│ 								LH_C _lh_listcomp_fun_ls_h²⁶ _lh_listcomp_fun_ls_t²⁶ => [LH_C [LH_P2 _lh_listcomp_fun_ls_h²⁶ 0] _lh_listcomp_fun⁷⁹(_lh_listcomp_fun_ls_t²⁶)]
 //│ 								| LH_N  => [LH_N]})
-//│ 							in _lh_listcomp_fun⁷⁹(_lh_algb_arg2⁵⁶))
-//│ 						in (fun ys⁶² -> ys⁶²(hx⁷⁵, tx⁷⁵))
+//│ 							in _lh_listcomp_fun⁷⁹(_lh_algb_arg2⁵⁶)))
+//│ 						in (fun ys⁶² -> ys⁶²(force⁰(hx⁷⁵), force⁰(tx⁷⁵)))
 //│ 						where
 //│ 						def algb1₀₂(_lh_algb1_arg1⁵⁰, _lh_algb1_arg2⁷¹) = 
 //│ 							case _lh_algb1_arg1⁵⁰ of {
@@ -12329,22 +12329,22 @@ testLCSS_nofib $ primId 0
 //│ 							def map₀₂(f⁴⁹, ls²⁴⁵) = 
 //│ 								case ls²⁴⁵ of {
 //│ 									LH_C h⁶⁴ t⁷³ => 
-//│ 										let hx⁵⁵ = f⁴⁹(h⁶⁴)
-//│ 										in let tx⁵⁵ = map₀₂(f⁴⁹, t⁷³)
-//│ 										in (fun ys⁴³ -> ys⁴³(hx⁵⁵, tx⁵⁵))
+//│ 										let hx⁵⁵ = lazy⁰(f⁴⁹(h⁶⁴))
+//│ 										in let tx⁵⁵ = lazy⁰(map₀₂(f⁴⁹, t⁷³))
+//│ 										in (fun ys⁴³ -> ys⁴³(force⁰(hx⁵⁵), force⁰(tx⁵⁵)))
 //│ 									| LH_N  => (fun ys⁴⁴ -> (fun _lh_findk_arg2⁷⁰ -> (fun _lh_findk_arg1⁷⁰ -> (fun _lh_findk_arg3⁷⁰ -> _lh_findk_arg2⁷⁰))))}
 //│ 							def snd₀₂(_lh_snd_arg1⁵⁴) = 
 //│ 								case _lh_snd_arg1⁵⁴ of {
 //│ 									LH_P2 _lh_snd_LH_P2_0⁴ _lh_snd_LH_P2_1⁴ => _lh_snd_LH_P2_1⁴
 //│ 									| _  => error⁰}
 //│ 					def algb₀₃(_lh_algb_arg1³⁸, _lh_algb_arg2³⁸) = 
-//│ 						let hx³⁰ = 0
-//│ 						in let tx³⁰ = algb1₀₃(_lh_algb_arg1³⁸, 
+//│ 						let hx³⁰ = lazy⁰(0)
+//│ 						in let tx³⁰ = lazy⁰(algb1₀₃(_lh_algb_arg1³⁸, 
 //│ 							let _lh_listcomp_fun⁴² = (fun _lh_listcomp_fun_para³⁸ -> case _lh_listcomp_fun_para³⁸ of {
 //│ 								LH_C _lh_listcomp_fun_ls_h²⁷ _lh_listcomp_fun_ls_t²⁷ => [LH_C [LH_P2 _lh_listcomp_fun_ls_h²⁷ 0] _lh_listcomp_fun⁴²(_lh_listcomp_fun_ls_t²⁷)]
 //│ 								| LH_N  => [LH_N]})
-//│ 							in _lh_listcomp_fun⁴²(_lh_algb_arg2³⁸))
-//│ 						in (fun ys²⁵ -> ys²⁵(hx³⁰, tx³⁰))
+//│ 							in _lh_listcomp_fun⁴²(_lh_algb_arg2³⁸)))
+//│ 						in (fun ys²⁵ -> ys²⁵(force⁰(hx³⁰), force⁰(tx³⁰)))
 //│ 						where
 //│ 						def algb1₀₃(_lh_algb1_arg1³⁸, _lh_algb1_arg2⁴³) = 
 //│ 							case _lh_algb1_arg1³⁸ of {
@@ -12367,29 +12367,29 @@ testLCSS_nofib $ primId 0
 //│ 							def map₀₃(f⁵⁸, ls³⁰³) = 
 //│ 								case ls³⁰³ of {
 //│ 									LH_C h¹²⁰ t¹³³ => 
-//│ 										let hx⁸¹ = f⁵⁸(h¹²⁰)
-//│ 										in let tx⁸¹ = map₀₃(f⁵⁸, t¹³³)
-//│ 										in (fun ys⁶⁵ -> ys⁶⁵(hx⁸¹, tx⁸¹))
+//│ 										let hx⁸¹ = lazy⁰(f⁵⁸(h¹²⁰))
+//│ 										in let tx⁸¹ = lazy⁰(map₀₃(f⁵⁸, t¹³³))
+//│ 										in (fun ys⁶⁵ -> ys⁶⁵(force⁰(hx⁸¹), force⁰(tx⁸¹)))
 //│ 									| LH_N  => (fun ys⁶⁶ -> (fun _lh_findk_arg2¹⁰⁸ -> (fun _lh_findk_arg1¹⁰⁸ -> (fun _lh_findk_arg3¹⁰⁸ -> _lh_findk_arg2¹⁰⁸))))}
 //│ 							def snd₀₃(_lh_snd_arg1⁵⁶) = 
 //│ 								case _lh_snd_arg1⁵⁶ of {
 //│ 									LH_P2 _lh_snd_LH_P2_0³⁰ _lh_snd_LH_P2_1³⁰ => _lh_snd_LH_P2_1³⁰
 //│ 									| _  => error⁰}
 //│ 					def algb₁₂(_lh_algb_arg1⁵⁸, _lh_algb_arg2⁵⁸) = 
-//│ 						let h¹⁴⁷ = 0
-//│ 						in let t¹⁶⁹ = algb1₁₂(_lh_algb_arg1⁵⁸, 
+//│ 						let h¹⁴⁷ = lazy⁰(0)
+//│ 						in let t¹⁶⁹ = lazy⁰(algb1₁₂(_lh_algb_arg1⁵⁸, 
 //│ 							let _lh_listcomp_fun⁸¹ = (fun _lh_listcomp_fun_para⁵⁸ -> _lh_listcomp_fun_para⁵⁸(_lh_listcomp_fun⁸¹))
-//│ 							in _lh_listcomp_fun⁸¹(_lh_algb_arg2⁵⁸))
-//│ 						in (fun a¹²⁹ -> reverse_helper₀₀(t¹⁶⁹, 
-//│ 							let hy⁴¹ = h¹⁴⁷
-//│ 							in let ty⁴¹ = a¹²⁹
+//│ 							in _lh_listcomp_fun⁸¹(_lh_algb_arg2⁵⁸)))
+//│ 						in (fun a¹²⁹ -> reverse_helper₀₀(force⁰(t¹⁶⁹), 
+//│ 							let hy⁴¹ = lazy⁰(force⁰(h¹⁴⁷))
+//│ 							in let ty⁴¹ = lazy⁰(a¹²⁹)
 //│ 							in (fun hx⁷⁹ -> (fun tx⁷⁹ -> 
-//│ 								let _lh_findk_LH_C_0⁴¹ = 	
-//│ 									let _lh_findk_LH_P2_0⁴¹ = hx⁷⁹
-//│ 									in let _lh_findk_LH_P2_1⁴¹ = hy⁴¹
-//│ 									in (fun _lh_findk_LH_C_1⁶⁶ -> (fun _lh_findk_arg1¹⁰⁵ -> (fun _lh_findk_arg2¹⁰⁵ -> (fun _lh_findk_arg3¹⁰⁵ -> if ((_lh_findk_LH_P2_0⁴¹ + _lh_findk_LH_P2_1⁴¹) >= _lh_findk_arg3¹⁰⁵) then findk₀₀((_lh_findk_arg1¹⁰⁵ + 1), _lh_findk_arg1¹⁰⁵, (_lh_findk_LH_P2_0⁴¹ + _lh_findk_LH_P2_1⁴¹), _lh_findk_LH_C_1⁶⁶) else findk₀₀((_lh_findk_arg1¹⁰⁵ + 1), _lh_findk_arg2¹⁰⁵, _lh_findk_arg3¹⁰⁵, _lh_findk_LH_C_1⁶⁶)))))
-//│ 								in let _lh_findk_LH_C_1⁶⁵ = zip₀₀(tx⁷⁹, ty⁴¹)
-//│ 								in (fun _lh_findk_arg2¹⁰⁴ -> (fun _lh_findk_arg1¹⁰⁴ -> (fun _lh_findk_arg3¹⁰⁴ -> _lh_findk_LH_C_0⁴¹(_lh_findk_LH_C_1⁶⁵, _lh_findk_arg1¹⁰⁴, _lh_findk_arg2¹⁰⁴, _lh_findk_arg3¹⁰⁴))))))))
+//│ 								let _lh_findk_LH_C_0⁴¹ = lazy⁰(
+//│ 									let _lh_findk_LH_P2_0⁴¹ = lazy⁰(hx⁷⁹)
+//│ 									in let _lh_findk_LH_P2_1⁴¹ = lazy⁰(force⁰(hy⁴¹))
+//│ 									in (fun _lh_findk_LH_C_1⁶⁶ -> (fun _lh_findk_arg1¹⁰⁵ -> (fun _lh_findk_arg2¹⁰⁵ -> (fun _lh_findk_arg3¹⁰⁵ -> if ((force⁰(_lh_findk_LH_P2_0⁴¹) + force⁰(_lh_findk_LH_P2_1⁴¹)) >= _lh_findk_arg3¹⁰⁵) then findk₀₀((_lh_findk_arg1¹⁰⁵ + 1), _lh_findk_arg1¹⁰⁵, (force⁰(_lh_findk_LH_P2_0⁴¹) + force⁰(_lh_findk_LH_P2_1⁴¹)), _lh_findk_LH_C_1⁶⁶) else findk₀₀((_lh_findk_arg1¹⁰⁵ + 1), _lh_findk_arg2¹⁰⁵, _lh_findk_arg3¹⁰⁵, _lh_findk_LH_C_1⁶⁶))))))
+//│ 								in let _lh_findk_LH_C_1⁶⁵ = lazy⁰(zip₀₀(tx⁷⁹, force⁰(ty⁴¹)))
+//│ 								in (fun _lh_findk_arg2¹⁰⁴ -> (fun _lh_findk_arg1¹⁰⁴ -> (fun _lh_findk_arg3¹⁰⁴ -> force⁰(_lh_findk_LH_C_0⁴¹, force⁰(_lh_findk_LH_C_1⁶⁵), _lh_findk_arg1¹⁰⁴, _lh_findk_arg2¹⁰⁴, _lh_findk_arg3¹⁰⁴))))))))
 //│ 						where
 //│ 						def algb1₁₂(_lh_algb1_arg1⁵¹, _lh_algb1_arg2⁷⁴) = 
 //│ 							_lh_algb1_arg1⁵¹(_lh_algb1_arg2⁷⁴)
@@ -12409,38 +12409,38 @@ testLCSS_nofib $ primId 0
 //│ 							def map₁₂(f⁵⁷, ls³⁰⁰) = 
 //│ 								case ls³⁰⁰ of {
 //│ 									LH_C h⁴⁸ t⁵⁷ => 
-//│ 										let h¹⁴⁸ = f⁵⁷(h⁴⁸)
-//│ 										in let t¹⁷⁰ = map₁₂(f⁵⁷, t⁵⁷)
-//│ 										in (fun a¹³¹ -> reverse_helper₀₀(t¹⁷⁰, 
-//│ 											let hy⁴² = h¹⁴⁸
-//│ 											in let ty⁴² = a¹³¹
+//│ 										let h¹⁴⁸ = lazy⁰(f⁵⁷(h⁴⁸))
+//│ 										in let t¹⁷⁰ = lazy⁰(map₁₂(f⁵⁷, t⁵⁷))
+//│ 										in (fun a¹³¹ -> reverse_helper₀₀(force⁰(t¹⁷⁰), 
+//│ 											let hy⁴² = lazy⁰(force⁰(h¹⁴⁸))
+//│ 											in let ty⁴² = lazy⁰(a¹³¹)
 //│ 											in (fun hx⁸⁰ -> (fun tx⁸⁰ -> 
-//│ 												let _lh_findk_LH_C_0⁴² = 	
-//│ 													let _lh_findk_LH_P2_0⁴² = hx⁸⁰
-//│ 													in let _lh_findk_LH_P2_1⁴² = hy⁴²
-//│ 													in (fun _lh_findk_LH_C_1⁶⁸ -> (fun _lh_findk_arg1¹⁰⁷ -> (fun _lh_findk_arg2¹⁰⁷ -> (fun _lh_findk_arg3¹⁰⁷ -> if ((_lh_findk_LH_P2_0⁴² + _lh_findk_LH_P2_1⁴²) >= _lh_findk_arg3¹⁰⁷) then findk₀₀((_lh_findk_arg1¹⁰⁷ + 1), _lh_findk_arg1¹⁰⁷, (_lh_findk_LH_P2_0⁴² + _lh_findk_LH_P2_1⁴²), _lh_findk_LH_C_1⁶⁸) else findk₀₀((_lh_findk_arg1¹⁰⁷ + 1), _lh_findk_arg2¹⁰⁷, _lh_findk_arg3¹⁰⁷, _lh_findk_LH_C_1⁶⁸)))))
-//│ 												in let _lh_findk_LH_C_1⁶⁷ = zip₀₀(tx⁸⁰, ty⁴²)
-//│ 												in (fun _lh_findk_arg2¹⁰⁶ -> (fun _lh_findk_arg1¹⁰⁶ -> (fun _lh_findk_arg3¹⁰⁶ -> _lh_findk_LH_C_0⁴²(_lh_findk_LH_C_1⁶⁷, _lh_findk_arg1¹⁰⁶, _lh_findk_arg2¹⁰⁶, _lh_findk_arg3¹⁰⁶))))))))
+//│ 												let _lh_findk_LH_C_0⁴² = lazy⁰(
+//│ 													let _lh_findk_LH_P2_0⁴² = lazy⁰(hx⁸⁰)
+//│ 													in let _lh_findk_LH_P2_1⁴² = lazy⁰(force⁰(hy⁴²))
+//│ 													in (fun _lh_findk_LH_C_1⁶⁸ -> (fun _lh_findk_arg1¹⁰⁷ -> (fun _lh_findk_arg2¹⁰⁷ -> (fun _lh_findk_arg3¹⁰⁷ -> if ((force⁰(_lh_findk_LH_P2_0⁴²) + force⁰(_lh_findk_LH_P2_1⁴²)) >= _lh_findk_arg3¹⁰⁷) then findk₀₀((_lh_findk_arg1¹⁰⁷ + 1), _lh_findk_arg1¹⁰⁷, (force⁰(_lh_findk_LH_P2_0⁴²) + force⁰(_lh_findk_LH_P2_1⁴²)), _lh_findk_LH_C_1⁶⁸) else findk₀₀((_lh_findk_arg1¹⁰⁷ + 1), _lh_findk_arg2¹⁰⁷, _lh_findk_arg3¹⁰⁷, _lh_findk_LH_C_1⁶⁸))))))
+//│ 												in let _lh_findk_LH_C_1⁶⁷ = lazy⁰(zip₀₀(tx⁸⁰, force⁰(ty⁴²)))
+//│ 												in (fun _lh_findk_arg2¹⁰⁶ -> (fun _lh_findk_arg1¹⁰⁶ -> (fun _lh_findk_arg3¹⁰⁶ -> force⁰(_lh_findk_LH_C_0⁴², force⁰(_lh_findk_LH_C_1⁶⁷), _lh_findk_arg1¹⁰⁶, _lh_findk_arg2¹⁰⁶, _lh_findk_arg3¹⁰⁶))))))))
 //│ 									| LH_N  => (fun a¹³² -> a¹³²)}
 //│ 							def snd₁₂(_lh_snd_arg1⁴⁸) = 
 //│ 								case _lh_snd_arg1⁴⁸ of {
 //│ 									LH_P2 _lh_snd_LH_P2_0⁶ _lh_snd_LH_P2_1⁶ => _lh_snd_LH_P2_1⁶
 //│ 									| _  => error⁰}
 //│ 					def algb₁₃(_lh_algb_arg1³⁴, _lh_algb_arg2³⁴) = 
-//│ 						let h¹²³ = 0
-//│ 						in let t¹³⁶ = algb1₁₃(_lh_algb_arg1³⁴, 
+//│ 						let h¹²³ = lazy⁰(0)
+//│ 						in let t¹³⁶ = lazy⁰(algb1₁₃(_lh_algb_arg1³⁴, 
 //│ 							let _lh_listcomp_fun³⁵ = (fun _lh_listcomp_fun_para³⁴ -> _lh_listcomp_fun_para³⁴(_lh_listcomp_fun³⁵))
-//│ 							in _lh_listcomp_fun³⁵(_lh_algb_arg2³⁴))
-//│ 						in (fun a⁵⁶ -> reverse_helper₀₁(t¹³⁶, 
-//│ 							let hy¹⁷ = h¹²³
-//│ 							in let ty¹⁷ = a⁵⁶
+//│ 							in _lh_listcomp_fun³⁵(_lh_algb_arg2³⁴)))
+//│ 						in (fun a⁵⁶ -> reverse_helper₀₁(force⁰(t¹³⁶), 
+//│ 							let hy¹⁷ = lazy⁰(force⁰(h¹²³))
+//│ 							in let ty¹⁷ = lazy⁰(a⁵⁶)
 //│ 							in (fun hx¹⁷ -> (fun tx¹⁷ -> 
-//│ 								let _lh_findk_LH_C_0¹⁷ = 	
-//│ 									let _lh_findk_LH_P2_0¹⁷ = hx¹⁷
-//│ 									in let _lh_findk_LH_P2_1¹⁷ = hy¹⁷
-//│ 									in (fun _lh_findk_LH_C_1¹⁸ -> (fun _lh_findk_arg1¹⁸ -> (fun _lh_findk_arg2¹⁸ -> (fun _lh_findk_arg3¹⁸ -> if ((_lh_findk_LH_P2_0¹⁷ + _lh_findk_LH_P2_1¹⁷) >= _lh_findk_arg3¹⁸) then findk₀₁((_lh_findk_arg1¹⁸ + 1), _lh_findk_arg1¹⁸, (_lh_findk_LH_P2_0¹⁷ + _lh_findk_LH_P2_1¹⁷), _lh_findk_LH_C_1¹⁸) else findk₀₁((_lh_findk_arg1¹⁸ + 1), _lh_findk_arg2¹⁸, _lh_findk_arg3¹⁸, _lh_findk_LH_C_1¹⁸)))))
-//│ 								in let _lh_findk_LH_C_1¹⁷ = zip₀₁(tx¹⁷, ty¹⁷)
-//│ 								in (fun _lh_findk_arg2¹⁷ -> (fun _lh_findk_arg1¹⁷ -> (fun _lh_findk_arg3¹⁷ -> _lh_findk_LH_C_0¹⁷(_lh_findk_LH_C_1¹⁷, _lh_findk_arg1¹⁷, _lh_findk_arg2¹⁷, _lh_findk_arg3¹⁷))))))))
+//│ 								let _lh_findk_LH_C_0¹⁷ = lazy⁰(
+//│ 									let _lh_findk_LH_P2_0¹⁷ = lazy⁰(hx¹⁷)
+//│ 									in let _lh_findk_LH_P2_1¹⁷ = lazy⁰(force⁰(hy¹⁷))
+//│ 									in (fun _lh_findk_LH_C_1¹⁸ -> (fun _lh_findk_arg1¹⁸ -> (fun _lh_findk_arg2¹⁸ -> (fun _lh_findk_arg3¹⁸ -> if ((force⁰(_lh_findk_LH_P2_0¹⁷) + force⁰(_lh_findk_LH_P2_1¹⁷)) >= _lh_findk_arg3¹⁸) then findk₀₁((_lh_findk_arg1¹⁸ + 1), _lh_findk_arg1¹⁸, (force⁰(_lh_findk_LH_P2_0¹⁷) + force⁰(_lh_findk_LH_P2_1¹⁷)), _lh_findk_LH_C_1¹⁸) else findk₀₁((_lh_findk_arg1¹⁸ + 1), _lh_findk_arg2¹⁸, _lh_findk_arg3¹⁸, _lh_findk_LH_C_1¹⁸))))))
+//│ 								in let _lh_findk_LH_C_1¹⁷ = lazy⁰(zip₀₁(tx¹⁷, force⁰(ty¹⁷)))
+//│ 								in (fun _lh_findk_arg2¹⁷ -> (fun _lh_findk_arg1¹⁷ -> (fun _lh_findk_arg3¹⁷ -> force⁰(_lh_findk_LH_C_0¹⁷, force⁰(_lh_findk_LH_C_1¹⁷), _lh_findk_arg1¹⁷, _lh_findk_arg2¹⁷, _lh_findk_arg3¹⁷))))))))
 //│ 						where
 //│ 						def algb1₁₃(_lh_algb1_arg1⁴⁴, _lh_algb1_arg2⁵⁴) = 
 //│ 							_lh_algb1_arg1⁴⁴(_lh_algb1_arg2⁵⁴)
@@ -12460,18 +12460,18 @@ testLCSS_nofib $ primId 0
 //│ 							def map₁₃(f⁴⁰, ls²⁰⁴) = 
 //│ 								case ls²⁰⁴ of {
 //│ 									LH_C h¹³ t¹⁷ => 
-//│ 										let h¹³¹ = f⁴⁰(h¹³)
-//│ 										in let t¹⁴⁸ = map₁₃(f⁴⁰, t¹⁷)
-//│ 										in (fun a⁸⁰ -> reverse_helper₀₁(t¹⁴⁸, 
-//│ 											let hy²⁵ = h¹³¹
-//│ 											in let ty²⁵ = a⁸⁰
+//│ 										let h¹³¹ = lazy⁰(f⁴⁰(h¹³))
+//│ 										in let t¹⁴⁸ = lazy⁰(map₁₃(f⁴⁰, t¹⁷))
+//│ 										in (fun a⁸⁰ -> reverse_helper₀₁(force⁰(t¹⁴⁸), 
+//│ 											let hy²⁵ = lazy⁰(force⁰(h¹³¹))
+//│ 											in let ty²⁵ = lazy⁰(a⁸⁰)
 //│ 											in (fun hx³² -> (fun tx³² -> 
-//│ 												let _lh_findk_LH_C_0²⁵ = 	
-//│ 													let _lh_findk_LH_P2_0²⁵ = hx³²
-//│ 													in let _lh_findk_LH_P2_1²⁵ = hy²⁵
-//│ 													in (fun _lh_findk_LH_C_1³⁴ -> (fun _lh_findk_arg1³⁹ -> (fun _lh_findk_arg2³⁹ -> (fun _lh_findk_arg3³⁹ -> if ((_lh_findk_LH_P2_0²⁵ + _lh_findk_LH_P2_1²⁵) >= _lh_findk_arg3³⁹) then findk₀₁((_lh_findk_arg1³⁹ + 1), _lh_findk_arg1³⁹, (_lh_findk_LH_P2_0²⁵ + _lh_findk_LH_P2_1²⁵), _lh_findk_LH_C_1³⁴) else findk₀₁((_lh_findk_arg1³⁹ + 1), _lh_findk_arg2³⁹, _lh_findk_arg3³⁹, _lh_findk_LH_C_1³⁴)))))
-//│ 												in let _lh_findk_LH_C_1³³ = zip₀₁(tx³², ty²⁵)
-//│ 												in (fun _lh_findk_arg2³⁸ -> (fun _lh_findk_arg1³⁸ -> (fun _lh_findk_arg3³⁸ -> _lh_findk_LH_C_0²⁵(_lh_findk_LH_C_1³³, _lh_findk_arg1³⁸, _lh_findk_arg2³⁸, _lh_findk_arg3³⁸))))))))
+//│ 												let _lh_findk_LH_C_0²⁵ = lazy⁰(
+//│ 													let _lh_findk_LH_P2_0²⁵ = lazy⁰(hx³²)
+//│ 													in let _lh_findk_LH_P2_1²⁵ = lazy⁰(force⁰(hy²⁵))
+//│ 													in (fun _lh_findk_LH_C_1³⁴ -> (fun _lh_findk_arg1³⁹ -> (fun _lh_findk_arg2³⁹ -> (fun _lh_findk_arg3³⁹ -> if ((force⁰(_lh_findk_LH_P2_0²⁵) + force⁰(_lh_findk_LH_P2_1²⁵)) >= _lh_findk_arg3³⁹) then findk₀₁((_lh_findk_arg1³⁹ + 1), _lh_findk_arg1³⁹, (force⁰(_lh_findk_LH_P2_0²⁵) + force⁰(_lh_findk_LH_P2_1²⁵)), _lh_findk_LH_C_1³⁴) else findk₀₁((_lh_findk_arg1³⁹ + 1), _lh_findk_arg2³⁹, _lh_findk_arg3³⁹, _lh_findk_LH_C_1³⁴))))))
+//│ 												in let _lh_findk_LH_C_1³³ = lazy⁰(zip₀₁(tx³², force⁰(ty²⁵)))
+//│ 												in (fun _lh_findk_arg2³⁸ -> (fun _lh_findk_arg1³⁸ -> (fun _lh_findk_arg3³⁸ -> force⁰(_lh_findk_LH_C_0²⁵, force⁰(_lh_findk_LH_C_1³³), _lh_findk_arg1³⁸, _lh_findk_arg2³⁸, _lh_findk_arg3³⁸))))))))
 //│ 									| LH_N  => (fun a⁸¹ -> a⁸¹)}
 //│ 							def snd₁₃(_lh_snd_arg1⁴²) = 
 //│ 								case _lh_snd_arg1⁴² of {
@@ -12518,9 +12518,9 @@ testLCSS_nofib $ primId 0
 //│ 						def reverse_helper₁₀(ls²⁴⁰, a⁹⁹) = 
 //│ 							case ls²⁴⁰ of {
 //│ 								LH_C h⁷⁶ t⁸⁶ => reverse_helper₁₀(t⁸⁶, 
-//│ 									let _lh_algb1_LH_C_0⁴⁰ = h⁷⁶
-//│ 									in let _lh_algb1_LH_C_1⁴⁰ = a⁹⁹
-//│ 									in (fun _lh_algb1_arg2⁵⁹ -> algb1₁₂(_lh_algb1_LH_C_1⁴⁰, algb2₁₂(_lh_algb1_LH_C_0⁴⁰, 0, 0, _lh_algb1_arg2⁵⁹))))
+//│ 									let _lh_algb1_LH_C_0⁴⁰ = lazy⁰(h⁷⁶)
+//│ 									in let _lh_algb1_LH_C_1⁴⁰ = lazy⁰(a⁹⁹)
+//│ 									in (fun _lh_algb1_arg2⁵⁹ -> algb1₁₂(force⁰(_lh_algb1_LH_C_1⁴⁰), algb2₁₂(force⁰(_lh_algb1_LH_C_0⁴⁰), 0, 0, _lh_algb1_arg2⁵⁹))))
 //│ 								| LH_N  => a⁹⁹}
 //│ 					def reverse₁₁(ls³⁰¹) = 
 //│ 						reverse_helper₁₁(ls³⁰¹, (fun _lh_algb1_arg2⁸⁴ -> map₁₃(snd₁₃, _lh_algb1_arg2⁸⁴)))
@@ -12528,9 +12528,9 @@ testLCSS_nofib $ primId 0
 //│ 						def reverse_helper₁₁(ls¹⁸⁶, a⁶⁷) = 
 //│ 							case ls¹⁸⁶ of {
 //│ 								LH_C h²¹ t²⁶ => reverse_helper₁₁(t²⁶, 
-//│ 									let _lh_algb1_LH_C_0³⁷ = h²¹
-//│ 									in let _lh_algb1_LH_C_1³⁷ = a⁶⁷
-//│ 									in (fun _lh_algb1_arg2³⁸ -> algb1₁₃(_lh_algb1_LH_C_1³⁷, algb2₁₃(_lh_algb1_LH_C_0³⁷, 0, 0, _lh_algb1_arg2³⁸))))
+//│ 									let _lh_algb1_LH_C_0³⁷ = lazy⁰(h²¹)
+//│ 									in let _lh_algb1_LH_C_1³⁷ = lazy⁰(a⁶⁷)
+//│ 									in (fun _lh_algb1_arg2³⁸ -> algb1₁₃(force⁰(_lh_algb1_LH_C_1³⁷), algb2₁₃(force⁰(_lh_algb1_LH_C_0³⁷), 0, 0, _lh_algb1_arg2³⁸))))
 //│ 								| LH_N  => a⁶⁷}
 //│ 					def reverse₂₀(ls²⁷⁷) = 
 //│ 						reverse_helper₂₀(ls²⁷⁷, (fun _lh_listcomp_fun⁷⁰ -> [LH_N]))
@@ -12538,9 +12538,9 @@ testLCSS_nofib $ primId 0
 //│ 						def reverse_helper₂₀(ls¹⁷⁴, a⁵⁵) = 
 //│ 							case ls¹⁷⁴ of {
 //│ 								LH_C h¹⁴ t¹⁸ => reverse_helper₂₀(t¹⁸, 
-//│ 									let _lh_listcomp_fun_ls_h³⁴ = h¹⁴
-//│ 									in let _lh_listcomp_fun_ls_t³⁴ = a⁵⁵
-//│ 									in (fun _lh_listcomp_fun³⁴ -> [LH_C [LH_P2 _lh_listcomp_fun_ls_h³⁴ 0] _lh_listcomp_fun³⁴(_lh_listcomp_fun_ls_t³⁴)]))
+//│ 									let _lh_listcomp_fun_ls_h³⁴ = lazy⁰(h¹⁴)
+//│ 									in let _lh_listcomp_fun_ls_t³⁴ = lazy⁰(a⁵⁵)
+//│ 									in (fun _lh_listcomp_fun³⁴ -> [LH_C [LH_P2 force⁰(_lh_listcomp_fun_ls_h³⁴) 0] _lh_listcomp_fun³⁴(force⁰(_lh_listcomp_fun_ls_t³⁴))]))
 //│ 								| LH_N  => a⁵⁵}
 //│ 					def reverse₂₁(ls²⁰⁹) = 
 //│ 						reverse_helper₂₁(ls²⁰⁹, (fun _lh_listcomp_fun⁴⁵ -> [LH_N]))
@@ -12548,9 +12548,9 @@ testLCSS_nofib $ primId 0
 //│ 						def reverse_helper₂₁(ls¹⁹⁴, a⁷³) = 
 //│ 							case ls¹⁹⁴ of {
 //│ 								LH_C h⁷¹ t⁸⁰ => reverse_helper₂₁(t⁸⁰, 
-//│ 									let _lh_listcomp_fun_ls_h³⁵ = h⁷¹
-//│ 									in let _lh_listcomp_fun_ls_t³⁵ = a⁷³
-//│ 									in (fun _lh_listcomp_fun⁴¹ -> [LH_C [LH_P2 _lh_listcomp_fun_ls_h³⁵ 0] _lh_listcomp_fun⁴¹(_lh_listcomp_fun_ls_t³⁵)]))
+//│ 									let _lh_listcomp_fun_ls_h³⁵ = lazy⁰(h⁷¹)
+//│ 									in let _lh_listcomp_fun_ls_t³⁵ = lazy⁰(a⁷³)
+//│ 									in (fun _lh_listcomp_fun⁴¹ -> [LH_C [LH_P2 force⁰(_lh_listcomp_fun_ls_h³⁵) 0] _lh_listcomp_fun⁴¹(force⁰(_lh_listcomp_fun_ls_t³⁵))]))
 //│ 								| LH_N  => a⁷³}
 //│ 					def take₀₀(n⁵⁵, ls²⁹⁶) = 
 //│ 						if (n⁵⁵ > 0) then case ls²⁹⁶ of {
@@ -12596,13 +12596,13 @@ testLCSS_nofib $ primId 0
 //│ 								in (fun _lh_funcomp_x³¹ -> algc₀₄(m2³¹, k³¹, xs1³¹, take₁₉(k³¹, _lh_algc_arg4¹⁵), algc₀₅((_lh_algc_arg1¹⁵ - m2³¹), (_lh_algc_arg2¹⁵ - k³¹), xs2³¹, drop₁₉(k³¹, _lh_algc_arg4¹⁵), _lh_funcomp_x³¹)))}}
 //│ 					where
 //│ 					def algb₀₄(_lh_algb_arg1⁶¹, _lh_algb_arg2⁶¹) = 
-//│ 						let hx⁸⁸ = 0
-//│ 						in let tx⁸⁸ = algb1₀₄(_lh_algb_arg1⁶¹, 
+//│ 						let hx⁸⁸ = lazy⁰(0)
+//│ 						in let tx⁸⁸ = lazy⁰(algb1₀₄(_lh_algb_arg1⁶¹, 
 //│ 							let _lh_listcomp_fun⁸⁶ = (fun _lh_listcomp_fun_para⁶¹ -> case _lh_listcomp_fun_para⁶¹ of {
 //│ 								LH_C _lh_listcomp_fun_ls_h¹⁶ _lh_listcomp_fun_ls_t¹⁶ => [LH_C [LH_P2 _lh_listcomp_fun_ls_h¹⁶ 0] _lh_listcomp_fun⁸⁶(_lh_listcomp_fun_ls_t¹⁶)]
 //│ 								| LH_N  => [LH_N]})
-//│ 							in _lh_listcomp_fun⁸⁶(_lh_algb_arg2⁶¹))
-//│ 						in (fun ys⁷⁷ -> ys⁷⁷(hx⁸⁸, tx⁸⁸))
+//│ 							in _lh_listcomp_fun⁸⁶(_lh_algb_arg2⁶¹)))
+//│ 						in (fun ys⁷⁷ -> ys⁷⁷(force⁰(hx⁸⁸), force⁰(tx⁸⁸)))
 //│ 						where
 //│ 						def algb1₀₄(_lh_algb1_arg1⁶³, _lh_algb1_arg2⁹⁵) = 
 //│ 							case _lh_algb1_arg1⁶³ of {
@@ -12625,22 +12625,22 @@ testLCSS_nofib $ primId 0
 //│ 							def map₀₄(f⁶⁰, ls³¹⁰) = 
 //│ 								case ls³¹⁰ of {
 //│ 									LH_C h⁵⁷ t⁶⁶ => 
-//│ 										let hx⁸³ = f⁶⁰(h⁵⁷)
-//│ 										in let tx⁸³ = map₀₄(f⁶⁰, t⁶⁶)
-//│ 										in (fun ys⁶⁹ -> ys⁶⁹(hx⁸³, tx⁸³))
+//│ 										let hx⁸³ = lazy⁰(f⁶⁰(h⁵⁷))
+//│ 										in let tx⁸³ = lazy⁰(map₀₄(f⁶⁰, t⁶⁶))
+//│ 										in (fun ys⁶⁹ -> ys⁶⁹(force⁰(hx⁸³), force⁰(tx⁸³)))
 //│ 									| LH_N  => (fun ys⁷⁰ -> (fun _lh_findk_arg2¹¹¹ -> (fun _lh_findk_arg1¹¹¹ -> (fun _lh_findk_arg3¹¹¹ -> _lh_findk_arg2¹¹¹))))}
 //│ 							def snd₀₄(_lh_snd_arg1⁶⁰) = 
 //│ 								case _lh_snd_arg1⁶⁰ of {
 //│ 									LH_P2 _lh_snd_LH_P2_0¹⁸ _lh_snd_LH_P2_1¹⁸ => _lh_snd_LH_P2_1¹⁸
 //│ 									| _  => error⁰}
 //│ 					def algb₀₅(_lh_algb_arg1⁶³, _lh_algb_arg2⁶³) = 
-//│ 						let hx⁹² = 0
-//│ 						in let tx⁹² = algb1₀₅(_lh_algb_arg1⁶³, 
+//│ 						let hx⁹² = lazy⁰(0)
+//│ 						in let tx⁹² = lazy⁰(algb1₀₅(_lh_algb_arg1⁶³, 
 //│ 							let _lh_listcomp_fun⁹⁰ = (fun _lh_listcomp_fun_para⁶³ -> case _lh_listcomp_fun_para⁶³ of {
 //│ 								LH_C _lh_listcomp_fun_ls_h⁹ _lh_listcomp_fun_ls_t⁹ => [LH_C [LH_P2 _lh_listcomp_fun_ls_h⁹ 0] _lh_listcomp_fun⁹⁰(_lh_listcomp_fun_ls_t⁹)]
 //│ 								| LH_N  => [LH_N]})
-//│ 							in _lh_listcomp_fun⁹⁰(_lh_algb_arg2⁶³))
-//│ 						in (fun ys⁷⁹ -> ys⁷⁹(hx⁹², tx⁹²))
+//│ 							in _lh_listcomp_fun⁹⁰(_lh_algb_arg2⁶³)))
+//│ 						in (fun ys⁷⁹ -> ys⁷⁹(force⁰(hx⁹²), force⁰(tx⁹²)))
 //│ 						where
 //│ 						def algb1₀₅(_lh_algb1_arg1⁴⁵, _lh_algb1_arg2⁵⁶) = 
 //│ 							case _lh_algb1_arg1⁴⁵ of {
@@ -12663,29 +12663,29 @@ testLCSS_nofib $ primId 0
 //│ 							def map₀₅(f⁶¹, ls³¹¹) = 
 //│ 								case ls³¹¹ of {
 //│ 									LH_C h⁹⁹ t¹⁰⁹ => 
-//│ 										let hx⁸⁴ = f⁶¹(h⁹⁹)
-//│ 										in let tx⁸⁴ = map₀₅(f⁶¹, t¹⁰⁹)
-//│ 										in (fun ys⁷² -> ys⁷²(hx⁸⁴, tx⁸⁴))
+//│ 										let hx⁸⁴ = lazy⁰(f⁶¹(h⁹⁹))
+//│ 										in let tx⁸⁴ = lazy⁰(map₀₅(f⁶¹, t¹⁰⁹))
+//│ 										in (fun ys⁷² -> ys⁷²(force⁰(hx⁸⁴), force⁰(tx⁸⁴)))
 //│ 									| LH_N  => (fun ys⁷³ -> (fun _lh_findk_arg2¹¹³ -> (fun _lh_findk_arg1¹¹³ -> (fun _lh_findk_arg3¹¹³ -> _lh_findk_arg2¹¹³))))}
 //│ 							def snd₀₅(_lh_snd_arg1⁵⁰) = 
 //│ 								case _lh_snd_arg1⁵⁰ of {
 //│ 									LH_P2 _lh_snd_LH_P2_0¹⁷ _lh_snd_LH_P2_1¹⁷ => _lh_snd_LH_P2_1¹⁷
 //│ 									| _  => error⁰}
 //│ 					def algb₁₄(_lh_algb_arg1⁵⁵, _lh_algb_arg2⁵⁵) = 
-//│ 						let h¹⁴⁵ = 0
-//│ 						in let t¹⁶⁷ = algb1₁₄(_lh_algb_arg1⁵⁵, 
+//│ 						let h¹⁴⁵ = lazy⁰(0)
+//│ 						in let t¹⁶⁷ = lazy⁰(algb1₁₄(_lh_algb_arg1⁵⁵, 
 //│ 							let _lh_listcomp_fun⁷⁶ = (fun _lh_listcomp_fun_para⁵⁵ -> _lh_listcomp_fun_para⁵⁵(_lh_listcomp_fun⁷⁶))
-//│ 							in _lh_listcomp_fun⁷⁶(_lh_algb_arg2⁵⁵))
-//│ 						in (fun a¹²⁵ -> reverse_helper₀₈(t¹⁶⁷, 
-//│ 							let hy³⁹ = h¹⁴⁵
-//│ 							in let ty³⁹ = a¹²⁵
+//│ 							in _lh_listcomp_fun⁷⁶(_lh_algb_arg2⁵⁵)))
+//│ 						in (fun a¹²⁵ -> reverse_helper₀₈(force⁰(t¹⁶⁷), 
+//│ 							let hy³⁹ = lazy⁰(force⁰(h¹⁴⁵))
+//│ 							in let ty³⁹ = lazy⁰(a¹²⁵)
 //│ 							in (fun hx⁷⁴ -> (fun tx⁷⁴ -> 
-//│ 								let _lh_findk_LH_C_0³⁹ = 	
-//│ 									let _lh_findk_LH_P2_0³⁹ = hx⁷⁴
-//│ 									in let _lh_findk_LH_P2_1³⁹ = hy³⁹
-//│ 									in (fun _lh_findk_LH_C_1⁶² -> (fun _lh_findk_arg1⁹⁷ -> (fun _lh_findk_arg2⁹⁷ -> (fun _lh_findk_arg3⁹⁷ -> if ((_lh_findk_LH_P2_0³⁹ + _lh_findk_LH_P2_1³⁹) >= _lh_findk_arg3⁹⁷) then findk₀₈((_lh_findk_arg1⁹⁷ + 1), _lh_findk_arg1⁹⁷, (_lh_findk_LH_P2_0³⁹ + _lh_findk_LH_P2_1³⁹), _lh_findk_LH_C_1⁶²) else findk₀₈((_lh_findk_arg1⁹⁷ + 1), _lh_findk_arg2⁹⁷, _lh_findk_arg3⁹⁷, _lh_findk_LH_C_1⁶²)))))
-//│ 								in let _lh_findk_LH_C_1⁶¹ = zip₀₈(tx⁷⁴, ty³⁹)
-//│ 								in (fun _lh_findk_arg2⁹⁶ -> (fun _lh_findk_arg1⁹⁶ -> (fun _lh_findk_arg3⁹⁶ -> _lh_findk_LH_C_0³⁹(_lh_findk_LH_C_1⁶¹, _lh_findk_arg1⁹⁶, _lh_findk_arg2⁹⁶, _lh_findk_arg3⁹⁶))))))))
+//│ 								let _lh_findk_LH_C_0³⁹ = lazy⁰(
+//│ 									let _lh_findk_LH_P2_0³⁹ = lazy⁰(hx⁷⁴)
+//│ 									in let _lh_findk_LH_P2_1³⁹ = lazy⁰(force⁰(hy³⁹))
+//│ 									in (fun _lh_findk_LH_C_1⁶² -> (fun _lh_findk_arg1⁹⁷ -> (fun _lh_findk_arg2⁹⁷ -> (fun _lh_findk_arg3⁹⁷ -> if ((force⁰(_lh_findk_LH_P2_0³⁹) + force⁰(_lh_findk_LH_P2_1³⁹)) >= _lh_findk_arg3⁹⁷) then findk₀₈((_lh_findk_arg1⁹⁷ + 1), _lh_findk_arg1⁹⁷, (force⁰(_lh_findk_LH_P2_0³⁹) + force⁰(_lh_findk_LH_P2_1³⁹)), _lh_findk_LH_C_1⁶²) else findk₀₈((_lh_findk_arg1⁹⁷ + 1), _lh_findk_arg2⁹⁷, _lh_findk_arg3⁹⁷, _lh_findk_LH_C_1⁶²))))))
+//│ 								in let _lh_findk_LH_C_1⁶¹ = lazy⁰(zip₀₈(tx⁷⁴, force⁰(ty³⁹)))
+//│ 								in (fun _lh_findk_arg2⁹⁶ -> (fun _lh_findk_arg1⁹⁶ -> (fun _lh_findk_arg3⁹⁶ -> force⁰(_lh_findk_LH_C_0³⁹, force⁰(_lh_findk_LH_C_1⁶¹), _lh_findk_arg1⁹⁶, _lh_findk_arg2⁹⁶, _lh_findk_arg3⁹⁶))))))))
 //│ 						where
 //│ 						def algb1₁₄(_lh_algb1_arg1⁵³, _lh_algb1_arg2⁷⁷) = 
 //│ 							_lh_algb1_arg1⁵³(_lh_algb1_arg2⁷⁷)
@@ -12705,38 +12705,38 @@ testLCSS_nofib $ primId 0
 //│ 							def map₁₄(f⁵³, ls²⁷⁸) = 
 //│ 								case ls²⁷⁸ of {
 //│ 									LH_C h⁶⁹ t⁷⁸ => 
-//│ 										let h¹⁴¹ = f⁵³(h⁶⁹)
-//│ 										in let t¹⁶³ = map₁₄(f⁵³, t⁷⁸)
-//│ 										in (fun a¹¹³ -> reverse_helper₀₈(t¹⁶³, 
-//│ 											let hy³⁵ = h¹⁴¹
-//│ 											in let ty³⁵ = a¹¹³
+//│ 										let h¹⁴¹ = lazy⁰(f⁵³(h⁶⁹))
+//│ 										in let t¹⁶³ = lazy⁰(map₁₄(f⁵³, t⁷⁸))
+//│ 										in (fun a¹¹³ -> reverse_helper₀₈(force⁰(t¹⁶³), 
+//│ 											let hy³⁵ = lazy⁰(force⁰(h¹⁴¹))
+//│ 											in let ty³⁵ = lazy⁰(a¹¹³)
 //│ 											in (fun hx⁶⁷ -> (fun tx⁶⁷ -> 
-//│ 												let _lh_findk_LH_C_0³⁵ = 	
-//│ 													let _lh_findk_LH_P2_0³⁵ = hx⁶⁷
-//│ 													in let _lh_findk_LH_P2_1³⁵ = hy³⁵
-//│ 													in (fun _lh_findk_LH_C_1⁵⁴ -> (fun _lh_findk_arg1⁸⁶ -> (fun _lh_findk_arg2⁸⁶ -> (fun _lh_findk_arg3⁸⁶ -> if ((_lh_findk_LH_P2_0³⁵ + _lh_findk_LH_P2_1³⁵) >= _lh_findk_arg3⁸⁶) then findk₀₈((_lh_findk_arg1⁸⁶ + 1), _lh_findk_arg1⁸⁶, (_lh_findk_LH_P2_0³⁵ + _lh_findk_LH_P2_1³⁵), _lh_findk_LH_C_1⁵⁴) else findk₀₈((_lh_findk_arg1⁸⁶ + 1), _lh_findk_arg2⁸⁶, _lh_findk_arg3⁸⁶, _lh_findk_LH_C_1⁵⁴)))))
-//│ 												in let _lh_findk_LH_C_1⁵³ = zip₀₈(tx⁶⁷, ty³⁵)
-//│ 												in (fun _lh_findk_arg2⁸⁵ -> (fun _lh_findk_arg1⁸⁵ -> (fun _lh_findk_arg3⁸⁵ -> _lh_findk_LH_C_0³⁵(_lh_findk_LH_C_1⁵³, _lh_findk_arg1⁸⁵, _lh_findk_arg2⁸⁵, _lh_findk_arg3⁸⁵))))))))
+//│ 												let _lh_findk_LH_C_0³⁵ = lazy⁰(
+//│ 													let _lh_findk_LH_P2_0³⁵ = lazy⁰(hx⁶⁷)
+//│ 													in let _lh_findk_LH_P2_1³⁵ = lazy⁰(force⁰(hy³⁵))
+//│ 													in (fun _lh_findk_LH_C_1⁵⁴ -> (fun _lh_findk_arg1⁸⁶ -> (fun _lh_findk_arg2⁸⁶ -> (fun _lh_findk_arg3⁸⁶ -> if ((force⁰(_lh_findk_LH_P2_0³⁵) + force⁰(_lh_findk_LH_P2_1³⁵)) >= _lh_findk_arg3⁸⁶) then findk₀₈((_lh_findk_arg1⁸⁶ + 1), _lh_findk_arg1⁸⁶, (force⁰(_lh_findk_LH_P2_0³⁵) + force⁰(_lh_findk_LH_P2_1³⁵)), _lh_findk_LH_C_1⁵⁴) else findk₀₈((_lh_findk_arg1⁸⁶ + 1), _lh_findk_arg2⁸⁶, _lh_findk_arg3⁸⁶, _lh_findk_LH_C_1⁵⁴))))))
+//│ 												in let _lh_findk_LH_C_1⁵³ = lazy⁰(zip₀₈(tx⁶⁷, force⁰(ty³⁵)))
+//│ 												in (fun _lh_findk_arg2⁸⁵ -> (fun _lh_findk_arg1⁸⁵ -> (fun _lh_findk_arg3⁸⁵ -> force⁰(_lh_findk_LH_C_0³⁵, force⁰(_lh_findk_LH_C_1⁵³), _lh_findk_arg1⁸⁵, _lh_findk_arg2⁸⁵, _lh_findk_arg3⁸⁵))))))))
 //│ 									| LH_N  => (fun a¹¹⁴ -> a¹¹⁴)}
 //│ 							def snd₁₄(_lh_snd_arg1³⁵) = 
 //│ 								case _lh_snd_arg1³⁵ of {
 //│ 									LH_P2 _lh_snd_LH_P2_0² _lh_snd_LH_P2_1² => _lh_snd_LH_P2_1²
 //│ 									| _  => error⁰}
 //│ 					def algb₁₅(_lh_algb_arg1⁴⁷, _lh_algb_arg2⁴⁷) = 
-//│ 						let h¹³⁷ = 0
-//│ 						in let t¹⁵⁷ = algb1₁₅(_lh_algb_arg1⁴⁷, 
+//│ 						let h¹³⁷ = lazy⁰(0)
+//│ 						in let t¹⁵⁷ = lazy⁰(algb1₁₅(_lh_algb_arg1⁴⁷, 
 //│ 							let _lh_listcomp_fun⁵⁶ = (fun _lh_listcomp_fun_para⁴⁷ -> _lh_listcomp_fun_para⁴⁷(_lh_listcomp_fun⁵⁶))
-//│ 							in _lh_listcomp_fun⁵⁶(_lh_algb_arg2⁴⁷))
-//│ 						in (fun a⁹⁵ -> reverse_helper₀₉(t¹⁵⁷, 
-//│ 							let hy³¹ = h¹³⁷
-//│ 							in let ty³¹ = a⁹⁵
+//│ 							in _lh_listcomp_fun⁵⁶(_lh_algb_arg2⁴⁷)))
+//│ 						in (fun a⁹⁵ -> reverse_helper₀₉(force⁰(t¹⁵⁷), 
+//│ 							let hy³¹ = lazy⁰(force⁰(h¹³⁷))
+//│ 							in let ty³¹ = lazy⁰(a⁹⁵)
 //│ 							in (fun hx⁵⁰ -> (fun tx⁵⁰ -> 
-//│ 								let _lh_findk_LH_C_0³¹ = 	
-//│ 									let _lh_findk_LH_P2_0³¹ = hx⁵⁰
-//│ 									in let _lh_findk_LH_P2_1³¹ = hy³¹
-//│ 									in (fun _lh_findk_LH_C_1⁴⁶ -> (fun _lh_findk_arg1⁶⁴ -> (fun _lh_findk_arg2⁶⁴ -> (fun _lh_findk_arg3⁶⁴ -> if ((_lh_findk_LH_P2_0³¹ + _lh_findk_LH_P2_1³¹) >= _lh_findk_arg3⁶⁴) then findk₀₉((_lh_findk_arg1⁶⁴ + 1), _lh_findk_arg1⁶⁴, (_lh_findk_LH_P2_0³¹ + _lh_findk_LH_P2_1³¹), _lh_findk_LH_C_1⁴⁶) else findk₀₉((_lh_findk_arg1⁶⁴ + 1), _lh_findk_arg2⁶⁴, _lh_findk_arg3⁶⁴, _lh_findk_LH_C_1⁴⁶)))))
-//│ 								in let _lh_findk_LH_C_1⁴⁵ = zip₀₉(tx⁵⁰, ty³¹)
-//│ 								in (fun _lh_findk_arg2⁶³ -> (fun _lh_findk_arg1⁶³ -> (fun _lh_findk_arg3⁶³ -> _lh_findk_LH_C_0³¹(_lh_findk_LH_C_1⁴⁵, _lh_findk_arg1⁶³, _lh_findk_arg2⁶³, _lh_findk_arg3⁶³))))))))
+//│ 								let _lh_findk_LH_C_0³¹ = lazy⁰(
+//│ 									let _lh_findk_LH_P2_0³¹ = lazy⁰(hx⁵⁰)
+//│ 									in let _lh_findk_LH_P2_1³¹ = lazy⁰(force⁰(hy³¹))
+//│ 									in (fun _lh_findk_LH_C_1⁴⁶ -> (fun _lh_findk_arg1⁶⁴ -> (fun _lh_findk_arg2⁶⁴ -> (fun _lh_findk_arg3⁶⁴ -> if ((force⁰(_lh_findk_LH_P2_0³¹) + force⁰(_lh_findk_LH_P2_1³¹)) >= _lh_findk_arg3⁶⁴) then findk₀₉((_lh_findk_arg1⁶⁴ + 1), _lh_findk_arg1⁶⁴, (force⁰(_lh_findk_LH_P2_0³¹) + force⁰(_lh_findk_LH_P2_1³¹)), _lh_findk_LH_C_1⁴⁶) else findk₀₉((_lh_findk_arg1⁶⁴ + 1), _lh_findk_arg2⁶⁴, _lh_findk_arg3⁶⁴, _lh_findk_LH_C_1⁴⁶))))))
+//│ 								in let _lh_findk_LH_C_1⁴⁵ = lazy⁰(zip₀₉(tx⁵⁰, force⁰(ty³¹)))
+//│ 								in (fun _lh_findk_arg2⁶³ -> (fun _lh_findk_arg1⁶³ -> (fun _lh_findk_arg3⁶³ -> force⁰(_lh_findk_LH_C_0³¹, force⁰(_lh_findk_LH_C_1⁴⁵), _lh_findk_arg1⁶³, _lh_findk_arg2⁶³, _lh_findk_arg3⁶³))))))))
 //│ 						where
 //│ 						def algb1₁₅(_lh_algb1_arg1⁶⁴, _lh_algb1_arg2⁹⁶) = 
 //│ 							_lh_algb1_arg1⁶⁴(_lh_algb1_arg2⁹⁶)
@@ -12756,18 +12756,18 @@ testLCSS_nofib $ primId 0
 //│ 							def map₁₅(f⁶⁵, ls³³⁵) = 
 //│ 								case ls³³⁵ of {
 //│ 									LH_C h¹¹⁶ t¹²⁹ => 
-//│ 										let h¹⁵⁴ = f⁶⁵(h¹¹⁶)
-//│ 										in let t¹⁷⁷ = map₁₅(f⁶⁵, t¹²⁹)
-//│ 										in (fun a¹⁵¹ -> reverse_helper₀₉(t¹⁷⁷, 
-//│ 											let hy⁴⁸ = h¹⁵⁴
-//│ 											in let ty⁴⁸ = a¹⁵¹
+//│ 										let h¹⁵⁴ = lazy⁰(f⁶⁵(h¹¹⁶))
+//│ 										in let t¹⁷⁷ = lazy⁰(map₁₅(f⁶⁵, t¹²⁹))
+//│ 										in (fun a¹⁵¹ -> reverse_helper₀₉(force⁰(t¹⁷⁷), 
+//│ 											let hy⁴⁸ = lazy⁰(force⁰(h¹⁵⁴))
+//│ 											in let ty⁴⁸ = lazy⁰(a¹⁵¹)
 //│ 											in (fun hx⁹⁶ -> (fun tx⁹⁶ -> 
-//│ 												let _lh_findk_LH_C_0⁴⁸ = 	
-//│ 													let _lh_findk_LH_P2_0⁴⁸ = hx⁹⁶
-//│ 													in let _lh_findk_LH_P2_1⁴⁸ = hy⁴⁸
-//│ 													in (fun _lh_findk_LH_C_1⁸⁰ -> (fun _lh_findk_arg1¹²⁸ -> (fun _lh_findk_arg2¹²⁸ -> (fun _lh_findk_arg3¹²⁸ -> if ((_lh_findk_LH_P2_0⁴⁸ + _lh_findk_LH_P2_1⁴⁸) >= _lh_findk_arg3¹²⁸) then findk₀₉((_lh_findk_arg1¹²⁸ + 1), _lh_findk_arg1¹²⁸, (_lh_findk_LH_P2_0⁴⁸ + _lh_findk_LH_P2_1⁴⁸), _lh_findk_LH_C_1⁸⁰) else findk₀₉((_lh_findk_arg1¹²⁸ + 1), _lh_findk_arg2¹²⁸, _lh_findk_arg3¹²⁸, _lh_findk_LH_C_1⁸⁰)))))
-//│ 												in let _lh_findk_LH_C_1⁷⁹ = zip₀₉(tx⁹⁶, ty⁴⁸)
-//│ 												in (fun _lh_findk_arg2¹²⁷ -> (fun _lh_findk_arg1¹²⁷ -> (fun _lh_findk_arg3¹²⁷ -> _lh_findk_LH_C_0⁴⁸(_lh_findk_LH_C_1⁷⁹, _lh_findk_arg1¹²⁷, _lh_findk_arg2¹²⁷, _lh_findk_arg3¹²⁷))))))))
+//│ 												let _lh_findk_LH_C_0⁴⁸ = lazy⁰(
+//│ 													let _lh_findk_LH_P2_0⁴⁸ = lazy⁰(hx⁹⁶)
+//│ 													in let _lh_findk_LH_P2_1⁴⁸ = lazy⁰(force⁰(hy⁴⁸))
+//│ 													in (fun _lh_findk_LH_C_1⁸⁰ -> (fun _lh_findk_arg1¹²⁸ -> (fun _lh_findk_arg2¹²⁸ -> (fun _lh_findk_arg3¹²⁸ -> if ((force⁰(_lh_findk_LH_P2_0⁴⁸) + force⁰(_lh_findk_LH_P2_1⁴⁸)) >= _lh_findk_arg3¹²⁸) then findk₀₉((_lh_findk_arg1¹²⁸ + 1), _lh_findk_arg1¹²⁸, (force⁰(_lh_findk_LH_P2_0⁴⁸) + force⁰(_lh_findk_LH_P2_1⁴⁸)), _lh_findk_LH_C_1⁸⁰) else findk₀₉((_lh_findk_arg1¹²⁸ + 1), _lh_findk_arg2¹²⁸, _lh_findk_arg3¹²⁸, _lh_findk_LH_C_1⁸⁰))))))
+//│ 												in let _lh_findk_LH_C_1⁷⁹ = lazy⁰(zip₀₉(tx⁹⁶, force⁰(ty⁴⁸)))
+//│ 												in (fun _lh_findk_arg2¹²⁷ -> (fun _lh_findk_arg1¹²⁷ -> (fun _lh_findk_arg3¹²⁷ -> force⁰(_lh_findk_LH_C_0⁴⁸, force⁰(_lh_findk_LH_C_1⁷⁹), _lh_findk_arg1¹²⁷, _lh_findk_arg2¹²⁷, _lh_findk_arg3¹²⁷))))))))
 //│ 									| LH_N  => (fun a¹⁵² -> a¹⁵²)}
 //│ 							def snd₁₅(_lh_snd_arg1⁴⁶) = 
 //│ 								case _lh_snd_arg1⁴⁶ of {
@@ -12797,13 +12797,13 @@ testLCSS_nofib $ primId 0
 //│ 									in (fun _lh_funcomp_x¹⁹ -> algc₀₃(m2¹⁹, k¹⁹, xs1¹⁹, take₁₃(k¹⁹, _lh_algc_arg4⁹), algc₀₃((_lh_algc_arg1⁹ - m2¹⁹), (_lh_algc_arg2⁹ - k¹⁹), xs2¹⁹, drop₁₃(k¹⁹, _lh_algc_arg4⁹), _lh_funcomp_x¹⁹)))}}
 //│ 						where
 //│ 						def algb₀₆(_lh_algb_arg1⁴⁵, _lh_algb_arg2⁴⁵) = 
-//│ 							let hx⁴⁶ = 0
-//│ 							in let tx⁴⁶ = algb1₀₆(_lh_algb_arg1⁴⁵, 
+//│ 							let hx⁴⁶ = lazy⁰(0)
+//│ 							in let tx⁴⁶ = lazy⁰(algb1₀₆(_lh_algb_arg1⁴⁵, 
 //│ 								let _lh_listcomp_fun⁵³ = (fun _lh_listcomp_fun_para⁴⁵ -> case _lh_listcomp_fun_para⁴⁵ of {
 //│ 									LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => [LH_C [LH_P2 _lh_listcomp_fun_ls_h² 0] _lh_listcomp_fun⁵³(_lh_listcomp_fun_ls_t²)]
 //│ 									| LH_N  => [LH_N]})
-//│ 								in _lh_listcomp_fun⁵³(_lh_algb_arg2⁴⁵))
-//│ 							in (fun ys³⁵ -> ys³⁵(hx⁴⁶, tx⁴⁶))
+//│ 								in _lh_listcomp_fun⁵³(_lh_algb_arg2⁴⁵)))
+//│ 							in (fun ys³⁵ -> ys³⁵(force⁰(hx⁴⁶), force⁰(tx⁴⁶)))
 //│ 							where
 //│ 							def algb1₀₆(_lh_algb1_arg1⁵⁷, _lh_algb1_arg2⁸⁷) = 
 //│ 								case _lh_algb1_arg1⁵⁷ of {
@@ -12826,22 +12826,22 @@ testLCSS_nofib $ primId 0
 //│ 								def map₀₆(f⁵⁰, ls²⁶⁸) = 
 //│ 									case ls²⁶⁸ of {
 //│ 										LH_C h¹²¹ t¹³⁴ => 
-//│ 											let hx⁶² = f⁵⁰(h¹²¹)
-//│ 											in let tx⁶² = map₀₆(f⁵⁰, t¹³⁴)
-//│ 											in (fun ys⁵¹ -> ys⁵¹(hx⁶², tx⁶²))
+//│ 											let hx⁶² = lazy⁰(f⁵⁰(h¹²¹))
+//│ 											in let tx⁶² = lazy⁰(map₀₆(f⁵⁰, t¹³⁴))
+//│ 											in (fun ys⁵¹ -> ys⁵¹(force⁰(hx⁶²), force⁰(tx⁶²)))
 //│ 										| LH_N  => (fun ys⁵² -> (fun _lh_findk_arg2⁷⁷ -> (fun _lh_findk_arg1⁷⁷ -> (fun _lh_findk_arg3⁷⁷ -> _lh_findk_arg2⁷⁷))))}
 //│ 								def snd₀₆(_lh_snd_arg1⁵⁸) = 
 //│ 									case _lh_snd_arg1⁵⁸ of {
 //│ 										LH_P2 _lh_snd_LH_P2_0⁹ _lh_snd_LH_P2_1⁹ => _lh_snd_LH_P2_1⁹
 //│ 										| _  => error⁰}
 //│ 						def algb₀₇(_lh_algb_arg1³⁹, _lh_algb_arg2³⁹) = 
-//│ 							let hx³¹ = 0
-//│ 							in let tx³¹ = algb1₀₇(_lh_algb_arg1³⁹, 
+//│ 							let hx³¹ = lazy⁰(0)
+//│ 							in let tx³¹ = lazy⁰(algb1₀₇(_lh_algb_arg1³⁹, 
 //│ 								let _lh_listcomp_fun⁴³ = (fun _lh_listcomp_fun_para³⁹ -> case _lh_listcomp_fun_para³⁹ of {
 //│ 									LH_C _lh_listcomp_fun_ls_h¹¹ _lh_listcomp_fun_ls_t¹¹ => [LH_C [LH_P2 _lh_listcomp_fun_ls_h¹¹ 0] _lh_listcomp_fun⁴³(_lh_listcomp_fun_ls_t¹¹)]
 //│ 									| LH_N  => [LH_N]})
-//│ 								in _lh_listcomp_fun⁴³(_lh_algb_arg2³⁹))
-//│ 							in (fun ys²⁷ -> ys²⁷(hx³¹, tx³¹))
+//│ 								in _lh_listcomp_fun⁴³(_lh_algb_arg2³⁹)))
+//│ 							in (fun ys²⁷ -> ys²⁷(force⁰(hx³¹), force⁰(tx³¹)))
 //│ 							where
 //│ 							def algb1₀₇(_lh_algb1_arg1³⁷, _lh_algb1_arg2⁴²) = 
 //│ 								case _lh_algb1_arg1³⁷ of {
@@ -12864,29 +12864,29 @@ testLCSS_nofib $ primId 0
 //│ 								def map₀₇(f⁶², ls³¹²) = 
 //│ 									case ls³¹² of {
 //│ 										LH_C h¹¹¹ t¹²¹ => 
-//│ 											let hx⁸⁵ = f⁶²(h¹¹¹)
-//│ 											in let tx⁸⁵ = map₀₇(f⁶², t¹²¹)
-//│ 											in (fun ys⁷⁴ -> ys⁷⁴(hx⁸⁵, tx⁸⁵))
+//│ 											let hx⁸⁵ = lazy⁰(f⁶²(h¹¹¹))
+//│ 											in let tx⁸⁵ = lazy⁰(map₀₇(f⁶², t¹²¹))
+//│ 											in (fun ys⁷⁴ -> ys⁷⁴(force⁰(hx⁸⁵), force⁰(tx⁸⁵)))
 //│ 										| LH_N  => (fun ys⁷⁵ -> (fun _lh_findk_arg2¹¹⁴ -> (fun _lh_findk_arg1¹¹⁴ -> (fun _lh_findk_arg3¹¹⁴ -> _lh_findk_arg2¹¹⁴))))}
 //│ 								def snd₀₇(_lh_snd_arg1³⁷) = 
 //│ 									case _lh_snd_arg1³⁷ of {
 //│ 										LH_P2 _lh_snd_LH_P2_0³³ _lh_snd_LH_P2_1³³ => _lh_snd_LH_P2_1³³
 //│ 										| _  => error⁰}
 //│ 						def algb₁₆(_lh_algb_arg1³⁵, _lh_algb_arg2³⁵) = 
-//│ 							let h¹²⁵ = 0
-//│ 							in let t¹³⁹ = algb1₁₆(_lh_algb_arg1³⁵, 
+//│ 							let h¹²⁵ = lazy⁰(0)
+//│ 							in let t¹³⁹ = lazy⁰(algb1₁₆(_lh_algb_arg1³⁵, 
 //│ 								let _lh_listcomp_fun³⁷ = (fun _lh_listcomp_fun_para³⁵ -> _lh_listcomp_fun_para³⁵(_lh_listcomp_fun³⁷))
-//│ 								in _lh_listcomp_fun³⁷(_lh_algb_arg2³⁵))
-//│ 							in (fun a⁶³ -> reverse_helper₀₂(t¹³⁹, 
-//│ 								let hy¹⁹ = h¹²⁵
-//│ 								in let ty¹⁹ = a⁶³
+//│ 								in _lh_listcomp_fun³⁷(_lh_algb_arg2³⁵)))
+//│ 							in (fun a⁶³ -> reverse_helper₀₂(force⁰(t¹³⁹), 
+//│ 								let hy¹⁹ = lazy⁰(force⁰(h¹²⁵))
+//│ 								in let ty¹⁹ = lazy⁰(a⁶³)
 //│ 								in (fun hx²⁰ -> (fun tx²⁰ -> 
-//│ 									let _lh_findk_LH_C_0¹⁹ = 	
-//│ 										let _lh_findk_LH_P2_0¹⁹ = hx²⁰
-//│ 										in let _lh_findk_LH_P2_1¹⁹ = hy¹⁹
-//│ 										in (fun _lh_findk_LH_C_1²² -> (fun _lh_findk_arg1²³ -> (fun _lh_findk_arg2²³ -> (fun _lh_findk_arg3²³ -> if ((_lh_findk_LH_P2_0¹⁹ + _lh_findk_LH_P2_1¹⁹) >= _lh_findk_arg3²³) then findk₀₂((_lh_findk_arg1²³ + 1), _lh_findk_arg1²³, (_lh_findk_LH_P2_0¹⁹ + _lh_findk_LH_P2_1¹⁹), _lh_findk_LH_C_1²²) else findk₀₂((_lh_findk_arg1²³ + 1), _lh_findk_arg2²³, _lh_findk_arg3²³, _lh_findk_LH_C_1²²)))))
-//│ 									in let _lh_findk_LH_C_1²¹ = zip₀₂(tx²⁰, ty¹⁹)
-//│ 									in (fun _lh_findk_arg2²² -> (fun _lh_findk_arg1²² -> (fun _lh_findk_arg3²² -> _lh_findk_LH_C_0¹⁹(_lh_findk_LH_C_1²¹, _lh_findk_arg1²², _lh_findk_arg2²², _lh_findk_arg3²²))))))))
+//│ 									let _lh_findk_LH_C_0¹⁹ = lazy⁰(
+//│ 										let _lh_findk_LH_P2_0¹⁹ = lazy⁰(hx²⁰)
+//│ 										in let _lh_findk_LH_P2_1¹⁹ = lazy⁰(force⁰(hy¹⁹))
+//│ 										in (fun _lh_findk_LH_C_1²² -> (fun _lh_findk_arg1²³ -> (fun _lh_findk_arg2²³ -> (fun _lh_findk_arg3²³ -> if ((force⁰(_lh_findk_LH_P2_0¹⁹) + force⁰(_lh_findk_LH_P2_1¹⁹)) >= _lh_findk_arg3²³) then findk₀₂((_lh_findk_arg1²³ + 1), _lh_findk_arg1²³, (force⁰(_lh_findk_LH_P2_0¹⁹) + force⁰(_lh_findk_LH_P2_1¹⁹)), _lh_findk_LH_C_1²²) else findk₀₂((_lh_findk_arg1²³ + 1), _lh_findk_arg2²³, _lh_findk_arg3²³, _lh_findk_LH_C_1²²))))))
+//│ 									in let _lh_findk_LH_C_1²¹ = lazy⁰(zip₀₂(tx²⁰, force⁰(ty¹⁹)))
+//│ 									in (fun _lh_findk_arg2²² -> (fun _lh_findk_arg1²² -> (fun _lh_findk_arg3²² -> force⁰(_lh_findk_LH_C_0¹⁹, force⁰(_lh_findk_LH_C_1²¹), _lh_findk_arg1²², _lh_findk_arg2²², _lh_findk_arg3²²))))))))
 //│ 							where
 //│ 							def algb1₁₆(_lh_algb1_arg1⁶⁰, _lh_algb1_arg2⁹²) = 
 //│ 								_lh_algb1_arg1⁶⁰(_lh_algb1_arg2⁹²)
@@ -12906,38 +12906,38 @@ testLCSS_nofib $ primId 0
 //│ 								def map₁₆(f⁵⁵, ls²⁸⁸) = 
 //│ 									case ls²⁸⁸ of {
 //│ 										LH_C h⁵¹ t⁶⁰ => 
-//│ 											let h¹⁴⁴ = f⁵⁵(h⁵¹)
-//│ 											in let t¹⁶⁶ = map₁₆(f⁵⁵, t⁶⁰)
-//│ 											in (fun a¹²³ -> reverse_helper₀₂(t¹⁶⁶, 
-//│ 												let hy³⁸ = h¹⁴⁴
-//│ 												in let ty³⁸ = a¹²³
+//│ 											let h¹⁴⁴ = lazy⁰(f⁵⁵(h⁵¹))
+//│ 											in let t¹⁶⁶ = lazy⁰(map₁₆(f⁵⁵, t⁶⁰))
+//│ 											in (fun a¹²³ -> reverse_helper₀₂(force⁰(t¹⁶⁶), 
+//│ 												let hy³⁸ = lazy⁰(force⁰(h¹⁴⁴))
+//│ 												in let ty³⁸ = lazy⁰(a¹²³)
 //│ 												in (fun hx⁷³ -> (fun tx⁷³ -> 
-//│ 													let _lh_findk_LH_C_0³⁸ = 	
-//│ 														let _lh_findk_LH_P2_0³⁸ = hx⁷³
-//│ 														in let _lh_findk_LH_P2_1³⁸ = hy³⁸
-//│ 														in (fun _lh_findk_LH_C_1⁶⁰ -> (fun _lh_findk_arg1⁹⁵ -> (fun _lh_findk_arg2⁹⁵ -> (fun _lh_findk_arg3⁹⁵ -> if ((_lh_findk_LH_P2_0³⁸ + _lh_findk_LH_P2_1³⁸) >= _lh_findk_arg3⁹⁵) then findk₀₂((_lh_findk_arg1⁹⁵ + 1), _lh_findk_arg1⁹⁵, (_lh_findk_LH_P2_0³⁸ + _lh_findk_LH_P2_1³⁸), _lh_findk_LH_C_1⁶⁰) else findk₀₂((_lh_findk_arg1⁹⁵ + 1), _lh_findk_arg2⁹⁵, _lh_findk_arg3⁹⁵, _lh_findk_LH_C_1⁶⁰)))))
-//│ 													in let _lh_findk_LH_C_1⁵⁹ = zip₀₂(tx⁷³, ty³⁸)
-//│ 													in (fun _lh_findk_arg2⁹⁴ -> (fun _lh_findk_arg1⁹⁴ -> (fun _lh_findk_arg3⁹⁴ -> _lh_findk_LH_C_0³⁸(_lh_findk_LH_C_1⁵⁹, _lh_findk_arg1⁹⁴, _lh_findk_arg2⁹⁴, _lh_findk_arg3⁹⁴))))))))
+//│ 													let _lh_findk_LH_C_0³⁸ = lazy⁰(
+//│ 														let _lh_findk_LH_P2_0³⁸ = lazy⁰(hx⁷³)
+//│ 														in let _lh_findk_LH_P2_1³⁸ = lazy⁰(force⁰(hy³⁸))
+//│ 														in (fun _lh_findk_LH_C_1⁶⁰ -> (fun _lh_findk_arg1⁹⁵ -> (fun _lh_findk_arg2⁹⁵ -> (fun _lh_findk_arg3⁹⁵ -> if ((force⁰(_lh_findk_LH_P2_0³⁸) + force⁰(_lh_findk_LH_P2_1³⁸)) >= _lh_findk_arg3⁹⁵) then findk₀₂((_lh_findk_arg1⁹⁵ + 1), _lh_findk_arg1⁹⁵, (force⁰(_lh_findk_LH_P2_0³⁸) + force⁰(_lh_findk_LH_P2_1³⁸)), _lh_findk_LH_C_1⁶⁰) else findk₀₂((_lh_findk_arg1⁹⁵ + 1), _lh_findk_arg2⁹⁵, _lh_findk_arg3⁹⁵, _lh_findk_LH_C_1⁶⁰))))))
+//│ 													in let _lh_findk_LH_C_1⁵⁹ = lazy⁰(zip₀₂(tx⁷³, force⁰(ty³⁸)))
+//│ 													in (fun _lh_findk_arg2⁹⁴ -> (fun _lh_findk_arg1⁹⁴ -> (fun _lh_findk_arg3⁹⁴ -> force⁰(_lh_findk_LH_C_0³⁸, force⁰(_lh_findk_LH_C_1⁵⁹), _lh_findk_arg1⁹⁴, _lh_findk_arg2⁹⁴, _lh_findk_arg3⁹⁴))))))))
 //│ 										| LH_N  => (fun a¹²⁴ -> a¹²⁴)}
 //│ 								def snd₁₆(_lh_snd_arg1⁴³) = 
 //│ 									case _lh_snd_arg1⁴³ of {
 //│ 										LH_P2 _lh_snd_LH_P2_0⁸ _lh_snd_LH_P2_1⁸ => _lh_snd_LH_P2_1⁸
 //│ 										| _  => error⁰}
 //│ 						def algb₁₇(_lh_algb_arg1⁵¹, _lh_algb_arg2⁵¹) = 
-//│ 							let h¹³⁹ = 0
-//│ 							in let t¹⁶⁰ = algb1₁₇(_lh_algb_arg1⁵¹, 
+//│ 							let h¹³⁹ = lazy⁰(0)
+//│ 							in let t¹⁶⁰ = lazy⁰(algb1₁₇(_lh_algb_arg1⁵¹, 
 //│ 								let _lh_listcomp_fun⁶⁷ = (fun _lh_listcomp_fun_para⁵¹ -> _lh_listcomp_fun_para⁵¹(_lh_listcomp_fun⁶⁷))
-//│ 								in _lh_listcomp_fun⁶⁷(_lh_algb_arg2⁵¹))
-//│ 							in (fun a¹⁰⁹ -> reverse_helper₀₃(t¹⁶⁰, 
-//│ 								let hy³³ = h¹³⁹
-//│ 								in let ty³³ = a¹⁰⁹
+//│ 								in _lh_listcomp_fun⁶⁷(_lh_algb_arg2⁵¹)))
+//│ 							in (fun a¹⁰⁹ -> reverse_helper₀₃(force⁰(t¹⁶⁰), 
+//│ 								let hy³³ = lazy⁰(force⁰(h¹³⁹))
+//│ 								in let ty³³ = lazy⁰(a¹⁰⁹)
 //│ 								in (fun hx⁶³ -> (fun tx⁶³ -> 
-//│ 									let _lh_findk_LH_C_0³³ = 	
-//│ 										let _lh_findk_LH_P2_0³³ = hx⁶³
-//│ 										in let _lh_findk_LH_P2_1³³ = hy³³
-//│ 										in (fun _lh_findk_LH_C_1⁵⁰ -> (fun _lh_findk_arg1⁷⁹ -> (fun _lh_findk_arg2⁷⁹ -> (fun _lh_findk_arg3⁷⁹ -> if ((_lh_findk_LH_P2_0³³ + _lh_findk_LH_P2_1³³) >= _lh_findk_arg3⁷⁹) then findk₀₃((_lh_findk_arg1⁷⁹ + 1), _lh_findk_arg1⁷⁹, (_lh_findk_LH_P2_0³³ + _lh_findk_LH_P2_1³³), _lh_findk_LH_C_1⁵⁰) else findk₀₃((_lh_findk_arg1⁷⁹ + 1), _lh_findk_arg2⁷⁹, _lh_findk_arg3⁷⁹, _lh_findk_LH_C_1⁵⁰)))))
-//│ 									in let _lh_findk_LH_C_1⁴⁹ = zip₀₃(tx⁶³, ty³³)
-//│ 									in (fun _lh_findk_arg2⁷⁸ -> (fun _lh_findk_arg1⁷⁸ -> (fun _lh_findk_arg3⁷⁸ -> _lh_findk_LH_C_0³³(_lh_findk_LH_C_1⁴⁹, _lh_findk_arg1⁷⁸, _lh_findk_arg2⁷⁸, _lh_findk_arg3⁷⁸))))))))
+//│ 									let _lh_findk_LH_C_0³³ = lazy⁰(
+//│ 										let _lh_findk_LH_P2_0³³ = lazy⁰(hx⁶³)
+//│ 										in let _lh_findk_LH_P2_1³³ = lazy⁰(force⁰(hy³³))
+//│ 										in (fun _lh_findk_LH_C_1⁵⁰ -> (fun _lh_findk_arg1⁷⁹ -> (fun _lh_findk_arg2⁷⁹ -> (fun _lh_findk_arg3⁷⁹ -> if ((force⁰(_lh_findk_LH_P2_0³³) + force⁰(_lh_findk_LH_P2_1³³)) >= _lh_findk_arg3⁷⁹) then findk₀₃((_lh_findk_arg1⁷⁹ + 1), _lh_findk_arg1⁷⁹, (force⁰(_lh_findk_LH_P2_0³³) + force⁰(_lh_findk_LH_P2_1³³)), _lh_findk_LH_C_1⁵⁰) else findk₀₃((_lh_findk_arg1⁷⁹ + 1), _lh_findk_arg2⁷⁹, _lh_findk_arg3⁷⁹, _lh_findk_LH_C_1⁵⁰))))))
+//│ 									in let _lh_findk_LH_C_1⁴⁹ = lazy⁰(zip₀₃(tx⁶³, force⁰(ty³³)))
+//│ 									in (fun _lh_findk_arg2⁷⁸ -> (fun _lh_findk_arg1⁷⁸ -> (fun _lh_findk_arg3⁷⁸ -> force⁰(_lh_findk_LH_C_0³³, force⁰(_lh_findk_LH_C_1⁴⁹), _lh_findk_arg1⁷⁸, _lh_findk_arg2⁷⁸, _lh_findk_arg3⁷⁸))))))))
 //│ 							where
 //│ 							def algb1₁₇(_lh_algb1_arg1⁵⁹, _lh_algb1_arg2⁹⁰) = 
 //│ 								_lh_algb1_arg1⁵⁹(_lh_algb1_arg2⁹⁰)
@@ -12957,18 +12957,18 @@ testLCSS_nofib $ primId 0
 //│ 								def map₁₇(f⁶⁴, ls³³²) = 
 //│ 									case ls³³² of {
 //│ 										LH_C h⁹⁸ t¹⁰⁸ => 
-//│ 											let h¹⁵² = f⁶⁴(h⁹⁸)
-//│ 											in let t¹⁷⁵ = map₁₇(f⁶⁴, t¹⁰⁸)
-//│ 											in (fun a¹⁴⁶ -> reverse_helper₀₃(t¹⁷⁵, 
-//│ 												let hy⁴⁶ = h¹⁵²
-//│ 												in let ty⁴⁶ = a¹⁴⁶
+//│ 											let h¹⁵² = lazy⁰(f⁶⁴(h⁹⁸))
+//│ 											in let t¹⁷⁵ = lazy⁰(map₁₇(f⁶⁴, t¹⁰⁸))
+//│ 											in (fun a¹⁴⁶ -> reverse_helper₀₃(force⁰(t¹⁷⁵), 
+//│ 												let hy⁴⁶ = lazy⁰(force⁰(h¹⁵²))
+//│ 												in let ty⁴⁶ = lazy⁰(a¹⁴⁶)
 //│ 												in (fun hx⁹⁴ -> (fun tx⁹⁴ -> 
-//│ 													let _lh_findk_LH_C_0⁴⁶ = 	
-//│ 														let _lh_findk_LH_P2_0⁴⁶ = hx⁹⁴
-//│ 														in let _lh_findk_LH_P2_1⁴⁶ = hy⁴⁶
-//│ 														in (fun _lh_findk_LH_C_1⁷⁶ -> (fun _lh_findk_arg1¹²³ -> (fun _lh_findk_arg2¹²³ -> (fun _lh_findk_arg3¹²³ -> if ((_lh_findk_LH_P2_0⁴⁶ + _lh_findk_LH_P2_1⁴⁶) >= _lh_findk_arg3¹²³) then findk₀₃((_lh_findk_arg1¹²³ + 1), _lh_findk_arg1¹²³, (_lh_findk_LH_P2_0⁴⁶ + _lh_findk_LH_P2_1⁴⁶), _lh_findk_LH_C_1⁷⁶) else findk₀₃((_lh_findk_arg1¹²³ + 1), _lh_findk_arg2¹²³, _lh_findk_arg3¹²³, _lh_findk_LH_C_1⁷⁶)))))
-//│ 													in let _lh_findk_LH_C_1⁷⁵ = zip₀₃(tx⁹⁴, ty⁴⁶)
-//│ 													in (fun _lh_findk_arg2¹²² -> (fun _lh_findk_arg1¹²² -> (fun _lh_findk_arg3¹²² -> _lh_findk_LH_C_0⁴⁶(_lh_findk_LH_C_1⁷⁵, _lh_findk_arg1¹²², _lh_findk_arg2¹²², _lh_findk_arg3¹²²))))))))
+//│ 													let _lh_findk_LH_C_0⁴⁶ = lazy⁰(
+//│ 														let _lh_findk_LH_P2_0⁴⁶ = lazy⁰(hx⁹⁴)
+//│ 														in let _lh_findk_LH_P2_1⁴⁶ = lazy⁰(force⁰(hy⁴⁶))
+//│ 														in (fun _lh_findk_LH_C_1⁷⁶ -> (fun _lh_findk_arg1¹²³ -> (fun _lh_findk_arg2¹²³ -> (fun _lh_findk_arg3¹²³ -> if ((force⁰(_lh_findk_LH_P2_0⁴⁶) + force⁰(_lh_findk_LH_P2_1⁴⁶)) >= _lh_findk_arg3¹²³) then findk₀₃((_lh_findk_arg1¹²³ + 1), _lh_findk_arg1¹²³, (force⁰(_lh_findk_LH_P2_0⁴⁶) + force⁰(_lh_findk_LH_P2_1⁴⁶)), _lh_findk_LH_C_1⁷⁶) else findk₀₃((_lh_findk_arg1¹²³ + 1), _lh_findk_arg2¹²³, _lh_findk_arg3¹²³, _lh_findk_LH_C_1⁷⁶))))))
+//│ 													in let _lh_findk_LH_C_1⁷⁵ = lazy⁰(zip₀₃(tx⁹⁴, force⁰(ty⁴⁶)))
+//│ 													in (fun _lh_findk_arg2¹²² -> (fun _lh_findk_arg1¹²² -> (fun _lh_findk_arg3¹²² -> force⁰(_lh_findk_LH_C_0⁴⁶, force⁰(_lh_findk_LH_C_1⁷⁵), _lh_findk_arg1¹²², _lh_findk_arg2¹²², _lh_findk_arg3¹²²))))))))
 //│ 										| LH_N  => (fun a¹⁴⁷ -> a¹⁴⁷)}
 //│ 								def snd₁₇(_lh_snd_arg1³⁴) = 
 //│ 									case _lh_snd_arg1³⁴ of {
@@ -13015,9 +13015,9 @@ testLCSS_nofib $ primId 0
 //│ 							def reverse_helper₁₂(ls¹⁷⁹, a⁵⁸) = 
 //│ 								case ls¹⁷⁹ of {
 //│ 									LH_C h²⁷ t³² => reverse_helper₁₂(t³², 
-//│ 										let _lh_algb1_LH_C_0³⁴ = h²⁷
-//│ 										in let _lh_algb1_LH_C_1³⁴ = a⁵⁸
-//│ 										in (fun _lh_algb1_arg2³⁴ -> algb1₁₆(_lh_algb1_LH_C_1³⁴, algb2₁₆(_lh_algb1_LH_C_0³⁴, 0, 0, _lh_algb1_arg2³⁴))))
+//│ 										let _lh_algb1_LH_C_0³⁴ = lazy⁰(h²⁷)
+//│ 										in let _lh_algb1_LH_C_1³⁴ = lazy⁰(a⁵⁸)
+//│ 										in (fun _lh_algb1_arg2³⁴ -> algb1₁₆(force⁰(_lh_algb1_LH_C_1³⁴), algb2₁₆(force⁰(_lh_algb1_LH_C_0³⁴), 0, 0, _lh_algb1_arg2³⁴))))
 //│ 									| LH_N  => a⁵⁸}
 //│ 						def reverse₁₃(ls¹⁹⁹) = 
 //│ 							reverse_helper₁₃(ls¹⁹⁹, (fun _lh_algb1_arg2⁴⁵ -> map₁₇(snd₁₇, _lh_algb1_arg2⁴⁵)))
@@ -13025,9 +13025,9 @@ testLCSS_nofib $ primId 0
 //│ 							def reverse_helper₁₃(ls²⁶⁰, a¹⁰⁸) = 
 //│ 								case ls²⁶⁰ of {
 //│ 									LH_C h¹⁰⁷ t¹¹⁷ => reverse_helper₁₃(t¹¹⁷, 
-//│ 										let _lh_algb1_LH_C_0⁴⁴ = h¹⁰⁷
-//│ 										in let _lh_algb1_LH_C_1⁴⁴ = a¹⁰⁸
-//│ 										in (fun _lh_algb1_arg2⁶⁹ -> algb1₁₇(_lh_algb1_LH_C_1⁴⁴, algb2₁₇(_lh_algb1_LH_C_0⁴⁴, 0, 0, _lh_algb1_arg2⁶⁹))))
+//│ 										let _lh_algb1_LH_C_0⁴⁴ = lazy⁰(h¹⁰⁷)
+//│ 										in let _lh_algb1_LH_C_1⁴⁴ = lazy⁰(a¹⁰⁸)
+//│ 										in (fun _lh_algb1_arg2⁶⁹ -> algb1₁₇(force⁰(_lh_algb1_LH_C_1⁴⁴), algb2₁₇(force⁰(_lh_algb1_LH_C_0⁴⁴), 0, 0, _lh_algb1_arg2⁶⁹))))
 //│ 									| LH_N  => a¹⁰⁸}
 //│ 						def reverse₂₂(ls³⁰⁹) = 
 //│ 							reverse_helper₂₂(ls³⁰⁹, (fun _lh_listcomp_fun⁸³ -> [LH_N]))
@@ -13035,9 +13035,9 @@ testLCSS_nofib $ primId 0
 //│ 							def reverse_helper₂₂(ls³²⁷, a¹⁴⁴) = 
 //│ 								case ls³²⁷ of {
 //│ 									LH_C h¹¹⁴ t¹²⁵ => reverse_helper₂₂(t¹²⁵, 
-//│ 										let _lh_listcomp_fun_ls_h⁴⁷ = h¹¹⁴
-//│ 										in let _lh_listcomp_fun_ls_t⁴⁷ = a¹⁴⁴
-//│ 										in (fun _lh_listcomp_fun⁹² -> [LH_C [LH_P2 _lh_listcomp_fun_ls_h⁴⁷ 0] _lh_listcomp_fun⁹²(_lh_listcomp_fun_ls_t⁴⁷)]))
+//│ 										let _lh_listcomp_fun_ls_h⁴⁷ = lazy⁰(h¹¹⁴)
+//│ 										in let _lh_listcomp_fun_ls_t⁴⁷ = lazy⁰(a¹⁴⁴)
+//│ 										in (fun _lh_listcomp_fun⁹² -> [LH_C [LH_P2 force⁰(_lh_listcomp_fun_ls_h⁴⁷) 0] _lh_listcomp_fun⁹²(force⁰(_lh_listcomp_fun_ls_t⁴⁷))]))
 //│ 									| LH_N  => a¹⁴⁴}
 //│ 						def reverse₂₃(ls²⁷⁴) = 
 //│ 							reverse_helper₂₃(ls²⁷⁴, (fun _lh_listcomp_fun⁶⁹ -> [LH_N]))
@@ -13045,9 +13045,9 @@ testLCSS_nofib $ primId 0
 //│ 							def reverse_helper₂₃(ls²⁵⁷, a¹⁰⁶) = 
 //│ 								case ls²⁵⁷ of {
 //│ 									LH_C h²⁸ t³⁴ => reverse_helper₂₃(t³⁴, 
-//│ 										let _lh_listcomp_fun_ls_h⁴¹ = h²⁸
-//│ 										in let _lh_listcomp_fun_ls_t⁴¹ = a¹⁰⁶
-//│ 										in (fun _lh_listcomp_fun⁶⁴ -> [LH_C [LH_P2 _lh_listcomp_fun_ls_h⁴¹ 0] _lh_listcomp_fun⁶⁴(_lh_listcomp_fun_ls_t⁴¹)]))
+//│ 										let _lh_listcomp_fun_ls_h⁴¹ = lazy⁰(h²⁸)
+//│ 										in let _lh_listcomp_fun_ls_t⁴¹ = lazy⁰(a¹⁰⁶)
+//│ 										in (fun _lh_listcomp_fun⁶⁴ -> [LH_C [LH_P2 force⁰(_lh_listcomp_fun_ls_h⁴¹) 0] _lh_listcomp_fun⁶⁴(force⁰(_lh_listcomp_fun_ls_t⁴¹))]))
 //│ 									| LH_N  => a¹⁰⁶}
 //│ 						def take₀₂(n⁴⁵, ls²³⁴) = 
 //│ 							if (n⁴⁵ > 0) then case ls²³⁴ of {
@@ -13093,13 +13093,13 @@ testLCSS_nofib $ primId 0
 //│ 									in (fun _lh_funcomp_x²⁵ -> algc₀₄(m2²⁵, k²⁵, xs1²⁵, take₁₅(k²⁵, _lh_algc_arg4¹²), algc₀₄((_lh_algc_arg1¹² - m2²⁵), (_lh_algc_arg2¹² - k²⁵), xs2²⁵, drop₁₅(k²⁵, _lh_algc_arg4¹²), _lh_funcomp_x²⁵)))}}
 //│ 						where
 //│ 						def algb₀₈(_lh_algb_arg1⁴⁴, _lh_algb_arg2⁴⁴) = 
-//│ 							let hx⁴¹ = 0
-//│ 							in let tx⁴¹ = algb1₀₈(_lh_algb_arg1⁴⁴, 
+//│ 							let hx⁴¹ = lazy⁰(0)
+//│ 							in let tx⁴¹ = lazy⁰(algb1₀₈(_lh_algb_arg1⁴⁴, 
 //│ 								let _lh_listcomp_fun⁵¹ = (fun _lh_listcomp_fun_para⁴⁴ -> case _lh_listcomp_fun_para⁴⁴ of {
 //│ 									LH_C _lh_listcomp_fun_ls_h¹² _lh_listcomp_fun_ls_t¹² => [LH_C [LH_P2 _lh_listcomp_fun_ls_h¹² 0] _lh_listcomp_fun⁵¹(_lh_listcomp_fun_ls_t¹²)]
 //│ 									| LH_N  => [LH_N]})
-//│ 								in _lh_listcomp_fun⁵¹(_lh_algb_arg2⁴⁴))
-//│ 							in (fun ys³⁴ -> ys³⁴(hx⁴¹, tx⁴¹))
+//│ 								in _lh_listcomp_fun⁵¹(_lh_algb_arg2⁴⁴)))
+//│ 							in (fun ys³⁴ -> ys³⁴(force⁰(hx⁴¹), force⁰(tx⁴¹)))
 //│ 							where
 //│ 							def algb1₀₈(_lh_algb1_arg1⁵⁵, _lh_algb1_arg2⁸¹) = 
 //│ 								case _lh_algb1_arg1⁵⁵ of {
@@ -13122,22 +13122,22 @@ testLCSS_nofib $ primId 0
 //│ 								def map₀₈(f³⁴, ls¹⁷⁶) = 
 //│ 									case ls¹⁷⁶ of {
 //│ 										LH_C h¹⁸ t²³ => 
-//│ 											let hx¹⁸ = f³⁴(h¹⁸)
-//│ 											in let tx¹⁸ = map₀₈(f³⁴, t²³)
-//│ 											in (fun ys¹⁷ -> ys¹⁷(hx¹⁸, tx¹⁸))
+//│ 											let hx¹⁸ = lazy⁰(f³⁴(h¹⁸))
+//│ 											in let tx¹⁸ = lazy⁰(map₀₈(f³⁴, t²³))
+//│ 											in (fun ys¹⁷ -> ys¹⁷(force⁰(hx¹⁸), force⁰(tx¹⁸)))
 //│ 										| LH_N  => (fun ys¹⁸ -> (fun _lh_findk_arg2¹⁹ -> (fun _lh_findk_arg1¹⁹ -> (fun _lh_findk_arg3¹⁹ -> _lh_findk_arg2¹⁹))))}
 //│ 								def snd₀₈(_lh_snd_arg1⁴⁴) = 
 //│ 									case _lh_snd_arg1⁴⁴ of {
 //│ 										LH_P2 _lh_snd_LH_P2_0¹⁵ _lh_snd_LH_P2_1¹⁵ => _lh_snd_LH_P2_1¹⁵
 //│ 										| _  => error⁰}
 //│ 						def algb₀₉(_lh_algb_arg1⁵⁰, _lh_algb_arg2⁵⁰) = 
-//│ 							let hx⁶⁰ = 0
-//│ 							in let tx⁶⁰ = algb1₀₉(_lh_algb_arg1⁵⁰, 
+//│ 							let hx⁶⁰ = lazy⁰(0)
+//│ 							in let tx⁶⁰ = lazy⁰(algb1₀₉(_lh_algb_arg1⁵⁰, 
 //│ 								let _lh_listcomp_fun⁶² = (fun _lh_listcomp_fun_para⁵⁰ -> case _lh_listcomp_fun_para⁵⁰ of {
 //│ 									LH_C _lh_listcomp_fun_ls_h²⁸ _lh_listcomp_fun_ls_t²⁸ => [LH_C [LH_P2 _lh_listcomp_fun_ls_h²⁸ 0] _lh_listcomp_fun⁶²(_lh_listcomp_fun_ls_t²⁸)]
 //│ 									| LH_N  => [LH_N]})
-//│ 								in _lh_listcomp_fun⁶²(_lh_algb_arg2⁵⁰))
-//│ 							in (fun ys⁴⁸ -> ys⁴⁸(hx⁶⁰, tx⁶⁰))
+//│ 								in _lh_listcomp_fun⁶²(_lh_algb_arg2⁵⁰)))
+//│ 							in (fun ys⁴⁸ -> ys⁴⁸(force⁰(hx⁶⁰), force⁰(tx⁶⁰)))
 //│ 							where
 //│ 							def algb1₀₉(_lh_algb1_arg1⁵⁶, _lh_algb1_arg2⁸²) = 
 //│ 								case _lh_algb1_arg1⁵⁶ of {
@@ -13160,29 +13160,29 @@ testLCSS_nofib $ primId 0
 //│ 								def map₀₉(f⁵¹, ls²⁷³) = 
 //│ 									case ls²⁷³ of {
 //│ 										LH_C h⁵⁰ t⁵⁹ => 
-//│ 											let hx⁶⁴ = f⁵¹(h⁵⁰)
-//│ 											in let tx⁶⁴ = map₀₉(f⁵¹, t⁵⁹)
-//│ 											in (fun ys⁵⁴ -> ys⁵⁴(hx⁶⁴, tx⁶⁴))
+//│ 											let hx⁶⁴ = lazy⁰(f⁵¹(h⁵⁰))
+//│ 											in let tx⁶⁴ = lazy⁰(map₀₉(f⁵¹, t⁵⁹))
+//│ 											in (fun ys⁵⁴ -> ys⁵⁴(force⁰(hx⁶⁴), force⁰(tx⁶⁴)))
 //│ 										| LH_N  => (fun ys⁵⁵ -> (fun _lh_findk_arg2⁸¹ -> (fun _lh_findk_arg1⁸¹ -> (fun _lh_findk_arg3⁸¹ -> _lh_findk_arg2⁸¹))))}
 //│ 								def snd₀₉(_lh_snd_arg1⁴⁷) = 
 //│ 									case _lh_snd_arg1⁴⁷ of {
 //│ 										LH_P2 _lh_snd_LH_P2_0³¹ _lh_snd_LH_P2_1³¹ => _lh_snd_LH_P2_1³¹
 //│ 										| _  => error⁰}
 //│ 						def algb₁₈(_lh_algb_arg1⁵⁷, _lh_algb_arg2⁵⁷) = 
-//│ 							let h¹⁴⁶ = 0
-//│ 							in let t¹⁶⁸ = algb1₁₈(_lh_algb_arg1⁵⁷, 
+//│ 							let h¹⁴⁶ = lazy⁰(0)
+//│ 							in let t¹⁶⁸ = lazy⁰(algb1₁₈(_lh_algb_arg1⁵⁷, 
 //│ 								let _lh_listcomp_fun⁸⁰ = (fun _lh_listcomp_fun_para⁵⁷ -> _lh_listcomp_fun_para⁵⁷(_lh_listcomp_fun⁸⁰))
-//│ 								in _lh_listcomp_fun⁸⁰(_lh_algb_arg2⁵⁷))
-//│ 							in (fun a¹²⁷ -> reverse_helper₀₄(t¹⁶⁸, 
-//│ 								let hy⁴⁰ = h¹⁴⁶
-//│ 								in let ty⁴⁰ = a¹²⁷
+//│ 								in _lh_listcomp_fun⁸⁰(_lh_algb_arg2⁵⁷)))
+//│ 							in (fun a¹²⁷ -> reverse_helper₀₄(force⁰(t¹⁶⁸), 
+//│ 								let hy⁴⁰ = lazy⁰(force⁰(h¹⁴⁶))
+//│ 								in let ty⁴⁰ = lazy⁰(a¹²⁷)
 //│ 								in (fun hx⁷⁷ -> (fun tx⁷⁷ -> 
-//│ 									let _lh_findk_LH_C_0⁴⁰ = 	
-//│ 										let _lh_findk_LH_P2_0⁴⁰ = hx⁷⁷
-//│ 										in let _lh_findk_LH_P2_1⁴⁰ = hy⁴⁰
-//│ 										in (fun _lh_findk_LH_C_1⁶⁴ -> (fun _lh_findk_arg1¹⁰¹ -> (fun _lh_findk_arg2¹⁰¹ -> (fun _lh_findk_arg3¹⁰¹ -> if ((_lh_findk_LH_P2_0⁴⁰ + _lh_findk_LH_P2_1⁴⁰) >= _lh_findk_arg3¹⁰¹) then findk₀₄((_lh_findk_arg1¹⁰¹ + 1), _lh_findk_arg1¹⁰¹, (_lh_findk_LH_P2_0⁴⁰ + _lh_findk_LH_P2_1⁴⁰), _lh_findk_LH_C_1⁶⁴) else findk₀₄((_lh_findk_arg1¹⁰¹ + 1), _lh_findk_arg2¹⁰¹, _lh_findk_arg3¹⁰¹, _lh_findk_LH_C_1⁶⁴)))))
-//│ 									in let _lh_findk_LH_C_1⁶³ = zip₀₄(tx⁷⁷, ty⁴⁰)
-//│ 									in (fun _lh_findk_arg2¹⁰⁰ -> (fun _lh_findk_arg1¹⁰⁰ -> (fun _lh_findk_arg3¹⁰⁰ -> _lh_findk_LH_C_0⁴⁰(_lh_findk_LH_C_1⁶³, _lh_findk_arg1¹⁰⁰, _lh_findk_arg2¹⁰⁰, _lh_findk_arg3¹⁰⁰))))))))
+//│ 									let _lh_findk_LH_C_0⁴⁰ = lazy⁰(
+//│ 										let _lh_findk_LH_P2_0⁴⁰ = lazy⁰(hx⁷⁷)
+//│ 										in let _lh_findk_LH_P2_1⁴⁰ = lazy⁰(force⁰(hy⁴⁰))
+//│ 										in (fun _lh_findk_LH_C_1⁶⁴ -> (fun _lh_findk_arg1¹⁰¹ -> (fun _lh_findk_arg2¹⁰¹ -> (fun _lh_findk_arg3¹⁰¹ -> if ((force⁰(_lh_findk_LH_P2_0⁴⁰) + force⁰(_lh_findk_LH_P2_1⁴⁰)) >= _lh_findk_arg3¹⁰¹) then findk₀₄((_lh_findk_arg1¹⁰¹ + 1), _lh_findk_arg1¹⁰¹, (force⁰(_lh_findk_LH_P2_0⁴⁰) + force⁰(_lh_findk_LH_P2_1⁴⁰)), _lh_findk_LH_C_1⁶⁴) else findk₀₄((_lh_findk_arg1¹⁰¹ + 1), _lh_findk_arg2¹⁰¹, _lh_findk_arg3¹⁰¹, _lh_findk_LH_C_1⁶⁴))))))
+//│ 									in let _lh_findk_LH_C_1⁶³ = lazy⁰(zip₀₄(tx⁷⁷, force⁰(ty⁴⁰)))
+//│ 									in (fun _lh_findk_arg2¹⁰⁰ -> (fun _lh_findk_arg1¹⁰⁰ -> (fun _lh_findk_arg3¹⁰⁰ -> force⁰(_lh_findk_LH_C_0⁴⁰, force⁰(_lh_findk_LH_C_1⁶³), _lh_findk_arg1¹⁰⁰, _lh_findk_arg2¹⁰⁰, _lh_findk_arg3¹⁰⁰))))))))
 //│ 							where
 //│ 							def algb1₁₈(_lh_algb1_arg1⁴⁶, _lh_algb1_arg2⁵⁸) = 
 //│ 								_lh_algb1_arg1⁴⁶(_lh_algb1_arg2⁵⁸)
@@ -13202,38 +13202,38 @@ testLCSS_nofib $ primId 0
 //│ 								def map₁₈(f⁴², ls²¹²) = 
 //│ 									case ls²¹² of {
 //│ 										LH_C h⁶³ t⁷² => 
-//│ 											let h¹³³ = f⁴²(h⁶³)
-//│ 											in let t¹⁵⁰ = map₁₈(f⁴², t⁷²)
-//│ 											in (fun a⁸⁶ -> reverse_helper₀₄(t¹⁵⁰, 
-//│ 												let hy²⁷ = h¹³³
-//│ 												in let ty²⁷ = a⁸⁶
+//│ 											let h¹³³ = lazy⁰(f⁴²(h⁶³))
+//│ 											in let t¹⁵⁰ = lazy⁰(map₁₈(f⁴², t⁷²))
+//│ 											in (fun a⁸⁶ -> reverse_helper₀₄(force⁰(t¹⁵⁰), 
+//│ 												let hy²⁷ = lazy⁰(force⁰(h¹³³))
+//│ 												in let ty²⁷ = lazy⁰(a⁸⁶)
 //│ 												in (fun hx³⁵ -> (fun tx³⁵ -> 
-//│ 													let _lh_findk_LH_C_0²⁷ = 	
-//│ 														let _lh_findk_LH_P2_0²⁷ = hx³⁵
-//│ 														in let _lh_findk_LH_P2_1²⁷ = hy²⁷
-//│ 														in (fun _lh_findk_LH_C_1³⁸ -> (fun _lh_findk_arg1⁴⁵ -> (fun _lh_findk_arg2⁴⁵ -> (fun _lh_findk_arg3⁴⁵ -> if ((_lh_findk_LH_P2_0²⁷ + _lh_findk_LH_P2_1²⁷) >= _lh_findk_arg3⁴⁵) then findk₀₄((_lh_findk_arg1⁴⁵ + 1), _lh_findk_arg1⁴⁵, (_lh_findk_LH_P2_0²⁷ + _lh_findk_LH_P2_1²⁷), _lh_findk_LH_C_1³⁸) else findk₀₄((_lh_findk_arg1⁴⁵ + 1), _lh_findk_arg2⁴⁵, _lh_findk_arg3⁴⁵, _lh_findk_LH_C_1³⁸)))))
-//│ 													in let _lh_findk_LH_C_1³⁷ = zip₀₄(tx³⁵, ty²⁷)
-//│ 													in (fun _lh_findk_arg2⁴⁴ -> (fun _lh_findk_arg1⁴⁴ -> (fun _lh_findk_arg3⁴⁴ -> _lh_findk_LH_C_0²⁷(_lh_findk_LH_C_1³⁷, _lh_findk_arg1⁴⁴, _lh_findk_arg2⁴⁴, _lh_findk_arg3⁴⁴))))))))
+//│ 													let _lh_findk_LH_C_0²⁷ = lazy⁰(
+//│ 														let _lh_findk_LH_P2_0²⁷ = lazy⁰(hx³⁵)
+//│ 														in let _lh_findk_LH_P2_1²⁷ = lazy⁰(force⁰(hy²⁷))
+//│ 														in (fun _lh_findk_LH_C_1³⁸ -> (fun _lh_findk_arg1⁴⁵ -> (fun _lh_findk_arg2⁴⁵ -> (fun _lh_findk_arg3⁴⁵ -> if ((force⁰(_lh_findk_LH_P2_0²⁷) + force⁰(_lh_findk_LH_P2_1²⁷)) >= _lh_findk_arg3⁴⁵) then findk₀₄((_lh_findk_arg1⁴⁵ + 1), _lh_findk_arg1⁴⁵, (force⁰(_lh_findk_LH_P2_0²⁷) + force⁰(_lh_findk_LH_P2_1²⁷)), _lh_findk_LH_C_1³⁸) else findk₀₄((_lh_findk_arg1⁴⁵ + 1), _lh_findk_arg2⁴⁵, _lh_findk_arg3⁴⁵, _lh_findk_LH_C_1³⁸))))))
+//│ 													in let _lh_findk_LH_C_1³⁷ = lazy⁰(zip₀₄(tx³⁵, force⁰(ty²⁷)))
+//│ 													in (fun _lh_findk_arg2⁴⁴ -> (fun _lh_findk_arg1⁴⁴ -> (fun _lh_findk_arg3⁴⁴ -> force⁰(_lh_findk_LH_C_0²⁷, force⁰(_lh_findk_LH_C_1³⁷), _lh_findk_arg1⁴⁴, _lh_findk_arg2⁴⁴, _lh_findk_arg3⁴⁴))))))))
 //│ 										| LH_N  => (fun a⁸⁷ -> a⁸⁷)}
 //│ 								def snd₁₈(_lh_snd_arg1⁵⁹) = 
 //│ 									case _lh_snd_arg1⁵⁹ of {
 //│ 										LH_P2 _lh_snd_LH_P2_0¹³ _lh_snd_LH_P2_1¹³ => _lh_snd_LH_P2_1¹³
 //│ 										| _  => error⁰}
 //│ 						def algb₁₉(_lh_algb_arg1⁵², _lh_algb_arg2⁵²) = 
-//│ 							let h¹⁴⁰ = 0
-//│ 							in let t¹⁶¹ = algb1₁₉(_lh_algb_arg1⁵², 
+//│ 							let h¹⁴⁰ = lazy⁰(0)
+//│ 							in let t¹⁶¹ = lazy⁰(algb1₁₉(_lh_algb_arg1⁵², 
 //│ 								let _lh_listcomp_fun⁶⁸ = (fun _lh_listcomp_fun_para⁵² -> _lh_listcomp_fun_para⁵²(_lh_listcomp_fun⁶⁸))
-//│ 								in _lh_listcomp_fun⁶⁸(_lh_algb_arg2⁵²))
-//│ 							in (fun a¹¹¹ -> reverse_helper₀₅(t¹⁶¹, 
-//│ 								let hy³⁴ = h¹⁴⁰
-//│ 								in let ty³⁴ = a¹¹¹
+//│ 								in _lh_listcomp_fun⁶⁸(_lh_algb_arg2⁵²)))
+//│ 							in (fun a¹¹¹ -> reverse_helper₀₅(force⁰(t¹⁶¹), 
+//│ 								let hy³⁴ = lazy⁰(force⁰(h¹⁴⁰))
+//│ 								in let ty³⁴ = lazy⁰(a¹¹¹)
 //│ 								in (fun hx⁶⁵ -> (fun tx⁶⁵ -> 
-//│ 									let _lh_findk_LH_C_0³⁴ = 	
-//│ 										let _lh_findk_LH_P2_0³⁴ = hx⁶⁵
-//│ 										in let _lh_findk_LH_P2_1³⁴ = hy³⁴
-//│ 										in (fun _lh_findk_LH_C_1⁵² -> (fun _lh_findk_arg1⁸³ -> (fun _lh_findk_arg2⁸³ -> (fun _lh_findk_arg3⁸³ -> if ((_lh_findk_LH_P2_0³⁴ + _lh_findk_LH_P2_1³⁴) >= _lh_findk_arg3⁸³) then findk₀₅((_lh_findk_arg1⁸³ + 1), _lh_findk_arg1⁸³, (_lh_findk_LH_P2_0³⁴ + _lh_findk_LH_P2_1³⁴), _lh_findk_LH_C_1⁵²) else findk₀₅((_lh_findk_arg1⁸³ + 1), _lh_findk_arg2⁸³, _lh_findk_arg3⁸³, _lh_findk_LH_C_1⁵²)))))
-//│ 									in let _lh_findk_LH_C_1⁵¹ = zip₀₅(tx⁶⁵, ty³⁴)
-//│ 									in (fun _lh_findk_arg2⁸² -> (fun _lh_findk_arg1⁸² -> (fun _lh_findk_arg3⁸² -> _lh_findk_LH_C_0³⁴(_lh_findk_LH_C_1⁵¹, _lh_findk_arg1⁸², _lh_findk_arg2⁸², _lh_findk_arg3⁸²))))))))
+//│ 									let _lh_findk_LH_C_0³⁴ = lazy⁰(
+//│ 										let _lh_findk_LH_P2_0³⁴ = lazy⁰(hx⁶⁵)
+//│ 										in let _lh_findk_LH_P2_1³⁴ = lazy⁰(force⁰(hy³⁴))
+//│ 										in (fun _lh_findk_LH_C_1⁵² -> (fun _lh_findk_arg1⁸³ -> (fun _lh_findk_arg2⁸³ -> (fun _lh_findk_arg3⁸³ -> if ((force⁰(_lh_findk_LH_P2_0³⁴) + force⁰(_lh_findk_LH_P2_1³⁴)) >= _lh_findk_arg3⁸³) then findk₀₅((_lh_findk_arg1⁸³ + 1), _lh_findk_arg1⁸³, (force⁰(_lh_findk_LH_P2_0³⁴) + force⁰(_lh_findk_LH_P2_1³⁴)), _lh_findk_LH_C_1⁵²) else findk₀₅((_lh_findk_arg1⁸³ + 1), _lh_findk_arg2⁸³, _lh_findk_arg3⁸³, _lh_findk_LH_C_1⁵²))))))
+//│ 									in let _lh_findk_LH_C_1⁵¹ = lazy⁰(zip₀₅(tx⁶⁵, force⁰(ty³⁴)))
+//│ 									in (fun _lh_findk_arg2⁸² -> (fun _lh_findk_arg1⁸² -> (fun _lh_findk_arg3⁸² -> force⁰(_lh_findk_LH_C_0³⁴, force⁰(_lh_findk_LH_C_1⁵¹), _lh_findk_arg1⁸², _lh_findk_arg2⁸², _lh_findk_arg3⁸²))))))))
 //│ 							where
 //│ 							def algb1₁₉(_lh_algb1_arg1⁵², _lh_algb1_arg2⁷⁶) = 
 //│ 								_lh_algb1_arg1⁵²(_lh_algb1_arg2⁷⁶)
@@ -13253,18 +13253,18 @@ testLCSS_nofib $ primId 0
 //│ 								def map₁₉(f³⁷, ls¹⁸⁸) = 
 //│ 									case ls¹⁸⁸ of {
 //│ 										LH_C h¹⁰⁵ t¹¹⁵ => 
-//│ 											let h¹²⁸ = f³⁷(h¹⁰⁵)
-//│ 											in let t¹⁴³ = map₁₉(f³⁷, t¹¹⁵)
-//│ 											in (fun a⁷⁰ -> reverse_helper₀₅(t¹⁴³, 
-//│ 												let hy²² = h¹²⁸
-//│ 												in let ty²² = a⁷⁰
+//│ 											let h¹²⁸ = lazy⁰(f³⁷(h¹⁰⁵))
+//│ 											in let t¹⁴³ = lazy⁰(map₁₉(f³⁷, t¹¹⁵))
+//│ 											in (fun a⁷⁰ -> reverse_helper₀₅(force⁰(t¹⁴³), 
+//│ 												let hy²² = lazy⁰(force⁰(h¹²⁸))
+//│ 												in let ty²² = lazy⁰(a⁷⁰)
 //│ 												in (fun hx²³ -> (fun tx²³ -> 
-//│ 													let _lh_findk_LH_C_0²² = 	
-//│ 														let _lh_findk_LH_P2_0²² = hx²³
-//│ 														in let _lh_findk_LH_P2_1²² = hy²²
-//│ 														in (fun _lh_findk_LH_C_1²⁸ -> (fun _lh_findk_arg1²⁹ -> (fun _lh_findk_arg2²⁹ -> (fun _lh_findk_arg3²⁹ -> if ((_lh_findk_LH_P2_0²² + _lh_findk_LH_P2_1²²) >= _lh_findk_arg3²⁹) then findk₀₅((_lh_findk_arg1²⁹ + 1), _lh_findk_arg1²⁹, (_lh_findk_LH_P2_0²² + _lh_findk_LH_P2_1²²), _lh_findk_LH_C_1²⁸) else findk₀₅((_lh_findk_arg1²⁹ + 1), _lh_findk_arg2²⁹, _lh_findk_arg3²⁹, _lh_findk_LH_C_1²⁸)))))
-//│ 													in let _lh_findk_LH_C_1²⁷ = zip₀₅(tx²³, ty²²)
-//│ 													in (fun _lh_findk_arg2²⁸ -> (fun _lh_findk_arg1²⁸ -> (fun _lh_findk_arg3²⁸ -> _lh_findk_LH_C_0²²(_lh_findk_LH_C_1²⁷, _lh_findk_arg1²⁸, _lh_findk_arg2²⁸, _lh_findk_arg3²⁸))))))))
+//│ 													let _lh_findk_LH_C_0²² = lazy⁰(
+//│ 														let _lh_findk_LH_P2_0²² = lazy⁰(hx²³)
+//│ 														in let _lh_findk_LH_P2_1²² = lazy⁰(force⁰(hy²²))
+//│ 														in (fun _lh_findk_LH_C_1²⁸ -> (fun _lh_findk_arg1²⁹ -> (fun _lh_findk_arg2²⁹ -> (fun _lh_findk_arg3²⁹ -> if ((force⁰(_lh_findk_LH_P2_0²²) + force⁰(_lh_findk_LH_P2_1²²)) >= _lh_findk_arg3²⁹) then findk₀₅((_lh_findk_arg1²⁹ + 1), _lh_findk_arg1²⁹, (force⁰(_lh_findk_LH_P2_0²²) + force⁰(_lh_findk_LH_P2_1²²)), _lh_findk_LH_C_1²⁸) else findk₀₅((_lh_findk_arg1²⁹ + 1), _lh_findk_arg2²⁹, _lh_findk_arg3²⁹, _lh_findk_LH_C_1²⁸))))))
+//│ 													in let _lh_findk_LH_C_1²⁷ = lazy⁰(zip₀₅(tx²³, force⁰(ty²²)))
+//│ 													in (fun _lh_findk_arg2²⁸ -> (fun _lh_findk_arg1²⁸ -> (fun _lh_findk_arg3²⁸ -> force⁰(_lh_findk_LH_C_0²², force⁰(_lh_findk_LH_C_1²⁷), _lh_findk_arg1²⁸, _lh_findk_arg2²⁸, _lh_findk_arg3²⁸))))))))
 //│ 										| LH_N  => (fun a⁷¹ -> a⁷¹)}
 //│ 								def snd₁₉(_lh_snd_arg1³⁸) = 
 //│ 									case _lh_snd_arg1³⁸ of {
@@ -13311,9 +13311,9 @@ testLCSS_nofib $ primId 0
 //│ 							def reverse_helper₁₄(ls¹⁸⁷, a⁶⁹) = 
 //│ 								case ls¹⁸⁷ of {
 //│ 									LH_C h⁹⁷ t¹⁰⁷ => reverse_helper₁₄(t¹⁰⁷, 
-//│ 										let _lh_algb1_LH_C_0³⁸ = h⁹⁷
-//│ 										in let _lh_algb1_LH_C_1³⁸ = a⁶⁹
-//│ 										in (fun _lh_algb1_arg2⁴⁰ -> algb1₁₈(_lh_algb1_LH_C_1³⁸, algb2₁₈(_lh_algb1_LH_C_0³⁸, 0, 0, _lh_algb1_arg2⁴⁰))))
+//│ 										let _lh_algb1_LH_C_0³⁸ = lazy⁰(h⁹⁷)
+//│ 										in let _lh_algb1_LH_C_1³⁸ = lazy⁰(a⁶⁹)
+//│ 										in (fun _lh_algb1_arg2⁴⁰ -> algb1₁₈(force⁰(_lh_algb1_LH_C_1³⁸), algb2₁₈(force⁰(_lh_algb1_LH_C_0³⁸), 0, 0, _lh_algb1_arg2⁴⁰))))
 //│ 									| LH_N  => a⁶⁹}
 //│ 						def reverse₁₅(ls²⁹²) = 
 //│ 							reverse_helper₁₅(ls²⁹², (fun _lh_algb1_arg2⁷⁹ -> map₁₉(snd₁₉, _lh_algb1_arg2⁷⁹)))
@@ -13321,9 +13321,9 @@ testLCSS_nofib $ primId 0
 //│ 							def reverse_helper₁₅(ls³⁰⁶, a¹³³) = 
 //│ 								case ls³⁰⁶ of {
 //│ 									LH_C h⁸⁷ t⁹⁷ => reverse_helper₁₅(t⁹⁷, 
-//│ 										let _lh_algb1_LH_C_0⁴⁸ = h⁸⁷
-//│ 										in let _lh_algb1_LH_C_1⁴⁸ = a¹³³
-//│ 										in (fun _lh_algb1_arg2⁸⁶ -> algb1₁₉(_lh_algb1_LH_C_1⁴⁸, algb2₁₉(_lh_algb1_LH_C_0⁴⁸, 0, 0, _lh_algb1_arg2⁸⁶))))
+//│ 										let _lh_algb1_LH_C_0⁴⁸ = lazy⁰(h⁸⁷)
+//│ 										in let _lh_algb1_LH_C_1⁴⁸ = lazy⁰(a¹³³)
+//│ 										in (fun _lh_algb1_arg2⁸⁶ -> algb1₁₉(force⁰(_lh_algb1_LH_C_1⁴⁸), algb2₁₉(force⁰(_lh_algb1_LH_C_0⁴⁸), 0, 0, _lh_algb1_arg2⁸⁶))))
 //│ 									| LH_N  => a¹³³}
 //│ 						def reverse₂₄(ls³¹⁸) = 
 //│ 							reverse_helper₂₄(ls³¹⁸, (fun _lh_listcomp_fun⁸⁷ -> [LH_N]))
@@ -13331,9 +13331,9 @@ testLCSS_nofib $ primId 0
 //│ 							def reverse_helper₂₄(ls²⁸⁰, a¹¹⁶) = 
 //│ 								case ls²⁸⁰ of {
 //│ 									LH_C h²⁴ t²⁹ => reverse_helper₂₄(t²⁹, 
-//│ 										let _lh_listcomp_fun_ls_h⁴² = h²⁴
-//│ 										in let _lh_listcomp_fun_ls_t⁴² = a¹¹⁶
-//│ 										in (fun _lh_listcomp_fun⁷¹ -> [LH_C [LH_P2 _lh_listcomp_fun_ls_h⁴² 0] _lh_listcomp_fun⁷¹(_lh_listcomp_fun_ls_t⁴²)]))
+//│ 										let _lh_listcomp_fun_ls_h⁴² = lazy⁰(h²⁴)
+//│ 										in let _lh_listcomp_fun_ls_t⁴² = lazy⁰(a¹¹⁶)
+//│ 										in (fun _lh_listcomp_fun⁷¹ -> [LH_C [LH_P2 force⁰(_lh_listcomp_fun_ls_h⁴²) 0] _lh_listcomp_fun⁷¹(force⁰(_lh_listcomp_fun_ls_t⁴²))]))
 //│ 									| LH_N  => a¹¹⁶}
 //│ 						def reverse₂₅(ls²⁶¹) = 
 //│ 							reverse_helper₂₅(ls²⁶¹, (fun _lh_listcomp_fun⁶⁵ -> [LH_N]))
@@ -13341,9 +13341,9 @@ testLCSS_nofib $ primId 0
 //│ 							def reverse_helper₂₅(ls²⁸³, a¹²⁰) = 
 //│ 								case ls²⁸³ of {
 //│ 									LH_C h³⁸ t⁴⁶ => reverse_helper₂₅(t⁴⁶, 
-//│ 										let _lh_listcomp_fun_ls_h⁴³ = h³⁸
-//│ 										in let _lh_listcomp_fun_ls_t⁴³ = a¹²⁰
-//│ 										in (fun _lh_listcomp_fun⁷³ -> [LH_C [LH_P2 _lh_listcomp_fun_ls_h⁴³ 0] _lh_listcomp_fun⁷³(_lh_listcomp_fun_ls_t⁴³)]))
+//│ 										let _lh_listcomp_fun_ls_h⁴³ = lazy⁰(h³⁸)
+//│ 										in let _lh_listcomp_fun_ls_t⁴³ = lazy⁰(a¹²⁰)
+//│ 										in (fun _lh_listcomp_fun⁷³ -> [LH_C [LH_P2 force⁰(_lh_listcomp_fun_ls_h⁴³) 0] _lh_listcomp_fun⁷³(force⁰(_lh_listcomp_fun_ls_t⁴³))]))
 //│ 									| LH_N  => a¹²⁰}
 //│ 						def take₀₄(n⁵⁷, ls²⁹⁸) = 
 //│ 							if (n⁵⁷ > 0) then case ls²⁹⁸ of {
@@ -13389,13 +13389,13 @@ testLCSS_nofib $ primId 0
 //│ 									in (fun _lh_funcomp_x²⁷ -> algc₀₅(m2²⁷, k²⁷, xs1²⁷, take₁₇(k²⁷, _lh_algc_arg4¹³), algc₀₅((_lh_algc_arg1¹³ - m2²⁷), (_lh_algc_arg2¹³ - k²⁷), xs2²⁷, drop₁₇(k²⁷, _lh_algc_arg4¹³), _lh_funcomp_x²⁷)))}}
 //│ 						where
 //│ 						def algb₀₁₀(_lh_algb_arg1⁴⁹, _lh_algb_arg2⁴⁹) = 
-//│ 							let hx⁵⁸ = 0
-//│ 							in let tx⁵⁸ = algb1₀₁₀(_lh_algb_arg1⁴⁹, 
+//│ 							let hx⁵⁸ = lazy⁰(0)
+//│ 							in let tx⁵⁸ = lazy⁰(algb1₀₁₀(_lh_algb_arg1⁴⁹, 
 //│ 								let _lh_listcomp_fun⁶¹ = (fun _lh_listcomp_fun_para⁴⁹ -> case _lh_listcomp_fun_para⁴⁹ of {
 //│ 									LH_C _lh_listcomp_fun_ls_h⁵ _lh_listcomp_fun_ls_t⁵ => [LH_C [LH_P2 _lh_listcomp_fun_ls_h⁵ 0] _lh_listcomp_fun⁶¹(_lh_listcomp_fun_ls_t⁵)]
 //│ 									| LH_N  => [LH_N]})
-//│ 								in _lh_listcomp_fun⁶¹(_lh_algb_arg2⁴⁹))
-//│ 							in (fun ys⁴⁷ -> ys⁴⁷(hx⁵⁸, tx⁵⁸))
+//│ 								in _lh_listcomp_fun⁶¹(_lh_algb_arg2⁴⁹)))
+//│ 							in (fun ys⁴⁷ -> ys⁴⁷(force⁰(hx⁵⁸), force⁰(tx⁵⁸)))
 //│ 							where
 //│ 							def algb1₀₁₀(_lh_algb1_arg1⁴⁰, _lh_algb1_arg2⁴⁶) = 
 //│ 								case _lh_algb1_arg1⁴⁰ of {
@@ -13418,22 +13418,22 @@ testLCSS_nofib $ primId 0
 //│ 								def map₀₁₀(f⁴⁷, ls²³⁸) = 
 //│ 									case ls²³⁸ of {
 //│ 										LH_C h⁵³ t⁶² => 
-//│ 											let hx⁵³ = f⁴⁷(h⁵³)
-//│ 											in let tx⁵³ = map₀₁₀(f⁴⁷, t⁶²)
-//│ 											in (fun ys³⁹ -> ys³⁹(hx⁵³, tx⁵³))
+//│ 											let hx⁵³ = lazy⁰(f⁴⁷(h⁵³))
+//│ 											in let tx⁵³ = lazy⁰(map₀₁₀(f⁴⁷, t⁶²))
+//│ 											in (fun ys³⁹ -> ys³⁹(force⁰(hx⁵³), force⁰(tx⁵³)))
 //│ 										| LH_N  => (fun ys⁴⁰ -> (fun _lh_findk_arg2⁶⁸ -> (fun _lh_findk_arg1⁶⁸ -> (fun _lh_findk_arg3⁶⁸ -> _lh_findk_arg2⁶⁸))))}
 //│ 								def snd₀₁₀(_lh_snd_arg1⁶⁵) = 
 //│ 									case _lh_snd_arg1⁶⁵ of {
 //│ 										LH_P2 _lh_snd_LH_P2_0³² _lh_snd_LH_P2_1³² => _lh_snd_LH_P2_1³²
 //│ 										| _  => error⁰}
 //│ 						def algb₀₁₁(_lh_algb_arg1⁶⁰, _lh_algb_arg2⁶⁰) = 
-//│ 							let hx⁸⁷ = 0
-//│ 							in let tx⁸⁷ = algb1₀₁₁(_lh_algb_arg1⁶⁰, 
+//│ 							let hx⁸⁷ = lazy⁰(0)
+//│ 							in let tx⁸⁷ = lazy⁰(algb1₀₁₁(_lh_algb_arg1⁶⁰, 
 //│ 								let _lh_listcomp_fun⁸⁵ = (fun _lh_listcomp_fun_para⁶⁰ -> case _lh_listcomp_fun_para⁶⁰ of {
 //│ 									LH_C _lh_listcomp_fun_ls_h²¹ _lh_listcomp_fun_ls_t²¹ => [LH_C [LH_P2 _lh_listcomp_fun_ls_h²¹ 0] _lh_listcomp_fun⁸⁵(_lh_listcomp_fun_ls_t²¹)]
 //│ 									| LH_N  => [LH_N]})
-//│ 								in _lh_listcomp_fun⁸⁵(_lh_algb_arg2⁶⁰))
-//│ 							in (fun ys⁷⁶ -> ys⁷⁶(hx⁸⁷, tx⁸⁷))
+//│ 								in _lh_listcomp_fun⁸⁵(_lh_algb_arg2⁶⁰)))
+//│ 							in (fun ys⁷⁶ -> ys⁷⁶(force⁰(hx⁸⁷), force⁰(tx⁸⁷)))
 //│ 							where
 //│ 							def algb1₀₁₁(_lh_algb1_arg1⁶¹, _lh_algb1_arg2⁹³) = 
 //│ 								case _lh_algb1_arg1⁶¹ of {
@@ -13456,29 +13456,29 @@ testLCSS_nofib $ primId 0
 //│ 								def map₀₁₁(f⁵⁹, ls³⁰⁵) = 
 //│ 									case ls³⁰⁵ of {
 //│ 										LH_C h⁸⁴ t⁹⁴ => 
-//│ 											let hx⁸² = f⁵⁹(h⁸⁴)
-//│ 											in let tx⁸² = map₀₁₁(f⁵⁹, t⁹⁴)
-//│ 											in (fun ys⁶⁷ -> ys⁶⁷(hx⁸², tx⁸²))
+//│ 											let hx⁸² = lazy⁰(f⁵⁹(h⁸⁴))
+//│ 											in let tx⁸² = lazy⁰(map₀₁₁(f⁵⁹, t⁹⁴))
+//│ 											in (fun ys⁶⁷ -> ys⁶⁷(force⁰(hx⁸²), force⁰(tx⁸²)))
 //│ 										| LH_N  => (fun ys⁶⁸ -> (fun _lh_findk_arg2¹⁰⁹ -> (fun _lh_findk_arg1¹⁰⁹ -> (fun _lh_findk_arg3¹⁰⁹ -> _lh_findk_arg2¹⁰⁹))))}
 //│ 								def snd₀₁₁(_lh_snd_arg1⁵³) = 
 //│ 									case _lh_snd_arg1⁵³ of {
 //│ 										LH_P2 _lh_snd_LH_P2_0²⁸ _lh_snd_LH_P2_1²⁸ => _lh_snd_LH_P2_1²⁸
 //│ 										| _  => error⁰}
 //│ 						def algb₁₁₀(_lh_algb_arg1⁴⁰, _lh_algb_arg2⁴⁰) = 
-//│ 							let h¹³² = 0
-//│ 							in let t¹⁴⁹ = algb1₁₁₀(_lh_algb_arg1⁴⁰, 
+//│ 							let h¹³² = lazy⁰(0)
+//│ 							in let t¹⁴⁹ = lazy⁰(algb1₁₁₀(_lh_algb_arg1⁴⁰, 
 //│ 								let _lh_listcomp_fun⁴⁶ = (fun _lh_listcomp_fun_para⁴⁰ -> _lh_listcomp_fun_para⁴⁰(_lh_listcomp_fun⁴⁶))
-//│ 								in _lh_listcomp_fun⁴⁶(_lh_algb_arg2⁴⁰))
-//│ 							in (fun a⁸³ -> reverse_helper₀₆(t¹⁴⁹, 
-//│ 								let hy²⁶ = h¹³²
-//│ 								in let ty²⁶ = a⁸³
+//│ 								in _lh_listcomp_fun⁴⁶(_lh_algb_arg2⁴⁰)))
+//│ 							in (fun a⁸³ -> reverse_helper₀₆(force⁰(t¹⁴⁹), 
+//│ 								let hy²⁶ = lazy⁰(force⁰(h¹³²))
+//│ 								in let ty²⁶ = lazy⁰(a⁸³)
 //│ 								in (fun hx³⁴ -> (fun tx³⁴ -> 
-//│ 									let _lh_findk_LH_C_0²⁶ = 	
-//│ 										let _lh_findk_LH_P2_0²⁶ = hx³⁴
-//│ 										in let _lh_findk_LH_P2_1²⁶ = hy²⁶
-//│ 										in (fun _lh_findk_LH_C_1³⁶ -> (fun _lh_findk_arg1⁴³ -> (fun _lh_findk_arg2⁴³ -> (fun _lh_findk_arg3⁴³ -> if ((_lh_findk_LH_P2_0²⁶ + _lh_findk_LH_P2_1²⁶) >= _lh_findk_arg3⁴³) then findk₀₆((_lh_findk_arg1⁴³ + 1), _lh_findk_arg1⁴³, (_lh_findk_LH_P2_0²⁶ + _lh_findk_LH_P2_1²⁶), _lh_findk_LH_C_1³⁶) else findk₀₆((_lh_findk_arg1⁴³ + 1), _lh_findk_arg2⁴³, _lh_findk_arg3⁴³, _lh_findk_LH_C_1³⁶)))))
-//│ 									in let _lh_findk_LH_C_1³⁵ = zip₀₆(tx³⁴, ty²⁶)
-//│ 									in (fun _lh_findk_arg2⁴² -> (fun _lh_findk_arg1⁴² -> (fun _lh_findk_arg3⁴² -> _lh_findk_LH_C_0²⁶(_lh_findk_LH_C_1³⁵, _lh_findk_arg1⁴², _lh_findk_arg2⁴², _lh_findk_arg3⁴²))))))))
+//│ 									let _lh_findk_LH_C_0²⁶ = lazy⁰(
+//│ 										let _lh_findk_LH_P2_0²⁶ = lazy⁰(hx³⁴)
+//│ 										in let _lh_findk_LH_P2_1²⁶ = lazy⁰(force⁰(hy²⁶))
+//│ 										in (fun _lh_findk_LH_C_1³⁶ -> (fun _lh_findk_arg1⁴³ -> (fun _lh_findk_arg2⁴³ -> (fun _lh_findk_arg3⁴³ -> if ((force⁰(_lh_findk_LH_P2_0²⁶) + force⁰(_lh_findk_LH_P2_1²⁶)) >= _lh_findk_arg3⁴³) then findk₀₆((_lh_findk_arg1⁴³ + 1), _lh_findk_arg1⁴³, (force⁰(_lh_findk_LH_P2_0²⁶) + force⁰(_lh_findk_LH_P2_1²⁶)), _lh_findk_LH_C_1³⁶) else findk₀₆((_lh_findk_arg1⁴³ + 1), _lh_findk_arg2⁴³, _lh_findk_arg3⁴³, _lh_findk_LH_C_1³⁶))))))
+//│ 									in let _lh_findk_LH_C_1³⁵ = lazy⁰(zip₀₆(tx³⁴, force⁰(ty²⁶)))
+//│ 									in (fun _lh_findk_arg2⁴² -> (fun _lh_findk_arg1⁴² -> (fun _lh_findk_arg3⁴² -> force⁰(_lh_findk_LH_C_0²⁶, force⁰(_lh_findk_LH_C_1³⁵), _lh_findk_arg1⁴², _lh_findk_arg2⁴², _lh_findk_arg3⁴²))))))))
 //│ 							where
 //│ 							def algb1₁₁₀(_lh_algb1_arg1⁴⁸, _lh_algb1_arg2⁶⁴) = 
 //│ 								_lh_algb1_arg1⁴⁸(_lh_algb1_arg2⁶⁴)
@@ -13498,38 +13498,38 @@ testLCSS_nofib $ primId 0
 //│ 								def map₁₁₀(f⁴⁴, ls²³¹) = 
 //│ 									case ls²³¹ of {
 //│ 										LH_C h¹¹⁹ t¹³² => 
-//│ 											let h¹³⁶ = f⁴⁴(h¹¹⁹)
-//│ 											in let t¹⁵⁶ = map₁₁₀(f⁴⁴, t¹³²)
-//│ 											in (fun a⁹³ -> reverse_helper₀₆(t¹⁵⁶, 
-//│ 												let hy³⁰ = h¹³⁶
-//│ 												in let ty³⁰ = a⁹³
+//│ 											let h¹³⁶ = lazy⁰(f⁴⁴(h¹¹⁹))
+//│ 											in let t¹⁵⁶ = lazy⁰(map₁₁₀(f⁴⁴, t¹³²))
+//│ 											in (fun a⁹³ -> reverse_helper₀₆(force⁰(t¹⁵⁶), 
+//│ 												let hy³⁰ = lazy⁰(force⁰(h¹³⁶))
+//│ 												in let ty³⁰ = lazy⁰(a⁹³)
 //│ 												in (fun hx⁴⁹ -> (fun tx⁴⁹ -> 
-//│ 													let _lh_findk_LH_C_0³⁰ = 	
-//│ 														let _lh_findk_LH_P2_0³⁰ = hx⁴⁹
-//│ 														in let _lh_findk_LH_P2_1³⁰ = hy³⁰
-//│ 														in (fun _lh_findk_LH_C_1⁴⁴ -> (fun _lh_findk_arg1⁶² -> (fun _lh_findk_arg2⁶² -> (fun _lh_findk_arg3⁶² -> if ((_lh_findk_LH_P2_0³⁰ + _lh_findk_LH_P2_1³⁰) >= _lh_findk_arg3⁶²) then findk₀₆((_lh_findk_arg1⁶² + 1), _lh_findk_arg1⁶², (_lh_findk_LH_P2_0³⁰ + _lh_findk_LH_P2_1³⁰), _lh_findk_LH_C_1⁴⁴) else findk₀₆((_lh_findk_arg1⁶² + 1), _lh_findk_arg2⁶², _lh_findk_arg3⁶², _lh_findk_LH_C_1⁴⁴)))))
-//│ 													in let _lh_findk_LH_C_1⁴³ = zip₀₆(tx⁴⁹, ty³⁰)
-//│ 													in (fun _lh_findk_arg2⁶¹ -> (fun _lh_findk_arg1⁶¹ -> (fun _lh_findk_arg3⁶¹ -> _lh_findk_LH_C_0³⁰(_lh_findk_LH_C_1⁴³, _lh_findk_arg1⁶¹, _lh_findk_arg2⁶¹, _lh_findk_arg3⁶¹))))))))
+//│ 													let _lh_findk_LH_C_0³⁰ = lazy⁰(
+//│ 														let _lh_findk_LH_P2_0³⁰ = lazy⁰(hx⁴⁹)
+//│ 														in let _lh_findk_LH_P2_1³⁰ = lazy⁰(force⁰(hy³⁰))
+//│ 														in (fun _lh_findk_LH_C_1⁴⁴ -> (fun _lh_findk_arg1⁶² -> (fun _lh_findk_arg2⁶² -> (fun _lh_findk_arg3⁶² -> if ((force⁰(_lh_findk_LH_P2_0³⁰) + force⁰(_lh_findk_LH_P2_1³⁰)) >= _lh_findk_arg3⁶²) then findk₀₆((_lh_findk_arg1⁶² + 1), _lh_findk_arg1⁶², (force⁰(_lh_findk_LH_P2_0³⁰) + force⁰(_lh_findk_LH_P2_1³⁰)), _lh_findk_LH_C_1⁴⁴) else findk₀₆((_lh_findk_arg1⁶² + 1), _lh_findk_arg2⁶², _lh_findk_arg3⁶², _lh_findk_LH_C_1⁴⁴))))))
+//│ 													in let _lh_findk_LH_C_1⁴³ = lazy⁰(zip₀₆(tx⁴⁹, force⁰(ty³⁰)))
+//│ 													in (fun _lh_findk_arg2⁶¹ -> (fun _lh_findk_arg1⁶¹ -> (fun _lh_findk_arg3⁶¹ -> force⁰(_lh_findk_LH_C_0³⁰, force⁰(_lh_findk_LH_C_1⁴³), _lh_findk_arg1⁶¹, _lh_findk_arg2⁶¹, _lh_findk_arg3⁶¹))))))))
 //│ 										| LH_N  => (fun a⁹⁴ -> a⁹⁴)}
 //│ 								def snd₁₁₀(_lh_snd_arg1⁶³) = 
 //│ 									case _lh_snd_arg1⁶³ of {
 //│ 										LH_P2 _lh_snd_LH_P2_0¹² _lh_snd_LH_P2_1¹² => _lh_snd_LH_P2_1¹²
 //│ 										| _  => error⁰}
 //│ 						def algb₁₁₁(_lh_algb_arg1⁵⁹, _lh_algb_arg2⁵⁹) = 
-//│ 							let h¹⁴⁹ = 0
-//│ 							in let t¹⁷¹ = algb1₁₁₁(_lh_algb_arg1⁵⁹, 
+//│ 							let h¹⁴⁹ = lazy⁰(0)
+//│ 							in let t¹⁷¹ = lazy⁰(algb1₁₁₁(_lh_algb_arg1⁵⁹, 
 //│ 								let _lh_listcomp_fun⁸⁴ = (fun _lh_listcomp_fun_para⁵⁹ -> _lh_listcomp_fun_para⁵⁹(_lh_listcomp_fun⁸⁴))
-//│ 								in _lh_listcomp_fun⁸⁴(_lh_algb_arg2⁵⁹))
-//│ 							in (fun a¹³⁵ -> reverse_helper₀₇(t¹⁷¹, 
-//│ 								let hy⁴³ = h¹⁴⁹
-//│ 								in let ty⁴³ = a¹³⁵
+//│ 								in _lh_listcomp_fun⁸⁴(_lh_algb_arg2⁵⁹)))
+//│ 							in (fun a¹³⁵ -> reverse_helper₀₇(force⁰(t¹⁷¹), 
+//│ 								let hy⁴³ = lazy⁰(force⁰(h¹⁴⁹))
+//│ 								in let ty⁴³ = lazy⁰(a¹³⁵)
 //│ 								in (fun hx⁸⁶ -> (fun tx⁸⁶ -> 
-//│ 									let _lh_findk_LH_C_0⁴³ = 	
-//│ 										let _lh_findk_LH_P2_0⁴³ = hx⁸⁶
-//│ 										in let _lh_findk_LH_P2_1⁴³ = hy⁴³
-//│ 										in (fun _lh_findk_LH_C_1⁷⁰ -> (fun _lh_findk_arg1¹¹⁶ -> (fun _lh_findk_arg2¹¹⁶ -> (fun _lh_findk_arg3¹¹⁶ -> if ((_lh_findk_LH_P2_0⁴³ + _lh_findk_LH_P2_1⁴³) >= _lh_findk_arg3¹¹⁶) then findk₀₇((_lh_findk_arg1¹¹⁶ + 1), _lh_findk_arg1¹¹⁶, (_lh_findk_LH_P2_0⁴³ + _lh_findk_LH_P2_1⁴³), _lh_findk_LH_C_1⁷⁰) else findk₀₇((_lh_findk_arg1¹¹⁶ + 1), _lh_findk_arg2¹¹⁶, _lh_findk_arg3¹¹⁶, _lh_findk_LH_C_1⁷⁰)))))
-//│ 									in let _lh_findk_LH_C_1⁶⁹ = zip₀₇(tx⁸⁶, ty⁴³)
-//│ 									in (fun _lh_findk_arg2¹¹⁵ -> (fun _lh_findk_arg1¹¹⁵ -> (fun _lh_findk_arg3¹¹⁵ -> _lh_findk_LH_C_0⁴³(_lh_findk_LH_C_1⁶⁹, _lh_findk_arg1¹¹⁵, _lh_findk_arg2¹¹⁵, _lh_findk_arg3¹¹⁵))))))))
+//│ 									let _lh_findk_LH_C_0⁴³ = lazy⁰(
+//│ 										let _lh_findk_LH_P2_0⁴³ = lazy⁰(hx⁸⁶)
+//│ 										in let _lh_findk_LH_P2_1⁴³ = lazy⁰(force⁰(hy⁴³))
+//│ 										in (fun _lh_findk_LH_C_1⁷⁰ -> (fun _lh_findk_arg1¹¹⁶ -> (fun _lh_findk_arg2¹¹⁶ -> (fun _lh_findk_arg3¹¹⁶ -> if ((force⁰(_lh_findk_LH_P2_0⁴³) + force⁰(_lh_findk_LH_P2_1⁴³)) >= _lh_findk_arg3¹¹⁶) then findk₀₇((_lh_findk_arg1¹¹⁶ + 1), _lh_findk_arg1¹¹⁶, (force⁰(_lh_findk_LH_P2_0⁴³) + force⁰(_lh_findk_LH_P2_1⁴³)), _lh_findk_LH_C_1⁷⁰) else findk₀₇((_lh_findk_arg1¹¹⁶ + 1), _lh_findk_arg2¹¹⁶, _lh_findk_arg3¹¹⁶, _lh_findk_LH_C_1⁷⁰))))))
+//│ 									in let _lh_findk_LH_C_1⁶⁹ = lazy⁰(zip₀₇(tx⁸⁶, force⁰(ty⁴³)))
+//│ 									in (fun _lh_findk_arg2¹¹⁵ -> (fun _lh_findk_arg1¹¹⁵ -> (fun _lh_findk_arg3¹¹⁵ -> force⁰(_lh_findk_LH_C_0⁴³, force⁰(_lh_findk_LH_C_1⁶⁹), _lh_findk_arg1¹¹⁵, _lh_findk_arg2¹¹⁵, _lh_findk_arg3¹¹⁵))))))))
 //│ 							where
 //│ 							def algb1₁₁₁(_lh_algb1_arg1⁴³, _lh_algb1_arg2⁵²) = 
 //│ 								_lh_algb1_arg1⁴³(_lh_algb1_arg2⁵²)
@@ -13549,18 +13549,18 @@ testLCSS_nofib $ primId 0
 //│ 								def map₁₁₁(f³⁶, ls¹⁸³) = 
 //│ 									case ls¹⁸³ of {
 //│ 										LH_C h⁴⁶ t⁵⁵ => 
-//│ 											let h¹²⁶ = f³⁶(h⁴⁶)
-//│ 											in let t¹⁴⁰ = map₁₁₁(f³⁶, t⁵⁵)
-//│ 											in (fun a⁶⁵ -> reverse_helper₀₇(t¹⁴⁰, 
-//│ 												let hy²⁰ = h¹²⁶
-//│ 												in let ty²⁰ = a⁶⁵
+//│ 											let h¹²⁶ = lazy⁰(f³⁶(h⁴⁶))
+//│ 											in let t¹⁴⁰ = lazy⁰(map₁₁₁(f³⁶, t⁵⁵))
+//│ 											in (fun a⁶⁵ -> reverse_helper₀₇(force⁰(t¹⁴⁰), 
+//│ 												let hy²⁰ = lazy⁰(force⁰(h¹²⁶))
+//│ 												in let ty²⁰ = lazy⁰(a⁶⁵)
 //│ 												in (fun hx²¹ -> (fun tx²¹ -> 
-//│ 													let _lh_findk_LH_C_0²⁰ = 	
-//│ 														let _lh_findk_LH_P2_0²⁰ = hx²¹
-//│ 														in let _lh_findk_LH_P2_1²⁰ = hy²⁰
-//│ 														in (fun _lh_findk_LH_C_1²⁴ -> (fun _lh_findk_arg1²⁵ -> (fun _lh_findk_arg2²⁵ -> (fun _lh_findk_arg3²⁵ -> if ((_lh_findk_LH_P2_0²⁰ + _lh_findk_LH_P2_1²⁰) >= _lh_findk_arg3²⁵) then findk₀₇((_lh_findk_arg1²⁵ + 1), _lh_findk_arg1²⁵, (_lh_findk_LH_P2_0²⁰ + _lh_findk_LH_P2_1²⁰), _lh_findk_LH_C_1²⁴) else findk₀₇((_lh_findk_arg1²⁵ + 1), _lh_findk_arg2²⁵, _lh_findk_arg3²⁵, _lh_findk_LH_C_1²⁴)))))
-//│ 													in let _lh_findk_LH_C_1²³ = zip₀₇(tx²¹, ty²⁰)
-//│ 													in (fun _lh_findk_arg2²⁴ -> (fun _lh_findk_arg1²⁴ -> (fun _lh_findk_arg3²⁴ -> _lh_findk_LH_C_0²⁰(_lh_findk_LH_C_1²³, _lh_findk_arg1²⁴, _lh_findk_arg2²⁴, _lh_findk_arg3²⁴))))))))
+//│ 													let _lh_findk_LH_C_0²⁰ = lazy⁰(
+//│ 														let _lh_findk_LH_P2_0²⁰ = lazy⁰(hx²¹)
+//│ 														in let _lh_findk_LH_P2_1²⁰ = lazy⁰(force⁰(hy²⁰))
+//│ 														in (fun _lh_findk_LH_C_1²⁴ -> (fun _lh_findk_arg1²⁵ -> (fun _lh_findk_arg2²⁵ -> (fun _lh_findk_arg3²⁵ -> if ((force⁰(_lh_findk_LH_P2_0²⁰) + force⁰(_lh_findk_LH_P2_1²⁰)) >= _lh_findk_arg3²⁵) then findk₀₇((_lh_findk_arg1²⁵ + 1), _lh_findk_arg1²⁵, (force⁰(_lh_findk_LH_P2_0²⁰) + force⁰(_lh_findk_LH_P2_1²⁰)), _lh_findk_LH_C_1²⁴) else findk₀₇((_lh_findk_arg1²⁵ + 1), _lh_findk_arg2²⁵, _lh_findk_arg3²⁵, _lh_findk_LH_C_1²⁴))))))
+//│ 													in let _lh_findk_LH_C_1²³ = lazy⁰(zip₀₇(tx²¹, force⁰(ty²⁰)))
+//│ 													in (fun _lh_findk_arg2²⁴ -> (fun _lh_findk_arg1²⁴ -> (fun _lh_findk_arg3²⁴ -> force⁰(_lh_findk_LH_C_0²⁰, force⁰(_lh_findk_LH_C_1²³), _lh_findk_arg1²⁴, _lh_findk_arg2²⁴, _lh_findk_arg3²⁴))))))))
 //│ 										| LH_N  => (fun a⁶⁶ -> a⁶⁶)}
 //│ 								def snd₁₁₁(_lh_snd_arg1⁴⁹) = 
 //│ 									case _lh_snd_arg1⁴⁹ of {
@@ -13607,9 +13607,9 @@ testLCSS_nofib $ primId 0
 //│ 							def reverse_helper₁₆(ls¹⁸², a⁶⁴) = 
 //│ 								case ls¹⁸² of {
 //│ 									LH_C h⁹¹ t¹⁰¹ => reverse_helper₁₆(t¹⁰¹, 
-//│ 										let _lh_algb1_LH_C_0³⁶ = h⁹¹
-//│ 										in let _lh_algb1_LH_C_1³⁶ = a⁶⁴
-//│ 										in (fun _lh_algb1_arg2³⁷ -> algb1₁₁₀(_lh_algb1_LH_C_1³⁶, algb2₁₁₀(_lh_algb1_LH_C_0³⁶, 0, 0, _lh_algb1_arg2³⁷))))
+//│ 										let _lh_algb1_LH_C_0³⁶ = lazy⁰(h⁹¹)
+//│ 										in let _lh_algb1_LH_C_1³⁶ = lazy⁰(a⁶⁴)
+//│ 										in (fun _lh_algb1_arg2³⁷ -> algb1₁₁₀(force⁰(_lh_algb1_LH_C_1³⁶), algb2₁₁₀(force⁰(_lh_algb1_LH_C_0³⁶), 0, 0, _lh_algb1_arg2³⁷))))
 //│ 									| LH_N  => a⁶⁴}
 //│ 						def reverse₁₇(ls²⁹¹) = 
 //│ 							reverse_helper₁₇(ls²⁹¹, (fun _lh_algb1_arg2⁷⁸ -> map₁₁₁(snd₁₁₁, _lh_algb1_arg2⁷⁸)))
@@ -13617,9 +13617,9 @@ testLCSS_nofib $ primId 0
 //│ 							def reverse_helper₁₇(ls¹⁸⁰, a⁶⁰) = 
 //│ 								case ls¹⁸⁰ of {
 //│ 									LH_C h⁴³ t⁵¹ => reverse_helper₁₇(t⁵¹, 
-//│ 										let _lh_algb1_LH_C_0³⁵ = h⁴³
-//│ 										in let _lh_algb1_LH_C_1³⁵ = a⁶⁰
-//│ 										in (fun _lh_algb1_arg2³⁵ -> algb1₁₁₁(_lh_algb1_LH_C_1³⁵, algb2₁₁₁(_lh_algb1_LH_C_0³⁵, 0, 0, _lh_algb1_arg2³⁵))))
+//│ 										let _lh_algb1_LH_C_0³⁵ = lazy⁰(h⁴³)
+//│ 										in let _lh_algb1_LH_C_1³⁵ = lazy⁰(a⁶⁰)
+//│ 										in (fun _lh_algb1_arg2³⁵ -> algb1₁₁₁(force⁰(_lh_algb1_LH_C_1³⁵), algb2₁₁₁(force⁰(_lh_algb1_LH_C_0³⁵), 0, 0, _lh_algb1_arg2³⁵))))
 //│ 									| LH_N  => a⁶⁰}
 //│ 						def reverse₂₆(ls³²²) = 
 //│ 							reverse_helper₂₆(ls³²², (fun _lh_listcomp_fun⁹¹ -> [LH_N]))
@@ -13627,9 +13627,9 @@ testLCSS_nofib $ primId 0
 //│ 							def reverse_helper₂₆(ls²³⁹, a⁹⁸) = 
 //│ 								case ls²³⁹ of {
 //│ 									LH_C h²⁹ t³⁵ => reverse_helper₂₆(t³⁵, 
-//│ 										let _lh_listcomp_fun_ls_h³⁸ = h²⁹
-//│ 										in let _lh_listcomp_fun_ls_t³⁸ = a⁹⁸
-//│ 										in (fun _lh_listcomp_fun⁵⁸ -> [LH_C [LH_P2 _lh_listcomp_fun_ls_h³⁸ 0] _lh_listcomp_fun⁵⁸(_lh_listcomp_fun_ls_t³⁸)]))
+//│ 										let _lh_listcomp_fun_ls_h³⁸ = lazy⁰(h²⁹)
+//│ 										in let _lh_listcomp_fun_ls_t³⁸ = lazy⁰(a⁹⁸)
+//│ 										in (fun _lh_listcomp_fun⁵⁸ -> [LH_C [LH_P2 force⁰(_lh_listcomp_fun_ls_h³⁸) 0] _lh_listcomp_fun⁵⁸(force⁰(_lh_listcomp_fun_ls_t³⁸))]))
 //│ 									| LH_N  => a⁹⁸}
 //│ 						def reverse₂₇(ls³⁰⁷) = 
 //│ 							reverse_helper₂₇(ls³⁰⁷, (fun _lh_listcomp_fun⁸² -> [LH_N]))
@@ -13637,9 +13637,9 @@ testLCSS_nofib $ primId 0
 //│ 							def reverse_helper₂₇(ls²²⁵, a⁹²) = 
 //│ 								case ls²²⁵ of {
 //│ 									LH_C h³² t³⁹ => reverse_helper₂₇(t³⁹, 
-//│ 										let _lh_listcomp_fun_ls_h³⁷ = h³²
-//│ 										in let _lh_listcomp_fun_ls_t³⁷ = a⁹²
-//│ 										in (fun _lh_listcomp_fun⁵² -> [LH_C [LH_P2 _lh_listcomp_fun_ls_h³⁷ 0] _lh_listcomp_fun⁵²(_lh_listcomp_fun_ls_t³⁷)]))
+//│ 										let _lh_listcomp_fun_ls_h³⁷ = lazy⁰(h³²)
+//│ 										in let _lh_listcomp_fun_ls_t³⁷ = lazy⁰(a⁹²)
+//│ 										in (fun _lh_listcomp_fun⁵² -> [LH_C [LH_P2 force⁰(_lh_listcomp_fun_ls_h³⁷) 0] _lh_listcomp_fun⁵²(force⁰(_lh_listcomp_fun_ls_t³⁷))]))
 //│ 									| LH_N  => a⁹²}
 //│ 						def take₀₆(n⁵¹, ls²⁶⁷) = 
 //│ 							if (n⁵¹ > 0) then case ls²⁶⁷ of {
@@ -13702,9 +13702,9 @@ testLCSS_nofib $ primId 0
 //│ 						def reverse_helper₁₈(ls²⁵⁹, a¹⁰⁷) = 
 //│ 							case ls²⁵⁹ of {
 //│ 								LH_C h⁹² t¹⁰² => reverse_helper₁₈(t¹⁰², 
-//│ 									let _lh_algb1_LH_C_0⁴³ = h⁹²
-//│ 									in let _lh_algb1_LH_C_1⁴³ = a¹⁰⁷
-//│ 									in (fun _lh_algb1_arg2⁶⁸ -> algb1₁₄(_lh_algb1_LH_C_1⁴³, algb2₁₄(_lh_algb1_LH_C_0⁴³, 0, 0, _lh_algb1_arg2⁶⁸))))
+//│ 									let _lh_algb1_LH_C_0⁴³ = lazy⁰(h⁹²)
+//│ 									in let _lh_algb1_LH_C_1⁴³ = lazy⁰(a¹⁰⁷)
+//│ 									in (fun _lh_algb1_arg2⁶⁸ -> algb1₁₄(force⁰(_lh_algb1_LH_C_1⁴³), algb2₁₄(force⁰(_lh_algb1_LH_C_0⁴³), 0, 0, _lh_algb1_arg2⁶⁸))))
 //│ 								| LH_N  => a¹⁰⁷}
 //│ 					def reverse₁₉(ls²²⁷) = 
 //│ 						reverse_helper₁₉(ls²²⁷, (fun _lh_algb1_arg2⁵⁵ -> map₁₅(snd₁₅, _lh_algb1_arg2⁵⁵)))
@@ -13712,9 +13712,9 @@ testLCSS_nofib $ primId 0
 //│ 						def reverse_helper₁₉(ls²⁹⁴, a¹²⁸) = 
 //│ 							case ls²⁹⁴ of {
 //│ 								LH_C h¹²² t¹³⁵ => reverse_helper₁₉(t¹³⁵, 
-//│ 									let _lh_algb1_LH_C_0⁴⁷ = h¹²²
-//│ 									in let _lh_algb1_LH_C_1⁴⁷ = a¹²⁸
-//│ 									in (fun _lh_algb1_arg2⁸³ -> algb1₁₅(_lh_algb1_LH_C_1⁴⁷, algb2₁₅(_lh_algb1_LH_C_0⁴⁷, 0, 0, _lh_algb1_arg2⁸³))))
+//│ 									let _lh_algb1_LH_C_0⁴⁷ = lazy⁰(h¹²²)
+//│ 									in let _lh_algb1_LH_C_1⁴⁷ = lazy⁰(a¹²⁸)
+//│ 									in (fun _lh_algb1_arg2⁸³ -> algb1₁₅(force⁰(_lh_algb1_LH_C_1⁴⁷), algb2₁₅(force⁰(_lh_algb1_LH_C_0⁴⁷), 0, 0, _lh_algb1_arg2⁸³))))
 //│ 								| LH_N  => a¹²⁸}
 //│ 					def reverse₂₈(ls²⁸⁹) = 
 //│ 						reverse_helper₂₈(ls²⁸⁹, (fun _lh_listcomp_fun⁷⁷ -> [LH_N]))
@@ -13722,9 +13722,9 @@ testLCSS_nofib $ primId 0
 //│ 						def reverse_helper₂₈(ls²⁵⁴, a¹⁰⁴) = 
 //│ 							case ls²⁵⁴ of {
 //│ 								LH_C h⁷⁸ t⁸⁸ => reverse_helper₂₈(t⁸⁸, 
-//│ 									let _lh_listcomp_fun_ls_h⁴⁰ = h⁷⁸
-//│ 									in let _lh_listcomp_fun_ls_t⁴⁰ = a¹⁰⁴
-//│ 									in (fun _lh_listcomp_fun⁶³ -> [LH_C [LH_P2 _lh_listcomp_fun_ls_h⁴⁰ 0] _lh_listcomp_fun⁶³(_lh_listcomp_fun_ls_t⁴⁰)]))
+//│ 									let _lh_listcomp_fun_ls_h⁴⁰ = lazy⁰(h⁷⁸)
+//│ 									in let _lh_listcomp_fun_ls_t⁴⁰ = lazy⁰(a¹⁰⁴)
+//│ 									in (fun _lh_listcomp_fun⁶³ -> [LH_C [LH_P2 force⁰(_lh_listcomp_fun_ls_h⁴⁰) 0] _lh_listcomp_fun⁶³(force⁰(_lh_listcomp_fun_ls_t⁴⁰))]))
 //│ 								| LH_N  => a¹⁰⁴}
 //│ 					def reverse₂₉(ls²³³) = 
 //│ 						reverse_helper₂₉(ls²³³, (fun _lh_listcomp_fun⁵⁵ -> [LH_N]))
@@ -13732,9 +13732,9 @@ testLCSS_nofib $ primId 0
 //│ 						def reverse_helper₂₉(ls³²⁰, a¹⁴⁰) = 
 //│ 							case ls³²⁰ of {
 //│ 								LH_C h¹⁵ t¹⁹ => reverse_helper₂₉(t¹⁹, 
-//│ 									let _lh_listcomp_fun_ls_h⁴⁶ = h¹⁵
-//│ 									in let _lh_listcomp_fun_ls_t⁴⁶ = a¹⁴⁰
-//│ 									in (fun _lh_listcomp_fun⁸⁸ -> [LH_C [LH_P2 _lh_listcomp_fun_ls_h⁴⁶ 0] _lh_listcomp_fun⁸⁸(_lh_listcomp_fun_ls_t⁴⁶)]))
+//│ 									let _lh_listcomp_fun_ls_h⁴⁶ = lazy⁰(h¹⁵)
+//│ 									in let _lh_listcomp_fun_ls_t⁴⁶ = lazy⁰(a¹⁴⁰)
+//│ 									in (fun _lh_listcomp_fun⁸⁸ -> [LH_C [LH_P2 force⁰(_lh_listcomp_fun_ls_h⁴⁶) 0] _lh_listcomp_fun⁸⁸(force⁰(_lh_listcomp_fun_ls_t⁴⁶))]))
 //│ 								| LH_N  => a¹⁴⁰}
 //│ 					def take₀₈(n³⁷, ls²⁰⁰) = 
 //│ 						if (n³⁷ > 0) then case ls²⁰⁰ of {
@@ -13780,13 +13780,13 @@ testLCSS_nofib $ primId 0
 //│ 								in (fun _lh_funcomp_x²⁹ -> algc₀₆(m2²⁹, k²⁹, xs1²⁹, take₁₁₁(k²⁹, _lh_algc_arg4¹⁴), algc₀₆((_lh_algc_arg1¹⁴ - m2²⁹), (_lh_algc_arg2¹⁴ - k²⁹), xs2²⁹, drop₁₁₁(k²⁹, _lh_algc_arg4¹⁴), _lh_funcomp_x²⁹)))}}
 //│ 					where
 //│ 					def algb₀₁₂(_lh_algb_arg1⁴⁶, _lh_algb_arg2⁴⁶) = 
-//│ 						let hx⁴⁸ = 0
-//│ 						in let tx⁴⁸ = algb1₀₁₂(_lh_algb_arg1⁴⁶, 
+//│ 						let hx⁴⁸ = lazy⁰(0)
+//│ 						in let tx⁴⁸ = lazy⁰(algb1₀₁₂(_lh_algb_arg1⁴⁶, 
 //│ 							let _lh_listcomp_fun⁵⁴ = (fun _lh_listcomp_fun_para⁴⁶ -> case _lh_listcomp_fun_para⁴⁶ of {
 //│ 								LH_C _lh_listcomp_fun_ls_h³¹ _lh_listcomp_fun_ls_t³¹ => [LH_C [LH_P2 _lh_listcomp_fun_ls_h³¹ 0] _lh_listcomp_fun⁵⁴(_lh_listcomp_fun_ls_t³¹)]
 //│ 								| LH_N  => [LH_N]})
-//│ 							in _lh_listcomp_fun⁵⁴(_lh_algb_arg2⁴⁶))
-//│ 						in (fun ys³⁶ -> ys³⁶(hx⁴⁸, tx⁴⁸))
+//│ 							in _lh_listcomp_fun⁵⁴(_lh_algb_arg2⁴⁶)))
+//│ 						in (fun ys³⁶ -> ys³⁶(force⁰(hx⁴⁸), force⁰(tx⁴⁸)))
 //│ 						where
 //│ 						def algb1₀₁₂(_lh_algb1_arg1⁴², _lh_algb1_arg2⁴⁸) = 
 //│ 							case _lh_algb1_arg1⁴² of {
@@ -13809,22 +13809,22 @@ testLCSS_nofib $ primId 0
 //│ 							def map₀₁₂(f⁴¹, ls²⁰⁷) = 
 //│ 								case ls²⁰⁷ of {
 //│ 									LH_C h⁵⁹ t⁶⁸ => 
-//│ 										let hx³³ = f⁴¹(h⁵⁹)
-//│ 										in let tx³³ = map₀₁₂(f⁴¹, t⁶⁸)
-//│ 										in (fun ys²⁹ -> ys²⁹(hx³³, tx³³))
+//│ 										let hx³³ = lazy⁰(f⁴¹(h⁵⁹))
+//│ 										in let tx³³ = lazy⁰(map₀₁₂(f⁴¹, t⁶⁸))
+//│ 										in (fun ys²⁹ -> ys²⁹(force⁰(hx³³), force⁰(tx³³)))
 //│ 									| LH_N  => (fun ys³⁰ -> (fun _lh_findk_arg2⁴¹ -> (fun _lh_findk_arg1⁴¹ -> (fun _lh_findk_arg3⁴¹ -> _lh_findk_arg2⁴¹))))}
 //│ 							def snd₀₁₂(_lh_snd_arg1⁶⁴) = 
 //│ 								case _lh_snd_arg1⁶⁴ of {
 //│ 									LH_P2 _lh_snd_LH_P2_0²¹ _lh_snd_LH_P2_1²¹ => _lh_snd_LH_P2_1²¹
 //│ 									| _  => error⁰}
 //│ 					def algb₀₁₃(_lh_algb_arg1⁴⁸, _lh_algb_arg2⁴⁸) = 
-//│ 						let hx⁵⁶ = 0
-//│ 						in let tx⁵⁶ = algb1₀₁₃(_lh_algb_arg1⁴⁸, 
+//│ 						let hx⁵⁶ = lazy⁰(0)
+//│ 						in let tx⁵⁶ = lazy⁰(algb1₀₁₃(_lh_algb_arg1⁴⁸, 
 //│ 							let _lh_listcomp_fun⁵⁹ = (fun _lh_listcomp_fun_para⁴⁸ -> case _lh_listcomp_fun_para⁴⁸ of {
 //│ 								LH_C _lh_listcomp_fun_ls_h²⁵ _lh_listcomp_fun_ls_t²⁵ => [LH_C [LH_P2 _lh_listcomp_fun_ls_h²⁵ 0] _lh_listcomp_fun⁵⁹(_lh_listcomp_fun_ls_t²⁵)]
 //│ 								| LH_N  => [LH_N]})
-//│ 							in _lh_listcomp_fun⁵⁹(_lh_algb_arg2⁴⁸))
-//│ 						in (fun ys⁴⁵ -> ys⁴⁵(hx⁵⁶, tx⁵⁶))
+//│ 							in _lh_listcomp_fun⁵⁹(_lh_algb_arg2⁴⁸)))
+//│ 						in (fun ys⁴⁵ -> ys⁴⁵(force⁰(hx⁵⁶), force⁰(tx⁵⁶)))
 //│ 						where
 //│ 						def algb1₀₁₃(_lh_algb1_arg1³⁴, _lh_algb1_arg2³⁶) = 
 //│ 							case _lh_algb1_arg1³⁴ of {
@@ -13847,29 +13847,29 @@ testLCSS_nofib $ primId 0
 //│ 							def map₀₁₃(f³⁹, ls¹⁹⁷) = 
 //│ 								case ls¹⁹⁷ of {
 //│ 									LH_C h²³ t²⁸ => 
-//│ 										let hx²⁹ = f³⁹(h²³)
-//│ 										in let tx²⁹ = map₀₁₃(f³⁹, t²⁸)
-//│ 										in (fun ys²³ -> ys²³(hx²⁹, tx²⁹))
+//│ 										let hx²⁹ = lazy⁰(f³⁹(h²³))
+//│ 										in let tx²⁹ = lazy⁰(map₀₁₃(f³⁹, t²⁸))
+//│ 										in (fun ys²³ -> ys²³(force⁰(hx²⁹), force⁰(tx²⁹)))
 //│ 									| LH_N  => (fun ys²⁴ -> (fun _lh_findk_arg2³⁷ -> (fun _lh_findk_arg1³⁷ -> (fun _lh_findk_arg3³⁷ -> _lh_findk_arg2³⁷))))}
 //│ 							def snd₀₁₃(_lh_snd_arg1⁶²) = 
 //│ 								case _lh_snd_arg1⁶² of {
 //│ 									LH_P2 _lh_snd_LH_P2_0⁵ _lh_snd_LH_P2_1⁵ => _lh_snd_LH_P2_1⁵
 //│ 									| _  => error⁰}
 //│ 					def algb₁₁₂(_lh_algb_arg1⁵³, _lh_algb_arg2⁵³) = 
-//│ 						let h¹⁴³ = 0
-//│ 						in let t¹⁶⁵ = algb1₁₁₂(_lh_algb_arg1⁵³, 
+//│ 						let h¹⁴³ = lazy⁰(0)
+//│ 						in let t¹⁶⁵ = lazy⁰(algb1₁₁₂(_lh_algb_arg1⁵³, 
 //│ 							let _lh_listcomp_fun⁷² = (fun _lh_listcomp_fun_para⁵³ -> _lh_listcomp_fun_para⁵³(_lh_listcomp_fun⁷²))
-//│ 							in _lh_listcomp_fun⁷²(_lh_algb_arg2⁵³))
-//│ 						in (fun a¹¹⁹ -> reverse_helper₀₁₀(t¹⁶⁵, 
-//│ 							let hy³⁷ = h¹⁴³
-//│ 							in let ty³⁷ = a¹¹⁹
+//│ 							in _lh_listcomp_fun⁷²(_lh_algb_arg2⁵³)))
+//│ 						in (fun a¹¹⁹ -> reverse_helper₀₁₀(force⁰(t¹⁶⁵), 
+//│ 							let hy³⁷ = lazy⁰(force⁰(h¹⁴³))
+//│ 							in let ty³⁷ = lazy⁰(a¹¹⁹)
 //│ 							in (fun hx⁷⁰ -> (fun tx⁷⁰ -> 
-//│ 								let _lh_findk_LH_C_0³⁷ = 	
-//│ 									let _lh_findk_LH_P2_0³⁷ = hx⁷⁰
-//│ 									in let _lh_findk_LH_P2_1³⁷ = hy³⁷
-//│ 									in (fun _lh_findk_LH_C_1⁵⁸ -> (fun _lh_findk_arg1⁹¹ -> (fun _lh_findk_arg2⁹¹ -> (fun _lh_findk_arg3⁹¹ -> if ((_lh_findk_LH_P2_0³⁷ + _lh_findk_LH_P2_1³⁷) >= _lh_findk_arg3⁹¹) then findk₀₁₀((_lh_findk_arg1⁹¹ + 1), _lh_findk_arg1⁹¹, (_lh_findk_LH_P2_0³⁷ + _lh_findk_LH_P2_1³⁷), _lh_findk_LH_C_1⁵⁸) else findk₀₁₀((_lh_findk_arg1⁹¹ + 1), _lh_findk_arg2⁹¹, _lh_findk_arg3⁹¹, _lh_findk_LH_C_1⁵⁸)))))
-//│ 								in let _lh_findk_LH_C_1⁵⁷ = zip₀₁₀(tx⁷⁰, ty³⁷)
-//│ 								in (fun _lh_findk_arg2⁹⁰ -> (fun _lh_findk_arg1⁹⁰ -> (fun _lh_findk_arg3⁹⁰ -> _lh_findk_LH_C_0³⁷(_lh_findk_LH_C_1⁵⁷, _lh_findk_arg1⁹⁰, _lh_findk_arg2⁹⁰, _lh_findk_arg3⁹⁰))))))))
+//│ 								let _lh_findk_LH_C_0³⁷ = lazy⁰(
+//│ 									let _lh_findk_LH_P2_0³⁷ = lazy⁰(hx⁷⁰)
+//│ 									in let _lh_findk_LH_P2_1³⁷ = lazy⁰(force⁰(hy³⁷))
+//│ 									in (fun _lh_findk_LH_C_1⁵⁸ -> (fun _lh_findk_arg1⁹¹ -> (fun _lh_findk_arg2⁹¹ -> (fun _lh_findk_arg3⁹¹ -> if ((force⁰(_lh_findk_LH_P2_0³⁷) + force⁰(_lh_findk_LH_P2_1³⁷)) >= _lh_findk_arg3⁹¹) then findk₀₁₀((_lh_findk_arg1⁹¹ + 1), _lh_findk_arg1⁹¹, (force⁰(_lh_findk_LH_P2_0³⁷) + force⁰(_lh_findk_LH_P2_1³⁷)), _lh_findk_LH_C_1⁵⁸) else findk₀₁₀((_lh_findk_arg1⁹¹ + 1), _lh_findk_arg2⁹¹, _lh_findk_arg3⁹¹, _lh_findk_LH_C_1⁵⁸))))))
+//│ 								in let _lh_findk_LH_C_1⁵⁷ = lazy⁰(zip₀₁₀(tx⁷⁰, force⁰(ty³⁷)))
+//│ 								in (fun _lh_findk_arg2⁹⁰ -> (fun _lh_findk_arg1⁹⁰ -> (fun _lh_findk_arg3⁹⁰ -> force⁰(_lh_findk_LH_C_0³⁷, force⁰(_lh_findk_LH_C_1⁵⁷), _lh_findk_arg1⁹⁰, _lh_findk_arg2⁹⁰, _lh_findk_arg3⁹⁰))))))))
 //│ 						where
 //│ 						def algb1₁₁₂(_lh_algb1_arg1⁵⁸, _lh_algb1_arg2⁸⁸) = 
 //│ 							_lh_algb1_arg1⁵⁸(_lh_algb1_arg2⁸⁸)
@@ -13889,38 +13889,38 @@ testLCSS_nofib $ primId 0
 //│ 							def map₁₁₂(f³⁵, ls¹⁸¹) = 
 //│ 								case ls¹⁸¹ of {
 //│ 									LH_C h⁸¹ t⁹¹ => 
-//│ 										let h¹²⁴ = f³⁵(h⁸¹)
-//│ 										in let t¹³⁸ = map₁₁₂(f³⁵, t⁹¹)
-//│ 										in (fun a⁶¹ -> reverse_helper₀₁₀(t¹³⁸, 
-//│ 											let hy¹⁸ = h¹²⁴
-//│ 											in let ty¹⁸ = a⁶¹
+//│ 										let h¹²⁴ = lazy⁰(f³⁵(h⁸¹))
+//│ 										in let t¹³⁸ = lazy⁰(map₁₁₂(f³⁵, t⁹¹))
+//│ 										in (fun a⁶¹ -> reverse_helper₀₁₀(force⁰(t¹³⁸), 
+//│ 											let hy¹⁸ = lazy⁰(force⁰(h¹²⁴))
+//│ 											in let ty¹⁸ = lazy⁰(a⁶¹)
 //│ 											in (fun hx¹⁹ -> (fun tx¹⁹ -> 
-//│ 												let _lh_findk_LH_C_0¹⁸ = 	
-//│ 													let _lh_findk_LH_P2_0¹⁸ = hx¹⁹
-//│ 													in let _lh_findk_LH_P2_1¹⁸ = hy¹⁸
-//│ 													in (fun _lh_findk_LH_C_1²⁰ -> (fun _lh_findk_arg1²¹ -> (fun _lh_findk_arg2²¹ -> (fun _lh_findk_arg3²¹ -> if ((_lh_findk_LH_P2_0¹⁸ + _lh_findk_LH_P2_1¹⁸) >= _lh_findk_arg3²¹) then findk₀₁₀((_lh_findk_arg1²¹ + 1), _lh_findk_arg1²¹, (_lh_findk_LH_P2_0¹⁸ + _lh_findk_LH_P2_1¹⁸), _lh_findk_LH_C_1²⁰) else findk₀₁₀((_lh_findk_arg1²¹ + 1), _lh_findk_arg2²¹, _lh_findk_arg3²¹, _lh_findk_LH_C_1²⁰)))))
-//│ 												in let _lh_findk_LH_C_1¹⁹ = zip₀₁₀(tx¹⁹, ty¹⁸)
-//│ 												in (fun _lh_findk_arg2²⁰ -> (fun _lh_findk_arg1²⁰ -> (fun _lh_findk_arg3²⁰ -> _lh_findk_LH_C_0¹⁸(_lh_findk_LH_C_1¹⁹, _lh_findk_arg1²⁰, _lh_findk_arg2²⁰, _lh_findk_arg3²⁰))))))))
+//│ 												let _lh_findk_LH_C_0¹⁸ = lazy⁰(
+//│ 													let _lh_findk_LH_P2_0¹⁸ = lazy⁰(hx¹⁹)
+//│ 													in let _lh_findk_LH_P2_1¹⁸ = lazy⁰(force⁰(hy¹⁸))
+//│ 													in (fun _lh_findk_LH_C_1²⁰ -> (fun _lh_findk_arg1²¹ -> (fun _lh_findk_arg2²¹ -> (fun _lh_findk_arg3²¹ -> if ((force⁰(_lh_findk_LH_P2_0¹⁸) + force⁰(_lh_findk_LH_P2_1¹⁸)) >= _lh_findk_arg3²¹) then findk₀₁₀((_lh_findk_arg1²¹ + 1), _lh_findk_arg1²¹, (force⁰(_lh_findk_LH_P2_0¹⁸) + force⁰(_lh_findk_LH_P2_1¹⁸)), _lh_findk_LH_C_1²⁰) else findk₀₁₀((_lh_findk_arg1²¹ + 1), _lh_findk_arg2²¹, _lh_findk_arg3²¹, _lh_findk_LH_C_1²⁰))))))
+//│ 												in let _lh_findk_LH_C_1¹⁹ = lazy⁰(zip₀₁₀(tx¹⁹, force⁰(ty¹⁸)))
+//│ 												in (fun _lh_findk_arg2²⁰ -> (fun _lh_findk_arg1²⁰ -> (fun _lh_findk_arg3²⁰ -> force⁰(_lh_findk_LH_C_0¹⁸, force⁰(_lh_findk_LH_C_1¹⁹), _lh_findk_arg1²⁰, _lh_findk_arg2²⁰, _lh_findk_arg3²⁰))))))))
 //│ 									| LH_N  => (fun a⁶² -> a⁶²)}
 //│ 							def snd₁₁₂(_lh_snd_arg1⁴¹) = 
 //│ 								case _lh_snd_arg1⁴¹ of {
 //│ 									LH_P2 _lh_snd_LH_P2_0²⁶ _lh_snd_LH_P2_1²⁶ => _lh_snd_LH_P2_1²⁶
 //│ 									| _  => error⁰}
 //│ 					def algb₁₁₃(_lh_algb_arg1³⁷, _lh_algb_arg2³⁷) = 
-//│ 						let h¹²⁹ = 0
-//│ 						in let t¹⁴⁵ = algb1₁₁₃(_lh_algb_arg1³⁷, 
+//│ 						let h¹²⁹ = lazy⁰(0)
+//│ 						in let t¹⁴⁵ = lazy⁰(algb1₁₁₃(_lh_algb_arg1³⁷, 
 //│ 							let _lh_listcomp_fun⁴⁰ = (fun _lh_listcomp_fun_para³⁷ -> _lh_listcomp_fun_para³⁷(_lh_listcomp_fun⁴⁰))
-//│ 							in _lh_listcomp_fun⁴⁰(_lh_algb_arg2³⁷))
-//│ 						in (fun a⁷² -> reverse_helper₀₁₁(t¹⁴⁵, 
-//│ 							let hy²³ = h¹²⁹
-//│ 							in let ty²³ = a⁷²
+//│ 							in _lh_listcomp_fun⁴⁰(_lh_algb_arg2³⁷)))
+//│ 						in (fun a⁷² -> reverse_helper₀₁₁(force⁰(t¹⁴⁵), 
+//│ 							let hy²³ = lazy⁰(force⁰(h¹²⁹))
+//│ 							in let ty²³ = lazy⁰(a⁷²)
 //│ 							in (fun hx²⁶ -> (fun tx²⁶ -> 
-//│ 								let _lh_findk_LH_C_0²³ = 	
-//│ 									let _lh_findk_LH_P2_0²³ = hx²⁶
-//│ 									in let _lh_findk_LH_P2_1²³ = hy²³
-//│ 									in (fun _lh_findk_LH_C_1³⁰ -> (fun _lh_findk_arg1³³ -> (fun _lh_findk_arg2³³ -> (fun _lh_findk_arg3³³ -> if ((_lh_findk_LH_P2_0²³ + _lh_findk_LH_P2_1²³) >= _lh_findk_arg3³³) then findk₀₁₁((_lh_findk_arg1³³ + 1), _lh_findk_arg1³³, (_lh_findk_LH_P2_0²³ + _lh_findk_LH_P2_1²³), _lh_findk_LH_C_1³⁰) else findk₀₁₁((_lh_findk_arg1³³ + 1), _lh_findk_arg2³³, _lh_findk_arg3³³, _lh_findk_LH_C_1³⁰)))))
-//│ 								in let _lh_findk_LH_C_1²⁹ = zip₀₁₁(tx²⁶, ty²³)
-//│ 								in (fun _lh_findk_arg2³² -> (fun _lh_findk_arg1³² -> (fun _lh_findk_arg3³² -> _lh_findk_LH_C_0²³(_lh_findk_LH_C_1²⁹, _lh_findk_arg1³², _lh_findk_arg2³², _lh_findk_arg3³²))))))))
+//│ 								let _lh_findk_LH_C_0²³ = lazy⁰(
+//│ 									let _lh_findk_LH_P2_0²³ = lazy⁰(hx²⁶)
+//│ 									in let _lh_findk_LH_P2_1²³ = lazy⁰(force⁰(hy²³))
+//│ 									in (fun _lh_findk_LH_C_1³⁰ -> (fun _lh_findk_arg1³³ -> (fun _lh_findk_arg2³³ -> (fun _lh_findk_arg3³³ -> if ((force⁰(_lh_findk_LH_P2_0²³) + force⁰(_lh_findk_LH_P2_1²³)) >= _lh_findk_arg3³³) then findk₀₁₁((_lh_findk_arg1³³ + 1), _lh_findk_arg1³³, (force⁰(_lh_findk_LH_P2_0²³) + force⁰(_lh_findk_LH_P2_1²³)), _lh_findk_LH_C_1³⁰) else findk₀₁₁((_lh_findk_arg1³³ + 1), _lh_findk_arg2³³, _lh_findk_arg3³³, _lh_findk_LH_C_1³⁰))))))
+//│ 								in let _lh_findk_LH_C_1²⁹ = lazy⁰(zip₀₁₁(tx²⁶, force⁰(ty²³)))
+//│ 								in (fun _lh_findk_arg2³² -> (fun _lh_findk_arg1³² -> (fun _lh_findk_arg3³² -> force⁰(_lh_findk_LH_C_0²³, force⁰(_lh_findk_LH_C_1²⁹), _lh_findk_arg1³², _lh_findk_arg2³², _lh_findk_arg3³²))))))))
 //│ 						where
 //│ 						def algb1₁₁₃(_lh_algb1_arg1⁴¹, _lh_algb1_arg2⁴⁷) = 
 //│ 							_lh_algb1_arg1⁴¹(_lh_algb1_arg2⁴⁷)
@@ -13940,18 +13940,18 @@ testLCSS_nofib $ primId 0
 //│ 							def map₁₁₃(f⁴⁶, ls²³⁷) = 
 //│ 								case ls²³⁷ of {
 //│ 									LH_C h⁶⁰ t⁶⁹ => 
-//│ 										let h¹³⁸ = f⁴⁶(h⁶⁰)
-//│ 										in let t¹⁵⁸ = map₁₁₃(f⁴⁶, t⁶⁹)
-//│ 										in (fun a⁹⁶ -> reverse_helper₀₁₁(t¹⁵⁸, 
-//│ 											let hy³² = h¹³⁸
-//│ 											in let ty³² = a⁹⁶
+//│ 										let h¹³⁸ = lazy⁰(f⁴⁶(h⁶⁰))
+//│ 										in let t¹⁵⁸ = lazy⁰(map₁₁₃(f⁴⁶, t⁶⁹))
+//│ 										in (fun a⁹⁶ -> reverse_helper₀₁₁(force⁰(t¹⁵⁸), 
+//│ 											let hy³² = lazy⁰(force⁰(h¹³⁸))
+//│ 											in let ty³² = lazy⁰(a⁹⁶)
 //│ 											in (fun hx⁵² -> (fun tx⁵² -> 
-//│ 												let _lh_findk_LH_C_0³² = 	
-//│ 													let _lh_findk_LH_P2_0³² = hx⁵²
-//│ 													in let _lh_findk_LH_P2_1³² = hy³²
-//│ 													in (fun _lh_findk_LH_C_1⁴⁸ -> (fun _lh_findk_arg1⁶⁷ -> (fun _lh_findk_arg2⁶⁷ -> (fun _lh_findk_arg3⁶⁷ -> if ((_lh_findk_LH_P2_0³² + _lh_findk_LH_P2_1³²) >= _lh_findk_arg3⁶⁷) then findk₀₁₁((_lh_findk_arg1⁶⁷ + 1), _lh_findk_arg1⁶⁷, (_lh_findk_LH_P2_0³² + _lh_findk_LH_P2_1³²), _lh_findk_LH_C_1⁴⁸) else findk₀₁₁((_lh_findk_arg1⁶⁷ + 1), _lh_findk_arg2⁶⁷, _lh_findk_arg3⁶⁷, _lh_findk_LH_C_1⁴⁸)))))
-//│ 												in let _lh_findk_LH_C_1⁴⁷ = zip₀₁₁(tx⁵², ty³²)
-//│ 												in (fun _lh_findk_arg2⁶⁶ -> (fun _lh_findk_arg1⁶⁶ -> (fun _lh_findk_arg3⁶⁶ -> _lh_findk_LH_C_0³²(_lh_findk_LH_C_1⁴⁷, _lh_findk_arg1⁶⁶, _lh_findk_arg2⁶⁶, _lh_findk_arg3⁶⁶))))))))
+//│ 												let _lh_findk_LH_C_0³² = lazy⁰(
+//│ 													let _lh_findk_LH_P2_0³² = lazy⁰(hx⁵²)
+//│ 													in let _lh_findk_LH_P2_1³² = lazy⁰(force⁰(hy³²))
+//│ 													in (fun _lh_findk_LH_C_1⁴⁸ -> (fun _lh_findk_arg1⁶⁷ -> (fun _lh_findk_arg2⁶⁷ -> (fun _lh_findk_arg3⁶⁷ -> if ((force⁰(_lh_findk_LH_P2_0³²) + force⁰(_lh_findk_LH_P2_1³²)) >= _lh_findk_arg3⁶⁷) then findk₀₁₁((_lh_findk_arg1⁶⁷ + 1), _lh_findk_arg1⁶⁷, (force⁰(_lh_findk_LH_P2_0³²) + force⁰(_lh_findk_LH_P2_1³²)), _lh_findk_LH_C_1⁴⁸) else findk₀₁₁((_lh_findk_arg1⁶⁷ + 1), _lh_findk_arg2⁶⁷, _lh_findk_arg3⁶⁷, _lh_findk_LH_C_1⁴⁸))))))
+//│ 												in let _lh_findk_LH_C_1⁴⁷ = lazy⁰(zip₀₁₁(tx⁵², force⁰(ty³²)))
+//│ 												in (fun _lh_findk_arg2⁶⁶ -> (fun _lh_findk_arg1⁶⁶ -> (fun _lh_findk_arg3⁶⁶ -> force⁰(_lh_findk_LH_C_0³², force⁰(_lh_findk_LH_C_1⁴⁷), _lh_findk_arg1⁶⁶, _lh_findk_arg2⁶⁶, _lh_findk_arg3⁶⁶))))))))
 //│ 									| LH_N  => (fun a⁹⁷ -> a⁹⁷)}
 //│ 							def snd₁₁₃(_lh_snd_arg1⁵²) = 
 //│ 								case _lh_snd_arg1⁵² of {
@@ -13998,9 +13998,9 @@ testLCSS_nofib $ primId 0
 //│ 						def reverse_helper₁₁₀(ls³¹⁷, a¹³⁹) = 
 //│ 							case ls³¹⁷ of {
 //│ 								LH_C h⁴⁰ t⁴⁸ => reverse_helper₁₁₀(t⁴⁸, 
-//│ 									let _lh_algb1_LH_C_0⁴⁹ = h⁴⁰
-//│ 									in let _lh_algb1_LH_C_1⁴⁹ = a¹³⁹
-//│ 									in (fun _lh_algb1_arg2⁸⁹ -> algb1₁₁₂(_lh_algb1_LH_C_1⁴⁹, algb2₁₁₂(_lh_algb1_LH_C_0⁴⁹, 0, 0, _lh_algb1_arg2⁸⁹))))
+//│ 									let _lh_algb1_LH_C_0⁴⁹ = lazy⁰(h⁴⁰)
+//│ 									in let _lh_algb1_LH_C_1⁴⁹ = lazy⁰(a¹³⁹)
+//│ 									in (fun _lh_algb1_arg2⁸⁹ -> algb1₁₁₂(force⁰(_lh_algb1_LH_C_1⁴⁹), algb2₁₁₂(force⁰(_lh_algb1_LH_C_0⁴⁹), 0, 0, _lh_algb1_arg2⁸⁹))))
 //│ 								| LH_N  => a¹³⁹}
 //│ 					def reverse₁₁₁(ls²⁵⁸) = 
 //│ 						reverse_helper₁₁₁(ls²⁵⁸, (fun _lh_algb1_arg2⁶⁷ -> map₁₁₃(snd₁₁₃, _lh_algb1_arg2⁶⁷)))
@@ -14008,9 +14008,9 @@ testLCSS_nofib $ primId 0
 //│ 						def reverse_helper₁₁₁(ls²⁴⁸, a¹⁰²) = 
 //│ 							case ls²⁴⁸ of {
 //│ 								LH_C h⁷³ t⁸³ => reverse_helper₁₁₁(t⁸³, 
-//│ 									let _lh_algb1_LH_C_0⁴¹ = h⁷³
-//│ 									in let _lh_algb1_LH_C_1⁴¹ = a¹⁰²
-//│ 									in (fun _lh_algb1_arg2⁶² -> algb1₁₁₃(_lh_algb1_LH_C_1⁴¹, algb2₁₁₃(_lh_algb1_LH_C_0⁴¹, 0, 0, _lh_algb1_arg2⁶²))))
+//│ 									let _lh_algb1_LH_C_0⁴¹ = lazy⁰(h⁷³)
+//│ 									in let _lh_algb1_LH_C_1⁴¹ = lazy⁰(a¹⁰²)
+//│ 									in (fun _lh_algb1_arg2⁶² -> algb1₁₁₃(force⁰(_lh_algb1_LH_C_1⁴¹), algb2₁₁₃(force⁰(_lh_algb1_LH_C_0⁴¹), 0, 0, _lh_algb1_arg2⁶²))))
 //│ 								| LH_N  => a¹⁰²}
 //│ 					def reverse₂₁₀(ls¹⁷⁵) = 
 //│ 						reverse_helper₂₁₀(ls¹⁷⁵, (fun _lh_listcomp_fun³⁶ -> [LH_N]))
@@ -14018,9 +14018,9 @@ testLCSS_nofib $ primId 0
 //│ 						def reverse_helper₂₁₀(ls²⁹⁰, a¹²⁶) = 
 //│ 							case ls²⁹⁰ of {
 //│ 								LH_C h⁸⁵ t⁹⁵ => reverse_helper₂₁₀(t⁹⁵, 
-//│ 									let _lh_listcomp_fun_ls_h⁴⁵ = h⁸⁵
-//│ 									in let _lh_listcomp_fun_ls_t⁴⁵ = a¹²⁶
-//│ 									in (fun _lh_listcomp_fun⁷⁸ -> [LH_C [LH_P2 _lh_listcomp_fun_ls_h⁴⁵ 0] _lh_listcomp_fun⁷⁸(_lh_listcomp_fun_ls_t⁴⁵)]))
+//│ 									let _lh_listcomp_fun_ls_h⁴⁵ = lazy⁰(h⁸⁵)
+//│ 									in let _lh_listcomp_fun_ls_t⁴⁵ = lazy⁰(a¹²⁶)
+//│ 									in (fun _lh_listcomp_fun⁷⁸ -> [LH_C [LH_P2 force⁰(_lh_listcomp_fun_ls_h⁴⁵) 0] _lh_listcomp_fun⁷⁸(force⁰(_lh_listcomp_fun_ls_t⁴⁵))]))
 //│ 								| LH_N  => a¹²⁶}
 //│ 					def reverse₂₁₁(ls³²⁹) = 
 //│ 						reverse_helper₂₁₁(ls³²⁹, (fun _lh_listcomp_fun⁹³ -> [LH_N]))
@@ -14028,9 +14028,9 @@ testLCSS_nofib $ primId 0
 //│ 						def reverse_helper₂₁₁(ls³³⁴, a¹⁵⁰) = 
 //│ 							case ls³³⁴ of {
 //│ 								LH_C h¹¹ t¹⁵ => reverse_helper₂₁₁(t¹⁵, 
-//│ 									let _lh_listcomp_fun_ls_h⁴⁹ = h¹¹
-//│ 									in let _lh_listcomp_fun_ls_t⁴⁹ = a¹⁵⁰
-//│ 									in (fun _lh_listcomp_fun⁹⁷ -> [LH_C [LH_P2 _lh_listcomp_fun_ls_h⁴⁹ 0] _lh_listcomp_fun⁹⁷(_lh_listcomp_fun_ls_t⁴⁹)]))
+//│ 									let _lh_listcomp_fun_ls_h⁴⁹ = lazy⁰(h¹¹)
+//│ 									in let _lh_listcomp_fun_ls_t⁴⁹ = lazy⁰(a¹⁵⁰)
+//│ 									in (fun _lh_listcomp_fun⁹⁷ -> [LH_C [LH_P2 force⁰(_lh_listcomp_fun_ls_h⁴⁹) 0] _lh_listcomp_fun⁹⁷(force⁰(_lh_listcomp_fun_ls_t⁴⁹))]))
 //│ 								| LH_N  => a¹⁵⁰}
 //│ 					def take₀₁₀(n⁴⁷, ls²⁵⁰) = 
 //│ 						if (n⁴⁷ > 0) then case ls²⁵⁰ of {
@@ -14076,13 +14076,13 @@ testLCSS_nofib $ primId 0
 //│ 								in (fun _lh_funcomp_x²¹ -> algc₀₇(m2²¹, k²¹, xs1²¹, take₁₁₃(k²¹, _lh_algc_arg4¹⁰), algc₀₇((_lh_algc_arg1¹⁰ - m2²¹), (_lh_algc_arg2¹⁰ - k²¹), xs2²¹, drop₁₁₃(k²¹, _lh_algc_arg4¹⁰), _lh_funcomp_x²¹)))}}
 //│ 					where
 //│ 					def algb₀₁₄(_lh_algb_arg1⁴³, _lh_algb_arg2⁴³) = 
-//│ 						let hx⁴⁰ = 0
-//│ 						in let tx⁴⁰ = algb1₀₁₄(_lh_algb_arg1⁴³, 
+//│ 						let hx⁴⁰ = lazy⁰(0)
+//│ 						in let tx⁴⁰ = lazy⁰(algb1₀₁₄(_lh_algb_arg1⁴³, 
 //│ 							let _lh_listcomp_fun⁵⁰ = (fun _lh_listcomp_fun_para⁴³ -> case _lh_listcomp_fun_para⁴³ of {
 //│ 								LH_C _lh_listcomp_fun_ls_h⁸ _lh_listcomp_fun_ls_t⁸ => [LH_C [LH_P2 _lh_listcomp_fun_ls_h⁸ 0] _lh_listcomp_fun⁵⁰(_lh_listcomp_fun_ls_t⁸)]
 //│ 								| LH_N  => [LH_N]})
-//│ 							in _lh_listcomp_fun⁵⁰(_lh_algb_arg2⁴³))
-//│ 						in (fun ys³³ -> ys³³(hx⁴⁰, tx⁴⁰))
+//│ 							in _lh_listcomp_fun⁵⁰(_lh_algb_arg2⁴³)))
+//│ 						in (fun ys³³ -> ys³³(force⁰(hx⁴⁰), force⁰(tx⁴⁰)))
 //│ 						where
 //│ 						def algb1₀₁₄(_lh_algb1_arg1⁵⁴, _lh_algb1_arg2⁸⁰) = 
 //│ 							case _lh_algb1_arg1⁵⁴ of {
@@ -14105,22 +14105,22 @@ testLCSS_nofib $ primId 0
 //│ 							def map₀₁₄(f⁵⁶, ls²⁹³) = 
 //│ 								case ls²⁹³ of {
 //│ 									LH_C h¹¹² t¹²² => 
-//│ 										let hx⁷⁶ = f⁵⁶(h¹¹²)
-//│ 										in let tx⁷⁶ = map₀₁₄(f⁵⁶, t¹²²)
-//│ 										in (fun ys⁶³ -> ys⁶³(hx⁷⁶, tx⁷⁶))
+//│ 										let hx⁷⁶ = lazy⁰(f⁵⁶(h¹¹²))
+//│ 										in let tx⁷⁶ = lazy⁰(map₀₁₄(f⁵⁶, t¹²²))
+//│ 										in (fun ys⁶³ -> ys⁶³(force⁰(hx⁷⁶), force⁰(tx⁷⁶)))
 //│ 									| LH_N  => (fun ys⁶⁴ -> (fun _lh_findk_arg2⁹⁹ -> (fun _lh_findk_arg1⁹⁹ -> (fun _lh_findk_arg3⁹⁹ -> _lh_findk_arg2⁹⁹))))}
 //│ 							def snd₀₁₄(_lh_snd_arg1³⁶) = 
 //│ 								case _lh_snd_arg1³⁶ of {
 //│ 									LH_P2 _lh_snd_LH_P2_0¹⁴ _lh_snd_LH_P2_1¹⁴ => _lh_snd_LH_P2_1¹⁴
 //│ 									| _  => error⁰}
 //│ 					def algb₀₁₅(_lh_algb_arg1⁵⁴, _lh_algb_arg2⁵⁴) = 
-//│ 						let hx⁷¹ = 0
-//│ 						in let tx⁷¹ = algb1₀₁₅(_lh_algb_arg1⁵⁴, 
+//│ 						let hx⁷¹ = lazy⁰(0)
+//│ 						in let tx⁷¹ = lazy⁰(algb1₀₁₅(_lh_algb_arg1⁵⁴, 
 //│ 							let _lh_listcomp_fun⁷⁴ = (fun _lh_listcomp_fun_para⁵⁴ -> case _lh_listcomp_fun_para⁵⁴ of {
 //│ 								LH_C _lh_listcomp_fun_ls_h²⁴ _lh_listcomp_fun_ls_t²⁴ => [LH_C [LH_P2 _lh_listcomp_fun_ls_h²⁴ 0] _lh_listcomp_fun⁷⁴(_lh_listcomp_fun_ls_t²⁴)]
 //│ 								| LH_N  => [LH_N]})
-//│ 							in _lh_listcomp_fun⁷⁴(_lh_algb_arg2⁵⁴))
-//│ 						in (fun ys⁶⁰ -> ys⁶⁰(hx⁷¹, tx⁷¹))
+//│ 							in _lh_listcomp_fun⁷⁴(_lh_algb_arg2⁵⁴)))
+//│ 						in (fun ys⁶⁰ -> ys⁶⁰(force⁰(hx⁷¹), force⁰(tx⁷¹)))
 //│ 						where
 //│ 						def algb1₀₁₅(_lh_algb1_arg1⁶⁵, _lh_algb1_arg2⁹⁷) = 
 //│ 							case _lh_algb1_arg1⁶⁵ of {
@@ -14143,29 +14143,29 @@ testLCSS_nofib $ primId 0
 //│ 							def map₀₁₅(f⁵², ls²⁷⁵) = 
 //│ 								case ls²⁷⁵ of {
 //│ 									LH_C h¹⁰⁴ t¹¹⁴ => 
-//│ 										let hx⁶⁶ = f⁵²(h¹⁰⁴)
-//│ 										in let tx⁶⁶ = map₀₁₅(f⁵², t¹¹⁴)
-//│ 										in (fun ys⁵⁶ -> ys⁵⁶(hx⁶⁶, tx⁶⁶))
+//│ 										let hx⁶⁶ = lazy⁰(f⁵²(h¹⁰⁴))
+//│ 										in let tx⁶⁶ = lazy⁰(map₀₁₅(f⁵², t¹¹⁴))
+//│ 										in (fun ys⁵⁶ -> ys⁵⁶(force⁰(hx⁶⁶), force⁰(tx⁶⁶)))
 //│ 									| LH_N  => (fun ys⁵⁷ -> (fun _lh_findk_arg2⁸⁴ -> (fun _lh_findk_arg1⁸⁴ -> (fun _lh_findk_arg3⁸⁴ -> _lh_findk_arg2⁸⁴))))}
 //│ 							def snd₀₁₅(_lh_snd_arg1³⁹) = 
 //│ 								case _lh_snd_arg1³⁹ of {
 //│ 									LH_P2 _lh_snd_LH_P2_0¹⁶ _lh_snd_LH_P2_1¹⁶ => _lh_snd_LH_P2_1¹⁶
 //│ 									| _  => error⁰}
 //│ 					def algb₁₁₄(_lh_algb_arg1³⁶, _lh_algb_arg2³⁶) = 
-//│ 						let h¹²⁷ = 0
-//│ 						in let t¹⁴² = algb1₁₁₄(_lh_algb_arg1³⁶, 
+//│ 						let h¹²⁷ = lazy⁰(0)
+//│ 						in let t¹⁴² = lazy⁰(algb1₁₁₄(_lh_algb_arg1³⁶, 
 //│ 							let _lh_listcomp_fun³⁹ = (fun _lh_listcomp_fun_para³⁶ -> _lh_listcomp_fun_para³⁶(_lh_listcomp_fun³⁹))
-//│ 							in _lh_listcomp_fun³⁹(_lh_algb_arg2³⁶))
-//│ 						in (fun a⁶⁸ -> reverse_helper₀₁₂(t¹⁴², 
-//│ 							let hy²¹ = h¹²⁷
-//│ 							in let ty²¹ = a⁶⁸
+//│ 							in _lh_listcomp_fun³⁹(_lh_algb_arg2³⁶)))
+//│ 						in (fun a⁶⁸ -> reverse_helper₀₁₂(force⁰(t¹⁴²), 
+//│ 							let hy²¹ = lazy⁰(force⁰(h¹²⁷))
+//│ 							in let ty²¹ = lazy⁰(a⁶⁸)
 //│ 							in (fun hx²² -> (fun tx²² -> 
-//│ 								let _lh_findk_LH_C_0²¹ = 	
-//│ 									let _lh_findk_LH_P2_0²¹ = hx²²
-//│ 									in let _lh_findk_LH_P2_1²¹ = hy²¹
-//│ 									in (fun _lh_findk_LH_C_1²⁶ -> (fun _lh_findk_arg1²⁷ -> (fun _lh_findk_arg2²⁷ -> (fun _lh_findk_arg3²⁷ -> if ((_lh_findk_LH_P2_0²¹ + _lh_findk_LH_P2_1²¹) >= _lh_findk_arg3²⁷) then findk₀₁₂((_lh_findk_arg1²⁷ + 1), _lh_findk_arg1²⁷, (_lh_findk_LH_P2_0²¹ + _lh_findk_LH_P2_1²¹), _lh_findk_LH_C_1²⁶) else findk₀₁₂((_lh_findk_arg1²⁷ + 1), _lh_findk_arg2²⁷, _lh_findk_arg3²⁷, _lh_findk_LH_C_1²⁶)))))
-//│ 								in let _lh_findk_LH_C_1²⁵ = zip₀₁₂(tx²², ty²¹)
-//│ 								in (fun _lh_findk_arg2²⁶ -> (fun _lh_findk_arg1²⁶ -> (fun _lh_findk_arg3²⁶ -> _lh_findk_LH_C_0²¹(_lh_findk_LH_C_1²⁵, _lh_findk_arg1²⁶, _lh_findk_arg2²⁶, _lh_findk_arg3²⁶))))))))
+//│ 								let _lh_findk_LH_C_0²¹ = lazy⁰(
+//│ 									let _lh_findk_LH_P2_0²¹ = lazy⁰(hx²²)
+//│ 									in let _lh_findk_LH_P2_1²¹ = lazy⁰(force⁰(hy²¹))
+//│ 									in (fun _lh_findk_LH_C_1²⁶ -> (fun _lh_findk_arg1²⁷ -> (fun _lh_findk_arg2²⁷ -> (fun _lh_findk_arg3²⁷ -> if ((force⁰(_lh_findk_LH_P2_0²¹) + force⁰(_lh_findk_LH_P2_1²¹)) >= _lh_findk_arg3²⁷) then findk₀₁₂((_lh_findk_arg1²⁷ + 1), _lh_findk_arg1²⁷, (force⁰(_lh_findk_LH_P2_0²¹) + force⁰(_lh_findk_LH_P2_1²¹)), _lh_findk_LH_C_1²⁶) else findk₀₁₂((_lh_findk_arg1²⁷ + 1), _lh_findk_arg2²⁷, _lh_findk_arg3²⁷, _lh_findk_LH_C_1²⁶))))))
+//│ 								in let _lh_findk_LH_C_1²⁵ = lazy⁰(zip₀₁₂(tx²², force⁰(ty²¹)))
+//│ 								in (fun _lh_findk_arg2²⁶ -> (fun _lh_findk_arg1²⁶ -> (fun _lh_findk_arg3²⁶ -> force⁰(_lh_findk_LH_C_0²¹, force⁰(_lh_findk_LH_C_1²⁵), _lh_findk_arg1²⁶, _lh_findk_arg2²⁶, _lh_findk_arg3²⁶))))))))
 //│ 						where
 //│ 						def algb1₁₁₄(_lh_algb1_arg1⁴⁷, _lh_algb1_arg2⁶³) = 
 //│ 							_lh_algb1_arg1⁴⁷(_lh_algb1_arg2⁶³)
@@ -14185,38 +14185,38 @@ testLCSS_nofib $ primId 0
 //│ 							def map₁₁₄(f⁶³, ls³¹⁵) = 
 //│ 								case ls³¹⁵ of {
 //│ 									LH_C h⁴² t⁵⁰ => 
-//│ 										let h¹⁵⁰ = f⁶³(h⁴²)
-//│ 										in let t¹⁷³ = map₁₁₄(f⁶³, t⁵⁰)
-//│ 										in (fun a¹³⁷ -> reverse_helper₀₁₂(t¹⁷³, 
-//│ 											let hy⁴⁴ = h¹⁵⁰
-//│ 											in let ty⁴⁴ = a¹³⁷
+//│ 										let h¹⁵⁰ = lazy⁰(f⁶³(h⁴²))
+//│ 										in let t¹⁷³ = lazy⁰(map₁₁₄(f⁶³, t⁵⁰))
+//│ 										in (fun a¹³⁷ -> reverse_helper₀₁₂(force⁰(t¹⁷³), 
+//│ 											let hy⁴⁴ = lazy⁰(force⁰(h¹⁵⁰))
+//│ 											in let ty⁴⁴ = lazy⁰(a¹³⁷)
 //│ 											in (fun hx⁸⁹ -> (fun tx⁸⁹ -> 
-//│ 												let _lh_findk_LH_C_0⁴⁴ = 	
-//│ 													let _lh_findk_LH_P2_0⁴⁴ = hx⁸⁹
-//│ 													in let _lh_findk_LH_P2_1⁴⁴ = hy⁴⁴
-//│ 													in (fun _lh_findk_LH_C_1⁷² -> (fun _lh_findk_arg1¹¹⁸ -> (fun _lh_findk_arg2¹¹⁸ -> (fun _lh_findk_arg3¹¹⁸ -> if ((_lh_findk_LH_P2_0⁴⁴ + _lh_findk_LH_P2_1⁴⁴) >= _lh_findk_arg3¹¹⁸) then findk₀₁₂((_lh_findk_arg1¹¹⁸ + 1), _lh_findk_arg1¹¹⁸, (_lh_findk_LH_P2_0⁴⁴ + _lh_findk_LH_P2_1⁴⁴), _lh_findk_LH_C_1⁷²) else findk₀₁₂((_lh_findk_arg1¹¹⁸ + 1), _lh_findk_arg2¹¹⁸, _lh_findk_arg3¹¹⁸, _lh_findk_LH_C_1⁷²)))))
-//│ 												in let _lh_findk_LH_C_1⁷¹ = zip₀₁₂(tx⁸⁹, ty⁴⁴)
-//│ 												in (fun _lh_findk_arg2¹¹⁷ -> (fun _lh_findk_arg1¹¹⁷ -> (fun _lh_findk_arg3¹¹⁷ -> _lh_findk_LH_C_0⁴⁴(_lh_findk_LH_C_1⁷¹, _lh_findk_arg1¹¹⁷, _lh_findk_arg2¹¹⁷, _lh_findk_arg3¹¹⁷))))))))
+//│ 												let _lh_findk_LH_C_0⁴⁴ = lazy⁰(
+//│ 													let _lh_findk_LH_P2_0⁴⁴ = lazy⁰(hx⁸⁹)
+//│ 													in let _lh_findk_LH_P2_1⁴⁴ = lazy⁰(force⁰(hy⁴⁴))
+//│ 													in (fun _lh_findk_LH_C_1⁷² -> (fun _lh_findk_arg1¹¹⁸ -> (fun _lh_findk_arg2¹¹⁸ -> (fun _lh_findk_arg3¹¹⁸ -> if ((force⁰(_lh_findk_LH_P2_0⁴⁴) + force⁰(_lh_findk_LH_P2_1⁴⁴)) >= _lh_findk_arg3¹¹⁸) then findk₀₁₂((_lh_findk_arg1¹¹⁸ + 1), _lh_findk_arg1¹¹⁸, (force⁰(_lh_findk_LH_P2_0⁴⁴) + force⁰(_lh_findk_LH_P2_1⁴⁴)), _lh_findk_LH_C_1⁷²) else findk₀₁₂((_lh_findk_arg1¹¹⁸ + 1), _lh_findk_arg2¹¹⁸, _lh_findk_arg3¹¹⁸, _lh_findk_LH_C_1⁷²))))))
+//│ 												in let _lh_findk_LH_C_1⁷¹ = lazy⁰(zip₀₁₂(tx⁸⁹, force⁰(ty⁴⁴)))
+//│ 												in (fun _lh_findk_arg2¹¹⁷ -> (fun _lh_findk_arg1¹¹⁷ -> (fun _lh_findk_arg3¹¹⁷ -> force⁰(_lh_findk_LH_C_0⁴⁴, force⁰(_lh_findk_LH_C_1⁷¹), _lh_findk_arg1¹¹⁷, _lh_findk_arg2¹¹⁷, _lh_findk_arg3¹¹⁷))))))))
 //│ 									| LH_N  => (fun a¹³⁸ -> a¹³⁸)}
 //│ 							def snd₁₁₄(_lh_snd_arg1⁵¹) = 
 //│ 								case _lh_snd_arg1⁵¹ of {
 //│ 									LH_P2 _lh_snd_LH_P2_0²⁰ _lh_snd_LH_P2_1²⁰ => _lh_snd_LH_P2_1²⁰
 //│ 									| _  => error⁰}
 //│ 					def algb₁₁₅(_lh_algb_arg1⁶⁵, _lh_algb_arg2⁶⁵) = 
-//│ 						let h¹⁵³ = 0
-//│ 						in let t¹⁷⁶ = algb1₁₁₅(_lh_algb_arg1⁶⁵, 
+//│ 						let h¹⁵³ = lazy⁰(0)
+//│ 						in let t¹⁷⁶ = lazy⁰(algb1₁₁₅(_lh_algb_arg1⁶⁵, 
 //│ 							let _lh_listcomp_fun⁹⁶ = (fun _lh_listcomp_fun_para⁶⁵ -> _lh_listcomp_fun_para⁶⁵(_lh_listcomp_fun⁹⁶))
-//│ 							in _lh_listcomp_fun⁹⁶(_lh_algb_arg2⁶⁵))
-//│ 						in (fun a¹⁴⁹ -> reverse_helper₀₁₃(t¹⁷⁶, 
-//│ 							let hy⁴⁷ = h¹⁵³
-//│ 							in let ty⁴⁷ = a¹⁴⁹
+//│ 							in _lh_listcomp_fun⁹⁶(_lh_algb_arg2⁶⁵)))
+//│ 						in (fun a¹⁴⁹ -> reverse_helper₀₁₃(force⁰(t¹⁷⁶), 
+//│ 							let hy⁴⁷ = lazy⁰(force⁰(h¹⁵³))
+//│ 							in let ty⁴⁷ = lazy⁰(a¹⁴⁹)
 //│ 							in (fun hx⁹⁵ -> (fun tx⁹⁵ -> 
-//│ 								let _lh_findk_LH_C_0⁴⁷ = 	
-//│ 									let _lh_findk_LH_P2_0⁴⁷ = hx⁹⁵
-//│ 									in let _lh_findk_LH_P2_1⁴⁷ = hy⁴⁷
-//│ 									in (fun _lh_findk_LH_C_1⁷⁸ -> (fun _lh_findk_arg1¹²⁵ -> (fun _lh_findk_arg2¹²⁵ -> (fun _lh_findk_arg3¹²⁵ -> if ((_lh_findk_LH_P2_0⁴⁷ + _lh_findk_LH_P2_1⁴⁷) >= _lh_findk_arg3¹²⁵) then findk₀₁₃((_lh_findk_arg1¹²⁵ + 1), _lh_findk_arg1¹²⁵, (_lh_findk_LH_P2_0⁴⁷ + _lh_findk_LH_P2_1⁴⁷), _lh_findk_LH_C_1⁷⁸) else findk₀₁₃((_lh_findk_arg1¹²⁵ + 1), _lh_findk_arg2¹²⁵, _lh_findk_arg3¹²⁵, _lh_findk_LH_C_1⁷⁸)))))
-//│ 								in let _lh_findk_LH_C_1⁷⁷ = zip₀₁₃(tx⁹⁵, ty⁴⁷)
-//│ 								in (fun _lh_findk_arg2¹²⁴ -> (fun _lh_findk_arg1¹²⁴ -> (fun _lh_findk_arg3¹²⁴ -> _lh_findk_LH_C_0⁴⁷(_lh_findk_LH_C_1⁷⁷, _lh_findk_arg1¹²⁴, _lh_findk_arg2¹²⁴, _lh_findk_arg3¹²⁴))))))))
+//│ 								let _lh_findk_LH_C_0⁴⁷ = lazy⁰(
+//│ 									let _lh_findk_LH_P2_0⁴⁷ = lazy⁰(hx⁹⁵)
+//│ 									in let _lh_findk_LH_P2_1⁴⁷ = lazy⁰(force⁰(hy⁴⁷))
+//│ 									in (fun _lh_findk_LH_C_1⁷⁸ -> (fun _lh_findk_arg1¹²⁵ -> (fun _lh_findk_arg2¹²⁵ -> (fun _lh_findk_arg3¹²⁵ -> if ((force⁰(_lh_findk_LH_P2_0⁴⁷) + force⁰(_lh_findk_LH_P2_1⁴⁷)) >= _lh_findk_arg3¹²⁵) then findk₀₁₃((_lh_findk_arg1¹²⁵ + 1), _lh_findk_arg1¹²⁵, (force⁰(_lh_findk_LH_P2_0⁴⁷) + force⁰(_lh_findk_LH_P2_1⁴⁷)), _lh_findk_LH_C_1⁷⁸) else findk₀₁₃((_lh_findk_arg1¹²⁵ + 1), _lh_findk_arg2¹²⁵, _lh_findk_arg3¹²⁵, _lh_findk_LH_C_1⁷⁸))))))
+//│ 								in let _lh_findk_LH_C_1⁷⁷ = lazy⁰(zip₀₁₃(tx⁹⁵, force⁰(ty⁴⁷)))
+//│ 								in (fun _lh_findk_arg2¹²⁴ -> (fun _lh_findk_arg1¹²⁴ -> (fun _lh_findk_arg3¹²⁴ -> force⁰(_lh_findk_LH_C_0⁴⁷, force⁰(_lh_findk_LH_C_1⁷⁷), _lh_findk_arg1¹²⁴, _lh_findk_arg2¹²⁴, _lh_findk_arg3¹²⁴))))))))
 //│ 						where
 //│ 						def algb1₁₁₅(_lh_algb1_arg1⁴⁹, _lh_algb1_arg2⁷⁰) = 
 //│ 							_lh_algb1_arg1⁴⁹(_lh_algb1_arg2⁷⁰)
@@ -14236,18 +14236,18 @@ testLCSS_nofib $ primId 0
 //│ 							def map₁₁₅(f³⁸, ls¹⁹⁶) = 
 //│ 								case ls¹⁹⁶ of {
 //│ 									LH_C h⁹⁰ t¹⁰⁰ => 
-//│ 										let h¹³⁰ = f³⁸(h⁹⁰)
-//│ 										in let t¹⁴⁷ = map₁₁₅(f³⁸, t¹⁰⁰)
-//│ 										in (fun a⁷⁵ -> reverse_helper₀₁₃(t¹⁴⁷, 
-//│ 											let hy²⁴ = h¹³⁰
-//│ 											in let ty²⁴ = a⁷⁵
+//│ 										let h¹³⁰ = lazy⁰(f³⁸(h⁹⁰))
+//│ 										in let t¹⁴⁷ = lazy⁰(map₁₁₅(f³⁸, t¹⁰⁰))
+//│ 										in (fun a⁷⁵ -> reverse_helper₀₁₃(force⁰(t¹⁴⁷), 
+//│ 											let hy²⁴ = lazy⁰(force⁰(h¹³⁰))
+//│ 											in let ty²⁴ = lazy⁰(a⁷⁵)
 //│ 											in (fun hx²⁸ -> (fun tx²⁸ -> 
-//│ 												let _lh_findk_LH_C_0²⁴ = 	
-//│ 													let _lh_findk_LH_P2_0²⁴ = hx²⁸
-//│ 													in let _lh_findk_LH_P2_1²⁴ = hy²⁴
-//│ 													in (fun _lh_findk_LH_C_1³² -> (fun _lh_findk_arg1³⁶ -> (fun _lh_findk_arg2³⁶ -> (fun _lh_findk_arg3³⁶ -> if ((_lh_findk_LH_P2_0²⁴ + _lh_findk_LH_P2_1²⁴) >= _lh_findk_arg3³⁶) then findk₀₁₃((_lh_findk_arg1³⁶ + 1), _lh_findk_arg1³⁶, (_lh_findk_LH_P2_0²⁴ + _lh_findk_LH_P2_1²⁴), _lh_findk_LH_C_1³²) else findk₀₁₃((_lh_findk_arg1³⁶ + 1), _lh_findk_arg2³⁶, _lh_findk_arg3³⁶, _lh_findk_LH_C_1³²)))))
-//│ 												in let _lh_findk_LH_C_1³¹ = zip₀₁₃(tx²⁸, ty²⁴)
-//│ 												in (fun _lh_findk_arg2³⁵ -> (fun _lh_findk_arg1³⁵ -> (fun _lh_findk_arg3³⁵ -> _lh_findk_LH_C_0²⁴(_lh_findk_LH_C_1³¹, _lh_findk_arg1³⁵, _lh_findk_arg2³⁵, _lh_findk_arg3³⁵))))))))
+//│ 												let _lh_findk_LH_C_0²⁴ = lazy⁰(
+//│ 													let _lh_findk_LH_P2_0²⁴ = lazy⁰(hx²⁸)
+//│ 													in let _lh_findk_LH_P2_1²⁴ = lazy⁰(force⁰(hy²⁴))
+//│ 													in (fun _lh_findk_LH_C_1³² -> (fun _lh_findk_arg1³⁶ -> (fun _lh_findk_arg2³⁶ -> (fun _lh_findk_arg3³⁶ -> if ((force⁰(_lh_findk_LH_P2_0²⁴) + force⁰(_lh_findk_LH_P2_1²⁴)) >= _lh_findk_arg3³⁶) then findk₀₁₃((_lh_findk_arg1³⁶ + 1), _lh_findk_arg1³⁶, (force⁰(_lh_findk_LH_P2_0²⁴) + force⁰(_lh_findk_LH_P2_1²⁴)), _lh_findk_LH_C_1³²) else findk₀₁₃((_lh_findk_arg1³⁶ + 1), _lh_findk_arg2³⁶, _lh_findk_arg3³⁶, _lh_findk_LH_C_1³²))))))
+//│ 												in let _lh_findk_LH_C_1³¹ = lazy⁰(zip₀₁₃(tx²⁸, force⁰(ty²⁴)))
+//│ 												in (fun _lh_findk_arg2³⁵ -> (fun _lh_findk_arg1³⁵ -> (fun _lh_findk_arg3³⁵ -> force⁰(_lh_findk_LH_C_0²⁴, force⁰(_lh_findk_LH_C_1³¹), _lh_findk_arg1³⁵, _lh_findk_arg2³⁵, _lh_findk_arg3³⁵))))))))
 //│ 									| LH_N  => (fun a⁷⁶ -> a⁷⁶)}
 //│ 							def snd₁₁₅(_lh_snd_arg1⁵⁷) = 
 //│ 								case _lh_snd_arg1⁵⁷ of {
@@ -14294,9 +14294,9 @@ testLCSS_nofib $ primId 0
 //│ 						def reverse_helper₁₁₂(ls²¹¹, a⁸⁵) = 
 //│ 							case ls²¹¹ of {
 //│ 								LH_C h²⁵ t³⁰ => reverse_helper₁₁₂(t³⁰, 
-//│ 									let _lh_algb1_LH_C_0³⁹ = h²⁵
-//│ 									in let _lh_algb1_LH_C_1³⁹ = a⁸⁵
-//│ 									in (fun _lh_algb1_arg2⁴⁹ -> algb1₁₁₄(_lh_algb1_LH_C_1³⁹, algb2₁₁₄(_lh_algb1_LH_C_0³⁹, 0, 0, _lh_algb1_arg2⁴⁹))))
+//│ 									let _lh_algb1_LH_C_0³⁹ = lazy⁰(h²⁵)
+//│ 									in let _lh_algb1_LH_C_1³⁹ = lazy⁰(a⁸⁵)
+//│ 									in (fun _lh_algb1_arg2⁴⁹ -> algb1₁₁₄(force⁰(_lh_algb1_LH_C_1³⁹), algb2₁₁₄(force⁰(_lh_algb1_LH_C_0³⁹), 0, 0, _lh_algb1_arg2⁴⁹))))
 //│ 								| LH_N  => a⁸⁵}
 //│ 					def reverse₁₁₃(ls²¹⁴) = 
 //│ 						reverse_helper₁₁₃(ls²¹⁴, (fun _lh_algb1_arg2⁵⁰ -> map₁₁₅(snd₁₁₅, _lh_algb1_arg2⁵⁰)))
@@ -14304,9 +14304,9 @@ testLCSS_nofib $ primId 0
 //│ 						def reverse_helper₁₁₃(ls²⁵¹, a¹⁰³) = 
 //│ 							case ls²⁵¹ of {
 //│ 								LH_C h⁴¹ t⁴⁹ => reverse_helper₁₁₃(t⁴⁹, 
-//│ 									let _lh_algb1_LH_C_0⁴² = h⁴¹
-//│ 									in let _lh_algb1_LH_C_1⁴² = a¹⁰³
-//│ 									in (fun _lh_algb1_arg2⁶⁵ -> algb1₁₁₅(_lh_algb1_LH_C_1⁴², algb2₁₁₅(_lh_algb1_LH_C_0⁴², 0, 0, _lh_algb1_arg2⁶⁵))))
+//│ 									let _lh_algb1_LH_C_0⁴² = lazy⁰(h⁴¹)
+//│ 									in let _lh_algb1_LH_C_1⁴² = lazy⁰(a¹⁰³)
+//│ 									in (fun _lh_algb1_arg2⁶⁵ -> algb1₁₁₅(force⁰(_lh_algb1_LH_C_1⁴²), algb2₁₁₅(force⁰(_lh_algb1_LH_C_0⁴²), 0, 0, _lh_algb1_arg2⁶⁵))))
 //│ 								| LH_N  => a¹⁰³}
 //│ 					def reverse₂₁₂(ls²³⁶) = 
 //│ 						reverse_helper₂₁₂(ls²³⁶, (fun _lh_listcomp_fun⁵⁷ -> [LH_N]))
@@ -14314,9 +14314,9 @@ testLCSS_nofib $ primId 0
 //│ 						def reverse_helper₂₁₂(ls²⁴⁷, a¹⁰¹) = 
 //│ 							case ls²⁴⁷ of {
 //│ 								LH_C h⁷⁷ t⁸⁷ => reverse_helper₂₁₂(t⁸⁷, 
-//│ 									let _lh_listcomp_fun_ls_h³⁹ = h⁷⁷
-//│ 									in let _lh_listcomp_fun_ls_t³⁹ = a¹⁰¹
-//│ 									in (fun _lh_listcomp_fun⁶⁰ -> [LH_C [LH_P2 _lh_listcomp_fun_ls_h³⁹ 0] _lh_listcomp_fun⁶⁰(_lh_listcomp_fun_ls_t³⁹)]))
+//│ 									let _lh_listcomp_fun_ls_h³⁹ = lazy⁰(h⁷⁷)
+//│ 									in let _lh_listcomp_fun_ls_t³⁹ = lazy⁰(a¹⁰¹)
+//│ 									in (fun _lh_listcomp_fun⁶⁰ -> [LH_C [LH_P2 force⁰(_lh_listcomp_fun_ls_h³⁹) 0] _lh_listcomp_fun⁶⁰(force⁰(_lh_listcomp_fun_ls_t³⁹))]))
 //│ 								| LH_N  => a¹⁰¹}
 //│ 					def reverse₂₁₃(ls¹⁸⁴) = 
 //│ 						reverse_helper₂₁₃(ls¹⁸⁴, (fun _lh_listcomp_fun³⁸ -> [LH_N]))
@@ -14324,9 +14324,9 @@ testLCSS_nofib $ primId 0
 //│ 						def reverse_helper₂₁₃(ls²⁸⁵, a¹²¹) = 
 //│ 							case ls²⁸⁵ of {
 //│ 								LH_C h⁵⁶ t⁶⁵ => reverse_helper₂₁₃(t⁶⁵, 
-//│ 									let _lh_listcomp_fun_ls_h⁴⁴ = h⁵⁶
-//│ 									in let _lh_listcomp_fun_ls_t⁴⁴ = a¹²¹
-//│ 									in (fun _lh_listcomp_fun⁷⁵ -> [LH_C [LH_P2 _lh_listcomp_fun_ls_h⁴⁴ 0] _lh_listcomp_fun⁷⁵(_lh_listcomp_fun_ls_t⁴⁴)]))
+//│ 									let _lh_listcomp_fun_ls_h⁴⁴ = lazy⁰(h⁵⁶)
+//│ 									in let _lh_listcomp_fun_ls_t⁴⁴ = lazy⁰(a¹²¹)
+//│ 									in (fun _lh_listcomp_fun⁷⁵ -> [LH_C [LH_P2 force⁰(_lh_listcomp_fun_ls_h⁴⁴) 0] _lh_listcomp_fun⁷⁵(force⁰(_lh_listcomp_fun_ls_t⁴⁴))]))
 //│ 								| LH_N  => a¹²¹}
 //│ 					def take₀₁₂(n⁴⁹, ls²⁶³) = 
 //│ 						if (n⁴⁹ > 0) then case ls²⁶³ of {
@@ -14389,9 +14389,9 @@ testLCSS_nofib $ primId 0
 //│ 					def reverse_helper₁₁₄(ls²⁷⁹, a¹¹⁵) = 
 //│ 						case ls²⁷⁹ of {
 //│ 							LH_C h⁸⁶ t⁹⁶ => reverse_helper₁₁₄(t⁹⁶, 
-//│ 								let _lh_algb1_LH_C_0⁴⁶ = h⁸⁶
-//│ 								in let _lh_algb1_LH_C_1⁴⁶ = a¹¹⁵
-//│ 								in (fun _lh_algb1_arg2⁷⁵ -> algb1₁₀(_lh_algb1_LH_C_1⁴⁶, algb2₁₀(_lh_algb1_LH_C_0⁴⁶, 0, 0, _lh_algb1_arg2⁷⁵))))
+//│ 								let _lh_algb1_LH_C_0⁴⁶ = lazy⁰(h⁸⁶)
+//│ 								in let _lh_algb1_LH_C_1⁴⁶ = lazy⁰(a¹¹⁵)
+//│ 								in (fun _lh_algb1_arg2⁷⁵ -> algb1₁₀(force⁰(_lh_algb1_LH_C_1⁴⁶), algb2₁₀(force⁰(_lh_algb1_LH_C_0⁴⁶), 0, 0, _lh_algb1_arg2⁷⁵))))
 //│ 							| LH_N  => a¹¹⁵}
 //│ 				def reverse₁₁₅(ls²¹⁸) = 
 //│ 					reverse_helper₁₁₅(ls²¹⁸, (fun _lh_algb1_arg2⁵¹ -> map₁₁(snd₁₁, _lh_algb1_arg2⁵¹)))
@@ -14399,9 +14399,9 @@ testLCSS_nofib $ primId 0
 //│ 					def reverse_helper₁₁₅(ls²⁷¹, a¹¹⁰) = 
 //│ 						case ls²⁷¹ of {
 //│ 							LH_C h⁶⁵ t⁷⁴ => reverse_helper₁₁₅(t⁷⁴, 
-//│ 								let _lh_algb1_LH_C_0⁴⁵ = h⁶⁵
-//│ 								in let _lh_algb1_LH_C_1⁴⁵ = a¹¹⁰
-//│ 								in (fun _lh_algb1_arg2⁷³ -> algb1₁₁(_lh_algb1_LH_C_1⁴⁵, algb2₁₁(_lh_algb1_LH_C_0⁴⁵, 0, 0, _lh_algb1_arg2⁷³))))
+//│ 								let _lh_algb1_LH_C_0⁴⁵ = lazy⁰(h⁶⁵)
+//│ 								in let _lh_algb1_LH_C_1⁴⁵ = lazy⁰(a¹¹⁰)
+//│ 								in (fun _lh_algb1_arg2⁷³ -> algb1₁₁(force⁰(_lh_algb1_LH_C_1⁴⁵), algb2₁₁(force⁰(_lh_algb1_LH_C_0⁴⁵), 0, 0, _lh_algb1_arg2⁷³))))
 //│ 							| LH_N  => a¹¹⁰}
 //│ 				def reverse₂₁₄(ls²⁶⁴) = 
 //│ 					reverse_helper₂₁₄(ls²⁶⁴, (fun _lh_listcomp_fun⁶⁶ -> [LH_N]))
@@ -14409,9 +14409,9 @@ testLCSS_nofib $ primId 0
 //│ 					def reverse_helper₂₁₄(ls³³³, a¹⁴⁸) = 
 //│ 						case ls³³³ of {
 //│ 							LH_C h⁴⁹ t⁵⁸ => reverse_helper₂₁₄(t⁵⁸, 
-//│ 								let _lh_listcomp_fun_ls_h⁴⁸ = h⁴⁹
-//│ 								in let _lh_listcomp_fun_ls_t⁴⁸ = a¹⁴⁸
-//│ 								in (fun _lh_listcomp_fun⁹⁵ -> [LH_C [LH_P2 _lh_listcomp_fun_ls_h⁴⁸ 0] _lh_listcomp_fun⁹⁵(_lh_listcomp_fun_ls_t⁴⁸)]))
+//│ 								let _lh_listcomp_fun_ls_h⁴⁸ = lazy⁰(h⁴⁹)
+//│ 								in let _lh_listcomp_fun_ls_t⁴⁸ = lazy⁰(a¹⁴⁸)
+//│ 								in (fun _lh_listcomp_fun⁹⁵ -> [LH_C [LH_P2 force⁰(_lh_listcomp_fun_ls_h⁴⁸) 0] _lh_listcomp_fun⁹⁵(force⁰(_lh_listcomp_fun_ls_t⁴⁸))]))
 //│ 							| LH_N  => a¹⁴⁸}
 //│ 				def reverse₂₁₅(ls²⁰⁸) = 
 //│ 					reverse_helper₂₁₅(ls²⁰⁸, (fun _lh_listcomp_fun⁴⁴ -> [LH_N]))
@@ -14419,9 +14419,9 @@ testLCSS_nofib $ primId 0
 //│ 					def reverse_helper₂₁₅(ls²¹⁰, a⁸⁴) = 
 //│ 						case ls²¹⁰ of {
 //│ 							LH_C h¹¹⁰ t¹²⁰ => reverse_helper₂₁₅(t¹²⁰, 
-//│ 								let _lh_listcomp_fun_ls_h³⁶ = h¹¹⁰
-//│ 								in let _lh_listcomp_fun_ls_t³⁶ = a⁸⁴
-//│ 								in (fun _lh_listcomp_fun⁴⁷ -> [LH_C [LH_P2 _lh_listcomp_fun_ls_h³⁶ 0] _lh_listcomp_fun⁴⁷(_lh_listcomp_fun_ls_t³⁶)]))
+//│ 								let _lh_listcomp_fun_ls_h³⁶ = lazy⁰(h¹¹⁰)
+//│ 								in let _lh_listcomp_fun_ls_t³⁶ = lazy⁰(a⁸⁴)
+//│ 								in (fun _lh_listcomp_fun⁴⁷ -> [LH_C [LH_P2 force⁰(_lh_listcomp_fun_ls_h³⁶) 0] _lh_listcomp_fun⁴⁷(force⁰(_lh_listcomp_fun_ls_t³⁶))]))
 //│ 							| LH_N  => a⁸⁴}
 //│ 				def take₀₁₄(n⁴², ls²¹⁹) = 
 //│ 					if (n⁴² > 0) then case ls²¹⁹ of {

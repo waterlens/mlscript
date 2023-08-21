@@ -65,9 +65,9 @@ last(C(1, C(2, N)))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ last₀([C 1 
-//│ 	let hh² = 2
-//│ 	in let tt² = (fun h³ -> [Some h³])
-//│ 	in (fun h² -> last₀([C hh² tt²]))])
+//│ 	let hh² = lazy⁰(2)
+//│ 	in let tt² = lazy⁰((fun h³ -> [Some h³]))
+//│ 	in (fun h² -> last₀([C force⁰(hh²) force⁰(tt²)]))])
 //│ def last₀(xs²) = 
 //│ 	case xs² of {
 //│ 		C h¹ t¹ => t¹(h¹)
@@ -77,72 +77,72 @@ last(C(1, C(2, N)))
 //│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
 //│ 
 //│ >>>>>>> expansion >>>>>>>
+//│ [last₀^11] (hopeless to continue)
 //│ [last₀^1] (hopeless to continue)
-//│ [last₀^7] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ last₀₀([C 1 
-//│ 	let hh¹ = 2
-//│ 	in let tt¹ = (fun h⁵ -> [Some h⁵])
-//│ 	in (fun h⁶ -> last₀₁([C hh¹ tt¹]))])
-//│ def last₀₀(xs²) = 
-//│ 	case xs² of {
-//│ 		C h⁴ t² => t²(h⁴)
-//│ 		| N  => [None]}
-//│ def last₀₁(xs¹) = 
+//│ last₀₁([C 1 
+//│ 	let hh¹ = lazy⁰(2)
+//│ 	in let tt¹ = lazy⁰((fun h⁵ -> [Some h⁵]))
+//│ 	in (fun h⁶ -> last₀₀([C force⁰(hh¹) force⁰(tt¹)]))])
+//│ def last₀₀(xs¹) = 
 //│ 	case xs¹ of {
 //│ 		C h³ t¹ => t¹(h³)
+//│ 		| N  => [None]}
+//│ def last₀₁(xs²) = 
+//│ 	case xs² of {
+//│ 		C h⁴ t² => t²(h⁴)
 //│ 		| N  => [None]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C hh¹ tt¹]: 47 --->
-//│ 	case xs¹ of {C h³ t¹ => t¹(h³) | N  => [None]}: 29
-//│ [C 1 let hh¹ = 2
-//│ in let tt¹ = (fun h⁵ -> [Some h⁵])
-//│ in (fun h⁶ -> last₀₁([C hh¹ tt¹]))]: 52 --->
-//│ 	case xs² of {C h⁴ t² => t²(h⁴) | N  => [None]}: 36
+//│ [C force⁰(hh¹) force⁰(tt¹)]: 63 --->
+//│ 	case xs¹ of {C h³ t¹ => t¹(h³) | N  => [None]}: 37
+//│ [C 1 let hh¹ = lazy⁰(2)
+//│ in let tt¹ = lazy⁰((fun h⁵ -> [Some h⁵]))
+//│ in (fun h⁶ -> last₀₀([C force⁰(hh¹) force⁰(tt¹)]))]: 68 --->
+//│ 	case xs² of {C h⁴ t² => t²(h⁴) | N  => [None]}: 44
 //│ ------------------
-//│ case xs¹ of {C h³ t¹ => t¹(h³) | N  => [None]}: 29 --->
-//│ 	[C hh¹ tt¹]: 47
-//│ case xs² of {C h⁴ t² => t²(h⁴) | N  => [None]}: 36 --->
-//│ 	[C 1 let hh¹ = 2
-//│ in let tt¹ = (fun h⁵ -> [Some h⁵])
-//│ in (fun h⁶ -> last₀₁([C hh¹ tt¹]))]: 52
+//│ case xs¹ of {C h³ t¹ => t¹(h³) | N  => [None]}: 37 --->
+//│ 	[C force⁰(hh¹) force⁰(tt¹)]: 63
+//│ case xs² of {C h⁴ t² => t²(h⁴) | N  => [None]}: 44 --->
+//│ 	[C 1 let hh¹ = lazy⁰(2)
+//│ in let tt¹ = lazy⁰((fun h⁵ -> [Some h⁵]))
+//│ in (fun h⁶ -> last₀₀([C force⁰(hh¹) force⁰(tt¹)]))]: 68
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C hh¹ tt¹]: 47 --->
-//│ 	case xs¹ of {C h³ t¹ => t¹(h³) | N  => [None]}: 29
-//│ [C 1 let hh¹ = 2
-//│ in let tt¹ = (fun h⁵ -> [Some h⁵])
-//│ in (fun h⁶ -> last₀₁([C hh¹ tt¹]))]: 52 --->
-//│ 	case xs² of {C h⁴ t² => t²(h⁴) | N  => [None]}: 36
+//│ [C force⁰(hh¹) force⁰(tt¹)]: 63 --->
+//│ 	case xs¹ of {C h³ t¹ => t¹(h³) | N  => [None]}: 37
+//│ [C 1 let hh¹ = lazy⁰(2)
+//│ in let tt¹ = lazy⁰((fun h⁵ -> [Some h⁵]))
+//│ in (fun h⁶ -> last₀₀([C force⁰(hh¹) force⁰(tt¹)]))]: 68 --->
+//│ 	case xs² of {C h⁴ t² => t²(h⁴) | N  => [None]}: 44
 //│ ------------------
-//│ case xs¹ of {C h³ t¹ => t¹(h³) | N  => [None]}: 29 --->
-//│ 	[C hh¹ tt¹]: 47
-//│ case xs² of {C h⁴ t² => t²(h⁴) | N  => [None]}: 36 --->
-//│ 	[C 1 let hh¹ = 2
-//│ in let tt¹ = (fun h⁵ -> [Some h⁵])
-//│ in (fun h⁶ -> last₀₁([C hh¹ tt¹]))]: 52
+//│ case xs¹ of {C h³ t¹ => t¹(h³) | N  => [None]}: 37 --->
+//│ 	[C force⁰(hh¹) force⁰(tt¹)]: 63
+//│ case xs² of {C h⁴ t² => t²(h⁴) | N  => [None]}: 44 --->
+//│ 	[C 1 let hh¹ = lazy⁰(2)
+//│ in let tt¹ = lazy⁰((fun h⁵ -> [Some h⁵]))
+//│ in (fun h⁶ -> last₀₀([C force⁰(hh¹) force⁰(tt¹)]))]: 68
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ last₀₀(
-//│ 	let h⁷ = 1
-//│ 	in let t³ = 	
-//│ 		let hh² = 2
-//│ 		in let tt² = (fun h⁸ -> [Some h⁸])
-//│ 		in (fun h⁹ -> last₀₁(
-//│ 			let h¹⁰ = hh²
-//│ 			in let t⁴ = tt²
-//│ 			in t⁴(h¹⁰)))
-//│ 	in t³(h⁷))
-//│ def last₀₀(xs⁴) = 
-//│ 	xs⁴
-//│ def last₀₁(xs³) = 
+//│ last₀₁(
+//│ 	let h⁷ = lazy⁰(1)
+//│ 	in let t³ = lazy⁰(
+//│ 		let hh² = lazy⁰(2)
+//│ 		in let tt² = lazy⁰((fun h⁸ -> [Some h⁸]))
+//│ 		in (fun h⁹ -> last₀₀(
+//│ 			let h¹⁰ = lazy⁰(force⁰(hh²))
+//│ 			in let t⁴ = lazy⁰(force⁰(tt²))
+//│ 			in force⁰(t⁴, force⁰(h¹⁰)))))
+//│ 	in force⁰(t³, force⁰(h⁷)))
+//│ def last₀₀(xs³) = 
 //│ 	xs³
+//│ def last₀₁(xs⁴) = 
+//│ 	xs⁴
 //│ <<<<<<< after fusion <<<<<<<
 
 fun last(xs) = if xs is

@@ -200,17 +200,17 @@ testBinaryTrees_nofib $ primId 17
 //│ 	def make₀₀(_lh_make_arg1², _lh_make_arg2²) = 
 //│ 		case _lh_make_arg2² of {
 //│ 			0  => 
-//│ 				let _lh_check'_Node_0² = _lh_make_arg1²
-//│ 				in let _lh_check'_Node_1² = (fun _lh_check'_arg2⁵ -> (fun _lh_check'_arg1⁵ -> _lh_check'_arg2⁵))
-//│ 				in let _lh_check'_Node_2² = (fun _lh_check'_arg2⁴ -> (fun _lh_check'_arg1⁴ -> _lh_check'_arg2⁴))
-//│ 				in (fun _lh_check'_arg2³ -> (fun _lh_check'_arg1³ -> check'₀₀(not⁰(_lh_check'_arg1³), check'₀₀(_lh_check'_arg1³, if _lh_check'_arg1³ then (_lh_check'_arg2³ + _lh_check'_Node_0²) else (_lh_check'_arg2³ - _lh_check'_Node_0²), _lh_check'_Node_1²), _lh_check'_Node_2²)))
+//│ 				let _lh_check'_Node_0² = lazy⁰(_lh_make_arg1²)
+//│ 				in let _lh_check'_Node_1² = lazy⁰((fun _lh_check'_arg2⁵ -> (fun _lh_check'_arg1⁵ -> _lh_check'_arg2⁵)))
+//│ 				in let _lh_check'_Node_2² = lazy⁰((fun _lh_check'_arg2⁴ -> (fun _lh_check'_arg1⁴ -> _lh_check'_arg2⁴)))
+//│ 				in (fun _lh_check'_arg2³ -> (fun _lh_check'_arg1³ -> check'₀₀(not⁰(_lh_check'_arg1³), check'₀₀(_lh_check'_arg1³, if _lh_check'_arg1³ then (_lh_check'_arg2³ + force⁰(_lh_check'_Node_0²)) else (_lh_check'_arg2³ - force⁰(_lh_check'_Node_0²)), force⁰(_lh_check'_Node_1²)), force⁰(_lh_check'_Node_2²))))
 //│ 			| _  => 
 //│ 				let i2² = (2 * _lh_make_arg1²)
 //│ 				in let d2² = (_lh_make_arg2² - 1)
-//│ 				in let _lh_check'_Node_0³ = _lh_make_arg1²
-//│ 				in let _lh_check'_Node_1³ = make₀₀((i2² - 1), d2²)
-//│ 				in let _lh_check'_Node_2³ = make₀₀(i2², d2²)
-//│ 				in (fun _lh_check'_arg2⁶ -> (fun _lh_check'_arg1⁶ -> check'₀₀(not⁰(_lh_check'_arg1⁶), check'₀₀(_lh_check'_arg1⁶, if _lh_check'_arg1⁶ then (_lh_check'_arg2⁶ + _lh_check'_Node_0³) else (_lh_check'_arg2⁶ - _lh_check'_Node_0³), _lh_check'_Node_1³), _lh_check'_Node_2³)))}
+//│ 				in let _lh_check'_Node_0³ = lazy⁰(_lh_make_arg1²)
+//│ 				in let _lh_check'_Node_1³ = lazy⁰(make₀₀((i2² - 1), d2²))
+//│ 				in let _lh_check'_Node_2³ = lazy⁰(make₀₀(i2², d2²))
+//│ 				in (fun _lh_check'_arg2⁶ -> (fun _lh_check'_arg1⁶ -> check'₀₀(not⁰(_lh_check'_arg1⁶), check'₀₀(_lh_check'_arg1⁶, if _lh_check'_arg1⁶ then (_lh_check'_arg2⁶ + force⁰(_lh_check'_Node_0³)) else (_lh_check'_arg2⁶ - force⁰(_lh_check'_Node_0³)), force⁰(_lh_check'_Node_1³)), force⁰(_lh_check'_Node_2³))))}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>

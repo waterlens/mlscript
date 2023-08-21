@@ -54,71 +54,71 @@ let rec sum_d0_d0 _lh_sum_arg1_3 _lh_sum_arg2_0 =
   (_lh_sum_arg2_0 _lh_sum_arg1_3);;
 let rec enumFromTo_d0_d0 a_1 b_0 =
   (if (a_1 <= b_0) then
-    (let rec _lh_flatMap_LH_C_0_0 = a_1 in
-      (let rec _lh_flatMap_LH_C_1_0 = ((enumFromTo_d0_d0 (a_1 + 1)) b_0) in
+    (let rec _lh_flatMap_LH_C_0_0 = (lazy a_1) in
+      (let rec _lh_flatMap_LH_C_1_0 = (lazy ((enumFromTo_d0_d0 (a_1 + 1)) b_0)) in
         (fun _lh_flatMap_arg1_0 -> 
-          ((mappend_d0_d0 (_lh_flatMap_arg1_0 _lh_flatMap_LH_C_0_0)) ((flatMap_d0_d0 _lh_flatMap_arg1_0) _lh_flatMap_LH_C_1_0)))))
+          ((mappend_d0_d0 (_lh_flatMap_arg1_0 (Lazy.force _lh_flatMap_LH_C_0_0))) ((flatMap_d0_d0 _lh_flatMap_arg1_0) (Lazy.force _lh_flatMap_LH_C_1_0))))))
   else
     (fun _lh_flatMap_arg1_1 _lh_sum_arg1_2 -> 
       _lh_sum_arg1_2))
 and testSumFlatmapEnum_d0_d0 _lh_testSumFlatmapEnum_arg1_0 =
   ((sum_d0_d0 0) ((flatMap_d0_d0 (fun a_0 -> 
-    (let rec h_0 = a_0 in
-      (let rec t_0 = (let rec h_1 = a_0 in
-        (let rec t_1 = (fun ys_0 -> 
-          ys_0) in
+    (let rec h_0 = (lazy a_0) in
+      (let rec t_0 = (lazy (let rec h_1 = (lazy a_0) in
+        (let rec t_1 = (lazy (fun ys_0 -> 
+          ys_0)) in
           (fun ys_1 -> 
-            (let rec _lh_sum_LH_C_0_0 = h_1 in
-              (let rec _lh_sum_LH_C_1_0 = ((mappend_d0_d0 t_1) ys_1) in
+            (let rec _lh_sum_LH_C_0_0 = (lazy (Lazy.force h_1)) in
+              (let rec _lh_sum_LH_C_1_0 = (lazy ((mappend_d0_d0 (Lazy.force t_1)) ys_1)) in
                 (fun _lh_sum_arg1_0 -> 
-                  ((sum_d0_d0 (_lh_sum_arg1_0 + _lh_sum_LH_C_0_0)) _lh_sum_LH_C_1_0))))))) in
+                  ((sum_d0_d0 (_lh_sum_arg1_0 + (Lazy.force _lh_sum_LH_C_0_0))) (Lazy.force _lh_sum_LH_C_1_0))))))))) in
         (fun ys_2 -> 
-          (let rec _lh_sum_LH_C_0_1 = h_0 in
-            (let rec _lh_sum_LH_C_1_1 = ((mappend_d0_d0 t_0) ys_2) in
+          (let rec _lh_sum_LH_C_0_1 = (lazy (Lazy.force h_0)) in
+            (let rec _lh_sum_LH_C_1_1 = (lazy ((mappend_d0_d0 (Lazy.force t_0)) ys_2)) in
               (fun _lh_sum_arg1_1 -> 
-                ((sum_d0_d0 (_lh_sum_arg1_1 + _lh_sum_LH_C_0_1)) _lh_sum_LH_C_1_1))))))))) ((enumFromTo_d0_d0 1) _lh_testSumFlatmapEnum_arg1_0)));;
+                ((sum_d0_d0 (_lh_sum_arg1_1 + (Lazy.force _lh_sum_LH_C_0_1))) (Lazy.force _lh_sum_LH_C_1_1)))))))))) ((enumFromTo_d0_d0 1) _lh_testSumFlatmapEnum_arg1_0)));;
 
 (* lumberhack_pop_out *)
-let rec flatMap_d0_d0_d0 _lh_flatMap_arg1_5 _lh_flatMap_arg2_1 =
-  (_lh_flatMap_arg2_1 _lh_flatMap_arg1_5);;
-let rec flatMap_d0_d0_d1 _lh_flatMap_arg1_6 _lh_flatMap_arg2_2 =
+let rec flatMap_d0_d0_d0 _lh_flatMap_arg1_6 _lh_flatMap_arg2_2 =
   (_lh_flatMap_arg2_2 _lh_flatMap_arg1_6);;
+let rec flatMap_d0_d0_d1 _lh_flatMap_arg1_5 _lh_flatMap_arg2_1 =
+  (_lh_flatMap_arg2_1 _lh_flatMap_arg1_5);;
 let rec mappend_d0_d0_d0 xs_1 ys_7 =
   (xs_1 ys_7);;
 let rec mappend_d0_d0_d1 xs_3 ys_9 =
   (xs_3 ys_9);;
 let rec mappend_d0_d0_d2 xs_2 ys_8 =
   (xs_2 ys_8);;
-let rec sum_d0_d0_d0 _lh_sum_arg1_9 _lh_sum_arg2_3 =
-  (_lh_sum_arg2_3 _lh_sum_arg1_9);;
-let rec sum_d0_d0_d1 _lh_sum_arg1_8 _lh_sum_arg2_2 =
+let rec sum_d0_d0_d0 _lh_sum_arg1_8 _lh_sum_arg2_2 =
   (_lh_sum_arg2_2 _lh_sum_arg1_8);;
+let rec sum_d0_d0_d1 _lh_sum_arg1_9 _lh_sum_arg2_3 =
+  (_lh_sum_arg2_3 _lh_sum_arg1_9);;
 let rec sum_d0_d0_d2 _lh_sum_arg1_4 _lh_sum_arg2_1 =
   (_lh_sum_arg2_1 _lh_sum_arg1_4);;
 let rec enumFromTo_d0_d0_d0 a_3 b_1 _lh_popOutId_0_0 =
   (if (a_3 <= b_1) then
-    (let rec _lh_flatMap_LH_C_0_1 = a_3 in
-      (let rec _lh_flatMap_LH_C_1_1 = ((enumFromTo_d0_d0_d0 (a_3 + 1)) b_1) in
-        ((mappend_d0_d0_d0 (_lh_popOutId_0_0 _lh_flatMap_LH_C_0_1)) ((flatMap_d0_d0_d0 _lh_popOutId_0_0) _lh_flatMap_LH_C_1_1))))
+    (let rec _lh_flatMap_LH_C_0_1 = (lazy a_3) in
+      (let rec _lh_flatMap_LH_C_1_1 = (lazy ((enumFromTo_d0_d0_d0 (a_3 + 1)) b_1)) in
+        ((mappend_d0_d0_d0 (_lh_popOutId_0_0 (Lazy.force _lh_flatMap_LH_C_0_1))) ((flatMap_d0_d0_d0 _lh_popOutId_0_0) (Lazy.force _lh_flatMap_LH_C_1_1)))))
   else
     (fun _lh_sum_arg1_7 -> 
       _lh_sum_arg1_7))
 and testSumFlatmapEnum_d0_d0_d0 _lh_testSumFlatmapEnum_arg1_1 =
   ((sum_d0_d0_d2 0) ((flatMap_d0_d0_d1 (fun a_2 -> 
-    (let rec h_2 = a_2 in
-      (let rec t_2 = (let rec h_3 = a_2 in
-        (let rec t_3 = (fun ys_4 -> 
-          ys_4) in
+    (let rec h_2 = (lazy a_2) in
+      (let rec t_2 = (lazy (let rec h_3 = (lazy a_2) in
+        (let rec t_3 = (lazy (fun ys_4 -> 
+          ys_4)) in
           (fun ys_5 -> 
-            (let rec _lh_sum_LH_C_0_2 = h_3 in
-              (let rec _lh_sum_LH_C_1_2 = ((mappend_d0_d0_d1 t_3) ys_5) in
+            (let rec _lh_sum_LH_C_0_2 = (lazy (Lazy.force h_3)) in
+              (let rec _lh_sum_LH_C_1_2 = (lazy ((mappend_d0_d0_d1 (Lazy.force t_3)) ys_5)) in
                 (fun _lh_sum_arg1_5 -> 
-                  ((sum_d0_d0_d0 (_lh_sum_arg1_5 + _lh_sum_LH_C_0_2)) _lh_sum_LH_C_1_2))))))) in
+                  ((sum_d0_d0_d0 (_lh_sum_arg1_5 + (Lazy.force _lh_sum_LH_C_0_2))) (Lazy.force _lh_sum_LH_C_1_2))))))))) in
         (fun ys_6 -> 
-          (let rec _lh_sum_LH_C_0_3 = h_2 in
-            (let rec _lh_sum_LH_C_1_3 = ((mappend_d0_d0_d2 t_2) ys_6) in
+          (let rec _lh_sum_LH_C_0_3 = (lazy (Lazy.force h_2)) in
+            (let rec _lh_sum_LH_C_1_3 = (lazy ((mappend_d0_d0_d2 (Lazy.force t_2)) ys_6)) in
               (fun _lh_sum_arg1_6 -> 
-                ((sum_d0_d0_d1 (_lh_sum_arg1_6 + _lh_sum_LH_C_0_3)) _lh_sum_LH_C_1_3))))))))) ((enumFromTo_d0_d0_d0 1) _lh_testSumFlatmapEnum_arg1_1)));;
+                ((sum_d0_d0_d1 (_lh_sum_arg1_6 + (Lazy.force _lh_sum_LH_C_0_3))) (Lazy.force _lh_sum_LH_C_1_3)))))))))) ((enumFromTo_d0_d0_d0 1) _lh_testSumFlatmapEnum_arg1_1)));;
 
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_SumFlatmapEnum" (fun () -> ignore ((testSumFlatmapEnum_d0 100000)));

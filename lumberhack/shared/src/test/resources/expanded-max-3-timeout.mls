@@ -53,9 +53,9 @@ max(C(1, N))(0)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ max₀(
-//│ 	let h² = 1
-//│ 	in let t² = (fun m⁵ -> m⁵)
-//│ 	in (fun m⁴ -> if (h² > m⁴) then max₀(t², h²) else max₀(t², m⁴)), 0)
+//│ 	let h² = lazy⁰(1)
+//│ 	in let t² = lazy⁰((fun m⁵ -> m⁵))
+//│ 	in (fun m⁴ -> if (force⁰(h²) > m⁴) then max₀(force⁰(t²), force⁰(h²)) else max₀(force⁰(t²), m⁴)), 0)
 //│ def max₀(ms²) = 
 //│ 	ms²
 //│ <<<<<<< after fusion <<<<<<<
@@ -127,15 +127,15 @@ max(C(1, C(3, C(2, N))))(0)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ max₀(
-//│ 	let h² = 1
-//│ 	in let t² = 	
-//│ 		let h³ = 3
-//│ 		in let t³ = 	
-//│ 			let h⁴ = 2
-//│ 			in let t⁴ = (fun m⁷ -> m⁷)
-//│ 			in (fun m⁶ -> if (h⁴ > m⁶) then max₀(t⁴, h⁴) else max₀(t⁴, m⁶))
-//│ 		in (fun m⁵ -> if (h³ > m⁵) then max₀(t³, h³) else max₀(t³, m⁵))
-//│ 	in (fun m⁴ -> if (h² > m⁴) then max₀(t², h²) else max₀(t², m⁴)), 0)
+//│ 	let h² = lazy⁰(1)
+//│ 	in let t² = lazy⁰(
+//│ 		let h³ = lazy⁰(3)
+//│ 		in let t³ = lazy⁰(
+//│ 			let h⁴ = lazy⁰(2)
+//│ 			in let t⁴ = lazy⁰((fun m⁷ -> m⁷))
+//│ 			in (fun m⁶ -> if (force⁰(h⁴) > m⁶) then max₀(force⁰(t⁴), force⁰(h⁴)) else max₀(force⁰(t⁴), m⁶)))
+//│ 		in (fun m⁵ -> if (force⁰(h³) > m⁵) then max₀(force⁰(t³), force⁰(h³)) else max₀(force⁰(t³), m⁵)))
+//│ 	in (fun m⁴ -> if (force⁰(h²) > m⁴) then max₀(force⁰(t²), force⁰(h²)) else max₀(force⁰(t²), m⁴)), 0)
 //│ def max₀(ms²) = 
 //│ 	ms²
 //│ <<<<<<< after fusion <<<<<<<
@@ -449,18 +449,18 @@ max(l)(0)
 //│ >>>>>>> after fusion >>>>>>>
 //│ max₀(l₀, 0)
 //│ def l₀ = 
-//│ 	let h² = 1
-//│ 	in let t² = 	
-//│ 		let h³ = 3
-//│ 		in let t³ = 	
-//│ 			let h⁴ = 2
-//│ 			in let t⁴ = 	
-//│ 				let h⁵ = 5
-//│ 				in let t⁵ = l₀
-//│ 				in (fun m⁷ -> if (h⁵ > m⁷) then max₀(t⁵, h⁵) else max₀(t⁵, m⁷))
-//│ 			in (fun m⁶ -> if (h⁴ > m⁶) then max₀(t⁴, h⁴) else max₀(t⁴, m⁶))
-//│ 		in (fun m⁵ -> if (h³ > m⁵) then max₀(t³, h³) else max₀(t³, m⁵))
-//│ 	in (fun m⁴ -> if (h² > m⁴) then max₀(t², h²) else max₀(t², m⁴))
+//│ 	let h² = lazy⁰(1)
+//│ 	in let t² = lazy⁰(
+//│ 		let h³ = lazy⁰(3)
+//│ 		in let t³ = lazy⁰(
+//│ 			let h⁴ = lazy⁰(2)
+//│ 			in let t⁴ = lazy⁰(
+//│ 				let h⁵ = lazy⁰(5)
+//│ 				in let t⁵ = lazy⁰(l₀)
+//│ 				in (fun m⁷ -> if (force⁰(h⁵) > m⁷) then max₀(force⁰(t⁵), force⁰(h⁵)) else max₀(force⁰(t⁵), m⁷)))
+//│ 			in (fun m⁶ -> if (force⁰(h⁴) > m⁶) then max₀(force⁰(t⁴), force⁰(h⁴)) else max₀(force⁰(t⁴), m⁶)))
+//│ 		in (fun m⁵ -> if (force⁰(h³) > m⁵) then max₀(force⁰(t³), force⁰(h³)) else max₀(force⁰(t³), m⁵)))
+//│ 	in (fun m⁴ -> if (force⁰(h²) > m⁴) then max₀(force⁰(t²), force⁰(h²)) else max₀(force⁰(t²), m⁴))
 //│ def max₀(ms²) = 
 //│ 	ms²
 //│ <<<<<<< after fusion <<<<<<<

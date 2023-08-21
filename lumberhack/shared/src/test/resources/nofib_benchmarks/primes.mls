@@ -238,12 +238,12 @@ testPrime_nofib $ primId 100
 //│ 				| LH_N  => error⁰}
 //│ 		def iterate₀₀(f⁸, x²) = 
 //│ 			lazy⁰(
-//│ 				let h⁸ = x²
-//│ 				in let t⁸ = iterate₀₀(f⁸, f⁸(x²))
+//│ 				let h⁸ = lazy⁰(x²)
+//│ 				in let t⁸ = lazy⁰(iterate₀₀(f⁸, f⁸(x²)))
 //│ 				in (fun f⁹ -> 
-//│ 					let h⁹ = f⁹(h⁸)
-//│ 					in let t⁹ = map_lz₀₀(f⁹, t⁸)
-//│ 					in (fun n³ -> if (n³ == 0) then h⁹ else atIndex_lz₀₀((n³ - 1), t⁹))))
+//│ 					let h⁹ = lazy⁰(f⁹(force⁰(h⁸)))
+//│ 					in let t⁹ = lazy⁰(map_lz₀₀(f⁹, force⁰(t⁸)))
+//│ 					in (fun n³ -> if (n³ == 0) then force⁰(h⁹) else atIndex_lz₀₀((n³ - 1), force⁰(t⁹)))))
 //│ 		def map_lz₀₀(f⁶, ls⁸) = 
 //│ 			lazy⁰(force⁰(ls⁸, f⁶))
 //│ 		def the_filter₀₀(_lh_the_filter_arg1²) = 

@@ -1149,11 +1149,11 @@ testIntegrate_nofib $ primId 100
 //│ 					where
 //│ 					def enumFromFloat₀₀(_lh_enumFromFloat_arg1¹⁵) = 
 //│ 						lazy⁰(
-//│ 							let h²⁵ = _lh_enumFromFloat_arg1¹⁵
-//│ 							in let t²⁴ = enumFromFloat₀₀((_lh_enumFromFloat_arg1¹⁵ +. 1.0))
+//│ 							let h²⁵ = lazy⁰(_lh_enumFromFloat_arg1¹⁵)
+//│ 							in let t²⁴ = lazy⁰(enumFromFloat₀₀((_lh_enumFromFloat_arg1¹⁵ +. 1.0)))
 //│ 							in (fun f³⁴ -> 
-//│ 								let h²⁶ = f³⁴(h²⁵)
-//│ 								in h²⁶))
+//│ 								let h²⁶ = lazy⁰(f³⁴(force⁰(h²⁵)))
+//│ 								in force⁰(h²⁶)))
 //│ 				def map_lz₀₀(f²⁹, ls²³) = 
 //│ 					lazy⁰(force⁰(ls²³, f²⁹))
 //│ 			def is₁₀(_lh_is_arg1⁵) = 
@@ -1164,9 +1164,9 @@ testIntegrate_nofib $ primId 100
 //│ 					where
 //│ 					def enumFromFloat₁₀(_lh_enumFromFloat_arg1¹³) = 
 //│ 						lazy⁰(
-//│ 							let h²⁰ = _lh_enumFromFloat_arg1¹³
-//│ 							in let t²⁰ = enumFromFloat₁₀((_lh_enumFromFloat_arg1¹³ +. 1.0))
-//│ 							in (fun f²² -> [LH_C f²²(h²⁰) map_lz₁₀(f²², t²⁰)]))
+//│ 							let h²⁰ = lazy⁰(_lh_enumFromFloat_arg1¹³)
+//│ 							in let t²⁰ = lazy⁰(enumFromFloat₁₀((_lh_enumFromFloat_arg1¹³ +. 1.0)))
+//│ 							in (fun f²² -> [LH_C f²²(force⁰(h²⁰)) map_lz₁₀(f²², force⁰(t²⁰))]))
 //│ 				def map_lz₁₀(f²⁰, ls²⁰) = 
 //│ 					lazy⁰(force⁰(ls²⁰, f²⁰))
 //│ 			def tail_lz₀₀(ls²⁶) = 
@@ -1198,22 +1198,22 @@ testIntegrate_nofib $ primId 100
 //│ 					where
 //│ 					def enumFromFloat₂₀(_lh_enumFromFloat_arg1¹²) = 
 //│ 						lazy⁰(
-//│ 							let hx¹⁰ = _lh_enumFromFloat_arg1¹²
-//│ 							in let tx¹⁰ = enumFromFloat₂₀((_lh_enumFromFloat_arg1¹² +. 1.0))
-//│ 							in (fun f²¹ -> (fun ys¹⁰ -> force⁰(ys¹⁰, f²¹, hx¹⁰, tx¹⁰))))
+//│ 							let hx¹⁰ = lazy⁰(_lh_enumFromFloat_arg1¹²)
+//│ 							in let tx¹⁰ = lazy⁰(enumFromFloat₂₀((_lh_enumFromFloat_arg1¹² +. 1.0)))
+//│ 							in (fun f²¹ -> (fun ys¹⁰ -> force⁰(ys¹⁰, f²¹, force⁰(hx¹⁰), force⁰(tx¹⁰)))))
 //│ 				def ints₃₀(_lh_ints_arg1¹²) = 
 //│ 					enumFromFloat₃₀(1.0)
 //│ 					where
 //│ 					def enumFromFloat₃₀(_lh_enumFromFloat_arg1¹⁴) = 
 //│ 						lazy⁰(
-//│ 							let h²³ = _lh_enumFromFloat_arg1¹⁴
-//│ 							in let t²³ = enumFromFloat₃₀((_lh_enumFromFloat_arg1¹⁴ +. 1.0))
+//│ 							let h²³ = lazy⁰(_lh_enumFromFloat_arg1¹⁴)
+//│ 							in let t²³ = lazy⁰(enumFromFloat₃₀((_lh_enumFromFloat_arg1¹⁴ +. 1.0)))
 //│ 							in (fun f³⁰ -> 
-//│ 								let hy¹⁰ = f³⁰(h²³)
-//│ 								in let ty¹⁰ = map_lz₃₀(f³⁰, t²³)
+//│ 								let hy¹⁰ = lazy⁰(f³⁰(force⁰(h²³)))
+//│ 								in let ty¹⁰ = lazy⁰(map_lz₃₀(f³⁰, force⁰(t²³)))
 //│ 								in (fun f³¹ -> (fun hx¹¹ -> (fun tx¹¹ -> 
-//│ 									let h²⁴ = f³¹(hx¹¹, hy¹⁰)
-//│ 									in h²⁴)))))
+//│ 									let h²⁴ = lazy⁰(f³¹(hx¹¹, force⁰(hy¹⁰)))
+//│ 									in force⁰(h²⁴))))))
 //│ 				def map_lz₃₀(f⁴⁰, ls²⁹) = 
 //│ 					lazy⁰(force⁰(ls²⁹, f⁴⁰))
 //│ 				def zark₀₀(_lh_zark_arg1⁵, _lh_zark_arg2⁵) = 
@@ -1225,66 +1225,66 @@ testIntegrate_nofib $ primId 100
 //│ 						def integrate1D₀₀(_lh_integrate1D_arg1¹¹, _lh_integrate1D_arg2¹¹, _lh_integrate1D_arg3¹¹) = 
 //│ 							let d¹¹ = ((_lh_integrate1D_arg2¹¹ -. _lh_integrate1D_arg1¹¹) /. 8.0)
 //│ 							in (d¹¹ *. sumFloat₀₀(
-//│ 								let _lh_sumFloat_LH_C_0³⁸ = (_lh_integrate1D_arg3¹¹(_lh_integrate1D_arg1¹¹) *. 0.5)
-//│ 								in let _lh_sumFloat_LH_C_1³⁸ = 	
-//│ 									let _lh_sumFloat_LH_C_0³⁹ = _lh_integrate1D_arg3¹¹((_lh_integrate1D_arg1¹¹ +. d¹¹))
-//│ 									in let _lh_sumFloat_LH_C_1³⁹ = 	
-//│ 										let _lh_sumFloat_LH_C_0⁴⁰ = _lh_integrate1D_arg3¹¹((_lh_integrate1D_arg1¹¹ +. (2.0 *. d¹¹)))
-//│ 										in let _lh_sumFloat_LH_C_1⁴⁰ = 	
-//│ 											let _lh_sumFloat_LH_C_0⁴¹ = _lh_integrate1D_arg3¹¹((_lh_integrate1D_arg1¹¹ +. (3.0 *. d¹¹)))
-//│ 											in let _lh_sumFloat_LH_C_1⁴¹ = 	
-//│ 												let _lh_sumFloat_LH_C_0⁴² = _lh_integrate1D_arg3¹¹((_lh_integrate1D_arg1¹¹ +. (4.0 *. d¹¹)))
-//│ 												in let _lh_sumFloat_LH_C_1⁴² = 	
-//│ 													let _lh_sumFloat_LH_C_0⁴³ = _lh_integrate1D_arg3¹¹((_lh_integrate1D_arg2¹¹ -. (3.0 *. d¹¹)))
-//│ 													in let _lh_sumFloat_LH_C_1⁴³ = 	
-//│ 														let _lh_sumFloat_LH_C_0⁴⁴ = _lh_integrate1D_arg3¹¹((_lh_integrate1D_arg2¹¹ -. (2.0 *. d¹¹)))
-//│ 														in let _lh_sumFloat_LH_C_1⁴⁴ = 	
-//│ 															let _lh_sumFloat_LH_C_0⁴⁵ = _lh_integrate1D_arg3¹¹((_lh_integrate1D_arg2¹¹ -. d¹¹))
-//│ 															in let _lh_sumFloat_LH_C_1⁴⁵ = 	
-//│ 																let _lh_sumFloat_LH_C_0⁴⁶ = (_lh_integrate1D_arg3¹¹(_lh_integrate1D_arg2¹¹) *. 0.5)
-//│ 																in let _lh_sumFloat_LH_C_1⁴⁶ = 0.0
-//│ 																in (_lh_sumFloat_LH_C_0⁴⁶ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁴⁶))
-//│ 															in (_lh_sumFloat_LH_C_0⁴⁵ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁴⁵))
-//│ 														in (_lh_sumFloat_LH_C_0⁴⁴ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁴⁴))
-//│ 													in (_lh_sumFloat_LH_C_0⁴³ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁴³))
-//│ 												in (_lh_sumFloat_LH_C_0⁴² +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁴²))
-//│ 											in (_lh_sumFloat_LH_C_0⁴¹ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁴¹))
-//│ 										in (_lh_sumFloat_LH_C_0⁴⁰ +. sumFloat₀₀(_lh_sumFloat_LH_C_1⁴⁰))
-//│ 									in (_lh_sumFloat_LH_C_0³⁹ +. sumFloat₀₀(_lh_sumFloat_LH_C_1³⁹))
-//│ 								in (_lh_sumFloat_LH_C_0³⁸ +. sumFloat₀₀(_lh_sumFloat_LH_C_1³⁸))))
+//│ 								let _lh_sumFloat_LH_C_0³⁸ = lazy⁰((_lh_integrate1D_arg3¹¹(_lh_integrate1D_arg1¹¹) *. 0.5))
+//│ 								in let _lh_sumFloat_LH_C_1³⁸ = lazy⁰(
+//│ 									let _lh_sumFloat_LH_C_0³⁹ = lazy⁰(_lh_integrate1D_arg3¹¹((_lh_integrate1D_arg1¹¹ +. d¹¹)))
+//│ 									in let _lh_sumFloat_LH_C_1³⁹ = lazy⁰(
+//│ 										let _lh_sumFloat_LH_C_0⁴⁰ = lazy⁰(_lh_integrate1D_arg3¹¹((_lh_integrate1D_arg1¹¹ +. (2.0 *. d¹¹))))
+//│ 										in let _lh_sumFloat_LH_C_1⁴⁰ = lazy⁰(
+//│ 											let _lh_sumFloat_LH_C_0⁴¹ = lazy⁰(_lh_integrate1D_arg3¹¹((_lh_integrate1D_arg1¹¹ +. (3.0 *. d¹¹))))
+//│ 											in let _lh_sumFloat_LH_C_1⁴¹ = lazy⁰(
+//│ 												let _lh_sumFloat_LH_C_0⁴² = lazy⁰(_lh_integrate1D_arg3¹¹((_lh_integrate1D_arg1¹¹ +. (4.0 *. d¹¹))))
+//│ 												in let _lh_sumFloat_LH_C_1⁴² = lazy⁰(
+//│ 													let _lh_sumFloat_LH_C_0⁴³ = lazy⁰(_lh_integrate1D_arg3¹¹((_lh_integrate1D_arg2¹¹ -. (3.0 *. d¹¹))))
+//│ 													in let _lh_sumFloat_LH_C_1⁴³ = lazy⁰(
+//│ 														let _lh_sumFloat_LH_C_0⁴⁴ = lazy⁰(_lh_integrate1D_arg3¹¹((_lh_integrate1D_arg2¹¹ -. (2.0 *. d¹¹))))
+//│ 														in let _lh_sumFloat_LH_C_1⁴⁴ = lazy⁰(
+//│ 															let _lh_sumFloat_LH_C_0⁴⁵ = lazy⁰(_lh_integrate1D_arg3¹¹((_lh_integrate1D_arg2¹¹ -. d¹¹)))
+//│ 															in let _lh_sumFloat_LH_C_1⁴⁵ = lazy⁰(
+//│ 																let _lh_sumFloat_LH_C_0⁴⁶ = lazy⁰((_lh_integrate1D_arg3¹¹(_lh_integrate1D_arg2¹¹) *. 0.5))
+//│ 																in let _lh_sumFloat_LH_C_1⁴⁶ = lazy⁰(0.0)
+//│ 																in (force⁰(_lh_sumFloat_LH_C_0⁴⁶) +. sumFloat₀₀(force⁰(_lh_sumFloat_LH_C_1⁴⁶))))
+//│ 															in (force⁰(_lh_sumFloat_LH_C_0⁴⁵) +. sumFloat₀₀(force⁰(_lh_sumFloat_LH_C_1⁴⁵))))
+//│ 														in (force⁰(_lh_sumFloat_LH_C_0⁴⁴) +. sumFloat₀₀(force⁰(_lh_sumFloat_LH_C_1⁴⁴))))
+//│ 													in (force⁰(_lh_sumFloat_LH_C_0⁴³) +. sumFloat₀₀(force⁰(_lh_sumFloat_LH_C_1⁴³))))
+//│ 												in (force⁰(_lh_sumFloat_LH_C_0⁴²) +. sumFloat₀₀(force⁰(_lh_sumFloat_LH_C_1⁴²))))
+//│ 											in (force⁰(_lh_sumFloat_LH_C_0⁴¹) +. sumFloat₀₀(force⁰(_lh_sumFloat_LH_C_1⁴¹))))
+//│ 										in (force⁰(_lh_sumFloat_LH_C_0⁴⁰) +. sumFloat₀₀(force⁰(_lh_sumFloat_LH_C_1⁴⁰))))
+//│ 									in (force⁰(_lh_sumFloat_LH_C_0³⁹) +. sumFloat₀₀(force⁰(_lh_sumFloat_LH_C_1³⁹))))
+//│ 								in (force⁰(_lh_sumFloat_LH_C_0³⁸) +. sumFloat₀₀(force⁰(_lh_sumFloat_LH_C_1³⁸)))))
 //│ 							where
 //│ 							def sumFloat₀₀(_lh_sumFloat_arg1¹³) = 
 //│ 								_lh_sumFloat_arg1¹³
 //│ 						def integrate1D₁₀(_lh_integrate1D_arg1⁹, _lh_integrate1D_arg2⁹, _lh_integrate1D_arg3⁹) = 
 //│ 							let d⁹ = ((_lh_integrate1D_arg2⁹ -. _lh_integrate1D_arg1⁹) /. 8.0)
 //│ 							in (d⁹ *. sumFloat₁₀(
-//│ 								let _lh_sumFloat_LH_C_0¹⁹ = (_lh_integrate1D_arg3⁹(_lh_integrate1D_arg1⁹) *. 0.5)
-//│ 								in let _lh_sumFloat_LH_C_1¹⁹ = 	
-//│ 									let _lh_sumFloat_LH_C_0²⁰ = _lh_integrate1D_arg3⁹((_lh_integrate1D_arg1⁹ +. d⁹))
-//│ 									in let _lh_sumFloat_LH_C_1²⁰ = 	
-//│ 										let _lh_sumFloat_LH_C_0²¹ = _lh_integrate1D_arg3⁹((_lh_integrate1D_arg1⁹ +. (2.0 *. d⁹)))
-//│ 										in let _lh_sumFloat_LH_C_1²¹ = 	
-//│ 											let _lh_sumFloat_LH_C_0²² = _lh_integrate1D_arg3⁹((_lh_integrate1D_arg1⁹ +. (3.0 *. d⁹)))
-//│ 											in let _lh_sumFloat_LH_C_1²² = 	
-//│ 												let _lh_sumFloat_LH_C_0²³ = _lh_integrate1D_arg3⁹((_lh_integrate1D_arg1⁹ +. (4.0 *. d⁹)))
-//│ 												in let _lh_sumFloat_LH_C_1²³ = 	
-//│ 													let _lh_sumFloat_LH_C_0²⁴ = _lh_integrate1D_arg3⁹((_lh_integrate1D_arg2⁹ -. (3.0 *. d⁹)))
-//│ 													in let _lh_sumFloat_LH_C_1²⁴ = 	
-//│ 														let _lh_sumFloat_LH_C_0²⁵ = _lh_integrate1D_arg3⁹((_lh_integrate1D_arg2⁹ -. (2.0 *. d⁹)))
-//│ 														in let _lh_sumFloat_LH_C_1²⁵ = 	
-//│ 															let _lh_sumFloat_LH_C_0²⁶ = _lh_integrate1D_arg3⁹((_lh_integrate1D_arg2⁹ -. d⁹))
-//│ 															in let _lh_sumFloat_LH_C_1²⁶ = 	
-//│ 																let _lh_sumFloat_LH_C_0²⁷ = (_lh_integrate1D_arg3⁹(_lh_integrate1D_arg2⁹) *. 0.5)
-//│ 																in let _lh_sumFloat_LH_C_1²⁷ = 0.0
-//│ 																in (_lh_sumFloat_LH_C_0²⁷ +. sumFloat₁₀(_lh_sumFloat_LH_C_1²⁷))
-//│ 															in (_lh_sumFloat_LH_C_0²⁶ +. sumFloat₁₀(_lh_sumFloat_LH_C_1²⁶))
-//│ 														in (_lh_sumFloat_LH_C_0²⁵ +. sumFloat₁₀(_lh_sumFloat_LH_C_1²⁵))
-//│ 													in (_lh_sumFloat_LH_C_0²⁴ +. sumFloat₁₀(_lh_sumFloat_LH_C_1²⁴))
-//│ 												in (_lh_sumFloat_LH_C_0²³ +. sumFloat₁₀(_lh_sumFloat_LH_C_1²³))
-//│ 											in (_lh_sumFloat_LH_C_0²² +. sumFloat₁₀(_lh_sumFloat_LH_C_1²²))
-//│ 										in (_lh_sumFloat_LH_C_0²¹ +. sumFloat₁₀(_lh_sumFloat_LH_C_1²¹))
-//│ 									in (_lh_sumFloat_LH_C_0²⁰ +. sumFloat₁₀(_lh_sumFloat_LH_C_1²⁰))
-//│ 								in (_lh_sumFloat_LH_C_0¹⁹ +. sumFloat₁₀(_lh_sumFloat_LH_C_1¹⁹))))
+//│ 								let _lh_sumFloat_LH_C_0¹⁹ = lazy⁰((_lh_integrate1D_arg3⁹(_lh_integrate1D_arg1⁹) *. 0.5))
+//│ 								in let _lh_sumFloat_LH_C_1¹⁹ = lazy⁰(
+//│ 									let _lh_sumFloat_LH_C_0²⁰ = lazy⁰(_lh_integrate1D_arg3⁹((_lh_integrate1D_arg1⁹ +. d⁹)))
+//│ 									in let _lh_sumFloat_LH_C_1²⁰ = lazy⁰(
+//│ 										let _lh_sumFloat_LH_C_0²¹ = lazy⁰(_lh_integrate1D_arg3⁹((_lh_integrate1D_arg1⁹ +. (2.0 *. d⁹))))
+//│ 										in let _lh_sumFloat_LH_C_1²¹ = lazy⁰(
+//│ 											let _lh_sumFloat_LH_C_0²² = lazy⁰(_lh_integrate1D_arg3⁹((_lh_integrate1D_arg1⁹ +. (3.0 *. d⁹))))
+//│ 											in let _lh_sumFloat_LH_C_1²² = lazy⁰(
+//│ 												let _lh_sumFloat_LH_C_0²³ = lazy⁰(_lh_integrate1D_arg3⁹((_lh_integrate1D_arg1⁹ +. (4.0 *. d⁹))))
+//│ 												in let _lh_sumFloat_LH_C_1²³ = lazy⁰(
+//│ 													let _lh_sumFloat_LH_C_0²⁴ = lazy⁰(_lh_integrate1D_arg3⁹((_lh_integrate1D_arg2⁹ -. (3.0 *. d⁹))))
+//│ 													in let _lh_sumFloat_LH_C_1²⁴ = lazy⁰(
+//│ 														let _lh_sumFloat_LH_C_0²⁵ = lazy⁰(_lh_integrate1D_arg3⁹((_lh_integrate1D_arg2⁹ -. (2.0 *. d⁹))))
+//│ 														in let _lh_sumFloat_LH_C_1²⁵ = lazy⁰(
+//│ 															let _lh_sumFloat_LH_C_0²⁶ = lazy⁰(_lh_integrate1D_arg3⁹((_lh_integrate1D_arg2⁹ -. d⁹)))
+//│ 															in let _lh_sumFloat_LH_C_1²⁶ = lazy⁰(
+//│ 																let _lh_sumFloat_LH_C_0²⁷ = lazy⁰((_lh_integrate1D_arg3⁹(_lh_integrate1D_arg2⁹) *. 0.5))
+//│ 																in let _lh_sumFloat_LH_C_1²⁷ = lazy⁰(0.0)
+//│ 																in (force⁰(_lh_sumFloat_LH_C_0²⁷) +. sumFloat₁₀(force⁰(_lh_sumFloat_LH_C_1²⁷))))
+//│ 															in (force⁰(_lh_sumFloat_LH_C_0²⁶) +. sumFloat₁₀(force⁰(_lh_sumFloat_LH_C_1²⁶))))
+//│ 														in (force⁰(_lh_sumFloat_LH_C_0²⁵) +. sumFloat₁₀(force⁰(_lh_sumFloat_LH_C_1²⁵))))
+//│ 													in (force⁰(_lh_sumFloat_LH_C_0²⁴) +. sumFloat₁₀(force⁰(_lh_sumFloat_LH_C_1²⁴))))
+//│ 												in (force⁰(_lh_sumFloat_LH_C_0²³) +. sumFloat₁₀(force⁰(_lh_sumFloat_LH_C_1²³))))
+//│ 											in (force⁰(_lh_sumFloat_LH_C_0²²) +. sumFloat₁₀(force⁰(_lh_sumFloat_LH_C_1²²))))
+//│ 										in (force⁰(_lh_sumFloat_LH_C_0²¹) +. sumFloat₁₀(force⁰(_lh_sumFloat_LH_C_1²¹))))
+//│ 									in (force⁰(_lh_sumFloat_LH_C_0²⁰) +. sumFloat₁₀(force⁰(_lh_sumFloat_LH_C_1²⁰))))
+//│ 								in (force⁰(_lh_sumFloat_LH_C_0¹⁹) +. sumFloat₁₀(force⁰(_lh_sumFloat_LH_C_1¹⁹)))))
 //│ 							where
 //│ 							def sumFloat₁₀(_lh_sumFloat_arg1¹⁰) = 
 //│ 								_lh_sumFloat_arg1¹⁰
@@ -1298,20 +1298,20 @@ testIntegrate_nofib $ primId 100
 //│ 					where
 //│ 					def enumFromFloat₄₀(_lh_enumFromFloat_arg1¹⁶) = 
 //│ 						lazy⁰(
-//│ 							let hx¹² = _lh_enumFromFloat_arg1¹⁶
-//│ 							in let tx¹² = enumFromFloat₄₀((_lh_enumFromFloat_arg1¹⁶ +. 1.0))
-//│ 							in (fun f³⁵ -> (fun ys¹⁵ -> force⁰(ys¹⁵, f³⁵, hx¹², tx¹²))))
+//│ 							let hx¹² = lazy⁰(_lh_enumFromFloat_arg1¹⁶)
+//│ 							in let tx¹² = lazy⁰(enumFromFloat₄₀((_lh_enumFromFloat_arg1¹⁶ +. 1.0)))
+//│ 							in (fun f³⁵ -> (fun ys¹⁵ -> force⁰(ys¹⁵, f³⁵, force⁰(hx¹²), force⁰(tx¹²)))))
 //│ 				def ints₅₀(_lh_ints_arg1¹⁶) = 
 //│ 					enumFromFloat₅₀(1.0)
 //│ 					where
 //│ 					def enumFromFloat₅₀(_lh_enumFromFloat_arg1¹⁷) = 
 //│ 						lazy⁰(
-//│ 							let h²⁷ = _lh_enumFromFloat_arg1¹⁷
-//│ 							in let t²⁵ = enumFromFloat₅₀((_lh_enumFromFloat_arg1¹⁷ +. 1.0))
+//│ 							let h²⁷ = lazy⁰(_lh_enumFromFloat_arg1¹⁷)
+//│ 							in let t²⁵ = lazy⁰(enumFromFloat₅₀((_lh_enumFromFloat_arg1¹⁷ +. 1.0)))
 //│ 							in (fun f³⁷ -> 
-//│ 								let hy¹¹ = f³⁷(h²⁷)
-//│ 								in let ty¹¹ = map_lz₄₀(f³⁷, t²⁵)
-//│ 								in (fun f³⁸ -> (fun hx¹³ -> (fun tx¹³ -> [LH_C f³⁸(hx¹³, hy¹¹) zipWith_lz_lz₂₀(f³⁸, tx¹³, ty¹¹)])))))
+//│ 								let hy¹¹ = lazy⁰(f³⁷(force⁰(h²⁷)))
+//│ 								in let ty¹¹ = lazy⁰(map_lz₄₀(f³⁷, force⁰(t²⁵)))
+//│ 								in (fun f³⁸ -> (fun hx¹³ -> (fun tx¹³ -> [LH_C f³⁸(hx¹³, force⁰(hy¹¹)) zipWith_lz_lz₂₀(f³⁸, tx¹³, force⁰(ty¹¹))])))))
 //│ 				def map_lz₄₀(f³², ls²⁵) = 
 //│ 					lazy⁰(force⁰(ls²⁵, f³²))
 //│ 				def zark₁₀(_lh_zark_arg1⁴, _lh_zark_arg2⁴) = 
@@ -1323,66 +1323,66 @@ testIntegrate_nofib $ primId 100
 //│ 						def integrate1D₂₀(_lh_integrate1D_arg1⁸, _lh_integrate1D_arg2⁸, _lh_integrate1D_arg3⁸) = 
 //│ 							let d⁸ = ((_lh_integrate1D_arg2⁸ -. _lh_integrate1D_arg1⁸) /. 8.0)
 //│ 							in (d⁸ *. sumFloat₂₀(
-//│ 								let _lh_sumFloat_LH_C_0¹⁰ = (_lh_integrate1D_arg3⁸(_lh_integrate1D_arg1⁸) *. 0.5)
-//│ 								in let _lh_sumFloat_LH_C_1¹⁰ = 	
-//│ 									let _lh_sumFloat_LH_C_0¹¹ = _lh_integrate1D_arg3⁸((_lh_integrate1D_arg1⁸ +. d⁸))
-//│ 									in let _lh_sumFloat_LH_C_1¹¹ = 	
-//│ 										let _lh_sumFloat_LH_C_0¹² = _lh_integrate1D_arg3⁸((_lh_integrate1D_arg1⁸ +. (2.0 *. d⁸)))
-//│ 										in let _lh_sumFloat_LH_C_1¹² = 	
-//│ 											let _lh_sumFloat_LH_C_0¹³ = _lh_integrate1D_arg3⁸((_lh_integrate1D_arg1⁸ +. (3.0 *. d⁸)))
-//│ 											in let _lh_sumFloat_LH_C_1¹³ = 	
-//│ 												let _lh_sumFloat_LH_C_0¹⁴ = _lh_integrate1D_arg3⁸((_lh_integrate1D_arg1⁸ +. (4.0 *. d⁸)))
-//│ 												in let _lh_sumFloat_LH_C_1¹⁴ = 	
-//│ 													let _lh_sumFloat_LH_C_0¹⁵ = _lh_integrate1D_arg3⁸((_lh_integrate1D_arg2⁸ -. (3.0 *. d⁸)))
-//│ 													in let _lh_sumFloat_LH_C_1¹⁵ = 	
-//│ 														let _lh_sumFloat_LH_C_0¹⁶ = _lh_integrate1D_arg3⁸((_lh_integrate1D_arg2⁸ -. (2.0 *. d⁸)))
-//│ 														in let _lh_sumFloat_LH_C_1¹⁶ = 	
-//│ 															let _lh_sumFloat_LH_C_0¹⁷ = _lh_integrate1D_arg3⁸((_lh_integrate1D_arg2⁸ -. d⁸))
-//│ 															in let _lh_sumFloat_LH_C_1¹⁷ = 	
-//│ 																let _lh_sumFloat_LH_C_0¹⁸ = (_lh_integrate1D_arg3⁸(_lh_integrate1D_arg2⁸) *. 0.5)
-//│ 																in let _lh_sumFloat_LH_C_1¹⁸ = 0.0
-//│ 																in (_lh_sumFloat_LH_C_0¹⁸ +. sumFloat₂₀(_lh_sumFloat_LH_C_1¹⁸))
-//│ 															in (_lh_sumFloat_LH_C_0¹⁷ +. sumFloat₂₀(_lh_sumFloat_LH_C_1¹⁷))
-//│ 														in (_lh_sumFloat_LH_C_0¹⁶ +. sumFloat₂₀(_lh_sumFloat_LH_C_1¹⁶))
-//│ 													in (_lh_sumFloat_LH_C_0¹⁵ +. sumFloat₂₀(_lh_sumFloat_LH_C_1¹⁵))
-//│ 												in (_lh_sumFloat_LH_C_0¹⁴ +. sumFloat₂₀(_lh_sumFloat_LH_C_1¹⁴))
-//│ 											in (_lh_sumFloat_LH_C_0¹³ +. sumFloat₂₀(_lh_sumFloat_LH_C_1¹³))
-//│ 										in (_lh_sumFloat_LH_C_0¹² +. sumFloat₂₀(_lh_sumFloat_LH_C_1¹²))
-//│ 									in (_lh_sumFloat_LH_C_0¹¹ +. sumFloat₂₀(_lh_sumFloat_LH_C_1¹¹))
-//│ 								in (_lh_sumFloat_LH_C_0¹⁰ +. sumFloat₂₀(_lh_sumFloat_LH_C_1¹⁰))))
+//│ 								let _lh_sumFloat_LH_C_0¹⁰ = lazy⁰((_lh_integrate1D_arg3⁸(_lh_integrate1D_arg1⁸) *. 0.5))
+//│ 								in let _lh_sumFloat_LH_C_1¹⁰ = lazy⁰(
+//│ 									let _lh_sumFloat_LH_C_0¹¹ = lazy⁰(_lh_integrate1D_arg3⁸((_lh_integrate1D_arg1⁸ +. d⁸)))
+//│ 									in let _lh_sumFloat_LH_C_1¹¹ = lazy⁰(
+//│ 										let _lh_sumFloat_LH_C_0¹² = lazy⁰(_lh_integrate1D_arg3⁸((_lh_integrate1D_arg1⁸ +. (2.0 *. d⁸))))
+//│ 										in let _lh_sumFloat_LH_C_1¹² = lazy⁰(
+//│ 											let _lh_sumFloat_LH_C_0¹³ = lazy⁰(_lh_integrate1D_arg3⁸((_lh_integrate1D_arg1⁸ +. (3.0 *. d⁸))))
+//│ 											in let _lh_sumFloat_LH_C_1¹³ = lazy⁰(
+//│ 												let _lh_sumFloat_LH_C_0¹⁴ = lazy⁰(_lh_integrate1D_arg3⁸((_lh_integrate1D_arg1⁸ +. (4.0 *. d⁸))))
+//│ 												in let _lh_sumFloat_LH_C_1¹⁴ = lazy⁰(
+//│ 													let _lh_sumFloat_LH_C_0¹⁵ = lazy⁰(_lh_integrate1D_arg3⁸((_lh_integrate1D_arg2⁸ -. (3.0 *. d⁸))))
+//│ 													in let _lh_sumFloat_LH_C_1¹⁵ = lazy⁰(
+//│ 														let _lh_sumFloat_LH_C_0¹⁶ = lazy⁰(_lh_integrate1D_arg3⁸((_lh_integrate1D_arg2⁸ -. (2.0 *. d⁸))))
+//│ 														in let _lh_sumFloat_LH_C_1¹⁶ = lazy⁰(
+//│ 															let _lh_sumFloat_LH_C_0¹⁷ = lazy⁰(_lh_integrate1D_arg3⁸((_lh_integrate1D_arg2⁸ -. d⁸)))
+//│ 															in let _lh_sumFloat_LH_C_1¹⁷ = lazy⁰(
+//│ 																let _lh_sumFloat_LH_C_0¹⁸ = lazy⁰((_lh_integrate1D_arg3⁸(_lh_integrate1D_arg2⁸) *. 0.5))
+//│ 																in let _lh_sumFloat_LH_C_1¹⁸ = lazy⁰(0.0)
+//│ 																in (force⁰(_lh_sumFloat_LH_C_0¹⁸) +. sumFloat₂₀(force⁰(_lh_sumFloat_LH_C_1¹⁸))))
+//│ 															in (force⁰(_lh_sumFloat_LH_C_0¹⁷) +. sumFloat₂₀(force⁰(_lh_sumFloat_LH_C_1¹⁷))))
+//│ 														in (force⁰(_lh_sumFloat_LH_C_0¹⁶) +. sumFloat₂₀(force⁰(_lh_sumFloat_LH_C_1¹⁶))))
+//│ 													in (force⁰(_lh_sumFloat_LH_C_0¹⁵) +. sumFloat₂₀(force⁰(_lh_sumFloat_LH_C_1¹⁵))))
+//│ 												in (force⁰(_lh_sumFloat_LH_C_0¹⁴) +. sumFloat₂₀(force⁰(_lh_sumFloat_LH_C_1¹⁴))))
+//│ 											in (force⁰(_lh_sumFloat_LH_C_0¹³) +. sumFloat₂₀(force⁰(_lh_sumFloat_LH_C_1¹³))))
+//│ 										in (force⁰(_lh_sumFloat_LH_C_0¹²) +. sumFloat₂₀(force⁰(_lh_sumFloat_LH_C_1¹²))))
+//│ 									in (force⁰(_lh_sumFloat_LH_C_0¹¹) +. sumFloat₂₀(force⁰(_lh_sumFloat_LH_C_1¹¹))))
+//│ 								in (force⁰(_lh_sumFloat_LH_C_0¹⁰) +. sumFloat₂₀(force⁰(_lh_sumFloat_LH_C_1¹⁰)))))
 //│ 							where
 //│ 							def sumFloat₂₀(_lh_sumFloat_arg1¹¹) = 
 //│ 								_lh_sumFloat_arg1¹¹
 //│ 						def integrate1D₃₀(_lh_integrate1D_arg1¹⁰, _lh_integrate1D_arg2¹⁰, _lh_integrate1D_arg3¹⁰) = 
 //│ 							let d¹⁰ = ((_lh_integrate1D_arg2¹⁰ -. _lh_integrate1D_arg1¹⁰) /. 8.0)
 //│ 							in (d¹⁰ *. sumFloat₃₀(
-//│ 								let _lh_sumFloat_LH_C_0²⁹ = (_lh_integrate1D_arg3¹⁰(_lh_integrate1D_arg1¹⁰) *. 0.5)
-//│ 								in let _lh_sumFloat_LH_C_1²⁹ = 	
-//│ 									let _lh_sumFloat_LH_C_0³⁰ = _lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg1¹⁰ +. d¹⁰))
-//│ 									in let _lh_sumFloat_LH_C_1³⁰ = 	
-//│ 										let _lh_sumFloat_LH_C_0³¹ = _lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg1¹⁰ +. (2.0 *. d¹⁰)))
-//│ 										in let _lh_sumFloat_LH_C_1³¹ = 	
-//│ 											let _lh_sumFloat_LH_C_0³² = _lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg1¹⁰ +. (3.0 *. d¹⁰)))
-//│ 											in let _lh_sumFloat_LH_C_1³² = 	
-//│ 												let _lh_sumFloat_LH_C_0³³ = _lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg1¹⁰ +. (4.0 *. d¹⁰)))
-//│ 												in let _lh_sumFloat_LH_C_1³³ = 	
-//│ 													let _lh_sumFloat_LH_C_0³⁴ = _lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg2¹⁰ -. (3.0 *. d¹⁰)))
-//│ 													in let _lh_sumFloat_LH_C_1³⁴ = 	
-//│ 														let _lh_sumFloat_LH_C_0³⁵ = _lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg2¹⁰ -. (2.0 *. d¹⁰)))
-//│ 														in let _lh_sumFloat_LH_C_1³⁵ = 	
-//│ 															let _lh_sumFloat_LH_C_0³⁶ = _lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg2¹⁰ -. d¹⁰))
-//│ 															in let _lh_sumFloat_LH_C_1³⁶ = 	
-//│ 																let _lh_sumFloat_LH_C_0³⁷ = (_lh_integrate1D_arg3¹⁰(_lh_integrate1D_arg2¹⁰) *. 0.5)
-//│ 																in let _lh_sumFloat_LH_C_1³⁷ = 0.0
-//│ 																in (_lh_sumFloat_LH_C_0³⁷ +. sumFloat₃₀(_lh_sumFloat_LH_C_1³⁷))
-//│ 															in (_lh_sumFloat_LH_C_0³⁶ +. sumFloat₃₀(_lh_sumFloat_LH_C_1³⁶))
-//│ 														in (_lh_sumFloat_LH_C_0³⁵ +. sumFloat₃₀(_lh_sumFloat_LH_C_1³⁵))
-//│ 													in (_lh_sumFloat_LH_C_0³⁴ +. sumFloat₃₀(_lh_sumFloat_LH_C_1³⁴))
-//│ 												in (_lh_sumFloat_LH_C_0³³ +. sumFloat₃₀(_lh_sumFloat_LH_C_1³³))
-//│ 											in (_lh_sumFloat_LH_C_0³² +. sumFloat₃₀(_lh_sumFloat_LH_C_1³²))
-//│ 										in (_lh_sumFloat_LH_C_0³¹ +. sumFloat₃₀(_lh_sumFloat_LH_C_1³¹))
-//│ 									in (_lh_sumFloat_LH_C_0³⁰ +. sumFloat₃₀(_lh_sumFloat_LH_C_1³⁰))
-//│ 								in (_lh_sumFloat_LH_C_0²⁹ +. sumFloat₃₀(_lh_sumFloat_LH_C_1²⁹))))
+//│ 								let _lh_sumFloat_LH_C_0²⁹ = lazy⁰((_lh_integrate1D_arg3¹⁰(_lh_integrate1D_arg1¹⁰) *. 0.5))
+//│ 								in let _lh_sumFloat_LH_C_1²⁹ = lazy⁰(
+//│ 									let _lh_sumFloat_LH_C_0³⁰ = lazy⁰(_lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg1¹⁰ +. d¹⁰)))
+//│ 									in let _lh_sumFloat_LH_C_1³⁰ = lazy⁰(
+//│ 										let _lh_sumFloat_LH_C_0³¹ = lazy⁰(_lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg1¹⁰ +. (2.0 *. d¹⁰))))
+//│ 										in let _lh_sumFloat_LH_C_1³¹ = lazy⁰(
+//│ 											let _lh_sumFloat_LH_C_0³² = lazy⁰(_lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg1¹⁰ +. (3.0 *. d¹⁰))))
+//│ 											in let _lh_sumFloat_LH_C_1³² = lazy⁰(
+//│ 												let _lh_sumFloat_LH_C_0³³ = lazy⁰(_lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg1¹⁰ +. (4.0 *. d¹⁰))))
+//│ 												in let _lh_sumFloat_LH_C_1³³ = lazy⁰(
+//│ 													let _lh_sumFloat_LH_C_0³⁴ = lazy⁰(_lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg2¹⁰ -. (3.0 *. d¹⁰))))
+//│ 													in let _lh_sumFloat_LH_C_1³⁴ = lazy⁰(
+//│ 														let _lh_sumFloat_LH_C_0³⁵ = lazy⁰(_lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg2¹⁰ -. (2.0 *. d¹⁰))))
+//│ 														in let _lh_sumFloat_LH_C_1³⁵ = lazy⁰(
+//│ 															let _lh_sumFloat_LH_C_0³⁶ = lazy⁰(_lh_integrate1D_arg3¹⁰((_lh_integrate1D_arg2¹⁰ -. d¹⁰)))
+//│ 															in let _lh_sumFloat_LH_C_1³⁶ = lazy⁰(
+//│ 																let _lh_sumFloat_LH_C_0³⁷ = lazy⁰((_lh_integrate1D_arg3¹⁰(_lh_integrate1D_arg2¹⁰) *. 0.5))
+//│ 																in let _lh_sumFloat_LH_C_1³⁷ = lazy⁰(0.0)
+//│ 																in (force⁰(_lh_sumFloat_LH_C_0³⁷) +. sumFloat₃₀(force⁰(_lh_sumFloat_LH_C_1³⁷))))
+//│ 															in (force⁰(_lh_sumFloat_LH_C_0³⁶) +. sumFloat₃₀(force⁰(_lh_sumFloat_LH_C_1³⁶))))
+//│ 														in (force⁰(_lh_sumFloat_LH_C_0³⁵) +. sumFloat₃₀(force⁰(_lh_sumFloat_LH_C_1³⁵))))
+//│ 													in (force⁰(_lh_sumFloat_LH_C_0³⁴) +. sumFloat₃₀(force⁰(_lh_sumFloat_LH_C_1³⁴))))
+//│ 												in (force⁰(_lh_sumFloat_LH_C_0³³) +. sumFloat₃₀(force⁰(_lh_sumFloat_LH_C_1³³))))
+//│ 											in (force⁰(_lh_sumFloat_LH_C_0³²) +. sumFloat₃₀(force⁰(_lh_sumFloat_LH_C_1³²))))
+//│ 										in (force⁰(_lh_sumFloat_LH_C_0³¹) +. sumFloat₃₀(force⁰(_lh_sumFloat_LH_C_1³¹))))
+//│ 									in (force⁰(_lh_sumFloat_LH_C_0³⁰) +. sumFloat₃₀(force⁰(_lh_sumFloat_LH_C_1³⁰))))
+//│ 								in (force⁰(_lh_sumFloat_LH_C_0²⁹) +. sumFloat₃₀(force⁰(_lh_sumFloat_LH_C_1²⁹)))))
 //│ 							where
 //│ 							def sumFloat₃₀(_lh_sumFloat_arg1¹²) = 
 //│ 								_lh_sumFloat_arg1¹²
@@ -1402,15 +1402,15 @@ testIntegrate_nofib $ primId 100
 //│ 			lazy⁰(case force⁰(xs¹⁰) of {
 //│ 				LH_C hx⁸ tx⁸ => case force⁰(ys¹¹) of {
 //│ 					LH_C hy⁸ ty⁸ => 
-//│ 						let h²¹ = f²³(hx⁸, hy⁸)
-//│ 						in let t²¹ = zipWith_lz_lz₄₀(f²³, tx⁸, ty⁸)
+//│ 						let h²¹ = lazy⁰(f²³(hx⁸, hy⁸))
+//│ 						in let t²¹ = lazy⁰(zipWith_lz_lz₄₀(f²³, tx⁸, ty⁸))
 //│ 						in (fun f²⁴ -> 
-//│ 							let h²² = f²⁴(h²¹)
-//│ 							in let t²² = map_lz₂₀(f²⁴, t²¹)
+//│ 							let h²² = lazy⁰(f²⁴(force⁰(h²¹)))
+//│ 							in let t²² = lazy⁰(map_lz₂₀(f²⁴, force⁰(t²¹)))
 //│ 							in (fun n⁶ -> 
-//│ 								let _lh_sumFloat_LH_C_0²⁸ = h²²
-//│ 								in let _lh_sumFloat_LH_C_1²⁸ = take_lz₀₀((n⁶ - 1), t²²)
-//│ 								in (_lh_sumFloat_LH_C_0²⁸ +. sumFloat₄₀(_lh_sumFloat_LH_C_1²⁸))))
+//│ 								let _lh_sumFloat_LH_C_0²⁸ = lazy⁰(force⁰(h²²))
+//│ 								in let _lh_sumFloat_LH_C_1²⁸ = lazy⁰(take_lz₀₀((n⁶ - 1), force⁰(t²²)))
+//│ 								in (force⁰(_lh_sumFloat_LH_C_0²⁸) +. sumFloat₄₀(force⁰(_lh_sumFloat_LH_C_1²⁸)))))
 //│ 					| LH_N  => (fun f²⁵ -> (fun n⁷ -> 0.0))}
 //│ 				| LH_N  => (fun f²⁶ -> (fun n⁸ -> 0.0))})
 //│ <<<<<<< after fusion <<<<<<<

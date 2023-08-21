@@ -52,8 +52,8 @@ c(p)
 //│ def c₀(x²) = 
 //│ 	x²
 //│ def p₀ = 
-//│ 	let a² = p₀
-//│ 	in c₀(a²)
+//│ 	let a² = lazy⁰(p₀)
+//│ 	in c₀(force⁰(a²))
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: correctly aligned recursive length
@@ -171,22 +171,22 @@ c(p)
 //│ 	def c₁(x³) = 
 //│ 		x³
 //│ def p₀ = 
-//│ 	let a⁴ = 	
-//│ 		let b⁴ = p₁
-//│ 		in b⁴
-//│ 	in a⁴
+//│ 	let a⁴ = lazy⁰(
+//│ 		let b⁴ = lazy⁰(p₁)
+//│ 		in force⁰(b⁴))
+//│ 	in force⁰(a⁴)
 //│ 	where
 //│ 	def p₁ = 
-//│ 		let y⁴ = 	
-//│ 			let a³ = p₂
-//│ 			in a³
-//│ 		in c₁(y⁴)
+//│ 		let y⁴ = lazy⁰(
+//│ 			let a³ = lazy⁰(p₂)
+//│ 			in force⁰(a³))
+//│ 		in c₁(force⁰(y⁴))
 //│ 		where
 //│ 		def p₂ = 
-//│ 			let b³ = 	
-//│ 				let y³ = p₀
-//│ 				in c₀(y³)
-//│ 			in b³
+//│ 			let b³ = lazy⁰(
+//│ 				let y³ = lazy⁰(p₀)
+//│ 				in c₀(force⁰(y³)))
+//│ 			in force⁰(b³)
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: correctly aligned recursive length (using split knot)
@@ -272,10 +272,10 @@ c(id(p))
 //│ 	def id2₀(yy²) = 
 //│ 		yy²
 //│ def p₀ = 
-//│ 	let a³ = 	
-//│ 		let a⁴ = p₀
-//│ 		in c₀(a⁴)
-//│ 	in c₁(a³)
+//│ 	let a³ = lazy⁰(
+//│ 		let a⁴ = lazy⁰(p₀)
+//│ 		in c₀(force⁰(a⁴)))
+//│ 	in c₁(force⁰(a³))
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -418,20 +418,20 @@ ca(p)
 //│ 					def cb₂(x¹³) = 
 //│ 						x¹³
 //│ def p₀ = 
-//│ 	let a⁵ = 	
-//│ 		let b⁶ = 	
-//│ 			let a⁶ = p₁
-//│ 			in cb₁(a⁶)
-//│ 		in ca₁(b⁶)
-//│ 	in cb₀(a⁵)
+//│ 	let a⁵ = lazy⁰(
+//│ 		let b⁶ = lazy⁰(
+//│ 			let a⁶ = lazy⁰(p₁)
+//│ 			in cb₁(force⁰(a⁶)))
+//│ 		in ca₁(force⁰(b⁶)))
+//│ 	in cb₀(force⁰(a⁵))
 //│ 	where
 //│ 	def p₁ = 
-//│ 		let b⁴ = 	
-//│ 			let a⁴ = 	
-//│ 				let b⁵ = p₀
-//│ 				in ca₀(b⁵)
-//│ 			in cb₂(a⁴)
-//│ 		in ca₂(b⁴)
+//│ 		let b⁴ = lazy⁰(
+//│ 			let a⁴ = lazy⁰(
+//│ 				let b⁵ = lazy⁰(p₀)
+//│ 				in ca₀(force⁰(b⁵)))
+//│ 			in cb₂(force⁰(a⁴)))
+//│ 		in ca₂(force⁰(b⁴))
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -544,16 +544,16 @@ c1(p1)
 //│ 			def c2₁(x2³) = 
 //│ 				x2³
 //│ def p1₀ = 
-//│ 	let a³ = 	
-//│ 		let b⁴ = 	
-//│ 			let a⁴ = p2₀
-//│ 			in c2₁(a⁴)
-//│ 		in c1₁(b⁴)
-//│ 	in c2₀(a³)
+//│ 	let a³ = lazy⁰(
+//│ 		let b⁴ = lazy⁰(
+//│ 			let a⁴ = lazy⁰(p2₀)
+//│ 			in c2₁(force⁰(a⁴)))
+//│ 		in c1₁(force⁰(b⁴)))
+//│ 	in c2₀(force⁰(a³))
 //│ 	where
 //│ 	def p2₀ = 
-//│ 		let b³ = p1₀
-//│ 		in c1₀(b³)
+//│ 		let b³ = lazy⁰(p1₀)
+//│ 		in c1₀(force⁰(b³))
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -617,8 +617,8 @@ main(c)
 //│ 	cc²(p₀)
 //│ 	where
 //│ 	def p₀ = 
-//│ 		let a² = p₀
-//│ 		in c₀(a²)
+//│ 		let a² = lazy⁰(p₀)
+//│ 		in c₀(force⁰(a²))
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -712,16 +712,16 @@ main(p)
 //│ 	def c₀(x²) = 
 //│ 		x²
 //│ def p₀ = 
-//│ 	let b² = p₁
-//│ 	in b²
+//│ 	let b² = lazy⁰(p₁)
+//│ 	in force⁰(b²)
 //│ 	where
 //│ 	def p₁ = 
-//│ 		let d² = p₂
-//│ 		in c₀(d²)
+//│ 		let d² = lazy⁰(p₂)
+//│ 		in c₀(force⁰(d²))
 //│ 		where
 //│ 		def p₂ = 
-//│ 			let a² = p₂
-//│ 			in c₀(a²)
+//│ 			let a² = lazy⁰(p₂)
+//│ 			in c₀(force⁰(a²))
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT:
@@ -782,8 +782,8 @@ main(c, p)
 //│ def main₀(cc², pp²) = 
 //│ 	cc²(pp²)
 //│ def p₀ = 
-//│ 	let a² = p₀
-//│ 	in c₀(a²)
+//│ 	let a² = lazy⁰(p₀)
+//│ 	in c₀(force⁰(a²))
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -872,8 +872,8 @@ a(p)
 //│ 			def d₀(cc², x⁹) = 
 //│ 				cc²(x⁹)
 //│ def p₀ = 
-//│ 	let aa² = p₀
-//│ 	in cons₀(aa²)
+//│ 	let aa² = lazy⁰(p₀)
+//│ 	in cons₀(force⁰(aa²))
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -977,8 +977,8 @@ c2(id(main))
 //│ 	z²
 //│ def id₀(y²) = 
 //│ 	c1₀(
-//│ 		let aa² = y²
-//│ 		in aa²)
+//│ 		let aa² = lazy⁰(y²)
+//│ 		in force⁰(aa²))
 //│ 	where
 //│ 	def c1₀(xx²) = 
 //│ 		xx²
@@ -988,10 +988,10 @@ c2(id(main))
 //│ 	def c₀(x²) = 
 //│ 		x²
 //│ 	def p₀ = 
-//│ 		let a² = p₁
-//│ 		in a²
+//│ 		let a² = lazy⁰(p₁)
+//│ 		in force⁰(a²)
 //│ 		where
 //│ 		def p₁ = 
-//│ 			let b² = p₁
-//│ 			in c2₀(b²)
+//│ 			let b² = lazy⁰(p₁)
+//│ 			in c2₀(force⁰(b²))
 //│ <<<<<<< after fusion <<<<<<<

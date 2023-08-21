@@ -62,14 +62,14 @@ and zip_d0 xs_0 ys_0 =
     | `C(x_0, xt_0) -> 
       (match ys_0 with
         | `C(y_0, yt_0) -> 
-          (let rec h_0 = (let rec a_2 = x_0 in
-            (let rec b_2 = y_0 in
+          (let rec h_0 = (lazy (let rec a_2 = (lazy x_0) in
+            (let rec b_2 = (lazy y_0) in
               (fun t_0 -> 
                 (match (unzip_d0 t_0) with
                   | `Pair(atail_0, btail_0) -> 
-                    (`Pair((`C(a_2, atail_0)), (`C(b_2, btail_0)))))))) in
-            (let rec t_1 = ((zip_d0 xt_0) yt_0) in
-              (h_0 t_1)))
+                    (`Pair((`C((Lazy.force a_2), atail_0)), (`C((Lazy.force b_2), btail_0))))))))) in
+            (let rec t_1 = (lazy ((zip_d0 xt_0) yt_0)) in
+              ((Lazy.force h_0) (Lazy.force t_1))))
         | `N -> 
           (`Pair((`N), (`N))))
     | `N -> 
@@ -86,10 +86,10 @@ let rec enumFromTo_d1_d0 a_3 b_3 =
     (`C(a_3, ((enumFromTo_d1_d0 (a_3 + 1)) b_3)))
   else
     (`N));;
-let rec unzip_d0_d0 ls_2 =
-  ls_2;;
-let rec unzip_d0_d1 ls_1 =
+let rec unzip_d0_d0 ls_1 =
   ls_1;;
+let rec unzip_d0_d1 ls_2 =
+  ls_2;;
 let rec testUnzipZip_d0_d0 n_1 =
   (unzip_d0_d0 ((zip_d0_d0 ((enumFromTo_d0_d0 1) n_1)) ((enumFromTo_d1_d0 2) (n_1 + 3))))
 and zip_d0_d0 xs_1 ys_1 =
@@ -97,14 +97,14 @@ and zip_d0_d0 xs_1 ys_1 =
     | `C(x_1, xt_1) -> 
       (match ys_1 with
         | `C(y_1, yt_1) -> 
-          (let rec h_1 = (let rec a_5 = x_1 in
-            (let rec b_5 = y_1 in
+          (let rec h_1 = (lazy (let rec a_5 = (lazy x_1) in
+            (let rec b_5 = (lazy y_1) in
               (fun t_2 -> 
                 (match (unzip_d0_d1 t_2) with
                   | `Pair(atail_1, btail_1) -> 
-                    (`Pair((`C(a_5, atail_1)), (`C(b_5, btail_1)))))))) in
-            (let rec t_3 = ((zip_d0_d0 xt_1) yt_1) in
-              (h_1 t_3)))
+                    (`Pair((`C((Lazy.force a_5), atail_1)), (`C((Lazy.force b_5), btail_1))))))))) in
+            (let rec t_3 = (lazy ((zip_d0_d0 xt_1) yt_1)) in
+              ((Lazy.force h_1) (Lazy.force t_3))))
         | `N -> 
           (`Pair((`N), (`N))))
     | `N -> 

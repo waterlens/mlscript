@@ -107,15 +107,15 @@ map(ff, l)
 //│ def ff₀(x²) = 
 //│ 	x²
 //│ def l₀ = 
-//│ 	let h² = [T]
-//│ 	in let t² = 	
-//│ 		let h³ = [TT]
-//│ 		in let t³ = 	
-//│ 			let h⁴ = [TTTT]
-//│ 			in let t⁴ = (fun f⁶ -> [N])
-//│ 			in (fun f⁵ -> [C f⁵(h⁴) map₀(f⁵, t⁴)])
-//│ 		in (fun f⁴ -> [C f⁴(h³) map₀(f⁴, t³)])
-//│ 	in (fun f³ -> [C f³(h²) map₀(f³, t²)])
+//│ 	let h² = lazy⁰([T])
+//│ 	in let t² = lazy⁰(
+//│ 		let h³ = lazy⁰([TT])
+//│ 		in let t³ = lazy⁰(
+//│ 			let h⁴ = lazy⁰([TTTT])
+//│ 			in let t⁴ = lazy⁰((fun f⁶ -> [N]))
+//│ 			in (fun f⁵ -> [C f⁵(force⁰(h⁴)) map₀(f⁵, force⁰(t⁴))]))
+//│ 		in (fun f⁴ -> [C f⁴(force⁰(h³)) map₀(f⁴, force⁰(t³))]))
+//│ 	in (fun f³ -> [C f³(force⁰(h²)) map₀(f³, force⁰(t²))])
 //│ def map₀(f², ls²) = 
 //│ 	ls²(f²)
 //│ <<<<<<< after fusion <<<<<<<
@@ -231,15 +231,15 @@ map(ff, l)
 //│ def ff₀(x²) = 
 //│ 	x²
 //│ def l₀ = 
-//│ 	let h² = [T]
-//│ 	in let t² = 	
-//│ 		let h³ = [TT]
-//│ 		in let t³ = 	
-//│ 			let h⁴ = [TTTT]
-//│ 			in let t⁴ = (fun f¹⁰ -> [N])
-//│ 			in (fun f⁹ -> [C f⁹(h⁴) map₀(f⁹, t⁴)])
-//│ 		in (fun f⁸ -> [C f⁸(h³) map₀(f⁸, t³)])
-//│ 	in (fun f⁷ -> [C f⁷(h²) map₀(f⁷, t²)])
+//│ 	let h² = lazy⁰([T])
+//│ 	in let t² = lazy⁰(
+//│ 		let h³ = lazy⁰([TT])
+//│ 		in let t³ = lazy⁰(
+//│ 			let h⁴ = lazy⁰([TTTT])
+//│ 			in let t⁴ = lazy⁰((fun f¹⁰ -> [N]))
+//│ 			in (fun f⁹ -> [C f⁹(force⁰(h⁴)) map₀(f⁹, force⁰(t⁴))]))
+//│ 		in (fun f⁸ -> [C f⁸(force⁰(h³)) map₀(f⁸, force⁰(t³))]))
+//│ 	in (fun f⁷ -> [C f⁷(force⁰(h²)) map₀(f⁷, force⁰(t²))])
 //│ def map₀(f⁶, ls²) = 
 //│ 	ls²(f⁶)
 //│ <<<<<<< after fusion <<<<<<<
@@ -704,21 +704,21 @@ idxSum(rev(C(A, C(B, C(C, N))), N))(0)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ idxSum₀(rev₀(
-//│ 	let hh² = [A]
-//│ 	in let tt² = 	
-//│ 		let hh³ = [B]
-//│ 		in let tt³ = 	
-//│ 			let hh⁴ = [C]
-//│ 			in let tt⁴ = (fun a⁷ -> a⁷)
-//│ 			in (fun a⁶ -> rev₀(tt⁴, 
-//│ 				let t⁴ = a⁶
-//│ 				in (fun acc⁶ -> (acc⁶ + idxSum₀(t⁴, (acc⁶ + 1))))))
-//│ 		in (fun a⁵ -> rev₀(tt³, 
-//│ 			let t³ = a⁵
-//│ 			in (fun acc⁵ -> (acc⁵ + idxSum₀(t³, (acc⁵ + 1))))))
-//│ 	in (fun a⁴ -> rev₀(tt², 
-//│ 		let t² = a⁴
-//│ 		in (fun acc⁴ -> (acc⁴ + idxSum₀(t², (acc⁴ + 1)))))), (fun acc⁷ -> 0)), 0)
+//│ 	let hh² = lazy⁰([A])
+//│ 	in let tt² = lazy⁰(
+//│ 		let hh³ = lazy⁰([B])
+//│ 		in let tt³ = lazy⁰(
+//│ 			let hh⁴ = lazy⁰([C])
+//│ 			in let tt⁴ = lazy⁰((fun a⁷ -> a⁷))
+//│ 			in (fun a⁶ -> rev₀(force⁰(tt⁴), 
+//│ 				let t⁴ = lazy⁰(a⁶)
+//│ 				in (fun acc⁶ -> (acc⁶ + idxSum₀(force⁰(t⁴), (acc⁶ + 1)))))))
+//│ 		in (fun a⁵ -> rev₀(force⁰(tt³), 
+//│ 			let t³ = lazy⁰(a⁵)
+//│ 			in (fun acc⁵ -> (acc⁵ + idxSum₀(force⁰(t³), (acc⁵ + 1)))))))
+//│ 	in (fun a⁴ -> rev₀(force⁰(tt²), 
+//│ 		let t² = lazy⁰(a⁴)
+//│ 		in (fun acc⁴ -> (acc⁴ + idxSum₀(force⁰(t²), (acc⁴ + 1)))))), (fun acc⁷ -> 0)), 0)
 //│ def idxSum₀(ls²) = 
 //│ 	ls²
 //│ def rev₀(lss²) = 
@@ -921,21 +921,21 @@ max(C(1, C(3, C(2, N))))(0)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ max₀(
-//│ 	let h² = 1
-//│ 	in let t² = 	
-//│ 		let h³ = 3
-//│ 		in let t³ = 	
-//│ 			let h⁴ = 2
-//│ 			in let t⁴ = (fun m⁷ -> m⁷)
-//│ 			in (fun m⁶ -> case (h⁴ > m⁶) of {
-//│ 				True  => max₀(t⁴, h⁴)
-//│ 				| False  => max₀(t⁴, m⁶)})
-//│ 		in (fun m⁵ -> case (h³ > m⁵) of {
-//│ 			True  => max₀(t³, h³)
-//│ 			| False  => max₀(t³, m⁵)})
-//│ 	in (fun m⁴ -> case (h² > m⁴) of {
-//│ 		True  => max₀(t², h²)
-//│ 		| False  => max₀(t², m⁴)}), 0)
+//│ 	let h² = lazy⁰(1)
+//│ 	in let t² = lazy⁰(
+//│ 		let h³ = lazy⁰(3)
+//│ 		in let t³ = lazy⁰(
+//│ 			let h⁴ = lazy⁰(2)
+//│ 			in let t⁴ = lazy⁰((fun m⁷ -> m⁷))
+//│ 			in (fun m⁶ -> case (force⁰(h⁴) > m⁶) of {
+//│ 				True  => max₀(force⁰(t⁴), force⁰(h⁴))
+//│ 				| False  => max₀(force⁰(t⁴), m⁶)}))
+//│ 		in (fun m⁵ -> case (force⁰(h³) > m⁵) of {
+//│ 			True  => max₀(force⁰(t³), force⁰(h³))
+//│ 			| False  => max₀(force⁰(t³), m⁵)}))
+//│ 	in (fun m⁴ -> case (force⁰(h²) > m⁴) of {
+//│ 		True  => max₀(force⁰(t²), force⁰(h²))
+//│ 		| False  => max₀(force⁰(t²), m⁴)}), 0)
 //│ def max₀(ms²) = 
 //│ 	ms²
 //│ <<<<<<< after fusion <<<<<<<
@@ -1111,15 +1111,15 @@ rev(C(1, C(2, C(3, N))))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ rev₀(
-//│ 	let h⁴ = 1
-//│ 	in let t⁴ = 	
-//│ 		let h⁵ = 2
-//│ 		in let t⁵ = 	
-//│ 			let h⁶ = 3
-//│ 			in let t⁶ = [N]
-//│ 			in concat₀(rev₀(t⁶), [C h⁶ [N]])
-//│ 		in concat₀(rev₀(t⁵), [C h⁵ [N]])
-//│ 	in concat₀(rev₀(t⁴), [C h⁴ [N]]))
+//│ 	let h⁴ = lazy⁰(1)
+//│ 	in let t⁴ = lazy⁰(
+//│ 		let h⁵ = lazy⁰(2)
+//│ 		in let t⁵ = lazy⁰(
+//│ 			let h⁶ = lazy⁰(3)
+//│ 			in let t⁶ = lazy⁰([N])
+//│ 			in concat₀(rev₀(force⁰(t⁶)), [C force⁰(h⁶) [N]]))
+//│ 		in concat₀(rev₀(force⁰(t⁵)), [C force⁰(h⁵) [N]]))
+//│ 	in concat₀(rev₀(force⁰(t⁴)), [C force⁰(h⁴) [N]]))
 //│ def rev₀(ls²) = 
 //│ 	ls²
 //│ 	where
@@ -1136,29 +1136,29 @@ rev(C(1, C(2, C(3, N))))
 //│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [concat₀^17]
-//│ 	[concat₀^17 · concat₀^44] ---> [concat₀^17] (only one)
-//│ [concat₀^28]
-//│ 	[concat₀^28 · concat₀^44] ---> [concat₀^28] (only one)
-//│ [concat₀^6]
-//│ 	[concat₀^6 · concat₀^44] ---> [concat₀^6] (only one)
-//│ [rev₀^18] (hopeless to continue)
+//│ [concat₀^16]
+//│ 	[concat₀^16 · concat₀^68] ---> [concat₀^16] (only one)
+//│ [concat₀^32]
+//│ 	[concat₀^32 · concat₀^68] ---> [concat₀^32] (only one)
+//│ [concat₀^48]
+//│ 	[concat₀^48 · concat₀^68] ---> [concat₀^48] (only one)
+//│ [rev₀^17] (hopeless to continue)
 //│ [rev₀^1] (hopeless to continue)
-//│ [rev₀^29] (hopeless to continue)
-//│ [rev₀^7] (hopeless to continue)
+//│ [rev₀^33] (hopeless to continue)
+//│ [rev₀^49] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
 //│ rev₀₁(
-//│ 	let h⁷ = 1
-//│ 	in let t⁷ = 	
-//│ 		let h⁸ = 2
-//│ 		in let t⁸ = 	
-//│ 			let h⁹ = 3
-//│ 			in let t⁹ = [N]
-//│ 			in concat₀₂(rev₀₃(t⁹), [C h⁹ [N]])
-//│ 		in concat₀₀(rev₀₀(t⁸), [C h⁸ [N]])
-//│ 	in concat₀₁(rev₀₂(t⁷), [C h⁷ [N]]))
+//│ 	let h⁷ = lazy⁰(1)
+//│ 	in let t⁷ = lazy⁰(
+//│ 		let h⁸ = lazy⁰(2)
+//│ 		in let t⁸ = lazy⁰(
+//│ 			let h⁹ = lazy⁰(3)
+//│ 			in let t⁹ = lazy⁰([N])
+//│ 			in concat₀₀(rev₀₀(force⁰(t⁹)), [C force⁰(h⁹) [N]]))
+//│ 		in concat₀₁(rev₀₂(force⁰(t⁸)), [C force⁰(h⁸) [N]]))
+//│ 	in concat₀₂(rev₀₃(force⁰(t⁷)), [C force⁰(h⁷) [N]]))
 //│ def concat₀₀(xs³) = 
 //│ 	case xs³ of {
 //│ 		N  => (fun ys⁶ -> ys⁶)
@@ -1171,92 +1171,92 @@ rev(C(1, C(2, C(3, N))))
 //│ 	case xs² of {
 //│ 		N  => (fun ys⁴ -> ys⁴)
 //│ 		| C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ concat₀₂(t⁵, ys⁵)])}
-//│ def rev₀₀(ls⁴) = 
-//│ 	ls⁴
-//│ def rev₀₁(ls²) = 
+//│ def rev₀₀(ls²) = 
 //│ 	ls²
-//│ def rev₀₂(ls¹) = 
+//│ def rev₀₁(ls¹) = 
 //│ 	ls¹
-//│ def rev₀₃(ls³) = 
+//│ def rev₀₂(ls³) = 
 //│ 	ls³
+//│ def rev₀₃(ls⁴) = 
+//│ 	ls⁴
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h⁵ concat₀₂(t⁵, ys⁵)]: 77 --->
-//│ 	case xs³ of {N  => (fun ys⁶ -> ys⁶) | C h⁶ t⁶ => (fun ys⁷ -> [C h⁶ concat₀₀(t⁶, ys⁷)])}: 98
-//│ [C h⁶ concat₀₀(t⁶, ys⁷)]: 96 --->
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ concat₀₁(t⁴, ys³)])}: 66
-//│ [N]: 106 --->
-//│ 	case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ concat₀₂(t⁵, ys⁵)])}: 79
-//│ [N]: 113 --->
-//│ 	case xs³ of {N  => (fun ys⁶ -> ys⁶) | C h⁶ t⁶ => (fun ys⁷ -> [C h⁶ concat₀₀(t⁶, ys⁷)])}: 98
-//│ [C h⁹ [N]]: 114 --->
-//│ 	case xs³ of {N  => (fun ys⁶ -> ys⁶) | C h⁶ t⁶ => (fun ys⁷ -> [C h⁶ concat₀₀(t⁶, ys⁷)])}: 98
-//│ [N]: 124 --->
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ concat₀₁(t⁴, ys³)])}: 66
-//│ [C h⁸ [N]]: 125 --->
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ concat₀₁(t⁴, ys³)])}: 66
+//│ [C h⁴ concat₀₁(t⁴, ys³)]: 88 --->
+//│ 	case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ concat₀₂(t⁵, ys⁵)])}: 107
+//│ [C h⁶ concat₀₀(t⁶, ys⁷)]: 120 --->
+//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ concat₀₁(t⁴, ys³)])}: 90
+//│ [N]: 139 --->
+//│ 	case xs³ of {N  => (fun ys⁶ -> ys⁶) | C h⁶ t⁶ => (fun ys⁷ -> [C h⁶ concat₀₀(t⁶, ys⁷)])}: 122
+//│ [N]: 151 --->
+//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ concat₀₁(t⁴, ys³)])}: 90
+//│ [C force⁰(h⁹) [N]]: 152 --->
+//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ concat₀₁(t⁴, ys³)])}: 90
+//│ [N]: 167 --->
+//│ 	case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ concat₀₂(t⁵, ys⁵)])}: 107
+//│ [C force⁰(h⁸) [N]]: 168 --->
+//│ 	case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ concat₀₂(t⁵, ys⁵)])}: 107
 //│ ------------------
-//│ case xs¹ of {N  => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ concat₀₁(t⁴, ys³)])}: 66 --->
-//│ 	[C h⁶ concat₀₀(t⁶, ys⁷)]: 96
-//│ 	[N]: 124
-//│ 	[C h⁸ [N]]: 125
-//│ case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ concat₀₂(t⁵, ys⁵)])}: 79 --->
-//│ 	[N]: 106
-//│ case xs³ of {N  => (fun ys⁶ -> ys⁶) | C h⁶ t⁶ => (fun ys⁷ -> [C h⁶ concat₀₀(t⁶, ys⁷)])}: 98 --->
-//│ 	[C h⁵ concat₀₂(t⁵, ys⁵)]: 77
-//│ 	[N]: 113
-//│ 	[C h⁹ [N]]: 114
+//│ case xs¹ of {N  => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ concat₀₁(t⁴, ys³)])}: 90 --->
+//│ 	[C h⁶ concat₀₀(t⁶, ys⁷)]: 120
+//│ 	[N]: 151
+//│ 	[C force⁰(h⁹) [N]]: 152
+//│ case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ concat₀₂(t⁵, ys⁵)])}: 107 --->
+//│ 	[C h⁴ concat₀₁(t⁴, ys³)]: 88
+//│ 	[N]: 167
+//│ 	[C force⁰(h⁸) [N]]: 168
+//│ case xs³ of {N  => (fun ys⁶ -> ys⁶) | C h⁶ t⁶ => (fun ys⁷ -> [C h⁶ concat₀₀(t⁶, ys⁷)])}: 122 --->
+//│ 	[N]: 139
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C h⁵ concat₀₂(t⁵, ys⁵)]: 77 --->
-//│ 	case xs³ of {N  => (fun ys⁶ -> ys⁶) | C h⁶ t⁶ => (fun ys⁷ -> [C h⁶ concat₀₀(t⁶, ys⁷)])}: 98
-//│ [C h⁶ concat₀₀(t⁶, ys⁷)]: 96 --->
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ concat₀₁(t⁴, ys³)])}: 66
-//│ [N]: 106 --->
-//│ 	case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ concat₀₂(t⁵, ys⁵)])}: 79
-//│ [N]: 113 --->
-//│ 	case xs³ of {N  => (fun ys⁶ -> ys⁶) | C h⁶ t⁶ => (fun ys⁷ -> [C h⁶ concat₀₀(t⁶, ys⁷)])}: 98
-//│ [C h⁹ [N]]: 114 --->
-//│ 	case xs³ of {N  => (fun ys⁶ -> ys⁶) | C h⁶ t⁶ => (fun ys⁷ -> [C h⁶ concat₀₀(t⁶, ys⁷)])}: 98
-//│ [N]: 124 --->
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ concat₀₁(t⁴, ys³)])}: 66
-//│ [C h⁸ [N]]: 125 --->
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ concat₀₁(t⁴, ys³)])}: 66
+//│ [C h⁴ concat₀₁(t⁴, ys³)]: 88 --->
+//│ 	case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ concat₀₂(t⁵, ys⁵)])}: 107
+//│ [C h⁶ concat₀₀(t⁶, ys⁷)]: 120 --->
+//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ concat₀₁(t⁴, ys³)])}: 90
+//│ [N]: 139 --->
+//│ 	case xs³ of {N  => (fun ys⁶ -> ys⁶) | C h⁶ t⁶ => (fun ys⁷ -> [C h⁶ concat₀₀(t⁶, ys⁷)])}: 122
+//│ [N]: 151 --->
+//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ concat₀₁(t⁴, ys³)])}: 90
+//│ [C force⁰(h⁹) [N]]: 152 --->
+//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ concat₀₁(t⁴, ys³)])}: 90
+//│ [N]: 167 --->
+//│ 	case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ concat₀₂(t⁵, ys⁵)])}: 107
+//│ [C force⁰(h⁸) [N]]: 168 --->
+//│ 	case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ concat₀₂(t⁵, ys⁵)])}: 107
 //│ ------------------
-//│ case xs¹ of {N  => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ concat₀₁(t⁴, ys³)])}: 66 --->
-//│ 	[C h⁶ concat₀₀(t⁶, ys⁷)]: 96
-//│ 	[N]: 124
-//│ 	[C h⁸ [N]]: 125
-//│ case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ concat₀₂(t⁵, ys⁵)])}: 79 --->
-//│ 	[N]: 106
-//│ case xs³ of {N  => (fun ys⁶ -> ys⁶) | C h⁶ t⁶ => (fun ys⁷ -> [C h⁶ concat₀₀(t⁶, ys⁷)])}: 98 --->
-//│ 	[C h⁵ concat₀₂(t⁵, ys⁵)]: 77
-//│ 	[N]: 113
-//│ 	[C h⁹ [N]]: 114
+//│ case xs¹ of {N  => (fun ys² -> ys²) | C h⁴ t⁴ => (fun ys³ -> [C h⁴ concat₀₁(t⁴, ys³)])}: 90 --->
+//│ 	[C h⁶ concat₀₀(t⁶, ys⁷)]: 120
+//│ 	[N]: 151
+//│ 	[C force⁰(h⁹) [N]]: 152
+//│ case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁵ t⁵ => (fun ys⁵ -> [C h⁵ concat₀₂(t⁵, ys⁵)])}: 107 --->
+//│ 	[C h⁴ concat₀₁(t⁴, ys³)]: 88
+//│ 	[N]: 167
+//│ 	[C force⁰(h⁸) [N]]: 168
+//│ case xs³ of {N  => (fun ys⁶ -> ys⁶) | C h⁶ t⁶ => (fun ys⁷ -> [C h⁶ concat₀₀(t⁶, ys⁷)])}: 122 --->
+//│ 	[N]: 139
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ rev₀₁(
-//│ 	let h¹⁰ = 1
-//│ 	in let t¹⁰ = 	
-//│ 		let h¹¹ = 2
-//│ 		in let t¹¹ = 	
-//│ 			let h¹² = 3
-//│ 			in let t¹² = (fun ys⁸ -> ys⁸)
-//│ 			in concat₀₂(rev₀₃(t¹²), 
-//│ 				let h¹³ = h¹²
-//│ 				in let t¹³ = (fun ys¹¹ -> ys¹¹)
+//│ 	let h¹⁰ = lazy⁰(1)
+//│ 	in let t¹⁰ = lazy⁰(
+//│ 		let h¹¹ = lazy⁰(2)
+//│ 		in let t¹¹ = lazy⁰(
+//│ 			let h¹² = lazy⁰(3)
+//│ 			in let t¹² = lazy⁰((fun ys⁸ -> ys⁸))
+//│ 			in concat₀₀(rev₀₀(force⁰(t¹²)), 
+//│ 				let h¹³ = lazy⁰(force⁰(h¹²))
+//│ 				in let t¹³ = lazy⁰((fun ys¹¹ -> ys¹¹))
 //│ 				in (fun ys⁹ -> 
-//│ 					let h¹⁴ = h¹³
-//│ 					in let t¹⁴ = concat₀₀(t¹³, ys⁹)
-//│ 					in (fun ys¹⁰ -> [C h¹⁴ concat₀₁(t¹⁴, ys¹⁰)])))
-//│ 		in concat₀₀(rev₀₀(t¹¹), 
-//│ 			let h¹⁵ = h¹¹
-//│ 			in let t¹⁵ = (fun ys¹³ -> ys¹³)
-//│ 			in (fun ys¹² -> [C h¹⁵ concat₀₁(t¹⁵, ys¹²)]))
-//│ 	in concat₀₁(rev₀₂(t¹⁰), [C h¹⁰ [N]]))
+//│ 					let h¹⁴ = lazy⁰(force⁰(h¹³))
+//│ 					in let t¹⁴ = lazy⁰(concat₀₁(force⁰(t¹³), ys⁹))
+//│ 					in (fun ys¹⁰ -> [C force⁰(h¹⁴) concat₀₂(force⁰(t¹⁴), ys¹⁰)]))))
+//│ 		in concat₀₁(rev₀₂(force⁰(t¹¹)), 
+//│ 			let h¹⁵ = lazy⁰(force⁰(h¹¹))
+//│ 			in let t¹⁵ = lazy⁰((fun ys¹³ -> ys¹³))
+//│ 			in (fun ys¹² -> [C force⁰(h¹⁵) concat₀₂(force⁰(t¹⁵), ys¹²)])))
+//│ 	in concat₀₂(rev₀₃(force⁰(t¹⁰)), [C force⁰(h¹⁰) [N]]))
 //│ def concat₀₀(xs⁴) = 
 //│ 	xs⁴
 //│ def concat₀₁(xs⁶) = 
@@ -1422,8 +1422,8 @@ main(0)
 //│ 	def c₀(x²) = 
 //│ 		x²
 //│ 	def p₀ = 
-//│ 		let a² = p₁
-//│ 		in a²
+//│ 		let a² = lazy⁰(p₁)
+//│ 		in force⁰(a²)
 //│ 		where
 //│ 		def p₁ = 
 //│ 			[C p₁]

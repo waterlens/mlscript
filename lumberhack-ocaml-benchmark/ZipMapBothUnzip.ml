@@ -77,44 +77,44 @@ and unzip_d0 ls_0 =
         | `Pair(a_0, b_0) -> 
           (match (unzip_d0 t_0) with
             | `Pair(atail_0, btail_0) -> 
-              (`Pair((let rec h_1 = a_0 in
-                (let rec t_1 = atail_0 in
+              (`Pair((let rec h_1 = (lazy a_0) in
+                (let rec t_1 = (lazy atail_0) in
                   (fun f_0 -> 
-                    (let rec x_0 = (f_0 h_1) in
-                      (let rec xt_0 = ((map_d0 f_0) t_1) in
+                    (let rec x_0 = (lazy (f_0 (Lazy.force h_1))) in
+                      (let rec xt_0 = (lazy ((map_d0 f_0) (Lazy.force t_1))) in
                         (fun ys_1 -> 
-                          ((ys_1 xt_0) x_0))))))), (let rec h_2 = b_0 in
-                (let rec t_2 = btail_0 in
+                          ((ys_1 (Lazy.force xt_0)) (Lazy.force x_0)))))))), (let rec h_2 = (lazy b_0) in
+                (let rec t_2 = (lazy btail_0) in
                   (fun f_1 -> 
-                    (let rec y_0 = (f_1 h_2) in
-                      (let rec yt_0 = ((map_d1 f_1) t_2) in
+                    (let rec y_0 = (lazy (f_1 (Lazy.force h_2))) in
+                      (let rec yt_0 = (lazy ((map_d1 f_1) (Lazy.force t_2))) in
                         (fun xt_1 x_1 -> 
-                          (`C((`Pair(x_1, y_0)), ((zip_d0 xt_1) yt_0)))))))))))))
+                          (`C((`Pair(x_1, (Lazy.force y_0))), ((zip_d0 xt_1) (Lazy.force yt_0))))))))))))))
     | `N -> 
       (`Pair((fun f_2 ys_2 -> 
         (`N)), (fun f_3 xt_2 x_2 -> 
         (`N)))));;
 
 (* lumberhack_pop_out *)
-let rec makeZippedList_d0_d0 n_2 =
-  (if (n_2 > 0) then
-    (`C((`Pair(n_2, (n_2 + 1))), (makeZippedList_d0_d0 (n_2 - 1))))
+let rec makeZippedList_d0_d0 n_3 =
+  (if (n_3 > 0) then
+    (`C((`Pair(n_3, (n_3 + 1))), (makeZippedList_d0_d0 (n_3 - 1))))
   else
     (`N));;
-let rec map_d0_d0 f_6 ls_3 =
-  (ls_3 f_6);;
+let rec map_d0_d0 f_7 ls_4 =
+  (ls_4 f_7);;
 let rec map_d0_d1 f_1_3 ls_7 =
   (ls_7 f_1_3);;
-let rec map_d1_d0 f_8 ls_5 =
+let rec map_d1_d0 f_6 ls_3 =
+  (ls_3 f_6);;
+let rec map_d1_d1 f_8 ls_5 =
   (ls_5 f_8);;
-let rec map_d1_d1 f_7 ls_4 =
-  (ls_4 f_7);;
-let rec zip_d0_d0 xs_4 ys_8 =
-  (xs_4 ys_8);;
-let rec zip_d0_d1 xs_3 ys_5 =
+let rec zip_d0_d0 xs_3 ys_5 =
   (xs_3 ys_5);;
-let rec testZipMapBothUnzip_d0_d0 n_3 =
-  (match (unzip_d0_d0 (makeZippedList_d0_d0 n_3)) with
+let rec zip_d0_d1 xs_4 ys_8 =
+  (xs_4 ys_8);;
+let rec testZipMapBothUnzip_d0_d0 n_2 =
+  (match (unzip_d0_d0 (makeZippedList_d0_d0 n_2)) with
     | `Pair(xs_2, ys_4) -> 
       ((zip_d0_d1 ((map_d0_d0 (fun x_5 -> 
         (x_5 + 1))) xs_2)) ((map_d1_d0 (fun x_6 -> 
@@ -126,19 +126,19 @@ and unzip_d0_d0 ls_6 =
         | `Pair(a_1, b_1) -> 
           (match (unzip_d0_d0 t_3) with
             | `Pair(atail_1, btail_1) -> 
-              (`Pair((let rec h_4 = a_1 in
-                (let rec t_4 = atail_1 in
+              (`Pair((let rec h_4 = (lazy a_1) in
+                (let rec t_4 = (lazy atail_1) in
                   (fun f_9 -> 
-                    (let rec x_7 = (f_9 h_4) in
-                      (let rec xt_3 = ((map_d0_d1 f_9) t_4) in
+                    (let rec x_7 = (lazy (f_9 (Lazy.force h_4))) in
+                      (let rec xt_3 = (lazy ((map_d0_d1 f_9) (Lazy.force t_4))) in
                         (fun ys_6 -> 
-                          ((ys_6 xt_3) x_7))))))), (let rec h_5 = b_1 in
-                (let rec t_5 = btail_1 in
+                          ((ys_6 (Lazy.force xt_3)) (Lazy.force x_7)))))))), (let rec h_5 = (lazy b_1) in
+                (let rec t_5 = (lazy btail_1) in
                   (fun f_1_0 -> 
-                    (let rec y_1 = (f_1_0 h_5) in
-                      (let rec yt_1 = ((map_d1_d1 f_1_0) t_5) in
+                    (let rec y_1 = (lazy (f_1_0 (Lazy.force h_5))) in
+                      (let rec yt_1 = (lazy ((map_d1_d1 f_1_0) (Lazy.force t_5))) in
                         (fun xt_4 x_8 -> 
-                          (`C((`Pair(x_8, y_1)), ((zip_d0_d0 xt_4) yt_1)))))))))))))
+                          (`C((`Pair(x_8, (Lazy.force y_1))), ((zip_d0_d0 xt_4) (Lazy.force yt_1))))))))))))))
     | `N -> 
       (`Pair((fun f_1_1 ys_7 -> 
         (`N)), (fun f_1_2 xt_5 x_9 -> 

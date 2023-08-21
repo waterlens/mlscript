@@ -147,9 +147,9 @@ map(l)(
 //│ >>>>>>> after fusion >>>>>>>
 //│ map₀(l₀, (fun x² -> x²))
 //│ def l₀ = 
-//│ 	let h² = [T]
-//│ 	in let t² = (fun f⁵ -> [N])
-//│ 	in (fun f⁴ -> [C f⁴(h²) map₀(t², f⁴)])
+//│ 	let h² = lazy⁰([T])
+//│ 	in let t² = lazy⁰((fun f⁵ -> [N]))
+//│ 	in (fun f⁴ -> [C f⁴(force⁰(h²)) map₀(force⁰(t²), f⁴)])
 //│ def map₀(ls²) = 
 //│ 	ls²
 //│ <<<<<<< after fusion <<<<<<<
@@ -257,15 +257,15 @@ map(l)
 //│ >>>>>>> after fusion >>>>>>>
 //│ map₀(l₀)
 //│ def l₀ = 
-//│ 	let h² = [T]
-//│ 	in let t² = 	
-//│ 		let h³ = [TT]
-//│ 		in let t³ = 	
-//│ 			let h⁴ = [TTTT]
-//│ 			in let t⁴ = [N]
-//│ 			in [C h⁴ map₀(t⁴)]
-//│ 		in [C h³ map₀(t³)]
-//│ 	in [C h² map₀(t²)]
+//│ 	let h² = lazy⁰([T])
+//│ 	in let t² = lazy⁰(
+//│ 		let h³ = lazy⁰([TT])
+//│ 		in let t³ = lazy⁰(
+//│ 			let h⁴ = lazy⁰([TTTT])
+//│ 			in let t⁴ = lazy⁰([N])
+//│ 			in [C force⁰(h⁴) map₀(force⁰(t⁴))])
+//│ 		in [C force⁰(h³) map₀(force⁰(t³))])
+//│ 	in [C force⁰(h²) map₀(force⁰(t²))]
 //│ def map₀(ls²) = 
 //│ 	ls²
 //│ <<<<<<< after fusion <<<<<<<
@@ -404,21 +404,21 @@ c(t)
 //│ def c₀(x²) = 
 //│ 	x²
 //│ def t₀ = 
-//│ 	let n³ = [KK]
-//│ 	in let l³ = aa₀
-//│ 	in let r³ = bb₀
-//│ 	in [T n³ c₀(l³) c₀(r³)]
+//│ 	let n³ = lazy⁰([KK])
+//│ 	in let l³ = lazy⁰(aa₀)
+//│ 	in let r³ = lazy⁰(bb₀)
+//│ 	in [T force⁰(n³) c₀(force⁰(l³)) c₀(force⁰(r³))]
 //│ 	where
 //│ 	def aa₀ = 
-//│ 		let n⁴ = [NN]
-//│ 		in let l⁴ = [LL]
-//│ 		in let r⁴ = [LL]
-//│ 		in [T n⁴ c₀(l⁴) c₀(r⁴)]
+//│ 		let n⁴ = lazy⁰([NN])
+//│ 		in let l⁴ = lazy⁰([LL])
+//│ 		in let r⁴ = lazy⁰([LL])
+//│ 		in [T force⁰(n⁴) c₀(force⁰(l⁴)) c₀(force⁰(r⁴))]
 //│ 	def bb₀ = 
-//│ 		let n² = [NN]
-//│ 		in let l² = [LL]
-//│ 		in let r² = [LL]
-//│ 		in [T n² c₀(l²) c₀(r²)]
+//│ 		let n² = lazy⁰([NN])
+//│ 		in let l² = lazy⁰([LL])
+//│ 		in let r² = lazy⁰([LL])
+//│ 		in [T force⁰(n²) c₀(force⁰(l²)) c₀(force⁰(r²))]
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -517,10 +517,10 @@ sum(mapa(mapb(primitive)))
 //│ def mapb₀(lsb²) = 
 //│ 	case lsb² of {
 //│ 		C hb¹ tb¹ => 
-//│ 			let ha² = primitive⁰(hb¹)
-//│ 			in let ta² = mapb₀(tb¹)
-//│ 			in let t² = mapa₀(ta²)
-//│ 			in [S [N] sum₀(t²)]
+//│ 			let ha² = lazy⁰(primitive⁰(hb¹))
+//│ 			in let ta² = lazy⁰(mapb₀(tb¹))
+//│ 			in let t² = lazy⁰(mapa₀(force⁰(ta²)))
+//│ 			in [S [N] sum₀(force⁰(t²))]
 //│ 		| N  => [N]}
 //│ def sum₀(ls²) = 
 //│ 	ls²
@@ -668,16 +668,16 @@ lastDrive(map(C(T, C(TT, N))))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ lastDrive₀(map₀(
-//│ 	let hhh³ = [K]
-//│ 	in let ttt³ = 	
-//│ 		let hhh⁴ = [KK]
-//│ 		in let ttt⁴ = (fun x⁵ -> x⁵)
-//│ 		in let h² = (fun head⁴ -> head⁴)(hhh⁴)
-//│ 		in let t² = map₁(ttt⁴)
-//│ 		in (fun x⁴ -> last₀(t², h²))
-//│ 	in let hh² = (fun head³ -> head³)(hhh³)
-//│ 	in let tt² = map₁(ttt³)
-//│ 	in [Some last₀(tt², hh²)]))
+//│ 	let hhh³ = lazy⁰([K])
+//│ 	in let ttt³ = lazy⁰(
+//│ 		let hhh⁴ = lazy⁰([KK])
+//│ 		in let ttt⁴ = lazy⁰((fun x⁵ -> x⁵))
+//│ 		in let h² = lazy⁰((fun head⁴ -> head⁴)(force⁰(hhh⁴)))
+//│ 		in let t² = lazy⁰(map₁(force⁰(ttt⁴)))
+//│ 		in (fun x⁴ -> last₀(force⁰(t²), force⁰(h²))))
+//│ 	in let hh² = lazy⁰((fun head³ -> head³)(force⁰(hhh³)))
+//│ 	in let tt² = lazy⁰(map₁(force⁰(ttt³)))
+//│ 	in [Some last₀(force⁰(tt²), force⁰(hh²))]))
 //│ def lastDrive₀(xs²) = 
 //│ 	xs²
 //│ 	where

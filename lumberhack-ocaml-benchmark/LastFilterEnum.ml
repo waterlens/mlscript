@@ -55,13 +55,13 @@ let rec last_d0 a_1 ls_1 =
       ((last_d0 h_2) t_2));;
 let rec enumFromTo_d0 a_0 b_0 =
   (if (a_0 <= b_0) then
-    (let rec h_0 = a_0 in
-      (let rec t_0 = ((enumFromTo_d0 (a_0 + 1)) b_0) in
+    (let rec h_0 = (lazy a_0) in
+      (let rec t_0 = (lazy ((enumFromTo_d0 (a_0 + 1)) b_0)) in
         (fun f_0 -> 
-          (if (f_0 h_0) then
-            (`C(h_0, ((filter_d0 t_0) f_0)))
+          (if (f_0 (Lazy.force h_0)) then
+            (`C((Lazy.force h_0), ((filter_d0 (Lazy.force t_0)) f_0)))
           else
-            ((filter_d0 t_0) f_0)))))
+            ((filter_d0 (Lazy.force t_0)) f_0)))))
   else
     (fun f_1 -> 
       (`N)))
@@ -76,32 +76,32 @@ and testLastFilterEnum_d0 n_0 =
     (x_0 < 1000))));;
 
 (* lumberhack_pop_out *)
-let rec filter_d0_d0 ls_7 f_5 =
-  (ls_7 f_5);;
-let rec filter_d0_d1 ls_5 f_3 =
-  (ls_5 f_3);;
-let rec filter_d0_d2 ls_6 f_4 =
-  (ls_6 f_4);;
-let rec last_d0_d0 a_2 ls_4 =
-  (match ls_4 with
+let rec filter_d0_d0 ls_4 f_4 =
+  (ls_4 f_4);;
+let rec filter_d0_d1 ls_3 f_3 =
+  (ls_3 f_3);;
+let rec filter_d0_d2 ls_5 f_5 =
+  (ls_5 f_5);;
+let rec last_d0_d0 a_3 ls_7 =
+  (match ls_7 with
     | `N -> 
-      a_2
-    | `C(h_4, t_4) -> 
-      ((last_d0_d0 h_4) t_4));;
-let rec enumFromTo_d0_d0 a_3 b_1 _lh_popOutId_0_0 =
-  (if (a_3 <= b_1) then
-    (let rec h_5 = a_3 in
-      (let rec t_5 = ((enumFromTo_d0_d0 (a_3 + 1)) b_1) in
-        (if (_lh_popOutId_0_0 h_5) then
-          (`C(h_5, ((filter_d0_d0 t_5) _lh_popOutId_0_0)))
+      a_3
+    | `C(h_5, t_5) -> 
+      ((last_d0_d0 h_5) t_5));;
+let rec enumFromTo_d0_d0 a_2 b_1 _lh_popOutId_0_0 =
+  (if (a_2 <= b_1) then
+    (let rec h_3 = (lazy a_2) in
+      (let rec t_3 = (lazy ((enumFromTo_d0_d0 (a_2 + 1)) b_1)) in
+        (if (_lh_popOutId_0_0 (Lazy.force h_3)) then
+          (`C((Lazy.force h_3), ((filter_d0_d0 (Lazy.force t_3)) _lh_popOutId_0_0)))
         else
-          ((filter_d0_d1 t_5) _lh_popOutId_0_0))))
+          ((filter_d0_d1 (Lazy.force t_3)) _lh_popOutId_0_0))))
   else
     (`N))
-and lastDrive_d0_d0 ls_3 =
-  (match ls_3 with
-    | `C(h_3, t_3) -> 
-      (`Some(((last_d0_d0 h_3) t_3)))
+and lastDrive_d0_d0 ls_6 =
+  (match ls_6 with
+    | `C(h_4, t_4) -> 
+      (`Some(((last_d0_d0 h_4) t_4)))
     | `N -> 
       (`None))
 and testLastFilterEnum_d0_d0 n_1 =

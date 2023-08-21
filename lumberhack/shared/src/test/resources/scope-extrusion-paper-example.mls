@@ -44,9 +44,9 @@ f(C(1, C(2, N)))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ f₀(
-//│ 	let h² = 1
-//│ 	in let t² = [C 2 [N]]
-//│ 	in (fun a² -> primitive⁰(h², t², a²)))
+//│ 	let h² = lazy⁰(1)
+//│ 	in let t² = lazy⁰([C 2 [N]])
+//│ 	in (fun a² -> primitive⁰(force⁰(h²), force⁰(t²), a²)))
 //│ def f₀(xs², a³) = 
 //│ 	primitive⁰(xs²(a³))
 //│ <<<<<<< after fusion <<<<<<<
@@ -175,9 +175,9 @@ f(g(42))(0)
 //│ 	primitive⁰(xs²(a²))
 //│ def g₀(init²) = 
 //│ 	if (init² > 0) then 
-//│ 		let h² = 1
-//│ 		in let t² = g₀((init² - 1))
-//│ 		in (fun a³ -> primitive⁰(h², f₀(t², a³), a³)) else (fun a⁴ -> primitive⁰(a⁴))
+//│ 		let h² = lazy⁰(1)
+//│ 		in let t² = lazy⁰(g₀((init² - 1)))
+//│ 		in (fun a³ -> primitive⁰(force⁰(h²), f₀(force⁰(t²), a³), a³)) else (fun a⁴ -> primitive⁰(a⁴))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -253,9 +253,9 @@ f(g(42))(0)
 //│ 	primitive⁰(xs²(a²))
 //│ def g₀(init²) = 
 //│ 	if (init² > 0) then 
-//│ 		let h² = 1
-//│ 		in let t² = g₀((init² - 1))
-//│ 		in (fun a³ -> primitive⁰(h², f₀(t², (a³ + 1)), a³)) else (fun a⁴ -> primitive⁰(a⁴))
+//│ 		let h² = lazy⁰(1)
+//│ 		in let t² = lazy⁰(g₀((init² - 1)))
+//│ 		in (fun a³ -> primitive⁰(force⁰(h²), f₀(force⁰(t²), (a³ + 1)), a³)) else (fun a⁴ -> primitive⁰(a⁴))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>

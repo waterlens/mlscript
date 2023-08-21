@@ -45,10 +45,10 @@ let rec sumTree_d0 t_0 =
 let rec sqTree_d0 t_1 =
   (match t_1 with
     | `T(v_0, l_0, r_0) -> 
-      (let rec v_1 = (v_0 * v_0) in
-        (let rec l_1 = (sqTree_d0 l_0) in
-          (let rec r_1 = (sqTree_d0 r_0) in
-            ((v_1 + (sumTree_d0 l_1)) + (sumTree_d0 r_1)))))
+      (let rec v_1 = (lazy (v_0 * v_0)) in
+        (let rec l_1 = (lazy (sqTree_d0 l_0)) in
+          (let rec r_1 = (lazy (sqTree_d0 r_0)) in
+            (((Lazy.force v_1) + (sumTree_d0 (Lazy.force l_1))) + (sumTree_d0 (Lazy.force r_1))))))
     | `L -> 
       0)
 and testSumSquareTree_d0 n_0 =
@@ -60,19 +60,19 @@ let rec genTree_d0_d0 n_2 =
     (`T(n_2, (genTree_d0_d0 (n_2 - 1)), (genTree_d0_d0 (n_2 - 1))))
   else
     (`L));;
-let rec sumTree_d0_d0 t_3 =
-  t_3;;
-let rec sumTree_d0_d1 t_4 =
-  t_4;;
-let rec sumTree_d0_d2 t_5 =
+let rec sumTree_d0_d0 t_5 =
   t_5;;
-let rec sqTree_d0_d0 t_2 =
-  (match t_2 with
+let rec sumTree_d0_d1 t_2 =
+  t_2;;
+let rec sumTree_d0_d2 t_3 =
+  t_3;;
+let rec sqTree_d0_d0 t_4 =
+  (match t_4 with
     | `T(v_2, l_2, r_2) -> 
-      (let rec v_3 = (v_2 * v_2) in
-        (let rec l_3 = (sqTree_d0_d0 l_2) in
-          (let rec r_3 = (sqTree_d0_d0 r_2) in
-            ((v_3 + (sumTree_d0_d0 l_3)) + (sumTree_d0_d1 r_3)))))
+      (let rec v_3 = (lazy (v_2 * v_2)) in
+        (let rec l_3 = (lazy (sqTree_d0_d0 l_2)) in
+          (let rec r_3 = (lazy (sqTree_d0_d0 r_2)) in
+            (((Lazy.force v_3) + (sumTree_d0_d0 (Lazy.force l_3))) + (sumTree_d0_d1 (Lazy.force r_3))))))
     | `L -> 
       0)
 and testSumSquareTree_d0_d0 n_3 =

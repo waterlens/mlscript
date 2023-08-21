@@ -8,7 +8,7 @@ map₁ f¹² ls¹⁹ = (case ls¹⁹ of {(h²⁰ : t²²) -> ((f¹² h²⁰):((m
 testMapmap₀ _lh_testMapmap_arg1¹ = ((map₀ (\x⁴ -> (x⁴ + 1))) ((map₁ (\x⁵ -> (x⁵ + x⁵))) ((enumFromTo₀ 1) _lh_testMapmap_arg1¹)))
 
 --- lumberhack ---
-enumFromTo₀₀ a⁰ b⁰ = (if (a⁰ <= b⁰) then (let h⁰ = a⁰ in (let t⁰ = ((enumFromTo₀₀ (a⁰ + 1)) b⁰) in (\f² -> (let h¹ = (f² h⁰) in (let t¹ = ((map₁₀ f²) t⁰) in (\f³ -> ((f³ h¹):((map₀₀ f³) t¹)))))))) else (\f⁴ f⁵ -> []))
+enumFromTo₀₀ a⁰ b⁰ = (if (a⁰ <= b⁰) then (let h⁰ = (lazy a⁰) in (let t⁰ = (lazy ((enumFromTo₀₀ (a⁰ + 1)) b⁰)) in (\f² -> (let h¹ = (lazy (f² (force h⁰))) in (let t¹ = (lazy ((map₁₀ f²) (force t⁰))) in (\f³ -> ((f³ (force h¹)):((map₀₀ f³) (force t¹))))))))) else (\f⁴ f⁵ -> []))
 map₀₀ f⁰ ls⁰ = (ls⁰ f⁰)
 map₁₀ f¹ ls¹ = (ls¹ f¹)
 testMapmap₀₀ _lh_testMapmap_arg1⁰ = ((map₀₀ (\x⁰ -> (x⁰ + 1))) ((map₁₀ (\x¹ -> (x¹ + x¹))) ((enumFromTo₀₀ 1) _lh_testMapmap_arg1⁰)))

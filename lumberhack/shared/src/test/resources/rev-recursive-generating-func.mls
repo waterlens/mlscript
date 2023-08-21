@@ -95,9 +95,9 @@ rev(genCountDown(4))
 //│ rev₀(genCountDown₀(4))
 //│ def genCountDown₀(n²) = 
 //│ 	if (n² > 0) then 
-//│ 		let h⁴ = n²
-//│ 		in let t⁴ = genCountDown₀((n² - 1))
-//│ 		in concat₀(rev₀(t⁴), [C h⁴ [N]]) else [N]
+//│ 		let h⁴ = lazy⁰(n²)
+//│ 		in let t⁴ = lazy⁰(genCountDown₀((n² - 1)))
+//│ 		in concat₀(rev₀(force⁰(t⁴)), [C force⁰(h⁴) [N]]) else [N]
 //│ def rev₀(ls²) = 
 //│ 	ls²
 //│ 	where
@@ -201,9 +201,9 @@ rev(genCountDown(primitive))
 //│ rev₀(genCountDown₀(primitive⁰))
 //│ def genCountDown₀(n²) = 
 //│ 	if (n² > 0) then 
-//│ 		let h⁴ = n²
-//│ 		in let t⁴ = genCountDown₀((n² - 1))
-//│ 		in concat₀(rev₀(t⁴), [C h⁴ [N]]) else [N]
+//│ 		let h⁴ = lazy⁰(n²)
+//│ 		in let t⁴ = lazy⁰(genCountDown₀((n² - 1)))
+//│ 		in concat₀(rev₀(force⁰(t⁴)), [C force⁰(h⁴) [N]]) else [N]
 //│ def rev₀(ls²) = 
 //│ 	ls²
 //│ 	where
@@ -274,9 +274,9 @@ rev(genCountDown(10), N)
 //│ rev₀(genCountDown₀(10), [N])
 //│ def genCountDown₀(n²) = 
 //│ 	if (n² > 0) then 
-//│ 		let h² = n²
-//│ 		in let t² = genCountDown₀((n² - 1))
-//│ 		in (fun a³ -> rev₀(t², [C h² a³])) else (fun a⁴ -> a⁴)
+//│ 		let h² = lazy⁰(n²)
+//│ 		in let t² = lazy⁰(genCountDown₀((n² - 1)))
+//│ 		in (fun a³ -> rev₀(force⁰(t²), [C force⁰(h²) a³])) else (fun a⁴ -> a⁴)
 //│ def rev₀(ls², a²) = 
 //│ 	ls²(a²)
 //│ <<<<<<< after fusion <<<<<<<

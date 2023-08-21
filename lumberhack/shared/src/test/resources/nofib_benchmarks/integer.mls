@@ -1929,32 +1929,32 @@ testInteger_nofib $ primId 3000
 //│ 				where
 //│ 				def enumFromThenTo₀₀(a¹²⁰, t⁸⁰, b¹²⁰) = 
 //│ 					if (a¹²⁰ <= b¹²⁰) then 
-//│ 						let _lh_listcomp_fun_ls_h⁸⁰ = a¹²⁰
-//│ 						in let _lh_listcomp_fun_ls_t⁸⁰ = enumFromThenTo₀₀(t⁸⁰, ((2 * t⁸⁰) - a¹²⁰), b¹²⁰)
+//│ 						let _lh_listcomp_fun_ls_h⁸⁰ = lazy⁰(a¹²⁰)
+//│ 						in let _lh_listcomp_fun_ls_t⁸⁰ = lazy⁰(enumFromThenTo₀₀(t⁸⁰, ((2 * t⁸⁰) - a¹²⁰), b¹²⁰))
 //│ 						in (fun _lh_intbench_arg1²⁰ -> (fun _lh_intbench_arg2²⁰ -> (fun _lh_intbench_arg5²⁰ -> (fun _lh_intbench_arg6²⁰ -> (fun _lh_intbench_arg7²⁰ -> (fun _lh_listcomp_fun⁸⁰ -> 
-//│ 							let _lh_listcomp_fun⁸¹ = (fun _lh_listcomp_fun_para⁸⁰ -> _lh_listcomp_fun_para⁸⁰(_lh_intbench_arg1²⁰, _lh_listcomp_fun_ls_h⁸⁰, _lh_listcomp_fun⁸¹, _lh_listcomp_fun_ls_t⁸⁰, _lh_listcomp_fun⁸⁰))
+//│ 							let _lh_listcomp_fun⁸¹ = (fun _lh_listcomp_fun_para⁸⁰ -> _lh_listcomp_fun_para⁸⁰(_lh_intbench_arg1²⁰, force⁰(_lh_listcomp_fun_ls_h⁸⁰), _lh_listcomp_fun⁸¹, force⁰(_lh_listcomp_fun_ls_t⁸⁰), _lh_listcomp_fun⁸⁰))
 //│ 							in _lh_listcomp_fun⁸¹(enumFromThenTo₁₀(_lh_intbench_arg5²⁰, (_lh_intbench_arg2²⁰ + _lh_intbench_arg6²⁰), _lh_intbench_arg7²⁰)))))))) else (fun _lh_intbench_arg1²¹ -> (fun _lh_intbench_arg2²¹ -> (fun _lh_intbench_arg5²¹ -> (fun _lh_intbench_arg6²¹ -> (fun _lh_intbench_arg7²¹ -> (fun _lh_listcomp_fun⁸² -> [LH_N]))))))
 //│ 				def enumFromThenTo₁₀(a¹⁷¹, t¹¹¹, b¹⁷¹) = 
 //│ 					if (a¹⁷¹ <= b¹⁷¹) then 
-//│ 						let _lh_listcomp_fun_ls_h¹⁴⁵ = a¹⁷¹
-//│ 						in let _lh_listcomp_fun_ls_t¹⁴⁵ = enumFromThenTo₁₀(t¹¹¹, ((2 * t¹¹¹) - a¹⁷¹), b¹⁷¹)
-//│ 						in (fun _lh_intbench_arg1⁵⁸ -> (fun _lh_listcomp_fun_ls_h¹⁴⁶ -> (fun _lh_listcomp_fun²⁰⁴ -> (fun _lh_listcomp_fun_ls_t¹⁴⁶ -> (fun _lh_listcomp_fun²⁰⁵ -> [LH_C _lh_intbench_arg1⁵⁸(_lh_listcomp_fun_ls_h¹⁴⁶, _lh_listcomp_fun_ls_h¹⁴⁵) _lh_listcomp_fun²⁰⁴(_lh_listcomp_fun_ls_t¹⁴⁵)]))))) else (fun _lh_intbench_arg1⁵⁹ -> (fun _lh_listcomp_fun_ls_h¹⁴⁷ -> (fun _lh_listcomp_fun²⁰⁶ -> (fun _lh_listcomp_fun_ls_t¹⁴⁷ -> (fun _lh_listcomp_fun²⁰⁷ -> _lh_listcomp_fun²⁰⁷(_lh_listcomp_fun_ls_t¹⁴⁷))))))
+//│ 						let _lh_listcomp_fun_ls_h¹⁴⁵ = lazy⁰(a¹⁷¹)
+//│ 						in let _lh_listcomp_fun_ls_t¹⁴⁵ = lazy⁰(enumFromThenTo₁₀(t¹¹¹, ((2 * t¹¹¹) - a¹⁷¹), b¹⁷¹))
+//│ 						in (fun _lh_intbench_arg1⁵⁸ -> (fun _lh_listcomp_fun_ls_h¹⁴⁶ -> (fun _lh_listcomp_fun²⁰⁴ -> (fun _lh_listcomp_fun_ls_t¹⁴⁶ -> (fun _lh_listcomp_fun²⁰⁵ -> [LH_C _lh_intbench_arg1⁵⁸(_lh_listcomp_fun_ls_h¹⁴⁶, force⁰(_lh_listcomp_fun_ls_h¹⁴⁵)) _lh_listcomp_fun²⁰⁴(force⁰(_lh_listcomp_fun_ls_t¹⁴⁵))]))))) else (fun _lh_intbench_arg1⁵⁹ -> (fun _lh_listcomp_fun_ls_h¹⁴⁷ -> (fun _lh_listcomp_fun²⁰⁶ -> (fun _lh_listcomp_fun_ls_t¹⁴⁷ -> (fun _lh_listcomp_fun²⁰⁷ -> _lh_listcomp_fun²⁰⁷(_lh_listcomp_fun_ls_t¹⁴⁷))))))
 //│ 			def integerbench₀₀(_lh_integerbench_arg1⁵⁵, _lh_integerbench_arg2³⁹, _lh_integerbench_arg3²⁷, _lh_integerbench_arg4²⁷, _lh_integerbench_arg5³⁹, _lh_integerbench_arg6³⁹, _lh_integerbench_arg7³⁹) = 
 //│ 				let _lh_listcomp_fun¹⁹⁶ = (fun _lh_listcomp_fun_para¹⁰⁶ -> _lh_listcomp_fun_para¹⁰⁶(_lh_integerbench_arg1⁵⁵, _lh_integerbench_arg2³⁹, _lh_integerbench_arg5³⁹, _lh_integerbench_arg6³⁹, _lh_integerbench_arg7³⁹, _lh_listcomp_fun¹⁹⁶))
 //│ 				in _lh_listcomp_fun¹⁹⁶(enumFromThenTo₂₀(_lh_integerbench_arg2³⁹, (_lh_integerbench_arg2³⁹ + _lh_integerbench_arg3²⁷), _lh_integerbench_arg4²⁷))
 //│ 				where
 //│ 				def enumFromThenTo₂₀(a¹³¹, t⁹¹, b¹³¹) = 
 //│ 					if (a¹³¹ <= b¹³¹) then 
-//│ 						let _lh_listcomp_fun_ls_h⁹⁹ = a¹³¹
-//│ 						in let _lh_listcomp_fun_ls_t⁹⁹ = enumFromThenTo₂₀(t⁹¹, ((2 * t⁹¹) - a¹³¹), b¹³¹)
+//│ 						let _lh_listcomp_fun_ls_h⁹⁹ = lazy⁰(a¹³¹)
+//│ 						in let _lh_listcomp_fun_ls_t⁹⁹ = lazy⁰(enumFromThenTo₂₀(t⁹¹, ((2 * t⁹¹) - a¹³¹), b¹³¹))
 //│ 						in (fun _lh_integerbench_arg1³⁵ -> (fun _lh_integerbench_arg2³¹ -> (fun _lh_integerbench_arg5³¹ -> (fun _lh_integerbench_arg6³¹ -> (fun _lh_integerbench_arg7³¹ -> (fun _lh_listcomp_fun¹²⁴ -> 
-//│ 							let _lh_listcomp_fun¹²⁵ = (fun _lh_listcomp_fun_para⁹⁴ -> _lh_listcomp_fun_para⁹⁴(_lh_integerbench_arg1³⁵, _lh_listcomp_fun_ls_h⁹⁹, _lh_listcomp_fun¹²⁵, _lh_listcomp_fun_ls_t⁹⁹, _lh_listcomp_fun¹²⁴))
+//│ 							let _lh_listcomp_fun¹²⁵ = (fun _lh_listcomp_fun_para⁹⁴ -> _lh_listcomp_fun_para⁹⁴(_lh_integerbench_arg1³⁵, force⁰(_lh_listcomp_fun_ls_h⁹⁹), _lh_listcomp_fun¹²⁵, force⁰(_lh_listcomp_fun_ls_t⁹⁹), _lh_listcomp_fun¹²⁴))
 //│ 							in _lh_listcomp_fun¹²⁵(enumFromThenTo₃₀(_lh_integerbench_arg5³¹, (_lh_integerbench_arg2³¹ + _lh_integerbench_arg6³¹), _lh_integerbench_arg7³¹)))))))) else (fun _lh_integerbench_arg1³⁶ -> (fun _lh_integerbench_arg2³² -> (fun _lh_integerbench_arg5³² -> (fun _lh_integerbench_arg6³² -> (fun _lh_integerbench_arg7³² -> (fun _lh_listcomp_fun¹²⁶ -> [LH_N]))))))
 //│ 				def enumFromThenTo₃₀(a¹⁴⁶, t¹⁰⁶, b¹⁴⁶) = 
 //│ 					if (a¹⁴⁶ <= b¹⁴⁶) then 
-//│ 						let _lh_listcomp_fun_ls_h¹³² = a¹⁴⁶
-//│ 						in let _lh_listcomp_fun_ls_t¹³² = enumFromThenTo₃₀(t¹⁰⁶, ((2 * t¹⁰⁶) - a¹⁴⁶), b¹⁴⁶)
-//│ 						in (fun _lh_integerbench_arg1⁵³ -> (fun _lh_listcomp_fun_ls_h¹³³ -> (fun _lh_listcomp_fun¹⁸⁴ -> (fun _lh_listcomp_fun_ls_t¹³³ -> (fun _lh_listcomp_fun¹⁸⁵ -> [LH_C _lh_integerbench_arg1⁵³(_lh_listcomp_fun_ls_h¹³³, _lh_listcomp_fun_ls_h¹³²) _lh_listcomp_fun¹⁸⁴(_lh_listcomp_fun_ls_t¹³²)]))))) else (fun _lh_integerbench_arg1⁵⁴ -> (fun _lh_listcomp_fun_ls_h¹³⁴ -> (fun _lh_listcomp_fun¹⁸⁶ -> (fun _lh_listcomp_fun_ls_t¹³⁴ -> (fun _lh_listcomp_fun¹⁸⁷ -> _lh_listcomp_fun¹⁸⁷(_lh_listcomp_fun_ls_t¹³⁴))))))
+//│ 						let _lh_listcomp_fun_ls_h¹³² = lazy⁰(a¹⁴⁶)
+//│ 						in let _lh_listcomp_fun_ls_t¹³² = lazy⁰(enumFromThenTo₃₀(t¹⁰⁶, ((2 * t¹⁰⁶) - a¹⁴⁶), b¹⁴⁶))
+//│ 						in (fun _lh_integerbench_arg1⁵³ -> (fun _lh_listcomp_fun_ls_h¹³³ -> (fun _lh_listcomp_fun¹⁸⁴ -> (fun _lh_listcomp_fun_ls_t¹³³ -> (fun _lh_listcomp_fun¹⁸⁵ -> [LH_C _lh_integerbench_arg1⁵³(_lh_listcomp_fun_ls_h¹³³, force⁰(_lh_listcomp_fun_ls_h¹³²)) _lh_listcomp_fun¹⁸⁴(force⁰(_lh_listcomp_fun_ls_t¹³²))]))))) else (fun _lh_integerbench_arg1⁵⁴ -> (fun _lh_listcomp_fun_ls_h¹³⁴ -> (fun _lh_listcomp_fun¹⁸⁶ -> (fun _lh_listcomp_fun_ls_t¹³⁴ -> (fun _lh_listcomp_fun¹⁸⁷ -> _lh_listcomp_fun¹⁸⁷(_lh_listcomp_fun_ls_t¹³⁴))))))
 //│ 		def runbench₁₀(_lh_runbench_arg1²⁹, _lh_runbench_arg2²⁹, _lh_runbench_arg3²⁹, _lh_runbench_arg4²⁹, _lh_runbench_arg5²⁹, _lh_runbench_arg6²⁹, _lh_runbench_arg7²⁹, _lh_runbench_arg8²⁹, _lh_runbench_arg9²⁹) = 
 //│ 			[LH_P2 intbench₁₀(_lh_runbench_arg2²⁹, _lh_runbench_arg4²⁹, _lh_runbench_arg5²⁹, _lh_runbench_arg6²⁹, _lh_runbench_arg4²⁹, _lh_runbench_arg5²⁹, _lh_runbench_arg6²⁹) integerbench₁₀(_lh_runbench_arg1²⁹, _lh_runbench_arg4²⁹, _lh_runbench_arg5²⁹, _lh_runbench_arg6²⁹, _lh_runbench_arg4²⁹, _lh_runbench_arg5²⁹, _lh_runbench_arg6²⁹)]
 //│ 			where
@@ -1964,32 +1964,32 @@ testInteger_nofib $ primId 3000
 //│ 				where
 //│ 				def enumFromThenTo₄₀(a¹⁴³, t¹⁰³, b¹⁴³) = 
 //│ 					if (a¹⁴³ <= b¹⁴³) then 
-//│ 						let _lh_listcomp_fun_ls_h¹²⁵ = a¹⁴³
-//│ 						in let _lh_listcomp_fun_ls_t¹²⁵ = enumFromThenTo₄₀(t¹⁰³, ((2 * t¹⁰³) - a¹⁴³), b¹⁴³)
+//│ 						let _lh_listcomp_fun_ls_h¹²⁵ = lazy⁰(a¹⁴³)
+//│ 						in let _lh_listcomp_fun_ls_t¹²⁵ = lazy⁰(enumFromThenTo₄₀(t¹⁰³, ((2 * t¹⁰³) - a¹⁴³), b¹⁴³))
 //│ 						in (fun _lh_intbench_arg1⁴⁸ -> (fun _lh_intbench_arg2³⁸ -> (fun _lh_intbench_arg5³⁸ -> (fun _lh_intbench_arg6³⁸ -> (fun _lh_intbench_arg7³⁸ -> (fun _lh_listcomp_fun¹⁷² -> 
-//│ 							let _lh_listcomp_fun¹⁷³ = (fun _lh_listcomp_fun_para¹⁰⁴ -> _lh_listcomp_fun_para¹⁰⁴(_lh_intbench_arg1⁴⁸, _lh_listcomp_fun_ls_h¹²⁵, _lh_listcomp_fun¹⁷³, _lh_listcomp_fun_ls_t¹²⁵, _lh_listcomp_fun¹⁷²))
+//│ 							let _lh_listcomp_fun¹⁷³ = (fun _lh_listcomp_fun_para¹⁰⁴ -> _lh_listcomp_fun_para¹⁰⁴(_lh_intbench_arg1⁴⁸, force⁰(_lh_listcomp_fun_ls_h¹²⁵), _lh_listcomp_fun¹⁷³, force⁰(_lh_listcomp_fun_ls_t¹²⁵), _lh_listcomp_fun¹⁷²))
 //│ 							in _lh_listcomp_fun¹⁷³(enumFromThenTo₅₀(_lh_intbench_arg5³⁸, (_lh_intbench_arg2³⁸ + _lh_intbench_arg6³⁸), _lh_intbench_arg7³⁸)))))))) else (fun _lh_intbench_arg1⁴⁹ -> (fun _lh_intbench_arg2³⁹ -> (fun _lh_intbench_arg5³⁹ -> (fun _lh_intbench_arg6³⁹ -> (fun _lh_intbench_arg7³⁹ -> (fun _lh_listcomp_fun¹⁷⁴ -> [LH_N]))))))
 //│ 				def enumFromThenTo₅₀(a¹⁴⁴, t¹⁰⁴, b¹⁴⁴) = 
 //│ 					if (a¹⁴⁴ <= b¹⁴⁴) then 
-//│ 						let _lh_listcomp_fun_ls_h¹²⁶ = a¹⁴⁴
-//│ 						in let _lh_listcomp_fun_ls_t¹²⁶ = enumFromThenTo₅₀(t¹⁰⁴, ((2 * t¹⁰⁴) - a¹⁴⁴), b¹⁴⁴)
-//│ 						in (fun _lh_intbench_arg1⁵⁰ -> (fun _lh_listcomp_fun_ls_h¹²⁷ -> (fun _lh_listcomp_fun¹⁷⁵ -> (fun _lh_listcomp_fun_ls_t¹²⁷ -> (fun _lh_listcomp_fun¹⁷⁶ -> [LH_C _lh_intbench_arg1⁵⁰(_lh_listcomp_fun_ls_h¹²⁷, _lh_listcomp_fun_ls_h¹²⁶) _lh_listcomp_fun¹⁷⁵(_lh_listcomp_fun_ls_t¹²⁶)]))))) else (fun _lh_intbench_arg1⁵¹ -> (fun _lh_listcomp_fun_ls_h¹²⁸ -> (fun _lh_listcomp_fun¹⁷⁷ -> (fun _lh_listcomp_fun_ls_t¹²⁸ -> (fun _lh_listcomp_fun¹⁷⁸ -> _lh_listcomp_fun¹⁷⁸(_lh_listcomp_fun_ls_t¹²⁸))))))
+//│ 						let _lh_listcomp_fun_ls_h¹²⁶ = lazy⁰(a¹⁴⁴)
+//│ 						in let _lh_listcomp_fun_ls_t¹²⁶ = lazy⁰(enumFromThenTo₅₀(t¹⁰⁴, ((2 * t¹⁰⁴) - a¹⁴⁴), b¹⁴⁴))
+//│ 						in (fun _lh_intbench_arg1⁵⁰ -> (fun _lh_listcomp_fun_ls_h¹²⁷ -> (fun _lh_listcomp_fun¹⁷⁵ -> (fun _lh_listcomp_fun_ls_t¹²⁷ -> (fun _lh_listcomp_fun¹⁷⁶ -> [LH_C _lh_intbench_arg1⁵⁰(_lh_listcomp_fun_ls_h¹²⁷, force⁰(_lh_listcomp_fun_ls_h¹²⁶)) _lh_listcomp_fun¹⁷⁵(force⁰(_lh_listcomp_fun_ls_t¹²⁶))]))))) else (fun _lh_intbench_arg1⁵¹ -> (fun _lh_listcomp_fun_ls_h¹²⁸ -> (fun _lh_listcomp_fun¹⁷⁷ -> (fun _lh_listcomp_fun_ls_t¹²⁸ -> (fun _lh_listcomp_fun¹⁷⁸ -> _lh_listcomp_fun¹⁷⁸(_lh_listcomp_fun_ls_t¹²⁸))))))
 //│ 			def integerbench₁₀(_lh_integerbench_arg1⁶³, _lh_integerbench_arg2⁴³, _lh_integerbench_arg3²⁹, _lh_integerbench_arg4²⁹, _lh_integerbench_arg5⁴³, _lh_integerbench_arg6⁴³, _lh_integerbench_arg7⁴³) = 
 //│ 				let _lh_listcomp_fun²²⁸ = (fun _lh_listcomp_fun_para¹¹⁴ -> _lh_listcomp_fun_para¹¹⁴(_lh_integerbench_arg1⁶³, _lh_integerbench_arg2⁴³, _lh_integerbench_arg5⁴³, _lh_integerbench_arg6⁴³, _lh_integerbench_arg7⁴³, _lh_listcomp_fun²²⁸))
 //│ 				in _lh_listcomp_fun²²⁸(enumFromThenTo₆₀(_lh_integerbench_arg2⁴³, (_lh_integerbench_arg2⁴³ + _lh_integerbench_arg3²⁹), _lh_integerbench_arg4²⁹))
 //│ 				where
 //│ 				def enumFromThenTo₆₀(a¹⁷⁸, t¹¹⁸, b¹⁷⁸) = 
 //│ 					if (a¹⁷⁸ <= b¹⁷⁸) then 
-//│ 						let _lh_listcomp_fun_ls_h¹⁵⁸ = a¹⁷⁸
-//│ 						in let _lh_listcomp_fun_ls_t¹⁵⁸ = enumFromThenTo₆₀(t¹¹⁸, ((2 * t¹¹⁸) - a¹⁷⁸), b¹⁷⁸)
+//│ 						let _lh_listcomp_fun_ls_h¹⁵⁸ = lazy⁰(a¹⁷⁸)
+//│ 						in let _lh_listcomp_fun_ls_t¹⁵⁸ = lazy⁰(enumFromThenTo₆₀(t¹¹⁸, ((2 * t¹¹⁸) - a¹⁷⁸), b¹⁷⁸))
 //│ 						in (fun _lh_integerbench_arg1⁶⁶ -> (fun _lh_integerbench_arg2⁴⁶ -> (fun _lh_integerbench_arg5⁴⁶ -> (fun _lh_integerbench_arg6⁴⁶ -> (fun _lh_integerbench_arg7⁴⁶ -> (fun _lh_listcomp_fun²³⁴ -> 
-//│ 							let _lh_listcomp_fun²³⁵ = (fun _lh_listcomp_fun_para¹¹⁸ -> _lh_listcomp_fun_para¹¹⁸(_lh_integerbench_arg1⁶⁶, _lh_listcomp_fun_ls_h¹⁵⁸, _lh_listcomp_fun²³⁵, _lh_listcomp_fun_ls_t¹⁵⁸, _lh_listcomp_fun²³⁴))
+//│ 							let _lh_listcomp_fun²³⁵ = (fun _lh_listcomp_fun_para¹¹⁸ -> _lh_listcomp_fun_para¹¹⁸(_lh_integerbench_arg1⁶⁶, force⁰(_lh_listcomp_fun_ls_h¹⁵⁸), _lh_listcomp_fun²³⁵, force⁰(_lh_listcomp_fun_ls_t¹⁵⁸), _lh_listcomp_fun²³⁴))
 //│ 							in _lh_listcomp_fun²³⁵(enumFromThenTo₇₀(_lh_integerbench_arg5⁴⁶, (_lh_integerbench_arg2⁴⁶ + _lh_integerbench_arg6⁴⁶), _lh_integerbench_arg7⁴⁶)))))))) else (fun _lh_integerbench_arg1⁶⁷ -> (fun _lh_integerbench_arg2⁴⁷ -> (fun _lh_integerbench_arg5⁴⁷ -> (fun _lh_integerbench_arg6⁴⁷ -> (fun _lh_integerbench_arg7⁴⁷ -> (fun _lh_listcomp_fun²³⁶ -> [LH_N]))))))
 //│ 				def enumFromThenTo₇₀(a¹²⁹, t⁸⁹, b¹²⁹) = 
 //│ 					if (a¹²⁹ <= b¹²⁹) then 
-//│ 						let _lh_listcomp_fun_ls_h⁹³ = a¹²⁹
-//│ 						in let _lh_listcomp_fun_ls_t⁹³ = enumFromThenTo₇₀(t⁸⁹, ((2 * t⁸⁹) - a¹²⁹), b¹²⁹)
-//│ 						in (fun _lh_integerbench_arg1³² -> (fun _lh_listcomp_fun_ls_h⁹⁴ -> (fun _lh_listcomp_fun¹¹² -> (fun _lh_listcomp_fun_ls_t⁹⁴ -> (fun _lh_listcomp_fun¹¹³ -> [LH_C _lh_integerbench_arg1³²(_lh_listcomp_fun_ls_h⁹⁴, _lh_listcomp_fun_ls_h⁹³) _lh_listcomp_fun¹¹²(_lh_listcomp_fun_ls_t⁹³)]))))) else (fun _lh_integerbench_arg1³³ -> (fun _lh_listcomp_fun_ls_h⁹⁵ -> (fun _lh_listcomp_fun¹¹⁴ -> (fun _lh_listcomp_fun_ls_t⁹⁵ -> (fun _lh_listcomp_fun¹¹⁵ -> _lh_listcomp_fun¹¹⁵(_lh_listcomp_fun_ls_t⁹⁵))))))
+//│ 						let _lh_listcomp_fun_ls_h⁹³ = lazy⁰(a¹²⁹)
+//│ 						in let _lh_listcomp_fun_ls_t⁹³ = lazy⁰(enumFromThenTo₇₀(t⁸⁹, ((2 * t⁸⁹) - a¹²⁹), b¹²⁹))
+//│ 						in (fun _lh_integerbench_arg1³² -> (fun _lh_listcomp_fun_ls_h⁹⁴ -> (fun _lh_listcomp_fun¹¹² -> (fun _lh_listcomp_fun_ls_t⁹⁴ -> (fun _lh_listcomp_fun¹¹³ -> [LH_C _lh_integerbench_arg1³²(_lh_listcomp_fun_ls_h⁹⁴, force⁰(_lh_listcomp_fun_ls_h⁹³)) _lh_listcomp_fun¹¹²(force⁰(_lh_listcomp_fun_ls_t⁹³))]))))) else (fun _lh_integerbench_arg1³³ -> (fun _lh_listcomp_fun_ls_h⁹⁵ -> (fun _lh_listcomp_fun¹¹⁴ -> (fun _lh_listcomp_fun_ls_t⁹⁵ -> (fun _lh_listcomp_fun¹¹⁵ -> _lh_listcomp_fun¹¹⁵(_lh_listcomp_fun_ls_t⁹⁵))))))
 //│ 		def runbench₂₀(_lh_runbench_arg1²⁸, _lh_runbench_arg2²⁸, _lh_runbench_arg3²⁸, _lh_runbench_arg4²⁸, _lh_runbench_arg5²⁸, _lh_runbench_arg6²⁸, _lh_runbench_arg7²⁸, _lh_runbench_arg8²⁸, _lh_runbench_arg9²⁸) = 
 //│ 			[LH_P2 intbench₂₀(_lh_runbench_arg2²⁸, _lh_runbench_arg4²⁸, _lh_runbench_arg5²⁸, _lh_runbench_arg6²⁸, _lh_runbench_arg4²⁸, _lh_runbench_arg5²⁸, _lh_runbench_arg6²⁸) integerbench₂₀(_lh_runbench_arg1²⁸, _lh_runbench_arg4²⁸, _lh_runbench_arg5²⁸, _lh_runbench_arg6²⁸, _lh_runbench_arg4²⁸, _lh_runbench_arg5²⁸, _lh_runbench_arg6²⁸)]
 //│ 			where
@@ -1999,32 +1999,32 @@ testInteger_nofib $ primId 3000
 //│ 				where
 //│ 				def enumFromThenTo₈₀(a¹²³, t⁸³, b¹²³) = 
 //│ 					if (a¹²³ <= b¹²³) then 
-//│ 						let _lh_listcomp_fun_ls_h⁸³ = a¹²³
-//│ 						in let _lh_listcomp_fun_ls_t⁸³ = enumFromThenTo₈₀(t⁸³, ((2 * t⁸³) - a¹²³), b¹²³)
+//│ 						let _lh_listcomp_fun_ls_h⁸³ = lazy⁰(a¹²³)
+//│ 						in let _lh_listcomp_fun_ls_t⁸³ = lazy⁰(enumFromThenTo₈₀(t⁸³, ((2 * t⁸³) - a¹²³), b¹²³))
 //│ 						in (fun _lh_intbench_arg1²⁵ -> (fun _lh_intbench_arg2²⁵ -> (fun _lh_intbench_arg5²⁵ -> (fun _lh_intbench_arg6²⁵ -> (fun _lh_intbench_arg7²⁵ -> (fun _lh_listcomp_fun⁹¹ -> 
-//│ 							let _lh_listcomp_fun⁹² = (fun _lh_listcomp_fun_para⁸⁵ -> _lh_listcomp_fun_para⁸⁵(_lh_intbench_arg1²⁵, _lh_listcomp_fun_ls_h⁸³, _lh_listcomp_fun⁹², _lh_listcomp_fun_ls_t⁸³, _lh_listcomp_fun⁹¹))
+//│ 							let _lh_listcomp_fun⁹² = (fun _lh_listcomp_fun_para⁸⁵ -> _lh_listcomp_fun_para⁸⁵(_lh_intbench_arg1²⁵, force⁰(_lh_listcomp_fun_ls_h⁸³), _lh_listcomp_fun⁹², force⁰(_lh_listcomp_fun_ls_t⁸³), _lh_listcomp_fun⁹¹))
 //│ 							in _lh_listcomp_fun⁹²(enumFromThenTo₉₀(_lh_intbench_arg5²⁵, (_lh_intbench_arg2²⁵ + _lh_intbench_arg6²⁵), _lh_intbench_arg7²⁵)))))))) else (fun _lh_intbench_arg1²⁶ -> (fun _lh_intbench_arg2²⁶ -> (fun _lh_intbench_arg5²⁶ -> (fun _lh_intbench_arg6²⁶ -> (fun _lh_intbench_arg7²⁶ -> (fun _lh_listcomp_fun⁹³ -> [LH_N]))))))
 //│ 				def enumFromThenTo₉₀(a¹⁷², t¹¹², b¹⁷²) = 
 //│ 					if (a¹⁷² <= b¹⁷²) then 
-//│ 						let _lh_listcomp_fun_ls_h¹⁴⁸ = a¹⁷²
-//│ 						in let _lh_listcomp_fun_ls_t¹⁴⁸ = enumFromThenTo₉₀(t¹¹², ((2 * t¹¹²) - a¹⁷²), b¹⁷²)
-//│ 						in (fun _lh_intbench_arg1⁶⁰ -> (fun _lh_listcomp_fun_ls_h¹⁴⁹ -> (fun _lh_listcomp_fun²⁰⁸ -> (fun _lh_listcomp_fun_ls_t¹⁴⁹ -> (fun _lh_listcomp_fun²⁰⁹ -> [LH_C _lh_intbench_arg1⁶⁰(_lh_listcomp_fun_ls_h¹⁴⁹, _lh_listcomp_fun_ls_h¹⁴⁸) _lh_listcomp_fun²⁰⁸(_lh_listcomp_fun_ls_t¹⁴⁸)]))))) else (fun _lh_intbench_arg1⁶¹ -> (fun _lh_listcomp_fun_ls_h¹⁵⁰ -> (fun _lh_listcomp_fun²¹⁰ -> (fun _lh_listcomp_fun_ls_t¹⁵⁰ -> (fun _lh_listcomp_fun²¹¹ -> _lh_listcomp_fun²¹¹(_lh_listcomp_fun_ls_t¹⁵⁰))))))
+//│ 						let _lh_listcomp_fun_ls_h¹⁴⁸ = lazy⁰(a¹⁷²)
+//│ 						in let _lh_listcomp_fun_ls_t¹⁴⁸ = lazy⁰(enumFromThenTo₉₀(t¹¹², ((2 * t¹¹²) - a¹⁷²), b¹⁷²))
+//│ 						in (fun _lh_intbench_arg1⁶⁰ -> (fun _lh_listcomp_fun_ls_h¹⁴⁹ -> (fun _lh_listcomp_fun²⁰⁸ -> (fun _lh_listcomp_fun_ls_t¹⁴⁹ -> (fun _lh_listcomp_fun²⁰⁹ -> [LH_C _lh_intbench_arg1⁶⁰(_lh_listcomp_fun_ls_h¹⁴⁹, force⁰(_lh_listcomp_fun_ls_h¹⁴⁸)) _lh_listcomp_fun²⁰⁸(force⁰(_lh_listcomp_fun_ls_t¹⁴⁸))]))))) else (fun _lh_intbench_arg1⁶¹ -> (fun _lh_listcomp_fun_ls_h¹⁵⁰ -> (fun _lh_listcomp_fun²¹⁰ -> (fun _lh_listcomp_fun_ls_t¹⁵⁰ -> (fun _lh_listcomp_fun²¹¹ -> _lh_listcomp_fun²¹¹(_lh_listcomp_fun_ls_t¹⁵⁰))))))
 //│ 			def integerbench₂₀(_lh_integerbench_arg1³⁴, _lh_integerbench_arg2³⁰, _lh_integerbench_arg3²², _lh_integerbench_arg4²², _lh_integerbench_arg5³⁰, _lh_integerbench_arg6³⁰, _lh_integerbench_arg7³⁰) = 
 //│ 				let _lh_listcomp_fun¹¹⁸ = (fun _lh_listcomp_fun_para⁹² -> _lh_listcomp_fun_para⁹²(_lh_integerbench_arg1³⁴, _lh_integerbench_arg2³⁰, _lh_integerbench_arg5³⁰, _lh_integerbench_arg6³⁰, _lh_integerbench_arg7³⁰, _lh_listcomp_fun¹¹⁸))
 //│ 				in _lh_listcomp_fun¹¹⁸(enumFromThenTo₁₀₀(_lh_integerbench_arg2³⁰, (_lh_integerbench_arg2³⁰ + _lh_integerbench_arg3²²), _lh_integerbench_arg4²²))
 //│ 				where
 //│ 				def enumFromThenTo₁₀₀(a¹⁷⁴, t¹¹⁴, b¹⁷⁴) = 
 //│ 					if (a¹⁷⁴ <= b¹⁷⁴) then 
-//│ 						let _lh_listcomp_fun_ls_h¹⁵² = a¹⁷⁴
-//│ 						in let _lh_listcomp_fun_ls_t¹⁵² = enumFromThenTo₁₀₀(t¹¹⁴, ((2 * t¹¹⁴) - a¹⁷⁴), b¹⁷⁴)
+//│ 						let _lh_listcomp_fun_ls_h¹⁵² = lazy⁰(a¹⁷⁴)
+//│ 						in let _lh_listcomp_fun_ls_t¹⁵² = lazy⁰(enumFromThenTo₁₀₀(t¹¹⁴, ((2 * t¹¹⁴) - a¹⁷⁴), b¹⁷⁴))
 //│ 						in (fun _lh_integerbench_arg1⁵⁹ -> (fun _lh_integerbench_arg2⁴¹ -> (fun _lh_integerbench_arg5⁴¹ -> (fun _lh_integerbench_arg6⁴¹ -> (fun _lh_integerbench_arg7⁴¹ -> (fun _lh_listcomp_fun²¹⁷ -> 
-//│ 							let _lh_listcomp_fun²¹⁸ = (fun _lh_listcomp_fun_para¹¹¹ -> _lh_listcomp_fun_para¹¹¹(_lh_integerbench_arg1⁵⁹, _lh_listcomp_fun_ls_h¹⁵², _lh_listcomp_fun²¹⁸, _lh_listcomp_fun_ls_t¹⁵², _lh_listcomp_fun²¹⁷))
+//│ 							let _lh_listcomp_fun²¹⁸ = (fun _lh_listcomp_fun_para¹¹¹ -> _lh_listcomp_fun_para¹¹¹(_lh_integerbench_arg1⁵⁹, force⁰(_lh_listcomp_fun_ls_h¹⁵²), _lh_listcomp_fun²¹⁸, force⁰(_lh_listcomp_fun_ls_t¹⁵²), _lh_listcomp_fun²¹⁷))
 //│ 							in _lh_listcomp_fun²¹⁸(enumFromThenTo₁₁₀(_lh_integerbench_arg5⁴¹, (_lh_integerbench_arg2⁴¹ + _lh_integerbench_arg6⁴¹), _lh_integerbench_arg7⁴¹)))))))) else (fun _lh_integerbench_arg1⁶⁰ -> (fun _lh_integerbench_arg2⁴² -> (fun _lh_integerbench_arg5⁴² -> (fun _lh_integerbench_arg6⁴² -> (fun _lh_integerbench_arg7⁴² -> (fun _lh_listcomp_fun²¹⁹ -> [LH_N]))))))
 //│ 				def enumFromThenTo₁₁₀(a¹²⁶, t⁸⁶, b¹²⁶) = 
 //│ 					if (a¹²⁶ <= b¹²⁶) then 
-//│ 						let _lh_listcomp_fun_ls_h⁸⁶ = a¹²⁶
-//│ 						in let _lh_listcomp_fun_ls_t⁸⁶ = enumFromThenTo₁₁₀(t⁸⁶, ((2 * t⁸⁶) - a¹²⁶), b¹²⁶)
-//│ 						in (fun _lh_integerbench_arg1²⁸ -> (fun _lh_listcomp_fun_ls_h⁸⁷ -> (fun _lh_listcomp_fun¹⁰¹ -> (fun _lh_listcomp_fun_ls_t⁸⁷ -> (fun _lh_listcomp_fun¹⁰² -> [LH_C _lh_integerbench_arg1²⁸(_lh_listcomp_fun_ls_h⁸⁷, _lh_listcomp_fun_ls_h⁸⁶) _lh_listcomp_fun¹⁰¹(_lh_listcomp_fun_ls_t⁸⁶)]))))) else (fun _lh_integerbench_arg1²⁹ -> (fun _lh_listcomp_fun_ls_h⁸⁸ -> (fun _lh_listcomp_fun¹⁰³ -> (fun _lh_listcomp_fun_ls_t⁸⁸ -> (fun _lh_listcomp_fun¹⁰⁴ -> _lh_listcomp_fun¹⁰⁴(_lh_listcomp_fun_ls_t⁸⁸))))))
+//│ 						let _lh_listcomp_fun_ls_h⁸⁶ = lazy⁰(a¹²⁶)
+//│ 						in let _lh_listcomp_fun_ls_t⁸⁶ = lazy⁰(enumFromThenTo₁₁₀(t⁸⁶, ((2 * t⁸⁶) - a¹²⁶), b¹²⁶))
+//│ 						in (fun _lh_integerbench_arg1²⁸ -> (fun _lh_listcomp_fun_ls_h⁸⁷ -> (fun _lh_listcomp_fun¹⁰¹ -> (fun _lh_listcomp_fun_ls_t⁸⁷ -> (fun _lh_listcomp_fun¹⁰² -> [LH_C _lh_integerbench_arg1²⁸(_lh_listcomp_fun_ls_h⁸⁷, force⁰(_lh_listcomp_fun_ls_h⁸⁶)) _lh_listcomp_fun¹⁰¹(force⁰(_lh_listcomp_fun_ls_t⁸⁶))]))))) else (fun _lh_integerbench_arg1²⁹ -> (fun _lh_listcomp_fun_ls_h⁸⁸ -> (fun _lh_listcomp_fun¹⁰³ -> (fun _lh_listcomp_fun_ls_t⁸⁸ -> (fun _lh_listcomp_fun¹⁰⁴ -> _lh_listcomp_fun¹⁰⁴(_lh_listcomp_fun_ls_t⁸⁸))))))
 //│ 		def runbench₃₀(_lh_runbench_arg1²⁷, _lh_runbench_arg2²⁷, _lh_runbench_arg3²⁷, _lh_runbench_arg4²⁷, _lh_runbench_arg5²⁷, _lh_runbench_arg6²⁷, _lh_runbench_arg7²⁷, _lh_runbench_arg8²⁷, _lh_runbench_arg9²⁷) = 
 //│ 			[LH_P2 intbench₃₀(_lh_runbench_arg2²⁷, _lh_runbench_arg4²⁷, _lh_runbench_arg5²⁷, _lh_runbench_arg6²⁷, _lh_runbench_arg4²⁷, _lh_runbench_arg5²⁷, _lh_runbench_arg6²⁷) integerbench₃₀(_lh_runbench_arg1²⁷, _lh_runbench_arg4²⁷, _lh_runbench_arg5²⁷, _lh_runbench_arg6²⁷, _lh_runbench_arg4²⁷, _lh_runbench_arg5²⁷, _lh_runbench_arg6²⁷)]
 //│ 			where
@@ -2034,32 +2034,32 @@ testInteger_nofib $ primId 3000
 //│ 				where
 //│ 				def enumFromThenTo₁₂₀(a¹³⁴, t⁹⁴, b¹³⁴) = 
 //│ 					if (a¹³⁴ <= b¹³⁴) then 
-//│ 						let _lh_listcomp_fun_ls_h¹⁰⁴ = a¹³⁴
-//│ 						in let _lh_listcomp_fun_ls_t¹⁰⁴ = enumFromThenTo₁₂₀(t⁹⁴, ((2 * t⁹⁴) - a¹³⁴), b¹³⁴)
+//│ 						let _lh_listcomp_fun_ls_h¹⁰⁴ = lazy⁰(a¹³⁴)
+//│ 						in let _lh_listcomp_fun_ls_t¹⁰⁴ = lazy⁰(enumFromThenTo₁₂₀(t⁹⁴, ((2 * t⁹⁴) - a¹³⁴), b¹³⁴))
 //│ 						in (fun _lh_intbench_arg1³⁷ -> (fun _lh_intbench_arg2³³ -> (fun _lh_intbench_arg5³³ -> (fun _lh_intbench_arg6³³ -> (fun _lh_intbench_arg7³³ -> (fun _lh_listcomp_fun¹³⁷ -> 
-//│ 							let _lh_listcomp_fun¹³⁸ = (fun _lh_listcomp_fun_para⁹⁹ -> _lh_listcomp_fun_para⁹⁹(_lh_intbench_arg1³⁷, _lh_listcomp_fun_ls_h¹⁰⁴, _lh_listcomp_fun¹³⁸, _lh_listcomp_fun_ls_t¹⁰⁴, _lh_listcomp_fun¹³⁷))
+//│ 							let _lh_listcomp_fun¹³⁸ = (fun _lh_listcomp_fun_para⁹⁹ -> _lh_listcomp_fun_para⁹⁹(_lh_intbench_arg1³⁷, force⁰(_lh_listcomp_fun_ls_h¹⁰⁴), _lh_listcomp_fun¹³⁸, force⁰(_lh_listcomp_fun_ls_t¹⁰⁴), _lh_listcomp_fun¹³⁷))
 //│ 							in _lh_listcomp_fun¹³⁸(enumFromThenTo₁₃₀(_lh_intbench_arg5³³, (_lh_intbench_arg2³³ + _lh_intbench_arg6³³), _lh_intbench_arg7³³)))))))) else (fun _lh_intbench_arg1³⁸ -> (fun _lh_intbench_arg2³⁴ -> (fun _lh_intbench_arg5³⁴ -> (fun _lh_intbench_arg6³⁴ -> (fun _lh_intbench_arg7³⁴ -> (fun _lh_listcomp_fun¹³⁹ -> [LH_N]))))))
 //│ 				def enumFromThenTo₁₃₀(a¹⁴⁷, t¹⁰⁷, b¹⁴⁷) = 
 //│ 					if (a¹⁴⁷ <= b¹⁴⁷) then 
-//│ 						let _lh_listcomp_fun_ls_h¹³⁵ = a¹⁴⁷
-//│ 						in let _lh_listcomp_fun_ls_t¹³⁵ = enumFromThenTo₁₃₀(t¹⁰⁷, ((2 * t¹⁰⁷) - a¹⁴⁷), b¹⁴⁷)
-//│ 						in (fun _lh_intbench_arg1⁵² -> (fun _lh_listcomp_fun_ls_h¹³⁶ -> (fun _lh_listcomp_fun¹⁸⁸ -> (fun _lh_listcomp_fun_ls_t¹³⁶ -> (fun _lh_listcomp_fun¹⁸⁹ -> [LH_C _lh_intbench_arg1⁵²(_lh_listcomp_fun_ls_h¹³⁶, _lh_listcomp_fun_ls_h¹³⁵) _lh_listcomp_fun¹⁸⁸(_lh_listcomp_fun_ls_t¹³⁵)]))))) else (fun _lh_intbench_arg1⁵³ -> (fun _lh_listcomp_fun_ls_h¹³⁷ -> (fun _lh_listcomp_fun¹⁹⁰ -> (fun _lh_listcomp_fun_ls_t¹³⁷ -> (fun _lh_listcomp_fun¹⁹¹ -> _lh_listcomp_fun¹⁹¹(_lh_listcomp_fun_ls_t¹³⁷))))))
+//│ 						let _lh_listcomp_fun_ls_h¹³⁵ = lazy⁰(a¹⁴⁷)
+//│ 						in let _lh_listcomp_fun_ls_t¹³⁵ = lazy⁰(enumFromThenTo₁₃₀(t¹⁰⁷, ((2 * t¹⁰⁷) - a¹⁴⁷), b¹⁴⁷))
+//│ 						in (fun _lh_intbench_arg1⁵² -> (fun _lh_listcomp_fun_ls_h¹³⁶ -> (fun _lh_listcomp_fun¹⁸⁸ -> (fun _lh_listcomp_fun_ls_t¹³⁶ -> (fun _lh_listcomp_fun¹⁸⁹ -> [LH_C _lh_intbench_arg1⁵²(_lh_listcomp_fun_ls_h¹³⁶, force⁰(_lh_listcomp_fun_ls_h¹³⁵)) _lh_listcomp_fun¹⁸⁸(force⁰(_lh_listcomp_fun_ls_t¹³⁵))]))))) else (fun _lh_intbench_arg1⁵³ -> (fun _lh_listcomp_fun_ls_h¹³⁷ -> (fun _lh_listcomp_fun¹⁹⁰ -> (fun _lh_listcomp_fun_ls_t¹³⁷ -> (fun _lh_listcomp_fun¹⁹¹ -> _lh_listcomp_fun¹⁹¹(_lh_listcomp_fun_ls_t¹³⁷))))))
 //│ 			def integerbench₃₀(_lh_integerbench_arg1²⁰, _lh_integerbench_arg2²⁰, _lh_integerbench_arg3²⁰, _lh_integerbench_arg4²⁰, _lh_integerbench_arg5²⁰, _lh_integerbench_arg6²⁰, _lh_integerbench_arg7²⁰) = 
 //│ 				let _lh_listcomp_fun⁸³ = (fun _lh_listcomp_fun_para⁸¹ -> _lh_listcomp_fun_para⁸¹(_lh_integerbench_arg1²⁰, _lh_integerbench_arg2²⁰, _lh_integerbench_arg5²⁰, _lh_integerbench_arg6²⁰, _lh_integerbench_arg7²⁰, _lh_listcomp_fun⁸³))
 //│ 				in _lh_listcomp_fun⁸³(enumFromThenTo₁₄₀(_lh_integerbench_arg2²⁰, (_lh_integerbench_arg2²⁰ + _lh_integerbench_arg3²⁰), _lh_integerbench_arg4²⁰))
 //│ 				where
 //│ 				def enumFromThenTo₁₄₀(a¹³⁹, t⁹⁹, b¹³⁹) = 
 //│ 					if (a¹³⁹ <= b¹³⁹) then 
-//│ 						let _lh_listcomp_fun_ls_h¹¹⁵ = a¹³⁹
-//│ 						in let _lh_listcomp_fun_ls_t¹¹⁵ = enumFromThenTo₁₄₀(t⁹⁹, ((2 * t⁹⁹) - a¹³⁹), b¹³⁹)
+//│ 						let _lh_listcomp_fun_ls_h¹¹⁵ = lazy⁰(a¹³⁹)
+//│ 						in let _lh_listcomp_fun_ls_t¹¹⁵ = lazy⁰(enumFromThenTo₁₄₀(t⁹⁹, ((2 * t⁹⁹) - a¹³⁹), b¹³⁹))
 //│ 						in (fun _lh_integerbench_arg1⁴⁵ -> (fun _lh_integerbench_arg2³⁵ -> (fun _lh_integerbench_arg5³⁵ -> (fun _lh_integerbench_arg6³⁵ -> (fun _lh_integerbench_arg7³⁵ -> (fun _lh_listcomp_fun¹⁵⁶ -> 
-//│ 							let _lh_listcomp_fun¹⁵⁷ = (fun _lh_listcomp_fun_para¹⁰² -> _lh_listcomp_fun_para¹⁰²(_lh_integerbench_arg1⁴⁵, _lh_listcomp_fun_ls_h¹¹⁵, _lh_listcomp_fun¹⁵⁷, _lh_listcomp_fun_ls_t¹¹⁵, _lh_listcomp_fun¹⁵⁶))
+//│ 							let _lh_listcomp_fun¹⁵⁷ = (fun _lh_listcomp_fun_para¹⁰² -> _lh_listcomp_fun_para¹⁰²(_lh_integerbench_arg1⁴⁵, force⁰(_lh_listcomp_fun_ls_h¹¹⁵), _lh_listcomp_fun¹⁵⁷, force⁰(_lh_listcomp_fun_ls_t¹¹⁵), _lh_listcomp_fun¹⁵⁶))
 //│ 							in _lh_listcomp_fun¹⁵⁷(enumFromThenTo₁₅₀(_lh_integerbench_arg5³⁵, (_lh_integerbench_arg2³⁵ + _lh_integerbench_arg6³⁵), _lh_integerbench_arg7³⁵)))))))) else (fun _lh_integerbench_arg1⁴⁶ -> (fun _lh_integerbench_arg2³⁶ -> (fun _lh_integerbench_arg5³⁶ -> (fun _lh_integerbench_arg6³⁶ -> (fun _lh_integerbench_arg7³⁶ -> (fun _lh_listcomp_fun¹⁵⁸ -> [LH_N]))))))
 //│ 				def enumFromThenTo₁₅₀(a¹⁴⁵, t¹⁰⁵, b¹⁴⁵) = 
 //│ 					if (a¹⁴⁵ <= b¹⁴⁵) then 
-//│ 						let _lh_listcomp_fun_ls_h¹²⁹ = a¹⁴⁵
-//│ 						in let _lh_listcomp_fun_ls_t¹²⁹ = enumFromThenTo₁₅₀(t¹⁰⁵, ((2 * t¹⁰⁵) - a¹⁴⁵), b¹⁴⁵)
-//│ 						in (fun _lh_integerbench_arg1⁵¹ -> (fun _lh_listcomp_fun_ls_h¹³⁰ -> (fun _lh_listcomp_fun¹⁸⁰ -> (fun _lh_listcomp_fun_ls_t¹³⁰ -> (fun _lh_listcomp_fun¹⁸¹ -> [LH_C _lh_integerbench_arg1⁵¹(_lh_listcomp_fun_ls_h¹³⁰, _lh_listcomp_fun_ls_h¹²⁹) _lh_listcomp_fun¹⁸⁰(_lh_listcomp_fun_ls_t¹²⁹)]))))) else (fun _lh_integerbench_arg1⁵² -> (fun _lh_listcomp_fun_ls_h¹³¹ -> (fun _lh_listcomp_fun¹⁸² -> (fun _lh_listcomp_fun_ls_t¹³¹ -> (fun _lh_listcomp_fun¹⁸³ -> _lh_listcomp_fun¹⁸³(_lh_listcomp_fun_ls_t¹³¹))))))
+//│ 						let _lh_listcomp_fun_ls_h¹²⁹ = lazy⁰(a¹⁴⁵)
+//│ 						in let _lh_listcomp_fun_ls_t¹²⁹ = lazy⁰(enumFromThenTo₁₅₀(t¹⁰⁵, ((2 * t¹⁰⁵) - a¹⁴⁵), b¹⁴⁵))
+//│ 						in (fun _lh_integerbench_arg1⁵¹ -> (fun _lh_listcomp_fun_ls_h¹³⁰ -> (fun _lh_listcomp_fun¹⁸⁰ -> (fun _lh_listcomp_fun_ls_t¹³⁰ -> (fun _lh_listcomp_fun¹⁸¹ -> [LH_C _lh_integerbench_arg1⁵¹(_lh_listcomp_fun_ls_h¹³⁰, force⁰(_lh_listcomp_fun_ls_h¹²⁹)) _lh_listcomp_fun¹⁸⁰(force⁰(_lh_listcomp_fun_ls_t¹²⁹))]))))) else (fun _lh_integerbench_arg1⁵² -> (fun _lh_listcomp_fun_ls_h¹³¹ -> (fun _lh_listcomp_fun¹⁸² -> (fun _lh_listcomp_fun_ls_t¹³¹ -> (fun _lh_listcomp_fun¹⁸³ -> _lh_listcomp_fun¹⁸³(_lh_listcomp_fun_ls_t¹³¹))))))
 //│ 		def runbench₄₀(_lh_runbench_arg1²³, _lh_runbench_arg2²³, _lh_runbench_arg3²³, _lh_runbench_arg4²³, _lh_runbench_arg5²³, _lh_runbench_arg6²³, _lh_runbench_arg7²³, _lh_runbench_arg8²³, _lh_runbench_arg9²³) = 
 //│ 			[LH_P2 intbench₄₀(_lh_runbench_arg2²³, _lh_runbench_arg4²³, _lh_runbench_arg5²³, _lh_runbench_arg6²³, _lh_runbench_arg4²³, _lh_runbench_arg5²³, _lh_runbench_arg6²³) integerbench₄₀(_lh_runbench_arg1²³, _lh_runbench_arg4²³, _lh_runbench_arg5²³, _lh_runbench_arg6²³, _lh_runbench_arg4²³, _lh_runbench_arg5²³, _lh_runbench_arg6²³)]
 //│ 			where
@@ -2069,32 +2069,32 @@ testInteger_nofib $ primId 3000
 //│ 				where
 //│ 				def enumFromThenTo₁₆₀(a¹³³, t⁹³, b¹³³) = 
 //│ 					if (a¹³³ <= b¹³³) then 
-//│ 						let _lh_listcomp_fun_ls_h¹⁰³ = a¹³³
-//│ 						in let _lh_listcomp_fun_ls_t¹⁰³ = enumFromThenTo₁₆₀(t⁹³, ((2 * t⁹³) - a¹³³), b¹³³)
+//│ 						let _lh_listcomp_fun_ls_h¹⁰³ = lazy⁰(a¹³³)
+//│ 						in let _lh_listcomp_fun_ls_t¹⁰³ = lazy⁰(enumFromThenTo₁₆₀(t⁹³, ((2 * t⁹³) - a¹³³), b¹³³))
 //│ 						in (fun _lh_intbench_arg1³⁴ -> (fun _lh_intbench_arg2³⁰ -> (fun _lh_intbench_arg5³⁰ -> (fun _lh_intbench_arg6³⁰ -> (fun _lh_intbench_arg7³⁰ -> (fun _lh_listcomp_fun¹³² -> 
-//│ 							let _lh_listcomp_fun¹³³ = (fun _lh_listcomp_fun_para⁹⁶ -> _lh_listcomp_fun_para⁹⁶(_lh_intbench_arg1³⁴, _lh_listcomp_fun_ls_h¹⁰³, _lh_listcomp_fun¹³³, _lh_listcomp_fun_ls_t¹⁰³, _lh_listcomp_fun¹³²))
+//│ 							let _lh_listcomp_fun¹³³ = (fun _lh_listcomp_fun_para⁹⁶ -> _lh_listcomp_fun_para⁹⁶(_lh_intbench_arg1³⁴, force⁰(_lh_listcomp_fun_ls_h¹⁰³), _lh_listcomp_fun¹³³, force⁰(_lh_listcomp_fun_ls_t¹⁰³), _lh_listcomp_fun¹³²))
 //│ 							in _lh_listcomp_fun¹³³(enumFromThenTo₁₇₀(_lh_intbench_arg5³⁰, (_lh_intbench_arg2³⁰ + _lh_intbench_arg6³⁰), _lh_intbench_arg7³⁰)))))))) else (fun _lh_intbench_arg1³⁵ -> (fun _lh_intbench_arg2³¹ -> (fun _lh_intbench_arg5³¹ -> (fun _lh_intbench_arg6³¹ -> (fun _lh_intbench_arg7³¹ -> (fun _lh_listcomp_fun¹³⁴ -> [LH_N]))))))
 //│ 				def enumFromThenTo₁₇₀(a¹⁴¹, t¹⁰¹, b¹⁴¹) = 
 //│ 					if (a¹⁴¹ <= b¹⁴¹) then 
-//│ 						let _lh_listcomp_fun_ls_h¹¹⁹ = a¹⁴¹
-//│ 						in let _lh_listcomp_fun_ls_t¹¹⁹ = enumFromThenTo₁₇₀(t¹⁰¹, ((2 * t¹⁰¹) - a¹⁴¹), b¹⁴¹)
-//│ 						in (fun _lh_intbench_arg1⁴⁶ -> (fun _lh_listcomp_fun_ls_h¹²⁰ -> (fun _lh_listcomp_fun¹⁶⁴ -> (fun _lh_listcomp_fun_ls_t¹²⁰ -> (fun _lh_listcomp_fun¹⁶⁵ -> [LH_C _lh_intbench_arg1⁴⁶(_lh_listcomp_fun_ls_h¹²⁰, _lh_listcomp_fun_ls_h¹¹⁹) _lh_listcomp_fun¹⁶⁴(_lh_listcomp_fun_ls_t¹¹⁹)]))))) else (fun _lh_intbench_arg1⁴⁷ -> (fun _lh_listcomp_fun_ls_h¹²¹ -> (fun _lh_listcomp_fun¹⁶⁶ -> (fun _lh_listcomp_fun_ls_t¹²¹ -> (fun _lh_listcomp_fun¹⁶⁷ -> _lh_listcomp_fun¹⁶⁷(_lh_listcomp_fun_ls_t¹²¹))))))
+//│ 						let _lh_listcomp_fun_ls_h¹¹⁹ = lazy⁰(a¹⁴¹)
+//│ 						in let _lh_listcomp_fun_ls_t¹¹⁹ = lazy⁰(enumFromThenTo₁₇₀(t¹⁰¹, ((2 * t¹⁰¹) - a¹⁴¹), b¹⁴¹))
+//│ 						in (fun _lh_intbench_arg1⁴⁶ -> (fun _lh_listcomp_fun_ls_h¹²⁰ -> (fun _lh_listcomp_fun¹⁶⁴ -> (fun _lh_listcomp_fun_ls_t¹²⁰ -> (fun _lh_listcomp_fun¹⁶⁵ -> [LH_C _lh_intbench_arg1⁴⁶(_lh_listcomp_fun_ls_h¹²⁰, force⁰(_lh_listcomp_fun_ls_h¹¹⁹)) _lh_listcomp_fun¹⁶⁴(force⁰(_lh_listcomp_fun_ls_t¹¹⁹))]))))) else (fun _lh_intbench_arg1⁴⁷ -> (fun _lh_listcomp_fun_ls_h¹²¹ -> (fun _lh_listcomp_fun¹⁶⁶ -> (fun _lh_listcomp_fun_ls_t¹²¹ -> (fun _lh_listcomp_fun¹⁶⁷ -> _lh_listcomp_fun¹⁶⁷(_lh_listcomp_fun_ls_t¹²¹))))))
 //│ 			def integerbench₄₀(_lh_integerbench_arg1³⁹, _lh_integerbench_arg2³³, _lh_integerbench_arg3²³, _lh_integerbench_arg4²³, _lh_integerbench_arg5³³, _lh_integerbench_arg6³³, _lh_integerbench_arg7³³) = 
 //│ 				let _lh_listcomp_fun¹³¹ = (fun _lh_listcomp_fun_para⁹⁵ -> _lh_listcomp_fun_para⁹⁵(_lh_integerbench_arg1³⁹, _lh_integerbench_arg2³³, _lh_integerbench_arg5³³, _lh_integerbench_arg6³³, _lh_integerbench_arg7³³, _lh_listcomp_fun¹³¹))
 //│ 				in _lh_listcomp_fun¹³¹(enumFromThenTo₁₈₀(_lh_integerbench_arg2³³, (_lh_integerbench_arg2³³ + _lh_integerbench_arg3²³), _lh_integerbench_arg4²³))
 //│ 				where
 //│ 				def enumFromThenTo₁₈₀(a¹²⁷, t⁸⁷, b¹²⁷) = 
 //│ 					if (a¹²⁷ <= b¹²⁷) then 
-//│ 						let _lh_listcomp_fun_ls_h⁸⁹ = a¹²⁷
-//│ 						in let _lh_listcomp_fun_ls_t⁸⁹ = enumFromThenTo₁₈₀(t⁸⁷, ((2 * t⁸⁷) - a¹²⁷), b¹²⁷)
+//│ 						let _lh_listcomp_fun_ls_h⁸⁹ = lazy⁰(a¹²⁷)
+//│ 						in let _lh_listcomp_fun_ls_t⁸⁹ = lazy⁰(enumFromThenTo₁₈₀(t⁸⁷, ((2 * t⁸⁷) - a¹²⁷), b¹²⁷))
 //│ 						in (fun _lh_integerbench_arg1³⁰ -> (fun _lh_integerbench_arg2²⁸ -> (fun _lh_integerbench_arg5²⁸ -> (fun _lh_integerbench_arg6²⁸ -> (fun _lh_integerbench_arg7²⁸ -> (fun _lh_listcomp_fun¹⁰⁵ -> 
-//│ 							let _lh_listcomp_fun¹⁰⁶ = (fun _lh_listcomp_fun_para⁸⁹ -> _lh_listcomp_fun_para⁸⁹(_lh_integerbench_arg1³⁰, _lh_listcomp_fun_ls_h⁸⁹, _lh_listcomp_fun¹⁰⁶, _lh_listcomp_fun_ls_t⁸⁹, _lh_listcomp_fun¹⁰⁵))
+//│ 							let _lh_listcomp_fun¹⁰⁶ = (fun _lh_listcomp_fun_para⁸⁹ -> _lh_listcomp_fun_para⁸⁹(_lh_integerbench_arg1³⁰, force⁰(_lh_listcomp_fun_ls_h⁸⁹), _lh_listcomp_fun¹⁰⁶, force⁰(_lh_listcomp_fun_ls_t⁸⁹), _lh_listcomp_fun¹⁰⁵))
 //│ 							in _lh_listcomp_fun¹⁰⁶(enumFromThenTo₁₉₀(_lh_integerbench_arg5²⁸, (_lh_integerbench_arg2²⁸ + _lh_integerbench_arg6²⁸), _lh_integerbench_arg7²⁸)))))))) else (fun _lh_integerbench_arg1³¹ -> (fun _lh_integerbench_arg2²⁹ -> (fun _lh_integerbench_arg5²⁹ -> (fun _lh_integerbench_arg6²⁹ -> (fun _lh_integerbench_arg7²⁹ -> (fun _lh_listcomp_fun¹⁰⁷ -> [LH_N]))))))
 //│ 				def enumFromThenTo₁₉₀(a¹³⁷, t⁹⁷, b¹³⁷) = 
 //│ 					if (a¹³⁷ <= b¹³⁷) then 
-//│ 						let _lh_listcomp_fun_ls_h¹⁰⁹ = a¹³⁷
-//│ 						in let _lh_listcomp_fun_ls_t¹⁰⁹ = enumFromThenTo₁₉₀(t⁹⁷, ((2 * t⁹⁷) - a¹³⁷), b¹³⁷)
-//│ 						in (fun _lh_integerbench_arg1⁴¹ -> (fun _lh_listcomp_fun_ls_h¹¹⁰ -> (fun _lh_listcomp_fun¹⁴⁷ -> (fun _lh_listcomp_fun_ls_t¹¹⁰ -> (fun _lh_listcomp_fun¹⁴⁸ -> [LH_C _lh_integerbench_arg1⁴¹(_lh_listcomp_fun_ls_h¹¹⁰, _lh_listcomp_fun_ls_h¹⁰⁹) _lh_listcomp_fun¹⁴⁷(_lh_listcomp_fun_ls_t¹⁰⁹)]))))) else (fun _lh_integerbench_arg1⁴² -> (fun _lh_listcomp_fun_ls_h¹¹¹ -> (fun _lh_listcomp_fun¹⁴⁹ -> (fun _lh_listcomp_fun_ls_t¹¹¹ -> (fun _lh_listcomp_fun¹⁵⁰ -> _lh_listcomp_fun¹⁵⁰(_lh_listcomp_fun_ls_t¹¹¹))))))
+//│ 						let _lh_listcomp_fun_ls_h¹⁰⁹ = lazy⁰(a¹³⁷)
+//│ 						in let _lh_listcomp_fun_ls_t¹⁰⁹ = lazy⁰(enumFromThenTo₁₉₀(t⁹⁷, ((2 * t⁹⁷) - a¹³⁷), b¹³⁷))
+//│ 						in (fun _lh_integerbench_arg1⁴¹ -> (fun _lh_listcomp_fun_ls_h¹¹⁰ -> (fun _lh_listcomp_fun¹⁴⁷ -> (fun _lh_listcomp_fun_ls_t¹¹⁰ -> (fun _lh_listcomp_fun¹⁴⁸ -> [LH_C _lh_integerbench_arg1⁴¹(_lh_listcomp_fun_ls_h¹¹⁰, force⁰(_lh_listcomp_fun_ls_h¹⁰⁹)) _lh_listcomp_fun¹⁴⁷(force⁰(_lh_listcomp_fun_ls_t¹⁰⁹))]))))) else (fun _lh_integerbench_arg1⁴² -> (fun _lh_listcomp_fun_ls_h¹¹¹ -> (fun _lh_listcomp_fun¹⁴⁹ -> (fun _lh_listcomp_fun_ls_t¹¹¹ -> (fun _lh_listcomp_fun¹⁵⁰ -> _lh_listcomp_fun¹⁵⁰(_lh_listcomp_fun_ls_t¹¹¹))))))
 //│ 		def runbench₅₀(_lh_runbench_arg1²², _lh_runbench_arg2²², _lh_runbench_arg3²², _lh_runbench_arg4²², _lh_runbench_arg5²², _lh_runbench_arg6²², _lh_runbench_arg7²², _lh_runbench_arg8²², _lh_runbench_arg9²²) = 
 //│ 			[LH_P2 intbench₅₀(_lh_runbench_arg2²², _lh_runbench_arg4²², _lh_runbench_arg5²², _lh_runbench_arg6²², _lh_runbench_arg4²², _lh_runbench_arg5²², _lh_runbench_arg6²²) integerbench₅₀(_lh_runbench_arg1²², _lh_runbench_arg4²², _lh_runbench_arg5²², _lh_runbench_arg6²², _lh_runbench_arg4²², _lh_runbench_arg5²², _lh_runbench_arg6²²)]
 //│ 			where
@@ -2104,32 +2104,32 @@ testInteger_nofib $ primId 3000
 //│ 				where
 //│ 				def enumFromThenTo₂₀₀(a¹³⁵, t⁹⁵, b¹³⁵) = 
 //│ 					if (a¹³⁵ <= b¹³⁵) then 
-//│ 						let _lh_listcomp_fun_ls_h¹⁰⁵ = a¹³⁵
-//│ 						in let _lh_listcomp_fun_ls_t¹⁰⁵ = enumFromThenTo₂₀₀(t⁹⁵, ((2 * t⁹⁵) - a¹³⁵), b¹³⁵)
+//│ 						let _lh_listcomp_fun_ls_h¹⁰⁵ = lazy⁰(a¹³⁵)
+//│ 						in let _lh_listcomp_fun_ls_t¹⁰⁵ = lazy⁰(enumFromThenTo₂₀₀(t⁹⁵, ((2 * t⁹⁵) - a¹³⁵), b¹³⁵))
 //│ 						in (fun _lh_intbench_arg1³⁹ -> (fun _lh_intbench_arg2³⁵ -> (fun _lh_intbench_arg5³⁵ -> (fun _lh_intbench_arg6³⁵ -> (fun _lh_intbench_arg7³⁵ -> (fun _lh_listcomp_fun¹⁴⁰ -> 
-//│ 							let _lh_listcomp_fun¹⁴¹ = (fun _lh_listcomp_fun_para¹⁰⁰ -> _lh_listcomp_fun_para¹⁰⁰(_lh_intbench_arg1³⁹, _lh_listcomp_fun_ls_h¹⁰⁵, _lh_listcomp_fun¹⁴¹, _lh_listcomp_fun_ls_t¹⁰⁵, _lh_listcomp_fun¹⁴⁰))
+//│ 							let _lh_listcomp_fun¹⁴¹ = (fun _lh_listcomp_fun_para¹⁰⁰ -> _lh_listcomp_fun_para¹⁰⁰(_lh_intbench_arg1³⁹, force⁰(_lh_listcomp_fun_ls_h¹⁰⁵), _lh_listcomp_fun¹⁴¹, force⁰(_lh_listcomp_fun_ls_t¹⁰⁵), _lh_listcomp_fun¹⁴⁰))
 //│ 							in _lh_listcomp_fun¹⁴¹(enumFromThenTo₂₁₀(_lh_intbench_arg5³⁵, (_lh_intbench_arg2³⁵ + _lh_intbench_arg6³⁵), _lh_intbench_arg7³⁵)))))))) else (fun _lh_intbench_arg1⁴⁰ -> (fun _lh_intbench_arg2³⁶ -> (fun _lh_intbench_arg5³⁶ -> (fun _lh_intbench_arg6³⁶ -> (fun _lh_intbench_arg7³⁶ -> (fun _lh_listcomp_fun¹⁴² -> [LH_N]))))))
 //│ 				def enumFromThenTo₂₁₀(a¹³⁰, t⁹⁰, b¹³⁰) = 
 //│ 					if (a¹³⁰ <= b¹³⁰) then 
-//│ 						let _lh_listcomp_fun_ls_h⁹⁶ = a¹³⁰
-//│ 						in let _lh_listcomp_fun_ls_t⁹⁶ = enumFromThenTo₂₁₀(t⁹⁰, ((2 * t⁹⁰) - a¹³⁰), b¹³⁰)
-//│ 						in (fun _lh_intbench_arg1³¹ -> (fun _lh_listcomp_fun_ls_h⁹⁷ -> (fun _lh_listcomp_fun¹¹⁹ -> (fun _lh_listcomp_fun_ls_t⁹⁷ -> (fun _lh_listcomp_fun¹²⁰ -> [LH_C _lh_intbench_arg1³¹(_lh_listcomp_fun_ls_h⁹⁷, _lh_listcomp_fun_ls_h⁹⁶) _lh_listcomp_fun¹¹⁹(_lh_listcomp_fun_ls_t⁹⁶)]))))) else (fun _lh_intbench_arg1³² -> (fun _lh_listcomp_fun_ls_h⁹⁸ -> (fun _lh_listcomp_fun¹²¹ -> (fun _lh_listcomp_fun_ls_t⁹⁸ -> (fun _lh_listcomp_fun¹²² -> _lh_listcomp_fun¹²²(_lh_listcomp_fun_ls_t⁹⁸))))))
+//│ 						let _lh_listcomp_fun_ls_h⁹⁶ = lazy⁰(a¹³⁰)
+//│ 						in let _lh_listcomp_fun_ls_t⁹⁶ = lazy⁰(enumFromThenTo₂₁₀(t⁹⁰, ((2 * t⁹⁰) - a¹³⁰), b¹³⁰))
+//│ 						in (fun _lh_intbench_arg1³¹ -> (fun _lh_listcomp_fun_ls_h⁹⁷ -> (fun _lh_listcomp_fun¹¹⁹ -> (fun _lh_listcomp_fun_ls_t⁹⁷ -> (fun _lh_listcomp_fun¹²⁰ -> [LH_C _lh_intbench_arg1³¹(_lh_listcomp_fun_ls_h⁹⁷, force⁰(_lh_listcomp_fun_ls_h⁹⁶)) _lh_listcomp_fun¹¹⁹(force⁰(_lh_listcomp_fun_ls_t⁹⁶))]))))) else (fun _lh_intbench_arg1³² -> (fun _lh_listcomp_fun_ls_h⁹⁸ -> (fun _lh_listcomp_fun¹²¹ -> (fun _lh_listcomp_fun_ls_t⁹⁸ -> (fun _lh_listcomp_fun¹²² -> _lh_listcomp_fun¹²²(_lh_listcomp_fun_ls_t⁹⁸))))))
 //│ 			def integerbench₅₀(_lh_integerbench_arg1⁴⁰, _lh_integerbench_arg2³⁴, _lh_integerbench_arg3²⁴, _lh_integerbench_arg4²⁴, _lh_integerbench_arg5³⁴, _lh_integerbench_arg6³⁴, _lh_integerbench_arg7³⁴) = 
 //│ 				let _lh_listcomp_fun¹³⁶ = (fun _lh_listcomp_fun_para⁹⁸ -> _lh_listcomp_fun_para⁹⁸(_lh_integerbench_arg1⁴⁰, _lh_integerbench_arg2³⁴, _lh_integerbench_arg5³⁴, _lh_integerbench_arg6³⁴, _lh_integerbench_arg7³⁴, _lh_listcomp_fun¹³⁶))
 //│ 				in _lh_listcomp_fun¹³⁶(enumFromThenTo₂₂₀(_lh_integerbench_arg2³⁴, (_lh_integerbench_arg2³⁴ + _lh_integerbench_arg3²⁴), _lh_integerbench_arg4²⁴))
 //│ 				where
 //│ 				def enumFromThenTo₂₂₀(a¹²⁵, t⁸⁵, b¹²⁵) = 
 //│ 					if (a¹²⁵ <= b¹²⁵) then 
-//│ 						let _lh_listcomp_fun_ls_h⁸⁵ = a¹²⁵
-//│ 						in let _lh_listcomp_fun_ls_t⁸⁵ = enumFromThenTo₂₂₀(t⁸⁵, ((2 * t⁸⁵) - a¹²⁵), b¹²⁵)
+//│ 						let _lh_listcomp_fun_ls_h⁸⁵ = lazy⁰(a¹²⁵)
+//│ 						in let _lh_listcomp_fun_ls_t⁸⁵ = lazy⁰(enumFromThenTo₂₂₀(t⁸⁵, ((2 * t⁸⁵) - a¹²⁵), b¹²⁵))
 //│ 						in (fun _lh_integerbench_arg1²⁶ -> (fun _lh_integerbench_arg2²⁶ -> (fun _lh_integerbench_arg5²⁶ -> (fun _lh_integerbench_arg6²⁶ -> (fun _lh_integerbench_arg7²⁶ -> (fun _lh_listcomp_fun⁹⁸ -> 
-//│ 							let _lh_listcomp_fun⁹⁹ = (fun _lh_listcomp_fun_para⁸⁸ -> _lh_listcomp_fun_para⁸⁸(_lh_integerbench_arg1²⁶, _lh_listcomp_fun_ls_h⁸⁵, _lh_listcomp_fun⁹⁹, _lh_listcomp_fun_ls_t⁸⁵, _lh_listcomp_fun⁹⁸))
+//│ 							let _lh_listcomp_fun⁹⁹ = (fun _lh_listcomp_fun_para⁸⁸ -> _lh_listcomp_fun_para⁸⁸(_lh_integerbench_arg1²⁶, force⁰(_lh_listcomp_fun_ls_h⁸⁵), _lh_listcomp_fun⁹⁹, force⁰(_lh_listcomp_fun_ls_t⁸⁵), _lh_listcomp_fun⁹⁸))
 //│ 							in _lh_listcomp_fun⁹⁹(enumFromThenTo₂₃₀(_lh_integerbench_arg5²⁶, (_lh_integerbench_arg2²⁶ + _lh_integerbench_arg6²⁶), _lh_integerbench_arg7²⁶)))))))) else (fun _lh_integerbench_arg1²⁷ -> (fun _lh_integerbench_arg2²⁷ -> (fun _lh_integerbench_arg5²⁷ -> (fun _lh_integerbench_arg6²⁷ -> (fun _lh_integerbench_arg7²⁷ -> (fun _lh_listcomp_fun¹⁰⁰ -> [LH_N]))))))
 //│ 				def enumFromThenTo₂₃₀(a¹³², t⁹², b¹³²) = 
 //│ 					if (a¹³² <= b¹³²) then 
-//│ 						let _lh_listcomp_fun_ls_h¹⁰⁰ = a¹³²
-//│ 						in let _lh_listcomp_fun_ls_t¹⁰⁰ = enumFromThenTo₂₃₀(t⁹², ((2 * t⁹²) - a¹³²), b¹³²)
-//│ 						in (fun _lh_integerbench_arg1³⁷ -> (fun _lh_listcomp_fun_ls_h¹⁰¹ -> (fun _lh_listcomp_fun¹²⁷ -> (fun _lh_listcomp_fun_ls_t¹⁰¹ -> (fun _lh_listcomp_fun¹²⁸ -> [LH_C _lh_integerbench_arg1³⁷(_lh_listcomp_fun_ls_h¹⁰¹, _lh_listcomp_fun_ls_h¹⁰⁰) _lh_listcomp_fun¹²⁷(_lh_listcomp_fun_ls_t¹⁰⁰)]))))) else (fun _lh_integerbench_arg1³⁸ -> (fun _lh_listcomp_fun_ls_h¹⁰² -> (fun _lh_listcomp_fun¹²⁹ -> (fun _lh_listcomp_fun_ls_t¹⁰² -> (fun _lh_listcomp_fun¹³⁰ -> _lh_listcomp_fun¹³⁰(_lh_listcomp_fun_ls_t¹⁰²))))))
+//│ 						let _lh_listcomp_fun_ls_h¹⁰⁰ = lazy⁰(a¹³²)
+//│ 						in let _lh_listcomp_fun_ls_t¹⁰⁰ = lazy⁰(enumFromThenTo₂₃₀(t⁹², ((2 * t⁹²) - a¹³²), b¹³²))
+//│ 						in (fun _lh_integerbench_arg1³⁷ -> (fun _lh_listcomp_fun_ls_h¹⁰¹ -> (fun _lh_listcomp_fun¹²⁷ -> (fun _lh_listcomp_fun_ls_t¹⁰¹ -> (fun _lh_listcomp_fun¹²⁸ -> [LH_C _lh_integerbench_arg1³⁷(_lh_listcomp_fun_ls_h¹⁰¹, force⁰(_lh_listcomp_fun_ls_h¹⁰⁰)) _lh_listcomp_fun¹²⁷(force⁰(_lh_listcomp_fun_ls_t¹⁰⁰))]))))) else (fun _lh_integerbench_arg1³⁸ -> (fun _lh_listcomp_fun_ls_h¹⁰² -> (fun _lh_listcomp_fun¹²⁹ -> (fun _lh_listcomp_fun_ls_t¹⁰² -> (fun _lh_listcomp_fun¹³⁰ -> _lh_listcomp_fun¹³⁰(_lh_listcomp_fun_ls_t¹⁰²))))))
 //│ 		def runbench₆₀(_lh_runbench_arg1²⁴, _lh_runbench_arg2²⁴, _lh_runbench_arg3²⁴, _lh_runbench_arg4²⁴, _lh_runbench_arg5²⁴, _lh_runbench_arg6²⁴, _lh_runbench_arg7²⁴, _lh_runbench_arg8²⁴, _lh_runbench_arg9²⁴) = 
 //│ 			[LH_P2 intbench₆₀(_lh_runbench_arg2²⁴, _lh_runbench_arg4²⁴, _lh_runbench_arg5²⁴, _lh_runbench_arg6²⁴, _lh_runbench_arg4²⁴, _lh_runbench_arg5²⁴, _lh_runbench_arg6²⁴) integerbench₆₀(_lh_runbench_arg1²⁴, _lh_runbench_arg4²⁴, _lh_runbench_arg5²⁴, _lh_runbench_arg6²⁴, _lh_runbench_arg4²⁴, _lh_runbench_arg5²⁴, _lh_runbench_arg6²⁴)]
 //│ 			where
@@ -2139,32 +2139,32 @@ testInteger_nofib $ primId 3000
 //│ 				where
 //│ 				def enumFromThenTo₂₄₀(a¹⁴⁹, t¹⁰⁹, b¹⁴⁹) = 
 //│ 					if (a¹⁴⁹ <= b¹⁴⁹) then 
-//│ 						let _lh_listcomp_fun_ls_h¹⁴¹ = a¹⁴⁹
-//│ 						in let _lh_listcomp_fun_ls_t¹⁴¹ = enumFromThenTo₂₄₀(t¹⁰⁹, ((2 * t¹⁰⁹) - a¹⁴⁹), b¹⁴⁹)
+//│ 						let _lh_listcomp_fun_ls_h¹⁴¹ = lazy⁰(a¹⁴⁹)
+//│ 						in let _lh_listcomp_fun_ls_t¹⁴¹ = lazy⁰(enumFromThenTo₂₄₀(t¹⁰⁹, ((2 * t¹⁰⁹) - a¹⁴⁹), b¹⁴⁹))
 //│ 						in (fun _lh_intbench_arg1⁵⁶ -> (fun _lh_intbench_arg2⁴⁰ -> (fun _lh_intbench_arg5⁴⁰ -> (fun _lh_intbench_arg6⁴⁰ -> (fun _lh_intbench_arg7⁴⁰ -> (fun _lh_listcomp_fun¹⁹⁷ -> 
-//│ 							let _lh_listcomp_fun¹⁹⁸ = (fun _lh_listcomp_fun_para¹⁰⁷ -> _lh_listcomp_fun_para¹⁰⁷(_lh_intbench_arg1⁵⁶, _lh_listcomp_fun_ls_h¹⁴¹, _lh_listcomp_fun¹⁹⁸, _lh_listcomp_fun_ls_t¹⁴¹, _lh_listcomp_fun¹⁹⁷))
+//│ 							let _lh_listcomp_fun¹⁹⁸ = (fun _lh_listcomp_fun_para¹⁰⁷ -> _lh_listcomp_fun_para¹⁰⁷(_lh_intbench_arg1⁵⁶, force⁰(_lh_listcomp_fun_ls_h¹⁴¹), _lh_listcomp_fun¹⁹⁸, force⁰(_lh_listcomp_fun_ls_t¹⁴¹), _lh_listcomp_fun¹⁹⁷))
 //│ 							in _lh_listcomp_fun¹⁹⁸(enumFromThenTo₂₅₀(_lh_intbench_arg5⁴⁰, (_lh_intbench_arg2⁴⁰ + _lh_intbench_arg6⁴⁰), _lh_intbench_arg7⁴⁰)))))))) else (fun _lh_intbench_arg1⁵⁷ -> (fun _lh_intbench_arg2⁴¹ -> (fun _lh_intbench_arg5⁴¹ -> (fun _lh_intbench_arg6⁴¹ -> (fun _lh_intbench_arg7⁴¹ -> (fun _lh_listcomp_fun¹⁹⁹ -> [LH_N]))))))
 //│ 				def enumFromThenTo₂₅₀(a¹⁴⁰, t¹⁰⁰, b¹⁴⁰) = 
 //│ 					if (a¹⁴⁰ <= b¹⁴⁰) then 
-//│ 						let _lh_listcomp_fun_ls_h¹¹⁶ = a¹⁴⁰
-//│ 						in let _lh_listcomp_fun_ls_t¹¹⁶ = enumFromThenTo₂₅₀(t¹⁰⁰, ((2 * t¹⁰⁰) - a¹⁴⁰), b¹⁴⁰)
-//│ 						in (fun _lh_intbench_arg1⁴⁴ -> (fun _lh_listcomp_fun_ls_h¹¹⁷ -> (fun _lh_listcomp_fun¹⁶⁰ -> (fun _lh_listcomp_fun_ls_t¹¹⁷ -> (fun _lh_listcomp_fun¹⁶¹ -> [LH_C _lh_intbench_arg1⁴⁴(_lh_listcomp_fun_ls_h¹¹⁷, _lh_listcomp_fun_ls_h¹¹⁶) _lh_listcomp_fun¹⁶⁰(_lh_listcomp_fun_ls_t¹¹⁶)]))))) else (fun _lh_intbench_arg1⁴⁵ -> (fun _lh_listcomp_fun_ls_h¹¹⁸ -> (fun _lh_listcomp_fun¹⁶² -> (fun _lh_listcomp_fun_ls_t¹¹⁸ -> (fun _lh_listcomp_fun¹⁶³ -> _lh_listcomp_fun¹⁶³(_lh_listcomp_fun_ls_t¹¹⁸))))))
+//│ 						let _lh_listcomp_fun_ls_h¹¹⁶ = lazy⁰(a¹⁴⁰)
+//│ 						in let _lh_listcomp_fun_ls_t¹¹⁶ = lazy⁰(enumFromThenTo₂₅₀(t¹⁰⁰, ((2 * t¹⁰⁰) - a¹⁴⁰), b¹⁴⁰))
+//│ 						in (fun _lh_intbench_arg1⁴⁴ -> (fun _lh_listcomp_fun_ls_h¹¹⁷ -> (fun _lh_listcomp_fun¹⁶⁰ -> (fun _lh_listcomp_fun_ls_t¹¹⁷ -> (fun _lh_listcomp_fun¹⁶¹ -> [LH_C _lh_intbench_arg1⁴⁴(_lh_listcomp_fun_ls_h¹¹⁷, force⁰(_lh_listcomp_fun_ls_h¹¹⁶)) _lh_listcomp_fun¹⁶⁰(force⁰(_lh_listcomp_fun_ls_t¹¹⁶))]))))) else (fun _lh_intbench_arg1⁴⁵ -> (fun _lh_listcomp_fun_ls_h¹¹⁸ -> (fun _lh_listcomp_fun¹⁶² -> (fun _lh_listcomp_fun_ls_t¹¹⁸ -> (fun _lh_listcomp_fun¹⁶³ -> _lh_listcomp_fun¹⁶³(_lh_listcomp_fun_ls_t¹¹⁸))))))
 //│ 			def integerbench₆₀(_lh_integerbench_arg1⁴⁷, _lh_integerbench_arg2³⁷, _lh_integerbench_arg3²⁵, _lh_integerbench_arg4²⁵, _lh_integerbench_arg5³⁷, _lh_integerbench_arg6³⁷, _lh_integerbench_arg7³⁷) = 
 //│ 				let _lh_listcomp_fun¹⁵⁹ = (fun _lh_listcomp_fun_para¹⁰³ -> _lh_listcomp_fun_para¹⁰³(_lh_integerbench_arg1⁴⁷, _lh_integerbench_arg2³⁷, _lh_integerbench_arg5³⁷, _lh_integerbench_arg6³⁷, _lh_integerbench_arg7³⁷, _lh_listcomp_fun¹⁵⁹))
 //│ 				in _lh_listcomp_fun¹⁵⁹(enumFromThenTo₂₆₀(_lh_integerbench_arg2³⁷, (_lh_integerbench_arg2³⁷ + _lh_integerbench_arg3²⁵), _lh_integerbench_arg4²⁵))
 //│ 				where
 //│ 				def enumFromThenTo₂₆₀(a¹²⁴, t⁸⁴, b¹²⁴) = 
 //│ 					if (a¹²⁴ <= b¹²⁴) then 
-//│ 						let _lh_listcomp_fun_ls_h⁸⁴ = a¹²⁴
-//│ 						in let _lh_listcomp_fun_ls_t⁸⁴ = enumFromThenTo₂₆₀(t⁸⁴, ((2 * t⁸⁴) - a¹²⁴), b¹²⁴)
+//│ 						let _lh_listcomp_fun_ls_h⁸⁴ = lazy⁰(a¹²⁴)
+//│ 						in let _lh_listcomp_fun_ls_t⁸⁴ = lazy⁰(enumFromThenTo₂₆₀(t⁸⁴, ((2 * t⁸⁴) - a¹²⁴), b¹²⁴))
 //│ 						in (fun _lh_integerbench_arg1²³ -> (fun _lh_integerbench_arg2²³ -> (fun _lh_integerbench_arg5²³ -> (fun _lh_integerbench_arg6²³ -> (fun _lh_integerbench_arg7²³ -> (fun _lh_listcomp_fun⁹⁴ -> 
-//│ 							let _lh_listcomp_fun⁹⁵ = (fun _lh_listcomp_fun_para⁸⁶ -> _lh_listcomp_fun_para⁸⁶(_lh_integerbench_arg1²³, _lh_listcomp_fun_ls_h⁸⁴, _lh_listcomp_fun⁹⁵, _lh_listcomp_fun_ls_t⁸⁴, _lh_listcomp_fun⁹⁴))
+//│ 							let _lh_listcomp_fun⁹⁵ = (fun _lh_listcomp_fun_para⁸⁶ -> _lh_listcomp_fun_para⁸⁶(_lh_integerbench_arg1²³, force⁰(_lh_listcomp_fun_ls_h⁸⁴), _lh_listcomp_fun⁹⁵, force⁰(_lh_listcomp_fun_ls_t⁸⁴), _lh_listcomp_fun⁹⁴))
 //│ 							in _lh_listcomp_fun⁹⁵(enumFromThenTo₂₇₀(_lh_integerbench_arg5²³, (_lh_integerbench_arg2²³ + _lh_integerbench_arg6²³), _lh_integerbench_arg7²³)))))))) else (fun _lh_integerbench_arg1²⁴ -> (fun _lh_integerbench_arg2²⁴ -> (fun _lh_integerbench_arg5²⁴ -> (fun _lh_integerbench_arg6²⁴ -> (fun _lh_integerbench_arg7²⁴ -> (fun _lh_listcomp_fun⁹⁶ -> [LH_N]))))))
 //│ 				def enumFromThenTo₂₇₀(a¹⁵⁰, t¹¹⁰, b¹⁵⁰) = 
 //│ 					if (a¹⁵⁰ <= b¹⁵⁰) then 
-//│ 						let _lh_listcomp_fun_ls_h¹⁴² = a¹⁵⁰
-//│ 						in let _lh_listcomp_fun_ls_t¹⁴² = enumFromThenTo₂₇₀(t¹¹⁰, ((2 * t¹¹⁰) - a¹⁵⁰), b¹⁵⁰)
-//│ 						in (fun _lh_integerbench_arg1⁵⁶ -> (fun _lh_listcomp_fun_ls_h¹⁴³ -> (fun _lh_listcomp_fun²⁰⁰ -> (fun _lh_listcomp_fun_ls_t¹⁴³ -> (fun _lh_listcomp_fun²⁰¹ -> [LH_C _lh_integerbench_arg1⁵⁶(_lh_listcomp_fun_ls_h¹⁴³, _lh_listcomp_fun_ls_h¹⁴²) _lh_listcomp_fun²⁰⁰(_lh_listcomp_fun_ls_t¹⁴²)]))))) else (fun _lh_integerbench_arg1⁵⁷ -> (fun _lh_listcomp_fun_ls_h¹⁴⁴ -> (fun _lh_listcomp_fun²⁰² -> (fun _lh_listcomp_fun_ls_t¹⁴⁴ -> (fun _lh_listcomp_fun²⁰³ -> _lh_listcomp_fun²⁰³(_lh_listcomp_fun_ls_t¹⁴⁴))))))
+//│ 						let _lh_listcomp_fun_ls_h¹⁴² = lazy⁰(a¹⁵⁰)
+//│ 						in let _lh_listcomp_fun_ls_t¹⁴² = lazy⁰(enumFromThenTo₂₇₀(t¹¹⁰, ((2 * t¹¹⁰) - a¹⁵⁰), b¹⁵⁰))
+//│ 						in (fun _lh_integerbench_arg1⁵⁶ -> (fun _lh_listcomp_fun_ls_h¹⁴³ -> (fun _lh_listcomp_fun²⁰⁰ -> (fun _lh_listcomp_fun_ls_t¹⁴³ -> (fun _lh_listcomp_fun²⁰¹ -> [LH_C _lh_integerbench_arg1⁵⁶(_lh_listcomp_fun_ls_h¹⁴³, force⁰(_lh_listcomp_fun_ls_h¹⁴²)) _lh_listcomp_fun²⁰⁰(force⁰(_lh_listcomp_fun_ls_t¹⁴²))]))))) else (fun _lh_integerbench_arg1⁵⁷ -> (fun _lh_listcomp_fun_ls_h¹⁴⁴ -> (fun _lh_listcomp_fun²⁰² -> (fun _lh_listcomp_fun_ls_t¹⁴⁴ -> (fun _lh_listcomp_fun²⁰³ -> _lh_listcomp_fun²⁰³(_lh_listcomp_fun_ls_t¹⁴⁴))))))
 //│ 		def runbench₇₀(_lh_runbench_arg1²⁰, _lh_runbench_arg2²⁰, _lh_runbench_arg3²⁰, _lh_runbench_arg4²⁰, _lh_runbench_arg5²⁰, _lh_runbench_arg6²⁰, _lh_runbench_arg7²⁰, _lh_runbench_arg8²⁰, _lh_runbench_arg9²⁰) = 
 //│ 			[LH_P2 intbench₇₀(_lh_runbench_arg2²⁰, _lh_runbench_arg4²⁰, _lh_runbench_arg5²⁰, _lh_runbench_arg6²⁰, _lh_runbench_arg4²⁰, _lh_runbench_arg5²⁰, _lh_runbench_arg6²⁰) integerbench₇₀(_lh_runbench_arg1²⁰, _lh_runbench_arg4²⁰, _lh_runbench_arg5²⁰, _lh_runbench_arg6²⁰, _lh_runbench_arg4²⁰, _lh_runbench_arg5²⁰, _lh_runbench_arg6²⁰)]
 //│ 			where
@@ -2174,32 +2174,32 @@ testInteger_nofib $ primId 3000
 //│ 				where
 //│ 				def enumFromThenTo₂₈₀(a¹²¹, t⁸¹, b¹²¹) = 
 //│ 					if (a¹²¹ <= b¹²¹) then 
-//│ 						let _lh_listcomp_fun_ls_h⁸¹ = a¹²¹
-//│ 						in let _lh_listcomp_fun_ls_t⁸¹ = enumFromThenTo₂₈₀(t⁸¹, ((2 * t⁸¹) - a¹²¹), b¹²¹)
+//│ 						let _lh_listcomp_fun_ls_h⁸¹ = lazy⁰(a¹²¹)
+//│ 						in let _lh_listcomp_fun_ls_t⁸¹ = lazy⁰(enumFromThenTo₂₈₀(t⁸¹, ((2 * t⁸¹) - a¹²¹), b¹²¹))
 //│ 						in (fun _lh_intbench_arg1²² -> (fun _lh_intbench_arg2²² -> (fun _lh_intbench_arg5²² -> (fun _lh_intbench_arg6²² -> (fun _lh_intbench_arg7²² -> (fun _lh_listcomp_fun⁸⁴ -> 
-//│ 							let _lh_listcomp_fun⁸⁵ = (fun _lh_listcomp_fun_para⁸² -> _lh_listcomp_fun_para⁸²(_lh_intbench_arg1²², _lh_listcomp_fun_ls_h⁸¹, _lh_listcomp_fun⁸⁵, _lh_listcomp_fun_ls_t⁸¹, _lh_listcomp_fun⁸⁴))
+//│ 							let _lh_listcomp_fun⁸⁵ = (fun _lh_listcomp_fun_para⁸² -> _lh_listcomp_fun_para⁸²(_lh_intbench_arg1²², force⁰(_lh_listcomp_fun_ls_h⁸¹), _lh_listcomp_fun⁸⁵, force⁰(_lh_listcomp_fun_ls_t⁸¹), _lh_listcomp_fun⁸⁴))
 //│ 							in _lh_listcomp_fun⁸⁵(enumFromThenTo₂₉₀(_lh_intbench_arg5²², (_lh_intbench_arg2²² + _lh_intbench_arg6²²), _lh_intbench_arg7²²)))))))) else (fun _lh_intbench_arg1²³ -> (fun _lh_intbench_arg2²³ -> (fun _lh_intbench_arg5²³ -> (fun _lh_intbench_arg6²³ -> (fun _lh_intbench_arg7²³ -> (fun _lh_listcomp_fun⁸⁶ -> [LH_N]))))))
 //│ 				def enumFromThenTo₂₉₀(a¹²⁸, t⁸⁸, b¹²⁸) = 
 //│ 					if (a¹²⁸ <= b¹²⁸) then 
-//│ 						let _lh_listcomp_fun_ls_h⁹⁰ = a¹²⁸
-//│ 						in let _lh_listcomp_fun_ls_t⁹⁰ = enumFromThenTo₂₉₀(t⁸⁸, ((2 * t⁸⁸) - a¹²⁸), b¹²⁸)
-//│ 						in (fun _lh_intbench_arg1²⁷ -> (fun _lh_listcomp_fun_ls_h⁹¹ -> (fun _lh_listcomp_fun¹⁰⁸ -> (fun _lh_listcomp_fun_ls_t⁹¹ -> (fun _lh_listcomp_fun¹⁰⁹ -> [LH_C _lh_intbench_arg1²⁷(_lh_listcomp_fun_ls_h⁹¹, _lh_listcomp_fun_ls_h⁹⁰) _lh_listcomp_fun¹⁰⁸(_lh_listcomp_fun_ls_t⁹⁰)]))))) else (fun _lh_intbench_arg1²⁸ -> (fun _lh_listcomp_fun_ls_h⁹² -> (fun _lh_listcomp_fun¹¹⁰ -> (fun _lh_listcomp_fun_ls_t⁹² -> (fun _lh_listcomp_fun¹¹¹ -> _lh_listcomp_fun¹¹¹(_lh_listcomp_fun_ls_t⁹²))))))
+//│ 						let _lh_listcomp_fun_ls_h⁹⁰ = lazy⁰(a¹²⁸)
+//│ 						in let _lh_listcomp_fun_ls_t⁹⁰ = lazy⁰(enumFromThenTo₂₉₀(t⁸⁸, ((2 * t⁸⁸) - a¹²⁸), b¹²⁸))
+//│ 						in (fun _lh_intbench_arg1²⁷ -> (fun _lh_listcomp_fun_ls_h⁹¹ -> (fun _lh_listcomp_fun¹⁰⁸ -> (fun _lh_listcomp_fun_ls_t⁹¹ -> (fun _lh_listcomp_fun¹⁰⁹ -> [LH_C _lh_intbench_arg1²⁷(_lh_listcomp_fun_ls_h⁹¹, force⁰(_lh_listcomp_fun_ls_h⁹⁰)) _lh_listcomp_fun¹⁰⁸(force⁰(_lh_listcomp_fun_ls_t⁹⁰))]))))) else (fun _lh_intbench_arg1²⁸ -> (fun _lh_listcomp_fun_ls_h⁹² -> (fun _lh_listcomp_fun¹¹⁰ -> (fun _lh_listcomp_fun_ls_t⁹² -> (fun _lh_listcomp_fun¹¹¹ -> _lh_listcomp_fun¹¹¹(_lh_listcomp_fun_ls_t⁹²))))))
 //│ 			def integerbench₇₀(_lh_integerbench_arg1⁵⁰, _lh_integerbench_arg2³⁸, _lh_integerbench_arg3²⁶, _lh_integerbench_arg4²⁶, _lh_integerbench_arg5³⁸, _lh_integerbench_arg6³⁸, _lh_integerbench_arg7³⁸) = 
 //│ 				let _lh_listcomp_fun¹⁷⁹ = (fun _lh_listcomp_fun_para¹⁰⁵ -> _lh_listcomp_fun_para¹⁰⁵(_lh_integerbench_arg1⁵⁰, _lh_integerbench_arg2³⁸, _lh_integerbench_arg5³⁸, _lh_integerbench_arg6³⁸, _lh_integerbench_arg7³⁸, _lh_listcomp_fun¹⁷⁹))
 //│ 				in _lh_listcomp_fun¹⁷⁹(enumFromThenTo₃₀₀(_lh_integerbench_arg2³⁸, (_lh_integerbench_arg2³⁸ + _lh_integerbench_arg3²⁶), _lh_integerbench_arg4²⁶))
 //│ 				where
 //│ 				def enumFromThenTo₃₀₀(a¹⁷⁹, t¹¹⁹, b¹⁷⁹) = 
 //│ 					if (a¹⁷⁹ <= b¹⁷⁹) then 
-//│ 						let _lh_listcomp_fun_ls_h¹⁵⁹ = a¹⁷⁹
-//│ 						in let _lh_listcomp_fun_ls_t¹⁵⁹ = enumFromThenTo₃₀₀(t¹¹⁹, ((2 * t¹¹⁹) - a¹⁷⁹), b¹⁷⁹)
+//│ 						let _lh_listcomp_fun_ls_h¹⁵⁹ = lazy⁰(a¹⁷⁹)
+//│ 						in let _lh_listcomp_fun_ls_t¹⁵⁹ = lazy⁰(enumFromThenTo₃₀₀(t¹¹⁹, ((2 * t¹¹⁹) - a¹⁷⁹), b¹⁷⁹))
 //│ 						in (fun _lh_integerbench_arg1⁶⁸ -> (fun _lh_integerbench_arg2⁴⁸ -> (fun _lh_integerbench_arg5⁴⁸ -> (fun _lh_integerbench_arg6⁴⁸ -> (fun _lh_integerbench_arg7⁴⁸ -> (fun _lh_listcomp_fun²³⁷ -> 
-//│ 							let _lh_listcomp_fun²³⁸ = (fun _lh_listcomp_fun_para¹¹⁹ -> _lh_listcomp_fun_para¹¹⁹(_lh_integerbench_arg1⁶⁸, _lh_listcomp_fun_ls_h¹⁵⁹, _lh_listcomp_fun²³⁸, _lh_listcomp_fun_ls_t¹⁵⁹, _lh_listcomp_fun²³⁷))
+//│ 							let _lh_listcomp_fun²³⁸ = (fun _lh_listcomp_fun_para¹¹⁹ -> _lh_listcomp_fun_para¹¹⁹(_lh_integerbench_arg1⁶⁸, force⁰(_lh_listcomp_fun_ls_h¹⁵⁹), _lh_listcomp_fun²³⁸, force⁰(_lh_listcomp_fun_ls_t¹⁵⁹), _lh_listcomp_fun²³⁷))
 //│ 							in _lh_listcomp_fun²³⁸(enumFromThenTo₃₁₀(_lh_integerbench_arg5⁴⁸, (_lh_integerbench_arg2⁴⁸ + _lh_integerbench_arg6⁴⁸), _lh_integerbench_arg7⁴⁸)))))))) else (fun _lh_integerbench_arg1⁶⁹ -> (fun _lh_integerbench_arg2⁴⁹ -> (fun _lh_integerbench_arg5⁴⁹ -> (fun _lh_integerbench_arg6⁴⁹ -> (fun _lh_integerbench_arg7⁴⁹ -> (fun _lh_listcomp_fun²³⁹ -> [LH_N]))))))
 //│ 				def enumFromThenTo₃₁₀(a¹⁴², t¹⁰², b¹⁴²) = 
 //│ 					if (a¹⁴² <= b¹⁴²) then 
-//│ 						let _lh_listcomp_fun_ls_h¹²² = a¹⁴²
-//│ 						in let _lh_listcomp_fun_ls_t¹²² = enumFromThenTo₃₁₀(t¹⁰², ((2 * t¹⁰²) - a¹⁴²), b¹⁴²)
-//│ 						in (fun _lh_integerbench_arg1⁴⁸ -> (fun _lh_listcomp_fun_ls_h¹²³ -> (fun _lh_listcomp_fun¹⁶⁸ -> (fun _lh_listcomp_fun_ls_t¹²³ -> (fun _lh_listcomp_fun¹⁶⁹ -> [LH_C _lh_integerbench_arg1⁴⁸(_lh_listcomp_fun_ls_h¹²³, _lh_listcomp_fun_ls_h¹²²) _lh_listcomp_fun¹⁶⁸(_lh_listcomp_fun_ls_t¹²²)]))))) else (fun _lh_integerbench_arg1⁴⁹ -> (fun _lh_listcomp_fun_ls_h¹²⁴ -> (fun _lh_listcomp_fun¹⁷⁰ -> (fun _lh_listcomp_fun_ls_t¹²⁴ -> (fun _lh_listcomp_fun¹⁷¹ -> _lh_listcomp_fun¹⁷¹(_lh_listcomp_fun_ls_t¹²⁴))))))
+//│ 						let _lh_listcomp_fun_ls_h¹²² = lazy⁰(a¹⁴²)
+//│ 						in let _lh_listcomp_fun_ls_t¹²² = lazy⁰(enumFromThenTo₃₁₀(t¹⁰², ((2 * t¹⁰²) - a¹⁴²), b¹⁴²))
+//│ 						in (fun _lh_integerbench_arg1⁴⁸ -> (fun _lh_listcomp_fun_ls_h¹²³ -> (fun _lh_listcomp_fun¹⁶⁸ -> (fun _lh_listcomp_fun_ls_t¹²³ -> (fun _lh_listcomp_fun¹⁶⁹ -> [LH_C _lh_integerbench_arg1⁴⁸(_lh_listcomp_fun_ls_h¹²³, force⁰(_lh_listcomp_fun_ls_h¹²²)) _lh_listcomp_fun¹⁶⁸(force⁰(_lh_listcomp_fun_ls_t¹²²))]))))) else (fun _lh_integerbench_arg1⁴⁹ -> (fun _lh_listcomp_fun_ls_h¹²⁴ -> (fun _lh_listcomp_fun¹⁷⁰ -> (fun _lh_listcomp_fun_ls_t¹²⁴ -> (fun _lh_listcomp_fun¹⁷¹ -> _lh_listcomp_fun¹⁷¹(_lh_listcomp_fun_ls_t¹²⁴))))))
 //│ 		def runbench₈₀(_lh_runbench_arg1²⁵, _lh_runbench_arg2²⁵, _lh_runbench_arg3²⁵, _lh_runbench_arg4²⁵, _lh_runbench_arg5²⁵, _lh_runbench_arg6²⁵, _lh_runbench_arg7²⁵, _lh_runbench_arg8²⁵, _lh_runbench_arg9²⁵) = 
 //│ 			[LH_P2 intbench₈₀(_lh_runbench_arg2²⁵, _lh_runbench_arg4²⁵, _lh_runbench_arg5²⁵, _lh_runbench_arg6²⁵, _lh_runbench_arg4²⁵, _lh_runbench_arg5²⁵, _lh_runbench_arg6²⁵) integerbench₈₀(_lh_runbench_arg1²⁵, _lh_runbench_arg4²⁵, _lh_runbench_arg5²⁵, _lh_runbench_arg6²⁵, _lh_runbench_arg4²⁵, _lh_runbench_arg5²⁵, _lh_runbench_arg6²⁵)]
 //│ 			where
@@ -2209,32 +2209,32 @@ testInteger_nofib $ primId 3000
 //│ 				where
 //│ 				def enumFromThenTo₃₂₀(a¹⁷⁶, t¹¹⁶, b¹⁷⁶) = 
 //│ 					if (a¹⁷⁶ <= b¹⁷⁶) then 
-//│ 						let _lh_listcomp_fun_ls_h¹⁵⁶ = a¹⁷⁶
-//│ 						in let _lh_listcomp_fun_ls_t¹⁵⁶ = enumFromThenTo₃₂₀(t¹¹⁶, ((2 * t¹¹⁶) - a¹⁷⁶), b¹⁷⁶)
+//│ 						let _lh_listcomp_fun_ls_h¹⁵⁶ = lazy⁰(a¹⁷⁶)
+//│ 						in let _lh_listcomp_fun_ls_t¹⁵⁶ = lazy⁰(enumFromThenTo₃₂₀(t¹¹⁶, ((2 * t¹¹⁶) - a¹⁷⁶), b¹⁷⁶))
 //│ 						in (fun _lh_intbench_arg1⁶⁵ -> (fun _lh_intbench_arg2⁴⁵ -> (fun _lh_intbench_arg5⁴⁵ -> (fun _lh_intbench_arg6⁴⁵ -> (fun _lh_intbench_arg7⁴⁵ -> (fun _lh_listcomp_fun²²⁴ -> 
-//│ 							let _lh_listcomp_fun²²⁵ = (fun _lh_listcomp_fun_para¹¹² -> _lh_listcomp_fun_para¹¹²(_lh_intbench_arg1⁶⁵, _lh_listcomp_fun_ls_h¹⁵⁶, _lh_listcomp_fun²²⁵, _lh_listcomp_fun_ls_t¹⁵⁶, _lh_listcomp_fun²²⁴))
+//│ 							let _lh_listcomp_fun²²⁵ = (fun _lh_listcomp_fun_para¹¹² -> _lh_listcomp_fun_para¹¹²(_lh_intbench_arg1⁶⁵, force⁰(_lh_listcomp_fun_ls_h¹⁵⁶), _lh_listcomp_fun²²⁵, force⁰(_lh_listcomp_fun_ls_t¹⁵⁶), _lh_listcomp_fun²²⁴))
 //│ 							in _lh_listcomp_fun²²⁵(enumFromThenTo₃₃₀(_lh_intbench_arg5⁴⁵, (_lh_intbench_arg2⁴⁵ + _lh_intbench_arg6⁴⁵), _lh_intbench_arg7⁴⁵)))))))) else (fun _lh_intbench_arg1⁶⁶ -> (fun _lh_intbench_arg2⁴⁶ -> (fun _lh_intbench_arg5⁴⁶ -> (fun _lh_intbench_arg6⁴⁶ -> (fun _lh_intbench_arg7⁴⁶ -> (fun _lh_listcomp_fun²²⁶ -> [LH_N]))))))
 //│ 				def enumFromThenTo₃₃₀(a¹⁴⁸, t¹⁰⁸, b¹⁴⁸) = 
 //│ 					if (a¹⁴⁸ <= b¹⁴⁸) then 
-//│ 						let _lh_listcomp_fun_ls_h¹³⁸ = a¹⁴⁸
-//│ 						in let _lh_listcomp_fun_ls_t¹³⁸ = enumFromThenTo₃₃₀(t¹⁰⁸, ((2 * t¹⁰⁸) - a¹⁴⁸), b¹⁴⁸)
-//│ 						in (fun _lh_intbench_arg1⁵⁴ -> (fun _lh_listcomp_fun_ls_h¹³⁹ -> (fun _lh_listcomp_fun¹⁹² -> (fun _lh_listcomp_fun_ls_t¹³⁹ -> (fun _lh_listcomp_fun¹⁹³ -> [LH_C _lh_intbench_arg1⁵⁴(_lh_listcomp_fun_ls_h¹³⁹, _lh_listcomp_fun_ls_h¹³⁸) _lh_listcomp_fun¹⁹²(_lh_listcomp_fun_ls_t¹³⁸)]))))) else (fun _lh_intbench_arg1⁵⁵ -> (fun _lh_listcomp_fun_ls_h¹⁴⁰ -> (fun _lh_listcomp_fun¹⁹⁴ -> (fun _lh_listcomp_fun_ls_t¹⁴⁰ -> (fun _lh_listcomp_fun¹⁹⁵ -> _lh_listcomp_fun¹⁹⁵(_lh_listcomp_fun_ls_t¹⁴⁰))))))
+//│ 						let _lh_listcomp_fun_ls_h¹³⁸ = lazy⁰(a¹⁴⁸)
+//│ 						in let _lh_listcomp_fun_ls_t¹³⁸ = lazy⁰(enumFromThenTo₃₃₀(t¹⁰⁸, ((2 * t¹⁰⁸) - a¹⁴⁸), b¹⁴⁸))
+//│ 						in (fun _lh_intbench_arg1⁵⁴ -> (fun _lh_listcomp_fun_ls_h¹³⁹ -> (fun _lh_listcomp_fun¹⁹² -> (fun _lh_listcomp_fun_ls_t¹³⁹ -> (fun _lh_listcomp_fun¹⁹³ -> [LH_C _lh_intbench_arg1⁵⁴(_lh_listcomp_fun_ls_h¹³⁹, force⁰(_lh_listcomp_fun_ls_h¹³⁸)) _lh_listcomp_fun¹⁹²(force⁰(_lh_listcomp_fun_ls_t¹³⁸))]))))) else (fun _lh_intbench_arg1⁵⁵ -> (fun _lh_listcomp_fun_ls_h¹⁴⁰ -> (fun _lh_listcomp_fun¹⁹⁴ -> (fun _lh_listcomp_fun_ls_t¹⁴⁰ -> (fun _lh_listcomp_fun¹⁹⁵ -> _lh_listcomp_fun¹⁹⁵(_lh_listcomp_fun_ls_t¹⁴⁰))))))
 //│ 			def integerbench₈₀(_lh_integerbench_arg1⁵⁸, _lh_integerbench_arg2⁴⁰, _lh_integerbench_arg3²⁸, _lh_integerbench_arg4²⁸, _lh_integerbench_arg5⁴⁰, _lh_integerbench_arg6⁴⁰, _lh_integerbench_arg7⁴⁰) = 
 //│ 				let _lh_listcomp_fun²¹³ = (fun _lh_listcomp_fun_para¹⁰⁹ -> _lh_listcomp_fun_para¹⁰⁹(_lh_integerbench_arg1⁵⁸, _lh_integerbench_arg2⁴⁰, _lh_integerbench_arg5⁴⁰, _lh_integerbench_arg6⁴⁰, _lh_integerbench_arg7⁴⁰, _lh_listcomp_fun²¹³))
 //│ 				in _lh_listcomp_fun²¹³(enumFromThenTo₃₄₀(_lh_integerbench_arg2⁴⁰, (_lh_integerbench_arg2⁴⁰ + _lh_integerbench_arg3²⁸), _lh_integerbench_arg4²⁸))
 //│ 				where
 //│ 				def enumFromThenTo₃₄₀(a¹²², t⁸², b¹²²) = 
 //│ 					if (a¹²² <= b¹²²) then 
-//│ 						let _lh_listcomp_fun_ls_h⁸² = a¹²²
-//│ 						in let _lh_listcomp_fun_ls_t⁸² = enumFromThenTo₃₄₀(t⁸², ((2 * t⁸²) - a¹²²), b¹²²)
+//│ 						let _lh_listcomp_fun_ls_h⁸² = lazy⁰(a¹²²)
+//│ 						in let _lh_listcomp_fun_ls_t⁸² = lazy⁰(enumFromThenTo₃₄₀(t⁸², ((2 * t⁸²) - a¹²²), b¹²²))
 //│ 						in (fun _lh_integerbench_arg1²¹ -> (fun _lh_integerbench_arg2²¹ -> (fun _lh_integerbench_arg5²¹ -> (fun _lh_integerbench_arg6²¹ -> (fun _lh_integerbench_arg7²¹ -> (fun _lh_listcomp_fun⁸⁸ -> 
-//│ 							let _lh_listcomp_fun⁸⁹ = (fun _lh_listcomp_fun_para⁸⁴ -> _lh_listcomp_fun_para⁸⁴(_lh_integerbench_arg1²¹, _lh_listcomp_fun_ls_h⁸², _lh_listcomp_fun⁸⁹, _lh_listcomp_fun_ls_t⁸², _lh_listcomp_fun⁸⁸))
+//│ 							let _lh_listcomp_fun⁸⁹ = (fun _lh_listcomp_fun_para⁸⁴ -> _lh_listcomp_fun_para⁸⁴(_lh_integerbench_arg1²¹, force⁰(_lh_listcomp_fun_ls_h⁸²), _lh_listcomp_fun⁸⁹, force⁰(_lh_listcomp_fun_ls_t⁸²), _lh_listcomp_fun⁸⁸))
 //│ 							in _lh_listcomp_fun⁸⁹(enumFromThenTo₃₅₀(_lh_integerbench_arg5²¹, (_lh_integerbench_arg2²¹ + _lh_integerbench_arg6²¹), _lh_integerbench_arg7²¹)))))))) else (fun _lh_integerbench_arg1²² -> (fun _lh_integerbench_arg2²² -> (fun _lh_integerbench_arg5²² -> (fun _lh_integerbench_arg6²² -> (fun _lh_integerbench_arg7²² -> (fun _lh_listcomp_fun⁹⁰ -> [LH_N]))))))
 //│ 				def enumFromThenTo₃₅₀(a¹⁷⁵, t¹¹⁵, b¹⁷⁵) = 
 //│ 					if (a¹⁷⁵ <= b¹⁷⁵) then 
-//│ 						let _lh_listcomp_fun_ls_h¹⁵³ = a¹⁷⁵
-//│ 						in let _lh_listcomp_fun_ls_t¹⁵³ = enumFromThenTo₃₅₀(t¹¹⁵, ((2 * t¹¹⁵) - a¹⁷⁵), b¹⁷⁵)
-//│ 						in (fun _lh_integerbench_arg1⁶¹ -> (fun _lh_listcomp_fun_ls_h¹⁵⁴ -> (fun _lh_listcomp_fun²²⁰ -> (fun _lh_listcomp_fun_ls_t¹⁵⁴ -> (fun _lh_listcomp_fun²²¹ -> [LH_C _lh_integerbench_arg1⁶¹(_lh_listcomp_fun_ls_h¹⁵⁴, _lh_listcomp_fun_ls_h¹⁵³) _lh_listcomp_fun²²⁰(_lh_listcomp_fun_ls_t¹⁵³)]))))) else (fun _lh_integerbench_arg1⁶² -> (fun _lh_listcomp_fun_ls_h¹⁵⁵ -> (fun _lh_listcomp_fun²²² -> (fun _lh_listcomp_fun_ls_t¹⁵⁵ -> (fun _lh_listcomp_fun²²³ -> _lh_listcomp_fun²²³(_lh_listcomp_fun_ls_t¹⁵⁵))))))
+//│ 						let _lh_listcomp_fun_ls_h¹⁵³ = lazy⁰(a¹⁷⁵)
+//│ 						in let _lh_listcomp_fun_ls_t¹⁵³ = lazy⁰(enumFromThenTo₃₅₀(t¹¹⁵, ((2 * t¹¹⁵) - a¹⁷⁵), b¹⁷⁵))
+//│ 						in (fun _lh_integerbench_arg1⁶¹ -> (fun _lh_listcomp_fun_ls_h¹⁵⁴ -> (fun _lh_listcomp_fun²²⁰ -> (fun _lh_listcomp_fun_ls_t¹⁵⁴ -> (fun _lh_listcomp_fun²²¹ -> [LH_C _lh_integerbench_arg1⁶¹(_lh_listcomp_fun_ls_h¹⁵⁴, force⁰(_lh_listcomp_fun_ls_h¹⁵³)) _lh_listcomp_fun²²⁰(force⁰(_lh_listcomp_fun_ls_t¹⁵³))]))))) else (fun _lh_integerbench_arg1⁶² -> (fun _lh_listcomp_fun_ls_h¹⁵⁵ -> (fun _lh_listcomp_fun²²² -> (fun _lh_listcomp_fun_ls_t¹⁵⁵ -> (fun _lh_listcomp_fun²²³ -> _lh_listcomp_fun²²³(_lh_listcomp_fun_ls_t¹⁵⁵))))))
 //│ 		def runbench₉₀(_lh_runbench_arg1²¹, _lh_runbench_arg2²¹, _lh_runbench_arg3²¹, _lh_runbench_arg4²¹, _lh_runbench_arg5²¹, _lh_runbench_arg6²¹, _lh_runbench_arg7²¹, _lh_runbench_arg8²¹, _lh_runbench_arg9²¹) = 
 //│ 			[LH_P2 intbench₉₀(_lh_runbench_arg2²¹, _lh_runbench_arg4²¹, _lh_runbench_arg5²¹, _lh_runbench_arg6²¹, _lh_runbench_arg4²¹, _lh_runbench_arg5²¹, _lh_runbench_arg6²¹) integerbench₉₀(_lh_runbench_arg1²¹, _lh_runbench_arg4²¹, _lh_runbench_arg5²¹, _lh_runbench_arg6²¹, _lh_runbench_arg4²¹, _lh_runbench_arg5²¹, _lh_runbench_arg6²¹)]
 //│ 			where
@@ -2244,32 +2244,32 @@ testInteger_nofib $ primId 3000
 //│ 				where
 //│ 				def enumFromThenTo₃₆₀(a¹⁷³, t¹¹³, b¹⁷³) = 
 //│ 					if (a¹⁷³ <= b¹⁷³) then 
-//│ 						let _lh_listcomp_fun_ls_h¹⁵¹ = a¹⁷³
-//│ 						in let _lh_listcomp_fun_ls_t¹⁵¹ = enumFromThenTo₃₆₀(t¹¹³, ((2 * t¹¹³) - a¹⁷³), b¹⁷³)
+//│ 						let _lh_listcomp_fun_ls_h¹⁵¹ = lazy⁰(a¹⁷³)
+//│ 						in let _lh_listcomp_fun_ls_t¹⁵¹ = lazy⁰(enumFromThenTo₃₆₀(t¹¹³, ((2 * t¹¹³) - a¹⁷³), b¹⁷³))
 //│ 						in (fun _lh_intbench_arg1⁶³ -> (fun _lh_intbench_arg2⁴³ -> (fun _lh_intbench_arg5⁴³ -> (fun _lh_intbench_arg6⁴³ -> (fun _lh_intbench_arg7⁴³ -> (fun _lh_listcomp_fun²¹⁴ -> 
-//│ 							let _lh_listcomp_fun²¹⁵ = (fun _lh_listcomp_fun_para¹¹⁰ -> _lh_listcomp_fun_para¹¹⁰(_lh_intbench_arg1⁶³, _lh_listcomp_fun_ls_h¹⁵¹, _lh_listcomp_fun²¹⁵, _lh_listcomp_fun_ls_t¹⁵¹, _lh_listcomp_fun²¹⁴))
+//│ 							let _lh_listcomp_fun²¹⁵ = (fun _lh_listcomp_fun_para¹¹⁰ -> _lh_listcomp_fun_para¹¹⁰(_lh_intbench_arg1⁶³, force⁰(_lh_listcomp_fun_ls_h¹⁵¹), _lh_listcomp_fun²¹⁵, force⁰(_lh_listcomp_fun_ls_t¹⁵¹), _lh_listcomp_fun²¹⁴))
 //│ 							in _lh_listcomp_fun²¹⁵(enumFromThenTo₃₇₀(_lh_intbench_arg5⁴³, (_lh_intbench_arg2⁴³ + _lh_intbench_arg6⁴³), _lh_intbench_arg7⁴³)))))))) else (fun _lh_intbench_arg1⁶⁴ -> (fun _lh_intbench_arg2⁴⁴ -> (fun _lh_intbench_arg5⁴⁴ -> (fun _lh_intbench_arg6⁴⁴ -> (fun _lh_intbench_arg7⁴⁴ -> (fun _lh_listcomp_fun²¹⁶ -> [LH_N]))))))
 //│ 				def enumFromThenTo₃₇₀(a¹³⁶, t⁹⁶, b¹³⁶) = 
 //│ 					if (a¹³⁶ <= b¹³⁶) then 
-//│ 						let _lh_listcomp_fun_ls_h¹⁰⁶ = a¹³⁶
-//│ 						in let _lh_listcomp_fun_ls_t¹⁰⁶ = enumFromThenTo₃₇₀(t⁹⁶, ((2 * t⁹⁶) - a¹³⁶), b¹³⁶)
-//│ 						in (fun _lh_intbench_arg1⁴¹ -> (fun _lh_listcomp_fun_ls_h¹⁰⁷ -> (fun _lh_listcomp_fun¹⁴³ -> (fun _lh_listcomp_fun_ls_t¹⁰⁷ -> (fun _lh_listcomp_fun¹⁴⁴ -> [LH_C _lh_intbench_arg1⁴¹(_lh_listcomp_fun_ls_h¹⁰⁷, _lh_listcomp_fun_ls_h¹⁰⁶) _lh_listcomp_fun¹⁴³(_lh_listcomp_fun_ls_t¹⁰⁶)]))))) else (fun _lh_intbench_arg1⁴² -> (fun _lh_listcomp_fun_ls_h¹⁰⁸ -> (fun _lh_listcomp_fun¹⁴⁵ -> (fun _lh_listcomp_fun_ls_t¹⁰⁸ -> (fun _lh_listcomp_fun¹⁴⁶ -> _lh_listcomp_fun¹⁴⁶(_lh_listcomp_fun_ls_t¹⁰⁸))))))
+//│ 						let _lh_listcomp_fun_ls_h¹⁰⁶ = lazy⁰(a¹³⁶)
+//│ 						in let _lh_listcomp_fun_ls_t¹⁰⁶ = lazy⁰(enumFromThenTo₃₇₀(t⁹⁶, ((2 * t⁹⁶) - a¹³⁶), b¹³⁶))
+//│ 						in (fun _lh_intbench_arg1⁴¹ -> (fun _lh_listcomp_fun_ls_h¹⁰⁷ -> (fun _lh_listcomp_fun¹⁴³ -> (fun _lh_listcomp_fun_ls_t¹⁰⁷ -> (fun _lh_listcomp_fun¹⁴⁴ -> [LH_C _lh_intbench_arg1⁴¹(_lh_listcomp_fun_ls_h¹⁰⁷, force⁰(_lh_listcomp_fun_ls_h¹⁰⁶)) _lh_listcomp_fun¹⁴³(force⁰(_lh_listcomp_fun_ls_t¹⁰⁶))]))))) else (fun _lh_intbench_arg1⁴² -> (fun _lh_listcomp_fun_ls_h¹⁰⁸ -> (fun _lh_listcomp_fun¹⁴⁵ -> (fun _lh_listcomp_fun_ls_t¹⁰⁸ -> (fun _lh_listcomp_fun¹⁴⁶ -> _lh_listcomp_fun¹⁴⁶(_lh_listcomp_fun_ls_t¹⁰⁸))))))
 //│ 			def integerbench₉₀(_lh_integerbench_arg1²⁵, _lh_integerbench_arg2²⁵, _lh_integerbench_arg3²¹, _lh_integerbench_arg4²¹, _lh_integerbench_arg5²⁵, _lh_integerbench_arg6²⁵, _lh_integerbench_arg7²⁵) = 
 //│ 				let _lh_listcomp_fun⁹⁷ = (fun _lh_listcomp_fun_para⁸⁷ -> _lh_listcomp_fun_para⁸⁷(_lh_integerbench_arg1²⁵, _lh_integerbench_arg2²⁵, _lh_integerbench_arg5²⁵, _lh_integerbench_arg6²⁵, _lh_integerbench_arg7²⁵, _lh_listcomp_fun⁹⁷))
 //│ 				in _lh_listcomp_fun⁹⁷(enumFromThenTo₃₈₀(_lh_integerbench_arg2²⁵, (_lh_integerbench_arg2²⁵ + _lh_integerbench_arg3²¹), _lh_integerbench_arg4²¹))
 //│ 				where
 //│ 				def enumFromThenTo₃₈₀(a¹⁷⁷, t¹¹⁷, b¹⁷⁷) = 
 //│ 					if (a¹⁷⁷ <= b¹⁷⁷) then 
-//│ 						let _lh_listcomp_fun_ls_h¹⁵⁷ = a¹⁷⁷
-//│ 						in let _lh_listcomp_fun_ls_t¹⁵⁷ = enumFromThenTo₃₈₀(t¹¹⁷, ((2 * t¹¹⁷) - a¹⁷⁷), b¹⁷⁷)
+//│ 						let _lh_listcomp_fun_ls_h¹⁵⁷ = lazy⁰(a¹⁷⁷)
+//│ 						in let _lh_listcomp_fun_ls_t¹⁵⁷ = lazy⁰(enumFromThenTo₃₈₀(t¹¹⁷, ((2 * t¹¹⁷) - a¹⁷⁷), b¹⁷⁷))
 //│ 						in (fun _lh_integerbench_arg1⁶⁴ -> (fun _lh_integerbench_arg2⁴⁴ -> (fun _lh_integerbench_arg5⁴⁴ -> (fun _lh_integerbench_arg6⁴⁴ -> (fun _lh_integerbench_arg7⁴⁴ -> (fun _lh_listcomp_fun²³¹ -> 
-//│ 							let _lh_listcomp_fun²³² = (fun _lh_listcomp_fun_para¹¹⁷ -> _lh_listcomp_fun_para¹¹⁷(_lh_integerbench_arg1⁶⁴, _lh_listcomp_fun_ls_h¹⁵⁷, _lh_listcomp_fun²³², _lh_listcomp_fun_ls_t¹⁵⁷, _lh_listcomp_fun²³¹))
+//│ 							let _lh_listcomp_fun²³² = (fun _lh_listcomp_fun_para¹¹⁷ -> _lh_listcomp_fun_para¹¹⁷(_lh_integerbench_arg1⁶⁴, force⁰(_lh_listcomp_fun_ls_h¹⁵⁷), _lh_listcomp_fun²³², force⁰(_lh_listcomp_fun_ls_t¹⁵⁷), _lh_listcomp_fun²³¹))
 //│ 							in _lh_listcomp_fun²³²(enumFromThenTo₃₉₀(_lh_integerbench_arg5⁴⁴, (_lh_integerbench_arg2⁴⁴ + _lh_integerbench_arg6⁴⁴), _lh_integerbench_arg7⁴⁴)))))))) else (fun _lh_integerbench_arg1⁶⁵ -> (fun _lh_integerbench_arg2⁴⁵ -> (fun _lh_integerbench_arg5⁴⁵ -> (fun _lh_integerbench_arg6⁴⁵ -> (fun _lh_integerbench_arg7⁴⁵ -> (fun _lh_listcomp_fun²³³ -> [LH_N]))))))
 //│ 				def enumFromThenTo₃₉₀(a¹³⁸, t⁹⁸, b¹³⁸) = 
 //│ 					if (a¹³⁸ <= b¹³⁸) then 
-//│ 						let _lh_listcomp_fun_ls_h¹¹² = a¹³⁸
-//│ 						in let _lh_listcomp_fun_ls_t¹¹² = enumFromThenTo₃₉₀(t⁹⁸, ((2 * t⁹⁸) - a¹³⁸), b¹³⁸)
-//│ 						in (fun _lh_integerbench_arg1⁴³ -> (fun _lh_listcomp_fun_ls_h¹¹³ -> (fun _lh_listcomp_fun¹⁵¹ -> (fun _lh_listcomp_fun_ls_t¹¹³ -> (fun _lh_listcomp_fun¹⁵² -> [LH_C _lh_integerbench_arg1⁴³(_lh_listcomp_fun_ls_h¹¹³, _lh_listcomp_fun_ls_h¹¹²) _lh_listcomp_fun¹⁵¹(_lh_listcomp_fun_ls_t¹¹²)]))))) else (fun _lh_integerbench_arg1⁴⁴ -> (fun _lh_listcomp_fun_ls_h¹¹⁴ -> (fun _lh_listcomp_fun¹⁵³ -> (fun _lh_listcomp_fun_ls_t¹¹⁴ -> (fun _lh_listcomp_fun¹⁵⁴ -> _lh_listcomp_fun¹⁵⁴(_lh_listcomp_fun_ls_t¹¹⁴))))))
+//│ 						let _lh_listcomp_fun_ls_h¹¹² = lazy⁰(a¹³⁸)
+//│ 						in let _lh_listcomp_fun_ls_t¹¹² = lazy⁰(enumFromThenTo₃₉₀(t⁹⁸, ((2 * t⁹⁸) - a¹³⁸), b¹³⁸))
+//│ 						in (fun _lh_integerbench_arg1⁴³ -> (fun _lh_listcomp_fun_ls_h¹¹³ -> (fun _lh_listcomp_fun¹⁵¹ -> (fun _lh_listcomp_fun_ls_t¹¹³ -> (fun _lh_listcomp_fun¹⁵² -> [LH_C _lh_integerbench_arg1⁴³(_lh_listcomp_fun_ls_h¹¹³, force⁰(_lh_listcomp_fun_ls_h¹¹²)) _lh_listcomp_fun¹⁵¹(force⁰(_lh_listcomp_fun_ls_t¹¹²))]))))) else (fun _lh_integerbench_arg1⁴⁴ -> (fun _lh_listcomp_fun_ls_h¹¹⁴ -> (fun _lh_listcomp_fun¹⁵³ -> (fun _lh_listcomp_fun_ls_t¹¹⁴ -> (fun _lh_listcomp_fun¹⁵⁴ -> _lh_listcomp_fun¹⁵⁴(_lh_listcomp_fun_ls_t¹¹⁴))))))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>

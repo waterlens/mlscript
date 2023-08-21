@@ -169,26 +169,26 @@ c(p1)(p2)
 //│ 	def c₁(x³) = 
 //│ 		x³
 //│ def p1₀ = 
-//│ 	let aa³ = 	
-//│ 		let a2⁴ = p1₁
-//│ 		in a2⁴
-//│ 	in aa³
+//│ 	let aa³ = lazy⁰(
+//│ 		let a2⁴ = lazy⁰(p1₁)
+//│ 		in force⁰(a2⁴))
+//│ 	in force⁰(aa³)
 //│ 	where
 //│ 	def p1₁ = 
-//│ 		let a3⁴ = 	
-//│ 			let aa⁴ = p1₂
-//│ 			in aa⁴
+//│ 		let a3⁴ = lazy⁰(
+//│ 			let aa⁴ = lazy⁰(p1₂)
+//│ 			in force⁰(aa⁴))
 //│ 		in (fun y⁴ -> case y⁴ of {
 //│ 			D bb¹ => case bb¹ of {
-//│ 				D cc¹ => c₁(a3⁴, cc¹)}})
+//│ 				D cc¹ => c₁(force⁰(a3⁴), cc¹)}})
 //│ 		where
 //│ 		def p1₂ = 
-//│ 			let a2³ = 	
-//│ 				let a3³ = p1₀
+//│ 			let a2³ = lazy⁰(
+//│ 				let a3³ = lazy⁰(p1₀)
 //│ 				in (fun y³ -> case y³ of {
 //│ 					D bb² => case bb² of {
-//│ 						D cc² => c₀(a3³, cc²)}})
-//│ 			in a2³
+//│ 						D cc² => c₀(force⁰(a3³), cc²)}}))
+//│ 			in force⁰(a2³)
 //│ def p2₀ = 
 //│ 	[D [D [D p2₁]]]
 //│ 	where
@@ -617,34 +617,34 @@ c0(p10)(p20)
 //│ 									def p10₃ = 
 //│ 										p11₀
 //│ def p20₀ = 
-//│ 	let bb⁸ = 	
-//│ 		let cc⁸ = 	
-//│ 			let bb⁹ = p21₀
-//│ 			in bb⁹
-//│ 		in c1₀(p12₀, cc⁸)
-//│ 	in bb⁸
+//│ 	let bb⁸ = lazy⁰(
+//│ 		let cc⁸ = lazy⁰(
+//│ 			let bb⁹ = lazy⁰(p21₀)
+//│ 			in force⁰(bb⁹))
+//│ 		in c1₀(p12₀, force⁰(cc⁸)))
+//│ 	in force⁰(bb⁸)
 //│ 	where
 //│ 	def p21₀ = 
-//│ 		let cc¹² = 	
-//│ 			let bb¹³ = 	
-//│ 				let cc¹³ = p20₁
-//│ 				in c1₁(p12₁, cc¹³)
-//│ 			in bb¹³
-//│ 		in id₀(p10₁, cc¹²)
+//│ 		let cc¹² = lazy⁰(
+//│ 			let bb¹³ = lazy⁰(
+//│ 				let cc¹³ = lazy⁰(p20₁)
+//│ 				in c1₁(p12₁, force⁰(cc¹³)))
+//│ 			in force⁰(bb¹³))
+//│ 		in id₀(p10₁, force⁰(cc¹²))
 //│ 		where
 //│ 		def p20₁ = 
-//│ 			let bb¹¹ = 	
-//│ 				let cc¹¹ = 	
-//│ 					let bb¹² = p21₁
-//│ 					in bb¹²
-//│ 				in id₁(p10₂, cc¹¹)
-//│ 			in bb¹¹
+//│ 			let bb¹¹ = lazy⁰(
+//│ 				let cc¹¹ = lazy⁰(
+//│ 					let bb¹² = lazy⁰(p21₁)
+//│ 					in force⁰(bb¹²))
+//│ 				in id₁(p10₂, force⁰(cc¹¹)))
+//│ 			in force⁰(bb¹¹)
 //│ 			where
 //│ 			def p21₁ = 
-//│ 				let cc⁹ = 	
-//│ 					let bb¹⁰ = 	
-//│ 						let cc¹⁰ = p20₀
-//│ 						in id₂(p10₃, cc¹⁰)
-//│ 					in bb¹⁰
-//│ 				in c1₂(p12₂, cc⁹)
+//│ 				let cc⁹ = lazy⁰(
+//│ 					let bb¹⁰ = lazy⁰(
+//│ 						let cc¹⁰ = lazy⁰(p20₀)
+//│ 						in id₂(p10₃, force⁰(cc¹⁰)))
+//│ 					in force⁰(bb¹⁰))
+//│ 				in c1₂(p12₂, force⁰(cc⁹))
 //│ <<<<<<< after fusion <<<<<<<

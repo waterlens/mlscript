@@ -136,14 +136,14 @@ trait MkCtorTrait { this: ProdStratEnum.MkCtor =>
     case r: ProdStratEnum.MkCtor => this.ctor == r.ctor && this.args == r.args && this.euid == r.euid
     case _ => false
   }
-  override def hashCode(): Int = (this.ctor, this.args, this.euid).hashCode()
+  override lazy val hashCode: Int = (this.ctor, this.args, this.euid).hashCode()
 }
 trait DestructTrait { this: ConsStratEnum.Destruct =>
   override def equals(x: Any): Boolean = x match {
     case r: ConsStratEnum.Destruct => this.destrs == r.destrs && this.euid == r.euid
     case _ => false
   }
-  override def hashCode(): Int = (this.destrs, this.euid).hashCode()
+  override lazy val hashCode: Int = (this.destrs, this.euid).hashCode()
 }
 enum ProdStratEnum(using val euid: ExprId) extends ToStrat[ProdStratEnum] {
   case NoProd()(using ExprId) extends ProdStratEnum with ToStrat[NoProd]
@@ -640,9 +640,9 @@ class Deforest(var debug: Boolean) {
     (allKnotsMapFiltered, allKnotsMapUnfiltered, afterSplit)
   }
 
-  lazy val lumberhackKeywordsIds = Deforest.lumberhackKeywords.map {
+  lazy val lumberhackKeywordsIds: Map[String, Ident] = Deforest.lumberhackKeywords.map {
     n => n -> this.nextIdent(false, Var(n))
-  }
+  }.toMap
 
   def resolveConstraintsImmutableCache: Unit = {
     type CacheImmutable = Map[Cnstr, Cnstr -> Int]

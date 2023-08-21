@@ -306,6 +306,7 @@ trait ExprRewrite { this: Expr =>
     } 
   }
 
+  // TODO: add lazy to let bindings introduced by fusion
   def rewriteFusion(
     using ctx: RewriteCtx,
     fusionMatch: Map[ExprId, ExprId],
@@ -357,15 +358,13 @@ trait ExprRewrite { this: Expr =>
         val newCtx = ctx ++ newIds.toMap
         
         val extrudedIds = scopeExtrusionInfo(matchId).map(original =>
-          newCtx.getOrElse(original, original) -> Ref(original.copyToNewDeforest)
-          // original -> Ref(original.copyToNewDeforest)
-        ).reverse
-        // val extrudedIds =
-        //   scopeExtrusionInfo.getOrElse(matchId, Nil).map(original => original -> Ref(original.copyToNewDeforest)).reverse
+          original -> original.copyToNewDeforest
+        )
         val innerAfterExtrusionHandling =
-          matchArm._3.rewriteFusion(using newCtx).subst(using extrudedIds.toMap)
-        val inner = extrudedIds.foldLeft(innerAfterExtrusionHandling){ (acc, newId) =>
-          Function(newId._2.id, acc)
+          // NOTE: extrudedIds may contain same keys as in newCtx, need to override those entries
+          matchArm._3.rewriteFusion(using newCtx ++ extrudedIds)
+        val inner = extrudedIds.foldRight(innerAfterExtrusionHandling){ (newId, acc) =>
+          Function(newId._2, acc)
         }
         (newIds zip newArgs).foldRight(inner){(t_i, acc) => 
           LetIn(t_i._1._2, t_i._2.rewriteFusion, acc)
@@ -400,8 +399,7 @@ trait ExprRewrite { this: Expr =>
     case Call(f, p) => Call(f.substId, p.substId)
     case Ctor(n, args) => Ctor(n, args.map(_.substId))
     case LetIn(id, value, body) => LetIn(id, value.substId, body.substId)
-    case LetGroup(defs, body) =>
-      LetGroup(defs.mapValues(_.substId).toMap, body.substId)
+    case LetGroup(defs, body) => LetGroup(defs.mapValues(_.substId).toMap, body.substId)
     case Match(scrut, arms) => Match(scrut.substId, arms.map((n, args, body) => (n, args, body.substId)))
     case IfThenElse(cond, thenn, elze) => IfThenElse(cond.substId, thenn.substId, elze.substId)
     case Sequence(f, s) => Sequence(f.substId, s.substId)

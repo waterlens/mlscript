@@ -1,0 +1,209 @@
+:NewParser
+:ParseOnly
+
+
+// CORRECT: resolved by add lazy to and remove unused let bindings introduced by deforestation 
+:lhInHaskell
+head $ [1..3]
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ head₀^634(enumFromTo₀^635(1, 3))
+//│ def enumFromTo₀(a⁵, b²) = if (a⁵ <= b²) then [LH_C a⁵ enumFromTo₀^615((a⁵ + 1), b²)] else [LH_N]
+//│ def head₀(ls¹⁹) = case ls¹⁹ of {
+//│ 	LH_C h²⁰ t²² => h²⁰
+//│ 	| LH_N  => error⁰}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [enumFromTo₀^635] (hopeless to continue)
+//│ 	[enumFromTo₀^635 · enumFromTo₀^615] ---> [enumFromTo₀^635] (using original def)
+//│ [head₀^634] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ head₀₀(enumFromTo₀₀(1, 3))
+//│ def enumFromTo₀₀(a¹, b¹) = 
+//│ 	if (a¹ <= b¹) then [LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)] else [LH_N]
+//│ def head₀₀(ls¹) = 
+//│ 	case ls¹ of {
+//│ 		LH_C h¹ t¹ => h¹
+//│ 		| LH_N  => error⁰}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)]: 48 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => h¹ | LH_N  => error⁰}: 56
+//│ [LH_N]: 49 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => h¹ | LH_N  => error⁰}: 56
+//│ ------------------
+//│ case ls¹ of {LH_C h¹ t¹ => h¹ | LH_N  => error⁰}: 56 --->
+//│ 	[LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)]: 48
+//│ 	[LH_N]: 49
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)]: 48 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => h¹ | LH_N  => error⁰}: 56
+//│ [LH_N]: 49 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => h¹ | LH_N  => error⁰}: 56
+//│ ------------------
+//│ case ls¹ of {LH_C h¹ t¹ => h¹ | LH_N  => error⁰}: 56 --->
+//│ 	[LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)]: 48
+//│ 	[LH_N]: 49
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ head₀₀(enumFromTo₀₀(1, 3))
+//│ def enumFromTo₀₀(a², b²) = 
+//│ 	if (a² <= b²) then 
+//│ 		let h² = lazy⁰(a²)
+//│ 		in force⁰(h²) else error⁰
+//│ def head₀₀(ls²) = 
+//│ 	ls²
+//│ <<<<<<< after fusion <<<<<<<
+
+
+// WRONG:
+:lhInHaskell
+head ([1] ++ [])
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ head₀^628(mappend₀^629([LH_C 1 [LH_N]], [LH_N]))
+//│ def head₀(ls¹⁹) = case ls¹⁹ of {
+//│ 	LH_C h²¹ t²³ => h²¹
+//│ 	| LH_N  => error⁰}
+//│ def mappend₀(xs⁹, ys⁹) = case xs⁹ of {
+//│ 	LH_C h²⁰ t²² => [LH_C h²⁰ mappend₀^613(t²², ys⁹)]
+//│ 	| LH_N  => ys⁹}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [head₀^628] (hopeless to continue)
+//│ [mappend₀^629] (hopeless to continue)
+//│ 	[mappend₀^629 · mappend₀^613] ---> [mappend₀^629] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ head₀₀(mappend₀₀([LH_C 1 [LH_N]], [LH_N]))
+//│ def head₀₀(ls¹) = 
+//│ 	case ls¹ of {
+//│ 		LH_C h³ t³ => h³
+//│ 		| LH_N  => error⁰}
+//│ def mappend₀₀(xs¹, ys¹) = 
+//│ 	case xs¹ of {
+//│ 		LH_C h² t² => [LH_C h² mappend₀₀(t², ys¹)]
+//│ 		| LH_N  => ys¹}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_C h² mappend₀₀(t², ys¹)]: 34 --->
+//│ 	case ls¹ of {LH_C h³ t³ => h³ | LH_N  => error⁰}: 42
+//│ [LH_N]: 47 --->
+//│ 	case xs¹ of {LH_C h² t² => [LH_C h² mappend₀₀(t², ys¹)] | LH_N  => ys¹}: 36
+//│ [LH_C 1 [LH_N]]: 48 --->
+//│ 	case xs¹ of {LH_C h² t² => [LH_C h² mappend₀₀(t², ys¹)] | LH_N  => ys¹}: 36
+//│ [LH_N]: 50 --->
+//│ 	case ls¹ of {LH_C h³ t³ => h³ | LH_N  => error⁰}: 42
+//│ ------------------
+//│ case xs¹ of {LH_C h² t² => [LH_C h² mappend₀₀(t², ys¹)] | LH_N  => ys¹}: 36 --->
+//│ 	[LH_N]: 47
+//│ 	[LH_C 1 [LH_N]]: 48
+//│ case ls¹ of {LH_C h³ t³ => h³ | LH_N  => error⁰}: 42 --->
+//│ 	[LH_C h² mappend₀₀(t², ys¹)]: 34
+//│ 	[LH_N]: 50
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_C h² mappend₀₀(t², ys¹)]: 34 --->
+//│ 	case ls¹ of {LH_C h³ t³ => h³ | LH_N  => error⁰}: 42
+//│ [LH_N]: 47 --->
+//│ 	case xs¹ of {LH_C h² t² => [LH_C h² mappend₀₀(t², ys¹)] | LH_N  => ys¹}: 36
+//│ [LH_C 1 [LH_N]]: 48 --->
+//│ 	case xs¹ of {LH_C h² t² => [LH_C h² mappend₀₀(t², ys¹)] | LH_N  => ys¹}: 36
+//│ [LH_N]: 50 --->
+//│ 	case ls¹ of {LH_C h³ t³ => h³ | LH_N  => error⁰}: 42
+//│ ------------------
+//│ case xs¹ of {LH_C h² t² => [LH_C h² mappend₀₀(t², ys¹)] | LH_N  => ys¹}: 36 --->
+//│ 	[LH_N]: 47
+//│ 	[LH_C 1 [LH_N]]: 48
+//│ case ls¹ of {LH_C h³ t³ => h³ | LH_N  => error⁰}: 42 --->
+//│ 	[LH_C h² mappend₀₀(t², ys¹)]: 34
+//│ 	[LH_N]: 50
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ head₀₀(mappend₀₀(
+//│ 	let h⁴ = lazy⁰(1)
+//│ 	in let t⁴ = lazy⁰((fun ys³ -> ys³))
+//│ 	in (fun ys² -> 
+//│ 		let h⁵ = lazy⁰(force⁰(h⁴))
+//│ 		in force⁰(h⁵)), error⁰))
+//│ def head₀₀(ls²) = 
+//│ 	ls²
+//│ def mappend₀₀(xs², ys⁴) = 
+//│ 	xs²(ys⁴)
+//│ <<<<<<< after fusion <<<<<<<
+
+
+// WRONG:
+:lhInHaskell
+f a b = if True then a else b
+head $ f [1] []
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ head₀^628(f₀^629([LH_C 1 [LH_N]], [LH_N]))
+//│ def f₀(_lh_f_arg1¹, _lh_f_arg2¹) = if [True] then _lh_f_arg1¹ else _lh_f_arg2¹
+//│ def head₀(ls¹⁹) = case ls¹⁹ of {
+//│ 	LH_C h²⁰ t²² => h²⁰
+//│ 	| LH_N  => error⁰}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀^629] (hopeless to continue)
+//│ [head₀^628] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ head₀₀(f₀₀([LH_C 1 [LH_N]], [LH_N]))
+//│ def f₀₀(_lh_f_arg1¹, _lh_f_arg2¹) = 
+//│ 	if [True] then _lh_f_arg1¹ else _lh_f_arg2¹
+//│ def head₀₀(ls¹) = 
+//│ 	case ls¹ of {
+//│ 		LH_C h¹ t¹ => h¹
+//│ 		| LH_N  => error⁰}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_C 1 [LH_N]]: 36 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => h¹ | LH_N  => error⁰}: 30
+//│ [LH_N]: 38 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => h¹ | LH_N  => error⁰}: 30
+//│ ------------------
+//│ case ls¹ of {LH_C h¹ t¹ => h¹ | LH_N  => error⁰}: 30 --->
+//│ 	[LH_C 1 [LH_N]]: 36
+//│ 	[LH_N]: 38
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_C 1 [LH_N]]: 36 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => h¹ | LH_N  => error⁰}: 30
+//│ [LH_N]: 38 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => h¹ | LH_N  => error⁰}: 30
+//│ ------------------
+//│ case ls¹ of {LH_C h¹ t¹ => h¹ | LH_N  => error⁰}: 30 --->
+//│ 	[LH_C 1 [LH_N]]: 36
+//│ 	[LH_N]: 38
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ head₀₀(f₀₀(
+//│ 	let h² = lazy⁰(1)
+//│ 	in force⁰(h²), error⁰))
+//│ def f₀₀(_lh_f_arg1², _lh_f_arg2²) = 
+//│ 	if [True] then _lh_f_arg1² else _lh_f_arg2²
+//│ def head₀₀(ls²) = 
+//│ 	ls²
+//│ <<<<<<< after fusion <<<<<<<

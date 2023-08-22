@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Prime_nofib.ml -o "./Prime_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Prime_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+touch ./Prime_nofib.mli && ocamlc ./Prime_nofib.mli && ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Prime_nofib.ml -o "./Prime_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Prime_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o ./*.mli
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;

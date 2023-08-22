@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Mapmap.ml -o "./Mapmap.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Mapmap.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+touch ./Mapmap.mli && ocamlc ./Mapmap.mli && ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Mapmap.ml -o "./Mapmap.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Mapmap.out && rm ./*.cmx ./*.out ./*.cmi ./*.o ./*.mli
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;

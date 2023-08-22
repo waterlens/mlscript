@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Clausify_nofib.ml -o "./Clausify_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Clausify_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+touch ./Clausify_nofib.mli && ocamlc ./Clausify_nofib.mli && ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Clausify_nofib.ml -o "./Clausify_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Clausify_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o ./*.mli
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;

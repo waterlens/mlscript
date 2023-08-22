@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./QrevMap.ml -o "./QrevMap.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./QrevMap.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+touch ./QrevMap.mli && ocamlc ./QrevMap.mli && ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./QrevMap.ml -o "./QrevMap.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./QrevMap.out && rm ./*.cmx ./*.out ./*.cmi ./*.o ./*.mli
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;

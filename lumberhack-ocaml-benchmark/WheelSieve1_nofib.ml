@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./WheelSieve1_nofib.ml -o "./WheelSieve1_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./WheelSieve1_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+touch ./WheelSieve1_nofib.mli && ocamlc ./WheelSieve1_nofib.mli && ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./WheelSieve1_nofib.ml -o "./WheelSieve1_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./WheelSieve1_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o ./*.mli
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;

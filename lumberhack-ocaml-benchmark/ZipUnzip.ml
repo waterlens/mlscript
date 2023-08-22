@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./ZipUnzip.ml -o "./ZipUnzip.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./ZipUnzip.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+touch ./ZipUnzip.mli && ocamlc ./ZipUnzip.mli && ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./ZipUnzip.ml -o "./ZipUnzip.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./ZipUnzip.out && rm ./*.cmx ./*.out ./*.cmi ./*.o ./*.mli
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;

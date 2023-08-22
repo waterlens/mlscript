@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Bernoulli_nofib.ml -o "./Bernoulli_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Bernoulli_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+touch ./Bernoulli_nofib.mli && ocamlc ./Bernoulli_nofib.mli && ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Bernoulli_nofib.ml -o "./Bernoulli_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Bernoulli_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o ./*.mli
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;

@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./LastFilter.ml -o "./LastFilter.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./LastFilter.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+touch ./LastFilter.mli && ocamlc ./LastFilter.mli && ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./LastFilter.ml -o "./LastFilter.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./LastFilter.out && rm ./*.cmx ./*.out ./*.cmi ./*.o ./*.mli
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;

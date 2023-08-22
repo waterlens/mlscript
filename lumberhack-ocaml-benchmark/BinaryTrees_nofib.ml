@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./BinaryTrees_nofib.ml -o "./BinaryTrees_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./BinaryTrees_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+touch ./BinaryTrees_nofib.mli && ocamlc ./BinaryTrees_nofib.mli && ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./BinaryTrees_nofib.ml -o "./BinaryTrees_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./BinaryTrees_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o ./*.mli
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;

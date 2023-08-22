@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./QueenUsingFlatMapBuiltInType.ml -o "./QueenUsingFlatMapBuiltInType.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./QueenUsingFlatMapBuiltInType.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+touch ./QueenUsingFlatMapBuiltInType.mli && ocamlc ./QueenUsingFlatMapBuiltInType.mli && ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./QueenUsingFlatMapBuiltInType.ml -o "./QueenUsingFlatMapBuiltInType.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./QueenUsingFlatMapBuiltInType.out && rm ./*.cmx ./*.out ./*.cmi ./*.o ./*.mli
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;

@@ -155,7 +155,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
           val paramPat = allChilds.tail.takeWhile(_.getType().startsWith("pat_")).map(_.toPattern)
           val paramIds = paramPat.map { // for lambdas, only id patterns are supported for now
             case NestedPat.IdPat(n) => n -> d.nextIdent(false, Var(n))
-            case _ => lastWords("not supported")
+            case _ => lastWords(s"not supported: ${n.getSrcContent}")
           }
           val bodyExpr = allChilds.last.toExpr(using ctx ++ paramIds)
           paramIds.unzip._2.foldRight(bodyExpr)(Expr.Function(_, _))
@@ -1419,10 +1419,11 @@ let string_of_float f = listToTaggedList (explode_string (string_of_float f))"""
       Raw("])")
     )
     val compileAndRunCommand =
-      s"ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./$benchName.ml -o \"./$benchName.out\""
+      s"touch ./$benchName.mli && ocamlc ./$benchName.mli "
+        + s"&& ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./$benchName.ml -o \"./$benchName.out\""
         + s" -linkpkg -package \"core_unix.command_unix\" -linkpkg -package \"core_bench\" "
         + s"&& ./$benchName.out "
-        + "&& rm ./*.cmx ./*.out ./*.cmi ./*.o"
+        + "&& rm ./*.cmx ./*.out ./*.cmi ./*.o ./*.mli"
     val hsFileContent = Stacked(
       Raw(s"(*\n$compileAndRunCommand\n*)") :: headers :: Nil
         ::: (if this.usePolymorphicVariant then Nil else (Raw(generateTypeInfo(programs.head._2.d)) :: Nil))

@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./GenRegexs_nofib.ml -o "./GenRegexs_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./GenRegexs_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+touch ./GenRegexs_nofib.mli && ocamlc ./GenRegexs_nofib.mli && ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./GenRegexs_nofib.ml -o "./GenRegexs_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./GenRegexs_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o ./*.mli
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;

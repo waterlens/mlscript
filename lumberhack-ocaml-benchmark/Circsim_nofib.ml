@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Circsim_nofib.ml -o "./Circsim_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Circsim_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o
+touch ./Circsim_nofib.mli && ocamlc ./Circsim_nofib.mli && ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Circsim_nofib.ml -o "./Circsim_nofib.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Circsim_nofib.out && rm ./*.cmx ./*.out ./*.cmi ./*.o ./*.mli
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;

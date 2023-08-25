@@ -83,7 +83,19 @@ class DiffTestLumberhack extends DiffTests {
         output("\t\t---------- unoptimized haskell gen ----------")
       if mode.lhGenOCaml then
         output("\t\t---------- unoptimized ocaml gen ----------")
-        output((new OCamlGen(true))(originalProgram).linesIterator.map("\t\t" + _).mkString("\n"))
+        val progStr = (new OCamlGen(true))(originalProgram)
+        output(progStr.linesIterator.map("\t\t" + _).mkString("\n"))
+        if mode.dbg then {
+          val decl :: mainExpr :: Nil = progStr.split(";;").toList : @unchecked
+          output("\t\t....... ocaml repl result .......")
+          val ocamlRepl = new OCamlReplHost()
+          ocamlRepl.execute(decl + ";;") match {
+            case OCamlReplHost.Reply.Err(msg) => throw Exception(msg) 
+            case ok => output(ok.toString.linesIterator.map("\t\t" + _).mkString("\n"))
+          }
+          ocamlRepl.terminate()
+          output("\t\t....... ocaml repl result .......")
+        }
         output("\t\t---------- unoptimized ocaml gen ----------")
       if mode.lhGenDistill then
         output("\t\t---------- unoptimized distiller gen ----------")
@@ -133,7 +145,23 @@ class DiffTestLumberhack extends DiffTests {
           output("benchmark file generated")
         } catch { case e =>
           output(s"cannot generate benchmark files: ${e.getMessage()}\n")
-          output(ocamlGen(iterativeProcessRes._1))
+          val progStr = ocamlGen(iterativeProcessRes._1)
+          // val clipboard = java.awt.Toolkit.getDefaultToolkit.getSystemClipboard
+          // val declClipboard = new java.awt.datatransfer.StringSelection(decl ++ ";;")
+          // val mainExprClipboard = new java.awt.datatransfer.StringSelection(mainExpr)
+          // clipboard.setContents(declClipboard, declClipboard)
+          output(progStr)
+          if mode.dbg then {
+            val decl :: mainExpr :: Nil = progStr.split(";;").toList : @unchecked
+            output("\n--------------- ocaml repl result -----------------")
+            val ocamlRepl = new OCamlReplHost()
+            ocamlRepl.execute(decl + ";;").flatMap(_ => ocamlRepl.execute(mainExpr + ";;")) match {
+              case OCamlReplHost.Reply.Err(msg) => throw Exception(msg) 
+              case ok => output(ok.toString)
+            }
+            ocamlRepl.terminate()
+            output("\n--------------- ocaml repl result -----------------")
+          }
         }
         output("<<<<<<<<<< Generated OCaml <<<<<<<<<<")
 
@@ -348,4 +376,61 @@ object DiffTestLumberhack {
   private val modified: Set[os.RelPath] = DiffTests.findModifiedFiles(dir)
   // private val lumberhackLocalTest = Set[Str]("_LocalTest")
   private val lumberhackLocalTest = Set[Str]()
+}
+
+object OCamlReplHost {
+  enum Reply(msg: String) {
+    case Ok(msg: String) extends Reply(msg)
+    case Err(msg: String) extends Reply(msg)
+
+    override lazy val toString: String = this match {
+      case Ok(res) => s"[ok]\n$res"
+      case Err(res) => s"[error]\n$res"
+    }
+
+    def flatMap(f: String => Reply) = this match {
+      case Ok(res) => f(res)
+      case Err(res) => this
+    }
+  }
+}
+final case class OCamlReplHost(limit: Int = 2000) {
+  import java.io.{BufferedWriter, BufferedReader, InputStreamReader, OutputStreamWriter}
+  private val builder = new java.lang.ProcessBuilder()
+  
+  import OCamlReplHost.Reply.*
+
+  // NOTE: this should be the ocaml repl location
+  builder.command("/Users/crescentonc/.opam/benchmarkflambda/bin/ocaml", "-rectypes")
+  private val proc = builder.start()
+
+  private val stdin = new BufferedWriter(new OutputStreamWriter(proc.getOutputStream))
+  private val stdout = new BufferedReader(new InputStreamReader(proc.getInputStream))
+  private val stderr = new BufferedReader(new InputStreamReader(proc.getErrorStream))
+
+  // Skip the welcome message.
+  collectUntilPrompt()
+
+  private def collectUntilPrompt(): OCamlReplHost.Reply = {
+    val buffer = new StringBuilder()
+    while (!buffer.endsWith("\n# ") && buffer.size < limit) {
+      buffer.append(stdout.read().toChar)
+    }
+    // Remove the trailing `"\n# "`
+    buffer.delete(buffer.length - 3, buffer.length)
+    val reply = buffer.toString()
+    reply.linesIterator.find(_.startsWith("Error: ")).fold(Ok(reply))(_ => Err(reply))
+  }
+
+  private def send(code: Str): Unit = {
+    stdin.write(if (code endsWith "\n") code else code + "\n")
+    stdin.flush()
+  }
+
+  def execute(code: Str): OCamlReplHost.Reply = {
+    send(code)
+    collectUntilPrompt()
+  }
+
+  def terminate(): Unit = proc.destroy()
 }

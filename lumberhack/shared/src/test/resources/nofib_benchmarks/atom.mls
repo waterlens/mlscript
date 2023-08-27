@@ -805,9 +805,9 @@ testAtom_nofib $ primId 500
 //│ 	concat₀₀(
 //│ 		let _lh_listcomp_fun⁸ = (fun _lh_listcomp_fun_para⁵ -> _lh_listcomp_fun_para⁵(_lh_listcomp_fun⁸))
 //│ 		in _lh_listcomp_fun⁸(take_lz₀₀(_lh_testAtom_nofib_arg1², runExperiment₀₀(testforce₀₀, 0.02, 
-//│ 			let _lh_scalarMut_LH_C_0⁶ = lazy⁰(1.0)
-//│ 			in let _lh_scalarMut_LH_C_1⁶ = lazy⁰((fun _lh_scalarMut_arg1⁹ -> [LH_N]))
-//│ 			in (fun _lh_scalarMut_arg1⁸ -> [LH_C (_lh_scalarMut_arg1⁸ *. force⁰(_lh_scalarMut_LH_C_0⁶)) scalarMut₂₀(_lh_scalarMut_arg1⁸, force⁰(_lh_scalarMut_LH_C_1⁶))]), [State [LH_C 1.0 [LH_N]] [LH_C 0.0 [LH_N]]]))))
+//│ 			let _lh_scalarMut_LH_C_0⁶ = 1.0
+//│ 			in let _lh_scalarMut_LH_C_1⁶ = (fun _lh_scalarMut_arg1⁹ -> [LH_N])
+//│ 			in (fun _lh_scalarMut_arg1⁸ -> [LH_C (_lh_scalarMut_arg1⁸ *. _lh_scalarMut_LH_C_0⁶) scalarMut₂₀(_lh_scalarMut_arg1⁸, _lh_scalarMut_LH_C_1⁶)]), [State [LH_C 1.0 [LH_N]] [LH_C 0.0 [LH_N]]]))))
 //│ 	where
 //│ 	def concat₀₀(lss⁵) = 
 //│ 		case lss⁵ of {
@@ -873,40 +873,40 @@ testAtom_nofib $ primId 500
 //│ 			State _lh_show_State_0¹ _lh_show_State_1¹ => concat₁₀(
 //│ 				let _lh_listcomp_fun⁷ = (fun _lh_listcomp_fun_para⁴ -> case _lh_listcomp_fun_para⁴ of {
 //│ 					LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => 
-//│ 						let h¹⁸ = lazy⁰(mappend₃₀(string_of_float⁰(_lh_listcomp_fun_ls_h³), 
-//│ 							let h¹⁹ = lazy⁰('t')
-//│ 							in let t¹⁹ = lazy⁰((fun ys¹⁹ -> ys¹⁹))
+//│ 						let h¹⁸ = mappend₃₀(string_of_float⁰(_lh_listcomp_fun_ls_h³), 
+//│ 							let h¹⁹ = 't'
+//│ 							in let t¹⁹ = (fun ys¹⁹ -> ys¹⁹)
 //│ 							in (fun ys¹⁷ -> 
-//│ 								let h²⁰ = lazy⁰(force⁰(h¹⁹))
-//│ 								in let t²⁰ = lazy⁰(mappend₂₀(force⁰(t¹⁹), ys¹⁷))
-//│ 								in (fun ys¹⁸ -> [LH_C force⁰(h²⁰) mappend₁₀(force⁰(t²⁰), ys¹⁸)]))))
-//│ 						in let t¹⁸ = lazy⁰(_lh_listcomp_fun⁷(_lh_listcomp_fun_ls_t³))
-//│ 						in mappend₂₀(force⁰(h¹⁸), concat₁₀(force⁰(t¹⁸)))
-//│ 					| LH_N  => (fun ys²⁰ -> ys²⁰)})
+//│ 								let h²⁰ = h¹⁹
+//│ 								in let t²⁰ = mappend₂₀(t¹⁹, ys¹⁷)
+//│ 								in (fun ys¹⁸ -> [LH_C h²⁰ mappend₁₀(t²⁰, ys¹⁸)])))
+//│ 						in let t¹⁸ = _lh_listcomp_fun⁷(_lh_listcomp_fun_ls_t³)
+//│ 						in (fun _lh_dummy⁰ -> mappend₂₀(h¹⁸, concat₁₀(t¹⁸)))
+//│ 					| LH_N  => (fun _lh_dummy¹ -> (fun ys²⁰ -> ys²⁰))})
 //│ 				in _lh_listcomp_fun⁷(_lh_show_State_0¹))
 //│ 			| _  => error⁰}
 //│ 		where
 //│ 		def concat₁₀(lss⁷) = 
-//│ 			lss⁷
+//│ 			lss⁷(99)
 //│ 			where
 //│ 			def mappend₂₀(xs¹⁵, ys²¹) = 
 //│ 				xs¹⁵(ys²¹)
 //│ 		def mappend₃₀(xs¹², ys¹²) = 
 //│ 			case xs¹² of {
 //│ 				LH_C h¹⁵ t¹⁵ => 
-//│ 					let h¹⁶ = lazy⁰(h¹⁵)
-//│ 					in let t¹⁶ = lazy⁰(mappend₃₀(t¹⁵, ys¹²))
+//│ 					let h¹⁶ = h¹⁵
+//│ 					in let t¹⁶ = mappend₃₀(t¹⁵, ys¹²)
 //│ 					in (fun ys¹³ -> 
-//│ 						let h¹⁷ = lazy⁰(force⁰(h¹⁶))
-//│ 						in let t¹⁷ = lazy⁰(mappend₂₀(force⁰(t¹⁶), ys¹³))
-//│ 						in (fun ys¹⁴ -> [LH_C force⁰(h¹⁷) mappend₁₀(force⁰(t¹⁷), ys¹⁴)]))
+//│ 						let h¹⁷ = h¹⁶
+//│ 						in let t¹⁷ = mappend₂₀(t¹⁶, ys¹³)
+//│ 						in (fun ys¹⁴ -> [LH_C h¹⁷ mappend₁₀(t¹⁷, ys¹⁴)]))
 //│ 				| LH_N  => ys¹²}
 //│ 	def take_lz₀₀(n², ls²) = 
 //│ 		if (n² > 0) then case force⁰(ls²) of {
 //│ 			LH_C h⁸ t⁸ => 
-//│ 				let _lh_listcomp_fun_ls_h⁴ = lazy⁰(h⁸)
-//│ 				in let _lh_listcomp_fun_ls_t⁴ = lazy⁰(take_lz₀₀((n² - 1), t⁸))
-//│ 				in (fun _lh_listcomp_fun⁴ -> [LH_C mappend₁₀(show₀₀(force⁰(_lh_listcomp_fun_ls_h⁴)), [LH_C 'n' [LH_N]]) _lh_listcomp_fun⁴(force⁰(_lh_listcomp_fun_ls_t⁴))])
+//│ 				let _lh_listcomp_fun_ls_h⁴ = h⁸
+//│ 				in let _lh_listcomp_fun_ls_t⁴ = take_lz₀₀((n² - 1), t⁸)
+//│ 				in (fun _lh_listcomp_fun⁴ -> [LH_C mappend₁₀(show₀₀(_lh_listcomp_fun_ls_h⁴), [LH_C 'n' [LH_N]]) _lh_listcomp_fun⁴(_lh_listcomp_fun_ls_t⁴)])
 //│ 			| LH_N  => (fun _lh_listcomp_fun⁵ -> [LH_N])} else (fun _lh_listcomp_fun⁶ -> [LH_N])
 //│ 	def testforce₀₀(_lh_testforce_arg1², _lh_testforce_arg2²) = 
 //│ 		lazy⁰(
@@ -914,10 +914,10 @@ testAtom_nofib $ primId 500
 //│ 			in case _lh_matchIdent² of {
 //│ 				LH_C _lh_testforce_LH_C_0¹ _lh_testforce_LH_C_1¹ => case _lh_testforce_LH_C_0¹ of {
 //│ 					State _lh_testforce_State_0¹ _lh_testforce_State_1¹ => 
-//│ 						let hx² = lazy⁰(dotMult₀₀(scalarMut₂₀((0.0 -. 1.0), _lh_testforce_arg1²), _lh_testforce_State_0¹))
-//│ 						in let tx² = lazy⁰(testforce₀₀(_lh_testforce_arg1², _lh_testforce_LH_C_1¹))
+//│ 						let hx² = dotMult₀₀(scalarMut₂₀((0.0 -. 1.0), _lh_testforce_arg1²), _lh_testforce_State_0¹)
+//│ 						in let tx² = testforce₀₀(_lh_testforce_arg1², _lh_testforce_LH_C_1¹)
 //│ 						in (fun f³ -> (fun ys²² -> case force⁰(ys²²) of {
-//│ 							LH_C hy¹ ty¹ => [LH_C f³(force⁰(hx²), hy¹) zipWith_lz_lz₀₀(f³, force⁰(tx²), ty¹)]
+//│ 							LH_C hy¹ ty¹ => [LH_C f³(hx², hy¹) zipWith_lz_lz₀₀(f³, tx², ty¹)]
 //│ 							| LH_N  => [LH_N]}))
 //│ 					| _  => error⁰}
 //│ 				| _  => error⁰})
@@ -930,9 +930,9 @@ testAtom_nofib $ primId 500
 //│ 					| _  => case _lh_dotMult_arg1² of {
 //│ 						LH_C _lh_dotMult_LH_C_0² _lh_dotMult_LH_C_1² => case _lh_dotMult_arg2² of {
 //│ 							LH_C _lh_dotMult_LH_C_0³ _lh_dotMult_LH_C_1³ => 
-//│ 								let _lh_scalarMut_LH_C_0⁷ = lazy⁰((_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³))
-//│ 								in let _lh_scalarMut_LH_C_1⁷ = lazy⁰(dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³))
-//│ 								in (fun _lh_scalarMut_arg1¹² -> [LH_C (_lh_scalarMut_arg1¹² *. force⁰(_lh_scalarMut_LH_C_0⁷)) scalarMut₁₀(_lh_scalarMut_arg1¹², force⁰(_lh_scalarMut_LH_C_1⁷))])
+//│ 								let _lh_scalarMut_LH_C_0⁷ = (_lh_dotMult_LH_C_0² *. _lh_dotMult_LH_C_0³)
+//│ 								in let _lh_scalarMut_LH_C_1⁷ = dotMult₀₀(_lh_dotMult_LH_C_1², _lh_dotMult_LH_C_1³)
+//│ 								in (fun _lh_scalarMut_arg1¹² -> [LH_C (_lh_scalarMut_arg1¹² *. _lh_scalarMut_LH_C_0⁷) scalarMut₁₀(_lh_scalarMut_arg1¹², _lh_scalarMut_LH_C_1⁷)])
 //│ 							| _  => error⁰}
 //│ 						| _  => error⁰}}}
 //│ 		def scalarMut₂₀(_lh_scalarMut_arg1⁶, _lh_scalarMut_arg2⁶) = 

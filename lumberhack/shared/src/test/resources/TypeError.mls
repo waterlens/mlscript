@@ -366,13 +366,13 @@ f(C(A))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ f₀(
-//│ 	let a⁴ = lazy⁰([A])
-//│ 	in primitive⁰(force⁰(a⁴)))
+//│ 	let a⁴ = [A]
+//│ 	in (fun _lh_dummy⁰ -> primitive⁰(a⁴)))
 //│ def f₀(a⁵) = 
 //│ 	if [False] then c₀(a⁵) else [Unit]
 //│ 	where
 //│ 	def c₀(x²) = 
-//│ 		x²
+//│ 		x²(99)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -440,8 +440,8 @@ f(C(1, N), C(2, N))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ f₀([C 1 [N]], 
-//│ 	let hh² = lazy⁰(2)
-//│ 	in (fun h² -> (h² + force⁰(hh²))))
+//│ 	let hh² = 2
+//│ 	in (fun h² -> (h² + hh²)))
 //│ def f₀(xs², ys²) = 
 //│ 	case xs² of {
 //│ 		N  => 0
@@ -705,11 +705,11 @@ f(C(3, N))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ f₀(
-//│ 	let h² = lazy⁰(3)
-//│ 	in let t² = lazy⁰((fun ff⁵ -> [N]))
-//│ 	in (fun ff⁴ -> [C force⁰(h²) ff⁴(force⁰(t²))]))
+//│ 	let h² = 3
+//│ 	in let t² = (fun _lh_dummy¹ -> (fun ff⁵ -> [N]))
+//│ 	in (fun _lh_dummy⁰ -> (fun ff⁴ -> [C h² ff⁴(t²)])))
 //│ def f₀(x²) = 
-//│ 	x²(f₀)
+//│ 	x²(99, f₀)
 //│ <<<<<<< after fusion <<<<<<<
 
 // a more minimal example requiring recursive type after fusion
@@ -756,7 +756,7 @@ f(N)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀((fun ff² -> 1))
+//│ f₀((fun _lh_dummy⁰ -> (fun ff² -> 1)))
 //│ def f₀(x²) = 
-//│ 	x²(f₀)
+//│ 	x²(99, f₀)
 //│ <<<<<<< after fusion <<<<<<<

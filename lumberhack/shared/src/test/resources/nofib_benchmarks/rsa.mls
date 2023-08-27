@@ -450,12 +450,12 @@ testRsa_nofib $ primId 50520
 //│ 				| _  => case _lh_collect_arg2² of {
 //│ 					LH_N  => (fun f¹² -> (fun f¹³ -> [LH_N]))
 //│ 					| _  => 
-//│ 						let h¹⁹ = lazy⁰(take₀₀(_lh_collect_arg1², _lh_collect_arg2²))
-//│ 						in let t¹⁹ = lazy⁰(collect₀₀(_lh_collect_arg1², drop₀₀(_lh_collect_arg1², _lh_collect_arg2²)))
+//│ 						let h¹⁹ = take₀₀(_lh_collect_arg1², _lh_collect_arg2²)
+//│ 						in let t¹⁹ = collect₀₀(_lh_collect_arg1², drop₀₀(_lh_collect_arg1², _lh_collect_arg2²))
 //│ 						in (fun f¹⁴ -> 
-//│ 							let h²⁰ = lazy⁰(f¹⁴(force⁰(h¹⁹)))
-//│ 							in let t²⁰ = lazy⁰(map₀₀(f¹⁴, force⁰(t¹⁹)))
-//│ 							in (fun f¹⁵ -> [LH_C f¹⁵(force⁰(h²⁰)) map₁₀(f¹⁵, force⁰(t²⁰))]))}}
+//│ 							let h²⁰ = f¹⁴(h¹⁹)
+//│ 							in let t²⁰ = map₀₀(f¹⁴, t¹⁹)
+//│ 							in (fun f¹⁵ -> [LH_C f¹⁵(h²⁰) map₁₀(f¹⁵, t²⁰)]))}}
 //│ 			where
 //│ 			def drop₀₀(_lh_drop_arg1², _lh_drop_arg2²) = 
 //│ 				case _lh_drop_arg2² of {
@@ -465,9 +465,9 @@ testRsa_nofib $ primId 50520
 //│ 			def take₀₀(n², ls¹¹) = 
 //│ 				if (n² > 0) then case ls¹¹ of {
 //│ 					LH_C h¹¹ t¹¹ => 
-//│ 						let h¹⁸ = lazy⁰(h¹¹)
-//│ 						in let t¹⁸ = lazy⁰(take₀₀((n² - 1), t¹¹))
-//│ 						in (fun f⁷ -> (fun i² -> foldl₀₀(f⁷, f⁷(i², force⁰(h¹⁸)), force⁰(t¹⁸))))
+//│ 						let h¹⁸ = h¹¹
+//│ 						in let t¹⁸ = take₀₀((n² - 1), t¹¹)
+//│ 						in (fun f⁷ -> (fun i² -> foldl₀₀(f⁷, f⁷(i², h¹⁸), t¹⁸)))
 //│ 					| LH_N  => (fun f⁸ -> (fun i³ -> i³))} else (fun f⁹ -> (fun i⁴ -> i⁴))
 //│ 		def map₀₀(f¹⁶, ls¹³) = 
 //│ 			ls¹³(f¹⁶)

@@ -88,9 +88,9 @@ let rec fromInteger_d1_d0 _lh_fromInteger_arg1_0 =
     (fun _lh_p_arg1_0 -> 
       (`S((`Z))))
   else
-    (let rec _lh_p_S_0_0 = (lazy (fromInteger_d1_d0 (_lh_fromInteger_arg1_0 - 1))) in
+    (let rec _lh_p_S_0_0 = (fromInteger_d1_d0 (_lh_fromInteger_arg1_0 - 1)) in
       (fun _lh_p_arg1_1 -> 
-        ((natMult_d0_d0 _lh_p_arg1_1) ((p_d0_d0 _lh_p_arg1_1) (Lazy.force _lh_p_S_0_0))))))
+        ((natMult_d0_d0 _lh_p_arg1_1) ((p_d0_d0 _lh_p_arg1_1) _lh_p_S_0_0)))))
 and natMult_d0_d0 _lh_natMult_arg1_0 _lh_natMult_arg2_0 =
   (match _lh_natMult_arg2_0 with
     | `Z -> 
@@ -103,11 +103,11 @@ and testExp38_nofib_d0_d0 _lh_testExp38_nofib_arg1_0 =
   (int_d0_d0 ((p_d0_d0 (fromInteger_d0_d0 3)) (fromInteger_d1_d0 _lh_testExp38_nofib_arg1_0)));;
 
 (* lumberhack_pop_out *)
-let rec fromInteger_d0_d0_d0 _lh_fromInteger_arg1_2 =
-  (if (_lh_fromInteger_arg1_2 < 1) then
+let rec fromInteger_d0_d0_d0 _lh_fromInteger_arg1_3 =
+  (if (_lh_fromInteger_arg1_3 < 1) then
     (`Z)
   else
-    (`S((fromInteger_d0_d0_d0 (_lh_fromInteger_arg1_2 - 1)))));;
+    (`S((fromInteger_d0_d0_d0 (_lh_fromInteger_arg1_3 - 1)))));;
 let rec int_d0_d0_d0 _lh_int_arg1_1 =
   (match _lh_int_arg1_1 with
     | `Z -> 
@@ -128,12 +128,12 @@ let rec p_d0_d0_d0 _lh_p_arg1_6 _lh_p_arg2_2 =
   (_lh_p_arg2_2 _lh_p_arg1_6);;
 let rec p_d0_d0_d1 _lh_p_arg1_5 _lh_p_arg2_1 =
   (_lh_p_arg2_1 _lh_p_arg1_5);;
-let rec fromInteger_d1_d0_d0 _lh_fromInteger_arg1_3 _lh_popOutId_0_0 =
-  (if (_lh_fromInteger_arg1_3 < 1) then
+let rec fromInteger_d1_d0_d0 _lh_fromInteger_arg1_2 _lh_popOutId_0_0 =
+  (if (_lh_fromInteger_arg1_2 < 1) then
     (`S((`Z)))
   else
-    (let rec _lh_p_S_0_1 = (lazy (fromInteger_d1_d0_d0 (_lh_fromInteger_arg1_3 - 1))) in
-      ((natMult_d0_d0_d0 _lh_popOutId_0_0) ((p_d0_d0_d0 _lh_popOutId_0_0) (Lazy.force _lh_p_S_0_1)))))
+    (let rec _lh_p_S_0_1 = (fromInteger_d1_d0_d0 (_lh_fromInteger_arg1_2 - 1)) in
+      ((natMult_d0_d0_d0 _lh_popOutId_0_0) ((p_d0_d0_d0 _lh_popOutId_0_0) _lh_p_S_0_1))))
 and natMult_d0_d0_d0 _lh_natMult_arg1_1 _lh_natMult_arg2_1 =
   (match _lh_natMult_arg2_1 with
     | `Z -> 

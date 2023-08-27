@@ -153,20 +153,20 @@ testUnzipZip(primId(50000))
 //│ 	def enumFromTo₁(a⁶, b⁶) = 
 //│ 		if (a⁶ < b⁶) then [C a⁶ enumFromTo₁((a⁶ + 1), b⁶)] else [N]
 //│ 	def unzip₀(ls²) = 
-//│ 		ls²
+//│ 		ls²(99)
 //│ 	def zip₀(xs², ys²) = 
 //│ 		case xs² of {
 //│ 			C x¹ xt¹ => case ys² of {
 //│ 				C y¹ yt¹ => 
-//│ 					let h² = lazy⁰(
-//│ 						let a⁷ = lazy⁰(x¹)
-//│ 						in let b⁷ = lazy⁰(y¹)
+//│ 					let h² = 	
+//│ 						let a⁷ = x¹
+//│ 						in let b⁷ = y¹
 //│ 						in (fun t³ -> case unzip₀(t³) of {
-//│ 							Pair atail¹ btail¹ => [Pair [C force⁰(a⁷) atail¹] [C force⁰(b⁷) btail¹]]}))
-//│ 					in let t² = lazy⁰(zip₀(xt¹, yt¹))
-//│ 					in force⁰(h², force⁰(t²))
-//│ 				| N  => [Pair [N] [N]]}
-//│ 			| N  => [Pair [N] [N]]}
+//│ 							Pair atail¹ btail¹ => [Pair [C a⁷ atail¹] [C b⁷ btail¹]]})
+//│ 					in let t² = zip₀(xt¹, yt¹)
+//│ 					in (fun _lh_dummy⁰ -> h²(t²))
+//│ 				| N  => (fun _lh_dummy¹ -> [Pair [N] [N]])}
+//│ 			| N  => (fun _lh_dummy² -> [Pair [N] [N]])}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
@@ -334,12 +334,12 @@ testZipUnzip(primId(50000))
 //│ 			C h¹ t¹ => case h¹ of {
 //│ 				Pair a¹ b¹ => case unzip₀(t¹) of {
 //│ 					Pair atail¹ btail¹ => [Pair 
-//│ 						let x² = lazy⁰(a¹)
-//│ 						in let xt² = lazy⁰(atail¹)
-//│ 						in (fun ys⁴ -> ys⁴(force⁰(xt²), force⁰(x²))) 
-//│ 						let y² = lazy⁰(b¹)
-//│ 						in let yt² = lazy⁰(btail¹)
-//│ 						in (fun xt³ -> (fun x³ -> [C [Pair x³ force⁰(y²)] zip₀(xt³, force⁰(yt²))]))]}}
+//│ 						let x² = a¹
+//│ 						in let xt² = atail¹
+//│ 						in (fun ys⁴ -> ys⁴(xt², x²)) 
+//│ 						let y² = b¹
+//│ 						in let yt² = btail¹
+//│ 						in (fun xt³ -> (fun x³ -> [C [Pair x³ y²] zip₀(xt³, yt²)]))]}}
 //│ 			| N  => [Pair (fun ys⁵ -> [N]) (fun xt⁴ -> (fun x⁴ -> [N]))]}
 //│ 	def zip₀(xs⁴, ys⁶) = 
 //│ 		xs⁴(ys⁶)
@@ -570,18 +570,18 @@ testZipMapBothUnzip(primId(50000))
 //│ 			C h³ t³ => case h³ of {
 //│ 				Pair a¹ b¹ => case unzip₀(t³) of {
 //│ 					Pair atail¹ btail¹ => [Pair 
-//│ 						let h⁵ = lazy⁰(a¹)
-//│ 						in let t⁵ = lazy⁰(atail¹)
+//│ 						let h⁵ = a¹
+//│ 						in let t⁵ = atail¹
 //│ 						in (fun f³ -> 
-//│ 							let x⁶ = lazy⁰(f³(force⁰(h⁵)))
-//│ 							in let xt² = lazy⁰(map₀(f³, force⁰(t⁵)))
-//│ 							in (fun ys⁵ -> ys⁵(force⁰(xt²), force⁰(x⁶)))) 
-//│ 						let h⁶ = lazy⁰(b¹)
-//│ 						in let t⁶ = lazy⁰(btail¹)
+//│ 							let x⁶ = f³(h⁵)
+//│ 							in let xt² = map₀(f³, t⁵)
+//│ 							in (fun ys⁵ -> ys⁵(xt², x⁶))) 
+//│ 						let h⁶ = b¹
+//│ 						in let t⁶ = btail¹
 //│ 						in (fun f⁴ -> 
-//│ 							let y² = lazy⁰(f⁴(force⁰(h⁶)))
-//│ 							in let yt² = lazy⁰(map₁(f⁴, force⁰(t⁶)))
-//│ 							in (fun xt³ -> (fun x⁷ -> [C [Pair x⁷ force⁰(y²)] zip₀(xt³, force⁰(yt²))])))]}}
+//│ 							let y² = f⁴(h⁶)
+//│ 							in let yt² = map₁(f⁴, t⁶)
+//│ 							in (fun xt³ -> (fun x⁷ -> [C [Pair x⁷ y²] zip₀(xt³, yt²)])))]}}
 //│ 			| N  => [Pair (fun f⁵ -> (fun ys⁶ -> [N])) (fun f⁶ -> (fun xt⁴ -> (fun x⁸ -> [N])))]}
 //│ 	def zip₀(xs⁴, ys⁴) = 
 //│ 		xs⁴(ys⁴)

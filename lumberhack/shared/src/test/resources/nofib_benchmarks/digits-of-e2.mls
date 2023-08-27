@@ -470,12 +470,12 @@ testDigitsOfE2_nofib $ primId 500
 //│ 	where
 //│ 	def e₀₀(_lh_e_arg1²) = 
 //│ 		take_lz₀₀(_lh_e_arg1², (fun b² -> append_lz₀₀(
-//│ 			let _lh_append_lz_LH_C_0⁴ = lazy⁰('2')
-//│ 			in let _lh_append_lz_LH_C_1⁴ = lazy⁰(
-//│ 				let _lh_append_lz_LH_C_0⁵ = lazy⁰('.')
-//│ 				in let _lh_append_lz_LH_C_1⁵ = lazy⁰((fun _lh_append_lz_arg2⁸ -> _lh_append_lz_arg2⁸))
-//│ 				in (fun _lh_append_lz_arg2⁷ -> lazy⁰([LH_C force⁰(_lh_append_lz_LH_C_0⁵) append_lz₀₀(force⁰(_lh_append_lz_LH_C_1⁵), _lh_append_lz_arg2⁷)])))
-//│ 			in (fun _lh_append_lz_arg2⁶ -> lazy⁰([LH_C force⁰(_lh_append_lz_LH_C_0⁴) append_lz₀₀(force⁰(_lh_append_lz_LH_C_1⁴), _lh_append_lz_arg2⁶)])), b²))((fun _lh_funcomp_x⁸ -> tail_lz₀₀(concat_lz₀₀(_lh_funcomp_x⁸)))(map_lz₀₀((fun _lh_funcomp_x⁹ -> string_of_int⁰(head_lz₀₀(_lh_funcomp_x⁹))), iterate₀₀((fun _lh_funcomp_x¹⁰ -> (fun _lh_funcomp_x¹¹ -> carryPropagate₀₀(2, map_lz₁₀((fun a⁵ -> (10 * a⁵)), _lh_funcomp_x¹¹)))(tail_lz₁₀(_lh_funcomp_x¹⁰))), lazy⁰([LH_C 2 enumFromThen₀₀(1, 1)]))))))
+//│ 			let _lh_append_lz_LH_C_0⁴ = '2'
+//│ 			in let _lh_append_lz_LH_C_1⁴ = 	
+//│ 				let _lh_append_lz_LH_C_0⁵ = '.'
+//│ 				in let _lh_append_lz_LH_C_1⁵ = (fun _lh_append_lz_arg2⁸ -> _lh_append_lz_arg2⁸)
+//│ 				in (fun _lh_append_lz_arg2⁷ -> lazy⁰([LH_C _lh_append_lz_LH_C_0⁵ append_lz₀₀(_lh_append_lz_LH_C_1⁵, _lh_append_lz_arg2⁷)]))
+//│ 			in (fun _lh_append_lz_arg2⁶ -> lazy⁰([LH_C _lh_append_lz_LH_C_0⁴ append_lz₀₀(_lh_append_lz_LH_C_1⁴, _lh_append_lz_arg2⁶)])), b²))((fun _lh_funcomp_x⁸ -> tail_lz₀₀(concat_lz₀₀(_lh_funcomp_x⁸)))(map_lz₀₀((fun _lh_funcomp_x⁹ -> string_of_int⁰(head_lz₀₀(_lh_funcomp_x⁹))), iterate₀₀((fun _lh_funcomp_x¹⁰ -> (fun _lh_funcomp_x¹¹ -> carryPropagate₀₀(2, map_lz₁₀((fun a⁵ -> (10 * a⁵)), _lh_funcomp_x¹¹)))(tail_lz₁₀(_lh_funcomp_x¹⁰))), lazy⁰([LH_C 2 enumFromThen₀₀(1, 1)]))))))
 //│ 		where
 //│ 		def append_lz₀₀(_lh_append_lz_arg1⁴, _lh_append_lz_arg2⁴) = 
 //│ 			let _lh_matchIdent¹² = _lh_append_lz_arg1⁴
@@ -505,7 +505,7 @@ testDigitsOfE2_nofib $ primId 500
 //│ 		def concat_lz₀₀(_lh_concat_lz_arg1²) = 
 //│ 			lazy⁰(
 //│ 				let _lh_matchIdent¹³ = force⁰(_lh_concat_lz_arg1²)
-//│ 				in _lh_matchIdent¹³)
+//│ 				in _lh_matchIdent¹³(99))
 //│ 			where
 //│ 			def append_lz₁₀(_lh_append_lz_arg1⁵, _lh_append_lz_arg2⁵) = 
 //│ 				let _lh_matchIdent¹⁴ = _lh_append_lz_arg1⁵
@@ -521,12 +521,12 @@ testDigitsOfE2_nofib $ primId 500
 //│ 				| LH_N  => error⁰}
 //│ 		def iterate₀₀(f⁸, x²) = 
 //│ 			lazy⁰(
-//│ 				let h¹² = lazy⁰(x²)
-//│ 				in let t¹⁴ = lazy⁰(iterate₀₀(f⁸, f⁸(x²)))
+//│ 				let h¹² = x²
+//│ 				in let t¹⁴ = iterate₀₀(f⁸, f⁸(x²))
 //│ 				in (fun f⁹ -> 
-//│ 					let _lh_concat_lz_LH_C_0² = lazy⁰(f⁹(force⁰(h¹²)))
-//│ 					in let _lh_concat_lz_LH_C_1² = lazy⁰(map_lz₀₀(f⁹, force⁰(t¹⁴)))
-//│ 					in force⁰(append_lz₁₀(force⁰(_lh_concat_lz_LH_C_0²), concat_lz₀₀(force⁰(_lh_concat_lz_LH_C_1²))))))
+//│ 					let _lh_concat_lz_LH_C_0² = f⁹(h¹²)
+//│ 					in let _lh_concat_lz_LH_C_1² = map_lz₀₀(f⁹, t¹⁴)
+//│ 					in (fun _lh_dummy⁰ -> force⁰(append_lz₁₀(_lh_concat_lz_LH_C_0², concat_lz₀₀(_lh_concat_lz_LH_C_1²))))))
 //│ 		def map_lz₀₀(f⁶, ls¹²) = 
 //│ 			lazy⁰(force⁰(ls¹², f⁶))
 //│ 		def map_lz₁₀(f⁷, ls¹³) = 

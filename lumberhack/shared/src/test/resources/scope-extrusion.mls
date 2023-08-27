@@ -65,9 +65,9 @@ if C(A, B(D)) is
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ 
-//│ 	let a² = lazy⁰([OK])
-//│ 	in let bd² = lazy⁰((fun a³ -> a³))
-//│ 	in force⁰(bd², force⁰(a²))
+//│ 	let a² = (fun _lh_dummy¹ -> [OK])
+//│ 	in let bd² = (fun a³ -> a³(99))
+//│ 	in (fun _lh_dummy⁰ -> bd²(a²))(99)
 //│ 
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
@@ -136,8 +136,8 @@ if C(A, B(D)) is
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ 
-//│ 	let a⁴ = lazy⁰([OK])
-//│ 	in let bd² = lazy⁰((fun a⁵ -> (fun a⁶ -> a⁶)(a⁵)))
-//│ 	in force⁰(bd², force⁰(a⁴))
+//│ 	let a⁴ = (fun _lh_dummy¹ -> [OK])
+//│ 	in let bd² = (fun a⁵ -> (fun a⁶ -> a⁶(99))(a⁵))
+//│ 	in (fun _lh_dummy⁰ -> bd²(a⁴))(99)
 //│ 
 //│ <<<<<<< after fusion <<<<<<<

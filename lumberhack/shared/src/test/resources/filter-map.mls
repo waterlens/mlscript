@@ -70,9 +70,9 @@ filter(map(primitive, primitive), primitive)
 //│ def map₀(ls², f²) = 
 //│ 	case ls² of {
 //│ 		C h² t² => 
-//│ 			let h⁴ = lazy⁰(f²(h²))
-//│ 			in let t⁴ = lazy⁰(map₀(t², f²))
-//│ 			in (fun p² -> if p²(force⁰(h⁴)) then [C force⁰(h⁴) filter₀(force⁰(t⁴), p²)] else filter₀(force⁰(t⁴), p²))
+//│ 			let h⁴ = f²(h²)
+//│ 			in let t⁴ = map₀(t², f²)
+//│ 			in (fun p² -> if p²(h⁴) then [C h⁴ filter₀(t⁴, p²)] else filter₀(t⁴, p²))
 //│ 		| N  => (fun p³ -> [N])}
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -170,24 +170,24 @@ filter(map(C(1, C(2, C(3, N))), x => x * 2), x => x > 3)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ filter₀(map₀(
-//│ 	let h⁴ = lazy⁰(1)
-//│ 	in let t⁴ = lazy⁰(
-//│ 		let h⁶ = lazy⁰(2)
-//│ 		in let t⁶ = lazy⁰(
-//│ 			let h⁸ = lazy⁰(3)
-//│ 			in let t⁸ = lazy⁰((fun f⁵ -> (fun p⁵ -> [N])))
+//│ 	let h⁴ = 1
+//│ 	in let t⁴ = 	
+//│ 		let h⁶ = 2
+//│ 		in let t⁶ = 	
+//│ 			let h⁸ = 3
+//│ 			in let t⁸ = (fun f⁵ -> (fun p⁵ -> [N]))
 //│ 			in (fun f⁴ -> 
-//│ 				let h⁹ = lazy⁰(f⁴(force⁰(h⁸)))
-//│ 				in let t⁹ = lazy⁰(map₀(force⁰(t⁸), f⁴))
-//│ 				in (fun p⁴ -> if p⁴(force⁰(h⁹)) then [C force⁰(h⁹) filter₀(force⁰(t⁹), p⁴)] else filter₀(force⁰(t⁹), p⁴))))
+//│ 				let h⁹ = f⁴(h⁸)
+//│ 				in let t⁹ = map₀(t⁸, f⁴)
+//│ 				in (fun p⁴ -> if p⁴(h⁹) then [C h⁹ filter₀(t⁹, p⁴)] else filter₀(t⁹, p⁴)))
 //│ 		in (fun f³ -> 
-//│ 			let h⁷ = lazy⁰(f³(force⁰(h⁶)))
-//│ 			in let t⁷ = lazy⁰(map₀(force⁰(t⁶), f³))
-//│ 			in (fun p³ -> if p³(force⁰(h⁷)) then [C force⁰(h⁷) filter₀(force⁰(t⁷), p³)] else filter₀(force⁰(t⁷), p³))))
+//│ 			let h⁷ = f³(h⁶)
+//│ 			in let t⁷ = map₀(t⁶, f³)
+//│ 			in (fun p³ -> if p³(h⁷) then [C h⁷ filter₀(t⁷, p³)] else filter₀(t⁷, p³)))
 //│ 	in (fun f² -> 
-//│ 		let h⁵ = lazy⁰(f²(force⁰(h⁴)))
-//│ 		in let t⁵ = lazy⁰(map₀(force⁰(t⁴), f²))
-//│ 		in (fun p² -> if p²(force⁰(h⁵)) then [C force⁰(h⁵) filter₀(force⁰(t⁵), p²)] else filter₀(force⁰(t⁵), p²))), (fun x⁴ -> (x⁴ * 2))), (fun x⁵ -> (x⁵ > 3)))
+//│ 		let h⁵ = f²(h⁴)
+//│ 		in let t⁵ = map₀(t⁴, f²)
+//│ 		in (fun p² -> if p²(h⁵) then [C h⁵ filter₀(t⁵, p²)] else filter₀(t⁵, p²))), (fun x⁴ -> (x⁴ * 2))), (fun x⁵ -> (x⁵ > 3)))
 //│ def filter₀(xs², p⁶) = 
 //│ 	xs²(p⁶)
 //│ def map₀(ls², f⁶) = 

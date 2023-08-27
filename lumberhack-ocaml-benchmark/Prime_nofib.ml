@@ -98,16 +98,16 @@ let rec isdivs_d0_d0 _lh_isdivs_arg1_0 _lh_isdivs_arg2_0 =
 let rec map_lz_d0_d0 f_0 ls_0 =
   (lazy ((Lazy.force ls_0) f_0));;
 let rec iterate_d0_d0 f_2 x_0 =
-  (lazy (let rec h_1 = (lazy x_0) in
-    (let rec t_1 = (lazy ((iterate_d0_d0 f_2) (f_2 x_0))) in
+  (lazy (let rec h_1 = x_0 in
+    (let rec t_1 = ((iterate_d0_d0 f_2) (f_2 x_0)) in
       (fun f_3 -> 
-        (let rec h_2 = (lazy (f_3 (Lazy.force h_1))) in
-          (let rec t_2 = (lazy ((map_lz_d0_d0 f_3) (Lazy.force t_1))) in
+        (let rec h_2 = (f_3 h_1) in
+          (let rec t_2 = ((map_lz_d0_d0 f_3) t_1) in
             (fun n_1 -> 
               (if (n_1 = 0) then
-                (Lazy.force h_2)
+                h_2
               else
-                ((atIndex_lz_d0_d0 (n_1 - 1)) (Lazy.force t_2))))))))))
+                ((atIndex_lz_d0_d0 (n_1 - 1)) t_2)))))))))
 and prime_d0_d0 _lh_prime_arg1_0 =
   ((atIndex_lz_d0_d0 _lh_prime_arg1_0) ((map_lz_d0_d0 head_d0_d0) ((iterate_d0_d0 the_filter_d0_d0) ((enumFromTo_d0_d0 2) (_lh_prime_arg1_0 * _lh_prime_arg1_0)))))
 and testPrime_nofib_d0_d0 _lh_testPrime_nofib_arg1_0 =
@@ -120,53 +120,53 @@ and the_filter_d0_d0 _lh_the_filter_arg1_0 =
       (failwith "error"));;
 
 (* lumberhack_pop_out *)
-let rec atIndex_lz_d0_d0_d0 n_3 ls_4 =
-  (if (n_3 < 0) then
+let rec atIndex_lz_d0_d0_d0 n_2 ls_6 =
+  (if (n_2 < 0) then
     (failwith "error")
   else
-    ((Lazy.force ls_4) n_3));;
-let rec atIndex_lz_d0_d0_d1 n_4 ls_5 =
+    ((Lazy.force ls_6) n_2));;
+let rec atIndex_lz_d0_d0_d1 n_4 ls_8 =
   (if (n_4 < 0) then
     (failwith "error")
   else
-    ((Lazy.force ls_5) n_4));;
+    ((Lazy.force ls_8) n_4));;
 let rec enumFromTo_d0_d0_d0 a_1 b_1 =
   (if (a_1 <= b_1) then
     (`LH_C(a_1, ((enumFromTo_d0_d0_d0 (a_1 + 1)) b_1)))
   else
     (`LH_N));;
-let rec filter_d0_d0_d0 f_8 ls_9 =
-  (match ls_9 with
-    | `LH_C(h_7, t_7) -> 
-      (if (f_8 h_7) then
-        (`LH_C(h_7, ((filter_d0_d0_d0 f_8) t_7)))
+let rec filter_d0_d0_d0 f_4 ls_4 =
+  (match ls_4 with
+    | `LH_C(h_4, t_4) -> 
+      (if (f_4 h_4) then
+        (`LH_C(h_4, ((filter_d0_d0_d0 f_4) t_4)))
       else
-        ((filter_d0_d0_d0 f_8) t_7))
+        ((filter_d0_d0_d0 f_4) t_4))
     | `LH_N -> 
       (`LH_N));;
-let rec head_d0_d0_d0 ls_8 =
-  (match ls_8 with
-    | `LH_C(h_6, t_6) -> 
-      h_6
+let rec head_d0_d0_d0 ls_9 =
+  (match ls_9 with
+    | `LH_C(h_7, t_7) -> 
+      h_7
     | `LH_N -> 
       (failwith "error"));;
 let rec isdivs_d0_d0_d0 _lh_isdivs_arg1_1 _lh_isdivs_arg2_1 =
   ((_lh_isdivs_arg2_1 mod _lh_isdivs_arg1_1) != 0);;
-let rec map_lz_d0_d0_d0 f_6 ls_6 =
-  (lazy ((Lazy.force ls_6) f_6));;
-let rec map_lz_d0_d0_d1 f_7 ls_7 =
-  (lazy ((Lazy.force ls_7) f_7));;
-let rec iterate_d0_d0_d0 f_4 x_1 =
-  (lazy (let rec h_4 = (lazy x_1) in
-    (let rec t_4 = (lazy ((iterate_d0_d0_d0 f_4) (f_4 x_1))) in
-      (fun f_5 -> 
-        (let rec h_5 = (lazy (f_5 (Lazy.force h_4))) in
-          (let rec t_5 = (lazy ((map_lz_d0_d0_d0 f_5) (Lazy.force t_4))) in
-            (fun n_2 -> 
-              (if (n_2 = 0) then
-                (Lazy.force h_5)
+let rec map_lz_d0_d0_d0 f_8 ls_7 =
+  (lazy ((Lazy.force ls_7) f_8));;
+let rec map_lz_d0_d0_d1 f_5 ls_5 =
+  (lazy ((Lazy.force ls_5) f_5));;
+let rec iterate_d0_d0_d0 f_6 x_1 =
+  (lazy (let rec h_5 = x_1 in
+    (let rec t_5 = ((iterate_d0_d0_d0 f_6) (f_6 x_1)) in
+      (fun f_7 -> 
+        (let rec h_6 = (f_7 h_5) in
+          (let rec t_6 = ((map_lz_d0_d0_d0 f_7) t_5) in
+            (fun n_3 -> 
+              (if (n_3 = 0) then
+                h_6
               else
-                ((atIndex_lz_d0_d0_d1 (n_2 - 1)) (Lazy.force t_5))))))))))
+                ((atIndex_lz_d0_d0_d1 (n_3 - 1)) t_6)))))))))
 and prime_d0_d0_d0 _lh_prime_arg1_1 =
   ((atIndex_lz_d0_d0_d0 _lh_prime_arg1_1) ((map_lz_d0_d0_d1 head_d0_d0_d0) ((iterate_d0_d0_d0 the_filter_d0_d0_d0) ((enumFromTo_d0_d0_d0 2) (_lh_prime_arg1_1 * _lh_prime_arg1_1)))))
 and testPrime_nofib_d0_d0_d0 _lh_testPrime_nofib_arg1_1 =

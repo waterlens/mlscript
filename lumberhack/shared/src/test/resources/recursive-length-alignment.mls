@@ -50,10 +50,10 @@ c(p)
 //│ >>>>>>> after fusion >>>>>>>
 //│ c₀(p₀)
 //│ def c₀(x²) = 
-//│ 	x²
+//│ 	x²(99)
 //│ def p₀ = 
-//│ 	let a² = lazy⁰(p₀)
-//│ 	in c₀(force⁰(a²))
+//│ 	let a² = p₀
+//│ 	in (fun _lh_dummy⁰ -> c₀(a²))
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: correctly aligned recursive length
@@ -166,27 +166,27 @@ c(p)
 //│ >>>>>>> after fusion >>>>>>>
 //│ c₀(p₀)
 //│ def c₀(x⁴) = 
-//│ 	x⁴
+//│ 	x⁴(99)
 //│ 	where
 //│ 	def c₁(x³) = 
-//│ 		x³
+//│ 		x³(99)
 //│ def p₀ = 
-//│ 	let a⁴ = lazy⁰(
-//│ 		let b⁴ = lazy⁰(p₁)
-//│ 		in force⁰(b⁴))
-//│ 	in force⁰(a⁴)
+//│ 	let a⁴ = 	
+//│ 		let b⁴ = p₁
+//│ 		in (fun _lh_dummy⁵ -> b⁴(99))
+//│ 	in (fun _lh_dummy⁴ -> a⁴(99))
 //│ 	where
 //│ 	def p₁ = 
-//│ 		let y⁴ = lazy⁰(
-//│ 			let a³ = lazy⁰(p₂)
-//│ 			in force⁰(a³))
-//│ 		in c₁(force⁰(y⁴))
+//│ 		let y⁴ = 	
+//│ 			let a³ = p₂
+//│ 			in (fun _lh_dummy³ -> a³(99))
+//│ 		in (fun _lh_dummy² -> c₁(y⁴))
 //│ 		where
 //│ 		def p₂ = 
-//│ 			let b³ = lazy⁰(
-//│ 				let y³ = lazy⁰(p₀)
-//│ 				in c₀(force⁰(y³)))
-//│ 			in force⁰(b³)
+//│ 			let b³ = 	
+//│ 				let y³ = p₀
+//│ 				in (fun _lh_dummy¹ -> c₀(y³))
+//│ 			in (fun _lh_dummy⁰ -> b³(99))
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: correctly aligned recursive length (using split knot)
@@ -262,20 +262,20 @@ c(id(p))
 //│ >>>>>>> after fusion >>>>>>>
 //│ c₀(id₀(p₀))
 //│ def c₀(x⁴) = 
-//│ 	x⁴
+//│ 	x⁴(99)
 //│ 	where
 //│ 	def c₁(x³) = 
-//│ 		x³
+//│ 		x³(99)
 //│ def id₀(y²) = 
 //│ 	id2₀(y²)
 //│ 	where
 //│ 	def id2₀(yy²) = 
 //│ 		yy²
 //│ def p₀ = 
-//│ 	let a³ = lazy⁰(
-//│ 		let a⁴ = lazy⁰(p₀)
-//│ 		in c₀(force⁰(a⁴)))
-//│ 	in c₁(force⁰(a³))
+//│ 	let a³ = 	
+//│ 		let a⁴ = p₀
+//│ 		in (fun _lh_dummy¹ -> c₀(a⁴))
+//│ 	in (fun _lh_dummy⁰ -> c₁(a³))
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -401,37 +401,37 @@ ca(p)
 //│ >>>>>>> after fusion >>>>>>>
 //│ ca₀(p₀)
 //│ def ca₀(x⁹) = 
-//│ 	x⁹
+//│ 	x⁹(99)
 //│ 	where
 //│ 	def cb₀(x¹⁰) = 
-//│ 		x¹⁰
+//│ 		x¹⁰(99)
 //│ 		where
 //│ 		def ca₁(x¹¹) = 
-//│ 			x¹¹
+//│ 			x¹¹(99)
 //│ 			where
 //│ 			def cb₁(x¹²) = 
-//│ 				x¹²
+//│ 				x¹²(99)
 //│ 				where
 //│ 				def ca₂(x⁸) = 
-//│ 					x⁸
+//│ 					x⁸(99)
 //│ 					where
 //│ 					def cb₂(x¹³) = 
-//│ 						x¹³
+//│ 						x¹³(99)
 //│ def p₀ = 
-//│ 	let a⁵ = lazy⁰(
-//│ 		let b⁶ = lazy⁰(
-//│ 			let a⁶ = lazy⁰(p₁)
-//│ 			in cb₁(force⁰(a⁶)))
-//│ 		in ca₁(force⁰(b⁶)))
-//│ 	in cb₀(force⁰(a⁵))
+//│ 	let a⁵ = 	
+//│ 		let b⁶ = 	
+//│ 			let a⁶ = p₁
+//│ 			in (fun _lh_dummy⁵ -> cb₁(a⁶))
+//│ 		in (fun _lh_dummy⁴ -> ca₁(b⁶))
+//│ 	in (fun _lh_dummy³ -> cb₀(a⁵))
 //│ 	where
 //│ 	def p₁ = 
-//│ 		let b⁴ = lazy⁰(
-//│ 			let a⁴ = lazy⁰(
-//│ 				let b⁵ = lazy⁰(p₀)
-//│ 				in ca₀(force⁰(b⁵)))
-//│ 			in cb₂(force⁰(a⁴)))
-//│ 		in ca₂(force⁰(b⁴))
+//│ 		let b⁴ = 	
+//│ 			let a⁴ = 	
+//│ 				let b⁵ = p₀
+//│ 				in (fun _lh_dummy² -> ca₀(b⁵))
+//│ 			in (fun _lh_dummy¹ -> cb₂(a⁴))
+//│ 		in (fun _lh_dummy⁰ -> ca₂(b⁴))
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -533,27 +533,27 @@ c1(p1)
 //│ >>>>>>> after fusion >>>>>>>
 //│ c1₀(p1₀)
 //│ def c1₀(x1⁴) = 
-//│ 	x1⁴
+//│ 	x1⁴(99)
 //│ 	where
 //│ 	def c2₀(x2⁴) = 
-//│ 		x2⁴
+//│ 		x2⁴(99)
 //│ 		where
 //│ 		def c1₁(x1³) = 
-//│ 			x1³
+//│ 			x1³(99)
 //│ 			where
 //│ 			def c2₁(x2³) = 
-//│ 				x2³
+//│ 				x2³(99)
 //│ def p1₀ = 
-//│ 	let a³ = lazy⁰(
-//│ 		let b⁴ = lazy⁰(
-//│ 			let a⁴ = lazy⁰(p2₀)
-//│ 			in c2₁(force⁰(a⁴)))
-//│ 		in c1₁(force⁰(b⁴)))
-//│ 	in c2₀(force⁰(a³))
+//│ 	let a³ = 	
+//│ 		let b⁴ = 	
+//│ 			let a⁴ = p2₀
+//│ 			in (fun _lh_dummy³ -> c2₁(a⁴))
+//│ 		in (fun _lh_dummy² -> c1₁(b⁴))
+//│ 	in (fun _lh_dummy¹ -> c2₀(a³))
 //│ 	where
 //│ 	def p2₀ = 
-//│ 		let b³ = lazy⁰(p1₀)
-//│ 		in c1₀(force⁰(b³))
+//│ 		let b³ = p1₀
+//│ 		in (fun _lh_dummy⁰ -> c1₀(b³))
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -612,13 +612,13 @@ main(c)
 //│ >>>>>>> after fusion >>>>>>>
 //│ main₀(c₀)
 //│ def c₀(x²) = 
-//│ 	x²
+//│ 	x²(99)
 //│ def main₀(cc²) = 
 //│ 	cc²(p₀)
 //│ 	where
 //│ 	def p₀ = 
-//│ 		let a² = lazy⁰(p₀)
-//│ 		in c₀(force⁰(a²))
+//│ 		let a² = p₀
+//│ 		in (fun _lh_dummy⁰ -> c₀(a²))
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -707,21 +707,21 @@ main(p)
 //│ >>>>>>> after fusion >>>>>>>
 //│ main₀(p₀)
 //│ def main₀(pp²) = 
-//│ 	pp²
+//│ 	pp²(99)
 //│ 	where
 //│ 	def c₀(x²) = 
-//│ 		x²
+//│ 		x²(99)
 //│ def p₀ = 
-//│ 	let b² = lazy⁰(p₁)
-//│ 	in force⁰(b²)
+//│ 	let b² = p₁
+//│ 	in (fun _lh_dummy² -> b²(99))
 //│ 	where
 //│ 	def p₁ = 
-//│ 		let d² = lazy⁰(p₂)
-//│ 		in c₀(force⁰(d²))
+//│ 		let d² = p₂
+//│ 		in (fun _lh_dummy¹ -> c₀(d²))
 //│ 		where
 //│ 		def p₂ = 
-//│ 			let a² = lazy⁰(p₂)
-//│ 			in c₀(force⁰(a²))
+//│ 			let a² = p₂
+//│ 			in (fun _lh_dummy⁰ -> c₀(a²))
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT:
@@ -778,12 +778,12 @@ main(c, p)
 //│ >>>>>>> after fusion >>>>>>>
 //│ main₀(c₀, p₀)
 //│ def c₀(x²) = 
-//│ 	x²
+//│ 	x²(99)
 //│ def main₀(cc², pp²) = 
 //│ 	cc²(pp²)
 //│ def p₀ = 
-//│ 	let a² = lazy⁰(p₀)
-//│ 	in c₀(force⁰(a²))
+//│ 	let a² = p₀
+//│ 	in (fun _lh_dummy⁰ -> c₀(a²))
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -868,12 +868,12 @@ a(p)
 //│ 			d₀(cons₀, x⁸)
 //│ 			where
 //│ 			def cons₀(y²) = 
-//│ 				y²
+//│ 				y²(99)
 //│ 			def d₀(cc², x⁹) = 
 //│ 				cc²(x⁹)
 //│ def p₀ = 
-//│ 	let aa² = lazy⁰(p₀)
-//│ 	in cons₀(force⁰(aa²))
+//│ 	let aa² = p₀
+//│ 	in (fun _lh_dummy⁰ -> cons₀(aa²))
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -974,24 +974,24 @@ c2(id(main))
 //│ >>>>>>> after fusion >>>>>>>
 //│ c2₀(id₀(main₀))
 //│ def c2₀(z²) = 
-//│ 	z²
+//│ 	z²(99)
 //│ def id₀(y²) = 
 //│ 	c1₀(
-//│ 		let aa² = lazy⁰(y²)
-//│ 		in force⁰(aa²))
+//│ 		let aa² = y²
+//│ 		in (fun _lh_dummy⁰ -> aa²))
 //│ 	where
 //│ 	def c1₀(xx²) = 
-//│ 		xx²
+//│ 		xx²(99)
 //│ def main₀ = 
 //│ 	c₀(p₀)
 //│ 	where
 //│ 	def c₀(x²) = 
-//│ 		x²
+//│ 		x²(99)
 //│ 	def p₀ = 
-//│ 		let a² = lazy⁰(p₁)
-//│ 		in force⁰(a²)
+//│ 		let a² = p₁
+//│ 		in (fun _lh_dummy² -> a²)
 //│ 		where
 //│ 		def p₁ = 
-//│ 			let b² = lazy⁰(p₁)
-//│ 			in c2₀(force⁰(b²))
+//│ 			let b² = p₁
+//│ 			in (fun _lh_dummy¹ -> c2₀(b²))
 //│ <<<<<<< after fusion <<<<<<<

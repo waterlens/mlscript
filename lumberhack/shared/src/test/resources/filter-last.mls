@@ -102,10 +102,10 @@ lastFilter
 //│ 	def filter₀(ls¹⁵, f⁹) = 
 //│ 		case ls¹⁵ of {
 //│ 			C h⁶ t⁶ => if f⁹(h⁶) then 
-//│ 				let h⁸ = lazy⁰(h⁶)
-//│ 				in let t⁸ = lazy⁰(filter₁(t⁶, f⁹))
-//│ 				in [Some last₀(force⁰(t⁸), force⁰(h⁸))] else filter₀(t⁶, f⁹)
-//│ 			| N  => [None]}
+//│ 				let h⁸ = h⁶
+//│ 				in let t⁸ = filter₁(t⁶, f⁹)
+//│ 				in (fun _lh_dummy⁰ -> [Some last₀(t⁸, h⁸)]) else filter₀(t⁶, f⁹)
+//│ 			| N  => (fun _lh_dummy¹ -> [None])}
 //│ 		where
 //│ 		def filter₁(ls¹³, f⁸) = 
 //│ 			case ls¹³ of {
@@ -117,7 +117,7 @@ lastFilter
 //│ 					C h⁷ t⁷ => if f⁷(h⁷) then [C h⁷ filter₂(t⁷, f⁷)] else filter₂(t⁷, f⁷)
 //│ 					| N  => [N]}
 //│ 	def lastDrive₀(ls¹¹) = 
-//│ 		ls¹¹
+//│ 		ls¹¹(99)
 //│ 		where
 //│ 		def last₀(a², ls¹⁴) = 
 //│ 			case ls¹⁴ of {

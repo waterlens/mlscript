@@ -59,9 +59,9 @@ f(a => if (if a is
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀((fun a² -> a²))
+//│ f₀((fun a² -> a²(99, 99)))
 //│ def f₀(c²) = 
-//│ 	[P c²(0) c²(0)]
+//│ 	[P c²((fun _lh_dummy¹ -> (fun _lh_dummy⁰ -> 0))) c²((fun _lh_dummy³ -> (fun _lh_dummy² -> 0)))]
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -114,9 +114,9 @@ f(a => if a is
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀((fun a² -> a²))
+//│ f₀((fun a² -> a²(99)))
 //│ def f₀(c²) = 
-//│ 	[P c²([B]) c²([C])]
+//│ 	[P c²((fun _lh_dummy⁰ -> [B])) c²((fun _lh_dummy¹ -> [C]))]
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: after the detection and elimination of multiple matches
@@ -314,9 +314,9 @@ f(a => if (if a is
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀((fun a² -> a²))
+//│ f₀((fun a² -> a²(99, 99)))
 //│ def f₀(c²) = 
-//│ 	[P c²(0) c²(1)]
+//│ 	[P c²((fun _lh_dummy¹ -> (fun _lh_dummy⁰ -> 0))) c²((fun _lh_dummy³ -> (fun _lh_dummy² -> 1)))]
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT:
@@ -395,9 +395,9 @@ f(a => if (if a is
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀((fun a² -> a²))
+//│ f₀((fun a² -> a²(99, 99)))
 //│ def f₀(c²) = 
-//│ 	[P c²(0) c²(if (1 > 2) then 0 else 1)]
+//│ 	[P c²((fun _lh_dummy¹ -> (fun _lh_dummy⁰ -> 0))) c²((fun _lh_dummy⁴ -> if (1 > 2) then (fun _lh_dummy² -> 0) else (fun _lh_dummy³ -> 1)))]
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: after the detection and elimination of multiple matches
@@ -471,11 +471,11 @@ f(a => if (if a is
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀((fun a² -> case a² of {
+//│ f₀((fun a² -> case a²(99) of {
 //│ 	X  => 0
 //│ 	| Y  => 1}))
 //│ def f₀(c²) = 
-//│ 	[P c²([X]) c²(primitive⁰)]
+//│ 	[P c²((fun _lh_dummy⁰ -> [X])) c²((fun _lh_dummy¹ -> primitive⁰))]
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: after the detection and elimination of multiple matches
@@ -623,9 +623,9 @@ f(A)(C(K))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀((fun x⁴ -> x⁴), [C [K]])
+//│ f₀((fun _lh_dummy⁰ -> (fun x⁴ -> x⁴)), [C [K]])
 //│ def f₀(cond²) = 
-//│ 	cond²
+//│ 	cond²(99)
 //│ 	where
 //│ 	def g₀(y⁴) = 
 //│ 		case y⁴ of {

@@ -63,12 +63,12 @@ rev(C(1, C(2, N)), N)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ rev₀(
-//│ 	let h² = lazy⁰(1)
-//│ 	in let t² = lazy⁰(
-//│ 		let h³ = lazy⁰(2)
-//│ 		in let t³ = lazy⁰((fun a⁴ -> a⁴))
-//│ 		in (fun a³ -> rev₀(force⁰(t³), [C force⁰(h³) a³])))
-//│ 	in (fun a² -> rev₀(force⁰(t²), [C force⁰(h²) a²])), [N])
+//│ 	let h² = 1
+//│ 	in let t² = 	
+//│ 		let h³ = 2
+//│ 		in let t³ = (fun a⁴ -> a⁴)
+//│ 		in (fun a³ -> rev₀(t³, [C h³ a³]))
+//│ 	in (fun a² -> rev₀(t², [C h² a²])), [N])
 //│ def rev₀(ys², a⁵) = 
 //│ 	ys²(a⁵)
 //│ <<<<<<< after fusion <<<<<<<
@@ -139,14 +139,14 @@ rev(C(1, C(2, N)))(N)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ rev₀(
-//│ 	let h² = lazy⁰(1)
-//│ 	in let t² = lazy⁰(
-//│ 		let h³ = lazy⁰(2)
-//│ 		in let t³ = lazy⁰((fun a⁶ -> a⁶))
-//│ 		in (fun a⁵ -> rev₀(force⁰(t³), [C force⁰(h³) a⁵])))
-//│ 	in (fun a⁴ -> rev₀(force⁰(t²), [C force⁰(h²) a⁴])), [N])
+//│ 	let h² = 1
+//│ 	in let t² = 	
+//│ 		let h³ = 2
+//│ 		in let t³ = (fun _lh_dummy² -> (fun a⁶ -> a⁶))
+//│ 		in (fun _lh_dummy¹ -> (fun a⁵ -> rev₀(t³, [C h³ a⁵])))
+//│ 	in (fun _lh_dummy⁰ -> (fun a⁴ -> rev₀(t², [C h² a⁴]))), [N])
 //│ def rev₀(ys²) = 
-//│ 	ys²
+//│ 	ys²(99)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -236,9 +236,9 @@ map(rev(primitive, N), ff)
 //│ def rev₀(ys², a²) = 
 //│ 	case ys² of {
 //│ 		C h³ t³ => rev₀(t³, 
-//│ 			let h⁴ = lazy⁰(h³)
-//│ 			in let t⁴ = lazy⁰(a²)
-//│ 			in (fun f⁴ -> [C f⁴(force⁰(h⁴)) map₀(force⁰(t⁴), f⁴)]))
+//│ 			let h⁴ = h³
+//│ 			in let t⁴ = a²
+//│ 			in (fun f⁴ -> [C f⁴(h⁴) map₀(t⁴, f⁴)]))
 //│ 		| N  => a²}
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -315,19 +315,19 @@ map(rev(primitive, N), ff)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ map₀(rev₀(primitive⁰, (fun f⁴ -> [N])), ff₀)
+//│ map₀(rev₀(primitive⁰, (fun _lh_dummy⁰ -> (fun f⁴ -> [N]))), ff₀)
 //│ def ff₀(x²) = 
 //│ 	case x² of {
 //│ 		A  => [AA]
 //│ 		| B  => [BB]}
 //│ def map₀(xs²) = 
-//│ 	xs²
+//│ 	xs²(99)
 //│ def rev₀(ys², a²) = 
 //│ 	case ys² of {
 //│ 		C h³ t³ => rev₀(t³, 
-//│ 			let h⁴ = lazy⁰(h³)
-//│ 			in let t⁴ = lazy⁰(a²)
-//│ 			in (fun f⁵ -> [C f⁵(force⁰(h⁴)) map₀(force⁰(t⁴), f⁵)]))
+//│ 			let h⁴ = h³
+//│ 			in let t⁴ = a²
+//│ 			in (fun _lh_dummy¹ -> (fun f⁵ -> [C f⁵(h⁴) map₀(t⁴, f⁵)])))
 //│ 		| N  => a²}
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -413,9 +413,9 @@ rev(N, map(primitive, ff))
 //│ def map₀(xs², f²) = 
 //│ 	case xs² of {
 //│ 		C h³ t³ => 
-//│ 			let h⁴ = lazy⁰(f²(h³))
-//│ 			in let t⁴ = lazy⁰(map₀(t³, f²))
-//│ 			in (fun a³ -> rev₀([C force⁰(h⁴) a³], force⁰(t⁴)))
+//│ 			let h⁴ = f²(h³)
+//│ 			in let t⁴ = map₀(t³, f²)
+//│ 			in (fun a³ -> rev₀([C h⁴ a³], t⁴))
 //│ 		| N  => (fun a⁴ -> a⁴)}
 //│ def rev₀(a², ys²) = 
 //│ 	ys²(a²)
@@ -503,10 +503,10 @@ rev(map(primitive, ff), N)
 //│ def map₀(xs²) = 
 //│ 	case xs² of {
 //│ 		C h³ t³ => (fun f⁴ -> 
-//│ 			let h⁴ = lazy⁰(f⁴(h³))
-//│ 			in let t⁴ = lazy⁰(map₀(t³, f⁴))
-//│ 			in (fun a⁴ -> rev₀(force⁰(t⁴), [C force⁰(h⁴) a⁴])))
-//│ 		| N  => (fun f⁵ -> (fun a⁵ -> a⁵))}
+//│ 			let h⁴ = f⁴(h³)
+//│ 			in let t⁴ = map₀(t³, f⁴)
+//│ 			in (fun _lh_dummy⁰ -> (fun a⁴ -> rev₀(t⁴, [C h⁴ a⁴]))))
+//│ 		| N  => (fun f⁵ -> (fun _lh_dummy¹ -> (fun a⁵ -> a⁵)))}
 //│ def rev₀(ys²) = 
-//│ 	ys²
+//│ 	ys²(99)
 //│ <<<<<<< after fusion <<<<<<<

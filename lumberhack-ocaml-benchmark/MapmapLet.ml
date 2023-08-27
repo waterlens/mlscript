@@ -43,11 +43,11 @@ let rec map_d1 f_0 ls_0 =
   (match ls_0 with
     | `C(h_0, t_0) -> 
       (let rec r_0 = (f_0 h_0) in
-        (let rec h_1 = (lazy r_0) in
-          (let rec t_1 = (lazy ((map_d1 f_0) t_0)) in
+        (let rec h_1 = r_0 in
+          (let rec t_1 = ((map_d1 f_0) t_0) in
             (fun f_1 -> 
-              (let rec r_1 = (f_1 (Lazy.force h_1)) in
-                (`C(r_1, ((map_d0 f_1) (Lazy.force t_1)))))))))
+              (let rec r_1 = (f_1 h_1) in
+                (`C(r_1, ((map_d0 f_1) t_1))))))))
     | `N -> 
       (fun f_2 -> 
         (`N)))
@@ -64,16 +64,16 @@ let rec enumFromTo_d0_d0 a_1 b_1 =
     (`N));;
 let rec map_d0_d0 f_4 ls_3 =
   (ls_3 f_4);;
-let rec map_d0_d1 f_5 ls_4 =
-  (ls_4 f_5);;
-let rec map_d1_d0 f_6 ls_5 _lh_popOutId_0_0 =
-  (match ls_5 with
+let rec map_d0_d1 f_8 ls_5 =
+  (ls_5 f_8);;
+let rec map_d1_d0 f_5 ls_4 _lh_popOutId_0_0 =
+  (match ls_4 with
     | `C(h_2, t_2) -> 
-      (let rec r_2 = (f_6 h_2) in
-        (let rec h_3 = (lazy r_2) in
-          (let rec t_3 = (lazy ((map_d1_d0 f_6) t_2)) in
-            (let rec r_3 = (_lh_popOutId_0_0 (Lazy.force h_3)) in
-              (`C(r_3, ((map_d0_d1 _lh_popOutId_0_0) (Lazy.force t_3))))))))
+      (let rec r_2 = (f_5 h_2) in
+        (let rec h_3 = r_2 in
+          (let rec t_3 = ((map_d1_d0 f_5) t_2) in
+            (let rec r_3 = (_lh_popOutId_0_0 h_3) in
+              (`C(r_3, ((map_d0_d1 _lh_popOutId_0_0) t_3)))))))
     | `N -> 
       (`N))
 and testMapmapLet_d0_d0 ls_6 =

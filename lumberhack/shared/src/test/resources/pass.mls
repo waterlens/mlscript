@@ -93,18 +93,18 @@ c(p)
 //│ >>>>>>> after fusion >>>>>>>
 //│ c₀(p₀)
 //│ def c₀(x²) = 
-//│ 	x²
+//│ 	x²(99)
 //│ 	where
 //│ 	def d₀(y²) = 
-//│ 		y²
+//│ 		y²(99)
 //│ 		where
 //│ 		def e₀(z²) = 
-//│ 			z²
+//│ 			z²(99)
 //│ def p₀ = 
-//│ 	let b² = lazy⁰(
-//│ 		let bb² = lazy⁰(7)
-//│ 		in e₀(force⁰(bb²)))
-//│ 	in d₀(force⁰(b²))
+//│ 	let b² = 	
+//│ 		let bb² = (fun _lh_dummy² -> 7)
+//│ 		in (fun _lh_dummy¹ -> e₀(bb²))
+//│ 	in (fun _lh_dummy⁰ -> d₀(b²))
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -178,16 +178,17 @@ sum(mapa(mapb(primitive)))
 //│ >>>>>>> after fusion >>>>>>>
 //│ sum₀(mapa₀(mapb₀(primitive⁰)))
 //│ def mapa₀(lsa²) = 
-//│ 	lsa²
+//│ 	lsa²(99)
 //│ def mapb₀(lsb²) = 
 //│ 	case lsb² of {
 //│ 		C hb¹ tb¹ => 
-//│ 			let ha² = lazy⁰(primitive⁰(hb¹))
-//│ 			in let ta² = lazy⁰(mapb₀(tb¹))
-//│ 			in let t² = lazy⁰(mapa₀(force⁰(ta²)))
-//│ 			in [S [N] sum₀(force⁰(t²))]}
+//│ 			let ha² = primitive⁰(hb¹)
+//│ 			in let ta² = mapb₀(tb¹)
+//│ 			in (fun _lh_dummy¹ -> 
+//│ 				let t² = mapa₀(ta²)
+//│ 				in (fun _lh_dummy⁰ -> [S [N] sum₀(t²)]))}
 //│ def sum₀(ls²) = 
-//│ 	ls²
+//│ 	ls²(99)
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT:
@@ -228,8 +229,8 @@ if C(A, B(C)) is
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ 
-//│ 	let b² = lazy⁰([B [C]])
-//│ 	in [D force⁰(b²)]
+//│ 	let b² = [B [C]]
+//│ 	in (fun _lh_dummy⁰ -> [D b²])(99)
 //│ 
 //│ <<<<<<< after fusion <<<<<<<
 //│
@@ -352,20 +353,20 @@ map(l)
 //│ >>>>>>> after fusion >>>>>>>
 //│ map₀(l₀)
 //│ def l₀ = 
-//│ 	let h² = lazy⁰([T])
-//│ 	in let t² = lazy⁰(
-//│ 		let h³ = lazy⁰([TT])
-//│ 		in let t³ = lazy⁰(
-//│ 			let h⁴ = lazy⁰([TTTT])
-//│ 			in let t⁴ = lazy⁰([N])
-//│ 			in [C ff₀(force⁰(h⁴)) map₀(force⁰(t⁴))])
-//│ 		in [C ff₀(force⁰(h³)) map₀(force⁰(t³))])
-//│ 	in [C ff₀(force⁰(h²)) map₀(force⁰(t²))]
+//│ 	let h² = (fun _lh_dummy⁶ -> [T])
+//│ 	in let t² = 	
+//│ 		let h³ = (fun _lh_dummy⁵ -> [TT])
+//│ 		in let t³ = 	
+//│ 			let h⁴ = (fun _lh_dummy⁴ -> [TTTT])
+//│ 			in let t⁴ = (fun _lh_dummy³ -> [N])
+//│ 			in (fun _lh_dummy² -> [C ff₀(h⁴) map₀(t⁴)])
+//│ 		in (fun _lh_dummy¹ -> [C ff₀(h³) map₀(t³)])
+//│ 	in (fun _lh_dummy⁰ -> [C ff₀(h²) map₀(t²)])
 //│ def map₀(ls²) = 
-//│ 	ls²
+//│ 	ls²(99)
 //│ 	where
 //│ 	def ff₀(x²) = 
-//│ 		x²
+//│ 		x²(99)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -471,17 +472,17 @@ map(l)
 //│ >>>>>>> after fusion >>>>>>>
 //│ map₀(l₀)
 //│ def l₀ = 
-//│ 	let h² = lazy⁰([T])
-//│ 	in let t² = lazy⁰(
-//│ 		let h³ = lazy⁰([TT])
-//│ 		in let t³ = lazy⁰(
-//│ 			let h⁴ = lazy⁰([TTTT])
-//│ 			in let t⁴ = lazy⁰([N])
-//│ 			in [C force⁰(h⁴) map₀(force⁰(t⁴))])
-//│ 		in [C force⁰(h³) map₀(force⁰(t³))])
-//│ 	in [C force⁰(h²) map₀(force⁰(t²))]
+//│ 	let h² = (fun _lh_dummy⁶ -> [T])
+//│ 	in let t² = 	
+//│ 		let h³ = (fun _lh_dummy⁵ -> [TT])
+//│ 		in let t³ = 	
+//│ 			let h⁴ = (fun _lh_dummy⁴ -> [TTTT])
+//│ 			in let t⁴ = (fun _lh_dummy³ -> [N])
+//│ 			in (fun _lh_dummy² -> [C h⁴(99) map₀(t⁴)])
+//│ 		in (fun _lh_dummy¹ -> [C h³(99) map₀(t³)])
+//│ 	in (fun _lh_dummy⁰ -> [C h²(99) map₀(t²)])
 //│ def map₀(ls²) = 
-//│ 	ls²
+//│ 	ls²(99)
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT:
@@ -574,17 +575,18 @@ sum(mapa(mapb(primitive)))
 //│ >>>>>>> after fusion >>>>>>>
 //│ sum₀(mapa₀(mapb₀(primitive⁰)))
 //│ def mapa₀(lsa²) = 
-//│ 	lsa²
+//│ 	lsa²(99)
 //│ def mapb₀(lsb²) = 
 //│ 	case lsb² of {
 //│ 		C hb¹ tb¹ => 
-//│ 			let ha² = lazy⁰(primitive⁰(hb¹))
-//│ 			in let ta² = lazy⁰(mapb₀(tb¹))
-//│ 			in let t² = lazy⁰(mapa₀(force⁰(ta²)))
-//│ 			in [S [N] sum₀(force⁰(t²))]
-//│ 		| N  => [N]}
+//│ 			let ha² = primitive⁰(hb¹)
+//│ 			in let ta² = mapb₀(tb¹)
+//│ 			in (fun _lh_dummy¹ -> 
+//│ 				let t² = mapa₀(ta²)
+//│ 				in (fun _lh_dummy⁰ -> [S [N] sum₀(t²)]))
+//│ 		| N  => (fun _lh_dummy³ -> (fun _lh_dummy² -> [N]))}
 //│ def sum₀(ls²) = 
-//│ 	ls²
+//│ 	ls²(99)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -638,8 +640,9 @@ c(p)
 //│ >>>>>>> after fusion >>>>>>>
 //│ c₀(p₀)
 //│ def c₀(x²) = 
-//│ 	let a² = lazy⁰(x²)
-//│ 	in c₀(force⁰(a²))
+//│ 	
+//│ 		let a² = x²
+//│ 		in (fun _lh_dummy⁰ -> c₀(a²))(99)
 //│ def p₀ = 
 //│ 	[C [N]]
 //│ <<<<<<< after fusion <<<<<<<
@@ -780,20 +783,20 @@ c(t)
 //│ >>>>>>> after fusion >>>>>>>
 //│ c₀(t₀)
 //│ def c₀(x²) = 
-//│ 	x²
+//│ 	x²(99)
 //│ def t₀ = 
-//│ 	let n² = lazy⁰([KK])
-//│ 	in let l² = lazy⁰(
-//│ 		let n⁴ = lazy⁰([NN])
-//│ 		in let l⁴ = lazy⁰([LL])
-//│ 		in let r⁴ = lazy⁰([LL])
-//│ 		in [T force⁰(n⁴) c₀(force⁰(l⁴)) c₀(force⁰(r⁴))])
-//│ 	in let r² = lazy⁰(
-//│ 		let n³ = lazy⁰([NN])
-//│ 		in let l³ = lazy⁰([LL])
-//│ 		in let r³ = lazy⁰([LL])
-//│ 		in [T force⁰(n³) c₀(force⁰(l³)) c₀(force⁰(r³))])
-//│ 	in [T force⁰(n²) c₀(force⁰(l²)) c₀(force⁰(r²))]
+//│ 	let n² = (fun _lh_dummy⁹ -> [KK])
+//│ 	in let l² = 	
+//│ 		let n⁴ = (fun _lh_dummy⁸ -> [NN])
+//│ 		in let l⁴ = (fun _lh_dummy⁷ -> [LL])
+//│ 		in let r⁴ = (fun _lh_dummy⁶ -> [LL])
+//│ 		in (fun _lh_dummy⁵ -> [T n⁴(99) c₀(l⁴) c₀(r⁴)])
+//│ 	in let r² = 	
+//│ 		let n³ = (fun _lh_dummy⁴ -> [NN])
+//│ 		in let l³ = (fun _lh_dummy³ -> [LL])
+//│ 		in let r³ = (fun _lh_dummy² -> [LL])
+//│ 		in (fun _lh_dummy¹ -> [T n³(99) c₀(l³) c₀(r³)])
+//│ 	in (fun _lh_dummy⁰ -> [T n²(99) c₀(l²) c₀(r²)])
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -935,23 +938,23 @@ c(t)
 //│ >>>>>>> after fusion >>>>>>>
 //│ c₀(t₀)
 //│ def c₀(x²) = 
-//│ 	x²
+//│ 	x²(99)
 //│ def t₀ = 
-//│ 	let n³ = lazy⁰([KK])
-//│ 	in let l³ = lazy⁰(aa₀)
-//│ 	in let r³ = lazy⁰(bb₀)
-//│ 	in [T force⁰(n³) c₀(force⁰(l³)) c₀(force⁰(r³))]
+//│ 	let n³ = (fun _lh_dummy⁵ -> [KK])
+//│ 	in let l³ = aa₀
+//│ 	in let r³ = bb₀
+//│ 	in (fun _lh_dummy⁴ -> [T n³(99) c₀(l³) c₀(r³)])
 //│ 	where
 //│ 	def aa₀ = 
-//│ 		let n⁴ = lazy⁰([NN])
-//│ 		in let l⁴ = lazy⁰([LL])
-//│ 		in let r⁴ = lazy⁰([LL])
-//│ 		in [T force⁰(n⁴) c₀(force⁰(l⁴)) c₀(force⁰(r⁴))]
+//│ 		let n⁴ = (fun _lh_dummy⁹ -> [NN])
+//│ 		in let l⁴ = (fun _lh_dummy⁸ -> [LL])
+//│ 		in let r⁴ = (fun _lh_dummy⁷ -> [LL])
+//│ 		in (fun _lh_dummy⁶ -> [T n⁴(99) c₀(l⁴) c₀(r⁴)])
 //│ 	def bb₀ = 
-//│ 		let n² = lazy⁰([NN])
-//│ 		in let l² = lazy⁰([LL])
-//│ 		in let r² = lazy⁰([LL])
-//│ 		in [T force⁰(n²) c₀(force⁰(l²)) c₀(force⁰(r²))]
+//│ 		let n² = (fun _lh_dummy³ -> [NN])
+//│ 		in let l² = (fun _lh_dummy² -> [LL])
+//│ 		in let r² = (fun _lh_dummy¹ -> [LL])
+//│ 		in (fun _lh_dummy⁰ -> [T n²(99) c₀(l²) c₀(r²)])
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -1031,13 +1034,13 @@ map(l)(
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ map₀(l₀, (fun x² -> x²))
+//│ map₀(l₀, (fun x² -> x²(99)))
 //│ def l₀ = 
-//│ 	let h² = lazy⁰([T])
-//│ 	in let t² = lazy⁰((fun f⁵ -> [N]))
-//│ 	in (fun f⁴ -> [C f⁴(force⁰(h²)) map₀(force⁰(t²), f⁴)])
+//│ 	let h² = (fun _lh_dummy² -> [T])
+//│ 	in let t² = (fun _lh_dummy¹ -> (fun f⁵ -> [N]))
+//│ 	in (fun _lh_dummy⁰ -> (fun f⁴ -> [C f⁴(h²) map₀(t², f⁴)]))
 //│ def map₀(ls²) = 
-//│ 	ls²
+//│ 	ls²(99)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -1120,17 +1123,17 @@ lastDrive(C(1, C(2, N)))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ lastDrive₀(
-//│ 	let hh² = lazy⁰(1)
-//│ 	in let tt² = lazy⁰(
-//│ 		let h² = lazy⁰(2)
-//│ 		in let t² = lazy⁰((fun x⁵ -> x⁵))
-//│ 		in (fun x⁴ -> last₀(force⁰(t²), force⁰(h²))))
-//│ 	in [Some last₀(force⁰(tt²), force⁰(hh²))])
+//│ 	let hh² = 1
+//│ 	in let tt² = 	
+//│ 		let h² = 2
+//│ 		in let t² = (fun _lh_dummy² -> (fun x⁵ -> x⁵))
+//│ 		in (fun _lh_dummy¹ -> (fun x⁴ -> last₀(t², h²)))
+//│ 	in (fun _lh_dummy⁰ -> [Some last₀(tt², hh²)]))
 //│ def lastDrive₀(xs²) = 
-//│ 	xs²
+//│ 	xs²(99)
 //│ 	where
 //│ 	def last₀(ys²) = 
-//│ 		ys²
+//│ 		ys²(99)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -1186,8 +1189,9 @@ c(p)
 //│ >>>>>>> after fusion >>>>>>>
 //│ c₀(p₀)
 //│ def c₀(x²) = 
-//│ 	let a² = lazy⁰(x²)
-//│ 	in c₀(force⁰(a²))
+//│ 	
+//│ 		let a² = x²
+//│ 		in (fun _lh_dummy⁰ -> c₀(a²))(99)
 //│ def p₀ = 
 //│ 	[C p₀]
 //│ <<<<<<< after fusion <<<<<<<
@@ -1286,17 +1290,17 @@ c2(B)
 //│ >>>>>>> after fusion >>>>>>>
 //│ c1₀(a₀)
 //│ c2₀(a₁)
-//│ c2₁([BBB])
-//│ def a₀ = 
+//│ c2₁((fun _lh_dummy⁰ -> [BBB]))
+//│ def a₀(_lh_dummy²) = 
 //│ 	[AA]
-//│ def a₁ = 
+//│ def a₁(_lh_dummy¹) = 
 //│ 	[AAA]
 //│ def c1₀(x1²) = 
-//│ 	x1²
+//│ 	x1²(99)
 //│ def c2₀(x2⁴) = 
-//│ 	x2⁴
+//│ 	x2⁴(99)
 //│ def c2₁(x2³) = 
-//│ 	x2³
+//│ 	x2³(99)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -1374,17 +1378,17 @@ lastDrive(C(1, C(2, N)))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ lastDrive₀(
-//│ 	let hh² = lazy⁰(1)
-//│ 	in let tt² = lazy⁰(
-//│ 		let h² = lazy⁰(2)
-//│ 		in let t² = lazy⁰((fun x⁵ -> x⁵))
-//│ 		in (fun x⁴ -> last₀(force⁰(t²), force⁰(h²))))
-//│ 	in [Some last₀(force⁰(tt²), force⁰(hh²))])
+//│ 	let hh² = 1
+//│ 	in let tt² = 	
+//│ 		let h² = 2
+//│ 		in let t² = (fun _lh_dummy² -> (fun x⁵ -> x⁵))
+//│ 		in (fun _lh_dummy¹ -> (fun x⁴ -> last₀(t², h²)))
+//│ 	in (fun _lh_dummy⁰ -> [Some last₀(tt², hh²)]))
 //│ def lastDrive₀(xs²) = 
-//│ 	xs²
+//│ 	xs²(99)
 //│ 	where
 //│ 	def last₀(ys²) = 
-//│ 		ys²
+//│ 		ys²(99)
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: the time of unrolling is correct
@@ -1530,19 +1534,19 @@ id6(id4)(c)(id5(id2)(id3(p)))
 //│ >>>>>>> after fusion >>>>>>>
 //│ id6₀(id4₀, c₀, id5₀(id2₀, id3₀(p₀)))
 //│ def c₀(xx⁹) = 
-//│ 	xx⁹
+//│ 	xx⁹(99)
 //│ 	where
 //│ 	def c₁(xx⁶) = 
-//│ 		xx⁶
+//│ 		xx⁶(99)
 //│ 		where
 //│ 		def c₂(xx¹⁰) = 
-//│ 			xx¹⁰
+//│ 			xx¹⁰(99)
 //│ 			where
 //│ 			def c₃(xx⁷) = 
-//│ 				xx⁷
+//│ 				xx⁷(99)
 //│ 				where
 //│ 				def c₄(xx⁸) = 
-//│ 					xx⁸
+//│ 					xx⁸(99)
 //│ def id2₀(y²) = 
 //│ 	y²
 //│ def id3₀(z²) = 
@@ -1554,16 +1558,16 @@ id6(id4)(c)(id5(id2)(id3(p)))
 //│ def id6₀(l²) = 
 //│ 	l²
 //│ def p₀ = 
-//│ 	let a⁶ = lazy⁰(
-//│ 		let a⁷ = lazy⁰(
-//│ 			let a⁸ = lazy⁰(id7₀(
-//│ 				let a⁹ = lazy⁰(
-//│ 					let a¹⁰ = lazy⁰(id1₀(p₀))
-//│ 					in c₀(force⁰(a¹⁰)))
-//│ 				in c₄(force⁰(a⁹))))
-//│ 			in c₃(force⁰(a⁸)))
-//│ 		in c₂(force⁰(a⁷)))
-//│ 	in c₁(force⁰(a⁶))
+//│ 	let a⁶ = 	
+//│ 		let a⁷ = 	
+//│ 			let a⁸ = id7₀(
+//│ 				let a⁹ = 	
+//│ 					let a¹⁰ = id1₀(p₀)
+//│ 					in (fun _lh_dummy⁴ -> c₀(a¹⁰))
+//│ 				in (fun _lh_dummy³ -> c₄(a⁹)))
+//│ 			in (fun _lh_dummy² -> c₃(a⁸))
+//│ 		in (fun _lh_dummy¹ -> c₂(a⁷))
+//│ 	in (fun _lh_dummy⁰ -> c₁(a⁶))
 //│ 	where
 //│ 	def id1₀(x²) = 
 //│ 		id₀(x²)
@@ -1760,18 +1764,20 @@ len(map(C(A, C(B, N))))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ len₀(map₀(
-//│ 	let h⁴ = lazy⁰([AA])
-//│ 	in let t⁴ = lazy⁰(
-//│ 		let h⁵ = lazy⁰([BB])
-//│ 		in let t⁶ = lazy⁰(0)
-//│ 		in let t⁷ = lazy⁰(map₀(force⁰(t⁶)))
-//│ 		in (1 + len₀(force⁰(t⁷))))
-//│ 	in let t⁵ = lazy⁰(map₀(force⁰(t⁴)))
-//│ 	in (1 + len₀(force⁰(t⁵)))))
+//│ 	let h⁴ = (fun _lh_dummy⁷ -> [AA])
+//│ 	in let t⁴ = 	
+//│ 		let h⁵ = (fun _lh_dummy⁶ -> [BB])
+//│ 		in let t⁶ = (fun _lh_dummy⁵ -> (fun _lh_dummy⁴ -> 0))
+//│ 		in (fun _lh_dummy³ -> 
+//│ 			let t⁷ = map₀(t⁶)
+//│ 			in (fun _lh_dummy² -> (1 + len₀(t⁷))))
+//│ 	in (fun _lh_dummy¹ -> 
+//│ 		let t⁵ = map₀(t⁴)
+//│ 		in (fun _lh_dummy⁰ -> (1 + len₀(t⁵))))))
 //│ def len₀(ls⁵) = 
-//│ 	ls⁵
+//│ 	ls⁵(99)
 //│ def map₀(ls⁴) = 
-//│ 	ls⁴
+//│ 	ls⁴(99)
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: multiple match, but correct
@@ -1846,15 +1852,15 @@ f(C(A))(C(B))(C(D))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀(f₁, f₂, f₃)
+//│ f₀((fun _lh_dummy⁰ -> f₁), (fun _lh_dummy¹ -> f₂), (fun _lh_dummy² -> f₃))
 //│ def f₀(x⁶) = 
-//│ 	x⁶
+//│ 	x⁶(99)
 //│ 	where
 //│ 	def f₁(x⁸) = 
-//│ 		x⁸
+//│ 		x⁸(99)
 //│ 		where
 //│ 		def f₂(x⁵) = 
-//│ 			x⁵
+//│ 			x⁵(99)
 //│ 			where
 //│ 			def f₃(x⁷) = 
 //│ 				case x⁷ of {
@@ -2002,34 +2008,34 @@ c(t)
 //│ >>>>>>> after fusion >>>>>>>
 //│ c₀(t₀)
 //│ def c₀(x²) = 
-//│ 	x²
+//│ 	x²(99)
 //│ def t₀ = 
-//│ 	let n² = lazy⁰([KK])
-//│ 	in let l² = lazy⁰(aa₀)
-//│ 	in let r² = lazy⁰(aa₁)
-//│ 	in [T force⁰(n²) c₀(force⁰(l²)) c₀(force⁰(r²))]
+//│ 	let n² = (fun _lh_dummy¹ -> [KK])
+//│ 	in let l² = aa₀
+//│ 	in let r² = aa₁
+//│ 	in (fun _lh_dummy⁰ -> [T n²(99) c₀(l²) c₀(r²)])
 //│ 	where
 //│ 	def aa₀ = 
-//│ 		let n⁶ = lazy⁰([NN])
-//│ 		in let l⁶ = lazy⁰(t₁)
-//│ 		in let r⁶ = lazy⁰(t₂)
-//│ 		in [T force⁰(n⁶) c₀(force⁰(l⁶)) c₀(force⁰(r⁶))]
+//│ 		let n⁶ = (fun _lh_dummy⁹ -> [NN])
+//│ 		in let l⁶ = t₁
+//│ 		in let r⁶ = t₂
+//│ 		in (fun _lh_dummy⁸ -> [T n⁶(99) c₀(l⁶) c₀(r⁶)])
 //│ 		where
 //│ 		def t₁ = 
-//│ 			let n⁵ = lazy⁰([KK])
-//│ 			in let l⁵ = lazy⁰(aa₀)
-//│ 			in let r⁵ = lazy⁰(aa₀)
-//│ 			in [T force⁰(n⁵) c₀(force⁰(l⁵)) c₀(force⁰(r⁵))]
+//│ 			let n⁵ = (fun _lh_dummy⁷ -> [KK])
+//│ 			in let l⁵ = aa₀
+//│ 			in let r⁵ = aa₀
+//│ 			in (fun _lh_dummy⁶ -> [T n⁵(99) c₀(l⁵) c₀(r⁵)])
 //│ 		def t₂ = 
-//│ 			let n⁴ = lazy⁰([KK])
-//│ 			in let l⁴ = lazy⁰(aa₀)
-//│ 			in let r⁴ = lazy⁰(aa₀)
-//│ 			in [T force⁰(n⁴) c₀(force⁰(l⁴)) c₀(force⁰(r⁴))]
+//│ 			let n⁴ = (fun _lh_dummy⁵ -> [KK])
+//│ 			in let l⁴ = aa₀
+//│ 			in let r⁴ = aa₀
+//│ 			in (fun _lh_dummy⁴ -> [T n⁴(99) c₀(l⁴) c₀(r⁴)])
 //│ 	def aa₁ = 
-//│ 		let n³ = lazy⁰([NN])
-//│ 		in let l³ = lazy⁰(t₀)
-//│ 		in let r³ = lazy⁰(t₀)
-//│ 		in [T force⁰(n³) c₀(force⁰(l³)) c₀(force⁰(r³))]
+//│ 		let n³ = (fun _lh_dummy³ -> [NN])
+//│ 		in let l³ = t₀
+//│ 		in let r³ = t₀
+//│ 		in (fun _lh_dummy² -> [T n³(99) c₀(l³) c₀(r³)])
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -2103,23 +2109,23 @@ filter(C(1, C(2, C(3, N))))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ filter₀(
-//│ 	let h² = lazy⁰(1)
-//│ 	in let t² = lazy⁰(
-//│ 		let h³ = lazy⁰(2)
-//│ 		in let t³ = lazy⁰(
-//│ 			let h⁴ = lazy⁰(3)
-//│ 			in let t⁴ = lazy⁰([N])
-//│ 			in case (force⁰(h⁴) > 1) of {
-//│ 				True  => [C force⁰(h⁴) filter₀(force⁰(t⁴))]
-//│ 				| False  => filter₀(force⁰(t⁴))})
-//│ 		in case (force⁰(h³) > 1) of {
-//│ 			True  => [C force⁰(h³) filter₀(force⁰(t³))]
-//│ 			| False  => filter₀(force⁰(t³))})
-//│ 	in case (force⁰(h²) > 1) of {
-//│ 		True  => [C force⁰(h²) filter₀(force⁰(t²))]
-//│ 		| False  => filter₀(force⁰(t²))})
+//│ 	let h² = 1
+//│ 	in let t² = 	
+//│ 		let h³ = 2
+//│ 		in let t³ = 	
+//│ 			let h⁴ = 3
+//│ 			in let t⁴ = (fun _lh_dummy³ -> [N])
+//│ 			in (fun _lh_dummy² -> case (h⁴ > 1) of {
+//│ 				True  => [C h⁴ filter₀(t⁴)]
+//│ 				| False  => filter₀(t⁴)})
+//│ 		in (fun _lh_dummy¹ -> case (h³ > 1) of {
+//│ 			True  => [C h³ filter₀(t³)]
+//│ 			| False  => filter₀(t³)})
+//│ 	in (fun _lh_dummy⁰ -> case (h² > 1) of {
+//│ 		True  => [C h² filter₀(t²)]
+//│ 		| False  => filter₀(t²)}))
 //│ def filter₀(ls²) = 
-//│ 	ls²
+//│ 	ls²(99)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -2325,22 +2331,22 @@ rev2(rev(C(1, C(2, N)))(N))(N)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ rev2₀(rev₀(
-//│ 	let h² = lazy⁰(1)
-//│ 	in let t² = lazy⁰(
-//│ 		let h³ = lazy⁰(2)
-//│ 		in let t³ = lazy⁰((fun a⁶ -> a⁶))
-//│ 		in (fun a⁵ -> rev₀(force⁰(t³), 
-//│ 			let h2³ = lazy⁰(force⁰(h³))
-//│ 			in let t2³ = lazy⁰(a⁵)
-//│ 			in (fun a2⁵ -> rev2₀(force⁰(t2³), [C force⁰(h2³) a2⁵])))))
-//│ 	in (fun a⁴ -> rev₀(force⁰(t²), 
-//│ 		let h2² = lazy⁰(force⁰(h²))
-//│ 		in let t2² = lazy⁰(a⁴)
-//│ 		in (fun a2⁴ -> rev2₀(force⁰(t2²), [C force⁰(h2²) a2⁴])))), (fun a2⁶ -> a2⁶)), [N])
+//│ 	let h² = 1
+//│ 	in let t² = 	
+//│ 		let h³ = 2
+//│ 		in let t³ = (fun _lh_dummy⁴ -> (fun a⁶ -> a⁶))
+//│ 		in (fun _lh_dummy³ -> (fun a⁵ -> rev₀(t³, 
+//│ 			let h2³ = h³
+//│ 			in let t2³ = a⁵
+//│ 			in (fun _lh_dummy² -> (fun a2⁵ -> rev2₀(t2³, [C h2³ a2⁵]))))))
+//│ 	in (fun _lh_dummy¹ -> (fun a⁴ -> rev₀(t², 
+//│ 		let h2² = h²
+//│ 		in let t2² = a⁴
+//│ 		in (fun _lh_dummy⁰ -> (fun a2⁴ -> rev2₀(t2², [C h2² a2⁴])))))), (fun _lh_dummy⁵ -> (fun a2⁶ -> a2⁶))), [N])
 //│ def rev2₀(ls2²) = 
-//│ 	ls2²
+//│ 	ls2²(99)
 //│ def rev₀(ls²) = 
-//│ 	ls²
+//│ 	ls²(99)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -2461,31 +2467,31 @@ rev(rev(C(A, C(B, N)))(N))(N)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ rev₀(
-//│ 	let h⁴ = lazy⁰([A])
-//│ 	in let t⁴ = lazy⁰(
-//│ 		let h⁵ = lazy⁰([B])
-//│ 		in let t⁵ = lazy⁰((fun a¹⁰ -> a¹⁰))
-//│ 		in (fun a⁹ -> rev₀(force⁰(t⁵), [C force⁰(h⁵) a⁹])))
-//│ 	in (fun a⁸ -> rev₀(force⁰(t⁴), [C force⁰(h⁴) a⁸])), [N])
+//│ 	let h⁴ = [A]
+//│ 	in let t⁴ = 	
+//│ 		let h⁵ = [B]
+//│ 		in let t⁵ = (fun _lh_dummy² -> (fun a¹⁰ -> a¹⁰))
+//│ 		in (fun _lh_dummy¹ -> (fun a⁹ -> rev₀(t⁵, [C h⁵ a⁹])))
+//│ 	in (fun _lh_dummy⁰ -> (fun a⁸ -> rev₀(t⁴, [C h⁴ a⁸]))), [N])
 //│ rev₁(rev₂(
-//│ 	let h⁶ = lazy⁰([A])
-//│ 	in let t⁶ = lazy⁰(
-//│ 		let h⁸ = lazy⁰([B])
-//│ 		in let t⁸ = lazy⁰((fun a¹⁵ -> a¹⁵))
-//│ 		in (fun a¹³ -> rev₂(force⁰(t⁸), 
-//│ 			let h⁹ = lazy⁰(force⁰(h⁸))
-//│ 			in let t⁹ = lazy⁰(a¹³)
-//│ 			in (fun a¹⁴ -> rev₁(force⁰(t⁹), [C force⁰(h⁹) a¹⁴])))))
-//│ 	in (fun a¹¹ -> rev₂(force⁰(t⁶), 
-//│ 		let h⁷ = lazy⁰(force⁰(h⁶))
-//│ 		in let t⁷ = lazy⁰(a¹¹)
-//│ 		in (fun a¹² -> rev₁(force⁰(t⁷), [C force⁰(h⁷) a¹²])))), (fun a¹⁶ -> a¹⁶)), [N])
+//│ 	let h⁶ = [A]
+//│ 	in let t⁶ = 	
+//│ 		let h⁸ = [B]
+//│ 		in let t⁸ = (fun _lh_dummy⁷ -> (fun a¹⁵ -> a¹⁵))
+//│ 		in (fun _lh_dummy⁶ -> (fun a¹³ -> rev₂(t⁸, 
+//│ 			let h⁹ = h⁸
+//│ 			in let t⁹ = a¹³
+//│ 			in (fun _lh_dummy⁵ -> (fun a¹⁴ -> rev₁(t⁹, [C h⁹ a¹⁴]))))))
+//│ 	in (fun _lh_dummy⁴ -> (fun a¹¹ -> rev₂(t⁶, 
+//│ 		let h⁷ = h⁶
+//│ 		in let t⁷ = a¹¹
+//│ 		in (fun _lh_dummy³ -> (fun a¹² -> rev₁(t⁷, [C h⁷ a¹²])))))), (fun _lh_dummy⁸ -> (fun a¹⁶ -> a¹⁶))), [N])
 //│ def rev₀(ls⁵) = 
-//│ 	ls⁵
+//│ 	ls⁵(99)
 //│ def rev₁(ls⁶) = 
-//│ 	ls⁶
+//│ 	ls⁶(99)
 //│ def rev₂(ls⁴) = 
-//│ 	ls⁴
+//│ 	ls⁴(99)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -2549,15 +2555,15 @@ rev(rev(primitive)(N))(N)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ rev₀(rev₁(primitive⁰, (fun a⁶ -> a⁶)), [N])
+//│ rev₀(rev₁(primitive⁰, (fun _lh_dummy⁰ -> (fun a⁶ -> a⁶))), [N])
 //│ def rev₀(ls³) = 
-//│ 	ls³
+//│ 	ls³(99)
 //│ def rev₁(ls⁴) = 
 //│ 	case ls⁴ of {
 //│ 		C h² t² => (fun a⁷ -> rev₁(t², 
-//│ 			let h³ = lazy⁰(h²)
-//│ 			in let t³ = lazy⁰(a⁷)
-//│ 			in (fun a⁸ -> rev₀(force⁰(t³), [C force⁰(h³) a⁸]))))
+//│ 			let h³ = h²
+//│ 			in let t³ = a⁷
+//│ 			in (fun _lh_dummy¹ -> (fun a⁸ -> rev₀(t³, [C h³ a⁸])))))
 //│ 		| N  => (fun a⁹ -> a⁹)}
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -2654,14 +2660,14 @@ rev(C(1, C(2, N)))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ rev₀(
-//│ 	let h⁴ = lazy⁰(1)
-//│ 	in let t⁴ = lazy⁰(
-//│ 		let h⁵ = lazy⁰(2)
-//│ 		in let t⁵ = lazy⁰([N])
-//│ 		in concat₀(rev₀(force⁰(t⁵)), [C force⁰(h⁵) [N]]))
-//│ 	in concat₀(rev₀(force⁰(t⁴)), [C force⁰(h⁴) [N]]))
+//│ 	let h⁴ = 1
+//│ 	in let t⁴ = 	
+//│ 		let h⁵ = 2
+//│ 		in let t⁵ = (fun _lh_dummy² -> [N])
+//│ 		in (fun _lh_dummy¹ -> concat₀(rev₀(t⁵), [C h⁵ [N]]))
+//│ 	in (fun _lh_dummy⁰ -> concat₀(rev₀(t⁴), [C h⁴ [N]])))
 //│ def rev₀(ls²) = 
-//│ 	ls²
+//│ 	ls²(99)
 //│ 	where
 //│ 	def concat₀(xs²) = 
 //│ 		case xs² of {
@@ -2676,96 +2682,96 @@ rev(C(1, C(2, N)))
 //│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [concat₀^12]
-//│ 	[concat₀^12 · concat₀^48] ---> [concat₀^12] (only one)
-//│ [concat₀^28]
-//│ 	[concat₀^28 · concat₀^48] ---> [concat₀^28] (only one)
-//│ [rev₀^13] (hopeless to continue)
+//│ [concat₀^18]
+//│ 	[concat₀^18 · concat₀^35] ---> [concat₀^18] (only one)
+//│ [concat₀^6]
+//│ 	[concat₀^6 · concat₀^35] ---> [concat₀^6] (only one)
+//│ [rev₀^19] (hopeless to continue)
 //│ [rev₀^1] (hopeless to continue)
-//│ [rev₀^29] (hopeless to continue)
+//│ [rev₀^7] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
 //│ rev₀₁(
-//│ 	let h⁵ = lazy⁰(1)
-//│ 	in let t⁵ = lazy⁰(
-//│ 		let h⁶ = lazy⁰(2)
-//│ 		in let t⁶ = lazy⁰([N])
-//│ 		in concat₀₀(rev₀₀(force⁰(t⁶)), [C force⁰(h⁶) [N]]))
-//│ 	in concat₀₁(rev₀₂(force⁰(t⁵)), [C force⁰(h⁵) [N]]))
-//│ def concat₀₀(xs²) = 
-//│ 	case xs² of {
-//│ 		N  => (fun ys⁴ -> ys⁴)
-//│ 		| C h⁴ t⁴ => (fun ys⁵ -> [C h⁴ concat₀₀(t⁴, ys⁵)])}
-//│ def concat₀₁(xs¹) = 
+//│ 	let h⁵ = 1
+//│ 	in let t⁵ = 	
+//│ 		let h⁶ = 2
+//│ 		in let t⁶ = (fun _lh_dummy³ -> [N])
+//│ 		in (fun _lh_dummy⁴ -> concat₀₁(rev₀₂(t⁶), [C h⁶ [N]]))
+//│ 	in (fun _lh_dummy⁵ -> concat₀₀(rev₀₀(t⁵), [C h⁵ [N]])))
+//│ def concat₀₀(xs¹) = 
 //│ 	case xs¹ of {
 //│ 		N  => (fun ys² -> ys²)
-//│ 		| C h³ t³ => (fun ys³ -> [C h³ concat₀₁(t³, ys³)])}
+//│ 		| C h³ t³ => (fun ys³ -> [C h³ concat₀₀(t³, ys³)])}
+//│ def concat₀₁(xs²) = 
+//│ 	case xs² of {
+//│ 		N  => (fun ys⁴ -> ys⁴)
+//│ 		| C h⁴ t⁴ => (fun ys⁵ -> [C h⁴ concat₀₁(t⁴, ys⁵)])}
 //│ def rev₀₀(ls³) = 
-//│ 	ls³
+//│ 	ls³(99)
 //│ def rev₀₁(ls²) = 
-//│ 	ls²
+//│ 	ls²(99)
 //│ def rev₀₂(ls¹) = 
-//│ 	ls¹
+//│ 	ls¹(99)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h⁴ concat₀₀(t⁴, ys⁵)]: 83 --->
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h³ t³ => (fun ys³ -> [C h³ concat₀₁(t³, ys³)])}: 70
-//│ [N]: 100 --->
-//│ 	case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁴ t⁴ => (fun ys⁵ -> [C h⁴ concat₀₀(t⁴, ys⁵)])}: 85
-//│ [N]: 112 --->
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h³ t³ => (fun ys³ -> [C h³ concat₀₁(t³, ys³)])}: 70
-//│ [C force⁰(h⁶) [N]]: 113 --->
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h³ t³ => (fun ys³ -> [C h³ concat₀₁(t³, ys³)])}: 70
+//│ [C h⁴ concat₀₁(t⁴, ys⁵)]: 74 --->
+//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h³ t³ => (fun ys³ -> [C h³ concat₀₀(t³, ys³)])}: 59
+//│ [N]: 89 --->
+//│ 	case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁴ t⁴ => (fun ys⁵ -> [C h⁴ concat₀₁(t⁴, ys⁵)])}: 76
+//│ [N]: 97 --->
+//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h³ t³ => (fun ys³ -> [C h³ concat₀₀(t³, ys³)])}: 59
+//│ [C h⁶ [N]]: 98 --->
+//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h³ t³ => (fun ys³ -> [C h³ concat₀₀(t³, ys³)])}: 59
 //│ ------------------
-//│ case xs¹ of {N  => (fun ys² -> ys²) | C h³ t³ => (fun ys³ -> [C h³ concat₀₁(t³, ys³)])}: 70 --->
-//│ 	[C h⁴ concat₀₀(t⁴, ys⁵)]: 83
-//│ 	[N]: 112
-//│ 	[C force⁰(h⁶) [N]]: 113
-//│ case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁴ t⁴ => (fun ys⁵ -> [C h⁴ concat₀₀(t⁴, ys⁵)])}: 85 --->
-//│ 	[N]: 100
+//│ case xs¹ of {N  => (fun ys² -> ys²) | C h³ t³ => (fun ys³ -> [C h³ concat₀₀(t³, ys³)])}: 59 --->
+//│ 	[C h⁴ concat₀₁(t⁴, ys⁵)]: 74
+//│ 	[N]: 97
+//│ 	[C h⁶ [N]]: 98
+//│ case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁴ t⁴ => (fun ys⁵ -> [C h⁴ concat₀₁(t⁴, ys⁵)])}: 76 --->
+//│ 	[N]: 89
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C h⁴ concat₀₀(t⁴, ys⁵)]: 83 --->
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h³ t³ => (fun ys³ -> [C h³ concat₀₁(t³, ys³)])}: 70
-//│ [N]: 100 --->
-//│ 	case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁴ t⁴ => (fun ys⁵ -> [C h⁴ concat₀₀(t⁴, ys⁵)])}: 85
-//│ [N]: 112 --->
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h³ t³ => (fun ys³ -> [C h³ concat₀₁(t³, ys³)])}: 70
-//│ [C force⁰(h⁶) [N]]: 113 --->
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h³ t³ => (fun ys³ -> [C h³ concat₀₁(t³, ys³)])}: 70
+//│ [C h⁴ concat₀₁(t⁴, ys⁵)]: 74 --->
+//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h³ t³ => (fun ys³ -> [C h³ concat₀₀(t³, ys³)])}: 59
+//│ [N]: 89 --->
+//│ 	case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁴ t⁴ => (fun ys⁵ -> [C h⁴ concat₀₁(t⁴, ys⁵)])}: 76
+//│ [N]: 97 --->
+//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h³ t³ => (fun ys³ -> [C h³ concat₀₀(t³, ys³)])}: 59
+//│ [C h⁶ [N]]: 98 --->
+//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h³ t³ => (fun ys³ -> [C h³ concat₀₀(t³, ys³)])}: 59
 //│ ------------------
-//│ case xs¹ of {N  => (fun ys² -> ys²) | C h³ t³ => (fun ys³ -> [C h³ concat₀₁(t³, ys³)])}: 70 --->
-//│ 	[C h⁴ concat₀₀(t⁴, ys⁵)]: 83
-//│ 	[N]: 112
-//│ 	[C force⁰(h⁶) [N]]: 113
-//│ case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁴ t⁴ => (fun ys⁵ -> [C h⁴ concat₀₀(t⁴, ys⁵)])}: 85 --->
-//│ 	[N]: 100
+//│ case xs¹ of {N  => (fun ys² -> ys²) | C h³ t³ => (fun ys³ -> [C h³ concat₀₀(t³, ys³)])}: 59 --->
+//│ 	[C h⁴ concat₀₁(t⁴, ys⁵)]: 74
+//│ 	[N]: 97
+//│ 	[C h⁶ [N]]: 98
+//│ case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁴ t⁴ => (fun ys⁵ -> [C h⁴ concat₀₁(t⁴, ys⁵)])}: 76 --->
+//│ 	[N]: 89
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ rev₀₁(
-//│ 	let h⁷ = lazy⁰(1)
-//│ 	in let t⁷ = lazy⁰(
-//│ 		let h⁸ = lazy⁰(2)
-//│ 		in let t⁸ = lazy⁰((fun ys⁶ -> ys⁶))
-//│ 		in concat₀₀(rev₀₀(force⁰(t⁸)), 
-//│ 			let h⁹ = lazy⁰(force⁰(h⁸))
-//│ 			in let t⁹ = lazy⁰((fun ys⁸ -> ys⁸))
-//│ 			in (fun ys⁷ -> [C force⁰(h⁹) concat₀₁(force⁰(t⁹), ys⁷)])))
-//│ 	in concat₀₁(rev₀₂(force⁰(t⁷)), [C force⁰(h⁷) [N]]))
+//│ 	let h⁷ = 1
+//│ 	in let t⁷ = 	
+//│ 		let h⁸ = 2
+//│ 		in let t⁸ = (fun _lh_dummy⁶ -> (fun _lh_dummy⁷ -> (fun ys⁶ -> ys⁶)))
+//│ 		in (fun _lh_dummy⁸ -> concat₀₁(rev₀₂(t⁸), 
+//│ 			let h⁹ = h⁸
+//│ 			in let t⁹ = (fun _lh_dummy¹⁰ -> (fun ys⁸ -> ys⁸))
+//│ 			in (fun _lh_dummy⁹ -> (fun ys⁷ -> [C h⁹ concat₀₀(t⁹, ys⁷)]))))
+//│ 	in (fun _lh_dummy¹¹ -> concat₀₀(rev₀₀(t⁷), [C h⁷ [N]])))
 //│ def concat₀₀(xs³) = 
-//│ 	xs³
+//│ 	xs³(99)
 //│ def concat₀₁(xs⁴) = 
-//│ 	xs⁴
+//│ 	xs⁴(99)
 //│ def rev₀₀(ls⁵) = 
-//│ 	ls⁵
+//│ 	ls⁵(99)
 //│ def rev₀₁(ls⁶) = 
-//│ 	ls⁶
+//│ 	ls⁶(99)
 //│ def rev₀₂(ls⁴) = 
-//│ 	ls⁴
+//│ 	ls⁴(99)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -2825,10 +2831,10 @@ f(C(1, N))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ f₀(
-//│ 	let t² = lazy⁰([N])
-//│ 	in force⁰(t²))
+//│ 	let t² = [N]
+//│ 	in (fun _lh_dummy⁰ -> t²))
 //│ def f₀(x²) = 
-//│ 	(fun x³ -> x³)(x²)
+//│ 	(fun x³ -> x³(99))(x²)
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: after using `last(C(hh, tt))` instead of `last(t)` and pushing in of parameters
@@ -2909,15 +2915,15 @@ last(C(1, C(2, C(3, N))))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ last₀([C 1 
-//│ 	let hh² = lazy⁰(2)
-//│ 	in let tt² = lazy⁰(
-//│ 		let hh³ = lazy⁰(3)
-//│ 		in let tt³ = lazy⁰((fun h⁸ -> [Some h⁸]))
-//│ 		in (fun h⁷ -> last₀([C force⁰(hh³) force⁰(tt³)])))
-//│ 	in (fun h⁶ -> last₀([C force⁰(hh²) force⁰(tt²)]))])
+//│ 	let hh² = 2
+//│ 	in let tt² = 	
+//│ 		let hh³ = 3
+//│ 		in let tt³ = (fun _lh_dummy² -> (fun h⁸ -> [Some h⁸]))
+//│ 		in (fun _lh_dummy¹ -> (fun h⁷ -> last₀([C hh³ tt³])))
+//│ 	in (fun _lh_dummy⁰ -> (fun h⁶ -> last₀([C hh² tt²])))])
 //│ def last₀(ls²) = 
 //│ 	case ls² of {
-//│ 		C h³ t¹ => t¹(h³)
+//│ 		C h³ t¹ => t¹(99, h³)
 //│ 		| N  => [None]}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
@@ -2928,104 +2934,104 @@ last(C(1, C(2, C(3, N))))
 //│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [last₀^15] (hopeless to continue)
+//│ [last₀^18] (hopeless to continue)
 //│ [last₀^1] (hopeless to continue)
-//│ [last₀^28] (hopeless to continue)
+//│ [last₀^9] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
 //│ last₀₁([C 1 
-//│ 	let hh² = lazy⁰(2)
-//│ 	in let tt² = lazy⁰(
-//│ 		let hh³ = lazy⁰(3)
-//│ 		in let tt³ = lazy⁰((fun h⁷ -> [Some h⁷]))
-//│ 		in (fun h⁸ -> last₀₀([C force⁰(hh³) force⁰(tt³)])))
-//│ 	in (fun h⁹ -> last₀₂([C force⁰(hh²) force⁰(tt²)]))])
-//│ def last₀₀(ls¹) = 
-//│ 	case ls¹ of {
-//│ 		C h⁴ t¹ => t¹(h⁴)
-//│ 		| N  => [None]}
-//│ def last₀₁(ls²) = 
-//│ 	case ls² of {
-//│ 		C h⁵ t² => t²(h⁵)
-//│ 		| N  => [None]}
-//│ def last₀₂(ls³) = 
+//│ 	let hh² = 2
+//│ 	in let tt² = 	
+//│ 		let hh³ = 3
+//│ 		in let tt³ = (fun _lh_dummy³ -> (fun h⁷ -> [Some h⁷]))
+//│ 		in (fun _lh_dummy⁴ -> (fun h⁸ -> last₀₂([C hh³ tt³])))
+//│ 	in (fun _lh_dummy⁵ -> (fun h⁹ -> last₀₀([C hh² tt²])))])
+//│ def last₀₀(ls³) = 
 //│ 	case ls³ of {
-//│ 		C h⁶ t³ => t³(h⁶)
+//│ 		C h⁶ t³ => t³(99, h⁶)
+//│ 		| N  => [None]}
+//│ def last₀₁(ls¹) = 
+//│ 	case ls¹ of {
+//│ 		C h⁴ t¹ => t¹(99, h⁴)
+//│ 		| N  => [None]}
+//│ def last₀₂(ls²) = 
+//│ 	case ls² of {
+//│ 		C h⁵ t² => t²(99, h⁵)
 //│ 		| N  => [None]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C force⁰(hh³) force⁰(tt³)]: 91 --->
-//│ 	case ls¹ of {C h⁴ t¹ => t¹(h⁴) | N  => [None]}: 54
-//│ [C force⁰(hh²) force⁰(tt²)]: 104 --->
-//│ 	case ls³ of {C h⁶ t³ => t³(h⁶) | N  => [None]}: 68
-//│ [C 1 let hh² = lazy⁰(2)
-//│ in let tt² = lazy⁰(let hh³ = lazy⁰(3)
-//│ in let tt³ = lazy⁰((fun h⁷ -> [Some h⁷]))
-//│ in (fun h⁸ -> last₀₀([C force⁰(hh³) force⁰(tt³)])))
-//│ in (fun h⁹ -> last₀₂([C force⁰(hh²) force⁰(tt²)]))]: 109 --->
-//│ 	case ls² of {C h⁵ t² => t²(h⁵) | N  => [None]}: 61
+//│ [C hh³ tt³]: 76 --->
+//│ 	case ls² of {C h⁵ t² => t²(99, h⁵) | N  => [None]}: 54
+//│ [C hh² tt²]: 85 --->
+//│ 	case ls³ of {C h⁶ t³ => t³(99, h⁶) | N  => [None]}: 63
+//│ [C 1 let hh² = 2
+//│ in let tt² = let hh³ = 3
+//│ in let tt³ = (fun _lh_dummy³ -> (fun h⁷ -> [Some h⁷]))
+//│ in (fun _lh_dummy⁴ -> (fun h⁸ -> last₀₂([C hh³ tt³])))
+//│ in (fun _lh_dummy⁵ -> (fun h⁹ -> last₀₀([C hh² tt²])))]: 91 --->
+//│ 	case ls¹ of {C h⁴ t¹ => t¹(99, h⁴) | N  => [None]}: 45
 //│ ------------------
-//│ case ls¹ of {C h⁴ t¹ => t¹(h⁴) | N  => [None]}: 54 --->
-//│ 	[C force⁰(hh³) force⁰(tt³)]: 91
-//│ case ls² of {C h⁵ t² => t²(h⁵) | N  => [None]}: 61 --->
-//│ 	[C 1 let hh² = lazy⁰(2)
-//│ in let tt² = lazy⁰(let hh³ = lazy⁰(3)
-//│ in let tt³ = lazy⁰((fun h⁷ -> [Some h⁷]))
-//│ in (fun h⁸ -> last₀₀([C force⁰(hh³) force⁰(tt³)])))
-//│ in (fun h⁹ -> last₀₂([C force⁰(hh²) force⁰(tt²)]))]: 109
-//│ case ls³ of {C h⁶ t³ => t³(h⁶) | N  => [None]}: 68 --->
-//│ 	[C force⁰(hh²) force⁰(tt²)]: 104
+//│ case ls¹ of {C h⁴ t¹ => t¹(99, h⁴) | N  => [None]}: 45 --->
+//│ 	[C 1 let hh² = 2
+//│ in let tt² = let hh³ = 3
+//│ in let tt³ = (fun _lh_dummy³ -> (fun h⁷ -> [Some h⁷]))
+//│ in (fun _lh_dummy⁴ -> (fun h⁸ -> last₀₂([C hh³ tt³])))
+//│ in (fun _lh_dummy⁵ -> (fun h⁹ -> last₀₀([C hh² tt²])))]: 91
+//│ case ls² of {C h⁵ t² => t²(99, h⁵) | N  => [None]}: 54 --->
+//│ 	[C hh³ tt³]: 76
+//│ case ls³ of {C h⁶ t³ => t³(99, h⁶) | N  => [None]}: 63 --->
+//│ 	[C hh² tt²]: 85
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C force⁰(hh³) force⁰(tt³)]: 91 --->
-//│ 	case ls¹ of {C h⁴ t¹ => t¹(h⁴) | N  => [None]}: 54
-//│ [C force⁰(hh²) force⁰(tt²)]: 104 --->
-//│ 	case ls³ of {C h⁶ t³ => t³(h⁶) | N  => [None]}: 68
-//│ [C 1 let hh² = lazy⁰(2)
-//│ in let tt² = lazy⁰(let hh³ = lazy⁰(3)
-//│ in let tt³ = lazy⁰((fun h⁷ -> [Some h⁷]))
-//│ in (fun h⁸ -> last₀₀([C force⁰(hh³) force⁰(tt³)])))
-//│ in (fun h⁹ -> last₀₂([C force⁰(hh²) force⁰(tt²)]))]: 109 --->
-//│ 	case ls² of {C h⁵ t² => t²(h⁵) | N  => [None]}: 61
+//│ [C hh³ tt³]: 76 --->
+//│ 	case ls² of {C h⁵ t² => t²(99, h⁵) | N  => [None]}: 54
+//│ [C hh² tt²]: 85 --->
+//│ 	case ls³ of {C h⁶ t³ => t³(99, h⁶) | N  => [None]}: 63
+//│ [C 1 let hh² = 2
+//│ in let tt² = let hh³ = 3
+//│ in let tt³ = (fun _lh_dummy³ -> (fun h⁷ -> [Some h⁷]))
+//│ in (fun _lh_dummy⁴ -> (fun h⁸ -> last₀₂([C hh³ tt³])))
+//│ in (fun _lh_dummy⁵ -> (fun h⁹ -> last₀₀([C hh² tt²])))]: 91 --->
+//│ 	case ls¹ of {C h⁴ t¹ => t¹(99, h⁴) | N  => [None]}: 45
 //│ ------------------
-//│ case ls¹ of {C h⁴ t¹ => t¹(h⁴) | N  => [None]}: 54 --->
-//│ 	[C force⁰(hh³) force⁰(tt³)]: 91
-//│ case ls² of {C h⁵ t² => t²(h⁵) | N  => [None]}: 61 --->
-//│ 	[C 1 let hh² = lazy⁰(2)
-//│ in let tt² = lazy⁰(let hh³ = lazy⁰(3)
-//│ in let tt³ = lazy⁰((fun h⁷ -> [Some h⁷]))
-//│ in (fun h⁸ -> last₀₀([C force⁰(hh³) force⁰(tt³)])))
-//│ in (fun h⁹ -> last₀₂([C force⁰(hh²) force⁰(tt²)]))]: 109
-//│ case ls³ of {C h⁶ t³ => t³(h⁶) | N  => [None]}: 68 --->
-//│ 	[C force⁰(hh²) force⁰(tt²)]: 104
+//│ case ls¹ of {C h⁴ t¹ => t¹(99, h⁴) | N  => [None]}: 45 --->
+//│ 	[C 1 let hh² = 2
+//│ in let tt² = let hh³ = 3
+//│ in let tt³ = (fun _lh_dummy³ -> (fun h⁷ -> [Some h⁷]))
+//│ in (fun _lh_dummy⁴ -> (fun h⁸ -> last₀₂([C hh³ tt³])))
+//│ in (fun _lh_dummy⁵ -> (fun h⁹ -> last₀₀([C hh² tt²])))]: 91
+//│ case ls² of {C h⁵ t² => t²(99, h⁵) | N  => [None]}: 54 --->
+//│ 	[C hh³ tt³]: 76
+//│ case ls³ of {C h⁶ t³ => t³(99, h⁶) | N  => [None]}: 63 --->
+//│ 	[C hh² tt²]: 85
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ last₀₁(
-//│ 	let h¹⁰ = lazy⁰(1)
-//│ 	in let t⁴ = lazy⁰(
-//│ 		let hh⁴ = lazy⁰(2)
-//│ 		in let tt⁴ = lazy⁰(
-//│ 			let hh⁵ = lazy⁰(3)
-//│ 			in let tt⁵ = lazy⁰((fun h¹¹ -> [Some h¹¹]))
-//│ 			in (fun h¹² -> last₀₀(
-//│ 				let h¹³ = lazy⁰(force⁰(hh⁵))
-//│ 				in let t⁵ = lazy⁰(force⁰(tt⁵))
-//│ 				in force⁰(t⁵, force⁰(h¹³)))))
-//│ 		in (fun h¹⁴ -> last₀₂(
-//│ 			let h¹⁵ = lazy⁰(force⁰(hh⁴))
-//│ 			in let t⁶ = lazy⁰(force⁰(tt⁴))
-//│ 			in force⁰(t⁶, force⁰(h¹⁵)))))
-//│ 	in force⁰(t⁴, force⁰(h¹⁰)))
-//│ def last₀₀(ls⁴) = 
-//│ 	ls⁴
-//│ def last₀₁(ls⁵) = 
-//│ 	ls⁵
-//│ def last₀₂(ls⁶) = 
-//│ 	ls⁶
+//│ 	let h¹⁰ = 1
+//│ 	in let t⁴ = 	
+//│ 		let hh⁴ = 2
+//│ 		in let tt⁴ = 	
+//│ 			let hh⁵ = 3
+//│ 			in let tt⁵ = (fun _lh_dummy⁷ -> (fun h¹¹ -> [Some h¹¹]))
+//│ 			in (fun _lh_dummy⁸ -> (fun h¹² -> last₀₂(
+//│ 				let h¹³ = hh⁵
+//│ 				in let t⁵ = tt⁵
+//│ 				in (fun _lh_dummy⁹ -> t⁵(99, h¹³)))))
+//│ 		in (fun _lh_dummy¹⁰ -> (fun h¹⁴ -> last₀₀(
+//│ 			let h¹⁵ = hh⁴
+//│ 			in let t⁶ = tt⁴
+//│ 			in (fun _lh_dummy¹¹ -> t⁶(99, h¹⁵)))))
+//│ 	in (fun _lh_dummy⁶ -> t⁴(99, h¹⁰)))
+//│ def last₀₀(ls⁶) = 
+//│ 	ls⁶(99)
+//│ def last₀₁(ls⁴) = 
+//│ 	ls⁴(99)
+//│ def last₀₂(ls⁵) = 
+//│ 	ls⁵(99)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -3089,10 +3095,10 @@ g(f(1), 2)
 //│ g₀(f₀(1), 2)
 //│ def f₀(x²) = 
 //│ 	if primitive⁰(x²) then 
-//│ 		let n² = lazy⁰(x²)
-//│ 		in (fun y³ -> ((y³ + force⁰(n²)) + 1)) else 
-//│ 		let m² = lazy⁰((x² + 1))
-//│ 		in (fun y⁴ -> (y⁴ + force⁰(m²)))
+//│ 		let n² = x²
+//│ 		in (fun y³ -> ((y³ + n²) + 1)) else 
+//│ 		let m² = (x² + 1)
+//│ 		in (fun y⁴ -> (y⁴ + m²))
 //│ def g₀(scrut², y²) = 
 //│ 	scrut²(y²)
 //│ <<<<<<< after fusion <<<<<<<
@@ -3342,9 +3348,9 @@ test $ primId 10
 //│ 	where
 //│ 	def enumFromTo₀₀(a⁴, b⁴) = 
 //│ 		if (a⁴ <= b⁴) then 
-//│ 			let h² = lazy⁰(a⁴)
-//│ 			in let t² = lazy⁰(enumFromTo₀₀((a⁴ + 1), b⁴))
-//│ 			in (fun f³ -> (fun i³ -> foldl₀₀(f³, f³(i³, force⁰(h²)), force⁰(t²)))) else (fun f⁴ -> (fun i⁴ -> i⁴))
+//│ 			let h² = a⁴
+//│ 			in let t² = enumFromTo₀₀((a⁴ + 1), b⁴)
+//│ 			in (fun f³ -> (fun i³ -> foldl₀₀(f³, f³(i³, h²), t²))) else (fun f⁴ -> (fun i⁴ -> i⁴))
 //│ 	def foldl₀₀(f², i², ls²) = 
 //│ 		ls²(f², i²)
 //│ <<<<<<< after fusion <<<<<<<
@@ -3463,16 +3469,16 @@ test $ primId 10
 //│ 	def enumFromTo₁₀(a⁸, b⁸) = 
 //│ 		if (a⁸ <= b⁸) then [LH_C a⁸ enumFromTo₁₀((a⁸ + 1), b⁸)] else [LH_N]
 //│ 	def sum₀₀(ls²) = 
-//│ 		ls²
+//│ 		ls²(99)
 //│ 	def zipWith₀₀(f², xs², ys²) = 
 //│ 		case xs² of {
 //│ 			LH_C hx¹ tx¹ => case ys² of {
 //│ 				LH_C hy¹ ty¹ => 
-//│ 					let h² = lazy⁰(f²(hx¹, hy¹))
-//│ 					in let t² = lazy⁰(zipWith₀₀(f², tx¹, ty¹))
-//│ 					in (force⁰(h²) + sum₀₀(force⁰(t²)))
-//│ 				| LH_N  => 0}
-//│ 			| LH_N  => 0}
+//│ 					let h² = f²(hx¹, hy¹)
+//│ 					in let t² = zipWith₀₀(f², tx¹, ty¹)
+//│ 					in (fun _lh_dummy⁰ -> (h² + sum₀₀(t²)))
+//│ 				| LH_N  => (fun _lh_dummy¹ -> 0)}
+//│ 			| LH_N  => (fun _lh_dummy² -> 0)}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -3781,12 +3787,12 @@ let mainFact = (\x -> fact (\y -> x x y)) (\x -> fact (\y -> x x y)) in mainFact
 //│ 	case _lh_fact_arg2⁵ of {
 //│ 		Z  => [S [Z]]
 //│ 		| S _lh_fact_S_0² => mmul₀₀([S _lh_fact_S_0²], _lh_fact_arg1⁵(mmin₀₀([S _lh_fact_S_0²], 
-//│ 			let _lh_mmin_S_0⁹ = lazy⁰((fun _lh_mmin_arg1⁹ -> _lh_mmin_arg1⁹))
+//│ 			let _lh_mmin_S_0⁹ = (fun _lh_mmin_arg1⁹ -> _lh_mmin_arg1⁹)
 //│ 			in (fun _lh_mmin_arg1⁸ -> 
 //│ 				let _lh_matchIdent¹¹ = _lh_mmin_arg1⁸
 //│ 				in case _lh_matchIdent¹¹ of {
 //│ 					Z  => [Z]
-//│ 					| S _lh_mmin_S_0⁵ => mmin₀₀(_lh_mmin_S_0⁵, force⁰(_lh_mmin_S_0⁹))
+//│ 					| S _lh_mmin_S_0⁵ => mmin₀₀(_lh_mmin_S_0⁵, _lh_mmin_S_0⁹)
 //│ 					| _  => error⁰}))))
 //│ 		| _  => error⁰}
 //│ 	where
@@ -3808,14 +3814,14 @@ let mainFact = (\x -> fact (\y -> x x y)) (\x -> fact (\y -> x x y)) in mainFact
 //│ 	case _lh_fact_arg2⁴ of {
 //│ 		Z  => [S [Z]]
 //│ 		| S _lh_fact_S_0³ => mmul₁₀(
-//│ 			let _lh_mmul_S_0⁵ = lazy⁰(_lh_fact_S_0³)
-//│ 			in (fun _lh_mmul_arg2⁶ -> pplus₁₁(_lh_mmul_arg2⁶, mmul₁₁(force⁰(_lh_mmul_S_0⁵), _lh_mmul_arg2⁶))), _lh_fact_arg1⁴(mmin₁₀([S _lh_fact_S_0³], 
-//│ 			let _lh_mmin_S_0⁸ = lazy⁰((fun _lh_mmin_arg1⁶ -> _lh_mmin_arg1⁶))
+//│ 			let _lh_mmul_S_0⁵ = _lh_fact_S_0³
+//│ 			in (fun _lh_mmul_arg2⁶ -> pplus₁₁(_lh_mmul_arg2⁶, mmul₁₁(_lh_mmul_S_0⁵, _lh_mmul_arg2⁶))), _lh_fact_arg1⁴(mmin₁₀([S _lh_fact_S_0³], 
+//│ 			let _lh_mmin_S_0⁸ = (fun _lh_mmin_arg1⁶ -> _lh_mmin_arg1⁶)
 //│ 			in (fun _lh_mmin_arg1⁵ -> 
 //│ 				let _lh_matchIdent⁹ = _lh_mmin_arg1⁵
 //│ 				in case _lh_matchIdent⁹ of {
 //│ 					Z  => [Z]
-//│ 					| S _lh_mmin_S_0⁷ => mmin₁₀(_lh_mmin_S_0⁷, force⁰(_lh_mmin_S_0⁸))
+//│ 					| S _lh_mmin_S_0⁷ => mmin₁₀(_lh_mmin_S_0⁷, _lh_mmin_S_0⁸)
 //│ 					| _  => error⁰}))))
 //│ 		| _  => error⁰}
 //│ 	where
@@ -3851,22 +3857,22 @@ let mainFact = (\x -> fact (\y -> x x y)) (\x -> fact (\y -> x x y)) in mainFact
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [fact₀₀^1]
-//│ 	[fact₀₀^1 · mmin₀₀^174] (hopeless to continue)
-//│ 	[fact₀₀^1 · mmin₀₀^185] (hopeless to continue)
-//│ 	[fact₀₀^1 · mmul₀₀^169]
-//│ 		[fact₀₀^1 · mmul₀₀^169 · mmul₀₀^156] ---> [fact₀₀^1 · mmul₀₀^169] (only one)
-//│ 		[fact₀₀^1 · mmul₀₀^169 · pplus₀₀^153]
-//│ 			[fact₀₀^1 · mmul₀₀^169 · pplus₀₀^153 · pplus₀₀^36] ---> [fact₀₀^1 · mmul₀₀^169 · pplus₀₀^153] (only one)
+//│ 	[fact₀₀^1 · mmin₀₀^166] (hopeless to continue)
+//│ 	[fact₀₀^1 · mmin₀₀^175] (hopeless to continue)
+//│ 	[fact₀₀^1 · mmul₀₀^161]
+//│ 		[fact₀₀^1 · mmul₀₀^161 · mmul₀₀^148] ---> [fact₀₀^1 · mmul₀₀^161] (only one)
+//│ 		[fact₀₀^1 · mmul₀₀^161 · pplus₀₀^145]
+//│ 			[fact₀₀^1 · mmul₀₀^161 · pplus₀₀^145 · pplus₀₀^36] ---> [fact₀₀^1 · mmul₀₀^161 · pplus₀₀^145] (only one)
 //│ [fact₁₀^10]
-//│ 	[fact₁₀^10 · mmin₁₀^87] (hopeless to continue)
-//│ 	[fact₁₀^10 · mmin₁₀^98] (hopeless to continue)
+//│ 	[fact₁₀^10 · mmin₁₀^83] (hopeless to continue)
+//│ 	[fact₁₀^10 · mmin₁₀^92] (hopeless to continue)
 //│ 	[fact₁₀^10 · mmul₁₀^68] (hopeless to continue)
-//│ 	[fact₁₀^10 · mmul₁₁^75] (hopeless to continue)
-//│ 		[fact₁₀^10 · mmul₁₁^75 · mmul₁₁^129] ---> [fact₁₀^10 · mmul₁₁^75] (using original def)
-//│ 		[fact₁₀^10 · mmul₁₁^75 · pplus₁₀^126] (using original def)
-//│ 			[fact₁₀^10 · mmul₁₁^75 · pplus₁₀^126 · pplus₁₀^48] ---> [fact₁₀^10 · mmul₁₁^75 · pplus₁₀^126] (using original def)
-//│ 	[fact₁₀^10 · pplus₁₁^72]
-//│ 		[fact₁₀^10 · pplus₁₁^72 · pplus₁₁^141] ---> [fact₁₀^10 · pplus₁₁^72] (only one)
+//│ 	[fact₁₀^10 · mmul₁₁^73] (hopeless to continue)
+//│ 		[fact₁₀^10 · mmul₁₁^73 · mmul₁₁^121] ---> [fact₁₀^10 · mmul₁₁^73] (using original def)
+//│ 		[fact₁₀^10 · mmul₁₁^73 · pplus₁₀^118] (using original def)
+//│ 			[fact₁₀^10 · mmul₁₁^73 · pplus₁₀^118 · pplus₁₀^48] ---> [fact₁₀^10 · mmul₁₁^73 · pplus₁₀^118] (using original def)
+//│ 	[fact₁₀^10 · pplus₁₁^70]
+//│ 		[fact₁₀^10 · pplus₁₁^70 · pplus₁₁^133] ---> [fact₁₀^10 · pplus₁₁^70] (only one)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -3877,59 +3883,59 @@ let mainFact = (\x -> fact (\y -> x x y)) (\x -> fact (\y -> x x y)) in mainFact
 //│ 	case _lh_fact_arg2³ of {
 //│ 		Z  => [S [Z]]
 //│ 		| S _lh_fact_S_0³ => mmul₀₀₀([S _lh_fact_S_0³], _lh_fact_arg1³(mmin₀₀₀([S _lh_fact_S_0³], 
-//│ 			let _lh_mmin_S_0⁶ = lazy⁰((fun _lh_mmin_arg1¹¹ -> _lh_mmin_arg1¹¹))
+//│ 			let _lh_mmin_S_0⁶ = (fun _lh_mmin_arg1¹¹ -> _lh_mmin_arg1¹¹)
 //│ 			in (fun _lh_mmin_arg1¹² -> 
 //│ 				let _lh_matchIdent⁸ = _lh_mmin_arg1¹²
 //│ 				in case _lh_matchIdent⁸ of {
 //│ 					Z  => [Z]
-//│ 					| S _lh_mmin_S_0⁷ => mmin₀₀₁(_lh_mmin_S_0⁷, force⁰(_lh_mmin_S_0⁶))
+//│ 					| S _lh_mmin_S_0⁷ => mmin₀₀₁(_lh_mmin_S_0⁷, _lh_mmin_S_0⁶)
 //│ 					| _  => error⁰}))))
 //│ 		| _  => error⁰}
 //│ 	where
-//│ 	def mmin₀₀₀(_lh_mmin_arg1¹⁰, _lh_mmin_arg2⁴) = 
-//│ 		let _lh_matchIdent⁷ = _lh_mmin_arg2⁴
-//│ 		in _lh_matchIdent⁷(_lh_mmin_arg1¹⁰)
-//│ 	def mmin₀₀₁(_lh_mmin_arg1⁶, _lh_mmin_arg2²) = 
-//│ 		let _lh_matchIdent⁴ = _lh_mmin_arg2²
-//│ 		in _lh_matchIdent⁴(_lh_mmin_arg1⁶)
-//│ 	def mmul₀₀₀(_lh_mmul_arg1⁵, _lh_mmul_arg2⁷) = 
+//│ 	def mmin₀₀₀(_lh_mmin_arg1¹³, _lh_mmin_arg2⁵) = 
+//│ 		let _lh_matchIdent⁹ = _lh_mmin_arg2⁵
+//│ 		in _lh_matchIdent⁹(_lh_mmin_arg1¹³)
+//│ 	def mmin₀₀₁(_lh_mmin_arg1⁷, _lh_mmin_arg2³) = 
+//│ 		let _lh_matchIdent⁵ = _lh_mmin_arg2³
+//│ 		in _lh_matchIdent⁵(_lh_mmin_arg1⁷)
+//│ 	def mmul₀₀₀(_lh_mmul_arg1⁵, _lh_mmul_arg2⁶) = 
 //│ 		case _lh_mmul_arg1⁵ of {
 //│ 			Z  => [Z]
-//│ 			| S _lh_mmul_S_0⁵ => pplus₀₀₀(_lh_mmul_arg2⁷, mmul₀₀₀(_lh_mmul_S_0⁵, _lh_mmul_arg2⁷))
+//│ 			| S _lh_mmul_S_0⁴ => pplus₀₀₀(_lh_mmul_arg2⁶, mmul₀₀₀(_lh_mmul_S_0⁴, _lh_mmul_arg2⁶))
 //│ 			| _  => error⁰}
 //│ 		where
-//│ 		def pplus₀₀₀(_lh_pplus_arg1⁵, _lh_pplus_arg2⁵) = 
-//│ 			case _lh_pplus_arg1⁵ of {
-//│ 				Z  => _lh_pplus_arg2⁵
-//│ 				| S _lh_pplus_S_0⁵ => [S pplus₀₀₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)]
+//│ 		def pplus₀₀₀(_lh_pplus_arg1⁴, _lh_pplus_arg2⁴) = 
+//│ 			case _lh_pplus_arg1⁴ of {
+//│ 				Z  => _lh_pplus_arg2⁴
+//│ 				| S _lh_pplus_S_0⁴ => [S pplus₀₀₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)]
 //│ 				| _  => error⁰}
 //│ def fact₁₀₀(_lh_fact_arg1², _lh_fact_arg2²) = 
 //│ 	case _lh_fact_arg2² of {
 //│ 		Z  => [S [Z]]
 //│ 		| S _lh_fact_S_0² => mmul₁₀₀(
-//│ 			let _lh_mmul_S_0⁴ = lazy⁰(_lh_fact_S_0²)
-//│ 			in (fun _lh_mmul_arg2⁶ -> pplus₁₁₀(_lh_mmul_arg2⁶, mmul₁₁₀(force⁰(_lh_mmul_S_0⁴), _lh_mmul_arg2⁶))), _lh_fact_arg1²(mmin₁₀₀([S _lh_fact_S_0²], 
-//│ 			let _lh_mmin_S_0⁴ = lazy⁰((fun _lh_mmin_arg1⁸ -> _lh_mmin_arg1⁸))
-//│ 			in (fun _lh_mmin_arg1⁹ -> 
-//│ 				let _lh_matchIdent⁶ = _lh_mmin_arg1⁹
-//│ 				in case _lh_matchIdent⁶ of {
+//│ 			let _lh_mmul_S_0⁵ = _lh_fact_S_0²
+//│ 			in (fun _lh_mmul_arg2⁷ -> pplus₁₁₀(_lh_mmul_arg2⁷, mmul₁₁₀(_lh_mmul_S_0⁵, _lh_mmul_arg2⁷))), _lh_fact_arg1²(mmin₁₀₀([S _lh_fact_S_0²], 
+//│ 			let _lh_mmin_S_0⁴ = (fun _lh_mmin_arg1⁹ -> _lh_mmin_arg1⁹)
+//│ 			in (fun _lh_mmin_arg1¹⁰ -> 
+//│ 				let _lh_matchIdent⁷ = _lh_mmin_arg1¹⁰
+//│ 				in case _lh_matchIdent⁷ of {
 //│ 					Z  => [Z]
-//│ 					| S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, force⁰(_lh_mmin_S_0⁴))
+//│ 					| S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴)
 //│ 					| _  => error⁰}))))
 //│ 		| _  => error⁰}
 //│ 	where
-//│ 	def mmin₁₀₀(_lh_mmin_arg1⁷, _lh_mmin_arg2³) = 
-//│ 		let _lh_matchIdent⁵ = _lh_mmin_arg2³
-//│ 		in _lh_matchIdent⁵(_lh_mmin_arg1⁷)
-//│ 	def mmin₁₀₁(_lh_mmin_arg1¹³, _lh_mmin_arg2⁵) = 
-//│ 		let _lh_matchIdent⁹ = _lh_mmin_arg2⁵
-//│ 		in _lh_matchIdent⁹(_lh_mmin_arg1¹³)
-//│ 	def mmul₁₀₀(_lh_mmul_arg1⁴, _lh_mmul_arg2⁵) = 
-//│ 		_lh_mmul_arg1⁴(_lh_mmul_arg2⁵)
-//│ 	def mmul₁₁₀(_lh_mmul_arg1³, _lh_mmul_arg2⁴) = 
-//│ 		case _lh_mmul_arg1³ of {
+//│ 	def mmin₁₀₀(_lh_mmin_arg1⁶, _lh_mmin_arg2²) = 
+//│ 		let _lh_matchIdent⁴ = _lh_mmin_arg2²
+//│ 		in _lh_matchIdent⁴(_lh_mmin_arg1⁶)
+//│ 	def mmin₁₀₁(_lh_mmin_arg1⁸, _lh_mmin_arg2⁴) = 
+//│ 		let _lh_matchIdent⁶ = _lh_mmin_arg2⁴
+//│ 		in _lh_matchIdent⁶(_lh_mmin_arg1⁸)
+//│ 	def mmul₁₀₀(_lh_mmul_arg1³, _lh_mmul_arg2⁴) = 
+//│ 		_lh_mmul_arg1³(_lh_mmul_arg2⁴)
+//│ 	def mmul₁₁₀(_lh_mmul_arg1⁴, _lh_mmul_arg2⁵) = 
+//│ 		case _lh_mmul_arg1⁴ of {
 //│ 			Z  => [Z]
-//│ 			| S _lh_mmul_S_0³ => pplus₁₀₀(_lh_mmul_arg2⁴, mmul₁₁₀(_lh_mmul_S_0³, _lh_mmul_arg2⁴))
+//│ 			| S _lh_mmul_S_0³ => pplus₁₀₀(_lh_mmul_arg2⁵, mmul₁₁₀(_lh_mmul_S_0³, _lh_mmul_arg2⁵))
 //│ 			| _  => error⁰}
 //│ 		where
 //│ 		def pplus₁₀₀(_lh_pplus_arg1³, _lh_pplus_arg2³) = 
@@ -3937,95 +3943,95 @@ let mainFact = (\x -> fact (\y -> x x y)) (\x -> fact (\y -> x x y)) in mainFact
 //│ 				Z  => _lh_pplus_arg2³
 //│ 				| S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)]
 //│ 				| _  => error⁰}
-//│ 	def pplus₁₁₀(_lh_pplus_arg1⁴, _lh_pplus_arg2⁴) = 
-//│ 		case _lh_pplus_arg1⁴ of {
-//│ 			Z  => _lh_pplus_arg2⁴
-//│ 			| S _lh_pplus_S_0⁴ => [S pplus₁₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)]
+//│ 	def pplus₁₁₀(_lh_pplus_arg1⁵, _lh_pplus_arg2⁵) = 
+//│ 		case _lh_pplus_arg1⁵ of {
+//│ 			Z  => _lh_pplus_arg2⁵
+//│ 			| S _lh_pplus_S_0⁵ => [S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)]
 //│ 			| _  => error⁰}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [Z]: 205 --->
-//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 228
-//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₁₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 240
-//│ 	case _lh_pplus_arg1⁵ of {Z  => _lh_pplus_arg2⁵ | S _lh_pplus_S_0⁵ => [S pplus₀₀₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)] | _  => error⁰}: 264
-//│ [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)]: 226 --->
-//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 228
-//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₁₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 240
-//│ 	case _lh_pplus_arg1⁵ of {Z  => _lh_pplus_arg2⁵ | S _lh_pplus_S_0⁵ => [S pplus₀₀₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)] | _  => error⁰}: 264
-//│ [S pplus₁₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)]: 238 --->
-//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 228
-//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₁₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 240
-//│ 	case _lh_pplus_arg1⁵ of {Z  => _lh_pplus_arg2⁵ | S _lh_pplus_S_0⁵ => [S pplus₀₀₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)] | _  => error⁰}: 264
-//│ [Z]: 275 --->
-//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 228
-//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₁₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 240
-//│ 	case _lh_pplus_arg1⁵ of {Z  => _lh_pplus_arg2⁵ | S _lh_pplus_S_0⁵ => [S pplus₀₀₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)] | _  => error⁰}: 264
-//│ [S [Z]]: 276 --->
-//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 228
-//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₁₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 240
-//│ 	case _lh_pplus_arg1⁵ of {Z  => _lh_pplus_arg2⁵ | S _lh_pplus_S_0⁵ => [S pplus₀₀₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)] | _  => error⁰}: 264
-//│ [S _lh_fact_S_0²]: 298 --->
-//│ 	case _lh_matchIdent⁶ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, force⁰(_lh_mmin_S_0⁴)) | _  => error⁰}: 315
-//│ [Z]: 306 --->
-//│ 	case _lh_fact_arg2² of {Z  => [S [Z]] | S _lh_fact_S_0² => mmul₁₀₀(let _lh_mmul_S_0⁴ = lazy⁰(_lh_fact_S_0²)
-//│ in (fun _lh_mmul_arg2⁶ -> pplus₁₁₀(_lh_mmul_arg2⁶, mmul₁₁₀(force⁰(_lh_mmul_S_0⁴), _lh_mmul_arg2⁶))), _lh_fact_arg1²(mmin₁₀₀([S _lh_fact_S_0²], let _lh_mmin_S_0⁴ = lazy⁰((fun _lh_mmin_arg1⁸ -> _lh_mmin_arg1⁸))
-//│ in (fun _lh_mmin_arg1⁹ -> let _lh_matchIdent⁶ = _lh_mmin_arg1⁹
-//│ in case _lh_matchIdent⁶ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, force⁰(_lh_mmin_S_0⁴)) | _  => error⁰})))) | _  => error⁰}: 323
-//│ [S _lh_fact_S_0³]: 353 --->
-//│ 	case _lh_mmul_arg1⁵ of {Z  => [Z] | S _lh_mmul_S_0⁵ => pplus₀₀₀(_lh_mmul_arg2⁷, mmul₀₀₀(_lh_mmul_S_0⁵, _lh_mmul_arg2⁷)) | _  => error⁰}: 345
-//│ [S _lh_fact_S_0³]: 358 --->
-//│ 	case _lh_matchIdent⁸ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₀₀₁(_lh_mmin_S_0⁷, force⁰(_lh_mmin_S_0⁶)) | _  => error⁰}: 375
-//│ [Z]: 366 --->
-//│ 	case _lh_fact_arg2² of {Z  => [S [Z]] | S _lh_fact_S_0² => mmul₁₀₀(let _lh_mmul_S_0⁴ = lazy⁰(_lh_fact_S_0²)
-//│ in (fun _lh_mmul_arg2⁶ -> pplus₁₁₀(_lh_mmul_arg2⁶, mmul₁₁₀(force⁰(_lh_mmul_S_0⁴), _lh_mmul_arg2⁶))), _lh_fact_arg1²(mmin₁₀₀([S _lh_fact_S_0²], let _lh_mmin_S_0⁴ = lazy⁰((fun _lh_mmin_arg1⁸ -> _lh_mmin_arg1⁸))
-//│ in (fun _lh_mmin_arg1⁹ -> let _lh_matchIdent⁶ = _lh_mmin_arg1⁹
-//│ in case _lh_matchIdent⁶ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, force⁰(_lh_mmin_S_0⁴)) | _  => error⁰})))) | _  => error⁰}: 323
+//│ [Z]: 212 --->
+//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 235
+//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₀₀₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 254
+//│ 	case _lh_pplus_arg1⁵ of {Z  => _lh_pplus_arg2⁵ | S _lh_pplus_S_0⁵ => [S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)] | _  => error⁰}: 325
+//│ [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)]: 233 --->
+//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 235
+//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₀₀₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 254
+//│ 	case _lh_pplus_arg1⁵ of {Z  => _lh_pplus_arg2⁵ | S _lh_pplus_S_0⁵ => [S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)] | _  => error⁰}: 325
+//│ [Z]: 273 --->
+//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 235
+//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₀₀₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 254
+//│ 	case _lh_pplus_arg1⁵ of {Z  => _lh_pplus_arg2⁵ | S _lh_pplus_S_0⁵ => [S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)] | _  => error⁰}: 325
+//│ [S [Z]]: 274 --->
+//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 235
+//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₀₀₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 254
+//│ 	case _lh_pplus_arg1⁵ of {Z  => _lh_pplus_arg2⁵ | S _lh_pplus_S_0⁵ => [S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)] | _  => error⁰}: 325
+//│ [S _lh_fact_S_0²]: 292 --->
+//│ 	case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰}: 305
+//│ [Z]: 298 --->
+//│ 	case _lh_fact_arg2² of {Z  => [S [Z]] | S _lh_fact_S_0² => mmul₁₀₀(let _lh_mmul_S_0⁵ = _lh_fact_S_0²
+//│ in (fun _lh_mmul_arg2⁷ -> pplus₁₁₀(_lh_mmul_arg2⁷, mmul₁₁₀(_lh_mmul_S_0⁵, _lh_mmul_arg2⁷))), _lh_fact_arg1²(mmin₁₀₀([S _lh_fact_S_0²], let _lh_mmin_S_0⁴ = (fun _lh_mmin_arg1⁹ -> _lh_mmin_arg1⁹)
+//│ in (fun _lh_mmin_arg1¹⁰ -> let _lh_matchIdent⁷ = _lh_mmin_arg1¹⁰
+//│ in case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰})))) | _  => error⁰}: 313
+//│ [S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)]: 323 --->
+//│ 	case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 235
+//│ 	case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₀₀₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 254
+//│ 	case _lh_pplus_arg1⁵ of {Z  => _lh_pplus_arg2⁵ | S _lh_pplus_S_0⁵ => [S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)] | _  => error⁰}: 325
+//│ [S _lh_fact_S_0³]: 333 --->
+//│ 	case _lh_mmul_arg1⁵ of {Z  => [Z] | S _lh_mmul_S_0⁴ => pplus₀₀₀(_lh_mmul_arg2⁶, mmul₀₀₀(_lh_mmul_S_0⁴, _lh_mmul_arg2⁶)) | _  => error⁰}: 269
+//│ [S _lh_fact_S_0³]: 338 --->
+//│ 	case _lh_matchIdent⁸ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₀₀₁(_lh_mmin_S_0⁷, _lh_mmin_S_0⁶) | _  => error⁰}: 351
+//│ [Z]: 344 --->
+//│ 	case _lh_fact_arg2² of {Z  => [S [Z]] | S _lh_fact_S_0² => mmul₁₀₀(let _lh_mmul_S_0⁵ = _lh_fact_S_0²
+//│ in (fun _lh_mmul_arg2⁷ -> pplus₁₁₀(_lh_mmul_arg2⁷, mmul₁₁₀(_lh_mmul_S_0⁵, _lh_mmul_arg2⁷))), _lh_fact_arg1²(mmin₁₀₀([S _lh_fact_S_0²], let _lh_mmin_S_0⁴ = (fun _lh_mmin_arg1⁹ -> _lh_mmin_arg1⁹)
+//│ in (fun _lh_mmin_arg1¹⁰ -> let _lh_matchIdent⁷ = _lh_mmin_arg1¹⁰
+//│ in case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰})))) | _  => error⁰}: 313
 //│ ------------------
-//│ case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 228 --->
-//│ 	[Z]: 205
-//│ 	[S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)]: 226
-//│ 	[S pplus₁₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)]: 238
-//│ 	[Z]: 275
-//│ 	[S [Z]]: 276
-//│ case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₁₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 240 --->
-//│ 	[Z]: 205
-//│ 	[S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)]: 226
-//│ 	[S pplus₁₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)]: 238
-//│ 	[Z]: 275
-//│ 	[S [Z]]: 276
-//│ case _lh_pplus_arg1⁵ of {Z  => _lh_pplus_arg2⁵ | S _lh_pplus_S_0⁵ => [S pplus₀₀₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)] | _  => error⁰}: 264 --->
-//│ 	[Z]: 205
-//│ 	[S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)]: 226
-//│ 	[S pplus₁₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)]: 238
-//│ 	[Z]: 275
-//│ 	[S [Z]]: 276
-//│ case _lh_matchIdent⁶ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, force⁰(_lh_mmin_S_0⁴)) | _  => error⁰}: 315 --->
-//│ 	[S _lh_fact_S_0²]: 298
-//│ case _lh_fact_arg2² of {Z  => [S [Z]] | S _lh_fact_S_0² => mmul₁₀₀(let _lh_mmul_S_0⁴ = lazy⁰(_lh_fact_S_0²)
-//│ in (fun _lh_mmul_arg2⁶ -> pplus₁₁₀(_lh_mmul_arg2⁶, mmul₁₁₀(force⁰(_lh_mmul_S_0⁴), _lh_mmul_arg2⁶))), _lh_fact_arg1²(mmin₁₀₀([S _lh_fact_S_0²], let _lh_mmin_S_0⁴ = lazy⁰((fun _lh_mmin_arg1⁸ -> _lh_mmin_arg1⁸))
-//│ in (fun _lh_mmin_arg1⁹ -> let _lh_matchIdent⁶ = _lh_mmin_arg1⁹
-//│ in case _lh_matchIdent⁶ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, force⁰(_lh_mmin_S_0⁴)) | _  => error⁰})))) | _  => error⁰}: 323 --->
+//│ case _lh_pplus_arg1³ of {Z  => _lh_pplus_arg2³ | S _lh_pplus_S_0³ => [S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)] | _  => error⁰}: 235 --->
+//│ 	[Z]: 212
+//│ 	[S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)]: 233
+//│ 	[Z]: 273
+//│ 	[S [Z]]: 274
+//│ 	[S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)]: 323
+//│ case _lh_pplus_arg1⁴ of {Z  => _lh_pplus_arg2⁴ | S _lh_pplus_S_0⁴ => [S pplus₀₀₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁴)] | _  => error⁰}: 254 --->
+//│ 	[Z]: 212
+//│ 	[S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)]: 233
+//│ 	[Z]: 273
+//│ 	[S [Z]]: 274
+//│ 	[S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)]: 323
+//│ case _lh_mmul_arg1⁵ of {Z  => [Z] | S _lh_mmul_S_0⁴ => pplus₀₀₀(_lh_mmul_arg2⁶, mmul₀₀₀(_lh_mmul_S_0⁴, _lh_mmul_arg2⁶)) | _  => error⁰}: 269 --->
 //│ 	NoProd
-//│ 	[Z]: 306
-//│ 	[Z]: 366
-//│ case _lh_mmul_arg1⁵ of {Z  => [Z] | S _lh_mmul_S_0⁵ => pplus₀₀₀(_lh_mmul_arg2⁷, mmul₀₀₀(_lh_mmul_S_0⁵, _lh_mmul_arg2⁷)) | _  => error⁰}: 345 --->
+//│ 	[S _lh_fact_S_0³]: 333
+//│ case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰}: 305 --->
+//│ 	[S _lh_fact_S_0²]: 292
+//│ case _lh_fact_arg2² of {Z  => [S [Z]] | S _lh_fact_S_0² => mmul₁₀₀(let _lh_mmul_S_0⁵ = _lh_fact_S_0²
+//│ in (fun _lh_mmul_arg2⁷ -> pplus₁₁₀(_lh_mmul_arg2⁷, mmul₁₁₀(_lh_mmul_S_0⁵, _lh_mmul_arg2⁷))), _lh_fact_arg1²(mmin₁₀₀([S _lh_fact_S_0²], let _lh_mmin_S_0⁴ = (fun _lh_mmin_arg1⁹ -> _lh_mmin_arg1⁹)
+//│ in (fun _lh_mmin_arg1¹⁰ -> let _lh_matchIdent⁷ = _lh_mmin_arg1¹⁰
+//│ in case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰})))) | _  => error⁰}: 313 --->
 //│ 	NoProd
-//│ 	[S _lh_fact_S_0³]: 353
-//│ case _lh_matchIdent⁸ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₀₀₁(_lh_mmin_S_0⁷, force⁰(_lh_mmin_S_0⁶)) | _  => error⁰}: 375 --->
-//│ 	[S _lh_fact_S_0³]: 358
+//│ 	[Z]: 298
+//│ 	[Z]: 344
+//│ case _lh_pplus_arg1⁵ of {Z  => _lh_pplus_arg2⁵ | S _lh_pplus_S_0⁵ => [S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)] | _  => error⁰}: 325 --->
+//│ 	[Z]: 212
+//│ 	[S pplus₁₀₀(_lh_pplus_S_0³, _lh_pplus_arg2³)]: 233
+//│ 	[Z]: 273
+//│ 	[S [Z]]: 274
+//│ 	[S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁵)]: 323
+//│ case _lh_matchIdent⁸ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₀₀₁(_lh_mmin_S_0⁷, _lh_mmin_S_0⁶) | _  => error⁰}: 351 --->
+//│ 	[S _lh_fact_S_0³]: 338
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [S _lh_fact_S_0²]: 298 --->
-//│ 	case _lh_matchIdent⁶ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, force⁰(_lh_mmin_S_0⁴)) | _  => error⁰}: 315
-//│ [S _lh_fact_S_0³]: 358 --->
-//│ 	case _lh_matchIdent⁸ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₀₀₁(_lh_mmin_S_0⁷, force⁰(_lh_mmin_S_0⁶)) | _  => error⁰}: 375
+//│ [S _lh_fact_S_0²]: 292 --->
+//│ 	case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰}: 305
+//│ [S _lh_fact_S_0³]: 338 --->
+//│ 	case _lh_matchIdent⁸ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₀₀₁(_lh_mmin_S_0⁷, _lh_mmin_S_0⁶) | _  => error⁰}: 351
 //│ ------------------
-//│ case _lh_matchIdent⁶ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, force⁰(_lh_mmin_S_0⁴)) | _  => error⁰}: 315 --->
-//│ 	[S _lh_fact_S_0²]: 298
-//│ case _lh_matchIdent⁸ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₀₀₁(_lh_mmin_S_0⁷, force⁰(_lh_mmin_S_0⁶)) | _  => error⁰}: 375 --->
-//│ 	[S _lh_fact_S_0³]: 358
+//│ case _lh_matchIdent⁷ of {Z  => [Z] | S _lh_mmin_S_0⁵ => mmin₁₀₁(_lh_mmin_S_0⁵, _lh_mmin_S_0⁴) | _  => error⁰}: 305 --->
+//│ 	[S _lh_fact_S_0²]: 292
+//│ case _lh_matchIdent⁸ of {Z  => [Z] | S _lh_mmin_S_0⁷ => mmin₀₀₁(_lh_mmin_S_0⁷, _lh_mmin_S_0⁶) | _  => error⁰}: 351 --->
+//│ 	[S _lh_fact_S_0³]: 338
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -4036,9 +4042,9 @@ let mainFact = (\x -> fact (\y -> x x y)) (\x -> fact (\y -> x x y)) in mainFact
 //│ 	case _lh_fact_arg2⁴ of {
 //│ 		Z  => [S [Z]]
 //│ 		| S _lh_fact_S_0³ => mmul₀₀₀([S _lh_fact_S_0³], _lh_fact_arg1⁴(mmin₀₀₀(
-//│ 			let _lh_mmin_S_0⁸ = lazy⁰(_lh_fact_S_0³)
-//│ 			in (fun _lh_mmin_S_0⁹ -> mmin₀₀₁(force⁰(_lh_mmin_S_0⁸), force⁰(_lh_mmin_S_0⁹))), 
-//│ 			let _lh_mmin_S_0¹⁰ = lazy⁰((fun _lh_mmin_arg1¹⁵ -> _lh_mmin_arg1¹⁵))
+//│ 			let _lh_mmin_S_0⁸ = _lh_fact_S_0³
+//│ 			in (fun _lh_mmin_S_0⁹ -> mmin₀₀₁(_lh_mmin_S_0⁸, _lh_mmin_S_0⁹)), 
+//│ 			let _lh_mmin_S_0¹⁰ = (fun _lh_mmin_arg1¹⁵ -> _lh_mmin_arg1¹⁵)
 //│ 			in (fun _lh_mmin_arg1¹⁶ -> 
 //│ 				let _lh_matchIdent¹¹ = _lh_mmin_arg1¹⁶
 //│ 				in _lh_matchIdent¹¹(_lh_mmin_S_0¹⁰)))))
@@ -4053,23 +4059,23 @@ let mainFact = (\x -> fact (\y -> x x y)) (\x -> fact (\y -> x x y)) in mainFact
 //│ 	def mmul₀₀₀(_lh_mmul_arg1⁶, _lh_mmul_arg2⁸) = 
 //│ 		case _lh_mmul_arg1⁶ of {
 //│ 			Z  => [Z]
-//│ 			| S _lh_mmul_S_0⁵ => pplus₀₀₀(_lh_mmul_arg2⁸, mmul₀₀₀(_lh_mmul_S_0⁵, _lh_mmul_arg2⁸))
+//│ 			| S _lh_mmul_S_0⁴ => pplus₀₀₀(_lh_mmul_arg2⁸, mmul₀₀₀(_lh_mmul_S_0⁴, _lh_mmul_arg2⁸))
 //│ 			| _  => error⁰}
 //│ 		where
 //│ 		def pplus₀₀₀(_lh_pplus_arg1⁸, _lh_pplus_arg2⁸) = 
 //│ 			case _lh_pplus_arg1⁸ of {
 //│ 				Z  => _lh_pplus_arg2⁸
-//│ 				| S _lh_pplus_S_0⁵ => [S pplus₀₀₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁸)]
+//│ 				| S _lh_pplus_S_0⁴ => [S pplus₀₀₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁸)]
 //│ 				| _  => error⁰}
 //│ def fact₁₀₀(_lh_fact_arg1⁵, _lh_fact_arg2⁵) = 
 //│ 	case _lh_fact_arg2⁵ of {
 //│ 		Z  => [S [Z]]
 //│ 		| S _lh_fact_S_0² => mmul₁₀₀(
-//│ 			let _lh_mmul_S_0⁶ = lazy⁰(_lh_fact_S_0²)
-//│ 			in (fun _lh_mmul_arg2¹⁰ -> pplus₁₁₀(_lh_mmul_arg2¹⁰, mmul₁₁₀(force⁰(_lh_mmul_S_0⁶), _lh_mmul_arg2¹⁰))), _lh_fact_arg1⁵(mmin₁₀₀(
-//│ 			let _lh_mmin_S_0¹¹ = lazy⁰(_lh_fact_S_0²)
-//│ 			in (fun _lh_mmin_S_0¹² -> mmin₁₀₁(force⁰(_lh_mmin_S_0¹¹), force⁰(_lh_mmin_S_0¹²))), 
-//│ 			let _lh_mmin_S_0¹³ = lazy⁰((fun _lh_mmin_arg1¹⁹ -> _lh_mmin_arg1¹⁹))
+//│ 			let _lh_mmul_S_0⁶ = _lh_fact_S_0²
+//│ 			in (fun _lh_mmul_arg2¹⁰ -> pplus₁₁₀(_lh_mmul_arg2¹⁰, mmul₁₁₀(_lh_mmul_S_0⁶, _lh_mmul_arg2¹⁰))), _lh_fact_arg1⁵(mmin₁₀₀(
+//│ 			let _lh_mmin_S_0¹¹ = _lh_fact_S_0²
+//│ 			in (fun _lh_mmin_S_0¹² -> mmin₁₀₁(_lh_mmin_S_0¹¹, _lh_mmin_S_0¹²)), 
+//│ 			let _lh_mmin_S_0¹³ = (fun _lh_mmin_arg1¹⁹ -> _lh_mmin_arg1¹⁹)
 //│ 			in (fun _lh_mmin_arg1²⁰ -> 
 //│ 				let _lh_matchIdent¹⁴ = _lh_mmin_arg1²⁰
 //│ 				in _lh_matchIdent¹⁴(_lh_mmin_S_0¹³)))))
@@ -4097,7 +4103,7 @@ let mainFact = (\x -> fact (\y -> x x y)) (\x -> fact (\y -> x x y)) in mainFact
 //│ 	def pplus₁₁₀(_lh_pplus_arg1⁶, _lh_pplus_arg2⁶) = 
 //│ 		case _lh_pplus_arg1⁶ of {
 //│ 			Z  => _lh_pplus_arg2⁶
-//│ 			| S _lh_pplus_S_0⁴ => [S pplus₁₁₀(_lh_pplus_S_0⁴, _lh_pplus_arg2⁶)]
+//│ 			| S _lh_pplus_S_0⁵ => [S pplus₁₁₀(_lh_pplus_S_0⁵, _lh_pplus_arg2⁶)]
 //│ 			| _  => error⁰}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 

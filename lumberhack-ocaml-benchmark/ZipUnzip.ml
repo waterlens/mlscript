@@ -63,13 +63,13 @@ and unzip_d0 ls_0 =
         | `Pair(a_0, b_0) -> 
           (match (unzip_d0 t_0) with
             | `Pair(atail_0, btail_0) -> 
-              (`Pair((let rec x_0 = (lazy a_0) in
-                (let rec xt_0 = (lazy atail_0) in
+              (`Pair((let rec x_0 = a_0 in
+                (let rec xt_0 = atail_0 in
                   (fun ys_1 -> 
-                    ((ys_1 (Lazy.force xt_0)) (Lazy.force x_0))))), (let rec y_0 = (lazy b_0) in
-                (let rec yt_0 = (lazy btail_0) in
+                    ((ys_1 xt_0) x_0)))), (let rec y_0 = b_0 in
+                (let rec yt_0 = btail_0 in
                   (fun xt_1 x_1 -> 
-                    (`C((`Pair(x_1, (Lazy.force y_0))), ((zip_d0 xt_1) (Lazy.force yt_0)))))))))))
+                    (`C((`Pair(x_1, y_0)), ((zip_d0 xt_1) yt_0))))))))))
     | `N -> 
       (`Pair((fun ys_2 -> 
         (`N)), (fun xt_2 x_2 -> 
@@ -81,14 +81,14 @@ let rec makeZippedList_d0_d0 n_2 =
     (`C((`Pair(n_2, (n_2 + 1))), (makeZippedList_d0_d0 (n_2 - 1))))
   else
     (`N));;
-let rec zip_d0_d0 xs_4 ys_8 =
+let rec zip_d0_d0 xs_2 ys_4 =
+  (xs_2 ys_4);;
+let rec zip_d0_d1 xs_4 ys_8 =
   (xs_4 ys_8);;
-let rec zip_d0_d1 xs_3 ys_7 =
-  (xs_3 ys_7);;
 let rec testZipUnzip_d0_d0 n_3 =
   (match (unzip_d0_d0 (makeZippedList_d0_d0 n_3)) with
-    | `Pair(xs_2, ys_4) -> 
-      ((zip_d0_d1 xs_2) ys_4))
+    | `Pair(xs_3, ys_5) -> 
+      ((zip_d0_d1 xs_3) ys_5))
 and unzip_d0_d0 ls_1 =
   (match ls_1 with
     | `C(h_1, t_1) -> 
@@ -96,15 +96,15 @@ and unzip_d0_d0 ls_1 =
         | `Pair(a_1, b_1) -> 
           (match (unzip_d0_d0 t_1) with
             | `Pair(atail_1, btail_1) -> 
-              (`Pair((let rec x_3 = (lazy a_1) in
-                (let rec xt_3 = (lazy atail_1) in
-                  (fun ys_5 -> 
-                    ((ys_5 (Lazy.force xt_3)) (Lazy.force x_3))))), (let rec y_1 = (lazy b_1) in
-                (let rec yt_1 = (lazy btail_1) in
+              (`Pair((let rec x_3 = a_1 in
+                (let rec xt_3 = atail_1 in
+                  (fun ys_6 -> 
+                    ((ys_6 xt_3) x_3)))), (let rec y_1 = b_1 in
+                (let rec yt_1 = btail_1 in
                   (fun xt_4 x_4 -> 
-                    (`C((`Pair(x_4, (Lazy.force y_1))), ((zip_d0_d0 xt_4) (Lazy.force yt_1)))))))))))
+                    (`C((`Pair(x_4, y_1)), ((zip_d0_d0 xt_4) yt_1))))))))))
     | `N -> 
-      (`Pair((fun ys_6 -> 
+      (`Pair((fun ys_7 -> 
         (`N)), (fun xt_5 x_5 -> 
         (`N)))));;
 

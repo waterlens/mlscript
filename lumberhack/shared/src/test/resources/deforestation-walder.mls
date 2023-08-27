@@ -108,12 +108,12 @@ main
 //│ 			ls⁶(acc⁴)
 //│ 	def upto₀(a², b²) = 
 //│ 		if (a² > b²) then (fun f² -> (fun acc² -> acc²)) else 
-//│ 			let h⁴ = lazy⁰(a²)
-//│ 			in let t⁴ = lazy⁰(upto₀((a² + 1), b²))
+//│ 			let h⁴ = a²
+//│ 			in let t⁴ = upto₀((a² + 1), b²)
 //│ 			in (fun f³ -> 
-//│ 				let h⁵ = lazy⁰(f³(force⁰(h⁴)))
-//│ 				in let t⁵ = lazy⁰(map₀(f³, force⁰(t⁴)))
-//│ 				in (fun acc³ -> summ₀((acc³ + force⁰(h⁵)), force⁰(t⁵))))
+//│ 				let h⁵ = f³(h⁴)
+//│ 				in let t⁵ = map₀(f³, t⁴)
+//│ 				in (fun acc³ -> summ₀((acc³ + h⁵), t⁵)))
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -214,15 +214,15 @@ main
 //│ 	def map₀(f², ls⁴) = 
 //│ 		ls⁴(f²)
 //│ 	def sum₀(ls⁵) = 
-//│ 		ls⁵
+//│ 		ls⁵(99)
 //│ 	def upto₀(a², b²) = 
-//│ 		if (a² > b²) then (fun f³ -> 0) else 
-//│ 			let h⁴ = lazy⁰(a²)
-//│ 			in let t⁴ = lazy⁰(upto₀((a² + 1), b²))
+//│ 		if (a² > b²) then (fun f³ -> (fun _lh_dummy⁰ -> 0)) else 
+//│ 			let h⁴ = a²
+//│ 			in let t⁴ = upto₀((a² + 1), b²)
 //│ 			in (fun f⁴ -> 
-//│ 				let h⁵ = lazy⁰(f⁴(force⁰(h⁴)))
-//│ 				in let t⁵ = lazy⁰(map₀(f⁴, force⁰(t⁴)))
-//│ 				in (force⁰(h⁵) + sum₀(force⁰(t⁵))))
+//│ 				let h⁵ = f⁴(h⁴)
+//│ 				in let t⁵ = map₀(f⁴, t⁴)
+//│ 				in (fun _lh_dummy¹ -> (h⁵ + sum₀(t⁵))))
 //│ <<<<<<< after fusion <<<<<<<
 
 // WRONG: cannot fuse at all if there is no concrete input
@@ -488,17 +488,17 @@ main
 //│ 	def append2₀(xs⁴, ys⁴) = 
 //│ 		case xs⁴ of {
 //│ 			C h³ t³ => 
-//│ 				let h⁶ = lazy⁰(h³)
-//│ 				in let t⁶ = lazy⁰(append2₀(t³, ys⁴))
-//│ 				in (fun ys⁵ -> [C force⁰(h⁶) append₀(force⁰(t⁶), ys⁵)])
+//│ 				let h⁶ = h³
+//│ 				in let t⁶ = append2₀(t³, ys⁴)
+//│ 				in (fun ys⁵ -> [C h⁶ append₀(t⁶, ys⁵)])
 //│ 			| N  => idList₀(ys⁴)}
 //│ 		where
 //│ 		def idList₀(ls²) = 
 //│ 			case ls² of {
 //│ 				C h⁵ t⁵ => 
-//│ 					let h⁷ = lazy⁰(h⁵)
-//│ 					in let t⁷ = lazy⁰(idList₀(t⁵))
-//│ 					in (fun ys⁷ -> [C force⁰(h⁷) append₀(force⁰(t⁷), ys⁷)])
+//│ 					let h⁷ = h⁵
+//│ 					in let t⁷ = idList₀(t⁵)
+//│ 					in (fun ys⁷ -> [C h⁷ append₀(t⁷, ys⁷)])
 //│ 				| N  => (fun ys⁸ -> ys⁸)}
 //│ 	def append₀(xs⁵, ys⁶) = 
 //│ 		xs⁵(ys⁶)
@@ -631,19 +631,19 @@ main
 //│ 	def map₀(ls⁴, f⁴) = 
 //│ 		case ls⁴ of {
 //│ 			C h³ t³ => 
-//│ 				let h⁷ = lazy⁰(f⁴(h³))
-//│ 				in let t⁷ = lazy⁰(map₀(t³, f⁴))
+//│ 				let h⁷ = f⁴(h³)
+//│ 				in let t⁷ = map₀(t³, f⁴)
 //│ 				in (fun ys⁴ -> 
-//│ 					let h⁸ = lazy⁰(force⁰(h⁷))
-//│ 					in let t⁸ = lazy⁰(append₁(force⁰(t⁷), ys⁴))
-//│ 					in (fun ys⁵ -> [C force⁰(h⁸) append₀(force⁰(t⁸), ys⁵)]))
+//│ 					let h⁸ = h⁷
+//│ 					in let t⁸ = append₁(t⁷, ys⁴)
+//│ 					in (fun ys⁵ -> [C h⁸ append₀(t⁸, ys⁵)]))
 //│ 			| N  => (fun ys⁶ -> ys⁶)}
 //│ 	def map₁(ls⁵, f⁵) = 
 //│ 		case ls⁵ of {
 //│ 			C h⁶ t⁶ => 
-//│ 				let h⁹ = lazy⁰(f⁵(h⁶))
-//│ 				in let t⁹ = lazy⁰(map₁(t⁶, f⁵))
-//│ 				in (fun ys⁷ -> [C force⁰(h⁹) append₀(force⁰(t⁹), ys⁷)])
+//│ 				let h⁹ = f⁵(h⁶)
+//│ 				in let t⁹ = map₁(t⁶, f⁵)
+//│ 				in (fun ys⁷ -> [C h⁹ append₀(t⁹, ys⁷)])
 //│ 			| N  => (fun ys⁸ -> ys⁸)}
 //│ 	def map₂(ls⁶, f⁶) = 
 //│ 		case ls⁶ of {
@@ -723,9 +723,9 @@ main
 //│ 	def append₁(xs³, ys³) = 
 //│ 		case xs³ of {
 //│ 			C h¹ t¹ => 
-//│ 				let h³ = lazy⁰(h¹)
-//│ 				in let t³ = lazy⁰(append₁(t¹, ys³))
-//│ 				in (fun ys⁴ -> [C force⁰(h³) append₀(force⁰(t³), ys⁴)])
+//│ 				let h³ = h¹
+//│ 				in let t³ = append₁(t¹, ys³)
+//│ 				in (fun ys⁴ -> [C h³ append₀(t³, ys⁴)])
 //│ 			| N  => ys³}
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -807,21 +807,21 @@ main
 //│ main₀
 //│ def main₀(x², y²) = 
 //│ 	append₀(append₁(x², 
-//│ 		let h⁴ = lazy⁰(1)
-//│ 		in let t⁴ = lazy⁰(
-//│ 			let h⁵ = lazy⁰(2)
-//│ 			in let t⁵ = lazy⁰((fun ys⁸ -> ys⁸))
-//│ 			in (fun ys⁷ -> [C force⁰(h⁵) append₀(force⁰(t⁵), ys⁷)]))
-//│ 		in (fun ys⁶ -> [C force⁰(h⁴) append₀(force⁰(t⁴), ys⁶)])), y²)
+//│ 		let h⁴ = 1
+//│ 		in let t⁴ = 	
+//│ 			let h⁵ = 2
+//│ 			in let t⁵ = (fun ys⁸ -> ys⁸)
+//│ 			in (fun ys⁷ -> [C h⁵ append₀(t⁵, ys⁷)])
+//│ 		in (fun ys⁶ -> [C h⁴ append₀(t⁴, ys⁶)])), y²)
 //│ 	where
 //│ 	def append₀(xs³, ys³) = 
 //│ 		xs³(ys³)
 //│ 	def append₁(xs⁴, ys⁴) = 
 //│ 		case xs⁴ of {
 //│ 			C h² t² => 
-//│ 				let h³ = lazy⁰(h²)
-//│ 				in let t³ = lazy⁰(append₁(t², ys⁴))
-//│ 				in (fun ys⁵ -> [C force⁰(h³) append₀(force⁰(t³), ys⁵)])
+//│ 				let h³ = h²
+//│ 				in let t³ = append₁(t², ys⁴)
+//│ 				in (fun ys⁵ -> [C h³ append₀(t³, ys⁵)])
 //│ 			| N  => ys⁴}
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -896,16 +896,16 @@ ff
 //│ 	flip₀(flip₁(t⁶))
 //│ 	where
 //│ 	def flip₀(t⁷) = 
-//│ 		t⁷
+//│ 		t⁷(99)
 //│ 	def flip₁(t⁵) = 
 //│ 		case t⁵ of {
 //│ 			T l¹ r¹ => 
-//│ 				let l³ = lazy⁰(flip₁(l¹))
-//│ 				in let r³ = lazy⁰(flip₁(r¹))
-//│ 				in [T flip₀(force⁰(l³)) flip₀(force⁰(r³))]
+//│ 				let l³ = flip₁(l¹)
+//│ 				in let r³ = flip₁(r¹)
+//│ 				in (fun _lh_dummy⁰ -> [T flip₀(l³) flip₀(r³)])
 //│ 			| N v¹ => 
-//│ 				let v³ = lazy⁰(v¹)
-//│ 				in [N force⁰(v³)]}
+//│ 				let v³ = v¹
+//│ 				in (fun _lh_dummy¹ -> [N v³])}
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT:
@@ -985,12 +985,12 @@ main
 //│ 	def squaretr₀(t⁸) = 
 //│ 		case t⁸ of {
 //│ 			N v³ => 
-//│ 				let v⁴ = lazy⁰((v³ * v³))
-//│ 				in force⁰(v⁴)
+//│ 				let v⁴ = (v³ * v³)
+//│ 				in (fun _lh_dummy⁰ -> v⁴)
 //│ 			| T l³ r³ => 
-//│ 				let l⁴ = lazy⁰(squaretr₀(l³))
-//│ 				in let r⁴ = lazy⁰(squaretr₀(r³))
-//│ 				in (sumtr₀(force⁰(l⁴)) + sumtr₀(force⁰(r⁴)))}
+//│ 				let l⁴ = squaretr₀(l³)
+//│ 				in let r⁴ = squaretr₀(r³)
+//│ 				in (fun _lh_dummy¹ -> (sumtr₀(l⁴) + sumtr₀(r⁴)))}
 //│ 	def sumtr₀(t⁶) = 
-//│ 		t⁶
+//│ 		t⁶(99)
 //│ <<<<<<< after fusion <<<<<<<

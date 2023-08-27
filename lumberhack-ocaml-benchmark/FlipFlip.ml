@@ -32,7 +32,7 @@ and testFlipFlip t_2 =
 
 (* lumberhack *)
 let rec flip_d0 t_2 =
-  t_2;;
+  (t_2 99);;
 let rec genTree_d0 n_0 i_0 =
   (if (n_0 <= 0) then
     (`N(i_0))
@@ -43,40 +43,42 @@ let rec ff_d0 t_0 =
 and flip_d1 t_1 =
   (match t_1 with
     | `T(l_0, r_0) -> 
-      (let rec l_1 = (lazy (flip_d1 r_0)) in
-        (let rec r_1 = (lazy (flip_d1 l_0)) in
-          (`T((flip_d0 (Lazy.force r_1)), (flip_d0 (Lazy.force l_1))))))
+      (let rec l_1 = (flip_d1 r_0) in
+        (let rec r_1 = (flip_d1 l_0) in
+          (fun _lh_dummy_0 -> 
+            (`T((flip_d0 r_1), (flip_d0 l_1))))))
     | `N(v_0) -> 
-      (let rec v_1 = (lazy v_0) in
-        (`N((Lazy.force v_1)))))
+      (let rec v_1 = v_0 in
+        (fun _lh_dummy_1 -> 
+          (`N(v_1)))))
 and testFlipFlip_d0 t_3 =
   (ff_d0 t_3);;
 
 (* lumberhack_pop_out *)
-let rec flip_d0_d0 t_4 =
-  t_4;;
-let rec flip_d0_d1 t_9 =
-  t_9;;
-let rec flip_d0_d2 t_6 =
-  t_6;;
+let rec flip_d0_d0 t_9 =
+  (t_9 99);;
+let rec flip_d0_d1 t_5 =
+  (t_5 99);;
+let rec flip_d0_d2 t_7 =
+  (t_7 99);;
 let rec genTree_d0_d0 n_1 i_1 =
   (if (n_1 <= 0) then
     (`N(i_1))
   else
     (`T(((genTree_d0_d0 (n_1 - 1)) i_1), ((genTree_d0_d0 (n_1 - 1)) (i_1 + 1)))));;
-let rec ff_d0_d0 t_8 =
-  (flip_d0_d0 (flip_d1_d0 t_8))
-and flip_d1_d0 t_5 =
-  (match t_5 with
+let rec ff_d0_d0 t_4 =
+  (flip_d0_d0 (flip_d1_d0 t_4))
+and flip_d1_d0 t_6 _lh_popOutId_0_0 =
+  (match t_6 with
     | `T(l_2, r_2) -> 
-      (let rec l_3 = (lazy (flip_d1_d0 r_2)) in
-        (let rec r_3 = (lazy (flip_d1_d0 l_2)) in
-          (`T((flip_d0_d1 (Lazy.force r_3)), (flip_d0_d2 (Lazy.force l_3))))))
+      (let rec l_3 = (flip_d1_d0 r_2) in
+        (let rec r_3 = (flip_d1_d0 l_2) in
+          (`T((flip_d0_d1 r_3), (flip_d0_d2 l_3)))))
     | `N(v_2) -> 
-      (let rec v_3 = (lazy v_2) in
-        (`N((Lazy.force v_3)))))
-and testFlipFlip_d0_d0 t_7 =
-  (ff_d0_d0 t_7);;
+      (let rec v_3 = v_2 in
+        (`N(v_3))))
+and testFlipFlip_d0_d0 t_8 =
+  (ff_d0_d0 t_8);;
 
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_FlipFlip" (fun () -> ignore ((testFlipFlip ((genTree 17) 0))));

@@ -340,22 +340,28 @@ trait ExprRewrite { this: Expr =>
       case Ref(id) => 
         val mappedId = ctx.getOrElse(id, id)
         if needForce(mappedId) then
-          Call(Ref(newd.lumberhackKeywordsIds("force")), Ref(mappedId))
+          // Call(Ref(newd.lumberhackKeywordsIds("force")), Ref(mappedId))
+          Ref(mappedId)
         else
           Ref(mappedId)
       case Match(scrut, arms) => {
         if fusionMatch.valuesIterator.contains(this.uid) then {
           val extrudedIds = scopeExtrusionInfo(this.uid)
-          // val extrudedIds = scopeExtrusionInfo.getOrElse(this.uid, Nil)
-          extrudedIds.foldLeft(scrut.rewriteFusion){
-            (acc, id) =>
-              val mappedId = ctx.getOrElse(id, id)
-              val maybeForcedId = if needForce(mappedId) then
-                Call(Ref(newd.lumberhackKeywordsIds("force")), Ref(mappedId))
-              else
-                Ref(mappedId)
-              Call(acc, maybeForcedId)
-          }
+          // make a call the triggerd the computation moved due to deforestation to keep termination behavior
+          if extrudedIds.isEmpty then
+            Call(scrut.rewriteFusion, Const(IntLit(99)))
+          else
+            // val extrudedIds = scopeExtrusionInfo.getOrElse(this.uid, Nil)
+            extrudedIds.foldLeft(scrut.rewriteFusion){
+              (acc, id) =>
+                val mappedId = ctx.getOrElse(id, id)
+                val maybeForcedId = if needForce(mappedId) then
+                  // Call(Ref(newd.lumberhackKeywordsIds("force")), Ref(mappedId))
+                  Ref(mappedId)
+                else
+                  Ref(mappedId)
+                Call(acc, maybeForcedId)
+            }
         } else {
           Match(scrut.rewriteFusion, arms.map{(n, args, body) => (n, args, body.rewriteFusion)})
         }
@@ -375,11 +381,18 @@ trait ExprRewrite { this: Expr =>
         val innerAfterExtrusionHandling =
           // NOTE: extrudedIds may contain same keys as in newCtx, need to override those entries
           matchArm._3.rewriteFusion(using newCtx ++ extrudedIds, needForce ++ newIds.map(_._2).toSet)
-        val inner = extrudedIds.foldRight(innerAfterExtrusionHandling){ (newId, acc) =>
-          Function(newId._2, acc)
+        val inner = {
+          val res = extrudedIds.foldRight(innerAfterExtrusionHandling){ (newId, acc) =>
+            Function(newId._2, acc)
+          }
+          if extrudedIds.isEmpty then
+            Function(newd.nextIdent(false, Var("_lh_dummy")), res)
+          else
+            res
         }
-        (newIds zip newArgs).foldRight(inner){case (((_, param), argExpr), acc) => 
-          LetIn(param, Call(Ref(newd.lumberhackKeywordsIds("lazy")), argExpr.rewriteFusion), acc)
+        (newIds zip newArgs).foldRight[Expr](inner){case (((_, param), argExpr), acc) => 
+          // LetIn(param, Call(Ref(newd.lumberhackKeywordsIds("lazy")), argExpr.rewriteFusion), acc)
+          LetIn(param, argExpr.rewriteFusion, acc)
         }
       }.getOrElse(Ctor(name, args.map(_.rewriteFusion)))
     }

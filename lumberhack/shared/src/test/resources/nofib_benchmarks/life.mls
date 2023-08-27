@@ -2746,34 +2746,34 @@ testLife_nofib $ primId 15
 //│ 			case _lh_copy_arg1¹¹ of {
 //│ 				0  => (fun n⁸ -> [LH_N])
 //│ 				| _  => 
-//│ 					let h⁸⁵ = lazy⁰(_lh_copy_arg2¹¹)
-//│ 					in let t⁸⁵ = lazy⁰(copy₀₀((_lh_copy_arg1¹¹ - 1), _lh_copy_arg2¹¹))
-//│ 					in (fun n⁹ -> [LH_C force⁰(h⁸⁵) take₁₀((n⁹ - 1), force⁰(t⁸⁵))])}
+//│ 					let h⁸⁵ = _lh_copy_arg2¹¹
+//│ 					in let t⁸⁵ = copy₀₀((_lh_copy_arg1¹¹ - 1), _lh_copy_arg2¹¹)
+//│ 					in (fun n⁹ -> [LH_C h⁸⁵ take₁₀((n⁹ - 1), t⁸⁵)])}
 //│ 		def copy₁₀(_lh_copy_arg1⁹, _lh_copy_arg2⁹) = 
 //│ 			case _lh_copy_arg1⁹ of {
 //│ 				0  => (fun f¹⁷ -> (fun n⁴ -> [LH_N]))
 //│ 				| _  => 
-//│ 					let h⁷¹ = lazy⁰(_lh_copy_arg2⁹)
-//│ 					in let t⁷¹ = lazy⁰(copy₁₀((_lh_copy_arg1⁹ - 1), _lh_copy_arg2⁹))
+//│ 					let h⁷¹ = _lh_copy_arg2⁹
+//│ 					in let t⁷¹ = copy₁₀((_lh_copy_arg1⁹ - 1), _lh_copy_arg2⁹)
 //│ 					in (fun f¹⁸ -> 
-//│ 						let h⁷² = lazy⁰(f¹⁸(force⁰(h⁷¹)))
-//│ 						in let t⁷² = lazy⁰(map₄₀(f¹⁸, force⁰(t⁷¹)))
-//│ 						in (fun n⁵ -> [LH_C force⁰(h⁷²) take₀₀((n⁵ - 1), force⁰(t⁷²))]))}
+//│ 						let h⁷² = f¹⁸(h⁷¹)
+//│ 						in let t⁷² = map₄₀(f¹⁸, t⁷¹)
+//│ 						in (fun n⁵ -> [LH_C h⁷² take₀₀((n⁵ - 1), t⁷²)]))}
 //│ 		def copy₂₀(_lh_copy_arg1¹⁰, _lh_copy_arg2¹⁰) = 
 //│ 			case _lh_copy_arg1¹⁰ of {
 //│ 				0  => (fun ys⁶³ -> ys⁶³)
 //│ 				| _  => 
-//│ 					let h⁸¹ = lazy⁰(_lh_copy_arg2¹⁰)
-//│ 					in let t⁸¹ = lazy⁰(copy₂₀((_lh_copy_arg1¹⁰ - 1), _lh_copy_arg2¹⁰))
+//│ 					let h⁸¹ = _lh_copy_arg2¹⁰
+//│ 					in let t⁸¹ = copy₂₀((_lh_copy_arg1¹⁰ - 1), _lh_copy_arg2¹⁰)
 //│ 					in (fun ys⁶⁴ -> 
-//│ 						let h⁸² = lazy⁰(force⁰(h⁸¹))
-//│ 						in let t⁸² = lazy⁰(mappend₁₃₀(force⁰(t⁸¹), ys⁶⁴))
-//│ 						in (fun n⁷ -> [LH_C force⁰(h⁸²) take₁₀((n⁷ - 1), force⁰(t⁸²))]))}
+//│ 						let h⁸² = h⁸¹
+//│ 						in let t⁸² = mappend₁₃₀(t⁸¹, ys⁶⁴)
+//│ 						in (fun n⁷ -> [LH_C h⁸² take₁₀((n⁷ - 1), t⁸²)]))}
 //│ 		def disp₀₀(_lh_disp_arg1²) = 
-//│ 			_lh_disp_arg1²
+//│ 			_lh_disp_arg1²(99)
 //│ 			where
 //│ 			def concat₀₀(lss²) = 
-//│ 				lss²
+//│ 				lss²(99)
 //│ 				where
 //│ 				def mappend₀₀(xs⁴⁹, ys⁷⁷) = 
 //│ 					xs⁴⁹(ys⁷⁷)
@@ -2791,88 +2791,88 @@ testLife_nofib $ primId 15
 //│ 			def mappend₄₀(xs³², ys³²) = 
 //│ 				case xs³² of {
 //│ 					LH_C h⁴⁰ t⁴⁰ => 
-//│ 						let h⁵⁸ = lazy⁰(h⁴⁰)
-//│ 						in let t⁵⁸ = lazy⁰(mappend₄₀(t⁴⁰, ys³²))
-//│ 						in (fun ys³³ -> [LH_C force⁰(h⁵⁸) mappend₃₀(force⁰(t⁵⁸), ys³³)])
+//│ 						let h⁵⁸ = h⁴⁰
+//│ 						in let t⁵⁸ = mappend₄₀(t⁴⁰, ys³²)
+//│ 						in (fun ys³³ -> [LH_C h⁵⁸ mappend₃₀(t⁵⁸, ys³³)])
 //│ 					| LH_N  => ys³²}
 //│ 			def map₀₀(f²⁴, ls³¹) = 
 //│ 				case ls³¹ of {
 //│ 					LH_C h³⁴ t³⁴ => 
-//│ 						let h⁸³ = lazy⁰(f²⁴(h³⁴))
-//│ 						in let t⁸³ = lazy⁰(map₀₀(f²⁴, t³⁴))
-//│ 						in (fun f²⁵ -> (fun i² -> f²⁵(force⁰(h⁸³), foldr₀₀(f²⁵, i², force⁰(t⁸³)))))
+//│ 						let h⁸³ = f²⁴(h³⁴)
+//│ 						in let t⁸³ = map₀₀(f²⁴, t³⁴)
+//│ 						in (fun f²⁵ -> (fun i² -> f²⁵(h⁸³, foldr₀₀(f²⁵, i², t⁸³))))
 //│ 					| LH_N  => (fun f²⁶ -> (fun i³ -> i³))}
 //│ 			def map₁₀(f³⁵, ls³⁴) = 
 //│ 				case ls³⁴ of {
 //│ 					LH_C h³⁰ t³⁰ => 
-//│ 						let h⁸⁷ = lazy⁰(f³⁵(h³⁰))
-//│ 						in let t⁸⁷ = lazy⁰(map₁₀(f³⁵, t³⁰))
-//│ 						in mappend₀₀(force⁰(h⁸⁷), concat₀₀(force⁰(t⁸⁷)))
-//│ 					| LH_N  => (fun ys⁷¹ -> ys⁷¹)}
+//│ 						let h⁸⁷ = f³⁵(h³⁰)
+//│ 						in let t⁸⁷ = map₁₀(f³⁵, t³⁰)
+//│ 						in (fun _lh_dummy³ -> mappend₀₀(h⁸⁷, concat₀₀(t⁸⁷)))
+//│ 					| LH_N  => (fun _lh_dummy⁴ -> (fun ys⁷¹ -> ys⁷¹))}
 //│ 			def star₀₀(_lh_star_arg1²) = 
 //│ 				case _lh_star_arg1² of {
 //│ 					0  => 
-//│ 						let h⁵⁹ = lazy⁰(' ')
-//│ 						in let t⁵⁹ = lazy⁰(
-//│ 							let h⁶² = lazy⁰(' ')
-//│ 							in let t⁶² = lazy⁰((fun ys⁴¹ -> ys⁴¹))
+//│ 						let h⁵⁹ = ' '
+//│ 						in let t⁵⁹ = 	
+//│ 							let h⁶² = ' '
+//│ 							in let t⁶² = (fun ys⁴¹ -> ys⁴¹)
 //│ 							in (fun ys³⁸ -> 
-//│ 								let h⁶³ = lazy⁰(force⁰(h⁶²))
-//│ 								in let t⁶³ = lazy⁰(mappend₀₀(force⁰(t⁶²), ys³⁸))
+//│ 								let h⁶³ = h⁶²
+//│ 								in let t⁶³ = mappend₀₀(t⁶², ys³⁸)
 //│ 								in (fun ys³⁹ -> 
-//│ 									let h⁶⁴ = lazy⁰(force⁰(h⁶³))
-//│ 									in let t⁶⁴ = lazy⁰(mappend₂₀(force⁰(t⁶³), ys³⁹))
-//│ 									in (fun ys⁴⁰ -> [LH_C force⁰(h⁶⁴) mappend₁₀(force⁰(t⁶⁴), ys⁴⁰)]))))
+//│ 									let h⁶⁴ = h⁶³
+//│ 									in let t⁶⁴ = mappend₂₀(t⁶³, ys³⁹)
+//│ 									in (fun ys⁴⁰ -> [LH_C h⁶⁴ mappend₁₀(t⁶⁴, ys⁴⁰)])))
 //│ 						in (fun ys³⁵ -> 
-//│ 							let h⁶⁰ = lazy⁰(force⁰(h⁵⁹))
-//│ 							in let t⁶⁰ = lazy⁰(mappend₀₀(force⁰(t⁵⁹), ys³⁵))
+//│ 							let h⁶⁰ = h⁵⁹
+//│ 							in let t⁶⁰ = mappend₀₀(t⁵⁹, ys³⁵)
 //│ 							in (fun ys³⁶ -> 
-//│ 								let h⁶¹ = lazy⁰(force⁰(h⁶⁰))
-//│ 								in let t⁶¹ = lazy⁰(mappend₂₀(force⁰(t⁶⁰), ys³⁶))
-//│ 								in (fun ys³⁷ -> [LH_C force⁰(h⁶¹) mappend₁₀(force⁰(t⁶¹), ys³⁷)])))
+//│ 								let h⁶¹ = h⁶⁰
+//│ 								in let t⁶¹ = mappend₂₀(t⁶⁰, ys³⁶)
+//│ 								in (fun ys³⁷ -> [LH_C h⁶¹ mappend₁₀(t⁶¹, ys³⁷)])))
 //│ 					| 1  => 
-//│ 						let h⁶⁵ = lazy⁰(' ')
-//│ 						in let t⁶⁵ = lazy⁰(
-//│ 							let h⁶⁸ = lazy⁰('o')
-//│ 							in let t⁶⁸ = lazy⁰((fun ys⁴⁸ -> ys⁴⁸))
+//│ 						let h⁶⁵ = ' '
+//│ 						in let t⁶⁵ = 	
+//│ 							let h⁶⁸ = 'o'
+//│ 							in let t⁶⁸ = (fun ys⁴⁸ -> ys⁴⁸)
 //│ 							in (fun ys⁴⁵ -> 
-//│ 								let h⁶⁹ = lazy⁰(force⁰(h⁶⁸))
-//│ 								in let t⁶⁹ = lazy⁰(mappend₀₀(force⁰(t⁶⁸), ys⁴⁵))
+//│ 								let h⁶⁹ = h⁶⁸
+//│ 								in let t⁶⁹ = mappend₀₀(t⁶⁸, ys⁴⁵)
 //│ 								in (fun ys⁴⁶ -> 
-//│ 									let h⁷⁰ = lazy⁰(force⁰(h⁶⁹))
-//│ 									in let t⁷⁰ = lazy⁰(mappend₂₀(force⁰(t⁶⁹), ys⁴⁶))
-//│ 									in (fun ys⁴⁷ -> [LH_C force⁰(h⁷⁰) mappend₁₀(force⁰(t⁷⁰), ys⁴⁷)]))))
+//│ 									let h⁷⁰ = h⁶⁹
+//│ 									in let t⁷⁰ = mappend₂₀(t⁶⁹, ys⁴⁶)
+//│ 									in (fun ys⁴⁷ -> [LH_C h⁷⁰ mappend₁₀(t⁷⁰, ys⁴⁷)])))
 //│ 						in (fun ys⁴² -> 
-//│ 							let h⁶⁶ = lazy⁰(force⁰(h⁶⁵))
-//│ 							in let t⁶⁶ = lazy⁰(mappend₀₀(force⁰(t⁶⁵), ys⁴²))
+//│ 							let h⁶⁶ = h⁶⁵
+//│ 							in let t⁶⁶ = mappend₀₀(t⁶⁵, ys⁴²)
 //│ 							in (fun ys⁴³ -> 
-//│ 								let h⁶⁷ = lazy⁰(force⁰(h⁶⁶))
-//│ 								in let t⁶⁷ = lazy⁰(mappend₂₀(force⁰(t⁶⁶), ys⁴³))
-//│ 								in (fun ys⁴⁴ -> [LH_C force⁰(h⁶⁷) mappend₁₀(force⁰(t⁶⁷), ys⁴⁴)])))
+//│ 								let h⁶⁷ = h⁶⁶
+//│ 								in let t⁶⁷ = mappend₂₀(t⁶⁶, ys⁴³)
+//│ 								in (fun ys⁴⁴ -> [LH_C h⁶⁷ mappend₁₀(t⁶⁷, ys⁴⁴)])))
 //│ 					| _  => error⁰}
 //│ 		def enumFrom₀₀(a²) = 
 //│ 			lazy⁰(
-//│ 				let h⁷⁶ = lazy⁰(a²)
-//│ 				in let t⁷⁶ = lazy⁰(enumFrom₀₀((a² + 1)))
+//│ 				let h⁷⁶ = a²
+//│ 				in let t⁷⁶ = enumFrom₀₀((a² + 1))
 //│ 				in (fun f²² -> 
-//│ 					let hx² = lazy⁰(f²²(force⁰(h⁷⁶)))
-//│ 					in let tx² = lazy⁰(map_lz₀₀(f²², force⁰(t⁷⁶)))
+//│ 					let hx² = f²²(h⁷⁶)
+//│ 					in let tx² = map_lz₀₀(f²², t⁷⁶)
 //│ 					in (fun hy² -> (fun ty² -> 
-//│ 						let h⁷⁷ = lazy⁰(
-//│ 							let _lh_disp_LH_P2_0² = lazy⁰(force⁰(hx²))
-//│ 							in let _lh_disp_LH_P2_1² = lazy⁰(hy²)
-//│ 							in mappend₃₀(mappend₄₀(force⁰(_lh_disp_LH_P2_0²), 
-//│ 								let h⁷⁸ = lazy⁰('n')
-//│ 								in let t⁷⁸ = lazy⁰(
-//│ 									let h⁷⁹ = lazy⁰('n')
-//│ 									in let t⁷⁹ = lazy⁰((fun ys⁶⁰ -> ys⁶⁰))
-//│ 									in (fun ys⁵⁹ -> [LH_C force⁰(h⁷⁹) mappend₃₀(force⁰(t⁷⁹), ys⁵⁹)]))
-//│ 								in (fun ys⁵⁸ -> [LH_C force⁰(h⁷⁸) mappend₃₀(force⁰(t⁷⁸), ys⁵⁸)])), (fun _lh_funcomp_x¹² -> foldr₀₀(glue₀₀(
-//│ 								let h⁸⁰ = lazy⁰('n')
-//│ 								in let t⁸⁰ = lazy⁰((fun ys⁶² -> ys⁶²))
-//│ 								in (fun ys⁶¹ -> [LH_C force⁰(h⁸⁰) mappend₁₀(force⁰(t⁸⁰), ys⁶¹)])), [LH_N], map₀₀((fun _lh_funcomp_x¹³ -> concat₀₀(map₁₀(star₀₀, _lh_funcomp_x¹³))), _lh_funcomp_x¹²)))(force⁰(_lh_disp_LH_P2_1²))))
-//│ 						in let t⁷⁷ = lazy⁰(zip_lz_nl₀₀(force⁰(tx²), ty²))
-//│ 						in (fun f²³ -> [LH_C f²³(force⁰(h⁷⁷)) map₃₀(f²³, force⁰(t⁷⁷))])))))
+//│ 						let h⁷⁷ = 	
+//│ 							let _lh_disp_LH_P2_0² = hx²
+//│ 							in let _lh_disp_LH_P2_1² = hy²
+//│ 							in (fun _lh_dummy¹ -> mappend₃₀(mappend₄₀(_lh_disp_LH_P2_0², 
+//│ 								let h⁷⁸ = 'n'
+//│ 								in let t⁷⁸ = 	
+//│ 									let h⁷⁹ = 'n'
+//│ 									in let t⁷⁹ = (fun ys⁶⁰ -> ys⁶⁰)
+//│ 									in (fun ys⁵⁹ -> [LH_C h⁷⁹ mappend₃₀(t⁷⁹, ys⁵⁹)])
+//│ 								in (fun ys⁵⁸ -> [LH_C h⁷⁸ mappend₃₀(t⁷⁸, ys⁵⁸)])), (fun _lh_funcomp_x¹² -> foldr₀₀(glue₀₀(
+//│ 								let h⁸⁰ = 'n'
+//│ 								in let t⁸⁰ = (fun ys⁶² -> ys⁶²)
+//│ 								in (fun ys⁶¹ -> [LH_C h⁸⁰ mappend₁₀(t⁸⁰, ys⁶¹)])), [LH_N], map₀₀((fun _lh_funcomp_x¹³ -> concat₀₀(map₁₀(star₀₀, _lh_funcomp_x¹³))), _lh_funcomp_x¹²)))(_lh_disp_LH_P2_1²)))
+//│ 						in let t⁷⁷ = zip_lz_nl₀₀(tx², ty²)
+//│ 						in (fun f²³ -> [LH_C f²³(h⁷⁷) map₃₀(f²³, t⁷⁷)])))))
 //│ 		def gen₀₀(_lh_gen_arg1², _lh_gen_arg2²) = 
 //│ 			map₂₀(row₀₀, shift₃₀(copy₃₀(_lh_gen_arg1², 0), _lh_gen_arg2²))
 //│ 			where
@@ -2883,7 +2883,7 @@ testLife_nofib $ primId 15
 //│ 			def map₂₀(f³⁶, ls³⁸) = 
 //│ 				ls³⁸(f³⁶)
 //│ 			def row₀₀(_lh_row_arg1²) = 
-//│ 				_lh_row_arg1²
+//│ 				_lh_row_arg1²(99)
 //│ 				where
 //│ 				def elt₀₀(_lh_elt_arg1², _lh_elt_arg2², _lh_elt_arg3⁴) = 
 //│ 					_lh_elt_arg1²(_lh_elt_arg2², _lh_elt_arg3⁴)
@@ -2892,34 +2892,34 @@ testLife_nofib $ primId 15
 //│ 					where
 //│ 					def shiftl₀₀(_lh_shiftl_arg1¹⁰, _lh_shiftl_arg2¹⁰) = 
 //│ 						mappend₅₀(tail₀₀(_lh_shiftl_arg2¹⁰), 
-//│ 							let _lh_zip3_LH_C_0⁴⁵ = lazy⁰(_lh_shiftl_arg1¹⁰)
-//│ 							in let _lh_zip3_LH_C_1⁴⁵ = lazy⁰((fun _lh_zip3_LH_C_0⁴⁸ -> (fun _lh_zip3_LH_C_0⁴⁹ -> (fun _lh_zip3_LH_C_1⁴⁸ -> (fun _lh_zip3_LH_C_1⁴⁹ -> (fun _lh_zipWith3_arg1¹¹ -> (fun _lh_zipWith3_arg3⁵ -> (fun _lh_zipWith3_arg4¹⁰ -> [LH_N]))))))))
+//│ 							let _lh_zip3_LH_C_0⁴⁵ = _lh_shiftl_arg1¹⁰
+//│ 							in let _lh_zip3_LH_C_1⁴⁵ = (fun _lh_zip3_LH_C_0⁴⁸ -> (fun _lh_zip3_LH_C_0⁴⁹ -> (fun _lh_zip3_LH_C_1⁴⁸ -> (fun _lh_zip3_LH_C_1⁴⁹ -> (fun _lh_zipWith3_arg1¹¹ -> (fun _lh_zipWith3_arg3⁵ -> (fun _lh_zipWith3_arg4¹⁰ -> [LH_N])))))))
 //│ 							in (fun _lh_zip3_LH_C_0⁴⁶ -> (fun _lh_zip3_LH_C_0⁴⁷ -> (fun _lh_zip3_LH_C_1⁴⁶ -> (fun _lh_zip3_LH_C_1⁴⁷ -> 
-//│ 								let _lh_zipWith3_LH_C_0¹⁵ = lazy⁰(
-//│ 									let _lh_elt_LH_P3_0¹⁰ = lazy⁰(_lh_zip3_LH_C_0⁴⁶)
-//│ 									in let _lh_elt_LH_P3_1¹⁰ = lazy⁰(_lh_zip3_LH_C_0⁴⁷)
-//│ 									in let _lh_elt_LH_P3_2¹⁰ = lazy⁰(force⁰(_lh_zip3_LH_C_0⁴⁵))
-//│ 									in (fun _lh_elt_arg2³ -> (fun _lh_elt_arg3⁵ -> _lh_elt_arg2³(force⁰(_lh_elt_LH_P3_0¹⁰), force⁰(_lh_elt_LH_P3_1¹⁰), force⁰(_lh_elt_LH_P3_2¹⁰), _lh_elt_arg3⁵))))
-//│ 								in let _lh_zipWith3_LH_C_1¹⁵ = lazy⁰(zip3₀₀(_lh_zip3_LH_C_1⁴⁶, _lh_zip3_LH_C_1⁴⁷, force⁰(_lh_zip3_LH_C_1⁴⁵)))
+//│ 								let _lh_zipWith3_LH_C_0¹⁵ = 	
+//│ 									let _lh_elt_LH_P3_0¹⁰ = _lh_zip3_LH_C_0⁴⁶
+//│ 									in let _lh_elt_LH_P3_1¹⁰ = _lh_zip3_LH_C_0⁴⁷
+//│ 									in let _lh_elt_LH_P3_2¹⁰ = _lh_zip3_LH_C_0⁴⁵
+//│ 									in (fun _lh_elt_arg2³ -> (fun _lh_elt_arg3⁵ -> _lh_elt_arg2³(_lh_elt_LH_P3_0¹⁰, _lh_elt_LH_P3_1¹⁰, _lh_elt_LH_P3_2¹⁰, _lh_elt_arg3⁵)))
+//│ 								in let _lh_zipWith3_LH_C_1¹⁵ = zip3₀₀(_lh_zip3_LH_C_1⁴⁶, _lh_zip3_LH_C_1⁴⁷, _lh_zip3_LH_C_1⁴⁵)
 //│ 								in (fun _lh_zipWith3_arg1¹⁰ -> (fun _lh_zipWith3_arg3⁴ -> (fun _lh_zipWith3_arg4⁹ -> 
 //│ 									let _lh_matchIdent⁵⁰ = _lh_zipWith3_arg3⁴
-//│ 									in _lh_matchIdent⁵⁰(force⁰(_lh_zipWith3_LH_C_0¹⁵), force⁰(_lh_zipWith3_LH_C_1¹⁵), _lh_zipWith3_arg1¹⁰, _lh_zipWith3_arg4⁹)))))))))
+//│ 									in _lh_matchIdent⁵⁰(_lh_zipWith3_LH_C_0¹⁵, _lh_zipWith3_LH_C_1¹⁵, _lh_zipWith3_arg1¹⁰, _lh_zipWith3_arg4⁹)))))))))
 //│ 						where
 //│ 						def mappend₅₀(xs⁴⁷, ys⁷⁵) = 
 //│ 							case xs⁴⁷ of {
 //│ 								LH_C h⁴² t⁴² => 
-//│ 									let _lh_zip3_LH_C_0⁵³ = lazy⁰(h⁴²)
-//│ 									in let _lh_zip3_LH_C_1⁵³ = lazy⁰(mappend₅₀(t⁴², ys⁷⁵))
+//│ 									let _lh_zip3_LH_C_0⁵³ = h⁴²
+//│ 									in let _lh_zip3_LH_C_1⁵³ = mappend₅₀(t⁴², ys⁷⁵)
 //│ 									in (fun _lh_zip3_LH_C_0⁵⁴ -> (fun _lh_zip3_LH_C_0⁵⁵ -> (fun _lh_zip3_LH_C_1⁵⁴ -> (fun _lh_zip3_LH_C_1⁵⁵ -> 
-//│ 										let _lh_zipWith3_LH_C_0²¹ = lazy⁰(
-//│ 											let _lh_elt_LH_P3_0¹¹ = lazy⁰(_lh_zip3_LH_C_0⁵⁴)
-//│ 											in let _lh_elt_LH_P3_1¹¹ = lazy⁰(_lh_zip3_LH_C_0⁵⁵)
-//│ 											in let _lh_elt_LH_P3_2¹¹ = lazy⁰(force⁰(_lh_zip3_LH_C_0⁵³))
-//│ 											in (fun _lh_elt_arg2⁴ -> (fun _lh_elt_arg3⁶ -> _lh_elt_arg2⁴(force⁰(_lh_elt_LH_P3_0¹¹), force⁰(_lh_elt_LH_P3_1¹¹), force⁰(_lh_elt_LH_P3_2¹¹), _lh_elt_arg3⁶))))
-//│ 										in let _lh_zipWith3_LH_C_1²¹ = lazy⁰(zip3₀₀(_lh_zip3_LH_C_1⁵⁴, _lh_zip3_LH_C_1⁵⁵, force⁰(_lh_zip3_LH_C_1⁵³)))
+//│ 										let _lh_zipWith3_LH_C_0²¹ = 	
+//│ 											let _lh_elt_LH_P3_0¹¹ = _lh_zip3_LH_C_0⁵⁴
+//│ 											in let _lh_elt_LH_P3_1¹¹ = _lh_zip3_LH_C_0⁵⁵
+//│ 											in let _lh_elt_LH_P3_2¹¹ = _lh_zip3_LH_C_0⁵³
+//│ 											in (fun _lh_elt_arg2⁴ -> (fun _lh_elt_arg3⁶ -> _lh_elt_arg2⁴(_lh_elt_LH_P3_0¹¹, _lh_elt_LH_P3_1¹¹, _lh_elt_LH_P3_2¹¹, _lh_elt_arg3⁶)))
+//│ 										in let _lh_zipWith3_LH_C_1²¹ = zip3₀₀(_lh_zip3_LH_C_1⁵⁴, _lh_zip3_LH_C_1⁵⁵, _lh_zip3_LH_C_1⁵³)
 //│ 										in (fun _lh_zipWith3_arg1¹⁷ -> (fun _lh_zipWith3_arg3⁸ -> (fun _lh_zipWith3_arg4¹⁴ -> 
 //│ 											let _lh_matchIdent⁶⁰ = _lh_zipWith3_arg3⁸
-//│ 											in _lh_matchIdent⁶⁰(force⁰(_lh_zipWith3_LH_C_0²¹), force⁰(_lh_zipWith3_LH_C_1²¹), _lh_zipWith3_arg1¹⁷, _lh_zipWith3_arg4¹⁴))))))))
+//│ 											in _lh_matchIdent⁶⁰(_lh_zipWith3_LH_C_0²¹, _lh_zipWith3_LH_C_1²¹, _lh_zipWith3_arg1¹⁷, _lh_zipWith3_arg4¹⁴))))))))
 //│ 								| LH_N  => ys⁷⁵}
 //│ 						def tail₀₀(ls³⁷) = 
 //│ 							case ls³⁷ of {
@@ -2927,17 +2927,17 @@ testLife_nofib $ primId 15
 //│ 								| LH_N  => error⁰}
 //│ 					def shiftr₀₀(_lh_shiftr_arg1⁹, _lh_shiftr_arg2⁹) = 
 //│ 						mappend₆₀(
-//│ 							let h⁷⁵ = lazy⁰(_lh_shiftr_arg1⁹)
-//│ 							in let t⁷⁵ = lazy⁰((fun ys⁵⁶ -> ys⁵⁶))
+//│ 							let h⁷⁵ = _lh_shiftr_arg1⁹
+//│ 							in let t⁷⁵ = (fun ys⁵⁶ -> ys⁵⁶)
 //│ 							in (fun ys⁵⁵ -> 
-//│ 								let _lh_zip3_LH_C_0³² = lazy⁰(force⁰(h⁷⁵))
-//│ 								in let _lh_zip3_LH_C_1³² = lazy⁰(mappend₆₀(force⁰(t⁷⁵), ys⁵⁵))
+//│ 								let _lh_zip3_LH_C_0³² = h⁷⁵
+//│ 								in let _lh_zip3_LH_C_1³² = mappend₆₀(t⁷⁵, ys⁵⁵)
 //│ 								in (fun _lh_zip3_arg2¹³ -> (fun _lh_zip3_arg3¹³ -> 
 //│ 									let _lh_matchIdent⁴² = _lh_zip3_arg2¹³
 //│ 									in case _lh_matchIdent⁴² of {
 //│ 										LH_C _lh_zip3_LH_C_0¹⁹ _lh_zip3_LH_C_1¹⁹ => 
 //│ 											let _lh_matchIdent⁴³ = _lh_zip3_arg3¹³
-//│ 											in _lh_matchIdent⁴³(force⁰(_lh_zip3_LH_C_0³²), _lh_zip3_LH_C_0¹⁹, force⁰(_lh_zip3_LH_C_1³²), _lh_zip3_LH_C_1¹⁹)
+//│ 											in _lh_matchIdent⁴³(_lh_zip3_LH_C_0³², _lh_zip3_LH_C_0¹⁹, _lh_zip3_LH_C_1³², _lh_zip3_LH_C_1¹⁹)
 //│ 										| LH_N  => (fun _lh_zipWith3_arg1⁷ -> (fun _lh_zipWith3_arg3³ -> (fun _lh_zipWith3_arg4⁶ -> [LH_N])))
 //│ 										| _  => error⁰}))), init₀₀(_lh_shiftr_arg2⁹))
 //│ 						where
@@ -2946,14 +2946,14 @@ testLife_nofib $ primId 15
 //│ 								LH_C _lh_init_LH_C_0⁴ _lh_init_LH_C_1⁴ => case _lh_init_LH_C_1⁴ of {
 //│ 									LH_N  => (fun _lh_zip3_arg2¹⁹ -> (fun _lh_zip3_arg3¹⁹ -> (fun _lh_zipWith3_arg1¹² -> (fun _lh_zipWith3_arg3⁶ -> (fun _lh_zipWith3_arg4¹¹ -> [LH_N])))))
 //│ 									| _  => 
-//│ 										let _lh_zip3_LH_C_0⁵⁰ = lazy⁰(_lh_init_LH_C_0⁴)
-//│ 										in let _lh_zip3_LH_C_1⁵⁰ = lazy⁰(init₀₀(_lh_init_LH_C_1⁴))
+//│ 										let _lh_zip3_LH_C_0⁵⁰ = _lh_init_LH_C_0⁴
+//│ 										in let _lh_zip3_LH_C_1⁵⁰ = init₀₀(_lh_init_LH_C_1⁴)
 //│ 										in (fun _lh_zip3_arg2²⁰ -> (fun _lh_zip3_arg3²⁰ -> 
 //│ 											let _lh_matchIdent⁵⁴ = _lh_zip3_arg2²⁰
 //│ 											in case _lh_matchIdent⁵⁴ of {
 //│ 												LH_C _lh_zip3_LH_C_0¹⁹ _lh_zip3_LH_C_1¹⁹ => 
 //│ 													let _lh_matchIdent⁵⁵ = _lh_zip3_arg3²⁰
-//│ 													in _lh_matchIdent⁵⁵(force⁰(_lh_zip3_LH_C_0⁵⁰), _lh_zip3_LH_C_0¹⁹, force⁰(_lh_zip3_LH_C_1⁵⁰), _lh_zip3_LH_C_1¹⁹)
+//│ 													in _lh_matchIdent⁵⁵(_lh_zip3_LH_C_0⁵⁰, _lh_zip3_LH_C_0¹⁹, _lh_zip3_LH_C_1⁵⁰, _lh_zip3_LH_C_1¹⁹)
 //│ 												| LH_N  => (fun _lh_zipWith3_arg1¹³ -> (fun _lh_zipWith3_arg3⁷ -> (fun _lh_zipWith3_arg4¹² -> [LH_N])))
 //│ 												| _  => error⁰}))}
 //│ 								| _  => error⁰}
@@ -2967,34 +2967,34 @@ testLife_nofib $ primId 15
 //│ 					where
 //│ 					def shiftl₁₀(_lh_shiftl_arg1⁸, _lh_shiftl_arg2⁸) = 
 //│ 						mappend₇₀(tail₁₀(_lh_shiftl_arg2⁸), 
-//│ 							let _lh_zip3_LH_C_0³³ = lazy⁰(_lh_shiftl_arg1⁸)
-//│ 							in let _lh_zip3_LH_C_1³³ = lazy⁰((fun _lh_zip3_LH_C_0³⁶ -> (fun _lh_zip3_LH_C_0³⁷ -> (fun _lh_zip3_LH_C_1³⁶ -> (fun _lh_zip3_LH_C_1³⁷ -> (fun _lh_zipWith3_LH_C_0¹⁴ -> (fun _lh_zipWith3_LH_C_1¹⁴ -> (fun _lh_zipWith3_arg1⁹ -> (fun _lh_zipWith3_arg4⁸ -> [LH_N])))))))))
+//│ 							let _lh_zip3_LH_C_0³³ = _lh_shiftl_arg1⁸
+//│ 							in let _lh_zip3_LH_C_1³³ = (fun _lh_zip3_LH_C_0³⁶ -> (fun _lh_zip3_LH_C_0³⁷ -> (fun _lh_zip3_LH_C_1³⁶ -> (fun _lh_zip3_LH_C_1³⁷ -> (fun _lh_zipWith3_LH_C_0¹⁴ -> (fun _lh_zipWith3_LH_C_1¹⁴ -> (fun _lh_zipWith3_arg1⁹ -> (fun _lh_zipWith3_arg4⁸ -> [LH_N]))))))))
 //│ 							in (fun _lh_zip3_LH_C_0³⁴ -> (fun _lh_zip3_LH_C_0³⁵ -> (fun _lh_zip3_LH_C_1³⁴ -> (fun _lh_zip3_LH_C_1³⁵ -> 
-//│ 								let _lh_zipWith3_LH_C_0¹² = lazy⁰(
-//│ 									let _lh_elt_LH_P3_0⁸ = lazy⁰(_lh_zip3_LH_C_0³⁴)
-//│ 									in let _lh_elt_LH_P3_1⁸ = lazy⁰(_lh_zip3_LH_C_0³⁵)
-//│ 									in let _lh_elt_LH_P3_2⁸ = lazy⁰(force⁰(_lh_zip3_LH_C_0³³))
-//│ 									in (fun _lh_elt_LH_P3_0⁹ -> (fun _lh_elt_LH_P3_1⁹ -> (fun _lh_elt_LH_P3_2⁹ -> (fun _lh_elt_arg3³ -> _lh_elt_arg3³(_lh_elt_LH_P3_0⁹, force⁰(_lh_elt_LH_P3_0⁸), _lh_elt_LH_P3_1⁹, force⁰(_lh_elt_LH_P3_1⁸), _lh_elt_LH_P3_2⁹, force⁰(_lh_elt_LH_P3_2⁸)))))))
-//│ 								in let _lh_zipWith3_LH_C_1¹² = lazy⁰(zip3₁₀(_lh_zip3_LH_C_1³⁴, _lh_zip3_LH_C_1³⁵, force⁰(_lh_zip3_LH_C_1³³)))
+//│ 								let _lh_zipWith3_LH_C_0¹² = 	
+//│ 									let _lh_elt_LH_P3_0⁸ = _lh_zip3_LH_C_0³⁴
+//│ 									in let _lh_elt_LH_P3_1⁸ = _lh_zip3_LH_C_0³⁵
+//│ 									in let _lh_elt_LH_P3_2⁸ = _lh_zip3_LH_C_0³³
+//│ 									in (fun _lh_elt_LH_P3_0⁹ -> (fun _lh_elt_LH_P3_1⁹ -> (fun _lh_elt_LH_P3_2⁹ -> (fun _lh_elt_arg3³ -> _lh_elt_arg3³(_lh_elt_LH_P3_0⁹, _lh_elt_LH_P3_0⁸, _lh_elt_LH_P3_1⁹, _lh_elt_LH_P3_1⁸, _lh_elt_LH_P3_2⁹, _lh_elt_LH_P3_2⁸)))))
+//│ 								in let _lh_zipWith3_LH_C_1¹² = zip3₁₀(_lh_zip3_LH_C_1³⁴, _lh_zip3_LH_C_1³⁵, _lh_zip3_LH_C_1³³)
 //│ 								in (fun _lh_zipWith3_LH_C_0¹³ -> (fun _lh_zipWith3_LH_C_1¹³ -> (fun _lh_zipWith3_arg1⁸ -> (fun _lh_zipWith3_arg4⁷ -> 
 //│ 									let _lh_matchIdent⁴⁴ = _lh_zipWith3_arg4⁷
-//│ 									in _lh_matchIdent⁴⁴(_lh_zipWith3_LH_C_0¹³, force⁰(_lh_zipWith3_LH_C_0¹²), _lh_zipWith3_LH_C_1¹³, force⁰(_lh_zipWith3_LH_C_1¹²), _lh_zipWith3_arg1⁸))))))))))
+//│ 									in _lh_matchIdent⁴⁴(_lh_zipWith3_LH_C_0¹³, _lh_zipWith3_LH_C_0¹², _lh_zipWith3_LH_C_1¹³, _lh_zipWith3_LH_C_1¹², _lh_zipWith3_arg1⁸))))))))))
 //│ 						where
 //│ 						def mappend₇₀(xs³⁶, ys⁵³) = 
 //│ 							case xs³⁶ of {
 //│ 								LH_C h⁵³ t⁵³ => 
-//│ 									let _lh_zip3_LH_C_0²⁶ = lazy⁰(h⁵³)
-//│ 									in let _lh_zip3_LH_C_1²⁶ = lazy⁰(mappend₇₀(t⁵³, ys⁵³))
+//│ 									let _lh_zip3_LH_C_0²⁶ = h⁵³
+//│ 									in let _lh_zip3_LH_C_1²⁶ = mappend₇₀(t⁵³, ys⁵³)
 //│ 									in (fun _lh_zip3_LH_C_0²⁷ -> (fun _lh_zip3_LH_C_0²⁸ -> (fun _lh_zip3_LH_C_1²⁷ -> (fun _lh_zip3_LH_C_1²⁸ -> 
-//│ 										let _lh_zipWith3_LH_C_0¹⁰ = lazy⁰(
-//│ 											let _lh_elt_LH_P3_0⁶ = lazy⁰(_lh_zip3_LH_C_0²⁷)
-//│ 											in let _lh_elt_LH_P3_1⁶ = lazy⁰(_lh_zip3_LH_C_0²⁸)
-//│ 											in let _lh_elt_LH_P3_2⁶ = lazy⁰(force⁰(_lh_zip3_LH_C_0²⁶))
-//│ 											in (fun _lh_elt_LH_P3_0⁷ -> (fun _lh_elt_LH_P3_1⁷ -> (fun _lh_elt_LH_P3_2⁷ -> (fun _lh_elt_arg3² -> _lh_elt_arg3²(_lh_elt_LH_P3_0⁷, force⁰(_lh_elt_LH_P3_0⁶), _lh_elt_LH_P3_1⁷, force⁰(_lh_elt_LH_P3_1⁶), _lh_elt_LH_P3_2⁷, force⁰(_lh_elt_LH_P3_2⁶)))))))
-//│ 										in let _lh_zipWith3_LH_C_1¹⁰ = lazy⁰(zip3₁₀(_lh_zip3_LH_C_1²⁷, _lh_zip3_LH_C_1²⁸, force⁰(_lh_zip3_LH_C_1²⁶)))
+//│ 										let _lh_zipWith3_LH_C_0¹⁰ = 	
+//│ 											let _lh_elt_LH_P3_0⁶ = _lh_zip3_LH_C_0²⁷
+//│ 											in let _lh_elt_LH_P3_1⁶ = _lh_zip3_LH_C_0²⁸
+//│ 											in let _lh_elt_LH_P3_2⁶ = _lh_zip3_LH_C_0²⁶
+//│ 											in (fun _lh_elt_LH_P3_0⁷ -> (fun _lh_elt_LH_P3_1⁷ -> (fun _lh_elt_LH_P3_2⁷ -> (fun _lh_elt_arg3² -> _lh_elt_arg3²(_lh_elt_LH_P3_0⁷, _lh_elt_LH_P3_0⁶, _lh_elt_LH_P3_1⁷, _lh_elt_LH_P3_1⁶, _lh_elt_LH_P3_2⁷, _lh_elt_LH_P3_2⁶)))))
+//│ 										in let _lh_zipWith3_LH_C_1¹⁰ = zip3₁₀(_lh_zip3_LH_C_1²⁷, _lh_zip3_LH_C_1²⁸, _lh_zip3_LH_C_1²⁶)
 //│ 										in (fun _lh_zipWith3_LH_C_0¹¹ -> (fun _lh_zipWith3_LH_C_1¹¹ -> (fun _lh_zipWith3_arg1⁶ -> (fun _lh_zipWith3_arg4⁵ -> 
 //│ 											let _lh_matchIdent⁴¹ = _lh_zipWith3_arg4⁵
-//│ 											in _lh_matchIdent⁴¹(_lh_zipWith3_LH_C_0¹¹, force⁰(_lh_zipWith3_LH_C_0¹⁰), _lh_zipWith3_LH_C_1¹¹, force⁰(_lh_zipWith3_LH_C_1¹⁰), _lh_zipWith3_arg1⁶)))))))))
+//│ 											in _lh_matchIdent⁴¹(_lh_zipWith3_LH_C_0¹¹, _lh_zipWith3_LH_C_0¹⁰, _lh_zipWith3_LH_C_1¹¹, _lh_zipWith3_LH_C_1¹⁰, _lh_zipWith3_arg1⁶)))))))))
 //│ 								| LH_N  => ys⁵³}
 //│ 						def tail₁₀(ls²⁷) = 
 //│ 							case ls²⁷ of {
@@ -3002,17 +3002,17 @@ testLife_nofib $ primId 15
 //│ 								| LH_N  => error⁰}
 //│ 					def shiftr₁₀(_lh_shiftr_arg1¹¹, _lh_shiftr_arg2¹¹) = 
 //│ 						mappend₈₀(
-//│ 							let h⁸⁸ = lazy⁰(_lh_shiftr_arg1¹¹)
-//│ 							in let t⁸⁸ = lazy⁰((fun ys⁷⁴ -> ys⁷⁴))
+//│ 							let h⁸⁸ = _lh_shiftr_arg1¹¹
+//│ 							in let t⁸⁸ = (fun ys⁷⁴ -> ys⁷⁴)
 //│ 							in (fun ys⁷³ -> 
-//│ 								let _lh_zip3_LH_C_0⁵² = lazy⁰(force⁰(h⁸⁸))
-//│ 								in let _lh_zip3_LH_C_1⁵² = lazy⁰(mappend₈₀(force⁰(t⁸⁸), ys⁷³))
+//│ 								let _lh_zip3_LH_C_0⁵² = h⁸⁸
+//│ 								in let _lh_zip3_LH_C_1⁵² = mappend₈₀(t⁸⁸, ys⁷³)
 //│ 								in (fun _lh_zip3_arg2²³ -> (fun _lh_zip3_arg3²³ -> 
 //│ 									let _lh_matchIdent⁵⁸ = _lh_zip3_arg2²³
 //│ 									in case _lh_matchIdent⁵⁸ of {
 //│ 										LH_C _lh_zip3_LH_C_0¹⁶ _lh_zip3_LH_C_1¹⁶ => 
 //│ 											let _lh_matchIdent⁵⁹ = _lh_zip3_arg3²³
-//│ 											in _lh_matchIdent⁵⁹(force⁰(_lh_zip3_LH_C_0⁵²), _lh_zip3_LH_C_0¹⁶, force⁰(_lh_zip3_LH_C_1⁵²), _lh_zip3_LH_C_1¹⁶)
+//│ 											in _lh_matchIdent⁵⁹(_lh_zip3_LH_C_0⁵², _lh_zip3_LH_C_0¹⁶, _lh_zip3_LH_C_1⁵², _lh_zip3_LH_C_1¹⁶)
 //│ 										| LH_N  => (fun _lh_zipWith3_LH_C_0²⁰ -> (fun _lh_zipWith3_LH_C_1²⁰ -> (fun _lh_zipWith3_arg1¹⁶ -> (fun _lh_zipWith3_arg4¹³ -> [LH_N]))))
 //│ 										| _  => error⁰}))), init₁₀(_lh_shiftr_arg2¹¹))
 //│ 						where
@@ -3021,14 +3021,14 @@ testLife_nofib $ primId 15
 //│ 								LH_C _lh_init_LH_C_0⁶ _lh_init_LH_C_1⁶ => case _lh_init_LH_C_1⁶ of {
 //│ 									LH_N  => (fun _lh_zip3_arg2¹¹ -> (fun _lh_zip3_arg3¹¹ -> (fun _lh_zipWith3_LH_C_0⁸ -> (fun _lh_zipWith3_LH_C_1⁸ -> (fun _lh_zipWith3_arg1⁴ -> (fun _lh_zipWith3_arg4³ -> [LH_N]))))))
 //│ 									| _  => 
-//│ 										let _lh_zip3_LH_C_0²⁵ = lazy⁰(_lh_init_LH_C_0⁶)
-//│ 										in let _lh_zip3_LH_C_1²⁵ = lazy⁰(init₁₀(_lh_init_LH_C_1⁶))
+//│ 										let _lh_zip3_LH_C_0²⁵ = _lh_init_LH_C_0⁶
+//│ 										in let _lh_zip3_LH_C_1²⁵ = init₁₀(_lh_init_LH_C_1⁶)
 //│ 										in (fun _lh_zip3_arg2¹² -> (fun _lh_zip3_arg3¹² -> 
 //│ 											let _lh_matchIdent³⁹ = _lh_zip3_arg2¹²
 //│ 											in case _lh_matchIdent³⁹ of {
 //│ 												LH_C _lh_zip3_LH_C_0¹⁶ _lh_zip3_LH_C_1¹⁶ => 
 //│ 													let _lh_matchIdent⁴⁰ = _lh_zip3_arg3¹²
-//│ 													in _lh_matchIdent⁴⁰(force⁰(_lh_zip3_LH_C_0²⁵), _lh_zip3_LH_C_0¹⁶, force⁰(_lh_zip3_LH_C_1²⁵), _lh_zip3_LH_C_1¹⁶)
+//│ 													in _lh_matchIdent⁴⁰(_lh_zip3_LH_C_0²⁵, _lh_zip3_LH_C_0¹⁶, _lh_zip3_LH_C_1²⁵, _lh_zip3_LH_C_1¹⁶)
 //│ 												| LH_N  => (fun _lh_zipWith3_LH_C_0⁹ -> (fun _lh_zipWith3_LH_C_1⁹ -> (fun _lh_zipWith3_arg1⁵ -> (fun _lh_zipWith3_arg4⁴ -> [LH_N]))))
 //│ 												| _  => error⁰}))}
 //│ 								| _  => error⁰}
@@ -3042,34 +3042,34 @@ testLife_nofib $ primId 15
 //│ 					where
 //│ 					def shiftl₂₀(_lh_shiftl_arg1¹¹, _lh_shiftl_arg2¹¹) = 
 //│ 						mappend₉₀(tail₂₀(_lh_shiftl_arg2¹¹), 
-//│ 							let _lh_zip3_LH_C_0⁵⁹ = lazy⁰(_lh_shiftl_arg1¹¹)
-//│ 							in let _lh_zip3_LH_C_1⁵⁹ = lazy⁰((fun _lh_zip3_LH_C_0⁶² -> (fun _lh_zip3_LH_C_0⁶³ -> (fun _lh_zip3_LH_C_1⁶² -> (fun _lh_zip3_LH_C_1⁶³ -> (fun _lh_zipWith3_LH_C_0²⁸ -> (fun _lh_zipWith3_LH_C_0²⁹ -> (fun _lh_zipWith3_LH_C_1²⁸ -> (fun _lh_zipWith3_LH_C_1²⁹ -> (fun _lh_zipWith3_arg1²⁰ -> [LH_N]))))))))))
+//│ 							let _lh_zip3_LH_C_0⁵⁹ = _lh_shiftl_arg1¹¹
+//│ 							in let _lh_zip3_LH_C_1⁵⁹ = (fun _lh_zip3_LH_C_0⁶² -> (fun _lh_zip3_LH_C_0⁶³ -> (fun _lh_zip3_LH_C_1⁶² -> (fun _lh_zip3_LH_C_1⁶³ -> (fun _lh_zipWith3_LH_C_0²⁸ -> (fun _lh_zipWith3_LH_C_0²⁹ -> (fun _lh_zipWith3_LH_C_1²⁸ -> (fun _lh_zipWith3_LH_C_1²⁹ -> (fun _lh_zipWith3_arg1²⁰ -> [LH_N])))))))))
 //│ 							in (fun _lh_zip3_LH_C_0⁶⁰ -> (fun _lh_zip3_LH_C_0⁶¹ -> (fun _lh_zip3_LH_C_1⁶⁰ -> (fun _lh_zip3_LH_C_1⁶¹ -> 
-//│ 								let _lh_zipWith3_LH_C_0²⁵ = lazy⁰(
-//│ 									let _lh_elt_LH_P3_0¹⁵ = lazy⁰(_lh_zip3_LH_C_0⁶¹)
-//│ 									in let _lh_elt_LH_P3_1¹⁵ = lazy⁰(_lh_zip3_LH_C_0⁶⁰)
-//│ 									in let _lh_elt_LH_P3_2¹⁵ = lazy⁰(force⁰(_lh_zip3_LH_C_0⁵⁹))
+//│ 								let _lh_zipWith3_LH_C_0²⁵ = 	
+//│ 									let _lh_elt_LH_P3_0¹⁵ = _lh_zip3_LH_C_0⁶¹
+//│ 									in let _lh_elt_LH_P3_1¹⁵ = _lh_zip3_LH_C_0⁶⁰
+//│ 									in let _lh_elt_LH_P3_2¹⁵ = _lh_zip3_LH_C_0⁵⁹
 //│ 									in (fun _lh_elt_LH_P3_0¹⁶ -> (fun _lh_elt_LH_P3_0¹⁷ -> (fun _lh_elt_LH_P3_1¹⁶ -> (fun _lh_elt_LH_P3_1¹⁷ -> (fun _lh_elt_LH_P3_2¹⁶ -> (fun _lh_elt_LH_P3_2¹⁷ -> 
-//│ 										let tot³ = (((((((_lh_elt_LH_P3_0¹⁶ + _lh_elt_LH_P3_1¹⁶) + _lh_elt_LH_P3_2¹⁶) + _lh_elt_LH_P3_0¹⁷) + _lh_elt_LH_P3_2¹⁷) + force⁰(_lh_elt_LH_P3_0¹⁵)) + force⁰(_lh_elt_LH_P3_1¹⁵)) + force⁰(_lh_elt_LH_P3_2¹⁵))
-//│ 										in if ((tot³ < 2) || (tot³ > 3)) then 0 else if (tot³ == 3) then 1 else _lh_elt_LH_P3_1¹⁷)))))))
-//│ 								in let _lh_zipWith3_LH_C_1²⁵ = lazy⁰(zip3₂₀(_lh_zip3_LH_C_1⁶¹, _lh_zip3_LH_C_1⁶⁰, force⁰(_lh_zip3_LH_C_1⁵⁹)))
-//│ 								in (fun _lh_zipWith3_LH_C_0²⁶ -> (fun _lh_zipWith3_LH_C_0²⁷ -> (fun _lh_zipWith3_LH_C_1²⁶ -> (fun _lh_zipWith3_LH_C_1²⁷ -> (fun _lh_zipWith3_arg1¹⁹ -> [LH_C _lh_zipWith3_arg1¹⁹(_lh_zipWith3_LH_C_0²⁶, _lh_zipWith3_LH_C_0²⁷, force⁰(_lh_zipWith3_LH_C_0²⁵)) zipWith3₀₀(_lh_zipWith3_arg1¹⁹, _lh_zipWith3_LH_C_1²⁶, _lh_zipWith3_LH_C_1²⁷, force⁰(_lh_zipWith3_LH_C_1²⁵))]))))))))))
+//│ 										let tot³ = (((((((_lh_elt_LH_P3_0¹⁶ + _lh_elt_LH_P3_1¹⁶) + _lh_elt_LH_P3_2¹⁶) + _lh_elt_LH_P3_0¹⁷) + _lh_elt_LH_P3_2¹⁷) + _lh_elt_LH_P3_0¹⁵) + _lh_elt_LH_P3_1¹⁵) + _lh_elt_LH_P3_2¹⁵)
+//│ 										in if ((tot³ < 2) || (tot³ > 3)) then 0 else if (tot³ == 3) then 1 else _lh_elt_LH_P3_1¹⁷))))))
+//│ 								in let _lh_zipWith3_LH_C_1²⁵ = zip3₂₀(_lh_zip3_LH_C_1⁶¹, _lh_zip3_LH_C_1⁶⁰, _lh_zip3_LH_C_1⁵⁹)
+//│ 								in (fun _lh_zipWith3_LH_C_0²⁶ -> (fun _lh_zipWith3_LH_C_0²⁷ -> (fun _lh_zipWith3_LH_C_1²⁶ -> (fun _lh_zipWith3_LH_C_1²⁷ -> (fun _lh_zipWith3_arg1¹⁹ -> [LH_C _lh_zipWith3_arg1¹⁹(_lh_zipWith3_LH_C_0²⁶, _lh_zipWith3_LH_C_0²⁷, _lh_zipWith3_LH_C_0²⁵) zipWith3₀₀(_lh_zipWith3_arg1¹⁹, _lh_zipWith3_LH_C_1²⁶, _lh_zipWith3_LH_C_1²⁷, _lh_zipWith3_LH_C_1²⁵)]))))))))))
 //│ 						where
 //│ 						def mappend₉₀(xs⁴⁸, ys⁷⁶) = 
 //│ 							case xs⁴⁸ of {
 //│ 								LH_C h⁴³ t⁴³ => 
-//│ 									let _lh_zip3_LH_C_0⁵⁶ = lazy⁰(h⁴³)
-//│ 									in let _lh_zip3_LH_C_1⁵⁶ = lazy⁰(mappend₉₀(t⁴³, ys⁷⁶))
+//│ 									let _lh_zip3_LH_C_0⁵⁶ = h⁴³
+//│ 									in let _lh_zip3_LH_C_1⁵⁶ = mappend₉₀(t⁴³, ys⁷⁶)
 //│ 									in (fun _lh_zip3_LH_C_0⁵⁷ -> (fun _lh_zip3_LH_C_0⁵⁸ -> (fun _lh_zip3_LH_C_1⁵⁷ -> (fun _lh_zip3_LH_C_1⁵⁸ -> 
-//│ 										let _lh_zipWith3_LH_C_0²² = lazy⁰(
-//│ 											let _lh_elt_LH_P3_0¹² = lazy⁰(_lh_zip3_LH_C_0⁵⁸)
-//│ 											in let _lh_elt_LH_P3_1¹² = lazy⁰(_lh_zip3_LH_C_0⁵⁷)
-//│ 											in let _lh_elt_LH_P3_2¹² = lazy⁰(force⁰(_lh_zip3_LH_C_0⁵⁶))
+//│ 										let _lh_zipWith3_LH_C_0²² = 	
+//│ 											let _lh_elt_LH_P3_0¹² = _lh_zip3_LH_C_0⁵⁸
+//│ 											in let _lh_elt_LH_P3_1¹² = _lh_zip3_LH_C_0⁵⁷
+//│ 											in let _lh_elt_LH_P3_2¹² = _lh_zip3_LH_C_0⁵⁶
 //│ 											in (fun _lh_elt_LH_P3_0¹³ -> (fun _lh_elt_LH_P3_0¹⁴ -> (fun _lh_elt_LH_P3_1¹³ -> (fun _lh_elt_LH_P3_1¹⁴ -> (fun _lh_elt_LH_P3_2¹³ -> (fun _lh_elt_LH_P3_2¹⁴ -> 
-//│ 												let tot² = (((((((_lh_elt_LH_P3_0¹³ + _lh_elt_LH_P3_1¹³) + _lh_elt_LH_P3_2¹³) + _lh_elt_LH_P3_0¹⁴) + _lh_elt_LH_P3_2¹⁴) + force⁰(_lh_elt_LH_P3_0¹²)) + force⁰(_lh_elt_LH_P3_1¹²)) + force⁰(_lh_elt_LH_P3_2¹²))
-//│ 												in if ((tot² < 2) || (tot² > 3)) then 0 else if (tot² == 3) then 1 else _lh_elt_LH_P3_1¹⁴)))))))
-//│ 										in let _lh_zipWith3_LH_C_1²² = lazy⁰(zip3₂₀(_lh_zip3_LH_C_1⁵⁸, _lh_zip3_LH_C_1⁵⁷, force⁰(_lh_zip3_LH_C_1⁵⁶)))
-//│ 										in (fun _lh_zipWith3_LH_C_0²³ -> (fun _lh_zipWith3_LH_C_0²⁴ -> (fun _lh_zipWith3_LH_C_1²³ -> (fun _lh_zipWith3_LH_C_1²⁴ -> (fun _lh_zipWith3_arg1¹⁸ -> [LH_C _lh_zipWith3_arg1¹⁸(_lh_zipWith3_LH_C_0²³, _lh_zipWith3_LH_C_0²⁴, force⁰(_lh_zipWith3_LH_C_0²²)) zipWith3₀₀(_lh_zipWith3_arg1¹⁸, _lh_zipWith3_LH_C_1²³, _lh_zipWith3_LH_C_1²⁴, force⁰(_lh_zipWith3_LH_C_1²²))])))))))))
+//│ 												let tot² = (((((((_lh_elt_LH_P3_0¹³ + _lh_elt_LH_P3_1¹³) + _lh_elt_LH_P3_2¹³) + _lh_elt_LH_P3_0¹⁴) + _lh_elt_LH_P3_2¹⁴) + _lh_elt_LH_P3_0¹²) + _lh_elt_LH_P3_1¹²) + _lh_elt_LH_P3_2¹²)
+//│ 												in if ((tot² < 2) || (tot² > 3)) then 0 else if (tot² == 3) then 1 else _lh_elt_LH_P3_1¹⁴))))))
+//│ 										in let _lh_zipWith3_LH_C_1²² = zip3₂₀(_lh_zip3_LH_C_1⁵⁸, _lh_zip3_LH_C_1⁵⁷, _lh_zip3_LH_C_1⁵⁶)
+//│ 										in (fun _lh_zipWith3_LH_C_0²³ -> (fun _lh_zipWith3_LH_C_0²⁴ -> (fun _lh_zipWith3_LH_C_1²³ -> (fun _lh_zipWith3_LH_C_1²⁴ -> (fun _lh_zipWith3_arg1¹⁸ -> [LH_C _lh_zipWith3_arg1¹⁸(_lh_zipWith3_LH_C_0²³, _lh_zipWith3_LH_C_0²⁴, _lh_zipWith3_LH_C_0²²) zipWith3₀₀(_lh_zipWith3_arg1¹⁸, _lh_zipWith3_LH_C_1²³, _lh_zipWith3_LH_C_1²⁴, _lh_zipWith3_LH_C_1²²)])))))))))
 //│ 								| LH_N  => ys⁷⁶}
 //│ 						def tail₂₀(ls³⁶) = 
 //│ 							case ls³⁶ of {
@@ -3077,17 +3077,17 @@ testLife_nofib $ primId 15
 //│ 								| LH_N  => error⁰}
 //│ 					def shiftr₂₀(_lh_shiftr_arg1⁸, _lh_shiftr_arg2⁸) = 
 //│ 						mappend₁₀₀(
-//│ 							let h⁷³ = lazy⁰(_lh_shiftr_arg1⁸)
-//│ 							in let t⁷³ = lazy⁰((fun ys⁵¹ -> ys⁵¹))
+//│ 							let h⁷³ = _lh_shiftr_arg1⁸
+//│ 							in let t⁷³ = (fun ys⁵¹ -> ys⁵¹)
 //│ 							in (fun ys⁵⁰ -> 
-//│ 								let _lh_zip3_LH_C_0²⁴ = lazy⁰(force⁰(h⁷³))
-//│ 								in let _lh_zip3_LH_C_1²⁴ = lazy⁰(mappend₁₀₀(force⁰(t⁷³), ys⁵⁰))
+//│ 								let _lh_zip3_LH_C_0²⁴ = h⁷³
+//│ 								in let _lh_zip3_LH_C_1²⁴ = mappend₁₀₀(t⁷³, ys⁵⁰)
 //│ 								in (fun _lh_zip3_arg2¹⁰ -> (fun _lh_zip3_arg3¹⁰ -> 
 //│ 									let _lh_matchIdent³⁷ = _lh_zip3_arg2¹⁰
 //│ 									in case _lh_matchIdent³⁷ of {
 //│ 										LH_C _lh_zip3_LH_C_0²² _lh_zip3_LH_C_1²² => 
 //│ 											let _lh_matchIdent³⁸ = _lh_zip3_arg3¹⁰
-//│ 											in _lh_matchIdent³⁸(_lh_zip3_LH_C_0²², force⁰(_lh_zip3_LH_C_0²⁴), _lh_zip3_LH_C_1²², force⁰(_lh_zip3_LH_C_1²⁴))
+//│ 											in _lh_matchIdent³⁸(_lh_zip3_LH_C_0²², _lh_zip3_LH_C_0²⁴, _lh_zip3_LH_C_1²², _lh_zip3_LH_C_1²⁴)
 //│ 										| LH_N  => (fun _lh_zipWith3_LH_C_0⁶ -> (fun _lh_zipWith3_LH_C_0⁷ -> (fun _lh_zipWith3_LH_C_1⁶ -> (fun _lh_zipWith3_LH_C_1⁷ -> (fun _lh_zipWith3_arg1³ -> [LH_N])))))
 //│ 										| _  => error⁰}))), init₂₀(_lh_shiftr_arg2⁸))
 //│ 						where
@@ -3096,14 +3096,14 @@ testLife_nofib $ primId 15
 //│ 								LH_C _lh_init_LH_C_0⁷ _lh_init_LH_C_1⁷ => case _lh_init_LH_C_1⁷ of {
 //│ 									LH_N  => (fun _lh_zip3_arg2²¹ -> (fun _lh_zip3_arg3²¹ -> (fun _lh_zipWith3_LH_C_0¹⁶ -> (fun _lh_zipWith3_LH_C_0¹⁷ -> (fun _lh_zipWith3_LH_C_1¹⁶ -> (fun _lh_zipWith3_LH_C_1¹⁷ -> (fun _lh_zipWith3_arg1¹⁴ -> [LH_N])))))))
 //│ 									| _  => 
-//│ 										let _lh_zip3_LH_C_0⁵¹ = lazy⁰(_lh_init_LH_C_0⁷)
-//│ 										in let _lh_zip3_LH_C_1⁵¹ = lazy⁰(init₂₀(_lh_init_LH_C_1⁷))
+//│ 										let _lh_zip3_LH_C_0⁵¹ = _lh_init_LH_C_0⁷
+//│ 										in let _lh_zip3_LH_C_1⁵¹ = init₂₀(_lh_init_LH_C_1⁷)
 //│ 										in (fun _lh_zip3_arg2²² -> (fun _lh_zip3_arg3²² -> 
 //│ 											let _lh_matchIdent⁵⁶ = _lh_zip3_arg2²²
 //│ 											in case _lh_matchIdent⁵⁶ of {
 //│ 												LH_C _lh_zip3_LH_C_0²² _lh_zip3_LH_C_1²² => 
 //│ 													let _lh_matchIdent⁵⁷ = _lh_zip3_arg3²²
-//│ 													in _lh_matchIdent⁵⁷(_lh_zip3_LH_C_0²², force⁰(_lh_zip3_LH_C_0⁵¹), _lh_zip3_LH_C_1²², force⁰(_lh_zip3_LH_C_1⁵¹))
+//│ 													in _lh_matchIdent⁵⁷(_lh_zip3_LH_C_0²², _lh_zip3_LH_C_0⁵¹, _lh_zip3_LH_C_1²², _lh_zip3_LH_C_1⁵¹)
 //│ 												| LH_N  => (fun _lh_zipWith3_LH_C_0¹⁸ -> (fun _lh_zipWith3_LH_C_0¹⁹ -> (fun _lh_zipWith3_LH_C_1¹⁸ -> (fun _lh_zipWith3_LH_C_1¹⁹ -> (fun _lh_zipWith3_arg1¹⁵ -> [LH_N])))))
 //│ 												| _  => error⁰}))}
 //│ 								| _  => error⁰}
@@ -3120,30 +3120,30 @@ testLife_nofib $ primId 15
 //│ 				where
 //│ 				def shiftl₃₀(_lh_shiftl_arg1⁹, _lh_shiftl_arg2⁹) = 
 //│ 					mappend₁₁₀(tail₃₀(_lh_shiftl_arg2⁹), 
-//│ 						let _lh_zip3_LH_C_0³⁸ = lazy⁰(_lh_shiftl_arg1⁹)
-//│ 						in let _lh_zip3_LH_C_1³⁸ = lazy⁰((fun _lh_zip3_LH_C_0⁴¹ -> (fun _lh_zip3_LH_C_0⁴² -> (fun _lh_zip3_LH_C_1⁴¹ -> (fun _lh_zip3_LH_C_1⁴² -> (fun f²⁸ -> [LH_N]))))))
+//│ 						let _lh_zip3_LH_C_0³⁸ = _lh_shiftl_arg1⁹
+//│ 						in let _lh_zip3_LH_C_1³⁸ = (fun _lh_zip3_LH_C_0⁴¹ -> (fun _lh_zip3_LH_C_0⁴² -> (fun _lh_zip3_LH_C_1⁴¹ -> (fun _lh_zip3_LH_C_1⁴² -> (fun f²⁸ -> [LH_N])))))
 //│ 						in (fun _lh_zip3_LH_C_0³⁹ -> (fun _lh_zip3_LH_C_0⁴⁰ -> (fun _lh_zip3_LH_C_1³⁹ -> (fun _lh_zip3_LH_C_1⁴⁰ -> 
-//│ 							let h⁸⁴ = lazy⁰(
-//│ 								let _lh_row_LH_P3_0³ = lazy⁰(_lh_zip3_LH_C_0³⁹)
-//│ 								in let _lh_row_LH_P3_1³ = lazy⁰(_lh_zip3_LH_C_0⁴⁰)
-//│ 								in let _lh_row_LH_P3_2³ = lazy⁰(force⁰(_lh_zip3_LH_C_0³⁸))
-//│ 								in zipWith3₀₀(elt₀₀, shift₀₀(0, force⁰(_lh_row_LH_P3_0³)), shift₁₀(0, force⁰(_lh_row_LH_P3_1³)), shift₂₀(0, force⁰(_lh_row_LH_P3_2³))))
-//│ 							in let t⁸⁴ = lazy⁰(zip3₃₀(_lh_zip3_LH_C_1³⁹, _lh_zip3_LH_C_1⁴⁰, force⁰(_lh_zip3_LH_C_1³⁸)))
-//│ 							in (fun f²⁷ -> [LH_C f²⁷(force⁰(h⁸⁴)) map₂₀(f²⁷, force⁰(t⁸⁴))]))))))
+//│ 							let h⁸⁴ = 	
+//│ 								let _lh_row_LH_P3_0³ = _lh_zip3_LH_C_0³⁹
+//│ 								in let _lh_row_LH_P3_1³ = _lh_zip3_LH_C_0⁴⁰
+//│ 								in let _lh_row_LH_P3_2³ = _lh_zip3_LH_C_0³⁸
+//│ 								in (fun _lh_dummy² -> zipWith3₀₀(elt₀₀, shift₀₀(0, _lh_row_LH_P3_0³), shift₁₀(0, _lh_row_LH_P3_1³), shift₂₀(0, _lh_row_LH_P3_2³)))
+//│ 							in let t⁸⁴ = zip3₃₀(_lh_zip3_LH_C_1³⁹, _lh_zip3_LH_C_1⁴⁰, _lh_zip3_LH_C_1³⁸)
+//│ 							in (fun f²⁷ -> [LH_C f²⁷(h⁸⁴) map₂₀(f²⁷, t⁸⁴)]))))))
 //│ 					where
 //│ 					def mappend₁₁₀(xs³⁷, ys⁵⁴) = 
 //│ 						case xs³⁷ of {
 //│ 							LH_C h⁴⁶ t⁴⁶ => 
-//│ 								let _lh_zip3_LH_C_0²⁹ = lazy⁰(h⁴⁶)
-//│ 								in let _lh_zip3_LH_C_1²⁹ = lazy⁰(mappend₁₁₀(t⁴⁶, ys⁵⁴))
+//│ 								let _lh_zip3_LH_C_0²⁹ = h⁴⁶
+//│ 								in let _lh_zip3_LH_C_1²⁹ = mappend₁₁₀(t⁴⁶, ys⁵⁴)
 //│ 								in (fun _lh_zip3_LH_C_0³⁰ -> (fun _lh_zip3_LH_C_0³¹ -> (fun _lh_zip3_LH_C_1³⁰ -> (fun _lh_zip3_LH_C_1³¹ -> 
-//│ 									let h⁷⁴ = lazy⁰(
-//│ 										let _lh_row_LH_P3_0² = lazy⁰(_lh_zip3_LH_C_0³⁰)
-//│ 										in let _lh_row_LH_P3_1² = lazy⁰(_lh_zip3_LH_C_0³¹)
-//│ 										in let _lh_row_LH_P3_2² = lazy⁰(force⁰(_lh_zip3_LH_C_0²⁹))
-//│ 										in zipWith3₀₀(elt₀₀, shift₀₀(0, force⁰(_lh_row_LH_P3_0²)), shift₁₀(0, force⁰(_lh_row_LH_P3_1²)), shift₂₀(0, force⁰(_lh_row_LH_P3_2²))))
-//│ 									in let t⁷⁴ = lazy⁰(zip3₃₀(_lh_zip3_LH_C_1³⁰, _lh_zip3_LH_C_1³¹, force⁰(_lh_zip3_LH_C_1²⁹)))
-//│ 									in (fun f²¹ -> [LH_C f²¹(force⁰(h⁷⁴)) map₂₀(f²¹, force⁰(t⁷⁴))])))))
+//│ 									let h⁷⁴ = 	
+//│ 										let _lh_row_LH_P3_0² = _lh_zip3_LH_C_0³⁰
+//│ 										in let _lh_row_LH_P3_1² = _lh_zip3_LH_C_0³¹
+//│ 										in let _lh_row_LH_P3_2² = _lh_zip3_LH_C_0²⁹
+//│ 										in (fun _lh_dummy⁰ -> zipWith3₀₀(elt₀₀, shift₀₀(0, _lh_row_LH_P3_0²), shift₁₀(0, _lh_row_LH_P3_1²), shift₂₀(0, _lh_row_LH_P3_2²)))
+//│ 									in let t⁷⁴ = zip3₃₀(_lh_zip3_LH_C_1³⁰, _lh_zip3_LH_C_1³¹, _lh_zip3_LH_C_1²⁹)
+//│ 									in (fun f²¹ -> [LH_C f²¹(h⁷⁴) map₂₀(f²¹, t⁷⁴)])))))
 //│ 							| LH_N  => ys⁵⁴}
 //│ 					def tail₃₀(ls³²) = 
 //│ 						case ls³² of {
@@ -3151,17 +3151,17 @@ testLife_nofib $ primId 15
 //│ 							| LH_N  => error⁰}
 //│ 				def shiftr₃₀(_lh_shiftr_arg1¹⁰, _lh_shiftr_arg2¹⁰) = 
 //│ 					mappend₁₂₀(
-//│ 						let h⁸⁶ = lazy⁰(_lh_shiftr_arg1¹⁰)
-//│ 						in let t⁸⁶ = lazy⁰((fun ys⁶⁹ -> ys⁶⁹))
+//│ 						let h⁸⁶ = _lh_shiftr_arg1¹⁰
+//│ 						in let t⁸⁶ = (fun ys⁶⁹ -> ys⁶⁹)
 //│ 						in (fun ys⁶⁸ -> 
-//│ 							let _lh_zip3_LH_C_0⁴⁴ = lazy⁰(force⁰(h⁸⁶))
-//│ 							in let _lh_zip3_LH_C_1⁴⁴ = lazy⁰(mappend₁₂₀(force⁰(t⁸⁶), ys⁶⁸))
+//│ 							let _lh_zip3_LH_C_0⁴⁴ = h⁸⁶
+//│ 							in let _lh_zip3_LH_C_1⁴⁴ = mappend₁₂₀(t⁸⁶, ys⁶⁸)
 //│ 							in (fun _lh_zip3_arg2¹⁷ -> (fun _lh_zip3_arg3¹⁷ -> 
 //│ 								let _lh_matchIdent⁴⁸ = _lh_zip3_arg2¹⁷
 //│ 								in case _lh_matchIdent⁴⁸ of {
 //│ 									LH_C _lh_zip3_LH_C_0¹³ _lh_zip3_LH_C_1¹³ => 
 //│ 										let _lh_matchIdent⁴⁹ = _lh_zip3_arg3¹⁷
-//│ 										in _lh_matchIdent⁴⁹(force⁰(_lh_zip3_LH_C_0⁴⁴), _lh_zip3_LH_C_0¹³, force⁰(_lh_zip3_LH_C_1⁴⁴), _lh_zip3_LH_C_1¹³)
+//│ 										in _lh_matchIdent⁴⁹(_lh_zip3_LH_C_0⁴⁴, _lh_zip3_LH_C_0¹³, _lh_zip3_LH_C_1⁴⁴, _lh_zip3_LH_C_1¹³)
 //│ 									| LH_N  => (fun f³³ -> [LH_N])
 //│ 									| _  => error⁰}))), init₃₀(_lh_shiftr_arg2¹⁰))
 //│ 					where
@@ -3170,14 +3170,14 @@ testLife_nofib $ primId 15
 //│ 							LH_C _lh_init_LH_C_0⁵ _lh_init_LH_C_1⁵ => case _lh_init_LH_C_1⁵ of {
 //│ 								LH_N  => (fun _lh_zip3_arg2¹⁵ -> (fun _lh_zip3_arg3¹⁵ -> (fun f²⁹ -> [LH_N])))
 //│ 								| _  => 
-//│ 									let _lh_zip3_LH_C_0⁴³ = lazy⁰(_lh_init_LH_C_0⁵)
-//│ 									in let _lh_zip3_LH_C_1⁴³ = lazy⁰(init₃₀(_lh_init_LH_C_1⁵))
+//│ 									let _lh_zip3_LH_C_0⁴³ = _lh_init_LH_C_0⁵
+//│ 									in let _lh_zip3_LH_C_1⁴³ = init₃₀(_lh_init_LH_C_1⁵)
 //│ 									in (fun _lh_zip3_arg2¹⁶ -> (fun _lh_zip3_arg3¹⁶ -> 
 //│ 										let _lh_matchIdent⁴⁶ = _lh_zip3_arg2¹⁶
 //│ 										in case _lh_matchIdent⁴⁶ of {
 //│ 											LH_C _lh_zip3_LH_C_0¹³ _lh_zip3_LH_C_1¹³ => 
 //│ 												let _lh_matchIdent⁴⁷ = _lh_zip3_arg3¹⁶
-//│ 												in _lh_matchIdent⁴⁷(force⁰(_lh_zip3_LH_C_0⁴³), _lh_zip3_LH_C_0¹³, force⁰(_lh_zip3_LH_C_1⁴³), _lh_zip3_LH_C_1¹³)
+//│ 												in _lh_matchIdent⁴⁷(_lh_zip3_LH_C_0⁴³, _lh_zip3_LH_C_0¹³, _lh_zip3_LH_C_1⁴³, _lh_zip3_LH_C_1¹³)
 //│ 											| LH_N  => (fun f³⁰ -> [LH_N])
 //│ 											| _  => error⁰}))}
 //│ 							| _  => error⁰}
@@ -3195,12 +3195,12 @@ testLife_nofib $ primId 15
 //│ 					let _lh_matchIdent⁵³ = force⁰(_lh_limit_LH_C_1²)
 //│ 					in case _lh_matchIdent⁵³ of {
 //│ 						LH_C _lh_limit_LH_C_0³ _lh_limit_LH_C_1³ => if polyEq⁰(_lh_limit_LH_C_0², _lh_limit_LH_C_0³) then 
-//│ 							let hy³ = lazy⁰(_lh_limit_LH_C_0²)
-//│ 							in let ty³ = lazy⁰((fun xs⁴⁴ -> (fun f³⁴ -> [LH_N])))
-//│ 							in (fun xs⁴³ -> force⁰(xs⁴³, force⁰(hy³), force⁰(ty³))) else 
-//│ 							let hy⁴ = lazy⁰(_lh_limit_LH_C_0²)
-//│ 							in let ty⁴ = lazy⁰(limit₀₀(lazy⁰([LH_C _lh_limit_LH_C_0³ _lh_limit_LH_C_1³])))
-//│ 							in (fun xs⁴⁵ -> force⁰(xs⁴⁵, force⁰(hy⁴), force⁰(ty⁴)))
+//│ 							let hy³ = _lh_limit_LH_C_0²
+//│ 							in let ty³ = (fun xs⁴⁴ -> (fun f³⁴ -> [LH_N]))
+//│ 							in (fun xs⁴³ -> force⁰(xs⁴³, hy³, ty³)) else 
+//│ 							let hy⁴ = _lh_limit_LH_C_0²
+//│ 							in let ty⁴ = limit₀₀(lazy⁰([LH_C _lh_limit_LH_C_0³ _lh_limit_LH_C_1³]))
+//│ 							in (fun xs⁴⁵ -> force⁰(xs⁴⁵, hy⁴, ty⁴))
 //│ 						| _  => error⁰}
 //│ 				| _  => error⁰}
 //│ 		def map_lz₀₀(f²⁰, ls³⁰) = 
@@ -3214,303 +3214,303 @@ testLife_nofib $ primId 15
 //│ 		def map₄₀(f¹⁶, ls²⁶) = 
 //│ 			ls²⁶(f¹⁶)
 //│ 		def start₀₀ = 
-//│ 			let h⁸⁹ = lazy⁰((fun ys¹³⁶ -> ys¹³⁶))
-//│ 			in let t⁸⁹ = lazy⁰(
-//│ 				let h⁹² = lazy⁰((fun ys¹³⁵ -> ys¹³⁵))
-//│ 				in let t⁹² = lazy⁰(
-//│ 					let h⁹⁵ = lazy⁰((fun ys¹³⁴ -> ys¹³⁴))
-//│ 					in let t⁹⁵ = lazy⁰(
-//│ 						let h⁹⁸ = lazy⁰((fun ys¹³³ -> ys¹³³))
-//│ 						in let t⁹⁸ = lazy⁰(
-//│ 							let h¹⁰¹ = lazy⁰((fun ys¹³² -> ys¹³²))
-//│ 							in let t¹⁰¹ = lazy⁰(
-//│ 								let h¹⁰⁴ = lazy⁰((fun ys¹³¹ -> ys¹³¹))
-//│ 								in let t¹⁰⁴ = lazy⁰(
-//│ 									let h¹⁰⁷ = lazy⁰((fun ys¹³⁰ -> ys¹³⁰))
-//│ 									in let t¹⁰⁷ = lazy⁰(
-//│ 										let h¹¹⁰ = lazy⁰((fun ys¹²⁹ -> ys¹²⁹))
-//│ 										in let t¹¹⁰ = lazy⁰(
-//│ 											let h¹¹³ = lazy⁰((fun ys¹²⁸ -> ys¹²⁸))
-//│ 											in let t¹¹³ = lazy⁰(
-//│ 												let h¹¹⁶ = lazy⁰((fun ys¹²⁷ -> ys¹²⁷))
-//│ 												in let t¹¹⁶ = lazy⁰(
-//│ 													let h¹¹⁹ = lazy⁰((fun ys¹²⁶ -> ys¹²⁶))
-//│ 													in let t¹¹⁹ = lazy⁰(
-//│ 														let h¹²² = lazy⁰((fun ys¹²⁵ -> ys¹²⁵))
-//│ 														in let t¹²² = lazy⁰(
-//│ 															let h¹²⁵ = lazy⁰((fun ys¹²⁴ -> ys¹²⁴))
-//│ 															in let t¹²⁵ = lazy⁰(
-//│ 																let h¹²⁸ = lazy⁰((fun ys¹²³ -> ys¹²³))
-//│ 																in let t¹²⁸ = lazy⁰(
-//│ 																	let h¹³¹ = lazy⁰(
-//│ 																		let h¹³⁴ = lazy⁰(0)
-//│ 																		in let t¹³⁴ = lazy⁰(
-//│ 																			let h¹³⁶ = lazy⁰(0)
-//│ 																			in let t¹³⁶ = lazy⁰(
-//│ 																				let h¹³⁸ = lazy⁰(0)
-//│ 																				in let t¹³⁸ = lazy⁰(
-//│ 																					let h¹⁴⁰ = lazy⁰(1)
-//│ 																					in let t¹⁴⁰ = lazy⁰(
-//│ 																						let h¹⁴² = lazy⁰(1)
-//│ 																						in let t¹⁴² = lazy⁰(
-//│ 																							let h¹⁴⁴ = lazy⁰(1)
-//│ 																							in let t¹⁴⁴ = lazy⁰(
-//│ 																								let h¹⁴⁶ = lazy⁰(1)
-//│ 																								in let t¹⁴⁶ = lazy⁰(
-//│ 																									let h¹⁴⁸ = lazy⁰(1)
-//│ 																									in let t¹⁴⁸ = lazy⁰(
-//│ 																										let h¹⁵⁰ = lazy⁰(0)
-//│ 																										in let t¹⁵⁰ = lazy⁰(
-//│ 																											let h¹⁵² = lazy⁰(1)
-//│ 																											in let t¹⁵² = lazy⁰(
-//│ 																												let h¹⁵⁴ = lazy⁰(1)
-//│ 																												in let t¹⁵⁴ = lazy⁰(
-//│ 																													let h¹⁵⁶ = lazy⁰(1)
-//│ 																													in let t¹⁵⁶ = lazy⁰(
-//│ 																														let h¹⁵⁸ = lazy⁰(1)
-//│ 																														in let t¹⁵⁸ = lazy⁰(
-//│ 																															let h¹⁶⁰ = lazy⁰(1)
-//│ 																															in let t¹⁶⁰ = lazy⁰(
-//│ 																																let h¹⁶² = lazy⁰(0)
-//│ 																																in let t¹⁶² = lazy⁰(
-//│ 																																	let h¹⁶⁴ = lazy⁰(1)
-//│ 																																	in let t¹⁶⁴ = lazy⁰(
-//│ 																																		let h¹⁶⁶ = lazy⁰(1)
-//│ 																																		in let t¹⁶⁶ = lazy⁰(
-//│ 																																			let h¹⁶⁸ = lazy⁰(1)
-//│ 																																			in let t¹⁶⁸ = lazy⁰(
-//│ 																																				let h¹⁷⁰ = lazy⁰(1)
-//│ 																																				in let t¹⁷⁰ = lazy⁰(
-//│ 																																					let h¹⁷² = lazy⁰(1)
-//│ 																																					in let t¹⁷² = lazy⁰(
-//│ 																																						let h¹⁷⁴ = lazy⁰(0)
-//│ 																																						in let t¹⁷⁴ = lazy⁰(
-//│ 																																							let h¹⁷⁶ = lazy⁰(1)
-//│ 																																							in let t¹⁷⁶ = lazy⁰(
-//│ 																																								let h¹⁷⁸ = lazy⁰(1)
-//│ 																																								in let t¹⁷⁸ = lazy⁰(
-//│ 																																									let h¹⁸⁰ = lazy⁰(1)
-//│ 																																									in let t¹⁸⁰ = lazy⁰(
-//│ 																																										let h¹⁸² = lazy⁰(1)
-//│ 																																										in let t¹⁸² = lazy⁰(
-//│ 																																											let h¹⁸⁴ = lazy⁰(1)
-//│ 																																											in let t¹⁸⁴ = lazy⁰(
-//│ 																																												let h¹⁸⁶ = lazy⁰(0)
-//│ 																																												in let t¹⁸⁶ = lazy⁰((fun ys¹²² -> ys¹²²))
+//│ 			let h⁸⁹ = (fun ys¹³⁶ -> ys¹³⁶)
+//│ 			in let t⁸⁹ = 	
+//│ 				let h⁹² = (fun ys¹³⁵ -> ys¹³⁵)
+//│ 				in let t⁹² = 	
+//│ 					let h⁹⁵ = (fun ys¹³⁴ -> ys¹³⁴)
+//│ 					in let t⁹⁵ = 	
+//│ 						let h⁹⁸ = (fun ys¹³³ -> ys¹³³)
+//│ 						in let t⁹⁸ = 	
+//│ 							let h¹⁰¹ = (fun ys¹³² -> ys¹³²)
+//│ 							in let t¹⁰¹ = 	
+//│ 								let h¹⁰⁴ = (fun ys¹³¹ -> ys¹³¹)
+//│ 								in let t¹⁰⁴ = 	
+//│ 									let h¹⁰⁷ = (fun ys¹³⁰ -> ys¹³⁰)
+//│ 									in let t¹⁰⁷ = 	
+//│ 										let h¹¹⁰ = (fun ys¹²⁹ -> ys¹²⁹)
+//│ 										in let t¹¹⁰ = 	
+//│ 											let h¹¹³ = (fun ys¹²⁸ -> ys¹²⁸)
+//│ 											in let t¹¹³ = 	
+//│ 												let h¹¹⁶ = (fun ys¹²⁷ -> ys¹²⁷)
+//│ 												in let t¹¹⁶ = 	
+//│ 													let h¹¹⁹ = (fun ys¹²⁶ -> ys¹²⁶)
+//│ 													in let t¹¹⁹ = 	
+//│ 														let h¹²² = (fun ys¹²⁵ -> ys¹²⁵)
+//│ 														in let t¹²² = 	
+//│ 															let h¹²⁵ = (fun ys¹²⁴ -> ys¹²⁴)
+//│ 															in let t¹²⁵ = 	
+//│ 																let h¹²⁸ = (fun ys¹²³ -> ys¹²³)
+//│ 																in let t¹²⁸ = 	
+//│ 																	let h¹³¹ = 	
+//│ 																		let h¹³⁴ = 0
+//│ 																		in let t¹³⁴ = 	
+//│ 																			let h¹³⁶ = 0
+//│ 																			in let t¹³⁶ = 	
+//│ 																				let h¹³⁸ = 0
+//│ 																				in let t¹³⁸ = 	
+//│ 																					let h¹⁴⁰ = 1
+//│ 																					in let t¹⁴⁰ = 	
+//│ 																						let h¹⁴² = 1
+//│ 																						in let t¹⁴² = 	
+//│ 																							let h¹⁴⁴ = 1
+//│ 																							in let t¹⁴⁴ = 	
+//│ 																								let h¹⁴⁶ = 1
+//│ 																								in let t¹⁴⁶ = 	
+//│ 																									let h¹⁴⁸ = 1
+//│ 																									in let t¹⁴⁸ = 	
+//│ 																										let h¹⁵⁰ = 0
+//│ 																										in let t¹⁵⁰ = 	
+//│ 																											let h¹⁵² = 1
+//│ 																											in let t¹⁵² = 	
+//│ 																												let h¹⁵⁴ = 1
+//│ 																												in let t¹⁵⁴ = 	
+//│ 																													let h¹⁵⁶ = 1
+//│ 																													in let t¹⁵⁶ = 	
+//│ 																														let h¹⁵⁸ = 1
+//│ 																														in let t¹⁵⁸ = 	
+//│ 																															let h¹⁶⁰ = 1
+//│ 																															in let t¹⁶⁰ = 	
+//│ 																																let h¹⁶² = 0
+//│ 																																in let t¹⁶² = 	
+//│ 																																	let h¹⁶⁴ = 1
+//│ 																																	in let t¹⁶⁴ = 	
+//│ 																																		let h¹⁶⁶ = 1
+//│ 																																		in let t¹⁶⁶ = 	
+//│ 																																			let h¹⁶⁸ = 1
+//│ 																																			in let t¹⁶⁸ = 	
+//│ 																																				let h¹⁷⁰ = 1
+//│ 																																				in let t¹⁷⁰ = 	
+//│ 																																					let h¹⁷² = 1
+//│ 																																					in let t¹⁷² = 	
+//│ 																																						let h¹⁷⁴ = 0
+//│ 																																						in let t¹⁷⁴ = 	
+//│ 																																							let h¹⁷⁶ = 1
+//│ 																																							in let t¹⁷⁶ = 	
+//│ 																																								let h¹⁷⁸ = 1
+//│ 																																								in let t¹⁷⁸ = 	
+//│ 																																									let h¹⁸⁰ = 1
+//│ 																																									in let t¹⁸⁰ = 	
+//│ 																																										let h¹⁸² = 1
+//│ 																																										in let t¹⁸² = 	
+//│ 																																											let h¹⁸⁴ = 1
+//│ 																																											in let t¹⁸⁴ = 	
+//│ 																																												let h¹⁸⁶ = 0
+//│ 																																												in let t¹⁸⁶ = (fun ys¹²² -> ys¹²²)
 //│ 																																												in (fun ys¹²¹ -> 
-//│ 																																													let h¹⁸⁷ = lazy⁰(force⁰(h¹⁸⁶))
-//│ 																																													in let t¹⁸⁷ = lazy⁰(mappend₁₃₀(force⁰(t¹⁸⁶), ys¹²¹))
-//│ 																																													in (fun n⁵² -> [LH_C force⁰(h¹⁸⁷) take₁₀((n⁵² - 1), force⁰(t¹⁸⁷))])))
+//│ 																																													let h¹⁸⁷ = h¹⁸⁶
+//│ 																																													in let t¹⁸⁷ = mappend₁₃₀(t¹⁸⁶, ys¹²¹)
+//│ 																																													in (fun n⁵² -> [LH_C h¹⁸⁷ take₁₀((n⁵² - 1), t¹⁸⁷)]))
 //│ 																																											in (fun ys¹²⁰ -> 
-//│ 																																												let h¹⁸⁵ = lazy⁰(force⁰(h¹⁸⁴))
-//│ 																																												in let t¹⁸⁵ = lazy⁰(mappend₁₃₀(force⁰(t¹⁸⁴), ys¹²⁰))
-//│ 																																												in (fun n⁵¹ -> [LH_C force⁰(h¹⁸⁵) take₁₀((n⁵¹ - 1), force⁰(t¹⁸⁵))])))
+//│ 																																												let h¹⁸⁵ = h¹⁸⁴
+//│ 																																												in let t¹⁸⁵ = mappend₁₃₀(t¹⁸⁴, ys¹²⁰)
+//│ 																																												in (fun n⁵¹ -> [LH_C h¹⁸⁵ take₁₀((n⁵¹ - 1), t¹⁸⁵)]))
 //│ 																																										in (fun ys¹¹⁹ -> 
-//│ 																																											let h¹⁸³ = lazy⁰(force⁰(h¹⁸²))
-//│ 																																											in let t¹⁸³ = lazy⁰(mappend₁₃₀(force⁰(t¹⁸²), ys¹¹⁹))
-//│ 																																											in (fun n⁵⁰ -> [LH_C force⁰(h¹⁸³) take₁₀((n⁵⁰ - 1), force⁰(t¹⁸³))])))
+//│ 																																											let h¹⁸³ = h¹⁸²
+//│ 																																											in let t¹⁸³ = mappend₁₃₀(t¹⁸², ys¹¹⁹)
+//│ 																																											in (fun n⁵⁰ -> [LH_C h¹⁸³ take₁₀((n⁵⁰ - 1), t¹⁸³)]))
 //│ 																																									in (fun ys¹¹⁸ -> 
-//│ 																																										let h¹⁸¹ = lazy⁰(force⁰(h¹⁸⁰))
-//│ 																																										in let t¹⁸¹ = lazy⁰(mappend₁₃₀(force⁰(t¹⁸⁰), ys¹¹⁸))
-//│ 																																										in (fun n⁴⁹ -> [LH_C force⁰(h¹⁸¹) take₁₀((n⁴⁹ - 1), force⁰(t¹⁸¹))])))
+//│ 																																										let h¹⁸¹ = h¹⁸⁰
+//│ 																																										in let t¹⁸¹ = mappend₁₃₀(t¹⁸⁰, ys¹¹⁸)
+//│ 																																										in (fun n⁴⁹ -> [LH_C h¹⁸¹ take₁₀((n⁴⁹ - 1), t¹⁸¹)]))
 //│ 																																								in (fun ys¹¹⁷ -> 
-//│ 																																									let h¹⁷⁹ = lazy⁰(force⁰(h¹⁷⁸))
-//│ 																																									in let t¹⁷⁹ = lazy⁰(mappend₁₃₀(force⁰(t¹⁷⁸), ys¹¹⁷))
-//│ 																																									in (fun n⁴⁸ -> [LH_C force⁰(h¹⁷⁹) take₁₀((n⁴⁸ - 1), force⁰(t¹⁷⁹))])))
+//│ 																																									let h¹⁷⁹ = h¹⁷⁸
+//│ 																																									in let t¹⁷⁹ = mappend₁₃₀(t¹⁷⁸, ys¹¹⁷)
+//│ 																																									in (fun n⁴⁸ -> [LH_C h¹⁷⁹ take₁₀((n⁴⁸ - 1), t¹⁷⁹)]))
 //│ 																																							in (fun ys¹¹⁶ -> 
-//│ 																																								let h¹⁷⁷ = lazy⁰(force⁰(h¹⁷⁶))
-//│ 																																								in let t¹⁷⁷ = lazy⁰(mappend₁₃₀(force⁰(t¹⁷⁶), ys¹¹⁶))
-//│ 																																								in (fun n⁴⁷ -> [LH_C force⁰(h¹⁷⁷) take₁₀((n⁴⁷ - 1), force⁰(t¹⁷⁷))])))
+//│ 																																								let h¹⁷⁷ = h¹⁷⁶
+//│ 																																								in let t¹⁷⁷ = mappend₁₃₀(t¹⁷⁶, ys¹¹⁶)
+//│ 																																								in (fun n⁴⁷ -> [LH_C h¹⁷⁷ take₁₀((n⁴⁷ - 1), t¹⁷⁷)]))
 //│ 																																						in (fun ys¹¹⁵ -> 
-//│ 																																							let h¹⁷⁵ = lazy⁰(force⁰(h¹⁷⁴))
-//│ 																																							in let t¹⁷⁵ = lazy⁰(mappend₁₃₀(force⁰(t¹⁷⁴), ys¹¹⁵))
-//│ 																																							in (fun n⁴⁶ -> [LH_C force⁰(h¹⁷⁵) take₁₀((n⁴⁶ - 1), force⁰(t¹⁷⁵))])))
+//│ 																																							let h¹⁷⁵ = h¹⁷⁴
+//│ 																																							in let t¹⁷⁵ = mappend₁₃₀(t¹⁷⁴, ys¹¹⁵)
+//│ 																																							in (fun n⁴⁶ -> [LH_C h¹⁷⁵ take₁₀((n⁴⁶ - 1), t¹⁷⁵)]))
 //│ 																																					in (fun ys¹¹⁴ -> 
-//│ 																																						let h¹⁷³ = lazy⁰(force⁰(h¹⁷²))
-//│ 																																						in let t¹⁷³ = lazy⁰(mappend₁₃₀(force⁰(t¹⁷²), ys¹¹⁴))
-//│ 																																						in (fun n⁴⁵ -> [LH_C force⁰(h¹⁷³) take₁₀((n⁴⁵ - 1), force⁰(t¹⁷³))])))
+//│ 																																						let h¹⁷³ = h¹⁷²
+//│ 																																						in let t¹⁷³ = mappend₁₃₀(t¹⁷², ys¹¹⁴)
+//│ 																																						in (fun n⁴⁵ -> [LH_C h¹⁷³ take₁₀((n⁴⁵ - 1), t¹⁷³)]))
 //│ 																																				in (fun ys¹¹³ -> 
-//│ 																																					let h¹⁷¹ = lazy⁰(force⁰(h¹⁷⁰))
-//│ 																																					in let t¹⁷¹ = lazy⁰(mappend₁₃₀(force⁰(t¹⁷⁰), ys¹¹³))
-//│ 																																					in (fun n⁴⁴ -> [LH_C force⁰(h¹⁷¹) take₁₀((n⁴⁴ - 1), force⁰(t¹⁷¹))])))
+//│ 																																					let h¹⁷¹ = h¹⁷⁰
+//│ 																																					in let t¹⁷¹ = mappend₁₃₀(t¹⁷⁰, ys¹¹³)
+//│ 																																					in (fun n⁴⁴ -> [LH_C h¹⁷¹ take₁₀((n⁴⁴ - 1), t¹⁷¹)]))
 //│ 																																			in (fun ys¹¹² -> 
-//│ 																																				let h¹⁶⁹ = lazy⁰(force⁰(h¹⁶⁸))
-//│ 																																				in let t¹⁶⁹ = lazy⁰(mappend₁₃₀(force⁰(t¹⁶⁸), ys¹¹²))
-//│ 																																				in (fun n⁴³ -> [LH_C force⁰(h¹⁶⁹) take₁₀((n⁴³ - 1), force⁰(t¹⁶⁹))])))
+//│ 																																				let h¹⁶⁹ = h¹⁶⁸
+//│ 																																				in let t¹⁶⁹ = mappend₁₃₀(t¹⁶⁸, ys¹¹²)
+//│ 																																				in (fun n⁴³ -> [LH_C h¹⁶⁹ take₁₀((n⁴³ - 1), t¹⁶⁹)]))
 //│ 																																		in (fun ys¹¹¹ -> 
-//│ 																																			let h¹⁶⁷ = lazy⁰(force⁰(h¹⁶⁶))
-//│ 																																			in let t¹⁶⁷ = lazy⁰(mappend₁₃₀(force⁰(t¹⁶⁶), ys¹¹¹))
-//│ 																																			in (fun n⁴² -> [LH_C force⁰(h¹⁶⁷) take₁₀((n⁴² - 1), force⁰(t¹⁶⁷))])))
+//│ 																																			let h¹⁶⁷ = h¹⁶⁶
+//│ 																																			in let t¹⁶⁷ = mappend₁₃₀(t¹⁶⁶, ys¹¹¹)
+//│ 																																			in (fun n⁴² -> [LH_C h¹⁶⁷ take₁₀((n⁴² - 1), t¹⁶⁷)]))
 //│ 																																	in (fun ys¹¹⁰ -> 
-//│ 																																		let h¹⁶⁵ = lazy⁰(force⁰(h¹⁶⁴))
-//│ 																																		in let t¹⁶⁵ = lazy⁰(mappend₁₃₀(force⁰(t¹⁶⁴), ys¹¹⁰))
-//│ 																																		in (fun n⁴¹ -> [LH_C force⁰(h¹⁶⁵) take₁₀((n⁴¹ - 1), force⁰(t¹⁶⁵))])))
+//│ 																																		let h¹⁶⁵ = h¹⁶⁴
+//│ 																																		in let t¹⁶⁵ = mappend₁₃₀(t¹⁶⁴, ys¹¹⁰)
+//│ 																																		in (fun n⁴¹ -> [LH_C h¹⁶⁵ take₁₀((n⁴¹ - 1), t¹⁶⁵)]))
 //│ 																																in (fun ys¹⁰⁹ -> 
-//│ 																																	let h¹⁶³ = lazy⁰(force⁰(h¹⁶²))
-//│ 																																	in let t¹⁶³ = lazy⁰(mappend₁₃₀(force⁰(t¹⁶²), ys¹⁰⁹))
-//│ 																																	in (fun n⁴⁰ -> [LH_C force⁰(h¹⁶³) take₁₀((n⁴⁰ - 1), force⁰(t¹⁶³))])))
+//│ 																																	let h¹⁶³ = h¹⁶²
+//│ 																																	in let t¹⁶³ = mappend₁₃₀(t¹⁶², ys¹⁰⁹)
+//│ 																																	in (fun n⁴⁰ -> [LH_C h¹⁶³ take₁₀((n⁴⁰ - 1), t¹⁶³)]))
 //│ 																															in (fun ys¹⁰⁸ -> 
-//│ 																																let h¹⁶¹ = lazy⁰(force⁰(h¹⁶⁰))
-//│ 																																in let t¹⁶¹ = lazy⁰(mappend₁₃₀(force⁰(t¹⁶⁰), ys¹⁰⁸))
-//│ 																																in (fun n³⁹ -> [LH_C force⁰(h¹⁶¹) take₁₀((n³⁹ - 1), force⁰(t¹⁶¹))])))
+//│ 																																let h¹⁶¹ = h¹⁶⁰
+//│ 																																in let t¹⁶¹ = mappend₁₃₀(t¹⁶⁰, ys¹⁰⁸)
+//│ 																																in (fun n³⁹ -> [LH_C h¹⁶¹ take₁₀((n³⁹ - 1), t¹⁶¹)]))
 //│ 																														in (fun ys¹⁰⁷ -> 
-//│ 																															let h¹⁵⁹ = lazy⁰(force⁰(h¹⁵⁸))
-//│ 																															in let t¹⁵⁹ = lazy⁰(mappend₁₃₀(force⁰(t¹⁵⁸), ys¹⁰⁷))
-//│ 																															in (fun n³⁸ -> [LH_C force⁰(h¹⁵⁹) take₁₀((n³⁸ - 1), force⁰(t¹⁵⁹))])))
+//│ 																															let h¹⁵⁹ = h¹⁵⁸
+//│ 																															in let t¹⁵⁹ = mappend₁₃₀(t¹⁵⁸, ys¹⁰⁷)
+//│ 																															in (fun n³⁸ -> [LH_C h¹⁵⁹ take₁₀((n³⁸ - 1), t¹⁵⁹)]))
 //│ 																													in (fun ys¹⁰⁶ -> 
-//│ 																														let h¹⁵⁷ = lazy⁰(force⁰(h¹⁵⁶))
-//│ 																														in let t¹⁵⁷ = lazy⁰(mappend₁₃₀(force⁰(t¹⁵⁶), ys¹⁰⁶))
-//│ 																														in (fun n³⁷ -> [LH_C force⁰(h¹⁵⁷) take₁₀((n³⁷ - 1), force⁰(t¹⁵⁷))])))
+//│ 																														let h¹⁵⁷ = h¹⁵⁶
+//│ 																														in let t¹⁵⁷ = mappend₁₃₀(t¹⁵⁶, ys¹⁰⁶)
+//│ 																														in (fun n³⁷ -> [LH_C h¹⁵⁷ take₁₀((n³⁷ - 1), t¹⁵⁷)]))
 //│ 																												in (fun ys¹⁰⁵ -> 
-//│ 																													let h¹⁵⁵ = lazy⁰(force⁰(h¹⁵⁴))
-//│ 																													in let t¹⁵⁵ = lazy⁰(mappend₁₃₀(force⁰(t¹⁵⁴), ys¹⁰⁵))
-//│ 																													in (fun n³⁶ -> [LH_C force⁰(h¹⁵⁵) take₁₀((n³⁶ - 1), force⁰(t¹⁵⁵))])))
+//│ 																													let h¹⁵⁵ = h¹⁵⁴
+//│ 																													in let t¹⁵⁵ = mappend₁₃₀(t¹⁵⁴, ys¹⁰⁵)
+//│ 																													in (fun n³⁶ -> [LH_C h¹⁵⁵ take₁₀((n³⁶ - 1), t¹⁵⁵)]))
 //│ 																											in (fun ys¹⁰⁴ -> 
-//│ 																												let h¹⁵³ = lazy⁰(force⁰(h¹⁵²))
-//│ 																												in let t¹⁵³ = lazy⁰(mappend₁₃₀(force⁰(t¹⁵²), ys¹⁰⁴))
-//│ 																												in (fun n³⁵ -> [LH_C force⁰(h¹⁵³) take₁₀((n³⁵ - 1), force⁰(t¹⁵³))])))
+//│ 																												let h¹⁵³ = h¹⁵²
+//│ 																												in let t¹⁵³ = mappend₁₃₀(t¹⁵², ys¹⁰⁴)
+//│ 																												in (fun n³⁵ -> [LH_C h¹⁵³ take₁₀((n³⁵ - 1), t¹⁵³)]))
 //│ 																										in (fun ys¹⁰³ -> 
-//│ 																											let h¹⁵¹ = lazy⁰(force⁰(h¹⁵⁰))
-//│ 																											in let t¹⁵¹ = lazy⁰(mappend₁₃₀(force⁰(t¹⁵⁰), ys¹⁰³))
-//│ 																											in (fun n³⁴ -> [LH_C force⁰(h¹⁵¹) take₁₀((n³⁴ - 1), force⁰(t¹⁵¹))])))
+//│ 																											let h¹⁵¹ = h¹⁵⁰
+//│ 																											in let t¹⁵¹ = mappend₁₃₀(t¹⁵⁰, ys¹⁰³)
+//│ 																											in (fun n³⁴ -> [LH_C h¹⁵¹ take₁₀((n³⁴ - 1), t¹⁵¹)]))
 //│ 																									in (fun ys¹⁰² -> 
-//│ 																										let h¹⁴⁹ = lazy⁰(force⁰(h¹⁴⁸))
-//│ 																										in let t¹⁴⁹ = lazy⁰(mappend₁₃₀(force⁰(t¹⁴⁸), ys¹⁰²))
-//│ 																										in (fun n³³ -> [LH_C force⁰(h¹⁴⁹) take₁₀((n³³ - 1), force⁰(t¹⁴⁹))])))
+//│ 																										let h¹⁴⁹ = h¹⁴⁸
+//│ 																										in let t¹⁴⁹ = mappend₁₃₀(t¹⁴⁸, ys¹⁰²)
+//│ 																										in (fun n³³ -> [LH_C h¹⁴⁹ take₁₀((n³³ - 1), t¹⁴⁹)]))
 //│ 																								in (fun ys¹⁰¹ -> 
-//│ 																									let h¹⁴⁷ = lazy⁰(force⁰(h¹⁴⁶))
-//│ 																									in let t¹⁴⁷ = lazy⁰(mappend₁₃₀(force⁰(t¹⁴⁶), ys¹⁰¹))
-//│ 																									in (fun n³² -> [LH_C force⁰(h¹⁴⁷) take₁₀((n³² - 1), force⁰(t¹⁴⁷))])))
+//│ 																									let h¹⁴⁷ = h¹⁴⁶
+//│ 																									in let t¹⁴⁷ = mappend₁₃₀(t¹⁴⁶, ys¹⁰¹)
+//│ 																									in (fun n³² -> [LH_C h¹⁴⁷ take₁₀((n³² - 1), t¹⁴⁷)]))
 //│ 																							in (fun ys¹⁰⁰ -> 
-//│ 																								let h¹⁴⁵ = lazy⁰(force⁰(h¹⁴⁴))
-//│ 																								in let t¹⁴⁵ = lazy⁰(mappend₁₃₀(force⁰(t¹⁴⁴), ys¹⁰⁰))
-//│ 																								in (fun n³¹ -> [LH_C force⁰(h¹⁴⁵) take₁₀((n³¹ - 1), force⁰(t¹⁴⁵))])))
+//│ 																								let h¹⁴⁵ = h¹⁴⁴
+//│ 																								in let t¹⁴⁵ = mappend₁₃₀(t¹⁴⁴, ys¹⁰⁰)
+//│ 																								in (fun n³¹ -> [LH_C h¹⁴⁵ take₁₀((n³¹ - 1), t¹⁴⁵)]))
 //│ 																						in (fun ys⁹⁹ -> 
-//│ 																							let h¹⁴³ = lazy⁰(force⁰(h¹⁴²))
-//│ 																							in let t¹⁴³ = lazy⁰(mappend₁₃₀(force⁰(t¹⁴²), ys⁹⁹))
-//│ 																							in (fun n³⁰ -> [LH_C force⁰(h¹⁴³) take₁₀((n³⁰ - 1), force⁰(t¹⁴³))])))
+//│ 																							let h¹⁴³ = h¹⁴²
+//│ 																							in let t¹⁴³ = mappend₁₃₀(t¹⁴², ys⁹⁹)
+//│ 																							in (fun n³⁰ -> [LH_C h¹⁴³ take₁₀((n³⁰ - 1), t¹⁴³)]))
 //│ 																					in (fun ys⁹⁸ -> 
-//│ 																						let h¹⁴¹ = lazy⁰(force⁰(h¹⁴⁰))
-//│ 																						in let t¹⁴¹ = lazy⁰(mappend₁₃₀(force⁰(t¹⁴⁰), ys⁹⁸))
-//│ 																						in (fun n²⁹ -> [LH_C force⁰(h¹⁴¹) take₁₀((n²⁹ - 1), force⁰(t¹⁴¹))])))
+//│ 																						let h¹⁴¹ = h¹⁴⁰
+//│ 																						in let t¹⁴¹ = mappend₁₃₀(t¹⁴⁰, ys⁹⁸)
+//│ 																						in (fun n²⁹ -> [LH_C h¹⁴¹ take₁₀((n²⁹ - 1), t¹⁴¹)]))
 //│ 																				in (fun ys⁹⁷ -> 
-//│ 																					let h¹³⁹ = lazy⁰(force⁰(h¹³⁸))
-//│ 																					in let t¹³⁹ = lazy⁰(mappend₁₃₀(force⁰(t¹³⁸), ys⁹⁷))
-//│ 																					in (fun n²⁸ -> [LH_C force⁰(h¹³⁹) take₁₀((n²⁸ - 1), force⁰(t¹³⁹))])))
+//│ 																					let h¹³⁹ = h¹³⁸
+//│ 																					in let t¹³⁹ = mappend₁₃₀(t¹³⁸, ys⁹⁷)
+//│ 																					in (fun n²⁸ -> [LH_C h¹³⁹ take₁₀((n²⁸ - 1), t¹³⁹)]))
 //│ 																			in (fun ys⁹⁶ -> 
-//│ 																				let h¹³⁷ = lazy⁰(force⁰(h¹³⁶))
-//│ 																				in let t¹³⁷ = lazy⁰(mappend₁₃₀(force⁰(t¹³⁶), ys⁹⁶))
-//│ 																				in (fun n²⁷ -> [LH_C force⁰(h¹³⁷) take₁₀((n²⁷ - 1), force⁰(t¹³⁷))])))
+//│ 																				let h¹³⁷ = h¹³⁶
+//│ 																				in let t¹³⁷ = mappend₁₃₀(t¹³⁶, ys⁹⁶)
+//│ 																				in (fun n²⁷ -> [LH_C h¹³⁷ take₁₀((n²⁷ - 1), t¹³⁷)]))
 //│ 																		in (fun ys⁹⁵ -> 
-//│ 																			let h¹³⁵ = lazy⁰(force⁰(h¹³⁴))
-//│ 																			in let t¹³⁵ = lazy⁰(mappend₁₃₀(force⁰(t¹³⁴), ys⁹⁵))
-//│ 																			in (fun n²⁶ -> [LH_C force⁰(h¹³⁵) take₁₀((n²⁶ - 1), force⁰(t¹³⁵))])))
-//│ 																	in let t¹³¹ = lazy⁰((fun ys⁹⁴ -> ys⁹⁴))
+//│ 																			let h¹³⁵ = h¹³⁴
+//│ 																			in let t¹³⁵ = mappend₁₃₀(t¹³⁴, ys⁹⁵)
+//│ 																			in (fun n²⁶ -> [LH_C h¹³⁵ take₁₀((n²⁶ - 1), t¹³⁵)]))
+//│ 																	in let t¹³¹ = (fun ys⁹⁴ -> ys⁹⁴)
 //│ 																	in (fun ys⁹³ -> 
-//│ 																		let h¹³² = lazy⁰(force⁰(h¹³¹))
-//│ 																		in let t¹³² = lazy⁰(mappend₁₄₀(force⁰(t¹³¹), ys⁹³))
+//│ 																		let h¹³² = h¹³¹
+//│ 																		in let t¹³² = mappend₁₄₀(t¹³¹, ys⁹³)
 //│ 																		in (fun f⁵¹ -> 
-//│ 																			let h¹³³ = lazy⁰(f⁵¹(force⁰(h¹³²)))
-//│ 																			in let t¹³³ = lazy⁰(map₄₀(f⁵¹, force⁰(t¹³²)))
-//│ 																			in (fun n²⁵ -> [LH_C force⁰(h¹³³) take₀₀((n²⁵ - 1), force⁰(t¹³³))]))))
+//│ 																			let h¹³³ = f⁵¹(h¹³²)
+//│ 																			in let t¹³³ = map₄₀(f⁵¹, t¹³²)
+//│ 																			in (fun n²⁵ -> [LH_C h¹³³ take₀₀((n²⁵ - 1), t¹³³)])))
 //│ 																in (fun ys⁹² -> 
-//│ 																	let h¹²⁹ = lazy⁰(force⁰(h¹²⁸))
-//│ 																	in let t¹²⁹ = lazy⁰(mappend₁₄₀(force⁰(t¹²⁸), ys⁹²))
+//│ 																	let h¹²⁹ = h¹²⁸
+//│ 																	in let t¹²⁹ = mappend₁₄₀(t¹²⁸, ys⁹²)
 //│ 																	in (fun f⁵⁰ -> 
-//│ 																		let h¹³⁰ = lazy⁰(f⁵⁰(force⁰(h¹²⁹)))
-//│ 																		in let t¹³⁰ = lazy⁰(map₄₀(f⁵⁰, force⁰(t¹²⁹)))
-//│ 																		in (fun n²⁴ -> [LH_C force⁰(h¹³⁰) take₀₀((n²⁴ - 1), force⁰(t¹³⁰))]))))
+//│ 																		let h¹³⁰ = f⁵⁰(h¹²⁹)
+//│ 																		in let t¹³⁰ = map₄₀(f⁵⁰, t¹²⁹)
+//│ 																		in (fun n²⁴ -> [LH_C h¹³⁰ take₀₀((n²⁴ - 1), t¹³⁰)])))
 //│ 															in (fun ys⁹¹ -> 
-//│ 																let h¹²⁶ = lazy⁰(force⁰(h¹²⁵))
-//│ 																in let t¹²⁶ = lazy⁰(mappend₁₄₀(force⁰(t¹²⁵), ys⁹¹))
+//│ 																let h¹²⁶ = h¹²⁵
+//│ 																in let t¹²⁶ = mappend₁₄₀(t¹²⁵, ys⁹¹)
 //│ 																in (fun f⁴⁹ -> 
-//│ 																	let h¹²⁷ = lazy⁰(f⁴⁹(force⁰(h¹²⁶)))
-//│ 																	in let t¹²⁷ = lazy⁰(map₄₀(f⁴⁹, force⁰(t¹²⁶)))
-//│ 																	in (fun n²³ -> [LH_C force⁰(h¹²⁷) take₀₀((n²³ - 1), force⁰(t¹²⁷))]))))
+//│ 																	let h¹²⁷ = f⁴⁹(h¹²⁶)
+//│ 																	in let t¹²⁷ = map₄₀(f⁴⁹, t¹²⁶)
+//│ 																	in (fun n²³ -> [LH_C h¹²⁷ take₀₀((n²³ - 1), t¹²⁷)])))
 //│ 														in (fun ys⁹⁰ -> 
-//│ 															let h¹²³ = lazy⁰(force⁰(h¹²²))
-//│ 															in let t¹²³ = lazy⁰(mappend₁₄₀(force⁰(t¹²²), ys⁹⁰))
+//│ 															let h¹²³ = h¹²²
+//│ 															in let t¹²³ = mappend₁₄₀(t¹²², ys⁹⁰)
 //│ 															in (fun f⁴⁸ -> 
-//│ 																let h¹²⁴ = lazy⁰(f⁴⁸(force⁰(h¹²³)))
-//│ 																in let t¹²⁴ = lazy⁰(map₄₀(f⁴⁸, force⁰(t¹²³)))
-//│ 																in (fun n²² -> [LH_C force⁰(h¹²⁴) take₀₀((n²² - 1), force⁰(t¹²⁴))]))))
+//│ 																let h¹²⁴ = f⁴⁸(h¹²³)
+//│ 																in let t¹²⁴ = map₄₀(f⁴⁸, t¹²³)
+//│ 																in (fun n²² -> [LH_C h¹²⁴ take₀₀((n²² - 1), t¹²⁴)])))
 //│ 													in (fun ys⁸⁹ -> 
-//│ 														let h¹²⁰ = lazy⁰(force⁰(h¹¹⁹))
-//│ 														in let t¹²⁰ = lazy⁰(mappend₁₄₀(force⁰(t¹¹⁹), ys⁸⁹))
+//│ 														let h¹²⁰ = h¹¹⁹
+//│ 														in let t¹²⁰ = mappend₁₄₀(t¹¹⁹, ys⁸⁹)
 //│ 														in (fun f⁴⁷ -> 
-//│ 															let h¹²¹ = lazy⁰(f⁴⁷(force⁰(h¹²⁰)))
-//│ 															in let t¹²¹ = lazy⁰(map₄₀(f⁴⁷, force⁰(t¹²⁰)))
-//│ 															in (fun n²¹ -> [LH_C force⁰(h¹²¹) take₀₀((n²¹ - 1), force⁰(t¹²¹))]))))
+//│ 															let h¹²¹ = f⁴⁷(h¹²⁰)
+//│ 															in let t¹²¹ = map₄₀(f⁴⁷, t¹²⁰)
+//│ 															in (fun n²¹ -> [LH_C h¹²¹ take₀₀((n²¹ - 1), t¹²¹)])))
 //│ 												in (fun ys⁸⁸ -> 
-//│ 													let h¹¹⁷ = lazy⁰(force⁰(h¹¹⁶))
-//│ 													in let t¹¹⁷ = lazy⁰(mappend₁₄₀(force⁰(t¹¹⁶), ys⁸⁸))
+//│ 													let h¹¹⁷ = h¹¹⁶
+//│ 													in let t¹¹⁷ = mappend₁₄₀(t¹¹⁶, ys⁸⁸)
 //│ 													in (fun f⁴⁶ -> 
-//│ 														let h¹¹⁸ = lazy⁰(f⁴⁶(force⁰(h¹¹⁷)))
-//│ 														in let t¹¹⁸ = lazy⁰(map₄₀(f⁴⁶, force⁰(t¹¹⁷)))
-//│ 														in (fun n²⁰ -> [LH_C force⁰(h¹¹⁸) take₀₀((n²⁰ - 1), force⁰(t¹¹⁸))]))))
+//│ 														let h¹¹⁸ = f⁴⁶(h¹¹⁷)
+//│ 														in let t¹¹⁸ = map₄₀(f⁴⁶, t¹¹⁷)
+//│ 														in (fun n²⁰ -> [LH_C h¹¹⁸ take₀₀((n²⁰ - 1), t¹¹⁸)])))
 //│ 											in (fun ys⁸⁷ -> 
-//│ 												let h¹¹⁴ = lazy⁰(force⁰(h¹¹³))
-//│ 												in let t¹¹⁴ = lazy⁰(mappend₁₄₀(force⁰(t¹¹³), ys⁸⁷))
+//│ 												let h¹¹⁴ = h¹¹³
+//│ 												in let t¹¹⁴ = mappend₁₄₀(t¹¹³, ys⁸⁷)
 //│ 												in (fun f⁴⁵ -> 
-//│ 													let h¹¹⁵ = lazy⁰(f⁴⁵(force⁰(h¹¹⁴)))
-//│ 													in let t¹¹⁵ = lazy⁰(map₄₀(f⁴⁵, force⁰(t¹¹⁴)))
-//│ 													in (fun n¹⁹ -> [LH_C force⁰(h¹¹⁵) take₀₀((n¹⁹ - 1), force⁰(t¹¹⁵))]))))
+//│ 													let h¹¹⁵ = f⁴⁵(h¹¹⁴)
+//│ 													in let t¹¹⁵ = map₄₀(f⁴⁵, t¹¹⁴)
+//│ 													in (fun n¹⁹ -> [LH_C h¹¹⁵ take₀₀((n¹⁹ - 1), t¹¹⁵)])))
 //│ 										in (fun ys⁸⁶ -> 
-//│ 											let h¹¹¹ = lazy⁰(force⁰(h¹¹⁰))
-//│ 											in let t¹¹¹ = lazy⁰(mappend₁₄₀(force⁰(t¹¹⁰), ys⁸⁶))
+//│ 											let h¹¹¹ = h¹¹⁰
+//│ 											in let t¹¹¹ = mappend₁₄₀(t¹¹⁰, ys⁸⁶)
 //│ 											in (fun f⁴⁴ -> 
-//│ 												let h¹¹² = lazy⁰(f⁴⁴(force⁰(h¹¹¹)))
-//│ 												in let t¹¹² = lazy⁰(map₄₀(f⁴⁴, force⁰(t¹¹¹)))
-//│ 												in (fun n¹⁸ -> [LH_C force⁰(h¹¹²) take₀₀((n¹⁸ - 1), force⁰(t¹¹²))]))))
+//│ 												let h¹¹² = f⁴⁴(h¹¹¹)
+//│ 												in let t¹¹² = map₄₀(f⁴⁴, t¹¹¹)
+//│ 												in (fun n¹⁸ -> [LH_C h¹¹² take₀₀((n¹⁸ - 1), t¹¹²)])))
 //│ 									in (fun ys⁸⁵ -> 
-//│ 										let h¹⁰⁸ = lazy⁰(force⁰(h¹⁰⁷))
-//│ 										in let t¹⁰⁸ = lazy⁰(mappend₁₄₀(force⁰(t¹⁰⁷), ys⁸⁵))
+//│ 										let h¹⁰⁸ = h¹⁰⁷
+//│ 										in let t¹⁰⁸ = mappend₁₄₀(t¹⁰⁷, ys⁸⁵)
 //│ 										in (fun f⁴³ -> 
-//│ 											let h¹⁰⁹ = lazy⁰(f⁴³(force⁰(h¹⁰⁸)))
-//│ 											in let t¹⁰⁹ = lazy⁰(map₄₀(f⁴³, force⁰(t¹⁰⁸)))
-//│ 											in (fun n¹⁷ -> [LH_C force⁰(h¹⁰⁹) take₀₀((n¹⁷ - 1), force⁰(t¹⁰⁹))]))))
+//│ 											let h¹⁰⁹ = f⁴³(h¹⁰⁸)
+//│ 											in let t¹⁰⁹ = map₄₀(f⁴³, t¹⁰⁸)
+//│ 											in (fun n¹⁷ -> [LH_C h¹⁰⁹ take₀₀((n¹⁷ - 1), t¹⁰⁹)])))
 //│ 								in (fun ys⁸⁴ -> 
-//│ 									let h¹⁰⁵ = lazy⁰(force⁰(h¹⁰⁴))
-//│ 									in let t¹⁰⁵ = lazy⁰(mappend₁₄₀(force⁰(t¹⁰⁴), ys⁸⁴))
+//│ 									let h¹⁰⁵ = h¹⁰⁴
+//│ 									in let t¹⁰⁵ = mappend₁₄₀(t¹⁰⁴, ys⁸⁴)
 //│ 									in (fun f⁴² -> 
-//│ 										let h¹⁰⁶ = lazy⁰(f⁴²(force⁰(h¹⁰⁵)))
-//│ 										in let t¹⁰⁶ = lazy⁰(map₄₀(f⁴², force⁰(t¹⁰⁵)))
-//│ 										in (fun n¹⁶ -> [LH_C force⁰(h¹⁰⁶) take₀₀((n¹⁶ - 1), force⁰(t¹⁰⁶))]))))
+//│ 										let h¹⁰⁶ = f⁴²(h¹⁰⁵)
+//│ 										in let t¹⁰⁶ = map₄₀(f⁴², t¹⁰⁵)
+//│ 										in (fun n¹⁶ -> [LH_C h¹⁰⁶ take₀₀((n¹⁶ - 1), t¹⁰⁶)])))
 //│ 							in (fun ys⁸³ -> 
-//│ 								let h¹⁰² = lazy⁰(force⁰(h¹⁰¹))
-//│ 								in let t¹⁰² = lazy⁰(mappend₁₄₀(force⁰(t¹⁰¹), ys⁸³))
+//│ 								let h¹⁰² = h¹⁰¹
+//│ 								in let t¹⁰² = mappend₁₄₀(t¹⁰¹, ys⁸³)
 //│ 								in (fun f⁴¹ -> 
-//│ 									let h¹⁰³ = lazy⁰(f⁴¹(force⁰(h¹⁰²)))
-//│ 									in let t¹⁰³ = lazy⁰(map₄₀(f⁴¹, force⁰(t¹⁰²)))
-//│ 									in (fun n¹⁵ -> [LH_C force⁰(h¹⁰³) take₀₀((n¹⁵ - 1), force⁰(t¹⁰³))]))))
+//│ 									let h¹⁰³ = f⁴¹(h¹⁰²)
+//│ 									in let t¹⁰³ = map₄₀(f⁴¹, t¹⁰²)
+//│ 									in (fun n¹⁵ -> [LH_C h¹⁰³ take₀₀((n¹⁵ - 1), t¹⁰³)])))
 //│ 						in (fun ys⁸² -> 
-//│ 							let h⁹⁹ = lazy⁰(force⁰(h⁹⁸))
-//│ 							in let t⁹⁹ = lazy⁰(mappend₁₄₀(force⁰(t⁹⁸), ys⁸²))
+//│ 							let h⁹⁹ = h⁹⁸
+//│ 							in let t⁹⁹ = mappend₁₄₀(t⁹⁸, ys⁸²)
 //│ 							in (fun f⁴⁰ -> 
-//│ 								let h¹⁰⁰ = lazy⁰(f⁴⁰(force⁰(h⁹⁹)))
-//│ 								in let t¹⁰⁰ = lazy⁰(map₄₀(f⁴⁰, force⁰(t⁹⁹)))
-//│ 								in (fun n¹⁴ -> [LH_C force⁰(h¹⁰⁰) take₀₀((n¹⁴ - 1), force⁰(t¹⁰⁰))]))))
+//│ 								let h¹⁰⁰ = f⁴⁰(h⁹⁹)
+//│ 								in let t¹⁰⁰ = map₄₀(f⁴⁰, t⁹⁹)
+//│ 								in (fun n¹⁴ -> [LH_C h¹⁰⁰ take₀₀((n¹⁴ - 1), t¹⁰⁰)])))
 //│ 					in (fun ys⁸¹ -> 
-//│ 						let h⁹⁶ = lazy⁰(force⁰(h⁹⁵))
-//│ 						in let t⁹⁶ = lazy⁰(mappend₁₄₀(force⁰(t⁹⁵), ys⁸¹))
+//│ 						let h⁹⁶ = h⁹⁵
+//│ 						in let t⁹⁶ = mappend₁₄₀(t⁹⁵, ys⁸¹)
 //│ 						in (fun f³⁹ -> 
-//│ 							let h⁹⁷ = lazy⁰(f³⁹(force⁰(h⁹⁶)))
-//│ 							in let t⁹⁷ = lazy⁰(map₄₀(f³⁹, force⁰(t⁹⁶)))
-//│ 							in (fun n¹³ -> [LH_C force⁰(h⁹⁷) take₀₀((n¹³ - 1), force⁰(t⁹⁷))]))))
+//│ 							let h⁹⁷ = f³⁹(h⁹⁶)
+//│ 							in let t⁹⁷ = map₄₀(f³⁹, t⁹⁶)
+//│ 							in (fun n¹³ -> [LH_C h⁹⁷ take₀₀((n¹³ - 1), t⁹⁷)])))
 //│ 				in (fun ys⁸⁰ -> 
-//│ 					let h⁹³ = lazy⁰(force⁰(h⁹²))
-//│ 					in let t⁹³ = lazy⁰(mappend₁₄₀(force⁰(t⁹²), ys⁸⁰))
+//│ 					let h⁹³ = h⁹²
+//│ 					in let t⁹³ = mappend₁₄₀(t⁹², ys⁸⁰)
 //│ 					in (fun f³⁸ -> 
-//│ 						let h⁹⁴ = lazy⁰(f³⁸(force⁰(h⁹³)))
-//│ 						in let t⁹⁴ = lazy⁰(map₄₀(f³⁸, force⁰(t⁹³)))
-//│ 						in (fun n¹² -> [LH_C force⁰(h⁹⁴) take₀₀((n¹² - 1), force⁰(t⁹⁴))]))))
+//│ 						let h⁹⁴ = f³⁸(h⁹³)
+//│ 						in let t⁹⁴ = map₄₀(f³⁸, t⁹³)
+//│ 						in (fun n¹² -> [LH_C h⁹⁴ take₀₀((n¹² - 1), t⁹⁴)])))
 //│ 			in (fun ys⁷⁹ -> 
-//│ 				let h⁹⁰ = lazy⁰(force⁰(h⁸⁹))
-//│ 				in let t⁹⁰ = lazy⁰(mappend₁₄₀(force⁰(t⁸⁹), ys⁷⁹))
+//│ 				let h⁹⁰ = h⁸⁹
+//│ 				in let t⁹⁰ = mappend₁₄₀(t⁸⁹, ys⁷⁹)
 //│ 				in (fun f³⁷ -> 
-//│ 					let h⁹¹ = lazy⁰(f³⁷(force⁰(h⁹⁰)))
-//│ 					in let t⁹¹ = lazy⁰(map₄₀(f³⁷, force⁰(t⁹⁰)))
-//│ 					in (fun n¹¹ -> [LH_C force⁰(h⁹¹) take₀₀((n¹¹ - 1), force⁰(t⁹¹))])))
+//│ 					let h⁹¹ = f³⁷(h⁹⁰)
+//│ 					in let t⁹¹ = map₄₀(f³⁷, t⁹⁰)
+//│ 					in (fun n¹¹ -> [LH_C h⁹¹ take₀₀((n¹¹ - 1), t⁹¹)])))
 //│ 		def take₀₀(n¹⁰, ls³⁵) = 
 //│ 			if (n¹⁰ > 0) then ls³⁵(n¹⁰) else [LH_N]
 //│ 		def take₁₀(n⁶, ls²⁹) = 

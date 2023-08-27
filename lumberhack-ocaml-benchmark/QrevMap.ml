@@ -60,10 +60,10 @@ let rec qrev_d0 a_1 ys_0 =
 let rec map_d0 f_1 xs_1 =
   (match xs_1 with
     | `C(h_1, t_1) -> 
-      (let rec h_2 = (lazy (f_1 h_1)) in
-        (let rec t_2 = (lazy ((map_d0 f_1) t_1)) in
+      (let rec h_2 = (f_1 h_1) in
+        (let rec t_2 = ((map_d0 f_1) t_1) in
           (fun a_3 -> 
-            ((qrev_d0 (`C((Lazy.force h_2), a_3))) (Lazy.force t_2)))))
+            ((qrev_d0 (`C(h_2, a_3))) t_2))))
     | `N -> 
       (fun a_4 -> 
         a_4))
@@ -82,21 +82,21 @@ let rec enumFromTo_d1_d0 a_6 b_2 =
     (`C(a_6, ((enumFromTo_d1_d0 (a_6 + 1)) b_2)))
   else
     (`N));;
-let rec qrev_d0_d0 a_1_2 ys_2 =
-  (ys_2 a_1_2);;
+let rec qrev_d0_d0 a_9 ys_2 =
+  (ys_2 a_9);;
 let rec qrev_d0_d1 a_7 ys_1 =
   (ys_1 a_7);;
 let rec map_d0_d0 f_3 xs_3 _lh_popOutId_0_0 =
   (match xs_3 with
     | `C(h_4, t_4) -> 
-      (let rec h_5 = (lazy (f_3 h_4)) in
-        (let rec t_5 = (lazy ((map_d0_d0 f_3) t_4)) in
-          ((qrev_d0_d0 (`C((Lazy.force h_5), _lh_popOutId_0_0))) (Lazy.force t_5))))
+      (let rec h_5 = (f_3 h_4) in
+        (let rec t_5 = ((map_d0_d0 f_3) t_4) in
+          ((qrev_d0_d0 (`C(h_5, _lh_popOutId_0_0))) t_5)))
     | `N -> 
       _lh_popOutId_0_0)
-and testQrevMap_d0_d0 ls_2 =
-  ((qrev_d0_d1 (`N)) ((map_d0_d0 (fun x_2 -> 
-    (x_2 + 1))) ls_2));;
+and testQrevMap_d0_d0 ls_3 =
+  ((qrev_d0_d1 (`N)) ((map_d0_d0 (fun x_3 -> 
+    (x_3 + 1))) ls_3));;
 
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_QrevMap" (fun () -> ignore ((testQrevMap ((enumFromTo 1) 10000))));

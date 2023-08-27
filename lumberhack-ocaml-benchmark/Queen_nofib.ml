@@ -70,16 +70,16 @@ let rec safe_d0_d0 _lh_safe_arg1_1 _lh_safe_arg2_1 _lh_safe_arg3_0 =
   ((_lh_safe_arg3_0 _lh_safe_arg1_1) _lh_safe_arg2_1);;
 let rec enumFromTo_d0_d0 a_0 b_0 =
   (if (a_0 <= b_0) then
-    (let rec _lh_listcomp_fun_ls_h_0 = (lazy a_0) in
-      (let rec _lh_listcomp_fun_ls_t_0 = (lazy ((enumFromTo_d0_d0 (a_0 + 1)) b_0)) in
+    (let rec _lh_listcomp_fun_ls_h_0 = a_0 in
+      (let rec _lh_listcomp_fun_ls_t_0 = ((enumFromTo_d0_d0 (a_0 + 1)) b_0) in
         (fun _lh_listcomp_fun_ls_h_1 _lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_1 _lh_listcomp_fun_1 -> 
-          (if (((safe_d0_d0 (Lazy.force _lh_listcomp_fun_ls_h_0)) 1) _lh_listcomp_fun_ls_h_1) then
-            (`LH_C((let rec _lh_safe_LH_C_0_0 = (lazy (Lazy.force _lh_listcomp_fun_ls_h_0)) in
-              (let rec _lh_safe_LH_C_1_0 = (lazy _lh_listcomp_fun_ls_h_1) in
+          (if (((safe_d0_d0 _lh_listcomp_fun_ls_h_0) 1) _lh_listcomp_fun_ls_h_1) then
+            (`LH_C((let rec _lh_safe_LH_C_0_0 = _lh_listcomp_fun_ls_h_0 in
+              (let rec _lh_safe_LH_C_1_0 = _lh_listcomp_fun_ls_h_1 in
                 (fun _lh_safe_arg1_0 _lh_safe_arg2_0 -> 
-                  ((((_lh_safe_arg1_0 != (Lazy.force _lh_safe_LH_C_0_0)) && (_lh_safe_arg1_0 != ((Lazy.force _lh_safe_LH_C_0_0) + _lh_safe_arg2_0))) && (_lh_safe_arg1_0 != ((Lazy.force _lh_safe_LH_C_0_0) - _lh_safe_arg2_0))) && (((safe_d0_d0 _lh_safe_arg1_0) (_lh_safe_arg2_0 + 1)) (Lazy.force _lh_safe_LH_C_1_0)))))), (_lh_listcomp_fun_0 (Lazy.force _lh_listcomp_fun_ls_t_0))))
+                  ((((_lh_safe_arg1_0 != _lh_safe_LH_C_0_0) && (_lh_safe_arg1_0 != (_lh_safe_LH_C_0_0 + _lh_safe_arg2_0))) && (_lh_safe_arg1_0 != (_lh_safe_LH_C_0_0 - _lh_safe_arg2_0))) && (((safe_d0_d0 _lh_safe_arg1_0) (_lh_safe_arg2_0 + 1)) _lh_safe_LH_C_1_0))))), (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0)))
           else
-            (_lh_listcomp_fun_0 (Lazy.force _lh_listcomp_fun_ls_t_0))))))
+            (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0)))))
   else
     (fun _lh_listcomp_fun_ls_h_2 _lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_2 _lh_listcomp_fun_3 -> 
       (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_2)))
@@ -110,27 +110,27 @@ let rec length_d0_d0_d0 ls_1 =
       (1 + (length_d0_d0_d0 t_1))
     | `LH_N -> 
       0);;
-let rec safe_d0_d0_d0 _lh_safe_arg1_6 _lh_safe_arg2_6 _lh_safe_arg3_2 =
-  ((_lh_safe_arg3_2 _lh_safe_arg1_6) _lh_safe_arg2_6);;
-let rec safe_d0_d0_d1 _lh_safe_arg1_4 _lh_safe_arg2_4 _lh_safe_arg3_1 =
-  ((_lh_safe_arg3_1 _lh_safe_arg1_4) _lh_safe_arg2_4);;
+let rec safe_d0_d0_d0 _lh_safe_arg1_3 _lh_safe_arg2_3 _lh_safe_arg3_1 =
+  ((_lh_safe_arg3_1 _lh_safe_arg1_3) _lh_safe_arg2_3);;
+let rec safe_d0_d0_d1 _lh_safe_arg1_5 _lh_safe_arg2_5 _lh_safe_arg3_2 =
+  ((_lh_safe_arg3_2 _lh_safe_arg1_5) _lh_safe_arg2_5);;
 let rec enumFromTo_d0_d0_d0 a_1 b_1 _lh_popOutId_0_0 _lh_popOutId_1_0 _lh_popOutId_2_0 _lh_popOutId_3_0 =
   (if (a_1 <= b_1) then
-    (let rec _lh_listcomp_fun_ls_h_4 = (lazy a_1) in
-      (let rec _lh_listcomp_fun_ls_t_4 = (lazy ((enumFromTo_d0_d0_d0 (a_1 + 1)) b_1)) in
-        (if (((safe_d0_d0_d0 (Lazy.force _lh_listcomp_fun_ls_h_4)) 1) _lh_popOutId_0_0) then
-          (`LH_C((let rec _lh_safe_LH_C_0_1 = (lazy (Lazy.force _lh_listcomp_fun_ls_h_4)) in
-            (let rec _lh_safe_LH_C_1_1 = (lazy _lh_popOutId_0_0) in
-              (fun _lh_safe_arg1_3 _lh_safe_arg2_3 -> 
-                ((((_lh_safe_arg1_3 != (Lazy.force _lh_safe_LH_C_0_1)) && (_lh_safe_arg1_3 != ((Lazy.force _lh_safe_LH_C_0_1) + _lh_safe_arg2_3))) && (_lh_safe_arg1_3 != ((Lazy.force _lh_safe_LH_C_0_1) - _lh_safe_arg2_3))) && (((safe_d0_d0_d1 _lh_safe_arg1_3) (_lh_safe_arg2_3 + 1)) (Lazy.force _lh_safe_LH_C_1_1)))))), (_lh_popOutId_1_0 (Lazy.force _lh_listcomp_fun_ls_t_4))))
+    (let rec _lh_listcomp_fun_ls_h_4 = a_1 in
+      (let rec _lh_listcomp_fun_ls_t_4 = ((enumFromTo_d0_d0_d0 (a_1 + 1)) b_1) in
+        (if (((safe_d0_d0_d0 _lh_listcomp_fun_ls_h_4) 1) _lh_popOutId_0_0) then
+          (`LH_C((let rec _lh_safe_LH_C_0_1 = _lh_listcomp_fun_ls_h_4 in
+            (let rec _lh_safe_LH_C_1_1 = _lh_popOutId_0_0 in
+              (fun _lh_safe_arg1_4 _lh_safe_arg2_4 -> 
+                ((((_lh_safe_arg1_4 != _lh_safe_LH_C_0_1) && (_lh_safe_arg1_4 != (_lh_safe_LH_C_0_1 + _lh_safe_arg2_4))) && (_lh_safe_arg1_4 != (_lh_safe_LH_C_0_1 - _lh_safe_arg2_4))) && (((safe_d0_d0_d1 _lh_safe_arg1_4) (_lh_safe_arg2_4 + 1)) _lh_safe_LH_C_1_1))))), (_lh_popOutId_1_0 _lh_listcomp_fun_ls_t_4)))
         else
-          (_lh_popOutId_1_0 (Lazy.force _lh_listcomp_fun_ls_t_4)))))
+          (_lh_popOutId_1_0 _lh_listcomp_fun_ls_t_4))))
   else
     (_lh_popOutId_3_0 _lh_popOutId_2_0))
 and gen_d0_d0_d0 _lh_gen_arg1_1 _lh_gen_arg2_1 =
   (match _lh_gen_arg1_1 with
     | 0 -> 
-      (`LH_C((fun _lh_safe_arg1_5 _lh_safe_arg2_5 -> 
+      (`LH_C((fun _lh_safe_arg1_6 _lh_safe_arg2_6 -> 
         true), (`LH_N)))
     | _ -> 
       (let rec _lh_listcomp_fun_1_0 = (fun _lh_listcomp_fun_para_2 -> 

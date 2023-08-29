@@ -57,13 +57,18 @@ class DiffTestLumberhack extends DiffTests {
       val (originalProgram, newD) = if mode.lhInHaskell then
         val p = FromHaskell(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output)
         p.d(p) // duplicate multiple usages here to enbale polymorphism
-        val initCallTree = CallTree.callTreeUsingSplitKnot(p.d)
+        // before resolving constraints, there isn't any potential knots to tie,
+        // so the method to tie the knot actually does not matter, will always get the
+        // same result as "withoutKnotTying"
+        val initCallTree = CallTree.callTreeWithoutKnotTying (p.d)
+        // val initCallTree = CallTree.callTreeUsingSplitKnot(p.d)
         val res = p.expandedWithNewDeforest(initCallTree)
         res
       else if mode.lhInOCaml then
         val p = FromOcaml(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output)
         p.d(p) // duplicate multiple usages here to enbale polymorphism
-        val initCallTree = CallTree.callTreeUsingSplitKnot(p.d)
+        val initCallTree = CallTree.callTreeWithoutKnotTying (p.d)
+        // val initCallTree = CallTree.callTreeUsingSplitKnot(p.d)
         val res = p.expandedWithNewDeforest(initCallTree)
         res
       else
@@ -79,11 +84,11 @@ class DiffTestLumberhack extends DiffTests {
       output(originalProgram.pp(using InitPpConfig.multilineOn.showIuidOn.showRefEuidOn))
       if mode.lhGenHaskell then
         output("\t\t---------- unoptimized haskell gen ----------")
-        output(HaskellGen(originalProgram).linesIterator.map("\t\t" + _).mkString("\n"))
+        output(HaskellGenTests(originalProgram).linesIterator.map("\t\t" + _).mkString("\n"))
         output("\t\t---------- unoptimized haskell gen ----------")
       if mode.lhGenOCaml then
         output("\t\t---------- unoptimized ocaml gen ----------")
-        val progStr = (new OCamlGen(true))(originalProgram)
+        val progStr = (new OCamlGenTests(true, mode))(originalProgram)
         output(progStr.linesIterator.map("\t\t" + _).mkString("\n"))
         if mode.dbg then {
           val decl :: mainExpr :: Nil = progStr.split(";;").toList : @unchecked
@@ -124,23 +129,23 @@ class DiffTestLumberhack extends DiffTests {
       if mode.lhGenHaskell then
         output("\n>>>>>>>>>> Generated Haskell >>>>>>>>>>")
         try {
-          output(HaskellGen.makeBenchFiles(List(
+          output(HaskellGenTests.makeBenchFiles(List(
             ("original" -> originalProgram),
             ("lumberhack" -> iterativeProcessRes._1)
           )))
         } catch { case e =>
           output(s"cannot generate benchmark files: ${e.getMessage()}\n")
-          output(HaskellGen(iterativeProcessRes._1))
+          output(HaskellGenTests(iterativeProcessRes._1))
         }
         output("<<<<<<<<<< Generated Haskell <<<<<<<<<<")
       if mode.lhGenOCaml then
         output("\n>>>>>>>>>> Generated OCaml >>>>>>>>>>")
-        val ocamlGen = new OCamlGen(true)
+        val ocamlGen = new OCamlGenTests(true, mode)
         try {
           ocamlGen.makeBenchFiles(List(
             ("original" -> originalProgram),
             ("lumberhack" -> iterativeProcessRes._1),
-            ("lumberhack_pop_out" -> iterativeProcessRes._1.popOutLambdas._1),
+            ("lumberhack_pop_out" -> iterativeProcessRes._1.popOutLambdas(using mode.lhLessExpansion)._1),
           ))
           output("benchmark file generated")
         } catch { case e =>
@@ -190,7 +195,13 @@ class DiffTestLumberhack extends DiffTests {
     val buf = Buffer.empty[String]
     val _output = if mode.stdout || mode.verbose || count == 0 then output else { (str: String) => buf.append(str); () }
 
-    val (expandedP, expandedD, callTree) = expander(using p, d, mode, _output)
+    val (expandedP, expandedD, callTree) =
+      if mode.lhLessExpansion then
+        (p, d, None)
+      else
+        val res = expander(using p, d, mode, _output)
+        res._2(res._1) // need to apply the deforest object once before resolving constraints
+        res
     val (fusedP, fusedD, stop, evalRes) = fuser(using expandedP, expandedD, callTree, mode, evaluate, _output)
     
     if count > 0 && !stop then
@@ -211,7 +222,7 @@ class DiffTestLumberhack extends DiffTests {
     d: Deforest,
     mode: ModeType,
     output: Str => Unit
-  ): (Program, Deforest, CallTrees) = {
+  ): (Program, Deforest, Some[CallTrees]) = {
     d.resolveConstraints
     // d.resolveConstraintsImmutableCache
     if mode.stdout || mode.verbose then {
@@ -275,19 +286,18 @@ class DiffTestLumberhack extends DiffTests {
     }
     output(newProg.pp(callTree)(using InitPpConfig.multilineOn.showIuidOn)) 
     output("<<<<<<< expanded program <<<<<<<")
-    (newProg, newd, callTree)
+    newd.debug = mode.stdout
+    (newProg, newd, Some(callTree))
   }
 
   def fuser(
     using p: Program,
     d: Deforest,
-    callTree: CallTrees,
+    callTree: Option[CallTrees],
     mode: ModeType,
     evaluate: Boolean,
     output: Str => Unit
   ): (Program, Deforest, Boolean, Option[List[Expr]]) = {
-    d.debug = mode.stdout
-    d(p)
     // d.resolveConstraintsImmutableCache
     d.resolveConstraints
 
@@ -334,9 +344,12 @@ class DiffTestLumberhack extends DiffTests {
     output("<<<<<<< new fusion strategy <<<<<<<")
 
 
-    output("\n>>>>>>> after fusion >>>>>>>")
     val prgmAfterFusion = p.rewrite(d)
-    output(prgmAfterFusion.pp(callTree)(using InitPpConfig.multilineOn.showIuidOn))
+    output("\n>>>>>>> after fusion >>>>>>>")
+    output(callTree match {
+      case None => prgmAfterFusion.pp(using InitPpConfig.multilineOn.showIuidOn)
+      case Some(callTree) => prgmAfterFusion.pp(callTree)(using InitPpConfig.multilineOn.showIuidOn)
+    })
     output("<<<<<<< after fusion <<<<<<<")
 
     var evaluatedExpr: Option[List[Expr]] = None
@@ -433,4 +446,185 @@ final case class OCamlReplHost(limit: Int = 2000) {
   }
 
   def terminate(): Unit = proc.destroy()
+}
+
+import mlscript.utils.shorthands.*
+class OCamlGenTests(
+  usePolymorphicVariant: Boolean,
+  val mode: ModeType,
+  backToBuiltInType: Boolean = false
+) extends OCamlGen(usePolymorphicVariant, backToBuiltInType) {
+  def makeBenchFiles(programs: List[String -> Program]): String = {
+    val useModule = mode.lhLessExpansion
+    assert(programs.length >= 2)
+    assert(programs.head._1 == "original")
+    val benchName = (programs.head._2.defAndExpr._2 match {
+      case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId), _)) :: Nil
+        if test.tree.name.startsWith("test") && primId.tree.name == "primId" =>
+        test.tree.name.drop(4).filter(_ <= 0x7f) // keep only valid ASCII characters
+      // with manually fuse tests
+      case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId1), arg1))
+        :: Expr.Call(Expr.Ref(testManual), Expr.Call(Expr.Ref(primId2), arg2))
+        :: Nil
+        if test.tree.name.startsWith("test") && primId1.tree.name == "primId"
+          && testManual.tree.name.startsWith("testManual") && primId1 == primId2
+          && arg1.pp(using InitPpConfig) == arg2.pp(using InitPpConfig) =>
+        test.tree.name.drop(4).filter(_ <= 0x7f) // keep only valid ASCII characters
+      case _ => lastWords(
+        "benchmark requires a method of name `testxxx` calling a value wrapped in `primId`"
+          + "\n and if there are manually fused benchmarks, there should be a call to `testManual`"
+          + "with exact the same parameter following the `testxxx`"
+      )
+    }).emptyOrElse(programs.hashCode().toString())
+
+    val originalDefsString =
+      "\n(* original *)\n" +
+      (if useModule then "module Module_original = struct\n" else "") +
+      apply(
+        Program(
+          programs.head._2.contents.filter(_.isLeft)
+        )(using programs.head._2.d),
+        false
+      ) +
+      (if useModule then "\nend;;\n" else "")
+
+    val restMergedDefsString = programs.tail.map { case (name, prgm) =>
+      s"\n\n(* $name *)\n" +
+      (if useModule then s"module Module_$name = struct\n" else "") +
+      apply(
+        Program(
+          prgm.contents.filter {
+            case Left(ProgDef(id, _)) =>
+              !(id.tree.name.startsWith("_lhManual") || id.tree.name.startsWith("testManual"))
+            case _ => false
+          }
+        )(using prgm.d),
+        false
+      ) +
+      (if useModule then "\nend;;\n" else "")
+    }.mkString + "\n"
+
+    val mergedDefsGen = originalDefsString + restMergedDefsString
+
+    val benchRunGen = 
+      if useModule then
+        (programs.head._2.defAndExpr._2 match {
+          case e :: Nil =>
+            (s"original_${benchName}" -> s"let open Module_original in (${this.rec(e).print})") :: Nil
+          case e :: m :: Nil =>
+            (s"original_${benchName}" -> s"let open Module_original in (${this.rec(e).print})")
+            :: (s"manual_${benchName}" -> s"let open Module_original in (${this.rec(e).print})") :: Nil
+          case _ => lastWords("unreachable")
+        }).appendedAll(programs.tail.map { case (name, prgm) =>
+          s"${name}_${benchName}" -> s"let open Module_$name in (${this.rec(prgm.defAndExpr._2.head).print})"
+        })
+      else
+        (programs.head._2.defAndExpr._2 match {
+          case e :: Nil => (s"original_${benchName}" -> this.rec(e).print) :: Nil
+          case e :: m :: Nil => (s"original_${benchName}" -> this.rec(e).print)
+            :: (s"manual_${benchName}" -> this.rec(m).print) :: Nil
+          case _ => lastWords("unreachable")
+        }).appendedAll(programs.tail.map { case (name, prgm) =>
+          s"${name}_${benchName}" -> this.rec(prgm.defAndExpr._2.head).print
+        })
+    val mainGen = stack(
+      Raw("Command_unix.run (Bench.make_command ["),
+      Indented(Stacked(
+        benchRunGen.map { case (name, doc) =>
+          Raw(s"Bench.Test.create ~name:\"$name\" (fun () -> ignore ($doc));")
+        },
+        false
+      )),
+      Raw("])")
+    )
+    val compileAndRunCommand =
+      s"touch ./$benchName.mli && ocamlc ./$benchName.mli "
+        + s"&& ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./$benchName.ml -o \"./$benchName.out\""
+        + s" -linkpkg -package \"core_unix.command_unix\" -linkpkg -package \"core_bench\" "
+        + s"&& ./$benchName.out "
+        + "&& rm ./*.cmx ./*.out ./*.cmi ./*.o ./*.mli"
+    val hsFileContent = Stacked(
+      Raw(s"(*\n$compileAndRunCommand\n*)") :: headers :: Nil
+        ::: (if this.usePolymorphicVariant then Nil else (Raw(generateTypeInfo(programs.head._2.d)) :: Nil))
+        ::: (Raw(mergedDefsGen) :: mainGen :: Nil),
+      false
+    ).print
+    
+
+    import sys.process.*
+    import java.io._
+    s"mkdir -p ./lumberhack-ocaml-benchmark/".!
+    val hsFw = new FileWriter(s"./lumberhack-ocaml-benchmark/$benchName.ml", false)
+    hsFw.write(hsFileContent + "\n")
+    hsFw.close()
+
+    hsFileContent
+  }
+}
+
+object HaskellGenTests extends HaskellGen {
+    // rely on the fact that toplevel expressions are always in the front of the program
+  def makeBenchFiles(programs: List[String -> Program]): String = {
+    assert(programs.length >= 2)
+    assert(programs.head._1 == "original")
+    val benchName = (programs.head._2.defAndExpr._2 match {
+      case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId), _)) :: Nil
+        if test.tree.name.startsWith("test") && primId.tree.name == "primId" =>
+        test.tree.name.drop(4).filter(_ <= 0x7f) // keep only valid ASCII characters
+      case _ => lastWords("benchmark requires a method of name `testxxx` calling a value wrapped in `primId`")
+    }).emptyOrElse(programs.hashCode().toString())
+    // val bigADT = HaskellGen.generateTypeInfo(original.d)
+
+    val mergedDefsGen = programs.map { case (name -> prgm) =>
+      val defsPrgm = Program(prgm.contents.tail)(using prgm.d)
+      s"\n\n--- $name ---\n" + (new HaskellGen)(defsPrgm)
+    }.mkString.drop(1) + "\n"
+
+    val mainTestGen = (Indented(Stacked(programs.reverse.zipWithIndex.map { case (name -> prgm) -> idx =>
+      Raw(s"${if idx == 0 then "  " else ", "}bench \"${name}_${benchName}\" $$ nf ")
+        <:> Raw(((new HaskellGen).rec(prgm.defAndExpr._2.head).print).drop(1).dropRight(1))
+    })) <:> Raw(" ] ]"))
+    // val mainTestGen = stack(
+    //   Raw(s"  bench $"lumberhack_$benchName$" $$ nf ")
+    //     <:> Raw((HaskellGen.rec(optimized.defAndExpr._2.head).print).drop(1).dropRight(1)),
+    //   Raw(s", bench $"original_$benchName$" $$ nf ")
+    //     <:> Raw((HaskellGen.rec(original.defAndExpr._2.head).print).drop(1).dropRight(1)) <:> Raw(" ] ]")
+    // )
+    val mainGen = stack(
+      Raw("main :: IO ()"),
+      Raw(s"main = defaultMain [ bgroup \"$benchName\" ["),
+      mainTestGen
+    )
+    val hsFileContent = stack(
+      headers,
+      // Raw(bigADT + "\n"),
+      Raw(mergedDefsGen),
+      mainGen
+    ).print
+    val cabalFileContent = s"""name: lumberhack-bench-$benchName
+                              |version: 0
+                              |build-type: Simple
+                              |cabal-version: >= 1.6
+                              |
+                              |executable $benchName
+                              |  main-is: $benchName.hs
+                              |  extensions: ExtendedDefaultRules
+                              |  ghc-options: -fno-strictness -O2
+                              |  build-depends:
+                              |    base == 4.*,
+                              |    criterion
+                              |    """.stripMargin
+
+    import sys.process.*
+    import java.io._
+    s"mkdir -p ./lumberhack-haskell-benchmark/$benchName".!
+    val hsFw = new FileWriter(s"./lumberhack-haskell-benchmark/$benchName/$benchName.hs", false)
+    hsFw.write(hsFileContent + "\n")
+    hsFw.close()
+    val cabalFw = new FileWriter(s"./lumberhack-haskell-benchmark/$benchName/$benchName.cabal", false)
+    cabalFw.write(cabalFileContent)
+    cabalFw.close()
+
+    hsFileContent
+  }
 }

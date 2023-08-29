@@ -307,6 +307,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
             )
           )
         }
+        case _ => lastWords(n.getSrcContent)
       }
     }
   }
@@ -953,11 +954,11 @@ trait CodeGen {
   def rec(e: Expr): Document
 
   def generateTypeInfo(d: Deforest): String
-  def makeBenchFiles(programs: List[String -> Program]): String
+
   def apply(p: Program, bigLetRec: Boolean = true): String
 }
 
-object HaskellGen extends CodeGen {
+class HaskellGen extends CodeGen {
   override val primitives = Map("add" -> "(+)", "sub" -> "(-)")
 
   override def generateTypeInfo(d: Deforest): String = {
@@ -1125,70 +1126,7 @@ object HaskellGen extends CodeGen {
     case _ => lastWords("unsupported: " + e.pp(using InitPpConfig.showIuidOn))
   }
 
-  // rely on the fact that toplevel expressions are always in the front of the program
-  override def makeBenchFiles(programs: List[String -> Program]): String = {
-    assert(programs.length >= 2)
-    assert(programs.head._1 == "original")
-    val benchName = (programs.head._2.defAndExpr._2 match {
-      case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId), _)) :: Nil
-        if test.tree.name.startsWith("test") && primId.tree.name == "primId" =>
-        test.tree.name.drop(4).filter(_ <= 0x7f) // keep only valid ASCII characters
-      case _ => lastWords("benchmark requires a method of name `testxxx` calling a value wrapped in `primId`")
-    }).emptyOrElse(programs.hashCode().toString())
-    // val bigADT = HaskellGen.generateTypeInfo(original.d)
 
-    val mergedDefsGen = programs.map { case (name -> prgm) =>
-      val defsPrgm = Program(prgm.contents.tail)(using prgm.d)
-      s"\n\n--- $name ---\n" + HaskellGen(defsPrgm)
-    }.mkString.drop(1) + "\n"
-
-    val mainTestGen = (Indented(Stacked(programs.reverse.zipWithIndex.map { case (name -> prgm) -> idx =>
-      Raw(s"${if idx == 0 then "  " else ", "}bench \"${name}_${benchName}\" $$ nf ")
-        <:> Raw((HaskellGen.rec(prgm.defAndExpr._2.head).print).drop(1).dropRight(1))
-    })) <:> Raw(" ] ]"))
-    // val mainTestGen = stack(
-    //   Raw(s"  bench $"lumberhack_$benchName$" $$ nf ")
-    //     <:> Raw((HaskellGen.rec(optimized.defAndExpr._2.head).print).drop(1).dropRight(1)),
-    //   Raw(s", bench $"original_$benchName$" $$ nf ")
-    //     <:> Raw((HaskellGen.rec(original.defAndExpr._2.head).print).drop(1).dropRight(1)) <:> Raw(" ] ]")
-    // )
-    val mainGen = stack(
-      Raw("main :: IO ()"),
-      Raw(s"main = defaultMain [ bgroup \"$benchName\" ["),
-      mainTestGen
-    )
-    val hsFileContent = stack(
-      headers,
-      // Raw(bigADT + "\n"),
-      Raw(mergedDefsGen),
-      mainGen
-    ).print
-    val cabalFileContent = s"""name: lumberhack-bench-$benchName
-                              |version: 0
-                              |build-type: Simple
-                              |cabal-version: >= 1.6
-                              |
-                              |executable $benchName
-                              |  main-is: $benchName.hs
-                              |  extensions: ExtendedDefaultRules
-                              |  ghc-options: -fno-strictness -O2
-                              |  build-depends:
-                              |    base == 4.*,
-                              |    criterion
-                              |    """.stripMargin
-
-    import sys.process.*
-    import java.io._
-    s"mkdir -p ./lumberhack-haskell-benchmark/$benchName".!
-    val hsFw = new FileWriter(s"./lumberhack-haskell-benchmark/$benchName/$benchName.hs", false)
-    hsFw.write(hsFileContent + "\n")
-    hsFw.close()
-    val cabalFw = new FileWriter(s"./lumberhack-haskell-benchmark/$benchName/$benchName.cabal", false)
-    cabalFw.write(cabalFileContent)
-    cabalFw.close()
-
-    hsFileContent
-  }
 
 }
 
@@ -1356,91 +1294,7 @@ let rec listToTaggedList s = match s with
 let string_of_int i = listToTaggedList (explode_string (string_of_int i));;
 let string_of_float f = listToTaggedList (explode_string (string_of_float f))""")
   )
-  override def makeBenchFiles(programs: List[String -> Program]): String = {
-    assert(programs.length >= 2)
-    assert(programs.head._1 == "original")
-    val benchName = (programs.head._2.defAndExpr._2 match {
-      case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId), _)) :: Nil
-        if test.tree.name.startsWith("test") && primId.tree.name == "primId" =>
-        test.tree.name.drop(4).filter(_ <= 0x7f) // keep only valid ASCII characters
-      // with manually fuse tests
-      case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId1), arg1))
-        :: Expr.Call(Expr.Ref(testManual), Expr.Call(Expr.Ref(primId2), arg2))
-        :: Nil
-        if test.tree.name.startsWith("test") && primId1.tree.name == "primId"
-          && testManual.tree.name.startsWith("testManual") && primId1 == primId2
-          && arg1.pp(using InitPpConfig) == arg2.pp(using InitPpConfig) =>
-        test.tree.name.drop(4).filter(_ <= 0x7f) // keep only valid ASCII characters
-      case _ => lastWords(
-        "benchmark requires a method of name `testxxx` calling a value wrapped in `primId`"
-          + "\n and if there are manually fused benchmarks, there should be a call to `testManual`"
-          + "with exact the same parameter following the `testxxx`"
-      )
-    }).emptyOrElse(programs.hashCode().toString())
 
-    val originalDefsString = "\n(* original *)\n" + apply(
-      Program(
-        programs.head._2.contents.filter(_.isLeft)
-      )(using programs.head._2.d),
-      false
-    )
-
-    val restMergedDefsString = programs.tail.map { case (name, prgm) =>
-      s"\n\n(* $name *)\n" + apply(
-        Program(
-          prgm.contents.filter {
-            case Left(ProgDef(id, _)) =>
-              !(id.tree.name.startsWith("_lhManual") || id.tree.name.startsWith("testManual"))
-            case _ => false
-          }
-        )(using prgm.d),
-        false
-      )
-    }.mkString + "\n"
-
-    val mergedDefsGen = originalDefsString + restMergedDefsString
-
-    val benchRunGen = (programs.head._2.defAndExpr._2 match {
-      case e :: Nil => (s"original_${benchName}" -> this.rec(e)) :: Nil
-      case e :: m :: Nil => (s"original_${benchName}" -> this.rec(e))
-        :: (s"manual_${benchName}" -> this.rec(m)) :: Nil
-      case _ => lastWords("unreachable")
-    }).appendedAll(programs.tail.map { case (name, prgm) =>
-      s"${name}_${benchName}" -> this.rec(prgm.defAndExpr._2.head)
-    })
-    val mainGen = stack(
-      Raw("Command_unix.run (Bench.make_command ["),
-      Indented(Stacked(
-        benchRunGen.map { case (name, doc) =>
-          Raw(s"Bench.Test.create ~name:\"$name\" (fun () -> ignore (${doc.print}));")
-        },
-        false
-      )),
-      Raw("])")
-    )
-    val compileAndRunCommand =
-      s"touch ./$benchName.mli && ocamlc ./$benchName.mli "
-        + s"&& ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./$benchName.ml -o \"./$benchName.out\""
-        + s" -linkpkg -package \"core_unix.command_unix\" -linkpkg -package \"core_bench\" "
-        + s"&& ./$benchName.out "
-        + "&& rm ./*.cmx ./*.out ./*.cmi ./*.o ./*.mli"
-    val hsFileContent = Stacked(
-      Raw(s"(*\n$compileAndRunCommand\n*)") :: headers :: Nil
-        ::: (if this.usePolymorphicVariant then Nil else (Raw(generateTypeInfo(programs.head._2.d)) :: Nil))
-        ::: (Raw(mergedDefsGen) :: mainGen :: Nil),
-      false
-    ).print
-    
-
-    import sys.process.*
-    import java.io._
-    s"mkdir -p ./lumberhack-ocaml-benchmark/".!
-    val hsFw = new FileWriter(s"./lumberhack-ocaml-benchmark/$benchName.ml", false)
-    hsFw.write(hsFileContent + "\n")
-    hsFw.close()
-
-    hsFileContent
-  }
   override def apply(p: Program, bigLetRec: Boolean = true): String = {
     val callsInfo = p.d.callsInfo._2.toMap
     def isIndependent(id: Ident): Boolean = {
@@ -1498,7 +1352,7 @@ let string_of_float f = listToTaggedList (explode_string (string_of_float f))"""
 
 object DistillerGen extends CodeGen {
   override def generateTypeInfo(d: Deforest): String = ???
-  override def makeBenchFiles(programs: List[(String, Program)]): String = ???
+  def makeBenchFiles(programs: List[(String, Program)]): String = ???
   override val headers: Document = ""
   override val primitives: Map[String, String] = Map(
     "+" -> "plus", "-" -> "minus", "*" -> "mul", "mult" -> "mul", "/" -> "div",

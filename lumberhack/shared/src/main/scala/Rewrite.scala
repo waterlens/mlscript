@@ -595,12 +595,15 @@ trait ProgramRewrite { this: Program =>
     )
   }
 
-  def popOutLambdas: Program -> Deforest = {
+  def popOutLambdas(using lessExpansion: Boolean = false): Program -> Deforest = {
     given newd: Deforest = Deforest(false)
     val copied -> _ -> _ = this.copyDefsToNewDeforest
-    newd(copied)
     val (newProg, finalD) =
-      copied.expandedWithNewDeforest(CallTree.callTreeWithoutKnotTying(newd))
+      if lessExpansion then
+        (copied, newd)
+      else
+        newd(copied)
+        copied.expandedWithNewDeforest(CallTree.callTreeWithoutKnotTying(newd))
     
     val prgm = Program(
       newProg.defAndExpr._2.map { e => given Option[Ident] = None; R(e.popOutLambdas) }

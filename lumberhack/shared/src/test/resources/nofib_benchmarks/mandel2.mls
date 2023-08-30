@@ -1,0 +1,2373 @@
+:NewParser
+:ParseOnly
+
+:lhInHaskell
+:lhGenOCaml
+strEq (ha:ta) hbtb = case hbtb of { (hb:tb) -> if polyEq ha hb then strEq ta tb else False; [] -> False }
+strEq [] hbtb = case hbtb of { (hb:tb) -> False; [] -> True }
+max a b = if a > b then a else b
+data MandTree = NS MandTree MandTree | EW MandTree MandTree | Leaf Colour deriving (Show)
+-- Colour - colour of a point or rectangle
+type Colour = Int
+-- Point - 2-Tuple of integers, (Int1,Int2),
+--         where Int1 - x-coord of point,
+--               Int2 - y-coord of point.
+type Point = (Int,Int)
+-- MandTuple
+type MandTuple = (Int,Int,Int,Int,Colour)
+-- size: Size of window - Square 400x400
+size :: Int
+size = 200
+-- build_tree - Constructs mandtree
+build_tree :: Point -> Point -> MandTree
+build_tree (x1,y1)
+           (x2,y2)
+           =
+            let rec_col = check_perim (x1,y1) (x2,y2) in
+            let split   = if (x2-x1) >= (y2-y1) then "NS" else "EW" in
+            let split_x = (x2+x1) `div` 2 in
+            let split_y = (y2+y1) `div` 2 in
+            let nsp1    = (x1,y1) in
+            let nsp2    = (split_x, y2) in
+            let nsp3    = (split_x+1, y1) in
+            let nsp4    = (x2,y2) in
+            let ewp1    = (x1,y1) in
+            let ewp2    = (x2, split_y) in
+            let ewp3    = (x1, split_y+1) in
+            let ewp4    = (x2,y2) in
+            if rec_col /= (0-1) then
+              Leaf rec_col
+            else
+              if strEq split "NS" then (NS (build_tree nsp1 nsp2) (build_tree nsp3 nsp4)) else (EW (build_tree ewp1 ewp2) (build_tree ewp3 ewp4))
+check_perim :: Point -> Point -> Colour
+check_perim (x1,y1) (x2,y2) =
+              let col1         = point_colour (x1,y1) in
+              let col2         = point_colour (x2,y1) in
+              let col3         = point_colour (x2,y2) in
+              let col4         = point_colour (x1,y2) in
+              let corners_diff = if col1 == col2 then (if col1 == col3 then (if col1 == col4 then False else True) else True) else True in
+              let check_line = \xcyc xdyd -> 
+                                  case xcyc of {
+                                    (xc,yc) -> case xdyd of {
+                                      (xd,yd) ->
+                                        let finished = if (equalp (xd,yd) right) then (xc >= x2)
+                                                       else if (equalp (xd,yd) down) then (yc <= y2)
+                                                       else if (equalp (xd,yd) left) then (xc <= x1)
+                                                       else (yc >= y1)
+                                        in
+                                        if finished then True
+                                        else if ((point_colour (xc,yc)) /= col1) then False
+                                        else check_line (xc+xd, yc+yd) (xd,yd)
+                                    }
+                                  }
+              in
+              let check_sides =
+                            if (check_line (x1+1,y1) right) then
+                              if (check_line (x2,y1+1) down) then
+                                if (check_line (x2-1,y2) left) then
+                                  if (check_line (x1,y2-1) up) then
+                                    col1
+                                  else
+                                    (0-1)
+                                else
+                                  (0-1)
+                              else
+                                (0-1)
+                            else
+                              (0-1)
+              in
+              if (equalp (x1,y1) (x2,y2)) then
+                 point_colour (x1,y1)
+              else if corners_diff then
+                 0-1
+              else
+                check_sides
+-- Evaluate the color index of a point
+-- This is the algoritm described on page 121 of "The Beauty of Fractals"
+-- The code is commented with the step numbers from the algorithm.
+-- point_colour - Calculates the dwell value of a point.
+point_colour :: Point -> Colour
+point_colour (x, y) = check_radius (np x) (nq y) 0 0.0 0.0 -- step1
+-- check_radius - Calculates the escape radius of a point
+check_radius :: Float -> Float -> Int -> Float -> Float -> Colour
+check_radius p q k x y =
+  let xn = new_x x y p in
+  let yn = new_y x y q in
+  let r = radius xn yn in
+  let kp = k + 1       in
+  if kp == num_cols then 0
+  else
+    if polyGt r (float_of_int m) then
+      kp
+    else
+      check_radius p q (kp) xn yn
+-- M Set Properties.
+pmn :: Float -- Min p value.
+pmn =  0.0 -. 2.25
+pmx :: Float -- Max p value.
+pmx =   0.75
+qmn :: Float -- Min q value.
+qmn = 0.0 -. 1.5
+qmx :: Float -- Max q value
+qmx = 1.5
+m :: Int      -- The escape radius, M.
+m =  20
+--- Misc functions.
+equalp :: Point -> Point -> Bool
+equalp (x1, y1) (x2, y2) = ((x1 == x2) && (y1 == y2))
+-- Set calculation functions.
+num_cols :: Int -- The number of colors; num_cols+1 = length (the_colors).
+num_cols = 26
+delta_p :: Float      -- The change in p per pixel.
+delta_p =  (pmx -. pmn) /. (float_of_int (size - 1))
+delta_q :: Float      -- The change in q per pixel.
+delta_q =  (qmx -. qmn) /. (float_of_int (size - 1))
+np :: Int -> Float     -- Calculate a new value of p.
+np x = pmn +. ((float_of_int x) *. delta_p)
+nq :: Int -> Float     -- Calculate a new value of q.
+nq y = qmn +. ((float_of_int y) *. delta_q)
+radius :: Float -> Float -> Float       -- Current radius of apoint (x,y).
+radius x y = (x *. x) +. (y *. y)
+new_x :: Float -> Float -> Float -> Float       -- iterate new x value.
+new_x x y p = (x *. x) -. (y *. y) +. p
+new_y :: Float -> Float -> Float -> Float       -- iterate new y value.
+new_y x y q = (2.0 *. x *. y) +. q
+-- Misc. functions for traversing perimeter of rectangle.
+up,down,left,right :: Point
+up    = ( 0,0-1)
+down  = ( 0, 1)
+left  = (0-1, 0)
+right = ( 1, 0)
+-- finite: forces evaluation of a tree
+finite            :: MandTree -> Bool
+finite (Leaf c)   =  (c == c)
+finite (NS t1 t2) =  ((finite t1) && (finite t2))
+finite (EW t1 t2) =  ((finite t1) && (finite t2))
+testMandel2_nofib n =
+  let size' = max (length n) size in
+  let tree = (build_tree (0,0) (size', size' `div` 2)) in
+  finite tree
+testMandel2_nofib $ primId [5]
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testMandel2_nofib₀^3192(primId⁰([LH_C 5 [LH_N]]))
+//│ def build_tree₀(_lh_build_tree_arg1¹, _lh_build_tree_arg2¹) = case _lh_build_tree_arg1¹ of {
+//│ 	LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1² => case _lh_build_tree_arg2¹ of {
+//│ 		LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³ => 
+//│ 			let rec_col¹ = check_perim₀^1932([LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²], [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³])
+//│ 			in let split¹ = if ((_lh_build_tree_LH_P2_0³ - _lh_build_tree_LH_P2_0²) >= (_lh_build_tree_LH_P2_1³ - _lh_build_tree_LH_P2_1²)) then [LH_C 'N' [LH_C 'S' [LH_N]]] else [LH_C 'E' [LH_C 'W' [LH_N]]]
+//│ 			in let split_x¹ = div⁰((_lh_build_tree_LH_P2_0³ + _lh_build_tree_LH_P2_0²), 2)
+//│ 			in let split_y¹ = div⁰((_lh_build_tree_LH_P2_1³ + _lh_build_tree_LH_P2_1²), 2)
+//│ 			in let nsp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ 			in let nsp2¹ = [LH_P2 split_x¹ _lh_build_tree_LH_P2_1³]
+//│ 			in let nsp3¹ = [LH_P2 (split_x¹ + 1) _lh_build_tree_LH_P2_1²]
+//│ 			in let nsp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ 			in let ewp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ 			in let ewp2¹ = [LH_P2 _lh_build_tree_LH_P2_0³ split_y¹]
+//│ 			in let ewp3¹ = [LH_P2 _lh_build_tree_LH_P2_0² (split_y¹ + 1)]
+//│ 			in let ewp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ 			in if (rec_col¹ /= (0 - 1)) then [Leaf rec_col¹] else if strEq₀^2026(split¹, [LH_C 'N' [LH_C 'S' [LH_N]]]) then [NS build_tree₀^2035(nsp1¹, nsp2¹) build_tree₀^2040(nsp3¹, nsp4¹)] else [EW build_tree₀^2046(ewp1¹, ewp2¹) build_tree₀^2051(ewp3¹, ewp4¹)]
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def check_perim₀(_lh_check_perim_arg1¹, _lh_check_perim_arg2¹) = case _lh_check_perim_arg1¹ of {
+//│ 	LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴ => case _lh_check_perim_arg2¹ of {
+//│ 		LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵ => 
+//│ 			let col1¹ = point_colour₀^2219([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴])
+//│ 			in let col2¹ = point_colour₁^2224([LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁴])
+//│ 			in let col3¹ = point_colour₂^2229([LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵])
+//│ 			in let col4¹ = point_colour₃^2234([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁵])
+//│ 			in let corners_diff¹ = if (col1¹ == col2¹) then if (col1¹ == col3¹) then if (col1¹ == col4¹) then [False] else [True] else [True] else [True]
+//│ 			in let check_line¹ = (fun xcyc¹ -> (fun xdyd¹ -> 
+//│ 				let _lh_matchIdent⁶ = xcyc¹
+//│ 				in case _lh_matchIdent⁶ of {
+//│ 					LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶ => 
+//│ 						let _lh_matchIdent⁷ = xdyd¹
+//│ 						in case _lh_matchIdent⁷ of {
+//│ 							LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷ => 
+//│ 								let finished¹ = if equalp₀^2265([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], right₀^2270) then (_lh_check_perim_LH_P2_0⁶ >= _lh_check_perim_LH_P2_0⁵) else if equalp₁^2277([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], down₀^2282) then (_lh_check_perim_LH_P2_1⁶ <= _lh_check_perim_LH_P2_1⁵) else if equalp₂^2289([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], left₀^2294) then (_lh_check_perim_LH_P2_0⁶ <= _lh_check_perim_LH_P2_0⁴) else (_lh_check_perim_LH_P2_1⁶ >= _lh_check_perim_LH_P2_1⁴)
+//│ 								in if finished¹ then [True] else if (point_colour₄^2312([LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]) /= col1¹) then [False] else check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)], [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷])
+//│ 							| _  => error⁰}
+//│ 					| _  => error⁰}))
+//│ 			in let check_sides¹ = if check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁴ + 1) _lh_check_perim_LH_P2_1⁴], right₁^2358) then if check_line¹([LH_P2 _lh_check_perim_LH_P2_0⁵ (_lh_check_perim_LH_P2_1⁴ + 1)], down₁^2369) then if check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁵ - 1) _lh_check_perim_LH_P2_1⁵], left₁^2380) then if check_line¹([LH_P2 _lh_check_perim_LH_P2_0⁴ (_lh_check_perim_LH_P2_1⁵ - 1)], up₀^2391) then col1¹ else (0 - 1) else (0 - 1) else (0 - 1) else (0 - 1)
+//│ 			in if equalp₃^2418([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴], [LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵]) then point_colour₅^2427([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴]) else if corners_diff¹ then (0 - 1) else check_sides¹
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def check_radius₀(_lh_check_radius_arg1¹, _lh_check_radius_arg2¹, _lh_check_radius_arg3¹, _lh_check_radius_arg4¹, _lh_check_radius_arg5¹) = 
+//│ 	let xn¹ = new_x₀^1588(_lh_check_radius_arg4¹, _lh_check_radius_arg5¹, _lh_check_radius_arg1¹)
+//│ 	in let yn¹ = new_y₀^1595(_lh_check_radius_arg4¹, _lh_check_radius_arg5¹, _lh_check_radius_arg2¹)
+//│ 	in let r¹ = radius₀^1602(xn¹, yn¹)
+//│ 	in let kp¹ = (_lh_check_radius_arg3¹ + 1)
+//│ 	in if (kp¹ == num_cols₀^1615) then 0 else if polyGt⁰(r¹, float_of_int⁰(m₀^1622)) then kp¹ else check_radius₀^1626(_lh_check_radius_arg1¹, _lh_check_radius_arg2¹, kp¹, xn¹, yn¹)
+//│ def check_radius₁(_lh_check_radius_arg1², _lh_check_radius_arg2², _lh_check_radius_arg3², _lh_check_radius_arg4², _lh_check_radius_arg5²) = 
+//│ 	let xn² = new_x₁^1821(_lh_check_radius_arg4², _lh_check_radius_arg5², _lh_check_radius_arg1²)
+//│ 	in let yn² = new_y₁^1828(_lh_check_radius_arg4², _lh_check_radius_arg5², _lh_check_radius_arg2²)
+//│ 	in let r² = radius₁^1835(xn², yn²)
+//│ 	in let kp² = (_lh_check_radius_arg3² + 1)
+//│ 	in if (kp² == num_cols₁^1848) then 0 else if polyGt⁰(r², float_of_int⁰(m₁^1855)) then kp² else check_radius₁^1859(_lh_check_radius_arg1², _lh_check_radius_arg2², kp², xn², yn²)
+//│ def check_radius₂(_lh_check_radius_arg1⁶, _lh_check_radius_arg2⁶, _lh_check_radius_arg3⁶, _lh_check_radius_arg4⁶, _lh_check_radius_arg5⁶) = 
+//│ 	let xn⁶ = new_x₂^3110(_lh_check_radius_arg4⁶, _lh_check_radius_arg5⁶, _lh_check_radius_arg1⁶)
+//│ 	in let yn⁶ = new_y₂^3117(_lh_check_radius_arg4⁶, _lh_check_radius_arg5⁶, _lh_check_radius_arg2⁶)
+//│ 	in let r⁶ = radius₂^3124(xn⁶, yn⁶)
+//│ 	in let kp⁶ = (_lh_check_radius_arg3⁶ + 1)
+//│ 	in if (kp⁶ == num_cols₂^3137) then 0 else if polyGt⁰(r⁶, float_of_int⁰(m₂^3144)) then kp⁶ else check_radius₂^3148(_lh_check_radius_arg1⁶, _lh_check_radius_arg2⁶, kp⁶, xn⁶, yn⁶)
+//│ def check_radius₃(_lh_check_radius_arg1³, _lh_check_radius_arg2³, _lh_check_radius_arg3³, _lh_check_radius_arg4³, _lh_check_radius_arg5³) = 
+//│ 	let xn³ = new_x₃^2089(_lh_check_radius_arg4³, _lh_check_radius_arg5³, _lh_check_radius_arg1³)
+//│ 	in let yn³ = new_y₃^2096(_lh_check_radius_arg4³, _lh_check_radius_arg5³, _lh_check_radius_arg2³)
+//│ 	in let r³ = radius₃^2103(xn³, yn³)
+//│ 	in let kp³ = (_lh_check_radius_arg3³ + 1)
+//│ 	in if (kp³ == num_cols₃^2116) then 0 else if polyGt⁰(r³, float_of_int⁰(m₃^2123)) then kp³ else check_radius₃^2127(_lh_check_radius_arg1³, _lh_check_radius_arg2³, kp³, xn³, yn³)
+//│ def check_radius₄(_lh_check_radius_arg1⁴, _lh_check_radius_arg2⁴, _lh_check_radius_arg3⁴, _lh_check_radius_arg4⁴, _lh_check_radius_arg5⁴) = 
+//│ 	let xn⁴ = new_x₄^2665(_lh_check_radius_arg4⁴, _lh_check_radius_arg5⁴, _lh_check_radius_arg1⁴)
+//│ 	in let yn⁴ = new_y₄^2672(_lh_check_radius_arg4⁴, _lh_check_radius_arg5⁴, _lh_check_radius_arg2⁴)
+//│ 	in let r⁴ = radius₄^2679(xn⁴, yn⁴)
+//│ 	in let kp⁴ = (_lh_check_radius_arg3⁴ + 1)
+//│ 	in if (kp⁴ == num_cols₄^2692) then 0 else if polyGt⁰(r⁴, float_of_int⁰(m₄^2699)) then kp⁴ else check_radius₄^2703(_lh_check_radius_arg1⁴, _lh_check_radius_arg2⁴, kp⁴, xn⁴, yn⁴)
+//│ def check_radius₅(_lh_check_radius_arg1⁵, _lh_check_radius_arg2⁵, _lh_check_radius_arg3⁵, _lh_check_radius_arg4⁵, _lh_check_radius_arg5⁵) = 
+//│ 	let xn⁵ = new_x₅^3022(_lh_check_radius_arg4⁵, _lh_check_radius_arg5⁵, _lh_check_radius_arg1⁵)
+//│ 	in let yn⁵ = new_y₅^3029(_lh_check_radius_arg4⁵, _lh_check_radius_arg5⁵, _lh_check_radius_arg2⁵)
+//│ 	in let r⁵ = radius₅^3036(xn⁵, yn⁵)
+//│ 	in let kp⁵ = (_lh_check_radius_arg3⁵ + 1)
+//│ 	in if (kp⁵ == num_cols₅^3049) then 0 else if polyGt⁰(r⁵, float_of_int⁰(m₅^3056)) then kp⁵ else check_radius₅^3060(_lh_check_radius_arg1⁵, _lh_check_radius_arg2⁵, kp⁵, xn⁵, yn⁵)
+//│ def delta_p₀ = ((pmx₀^2537 -. pmn₀^2539) /. float_of_int⁰((size₀^2544 - 1)))
+//│ def delta_p₁ = ((pmx₁^2498 -. pmn₂^2500) /. float_of_int⁰((size₂^2505 - 1)))
+//│ def delta_p₂ = ((pmx₂^1768 -. pmn₄^1770) /. float_of_int⁰((size₄^1775 - 1)))
+//│ def delta_p₃ = ((pmx₃^1651 -. pmn₆^1653) /. float_of_int⁰((size₆^1658 - 1)))
+//│ def delta_p₄ = ((pmx₄^3177 -. pmn₈^3179) /. float_of_int⁰((size₈^3184 - 1)))
+//│ def delta_p₅ = ((pmx₅^2164 -. pmn₁₀^2166) /. float_of_int⁰((size₁₀^2171 - 1)))
+//│ def delta_q₀ = ((qmx₀^1419 -. qmn₀^1421) /. float_of_int⁰((size₁^1426 - 1)))
+//│ def delta_q₁ = ((qmx₁^2814 -. qmn₂^2816) /. float_of_int⁰((size₃^2821 - 1)))
+//│ def delta_q₂ = ((qmx₂^1692 -. qmn₄^1694) /. float_of_int⁰((size₅^1699 - 1)))
+//│ def delta_q₃ = ((qmx₃^2799 -. qmn₆^2801) /. float_of_int⁰((size₇^2806 - 1)))
+//│ def delta_q₄ = ((qmx₄^2867 -. qmn₈^2869) /. float_of_int⁰((size₉^2874 - 1)))
+//│ def delta_q₅ = ((qmx₅^2646 -. qmn₁₀^2648) /. float_of_int⁰((size₁₁^2653 - 1)))
+//│ def down₀ = [LH_P2 0 1]
+//│ def down₁ = [LH_P2 0 1]
+//│ def equalp₀(_lh_equalp_arg1², _lh_equalp_arg2²) = case _lh_equalp_arg1² of {
+//│ 	LH_P2 _lh_equalp_LH_P2_0⁴ _lh_equalp_LH_P2_1⁴ => case _lh_equalp_arg2² of {
+//│ 		LH_P2 _lh_equalp_LH_P2_0⁵ _lh_equalp_LH_P2_1⁵ => ((_lh_equalp_LH_P2_0⁴ == _lh_equalp_LH_P2_0⁵) && (_lh_equalp_LH_P2_1⁴ == _lh_equalp_LH_P2_1⁵))
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def equalp₁(_lh_equalp_arg1³, _lh_equalp_arg2³) = case _lh_equalp_arg1³ of {
+//│ 	LH_P2 _lh_equalp_LH_P2_0⁶ _lh_equalp_LH_P2_1⁶ => case _lh_equalp_arg2³ of {
+//│ 		LH_P2 _lh_equalp_LH_P2_0⁷ _lh_equalp_LH_P2_1⁷ => ((_lh_equalp_LH_P2_0⁶ == _lh_equalp_LH_P2_0⁷) && (_lh_equalp_LH_P2_1⁶ == _lh_equalp_LH_P2_1⁷))
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def equalp₂(_lh_equalp_arg1⁴, _lh_equalp_arg2⁴) = case _lh_equalp_arg1⁴ of {
+//│ 	LH_P2 _lh_equalp_LH_P2_0⁸ _lh_equalp_LH_P2_1⁸ => case _lh_equalp_arg2⁴ of {
+//│ 		LH_P2 _lh_equalp_LH_P2_0⁹ _lh_equalp_LH_P2_1⁹ => ((_lh_equalp_LH_P2_0⁸ == _lh_equalp_LH_P2_0⁹) && (_lh_equalp_LH_P2_1⁸ == _lh_equalp_LH_P2_1⁹))
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def equalp₃(_lh_equalp_arg1¹, _lh_equalp_arg2¹) = case _lh_equalp_arg1¹ of {
+//│ 	LH_P2 _lh_equalp_LH_P2_0² _lh_equalp_LH_P2_1² => case _lh_equalp_arg2¹ of {
+//│ 		LH_P2 _lh_equalp_LH_P2_0³ _lh_equalp_LH_P2_1³ => ((_lh_equalp_LH_P2_0² == _lh_equalp_LH_P2_0³) && (_lh_equalp_LH_P2_1² == _lh_equalp_LH_P2_1³))
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def finite₀(_lh_finite_arg1¹) = case _lh_finite_arg1¹ of {
+//│ 	Leaf _lh_finite_Leaf_0¹ => (_lh_finite_Leaf_0¹ == _lh_finite_Leaf_0¹)
+//│ 	| NS _lh_finite_NS_0¹ _lh_finite_NS_1¹ => (finite₀^2768(_lh_finite_NS_0¹) && finite₀^2772(_lh_finite_NS_1¹))
+//│ 	| EW _lh_finite_EW_0¹ _lh_finite_EW_1¹ => (finite₀^2777(_lh_finite_EW_0¹) && finite₀^2781(_lh_finite_EW_1¹))
+//│ 	| _  => error⁰}
+//│ def left₀ = [LH_P2 (0 - 1) 0]
+//│ def left₁ = [LH_P2 (0 - 1) 0]
+//│ def length₀(ls¹⁹) = case ls¹⁹ of {
+//│ 	LH_C h²⁰ t²² => (1 + length₀^1526(t²²))
+//│ 	| LH_N  => 0}
+//│ def max₀(_lh_max_arg1¹, _lh_max_arg2¹) = if (_lh_max_arg1¹ > _lh_max_arg2¹) then _lh_max_arg1¹ else _lh_max_arg2¹
+//│ def m₀ = 20
+//│ def m₁ = 20
+//│ def m₂ = 20
+//│ def m₃ = 20
+//│ def m₄ = 20
+//│ def m₅ = 20
+//│ def new_x₀(_lh_new_x_arg1⁴, _lh_new_x_arg2⁴, _lh_new_x_arg3⁴) = (((_lh_new_x_arg1⁴ *. _lh_new_x_arg1⁴) -. (_lh_new_x_arg2⁴ *. _lh_new_x_arg2⁴)) +. _lh_new_x_arg3⁴)
+//│ def new_x₁(_lh_new_x_arg1⁶, _lh_new_x_arg2⁶, _lh_new_x_arg3⁶) = (((_lh_new_x_arg1⁶ *. _lh_new_x_arg1⁶) -. (_lh_new_x_arg2⁶ *. _lh_new_x_arg2⁶)) +. _lh_new_x_arg3⁶)
+//│ def new_x₂(_lh_new_x_arg1¹, _lh_new_x_arg2¹, _lh_new_x_arg3¹) = (((_lh_new_x_arg1¹ *. _lh_new_x_arg1¹) -. (_lh_new_x_arg2¹ *. _lh_new_x_arg2¹)) +. _lh_new_x_arg3¹)
+//│ def new_x₃(_lh_new_x_arg1⁵, _lh_new_x_arg2⁵, _lh_new_x_arg3⁵) = (((_lh_new_x_arg1⁵ *. _lh_new_x_arg1⁵) -. (_lh_new_x_arg2⁵ *. _lh_new_x_arg2⁵)) +. _lh_new_x_arg3⁵)
+//│ def new_x₄(_lh_new_x_arg1², _lh_new_x_arg2², _lh_new_x_arg3²) = (((_lh_new_x_arg1² *. _lh_new_x_arg1²) -. (_lh_new_x_arg2² *. _lh_new_x_arg2²)) +. _lh_new_x_arg3²)
+//│ def new_x₅(_lh_new_x_arg1³, _lh_new_x_arg2³, _lh_new_x_arg3³) = (((_lh_new_x_arg1³ *. _lh_new_x_arg1³) -. (_lh_new_x_arg2³ *. _lh_new_x_arg2³)) +. _lh_new_x_arg3³)
+//│ def new_y₀(_lh_new_y_arg1⁴, _lh_new_y_arg2⁴, _lh_new_y_arg3⁴) = (((2.0 *. _lh_new_y_arg1⁴) *. _lh_new_y_arg2⁴) +. _lh_new_y_arg3⁴)
+//│ def new_y₁(_lh_new_y_arg1⁶, _lh_new_y_arg2⁶, _lh_new_y_arg3⁶) = (((2.0 *. _lh_new_y_arg1⁶) *. _lh_new_y_arg2⁶) +. _lh_new_y_arg3⁶)
+//│ def new_y₂(_lh_new_y_arg1¹, _lh_new_y_arg2¹, _lh_new_y_arg3¹) = (((2.0 *. _lh_new_y_arg1¹) *. _lh_new_y_arg2¹) +. _lh_new_y_arg3¹)
+//│ def new_y₃(_lh_new_y_arg1³, _lh_new_y_arg2³, _lh_new_y_arg3³) = (((2.0 *. _lh_new_y_arg1³) *. _lh_new_y_arg2³) +. _lh_new_y_arg3³)
+//│ def new_y₄(_lh_new_y_arg1², _lh_new_y_arg2², _lh_new_y_arg3²) = (((2.0 *. _lh_new_y_arg1²) *. _lh_new_y_arg2²) +. _lh_new_y_arg3²)
+//│ def new_y₅(_lh_new_y_arg1⁵, _lh_new_y_arg2⁵, _lh_new_y_arg3⁵) = (((2.0 *. _lh_new_y_arg1⁵) *. _lh_new_y_arg2⁵) +. _lh_new_y_arg3⁵)
+//│ def np₀(_lh_np_arg1¹) = (pmn₁^1535 +. (float_of_int⁰(_lh_np_arg1¹) *. delta_p₀^1542))
+//│ def np₁(_lh_np_arg1⁶) = (pmn₃^2962 +. (float_of_int⁰(_lh_np_arg1⁶) *. delta_p₁^2969))
+//│ def np₂(_lh_np_arg1²) = (pmn₅^1755 +. (float_of_int⁰(_lh_np_arg1²) *. delta_p₂^1762))
+//│ def np₃(_lh_np_arg1³) = (pmn₇^2455 +. (float_of_int⁰(_lh_np_arg1³) *. delta_p₃^2462))
+//│ def np₄(_lh_np_arg1⁴) = (pmn₉^2750 +. (float_of_int⁰(_lh_np_arg1⁴) *. delta_p₄^2757))
+//│ def np₅(_lh_np_arg1⁵) = (pmn₁₁^2898 +. (float_of_int⁰(_lh_np_arg1⁵) *. delta_p₅^2905))
+//│ def nq₀(_lh_nq_arg1⁴) = (qmn₁^2571 +. (float_of_int⁰(_lh_nq_arg1⁴) *. delta_q₀^2578))
+//│ def nq₁(_lh_nq_arg1²) = (qmn₃^2078 +. (float_of_int⁰(_lh_nq_arg1²) *. delta_q₁^2085))
+//│ def nq₂(_lh_nq_arg1⁶) = (qmn₅^2923 +. (float_of_int⁰(_lh_nq_arg1⁶) *. delta_q₂^2930))
+//│ def nq₃(_lh_nq_arg1⁵) = (qmn₇^2910 +. (float_of_int⁰(_lh_nq_arg1⁵) *. delta_q₃^2917))
+//│ def nq₄(_lh_nq_arg1³) = (qmn₉^2151 +. (float_of_int⁰(_lh_nq_arg1³) *. delta_q₄^2158))
+//│ def nq₅(_lh_nq_arg1¹) = (qmn₁₁^1433 +. (float_of_int⁰(_lh_nq_arg1¹) *. delta_q₅^1440))
+//│ def num_cols₀ = 26
+//│ def num_cols₁ = 26
+//│ def num_cols₂ = 26
+//│ def num_cols₃ = 26
+//│ def num_cols₄ = 26
+//│ def num_cols₅ = 26
+//│ def pmn₀ = (0.0 -. 2.25)
+//│ def pmn₁ = (0.0 -. 2.25)
+//│ def pmn₁₀ = (0.0 -. 2.25)
+//│ def pmn₁₁ = (0.0 -. 2.25)
+//│ def pmn₂ = (0.0 -. 2.25)
+//│ def pmn₃ = (0.0 -. 2.25)
+//│ def pmn₄ = (0.0 -. 2.25)
+//│ def pmn₅ = (0.0 -. 2.25)
+//│ def pmn₆ = (0.0 -. 2.25)
+//│ def pmn₇ = (0.0 -. 2.25)
+//│ def pmn₈ = (0.0 -. 2.25)
+//│ def pmn₉ = (0.0 -. 2.25)
+//│ def pmx₀ = 0.75
+//│ def pmx₁ = 0.75
+//│ def pmx₂ = 0.75
+//│ def pmx₃ = 0.75
+//│ def pmx₄ = 0.75
+//│ def pmx₅ = 0.75
+//│ def point_colour₀(_lh_point_colour_arg1²) = case _lh_point_colour_arg1² of {
+//│ 	LH_P2 _lh_point_colour_LH_P2_0² _lh_point_colour_LH_P2_1² => check_radius₀^1885(np₀^1886(_lh_point_colour_LH_P2_0²), nq₀^1890(_lh_point_colour_LH_P2_1²), 0, 0.0, 0.0)
+//│ 	| _  => error⁰}
+//│ def point_colour₁(_lh_point_colour_arg1⁶) = case _lh_point_colour_arg1⁶ of {
+//│ 	LH_P2 _lh_point_colour_LH_P2_0⁶ _lh_point_colour_LH_P2_1⁶ => check_radius₁^3000(np₁^3001(_lh_point_colour_LH_P2_0⁶), nq₁^3005(_lh_point_colour_LH_P2_1⁶), 0, 0.0, 0.0)
+//│ 	| _  => error⁰}
+//│ def point_colour₂(_lh_point_colour_arg1⁵) = case _lh_point_colour_arg1⁵ of {
+//│ 	LH_P2 _lh_point_colour_LH_P2_0⁵ _lh_point_colour_LH_P2_1⁵ => check_radius₂^2731(np₂^2732(_lh_point_colour_LH_P2_0⁵), nq₂^2736(_lh_point_colour_LH_P2_1⁵), 0, 0.0, 0.0)
+//│ 	| _  => error⁰}
+//│ def point_colour₃(_lh_point_colour_arg1⁴) = case _lh_point_colour_arg1⁴ of {
+//│ 	LH_P2 _lh_point_colour_LH_P2_0⁴ _lh_point_colour_LH_P2_1⁴ => check_radius₃^2517(np₃^2518(_lh_point_colour_LH_P2_0⁴), nq₃^2522(_lh_point_colour_LH_P2_1⁴), 0, 0.0, 0.0)
+//│ 	| _  => error⁰}
+//│ def point_colour₄(_lh_point_colour_arg1³) = case _lh_point_colour_arg1³ of {
+//│ 	LH_P2 _lh_point_colour_LH_P2_0³ _lh_point_colour_LH_P2_1³ => check_radius₄^2189(np₄^2190(_lh_point_colour_LH_P2_0³), nq₄^2194(_lh_point_colour_LH_P2_1³), 0, 0.0, 0.0)
+//│ 	| _  => error⁰}
+//│ def point_colour₅(_lh_point_colour_arg1¹) = case _lh_point_colour_arg1¹ of {
+//│ 	LH_P2 _lh_point_colour_LH_P2_0¹ _lh_point_colour_LH_P2_1¹ => check_radius₅^1547(np₅^1548(_lh_point_colour_LH_P2_0¹), nq₅^1552(_lh_point_colour_LH_P2_1¹), 0, 0.0, 0.0)
+//│ 	| _  => error⁰}
+//│ def qmn₀ = (0.0 -. 1.5)
+//│ def qmn₁ = (0.0 -. 1.5)
+//│ def qmn₁₀ = (0.0 -. 1.5)
+//│ def qmn₁₁ = (0.0 -. 1.5)
+//│ def qmn₂ = (0.0 -. 1.5)
+//│ def qmn₃ = (0.0 -. 1.5)
+//│ def qmn₄ = (0.0 -. 1.5)
+//│ def qmn₅ = (0.0 -. 1.5)
+//│ def qmn₆ = (0.0 -. 1.5)
+//│ def qmn₇ = (0.0 -. 1.5)
+//│ def qmn₈ = (0.0 -. 1.5)
+//│ def qmn₉ = (0.0 -. 1.5)
+//│ def qmx₀ = 1.5
+//│ def qmx₁ = 1.5
+//│ def qmx₂ = 1.5
+//│ def qmx₃ = 1.5
+//│ def qmx₄ = 1.5
+//│ def qmx₅ = 1.5
+//│ def radius₀(_lh_radius_arg1², _lh_radius_arg2²) = ((_lh_radius_arg1² *. _lh_radius_arg1²) +. (_lh_radius_arg2² *. _lh_radius_arg2²))
+//│ def radius₁(_lh_radius_arg1³, _lh_radius_arg2³) = ((_lh_radius_arg1³ *. _lh_radius_arg1³) +. (_lh_radius_arg2³ *. _lh_radius_arg2³))
+//│ def radius₂(_lh_radius_arg1⁵, _lh_radius_arg2⁵) = ((_lh_radius_arg1⁵ *. _lh_radius_arg1⁵) +. (_lh_radius_arg2⁵ *. _lh_radius_arg2⁵))
+//│ def radius₃(_lh_radius_arg1⁴, _lh_radius_arg2⁴) = ((_lh_radius_arg1⁴ *. _lh_radius_arg1⁴) +. (_lh_radius_arg2⁴ *. _lh_radius_arg2⁴))
+//│ def radius₄(_lh_radius_arg1¹, _lh_radius_arg2¹) = ((_lh_radius_arg1¹ *. _lh_radius_arg1¹) +. (_lh_radius_arg2¹ *. _lh_radius_arg2¹))
+//│ def radius₅(_lh_radius_arg1⁶, _lh_radius_arg2⁶) = ((_lh_radius_arg1⁶ *. _lh_radius_arg1⁶) +. (_lh_radius_arg2⁶ *. _lh_radius_arg2⁶))
+//│ def right₀ = [LH_P2 1 0]
+//│ def right₁ = [LH_P2 1 0]
+//│ def size₀ = 200
+//│ def size₁ = 200
+//│ def size₁₀ = 200
+//│ def size₁₁ = 200
+//│ def size₁₂ = 200
+//│ def size₂ = 200
+//│ def size₃ = 200
+//│ def size₄ = 200
+//│ def size₅ = 200
+//│ def size₆ = 200
+//│ def size₇ = 200
+//│ def size₈ = 200
+//│ def size₉ = 200
+//│ def strEq₀(_lh_strEq_arg1¹, _lh_strEq_arg2¹) = case _lh_strEq_arg1¹ of {
+//│ 	LH_C _lh_strEq_LH_C_0³ _lh_strEq_LH_C_1³ => 
+//│ 		let _lh_matchIdent⁴ = _lh_strEq_arg2¹
+//│ 		in case _lh_matchIdent⁴ of {
+//│ 			LH_C _lh_strEq_LH_C_0⁴ _lh_strEq_LH_C_1⁴ => if polyEq⁰(_lh_strEq_LH_C_0³, _lh_strEq_LH_C_0⁴) then strEq₀^1453(_lh_strEq_LH_C_1³, _lh_strEq_LH_C_1⁴) else [False]
+//│ 			| LH_N  => [False]
+//│ 			| _  => error⁰}
+//│ 	| LH_N  => 
+//│ 		let _lh_matchIdent⁵ = _lh_strEq_arg2¹
+//│ 		in case _lh_matchIdent⁵ of {
+//│ 			LH_C _lh_strEq_LH_C_0⁵ _lh_strEq_LH_C_1⁵ => [False]
+//│ 			| LH_N  => [True]
+//│ 			| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def testMandel2_nofib₀(_lh_testMandel2_nofib_arg1¹) = 
+//│ 	let size'¹ = max₀^2615(length₀^2616(_lh_testMandel2_nofib_arg1¹), size₁₂^2620)
+//│ 	in let tree¹ = build_tree₀^2622([LH_P2 0 0], [LH_P2 size'¹ div⁰(size'¹, 2)])
+//│ 	in finite₀^2635(tree¹)
+//│ def up₀ = [LH_P2 0 (0 - 1)]
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec build_tree_d0 _lh_build_tree_arg1_1 _lh_build_tree_arg2_1 =
+//│ 		  (match _lh_build_tree_arg1_1 with
+//│ 		    | `LH_P2(_lh_build_tree_LH_P2_0_2, _lh_build_tree_LH_P2_1_2) -> 
+//│ 		      (match _lh_build_tree_arg2_1 with
+//│ 		        | `LH_P2(_lh_build_tree_LH_P2_0_3, _lh_build_tree_LH_P2_1_3) -> 
+//│ 		          (let rec rec_col_1 = ((check_perim_d0 (`LH_P2(_lh_build_tree_LH_P2_0_2, _lh_build_tree_LH_P2_1_2))) (`LH_P2(_lh_build_tree_LH_P2_0_3, _lh_build_tree_LH_P2_1_3))) in
+//│ 		            (let rec split_1 = (if ((_lh_build_tree_LH_P2_0_3 - _lh_build_tree_LH_P2_0_2) >= (_lh_build_tree_LH_P2_1_3 - _lh_build_tree_LH_P2_1_2)) then
+//│ 		              (`LH_C('N', (`LH_C('S', (`LH_N)))))
+//│ 		            else
+//│ 		              (`LH_C('E', (`LH_C('W', (`LH_N)))))) in
+//│ 		              (let rec split_x_1 = ((_lh_build_tree_LH_P2_0_3 + _lh_build_tree_LH_P2_0_2) / 2) in
+//│ 		                (let rec split_y_1 = ((_lh_build_tree_LH_P2_1_3 + _lh_build_tree_LH_P2_1_2) / 2) in
+//│ 		                  (let rec nsp1_1 = (`LH_P2(_lh_build_tree_LH_P2_0_2, _lh_build_tree_LH_P2_1_2)) in
+//│ 		                    (let rec nsp2_1 = (`LH_P2(split_x_1, _lh_build_tree_LH_P2_1_3)) in
+//│ 		                      (let rec nsp3_1 = (`LH_P2((split_x_1 + 1), _lh_build_tree_LH_P2_1_2)) in
+//│ 		                        (let rec nsp4_1 = (`LH_P2(_lh_build_tree_LH_P2_0_3, _lh_build_tree_LH_P2_1_3)) in
+//│ 		                          (let rec ewp1_1 = (`LH_P2(_lh_build_tree_LH_P2_0_2, _lh_build_tree_LH_P2_1_2)) in
+//│ 		                            (let rec ewp2_1 = (`LH_P2(_lh_build_tree_LH_P2_0_3, split_y_1)) in
+//│ 		                              (let rec ewp3_1 = (`LH_P2(_lh_build_tree_LH_P2_0_2, (split_y_1 + 1))) in
+//│ 		                                (let rec ewp4_1 = (`LH_P2(_lh_build_tree_LH_P2_0_3, _lh_build_tree_LH_P2_1_3)) in
+//│ 		                                  (if (rec_col_1 != (0 - 1)) then
+//│ 		                                    (`Leaf(rec_col_1))
+//│ 		                                  else
+//│ 		                                    (if ((strEq_d0 split_1) (`LH_C('N', (`LH_C('S', (`LH_N)))))) then
+//│ 		                                      (`NS(((build_tree_d0 nsp1_1) nsp2_1), ((build_tree_d0 nsp3_1) nsp4_1)))
+//│ 		                                    else
+//│ 		                                      (`EW(((build_tree_d0 ewp1_1) ewp2_1), ((build_tree_d0 ewp3_1) ewp4_1)))))))))))))))))
+//│ 		        | _ -> 
+//│ 		          (failwith "error"))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and check_perim_d0 _lh_check_perim_arg1_1 _lh_check_perim_arg2_1 =
+//│ 		  (match _lh_check_perim_arg1_1 with
+//│ 		    | `LH_P2(_lh_check_perim_LH_P2_0_4, _lh_check_perim_LH_P2_1_4) -> 
+//│ 		      (match _lh_check_perim_arg2_1 with
+//│ 		        | `LH_P2(_lh_check_perim_LH_P2_0_5, _lh_check_perim_LH_P2_1_5) -> 
+//│ 		          (let rec col1_1 = (point_colour_d0 (`LH_P2(_lh_check_perim_LH_P2_0_4, _lh_check_perim_LH_P2_1_4))) in
+//│ 		            (let rec col2_1 = (point_colour_d1 (`LH_P2(_lh_check_perim_LH_P2_0_5, _lh_check_perim_LH_P2_1_4))) in
+//│ 		              (let rec col3_1 = (point_colour_d2 (`LH_P2(_lh_check_perim_LH_P2_0_5, _lh_check_perim_LH_P2_1_5))) in
+//│ 		                (let rec col4_1 = (point_colour_d3 (`LH_P2(_lh_check_perim_LH_P2_0_4, _lh_check_perim_LH_P2_1_5))) in
+//│ 		                  (let rec corners_diff_1 = (if (col1_1 = col2_1) then
+//│ 		                    (if (col1_1 = col3_1) then
+//│ 		                      (if (col1_1 = col4_1) then
+//│ 		                        false
+//│ 		                      else
+//│ 		                        true)
+//│ 		                    else
+//│ 		                      true)
+//│ 		                  else
+//│ 		                    true) in
+//│ 		                    (let rec check_line_1 = (fun xcyc_1 xdyd_1 -> 
+//│ 		                      (let rec _lh_matchIdent_6 = xcyc_1 in
+//│ 		                        (match _lh_matchIdent_6 with
+//│ 		                          | `LH_P2(_lh_check_perim_LH_P2_0_6, _lh_check_perim_LH_P2_1_6) -> 
+//│ 		                            (let rec _lh_matchIdent_7 = xdyd_1 in
+//│ 		                              (match _lh_matchIdent_7 with
+//│ 		                                | `LH_P2(_lh_check_perim_LH_P2_0_7, _lh_check_perim_LH_P2_1_7) -> 
+//│ 		                                  (let rec finished_1 = (if ((equalp_d0 (`LH_P2(_lh_check_perim_LH_P2_0_7, _lh_check_perim_LH_P2_1_7))) right_d0) then
+//│ 		                                    (_lh_check_perim_LH_P2_0_6 >= _lh_check_perim_LH_P2_0_5)
+//│ 		                                  else
+//│ 		                                    (if ((equalp_d1 (`LH_P2(_lh_check_perim_LH_P2_0_7, _lh_check_perim_LH_P2_1_7))) down_d0) then
+//│ 		                                      (_lh_check_perim_LH_P2_1_6 <= _lh_check_perim_LH_P2_1_5)
+//│ 		                                    else
+//│ 		                                      (if ((equalp_d2 (`LH_P2(_lh_check_perim_LH_P2_0_7, _lh_check_perim_LH_P2_1_7))) left_d0) then
+//│ 		                                        (_lh_check_perim_LH_P2_0_6 <= _lh_check_perim_LH_P2_0_4)
+//│ 		                                      else
+//│ 		                                        (_lh_check_perim_LH_P2_1_6 >= _lh_check_perim_LH_P2_1_4)))) in
+//│ 		                                    (if finished_1 then
+//│ 		                                      true
+//│ 		                                    else
+//│ 		                                      (if ((point_colour_d4 (`LH_P2(_lh_check_perim_LH_P2_0_6, _lh_check_perim_LH_P2_1_6))) != col1_1) then
+//│ 		                                        false
+//│ 		                                      else
+//│ 		                                        ((check_line_1 (`LH_P2((_lh_check_perim_LH_P2_0_6 + _lh_check_perim_LH_P2_0_7), (_lh_check_perim_LH_P2_1_6 + _lh_check_perim_LH_P2_1_7)))) (`LH_P2(_lh_check_perim_LH_P2_0_7, _lh_check_perim_LH_P2_1_7))))))
+//│ 		                                | _ -> 
+//│ 		                                  (failwith "error")))
+//│ 		                          | _ -> 
+//│ 		                            (failwith "error")))) in
+//│ 		                      (let rec check_sides_1 = (if ((check_line_1 (`LH_P2((_lh_check_perim_LH_P2_0_4 + 1), _lh_check_perim_LH_P2_1_4))) right_d1) then
+//│ 		                        (if ((check_line_1 (`LH_P2(_lh_check_perim_LH_P2_0_5, (_lh_check_perim_LH_P2_1_4 + 1)))) down_d1) then
+//│ 		                          (if ((check_line_1 (`LH_P2((_lh_check_perim_LH_P2_0_5 - 1), _lh_check_perim_LH_P2_1_5))) left_d1) then
+//│ 		                            (if ((check_line_1 (`LH_P2(_lh_check_perim_LH_P2_0_4, (_lh_check_perim_LH_P2_1_5 - 1)))) up_d0) then
+//│ 		                              col1_1
+//│ 		                            else
+//│ 		                              (0 - 1))
+//│ 		                          else
+//│ 		                            (0 - 1))
+//│ 		                        else
+//│ 		                          (0 - 1))
+//│ 		                      else
+//│ 		                        (0 - 1)) in
+//│ 		                        (if ((equalp_d3 (`LH_P2(_lh_check_perim_LH_P2_0_4, _lh_check_perim_LH_P2_1_4))) (`LH_P2(_lh_check_perim_LH_P2_0_5, _lh_check_perim_LH_P2_1_5))) then
+//│ 		                          (point_colour_d5 (`LH_P2(_lh_check_perim_LH_P2_0_4, _lh_check_perim_LH_P2_1_4)))
+//│ 		                        else
+//│ 		                          (if corners_diff_1 then
+//│ 		                            (0 - 1)
+//│ 		                          else
+//│ 		                            check_sides_1)))))))))
+//│ 		        | _ -> 
+//│ 		          (failwith "error"))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and check_radius_d0 _lh_check_radius_arg1_1 _lh_check_radius_arg2_1 _lh_check_radius_arg3_1 _lh_check_radius_arg4_1 _lh_check_radius_arg5_1 =
+//│ 		  (let rec xn_1 = (((new_x_d0 _lh_check_radius_arg4_1) _lh_check_radius_arg5_1) _lh_check_radius_arg1_1) in
+//│ 		    (let rec yn_1 = (((new_y_d0 _lh_check_radius_arg4_1) _lh_check_radius_arg5_1) _lh_check_radius_arg2_1) in
+//│ 		      (let rec r_1 = ((radius_d0 xn_1) yn_1) in
+//│ 		        (let rec kp_1 = (_lh_check_radius_arg3_1 + 1) in
+//│ 		          (if (kp_1 = num_cols_d0) then
+//│ 		            0
+//│ 		          else
+//│ 		            (if (r_1 > (float_of_int m_d0)) then
+//│ 		              kp_1
+//│ 		            else
+//│ 		              (((((check_radius_d0 _lh_check_radius_arg1_1) _lh_check_radius_arg2_1) kp_1) xn_1) yn_1)))))))
+//│ 		and check_radius_d1 _lh_check_radius_arg1_2 _lh_check_radius_arg2_2 _lh_check_radius_arg3_2 _lh_check_radius_arg4_2 _lh_check_radius_arg5_2 =
+//│ 		  (let rec xn_2 = (((new_x_d1 _lh_check_radius_arg4_2) _lh_check_radius_arg5_2) _lh_check_radius_arg1_2) in
+//│ 		    (let rec yn_2 = (((new_y_d1 _lh_check_radius_arg4_2) _lh_check_radius_arg5_2) _lh_check_radius_arg2_2) in
+//│ 		      (let rec r_2 = ((radius_d1 xn_2) yn_2) in
+//│ 		        (let rec kp_2 = (_lh_check_radius_arg3_2 + 1) in
+//│ 		          (if (kp_2 = num_cols_d1) then
+//│ 		            0
+//│ 		          else
+//│ 		            (if (r_2 > (float_of_int m_d1)) then
+//│ 		              kp_2
+//│ 		            else
+//│ 		              (((((check_radius_d1 _lh_check_radius_arg1_2) _lh_check_radius_arg2_2) kp_2) xn_2) yn_2)))))))
+//│ 		and check_radius_d2 _lh_check_radius_arg1_6 _lh_check_radius_arg2_6 _lh_check_radius_arg3_6 _lh_check_radius_arg4_6 _lh_check_radius_arg5_6 =
+//│ 		  (let rec xn_6 = (((new_x_d2 _lh_check_radius_arg4_6) _lh_check_radius_arg5_6) _lh_check_radius_arg1_6) in
+//│ 		    (let rec yn_6 = (((new_y_d2 _lh_check_radius_arg4_6) _lh_check_radius_arg5_6) _lh_check_radius_arg2_6) in
+//│ 		      (let rec r_6 = ((radius_d2 xn_6) yn_6) in
+//│ 		        (let rec kp_6 = (_lh_check_radius_arg3_6 + 1) in
+//│ 		          (if (kp_6 = num_cols_d2) then
+//│ 		            0
+//│ 		          else
+//│ 		            (if (r_6 > (float_of_int m_d2)) then
+//│ 		              kp_6
+//│ 		            else
+//│ 		              (((((check_radius_d2 _lh_check_radius_arg1_6) _lh_check_radius_arg2_6) kp_6) xn_6) yn_6)))))))
+//│ 		and check_radius_d3 _lh_check_radius_arg1_3 _lh_check_radius_arg2_3 _lh_check_radius_arg3_3 _lh_check_radius_arg4_3 _lh_check_radius_arg5_3 =
+//│ 		  (let rec xn_3 = (((new_x_d3 _lh_check_radius_arg4_3) _lh_check_radius_arg5_3) _lh_check_radius_arg1_3) in
+//│ 		    (let rec yn_3 = (((new_y_d3 _lh_check_radius_arg4_3) _lh_check_radius_arg5_3) _lh_check_radius_arg2_3) in
+//│ 		      (let rec r_3 = ((radius_d3 xn_3) yn_3) in
+//│ 		        (let rec kp_3 = (_lh_check_radius_arg3_3 + 1) in
+//│ 		          (if (kp_3 = num_cols_d3) then
+//│ 		            0
+//│ 		          else
+//│ 		            (if (r_3 > (float_of_int m_d3)) then
+//│ 		              kp_3
+//│ 		            else
+//│ 		              (((((check_radius_d3 _lh_check_radius_arg1_3) _lh_check_radius_arg2_3) kp_3) xn_3) yn_3)))))))
+//│ 		and check_radius_d4 _lh_check_radius_arg1_4 _lh_check_radius_arg2_4 _lh_check_radius_arg3_4 _lh_check_radius_arg4_4 _lh_check_radius_arg5_4 =
+//│ 		  (let rec xn_4 = (((new_x_d4 _lh_check_radius_arg4_4) _lh_check_radius_arg5_4) _lh_check_radius_arg1_4) in
+//│ 		    (let rec yn_4 = (((new_y_d4 _lh_check_radius_arg4_4) _lh_check_radius_arg5_4) _lh_check_radius_arg2_4) in
+//│ 		      (let rec r_4 = ((radius_d4 xn_4) yn_4) in
+//│ 		        (let rec kp_4 = (_lh_check_radius_arg3_4 + 1) in
+//│ 		          (if (kp_4 = num_cols_d4) then
+//│ 		            0
+//│ 		          else
+//│ 		            (if (r_4 > (float_of_int m_d4)) then
+//│ 		              kp_4
+//│ 		            else
+//│ 		              (((((check_radius_d4 _lh_check_radius_arg1_4) _lh_check_radius_arg2_4) kp_4) xn_4) yn_4)))))))
+//│ 		and check_radius_d5 _lh_check_radius_arg1_5 _lh_check_radius_arg2_5 _lh_check_radius_arg3_5 _lh_check_radius_arg4_5 _lh_check_radius_arg5_5 =
+//│ 		  (let rec xn_5 = (((new_x_d5 _lh_check_radius_arg4_5) _lh_check_radius_arg5_5) _lh_check_radius_arg1_5) in
+//│ 		    (let rec yn_5 = (((new_y_d5 _lh_check_radius_arg4_5) _lh_check_radius_arg5_5) _lh_check_radius_arg2_5) in
+//│ 		      (let rec r_5 = ((radius_d5 xn_5) yn_5) in
+//│ 		        (let rec kp_5 = (_lh_check_radius_arg3_5 + 1) in
+//│ 		          (if (kp_5 = num_cols_d5) then
+//│ 		            0
+//│ 		          else
+//│ 		            (if (r_5 > (float_of_int m_d5)) then
+//│ 		              kp_5
+//│ 		            else
+//│ 		              (((((check_radius_d5 _lh_check_radius_arg1_5) _lh_check_radius_arg2_5) kp_5) xn_5) yn_5)))))))
+//│ 		and delta_p_d0 =
+//│ 		  ((pmx_d0 -. pmn_d0) /. (float_of_int (size_d0 - 1)))
+//│ 		and delta_p_d1 =
+//│ 		  ((pmx_d1 -. pmn_d2) /. (float_of_int (size_d2 - 1)))
+//│ 		and delta_p_d2 =
+//│ 		  ((pmx_d2 -. pmn_d4) /. (float_of_int (size_d4 - 1)))
+//│ 		and delta_p_d3 =
+//│ 		  ((pmx_d3 -. pmn_d6) /. (float_of_int (size_d6 - 1)))
+//│ 		and delta_p_d4 =
+//│ 		  ((pmx_d4 -. pmn_d8) /. (float_of_int (size_d8 - 1)))
+//│ 		and delta_p_d5 =
+//│ 		  ((pmx_d5 -. pmn_d1_d0) /. (float_of_int (size_d1_d0 - 1)))
+//│ 		and delta_q_d0 =
+//│ 		  ((qmx_d0 -. qmn_d0) /. (float_of_int (size_d1 - 1)))
+//│ 		and delta_q_d1 =
+//│ 		  ((qmx_d1 -. qmn_d2) /. (float_of_int (size_d3 - 1)))
+//│ 		and delta_q_d2 =
+//│ 		  ((qmx_d2 -. qmn_d4) /. (float_of_int (size_d5 - 1)))
+//│ 		and delta_q_d3 =
+//│ 		  ((qmx_d3 -. qmn_d6) /. (float_of_int (size_d7 - 1)))
+//│ 		and delta_q_d4 =
+//│ 		  ((qmx_d4 -. qmn_d8) /. (float_of_int (size_d9 - 1)))
+//│ 		and delta_q_d5 =
+//│ 		  ((qmx_d5 -. qmn_d1_d0) /. (float_of_int (size_d1_d1 - 1)))
+//│ 		and down_d0 =
+//│ 		  (`LH_P2(0, 1))
+//│ 		and down_d1 =
+//│ 		  (`LH_P2(0, 1))
+//│ 		and equalp_d0 _lh_equalp_arg1_2 _lh_equalp_arg2_2 =
+//│ 		  (match _lh_equalp_arg1_2 with
+//│ 		    | `LH_P2(_lh_equalp_LH_P2_0_4, _lh_equalp_LH_P2_1_4) -> 
+//│ 		      (match _lh_equalp_arg2_2 with
+//│ 		        | `LH_P2(_lh_equalp_LH_P2_0_5, _lh_equalp_LH_P2_1_5) -> 
+//│ 		          ((_lh_equalp_LH_P2_0_4 = _lh_equalp_LH_P2_0_5) && (_lh_equalp_LH_P2_1_4 = _lh_equalp_LH_P2_1_5))
+//│ 		        | _ -> 
+//│ 		          (failwith "error"))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and equalp_d1 _lh_equalp_arg1_3 _lh_equalp_arg2_3 =
+//│ 		  (match _lh_equalp_arg1_3 with
+//│ 		    | `LH_P2(_lh_equalp_LH_P2_0_6, _lh_equalp_LH_P2_1_6) -> 
+//│ 		      (match _lh_equalp_arg2_3 with
+//│ 		        | `LH_P2(_lh_equalp_LH_P2_0_7, _lh_equalp_LH_P2_1_7) -> 
+//│ 		          ((_lh_equalp_LH_P2_0_6 = _lh_equalp_LH_P2_0_7) && (_lh_equalp_LH_P2_1_6 = _lh_equalp_LH_P2_1_7))
+//│ 		        | _ -> 
+//│ 		          (failwith "error"))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and equalp_d2 _lh_equalp_arg1_4 _lh_equalp_arg2_4 =
+//│ 		  (match _lh_equalp_arg1_4 with
+//│ 		    | `LH_P2(_lh_equalp_LH_P2_0_8, _lh_equalp_LH_P2_1_8) -> 
+//│ 		      (match _lh_equalp_arg2_4 with
+//│ 		        | `LH_P2(_lh_equalp_LH_P2_0_9, _lh_equalp_LH_P2_1_9) -> 
+//│ 		          ((_lh_equalp_LH_P2_0_8 = _lh_equalp_LH_P2_0_9) && (_lh_equalp_LH_P2_1_8 = _lh_equalp_LH_P2_1_9))
+//│ 		        | _ -> 
+//│ 		          (failwith "error"))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and equalp_d3 _lh_equalp_arg1_1 _lh_equalp_arg2_1 =
+//│ 		  (match _lh_equalp_arg1_1 with
+//│ 		    | `LH_P2(_lh_equalp_LH_P2_0_2, _lh_equalp_LH_P2_1_2) -> 
+//│ 		      (match _lh_equalp_arg2_1 with
+//│ 		        | `LH_P2(_lh_equalp_LH_P2_0_3, _lh_equalp_LH_P2_1_3) -> 
+//│ 		          ((_lh_equalp_LH_P2_0_2 = _lh_equalp_LH_P2_0_3) && (_lh_equalp_LH_P2_1_2 = _lh_equalp_LH_P2_1_3))
+//│ 		        | _ -> 
+//│ 		          (failwith "error"))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and finite_d0 _lh_finite_arg1_1 =
+//│ 		  (match _lh_finite_arg1_1 with
+//│ 		    | `Leaf(_lh_finite_Leaf_0_1) -> 
+//│ 		      (_lh_finite_Leaf_0_1 = _lh_finite_Leaf_0_1)
+//│ 		    | `NS(_lh_finite_NS_0_1, _lh_finite_NS_1_1) -> 
+//│ 		      ((finite_d0 _lh_finite_NS_0_1) && (finite_d0 _lh_finite_NS_1_1))
+//│ 		    | `EW(_lh_finite_EW_0_1, _lh_finite_EW_1_1) -> 
+//│ 		      ((finite_d0 _lh_finite_EW_0_1) && (finite_d0 _lh_finite_EW_1_1))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and left_d0 =
+//│ 		  (`LH_P2((0 - 1), 0))
+//│ 		and left_d1 =
+//│ 		  (`LH_P2((0 - 1), 0))
+//│ 		and length_d0 ls_1_9 =
+//│ 		  (match ls_1_9 with
+//│ 		    | `LH_C(h_2_0, t_2_2) -> 
+//│ 		      (1 + (length_d0 t_2_2))
+//│ 		    | `LH_N -> 
+//│ 		      0)
+//│ 		and max_d0 _lh_max_arg1_1 _lh_max_arg2_1 =
+//│ 		  (if (_lh_max_arg1_1 > _lh_max_arg2_1) then
+//│ 		    _lh_max_arg1_1
+//│ 		  else
+//│ 		    _lh_max_arg2_1)
+//│ 		and m_d0 =
+//│ 		  20
+//│ 		and m_d1 =
+//│ 		  20
+//│ 		and m_d2 =
+//│ 		  20
+//│ 		and m_d3 =
+//│ 		  20
+//│ 		and m_d4 =
+//│ 		  20
+//│ 		and m_d5 =
+//│ 		  20
+//│ 		and new_x_d0 _lh_new_x_arg1_4 _lh_new_x_arg2_4 _lh_new_x_arg3_4 =
+//│ 		  (((_lh_new_x_arg1_4 *. _lh_new_x_arg1_4) -. (_lh_new_x_arg2_4 *. _lh_new_x_arg2_4)) +. _lh_new_x_arg3_4)
+//│ 		and new_x_d1 _lh_new_x_arg1_6 _lh_new_x_arg2_6 _lh_new_x_arg3_6 =
+//│ 		  (((_lh_new_x_arg1_6 *. _lh_new_x_arg1_6) -. (_lh_new_x_arg2_6 *. _lh_new_x_arg2_6)) +. _lh_new_x_arg3_6)
+//│ 		and new_x_d2 _lh_new_x_arg1_1 _lh_new_x_arg2_1 _lh_new_x_arg3_1 =
+//│ 		  (((_lh_new_x_arg1_1 *. _lh_new_x_arg1_1) -. (_lh_new_x_arg2_1 *. _lh_new_x_arg2_1)) +. _lh_new_x_arg3_1)
+//│ 		and new_x_d3 _lh_new_x_arg1_5 _lh_new_x_arg2_5 _lh_new_x_arg3_5 =
+//│ 		  (((_lh_new_x_arg1_5 *. _lh_new_x_arg1_5) -. (_lh_new_x_arg2_5 *. _lh_new_x_arg2_5)) +. _lh_new_x_arg3_5)
+//│ 		and new_x_d4 _lh_new_x_arg1_2 _lh_new_x_arg2_2 _lh_new_x_arg3_2 =
+//│ 		  (((_lh_new_x_arg1_2 *. _lh_new_x_arg1_2) -. (_lh_new_x_arg2_2 *. _lh_new_x_arg2_2)) +. _lh_new_x_arg3_2)
+//│ 		and new_x_d5 _lh_new_x_arg1_3 _lh_new_x_arg2_3 _lh_new_x_arg3_3 =
+//│ 		  (((_lh_new_x_arg1_3 *. _lh_new_x_arg1_3) -. (_lh_new_x_arg2_3 *. _lh_new_x_arg2_3)) +. _lh_new_x_arg3_3)
+//│ 		and new_y_d0 _lh_new_y_arg1_4 _lh_new_y_arg2_4 _lh_new_y_arg3_4 =
+//│ 		  (((2.0 *. _lh_new_y_arg1_4) *. _lh_new_y_arg2_4) +. _lh_new_y_arg3_4)
+//│ 		and new_y_d1 _lh_new_y_arg1_6 _lh_new_y_arg2_6 _lh_new_y_arg3_6 =
+//│ 		  (((2.0 *. _lh_new_y_arg1_6) *. _lh_new_y_arg2_6) +. _lh_new_y_arg3_6)
+//│ 		and new_y_d2 _lh_new_y_arg1_1 _lh_new_y_arg2_1 _lh_new_y_arg3_1 =
+//│ 		  (((2.0 *. _lh_new_y_arg1_1) *. _lh_new_y_arg2_1) +. _lh_new_y_arg3_1)
+//│ 		and new_y_d3 _lh_new_y_arg1_3 _lh_new_y_arg2_3 _lh_new_y_arg3_3 =
+//│ 		  (((2.0 *. _lh_new_y_arg1_3) *. _lh_new_y_arg2_3) +. _lh_new_y_arg3_3)
+//│ 		and new_y_d4 _lh_new_y_arg1_2 _lh_new_y_arg2_2 _lh_new_y_arg3_2 =
+//│ 		  (((2.0 *. _lh_new_y_arg1_2) *. _lh_new_y_arg2_2) +. _lh_new_y_arg3_2)
+//│ 		and new_y_d5 _lh_new_y_arg1_5 _lh_new_y_arg2_5 _lh_new_y_arg3_5 =
+//│ 		  (((2.0 *. _lh_new_y_arg1_5) *. _lh_new_y_arg2_5) +. _lh_new_y_arg3_5)
+//│ 		and np_d0 _lh_np_arg1_1 =
+//│ 		  (pmn_d1 +. ((float_of_int _lh_np_arg1_1) *. delta_p_d0))
+//│ 		and np_d1 _lh_np_arg1_6 =
+//│ 		  (pmn_d3 +. ((float_of_int _lh_np_arg1_6) *. delta_p_d1))
+//│ 		and np_d2 _lh_np_arg1_2 =
+//│ 		  (pmn_d5 +. ((float_of_int _lh_np_arg1_2) *. delta_p_d2))
+//│ 		and np_d3 _lh_np_arg1_3 =
+//│ 		  (pmn_d7 +. ((float_of_int _lh_np_arg1_3) *. delta_p_d3))
+//│ 		and np_d4 _lh_np_arg1_4 =
+//│ 		  (pmn_d9 +. ((float_of_int _lh_np_arg1_4) *. delta_p_d4))
+//│ 		and np_d5 _lh_np_arg1_5 =
+//│ 		  (pmn_d1_d1 +. ((float_of_int _lh_np_arg1_5) *. delta_p_d5))
+//│ 		and nq_d0 _lh_nq_arg1_4 =
+//│ 		  (qmn_d1 +. ((float_of_int _lh_nq_arg1_4) *. delta_q_d0))
+//│ 		and nq_d1 _lh_nq_arg1_2 =
+//│ 		  (qmn_d3 +. ((float_of_int _lh_nq_arg1_2) *. delta_q_d1))
+//│ 		and nq_d2 _lh_nq_arg1_6 =
+//│ 		  (qmn_d5 +. ((float_of_int _lh_nq_arg1_6) *. delta_q_d2))
+//│ 		and nq_d3 _lh_nq_arg1_5 =
+//│ 		  (qmn_d7 +. ((float_of_int _lh_nq_arg1_5) *. delta_q_d3))
+//│ 		and nq_d4 _lh_nq_arg1_3 =
+//│ 		  (qmn_d9 +. ((float_of_int _lh_nq_arg1_3) *. delta_q_d4))
+//│ 		and nq_d5 _lh_nq_arg1_1 =
+//│ 		  (qmn_d1_d1 +. ((float_of_int _lh_nq_arg1_1) *. delta_q_d5))
+//│ 		and num_cols_d0 =
+//│ 		  26
+//│ 		and num_cols_d1 =
+//│ 		  26
+//│ 		and num_cols_d2 =
+//│ 		  26
+//│ 		and num_cols_d3 =
+//│ 		  26
+//│ 		and num_cols_d4 =
+//│ 		  26
+//│ 		and num_cols_d5 =
+//│ 		  26
+//│ 		and pmn_d0 =
+//│ 		  (0.0 -. 2.25)
+//│ 		and pmn_d1 =
+//│ 		  (0.0 -. 2.25)
+//│ 		and pmn_d1_d0 =
+//│ 		  (0.0 -. 2.25)
+//│ 		and pmn_d1_d1 =
+//│ 		  (0.0 -. 2.25)
+//│ 		and pmn_d2 =
+//│ 		  (0.0 -. 2.25)
+//│ 		and pmn_d3 =
+//│ 		  (0.0 -. 2.25)
+//│ 		and pmn_d4 =
+//│ 		  (0.0 -. 2.25)
+//│ 		and pmn_d5 =
+//│ 		  (0.0 -. 2.25)
+//│ 		and pmn_d6 =
+//│ 		  (0.0 -. 2.25)
+//│ 		and pmn_d7 =
+//│ 		  (0.0 -. 2.25)
+//│ 		and pmn_d8 =
+//│ 		  (0.0 -. 2.25)
+//│ 		and pmn_d9 =
+//│ 		  (0.0 -. 2.25)
+//│ 		and pmx_d0 =
+//│ 		  0.75
+//│ 		and pmx_d1 =
+//│ 		  0.75
+//│ 		and pmx_d2 =
+//│ 		  0.75
+//│ 		and pmx_d3 =
+//│ 		  0.75
+//│ 		and pmx_d4 =
+//│ 		  0.75
+//│ 		and pmx_d5 =
+//│ 		  0.75
+//│ 		and point_colour_d0 _lh_point_colour_arg1_2 =
+//│ 		  (match _lh_point_colour_arg1_2 with
+//│ 		    | `LH_P2(_lh_point_colour_LH_P2_0_2, _lh_point_colour_LH_P2_1_2) -> 
+//│ 		      (((((check_radius_d0 (np_d0 _lh_point_colour_LH_P2_0_2)) (nq_d0 _lh_point_colour_LH_P2_1_2)) 0) 0.0) 0.0)
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and point_colour_d1 _lh_point_colour_arg1_6 =
+//│ 		  (match _lh_point_colour_arg1_6 with
+//│ 		    | `LH_P2(_lh_point_colour_LH_P2_0_6, _lh_point_colour_LH_P2_1_6) -> 
+//│ 		      (((((check_radius_d1 (np_d1 _lh_point_colour_LH_P2_0_6)) (nq_d1 _lh_point_colour_LH_P2_1_6)) 0) 0.0) 0.0)
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and point_colour_d2 _lh_point_colour_arg1_5 =
+//│ 		  (match _lh_point_colour_arg1_5 with
+//│ 		    | `LH_P2(_lh_point_colour_LH_P2_0_5, _lh_point_colour_LH_P2_1_5) -> 
+//│ 		      (((((check_radius_d2 (np_d2 _lh_point_colour_LH_P2_0_5)) (nq_d2 _lh_point_colour_LH_P2_1_5)) 0) 0.0) 0.0)
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and point_colour_d3 _lh_point_colour_arg1_4 =
+//│ 		  (match _lh_point_colour_arg1_4 with
+//│ 		    | `LH_P2(_lh_point_colour_LH_P2_0_4, _lh_point_colour_LH_P2_1_4) -> 
+//│ 		      (((((check_radius_d3 (np_d3 _lh_point_colour_LH_P2_0_4)) (nq_d3 _lh_point_colour_LH_P2_1_4)) 0) 0.0) 0.0)
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and point_colour_d4 _lh_point_colour_arg1_3 =
+//│ 		  (match _lh_point_colour_arg1_3 with
+//│ 		    | `LH_P2(_lh_point_colour_LH_P2_0_3, _lh_point_colour_LH_P2_1_3) -> 
+//│ 		      (((((check_radius_d4 (np_d4 _lh_point_colour_LH_P2_0_3)) (nq_d4 _lh_point_colour_LH_P2_1_3)) 0) 0.0) 0.0)
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and point_colour_d5 _lh_point_colour_arg1_1 =
+//│ 		  (match _lh_point_colour_arg1_1 with
+//│ 		    | `LH_P2(_lh_point_colour_LH_P2_0_1, _lh_point_colour_LH_P2_1_1) -> 
+//│ 		      (((((check_radius_d5 (np_d5 _lh_point_colour_LH_P2_0_1)) (nq_d5 _lh_point_colour_LH_P2_1_1)) 0) 0.0) 0.0)
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and qmn_d0 =
+//│ 		  (0.0 -. 1.5)
+//│ 		and qmn_d1 =
+//│ 		  (0.0 -. 1.5)
+//│ 		and qmn_d1_d0 =
+//│ 		  (0.0 -. 1.5)
+//│ 		and qmn_d1_d1 =
+//│ 		  (0.0 -. 1.5)
+//│ 		and qmn_d2 =
+//│ 		  (0.0 -. 1.5)
+//│ 		and qmn_d3 =
+//│ 		  (0.0 -. 1.5)
+//│ 		and qmn_d4 =
+//│ 		  (0.0 -. 1.5)
+//│ 		and qmn_d5 =
+//│ 		  (0.0 -. 1.5)
+//│ 		and qmn_d6 =
+//│ 		  (0.0 -. 1.5)
+//│ 		and qmn_d7 =
+//│ 		  (0.0 -. 1.5)
+//│ 		and qmn_d8 =
+//│ 		  (0.0 -. 1.5)
+//│ 		and qmn_d9 =
+//│ 		  (0.0 -. 1.5)
+//│ 		and qmx_d0 =
+//│ 		  1.5
+//│ 		and qmx_d1 =
+//│ 		  1.5
+//│ 		and qmx_d2 =
+//│ 		  1.5
+//│ 		and qmx_d3 =
+//│ 		  1.5
+//│ 		and qmx_d4 =
+//│ 		  1.5
+//│ 		and qmx_d5 =
+//│ 		  1.5
+//│ 		and radius_d0 _lh_radius_arg1_2 _lh_radius_arg2_2 =
+//│ 		  ((_lh_radius_arg1_2 *. _lh_radius_arg1_2) +. (_lh_radius_arg2_2 *. _lh_radius_arg2_2))
+//│ 		and radius_d1 _lh_radius_arg1_3 _lh_radius_arg2_3 =
+//│ 		  ((_lh_radius_arg1_3 *. _lh_radius_arg1_3) +. (_lh_radius_arg2_3 *. _lh_radius_arg2_3))
+//│ 		and radius_d2 _lh_radius_arg1_5 _lh_radius_arg2_5 =
+//│ 		  ((_lh_radius_arg1_5 *. _lh_radius_arg1_5) +. (_lh_radius_arg2_5 *. _lh_radius_arg2_5))
+//│ 		and radius_d3 _lh_radius_arg1_4 _lh_radius_arg2_4 =
+//│ 		  ((_lh_radius_arg1_4 *. _lh_radius_arg1_4) +. (_lh_radius_arg2_4 *. _lh_radius_arg2_4))
+//│ 		and radius_d4 _lh_radius_arg1_1 _lh_radius_arg2_1 =
+//│ 		  ((_lh_radius_arg1_1 *. _lh_radius_arg1_1) +. (_lh_radius_arg2_1 *. _lh_radius_arg2_1))
+//│ 		and radius_d5 _lh_radius_arg1_6 _lh_radius_arg2_6 =
+//│ 		  ((_lh_radius_arg1_6 *. _lh_radius_arg1_6) +. (_lh_radius_arg2_6 *. _lh_radius_arg2_6))
+//│ 		and right_d0 =
+//│ 		  (`LH_P2(1, 0))
+//│ 		and right_d1 =
+//│ 		  (`LH_P2(1, 0))
+//│ 		and size_d0 =
+//│ 		  200
+//│ 		and size_d1 =
+//│ 		  200
+//│ 		and size_d1_d0 =
+//│ 		  200
+//│ 		and size_d1_d1 =
+//│ 		  200
+//│ 		and size_d1_d2 =
+//│ 		  200
+//│ 		and size_d2 =
+//│ 		  200
+//│ 		and size_d3 =
+//│ 		  200
+//│ 		and size_d4 =
+//│ 		  200
+//│ 		and size_d5 =
+//│ 		  200
+//│ 		and size_d6 =
+//│ 		  200
+//│ 		and size_d7 =
+//│ 		  200
+//│ 		and size_d8 =
+//│ 		  200
+//│ 		and size_d9 =
+//│ 		  200
+//│ 		and strEq_d0 _lh_strEq_arg1_1 _lh_strEq_arg2_1 =
+//│ 		  (match _lh_strEq_arg1_1 with
+//│ 		    | `LH_C(_lh_strEq_LH_C_0_3, _lh_strEq_LH_C_1_3) -> 
+//│ 		      (let rec _lh_matchIdent_4 = _lh_strEq_arg2_1 in
+//│ 		        (match _lh_matchIdent_4 with
+//│ 		          | `LH_C(_lh_strEq_LH_C_0_4, _lh_strEq_LH_C_1_4) -> 
+//│ 		            (if (_lh_strEq_LH_C_0_3 = _lh_strEq_LH_C_0_4) then
+//│ 		              ((strEq_d0 _lh_strEq_LH_C_1_3) _lh_strEq_LH_C_1_4)
+//│ 		            else
+//│ 		              false)
+//│ 		          | `LH_N -> 
+//│ 		            false
+//│ 		          | _ -> 
+//│ 		            (failwith "error")))
+//│ 		    | `LH_N -> 
+//│ 		      (let rec _lh_matchIdent_5 = _lh_strEq_arg2_1 in
+//│ 		        (match _lh_matchIdent_5 with
+//│ 		          | `LH_C(_lh_strEq_LH_C_0_5, _lh_strEq_LH_C_1_5) -> 
+//│ 		            false
+//│ 		          | `LH_N -> 
+//│ 		            true
+//│ 		          | _ -> 
+//│ 		            (failwith "error")))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and testMandel2_nofib_d0 _lh_testMandel2_nofib_arg1_1 =
+//│ 		  (let rec size'_1 = ((max_d0 (length_d0 _lh_testMandel2_nofib_arg1_1)) size_d1_d2) in
+//│ 		    (let rec tree_1 = ((build_tree_d0 (`LH_P2(0, 0))) (`LH_P2(size'_1, (size'_1 / 2)))) in
+//│ 		      (finite_d0 tree_1)))
+//│ 		and up_d0 =
+//│ 		  (`LH_P2(0, (0 - 1)));;
+//│ 		(testMandel2_nofib_d0 (`LH_C(5, (`LH_N))))
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testMandel2_nofib₀^3192]
+//│ 	[testMandel2_nofib₀^3192 · build_tree₀^2622] (hopeless to continue)
+//│ 		[testMandel2_nofib₀^3192 · build_tree₀^2622 · build_tree₀^2035] ---> [testMandel2_nofib₀^3192 · build_tree₀^2622] (using original def)
+//│ 		[testMandel2_nofib₀^3192 · build_tree₀^2622 · build_tree₀^2040] ---> [testMandel2_nofib₀^3192 · build_tree₀^2622] (using original def)
+//│ 		[testMandel2_nofib₀^3192 · build_tree₀^2622 · build_tree₀^2046] ---> [testMandel2_nofib₀^3192 · build_tree₀^2622] (using original def)
+//│ 		[testMandel2_nofib₀^3192 · build_tree₀^2622 · build_tree₀^2051] ---> [testMandel2_nofib₀^3192 · build_tree₀^2622] (using original def)
+//│ 		[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932] (using original def)
+//│ 			[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · down₀^2282] (using original def)
+//│ 			[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · down₁^2369] (using original def)
+//│ 			[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · equalp₀^2265] (using original def)
+//│ 			[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · equalp₁^2277] (using original def)
+//│ 			[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · equalp₂^2289] (using original def)
+//│ 			[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · equalp₃^2418] (using original def)
+//│ 			[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · left₀^2294] (using original def)
+//│ 			[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · left₁^2380] (using original def)
+//│ 			[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219] (using original def)
+//│ 				[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · check_radius₀^1885] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · check_radius₀^1885 · check_radius₀^1626] ---> [testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · check_radius₀^1885] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · check_radius₀^1885 · m₀^1622] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · check_radius₀^1885 · new_x₀^1588] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · check_radius₀^1885 · new_y₀^1595] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · check_radius₀^1885 · num_cols₀^1615] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · check_radius₀^1885 · radius₀^1602] (using original def)
+//│ 				[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · np₀^1886] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · np₀^1886 · delta_p₀^1542] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · np₀^1886 · delta_p₀^1542 · pmn₀^2539] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · np₀^1886 · delta_p₀^1542 · pmx₀^2537] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · np₀^1886 · delta_p₀^1542 · size₀^2544] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · np₀^1886 · pmn₁^1535] (using original def)
+//│ 				[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · nq₀^1890] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · nq₀^1890 · delta_q₀^2578] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · nq₀^1890 · delta_q₀^2578 · qmn₀^1421] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · nq₀^1890 · delta_q₀^2578 · qmx₀^1419] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · nq₀^1890 · delta_q₀^2578 · size₁^1426] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₀^2219 · nq₀^1890 · qmn₁^2571] (using original def)
+//│ 			[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224] (using original def)
+//│ 				[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · check_radius₁^3000] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · check_radius₁^3000 · check_radius₁^1859] ---> [testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · check_radius₁^3000] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · check_radius₁^3000 · m₁^1855] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · check_radius₁^3000 · new_x₁^1821] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · check_radius₁^3000 · new_y₁^1828] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · check_radius₁^3000 · num_cols₁^1848] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · check_radius₁^3000 · radius₁^1835] (using original def)
+//│ 				[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · np₁^3001] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · np₁^3001 · delta_p₁^2969] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · np₁^3001 · delta_p₁^2969 · pmn₂^2500] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · np₁^3001 · delta_p₁^2969 · pmx₁^2498] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · np₁^3001 · delta_p₁^2969 · size₂^2505] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · np₁^3001 · pmn₃^2962] (using original def)
+//│ 				[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · nq₁^3005] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · nq₁^3005 · delta_q₁^2085] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · nq₁^3005 · delta_q₁^2085 · qmn₂^2816] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · nq₁^3005 · delta_q₁^2085 · qmx₁^2814] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · nq₁^3005 · delta_q₁^2085 · size₃^2821] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₁^2224 · nq₁^3005 · qmn₃^2078] (using original def)
+//│ 			[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229] (using original def)
+//│ 				[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · check_radius₂^2731] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · check_radius₂^2731 · check_radius₂^3148] ---> [testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · check_radius₂^2731] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · check_radius₂^2731 · m₂^3144] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · check_radius₂^2731 · new_x₂^3110] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · check_radius₂^2731 · new_y₂^3117] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · check_radius₂^2731 · num_cols₂^3137] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · check_radius₂^2731 · radius₂^3124] (using original def)
+//│ 				[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · np₂^2732] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · np₂^2732 · delta_p₂^1762] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · np₂^2732 · delta_p₂^1762 · pmn₄^1770] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · np₂^2732 · delta_p₂^1762 · pmx₂^1768] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · np₂^2732 · delta_p₂^1762 · size₄^1775] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · np₂^2732 · pmn₅^1755] (using original def)
+//│ 				[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · nq₂^2736] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · nq₂^2736 · delta_q₂^2930] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · nq₂^2736 · delta_q₂^2930 · qmn₄^1694] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · nq₂^2736 · delta_q₂^2930 · qmx₂^1692] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · nq₂^2736 · delta_q₂^2930 · size₅^1699] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₂^2229 · nq₂^2736 · qmn₅^2923] (using original def)
+//│ 			[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234] (using original def)
+//│ 				[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · check_radius₃^2517] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · check_radius₃^2517 · check_radius₃^2127] ---> [testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · check_radius₃^2517] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · check_radius₃^2517 · m₃^2123] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · check_radius₃^2517 · new_x₃^2089] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · check_radius₃^2517 · new_y₃^2096] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · check_radius₃^2517 · num_cols₃^2116] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · check_radius₃^2517 · radius₃^2103] (using original def)
+//│ 				[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · np₃^2518] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · np₃^2518 · delta_p₃^2462] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · np₃^2518 · delta_p₃^2462 · pmn₆^1653] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · np₃^2518 · delta_p₃^2462 · pmx₃^1651] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · np₃^2518 · delta_p₃^2462 · size₆^1658] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · np₃^2518 · pmn₇^2455] (using original def)
+//│ 				[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · nq₃^2522] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · nq₃^2522 · delta_q₃^2917] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · nq₃^2522 · delta_q₃^2917 · qmn₆^2801] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · nq₃^2522 · delta_q₃^2917 · qmx₃^2799] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · nq₃^2522 · delta_q₃^2917 · size₇^2806] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₃^2234 · nq₃^2522 · qmn₇^2910] (using original def)
+//│ 			[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312] (using original def)
+//│ 				[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · check_radius₄^2189] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · check_radius₄^2189 · check_radius₄^2703] ---> [testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · check_radius₄^2189] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · check_radius₄^2189 · m₄^2699] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · check_radius₄^2189 · new_x₄^2665] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · check_radius₄^2189 · new_y₄^2672] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · check_radius₄^2189 · num_cols₄^2692] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · check_radius₄^2189 · radius₄^2679] (using original def)
+//│ 				[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · np₄^2190] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · np₄^2190 · delta_p₄^2757] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · np₄^2190 · delta_p₄^2757 · pmn₈^3179] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · np₄^2190 · delta_p₄^2757 · pmx₄^3177] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · np₄^2190 · delta_p₄^2757 · size₈^3184] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · np₄^2190 · pmn₉^2750] (using original def)
+//│ 				[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · nq₄^2194] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · nq₄^2194 · delta_q₄^2158] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · nq₄^2194 · delta_q₄^2158 · qmn₈^2869] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · nq₄^2194 · delta_q₄^2158 · qmx₄^2867] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · nq₄^2194 · delta_q₄^2158 · size₉^2874] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₄^2312 · nq₄^2194 · qmn₉^2151] (using original def)
+//│ 			[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427] (using original def)
+//│ 				[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · check_radius₅^1547] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · check_radius₅^1547 · check_radius₅^3060] ---> [testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · check_radius₅^1547] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · check_radius₅^1547 · m₅^3056] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · check_radius₅^1547 · new_x₅^3022] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · check_radius₅^1547 · new_y₅^3029] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · check_radius₅^1547 · num_cols₅^3049] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · check_radius₅^1547 · radius₅^3036] (using original def)
+//│ 				[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · np₅^1548] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · np₅^1548 · delta_p₅^2905] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · np₅^1548 · delta_p₅^2905 · pmn₁₀^2166] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · np₅^1548 · delta_p₅^2905 · pmx₅^2164] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · np₅^1548 · delta_p₅^2905 · size₁₀^2171] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · np₅^1548 · pmn₁₁^2898] (using original def)
+//│ 				[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · nq₅^1552] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · nq₅^1552 · delta_q₅^1440] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · nq₅^1552 · delta_q₅^1440 · qmn₁₀^2648] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · nq₅^1552 · delta_q₅^1440 · qmx₅^2646] (using original def)
+//│ 						[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · nq₅^1552 · delta_q₅^1440 · size₁₁^2653] (using original def)
+//│ 					[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · point_colour₅^2427 · nq₅^1552 · qmn₁₁^1433] (using original def)
+//│ 			[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · right₀^2270] (using original def)
+//│ 			[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · right₁^2358] (using original def)
+//│ 			[testMandel2_nofib₀^3192 · build_tree₀^2622 · check_perim₀^1932 · up₀^2391] (using original def)
+//│ 		[testMandel2_nofib₀^3192 · build_tree₀^2622 · strEq₀^2026] (using original def)
+//│ 			[testMandel2_nofib₀^3192 · build_tree₀^2622 · strEq₀^2026 · strEq₀^1453] ---> [testMandel2_nofib₀^3192 · build_tree₀^2622 · strEq₀^2026] (using original def)
+//│ 	[testMandel2_nofib₀^3192 · finite₀^2635] (hopeless to continue)
+//│ 		[testMandel2_nofib₀^3192 · finite₀^2635 · finite₀^2768] ---> [testMandel2_nofib₀^3192 · finite₀^2635] (using original def)
+//│ 		[testMandel2_nofib₀^3192 · finite₀^2635 · finite₀^2772] ---> [testMandel2_nofib₀^3192 · finite₀^2635] (using original def)
+//│ 		[testMandel2_nofib₀^3192 · finite₀^2635 · finite₀^2777] ---> [testMandel2_nofib₀^3192 · finite₀^2635] (using original def)
+//│ 		[testMandel2_nofib₀^3192 · finite₀^2635 · finite₀^2781] ---> [testMandel2_nofib₀^3192 · finite₀^2635] (using original def)
+//│ 	[testMandel2_nofib₀^3192 · length₀^2616]
+//│ 		[testMandel2_nofib₀^3192 · length₀^2616 · length₀^1526] ---> [testMandel2_nofib₀^3192 · length₀^2616] (only one)
+//│ 	[testMandel2_nofib₀^3192 · max₀^2615] (hopeless to continue)
+//│ 	[testMandel2_nofib₀^3192 · size₁₂^2620] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testMandel2_nofib₀₀(primId⁰([LH_C 5 [LH_N]]))
+//│ def testMandel2_nofib₀₀(_lh_testMandel2_nofib_arg1¹) = 
+//│ 	let size'¹ = max₀₀(length₀₀(_lh_testMandel2_nofib_arg1¹), size₁₂₀)
+//│ 	in let tree¹ = build_tree₀₀([LH_P2 0 0], [LH_P2 size'¹ div⁰(size'¹, 2)])
+//│ 	in finite₀₀(tree¹)
+//│ 	where
+//│ 	def build_tree₀₀(_lh_build_tree_arg1¹, _lh_build_tree_arg2¹) = 
+//│ 		case _lh_build_tree_arg1¹ of {
+//│ 			LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1² => case _lh_build_tree_arg2¹ of {
+//│ 				LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³ => 
+//│ 					let rec_col¹ = check_perim₀₀([LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²], [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³])
+//│ 					in let split¹ = if ((_lh_build_tree_LH_P2_0³ - _lh_build_tree_LH_P2_0²) >= (_lh_build_tree_LH_P2_1³ - _lh_build_tree_LH_P2_1²)) then [LH_C 'N' [LH_C 'S' [LH_N]]] else [LH_C 'E' [LH_C 'W' [LH_N]]]
+//│ 					in let split_x¹ = div⁰((_lh_build_tree_LH_P2_0³ + _lh_build_tree_LH_P2_0²), 2)
+//│ 					in let split_y¹ = div⁰((_lh_build_tree_LH_P2_1³ + _lh_build_tree_LH_P2_1²), 2)
+//│ 					in let nsp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ 					in let nsp2¹ = [LH_P2 split_x¹ _lh_build_tree_LH_P2_1³]
+//│ 					in let nsp3¹ = [LH_P2 (split_x¹ + 1) _lh_build_tree_LH_P2_1²]
+//│ 					in let nsp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ 					in let ewp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ 					in let ewp2¹ = [LH_P2 _lh_build_tree_LH_P2_0³ split_y¹]
+//│ 					in let ewp3¹ = [LH_P2 _lh_build_tree_LH_P2_0² (split_y¹ + 1)]
+//│ 					in let ewp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ 					in if (rec_col¹ /= (0 - 1)) then [Leaf rec_col¹] else if strEq₀₀(split¹, [LH_C 'N' [LH_C 'S' [LH_N]]]) then [NS build_tree₀₀(nsp1¹, nsp2¹) build_tree₀₀(nsp3¹, nsp4¹)] else [EW build_tree₀₀(ewp1¹, ewp2¹) build_tree₀₀(ewp3¹, ewp4¹)]
+//│ 				| _  => error⁰}
+//│ 			| _  => error⁰}
+//│ 		where
+//│ 		def check_perim₀₀(_lh_check_perim_arg1¹, _lh_check_perim_arg2¹) = 
+//│ 			case _lh_check_perim_arg1¹ of {
+//│ 				LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴ => case _lh_check_perim_arg2¹ of {
+//│ 					LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵ => 
+//│ 						let col1¹ = point_colour₀₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴])
+//│ 						in let col2¹ = point_colour₁₀([LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁴])
+//│ 						in let col3¹ = point_colour₂₀([LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵])
+//│ 						in let col4¹ = point_colour₃₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁵])
+//│ 						in let corners_diff¹ = if (col1¹ == col2¹) then if (col1¹ == col3¹) then if (col1¹ == col4¹) then [False] else [True] else [True] else [True]
+//│ 						in let check_line¹ = (fun xcyc¹ -> (fun xdyd¹ -> 
+//│ 							let _lh_matchIdent⁶ = xcyc¹
+//│ 							in case _lh_matchIdent⁶ of {
+//│ 								LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶ => 
+//│ 									let _lh_matchIdent⁷ = xdyd¹
+//│ 									in case _lh_matchIdent⁷ of {
+//│ 										LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷ => 
+//│ 											let finished¹ = if equalp₀₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], right₀₀) then (_lh_check_perim_LH_P2_0⁶ >= _lh_check_perim_LH_P2_0⁵) else if equalp₁₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], down₀₀) then (_lh_check_perim_LH_P2_1⁶ <= _lh_check_perim_LH_P2_1⁵) else if equalp₂₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], left₀₀) then (_lh_check_perim_LH_P2_0⁶ <= _lh_check_perim_LH_P2_0⁴) else (_lh_check_perim_LH_P2_1⁶ >= _lh_check_perim_LH_P2_1⁴)
+//│ 											in if finished¹ then [True] else if (point_colour₄₀([LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]) /= col1¹) then [False] else check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)], [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷])
+//│ 										| _  => error⁰}
+//│ 								| _  => error⁰}))
+//│ 						in let check_sides¹ = if check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁴ + 1) _lh_check_perim_LH_P2_1⁴], right₁₀) then if check_line¹([LH_P2 _lh_check_perim_LH_P2_0⁵ (_lh_check_perim_LH_P2_1⁴ + 1)], down₁₀) then if check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁵ - 1) _lh_check_perim_LH_P2_1⁵], left₁₀) then if check_line¹([LH_P2 _lh_check_perim_LH_P2_0⁴ (_lh_check_perim_LH_P2_1⁵ - 1)], up₀₀) then col1¹ else (0 - 1) else (0 - 1) else (0 - 1) else (0 - 1)
+//│ 						in if equalp₃₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴], [LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵]) then point_colour₅₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴]) else if corners_diff¹ then (0 - 1) else check_sides¹
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 			where
+//│ 			def down₀₀ = 
+//│ 				[LH_P2 0 1]
+//│ 			def down₁₀ = 
+//│ 				[LH_P2 0 1]
+//│ 			def equalp₀₀(_lh_equalp_arg1⁵, _lh_equalp_arg2⁵) = 
+//│ 				case _lh_equalp_arg1⁵ of {
+//│ 					LH_P2 _lh_equalp_LH_P2_0¹⁰ _lh_equalp_LH_P2_1¹⁰ => case _lh_equalp_arg2⁵ of {
+//│ 						LH_P2 _lh_equalp_LH_P2_0¹¹ _lh_equalp_LH_P2_1¹¹ => ((_lh_equalp_LH_P2_0¹⁰ == _lh_equalp_LH_P2_0¹¹) && (_lh_equalp_LH_P2_1¹⁰ == _lh_equalp_LH_P2_1¹¹))
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 			def equalp₁₀(_lh_equalp_arg1⁷, _lh_equalp_arg2⁷) = 
+//│ 				case _lh_equalp_arg1⁷ of {
+//│ 					LH_P2 _lh_equalp_LH_P2_0¹⁴ _lh_equalp_LH_P2_1¹⁴ => case _lh_equalp_arg2⁷ of {
+//│ 						LH_P2 _lh_equalp_LH_P2_0¹⁵ _lh_equalp_LH_P2_1¹⁵ => ((_lh_equalp_LH_P2_0¹⁴ == _lh_equalp_LH_P2_0¹⁵) && (_lh_equalp_LH_P2_1¹⁴ == _lh_equalp_LH_P2_1¹⁵))
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 			def equalp₂₀(_lh_equalp_arg1⁶, _lh_equalp_arg2⁶) = 
+//│ 				case _lh_equalp_arg1⁶ of {
+//│ 					LH_P2 _lh_equalp_LH_P2_0¹² _lh_equalp_LH_P2_1¹² => case _lh_equalp_arg2⁶ of {
+//│ 						LH_P2 _lh_equalp_LH_P2_0¹³ _lh_equalp_LH_P2_1¹³ => ((_lh_equalp_LH_P2_0¹² == _lh_equalp_LH_P2_0¹³) && (_lh_equalp_LH_P2_1¹² == _lh_equalp_LH_P2_1¹³))
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 			def equalp₃₀(_lh_equalp_arg1⁴, _lh_equalp_arg2⁴) = 
+//│ 				case _lh_equalp_arg1⁴ of {
+//│ 					LH_P2 _lh_equalp_LH_P2_0⁸ _lh_equalp_LH_P2_1⁸ => case _lh_equalp_arg2⁴ of {
+//│ 						LH_P2 _lh_equalp_LH_P2_0⁹ _lh_equalp_LH_P2_1⁹ => ((_lh_equalp_LH_P2_0⁸ == _lh_equalp_LH_P2_0⁹) && (_lh_equalp_LH_P2_1⁸ == _lh_equalp_LH_P2_1⁹))
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 			def left₀₀ = 
+//│ 				[LH_P2 (0 - 1) 0]
+//│ 			def left₁₀ = 
+//│ 				[LH_P2 (0 - 1) 0]
+//│ 			def point_colour₀₀(_lh_point_colour_arg1¹⁰) = 
+//│ 				case _lh_point_colour_arg1¹⁰ of {
+//│ 					LH_P2 _lh_point_colour_LH_P2_0¹⁰ _lh_point_colour_LH_P2_1¹⁰ => check_radius₀₀(np₀₀(_lh_point_colour_LH_P2_0¹⁰), nq₀₀(_lh_point_colour_LH_P2_1¹⁰), 0, 0.0, 0.0)
+//│ 					| _  => error⁰}
+//│ 				where
+//│ 				def check_radius₀₀(_lh_check_radius_arg1¹¹, _lh_check_radius_arg2¹¹, _lh_check_radius_arg3¹¹, _lh_check_radius_arg4¹¹, _lh_check_radius_arg5¹¹) = 
+//│ 					let xn¹¹ = new_x₀₀(_lh_check_radius_arg4¹¹, _lh_check_radius_arg5¹¹, _lh_check_radius_arg1¹¹)
+//│ 					in let yn¹¹ = new_y₀₀(_lh_check_radius_arg4¹¹, _lh_check_radius_arg5¹¹, _lh_check_radius_arg2¹¹)
+//│ 					in let r¹¹ = radius₀₀(xn¹¹, yn¹¹)
+//│ 					in let kp¹¹ = (_lh_check_radius_arg3¹¹ + 1)
+//│ 					in if (kp¹¹ == num_cols₀₀) then 0 else if polyGt⁰(r¹¹, float_of_int⁰(m₀₀)) then kp¹¹ else check_radius₀₀(_lh_check_radius_arg1¹¹, _lh_check_radius_arg2¹¹, kp¹¹, xn¹¹, yn¹¹)
+//│ 					where
+//│ 					def m₀₀ = 
+//│ 						20
+//│ 					def new_x₀₀(_lh_new_x_arg1⁸, _lh_new_x_arg2⁸, _lh_new_x_arg3⁸) = 
+//│ 						(((_lh_new_x_arg1⁸ *. _lh_new_x_arg1⁸) -. (_lh_new_x_arg2⁸ *. _lh_new_x_arg2⁸)) +. _lh_new_x_arg3⁸)
+//│ 					def new_y₀₀(_lh_new_y_arg1⁸, _lh_new_y_arg2⁸, _lh_new_y_arg3⁸) = 
+//│ 						(((2.0 *. _lh_new_y_arg1⁸) *. _lh_new_y_arg2⁸) +. _lh_new_y_arg3⁸)
+//│ 					def num_cols₀₀ = 
+//│ 						26
+//│ 					def radius₀₀(_lh_radius_arg1¹⁰, _lh_radius_arg2¹⁰) = 
+//│ 						((_lh_radius_arg1¹⁰ *. _lh_radius_arg1¹⁰) +. (_lh_radius_arg2¹⁰ *. _lh_radius_arg2¹⁰))
+//│ 				def np₀₀(_lh_np_arg1⁸) = 
+//│ 					(pmn₁₀ +. (float_of_int⁰(_lh_np_arg1⁸) *. delta_p₀₀))
+//│ 					where
+//│ 					def delta_p₀₀ = 
+//│ 						((pmx₀₀ -. pmn₀₀) /. float_of_int⁰((size₀₀ - 1)))
+//│ 						where
+//│ 						def pmn₀₀ = 
+//│ 							(0.0 -. 2.25)
+//│ 						def pmx₀₀ = 
+//│ 							0.75
+//│ 						def size₀₀ = 
+//│ 							200
+//│ 					def pmn₁₀ = 
+//│ 						(0.0 -. 2.25)
+//│ 				def nq₀₀(_lh_nq_arg1⁸) = 
+//│ 					(qmn₁₀ +. (float_of_int⁰(_lh_nq_arg1⁸) *. delta_q₀₀))
+//│ 					where
+//│ 					def delta_q₀₀ = 
+//│ 						((qmx₀₀ -. qmn₀₀) /. float_of_int⁰((size₁₀ - 1)))
+//│ 						where
+//│ 						def qmn₀₀ = 
+//│ 							(0.0 -. 1.5)
+//│ 						def qmx₀₀ = 
+//│ 							1.5
+//│ 						def size₁₀ = 
+//│ 							200
+//│ 					def qmn₁₀ = 
+//│ 						(0.0 -. 1.5)
+//│ 			def point_colour₁₀(_lh_point_colour_arg1⁸) = 
+//│ 				case _lh_point_colour_arg1⁸ of {
+//│ 					LH_P2 _lh_point_colour_LH_P2_0⁸ _lh_point_colour_LH_P2_1⁸ => check_radius₁₀(np₁₀(_lh_point_colour_LH_P2_0⁸), nq₁₀(_lh_point_colour_LH_P2_1⁸), 0, 0.0, 0.0)
+//│ 					| _  => error⁰}
+//│ 				where
+//│ 				def check_radius₁₀(_lh_check_radius_arg1⁶, _lh_check_radius_arg2⁶, _lh_check_radius_arg3⁶, _lh_check_radius_arg4⁶, _lh_check_radius_arg5⁶) = 
+//│ 					let xn⁶ = new_x₁₀(_lh_check_radius_arg4⁶, _lh_check_radius_arg5⁶, _lh_check_radius_arg1⁶)
+//│ 					in let yn⁶ = new_y₁₀(_lh_check_radius_arg4⁶, _lh_check_radius_arg5⁶, _lh_check_radius_arg2⁶)
+//│ 					in let r⁶ = radius₁₀(xn⁶, yn⁶)
+//│ 					in let kp⁶ = (_lh_check_radius_arg3⁶ + 1)
+//│ 					in if (kp⁶ == num_cols₁₀) then 0 else if polyGt⁰(r⁶, float_of_int⁰(m₁₀)) then kp⁶ else check_radius₁₀(_lh_check_radius_arg1⁶, _lh_check_radius_arg2⁶, kp⁶, xn⁶, yn⁶)
+//│ 					where
+//│ 					def m₁₀ = 
+//│ 						20
+//│ 					def new_x₁₀(_lh_new_x_arg1¹⁰, _lh_new_x_arg2¹⁰, _lh_new_x_arg3¹⁰) = 
+//│ 						(((_lh_new_x_arg1¹⁰ *. _lh_new_x_arg1¹⁰) -. (_lh_new_x_arg2¹⁰ *. _lh_new_x_arg2¹⁰)) +. _lh_new_x_arg3¹⁰)
+//│ 					def new_y₁₀(_lh_new_y_arg1¹¹, _lh_new_y_arg2¹¹, _lh_new_y_arg3¹¹) = 
+//│ 						(((2.0 *. _lh_new_y_arg1¹¹) *. _lh_new_y_arg2¹¹) +. _lh_new_y_arg3¹¹)
+//│ 					def num_cols₁₀ = 
+//│ 						26
+//│ 					def radius₁₀(_lh_radius_arg1¹¹, _lh_radius_arg2¹¹) = 
+//│ 						((_lh_radius_arg1¹¹ *. _lh_radius_arg1¹¹) +. (_lh_radius_arg2¹¹ *. _lh_radius_arg2¹¹))
+//│ 				def np₁₀(_lh_np_arg1⁹) = 
+//│ 					(pmn₃₀ +. (float_of_int⁰(_lh_np_arg1⁹) *. delta_p₁₀))
+//│ 					where
+//│ 					def delta_p₁₀ = 
+//│ 						((pmx₁₀ -. pmn₂₀) /. float_of_int⁰((size₂₀ - 1)))
+//│ 						where
+//│ 						def pmn₂₀ = 
+//│ 							(0.0 -. 2.25)
+//│ 						def pmx₁₀ = 
+//│ 							0.75
+//│ 						def size₂₀ = 
+//│ 							200
+//│ 					def pmn₃₀ = 
+//│ 						(0.0 -. 2.25)
+//│ 				def nq₁₀(_lh_nq_arg1¹¹) = 
+//│ 					(qmn₃₀ +. (float_of_int⁰(_lh_nq_arg1¹¹) *. delta_q₁₀))
+//│ 					where
+//│ 					def delta_q₁₀ = 
+//│ 						((qmx₁₀ -. qmn₂₀) /. float_of_int⁰((size₃₀ - 1)))
+//│ 						where
+//│ 						def qmn₂₀ = 
+//│ 							(0.0 -. 1.5)
+//│ 						def qmx₁₀ = 
+//│ 							1.5
+//│ 						def size₃₀ = 
+//│ 							200
+//│ 					def qmn₃₀ = 
+//│ 						(0.0 -. 1.5)
+//│ 			def point_colour₂₀(_lh_point_colour_arg1⁷) = 
+//│ 				case _lh_point_colour_arg1⁷ of {
+//│ 					LH_P2 _lh_point_colour_LH_P2_0⁷ _lh_point_colour_LH_P2_1⁷ => check_radius₂₀(np₂₀(_lh_point_colour_LH_P2_0⁷), nq₂₀(_lh_point_colour_LH_P2_1⁷), 0, 0.0, 0.0)
+//│ 					| _  => error⁰}
+//│ 				where
+//│ 				def check_radius₂₀(_lh_check_radius_arg1⁹, _lh_check_radius_arg2⁹, _lh_check_radius_arg3⁹, _lh_check_radius_arg4⁹, _lh_check_radius_arg5⁹) = 
+//│ 					let xn⁹ = new_x₂₀(_lh_check_radius_arg4⁹, _lh_check_radius_arg5⁹, _lh_check_radius_arg1⁹)
+//│ 					in let yn⁹ = new_y₂₀(_lh_check_radius_arg4⁹, _lh_check_radius_arg5⁹, _lh_check_radius_arg2⁹)
+//│ 					in let r⁹ = radius₂₀(xn⁹, yn⁹)
+//│ 					in let kp⁹ = (_lh_check_radius_arg3⁹ + 1)
+//│ 					in if (kp⁹ == num_cols₂₀) then 0 else if polyGt⁰(r⁹, float_of_int⁰(m₂₀)) then kp⁹ else check_radius₂₀(_lh_check_radius_arg1⁹, _lh_check_radius_arg2⁹, kp⁹, xn⁹, yn⁹)
+//│ 					where
+//│ 					def m₂₀ = 
+//│ 						20
+//│ 					def new_x₂₀(_lh_new_x_arg1⁷, _lh_new_x_arg2⁷, _lh_new_x_arg3⁷) = 
+//│ 						(((_lh_new_x_arg1⁷ *. _lh_new_x_arg1⁷) -. (_lh_new_x_arg2⁷ *. _lh_new_x_arg2⁷)) +. _lh_new_x_arg3⁷)
+//│ 					def new_y₂₀(_lh_new_y_arg1⁹, _lh_new_y_arg2⁹, _lh_new_y_arg3⁹) = 
+//│ 						(((2.0 *. _lh_new_y_arg1⁹) *. _lh_new_y_arg2⁹) +. _lh_new_y_arg3⁹)
+//│ 					def num_cols₂₀ = 
+//│ 						26
+//│ 					def radius₂₀(_lh_radius_arg1⁹, _lh_radius_arg2⁹) = 
+//│ 						((_lh_radius_arg1⁹ *. _lh_radius_arg1⁹) +. (_lh_radius_arg2⁹ *. _lh_radius_arg2⁹))
+//│ 				def np₂₀(_lh_np_arg1¹¹) = 
+//│ 					(pmn₅₀ +. (float_of_int⁰(_lh_np_arg1¹¹) *. delta_p₂₀))
+//│ 					where
+//│ 					def delta_p₂₀ = 
+//│ 						((pmx₂₀ -. pmn₄₀) /. float_of_int⁰((size₄₀ - 1)))
+//│ 						where
+//│ 						def pmn₄₀ = 
+//│ 							(0.0 -. 2.25)
+//│ 						def pmx₂₀ = 
+//│ 							0.75
+//│ 						def size₄₀ = 
+//│ 							200
+//│ 					def pmn₅₀ = 
+//│ 						(0.0 -. 2.25)
+//│ 				def nq₂₀(_lh_nq_arg1⁹) = 
+//│ 					(qmn₅₀ +. (float_of_int⁰(_lh_nq_arg1⁹) *. delta_q₂₀))
+//│ 					where
+//│ 					def delta_q₂₀ = 
+//│ 						((qmx₂₀ -. qmn₄₀) /. float_of_int⁰((size₅₀ - 1)))
+//│ 						where
+//│ 						def qmn₄₀ = 
+//│ 							(0.0 -. 1.5)
+//│ 						def qmx₂₀ = 
+//│ 							1.5
+//│ 						def size₅₀ = 
+//│ 							200
+//│ 					def qmn₅₀ = 
+//│ 						(0.0 -. 1.5)
+//│ 			def point_colour₃₀(_lh_point_colour_arg1⁹) = 
+//│ 				case _lh_point_colour_arg1⁹ of {
+//│ 					LH_P2 _lh_point_colour_LH_P2_0⁹ _lh_point_colour_LH_P2_1⁹ => check_radius₃₀(np₃₀(_lh_point_colour_LH_P2_0⁹), nq₃₀(_lh_point_colour_LH_P2_1⁹), 0, 0.0, 0.0)
+//│ 					| _  => error⁰}
+//│ 				where
+//│ 				def check_radius₃₀(_lh_check_radius_arg1⁸, _lh_check_radius_arg2⁸, _lh_check_radius_arg3⁸, _lh_check_radius_arg4⁸, _lh_check_radius_arg5⁸) = 
+//│ 					let xn⁸ = new_x₃₀(_lh_check_radius_arg4⁸, _lh_check_radius_arg5⁸, _lh_check_radius_arg1⁸)
+//│ 					in let yn⁸ = new_y₃₀(_lh_check_radius_arg4⁸, _lh_check_radius_arg5⁸, _lh_check_radius_arg2⁸)
+//│ 					in let r⁸ = radius₃₀(xn⁸, yn⁸)
+//│ 					in let kp⁸ = (_lh_check_radius_arg3⁸ + 1)
+//│ 					in if (kp⁸ == num_cols₃₀) then 0 else if polyGt⁰(r⁸, float_of_int⁰(m₃₀)) then kp⁸ else check_radius₃₀(_lh_check_radius_arg1⁸, _lh_check_radius_arg2⁸, kp⁸, xn⁸, yn⁸)
+//│ 					where
+//│ 					def m₃₀ = 
+//│ 						20
+//│ 					def new_x₃₀(_lh_new_x_arg1¹¹, _lh_new_x_arg2¹¹, _lh_new_x_arg3¹¹) = 
+//│ 						(((_lh_new_x_arg1¹¹ *. _lh_new_x_arg1¹¹) -. (_lh_new_x_arg2¹¹ *. _lh_new_x_arg2¹¹)) +. _lh_new_x_arg3¹¹)
+//│ 					def new_y₃₀(_lh_new_y_arg1¹⁰, _lh_new_y_arg2¹⁰, _lh_new_y_arg3¹⁰) = 
+//│ 						(((2.0 *. _lh_new_y_arg1¹⁰) *. _lh_new_y_arg2¹⁰) +. _lh_new_y_arg3¹⁰)
+//│ 					def num_cols₃₀ = 
+//│ 						26
+//│ 					def radius₃₀(_lh_radius_arg1⁷, _lh_radius_arg2⁷) = 
+//│ 						((_lh_radius_arg1⁷ *. _lh_radius_arg1⁷) +. (_lh_radius_arg2⁷ *. _lh_radius_arg2⁷))
+//│ 				def np₃₀(_lh_np_arg1⁶) = 
+//│ 					(pmn₇₀ +. (float_of_int⁰(_lh_np_arg1⁶) *. delta_p₃₀))
+//│ 					where
+//│ 					def delta_p₃₀ = 
+//│ 						((pmx₃₀ -. pmn₆₀) /. float_of_int⁰((size₆₀ - 1)))
+//│ 						where
+//│ 						def pmn₆₀ = 
+//│ 							(0.0 -. 2.25)
+//│ 						def pmx₃₀ = 
+//│ 							0.75
+//│ 						def size₆₀ = 
+//│ 							200
+//│ 					def pmn₇₀ = 
+//│ 						(0.0 -. 2.25)
+//│ 				def nq₃₀(_lh_nq_arg1⁷) = 
+//│ 					(qmn₇₀ +. (float_of_int⁰(_lh_nq_arg1⁷) *. delta_q₃₀))
+//│ 					where
+//│ 					def delta_q₃₀ = 
+//│ 						((qmx₃₀ -. qmn₆₀) /. float_of_int⁰((size₇₀ - 1)))
+//│ 						where
+//│ 						def qmn₆₀ = 
+//│ 							(0.0 -. 1.5)
+//│ 						def qmx₃₀ = 
+//│ 							1.5
+//│ 						def size₇₀ = 
+//│ 							200
+//│ 					def qmn₇₀ = 
+//│ 						(0.0 -. 1.5)
+//│ 			def point_colour₄₀(_lh_point_colour_arg1¹¹) = 
+//│ 				case _lh_point_colour_arg1¹¹ of {
+//│ 					LH_P2 _lh_point_colour_LH_P2_0¹¹ _lh_point_colour_LH_P2_1¹¹ => check_radius₄₀(np₄₀(_lh_point_colour_LH_P2_0¹¹), nq₄₀(_lh_point_colour_LH_P2_1¹¹), 0, 0.0, 0.0)
+//│ 					| _  => error⁰}
+//│ 				where
+//│ 				def check_radius₄₀(_lh_check_radius_arg1¹⁰, _lh_check_radius_arg2¹⁰, _lh_check_radius_arg3¹⁰, _lh_check_radius_arg4¹⁰, _lh_check_radius_arg5¹⁰) = 
+//│ 					let xn¹⁰ = new_x₄₀(_lh_check_radius_arg4¹⁰, _lh_check_radius_arg5¹⁰, _lh_check_radius_arg1¹⁰)
+//│ 					in let yn¹⁰ = new_y₄₀(_lh_check_radius_arg4¹⁰, _lh_check_radius_arg5¹⁰, _lh_check_radius_arg2¹⁰)
+//│ 					in let r¹⁰ = radius₄₀(xn¹⁰, yn¹⁰)
+//│ 					in let kp¹⁰ = (_lh_check_radius_arg3¹⁰ + 1)
+//│ 					in if (kp¹⁰ == num_cols₄₀) then 0 else if polyGt⁰(r¹⁰, float_of_int⁰(m₄₀)) then kp¹⁰ else check_radius₄₀(_lh_check_radius_arg1¹⁰, _lh_check_radius_arg2¹⁰, kp¹⁰, xn¹⁰, yn¹⁰)
+//│ 					where
+//│ 					def m₄₀ = 
+//│ 						20
+//│ 					def new_x₄₀(_lh_new_x_arg1⁹, _lh_new_x_arg2⁹, _lh_new_x_arg3⁹) = 
+//│ 						(((_lh_new_x_arg1⁹ *. _lh_new_x_arg1⁹) -. (_lh_new_x_arg2⁹ *. _lh_new_x_arg2⁹)) +. _lh_new_x_arg3⁹)
+//│ 					def new_y₄₀(_lh_new_y_arg1⁶, _lh_new_y_arg2⁶, _lh_new_y_arg3⁶) = 
+//│ 						(((2.0 *. _lh_new_y_arg1⁶) *. _lh_new_y_arg2⁶) +. _lh_new_y_arg3⁶)
+//│ 					def num_cols₄₀ = 
+//│ 						26
+//│ 					def radius₄₀(_lh_radius_arg1⁸, _lh_radius_arg2⁸) = 
+//│ 						((_lh_radius_arg1⁸ *. _lh_radius_arg1⁸) +. (_lh_radius_arg2⁸ *. _lh_radius_arg2⁸))
+//│ 				def np₄₀(_lh_np_arg1⁷) = 
+//│ 					(pmn₉₀ +. (float_of_int⁰(_lh_np_arg1⁷) *. delta_p₄₀))
+//│ 					where
+//│ 					def delta_p₄₀ = 
+//│ 						((pmx₄₀ -. pmn₈₀) /. float_of_int⁰((size₈₀ - 1)))
+//│ 						where
+//│ 						def pmn₈₀ = 
+//│ 							(0.0 -. 2.25)
+//│ 						def pmx₄₀ = 
+//│ 							0.75
+//│ 						def size₈₀ = 
+//│ 							200
+//│ 					def pmn₉₀ = 
+//│ 						(0.0 -. 2.25)
+//│ 				def nq₄₀(_lh_nq_arg1⁶) = 
+//│ 					(qmn₉₀ +. (float_of_int⁰(_lh_nq_arg1⁶) *. delta_q₄₀))
+//│ 					where
+//│ 					def delta_q₄₀ = 
+//│ 						((qmx₄₀ -. qmn₈₀) /. float_of_int⁰((size₉₀ - 1)))
+//│ 						where
+//│ 						def qmn₈₀ = 
+//│ 							(0.0 -. 1.5)
+//│ 						def qmx₄₀ = 
+//│ 							1.5
+//│ 						def size₉₀ = 
+//│ 							200
+//│ 					def qmn₉₀ = 
+//│ 						(0.0 -. 1.5)
+//│ 			def point_colour₅₀(_lh_point_colour_arg1⁶) = 
+//│ 				case _lh_point_colour_arg1⁶ of {
+//│ 					LH_P2 _lh_point_colour_LH_P2_0⁶ _lh_point_colour_LH_P2_1⁶ => check_radius₅₀(np₅₀(_lh_point_colour_LH_P2_0⁶), nq₅₀(_lh_point_colour_LH_P2_1⁶), 0, 0.0, 0.0)
+//│ 					| _  => error⁰}
+//│ 				where
+//│ 				def check_radius₅₀(_lh_check_radius_arg1⁷, _lh_check_radius_arg2⁷, _lh_check_radius_arg3⁷, _lh_check_radius_arg4⁷, _lh_check_radius_arg5⁷) = 
+//│ 					let xn⁷ = new_x₅₀(_lh_check_radius_arg4⁷, _lh_check_radius_arg5⁷, _lh_check_radius_arg1⁷)
+//│ 					in let yn⁷ = new_y₅₀(_lh_check_radius_arg4⁷, _lh_check_radius_arg5⁷, _lh_check_radius_arg2⁷)
+//│ 					in let r⁷ = radius₅₀(xn⁷, yn⁷)
+//│ 					in let kp⁷ = (_lh_check_radius_arg3⁷ + 1)
+//│ 					in if (kp⁷ == num_cols₅₀) then 0 else if polyGt⁰(r⁷, float_of_int⁰(m₅₀)) then kp⁷ else check_radius₅₀(_lh_check_radius_arg1⁷, _lh_check_radius_arg2⁷, kp⁷, xn⁷, yn⁷)
+//│ 					where
+//│ 					def m₅₀ = 
+//│ 						20
+//│ 					def new_x₅₀(_lh_new_x_arg1⁶, _lh_new_x_arg2⁶, _lh_new_x_arg3⁶) = 
+//│ 						(((_lh_new_x_arg1⁶ *. _lh_new_x_arg1⁶) -. (_lh_new_x_arg2⁶ *. _lh_new_x_arg2⁶)) +. _lh_new_x_arg3⁶)
+//│ 					def new_y₅₀(_lh_new_y_arg1⁷, _lh_new_y_arg2⁷, _lh_new_y_arg3⁷) = 
+//│ 						(((2.0 *. _lh_new_y_arg1⁷) *. _lh_new_y_arg2⁷) +. _lh_new_y_arg3⁷)
+//│ 					def num_cols₅₀ = 
+//│ 						26
+//│ 					def radius₅₀(_lh_radius_arg1⁶, _lh_radius_arg2⁶) = 
+//│ 						((_lh_radius_arg1⁶ *. _lh_radius_arg1⁶) +. (_lh_radius_arg2⁶ *. _lh_radius_arg2⁶))
+//│ 				def np₅₀(_lh_np_arg1¹⁰) = 
+//│ 					(pmn₁₁₀ +. (float_of_int⁰(_lh_np_arg1¹⁰) *. delta_p₅₀))
+//│ 					where
+//│ 					def delta_p₅₀ = 
+//│ 						((pmx₅₀ -. pmn₁₀₀) /. float_of_int⁰((size₁₀₀ - 1)))
+//│ 						where
+//│ 						def pmn₁₀₀ = 
+//│ 							(0.0 -. 2.25)
+//│ 						def pmx₅₀ = 
+//│ 							0.75
+//│ 						def size₁₀₀ = 
+//│ 							200
+//│ 					def pmn₁₁₀ = 
+//│ 						(0.0 -. 2.25)
+//│ 				def nq₅₀(_lh_nq_arg1¹⁰) = 
+//│ 					(qmn₁₁₀ +. (float_of_int⁰(_lh_nq_arg1¹⁰) *. delta_q₅₀))
+//│ 					where
+//│ 					def delta_q₅₀ = 
+//│ 						((qmx₅₀ -. qmn₁₀₀) /. float_of_int⁰((size₁₁₀ - 1)))
+//│ 						where
+//│ 						def qmn₁₀₀ = 
+//│ 							(0.0 -. 1.5)
+//│ 						def qmx₅₀ = 
+//│ 							1.5
+//│ 						def size₁₁₀ = 
+//│ 							200
+//│ 					def qmn₁₁₀ = 
+//│ 						(0.0 -. 1.5)
+//│ 			def right₀₀ = 
+//│ 				[LH_P2 1 0]
+//│ 			def right₁₀ = 
+//│ 				[LH_P2 1 0]
+//│ 			def up₀₀ = 
+//│ 				[LH_P2 0 (0 - 1)]
+//│ 		def strEq₀₀(_lh_strEq_arg1¹, _lh_strEq_arg2¹) = 
+//│ 			case _lh_strEq_arg1¹ of {
+//│ 				LH_C _lh_strEq_LH_C_0³ _lh_strEq_LH_C_1³ => 
+//│ 					let _lh_matchIdent⁴ = _lh_strEq_arg2¹
+//│ 					in case _lh_matchIdent⁴ of {
+//│ 						LH_C _lh_strEq_LH_C_0⁴ _lh_strEq_LH_C_1⁴ => if polyEq⁰(_lh_strEq_LH_C_0³, _lh_strEq_LH_C_0⁴) then strEq₀₀(_lh_strEq_LH_C_1³, _lh_strEq_LH_C_1⁴) else [False]
+//│ 						| LH_N  => [False]
+//│ 						| _  => error⁰}
+//│ 				| LH_N  => 
+//│ 					let _lh_matchIdent⁵ = _lh_strEq_arg2¹
+//│ 					in case _lh_matchIdent⁵ of {
+//│ 						LH_C _lh_strEq_LH_C_0⁵ _lh_strEq_LH_C_1⁵ => [False]
+//│ 						| LH_N  => [True]
+//│ 						| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 	def finite₀₀(_lh_finite_arg1¹) = 
+//│ 		case _lh_finite_arg1¹ of {
+//│ 			Leaf _lh_finite_Leaf_0¹ => (_lh_finite_Leaf_0¹ == _lh_finite_Leaf_0¹)
+//│ 			| NS _lh_finite_NS_0¹ _lh_finite_NS_1¹ => (finite₀₀(_lh_finite_NS_0¹) && finite₀₀(_lh_finite_NS_1¹))
+//│ 			| EW _lh_finite_EW_0¹ _lh_finite_EW_1¹ => (finite₀₀(_lh_finite_EW_0¹) && finite₀₀(_lh_finite_EW_1¹))
+//│ 			| _  => error⁰}
+//│ 	def length₀₀(ls¹) = 
+//│ 		case ls¹ of {
+//│ 			LH_C h¹ t¹ => (1 + length₀₀(t¹))
+//│ 			| LH_N  => 0}
+//│ 	def max₀₀(_lh_max_arg1¹, _lh_max_arg2¹) = 
+//│ 		if (_lh_max_arg1¹ > _lh_max_arg2¹) then _lh_max_arg1¹ else _lh_max_arg2¹
+//│ 	def size₁₂₀ = 
+//│ 		200
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_P2 0 1]: 1881 --->
+//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷ => let finished¹ = if equalp₀₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], right₀₀) then (_lh_check_perim_LH_P2_0⁶ >= _lh_check_perim_LH_P2_0⁵) else if equalp₁₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], down₀₀) then (_lh_check_perim_LH_P2_1⁶ <= _lh_check_perim_LH_P2_1⁵) else if equalp₂₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], left₀₀) then (_lh_check_perim_LH_P2_0⁶ <= _lh_check_perim_LH_P2_0⁴) else (_lh_check_perim_LH_P2_1⁶ >= _lh_check_perim_LH_P2_1⁴)
+//│ in if finished¹ then [True] else if (point_colour₄₀([LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]) /= col1¹) then [False] else check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)], [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]) | _  => error⁰}: 3063
+//│ [LH_P2 (0 - 1) 0]: 1888 --->
+//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷ => let finished¹ = if equalp₀₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], right₀₀) then (_lh_check_perim_LH_P2_0⁶ >= _lh_check_perim_LH_P2_0⁵) else if equalp₁₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], down₀₀) then (_lh_check_perim_LH_P2_1⁶ <= _lh_check_perim_LH_P2_1⁵) else if equalp₂₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], left₀₀) then (_lh_check_perim_LH_P2_0⁶ <= _lh_check_perim_LH_P2_0⁴) else (_lh_check_perim_LH_P2_1⁶ >= _lh_check_perim_LH_P2_1⁴)
+//│ in if finished¹ then [True] else if (point_colour₄₀([LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]) /= col1¹) then [False] else check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)], [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]) | _  => error⁰}: 3063
+//│ [LH_P2 1 0]: 1971 --->
+//│ 	case _lh_equalp_arg2⁵ of {LH_P2 _lh_equalp_LH_P2_0¹¹ _lh_equalp_LH_P2_1¹¹ => ((_lh_equalp_LH_P2_0¹⁰ == _lh_equalp_LH_P2_0¹¹) && (_lh_equalp_LH_P2_1¹⁰ == _lh_equalp_LH_P2_1¹¹)) | _  => error⁰}: 2182
+//│ [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]: 2008 --->
+//│ 	case _lh_check_perim_arg1¹ of {LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴ => case _lh_check_perim_arg2¹ of {LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵ => let col1¹ = point_colour₀₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴])
+//│ in let col2¹ = point_colour₁₀([LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁴])
+//│ in let col3¹ = point_colour₂₀([LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵])
+//│ in let col4¹ = point_colour₃₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁵])
+//│ in let corners_diff¹ = if (col1¹ == col2¹) then if (col1¹ == col3¹) then if (col1¹ == col4¹) then [False] else [True] else [True] else [True]
+//│ in let check_line¹ = (fun xcyc¹ -> (fun xdyd¹ -> let _lh_matchIdent⁶ = xcyc¹
+//│ in case _lh_matchIdent⁶ of {LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶ => let _lh_matchIdent⁷ = xdyd¹
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷ => let finished¹ = if equalp₀₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], right₀₀) then (_lh_check_perim_LH_P2_0⁶ >= _lh_check_perim_LH_P2_0⁵) else if equalp₁₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], down₀₀) then (_lh_check_perim_LH_P2_1⁶ <= _lh_check_perim_LH_P2_1⁵) else if equalp₂₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], left₀₀) then (_lh_check_perim_LH_P2_0⁶ <= _lh_check_perim_LH_P2_0⁴) else (_lh_check_perim_LH_P2_1⁶ >= _lh_check_perim_LH_P2_1⁴)
+//│ in if finished¹ then [True] else if (point_colour₄₀([LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]) /= col1¹) then [False] else check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)], [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]) | _  => error⁰} | _  => error⁰}))
+//│ in let check_sides¹ = if check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁴ + 1) _lh_check_perim_LH_P2_1⁴], right₁₀) then if check_line¹([LH_P2 _lh_check_perim_LH_P2_0⁵ (_lh_check_perim_LH_P2_1⁴ + 1)], down₁₀) then if check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁵ - 1) _lh_check_perim_LH_P2_1⁵], left₁₀) then if check_line¹([LH_P2 _lh_check_perim_LH_P2_0⁴ (_lh_check_perim_LH_P2_1⁵ - 1)], up₀₀) then col1¹ else (0 - 1) else (0 - 1) else (0 - 1) else (0 - 1)
+//│ in if equalp₃₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴], [LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵]) then point_colour₅₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴]) else if corners_diff¹ then (0 - 1) else check_sides¹ | _  => error⁰} | _  => error⁰}: 3172
+//│ [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]: 2012 --->
+//│ 	case _lh_check_perim_arg2¹ of {LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵ => let col1¹ = point_colour₀₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴])
+//│ in let col2¹ = point_colour₁₀([LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁴])
+//│ in let col3¹ = point_colour₂₀([LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵])
+//│ in let col4¹ = point_colour₃₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁵])
+//│ in let corners_diff¹ = if (col1¹ == col2¹) then if (col1¹ == col3¹) then if (col1¹ == col4¹) then [False] else [True] else [True] else [True]
+//│ in let check_line¹ = (fun xcyc¹ -> (fun xdyd¹ -> let _lh_matchIdent⁶ = xcyc¹
+//│ in case _lh_matchIdent⁶ of {LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶ => let _lh_matchIdent⁷ = xdyd¹
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷ => let finished¹ = if equalp₀₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], right₀₀) then (_lh_check_perim_LH_P2_0⁶ >= _lh_check_perim_LH_P2_0⁵) else if equalp₁₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], down₀₀) then (_lh_check_perim_LH_P2_1⁶ <= _lh_check_perim_LH_P2_1⁵) else if equalp₂₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], left₀₀) then (_lh_check_perim_LH_P2_0⁶ <= _lh_check_perim_LH_P2_0⁴) else (_lh_check_perim_LH_P2_1⁶ >= _lh_check_perim_LH_P2_1⁴)
+//│ in if finished¹ then [True] else if (point_colour₄₀([LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]) /= col1¹) then [False] else check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)], [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]) | _  => error⁰} | _  => error⁰}))
+//│ in let check_sides¹ = if check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁴ + 1) _lh_check_perim_LH_P2_1⁴], right₁₀) then if check_line¹([LH_P2 _lh_check_perim_LH_P2_0⁵ (_lh_check_perim_LH_P2_1⁴ + 1)], down₁₀) then if check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁵ - 1) _lh_check_perim_LH_P2_1⁵], left₁₀) then if check_line¹([LH_P2 _lh_check_perim_LH_P2_0⁴ (_lh_check_perim_LH_P2_1⁵ - 1)], up₀₀) then col1¹ else (0 - 1) else (0 - 1) else (0 - 1) else (0 - 1)
+//│ in if equalp₃₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴], [LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵]) then point_colour₅₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴]) else if corners_diff¹ then (0 - 1) else check_sides¹ | _  => error⁰}: 3170
+//│ [LH_N]: 2029 --->
+//│ 	case _lh_strEq_arg1¹ of {LH_C _lh_strEq_LH_C_0³ _lh_strEq_LH_C_1³ => let _lh_matchIdent⁴ = _lh_strEq_arg2¹
+//│ in case _lh_matchIdent⁴ of {LH_C _lh_strEq_LH_C_0⁴ _lh_strEq_LH_C_1⁴ => if polyEq⁰(_lh_strEq_LH_C_0³, _lh_strEq_LH_C_0⁴) then strEq₀₀(_lh_strEq_LH_C_1³, _lh_strEq_LH_C_1⁴) else [False] | LH_N  => [False] | _  => error⁰} | LH_N  => let _lh_matchIdent⁵ = _lh_strEq_arg2¹
+//│ in case _lh_matchIdent⁵ of {LH_C _lh_strEq_LH_C_0⁵ _lh_strEq_LH_C_1⁵ => [False] | LH_N  => [True] | _  => error⁰} | _  => error⁰}: 1999
+//│ [LH_C 'S' [LH_N]]: 2030 --->
+//│ 	case _lh_strEq_arg1¹ of {LH_C _lh_strEq_LH_C_0³ _lh_strEq_LH_C_1³ => let _lh_matchIdent⁴ = _lh_strEq_arg2¹
+//│ in case _lh_matchIdent⁴ of {LH_C _lh_strEq_LH_C_0⁴ _lh_strEq_LH_C_1⁴ => if polyEq⁰(_lh_strEq_LH_C_0³, _lh_strEq_LH_C_0⁴) then strEq₀₀(_lh_strEq_LH_C_1³, _lh_strEq_LH_C_1⁴) else [False] | LH_N  => [False] | _  => error⁰} | LH_N  => let _lh_matchIdent⁵ = _lh_strEq_arg2¹
+//│ in case _lh_matchIdent⁵ of {LH_C _lh_strEq_LH_C_0⁵ _lh_strEq_LH_C_1⁵ => [False] | LH_N  => [True] | _  => error⁰} | _  => error⁰}: 1999
+//│ [LH_C 'N' [LH_C 'S' [LH_N]]]: 2031 --->
+//│ 	case _lh_strEq_arg1¹ of {LH_C _lh_strEq_LH_C_0³ _lh_strEq_LH_C_1³ => let _lh_matchIdent⁴ = _lh_strEq_arg2¹
+//│ in case _lh_matchIdent⁴ of {LH_C _lh_strEq_LH_C_0⁴ _lh_strEq_LH_C_1⁴ => if polyEq⁰(_lh_strEq_LH_C_0³, _lh_strEq_LH_C_0⁴) then strEq₀₀(_lh_strEq_LH_C_1³, _lh_strEq_LH_C_1⁴) else [False] | LH_N  => [False] | _  => error⁰} | LH_N  => let _lh_matchIdent⁵ = _lh_strEq_arg2¹
+//│ in case _lh_matchIdent⁵ of {LH_C _lh_strEq_LH_C_0⁵ _lh_strEq_LH_C_1⁵ => [False] | LH_N  => [True] | _  => error⁰} | _  => error⁰}: 1999
+//│ [LH_N]: 2034 --->
+//│ 	case _lh_strEq_arg1¹ of {LH_C _lh_strEq_LH_C_0³ _lh_strEq_LH_C_1³ => let _lh_matchIdent⁴ = _lh_strEq_arg2¹
+//│ in case _lh_matchIdent⁴ of {LH_C _lh_strEq_LH_C_0⁴ _lh_strEq_LH_C_1⁴ => if polyEq⁰(_lh_strEq_LH_C_0³, _lh_strEq_LH_C_0⁴) then strEq₀₀(_lh_strEq_LH_C_1³, _lh_strEq_LH_C_1⁴) else [False] | LH_N  => [False] | _  => error⁰} | LH_N  => let _lh_matchIdent⁵ = _lh_strEq_arg2¹
+//│ in case _lh_matchIdent⁵ of {LH_C _lh_strEq_LH_C_0⁵ _lh_strEq_LH_C_1⁵ => [False] | LH_N  => [True] | _  => error⁰} | _  => error⁰}: 1999
+//│ [LH_C 'W' [LH_N]]: 2035 --->
+//│ 	case _lh_strEq_arg1¹ of {LH_C _lh_strEq_LH_C_0³ _lh_strEq_LH_C_1³ => let _lh_matchIdent⁴ = _lh_strEq_arg2¹
+//│ in case _lh_matchIdent⁴ of {LH_C _lh_strEq_LH_C_0⁴ _lh_strEq_LH_C_1⁴ => if polyEq⁰(_lh_strEq_LH_C_0³, _lh_strEq_LH_C_0⁴) then strEq₀₀(_lh_strEq_LH_C_1³, _lh_strEq_LH_C_1⁴) else [False] | LH_N  => [False] | _  => error⁰} | LH_N  => let _lh_matchIdent⁵ = _lh_strEq_arg2¹
+//│ in case _lh_matchIdent⁵ of {LH_C _lh_strEq_LH_C_0⁵ _lh_strEq_LH_C_1⁵ => [False] | LH_N  => [True] | _  => error⁰} | _  => error⁰}: 1999
+//│ [LH_C 'E' [LH_C 'W' [LH_N]]]: 2036 --->
+//│ 	case _lh_strEq_arg1¹ of {LH_C _lh_strEq_LH_C_0³ _lh_strEq_LH_C_1³ => let _lh_matchIdent⁴ = _lh_strEq_arg2¹
+//│ in case _lh_matchIdent⁴ of {LH_C _lh_strEq_LH_C_0⁴ _lh_strEq_LH_C_1⁴ => if polyEq⁰(_lh_strEq_LH_C_0³, _lh_strEq_LH_C_0⁴) then strEq₀₀(_lh_strEq_LH_C_1³, _lh_strEq_LH_C_1⁴) else [False] | LH_N  => [False] | _  => error⁰} | LH_N  => let _lh_matchIdent⁵ = _lh_strEq_arg2¹
+//│ in case _lh_matchIdent⁵ of {LH_C _lh_strEq_LH_C_0⁵ _lh_strEq_LH_C_1⁵ => [False] | LH_N  => [True] | _  => error⁰} | _  => error⁰}: 1999
+//│ [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]: 2058 --->
+//│ 	case _lh_build_tree_arg1¹ of {LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1² => case _lh_build_tree_arg2¹ of {LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³ => let rec_col¹ = check_perim₀₀([LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²], [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³])
+//│ in let split¹ = if ((_lh_build_tree_LH_P2_0³ - _lh_build_tree_LH_P2_0²) >= (_lh_build_tree_LH_P2_1³ - _lh_build_tree_LH_P2_1²)) then [LH_C 'N' [LH_C 'S' [LH_N]]] else [LH_C 'E' [LH_C 'W' [LH_N]]]
+//│ in let split_x¹ = div⁰((_lh_build_tree_LH_P2_0³ + _lh_build_tree_LH_P2_0²), 2)
+//│ in let split_y¹ = div⁰((_lh_build_tree_LH_P2_1³ + _lh_build_tree_LH_P2_1²), 2)
+//│ in let nsp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let nsp2¹ = [LH_P2 split_x¹ _lh_build_tree_LH_P2_1³]
+//│ in let nsp3¹ = [LH_P2 (split_x¹ + 1) _lh_build_tree_LH_P2_1²]
+//│ in let nsp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in let ewp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let ewp2¹ = [LH_P2 _lh_build_tree_LH_P2_0³ split_y¹]
+//│ in let ewp3¹ = [LH_P2 _lh_build_tree_LH_P2_0² (split_y¹ + 1)]
+//│ in let ewp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in if (rec_col¹ /= (0 - 1)) then [Leaf rec_col¹] else if strEq₀₀(split¹, [LH_C 'N' [LH_C 'S' [LH_N]]]) then [NS build_tree₀₀(nsp1¹, nsp2¹) build_tree₀₀(nsp3¹, nsp4¹)] else [EW build_tree₀₀(ewp1¹, ewp2¹) build_tree₀₀(ewp3¹, ewp4¹)] | _  => error⁰} | _  => error⁰}: 2147
+//│ [LH_P2 split_x¹ _lh_build_tree_LH_P2_1³]: 2061 --->
+//│ 	case _lh_build_tree_arg2¹ of {LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³ => let rec_col¹ = check_perim₀₀([LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²], [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³])
+//│ in let split¹ = if ((_lh_build_tree_LH_P2_0³ - _lh_build_tree_LH_P2_0²) >= (_lh_build_tree_LH_P2_1³ - _lh_build_tree_LH_P2_1²)) then [LH_C 'N' [LH_C 'S' [LH_N]]] else [LH_C 'E' [LH_C 'W' [LH_N]]]
+//│ in let split_x¹ = div⁰((_lh_build_tree_LH_P2_0³ + _lh_build_tree_LH_P2_0²), 2)
+//│ in let split_y¹ = div⁰((_lh_build_tree_LH_P2_1³ + _lh_build_tree_LH_P2_1²), 2)
+//│ in let nsp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let nsp2¹ = [LH_P2 split_x¹ _lh_build_tree_LH_P2_1³]
+//│ in let nsp3¹ = [LH_P2 (split_x¹ + 1) _lh_build_tree_LH_P2_1²]
+//│ in let nsp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in let ewp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let ewp2¹ = [LH_P2 _lh_build_tree_LH_P2_0³ split_y¹]
+//│ in let ewp3¹ = [LH_P2 _lh_build_tree_LH_P2_0² (split_y¹ + 1)]
+//│ in let ewp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in if (rec_col¹ /= (0 - 1)) then [Leaf rec_col¹] else if strEq₀₀(split¹, [LH_C 'N' [LH_C 'S' [LH_N]]]) then [NS build_tree₀₀(nsp1¹, nsp2¹) build_tree₀₀(nsp3¹, nsp4¹)] else [EW build_tree₀₀(ewp1¹, ewp2¹) build_tree₀₀(ewp3¹, ewp4¹)] | _  => error⁰}: 2145
+//│ [LH_P2 (split_x¹ + 1) _lh_build_tree_LH_P2_1²]: 2068 --->
+//│ 	case _lh_build_tree_arg1¹ of {LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1² => case _lh_build_tree_arg2¹ of {LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³ => let rec_col¹ = check_perim₀₀([LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²], [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³])
+//│ in let split¹ = if ((_lh_build_tree_LH_P2_0³ - _lh_build_tree_LH_P2_0²) >= (_lh_build_tree_LH_P2_1³ - _lh_build_tree_LH_P2_1²)) then [LH_C 'N' [LH_C 'S' [LH_N]]] else [LH_C 'E' [LH_C 'W' [LH_N]]]
+//│ in let split_x¹ = div⁰((_lh_build_tree_LH_P2_0³ + _lh_build_tree_LH_P2_0²), 2)
+//│ in let split_y¹ = div⁰((_lh_build_tree_LH_P2_1³ + _lh_build_tree_LH_P2_1²), 2)
+//│ in let nsp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let nsp2¹ = [LH_P2 split_x¹ _lh_build_tree_LH_P2_1³]
+//│ in let nsp3¹ = [LH_P2 (split_x¹ + 1) _lh_build_tree_LH_P2_1²]
+//│ in let nsp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in let ewp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let ewp2¹ = [LH_P2 _lh_build_tree_LH_P2_0³ split_y¹]
+//│ in let ewp3¹ = [LH_P2 _lh_build_tree_LH_P2_0² (split_y¹ + 1)]
+//│ in let ewp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in if (rec_col¹ /= (0 - 1)) then [Leaf rec_col¹] else if strEq₀₀(split¹, [LH_C 'N' [LH_C 'S' [LH_N]]]) then [NS build_tree₀₀(nsp1¹, nsp2¹) build_tree₀₀(nsp3¹, nsp4¹)] else [EW build_tree₀₀(ewp1¹, ewp2¹) build_tree₀₀(ewp3¹, ewp4¹)] | _  => error⁰} | _  => error⁰}: 2147
+//│ [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]: 2071 --->
+//│ 	case _lh_build_tree_arg2¹ of {LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³ => let rec_col¹ = check_perim₀₀([LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²], [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³])
+//│ in let split¹ = if ((_lh_build_tree_LH_P2_0³ - _lh_build_tree_LH_P2_0²) >= (_lh_build_tree_LH_P2_1³ - _lh_build_tree_LH_P2_1²)) then [LH_C 'N' [LH_C 'S' [LH_N]]] else [LH_C 'E' [LH_C 'W' [LH_N]]]
+//│ in let split_x¹ = div⁰((_lh_build_tree_LH_P2_0³ + _lh_build_tree_LH_P2_0²), 2)
+//│ in let split_y¹ = div⁰((_lh_build_tree_LH_P2_1³ + _lh_build_tree_LH_P2_1²), 2)
+//│ in let nsp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let nsp2¹ = [LH_P2 split_x¹ _lh_build_tree_LH_P2_1³]
+//│ in let nsp3¹ = [LH_P2 (split_x¹ + 1) _lh_build_tree_LH_P2_1²]
+//│ in let nsp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in let ewp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let ewp2¹ = [LH_P2 _lh_build_tree_LH_P2_0³ split_y¹]
+//│ in let ewp3¹ = [LH_P2 _lh_build_tree_LH_P2_0² (split_y¹ + 1)]
+//│ in let ewp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in if (rec_col¹ /= (0 - 1)) then [Leaf rec_col¹] else if strEq₀₀(split¹, [LH_C 'N' [LH_C 'S' [LH_N]]]) then [NS build_tree₀₀(nsp1¹, nsp2¹) build_tree₀₀(nsp3¹, nsp4¹)] else [EW build_tree₀₀(ewp1¹, ewp2¹) build_tree₀₀(ewp3¹, ewp4¹)] | _  => error⁰}: 2145
+//│ [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]: 2074 --->
+//│ 	case _lh_build_tree_arg1¹ of {LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1² => case _lh_build_tree_arg2¹ of {LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³ => let rec_col¹ = check_perim₀₀([LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²], [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³])
+//│ in let split¹ = if ((_lh_build_tree_LH_P2_0³ - _lh_build_tree_LH_P2_0²) >= (_lh_build_tree_LH_P2_1³ - _lh_build_tree_LH_P2_1²)) then [LH_C 'N' [LH_C 'S' [LH_N]]] else [LH_C 'E' [LH_C 'W' [LH_N]]]
+//│ in let split_x¹ = div⁰((_lh_build_tree_LH_P2_0³ + _lh_build_tree_LH_P2_0²), 2)
+//│ in let split_y¹ = div⁰((_lh_build_tree_LH_P2_1³ + _lh_build_tree_LH_P2_1²), 2)
+//│ in let nsp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let nsp2¹ = [LH_P2 split_x¹ _lh_build_tree_LH_P2_1³]
+//│ in let nsp3¹ = [LH_P2 (split_x¹ + 1) _lh_build_tree_LH_P2_1²]
+//│ in let nsp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in let ewp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let ewp2¹ = [LH_P2 _lh_build_tree_LH_P2_0³ split_y¹]
+//│ in let ewp3¹ = [LH_P2 _lh_build_tree_LH_P2_0² (split_y¹ + 1)]
+//│ in let ewp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in if (rec_col¹ /= (0 - 1)) then [Leaf rec_col¹] else if strEq₀₀(split¹, [LH_C 'N' [LH_C 'S' [LH_N]]]) then [NS build_tree₀₀(nsp1¹, nsp2¹) build_tree₀₀(nsp3¹, nsp4¹)] else [EW build_tree₀₀(ewp1¹, ewp2¹) build_tree₀₀(ewp3¹, ewp4¹)] | _  => error⁰} | _  => error⁰}: 2147
+//│ [LH_P2 _lh_build_tree_LH_P2_0³ split_y¹]: 2077 --->
+//│ 	case _lh_build_tree_arg2¹ of {LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³ => let rec_col¹ = check_perim₀₀([LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²], [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³])
+//│ in let split¹ = if ((_lh_build_tree_LH_P2_0³ - _lh_build_tree_LH_P2_0²) >= (_lh_build_tree_LH_P2_1³ - _lh_build_tree_LH_P2_1²)) then [LH_C 'N' [LH_C 'S' [LH_N]]] else [LH_C 'E' [LH_C 'W' [LH_N]]]
+//│ in let split_x¹ = div⁰((_lh_build_tree_LH_P2_0³ + _lh_build_tree_LH_P2_0²), 2)
+//│ in let split_y¹ = div⁰((_lh_build_tree_LH_P2_1³ + _lh_build_tree_LH_P2_1²), 2)
+//│ in let nsp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let nsp2¹ = [LH_P2 split_x¹ _lh_build_tree_LH_P2_1³]
+//│ in let nsp3¹ = [LH_P2 (split_x¹ + 1) _lh_build_tree_LH_P2_1²]
+//│ in let nsp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in let ewp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let ewp2¹ = [LH_P2 _lh_build_tree_LH_P2_0³ split_y¹]
+//│ in let ewp3¹ = [LH_P2 _lh_build_tree_LH_P2_0² (split_y¹ + 1)]
+//│ in let ewp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in if (rec_col¹ /= (0 - 1)) then [Leaf rec_col¹] else if strEq₀₀(split¹, [LH_C 'N' [LH_C 'S' [LH_N]]]) then [NS build_tree₀₀(nsp1¹, nsp2¹) build_tree₀₀(nsp3¹, nsp4¹)] else [EW build_tree₀₀(ewp1¹, ewp2¹) build_tree₀₀(ewp3¹, ewp4¹)] | _  => error⁰}: 2145
+//│ [LH_P2 _lh_build_tree_LH_P2_0² (split_y¹ + 1)]: 2084 --->
+//│ 	case _lh_build_tree_arg1¹ of {LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1² => case _lh_build_tree_arg2¹ of {LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³ => let rec_col¹ = check_perim₀₀([LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²], [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³])
+//│ in let split¹ = if ((_lh_build_tree_LH_P2_0³ - _lh_build_tree_LH_P2_0²) >= (_lh_build_tree_LH_P2_1³ - _lh_build_tree_LH_P2_1²)) then [LH_C 'N' [LH_C 'S' [LH_N]]] else [LH_C 'E' [LH_C 'W' [LH_N]]]
+//│ in let split_x¹ = div⁰((_lh_build_tree_LH_P2_0³ + _lh_build_tree_LH_P2_0²), 2)
+//│ in let split_y¹ = div⁰((_lh_build_tree_LH_P2_1³ + _lh_build_tree_LH_P2_1²), 2)
+//│ in let nsp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let nsp2¹ = [LH_P2 split_x¹ _lh_build_tree_LH_P2_1³]
+//│ in let nsp3¹ = [LH_P2 (split_x¹ + 1) _lh_build_tree_LH_P2_1²]
+//│ in let nsp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in let ewp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let ewp2¹ = [LH_P2 _lh_build_tree_LH_P2_0³ split_y¹]
+//│ in let ewp3¹ = [LH_P2 _lh_build_tree_LH_P2_0² (split_y¹ + 1)]
+//│ in let ewp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in if (rec_col¹ /= (0 - 1)) then [Leaf rec_col¹] else if strEq₀₀(split¹, [LH_C 'N' [LH_C 'S' [LH_N]]]) then [NS build_tree₀₀(nsp1¹, nsp2¹) build_tree₀₀(nsp3¹, nsp4¹)] else [EW build_tree₀₀(ewp1¹, ewp2¹) build_tree₀₀(ewp3¹, ewp4¹)] | _  => error⁰} | _  => error⁰}: 2147
+//│ [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]: 2087 --->
+//│ 	case _lh_build_tree_arg2¹ of {LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³ => let rec_col¹ = check_perim₀₀([LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²], [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³])
+//│ in let split¹ = if ((_lh_build_tree_LH_P2_0³ - _lh_build_tree_LH_P2_0²) >= (_lh_build_tree_LH_P2_1³ - _lh_build_tree_LH_P2_1²)) then [LH_C 'N' [LH_C 'S' [LH_N]]] else [LH_C 'E' [LH_C 'W' [LH_N]]]
+//│ in let split_x¹ = div⁰((_lh_build_tree_LH_P2_0³ + _lh_build_tree_LH_P2_0²), 2)
+//│ in let split_y¹ = div⁰((_lh_build_tree_LH_P2_1³ + _lh_build_tree_LH_P2_1²), 2)
+//│ in let nsp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let nsp2¹ = [LH_P2 split_x¹ _lh_build_tree_LH_P2_1³]
+//│ in let nsp3¹ = [LH_P2 (split_x¹ + 1) _lh_build_tree_LH_P2_1²]
+//│ in let nsp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in let ewp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let ewp2¹ = [LH_P2 _lh_build_tree_LH_P2_0³ split_y¹]
+//│ in let ewp3¹ = [LH_P2 _lh_build_tree_LH_P2_0² (split_y¹ + 1)]
+//│ in let ewp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in if (rec_col¹ /= (0 - 1)) then [Leaf rec_col¹] else if strEq₀₀(split¹, [LH_C 'N' [LH_C 'S' [LH_N]]]) then [NS build_tree₀₀(nsp1¹, nsp2¹) build_tree₀₀(nsp3¹, nsp4¹)] else [EW build_tree₀₀(ewp1¹, ewp2¹) build_tree₀₀(ewp3¹, ewp4¹)] | _  => error⁰}: 2145
+//│ [Leaf rec_col¹]: 2098 --->
+//│ 	case _lh_finite_arg1¹ of {Leaf _lh_finite_Leaf_0¹ => (_lh_finite_Leaf_0¹ == _lh_finite_Leaf_0¹) | NS _lh_finite_NS_0¹ _lh_finite_NS_1¹ => (finite₀₀(_lh_finite_NS_0¹) && finite₀₀(_lh_finite_NS_1¹)) | EW _lh_finite_EW_0¹ _lh_finite_EW_1¹ => (finite₀₀(_lh_finite_EW_0¹) && finite₀₀(_lh_finite_EW_1¹)) | _  => error⁰}: 3726
+//│ [LH_N]: 2104 --->
+//│ 	case _lh_matchIdent⁴ of {LH_C _lh_strEq_LH_C_0⁴ _lh_strEq_LH_C_1⁴ => if polyEq⁰(_lh_strEq_LH_C_0³, _lh_strEq_LH_C_0⁴) then strEq₀₀(_lh_strEq_LH_C_1³, _lh_strEq_LH_C_1⁴) else [False] | LH_N  => [False] | _  => error⁰}: 1989
+//│ 	case _lh_matchIdent⁵ of {LH_C _lh_strEq_LH_C_0⁵ _lh_strEq_LH_C_1⁵ => [False] | LH_N  => [True] | _  => error⁰}: 1996
+//│ [LH_C 'S' [LH_N]]: 2105 --->
+//│ 	case _lh_matchIdent⁴ of {LH_C _lh_strEq_LH_C_0⁴ _lh_strEq_LH_C_1⁴ => if polyEq⁰(_lh_strEq_LH_C_0³, _lh_strEq_LH_C_0⁴) then strEq₀₀(_lh_strEq_LH_C_1³, _lh_strEq_LH_C_1⁴) else [False] | LH_N  => [False] | _  => error⁰}: 1989
+//│ 	case _lh_matchIdent⁵ of {LH_C _lh_strEq_LH_C_0⁵ _lh_strEq_LH_C_1⁵ => [False] | LH_N  => [True] | _  => error⁰}: 1996
+//│ [LH_C 'N' [LH_C 'S' [LH_N]]]: 2106 --->
+//│ 	case _lh_matchIdent⁴ of {LH_C _lh_strEq_LH_C_0⁴ _lh_strEq_LH_C_1⁴ => if polyEq⁰(_lh_strEq_LH_C_0³, _lh_strEq_LH_C_0⁴) then strEq₀₀(_lh_strEq_LH_C_1³, _lh_strEq_LH_C_1⁴) else [False] | LH_N  => [False] | _  => error⁰}: 1989
+//│ 	case _lh_matchIdent⁵ of {LH_C _lh_strEq_LH_C_0⁵ _lh_strEq_LH_C_1⁵ => [False] | LH_N  => [True] | _  => error⁰}: 1996
+//│ [NS build_tree₀₀(nsp1¹, nsp2¹) build_tree₀₀(nsp3¹, nsp4¹)]: 2118 --->
+//│ 	case _lh_finite_arg1¹ of {Leaf _lh_finite_Leaf_0¹ => (_lh_finite_Leaf_0¹ == _lh_finite_Leaf_0¹) | NS _lh_finite_NS_0¹ _lh_finite_NS_1¹ => (finite₀₀(_lh_finite_NS_0¹) && finite₀₀(_lh_finite_NS_1¹)) | EW _lh_finite_EW_0¹ _lh_finite_EW_1¹ => (finite₀₀(_lh_finite_EW_0¹) && finite₀₀(_lh_finite_EW_1¹)) | _  => error⁰}: 3726
+//│ [EW build_tree₀₀(ewp1¹, ewp2¹) build_tree₀₀(ewp3¹, ewp4¹)]: 2129 --->
+//│ 	case _lh_finite_arg1¹ of {Leaf _lh_finite_Leaf_0¹ => (_lh_finite_Leaf_0¹ == _lh_finite_Leaf_0¹) | NS _lh_finite_NS_0¹ _lh_finite_NS_1¹ => (finite₀₀(_lh_finite_NS_0¹) && finite₀₀(_lh_finite_NS_1¹)) | EW _lh_finite_EW_0¹ _lh_finite_EW_1¹ => (finite₀₀(_lh_finite_EW_0¹) && finite₀₀(_lh_finite_EW_1¹)) | _  => error⁰}: 3726
+//│ [LH_P2 1 0]: 2152 --->
+//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷ => let finished¹ = if equalp₀₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], right₀₀) then (_lh_check_perim_LH_P2_0⁶ >= _lh_check_perim_LH_P2_0⁵) else if equalp₁₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], down₀₀) then (_lh_check_perim_LH_P2_1⁶ <= _lh_check_perim_LH_P2_1⁵) else if equalp₂₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], left₀₀) then (_lh_check_perim_LH_P2_0⁶ <= _lh_check_perim_LH_P2_0⁴) else (_lh_check_perim_LH_P2_1⁶ >= _lh_check_perim_LH_P2_1⁴)
+//│ in if finished¹ then [True] else if (point_colour₄₀([LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]) /= col1¹) then [False] else check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)], [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]) | _  => error⁰}: 3063
+//│ [LH_P2 0 (0 - 1)]: 2159 --->
+//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷ => let finished¹ = if equalp₀₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], right₀₀) then (_lh_check_perim_LH_P2_0⁶ >= _lh_check_perim_LH_P2_0⁵) else if equalp₁₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], down₀₀) then (_lh_check_perim_LH_P2_1⁶ <= _lh_check_perim_LH_P2_1⁵) else if equalp₂₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], left₀₀) then (_lh_check_perim_LH_P2_0⁶ <= _lh_check_perim_LH_P2_0⁴) else (_lh_check_perim_LH_P2_1⁶ >= _lh_check_perim_LH_P2_1⁴)
+//│ in if finished¹ then [True] else if (point_colour₄₀([LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]) /= col1¹) then [False] else check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)], [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]) | _  => error⁰}: 3063
+//│ [LH_P2 0 0]: 2337 --->
+//│ 	case _lh_build_tree_arg1¹ of {LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1² => case _lh_build_tree_arg2¹ of {LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³ => let rec_col¹ = check_perim₀₀([LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²], [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³])
+//│ in let split¹ = if ((_lh_build_tree_LH_P2_0³ - _lh_build_tree_LH_P2_0²) >= (_lh_build_tree_LH_P2_1³ - _lh_build_tree_LH_P2_1²)) then [LH_C 'N' [LH_C 'S' [LH_N]]] else [LH_C 'E' [LH_C 'W' [LH_N]]]
+//│ in let split_x¹ = div⁰((_lh_build_tree_LH_P2_0³ + _lh_build_tree_LH_P2_0²), 2)
+//│ in let split_y¹ = div⁰((_lh_build_tree_LH_P2_1³ + _lh_build_tree_LH_P2_1²), 2)
+//│ in let nsp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let nsp2¹ = [LH_P2 split_x¹ _lh_build_tree_LH_P2_1³]
+//│ in let nsp3¹ = [LH_P2 (split_x¹ + 1) _lh_build_tree_LH_P2_1²]
+//│ in let nsp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in let ewp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let ewp2¹ = [LH_P2 _lh_build_tree_LH_P2_0³ split_y¹]
+//│ in let ewp3¹ = [LH_P2 _lh_build_tree_LH_P2_0² (split_y¹ + 1)]
+//│ in let ewp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in if (rec_col¹ /= (0 - 1)) then [Leaf rec_col¹] else if strEq₀₀(split¹, [LH_C 'N' [LH_C 'S' [LH_N]]]) then [NS build_tree₀₀(nsp1¹, nsp2¹) build_tree₀₀(nsp3¹, nsp4¹)] else [EW build_tree₀₀(ewp1¹, ewp2¹) build_tree₀₀(ewp3¹, ewp4¹)] | _  => error⁰} | _  => error⁰}: 2147
+//│ [LH_P2 size'¹ div⁰(size'¹, 2)]: 2345 --->
+//│ 	case _lh_build_tree_arg2¹ of {LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³ => let rec_col¹ = check_perim₀₀([LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²], [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³])
+//│ in let split¹ = if ((_lh_build_tree_LH_P2_0³ - _lh_build_tree_LH_P2_0²) >= (_lh_build_tree_LH_P2_1³ - _lh_build_tree_LH_P2_1²)) then [LH_C 'N' [LH_C 'S' [LH_N]]] else [LH_C 'E' [LH_C 'W' [LH_N]]]
+//│ in let split_x¹ = div⁰((_lh_build_tree_LH_P2_0³ + _lh_build_tree_LH_P2_0²), 2)
+//│ in let split_y¹ = div⁰((_lh_build_tree_LH_P2_1³ + _lh_build_tree_LH_P2_1²), 2)
+//│ in let nsp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let nsp2¹ = [LH_P2 split_x¹ _lh_build_tree_LH_P2_1³]
+//│ in let nsp3¹ = [LH_P2 (split_x¹ + 1) _lh_build_tree_LH_P2_1²]
+//│ in let nsp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in let ewp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let ewp2¹ = [LH_P2 _lh_build_tree_LH_P2_0³ split_y¹]
+//│ in let ewp3¹ = [LH_P2 _lh_build_tree_LH_P2_0² (split_y¹ + 1)]
+//│ in let ewp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in if (rec_col¹ /= (0 - 1)) then [Leaf rec_col¹] else if strEq₀₀(split¹, [LH_C 'N' [LH_C 'S' [LH_N]]]) then [NS build_tree₀₀(nsp1¹, nsp2¹) build_tree₀₀(nsp3¹, nsp4¹)] else [EW build_tree₀₀(ewp1¹, ewp2¹) build_tree₀₀(ewp3¹, ewp4¹)] | _  => error⁰}: 2145
+//│ [LH_P2 (0 - 1) 0]: 2795 --->
+//│ 	case _lh_equalp_arg2⁶ of {LH_P2 _lh_equalp_LH_P2_0¹³ _lh_equalp_LH_P2_1¹³ => ((_lh_equalp_LH_P2_0¹² == _lh_equalp_LH_P2_0¹³) && (_lh_equalp_LH_P2_1¹² == _lh_equalp_LH_P2_1¹³)) | _  => error⁰}: 2538
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴]: 2943 --->
+//│ 	case _lh_point_colour_arg1¹⁰ of {LH_P2 _lh_point_colour_LH_P2_0¹⁰ _lh_point_colour_LH_P2_1¹⁰ => check_radius₀₀(np₀₀(_lh_point_colour_LH_P2_0¹⁰), nq₀₀(_lh_point_colour_LH_P2_1¹⁰), 0, 0.0, 0.0) | _  => error⁰}: 2815
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁴]: 2948 --->
+//│ 	case _lh_point_colour_arg1⁸ of {LH_P2 _lh_point_colour_LH_P2_0⁸ _lh_point_colour_LH_P2_1⁸ => check_radius₁₀(np₁₀(_lh_point_colour_LH_P2_0⁸), nq₁₀(_lh_point_colour_LH_P2_1⁸), 0, 0.0, 0.0) | _  => error⁰}: 2457
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵]: 2953 --->
+//│ 	case _lh_point_colour_arg1⁷ of {LH_P2 _lh_point_colour_LH_P2_0⁷ _lh_point_colour_LH_P2_1⁷ => check_radius₂₀(np₂₀(_lh_point_colour_LH_P2_0⁷), nq₂₀(_lh_point_colour_LH_P2_1⁷), 0, 0.0, 0.0) | _  => error⁰}: 2411
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁵]: 2958 --->
+//│ 	case _lh_point_colour_arg1⁹ of {LH_P2 _lh_point_colour_LH_P2_0⁹ _lh_point_colour_LH_P2_1⁹ => check_radius₃₀(np₃₀(_lh_point_colour_LH_P2_0⁹), nq₃₀(_lh_point_colour_LH_P2_1⁹), 0, 0.0, 0.0) | _  => error⁰}: 2611
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]: 2989 --->
+//│ 	case _lh_equalp_arg1⁵ of {LH_P2 _lh_equalp_LH_P2_0¹⁰ _lh_equalp_LH_P2_1¹⁰ => case _lh_equalp_arg2⁵ of {LH_P2 _lh_equalp_LH_P2_0¹¹ _lh_equalp_LH_P2_1¹¹ => ((_lh_equalp_LH_P2_0¹⁰ == _lh_equalp_LH_P2_0¹¹) && (_lh_equalp_LH_P2_1¹⁰ == _lh_equalp_LH_P2_1¹¹)) | _  => error⁰} | _  => error⁰}: 2184
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]: 3001 --->
+//│ 	case _lh_equalp_arg1⁷ of {LH_P2 _lh_equalp_LH_P2_0¹⁴ _lh_equalp_LH_P2_1¹⁴ => case _lh_equalp_arg2⁷ of {LH_P2 _lh_equalp_LH_P2_0¹⁵ _lh_equalp_LH_P2_1¹⁵ => ((_lh_equalp_LH_P2_0¹⁴ == _lh_equalp_LH_P2_0¹⁵) && (_lh_equalp_LH_P2_1¹⁴ == _lh_equalp_LH_P2_1¹⁵)) | _  => error⁰} | _  => error⁰}: 2835
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]: 3013 --->
+//│ 	case _lh_equalp_arg1⁶ of {LH_P2 _lh_equalp_LH_P2_0¹² _lh_equalp_LH_P2_1¹² => case _lh_equalp_arg2⁶ of {LH_P2 _lh_equalp_LH_P2_0¹³ _lh_equalp_LH_P2_1¹³ => ((_lh_equalp_LH_P2_0¹² == _lh_equalp_LH_P2_0¹³) && (_lh_equalp_LH_P2_1¹² == _lh_equalp_LH_P2_1¹³)) | _  => error⁰} | _  => error⁰}: 2540
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]: 3036 --->
+//│ 	case _lh_point_colour_arg1¹¹ of {LH_P2 _lh_point_colour_LH_P2_0¹¹ _lh_point_colour_LH_P2_1¹¹ => check_radius₄₀(np₄₀(_lh_point_colour_LH_P2_0¹¹), nq₄₀(_lh_point_colour_LH_P2_1¹¹), 0, 0.0, 0.0) | _  => error⁰}: 3560
+//│ [LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)]: 3053 --->
+//│ 	case _lh_matchIdent⁶ of {LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶ => let _lh_matchIdent⁷ = xdyd¹
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷ => let finished¹ = if equalp₀₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], right₀₀) then (_lh_check_perim_LH_P2_0⁶ >= _lh_check_perim_LH_P2_0⁵) else if equalp₁₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], down₀₀) then (_lh_check_perim_LH_P2_1⁶ <= _lh_check_perim_LH_P2_1⁵) else if equalp₂₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], left₀₀) then (_lh_check_perim_LH_P2_0⁶ <= _lh_check_perim_LH_P2_0⁴) else (_lh_check_perim_LH_P2_1⁶ >= _lh_check_perim_LH_P2_1⁴)
+//│ in if finished¹ then [True] else if (point_colour₄₀([LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]) /= col1¹) then [False] else check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)], [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]) | _  => error⁰} | _  => error⁰}: 3066
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]: 3057 --->
+//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷ => let finished¹ = if equalp₀₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], right₀₀) then (_lh_check_perim_LH_P2_0⁶ >= _lh_check_perim_LH_P2_0⁵) else if equalp₁₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], down₀₀) then (_lh_check_perim_LH_P2_1⁶ <= _lh_check_perim_LH_P2_1⁵) else if equalp₂₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], left₀₀) then (_lh_check_perim_LH_P2_0⁶ <= _lh_check_perim_LH_P2_0⁴) else (_lh_check_perim_LH_P2_1⁶ >= _lh_check_perim_LH_P2_1⁴)
+//│ in if finished¹ then [True] else if (point_colour₄₀([LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]) /= col1¹) then [False] else check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)], [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]) | _  => error⁰}: 3063
+//│ [LH_P2 (_lh_check_perim_LH_P2_0⁴ + 1) _lh_check_perim_LH_P2_1⁴]: 3077 --->
+//│ 	case _lh_matchIdent⁶ of {LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶ => let _lh_matchIdent⁷ = xdyd¹
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷ => let finished¹ = if equalp₀₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], right₀₀) then (_lh_check_perim_LH_P2_0⁶ >= _lh_check_perim_LH_P2_0⁵) else if equalp₁₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], down₀₀) then (_lh_check_perim_LH_P2_1⁶ <= _lh_check_perim_LH_P2_1⁵) else if equalp₂₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], left₀₀) then (_lh_check_perim_LH_P2_0⁶ <= _lh_check_perim_LH_P2_0⁴) else (_lh_check_perim_LH_P2_1⁶ >= _lh_check_perim_LH_P2_1⁴)
+//│ in if finished¹ then [True] else if (point_colour₄₀([LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]) /= col1¹) then [False] else check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)], [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]) | _  => error⁰} | _  => error⁰}: 3066
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁵ (_lh_check_perim_LH_P2_1⁴ + 1)]: 3088 --->
+//│ 	case _lh_matchIdent⁶ of {LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶ => let _lh_matchIdent⁷ = xdyd¹
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷ => let finished¹ = if equalp₀₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], right₀₀) then (_lh_check_perim_LH_P2_0⁶ >= _lh_check_perim_LH_P2_0⁵) else if equalp₁₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], down₀₀) then (_lh_check_perim_LH_P2_1⁶ <= _lh_check_perim_LH_P2_1⁵) else if equalp₂₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], left₀₀) then (_lh_check_perim_LH_P2_0⁶ <= _lh_check_perim_LH_P2_0⁴) else (_lh_check_perim_LH_P2_1⁶ >= _lh_check_perim_LH_P2_1⁴)
+//│ in if finished¹ then [True] else if (point_colour₄₀([LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]) /= col1¹) then [False] else check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)], [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]) | _  => error⁰} | _  => error⁰}: 3066
+//│ [LH_P2 (_lh_check_perim_LH_P2_0⁵ - 1) _lh_check_perim_LH_P2_1⁵]: 3099 --->
+//│ 	case _lh_matchIdent⁶ of {LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶ => let _lh_matchIdent⁷ = xdyd¹
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷ => let finished¹ = if equalp₀₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], right₀₀) then (_lh_check_perim_LH_P2_0⁶ >= _lh_check_perim_LH_P2_0⁵) else if equalp₁₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], down₀₀) then (_lh_check_perim_LH_P2_1⁶ <= _lh_check_perim_LH_P2_1⁵) else if equalp₂₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], left₀₀) then (_lh_check_perim_LH_P2_0⁶ <= _lh_check_perim_LH_P2_0⁴) else (_lh_check_perim_LH_P2_1⁶ >= _lh_check_perim_LH_P2_1⁴)
+//│ in if finished¹ then [True] else if (point_colour₄₀([LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]) /= col1¹) then [False] else check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)], [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]) | _  => error⁰} | _  => error⁰}: 3066
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁴ (_lh_check_perim_LH_P2_1⁵ - 1)]: 3110 --->
+//│ 	case _lh_matchIdent⁶ of {LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶ => let _lh_matchIdent⁷ = xdyd¹
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷ => let finished¹ = if equalp₀₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], right₀₀) then (_lh_check_perim_LH_P2_0⁶ >= _lh_check_perim_LH_P2_0⁵) else if equalp₁₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], down₀₀) then (_lh_check_perim_LH_P2_1⁶ <= _lh_check_perim_LH_P2_1⁵) else if equalp₂₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], left₀₀) then (_lh_check_perim_LH_P2_0⁶ <= _lh_check_perim_LH_P2_0⁴) else (_lh_check_perim_LH_P2_1⁶ >= _lh_check_perim_LH_P2_1⁴)
+//│ in if finished¹ then [True] else if (point_colour₄₀([LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]) /= col1¹) then [False] else check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)], [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]) | _  => error⁰} | _  => error⁰}: 3066
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴]: 3142 --->
+//│ 	case _lh_equalp_arg1⁴ of {LH_P2 _lh_equalp_LH_P2_0⁸ _lh_equalp_LH_P2_1⁸ => case _lh_equalp_arg2⁴ of {LH_P2 _lh_equalp_LH_P2_0⁹ _lh_equalp_LH_P2_1⁹ => ((_lh_equalp_LH_P2_0⁸ == _lh_equalp_LH_P2_0⁹) && (_lh_equalp_LH_P2_1⁸ == _lh_equalp_LH_P2_1⁹)) | _  => error⁰} | _  => error⁰}: 1954
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵]: 3146 --->
+//│ 	case _lh_equalp_arg2⁴ of {LH_P2 _lh_equalp_LH_P2_0⁹ _lh_equalp_LH_P2_1⁹ => ((_lh_equalp_LH_P2_0⁸ == _lh_equalp_LH_P2_0⁹) && (_lh_equalp_LH_P2_1⁸ == _lh_equalp_LH_P2_1⁹)) | _  => error⁰}: 1952
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴]: 3151 --->
+//│ 	case _lh_point_colour_arg1⁶ of {LH_P2 _lh_point_colour_LH_P2_0⁶ _lh_point_colour_LH_P2_1⁶ => check_radius₅₀(np₅₀(_lh_point_colour_LH_P2_0⁶), nq₅₀(_lh_point_colour_LH_P2_1⁶), 0, 0.0, 0.0) | _  => error⁰}: 2324
+//│ [LH_P2 0 1]: 3264 --->
+//│ 	case _lh_equalp_arg2⁷ of {LH_P2 _lh_equalp_LH_P2_0¹⁵ _lh_equalp_LH_P2_1¹⁵ => ((_lh_equalp_LH_P2_0¹⁴ == _lh_equalp_LH_P2_0¹⁵) && (_lh_equalp_LH_P2_1¹⁴ == _lh_equalp_LH_P2_1¹⁵)) | _  => error⁰}: 2833
+//│ ------------------
+//│ case _lh_equalp_arg2⁴ of {LH_P2 _lh_equalp_LH_P2_0⁹ _lh_equalp_LH_P2_1⁹ => ((_lh_equalp_LH_P2_0⁸ == _lh_equalp_LH_P2_0⁹) && (_lh_equalp_LH_P2_1⁸ == _lh_equalp_LH_P2_1⁹)) | _  => error⁰}: 1952 --->
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵]: 3146
+//│ case _lh_equalp_arg1⁴ of {LH_P2 _lh_equalp_LH_P2_0⁸ _lh_equalp_LH_P2_1⁸ => case _lh_equalp_arg2⁴ of {LH_P2 _lh_equalp_LH_P2_0⁹ _lh_equalp_LH_P2_1⁹ => ((_lh_equalp_LH_P2_0⁸ == _lh_equalp_LH_P2_0⁹) && (_lh_equalp_LH_P2_1⁸ == _lh_equalp_LH_P2_1⁹)) | _  => error⁰} | _  => error⁰}: 1954 --->
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴]: 3142
+//│ case _lh_matchIdent⁴ of {LH_C _lh_strEq_LH_C_0⁴ _lh_strEq_LH_C_1⁴ => if polyEq⁰(_lh_strEq_LH_C_0³, _lh_strEq_LH_C_0⁴) then strEq₀₀(_lh_strEq_LH_C_1³, _lh_strEq_LH_C_1⁴) else [False] | LH_N  => [False] | _  => error⁰}: 1989 --->
+//│ 	[LH_N]: 2104
+//│ 	[LH_C 'S' [LH_N]]: 2105
+//│ 	[LH_C 'N' [LH_C 'S' [LH_N]]]: 2106
+//│ case _lh_matchIdent⁵ of {LH_C _lh_strEq_LH_C_0⁵ _lh_strEq_LH_C_1⁵ => [False] | LH_N  => [True] | _  => error⁰}: 1996 --->
+//│ 	[LH_N]: 2104
+//│ 	[LH_C 'S' [LH_N]]: 2105
+//│ 	[LH_C 'N' [LH_C 'S' [LH_N]]]: 2106
+//│ case _lh_strEq_arg1¹ of {LH_C _lh_strEq_LH_C_0³ _lh_strEq_LH_C_1³ => let _lh_matchIdent⁴ = _lh_strEq_arg2¹
+//│ in case _lh_matchIdent⁴ of {LH_C _lh_strEq_LH_C_0⁴ _lh_strEq_LH_C_1⁴ => if polyEq⁰(_lh_strEq_LH_C_0³, _lh_strEq_LH_C_0⁴) then strEq₀₀(_lh_strEq_LH_C_1³, _lh_strEq_LH_C_1⁴) else [False] | LH_N  => [False] | _  => error⁰} | LH_N  => let _lh_matchIdent⁵ = _lh_strEq_arg2¹
+//│ in case _lh_matchIdent⁵ of {LH_C _lh_strEq_LH_C_0⁵ _lh_strEq_LH_C_1⁵ => [False] | LH_N  => [True] | _  => error⁰} | _  => error⁰}: 1999 --->
+//│ 	[LH_N]: 2029
+//│ 	[LH_C 'S' [LH_N]]: 2030
+//│ 	[LH_C 'N' [LH_C 'S' [LH_N]]]: 2031
+//│ 	[LH_N]: 2034
+//│ 	[LH_C 'W' [LH_N]]: 2035
+//│ 	[LH_C 'E' [LH_C 'W' [LH_N]]]: 2036
+//│ case _lh_build_tree_arg2¹ of {LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³ => let rec_col¹ = check_perim₀₀([LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²], [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³])
+//│ in let split¹ = if ((_lh_build_tree_LH_P2_0³ - _lh_build_tree_LH_P2_0²) >= (_lh_build_tree_LH_P2_1³ - _lh_build_tree_LH_P2_1²)) then [LH_C 'N' [LH_C 'S' [LH_N]]] else [LH_C 'E' [LH_C 'W' [LH_N]]]
+//│ in let split_x¹ = div⁰((_lh_build_tree_LH_P2_0³ + _lh_build_tree_LH_P2_0²), 2)
+//│ in let split_y¹ = div⁰((_lh_build_tree_LH_P2_1³ + _lh_build_tree_LH_P2_1²), 2)
+//│ in let nsp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let nsp2¹ = [LH_P2 split_x¹ _lh_build_tree_LH_P2_1³]
+//│ in let nsp3¹ = [LH_P2 (split_x¹ + 1) _lh_build_tree_LH_P2_1²]
+//│ in let nsp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in let ewp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let ewp2¹ = [LH_P2 _lh_build_tree_LH_P2_0³ split_y¹]
+//│ in let ewp3¹ = [LH_P2 _lh_build_tree_LH_P2_0² (split_y¹ + 1)]
+//│ in let ewp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in if (rec_col¹ /= (0 - 1)) then [Leaf rec_col¹] else if strEq₀₀(split¹, [LH_C 'N' [LH_C 'S' [LH_N]]]) then [NS build_tree₀₀(nsp1¹, nsp2¹) build_tree₀₀(nsp3¹, nsp4¹)] else [EW build_tree₀₀(ewp1¹, ewp2¹) build_tree₀₀(ewp3¹, ewp4¹)] | _  => error⁰}: 2145 --->
+//│ 	[LH_P2 split_x¹ _lh_build_tree_LH_P2_1³]: 2061
+//│ 	[LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]: 2071
+//│ 	[LH_P2 _lh_build_tree_LH_P2_0³ split_y¹]: 2077
+//│ 	[LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]: 2087
+//│ 	[LH_P2 size'¹ div⁰(size'¹, 2)]: 2345
+//│ case _lh_build_tree_arg1¹ of {LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1² => case _lh_build_tree_arg2¹ of {LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³ => let rec_col¹ = check_perim₀₀([LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²], [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³])
+//│ in let split¹ = if ((_lh_build_tree_LH_P2_0³ - _lh_build_tree_LH_P2_0²) >= (_lh_build_tree_LH_P2_1³ - _lh_build_tree_LH_P2_1²)) then [LH_C 'N' [LH_C 'S' [LH_N]]] else [LH_C 'E' [LH_C 'W' [LH_N]]]
+//│ in let split_x¹ = div⁰((_lh_build_tree_LH_P2_0³ + _lh_build_tree_LH_P2_0²), 2)
+//│ in let split_y¹ = div⁰((_lh_build_tree_LH_P2_1³ + _lh_build_tree_LH_P2_1²), 2)
+//│ in let nsp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let nsp2¹ = [LH_P2 split_x¹ _lh_build_tree_LH_P2_1³]
+//│ in let nsp3¹ = [LH_P2 (split_x¹ + 1) _lh_build_tree_LH_P2_1²]
+//│ in let nsp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in let ewp1¹ = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ in let ewp2¹ = [LH_P2 _lh_build_tree_LH_P2_0³ split_y¹]
+//│ in let ewp3¹ = [LH_P2 _lh_build_tree_LH_P2_0² (split_y¹ + 1)]
+//│ in let ewp4¹ = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ in if (rec_col¹ /= (0 - 1)) then [Leaf rec_col¹] else if strEq₀₀(split¹, [LH_C 'N' [LH_C 'S' [LH_N]]]) then [NS build_tree₀₀(nsp1¹, nsp2¹) build_tree₀₀(nsp3¹, nsp4¹)] else [EW build_tree₀₀(ewp1¹, ewp2¹) build_tree₀₀(ewp3¹, ewp4¹)] | _  => error⁰} | _  => error⁰}: 2147 --->
+//│ 	[LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]: 2058
+//│ 	[LH_P2 (split_x¹ + 1) _lh_build_tree_LH_P2_1²]: 2068
+//│ 	[LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]: 2074
+//│ 	[LH_P2 _lh_build_tree_LH_P2_0² (split_y¹ + 1)]: 2084
+//│ 	[LH_P2 0 0]: 2337
+//│ case _lh_equalp_arg2⁵ of {LH_P2 _lh_equalp_LH_P2_0¹¹ _lh_equalp_LH_P2_1¹¹ => ((_lh_equalp_LH_P2_0¹⁰ == _lh_equalp_LH_P2_0¹¹) && (_lh_equalp_LH_P2_1¹⁰ == _lh_equalp_LH_P2_1¹¹)) | _  => error⁰}: 2182 --->
+//│ 	[LH_P2 1 0]: 1971
+//│ case _lh_equalp_arg1⁵ of {LH_P2 _lh_equalp_LH_P2_0¹⁰ _lh_equalp_LH_P2_1¹⁰ => case _lh_equalp_arg2⁵ of {LH_P2 _lh_equalp_LH_P2_0¹¹ _lh_equalp_LH_P2_1¹¹ => ((_lh_equalp_LH_P2_0¹⁰ == _lh_equalp_LH_P2_0¹¹) && (_lh_equalp_LH_P2_1¹⁰ == _lh_equalp_LH_P2_1¹¹)) | _  => error⁰} | _  => error⁰}: 2184 --->
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]: 2989
+//│ case _lh_point_colour_arg1⁶ of {LH_P2 _lh_point_colour_LH_P2_0⁶ _lh_point_colour_LH_P2_1⁶ => check_radius₅₀(np₅₀(_lh_point_colour_LH_P2_0⁶), nq₅₀(_lh_point_colour_LH_P2_1⁶), 0, 0.0, 0.0) | _  => error⁰}: 2324 --->
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴]: 3151
+//│ case _lh_point_colour_arg1⁷ of {LH_P2 _lh_point_colour_LH_P2_0⁷ _lh_point_colour_LH_P2_1⁷ => check_radius₂₀(np₂₀(_lh_point_colour_LH_P2_0⁷), nq₂₀(_lh_point_colour_LH_P2_1⁷), 0, 0.0, 0.0) | _  => error⁰}: 2411 --->
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵]: 2953
+//│ case _lh_point_colour_arg1⁸ of {LH_P2 _lh_point_colour_LH_P2_0⁸ _lh_point_colour_LH_P2_1⁸ => check_radius₁₀(np₁₀(_lh_point_colour_LH_P2_0⁸), nq₁₀(_lh_point_colour_LH_P2_1⁸), 0, 0.0, 0.0) | _  => error⁰}: 2457 --->
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁴]: 2948
+//│ case _lh_equalp_arg2⁶ of {LH_P2 _lh_equalp_LH_P2_0¹³ _lh_equalp_LH_P2_1¹³ => ((_lh_equalp_LH_P2_0¹² == _lh_equalp_LH_P2_0¹³) && (_lh_equalp_LH_P2_1¹² == _lh_equalp_LH_P2_1¹³)) | _  => error⁰}: 2538 --->
+//│ 	[LH_P2 (0 - 1) 0]: 2795
+//│ case _lh_equalp_arg1⁶ of {LH_P2 _lh_equalp_LH_P2_0¹² _lh_equalp_LH_P2_1¹² => case _lh_equalp_arg2⁶ of {LH_P2 _lh_equalp_LH_P2_0¹³ _lh_equalp_LH_P2_1¹³ => ((_lh_equalp_LH_P2_0¹² == _lh_equalp_LH_P2_0¹³) && (_lh_equalp_LH_P2_1¹² == _lh_equalp_LH_P2_1¹³)) | _  => error⁰} | _  => error⁰}: 2540 --->
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]: 3013
+//│ case _lh_point_colour_arg1⁹ of {LH_P2 _lh_point_colour_LH_P2_0⁹ _lh_point_colour_LH_P2_1⁹ => check_radius₃₀(np₃₀(_lh_point_colour_LH_P2_0⁹), nq₃₀(_lh_point_colour_LH_P2_1⁹), 0, 0.0, 0.0) | _  => error⁰}: 2611 --->
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁵]: 2958
+//│ case _lh_point_colour_arg1¹⁰ of {LH_P2 _lh_point_colour_LH_P2_0¹⁰ _lh_point_colour_LH_P2_1¹⁰ => check_radius₀₀(np₀₀(_lh_point_colour_LH_P2_0¹⁰), nq₀₀(_lh_point_colour_LH_P2_1¹⁰), 0, 0.0, 0.0) | _  => error⁰}: 2815 --->
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴]: 2943
+//│ case _lh_equalp_arg2⁷ of {LH_P2 _lh_equalp_LH_P2_0¹⁵ _lh_equalp_LH_P2_1¹⁵ => ((_lh_equalp_LH_P2_0¹⁴ == _lh_equalp_LH_P2_0¹⁵) && (_lh_equalp_LH_P2_1¹⁴ == _lh_equalp_LH_P2_1¹⁵)) | _  => error⁰}: 2833 --->
+//│ 	[LH_P2 0 1]: 3264
+//│ case _lh_equalp_arg1⁷ of {LH_P2 _lh_equalp_LH_P2_0¹⁴ _lh_equalp_LH_P2_1¹⁴ => case _lh_equalp_arg2⁷ of {LH_P2 _lh_equalp_LH_P2_0¹⁵ _lh_equalp_LH_P2_1¹⁵ => ((_lh_equalp_LH_P2_0¹⁴ == _lh_equalp_LH_P2_0¹⁵) && (_lh_equalp_LH_P2_1¹⁴ == _lh_equalp_LH_P2_1¹⁵)) | _  => error⁰} | _  => error⁰}: 2835 --->
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]: 3001
+//│ case _lh_matchIdent⁷ of {LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷ => let finished¹ = if equalp₀₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], right₀₀) then (_lh_check_perim_LH_P2_0⁶ >= _lh_check_perim_LH_P2_0⁵) else if equalp₁₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], down₀₀) then (_lh_check_perim_LH_P2_1⁶ <= _lh_check_perim_LH_P2_1⁵) else if equalp₂₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], left₀₀) then (_lh_check_perim_LH_P2_0⁶ <= _lh_check_perim_LH_P2_0⁴) else (_lh_check_perim_LH_P2_1⁶ >= _lh_check_perim_LH_P2_1⁴)
+//│ in if finished¹ then [True] else if (point_colour₄₀([LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]) /= col1¹) then [False] else check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)], [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]) | _  => error⁰}: 3063 --->
+//│ 	[LH_P2 0 1]: 1881
+//│ 	[LH_P2 (0 - 1) 0]: 1888
+//│ 	[LH_P2 1 0]: 2152
+//│ 	[LH_P2 0 (0 - 1)]: 2159
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]: 3057
+//│ case _lh_matchIdent⁶ of {LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶ => let _lh_matchIdent⁷ = xdyd¹
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷ => let finished¹ = if equalp₀₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], right₀₀) then (_lh_check_perim_LH_P2_0⁶ >= _lh_check_perim_LH_P2_0⁵) else if equalp₁₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], down₀₀) then (_lh_check_perim_LH_P2_1⁶ <= _lh_check_perim_LH_P2_1⁵) else if equalp₂₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], left₀₀) then (_lh_check_perim_LH_P2_0⁶ <= _lh_check_perim_LH_P2_0⁴) else (_lh_check_perim_LH_P2_1⁶ >= _lh_check_perim_LH_P2_1⁴)
+//│ in if finished¹ then [True] else if (point_colour₄₀([LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]) /= col1¹) then [False] else check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)], [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]) | _  => error⁰} | _  => error⁰}: 3066 --->
+//│ 	[LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)]: 3053
+//│ 	[LH_P2 (_lh_check_perim_LH_P2_0⁴ + 1) _lh_check_perim_LH_P2_1⁴]: 3077
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁵ (_lh_check_perim_LH_P2_1⁴ + 1)]: 3088
+//│ 	[LH_P2 (_lh_check_perim_LH_P2_0⁵ - 1) _lh_check_perim_LH_P2_1⁵]: 3099
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁴ (_lh_check_perim_LH_P2_1⁵ - 1)]: 3110
+//│ case _lh_check_perim_arg2¹ of {LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵ => let col1¹ = point_colour₀₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴])
+//│ in let col2¹ = point_colour₁₀([LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁴])
+//│ in let col3¹ = point_colour₂₀([LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵])
+//│ in let col4¹ = point_colour₃₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁵])
+//│ in let corners_diff¹ = if (col1¹ == col2¹) then if (col1¹ == col3¹) then if (col1¹ == col4¹) then [False] else [True] else [True] else [True]
+//│ in let check_line¹ = (fun xcyc¹ -> (fun xdyd¹ -> let _lh_matchIdent⁶ = xcyc¹
+//│ in case _lh_matchIdent⁶ of {LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶ => let _lh_matchIdent⁷ = xdyd¹
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷ => let finished¹ = if equalp₀₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], right₀₀) then (_lh_check_perim_LH_P2_0⁶ >= _lh_check_perim_LH_P2_0⁵) else if equalp₁₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], down₀₀) then (_lh_check_perim_LH_P2_1⁶ <= _lh_check_perim_LH_P2_1⁵) else if equalp₂₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], left₀₀) then (_lh_check_perim_LH_P2_0⁶ <= _lh_check_perim_LH_P2_0⁴) else (_lh_check_perim_LH_P2_1⁶ >= _lh_check_perim_LH_P2_1⁴)
+//│ in if finished¹ then [True] else if (point_colour₄₀([LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]) /= col1¹) then [False] else check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)], [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]) | _  => error⁰} | _  => error⁰}))
+//│ in let check_sides¹ = if check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁴ + 1) _lh_check_perim_LH_P2_1⁴], right₁₀) then if check_line¹([LH_P2 _lh_check_perim_LH_P2_0⁵ (_lh_check_perim_LH_P2_1⁴ + 1)], down₁₀) then if check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁵ - 1) _lh_check_perim_LH_P2_1⁵], left₁₀) then if check_line¹([LH_P2 _lh_check_perim_LH_P2_0⁴ (_lh_check_perim_LH_P2_1⁵ - 1)], up₀₀) then col1¹ else (0 - 1) else (0 - 1) else (0 - 1) else (0 - 1)
+//│ in if equalp₃₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴], [LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵]) then point_colour₅₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴]) else if corners_diff¹ then (0 - 1) else check_sides¹ | _  => error⁰}: 3170 --->
+//│ 	[LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]: 2012
+//│ case _lh_check_perim_arg1¹ of {LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴ => case _lh_check_perim_arg2¹ of {LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵ => let col1¹ = point_colour₀₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴])
+//│ in let col2¹ = point_colour₁₀([LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁴])
+//│ in let col3¹ = point_colour₂₀([LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵])
+//│ in let col4¹ = point_colour₃₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁵])
+//│ in let corners_diff¹ = if (col1¹ == col2¹) then if (col1¹ == col3¹) then if (col1¹ == col4¹) then [False] else [True] else [True] else [True]
+//│ in let check_line¹ = (fun xcyc¹ -> (fun xdyd¹ -> let _lh_matchIdent⁶ = xcyc¹
+//│ in case _lh_matchIdent⁶ of {LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶ => let _lh_matchIdent⁷ = xdyd¹
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷ => let finished¹ = if equalp₀₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], right₀₀) then (_lh_check_perim_LH_P2_0⁶ >= _lh_check_perim_LH_P2_0⁵) else if equalp₁₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], down₀₀) then (_lh_check_perim_LH_P2_1⁶ <= _lh_check_perim_LH_P2_1⁵) else if equalp₂₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], left₀₀) then (_lh_check_perim_LH_P2_0⁶ <= _lh_check_perim_LH_P2_0⁴) else (_lh_check_perim_LH_P2_1⁶ >= _lh_check_perim_LH_P2_1⁴)
+//│ in if finished¹ then [True] else if (point_colour₄₀([LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]) /= col1¹) then [False] else check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)], [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷]) | _  => error⁰} | _  => error⁰}))
+//│ in let check_sides¹ = if check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁴ + 1) _lh_check_perim_LH_P2_1⁴], right₁₀) then if check_line¹([LH_P2 _lh_check_perim_LH_P2_0⁵ (_lh_check_perim_LH_P2_1⁴ + 1)], down₁₀) then if check_line¹([LH_P2 (_lh_check_perim_LH_P2_0⁵ - 1) _lh_check_perim_LH_P2_1⁵], left₁₀) then if check_line¹([LH_P2 _lh_check_perim_LH_P2_0⁴ (_lh_check_perim_LH_P2_1⁵ - 1)], up₀₀) then col1¹ else (0 - 1) else (0 - 1) else (0 - 1) else (0 - 1)
+//│ in if equalp₃₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴], [LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵]) then point_colour₅₀([LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴]) else if corners_diff¹ then (0 - 1) else check_sides¹ | _  => error⁰} | _  => error⁰}: 3172 --->
+//│ 	[LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]: 2008
+//│ case _lh_point_colour_arg1¹¹ of {LH_P2 _lh_point_colour_LH_P2_0¹¹ _lh_point_colour_LH_P2_1¹¹ => check_radius₄₀(np₄₀(_lh_point_colour_LH_P2_0¹¹), nq₄₀(_lh_point_colour_LH_P2_1¹¹), 0, 0.0, 0.0) | _  => error⁰}: 3560 --->
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]: 3036
+//│ case _lh_finite_arg1¹ of {Leaf _lh_finite_Leaf_0¹ => (_lh_finite_Leaf_0¹ == _lh_finite_Leaf_0¹) | NS _lh_finite_NS_0¹ _lh_finite_NS_1¹ => (finite₀₀(_lh_finite_NS_0¹) && finite₀₀(_lh_finite_NS_1¹)) | EW _lh_finite_EW_0¹ _lh_finite_EW_1¹ => (finite₀₀(_lh_finite_EW_0¹) && finite₀₀(_lh_finite_EW_1¹)) | _  => error⁰}: 3726 --->
+//│ 	[Leaf rec_col¹]: 2098
+//│ 	[NS build_tree₀₀(nsp1¹, nsp2¹) build_tree₀₀(nsp3¹, nsp4¹)]: 2118
+//│ 	[EW build_tree₀₀(ewp1¹, ewp2¹) build_tree₀₀(ewp3¹, ewp4¹)]: 2129
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_P2 1 0]: 1971 --->
+//│ 	case _lh_equalp_arg2⁵ of {LH_P2 _lh_equalp_LH_P2_0¹¹ _lh_equalp_LH_P2_1¹¹ => ((_lh_equalp_LH_P2_0¹⁰ == _lh_equalp_LH_P2_0¹¹) && (_lh_equalp_LH_P2_1¹⁰ == _lh_equalp_LH_P2_1¹¹)) | _  => error⁰}: 2182
+//│ [LH_P2 (0 - 1) 0]: 2795 --->
+//│ 	case _lh_equalp_arg2⁶ of {LH_P2 _lh_equalp_LH_P2_0¹³ _lh_equalp_LH_P2_1¹³ => ((_lh_equalp_LH_P2_0¹² == _lh_equalp_LH_P2_0¹³) && (_lh_equalp_LH_P2_1¹² == _lh_equalp_LH_P2_1¹³)) | _  => error⁰}: 2538
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴]: 2943 --->
+//│ 	case _lh_point_colour_arg1¹⁰ of {LH_P2 _lh_point_colour_LH_P2_0¹⁰ _lh_point_colour_LH_P2_1¹⁰ => check_radius₀₀(np₀₀(_lh_point_colour_LH_P2_0¹⁰), nq₀₀(_lh_point_colour_LH_P2_1¹⁰), 0, 0.0, 0.0) | _  => error⁰}: 2815
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁴]: 2948 --->
+//│ 	case _lh_point_colour_arg1⁸ of {LH_P2 _lh_point_colour_LH_P2_0⁸ _lh_point_colour_LH_P2_1⁸ => check_radius₁₀(np₁₀(_lh_point_colour_LH_P2_0⁸), nq₁₀(_lh_point_colour_LH_P2_1⁸), 0, 0.0, 0.0) | _  => error⁰}: 2457
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵]: 2953 --->
+//│ 	case _lh_point_colour_arg1⁷ of {LH_P2 _lh_point_colour_LH_P2_0⁷ _lh_point_colour_LH_P2_1⁷ => check_radius₂₀(np₂₀(_lh_point_colour_LH_P2_0⁷), nq₂₀(_lh_point_colour_LH_P2_1⁷), 0, 0.0, 0.0) | _  => error⁰}: 2411
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁵]: 2958 --->
+//│ 	case _lh_point_colour_arg1⁹ of {LH_P2 _lh_point_colour_LH_P2_0⁹ _lh_point_colour_LH_P2_1⁹ => check_radius₃₀(np₃₀(_lh_point_colour_LH_P2_0⁹), nq₃₀(_lh_point_colour_LH_P2_1⁹), 0, 0.0, 0.0) | _  => error⁰}: 2611
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴]: 3142 --->
+//│ 	case _lh_equalp_arg1⁴ of {LH_P2 _lh_equalp_LH_P2_0⁸ _lh_equalp_LH_P2_1⁸ => case _lh_equalp_arg2⁴ of {LH_P2 _lh_equalp_LH_P2_0⁹ _lh_equalp_LH_P2_1⁹ => ((_lh_equalp_LH_P2_0⁸ == _lh_equalp_LH_P2_0⁹) && (_lh_equalp_LH_P2_1⁸ == _lh_equalp_LH_P2_1⁹)) | _  => error⁰} | _  => error⁰}: 1954
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵]: 3146 --->
+//│ 	case _lh_equalp_arg2⁴ of {LH_P2 _lh_equalp_LH_P2_0⁹ _lh_equalp_LH_P2_1⁹ => ((_lh_equalp_LH_P2_0⁸ == _lh_equalp_LH_P2_0⁹) && (_lh_equalp_LH_P2_1⁸ == _lh_equalp_LH_P2_1⁹)) | _  => error⁰}: 1952
+//│ [LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴]: 3151 --->
+//│ 	case _lh_point_colour_arg1⁶ of {LH_P2 _lh_point_colour_LH_P2_0⁶ _lh_point_colour_LH_P2_1⁶ => check_radius₅₀(np₅₀(_lh_point_colour_LH_P2_0⁶), nq₅₀(_lh_point_colour_LH_P2_1⁶), 0, 0.0, 0.0) | _  => error⁰}: 2324
+//│ [LH_P2 0 1]: 3264 --->
+//│ 	case _lh_equalp_arg2⁷ of {LH_P2 _lh_equalp_LH_P2_0¹⁵ _lh_equalp_LH_P2_1¹⁵ => ((_lh_equalp_LH_P2_0¹⁴ == _lh_equalp_LH_P2_0¹⁵) && (_lh_equalp_LH_P2_1¹⁴ == _lh_equalp_LH_P2_1¹⁵)) | _  => error⁰}: 2833
+//│ ------------------
+//│ case _lh_equalp_arg2⁴ of {LH_P2 _lh_equalp_LH_P2_0⁹ _lh_equalp_LH_P2_1⁹ => ((_lh_equalp_LH_P2_0⁸ == _lh_equalp_LH_P2_0⁹) && (_lh_equalp_LH_P2_1⁸ == _lh_equalp_LH_P2_1⁹)) | _  => error⁰}: 1952 --->
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵]: 3146
+//│ case _lh_equalp_arg1⁴ of {LH_P2 _lh_equalp_LH_P2_0⁸ _lh_equalp_LH_P2_1⁸ => case _lh_equalp_arg2⁴ of {LH_P2 _lh_equalp_LH_P2_0⁹ _lh_equalp_LH_P2_1⁹ => ((_lh_equalp_LH_P2_0⁸ == _lh_equalp_LH_P2_0⁹) && (_lh_equalp_LH_P2_1⁸ == _lh_equalp_LH_P2_1⁹)) | _  => error⁰} | _  => error⁰}: 1954 --->
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴]: 3142
+//│ case _lh_equalp_arg2⁵ of {LH_P2 _lh_equalp_LH_P2_0¹¹ _lh_equalp_LH_P2_1¹¹ => ((_lh_equalp_LH_P2_0¹⁰ == _lh_equalp_LH_P2_0¹¹) && (_lh_equalp_LH_P2_1¹⁰ == _lh_equalp_LH_P2_1¹¹)) | _  => error⁰}: 2182 --->
+//│ 	[LH_P2 1 0]: 1971
+//│ case _lh_point_colour_arg1⁶ of {LH_P2 _lh_point_colour_LH_P2_0⁶ _lh_point_colour_LH_P2_1⁶ => check_radius₅₀(np₅₀(_lh_point_colour_LH_P2_0⁶), nq₅₀(_lh_point_colour_LH_P2_1⁶), 0, 0.0, 0.0) | _  => error⁰}: 2324 --->
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴]: 3151
+//│ case _lh_point_colour_arg1⁷ of {LH_P2 _lh_point_colour_LH_P2_0⁷ _lh_point_colour_LH_P2_1⁷ => check_radius₂₀(np₂₀(_lh_point_colour_LH_P2_0⁷), nq₂₀(_lh_point_colour_LH_P2_1⁷), 0, 0.0, 0.0) | _  => error⁰}: 2411 --->
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵]: 2953
+//│ case _lh_point_colour_arg1⁸ of {LH_P2 _lh_point_colour_LH_P2_0⁸ _lh_point_colour_LH_P2_1⁸ => check_radius₁₀(np₁₀(_lh_point_colour_LH_P2_0⁸), nq₁₀(_lh_point_colour_LH_P2_1⁸), 0, 0.0, 0.0) | _  => error⁰}: 2457 --->
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁴]: 2948
+//│ case _lh_equalp_arg2⁶ of {LH_P2 _lh_equalp_LH_P2_0¹³ _lh_equalp_LH_P2_1¹³ => ((_lh_equalp_LH_P2_0¹² == _lh_equalp_LH_P2_0¹³) && (_lh_equalp_LH_P2_1¹² == _lh_equalp_LH_P2_1¹³)) | _  => error⁰}: 2538 --->
+//│ 	[LH_P2 (0 - 1) 0]: 2795
+//│ case _lh_point_colour_arg1⁹ of {LH_P2 _lh_point_colour_LH_P2_0⁹ _lh_point_colour_LH_P2_1⁹ => check_radius₃₀(np₃₀(_lh_point_colour_LH_P2_0⁹), nq₃₀(_lh_point_colour_LH_P2_1⁹), 0, 0.0, 0.0) | _  => error⁰}: 2611 --->
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁵]: 2958
+//│ case _lh_point_colour_arg1¹⁰ of {LH_P2 _lh_point_colour_LH_P2_0¹⁰ _lh_point_colour_LH_P2_1¹⁰ => check_radius₀₀(np₀₀(_lh_point_colour_LH_P2_0¹⁰), nq₀₀(_lh_point_colour_LH_P2_1¹⁰), 0, 0.0, 0.0) | _  => error⁰}: 2815 --->
+//│ 	[LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴]: 2943
+//│ case _lh_equalp_arg2⁷ of {LH_P2 _lh_equalp_LH_P2_0¹⁵ _lh_equalp_LH_P2_1¹⁵ => ((_lh_equalp_LH_P2_0¹⁴ == _lh_equalp_LH_P2_0¹⁵) && (_lh_equalp_LH_P2_1¹⁴ == _lh_equalp_LH_P2_1¹⁵)) | _  => error⁰}: 2833 --->
+//│ 	[LH_P2 0 1]: 3264
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testMandel2_nofib₀₀(primId⁰([LH_C 5 [LH_N]]))
+//│ def testMandel2_nofib₀₀(_lh_testMandel2_nofib_arg1²) = 
+//│ 	let size'² = max₀₀(length₀₀(_lh_testMandel2_nofib_arg1²), size₁₂₀)
+//│ 	in let tree² = build_tree₀₀([LH_P2 0 0], [LH_P2 size'² div⁰(size'², 2)])
+//│ 	in finite₀₀(tree²)
+//│ 	where
+//│ 	def build_tree₀₀(_lh_build_tree_arg1², _lh_build_tree_arg2²) = 
+//│ 		case _lh_build_tree_arg1² of {
+//│ 			LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1² => case _lh_build_tree_arg2² of {
+//│ 				LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³ => 
+//│ 					let rec_col² = check_perim₀₀([LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²], [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³])
+//│ 					in let split² = if ((_lh_build_tree_LH_P2_0³ - _lh_build_tree_LH_P2_0²) >= (_lh_build_tree_LH_P2_1³ - _lh_build_tree_LH_P2_1²)) then [LH_C 'N' [LH_C 'S' [LH_N]]] else [LH_C 'E' [LH_C 'W' [LH_N]]]
+//│ 					in let split_x² = div⁰((_lh_build_tree_LH_P2_0³ + _lh_build_tree_LH_P2_0²), 2)
+//│ 					in let split_y² = div⁰((_lh_build_tree_LH_P2_1³ + _lh_build_tree_LH_P2_1²), 2)
+//│ 					in let nsp1² = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ 					in let nsp2² = [LH_P2 split_x² _lh_build_tree_LH_P2_1³]
+//│ 					in let nsp3² = [LH_P2 (split_x² + 1) _lh_build_tree_LH_P2_1²]
+//│ 					in let nsp4² = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ 					in let ewp1² = [LH_P2 _lh_build_tree_LH_P2_0² _lh_build_tree_LH_P2_1²]
+//│ 					in let ewp2² = [LH_P2 _lh_build_tree_LH_P2_0³ split_y²]
+//│ 					in let ewp3² = [LH_P2 _lh_build_tree_LH_P2_0² (split_y² + 1)]
+//│ 					in let ewp4² = [LH_P2 _lh_build_tree_LH_P2_0³ _lh_build_tree_LH_P2_1³]
+//│ 					in if (rec_col² /= (0 - 1)) then [Leaf rec_col²] else if strEq₀₀(split², [LH_C 'N' [LH_C 'S' [LH_N]]]) then [NS build_tree₀₀(nsp1², nsp2²) build_tree₀₀(nsp3², nsp4²)] else [EW build_tree₀₀(ewp1², ewp2²) build_tree₀₀(ewp3², ewp4²)]
+//│ 				| _  => error⁰}
+//│ 			| _  => error⁰}
+//│ 		where
+//│ 		def check_perim₀₀(_lh_check_perim_arg1², _lh_check_perim_arg2²) = 
+//│ 			case _lh_check_perim_arg1² of {
+//│ 				LH_P2 _lh_check_perim_LH_P2_0⁴ _lh_check_perim_LH_P2_1⁴ => case _lh_check_perim_arg2² of {
+//│ 					LH_P2 _lh_check_perim_LH_P2_0⁵ _lh_check_perim_LH_P2_1⁵ => 
+//│ 						let col1² = point_colour₀₀(
+//│ 							let _lh_point_colour_LH_P2_0¹² = _lh_check_perim_LH_P2_0⁴
+//│ 							in let _lh_point_colour_LH_P2_1¹² = _lh_check_perim_LH_P2_1⁴
+//│ 							in (fun _lh_dummy⁰ -> check_radius₀₀(np₀₀(_lh_point_colour_LH_P2_0¹²), nq₀₀(_lh_point_colour_LH_P2_1¹²), 0, 0.0, 0.0)))
+//│ 						in let col2² = point_colour₁₀(
+//│ 							let _lh_point_colour_LH_P2_0¹³ = _lh_check_perim_LH_P2_0⁵
+//│ 							in let _lh_point_colour_LH_P2_1¹³ = _lh_check_perim_LH_P2_1⁴
+//│ 							in (fun _lh_dummy¹ -> check_radius₁₀(np₁₀(_lh_point_colour_LH_P2_0¹³), nq₁₀(_lh_point_colour_LH_P2_1¹³), 0, 0.0, 0.0)))
+//│ 						in let col3² = point_colour₂₀(
+//│ 							let _lh_point_colour_LH_P2_0¹⁴ = _lh_check_perim_LH_P2_0⁵
+//│ 							in let _lh_point_colour_LH_P2_1¹⁴ = _lh_check_perim_LH_P2_1⁵
+//│ 							in (fun _lh_dummy² -> check_radius₂₀(np₂₀(_lh_point_colour_LH_P2_0¹⁴), nq₂₀(_lh_point_colour_LH_P2_1¹⁴), 0, 0.0, 0.0)))
+//│ 						in let col4² = point_colour₃₀(
+//│ 							let _lh_point_colour_LH_P2_0¹⁵ = _lh_check_perim_LH_P2_0⁴
+//│ 							in let _lh_point_colour_LH_P2_1¹⁵ = _lh_check_perim_LH_P2_1⁵
+//│ 							in (fun _lh_dummy³ -> check_radius₃₀(np₃₀(_lh_point_colour_LH_P2_0¹⁵), nq₃₀(_lh_point_colour_LH_P2_1¹⁵), 0, 0.0, 0.0)))
+//│ 						in let corners_diff² = if (col1² == col2²) then if (col1² == col3²) then if (col1² == col4²) then [False] else [True] else [True] else [True]
+//│ 						in let check_line² = (fun xcyc² -> (fun xdyd² -> 
+//│ 							let _lh_matchIdent⁸ = xcyc²
+//│ 							in case _lh_matchIdent⁸ of {
+//│ 								LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶ => 
+//│ 									let _lh_matchIdent⁹ = xdyd²
+//│ 									in case _lh_matchIdent⁹ of {
+//│ 										LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷ => 
+//│ 											let finished² = if equalp₀₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], right₀₀) then (_lh_check_perim_LH_P2_0⁶ >= _lh_check_perim_LH_P2_0⁵) else if equalp₁₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], down₀₀) then (_lh_check_perim_LH_P2_1⁶ <= _lh_check_perim_LH_P2_1⁵) else if equalp₂₀([LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷], left₀₀) then (_lh_check_perim_LH_P2_0⁶ <= _lh_check_perim_LH_P2_0⁴) else (_lh_check_perim_LH_P2_1⁶ >= _lh_check_perim_LH_P2_1⁴)
+//│ 											in if finished² then [True] else if (point_colour₄₀([LH_P2 _lh_check_perim_LH_P2_0⁶ _lh_check_perim_LH_P2_1⁶]) /= col1²) then [False] else check_line²([LH_P2 (_lh_check_perim_LH_P2_0⁶ + _lh_check_perim_LH_P2_0⁷) (_lh_check_perim_LH_P2_1⁶ + _lh_check_perim_LH_P2_1⁷)], [LH_P2 _lh_check_perim_LH_P2_0⁷ _lh_check_perim_LH_P2_1⁷])
+//│ 										| _  => error⁰}
+//│ 								| _  => error⁰}))
+//│ 						in let check_sides² = if check_line²([LH_P2 (_lh_check_perim_LH_P2_0⁴ + 1) _lh_check_perim_LH_P2_1⁴], right₁₀) then if check_line²([LH_P2 _lh_check_perim_LH_P2_0⁵ (_lh_check_perim_LH_P2_1⁴ + 1)], down₁₀) then if check_line²([LH_P2 (_lh_check_perim_LH_P2_0⁵ - 1) _lh_check_perim_LH_P2_1⁵], left₁₀) then if check_line²([LH_P2 _lh_check_perim_LH_P2_0⁴ (_lh_check_perim_LH_P2_1⁵ - 1)], up₀₀) then col1² else (0 - 1) else (0 - 1) else (0 - 1) else (0 - 1)
+//│ 						in if equalp₃₀(
+//│ 							let _lh_equalp_LH_P2_0¹⁸ = _lh_check_perim_LH_P2_0⁴
+//│ 							in let _lh_equalp_LH_P2_1¹⁸ = _lh_check_perim_LH_P2_1⁴
+//│ 							in (fun _lh_equalp_arg2⁸ -> _lh_equalp_arg2⁸(_lh_equalp_LH_P2_0¹⁸, _lh_equalp_LH_P2_1¹⁸)), 
+//│ 							let _lh_equalp_LH_P2_0¹⁹ = _lh_check_perim_LH_P2_0⁵
+//│ 							in let _lh_equalp_LH_P2_1¹⁹ = _lh_check_perim_LH_P2_1⁵
+//│ 							in (fun _lh_equalp_LH_P2_0²⁰ -> (fun _lh_equalp_LH_P2_1²⁰ -> ((_lh_equalp_LH_P2_0²⁰ == _lh_equalp_LH_P2_0¹⁹) && (_lh_equalp_LH_P2_1²⁰ == _lh_equalp_LH_P2_1¹⁹))))) then point_colour₅₀(
+//│ 							let _lh_point_colour_LH_P2_0¹⁶ = _lh_check_perim_LH_P2_0⁴
+//│ 							in let _lh_point_colour_LH_P2_1¹⁶ = _lh_check_perim_LH_P2_1⁴
+//│ 							in (fun _lh_dummy⁴ -> check_radius₅₀(np₅₀(_lh_point_colour_LH_P2_0¹⁶), nq₅₀(_lh_point_colour_LH_P2_1¹⁶), 0, 0.0, 0.0))) else if corners_diff² then (0 - 1) else check_sides²
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 			where
+//│ 			def down₀₀ = 
+//│ 				let _lh_equalp_LH_P2_0²³ = 0
+//│ 				in let _lh_equalp_LH_P2_1²³ = 1
+//│ 				in (fun _lh_equalp_LH_P2_0²⁴ -> (fun _lh_equalp_LH_P2_1²⁴ -> ((_lh_equalp_LH_P2_0²⁴ == _lh_equalp_LH_P2_0²³) && (_lh_equalp_LH_P2_1²⁴ == _lh_equalp_LH_P2_1²³))))
+//│ 			def down₁₀ = 
+//│ 				[LH_P2 0 1]
+//│ 			def equalp₀₀(_lh_equalp_arg1¹⁰, _lh_equalp_arg2¹¹) = 
+//│ 				case _lh_equalp_arg1¹⁰ of {
+//│ 					LH_P2 _lh_equalp_LH_P2_0¹⁰ _lh_equalp_LH_P2_1¹⁰ => _lh_equalp_arg2¹¹(_lh_equalp_LH_P2_0¹⁰, _lh_equalp_LH_P2_1¹⁰)
+//│ 					| _  => error⁰}
+//│ 			def equalp₁₀(_lh_equalp_arg1¹¹, _lh_equalp_arg2¹²) = 
+//│ 				case _lh_equalp_arg1¹¹ of {
+//│ 					LH_P2 _lh_equalp_LH_P2_0¹⁴ _lh_equalp_LH_P2_1¹⁴ => _lh_equalp_arg2¹²(_lh_equalp_LH_P2_0¹⁴, _lh_equalp_LH_P2_1¹⁴)
+//│ 					| _  => error⁰}
+//│ 			def equalp₂₀(_lh_equalp_arg1⁸, _lh_equalp_arg2⁹) = 
+//│ 				case _lh_equalp_arg1⁸ of {
+//│ 					LH_P2 _lh_equalp_LH_P2_0¹² _lh_equalp_LH_P2_1¹² => _lh_equalp_arg2⁹(_lh_equalp_LH_P2_0¹², _lh_equalp_LH_P2_1¹²)
+//│ 					| _  => error⁰}
+//│ 			def equalp₃₀(_lh_equalp_arg1⁹, _lh_equalp_arg2¹⁰) = 
+//│ 				_lh_equalp_arg1⁹(_lh_equalp_arg2¹⁰)
+//│ 			def left₀₀ = 
+//│ 				let _lh_equalp_LH_P2_0²¹ = (0 - 1)
+//│ 				in let _lh_equalp_LH_P2_1²¹ = 0
+//│ 				in (fun _lh_equalp_LH_P2_0²² -> (fun _lh_equalp_LH_P2_1²² -> ((_lh_equalp_LH_P2_0²² == _lh_equalp_LH_P2_0²¹) && (_lh_equalp_LH_P2_1²² == _lh_equalp_LH_P2_1²¹))))
+//│ 			def left₁₀ = 
+//│ 				[LH_P2 (0 - 1) 0]
+//│ 			def point_colour₀₀(_lh_point_colour_arg1¹⁵) = 
+//│ 				_lh_point_colour_arg1¹⁵(99)
+//│ 				where
+//│ 				def check_radius₀₀(_lh_check_radius_arg1¹³, _lh_check_radius_arg2¹³, _lh_check_radius_arg3¹³, _lh_check_radius_arg4¹³, _lh_check_radius_arg5¹³) = 
+//│ 					let xn¹³ = new_x₀₀(_lh_check_radius_arg4¹³, _lh_check_radius_arg5¹³, _lh_check_radius_arg1¹³)
+//│ 					in let yn¹³ = new_y₀₀(_lh_check_radius_arg4¹³, _lh_check_radius_arg5¹³, _lh_check_radius_arg2¹³)
+//│ 					in let r¹³ = radius₀₀(xn¹³, yn¹³)
+//│ 					in let kp¹³ = (_lh_check_radius_arg3¹³ + 1)
+//│ 					in if (kp¹³ == num_cols₀₀) then 0 else if polyGt⁰(r¹³, float_of_int⁰(m₀₀)) then kp¹³ else check_radius₀₀(_lh_check_radius_arg1¹³, _lh_check_radius_arg2¹³, kp¹³, xn¹³, yn¹³)
+//│ 					where
+//│ 					def m₀₀ = 
+//│ 						20
+//│ 					def new_x₀₀(_lh_new_x_arg1¹⁵, _lh_new_x_arg2¹⁵, _lh_new_x_arg3¹⁵) = 
+//│ 						(((_lh_new_x_arg1¹⁵ *. _lh_new_x_arg1¹⁵) -. (_lh_new_x_arg2¹⁵ *. _lh_new_x_arg2¹⁵)) +. _lh_new_x_arg3¹⁵)
+//│ 					def new_y₀₀(_lh_new_y_arg1¹⁵, _lh_new_y_arg2¹⁵, _lh_new_y_arg3¹⁵) = 
+//│ 						(((2.0 *. _lh_new_y_arg1¹⁵) *. _lh_new_y_arg2¹⁵) +. _lh_new_y_arg3¹⁵)
+//│ 					def num_cols₀₀ = 
+//│ 						26
+//│ 					def radius₀₀(_lh_radius_arg1¹³, _lh_radius_arg2¹³) = 
+//│ 						((_lh_radius_arg1¹³ *. _lh_radius_arg1¹³) +. (_lh_radius_arg2¹³ *. _lh_radius_arg2¹³))
+//│ 				def np₀₀(_lh_np_arg1¹²) = 
+//│ 					(pmn₁₀ +. (float_of_int⁰(_lh_np_arg1¹²) *. delta_p₀₀))
+//│ 					where
+//│ 					def delta_p₀₀ = 
+//│ 						((pmx₀₀ -. pmn₀₀) /. float_of_int⁰((size₀₀ - 1)))
+//│ 						where
+//│ 						def pmn₀₀ = 
+//│ 							(0.0 -. 2.25)
+//│ 						def pmx₀₀ = 
+//│ 							0.75
+//│ 						def size₀₀ = 
+//│ 							200
+//│ 					def pmn₁₀ = 
+//│ 						(0.0 -. 2.25)
+//│ 				def nq₀₀(_lh_nq_arg1¹⁶) = 
+//│ 					(qmn₁₀ +. (float_of_int⁰(_lh_nq_arg1¹⁶) *. delta_q₀₀))
+//│ 					where
+//│ 					def delta_q₀₀ = 
+//│ 						((qmx₀₀ -. qmn₀₀) /. float_of_int⁰((size₁₀ - 1)))
+//│ 						where
+//│ 						def qmn₀₀ = 
+//│ 							(0.0 -. 1.5)
+//│ 						def qmx₀₀ = 
+//│ 							1.5
+//│ 						def size₁₀ = 
+//│ 							200
+//│ 					def qmn₁₀ = 
+//│ 						(0.0 -. 1.5)
+//│ 			def point_colour₁₀(_lh_point_colour_arg1¹⁴) = 
+//│ 				_lh_point_colour_arg1¹⁴(99)
+//│ 				where
+//│ 				def check_radius₁₀(_lh_check_radius_arg1¹², _lh_check_radius_arg2¹², _lh_check_radius_arg3¹², _lh_check_radius_arg4¹², _lh_check_radius_arg5¹²) = 
+//│ 					let xn¹² = new_x₁₀(_lh_check_radius_arg4¹², _lh_check_radius_arg5¹², _lh_check_radius_arg1¹²)
+//│ 					in let yn¹² = new_y₁₀(_lh_check_radius_arg4¹², _lh_check_radius_arg5¹², _lh_check_radius_arg2¹²)
+//│ 					in let r¹² = radius₁₀(xn¹², yn¹²)
+//│ 					in let kp¹² = (_lh_check_radius_arg3¹² + 1)
+//│ 					in if (kp¹² == num_cols₁₀) then 0 else if polyGt⁰(r¹², float_of_int⁰(m₁₀)) then kp¹² else check_radius₁₀(_lh_check_radius_arg1¹², _lh_check_radius_arg2¹², kp¹², xn¹², yn¹²)
+//│ 					where
+//│ 					def m₁₀ = 
+//│ 						20
+//│ 					def new_x₁₀(_lh_new_x_arg1¹⁷, _lh_new_x_arg2¹⁷, _lh_new_x_arg3¹⁷) = 
+//│ 						(((_lh_new_x_arg1¹⁷ *. _lh_new_x_arg1¹⁷) -. (_lh_new_x_arg2¹⁷ *. _lh_new_x_arg2¹⁷)) +. _lh_new_x_arg3¹⁷)
+//│ 					def new_y₁₀(_lh_new_y_arg1¹⁷, _lh_new_y_arg2¹⁷, _lh_new_y_arg3¹⁷) = 
+//│ 						(((2.0 *. _lh_new_y_arg1¹⁷) *. _lh_new_y_arg2¹⁷) +. _lh_new_y_arg3¹⁷)
+//│ 					def num_cols₁₀ = 
+//│ 						26
+//│ 					def radius₁₀(_lh_radius_arg1¹⁶, _lh_radius_arg2¹⁶) = 
+//│ 						((_lh_radius_arg1¹⁶ *. _lh_radius_arg1¹⁶) +. (_lh_radius_arg2¹⁶ *. _lh_radius_arg2¹⁶))
+//│ 				def np₁₀(_lh_np_arg1¹⁴) = 
+//│ 					(pmn₃₀ +. (float_of_int⁰(_lh_np_arg1¹⁴) *. delta_p₁₀))
+//│ 					where
+//│ 					def delta_p₁₀ = 
+//│ 						((pmx₁₀ -. pmn₂₀) /. float_of_int⁰((size₂₀ - 1)))
+//│ 						where
+//│ 						def pmn₂₀ = 
+//│ 							(0.0 -. 2.25)
+//│ 						def pmx₁₀ = 
+//│ 							0.75
+//│ 						def size₂₀ = 
+//│ 							200
+//│ 					def pmn₃₀ = 
+//│ 						(0.0 -. 2.25)
+//│ 				def nq₁₀(_lh_nq_arg1¹³) = 
+//│ 					(qmn₃₀ +. (float_of_int⁰(_lh_nq_arg1¹³) *. delta_q₁₀))
+//│ 					where
+//│ 					def delta_q₁₀ = 
+//│ 						((qmx₁₀ -. qmn₂₀) /. float_of_int⁰((size₃₀ - 1)))
+//│ 						where
+//│ 						def qmn₂₀ = 
+//│ 							(0.0 -. 1.5)
+//│ 						def qmx₁₀ = 
+//│ 							1.5
+//│ 						def size₃₀ = 
+//│ 							200
+//│ 					def qmn₃₀ = 
+//│ 						(0.0 -. 1.5)
+//│ 			def point_colour₂₀(_lh_point_colour_arg1¹⁷) = 
+//│ 				_lh_point_colour_arg1¹⁷(99)
+//│ 				where
+//│ 				def check_radius₂₀(_lh_check_radius_arg1¹⁵, _lh_check_radius_arg2¹⁵, _lh_check_radius_arg3¹⁵, _lh_check_radius_arg4¹⁵, _lh_check_radius_arg5¹⁵) = 
+//│ 					let xn¹⁵ = new_x₂₀(_lh_check_radius_arg4¹⁵, _lh_check_radius_arg5¹⁵, _lh_check_radius_arg1¹⁵)
+//│ 					in let yn¹⁵ = new_y₂₀(_lh_check_radius_arg4¹⁵, _lh_check_radius_arg5¹⁵, _lh_check_radius_arg2¹⁵)
+//│ 					in let r¹⁵ = radius₂₀(xn¹⁵, yn¹⁵)
+//│ 					in let kp¹⁵ = (_lh_check_radius_arg3¹⁵ + 1)
+//│ 					in if (kp¹⁵ == num_cols₂₀) then 0 else if polyGt⁰(r¹⁵, float_of_int⁰(m₂₀)) then kp¹⁵ else check_radius₂₀(_lh_check_radius_arg1¹⁵, _lh_check_radius_arg2¹⁵, kp¹⁵, xn¹⁵, yn¹⁵)
+//│ 					where
+//│ 					def m₂₀ = 
+//│ 						20
+//│ 					def new_x₂₀(_lh_new_x_arg1¹³, _lh_new_x_arg2¹³, _lh_new_x_arg3¹³) = 
+//│ 						(((_lh_new_x_arg1¹³ *. _lh_new_x_arg1¹³) -. (_lh_new_x_arg2¹³ *. _lh_new_x_arg2¹³)) +. _lh_new_x_arg3¹³)
+//│ 					def new_y₂₀(_lh_new_y_arg1¹⁴, _lh_new_y_arg2¹⁴, _lh_new_y_arg3¹⁴) = 
+//│ 						(((2.0 *. _lh_new_y_arg1¹⁴) *. _lh_new_y_arg2¹⁴) +. _lh_new_y_arg3¹⁴)
+//│ 					def num_cols₂₀ = 
+//│ 						26
+//│ 					def radius₂₀(_lh_radius_arg1¹⁵, _lh_radius_arg2¹⁵) = 
+//│ 						((_lh_radius_arg1¹⁵ *. _lh_radius_arg1¹⁵) +. (_lh_radius_arg2¹⁵ *. _lh_radius_arg2¹⁵))
+//│ 				def np₂₀(_lh_np_arg1¹⁷) = 
+//│ 					(pmn₅₀ +. (float_of_int⁰(_lh_np_arg1¹⁷) *. delta_p₂₀))
+//│ 					where
+//│ 					def delta_p₂₀ = 
+//│ 						((pmx₂₀ -. pmn₄₀) /. float_of_int⁰((size₄₀ - 1)))
+//│ 						where
+//│ 						def pmn₄₀ = 
+//│ 							(0.0 -. 2.25)
+//│ 						def pmx₂₀ = 
+//│ 							0.75
+//│ 						def size₄₀ = 
+//│ 							200
+//│ 					def pmn₅₀ = 
+//│ 						(0.0 -. 2.25)
+//│ 				def nq₂₀(_lh_nq_arg1¹⁴) = 
+//│ 					(qmn₅₀ +. (float_of_int⁰(_lh_nq_arg1¹⁴) *. delta_q₂₀))
+//│ 					where
+//│ 					def delta_q₂₀ = 
+//│ 						((qmx₂₀ -. qmn₄₀) /. float_of_int⁰((size₅₀ - 1)))
+//│ 						where
+//│ 						def qmn₄₀ = 
+//│ 							(0.0 -. 1.5)
+//│ 						def qmx₂₀ = 
+//│ 							1.5
+//│ 						def size₅₀ = 
+//│ 							200
+//│ 					def qmn₅₀ = 
+//│ 						(0.0 -. 1.5)
+//│ 			def point_colour₃₀(_lh_point_colour_arg1¹²) = 
+//│ 				_lh_point_colour_arg1¹²(99)
+//│ 				where
+//│ 				def check_radius₃₀(_lh_check_radius_arg1¹⁷, _lh_check_radius_arg2¹⁷, _lh_check_radius_arg3¹⁷, _lh_check_radius_arg4¹⁷, _lh_check_radius_arg5¹⁷) = 
+//│ 					let xn¹⁷ = new_x₃₀(_lh_check_radius_arg4¹⁷, _lh_check_radius_arg5¹⁷, _lh_check_radius_arg1¹⁷)
+//│ 					in let yn¹⁷ = new_y₃₀(_lh_check_radius_arg4¹⁷, _lh_check_radius_arg5¹⁷, _lh_check_radius_arg2¹⁷)
+//│ 					in let r¹⁷ = radius₃₀(xn¹⁷, yn¹⁷)
+//│ 					in let kp¹⁷ = (_lh_check_radius_arg3¹⁷ + 1)
+//│ 					in if (kp¹⁷ == num_cols₃₀) then 0 else if polyGt⁰(r¹⁷, float_of_int⁰(m₃₀)) then kp¹⁷ else check_radius₃₀(_lh_check_radius_arg1¹⁷, _lh_check_radius_arg2¹⁷, kp¹⁷, xn¹⁷, yn¹⁷)
+//│ 					where
+//│ 					def m₃₀ = 
+//│ 						20
+//│ 					def new_x₃₀(_lh_new_x_arg1¹⁴, _lh_new_x_arg2¹⁴, _lh_new_x_arg3¹⁴) = 
+//│ 						(((_lh_new_x_arg1¹⁴ *. _lh_new_x_arg1¹⁴) -. (_lh_new_x_arg2¹⁴ *. _lh_new_x_arg2¹⁴)) +. _lh_new_x_arg3¹⁴)
+//│ 					def new_y₃₀(_lh_new_y_arg1¹³, _lh_new_y_arg2¹³, _lh_new_y_arg3¹³) = 
+//│ 						(((2.0 *. _lh_new_y_arg1¹³) *. _lh_new_y_arg2¹³) +. _lh_new_y_arg3¹³)
+//│ 					def num_cols₃₀ = 
+//│ 						26
+//│ 					def radius₃₀(_lh_radius_arg1¹⁷, _lh_radius_arg2¹⁷) = 
+//│ 						((_lh_radius_arg1¹⁷ *. _lh_radius_arg1¹⁷) +. (_lh_radius_arg2¹⁷ *. _lh_radius_arg2¹⁷))
+//│ 				def np₃₀(_lh_np_arg1¹³) = 
+//│ 					(pmn₇₀ +. (float_of_int⁰(_lh_np_arg1¹³) *. delta_p₃₀))
+//│ 					where
+//│ 					def delta_p₃₀ = 
+//│ 						((pmx₃₀ -. pmn₆₀) /. float_of_int⁰((size₆₀ - 1)))
+//│ 						where
+//│ 						def pmn₆₀ = 
+//│ 							(0.0 -. 2.25)
+//│ 						def pmx₃₀ = 
+//│ 							0.75
+//│ 						def size₆₀ = 
+//│ 							200
+//│ 					def pmn₇₀ = 
+//│ 						(0.0 -. 2.25)
+//│ 				def nq₃₀(_lh_nq_arg1¹⁷) = 
+//│ 					(qmn₇₀ +. (float_of_int⁰(_lh_nq_arg1¹⁷) *. delta_q₃₀))
+//│ 					where
+//│ 					def delta_q₃₀ = 
+//│ 						((qmx₃₀ -. qmn₆₀) /. float_of_int⁰((size₇₀ - 1)))
+//│ 						where
+//│ 						def qmn₆₀ = 
+//│ 							(0.0 -. 1.5)
+//│ 						def qmx₃₀ = 
+//│ 							1.5
+//│ 						def size₇₀ = 
+//│ 							200
+//│ 					def qmn₇₀ = 
+//│ 						(0.0 -. 1.5)
+//│ 			def point_colour₄₀(_lh_point_colour_arg1¹³) = 
+//│ 				case _lh_point_colour_arg1¹³ of {
+//│ 					LH_P2 _lh_point_colour_LH_P2_0¹¹ _lh_point_colour_LH_P2_1¹¹ => check_radius₄₀(np₄₀(_lh_point_colour_LH_P2_0¹¹), nq₄₀(_lh_point_colour_LH_P2_1¹¹), 0, 0.0, 0.0)
+//│ 					| _  => error⁰}
+//│ 				where
+//│ 				def check_radius₄₀(_lh_check_radius_arg1¹⁶, _lh_check_radius_arg2¹⁶, _lh_check_radius_arg3¹⁶, _lh_check_radius_arg4¹⁶, _lh_check_radius_arg5¹⁶) = 
+//│ 					let xn¹⁶ = new_x₄₀(_lh_check_radius_arg4¹⁶, _lh_check_radius_arg5¹⁶, _lh_check_radius_arg1¹⁶)
+//│ 					in let yn¹⁶ = new_y₄₀(_lh_check_radius_arg4¹⁶, _lh_check_radius_arg5¹⁶, _lh_check_radius_arg2¹⁶)
+//│ 					in let r¹⁶ = radius₄₀(xn¹⁶, yn¹⁶)
+//│ 					in let kp¹⁶ = (_lh_check_radius_arg3¹⁶ + 1)
+//│ 					in if (kp¹⁶ == num_cols₄₀) then 0 else if polyGt⁰(r¹⁶, float_of_int⁰(m₄₀)) then kp¹⁶ else check_radius₄₀(_lh_check_radius_arg1¹⁶, _lh_check_radius_arg2¹⁶, kp¹⁶, xn¹⁶, yn¹⁶)
+//│ 					where
+//│ 					def m₄₀ = 
+//│ 						20
+//│ 					def new_x₄₀(_lh_new_x_arg1¹⁶, _lh_new_x_arg2¹⁶, _lh_new_x_arg3¹⁶) = 
+//│ 						(((_lh_new_x_arg1¹⁶ *. _lh_new_x_arg1¹⁶) -. (_lh_new_x_arg2¹⁶ *. _lh_new_x_arg2¹⁶)) +. _lh_new_x_arg3¹⁶)
+//│ 					def new_y₄₀(_lh_new_y_arg1¹⁶, _lh_new_y_arg2¹⁶, _lh_new_y_arg3¹⁶) = 
+//│ 						(((2.0 *. _lh_new_y_arg1¹⁶) *. _lh_new_y_arg2¹⁶) +. _lh_new_y_arg3¹⁶)
+//│ 					def num_cols₄₀ = 
+//│ 						26
+//│ 					def radius₄₀(_lh_radius_arg1¹⁴, _lh_radius_arg2¹⁴) = 
+//│ 						((_lh_radius_arg1¹⁴ *. _lh_radius_arg1¹⁴) +. (_lh_radius_arg2¹⁴ *. _lh_radius_arg2¹⁴))
+//│ 				def np₄₀(_lh_np_arg1¹⁶) = 
+//│ 					(pmn₉₀ +. (float_of_int⁰(_lh_np_arg1¹⁶) *. delta_p₄₀))
+//│ 					where
+//│ 					def delta_p₄₀ = 
+//│ 						((pmx₄₀ -. pmn₈₀) /. float_of_int⁰((size₈₀ - 1)))
+//│ 						where
+//│ 						def pmn₈₀ = 
+//│ 							(0.0 -. 2.25)
+//│ 						def pmx₄₀ = 
+//│ 							0.75
+//│ 						def size₈₀ = 
+//│ 							200
+//│ 					def pmn₉₀ = 
+//│ 						(0.0 -. 2.25)
+//│ 				def nq₄₀(_lh_nq_arg1¹²) = 
+//│ 					(qmn₉₀ +. (float_of_int⁰(_lh_nq_arg1¹²) *. delta_q₄₀))
+//│ 					where
+//│ 					def delta_q₄₀ = 
+//│ 						((qmx₄₀ -. qmn₈₀) /. float_of_int⁰((size₉₀ - 1)))
+//│ 						where
+//│ 						def qmn₈₀ = 
+//│ 							(0.0 -. 1.5)
+//│ 						def qmx₄₀ = 
+//│ 							1.5
+//│ 						def size₉₀ = 
+//│ 							200
+//│ 					def qmn₉₀ = 
+//│ 						(0.0 -. 1.5)
+//│ 			def point_colour₅₀(_lh_point_colour_arg1¹⁶) = 
+//│ 				_lh_point_colour_arg1¹⁶(99)
+//│ 				where
+//│ 				def check_radius₅₀(_lh_check_radius_arg1¹⁴, _lh_check_radius_arg2¹⁴, _lh_check_radius_arg3¹⁴, _lh_check_radius_arg4¹⁴, _lh_check_radius_arg5¹⁴) = 
+//│ 					let xn¹⁴ = new_x₅₀(_lh_check_radius_arg4¹⁴, _lh_check_radius_arg5¹⁴, _lh_check_radius_arg1¹⁴)
+//│ 					in let yn¹⁴ = new_y₅₀(_lh_check_radius_arg4¹⁴, _lh_check_radius_arg5¹⁴, _lh_check_radius_arg2¹⁴)
+//│ 					in let r¹⁴ = radius₅₀(xn¹⁴, yn¹⁴)
+//│ 					in let kp¹⁴ = (_lh_check_radius_arg3¹⁴ + 1)
+//│ 					in if (kp¹⁴ == num_cols₅₀) then 0 else if polyGt⁰(r¹⁴, float_of_int⁰(m₅₀)) then kp¹⁴ else check_radius₅₀(_lh_check_radius_arg1¹⁴, _lh_check_radius_arg2¹⁴, kp¹⁴, xn¹⁴, yn¹⁴)
+//│ 					where
+//│ 					def m₅₀ = 
+//│ 						20
+//│ 					def new_x₅₀(_lh_new_x_arg1¹², _lh_new_x_arg2¹², _lh_new_x_arg3¹²) = 
+//│ 						(((_lh_new_x_arg1¹² *. _lh_new_x_arg1¹²) -. (_lh_new_x_arg2¹² *. _lh_new_x_arg2¹²)) +. _lh_new_x_arg3¹²)
+//│ 					def new_y₅₀(_lh_new_y_arg1¹², _lh_new_y_arg2¹², _lh_new_y_arg3¹²) = 
+//│ 						(((2.0 *. _lh_new_y_arg1¹²) *. _lh_new_y_arg2¹²) +. _lh_new_y_arg3¹²)
+//│ 					def num_cols₅₀ = 
+//│ 						26
+//│ 					def radius₅₀(_lh_radius_arg1¹², _lh_radius_arg2¹²) = 
+//│ 						((_lh_radius_arg1¹² *. _lh_radius_arg1¹²) +. (_lh_radius_arg2¹² *. _lh_radius_arg2¹²))
+//│ 				def np₅₀(_lh_np_arg1¹⁵) = 
+//│ 					(pmn₁₁₀ +. (float_of_int⁰(_lh_np_arg1¹⁵) *. delta_p₅₀))
+//│ 					where
+//│ 					def delta_p₅₀ = 
+//│ 						((pmx₅₀ -. pmn₁₀₀) /. float_of_int⁰((size₁₀₀ - 1)))
+//│ 						where
+//│ 						def pmn₁₀₀ = 
+//│ 							(0.0 -. 2.25)
+//│ 						def pmx₅₀ = 
+//│ 							0.75
+//│ 						def size₁₀₀ = 
+//│ 							200
+//│ 					def pmn₁₁₀ = 
+//│ 						(0.0 -. 2.25)
+//│ 				def nq₅₀(_lh_nq_arg1¹⁵) = 
+//│ 					(qmn₁₁₀ +. (float_of_int⁰(_lh_nq_arg1¹⁵) *. delta_q₅₀))
+//│ 					where
+//│ 					def delta_q₅₀ = 
+//│ 						((qmx₅₀ -. qmn₁₀₀) /. float_of_int⁰((size₁₁₀ - 1)))
+//│ 						where
+//│ 						def qmn₁₀₀ = 
+//│ 							(0.0 -. 1.5)
+//│ 						def qmx₅₀ = 
+//│ 							1.5
+//│ 						def size₁₁₀ = 
+//│ 							200
+//│ 					def qmn₁₁₀ = 
+//│ 						(0.0 -. 1.5)
+//│ 			def right₀₀ = 
+//│ 				let _lh_equalp_LH_P2_0¹⁶ = 1
+//│ 				in let _lh_equalp_LH_P2_1¹⁶ = 0
+//│ 				in (fun _lh_equalp_LH_P2_0¹⁷ -> (fun _lh_equalp_LH_P2_1¹⁷ -> ((_lh_equalp_LH_P2_0¹⁷ == _lh_equalp_LH_P2_0¹⁶) && (_lh_equalp_LH_P2_1¹⁷ == _lh_equalp_LH_P2_1¹⁶))))
+//│ 			def right₁₀ = 
+//│ 				[LH_P2 1 0]
+//│ 			def up₀₀ = 
+//│ 				[LH_P2 0 (0 - 1)]
+//│ 		def strEq₀₀(_lh_strEq_arg1², _lh_strEq_arg2²) = 
+//│ 			case _lh_strEq_arg1² of {
+//│ 				LH_C _lh_strEq_LH_C_0³ _lh_strEq_LH_C_1³ => 
+//│ 					let _lh_matchIdent¹⁰ = _lh_strEq_arg2²
+//│ 					in case _lh_matchIdent¹⁰ of {
+//│ 						LH_C _lh_strEq_LH_C_0⁴ _lh_strEq_LH_C_1⁴ => if polyEq⁰(_lh_strEq_LH_C_0³, _lh_strEq_LH_C_0⁴) then strEq₀₀(_lh_strEq_LH_C_1³, _lh_strEq_LH_C_1⁴) else [False]
+//│ 						| LH_N  => [False]
+//│ 						| _  => error⁰}
+//│ 				| LH_N  => 
+//│ 					let _lh_matchIdent¹¹ = _lh_strEq_arg2²
+//│ 					in case _lh_matchIdent¹¹ of {
+//│ 						LH_C _lh_strEq_LH_C_0⁵ _lh_strEq_LH_C_1⁵ => [False]
+//│ 						| LH_N  => [True]
+//│ 						| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 	def finite₀₀(_lh_finite_arg1²) = 
+//│ 		case _lh_finite_arg1² of {
+//│ 			Leaf _lh_finite_Leaf_0¹ => (_lh_finite_Leaf_0¹ == _lh_finite_Leaf_0¹)
+//│ 			| NS _lh_finite_NS_0¹ _lh_finite_NS_1¹ => (finite₀₀(_lh_finite_NS_0¹) && finite₀₀(_lh_finite_NS_1¹))
+//│ 			| EW _lh_finite_EW_0¹ _lh_finite_EW_1¹ => (finite₀₀(_lh_finite_EW_0¹) && finite₀₀(_lh_finite_EW_1¹))
+//│ 			| _  => error⁰}
+//│ 	def length₀₀(ls²) = 
+//│ 		case ls² of {
+//│ 			LH_C h¹ t¹ => (1 + length₀₀(t¹))
+//│ 			| LH_N  => 0}
+//│ 	def max₀₀(_lh_max_arg1², _lh_max_arg2²) = 
+//│ 		if (_lh_max_arg1² > _lh_max_arg2²) then _lh_max_arg1² else _lh_max_arg2²
+//│ 	def size₁₂₀ = 
+//│ 		200
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

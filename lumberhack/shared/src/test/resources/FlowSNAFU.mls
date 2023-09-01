@@ -1,0 +1,898 @@
+:NewParser
+:ParseOnly
+
+
+
+// NOTE: mlscript thinks this is ok, but not ocaml
+:lhError
+:lhGenOCaml
+:d
+fun f(a) = if True then C(0) else C(x => x)
+f(0)
+// // will need to be:
+// ignore(f(0))
+//│ |#fun| |f|(|a|)| |#=| |#if| |True| |#then| |C|(|0|)| |#else| |C|(|x| |=>| |x|)|↵|f|(|0|)|↵|/* // will need to be:*/|↵|/* ignore(f(0))*/|
+//│ Parsed: {fun f = a, => if (True) then C (0,) else C (x, => x,); f (0,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ f^9(0)
+//│ def f(a⁰) = if [True] then [C 0] else [C (fun x⁰ -> x⁰)]
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec f a_0 =
+//│ 		  (if true then
+//│ 		    (`C(0))
+//│ 		  else
+//│ 		    (`C((fun x_0 -> 
+//│ 		      x_0))));;
+//│ 		(f 0)
+//│ 		....... ocaml repl result .......
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception:           Lines 5-6, characters 7-11:
+//│ 5 | .......((fun x_0 -> 
+//│ 6 |       x_0))....
+//│ Error: This expression should not be a function, the expected type is int
+//│ !!!!!!ERROR!!!!!!
+
+// fun f(a) = if True then C(0) else Object.magic(C(x => x))
+// f(0)
+
+
+
+// TODO: investigate why the expander doesn't dup dropWhile, which causes its outer layer not to fuse
+// reproduced as below
+// ```
+// fun c(x) = if x is
+//   C(a) then c(a)
+//   N then N
+// c(C(C(C(N))))
+// ```
+// the fusion process if the `NoCons` does not block the fusion
+// and the dropWhile gets duplicated as needed
+// fun dropWhile(ls) = (if ls is
+//   N then () => C(N)
+//   C(t) then () => if True then dropWhile(t) else C(t))()
+// dropWhile(C(N))
+// -----------
+// dropWhile'(ls) = ls ()
+// dropWhile'(
+//   let t = N
+//   in () => if True then dropWhile(t) else C(t)
+// )
+// -----------
+// dropWhile''(ls) = ls()
+// dropWhile'(ls) = ls()
+// dropWhile'(
+//   let t = () => C(N)
+//   in () => if True then dropWhile''(t) else C(t)
+// )
+:lhGenOCaml
+:d
+fun dropWhile(ls) = if ls is
+  N then C(N)
+  C(t) then if True then dropWhile(t) else C(t)
+dropWhile(C(N))
+//│ |#fun| |dropWhile|(|ls|)| |#=| |#if| |ls| |is|→|N| |#then| |C|(|N|)|↵|C|(|t|)| |#then| |#if| |True| |#then| |dropWhile|(|t|)| |#else| |C|(|t|)|←|↵|dropWhile|(|C|(|N|)|)|
+//│ Parsed: {fun dropWhile = ls, => if ls is ‹(N) then C (N,); (C (t,)) then if (True) then dropWhile (t,) else C (t,)›; dropWhile (C (N,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ dropWhile^13([C [N]])
+//│ def dropWhile(ls⁰) = case ls⁰ of {
+//│ 	N  => [C [N]]
+//│ 	| C t⁰ => if [True] then dropWhile^5(t⁰) else [C t⁰]}
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec dropWhile ls_0 =
+//│ 		  (match ls_0 with
+//│ 		    | `N -> 
+//│ 		      (`C((`N)))
+//│ 		    | `C(t_0) -> 
+//│ 		      (if true then
+//│ 		        (dropWhile t_0)
+//│ 		      else
+//│ 		        (`C(t_0))));;
+//│ 		(dropWhile (`C((`N))))
+//│ 		....... ocaml repl result .......
+//│ 		[ok]
+//│ 		                val dropWhile : ([< `C of 'a | `N > `N ] as 'a) -> [> `C of 'a ] = <fun>
+//│ 		....... ocaml repl result .......
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [dropWhile^13] (hopeless to continue)
+//│ 	[dropWhile^13 · dropWhile^5] ---> [dropWhile^13] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ dropWhile₀([C [N]])
+//│ def dropWhile₀(ls¹) = 
+//│ 	case ls¹ of {
+//│ 		N  => [C [N]]
+//│ 		| C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [N]: 30 --->
+//│ 	NoCons
+//│ 	case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 27
+//│ [C [N]]: 31 --->
+//│ 	case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 27
+//│ ------------------
+//│ case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 27 --->
+//│ 	[N]: 30
+//│ 	[C [N]]: 31
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ dropWhile₀([C [N]])
+//│ def dropWhile₀(ls²) = 
+//│ 	case ls² of {
+//│ 		N  => [C [N]]
+//│ 		| C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
+//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
+//│ 
+//│ let rec dropWhile_d0 ls_0 =
+//│   (match ls_0 with
+//│     | `N -> 
+//│       (`C((`N)))
+//│     | `C(t_0) -> 
+//│       (if true then
+//│         (dropWhile_d0 t_0)
+//│       else
+//│         (`C(t_0))));;
+//│ (dropWhile_d0 (`C((`N))))
+//│ 
+//│ --------------- ocaml repl result -----------------
+//│ [ok]
+//│   - : [> `C of [ `C of 'a | `N ] as 'a ] = `C `N
+//│ 
+//│ --------------- ocaml repl result -----------------
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
+
+:lhError
+:lhGenOCaml
+:d
+fun dropWhile(ls) = if ls is
+  N then C(N)
+  C(t) then if True then dropWhile(t) else C(t)
+(x => 2)(dropWhile(C(N)))
+//│ |#fun| |dropWhile|(|ls|)| |#=| |#if| |ls| |is|→|N| |#then| |C|(|N|)|↵|C|(|t|)| |#then| |#if| |True| |#then| |dropWhile|(|t|)| |#else| |C|(|t|)|←|↵|(|x| |=>| |2|)|(|dropWhile|(|C|(|N|)|)|)|
+//│ Parsed: {fun dropWhile = ls, => if ls is ‹(N) then C (N,); (C (t,)) then if (True) then dropWhile (t,) else C (t,)›; '(' x, => 2, ')' (dropWhile (C (N,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (fun x⁰ -> 2)(dropWhile^15([C [N]]))
+//│ def dropWhile(ls⁰) = case ls⁰ of {
+//│ 	N  => [C [N]]
+//│ 	| C t⁰ => if [True] then dropWhile^5(t⁰) else [C t⁰]}
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec dropWhile ls_0 =
+//│ 		  (match ls_0 with
+//│ 		    | `N -> 
+//│ 		      (`C((`N)))
+//│ 		    | `C(t_0) -> 
+//│ 		      (if true then
+//│ 		        (dropWhile t_0)
+//│ 		      else
+//│ 		        (`C(t_0))));;
+//│ 		((fun x_0 -> 
+//│ 		  2) (dropWhile (`C((`N)))))
+//│ 		....... ocaml repl result .......
+//│ 		[ok]
+//│ 		                val dropWhile : ([< `C of 'a | `N > `N ] as 'a) -> [> `C of 'a ] = <fun>
+//│ 		....... ocaml repl result .......
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [dropWhile^15] (hopeless to continue)
+//│ 	[dropWhile^15 · dropWhile^5] ---> [dropWhile^15] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (fun x¹ -> 2)(dropWhile₀([C [N]]))
+//│ def dropWhile₀(ls¹) = 
+//│ 	case ls¹ of {
+//│ 		N  => [C [N]]
+//│ 		| C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [N]: 35 --->
+//│ 	case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 30
+//│ [C [N]]: 36 --->
+//│ 	case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 30
+//│ ------------------
+//│ case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 30 --->
+//│ 	[N]: 35
+//│ 	[C [N]]: 36
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [N]: 35 --->
+//│ 	case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 30
+//│ [C [N]]: 36 --->
+//│ 	case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 30
+//│ ------------------
+//│ case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 30 --->
+//│ 	[N]: 35
+//│ 	[C [N]]: 36
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (fun x² -> 2)(dropWhile₀(
+//│ 	let t² = (fun _lh_dummy¹ -> [C [N]])
+//│ 	in (fun _lh_dummy⁰ -> if [True] then dropWhile₀(t²) else [C t²])))
+//│ def dropWhile₀(ls²) = 
+//│ 	ls²(99)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
+//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
+//│ 
+//│ let rec dropWhile_d0 ls_0 =
+//│   (ls_0 99);;
+//│ ((fun x_0 -> 
+//│   2) (dropWhile_d0 (let rec t_0 = (fun _lh_dummy_0 -> 
+//│   (`C((`N)))) in
+//│   (fun _lh_dummy_1 -> 
+//│     (if true then
+//│       (dropWhile_d0 t_0)
+//│     else
+//│       (`C(t_0)))))))
+//│ 
+//│ --------------- ocaml repl result -----------------
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception:                 Line 9, characters 9-14:
+//│ 9 |       (`C(t_0)))))));;
+//│              ^^^^^
+//│ Error: This expression has type 'a -> [> `C of [> `N ] ]
+//│        but an expression was expected of type [> `N ]
+//│ !!!!!!ERROR!!!!!!
+
+:lhError
+:lhGenOCaml
+:d
+fun dropWhile(ls) = if ls is
+  N then N
+  C(t) then if True then dropWhile(t) else C(t)
+fun f(x) = Pair(f(C(N)), f(x))
+f(dropWhile(C(N)))
+//│ |#fun| |dropWhile|(|ls|)| |#=| |#if| |ls| |is|→|N| |#then| |N|↵|C|(|t|)| |#then| |#if| |True| |#then| |dropWhile|(|t|)| |#else| |C|(|t|)|←|↵|#fun| |f|(|x|)| |#=| |Pair|(|f|(|C|(|N|)|)|,| |f|(|x|)|)|↵|f|(|dropWhile|(|C|(|N|)|)|)|
+//│ Parsed: {fun dropWhile = ls, => if ls is ‹(N) then N; (C (t,)) then if (True) then dropWhile (t,) else C (t,)›; fun f = x, => Pair (f (C (N,),), f (x,),); f (dropWhile (C (N,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ f^21(dropWhile^22([C [N]]))
+//│ def dropWhile(ls⁰) = case ls⁰ of {
+//│ 	N  => [N]
+//│ 	| C t⁰ => if [True] then dropWhile^4(t⁰) else [C t⁰]}
+//│ def f(x⁰) = [Pair f^12([C [N]]) f^16(x⁰)]
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec dropWhile ls_0 =
+//│ 		  (match ls_0 with
+//│ 		    | `N -> 
+//│ 		      (`N)
+//│ 		    | `C(t_0) -> 
+//│ 		      (if true then
+//│ 		        (dropWhile t_0)
+//│ 		      else
+//│ 		        (`C(t_0))))
+//│ 		and f x_0 =
+//│ 		  (`Pair((f (`C((`N)))), (f x_0)));;
+//│ 		(f (dropWhile (`C((`N)))))
+//│ 		....... ocaml repl result .......
+//│ 		[ok]
+//│ 		                    val dropWhile : ([< `C of 'a | `N ] as 'a) -> [> `C of 'a | `N ] = <fun>
+//│ 		val f : [> `C of [> `N ] ] -> ([> `Pair of 'a * 'a ] as 'a) = <fun>
+//│ 		....... ocaml repl result .......
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [dropWhile^22] (hopeless to continue)
+//│ 	[dropWhile^22 · dropWhile^4] ---> [dropWhile^22] (using original def)
+//│ [f^21]
+//│ 	[f^21 · f^12] ---> [f^21] (only one)
+//│ 	[f^21 · f^16] ---> [f^21] (only one)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀(dropWhile₀([C [N]]))
+//│ def dropWhile₀(ls¹) = 
+//│ 	case ls¹ of {
+//│ 		N  => [N]
+//│ 		| C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}
+//│ def f₀(x¹) = 
+//│ 	[Pair f₀([C [N]]) f₀(x¹)]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [N]: 49 --->
+//│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 36
+//│ [C [N]]: 50 --->
+//│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 36
+//│ ------------------
+//│ case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 36 --->
+//│ 	[N]: 49
+//│ 	[C [N]]: 50
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [N]: 49 --->
+//│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 36
+//│ [C [N]]: 50 --->
+//│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 36
+//│ ------------------
+//│ case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 36 --->
+//│ 	[N]: 49
+//│ 	[C [N]]: 50
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀(dropWhile₀(
+//│ 	let t² = (fun _lh_dummy¹ -> [N])
+//│ 	in (fun _lh_dummy⁰ -> if [True] then dropWhile₀(t²) else [C t²])))
+//│ def dropWhile₀(ls²) = 
+//│ 	ls²(99)
+//│ def f₀(x²) = 
+//│ 	[Pair f₀([C [N]]) f₀(x²)]
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
+//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
+//│ 
+//│ let rec dropWhile_d0 ls_0 =
+//│   (ls_0 99)
+//│ and f_d0 x_0 =
+//│   (`Pair((f_d0 (`C((`N)))), (f_d0 x_0)));;
+//│ (f_d0 (dropWhile_d0 (let rec t_0 = (fun _lh_dummy_0 -> 
+//│   (`N)) in
+//│   (fun _lh_dummy_1 -> 
+//│     (if true then
+//│       (dropWhile_d0 t_0)
+//│     else
+//│       (`C(t_0)))))))
+//│ 
+//│ --------------- ocaml repl result -----------------
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception:               Lines 2-8, characters 6-19:
+//│ 2 | ......(dropWhile_d0 (let rec t_0 = (fun _lh_dummy_0 -> 
+//│ 3 |   (`N)) in
+//│ 4 |   (fun _lh_dummy_1 -> 
+//│ 5 |     (if true then
+//│ 6 |       (dropWhile_d0 t_0)
+//│ 7 |     else
+//│ 8 |       (`C(t_0))))))...
+//│ Error: This expression has type [> `C of 'a -> [> `N ] | `N ]
+//│        but an expression was expected of type [> `C of [> `N ] ]
+//│        Types for tag `C are incompatible
+//│ !!!!!!ERROR!!!!!!
+
+
+:lhError
+:lhGenOCaml
+:d
+fun dropWhile(ls) = if ls is
+  N then N
+  C(t) then if True then dropWhile(t) else C(t)
+fun f(x) =
+  let x = f(C(N))
+  if x is
+    C(a) then N
+    N then f(x)
+f(dropWhile(C(N)))
+//│ |#fun| |dropWhile|(|ls|)| |#=| |#if| |ls| |is|→|N| |#then| |N|↵|C|(|t|)| |#then| |#if| |True| |#then| |dropWhile|(|t|)| |#else| |C|(|t|)|←|↵|#fun| |f|(|x|)| |#=|→|#let| |x| |#=| |f|(|C|(|N|)|)|↵|#if| |x| |is|→|C|(|a|)| |#then| |N|↵|N| |#then| |f|(|x|)|←|←|↵|f|(|dropWhile|(|C|(|N|)|)|)|
+//│ Parsed: {fun dropWhile = ls, => if ls is ‹(N) then N; (C (t,)) then if (True) then dropWhile (t,) else C (t,)›; fun f = x, => {let x = f (C (N,),); if x is ‹(C (a,)) then N; (N) then f (x,)›}; f (dropWhile (C (N,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ f^24(dropWhile^25([C [N]]))
+//│ def dropWhile(ls⁰) = case ls⁰ of {
+//│ 	N  => [N]
+//│ 	| C t⁰ => if [True] then dropWhile^4(t⁰) else [C t⁰]}
+//│ def f(x⁰) = 
+//│ 	let x¹ = f^12([C [N]])
+//│ 	in case x¹ of {
+//│ 		C a⁰ => [N]
+//│ 		| N  => f^18(x¹)}
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec dropWhile ls_0 =
+//│ 		  (match ls_0 with
+//│ 		    | `N -> 
+//│ 		      (`N)
+//│ 		    | `C(t_0) -> 
+//│ 		      (if true then
+//│ 		        (dropWhile t_0)
+//│ 		      else
+//│ 		        (`C(t_0))))
+//│ 		and f x_0 =
+//│ 		  (let rec x_1 = (f (`C((`N)))) in
+//│ 		    (match x_1 with
+//│ 		      | `C(a_0) -> 
+//│ 		        (`N)
+//│ 		      | `N -> 
+//│ 		        (f x_1)));;
+//│ 		(f (dropWhile (`C((`N)))))
+//│ 		....... ocaml repl result .......
+//│ 		[ok]
+//│ 		                              val dropWhile : ([< `C of 'a | `N ] as 'a) -> [> `C of 'a | `N ] = <fun>
+//│ 		val f : [ `C of [> `N ] as 'a | `N ] -> [ `C of 'a | `N ] = <fun>
+//│ 		....... ocaml repl result .......
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [dropWhile^25] (hopeless to continue)
+//│ 	[dropWhile^25 · dropWhile^4] ---> [dropWhile^25] (using original def)
+//│ [f^24] (hopeless to continue)
+//│ 	[f^24 · f^12] ---> [f^24] (using original def)
+//│ 	[f^24 · f^18] ---> [f^24] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀(dropWhile₀([C [N]]))
+//│ def dropWhile₀(ls¹) = 
+//│ 	case ls¹ of {
+//│ 		N  => [N]
+//│ 		| C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}
+//│ def f₀(x²) = 
+//│ 	let x³ = f₀([C [N]])
+//│ 	in case x³ of {
+//│ 		C a¹ => [N]
+//│ 		| N  => f₀(x³)}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [N]: 35 --->
+//│ 	NoCons
+//│ 	case x³ of {C a¹ => [N] | N  => f₀(x³)}: 39
+//│ [N]: 55 --->
+//│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 51
+//│ [C [N]]: 56 --->
+//│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 51
+//│ ------------------
+//│ case x³ of {C a¹ => [N] | N  => f₀(x³)}: 39 --->
+//│ 	[N]: 35
+//│ case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 51 --->
+//│ 	[N]: 55
+//│ 	[C [N]]: 56
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [N]: 55 --->
+//│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 51
+//│ [C [N]]: 56 --->
+//│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 51
+//│ ------------------
+//│ case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 51 --->
+//│ 	[N]: 55
+//│ 	[C [N]]: 56
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀(dropWhile₀(
+//│ 	let t² = (fun _lh_dummy¹ -> [N])
+//│ 	in (fun _lh_dummy⁰ -> if [True] then dropWhile₀(t²) else [C t²])))
+//│ def dropWhile₀(ls²) = 
+//│ 	ls²(99)
+//│ def f₀(x⁴) = 
+//│ 	let x⁵ = f₀([C [N]])
+//│ 	in case x⁵ of {
+//│ 		C a¹ => [N]
+//│ 		| N  => f₀(x⁵)}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
+//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
+//│ 
+//│ let rec dropWhile_d0 ls_0 =
+//│   (ls_0 99)
+//│ and f_d0 x_0 =
+//│   (let rec x_1 = (f_d0 (`C((`N)))) in
+//│     (match x_1 with
+//│       | `C(a_0) -> 
+//│         (`N)
+//│       | `N -> 
+//│         (f_d0 x_1)));;
+//│ (f_d0 (dropWhile_d0 (let rec t_0 = (fun _lh_dummy_0 -> 
+//│   (`N)) in
+//│   (fun _lh_dummy_1 -> 
+//│     (if true then
+//│       (dropWhile_d0 t_0)
+//│     else
+//│       (`C(t_0)))))))
+//│ 
+//│ --------------- ocaml repl result -----------------
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception:               Lines 2-8, characters 6-19:
+//│ 2 | ......(dropWhile_d0 (let rec t_0 = (fun _lh_dummy_0 -> 
+//│ 3 |   (`N)) in
+//│ 4 |   (fun _lh_dummy_1 -> 
+//│ 5 |     (if true then
+//│ 6 |       (dropWhile_d0 t_0)
+//│ 7 |     else
+//│ 8 |       (`C(t_0))))))...
+//│ Error: This expression has type [> `C of 'a -> [> `N ] | `N ]
+//│        but an expression was expected of type [ `C of [> `N ] | `N ]
+//│        Types for tag `C are incompatible
+//│ !!!!!!ERROR!!!!!!
+
+
+:lhError
+:lhGenOCaml
+:lhNoIter
+:d
+fun break(ls) = if ls is
+  N then
+    let fst = N
+    let snd = N
+    C(fst, words1(snd))
+  C(h,t) then
+    let fst = N
+    let snd = C(h,t)
+    C(fst, words1(snd))
+fun dropWhile(p, ls) = if ls is
+  N then N
+  C(h,t) then if p(h) then dropWhile(p, t) else C(h,t)
+fun words0(ls) =
+  let mident = dropWhile(x => False, ls)
+  if mident is
+    N then N
+    _ then break(mident)
+fun words1(ls) =
+  let mident = dropWhile(x => False, ls)
+  if mident is
+    N then N
+    _ then break(mident)
+(x => 2)(words0)
+//│ |#fun| |break|(|ls|)| |#=| |#if| |ls| |is|→|N| |#then|→|#let| |fst| |#=| |N|↵|#let| |snd| |#=| |N|↵|C|(|fst|,| |words1|(|snd|)|)|←|↵|C|(|h|,|t|)| |#then|→|#let| |fst| |#=| |N|↵|#let| |snd| |#=| |C|(|h|,|t|)|↵|C|(|fst|,| |words1|(|snd|)|)|←|←|↵|#fun| |dropWhile|(|p|,| |ls|)| |#=| |#if| |ls| |is|→|N| |#then| |N|↵|C|(|h|,|t|)| |#then| |#if| |p|(|h|)| |#then| |dropWhile|(|p|,| |t|)| |#else| |C|(|h|,|t|)|←|↵|#fun| |words0|(|ls|)| |#=|→|#let| |mident| |#=| |dropWhile|(|x| |=>| |False|,| |ls|)|↵|#if| |mident| |is|→|N| |#then| |N|↵|_| |#then| |break|(|mident|)|←|←|↵|#fun| |words1|(|ls|)| |#=|→|#let| |mident| |#=| |dropWhile|(|x| |=>| |False|,| |ls|)|↵|#if| |mident| |is|→|N| |#then| |N|↵|_| |#then| |break|(|mident|)|←|←|↵|(|x| |=>| |2|)|(|words0|)|
+//│ Parsed: {fun break = ls, => if ls is ‹(N) then {let fst = N; let snd = N; C (fst, words1 (snd,),)}; (C (h, t,)) then {let fst = N; let snd = C (h, t,); C (fst, words1 (snd,),)}›; fun dropWhile = p, ls, => if ls is ‹(N) then N; (C (h, t,)) then if (p (h,)) then dropWhile (p, t,) else C (h, t,)›; fun words0 = ls, => {let mident = dropWhile (x, => False, ls,); if mident is ‹(N) then N; (_) then break (mident,)›}; fun words1 = ls, => {let mident = dropWhile (x, => False, ls,); if mident is ‹(N) then N; (_) then break (mident,)›}; '(' x, => 2, ')' (words0,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (fun x² -> 2)(words0^71)
+//│ def break(ls⁰) = case ls⁰ of {
+//│ 	N  => 
+//│ 		let fst⁰ = [N]
+//│ 		in let snd⁰ = [N]
+//│ 		in [C fst⁰ words1^5(snd⁰)]
+//│ 	| C h⁰ t⁰ => 
+//│ 		let fst¹ = [N]
+//│ 		in let snd¹ = [C h⁰ t⁰]
+//│ 		in [C fst¹ words1^16(snd¹)]}
+//│ def dropWhile(p⁰, ls¹) = case ls¹ of {
+//│ 	N  => [N]
+//│ 	| C h¹ t¹ => if p⁰(h¹) then dropWhile^29(p⁰, t¹) else [C h¹ t¹]}
+//│ def words0(ls²) = 
+//│ 	let mident⁰ = dropWhile^41((fun x⁰ -> [False]), ls²)
+//│ 	in case mident⁰ of {
+//│ 		N  => [N]
+//│ 		| _  => break^49(mident⁰)}
+//│ def words1(ls³) = 
+//│ 	let mident¹ = dropWhile^55((fun x¹ -> [False]), ls³)
+//│ 	in case mident¹ of {
+//│ 		N  => [N]
+//│ 		| _  => break^63(mident¹)}
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec break ls_0 =
+//│ 		  (match ls_0 with
+//│ 		    | `N -> 
+//│ 		      (let rec fst_0 = (`N) in
+//│ 		        (let rec snd_0 = (`N) in
+//│ 		          (`C(fst_0, (words1 snd_0)))))
+//│ 		    | `C(h_0, t_0) -> 
+//│ 		      (let rec fst_1 = (`N) in
+//│ 		        (let rec snd_1 = (`C(h_0, t_0)) in
+//│ 		          (`C(fst_1, (words1 snd_1))))))
+//│ 		and dropWhile p_0 ls_1 =
+//│ 		  (match ls_1 with
+//│ 		    | `N -> 
+//│ 		      (`N)
+//│ 		    | `C(h_1, t_1) -> 
+//│ 		      (if (p_0 h_1) then
+//│ 		        ((dropWhile p_0) t_1)
+//│ 		      else
+//│ 		        (`C(h_1, t_1))))
+//│ 		and words0 ls_2 =
+//│ 		  (let rec mident_0 = ((dropWhile (fun x_0 -> 
+//│ 		    false)) ls_2) in
+//│ 		    (match mident_0 with
+//│ 		      | `N -> 
+//│ 		        (`N)
+//│ 		      | _ -> 
+//│ 		        (break mident_0)))
+//│ 		and words1 ls_3 =
+//│ 		  (let rec mident_1 = ((dropWhile (fun x_1 -> 
+//│ 		    false)) ls_3) in
+//│ 		    (match mident_1 with
+//│ 		      | `N -> 
+//│ 		        (`N)
+//│ 		      | _ -> 
+//│ 		        (break mident_1)));;
+//│ 		((fun x_2 -> 
+//│ 		  2) words0)
+//│ 		....... ocaml repl result .......
+//│ 		[ok]
+//│ 		                                                                    val break :
+//│ 		  [ `C of 'a * ([ `C of 'a * 'b | `N ] as 'b) | `N ] ->
+//│ 		  ([> `C of [> `N ] * 'c | `N ] as 'c) = <fun>
+//│ 		val dropWhile :
+//│ 		  ('a -> bool) -> ([ `C of 'a * 'b | `N ] as 'b) -> [ `C of 'a * 'b | `N ] =
+//│ 		  <fun>
+//│ 		val words0 :
+//│ 		  ([ `C of 'b * 'a | `N ] as 'a) -> ([> `C of [> `N ] * 'c | `N ] as 'c) =
+//│ 		  <fun>
+//│ 		val words1 :
+//│ 		  ([ `C of 'b * 'a | `N ] as 'a) -> ([> `C of [> `N ] * 'c | `N ] as 'c) =
+//│ 		  <fun>
+//│ 		....... ocaml repl result .......
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [words0^71] (hopeless to continue)
+//│ 	[words0^71 · break^49] (using original def)
+//│ 		[words0^71 · break^49 · words1^16] (using original def)
+//│ 			[words0^71 · break^49 · words1^16 · break^63] ---> [words0^71 · break^49] (using original def)
+//│ 			[words0^71 · break^49 · words1^16 · dropWhile^55] (using original def)
+//│ 				[words0^71 · break^49 · words1^16 · dropWhile^55 · dropWhile^29] ---> [words0^71 · break^49 · words1^16 · dropWhile^55] (using original def)
+//│ 		[words0^71 · break^49 · words1^5] (using original def)
+//│ 			[words0^71 · break^49 · words1^5 · break^63] ---> [words0^71 · break^49] (using original def)
+//│ 			[words0^71 · break^49 · words1^5 · dropWhile^55] (using original def)
+//│ 				[words0^71 · break^49 · words1^5 · dropWhile^55 · dropWhile^29] ---> [words0^71 · break^49 · words1^5 · dropWhile^55] (using original def)
+//│ 	[words0^71 · dropWhile^41] (using original def)
+//│ 		[words0^71 · dropWhile^41 · dropWhile^29] ---> [words0^71 · dropWhile^41] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (fun x⁶ -> 2)(words0₀)
+//│ def words0₀(ls⁴) = 
+//│ 	let mident² = dropWhile₂((fun x³ -> [False]), ls⁴)
+//│ 	in case mident² of {
+//│ 		N  => [N]
+//│ 		| _  => break₀(mident²)}
+//│ 	where
+//│ 	def break₀(ls⁸) = 
+//│ 		case ls⁸ of {
+//│ 			N  => 
+//│ 				let fst² = [N]
+//│ 				in let snd² = [N]
+//│ 				in [C fst² words1₁(snd²)]
+//│ 			| C h⁴ t⁴ => 
+//│ 				let fst³ = [N]
+//│ 				in let snd³ = [C h⁴ t⁴]
+//│ 				in [C fst³ words1₀(snd³)]}
+//│ 		where
+//│ 		def words1₀(ls¹⁰) = 
+//│ 			let mident⁴ = dropWhile₀((fun x⁵ -> [False]), ls¹⁰)
+//│ 			in case mident⁴ of {
+//│ 				N  => [N]
+//│ 				| _  => break₀(mident⁴)}
+//│ 			where
+//│ 			def dropWhile₀(p³, ls⁹) = 
+//│ 				case ls⁹ of {
+//│ 					N  => [N]
+//│ 					| C h⁵ t⁵ => if p³(h⁵) then dropWhile₀(p³, t⁵) else [C h⁵ t⁵]}
+//│ 		def words1₁(ls⁵) = 
+//│ 			let mident³ = dropWhile₁((fun x⁴ -> [False]), ls⁵)
+//│ 			in case mident³ of {
+//│ 				N  => [N]
+//│ 				| _  => break₀(mident³)}
+//│ 			where
+//│ 			def dropWhile₁(p¹, ls⁶) = 
+//│ 				case ls⁶ of {
+//│ 					N  => [N]
+//│ 					| C h² t² => if p¹(h²) then dropWhile₁(p¹, t²) else [C h² t²]}
+//│ 	def dropWhile₂(p², ls⁷) = 
+//│ 		case ls⁷ of {
+//│ 			N  => [N]
+//│ 			| C h³ t³ => if p²(h³) then dropWhile₂(p², t³) else [C h³ t³]}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [N]: 102 --->
+//│ 	case mident³ of {N  => [N] | _  => break₀(mident³)}: 98
+//│ 	case ls⁸ of {N  => let fst² = [N]
+//│ in let snd² = [N]
+//│ in [C fst² words1₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
+//│ in let snd³ = [C h⁴ t⁴]
+//│ in [C fst³ words1₀(snd³)]}: 156
+//│ [C h² t²]: 113 --->
+//│ 	case mident³ of {N  => [N] | _  => break₀(mident³)}: 98
+//│ 	case ls⁸ of {N  => let fst² = [N]
+//│ in let snd² = [N]
+//│ in [C fst² words1₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
+//│ in let snd³ = [C h⁴ t⁴]
+//│ in [C fst³ words1₀(snd³)]}: 156
+//│ [N]: 119 --->
+//│ 	case mident² of {N  => [N] | _  => break₀(mident²)}: 84
+//│ 	case ls⁸ of {N  => let fst² = [N]
+//│ in let snd² = [N]
+//│ in [C fst² words1₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
+//│ in let snd³ = [C h⁴ t⁴]
+//│ in [C fst³ words1₀(snd³)]}: 156
+//│ [C h³ t³]: 130 --->
+//│ 	case mident² of {N  => [N] | _  => break₀(mident²)}: 84
+//│ 	case ls⁸ of {N  => let fst² = [N]
+//│ in let snd² = [N]
+//│ in [C fst² words1₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
+//│ in let snd³ = [C h⁴ t⁴]
+//│ in [C fst³ words1₀(snd³)]}: 156
+//│ [N]: 137 --->
+//│ 	case ls⁶ of {N  => [N] | C h² t² => if p¹(h²) then dropWhile₁(p¹, t²) else [C h² t²]}: 115
+//│ [C h⁴ t⁴]: 148 --->
+//│ 	case ls⁹ of {N  => [N] | C h⁵ t⁵ => if p³(h⁵) then dropWhile₀(p³, t⁵) else [C h⁵ t⁵]}: 172
+//│ [N]: 159 --->
+//│ 	case ls⁸ of {N  => let fst² = [N]
+//│ in let snd² = [N]
+//│ in [C fst² words1₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
+//│ in let snd³ = [C h⁴ t⁴]
+//│ in [C fst³ words1₀(snd³)]}: 156
+//│ 	case mident⁴ of {N  => [N] | _  => break₀(mident⁴)}: 186
+//│ [C h⁵ t⁵]: 170 --->
+//│ 	case ls⁸ of {N  => let fst² = [N]
+//│ in let snd² = [N]
+//│ in [C fst² words1₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
+//│ in let snd³ = [C h⁴ t⁴]
+//│ in [C fst³ words1₀(snd³)]}: 156
+//│ 	case mident⁴ of {N  => [N] | _  => break₀(mident⁴)}: 186
+//│ ------------------
+//│ case mident² of {N  => [N] | _  => break₀(mident²)}: 84 --->
+//│ 	[N]: 119
+//│ 	[C h³ t³]: 130
+//│ case mident³ of {N  => [N] | _  => break₀(mident³)}: 98 --->
+//│ 	[N]: 102
+//│ 	[C h² t²]: 113
+//│ case ls⁶ of {N  => [N] | C h² t² => if p¹(h²) then dropWhile₁(p¹, t²) else [C h² t²]}: 115 --->
+//│ 	[N]: 137
+//│ case ls⁸ of {N  => let fst² = [N]
+//│ in let snd² = [N]
+//│ in [C fst² words1₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
+//│ in let snd³ = [C h⁴ t⁴]
+//│ in [C fst³ words1₀(snd³)]}: 156 --->
+//│ 	[N]: 102
+//│ 	[C h² t²]: 113
+//│ 	[N]: 119
+//│ 	[C h³ t³]: 130
+//│ 	[N]: 159
+//│ 	[C h⁵ t⁵]: 170
+//│ case ls⁹ of {N  => [N] | C h⁵ t⁵ => if p³(h⁵) then dropWhile₀(p³, t⁵) else [C h⁵ t⁵]}: 172 --->
+//│ 	[C h⁴ t⁴]: 148
+//│ case mident⁴ of {N  => [N] | _  => break₀(mident⁴)}: 186 --->
+//│ 	[N]: 159
+//│ 	[C h⁵ t⁵]: 170
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [N]: 137 --->
+//│ 	case ls⁶ of {N  => [N] | C h² t² => if p¹(h²) then dropWhile₁(p¹, t²) else [C h² t²]}: 115
+//│ [C h⁴ t⁴]: 148 --->
+//│ 	case ls⁹ of {N  => [N] | C h⁵ t⁵ => if p³(h⁵) then dropWhile₀(p³, t⁵) else [C h⁵ t⁵]}: 172
+//│ ------------------
+//│ case ls⁶ of {N  => [N] | C h² t² => if p¹(h²) then dropWhile₁(p¹, t²) else [C h² t²]}: 115 --->
+//│ 	[N]: 137
+//│ case ls⁹ of {N  => [N] | C h⁵ t⁵ => if p³(h⁵) then dropWhile₀(p³, t⁵) else [C h⁵ t⁵]}: 172 --->
+//│ 	[C h⁴ t⁴]: 148
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (fun x⁷ -> 2)(words0₀)
+//│ def words0₀(ls¹²) = 
+//│ 	let mident⁶ = dropWhile₂((fun x⁹ -> [False]), ls¹²)
+//│ 	in case mident⁶ of {
+//│ 		N  => [N]
+//│ 		| _  => break₀(mident⁶)}
+//│ 	where
+//│ 	def break₀(ls¹⁷) = 
+//│ 		case ls¹⁷ of {
+//│ 			N  => 
+//│ 				let fst⁴ = [N]
+//│ 				in let snd⁴ = (fun p⁷ -> [N])
+//│ 				in [C fst⁴ words1₁(snd⁴)]
+//│ 			| C h⁴ t⁴ => 
+//│ 				let fst⁵ = [N]
+//│ 				in let snd⁵ = 	
+//│ 					let h⁶ = h⁴
+//│ 					in let t⁶ = t⁴
+//│ 					in (fun p⁸ -> if p⁸(h⁶) then dropWhile₀(p⁸, t⁶) else [C h⁶ t⁶])
+//│ 				in [C fst⁵ words1₀(snd⁵)]}
+//│ 		where
+//│ 		def words1₀(ls¹⁴) = 
+//│ 			let mident⁷ = dropWhile₀((fun x¹⁰ -> [False]), ls¹⁴)
+//│ 			in case mident⁷ of {
+//│ 				N  => [N]
+//│ 				| _  => break₀(mident⁷)}
+//│ 			where
+//│ 			def dropWhile₀(p⁵, ls¹⁵) = 
+//│ 				ls¹⁵(p⁵)
+//│ 		def words1₁(ls¹¹) = 
+//│ 			let mident⁵ = dropWhile₁((fun x⁸ -> [False]), ls¹¹)
+//│ 			in case mident⁵ of {
+//│ 				N  => [N]
+//│ 				| _  => break₀(mident⁵)}
+//│ 			where
+//│ 			def dropWhile₁(p⁶, ls¹⁶) = 
+//│ 				ls¹⁶(p⁶)
+//│ 	def dropWhile₂(p⁴, ls¹³) = 
+//│ 		case ls¹³ of {
+//│ 			N  => [N]
+//│ 			| C h³ t³ => if p⁴(h³) then dropWhile₂(p⁴, t³) else [C h³ t³]}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
+//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
+//│ 
+//│ let rec break_d0 ls_6 =
+//│   (match ls_6 with
+//│     | `N -> 
+//│       (let rec fst_0 = (`N) in
+//│         (let rec snd_0 = (fun p_3 -> 
+//│           (`N)) in
+//│           (`C(fst_0, (words1_d1 snd_0)))))
+//│     | `C(h_1, t_1) -> 
+//│       (let rec fst_1 = (`N) in
+//│         (let rec snd_1 = (let rec h_2 = h_1 in
+//│           (let rec t_2 = t_1 in
+//│             (fun p_4 -> 
+//│               (if (p_4 h_2) then
+//│                 ((dropWhile_d0 p_4) t_2)
+//│               else
+//│                 (`C(h_2, t_2)))))) in
+//│           (`C(fst_1, (words1_d0 snd_1))))))
+//│ and dropWhile_d0 p_1 ls_4 =
+//│   (ls_4 p_1)
+//│ and dropWhile_d1 p_2 ls_5 =
+//│   (ls_5 p_2)
+//│ and dropWhile_d2 p_0 ls_2 =
+//│   (match ls_2 with
+//│     | `N -> 
+//│       (`N)
+//│     | `C(h_0, t_0) -> 
+//│       (if (p_0 h_0) then
+//│         ((dropWhile_d2 p_0) t_0)
+//│       else
+//│         (`C(h_0, t_0))))
+//│ and words0_d0 ls_1 =
+//│   (let rec mident_1 = ((dropWhile_d2 (fun x_2 -> 
+//│     false)) ls_1) in
+//│     (match mident_1 with
+//│       | `N -> 
+//│         (`N)
+//│       | _ -> 
+//│         (break_d0 mident_1)))
+//│ and words1_d0 ls_3 =
+//│   (let rec mident_2 = ((dropWhile_d0 (fun x_3 -> 
+//│     false)) ls_3) in
+//│     (match mident_2 with
+//│       | `N -> 
+//│         (`N)
+//│       | _ -> 
+//│         (break_d0 mident_2)))
+//│ and words1_d1 ls_0 =
+//│   (let rec mident_0 = ((dropWhile_d1 (fun x_1 -> 
+//│     false)) ls_0) in
+//│     (match mident_0 with
+//│       | `N -> 
+//│         (`N)
+//│       | _ -> 
+//│         (break_d0 mident_0)));;
+//│ ((fun x_0 -> 
+//│   2) words0_d0)
+//│ 
+//│ --------------- ocaml repl result -----------------
+//│ !!!!!!ERROR!!!!!!
+//│ java.lang.Exception:                                                                                                           Line 38, characters 18-26:
+//│ 38 |         (break_d0 mident_1)))
+//│                        ^^^^^^^^
+//│ Error: This expression has type
+//│          [> `C of 'a * ([< `C of 'a * 'b | `N ] as 'b) | `N ]
+//│        but an expression was expected of type
+//│          [< `C of 'a * (('a -> bool) -> [> `C of 'a * 'c ] as 'c) | `N > `N ]
+//│        Types for tag `C are incompatible
+//│ !!!!!!ERROR!!!!!!
+

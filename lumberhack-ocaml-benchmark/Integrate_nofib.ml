@@ -247,9 +247,9 @@ let rec enumFromFloat_d0_d0 _lh_enumFromFloat_arg1_3 =
   (lazy (let rec h_7 = _lh_enumFromFloat_arg1_3 in
     (let rec t_6 = (enumFromFloat_d0_d0 (_lh_enumFromFloat_arg1_3 +. 1.0)) in
       (fun f_1_4 -> 
-        (let rec h_8 = (f_1_4 h_7) in
+        (Obj.magic (let rec h_8 = (f_1_4 h_7) in
           (fun _lh_dummy_3_4 -> 
-            h_8))))));;
+            h_8)))))));;
 let rec enumFromFloat_d2_d0 _lh_enumFromFloat_arg1_0 =
   (lazy (let rec hx_0 = _lh_enumFromFloat_arg1_0 in
     (let rec tx_0 = (enumFromFloat_d2_d0 (_lh_enumFromFloat_arg1_0 +. 1.0)) in
@@ -338,9 +338,9 @@ and enumFromFloat_d3_d0 _lh_enumFromFloat_arg1_2 =
         (let rec hy_2 = (f_1_0 h_4) in
           (let rec ty_2 = ((map_lz_d3_d0 f_1_0) t_4) in
             (fun f_1_1 hx_3 tx_3 -> 
-              (let rec h_5 = ((f_1_1 hx_3) hy_2) in
+              (Obj.magic (let rec h_5 = ((f_1_1 hx_3) hy_2) in
                 (fun _lh_dummy_3_3 -> 
-                  h_5)))))))))
+                  h_5))))))))))
 and enumFromFloat_d5_d0 _lh_enumFromFloat_arg1_5 =
   (lazy (let rec h_9 = _lh_enumFromFloat_arg1_5 in
     (let rec t_7 = (enumFromFloat_d5_d0 (_lh_enumFromFloat_arg1_5 +. 1.0)) in
@@ -546,152 +546,152 @@ and zipWith_lz_lz_d4_d0 f_3 xs_0 ys_1 =
         0.0)));;
 
 (* lumberhack_pop_out *)
-let rec enumFromFloat_d0_d0_d0 _lh_enumFromFloat_arg1_6 =
-  (lazy (let rec h_1_0 = _lh_enumFromFloat_arg1_6 in
-    (let rec t_8 = (enumFromFloat_d0_d0_d0 (_lh_enumFromFloat_arg1_6 +. 1.0)) in
-      (fun f_2_2 -> 
-        (let rec h_1_1 = (f_2_2 h_1_0) in
-          (fun _lh_dummy_4_6 -> 
-            h_1_1))))));;
-let rec enumFromFloat_d2_d0_d0 _lh_enumFromFloat_arg1_8 =
-  (lazy (let rec hx_8 = _lh_enumFromFloat_arg1_8 in
-    (let rec tx_8 = (enumFromFloat_d2_d0_d0 (_lh_enumFromFloat_arg1_8 +. 1.0)) in
-      (fun f_3_0 ys_8 -> 
-        ((((Lazy.force ys_8) f_3_0) hx_8) tx_8)))));;
-let rec enumFromFloat_d4_d0_d0 _lh_enumFromFloat_arg1_1_0 =
-  (lazy (let rec hx_1_1 = _lh_enumFromFloat_arg1_1_0 in
-    (let rec tx_1_1 = (enumFromFloat_d4_d0_d0 (_lh_enumFromFloat_arg1_1_0 +. 1.0)) in
-      (fun f_3_9 ys_1_1 -> 
-        ((((Lazy.force ys_1_1) f_3_9) hx_1_1) tx_1_1)))));;
+let rec enumFromFloat_d0_d0_d0 _lh_enumFromFloat_arg1_1_1 =
+  (lazy (let rec h_1_8 = _lh_enumFromFloat_arg1_1_1 in
+    (let rec t_1_5 = (enumFromFloat_d0_d0_d0 (_lh_enumFromFloat_arg1_1_1 +. 1.0)) in
+      (fun f_4_4 -> 
+        (Obj.magic (let rec h_1_9 = (f_4_4 h_1_8) in
+          (fun _lh_dummy_8_2 -> 
+            h_1_9)))))));;
+let rec enumFromFloat_d2_d0_d0 _lh_enumFromFloat_arg1_7 =
+  (lazy (let rec hx_8 = _lh_enumFromFloat_arg1_7 in
+    (let rec tx_8 = (enumFromFloat_d2_d0_d0 (_lh_enumFromFloat_arg1_7 +. 1.0)) in
+      (fun f_2_5 ys_8 -> 
+        ((((Lazy.force ys_8) f_2_5) hx_8) tx_8)))));;
+let rec enumFromFloat_d4_d0_d0 _lh_enumFromFloat_arg1_6 =
+  (lazy (let rec hx_7 = _lh_enumFromFloat_arg1_6 in
+    (let rec tx_7 = (enumFromFloat_d4_d0_d0 (_lh_enumFromFloat_arg1_6 +. 1.0)) in
+      (fun f_2_3 ys_7 -> 
+        ((((Lazy.force ys_7) f_2_3) hx_7) tx_7)))));;
 let rec head_lz_d0_d0_d0 ls_1_1 =
   ((Lazy.force ls_1_1) 99);;
-let rec head_lz_d1_d0_d0 ls_1_9 =
-  ((Lazy.force ls_1_9) 99);;
+let rec head_lz_d1_d0_d0 ls_2_1 =
+  ((Lazy.force ls_2_1) 99);;
 let rec map_lz_d0_d0_d0 f_2_1 ls_1_0 =
   (lazy ((Lazy.force ls_1_0) f_2_1));;
-let rec map_lz_d1_d0_d0 f_4_3 ls_2_3 =
-  (lazy ((Lazy.force ls_2_3) f_4_3));;
-let rec map_lz_d1_d0_d1 f_4_1 ls_2_1 =
-  (lazy ((Lazy.force ls_2_1) f_4_1));;
-let rec map_lz_d2_d0_d0 f_2_8 ls_1_6 =
-  (lazy ((Lazy.force ls_1_6) f_2_8));;
+let rec map_lz_d1_d0_d0 f_3_6 ls_1_8 =
+  (lazy ((Lazy.force ls_1_8) f_3_6));;
+let rec map_lz_d1_d0_d1 f_4_0 ls_2_0 =
+  (lazy ((Lazy.force ls_2_0) f_4_0));;
+let rec map_lz_d2_d0_d0 f_2_4 ls_1_3 =
+  (lazy ((Lazy.force ls_1_3) f_2_4));;
 let rec map_lz_d2_d0_d1 f_4_6 ls_2_4 =
   (lazy ((Lazy.force ls_2_4) f_4_6));;
-let rec map_lz_d3_d0_d0 f_2_4 ls_1_3 =
-  (lazy ((Lazy.force ls_1_3) f_2_4));;
-let rec map_lz_d3_d0_d1 f_2_5 ls_1_4 =
-  (lazy ((Lazy.force ls_1_4) f_2_5));;
-let rec map_lz_d4_d0_d0 f_3_2 ls_1_7 =
-  (lazy ((Lazy.force ls_1_7) f_3_2));;
-let rec map_lz_d4_d0_d1 f_2_3 ls_1_2 =
-  (lazy ((Lazy.force ls_1_2) f_2_3));;
-let rec sumFloat_d0_d0_d0 _lh_sumFloat_arg1_3_1 =
-  (_lh_sumFloat_arg1_3_1 99);;
+let rec map_lz_d3_d0_d0 f_2_2 ls_1_2 =
+  (lazy ((Lazy.force ls_1_2) f_2_2));;
+let rec map_lz_d3_d0_d1 f_2_8 ls_1_6 =
+  (lazy ((Lazy.force ls_1_6) f_2_8));;
+let rec map_lz_d4_d0_d0 f_3_0 ls_1_7 =
+  (lazy ((Lazy.force ls_1_7) f_3_0));;
+let rec map_lz_d4_d0_d1 f_4_2 ls_2_2 =
+  (lazy ((Lazy.force ls_2_2) f_4_2));;
+let rec sumFloat_d0_d0_d0 _lh_sumFloat_arg1_1_0 =
+  (_lh_sumFloat_arg1_1_0 99);;
 let rec sumFloat_d0_d0_d1 _lh_sumFloat_arg1_4_0 =
   (_lh_sumFloat_arg1_4_0 99);;
-let rec sumFloat_d0_d0_d2 _lh_sumFloat_arg1_4_4 =
-  (_lh_sumFloat_arg1_4_4 99);;
-let rec sumFloat_d0_d0_d3 _lh_sumFloat_arg1_3_9 =
-  (_lh_sumFloat_arg1_3_9 99);;
-let rec sumFloat_d0_d0_d4 _lh_sumFloat_arg1_3_4 =
-  (_lh_sumFloat_arg1_3_4 99);;
-let rec sumFloat_d0_d0_d5 _lh_sumFloat_arg1_4_2 =
-  (_lh_sumFloat_arg1_4_2 99);;
-let rec sumFloat_d0_d0_d6 _lh_sumFloat_arg1_2_4 =
-  (_lh_sumFloat_arg1_2_4 99);;
-let rec sumFloat_d0_d0_d7 _lh_sumFloat_arg1_3_0 =
-  (_lh_sumFloat_arg1_3_0 99);;
-let rec sumFloat_d0_d0_d8 _lh_sumFloat_arg1_1_8 =
-  (_lh_sumFloat_arg1_1_8 99);;
-let rec sumFloat_d0_d0_d9 _lh_sumFloat_arg1_3_6 =
-  (_lh_sumFloat_arg1_3_6 99);;
-let rec sumFloat_d1_d0_d0 _lh_sumFloat_arg1_1_1 =
-  (_lh_sumFloat_arg1_1_1 99);;
-let rec sumFloat_d1_d0_d1 _lh_sumFloat_arg1_9 =
+let rec sumFloat_d0_d0_d2 _lh_sumFloat_arg1_9 =
   (_lh_sumFloat_arg1_9 99);;
-let rec sumFloat_d1_d0_d2 _lh_sumFloat_arg1_1_6 =
-  (_lh_sumFloat_arg1_1_6 99);;
-let rec sumFloat_d1_d0_d3 _lh_sumFloat_arg1_2_9 =
-  (_lh_sumFloat_arg1_2_9 99);;
+let rec sumFloat_d0_d0_d3 _lh_sumFloat_arg1_4_2 =
+  (_lh_sumFloat_arg1_4_2 99);;
+let rec sumFloat_d0_d0_d4 _lh_sumFloat_arg1_7 =
+  (_lh_sumFloat_arg1_7 99);;
+let rec sumFloat_d0_d0_d5 _lh_sumFloat_arg1_1_1 =
+  (_lh_sumFloat_arg1_1_1 99);;
+let rec sumFloat_d0_d0_d6 _lh_sumFloat_arg1_2_8 =
+  (_lh_sumFloat_arg1_2_8 99);;
+let rec sumFloat_d0_d0_d7 _lh_sumFloat_arg1_3_1 =
+  (_lh_sumFloat_arg1_3_1 99);;
+let rec sumFloat_d0_d0_d8 _lh_sumFloat_arg1_2_3 =
+  (_lh_sumFloat_arg1_2_3 99);;
+let rec sumFloat_d0_d0_d9 _lh_sumFloat_arg1_2_6 =
+  (_lh_sumFloat_arg1_2_6 99);;
+let rec sumFloat_d1_d0_d0 _lh_sumFloat_arg1_1_7 =
+  (_lh_sumFloat_arg1_1_7 99);;
+let rec sumFloat_d1_d0_d1 _lh_sumFloat_arg1_1_5 =
+  (_lh_sumFloat_arg1_1_5 99);;
+let rec sumFloat_d1_d0_d2 _lh_sumFloat_arg1_2_7 =
+  (_lh_sumFloat_arg1_2_7 99);;
+let rec sumFloat_d1_d0_d3 _lh_sumFloat_arg1_1_3 =
+  (_lh_sumFloat_arg1_1_3 99);;
 let rec sumFloat_d1_d0_d4 _lh_sumFloat_arg1_2_2 =
   (_lh_sumFloat_arg1_2_2 99);;
-let rec sumFloat_d1_d0_d5 _lh_sumFloat_arg1_1_0 =
-  (_lh_sumFloat_arg1_1_0 99);;
-let rec sumFloat_d1_d0_d6 _lh_sumFloat_arg1_1_7 =
-  (_lh_sumFloat_arg1_1_7 99);;
-let rec sumFloat_d1_d0_d7 _lh_sumFloat_arg1_1_9 =
-  (_lh_sumFloat_arg1_1_9 99);;
-let rec sumFloat_d1_d0_d8 _lh_sumFloat_arg1_2_3 =
-  (_lh_sumFloat_arg1_2_3 99);;
-let rec sumFloat_d1_d0_d9 _lh_sumFloat_arg1_5 =
-  (_lh_sumFloat_arg1_5 99);;
-let rec sumFloat_d2_d0_d0 _lh_sumFloat_arg1_2_7 =
-  (_lh_sumFloat_arg1_2_7 99);;
-let rec sumFloat_d2_d0_d1 _lh_sumFloat_arg1_1_2 =
-  (_lh_sumFloat_arg1_1_2 99);;
-let rec sumFloat_d2_d0_d2 _lh_sumFloat_arg1_1_4 =
-  (_lh_sumFloat_arg1_1_4 99);;
-let rec sumFloat_d2_d0_d3 _lh_sumFloat_arg1_4_1 =
-  (_lh_sumFloat_arg1_4_1 99);;
-let rec sumFloat_d2_d0_d4 _lh_sumFloat_arg1_3_2 =
-  (_lh_sumFloat_arg1_3_2 99);;
-let rec sumFloat_d2_d0_d5 _lh_sumFloat_arg1_2_5 =
-  (_lh_sumFloat_arg1_2_5 99);;
-let rec sumFloat_d2_d0_d6 _lh_sumFloat_arg1_2_6 =
-  (_lh_sumFloat_arg1_2_6 99);;
-let rec sumFloat_d2_d0_d7 _lh_sumFloat_arg1_4_5 =
-  (_lh_sumFloat_arg1_4_5 99);;
-let rec sumFloat_d2_d0_d8 _lh_sumFloat_arg1_6 =
-  (_lh_sumFloat_arg1_6 99);;
-let rec sumFloat_d2_d0_d9 _lh_sumFloat_arg1_7 =
-  (_lh_sumFloat_arg1_7 99);;
-let rec sumFloat_d3_d0_d0 _lh_sumFloat_arg1_4_6 =
-  (_lh_sumFloat_arg1_4_6 99);;
-let rec sumFloat_d3_d0_d1 _lh_sumFloat_arg1_3_8 =
-  (_lh_sumFloat_arg1_3_8 99);;
-let rec sumFloat_d3_d0_d2 _lh_sumFloat_arg1_4_3 =
-  (_lh_sumFloat_arg1_4_3 99);;
-let rec sumFloat_d3_d0_d3 _lh_sumFloat_arg1_2_8 =
-  (_lh_sumFloat_arg1_2_8 99);;
-let rec sumFloat_d3_d0_d4 _lh_sumFloat_arg1_1_3 =
-  (_lh_sumFloat_arg1_1_3 99);;
-let rec sumFloat_d3_d0_d5 _lh_sumFloat_arg1_8 =
-  (_lh_sumFloat_arg1_8 99);;
-let rec sumFloat_d3_d0_d6 _lh_sumFloat_arg1_3_7 =
-  (_lh_sumFloat_arg1_3_7 99);;
-let rec sumFloat_d3_d0_d7 _lh_sumFloat_arg1_2_1 =
-  (_lh_sumFloat_arg1_2_1 99);;
-let rec sumFloat_d3_d0_d8 _lh_sumFloat_arg1_3_3 =
-  (_lh_sumFloat_arg1_3_3 99);;
-let rec sumFloat_d3_d0_d9 _lh_sumFloat_arg1_1_5 =
-  (_lh_sumFloat_arg1_1_5 99);;
-let rec sumFloat_d4_d0_d0 _lh_sumFloat_arg1_2_0 =
+let rec sumFloat_d1_d0_d5 _lh_sumFloat_arg1_2_0 =
   (_lh_sumFloat_arg1_2_0 99);;
-let rec sumFloat_d4_d0_d1 _lh_sumFloat_arg1_3_5 =
+let rec sumFloat_d1_d0_d6 _lh_sumFloat_arg1_2_4 =
+  (_lh_sumFloat_arg1_2_4 99);;
+let rec sumFloat_d1_d0_d7 _lh_sumFloat_arg1_4_5 =
+  (_lh_sumFloat_arg1_4_5 99);;
+let rec sumFloat_d1_d0_d8 _lh_sumFloat_arg1_3_0 =
+  (_lh_sumFloat_arg1_3_0 99);;
+let rec sumFloat_d1_d0_d9 _lh_sumFloat_arg1_3_3 =
+  (_lh_sumFloat_arg1_3_3 99);;
+let rec sumFloat_d2_d0_d0 _lh_sumFloat_arg1_3_8 =
+  (_lh_sumFloat_arg1_3_8 99);;
+let rec sumFloat_d2_d0_d1 _lh_sumFloat_arg1_3_5 =
   (_lh_sumFloat_arg1_3_5 99);;
-let rec tail_lz_d0_d0_d0 ls_1_5 =
+let rec sumFloat_d2_d0_d2 _lh_sumFloat_arg1_3_7 =
+  (_lh_sumFloat_arg1_3_7 99);;
+let rec sumFloat_d2_d0_d3 _lh_sumFloat_arg1_3_4 =
+  (_lh_sumFloat_arg1_3_4 99);;
+let rec sumFloat_d2_d0_d4 _lh_sumFloat_arg1_1_2 =
+  (_lh_sumFloat_arg1_1_2 99);;
+let rec sumFloat_d2_d0_d5 _lh_sumFloat_arg1_1_6 =
+  (_lh_sumFloat_arg1_1_6 99);;
+let rec sumFloat_d2_d0_d6 _lh_sumFloat_arg1_1_4 =
+  (_lh_sumFloat_arg1_1_4 99);;
+let rec sumFloat_d2_d0_d7 _lh_sumFloat_arg1_3_6 =
+  (_lh_sumFloat_arg1_3_6 99);;
+let rec sumFloat_d2_d0_d8 _lh_sumFloat_arg1_2_1 =
+  (_lh_sumFloat_arg1_2_1 99);;
+let rec sumFloat_d2_d0_d9 _lh_sumFloat_arg1_4_3 =
+  (_lh_sumFloat_arg1_4_3 99);;
+let rec sumFloat_d3_d0_d0 _lh_sumFloat_arg1_1_9 =
+  (_lh_sumFloat_arg1_1_9 99);;
+let rec sumFloat_d3_d0_d1 _lh_sumFloat_arg1_3_2 =
+  (_lh_sumFloat_arg1_3_2 99);;
+let rec sumFloat_d3_d0_d2 _lh_sumFloat_arg1_8 =
+  (_lh_sumFloat_arg1_8 99);;
+let rec sumFloat_d3_d0_d3 _lh_sumFloat_arg1_3_9 =
+  (_lh_sumFloat_arg1_3_9 99);;
+let rec sumFloat_d3_d0_d4 _lh_sumFloat_arg1_4_1 =
+  (_lh_sumFloat_arg1_4_1 99);;
+let rec sumFloat_d3_d0_d5 _lh_sumFloat_arg1_4_4 =
+  (_lh_sumFloat_arg1_4_4 99);;
+let rec sumFloat_d3_d0_d6 _lh_sumFloat_arg1_2_5 =
+  (_lh_sumFloat_arg1_2_5 99);;
+let rec sumFloat_d3_d0_d7 _lh_sumFloat_arg1_5 =
+  (_lh_sumFloat_arg1_5 99);;
+let rec sumFloat_d3_d0_d8 _lh_sumFloat_arg1_6 =
+  (_lh_sumFloat_arg1_6 99);;
+let rec sumFloat_d3_d0_d9 _lh_sumFloat_arg1_4_6 =
+  (_lh_sumFloat_arg1_4_6 99);;
+let rec sumFloat_d4_d0_d0 _lh_sumFloat_arg1_1_8 =
+  (_lh_sumFloat_arg1_1_8 99);;
+let rec sumFloat_d4_d0_d1 _lh_sumFloat_arg1_2_9 =
+  (_lh_sumFloat_arg1_2_9 99);;
+let rec tail_lz_d0_d0_d0 ls_1_4 =
+  (match (Lazy.force ls_1_4) with
+    | `LH_C(h_1_0, t_8) -> 
+      t_8
+    | `LH_N -> 
+      (failwith "error"));;
+let rec tail_lz_d1_d0_d0 ls_1_5 =
   (match (Lazy.force ls_1_5) with
-    | `LH_C(h_1_2, t_9) -> 
+    | `LH_C(h_1_1, t_9) -> 
       t_9
     | `LH_N -> 
       (failwith "error"));;
-let rec tail_lz_d1_d0_d0 ls_1_8 =
-  (match (Lazy.force ls_1_8) with
-    | `LH_C(h_1_6, t_1_2) -> 
-      t_1_2
-    | `LH_N -> 
-      (failwith "error"));;
-let rec take_lz_d0_d0_d0 n_1_0 ls_2_0 =
+let rec take_lz_d0_d0_d0 n_1_0 ls_1_9 =
   (if (n_1_0 > 0) then
-    ((Lazy.force ls_2_0) n_1_0)
+    ((Lazy.force ls_1_9) n_1_0)
   else
-    (fun _lh_dummy_8_1 -> 
+    (fun _lh_dummy_7_0 -> 
       0.0));;
-let rec take_lz_d0_d0_d1 n_1_1 ls_2_2 =
+let rec take_lz_d0_d0_d1 n_1_1 ls_2_3 =
   (if (n_1_1 > 0) then
-    ((Lazy.force ls_2_2) n_1_1)
+    ((Lazy.force ls_2_3) n_1_1)
   else
-    (fun _lh_dummy_8_2 -> 
+    (fun _lh_dummy_7_1 -> 
       0.0));;
 let rec zipWith_lz_lz_d0_d0_d0 f_4_5 xs_1_0 ys_1_4 =
   (lazy (match (Lazy.force xs_1_0) with
@@ -703,52 +703,114 @@ let rec zipWith_lz_lz_d0_d0_d0 f_4_5 xs_1_0 ys_1_4 =
           (`LH_N))
     | `LH_N -> 
       (`LH_N)));;
-let rec zipWith_lz_lz_d1_d0_d0 f_3_1 xs_6 ys_9 =
-  (lazy (((Lazy.force xs_6) f_3_1) ys_9));;
-let rec zipWith_lz_lz_d2_d0_d0 f_2_9 xs_5 ys_7 =
-  (lazy (((Lazy.force xs_5) f_2_9) ys_7));;
-let rec zipWith_lz_lz_d2_d0_d1 f_4_2 xs_8 ys_1_2 =
-  (lazy (((Lazy.force xs_8) f_4_2) ys_1_2));;
-let rec zipWith_lz_lz_d3_d0_d0 f_4_4 xs_9 ys_1_3 =
+let rec zipWith_lz_lz_d1_d0_d0 f_3_5 xs_6 ys_1_0 =
+  (lazy (((Lazy.force xs_6) f_3_5) ys_1_0));;
+let rec zipWith_lz_lz_d2_d0_d0 f_3_7 xs_7 ys_1_1 =
+  (lazy (((Lazy.force xs_7) f_3_7) ys_1_1));;
+let rec zipWith_lz_lz_d2_d0_d1 f_4_1 xs_8 ys_1_2 =
+  (lazy (((Lazy.force xs_8) f_4_1) ys_1_2));;
+let rec zipWith_lz_lz_d3_d0_d0 f_4_3 xs_9 ys_1_3 =
   (lazy (match (Lazy.force xs_9) with
     | `LH_C(hx_1_2, tx_1_2) -> 
       (match (Lazy.force ys_1_3) with
         | `LH_C(hy_8, ty_8) -> 
-          (`LH_C(((f_4_4 hx_1_2) hy_8), (((zipWith_lz_lz_d3_d0_d0 f_4_4) tx_1_2) ty_8)))
+          (`LH_C(((f_4_3 hx_1_2) hy_8), (((zipWith_lz_lz_d3_d0_d0 f_4_3) tx_1_2) ty_8)))
         | `LH_N -> 
           (`LH_N))
     | `LH_N -> 
       (`LH_N)));;
-let rec enumFromFloat_d1_d0_d0 _lh_enumFromFloat_arg1_1_1 =
-  (lazy (let rec h_1_9 = _lh_enumFromFloat_arg1_1_1 in
-    (let rec t_1_5 = (enumFromFloat_d1_d0_d0 (_lh_enumFromFloat_arg1_1_1 +. 1.0)) in
-      (fun f_4_0 -> 
-        (`LH_C((f_4_0 h_1_9), ((map_lz_d1_d0_d0 f_4_0) t_1_5)))))))
-and enumFromFloat_d3_d0_d0 _lh_enumFromFloat_arg1_7 =
-  (lazy (let rec h_1_3 = _lh_enumFromFloat_arg1_7 in
-    (let rec t_1_0 = (enumFromFloat_d3_d0_d0 (_lh_enumFromFloat_arg1_7 +. 1.0)) in
+let rec enumFromFloat_d1_d0_d0 _lh_enumFromFloat_arg1_9 =
+  (lazy (let rec h_1_4 = _lh_enumFromFloat_arg1_9 in
+    (let rec t_1_1 = (enumFromFloat_d1_d0_d0 (_lh_enumFromFloat_arg1_9 +. 1.0)) in
+      (fun f_2_9 -> 
+        (`LH_C((f_2_9 h_1_4), ((map_lz_d1_d0_d0 f_2_9) t_1_1)))))))
+and enumFromFloat_d3_d0_d0 _lh_enumFromFloat_arg1_8 =
+  (lazy (let rec h_1_2 = _lh_enumFromFloat_arg1_8 in
+    (let rec t_1_0 = (enumFromFloat_d3_d0_d0 (_lh_enumFromFloat_arg1_8 +. 1.0)) in
       (fun f_2_6 -> 
-        (let rec hy_5 = (f_2_6 h_1_3) in
+        (let rec hy_5 = (f_2_6 h_1_2) in
           (let rec ty_5 = ((map_lz_d3_d0_d0 f_2_6) t_1_0) in
-            (fun f_2_7 hx_7 tx_7 -> 
-              (let rec h_1_4 = ((f_2_7 hx_7) hy_5) in
-                (fun _lh_dummy_4_7 -> 
-                  h_1_4)))))))))
-and enumFromFloat_d5_d0_d0 _lh_enumFromFloat_arg1_9 =
-  (lazy (let rec h_1_5 = _lh_enumFromFloat_arg1_9 in
-    (let rec t_1_1 = (enumFromFloat_d5_d0_d0 (_lh_enumFromFloat_arg1_9 +. 1.0)) in
-      (fun f_3_3 -> 
-        (let rec hy_6 = (f_3_3 h_1_5) in
-          (let rec ty_6 = ((map_lz_d4_d0_d0 f_3_3) t_1_1) in
-            (fun f_3_4 hx_9 tx_9 -> 
-              (`LH_C(((f_3_4 hx_9) hy_6), (((zipWith_lz_lz_d2_d0_d0 f_3_4) tx_9) ty_6))))))))))
+            (fun f_2_7 hx_9 tx_9 -> 
+              (Obj.magic (let rec h_1_3 = ((f_2_7 hx_9) hy_5) in
+                (fun _lh_dummy_6_6 -> 
+                  h_1_3))))))))))
+and enumFromFloat_d5_d0_d0 _lh_enumFromFloat_arg1_1_0 =
+  (lazy (let rec h_1_7 = _lh_enumFromFloat_arg1_1_0 in
+    (let rec t_1_4 = (enumFromFloat_d5_d0_d0 (_lh_enumFromFloat_arg1_1_0 +. 1.0)) in
+      (fun f_3_8 -> 
+        (let rec hy_7 = (f_3_8 h_1_7) in
+          (let rec ty_7 = ((map_lz_d4_d0_d0 f_3_8) t_1_4) in
+            (fun f_3_9 hx_1_1 tx_1_1 -> 
+              (`LH_C(((f_3_9 hx_1_1) hy_7), (((zipWith_lz_lz_d2_d0_d0 f_3_9) tx_1_1) ty_7))))))))))
 and etotal_d0_d0_d0 _lh_etotal_arg1_1 =
   (sumFloat_d4_d0_d0 ((take_lz_d0_d0_d0 _lh_etotal_arg1_1) ((map_lz_d2_d0_d0 (fun a_8 -> 
     (a_8 *. a_8))) (((zipWith_lz_lz_d4_d0_d0 (fun a_9 b_4 -> 
     (a_9 -. b_4))) (rtotals_d0_d0_d0 0)) (itotals_d0_d0_d0 0)))))
-and integrate1D_d0_d0_d0 _lh_integrate1D_arg1_7 _lh_integrate1D_arg2_7 _lh_integrate1D_arg3_7 =
+and integrate1D_d0_d0_d0 _lh_integrate1D_arg1_5 _lh_integrate1D_arg2_5 _lh_integrate1D_arg3_5 =
+  (let rec d_5 = ((_lh_integrate1D_arg2_5 -. _lh_integrate1D_arg1_5) /. 8.0) in
+    (d_5 *. (sumFloat_d0_d0_d0 (let rec _lh_sumFloat_LH_C_0_4_6 = ((_lh_integrate1D_arg3_5 _lh_integrate1D_arg1_5) *. 0.5) in
+      (let rec _lh_sumFloat_LH_C_1_4_6 = (let rec _lh_sumFloat_LH_C_0_4_7 = (_lh_integrate1D_arg3_5 (_lh_integrate1D_arg1_5 +. d_5)) in
+        (let rec _lh_sumFloat_LH_C_1_4_7 = (let rec _lh_sumFloat_LH_C_0_4_8 = (_lh_integrate1D_arg3_5 (_lh_integrate1D_arg1_5 +. (2.0 *. d_5))) in
+          (let rec _lh_sumFloat_LH_C_1_4_8 = (let rec _lh_sumFloat_LH_C_0_4_9 = (_lh_integrate1D_arg3_5 (_lh_integrate1D_arg1_5 +. (3.0 *. d_5))) in
+            (let rec _lh_sumFloat_LH_C_1_4_9 = (let rec _lh_sumFloat_LH_C_0_5_0 = (_lh_integrate1D_arg3_5 (_lh_integrate1D_arg1_5 +. (4.0 *. d_5))) in
+              (let rec _lh_sumFloat_LH_C_1_5_0 = (let rec _lh_sumFloat_LH_C_0_5_1 = (_lh_integrate1D_arg3_5 (_lh_integrate1D_arg2_5 -. (3.0 *. d_5))) in
+                (let rec _lh_sumFloat_LH_C_1_5_1 = (let rec _lh_sumFloat_LH_C_0_5_2 = (_lh_integrate1D_arg3_5 (_lh_integrate1D_arg2_5 -. (2.0 *. d_5))) in
+                  (let rec _lh_sumFloat_LH_C_1_5_2 = (let rec _lh_sumFloat_LH_C_0_5_3 = (_lh_integrate1D_arg3_5 (_lh_integrate1D_arg2_5 -. d_5)) in
+                    (let rec _lh_sumFloat_LH_C_1_5_3 = (let rec _lh_sumFloat_LH_C_0_5_4 = ((_lh_integrate1D_arg3_5 _lh_integrate1D_arg2_5) *. 0.5) in
+                      (let rec _lh_sumFloat_LH_C_1_5_4 = (fun _lh_dummy_5_6 -> 
+                        0.0) in
+                        (fun _lh_dummy_5_7 -> 
+                          (_lh_sumFloat_LH_C_0_5_4 +. (sumFloat_d0_d0_d1 _lh_sumFloat_LH_C_1_5_4))))) in
+                      (fun _lh_dummy_5_8 -> 
+                        (_lh_sumFloat_LH_C_0_5_3 +. (sumFloat_d0_d0_d2 _lh_sumFloat_LH_C_1_5_3))))) in
+                    (fun _lh_dummy_5_9 -> 
+                      (_lh_sumFloat_LH_C_0_5_2 +. (sumFloat_d0_d0_d3 _lh_sumFloat_LH_C_1_5_2))))) in
+                  (fun _lh_dummy_6_0 -> 
+                    (_lh_sumFloat_LH_C_0_5_1 +. (sumFloat_d0_d0_d4 _lh_sumFloat_LH_C_1_5_1))))) in
+                (fun _lh_dummy_6_1 -> 
+                  (_lh_sumFloat_LH_C_0_5_0 +. (sumFloat_d0_d0_d5 _lh_sumFloat_LH_C_1_5_0))))) in
+              (fun _lh_dummy_6_2 -> 
+                (_lh_sumFloat_LH_C_0_4_9 +. (sumFloat_d0_d0_d6 _lh_sumFloat_LH_C_1_4_9))))) in
+            (fun _lh_dummy_6_3 -> 
+              (_lh_sumFloat_LH_C_0_4_8 +. (sumFloat_d0_d0_d7 _lh_sumFloat_LH_C_1_4_8))))) in
+          (fun _lh_dummy_6_4 -> 
+            (_lh_sumFloat_LH_C_0_4_7 +. (sumFloat_d0_d0_d8 _lh_sumFloat_LH_C_1_4_7))))) in
+        (fun _lh_dummy_6_5 -> 
+          (_lh_sumFloat_LH_C_0_4_6 +. (sumFloat_d0_d0_d9 _lh_sumFloat_LH_C_1_4_6))))))))
+and integrate1D_d1_d0_d0 _lh_integrate1D_arg1_6 _lh_integrate1D_arg2_6 _lh_integrate1D_arg3_6 =
+  (let rec d_6 = ((_lh_integrate1D_arg2_6 -. _lh_integrate1D_arg1_6) /. 8.0) in
+    (d_6 *. (sumFloat_d1_d0_d0 (let rec _lh_sumFloat_LH_C_0_5_6 = ((_lh_integrate1D_arg3_6 _lh_integrate1D_arg1_6) *. 0.5) in
+      (let rec _lh_sumFloat_LH_C_1_5_6 = (let rec _lh_sumFloat_LH_C_0_5_7 = (_lh_integrate1D_arg3_6 (_lh_integrate1D_arg1_6 +. d_6)) in
+        (let rec _lh_sumFloat_LH_C_1_5_7 = (let rec _lh_sumFloat_LH_C_0_5_8 = (_lh_integrate1D_arg3_6 (_lh_integrate1D_arg1_6 +. (2.0 *. d_6))) in
+          (let rec _lh_sumFloat_LH_C_1_5_8 = (let rec _lh_sumFloat_LH_C_0_5_9 = (_lh_integrate1D_arg3_6 (_lh_integrate1D_arg1_6 +. (3.0 *. d_6))) in
+            (let rec _lh_sumFloat_LH_C_1_5_9 = (let rec _lh_sumFloat_LH_C_0_6_0 = (_lh_integrate1D_arg3_6 (_lh_integrate1D_arg1_6 +. (4.0 *. d_6))) in
+              (let rec _lh_sumFloat_LH_C_1_6_0 = (let rec _lh_sumFloat_LH_C_0_6_1 = (_lh_integrate1D_arg3_6 (_lh_integrate1D_arg2_6 -. (3.0 *. d_6))) in
+                (let rec _lh_sumFloat_LH_C_1_6_1 = (let rec _lh_sumFloat_LH_C_0_6_2 = (_lh_integrate1D_arg3_6 (_lh_integrate1D_arg2_6 -. (2.0 *. d_6))) in
+                  (let rec _lh_sumFloat_LH_C_1_6_2 = (let rec _lh_sumFloat_LH_C_0_6_3 = (_lh_integrate1D_arg3_6 (_lh_integrate1D_arg2_6 -. d_6)) in
+                    (let rec _lh_sumFloat_LH_C_1_6_3 = (let rec _lh_sumFloat_LH_C_0_6_4 = ((_lh_integrate1D_arg3_6 _lh_integrate1D_arg2_6) *. 0.5) in
+                      (let rec _lh_sumFloat_LH_C_1_6_4 = (fun _lh_dummy_7_2 -> 
+                        0.0) in
+                        (fun _lh_dummy_7_3 -> 
+                          (_lh_sumFloat_LH_C_0_6_4 +. (sumFloat_d1_d0_d1 _lh_sumFloat_LH_C_1_6_4))))) in
+                      (fun _lh_dummy_7_4 -> 
+                        (_lh_sumFloat_LH_C_0_6_3 +. (sumFloat_d1_d0_d2 _lh_sumFloat_LH_C_1_6_3))))) in
+                    (fun _lh_dummy_7_5 -> 
+                      (_lh_sumFloat_LH_C_0_6_2 +. (sumFloat_d1_d0_d3 _lh_sumFloat_LH_C_1_6_2))))) in
+                  (fun _lh_dummy_7_6 -> 
+                    (_lh_sumFloat_LH_C_0_6_1 +. (sumFloat_d1_d0_d4 _lh_sumFloat_LH_C_1_6_1))))) in
+                (fun _lh_dummy_7_7 -> 
+                  (_lh_sumFloat_LH_C_0_6_0 +. (sumFloat_d1_d0_d5 _lh_sumFloat_LH_C_1_6_0))))) in
+              (fun _lh_dummy_7_8 -> 
+                (_lh_sumFloat_LH_C_0_5_9 +. (sumFloat_d1_d0_d6 _lh_sumFloat_LH_C_1_5_9))))) in
+            (fun _lh_dummy_7_9 -> 
+              (_lh_sumFloat_LH_C_0_5_8 +. (sumFloat_d1_d0_d7 _lh_sumFloat_LH_C_1_5_8))))) in
+          (fun _lh_dummy_8_0 -> 
+            (_lh_sumFloat_LH_C_0_5_7 +. (sumFloat_d1_d0_d8 _lh_sumFloat_LH_C_1_5_7))))) in
+        (fun _lh_dummy_8_1 -> 
+          (_lh_sumFloat_LH_C_0_5_6 +. (sumFloat_d1_d0_d9 _lh_sumFloat_LH_C_1_5_6))))))))
+and integrate1D_d2_d0_d0 _lh_integrate1D_arg1_7 _lh_integrate1D_arg2_7 _lh_integrate1D_arg3_7 =
   (let rec d_7 = ((_lh_integrate1D_arg2_7 -. _lh_integrate1D_arg1_7) /. 8.0) in
-    (d_7 *. (sumFloat_d0_d0_d0 (let rec _lh_sumFloat_LH_C_0_6_5 = ((_lh_integrate1D_arg3_7 _lh_integrate1D_arg1_7) *. 0.5) in
+    (d_7 *. (sumFloat_d2_d0_d9 (let rec _lh_sumFloat_LH_C_0_6_5 = ((_lh_integrate1D_arg3_7 _lh_integrate1D_arg1_7) *. 0.5) in
       (let rec _lh_sumFloat_LH_C_1_6_5 = (let rec _lh_sumFloat_LH_C_0_6_6 = (_lh_integrate1D_arg3_7 (_lh_integrate1D_arg1_7 +. d_7)) in
         (let rec _lh_sumFloat_LH_C_1_6_6 = (let rec _lh_sumFloat_LH_C_0_6_7 = (_lh_integrate1D_arg3_7 (_lh_integrate1D_arg1_7 +. (2.0 *. d_7))) in
           (let rec _lh_sumFloat_LH_C_1_6_7 = (let rec _lh_sumFloat_LH_C_0_6_8 = (_lh_integrate1D_arg3_7 (_lh_integrate1D_arg1_7 +. (3.0 *. d_7))) in
@@ -760,57 +822,26 @@ and integrate1D_d0_d0_d0 _lh_integrate1D_arg1_7 _lh_integrate1D_arg2_7 _lh_integ
                       (let rec _lh_sumFloat_LH_C_1_7_3 = (fun _lh_dummy_8_3 -> 
                         0.0) in
                         (fun _lh_dummy_8_4 -> 
-                          (_lh_sumFloat_LH_C_0_7_3 +. (sumFloat_d0_d0_d1 _lh_sumFloat_LH_C_1_7_3))))) in
+                          (_lh_sumFloat_LH_C_0_7_3 +. (sumFloat_d2_d0_d0 _lh_sumFloat_LH_C_1_7_3))))) in
                       (fun _lh_dummy_8_5 -> 
-                        (_lh_sumFloat_LH_C_0_7_2 +. (sumFloat_d0_d0_d2 _lh_sumFloat_LH_C_1_7_2))))) in
+                        (_lh_sumFloat_LH_C_0_7_2 +. (sumFloat_d2_d0_d1 _lh_sumFloat_LH_C_1_7_2))))) in
                     (fun _lh_dummy_8_6 -> 
-                      (_lh_sumFloat_LH_C_0_7_1 +. (sumFloat_d0_d0_d3 _lh_sumFloat_LH_C_1_7_1))))) in
+                      (_lh_sumFloat_LH_C_0_7_1 +. (sumFloat_d2_d0_d2 _lh_sumFloat_LH_C_1_7_1))))) in
                   (fun _lh_dummy_8_7 -> 
-                    (_lh_sumFloat_LH_C_0_7_0 +. (sumFloat_d0_d0_d4 _lh_sumFloat_LH_C_1_7_0))))) in
+                    (_lh_sumFloat_LH_C_0_7_0 +. (sumFloat_d2_d0_d3 _lh_sumFloat_LH_C_1_7_0))))) in
                 (fun _lh_dummy_8_8 -> 
-                  (_lh_sumFloat_LH_C_0_6_9 +. (sumFloat_d0_d0_d5 _lh_sumFloat_LH_C_1_6_9))))) in
+                  (_lh_sumFloat_LH_C_0_6_9 +. (sumFloat_d2_d0_d4 _lh_sumFloat_LH_C_1_6_9))))) in
               (fun _lh_dummy_8_9 -> 
-                (_lh_sumFloat_LH_C_0_6_8 +. (sumFloat_d0_d0_d6 _lh_sumFloat_LH_C_1_6_8))))) in
+                (_lh_sumFloat_LH_C_0_6_8 +. (sumFloat_d2_d0_d5 _lh_sumFloat_LH_C_1_6_8))))) in
             (fun _lh_dummy_9_0 -> 
-              (_lh_sumFloat_LH_C_0_6_7 +. (sumFloat_d0_d0_d7 _lh_sumFloat_LH_C_1_6_7))))) in
+              (_lh_sumFloat_LH_C_0_6_7 +. (sumFloat_d2_d0_d6 _lh_sumFloat_LH_C_1_6_7))))) in
           (fun _lh_dummy_9_1 -> 
-            (_lh_sumFloat_LH_C_0_6_6 +. (sumFloat_d0_d0_d8 _lh_sumFloat_LH_C_1_6_6))))) in
+            (_lh_sumFloat_LH_C_0_6_6 +. (sumFloat_d2_d0_d7 _lh_sumFloat_LH_C_1_6_6))))) in
         (fun _lh_dummy_9_2 -> 
-          (_lh_sumFloat_LH_C_0_6_5 +. (sumFloat_d0_d0_d9 _lh_sumFloat_LH_C_1_6_5))))))))
-and integrate1D_d1_d0_d0 _lh_integrate1D_arg1_5 _lh_integrate1D_arg2_5 _lh_integrate1D_arg3_5 =
-  (let rec d_5 = ((_lh_integrate1D_arg2_5 -. _lh_integrate1D_arg1_5) /. 8.0) in
-    (d_5 *. (sumFloat_d1_d0_d0 (let rec _lh_sumFloat_LH_C_0_4_6 = ((_lh_integrate1D_arg3_5 _lh_integrate1D_arg1_5) *. 0.5) in
-      (let rec _lh_sumFloat_LH_C_1_4_6 = (let rec _lh_sumFloat_LH_C_0_4_7 = (_lh_integrate1D_arg3_5 (_lh_integrate1D_arg1_5 +. d_5)) in
-        (let rec _lh_sumFloat_LH_C_1_4_7 = (let rec _lh_sumFloat_LH_C_0_4_8 = (_lh_integrate1D_arg3_5 (_lh_integrate1D_arg1_5 +. (2.0 *. d_5))) in
-          (let rec _lh_sumFloat_LH_C_1_4_8 = (let rec _lh_sumFloat_LH_C_0_4_9 = (_lh_integrate1D_arg3_5 (_lh_integrate1D_arg1_5 +. (3.0 *. d_5))) in
-            (let rec _lh_sumFloat_LH_C_1_4_9 = (let rec _lh_sumFloat_LH_C_0_5_0 = (_lh_integrate1D_arg3_5 (_lh_integrate1D_arg1_5 +. (4.0 *. d_5))) in
-              (let rec _lh_sumFloat_LH_C_1_5_0 = (let rec _lh_sumFloat_LH_C_0_5_1 = (_lh_integrate1D_arg3_5 (_lh_integrate1D_arg2_5 -. (3.0 *. d_5))) in
-                (let rec _lh_sumFloat_LH_C_1_5_1 = (let rec _lh_sumFloat_LH_C_0_5_2 = (_lh_integrate1D_arg3_5 (_lh_integrate1D_arg2_5 -. (2.0 *. d_5))) in
-                  (let rec _lh_sumFloat_LH_C_1_5_2 = (let rec _lh_sumFloat_LH_C_0_5_3 = (_lh_integrate1D_arg3_5 (_lh_integrate1D_arg2_5 -. d_5)) in
-                    (let rec _lh_sumFloat_LH_C_1_5_3 = (let rec _lh_sumFloat_LH_C_0_5_4 = ((_lh_integrate1D_arg3_5 _lh_integrate1D_arg2_5) *. 0.5) in
-                      (let rec _lh_sumFloat_LH_C_1_5_4 = (fun _lh_dummy_5_8 -> 
-                        0.0) in
-                        (fun _lh_dummy_5_9 -> 
-                          (_lh_sumFloat_LH_C_0_5_4 +. (sumFloat_d1_d0_d1 _lh_sumFloat_LH_C_1_5_4))))) in
-                      (fun _lh_dummy_6_0 -> 
-                        (_lh_sumFloat_LH_C_0_5_3 +. (sumFloat_d1_d0_d2 _lh_sumFloat_LH_C_1_5_3))))) in
-                    (fun _lh_dummy_6_1 -> 
-                      (_lh_sumFloat_LH_C_0_5_2 +. (sumFloat_d1_d0_d3 _lh_sumFloat_LH_C_1_5_2))))) in
-                  (fun _lh_dummy_6_2 -> 
-                    (_lh_sumFloat_LH_C_0_5_1 +. (sumFloat_d1_d0_d4 _lh_sumFloat_LH_C_1_5_1))))) in
-                (fun _lh_dummy_6_3 -> 
-                  (_lh_sumFloat_LH_C_0_5_0 +. (sumFloat_d1_d0_d5 _lh_sumFloat_LH_C_1_5_0))))) in
-              (fun _lh_dummy_6_4 -> 
-                (_lh_sumFloat_LH_C_0_4_9 +. (sumFloat_d1_d0_d6 _lh_sumFloat_LH_C_1_4_9))))) in
-            (fun _lh_dummy_6_5 -> 
-              (_lh_sumFloat_LH_C_0_4_8 +. (sumFloat_d1_d0_d7 _lh_sumFloat_LH_C_1_4_8))))) in
-          (fun _lh_dummy_6_6 -> 
-            (_lh_sumFloat_LH_C_0_4_7 +. (sumFloat_d1_d0_d8 _lh_sumFloat_LH_C_1_4_7))))) in
-        (fun _lh_dummy_6_7 -> 
-          (_lh_sumFloat_LH_C_0_4_6 +. (sumFloat_d1_d0_d9 _lh_sumFloat_LH_C_1_4_6))))))))
-and integrate1D_d2_d0_d0 _lh_integrate1D_arg1_4 _lh_integrate1D_arg2_4 _lh_integrate1D_arg3_4 =
+          (_lh_sumFloat_LH_C_0_6_5 +. (sumFloat_d2_d0_d8 _lh_sumFloat_LH_C_1_6_5))))))))
+and integrate1D_d3_d0_d0 _lh_integrate1D_arg1_4 _lh_integrate1D_arg2_4 _lh_integrate1D_arg3_4 =
   (let rec d_4 = ((_lh_integrate1D_arg2_4 -. _lh_integrate1D_arg1_4) /. 8.0) in
-    (d_4 *. (sumFloat_d2_d0_d9 (let rec _lh_sumFloat_LH_C_0_3_7 = ((_lh_integrate1D_arg3_4 _lh_integrate1D_arg1_4) *. 0.5) in
+    (d_4 *. (sumFloat_d3_d0_d0 (let rec _lh_sumFloat_LH_C_0_3_7 = ((_lh_integrate1D_arg3_4 _lh_integrate1D_arg1_4) *. 0.5) in
       (let rec _lh_sumFloat_LH_C_1_3_7 = (let rec _lh_sumFloat_LH_C_0_3_8 = (_lh_integrate1D_arg3_4 (_lh_integrate1D_arg1_4 +. d_4)) in
         (let rec _lh_sumFloat_LH_C_1_3_8 = (let rec _lh_sumFloat_LH_C_0_3_9 = (_lh_integrate1D_arg3_4 (_lh_integrate1D_arg1_4 +. (2.0 *. d_4))) in
           (let rec _lh_sumFloat_LH_C_1_3_9 = (let rec _lh_sumFloat_LH_C_0_4_0 = (_lh_integrate1D_arg3_4 (_lh_integrate1D_arg1_4 +. (3.0 *. d_4))) in
@@ -819,80 +850,49 @@ and integrate1D_d2_d0_d0 _lh_integrate1D_arg1_4 _lh_integrate1D_arg2_4 _lh_integ
                 (let rec _lh_sumFloat_LH_C_1_4_2 = (let rec _lh_sumFloat_LH_C_0_4_3 = (_lh_integrate1D_arg3_4 (_lh_integrate1D_arg2_4 -. (2.0 *. d_4))) in
                   (let rec _lh_sumFloat_LH_C_1_4_3 = (let rec _lh_sumFloat_LH_C_0_4_4 = (_lh_integrate1D_arg3_4 (_lh_integrate1D_arg2_4 -. d_4)) in
                     (let rec _lh_sumFloat_LH_C_1_4_4 = (let rec _lh_sumFloat_LH_C_0_4_5 = ((_lh_integrate1D_arg3_4 _lh_integrate1D_arg2_4) *. 0.5) in
-                      (let rec _lh_sumFloat_LH_C_1_4_5 = (fun _lh_dummy_4_8 -> 
+                      (let rec _lh_sumFloat_LH_C_1_4_5 = (fun _lh_dummy_4_6 -> 
                         0.0) in
-                        (fun _lh_dummy_4_9 -> 
-                          (_lh_sumFloat_LH_C_0_4_5 +. (sumFloat_d2_d0_d0 _lh_sumFloat_LH_C_1_4_5))))) in
-                      (fun _lh_dummy_5_0 -> 
-                        (_lh_sumFloat_LH_C_0_4_4 +. (sumFloat_d2_d0_d1 _lh_sumFloat_LH_C_1_4_4))))) in
-                    (fun _lh_dummy_5_1 -> 
-                      (_lh_sumFloat_LH_C_0_4_3 +. (sumFloat_d2_d0_d2 _lh_sumFloat_LH_C_1_4_3))))) in
-                  (fun _lh_dummy_5_2 -> 
-                    (_lh_sumFloat_LH_C_0_4_2 +. (sumFloat_d2_d0_d3 _lh_sumFloat_LH_C_1_4_2))))) in
-                (fun _lh_dummy_5_3 -> 
-                  (_lh_sumFloat_LH_C_0_4_1 +. (sumFloat_d2_d0_d4 _lh_sumFloat_LH_C_1_4_1))))) in
-              (fun _lh_dummy_5_4 -> 
-                (_lh_sumFloat_LH_C_0_4_0 +. (sumFloat_d2_d0_d5 _lh_sumFloat_LH_C_1_4_0))))) in
-            (fun _lh_dummy_5_5 -> 
-              (_lh_sumFloat_LH_C_0_3_9 +. (sumFloat_d2_d0_d6 _lh_sumFloat_LH_C_1_3_9))))) in
-          (fun _lh_dummy_5_6 -> 
-            (_lh_sumFloat_LH_C_0_3_8 +. (sumFloat_d2_d0_d7 _lh_sumFloat_LH_C_1_3_8))))) in
-        (fun _lh_dummy_5_7 -> 
-          (_lh_sumFloat_LH_C_0_3_7 +. (sumFloat_d2_d0_d8 _lh_sumFloat_LH_C_1_3_7))))))))
-and integrate1D_d3_d0_d0 _lh_integrate1D_arg1_6 _lh_integrate1D_arg2_6 _lh_integrate1D_arg3_6 =
-  (let rec d_6 = ((_lh_integrate1D_arg2_6 -. _lh_integrate1D_arg1_6) /. 8.0) in
-    (d_6 *. (sumFloat_d3_d0_d0 (let rec _lh_sumFloat_LH_C_0_5_6 = ((_lh_integrate1D_arg3_6 _lh_integrate1D_arg1_6) *. 0.5) in
-      (let rec _lh_sumFloat_LH_C_1_5_6 = (let rec _lh_sumFloat_LH_C_0_5_7 = (_lh_integrate1D_arg3_6 (_lh_integrate1D_arg1_6 +. d_6)) in
-        (let rec _lh_sumFloat_LH_C_1_5_7 = (let rec _lh_sumFloat_LH_C_0_5_8 = (_lh_integrate1D_arg3_6 (_lh_integrate1D_arg1_6 +. (2.0 *. d_6))) in
-          (let rec _lh_sumFloat_LH_C_1_5_8 = (let rec _lh_sumFloat_LH_C_0_5_9 = (_lh_integrate1D_arg3_6 (_lh_integrate1D_arg1_6 +. (3.0 *. d_6))) in
-            (let rec _lh_sumFloat_LH_C_1_5_9 = (let rec _lh_sumFloat_LH_C_0_6_0 = (_lh_integrate1D_arg3_6 (_lh_integrate1D_arg1_6 +. (4.0 *. d_6))) in
-              (let rec _lh_sumFloat_LH_C_1_6_0 = (let rec _lh_sumFloat_LH_C_0_6_1 = (_lh_integrate1D_arg3_6 (_lh_integrate1D_arg2_6 -. (3.0 *. d_6))) in
-                (let rec _lh_sumFloat_LH_C_1_6_1 = (let rec _lh_sumFloat_LH_C_0_6_2 = (_lh_integrate1D_arg3_6 (_lh_integrate1D_arg2_6 -. (2.0 *. d_6))) in
-                  (let rec _lh_sumFloat_LH_C_1_6_2 = (let rec _lh_sumFloat_LH_C_0_6_3 = (_lh_integrate1D_arg3_6 (_lh_integrate1D_arg2_6 -. d_6)) in
-                    (let rec _lh_sumFloat_LH_C_1_6_3 = (let rec _lh_sumFloat_LH_C_0_6_4 = ((_lh_integrate1D_arg3_6 _lh_integrate1D_arg2_6) *. 0.5) in
-                      (let rec _lh_sumFloat_LH_C_1_6_4 = (fun _lh_dummy_7_1 -> 
-                        0.0) in
-                        (fun _lh_dummy_7_2 -> 
-                          (_lh_sumFloat_LH_C_0_6_4 +. (sumFloat_d3_d0_d1 _lh_sumFloat_LH_C_1_6_4))))) in
-                      (fun _lh_dummy_7_3 -> 
-                        (_lh_sumFloat_LH_C_0_6_3 +. (sumFloat_d3_d0_d2 _lh_sumFloat_LH_C_1_6_3))))) in
-                    (fun _lh_dummy_7_4 -> 
-                      (_lh_sumFloat_LH_C_0_6_2 +. (sumFloat_d3_d0_d3 _lh_sumFloat_LH_C_1_6_2))))) in
-                  (fun _lh_dummy_7_5 -> 
-                    (_lh_sumFloat_LH_C_0_6_1 +. (sumFloat_d3_d0_d4 _lh_sumFloat_LH_C_1_6_1))))) in
-                (fun _lh_dummy_7_6 -> 
-                  (_lh_sumFloat_LH_C_0_6_0 +. (sumFloat_d3_d0_d5 _lh_sumFloat_LH_C_1_6_0))))) in
-              (fun _lh_dummy_7_7 -> 
-                (_lh_sumFloat_LH_C_0_5_9 +. (sumFloat_d3_d0_d6 _lh_sumFloat_LH_C_1_5_9))))) in
-            (fun _lh_dummy_7_8 -> 
-              (_lh_sumFloat_LH_C_0_5_8 +. (sumFloat_d3_d0_d7 _lh_sumFloat_LH_C_1_5_8))))) in
-          (fun _lh_dummy_7_9 -> 
-            (_lh_sumFloat_LH_C_0_5_7 +. (sumFloat_d3_d0_d8 _lh_sumFloat_LH_C_1_5_7))))) in
-        (fun _lh_dummy_8_0 -> 
-          (_lh_sumFloat_LH_C_0_5_6 +. (sumFloat_d3_d0_d9 _lh_sumFloat_LH_C_1_5_6))))))))
-and integrate2D_d0_d0_d0 _lh_integrate2D_arg1_3 _lh_integrate2D_arg2_3 _lh_integrate2D_arg3_3 _lh_integrate2D_arg4_3 _lh_integrate2D_arg5_3 =
-  (((integrate1D_d0_d0_d0 _lh_integrate2D_arg3_3) _lh_integrate2D_arg4_3) (fun y_7 -> 
-    (((integrate1D_d1_d0_d0 _lh_integrate2D_arg1_3) _lh_integrate2D_arg2_3) (fun x_7 -> 
-      ((_lh_integrate2D_arg5_3 x_7) y_7)))))
-and integrate2D_d1_d0_d0 _lh_integrate2D_arg1_2 _lh_integrate2D_arg2_2 _lh_integrate2D_arg3_2 _lh_integrate2D_arg4_2 _lh_integrate2D_arg5_2 =
-  (((integrate1D_d2_d0_d0 _lh_integrate2D_arg3_2) _lh_integrate2D_arg4_2) (fun y_5 -> 
-    (((integrate1D_d3_d0_d0 _lh_integrate2D_arg1_2) _lh_integrate2D_arg2_2) (fun x_5 -> 
-      ((_lh_integrate2D_arg5_2 x_5) y_5)))))
-and ints_d0_d0_d0 _lh_ints_arg1_1_0 =
+                        (fun _lh_dummy_4_7 -> 
+                          (_lh_sumFloat_LH_C_0_4_5 +. (sumFloat_d3_d0_d1 _lh_sumFloat_LH_C_1_4_5))))) in
+                      (fun _lh_dummy_4_8 -> 
+                        (_lh_sumFloat_LH_C_0_4_4 +. (sumFloat_d3_d0_d2 _lh_sumFloat_LH_C_1_4_4))))) in
+                    (fun _lh_dummy_4_9 -> 
+                      (_lh_sumFloat_LH_C_0_4_3 +. (sumFloat_d3_d0_d3 _lh_sumFloat_LH_C_1_4_3))))) in
+                  (fun _lh_dummy_5_0 -> 
+                    (_lh_sumFloat_LH_C_0_4_2 +. (sumFloat_d3_d0_d4 _lh_sumFloat_LH_C_1_4_2))))) in
+                (fun _lh_dummy_5_1 -> 
+                  (_lh_sumFloat_LH_C_0_4_1 +. (sumFloat_d3_d0_d5 _lh_sumFloat_LH_C_1_4_1))))) in
+              (fun _lh_dummy_5_2 -> 
+                (_lh_sumFloat_LH_C_0_4_0 +. (sumFloat_d3_d0_d6 _lh_sumFloat_LH_C_1_4_0))))) in
+            (fun _lh_dummy_5_3 -> 
+              (_lh_sumFloat_LH_C_0_3_9 +. (sumFloat_d3_d0_d7 _lh_sumFloat_LH_C_1_3_9))))) in
+          (fun _lh_dummy_5_4 -> 
+            (_lh_sumFloat_LH_C_0_3_8 +. (sumFloat_d3_d0_d8 _lh_sumFloat_LH_C_1_3_8))))) in
+        (fun _lh_dummy_5_5 -> 
+          (_lh_sumFloat_LH_C_0_3_7 +. (sumFloat_d3_d0_d9 _lh_sumFloat_LH_C_1_3_7))))))))
+and integrate2D_d0_d0_d0 _lh_integrate2D_arg1_2 _lh_integrate2D_arg2_2 _lh_integrate2D_arg3_2 _lh_integrate2D_arg4_2 _lh_integrate2D_arg5_2 =
+  (((integrate1D_d0_d0_d0 _lh_integrate2D_arg3_2) _lh_integrate2D_arg4_2) (fun y_4 -> 
+    (((integrate1D_d1_d0_d0 _lh_integrate2D_arg1_2) _lh_integrate2D_arg2_2) (fun x_4 -> 
+      ((_lh_integrate2D_arg5_2 x_4) y_4)))))
+and integrate2D_d1_d0_d0 _lh_integrate2D_arg1_3 _lh_integrate2D_arg2_3 _lh_integrate2D_arg3_3 _lh_integrate2D_arg4_3 _lh_integrate2D_arg5_3 =
+  (((integrate1D_d2_d0_d0 _lh_integrate2D_arg3_3) _lh_integrate2D_arg4_3) (fun y_5 -> 
+    (((integrate1D_d3_d0_d0 _lh_integrate2D_arg1_3) _lh_integrate2D_arg2_3) (fun x_5 -> 
+      ((_lh_integrate2D_arg5_3 x_5) y_5)))))
+and ints_d0_d0_d0 _lh_ints_arg1_7 =
   (enumFromFloat_d0_d0_d0 1.0)
 and ints_d1_d0_d0 _lh_ints_arg1_6 =
   (enumFromFloat_d1_d0_d0 1.0)
-and ints_d2_d0_d0 _lh_ints_arg1_1_1 =
+and ints_d2_d0_d0 _lh_ints_arg1_8 =
   (enumFromFloat_d2_d0_d0 1.0)
-and ints_d3_d0_d0 _lh_ints_arg1_8 =
+and ints_d3_d0_d0 _lh_ints_arg1_1_1 =
   (enumFromFloat_d3_d0_d0 1.0)
-and ints_d4_d0_d0 _lh_ints_arg1_9 =
+and ints_d4_d0_d0 _lh_ints_arg1_1_0 =
   (enumFromFloat_d4_d0_d0 1.0)
-and ints_d5_d0_d0 _lh_ints_arg1_7 =
+and ints_d5_d0_d0 _lh_ints_arg1_9 =
   (enumFromFloat_d5_d0_d0 1.0)
 and is_d0_d0_d0 _lh_is_arg1_3 =
-  ((map_lz_d0_d0_d0 (fun a_1_1 -> 
-    (((a_1_1 *. a_1_1) *. a_1_1) *. a_1_1))) (ints_d0_d0_d0 0))
+  ((map_lz_d0_d0_d0 (fun a_1_0 -> 
+    (((a_1_0 *. a_1_0) *. a_1_0) *. a_1_0))) (ints_d0_d0_d0 0))
 and is_d1_d0_d0 _lh_is_arg1_2 =
   ((map_lz_d1_d0_d1 (fun a_7 -> 
     (((a_7 *. a_7) *. a_7) *. a_7))) (ints_d1_d0_d0 0))
@@ -900,42 +900,42 @@ and itotals_d0_d0_d0 _lh_itotals_arg1_1 =
   (lazy (`LH_C((head_lz_d0_d0_d0 (is_d0_d0_d0 0)), (((zipWith_lz_lz_d0_d0_d0 (fun a_6 b_3 -> 
     (a_6 +. b_3))) (tail_lz_d0_d0_d0 (is_d1_d0_d0 0))) (itotals_d0_d0_d0 0)))))
 and rtotals_d0_d0_d0 _lh_rtotals_arg1_1 =
-  (lazy (`LH_C((head_lz_d1_d0_d0 (zarks_d0_d0_d0 0)), (((zipWith_lz_lz_d3_d0_d0 (fun a_1_0 b_5 -> 
-    (a_1_0 +. b_5))) (tail_lz_d1_d0_d0 (zarks_d1_d0_d0 0))) (rtotals_d0_d0_d0 0)))))
+  (lazy (`LH_C((head_lz_d1_d0_d0 (zarks_d0_d0_d0 0)), (((zipWith_lz_lz_d3_d0_d0 (fun a_1_1 b_5 -> 
+    (a_1_1 +. b_5))) (tail_lz_d1_d0_d0 (zarks_d1_d0_d0 0))) (rtotals_d0_d0_d0 0)))))
 and testIntegrate_nofib_d0_d0_d0 _lh_testIntegrate_nofib_arg1_1 =
   (etotal_d0_d0_d0 _lh_testIntegrate_nofib_arg1_1)
-and zarks_d0_d0_d0 _lh_zarks_arg1_2 =
-  (((zipWith_lz_lz_d1_d0_d0 zark_d0_d0_d0) (ints_d2_d0_d0 0)) ((map_lz_d3_d0_d1 (fun n_6 -> 
-    (2.0 *. n_6))) (ints_d3_d0_d0 0)))
-and zarks_d1_d0_d0 _lh_zarks_arg1_3 =
-  (((zipWith_lz_lz_d2_d0_d1 zark_d1_d0_d0) (ints_d4_d0_d0 0)) ((map_lz_d4_d0_d1 (fun n_1_2 -> 
-    (2.0 *. n_1_2))) (ints_d5_d0_d0 0)))
+and zarks_d0_d0_d0 _lh_zarks_arg1_3 =
+  (((zipWith_lz_lz_d1_d0_d0 zark_d0_d0_d0) (ints_d2_d0_d0 0)) ((map_lz_d3_d0_d1 (fun n_1_2 -> 
+    (2.0 *. n_1_2))) (ints_d3_d0_d0 0)))
+and zarks_d1_d0_d0 _lh_zarks_arg1_2 =
+  (((zipWith_lz_lz_d2_d0_d1 zark_d1_d0_d0) (ints_d4_d0_d0 0)) ((map_lz_d4_d0_d1 (fun n_6 -> 
+    (2.0 *. n_6))) (ints_d5_d0_d0 0)))
 and zark_d0_d0_d0 _lh_zark_arg1_3 _lh_zark_arg2_3 =
-  (((((integrate2D_d0_d0_d0 0.0) _lh_zark_arg1_3) 0.0) _lh_zark_arg2_3) (fun x_6 y_6 -> 
-    (x_6 *. y_6)))
+  (((((integrate2D_d0_d0_d0 0.0) _lh_zark_arg1_3) 0.0) _lh_zark_arg2_3) (fun x_7 y_7 -> 
+    (x_7 *. y_7)))
 and zark_d1_d0_d0 _lh_zark_arg1_2 _lh_zark_arg2_2 =
-  (((((integrate2D_d1_d0_d0 0.0) _lh_zark_arg1_2) 0.0) _lh_zark_arg2_2) (fun x_4 y_4 -> 
-    (x_4 *. y_4)))
-and zipWith_lz_lz_d4_d0_d0 f_3_5 xs_7 ys_1_0 =
-  (lazy (match (Lazy.force xs_7) with
+  (((((integrate2D_d1_d0_d0 0.0) _lh_zark_arg1_2) 0.0) _lh_zark_arg2_2) (fun x_6 y_6 -> 
+    (x_6 *. y_6)))
+and zipWith_lz_lz_d4_d0_d0 f_3_1 xs_5 ys_9 =
+  (lazy (match (Lazy.force xs_5) with
     | `LH_C(hx_1_0, tx_1_0) -> 
-      (match (Lazy.force ys_1_0) with
-        | `LH_C(hy_7, ty_7) -> 
-          (let rec h_1_7 = ((f_3_5 hx_1_0) hy_7) in
-            (let rec t_1_3 = (((zipWith_lz_lz_d4_d0_d0 f_3_5) tx_1_0) ty_7) in
-              (fun f_3_6 -> 
-                (let rec h_1_8 = (f_3_6 h_1_7) in
-                  (let rec t_1_4 = ((map_lz_d2_d0_d1 f_3_6) t_1_3) in
+      (match (Lazy.force ys_9) with
+        | `LH_C(hy_6, ty_6) -> 
+          (let rec h_1_5 = ((f_3_1 hx_1_0) hy_6) in
+            (let rec t_1_2 = (((zipWith_lz_lz_d4_d0_d0 f_3_1) tx_1_0) ty_6) in
+              (fun f_3_2 -> 
+                (let rec h_1_6 = (f_3_2 h_1_5) in
+                  (let rec t_1_3 = ((map_lz_d2_d0_d1 f_3_2) t_1_2) in
                     (fun n_7 -> 
-                      (let rec _lh_sumFloat_LH_C_0_5_5 = h_1_8 in
-                        (let rec _lh_sumFloat_LH_C_1_5_5 = ((take_lz_d0_d0_d1 (n_7 - 1)) t_1_4) in
-                          (fun _lh_dummy_6_8 -> 
+                      (let rec _lh_sumFloat_LH_C_0_5_5 = h_1_6 in
+                        (let rec _lh_sumFloat_LH_C_1_5_5 = ((take_lz_d0_d0_d1 (n_7 - 1)) t_1_3) in
+                          (fun _lh_dummy_6_7 -> 
                             (_lh_sumFloat_LH_C_0_5_5 +. (sumFloat_d4_d0_d1 _lh_sumFloat_LH_C_1_5_5)))))))))))
         | `LH_N -> 
-          (fun f_3_7 n_8 _lh_dummy_6_9 -> 
+          (fun f_3_3 n_8 _lh_dummy_6_8 -> 
             0.0))
     | `LH_N -> 
-      (fun f_3_8 n_9 _lh_dummy_7_0 -> 
+      (fun f_3_4 n_9 _lh_dummy_6_9 -> 
         0.0)));;
 
 Command_unix.run (Bench.make_command [

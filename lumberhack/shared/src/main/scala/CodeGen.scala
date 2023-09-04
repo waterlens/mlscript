@@ -1134,7 +1134,7 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
   override val primitives = Map(
     "add" -> "(+)", "sub" -> "(-)", "%" -> "mod", "==" -> "=", "error" -> "(failwith \"error\")", "/=" -> "!=",
     "force" -> "Lazy.force", "polyEq" -> "=", "polyLt" -> "<", "polyGt" -> ">", "polyLeq" -> "<=",
-    "polyGeq" -> ">=", "polyNeq" -> "!=", "div" -> "/", "ceiling" -> "ceil"
+    "polyGeq" -> ">=", "polyNeq" -> "!=", "div" -> "/", "ceiling" -> "ceil", "lumberhack_obj_magic" -> "Obj.magic"
   )
   def transformPrimitive(p: String): String = primitives.getOrElse(p, p)
 

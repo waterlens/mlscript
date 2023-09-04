@@ -169,6 +169,7 @@ last(p)
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 33 --->
+//│ 	DeadCodeCons
 //│ 	case t¹ of {N  => [Some h¹] | C hh¹ tt¹ => last₀(t¹)}: 27
 //│ 	case ls¹ of {C h¹ t¹ => case t¹ of {N  => [Some h¹] | C hh¹ tt¹ => last₀(t¹)} | N  => [None]}: 29
 //│ [C 2 [N]]: 34 --->
@@ -354,6 +355,7 @@ minuss(fst)(snd)
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [Z]: 24 --->
+//│ 	DeadCodeCons
 //│ 	case b¹ of {S bb¹ => minuss₀(aa¹, bb¹) | Z  => aa¹}: 36
 //│ [Z]: 25 --->
 //│ 	NoCons
@@ -388,8 +390,8 @@ minuss(fst)(snd)
 //│ 	case a² of {
 //│ 		S aa¹ => (fun b² -> b²(aa¹))
 //│ 		| Z  => (fun n² -> [Z])}
-//│ def snd₀(aa²) = 
-//│ 	aa²
+//│ def snd₀ = 
+//│ 	lumberhack_obj_magic⁰((fun aa² -> aa²))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -412,24 +414,24 @@ minuss(fst)(snd)
 //│ 	case a¹ of {
 //│ 		S aa² => (fun b¹ -> b¹(aa²))
 //│ 		| Z  => (fun n¹ -> [Z])}
-//│ def snd₀₀(aa³) = 
-//│ 	aa³
+//│ def snd₀₀ = 
+//│ 	lumberhack_obj_magic⁰((fun aa³ -> aa³))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [S [S [Z]]]: 22 --->
-//│ 	case a¹ of {S aa² => (fun b¹ -> b¹(aa²)) | Z  => (fun n¹ -> [Z])}: 30
+//│ [S [S [Z]]]: 24 --->
+//│ 	case a¹ of {S aa² => (fun b¹ -> b¹(aa²)) | Z  => (fun n¹ -> [Z])}: 32
 //│ ------------------
-//│ case a¹ of {S aa² => (fun b¹ -> b¹(aa²)) | Z  => (fun n¹ -> [Z])}: 30 --->
-//│ 	[S [S [Z]]]: 22
+//│ case a¹ of {S aa² => (fun b¹ -> b¹(aa²)) | Z  => (fun n¹ -> [Z])}: 32 --->
+//│ 	[S [S [Z]]]: 24
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [S [S [Z]]]: 22 --->
-//│ 	case a¹ of {S aa² => (fun b¹ -> b¹(aa²)) | Z  => (fun n¹ -> [Z])}: 30
+//│ [S [S [Z]]]: 24 --->
+//│ 	case a¹ of {S aa² => (fun b¹ -> b¹(aa²)) | Z  => (fun n¹ -> [Z])}: 32
 //│ ------------------
-//│ case a¹ of {S aa² => (fun b¹ -> b¹(aa²)) | Z  => (fun n¹ -> [Z])}: 30 --->
-//│ 	[S [S [Z]]]: 22
+//│ case a¹ of {S aa² => (fun b¹ -> b¹(aa²)) | Z  => (fun n¹ -> [Z])}: 32 --->
+//│ 	[S [S [Z]]]: 24
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -439,8 +441,8 @@ minuss(fst)(snd)
 //│ 	in (fun _lh_dummy⁰ -> (fun b² -> b²(aa⁴)))
 //│ def minuss₀₀(a²) = 
 //│ 	a²(99)
-//│ def snd₀₀(aa⁵) = 
-//│ 	aa⁵
+//│ def snd₀₀ = 
+//│ 	lumberhack_obj_magic⁰((fun aa⁵ -> aa⁵))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -504,6 +506,7 @@ minuss(fst)(snd)
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [Z]: 43 --->
+//│ 	DeadCodeCons
 //│ 	case b³ of {S bb¹ => (fun aaa² -> minuss₀(aaa², bb¹)) | Z  => (fun aaa³ -> aaa³)}: 53
 //│ [Z]: 55 --->
 //│ 	NoCons
@@ -541,8 +544,8 @@ minuss(fst)(snd)
 //│ 	where
 //│ 	def checkb₀(b⁵) = 
 //│ 		b⁵(99)
-//│ def snd₀(_lh_dummy⁰, aaa⁴) = 
-//│ 	aaa⁴
+//│ def snd₀ = 
+//│ 	lumberhack_obj_magic⁰((fun _lh_dummy⁰ -> (fun aaa⁴ -> aaa⁴)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -569,24 +572,24 @@ minuss(fst)(snd)
 //│ 	where
 //│ 	def checkb₀₀(b³) = 
 //│ 		b³(99)
-//│ def snd₀₀(_lh_dummy¹, aaa¹) = 
-//│ 	aaa¹
+//│ def snd₀₀ = 
+//│ 	lumberhack_obj_magic⁰((fun _lh_dummy¹ -> (fun aaa¹ -> aaa¹)))
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [S [S [Z]]]: 29 --->
-//│ 	case a¹ of {S aa¹ => (fun b² -> checkb₀₀(b², aa¹)) | Z  => (fun n¹ -> [Z])}: 39
+//│ [S [S [Z]]]: 31 --->
+//│ 	case a¹ of {S aa¹ => (fun b² -> checkb₀₀(b², aa¹)) | Z  => (fun n¹ -> [Z])}: 41
 //│ ------------------
-//│ case a¹ of {S aa¹ => (fun b² -> checkb₀₀(b², aa¹)) | Z  => (fun n¹ -> [Z])}: 39 --->
-//│ 	[S [S [Z]]]: 29
+//│ case a¹ of {S aa¹ => (fun b² -> checkb₀₀(b², aa¹)) | Z  => (fun n¹ -> [Z])}: 41 --->
+//│ 	[S [S [Z]]]: 31
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [S [S [Z]]]: 29 --->
-//│ 	case a¹ of {S aa¹ => (fun b² -> checkb₀₀(b², aa¹)) | Z  => (fun n¹ -> [Z])}: 39
+//│ [S [S [Z]]]: 31 --->
+//│ 	case a¹ of {S aa¹ => (fun b² -> checkb₀₀(b², aa¹)) | Z  => (fun n¹ -> [Z])}: 41
 //│ ------------------
-//│ case a¹ of {S aa¹ => (fun b² -> checkb₀₀(b², aa¹)) | Z  => (fun n¹ -> [Z])}: 39 --->
-//│ 	[S [S [Z]]]: 29
+//│ case a¹ of {S aa¹ => (fun b² -> checkb₀₀(b², aa¹)) | Z  => (fun n¹ -> [Z])}: 41 --->
+//│ 	[S [S [Z]]]: 31
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -599,8 +602,8 @@ minuss(fst)(snd)
 //│ 	where
 //│ 	def checkb₀₀(b⁵) = 
 //│ 		b⁵(99)
-//│ def snd₀₀(_lh_dummy³, aaa²) = 
-//│ 	aaa²
+//│ def snd₀₀ = 
+//│ 	lumberhack_obj_magic⁰((fun _lh_dummy³ -> (fun aaa² -> aaa²)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -1005,8 +1008,10 @@ f(C(primitive))
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C x¹]: 15 --->
+//│ 	DeadCodeCons
 //│ 	case x¹ of {C k¹ => f₀([C x¹])}: 17
 //│ [C primitive⁰]: 21 --->
+//│ 	DeadCodeCons
 //│ 	case x¹ of {C k¹ => f₀([C x¹])}: 17
 //│ ------------------
 //│ case x¹ of {C k¹ => f₀([C x¹])}: 17 --->

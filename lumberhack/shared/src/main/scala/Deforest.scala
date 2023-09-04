@@ -178,9 +178,11 @@ enum ConsStratEnum(using val euid: ExprId) extends ToStrat[ConsStratEnum] {
     extends ConsStratEnum
     with ToStrat[ConsVar]
     with TypevarWithBoundary(boundary)
+  case DeadCodeCons()(using ExprId) extends ConsStratEnum with ToStrat[DeadCodeCons]
 
   def pp(using config: PrettyPrintConfig): Str = this match
     case NoCons() => "NoCons"
+    case DeadCodeCons() => "DeadCodeCons"
     case Destruct(x) => s"Destruct(${x.map(_.pp).mkString(", ")})"
     case ConsFun(l, r) => s"${l.pp} => ${r.pp}"
     case cv@ConsVar(uid, n) =>
@@ -303,7 +305,9 @@ class Deforest(var debug: Boolean) {
   // type check, we need to do the duplication of multiple-usage definitions, so seems that these two things has to be done in two steps
   def process(e: Expr)(using ctx: Ctx, calls: mutable.Set[Ref]): ProdStrat = trace(s"process ${e.uid}: ${e.pp(using InitPpConfig)}") {
     val res: ProdStratEnum = e match
-      case Call(Ref(lazyOrForce), e) if Set("lazy", "force")(lazyOrForce.tree.name) => process(e).s
+      case Call(Ref(lazyOrForce), e) if Set("lazy", "force", "lumberhack_obj_magic")(lazyOrForce.tree.name) =>
+        // treat the above annotations as identity functions to keep fusion
+        process(e).s
       case Const(IntLit(_)) => prodInt(using noExprId)
       case Const(DecLit(_)) => prodFloat(using noExprId) // floating point numbers as integers type
       case Const(CharLit(_)) => prodChar(using noExprId)
@@ -339,7 +343,7 @@ class Deforest(var debug: Boolean) {
         else if primitive == "ceiling" then
           ProdFun(consFloat(using noExprId).toStrat(), prodFloat(using noExprId).toStrat())(using noExprId)
         else
-          lastWords("lazy and force should not be handled here")
+          lastWords("lazy, force and lumberhack_obj_magic should not be handled here")
       }
       case r @ Ref(id) => if id.isDef then {
         calls.add(r)
@@ -611,8 +615,36 @@ class Deforest(var debug: Boolean) {
     // shuffle(constraints) foreach handle
     constraints foreach handle
     assert(lowerBounds.values.flatten.forall(!_._2.s.isInstanceOf[ProdVar]))
+    propagateDeadCodeCons
   }
   
+  def propagateDeadCodeCons: Unit = {
+    val emptyPathDeadCodeCons = DeadCodeCons()(using noExprId)
+    val cache = mutable.Set.empty[ProdStrat]
+    def handle(p: ProdStrat): Unit = {
+      if cache.add(p) then
+        p.s match {
+          case NoProd() => ()
+          case ctorType@MkCtor(ctor, args) =>
+            if ctorType.euid != noExprId then
+              ctorDestinations += ctorType -> (ctorDestinations(ctorType) + emptyPathDeadCodeCons)
+            args.foreach(a => handle(a))
+          case Sum(ls) => ls.foreach(m => handle(m))
+          case ProdFun(l, r) =>
+            // not handling NoProd <: l
+            handle(r)
+          case ProdVar(uid, n) =>
+            upperBounds += uid -> ((Path.empty, emptyPathDeadCodeCons.toStrat()) :: upperBounds(uid))
+            lowerBounds(uid).foreach(l => handle(l._2))
+        }
+    }
+    varsName.keys.foreach { vid =>
+      if upperBounds(vid).isEmpty then
+        upperBounds += vid -> ((Path.empty, emptyPathDeadCodeCons.toStrat()) :: upperBounds(vid))
+        lowerBounds(vid).foreach(l => handle(l._2))
+    }
+  }
+
   lazy val knotsAfterAnnihilation = recursiveConstr.map { (cnstr, set) => (cnstr, {
     set.map { (key, vall) => (key.annihilated, vall.annihilated) }.toSet
   })}.toMap
@@ -965,7 +997,7 @@ object Deforest {
     (lumberhackIntFun ++ lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackBoolUnaryOps ++ lumberhackPolyOps
       ++ lumberhackFloatBinOps)
       + "string_of_int" + "int_of_char" + "char_of_int" + "ceiling" + "float_of_int" + "int_of_float" + "string_of_float"
-      + "primitive" + "primId" + "error" + "lazy" + "force"
+      + "primitive" + "primId" + "error" + "lazy" + "force" + "lumberhack_obj_magic"
   lazy val lumberhackPolyOps: Set[String] = Set("polyEq", "polyLt", "polyGt", "polyLeq", "polyGeq", "polyNeq")
   lazy val lumberhackBinOps = lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackFloatBinOps
   lazy val lumberhackIntFun: Set[String] = lumberhackIntValueFun ++ lumberhackIntComparisonFun

@@ -282,7 +282,8 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
         case None => lastWords(this.pp(using InitPpConfig.showIuidOn) + " not in ctx")
       }
       case Call(f, p) => f.evaluate match {
-        case Ref(sameAsIdentity) if Set("primId", "force", "lazy")(sameAsIdentity.tree.name) => p.evaluate
+        case Ref(sameAsIdentity)
+          if Set("primId", "force", "lazy", "lumberhack_obj_magic")(sameAsIdentity.tree.name) => p.evaluate
         case Ref(errorId) if errorId.tree.name == "error" => Call(Ref(errorId), p.evaluate)
         case Function(arg, body) => body.subst(using Map(arg -> p.evaluate)).evaluate
         case c: Ctor => throw Exception("\n" + c.pp(using InitPpConfig.showIuidOn.multilineOn))

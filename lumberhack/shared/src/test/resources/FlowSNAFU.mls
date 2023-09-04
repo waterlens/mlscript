@@ -205,6 +205,7 @@ fun dropWhile(ls) = if ls is
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 35 --->
+//│ 	DeadCodeCons
 //│ 	case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 30
 //│ [C [N]]: 36 --->
 //│ 	case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 30
@@ -227,7 +228,7 @@ fun dropWhile(ls) = if ls is
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ (fun x² -> 2)(dropWhile₀(
-//│ 	let t² = (fun _lh_dummy¹ -> [C [N]])
+//│ 	let t² = lumberhack_obj_magic⁰((fun _lh_dummy¹ -> [C [N]]))
 //│ 	in (fun _lh_dummy⁰ -> if [True] then dropWhile₀(t²) else [C t²])))
 //│ def dropWhile₀(ls²) = 
 //│ 	ls²(99)
@@ -240,8 +241,8 @@ fun dropWhile(ls) = if ls is
 //│ let rec dropWhile_d0 ls_0 =
 //│   (ls_0 99);;
 //│ ((fun x_0 -> 
-//│   2) (dropWhile_d0 (let rec t_0 = (fun _lh_dummy_0 -> 
-//│   (`C((`N)))) in
+//│   2) (dropWhile_d0 (let rec t_0 = (Obj.magic (fun _lh_dummy_0 -> 
+//│   (`C((`N))))) in
 //│   (fun _lh_dummy_1 -> 
 //│     (if true then
 //│       (dropWhile_d0 t_0)
@@ -249,12 +250,13 @@ fun dropWhile(ls) = if ls is
 //│       (`C(t_0)))))))
 //│ 
 //│ --------------- ocaml repl result -----------------
+//│ [ok]
+//│                 - : int = 2
+//│ 
+//│ --------------- ocaml repl result -----------------
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception:                 Line 9, characters 9-14:
-//│ 9 |       (`C(t_0)))))));;
-//│              ^^^^^
-//│ Error: This expression has type 'a -> [> `C of [> `N ] ]
-//│        but an expression was expected of type [> `N ]
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 :lhError
@@ -314,6 +316,7 @@ f(dropWhile(C(N)))
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 49 --->
+//│ 	DeadCodeCons
 //│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 36
 //│ [C [N]]: 50 --->
 //│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 36
@@ -336,7 +339,7 @@ f(dropWhile(C(N)))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ f₀(dropWhile₀(
-//│ 	let t² = (fun _lh_dummy¹ -> [N])
+//│ 	let t² = lumberhack_obj_magic⁰((fun _lh_dummy¹ -> [N]))
 //│ 	in (fun _lh_dummy⁰ -> if [True] then dropWhile₀(t²) else [C t²])))
 //│ def dropWhile₀(ls²) = 
 //│ 	ls²(99)
@@ -352,8 +355,8 @@ f(dropWhile(C(N)))
 //│   (ls_0 99)
 //│ and f_d0 x_0 =
 //│   (`Pair((f_d0 (`C((`N)))), (f_d0 x_0)));;
-//│ (f_d0 (dropWhile_d0 (let rec t_0 = (fun _lh_dummy_0 -> 
-//│   (`N)) in
+//│ (f_d0 (dropWhile_d0 (let rec t_0 = (Obj.magic (fun _lh_dummy_0 -> 
+//│   (`N))) in
 //│   (fun _lh_dummy_1 -> 
 //│     (if true then
 //│       (dropWhile_d0 t_0)
@@ -361,18 +364,13 @@ f(dropWhile(C(N)))
 //│       (`C(t_0)))))))
 //│ 
 //│ --------------- ocaml repl result -----------------
+//│ [ok]
+//│               Stack overflow during evaluation (looping recursion?).
+//│ 
+//│ --------------- ocaml repl result -----------------
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception:               Lines 2-8, characters 6-19:
-//│ 2 | ......(dropWhile_d0 (let rec t_0 = (fun _lh_dummy_0 -> 
-//│ 3 |   (`N)) in
-//│ 4 |   (fun _lh_dummy_1 -> 
-//│ 5 |     (if true then
-//│ 6 |       (dropWhile_d0 t_0)
-//│ 7 |     else
-//│ 8 |       (`C(t_0))))))...
-//│ Error: This expression has type [> `C of 'a -> [> `N ] | `N ]
-//│        but an expression was expected of type [> `C of [> `N ] ]
-//│        Types for tag `C are incompatible
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 
@@ -449,9 +447,11 @@ f(dropWhile(C(N)))
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 35 --->
+//│ 	DeadCodeCons
 //│ 	NoCons
 //│ 	case x³ of {C a¹ => [N] | N  => f₀(x³)}: 39
 //│ [N]: 55 --->
+//│ 	DeadCodeCons
 //│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 51
 //│ [C [N]]: 56 --->
 //│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 51
@@ -476,7 +476,7 @@ f(dropWhile(C(N)))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ f₀(dropWhile₀(
-//│ 	let t² = (fun _lh_dummy¹ -> [N])
+//│ 	let t² = lumberhack_obj_magic⁰((fun _lh_dummy¹ -> [N]))
 //│ 	in (fun _lh_dummy⁰ -> if [True] then dropWhile₀(t²) else [C t²])))
 //│ def dropWhile₀(ls²) = 
 //│ 	ls²(99)
@@ -500,8 +500,8 @@ f(dropWhile(C(N)))
 //│         (`N)
 //│       | `N -> 
 //│         (f_d0 x_1)));;
-//│ (f_d0 (dropWhile_d0 (let rec t_0 = (fun _lh_dummy_0 -> 
-//│   (`N)) in
+//│ (f_d0 (dropWhile_d0 (let rec t_0 = (Obj.magic (fun _lh_dummy_0 -> 
+//│   (`N))) in
 //│   (fun _lh_dummy_1 -> 
 //│     (if true then
 //│       (dropWhile_d0 t_0)
@@ -509,18 +509,13 @@ f(dropWhile(C(N)))
 //│       (`C(t_0)))))))
 //│ 
 //│ --------------- ocaml repl result -----------------
+//│ [ok]
+//│               Stack overflow during evaluation (looping recursion?).
+//│ 
+//│ --------------- ocaml repl result -----------------
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception:               Lines 2-8, characters 6-19:
-//│ 2 | ......(dropWhile_d0 (let rec t_0 = (fun _lh_dummy_0 -> 
-//│ 3 |   (`N)) in
-//│ 4 |   (fun _lh_dummy_1 -> 
-//│ 5 |     (if true then
-//│ 6 |       (dropWhile_d0 t_0)
-//│ 7 |     else
-//│ 8 |       (`C(t_0))))))...
-//│ Error: This expression has type [> `C of 'a -> [> `N ] | `N ]
-//│        but an expression was expected of type [ `C of [> `N ] | `N ]
-//│        Types for tag `C are incompatible
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
 
 

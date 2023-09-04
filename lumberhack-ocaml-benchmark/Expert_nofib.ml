@@ -6656,9 +6656,9 @@ and lines_d0 _lh_lines_arg1_2 =
     (x_1_9 = '|'))) _lh_lines_arg1_2) in
     (match _lh_matchIdent_1_5_1 with
       | `LH_P2(_lh_lines_LH_P2_0_2, _lh_lines_LH_P2_1_2) -> 
-        (let rec h_9_9 = _lh_lines_LH_P2_0_2 in
+        (Obj.magic (let rec h_9_9 = _lh_lines_LH_P2_0_2 in
           (fun _lh_dummy_6_6 -> 
-            h_9_9))
+            h_9_9)))
       | _ -> 
         (failwith "error")))
 and lines_d1 _lh_lines_arg1_1 =
@@ -7296,14 +7296,14 @@ and relation_d0 _lh_relation_arg1_0 =
       (match _lh_listcomp_fun_para_1 with
         | `LH_C(_lh_listcomp_fun_ls_h_2, _lh_listcomp_fun_ls_t_2) -> 
           (if ((inList_d2 _lh_listcomp_fun_ls_h_2) verbs_0) then
-            (let rec h_3 = _lh_listcomp_fun_ls_h_2 in
+            (Obj.magic (let rec h_3 = _lh_listcomp_fun_ls_h_2 in
               (fun _lh_dummy_2 -> 
-                h_3))
+                h_3)))
           else
             (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_2))
         | `LH_N -> 
-          (fun _lh_dummy_3 -> 
-            (failwith "error")))) in
+          (Obj.magic (fun _lh_dummy_3 -> 
+            (failwith "error"))))) in
       (_lh_listcomp_fun_3 _lh_relation_arg1_0))) in
       ((((split_d0 _lh_relation_arg1_0) noun_d0) verb_0) noun_d1)))
 and relation_d1 _lh_relation_arg1_2 =
@@ -7343,14 +7343,14 @@ and relation_d1 _lh_relation_arg1_2 =
       (match _lh_listcomp_fun_para_3_1 with
         | `LH_C(_lh_listcomp_fun_ls_h_3_0, _lh_listcomp_fun_ls_t_3_1) -> 
           (if ((inList_d5 _lh_listcomp_fun_ls_h_3_0) verbs_3) then
-            (let rec h_8_2 = _lh_listcomp_fun_ls_h_3_0 in
+            (Obj.magic (let rec h_8_2 = _lh_listcomp_fun_ls_h_3_0 in
               (fun _lh_dummy_5_3 -> 
-                h_8_2))
+                h_8_2)))
           else
             (_lh_listcomp_fun_4_2 _lh_listcomp_fun_ls_t_3_1))
         | `LH_N -> 
-          (fun _lh_dummy_5_4 -> 
-            (failwith "error")))) in
+          (Obj.magic (fun _lh_dummy_5_4 -> 
+            (failwith "error"))))) in
       (_lh_listcomp_fun_4_2 _lh_relation_arg1_2))) in
       ((((split_d3 _lh_relation_arg1_2) noun_d2) verb_3) noun_d3)))
 and relation_d2 _lh_relation_arg1_1 =
@@ -7390,14 +7390,14 @@ and relation_d2 _lh_relation_arg1_1 =
       (match _lh_listcomp_fun_para_8 with
         | `LH_C(_lh_listcomp_fun_ls_h_7, _lh_listcomp_fun_ls_t_7) -> 
           (if ((inList_d1_d0 _lh_listcomp_fun_ls_h_7) verbs_1) then
-            (let rec h_5_5 = _lh_listcomp_fun_ls_h_7 in
+            (Obj.magic (let rec h_5_5 = _lh_listcomp_fun_ls_h_7 in
               (fun _lh_dummy_1_8 -> 
-                h_5_5))
+                h_5_5)))
           else
             (_lh_listcomp_fun_1_4 _lh_listcomp_fun_ls_t_7))
         | `LH_N -> 
-          (fun _lh_dummy_1_9 -> 
-            (failwith "error")))) in
+          (Obj.magic (fun _lh_dummy_1_9 -> 
+            (failwith "error"))))) in
       (_lh_listcomp_fun_1_4 _lh_relation_arg1_1))) in
       ((((split_d5 _lh_relation_arg1_1) noun_d4) verb_1) noun_d5)))
 and relevant_d0 _lh_relevant_arg1_0 _lh_relevant_arg2_0 =
@@ -11497,9 +11497,9 @@ and lines_d0 _lh_lines_arg1_2 =
     (x_1_9 = '|'))) _lh_lines_arg1_2) in
     (match _lh_matchIdent_1_5_1 with
       | `LH_P2(_lh_lines_LH_P2_0_2, _lh_lines_LH_P2_1_2) -> 
-        (let rec h_9_9 = _lh_lines_LH_P2_0_2 in
+        (Obj.magic (let rec h_9_9 = _lh_lines_LH_P2_0_2 in
           (fun _lh_dummy_6_6 -> 
-            h_9_9))
+            h_9_9)))
       | _ -> 
         (failwith "error")))
 and lines_d1 _lh_lines_arg1_1 =
@@ -12137,14 +12137,14 @@ and relation_d0 _lh_relation_arg1_0 =
       (match _lh_listcomp_fun_para_1 with
         | `LH_C(_lh_listcomp_fun_ls_h_2, _lh_listcomp_fun_ls_t_2) -> 
           (if ((inList_d2 _lh_listcomp_fun_ls_h_2) verbs_0) then
-            (let rec h_3 = _lh_listcomp_fun_ls_h_2 in
+            (Obj.magic (let rec h_3 = _lh_listcomp_fun_ls_h_2 in
               (fun _lh_dummy_2 -> 
-                h_3))
+                h_3)))
           else
             (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_2))
         | `LH_N -> 
-          (fun _lh_dummy_3 -> 
-            (failwith "error")))) in
+          (Obj.magic (fun _lh_dummy_3 -> 
+            (failwith "error"))))) in
       (_lh_listcomp_fun_3 _lh_relation_arg1_0))) in
       ((((split_d0 _lh_relation_arg1_0) noun_d0) verb_0) noun_d1)))
 and relation_d1 _lh_relation_arg1_2 =
@@ -12184,14 +12184,14 @@ and relation_d1 _lh_relation_arg1_2 =
       (match _lh_listcomp_fun_para_3_1 with
         | `LH_C(_lh_listcomp_fun_ls_h_3_0, _lh_listcomp_fun_ls_t_3_1) -> 
           (if ((inList_d5 _lh_listcomp_fun_ls_h_3_0) verbs_3) then
-            (let rec h_8_2 = _lh_listcomp_fun_ls_h_3_0 in
+            (Obj.magic (let rec h_8_2 = _lh_listcomp_fun_ls_h_3_0 in
               (fun _lh_dummy_5_3 -> 
-                h_8_2))
+                h_8_2)))
           else
             (_lh_listcomp_fun_4_2 _lh_listcomp_fun_ls_t_3_1))
         | `LH_N -> 
-          (fun _lh_dummy_5_4 -> 
-            (failwith "error")))) in
+          (Obj.magic (fun _lh_dummy_5_4 -> 
+            (failwith "error"))))) in
       (_lh_listcomp_fun_4_2 _lh_relation_arg1_2))) in
       ((((split_d3 _lh_relation_arg1_2) noun_d2) verb_3) noun_d3)))
 and relation_d2 _lh_relation_arg1_1 =
@@ -12231,14 +12231,14 @@ and relation_d2 _lh_relation_arg1_1 =
       (match _lh_listcomp_fun_para_8 with
         | `LH_C(_lh_listcomp_fun_ls_h_7, _lh_listcomp_fun_ls_t_7) -> 
           (if ((inList_d1_d0 _lh_listcomp_fun_ls_h_7) verbs_1) then
-            (let rec h_5_5 = _lh_listcomp_fun_ls_h_7 in
+            (Obj.magic (let rec h_5_5 = _lh_listcomp_fun_ls_h_7 in
               (fun _lh_dummy_1_8 -> 
-                h_5_5))
+                h_5_5)))
           else
             (_lh_listcomp_fun_1_4 _lh_listcomp_fun_ls_t_7))
         | `LH_N -> 
-          (fun _lh_dummy_1_9 -> 
-            (failwith "error")))) in
+          (Obj.magic (fun _lh_dummy_1_9 -> 
+            (failwith "error"))))) in
       (_lh_listcomp_fun_1_4 _lh_relation_arg1_1))) in
       ((((split_d5 _lh_relation_arg1_1) noun_d4) verb_1) noun_d5)))
 and relevant_d0 _lh_relevant_arg1_0 _lh_relevant_arg2_0 =

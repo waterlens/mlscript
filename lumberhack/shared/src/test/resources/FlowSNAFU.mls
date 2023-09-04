@@ -1,7 +1,75 @@
 :NewParser
 :ParseOnly
 
-
+:lhEval
+// NOTE: sometimes the output program will be correct without adding Obj.magic
+fun f(a, ret) = if a is
+  A then b =>
+    if b is
+      B then ret
+  AA then b => End2
+f(A, ReturnValue, B)
+//│ |#fun| |f|(|a|,| |ret|)| |#=| |#if| |a| |is|→|A| |#then| |b| |=>|→|#if| |b| |is|→|B| |#then| |ret|←|←|↵|AA| |#then| |b| |=>| |End2|←|↵|f|(|A|,| |ReturnValue|,| |B|)|
+//│ Parsed: {fun f = a, ret, => if a is ‹(A) then b, => {if b is ‹(B) then ret›}; (AA) then b, => End2›; f (A, ReturnValue, B,)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ f^11([A], [ReturnValue], [B])
+//│ def f(a⁰, ret⁰) = case a⁰ of {
+//│ 	A  => (fun b⁰ -> case b⁰ of {
+//│ 		B  => ret⁰})
+//│ 	| AA  => (fun b¹ -> [End2])}
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>>>>> Original Eval Res >>>>>>>>>>
+//│ [ReturnValue]
+//│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^11] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀([A], [ReturnValue], [B])
+//│ def f₀(a¹, ret¹) = 
+//│ 	case a¹ of {
+//│ 		A  => (fun b² -> case b² of {
+//│ 			B  => ret¹})
+//│ 		| AA  => (fun b³ -> [End2])}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [A]: 29 --->
+//│ 	case a¹ of {A  => (fun b² -> case b² of {B  => ret¹}) | AA  => (fun b³ -> [End2])}: 25
+//│ [B]: 33 --->
+//│ 	DeadCodeCons
+//│ 	case b² of {B  => ret¹}: 21
+//│ ------------------
+//│ case b² of {B  => ret¹}: 21 --->
+//│ 	[B]: 33
+//│ case a¹ of {A  => (fun b² -> case b² of {B  => ret¹}) | AA  => (fun b³ -> [End2])}: 25 --->
+//│ 	[A]: 29
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [A]: 29 --->
+//│ 	case a¹ of {A  => (fun b² -> case b² of {B  => ret¹}) | AA  => (fun b³ -> [End2])}: 25
+//│ [B]: 33 --->
+//│ 	case b² of {B  => ret¹}: 21
+//│ ------------------
+//│ case b² of {B  => ret¹}: 21 --->
+//│ 	[B]: 33
+//│ case a¹ of {A  => (fun b² -> case b² of {B  => ret¹}) | AA  => (fun b³ -> [End2])}: 25 --->
+//│ 	[A]: 29
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀((fun ret² -> (fun b⁴ -> b⁴(ret²))), [ReturnValue], lumberhack_obj_magic⁰((fun ret³ -> ret³)))
+//│ def f₀(a², ret⁴) = 
+//│ 	a²(ret⁴)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> evaluate >>>>>>>
+//│ [ReturnValue]
+//│ <<<<<<< evaluate <<<<<<<
 
 // NOTE: mlscript thinks this is ok, but not ocaml
 :lhError
@@ -157,7 +225,6 @@ dropWhile(C(N))
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
 
 
-:lhError
 :lhGenOCaml
 :d
 fun dropWhile(ls) = if ls is
@@ -255,11 +322,7 @@ fun dropWhile(ls) = if ls is
 //│ 
 //│ --------------- ocaml repl result -----------------
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
-//│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: expect to fail but pass
-//│ !!!!!!ERROR!!!!!!
 
-:lhError
 :lhGenOCaml
 :d
 fun dropWhile(ls) = if ls is
@@ -369,12 +432,8 @@ f(dropWhile(C(N)))
 //│ 
 //│ --------------- ocaml repl result -----------------
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
-//│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: expect to fail but pass
-//│ !!!!!!ERROR!!!!!!
 
 
-:lhError
 :lhGenOCaml
 :d
 fun dropWhile(ls) = if ls is
@@ -514,11 +573,9 @@ f(dropWhile(C(N)))
 //│ 
 //│ --------------- ocaml repl result -----------------
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
-//│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: expect to fail but pass
-//│ !!!!!!ERROR!!!!!!
 
 
+// FIXME:
 :lhError
 :lhGenOCaml
 :lhNoIter
@@ -891,3 +948,431 @@ fun words1(ls) =
 //│        Types for tag `C are incompatible
 //│ !!!!!!ERROR!!!!!!
 
+
+// FIXME: how?
+:lhGenOCaml
+:lhNoIter
+:d
+fun f(x) = if x is
+  C(t) then if True then f(t) else x // NOTE: or `else x`, but two branches must exist
+fun break(x) = break(f(C(x)))
+(x => 2)(x => break(f(x)))
+//│ |#fun| |f|(|x|)| |#=| |#if| |x| |is|→|C|(|t|)| |#then| |#if| |True| |#then| |f|(|t|)| |#else| |x| |/* NOTE: or `else x`, but two branches must exist*/|←|↵|#fun| |break|(|x|)| |#=| |break|(|f|(|C|(|x|)|)|)|↵|(|x| |=>| |2|)|(|x| |=>| |break|(|f|(|x|)|)|)|
+//│ Parsed: {fun f = x, => if x is ‹(C (t,)) then if (True) then f (t,) else x›; fun break = x, => break (f (C (x,),),); '(' x, => 2, ')' (x, => break (f (x,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (fun x² -> 2)((fun x³ -> break^19(f^20(x³))))
+//│ def break(x¹) = break^10(f^11([C x¹]))
+//│ def f(x⁰) = case x⁰ of {
+//│ 	C t⁰ => if [True] then f^3(t⁰) else x⁰}
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec break x_1 =
+//│ 		  (break (f (`C(x_1))))
+//│ 		and f x_0 =
+//│ 		  (match x_0 with
+//│ 		    | `C(t_0) -> 
+//│ 		      (if true then
+//│ 		        (f t_0)
+//│ 		      else
+//│ 		        x_0));;
+//│ 		((fun x_2 -> 
+//│ 		  2) (fun x_3 -> 
+//│ 		  (break (f x_3))))
+//│ 		....... ocaml repl result .......
+//│ 		[ok]
+//│ 		                val break : ([ `C of 'a ] as 'a) -> 'b = <fun>
+//│ 		val f : ([ `C of 'a ] as 'a) -> 'a = <fun>
+//│ 		....... ocaml repl result .......
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [break^19] (hopeless to continue)
+//│ 	[break^19 · break^10] ---> [break^19] (using original def)
+//│ 	[break^19 · f^11] (using original def)
+//│ 		[break^19 · f^11 · f^3] ---> [break^19 · f^11] (using original def)
+//│ [f^20] (hopeless to continue)
+//│ 	[f^20 · f^3] ---> [f^20] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (fun x⁷ -> 2)((fun x⁸ -> break₀(f₁(x⁸))))
+//│ def break₀(x⁴) = 
+//│ 	break₀(f₀([C x⁴]))
+//│ 	where
+//│ 	def f₀(x⁵) = 
+//│ 		case x⁵ of {
+//│ 			C t¹ => if [True] then f₀(t¹) else x⁵}
+//│ def f₁(x⁶) = 
+//│ 	case x⁶ of {
+//│ 		C t² => if [True] then f₁(t²) else x⁶}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C x⁴]: 29 --->
+//│ 	case x⁵ of {C t¹ => if [True] then f₀(t¹) else x⁵}: 40
+//│ ------------------
+//│ case x⁵ of {C t¹ => if [True] then f₀(t¹) else x⁵}: 40 --->
+//│ 	[C x⁴]: 29
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C x⁴]: 29 --->
+//│ 	case x⁵ of {C t¹ => if [True] then f₀(t¹) else x⁵}: 40
+//│ ------------------
+//│ case x⁵ of {C t¹ => if [True] then f₀(t¹) else x⁵}: 40 --->
+//│ 	[C x⁴]: 29
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (fun x⁹ -> 2)((fun x¹⁰ -> break₀(f₁(x¹⁰))))
+//│ def break₀(x¹¹) = 
+//│ 	break₀(f₀(
+//│ 		let t³ = x¹¹
+//│ 		in (fun x¹² -> if [True] then f₀(t³) else x¹²)))
+//│ 	where
+//│ 	def f₀(x¹³) = 
+//│ 		x¹³(x¹³)
+//│ def f₁(x¹⁴) = 
+//│ 	case x¹⁴ of {
+//│ 		C t² => if [True] then f₁(t²) else x¹⁴}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
+//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
+//│ 
+//│ let rec break_d0 x_2 =
+//│   (break_d0 (f_d0 (let rec t_0 = x_2 in
+//│     (fun x_3 -> 
+//│       (if true then
+//│         (f_d0 t_0)
+//│       else
+//│         x_3)))))
+//│ and f_d0 x_4 =
+//│   (x_4 x_4)
+//│ and f_d1 x_5 =
+//│   (match x_5 with
+//│     | `C(t_1) -> 
+//│       (if true then
+//│         (f_d1 t_1)
+//│       else
+//│         x_5));;
+//│ ((fun x_0 -> 
+//│   2) (fun x_1 -> 
+//│   (break_d0 (f_d1 x_1))))
+//│ 
+//│ --------------- ocaml repl result -----------------
+//│ /!!!\ Uncaught error: java.lang.Exception:       Line 4, characters 12-22:
+//│ 4 |   (break_d0 (f_d1 x_1))));;
+//│                 ^^^^^^^^^^
+//│ Error: This expression has type [< `C of 'a ] as 'a
+//│        but an expression was expected of type 'b -> 'b as 'b
+
+// prodType recurses in a way that will return a type of `[C of 'a] as 'a`
+// two uses of the consumer `f`:
+// for one branch the input is not constraint with any prodStrat, so it is ignored with no clash;
+// for the other branch the input is `g(t)` which produces a `C(t)`, and it will be fused
+// and our type system does not catch this?
+// FIXME:
+:lhGenOCaml
+:d
+fun prodType(x) = if x is
+  C(t) then if True then t else prodType(t)
+fun f(x) = if x is
+  C(t) then if True then f(t) else f(g(t))
+fun g(t) = C(t)
+(x => 2)(x => f(prodType(x)))
+//│ |#fun| |prodType|(|x|)| |#=| |#if| |x| |is|→|C|(|t|)| |#then| |#if| |True| |#then| |t| |#else| |prodType|(|t|)|←|↵|#fun| |f|(|x|)| |#=| |#if| |x| |is|→|C|(|t|)| |#then| |#if| |True| |#then| |f|(|t|)| |#else| |f|(|g|(|t|)|)|←|↵|#fun| |g|(|t|)| |#=| |C|(|t|)|↵|(|x| |=>| |2|)|(|x| |=>| |f|(|prodType|(|x|)|)|)|
+//│ Parsed: {fun prodType = x, => if x is ‹(C (t,)) then if (True) then t else prodType (t,)›; fun f = x, => if x is ‹(C (t,)) then if (True) then f (t,) else f (g (t,),)›; fun g = t, => C (t,); '(' x, => 2, ')' (x, => f (prodType (x,),),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ (fun x² -> 2)((fun x³ -> f^28(prodType^29(x³))))
+//│ def f(x¹) = case x¹ of {
+//│ 	C t¹ => if [True] then f^12(t¹) else f^15(g^16(t¹))}
+//│ def g(t²) = [C t²]
+//│ def prodType(x⁰) = case x⁰ of {
+//│ 	C t⁰ => if [True] then t⁰ else prodType^4(t⁰)}
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec f x_1 =
+//│ 		  (match x_1 with
+//│ 		    | `C(t_1) -> 
+//│ 		      (if true then
+//│ 		        (f t_1)
+//│ 		      else
+//│ 		        (f (g t_1))))
+//│ 		and g t_2 =
+//│ 		  (`C(t_2))
+//│ 		and prodType x_0 =
+//│ 		  (match x_0 with
+//│ 		    | `C(t_0) -> 
+//│ 		      (if true then
+//│ 		        t_0
+//│ 		      else
+//│ 		        (prodType t_0)));;
+//│ 		((fun x_2 -> 
+//│ 		  2) (fun x_3 -> 
+//│ 		  (f (prodType x_3))))
+//│ 		....... ocaml repl result .......
+//│ 		[ok]
+//│ 		                              val f : ([ `C of 'a ] as 'a) -> 'b = <fun>
+//│ 		val g : ([ `C of 'a ] as 'a) -> 'a = <fun>
+//│ 		val prodType : ([< `C of 'a ] as 'a) -> 'a = <fun>
+//│ 		....... ocaml repl result .......
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^28] (hopeless to continue)
+//│ 	[f^28 · f^12] ---> [f^28] (using original def)
+//│ 	[f^28 · f^15] ---> [f^28] (using original def)
+//│ 	[f^28 · g^16] (using original def)
+//│ [prodType^29] (hopeless to continue)
+//│ 	[prodType^29 · prodType^4] ---> [prodType^29] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ (fun x⁶ -> 2)((fun x⁷ -> f₀(prodType₀(x⁷))))
+//│ def f₀(x⁴) = 
+//│ 	case x⁴ of {
+//│ 		C t⁴ => if [True] then f₀(t⁴) else f₀(g₀(t⁴))}
+//│ 	where
+//│ 	def g₀(t³) = 
+//│ 		[C t³]
+//│ def prodType₀(x⁵) = 
+//│ 	case x⁵ of {
+//│ 		C t⁵ => if [True] then t⁵ else prodType₀(t⁵)}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C t³]: 36 --->
+//│ 	case x⁴ of {C t⁴ => if [True] then f₀(t⁴) else f₀(g₀(t⁴))}: 49
+//│ ------------------
+//│ case x⁴ of {C t⁴ => if [True] then f₀(t⁴) else f₀(g₀(t⁴))}: 49 --->
+//│ 	[C t³]: 36
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C t³]: 36 --->
+//│ 	case x⁴ of {C t⁴ => if [True] then f₀(t⁴) else f₀(g₀(t⁴))}: 49
+//│ ------------------
+//│ case x⁴ of {C t⁴ => if [True] then f₀(t⁴) else f₀(g₀(t⁴))}: 49 --->
+//│ 	[C t³]: 36
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ (fun x⁸ -> 2)((fun x⁹ -> f₀(prodType₀(x⁹))))
+//│ def f₀(x¹⁰) = 
+//│ 	x¹⁰(99)
+//│ 	where
+//│ 	def g₀(t⁶) = 
+//│ 		let t⁷ = t⁶
+//│ 		in (fun _lh_dummy⁰ -> if [True] then f₀(t⁷) else f₀(g₀(t⁷)))
+//│ def prodType₀(x¹¹) = 
+//│ 	case x¹¹ of {
+//│ 		C t⁵ => if [True] then t⁵ else prodType₀(t⁵)}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
+//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
+//│ 
+//│ let rec f_d0 x_2 =
+//│   (x_2 99)
+//│ and g_d0 t_0 =
+//│   (let rec t_1 = t_0 in
+//│     (fun _lh_dummy_0 -> 
+//│       (if true then
+//│         (f_d0 t_1)
+//│       else
+//│         (f_d0 (g_d0 t_1)))))
+//│ and prodType_d0 x_3 =
+//│   (match x_3 with
+//│     | `C(t_2) -> 
+//│       (if true then
+//│         t_2
+//│       else
+//│         (prodType_d0 t_2)));;
+//│ ((fun x_0 -> 
+//│   2) (fun x_1 -> 
+//│   (f_d0 (prodType_d0 x_1))))
+//│ 
+//│ --------------- ocaml repl result -----------------
+//│ /!!!\ Uncaught error: java.lang.Exception:       Line 4, characters 8-25:
+//│ 4 |   (f_d0 (prodType_d0 x_1))));;
+//│             ^^^^^^^^^^^^^^^^^
+//│ Error: This expression has type [< `C of 'a ] as 'a
+//│        but an expression was expected of type int -> 'b
+
+
+// FIXME:
+:lhGenOCaml
+:d
+:lhLessExpansion
+fun break(ls) = if ls is
+  N then P(N, N)
+  C(h, t) then if h == 1 then P(N, C(h, t)) else if (break(t)) is
+    P(fst, snd) then P(C(h, fst), snd)
+fun line(ls) = if break(ls) is
+  P(fst, snd) then
+    C(
+      fst,
+      if snd is
+        C(h, t) then line(t)
+        N then N
+    )
+fun head(ls) = if ls is
+  C(h, t) then h
+  N then error
+(head(line(primId(C(2,C(2,C(1,C(2,N))))))))
+//│ |#fun| |break|(|ls|)| |#=| |#if| |ls| |is|→|N| |#then| |P|(|N|,| |N|)|↵|C|(|h|,| |t|)| |#then| |#if| |h| |==| |1| |#then| |P|(|N|,| |C|(|h|,| |t|)|)| |#else| |#if| |(|break|(|t|)|)| |is|→|P|(|fst|,| |snd|)| |#then| |P|(|C|(|h|,| |fst|)|,| |snd|)|←|←|↵|#fun| |line|(|ls|)| |#=| |#if| |break|(|ls|)| |is|→|P|(|fst|,| |snd|)| |#then|→|C|(|→|fst|,|↵|#if| |snd| |is|→|C|(|h|,| |t|)| |#then| |line|(|t|)|↵|N| |#then| |N|←|←|↵|)|←|←|↵|#fun| |head|(|ls|)| |#=| |#if| |ls| |is|→|C|(|h|,| |t|)| |#then| |h|↵|N| |#then| |error|←|↵|(|head|(|line|(|primId|(|C|(|2|,|C|(|2|,|C|(|1|,|C|(|2|,|N|)|)|)|)|)|)|)|)|
+//│ Parsed: {fun break = ls, => if ls is ‹(N) then P (N, N,); (C (h, t,)) then if (== (h,) (1,)) then P (N, C (h, t,),) else if '(' break (t,), ')' is ‹(P (fst, snd,)) then P (C (h, fst,), snd,)››; fun line = ls, => if break (ls,) is ‹(P (fst, snd,)) then {C (fst, if snd is ‹(C (h, t,)) then line (t,); (N) then N›,)}›; fun head = ls, => if ls is ‹(C (h, t,)) then h; (N) then error›; '(' head (line (primId (C (2, C (2, C (1, C (2, N,),),),),),),), ')'}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ head^45(line^46(primId⁰([C 2 [C 2 [C 1 [C 2 [N]]]]])))
+//│ def break(ls⁰) = case ls⁰ of {
+//│ 	N  => [P [N] [N]]
+//│ 	| C h⁰ t⁰ => if (h⁰ == 1) then [P [N] [C h⁰ t⁰]] else case break^15(t⁰) of {
+//│ 		P fst⁰ snd⁰ => [P [C h⁰ fst⁰] snd⁰]}}
+//│ def head(ls²) = case ls² of {
+//│ 	C h² t² => h²
+//│ 	| N  => error⁰}
+//│ def line(ls¹) = case break^27(ls¹) of {
+//│ 	P fst¹ snd¹ => [C fst¹ case snd¹ of {
+//│ 		C h¹ t¹ => line^32(t¹)
+//│ 		| N  => [N]}]}
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec break ls_0 =
+//│ 		  (match ls_0 with
+//│ 		    | `N -> 
+//│ 		      (`P((`N), (`N)))
+//│ 		    | `C(h_0, t_0) -> 
+//│ 		      (if (h_0 = 1) then
+//│ 		        (`P((`N), (`C(h_0, t_0))))
+//│ 		      else
+//│ 		        (match (break t_0) with
+//│ 		          | `P(fst_0, snd_0) -> 
+//│ 		            (`P((`C(h_0, fst_0)), snd_0)))))
+//│ 		and head ls_2 =
+//│ 		  (match ls_2 with
+//│ 		    | `C(h_2, t_2) -> 
+//│ 		      h_2
+//│ 		    | `N -> 
+//│ 		      (failwith "error"))
+//│ 		and line ls_1 =
+//│ 		  (match (break ls_1) with
+//│ 		    | `P(fst_1, snd_1) -> 
+//│ 		      (`C(fst_1, (match snd_1 with
+//│ 		        | `C(h_1, t_1) -> 
+//│ 		          (line t_1)
+//│ 		        | `N -> 
+//│ 		          (`N)))));;
+//│ 		(head (line (`C(2, (`C(2, (`C(1, (`C(2, (`N)))))))))))
+//│ 		....... ocaml repl result .......
+//│ 		[ok]
+//│ 		                                                val break :
+//│ 		  ([< `C of int * 'a | `N ] as 'a) ->
+//│ 		  [ `P of ([> `C of int * 'b | `N ] as 'b) * [ `C of int * 'a | `N ] ] =
+//│ 		  <fun>
+//│ 		val head : [< `C of 'a * 'b | `N ] -> 'a = <fun>
+//│ 		val line :
+//│ 		  ([< `C of int * 'a | `N ] as 'a) ->
+//│ 		  ([> `C of ([> `C of int * 'c | `N ] as 'c) * 'b | `N ] as 'b) = <fun>
+//│ 		....... ocaml repl result .......
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [N]: 3 --->
+//│ 	case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}: 36
+//│ [P [N] [N]]: 4 --->
+//│ 	case break(t⁰) of {P fst⁰ snd⁰ => [P [C h⁰ fst⁰] snd⁰]}: 23
+//│ 	case break(ls¹) of {P fst¹ snd¹ => [C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]}: 38
+//│ [C h⁰ t⁰]: 13 --->
+//│ 	case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}: 36
+//│ [P [N] [C h⁰ t⁰]]: 14 --->
+//│ 	case break(t⁰) of {P fst⁰ snd⁰ => [P [C h⁰ fst⁰] snd⁰]}: 23
+//│ 	case break(ls¹) of {P fst¹ snd¹ => [C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]}: 38
+//│ [P [C h⁰ fst⁰] snd⁰]: 22 --->
+//│ 	case break(t⁰) of {P fst⁰ snd⁰ => [P [C h⁰ fst⁰] snd⁰]}: 23
+//│ 	case break(ls¹) of {P fst¹ snd¹ => [C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]}: 38
+//│ [C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]: 37 --->
+//│ 	DeadCodeCons
+//│ 	case ls² of {C h² t² => h² | N  => error⁰}: 43
+//│ ------------------
+//│ case break(t⁰) of {P fst⁰ snd⁰ => [P [C h⁰ fst⁰] snd⁰]}: 23 --->
+//│ 	[P [N] [N]]: 4
+//│ 	[P [N] [C h⁰ t⁰]]: 14
+//│ 	[P [C h⁰ fst⁰] snd⁰]: 22
+//│ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}: 36 --->
+//│ 	[N]: 3
+//│ 	[C h⁰ t⁰]: 13
+//│ case break(ls¹) of {P fst¹ snd¹ => [C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]}: 38 --->
+//│ 	[P [N] [N]]: 4
+//│ 	[P [N] [C h⁰ t⁰]]: 14
+//│ 	[P [C h⁰ fst⁰] snd⁰]: 22
+//│ case ls² of {C h² t² => h² | N  => error⁰}: 43 --->
+//│ 	[C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]: 37
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [N]: 3 --->
+//│ 	case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}: 36
+//│ [C h⁰ t⁰]: 13 --->
+//│ 	case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}: 36
+//│ [C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]: 37 --->
+//│ 	case ls² of {C h² t² => h² | N  => error⁰}: 43
+//│ ------------------
+//│ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}: 36 --->
+//│ 	[N]: 3
+//│ 	[C h⁰ t⁰]: 13
+//│ case ls² of {C h² t² => h² | N  => error⁰}: 43 --->
+//│ 	[C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]: 37
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ head(line(primId⁰([C 2 [C 2 [C 1 [C 2 [N]]]]])))
+//│ def break(ls³) = case ls³ of {
+//│ 	N  => [P [N] (fun _lh_dummy⁰ -> [N])]
+//│ 	| C h⁰ t⁰ => if (h⁰ == 1) then [P [N] 
+//│ 		let t³ = t⁰
+//│ 		in (fun _lh_dummy¹ -> line(t³))] else case break(t⁰) of {
+//│ 		P fst⁰ snd⁰ => [P [C h⁰ fst⁰] snd⁰]}}
+//│ def head(ls⁵) = ls⁵(99)
+//│ def line(ls⁴) = case break(ls⁴) of {
+//│ 	P fst¹ snd¹ => lumberhack_obj_magic⁰(
+//│ 		let h³ = fst¹
+//│ 		in (fun _lh_dummy² -> h³))}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
+//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
+//│ 
+//│ let rec break ls_0 =
+//│   (match ls_0 with
+//│     | `N -> 
+//│       (`P((`N), (fun _lh_dummy_0 -> 
+//│         (`N))))
+//│     | `C(h_0, t_0) -> 
+//│       (if (h_0 = 1) then
+//│         (`P((`N), (let rec t_1 = t_0 in
+//│           (fun _lh_dummy_1 -> 
+//│             (line t_1)))))
+//│       else
+//│         (match (break t_0) with
+//│           | `P(fst_0, snd_0) -> 
+//│             (`P((`C(h_0, fst_0)), snd_0)))))
+//│ and head ls_2 =
+//│   (ls_2 99)
+//│ and line ls_1 =
+//│   (match (break ls_1) with
+//│     | `P(fst_1, snd_1) -> 
+//│       (Obj.magic (let rec h_1 = fst_1 in
+//│         (fun _lh_dummy_2 -> 
+//│           h_1))));;
+//│ (head (line (`C(2, (`C(2, (`C(1, (`C(2, (`N)))))))))))
+//│ 
+//│ --------------- ocaml repl result -----------------
+//│ /!!!\ Uncaught error: java.lang.Exception:   Line 2, characters 6-53:
+//│ 2 | (head (line (`C(2, (`C(2, (`C(1, (`C(2, (`N)))))))))));;
+//│           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//│ Error: This expression has type [> `N ]
+//│        but an expression was expected of type int -> 'a

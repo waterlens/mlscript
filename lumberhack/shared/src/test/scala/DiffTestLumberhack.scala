@@ -150,6 +150,7 @@ class DiffTestLumberhack extends DiffTests {
           output("benchmark file generated")
         } catch { case e =>
           output(s"cannot generate benchmark files: ${e.getMessage()}\n")
+          // output(s"cannot generate benchmark files: ${e.getMessage()}\n${e.getStackTrace().mkString("\n")}")
           val progStr = ocamlGen(iterativeProcessRes._1)
           // val clipboard = java.awt.Toolkit.getDefaultToolkit.getSystemClipboard
           // val declClipboard = new java.awt.datatransfer.StringSelection(decl ++ ";;")
@@ -211,10 +212,12 @@ class DiffTestLumberhack extends DiffTests {
       output("\n~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~")
 
     val newEvalRess = evalRes.flatMap(r => evalRess.map(rs => r :: rs))
-    if stop then return if count > 0 then (p, d, evalRess) else (fusedP, fusedD, newEvalRess)
-    if count > 10 || mode.lhNoIter then return (fusedP, fusedD, newEvalRess)
-    
-    keepFuse(fusedP, fusedD, mode, evaluate, output, count + 1, newEvalRess)
+    if stop then
+      if count > 0 then (p, d, evalRess) else (fusedP, fusedD, newEvalRess)
+    else if count > 10 || mode.lhNoIter then
+      (fusedP, fusedD, newEvalRess)
+    else
+      keepFuse(fusedP, fusedD, mode, evaluate, output, count + 1, newEvalRess)
   }
 
   def expander(

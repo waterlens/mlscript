@@ -614,8 +614,8 @@ trait ProgramRewrite { this: Program =>
   }
 
   def popOutLambdas(using lessExpansion: Boolean = false): Program -> Deforest = {
-    given newd: Deforest = Deforest(false)
-    val copied -> _ -> _ = this.copyDefsToNewDeforest
+    val newd: Deforest = Deforest(false)
+    val copied -> _ -> _ = this.copyDefsToNewDeforest(using newd)
     val (newProg, finalD) =
       if lessExpansion then
         (copied, newd)
@@ -624,10 +624,10 @@ trait ProgramRewrite { this: Program =>
         copied.expandedWithNewDeforest(CallTree.callTreeWithoutKnotTying(newd))
     
     val prgm = Program(
-      newProg.defAndExpr._2.map { e => given Option[Ident] = None; R(e.popOutLambdas) }
+      newProg.defAndExpr._2.map { e => given Option[Ident] = None; R(e.popOutLambdas(using finalD)) }
       ::: newProg.defAndExpr._1.map { case (id, body) =>
         given Option[Ident] = Some(id)
-        L(ProgDef(id, body.popOutLambdas))
+        L(ProgDef(id, body.popOutLambdas(using finalD)))
       }.toList
     )(using finalD)
     finalD(prgm)

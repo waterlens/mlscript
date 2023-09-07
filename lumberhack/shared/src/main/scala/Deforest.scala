@@ -300,6 +300,31 @@ class Deforest(var debug: Boolean) {
   val callsInfo = (mutable.Set.empty[Ref], mutable.Map.empty[Ident, Set[Ref]])
   val ctorExprToType = mutable.Map.empty[ExprId, MkCtor]
   val dtorExprToType = mutable.Map.empty[ExprId, Destruct]
+  val exprToProdType = mutable.Map.empty[ExprId, ProdStrat]
+  private def registerExprToType(e: Expr, s: ProdStrat) = {
+    // just to handle the initial program translated from haskell since its ExprId may got duplicated
+    def eq(a: ProdStrat, b: ProdStrat): Boolean = (a.s, b.s) match {
+      case (NoProd(), NoProd()) => true
+      case (MkCtor(c1, a1), MkCtor(c2, a2)) => c1 == c2 && a1.zip(a2).foldLeft(true){ case (acc, (a1, a2)) => acc && eq(a1, a2) }
+      case (Sum(ctors1), Sum(ctors2)) => ctors1.zip(ctors2).foldLeft(true){ case (acc, (cs1, cs2)) => acc && eq(cs1, cs2) }
+      case (ProdFun(_, rhs1), ProdFun(_, rhs2)) => eq(rhs1, rhs2)
+      case (ProdVar(_, n1), ProdVar(_, n2)) => n1 == n2
+      case _ => false
+    }
+    exprToProdType.get(e.uid) match {
+      case None => {
+        exprToProdType += e.uid -> s
+        s
+      }
+      // case Some(value) =>
+      //   lastWords(s"${e.pp(using InitPpConfig.showEuidOn)} registered two prod strategies:\n already has ${value.pp(using InitPpConfig)}, but got ${s.pp(using InitPpConfig)}")
+      case Some(value) =>
+        if eq(value, s) then
+          value
+        else
+          lastWords(s"${e.pp(using InitPpConfig.showEuidOn)} registered two prod strategies:\n already has ${value.pp(using InitPpConfig)}, but got ${s.pp(using InitPpConfig)}")
+    }
+  }
 
   // NOTE: the thing is that, to get recursive knots, we need the program to tyoe check, but to make a polymorphic program to
   // type check, we need to do the duplication of multiple-usage definitions, so seems that these two things has to be done in two steps
@@ -416,7 +441,8 @@ class Deforest(var debug: Boolean) {
         process(fst)
         process(snd).s
 
-    res.toStrat()
+    // res.toStrat()
+    registerExprToType(e, res.toStrat())
   }(r => s"=> ${r.pp(using InitPpConfig)}")
 
   def apply(p: Program): Ls[Ident -> ProdStrat] = trace(s"apply ${summary(p.pp(using InitPpConfig))}") {

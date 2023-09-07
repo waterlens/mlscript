@@ -72,6 +72,8 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
     // output(treeRootNode.pp)
     // output(treeRootNode.getNodeString())
     fromHaskellToPrgm(treeRootNode)(using program)
+    // if not copy, some exprids may be shared, but is's ok since it will be expanded and copied later
+    // fromHaskellToPrgm(treeRootNode)(using program).copyDefsToNewDeforest(using Deforest(d.debug))._1._1
   }
   given NodeExtension with {
     extension (n: Node) override def toPattern(using prgmStr: Str): NestedPat = n.getType() match {

@@ -302,7 +302,8 @@ class Deforest(var debug: Boolean) {
   val dtorExprToType = mutable.Map.empty[ExprId, Destruct]
   val exprToProdType = mutable.Map.empty[ExprId, ProdStrat]
   private def registerExprToType(e: Expr, s: ProdStrat) = {
-    // just to handle the initial program translated from haskell since its ExprId may got duplicated
+    // just to handle the initial program translated from haskell since its ExprId may got duplicated, just
+    // a check to make sure things does not break here
     def eq(a: ProdStrat, b: ProdStrat): Boolean = (a.s, b.s) match {
       case (NoProd(), NoProd()) => true
       case (MkCtor(c1, a1), MkCtor(c2, a2)) => c1 == c2 && a1.zip(a2).foldLeft(true){ case (acc, (a1, a2)) => acc && eq(a1, a2) }
@@ -313,6 +314,7 @@ class Deforest(var debug: Boolean) {
     }
     exprToProdType.get(e.uid) match {
       case None => {
+        // assert(s.s.euid == e.uid)
         exprToProdType += e.uid -> s
         s
       }
@@ -476,6 +478,15 @@ class Deforest(var debug: Boolean) {
       case (p, c) => constraints ::= (prod, cons)
   }
   
+  def isRealCtorOrDtor(id: ExprId): Boolean =
+    if id == noExprId then
+      false
+    else
+      exprs(id) match {
+        case cd: (Expr.Ctor | Expr.Match) => true
+        case _ => false
+      }
+  
   // type Cache = Map[Cnstr, Cnstr -> Int]
   type Cache = scala.collection.mutable.Map[Cnstr, Cnstr -> Int]
 
@@ -489,7 +500,8 @@ class Deforest(var debug: Boolean) {
   val ctorDestinations = mutable.Map.empty[ProdStratEnum.MkCtor, Set[ConsStratEnum]].withDefaultValue(Set())
   val dtorSources = mutable.Map.empty[ConsStratEnum.Destruct, Set[ProdStratEnum]].withDefaultValue(Set())
   def resolveConstraints: Unit = {
-
+    // if constraint resolver has already been executed, do not execute it more than once
+    if lowerBounds.keys.nonEmpty || upperBounds.keys.nonEmpty then return ()
     def handle(c: Cnstr)(using cache: Cache, numOfTypeCtor: Int): Unit = trace(s"handle [${c._1.pp(using InitPpConfig.showVuidOn)} <: ${c._2.pp(using InitPpConfig.showVuidOn)}]") {
       val prod = c._1
       val cons = c._2
@@ -533,7 +545,7 @@ class Deforest(var debug: Boolean) {
           handle(NoProd()(using noExprId).toStrat(cons.path.neg) -> l.addPath(prod.path.neg))
         case (NoProd(), dtor@Destruct(ds)) =>
           given Int = numOfTypeCtor + 1
-          if dtor.euid != noExprId then {
+          if this.isRealCtorOrDtor(dtor.euid) then {
             dtorSources += dtor -> (dtorSources(dtor) + prod.s)
           }
           ds foreach { case Destructor(ctor, argCons) =>
@@ -541,7 +553,7 @@ class Deforest(var debug: Boolean) {
           }
         case (ctorType@MkCtor(ctor, args), NoCons()) =>
           given Int = numOfTypeCtor + 1
-          if ctorType.euid != noExprId then {
+          if this.isRealCtorOrDtor(ctorType.euid) then {
             ctorDestinations += ctorType -> (ctorDestinations(ctorType) + cons.s)
           }
           args foreach { p => handle(p.addPath(prod.path), cons) }
@@ -549,7 +561,8 @@ class Deforest(var debug: Boolean) {
         case (_, cv@ConsVar(v, n)) if n == "_lh_rigid_error_var" => ()
         case (pv@ProdVar(v, _), _) =>
           cons.s match {
-            case dtor: Destruct if lowerBounds(v).isEmpty && dtor.euid != noExprId => dtorSources += dtor -> (dtorSources(dtor) + pv)
+            case dtor: Destruct if lowerBounds(v).isEmpty && this.isRealCtorOrDtor(dtor.euid) =>
+              dtorSources += dtor -> (dtorSources(dtor) + pv)
             case _ => ()
           }
           upperBounds += v -> ((pv.asOutPath.getOrElse(Path.empty) ::: prod.path.rev, cons) :: upperBounds(v))
@@ -559,7 +572,8 @@ class Deforest(var debug: Boolean) {
           }))
         case (_, cv@ConsVar(v, _)) =>
           prod.s match {
-            case ctor: MkCtor if upperBounds(v).isEmpty && ctor.euid != noExprId => ctorDestinations += ctor -> (ctorDestinations(ctor) + cv)
+            case ctor: MkCtor if upperBounds(v).isEmpty && this.isRealCtorOrDtor(ctor.euid) =>
+              ctorDestinations += ctor -> (ctorDestinations(ctor) + cv)
             case _ => ()
           }
           lowerBounds += v -> ((cv.asInPath.getOrElse(Path.empty) ::: cons.path.rev, prod) :: lowerBounds(v))
@@ -607,7 +621,7 @@ class Deforest(var debug: Boolean) {
               found = true
               assert(args.size == argCons.size)
               // register the fusion match
-              if (prod.s.euid =/= noExprId && cons.s.euid =/= noExprId) then {
+              if (this.isRealCtorOrDtor(prod.s.euid) && this.isRealCtorOrDtor(cons.s.euid)) then {
                 fusionMatch.updateWith(prod.s.euid)(_.map(_ + cons.s.euid).orElse(Some(Set(cons.s.euid))))
                 dtorSources += cons.s.asInstanceOf[Destruct] -> (dtorSources(cons.s.asInstanceOf[Destruct]) + prod.s)
                 ctorDestinations += prod.s.asInstanceOf[MkCtor] -> (ctorDestinations(prod.s.asInstanceOf[MkCtor]) + cons.s)
@@ -619,7 +633,7 @@ class Deforest(var debug: Boolean) {
               
             } else if ds_ctor.name == "_" then { // both wildcard pattern and id pattern
               found = true
-              if (prod.s.euid =/= noExprId && cons.s.euid =/= noExprId) then {
+              if (this.isRealCtorOrDtor(prod.s.euid) && this.isRealCtorOrDtor(cons.s.euid)) then {
                 fusionMatch.updateWith(prod.s.euid)(_.map(_ + cons.s.euid).orElse(Some(Set(cons.s.euid))))
                 dtorSources += cons.s.asInstanceOf[Destruct] -> (dtorSources(cons.s.asInstanceOf[Destruct]) + prod.s)
                 ctorDestinations += prod.s.asInstanceOf[MkCtor] -> (ctorDestinations(prod.s.asInstanceOf[MkCtor]) + cons.s)
@@ -673,32 +687,6 @@ class Deforest(var debug: Boolean) {
     propagateDeadCodeCons
   }
   
-  def propagateDeadCodeCons: Unit = {
-    val emptyPathDeadCodeCons = DeadCodeCons()(using noExprId)
-    val cache = mutable.Set.empty[ProdStrat]
-    def handle(p: ProdStrat): Unit = {
-      if cache.add(p) then
-        p.s match {
-          case NoProd() => ()
-          case ctorType@MkCtor(ctor, args) =>
-            if ctorType.euid != noExprId then
-              ctorDestinations += ctorType -> (ctorDestinations(ctorType) + emptyPathDeadCodeCons)
-            args.foreach(a => handle(a))
-          case Sum(ls) => ls.foreach(m => handle(m))
-          case ProdFun(l, r) =>
-            // not handling NoProd <: l
-            handle(r)
-          case ProdVar(uid, n) =>
-            upperBounds += uid -> ((Path.empty, emptyPathDeadCodeCons.toStrat()) :: upperBounds(uid))
-            lowerBounds(uid).foreach(l => handle(l._2))
-        }
-    }
-    varsName.keys.foreach { vid =>
-      if upperBounds(vid).isEmpty then
-        upperBounds += vid -> ((Path.empty, emptyPathDeadCodeCons.toStrat()) :: upperBounds(vid))
-        lowerBounds(vid).foreach(l => handle(l._2))
-    }
-  }
 
   lazy val knotsAfterAnnihilation = recursiveConstr.map { (cnstr, set) => (cnstr, {
     set.map { (key, vall) => (key.annihilated, vall.annihilated) }.toSet
@@ -730,6 +718,33 @@ class Deforest(var debug: Boolean) {
   lazy val lumberhackKeywordsIds: Map[String, Ident] = Deforest.lumberhackKeywords.map {
     n => n -> this.nextIdent(false, Var(n))
   }.toMap
+
+  def propagateDeadCodeCons: Unit = {
+    val emptyPathDeadCodeCons = DeadCodeCons()(using noExprId)
+    val cache = mutable.Set.empty[ProdStrat]
+    def handle(p: ProdStrat): Unit = {
+      if cache.add(p) then
+        p.s match {
+          case NoProd() => ()
+          case ctorType@MkCtor(ctor, args) =>
+            if this.isRealCtorOrDtor(ctorType.euid) then
+              ctorDestinations += ctorType -> (ctorDestinations(ctorType) + emptyPathDeadCodeCons)
+            args.foreach(a => handle(a))
+          case Sum(ls) => ls.foreach(m => handle(m))
+          case ProdFun(l, r) =>
+            // not handling NoProd <: l
+            handle(r)
+          case ProdVar(uid, n) =>
+            upperBounds += uid -> ((Path.empty, emptyPathDeadCodeCons.toStrat()) :: upperBounds(uid))
+            lowerBounds(uid).foreach(l => handle(l._2))
+        }
+    }
+    varsName.keys.foreach { vid =>
+      if upperBounds(vid).isEmpty then
+        upperBounds += vid -> ((Path.empty, emptyPathDeadCodeCons.toStrat()) :: upperBounds(vid))
+        lowerBounds(vid).foreach(l => handle(l._2))
+    }
+  }
 
   def resolveConstraintsImmutableCache: Unit = {
     type CacheImmutable = Map[Cnstr, Cnstr -> Int]

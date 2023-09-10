@@ -165,13 +165,14 @@ class FusionStrategy(d: Deforest) {
     // }
     
     // remove those ctors with multiple dtors
-    val toRmCtor1 = res1._1.filter(
-      _._2.filterNot(_.isInstanceOf[DeadCodeCons]).size > 1
-    ).keySet.asInstanceOf[Set[ProdStratEnum]]
-    removeCtor(res1._1, res1._2, toRmCtor1).mapFirst { ctorDests =>
+    val toRmCtor1 = res1._1.filter(_._2.size > 1).keySet.asInstanceOf[Set[ProdStratEnum]]
+    // val toRmCtor1 = res1._1.filter(
+    //   _._2.filterNot(_.isInstanceOf[DeadCodeCons]).size > 1
+    // ).keySet.asInstanceOf[Set[ProdStratEnum]]
+    removeCtor(res1._1, res1._2, toRmCtor1)/* .mapFirst { ctorDests =>
       // filter out DeadCodeCons just for later processing not crash
       ctorDests.mapValues(_.filterNot(_.isInstanceOf[DeadCodeCons])).toMap
-    }
+    } */
   }
 
   // assume that there is already no multiple match clashes, can be more efficient
@@ -319,7 +320,7 @@ trait ExprRewrite { this: Expr =>
     newd: Deforest,
     inDef: Option[Ident],
     scopeExtrusionInfo: Map[ExprId, List[Ident]],
-    goesIntoDeadCodeCons: Set[ExprId]
+    // goesIntoDeadCodeCons: Set[ExprId]
   ): Expr = this.deforest.Trace.trace(s"fusion handling ${this.pp(using InitPpConfig)}"){
     this match {
       case Const(lit) => Const(lit)
@@ -405,10 +406,11 @@ trait ExprRewrite { this: Expr =>
           // LetIn(param, Call(Ref(newd.lumberhackKeywordsIds("lazy")), argExpr.rewriteFusion), acc)
           LetIn(param, argExpr.rewriteFusion, acc)
         }
-        if goesIntoDeadCodeCons(this.uid) then
-          Call(Ref(newd.lumberhackKeywordsIds("lumberhack_obj_magic")), fused)
-        else
-          fused
+        // if goesIntoDeadCodeCons(this.uid) then
+        //   Call(Ref(newd.lumberhackKeywordsIds("lumberhack_obj_magic")), fused)
+        // else
+        //   fused
+        fused
       }.getOrElse(Ctor(name, args.map(_.rewriteFusion)))
     }
   }(res => s"done handling fusion with result: ${res.pp(using InitPpConfig)}")
@@ -599,9 +601,9 @@ trait ProgramRewrite { this: Program =>
       assert(dtors.size == 1 && dtors.head.isInstanceOf[Destruct])
       ctor.euid -> dtors.head.euid
     }
-    given goesIntoDeadCodeCons: Set[ExprId] = fusionStrategy.finallyFilteredStrategies._1.keys.filter { k =>
-      fusionStrategy.ctorFinalDestinations(k).exists(_.isInstanceOf[DeadCodeCons])
-    }.map(_.euid).toSet
+    // given goesIntoDeadCodeCons: Set[ExprId] = fusionStrategy.finallyFilteredStrategies._1.keys.filter { k =>
+    //   fusionStrategy.ctorFinalDestinations(k).exists(_.isInstanceOf[DeadCodeCons])
+    // }.map(_.euid).toSet
     // given Map[ExprId, List[Ident]] = Map.empty.withDefaultValue(Nil)
     given Map[ExprId, List[Ident]] = fusionStrategy.scopeExtrusionInfo
     Program(

@@ -684,7 +684,7 @@ class Deforest(var debug: Boolean) {
     // shuffle(constraints) foreach handle
     constraints foreach handle
     assert(lowerBounds.values.flatten.forall(!_._2.s.isInstanceOf[ProdVar]))
-    propagateDeadCodeCons
+    // propagateDeadCodeCons
   }
   
 

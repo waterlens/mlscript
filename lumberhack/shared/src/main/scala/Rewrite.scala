@@ -507,6 +507,28 @@ trait ExprRewrite { this: Expr =>
       }
     }
   }
+
+  def deadCodeToMagic(using d: Deforest): Expr =
+    if d.exprToProdType.getOrElse(this.uid, lastWords(s"${d.exprs(this.uid).pp(using InitPpConfig)}")).s.representsDeadCode then
+      Call(Ref(d.lumberhackKeywordsIds("lumberhack_obj_magic")), Const(IntLit(99)))
+    else this match {
+      case Call(f, x) => Call(f.deadCodeToMagic, x.deadCodeToMagic)
+      case Const(x) => Const(x)
+      case Ctor(ctor, args) => Ctor(ctor, args.map(_.deadCodeToMagic))
+      case Function(x, body) => Function(x, body.deadCodeToMagic)
+      case IfThenElse(scrut, thenn, elze) => IfThenElse(scrut.deadCodeToMagic, thenn.deadCodeToMagic, elze.deadCodeToMagic)
+      case LetGroup(lets, body) => LetGroup(
+        lets.mapValues(_.deadCodeToMagic).toMap,
+        body.deadCodeToMagic
+      )
+      case LetIn(id, rhs, body) => LetIn(id, rhs.deadCodeToMagic, body.deadCodeToMagic)
+      case Match(scrut, arms) => Match(
+        scrut.deadCodeToMagic,
+        arms.map { case (ctor, ids, body) => (ctor, ids, body.deadCodeToMagic) }
+      )
+      case Ref(id) => Ref(id)
+      case Sequence(fst, snd) => Sequence(fst.deadCodeToMagic, snd.deadCodeToMagic)
+    }
 }
 
 trait ProgramRewrite { this: Program =>
@@ -634,5 +656,34 @@ trait ProgramRewrite { this: Program =>
     )(using finalD)
     finalD(prgm)
     prgm -> finalD
+  }
+
+  lazy val deadCodeToMagic: Program = {
+    def prodStratDests(p: ProdStrat)(using d: Deforest) = p.s match {
+      // case v: ProdVar => d.upperBounds(v.uid).forall
+      case _ => ???
+    }
+    this.d.resolveConstraints
+    
+    val res = Program(this.contents.map {
+      case Left(deff) => Left(ProgDef(
+        deff.id,
+        deff.body.deadCodeToMagic
+      ))
+      case Right(expr) => Right(expr.deadCodeToMagic)
+    }).copyDefsToNewDeforest(using Deforest(this.d.debug))._1._1
+    res.d(res)
+    res
+    // val copied = this.copyDefsToNewDeforest(using Deforest(this.d.debug))._1._1
+    // copied.d(copied)
+    // copied.d.resolveConstraints
+    // val exprIdToProdStrat = copied.d.exprToProdType.toMap
+    // val exprDests = 
+    
+    // Program(
+
+    // )
+    // ???
+    // copied
   }
 }

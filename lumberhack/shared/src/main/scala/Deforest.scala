@@ -167,6 +167,25 @@ enum ProdStratEnum(using val euid: ExprId) extends ToStrat[ProdStratEnum] {
       (if config.showVuid then s"$uid" else "") +
       s"'$n" +
       (if config.showVboundary then pv.printBoundary else "")
+
+  def representsDeadCode(using d: Deforest, cache: Set[TypeVarId] = Set()): Boolean = {
+    if !(d.exprs.isDefinedAt(this.euid)) then
+      false
+    else
+      this match {
+        case p: (MkCtor | NoProd | Sum | ProdFun) => !d.isNotDead.contains(p)
+        case v: ProdVar =>
+          if cache(v.uid) then
+            true
+          else
+            d.upperBounds(v.uid).forall { case (_, s) => s.s match {
+              case ConsStratEnum.DeadCodeCons() => true
+              case ConsStratEnum.ConsVar(uid, name) => ProdVar(uid, name)().representsDeadCode(using d, cache + v.uid)
+              case _ => false
+            }}
+      }
+  }
+
 }
 enum ConsStratEnum(using val euid: ExprId) extends ToStrat[ConsStratEnum] {
   case NoCons()(using ExprId) extends ConsStratEnum with ToStrat[NoCons]
@@ -214,25 +233,25 @@ object ProdStratEnum {
     case Some(_) => MkCtor(Var("LH_C"), prodChar.toStrat() :: prodString(s.tail).toStrat() :: Nil)
     case None => MkCtor(Var("LH_N"), Nil)
   }
-  def prodIntBinOp(using ExprId) = ProdFun(
-    consInt.toStrat(),
-    ProdFun(consInt.toStrat(), prodInt.toStrat()).toStrat()
+  def prodIntBinOp(using id: ExprId, d: Deforest) = ProdFun(
+    consInt(using d.noExprId).toStrat(),
+    ProdFun(consInt(using d.noExprId).toStrat(), prodInt(using d.noExprId).toStrat())(using d.noExprId).toStrat()
   )
-  def prodFloatBinOp(using ExprId) = ProdFun(
-    consFloat.toStrat(),
-    ProdFun(consFloat.toStrat(), prodFloat.toStrat()).toStrat()
+  def prodFloatBinOp(using id: ExprId, d: Deforest) = ProdFun(
+    consFloat(using d.noExprId).toStrat(),
+    ProdFun(consFloat(using d.noExprId).toStrat(), prodFloat(using d.noExprId).toStrat())(using d.noExprId).toStrat()
   )
-  def prodIntEq(using ExprId) = ProdFun(
-    consInt.toStrat(),
-    ProdFun(consInt.toStrat(), prodBool.toStrat()).toStrat()
+  def prodIntEq(using id: ExprId, d: Deforest) = ProdFun(
+    consInt(using d.noExprId).toStrat(),
+    ProdFun(consInt(using d.noExprId).toStrat(), prodBool(using d.noExprId).toStrat())(using d.noExprId).toStrat()
   )
-  def prodBoolBinOp(using ExprId) = ProdFun(
-    consBool.toStrat(),
-    ProdFun(consBool.toStrat(), prodBool.toStrat()).toStrat()
+  def prodBoolBinOp(using id: ExprId, d: Deforest) = ProdFun(
+    consBool(using d.noExprId).toStrat(),
+    ProdFun(consBool(using d.noExprId).toStrat(), prodBool(using d.noExprId).toStrat())(using d.noExprId).toStrat()
   )
-  def prodBoolUnaryOp(using ExprId) = ProdFun(
-    consBool.toStrat(),
-    prodBool.toStrat()
+  def prodBoolUnaryOp(using id: ExprId, d: Deforest) = ProdFun(
+    consBool(using d.noExprId).toStrat(),
+    prodBool(using d.noExprId).toStrat()
   )
 }
 object ConsStratEnum {
@@ -332,43 +351,47 @@ class Deforest(var debug: Boolean) {
   // type check, we need to do the duplication of multiple-usage definitions, so seems that these two things has to be done in two steps
   def process(e: Expr)(using ctx: Ctx, calls: mutable.Set[Ref]): ProdStrat = trace(s"process ${e.uid}: ${e.pp(using InitPpConfig)}") {
     val res: ProdStratEnum = e match
-      case Call(Ref(lazyOrForce), e) if Set("lazy", "force", "lumberhack_obj_magic")(lazyOrForce.tree.name) =>
+      case Call(primFun@Ref(lazyOrForce), e) if Set("lazy", "force", "lumberhack_obj_magic")(lazyOrForce.tree.name) =>
+        registerExprToType(primFun, freshVar("_lh_rigid_error_var")(using e.uid)._1.toStrat())
         // treat the above annotations as identity functions to keep fusion
         process(e).s
+      // adding exprid here to the mkctor types changes the knot tying result and makes type checking slow because
+      // the `recursiveConstr` later will be changed, since mkctor type's eq test and hashCode value relies on the exprId
       case Const(IntLit(_)) => prodInt(using noExprId)
       case Const(DecLit(_)) => prodFloat(using noExprId) // floating point numbers as integers type
       case Const(CharLit(_)) => prodChar(using noExprId)
-      case Const(StrLit(strLit)) => prodString(strLit)(using noExprId) // Strings constants are lists of chars
+      // str lits are handled by fromHaskell; do not handle str lits in mls now
+      // case Const(StrLit(strLit)) => prodString(strLit)(using noExprId) // Strings constants are lists of chars
       case Const(l) => NoProd()(using e.uid)
       case Ref(Ident(_, Var(primitive), _)) if Deforest.lumberhackKeywords(primitive) => {
         if Deforest.lumberhackIntComparisonFun(primitive) || Deforest.lumberhackIntComparisonOps(primitive) then
-          prodIntEq(using noExprId)
+          prodIntEq(using e.uid, this)
         else if Deforest.lumberhackIntValueFun(primitive) || Deforest.lumberhackIntValueBinOps(primitive) then
-          prodIntBinOp(using noExprId)
+          prodIntBinOp(using e.uid, this)
         else if Deforest.lumberhackBoolBinOps(primitive) then
-          prodBoolBinOp(using noExprId)
+          prodBoolBinOp(using e.uid, this)
         else if Deforest.lumberhackBoolUnaryOps(primitive) then
-          prodBoolUnaryOp(using noExprId)
+          prodBoolUnaryOp(using e.uid, this)
         else if Deforest.lumberhackFloatBinOps(primitive) then
-          prodFloatBinOp(using noExprId)
+          prodFloatBinOp(using e.uid, this)
         else if primitive == "error" then
-          freshVar("_lh_rigid_error_var")(using noExprId)._1
+          freshVar("_lh_rigid_error_var")(using e.uid)._1
         else if (Set("primitive", "primId") ++ Deforest.lumberhackPolyOps)(primitive) then
           NoProd()(using e.uid) // `primitive`, `primId`
         else if primitive == "string_of_int" then
-          ProdFun(consInt(using noExprId).toStrat(), prodString(using this, noExprId).toStrat())(using noExprId)
+          ProdFun(consInt(using noExprId).toStrat(), prodString(using this, noExprId).toStrat())(using e.uid)
         else if primitive == "string_of_float" then
-          ProdFun(consFloat(using noExprId).toStrat(), prodString(using this, noExprId).toStrat())(using noExprId)
+          ProdFun(consFloat(using noExprId).toStrat(), prodString(using this, noExprId).toStrat())(using e.uid)
         else if primitive == "char_of_int" then
-          ProdFun(consInt(using noExprId).toStrat(), prodChar(using noExprId).toStrat())(using noExprId)
+          ProdFun(consInt(using noExprId).toStrat(), prodChar(using noExprId).toStrat())(using e.uid)
         else if primitive == "int_of_char" then
-          ProdFun(consChar(using noExprId).toStrat(), prodInt(using noExprId).toStrat())(using noExprId)
+          ProdFun(consChar(using noExprId).toStrat(), prodInt(using noExprId).toStrat())(using e.uid)
         else if primitive == "float_of_int" then
-          ProdFun(consInt(using noExprId).toStrat(), prodFloat(using noExprId).toStrat())(using noExprId)
+          ProdFun(consInt(using noExprId).toStrat(), prodFloat(using noExprId).toStrat())(using e.uid)
         else if primitive == "int_of_float" then
-          ProdFun(consFloat(using noExprId).toStrat(), prodInt(using noExprId).toStrat())(using noExprId)
+          ProdFun(consFloat(using noExprId).toStrat(), prodInt(using noExprId).toStrat())(using e.uid)
         else if primitive == "ceiling" then
-          ProdFun(consFloat(using noExprId).toStrat(), prodFloat(using noExprId).toStrat())(using noExprId)
+          ProdFun(consFloat(using noExprId).toStrat(), prodFloat(using noExprId).toStrat())(using e.uid)
         else
           lastWords("lazy, force and lumberhack_obj_magic should not be handled here")
       }
@@ -499,6 +522,12 @@ class Deforest(var debug: Boolean) {
   // val lowerBounds = mutable.Map.empty[TypeVarId, Set[(Path, ProdStrat)]].withDefaultValue(Set.empty)
   val ctorDestinations = mutable.Map.empty[ProdStratEnum.MkCtor, Set[ConsStratEnum]].withDefaultValue(Set())
   val dtorSources = mutable.Map.empty[ConsStratEnum.Destruct, Set[ProdStratEnum]].withDefaultValue(Set())
+  val isNotDead = mutable.Set.empty[
+    ProdStratEnum.MkCtor |
+    ProdStratEnum.ProdFun |
+    ProdStratEnum.Sum |
+    ProdStratEnum.NoProd
+  ]
   def resolveConstraints: Unit = {
     // if constraint resolver has already been executed, do not execute it more than once
     if lowerBounds.keys.nonEmpty || upperBounds.keys.nonEmpty then return ()
@@ -534,16 +563,20 @@ class Deforest(var debug: Boolean) {
       (prod.s, cons.s) match
         case (ProdVar(v, pn), ConsVar(w, cn))
           if v === w || pn == "_lh_rigid_error_var" || cn == "_lh_rigid_error_var" => ()
-        case (NoProd(), NoCons()) => ()
-        case (NoProd(), ConsFun(l, r)) =>
+        case (np@NoProd(), NoCons()) =>
+          isNotDead += np
+        case (np@NoProd(), ConsFun(l, r)) =>
+          isNotDead += np
           given Int = numOfTypeCtor + 1
           handle(l.addPath(cons.path.neg) -> NoCons()(using noExprId).toStrat(prod.path.neg))
           handle(NoProd()(using noExprId).toStrat(prod.path) -> r.addPath(cons.path))
-        case (ProdFun(l, r), NoCons()) =>
+        case (prodFun@ProdFun(l, r), NoCons()) =>
+          isNotDead += prodFun
           given Int = numOfTypeCtor + 1
           handle(r.addPath(prod.path) -> NoCons()(using noExprId).toStrat(cons.path))
           handle(NoProd()(using noExprId).toStrat(cons.path.neg) -> l.addPath(prod.path.neg))
-        case (NoProd(), dtor@Destruct(ds)) =>
+        case (np@NoProd(), dtor@Destruct(ds)) =>
+          isNotDead += np
           given Int = numOfTypeCtor + 1
           if this.isRealCtorOrDtor(dtor.euid) then {
             dtorSources += dtor -> (dtorSources(dtor) + prod.s)
@@ -552,6 +585,7 @@ class Deforest(var debug: Boolean) {
             argCons foreach { c => handle(prod, c.addPath(cons.path)) }
           }
         case (ctorType@MkCtor(ctor, args), NoCons()) =>
+          isNotDead += ctorType
           given Int = numOfTypeCtor + 1
           if this.isRealCtorOrDtor(ctorType.euid) then {
             ctorDestinations += ctorType -> (ctorDestinations(ctorType) + cons.s)
@@ -581,11 +615,13 @@ class Deforest(var debug: Boolean) {
           upperBounds(v).foreach((ub_path, ub_strat) => handle({
             prod.addPath(cons.path.rev).addPath(cv.asInPath.getOrElse(Path.empty)) -> ub_strat.addPath(ub_path)
           }))
-        case (ProdFun(lhs1, rhs1), ConsFun(lhs2, rhs2)) =>
+        case (prodFun@ProdFun(lhs1, rhs1), ConsFun(lhs2, rhs2)) =>
+          isNotDead += prodFun
           given Int = numOfTypeCtor + 1
           handle(lhs2.addPath(cons.path.neg) -> lhs1.addPath(prod.path.neg))
           handle(rhs1.addPath(prod.path) -> rhs2.addPath(cons.path))
-        case (MkCtor(ctor, args), Destruct(ds)) =>
+        case (mkctor@MkCtor(ctor, args), Destruct(ds)) =>
+          isNotDead += mkctor
           given Int = numOfTypeCtor + 1
           var found = false
           // (ds.find {case Destructor(ds_ctor, argCons) => ds_ctor == ctor || ds_ctor.name == "_"}) match {
@@ -646,7 +682,8 @@ class Deforest(var debug: Boolean) {
             //   argCons foreach { c => handle(NoProd()(using noExprId).toStrat(prod.path), c.addPath(cons.path)) }
           }
           if !found then lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
-        case (Sum(ctors), Destruct(ds)) =>
+        case (sum@Sum(ctors), Destruct(ds)) =>
+          isNotDead += sum
           given Int = numOfTypeCtor + 1
           ctors.foreach { ctorStrat => ctorStrat.s match
             case MkCtor(ctor, args) => {
@@ -666,7 +703,9 @@ class Deforest(var debug: Boolean) {
               }
             }
           }
-        case (Sum(ctors), NoCons()) => ctors.foreach(handle(_, cons))
+        case (sum@Sum(ctors), NoCons()) =>
+          isNotDead += sum
+          ctors.foreach(handle(_, cons))
         // allow function to be the scrutinee, haskell and ocaml also allows it
         case (f: ProdFun, Destruct(ds)) if ds.find(_.ctor.name == "_").isDefined =>
           val dtor = ds.find(_.ctor.name == "_").get

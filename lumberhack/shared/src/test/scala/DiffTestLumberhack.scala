@@ -141,17 +141,34 @@ class DiffTestLumberhack extends DiffTests {
       if mode.lhGenOCaml then
         output("\n>>>>>>>>>> Generated OCaml >>>>>>>>>>")
         val ocamlGen = new OCamlGenTests(true, mode)
+        if mode.dbg || mode.stdout then
+          output("\n>>>>>>>>>> deadcode elimination info >>>>>>>>>>")
+          output(iterativeProcessRes._1.d.exprToProdType.map { case (id, tpe) =>
+            val d = iterativeProcessRes._1.d
+            val exprStr = d.exprs(id).pp(using InitPpConfig)
+            val tpeStr = tpe.pp(using InitPpConfig)
+            val upperBoundsStr = tpe.s match {
+              case v: ProdStratEnum.ProdVar =>
+                s" <: [${d.upperBounds(v.uid).map { case (_, cons) =>
+                  cons.s.pp(using InitPpConfig)
+                }.mkString(" | ")}]"
+              case _ => ""
+            }
+            val representsDeadCodeStr = tpe.s.representsDeadCode(using d)
+            s"$exprStr :: $tpeStr$upperBoundsStr ::: $representsDeadCodeStr"
+          }.mkString("\n"))
+          output("<<<<<<<<<< deadcode elimination info <<<<<<<<<<")
         try {
           ocamlGen.makeBenchFiles(List(
             ("original" -> originalProgram),
-            ("lumberhack" -> iterativeProcessRes._1),
-            ("lumberhack_pop_out" -> iterativeProcessRes._1.popOutLambdas(using mode.lhLessExpansion)._1),
+            ("lumberhack" -> iterativeProcessRes._1.deadCodeToMagic),
+            ("lumberhack_pop_out" -> iterativeProcessRes._1.deadCodeToMagic.popOutLambdas(using mode.lhLessExpansion)._1),
           ))
           output("benchmark file generated")
         } catch { case e =>
           output(s"cannot generate benchmark files: ${e.getMessage()}\n")
           // output(s"cannot generate benchmark files: ${e.getMessage()}\n${e.getStackTrace().mkString("\n")}")
-          val progStr = ocamlGen(iterativeProcessRes._1)
+          val progStr = ocamlGen(iterativeProcessRes._1.deadCodeToMagic)
           // val clipboard = java.awt.Toolkit.getDefaultToolkit.getSystemClipboard
           // val declClipboard = new java.awt.datatransfer.StringSelection(decl ++ ";;")
           // val mainExprClipboard = new java.awt.datatransfer.StringSelection(mainExpr)

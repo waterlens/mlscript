@@ -209,7 +209,7 @@ class FusionStrategy(d: Deforest) {
     }
 
     def getCtorsInStrategy(ctor: MkCtor, dtor: Destruct): Set[MkCtor] = {
-      val res = d.exprs(dtor.euid).asInstanceOf[Expr.Match].arms.find(_._1 == ctor.ctor).map { m =>
+      val res = d.exprs(dtor.euid).asInstanceOf[Expr.Match].arms.find(a => a._1 == ctor.ctor || a._1.name == "_").map { m =>
         getCtorsInExpr(m._3)
       }.getOrElse(Set())
       // getCtorsInExpr(matchingArm._3)
@@ -242,15 +242,15 @@ class FusionStrategy(d: Deforest) {
     res
   }
 
-  val afterRemoveIdpatternAndWildcardPattern = {
-    val toRmCtor = afterRemoveRecursiveStrategies._1.filterNot { case (ctor, dtors) =>
-      assert(dtors.size == 1)
-      dtors.forall(ds => ds.asInstanceOf[ConsStratEnum.Destruct].destrs.exists(d => d.ctor == ctor.ctor))
-    }.keys
-    removeCtor(afterRemoveRecursiveStrategies._1, afterRemoveRecursiveStrategies._2, toRmCtor.toSet)
-  }
+  // val afterRemoveIdpatternAndWildcardPattern = {
+  //   val toRmCtor = afterRemoveRecursiveStrategies._1.filterNot { case (ctor, dtors) =>
+  //     assert(dtors.size == 1)
+  //     dtors.forall(ds => ds.asInstanceOf[ConsStratEnum.Destruct].destrs.exists(d => d.ctor == ctor.ctor))
+  //   }.keys
+  //   removeCtor(afterRemoveRecursiveStrategies._1, afterRemoveRecursiveStrategies._2, toRmCtor.toSet)
+  // }
   
-  val finallyFilteredStrategies = afterRemoveIdpatternAndWildcardPattern
+  val finallyFilteredStrategies = afterRemoveRecursiveStrategies
   val scopeExtrusionInfo: Map[ExprId, List[Ident]] = {
     // val dtorExprs = finallyFilteredStrategies._2.keys.flatMap { de =>
     //   val expr = d.exprs(de.euid).asInstanceOf[Expr.Match]
@@ -372,11 +372,16 @@ trait ExprRewrite { this: Expr =>
           Match(scrut.rewriteFusion, arms.map{(n, args, body) => (n, args, body.rewriteFusion)})
         }
       }
-      case Ctor(name, args) => fusionMatch.get(this.uid).map { matchId =>
-        val matchArm = newd.exprs(matchId).asInstanceOf[Match].arms.find(_._1 == name).get
+      case ctor@Ctor(name, args) => fusionMatch.get(this.uid).map { matchId =>
+        val matchArm = newd.exprs(matchId).asInstanceOf[Match].arms.find(a => a._1 == name || a._1.name == "_").get
         // ignore unused fields
         val allFvs = matchArm._3.getFreeVarsInExpr
-        val usedFieldsWithArgs = (matchArm._2 zip args).filter(ida => allFvs(ida._1))
+        val usedFieldsWithArgs = {
+          if matchArm._1.name == "_" then // id pattern or wildcard pattern
+            (matchArm._2 zip (ctor :: Nil)).filter(ida => allFvs(ida._1))
+          else
+            (matchArm._2 zip args).filter(ida => allFvs(ida._1))
+        }
 
         val (newIds, newArgs) = usedFieldsWithArgs.unzip.mapFirst(_.map(i => i -> i.copyToNewDeforest))
         val newCtx = ctx ++ newIds.toMap

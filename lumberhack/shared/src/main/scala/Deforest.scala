@@ -548,6 +548,34 @@ class Deforest(var debug: Boolean) {
         case (MkCtor(ctor, args), Destruct(ds)) =>
           given Int = numOfTypeCtor + 1
           var found = false
+          // (ds.find {case Destructor(ds_ctor, argCons) => ds_ctor == ctor || ds_ctor.name == "_"}) match {
+          //   case None => lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
+          //   case Some(Destructor(ds_ctor, argCons)) => {
+          //     if ds_ctor == ctor then {
+          //       assert(args.size == argCons.size)
+          //       // register the fusion match
+          //       if (this.isRealCtorOrDtor(prod.s.euid) && this.isRealCtorOrDtor(cons.s.euid)) then {
+          //         fusionMatch.updateWith(prod.s.euid)(_.map(_ + cons.s.euid).orElse(Some(Set(cons.s.euid))))
+          //         dtorSources += cons.s.asInstanceOf[Destruct] -> (dtorSources(cons.s.asInstanceOf[Destruct]) + prod.s)
+          //         ctorDestinations += prod.s.asInstanceOf[MkCtor] -> (ctorDestinations(prod.s.asInstanceOf[MkCtor]) + cons.s)
+          //       }
+
+          //       args lazyZip argCons foreach { case (a, c) =>
+          //         handle(a.addPath(prod.path), c.addPath(cons.path))
+          //       }
+
+          //     } else if ds_ctor.name == "_" then { // both wildcard pattern and id pattern
+          //       if (this.isRealCtorOrDtor(prod.s.euid) && this.isRealCtorOrDtor(cons.s.euid)) then {
+          //         fusionMatch.updateWith(prod.s.euid)(_.map(_ + cons.s.euid).orElse(Some(Set(cons.s.euid))))
+          //         dtorSources += cons.s.asInstanceOf[Destruct] -> (dtorSources(cons.s.asInstanceOf[Destruct]) + prod.s)
+          //         ctorDestinations += prod.s.asInstanceOf[MkCtor] -> (ctorDestinations(prod.s.asInstanceOf[MkCtor]) + cons.s)
+          //       }
+          //       (prod :: Nil) lazyZip argCons foreach { case (a, c) =>
+          //         handle(a.addPath(prod.path), c.addPath(cons.path))
+          //       }
+          //     }
+          //   }
+          // }
           ds foreach { case Destructor(ds_ctor, argCons) =>
             if ds_ctor == ctor then {
               found = true
@@ -562,6 +590,7 @@ class Deforest(var debug: Boolean) {
               args lazyZip argCons foreach { case (a, c) =>
                 handle(a.addPath(prod.path), c.addPath(cons.path))
               }
+              
             } else if ds_ctor.name == "_" then { // both wildcard pattern and id pattern
               found = true
               if (prod.s.euid =/= noExprId && cons.s.euid =/= noExprId) then {

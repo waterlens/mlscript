@@ -72,7 +72,7 @@ let rec int_d0_d0 _lh_int_arg1_0 =
     | `S(_lh_int_S_0_0) -> 
       (1 + (int_d0_d0 _lh_int_S_0_0))
     | _ -> 
-      (failwith "error"));;
+      (Obj.magic 99));;
 let rec natPlus_d0_d0 _lh_natPlus_arg1_0 _lh_natPlus_arg2_0 =
   (match _lh_natPlus_arg1_0 with
     | `Z -> 
@@ -80,7 +80,7 @@ let rec natPlus_d0_d0 _lh_natPlus_arg1_0 _lh_natPlus_arg2_0 =
     | `S(_lh_natPlus_S_0_0) -> 
       (`S(((natPlus_d0_d0 _lh_natPlus_S_0_0) _lh_natPlus_arg2_0)))
     | _ -> 
-      (failwith "error"));;
+      (Obj.magic 99));;
 let rec p_d0_d0 _lh_p_arg1_2 _lh_p_arg2_0 =
   (_lh_p_arg2_0 _lh_p_arg1_2);;
 let rec fromInteger_d1_d0 _lh_fromInteger_arg1_0 =
@@ -98,7 +98,7 @@ and natMult_d0_d0 _lh_natMult_arg1_0 _lh_natMult_arg2_0 =
     | `S(_lh_natMult_S_0_0) -> 
       ((natPlus_d0_d0 ((natMult_d0_d0 _lh_natMult_arg1_0) _lh_natMult_S_0_0)) _lh_natMult_arg1_0)
     | _ -> 
-      (failwith "error"))
+      (Obj.magic 99))
 and testExp38_nofib_d0_d0 _lh_testExp38_nofib_arg1_0 =
   (int_d0_d0 ((p_d0_d0 (fromInteger_d0_d0 3)) (fromInteger_d1_d0 _lh_testExp38_nofib_arg1_0)));;
 
@@ -115,7 +115,7 @@ let rec int_d0_d0_d0 _lh_int_arg1_1 =
     | `S(_lh_int_S_0_1) -> 
       (1 + (int_d0_d0_d0 _lh_int_S_0_1))
     | _ -> 
-      (failwith "error"));;
+      (Obj.magic 99));;
 let rec natPlus_d0_d0_d0 _lh_natPlus_arg1_1 _lh_natPlus_arg2_1 =
   (match _lh_natPlus_arg1_1 with
     | `Z -> 
@@ -123,7 +123,7 @@ let rec natPlus_d0_d0_d0 _lh_natPlus_arg1_1 _lh_natPlus_arg2_1 =
     | `S(_lh_natPlus_S_0_1) -> 
       (`S(((natPlus_d0_d0_d0 _lh_natPlus_S_0_1) _lh_natPlus_arg2_1)))
     | _ -> 
-      (failwith "error"));;
+      (Obj.magic 99));;
 let rec p_d0_d0_d0 _lh_p_arg1_6 _lh_p_arg2_2 =
   (_lh_p_arg2_2 _lh_p_arg1_6);;
 let rec p_d0_d0_d1 _lh_p_arg1_5 _lh_p_arg2_1 =
@@ -141,7 +141,7 @@ and natMult_d0_d0_d0 _lh_natMult_arg1_1 _lh_natMult_arg2_1 =
     | `S(_lh_natMult_S_0_1) -> 
       ((natPlus_d0_d0_d0 ((natMult_d0_d0_d0 _lh_natMult_arg1_1) _lh_natMult_S_0_1)) _lh_natMult_arg1_1)
     | _ -> 
-      (failwith "error"))
+      (Obj.magic 99))
 and testExp38_nofib_d0_d0_d0 _lh_testExp38_nofib_arg1_1 =
   (int_d0_d0_d0 ((p_d0_d0_d1 (fromInteger_d0_d0_d0 3)) (fromInteger_d1_d0_d0 _lh_testExp38_nofib_arg1_1)));;
 

@@ -33,10 +33,8 @@ head $ [1..3]
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)]: 48 --->
-//│ 	DeadCodeCons
 //│ 	case ls¹ of {LH_C h¹ t¹ => h¹ | LH_N  => error⁰}: 56
 //│ [LH_N]: 49 --->
-//│ 	DeadCodeCons
 //│ 	case ls¹ of {LH_C h¹ t¹ => h¹ | LH_N  => error⁰}: 56
 //│ ------------------
 //│ case ls¹ of {LH_C h¹ t¹ => h¹ | LH_N  => error⁰}: 56 --->
@@ -58,9 +56,9 @@ head $ [1..3]
 //│ >>>>>>> after fusion >>>>>>>
 //│ head₀₀(enumFromTo₀₀(1, 3))
 //│ def enumFromTo₀₀(a², b²) = 
-//│ 	if (a² <= b²) then lumberhack_obj_magic⁰(
+//│ 	if (a² <= b²) then 
 //│ 		let h² = a²
-//│ 		in (fun _lh_dummy⁰ -> h²)) else lumberhack_obj_magic⁰((fun _lh_dummy¹ -> error⁰))
+//│ 		in (fun _lh_dummy⁰ -> h²) else (fun _lh_dummy¹ -> error⁰)
 //│ def head₀₀(ls²) = 
 //│ 	ls²(99)
 //│ <<<<<<< after fusion <<<<<<<
@@ -101,14 +99,12 @@ head ([1] ++ [])
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [LH_C h² mappend₀₀(t², ys¹)]: 34 --->
-//│ 	DeadCodeCons
 //│ 	case ls¹ of {LH_C h³ t³ => h³ | LH_N  => error⁰}: 42
 //│ [LH_N]: 47 --->
 //│ 	case xs¹ of {LH_C h² t² => [LH_C h² mappend₀₀(t², ys¹)] | LH_N  => ys¹}: 36
 //│ [LH_C 1 [LH_N]]: 48 --->
 //│ 	case xs¹ of {LH_C h² t² => [LH_C h² mappend₀₀(t², ys¹)] | LH_N  => ys¹}: 36
 //│ [LH_N]: 50 --->
-//│ 	DeadCodeCons
 //│ 	case ls¹ of {LH_C h³ t³ => h³ | LH_N  => error⁰}: 42
 //│ ------------------
 //│ case xs¹ of {LH_C h² t² => [LH_C h² mappend₀₀(t², ys¹)] | LH_N  => ys¹}: 36 --->
@@ -141,9 +137,9 @@ head ([1] ++ [])
 //│ head₀₀(mappend₀₀(
 //│ 	let h⁴ = 1
 //│ 	in let t⁴ = (fun ys³ -> ys³)
-//│ 	in (fun ys² -> lumberhack_obj_magic⁰(
+//│ 	in (fun ys² -> 
 //│ 		let h⁵ = h⁴
-//│ 		in (fun _lh_dummy⁰ -> h⁵))), lumberhack_obj_magic⁰((fun _lh_dummy¹ -> error⁰))))
+//│ 		in (fun _lh_dummy⁰ -> h⁵)), (fun _lh_dummy¹ -> error⁰)))
 //│ def head₀₀(ls²) = 
 //│ 	ls²(99)
 //│ def mappend₀₀(xs², ys⁴) = 

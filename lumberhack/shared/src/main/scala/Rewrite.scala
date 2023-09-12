@@ -679,12 +679,13 @@ trait ProgramRewrite { this: Program =>
         deff.body.deadCodeToMagic
       ))
       case Right(expr) => Right(expr.deadCodeToMagic)
-    }).copyDefsToNewDeforest(using Deforest(this.d.debug))._1._1
+    })/* .copyDefsToNewDeforest(using Deforest(this.d.debug))._1._1
     locallyElimiated.d(locallyElimiated)
     // locallyElimiated
 
     val (res, resd) = locallyElimiated.expandedWithNewDeforest(callTreeWithoutKnotTying(locallyElimiated.d))
     resd(res)
-    res
+    res */
+    locallyElimiated
   }
 }

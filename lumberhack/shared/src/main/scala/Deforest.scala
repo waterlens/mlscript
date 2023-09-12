@@ -156,6 +156,7 @@ enum ProdStratEnum(using val euid: ExprId) extends ToStrat[ProdStratEnum] {
     extends ProdStratEnum
     with ToStrat[ProdVar]
     with TypevarWithBoundary(boundary)
+  case DeadCodeProd()(using ExprId) extends ProdStratEnum with ToStrat[DeadCodeProd]
 
   def pp(using config: PrettyPrintConfig): Str = this match
     case NoProd() => "NoProd"
@@ -167,6 +168,7 @@ enum ProdStratEnum(using val euid: ExprId) extends ToStrat[ProdStratEnum] {
       (if config.showVuid then s"$uid" else "") +
       s"'$n" +
       (if config.showVboundary then pv.printBoundary else "")
+    case DeadCodeProd() => "DeadCodeProd"
 
   def representsDeadCode(using d: Deforest, cache: Set[TypeVarId] = Set()): Boolean = {
     if !(d.exprs.isDefinedAt(this.euid)) then
@@ -183,6 +185,7 @@ enum ProdStratEnum(using val euid: ExprId) extends ToStrat[ProdStratEnum] {
               case ConsStratEnum.ConsVar(uid, name) => ProdVar(uid, name)().representsDeadCode(using d, cache + v.uid)
               case _ => false
             }}
+        case DeadCodeProd() => lastWords("deadcodeprod cannot associate with an expr")
       }
   }
 
@@ -329,6 +332,7 @@ class Deforest(var debug: Boolean) {
       case (Sum(ctors1), Sum(ctors2)) => ctors1.zip(ctors2).foldLeft(true){ case (acc, (cs1, cs2)) => acc && eq(cs1, cs2) }
       case (ProdFun(_, rhs1), ProdFun(_, rhs2)) => eq(rhs1, rhs2)
       case (ProdVar(_, n1), ProdVar(_, n2)) => n1 == n2
+      case (DeadCodeProd(), DeadCodeProd()) => true
       case _ => false
     }
     exprToProdType.get(e.uid) match {
@@ -700,7 +704,7 @@ class Deforest(var debug: Boolean) {
     // shuffle(constraints) foreach handle
     constraints foreach handle
     assert(lowerBounds.values.flatten.forall(!_._2.s.isInstanceOf[ProdVar]))
-    // propagateDeadCodeCons
+    propagateDeadCodeConsProd
   }
   
 
@@ -735,30 +739,54 @@ class Deforest(var debug: Boolean) {
     n => n -> this.nextIdent(false, Var(n))
   }.toMap
 
-  def propagateDeadCodeCons: Unit = {
+  def propagateDeadCodeConsProd: Unit = {
     val emptyPathDeadCodeCons = DeadCodeCons()(using noExprId)
-    val cache = mutable.Set.empty[ProdStrat]
-    def handle(p: ProdStrat): Unit = {
-      if cache.add(p) then
+    val emptyPathDeadCodeProd = DeadCodeProd()(using noExprId)
+    val cacheProd = mutable.Set.empty[ProdStrat]
+    val cacheCons = mutable.Set.empty[ConsStrat]
+    def handleProd(p: ProdStrat): Unit = {
+      if cacheProd.add(p) then
         p.s match {
+          case DeadCodeProd() => ()
           case NoProd() => ()
           case ctorType@MkCtor(ctor, args) =>
             if this.isRealCtorOrDtor(ctorType.euid) then
               ctorDestinations += ctorType -> (ctorDestinations(ctorType) + emptyPathDeadCodeCons)
-            args.foreach(a => handle(a))
-          case Sum(ls) => ls.foreach(m => handle(m))
+            args.foreach(a => handleProd(a))
+          case Sum(ls) => ls.foreach(m => handleProd(m))
           case ProdFun(l, r) =>
-            // not handling NoProd <: l
-            handle(r)
+            handleCons(l)
+            handleProd(r)
           case ProdVar(uid, n) =>
             upperBounds += uid -> ((Path.empty, emptyPathDeadCodeCons.toStrat()) :: upperBounds(uid))
-            lowerBounds(uid).foreach(l => handle(l._2))
+            lowerBounds(uid).foreach(l => handleProd(l._2))
         }
     }
-    varsName.keys.foreach { vid =>
-      if upperBounds(vid).isEmpty then
-        upperBounds += vid -> ((Path.empty, emptyPathDeadCodeCons.toStrat()) :: upperBounds(vid))
-        lowerBounds(vid).foreach(l => handle(l._2))
+    def handleCons(c: ConsStrat): Unit = {
+      if cacheCons.add(c) then
+        c.s match {
+          case DeadCodeCons() => ()
+          case NoCons() => ()
+          case dtorType@Destruct(ds) => {
+            if this.isRealCtorOrDtor(dtorType.euid) then
+              dtorSources += dtorType -> (dtorSources(dtorType) + emptyPathDeadCodeProd)
+            ds.foreach { case Destructor(_, args) => args.foreach(a => handleCons(a)) }
+          }
+          case ConsVar(uid, n) =>
+            lowerBounds += uid -> ((Path.empty, emptyPathDeadCodeProd.toStrat()) :: lowerBounds(uid))
+            upperBounds(uid).foreach(u => handleCons(u._2))
+          case ConsFun(l, r) =>
+            handleCons(r)
+            handleProd(l)
+        }
+    }
+    varsName.keys.foreach { uid =>
+      if upperBounds(uid).isEmpty then
+        upperBounds += uid -> ((Path.empty, emptyPathDeadCodeCons.toStrat()) :: upperBounds(uid))
+        lowerBounds(uid).foreach(l => handleProd(l._2))
+      if lowerBounds(uid).isEmpty then
+        lowerBounds += uid -> ((Path.empty, emptyPathDeadCodeProd.toStrat()) :: lowerBounds(uid))
+        upperBounds(uid).foreach(u => handleCons(u._2))
     }
   }
 

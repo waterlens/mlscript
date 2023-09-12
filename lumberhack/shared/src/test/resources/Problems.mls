@@ -169,6 +169,7 @@ last(p)
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 33 --->
+//│ 	DeadCodeCons
 //│ 	case t¹ of {N  => [Some h¹] | C hh¹ tt¹ => last₀(t¹)}: 27
 //│ 	case ls¹ of {C h¹ t¹ => case t¹ of {N  => [Some h¹] | C hh¹ tt¹ => last₀(t¹)} | N  => [None]}: 29
 //│ [C 2 [N]]: 34 --->
@@ -354,6 +355,7 @@ minuss(fst)(snd)
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [Z]: 24 --->
+//│ 	DeadCodeCons
 //│ 	case b¹ of {S bb¹ => minuss₀(aa¹, bb¹) | Z  => aa¹}: 36
 //│ [Z]: 25 --->
 //│ 	NoCons
@@ -365,6 +367,7 @@ minuss(fst)(snd)
 //│ 	case a¹ of {S aa¹ => (fun b¹ -> case b¹ of {S bb¹ => minuss₀(aa¹, bb¹) | Z  => aa¹}) | Z  => (fun n¹ -> [Z])}: 40
 //│ ------------------
 //│ case b¹ of {S bb¹ => minuss₀(aa¹, bb¹) | Z  => aa¹}: 36 --->
+//│ 	DeadCodeProd
 //│ 	[Z]: 24
 //│ case a¹ of {S aa¹ => (fun b¹ -> case b¹ of {S bb¹ => minuss₀(aa¹, bb¹) | Z  => aa¹}) | Z  => (fun n¹ -> [Z])}: 40 --->
 //│ 	[Z]: 25
@@ -373,11 +376,9 @@ minuss(fst)(snd)
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [Z]: 24 --->
-//│ 	case b¹ of {S bb¹ => minuss₀(aa¹, bb¹) | Z  => aa¹}: 36
+//│ 
 //│ ------------------
-//│ case b¹ of {S bb¹ => minuss₀(aa¹, bb¹) | Z  => aa¹}: 36 --->
-//│ 	[Z]: 24
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -386,61 +387,12 @@ minuss(fst)(snd)
 //│ 	[S [S [Z]]]
 //│ def minuss₀(a²) = 
 //│ 	case a² of {
-//│ 		S aa¹ => (fun b² -> b²(aa¹))
+//│ 		S aa¹ => (fun b² -> case b² of {
+//│ 			S bb¹ => minuss₀(aa¹, bb¹)
+//│ 			| Z  => aa¹})
 //│ 		| Z  => (fun n² -> [Z])}
-//│ def snd₀(aa²) = 
-//│ 	aa²
-//│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ [S [Z]]
-//│ <<<<<<< evaluate <<<<<<<
-//│ 
-//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
-//│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [fst₀^2] (hopeless to continue)
-//│ [minuss₀^1] (hopeless to continue)
-//│ [snd₀^4] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ minuss₀₀(fst₀₀, snd₀₀)
-//│ def fst₀₀ = 
-//│ 	[S [S [Z]]]
-//│ def minuss₀₀(a¹) = 
-//│ 	case a¹ of {
-//│ 		S aa² => (fun b¹ -> b¹(aa²))
-//│ 		| Z  => (fun n¹ -> [Z])}
-//│ def snd₀₀(aa³) = 
-//│ 	aa³
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ [S [S [Z]]]: 22 --->
-//│ 	case a¹ of {S aa² => (fun b¹ -> b¹(aa²)) | Z  => (fun n¹ -> [Z])}: 30
-//│ ------------------
-//│ case a¹ of {S aa² => (fun b¹ -> b¹(aa²)) | Z  => (fun n¹ -> [Z])}: 30 --->
-//│ 	[S [S [Z]]]: 22
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ [S [S [Z]]]: 22 --->
-//│ 	case a¹ of {S aa² => (fun b¹ -> b¹(aa²)) | Z  => (fun n¹ -> [Z])}: 30
-//│ ------------------
-//│ case a¹ of {S aa² => (fun b¹ -> b¹(aa²)) | Z  => (fun n¹ -> [Z])}: 30 --->
-//│ 	[S [S [Z]]]: 22
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ minuss₀₀(fst₀₀, snd₀₀)
-//│ def fst₀₀ = 
-//│ 	let aa⁴ = [S [Z]]
-//│ 	in (fun _lh_dummy⁰ -> (fun b² -> b²(aa⁴)))
-//│ def minuss₀₀(a²) = 
-//│ 	a²(99)
-//│ def snd₀₀(aa⁵) = 
-//│ 	aa⁵
+//│ def snd₀ = 
+//│ 	[Z]
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -504,6 +456,7 @@ minuss(fst)(snd)
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [Z]: 43 --->
+//│ 	DeadCodeCons
 //│ 	case b³ of {S bb¹ => (fun aaa² -> minuss₀(aaa², bb¹)) | Z  => (fun aaa³ -> aaa³)}: 53
 //│ [Z]: 55 --->
 //│ 	NoCons
@@ -519,15 +472,14 @@ minuss(fst)(snd)
 //│ 	[S [Z]]: 56
 //│ 	[S [S [Z]]]: 57
 //│ case b³ of {S bb¹ => (fun aaa² -> minuss₀(aaa², bb¹)) | Z  => (fun aaa³ -> aaa³)}: 53 --->
+//│ 	DeadCodeProd
 //│ 	[Z]: 43
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [Z]: 43 --->
-//│ 	case b³ of {S bb¹ => (fun aaa² -> minuss₀(aaa², bb¹)) | Z  => (fun aaa³ -> aaa³)}: 53
+//│ 
 //│ ------------------
-//│ case b³ of {S bb¹ => (fun aaa² -> minuss₀(aaa², bb¹)) | Z  => (fun aaa³ -> aaa³)}: 53 --->
-//│ 	[Z]: 43
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -540,67 +492,11 @@ minuss(fst)(snd)
 //│ 		| Z  => (fun n² -> [Z])}
 //│ 	where
 //│ 	def checkb₀(b⁵) = 
-//│ 		b⁵(99)
-//│ def snd₀(_lh_dummy⁰, aaa⁴) = 
-//│ 	aaa⁴
-//│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> evaluate >>>>>>>
-//│ [S [Z]]
-//│ <<<<<<< evaluate <<<<<<<
-//│ 
-//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
-//│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [fst₀^2] (hopeless to continue)
-//│ [minuss₀^1] (hopeless to continue)
-//│ 	[minuss₀^1 · checkb₀^7] (using original def)
-//│ [snd₀^4] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ minuss₀₀(fst₀₀, snd₀₀)
-//│ def fst₀₀ = 
-//│ 	[S [S [Z]]]
-//│ def minuss₀₀(a¹) = 
-//│ 	case a¹ of {
-//│ 		S aa¹ => (fun b² -> checkb₀₀(b², aa¹))
-//│ 		| Z  => (fun n¹ -> [Z])}
-//│ 	where
-//│ 	def checkb₀₀(b³) = 
-//│ 		b³(99)
-//│ def snd₀₀(_lh_dummy¹, aaa¹) = 
-//│ 	aaa¹
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ [S [S [Z]]]: 29 --->
-//│ 	case a¹ of {S aa¹ => (fun b² -> checkb₀₀(b², aa¹)) | Z  => (fun n¹ -> [Z])}: 39
-//│ ------------------
-//│ case a¹ of {S aa¹ => (fun b² -> checkb₀₀(b², aa¹)) | Z  => (fun n¹ -> [Z])}: 39 --->
-//│ 	[S [S [Z]]]: 29
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ [S [S [Z]]]: 29 --->
-//│ 	case a¹ of {S aa¹ => (fun b² -> checkb₀₀(b², aa¹)) | Z  => (fun n¹ -> [Z])}: 39
-//│ ------------------
-//│ case a¹ of {S aa¹ => (fun b² -> checkb₀₀(b², aa¹)) | Z  => (fun n¹ -> [Z])}: 39 --->
-//│ 	[S [S [Z]]]: 29
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ minuss₀₀(fst₀₀, snd₀₀)
-//│ def fst₀₀ = 
-//│ 	let aa² = [S [Z]]
-//│ 	in (fun _lh_dummy² -> (fun b⁴ -> checkb₀₀(b⁴, aa²)))
-//│ def minuss₀₀(a²) = 
-//│ 	a²(99)
-//│ 	where
-//│ 	def checkb₀₀(b⁵) = 
-//│ 		b⁵(99)
-//│ def snd₀₀(_lh_dummy³, aaa²) = 
-//│ 	aaa²
+//│ 		case b⁵ of {
+//│ 			S bb¹ => (fun aaa⁴ -> minuss₀(aaa⁴, bb¹))
+//│ 			| Z  => (fun aaa⁵ -> aaa⁵)}
+//│ def snd₀ = 
+//│ 	[Z]
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -1005,8 +901,10 @@ f(C(primitive))
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C x¹]: 15 --->
+//│ 	DeadCodeCons
 //│ 	case x¹ of {C k¹ => f₀([C x¹])}: 17
 //│ [C primitive⁰]: 21 --->
+//│ 	DeadCodeCons
 //│ 	case x¹ of {C k¹ => f₀([C x¹])}: 17
 //│ ------------------
 //│ case x¹ of {C k¹ => f₀([C x¹])}: 17 --->

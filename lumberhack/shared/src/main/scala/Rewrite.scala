@@ -75,7 +75,7 @@ class FusionStrategy(d: Deforest) {
     val res = MutMap.empty[Destruct, Set[ProdStratEnum]].withDefaultValue(Set())
     d.dtorSources.foreach { (dtor, sources) => if involvedDtors(dtor.euid) then 
       sources.foreach { src => src match {
-        case s: (NoProd | MkCtor) => res += dtor -> (res(dtor) + s)
+        case s: (NoProd | MkCtor | DeadCodeProd) => res += dtor -> (res(dtor) + s)
         // case pv: ProdVar => res += dtor -> (res(dtor) ++ findToEndProd(pv))
         case pv: ProdVar => ()
         // case pv: ProdVar => if d.lowerBounds(pv.uid).isEmpty then res += dtor -> (res(dtor) + pv)
@@ -145,7 +145,7 @@ class FusionStrategy(d: Deforest) {
 
     // remove those ctors with primitive dtors as destinations
     val toRmCtor = res._1.filter(_._2.exists {
-      case _: (Destruct | DeadCodeCons) => false
+      case _: Destruct => false
       case _ => true
     }).keySet.asInstanceOf[Set[ProdStratEnum]]
     val res1 = removeCtor(res._1, res._2, toRmCtor)
@@ -672,20 +672,21 @@ trait ProgramRewrite { this: Program =>
   }
 
   lazy val deadCodeToMagic: Program = {
-    this.d.resolveConstraints
-    val locallyElimiated = Program(this.contents.map {
-      case Left(deff) => Left(ProgDef(
-        deff.id,
-        deff.body.deadCodeToMagic
-      ))
-      case Right(expr) => Right(expr.deadCodeToMagic)
-    })/* .copyDefsToNewDeforest(using Deforest(this.d.debug))._1._1
-    locallyElimiated.d(locallyElimiated)
-    // locallyElimiated
+    this
+    // this.d.resolveConstraints
+    // val locallyElimiated = Program(this.contents.map {
+    //   case Left(deff) => Left(ProgDef(
+    //     deff.id,
+    //     deff.body.deadCodeToMagic
+    //   ))
+    //   case Right(expr) => Right(expr.deadCodeToMagic)
+    // })/* .copyDefsToNewDeforest(using Deforest(this.d.debug))._1._1
+    // locallyElimiated.d(locallyElimiated)
+    // // locallyElimiated
 
-    val (res, resd) = locallyElimiated.expandedWithNewDeforest(callTreeWithoutKnotTying(locallyElimiated.d))
-    resd(res)
-    res */
-    locallyElimiated
+    // val (res, resd) = locallyElimiated.expandedWithNewDeforest(callTreeWithoutKnotTying(locallyElimiated.d))
+    // resd(res)
+    // res */
+    // locallyElimiated
   }
 }

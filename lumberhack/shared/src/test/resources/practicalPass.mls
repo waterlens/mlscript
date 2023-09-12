@@ -126,12 +126,11 @@ map(l)(
 //│ 	[N]: 28
 //│ 	[C [K] [N]]: 29
 //│ case x¹ of {K  => [T]}: 50 --->
+//│ 	DeadCodeProd
 //│ 	[K]: 27
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [K]: 27 --->
-//│ 	case x¹ of {K  => [T]}: 50
 //│ [N]: 28 --->
 //│ 	case ls¹ of {C h¹ t¹ => (fun f² -> [C f²(h¹) map₀(t¹, f²)]) | N  => (fun f³ -> [N])}: 43
 //│ [C [K] [N]]: 29 --->
@@ -140,14 +139,13 @@ map(l)(
 //│ case ls¹ of {C h¹ t¹ => (fun f² -> [C f²(h¹) map₀(t¹, f²)]) | N  => (fun f³ -> [N])}: 43 --->
 //│ 	[N]: 28
 //│ 	[C [K] [N]]: 29
-//│ case x¹ of {K  => [T]}: 50 --->
-//│ 	[K]: 27
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ map₀(l₀, (fun x² -> x²(99)))
+//│ map₀(l₀, (fun x² -> case x² of {
+//│ 	K  => [T]}))
 //│ def l₀ = 
-//│ 	let h² = (fun _lh_dummy² -> [T])
+//│ 	let h² = [K]
 //│ 	in let t² = (fun _lh_dummy¹ -> (fun f⁵ -> [N]))
 //│ 	in (fun _lh_dummy⁰ -> (fun f⁴ -> [C f⁴(h²) map₀(t², f⁴)]))
 //│ def map₀(ls²) = 

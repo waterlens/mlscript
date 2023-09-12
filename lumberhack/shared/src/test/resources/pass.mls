@@ -1015,12 +1015,11 @@ map(l)(
 //│ 	[N]: 28
 //│ 	[C [K] [N]]: 29
 //│ case x¹ of {K  => [T]}: 50 --->
+//│ 	DeadCodeProd
 //│ 	[K]: 27
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [K]: 27 --->
-//│ 	case x¹ of {K  => [T]}: 50
 //│ [N]: 28 --->
 //│ 	case ls¹ of {C h¹ t¹ => (fun f² -> [C f²(h¹) map₀(t¹, f²)]) | N  => (fun f³ -> [N])}: 43
 //│ [C [K] [N]]: 29 --->
@@ -1029,14 +1028,13 @@ map(l)(
 //│ case ls¹ of {C h¹ t¹ => (fun f² -> [C f²(h¹) map₀(t¹, f²)]) | N  => (fun f³ -> [N])}: 43 --->
 //│ 	[N]: 28
 //│ 	[C [K] [N]]: 29
-//│ case x¹ of {K  => [T]}: 50 --->
-//│ 	[K]: 27
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ map₀(l₀, (fun x² -> x²(99)))
+//│ map₀(l₀, (fun x² -> case x² of {
+//│ 	K  => [T]}))
 //│ def l₀ = 
-//│ 	let h² = (fun _lh_dummy² -> [T])
+//│ 	let h² = [K]
 //│ 	in let t² = (fun _lh_dummy¹ -> (fun f⁵ -> [N]))
 //│ 	in (fun _lh_dummy⁰ -> (fun f⁴ -> [C f⁴(h²) map₀(t², f⁴)]))
 //│ def map₀(ls²) = 
@@ -2730,14 +2728,13 @@ rev(C(1, C(2, N)))
 //│ 	[N]: 97
 //│ 	[C h⁶ [N]]: 98
 //│ case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁴ t⁴ => (fun ys⁵ -> [C h⁴ concat₀₁(t⁴, ys⁵)])}: 76 --->
+//│ 	DeadCodeProd
 //│ 	[N]: 89
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [C h⁴ concat₀₁(t⁴, ys⁵)]: 74 --->
 //│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h³ t³ => (fun ys³ -> [C h³ concat₀₀(t³, ys³)])}: 59
-//│ [N]: 89 --->
-//│ 	case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁴ t⁴ => (fun ys⁵ -> [C h⁴ concat₀₁(t⁴, ys⁵)])}: 76
 //│ [N]: 97 --->
 //│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h³ t³ => (fun ys³ -> [C h³ concat₀₀(t³, ys³)])}: 59
 //│ [C h⁶ [N]]: 98 --->
@@ -2747,8 +2744,6 @@ rev(C(1, C(2, N)))
 //│ 	[C h⁴ concat₀₁(t⁴, ys⁵)]: 74
 //│ 	[N]: 97
 //│ 	[C h⁶ [N]]: 98
-//│ case xs² of {N  => (fun ys⁴ -> ys⁴) | C h⁴ t⁴ => (fun ys⁵ -> [C h⁴ concat₀₁(t⁴, ys⁵)])}: 76 --->
-//│ 	[N]: 89
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
@@ -2756,16 +2751,21 @@ rev(C(1, C(2, N)))
 //│ 	let h⁷ = 1
 //│ 	in let t⁷ = 	
 //│ 		let h⁸ = 2
-//│ 		in let t⁸ = (fun _lh_dummy⁶ -> (fun _lh_dummy⁷ -> (fun ys⁶ -> ys⁶)))
-//│ 		in (fun _lh_dummy⁸ -> concat₀₁(rev₀₂(t⁸), 
+//│ 		in let t⁸ = (fun _lh_dummy⁶ -> [N])
+//│ 		in (fun _lh_dummy⁷ -> concat₀₁(rev₀₂(t⁸), 
 //│ 			let h⁹ = h⁸
-//│ 			in let t⁹ = (fun _lh_dummy¹⁰ -> (fun ys⁸ -> ys⁸))
-//│ 			in (fun _lh_dummy⁹ -> (fun ys⁷ -> [C h⁹ concat₀₀(t⁹, ys⁷)]))))
-//│ 	in (fun _lh_dummy¹¹ -> concat₀₀(rev₀₀(t⁷), [C h⁷ [N]])))
+//│ 			in let t⁹ = (fun _lh_dummy⁹ -> (fun ys⁷ -> ys⁷))
+//│ 			in (fun _lh_dummy⁸ -> (fun ys⁶ -> [C h⁹ concat₀₀(t⁹, ys⁶)]))))
+//│ 	in (fun _lh_dummy¹⁰ -> concat₀₀(rev₀₀(t⁷), [C h⁷ [N]])))
 //│ def concat₀₀(xs³) = 
 //│ 	xs³(99)
 //│ def concat₀₁(xs⁴) = 
-//│ 	xs⁴(99)
+//│ 	case xs⁴ of {
+//│ 		N  => (fun ys⁸ -> ys⁸)
+//│ 		| C h⁴ t⁴ => (fun ys⁹ -> 
+//│ 			let h¹⁰ = h⁴
+//│ 			in let t¹⁰ = concat₀₁(t⁴, ys⁹)
+//│ 			in (fun _lh_dummy¹¹ -> (fun ys¹⁰ -> [C h¹⁰ concat₀₀(t¹⁰, ys¹⁰)])))}
 //│ def rev₀₀(ls⁵) = 
 //│ 	ls⁵(99)
 //│ def rev₀₁(ls⁶) = 
@@ -2809,6 +2809,7 @@ f(C(1, N))
 //│ [A x¹]: 14 --->
 //│ 	case [A x¹] of {A y¹ => case x¹ of {C h¹ t¹ => t¹}}: 18
 //│ [C 1 [N]]: 23 --->
+//│ 	DeadCodeCons
 //│ 	case x¹ of {C h¹ t¹ => t¹}: 17
 //│ ------------------
 //│ case x¹ of {C h¹ t¹ => t¹}: 17 --->
@@ -2820,21 +2821,53 @@ f(C(1, N))
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [A x¹]: 14 --->
 //│ 	case [A x¹] of {A y¹ => case x¹ of {C h¹ t¹ => t¹}}: 18
-//│ [C 1 [N]]: 23 --->
-//│ 	case x¹ of {C h¹ t¹ => t¹}: 17
 //│ ------------------
-//│ case x¹ of {C h¹ t¹ => t¹}: 17 --->
-//│ 	[C 1 [N]]: 23
 //│ case [A x¹] of {A y¹ => case x¹ of {C h¹ t¹ => t¹}}: 18 --->
 //│ 	[A x¹]: 14
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀(
+//│ f₀([C 1 [N]])
+//│ def f₀(x²) = 
+//│ 	(fun x³ -> case x³ of {
+//│ 		C h¹ t¹ => t¹})(x²)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f₀^1] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀₀([C 1 [N]])
+//│ def f₀₀(x²) = 
+//│ 	(fun x³ -> case x³ of {
+//│ 		C h¹ t¹ => t¹})(x²)
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C 1 [N]]: 23 --->
+//│ 	case x³ of {C h¹ t¹ => t¹}: 15
+//│ ------------------
+//│ case x³ of {C h¹ t¹ => t¹}: 15 --->
+//│ 	[C 1 [N]]: 23
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C 1 [N]]: 23 --->
+//│ 	case x³ of {C h¹ t¹ => t¹}: 15
+//│ ------------------
+//│ case x³ of {C h¹ t¹ => t¹}: 15 --->
+//│ 	[C 1 [N]]: 23
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀₀(
 //│ 	let t² = [N]
 //│ 	in (fun _lh_dummy⁰ -> t²))
-//│ def f₀(x²) = 
-//│ 	(fun x³ -> x³(99))(x²)
+//│ def f₀₀(x⁴) = 
+//│ 	(fun x⁵ -> x⁵(99))(x⁴)
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: after using `last(C(hh, tt))` instead of `last(t)` and pushing in of parameters

@@ -548,19 +548,19 @@ let rec equalp_d0_d0 _lh_equalp_arg1_2 _lh_equalp_arg2_3 =
     | `LH_P2(_lh_equalp_LH_P2_0_8, _lh_equalp_LH_P2_1_8) -> 
       ((_lh_equalp_arg2_3 _lh_equalp_LH_P2_0_8) _lh_equalp_LH_P2_1_8)
     | _ -> 
-      (Obj.magic 99));;
+      (failwith "error"));;
 let rec equalp_d1_d0 _lh_equalp_arg1_3 _lh_equalp_arg2_4 =
   (match _lh_equalp_arg1_3 with
     | `LH_P2(_lh_equalp_LH_P2_0_9, _lh_equalp_LH_P2_1_9) -> 
       ((_lh_equalp_arg2_4 _lh_equalp_LH_P2_0_9) _lh_equalp_LH_P2_1_9)
     | _ -> 
-      (Obj.magic 99));;
+      (failwith "error"));;
 let rec equalp_d2_d0 _lh_equalp_arg1_0 _lh_equalp_arg2_1 =
   (match _lh_equalp_arg1_0 with
     | `LH_P2(_lh_equalp_LH_P2_0_5, _lh_equalp_LH_P2_1_5) -> 
       ((_lh_equalp_arg2_1 _lh_equalp_LH_P2_0_5) _lh_equalp_LH_P2_1_5)
     | _ -> 
-      (Obj.magic 99));;
+      (failwith "error"));;
 let rec equalp_d3_d0 _lh_equalp_arg1_1 _lh_equalp_arg2_2 =
   (_lh_equalp_arg1_1 _lh_equalp_arg2_2);;
 let rec finite_d0_d0 _lh_finite_arg1_0 =
@@ -572,7 +572,7 @@ let rec finite_d0_d0 _lh_finite_arg1_0 =
     | `EW(_lh_finite_EW_0_0, _lh_finite_EW_1_0) -> 
       ((finite_d0_d0 _lh_finite_EW_0_0) && (finite_d0_d0 _lh_finite_EW_1_0))
     | _ -> 
-      (Obj.magic 99));;
+      (failwith "error"));;
 let rec left_d0_d0 =
   (let rec _lh_equalp_LH_P2_0_6 = (0 - 1) in
     (let rec _lh_equalp_LH_P2_1_6 = 0 in
@@ -779,7 +779,7 @@ let rec strEq_d0_d0 _lh_strEq_arg1_0 _lh_strEq_arg2_0 =
           | `LH_N -> 
             false
           | _ -> 
-            (Obj.magic 99)))
+            (failwith "error")))
     | `LH_N -> 
       (let rec _lh_matchIdent_3 = _lh_strEq_arg2_0 in
         (match _lh_matchIdent_3 with
@@ -788,9 +788,9 @@ let rec strEq_d0_d0 _lh_strEq_arg1_0 _lh_strEq_arg2_0 =
           | `LH_N -> 
             true
           | _ -> 
-            (Obj.magic 99)))
+            (failwith "error")))
     | _ -> 
-      (Obj.magic 99));;
+      (failwith "error"));;
 let rec up_d0_d0 =
   (`LH_P2(0, (0 - 1)));;
 let rec build_tree_d0_d0 _lh_build_tree_arg1_0 _lh_build_tree_arg2_0 =
@@ -821,9 +821,9 @@ let rec build_tree_d0_d0 _lh_build_tree_arg1_0 _lh_build_tree_arg2_0 =
                                     else
                                       (`EW(((build_tree_d0_d0 ewp1_0) ewp2_0), ((build_tree_d0_d0 ewp3_0) ewp4_0)))))))))))))))))
         | _ -> 
-          (Obj.magic 99))
+          (failwith "error"))
     | _ -> 
-      (Obj.magic 99))
+      (failwith "error"))
 and check_perim_d0_d0 _lh_check_perim_arg1_0 _lh_check_perim_arg2_0 =
   (match _lh_check_perim_arg1_0 with
     | `LH_P2(_lh_check_perim_LH_P2_0_0, _lh_check_perim_LH_P2_1_0) -> 
@@ -880,9 +880,9 @@ and check_perim_d0_d0 _lh_check_perim_arg1_0 _lh_check_perim_arg2_0 =
                                       else
                                         ((check_line_0 (`LH_P2((_lh_check_perim_LH_P2_0_2 + _lh_check_perim_LH_P2_0_3), (_lh_check_perim_LH_P2_1_2 + _lh_check_perim_LH_P2_1_3)))) (`LH_P2(_lh_check_perim_LH_P2_0_3, _lh_check_perim_LH_P2_1_3))))))
                                 | _ -> 
-                                  (Obj.magic 99)))
+                                  (failwith "error")))
                           | _ -> 
-                            (Obj.magic 99)))) in
+                            (failwith "error")))) in
                       (let rec check_sides_0 = (if ((check_line_0 (`LH_P2((_lh_check_perim_LH_P2_0_0 + 1), _lh_check_perim_LH_P2_1_0))) right_d1_d0) then
                         (if ((check_line_0 (`LH_P2(_lh_check_perim_LH_P2_0_1, (_lh_check_perim_LH_P2_1_0 + 1)))) down_d1_d0) then
                           (if ((check_line_0 (`LH_P2((_lh_check_perim_LH_P2_0_1 - 1), _lh_check_perim_LH_P2_1_1))) left_d1_d0) then
@@ -913,9 +913,9 @@ and check_perim_d0_d0 _lh_check_perim_arg1_0 _lh_check_perim_arg2_0 =
                           else
                             check_sides_0)))))))))
         | _ -> 
-          (Obj.magic 99))
+          (failwith "error"))
     | _ -> 
-      (Obj.magic 99))
+      (failwith "error"))
 and check_radius_d0_d0 _lh_check_radius_arg1_1 _lh_check_radius_arg2_1 _lh_check_radius_arg3_1 _lh_check_radius_arg4_1 _lh_check_radius_arg5_1 =
   (let rec xn_1 = (((new_x_d0_d0 _lh_check_radius_arg4_1) _lh_check_radius_arg5_1) _lh_check_radius_arg1_1) in
     (let rec yn_1 = (((new_y_d0_d0 _lh_check_radius_arg4_1) _lh_check_radius_arg5_1) _lh_check_radius_arg2_1) in
@@ -1041,39 +1041,39 @@ and point_colour_d4_d0 _lh_point_colour_arg1_1 =
     | `LH_P2(_lh_point_colour_LH_P2_0_5, _lh_point_colour_LH_P2_1_5) -> 
       (((((check_radius_d4_d0 (np_d4_d0 _lh_point_colour_LH_P2_0_5)) (nq_d4_d0 _lh_point_colour_LH_P2_1_5)) 0) 0.0) 0.0)
     | _ -> 
-      (Obj.magic 99))
+      (failwith "error"))
 and testMandel2_nofib_d0_d0 _lh_testMandel2_nofib_arg1_0 =
   (let rec size'_0 = ((max_d0_d0 (length_d0_d0 _lh_testMandel2_nofib_arg1_0)) size_d1_d2_d0) in
     (let rec tree_0 = ((build_tree_d0_d0 (`LH_P2(0, 0))) (`LH_P2(size'_0, (size'_0 / 2)))) in
       (finite_d0_d0 tree_0)));;
 
 (* lumberhack_pop_out *)
-let rec down_d0_d0_d0 _lh_equalp_LH_P2_0_1_8 _lh_equalp_LH_P2_1_1_8 =
-  (let rec _lh_equalp_LH_P2_0_1_7 = 0 in
-    (let rec _lh_equalp_LH_P2_1_1_7 = 1 in
-      ((_lh_equalp_LH_P2_0_1_8 = _lh_equalp_LH_P2_0_1_7) && (_lh_equalp_LH_P2_1_1_8 = _lh_equalp_LH_P2_1_1_7))));;
+let rec down_d0_d0_d0 _lh_equalp_LH_P2_0_1_9 _lh_equalp_LH_P2_1_1_9 =
+  (let rec _lh_equalp_LH_P2_0_1_8 = 0 in
+    (let rec _lh_equalp_LH_P2_1_1_8 = 1 in
+      ((_lh_equalp_LH_P2_0_1_9 = _lh_equalp_LH_P2_0_1_8) && (_lh_equalp_LH_P2_1_1_9 = _lh_equalp_LH_P2_1_1_8))));;
 let rec down_d1_d0_d0 =
   (`LH_P2(0, 1));;
-let rec equalp_d0_d0_d0 _lh_equalp_arg1_7 _lh_equalp_arg2_9 =
-  (match _lh_equalp_arg1_7 with
-    | `LH_P2(_lh_equalp_LH_P2_0_2_3, _lh_equalp_LH_P2_1_2_3) -> 
-      ((_lh_equalp_arg2_9 _lh_equalp_LH_P2_0_2_3) _lh_equalp_LH_P2_1_2_3)
-    | _ -> 
-      (Obj.magic 99));;
-let rec equalp_d1_d0_d0 _lh_equalp_arg1_5 _lh_equalp_arg2_7 =
-  (match _lh_equalp_arg1_5 with
-    | `LH_P2(_lh_equalp_LH_P2_0_1_6, _lh_equalp_LH_P2_1_1_6) -> 
-      ((_lh_equalp_arg2_7 _lh_equalp_LH_P2_0_1_6) _lh_equalp_LH_P2_1_1_6)
-    | _ -> 
-      (Obj.magic 99));;
-let rec equalp_d2_d0_d0 _lh_equalp_arg1_4 _lh_equalp_arg2_5 =
+let rec equalp_d0_d0_d0 _lh_equalp_arg1_4 _lh_equalp_arg2_5 =
   (match _lh_equalp_arg1_4 with
     | `LH_P2(_lh_equalp_LH_P2_0_1_2, _lh_equalp_LH_P2_1_1_2) -> 
       ((_lh_equalp_arg2_5 _lh_equalp_LH_P2_0_1_2) _lh_equalp_LH_P2_1_1_2)
     | _ -> 
-      (Obj.magic 99));;
-let rec equalp_d3_d0_d0 _lh_equalp_arg1_6 _lh_equalp_arg2_8 =
-  (_lh_equalp_arg1_6 _lh_equalp_arg2_8);;
+      (failwith "error"));;
+let rec equalp_d1_d0_d0 _lh_equalp_arg1_5 _lh_equalp_arg2_6 =
+  (match _lh_equalp_arg1_5 with
+    | `LH_P2(_lh_equalp_LH_P2_0_1_3, _lh_equalp_LH_P2_1_1_3) -> 
+      ((_lh_equalp_arg2_6 _lh_equalp_LH_P2_0_1_3) _lh_equalp_LH_P2_1_1_3)
+    | _ -> 
+      (failwith "error"));;
+let rec equalp_d2_d0_d0 _lh_equalp_arg1_7 _lh_equalp_arg2_8 =
+  (match _lh_equalp_arg1_7 with
+    | `LH_P2(_lh_equalp_LH_P2_0_2_0, _lh_equalp_LH_P2_1_2_0) -> 
+      ((_lh_equalp_arg2_8 _lh_equalp_LH_P2_0_2_0) _lh_equalp_LH_P2_1_2_0)
+    | _ -> 
+      (failwith "error"));;
+let rec equalp_d3_d0_d0 _lh_equalp_arg1_6 _lh_equalp_arg2_7 =
+  (_lh_equalp_arg1_6 _lh_equalp_arg2_7);;
 let rec finite_d0_d0_d0 _lh_finite_arg1_1 =
   (match _lh_finite_arg1_1 with
     | `Leaf(_lh_finite_Leaf_0_1) -> 
@@ -1083,11 +1083,11 @@ let rec finite_d0_d0_d0 _lh_finite_arg1_1 =
     | `EW(_lh_finite_EW_0_1, _lh_finite_EW_1_1) -> 
       ((finite_d0_d0_d0 _lh_finite_EW_0_1) && (finite_d0_d0_d0 _lh_finite_EW_1_1))
     | _ -> 
-      (Obj.magic 99));;
-let rec left_d0_d0_d0 _lh_equalp_LH_P2_0_2_0 _lh_equalp_LH_P2_1_2_0 =
-  (let rec _lh_equalp_LH_P2_0_1_9 = (0 - 1) in
-    (let rec _lh_equalp_LH_P2_1_1_9 = 0 in
-      ((_lh_equalp_LH_P2_0_2_0 = _lh_equalp_LH_P2_0_1_9) && (_lh_equalp_LH_P2_1_2_0 = _lh_equalp_LH_P2_1_1_9))));;
+      (failwith "error"));;
+let rec left_d0_d0_d0 _lh_equalp_LH_P2_0_1_7 _lh_equalp_LH_P2_1_1_7 =
+  (let rec _lh_equalp_LH_P2_0_1_6 = (0 - 1) in
+    (let rec _lh_equalp_LH_P2_1_1_6 = 0 in
+      ((_lh_equalp_LH_P2_0_1_7 = _lh_equalp_LH_P2_0_1_6) && (_lh_equalp_LH_P2_1_1_7 = _lh_equalp_LH_P2_1_1_6))));;
 let rec left_d1_d0_d0 =
   (`LH_P2((0 - 1), 0));;
 let rec length_d0_d0_d0 ls_1 =
@@ -1113,30 +1113,30 @@ let rec m_d4_d0_d0 =
   20;;
 let rec m_d5_d0_d0 =
   20;;
-let rec new_x_d0_d0_d0 _lh_new_x_arg1_8 _lh_new_x_arg2_8 _lh_new_x_arg3_8 =
-  (((_lh_new_x_arg1_8 *. _lh_new_x_arg1_8) -. (_lh_new_x_arg2_8 *. _lh_new_x_arg2_8)) +. _lh_new_x_arg3_8);;
-let rec new_x_d1_d0_d0 _lh_new_x_arg1_1_0 _lh_new_x_arg2_1_0 _lh_new_x_arg3_1_0 =
+let rec new_x_d0_d0_d0 _lh_new_x_arg1_1_0 _lh_new_x_arg2_1_0 _lh_new_x_arg3_1_0 =
   (((_lh_new_x_arg1_1_0 *. _lh_new_x_arg1_1_0) -. (_lh_new_x_arg2_1_0 *. _lh_new_x_arg2_1_0)) +. _lh_new_x_arg3_1_0);;
-let rec new_x_d2_d0_d0 _lh_new_x_arg1_6 _lh_new_x_arg2_6 _lh_new_x_arg3_6 =
-  (((_lh_new_x_arg1_6 *. _lh_new_x_arg1_6) -. (_lh_new_x_arg2_6 *. _lh_new_x_arg2_6)) +. _lh_new_x_arg3_6);;
-let rec new_x_d3_d0_d0 _lh_new_x_arg1_1_1 _lh_new_x_arg2_1_1 _lh_new_x_arg3_1_1 =
-  (((_lh_new_x_arg1_1_1 *. _lh_new_x_arg1_1_1) -. (_lh_new_x_arg2_1_1 *. _lh_new_x_arg2_1_1)) +. _lh_new_x_arg3_1_1);;
-let rec new_x_d4_d0_d0 _lh_new_x_arg1_7 _lh_new_x_arg2_7 _lh_new_x_arg3_7 =
+let rec new_x_d1_d0_d0 _lh_new_x_arg1_8 _lh_new_x_arg2_8 _lh_new_x_arg3_8 =
+  (((_lh_new_x_arg1_8 *. _lh_new_x_arg1_8) -. (_lh_new_x_arg2_8 *. _lh_new_x_arg2_8)) +. _lh_new_x_arg3_8);;
+let rec new_x_d2_d0_d0 _lh_new_x_arg1_7 _lh_new_x_arg2_7 _lh_new_x_arg3_7 =
   (((_lh_new_x_arg1_7 *. _lh_new_x_arg1_7) -. (_lh_new_x_arg2_7 *. _lh_new_x_arg2_7)) +. _lh_new_x_arg3_7);;
-let rec new_x_d5_d0_d0 _lh_new_x_arg1_9 _lh_new_x_arg2_9 _lh_new_x_arg3_9 =
+let rec new_x_d3_d0_d0 _lh_new_x_arg1_9 _lh_new_x_arg2_9 _lh_new_x_arg3_9 =
   (((_lh_new_x_arg1_9 *. _lh_new_x_arg1_9) -. (_lh_new_x_arg2_9 *. _lh_new_x_arg2_9)) +. _lh_new_x_arg3_9);;
-let rec new_y_d0_d0_d0 _lh_new_y_arg1_7 _lh_new_y_arg2_7 _lh_new_y_arg3_7 =
-  (((2.0 *. _lh_new_y_arg1_7) *. _lh_new_y_arg2_7) +. _lh_new_y_arg3_7);;
-let rec new_y_d1_d0_d0 _lh_new_y_arg1_1_1 _lh_new_y_arg2_1_1 _lh_new_y_arg3_1_1 =
-  (((2.0 *. _lh_new_y_arg1_1_1) *. _lh_new_y_arg2_1_1) +. _lh_new_y_arg3_1_1);;
-let rec new_y_d2_d0_d0 _lh_new_y_arg1_8 _lh_new_y_arg2_8 _lh_new_y_arg3_8 =
-  (((2.0 *. _lh_new_y_arg1_8) *. _lh_new_y_arg2_8) +. _lh_new_y_arg3_8);;
-let rec new_y_d3_d0_d0 _lh_new_y_arg1_6 _lh_new_y_arg2_6 _lh_new_y_arg3_6 =
-  (((2.0 *. _lh_new_y_arg1_6) *. _lh_new_y_arg2_6) +. _lh_new_y_arg3_6);;
-let rec new_y_d4_d0_d0 _lh_new_y_arg1_1_0 _lh_new_y_arg2_1_0 _lh_new_y_arg3_1_0 =
-  (((2.0 *. _lh_new_y_arg1_1_0) *. _lh_new_y_arg2_1_0) +. _lh_new_y_arg3_1_0);;
-let rec new_y_d5_d0_d0 _lh_new_y_arg1_9 _lh_new_y_arg2_9 _lh_new_y_arg3_9 =
+let rec new_x_d4_d0_d0 _lh_new_x_arg1_1_1 _lh_new_x_arg2_1_1 _lh_new_x_arg3_1_1 =
+  (((_lh_new_x_arg1_1_1 *. _lh_new_x_arg1_1_1) -. (_lh_new_x_arg2_1_1 *. _lh_new_x_arg2_1_1)) +. _lh_new_x_arg3_1_1);;
+let rec new_x_d5_d0_d0 _lh_new_x_arg1_6 _lh_new_x_arg2_6 _lh_new_x_arg3_6 =
+  (((_lh_new_x_arg1_6 *. _lh_new_x_arg1_6) -. (_lh_new_x_arg2_6 *. _lh_new_x_arg2_6)) +. _lh_new_x_arg3_6);;
+let rec new_y_d0_d0_d0 _lh_new_y_arg1_9 _lh_new_y_arg2_9 _lh_new_y_arg3_9 =
   (((2.0 *. _lh_new_y_arg1_9) *. _lh_new_y_arg2_9) +. _lh_new_y_arg3_9);;
+let rec new_y_d1_d0_d0 _lh_new_y_arg1_8 _lh_new_y_arg2_8 _lh_new_y_arg3_8 =
+  (((2.0 *. _lh_new_y_arg1_8) *. _lh_new_y_arg2_8) +. _lh_new_y_arg3_8);;
+let rec new_y_d2_d0_d0 _lh_new_y_arg1_1_0 _lh_new_y_arg2_1_0 _lh_new_y_arg3_1_0 =
+  (((2.0 *. _lh_new_y_arg1_1_0) *. _lh_new_y_arg2_1_0) +. _lh_new_y_arg3_1_0);;
+let rec new_y_d3_d0_d0 _lh_new_y_arg1_7 _lh_new_y_arg2_7 _lh_new_y_arg3_7 =
+  (((2.0 *. _lh_new_y_arg1_7) *. _lh_new_y_arg2_7) +. _lh_new_y_arg3_7);;
+let rec new_y_d4_d0_d0 _lh_new_y_arg1_1_1 _lh_new_y_arg2_1_1 _lh_new_y_arg3_1_1 =
+  (((2.0 *. _lh_new_y_arg1_1_1) *. _lh_new_y_arg2_1_1) +. _lh_new_y_arg3_1_1);;
+let rec new_y_d5_d0_d0 _lh_new_y_arg1_6 _lh_new_y_arg2_6 _lh_new_y_arg3_6 =
+  (((2.0 *. _lh_new_y_arg1_6) *. _lh_new_y_arg2_6) +. _lh_new_y_arg3_6);;
 let rec num_cols_d0_d0_d0 =
   26;;
 let rec num_cols_d1_d0_d0 =
@@ -1185,16 +1185,16 @@ let rec pmx_d4_d0_d0 =
   0.75;;
 let rec pmx_d5_d0_d0 =
   0.75;;
-let rec point_colour_d0_d0_d0 _lh_point_colour_arg1_8 =
+let rec point_colour_d0_d0_d0 _lh_point_colour_arg1_6 =
+  (_lh_point_colour_arg1_6 99);;
+let rec point_colour_d1_d0_d0 _lh_point_colour_arg1_1_0 =
+  (_lh_point_colour_arg1_1_0 99);;
+let rec point_colour_d2_d0_d0 _lh_point_colour_arg1_8 =
   (_lh_point_colour_arg1_8 99);;
-let rec point_colour_d1_d0_d0 _lh_point_colour_arg1_1_1 =
-  (_lh_point_colour_arg1_1_1 99);;
-let rec point_colour_d2_d0_d0 _lh_point_colour_arg1_9 =
-  (_lh_point_colour_arg1_9 99);;
 let rec point_colour_d3_d0_d0 _lh_point_colour_arg1_7 =
   (_lh_point_colour_arg1_7 99);;
-let rec point_colour_d5_d0_d0 _lh_point_colour_arg1_6 =
-  (_lh_point_colour_arg1_6 99);;
+let rec point_colour_d5_d0_d0 _lh_point_colour_arg1_9 =
+  (_lh_point_colour_arg1_9 99);;
 let rec qmn_d0_d0_d0 =
   (0.0 -. 1.5);;
 let rec qmn_d1_d0_d0 =
@@ -1231,22 +1231,22 @@ let rec qmx_d4_d0_d0 =
   1.5;;
 let rec qmx_d5_d0_d0 =
   1.5;;
-let rec radius_d0_d0_d0 _lh_radius_arg1_8 _lh_radius_arg2_8 =
-  ((_lh_radius_arg1_8 *. _lh_radius_arg1_8) +. (_lh_radius_arg2_8 *. _lh_radius_arg2_8));;
-let rec radius_d1_d0_d0 _lh_radius_arg1_7 _lh_radius_arg2_7 =
-  ((_lh_radius_arg1_7 *. _lh_radius_arg1_7) +. (_lh_radius_arg2_7 *. _lh_radius_arg2_7));;
-let rec radius_d2_d0_d0 _lh_radius_arg1_1_0 _lh_radius_arg2_1_0 =
-  ((_lh_radius_arg1_1_0 *. _lh_radius_arg1_1_0) +. (_lh_radius_arg2_1_0 *. _lh_radius_arg2_1_0));;
-let rec radius_d3_d0_d0 _lh_radius_arg1_6 _lh_radius_arg2_6 =
+let rec radius_d0_d0_d0 _lh_radius_arg1_6 _lh_radius_arg2_6 =
   ((_lh_radius_arg1_6 *. _lh_radius_arg1_6) +. (_lh_radius_arg2_6 *. _lh_radius_arg2_6));;
+let rec radius_d1_d0_d0 _lh_radius_arg1_8 _lh_radius_arg2_8 =
+  ((_lh_radius_arg1_8 *. _lh_radius_arg1_8) +. (_lh_radius_arg2_8 *. _lh_radius_arg2_8));;
+let rec radius_d2_d0_d0 _lh_radius_arg1_9 _lh_radius_arg2_9 =
+  ((_lh_radius_arg1_9 *. _lh_radius_arg1_9) +. (_lh_radius_arg2_9 *. _lh_radius_arg2_9));;
+let rec radius_d3_d0_d0 _lh_radius_arg1_7 _lh_radius_arg2_7 =
+  ((_lh_radius_arg1_7 *. _lh_radius_arg1_7) +. (_lh_radius_arg2_7 *. _lh_radius_arg2_7));;
 let rec radius_d4_d0_d0 _lh_radius_arg1_1_1 _lh_radius_arg2_1_1 =
   ((_lh_radius_arg1_1_1 *. _lh_radius_arg1_1_1) +. (_lh_radius_arg2_1_1 *. _lh_radius_arg2_1_1));;
-let rec radius_d5_d0_d0 _lh_radius_arg1_9 _lh_radius_arg2_9 =
-  ((_lh_radius_arg1_9 *. _lh_radius_arg1_9) +. (_lh_radius_arg2_9 *. _lh_radius_arg2_9));;
-let rec right_d0_d0_d0 _lh_equalp_LH_P2_0_2_2 _lh_equalp_LH_P2_1_2_2 =
-  (let rec _lh_equalp_LH_P2_0_2_1 = 1 in
-    (let rec _lh_equalp_LH_P2_1_2_1 = 0 in
-      ((_lh_equalp_LH_P2_0_2_2 = _lh_equalp_LH_P2_0_2_1) && (_lh_equalp_LH_P2_1_2_2 = _lh_equalp_LH_P2_1_2_1))));;
+let rec radius_d5_d0_d0 _lh_radius_arg1_1_0 _lh_radius_arg2_1_0 =
+  ((_lh_radius_arg1_1_0 *. _lh_radius_arg1_1_0) +. (_lh_radius_arg2_1_0 *. _lh_radius_arg2_1_0));;
+let rec right_d0_d0_d0 _lh_equalp_LH_P2_0_1_5 _lh_equalp_LH_P2_1_1_5 =
+  (let rec _lh_equalp_LH_P2_0_1_4 = 1 in
+    (let rec _lh_equalp_LH_P2_1_1_4 = 0 in
+      ((_lh_equalp_LH_P2_0_1_5 = _lh_equalp_LH_P2_0_1_4) && (_lh_equalp_LH_P2_1_1_5 = _lh_equalp_LH_P2_1_1_4))));;
 let rec right_d1_d0_d0 =
   (`LH_P2(1, 0));;
 let rec size_d0_d0_d0 =
@@ -1278,8 +1278,8 @@ let rec size_d9_d0_d0 =
 let rec strEq_d0_d0_d0 _lh_strEq_arg1_1 _lh_strEq_arg2_1 =
   (match _lh_strEq_arg1_1 with
     | `LH_C(_lh_strEq_LH_C_0_3, _lh_strEq_LH_C_1_3) -> 
-      (let rec _lh_matchIdent_6 = _lh_strEq_arg2_1 in
-        (match _lh_matchIdent_6 with
+      (let rec _lh_matchIdent_4 = _lh_strEq_arg2_1 in
+        (match _lh_matchIdent_4 with
           | `LH_C(_lh_strEq_LH_C_0_4, _lh_strEq_LH_C_1_4) -> 
             (if (_lh_strEq_LH_C_0_3 = _lh_strEq_LH_C_0_4) then
               ((strEq_d0_d0_d0 _lh_strEq_LH_C_1_3) _lh_strEq_LH_C_1_4)
@@ -1288,18 +1288,18 @@ let rec strEq_d0_d0_d0 _lh_strEq_arg1_1 _lh_strEq_arg2_1 =
           | `LH_N -> 
             false
           | _ -> 
-            (Obj.magic 99)))
+            (failwith "error")))
     | `LH_N -> 
-      (let rec _lh_matchIdent_7 = _lh_strEq_arg2_1 in
-        (match _lh_matchIdent_7 with
+      (let rec _lh_matchIdent_5 = _lh_strEq_arg2_1 in
+        (match _lh_matchIdent_5 with
           | `LH_C(_lh_strEq_LH_C_0_5, _lh_strEq_LH_C_1_5) -> 
             false
           | `LH_N -> 
             true
           | _ -> 
-            (Obj.magic 99)))
+            (failwith "error")))
     | _ -> 
-      (Obj.magic 99));;
+      (failwith "error"));;
 let rec up_d0_d0_d0 =
   (`LH_P2(0, (0 - 1)));;
 let rec build_tree_d0_d0_d0 _lh_build_tree_arg1_1 _lh_build_tree_arg2_1 =
@@ -1330,9 +1330,9 @@ let rec build_tree_d0_d0_d0 _lh_build_tree_arg1_1 _lh_build_tree_arg2_1 =
                                     else
                                       (`EW(((build_tree_d0_d0_d0 ewp1_1) ewp2_1), ((build_tree_d0_d0_d0 ewp3_1) ewp4_1)))))))))))))))))
         | _ -> 
-          (Obj.magic 99))
+          (failwith "error"))
     | _ -> 
-      (Obj.magic 99))
+      (failwith "error"))
 and check_perim_d0_d0_d0 _lh_check_perim_arg1_1 _lh_check_perim_arg2_1 =
   (match _lh_check_perim_arg1_1 with
     | `LH_P2(_lh_check_perim_LH_P2_0_4, _lh_check_perim_LH_P2_1_4) -> 
@@ -1365,11 +1365,11 @@ and check_perim_d0_d0_d0 _lh_check_perim_arg1_1 _lh_check_perim_arg2_1 =
                   else
                     true) in
                     (let rec check_line_1 = (fun xcyc_1 xdyd_1 -> 
-                      (let rec _lh_matchIdent_4 = xcyc_1 in
-                        (match _lh_matchIdent_4 with
+                      (let rec _lh_matchIdent_6 = xcyc_1 in
+                        (match _lh_matchIdent_6 with
                           | `LH_P2(_lh_check_perim_LH_P2_0_6, _lh_check_perim_LH_P2_1_6) -> 
-                            (let rec _lh_matchIdent_5 = xdyd_1 in
-                              (match _lh_matchIdent_5 with
+                            (let rec _lh_matchIdent_7 = xdyd_1 in
+                              (match _lh_matchIdent_7 with
                                 | `LH_P2(_lh_check_perim_LH_P2_0_7, _lh_check_perim_LH_P2_1_7) -> 
                                   (let rec finished_1 = (if ((equalp_d0_d0_d0 (`LH_P2(_lh_check_perim_LH_P2_0_7, _lh_check_perim_LH_P2_1_7))) right_d0_d0_d0) then
                                     (_lh_check_perim_LH_P2_0_6 >= _lh_check_perim_LH_P2_0_5)
@@ -1389,9 +1389,9 @@ and check_perim_d0_d0_d0 _lh_check_perim_arg1_1 _lh_check_perim_arg2_1 =
                                       else
                                         ((check_line_1 (`LH_P2((_lh_check_perim_LH_P2_0_6 + _lh_check_perim_LH_P2_0_7), (_lh_check_perim_LH_P2_1_6 + _lh_check_perim_LH_P2_1_7)))) (`LH_P2(_lh_check_perim_LH_P2_0_7, _lh_check_perim_LH_P2_1_7))))))
                                 | _ -> 
-                                  (Obj.magic 99)))
+                                  (failwith "error")))
                           | _ -> 
-                            (Obj.magic 99)))) in
+                            (failwith "error")))) in
                       (let rec check_sides_1 = (if ((check_line_1 (`LH_P2((_lh_check_perim_LH_P2_0_4 + 1), _lh_check_perim_LH_P2_1_4))) right_d1_d0_d0) then
                         (if ((check_line_1 (`LH_P2(_lh_check_perim_LH_P2_0_5, (_lh_check_perim_LH_P2_1_4 + 1)))) down_d1_d0_d0) then
                           (if ((check_line_1 (`LH_P2((_lh_check_perim_LH_P2_0_5 - 1), _lh_check_perim_LH_P2_1_5))) left_d1_d0_d0) then
@@ -1405,13 +1405,13 @@ and check_perim_d0_d0_d0 _lh_check_perim_arg1_1 _lh_check_perim_arg2_1 =
                           (0 - 1))
                       else
                         (0 - 1)) in
-                        (if ((equalp_d3_d0_d0 (let rec _lh_equalp_LH_P2_0_1_3 = _lh_check_perim_LH_P2_0_4 in
-                          (let rec _lh_equalp_LH_P2_1_1_3 = _lh_check_perim_LH_P2_1_4 in
-                            (fun _lh_equalp_arg2_6 -> 
-                              ((_lh_equalp_arg2_6 _lh_equalp_LH_P2_0_1_3) _lh_equalp_LH_P2_1_1_3))))) (let rec _lh_equalp_LH_P2_0_1_4 = _lh_check_perim_LH_P2_0_5 in
-                          (let rec _lh_equalp_LH_P2_1_1_4 = _lh_check_perim_LH_P2_1_5 in
-                            (fun _lh_equalp_LH_P2_0_1_5 _lh_equalp_LH_P2_1_1_5 -> 
-                              ((_lh_equalp_LH_P2_0_1_5 = _lh_equalp_LH_P2_0_1_4) && (_lh_equalp_LH_P2_1_1_5 = _lh_equalp_LH_P2_1_1_4)))))) then
+                        (if ((equalp_d3_d0_d0 (let rec _lh_equalp_LH_P2_0_2_1 = _lh_check_perim_LH_P2_0_4 in
+                          (let rec _lh_equalp_LH_P2_1_2_1 = _lh_check_perim_LH_P2_1_4 in
+                            (fun _lh_equalp_arg2_9 -> 
+                              ((_lh_equalp_arg2_9 _lh_equalp_LH_P2_0_2_1) _lh_equalp_LH_P2_1_2_1))))) (let rec _lh_equalp_LH_P2_0_2_2 = _lh_check_perim_LH_P2_0_5 in
+                          (let rec _lh_equalp_LH_P2_1_2_2 = _lh_check_perim_LH_P2_1_5 in
+                            (fun _lh_equalp_LH_P2_0_2_3 _lh_equalp_LH_P2_1_2_3 -> 
+                              ((_lh_equalp_LH_P2_0_2_3 = _lh_equalp_LH_P2_0_2_2) && (_lh_equalp_LH_P2_1_2_3 = _lh_equalp_LH_P2_1_2_2)))))) then
                           (point_colour_d5_d0_d0 (let rec _lh_point_colour_LH_P2_0_1_0 = _lh_check_perim_LH_P2_0_4 in
                             (let rec _lh_point_colour_LH_P2_1_1_0 = _lh_check_perim_LH_P2_1_4 in
                               (fun _lh_dummy_9 -> 
@@ -1422,57 +1422,57 @@ and check_perim_d0_d0_d0 _lh_check_perim_arg1_1 _lh_check_perim_arg2_1 =
                           else
                             check_sides_1)))))))))
         | _ -> 
-          (Obj.magic 99))
+          (failwith "error"))
     | _ -> 
-      (Obj.magic 99))
-and check_radius_d0_d0_d0 _lh_check_radius_arg1_7 _lh_check_radius_arg2_7 _lh_check_radius_arg3_7 _lh_check_radius_arg4_7 _lh_check_radius_arg5_7 =
-  (let rec xn_7 = (((new_x_d0_d0_d0 _lh_check_radius_arg4_7) _lh_check_radius_arg5_7) _lh_check_radius_arg1_7) in
-    (let rec yn_7 = (((new_y_d0_d0_d0 _lh_check_radius_arg4_7) _lh_check_radius_arg5_7) _lh_check_radius_arg2_7) in
-      (let rec r_7 = ((radius_d0_d0_d0 xn_7) yn_7) in
-        (let rec kp_7 = (_lh_check_radius_arg3_7 + 1) in
-          (if (kp_7 = num_cols_d0_d0_d0) then
-            0
-          else
-            (if (r_7 > (float_of_int m_d0_d0_d0)) then
-              kp_7
-            else
-              (((((check_radius_d0_d0_d0 _lh_check_radius_arg1_7) _lh_check_radius_arg2_7) kp_7) xn_7) yn_7)))))))
-and check_radius_d1_d0_d0 _lh_check_radius_arg1_1_1 _lh_check_radius_arg2_1_1 _lh_check_radius_arg3_1_1 _lh_check_radius_arg4_1_1 _lh_check_radius_arg5_1_1 =
-  (let rec xn_1_1 = (((new_x_d1_d0_d0 _lh_check_radius_arg4_1_1) _lh_check_radius_arg5_1_1) _lh_check_radius_arg1_1_1) in
-    (let rec yn_1_1 = (((new_y_d1_d0_d0 _lh_check_radius_arg4_1_1) _lh_check_radius_arg5_1_1) _lh_check_radius_arg2_1_1) in
-      (let rec r_1_1 = ((radius_d1_d0_d0 xn_1_1) yn_1_1) in
+      (failwith "error"))
+and check_radius_d0_d0_d0 _lh_check_radius_arg1_1_1 _lh_check_radius_arg2_1_1 _lh_check_radius_arg3_1_1 _lh_check_radius_arg4_1_1 _lh_check_radius_arg5_1_1 =
+  (let rec xn_1_1 = (((new_x_d0_d0_d0 _lh_check_radius_arg4_1_1) _lh_check_radius_arg5_1_1) _lh_check_radius_arg1_1_1) in
+    (let rec yn_1_1 = (((new_y_d0_d0_d0 _lh_check_radius_arg4_1_1) _lh_check_radius_arg5_1_1) _lh_check_radius_arg2_1_1) in
+      (let rec r_1_1 = ((radius_d0_d0_d0 xn_1_1) yn_1_1) in
         (let rec kp_1_1 = (_lh_check_radius_arg3_1_1 + 1) in
-          (if (kp_1_1 = num_cols_d1_d0_d0) then
+          (if (kp_1_1 = num_cols_d0_d0_d0) then
             0
           else
-            (if (r_1_1 > (float_of_int m_d1_d0_d0)) then
+            (if (r_1_1 > (float_of_int m_d0_d0_d0)) then
               kp_1_1
             else
-              (((((check_radius_d1_d0_d0 _lh_check_radius_arg1_1_1) _lh_check_radius_arg2_1_1) kp_1_1) xn_1_1) yn_1_1)))))))
-and check_radius_d2_d0_d0 _lh_check_radius_arg1_9 _lh_check_radius_arg2_9 _lh_check_radius_arg3_9 _lh_check_radius_arg4_9 _lh_check_radius_arg5_9 =
-  (let rec xn_9 = (((new_x_d2_d0_d0 _lh_check_radius_arg4_9) _lh_check_radius_arg5_9) _lh_check_radius_arg1_9) in
-    (let rec yn_9 = (((new_y_d2_d0_d0 _lh_check_radius_arg4_9) _lh_check_radius_arg5_9) _lh_check_radius_arg2_9) in
-      (let rec r_9 = ((radius_d2_d0_d0 xn_9) yn_9) in
-        (let rec kp_9 = (_lh_check_radius_arg3_9 + 1) in
-          (if (kp_9 = num_cols_d2_d0_d0) then
+              (((((check_radius_d0_d0_d0 _lh_check_radius_arg1_1_1) _lh_check_radius_arg2_1_1) kp_1_1) xn_1_1) yn_1_1)))))))
+and check_radius_d1_d0_d0 _lh_check_radius_arg1_7 _lh_check_radius_arg2_7 _lh_check_radius_arg3_7 _lh_check_radius_arg4_7 _lh_check_radius_arg5_7 =
+  (let rec xn_7 = (((new_x_d1_d0_d0 _lh_check_radius_arg4_7) _lh_check_radius_arg5_7) _lh_check_radius_arg1_7) in
+    (let rec yn_7 = (((new_y_d1_d0_d0 _lh_check_radius_arg4_7) _lh_check_radius_arg5_7) _lh_check_radius_arg2_7) in
+      (let rec r_7 = ((radius_d1_d0_d0 xn_7) yn_7) in
+        (let rec kp_7 = (_lh_check_radius_arg3_7 + 1) in
+          (if (kp_7 = num_cols_d1_d0_d0) then
             0
           else
-            (if (r_9 > (float_of_int m_d2_d0_d0)) then
+            (if (r_7 > (float_of_int m_d1_d0_d0)) then
+              kp_7
+            else
+              (((((check_radius_d1_d0_d0 _lh_check_radius_arg1_7) _lh_check_radius_arg2_7) kp_7) xn_7) yn_7)))))))
+and check_radius_d2_d0_d0 _lh_check_radius_arg1_6 _lh_check_radius_arg2_6 _lh_check_radius_arg3_6 _lh_check_radius_arg4_6 _lh_check_radius_arg5_6 =
+  (let rec xn_6 = (((new_x_d2_d0_d0 _lh_check_radius_arg4_6) _lh_check_radius_arg5_6) _lh_check_radius_arg1_6) in
+    (let rec yn_6 = (((new_y_d2_d0_d0 _lh_check_radius_arg4_6) _lh_check_radius_arg5_6) _lh_check_radius_arg2_6) in
+      (let rec r_6 = ((radius_d2_d0_d0 xn_6) yn_6) in
+        (let rec kp_6 = (_lh_check_radius_arg3_6 + 1) in
+          (if (kp_6 = num_cols_d2_d0_d0) then
+            0
+          else
+            (if (r_6 > (float_of_int m_d2_d0_d0)) then
+              kp_6
+            else
+              (((((check_radius_d2_d0_d0 _lh_check_radius_arg1_6) _lh_check_radius_arg2_6) kp_6) xn_6) yn_6)))))))
+and check_radius_d3_d0_d0 _lh_check_radius_arg1_9 _lh_check_radius_arg2_9 _lh_check_radius_arg3_9 _lh_check_radius_arg4_9 _lh_check_radius_arg5_9 =
+  (let rec xn_9 = (((new_x_d3_d0_d0 _lh_check_radius_arg4_9) _lh_check_radius_arg5_9) _lh_check_radius_arg1_9) in
+    (let rec yn_9 = (((new_y_d3_d0_d0 _lh_check_radius_arg4_9) _lh_check_radius_arg5_9) _lh_check_radius_arg2_9) in
+      (let rec r_9 = ((radius_d3_d0_d0 xn_9) yn_9) in
+        (let rec kp_9 = (_lh_check_radius_arg3_9 + 1) in
+          (if (kp_9 = num_cols_d3_d0_d0) then
+            0
+          else
+            (if (r_9 > (float_of_int m_d3_d0_d0)) then
               kp_9
             else
-              (((((check_radius_d2_d0_d0 _lh_check_radius_arg1_9) _lh_check_radius_arg2_9) kp_9) xn_9) yn_9)))))))
-and check_radius_d3_d0_d0 _lh_check_radius_arg1_8 _lh_check_radius_arg2_8 _lh_check_radius_arg3_8 _lh_check_radius_arg4_8 _lh_check_radius_arg5_8 =
-  (let rec xn_8 = (((new_x_d3_d0_d0 _lh_check_radius_arg4_8) _lh_check_radius_arg5_8) _lh_check_radius_arg1_8) in
-    (let rec yn_8 = (((new_y_d3_d0_d0 _lh_check_radius_arg4_8) _lh_check_radius_arg5_8) _lh_check_radius_arg2_8) in
-      (let rec r_8 = ((radius_d3_d0_d0 xn_8) yn_8) in
-        (let rec kp_8 = (_lh_check_radius_arg3_8 + 1) in
-          (if (kp_8 = num_cols_d3_d0_d0) then
-            0
-          else
-            (if (r_8 > (float_of_int m_d3_d0_d0)) then
-              kp_8
-            else
-              (((((check_radius_d3_d0_d0 _lh_check_radius_arg1_8) _lh_check_radius_arg2_8) kp_8) xn_8) yn_8)))))))
+              (((((check_radius_d3_d0_d0 _lh_check_radius_arg1_9) _lh_check_radius_arg2_9) kp_9) xn_9) yn_9)))))))
 and check_radius_d4_d0_d0 _lh_check_radius_arg1_1_0 _lh_check_radius_arg2_1_0 _lh_check_radius_arg3_1_0 _lh_check_radius_arg4_1_0 _lh_check_radius_arg5_1_0 =
   (let rec xn_1_0 = (((new_x_d4_d0_d0 _lh_check_radius_arg4_1_0) _lh_check_radius_arg5_1_0) _lh_check_radius_arg1_1_0) in
     (let rec yn_1_0 = (((new_y_d4_d0_d0 _lh_check_radius_arg4_1_0) _lh_check_radius_arg5_1_0) _lh_check_radius_arg2_1_0) in
@@ -1485,18 +1485,18 @@ and check_radius_d4_d0_d0 _lh_check_radius_arg1_1_0 _lh_check_radius_arg2_1_0 _l
               kp_1_0
             else
               (((((check_radius_d4_d0_d0 _lh_check_radius_arg1_1_0) _lh_check_radius_arg2_1_0) kp_1_0) xn_1_0) yn_1_0)))))))
-and check_radius_d5_d0_d0 _lh_check_radius_arg1_6 _lh_check_radius_arg2_6 _lh_check_radius_arg3_6 _lh_check_radius_arg4_6 _lh_check_radius_arg5_6 =
-  (let rec xn_6 = (((new_x_d5_d0_d0 _lh_check_radius_arg4_6) _lh_check_radius_arg5_6) _lh_check_radius_arg1_6) in
-    (let rec yn_6 = (((new_y_d5_d0_d0 _lh_check_radius_arg4_6) _lh_check_radius_arg5_6) _lh_check_radius_arg2_6) in
-      (let rec r_6 = ((radius_d5_d0_d0 xn_6) yn_6) in
-        (let rec kp_6 = (_lh_check_radius_arg3_6 + 1) in
-          (if (kp_6 = num_cols_d5_d0_d0) then
+and check_radius_d5_d0_d0 _lh_check_radius_arg1_8 _lh_check_radius_arg2_8 _lh_check_radius_arg3_8 _lh_check_radius_arg4_8 _lh_check_radius_arg5_8 =
+  (let rec xn_8 = (((new_x_d5_d0_d0 _lh_check_radius_arg4_8) _lh_check_radius_arg5_8) _lh_check_radius_arg1_8) in
+    (let rec yn_8 = (((new_y_d5_d0_d0 _lh_check_radius_arg4_8) _lh_check_radius_arg5_8) _lh_check_radius_arg2_8) in
+      (let rec r_8 = ((radius_d5_d0_d0 xn_8) yn_8) in
+        (let rec kp_8 = (_lh_check_radius_arg3_8 + 1) in
+          (if (kp_8 = num_cols_d5_d0_d0) then
             0
           else
-            (if (r_6 > (float_of_int m_d5_d0_d0)) then
-              kp_6
+            (if (r_8 > (float_of_int m_d5_d0_d0)) then
+              kp_8
             else
-              (((((check_radius_d5_d0_d0 _lh_check_radius_arg1_6) _lh_check_radius_arg2_6) kp_6) xn_6) yn_6)))))))
+              (((((check_radius_d5_d0_d0 _lh_check_radius_arg1_8) _lh_check_radius_arg2_8) kp_8) xn_8) yn_8)))))))
 and delta_p_d0_d0_d0 =
   ((pmx_d0_d0_d0 -. pmn_d0_d0_d0) /. (float_of_int (size_d0_d0_d0 - 1)))
 and delta_p_d1_d0_d0 =
@@ -1521,36 +1521,36 @@ and delta_q_d4_d0_d0 =
   ((qmx_d4_d0_d0 -. qmn_d8_d0_d0) /. (float_of_int (size_d9_d0_d0 - 1)))
 and delta_q_d5_d0_d0 =
   ((qmx_d5_d0_d0 -. qmn_d1_d0_d0_d0) /. (float_of_int (size_d1_d1_d0_d0 - 1)))
-and np_d0_d0_d0 _lh_np_arg1_6 =
-  (pmn_d1_d0_d0 +. ((float_of_int _lh_np_arg1_6) *. delta_p_d0_d0_d0))
-and np_d1_d0_d0 _lh_np_arg1_1_0 =
-  (pmn_d3_d0_d0 +. ((float_of_int _lh_np_arg1_1_0) *. delta_p_d1_d0_d0))
-and np_d2_d0_d0 _lh_np_arg1_9 =
-  (pmn_d5_d0_d0 +. ((float_of_int _lh_np_arg1_9) *. delta_p_d2_d0_d0))
-and np_d3_d0_d0 _lh_np_arg1_8 =
-  (pmn_d7_d0_d0 +. ((float_of_int _lh_np_arg1_8) *. delta_p_d3_d0_d0))
+and np_d0_d0_d0 _lh_np_arg1_8 =
+  (pmn_d1_d0_d0 +. ((float_of_int _lh_np_arg1_8) *. delta_p_d0_d0_d0))
+and np_d1_d0_d0 _lh_np_arg1_6 =
+  (pmn_d3_d0_d0 +. ((float_of_int _lh_np_arg1_6) *. delta_p_d1_d0_d0))
+and np_d2_d0_d0 _lh_np_arg1_1_1 =
+  (pmn_d5_d0_d0 +. ((float_of_int _lh_np_arg1_1_1) *. delta_p_d2_d0_d0))
+and np_d3_d0_d0 _lh_np_arg1_9 =
+  (pmn_d7_d0_d0 +. ((float_of_int _lh_np_arg1_9) *. delta_p_d3_d0_d0))
 and np_d4_d0_d0 _lh_np_arg1_7 =
   (pmn_d9_d0_d0 +. ((float_of_int _lh_np_arg1_7) *. delta_p_d4_d0_d0))
-and np_d5_d0_d0 _lh_np_arg1_1_1 =
-  (pmn_d1_d1_d0_d0 +. ((float_of_int _lh_np_arg1_1_1) *. delta_p_d5_d0_d0))
+and np_d5_d0_d0 _lh_np_arg1_1_0 =
+  (pmn_d1_d1_d0_d0 +. ((float_of_int _lh_np_arg1_1_0) *. delta_p_d5_d0_d0))
 and nq_d0_d0_d0 _lh_nq_arg1_7 =
   (qmn_d1_d0_d0 +. ((float_of_int _lh_nq_arg1_7) *. delta_q_d0_d0_d0))
-and nq_d1_d0_d0 _lh_nq_arg1_1_1 =
-  (qmn_d3_d0_d0 +. ((float_of_int _lh_nq_arg1_1_1) *. delta_q_d1_d0_d0))
-and nq_d2_d0_d0 _lh_nq_arg1_6 =
-  (qmn_d5_d0_d0 +. ((float_of_int _lh_nq_arg1_6) *. delta_q_d2_d0_d0))
-and nq_d3_d0_d0 _lh_nq_arg1_8 =
-  (qmn_d7_d0_d0 +. ((float_of_int _lh_nq_arg1_8) *. delta_q_d3_d0_d0))
-and nq_d4_d0_d0 _lh_nq_arg1_1_0 =
-  (qmn_d9_d0_d0 +. ((float_of_int _lh_nq_arg1_1_0) *. delta_q_d4_d0_d0))
-and nq_d5_d0_d0 _lh_nq_arg1_9 =
-  (qmn_d1_d1_d0_d0 +. ((float_of_int _lh_nq_arg1_9) *. delta_q_d5_d0_d0))
-and point_colour_d4_d0_d0 _lh_point_colour_arg1_1_0 =
-  (match _lh_point_colour_arg1_1_0 with
+and nq_d1_d0_d0 _lh_nq_arg1_9 =
+  (qmn_d3_d0_d0 +. ((float_of_int _lh_nq_arg1_9) *. delta_q_d1_d0_d0))
+and nq_d2_d0_d0 _lh_nq_arg1_1_0 =
+  (qmn_d5_d0_d0 +. ((float_of_int _lh_nq_arg1_1_0) *. delta_q_d2_d0_d0))
+and nq_d3_d0_d0 _lh_nq_arg1_6 =
+  (qmn_d7_d0_d0 +. ((float_of_int _lh_nq_arg1_6) *. delta_q_d3_d0_d0))
+and nq_d4_d0_d0 _lh_nq_arg1_8 =
+  (qmn_d9_d0_d0 +. ((float_of_int _lh_nq_arg1_8) *. delta_q_d4_d0_d0))
+and nq_d5_d0_d0 _lh_nq_arg1_1_1 =
+  (qmn_d1_d1_d0_d0 +. ((float_of_int _lh_nq_arg1_1_1) *. delta_q_d5_d0_d0))
+and point_colour_d4_d0_d0 _lh_point_colour_arg1_1_1 =
+  (match _lh_point_colour_arg1_1_1 with
     | `LH_P2(_lh_point_colour_LH_P2_0_1_1, _lh_point_colour_LH_P2_1_1_1) -> 
       (((((check_radius_d4_d0_d0 (np_d4_d0_d0 _lh_point_colour_LH_P2_0_1_1)) (nq_d4_d0_d0 _lh_point_colour_LH_P2_1_1_1)) 0) 0.0) 0.0)
     | _ -> 
-      (Obj.magic 99))
+      (failwith "error"))
 and testMandel2_nofib_d0_d0_d0 _lh_testMandel2_nofib_arg1_1 =
   (let rec size'_1 = ((max_d0_d0_d0 (length_d0_d0_d0 _lh_testMandel2_nofib_arg1_1)) size_d1_d2_d0_d0) in
     (let rec tree_1 = ((build_tree_d0_d0_d0 (`LH_P2(0, 0))) (`LH_P2(size'_1, (size'_1 / 2)))) in

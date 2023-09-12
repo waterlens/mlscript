@@ -138,7 +138,7 @@ let rec drop_d0_d0 _lh_drop_arg1_0 _lh_drop_arg2_0 =
       else
         (`LH_C(_lh_drop_LH_C_0_0, _lh_drop_LH_C_1_0)))
     | _ -> 
-      (Obj.magic 99));;
+      (failwith "error"));;
 let rec even_d0_d0 _lh_even_arg1_0 =
   ((_lh_even_arg1_0 mod 2) = 0);;
 let rec foldl_d0_d0 f_1_1 i_3 ls_4 =
@@ -259,45 +259,45 @@ let rec drop_d0_d0_d0 _lh_drop_arg1_1 _lh_drop_arg2_1 =
       else
         (`LH_C(_lh_drop_LH_C_0_1, _lh_drop_LH_C_1_1)))
     | _ -> 
-      (Obj.magic 99));;
+      (failwith "error"));;
 let rec even_d0_d0_d0 _lh_even_arg1_1 =
   ((_lh_even_arg1_1 mod 2) = 0);;
 let rec foldl_d0_d0_d0 f_1_2 i_4 ls_5 =
   ((ls_5 f_1_2) i_4);;
-let rec foldl_d0_d0_d1 f_2_4 i_8 ls_1_0 =
-  ((ls_1_0 f_2_4) i_8);;
-let rec length_d0_d0_d0 ls_8 =
-  (match ls_8 with
-    | `LH_C(h_1_6, t_1_6) -> 
-      (1 + (length_d0_d0_d0 t_1_6))
+let rec foldl_d0_d0_d1 f_2_5 i_8 ls_1_1 =
+  ((ls_1_1 f_2_5) i_8);;
+let rec length_d0_d0_d0 ls_9 =
+  (match ls_9 with
+    | `LH_C(h_1_7, t_1_7) -> 
+      (1 + (length_d0_d0_d0 t_1_7))
     | `LH_N -> 
       0);;
-let rec mappend_d0_d0_d0 xs_4 ys_4 =
-  (match xs_4 with
-    | `LH_C(h_1_3, t_1_3) -> 
-      (`LH_C(h_1_3, ((mappend_d0_d0_d0 t_1_3) ys_4)))
-    | `LH_N -> 
-      ys_4);;
-let rec mappend_d0_d1_d0 xs_5 ys_5 =
+let rec mappend_d0_d0_d0 xs_5 ys_5 =
   (match xs_5 with
-    | `LH_C(h_1_9, t_1_9) -> 
-      (`LH_C(h_1_9, ((mappend_d0_d1_d0 t_1_9) ys_5)))
+    | `LH_C(h_1_4, t_1_4) -> 
+      (`LH_C(h_1_4, ((mappend_d0_d0_d0 t_1_4) ys_5)))
     | `LH_N -> 
       ys_5);;
+let rec mappend_d0_d1_d0 xs_4 ys_4 =
+  (match xs_4 with
+    | `LH_C(h_1_1, t_1_1) -> 
+      (`LH_C(h_1_1, ((mappend_d0_d1_d0 t_1_1) ys_4)))
+    | `LH_N -> 
+      ys_4);;
 let rec mappend_d1_d0_d0 xs_3 ys_3 =
   (match xs_3 with
     | `LH_C(h_1_0, t_1_0) -> 
       (`LH_C(h_1_0, ((mappend_d1_d0_d0 t_1_0) ys_3)))
     | `LH_N -> 
       ys_3);;
-let rec map_d0_d0_d0 f_1_9 ls_6 =
-  (ls_6 f_1_9);;
+let rec map_d0_d0_d0 f_2_0 ls_7 =
+  (ls_7 f_2_0);;
 let rec map_d0_d0_d1 f_2_6 ls_1_2 =
   (ls_1_2 f_2_6);;
-let rec map_d1_d0_d0 f_2_0 ls_7 =
-  (ls_7 f_2_0);;
-let rec map_d1_d0_d1 f_2_5 ls_1_1 =
-  (ls_1_1 f_2_5);;
+let rec map_d1_d0_d0 f_2_1 ls_8 =
+  (ls_8 f_2_1);;
+let rec map_d1_d0_d1 f_1_3 ls_6 =
+  (ls_6 f_1_3);;
 let rec sqr_d0_d0_d0 _lh_sqr_arg1_1 =
   (_lh_sqr_arg1_1 * _lh_sqr_arg1_1);;
 let rec code_d0_d0_d0 _lh_code_arg1_1 =
@@ -312,21 +312,21 @@ and collect_d0_d0_d0 _lh_collect_arg1_1 _lh_collect_arg2_1 _lh_popOutId_0_3 _lh_
         | `LH_N -> 
           (`LH_N)
         | _ -> 
-          (let rec h_1_1 = ((take_d0_d0_d0 _lh_collect_arg1_1) _lh_collect_arg2_1) in
-            (let rec t_1_1 = ((collect_d0_d0_d0 _lh_collect_arg1_1) ((drop_d0_d0_d0 _lh_collect_arg1_1) _lh_collect_arg2_1)) in
-              (let rec h_1_2 = (_lh_popOutId_0_3 h_1_1) in
-                (let rec t_1_2 = ((map_d0_d0_d0 _lh_popOutId_0_3) t_1_1) in
-                  (`LH_C((_lh_popOutId_1_3 h_1_2), ((map_d1_d0_d0 _lh_popOutId_1_3) t_1_2)))))))))
+          (let rec h_1_2 = ((take_d0_d0_d0 _lh_collect_arg1_1) _lh_collect_arg2_1) in
+            (let rec t_1_2 = ((collect_d0_d0_d0 _lh_collect_arg1_1) ((drop_d0_d0_d0 _lh_collect_arg1_1) _lh_collect_arg2_1)) in
+              (let rec h_1_3 = (_lh_popOutId_0_3 h_1_2) in
+                (let rec t_1_3 = ((map_d0_d0_d0 _lh_popOutId_0_3) t_1_2) in
+                  (`LH_C((_lh_popOutId_1_3 h_1_3), ((map_d1_d0_d0 _lh_popOutId_1_3) t_1_3)))))))))
 and concat_d0_d0_d0 lss_3 =
   (match lss_3 with
-    | `LH_C(h_1_5, t_1_5) -> 
-      ((mappend_d0_d1_d0 h_1_5) (concat_d0_d1_d0 t_1_5))
+    | `LH_C(h_1_6, t_1_6) -> 
+      ((mappend_d0_d1_d0 h_1_6) (concat_d0_d1_d0 t_1_6))
     | `LH_N -> 
       (`LH_N))
 and concat_d0_d1_d0 lss_2 =
   (match lss_2 with
-    | `LH_C(h_1_4, t_1_4) -> 
-      ((mappend_d0_d0_d0 h_1_4) (concat_d0_d1_d0 t_1_4))
+    | `LH_C(h_1_5, t_1_5) -> 
+      ((mappend_d0_d0_d0 h_1_5) (concat_d0_d1_d0 t_1_5))
     | `LH_N -> 
       (`LH_N))
 and encrypt_d0_d0_d0 _lh_encrypt_arg1_1 _lh_encrypt_arg2_1 _lh_funcomp_x_4 =
@@ -345,13 +345,13 @@ and power_d0_d0_d0 _lh_power_arg1_1 _lh_power_arg2_1 _lh_power_arg3_1 =
         ((_lh_power_arg3_1 * (((power_d0_d0_d0 (_lh_power_arg1_1 - 1)) _lh_power_arg2_1) _lh_power_arg3_1)) mod _lh_power_arg2_1)))
 and size_d0_d0_d0 _lh_size_arg1_1 =
   (((length_d0_d0_d0 (string_of_int _lh_size_arg1_1)) * 47) / 100)
-and take_d0_d0_d0 n_1 ls_9 _lh_popOutId_0_1 _lh_popOutId_1_1 =
+and take_d0_d0_d0 n_1 ls_1_0 _lh_popOutId_0_1 _lh_popOutId_1_1 =
   (if (n_1 > 0) then
-    (match ls_9 with
-      | `LH_C(h_1_7, t_1_7) -> 
-        (let rec h_1_8 = h_1_7 in
-          (let rec t_1_8 = ((take_d0_d0_d0 (n_1 - 1)) t_1_7) in
-            (((foldl_d0_d0_d1 _lh_popOutId_0_1) ((_lh_popOutId_0_1 _lh_popOutId_1_1) h_1_8)) t_1_8)))
+    (match ls_1_0 with
+      | `LH_C(h_1_8, t_1_8) -> 
+        (let rec h_1_9 = h_1_8 in
+          (let rec t_1_9 = ((take_d0_d0_d0 (n_1 - 1)) t_1_8) in
+            (((foldl_d0_d0_d1 _lh_popOutId_0_1) ((_lh_popOutId_0_1 _lh_popOutId_1_1) h_1_9)) t_1_9)))
       | `LH_N -> 
         _lh_popOutId_1_1)
   else

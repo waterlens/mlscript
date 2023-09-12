@@ -162,9 +162,9 @@ let rec max'_d0_d0_d0 _lh_max'_arg1_0 =
           else
             (max'_d0_d0_d0 (`LH_C(_lh_max'_LH_C_0_0, _lh_max'_LH_C_1_1))))
         | _ -> 
-          (Obj.magic 99))
+          (failwith "error"))
     | _ -> 
-      (Obj.magic 99));;
+      (failwith "error"));;
 let rec enumFromTo_d1_d0_d0 a_1 b_1 =
   (if (a_1 <= b_1) then
     (let rec _lh_listcomp_fun_ls_h_1 = a_1 in
@@ -297,9 +297,9 @@ let rec max'_d0_d0_d0_d0 _lh_max'_arg1_1 =
           else
             (max'_d0_d0_d0_d0 (`LH_C(_lh_max'_LH_C_0_2, _lh_max'_LH_C_1_3))))
         | _ -> 
-          (Obj.magic 99))
+          (failwith "error"))
     | _ -> 
-      (Obj.magic 99));;
+      (failwith "error"));;
 let rec enumFromTo_d1_d0_d0_d0 a_3 b_3 _lh_popOutId_0_0 _lh_popOutId_1_0 _lh_popOutId_2_0 _lh_popOutId_3_0 =
   (if (a_3 <= b_3) then
     (fun f_1_2 f_1_3 -> 

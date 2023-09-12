@@ -334,6 +334,7 @@ testDigitsOfE2_nofib $ primId 500
 //│ [LH_C _lh_append_lz_LH_C_0² append_lz₀₀(_lh_append_lz_LH_C_1², _lh_append_lz_arg2²)]: 346 --->
 //│ 	case force⁰(ls⁸) of {LH_C h⁸ t⁹ => [LH_C h⁸ take_lz₀₀((n¹ - 1), t⁹)] | LH_N  => [LH_N]}: 606
 //│ [LH_C (remainder¹ + _lh_carryPropagate_LH_C_0⁴) _lh_carryPropagate_LH_C_1⁴]: 402 --->
+//│ 	DeadCodeCons
 //│ 	case force⁰(ls⁶) of {LH_C h⁶ t⁷ => [LH_C f³(h⁶) map_lz₁₀(f³, t⁷)] | LH_N  => [LH_N]}: 487
 //│ [LH_C carryguess¹ tail¹]: 409 --->
 //│ 	case _lh_matchIdent⁸ of {LH_C _lh_carryPropagate_LH_C_0⁴ _lh_carryPropagate_LH_C_1⁴ => [LH_C (remainder¹ + _lh_carryPropagate_LH_C_0⁴) _lh_carryPropagate_LH_C_1⁴] | _  => error⁰}: 404
@@ -342,6 +343,7 @@ testDigitsOfE2_nofib $ primId 500
 //│ 	case force⁰(ls¹⁰) of {LH_C h¹⁰ t¹² => t¹² | LH_N  => error⁰}: 659
 //│ 	case force⁰(ls¹¹) of {LH_C h¹¹ t¹³ => h¹¹ | LH_N  => error⁰}: 666
 //│ [LH_C (dCorrected¹ % _lh_carryPropagate_arg1¹) _lh_carryPropagate_LH_C_1⁵]: 432 --->
+//│ 	DeadCodeCons
 //│ 	case force⁰(ls⁶) of {LH_C h⁶ t⁷ => [LH_C f³(h⁶) map_lz₁₀(f³, t⁷)] | LH_N  => [LH_N]}: 487
 //│ [LH_C div⁰(dCorrected¹, _lh_carryPropagate_arg1¹) lazy⁰([LH_C (dCorrected¹ % _lh_carryPropagate_arg1¹) _lh_carryPropagate_LH_C_1⁵])]: 434 --->
 //│ 	case _lh_matchIdent⁸ of {LH_C _lh_carryPropagate_LH_C_0⁴ _lh_carryPropagate_LH_C_1⁴ => [LH_C (remainder¹ + _lh_carryPropagate_LH_C_0⁴) _lh_carryPropagate_LH_C_1⁴] | _  => error⁰}: 404
@@ -386,6 +388,7 @@ testDigitsOfE2_nofib $ primId 500
 //│ [LH_C x¹ iterate₀₀(f⁵, f⁵(x¹))]: 582 --->
 //│ 	case force⁰(ls⁷) of {LH_C h⁷ t⁸ => [LH_C f⁴(h⁷) map_lz₀₀(f⁴, t⁸)] | LH_N  => [LH_N]}: 569
 //│ [LH_C a³ enumFromThen₀₀(t¹¹, ((2 * t¹¹) - a³))]: 633 --->
+//│ 	DeadCodeCons
 //│ 	case force⁰(ls⁶) of {LH_C h⁶ t⁷ => [LH_C f³(h⁶) map_lz₁₀(f³, t⁷)] | LH_N  => [LH_N]}: 487
 //│ [LH_C _lh_append_lz_LH_C_0³ append_lz₁₀(_lh_append_lz_LH_C_1³, _lh_append_lz_arg2³)]: 646 --->
 //│ 	case force⁰(ls⁸) of {LH_C h⁸ t⁹ => [LH_C h⁸ take_lz₀₀((n¹ - 1), t⁹)] | LH_N  => [LH_N]}: 606
@@ -439,6 +442,24 @@ testDigitsOfE2_nofib $ primId 500
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_C f³(h⁶) map_lz₁₀(f³, t⁷)]: 485 --->
+//│ 	case _lh_matchIdent⁷ of {LH_C _lh_carryPropagate_LH_C_0³ _lh_carryPropagate_LH_C_1³ => let carryguess¹ = div⁰(_lh_carryPropagate_LH_C_0³, _lh_carryPropagate_arg1¹)
+//│ in let remainder¹ = (_lh_carryPropagate_LH_C_0³ % _lh_carryPropagate_arg1¹)
+//│ in let recRes¹ = carryPropagate₀₀((_lh_carryPropagate_arg1¹ + 1), _lh_carryPropagate_LH_C_1³)
+//│ in if (carryguess¹ == div⁰((_lh_carryPropagate_LH_C_0³ + 9), _lh_carryPropagate_arg1¹)) then let tail¹ = lazy⁰(let _lh_matchIdent⁸ = force⁰(recRes¹)
+//│ in case _lh_matchIdent⁸ of {LH_C _lh_carryPropagate_LH_C_0⁴ _lh_carryPropagate_LH_C_1⁴ => [LH_C (remainder¹ + _lh_carryPropagate_LH_C_0⁴) _lh_carryPropagate_LH_C_1⁴] | _  => error⁰})
+//│ in [LH_C carryguess¹ tail¹] else let _lh_matchIdent⁹ = force⁰(recRes¹)
+//│ in case _lh_matchIdent⁹ of {LH_C _lh_carryPropagate_LH_C_0⁵ _lh_carryPropagate_LH_C_1⁵ => let dCorrected¹ = (_lh_carryPropagate_LH_C_0³ + _lh_carryPropagate_LH_C_0⁵)
+//│ in [LH_C div⁰(dCorrected¹, _lh_carryPropagate_arg1¹) lazy⁰([LH_C (dCorrected¹ % _lh_carryPropagate_arg1¹) _lh_carryPropagate_LH_C_1⁵])] | _  => error⁰} | _  => error⁰}: 444
+//│ [LH_N]: 486 --->
+//│ 	case _lh_matchIdent⁷ of {LH_C _lh_carryPropagate_LH_C_0³ _lh_carryPropagate_LH_C_1³ => let carryguess¹ = div⁰(_lh_carryPropagate_LH_C_0³, _lh_carryPropagate_arg1¹)
+//│ in let remainder¹ = (_lh_carryPropagate_LH_C_0³ % _lh_carryPropagate_arg1¹)
+//│ in let recRes¹ = carryPropagate₀₀((_lh_carryPropagate_arg1¹ + 1), _lh_carryPropagate_LH_C_1³)
+//│ in if (carryguess¹ == div⁰((_lh_carryPropagate_LH_C_0³ + 9), _lh_carryPropagate_arg1¹)) then let tail¹ = lazy⁰(let _lh_matchIdent⁸ = force⁰(recRes¹)
+//│ in case _lh_matchIdent⁸ of {LH_C _lh_carryPropagate_LH_C_0⁴ _lh_carryPropagate_LH_C_1⁴ => [LH_C (remainder¹ + _lh_carryPropagate_LH_C_0⁴) _lh_carryPropagate_LH_C_1⁴] | _  => error⁰})
+//│ in [LH_C carryguess¹ tail¹] else let _lh_matchIdent⁹ = force⁰(recRes¹)
+//│ in case _lh_matchIdent⁹ of {LH_C _lh_carryPropagate_LH_C_0⁵ _lh_carryPropagate_LH_C_1⁵ => let dCorrected¹ = (_lh_carryPropagate_LH_C_0³ + _lh_carryPropagate_LH_C_0⁵)
+//│ in [LH_C div⁰(dCorrected¹, _lh_carryPropagate_arg1¹) lazy⁰([LH_C (dCorrected¹ % _lh_carryPropagate_arg1¹) _lh_carryPropagate_LH_C_1⁵])] | _  => error⁰} | _  => error⁰}: 444
 //│ [LH_N]: 497 --->
 //│ 	case _lh_matchIdent⁶ of {LH_C _lh_append_lz_LH_C_0² _lh_append_lz_LH_C_1² => lazy⁰([LH_C _lh_append_lz_LH_C_0² append_lz₀₀(_lh_append_lz_LH_C_1², _lh_append_lz_arg2²)]) | LH_N  => _lh_append_lz_arg2² | _  => error⁰}: 350
 //│ [LH_C '.' [LH_N]]: 498 --->
@@ -456,6 +477,16 @@ testDigitsOfE2_nofib $ primId 500
 //│ 	[LH_N]: 497
 //│ 	[LH_C '.' [LH_N]]: 498
 //│ 	[LH_C '2' [LH_C '.' [LH_N]]]: 499
+//│ case _lh_matchIdent⁷ of {LH_C _lh_carryPropagate_LH_C_0³ _lh_carryPropagate_LH_C_1³ => let carryguess¹ = div⁰(_lh_carryPropagate_LH_C_0³, _lh_carryPropagate_arg1¹)
+//│ in let remainder¹ = (_lh_carryPropagate_LH_C_0³ % _lh_carryPropagate_arg1¹)
+//│ in let recRes¹ = carryPropagate₀₀((_lh_carryPropagate_arg1¹ + 1), _lh_carryPropagate_LH_C_1³)
+//│ in if (carryguess¹ == div⁰((_lh_carryPropagate_LH_C_0³ + 9), _lh_carryPropagate_arg1¹)) then let tail¹ = lazy⁰(let _lh_matchIdent⁸ = force⁰(recRes¹)
+//│ in case _lh_matchIdent⁸ of {LH_C _lh_carryPropagate_LH_C_0⁴ _lh_carryPropagate_LH_C_1⁴ => [LH_C (remainder¹ + _lh_carryPropagate_LH_C_0⁴) _lh_carryPropagate_LH_C_1⁴] | _  => error⁰})
+//│ in [LH_C carryguess¹ tail¹] else let _lh_matchIdent⁹ = force⁰(recRes¹)
+//│ in case _lh_matchIdent⁹ of {LH_C _lh_carryPropagate_LH_C_0⁵ _lh_carryPropagate_LH_C_1⁵ => let dCorrected¹ = (_lh_carryPropagate_LH_C_0³ + _lh_carryPropagate_LH_C_0⁵)
+//│ in [LH_C div⁰(dCorrected¹, _lh_carryPropagate_arg1¹) lazy⁰([LH_C (dCorrected¹ % _lh_carryPropagate_arg1¹) _lh_carryPropagate_LH_C_1⁵])] | _  => error⁰} | _  => error⁰}: 444 --->
+//│ 	[LH_C f³(h⁶) map_lz₁₀(f³, t⁷)]: 485
+//│ 	[LH_N]: 486
 //│ case _lh_matchIdent¹⁰ of {LH_C _lh_concat_lz_LH_C_0¹ _lh_concat_lz_LH_C_1¹ => force⁰(append_lz₁₀(_lh_concat_lz_LH_C_0¹, concat_lz₀₀(_lh_concat_lz_LH_C_1¹))) | LH_N  => [LH_N] | _  => error⁰}: 469 --->
 //│ 	[LH_C f⁴(h⁷) map_lz₀₀(f⁴, t⁸)]: 567
 //│ 	[LH_N]: 568
@@ -480,36 +511,18 @@ testDigitsOfE2_nofib $ primId 500
 //│ 		def append_lz₀₀(_lh_append_lz_arg1⁴, _lh_append_lz_arg2⁴) = 
 //│ 			let _lh_matchIdent¹² = _lh_append_lz_arg1⁴
 //│ 			in _lh_matchIdent¹²(_lh_append_lz_arg2⁴)
-//│ 		def carryPropagate₀₀(_lh_carryPropagate_arg1², _lh_carryPropagate_arg2²) = 
+//│ 		def carryPropagate₀₀(_lh_carryPropagate_arg1⁴, _lh_carryPropagate_arg2²) = 
 //│ 			lazy⁰(
-//│ 				let _lh_matchIdent¹⁵ = force⁰(_lh_carryPropagate_arg2²)
-//│ 				in case _lh_matchIdent¹⁵ of {
-//│ 					LH_C _lh_carryPropagate_LH_C_0³ _lh_carryPropagate_LH_C_1³ => 
-//│ 						let carryguess² = div⁰(_lh_carryPropagate_LH_C_0³, _lh_carryPropagate_arg1²)
-//│ 						in let remainder² = (_lh_carryPropagate_LH_C_0³ % _lh_carryPropagate_arg1²)
-//│ 						in let recRes² = carryPropagate₀₀((_lh_carryPropagate_arg1² + 1), _lh_carryPropagate_LH_C_1³)
-//│ 						in if (carryguess² == div⁰((_lh_carryPropagate_LH_C_0³ + 9), _lh_carryPropagate_arg1²)) then 
-//│ 							let tail² = lazy⁰(
-//│ 								let _lh_matchIdent¹⁶ = force⁰(recRes²)
-//│ 								in case _lh_matchIdent¹⁶ of {
-//│ 									LH_C _lh_carryPropagate_LH_C_0⁴ _lh_carryPropagate_LH_C_1⁴ => [LH_C (remainder² + _lh_carryPropagate_LH_C_0⁴) _lh_carryPropagate_LH_C_1⁴]
-//│ 									| _  => error⁰})
-//│ 							in [LH_C carryguess² tail²] else 
-//│ 							let _lh_matchIdent¹⁷ = force⁰(recRes²)
-//│ 							in case _lh_matchIdent¹⁷ of {
-//│ 								LH_C _lh_carryPropagate_LH_C_0⁵ _lh_carryPropagate_LH_C_1⁵ => 
-//│ 									let dCorrected² = (_lh_carryPropagate_LH_C_0³ + _lh_carryPropagate_LH_C_0⁵)
-//│ 									in [LH_C div⁰(dCorrected², _lh_carryPropagate_arg1²) lazy⁰([LH_C (dCorrected² % _lh_carryPropagate_arg1²) _lh_carryPropagate_LH_C_1⁵])]
-//│ 								| _  => error⁰}
-//│ 					| _  => error⁰})
+//│ 				let _lh_matchIdent¹⁷ = force⁰(_lh_carryPropagate_arg2²)
+//│ 				in _lh_matchIdent¹⁷(_lh_carryPropagate_arg1⁴))
 //│ 		def concat_lz₀₀(_lh_concat_lz_arg1²) = 
 //│ 			lazy⁰(
 //│ 				let _lh_matchIdent¹³ = force⁰(_lh_concat_lz_arg1²)
 //│ 				in _lh_matchIdent¹³(99))
 //│ 			where
 //│ 			def append_lz₁₀(_lh_append_lz_arg1⁵, _lh_append_lz_arg2⁵) = 
-//│ 				let _lh_matchIdent¹⁴ = _lh_append_lz_arg1⁵
-//│ 				in case _lh_matchIdent¹⁴ of {
+//│ 				let _lh_matchIdent¹⁶ = _lh_append_lz_arg1⁵
+//│ 				in case _lh_matchIdent¹⁶ of {
 //│ 					LH_C _lh_append_lz_LH_C_0³ _lh_append_lz_LH_C_1³ => lazy⁰([LH_C _lh_append_lz_LH_C_0³ append_lz₁₀(_lh_append_lz_LH_C_1³, _lh_append_lz_arg2⁵)])
 //│ 					| LH_N  => _lh_append_lz_arg2⁵
 //│ 					| _  => error⁰}
@@ -531,8 +544,27 @@ testDigitsOfE2_nofib $ primId 500
 //│ 			lazy⁰(force⁰(ls¹², f⁶))
 //│ 		def map_lz₁₀(f⁷, ls¹³) = 
 //│ 			lazy⁰(case force⁰(ls¹³) of {
-//│ 				LH_C h⁶ t⁷ => [LH_C f⁷(h⁶) map_lz₁₀(f⁷, t⁷)]
-//│ 				| LH_N  => [LH_N]})
+//│ 				LH_C h⁶ t⁷ => 
+//│ 					let _lh_carryPropagate_LH_C_0⁶ = f⁷(h⁶)
+//│ 					in let _lh_carryPropagate_LH_C_1⁶ = map_lz₁₀(f⁷, t⁷)
+//│ 					in (fun _lh_carryPropagate_arg1² -> 
+//│ 						let carryguess² = div⁰(_lh_carryPropagate_LH_C_0⁶, _lh_carryPropagate_arg1²)
+//│ 						in let remainder² = (_lh_carryPropagate_LH_C_0⁶ % _lh_carryPropagate_arg1²)
+//│ 						in let recRes² = carryPropagate₀₀((_lh_carryPropagate_arg1² + 1), _lh_carryPropagate_LH_C_1⁶)
+//│ 						in if (carryguess² == div⁰((_lh_carryPropagate_LH_C_0⁶ + 9), _lh_carryPropagate_arg1²)) then 
+//│ 							let tail² = lazy⁰(
+//│ 								let _lh_matchIdent¹⁴ = force⁰(recRes²)
+//│ 								in case _lh_matchIdent¹⁴ of {
+//│ 									LH_C _lh_carryPropagate_LH_C_0⁴ _lh_carryPropagate_LH_C_1⁴ => [LH_C (remainder² + _lh_carryPropagate_LH_C_0⁴) _lh_carryPropagate_LH_C_1⁴]
+//│ 									| _  => error⁰})
+//│ 							in [LH_C carryguess² tail²] else 
+//│ 							let _lh_matchIdent¹⁵ = force⁰(recRes²)
+//│ 							in case _lh_matchIdent¹⁵ of {
+//│ 								LH_C _lh_carryPropagate_LH_C_0⁵ _lh_carryPropagate_LH_C_1⁵ => 
+//│ 									let dCorrected² = (_lh_carryPropagate_LH_C_0⁶ + _lh_carryPropagate_LH_C_0⁵)
+//│ 									in [LH_C div⁰(dCorrected², _lh_carryPropagate_arg1²) lazy⁰([LH_C (dCorrected² % _lh_carryPropagate_arg1²) _lh_carryPropagate_LH_C_1⁵])]
+//│ 								| _  => error⁰})
+//│ 				| LH_N  => (fun _lh_carryPropagate_arg1³ -> error⁰)})
 //│ 		def tail_lz₀₀(ls¹⁵) = 
 //│ 			case force⁰(ls¹⁵) of {
 //│ 				LH_C h⁹ t¹⁰ => t¹⁰

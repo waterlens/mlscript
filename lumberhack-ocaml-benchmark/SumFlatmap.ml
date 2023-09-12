@@ -63,7 +63,7 @@ let rec flatMap_d0_d0 _lh_flatMap_arg1_0 _lh_flatMap_arg2_0 =
     | `LH_C(_lh_flatMap_LH_C_0_0, _lh_flatMap_LH_C_1_0) -> 
       ((mappend_d0_d0 (_lh_flatMap_arg1_0 _lh_flatMap_LH_C_0_0)) ((flatMap_d0_d0 _lh_flatMap_arg1_0) _lh_flatMap_LH_C_1_0))
     | _ -> 
-      (Obj.magic 99))
+      (failwith "error"))
 and testSumFlatmap_d0_d0 _lh_testSumFlatmap_arg1_0 =
   ((sum_d0_d0 0) ((flatMap_d0_d0 (fun a_1 -> 
     (let rec h_0 = a_1 in
@@ -89,25 +89,25 @@ let rec enumFromTo_d0_d0_d0 a_2 b_1 =
     (`LH_N));;
 let rec mappend_d0_d0_d0 xs_1 ys_4 =
   (xs_1 ys_4);;
-let rec mappend_d0_d0_d1 xs_2 ys_5 =
-  (xs_2 ys_5);;
-let rec mappend_d0_d0_d2 xs_3 ys_6 =
+let rec mappend_d0_d0_d1 xs_3 ys_6 =
   (xs_3 ys_6);;
-let rec sum_d0_d0_d0 _lh_sum_arg1_7 _lh_sum_arg2_3 =
-  (_lh_sum_arg2_3 _lh_sum_arg1_7);;
-let rec sum_d0_d0_d1 _lh_sum_arg1_5 _lh_sum_arg2_1 =
-  (_lh_sum_arg2_1 _lh_sum_arg1_5);;
-let rec sum_d0_d0_d2 _lh_sum_arg1_6 _lh_sum_arg2_2 =
-  (_lh_sum_arg2_2 _lh_sum_arg1_6);;
+let rec mappend_d0_d0_d2 xs_2 ys_5 =
+  (xs_2 ys_5);;
+let rec sum_d0_d0_d0 _lh_sum_arg1_5 _lh_sum_arg2_2 =
+  (_lh_sum_arg2_2 _lh_sum_arg1_5);;
+let rec sum_d0_d0_d1 _lh_sum_arg1_4 _lh_sum_arg2_1 =
+  (_lh_sum_arg2_1 _lh_sum_arg1_4);;
+let rec sum_d0_d0_d2 _lh_sum_arg1_6 _lh_sum_arg2_3 =
+  (_lh_sum_arg2_3 _lh_sum_arg1_6);;
 let rec flatMap_d0_d0_d0 _lh_flatMap_arg1_1 _lh_flatMap_arg2_1 =
   (match _lh_flatMap_arg2_1 with
     | `LH_N -> 
-      (fun _lh_sum_arg1_4 -> 
-        _lh_sum_arg1_4)
+      (fun _lh_sum_arg1_7 -> 
+        _lh_sum_arg1_7)
     | `LH_C(_lh_flatMap_LH_C_0_1, _lh_flatMap_LH_C_1_1) -> 
       ((mappend_d0_d0_d0 (_lh_flatMap_arg1_1 _lh_flatMap_LH_C_0_1)) ((flatMap_d0_d0_d0 _lh_flatMap_arg1_1) _lh_flatMap_LH_C_1_1))
     | _ -> 
-      (Obj.magic 99))
+      (failwith "error"))
 and testSumFlatmap_d0_d0_d0 _lh_testSumFlatmap_arg1_1 =
   ((sum_d0_d0_d0 0) ((flatMap_d0_d0_d0 (fun a_3 -> 
     (let rec h_2 = a_3 in

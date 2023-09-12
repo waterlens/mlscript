@@ -42,6 +42,6 @@ let rec testTak_nofib_d0_d0_d0 _lh_testTak_nofib_arg1_1 =
 
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_Tak_nofib" (fun () -> ignore ((testTak_nofib_d0 0)));
-  Bench.Test.create ~name:"lumberhack_Tak_nofib" (fun () -> ignore ((testTak_nofib_d0_d0 (Obj.magic 99))));
-  Bench.Test.create ~name:"lumberhack_pop_out_Tak_nofib" (fun () -> ignore ((testTak_nofib_d0_d0_d0 (Obj.magic 99))));
+  Bench.Test.create ~name:"lumberhack_Tak_nofib" (fun () -> ignore ((testTak_nofib_d0_d0 0)));
+  Bench.Test.create ~name:"lumberhack_pop_out_Tak_nofib" (fun () -> ignore ((testTak_nofib_d0_d0_d0 0)));
 ])

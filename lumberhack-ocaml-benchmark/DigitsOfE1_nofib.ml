@@ -120,7 +120,7 @@ and ratTrans_d0_d0 _lh_ratTrans_arg1_0 _lh_ratTrans_arg2_0 =
       (let rec _lh_matchIdent_1 = (Lazy.force _lh_ratTrans_arg2_0) in
         (match _lh_matchIdent_1 with
           | `LH_N -> 
-            (Obj.magic 99)
+            (failwith "error")
           | `LH_C(_lh_ratTrans_LH_C_0_0, _lh_ratTrans_LH_C_1_0) -> 
             (if (_lh_ratTrans_LH_P4_3_0 = 0) then
               ((ratTrans_d0_d0 (`LH_P4(_lh_ratTrans_LH_P4_1_0, (_lh_ratTrans_LH_P4_0_0 + (_lh_ratTrans_LH_C_0_0 * _lh_ratTrans_LH_P4_1_0)), _lh_ratTrans_LH_P4_3_0, (_lh_ratTrans_LH_P4_2_0 + (_lh_ratTrans_LH_C_0_0 * _lh_ratTrans_LH_P4_3_0))))) _lh_ratTrans_LH_C_1_0)
@@ -131,35 +131,35 @@ and ratTrans_d0_d0 _lh_ratTrans_arg1_0 _lh_ratTrans_arg2_0 =
                 else
                   ((ratTrans_d0_d0 (`LH_P4(_lh_ratTrans_LH_P4_1_0, (_lh_ratTrans_LH_P4_0_0 + (_lh_ratTrans_LH_C_0_0 * _lh_ratTrans_LH_P4_1_0)), _lh_ratTrans_LH_P4_3_0, (_lh_ratTrans_LH_P4_2_0 + (_lh_ratTrans_LH_C_0_0 * _lh_ratTrans_LH_P4_3_0))))) _lh_ratTrans_LH_C_1_0))))
           | _ -> 
-            (Obj.magic 99)))
+            (failwith "error")))
     | _ -> 
-      (Obj.magic 99))
+      (failwith "error"))
 and takeDigits_d0_d0 _lh_takeDigits_arg1_0 _lh_takeDigits_arg2_0 =
   (if (_lh_takeDigits_arg1_0 > 0) then
     (let rec _lh_matchIdent_0 = (Lazy.force _lh_takeDigits_arg2_0) in
       (match _lh_matchIdent_0 with
         | `LH_N -> 
-          (Obj.magic 99)
+          (failwith "error")
         | `LH_C(_lh_takeDigits_LH_C_0_0, _lh_takeDigits_LH_C_1_0) -> 
           (`LH_C(_lh_takeDigits_LH_C_0_0, ((takeDigits_d0_d0 (_lh_takeDigits_arg1_0 - 1)) ((ratTrans_d0_d0 (`LH_P4(10, 0, 0, 1))) _lh_takeDigits_LH_C_1_0))))
         | _ -> 
-          (Obj.magic 99)))
+          (failwith "error")))
   else
     (`LH_N))
 and testDigitsOfE1_nofib_d0_d0 _lh_testDigitsOfE1_nofib_arg1_0 =
   ((takeDigits_d0_d0 _lh_testDigitsOfE1_nofib_arg1_0) eContFrac_d0_d0);;
 
 (* lumberhack_pop_out *)
-let rec abs_d0_d0_d0 _lh_abs_arg1_3 =
-  (if (_lh_abs_arg1_3 < 0) then
-    (0 - _lh_abs_arg1_3)
-  else
-    _lh_abs_arg1_3);;
-let rec abs_d1_d0_d0 _lh_abs_arg1_2 =
+let rec abs_d0_d0_d0 _lh_abs_arg1_2 =
   (if (_lh_abs_arg1_2 < 0) then
     (0 - _lh_abs_arg1_2)
   else
     _lh_abs_arg1_2);;
+let rec abs_d1_d0_d0 _lh_abs_arg1_3 =
+  (if (_lh_abs_arg1_3 < 0) then
+    (0 - _lh_abs_arg1_3)
+  else
+    _lh_abs_arg1_3);;
 let rec aux_d0_d0_d0 _lh_aux_arg1_1 =
   (lazy (`LH_C(1, (lazy (`LH_C(_lh_aux_arg1_1, (lazy (`LH_C(1, (aux_d0_d0_d0 (_lh_aux_arg1_1 + 2)))))))))));;
 let rec signum_d0_d0_d0 _lh_signum_arg1_2 =
@@ -185,10 +185,10 @@ let rec eContFrac_d0_d0_d0 =
 and ratTrans_d0_d0_d0 _lh_ratTrans_arg1_1 _lh_ratTrans_arg2_1 =
   (match _lh_ratTrans_arg1_1 with
     | `LH_P4(_lh_ratTrans_LH_P4_0_1, _lh_ratTrans_LH_P4_1_1, _lh_ratTrans_LH_P4_2_1, _lh_ratTrans_LH_P4_3_1) -> 
-      (let rec _lh_matchIdent_2 = (Lazy.force _lh_ratTrans_arg2_1) in
-        (match _lh_matchIdent_2 with
+      (let rec _lh_matchIdent_3 = (Lazy.force _lh_ratTrans_arg2_1) in
+        (match _lh_matchIdent_3 with
           | `LH_N -> 
-            (Obj.magic 99)
+            (failwith "error")
           | `LH_C(_lh_ratTrans_LH_C_0_1, _lh_ratTrans_LH_C_1_1) -> 
             (if (_lh_ratTrans_LH_P4_3_1 = 0) then
               ((ratTrans_d0_d0_d0 (`LH_P4(_lh_ratTrans_LH_P4_1_1, (_lh_ratTrans_LH_P4_0_1 + (_lh_ratTrans_LH_C_0_1 * _lh_ratTrans_LH_P4_1_1)), _lh_ratTrans_LH_P4_3_1, (_lh_ratTrans_LH_P4_2_1 + (_lh_ratTrans_LH_C_0_1 * _lh_ratTrans_LH_P4_3_1))))) _lh_ratTrans_LH_C_1_1)
@@ -199,19 +199,19 @@ and ratTrans_d0_d0_d0 _lh_ratTrans_arg1_1 _lh_ratTrans_arg2_1 =
                 else
                   ((ratTrans_d0_d0_d0 (`LH_P4(_lh_ratTrans_LH_P4_1_1, (_lh_ratTrans_LH_P4_0_1 + (_lh_ratTrans_LH_C_0_1 * _lh_ratTrans_LH_P4_1_1)), _lh_ratTrans_LH_P4_3_1, (_lh_ratTrans_LH_P4_2_1 + (_lh_ratTrans_LH_C_0_1 * _lh_ratTrans_LH_P4_3_1))))) _lh_ratTrans_LH_C_1_1))))
           | _ -> 
-            (Obj.magic 99)))
+            (failwith "error")))
     | _ -> 
-      (Obj.magic 99))
+      (failwith "error"))
 and takeDigits_d0_d0_d0 _lh_takeDigits_arg1_1 _lh_takeDigits_arg2_1 =
   (if (_lh_takeDigits_arg1_1 > 0) then
-    (let rec _lh_matchIdent_3 = (Lazy.force _lh_takeDigits_arg2_1) in
-      (match _lh_matchIdent_3 with
+    (let rec _lh_matchIdent_2 = (Lazy.force _lh_takeDigits_arg2_1) in
+      (match _lh_matchIdent_2 with
         | `LH_N -> 
-          (Obj.magic 99)
+          (failwith "error")
         | `LH_C(_lh_takeDigits_LH_C_0_1, _lh_takeDigits_LH_C_1_1) -> 
           (`LH_C(_lh_takeDigits_LH_C_0_1, ((takeDigits_d0_d0_d0 (_lh_takeDigits_arg1_1 - 1)) ((ratTrans_d0_d0_d0 (`LH_P4(10, 0, 0, 1))) _lh_takeDigits_LH_C_1_1))))
         | _ -> 
-          (Obj.magic 99)))
+          (failwith "error")))
   else
     (`LH_N))
 and testDigitsOfE1_nofib_d0_d0_d0 _lh_testDigitsOfE1_nofib_arg1_1 =

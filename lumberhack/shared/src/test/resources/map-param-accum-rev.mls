@@ -165,6 +165,7 @@ rev(map(C(A, C(B, N)))(f))(N)
 //│ 	[C [B] [N]]: 85
 //│ 	[C [A] [C [B] [N]]]: 86
 //│ case x¹ of {A  => [AA] | B  => [BB]}: 78 --->
+//│ 	DeadCodeProd
 //│ 	[A]: 82
 //│ 	[B]: 83
 //│ <<<<<<< fusion matches <<<<<<<
@@ -174,10 +175,6 @@ rev(map(C(A, C(B, N)))(f))(N)
 //│ 	case ys¹ of {N  => (fun a² -> a²) | C h² t² => (fun a³ -> rev₀(t², [C h² a³]))}: 58
 //│ [C f⁴(h³) map₀(t³, f⁴)]: 71 --->
 //│ 	case ys¹ of {N  => (fun a² -> a²) | C h² t² => (fun a³ -> rev₀(t², [C h² a³]))}: 58
-//│ [A]: 82 --->
-//│ 	case x¹ of {A  => [AA] | B  => [BB]}: 78
-//│ [B]: 83 --->
-//│ 	case x¹ of {A  => [AA] | B  => [BB]}: 78
 //│ [N]: 84 --->
 //│ 	case xs¹ of {N  => (fun f³ -> [N]) | C h³ t³ => (fun f⁴ -> [C f⁴(h³) map₀(t³, f⁴)])}: 73
 //│ [C [B] [N]]: 85 --->
@@ -192,16 +189,13 @@ rev(map(C(A, C(B, N)))(f))(N)
 //│ 	[N]: 84
 //│ 	[C [B] [N]]: 85
 //│ 	[C [A] [C [B] [N]]]: 86
-//│ case x¹ of {A  => [AA] | B  => [BB]}: 78 --->
-//│ 	[A]: 82
-//│ 	[B]: 83
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ rev₀(map₀(
-//│ 	let h⁴ = (fun _lh_dummy⁷ -> [AA])
+//│ 	let h⁴ = [A]
 //│ 	in let t⁴ = 	
-//│ 		let h⁶ = (fun _lh_dummy⁶ -> [BB])
+//│ 		let h⁶ = [B]
 //│ 		in let t⁶ = (fun _lh_dummy⁵ -> (fun f⁷ -> (fun _lh_dummy⁴ -> (fun a⁶ -> a⁶))))
 //│ 		in (fun _lh_dummy³ -> (fun f⁶ -> 
 //│ 			let h⁷ = f⁶(h⁶)
@@ -212,7 +206,9 @@ rev(map(C(A, C(B, N)))(f))(N)
 //│ 		in let t⁵ = map₀(t⁴, f⁵)
 //│ 		in (fun _lh_dummy⁰ -> (fun a⁴ -> rev₀(t⁵, [C h⁵ a⁴]))))), f₀), [N])
 //│ def f₀(x²) = 
-//│ 	x²(99)
+//│ 	case x² of {
+//│ 		A  => [AA]
+//│ 		| B  => [BB]}
 //│ def map₀(xs²) = 
 //│ 	xs²(99)
 //│ def rev₀(ys²) = 

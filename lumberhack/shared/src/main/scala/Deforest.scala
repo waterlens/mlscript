@@ -352,7 +352,7 @@ class Deforest(var debug: Boolean) {
   def process(e: Expr)(using ctx: Ctx, calls: mutable.Set[Ref]): ProdStrat = trace(s"process ${e.uid}: ${e.pp(using InitPpConfig)}") {
     val res: ProdStratEnum = e match
       case Call(primFun@Ref(lazyOrForce), e) if Set("lazy", "force", "lumberhack_obj_magic")(lazyOrForce.tree.name) =>
-        registerExprToType(primFun, freshVar("_lh_rigid_error_var")(using e.uid)._1.toStrat())
+        // registerExprToType(primFun, freshVar("_lh_rigid_error_var")(using e.uid)._1.toStrat())
         // treat the above annotations as identity functions to keep fusion
         process(e).s
       // adding exprid here to the mkctor types changes the knot tying result and makes type checking slow because
@@ -528,6 +528,7 @@ class Deforest(var debug: Boolean) {
     ProdStratEnum.Sum |
     ProdStratEnum.NoProd
   ]
+  val isNotDeadBranch = mutable.Map.empty[Destruct, Set[Int]]
   def resolveConstraints: Unit = {
     // if constraint resolver has already been executed, do not execute it more than once
     if lowerBounds.keys.nonEmpty || upperBounds.keys.nonEmpty then return ()
@@ -576,6 +577,7 @@ class Deforest(var debug: Boolean) {
           handle(r.addPath(prod.path) -> NoCons()(using noExprId).toStrat(cons.path))
           handle(NoProd()(using noExprId).toStrat(cons.path.neg) -> l.addPath(prod.path.neg))
         case (np@NoProd(), dtor@Destruct(ds)) =>
+          isNotDeadBranch.update(dtor, (0 until ds.length).toSet)
           isNotDead += np
           given Int = numOfTypeCtor + 1
           if this.isRealCtorOrDtor(dtor.euid) then {
@@ -620,68 +622,43 @@ class Deforest(var debug: Boolean) {
           given Int = numOfTypeCtor + 1
           handle(lhs2.addPath(cons.path.neg) -> lhs1.addPath(prod.path.neg))
           handle(rhs1.addPath(prod.path) -> rhs2.addPath(cons.path))
-        case (mkctor@MkCtor(ctor, args), Destruct(ds)) =>
+        case (mkctor@MkCtor(ctor, args), dtors@Destruct(ds)) =>
           isNotDead += mkctor
           given Int = numOfTypeCtor + 1
-          var found = false
-          // (ds.find {case Destructor(ds_ctor, argCons) => ds_ctor == ctor || ds_ctor.name == "_"}) match {
-          //   case None => lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
-          //   case Some(Destructor(ds_ctor, argCons)) => {
-          //     if ds_ctor == ctor then {
-          //       assert(args.size == argCons.size)
-          //       // register the fusion match
-          //       if (this.isRealCtorOrDtor(prod.s.euid) && this.isRealCtorOrDtor(cons.s.euid)) then {
-          //         fusionMatch.updateWith(prod.s.euid)(_.map(_ + cons.s.euid).orElse(Some(Set(cons.s.euid))))
-          //         dtorSources += cons.s.asInstanceOf[Destruct] -> (dtorSources(cons.s.asInstanceOf[Destruct]) + prod.s)
-          //         ctorDestinations += prod.s.asInstanceOf[MkCtor] -> (ctorDestinations(prod.s.asInstanceOf[MkCtor]) + cons.s)
-          //       }
+          (ds.indexWhere {case Destructor(ds_ctor, argCons) => ds_ctor == ctor || ds_ctor.name == "_"}) match {
+            case -1 => lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
+            case armIndex => {
+              val Destructor(ds_ctor, argCons) = ds(armIndex)
+              if (ctor.name != "Int") && (ctor.name != "Char") then
+                isNotDeadBranch.updateWith(dtors) {
+                  case None => Some(Set(armIndex))
+                  case Some(idxs) => Some(idxs + armIndex)
+                }
+              if ds_ctor == ctor then {
+                assert(args.size == argCons.size)
+                // register the fusion match
+                if (this.isRealCtorOrDtor(prod.s.euid) && this.isRealCtorOrDtor(cons.s.euid)) then {
+                  fusionMatch.updateWith(prod.s.euid)(_.map(_ + cons.s.euid).orElse(Some(Set(cons.s.euid))))
+                  dtorSources += cons.s.asInstanceOf[Destruct] -> (dtorSources(cons.s.asInstanceOf[Destruct]) + prod.s)
+                  ctorDestinations += prod.s.asInstanceOf[MkCtor] -> (ctorDestinations(prod.s.asInstanceOf[MkCtor]) + cons.s)
+                }
 
-          //       args lazyZip argCons foreach { case (a, c) =>
-          //         handle(a.addPath(prod.path), c.addPath(cons.path))
-          //       }
+                args lazyZip argCons foreach { case (a, c) =>
+                  handle(a.addPath(prod.path), c.addPath(cons.path))
+                }
 
-          //     } else if ds_ctor.name == "_" then { // both wildcard pattern and id pattern
-          //       if (this.isRealCtorOrDtor(prod.s.euid) && this.isRealCtorOrDtor(cons.s.euid)) then {
-          //         fusionMatch.updateWith(prod.s.euid)(_.map(_ + cons.s.euid).orElse(Some(Set(cons.s.euid))))
-          //         dtorSources += cons.s.asInstanceOf[Destruct] -> (dtorSources(cons.s.asInstanceOf[Destruct]) + prod.s)
-          //         ctorDestinations += prod.s.asInstanceOf[MkCtor] -> (ctorDestinations(prod.s.asInstanceOf[MkCtor]) + cons.s)
-          //       }
-          //       (prod :: Nil) lazyZip argCons foreach { case (a, c) =>
-          //         handle(a.addPath(prod.path), c.addPath(cons.path))
-          //       }
-          //     }
-          //   }
-          // }
-          ds foreach { case Destructor(ds_ctor, argCons) =>
-            if ds_ctor == ctor then {
-              found = true
-              assert(args.size == argCons.size)
-              // register the fusion match
-              if (this.isRealCtorOrDtor(prod.s.euid) && this.isRealCtorOrDtor(cons.s.euid)) then {
-                fusionMatch.updateWith(prod.s.euid)(_.map(_ + cons.s.euid).orElse(Some(Set(cons.s.euid))))
-                dtorSources += cons.s.asInstanceOf[Destruct] -> (dtorSources(cons.s.asInstanceOf[Destruct]) + prod.s)
-                ctorDestinations += prod.s.asInstanceOf[MkCtor] -> (ctorDestinations(prod.s.asInstanceOf[MkCtor]) + cons.s)
-              }
-
-              args lazyZip argCons foreach { case (a, c) =>
-                handle(a.addPath(prod.path), c.addPath(cons.path))
-              }
-              
-            } else if ds_ctor.name == "_" then { // both wildcard pattern and id pattern
-              found = true
-              if (this.isRealCtorOrDtor(prod.s.euid) && this.isRealCtorOrDtor(cons.s.euid)) then {
-                fusionMatch.updateWith(prod.s.euid)(_.map(_ + cons.s.euid).orElse(Some(Set(cons.s.euid))))
-                dtorSources += cons.s.asInstanceOf[Destruct] -> (dtorSources(cons.s.asInstanceOf[Destruct]) + prod.s)
-                ctorDestinations += prod.s.asInstanceOf[MkCtor] -> (ctorDestinations(prod.s.asInstanceOf[MkCtor]) + cons.s)
-              }
-              (prod :: Nil) lazyZip argCons foreach { case (a, c) =>
-                handle(a.addPath(prod.path), c.addPath(cons.path))
+              } else if ds_ctor.name == "_" then { // both wildcard pattern and id pattern
+                if (this.isRealCtorOrDtor(prod.s.euid) && this.isRealCtorOrDtor(cons.s.euid)) then {
+                  fusionMatch.updateWith(prod.s.euid)(_.map(_ + cons.s.euid).orElse(Some(Set(cons.s.euid))))
+                  dtorSources += cons.s.asInstanceOf[Destruct] -> (dtorSources(cons.s.asInstanceOf[Destruct]) + prod.s)
+                  ctorDestinations += prod.s.asInstanceOf[MkCtor] -> (ctorDestinations(prod.s.asInstanceOf[MkCtor]) + cons.s)
+                }
+                (prod :: Nil) lazyZip argCons foreach { case (a, c) =>
+                  handle(a.addPath(prod.path), c.addPath(cons.path))
+                }
               }
             }
-            // else
-            //   argCons foreach { c => handle(NoProd()(using noExprId).toStrat(prod.path), c.addPath(cons.path)) }
           }
-          if !found then lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
         case (sum@Sum(ctors), Destruct(ds)) =>
           isNotDead += sum
           given Int = numOfTypeCtor + 1

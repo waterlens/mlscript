@@ -175,10 +175,16 @@ class DiffTestLumberhack extends DiffTests {
           // clipboard.setContents(declClipboard, declClipboard)
           output(progStr)
           if mode.dbg then {
-            val decl :: mainExpr :: Nil = progStr.split(";;").toList : @unchecked
+            val declAndMainExpr = progStr.split(";;").toList
             output("\n--------------- ocaml repl result -----------------")
             val ocamlRepl = new OCamlReplHost()
-            ocamlRepl.execute(decl + ";;").flatMap(_ => ocamlRepl.execute(mainExpr + ";;")) match {
+            (declAndMainExpr match {
+              case decl :: mainExpr :: Nil => {
+                ocamlRepl.execute(decl + ";;").flatMap(_ => ocamlRepl.execute(mainExpr + ";;"))
+              }
+              case mainExpr :: Nil => ocamlRepl.execute(mainExpr + ";;")
+              case _ => lastWords("unknown program structure")
+            }) match {
               case OCamlReplHost.Reply.Err(msg) => throw Exception(msg) 
               case ok => output(ok.toString)
             }

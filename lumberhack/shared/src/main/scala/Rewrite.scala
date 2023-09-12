@@ -10,6 +10,7 @@ import scala.collection.mutable.Set as MutSet
 import lumberhack.utils.*
 import ConsStratEnum.*
 import ProdStratEnum.*
+import mlscript.lumberhack.CallTree.callTreeWithoutKnotTying
 
 type RewriteCtx = Map[Ident, Ident]
 class FusionStrategy(d: Deforest) {
@@ -509,9 +510,11 @@ trait ExprRewrite { this: Expr =>
   }
 
   def deadCodeToMagic(using d: Deforest): Expr =
-    if d.exprToProdType.getOrElse(this.uid, lastWords(s"${d.exprs(this.uid).pp(using InitPpConfig)}")).s.representsDeadCode then
-      Call(Ref(d.lumberhackKeywordsIds("lumberhack_obj_magic")), Const(IntLit(99)))
-    else this match {
+    this match {
+      case Ref(lazyOrForceOrMagic) if Set("lazy", "force", "lumberhack_obj_magic")(lazyOrForceOrMagic.tree.name)
+        => Ref(lazyOrForceOrMagic)
+      case _ if d.exprToProdType.getOrElse(this.uid, lastWords(s"${d.exprs(this.uid).pp(using InitPpConfig)}")).s.representsDeadCode
+        => Call(Ref(d.lumberhackKeywordsIds("lumberhack_obj_magic")), Const(IntLit(99)))
       case Call(f, x) => Call(f.deadCodeToMagic, x.deadCodeToMagic)
       case Const(x) => Const(x)
       case Ctor(ctor, args) => Ctor(ctor, args.map(_.deadCodeToMagic))
@@ -522,10 +525,20 @@ trait ExprRewrite { this: Expr =>
         body.deadCodeToMagic
       )
       case LetIn(id, rhs, body) => LetIn(id, rhs.deadCodeToMagic, body.deadCodeToMagic)
-      case Match(scrut, arms) => Match(
-        scrut.deadCodeToMagic,
-        arms.map { case (ctor, ids, body) => (ctor, ids, body.deadCodeToMagic) }
-      )
+      case Match(scrut, arms) => {
+        val nonDeadBranches = d.dtorExprToType.get(this.uid).flatMap { dtor =>
+          d.isNotDeadBranch.get(dtor)
+        }.getOrElse((0 until arms.length).toSet)
+        Match(
+          scrut.deadCodeToMagic,
+          arms.zipWithIndex.map { case ((ctor, ids, body), idx) =>
+            if nonDeadBranches(idx) then
+              (ctor, ids, body.deadCodeToMagic)
+            else
+              (ctor, ids, Call(Ref(d.lumberhackKeywordsIds("lumberhack_obj_magic")), Const(IntLit(99))))
+          }
+        )
+      }
       case Ref(id) => Ref(id)
       case Sequence(fst, snd) => Sequence(fst.deadCodeToMagic, snd.deadCodeToMagic)
     }
@@ -659,31 +672,19 @@ trait ProgramRewrite { this: Program =>
   }
 
   lazy val deadCodeToMagic: Program = {
-    def prodStratDests(p: ProdStrat)(using d: Deforest) = p.s match {
-      // case v: ProdVar => d.upperBounds(v.uid).forall
-      case _ => ???
-    }
     this.d.resolveConstraints
-    
-    val res = Program(this.contents.map {
+    val locallyElimiated = Program(this.contents.map {
       case Left(deff) => Left(ProgDef(
         deff.id,
         deff.body.deadCodeToMagic
       ))
       case Right(expr) => Right(expr.deadCodeToMagic)
     }).copyDefsToNewDeforest(using Deforest(this.d.debug))._1._1
-    res.d(res)
-    res
-    // val copied = this.copyDefsToNewDeforest(using Deforest(this.d.debug))._1._1
-    // copied.d(copied)
-    // copied.d.resolveConstraints
-    // val exprIdToProdStrat = copied.d.exprToProdType.toMap
-    // val exprDests = 
-    
-    // Program(
+    locallyElimiated.d(locallyElimiated)
+    // locallyElimiated
 
-    // )
-    // ???
-    // copied
+    val (res, resd) = locallyElimiated.expandedWithNewDeforest(callTreeWithoutKnotTying(locallyElimiated.d))
+    resd(res)
+    res
   }
 }

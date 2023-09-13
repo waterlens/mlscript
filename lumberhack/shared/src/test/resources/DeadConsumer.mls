@@ -1,0 +1,129 @@
+:NewParser
+:ParseOnly
+
+:d
+:lhGenOCaml
+fun f(x) =
+  if True then lazy(f(x)) else lazy(f(C)) // adding lazy to make ocam repl terminate
+fun g(x) = if x is                        //  but f never checks its argument, so x has no upper bound
+  D then x
+  C then x
+f(g(D))                                   // D gets fused and becomes x => x, g get fused and becomes x(x), so type of g'(x => x) is not compatible with C
+//│ |#fun| |f|(|x|)| |#=|→|#if| |True| |#then| |lazy|(|f|(|x|)|)| |#else| |lazy|(|f|(|C|)|)| |/* adding lazy to make ocam repl terminate*/|←|↵|#fun| |g|(|x|)| |#=| |#if| |x| |is| |/*  but f never checks its argument, so x has no upper bound*/|→|D| |#then| |x|↵|C| |#then| |x|←|↵|f|(|g|(|D|)|)| |/* D gets fused and becomes x => x, g get fused and becomes x(x), so type of g'(x => x) is not compatible with C*/|
+//│ Parsed: {fun f = x, => {if (True) then lazy (f (x,),) else lazy (f (C,),)}; fun g = x, => if x is ‹(D) then x; (C) then x›; f (g (D,),)}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ f^19(g^20([D]))
+//│ def f(x⁰) = if [True] then lazy⁰(f^3(x⁰)) else lazy⁰(f^8([C]))
+//│ def g(x¹) = case x¹ of {
+//│ 	D  => x¹
+//│ 	| C  => x¹}
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec f x_0 =
+//│ 		  (if true then
+//│ 		    (lazy (f x_0))
+//│ 		  else
+//│ 		    (lazy (f (`C))))
+//│ 		and g x_1 =
+//│ 		  (match x_1 with
+//│ 		    | `D -> 
+//│ 		      x_1
+//│ 		    | `C -> 
+//│ 		      x_1);;
+//│ 		(f (g (`D)))
+//│ 		....... ocaml repl result .......
+//│ 		[ok]
+//│ 		                    val f : [> `C ] -> ('a lazy_t as 'a) = <fun>
+//│ 		val g : ([< `C | `D ] as 'a) -> 'a = <fun>
+//│ 		....... ocaml repl result .......
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [f^19] (hopeless to continue)
+//│ 	[f^19 · f^3] ---> [f^19] (using original def)
+//│ 	[f^19 · f^8] ---> [f^19] (using original def)
+//│ [g^20] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ f₀(g₀([D]))
+//│ def f₀(x³) = 
+//│ 	if [True] then lazy⁰(f₀(x³)) else lazy⁰(f₀([C]))
+//│ def g₀(x²) = 
+//│ 	case x² of {
+//│ 		D  => x²
+//│ 		| C  => x²}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [D]: 44 --->
+//│ 	DeadCodeCons
+//│ 	case x² of {D  => x² | C  => x²}: 27
+//│ ------------------
+//│ case x² of {D  => x² | C  => x²}: 27 --->
+//│ 	[D]: 44
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ f₀(g₀([D]))
+//│ def f₀(x⁵) = 
+//│ 	if [True] then lazy⁰(f₀(x⁵)) else lazy⁰(f₀([C]))
+//│ def g₀(x⁴) = 
+//│ 	case x⁴ of {
+//│ 		D  => x⁴
+//│ 		| C  => x⁴}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ 
+//│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
+//│ f₀ :: 'f₀ <: [] ::: true
+//│ g₀ :: 'g₀ <: [] ::: true
+//│ [D] :: D ::: true
+//│ g₀([D]) :: '4_callres <: [] ::: true
+//│ f₀(g₀([D])) :: '5_callres <: [] ::: true
+//│ x :: 'x⁰ <: [] ::: true
+//│ x :: 'x⁰ <: [] ::: true
+//│ x :: 'x⁰ <: [] ::: true
+//│ case x of {D  => x | C  => x} :: '9_matchres <: [] ::: true
+//│ (fun x -> case x of {D  => x | C  => x}) :: 'x⁰ => '9_matchres ::: true
+//│ [True] :: True ::: true
+//│ f₀ :: 'f₀ <: [] ::: true
+//│ x :: 'x¹ <: [] ::: true
+//│ f₀(x) :: '15_callres <: [] ::: true
+//│ lazy(f₀(x)) :: '15_callres <: [] ::: true
+//│ f₀ :: 'f₀ <: [] ::: true
+//│ [C] :: C ::: true
+//│ f₀([C]) :: '20_callres <: [] ::: true
+//│ lazy(f₀([C])) :: '20_callres <: [] ::: true
+//│ if [True] then lazy(f₀(x)) else lazy(f₀([C])) :: '22_ifres <: [] ::: true
+//│ (fun x -> if [True] then lazy(f₀(x)) else lazy(f₀([C]))) :: 'x¹ => '22_ifres ::: true
+//│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
+//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
+//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
+//│ 
+//│ let rec f_d0 x_1 =
+//│   (if true then
+//│     (lazy (f_d0 x_1))
+//│   else
+//│     (lazy (f_d0 (`C))))
+//│ and g_d0 x_0 =
+//│   (match x_0 with
+//│     | `D -> 
+//│       x_0
+//│     | `C -> 
+//│       x_0);;
+//│ (f_d0 (g_d0 (`D)))
+//│ 
+//│ --------------- ocaml repl result -----------------
+//│ [ok]
+//│   - : 'a lazy_t as 'a = <lazy>
+//│ 
+//│ --------------- ocaml repl result -----------------
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

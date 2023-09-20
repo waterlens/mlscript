@@ -68,7 +68,7 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
     val tree = parser.parseString(program)
     val treeRootNode = tree.getRootNode()
     val pp = treeRootNode.pp
-    if pp.contains("ERROR") then lastWords("parse error")
+    if pp.contains("ERROR") then lastWords(s"parse error:\n $pp")
     // output(treeRootNode.pp)
     // output(treeRootNode.getNodeString())
     fromHaskellToPrgm(treeRootNode)(using program)

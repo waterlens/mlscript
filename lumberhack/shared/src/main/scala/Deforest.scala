@@ -569,20 +569,20 @@ class Deforest(var debug: Boolean) {
         case (ProdVar(v, pn), ConsVar(w, cn))
           if v === w || pn == "_lh_rigid_error_var" || cn == "_lh_rigid_error_var" => ()
         case (np@NoProd(), NoCons()) =>
-          isNotDead += np
+          // isNotDead += np
         case (np@NoProd(), ConsFun(l, r)) =>
-          isNotDead += np
+          // isNotDead += np
           given Int = numOfTypeCtor + 1
           handle(l.addPath(cons.path.neg) -> NoCons()(using noExprId).toStrat(prod.path.neg))
           handle(NoProd()(using noExprId).toStrat(prod.path) -> r.addPath(cons.path))
         case (prodFun@ProdFun(l, r), NoCons()) =>
-          isNotDead += prodFun
+          // isNotDead += prodFun
           given Int = numOfTypeCtor + 1
           handle(r.addPath(prod.path) -> NoCons()(using noExprId).toStrat(cons.path))
           handle(NoProd()(using noExprId).toStrat(cons.path.neg) -> l.addPath(prod.path.neg))
         case (np@NoProd(), dtor@Destruct(ds)) =>
-          isNotDeadBranch.update(dtor, (0 until ds.length).toSet)
-          isNotDead += np
+          // isNotDeadBranch.update(dtor, (0 until ds.length).toSet)
+          // isNotDead += np
           given Int = numOfTypeCtor + 1
           if this.isRealCtorOrDtor(dtor.euid) then {
             dtorSources += dtor -> (dtorSources(dtor) + prod.s)
@@ -591,7 +591,7 @@ class Deforest(var debug: Boolean) {
             argCons foreach { c => handle(prod, c.addPath(cons.path)) }
           }
         case (ctorType@MkCtor(ctor, args), NoCons()) =>
-          isNotDead += ctorType
+          // isNotDead += ctorType
           given Int = numOfTypeCtor + 1
           if this.isRealCtorOrDtor(ctorType.euid) then {
             ctorDestinations += ctorType -> (ctorDestinations(ctorType) + cons.s)
@@ -622,22 +622,22 @@ class Deforest(var debug: Boolean) {
             prod.addPath(cons.path.rev).addPath(cv.asInPath.getOrElse(Path.empty)) -> ub_strat.addPath(ub_path)
           }))
         case (prodFun@ProdFun(lhs1, rhs1), ConsFun(lhs2, rhs2)) =>
-          isNotDead += prodFun
+          // isNotDead += prodFun
           given Int = numOfTypeCtor + 1
           handle(lhs2.addPath(cons.path.neg) -> lhs1.addPath(prod.path.neg))
           handle(rhs1.addPath(prod.path) -> rhs2.addPath(cons.path))
         case (mkctor@MkCtor(ctor, args), dtors@Destruct(ds)) =>
-          isNotDead += mkctor
+          // isNotDead += mkctor
           given Int = numOfTypeCtor + 1
           (ds.indexWhere {case Destructor(ds_ctor, argCons) => ds_ctor == ctor || ds_ctor.name == "_"}) match {
             case -1 => lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
             case armIndex => {
               val Destructor(ds_ctor, argCons) = ds(armIndex)
               if (ctor.name != "Int") && (ctor.name != "Char") then
-                isNotDeadBranch.updateWith(dtors) {
-                  case None => Some(Set(armIndex))
-                  case Some(idxs) => Some(idxs + armIndex)
-                }
+                // isNotDeadBranch.updateWith(dtors) {
+                  // case None => Some(Set(armIndex))
+                  // case Some(idxs) => Some(idxs + armIndex)
+                // }
               if ds_ctor == ctor then {
                 assert(args.size == argCons.size)
                 // register the fusion match
@@ -664,7 +664,7 @@ class Deforest(var debug: Boolean) {
             }
           }
         case (sum@Sum(ctors), Destruct(ds)) =>
-          isNotDead += sum
+          // isNotDead += sum
           given Int = numOfTypeCtor + 1
           ctors.foreach { ctorStrat => ctorStrat.s match
             case MkCtor(ctor, args) => {
@@ -685,7 +685,7 @@ class Deforest(var debug: Boolean) {
             }
           }
         case (sum@Sum(ctors), NoCons()) =>
-          isNotDead += sum
+          // isNotDead += sum
           ctors.foreach(handle(_, cons))
         // allow function to be the scrutinee, haskell and ocaml also allows it
         case (f: ProdFun, Destruct(ds)) if ds.find(_.ctor.name == "_").isDefined =>

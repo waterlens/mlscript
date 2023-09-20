@@ -370,7 +370,7 @@ class DiffTestLumberhack extends DiffTests {
     output("<<<<<<< new fusion strategy <<<<<<<")
 
 
-    val prgmAfterFusion = p.rewrite(d)
+    val prgmAfterFusion = p.rewrite(d, fusionStrategy)
     output("\n>>>>>>> after fusion >>>>>>>")
     output(callTree match {
       case None => prgmAfterFusion.pp(using InitPpConfig.multilineOn.showIuidOn)

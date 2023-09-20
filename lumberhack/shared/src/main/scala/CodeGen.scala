@@ -785,7 +785,10 @@ fun reverse_helper(ls, a) = if ls is
       val declsNode = n.getAllChilds.find(_.getType() == "decls")
       val (whereDecls, newCtx) = declsNode match {
         case Some(declsNode) => {
-          val allWhereDecls = declsNode.getAllChilds.filterNot(_.getType() == "comment")
+          val allWhereDecls = declsNode.getAllChilds.filterNot { a => 
+            val nodeType = a.getType()
+            nodeType == "comment" || nodeType == "signature"
+          }
           assert(allWhereDecls.forall(_.getType() == "function"), allWhereDecls.map(_.getType()).mkString("|"))
           val allWhereDeclsGrouped = allWhereDecls.groupBy(_.getChild(0).getSrcContent)
           val decledCtx = allWhereDeclsGrouped.keys.map(n => n -> d.nextIdent(false, Var(n)))

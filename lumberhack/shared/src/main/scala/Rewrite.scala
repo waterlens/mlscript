@@ -628,9 +628,8 @@ trait ProgramRewrite { this: Program =>
     
   }
 
-  def rewrite(d: Deforest): Program = {
+  def rewrite(d: Deforest, fusionStrategy: FusionStrategy): Program = {
     // given Map[ExprId, ExprId] = d.fusionMatch.map { (p, cs) => p -> cs.head }.toMap
-    val fusionStrategy = FusionStrategy(d)
     given Deforest = d
     given Map[ExprId, ExprId] = fusionStrategy.finallyFilteredStrategies._1.map { (ctor, dtors) =>
       assert(dtors.size == 1 && dtors.head.isInstanceOf[Destruct])

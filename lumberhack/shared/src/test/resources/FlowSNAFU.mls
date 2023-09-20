@@ -1680,54 +1680,54 @@ fun head(ls) = if ls is
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
 //│ head :: 'head <: ['14_callres => '15_callres] ::: false
 //│ line :: 'line <: ['13_callres => '14_callres | 't¹ => '30_callres] ::: false
-//│ primId :: NoProd ::: false
+//│ primId :: NoProd ::: true
 //│ 2 :: Int ::: false
 //│ 2 :: Int ::: false
 //│ 1 :: Int ::: false
 //│ 2 :: Int ::: false
-//│ [N] :: N ::: false
-//│ [C 2 [N]] :: C(Int, N) ::: false
-//│ [C 1 [C 2 [N]]] :: C(Int, C(Int, N)) ::: false
-//│ [C 2 [C 1 [C 2 [N]]]] :: C(Int, C(Int, C(Int, N))) ::: false
-//│ [C 2 [C 2 [C 1 [C 2 [N]]]]] :: C(Int, C(Int, C(Int, C(Int, N)))) ::: false
+//│ [N] :: N ::: true
+//│ [C 2 [N]] :: C(Int, N) ::: true
+//│ [C 1 [C 2 [N]]] :: C(Int, C(Int, N)) ::: true
+//│ [C 2 [C 1 [C 2 [N]]]] :: C(Int, C(Int, C(Int, N))) ::: true
+//│ [C 2 [C 2 [C 1 [C 2 [N]]]]] :: C(Int, C(Int, C(Int, C(Int, N)))) ::: true
 //│ primId([C 2 [C 2 [C 1 [C 2 [N]]]]]) :: '13_callres <: ['ls¹] ::: false
 //│ line(primId([C 2 [C 2 [C 1 [C 2 [N]]]]])) :: '14_callres <: ['ls²] ::: false
 //│ head(line(primId([C 2 [C 2 [C 1 [C 2 [N]]]]]))) :: '15_callres <: [NoCons] ::: false
 //│ ls :: 'ls⁰ <: [Destruct(N, C('h⁰, 't⁰))] ::: false
-//│ [N] :: N ::: false
 //│ [N] :: N ::: true
-//│ (fun _lh_dummy -> [N]) :: '_lh_dummy⁰ => N ::: false
-//│ [P [N] (fun _lh_dummy -> [N])] :: P(N, '_lh_dummy⁰ => N) ::: false
-//│ == :: Destruct(Int) => Destruct(Int) => Sum[True, False] ::: false
+//│ [N] :: N ::: true
+//│ (fun _lh_dummy -> [N]) :: '_lh_dummy⁰ => N ::: true
+//│ [P [N] (fun _lh_dummy -> [N])] :: P(N, '_lh_dummy⁰ => N) ::: true
+//│ == :: Destruct(Int) => Destruct(Int) => Sum[True, False] ::: true
 //│ h :: 'h⁰ <: [DeadCodeCons | NoCons | Destruct(Int)] ::: false
 //│ ==(h) :: '23_callres <: [Int => '25_callres] ::: false
 //│ 1 :: Int ::: false
 //│ (h == 1) :: '25_callres <: [Destruct(True, False)] ::: false
-//│ [N] :: N ::: false
+//│ [N] :: N ::: true
 //│ t :: 't⁰ <: ['t¹ | 'ls⁰] ::: false
 //│ line :: 'line <: ['13_callres => '14_callres | 't¹ => '30_callres] ::: false
 //│ t :: 't¹ <: ['ls¹] ::: false
 //│ line(t) :: '30_callres <: ['52_callres] ::: true
-//│ (fun _lh_dummy -> line(t)) :: '_lh_dummy¹ => '30_callres ::: false
+//│ (fun _lh_dummy -> line(t)) :: '_lh_dummy¹ => '30_callres ::: true
 //│ let t = t
-//│ in (fun _lh_dummy -> line(t)) :: '_lh_dummy¹ => '30_callres ::: false
+//│ in (fun _lh_dummy -> line(t)) :: '_lh_dummy¹ => '30_callres ::: true
 //│ [P [N] let t = t
-//│ in (fun _lh_dummy -> line(t))] :: P(N, '_lh_dummy¹ => '30_callres) ::: false
+//│ in (fun _lh_dummy -> line(t))] :: P(N, '_lh_dummy¹ => '30_callres) ::: true
 //│ break :: 'break <: ['t⁰ => '36_callres | 'ls¹ => '48_callres] ::: false
 //│ t :: 't⁰ <: ['t¹ | 'ls⁰] ::: false
 //│ break(t) :: '36_callres <: [Destruct(P('fst⁰, 'snd⁰))] ::: false
 //│ h :: 'h⁰ <: [DeadCodeCons | NoCons | Destruct(Int)] ::: false
 //│ fst :: 'fst⁰ <: [DeadCodeCons | NoCons] ::: false
-//│ [C h fst] :: C('h⁰, 'fst⁰) ::: false
+//│ [C h fst] :: C('h⁰, 'fst⁰) ::: true
 //│ snd :: 'snd⁰ <: ['snd¹] ::: false
-//│ [P [C h fst] snd] :: P(C('h⁰, 'fst⁰), 'snd⁰) ::: false
+//│ [P [C h fst] snd] :: P(C('h⁰, 'fst⁰), 'snd⁰) ::: true
 //│ case break(t) of {P fst snd => [P [C h fst] snd]} :: '42_matchres <: ['43_ifres] ::: false
 //│ if (h == 1) then [P [N] let t = t
 //│ in (fun _lh_dummy -> line(t))] else case break(t) of {P fst snd => [P [C h fst] snd]} :: '43_ifres <: ['44_matchres] ::: false
 //│ case ls of {N  => [P [N] (fun _lh_dummy -> [N])] | C h t => if (h == 1) then [P [N] let t = t
 //│ in (fun _lh_dummy -> line(t))] else case break(t) of {P fst snd => [P [C h fst] snd]}} :: '44_matchres <: ['36_callres | '48_callres] ::: false
 //│ (fun ls -> case ls of {N  => [P [N] (fun _lh_dummy -> [N])] | C h t => if (h == 1) then [P [N] let t = t
-//│ in (fun _lh_dummy -> line(t))] else case break(t) of {P fst snd => [P [C h fst] snd]}}) :: 'ls⁰ => '44_matchres ::: false
+//│ in (fun _lh_dummy -> line(t))] else case break(t) of {P fst snd => [P [C h fst] snd]}}) :: 'ls⁰ => '44_matchres ::: true
 //│ break :: 'break <: ['t⁰ => '36_callres | 'ls¹ => '48_callres] ::: false
 //│ ls :: 'ls¹ <: ['ls⁰] ::: false
 //│ break(ls) :: '48_callres <: [Destruct(P('fst¹, 'snd¹))] ::: false
@@ -1735,14 +1735,14 @@ fun head(ls) = if ls is
 //│ snd :: 'snd¹ <: [Int => '52_callres] ::: false
 //│ 99 :: Int ::: false
 //│ snd(99) :: '52_callres <: [DeadCodeCons | 't²] ::: true
-//│ [C fst snd(99)] :: C('fst¹, '52_callres) ::: false
+//│ [C fst snd(99)] :: C('fst¹, '52_callres) ::: true
 //│ case break(ls) of {P fst snd => [C fst snd(99)]} :: '54_matchres <: ['14_callres | '30_callres] ::: false
-//│ (fun ls -> case break(ls) of {P fst snd => [C fst snd(99)]}) :: 'ls¹ => '54_matchres ::: false
+//│ (fun ls -> case break(ls) of {P fst snd => [C fst snd(99)]}) :: 'ls¹ => '54_matchres ::: true
 //│ ls :: 'ls² <: [Destruct(C('h¹, 't²), N)] ::: false
 //│ h :: 'h¹ <: ['59_matchres] ::: false
 //│ error :: '_lh_rigid_error_var <: [DeadCodeCons] ::: true
 //│ case ls of {C h t => h | N  => error} :: '59_matchres <: ['15_callres] ::: false
-//│ (fun ls -> case ls of {C h t => h | N  => error}) :: 'ls² => '59_matchres ::: false
+//│ (fun ls -> case ls of {C h t => h | N  => error}) :: 'ls² => '59_matchres ::: true
 //│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`

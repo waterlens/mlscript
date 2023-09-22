@@ -292,7 +292,7 @@ let rec build_tree_d0 _lh_build_tree_arg1_1 _lh_build_tree_arg2_1 =
                             (let rec ewp2_1 = (`LH_P2(_lh_build_tree_LH_P2_0_3, split_y_1)) in
                               (let rec ewp3_1 = (`LH_P2(_lh_build_tree_LH_P2_0_2, (split_y_1 + 1))) in
                                 (let rec ewp4_1 = (`LH_P2(_lh_build_tree_LH_P2_0_3, _lh_build_tree_LH_P2_1_3)) in
-                                  (if (rec_col_1 != (0 - 1)) then
+                                  (if (rec_col_1 <> (0 - 1)) then
                                     (`Leaf(rec_col_1))
                                   else
                                     (if ((strEq_d0 split_1) (`LH_C('N', (`LH_C('S', (`LH_N)))))) then
@@ -342,7 +342,7 @@ and check_perim_d0 _lh_check_perim_arg1_1 _lh_check_perim_arg2_1 =
                                     (if finished_1 then
                                       true
                                     else
-                                      (if ((point_colour_d4 (`LH_P2(_lh_check_perim_LH_P2_0_6, _lh_check_perim_LH_P2_1_6))) != col1_1) then
+                                      (if ((point_colour_d4 (`LH_P2(_lh_check_perim_LH_P2_0_6, _lh_check_perim_LH_P2_1_6))) <> col1_1) then
                                         false
                                       else
                                         ((check_line_1 (`LH_P2((_lh_check_perim_LH_P2_0_6 + _lh_check_perim_LH_P2_0_7), (_lh_check_perim_LH_P2_1_6 + _lh_check_perim_LH_P2_1_7)))) (`LH_P2(_lh_check_perim_LH_P2_0_7, _lh_check_perim_LH_P2_1_7))))))
@@ -813,7 +813,7 @@ let rec build_tree_d0_d0 _lh_build_tree_arg1_0 _lh_build_tree_arg2_0 =
                             (let rec ewp2_0 = (`LH_P2(_lh_build_tree_LH_P2_0_1, split_y_0)) in
                               (let rec ewp3_0 = (`LH_P2(_lh_build_tree_LH_P2_0_0, (split_y_0 + 1))) in
                                 (let rec ewp4_0 = (`LH_P2(_lh_build_tree_LH_P2_0_1, _lh_build_tree_LH_P2_1_1)) in
-                                  (if (rec_col_0 != (0 - 1)) then
+                                  (if (rec_col_0 <> (0 - 1)) then
                                     (`Leaf(rec_col_0))
                                   else
                                     (if ((strEq_d0_d0 split_0) (`LH_C('N', (`LH_C('S', (`LH_N)))))) then
@@ -875,7 +875,7 @@ and check_perim_d0_d0 _lh_check_perim_arg1_0 _lh_check_perim_arg2_0 =
                                     (if finished_0 then
                                       true
                                     else
-                                      (if ((point_colour_d4_d0 (`LH_P2(_lh_check_perim_LH_P2_0_2, _lh_check_perim_LH_P2_1_2))) != col1_0) then
+                                      (if ((point_colour_d4_d0 (`LH_P2(_lh_check_perim_LH_P2_0_2, _lh_check_perim_LH_P2_1_2))) <> col1_0) then
                                         false
                                       else
                                         ((check_line_0 (`LH_P2((_lh_check_perim_LH_P2_0_2 + _lh_check_perim_LH_P2_0_3), (_lh_check_perim_LH_P2_1_2 + _lh_check_perim_LH_P2_1_3)))) (`LH_P2(_lh_check_perim_LH_P2_0_3, _lh_check_perim_LH_P2_1_3))))))
@@ -1322,7 +1322,7 @@ let rec build_tree_d0_d0_d0 _lh_build_tree_arg1_1 _lh_build_tree_arg2_1 =
                             (let rec ewp2_1 = (`LH_P2(_lh_build_tree_LH_P2_0_3, split_y_1)) in
                               (let rec ewp3_1 = (`LH_P2(_lh_build_tree_LH_P2_0_2, (split_y_1 + 1))) in
                                 (let rec ewp4_1 = (`LH_P2(_lh_build_tree_LH_P2_0_3, _lh_build_tree_LH_P2_1_3)) in
-                                  (if (rec_col_1 != (0 - 1)) then
+                                  (if (rec_col_1 <> (0 - 1)) then
                                     (`Leaf(rec_col_1))
                                   else
                                     (if ((strEq_d0_d0_d0 split_1) (`LH_C('N', (`LH_C('S', (`LH_N)))))) then
@@ -1384,7 +1384,7 @@ and check_perim_d0_d0_d0 _lh_check_perim_arg1_1 _lh_check_perim_arg2_1 =
                                     (if finished_1 then
                                       true
                                     else
-                                      (if ((point_colour_d4_d0_d0 (`LH_P2(_lh_check_perim_LH_P2_0_6, _lh_check_perim_LH_P2_1_6))) != col1_1) then
+                                      (if ((point_colour_d4_d0_d0 (`LH_P2(_lh_check_perim_LH_P2_0_6, _lh_check_perim_LH_P2_1_6))) <> col1_1) then
                                         false
                                       else
                                         ((check_line_1 (`LH_P2((_lh_check_perim_LH_P2_0_6 + _lh_check_perim_LH_P2_0_7), (_lh_check_perim_LH_P2_1_6 + _lh_check_perim_LH_P2_1_7)))) (`LH_P2(_lh_check_perim_LH_P2_0_7, _lh_check_perim_LH_P2_1_7))))))

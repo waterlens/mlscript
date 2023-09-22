@@ -1314,7 +1314,7 @@ and safe_d0 _lh_safe_arg1_1 _lh_safe_arg2_1 =
     | `Assign(_lh_safe_Assign_0_2, _lh_safe_Assign_1_2) -> 
       (match _lh_safe_arg2_1 with
         | `Assign(_lh_safe_Assign_0_3, _lh_safe_Assign_1_3) -> 
-          ((_lh_safe_Assign_1_2 != _lh_safe_Assign_1_3) && ((abs_d0 (_lh_safe_Assign_0_2 - _lh_safe_Assign_0_3)) != (abs_d1 (_lh_safe_Assign_1_2 - _lh_safe_Assign_1_3))))
+          ((_lh_safe_Assign_1_2 <> _lh_safe_Assign_1_3) && ((abs_d0 (_lh_safe_Assign_0_2 - _lh_safe_Assign_0_3)) <> (abs_d1 (_lh_safe_Assign_1_2 - _lh_safe_Assign_1_3))))
         | _ -> 
           (failwith "error"))
     | _ -> 
@@ -2616,7 +2616,7 @@ and safe_d0_d0 _lh_safe_arg1_0 _lh_safe_arg2_0 =
     | `Assign(_lh_safe_Assign_0_0, _lh_safe_Assign_1_0) -> 
       (match _lh_safe_arg2_0 with
         | `Assign(_lh_safe_Assign_0_1, _lh_safe_Assign_1_1) -> 
-          ((_lh_safe_Assign_1_0 != _lh_safe_Assign_1_1) && ((abs_d0_d0 (_lh_safe_Assign_0_0 - _lh_safe_Assign_0_1)) != (abs_d1_d0 (_lh_safe_Assign_1_0 - _lh_safe_Assign_1_1))))
+          ((_lh_safe_Assign_1_0 <> _lh_safe_Assign_1_1) && ((abs_d0_d0 (_lh_safe_Assign_0_0 - _lh_safe_Assign_0_1)) <> (abs_d1_d0 (_lh_safe_Assign_1_0 - _lh_safe_Assign_1_1))))
         | _ -> 
           (failwith "error"))
     | _ -> 
@@ -4340,7 +4340,7 @@ and safe_d0_d0_d0 _lh_safe_arg1_1 _lh_safe_arg2_1 =
     | `Assign(_lh_safe_Assign_0_2, _lh_safe_Assign_1_2) -> 
       (match _lh_safe_arg2_1 with
         | `Assign(_lh_safe_Assign_0_3, _lh_safe_Assign_1_3) -> 
-          ((_lh_safe_Assign_1_2 != _lh_safe_Assign_1_3) && ((abs_d0_d0_d0 (_lh_safe_Assign_0_2 - _lh_safe_Assign_0_3)) != (abs_d1_d0_d0 (_lh_safe_Assign_1_2 - _lh_safe_Assign_1_3))))
+          ((_lh_safe_Assign_1_2 <> _lh_safe_Assign_1_3) && ((abs_d0_d0_d0 (_lh_safe_Assign_0_2 - _lh_safe_Assign_0_3)) <> (abs_d1_d0_d0 (_lh_safe_Assign_1_2 - _lh_safe_Assign_1_3))))
         | _ -> 
           (failwith "error"))
     | _ -> 

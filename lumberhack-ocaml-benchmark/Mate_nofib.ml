@@ -6227,7 +6227,7 @@ and moveLine_d0 _lh_moveLine_arg1_2_1 _lh_moveLine_arg2_2_1 _lh_moveLine_arg3_2_
             | `Nothing -> 
               ((ml_2_1 sq'_2_1) (`LH_C((`Move(sq'_2_1, (`Nothing), (`Nothing))), ms_2_4)))
             | `Just(_lh_moveLine_Just_0_2_1) -> 
-              (if ((colourOf_d0 _lh_moveLine_Just_0_2_1) != _lh_moveLine_arg2_2_1) then
+              (if ((colourOf_d0 _lh_moveLine_Just_0_2_1) <> _lh_moveLine_arg2_2_1) then
                 (_lh_moveLine_arg5_2_1 (`LH_C((`Move(sq'_2_1, (`Just(_lh_moveLine_Just_0_2_1)), (`Nothing))), ms_2_4)))
               else
                 (_lh_moveLine_arg5_2_1 ms_2_4))
@@ -6245,7 +6245,7 @@ and moveLine_d1 _lh_moveLine_arg1_2_0 _lh_moveLine_arg2_2_0 _lh_moveLine_arg3_2_
             | `Nothing -> 
               ((ml_2_0 sq'_2_0) (`LH_C((`Move(sq'_2_0, (`Nothing), (`Nothing))), ms_2_3)))
             | `Just(_lh_moveLine_Just_0_2_0) -> 
-              (if ((colourOf_d1 _lh_moveLine_Just_0_2_0) != _lh_moveLine_arg2_2_0) then
+              (if ((colourOf_d1 _lh_moveLine_Just_0_2_0) <> _lh_moveLine_arg2_2_0) then
                 (_lh_moveLine_arg5_2_0 (`LH_C((`Move(sq'_2_0, (`Just(_lh_moveLine_Just_0_2_0)), (`Nothing))), ms_2_3)))
               else
                 (_lh_moveLine_arg5_2_0 ms_2_3))
@@ -6263,7 +6263,7 @@ and moveLine_d1_d0 _lh_moveLine_arg1_3_1 _lh_moveLine_arg2_3_1 _lh_moveLine_arg3
             | `Nothing -> 
               ((ml_3_1 sq'_3_1) (`LH_C((`Move(sq'_3_1, (`Nothing), (`Nothing))), ms_3_4)))
             | `Just(_lh_moveLine_Just_0_3_1) -> 
-              (if ((colourOf_d1_d3 _lh_moveLine_Just_0_3_1) != _lh_moveLine_arg2_3_1) then
+              (if ((colourOf_d1_d3 _lh_moveLine_Just_0_3_1) <> _lh_moveLine_arg2_3_1) then
                 (_lh_moveLine_arg5_3_1 (`LH_C((`Move(sq'_3_1, (`Just(_lh_moveLine_Just_0_3_1)), (`Nothing))), ms_3_4)))
               else
                 (_lh_moveLine_arg5_3_1 ms_3_4))
@@ -6281,7 +6281,7 @@ and moveLine_d1_d1 _lh_moveLine_arg1_1 _lh_moveLine_arg2_1 _lh_moveLine_arg3_1 _
             | `Nothing -> 
               ((ml_1 sq'_1) (`LH_C((`Move(sq'_1, (`Nothing), (`Nothing))), ms_2)))
             | `Just(_lh_moveLine_Just_0_1) -> 
-              (if ((colourOf_d1_d4 _lh_moveLine_Just_0_1) != _lh_moveLine_arg2_1) then
+              (if ((colourOf_d1_d4 _lh_moveLine_Just_0_1) <> _lh_moveLine_arg2_1) then
                 (_lh_moveLine_arg5_1 (`LH_C((`Move(sq'_1, (`Just(_lh_moveLine_Just_0_1)), (`Nothing))), ms_2)))
               else
                 (_lh_moveLine_arg5_1 ms_2))
@@ -6299,7 +6299,7 @@ and moveLine_d1_d2 _lh_moveLine_arg1_1_4 _lh_moveLine_arg2_1_4 _lh_moveLine_arg3
             | `Nothing -> 
               ((ml_1_4 sq'_1_4) (`LH_C((`Move(sq'_1_4, (`Nothing), (`Nothing))), ms_1_7)))
             | `Just(_lh_moveLine_Just_0_1_4) -> 
-              (if ((colourOf_d1_d5 _lh_moveLine_Just_0_1_4) != _lh_moveLine_arg2_1_4) then
+              (if ((colourOf_d1_d5 _lh_moveLine_Just_0_1_4) <> _lh_moveLine_arg2_1_4) then
                 (_lh_moveLine_arg5_1_4 (`LH_C((`Move(sq'_1_4, (`Just(_lh_moveLine_Just_0_1_4)), (`Nothing))), ms_1_7)))
               else
                 (_lh_moveLine_arg5_1_4 ms_1_7))
@@ -6317,7 +6317,7 @@ and moveLine_d1_d3 _lh_moveLine_arg1_1_3 _lh_moveLine_arg2_1_3 _lh_moveLine_arg3
             | `Nothing -> 
               ((ml_1_3 sq'_1_3) (`LH_C((`Move(sq'_1_3, (`Nothing), (`Nothing))), ms_1_6)))
             | `Just(_lh_moveLine_Just_0_1_3) -> 
-              (if ((colourOf_d1_d6 _lh_moveLine_Just_0_1_3) != _lh_moveLine_arg2_1_3) then
+              (if ((colourOf_d1_d6 _lh_moveLine_Just_0_1_3) <> _lh_moveLine_arg2_1_3) then
                 (_lh_moveLine_arg5_1_3 (`LH_C((`Move(sq'_1_3, (`Just(_lh_moveLine_Just_0_1_3)), (`Nothing))), ms_1_6)))
               else
                 (_lh_moveLine_arg5_1_3 ms_1_6))
@@ -6335,7 +6335,7 @@ and moveLine_d1_d4 _lh_moveLine_arg1_1_8 _lh_moveLine_arg2_1_8 _lh_moveLine_arg3
             | `Nothing -> 
               ((ml_1_8 sq'_1_8) (`LH_C((`Move(sq'_1_8, (`Nothing), (`Nothing))), ms_2_1)))
             | `Just(_lh_moveLine_Just_0_1_8) -> 
-              (if ((colourOf_d1_d7 _lh_moveLine_Just_0_1_8) != _lh_moveLine_arg2_1_8) then
+              (if ((colourOf_d1_d7 _lh_moveLine_Just_0_1_8) <> _lh_moveLine_arg2_1_8) then
                 (_lh_moveLine_arg5_1_8 (`LH_C((`Move(sq'_1_8, (`Just(_lh_moveLine_Just_0_1_8)), (`Nothing))), ms_2_1)))
               else
                 (_lh_moveLine_arg5_1_8 ms_2_1))
@@ -6353,7 +6353,7 @@ and moveLine_d1_d5 _lh_moveLine_arg1_2_4 _lh_moveLine_arg2_2_4 _lh_moveLine_arg3
             | `Nothing -> 
               ((ml_2_4 sq'_2_4) (`LH_C((`Move(sq'_2_4, (`Nothing), (`Nothing))), ms_2_7)))
             | `Just(_lh_moveLine_Just_0_2_4) -> 
-              (if ((colourOf_d1_d8 _lh_moveLine_Just_0_2_4) != _lh_moveLine_arg2_2_4) then
+              (if ((colourOf_d1_d8 _lh_moveLine_Just_0_2_4) <> _lh_moveLine_arg2_2_4) then
                 (_lh_moveLine_arg5_2_4 (`LH_C((`Move(sq'_2_4, (`Just(_lh_moveLine_Just_0_2_4)), (`Nothing))), ms_2_7)))
               else
                 (_lh_moveLine_arg5_2_4 ms_2_7))
@@ -6371,7 +6371,7 @@ and moveLine_d1_d6 _lh_moveLine_arg1_1_5 _lh_moveLine_arg2_1_5 _lh_moveLine_arg3
             | `Nothing -> 
               ((ml_1_5 sq'_1_5) (`LH_C((`Move(sq'_1_5, (`Nothing), (`Nothing))), ms_1_8)))
             | `Just(_lh_moveLine_Just_0_1_5) -> 
-              (if ((colourOf_d1_d9 _lh_moveLine_Just_0_1_5) != _lh_moveLine_arg2_1_5) then
+              (if ((colourOf_d1_d9 _lh_moveLine_Just_0_1_5) <> _lh_moveLine_arg2_1_5) then
                 (_lh_moveLine_arg5_1_5 (`LH_C((`Move(sq'_1_5, (`Just(_lh_moveLine_Just_0_1_5)), (`Nothing))), ms_1_8)))
               else
                 (_lh_moveLine_arg5_1_5 ms_1_8))
@@ -6389,7 +6389,7 @@ and moveLine_d1_d7 _lh_moveLine_arg1_3 _lh_moveLine_arg2_3 _lh_moveLine_arg3_3 _
             | `Nothing -> 
               ((ml_3 sq'_3) (`LH_C((`Move(sq'_3, (`Nothing), (`Nothing))), ms_4)))
             | `Just(_lh_moveLine_Just_0_3) -> 
-              (if ((colourOf_d2_d0 _lh_moveLine_Just_0_3) != _lh_moveLine_arg2_3) then
+              (if ((colourOf_d2_d0 _lh_moveLine_Just_0_3) <> _lh_moveLine_arg2_3) then
                 (_lh_moveLine_arg5_3 (`LH_C((`Move(sq'_3, (`Just(_lh_moveLine_Just_0_3)), (`Nothing))), ms_4)))
               else
                 (_lh_moveLine_arg5_3 ms_4))
@@ -6407,7 +6407,7 @@ and moveLine_d1_d8 _lh_moveLine_arg1_2_6 _lh_moveLine_arg2_2_6 _lh_moveLine_arg3
             | `Nothing -> 
               ((ml_2_6 sq'_2_6) (`LH_C((`Move(sq'_2_6, (`Nothing), (`Nothing))), ms_2_9)))
             | `Just(_lh_moveLine_Just_0_2_6) -> 
-              (if ((colourOf_d2_d1 _lh_moveLine_Just_0_2_6) != _lh_moveLine_arg2_2_6) then
+              (if ((colourOf_d2_d1 _lh_moveLine_Just_0_2_6) <> _lh_moveLine_arg2_2_6) then
                 (_lh_moveLine_arg5_2_6 (`LH_C((`Move(sq'_2_6, (`Just(_lh_moveLine_Just_0_2_6)), (`Nothing))), ms_2_9)))
               else
                 (_lh_moveLine_arg5_2_6 ms_2_9))
@@ -6425,7 +6425,7 @@ and moveLine_d1_d9 _lh_moveLine_arg1_2 _lh_moveLine_arg2_2 _lh_moveLine_arg3_2 _
             | `Nothing -> 
               ((ml_2 sq'_2) (`LH_C((`Move(sq'_2, (`Nothing), (`Nothing))), ms_3)))
             | `Just(_lh_moveLine_Just_0_2) -> 
-              (if ((colourOf_d2_d2 _lh_moveLine_Just_0_2) != _lh_moveLine_arg2_2) then
+              (if ((colourOf_d2_d2 _lh_moveLine_Just_0_2) <> _lh_moveLine_arg2_2) then
                 (_lh_moveLine_arg5_2 (`LH_C((`Move(sq'_2, (`Just(_lh_moveLine_Just_0_2)), (`Nothing))), ms_3)))
               else
                 (_lh_moveLine_arg5_2 ms_3))
@@ -6443,7 +6443,7 @@ and moveLine_d2 _lh_moveLine_arg1_1_7 _lh_moveLine_arg2_1_7 _lh_moveLine_arg3_1_
             | `Nothing -> 
               ((ml_1_7 sq'_1_7) (`LH_C((`Move(sq'_1_7, (`Nothing), (`Nothing))), ms_2_0)))
             | `Just(_lh_moveLine_Just_0_1_7) -> 
-              (if ((colourOf_d2 _lh_moveLine_Just_0_1_7) != _lh_moveLine_arg2_1_7) then
+              (if ((colourOf_d2 _lh_moveLine_Just_0_1_7) <> _lh_moveLine_arg2_1_7) then
                 (_lh_moveLine_arg5_1_7 (`LH_C((`Move(sq'_1_7, (`Just(_lh_moveLine_Just_0_1_7)), (`Nothing))), ms_2_0)))
               else
                 (_lh_moveLine_arg5_1_7 ms_2_0))
@@ -6461,7 +6461,7 @@ and moveLine_d2_d0 _lh_moveLine_arg1_1_0 _lh_moveLine_arg2_1_0 _lh_moveLine_arg3
             | `Nothing -> 
               ((ml_1_0 sq'_1_0) (`LH_C((`Move(sq'_1_0, (`Nothing), (`Nothing))), ms_1_3)))
             | `Just(_lh_moveLine_Just_0_1_0) -> 
-              (if ((colourOf_d2_d6 _lh_moveLine_Just_0_1_0) != _lh_moveLine_arg2_1_0) then
+              (if ((colourOf_d2_d6 _lh_moveLine_Just_0_1_0) <> _lh_moveLine_arg2_1_0) then
                 (_lh_moveLine_arg5_1_0 (`LH_C((`Move(sq'_1_0, (`Just(_lh_moveLine_Just_0_1_0)), (`Nothing))), ms_1_3)))
               else
                 (_lh_moveLine_arg5_1_0 ms_1_3))
@@ -6479,7 +6479,7 @@ and moveLine_d2_d1 _lh_moveLine_arg1_8 _lh_moveLine_arg2_8 _lh_moveLine_arg3_8 _
             | `Nothing -> 
               ((ml_8 sq'_8) (`LH_C((`Move(sq'_8, (`Nothing), (`Nothing))), ms_1_1)))
             | `Just(_lh_moveLine_Just_0_8) -> 
-              (if ((colourOf_d2_d7 _lh_moveLine_Just_0_8) != _lh_moveLine_arg2_8) then
+              (if ((colourOf_d2_d7 _lh_moveLine_Just_0_8) <> _lh_moveLine_arg2_8) then
                 (_lh_moveLine_arg5_8 (`LH_C((`Move(sq'_8, (`Just(_lh_moveLine_Just_0_8)), (`Nothing))), ms_1_1)))
               else
                 (_lh_moveLine_arg5_8 ms_1_1))
@@ -6497,7 +6497,7 @@ and moveLine_d2_d2 _lh_moveLine_arg1_1_9 _lh_moveLine_arg2_1_9 _lh_moveLine_arg3
             | `Nothing -> 
               ((ml_1_9 sq'_1_9) (`LH_C((`Move(sq'_1_9, (`Nothing), (`Nothing))), ms_2_2)))
             | `Just(_lh_moveLine_Just_0_1_9) -> 
-              (if ((colourOf_d2_d8 _lh_moveLine_Just_0_1_9) != _lh_moveLine_arg2_1_9) then
+              (if ((colourOf_d2_d8 _lh_moveLine_Just_0_1_9) <> _lh_moveLine_arg2_1_9) then
                 (_lh_moveLine_arg5_1_9 (`LH_C((`Move(sq'_1_9, (`Just(_lh_moveLine_Just_0_1_9)), (`Nothing))), ms_2_2)))
               else
                 (_lh_moveLine_arg5_1_9 ms_2_2))
@@ -6515,7 +6515,7 @@ and moveLine_d2_d3 _lh_moveLine_arg1_2_2 _lh_moveLine_arg2_2_2 _lh_moveLine_arg3
             | `Nothing -> 
               ((ml_2_2 sq'_2_2) (`LH_C((`Move(sq'_2_2, (`Nothing), (`Nothing))), ms_2_5)))
             | `Just(_lh_moveLine_Just_0_2_2) -> 
-              (if ((colourOf_d2_d9 _lh_moveLine_Just_0_2_2) != _lh_moveLine_arg2_2_2) then
+              (if ((colourOf_d2_d9 _lh_moveLine_Just_0_2_2) <> _lh_moveLine_arg2_2_2) then
                 (_lh_moveLine_arg5_2_2 (`LH_C((`Move(sq'_2_2, (`Just(_lh_moveLine_Just_0_2_2)), (`Nothing))), ms_2_5)))
               else
                 (_lh_moveLine_arg5_2_2 ms_2_5))
@@ -6533,7 +6533,7 @@ and moveLine_d2_d4 _lh_moveLine_arg1_3_0 _lh_moveLine_arg2_3_0 _lh_moveLine_arg3
             | `Nothing -> 
               ((ml_3_0 sq'_3_0) (`LH_C((`Move(sq'_3_0, (`Nothing), (`Nothing))), ms_3_3)))
             | `Just(_lh_moveLine_Just_0_3_0) -> 
-              (if ((colourOf_d3_d0 _lh_moveLine_Just_0_3_0) != _lh_moveLine_arg2_3_0) then
+              (if ((colourOf_d3_d0 _lh_moveLine_Just_0_3_0) <> _lh_moveLine_arg2_3_0) then
                 (_lh_moveLine_arg5_3_0 (`LH_C((`Move(sq'_3_0, (`Just(_lh_moveLine_Just_0_3_0)), (`Nothing))), ms_3_3)))
               else
                 (_lh_moveLine_arg5_3_0 ms_3_3))
@@ -6551,7 +6551,7 @@ and moveLine_d2_d5 _lh_moveLine_arg1_4 _lh_moveLine_arg2_4 _lh_moveLine_arg3_4 _
             | `Nothing -> 
               ((ml_4 sq'_4) (`LH_C((`Move(sq'_4, (`Nothing), (`Nothing))), ms_5)))
             | `Just(_lh_moveLine_Just_0_4) -> 
-              (if ((colourOf_d3_d1 _lh_moveLine_Just_0_4) != _lh_moveLine_arg2_4) then
+              (if ((colourOf_d3_d1 _lh_moveLine_Just_0_4) <> _lh_moveLine_arg2_4) then
                 (_lh_moveLine_arg5_4 (`LH_C((`Move(sq'_4, (`Just(_lh_moveLine_Just_0_4)), (`Nothing))), ms_5)))
               else
                 (_lh_moveLine_arg5_4 ms_5))
@@ -6569,7 +6569,7 @@ and moveLine_d2_d6 _lh_moveLine_arg1_3_2 _lh_moveLine_arg2_3_2 _lh_moveLine_arg3
             | `Nothing -> 
               ((ml_3_2 sq'_3_2) (`LH_C((`Move(sq'_3_2, (`Nothing), (`Nothing))), ms_3_5)))
             | `Just(_lh_moveLine_Just_0_3_2) -> 
-              (if ((colourOf_d3_d2 _lh_moveLine_Just_0_3_2) != _lh_moveLine_arg2_3_2) then
+              (if ((colourOf_d3_d2 _lh_moveLine_Just_0_3_2) <> _lh_moveLine_arg2_3_2) then
                 (_lh_moveLine_arg5_3_2 (`LH_C((`Move(sq'_3_2, (`Just(_lh_moveLine_Just_0_3_2)), (`Nothing))), ms_3_5)))
               else
                 (_lh_moveLine_arg5_3_2 ms_3_5))
@@ -6587,7 +6587,7 @@ and moveLine_d2_d7 _lh_moveLine_arg1_7 _lh_moveLine_arg2_7 _lh_moveLine_arg3_7 _
             | `Nothing -> 
               ((ml_7 sq'_7) (`LH_C((`Move(sq'_7, (`Nothing), (`Nothing))), ms_9)))
             | `Just(_lh_moveLine_Just_0_7) -> 
-              (if ((colourOf_d3_d3 _lh_moveLine_Just_0_7) != _lh_moveLine_arg2_7) then
+              (if ((colourOf_d3_d3 _lh_moveLine_Just_0_7) <> _lh_moveLine_arg2_7) then
                 (_lh_moveLine_arg5_7 (`LH_C((`Move(sq'_7, (`Just(_lh_moveLine_Just_0_7)), (`Nothing))), ms_9)))
               else
                 (_lh_moveLine_arg5_7 ms_9))
@@ -6605,7 +6605,7 @@ and moveLine_d2_d8 _lh_moveLine_arg1_2_9 _lh_moveLine_arg2_2_9 _lh_moveLine_arg3
             | `Nothing -> 
               ((ml_2_9 sq'_2_9) (`LH_C((`Move(sq'_2_9, (`Nothing), (`Nothing))), ms_3_2)))
             | `Just(_lh_moveLine_Just_0_2_9) -> 
-              (if ((colourOf_d3_d4 _lh_moveLine_Just_0_2_9) != _lh_moveLine_arg2_2_9) then
+              (if ((colourOf_d3_d4 _lh_moveLine_Just_0_2_9) <> _lh_moveLine_arg2_2_9) then
                 (_lh_moveLine_arg5_2_9 (`LH_C((`Move(sq'_2_9, (`Just(_lh_moveLine_Just_0_2_9)), (`Nothing))), ms_3_2)))
               else
                 (_lh_moveLine_arg5_2_9 ms_3_2))
@@ -6623,7 +6623,7 @@ and moveLine_d2_d9 _lh_moveLine_arg1_2_7 _lh_moveLine_arg2_2_7 _lh_moveLine_arg3
             | `Nothing -> 
               ((ml_2_7 sq'_2_7) (`LH_C((`Move(sq'_2_7, (`Nothing), (`Nothing))), ms_3_0)))
             | `Just(_lh_moveLine_Just_0_2_7) -> 
-              (if ((colourOf_d3_d5 _lh_moveLine_Just_0_2_7) != _lh_moveLine_arg2_2_7) then
+              (if ((colourOf_d3_d5 _lh_moveLine_Just_0_2_7) <> _lh_moveLine_arg2_2_7) then
                 (_lh_moveLine_arg5_2_7 (`LH_C((`Move(sq'_2_7, (`Just(_lh_moveLine_Just_0_2_7)), (`Nothing))), ms_3_0)))
               else
                 (_lh_moveLine_arg5_2_7 ms_3_0))
@@ -6641,7 +6641,7 @@ and moveLine_d3 _lh_moveLine_arg1_1_1 _lh_moveLine_arg2_1_1 _lh_moveLine_arg3_1_
             | `Nothing -> 
               ((ml_1_1 sq'_1_1) (`LH_C((`Move(sq'_1_1, (`Nothing), (`Nothing))), ms_1_4)))
             | `Just(_lh_moveLine_Just_0_1_1) -> 
-              (if ((colourOf_d3 _lh_moveLine_Just_0_1_1) != _lh_moveLine_arg2_1_1) then
+              (if ((colourOf_d3 _lh_moveLine_Just_0_1_1) <> _lh_moveLine_arg2_1_1) then
                 (_lh_moveLine_arg5_1_1 (`LH_C((`Move(sq'_1_1, (`Just(_lh_moveLine_Just_0_1_1)), (`Nothing))), ms_1_4)))
               else
                 (_lh_moveLine_arg5_1_1 ms_1_4))
@@ -6659,7 +6659,7 @@ and moveLine_d3_d0 _lh_moveLine_arg1_6 _lh_moveLine_arg2_6 _lh_moveLine_arg3_6 _
             | `Nothing -> 
               ((ml_6 sq'_6) (`LH_C((`Move(sq'_6, (`Nothing), (`Nothing))), ms_7)))
             | `Just(_lh_moveLine_Just_0_6) -> 
-              (if ((colourOf_d3_d6 _lh_moveLine_Just_0_6) != _lh_moveLine_arg2_6) then
+              (if ((colourOf_d3_d6 _lh_moveLine_Just_0_6) <> _lh_moveLine_arg2_6) then
                 (_lh_moveLine_arg5_6 (`LH_C((`Move(sq'_6, (`Just(_lh_moveLine_Just_0_6)), (`Nothing))), ms_7)))
               else
                 (_lh_moveLine_arg5_6 ms_7))
@@ -6677,7 +6677,7 @@ and moveLine_d3_d1 _lh_moveLine_arg1_1_6 _lh_moveLine_arg2_1_6 _lh_moveLine_arg3
             | `Nothing -> 
               ((ml_1_6 sq'_1_6) (`LH_C((`Move(sq'_1_6, (`Nothing), (`Nothing))), ms_1_9)))
             | `Just(_lh_moveLine_Just_0_1_6) -> 
-              (if ((colourOf_d3_d7 _lh_moveLine_Just_0_1_6) != _lh_moveLine_arg2_1_6) then
+              (if ((colourOf_d3_d7 _lh_moveLine_Just_0_1_6) <> _lh_moveLine_arg2_1_6) then
                 (_lh_moveLine_arg5_1_6 (`LH_C((`Move(sq'_1_6, (`Just(_lh_moveLine_Just_0_1_6)), (`Nothing))), ms_1_9)))
               else
                 (_lh_moveLine_arg5_1_6 ms_1_9))
@@ -6695,7 +6695,7 @@ and moveLine_d4 _lh_moveLine_arg1_9 _lh_moveLine_arg2_9 _lh_moveLine_arg3_9 _lh_
             | `Nothing -> 
               ((ml_9 sq'_9) (`LH_C((`Move(sq'_9, (`Nothing), (`Nothing))), ms_1_2)))
             | `Just(_lh_moveLine_Just_0_9) -> 
-              (if ((colourOf_d7 _lh_moveLine_Just_0_9) != _lh_moveLine_arg2_9) then
+              (if ((colourOf_d7 _lh_moveLine_Just_0_9) <> _lh_moveLine_arg2_9) then
                 (_lh_moveLine_arg5_9 (`LH_C((`Move(sq'_9, (`Just(_lh_moveLine_Just_0_9)), (`Nothing))), ms_1_2)))
               else
                 (_lh_moveLine_arg5_9 ms_1_2))
@@ -6713,7 +6713,7 @@ and moveLine_d5 _lh_moveLine_arg1_1_2 _lh_moveLine_arg2_1_2 _lh_moveLine_arg3_1_
             | `Nothing -> 
               ((ml_1_2 sq'_1_2) (`LH_C((`Move(sq'_1_2, (`Nothing), (`Nothing))), ms_1_5)))
             | `Just(_lh_moveLine_Just_0_1_2) -> 
-              (if ((colourOf_d8 _lh_moveLine_Just_0_1_2) != _lh_moveLine_arg2_1_2) then
+              (if ((colourOf_d8 _lh_moveLine_Just_0_1_2) <> _lh_moveLine_arg2_1_2) then
                 (_lh_moveLine_arg5_1_2 (`LH_C((`Move(sq'_1_2, (`Just(_lh_moveLine_Just_0_1_2)), (`Nothing))), ms_1_5)))
               else
                 (_lh_moveLine_arg5_1_2 ms_1_5))
@@ -6731,7 +6731,7 @@ and moveLine_d6 _lh_moveLine_arg1_2_5 _lh_moveLine_arg2_2_5 _lh_moveLine_arg3_2_
             | `Nothing -> 
               ((ml_2_5 sq'_2_5) (`LH_C((`Move(sq'_2_5, (`Nothing), (`Nothing))), ms_2_8)))
             | `Just(_lh_moveLine_Just_0_2_5) -> 
-              (if ((colourOf_d9 _lh_moveLine_Just_0_2_5) != _lh_moveLine_arg2_2_5) then
+              (if ((colourOf_d9 _lh_moveLine_Just_0_2_5) <> _lh_moveLine_arg2_2_5) then
                 (_lh_moveLine_arg5_2_5 (`LH_C((`Move(sq'_2_5, (`Just(_lh_moveLine_Just_0_2_5)), (`Nothing))), ms_2_8)))
               else
                 (_lh_moveLine_arg5_2_5 ms_2_8))
@@ -6749,7 +6749,7 @@ and moveLine_d7 _lh_moveLine_arg1_2_8 _lh_moveLine_arg2_2_8 _lh_moveLine_arg3_2_
             | `Nothing -> 
               ((ml_2_8 sq'_2_8) (`LH_C((`Move(sq'_2_8, (`Nothing), (`Nothing))), ms_3_1)))
             | `Just(_lh_moveLine_Just_0_2_8) -> 
-              (if ((colourOf_d1_d0 _lh_moveLine_Just_0_2_8) != _lh_moveLine_arg2_2_8) then
+              (if ((colourOf_d1_d0 _lh_moveLine_Just_0_2_8) <> _lh_moveLine_arg2_2_8) then
                 (_lh_moveLine_arg5_2_8 (`LH_C((`Move(sq'_2_8, (`Just(_lh_moveLine_Just_0_2_8)), (`Nothing))), ms_3_1)))
               else
                 (_lh_moveLine_arg5_2_8 ms_3_1))
@@ -6767,7 +6767,7 @@ and moveLine_d8 _lh_moveLine_arg1_5 _lh_moveLine_arg2_5 _lh_moveLine_arg3_5 _lh_
             | `Nothing -> 
               ((ml_5 sq'_5) (`LH_C((`Move(sq'_5, (`Nothing), (`Nothing))), ms_6)))
             | `Just(_lh_moveLine_Just_0_5) -> 
-              (if ((colourOf_d1_d1 _lh_moveLine_Just_0_5) != _lh_moveLine_arg2_5) then
+              (if ((colourOf_d1_d1 _lh_moveLine_Just_0_5) <> _lh_moveLine_arg2_5) then
                 (_lh_moveLine_arg5_5 (`LH_C((`Move(sq'_5, (`Just(_lh_moveLine_Just_0_5)), (`Nothing))), ms_6)))
               else
                 (_lh_moveLine_arg5_5 ms_6))
@@ -6785,7 +6785,7 @@ and moveLine_d9 _lh_moveLine_arg1_2_3 _lh_moveLine_arg2_2_3 _lh_moveLine_arg3_2_
             | `Nothing -> 
               ((ml_2_3 sq'_2_3) (`LH_C((`Move(sq'_2_3, (`Nothing), (`Nothing))), ms_2_6)))
             | `Just(_lh_moveLine_Just_0_2_3) -> 
-              (if ((colourOf_d1_d2 _lh_moveLine_Just_0_2_3) != _lh_moveLine_arg2_2_3) then
+              (if ((colourOf_d1_d2 _lh_moveLine_Just_0_2_3) <> _lh_moveLine_arg2_2_3) then
                 (_lh_moveLine_arg5_2_3 (`LH_C((`Move(sq'_2_3, (`Just(_lh_moveLine_Just_0_2_3)), (`Nothing))), ms_2_6)))
               else
                 (_lh_moveLine_arg5_2_3 ms_2_6))
@@ -7493,7 +7493,7 @@ and showMovesAfter_d0 _lh_showMovesAfter_arg1_6 _lh_showMovesAfter_arg2_6 =
             | `LH_C(_lh_showMovesAfter_LH_C_0_6, _lh_showMovesAfter_LH_C_1_6) -> 
               (match _lh_showMovesAfter_LH_C_0_6 with
                 | `MoveInFull(_lh_showMovesAfter_MoveInFull_0_1_3, _lh_showMovesAfter_MoveInFull_1_1_3, _lh_showMovesAfter_MoveInFull_2_1_3) -> 
-                  ((mappend_d4_d2 ((mappend_d4_d3 (`LH_C(',', (`LH_C(' ', (`LH_N)))))) ((showMove_d2 ((_lh_showMovesAfter_MoveInFull_0_1_3 != _lh_showMovesAfter_MoveInFull_0_1_2) || (_lh_showMovesAfter_MoveInFull_1_1_3 != _lh_showMovesAfter_MoveInFull_1_1_2))) (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_1_3, _lh_showMovesAfter_MoveInFull_1_1_3, _lh_showMovesAfter_MoveInFull_2_1_3))))) ((showMovesAfter_d0 (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_1_3, _lh_showMovesAfter_MoveInFull_1_1_3, _lh_showMovesAfter_MoveInFull_2_1_3))) _lh_showMovesAfter_LH_C_1_6))
+                  ((mappend_d4_d2 ((mappend_d4_d3 (`LH_C(',', (`LH_C(' ', (`LH_N)))))) ((showMove_d2 ((_lh_showMovesAfter_MoveInFull_0_1_3 <> _lh_showMovesAfter_MoveInFull_0_1_2) || (_lh_showMovesAfter_MoveInFull_1_1_3 <> _lh_showMovesAfter_MoveInFull_1_1_2))) (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_1_3, _lh_showMovesAfter_MoveInFull_1_1_3, _lh_showMovesAfter_MoveInFull_2_1_3))))) ((showMovesAfter_d0 (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_1_3, _lh_showMovesAfter_MoveInFull_1_1_3, _lh_showMovesAfter_MoveInFull_2_1_3))) _lh_showMovesAfter_LH_C_1_6))
                 | _ -> 
                   (failwith "error"))
             | _ -> 
@@ -7511,7 +7511,7 @@ and showMovesAfter_d1 _lh_showMovesAfter_arg1_2 _lh_showMovesAfter_arg2_2 =
             | `LH_C(_lh_showMovesAfter_LH_C_0_2, _lh_showMovesAfter_LH_C_1_2) -> 
               (match _lh_showMovesAfter_LH_C_0_2 with
                 | `MoveInFull(_lh_showMovesAfter_MoveInFull_0_5, _lh_showMovesAfter_MoveInFull_1_5, _lh_showMovesAfter_MoveInFull_2_5) -> 
-                  ((mappend_d7_d2 ((mappend_d7_d3 (`LH_C(',', (`LH_C(' ', (`LH_N)))))) ((showMove_d4 ((_lh_showMovesAfter_MoveInFull_0_5 != _lh_showMovesAfter_MoveInFull_0_4) || (_lh_showMovesAfter_MoveInFull_1_5 != _lh_showMovesAfter_MoveInFull_1_4))) (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_5, _lh_showMovesAfter_MoveInFull_1_5, _lh_showMovesAfter_MoveInFull_2_5))))) ((showMovesAfter_d1 (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_5, _lh_showMovesAfter_MoveInFull_1_5, _lh_showMovesAfter_MoveInFull_2_5))) _lh_showMovesAfter_LH_C_1_2))
+                  ((mappend_d7_d2 ((mappend_d7_d3 (`LH_C(',', (`LH_C(' ', (`LH_N)))))) ((showMove_d4 ((_lh_showMovesAfter_MoveInFull_0_5 <> _lh_showMovesAfter_MoveInFull_0_4) || (_lh_showMovesAfter_MoveInFull_1_5 <> _lh_showMovesAfter_MoveInFull_1_4))) (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_5, _lh_showMovesAfter_MoveInFull_1_5, _lh_showMovesAfter_MoveInFull_2_5))))) ((showMovesAfter_d1 (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_5, _lh_showMovesAfter_MoveInFull_1_5, _lh_showMovesAfter_MoveInFull_2_5))) _lh_showMovesAfter_LH_C_1_2))
                 | _ -> 
                   (failwith "error"))
             | _ -> 
@@ -7529,7 +7529,7 @@ and showMovesAfter_d2 _lh_showMovesAfter_arg1_3 _lh_showMovesAfter_arg2_3 =
             | `LH_C(_lh_showMovesAfter_LH_C_0_3, _lh_showMovesAfter_LH_C_1_3) -> 
               (match _lh_showMovesAfter_LH_C_0_3 with
                 | `MoveInFull(_lh_showMovesAfter_MoveInFull_0_7, _lh_showMovesAfter_MoveInFull_1_7, _lh_showMovesAfter_MoveInFull_2_7) -> 
-                  ((mappend_d1_d1_d5 ((mappend_d1_d1_d6 (`LH_C(',', (`LH_C(' ', (`LH_N)))))) ((showMove_d7 ((_lh_showMovesAfter_MoveInFull_0_7 != _lh_showMovesAfter_MoveInFull_0_6) || (_lh_showMovesAfter_MoveInFull_1_7 != _lh_showMovesAfter_MoveInFull_1_6))) (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_7, _lh_showMovesAfter_MoveInFull_1_7, _lh_showMovesAfter_MoveInFull_2_7))))) ((showMovesAfter_d2 (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_7, _lh_showMovesAfter_MoveInFull_1_7, _lh_showMovesAfter_MoveInFull_2_7))) _lh_showMovesAfter_LH_C_1_3))
+                  ((mappend_d1_d1_d5 ((mappend_d1_d1_d6 (`LH_C(',', (`LH_C(' ', (`LH_N)))))) ((showMove_d7 ((_lh_showMovesAfter_MoveInFull_0_7 <> _lh_showMovesAfter_MoveInFull_0_6) || (_lh_showMovesAfter_MoveInFull_1_7 <> _lh_showMovesAfter_MoveInFull_1_6))) (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_7, _lh_showMovesAfter_MoveInFull_1_7, _lh_showMovesAfter_MoveInFull_2_7))))) ((showMovesAfter_d2 (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_7, _lh_showMovesAfter_MoveInFull_1_7, _lh_showMovesAfter_MoveInFull_2_7))) _lh_showMovesAfter_LH_C_1_3))
                 | _ -> 
                   (failwith "error"))
             | _ -> 
@@ -7547,7 +7547,7 @@ and showMovesAfter_d3 _lh_showMovesAfter_arg1_4 _lh_showMovesAfter_arg2_4 =
             | `LH_C(_lh_showMovesAfter_LH_C_0_4, _lh_showMovesAfter_LH_C_1_4) -> 
               (match _lh_showMovesAfter_LH_C_0_4 with
                 | `MoveInFull(_lh_showMovesAfter_MoveInFull_0_9, _lh_showMovesAfter_MoveInFull_1_9, _lh_showMovesAfter_MoveInFull_2_9) -> 
-                  ((mappend_d1_d4_d5 ((mappend_d1_d4_d6 (`LH_C(',', (`LH_C(' ', (`LH_N)))))) ((showMove_d9 ((_lh_showMovesAfter_MoveInFull_0_9 != _lh_showMovesAfter_MoveInFull_0_8) || (_lh_showMovesAfter_MoveInFull_1_9 != _lh_showMovesAfter_MoveInFull_1_8))) (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_9, _lh_showMovesAfter_MoveInFull_1_9, _lh_showMovesAfter_MoveInFull_2_9))))) ((showMovesAfter_d3 (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_9, _lh_showMovesAfter_MoveInFull_1_9, _lh_showMovesAfter_MoveInFull_2_9))) _lh_showMovesAfter_LH_C_1_4))
+                  ((mappend_d1_d4_d5 ((mappend_d1_d4_d6 (`LH_C(',', (`LH_C(' ', (`LH_N)))))) ((showMove_d9 ((_lh_showMovesAfter_MoveInFull_0_9 <> _lh_showMovesAfter_MoveInFull_0_8) || (_lh_showMovesAfter_MoveInFull_1_9 <> _lh_showMovesAfter_MoveInFull_1_8))) (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_9, _lh_showMovesAfter_MoveInFull_1_9, _lh_showMovesAfter_MoveInFull_2_9))))) ((showMovesAfter_d3 (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_9, _lh_showMovesAfter_MoveInFull_1_9, _lh_showMovesAfter_MoveInFull_2_9))) _lh_showMovesAfter_LH_C_1_4))
                 | _ -> 
                   (failwith "error"))
             | _ -> 
@@ -7565,7 +7565,7 @@ and showMovesAfter_d4 _lh_showMovesAfter_arg1_5 _lh_showMovesAfter_arg2_5 =
             | `LH_C(_lh_showMovesAfter_LH_C_0_5, _lh_showMovesAfter_LH_C_1_5) -> 
               (match _lh_showMovesAfter_LH_C_0_5 with
                 | `MoveInFull(_lh_showMovesAfter_MoveInFull_0_1_1, _lh_showMovesAfter_MoveInFull_1_1_1, _lh_showMovesAfter_MoveInFull_2_1_1) -> 
-                  ((mappend_d1_d8_d8 ((mappend_d1_d8_d9 (`LH_C(',', (`LH_C(' ', (`LH_N)))))) ((showMove_d1_d2 ((_lh_showMovesAfter_MoveInFull_0_1_1 != _lh_showMovesAfter_MoveInFull_0_1_0) || (_lh_showMovesAfter_MoveInFull_1_1_1 != _lh_showMovesAfter_MoveInFull_1_1_0))) (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_1_1, _lh_showMovesAfter_MoveInFull_1_1_1, _lh_showMovesAfter_MoveInFull_2_1_1))))) ((showMovesAfter_d4 (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_1_1, _lh_showMovesAfter_MoveInFull_1_1_1, _lh_showMovesAfter_MoveInFull_2_1_1))) _lh_showMovesAfter_LH_C_1_5))
+                  ((mappend_d1_d8_d8 ((mappend_d1_d8_d9 (`LH_C(',', (`LH_C(' ', (`LH_N)))))) ((showMove_d1_d2 ((_lh_showMovesAfter_MoveInFull_0_1_1 <> _lh_showMovesAfter_MoveInFull_0_1_0) || (_lh_showMovesAfter_MoveInFull_1_1_1 <> _lh_showMovesAfter_MoveInFull_1_1_0))) (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_1_1, _lh_showMovesAfter_MoveInFull_1_1_1, _lh_showMovesAfter_MoveInFull_2_1_1))))) ((showMovesAfter_d4 (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_1_1, _lh_showMovesAfter_MoveInFull_1_1_1, _lh_showMovesAfter_MoveInFull_2_1_1))) _lh_showMovesAfter_LH_C_1_5))
                 | _ -> 
                   (failwith "error"))
             | _ -> 
@@ -7583,7 +7583,7 @@ and showMovesAfter_d5 _lh_showMovesAfter_arg1_1 _lh_showMovesAfter_arg2_1 =
             | `LH_C(_lh_showMovesAfter_LH_C_0_1, _lh_showMovesAfter_LH_C_1_1) -> 
               (match _lh_showMovesAfter_LH_C_0_1 with
                 | `MoveInFull(_lh_showMovesAfter_MoveInFull_0_3, _lh_showMovesAfter_MoveInFull_1_3, _lh_showMovesAfter_MoveInFull_2_3) -> 
-                  ((mappend_d2_d1_d8 ((mappend_d2_d1_d9 (`LH_C(',', (`LH_C(' ', (`LH_N)))))) ((showMove_d1_d4 ((_lh_showMovesAfter_MoveInFull_0_3 != _lh_showMovesAfter_MoveInFull_0_2) || (_lh_showMovesAfter_MoveInFull_1_3 != _lh_showMovesAfter_MoveInFull_1_2))) (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_3, _lh_showMovesAfter_MoveInFull_1_3, _lh_showMovesAfter_MoveInFull_2_3))))) ((showMovesAfter_d5 (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_3, _lh_showMovesAfter_MoveInFull_1_3, _lh_showMovesAfter_MoveInFull_2_3))) _lh_showMovesAfter_LH_C_1_1))
+                  ((mappend_d2_d1_d8 ((mappend_d2_d1_d9 (`LH_C(',', (`LH_C(' ', (`LH_N)))))) ((showMove_d1_d4 ((_lh_showMovesAfter_MoveInFull_0_3 <> _lh_showMovesAfter_MoveInFull_0_2) || (_lh_showMovesAfter_MoveInFull_1_3 <> _lh_showMovesAfter_MoveInFull_1_2))) (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_3, _lh_showMovesAfter_MoveInFull_1_3, _lh_showMovesAfter_MoveInFull_2_3))))) ((showMovesAfter_d5 (`MoveInFull(_lh_showMovesAfter_MoveInFull_0_3, _lh_showMovesAfter_MoveInFull_1_3, _lh_showMovesAfter_MoveInFull_2_3))) _lh_showMovesAfter_LH_C_1_1))
                 | _ -> 
                   (failwith "error"))
             | _ -> 
@@ -7633,8 +7633,8 @@ and showMove_d0 _lh_showMove_arg1_3 _lh_showMove_arg2_3 =
         | `LH_P2(_lh_showMove_LH_P2_0_3, _lh_showMove_LH_P2_1_3) -> 
           (match _lh_showMove_MoveInFull_2_3 with
             | `Move(_lh_showMove_Move_0_3, _lh_showMove_Move_1_3, _lh_showMove_Move_2_3) -> 
-              (let rec capt_3 = (_lh_showMove_Move_1_3 != (`Nothing)) in
-                (let rec prom_3 = (_lh_showMove_Move_2_3 != (`Nothing)) in
+              (let rec capt_3 = (_lh_showMove_Move_1_3 <> (`Nothing)) in
+                (let rec prom_3 = (_lh_showMove_Move_2_3 <> (`Nothing)) in
                   ((mappend_d1_d9 ((mappend_d2_d0 ((mappend_d2_d1 (if _lh_showMove_arg1_3 then
                     ((mappend_d2_d2 ((mappend_d2_d3 (showPiece_d0 (`LH_P2(_lh_showMove_LH_P2_0_3, _lh_showMove_LH_P2_1_3)))) (if ((_lh_showMove_LH_P2_1_3 = (`King)) || ((_lh_showMove_LH_P2_1_3 = (`Pawn)) && (not (capt_3 || prom_3)))) then
                       (`LH_N)
@@ -7657,8 +7657,8 @@ and showMove_d1 _lh_showMove_arg1_6 _lh_showMove_arg2_6 =
         | `LH_P2(_lh_showMove_LH_P2_0_6, _lh_showMove_LH_P2_1_6) -> 
           (match _lh_showMove_MoveInFull_2_6 with
             | `Move(_lh_showMove_Move_0_6, _lh_showMove_Move_1_6, _lh_showMove_Move_2_6) -> 
-              (let rec capt_6 = (_lh_showMove_Move_1_6 != (`Nothing)) in
-                (let rec prom_6 = (_lh_showMove_Move_2_6 != (`Nothing)) in
+              (let rec capt_6 = (_lh_showMove_Move_1_6 <> (`Nothing)) in
+                (let rec prom_6 = (_lh_showMove_Move_2_6 <> (`Nothing)) in
                   ((mappend_d3_d1 ((mappend_d3_d2 ((mappend_d3_d3 (if _lh_showMove_arg1_6 then
                     ((mappend_d3_d4 ((mappend_d3_d5 (showPiece_d3 (`LH_P2(_lh_showMove_LH_P2_0_6, _lh_showMove_LH_P2_1_6)))) (if ((_lh_showMove_LH_P2_1_6 = (`King)) || ((_lh_showMove_LH_P2_1_6 = (`Pawn)) && (not (capt_6 || prom_6)))) then
                       (`LH_N)
@@ -7681,8 +7681,8 @@ and showMove_d1_d0 _lh_showMove_arg1_1_2 _lh_showMove_arg2_1_2 =
         | `LH_P2(_lh_showMove_LH_P2_0_1_2, _lh_showMove_LH_P2_1_1_2) -> 
           (match _lh_showMove_MoveInFull_2_1_2 with
             | `Move(_lh_showMove_Move_0_1_2, _lh_showMove_Move_1_1_2, _lh_showMove_Move_2_1_2) -> 
-              (let rec capt_1_2 = (_lh_showMove_Move_1_1_2 != (`Nothing)) in
-                (let rec prom_1_2 = (_lh_showMove_Move_2_1_2 != (`Nothing)) in
+              (let rec capt_1_2 = (_lh_showMove_Move_1_1_2 <> (`Nothing)) in
+                (let rec prom_1_2 = (_lh_showMove_Move_2_1_2 <> (`Nothing)) in
                   ((mappend_d1_d6_d5 ((mappend_d1_d6_d6 ((mappend_d1_d6_d7 (if _lh_showMove_arg1_1_2 then
                     ((mappend_d1_d6_d8 ((mappend_d1_d6_d9 (showPiece_d3_d0 (`LH_P2(_lh_showMove_LH_P2_0_1_2, _lh_showMove_LH_P2_1_1_2)))) (if ((_lh_showMove_LH_P2_1_1_2 = (`King)) || ((_lh_showMove_LH_P2_1_1_2 = (`Pawn)) && (not (capt_1_2 || prom_1_2)))) then
                       (`LH_N)
@@ -7705,8 +7705,8 @@ and showMove_d1_d1 _lh_showMove_arg1_1_3 _lh_showMove_arg2_1_3 =
         | `LH_P2(_lh_showMove_LH_P2_0_1_3, _lh_showMove_LH_P2_1_1_3) -> 
           (match _lh_showMove_MoveInFull_2_1_3 with
             | `Move(_lh_showMove_Move_0_1_3, _lh_showMove_Move_1_1_3, _lh_showMove_Move_2_1_3) -> 
-              (let rec capt_1_3 = (_lh_showMove_Move_1_1_3 != (`Nothing)) in
-                (let rec prom_1_3 = (_lh_showMove_Move_2_1_3 != (`Nothing)) in
+              (let rec capt_1_3 = (_lh_showMove_Move_1_1_3 <> (`Nothing)) in
+                (let rec prom_1_3 = (_lh_showMove_Move_2_1_3 <> (`Nothing)) in
                   ((mappend_d1_d7_d7 ((mappend_d1_d7_d8 ((mappend_d1_d7_d9 (if _lh_showMove_arg1_1_3 then
                     ((mappend_d1_d8_d0 ((mappend_d1_d8_d1 (showPiece_d3_d3 (`LH_P2(_lh_showMove_LH_P2_0_1_3, _lh_showMove_LH_P2_1_1_3)))) (if ((_lh_showMove_LH_P2_1_1_3 = (`King)) || ((_lh_showMove_LH_P2_1_1_3 = (`Pawn)) && (not (capt_1_3 || prom_1_3)))) then
                       (`LH_N)
@@ -7729,8 +7729,8 @@ and showMove_d1_d2 _lh_showMove_arg1_1 _lh_showMove_arg2_1 =
         | `LH_P2(_lh_showMove_LH_P2_0_1, _lh_showMove_LH_P2_1_1) -> 
           (match _lh_showMove_MoveInFull_2_1 with
             | `Move(_lh_showMove_Move_0_1, _lh_showMove_Move_1_1, _lh_showMove_Move_2_1) -> 
-              (let rec capt_1 = (_lh_showMove_Move_1_1 != (`Nothing)) in
-                (let rec prom_1 = (_lh_showMove_Move_2_1 != (`Nothing)) in
+              (let rec capt_1 = (_lh_showMove_Move_1_1 <> (`Nothing)) in
+                (let rec prom_1 = (_lh_showMove_Move_2_1 <> (`Nothing)) in
                   ((mappend_d1_d9_d0 ((mappend_d1_d9_d1 ((mappend_d1_d9_d2 (if _lh_showMove_arg1_1 then
                     ((mappend_d1_d9_d3 ((mappend_d1_d9_d4 (showPiece_d3_d6 (`LH_P2(_lh_showMove_LH_P2_0_1, _lh_showMove_LH_P2_1_1)))) (if ((_lh_showMove_LH_P2_1_1 = (`King)) || ((_lh_showMove_LH_P2_1_1 = (`Pawn)) && (not (capt_1 || prom_1)))) then
                       (`LH_N)
@@ -7753,8 +7753,8 @@ and showMove_d1_d3 _lh_showMove_arg1_8 _lh_showMove_arg2_8 =
         | `LH_P2(_lh_showMove_LH_P2_0_8, _lh_showMove_LH_P2_1_8) -> 
           (match _lh_showMove_MoveInFull_2_8 with
             | `Move(_lh_showMove_Move_0_8, _lh_showMove_Move_1_8, _lh_showMove_Move_2_8) -> 
-              (let rec capt_8 = (_lh_showMove_Move_1_8 != (`Nothing)) in
-                (let rec prom_8 = (_lh_showMove_Move_2_8 != (`Nothing)) in
+              (let rec capt_8 = (_lh_showMove_Move_1_8 <> (`Nothing)) in
+                (let rec prom_8 = (_lh_showMove_Move_2_8 <> (`Nothing)) in
                   ((mappend_d2_d0_d7 ((mappend_d2_d0_d8 ((mappend_d2_d0_d9 (if _lh_showMove_arg1_8 then
                     ((mappend_d2_d1_d0 ((mappend_d2_d1_d1 (showPiece_d3_d9 (`LH_P2(_lh_showMove_LH_P2_0_8, _lh_showMove_LH_P2_1_8)))) (if ((_lh_showMove_LH_P2_1_8 = (`King)) || ((_lh_showMove_LH_P2_1_8 = (`Pawn)) && (not (capt_8 || prom_8)))) then
                       (`LH_N)
@@ -7777,8 +7777,8 @@ and showMove_d1_d4 _lh_showMove_arg1_7 _lh_showMove_arg2_7 =
         | `LH_P2(_lh_showMove_LH_P2_0_7, _lh_showMove_LH_P2_1_7) -> 
           (match _lh_showMove_MoveInFull_2_7 with
             | `Move(_lh_showMove_Move_0_7, _lh_showMove_Move_1_7, _lh_showMove_Move_2_7) -> 
-              (let rec capt_7 = (_lh_showMove_Move_1_7 != (`Nothing)) in
-                (let rec prom_7 = (_lh_showMove_Move_2_7 != (`Nothing)) in
+              (let rec capt_7 = (_lh_showMove_Move_1_7 <> (`Nothing)) in
+                (let rec prom_7 = (_lh_showMove_Move_2_7 <> (`Nothing)) in
                   ((mappend_d2_d2_d0 ((mappend_d2_d2_d1 ((mappend_d2_d2_d2 (if _lh_showMove_arg1_7 then
                     ((mappend_d2_d2_d3 ((mappend_d2_d2_d4 (showPiece_d4_d2 (`LH_P2(_lh_showMove_LH_P2_0_7, _lh_showMove_LH_P2_1_7)))) (if ((_lh_showMove_LH_P2_1_7 = (`King)) || ((_lh_showMove_LH_P2_1_7 = (`Pawn)) && (not (capt_7 || prom_7)))) then
                       (`LH_N)
@@ -7801,8 +7801,8 @@ and showMove_d2 _lh_showMove_arg1_2 _lh_showMove_arg2_2 =
         | `LH_P2(_lh_showMove_LH_P2_0_2, _lh_showMove_LH_P2_1_2) -> 
           (match _lh_showMove_MoveInFull_2_2 with
             | `Move(_lh_showMove_Move_0_2, _lh_showMove_Move_1_2, _lh_showMove_Move_2_2) -> 
-              (let rec capt_2 = (_lh_showMove_Move_1_2 != (`Nothing)) in
-                (let rec prom_2 = (_lh_showMove_Move_2_2 != (`Nothing)) in
+              (let rec capt_2 = (_lh_showMove_Move_1_2 <> (`Nothing)) in
+                (let rec prom_2 = (_lh_showMove_Move_2_2 <> (`Nothing)) in
                   ((mappend_d4_d4 ((mappend_d4_d5 ((mappend_d4_d6 (if _lh_showMove_arg1_2 then
                     ((mappend_d4_d7 ((mappend_d4_d8 (showPiece_d6 (`LH_P2(_lh_showMove_LH_P2_0_2, _lh_showMove_LH_P2_1_2)))) (if ((_lh_showMove_LH_P2_1_2 = (`King)) || ((_lh_showMove_LH_P2_1_2 = (`Pawn)) && (not (capt_2 || prom_2)))) then
                       (`LH_N)
@@ -7825,8 +7825,8 @@ and showMove_d3 _lh_showMove_arg1_1_1 _lh_showMove_arg2_1_1 =
         | `LH_P2(_lh_showMove_LH_P2_0_1_1, _lh_showMove_LH_P2_1_1_1) -> 
           (match _lh_showMove_MoveInFull_2_1_1 with
             | `Move(_lh_showMove_Move_0_1_1, _lh_showMove_Move_1_1_1, _lh_showMove_Move_2_1_1) -> 
-              (let rec capt_1_1 = (_lh_showMove_Move_1_1_1 != (`Nothing)) in
-                (let rec prom_1_1 = (_lh_showMove_Move_2_1_1 != (`Nothing)) in
+              (let rec capt_1_1 = (_lh_showMove_Move_1_1_1 <> (`Nothing)) in
+                (let rec prom_1_1 = (_lh_showMove_Move_2_1_1 <> (`Nothing)) in
                   ((mappend_d6_d1 ((mappend_d6_d2 ((mappend_d6_d3 (if _lh_showMove_arg1_1_1 then
                     ((mappend_d6_d4 ((mappend_d6_d5 (showPiece_d9 (`LH_P2(_lh_showMove_LH_P2_0_1_1, _lh_showMove_LH_P2_1_1_1)))) (if ((_lh_showMove_LH_P2_1_1_1 = (`King)) || ((_lh_showMove_LH_P2_1_1_1 = (`Pawn)) && (not (capt_1_1 || prom_1_1)))) then
                       (`LH_N)
@@ -7849,8 +7849,8 @@ and showMove_d4 _lh_showMove_arg1_4 _lh_showMove_arg2_4 =
         | `LH_P2(_lh_showMove_LH_P2_0_4, _lh_showMove_LH_P2_1_4) -> 
           (match _lh_showMove_MoveInFull_2_4 with
             | `Move(_lh_showMove_Move_0_4, _lh_showMove_Move_1_4, _lh_showMove_Move_2_4) -> 
-              (let rec capt_4 = (_lh_showMove_Move_1_4 != (`Nothing)) in
-                (let rec prom_4 = (_lh_showMove_Move_2_4 != (`Nothing)) in
+              (let rec capt_4 = (_lh_showMove_Move_1_4 <> (`Nothing)) in
+                (let rec prom_4 = (_lh_showMove_Move_2_4 <> (`Nothing)) in
                   ((mappend_d7_d4 ((mappend_d7_d5 ((mappend_d7_d6 (if _lh_showMove_arg1_4 then
                     ((mappend_d7_d7 ((mappend_d7_d8 (showPiece_d1_d2 (`LH_P2(_lh_showMove_LH_P2_0_4, _lh_showMove_LH_P2_1_4)))) (if ((_lh_showMove_LH_P2_1_4 = (`King)) || ((_lh_showMove_LH_P2_1_4 = (`Pawn)) && (not (capt_4 || prom_4)))) then
                       (`LH_N)
@@ -7873,8 +7873,8 @@ and showMove_d5 _lh_showMove_arg1_1_4 _lh_showMove_arg2_1_4 =
         | `LH_P2(_lh_showMove_LH_P2_0_1_4, _lh_showMove_LH_P2_1_1_4) -> 
           (match _lh_showMove_MoveInFull_2_1_4 with
             | `Move(_lh_showMove_Move_0_1_4, _lh_showMove_Move_1_1_4, _lh_showMove_Move_2_1_4) -> 
-              (let rec capt_1_4 = (_lh_showMove_Move_1_1_4 != (`Nothing)) in
-                (let rec prom_1_4 = (_lh_showMove_Move_2_1_4 != (`Nothing)) in
+              (let rec capt_1_4 = (_lh_showMove_Move_1_1_4 <> (`Nothing)) in
+                (let rec prom_1_4 = (_lh_showMove_Move_2_1_4 <> (`Nothing)) in
                   ((mappend_d9_d2 ((mappend_d9_d3 ((mappend_d9_d4 (if _lh_showMove_arg1_1_4 then
                     ((mappend_d9_d5 ((mappend_d9_d6 (showPiece_d1_d5 (`LH_P2(_lh_showMove_LH_P2_0_1_4, _lh_showMove_LH_P2_1_1_4)))) (if ((_lh_showMove_LH_P2_1_1_4 = (`King)) || ((_lh_showMove_LH_P2_1_1_4 = (`Pawn)) && (not (capt_1_4 || prom_1_4)))) then
                       (`LH_N)
@@ -7897,8 +7897,8 @@ and showMove_d6 _lh_showMove_arg1_1_0 _lh_showMove_arg2_1_0 =
         | `LH_P2(_lh_showMove_LH_P2_0_1_0, _lh_showMove_LH_P2_1_1_0) -> 
           (match _lh_showMove_MoveInFull_2_1_0 with
             | `Move(_lh_showMove_Move_0_1_0, _lh_showMove_Move_1_1_0, _lh_showMove_Move_2_1_0) -> 
-              (let rec capt_1_0 = (_lh_showMove_Move_1_1_0 != (`Nothing)) in
-                (let rec prom_1_0 = (_lh_showMove_Move_2_1_0 != (`Nothing)) in
+              (let rec capt_1_0 = (_lh_showMove_Move_1_1_0 <> (`Nothing)) in
+                (let rec prom_1_0 = (_lh_showMove_Move_2_1_0 <> (`Nothing)) in
                   ((mappend_d1_d0_d4 ((mappend_d1_d0_d5 ((mappend_d1_d0_d6 (if _lh_showMove_arg1_1_0 then
                     ((mappend_d1_d0_d7 ((mappend_d1_d0_d8 (showPiece_d1_d8 (`LH_P2(_lh_showMove_LH_P2_0_1_0, _lh_showMove_LH_P2_1_1_0)))) (if ((_lh_showMove_LH_P2_1_1_0 = (`King)) || ((_lh_showMove_LH_P2_1_1_0 = (`Pawn)) && (not (capt_1_0 || prom_1_0)))) then
                       (`LH_N)
@@ -7921,8 +7921,8 @@ and showMove_d7 _lh_showMove_arg1_5 _lh_showMove_arg2_5 =
         | `LH_P2(_lh_showMove_LH_P2_0_5, _lh_showMove_LH_P2_1_5) -> 
           (match _lh_showMove_MoveInFull_2_5 with
             | `Move(_lh_showMove_Move_0_5, _lh_showMove_Move_1_5, _lh_showMove_Move_2_5) -> 
-              (let rec capt_5 = (_lh_showMove_Move_1_5 != (`Nothing)) in
-                (let rec prom_5 = (_lh_showMove_Move_2_5 != (`Nothing)) in
+              (let rec capt_5 = (_lh_showMove_Move_1_5 <> (`Nothing)) in
+                (let rec prom_5 = (_lh_showMove_Move_2_5 <> (`Nothing)) in
                   ((mappend_d1_d1_d7 ((mappend_d1_d1_d8 ((mappend_d1_d1_d9 (if _lh_showMove_arg1_5 then
                     ((mappend_d1_d2_d0 ((mappend_d1_d2_d1 (showPiece_d2_d1 (`LH_P2(_lh_showMove_LH_P2_0_5, _lh_showMove_LH_P2_1_5)))) (if ((_lh_showMove_LH_P2_1_5 = (`King)) || ((_lh_showMove_LH_P2_1_5 = (`Pawn)) && (not (capt_5 || prom_5)))) then
                       (`LH_N)
@@ -7945,8 +7945,8 @@ and showMove_d8 _lh_showMove_arg1_1_5 _lh_showMove_arg2_1_5 =
         | `LH_P2(_lh_showMove_LH_P2_0_1_5, _lh_showMove_LH_P2_1_1_5) -> 
           (match _lh_showMove_MoveInFull_2_1_5 with
             | `Move(_lh_showMove_Move_0_1_5, _lh_showMove_Move_1_1_5, _lh_showMove_Move_2_1_5) -> 
-              (let rec capt_1_5 = (_lh_showMove_Move_1_1_5 != (`Nothing)) in
-                (let rec prom_1_5 = (_lh_showMove_Move_2_1_5 != (`Nothing)) in
+              (let rec capt_1_5 = (_lh_showMove_Move_1_1_5 <> (`Nothing)) in
+                (let rec prom_1_5 = (_lh_showMove_Move_2_1_5 <> (`Nothing)) in
                   ((mappend_d1_d3_d4 ((mappend_d1_d3_d5 ((mappend_d1_d3_d6 (if _lh_showMove_arg1_1_5 then
                     ((mappend_d1_d3_d7 ((mappend_d1_d3_d8 (showPiece_d2_d4 (`LH_P2(_lh_showMove_LH_P2_0_1_5, _lh_showMove_LH_P2_1_1_5)))) (if ((_lh_showMove_LH_P2_1_1_5 = (`King)) || ((_lh_showMove_LH_P2_1_1_5 = (`Pawn)) && (not (capt_1_5 || prom_1_5)))) then
                       (`LH_N)
@@ -7969,8 +7969,8 @@ and showMove_d9 _lh_showMove_arg1_9 _lh_showMove_arg2_9 =
         | `LH_P2(_lh_showMove_LH_P2_0_9, _lh_showMove_LH_P2_1_9) -> 
           (match _lh_showMove_MoveInFull_2_9 with
             | `Move(_lh_showMove_Move_0_9, _lh_showMove_Move_1_9, _lh_showMove_Move_2_9) -> 
-              (let rec capt_9 = (_lh_showMove_Move_1_9 != (`Nothing)) in
-                (let rec prom_9 = (_lh_showMove_Move_2_9 != (`Nothing)) in
+              (let rec capt_9 = (_lh_showMove_Move_1_9 <> (`Nothing)) in
+                (let rec prom_9 = (_lh_showMove_Move_2_9 <> (`Nothing)) in
                   ((mappend_d1_d4_d7 ((mappend_d1_d4_d8 ((mappend_d1_d4_d9 (if _lh_showMove_arg1_9 then
                     ((mappend_d1_d5_d0 ((mappend_d1_d5_d1 (showPiece_d2_d7 (`LH_P2(_lh_showMove_LH_P2_0_9, _lh_showMove_LH_P2_1_9)))) (if ((_lh_showMove_LH_P2_1_9 = (`King)) || ((_lh_showMove_LH_P2_1_9 = (`Pawn)) && (not (capt_9 || prom_9)))) then
                       (`LH_N)
@@ -14622,7 +14622,7 @@ and pieceAt_d1 _lh_pieceAt_arg1_6 _lh_pieceAt_arg2_6 =
                   (if (_lh_pieceAt_LH_P2_1_6 = _lh_pieceAt_arg2_6) then
                     (let rec _lh_moveLine_Just_0_6 = (`LH_P2(c_6, _lh_pieceAt_LH_P2_0_6)) in
                       (fun ml_1_8 ms_1_8 sq'_1_8 _lh_moveLine_arg2_1_8 _lh_moveLine_arg5_1_8 -> 
-                        (if ((colourOf_d0 _lh_moveLine_Just_0_6) != _lh_moveLine_arg2_1_8) then
+                        (if ((colourOf_d0 _lh_moveLine_Just_0_6) <> _lh_moveLine_arg2_1_8) then
                           (_lh_moveLine_arg5_1_8 (let rec h_2_4_0 = (let rec _lh_tryMove_Move_0_1_5 = sq'_1_8 in
                             (let rec _lh_tryMove_Move_1_1_5 = (`Just(_lh_moveLine_Just_0_6)) in
                               (let rec _lh_tryMove_Move_2_1_5 = (`Nothing) in
@@ -14724,7 +14724,7 @@ and pieceAt_d1_d0 _lh_pieceAt_arg1_2_9 _lh_pieceAt_arg2_2_9 =
                   (if (_lh_pieceAt_LH_P2_1_2_9 = _lh_pieceAt_arg2_2_9) then
                     (let rec _lh_moveLine_Just_0_2_2 = (`LH_P2(c_3_0, _lh_pieceAt_LH_P2_0_2_9)) in
                       (fun ml_6_4 ms_6_5 sq'_6_4 _lh_moveLine_arg2_6_4 _lh_moveLine_arg5_6_4 -> 
-                        (if ((colourOf_d7 _lh_moveLine_Just_0_2_2) != _lh_moveLine_arg2_6_4) then
+                        (if ((colourOf_d7 _lh_moveLine_Just_0_2_2) <> _lh_moveLine_arg2_6_4) then
                           (_lh_moveLine_arg5_6_4 (let rec h_9_3_5 = (let rec _lh_tryMove_Move_0_5_4 = sq'_6_4 in
                             (let rec _lh_tryMove_Move_1_5_4 = (`Just(_lh_moveLine_Just_0_2_2)) in
                               (let rec _lh_tryMove_Move_2_5_4 = (`Nothing) in
@@ -14832,7 +14832,7 @@ and pieceAt_d1_d1 _lh_pieceAt_arg1_8 _lh_pieceAt_arg2_8 =
                   (if (_lh_pieceAt_LH_P2_1_8 = _lh_pieceAt_arg2_8) then
                     (let rec _lh_moveLine_Just_0_8 = (`LH_P2(c_8, _lh_pieceAt_LH_P2_0_8)) in
                       (fun ml_2_3 ms_2_3 sq'_2_3 _lh_moveLine_arg2_2_3 _lh_moveLine_arg5_2_3 -> 
-                        (if ((colourOf_d8 _lh_moveLine_Just_0_8) != _lh_moveLine_arg2_2_3) then
+                        (if ((colourOf_d8 _lh_moveLine_Just_0_8) <> _lh_moveLine_arg2_2_3) then
                           (_lh_moveLine_arg5_2_3 (let rec h_3_1_5 = (let rec _lh_tryMove_Move_0_2_2 = sq'_2_3 in
                             (let rec _lh_tryMove_Move_1_2_2 = (`Just(_lh_moveLine_Just_0_8)) in
                               (let rec _lh_tryMove_Move_2_2_2 = (`Nothing) in
@@ -14940,7 +14940,7 @@ and pieceAt_d1_d2 _lh_pieceAt_arg1_4_1 _lh_pieceAt_arg2_4_1 =
                   (if (_lh_pieceAt_LH_P2_1_4_1 = _lh_pieceAt_arg2_4_1) then
                     (let rec _lh_moveLine_Just_0_3_1 = (`LH_P2(c_4_2, _lh_pieceAt_LH_P2_0_4_1)) in
                       (fun ml_9_4 ms_9_6 sq'_9_4 _lh_moveLine_arg2_9_4 _lh_moveLine_arg5_9_4 -> 
-                        (if ((colourOf_d9 _lh_moveLine_Just_0_3_1) != _lh_moveLine_arg2_9_4) then
+                        (if ((colourOf_d9 _lh_moveLine_Just_0_3_1) <> _lh_moveLine_arg2_9_4) then
                           (_lh_moveLine_arg5_9_4 (let rec h_1_2_6_1 = (let rec _lh_tryMove_Move_0_7_6 = sq'_9_4 in
                             (let rec _lh_tryMove_Move_1_7_6 = (`Just(_lh_moveLine_Just_0_3_1)) in
                               (let rec _lh_tryMove_Move_2_7_6 = (`Nothing) in
@@ -15048,7 +15048,7 @@ and pieceAt_d1_d3 _lh_pieceAt_arg1_4 _lh_pieceAt_arg2_4 =
                   (if (_lh_pieceAt_LH_P2_1_4 = _lh_pieceAt_arg2_4) then
                     (let rec _lh_moveLine_Just_0_4 = (`LH_P2(c_4, _lh_pieceAt_LH_P2_0_4)) in
                       (fun ml_1_2 ms_1_2 sq'_1_2 _lh_moveLine_arg2_1_2 _lh_moveLine_arg5_1_2 -> 
-                        (if ((colourOf_d1_d0 _lh_moveLine_Just_0_4) != _lh_moveLine_arg2_1_2) then
+                        (if ((colourOf_d1_d0 _lh_moveLine_Just_0_4) <> _lh_moveLine_arg2_1_2) then
                           (_lh_moveLine_arg5_1_2 (let rec h_1_8_2 = (let rec _lh_tryMove_Move_0_1_1 = sq'_1_2 in
                             (let rec _lh_tryMove_Move_1_1_1 = (`Just(_lh_moveLine_Just_0_4)) in
                               (let rec _lh_tryMove_Move_2_1_1 = (`Nothing) in
@@ -15156,7 +15156,7 @@ and pieceAt_d1_d4 _lh_pieceAt_arg1_3_6 _lh_pieceAt_arg2_3_6 =
                   (if (_lh_pieceAt_LH_P2_1_3_6 = _lh_pieceAt_arg2_3_6) then
                     (let rec _lh_moveLine_Just_0_2_8 = (`LH_P2(c_3_7, _lh_pieceAt_LH_P2_0_3_6)) in
                       (fun ml_8_3 ms_8_4 sq'_8_3 _lh_moveLine_arg2_8_3 _lh_moveLine_arg5_8_3 -> 
-                        (if ((colourOf_d1_d1 _lh_moveLine_Just_0_2_8) != _lh_moveLine_arg2_8_3) then
+                        (if ((colourOf_d1_d1 _lh_moveLine_Just_0_2_8) <> _lh_moveLine_arg2_8_3) then
                           (_lh_moveLine_arg5_8_3 (let rec h_1_0_5_5 = (let rec _lh_tryMove_Move_0_6_8 = sq'_8_3 in
                             (let rec _lh_tryMove_Move_1_6_8 = (`Just(_lh_moveLine_Just_0_2_8)) in
                               (let rec _lh_tryMove_Move_2_6_8 = (`Nothing) in
@@ -15258,7 +15258,7 @@ and pieceAt_d1_d5 _lh_pieceAt_arg1_3_7 _lh_pieceAt_arg2_3_7 =
                   (if (_lh_pieceAt_LH_P2_1_3_7 = _lh_pieceAt_arg2_3_7) then
                     (let rec _lh_moveLine_Just_0_2_9 = (`LH_P2(c_3_8, _lh_pieceAt_LH_P2_0_3_7)) in
                       (fun ml_8_6 ms_8_7 sq'_8_6 _lh_moveLine_arg2_8_6 _lh_moveLine_arg5_8_6 -> 
-                        (if ((colourOf_d1_d2 _lh_moveLine_Just_0_2_9) != _lh_moveLine_arg2_8_6) then
+                        (if ((colourOf_d1_d2 _lh_moveLine_Just_0_2_9) <> _lh_moveLine_arg2_8_6) then
                           (_lh_moveLine_arg5_8_6 (let rec h_1_0_9_5 = (let rec _lh_tryMove_Move_0_7_0 = sq'_8_6 in
                             (let rec _lh_tryMove_Move_1_7_0 = (`Just(_lh_moveLine_Just_0_2_9)) in
                               (let rec _lh_tryMove_Move_2_7_0 = (`Nothing) in
@@ -15360,7 +15360,7 @@ and pieceAt_d1_d6 _lh_pieceAt_arg1_1_2 _lh_pieceAt_arg2_1_2 =
                   (if (_lh_pieceAt_LH_P2_1_1_2 = _lh_pieceAt_arg2_1_2) then
                     (let rec _lh_moveLine_Just_0_1_0 = (`LH_P2(c_1_3, _lh_pieceAt_LH_P2_0_1_2)) in
                       (fun ml_2_9 ms_2_9 sq'_2_9 _lh_moveLine_arg2_2_9 _lh_moveLine_arg5_2_9 -> 
-                        (if ((colourOf_d1_d3 _lh_moveLine_Just_0_1_0) != _lh_moveLine_arg2_2_9) then
+                        (if ((colourOf_d1_d3 _lh_moveLine_Just_0_1_0) <> _lh_moveLine_arg2_2_9) then
                           (_lh_moveLine_arg5_2_9 (let rec h_4_2_0 = (let rec _lh_tryMove_Move_0_2_6 = sq'_2_9 in
                             (let rec _lh_tryMove_Move_1_2_6 = (`Just(_lh_moveLine_Just_0_1_0)) in
                               (let rec _lh_tryMove_Move_2_2_6 = (`Nothing) in
@@ -15462,7 +15462,7 @@ and pieceAt_d1_d7 _lh_pieceAt_arg1_7 _lh_pieceAt_arg2_7 =
                   (if (_lh_pieceAt_LH_P2_1_7 = _lh_pieceAt_arg2_7) then
                     (let rec _lh_moveLine_Just_0_7 = (`LH_P2(c_7, _lh_pieceAt_LH_P2_0_7)) in
                       (fun ml_2_0 ms_2_0 sq'_2_0 _lh_moveLine_arg2_2_0 _lh_moveLine_arg5_2_0 -> 
-                        (if ((colourOf_d1_d4 _lh_moveLine_Just_0_7) != _lh_moveLine_arg2_2_0) then
+                        (if ((colourOf_d1_d4 _lh_moveLine_Just_0_7) <> _lh_moveLine_arg2_2_0) then
                           (_lh_moveLine_arg5_2_0 (let rec h_2_4_2 = (let rec _lh_tryMove_Move_0_1_7 = sq'_2_0 in
                             (let rec _lh_tryMove_Move_1_1_7 = (`Just(_lh_moveLine_Just_0_7)) in
                               (let rec _lh_tryMove_Move_2_1_7 = (`Nothing) in
@@ -15564,7 +15564,7 @@ and pieceAt_d1_d8 _lh_pieceAt_arg1_1_4 _lh_pieceAt_arg2_1_4 =
                   (if (_lh_pieceAt_LH_P2_1_1_4 = _lh_pieceAt_arg2_1_4) then
                     (let rec _lh_moveLine_Just_0_1_2 = (`LH_P2(c_1_5, _lh_pieceAt_LH_P2_0_1_4)) in
                       (fun ml_3_4 ms_3_4 sq'_3_4 _lh_moveLine_arg2_3_4 _lh_moveLine_arg5_3_4 -> 
-                        (if ((colourOf_d1_d5 _lh_moveLine_Just_0_1_2) != _lh_moveLine_arg2_3_4) then
+                        (if ((colourOf_d1_d5 _lh_moveLine_Just_0_1_2) <> _lh_moveLine_arg2_3_4) then
                           (_lh_moveLine_arg5_3_4 (let rec h_4_2_8 = (let rec _lh_tryMove_Move_0_3_0 = sq'_3_4 in
                             (let rec _lh_tryMove_Move_1_3_0 = (`Just(_lh_moveLine_Just_0_1_2)) in
                               (let rec _lh_tryMove_Move_2_3_0 = (`Nothing) in
@@ -15666,7 +15666,7 @@ and pieceAt_d1_d9 _lh_pieceAt_arg1_3_0 _lh_pieceAt_arg2_3_0 =
                   (if (_lh_pieceAt_LH_P2_1_3_0 = _lh_pieceAt_arg2_3_0) then
                     (let rec _lh_moveLine_Just_0_2_3 = (`LH_P2(c_3_1, _lh_pieceAt_LH_P2_0_3_0)) in
                       (fun ml_6_8 ms_6_9 sq'_6_8 _lh_moveLine_arg2_6_8 _lh_moveLine_arg5_6_8 -> 
-                        (if ((colourOf_d1_d6 _lh_moveLine_Just_0_2_3) != _lh_moveLine_arg2_6_8) then
+                        (if ((colourOf_d1_d6 _lh_moveLine_Just_0_2_3) <> _lh_moveLine_arg2_6_8) then
                           (_lh_moveLine_arg5_6_8 (let rec h_9_3_9 = (let rec _lh_tryMove_Move_0_5_6 = sq'_6_8 in
                             (let rec _lh_tryMove_Move_1_5_6 = (`Just(_lh_moveLine_Just_0_2_3)) in
                               (let rec _lh_tryMove_Move_2_5_6 = (`Nothing) in
@@ -15768,7 +15768,7 @@ and pieceAt_d2 _lh_pieceAt_arg1_5 _lh_pieceAt_arg2_5 =
                   (if (_lh_pieceAt_LH_P2_1_5 = _lh_pieceAt_arg2_5) then
                     (let rec _lh_moveLine_Just_0_5 = (`LH_P2(c_5, _lh_pieceAt_LH_P2_0_5)) in
                       (fun ml_1_4 ms_1_4 sq'_1_4 _lh_moveLine_arg2_1_4 _lh_moveLine_arg5_1_4 -> 
-                        (if ((colourOf_d1 _lh_moveLine_Just_0_5) != _lh_moveLine_arg2_1_4) then
+                        (if ((colourOf_d1 _lh_moveLine_Just_0_5) <> _lh_moveLine_arg2_1_4) then
                           (_lh_moveLine_arg5_1_4 (let rec h_2_1_3 = (let rec _lh_tryMove_Move_0_1_3 = sq'_1_4 in
                             (let rec _lh_tryMove_Move_1_1_3 = (`Just(_lh_moveLine_Just_0_5)) in
                               (let rec _lh_tryMove_Move_2_1_3 = (`Nothing) in
@@ -15870,7 +15870,7 @@ and pieceAt_d2_d0 _lh_pieceAt_arg1_1_9 _lh_pieceAt_arg2_1_9 =
                   (if (_lh_pieceAt_LH_P2_1_1_9 = _lh_pieceAt_arg2_1_9) then
                     (let rec _lh_moveLine_Just_0_1_5 = (`LH_P2(c_2_0, _lh_pieceAt_LH_P2_0_1_9)) in
                       (fun ml_4_2 ms_4_3 sq'_4_2 _lh_moveLine_arg2_4_2 _lh_moveLine_arg5_4_2 -> 
-                        (if ((colourOf_d1_d7 _lh_moveLine_Just_0_1_5) != _lh_moveLine_arg2_4_2) then
+                        (if ((colourOf_d1_d7 _lh_moveLine_Just_0_1_5) <> _lh_moveLine_arg2_4_2) then
                           (_lh_moveLine_arg5_4_2 (let rec h_5_7_4 = (let rec _lh_tryMove_Move_0_3_8 = sq'_4_2 in
                             (let rec _lh_tryMove_Move_1_3_8 = (`Just(_lh_moveLine_Just_0_1_5)) in
                               (let rec _lh_tryMove_Move_2_3_8 = (`Nothing) in
@@ -15972,7 +15972,7 @@ and pieceAt_d2_d1 _lh_pieceAt_arg1_2_2 _lh_pieceAt_arg2_2_2 =
                   (if (_lh_pieceAt_LH_P2_1_2_2 = _lh_pieceAt_arg2_2_2) then
                     (let rec _lh_moveLine_Just_0_1_7 = (`LH_P2(c_2_3, _lh_pieceAt_LH_P2_0_2_2)) in
                       (fun ml_5_0 ms_5_1 sq'_5_0 _lh_moveLine_arg2_5_0 _lh_moveLine_arg5_5_0 -> 
-                        (if ((colourOf_d1_d8 _lh_moveLine_Just_0_1_7) != _lh_moveLine_arg2_5_0) then
+                        (if ((colourOf_d1_d8 _lh_moveLine_Just_0_1_7) <> _lh_moveLine_arg2_5_0) then
                           (_lh_moveLine_arg5_5_0 (let rec h_6_6_8 = (let rec _lh_tryMove_Move_0_4_2 = sq'_5_0 in
                             (let rec _lh_tryMove_Move_1_4_2 = (`Just(_lh_moveLine_Just_0_1_7)) in
                               (let rec _lh_tryMove_Move_2_4_2 = (`Nothing) in
@@ -16074,7 +16074,7 @@ and pieceAt_d2_d2 _lh_pieceAt_arg1_0 _lh_pieceAt_arg2_0 =
                   (if (_lh_pieceAt_LH_P2_1_0 = _lh_pieceAt_arg2_0) then
                     (let rec _lh_moveLine_Just_0_0 = (`LH_P2(c_0, _lh_pieceAt_LH_P2_0_0)) in
                       (fun ml_0 ms_0 sq'_0 _lh_moveLine_arg2_0 _lh_moveLine_arg5_0 -> 
-                        (if ((colourOf_d1_d9 _lh_moveLine_Just_0_0) != _lh_moveLine_arg2_0) then
+                        (if ((colourOf_d1_d9 _lh_moveLine_Just_0_0) <> _lh_moveLine_arg2_0) then
                           (_lh_moveLine_arg5_0 (let rec h_1 = (let rec _lh_tryMove_Move_0_0 = sq'_0 in
                             (let rec _lh_tryMove_Move_1_0 = (`Just(_lh_moveLine_Just_0_0)) in
                               (let rec _lh_tryMove_Move_2_0 = (`Nothing) in
@@ -16140,7 +16140,7 @@ and pieceAt_d2_d3 _lh_pieceAt_arg1_3 _lh_pieceAt_arg2_3 =
                   (if (_lh_pieceAt_LH_P2_1_3 = _lh_pieceAt_arg2_3) then
                     (let rec _lh_moveLine_Just_0_3 = (`LH_P2(c_3, _lh_pieceAt_LH_P2_0_3)) in
                       (fun ml_1_0 ms_1_0 sq'_1_0 _lh_moveLine_arg2_1_0 _lh_moveLine_arg5_1_0 -> 
-                        (if ((colourOf_d2_d0 _lh_moveLine_Just_0_3) != _lh_moveLine_arg2_1_0) then
+                        (if ((colourOf_d2_d0 _lh_moveLine_Just_0_3) <> _lh_moveLine_arg2_1_0) then
                           (_lh_moveLine_arg5_1_0 (let rec h_1_2_1 = (let rec _lh_tryMove_Move_0_9 = sq'_1_0 in
                             (let rec _lh_tryMove_Move_1_9 = (`Just(_lh_moveLine_Just_0_3)) in
                               (let rec _lh_tryMove_Move_2_9 = (`Nothing) in
@@ -16206,7 +16206,7 @@ and pieceAt_d2_d4 _lh_pieceAt_arg1_3_5 _lh_pieceAt_arg2_3_5 =
                   (if (_lh_pieceAt_LH_P2_1_3_5 = _lh_pieceAt_arg2_3_5) then
                     (let rec _lh_moveLine_Just_0_2_7 = (`LH_P2(c_3_6, _lh_pieceAt_LH_P2_0_3_5)) in
                       (fun ml_8_0 ms_8_1 sq'_8_0 _lh_moveLine_arg2_8_0 _lh_moveLine_arg5_8_0 -> 
-                        (if ((colourOf_d2_d1 _lh_moveLine_Just_0_2_7) != _lh_moveLine_arg2_8_0) then
+                        (if ((colourOf_d2_d1 _lh_moveLine_Just_0_2_7) <> _lh_moveLine_arg2_8_0) then
                           (_lh_moveLine_arg5_8_0 (let rec h_1_0_5_3 = (let rec _lh_tryMove_Move_0_6_6 = sq'_8_0 in
                             (let rec _lh_tryMove_Move_1_6_6 = (`Just(_lh_moveLine_Just_0_2_7)) in
                               (let rec _lh_tryMove_Move_2_6_6 = (`Nothing) in
@@ -16272,7 +16272,7 @@ and pieceAt_d2_d5 _lh_pieceAt_arg1_2_6 _lh_pieceAt_arg2_2_6 =
                   (if (_lh_pieceAt_LH_P2_1_2_6 = _lh_pieceAt_arg2_2_6) then
                     (let rec _lh_moveLine_Just_0_1_9 = (`LH_P2(c_2_7, _lh_pieceAt_LH_P2_0_2_6)) in
                       (fun ml_5_6 ms_5_7 sq'_5_6 _lh_moveLine_arg2_5_6 _lh_moveLine_arg5_5_6 -> 
-                        (if ((colourOf_d2_d2 _lh_moveLine_Just_0_1_9) != _lh_moveLine_arg2_5_6) then
+                        (if ((colourOf_d2_d2 _lh_moveLine_Just_0_1_9) <> _lh_moveLine_arg2_5_6) then
                           (_lh_moveLine_arg5_5_6 (let rec h_8_7_9 = (let rec _lh_tryMove_Move_0_4_8 = sq'_5_6 in
                             (let rec _lh_tryMove_Move_1_4_8 = (`Just(_lh_moveLine_Just_0_1_9)) in
                               (let rec _lh_tryMove_Move_2_4_8 = (`Nothing) in
@@ -16470,7 +16470,7 @@ and pieceAt_d3 _lh_pieceAt_arg1_3_2 _lh_pieceAt_arg2_3_2 =
                   (if (_lh_pieceAt_LH_P2_1_3_2 = _lh_pieceAt_arg2_3_2) then
                     (let rec _lh_moveLine_Just_0_2_4 = (`LH_P2(c_3_3, _lh_pieceAt_LH_P2_0_3_2)) in
                       (fun ml_7_2 ms_7_3 sq'_7_2 _lh_moveLine_arg2_7_2 _lh_moveLine_arg5_7_2 -> 
-                        (if ((colourOf_d2 _lh_moveLine_Just_0_2_4) != _lh_moveLine_arg2_7_2) then
+                        (if ((colourOf_d2 _lh_moveLine_Just_0_2_4) <> _lh_moveLine_arg2_7_2) then
                           (_lh_moveLine_arg5_7_2 (let rec h_1_0_1_7 = (let rec _lh_tryMove_Move_0_6_0 = sq'_7_2 in
                             (let rec _lh_tryMove_Move_1_6_0 = (`Just(_lh_moveLine_Just_0_2_4)) in
                               (let rec _lh_tryMove_Move_2_6_0 = (`Nothing) in
@@ -16600,7 +16600,7 @@ and pieceAt_d3_d1 _lh_pieceAt_arg1_1_3 _lh_pieceAt_arg2_1_3 =
                   (if (_lh_pieceAt_LH_P2_1_1_3 = _lh_pieceAt_arg2_1_3) then
                     (let rec _lh_moveLine_Just_0_1_1 = (`LH_P2(c_1_4, _lh_pieceAt_LH_P2_0_1_3)) in
                       (fun ml_3_1 ms_3_1 sq'_3_1 _lh_moveLine_arg2_3_1 _lh_moveLine_arg5_3_1 -> 
-                        (if ((colourOf_d2_d6 _lh_moveLine_Just_0_1_1) != _lh_moveLine_arg2_3_1) then
+                        (if ((colourOf_d2_d6 _lh_moveLine_Just_0_1_1) <> _lh_moveLine_arg2_3_1) then
                           (_lh_moveLine_arg5_3_1 (let rec h_4_2_2 = (let rec _lh_tryMove_Move_0_2_8 = sq'_3_1 in
                             (let rec _lh_tryMove_Move_1_2_8 = (`Just(_lh_moveLine_Just_0_1_1)) in
                               (let rec _lh_tryMove_Move_2_2_8 = (`Nothing) in
@@ -16672,7 +16672,7 @@ and pieceAt_d3_d2 _lh_pieceAt_arg1_1_1 _lh_pieceAt_arg2_1_1 =
                   (if (_lh_pieceAt_LH_P2_1_1_1 = _lh_pieceAt_arg2_1_1) then
                     (let rec _lh_moveLine_Just_0_9 = (`LH_P2(c_1_2, _lh_pieceAt_LH_P2_0_1_1)) in
                       (fun ml_2_7 ms_2_7 sq'_2_7 _lh_moveLine_arg2_2_7 _lh_moveLine_arg5_2_7 -> 
-                        (if ((colourOf_d2_d7 _lh_moveLine_Just_0_9) != _lh_moveLine_arg2_2_7) then
+                        (if ((colourOf_d2_d7 _lh_moveLine_Just_0_9) <> _lh_moveLine_arg2_2_7) then
                           (_lh_moveLine_arg5_2_7 (let rec h_4_1_2 = (let rec _lh_tryMove_Move_0_2_4 = sq'_2_7 in
                             (let rec _lh_tryMove_Move_1_2_4 = (`Just(_lh_moveLine_Just_0_9)) in
                               (let rec _lh_tryMove_Move_2_2_4 = (`Nothing) in
@@ -16744,7 +16744,7 @@ and pieceAt_d3_d3 _lh_pieceAt_arg1_1 _lh_pieceAt_arg2_1 =
                   (if (_lh_pieceAt_LH_P2_1_1 = _lh_pieceAt_arg2_1) then
                     (let rec _lh_moveLine_Just_0_1 = (`LH_P2(c_1, _lh_pieceAt_LH_P2_0_1)) in
                       (fun ml_2 ms_2 sq'_2 _lh_moveLine_arg2_2 _lh_moveLine_arg5_2 -> 
-                        (if ((colourOf_d2_d8 _lh_moveLine_Just_0_1) != _lh_moveLine_arg2_2) then
+                        (if ((colourOf_d2_d8 _lh_moveLine_Just_0_1) <> _lh_moveLine_arg2_2) then
                           (_lh_moveLine_arg5_2 (let rec h_3 = (let rec _lh_tryMove_Move_0_2 = sq'_2 in
                             (let rec _lh_tryMove_Move_1_2 = (`Just(_lh_moveLine_Just_0_1)) in
                               (let rec _lh_tryMove_Move_2_2 = (`Nothing) in
@@ -16816,7 +16816,7 @@ and pieceAt_d3_d4 _lh_pieceAt_arg1_2_0 _lh_pieceAt_arg2_2_0 =
                   (if (_lh_pieceAt_LH_P2_1_2_0 = _lh_pieceAt_arg2_2_0) then
                     (let rec _lh_moveLine_Just_0_1_6 = (`LH_P2(c_2_1, _lh_pieceAt_LH_P2_0_2_0)) in
                       (fun ml_4_5 ms_4_6 sq'_4_5 _lh_moveLine_arg2_4_5 _lh_moveLine_arg5_4_5 -> 
-                        (if ((colourOf_d2_d9 _lh_moveLine_Just_0_1_6) != _lh_moveLine_arg2_4_5) then
+                        (if ((colourOf_d2_d9 _lh_moveLine_Just_0_1_6) <> _lh_moveLine_arg2_4_5) then
                           (_lh_moveLine_arg5_4_5 (let rec h_5_9_8 = (let rec _lh_tryMove_Move_0_4_0 = sq'_4_5 in
                             (let rec _lh_tryMove_Move_1_4_0 = (`Just(_lh_moveLine_Just_0_1_6)) in
                               (let rec _lh_tryMove_Move_2_4_0 = (`Nothing) in
@@ -16888,7 +16888,7 @@ and pieceAt_d3_d5 _lh_pieceAt_arg1_2_8 _lh_pieceAt_arg2_2_8 =
                   (if (_lh_pieceAt_LH_P2_1_2_8 = _lh_pieceAt_arg2_2_8) then
                     (let rec _lh_moveLine_Just_0_2_1 = (`LH_P2(c_2_9, _lh_pieceAt_LH_P2_0_2_8)) in
                       (fun ml_6_2 ms_6_3 sq'_6_2 _lh_moveLine_arg2_6_2 _lh_moveLine_arg5_6_2 -> 
-                        (if ((colourOf_d3_d0 _lh_moveLine_Just_0_2_1) != _lh_moveLine_arg2_6_2) then
+                        (if ((colourOf_d3_d0 _lh_moveLine_Just_0_2_1) <> _lh_moveLine_arg2_6_2) then
                           (_lh_moveLine_arg5_6_2 (let rec h_9_2_9 = (let rec _lh_tryMove_Move_0_5_2 = sq'_6_2 in
                             (let rec _lh_tryMove_Move_1_5_2 = (`Just(_lh_moveLine_Just_0_2_1)) in
                               (let rec _lh_tryMove_Move_2_5_2 = (`Nothing) in
@@ -16954,7 +16954,7 @@ and pieceAt_d3_d6 _lh_pieceAt_arg1_3_4 _lh_pieceAt_arg2_3_4 =
                   (if (_lh_pieceAt_LH_P2_1_3_4 = _lh_pieceAt_arg2_3_4) then
                     (let rec _lh_moveLine_Just_0_2_6 = (`LH_P2(c_3_5, _lh_pieceAt_LH_P2_0_3_4)) in
                       (fun ml_7_7 ms_7_8 sq'_7_7 _lh_moveLine_arg2_7_7 _lh_moveLine_arg5_7_7 -> 
-                        (if ((colourOf_d3_d1 _lh_moveLine_Just_0_2_6) != _lh_moveLine_arg2_7_7) then
+                        (if ((colourOf_d3_d1 _lh_moveLine_Just_0_2_6) <> _lh_moveLine_arg2_7_7) then
                           (_lh_moveLine_arg5_7_7 (let rec h_1_0_5_1 = (let rec _lh_tryMove_Move_0_6_4 = sq'_7_7 in
                             (let rec _lh_tryMove_Move_1_6_4 = (`Just(_lh_moveLine_Just_0_2_6)) in
                               (let rec _lh_tryMove_Move_2_6_4 = (`Nothing) in
@@ -17020,7 +17020,7 @@ and pieceAt_d3_d7 _lh_pieceAt_arg1_2_3 _lh_pieceAt_arg2_2_3 =
                   (if (_lh_pieceAt_LH_P2_1_2_3 = _lh_pieceAt_arg2_2_3) then
                     (let rec _lh_moveLine_Just_0_1_8 = (`LH_P2(c_2_4, _lh_pieceAt_LH_P2_0_2_3)) in
                       (fun ml_5_2 ms_5_3 sq'_5_2 _lh_moveLine_arg2_5_2 _lh_moveLine_arg5_5_2 -> 
-                        (if ((colourOf_d3_d2 _lh_moveLine_Just_0_1_8) != _lh_moveLine_arg2_5_2) then
+                        (if ((colourOf_d3_d2 _lh_moveLine_Just_0_1_8) <> _lh_moveLine_arg2_5_2) then
                           (_lh_moveLine_arg5_5_2 (let rec h_7_7_6 = (let rec _lh_tryMove_Move_0_4_4 = sq'_5_2 in
                             (let rec _lh_tryMove_Move_1_4_4 = (`Just(_lh_moveLine_Just_0_1_8)) in
                               (let rec _lh_tryMove_Move_2_4_4 = (`Nothing) in
@@ -17086,7 +17086,7 @@ and pieceAt_d3_d8 _lh_pieceAt_arg1_1_7 _lh_pieceAt_arg2_1_7 =
                   (if (_lh_pieceAt_LH_P2_1_1_7 = _lh_pieceAt_arg2_1_7) then
                     (let rec _lh_moveLine_Just_0_1_3 = (`LH_P2(c_1_8, _lh_pieceAt_LH_P2_0_1_7)) in
                       (fun ml_3_8 ms_3_9 sq'_3_8 _lh_moveLine_arg2_3_8 _lh_moveLine_arg5_3_8 -> 
-                        (if ((colourOf_d3_d3 _lh_moveLine_Just_0_1_3) != _lh_moveLine_arg2_3_8) then
+                        (if ((colourOf_d3_d3 _lh_moveLine_Just_0_1_3) <> _lh_moveLine_arg2_3_8) then
                           (_lh_moveLine_arg5_3_8 (let rec h_5_5_8 = (let rec _lh_tryMove_Move_0_3_4 = sq'_3_8 in
                             (let rec _lh_tryMove_Move_1_3_4 = (`Just(_lh_moveLine_Just_0_1_3)) in
                               (let rec _lh_tryMove_Move_2_3_4 = (`Nothing) in
@@ -17152,7 +17152,7 @@ and pieceAt_d3_d9 _lh_pieceAt_arg1_3_8 _lh_pieceAt_arg2_3_8 =
                   (if (_lh_pieceAt_LH_P2_1_3_8 = _lh_pieceAt_arg2_3_8) then
                     (let rec _lh_moveLine_Just_0_3_0 = (`LH_P2(c_3_9, _lh_pieceAt_LH_P2_0_3_8)) in
                       (fun ml_8_9 ms_9_1 sq'_8_9 _lh_moveLine_arg2_8_9 _lh_moveLine_arg5_8_9 -> 
-                        (if ((colourOf_d3_d4 _lh_moveLine_Just_0_3_0) != _lh_moveLine_arg2_8_9) then
+                        (if ((colourOf_d3_d4 _lh_moveLine_Just_0_3_0) <> _lh_moveLine_arg2_8_9) then
                           (_lh_moveLine_arg5_8_9 (let rec h_1_1_3_9 = (let rec _lh_tryMove_Move_0_7_2 = sq'_8_9 in
                             (let rec _lh_tryMove_Move_1_7_2 = (`Just(_lh_moveLine_Just_0_3_0)) in
                               (let rec _lh_tryMove_Move_2_7_2 = (`Nothing) in
@@ -17218,7 +17218,7 @@ and pieceAt_d4 _lh_pieceAt_arg1_2 _lh_pieceAt_arg2_2 =
                   (if (_lh_pieceAt_LH_P2_1_2 = _lh_pieceAt_arg2_2) then
                     (let rec _lh_moveLine_Just_0_2 = (`LH_P2(c_2, _lh_pieceAt_LH_P2_0_2)) in
                       (fun ml_6 ms_6 sq'_6 _lh_moveLine_arg2_6 _lh_moveLine_arg5_6 -> 
-                        (if ((colourOf_d3 _lh_moveLine_Just_0_2) != _lh_moveLine_arg2_6) then
+                        (if ((colourOf_d3 _lh_moveLine_Just_0_2) <> _lh_moveLine_arg2_6) then
                           (_lh_moveLine_arg5_6 (let rec h_8_9 = (let rec _lh_tryMove_Move_0_7 = sq'_6 in
                             (let rec _lh_tryMove_Move_1_7 = (`Just(_lh_moveLine_Just_0_2)) in
                               (let rec _lh_tryMove_Move_2_7 = (`Nothing) in
@@ -17320,7 +17320,7 @@ and pieceAt_d4_d0 _lh_pieceAt_arg1_1_8 _lh_pieceAt_arg2_1_8 =
                   (if (_lh_pieceAt_LH_P2_1_1_8 = _lh_pieceAt_arg2_1_8) then
                     (let rec _lh_moveLine_Just_0_1_4 = (`LH_P2(c_1_9, _lh_pieceAt_LH_P2_0_1_8)) in
                       (fun ml_4_0 ms_4_1 sq'_4_0 _lh_moveLine_arg2_4_0 _lh_moveLine_arg5_4_0 -> 
-                        (if ((colourOf_d3_d5 _lh_moveLine_Just_0_1_4) != _lh_moveLine_arg2_4_0) then
+                        (if ((colourOf_d3_d5 _lh_moveLine_Just_0_1_4) <> _lh_moveLine_arg2_4_0) then
                           (_lh_moveLine_arg5_4_0 (let rec h_5_6_0 = (let rec _lh_tryMove_Move_0_3_6 = sq'_4_0 in
                             (let rec _lh_tryMove_Move_1_3_6 = (`Just(_lh_moveLine_Just_0_1_4)) in
                               (let rec _lh_tryMove_Move_2_3_6 = (`Nothing) in
@@ -17386,7 +17386,7 @@ and pieceAt_d4_d1 _lh_pieceAt_arg1_2_7 _lh_pieceAt_arg2_2_7 =
                   (if (_lh_pieceAt_LH_P2_1_2_7 = _lh_pieceAt_arg2_2_7) then
                     (let rec _lh_moveLine_Just_0_2_0 = (`LH_P2(c_2_8, _lh_pieceAt_LH_P2_0_2_7)) in
                       (fun ml_5_8 ms_5_9 sq'_5_8 _lh_moveLine_arg2_5_8 _lh_moveLine_arg5_5_8 -> 
-                        (if ((colourOf_d3_d6 _lh_moveLine_Just_0_2_0) != _lh_moveLine_arg2_5_8) then
+                        (if ((colourOf_d3_d6 _lh_moveLine_Just_0_2_0) <> _lh_moveLine_arg2_5_8) then
                           (_lh_moveLine_arg5_5_8 (let rec h_8_8_1 = (let rec _lh_tryMove_Move_0_5_0 = sq'_5_8 in
                             (let rec _lh_tryMove_Move_1_5_0 = (`Just(_lh_moveLine_Just_0_2_0)) in
                               (let rec _lh_tryMove_Move_2_5_0 = (`Nothing) in
@@ -17452,7 +17452,7 @@ and pieceAt_d4_d2 _lh_pieceAt_arg1_3_3 _lh_pieceAt_arg2_3_3 =
                   (if (_lh_pieceAt_LH_P2_1_3_3 = _lh_pieceAt_arg2_3_3) then
                     (let rec _lh_moveLine_Just_0_2_5 = (`LH_P2(c_3_4, _lh_pieceAt_LH_P2_0_3_3)) in
                       (fun ml_7_4 ms_7_5 sq'_7_4 _lh_moveLine_arg2_7_4 _lh_moveLine_arg5_7_4 -> 
-                        (if ((colourOf_d3_d7 _lh_moveLine_Just_0_2_5) != _lh_moveLine_arg2_7_4) then
+                        (if ((colourOf_d3_d7 _lh_moveLine_Just_0_2_5) <> _lh_moveLine_arg2_7_4) then
                           (_lh_moveLine_arg5_7_4 (let rec h_1_0_2_1 = (let rec _lh_tryMove_Move_0_6_2 = sq'_7_4 in
                             (let rec _lh_tryMove_Move_1_6_2 = (`Just(_lh_moveLine_Just_0_2_5)) in
                               (let rec _lh_tryMove_Move_2_6_2 = (`Nothing) in
@@ -18298,7 +18298,7 @@ and showMovesAfter_d0 _lh_showMovesAfter_arg1_1 _lh_showMovesAfter_arg2_1 =
                         (let rec h_1_6_2 = h_1_5_9 in
                           (let rec t_1_6_2 = ((mappend_d4_d3 t_1_5_9) ys_2_0_7) in
                             (fun ys_2_0_8 -> 
-                              (`LH_C(h_1_6_2, ((mappend_d4_d2 t_1_6_2) ys_2_0_8)))))))))) ((showMove_d2 ((_lh_showMovesAfter_MoveInFull_0_3 != _lh_showMovesAfter_MoveInFull_0_2) || (_lh_showMovesAfter_MoveInFull_1_3 != _lh_showMovesAfter_MoveInFull_1_2))) (let rec _lh_showMove_MoveInFull_0_3 = _lh_showMovesAfter_MoveInFull_0_3 in
+                              (`LH_C(h_1_6_2, ((mappend_d4_d2 t_1_6_2) ys_2_0_8)))))))))) ((showMove_d2 ((_lh_showMovesAfter_MoveInFull_0_3 <> _lh_showMovesAfter_MoveInFull_0_2) || (_lh_showMovesAfter_MoveInFull_1_3 <> _lh_showMovesAfter_MoveInFull_1_2))) (let rec _lh_showMove_MoveInFull_0_3 = _lh_showMovesAfter_MoveInFull_0_3 in
                     (let rec _lh_showMove_MoveInFull_1_3 = _lh_showMovesAfter_MoveInFull_1_3 in
                       (let rec _lh_showMove_MoveInFull_2_3 = _lh_showMovesAfter_MoveInFull_2_3 in
                         (fun _lh_showMove_arg1_5 -> 
@@ -18306,8 +18306,8 @@ and showMovesAfter_d0 _lh_showMovesAfter_arg1_1 _lh_showMovesAfter_arg2_1 =
                             | `LH_P2(_lh_showMove_LH_P2_0_3, _lh_showMove_LH_P2_1_3) -> 
                               (match _lh_showMove_MoveInFull_2_3 with
                                 | `Move(_lh_showMove_Move_0_3, _lh_showMove_Move_1_3, _lh_showMove_Move_2_3) -> 
-                                  (let rec capt_3 = (_lh_showMove_Move_1_3 != (`Nothing)) in
-                                    (let rec prom_3 = (_lh_showMove_Move_2_3 != (`Nothing)) in
+                                  (let rec capt_3 = (_lh_showMove_Move_1_3 <> (`Nothing)) in
+                                    (let rec prom_3 = (_lh_showMove_Move_2_3 <> (`Nothing)) in
                                       ((mappend_d4_d4 ((mappend_d4_d5 ((mappend_d4_d6 (if _lh_showMove_arg1_5 then
                                         ((mappend_d4_d7 ((mappend_d4_d8 (showPiece_d6 (let rec _lh_showPiece_LH_P2_1_5 = _lh_showMove_LH_P2_1_3 in
                                           (fun _lh_dummy_5 -> 
@@ -18398,7 +18398,7 @@ and showMovesAfter_d1 _lh_showMovesAfter_arg1_2 _lh_showMovesAfter_arg2_2 =
                         (let rec h_2_5_5 = h_2_5_2 in
                           (let rec t_2_5_5 = ((mappend_d7_d3 t_2_5_2) ys_3_4_2) in
                             (fun ys_3_4_3 -> 
-                              (`LH_C(h_2_5_5, ((mappend_d7_d2 t_2_5_5) ys_3_4_3)))))))))) ((showMove_d4 ((_lh_showMovesAfter_MoveInFull_0_5 != _lh_showMovesAfter_MoveInFull_0_4) || (_lh_showMovesAfter_MoveInFull_1_5 != _lh_showMovesAfter_MoveInFull_1_4))) (let rec _lh_showMove_MoveInFull_0_5 = _lh_showMovesAfter_MoveInFull_0_5 in
+                              (`LH_C(h_2_5_5, ((mappend_d7_d2 t_2_5_5) ys_3_4_3)))))))))) ((showMove_d4 ((_lh_showMovesAfter_MoveInFull_0_5 <> _lh_showMovesAfter_MoveInFull_0_4) || (_lh_showMovesAfter_MoveInFull_1_5 <> _lh_showMovesAfter_MoveInFull_1_4))) (let rec _lh_showMove_MoveInFull_0_5 = _lh_showMovesAfter_MoveInFull_0_5 in
                     (let rec _lh_showMove_MoveInFull_1_5 = _lh_showMovesAfter_MoveInFull_1_5 in
                       (let rec _lh_showMove_MoveInFull_2_5 = _lh_showMovesAfter_MoveInFull_2_5 in
                         (fun _lh_showMove_arg1_7 -> 
@@ -18406,8 +18406,8 @@ and showMovesAfter_d1 _lh_showMovesAfter_arg1_2 _lh_showMovesAfter_arg2_2 =
                             | `LH_P2(_lh_showMove_LH_P2_0_5, _lh_showMove_LH_P2_1_5) -> 
                               (match _lh_showMove_MoveInFull_2_5 with
                                 | `Move(_lh_showMove_Move_0_5, _lh_showMove_Move_1_5, _lh_showMove_Move_2_5) -> 
-                                  (let rec capt_5 = (_lh_showMove_Move_1_5 != (`Nothing)) in
-                                    (let rec prom_5 = (_lh_showMove_Move_2_5 != (`Nothing)) in
+                                  (let rec capt_5 = (_lh_showMove_Move_1_5 <> (`Nothing)) in
+                                    (let rec prom_5 = (_lh_showMove_Move_2_5 <> (`Nothing)) in
                                       ((mappend_d7_d4 ((mappend_d7_d5 ((mappend_d7_d6 (if _lh_showMove_arg1_7 then
                                         ((mappend_d7_d7 ((mappend_d7_d8 (showPiece_d1_d2 (let rec _lh_showPiece_LH_P2_1_8 = _lh_showMove_LH_P2_1_5 in
                                           (fun _lh_dummy_7 -> 
@@ -18498,7 +18498,7 @@ and showMovesAfter_d2 _lh_showMovesAfter_arg1_4 _lh_showMovesAfter_arg2_4 =
                         (let rec h_1_1_2_3 = h_1_1_2_0 in
                           (let rec t_1_1_2_3 = ((mappend_d1_d1_d6 t_1_1_2_0) ys_1_3_6_2) in
                             (fun ys_1_3_6_3 -> 
-                              (`LH_C(h_1_1_2_3, ((mappend_d1_d1_d5 t_1_1_2_3) ys_1_3_6_3)))))))))) ((showMove_d7 ((_lh_showMovesAfter_MoveInFull_0_9 != _lh_showMovesAfter_MoveInFull_0_8) || (_lh_showMovesAfter_MoveInFull_1_9 != _lh_showMovesAfter_MoveInFull_1_8))) (let rec _lh_showMove_MoveInFull_0_1_2 = _lh_showMovesAfter_MoveInFull_0_9 in
+                              (`LH_C(h_1_1_2_3, ((mappend_d1_d1_d5 t_1_1_2_3) ys_1_3_6_3)))))))))) ((showMove_d7 ((_lh_showMovesAfter_MoveInFull_0_9 <> _lh_showMovesAfter_MoveInFull_0_8) || (_lh_showMovesAfter_MoveInFull_1_9 <> _lh_showMovesAfter_MoveInFull_1_8))) (let rec _lh_showMove_MoveInFull_0_1_2 = _lh_showMovesAfter_MoveInFull_0_9 in
                     (let rec _lh_showMove_MoveInFull_1_1_2 = _lh_showMovesAfter_MoveInFull_1_9 in
                       (let rec _lh_showMove_MoveInFull_2_1_2 = _lh_showMovesAfter_MoveInFull_2_9 in
                         (fun _lh_showMove_arg1_1_6 -> 
@@ -18506,8 +18506,8 @@ and showMovesAfter_d2 _lh_showMovesAfter_arg1_4 _lh_showMovesAfter_arg2_4 =
                             | `LH_P2(_lh_showMove_LH_P2_0_1_2, _lh_showMove_LH_P2_1_1_2) -> 
                               (match _lh_showMove_MoveInFull_2_1_2 with
                                 | `Move(_lh_showMove_Move_0_1_2, _lh_showMove_Move_1_1_2, _lh_showMove_Move_2_1_2) -> 
-                                  (let rec capt_1_2 = (_lh_showMove_Move_1_1_2 != (`Nothing)) in
-                                    (let rec prom_1_2 = (_lh_showMove_Move_2_1_2 != (`Nothing)) in
+                                  (let rec capt_1_2 = (_lh_showMove_Move_1_1_2 <> (`Nothing)) in
+                                    (let rec prom_1_2 = (_lh_showMove_Move_2_1_2 <> (`Nothing)) in
                                       ((mappend_d1_d1_d7 ((mappend_d1_d1_d8 ((mappend_d1_d1_d9 (if _lh_showMove_arg1_1_6 then
                                         ((mappend_d1_d2_d0 ((mappend_d1_d2_d1 (showPiece_d2_d1 (let rec _lh_showPiece_LH_P2_1_3_7 = _lh_showMove_LH_P2_1_1_2 in
                                           (fun _lh_dummy_2_6 -> 
@@ -18598,7 +18598,7 @@ and showMovesAfter_d3 _lh_showMovesAfter_arg1_0 _lh_showMovesAfter_arg2_0 =
                         (let rec h_3_2 = h_2_9 in
                           (let rec t_3_2 = ((mappend_d1_d4_d6 t_2_9) ys_3_4) in
                             (fun ys_3_5 -> 
-                              (`LH_C(h_3_2, ((mappend_d1_d4_d5 t_3_2) ys_3_5)))))))))) ((showMove_d9 ((_lh_showMovesAfter_MoveInFull_0_1 != _lh_showMovesAfter_MoveInFull_0_0) || (_lh_showMovesAfter_MoveInFull_1_1 != _lh_showMovesAfter_MoveInFull_1_0))) (let rec _lh_showMove_MoveInFull_0_0 = _lh_showMovesAfter_MoveInFull_0_1 in
+                              (`LH_C(h_3_2, ((mappend_d1_d4_d5 t_3_2) ys_3_5)))))))))) ((showMove_d9 ((_lh_showMovesAfter_MoveInFull_0_1 <> _lh_showMovesAfter_MoveInFull_0_0) || (_lh_showMovesAfter_MoveInFull_1_1 <> _lh_showMovesAfter_MoveInFull_1_0))) (let rec _lh_showMove_MoveInFull_0_0 = _lh_showMovesAfter_MoveInFull_0_1 in
                     (let rec _lh_showMove_MoveInFull_1_0 = _lh_showMovesAfter_MoveInFull_1_1 in
                       (let rec _lh_showMove_MoveInFull_2_0 = _lh_showMovesAfter_MoveInFull_2_1 in
                         (fun _lh_showMove_arg1_0 -> 
@@ -18606,8 +18606,8 @@ and showMovesAfter_d3 _lh_showMovesAfter_arg1_0 _lh_showMovesAfter_arg2_0 =
                             | `LH_P2(_lh_showMove_LH_P2_0_0, _lh_showMove_LH_P2_1_0) -> 
                               (match _lh_showMove_MoveInFull_2_0 with
                                 | `Move(_lh_showMove_Move_0_0, _lh_showMove_Move_1_0, _lh_showMove_Move_2_0) -> 
-                                  (let rec capt_0 = (_lh_showMove_Move_1_0 != (`Nothing)) in
-                                    (let rec prom_0 = (_lh_showMove_Move_2_0 != (`Nothing)) in
+                                  (let rec capt_0 = (_lh_showMove_Move_1_0 <> (`Nothing)) in
+                                    (let rec prom_0 = (_lh_showMove_Move_2_0 <> (`Nothing)) in
                                       ((mappend_d1_d4_d7 ((mappend_d1_d4_d8 ((mappend_d1_d4_d9 (if _lh_showMove_arg1_0 then
                                         ((mappend_d1_d5_d0 ((mappend_d1_d5_d1 (showPiece_d2_d7 (let rec _lh_showPiece_LH_P2_1_0 = _lh_showMove_LH_P2_1_0 in
                                           (fun _lh_dummy_0 -> 
@@ -18698,7 +18698,7 @@ and showMovesAfter_d4 _lh_showMovesAfter_arg1_5 _lh_showMovesAfter_arg2_5 =
                         (let rec h_1_2_8_0 = h_1_2_7_7 in
                           (let rec t_1_2_8_0 = ((mappend_d1_d8_d9 t_1_2_7_7) ys_1_5_6_4) in
                             (fun ys_1_5_6_5 -> 
-                              (`LH_C(h_1_2_8_0, ((mappend_d1_d8_d8 t_1_2_8_0) ys_1_5_6_5)))))))))) ((showMove_d1_d2 ((_lh_showMovesAfter_MoveInFull_0_1_1 != _lh_showMovesAfter_MoveInFull_0_1_0) || (_lh_showMovesAfter_MoveInFull_1_1_1 != _lh_showMovesAfter_MoveInFull_1_1_0))) (let rec _lh_showMove_MoveInFull_0_1_4 = _lh_showMovesAfter_MoveInFull_0_1_1 in
+                              (`LH_C(h_1_2_8_0, ((mappend_d1_d8_d8 t_1_2_8_0) ys_1_5_6_5)))))))))) ((showMove_d1_d2 ((_lh_showMovesAfter_MoveInFull_0_1_1 <> _lh_showMovesAfter_MoveInFull_0_1_0) || (_lh_showMovesAfter_MoveInFull_1_1_1 <> _lh_showMovesAfter_MoveInFull_1_1_0))) (let rec _lh_showMove_MoveInFull_0_1_4 = _lh_showMovesAfter_MoveInFull_0_1_1 in
                     (let rec _lh_showMove_MoveInFull_1_1_4 = _lh_showMovesAfter_MoveInFull_1_1_1 in
                       (let rec _lh_showMove_MoveInFull_2_1_4 = _lh_showMovesAfter_MoveInFull_2_1_1 in
                         (fun _lh_showMove_arg1_1_9 -> 
@@ -18706,8 +18706,8 @@ and showMovesAfter_d4 _lh_showMovesAfter_arg1_5 _lh_showMovesAfter_arg2_5 =
                             | `LH_P2(_lh_showMove_LH_P2_0_1_4, _lh_showMove_LH_P2_1_1_4) -> 
                               (match _lh_showMove_MoveInFull_2_1_4 with
                                 | `Move(_lh_showMove_Move_0_1_4, _lh_showMove_Move_1_1_4, _lh_showMove_Move_2_1_4) -> 
-                                  (let rec capt_1_4 = (_lh_showMove_Move_1_1_4 != (`Nothing)) in
-                                    (let rec prom_1_4 = (_lh_showMove_Move_2_1_4 != (`Nothing)) in
+                                  (let rec capt_1_4 = (_lh_showMove_Move_1_1_4 <> (`Nothing)) in
+                                    (let rec prom_1_4 = (_lh_showMove_Move_2_1_4 <> (`Nothing)) in
                                       ((mappend_d1_d9_d0 ((mappend_d1_d9_d1 ((mappend_d1_d9_d2 (if _lh_showMove_arg1_1_9 then
                                         ((mappend_d1_d9_d3 ((mappend_d1_d9_d4 (showPiece_d3_d6 (let rec _lh_showPiece_LH_P2_1_4_2 = _lh_showMove_LH_P2_1_1_4 in
                                           (fun _lh_dummy_3_1 -> 
@@ -18798,7 +18798,7 @@ and showMovesAfter_d5 _lh_showMovesAfter_arg1_3 _lh_showMovesAfter_arg2_3 =
                         (let rec h_8_4_4 = h_8_4_1 in
                           (let rec t_8_4_4 = ((mappend_d2_d1_d9 t_8_4_1) ys_1_0_4_3) in
                             (fun ys_1_0_4_4 -> 
-                              (`LH_C(h_8_4_4, ((mappend_d2_d1_d8 t_8_4_4) ys_1_0_4_4)))))))))) ((showMove_d1_d4 ((_lh_showMovesAfter_MoveInFull_0_7 != _lh_showMovesAfter_MoveInFull_0_6) || (_lh_showMovesAfter_MoveInFull_1_7 != _lh_showMovesAfter_MoveInFull_1_6))) (let rec _lh_showMove_MoveInFull_0_9 = _lh_showMovesAfter_MoveInFull_0_7 in
+                              (`LH_C(h_8_4_4, ((mappend_d2_d1_d8 t_8_4_4) ys_1_0_4_4)))))))))) ((showMove_d1_d4 ((_lh_showMovesAfter_MoveInFull_0_7 <> _lh_showMovesAfter_MoveInFull_0_6) || (_lh_showMovesAfter_MoveInFull_1_7 <> _lh_showMovesAfter_MoveInFull_1_6))) (let rec _lh_showMove_MoveInFull_0_9 = _lh_showMovesAfter_MoveInFull_0_7 in
                     (let rec _lh_showMove_MoveInFull_1_9 = _lh_showMovesAfter_MoveInFull_1_7 in
                       (let rec _lh_showMove_MoveInFull_2_9 = _lh_showMovesAfter_MoveInFull_2_7 in
                         (fun _lh_showMove_arg1_1_2 -> 
@@ -18806,8 +18806,8 @@ and showMovesAfter_d5 _lh_showMovesAfter_arg1_3 _lh_showMovesAfter_arg2_3 =
                             | `LH_P2(_lh_showMove_LH_P2_0_9, _lh_showMove_LH_P2_1_9) -> 
                               (match _lh_showMove_MoveInFull_2_9 with
                                 | `Move(_lh_showMove_Move_0_9, _lh_showMove_Move_1_9, _lh_showMove_Move_2_9) -> 
-                                  (let rec capt_9 = (_lh_showMove_Move_1_9 != (`Nothing)) in
-                                    (let rec prom_9 = (_lh_showMove_Move_2_9 != (`Nothing)) in
+                                  (let rec capt_9 = (_lh_showMove_Move_1_9 <> (`Nothing)) in
+                                    (let rec prom_9 = (_lh_showMove_Move_2_9 <> (`Nothing)) in
                                       ((mappend_d2_d2_d0 ((mappend_d2_d2_d1 ((mappend_d2_d2_d2 (if _lh_showMove_arg1_1_2 then
                                         ((mappend_d2_d2_d3 ((mappend_d2_d2_d4 (showPiece_d4_d2 (let rec _lh_showPiece_LH_P2_1_2_5 = _lh_showMove_LH_P2_1_9 in
                                           (fun _lh_dummy_1_8 -> 
@@ -18917,8 +18917,8 @@ and showMove_d0 _lh_showMove_arg1_4 _lh_showMove_arg2_3 =
         | `LH_P2(_lh_showMove_LH_P2_0_2, _lh_showMove_LH_P2_1_2) -> 
           (match _lh_showMove_MoveInFull_2_2 with
             | `Move(_lh_showMove_Move_0_2, _lh_showMove_Move_1_2, _lh_showMove_Move_2_2) -> 
-              (let rec capt_2 = (_lh_showMove_Move_1_2 != (`Nothing)) in
-                (let rec prom_2 = (_lh_showMove_Move_2_2 != (`Nothing)) in
+              (let rec capt_2 = (_lh_showMove_Move_1_2 <> (`Nothing)) in
+                (let rec prom_2 = (_lh_showMove_Move_2_2 <> (`Nothing)) in
                   ((mappend_d1_d9 ((mappend_d2_d0 ((mappend_d2_d1 (if _lh_showMove_arg1_4 then
                     ((mappend_d2_d2 ((mappend_d2_d3 (showPiece_d0 (let rec _lh_showPiece_LH_P2_1_4 = _lh_showMove_LH_P2_1_2 in
                       (fun _lh_dummy_4 -> 
@@ -18988,8 +18988,8 @@ and showMove_d1 _lh_showMove_arg1_6 _lh_showMove_arg2_4 =
         | `LH_P2(_lh_showMove_LH_P2_0_4, _lh_showMove_LH_P2_1_4) -> 
           (match _lh_showMove_MoveInFull_2_4 with
             | `Move(_lh_showMove_Move_0_4, _lh_showMove_Move_1_4, _lh_showMove_Move_2_4) -> 
-              (let rec capt_4 = (_lh_showMove_Move_1_4 != (`Nothing)) in
-                (let rec prom_4 = (_lh_showMove_Move_2_4 != (`Nothing)) in
+              (let rec capt_4 = (_lh_showMove_Move_1_4 <> (`Nothing)) in
+                (let rec prom_4 = (_lh_showMove_Move_2_4 <> (`Nothing)) in
                   ((mappend_d3_d1 ((mappend_d3_d2 ((mappend_d3_d3 (if _lh_showMove_arg1_6 then
                     ((mappend_d3_d4 ((mappend_d3_d5 (showPiece_d3 (let rec _lh_showPiece_LH_P2_1_7 = _lh_showMove_LH_P2_1_4 in
                       (fun _lh_dummy_6 -> 
@@ -19059,8 +19059,8 @@ and showMove_d1_d0 _lh_showMove_arg1_1_4 _lh_showMove_arg2_1_0 =
         | `LH_P2(_lh_showMove_LH_P2_0_1_0, _lh_showMove_LH_P2_1_1_0) -> 
           (match _lh_showMove_MoveInFull_2_1_0 with
             | `Move(_lh_showMove_Move_0_1_0, _lh_showMove_Move_1_1_0, _lh_showMove_Move_2_1_0) -> 
-              (let rec capt_1_0 = (_lh_showMove_Move_1_1_0 != (`Nothing)) in
-                (let rec prom_1_0 = (_lh_showMove_Move_2_1_0 != (`Nothing)) in
+              (let rec capt_1_0 = (_lh_showMove_Move_1_1_0 <> (`Nothing)) in
+                (let rec prom_1_0 = (_lh_showMove_Move_2_1_0 <> (`Nothing)) in
                   ((mappend_d1_d6_d5 ((mappend_d1_d6_d6 ((mappend_d1_d6_d7 (if _lh_showMove_arg1_1_4 then
                     ((mappend_d1_d6_d8 ((mappend_d1_d6_d9 (showPiece_d3_d0 (let rec _lh_showPiece_LH_P2_1_2_8 = _lh_showMove_LH_P2_1_1_0 in
                       (fun _lh_dummy_2_2 -> 
@@ -19130,8 +19130,8 @@ and showMove_d1_d1 _lh_showMove_arg1_1_0 _lh_showMove_arg2_7 =
         | `LH_P2(_lh_showMove_LH_P2_0_7, _lh_showMove_LH_P2_1_7) -> 
           (match _lh_showMove_MoveInFull_2_7 with
             | `Move(_lh_showMove_Move_0_7, _lh_showMove_Move_1_7, _lh_showMove_Move_2_7) -> 
-              (let rec capt_7 = (_lh_showMove_Move_1_7 != (`Nothing)) in
-                (let rec prom_7 = (_lh_showMove_Move_2_7 != (`Nothing)) in
+              (let rec capt_7 = (_lh_showMove_Move_1_7 <> (`Nothing)) in
+                (let rec prom_7 = (_lh_showMove_Move_2_7 <> (`Nothing)) in
                   ((mappend_d1_d7_d7 ((mappend_d1_d7_d8 ((mappend_d1_d7_d9 (if _lh_showMove_arg1_1_0 then
                     ((mappend_d1_d8_d0 ((mappend_d1_d8_d1 (showPiece_d3_d3 (let rec _lh_showPiece_LH_P2_1_2_2 = _lh_showMove_LH_P2_1_7 in
                       (fun _lh_dummy_1_5 -> 
@@ -19201,8 +19201,8 @@ and showMove_d1_d3 _lh_showMove_arg1_8 _lh_showMove_arg2_5 =
         | `LH_P2(_lh_showMove_LH_P2_0_6, _lh_showMove_LH_P2_1_6) -> 
           (match _lh_showMove_MoveInFull_2_6 with
             | `Move(_lh_showMove_Move_0_6, _lh_showMove_Move_1_6, _lh_showMove_Move_2_6) -> 
-              (let rec capt_6 = (_lh_showMove_Move_1_6 != (`Nothing)) in
-                (let rec prom_6 = (_lh_showMove_Move_2_6 != (`Nothing)) in
+              (let rec capt_6 = (_lh_showMove_Move_1_6 <> (`Nothing)) in
+                (let rec prom_6 = (_lh_showMove_Move_2_6 <> (`Nothing)) in
                   ((mappend_d2_d0_d7 ((mappend_d2_d0_d8 ((mappend_d2_d0_d9 (if _lh_showMove_arg1_8 then
                     ((mappend_d2_d1_d0 ((mappend_d2_d1_d1 (showPiece_d3_d9 (let rec _lh_showPiece_LH_P2_1_1_7 = _lh_showMove_LH_P2_1_6 in
                       (fun _lh_dummy_1_3 -> 
@@ -19272,8 +19272,8 @@ and showMove_d3 _lh_showMove_arg1_1_8 _lh_showMove_arg2_1_3 =
         | `LH_P2(_lh_showMove_LH_P2_0_1_3, _lh_showMove_LH_P2_1_1_3) -> 
           (match _lh_showMove_MoveInFull_2_1_3 with
             | `Move(_lh_showMove_Move_0_1_3, _lh_showMove_Move_1_1_3, _lh_showMove_Move_2_1_3) -> 
-              (let rec capt_1_3 = (_lh_showMove_Move_1_1_3 != (`Nothing)) in
-                (let rec prom_1_3 = (_lh_showMove_Move_2_1_3 != (`Nothing)) in
+              (let rec capt_1_3 = (_lh_showMove_Move_1_1_3 <> (`Nothing)) in
+                (let rec prom_1_3 = (_lh_showMove_Move_2_1_3 <> (`Nothing)) in
                   ((mappend_d6_d1 ((mappend_d6_d2 ((mappend_d6_d3 (if _lh_showMove_arg1_1_8 then
                     ((mappend_d6_d4 ((mappend_d6_d5 (showPiece_d9 (let rec _lh_showPiece_LH_P2_1_4_1 = _lh_showMove_LH_P2_1_1_3 in
                       (fun _lh_dummy_3_0 -> 
@@ -19343,8 +19343,8 @@ and showMove_d5 _lh_showMove_arg1_1_5 _lh_showMove_arg2_1_1 =
         | `LH_P2(_lh_showMove_LH_P2_0_1_1, _lh_showMove_LH_P2_1_1_1) -> 
           (match _lh_showMove_MoveInFull_2_1_1 with
             | `Move(_lh_showMove_Move_0_1_1, _lh_showMove_Move_1_1_1, _lh_showMove_Move_2_1_1) -> 
-              (let rec capt_1_1 = (_lh_showMove_Move_1_1_1 != (`Nothing)) in
-                (let rec prom_1_1 = (_lh_showMove_Move_2_1_1 != (`Nothing)) in
+              (let rec capt_1_1 = (_lh_showMove_Move_1_1_1 <> (`Nothing)) in
+                (let rec prom_1_1 = (_lh_showMove_Move_2_1_1 <> (`Nothing)) in
                   ((mappend_d9_d2 ((mappend_d9_d3 ((mappend_d9_d4 (if _lh_showMove_arg1_1_5 then
                     ((mappend_d9_d5 ((mappend_d9_d6 (showPiece_d1_d5 (let rec _lh_showPiece_LH_P2_1_3_4 = _lh_showMove_LH_P2_1_1_1 in
                       (fun _lh_dummy_2_5 -> 
@@ -19414,8 +19414,8 @@ and showMove_d6 _lh_showMove_arg1_1 _lh_showMove_arg2_0 =
         | `LH_P2(_lh_showMove_LH_P2_0_1, _lh_showMove_LH_P2_1_1) -> 
           (match _lh_showMove_MoveInFull_2_1 with
             | `Move(_lh_showMove_Move_0_1, _lh_showMove_Move_1_1, _lh_showMove_Move_2_1) -> 
-              (let rec capt_1 = (_lh_showMove_Move_1_1 != (`Nothing)) in
-                (let rec prom_1 = (_lh_showMove_Move_2_1 != (`Nothing)) in
+              (let rec capt_1 = (_lh_showMove_Move_1_1 <> (`Nothing)) in
+                (let rec prom_1 = (_lh_showMove_Move_2_1 <> (`Nothing)) in
                   ((mappend_d1_d0_d4 ((mappend_d1_d0_d5 ((mappend_d1_d0_d6 (if _lh_showMove_arg1_1 then
                     ((mappend_d1_d0_d7 ((mappend_d1_d0_d8 (showPiece_d1_d8 (let rec _lh_showPiece_LH_P2_1_1 = _lh_showMove_LH_P2_1_1 in
                       (fun _lh_dummy_1 -> 
@@ -19485,8 +19485,8 @@ and showMove_d8 _lh_showMove_arg1_1_1 _lh_showMove_arg2_8 =
         | `LH_P2(_lh_showMove_LH_P2_0_8, _lh_showMove_LH_P2_1_8) -> 
           (match _lh_showMove_MoveInFull_2_8 with
             | `Move(_lh_showMove_Move_0_8, _lh_showMove_Move_1_8, _lh_showMove_Move_2_8) -> 
-              (let rec capt_8 = (_lh_showMove_Move_1_8 != (`Nothing)) in
-                (let rec prom_8 = (_lh_showMove_Move_2_8 != (`Nothing)) in
+              (let rec capt_8 = (_lh_showMove_Move_1_8 <> (`Nothing)) in
+                (let rec prom_8 = (_lh_showMove_Move_2_8 <> (`Nothing)) in
                   ((mappend_d1_d3_d4 ((mappend_d1_d3_d5 ((mappend_d1_d3_d6 (if _lh_showMove_arg1_1_1 then
                     ((mappend_d1_d3_d7 ((mappend_d1_d3_d8 (showPiece_d2_d4 (let rec _lh_showPiece_LH_P2_1_2_3 = _lh_showMove_LH_P2_1_8 in
                       (fun _lh_dummy_1_6 -> 
@@ -29388,7 +29388,7 @@ and pieceAt_d1 _lh_pieceAt_arg1_6 _lh_pieceAt_arg2_6 =
                   (if (_lh_pieceAt_LH_P2_1_6 = _lh_pieceAt_arg2_6) then
                     (let rec _lh_moveLine_Just_0_6 = (`LH_P2(c_6, _lh_pieceAt_LH_P2_0_6)) in
                       (fun ml_1_8 ms_1_8 sq'_1_8 _lh_moveLine_arg2_1_8 _lh_moveLine_arg5_1_8 -> 
-                        (if ((colourOf_d0 _lh_moveLine_Just_0_6) != _lh_moveLine_arg2_1_8) then
+                        (if ((colourOf_d0 _lh_moveLine_Just_0_6) <> _lh_moveLine_arg2_1_8) then
                           (_lh_moveLine_arg5_1_8 (let rec h_2_4_0 = (let rec _lh_tryMove_Move_0_1_5 = sq'_1_8 in
                             (let rec _lh_tryMove_Move_1_1_5 = (`Just(_lh_moveLine_Just_0_6)) in
                               (let rec _lh_tryMove_Move_2_1_5 = (`Nothing) in
@@ -29490,7 +29490,7 @@ and pieceAt_d1_d0 _lh_pieceAt_arg1_2_9 _lh_pieceAt_arg2_2_9 =
                   (if (_lh_pieceAt_LH_P2_1_2_9 = _lh_pieceAt_arg2_2_9) then
                     (let rec _lh_moveLine_Just_0_2_2 = (`LH_P2(c_3_0, _lh_pieceAt_LH_P2_0_2_9)) in
                       (fun ml_6_4 ms_6_5 sq'_6_4 _lh_moveLine_arg2_6_4 _lh_moveLine_arg5_6_4 -> 
-                        (if ((colourOf_d7 _lh_moveLine_Just_0_2_2) != _lh_moveLine_arg2_6_4) then
+                        (if ((colourOf_d7 _lh_moveLine_Just_0_2_2) <> _lh_moveLine_arg2_6_4) then
                           (_lh_moveLine_arg5_6_4 (let rec h_9_3_5 = (let rec _lh_tryMove_Move_0_5_4 = sq'_6_4 in
                             (let rec _lh_tryMove_Move_1_5_4 = (`Just(_lh_moveLine_Just_0_2_2)) in
                               (let rec _lh_tryMove_Move_2_5_4 = (`Nothing) in
@@ -29598,7 +29598,7 @@ and pieceAt_d1_d1 _lh_pieceAt_arg1_8 _lh_pieceAt_arg2_8 =
                   (if (_lh_pieceAt_LH_P2_1_8 = _lh_pieceAt_arg2_8) then
                     (let rec _lh_moveLine_Just_0_8 = (`LH_P2(c_8, _lh_pieceAt_LH_P2_0_8)) in
                       (fun ml_2_3 ms_2_3 sq'_2_3 _lh_moveLine_arg2_2_3 _lh_moveLine_arg5_2_3 -> 
-                        (if ((colourOf_d8 _lh_moveLine_Just_0_8) != _lh_moveLine_arg2_2_3) then
+                        (if ((colourOf_d8 _lh_moveLine_Just_0_8) <> _lh_moveLine_arg2_2_3) then
                           (_lh_moveLine_arg5_2_3 (let rec h_3_1_5 = (let rec _lh_tryMove_Move_0_2_2 = sq'_2_3 in
                             (let rec _lh_tryMove_Move_1_2_2 = (`Just(_lh_moveLine_Just_0_8)) in
                               (let rec _lh_tryMove_Move_2_2_2 = (`Nothing) in
@@ -29706,7 +29706,7 @@ and pieceAt_d1_d2 _lh_pieceAt_arg1_4_1 _lh_pieceAt_arg2_4_1 =
                   (if (_lh_pieceAt_LH_P2_1_4_1 = _lh_pieceAt_arg2_4_1) then
                     (let rec _lh_moveLine_Just_0_3_1 = (`LH_P2(c_4_2, _lh_pieceAt_LH_P2_0_4_1)) in
                       (fun ml_9_4 ms_9_6 sq'_9_4 _lh_moveLine_arg2_9_4 _lh_moveLine_arg5_9_4 -> 
-                        (if ((colourOf_d9 _lh_moveLine_Just_0_3_1) != _lh_moveLine_arg2_9_4) then
+                        (if ((colourOf_d9 _lh_moveLine_Just_0_3_1) <> _lh_moveLine_arg2_9_4) then
                           (_lh_moveLine_arg5_9_4 (let rec h_1_2_6_1 = (let rec _lh_tryMove_Move_0_7_6 = sq'_9_4 in
                             (let rec _lh_tryMove_Move_1_7_6 = (`Just(_lh_moveLine_Just_0_3_1)) in
                               (let rec _lh_tryMove_Move_2_7_6 = (`Nothing) in
@@ -29814,7 +29814,7 @@ and pieceAt_d1_d3 _lh_pieceAt_arg1_4 _lh_pieceAt_arg2_4 =
                   (if (_lh_pieceAt_LH_P2_1_4 = _lh_pieceAt_arg2_4) then
                     (let rec _lh_moveLine_Just_0_4 = (`LH_P2(c_4, _lh_pieceAt_LH_P2_0_4)) in
                       (fun ml_1_2 ms_1_2 sq'_1_2 _lh_moveLine_arg2_1_2 _lh_moveLine_arg5_1_2 -> 
-                        (if ((colourOf_d1_d0 _lh_moveLine_Just_0_4) != _lh_moveLine_arg2_1_2) then
+                        (if ((colourOf_d1_d0 _lh_moveLine_Just_0_4) <> _lh_moveLine_arg2_1_2) then
                           (_lh_moveLine_arg5_1_2 (let rec h_1_8_2 = (let rec _lh_tryMove_Move_0_1_1 = sq'_1_2 in
                             (let rec _lh_tryMove_Move_1_1_1 = (`Just(_lh_moveLine_Just_0_4)) in
                               (let rec _lh_tryMove_Move_2_1_1 = (`Nothing) in
@@ -29922,7 +29922,7 @@ and pieceAt_d1_d4 _lh_pieceAt_arg1_3_6 _lh_pieceAt_arg2_3_6 =
                   (if (_lh_pieceAt_LH_P2_1_3_6 = _lh_pieceAt_arg2_3_6) then
                     (let rec _lh_moveLine_Just_0_2_8 = (`LH_P2(c_3_7, _lh_pieceAt_LH_P2_0_3_6)) in
                       (fun ml_8_3 ms_8_4 sq'_8_3 _lh_moveLine_arg2_8_3 _lh_moveLine_arg5_8_3 -> 
-                        (if ((colourOf_d1_d1 _lh_moveLine_Just_0_2_8) != _lh_moveLine_arg2_8_3) then
+                        (if ((colourOf_d1_d1 _lh_moveLine_Just_0_2_8) <> _lh_moveLine_arg2_8_3) then
                           (_lh_moveLine_arg5_8_3 (let rec h_1_0_5_5 = (let rec _lh_tryMove_Move_0_6_8 = sq'_8_3 in
                             (let rec _lh_tryMove_Move_1_6_8 = (`Just(_lh_moveLine_Just_0_2_8)) in
                               (let rec _lh_tryMove_Move_2_6_8 = (`Nothing) in
@@ -30024,7 +30024,7 @@ and pieceAt_d1_d5 _lh_pieceAt_arg1_3_7 _lh_pieceAt_arg2_3_7 =
                   (if (_lh_pieceAt_LH_P2_1_3_7 = _lh_pieceAt_arg2_3_7) then
                     (let rec _lh_moveLine_Just_0_2_9 = (`LH_P2(c_3_8, _lh_pieceAt_LH_P2_0_3_7)) in
                       (fun ml_8_6 ms_8_7 sq'_8_6 _lh_moveLine_arg2_8_6 _lh_moveLine_arg5_8_6 -> 
-                        (if ((colourOf_d1_d2 _lh_moveLine_Just_0_2_9) != _lh_moveLine_arg2_8_6) then
+                        (if ((colourOf_d1_d2 _lh_moveLine_Just_0_2_9) <> _lh_moveLine_arg2_8_6) then
                           (_lh_moveLine_arg5_8_6 (let rec h_1_0_9_5 = (let rec _lh_tryMove_Move_0_7_0 = sq'_8_6 in
                             (let rec _lh_tryMove_Move_1_7_0 = (`Just(_lh_moveLine_Just_0_2_9)) in
                               (let rec _lh_tryMove_Move_2_7_0 = (`Nothing) in
@@ -30126,7 +30126,7 @@ and pieceAt_d1_d6 _lh_pieceAt_arg1_1_2 _lh_pieceAt_arg2_1_2 =
                   (if (_lh_pieceAt_LH_P2_1_1_2 = _lh_pieceAt_arg2_1_2) then
                     (let rec _lh_moveLine_Just_0_1_0 = (`LH_P2(c_1_3, _lh_pieceAt_LH_P2_0_1_2)) in
                       (fun ml_2_9 ms_2_9 sq'_2_9 _lh_moveLine_arg2_2_9 _lh_moveLine_arg5_2_9 -> 
-                        (if ((colourOf_d1_d3 _lh_moveLine_Just_0_1_0) != _lh_moveLine_arg2_2_9) then
+                        (if ((colourOf_d1_d3 _lh_moveLine_Just_0_1_0) <> _lh_moveLine_arg2_2_9) then
                           (_lh_moveLine_arg5_2_9 (let rec h_4_2_0 = (let rec _lh_tryMove_Move_0_2_6 = sq'_2_9 in
                             (let rec _lh_tryMove_Move_1_2_6 = (`Just(_lh_moveLine_Just_0_1_0)) in
                               (let rec _lh_tryMove_Move_2_2_6 = (`Nothing) in
@@ -30228,7 +30228,7 @@ and pieceAt_d1_d7 _lh_pieceAt_arg1_7 _lh_pieceAt_arg2_7 =
                   (if (_lh_pieceAt_LH_P2_1_7 = _lh_pieceAt_arg2_7) then
                     (let rec _lh_moveLine_Just_0_7 = (`LH_P2(c_7, _lh_pieceAt_LH_P2_0_7)) in
                       (fun ml_2_0 ms_2_0 sq'_2_0 _lh_moveLine_arg2_2_0 _lh_moveLine_arg5_2_0 -> 
-                        (if ((colourOf_d1_d4 _lh_moveLine_Just_0_7) != _lh_moveLine_arg2_2_0) then
+                        (if ((colourOf_d1_d4 _lh_moveLine_Just_0_7) <> _lh_moveLine_arg2_2_0) then
                           (_lh_moveLine_arg5_2_0 (let rec h_2_4_2 = (let rec _lh_tryMove_Move_0_1_7 = sq'_2_0 in
                             (let rec _lh_tryMove_Move_1_1_7 = (`Just(_lh_moveLine_Just_0_7)) in
                               (let rec _lh_tryMove_Move_2_1_7 = (`Nothing) in
@@ -30330,7 +30330,7 @@ and pieceAt_d1_d8 _lh_pieceAt_arg1_1_4 _lh_pieceAt_arg2_1_4 =
                   (if (_lh_pieceAt_LH_P2_1_1_4 = _lh_pieceAt_arg2_1_4) then
                     (let rec _lh_moveLine_Just_0_1_2 = (`LH_P2(c_1_5, _lh_pieceAt_LH_P2_0_1_4)) in
                       (fun ml_3_4 ms_3_4 sq'_3_4 _lh_moveLine_arg2_3_4 _lh_moveLine_arg5_3_4 -> 
-                        (if ((colourOf_d1_d5 _lh_moveLine_Just_0_1_2) != _lh_moveLine_arg2_3_4) then
+                        (if ((colourOf_d1_d5 _lh_moveLine_Just_0_1_2) <> _lh_moveLine_arg2_3_4) then
                           (_lh_moveLine_arg5_3_4 (let rec h_4_2_8 = (let rec _lh_tryMove_Move_0_3_0 = sq'_3_4 in
                             (let rec _lh_tryMove_Move_1_3_0 = (`Just(_lh_moveLine_Just_0_1_2)) in
                               (let rec _lh_tryMove_Move_2_3_0 = (`Nothing) in
@@ -30432,7 +30432,7 @@ and pieceAt_d1_d9 _lh_pieceAt_arg1_3_0 _lh_pieceAt_arg2_3_0 =
                   (if (_lh_pieceAt_LH_P2_1_3_0 = _lh_pieceAt_arg2_3_0) then
                     (let rec _lh_moveLine_Just_0_2_3 = (`LH_P2(c_3_1, _lh_pieceAt_LH_P2_0_3_0)) in
                       (fun ml_6_8 ms_6_9 sq'_6_8 _lh_moveLine_arg2_6_8 _lh_moveLine_arg5_6_8 -> 
-                        (if ((colourOf_d1_d6 _lh_moveLine_Just_0_2_3) != _lh_moveLine_arg2_6_8) then
+                        (if ((colourOf_d1_d6 _lh_moveLine_Just_0_2_3) <> _lh_moveLine_arg2_6_8) then
                           (_lh_moveLine_arg5_6_8 (let rec h_9_3_9 = (let rec _lh_tryMove_Move_0_5_6 = sq'_6_8 in
                             (let rec _lh_tryMove_Move_1_5_6 = (`Just(_lh_moveLine_Just_0_2_3)) in
                               (let rec _lh_tryMove_Move_2_5_6 = (`Nothing) in
@@ -30534,7 +30534,7 @@ and pieceAt_d2 _lh_pieceAt_arg1_5 _lh_pieceAt_arg2_5 =
                   (if (_lh_pieceAt_LH_P2_1_5 = _lh_pieceAt_arg2_5) then
                     (let rec _lh_moveLine_Just_0_5 = (`LH_P2(c_5, _lh_pieceAt_LH_P2_0_5)) in
                       (fun ml_1_4 ms_1_4 sq'_1_4 _lh_moveLine_arg2_1_4 _lh_moveLine_arg5_1_4 -> 
-                        (if ((colourOf_d1 _lh_moveLine_Just_0_5) != _lh_moveLine_arg2_1_4) then
+                        (if ((colourOf_d1 _lh_moveLine_Just_0_5) <> _lh_moveLine_arg2_1_4) then
                           (_lh_moveLine_arg5_1_4 (let rec h_2_1_3 = (let rec _lh_tryMove_Move_0_1_3 = sq'_1_4 in
                             (let rec _lh_tryMove_Move_1_1_3 = (`Just(_lh_moveLine_Just_0_5)) in
                               (let rec _lh_tryMove_Move_2_1_3 = (`Nothing) in
@@ -30636,7 +30636,7 @@ and pieceAt_d2_d0 _lh_pieceAt_arg1_1_9 _lh_pieceAt_arg2_1_9 =
                   (if (_lh_pieceAt_LH_P2_1_1_9 = _lh_pieceAt_arg2_1_9) then
                     (let rec _lh_moveLine_Just_0_1_5 = (`LH_P2(c_2_0, _lh_pieceAt_LH_P2_0_1_9)) in
                       (fun ml_4_2 ms_4_3 sq'_4_2 _lh_moveLine_arg2_4_2 _lh_moveLine_arg5_4_2 -> 
-                        (if ((colourOf_d1_d7 _lh_moveLine_Just_0_1_5) != _lh_moveLine_arg2_4_2) then
+                        (if ((colourOf_d1_d7 _lh_moveLine_Just_0_1_5) <> _lh_moveLine_arg2_4_2) then
                           (_lh_moveLine_arg5_4_2 (let rec h_5_7_4 = (let rec _lh_tryMove_Move_0_3_8 = sq'_4_2 in
                             (let rec _lh_tryMove_Move_1_3_8 = (`Just(_lh_moveLine_Just_0_1_5)) in
                               (let rec _lh_tryMove_Move_2_3_8 = (`Nothing) in
@@ -30738,7 +30738,7 @@ and pieceAt_d2_d1 _lh_pieceAt_arg1_2_2 _lh_pieceAt_arg2_2_2 =
                   (if (_lh_pieceAt_LH_P2_1_2_2 = _lh_pieceAt_arg2_2_2) then
                     (let rec _lh_moveLine_Just_0_1_7 = (`LH_P2(c_2_3, _lh_pieceAt_LH_P2_0_2_2)) in
                       (fun ml_5_0 ms_5_1 sq'_5_0 _lh_moveLine_arg2_5_0 _lh_moveLine_arg5_5_0 -> 
-                        (if ((colourOf_d1_d8 _lh_moveLine_Just_0_1_7) != _lh_moveLine_arg2_5_0) then
+                        (if ((colourOf_d1_d8 _lh_moveLine_Just_0_1_7) <> _lh_moveLine_arg2_5_0) then
                           (_lh_moveLine_arg5_5_0 (let rec h_6_6_8 = (let rec _lh_tryMove_Move_0_4_2 = sq'_5_0 in
                             (let rec _lh_tryMove_Move_1_4_2 = (`Just(_lh_moveLine_Just_0_1_7)) in
                               (let rec _lh_tryMove_Move_2_4_2 = (`Nothing) in
@@ -30840,7 +30840,7 @@ and pieceAt_d2_d2 _lh_pieceAt_arg1_0 _lh_pieceAt_arg2_0 =
                   (if (_lh_pieceAt_LH_P2_1_0 = _lh_pieceAt_arg2_0) then
                     (let rec _lh_moveLine_Just_0_0 = (`LH_P2(c_0, _lh_pieceAt_LH_P2_0_0)) in
                       (fun ml_0 ms_0 sq'_0 _lh_moveLine_arg2_0 _lh_moveLine_arg5_0 -> 
-                        (if ((colourOf_d1_d9 _lh_moveLine_Just_0_0) != _lh_moveLine_arg2_0) then
+                        (if ((colourOf_d1_d9 _lh_moveLine_Just_0_0) <> _lh_moveLine_arg2_0) then
                           (_lh_moveLine_arg5_0 (let rec h_1 = (let rec _lh_tryMove_Move_0_0 = sq'_0 in
                             (let rec _lh_tryMove_Move_1_0 = (`Just(_lh_moveLine_Just_0_0)) in
                               (let rec _lh_tryMove_Move_2_0 = (`Nothing) in
@@ -30906,7 +30906,7 @@ and pieceAt_d2_d3 _lh_pieceAt_arg1_3 _lh_pieceAt_arg2_3 =
                   (if (_lh_pieceAt_LH_P2_1_3 = _lh_pieceAt_arg2_3) then
                     (let rec _lh_moveLine_Just_0_3 = (`LH_P2(c_3, _lh_pieceAt_LH_P2_0_3)) in
                       (fun ml_1_0 ms_1_0 sq'_1_0 _lh_moveLine_arg2_1_0 _lh_moveLine_arg5_1_0 -> 
-                        (if ((colourOf_d2_d0 _lh_moveLine_Just_0_3) != _lh_moveLine_arg2_1_0) then
+                        (if ((colourOf_d2_d0 _lh_moveLine_Just_0_3) <> _lh_moveLine_arg2_1_0) then
                           (_lh_moveLine_arg5_1_0 (let rec h_1_2_1 = (let rec _lh_tryMove_Move_0_9 = sq'_1_0 in
                             (let rec _lh_tryMove_Move_1_9 = (`Just(_lh_moveLine_Just_0_3)) in
                               (let rec _lh_tryMove_Move_2_9 = (`Nothing) in
@@ -30972,7 +30972,7 @@ and pieceAt_d2_d4 _lh_pieceAt_arg1_3_5 _lh_pieceAt_arg2_3_5 =
                   (if (_lh_pieceAt_LH_P2_1_3_5 = _lh_pieceAt_arg2_3_5) then
                     (let rec _lh_moveLine_Just_0_2_7 = (`LH_P2(c_3_6, _lh_pieceAt_LH_P2_0_3_5)) in
                       (fun ml_8_0 ms_8_1 sq'_8_0 _lh_moveLine_arg2_8_0 _lh_moveLine_arg5_8_0 -> 
-                        (if ((colourOf_d2_d1 _lh_moveLine_Just_0_2_7) != _lh_moveLine_arg2_8_0) then
+                        (if ((colourOf_d2_d1 _lh_moveLine_Just_0_2_7) <> _lh_moveLine_arg2_8_0) then
                           (_lh_moveLine_arg5_8_0 (let rec h_1_0_5_3 = (let rec _lh_tryMove_Move_0_6_6 = sq'_8_0 in
                             (let rec _lh_tryMove_Move_1_6_6 = (`Just(_lh_moveLine_Just_0_2_7)) in
                               (let rec _lh_tryMove_Move_2_6_6 = (`Nothing) in
@@ -31038,7 +31038,7 @@ and pieceAt_d2_d5 _lh_pieceAt_arg1_2_6 _lh_pieceAt_arg2_2_6 =
                   (if (_lh_pieceAt_LH_P2_1_2_6 = _lh_pieceAt_arg2_2_6) then
                     (let rec _lh_moveLine_Just_0_1_9 = (`LH_P2(c_2_7, _lh_pieceAt_LH_P2_0_2_6)) in
                       (fun ml_5_6 ms_5_7 sq'_5_6 _lh_moveLine_arg2_5_6 _lh_moveLine_arg5_5_6 -> 
-                        (if ((colourOf_d2_d2 _lh_moveLine_Just_0_1_9) != _lh_moveLine_arg2_5_6) then
+                        (if ((colourOf_d2_d2 _lh_moveLine_Just_0_1_9) <> _lh_moveLine_arg2_5_6) then
                           (_lh_moveLine_arg5_5_6 (let rec h_8_7_9 = (let rec _lh_tryMove_Move_0_4_8 = sq'_5_6 in
                             (let rec _lh_tryMove_Move_1_4_8 = (`Just(_lh_moveLine_Just_0_1_9)) in
                               (let rec _lh_tryMove_Move_2_4_8 = (`Nothing) in
@@ -31236,7 +31236,7 @@ and pieceAt_d3 _lh_pieceAt_arg1_3_2 _lh_pieceAt_arg2_3_2 =
                   (if (_lh_pieceAt_LH_P2_1_3_2 = _lh_pieceAt_arg2_3_2) then
                     (let rec _lh_moveLine_Just_0_2_4 = (`LH_P2(c_3_3, _lh_pieceAt_LH_P2_0_3_2)) in
                       (fun ml_7_2 ms_7_3 sq'_7_2 _lh_moveLine_arg2_7_2 _lh_moveLine_arg5_7_2 -> 
-                        (if ((colourOf_d2 _lh_moveLine_Just_0_2_4) != _lh_moveLine_arg2_7_2) then
+                        (if ((colourOf_d2 _lh_moveLine_Just_0_2_4) <> _lh_moveLine_arg2_7_2) then
                           (_lh_moveLine_arg5_7_2 (let rec h_1_0_1_7 = (let rec _lh_tryMove_Move_0_6_0 = sq'_7_2 in
                             (let rec _lh_tryMove_Move_1_6_0 = (`Just(_lh_moveLine_Just_0_2_4)) in
                               (let rec _lh_tryMove_Move_2_6_0 = (`Nothing) in
@@ -31366,7 +31366,7 @@ and pieceAt_d3_d1 _lh_pieceAt_arg1_1_3 _lh_pieceAt_arg2_1_3 =
                   (if (_lh_pieceAt_LH_P2_1_1_3 = _lh_pieceAt_arg2_1_3) then
                     (let rec _lh_moveLine_Just_0_1_1 = (`LH_P2(c_1_4, _lh_pieceAt_LH_P2_0_1_3)) in
                       (fun ml_3_1 ms_3_1 sq'_3_1 _lh_moveLine_arg2_3_1 _lh_moveLine_arg5_3_1 -> 
-                        (if ((colourOf_d2_d6 _lh_moveLine_Just_0_1_1) != _lh_moveLine_arg2_3_1) then
+                        (if ((colourOf_d2_d6 _lh_moveLine_Just_0_1_1) <> _lh_moveLine_arg2_3_1) then
                           (_lh_moveLine_arg5_3_1 (let rec h_4_2_2 = (let rec _lh_tryMove_Move_0_2_8 = sq'_3_1 in
                             (let rec _lh_tryMove_Move_1_2_8 = (`Just(_lh_moveLine_Just_0_1_1)) in
                               (let rec _lh_tryMove_Move_2_2_8 = (`Nothing) in
@@ -31438,7 +31438,7 @@ and pieceAt_d3_d2 _lh_pieceAt_arg1_1_1 _lh_pieceAt_arg2_1_1 =
                   (if (_lh_pieceAt_LH_P2_1_1_1 = _lh_pieceAt_arg2_1_1) then
                     (let rec _lh_moveLine_Just_0_9 = (`LH_P2(c_1_2, _lh_pieceAt_LH_P2_0_1_1)) in
                       (fun ml_2_7 ms_2_7 sq'_2_7 _lh_moveLine_arg2_2_7 _lh_moveLine_arg5_2_7 -> 
-                        (if ((colourOf_d2_d7 _lh_moveLine_Just_0_9) != _lh_moveLine_arg2_2_7) then
+                        (if ((colourOf_d2_d7 _lh_moveLine_Just_0_9) <> _lh_moveLine_arg2_2_7) then
                           (_lh_moveLine_arg5_2_7 (let rec h_4_1_2 = (let rec _lh_tryMove_Move_0_2_4 = sq'_2_7 in
                             (let rec _lh_tryMove_Move_1_2_4 = (`Just(_lh_moveLine_Just_0_9)) in
                               (let rec _lh_tryMove_Move_2_2_4 = (`Nothing) in
@@ -31510,7 +31510,7 @@ and pieceAt_d3_d3 _lh_pieceAt_arg1_1 _lh_pieceAt_arg2_1 =
                   (if (_lh_pieceAt_LH_P2_1_1 = _lh_pieceAt_arg2_1) then
                     (let rec _lh_moveLine_Just_0_1 = (`LH_P2(c_1, _lh_pieceAt_LH_P2_0_1)) in
                       (fun ml_2 ms_2 sq'_2 _lh_moveLine_arg2_2 _lh_moveLine_arg5_2 -> 
-                        (if ((colourOf_d2_d8 _lh_moveLine_Just_0_1) != _lh_moveLine_arg2_2) then
+                        (if ((colourOf_d2_d8 _lh_moveLine_Just_0_1) <> _lh_moveLine_arg2_2) then
                           (_lh_moveLine_arg5_2 (let rec h_3 = (let rec _lh_tryMove_Move_0_2 = sq'_2 in
                             (let rec _lh_tryMove_Move_1_2 = (`Just(_lh_moveLine_Just_0_1)) in
                               (let rec _lh_tryMove_Move_2_2 = (`Nothing) in
@@ -31582,7 +31582,7 @@ and pieceAt_d3_d4 _lh_pieceAt_arg1_2_0 _lh_pieceAt_arg2_2_0 =
                   (if (_lh_pieceAt_LH_P2_1_2_0 = _lh_pieceAt_arg2_2_0) then
                     (let rec _lh_moveLine_Just_0_1_6 = (`LH_P2(c_2_1, _lh_pieceAt_LH_P2_0_2_0)) in
                       (fun ml_4_5 ms_4_6 sq'_4_5 _lh_moveLine_arg2_4_5 _lh_moveLine_arg5_4_5 -> 
-                        (if ((colourOf_d2_d9 _lh_moveLine_Just_0_1_6) != _lh_moveLine_arg2_4_5) then
+                        (if ((colourOf_d2_d9 _lh_moveLine_Just_0_1_6) <> _lh_moveLine_arg2_4_5) then
                           (_lh_moveLine_arg5_4_5 (let rec h_5_9_8 = (let rec _lh_tryMove_Move_0_4_0 = sq'_4_5 in
                             (let rec _lh_tryMove_Move_1_4_0 = (`Just(_lh_moveLine_Just_0_1_6)) in
                               (let rec _lh_tryMove_Move_2_4_0 = (`Nothing) in
@@ -31654,7 +31654,7 @@ and pieceAt_d3_d5 _lh_pieceAt_arg1_2_8 _lh_pieceAt_arg2_2_8 =
                   (if (_lh_pieceAt_LH_P2_1_2_8 = _lh_pieceAt_arg2_2_8) then
                     (let rec _lh_moveLine_Just_0_2_1 = (`LH_P2(c_2_9, _lh_pieceAt_LH_P2_0_2_8)) in
                       (fun ml_6_2 ms_6_3 sq'_6_2 _lh_moveLine_arg2_6_2 _lh_moveLine_arg5_6_2 -> 
-                        (if ((colourOf_d3_d0 _lh_moveLine_Just_0_2_1) != _lh_moveLine_arg2_6_2) then
+                        (if ((colourOf_d3_d0 _lh_moveLine_Just_0_2_1) <> _lh_moveLine_arg2_6_2) then
                           (_lh_moveLine_arg5_6_2 (let rec h_9_2_9 = (let rec _lh_tryMove_Move_0_5_2 = sq'_6_2 in
                             (let rec _lh_tryMove_Move_1_5_2 = (`Just(_lh_moveLine_Just_0_2_1)) in
                               (let rec _lh_tryMove_Move_2_5_2 = (`Nothing) in
@@ -31720,7 +31720,7 @@ and pieceAt_d3_d6 _lh_pieceAt_arg1_3_4 _lh_pieceAt_arg2_3_4 =
                   (if (_lh_pieceAt_LH_P2_1_3_4 = _lh_pieceAt_arg2_3_4) then
                     (let rec _lh_moveLine_Just_0_2_6 = (`LH_P2(c_3_5, _lh_pieceAt_LH_P2_0_3_4)) in
                       (fun ml_7_7 ms_7_8 sq'_7_7 _lh_moveLine_arg2_7_7 _lh_moveLine_arg5_7_7 -> 
-                        (if ((colourOf_d3_d1 _lh_moveLine_Just_0_2_6) != _lh_moveLine_arg2_7_7) then
+                        (if ((colourOf_d3_d1 _lh_moveLine_Just_0_2_6) <> _lh_moveLine_arg2_7_7) then
                           (_lh_moveLine_arg5_7_7 (let rec h_1_0_5_1 = (let rec _lh_tryMove_Move_0_6_4 = sq'_7_7 in
                             (let rec _lh_tryMove_Move_1_6_4 = (`Just(_lh_moveLine_Just_0_2_6)) in
                               (let rec _lh_tryMove_Move_2_6_4 = (`Nothing) in
@@ -31786,7 +31786,7 @@ and pieceAt_d3_d7 _lh_pieceAt_arg1_2_3 _lh_pieceAt_arg2_2_3 =
                   (if (_lh_pieceAt_LH_P2_1_2_3 = _lh_pieceAt_arg2_2_3) then
                     (let rec _lh_moveLine_Just_0_1_8 = (`LH_P2(c_2_4, _lh_pieceAt_LH_P2_0_2_3)) in
                       (fun ml_5_2 ms_5_3 sq'_5_2 _lh_moveLine_arg2_5_2 _lh_moveLine_arg5_5_2 -> 
-                        (if ((colourOf_d3_d2 _lh_moveLine_Just_0_1_8) != _lh_moveLine_arg2_5_2) then
+                        (if ((colourOf_d3_d2 _lh_moveLine_Just_0_1_8) <> _lh_moveLine_arg2_5_2) then
                           (_lh_moveLine_arg5_5_2 (let rec h_7_7_6 = (let rec _lh_tryMove_Move_0_4_4 = sq'_5_2 in
                             (let rec _lh_tryMove_Move_1_4_4 = (`Just(_lh_moveLine_Just_0_1_8)) in
                               (let rec _lh_tryMove_Move_2_4_4 = (`Nothing) in
@@ -31852,7 +31852,7 @@ and pieceAt_d3_d8 _lh_pieceAt_arg1_1_7 _lh_pieceAt_arg2_1_7 =
                   (if (_lh_pieceAt_LH_P2_1_1_7 = _lh_pieceAt_arg2_1_7) then
                     (let rec _lh_moveLine_Just_0_1_3 = (`LH_P2(c_1_8, _lh_pieceAt_LH_P2_0_1_7)) in
                       (fun ml_3_8 ms_3_9 sq'_3_8 _lh_moveLine_arg2_3_8 _lh_moveLine_arg5_3_8 -> 
-                        (if ((colourOf_d3_d3 _lh_moveLine_Just_0_1_3) != _lh_moveLine_arg2_3_8) then
+                        (if ((colourOf_d3_d3 _lh_moveLine_Just_0_1_3) <> _lh_moveLine_arg2_3_8) then
                           (_lh_moveLine_arg5_3_8 (let rec h_5_5_8 = (let rec _lh_tryMove_Move_0_3_4 = sq'_3_8 in
                             (let rec _lh_tryMove_Move_1_3_4 = (`Just(_lh_moveLine_Just_0_1_3)) in
                               (let rec _lh_tryMove_Move_2_3_4 = (`Nothing) in
@@ -31918,7 +31918,7 @@ and pieceAt_d3_d9 _lh_pieceAt_arg1_3_8 _lh_pieceAt_arg2_3_8 =
                   (if (_lh_pieceAt_LH_P2_1_3_8 = _lh_pieceAt_arg2_3_8) then
                     (let rec _lh_moveLine_Just_0_3_0 = (`LH_P2(c_3_9, _lh_pieceAt_LH_P2_0_3_8)) in
                       (fun ml_8_9 ms_9_1 sq'_8_9 _lh_moveLine_arg2_8_9 _lh_moveLine_arg5_8_9 -> 
-                        (if ((colourOf_d3_d4 _lh_moveLine_Just_0_3_0) != _lh_moveLine_arg2_8_9) then
+                        (if ((colourOf_d3_d4 _lh_moveLine_Just_0_3_0) <> _lh_moveLine_arg2_8_9) then
                           (_lh_moveLine_arg5_8_9 (let rec h_1_1_3_9 = (let rec _lh_tryMove_Move_0_7_2 = sq'_8_9 in
                             (let rec _lh_tryMove_Move_1_7_2 = (`Just(_lh_moveLine_Just_0_3_0)) in
                               (let rec _lh_tryMove_Move_2_7_2 = (`Nothing) in
@@ -31984,7 +31984,7 @@ and pieceAt_d4 _lh_pieceAt_arg1_2 _lh_pieceAt_arg2_2 =
                   (if (_lh_pieceAt_LH_P2_1_2 = _lh_pieceAt_arg2_2) then
                     (let rec _lh_moveLine_Just_0_2 = (`LH_P2(c_2, _lh_pieceAt_LH_P2_0_2)) in
                       (fun ml_6 ms_6 sq'_6 _lh_moveLine_arg2_6 _lh_moveLine_arg5_6 -> 
-                        (if ((colourOf_d3 _lh_moveLine_Just_0_2) != _lh_moveLine_arg2_6) then
+                        (if ((colourOf_d3 _lh_moveLine_Just_0_2) <> _lh_moveLine_arg2_6) then
                           (_lh_moveLine_arg5_6 (let rec h_8_9 = (let rec _lh_tryMove_Move_0_7 = sq'_6 in
                             (let rec _lh_tryMove_Move_1_7 = (`Just(_lh_moveLine_Just_0_2)) in
                               (let rec _lh_tryMove_Move_2_7 = (`Nothing) in
@@ -32086,7 +32086,7 @@ and pieceAt_d4_d0 _lh_pieceAt_arg1_1_8 _lh_pieceAt_arg2_1_8 =
                   (if (_lh_pieceAt_LH_P2_1_1_8 = _lh_pieceAt_arg2_1_8) then
                     (let rec _lh_moveLine_Just_0_1_4 = (`LH_P2(c_1_9, _lh_pieceAt_LH_P2_0_1_8)) in
                       (fun ml_4_0 ms_4_1 sq'_4_0 _lh_moveLine_arg2_4_0 _lh_moveLine_arg5_4_0 -> 
-                        (if ((colourOf_d3_d5 _lh_moveLine_Just_0_1_4) != _lh_moveLine_arg2_4_0) then
+                        (if ((colourOf_d3_d5 _lh_moveLine_Just_0_1_4) <> _lh_moveLine_arg2_4_0) then
                           (_lh_moveLine_arg5_4_0 (let rec h_5_6_0 = (let rec _lh_tryMove_Move_0_3_6 = sq'_4_0 in
                             (let rec _lh_tryMove_Move_1_3_6 = (`Just(_lh_moveLine_Just_0_1_4)) in
                               (let rec _lh_tryMove_Move_2_3_6 = (`Nothing) in
@@ -32152,7 +32152,7 @@ and pieceAt_d4_d1 _lh_pieceAt_arg1_2_7 _lh_pieceAt_arg2_2_7 =
                   (if (_lh_pieceAt_LH_P2_1_2_7 = _lh_pieceAt_arg2_2_7) then
                     (let rec _lh_moveLine_Just_0_2_0 = (`LH_P2(c_2_8, _lh_pieceAt_LH_P2_0_2_7)) in
                       (fun ml_5_8 ms_5_9 sq'_5_8 _lh_moveLine_arg2_5_8 _lh_moveLine_arg5_5_8 -> 
-                        (if ((colourOf_d3_d6 _lh_moveLine_Just_0_2_0) != _lh_moveLine_arg2_5_8) then
+                        (if ((colourOf_d3_d6 _lh_moveLine_Just_0_2_0) <> _lh_moveLine_arg2_5_8) then
                           (_lh_moveLine_arg5_5_8 (let rec h_8_8_1 = (let rec _lh_tryMove_Move_0_5_0 = sq'_5_8 in
                             (let rec _lh_tryMove_Move_1_5_0 = (`Just(_lh_moveLine_Just_0_2_0)) in
                               (let rec _lh_tryMove_Move_2_5_0 = (`Nothing) in
@@ -32218,7 +32218,7 @@ and pieceAt_d4_d2 _lh_pieceAt_arg1_3_3 _lh_pieceAt_arg2_3_3 =
                   (if (_lh_pieceAt_LH_P2_1_3_3 = _lh_pieceAt_arg2_3_3) then
                     (let rec _lh_moveLine_Just_0_2_5 = (`LH_P2(c_3_4, _lh_pieceAt_LH_P2_0_3_3)) in
                       (fun ml_7_4 ms_7_5 sq'_7_4 _lh_moveLine_arg2_7_4 _lh_moveLine_arg5_7_4 -> 
-                        (if ((colourOf_d3_d7 _lh_moveLine_Just_0_2_5) != _lh_moveLine_arg2_7_4) then
+                        (if ((colourOf_d3_d7 _lh_moveLine_Just_0_2_5) <> _lh_moveLine_arg2_7_4) then
                           (_lh_moveLine_arg5_7_4 (let rec h_1_0_2_1 = (let rec _lh_tryMove_Move_0_6_2 = sq'_7_4 in
                             (let rec _lh_tryMove_Move_1_6_2 = (`Just(_lh_moveLine_Just_0_2_5)) in
                               (let rec _lh_tryMove_Move_2_6_2 = (`Nothing) in
@@ -33064,7 +33064,7 @@ and showMovesAfter_d0 _lh_showMovesAfter_arg1_1 _lh_showMovesAfter_arg2_1 =
                         (let rec h_1_6_2 = h_1_5_9 in
                           (let rec t_1_6_2 = ((mappend_d4_d3 t_1_5_9) ys_2_0_7) in
                             (fun ys_2_0_8 -> 
-                              (`LH_C(h_1_6_2, ((mappend_d4_d2 t_1_6_2) ys_2_0_8)))))))))) ((showMove_d2 ((_lh_showMovesAfter_MoveInFull_0_3 != _lh_showMovesAfter_MoveInFull_0_2) || (_lh_showMovesAfter_MoveInFull_1_3 != _lh_showMovesAfter_MoveInFull_1_2))) (let rec _lh_showMove_MoveInFull_0_3 = _lh_showMovesAfter_MoveInFull_0_3 in
+                              (`LH_C(h_1_6_2, ((mappend_d4_d2 t_1_6_2) ys_2_0_8)))))))))) ((showMove_d2 ((_lh_showMovesAfter_MoveInFull_0_3 <> _lh_showMovesAfter_MoveInFull_0_2) || (_lh_showMovesAfter_MoveInFull_1_3 <> _lh_showMovesAfter_MoveInFull_1_2))) (let rec _lh_showMove_MoveInFull_0_3 = _lh_showMovesAfter_MoveInFull_0_3 in
                     (let rec _lh_showMove_MoveInFull_1_3 = _lh_showMovesAfter_MoveInFull_1_3 in
                       (let rec _lh_showMove_MoveInFull_2_3 = _lh_showMovesAfter_MoveInFull_2_3 in
                         (fun _lh_showMove_arg1_5 -> 
@@ -33072,8 +33072,8 @@ and showMovesAfter_d0 _lh_showMovesAfter_arg1_1 _lh_showMovesAfter_arg2_1 =
                             | `LH_P2(_lh_showMove_LH_P2_0_3, _lh_showMove_LH_P2_1_3) -> 
                               (match _lh_showMove_MoveInFull_2_3 with
                                 | `Move(_lh_showMove_Move_0_3, _lh_showMove_Move_1_3, _lh_showMove_Move_2_3) -> 
-                                  (let rec capt_3 = (_lh_showMove_Move_1_3 != (`Nothing)) in
-                                    (let rec prom_3 = (_lh_showMove_Move_2_3 != (`Nothing)) in
+                                  (let rec capt_3 = (_lh_showMove_Move_1_3 <> (`Nothing)) in
+                                    (let rec prom_3 = (_lh_showMove_Move_2_3 <> (`Nothing)) in
                                       ((mappend_d4_d4 ((mappend_d4_d5 ((mappend_d4_d6 (if _lh_showMove_arg1_5 then
                                         ((mappend_d4_d7 ((mappend_d4_d8 (showPiece_d6 (let rec _lh_showPiece_LH_P2_1_5 = _lh_showMove_LH_P2_1_3 in
                                           (fun _lh_dummy_5 -> 
@@ -33164,7 +33164,7 @@ and showMovesAfter_d1 _lh_showMovesAfter_arg1_2 _lh_showMovesAfter_arg2_2 =
                         (let rec h_2_5_5 = h_2_5_2 in
                           (let rec t_2_5_5 = ((mappend_d7_d3 t_2_5_2) ys_3_4_2) in
                             (fun ys_3_4_3 -> 
-                              (`LH_C(h_2_5_5, ((mappend_d7_d2 t_2_5_5) ys_3_4_3)))))))))) ((showMove_d4 ((_lh_showMovesAfter_MoveInFull_0_5 != _lh_showMovesAfter_MoveInFull_0_4) || (_lh_showMovesAfter_MoveInFull_1_5 != _lh_showMovesAfter_MoveInFull_1_4))) (let rec _lh_showMove_MoveInFull_0_5 = _lh_showMovesAfter_MoveInFull_0_5 in
+                              (`LH_C(h_2_5_5, ((mappend_d7_d2 t_2_5_5) ys_3_4_3)))))))))) ((showMove_d4 ((_lh_showMovesAfter_MoveInFull_0_5 <> _lh_showMovesAfter_MoveInFull_0_4) || (_lh_showMovesAfter_MoveInFull_1_5 <> _lh_showMovesAfter_MoveInFull_1_4))) (let rec _lh_showMove_MoveInFull_0_5 = _lh_showMovesAfter_MoveInFull_0_5 in
                     (let rec _lh_showMove_MoveInFull_1_5 = _lh_showMovesAfter_MoveInFull_1_5 in
                       (let rec _lh_showMove_MoveInFull_2_5 = _lh_showMovesAfter_MoveInFull_2_5 in
                         (fun _lh_showMove_arg1_7 -> 
@@ -33172,8 +33172,8 @@ and showMovesAfter_d1 _lh_showMovesAfter_arg1_2 _lh_showMovesAfter_arg2_2 =
                             | `LH_P2(_lh_showMove_LH_P2_0_5, _lh_showMove_LH_P2_1_5) -> 
                               (match _lh_showMove_MoveInFull_2_5 with
                                 | `Move(_lh_showMove_Move_0_5, _lh_showMove_Move_1_5, _lh_showMove_Move_2_5) -> 
-                                  (let rec capt_5 = (_lh_showMove_Move_1_5 != (`Nothing)) in
-                                    (let rec prom_5 = (_lh_showMove_Move_2_5 != (`Nothing)) in
+                                  (let rec capt_5 = (_lh_showMove_Move_1_5 <> (`Nothing)) in
+                                    (let rec prom_5 = (_lh_showMove_Move_2_5 <> (`Nothing)) in
                                       ((mappend_d7_d4 ((mappend_d7_d5 ((mappend_d7_d6 (if _lh_showMove_arg1_7 then
                                         ((mappend_d7_d7 ((mappend_d7_d8 (showPiece_d1_d2 (let rec _lh_showPiece_LH_P2_1_8 = _lh_showMove_LH_P2_1_5 in
                                           (fun _lh_dummy_7 -> 
@@ -33264,7 +33264,7 @@ and showMovesAfter_d2 _lh_showMovesAfter_arg1_4 _lh_showMovesAfter_arg2_4 =
                         (let rec h_1_1_2_3 = h_1_1_2_0 in
                           (let rec t_1_1_2_3 = ((mappend_d1_d1_d6 t_1_1_2_0) ys_1_3_6_2) in
                             (fun ys_1_3_6_3 -> 
-                              (`LH_C(h_1_1_2_3, ((mappend_d1_d1_d5 t_1_1_2_3) ys_1_3_6_3)))))))))) ((showMove_d7 ((_lh_showMovesAfter_MoveInFull_0_9 != _lh_showMovesAfter_MoveInFull_0_8) || (_lh_showMovesAfter_MoveInFull_1_9 != _lh_showMovesAfter_MoveInFull_1_8))) (let rec _lh_showMove_MoveInFull_0_1_2 = _lh_showMovesAfter_MoveInFull_0_9 in
+                              (`LH_C(h_1_1_2_3, ((mappend_d1_d1_d5 t_1_1_2_3) ys_1_3_6_3)))))))))) ((showMove_d7 ((_lh_showMovesAfter_MoveInFull_0_9 <> _lh_showMovesAfter_MoveInFull_0_8) || (_lh_showMovesAfter_MoveInFull_1_9 <> _lh_showMovesAfter_MoveInFull_1_8))) (let rec _lh_showMove_MoveInFull_0_1_2 = _lh_showMovesAfter_MoveInFull_0_9 in
                     (let rec _lh_showMove_MoveInFull_1_1_2 = _lh_showMovesAfter_MoveInFull_1_9 in
                       (let rec _lh_showMove_MoveInFull_2_1_2 = _lh_showMovesAfter_MoveInFull_2_9 in
                         (fun _lh_showMove_arg1_1_6 -> 
@@ -33272,8 +33272,8 @@ and showMovesAfter_d2 _lh_showMovesAfter_arg1_4 _lh_showMovesAfter_arg2_4 =
                             | `LH_P2(_lh_showMove_LH_P2_0_1_2, _lh_showMove_LH_P2_1_1_2) -> 
                               (match _lh_showMove_MoveInFull_2_1_2 with
                                 | `Move(_lh_showMove_Move_0_1_2, _lh_showMove_Move_1_1_2, _lh_showMove_Move_2_1_2) -> 
-                                  (let rec capt_1_2 = (_lh_showMove_Move_1_1_2 != (`Nothing)) in
-                                    (let rec prom_1_2 = (_lh_showMove_Move_2_1_2 != (`Nothing)) in
+                                  (let rec capt_1_2 = (_lh_showMove_Move_1_1_2 <> (`Nothing)) in
+                                    (let rec prom_1_2 = (_lh_showMove_Move_2_1_2 <> (`Nothing)) in
                                       ((mappend_d1_d1_d7 ((mappend_d1_d1_d8 ((mappend_d1_d1_d9 (if _lh_showMove_arg1_1_6 then
                                         ((mappend_d1_d2_d0 ((mappend_d1_d2_d1 (showPiece_d2_d1 (let rec _lh_showPiece_LH_P2_1_3_7 = _lh_showMove_LH_P2_1_1_2 in
                                           (fun _lh_dummy_2_6 -> 
@@ -33364,7 +33364,7 @@ and showMovesAfter_d3 _lh_showMovesAfter_arg1_0 _lh_showMovesAfter_arg2_0 =
                         (let rec h_3_2 = h_2_9 in
                           (let rec t_3_2 = ((mappend_d1_d4_d6 t_2_9) ys_3_4) in
                             (fun ys_3_5 -> 
-                              (`LH_C(h_3_2, ((mappend_d1_d4_d5 t_3_2) ys_3_5)))))))))) ((showMove_d9 ((_lh_showMovesAfter_MoveInFull_0_1 != _lh_showMovesAfter_MoveInFull_0_0) || (_lh_showMovesAfter_MoveInFull_1_1 != _lh_showMovesAfter_MoveInFull_1_0))) (let rec _lh_showMove_MoveInFull_0_0 = _lh_showMovesAfter_MoveInFull_0_1 in
+                              (`LH_C(h_3_2, ((mappend_d1_d4_d5 t_3_2) ys_3_5)))))))))) ((showMove_d9 ((_lh_showMovesAfter_MoveInFull_0_1 <> _lh_showMovesAfter_MoveInFull_0_0) || (_lh_showMovesAfter_MoveInFull_1_1 <> _lh_showMovesAfter_MoveInFull_1_0))) (let rec _lh_showMove_MoveInFull_0_0 = _lh_showMovesAfter_MoveInFull_0_1 in
                     (let rec _lh_showMove_MoveInFull_1_0 = _lh_showMovesAfter_MoveInFull_1_1 in
                       (let rec _lh_showMove_MoveInFull_2_0 = _lh_showMovesAfter_MoveInFull_2_1 in
                         (fun _lh_showMove_arg1_0 -> 
@@ -33372,8 +33372,8 @@ and showMovesAfter_d3 _lh_showMovesAfter_arg1_0 _lh_showMovesAfter_arg2_0 =
                             | `LH_P2(_lh_showMove_LH_P2_0_0, _lh_showMove_LH_P2_1_0) -> 
                               (match _lh_showMove_MoveInFull_2_0 with
                                 | `Move(_lh_showMove_Move_0_0, _lh_showMove_Move_1_0, _lh_showMove_Move_2_0) -> 
-                                  (let rec capt_0 = (_lh_showMove_Move_1_0 != (`Nothing)) in
-                                    (let rec prom_0 = (_lh_showMove_Move_2_0 != (`Nothing)) in
+                                  (let rec capt_0 = (_lh_showMove_Move_1_0 <> (`Nothing)) in
+                                    (let rec prom_0 = (_lh_showMove_Move_2_0 <> (`Nothing)) in
                                       ((mappend_d1_d4_d7 ((mappend_d1_d4_d8 ((mappend_d1_d4_d9 (if _lh_showMove_arg1_0 then
                                         ((mappend_d1_d5_d0 ((mappend_d1_d5_d1 (showPiece_d2_d7 (let rec _lh_showPiece_LH_P2_1_0 = _lh_showMove_LH_P2_1_0 in
                                           (fun _lh_dummy_0 -> 
@@ -33464,7 +33464,7 @@ and showMovesAfter_d4 _lh_showMovesAfter_arg1_5 _lh_showMovesAfter_arg2_5 =
                         (let rec h_1_2_8_0 = h_1_2_7_7 in
                           (let rec t_1_2_8_0 = ((mappend_d1_d8_d9 t_1_2_7_7) ys_1_5_6_4) in
                             (fun ys_1_5_6_5 -> 
-                              (`LH_C(h_1_2_8_0, ((mappend_d1_d8_d8 t_1_2_8_0) ys_1_5_6_5)))))))))) ((showMove_d1_d2 ((_lh_showMovesAfter_MoveInFull_0_1_1 != _lh_showMovesAfter_MoveInFull_0_1_0) || (_lh_showMovesAfter_MoveInFull_1_1_1 != _lh_showMovesAfter_MoveInFull_1_1_0))) (let rec _lh_showMove_MoveInFull_0_1_4 = _lh_showMovesAfter_MoveInFull_0_1_1 in
+                              (`LH_C(h_1_2_8_0, ((mappend_d1_d8_d8 t_1_2_8_0) ys_1_5_6_5)))))))))) ((showMove_d1_d2 ((_lh_showMovesAfter_MoveInFull_0_1_1 <> _lh_showMovesAfter_MoveInFull_0_1_0) || (_lh_showMovesAfter_MoveInFull_1_1_1 <> _lh_showMovesAfter_MoveInFull_1_1_0))) (let rec _lh_showMove_MoveInFull_0_1_4 = _lh_showMovesAfter_MoveInFull_0_1_1 in
                     (let rec _lh_showMove_MoveInFull_1_1_4 = _lh_showMovesAfter_MoveInFull_1_1_1 in
                       (let rec _lh_showMove_MoveInFull_2_1_4 = _lh_showMovesAfter_MoveInFull_2_1_1 in
                         (fun _lh_showMove_arg1_1_9 -> 
@@ -33472,8 +33472,8 @@ and showMovesAfter_d4 _lh_showMovesAfter_arg1_5 _lh_showMovesAfter_arg2_5 =
                             | `LH_P2(_lh_showMove_LH_P2_0_1_4, _lh_showMove_LH_P2_1_1_4) -> 
                               (match _lh_showMove_MoveInFull_2_1_4 with
                                 | `Move(_lh_showMove_Move_0_1_4, _lh_showMove_Move_1_1_4, _lh_showMove_Move_2_1_4) -> 
-                                  (let rec capt_1_4 = (_lh_showMove_Move_1_1_4 != (`Nothing)) in
-                                    (let rec prom_1_4 = (_lh_showMove_Move_2_1_4 != (`Nothing)) in
+                                  (let rec capt_1_4 = (_lh_showMove_Move_1_1_4 <> (`Nothing)) in
+                                    (let rec prom_1_4 = (_lh_showMove_Move_2_1_4 <> (`Nothing)) in
                                       ((mappend_d1_d9_d0 ((mappend_d1_d9_d1 ((mappend_d1_d9_d2 (if _lh_showMove_arg1_1_9 then
                                         ((mappend_d1_d9_d3 ((mappend_d1_d9_d4 (showPiece_d3_d6 (let rec _lh_showPiece_LH_P2_1_4_2 = _lh_showMove_LH_P2_1_1_4 in
                                           (fun _lh_dummy_3_1 -> 
@@ -33564,7 +33564,7 @@ and showMovesAfter_d5 _lh_showMovesAfter_arg1_3 _lh_showMovesAfter_arg2_3 =
                         (let rec h_8_4_4 = h_8_4_1 in
                           (let rec t_8_4_4 = ((mappend_d2_d1_d9 t_8_4_1) ys_1_0_4_3) in
                             (fun ys_1_0_4_4 -> 
-                              (`LH_C(h_8_4_4, ((mappend_d2_d1_d8 t_8_4_4) ys_1_0_4_4)))))))))) ((showMove_d1_d4 ((_lh_showMovesAfter_MoveInFull_0_7 != _lh_showMovesAfter_MoveInFull_0_6) || (_lh_showMovesAfter_MoveInFull_1_7 != _lh_showMovesAfter_MoveInFull_1_6))) (let rec _lh_showMove_MoveInFull_0_9 = _lh_showMovesAfter_MoveInFull_0_7 in
+                              (`LH_C(h_8_4_4, ((mappend_d2_d1_d8 t_8_4_4) ys_1_0_4_4)))))))))) ((showMove_d1_d4 ((_lh_showMovesAfter_MoveInFull_0_7 <> _lh_showMovesAfter_MoveInFull_0_6) || (_lh_showMovesAfter_MoveInFull_1_7 <> _lh_showMovesAfter_MoveInFull_1_6))) (let rec _lh_showMove_MoveInFull_0_9 = _lh_showMovesAfter_MoveInFull_0_7 in
                     (let rec _lh_showMove_MoveInFull_1_9 = _lh_showMovesAfter_MoveInFull_1_7 in
                       (let rec _lh_showMove_MoveInFull_2_9 = _lh_showMovesAfter_MoveInFull_2_7 in
                         (fun _lh_showMove_arg1_1_2 -> 
@@ -33572,8 +33572,8 @@ and showMovesAfter_d5 _lh_showMovesAfter_arg1_3 _lh_showMovesAfter_arg2_3 =
                             | `LH_P2(_lh_showMove_LH_P2_0_9, _lh_showMove_LH_P2_1_9) -> 
                               (match _lh_showMove_MoveInFull_2_9 with
                                 | `Move(_lh_showMove_Move_0_9, _lh_showMove_Move_1_9, _lh_showMove_Move_2_9) -> 
-                                  (let rec capt_9 = (_lh_showMove_Move_1_9 != (`Nothing)) in
-                                    (let rec prom_9 = (_lh_showMove_Move_2_9 != (`Nothing)) in
+                                  (let rec capt_9 = (_lh_showMove_Move_1_9 <> (`Nothing)) in
+                                    (let rec prom_9 = (_lh_showMove_Move_2_9 <> (`Nothing)) in
                                       ((mappend_d2_d2_d0 ((mappend_d2_d2_d1 ((mappend_d2_d2_d2 (if _lh_showMove_arg1_1_2 then
                                         ((mappend_d2_d2_d3 ((mappend_d2_d2_d4 (showPiece_d4_d2 (let rec _lh_showPiece_LH_P2_1_2_5 = _lh_showMove_LH_P2_1_9 in
                                           (fun _lh_dummy_1_8 -> 
@@ -33683,8 +33683,8 @@ and showMove_d0 _lh_showMove_arg1_4 _lh_showMove_arg2_3 =
         | `LH_P2(_lh_showMove_LH_P2_0_2, _lh_showMove_LH_P2_1_2) -> 
           (match _lh_showMove_MoveInFull_2_2 with
             | `Move(_lh_showMove_Move_0_2, _lh_showMove_Move_1_2, _lh_showMove_Move_2_2) -> 
-              (let rec capt_2 = (_lh_showMove_Move_1_2 != (`Nothing)) in
-                (let rec prom_2 = (_lh_showMove_Move_2_2 != (`Nothing)) in
+              (let rec capt_2 = (_lh_showMove_Move_1_2 <> (`Nothing)) in
+                (let rec prom_2 = (_lh_showMove_Move_2_2 <> (`Nothing)) in
                   ((mappend_d1_d9 ((mappend_d2_d0 ((mappend_d2_d1 (if _lh_showMove_arg1_4 then
                     ((mappend_d2_d2 ((mappend_d2_d3 (showPiece_d0 (let rec _lh_showPiece_LH_P2_1_4 = _lh_showMove_LH_P2_1_2 in
                       (fun _lh_dummy_4 -> 
@@ -33754,8 +33754,8 @@ and showMove_d1 _lh_showMove_arg1_6 _lh_showMove_arg2_4 =
         | `LH_P2(_lh_showMove_LH_P2_0_4, _lh_showMove_LH_P2_1_4) -> 
           (match _lh_showMove_MoveInFull_2_4 with
             | `Move(_lh_showMove_Move_0_4, _lh_showMove_Move_1_4, _lh_showMove_Move_2_4) -> 
-              (let rec capt_4 = (_lh_showMove_Move_1_4 != (`Nothing)) in
-                (let rec prom_4 = (_lh_showMove_Move_2_4 != (`Nothing)) in
+              (let rec capt_4 = (_lh_showMove_Move_1_4 <> (`Nothing)) in
+                (let rec prom_4 = (_lh_showMove_Move_2_4 <> (`Nothing)) in
                   ((mappend_d3_d1 ((mappend_d3_d2 ((mappend_d3_d3 (if _lh_showMove_arg1_6 then
                     ((mappend_d3_d4 ((mappend_d3_d5 (showPiece_d3 (let rec _lh_showPiece_LH_P2_1_7 = _lh_showMove_LH_P2_1_4 in
                       (fun _lh_dummy_6 -> 
@@ -33825,8 +33825,8 @@ and showMove_d1_d0 _lh_showMove_arg1_1_4 _lh_showMove_arg2_1_0 =
         | `LH_P2(_lh_showMove_LH_P2_0_1_0, _lh_showMove_LH_P2_1_1_0) -> 
           (match _lh_showMove_MoveInFull_2_1_0 with
             | `Move(_lh_showMove_Move_0_1_0, _lh_showMove_Move_1_1_0, _lh_showMove_Move_2_1_0) -> 
-              (let rec capt_1_0 = (_lh_showMove_Move_1_1_0 != (`Nothing)) in
-                (let rec prom_1_0 = (_lh_showMove_Move_2_1_0 != (`Nothing)) in
+              (let rec capt_1_0 = (_lh_showMove_Move_1_1_0 <> (`Nothing)) in
+                (let rec prom_1_0 = (_lh_showMove_Move_2_1_0 <> (`Nothing)) in
                   ((mappend_d1_d6_d5 ((mappend_d1_d6_d6 ((mappend_d1_d6_d7 (if _lh_showMove_arg1_1_4 then
                     ((mappend_d1_d6_d8 ((mappend_d1_d6_d9 (showPiece_d3_d0 (let rec _lh_showPiece_LH_P2_1_2_8 = _lh_showMove_LH_P2_1_1_0 in
                       (fun _lh_dummy_2_2 -> 
@@ -33896,8 +33896,8 @@ and showMove_d1_d1 _lh_showMove_arg1_1_0 _lh_showMove_arg2_7 =
         | `LH_P2(_lh_showMove_LH_P2_0_7, _lh_showMove_LH_P2_1_7) -> 
           (match _lh_showMove_MoveInFull_2_7 with
             | `Move(_lh_showMove_Move_0_7, _lh_showMove_Move_1_7, _lh_showMove_Move_2_7) -> 
-              (let rec capt_7 = (_lh_showMove_Move_1_7 != (`Nothing)) in
-                (let rec prom_7 = (_lh_showMove_Move_2_7 != (`Nothing)) in
+              (let rec capt_7 = (_lh_showMove_Move_1_7 <> (`Nothing)) in
+                (let rec prom_7 = (_lh_showMove_Move_2_7 <> (`Nothing)) in
                   ((mappend_d1_d7_d7 ((mappend_d1_d7_d8 ((mappend_d1_d7_d9 (if _lh_showMove_arg1_1_0 then
                     ((mappend_d1_d8_d0 ((mappend_d1_d8_d1 (showPiece_d3_d3 (let rec _lh_showPiece_LH_P2_1_2_2 = _lh_showMove_LH_P2_1_7 in
                       (fun _lh_dummy_1_5 -> 
@@ -33967,8 +33967,8 @@ and showMove_d1_d3 _lh_showMove_arg1_8 _lh_showMove_arg2_5 =
         | `LH_P2(_lh_showMove_LH_P2_0_6, _lh_showMove_LH_P2_1_6) -> 
           (match _lh_showMove_MoveInFull_2_6 with
             | `Move(_lh_showMove_Move_0_6, _lh_showMove_Move_1_6, _lh_showMove_Move_2_6) -> 
-              (let rec capt_6 = (_lh_showMove_Move_1_6 != (`Nothing)) in
-                (let rec prom_6 = (_lh_showMove_Move_2_6 != (`Nothing)) in
+              (let rec capt_6 = (_lh_showMove_Move_1_6 <> (`Nothing)) in
+                (let rec prom_6 = (_lh_showMove_Move_2_6 <> (`Nothing)) in
                   ((mappend_d2_d0_d7 ((mappend_d2_d0_d8 ((mappend_d2_d0_d9 (if _lh_showMove_arg1_8 then
                     ((mappend_d2_d1_d0 ((mappend_d2_d1_d1 (showPiece_d3_d9 (let rec _lh_showPiece_LH_P2_1_1_7 = _lh_showMove_LH_P2_1_6 in
                       (fun _lh_dummy_1_3 -> 
@@ -34038,8 +34038,8 @@ and showMove_d3 _lh_showMove_arg1_1_8 _lh_showMove_arg2_1_3 =
         | `LH_P2(_lh_showMove_LH_P2_0_1_3, _lh_showMove_LH_P2_1_1_3) -> 
           (match _lh_showMove_MoveInFull_2_1_3 with
             | `Move(_lh_showMove_Move_0_1_3, _lh_showMove_Move_1_1_3, _lh_showMove_Move_2_1_3) -> 
-              (let rec capt_1_3 = (_lh_showMove_Move_1_1_3 != (`Nothing)) in
-                (let rec prom_1_3 = (_lh_showMove_Move_2_1_3 != (`Nothing)) in
+              (let rec capt_1_3 = (_lh_showMove_Move_1_1_3 <> (`Nothing)) in
+                (let rec prom_1_3 = (_lh_showMove_Move_2_1_3 <> (`Nothing)) in
                   ((mappend_d6_d1 ((mappend_d6_d2 ((mappend_d6_d3 (if _lh_showMove_arg1_1_8 then
                     ((mappend_d6_d4 ((mappend_d6_d5 (showPiece_d9 (let rec _lh_showPiece_LH_P2_1_4_1 = _lh_showMove_LH_P2_1_1_3 in
                       (fun _lh_dummy_3_0 -> 
@@ -34109,8 +34109,8 @@ and showMove_d5 _lh_showMove_arg1_1_5 _lh_showMove_arg2_1_1 =
         | `LH_P2(_lh_showMove_LH_P2_0_1_1, _lh_showMove_LH_P2_1_1_1) -> 
           (match _lh_showMove_MoveInFull_2_1_1 with
             | `Move(_lh_showMove_Move_0_1_1, _lh_showMove_Move_1_1_1, _lh_showMove_Move_2_1_1) -> 
-              (let rec capt_1_1 = (_lh_showMove_Move_1_1_1 != (`Nothing)) in
-                (let rec prom_1_1 = (_lh_showMove_Move_2_1_1 != (`Nothing)) in
+              (let rec capt_1_1 = (_lh_showMove_Move_1_1_1 <> (`Nothing)) in
+                (let rec prom_1_1 = (_lh_showMove_Move_2_1_1 <> (`Nothing)) in
                   ((mappend_d9_d2 ((mappend_d9_d3 ((mappend_d9_d4 (if _lh_showMove_arg1_1_5 then
                     ((mappend_d9_d5 ((mappend_d9_d6 (showPiece_d1_d5 (let rec _lh_showPiece_LH_P2_1_3_4 = _lh_showMove_LH_P2_1_1_1 in
                       (fun _lh_dummy_2_5 -> 
@@ -34180,8 +34180,8 @@ and showMove_d6 _lh_showMove_arg1_1 _lh_showMove_arg2_0 =
         | `LH_P2(_lh_showMove_LH_P2_0_1, _lh_showMove_LH_P2_1_1) -> 
           (match _lh_showMove_MoveInFull_2_1 with
             | `Move(_lh_showMove_Move_0_1, _lh_showMove_Move_1_1, _lh_showMove_Move_2_1) -> 
-              (let rec capt_1 = (_lh_showMove_Move_1_1 != (`Nothing)) in
-                (let rec prom_1 = (_lh_showMove_Move_2_1 != (`Nothing)) in
+              (let rec capt_1 = (_lh_showMove_Move_1_1 <> (`Nothing)) in
+                (let rec prom_1 = (_lh_showMove_Move_2_1 <> (`Nothing)) in
                   ((mappend_d1_d0_d4 ((mappend_d1_d0_d5 ((mappend_d1_d0_d6 (if _lh_showMove_arg1_1 then
                     ((mappend_d1_d0_d7 ((mappend_d1_d0_d8 (showPiece_d1_d8 (let rec _lh_showPiece_LH_P2_1_1 = _lh_showMove_LH_P2_1_1 in
                       (fun _lh_dummy_1 -> 
@@ -34251,8 +34251,8 @@ and showMove_d8 _lh_showMove_arg1_1_1 _lh_showMove_arg2_8 =
         | `LH_P2(_lh_showMove_LH_P2_0_8, _lh_showMove_LH_P2_1_8) -> 
           (match _lh_showMove_MoveInFull_2_8 with
             | `Move(_lh_showMove_Move_0_8, _lh_showMove_Move_1_8, _lh_showMove_Move_2_8) -> 
-              (let rec capt_8 = (_lh_showMove_Move_1_8 != (`Nothing)) in
-                (let rec prom_8 = (_lh_showMove_Move_2_8 != (`Nothing)) in
+              (let rec capt_8 = (_lh_showMove_Move_1_8 <> (`Nothing)) in
+                (let rec prom_8 = (_lh_showMove_Move_2_8 <> (`Nothing)) in
                   ((mappend_d1_d3_d4 ((mappend_d1_d3_d5 ((mappend_d1_d3_d6 (if _lh_showMove_arg1_1_1 then
                     ((mappend_d1_d3_d7 ((mappend_d1_d3_d8 (showPiece_d2_d4 (let rec _lh_showPiece_LH_P2_1_2_3 = _lh_showMove_LH_P2_1_8 in
                       (fun _lh_dummy_1_6 -> 

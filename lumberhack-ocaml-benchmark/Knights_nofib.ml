@@ -1351,7 +1351,7 @@ and printBoard_d0 _lh_printBoard_arg1_1 _lh_printBoard_arg2_1 _lh_printBoard_arg
       (if (_lh_printBoard_arg2_1 > (_lh_printBoard_arg1_1 * _lh_printBoard_arg1_1)) then
         (`LH_N)
       else
-        (if ((_lh_printBoard_arg2_1 mod _lh_printBoard_arg1_1) != 0) then
+        (if ((_lh_printBoard_arg2_1 mod _lh_printBoard_arg1_1) <> 0) then
           ((mappend_d8 ((mappend_d9 (`LH_C('*', (`LH_N)))) ((spaces_d0 (_lh_printBoard_arg1_1 * _lh_printBoard_arg1_1)) 1))) (((printBoard_d0 _lh_printBoard_arg1_1) (_lh_printBoard_arg2_1 + 1)) (`LH_N)))
         else
           (if ((_lh_printBoard_arg2_1 mod _lh_printBoard_arg1_1) = 0) then
@@ -1364,10 +1364,10 @@ and printBoard_d0 _lh_printBoard_arg1_1 _lh_printBoard_arg2_1 _lh_printBoard_arg
           (if ((_lh_printBoard_LH_P2_0_1 = _lh_printBoard_arg2_1) && ((_lh_printBoard_arg2_1 mod _lh_printBoard_arg1_1) = 0)) then
             ((mappend_d1_d1 ((mappend_d1_d2 (string_of_int _lh_printBoard_LH_P2_1_1)) (`LH_C('|', (`LH_N))))) (((printBoard_d0 _lh_printBoard_arg1_1) (_lh_printBoard_arg2_1 + 1)) _lh_printBoard_LH_C_1_1))
           else
-            (if ((_lh_printBoard_LH_P2_0_1 = _lh_printBoard_arg2_1) && ((_lh_printBoard_arg2_1 mod _lh_printBoard_arg1_1) != 0)) then
+            (if ((_lh_printBoard_LH_P2_0_1 = _lh_printBoard_arg2_1) && ((_lh_printBoard_arg2_1 mod _lh_printBoard_arg1_1) <> 0)) then
               ((mappend_d1_d3 ((mappend_d1_d4 (string_of_int _lh_printBoard_LH_P2_1_1)) ((spaces_d1 (_lh_printBoard_arg1_1 * _lh_printBoard_arg1_1)) _lh_printBoard_LH_P2_1_1))) (((printBoard_d0 _lh_printBoard_arg1_1) (_lh_printBoard_arg2_1 + 1)) _lh_printBoard_LH_C_1_1))
             else
-              (if ((_lh_printBoard_arg2_1 mod _lh_printBoard_arg1_1) != 0) then
+              (if ((_lh_printBoard_arg2_1 mod _lh_printBoard_arg1_1) <> 0) then
                 ((mappend_d1_d5 ((mappend_d1_d6 (`LH_C('*', (`LH_N)))) ((spaces_d2 (_lh_printBoard_arg1_1 * _lh_printBoard_arg1_1)) 1))) (((printBoard_d0 _lh_printBoard_arg1_1) (_lh_printBoard_arg2_1 + 1)) (`LH_C((`LH_P2(_lh_printBoard_LH_P2_0_1, _lh_printBoard_LH_P2_1_1)), _lh_printBoard_LH_C_1_1))))
               else
                 (if ((_lh_printBoard_arg2_1 mod _lh_printBoard_arg1_1) = 0) then
@@ -37742,7 +37742,7 @@ and printBoard_d0_d0_d0 _lh_printBoard_arg1_0 _lh_printBoard_arg2_0 _lh_printBoa
       (if (_lh_printBoard_arg2_0 > (_lh_printBoard_arg1_0 * _lh_printBoard_arg1_0)) then
         (`LH_N)
       else
-        (if ((_lh_printBoard_arg2_0 mod _lh_printBoard_arg1_0) != 0) then
+        (if ((_lh_printBoard_arg2_0 mod _lh_printBoard_arg1_0) <> 0) then
           ((mappend_d8_d0_d0 ((mappend_d9_d0_d0 (let rec h_7_4 = '*' in
             (let rec t_1_7_0 = (fun ys_1_3_8 -> 
               ys_1_3_8) in
@@ -37773,10 +37773,10 @@ and printBoard_d0_d0_d0 _lh_printBoard_arg1_0 _lh_printBoard_arg2_0 _lh_printBoa
                 (fun ys_1_4_5 -> 
                   (`LH_C(h_7_8, ((mappend_d1_d1_d0_d1 t_1_7_4) ys_1_4_5)))))))) (((printBoard_d0_d0_d0 _lh_printBoard_arg1_0) (_lh_printBoard_arg2_0 + 1)) _lh_printBoard_LH_C_1_0))
           else
-            (if ((_lh_printBoard_LH_P2_0_0 = _lh_printBoard_arg2_0) && ((_lh_printBoard_arg2_0 mod _lh_printBoard_arg1_0) != 0)) then
+            (if ((_lh_printBoard_LH_P2_0_0 = _lh_printBoard_arg2_0) && ((_lh_printBoard_arg2_0 mod _lh_printBoard_arg1_0) <> 0)) then
               ((mappend_d1_d3_d0_d0 ((mappend_d1_d4_d0_d0 (string_of_int _lh_printBoard_LH_P2_1_0)) ((spaces_d1_d0_d0 (_lh_printBoard_arg1_0 * _lh_printBoard_arg1_0)) _lh_printBoard_LH_P2_1_0))) (((printBoard_d0_d0_d0 _lh_printBoard_arg1_0) (_lh_printBoard_arg2_0 + 1)) _lh_printBoard_LH_C_1_0))
             else
-              (if ((_lh_printBoard_arg2_0 mod _lh_printBoard_arg1_0) != 0) then
+              (if ((_lh_printBoard_arg2_0 mod _lh_printBoard_arg1_0) <> 0) then
                 ((mappend_d1_d5_d0_d0 ((mappend_d1_d6_d0_d0 (let rec h_7_9 = '*' in
                   (let rec t_1_7_5 = (fun ys_1_4_6 -> 
                     ys_1_4_6) in
@@ -52251,7 +52251,7 @@ and printBoard_d0_d0_d0_d0 _lh_printBoard_arg1_1 _lh_printBoard_arg2_1 _lh_print
       (if (_lh_printBoard_arg2_1 > (_lh_printBoard_arg1_1 * _lh_printBoard_arg1_1)) then
         (`LH_N)
       else
-        (if ((_lh_printBoard_arg2_1 mod _lh_printBoard_arg1_1) != 0) then
+        (if ((_lh_printBoard_arg2_1 mod _lh_printBoard_arg1_1) <> 0) then
           ((mappend_d8_d0_d0_d0 ((mappend_d9_d0_d0_d0 (let rec h_1_5_9 = '*' in
             (let rec t_4_2_4 = (fun ys_3_0_7 -> 
               ys_3_0_7) in
@@ -52282,10 +52282,10 @@ and printBoard_d0_d0_d0_d0 _lh_printBoard_arg1_1 _lh_printBoard_arg2_1 _lh_print
                 (fun ys_3_1_4 -> 
                   (`LH_C(h_1_6_3, ((mappend_d1_d1_d0_d1_d0 t_4_2_8) ys_3_1_4)))))))) (((printBoard_d0_d0_d0_d0 _lh_printBoard_arg1_1) (_lh_printBoard_arg2_1 + 1)) _lh_printBoard_LH_C_1_1))
           else
-            (if ((_lh_printBoard_LH_P2_0_1 = _lh_printBoard_arg2_1) && ((_lh_printBoard_arg2_1 mod _lh_printBoard_arg1_1) != 0)) then
+            (if ((_lh_printBoard_LH_P2_0_1 = _lh_printBoard_arg2_1) && ((_lh_printBoard_arg2_1 mod _lh_printBoard_arg1_1) <> 0)) then
               ((mappend_d1_d3_d0_d0_d0 ((mappend_d1_d4_d0_d0_d0 (string_of_int _lh_printBoard_LH_P2_1_1)) ((spaces_d1_d0_d0_d0 (_lh_printBoard_arg1_1 * _lh_printBoard_arg1_1)) _lh_printBoard_LH_P2_1_1))) (((printBoard_d0_d0_d0_d0 _lh_printBoard_arg1_1) (_lh_printBoard_arg2_1 + 1)) _lh_printBoard_LH_C_1_1))
             else
-              (if ((_lh_printBoard_arg2_1 mod _lh_printBoard_arg1_1) != 0) then
+              (if ((_lh_printBoard_arg2_1 mod _lh_printBoard_arg1_1) <> 0) then
                 ((mappend_d1_d5_d0_d0_d0 ((mappend_d1_d6_d0_d0_d0 (let rec h_1_6_4 = '*' in
                   (let rec t_4_2_9 = (fun ys_3_1_5 -> 
                     ys_3_1_5) in

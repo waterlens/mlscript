@@ -595,10 +595,10 @@ and parse_d0 _lh_parse_arg1_1 =
         (failwith "error")))
 and redstar_d0 _lh_redstar_arg1_1 =
   (((while_d0 (fun _lh_funcomp_x_1_5 -> 
-    (0 != (spri_d0 _lh_funcomp_x_1_5)))) red_d1) _lh_redstar_arg1_1)
+    (0 <> (spri_d0 _lh_funcomp_x_1_5)))) red_d1) _lh_redstar_arg1_1)
 and redstar_d1 _lh_redstar_arg1_2 =
   (((while_d1 (fun _lh_funcomp_x_1_6 -> 
-    (0 != (spri_d1 _lh_funcomp_x_1_6)))) red_d2) _lh_redstar_arg1_2)
+    (0 <> (spri_d1 _lh_funcomp_x_1_6)))) red_d2) _lh_redstar_arg1_2)
 and spaces_d0 _lh_spaces_arg1_2 =
   ((copy_d0 _lh_spaces_arg1_2) ' ')
 and spaces_d1 _lh_spaces_arg1_1 =
@@ -671,7 +671,7 @@ and tautclause_d0 _lh_tautclause_arg1_1 =
               (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_1))
           | `LH_N -> 
             (`LH_N))) in
-        (_lh_listcomp_fun_1 _lh_tautclause_LH_P2_0_1)) != (`LH_N))
+        (_lh_listcomp_fun_1 _lh_tautclause_LH_P2_0_1)) <> (`LH_N))
     | _ -> 
       (failwith "error"))
 and testClausify_nofib_d0 _lh_testClausify_nofib_arg1_1 =
@@ -1288,10 +1288,10 @@ and parse_d0_d0 _lh_parse_arg1_0 =
         (failwith "error")))
 and redstar_d0_d0 _lh_redstar_arg1_1 =
   (((while_d0_d0 (fun _lh_funcomp_x_8 -> 
-    (0 != (spri_d0_d0 _lh_funcomp_x_8)))) red_d1_d0) _lh_redstar_arg1_1)
+    (0 <> (spri_d0_d0 _lh_funcomp_x_8)))) red_d1_d0) _lh_redstar_arg1_1)
 and redstar_d1_d0 _lh_redstar_arg1_0 =
   (((while_d1_d0 (fun _lh_funcomp_x_7 -> 
-    (0 != (spri_d1_d0 _lh_funcomp_x_7)))) red_d2_d0) _lh_redstar_arg1_0)
+    (0 <> (spri_d1_d0 _lh_funcomp_x_7)))) red_d2_d0) _lh_redstar_arg1_0)
 and spaces_d0_d0 _lh_spaces_arg1_0 =
   ((copy_d0_d0 _lh_spaces_arg1_0) ' ')
 and spaces_d1_d0 _lh_spaces_arg1_1 =
@@ -1374,7 +1374,7 @@ and tautclause_d0_d0 _lh_tautclause_arg1_0 =
               (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0))
           | `LH_N -> 
             (`LH_N))) in
-        (_lh_listcomp_fun_0 _lh_tautclause_LH_P2_0_0)) != (`LH_N))
+        (_lh_listcomp_fun_0 _lh_tautclause_LH_P2_0_0)) <> (`LH_N))
     | _ -> 
       (failwith "error"))
 and testClausify_nofib_d0_d0 _lh_testClausify_nofib_arg1_0 =
@@ -2013,10 +2013,10 @@ and parse_d0_d0_d0 _lh_parse_arg1_1 =
         (failwith "error")))
 and redstar_d0_d0_d0 _lh_redstar_arg1_3 =
   (((while_d0_d0_d0 (fun _lh_funcomp_x_1_7 -> 
-    (0 != (spri_d0_d0_d0 _lh_funcomp_x_1_7)))) red_d1_d0_d0) _lh_redstar_arg1_3)
+    (0 <> (spri_d0_d0_d0 _lh_funcomp_x_1_7)))) red_d1_d0_d0) _lh_redstar_arg1_3)
 and redstar_d1_d0_d0 _lh_redstar_arg1_2 =
   (((while_d1_d0_d0 (fun _lh_funcomp_x_1_6 -> 
-    (0 != (spri_d1_d0_d0 _lh_funcomp_x_1_6)))) red_d2_d0_d0) _lh_redstar_arg1_2)
+    (0 <> (spri_d1_d0_d0 _lh_funcomp_x_1_6)))) red_d2_d0_d0) _lh_redstar_arg1_2)
 and spaces_d0_d0_d0 _lh_spaces_arg1_2 =
   ((copy_d0_d0_d0 _lh_spaces_arg1_2) ' ')
 and spaces_d1_d0_d0 _lh_spaces_arg1_3 =
@@ -2099,7 +2099,7 @@ and tautclause_d0_d0_d0 _lh_tautclause_arg1_1 =
               (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_1))
           | `LH_N -> 
             (`LH_N))) in
-        (_lh_listcomp_fun_1 _lh_tautclause_LH_P2_0_1)) != (`LH_N))
+        (_lh_listcomp_fun_1 _lh_tautclause_LH_P2_0_1)) <> (`LH_N))
     | _ -> 
       (failwith "error"))
 and testClausify_nofib_d0_d0_d0 _lh_testClausify_nofib_arg1_1 =

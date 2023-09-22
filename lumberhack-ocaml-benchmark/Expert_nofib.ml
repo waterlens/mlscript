@@ -1871,7 +1871,7 @@ and compear_d0 _lh_compear_arg1_1 _lh_compear_arg2_1 _lh_compear_arg3_1 =
     | `Var(_lh_compear_Var_0_5) -> 
       (match _lh_compear_arg3_1 with
         | `Var(_lh_compear_Var_0_6) -> 
-          (if (_lh_compear_Var_0_5 != _lh_compear_Var_0_6) then
+          (if (_lh_compear_Var_0_5 <> _lh_compear_Var_0_6) then
             (success_d6 (((update_d1 _lh_compear_arg1_1) _lh_compear_Var_0_5) (`Var(_lh_compear_Var_0_6))))
           else
             (success_d7 _lh_compear_arg1_1))
@@ -2591,7 +2591,7 @@ and process_d0 _lh_process_arg1_1 _lh_process_arg2_1 =
     (let rec _lh_listcomp_fun_5_2 = (fun _lh_listcomp_fun_para_5_2 -> 
       (match _lh_listcomp_fun_para_5_2 with
         | `LH_C(_lh_listcomp_fun_ls_h_5_2, _lh_listcomp_fun_ls_t_5_2) -> 
-          (`LH_C(((words_d2 _lh_listcomp_fun_ls_h_5_2) != (`LH_C((`LH_C('n', (`LH_C('o', (`LH_N))))), (`LH_N)))), (_lh_listcomp_fun_5_2 _lh_listcomp_fun_ls_t_5_2)))
+          (`LH_C(((words_d2 _lh_listcomp_fun_ls_h_5_2) <> (`LH_C((`LH_C('n', (`LH_C('o', (`LH_N))))), (`LH_N)))), (_lh_listcomp_fun_5_2 _lh_listcomp_fun_ls_t_5_2)))
         | `LH_N -> 
           (`LH_N))) in
       (_lh_listcomp_fun_5_2 (lines_d1 _lh_replies_arg1_1))))
@@ -6018,7 +6018,7 @@ and compear_d0 _lh_compear_arg1_0 _lh_compear_arg2_0 _lh_compear_arg3_0 =
     | `Var(_lh_compear_Var_0_1) -> 
       (match _lh_compear_arg3_0 with
         | `Var(_lh_compear_Var_0_2) -> 
-          (if (_lh_compear_Var_0_1 != _lh_compear_Var_0_2) then
+          (if (_lh_compear_Var_0_1 <> _lh_compear_Var_0_2) then
             (success_d6 (((update_d1 _lh_compear_arg1_0) _lh_compear_Var_0_1) (`Var(_lh_compear_Var_0_2))))
           else
             (success_d7 _lh_compear_arg1_0))
@@ -6705,7 +6705,7 @@ and lines_d1 _lh_lines_arg1_1 =
           (let rec _lh_listcomp_fun_ls_t_2_7 = (let rec _lh_matchIdent_1_3_3 = _lh_lines_LH_P2_1_1 in
             (_lh_matchIdent_1_3_3 99)) in
             (fun _lh_listcomp_fun_3_5 -> 
-              (`LH_C(((words_d2 _lh_listcomp_fun_ls_h_2_7) != (`LH_C((`LH_C('n', (`LH_C('o', (`LH_N))))), (`LH_N)))), (_lh_listcomp_fun_3_5 _lh_listcomp_fun_ls_t_2_7))))))
+              (`LH_C(((words_d2 _lh_listcomp_fun_ls_h_2_7) <> (`LH_C((`LH_C('n', (`LH_C('o', (`LH_N))))), (`LH_N)))), (_lh_listcomp_fun_3_5 _lh_listcomp_fun_ls_t_2_7))))))
       | _ -> 
         (failwith "error")))
 and lines_d2 _lh_lines_arg1_0 =
@@ -10885,7 +10885,7 @@ and compear_d0 _lh_compear_arg1_0 _lh_compear_arg2_0 _lh_compear_arg3_0 =
     | `Var(_lh_compear_Var_0_1) -> 
       (match _lh_compear_arg3_0 with
         | `Var(_lh_compear_Var_0_2) -> 
-          (if (_lh_compear_Var_0_1 != _lh_compear_Var_0_2) then
+          (if (_lh_compear_Var_0_1 <> _lh_compear_Var_0_2) then
             (success_d6 (((update_d1 _lh_compear_arg1_0) _lh_compear_Var_0_1) (`Var(_lh_compear_Var_0_2))))
           else
             (success_d7 _lh_compear_arg1_0))
@@ -11572,7 +11572,7 @@ and lines_d1 _lh_lines_arg1_1 =
           (let rec _lh_listcomp_fun_ls_t_2_7 = (let rec _lh_matchIdent_1_3_3 = _lh_lines_LH_P2_1_1 in
             (_lh_matchIdent_1_3_3 99)) in
             (fun _lh_listcomp_fun_3_5 -> 
-              (`LH_C(((words_d2 _lh_listcomp_fun_ls_h_2_7) != (`LH_C((`LH_C('n', (`LH_C('o', (`LH_N))))), (`LH_N)))), (_lh_listcomp_fun_3_5 _lh_listcomp_fun_ls_t_2_7))))))
+              (`LH_C(((words_d2 _lh_listcomp_fun_ls_h_2_7) <> (`LH_C((`LH_C('n', (`LH_C('o', (`LH_N))))), (`LH_N)))), (_lh_listcomp_fun_3_5 _lh_listcomp_fun_ls_t_2_7))))))
       | _ -> 
         (failwith "error")))
 and lines_d2 _lh_lines_arg1_0 =

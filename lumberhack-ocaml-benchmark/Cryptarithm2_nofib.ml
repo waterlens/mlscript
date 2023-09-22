@@ -1056,7 +1056,7 @@ and puzzle_d0 _lh_puzzle_arg1_1 _lh_puzzle_arg2_1 =
                 (if ((length_d0 (nub_d0 ((mappend_d3 (concat_d0 _lh_puzzle_arg1_1)) _lh_puzzle_arg2_1))) > 10) then
                   (failwith "error")
                 else
-                  (if (topVal_1 != botVal_1) then
+                  (if (topVal_1 <> botVal_1) then
                     (failwith "error")
                   else
                     (unlines_d0 (let rec _lh_listcomp_fun_7 = (fun _lh_listcomp_fun_para_7 -> 
@@ -2020,7 +2020,7 @@ and puzzle_d0_d0 _lh_puzzle_arg1_0 _lh_puzzle_arg2_0 =
                 (if ((length_d0_d0 (nub_d0_d0 ((mappend_d3_d0 (concat_d0_d0 _lh_puzzle_arg1_0)) _lh_puzzle_arg2_0))) > 10) then
                   (failwith "error")
                 else
-                  (if (topVal_0 != botVal_0) then
+                  (if (topVal_0 <> botVal_0) then
                     (failwith "error")
                   else
                     (unlines_d0_d0 (let rec _lh_listcomp_fun_1 = (fun _lh_listcomp_fun_para_1 -> 
@@ -3300,7 +3300,7 @@ and puzzle_d0_d0_d0 _lh_puzzle_arg1_1 _lh_puzzle_arg2_1 =
                 (if ((length_d0_d0_d0 (nub_d0_d0_d0 ((mappend_d3_d0_d1 (concat_d0_d0_d0 _lh_puzzle_arg1_1)) _lh_puzzle_arg2_1))) > 10) then
                   (failwith "error")
                 else
-                  (if (topVal_1 != botVal_1) then
+                  (if (topVal_1 <> botVal_1) then
                     (failwith "error")
                   else
                     (unlines_d0_d0_d0 (let rec _lh_listcomp_fun_9 = (fun _lh_listcomp_fun_para_9 -> 

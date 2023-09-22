@@ -47,7 +47,7 @@ let rec head_d0 ls_2_0 =
     | `LH_N -> 
       (failwith "error"));;
 let rec isdivs_d0 _lh_isdivs_arg1_1 _lh_isdivs_arg2_1 =
-  ((_lh_isdivs_arg2_1 mod _lh_isdivs_arg1_1) != 0);;
+  ((_lh_isdivs_arg2_1 mod _lh_isdivs_arg1_1) <> 0);;
 let rec iterate_d0 f_1_3 x_2 =
   (lazy (`LH_C(x_2, ((iterate_d0 f_1_3) (f_1_3 x_2)))));;
 let rec map_lz_d0 f_1_2 ls_1_9 =
@@ -94,7 +94,7 @@ let rec head_d0_d0 ls_3 =
     | `LH_N -> 
       (failwith "error"));;
 let rec isdivs_d0_d0 _lh_isdivs_arg1_0 _lh_isdivs_arg2_0 =
-  ((_lh_isdivs_arg2_0 mod _lh_isdivs_arg1_0) != 0);;
+  ((_lh_isdivs_arg2_0 mod _lh_isdivs_arg1_0) <> 0);;
 let rec map_lz_d0_d0 f_0 ls_0 =
   (lazy ((Lazy.force ls_0) f_0));;
 let rec iterate_d0_d0 f_2 x_0 =
@@ -151,7 +151,7 @@ let rec head_d0_d0_d0 ls_9 =
     | `LH_N -> 
       (failwith "error"));;
 let rec isdivs_d0_d0_d0 _lh_isdivs_arg1_1 _lh_isdivs_arg2_1 =
-  ((_lh_isdivs_arg2_1 mod _lh_isdivs_arg1_1) != 0);;
+  ((_lh_isdivs_arg2_1 mod _lh_isdivs_arg1_1) <> 0);;
 let rec map_lz_d0_d0_d0 f_8 ls_7 =
   (lazy ((Lazy.force ls_7) f_8));;
 let rec map_lz_d0_d0_d1 f_5 ls_5 =

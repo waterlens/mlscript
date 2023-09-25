@@ -586,7 +586,21 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
         handleListComprehension(elemGen, quals.tail, rest, comprehCtx, produceLazyList = produceLazyList),
         rest
       )
-      case "let" => lastWords(s"unsupported: ${quals.head.getNodeString()}")
+      case "let" => {
+        val decls = quals.head.getChild(0).getChild(1).getAllChilds
+        assert(
+          decls.length == 1 
+          && decls.head.getChild(0).getType() == "variable"
+          && decls.head.getChild(1).getType() == "="
+        ) // only handle single let binding with simple name
+        val id = d.nextIdent(false, Var(decls.head.getChild(0).getSrcContent))
+        val rhs = decls.head.getChild(2).toExpr(using (ctx ++ comprehCtx) + (id.tree.name -> id))
+        Expr.LetIn(
+          id,
+          rhs,
+          handleListComprehension(elemGen, quals.tail, rest, comprehCtx + (id.tree.name -> id), produceLazyList = produceLazyList)
+        )
+      }
       case _ => lastWords(s"unsupported: ${quals.head.getNodeString()}")
     }
   }

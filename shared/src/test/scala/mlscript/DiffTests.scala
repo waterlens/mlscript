@@ -52,7 +52,6 @@ abstract class ModeType {
 
 class DiffTests
   extends funsuite.AnyFunSuite
-  with ParallelTestExecution
   with TimeLimitedTests
 {
   

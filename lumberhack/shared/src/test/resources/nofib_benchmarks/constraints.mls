@@ -5756,10 +5756,9 @@ testConstraints_nofib $ primId 5
 //│ 									let _lh_bt_Just_0⁶ = 	
 //│ 										let _lh_bt_LH_P2_0⁶ = level₀₀(_lh_earliestInconsistency_LH_C_0⁸)
 //│ 										in let _lh_bt_LH_P2_1⁶ = level₁₀(_lh_earliestInconsistency_LH_C_0⁹)
-//│ 										in (fun _lh_dummy⁰ -> 
-//│ 											let _lh_f_Known_0⁴ = [LH_C _lh_bt_LH_P2_0⁶ [LH_C _lh_bt_LH_P2_1⁶ [LH_N]]]
-//│ 											in (fun _lh_f_LH_P2_0¹² -> (fun _lh_f_arg2⁸ -> [Node [LH_P2 _lh_f_LH_P2_0¹² [Known _lh_f_Known_0⁴]] _lh_f_arg2⁸])))
-//│ 									in (fun _lh_bt_arg1⁸ -> (fun s⁸ -> _lh_bt_Just_0⁶(99)))
+//│ 										in let _lh_f_Known_0⁴ = [LH_C _lh_bt_LH_P2_0⁶ [LH_C _lh_bt_LH_P2_1⁶ [LH_N]]]
+//│ 										in (fun _lh_f_LH_P2_0¹² -> (fun _lh_f_arg2⁸ -> [Node [LH_P2 _lh_f_LH_P2_0¹² [Known _lh_f_Known_0⁴]] _lh_f_arg2⁸]))
+//│ 									in (fun _lh_bt_arg1⁸ -> (fun s⁸ -> _lh_bt_Just_0⁶))
 //│ 								| _  => error⁰}
 //│ 						| _  => error⁰}
 //│ 					| _  => error⁰}
@@ -5910,10 +5909,9 @@ testConstraints_nofib $ primId 5
 //│ 									let _lh_bt_Just_0⁷ = 	
 //│ 										let _lh_bt_LH_P2_0⁷ = level₂₀(_lh_earliestInconsistency_LH_C_0¹⁰)
 //│ 										in let _lh_bt_LH_P2_1⁷ = level₃₀(_lh_earliestInconsistency_LH_C_0¹¹)
-//│ 										in (fun _lh_dummy⁴ -> 
-//│ 											let _lh_f_Known_0⁶ = [LH_C _lh_bt_LH_P2_0⁷ [LH_C _lh_bt_LH_P2_1⁷ [LH_N]]]
-//│ 											in (fun _lh_f_LH_P2_0¹⁶ -> (fun _lh_f_arg2¹³ -> [Node [LH_P2 _lh_f_LH_P2_0¹⁶ [Known _lh_f_Known_0⁶]] _lh_f_arg2¹³])))
-//│ 									in (fun _lh_bt_arg1¹¹ -> (fun s¹¹ -> _lh_bt_Just_0⁷(99)))
+//│ 										in let _lh_f_Known_0⁶ = [LH_C _lh_bt_LH_P2_0⁷ [LH_C _lh_bt_LH_P2_1⁷ [LH_N]]]
+//│ 										in (fun _lh_f_LH_P2_0¹⁶ -> (fun _lh_f_arg2¹³ -> [Node [LH_P2 _lh_f_LH_P2_0¹⁶ [Known _lh_f_Known_0⁶]] _lh_f_arg2¹³]))
+//│ 									in (fun _lh_bt_arg1¹¹ -> (fun s¹¹ -> _lh_bt_Just_0⁷))
 //│ 								| _  => error⁰}
 //│ 						| _  => error⁰}
 //│ 					| _  => error⁰}
@@ -5965,16 +5963,16 @@ testConstraints_nofib $ primId 5
 //│ 						in (fun _lh_f_arg1¹² -> case _lh_f_LH_P2_0¹³ of {
 //│ 							LH_N  => 
 //│ 								let _lh_fst_LH_P2_0⁴ = [LH_P2 [LH_N] [Unknown]]
-//│ 								in (fun _lh_dummy¹ -> _lh_fst_LH_P2_0⁴)
+//│ 								in _lh_fst_LH_P2_0⁴
 //│ 							| LH_C _lh_f_LH_C_0³ _lh_f_LH_C_1³ => 
 //│ 								let tableEntry⁴ = atIndex₀₀((value₀₀(_lh_f_LH_C_0³) - 1), head₀₀(_lh_f_LH_P2_1¹²))
 //│ 								in let cs¹¹ = if polyEq⁰(tableEntry⁴, [Unknown]) then checkComplete₂₀(_lh_f_arg1¹², 
 //│ 									let _lh_maxLevel_LH_C_0¹⁸ = _lh_f_LH_C_0³
-//│ 									in (fun _lh_dummy² -> case _lh_maxLevel_LH_C_0¹⁸ of {
+//│ 									in case _lh_maxLevel_LH_C_0¹⁸ of {
 //│ 										Assign _lh_maxLevel_Assign_0¹⁰ _lh_maxLevel_Assign_1¹⁰ => _lh_maxLevel_Assign_0¹⁰
-//│ 										| _  => error⁰})) else tableEntry⁴
+//│ 										| _  => error⁰}) else tableEntry⁴
 //│ 								in let _lh_fst_LH_P2_0⁵ = [LH_P2 [LH_C _lh_f_LH_C_0³ _lh_f_LH_C_1³] cs¹¹]
-//│ 								in (fun _lh_dummy³ -> _lh_fst_LH_P2_0⁵)
+//│ 								in _lh_fst_LH_P2_0⁵
 //│ 							| _  => error⁰})
 //│ 					in let _lh_mapTree_Node_1¹⁴ = map₆₀(cacheChecks₀₀(_lh_cacheChecks_arg1⁴, fillTable₀₀(_lh_cacheChecks_Node_0², _lh_cacheChecks_arg1⁴, tail₀₀(_lh_cacheChecks_arg2⁴))), _lh_cacheChecks_Node_1²)
 //│ 					in (fun _lh_mapTree_arg1¹⁶ -> 
@@ -6060,7 +6058,7 @@ testConstraints_nofib $ primId 5
 //│ 					let _lh_listcomp_fun_ls_t²⁴ = enumFromTo₃₀((a³⁹ + 1), b²⁸)
 //│ 					in (fun _lh_listcomp_fun³⁴ -> [LH_C [Unknown] _lh_listcomp_fun³⁴(_lh_listcomp_fun_ls_t²⁴)]) else (fun _lh_listcomp_fun³⁵ -> [LH_N])
 //│ 		def fst₀₀(_lh_fst_arg1⁴) = 
-//│ 			_lh_fst_arg1⁴(99)
+//│ 			_lh_fst_arg1⁴
 //│ 		def lookupCache₀₀(_lh_lookupCache_arg1⁴, _lh_lookupCache_arg2⁴) = 
 //│ 			let f¹¹² = (fun _lh_f_arg1¹¹ -> (fun _lh_f_arg2⁹ -> _lh_f_arg2⁹(_lh_f_arg1¹¹)))
 //│ 			in mapTree₂₀(f¹¹²(_lh_lookupCache_arg1⁴), _lh_lookupCache_arg2⁴)
@@ -6078,7 +6076,7 @@ testConstraints_nofib $ primId 5
 //│ 						| _  => error⁰}
 //│ 					where
 //│ 					def maxLevel₄₀(_lh_maxLevel_arg1²⁶) = 
-//│ 						_lh_maxLevel_arg1²⁶(99)
+//│ 						_lh_maxLevel_arg1²⁶
 //│ 			def head₀₀(ls¹⁰⁸) = 
 //│ 				case ls¹⁰⁸ of {
 //│ 					LH_C h⁶⁴ t⁶⁴ => h⁶⁴
@@ -6130,8 +6128,8 @@ testConstraints_nofib $ primId 5
 //│ 								let _lh_bt_Just_0⁸ = 	
 //│ 									let _lh_bt_LH_P2_0⁸ = level₄₀(_lh_earliestInconsistency_LH_C_0⁶)
 //│ 									in let _lh_bt_LH_P2_1⁸ = level₅₀(_lh_earliestInconsistency_LH_C_0⁷)
-//│ 									in (fun _lh_dummy⁵ -> [Known [LH_C _lh_bt_LH_P2_0⁸ [LH_C _lh_bt_LH_P2_1⁸ [LH_N]]]])
-//│ 								in (fun _lh_bt_arg1¹⁵ -> (fun s¹⁵ -> _lh_bt_Just_0⁸(99)))
+//│ 									in [Known [LH_C _lh_bt_LH_P2_0⁸ [LH_C _lh_bt_LH_P2_1⁸ [LH_N]]]]
+//│ 								in (fun _lh_bt_arg1¹⁵ -> (fun s¹⁵ -> _lh_bt_Just_0⁸))
 //│ 							| _  => error⁰}
 //│ 					| _  => error⁰}
 //│ 				| _  => error⁰}
@@ -6188,14 +6186,14 @@ testConstraints_nofib $ primId 5
 //│ 										in let cs'⁵ = if null₀₀(wipedDomains²) then _lh_f_LH_P2_1¹⁷ else [Known collect₀₀(head₁₀(wipedDomains²))]
 //│ 										in [LH_P2 _lh_f_LH_P2_0²³ cs'⁵])
 //│ 								in let _lh_f_LH_P2_1¹⁶ = _lh_f_LH_P2_1¹⁵
-//│ 								in (fun _lh_dummy¹⁰ -> _lh_f_LH_P2_0²²(_lh_f_LH_P2_1¹⁶))
+//│ 								in (fun _lh_dummy⁴ -> _lh_f_LH_P2_0²²(_lh_f_LH_P2_1¹⁶))
 //│ 							| LH_C _lh_f_LH_C_0² _lh_f_LH_C_1² => 
 //│ 								let tableEntry⁵ = atIndex₁₀((value₁₀(_lh_f_LH_C_0²) - 1), head₂₀(_lh_f_LH_P2_1¹⁵))
 //│ 								in let cs¹⁶ = if polyEq⁰(tableEntry⁵, [Unknown]) then checkComplete₄₀(_lh_f_arg1¹⁶, 
 //│ 									let _lh_maxLevel_LH_C_0¹⁹ = _lh_f_LH_C_0²
-//│ 									in (fun _lh_dummy¹¹ -> case _lh_maxLevel_LH_C_0¹⁹ of {
+//│ 									in case _lh_maxLevel_LH_C_0¹⁹ of {
 //│ 										Assign _lh_maxLevel_Assign_0¹¹ _lh_maxLevel_Assign_1¹¹ => _lh_maxLevel_Assign_0¹¹
-//│ 										| _  => error⁰})) else tableEntry⁵
+//│ 										| _  => error⁰}) else tableEntry⁵
 //│ 								in let _lh_f_LH_P2_0²⁴ = 	
 //│ 									let _lh_f_LH_P2_0²⁵ = [LH_C _lh_f_LH_C_0² _lh_f_LH_C_1²]
 //│ 									in let _lh_f_LH_P2_1²⁰ = cs¹⁶
@@ -6208,7 +6206,7 @@ testConstraints_nofib $ primId 5
 //│ 										in let cs'⁶ = if null₀₀(wipedDomains³) then _lh_f_LH_P2_1²⁰ else [Known collect₀₀(head₁₀(wipedDomains³))]
 //│ 										in [LH_P2 _lh_f_LH_P2_0²⁵ cs'⁶])
 //│ 								in let _lh_f_LH_P2_1¹⁹ = _lh_f_LH_P2_1¹⁵
-//│ 								in (fun _lh_dummy¹² -> _lh_f_LH_P2_0²⁴(_lh_f_LH_P2_1¹⁹))
+//│ 								in (fun _lh_dummy⁵ -> _lh_f_LH_P2_0²⁴(_lh_f_LH_P2_1¹⁹))
 //│ 							| _  => error⁰})
 //│ 					in let _lh_mapTree_Node_1¹⁶ = map₁₀₀(cacheChecks₁₀(_lh_cacheChecks_arg1⁵, fillTable₁₀(_lh_cacheChecks_Node_0³, _lh_cacheChecks_arg1⁵, tail₁₀(_lh_cacheChecks_arg2⁵))), _lh_cacheChecks_Node_1³)
 //│ 					in (fun _lh_mapTree_arg1²³ -> 
@@ -6381,7 +6379,7 @@ testConstraints_nofib $ primId 5
 //│ 						| _  => error⁰}
 //│ 					where
 //│ 					def maxLevel₆₀(_lh_maxLevel_arg1²⁵) = 
-//│ 						_lh_maxLevel_arg1²⁵(99)
+//│ 						_lh_maxLevel_arg1²⁵
 //│ 			def head₂₀(ls¹¹⁶) = 
 //│ 				case ls¹¹⁶ of {
 //│ 					LH_C h⁸³ t⁸³ => h⁸³
@@ -6426,8 +6424,8 @@ testConstraints_nofib $ primId 5
 //│ 						in let t¹⁰⁶ = filter₆₀(f¹⁶⁰, t⁷⁸)
 //│ 						in (fun f¹⁶¹ -> 
 //│ 							let t¹⁰⁷ = map₁₅₀(f¹⁶¹, t¹⁰⁶)
-//│ 							in (fun _lh_dummy⁸ -> (1 + length₀₀(t¹⁰⁷)))) else filter₆₀(f¹⁶⁰, t⁷⁸)
-//│ 					| LH_N  => (fun f¹⁶² -> (fun _lh_dummy⁹ -> 0))}
+//│ 							in (fun _lh_dummy² -> (1 + length₀₀(t¹⁰⁷)))) else filter₆₀(f¹⁶⁰, t⁷⁸)
+//│ 					| LH_N  => (fun f¹⁶² -> (fun _lh_dummy³ -> 0))}
 //│ 			def fst₁₀(_lh_fst_arg1⁵) = 
 //│ 				case _lh_fst_arg1⁵ of {
 //│ 					LH_P2 _lh_fst_LH_P2_0² _lh_fst_LH_P2_1² => _lh_fst_LH_P2_0²
@@ -6463,8 +6461,8 @@ testConstraints_nofib $ primId 5
 //│ 						LH_C h⁸⁹ t⁸⁹ => 
 //│ 							let h¹⁰⁵ = f¹⁵⁷(h⁸⁹)
 //│ 							in let t¹⁰⁵ = map₁₄₀(f¹⁵⁷, t⁸⁹)
-//│ 							in (fun _lh_dummy⁶ -> mappend₃₀(h¹⁰⁵, concat₀₀(t¹⁰⁵)))
-//│ 						| LH_N  => (fun _lh_dummy⁷ -> [LH_N])}
+//│ 							in (fun _lh_dummy⁰ -> mappend₃₀(h¹⁰⁵, concat₀₀(t¹⁰⁵)))
+//│ 						| LH_N  => (fun _lh_dummy¹ -> [LH_N])}
 //│ 			def map₁₅₀(f¹⁶⁸, ls¹²⁷) = 
 //│ 				ls¹²⁷(f¹⁶⁸)
 //│ 			def mkTree₀₀(_lh_mkTree_arg1²) = 

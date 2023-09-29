@@ -15975,10 +15975,10 @@ testRewrite_nofib $ primId 50
 //│ 	| Just _lh_lift_Just_0³ => [Just _lh_lift_arg1²²(_lh_lift_Just_0³)]
 //│ 	| _  => error⁰}
 //│ def lift₃(_lh_lift_arg1⁴⁵, _lh_lift_arg2³⁹) = case _lh_lift_arg2³⁹ of {
-//│ 	Nothing  => (fun _lh_dummy¹⁸ -> [Nothing])
+//│ 	Nothing  => [Nothing]
 //│ 	| Just _lh_lift_Just_0¹³ => 
 //│ 		let _lh_squash_Just_0⁴ = _lh_lift_arg1⁴⁵(_lh_lift_Just_0¹³)
-//│ 		in (fun _lh_dummy¹⁹ -> _lh_squash_Just_0⁴)
+//│ 		in _lh_squash_Just_0⁴
 //│ 	| _  => error⁰}
 //│ def lift₄(_lh_lift_arg1³⁶, _lh_lift_arg2³³) = case _lh_lift_arg2³³ of {
 //│ 	Nothing  => (fun _lh_getOrElse_arg2³⁴ -> _lh_getOrElse_arg2³⁴)
@@ -15991,10 +15991,10 @@ testRewrite_nofib $ primId 50
 //│ 	| Just _lh_lift_Just_0² => [Just _lh_lift_arg1²⁸(_lh_lift_Just_0²)]
 //│ 	| _  => error⁰}
 //│ def lift₆(_lh_lift_arg1³⁵, _lh_lift_arg2³²) = case _lh_lift_arg2³² of {
-//│ 	Nothing  => (fun _lh_dummy⁶ -> [Nothing])
+//│ 	Nothing  => [Nothing]
 //│ 	| Just _lh_lift_Just_0⁸ => 
 //│ 		let _lh_squash_Just_0³ = _lh_lift_arg1³⁵(_lh_lift_Just_0⁸)
-//│ 		in (fun _lh_dummy⁷ -> _lh_squash_Just_0³)
+//│ 		in _lh_squash_Just_0³
 //│ 	| _  => error⁰}
 //│ def lift₇(_lh_lift_arg1²⁹, _lh_lift_arg2²⁸) = case _lh_lift_arg2²⁸ of {
 //│ 	Nothing  => (fun _lh_lift_arg1³⁰ -> (fun _lh_getOrElse_arg2²⁷ -> _lh_getOrElse_arg2²⁷))
@@ -16071,8 +16071,8 @@ testRewrite_nofib $ primId 50
 //│ 	LH_C h¹⁰⁴ t¹¹⁸ => 
 //│ 		let h¹⁷⁶ = f²¹⁵(h¹⁰⁴)
 //│ 		in let t¹⁹⁹ = map₁(f²¹⁵, t¹¹⁸)
-//│ 		in (fun _lh_dummy²⁰ -> (h¹⁷⁶ + sum₀(t¹⁹⁹)))
-//│ 	| LH_N  => (fun _lh_dummy²¹ -> 0)}
+//│ 		in (fun _lh_dummy¹⁶ -> (h¹⁷⁶ + sum₀(t¹⁹⁹)))
+//│ 	| LH_N  => (fun _lh_dummy¹⁷ -> 0)}
 //│ def map₁₀(f¹⁷⁹, ls¹⁴⁴) = case ls¹⁴⁴ of {
 //│ 	LH_C h⁶⁸ t⁷⁸ => 
 //│ 		let h¹⁶⁴ = f¹⁷⁹(h⁶⁸)
@@ -16114,14 +16114,14 @@ testRewrite_nofib $ primId 50
 //│ 	LH_C h¹⁰³ t¹¹⁷ => 
 //│ 		let _lh_or_LH_C_0⁷ = f¹⁸⁹(h¹⁰³)
 //│ 		in let _lh_or_LH_C_1⁷ = map₁₆(f¹⁸⁹, t¹¹⁷)
-//│ 		in (fun _lh_dummy¹³ -> if _lh_or_LH_C_0⁷ then [True] else or₀(_lh_or_LH_C_1⁷))
-//│ 	| LH_N  => (fun _lh_dummy¹⁴ -> [False])}
+//│ 		in (fun _lh_dummy¹¹ -> if _lh_or_LH_C_0⁷ then [True] else or₀(_lh_or_LH_C_1⁷))
+//│ 	| LH_N  => (fun _lh_dummy¹² -> [False])}
 //│ def map₁₇(f²²⁷, ls¹⁷⁰) = case ls¹⁷⁰ of {
 //│ 	LH_C h⁴⁵ t⁵² => 
 //│ 		let _lh_or_LH_C_0⁸ = f²²⁷(h⁴⁵)
 //│ 		in let _lh_or_LH_C_1⁸ = map₁₇(f²²⁷, t⁵²)
-//│ 		in (fun _lh_dummy²² -> if _lh_or_LH_C_0⁸ then [True] else or₁(_lh_or_LH_C_1⁸))
-//│ 	| LH_N  => (fun _lh_dummy²³ -> [False])}
+//│ 		in (fun _lh_dummy¹⁸ -> if _lh_or_LH_C_0⁸ then [True] else or₁(_lh_or_LH_C_1⁸))
+//│ 	| LH_N  => (fun _lh_dummy¹⁹ -> [False])}
 //│ def map₁₈(f¹³⁵, ls¹¹³) = case ls¹¹³ of {
 //│ 	LH_C h⁹⁵ t¹⁰⁶ => 
 //│ 		let h¹⁴⁵ = f¹³⁵(h⁹⁵)
@@ -16215,8 +16215,8 @@ testRewrite_nofib $ primId 50
 //│ 	LH_C h⁶¹ t⁷⁰ => 
 //│ 		let _lh_or_LH_C_0⁶ = f¹⁷³(h⁶¹)
 //│ 		in let _lh_or_LH_C_1⁶ = map₃₉(f¹⁷³, t⁷⁰)
-//│ 		in (fun _lh_dummy¹⁰ -> if _lh_or_LH_C_0⁶ then [True] else or₂(_lh_or_LH_C_1⁶))
-//│ 	| LH_N  => (fun _lh_dummy¹¹ -> [False])}
+//│ 		in (fun _lh_dummy⁸ -> if _lh_or_LH_C_0⁶ then [True] else or₂(_lh_or_LH_C_1⁶))
+//│ 	| LH_N  => (fun _lh_dummy⁹ -> [False])}
 //│ def map₄(f¹⁶⁰, ls¹³²) = case ls¹³² of {
 //│ 	LH_C h¹¹⁴ t¹²⁹ => 
 //│ 		let h¹⁵² = f¹⁶⁰(h¹¹⁴)
@@ -16233,7 +16233,7 @@ testRewrite_nofib $ primId 50
 //│ 					in (fun f¹⁶² -> 
 //│ 						let h¹⁵⁶ = f¹⁶²(h¹⁵⁵)
 //│ 						in let t¹⁷⁵ = map₂₅(f¹⁶², t¹⁷⁴)
-//│ 						in (fun _lh_dummy⁸ -> mappend₁₁(h¹⁵⁶, concat₂(t¹⁷⁵)))))))
+//│ 						in (fun _lh_dummy⁶ -> mappend₁₁(h¹⁵⁶, concat₂(t¹⁷⁵)))))))
 //│ 	| LH_N  => (fun ys⁶⁸ -> ys⁶⁸)}
 //│ def map₄₀(f¹²⁴, ls¹⁰⁷) = case ls¹⁰⁷ of {
 //│ 	LH_C h⁶⁹ t⁷⁹ => 
@@ -16287,7 +16287,7 @@ testRewrite_nofib $ primId 50
 //│ 				in (fun f¹⁸⁵ -> 
 //│ 					let h¹⁶⁸ = f¹⁸⁵(h¹⁶⁷)
 //│ 					in let t¹⁸⁸ = map₂₅(f¹⁸⁵, t¹⁸⁷)
-//│ 					in (fun _lh_dummy¹² -> mappend₁₁(h¹⁶⁸, concat₂(t¹⁸⁸))))))
+//│ 					in (fun _lh_dummy¹⁰ -> mappend₁₁(h¹⁶⁸, concat₂(t¹⁸⁸))))))
 //│ 	| LH_N  => (fun ys⁸¹ -> ys⁸¹)}
 //│ def map₆(f⁸⁸, ls⁹⁹) = case ls⁹⁹ of {
 //│ 	LH_C h⁶⁶ t⁷⁶ => 
@@ -16302,8 +16302,8 @@ testRewrite_nofib $ primId 50
 //│ 		in (fun f¹⁹⁷ -> 
 //│ 			let h¹⁷² = f¹⁹⁷(h¹⁷¹)
 //│ 			in let t¹⁹² = map₉(f¹⁹⁷, t¹⁹¹)
-//│ 			in (fun _lh_dummy¹⁵ -> mappend₀(h¹⁷², concat₀(t¹⁹²))))
-//│ 	| LH_N  => (fun f¹⁹⁸ -> (fun _lh_dummy¹⁷ -> (fun f¹⁹⁹ -> (fun f²⁰⁰ -> (fun _lh_dummy¹⁶ -> [LH_N])))))}
+//│ 			in (fun _lh_dummy¹³ -> mappend₀(h¹⁷², concat₀(t¹⁹²))))
+//│ 	| LH_N  => (fun f¹⁹⁸ -> (fun _lh_dummy¹⁵ -> (fun f¹⁹⁹ -> (fun f²⁰⁰ -> (fun _lh_dummy¹⁴ -> [LH_N])))))}
 //│ def map₈(f¹⁶⁸, ls¹³⁶) = case ls¹³⁶ of {
 //│ 	LH_C h⁶⁷ t⁷⁷ => 
 //│ 		let h¹⁵⁹ = f¹⁶⁸(h⁶⁷)
@@ -16317,7 +16317,7 @@ testRewrite_nofib $ primId 50
 //│ 				in (fun f¹⁷⁰ -> 
 //│ 					let h¹⁶² = f¹⁷⁰(h¹⁶¹)
 //│ 					in let t¹⁸² = map₂₅(f¹⁷⁰, t¹⁸¹)
-//│ 					in (fun _lh_dummy⁹ -> mappend₁₁(h¹⁶², concat₂(t¹⁸²))))))
+//│ 					in (fun _lh_dummy⁷ -> mappend₁₁(h¹⁶², concat₂(t¹⁸²))))))
 //│ 	| LH_N  => (fun ys⁷⁶ -> ys⁷⁶)}
 //│ def map₉(f¹⁵², ls¹²⁶) = ls¹²⁶(f¹⁵²)
 //│ def match'₀(_lh_match'_arg1³, _lh_match'_arg2³) = _lh_match'_arg2³(_lh_match'_arg1³)
@@ -16554,8 +16554,8 @@ testRewrite_nofib $ primId 50
 //│ def snd₂(_lh_snd_arg1⁶) = case _lh_snd_arg1⁶ of {
 //│ 	LH_P2 _lh_snd_LH_P2_0² _lh_snd_LH_P2_1² => _lh_snd_LH_P2_1²
 //│ 	| _  => error⁰}
-//│ def squash₀(_lh_squash_arg1⁴) = _lh_squash_arg1⁴(99)
-//│ def squash₁(_lh_squash_arg1³) = _lh_squash_arg1³(99)
+//│ def squash₀(_lh_squash_arg1⁴) = _lh_squash_arg1⁴
+//│ def squash₁(_lh_squash_arg1³) = _lh_squash_arg1³
 //│ def stand_eqn₀(_lh_stand_eqn_arg1⁵, _lh_stand_eqn_arg2⁵) = case _lh_stand_eqn_arg2⁵ of {
 //│ 	Eqn _lh_stand_eqn_Eqn_0¹ _lh_stand_eqn_Eqn_1¹ => case _lh_stand_eqn_Eqn_1¹ of {
 //│ 		LH_P2 _lh_stand_eqn_LH_P2_0¹ _lh_stand_eqn_LH_P2_1¹ => [Eqn _lh_stand_eqn_Eqn_0¹ [LH_P2 stand₀(_lh_stand_eqn_arg1⁵, _lh_stand_eqn_LH_P2_0¹) stand₁(_lh_stand_eqn_arg1⁵, _lh_stand_eqn_LH_P2_1¹)]]

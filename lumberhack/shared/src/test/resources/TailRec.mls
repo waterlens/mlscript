@@ -178,16 +178,16 @@ count(0, rev(C(1, C(2, N)), N))
 //│ >>>>>>> after fusion >>>>>>>
 //│ count₀(0, rev₀(
 //│ 	let t² = 	
-//│ 		let t³ = (fun _lh_dummy² -> (fun c⁸ -> c⁸))
-//│ 		in (fun _lh_dummy¹ -> (fun c⁷ -> count₀((c⁷ + 1), t³)))
-//│ 	in (fun _lh_dummy⁰ -> (fun c⁶ -> count₀((c⁶ + 1), t²))), [N]))
+//│ 		let t³ = (fun c⁸ -> c⁸)
+//│ 		in (fun c⁷ -> count₀((c⁷ + 1), t³))
+//│ 	in (fun c⁶ -> count₀((c⁶ + 1), t²)), [N]))
 //│ def count₀(c⁹, xs²) = 
-//│ 	xs²(99, c⁹)
+//│ 	xs²(c⁹)
 //│ def rev₀(a⁶, ys²) = 
 //│ 	case ys² of {
 //│ 		C h1¹ t1¹ => (fun a⁷ -> rev₀(
 //│ 			let t⁴ = a⁷
-//│ 			in (fun _lh_dummy³ -> (fun c¹⁰ -> count₀((c¹⁰ + 1), t⁴))), t1¹))
+//│ 			in (fun c¹⁰ -> count₀((c¹⁰ + 1), t⁴)), t1¹))
 //│ 		| N  => (fun a⁸ -> a⁸)}(a⁶)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
@@ -275,16 +275,16 @@ count(rev(N, init))(0)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ count₀(rev₀((fun _lh_dummy⁰ -> (fun c⁴ -> c⁴)), init₀), 0)
+//│ count₀(rev₀((fun c⁴ -> c⁴), init₀), 0)
 //│ def count₀(xs²) = 
-//│ 	xs²(99)
+//│ 	xs²
 //│ def init₀ = 
 //│ 	[N]
 //│ def rev₀(a², ys²) = 
 //│ 	case ys² of {
 //│ 		C h1¹ t1¹ => rev₀(
 //│ 			let t² = a²
-//│ 			in (fun _lh_dummy¹ -> (fun c⁵ -> count₀(t², (c⁵ + 1)))), t1¹)
+//│ 			in (fun c⁵ -> count₀(t², (c⁵ + 1))), t1¹)
 //│ 		| N  => a²}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 

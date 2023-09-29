@@ -105,13 +105,13 @@ map(ff, l)
 //│ >>>>>>> after fusion >>>>>>>
 //│ map₀(ff₀, l₀)
 //│ def ff₀(x²) = 
-//│ 	x²(99)
+//│ 	x²
 //│ def l₀ = 
-//│ 	let h² = (fun _lh_dummy² -> [T])
+//│ 	let h² = [T]
 //│ 	in let t² = 	
-//│ 		let h³ = (fun _lh_dummy¹ -> [TT])
+//│ 		let h³ = [TT]
 //│ 		in let t³ = 	
-//│ 			let h⁴ = (fun _lh_dummy⁰ -> [TTTT])
+//│ 			let h⁴ = [TTTT]
 //│ 			in let t⁴ = (fun f⁶ -> [N])
 //│ 			in (fun f⁵ -> [C f⁵(h⁴) map₀(f⁵, t⁴)])
 //│ 		in (fun f⁴ -> [C f⁴(h³) map₀(f⁴, t³)])
@@ -230,12 +230,12 @@ map(ff, l)
 //│ 		let h³ = [KK]
 //│ 		in let t³ = 	
 //│ 			let h⁴ = [KKKK]
-//│ 			in let t⁴ = (fun _lh_dummy³ -> (fun f¹⁰ -> [N]))
-//│ 			in (fun _lh_dummy² -> (fun f⁹ -> [C f⁹(h⁴) map₀(f⁹, t⁴)]))
-//│ 		in (fun _lh_dummy¹ -> (fun f⁸ -> [C f⁸(h³) map₀(f⁸, t³)]))
-//│ 	in (fun _lh_dummy⁰ -> (fun f⁷ -> [C f⁷(h²) map₀(f⁷, t²)]))
+//│ 			in let t⁴ = (fun f¹⁰ -> [N])
+//│ 			in (fun f⁹ -> [C f⁹(h⁴) map₀(f⁹, t⁴)])
+//│ 		in (fun f⁸ -> [C f⁸(h³) map₀(f⁸, t³)])
+//│ 	in (fun f⁷ -> [C f⁷(h²) map₀(f⁷, t²)])
 //│ def map₀(f⁶, ls²) = 
-//│ 	ls²(99, f⁶)
+//│ 	ls²(f⁶)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -703,20 +703,20 @@ idxSum(rev(C(A, C(B, C(C, N))), N))(0)
 //│ 		let hh³ = [B]
 //│ 		in let tt³ = 	
 //│ 			let hh⁴ = [C]
-//│ 			in let tt⁴ = (fun _lh_dummy⁶ -> (fun a⁷ -> a⁷))
-//│ 			in (fun _lh_dummy⁵ -> (fun a⁶ -> rev₀(tt⁴, 
+//│ 			in let tt⁴ = (fun a⁷ -> a⁷)
+//│ 			in (fun a⁶ -> rev₀(tt⁴, 
 //│ 				let t⁴ = a⁶
-//│ 				in (fun _lh_dummy⁴ -> (fun acc⁶ -> (acc⁶ + idxSum₀(t⁴, (acc⁶ + 1))))))))
-//│ 		in (fun _lh_dummy³ -> (fun a⁵ -> rev₀(tt³, 
+//│ 				in (fun acc⁶ -> (acc⁶ + idxSum₀(t⁴, (acc⁶ + 1))))))
+//│ 		in (fun a⁵ -> rev₀(tt³, 
 //│ 			let t³ = a⁵
-//│ 			in (fun _lh_dummy² -> (fun acc⁵ -> (acc⁵ + idxSum₀(t³, (acc⁵ + 1))))))))
-//│ 	in (fun _lh_dummy¹ -> (fun a⁴ -> rev₀(tt², 
+//│ 			in (fun acc⁵ -> (acc⁵ + idxSum₀(t³, (acc⁵ + 1))))))
+//│ 	in (fun a⁴ -> rev₀(tt², 
 //│ 		let t² = a⁴
-//│ 		in (fun _lh_dummy⁰ -> (fun acc⁴ -> (acc⁴ + idxSum₀(t², (acc⁴ + 1)))))))), (fun _lh_dummy⁷ -> (fun acc⁷ -> 0))), 0)
+//│ 		in (fun acc⁴ -> (acc⁴ + idxSum₀(t², (acc⁴ + 1)))))), (fun acc⁷ -> 0)), 0)
 //│ def idxSum₀(ls²) = 
-//│ 	ls²(99)
+//│ 	ls²
 //│ def rev₀(lss²) = 
-//│ 	lss²(99)
+//│ 	lss²
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -920,18 +920,18 @@ max(C(1, C(3, C(2, N))))(0)
 //│ 		let h³ = 3
 //│ 		in let t³ = 	
 //│ 			let h⁴ = 2
-//│ 			in let t⁴ = (fun _lh_dummy³ -> (fun m⁷ -> m⁷))
-//│ 			in (fun _lh_dummy² -> (fun m⁶ -> case (h⁴ > m⁶) of {
+//│ 			in let t⁴ = (fun m⁷ -> m⁷)
+//│ 			in (fun m⁶ -> case (h⁴ > m⁶) of {
 //│ 				True  => max₀(t⁴, h⁴)
-//│ 				| False  => max₀(t⁴, m⁶)}))
-//│ 		in (fun _lh_dummy¹ -> (fun m⁵ -> case (h³ > m⁵) of {
+//│ 				| False  => max₀(t⁴, m⁶)})
+//│ 		in (fun m⁵ -> case (h³ > m⁵) of {
 //│ 			True  => max₀(t³, h³)
-//│ 			| False  => max₀(t³, m⁵)}))
-//│ 	in (fun _lh_dummy⁰ -> (fun m⁴ -> case (h² > m⁴) of {
+//│ 			| False  => max₀(t³, m⁵)})
+//│ 	in (fun m⁴ -> case (h² > m⁴) of {
 //│ 		True  => max₀(t², h²)
-//│ 		| False  => max₀(t², m⁴)})), 0)
+//│ 		| False  => max₀(t², m⁴)}), 0)
 //│ def max₀(ms²) = 
-//│ 	ms²(99)
+//│ 	ms²
 //│ <<<<<<< after fusion <<<<<<<
 
 // WRONG: multiple match
@@ -1240,30 +1240,30 @@ rev(C(1, C(2, C(3, N))))
 //│ 			in let t¹² = (fun _lh_dummy⁸ -> [N])
 //│ 			in (fun _lh_dummy⁹ -> concat₀₂(rev₀₃(t¹²), 
 //│ 				let h¹³ = h¹²
-//│ 				in let t¹³ = (fun _lh_dummy¹² -> (fun ys¹⁰ -> ys¹⁰))
-//│ 				in (fun _lh_dummy¹¹ -> (fun ys⁸ -> 
+//│ 				in let t¹³ = (fun ys¹⁰ -> ys¹⁰)
+//│ 				in (fun ys⁸ -> 
 //│ 					let h¹⁴ = h¹³
 //│ 					in let t¹⁴ = concat₀₀(t¹³, ys⁸)
-//│ 					in (fun _lh_dummy¹⁰ -> (fun ys⁹ -> [C h¹⁴ concat₀₁(t¹⁴, ys⁹)]))))))
-//│ 		in (fun _lh_dummy¹³ -> concat₀₀(rev₀₁(t¹¹), 
+//│ 					in (fun ys⁹ -> [C h¹⁴ concat₀₁(t¹⁴, ys⁹)]))))
+//│ 		in (fun _lh_dummy¹⁰ -> concat₀₀(rev₀₁(t¹¹), 
 //│ 			let h¹⁵ = h¹¹
-//│ 			in let t¹⁵ = (fun _lh_dummy¹⁵ -> (fun ys¹² -> ys¹²))
-//│ 			in (fun _lh_dummy¹⁴ -> (fun ys¹¹ -> [C h¹⁵ concat₀₁(t¹⁵, ys¹¹)]))))
-//│ 	in (fun _lh_dummy¹⁶ -> concat₀₁(rev₀₂(t¹⁰), [C h¹⁰ [N]])))
+//│ 			in let t¹⁵ = (fun ys¹² -> ys¹²)
+//│ 			in (fun ys¹¹ -> [C h¹⁵ concat₀₁(t¹⁵, ys¹¹)])))
+//│ 	in (fun _lh_dummy¹¹ -> concat₀₁(rev₀₂(t¹⁰), [C h¹⁰ [N]])))
 //│ def concat₀₀(xs⁴) = 
-//│ 	xs⁴(99)
+//│ 	xs⁴
 //│ def concat₀₁(xs⁶) = 
-//│ 	xs⁶(99)
+//│ 	xs⁶
 //│ def concat₀₂(xs⁵) = 
 //│ 	case xs⁵ of {
 //│ 		N  => (fun ys¹³ -> ys¹³)
 //│ 		| C h⁶ t⁶ => (fun ys¹⁴ -> 
 //│ 			let h¹⁶ = h⁶
 //│ 			in let t¹⁶ = concat₀₂(t⁶, ys¹⁴)
-//│ 			in (fun _lh_dummy¹⁸ -> (fun ys¹⁵ -> 
+//│ 			in (fun ys¹⁵ -> 
 //│ 				let h¹⁷ = h¹⁶
 //│ 				in let t¹⁷ = concat₀₀(t¹⁶, ys¹⁵)
-//│ 				in (fun _lh_dummy¹⁷ -> (fun ys¹⁶ -> [C h¹⁷ concat₀₁(t¹⁷, ys¹⁶)])))))}
+//│ 				in (fun ys¹⁶ -> [C h¹⁷ concat₀₁(t¹⁷, ys¹⁶)])))}
 //│ def rev₀₀(ls⁷) = 
 //│ 	ls⁷(99)
 //│ def rev₀₁(ls⁸) = 
@@ -1421,10 +1421,10 @@ main(0)
 //│ 	c₀(p₀)
 //│ 	where
 //│ 	def c₀(x²) = 
-//│ 		x²(99)
+//│ 		x²
 //│ 	def p₀ = 
 //│ 		let a² = p₁
-//│ 		in (fun _lh_dummy⁰ -> a²)
+//│ 		in a²
 //│ 		where
 //│ 		def p₁ = 
 //│ 			[C p₁]

@@ -323,6 +323,16 @@ trait ExprRewrite { this: Expr =>
     scopeExtrusionInfo: Map[ExprId, List[Ident]],
     // goesIntoDeadCodeCons: Set[ExprId]
   ): Expr = this.deforest.Trace.trace(s"fusion handling ${this.pp(using InitPpConfig)}"){
+    def inexpensiveMatchingArmBody(e: Expr): Boolean = e match {
+      case _: (Function | Const | Ref) => true
+      case Ctor(_, args) => args.forall(a => inexpensiveMatchingArmBody(a))
+      case Sequence(a, b) => inexpensiveMatchingArmBody(a) && inexpensiveMatchingArmBody(b)
+      case IfThenElse(b, t, f) => inexpensiveMatchingArmBody(b) && inexpensiveMatchingArmBody(t) && inexpensiveMatchingArmBody(f)
+      case Match(s, arms) => inexpensiveMatchingArmBody(s) && (arms.forall(a => inexpensiveMatchingArmBody(a._3)))
+      case LetIn(_, rhs, body) => inexpensiveMatchingArmBody(rhs) && inexpensiveMatchingArmBody(body)
+      case LetGroup(lets, body) => inexpensiveMatchingArmBody(body) && lets.forall(l => inexpensiveMatchingArmBody(l._2))
+      case Call(_, _) => false
+    }
     this match {
       case Const(lit) => Const(lit)
       case Call(lhs, rhs) => Call(lhs.rewriteFusion, rhs.rewriteFusion)
@@ -356,7 +366,8 @@ trait ExprRewrite { this: Expr =>
         if fusionMatch.valuesIterator.contains(this.uid) then {
           val extrudedIds = scopeExtrusionInfo(this.uid)
           // make a call the triggerd the computation moved due to deforestation to keep termination behavior
-          if extrudedIds.isEmpty then
+          val noNeedThunking = arms.forall { case (_, _, body) => inexpensiveMatchingArmBody(body) }
+          if extrudedIds.isEmpty && (!noNeedThunking) then
             Call(scrut.rewriteFusion, Const(IntLit(99)))
           else
             // val extrudedIds = scopeExtrusionInfo.getOrElse(this.uid, Nil)
@@ -398,7 +409,9 @@ trait ExprRewrite { this: Expr =>
           val res = extrudedIds.foldRight(innerAfterExtrusionHandling){ (newId, acc) =>
             Function(newId._2, acc)
           }
-          if extrudedIds.isEmpty then
+          val noNeedThunking = newd.exprs(matchId).asInstanceOf[Match].arms.forall { case (_, _, body) => inexpensiveMatchingArmBody(body) }
+          
+          if extrudedIds.isEmpty && (!noNeedThunking) then
             Function(newd.nextIdent(false, Var("_lh_dummy")), res)
           else
             res

@@ -142,11 +142,11 @@ rev(C(1, C(2, N)))(N)
 //│ 	let h² = 1
 //│ 	in let t² = 	
 //│ 		let h³ = 2
-//│ 		in let t³ = (fun _lh_dummy² -> (fun a⁶ -> a⁶))
-//│ 		in (fun _lh_dummy¹ -> (fun a⁵ -> rev₀(t³, [C h³ a⁵])))
-//│ 	in (fun _lh_dummy⁰ -> (fun a⁴ -> rev₀(t², [C h² a⁴]))), [N])
+//│ 		in let t³ = (fun a⁶ -> a⁶)
+//│ 		in (fun a⁵ -> rev₀(t³, [C h³ a⁵]))
+//│ 	in (fun a⁴ -> rev₀(t², [C h² a⁴])), [N])
 //│ def rev₀(ys²) = 
-//│ 	ys²(99)
+//│ 	ys²
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -315,19 +315,19 @@ map(rev(primitive, N), ff)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ map₀(rev₀(primitive⁰, (fun _lh_dummy⁰ -> (fun f⁴ -> [N]))), ff₀)
+//│ map₀(rev₀(primitive⁰, (fun f⁴ -> [N])), ff₀)
 //│ def ff₀(x²) = 
 //│ 	case x² of {
 //│ 		A  => [AA]
 //│ 		| B  => [BB]}
 //│ def map₀(xs²) = 
-//│ 	xs²(99)
+//│ 	xs²
 //│ def rev₀(ys², a²) = 
 //│ 	case ys² of {
 //│ 		C h³ t³ => rev₀(t³, 
 //│ 			let h⁴ = h³
 //│ 			in let t⁴ = a²
-//│ 			in (fun _lh_dummy¹ -> (fun f⁵ -> [C f⁵(h⁴) map₀(t⁴, f⁵)])))
+//│ 			in (fun f⁵ -> [C f⁵(h⁴) map₀(t⁴, f⁵)]))
 //│ 		| N  => a²}
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -505,8 +505,8 @@ rev(map(primitive, ff), N)
 //│ 		C h³ t³ => (fun f⁴ -> 
 //│ 			let h⁴ = f⁴(h³)
 //│ 			in let t⁴ = map₀(t³, f⁴)
-//│ 			in (fun _lh_dummy⁰ -> (fun a⁴ -> rev₀(t⁴, [C h⁴ a⁴]))))
-//│ 		| N  => (fun f⁵ -> (fun _lh_dummy¹ -> (fun a⁵ -> a⁵)))}
+//│ 			in (fun a⁴ -> rev₀(t⁴, [C h⁴ a⁴])))
+//│ 		| N  => (fun f⁵ -> (fun a⁵ -> a⁵))}
 //│ def rev₀(ys²) = 
-//│ 	ys²(99)
+//│ 	ys²
 //│ <<<<<<< after fusion <<<<<<<

@@ -1796,7 +1796,7 @@ let rec foldr_d0 f_1_2 i_8 ls_2 =
 let rec foldr_d1 f_4 i_2 ls_0 =
   ((ls_0 f_4) i_2);;
 let rec fromJust_d0 _lh_fromJust_arg1_0 =
-  (_lh_fromJust_arg1_0 99);;
+  _lh_fromJust_arg1_0;;
 let rec indent_d0 _lh_indent_arg1_0 =
   (if (_lh_indent_arg1_0 <= 0) then
     (`LH_N)
@@ -1808,7 +1808,7 @@ let rec indent_d1 _lh_indent_arg1_1 =
   else
     (`LH_C(' ', (indent_d1 (_lh_indent_arg1_1 - 1)))));;
 let rec isJust_d0 _lh_isJust_arg1_0 =
-  (_lh_isJust_arg1_0 99);;
+  _lh_isJust_arg1_0;;
 let rec length_d0 ls_1 =
   (match ls_1 with
     | `LH_C(h_7, t_7) -> 
@@ -3176,7 +3176,7 @@ and compareIntInt_d4 _lh_compareIntInt_arg1_0 _lh_compareIntInt_arg2_0 =
                   (fun _lh_mapLookup_Bin_3_4 _lh_mapLookup_arg1_4 _lh_mapLookup_Bin_4_4 _lh_mapLookup_Bin_2_4 -> 
                     ((mapLookup_d2 _lh_mapLookup_arg1_4) _lh_mapLookup_Bin_3_4))
                 else
-                  (fun _lh_mapLookup_Bin_3_5 _lh_mapLookup_arg1_5 _lh_mapLookup_Bin_4_5 _lh_mapLookup_Bin_2_5 _lh_dummy_0 -> 
+                  (fun _lh_mapLookup_Bin_3_5 _lh_mapLookup_arg1_5 _lh_mapLookup_Bin_4_5 _lh_mapLookup_Bin_2_5 -> 
                     true)))))
         | _ -> 
           (failwith "error"))
@@ -10532,8 +10532,7 @@ and mapLookup_d1 _lh_mapLookup_arg1_0 _lh_mapLookup_arg2_0 =
 and mapLookup_d2 _lh_mapLookup_arg1_6 _lh_mapLookup_arg2_1 =
   (match _lh_mapLookup_arg2_1 with
     | `Tip -> 
-      (fun _lh_dummy_1 -> 
-        false)
+      false
     | `Bin(_lh_mapLookup_Bin_0_1, _lh_mapLookup_Bin_1_1, _lh_mapLookup_Bin_2_6, _lh_mapLookup_Bin_3_6, _lh_mapLookup_Bin_4_6) -> 
       (let rec _lh_matchIdent_1 = ((compareIntInt_d4 _lh_mapLookup_arg1_6) _lh_mapLookup_Bin_1_1) in
         ((((_lh_matchIdent_1 _lh_mapLookup_Bin_3_6) _lh_mapLookup_arg1_6) _lh_mapLookup_Bin_4_6) _lh_mapLookup_Bin_2_6))
@@ -11500,16 +11499,14 @@ and testLastPiece_nofib_d0 _lh_testLastPiece_nofib_arg1_0 =
                     ((((_lh_matchIdent_6_2 _lh_extend_maybe_LH_P2_0_2_0) _lh_extend_maybe_LH_P2_1_2_0) _lh_extend_maybe_arg1_2_0) _lh_extend_maybe_arg3_2_0))))))))) in
       (let rec _lh_fit_LH_C_1_9 = (fun _lh_fit_arg1_1_1 _lh_fit_arg2_1_1 _lh_fit_arg3_1_1 -> 
         (let rec _lh_fromJust_Just_0_0 = (((extend_d0 _lh_fit_arg1_1_1) _lh_fit_arg2_1_1) _lh_fit_arg3_1_1) in
-          (fun _lh_dummy_2 -> 
-            _lh_fromJust_Just_0_0))) in
+          _lh_fromJust_Just_0_0)) in
         (fun _lh_fit_arg1_1_2 _lh_fit_arg2_1_2 _lh_fit_arg3_1_2 -> 
           (let rec _lh_matchIdent_6_3 = (((extend_maybe_d0 _lh_fit_arg1_1_2) ((addIntInt_d0 _lh_fit_arg2_1_2) _lh_fit_LH_C_0_9)) _lh_fit_arg3_1_2) in
             (match _lh_matchIdent_6_3 with
               | `Just(_lh_fit_Just_0_8) -> 
                 ((((fit_d0 _lh_fit_Just_0_8) _lh_fit_arg2_1_2) _lh_fit_arg3_1_2) _lh_fit_LH_C_1_9)
               | `Nothing -> 
-                (fun _lh_dummy_3 -> 
-                  (failwith "error"))
+                (failwith "error")
               | _ -> 
                 (failwith "error")))))) in
       (fun _lh_fit_arg1_1_3 _lh_fit_arg2_1_3 _lh_fit_arg3_1_3 -> 
@@ -11518,8 +11515,7 @@ and testLastPiece_nofib_d0 _lh_testLastPiece_nofib_arg1_0 =
             | `Just(_lh_fit_Just_0_9) -> 
               ((((fit_d0 _lh_fit_Just_0_9) _lh_fit_arg2_1_3) _lh_fit_arg3_1_3) _lh_fit_LH_C_1_8)
             | `Nothing -> 
-              (fun _lh_dummy_4 -> 
-                (failwith "error"))
+              (failwith "error")
             | _ -> 
               (failwith "error")))))))) in
     (let rec solutions_0 = ((((search_d0 (`LH_P2(1, 2))) (`Female)) initialBoard_0) initialPieces_d0) in
@@ -11603,7 +11599,7 @@ let rec foldr_d0 f_1_2 i_8 ls_2 =
 let rec foldr_d1 f_4 i_2 ls_0 =
   ((ls_0 f_4) i_2);;
 let rec fromJust_d0 _lh_fromJust_arg1_0 =
-  (_lh_fromJust_arg1_0 99);;
+  _lh_fromJust_arg1_0;;
 let rec indent_d0 _lh_indent_arg1_0 =
   (if (_lh_indent_arg1_0 <= 0) then
     (`LH_N)
@@ -11615,7 +11611,7 @@ let rec indent_d1 _lh_indent_arg1_1 =
   else
     (`LH_C(' ', (indent_d1 (_lh_indent_arg1_1 - 1)))));;
 let rec isJust_d0 _lh_isJust_arg1_0 =
-  (_lh_isJust_arg1_0 99);;
+  _lh_isJust_arg1_0;;
 let rec length_d0 ls_1 =
   (match ls_1 with
     | `LH_C(h_7, t_7) -> 
@@ -12981,7 +12977,7 @@ and compareIntInt_d4 _lh_compareIntInt_arg1_0 _lh_compareIntInt_arg2_0 =
                   (fun _lh_mapLookup_Bin_3_4 _lh_mapLookup_arg1_4 _lh_mapLookup_Bin_4_4 _lh_mapLookup_Bin_2_4 -> 
                     ((mapLookup_d2 _lh_mapLookup_arg1_4) _lh_mapLookup_Bin_3_4))
                 else
-                  (fun _lh_mapLookup_Bin_3_5 _lh_mapLookup_arg1_5 _lh_mapLookup_Bin_4_5 _lh_mapLookup_Bin_2_5 _lh_dummy_0 -> 
+                  (fun _lh_mapLookup_Bin_3_5 _lh_mapLookup_arg1_5 _lh_mapLookup_Bin_4_5 _lh_mapLookup_Bin_2_5 -> 
                     true)))))
         | _ -> 
           (failwith "error"))
@@ -20321,8 +20317,7 @@ and mapLookup_d1 _lh_mapLookup_arg1_0 _lh_mapLookup_arg2_0 =
 and mapLookup_d2 _lh_mapLookup_arg1_6 _lh_mapLookup_arg2_1 =
   (match _lh_mapLookup_arg2_1 with
     | `Tip -> 
-      (fun _lh_dummy_1 -> 
-        false)
+      false
     | `Bin(_lh_mapLookup_Bin_0_1, _lh_mapLookup_Bin_1_1, _lh_mapLookup_Bin_2_6, _lh_mapLookup_Bin_3_6, _lh_mapLookup_Bin_4_6) -> 
       (let rec _lh_matchIdent_1 = ((compareIntInt_d4 _lh_mapLookup_arg1_6) _lh_mapLookup_Bin_1_1) in
         ((((_lh_matchIdent_1 _lh_mapLookup_Bin_3_6) _lh_mapLookup_arg1_6) _lh_mapLookup_Bin_4_6) _lh_mapLookup_Bin_2_6))
@@ -21286,16 +21281,14 @@ and testLastPiece_nofib_d0 _lh_testLastPiece_nofib_arg1_0 =
                     ((((_lh_matchIdent_6_2 _lh_extend_maybe_LH_P2_0_2_0) _lh_extend_maybe_LH_P2_1_2_0) _lh_extend_maybe_arg1_2_0) _lh_extend_maybe_arg3_2_0))))))))) in
       (let rec _lh_fit_LH_C_1_9 = (fun _lh_fit_arg1_1_1 _lh_fit_arg2_1_1 _lh_fit_arg3_1_1 -> 
         (let rec _lh_fromJust_Just_0_0 = (((extend_d0 _lh_fit_arg1_1_1) _lh_fit_arg2_1_1) _lh_fit_arg3_1_1) in
-          (fun _lh_dummy_2 -> 
-            _lh_fromJust_Just_0_0))) in
+          _lh_fromJust_Just_0_0)) in
         (fun _lh_fit_arg1_1_2 _lh_fit_arg2_1_2 _lh_fit_arg3_1_2 -> 
           (let rec _lh_matchIdent_6_3 = (((extend_maybe_d0 _lh_fit_arg1_1_2) ((addIntInt_d0 _lh_fit_arg2_1_2) _lh_fit_LH_C_0_9)) _lh_fit_arg3_1_2) in
             (match _lh_matchIdent_6_3 with
               | `Just(_lh_fit_Just_0_8) -> 
                 ((((fit_d0 _lh_fit_Just_0_8) _lh_fit_arg2_1_2) _lh_fit_arg3_1_2) _lh_fit_LH_C_1_9)
               | `Nothing -> 
-                (fun _lh_dummy_3 -> 
-                  (failwith "error"))
+                (failwith "error")
               | _ -> 
                 (failwith "error")))))) in
       (fun _lh_fit_arg1_1_3 _lh_fit_arg2_1_3 _lh_fit_arg3_1_3 -> 
@@ -21304,8 +21297,7 @@ and testLastPiece_nofib_d0 _lh_testLastPiece_nofib_arg1_0 =
             | `Just(_lh_fit_Just_0_9) -> 
               ((((fit_d0 _lh_fit_Just_0_9) _lh_fit_arg2_1_3) _lh_fit_arg3_1_3) _lh_fit_LH_C_1_8)
             | `Nothing -> 
-              (fun _lh_dummy_4 -> 
-                (failwith "error"))
+              (failwith "error")
             | _ -> 
               (failwith "error")))))))) in
     (let rec solutions_0 = ((((search_d0 (`LH_P2(1, 2))) (`Female)) initialBoard_0) initialPieces_d0) in

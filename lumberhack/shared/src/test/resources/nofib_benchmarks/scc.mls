@@ -1,0 +1,1155 @@
+:NewParser
+:ParseOnly
+
+:lhInHaskell
+:lhGenOCaml
+inList x (h:t) = if x == h then True else inList x t
+inList x [] = False
+snd (a,b) = b
+type Edge  vertex = (vertex, vertex)
+type Cycle vertex = [vertex]
+stronglyConnComp :: Eq vertex => [Edge vertex] -> [vertex] -> [[vertex]]
+stronglyConnComp es vs
+  = snd (span_tree (new_range (map swap es)) ([],[]) (snd (dfs (new_range es) ([],[]) vs)))
+  where
+    swap (x,y) = (y,x)
+    new_range [] w = []
+    new_range ((x,y):xys) w
+        = if x==w
+          then (y : (new_range xys w))
+          else (new_range xys w)
+    span_tree r (vs,ns) [] = (vs,ns)
+    span_tree r (vs,ns) (x:xs) =
+      if inList x vs then
+        span_tree r (vs,ns) xs
+      else
+        case (dfs r (x:vs,[]) (r x)) of { (vs',ns') -> span_tree r (vs',(x:ns'):ns) xs }
+dfs r (vs,ns) [] = (vs,ns)
+dfs r (vs,ns) (x:xs) =
+  if inList x vs then
+    dfs r (vs,ns) xs
+  else
+    case (dfs r (x:vs,[]) (r x)) of { (vs',ns') -> dfs r (vs',(x:ns')++ns) xs }
+testScc_nofib dummy =
+  let a = 1 in
+  let b = 2 in
+  let c = 3 in
+  let d = 4 in
+  let f = 5 in
+  let g = 6 in
+  let h = 7 in
+  let vertices = [a,b,c,d,f,g,h] in
+  let edges = [(b, a),(c, b),(c, d),(c, h),(d, c),(f, a),(f, g),(f, h),(g, f),(h, g)] in
+  stronglyConnComp edges vertices
+testScc_nofib $ primId 0
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testScc_nofib₀^1311(primId⁰(0))
+//│ def dfs₀(_lh_dfs_arg1², _lh_dfs_arg2², _lh_dfs_arg3²) = case _lh_dfs_arg2² of {
+//│ 	LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴ => case _lh_dfs_arg3² of {
+//│ 		LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴]
+//│ 		| LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_C_1² => if inList₀^1225(_lh_dfs_LH_C_0², _lh_dfs_LH_P2_0⁴) then dfs₀^1230(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴], _lh_dfs_LH_C_1²) else 
+//│ 			let _lh_matchIdent⁴ = dfs₀^1239(_lh_dfs_arg1², [LH_P2 [LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_0⁴] [LH_N]], _lh_dfs_arg1²(_lh_dfs_LH_C_0²))
+//│ 			in case _lh_matchIdent⁴ of {
+//│ 				LH_P2 _lh_dfs_LH_P2_0⁵ _lh_dfs_LH_P2_1⁵ => dfs₀^1253(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁵ mappend₀^1257([LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_1⁵], _lh_dfs_LH_P2_1⁴)], _lh_dfs_LH_C_1²)
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def dfs₁(_lh_dfs_arg1¹, _lh_dfs_arg2¹, _lh_dfs_arg3¹) = case _lh_dfs_arg2¹ of {
+//│ 	LH_P2 _lh_dfs_LH_P2_0² _lh_dfs_LH_P2_1² => case _lh_dfs_arg3¹ of {
+//│ 		LH_N  => [LH_P2 _lh_dfs_LH_P2_0² _lh_dfs_LH_P2_1²]
+//│ 		| LH_C _lh_dfs_LH_C_0¹ _lh_dfs_LH_C_1¹ => if inList₁^907(_lh_dfs_LH_C_0¹, _lh_dfs_LH_P2_0²) then dfs₁^912(_lh_dfs_arg1¹, [LH_P2 _lh_dfs_LH_P2_0² _lh_dfs_LH_P2_1²], _lh_dfs_LH_C_1¹) else 
+//│ 			let _lh_matchIdent² = dfs₁^921(_lh_dfs_arg1¹, [LH_P2 [LH_C _lh_dfs_LH_C_0¹ _lh_dfs_LH_P2_0²] [LH_N]], _lh_dfs_arg1¹(_lh_dfs_LH_C_0¹))
+//│ 			in case _lh_matchIdent² of {
+//│ 				LH_P2 _lh_dfs_LH_P2_0³ _lh_dfs_LH_P2_1³ => dfs₁^935(_lh_dfs_arg1¹, [LH_P2 _lh_dfs_LH_P2_0³ mappend₁^939([LH_C _lh_dfs_LH_C_0¹ _lh_dfs_LH_P2_1³], _lh_dfs_LH_P2_1²)], _lh_dfs_LH_C_1¹)
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def inList₀(_lh_inList_arg1², _lh_inList_arg2²) = case _lh_inList_arg2² of {
+//│ 	LH_C _lh_inList_LH_C_0² _lh_inList_LH_C_1² => if (_lh_inList_arg1² == _lh_inList_LH_C_0²) then [True] else inList₀^1204(_lh_inList_arg1², _lh_inList_LH_C_1²)
+//│ 	| LH_N  => [False]
+//│ 	| _  => error⁰}
+//│ def inList₁(_lh_inList_arg1¹, _lh_inList_arg2¹) = case _lh_inList_arg2¹ of {
+//│ 	LH_C _lh_inList_LH_C_0¹ _lh_inList_LH_C_1¹ => if (_lh_inList_arg1¹ == _lh_inList_LH_C_0¹) then [True] else inList₁^1058(_lh_inList_arg1¹, _lh_inList_LH_C_1¹)
+//│ 	| LH_N  => [False]
+//│ 	| _  => error⁰}
+//│ def inList₂(_lh_inList_arg1³, _lh_inList_arg2³) = case _lh_inList_arg2³ of {
+//│ 	LH_C _lh_inList_LH_C_0³ _lh_inList_LH_C_1³ => if (_lh_inList_arg1³ == _lh_inList_LH_C_0³) then [True] else inList₂^1300(_lh_inList_arg1³, _lh_inList_LH_C_1³)
+//│ 	| LH_N  => [False]
+//│ 	| _  => error⁰}
+//│ def mappend₀(xs¹⁰, ys¹⁰) = case xs¹⁰ of {
+//│ 	LH_C h²² t²³ => [LH_C h²² mappend₀^963(t²³, ys¹⁰)]
+//│ 	| LH_N  => ys¹⁰}
+//│ def mappend₁(xs⁹, ys⁹) = case xs⁹ of {
+//│ 	LH_C h²¹ t²² => [LH_C h²¹ mappend₁^892(t²², ys⁹)]
+//│ 	| LH_N  => ys⁹}
+//│ def map₀(f¹⁴, ls¹⁹) = case ls¹⁹ of {
+//│ 	LH_C h²⁴ t²⁴ => [LH_C f¹⁴(h²⁴) map₀^1283(f¹⁴, t²⁴)]
+//│ 	| LH_N  => [LH_N]}
+//│ def snd₀(_lh_snd_arg1¹) = case _lh_snd_arg1¹ of {
+//│ 	LH_P2 _lh_snd_LH_P2_0¹ _lh_snd_LH_P2_1¹ => _lh_snd_LH_P2_1¹
+//│ 	| _  => error⁰}
+//│ def snd₁(_lh_snd_arg1²) = case _lh_snd_arg1² of {
+//│ 	LH_P2 _lh_snd_LH_P2_0² _lh_snd_LH_P2_1² => _lh_snd_LH_P2_1²
+//│ 	| _  => error⁰}
+//│ def stronglyConnComp₀(_lh_stronglyConnComp_arg1¹, _lh_stronglyConnComp_arg2¹) = 
+//│ 	let swap¹ = (fun _lh_swap_arg1¹ -> case _lh_swap_arg1¹ of {
+//│ 			LH_P2 _lh_swap_LH_P2_0¹ _lh_swap_LH_P2_1¹ => [LH_P2 _lh_swap_LH_P2_1¹ _lh_swap_LH_P2_0¹]
+//│ 			| _  => error⁰})
+//│ 	and span_tree¹ = (fun _lh_span_tree_arg1¹ -> (fun _lh_span_tree_arg2¹ -> (fun _lh_span_tree_arg3¹ -> case _lh_span_tree_arg2¹ of {
+//│ 			LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1² => case _lh_span_tree_arg3¹ of {
+//│ 				LH_N  => [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²]
+//│ 				| LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_C_1¹ => if inList₂^1101(_lh_span_tree_LH_C_0¹, _lh_span_tree_LH_P2_0²) then span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²], _lh_span_tree_LH_C_1¹) else 
+//│ 					let _lh_matchIdent³ = dfs₀^1115(_lh_span_tree_arg1¹, [LH_P2 [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_0²] [LH_N]], _lh_span_tree_arg1¹(_lh_span_tree_LH_C_0¹))
+//│ 					in case _lh_matchIdent³ of {
+//│ 						LH_P2 _lh_span_tree_LH_P2_0³ _lh_span_tree_LH_P2_1³ => span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0³ [LH_C [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_1³] _lh_span_tree_LH_P2_1²]], _lh_span_tree_LH_C_1¹)
+//│ 						| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 			| _  => error⁰})))
+//│ 	and new_range¹ = (fun _lh_new_range_arg1¹ -> (fun _lh_new_range_arg2¹ -> case _lh_new_range_arg1¹ of {
+//│ 			LH_N  => [LH_N]
+//│ 			| LH_C _lh_new_range_LH_C_0¹ _lh_new_range_LH_C_1¹ => case _lh_new_range_LH_C_0¹ of {
+//│ 				LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)
+//│ 				| _  => error⁰}
+//│ 			| _  => error⁰})) 
+//│ 	in snd₀^1160(span_tree¹(new_range¹(map₀^1163(swap¹, _lh_stronglyConnComp_arg1¹)), [LH_P2 [LH_N] [LH_N]], snd₁^1174(dfs₁^1175(new_range¹(_lh_stronglyConnComp_arg1¹), [LH_P2 [LH_N] [LH_N]], _lh_stronglyConnComp_arg2¹))))
+//│ def testScc_nofib₀(_lh_testScc_nofib_arg1¹) = 
+//│ 	let a⁶ = 1
+//│ 	in let b³ = 2
+//│ 	in let c¹ = 3
+//│ 	in let d¹ = 4
+//│ 	in let f¹³ = 5
+//│ 	in let g¹ = 6
+//│ 	in let h²³ = 7
+//│ 	in let vertices¹ = [LH_C a⁶ [LH_C b³ [LH_C c¹ [LH_C d¹ [LH_C f¹³ [LH_C g¹ [LH_C h²³ [LH_N]]]]]]]]
+//│ 	in let edges¹ = [LH_C [LH_P2 b³ a⁶] [LH_C [LH_P2 c¹ b³] [LH_C [LH_P2 c¹ d¹] [LH_C [LH_P2 c¹ h²³] [LH_C [LH_P2 d¹ c¹] [LH_C [LH_P2 f¹³ a⁶] [LH_C [LH_P2 f¹³ g¹] [LH_C [LH_P2 f¹³ h²³] [LH_C [LH_P2 g¹ f¹³] [LH_C [LH_P2 h²³ g¹] [LH_N]]]]]]]]]]]
+//│ 	in stronglyConnComp₀^1036(edges¹, vertices¹)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec dfs_d0 _lh_dfs_arg1_2 _lh_dfs_arg2_2 _lh_dfs_arg3_2 =
+//│ 		  (match _lh_dfs_arg2_2 with
+//│ 		    | `LH_P2(_lh_dfs_LH_P2_0_4, _lh_dfs_LH_P2_1_4) -> 
+//│ 		      (match _lh_dfs_arg3_2 with
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_P2(_lh_dfs_LH_P2_0_4, _lh_dfs_LH_P2_1_4))
+//│ 		        | `LH_C(_lh_dfs_LH_C_0_2, _lh_dfs_LH_C_1_2) -> 
+//│ 		          (if ((inList_d0 _lh_dfs_LH_C_0_2) _lh_dfs_LH_P2_0_4) then
+//│ 		            (((dfs_d0 _lh_dfs_arg1_2) (`LH_P2(_lh_dfs_LH_P2_0_4, _lh_dfs_LH_P2_1_4))) _lh_dfs_LH_C_1_2)
+//│ 		          else
+//│ 		            (let rec _lh_matchIdent_4 = (((dfs_d0 _lh_dfs_arg1_2) (`LH_P2((`LH_C(_lh_dfs_LH_C_0_2, _lh_dfs_LH_P2_0_4)), (`LH_N)))) (_lh_dfs_arg1_2 _lh_dfs_LH_C_0_2)) in
+//│ 		              (match _lh_matchIdent_4 with
+//│ 		                | `LH_P2(_lh_dfs_LH_P2_0_5, _lh_dfs_LH_P2_1_5) -> 
+//│ 		                  (((dfs_d0 _lh_dfs_arg1_2) (`LH_P2(_lh_dfs_LH_P2_0_5, ((mappend_d0 (`LH_C(_lh_dfs_LH_C_0_2, _lh_dfs_LH_P2_1_5))) _lh_dfs_LH_P2_1_4)))) _lh_dfs_LH_C_1_2)
+//│ 		                | _ -> 
+//│ 		                  (failwith "error"))))
+//│ 		        | _ -> 
+//│ 		          (failwith "error"))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and dfs_d1 _lh_dfs_arg1_1 _lh_dfs_arg2_1 _lh_dfs_arg3_1 =
+//│ 		  (match _lh_dfs_arg2_1 with
+//│ 		    | `LH_P2(_lh_dfs_LH_P2_0_2, _lh_dfs_LH_P2_1_2) -> 
+//│ 		      (match _lh_dfs_arg3_1 with
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_P2(_lh_dfs_LH_P2_0_2, _lh_dfs_LH_P2_1_2))
+//│ 		        | `LH_C(_lh_dfs_LH_C_0_1, _lh_dfs_LH_C_1_1) -> 
+//│ 		          (if ((inList_d1 _lh_dfs_LH_C_0_1) _lh_dfs_LH_P2_0_2) then
+//│ 		            (((dfs_d1 _lh_dfs_arg1_1) (`LH_P2(_lh_dfs_LH_P2_0_2, _lh_dfs_LH_P2_1_2))) _lh_dfs_LH_C_1_1)
+//│ 		          else
+//│ 		            (let rec _lh_matchIdent_2 = (((dfs_d1 _lh_dfs_arg1_1) (`LH_P2((`LH_C(_lh_dfs_LH_C_0_1, _lh_dfs_LH_P2_0_2)), (`LH_N)))) (_lh_dfs_arg1_1 _lh_dfs_LH_C_0_1)) in
+//│ 		              (match _lh_matchIdent_2 with
+//│ 		                | `LH_P2(_lh_dfs_LH_P2_0_3, _lh_dfs_LH_P2_1_3) -> 
+//│ 		                  (((dfs_d1 _lh_dfs_arg1_1) (`LH_P2(_lh_dfs_LH_P2_0_3, ((mappend_d1 (`LH_C(_lh_dfs_LH_C_0_1, _lh_dfs_LH_P2_1_3))) _lh_dfs_LH_P2_1_2)))) _lh_dfs_LH_C_1_1)
+//│ 		                | _ -> 
+//│ 		                  (failwith "error"))))
+//│ 		        | _ -> 
+//│ 		          (failwith "error"))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and inList_d0 _lh_inList_arg1_2 _lh_inList_arg2_2 =
+//│ 		  (match _lh_inList_arg2_2 with
+//│ 		    | `LH_C(_lh_inList_LH_C_0_2, _lh_inList_LH_C_1_2) -> 
+//│ 		      (if (_lh_inList_arg1_2 = _lh_inList_LH_C_0_2) then
+//│ 		        true
+//│ 		      else
+//│ 		        ((inList_d0 _lh_inList_arg1_2) _lh_inList_LH_C_1_2))
+//│ 		    | `LH_N -> 
+//│ 		      false
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and inList_d1 _lh_inList_arg1_1 _lh_inList_arg2_1 =
+//│ 		  (match _lh_inList_arg2_1 with
+//│ 		    | `LH_C(_lh_inList_LH_C_0_1, _lh_inList_LH_C_1_1) -> 
+//│ 		      (if (_lh_inList_arg1_1 = _lh_inList_LH_C_0_1) then
+//│ 		        true
+//│ 		      else
+//│ 		        ((inList_d1 _lh_inList_arg1_1) _lh_inList_LH_C_1_1))
+//│ 		    | `LH_N -> 
+//│ 		      false
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and inList_d2 _lh_inList_arg1_3 _lh_inList_arg2_3 =
+//│ 		  (match _lh_inList_arg2_3 with
+//│ 		    | `LH_C(_lh_inList_LH_C_0_3, _lh_inList_LH_C_1_3) -> 
+//│ 		      (if (_lh_inList_arg1_3 = _lh_inList_LH_C_0_3) then
+//│ 		        true
+//│ 		      else
+//│ 		        ((inList_d2 _lh_inList_arg1_3) _lh_inList_LH_C_1_3))
+//│ 		    | `LH_N -> 
+//│ 		      false
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and mappend_d0 xs_1_0 ys_1_0 =
+//│ 		  (match xs_1_0 with
+//│ 		    | `LH_C(h_2_2, t_2_3) -> 
+//│ 		      (`LH_C(h_2_2, ((mappend_d0 t_2_3) ys_1_0)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_1_0)
+//│ 		and mappend_d1 xs_9 ys_9 =
+//│ 		  (match xs_9 with
+//│ 		    | `LH_C(h_2_1, t_2_2) -> 
+//│ 		      (`LH_C(h_2_1, ((mappend_d1 t_2_2) ys_9)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_9)
+//│ 		and map_d0 f_1_4 ls_1_9 =
+//│ 		  (match ls_1_9 with
+//│ 		    | `LH_C(h_2_4, t_2_4) -> 
+//│ 		      (`LH_C((f_1_4 h_2_4), ((map_d0 f_1_4) t_2_4)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N))
+//│ 		and snd_d0 _lh_snd_arg1_1 =
+//│ 		  (match _lh_snd_arg1_1 with
+//│ 		    | `LH_P2(_lh_snd_LH_P2_0_1, _lh_snd_LH_P2_1_1) -> 
+//│ 		      _lh_snd_LH_P2_1_1
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and snd_d1 _lh_snd_arg1_2 =
+//│ 		  (match _lh_snd_arg1_2 with
+//│ 		    | `LH_P2(_lh_snd_LH_P2_0_2, _lh_snd_LH_P2_1_2) -> 
+//│ 		      _lh_snd_LH_P2_1_2
+//│ 		    | _ -> 
+//│ 		      (failwith "error"))
+//│ 		and stronglyConnComp_d0 _lh_stronglyConnComp_arg1_1 _lh_stronglyConnComp_arg2_1 =
+//│ 		  let rec swap_1 = (fun _lh_swap_arg1_1 -> 
+//│ 		    (match _lh_swap_arg1_1 with
+//│ 		      | `LH_P2(_lh_swap_LH_P2_0_1, _lh_swap_LH_P2_1_1) -> 
+//│ 		        (`LH_P2(_lh_swap_LH_P2_1_1, _lh_swap_LH_P2_0_1))
+//│ 		      | _ -> 
+//│ 		        (failwith "error")))
+//│ 		  and span_tree_1 = (fun _lh_span_tree_arg1_1 _lh_span_tree_arg2_1 _lh_span_tree_arg3_1 -> 
+//│ 		    (match _lh_span_tree_arg2_1 with
+//│ 		      | `LH_P2(_lh_span_tree_LH_P2_0_2, _lh_span_tree_LH_P2_1_2) -> 
+//│ 		        (match _lh_span_tree_arg3_1 with
+//│ 		          | `LH_N -> 
+//│ 		            (`LH_P2(_lh_span_tree_LH_P2_0_2, _lh_span_tree_LH_P2_1_2))
+//│ 		          | `LH_C(_lh_span_tree_LH_C_0_1, _lh_span_tree_LH_C_1_1) -> 
+//│ 		            (if ((inList_d2 _lh_span_tree_LH_C_0_1) _lh_span_tree_LH_P2_0_2) then
+//│ 		              (((span_tree_1 _lh_span_tree_arg1_1) (`LH_P2(_lh_span_tree_LH_P2_0_2, _lh_span_tree_LH_P2_1_2))) _lh_span_tree_LH_C_1_1)
+//│ 		            else
+//│ 		              (let rec _lh_matchIdent_3 = (((dfs_d0 _lh_span_tree_arg1_1) (`LH_P2((`LH_C(_lh_span_tree_LH_C_0_1, _lh_span_tree_LH_P2_0_2)), (`LH_N)))) (_lh_span_tree_arg1_1 _lh_span_tree_LH_C_0_1)) in
+//│ 		                (match _lh_matchIdent_3 with
+//│ 		                  | `LH_P2(_lh_span_tree_LH_P2_0_3, _lh_span_tree_LH_P2_1_3) -> 
+//│ 		                    (((span_tree_1 _lh_span_tree_arg1_1) (`LH_P2(_lh_span_tree_LH_P2_0_3, (`LH_C((`LH_C(_lh_span_tree_LH_C_0_1, _lh_span_tree_LH_P2_1_3)), _lh_span_tree_LH_P2_1_2))))) _lh_span_tree_LH_C_1_1)
+//│ 		                  | _ -> 
+//│ 		                    (failwith "error"))))
+//│ 		          | _ -> 
+//│ 		            (failwith "error"))
+//│ 		      | _ -> 
+//│ 		        (failwith "error")))
+//│ 		  and new_range_1 = (fun _lh_new_range_arg1_1 _lh_new_range_arg2_1 -> 
+//│ 		    (match _lh_new_range_arg1_1 with
+//│ 		      | `LH_N -> 
+//│ 		        (`LH_N)
+//│ 		      | `LH_C(_lh_new_range_LH_C_0_1, _lh_new_range_LH_C_1_1) -> 
+//│ 		        (match _lh_new_range_LH_C_0_1 with
+//│ 		          | `LH_P2(_lh_new_range_LH_P2_0_1, _lh_new_range_LH_P2_1_1) -> 
+//│ 		            (if (_lh_new_range_LH_P2_0_1 = _lh_new_range_arg2_1) then
+//│ 		              (`LH_C(_lh_new_range_LH_P2_1_1, ((new_range_1 _lh_new_range_LH_C_1_1) _lh_new_range_arg2_1)))
+//│ 		            else
+//│ 		              ((new_range_1 _lh_new_range_LH_C_1_1) _lh_new_range_arg2_1))
+//│ 		          | _ -> 
+//│ 		            (failwith "error"))
+//│ 		      | _ -> 
+//│ 		        (failwith "error")))
+//│ 		  in (snd_d0 (((span_tree_1 (new_range_1 ((map_d0 swap_1) _lh_stronglyConnComp_arg1_1))) (`LH_P2((`LH_N), (`LH_N)))) (snd_d1 (((dfs_d1 (new_range_1 _lh_stronglyConnComp_arg1_1)) (`LH_P2((`LH_N), (`LH_N)))) _lh_stronglyConnComp_arg2_1))))
+//│ 		and testScc_nofib_d0 _lh_testScc_nofib_arg1_1 =
+//│ 		  (let rec a_6 = 1 in
+//│ 		    (let rec b_3 = 2 in
+//│ 		      (let rec c_1 = 3 in
+//│ 		        (let rec d_1 = 4 in
+//│ 		          (let rec f_1_3 = 5 in
+//│ 		            (let rec g_1 = 6 in
+//│ 		              (let rec h_2_3 = 7 in
+//│ 		                (let rec vertices_1 = (`LH_C(a_6, (`LH_C(b_3, (`LH_C(c_1, (`LH_C(d_1, (`LH_C(f_1_3, (`LH_C(g_1, (`LH_C(h_2_3, (`LH_N))))))))))))))) in
+//│ 		                  (let rec edges_1 = (`LH_C((`LH_P2(b_3, a_6)), (`LH_C((`LH_P2(c_1, b_3)), (`LH_C((`LH_P2(c_1, d_1)), (`LH_C((`LH_P2(c_1, h_2_3)), (`LH_C((`LH_P2(d_1, c_1)), (`LH_C((`LH_P2(f_1_3, a_6)), (`LH_C((`LH_P2(f_1_3, g_1)), (`LH_C((`LH_P2(f_1_3, h_2_3)), (`LH_C((`LH_P2(g_1, f_1_3)), (`LH_C((`LH_P2(h_2_3, g_1)), (`LH_N))))))))))))))))))))) in
+//│ 		                    ((stronglyConnComp_d0 edges_1) vertices_1))))))))));;
+//│ 		(testScc_nofib_d0 0)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [testScc_nofib₀^1311]
+//│ 	[testScc_nofib₀^1311 · stronglyConnComp₀^1036]
+//│ 		[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115]
+//│ 			[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1230] (hopeless to continue)
+//│ 				[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1230 · dfs₀^1230] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1230] (using original def)
+//│ 				[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1230 · dfs₀^1239] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1230] (using original def)
+//│ 				[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1230 · dfs₀^1253] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1230] (using original def)
+//│ 				[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1230 · inList₀^1225] (using original def)
+//│ 					[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1230 · inList₀^1225 · inList₀^1204] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1230 · inList₀^1225] (using original def)
+//│ 				[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1230 · mappend₀^1257] (using original def)
+//│ 					[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1230 · mappend₀^1257 · mappend₀^963] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1230 · mappend₀^1257] (using original def)
+//│ 			[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1239] (hopeless to continue)
+//│ 				[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1239 · dfs₀^1230] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1239] (using original def)
+//│ 				[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1239 · dfs₀^1239] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1239] (using original def)
+//│ 				[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1239 · dfs₀^1253] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1239] (using original def)
+//│ 				[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1239 · inList₀^1225] (using original def)
+//│ 					[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1239 · inList₀^1225 · inList₀^1204] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1239 · inList₀^1225] (using original def)
+//│ 				[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1239 · mappend₀^1257] (using original def)
+//│ 					[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1239 · mappend₀^1257 · mappend₀^963] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1239 · mappend₀^1257] (using original def)
+//│ 			[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1253] (hopeless to continue)
+//│ 				[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1253 · dfs₀^1230] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1253] (using original def)
+//│ 				[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1253 · dfs₀^1239] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1253] (using original def)
+//│ 				[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1253 · dfs₀^1253] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1253] (using original def)
+//│ 				[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1253 · inList₀^1225] (using original def)
+//│ 					[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1253 · inList₀^1225 · inList₀^1204] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1253 · inList₀^1225] (using original def)
+//│ 				[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1253 · mappend₀^1257] (using original def)
+//│ 					[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1253 · mappend₀^1257 · mappend₀^963] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · dfs₀^1253 · mappend₀^1257] (using original def)
+//│ 			[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · inList₀^1225] (hopeless to continue)
+//│ 				[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · inList₀^1225 · inList₀^1204] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · inList₀^1225] (using original def)
+//│ 			[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · mappend₀^1257]
+//│ 				[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · mappend₀^1257 · mappend₀^963] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₀^1115 · mappend₀^1257] (only one)
+//│ 		[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₁^1175] (hopeless to continue)
+//│ 			[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₁^1175 · dfs₁^912] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₁^1175] (using original def)
+//│ 			[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₁^1175 · dfs₁^921] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₁^1175] (using original def)
+//│ 			[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₁^1175 · dfs₁^935] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₁^1175] (using original def)
+//│ 			[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₁^1175 · inList₁^907] (using original def)
+//│ 				[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₁^1175 · inList₁^907 · inList₁^1058] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₁^1175 · inList₁^907] (using original def)
+//│ 			[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₁^1175 · mappend₁^939] (using original def)
+//│ 				[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₁^1175 · mappend₁^939 · mappend₁^892] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · dfs₁^1175 · mappend₁^939] (using original def)
+//│ 		[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · inList₂^1101] (hopeless to continue)
+//│ 			[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · inList₂^1101 · inList₂^1300] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · inList₂^1101] (using original def)
+//│ 		[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · map₀^1163] (hopeless to continue)
+//│ 			[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · map₀^1163 · map₀^1283] ---> [testScc_nofib₀^1311 · stronglyConnComp₀^1036 · map₀^1163] (using original def)
+//│ 		[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · snd₀^1160] (hopeless to continue)
+//│ 		[testScc_nofib₀^1311 · stronglyConnComp₀^1036 · snd₁^1174] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ testScc_nofib₀₀(primId⁰(0))
+//│ def testScc_nofib₀₀(_lh_testScc_nofib_arg1¹) = 
+//│ 	let a¹ = 1
+//│ 	in let b¹ = 2
+//│ 	in let c¹ = 3
+//│ 	in let d¹ = 4
+//│ 	in let f² = 5
+//│ 	in let g¹ = 6
+//│ 	in let h⁵ = 7
+//│ 	in let vertices¹ = [LH_C a¹ [LH_C b¹ [LH_C c¹ [LH_C d¹ [LH_C f² [LH_C g¹ [LH_C h⁵ [LH_N]]]]]]]]
+//│ 	in let edges¹ = [LH_C [LH_P2 b¹ a¹] [LH_C [LH_P2 c¹ b¹] [LH_C [LH_P2 c¹ d¹] [LH_C [LH_P2 c¹ h⁵] [LH_C [LH_P2 d¹ c¹] [LH_C [LH_P2 f² a¹] [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]]]]]]]
+//│ 	in stronglyConnComp₀₀(edges¹, vertices¹)
+//│ 	where
+//│ 	def stronglyConnComp₀₀(_lh_stronglyConnComp_arg1¹, _lh_stronglyConnComp_arg2¹) = 
+//│ 		let swap¹ = (fun _lh_swap_arg1¹ -> case _lh_swap_arg1¹ of {
+//│ 				LH_P2 _lh_swap_LH_P2_0¹ _lh_swap_LH_P2_1¹ => [LH_P2 _lh_swap_LH_P2_1¹ _lh_swap_LH_P2_0¹]
+//│ 				| _  => error⁰})
+//│ 		and span_tree¹ = (fun _lh_span_tree_arg1¹ -> (fun _lh_span_tree_arg2¹ -> (fun _lh_span_tree_arg3¹ -> case _lh_span_tree_arg2¹ of {
+//│ 				LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1² => case _lh_span_tree_arg3¹ of {
+//│ 					LH_N  => [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²]
+//│ 					| LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_C_1¹ => if inList₂₀(_lh_span_tree_LH_C_0¹, _lh_span_tree_LH_P2_0²) then span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²], _lh_span_tree_LH_C_1¹) else 
+//│ 						let _lh_matchIdent⁴ = dfs₀₀(_lh_span_tree_arg1¹, [LH_P2 [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_0²] [LH_N]], _lh_span_tree_arg1¹(_lh_span_tree_LH_C_0¹))
+//│ 						in case _lh_matchIdent⁴ of {
+//│ 							LH_P2 _lh_span_tree_LH_P2_0³ _lh_span_tree_LH_P2_1³ => span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0³ [LH_C [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_1³] _lh_span_tree_LH_P2_1²]], _lh_span_tree_LH_C_1¹)
+//│ 							| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰})))
+//│ 		and new_range¹ = (fun _lh_new_range_arg1¹ -> (fun _lh_new_range_arg2¹ -> case _lh_new_range_arg1¹ of {
+//│ 				LH_N  => [LH_N]
+//│ 				| LH_C _lh_new_range_LH_C_0¹ _lh_new_range_LH_C_1¹ => case _lh_new_range_LH_C_0¹ of {
+//│ 					LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰})) 
+//│ 		in snd₀₀(span_tree¹(new_range¹(map₀₀(swap¹, _lh_stronglyConnComp_arg1¹)), [LH_P2 [LH_N] [LH_N]], snd₁₀(dfs₁₀(new_range¹(_lh_stronglyConnComp_arg1¹), [LH_P2 [LH_N] [LH_N]], _lh_stronglyConnComp_arg2¹))))
+//│ 		where
+//│ 		def dfs₀₀(_lh_dfs_arg1³, _lh_dfs_arg2³, _lh_dfs_arg3³) = 
+//│ 			case _lh_dfs_arg2³ of {
+//│ 				LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶ => case _lh_dfs_arg3³ of {
+//│ 					LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶]
+//│ 					| LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_C_1³ => if inList₀₃(_lh_dfs_LH_C_0³, _lh_dfs_LH_P2_0⁶) then dfs₀₁(_lh_dfs_arg1³, [LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶], _lh_dfs_LH_C_1³) else 
+//│ 						let _lh_matchIdent⁵ = dfs₀₂(_lh_dfs_arg1³, [LH_P2 [LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_0⁶] [LH_N]], _lh_dfs_arg1³(_lh_dfs_LH_C_0³))
+//│ 						in case _lh_matchIdent⁵ of {
+//│ 							LH_P2 _lh_dfs_LH_P2_0⁷ _lh_dfs_LH_P2_1⁷ => dfs₀₃(_lh_dfs_arg1³, [LH_P2 _lh_dfs_LH_P2_0⁷ mappend₀₃([LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_1⁷], _lh_dfs_LH_P2_1⁶)], _lh_dfs_LH_C_1³)
+//│ 							| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 			where
+//│ 			def dfs₀₁(_lh_dfs_arg1⁶, _lh_dfs_arg2⁶, _lh_dfs_arg3⁶) = 
+//│ 				case _lh_dfs_arg2⁶ of {
+//│ 					LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹² => case _lh_dfs_arg3⁶ of {
+//│ 						LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²]
+//│ 						| LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_C_1⁶ => if inList₀₀(_lh_dfs_LH_C_0⁶, _lh_dfs_LH_P2_0¹²) then dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²], _lh_dfs_LH_C_1⁶) else 
+//│ 							let _lh_matchIdent⁸ = dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 [LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_0¹²] [LH_N]], _lh_dfs_arg1⁶(_lh_dfs_LH_C_0⁶))
+//│ 							in case _lh_matchIdent⁸ of {
+//│ 								LH_P2 _lh_dfs_LH_P2_0¹³ _lh_dfs_LH_P2_1¹³ => dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹³ mappend₀₀([LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_1¹³], _lh_dfs_LH_P2_1¹²)], _lh_dfs_LH_C_1⁶)
+//│ 								| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 				where
+//│ 				def inList₀₀(_lh_inList_arg1⁵, _lh_inList_arg2⁵) = 
+//│ 					case _lh_inList_arg2⁵ of {
+//│ 						LH_C _lh_inList_LH_C_0⁵ _lh_inList_LH_C_1⁵ => if (_lh_inList_arg1⁵ == _lh_inList_LH_C_0⁵) then [True] else inList₀₀(_lh_inList_arg1⁵, _lh_inList_LH_C_1⁵)
+//│ 						| LH_N  => [False]
+//│ 						| _  => error⁰}
+//│ 				def mappend₀₀(xs⁴, ys⁴) = 
+//│ 					case xs⁴ of {
+//│ 						LH_C h⁸ t⁶ => [LH_C h⁸ mappend₀₀(t⁶, ys⁴)]
+//│ 						| LH_N  => ys⁴}
+//│ 			def dfs₀₂(_lh_dfs_arg1⁴, _lh_dfs_arg2⁴, _lh_dfs_arg3⁴) = 
+//│ 				case _lh_dfs_arg2⁴ of {
+//│ 					LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸ => case _lh_dfs_arg3⁴ of {
+//│ 						LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸]
+//│ 						| LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_C_1⁴ => if inList₀₁(_lh_dfs_LH_C_0⁴, _lh_dfs_LH_P2_0⁸) then dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸], _lh_dfs_LH_C_1⁴) else 
+//│ 							let _lh_matchIdent⁶ = dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 [LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_0⁸] [LH_N]], _lh_dfs_arg1⁴(_lh_dfs_LH_C_0⁴))
+//│ 							in case _lh_matchIdent⁶ of {
+//│ 								LH_P2 _lh_dfs_LH_P2_0⁹ _lh_dfs_LH_P2_1⁹ => dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁹ mappend₀₁([LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_1⁹], _lh_dfs_LH_P2_1⁸)], _lh_dfs_LH_C_1⁴)
+//│ 								| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 				where
+//│ 				def inList₀₁(_lh_inList_arg1³, _lh_inList_arg2³) = 
+//│ 					case _lh_inList_arg2³ of {
+//│ 						LH_C _lh_inList_LH_C_0³ _lh_inList_LH_C_1³ => if (_lh_inList_arg1³ == _lh_inList_LH_C_0³) then [True] else inList₀₁(_lh_inList_arg1³, _lh_inList_LH_C_1³)
+//│ 						| LH_N  => [False]
+//│ 						| _  => error⁰}
+//│ 				def mappend₀₁(xs², ys²) = 
+//│ 					case xs² of {
+//│ 						LH_C h⁴ t³ => [LH_C h⁴ mappend₀₁(t³, ys²)]
+//│ 						| LH_N  => ys²}
+//│ 			def dfs₀₃(_lh_dfs_arg1², _lh_dfs_arg2², _lh_dfs_arg3²) = 
+//│ 				case _lh_dfs_arg2² of {
+//│ 					LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴ => case _lh_dfs_arg3² of {
+//│ 						LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴]
+//│ 						| LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_C_1² => if inList₀₂(_lh_dfs_LH_C_0², _lh_dfs_LH_P2_0⁴) then dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴], _lh_dfs_LH_C_1²) else 
+//│ 							let _lh_matchIdent³ = dfs₀₃(_lh_dfs_arg1², [LH_P2 [LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_0⁴] [LH_N]], _lh_dfs_arg1²(_lh_dfs_LH_C_0²))
+//│ 							in case _lh_matchIdent³ of {
+//│ 								LH_P2 _lh_dfs_LH_P2_0⁵ _lh_dfs_LH_P2_1⁵ => dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁵ mappend₀₂([LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_1⁵], _lh_dfs_LH_P2_1⁴)], _lh_dfs_LH_C_1²)
+//│ 								| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 				where
+//│ 				def inList₀₂(_lh_inList_arg1⁶, _lh_inList_arg2⁶) = 
+//│ 					case _lh_inList_arg2⁶ of {
+//│ 						LH_C _lh_inList_LH_C_0⁶ _lh_inList_LH_C_1⁶ => if (_lh_inList_arg1⁶ == _lh_inList_LH_C_0⁶) then [True] else inList₀₂(_lh_inList_arg1⁶, _lh_inList_LH_C_1⁶)
+//│ 						| LH_N  => [False]
+//│ 						| _  => error⁰}
+//│ 				def mappend₀₂(xs³, ys³) = 
+//│ 					case xs³ of {
+//│ 						LH_C h⁶ t⁴ => [LH_C h⁶ mappend₀₂(t⁴, ys³)]
+//│ 						| LH_N  => ys³}
+//│ 			def inList₀₃(_lh_inList_arg1⁸, _lh_inList_arg2⁸) = 
+//│ 				case _lh_inList_arg2⁸ of {
+//│ 					LH_C _lh_inList_LH_C_0⁸ _lh_inList_LH_C_1⁸ => if (_lh_inList_arg1⁸ == _lh_inList_LH_C_0⁸) then [True] else inList₀₃(_lh_inList_arg1⁸, _lh_inList_LH_C_1⁸)
+//│ 					| LH_N  => [False]
+//│ 					| _  => error⁰}
+//│ 			def mappend₀₃(xs⁵, ys⁵) = 
+//│ 				case xs⁵ of {
+//│ 					LH_C h⁹ t⁷ => [LH_C h⁹ mappend₀₃(t⁷, ys⁵)]
+//│ 					| LH_N  => ys⁵}
+//│ 		def dfs₁₀(_lh_dfs_arg1⁵, _lh_dfs_arg2⁵, _lh_dfs_arg3⁵) = 
+//│ 			case _lh_dfs_arg2⁵ of {
+//│ 				LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰ => case _lh_dfs_arg3⁵ of {
+//│ 					LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰]
+//│ 					| LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_C_1⁵ => if inList₁₀(_lh_dfs_LH_C_0⁵, _lh_dfs_LH_P2_0¹⁰) then dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰], _lh_dfs_LH_C_1⁵) else 
+//│ 						let _lh_matchIdent⁷ = dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]], _lh_dfs_arg1⁵(_lh_dfs_LH_C_0⁵))
+//│ 						in case _lh_matchIdent⁷ of {
+//│ 							LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵)
+//│ 							| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 			where
+//│ 			def inList₁₀(_lh_inList_arg1⁷, _lh_inList_arg2⁷) = 
+//│ 				case _lh_inList_arg2⁷ of {
+//│ 					LH_C _lh_inList_LH_C_0⁷ _lh_inList_LH_C_1⁷ => if (_lh_inList_arg1⁷ == _lh_inList_LH_C_0⁷) then [True] else inList₁₀(_lh_inList_arg1⁷, _lh_inList_LH_C_1⁷)
+//│ 					| LH_N  => [False]
+//│ 					| _  => error⁰}
+//│ 			def mappend₁₀(xs⁶, ys⁶) = 
+//│ 				case xs⁶ of {
+//│ 					LH_C h¹⁰ t⁸ => [LH_C h¹⁰ mappend₁₀(t⁸, ys⁶)]
+//│ 					| LH_N  => ys⁶}
+//│ 		def inList₂₀(_lh_inList_arg1⁴, _lh_inList_arg2⁴) = 
+//│ 			case _lh_inList_arg2⁴ of {
+//│ 				LH_C _lh_inList_LH_C_0⁴ _lh_inList_LH_C_1⁴ => if (_lh_inList_arg1⁴ == _lh_inList_LH_C_0⁴) then [True] else inList₂₀(_lh_inList_arg1⁴, _lh_inList_LH_C_1⁴)
+//│ 				| LH_N  => [False]
+//│ 				| _  => error⁰}
+//│ 		def map₀₀(f³, ls¹) = 
+//│ 			case ls¹ of {
+//│ 				LH_C h⁷ t⁵ => [LH_C f³(h⁷) map₀₀(f³, t⁵)]
+//│ 				| LH_N  => [LH_N]}
+//│ 		def snd₀₀(_lh_snd_arg1³) = 
+//│ 			case _lh_snd_arg1³ of {
+//│ 				LH_P2 _lh_snd_LH_P2_0³ _lh_snd_LH_P2_1³ => _lh_snd_LH_P2_1³
+//│ 				| _  => error⁰}
+//│ 		def snd₁₀(_lh_snd_arg1²) = 
+//│ 			case _lh_snd_arg1² of {
+//│ 				LH_P2 _lh_snd_LH_P2_0² _lh_snd_LH_P2_1² => _lh_snd_LH_P2_1²
+//│ 				| _  => error⁰}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_C h⁴ mappend₀₁(t³, ys²)]: 439 --->
+//│ 	case xs² of {LH_C h⁴ t³ => [LH_C h⁴ mappend₀₁(t³, ys²)] | LH_N  => ys²}: 441
+//│ 	case xs⁵ of {LH_C h⁹ t⁷ => [LH_C h⁹ mappend₀₃(t⁷, ys⁵)] | LH_N  => ys⁵}: 982
+//│ [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴]: 466 --->
+//│ 	case _lh_matchIdent³ of {LH_P2 _lh_dfs_LH_P2_0⁵ _lh_dfs_LH_P2_1⁵ => dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁵ mappend₀₂([LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_1⁵], _lh_dfs_LH_P2_1⁴)], _lh_dfs_LH_C_1²) | _  => error⁰}: 511
+//│ 	case _lh_matchIdent⁴ of {LH_P2 _lh_span_tree_LH_P2_0³ _lh_span_tree_LH_P2_1³ => span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0³ [LH_C [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_1³] _lh_span_tree_LH_P2_1²]], _lh_span_tree_LH_C_1¹) | _  => error⁰}: 595
+//│ [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴]: 477 --->
+//│ 	case _lh_dfs_arg2² of {LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴ => case _lh_dfs_arg3² of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴] | LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_C_1² => if inList₀₂(_lh_dfs_LH_C_0², _lh_dfs_LH_P2_0⁴) then dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴], _lh_dfs_LH_C_1²) else let _lh_matchIdent³ = dfs₀₃(_lh_dfs_arg1², [LH_P2 [LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_0⁴] [LH_N]], _lh_dfs_arg1²(_lh_dfs_LH_C_0²))
+//│ in case _lh_matchIdent³ of {LH_P2 _lh_dfs_LH_P2_0⁵ _lh_dfs_LH_P2_1⁵ => dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁵ mappend₀₂([LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_1⁵], _lh_dfs_LH_P2_1⁴)], _lh_dfs_LH_C_1²) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 517
+//│ [LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_0⁴]: 486 --->
+//│ 	DeadCodeCons
+//│ 	case _lh_inList_arg2³ of {LH_C _lh_inList_LH_C_0³ _lh_inList_LH_C_1³ => if (_lh_inList_arg1³ == _lh_inList_LH_C_0³) then [True] else inList₀₁(_lh_inList_arg1³, _lh_inList_LH_C_1³) | LH_N  => [False] | _  => error⁰}: 459
+//│ 	case _lh_inList_arg2⁴ of {LH_C _lh_inList_LH_C_0⁴ _lh_inList_LH_C_1⁴ => if (_lh_inList_arg1⁴ == _lh_inList_LH_C_0⁴) then [True] else inList₂₀(_lh_inList_arg1⁴, _lh_inList_LH_C_1⁴) | LH_N  => [False] | _  => error⁰}: 914
+//│ 	case _lh_inList_arg2⁵ of {LH_C _lh_inList_LH_C_0⁵ _lh_inList_LH_C_1⁵ => if (_lh_inList_arg1⁵ == _lh_inList_LH_C_0⁵) then [True] else inList₀₀(_lh_inList_arg1⁵, _lh_inList_LH_C_1⁵) | LH_N  => [False] | _  => error⁰}: 932
+//│ 	case _lh_inList_arg2⁶ of {LH_C _lh_inList_LH_C_0⁶ _lh_inList_LH_C_1⁶ => if (_lh_inList_arg1⁶ == _lh_inList_LH_C_0⁶) then [True] else inList₀₂(_lh_inList_arg1⁶, _lh_inList_LH_C_1⁶) | LH_N  => [False] | _  => error⁰}: 1000
+//│ 	case _lh_inList_arg2⁸ of {LH_C _lh_inList_LH_C_0⁸ _lh_inList_LH_C_1⁸ => if (_lh_inList_arg1⁸ == _lh_inList_LH_C_0⁸) then [True] else inList₀₃(_lh_inList_arg1⁸, _lh_inList_LH_C_1⁸) | LH_N  => [False] | _  => error⁰}: 1112
+//│ [LH_N]: 487 --->
+//│ 	NoCons
+//│ 	case xs³ of {LH_C h⁶ t⁴ => [LH_C h⁶ mappend₀₂(t⁴, ys³)] | LH_N  => ys³}: 944
+//│ [LH_P2 [LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_0⁴] [LH_N]]: 488 --->
+//│ 	case _lh_dfs_arg2² of {LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴ => case _lh_dfs_arg3² of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴] | LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_C_1² => if inList₀₂(_lh_dfs_LH_C_0², _lh_dfs_LH_P2_0⁴) then dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴], _lh_dfs_LH_C_1²) else let _lh_matchIdent³ = dfs₀₃(_lh_dfs_arg1², [LH_P2 [LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_0⁴] [LH_N]], _lh_dfs_arg1²(_lh_dfs_LH_C_0²))
+//│ in case _lh_matchIdent³ of {LH_P2 _lh_dfs_LH_P2_0⁵ _lh_dfs_LH_P2_1⁵ => dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁵ mappend₀₂([LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_1⁵], _lh_dfs_LH_P2_1⁴)], _lh_dfs_LH_C_1²) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 517
+//│ [LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_1⁵]: 502 --->
+//│ 	case xs³ of {LH_C h⁶ t⁴ => [LH_C h⁶ mappend₀₂(t⁴, ys³)] | LH_N  => ys³}: 944
+//│ [LH_P2 _lh_dfs_LH_P2_0⁵ mappend₀₂([LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_1⁵], _lh_dfs_LH_P2_1⁴)]: 506 --->
+//│ 	case _lh_dfs_arg2² of {LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴ => case _lh_dfs_arg3² of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴] | LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_C_1² => if inList₀₂(_lh_dfs_LH_C_0², _lh_dfs_LH_P2_0⁴) then dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴], _lh_dfs_LH_C_1²) else let _lh_matchIdent³ = dfs₀₃(_lh_dfs_arg1², [LH_P2 [LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_0⁴] [LH_N]], _lh_dfs_arg1²(_lh_dfs_LH_C_0²))
+//│ in case _lh_matchIdent³ of {LH_P2 _lh_dfs_LH_P2_0⁵ _lh_dfs_LH_P2_1⁵ => dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁵ mappend₀₂([LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_1⁵], _lh_dfs_LH_P2_1⁴)], _lh_dfs_LH_C_1²) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 517
+//│ [LH_N]: 522 --->
+//│ 	case _lh_dfs_arg3² of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴] | LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_C_1² => if inList₀₂(_lh_dfs_LH_C_0², _lh_dfs_LH_P2_0⁴) then dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴], _lh_dfs_LH_C_1²) else let _lh_matchIdent³ = dfs₀₃(_lh_dfs_arg1², [LH_P2 [LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_0⁴] [LH_N]], _lh_dfs_arg1²(_lh_dfs_LH_C_0²))
+//│ in case _lh_matchIdent³ of {LH_P2 _lh_dfs_LH_P2_0⁵ _lh_dfs_LH_P2_1⁵ => dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁵ mappend₀₂([LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_1⁵], _lh_dfs_LH_P2_1⁴)], _lh_dfs_LH_C_1²) | _  => error⁰} | _  => error⁰}: 515
+//│ 	case _lh_dfs_arg3³ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶] | LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_C_1³ => if inList₀₃(_lh_dfs_LH_C_0³, _lh_dfs_LH_P2_0⁶) then dfs₀₁(_lh_dfs_arg1³, [LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶], _lh_dfs_LH_C_1³) else let _lh_matchIdent⁵ = dfs₀₂(_lh_dfs_arg1³, [LH_P2 [LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_0⁶] [LH_N]], _lh_dfs_arg1³(_lh_dfs_LH_C_0³))
+//│ in case _lh_matchIdent⁵ of {LH_P2 _lh_dfs_LH_P2_0⁷ _lh_dfs_LH_P2_1⁷ => dfs₀₃(_lh_dfs_arg1³, [LH_P2 _lh_dfs_LH_P2_0⁷ mappend₀₃([LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_1⁷], _lh_dfs_LH_P2_1⁶)], _lh_dfs_LH_C_1³) | _  => error⁰} | _  => error⁰}: 697
+//│ 	case _lh_dfs_arg3⁴ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸] | LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_C_1⁴ => if inList₀₁(_lh_dfs_LH_C_0⁴, _lh_dfs_LH_P2_0⁸) then dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸], _lh_dfs_LH_C_1⁴) else let _lh_matchIdent⁶ = dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 [LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_0⁸] [LH_N]], _lh_dfs_arg1⁴(_lh_dfs_LH_C_0⁴))
+//│ in case _lh_matchIdent⁶ of {LH_P2 _lh_dfs_LH_P2_0⁹ _lh_dfs_LH_P2_1⁹ => dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁹ mappend₀₁([LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_1⁹], _lh_dfs_LH_P2_1⁸)], _lh_dfs_LH_C_1⁴) | _  => error⁰} | _  => error⁰}: 834
+//│ 	case _lh_dfs_arg3⁵ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰] | LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_C_1⁵ => if inList₁₀(_lh_dfs_LH_C_0⁵, _lh_dfs_LH_P2_0¹⁰) then dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰], _lh_dfs_LH_C_1⁵) else let _lh_matchIdent⁷ = dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]], _lh_dfs_arg1⁵(_lh_dfs_LH_C_0⁵))
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵) | _  => error⁰} | _  => error⁰}: 893
+//│ 	case _lh_dfs_arg3⁶ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²] | LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_C_1⁶ => if inList₀₀(_lh_dfs_LH_C_0⁶, _lh_dfs_LH_P2_0¹²) then dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²], _lh_dfs_LH_C_1⁶) else let _lh_matchIdent⁸ = dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 [LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_0¹²] [LH_N]], _lh_dfs_arg1⁶(_lh_dfs_LH_C_0⁶))
+//│ in case _lh_matchIdent⁸ of {LH_P2 _lh_dfs_LH_P2_0¹³ _lh_dfs_LH_P2_1¹³ => dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹³ mappend₀₀([LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_1¹³], _lh_dfs_LH_P2_1¹²)], _lh_dfs_LH_C_1⁶) | _  => error⁰} | _  => error⁰}: 1091
+//│ [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)]: 535 --->
+//│ 	case _lh_dfs_arg3² of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴] | LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_C_1² => if inList₀₂(_lh_dfs_LH_C_0², _lh_dfs_LH_P2_0⁴) then dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴], _lh_dfs_LH_C_1²) else let _lh_matchIdent³ = dfs₀₃(_lh_dfs_arg1², [LH_P2 [LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_0⁴] [LH_N]], _lh_dfs_arg1²(_lh_dfs_LH_C_0²))
+//│ in case _lh_matchIdent³ of {LH_P2 _lh_dfs_LH_P2_0⁵ _lh_dfs_LH_P2_1⁵ => dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁵ mappend₀₂([LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_1⁵], _lh_dfs_LH_P2_1⁴)], _lh_dfs_LH_C_1²) | _  => error⁰} | _  => error⁰}: 515
+//│ 	case _lh_dfs_arg3³ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶] | LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_C_1³ => if inList₀₃(_lh_dfs_LH_C_0³, _lh_dfs_LH_P2_0⁶) then dfs₀₁(_lh_dfs_arg1³, [LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶], _lh_dfs_LH_C_1³) else let _lh_matchIdent⁵ = dfs₀₂(_lh_dfs_arg1³, [LH_P2 [LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_0⁶] [LH_N]], _lh_dfs_arg1³(_lh_dfs_LH_C_0³))
+//│ in case _lh_matchIdent⁵ of {LH_P2 _lh_dfs_LH_P2_0⁷ _lh_dfs_LH_P2_1⁷ => dfs₀₃(_lh_dfs_arg1³, [LH_P2 _lh_dfs_LH_P2_0⁷ mappend₀₃([LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_1⁷], _lh_dfs_LH_P2_1⁶)], _lh_dfs_LH_C_1³) | _  => error⁰} | _  => error⁰}: 697
+//│ 	case _lh_dfs_arg3⁴ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸] | LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_C_1⁴ => if inList₀₁(_lh_dfs_LH_C_0⁴, _lh_dfs_LH_P2_0⁸) then dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸], _lh_dfs_LH_C_1⁴) else let _lh_matchIdent⁶ = dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 [LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_0⁸] [LH_N]], _lh_dfs_arg1⁴(_lh_dfs_LH_C_0⁴))
+//│ in case _lh_matchIdent⁶ of {LH_P2 _lh_dfs_LH_P2_0⁹ _lh_dfs_LH_P2_1⁹ => dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁹ mappend₀₁([LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_1⁹], _lh_dfs_LH_P2_1⁸)], _lh_dfs_LH_C_1⁴) | _  => error⁰} | _  => error⁰}: 834
+//│ 	case _lh_dfs_arg3⁵ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰] | LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_C_1⁵ => if inList₁₀(_lh_dfs_LH_C_0⁵, _lh_dfs_LH_P2_0¹⁰) then dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰], _lh_dfs_LH_C_1⁵) else let _lh_matchIdent⁷ = dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]], _lh_dfs_arg1⁵(_lh_dfs_LH_C_0⁵))
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵) | _  => error⁰} | _  => error⁰}: 893
+//│ 	case _lh_dfs_arg3⁶ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²] | LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_C_1⁶ => if inList₀₀(_lh_dfs_LH_C_0⁶, _lh_dfs_LH_P2_0¹²) then dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²], _lh_dfs_LH_C_1⁶) else let _lh_matchIdent⁸ = dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 [LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_0¹²] [LH_N]], _lh_dfs_arg1⁶(_lh_dfs_LH_C_0⁶))
+//│ in case _lh_matchIdent⁸ of {LH_P2 _lh_dfs_LH_P2_0¹³ _lh_dfs_LH_P2_1¹³ => dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹³ mappend₀₀([LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_1¹³], _lh_dfs_LH_P2_1¹²)], _lh_dfs_LH_C_1⁶) | _  => error⁰} | _  => error⁰}: 1091
+//│ [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²]: 552 --->
+//│ 	case _lh_snd_arg1³ of {LH_P2 _lh_snd_LH_P2_0³ _lh_snd_LH_P2_1³ => _lh_snd_LH_P2_1³ | _  => error⁰}: 1006
+//│ [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²]: 563 --->
+//│ 	case _lh_span_tree_arg2¹ of {LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1² => case _lh_span_tree_arg3¹ of {LH_N  => [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²] | LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_C_1¹ => if inList₂₀(_lh_span_tree_LH_C_0¹, _lh_span_tree_LH_P2_0²) then span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²], _lh_span_tree_LH_C_1¹) else let _lh_matchIdent⁴ = dfs₀₀(_lh_span_tree_arg1¹, [LH_P2 [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_0²] [LH_N]], _lh_span_tree_arg1¹(_lh_span_tree_LH_C_0¹))
+//│ in case _lh_matchIdent⁴ of {LH_P2 _lh_span_tree_LH_P2_0³ _lh_span_tree_LH_P2_1³ => span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0³ [LH_C [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_1³] _lh_span_tree_LH_P2_1²]], _lh_span_tree_LH_C_1¹) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 601
+//│ [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_0²]: 572 --->
+//│ 	DeadCodeCons
+//│ 	case _lh_inList_arg2³ of {LH_C _lh_inList_LH_C_0³ _lh_inList_LH_C_1³ => if (_lh_inList_arg1³ == _lh_inList_LH_C_0³) then [True] else inList₀₁(_lh_inList_arg1³, _lh_inList_LH_C_1³) | LH_N  => [False] | _  => error⁰}: 459
+//│ 	case _lh_inList_arg2⁴ of {LH_C _lh_inList_LH_C_0⁴ _lh_inList_LH_C_1⁴ => if (_lh_inList_arg1⁴ == _lh_inList_LH_C_0⁴) then [True] else inList₂₀(_lh_inList_arg1⁴, _lh_inList_LH_C_1⁴) | LH_N  => [False] | _  => error⁰}: 914
+//│ 	case _lh_inList_arg2⁵ of {LH_C _lh_inList_LH_C_0⁵ _lh_inList_LH_C_1⁵ => if (_lh_inList_arg1⁵ == _lh_inList_LH_C_0⁵) then [True] else inList₀₀(_lh_inList_arg1⁵, _lh_inList_LH_C_1⁵) | LH_N  => [False] | _  => error⁰}: 932
+//│ 	case _lh_inList_arg2⁶ of {LH_C _lh_inList_LH_C_0⁶ _lh_inList_LH_C_1⁶ => if (_lh_inList_arg1⁶ == _lh_inList_LH_C_0⁶) then [True] else inList₀₂(_lh_inList_arg1⁶, _lh_inList_LH_C_1⁶) | LH_N  => [False] | _  => error⁰}: 1000
+//│ 	case _lh_inList_arg2⁸ of {LH_C _lh_inList_LH_C_0⁸ _lh_inList_LH_C_1⁸ => if (_lh_inList_arg1⁸ == _lh_inList_LH_C_0⁸) then [True] else inList₀₃(_lh_inList_arg1⁸, _lh_inList_LH_C_1⁸) | LH_N  => [False] | _  => error⁰}: 1112
+//│ [LH_N]: 573 --->
+//│ 	NoCons
+//│ 	case xs³ of {LH_C h⁶ t⁴ => [LH_C h⁶ mappend₀₂(t⁴, ys³)] | LH_N  => ys³}: 944
+//│ 	case xs⁴ of {LH_C h⁸ t⁶ => [LH_C h⁸ mappend₀₀(t⁶, ys⁴)] | LH_N  => ys⁴}: 970
+//│ [LH_P2 [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_0²] [LH_N]]: 574 --->
+//│ 	case _lh_dfs_arg2³ of {LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶ => case _lh_dfs_arg3³ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶] | LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_C_1³ => if inList₀₃(_lh_dfs_LH_C_0³, _lh_dfs_LH_P2_0⁶) then dfs₀₁(_lh_dfs_arg1³, [LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶], _lh_dfs_LH_C_1³) else let _lh_matchIdent⁵ = dfs₀₂(_lh_dfs_arg1³, [LH_P2 [LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_0⁶] [LH_N]], _lh_dfs_arg1³(_lh_dfs_LH_C_0³))
+//│ in case _lh_matchIdent⁵ of {LH_P2 _lh_dfs_LH_P2_0⁷ _lh_dfs_LH_P2_1⁷ => dfs₀₃(_lh_dfs_arg1³, [LH_P2 _lh_dfs_LH_P2_0⁷ mappend₀₃([LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_1⁷], _lh_dfs_LH_P2_1⁶)], _lh_dfs_LH_C_1³) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 699
+//│ [LH_P2 _lh_span_tree_LH_P2_0³ [LH_C [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_1³] _lh_span_tree_LH_P2_1²]]: 590 --->
+//│ 	case _lh_span_tree_arg2¹ of {LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1² => case _lh_span_tree_arg3¹ of {LH_N  => [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²] | LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_C_1¹ => if inList₂₀(_lh_span_tree_LH_C_0¹, _lh_span_tree_LH_P2_0²) then span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²], _lh_span_tree_LH_C_1¹) else let _lh_matchIdent⁴ = dfs₀₀(_lh_span_tree_arg1¹, [LH_P2 [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_0²] [LH_N]], _lh_span_tree_arg1¹(_lh_span_tree_LH_C_0¹))
+//│ in case _lh_matchIdent⁴ of {LH_P2 _lh_span_tree_LH_P2_0³ _lh_span_tree_LH_P2_1³ => span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0³ [LH_C [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_1³] _lh_span_tree_LH_P2_1²]], _lh_span_tree_LH_C_1¹) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 601
+//│ [LH_P2 _lh_swap_LH_P2_1¹ _lh_swap_LH_P2_0¹]: 608 --->
+//│ 	case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰}: 543
+//│ [LH_N]: 622 --->
+//│ 	DeadCodeCons
+//│ 	case _lh_inList_arg2³ of {LH_C _lh_inList_LH_C_0³ _lh_inList_LH_C_1³ => if (_lh_inList_arg1³ == _lh_inList_LH_C_0³) then [True] else inList₀₁(_lh_inList_arg1³, _lh_inList_LH_C_1³) | LH_N  => [False] | _  => error⁰}: 459
+//│ 	case _lh_inList_arg2⁴ of {LH_C _lh_inList_LH_C_0⁴ _lh_inList_LH_C_1⁴ => if (_lh_inList_arg1⁴ == _lh_inList_LH_C_0⁴) then [True] else inList₂₀(_lh_inList_arg1⁴, _lh_inList_LH_C_1⁴) | LH_N  => [False] | _  => error⁰}: 914
+//│ 	case _lh_inList_arg2⁵ of {LH_C _lh_inList_LH_C_0⁵ _lh_inList_LH_C_1⁵ => if (_lh_inList_arg1⁵ == _lh_inList_LH_C_0⁵) then [True] else inList₀₀(_lh_inList_arg1⁵, _lh_inList_LH_C_1⁵) | LH_N  => [False] | _  => error⁰}: 932
+//│ 	case _lh_inList_arg2⁶ of {LH_C _lh_inList_LH_C_0⁶ _lh_inList_LH_C_1⁶ => if (_lh_inList_arg1⁶ == _lh_inList_LH_C_0⁶) then [True] else inList₀₂(_lh_inList_arg1⁶, _lh_inList_LH_C_1⁶) | LH_N  => [False] | _  => error⁰}: 1000
+//│ 	case _lh_inList_arg2⁸ of {LH_C _lh_inList_LH_C_0⁸ _lh_inList_LH_C_1⁸ => if (_lh_inList_arg1⁸ == _lh_inList_LH_C_0⁸) then [True] else inList₀₃(_lh_inList_arg1⁸, _lh_inList_LH_C_1⁸) | LH_N  => [False] | _  => error⁰}: 1112
+//│ [LH_P2 [LH_N] [LH_N]]: 624 --->
+//│ 	case _lh_span_tree_arg2¹ of {LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1² => case _lh_span_tree_arg3¹ of {LH_N  => [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²] | LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_C_1¹ => if inList₂₀(_lh_span_tree_LH_C_0¹, _lh_span_tree_LH_P2_0²) then span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²], _lh_span_tree_LH_C_1¹) else let _lh_matchIdent⁴ = dfs₀₀(_lh_span_tree_arg1¹, [LH_P2 [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_0²] [LH_N]], _lh_span_tree_arg1¹(_lh_span_tree_LH_C_0¹))
+//│ in case _lh_matchIdent⁴ of {LH_P2 _lh_span_tree_LH_P2_0³ _lh_span_tree_LH_P2_1³ => span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0³ [LH_C [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_1³] _lh_span_tree_LH_P2_1²]], _lh_span_tree_LH_C_1¹) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 601
+//│ [LH_N]: 632 --->
+//│ 	DeadCodeCons
+//│ 	case _lh_inList_arg2⁷ of {LH_C _lh_inList_LH_C_0⁷ _lh_inList_LH_C_1⁷ => if (_lh_inList_arg1⁷ == _lh_inList_LH_C_0⁷) then [True] else inList₁₀(_lh_inList_arg1⁷, _lh_inList_LH_C_1⁷) | LH_N  => [False] | _  => error⁰}: 1035
+//│ [LH_N]: 633 --->
+//│ 	case _lh_span_tree_arg3¹ of {LH_N  => [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²] | LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_C_1¹ => if inList₂₀(_lh_span_tree_LH_C_0¹, _lh_span_tree_LH_P2_0²) then span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²], _lh_span_tree_LH_C_1¹) else let _lh_matchIdent⁴ = dfs₀₀(_lh_span_tree_arg1¹, [LH_P2 [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_0²] [LH_N]], _lh_span_tree_arg1¹(_lh_span_tree_LH_C_0¹))
+//│ in case _lh_matchIdent⁴ of {LH_P2 _lh_span_tree_LH_P2_0³ _lh_span_tree_LH_P2_1³ => span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0³ [LH_C [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_1³] _lh_span_tree_LH_P2_1²]], _lh_span_tree_LH_C_1¹) | _  => error⁰} | _  => error⁰}: 599
+//│ 	case xs⁶ of {LH_C h¹⁰ t⁸ => [LH_C h¹⁰ mappend₁₀(t⁸, ys⁶)] | LH_N  => ys⁶}: 1017
+//│ [LH_P2 [LH_N] [LH_N]]: 634 --->
+//│ 	case _lh_dfs_arg2⁵ of {LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰ => case _lh_dfs_arg3⁵ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰] | LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_C_1⁵ => if inList₁₀(_lh_dfs_LH_C_0⁵, _lh_dfs_LH_P2_0¹⁰) then dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰], _lh_dfs_LH_C_1⁵) else let _lh_matchIdent⁷ = dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]], _lh_dfs_arg1⁵(_lh_dfs_LH_C_0⁵))
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 895
+//│ [LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶]: 648 --->
+//│ 	case _lh_matchIdent⁴ of {LH_P2 _lh_span_tree_LH_P2_0³ _lh_span_tree_LH_P2_1³ => span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0³ [LH_C [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_1³] _lh_span_tree_LH_P2_1²]], _lh_span_tree_LH_C_1¹) | _  => error⁰}: 595
+//│ [LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶]: 659 --->
+//│ 	case _lh_dfs_arg2⁶ of {LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹² => case _lh_dfs_arg3⁶ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²] | LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_C_1⁶ => if inList₀₀(_lh_dfs_LH_C_0⁶, _lh_dfs_LH_P2_0¹²) then dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²], _lh_dfs_LH_C_1⁶) else let _lh_matchIdent⁸ = dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 [LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_0¹²] [LH_N]], _lh_dfs_arg1⁶(_lh_dfs_LH_C_0⁶))
+//│ in case _lh_matchIdent⁸ of {LH_P2 _lh_dfs_LH_P2_0¹³ _lh_dfs_LH_P2_1¹³ => dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹³ mappend₀₀([LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_1¹³], _lh_dfs_LH_P2_1¹²)], _lh_dfs_LH_C_1⁶) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 1093
+//│ [LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_0⁶]: 668 --->
+//│ 	DeadCodeCons
+//│ 	case _lh_inList_arg2³ of {LH_C _lh_inList_LH_C_0³ _lh_inList_LH_C_1³ => if (_lh_inList_arg1³ == _lh_inList_LH_C_0³) then [True] else inList₀₁(_lh_inList_arg1³, _lh_inList_LH_C_1³) | LH_N  => [False] | _  => error⁰}: 459
+//│ 	case _lh_inList_arg2⁴ of {LH_C _lh_inList_LH_C_0⁴ _lh_inList_LH_C_1⁴ => if (_lh_inList_arg1⁴ == _lh_inList_LH_C_0⁴) then [True] else inList₂₀(_lh_inList_arg1⁴, _lh_inList_LH_C_1⁴) | LH_N  => [False] | _  => error⁰}: 914
+//│ 	case _lh_inList_arg2⁵ of {LH_C _lh_inList_LH_C_0⁵ _lh_inList_LH_C_1⁵ => if (_lh_inList_arg1⁵ == _lh_inList_LH_C_0⁵) then [True] else inList₀₀(_lh_inList_arg1⁵, _lh_inList_LH_C_1⁵) | LH_N  => [False] | _  => error⁰}: 932
+//│ 	case _lh_inList_arg2⁶ of {LH_C _lh_inList_LH_C_0⁶ _lh_inList_LH_C_1⁶ => if (_lh_inList_arg1⁶ == _lh_inList_LH_C_0⁶) then [True] else inList₀₂(_lh_inList_arg1⁶, _lh_inList_LH_C_1⁶) | LH_N  => [False] | _  => error⁰}: 1000
+//│ 	case _lh_inList_arg2⁸ of {LH_C _lh_inList_LH_C_0⁸ _lh_inList_LH_C_1⁸ => if (_lh_inList_arg1⁸ == _lh_inList_LH_C_0⁸) then [True] else inList₀₃(_lh_inList_arg1⁸, _lh_inList_LH_C_1⁸) | LH_N  => [False] | _  => error⁰}: 1112
+//│ [LH_N]: 669 --->
+//│ 	case xs² of {LH_C h⁴ t³ => [LH_C h⁴ mappend₀₁(t³, ys²)] | LH_N  => ys²}: 441
+//│ 	case xs⁵ of {LH_C h⁹ t⁷ => [LH_C h⁹ mappend₀₃(t⁷, ys⁵)] | LH_N  => ys⁵}: 982
+//│ [LH_P2 [LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_0⁶] [LH_N]]: 670 --->
+//│ 	case _lh_dfs_arg2⁴ of {LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸ => case _lh_dfs_arg3⁴ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸] | LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_C_1⁴ => if inList₀₁(_lh_dfs_LH_C_0⁴, _lh_dfs_LH_P2_0⁸) then dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸], _lh_dfs_LH_C_1⁴) else let _lh_matchIdent⁶ = dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 [LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_0⁸] [LH_N]], _lh_dfs_arg1⁴(_lh_dfs_LH_C_0⁴))
+//│ in case _lh_matchIdent⁶ of {LH_P2 _lh_dfs_LH_P2_0⁹ _lh_dfs_LH_P2_1⁹ => dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁹ mappend₀₁([LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_1⁹], _lh_dfs_LH_P2_1⁸)], _lh_dfs_LH_C_1⁴) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 836
+//│ [LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_1⁷]: 684 --->
+//│ 	case xs⁵ of {LH_C h⁹ t⁷ => [LH_C h⁹ mappend₀₃(t⁷, ys⁵)] | LH_N  => ys⁵}: 982
+//│ [LH_P2 _lh_dfs_LH_P2_0⁷ mappend₀₃([LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_1⁷], _lh_dfs_LH_P2_1⁶)]: 688 --->
+//│ 	case _lh_dfs_arg2² of {LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴ => case _lh_dfs_arg3² of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴] | LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_C_1² => if inList₀₂(_lh_dfs_LH_C_0², _lh_dfs_LH_P2_0⁴) then dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴], _lh_dfs_LH_C_1²) else let _lh_matchIdent³ = dfs₀₃(_lh_dfs_arg1², [LH_P2 [LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_0⁴] [LH_N]], _lh_dfs_arg1²(_lh_dfs_LH_C_0²))
+//│ in case _lh_matchIdent³ of {LH_P2 _lh_dfs_LH_P2_0⁵ _lh_dfs_LH_P2_1⁵ => dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁵ mappend₀₂([LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_1⁵], _lh_dfs_LH_P2_1⁴)], _lh_dfs_LH_C_1²) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 517
+//│ [LH_N]: 717 --->
+//│ 	case _lh_dfs_arg3⁵ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰] | LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_C_1⁵ => if inList₁₀(_lh_dfs_LH_C_0⁵, _lh_dfs_LH_P2_0¹⁰) then dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰], _lh_dfs_LH_C_1⁵) else let _lh_matchIdent⁷ = dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]], _lh_dfs_arg1⁵(_lh_dfs_LH_C_0⁵))
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵) | _  => error⁰} | _  => error⁰}: 893
+//│ [LH_C h⁵ [LH_N]]: 718 --->
+//│ 	case _lh_dfs_arg3⁵ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰] | LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_C_1⁵ => if inList₁₀(_lh_dfs_LH_C_0⁵, _lh_dfs_LH_P2_0¹⁰) then dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰], _lh_dfs_LH_C_1⁵) else let _lh_matchIdent⁷ = dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]], _lh_dfs_arg1⁵(_lh_dfs_LH_C_0⁵))
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵) | _  => error⁰} | _  => error⁰}: 893
+//│ [LH_C g¹ [LH_C h⁵ [LH_N]]]: 719 --->
+//│ 	case _lh_dfs_arg3⁵ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰] | LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_C_1⁵ => if inList₁₀(_lh_dfs_LH_C_0⁵, _lh_dfs_LH_P2_0¹⁰) then dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰], _lh_dfs_LH_C_1⁵) else let _lh_matchIdent⁷ = dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]], _lh_dfs_arg1⁵(_lh_dfs_LH_C_0⁵))
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵) | _  => error⁰} | _  => error⁰}: 893
+//│ [LH_C f² [LH_C g¹ [LH_C h⁵ [LH_N]]]]: 720 --->
+//│ 	case _lh_dfs_arg3⁵ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰] | LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_C_1⁵ => if inList₁₀(_lh_dfs_LH_C_0⁵, _lh_dfs_LH_P2_0¹⁰) then dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰], _lh_dfs_LH_C_1⁵) else let _lh_matchIdent⁷ = dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]], _lh_dfs_arg1⁵(_lh_dfs_LH_C_0⁵))
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵) | _  => error⁰} | _  => error⁰}: 893
+//│ [LH_C d¹ [LH_C f² [LH_C g¹ [LH_C h⁵ [LH_N]]]]]: 721 --->
+//│ 	case _lh_dfs_arg3⁵ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰] | LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_C_1⁵ => if inList₁₀(_lh_dfs_LH_C_0⁵, _lh_dfs_LH_P2_0¹⁰) then dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰], _lh_dfs_LH_C_1⁵) else let _lh_matchIdent⁷ = dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]], _lh_dfs_arg1⁵(_lh_dfs_LH_C_0⁵))
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵) | _  => error⁰} | _  => error⁰}: 893
+//│ [LH_C c¹ [LH_C d¹ [LH_C f² [LH_C g¹ [LH_C h⁵ [LH_N]]]]]]: 722 --->
+//│ 	case _lh_dfs_arg3⁵ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰] | LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_C_1⁵ => if inList₁₀(_lh_dfs_LH_C_0⁵, _lh_dfs_LH_P2_0¹⁰) then dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰], _lh_dfs_LH_C_1⁵) else let _lh_matchIdent⁷ = dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]], _lh_dfs_arg1⁵(_lh_dfs_LH_C_0⁵))
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵) | _  => error⁰} | _  => error⁰}: 893
+//│ [LH_C b¹ [LH_C c¹ [LH_C d¹ [LH_C f² [LH_C g¹ [LH_C h⁵ [LH_N]]]]]]]: 723 --->
+//│ 	case _lh_dfs_arg3⁵ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰] | LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_C_1⁵ => if inList₁₀(_lh_dfs_LH_C_0⁵, _lh_dfs_LH_P2_0¹⁰) then dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰], _lh_dfs_LH_C_1⁵) else let _lh_matchIdent⁷ = dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]], _lh_dfs_arg1⁵(_lh_dfs_LH_C_0⁵))
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵) | _  => error⁰} | _  => error⁰}: 893
+//│ [LH_C a¹ [LH_C b¹ [LH_C c¹ [LH_C d¹ [LH_C f² [LH_C g¹ [LH_C h⁵ [LH_N]]]]]]]]: 724 --->
+//│ 	case _lh_dfs_arg3⁵ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰] | LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_C_1⁵ => if inList₁₀(_lh_dfs_LH_C_0⁵, _lh_dfs_LH_P2_0¹⁰) then dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰], _lh_dfs_LH_C_1⁵) else let _lh_matchIdent⁷ = dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]], _lh_dfs_arg1⁵(_lh_dfs_LH_C_0⁵))
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵) | _  => error⁰} | _  => error⁰}: 893
+//│ [LH_P2 b¹ a¹]: 727 --->
+//│ 	case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰}: 543
+//│ 	case _lh_swap_arg1¹ of {LH_P2 _lh_swap_LH_P2_0¹ _lh_swap_LH_P2_1¹ => [LH_P2 _lh_swap_LH_P2_1¹ _lh_swap_LH_P2_0¹] | _  => error⁰}: 610
+//│ [LH_P2 c¹ b¹]: 730 --->
+//│ 	case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰}: 543
+//│ 	case _lh_swap_arg1¹ of {LH_P2 _lh_swap_LH_P2_0¹ _lh_swap_LH_P2_1¹ => [LH_P2 _lh_swap_LH_P2_1¹ _lh_swap_LH_P2_0¹] | _  => error⁰}: 610
+//│ [LH_P2 c¹ d¹]: 733 --->
+//│ 	case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰}: 543
+//│ 	case _lh_swap_arg1¹ of {LH_P2 _lh_swap_LH_P2_0¹ _lh_swap_LH_P2_1¹ => [LH_P2 _lh_swap_LH_P2_1¹ _lh_swap_LH_P2_0¹] | _  => error⁰}: 610
+//│ [LH_P2 c¹ h⁵]: 736 --->
+//│ 	case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰}: 543
+//│ 	case _lh_swap_arg1¹ of {LH_P2 _lh_swap_LH_P2_0¹ _lh_swap_LH_P2_1¹ => [LH_P2 _lh_swap_LH_P2_1¹ _lh_swap_LH_P2_0¹] | _  => error⁰}: 610
+//│ [LH_P2 d¹ c¹]: 739 --->
+//│ 	case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰}: 543
+//│ 	case _lh_swap_arg1¹ of {LH_P2 _lh_swap_LH_P2_0¹ _lh_swap_LH_P2_1¹ => [LH_P2 _lh_swap_LH_P2_1¹ _lh_swap_LH_P2_0¹] | _  => error⁰}: 610
+//│ [LH_P2 f² a¹]: 742 --->
+//│ 	case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰}: 543
+//│ 	case _lh_swap_arg1¹ of {LH_P2 _lh_swap_LH_P2_0¹ _lh_swap_LH_P2_1¹ => [LH_P2 _lh_swap_LH_P2_1¹ _lh_swap_LH_P2_0¹] | _  => error⁰}: 610
+//│ [LH_P2 f² g¹]: 745 --->
+//│ 	case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰}: 543
+//│ 	case _lh_swap_arg1¹ of {LH_P2 _lh_swap_LH_P2_0¹ _lh_swap_LH_P2_1¹ => [LH_P2 _lh_swap_LH_P2_1¹ _lh_swap_LH_P2_0¹] | _  => error⁰}: 610
+//│ [LH_P2 f² h⁵]: 748 --->
+//│ 	case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰}: 543
+//│ 	case _lh_swap_arg1¹ of {LH_P2 _lh_swap_LH_P2_0¹ _lh_swap_LH_P2_1¹ => [LH_P2 _lh_swap_LH_P2_1¹ _lh_swap_LH_P2_0¹] | _  => error⁰}: 610
+//│ [LH_P2 g¹ f²]: 751 --->
+//│ 	case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰}: 543
+//│ 	case _lh_swap_arg1¹ of {LH_P2 _lh_swap_LH_P2_0¹ _lh_swap_LH_P2_1¹ => [LH_P2 _lh_swap_LH_P2_1¹ _lh_swap_LH_P2_0¹] | _  => error⁰}: 610
+//│ [LH_P2 h⁵ g¹]: 754 --->
+//│ 	case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰}: 543
+//│ 	case _lh_swap_arg1¹ of {LH_P2 _lh_swap_LH_P2_0¹ _lh_swap_LH_P2_1¹ => [LH_P2 _lh_swap_LH_P2_1¹ _lh_swap_LH_P2_0¹] | _  => error⁰}: 610
+//│ [LH_N]: 755 --->
+//│ 	case _lh_new_range_arg1¹ of {LH_N  => [LH_N] | LH_C _lh_new_range_LH_C_0¹ _lh_new_range_LH_C_1¹ => case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰} | _  => error⁰}: 545
+//│ 	case ls¹ of {LH_C h⁷ t⁵ => [LH_C f³(h⁷) map₀₀(f³, t⁵)] | LH_N  => [LH_N]}: 958
+//│ [LH_C [LH_P2 h⁵ g¹] [LH_N]]: 756 --->
+//│ 	case _lh_new_range_arg1¹ of {LH_N  => [LH_N] | LH_C _lh_new_range_LH_C_0¹ _lh_new_range_LH_C_1¹ => case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰} | _  => error⁰}: 545
+//│ 	case ls¹ of {LH_C h⁷ t⁵ => [LH_C f³(h⁷) map₀₀(f³, t⁵)] | LH_N  => [LH_N]}: 958
+//│ [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]: 757 --->
+//│ 	case _lh_new_range_arg1¹ of {LH_N  => [LH_N] | LH_C _lh_new_range_LH_C_0¹ _lh_new_range_LH_C_1¹ => case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰} | _  => error⁰}: 545
+//│ 	case ls¹ of {LH_C h⁷ t⁵ => [LH_C f³(h⁷) map₀₀(f³, t⁵)] | LH_N  => [LH_N]}: 958
+//│ [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]: 758 --->
+//│ 	case _lh_new_range_arg1¹ of {LH_N  => [LH_N] | LH_C _lh_new_range_LH_C_0¹ _lh_new_range_LH_C_1¹ => case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰} | _  => error⁰}: 545
+//│ 	case ls¹ of {LH_C h⁷ t⁵ => [LH_C f³(h⁷) map₀₀(f³, t⁵)] | LH_N  => [LH_N]}: 958
+//│ [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]: 759 --->
+//│ 	case _lh_new_range_arg1¹ of {LH_N  => [LH_N] | LH_C _lh_new_range_LH_C_0¹ _lh_new_range_LH_C_1¹ => case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰} | _  => error⁰}: 545
+//│ 	case ls¹ of {LH_C h⁷ t⁵ => [LH_C f³(h⁷) map₀₀(f³, t⁵)] | LH_N  => [LH_N]}: 958
+//│ [LH_C [LH_P2 f² a¹] [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]]: 760 --->
+//│ 	case _lh_new_range_arg1¹ of {LH_N  => [LH_N] | LH_C _lh_new_range_LH_C_0¹ _lh_new_range_LH_C_1¹ => case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰} | _  => error⁰}: 545
+//│ 	case ls¹ of {LH_C h⁷ t⁵ => [LH_C f³(h⁷) map₀₀(f³, t⁵)] | LH_N  => [LH_N]}: 958
+//│ [LH_C [LH_P2 d¹ c¹] [LH_C [LH_P2 f² a¹] [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]]]: 761 --->
+//│ 	case _lh_new_range_arg1¹ of {LH_N  => [LH_N] | LH_C _lh_new_range_LH_C_0¹ _lh_new_range_LH_C_1¹ => case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰} | _  => error⁰}: 545
+//│ 	case ls¹ of {LH_C h⁷ t⁵ => [LH_C f³(h⁷) map₀₀(f³, t⁵)] | LH_N  => [LH_N]}: 958
+//│ [LH_C [LH_P2 c¹ h⁵] [LH_C [LH_P2 d¹ c¹] [LH_C [LH_P2 f² a¹] [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]]]]: 762 --->
+//│ 	case _lh_new_range_arg1¹ of {LH_N  => [LH_N] | LH_C _lh_new_range_LH_C_0¹ _lh_new_range_LH_C_1¹ => case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰} | _  => error⁰}: 545
+//│ 	case ls¹ of {LH_C h⁷ t⁵ => [LH_C f³(h⁷) map₀₀(f³, t⁵)] | LH_N  => [LH_N]}: 958
+//│ [LH_C [LH_P2 c¹ d¹] [LH_C [LH_P2 c¹ h⁵] [LH_C [LH_P2 d¹ c¹] [LH_C [LH_P2 f² a¹] [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]]]]]: 763 --->
+//│ 	case _lh_new_range_arg1¹ of {LH_N  => [LH_N] | LH_C _lh_new_range_LH_C_0¹ _lh_new_range_LH_C_1¹ => case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰} | _  => error⁰}: 545
+//│ 	case ls¹ of {LH_C h⁷ t⁵ => [LH_C f³(h⁷) map₀₀(f³, t⁵)] | LH_N  => [LH_N]}: 958
+//│ [LH_C [LH_P2 c¹ b¹] [LH_C [LH_P2 c¹ d¹] [LH_C [LH_P2 c¹ h⁵] [LH_C [LH_P2 d¹ c¹] [LH_C [LH_P2 f² a¹] [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]]]]]]: 764 --->
+//│ 	case _lh_new_range_arg1¹ of {LH_N  => [LH_N] | LH_C _lh_new_range_LH_C_0¹ _lh_new_range_LH_C_1¹ => case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰} | _  => error⁰}: 545
+//│ 	case ls¹ of {LH_C h⁷ t⁵ => [LH_C f³(h⁷) map₀₀(f³, t⁵)] | LH_N  => [LH_N]}: 958
+//│ [LH_C [LH_P2 b¹ a¹] [LH_C [LH_P2 c¹ b¹] [LH_C [LH_P2 c¹ d¹] [LH_C [LH_P2 c¹ h⁵] [LH_C [LH_P2 d¹ c¹] [LH_C [LH_P2 f² a¹] [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]]]]]]]: 765 --->
+//│ 	case _lh_new_range_arg1¹ of {LH_N  => [LH_N] | LH_C _lh_new_range_LH_C_0¹ _lh_new_range_LH_C_1¹ => case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰} | _  => error⁰}: 545
+//│ 	case ls¹ of {LH_C h⁷ t⁵ => [LH_C f³(h⁷) map₀₀(f³, t⁵)] | LH_N  => [LH_N]}: 958
+//│ [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸]: 785 --->
+//│ 	case _lh_matchIdent⁵ of {LH_P2 _lh_dfs_LH_P2_0⁷ _lh_dfs_LH_P2_1⁷ => dfs₀₃(_lh_dfs_arg1³, [LH_P2 _lh_dfs_LH_P2_0⁷ mappend₀₃([LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_1⁷], _lh_dfs_LH_P2_1⁶)], _lh_dfs_LH_C_1³) | _  => error⁰}: 693
+//│ 	case _lh_matchIdent⁶ of {LH_P2 _lh_dfs_LH_P2_0⁹ _lh_dfs_LH_P2_1⁹ => dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁹ mappend₀₁([LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_1⁹], _lh_dfs_LH_P2_1⁸)], _lh_dfs_LH_C_1⁴) | _  => error⁰}: 830
+//│ [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸]: 796 --->
+//│ 	case _lh_dfs_arg2⁴ of {LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸ => case _lh_dfs_arg3⁴ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸] | LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_C_1⁴ => if inList₀₁(_lh_dfs_LH_C_0⁴, _lh_dfs_LH_P2_0⁸) then dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸], _lh_dfs_LH_C_1⁴) else let _lh_matchIdent⁶ = dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 [LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_0⁸] [LH_N]], _lh_dfs_arg1⁴(_lh_dfs_LH_C_0⁴))
+//│ in case _lh_matchIdent⁶ of {LH_P2 _lh_dfs_LH_P2_0⁹ _lh_dfs_LH_P2_1⁹ => dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁹ mappend₀₁([LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_1⁹], _lh_dfs_LH_P2_1⁸)], _lh_dfs_LH_C_1⁴) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 836
+//│ [LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_0⁸]: 805 --->
+//│ 	DeadCodeCons
+//│ 	case _lh_inList_arg2³ of {LH_C _lh_inList_LH_C_0³ _lh_inList_LH_C_1³ => if (_lh_inList_arg1³ == _lh_inList_LH_C_0³) then [True] else inList₀₁(_lh_inList_arg1³, _lh_inList_LH_C_1³) | LH_N  => [False] | _  => error⁰}: 459
+//│ 	case _lh_inList_arg2⁴ of {LH_C _lh_inList_LH_C_0⁴ _lh_inList_LH_C_1⁴ => if (_lh_inList_arg1⁴ == _lh_inList_LH_C_0⁴) then [True] else inList₂₀(_lh_inList_arg1⁴, _lh_inList_LH_C_1⁴) | LH_N  => [False] | _  => error⁰}: 914
+//│ 	case _lh_inList_arg2⁵ of {LH_C _lh_inList_LH_C_0⁵ _lh_inList_LH_C_1⁵ => if (_lh_inList_arg1⁵ == _lh_inList_LH_C_0⁵) then [True] else inList₀₀(_lh_inList_arg1⁵, _lh_inList_LH_C_1⁵) | LH_N  => [False] | _  => error⁰}: 932
+//│ 	case _lh_inList_arg2⁶ of {LH_C _lh_inList_LH_C_0⁶ _lh_inList_LH_C_1⁶ => if (_lh_inList_arg1⁶ == _lh_inList_LH_C_0⁶) then [True] else inList₀₂(_lh_inList_arg1⁶, _lh_inList_LH_C_1⁶) | LH_N  => [False] | _  => error⁰}: 1000
+//│ 	case _lh_inList_arg2⁸ of {LH_C _lh_inList_LH_C_0⁸ _lh_inList_LH_C_1⁸ => if (_lh_inList_arg1⁸ == _lh_inList_LH_C_0⁸) then [True] else inList₀₃(_lh_inList_arg1⁸, _lh_inList_LH_C_1⁸) | LH_N  => [False] | _  => error⁰}: 1112
+//│ [LH_N]: 806 --->
+//│ 	case xs² of {LH_C h⁴ t³ => [LH_C h⁴ mappend₀₁(t³, ys²)] | LH_N  => ys²}: 441
+//│ 	case xs⁵ of {LH_C h⁹ t⁷ => [LH_C h⁹ mappend₀₃(t⁷, ys⁵)] | LH_N  => ys⁵}: 982
+//│ [LH_P2 [LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_0⁸] [LH_N]]: 807 --->
+//│ 	case _lh_dfs_arg2⁴ of {LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸ => case _lh_dfs_arg3⁴ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸] | LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_C_1⁴ => if inList₀₁(_lh_dfs_LH_C_0⁴, _lh_dfs_LH_P2_0⁸) then dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸], _lh_dfs_LH_C_1⁴) else let _lh_matchIdent⁶ = dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 [LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_0⁸] [LH_N]], _lh_dfs_arg1⁴(_lh_dfs_LH_C_0⁴))
+//│ in case _lh_matchIdent⁶ of {LH_P2 _lh_dfs_LH_P2_0⁹ _lh_dfs_LH_P2_1⁹ => dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁹ mappend₀₁([LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_1⁹], _lh_dfs_LH_P2_1⁸)], _lh_dfs_LH_C_1⁴) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 836
+//│ [LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_1⁹]: 821 --->
+//│ 	case xs² of {LH_C h⁴ t³ => [LH_C h⁴ mappend₀₁(t³, ys²)] | LH_N  => ys²}: 441
+//│ [LH_P2 _lh_dfs_LH_P2_0⁹ mappend₀₁([LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_1⁹], _lh_dfs_LH_P2_1⁸)]: 825 --->
+//│ 	case _lh_dfs_arg2⁴ of {LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸ => case _lh_dfs_arg3⁴ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸] | LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_C_1⁴ => if inList₀₁(_lh_dfs_LH_C_0⁴, _lh_dfs_LH_P2_0⁸) then dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸], _lh_dfs_LH_C_1⁴) else let _lh_matchIdent⁶ = dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 [LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_0⁸] [LH_N]], _lh_dfs_arg1⁴(_lh_dfs_LH_C_0⁴))
+//│ in case _lh_matchIdent⁶ of {LH_P2 _lh_dfs_LH_P2_0⁹ _lh_dfs_LH_P2_1⁹ => dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁹ mappend₀₁([LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_1⁹], _lh_dfs_LH_P2_1⁸)], _lh_dfs_LH_C_1⁴) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 836
+//│ [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰]: 844 --->
+//│ 	case _lh_snd_arg1² of {LH_P2 _lh_snd_LH_P2_0² _lh_snd_LH_P2_1² => _lh_snd_LH_P2_1² | _  => error⁰}: 430
+//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵) | _  => error⁰}: 889
+//│ [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰]: 855 --->
+//│ 	case _lh_dfs_arg2⁵ of {LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰ => case _lh_dfs_arg3⁵ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰] | LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_C_1⁵ => if inList₁₀(_lh_dfs_LH_C_0⁵, _lh_dfs_LH_P2_0¹⁰) then dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰], _lh_dfs_LH_C_1⁵) else let _lh_matchIdent⁷ = dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]], _lh_dfs_arg1⁵(_lh_dfs_LH_C_0⁵))
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 895
+//│ [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰]: 864 --->
+//│ 	DeadCodeCons
+//│ 	case _lh_inList_arg2⁷ of {LH_C _lh_inList_LH_C_0⁷ _lh_inList_LH_C_1⁷ => if (_lh_inList_arg1⁷ == _lh_inList_LH_C_0⁷) then [True] else inList₁₀(_lh_inList_arg1⁷, _lh_inList_LH_C_1⁷) | LH_N  => [False] | _  => error⁰}: 1035
+//│ [LH_N]: 865 --->
+//│ 	case _lh_span_tree_arg3¹ of {LH_N  => [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²] | LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_C_1¹ => if inList₂₀(_lh_span_tree_LH_C_0¹, _lh_span_tree_LH_P2_0²) then span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²], _lh_span_tree_LH_C_1¹) else let _lh_matchIdent⁴ = dfs₀₀(_lh_span_tree_arg1¹, [LH_P2 [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_0²] [LH_N]], _lh_span_tree_arg1¹(_lh_span_tree_LH_C_0¹))
+//│ in case _lh_matchIdent⁴ of {LH_P2 _lh_span_tree_LH_P2_0³ _lh_span_tree_LH_P2_1³ => span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0³ [LH_C [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_1³] _lh_span_tree_LH_P2_1²]], _lh_span_tree_LH_C_1¹) | _  => error⁰} | _  => error⁰}: 599
+//│ 	case xs⁶ of {LH_C h¹⁰ t⁸ => [LH_C h¹⁰ mappend₁₀(t⁸, ys⁶)] | LH_N  => ys⁶}: 1017
+//│ [LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]]: 866 --->
+//│ 	case _lh_dfs_arg2⁵ of {LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰ => case _lh_dfs_arg3⁵ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰] | LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_C_1⁵ => if inList₁₀(_lh_dfs_LH_C_0⁵, _lh_dfs_LH_P2_0¹⁰) then dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰], _lh_dfs_LH_C_1⁵) else let _lh_matchIdent⁷ = dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]], _lh_dfs_arg1⁵(_lh_dfs_LH_C_0⁵))
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 895
+//│ [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹]: 880 --->
+//│ 	case xs⁶ of {LH_C h¹⁰ t⁸ => [LH_C h¹⁰ mappend₁₀(t⁸, ys⁶)] | LH_N  => ys⁶}: 1017
+//│ [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)]: 884 --->
+//│ 	case _lh_dfs_arg2⁵ of {LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰ => case _lh_dfs_arg3⁵ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰] | LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_C_1⁵ => if inList₁₀(_lh_dfs_LH_C_0⁵, _lh_dfs_LH_P2_0¹⁰) then dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰], _lh_dfs_LH_C_1⁵) else let _lh_matchIdent⁷ = dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]], _lh_dfs_arg1⁵(_lh_dfs_LH_C_0⁵))
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 895
+//│ [LH_C h⁶ mappend₀₂(t⁴, ys³)]: 942 --->
+//│ 	NoCons
+//│ 	case xs³ of {LH_C h⁶ t⁴ => [LH_C h⁶ mappend₀₂(t⁴, ys³)] | LH_N  => ys³}: 944
+//│ [LH_C f³(h⁷) map₀₀(f³, t⁵)]: 956 --->
+//│ 	case _lh_new_range_arg1¹ of {LH_N  => [LH_N] | LH_C _lh_new_range_LH_C_0¹ _lh_new_range_LH_C_1¹ => case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰} | _  => error⁰}: 545
+//│ [LH_N]: 957 --->
+//│ 	case _lh_new_range_arg1¹ of {LH_N  => [LH_N] | LH_C _lh_new_range_LH_C_0¹ _lh_new_range_LH_C_1¹ => case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰} | _  => error⁰}: 545
+//│ [LH_C h⁸ mappend₀₀(t⁶, ys⁴)]: 968 --->
+//│ 	NoCons
+//│ 	case xs⁴ of {LH_C h⁸ t⁶ => [LH_C h⁸ mappend₀₀(t⁶, ys⁴)] | LH_N  => ys⁴}: 970
+//│ [LH_C h⁹ mappend₀₃(t⁷, ys⁵)]: 980 --->
+//│ 	NoCons
+//│ 	case xs³ of {LH_C h⁶ t⁴ => [LH_C h⁶ mappend₀₂(t⁴, ys³)] | LH_N  => ys³}: 944
+//│ [LH_C h¹⁰ mappend₁₀(t⁸, ys⁶)]: 1015 --->
+//│ 	case _lh_span_tree_arg3¹ of {LH_N  => [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²] | LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_C_1¹ => if inList₂₀(_lh_span_tree_LH_C_0¹, _lh_span_tree_LH_P2_0²) then span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²], _lh_span_tree_LH_C_1¹) else let _lh_matchIdent⁴ = dfs₀₀(_lh_span_tree_arg1¹, [LH_P2 [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_0²] [LH_N]], _lh_span_tree_arg1¹(_lh_span_tree_LH_C_0¹))
+//│ in case _lh_matchIdent⁴ of {LH_P2 _lh_span_tree_LH_P2_0³ _lh_span_tree_LH_P2_1³ => span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0³ [LH_C [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_1³] _lh_span_tree_LH_P2_1²]], _lh_span_tree_LH_C_1¹) | _  => error⁰} | _  => error⁰}: 599
+//│ 	case xs⁶ of {LH_C h¹⁰ t⁸ => [LH_C h¹⁰ mappend₁₀(t⁸, ys⁶)] | LH_N  => ys⁶}: 1017
+//│ [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²]: 1042 --->
+//│ 	case _lh_matchIdent⁴ of {LH_P2 _lh_span_tree_LH_P2_0³ _lh_span_tree_LH_P2_1³ => span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0³ [LH_C [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_1³] _lh_span_tree_LH_P2_1²]], _lh_span_tree_LH_C_1¹) | _  => error⁰}: 595
+//│ 	case _lh_matchIdent⁸ of {LH_P2 _lh_dfs_LH_P2_0¹³ _lh_dfs_LH_P2_1¹³ => dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹³ mappend₀₀([LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_1¹³], _lh_dfs_LH_P2_1¹²)], _lh_dfs_LH_C_1⁶) | _  => error⁰}: 1087
+//│ [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²]: 1053 --->
+//│ 	case _lh_dfs_arg2⁶ of {LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹² => case _lh_dfs_arg3⁶ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²] | LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_C_1⁶ => if inList₀₀(_lh_dfs_LH_C_0⁶, _lh_dfs_LH_P2_0¹²) then dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²], _lh_dfs_LH_C_1⁶) else let _lh_matchIdent⁸ = dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 [LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_0¹²] [LH_N]], _lh_dfs_arg1⁶(_lh_dfs_LH_C_0⁶))
+//│ in case _lh_matchIdent⁸ of {LH_P2 _lh_dfs_LH_P2_0¹³ _lh_dfs_LH_P2_1¹³ => dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹³ mappend₀₀([LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_1¹³], _lh_dfs_LH_P2_1¹²)], _lh_dfs_LH_C_1⁶) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 1093
+//│ [LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_0¹²]: 1062 --->
+//│ 	DeadCodeCons
+//│ 	case _lh_inList_arg2³ of {LH_C _lh_inList_LH_C_0³ _lh_inList_LH_C_1³ => if (_lh_inList_arg1³ == _lh_inList_LH_C_0³) then [True] else inList₀₁(_lh_inList_arg1³, _lh_inList_LH_C_1³) | LH_N  => [False] | _  => error⁰}: 459
+//│ 	case _lh_inList_arg2⁴ of {LH_C _lh_inList_LH_C_0⁴ _lh_inList_LH_C_1⁴ => if (_lh_inList_arg1⁴ == _lh_inList_LH_C_0⁴) then [True] else inList₂₀(_lh_inList_arg1⁴, _lh_inList_LH_C_1⁴) | LH_N  => [False] | _  => error⁰}: 914
+//│ 	case _lh_inList_arg2⁵ of {LH_C _lh_inList_LH_C_0⁵ _lh_inList_LH_C_1⁵ => if (_lh_inList_arg1⁵ == _lh_inList_LH_C_0⁵) then [True] else inList₀₀(_lh_inList_arg1⁵, _lh_inList_LH_C_1⁵) | LH_N  => [False] | _  => error⁰}: 932
+//│ 	case _lh_inList_arg2⁶ of {LH_C _lh_inList_LH_C_0⁶ _lh_inList_LH_C_1⁶ => if (_lh_inList_arg1⁶ == _lh_inList_LH_C_0⁶) then [True] else inList₀₂(_lh_inList_arg1⁶, _lh_inList_LH_C_1⁶) | LH_N  => [False] | _  => error⁰}: 1000
+//│ 	case _lh_inList_arg2⁸ of {LH_C _lh_inList_LH_C_0⁸ _lh_inList_LH_C_1⁸ => if (_lh_inList_arg1⁸ == _lh_inList_LH_C_0⁸) then [True] else inList₀₃(_lh_inList_arg1⁸, _lh_inList_LH_C_1⁸) | LH_N  => [False] | _  => error⁰}: 1112
+//│ [LH_N]: 1063 --->
+//│ 	NoCons
+//│ 	case xs⁴ of {LH_C h⁸ t⁶ => [LH_C h⁸ mappend₀₀(t⁶, ys⁴)] | LH_N  => ys⁴}: 970
+//│ [LH_P2 [LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_0¹²] [LH_N]]: 1064 --->
+//│ 	case _lh_dfs_arg2⁶ of {LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹² => case _lh_dfs_arg3⁶ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²] | LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_C_1⁶ => if inList₀₀(_lh_dfs_LH_C_0⁶, _lh_dfs_LH_P2_0¹²) then dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²], _lh_dfs_LH_C_1⁶) else let _lh_matchIdent⁸ = dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 [LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_0¹²] [LH_N]], _lh_dfs_arg1⁶(_lh_dfs_LH_C_0⁶))
+//│ in case _lh_matchIdent⁸ of {LH_P2 _lh_dfs_LH_P2_0¹³ _lh_dfs_LH_P2_1¹³ => dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹³ mappend₀₀([LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_1¹³], _lh_dfs_LH_P2_1¹²)], _lh_dfs_LH_C_1⁶) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 1093
+//│ [LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_1¹³]: 1078 --->
+//│ 	case xs⁴ of {LH_C h⁸ t⁶ => [LH_C h⁸ mappend₀₀(t⁶, ys⁴)] | LH_N  => ys⁴}: 970
+//│ [LH_P2 _lh_dfs_LH_P2_0¹³ mappend₀₀([LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_1¹³], _lh_dfs_LH_P2_1¹²)]: 1082 --->
+//│ 	case _lh_dfs_arg2⁶ of {LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹² => case _lh_dfs_arg3⁶ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²] | LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_C_1⁶ => if inList₀₀(_lh_dfs_LH_C_0⁶, _lh_dfs_LH_P2_0¹²) then dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²], _lh_dfs_LH_C_1⁶) else let _lh_matchIdent⁸ = dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 [LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_0¹²] [LH_N]], _lh_dfs_arg1⁶(_lh_dfs_LH_C_0⁶))
+//│ in case _lh_matchIdent⁸ of {LH_P2 _lh_dfs_LH_P2_0¹³ _lh_dfs_LH_P2_1¹³ => dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹³ mappend₀₀([LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_1¹³], _lh_dfs_LH_P2_1¹²)], _lh_dfs_LH_C_1⁶) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 1093
+//│ ------------------
+//│ case _lh_snd_arg1² of {LH_P2 _lh_snd_LH_P2_0² _lh_snd_LH_P2_1² => _lh_snd_LH_P2_1² | _  => error⁰}: 430 --->
+//│ 	[LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰]: 844
+//│ case xs² of {LH_C h⁴ t³ => [LH_C h⁴ mappend₀₁(t³, ys²)] | LH_N  => ys²}: 441 --->
+//│ 	[LH_C h⁴ mappend₀₁(t³, ys²)]: 439
+//│ 	[LH_N]: 669
+//│ 	[LH_N]: 806
+//│ 	[LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_1⁹]: 821
+//│ case _lh_inList_arg2³ of {LH_C _lh_inList_LH_C_0³ _lh_inList_LH_C_1³ => if (_lh_inList_arg1³ == _lh_inList_LH_C_0³) then [True] else inList₀₁(_lh_inList_arg1³, _lh_inList_LH_C_1³) | LH_N  => [False] | _  => error⁰}: 459 --->
+//│ 	[LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_0⁴]: 486
+//│ 	[LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_0²]: 572
+//│ 	[LH_N]: 622
+//│ 	[LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_0⁶]: 668
+//│ 	[LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_0⁸]: 805
+//│ 	[LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_0¹²]: 1062
+//│ case _lh_matchIdent³ of {LH_P2 _lh_dfs_LH_P2_0⁵ _lh_dfs_LH_P2_1⁵ => dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁵ mappend₀₂([LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_1⁵], _lh_dfs_LH_P2_1⁴)], _lh_dfs_LH_C_1²) | _  => error⁰}: 511 --->
+//│ 	[LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴]: 466
+//│ case _lh_dfs_arg3² of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴] | LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_C_1² => if inList₀₂(_lh_dfs_LH_C_0², _lh_dfs_LH_P2_0⁴) then dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴], _lh_dfs_LH_C_1²) else let _lh_matchIdent³ = dfs₀₃(_lh_dfs_arg1², [LH_P2 [LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_0⁴] [LH_N]], _lh_dfs_arg1²(_lh_dfs_LH_C_0²))
+//│ in case _lh_matchIdent³ of {LH_P2 _lh_dfs_LH_P2_0⁵ _lh_dfs_LH_P2_1⁵ => dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁵ mappend₀₂([LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_1⁵], _lh_dfs_LH_P2_1⁴)], _lh_dfs_LH_C_1²) | _  => error⁰} | _  => error⁰}: 515 --->
+//│ 	[LH_N]: 522
+//│ 	[LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)]: 535
+//│ case _lh_dfs_arg2² of {LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴ => case _lh_dfs_arg3² of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴] | LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_C_1² => if inList₀₂(_lh_dfs_LH_C_0², _lh_dfs_LH_P2_0⁴) then dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴], _lh_dfs_LH_C_1²) else let _lh_matchIdent³ = dfs₀₃(_lh_dfs_arg1², [LH_P2 [LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_0⁴] [LH_N]], _lh_dfs_arg1²(_lh_dfs_LH_C_0²))
+//│ in case _lh_matchIdent³ of {LH_P2 _lh_dfs_LH_P2_0⁵ _lh_dfs_LH_P2_1⁵ => dfs₀₃(_lh_dfs_arg1², [LH_P2 _lh_dfs_LH_P2_0⁵ mappend₀₂([LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_1⁵], _lh_dfs_LH_P2_1⁴)], _lh_dfs_LH_C_1²) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 517 --->
+//│ 	[LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴]: 477
+//│ 	[LH_P2 [LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_0⁴] [LH_N]]: 488
+//│ 	[LH_P2 _lh_dfs_LH_P2_0⁵ mappend₀₂([LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_1⁵], _lh_dfs_LH_P2_1⁴)]: 506
+//│ 	[LH_P2 _lh_dfs_LH_P2_0⁷ mappend₀₃([LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_1⁷], _lh_dfs_LH_P2_1⁶)]: 688
+//│ case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰}: 543 --->
+//│ 	[LH_P2 _lh_swap_LH_P2_1¹ _lh_swap_LH_P2_0¹]: 608
+//│ 	[LH_P2 b¹ a¹]: 727
+//│ 	[LH_P2 c¹ b¹]: 730
+//│ 	[LH_P2 c¹ d¹]: 733
+//│ 	[LH_P2 c¹ h⁵]: 736
+//│ 	[LH_P2 d¹ c¹]: 739
+//│ 	[LH_P2 f² a¹]: 742
+//│ 	[LH_P2 f² g¹]: 745
+//│ 	[LH_P2 f² h⁵]: 748
+//│ 	[LH_P2 g¹ f²]: 751
+//│ 	[LH_P2 h⁵ g¹]: 754
+//│ case _lh_new_range_arg1¹ of {LH_N  => [LH_N] | LH_C _lh_new_range_LH_C_0¹ _lh_new_range_LH_C_1¹ => case _lh_new_range_LH_C_0¹ of {LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2¹) then [LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)] else new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹) | _  => error⁰} | _  => error⁰}: 545 --->
+//│ 	[LH_N]: 755
+//│ 	[LH_C [LH_P2 h⁵ g¹] [LH_N]]: 756
+//│ 	[LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]: 757
+//│ 	[LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]: 758
+//│ 	[LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]: 759
+//│ 	[LH_C [LH_P2 f² a¹] [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]]: 760
+//│ 	[LH_C [LH_P2 d¹ c¹] [LH_C [LH_P2 f² a¹] [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]]]: 761
+//│ 	[LH_C [LH_P2 c¹ h⁵] [LH_C [LH_P2 d¹ c¹] [LH_C [LH_P2 f² a¹] [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]]]]: 762
+//│ 	[LH_C [LH_P2 c¹ d¹] [LH_C [LH_P2 c¹ h⁵] [LH_C [LH_P2 d¹ c¹] [LH_C [LH_P2 f² a¹] [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]]]]]: 763
+//│ 	[LH_C [LH_P2 c¹ b¹] [LH_C [LH_P2 c¹ d¹] [LH_C [LH_P2 c¹ h⁵] [LH_C [LH_P2 d¹ c¹] [LH_C [LH_P2 f² a¹] [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]]]]]]: 764
+//│ 	[LH_C [LH_P2 b¹ a¹] [LH_C [LH_P2 c¹ b¹] [LH_C [LH_P2 c¹ d¹] [LH_C [LH_P2 c¹ h⁵] [LH_C [LH_P2 d¹ c¹] [LH_C [LH_P2 f² a¹] [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]]]]]]]: 765
+//│ 	[LH_C f³(h⁷) map₀₀(f³, t⁵)]: 956
+//│ 	[LH_N]: 957
+//│ case _lh_matchIdent⁴ of {LH_P2 _lh_span_tree_LH_P2_0³ _lh_span_tree_LH_P2_1³ => span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0³ [LH_C [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_1³] _lh_span_tree_LH_P2_1²]], _lh_span_tree_LH_C_1¹) | _  => error⁰}: 595 --->
+//│ 	[LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴]: 466
+//│ 	[LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶]: 648
+//│ 	[LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²]: 1042
+//│ case _lh_span_tree_arg3¹ of {LH_N  => [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²] | LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_C_1¹ => if inList₂₀(_lh_span_tree_LH_C_0¹, _lh_span_tree_LH_P2_0²) then span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²], _lh_span_tree_LH_C_1¹) else let _lh_matchIdent⁴ = dfs₀₀(_lh_span_tree_arg1¹, [LH_P2 [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_0²] [LH_N]], _lh_span_tree_arg1¹(_lh_span_tree_LH_C_0¹))
+//│ in case _lh_matchIdent⁴ of {LH_P2 _lh_span_tree_LH_P2_0³ _lh_span_tree_LH_P2_1³ => span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0³ [LH_C [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_1³] _lh_span_tree_LH_P2_1²]], _lh_span_tree_LH_C_1¹) | _  => error⁰} | _  => error⁰}: 599 --->
+//│ 	[LH_N]: 633
+//│ 	[LH_N]: 865
+//│ 	[LH_C h¹⁰ mappend₁₀(t⁸, ys⁶)]: 1015
+//│ case _lh_span_tree_arg2¹ of {LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1² => case _lh_span_tree_arg3¹ of {LH_N  => [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²] | LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_C_1¹ => if inList₂₀(_lh_span_tree_LH_C_0¹, _lh_span_tree_LH_P2_0²) then span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²], _lh_span_tree_LH_C_1¹) else let _lh_matchIdent⁴ = dfs₀₀(_lh_span_tree_arg1¹, [LH_P2 [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_0²] [LH_N]], _lh_span_tree_arg1¹(_lh_span_tree_LH_C_0¹))
+//│ in case _lh_matchIdent⁴ of {LH_P2 _lh_span_tree_LH_P2_0³ _lh_span_tree_LH_P2_1³ => span_tree¹(_lh_span_tree_arg1¹, [LH_P2 _lh_span_tree_LH_P2_0³ [LH_C [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_1³] _lh_span_tree_LH_P2_1²]], _lh_span_tree_LH_C_1¹) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 601 --->
+//│ 	[LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²]: 563
+//│ 	[LH_P2 _lh_span_tree_LH_P2_0³ [LH_C [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_1³] _lh_span_tree_LH_P2_1²]]: 590
+//│ 	[LH_P2 [LH_N] [LH_N]]: 624
+//│ case _lh_swap_arg1¹ of {LH_P2 _lh_swap_LH_P2_0¹ _lh_swap_LH_P2_1¹ => [LH_P2 _lh_swap_LH_P2_1¹ _lh_swap_LH_P2_0¹] | _  => error⁰}: 610 --->
+//│ 	[LH_P2 b¹ a¹]: 727
+//│ 	[LH_P2 c¹ b¹]: 730
+//│ 	[LH_P2 c¹ d¹]: 733
+//│ 	[LH_P2 c¹ h⁵]: 736
+//│ 	[LH_P2 d¹ c¹]: 739
+//│ 	[LH_P2 f² a¹]: 742
+//│ 	[LH_P2 f² g¹]: 745
+//│ 	[LH_P2 f² h⁵]: 748
+//│ 	[LH_P2 g¹ f²]: 751
+//│ 	[LH_P2 h⁵ g¹]: 754
+//│ case _lh_matchIdent⁵ of {LH_P2 _lh_dfs_LH_P2_0⁷ _lh_dfs_LH_P2_1⁷ => dfs₀₃(_lh_dfs_arg1³, [LH_P2 _lh_dfs_LH_P2_0⁷ mappend₀₃([LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_1⁷], _lh_dfs_LH_P2_1⁶)], _lh_dfs_LH_C_1³) | _  => error⁰}: 693 --->
+//│ 	[LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸]: 785
+//│ case _lh_dfs_arg3³ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶] | LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_C_1³ => if inList₀₃(_lh_dfs_LH_C_0³, _lh_dfs_LH_P2_0⁶) then dfs₀₁(_lh_dfs_arg1³, [LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶], _lh_dfs_LH_C_1³) else let _lh_matchIdent⁵ = dfs₀₂(_lh_dfs_arg1³, [LH_P2 [LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_0⁶] [LH_N]], _lh_dfs_arg1³(_lh_dfs_LH_C_0³))
+//│ in case _lh_matchIdent⁵ of {LH_P2 _lh_dfs_LH_P2_0⁷ _lh_dfs_LH_P2_1⁷ => dfs₀₃(_lh_dfs_arg1³, [LH_P2 _lh_dfs_LH_P2_0⁷ mappend₀₃([LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_1⁷], _lh_dfs_LH_P2_1⁶)], _lh_dfs_LH_C_1³) | _  => error⁰} | _  => error⁰}: 697 --->
+//│ 	[LH_N]: 522
+//│ 	[LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)]: 535
+//│ case _lh_dfs_arg2³ of {LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶ => case _lh_dfs_arg3³ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶] | LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_C_1³ => if inList₀₃(_lh_dfs_LH_C_0³, _lh_dfs_LH_P2_0⁶) then dfs₀₁(_lh_dfs_arg1³, [LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶], _lh_dfs_LH_C_1³) else let _lh_matchIdent⁵ = dfs₀₂(_lh_dfs_arg1³, [LH_P2 [LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_0⁶] [LH_N]], _lh_dfs_arg1³(_lh_dfs_LH_C_0³))
+//│ in case _lh_matchIdent⁵ of {LH_P2 _lh_dfs_LH_P2_0⁷ _lh_dfs_LH_P2_1⁷ => dfs₀₃(_lh_dfs_arg1³, [LH_P2 _lh_dfs_LH_P2_0⁷ mappend₀₃([LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_1⁷], _lh_dfs_LH_P2_1⁶)], _lh_dfs_LH_C_1³) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 699 --->
+//│ 	[LH_P2 [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_0²] [LH_N]]: 574
+//│ case _lh_matchIdent⁶ of {LH_P2 _lh_dfs_LH_P2_0⁹ _lh_dfs_LH_P2_1⁹ => dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁹ mappend₀₁([LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_1⁹], _lh_dfs_LH_P2_1⁸)], _lh_dfs_LH_C_1⁴) | _  => error⁰}: 830 --->
+//│ 	[LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸]: 785
+//│ case _lh_dfs_arg3⁴ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸] | LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_C_1⁴ => if inList₀₁(_lh_dfs_LH_C_0⁴, _lh_dfs_LH_P2_0⁸) then dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸], _lh_dfs_LH_C_1⁴) else let _lh_matchIdent⁶ = dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 [LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_0⁸] [LH_N]], _lh_dfs_arg1⁴(_lh_dfs_LH_C_0⁴))
+//│ in case _lh_matchIdent⁶ of {LH_P2 _lh_dfs_LH_P2_0⁹ _lh_dfs_LH_P2_1⁹ => dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁹ mappend₀₁([LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_1⁹], _lh_dfs_LH_P2_1⁸)], _lh_dfs_LH_C_1⁴) | _  => error⁰} | _  => error⁰}: 834 --->
+//│ 	[LH_N]: 522
+//│ 	[LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)]: 535
+//│ case _lh_dfs_arg2⁴ of {LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸ => case _lh_dfs_arg3⁴ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸] | LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_C_1⁴ => if inList₀₁(_lh_dfs_LH_C_0⁴, _lh_dfs_LH_P2_0⁸) then dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸], _lh_dfs_LH_C_1⁴) else let _lh_matchIdent⁶ = dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 [LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_0⁸] [LH_N]], _lh_dfs_arg1⁴(_lh_dfs_LH_C_0⁴))
+//│ in case _lh_matchIdent⁶ of {LH_P2 _lh_dfs_LH_P2_0⁹ _lh_dfs_LH_P2_1⁹ => dfs₀₂(_lh_dfs_arg1⁴, [LH_P2 _lh_dfs_LH_P2_0⁹ mappend₀₁([LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_1⁹], _lh_dfs_LH_P2_1⁸)], _lh_dfs_LH_C_1⁴) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 836 --->
+//│ 	[LH_P2 [LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_0⁶] [LH_N]]: 670
+//│ 	[LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸]: 796
+//│ 	[LH_P2 [LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_0⁸] [LH_N]]: 807
+//│ 	[LH_P2 _lh_dfs_LH_P2_0⁹ mappend₀₁([LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_1⁹], _lh_dfs_LH_P2_1⁸)]: 825
+//│ case _lh_matchIdent⁷ of {LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵) | _  => error⁰}: 889 --->
+//│ 	[LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰]: 844
+//│ case _lh_dfs_arg3⁵ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰] | LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_C_1⁵ => if inList₁₀(_lh_dfs_LH_C_0⁵, _lh_dfs_LH_P2_0¹⁰) then dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰], _lh_dfs_LH_C_1⁵) else let _lh_matchIdent⁷ = dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]], _lh_dfs_arg1⁵(_lh_dfs_LH_C_0⁵))
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵) | _  => error⁰} | _  => error⁰}: 893 --->
+//│ 	[LH_N]: 522
+//│ 	[LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)]: 535
+//│ 	[LH_N]: 717
+//│ 	[LH_C h⁵ [LH_N]]: 718
+//│ 	[LH_C g¹ [LH_C h⁵ [LH_N]]]: 719
+//│ 	[LH_C f² [LH_C g¹ [LH_C h⁵ [LH_N]]]]: 720
+//│ 	[LH_C d¹ [LH_C f² [LH_C g¹ [LH_C h⁵ [LH_N]]]]]: 721
+//│ 	[LH_C c¹ [LH_C d¹ [LH_C f² [LH_C g¹ [LH_C h⁵ [LH_N]]]]]]: 722
+//│ 	[LH_C b¹ [LH_C c¹ [LH_C d¹ [LH_C f² [LH_C g¹ [LH_C h⁵ [LH_N]]]]]]]: 723
+//│ 	[LH_C a¹ [LH_C b¹ [LH_C c¹ [LH_C d¹ [LH_C f² [LH_C g¹ [LH_C h⁵ [LH_N]]]]]]]]: 724
+//│ case _lh_dfs_arg2⁵ of {LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰ => case _lh_dfs_arg3⁵ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰] | LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_C_1⁵ => if inList₁₀(_lh_dfs_LH_C_0⁵, _lh_dfs_LH_P2_0¹⁰) then dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰], _lh_dfs_LH_C_1⁵) else let _lh_matchIdent⁷ = dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]], _lh_dfs_arg1⁵(_lh_dfs_LH_C_0⁵))
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁵, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 895 --->
+//│ 	[LH_P2 [LH_N] [LH_N]]: 634
+//│ 	[LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰]: 855
+//│ 	[LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]]: 866
+//│ 	[LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)]: 884
+//│ case _lh_inList_arg2⁴ of {LH_C _lh_inList_LH_C_0⁴ _lh_inList_LH_C_1⁴ => if (_lh_inList_arg1⁴ == _lh_inList_LH_C_0⁴) then [True] else inList₂₀(_lh_inList_arg1⁴, _lh_inList_LH_C_1⁴) | LH_N  => [False] | _  => error⁰}: 914 --->
+//│ 	[LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_0⁴]: 486
+//│ 	[LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_0²]: 572
+//│ 	[LH_N]: 622
+//│ 	[LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_0⁶]: 668
+//│ 	[LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_0⁸]: 805
+//│ 	[LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_0¹²]: 1062
+//│ case _lh_inList_arg2⁵ of {LH_C _lh_inList_LH_C_0⁵ _lh_inList_LH_C_1⁵ => if (_lh_inList_arg1⁵ == _lh_inList_LH_C_0⁵) then [True] else inList₀₀(_lh_inList_arg1⁵, _lh_inList_LH_C_1⁵) | LH_N  => [False] | _  => error⁰}: 932 --->
+//│ 	[LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_0⁴]: 486
+//│ 	[LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_0²]: 572
+//│ 	[LH_N]: 622
+//│ 	[LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_0⁶]: 668
+//│ 	[LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_0⁸]: 805
+//│ 	[LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_0¹²]: 1062
+//│ case xs³ of {LH_C h⁶ t⁴ => [LH_C h⁶ mappend₀₂(t⁴, ys³)] | LH_N  => ys³}: 944 --->
+//│ 	[LH_N]: 487
+//│ 	[LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_1⁵]: 502
+//│ 	[LH_N]: 573
+//│ 	[LH_C h⁶ mappend₀₂(t⁴, ys³)]: 942
+//│ 	[LH_C h⁹ mappend₀₃(t⁷, ys⁵)]: 980
+//│ case ls¹ of {LH_C h⁷ t⁵ => [LH_C f³(h⁷) map₀₀(f³, t⁵)] | LH_N  => [LH_N]}: 958 --->
+//│ 	[LH_N]: 755
+//│ 	[LH_C [LH_P2 h⁵ g¹] [LH_N]]: 756
+//│ 	[LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]: 757
+//│ 	[LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]: 758
+//│ 	[LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]: 759
+//│ 	[LH_C [LH_P2 f² a¹] [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]]: 760
+//│ 	[LH_C [LH_P2 d¹ c¹] [LH_C [LH_P2 f² a¹] [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]]]: 761
+//│ 	[LH_C [LH_P2 c¹ h⁵] [LH_C [LH_P2 d¹ c¹] [LH_C [LH_P2 f² a¹] [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]]]]: 762
+//│ 	[LH_C [LH_P2 c¹ d¹] [LH_C [LH_P2 c¹ h⁵] [LH_C [LH_P2 d¹ c¹] [LH_C [LH_P2 f² a¹] [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]]]]]: 763
+//│ 	[LH_C [LH_P2 c¹ b¹] [LH_C [LH_P2 c¹ d¹] [LH_C [LH_P2 c¹ h⁵] [LH_C [LH_P2 d¹ c¹] [LH_C [LH_P2 f² a¹] [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]]]]]]: 764
+//│ 	[LH_C [LH_P2 b¹ a¹] [LH_C [LH_P2 c¹ b¹] [LH_C [LH_P2 c¹ d¹] [LH_C [LH_P2 c¹ h⁵] [LH_C [LH_P2 d¹ c¹] [LH_C [LH_P2 f² a¹] [LH_C [LH_P2 f² g¹] [LH_C [LH_P2 f² h⁵] [LH_C [LH_P2 g¹ f²] [LH_C [LH_P2 h⁵ g¹] [LH_N]]]]]]]]]]]: 765
+//│ case xs⁴ of {LH_C h⁸ t⁶ => [LH_C h⁸ mappend₀₀(t⁶, ys⁴)] | LH_N  => ys⁴}: 970 --->
+//│ 	[LH_N]: 573
+//│ 	[LH_C h⁸ mappend₀₀(t⁶, ys⁴)]: 968
+//│ 	[LH_N]: 1063
+//│ 	[LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_1¹³]: 1078
+//│ case xs⁵ of {LH_C h⁹ t⁷ => [LH_C h⁹ mappend₀₃(t⁷, ys⁵)] | LH_N  => ys⁵}: 982 --->
+//│ 	[LH_C h⁴ mappend₀₁(t³, ys²)]: 439
+//│ 	[LH_N]: 669
+//│ 	[LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_1⁷]: 684
+//│ 	[LH_N]: 806
+//│ case _lh_inList_arg2⁶ of {LH_C _lh_inList_LH_C_0⁶ _lh_inList_LH_C_1⁶ => if (_lh_inList_arg1⁶ == _lh_inList_LH_C_0⁶) then [True] else inList₀₂(_lh_inList_arg1⁶, _lh_inList_LH_C_1⁶) | LH_N  => [False] | _  => error⁰}: 1000 --->
+//│ 	[LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_0⁴]: 486
+//│ 	[LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_0²]: 572
+//│ 	[LH_N]: 622
+//│ 	[LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_0⁶]: 668
+//│ 	[LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_0⁸]: 805
+//│ 	[LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_0¹²]: 1062
+//│ case _lh_snd_arg1³ of {LH_P2 _lh_snd_LH_P2_0³ _lh_snd_LH_P2_1³ => _lh_snd_LH_P2_1³ | _  => error⁰}: 1006 --->
+//│ 	[LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²]: 552
+//│ case xs⁶ of {LH_C h¹⁰ t⁸ => [LH_C h¹⁰ mappend₁₀(t⁸, ys⁶)] | LH_N  => ys⁶}: 1017 --->
+//│ 	[LH_N]: 633
+//│ 	[LH_N]: 865
+//│ 	[LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹]: 880
+//│ 	[LH_C h¹⁰ mappend₁₀(t⁸, ys⁶)]: 1015
+//│ case _lh_inList_arg2⁷ of {LH_C _lh_inList_LH_C_0⁷ _lh_inList_LH_C_1⁷ => if (_lh_inList_arg1⁷ == _lh_inList_LH_C_0⁷) then [True] else inList₁₀(_lh_inList_arg1⁷, _lh_inList_LH_C_1⁷) | LH_N  => [False] | _  => error⁰}: 1035 --->
+//│ 	[LH_N]: 632
+//│ 	[LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰]: 864
+//│ case _lh_matchIdent⁸ of {LH_P2 _lh_dfs_LH_P2_0¹³ _lh_dfs_LH_P2_1¹³ => dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹³ mappend₀₀([LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_1¹³], _lh_dfs_LH_P2_1¹²)], _lh_dfs_LH_C_1⁶) | _  => error⁰}: 1087 --->
+//│ 	[LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²]: 1042
+//│ case _lh_dfs_arg3⁶ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²] | LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_C_1⁶ => if inList₀₀(_lh_dfs_LH_C_0⁶, _lh_dfs_LH_P2_0¹²) then dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²], _lh_dfs_LH_C_1⁶) else let _lh_matchIdent⁸ = dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 [LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_0¹²] [LH_N]], _lh_dfs_arg1⁶(_lh_dfs_LH_C_0⁶))
+//│ in case _lh_matchIdent⁸ of {LH_P2 _lh_dfs_LH_P2_0¹³ _lh_dfs_LH_P2_1¹³ => dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹³ mappend₀₀([LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_1¹³], _lh_dfs_LH_P2_1¹²)], _lh_dfs_LH_C_1⁶) | _  => error⁰} | _  => error⁰}: 1091 --->
+//│ 	[LH_N]: 522
+//│ 	[LH_C _lh_new_range_LH_P2_1¹ new_range¹(_lh_new_range_LH_C_1¹, _lh_new_range_arg2¹)]: 535
+//│ case _lh_dfs_arg2⁶ of {LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹² => case _lh_dfs_arg3⁶ of {LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²] | LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_C_1⁶ => if inList₀₀(_lh_dfs_LH_C_0⁶, _lh_dfs_LH_P2_0¹²) then dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²], _lh_dfs_LH_C_1⁶) else let _lh_matchIdent⁸ = dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 [LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_0¹²] [LH_N]], _lh_dfs_arg1⁶(_lh_dfs_LH_C_0⁶))
+//│ in case _lh_matchIdent⁸ of {LH_P2 _lh_dfs_LH_P2_0¹³ _lh_dfs_LH_P2_1¹³ => dfs₀₁(_lh_dfs_arg1⁶, [LH_P2 _lh_dfs_LH_P2_0¹³ mappend₀₀([LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_1¹³], _lh_dfs_LH_P2_1¹²)], _lh_dfs_LH_C_1⁶) | _  => error⁰} | _  => error⁰} | _  => error⁰}: 1093 --->
+//│ 	[LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶]: 659
+//│ 	[LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²]: 1053
+//│ 	[LH_P2 [LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_0¹²] [LH_N]]: 1064
+//│ 	[LH_P2 _lh_dfs_LH_P2_0¹³ mappend₀₀([LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_1¹³], _lh_dfs_LH_P2_1¹²)]: 1082
+//│ case _lh_inList_arg2⁸ of {LH_C _lh_inList_LH_C_0⁸ _lh_inList_LH_C_1⁸ => if (_lh_inList_arg1⁸ == _lh_inList_LH_C_0⁸) then [True] else inList₀₃(_lh_inList_arg1⁸, _lh_inList_LH_C_1⁸) | LH_N  => [False] | _  => error⁰}: 1112 --->
+//│ 	[LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_0⁴]: 486
+//│ 	[LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_0²]: 572
+//│ 	[LH_N]: 622
+//│ 	[LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_0⁶]: 668
+//│ 	[LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_0⁸]: 805
+//│ 	[LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_0¹²]: 1062
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testScc_nofib₀₀(primId⁰(0))
+//│ def testScc_nofib₀₀(_lh_testScc_nofib_arg1²) = 
+//│ 	let a² = 1
+//│ 	in let b² = 2
+//│ 	in let c² = 3
+//│ 	in let d² = 4
+//│ 	in let f⁴ = 5
+//│ 	in let g² = 6
+//│ 	in let h¹¹ = 7
+//│ 	in let vertices² = [LH_C a² [LH_C b² [LH_C c² [LH_C d² [LH_C f⁴ [LH_C g² [LH_C h¹¹ [LH_N]]]]]]]]
+//│ 	in let edges² = [LH_C [LH_P2 b² a²] [LH_C [LH_P2 c² b²] [LH_C [LH_P2 c² d²] [LH_C [LH_P2 c² h¹¹] [LH_C [LH_P2 d² c²] [LH_C [LH_P2 f⁴ a²] [LH_C [LH_P2 f⁴ g²] [LH_C [LH_P2 f⁴ h¹¹] [LH_C [LH_P2 g² f⁴] [LH_C [LH_P2 h¹¹ g²] [LH_N]]]]]]]]]]]
+//│ 	in stronglyConnComp₀₀(edges², vertices²)
+//│ 	where
+//│ 	def stronglyConnComp₀₀(_lh_stronglyConnComp_arg1², _lh_stronglyConnComp_arg2²) = 
+//│ 		let span_tree² = (fun _lh_span_tree_arg1² -> (fun _lh_span_tree_arg2² -> (fun _lh_span_tree_arg3² -> case _lh_span_tree_arg2² of {
+//│ 				LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1² => case _lh_span_tree_arg3² of {
+//│ 					LH_N  => [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²]
+//│ 					| LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_C_1¹ => if inList₂₀(_lh_span_tree_LH_C_0¹, _lh_span_tree_LH_P2_0²) then span_tree²(_lh_span_tree_arg1², [LH_P2 _lh_span_tree_LH_P2_0² _lh_span_tree_LH_P2_1²], _lh_span_tree_LH_C_1¹) else 
+//│ 						let _lh_matchIdent¹⁴ = dfs₀₀(_lh_span_tree_arg1², [LH_P2 [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_0²] [LH_N]], _lh_span_tree_arg1²(_lh_span_tree_LH_C_0¹))
+//│ 						in case _lh_matchIdent¹⁴ of {
+//│ 							LH_P2 _lh_span_tree_LH_P2_0³ _lh_span_tree_LH_P2_1³ => span_tree²(_lh_span_tree_arg1², [LH_P2 _lh_span_tree_LH_P2_0³ [LH_C [LH_C _lh_span_tree_LH_C_0¹ _lh_span_tree_LH_P2_1³] _lh_span_tree_LH_P2_1²]], _lh_span_tree_LH_C_1¹)
+//│ 							| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰})))
+//│ 		and new_range² = (fun _lh_new_range_arg1² -> (fun _lh_new_range_arg2² -> case _lh_new_range_arg1² of {
+//│ 				LH_N  => [LH_N]
+//│ 				| LH_C _lh_new_range_LH_C_0¹ _lh_new_range_LH_C_1¹ => case _lh_new_range_LH_C_0¹ of {
+//│ 					LH_P2 _lh_new_range_LH_P2_0¹ _lh_new_range_LH_P2_1¹ => if (_lh_new_range_LH_P2_0¹ == _lh_new_range_arg2²) then [LH_C _lh_new_range_LH_P2_1¹ new_range²(_lh_new_range_LH_C_1¹, _lh_new_range_arg2²)] else new_range²(_lh_new_range_LH_C_1¹, _lh_new_range_arg2²)
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰}))
+//│ 		and swap² = (fun _lh_swap_arg1² -> case _lh_swap_arg1² of {
+//│ 				LH_P2 _lh_swap_LH_P2_0¹ _lh_swap_LH_P2_1¹ => [LH_P2 _lh_swap_LH_P2_1¹ _lh_swap_LH_P2_0¹]
+//│ 				| _  => error⁰}) 
+//│ 		in snd₀₀(span_tree²(new_range²(map₀₀(swap², _lh_stronglyConnComp_arg1²)), [LH_P2 [LH_N] [LH_N]], snd₁₀(dfs₁₀(new_range²(_lh_stronglyConnComp_arg1²), [LH_P2 [LH_N] [LH_N]], _lh_stronglyConnComp_arg2²))))
+//│ 		where
+//│ 		def dfs₀₀(_lh_dfs_arg1⁸, _lh_dfs_arg2⁸, _lh_dfs_arg3⁸) = 
+//│ 			case _lh_dfs_arg2⁸ of {
+//│ 				LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶ => case _lh_dfs_arg3⁸ of {
+//│ 					LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶]
+//│ 					| LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_C_1³ => if inList₀₃(_lh_dfs_LH_C_0³, _lh_dfs_LH_P2_0⁶) then dfs₀₁(_lh_dfs_arg1⁸, [LH_P2 _lh_dfs_LH_P2_0⁶ _lh_dfs_LH_P2_1⁶], _lh_dfs_LH_C_1³) else 
+//│ 						let _lh_matchIdent¹⁰ = dfs₀₂(_lh_dfs_arg1⁸, [LH_P2 [LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_0⁶] [LH_N]], _lh_dfs_arg1⁸(_lh_dfs_LH_C_0³))
+//│ 						in case _lh_matchIdent¹⁰ of {
+//│ 							LH_P2 _lh_dfs_LH_P2_0⁷ _lh_dfs_LH_P2_1⁷ => dfs₀₃(_lh_dfs_arg1⁸, [LH_P2 _lh_dfs_LH_P2_0⁷ mappend₀₃([LH_C _lh_dfs_LH_C_0³ _lh_dfs_LH_P2_1⁷], _lh_dfs_LH_P2_1⁶)], _lh_dfs_LH_C_1³)
+//│ 							| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 			where
+//│ 			def dfs₀₁(_lh_dfs_arg1¹¹, _lh_dfs_arg2¹¹, _lh_dfs_arg3¹¹) = 
+//│ 				case _lh_dfs_arg2¹¹ of {
+//│ 					LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹² => case _lh_dfs_arg3¹¹ of {
+//│ 						LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²]
+//│ 						| LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_C_1⁶ => if inList₀₀(_lh_dfs_LH_C_0⁶, _lh_dfs_LH_P2_0¹²) then dfs₀₁(_lh_dfs_arg1¹¹, [LH_P2 _lh_dfs_LH_P2_0¹² _lh_dfs_LH_P2_1¹²], _lh_dfs_LH_C_1⁶) else 
+//│ 							let _lh_matchIdent¹³ = dfs₀₁(_lh_dfs_arg1¹¹, [LH_P2 [LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_0¹²] [LH_N]], _lh_dfs_arg1¹¹(_lh_dfs_LH_C_0⁶))
+//│ 							in case _lh_matchIdent¹³ of {
+//│ 								LH_P2 _lh_dfs_LH_P2_0¹³ _lh_dfs_LH_P2_1¹³ => dfs₀₁(_lh_dfs_arg1¹¹, [LH_P2 _lh_dfs_LH_P2_0¹³ mappend₀₀([LH_C _lh_dfs_LH_C_0⁶ _lh_dfs_LH_P2_1¹³], _lh_dfs_LH_P2_1¹²)], _lh_dfs_LH_C_1⁶)
+//│ 								| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 				where
+//│ 				def inList₀₀(_lh_inList_arg1⁹, _lh_inList_arg2⁹) = 
+//│ 					case _lh_inList_arg2⁹ of {
+//│ 						LH_C _lh_inList_LH_C_0⁵ _lh_inList_LH_C_1⁵ => if (_lh_inList_arg1⁹ == _lh_inList_LH_C_0⁵) then [True] else inList₀₀(_lh_inList_arg1⁹, _lh_inList_LH_C_1⁵)
+//│ 						| LH_N  => [False]
+//│ 						| _  => error⁰}
+//│ 				def mappend₀₀(xs¹⁰, ys¹⁰) = 
+//│ 					case xs¹⁰ of {
+//│ 						LH_C h⁸ t⁶ => [LH_C h⁸ mappend₀₀(t⁶, ys¹⁰)]
+//│ 						| LH_N  => ys¹⁰}
+//│ 			def dfs₀₂(_lh_dfs_arg1⁹, _lh_dfs_arg2⁹, _lh_dfs_arg3⁹) = 
+//│ 				case _lh_dfs_arg2⁹ of {
+//│ 					LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸ => case _lh_dfs_arg3⁹ of {
+//│ 						LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸]
+//│ 						| LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_C_1⁴ => if inList₀₁(_lh_dfs_LH_C_0⁴, _lh_dfs_LH_P2_0⁸) then dfs₀₂(_lh_dfs_arg1⁹, [LH_P2 _lh_dfs_LH_P2_0⁸ _lh_dfs_LH_P2_1⁸], _lh_dfs_LH_C_1⁴) else 
+//│ 							let _lh_matchIdent¹¹ = dfs₀₂(_lh_dfs_arg1⁹, [LH_P2 [LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_0⁸] [LH_N]], _lh_dfs_arg1⁹(_lh_dfs_LH_C_0⁴))
+//│ 							in case _lh_matchIdent¹¹ of {
+//│ 								LH_P2 _lh_dfs_LH_P2_0⁹ _lh_dfs_LH_P2_1⁹ => dfs₀₂(_lh_dfs_arg1⁹, [LH_P2 _lh_dfs_LH_P2_0⁹ mappend₀₁([LH_C _lh_dfs_LH_C_0⁴ _lh_dfs_LH_P2_1⁹], _lh_dfs_LH_P2_1⁸)], _lh_dfs_LH_C_1⁴)
+//│ 								| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 				where
+//│ 				def inList₀₁(_lh_inList_arg1¹⁰, _lh_inList_arg2¹⁰) = 
+//│ 					case _lh_inList_arg2¹⁰ of {
+//│ 						LH_C _lh_inList_LH_C_0³ _lh_inList_LH_C_1³ => if (_lh_inList_arg1¹⁰ == _lh_inList_LH_C_0³) then [True] else inList₀₁(_lh_inList_arg1¹⁰, _lh_inList_LH_C_1³)
+//│ 						| LH_N  => [False]
+//│ 						| _  => error⁰}
+//│ 				def mappend₀₁(xs¹¹, ys¹¹) = 
+//│ 					case xs¹¹ of {
+//│ 						LH_C h⁴ t³ => [LH_C h⁴ mappend₀₁(t³, ys¹¹)]
+//│ 						| LH_N  => ys¹¹}
+//│ 			def dfs₀₃(_lh_dfs_arg1¹⁰, _lh_dfs_arg2¹⁰, _lh_dfs_arg3¹⁰) = 
+//│ 				case _lh_dfs_arg2¹⁰ of {
+//│ 					LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴ => case _lh_dfs_arg3¹⁰ of {
+//│ 						LH_N  => [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴]
+//│ 						| LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_C_1² => if inList₀₂(_lh_dfs_LH_C_0², _lh_dfs_LH_P2_0⁴) then dfs₀₃(_lh_dfs_arg1¹⁰, [LH_P2 _lh_dfs_LH_P2_0⁴ _lh_dfs_LH_P2_1⁴], _lh_dfs_LH_C_1²) else 
+//│ 							let _lh_matchIdent¹² = dfs₀₃(_lh_dfs_arg1¹⁰, [LH_P2 [LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_0⁴] [LH_N]], _lh_dfs_arg1¹⁰(_lh_dfs_LH_C_0²))
+//│ 							in case _lh_matchIdent¹² of {
+//│ 								LH_P2 _lh_dfs_LH_P2_0⁵ _lh_dfs_LH_P2_1⁵ => dfs₀₃(_lh_dfs_arg1¹⁰, [LH_P2 _lh_dfs_LH_P2_0⁵ mappend₀₂([LH_C _lh_dfs_LH_C_0² _lh_dfs_LH_P2_1⁵], _lh_dfs_LH_P2_1⁴)], _lh_dfs_LH_C_1²)
+//│ 								| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 				where
+//│ 				def inList₀₂(_lh_inList_arg1¹¹, _lh_inList_arg2¹¹) = 
+//│ 					case _lh_inList_arg2¹¹ of {
+//│ 						LH_C _lh_inList_LH_C_0⁶ _lh_inList_LH_C_1⁶ => if (_lh_inList_arg1¹¹ == _lh_inList_LH_C_0⁶) then [True] else inList₀₂(_lh_inList_arg1¹¹, _lh_inList_LH_C_1⁶)
+//│ 						| LH_N  => [False]
+//│ 						| _  => error⁰}
+//│ 				def mappend₀₂(xs⁷, ys⁷) = 
+//│ 					case xs⁷ of {
+//│ 						LH_C h⁶ t⁴ => [LH_C h⁶ mappend₀₂(t⁴, ys⁷)]
+//│ 						| LH_N  => ys⁷}
+//│ 			def inList₀₃(_lh_inList_arg1¹⁴, _lh_inList_arg2¹⁴) = 
+//│ 				case _lh_inList_arg2¹⁴ of {
+//│ 					LH_C _lh_inList_LH_C_0⁸ _lh_inList_LH_C_1⁸ => if (_lh_inList_arg1¹⁴ == _lh_inList_LH_C_0⁸) then [True] else inList₀₃(_lh_inList_arg1¹⁴, _lh_inList_LH_C_1⁸)
+//│ 					| LH_N  => [False]
+//│ 					| _  => error⁰}
+//│ 			def mappend₀₃(xs⁹, ys⁹) = 
+//│ 				case xs⁹ of {
+//│ 					LH_C h⁹ t⁷ => [LH_C h⁹ mappend₀₃(t⁷, ys⁹)]
+//│ 					| LH_N  => ys⁹}
+//│ 		def dfs₁₀(_lh_dfs_arg1⁷, _lh_dfs_arg2⁷, _lh_dfs_arg3⁷) = 
+//│ 			case _lh_dfs_arg2⁷ of {
+//│ 				LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰ => case _lh_dfs_arg3⁷ of {
+//│ 					LH_N  => [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰]
+//│ 					| LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_C_1⁵ => if inList₁₀(_lh_dfs_LH_C_0⁵, _lh_dfs_LH_P2_0¹⁰) then dfs₁₀(_lh_dfs_arg1⁷, [LH_P2 _lh_dfs_LH_P2_0¹⁰ _lh_dfs_LH_P2_1¹⁰], _lh_dfs_LH_C_1⁵) else 
+//│ 						let _lh_matchIdent⁹ = dfs₁₀(_lh_dfs_arg1⁷, [LH_P2 [LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_0¹⁰] [LH_N]], _lh_dfs_arg1⁷(_lh_dfs_LH_C_0⁵))
+//│ 						in case _lh_matchIdent⁹ of {
+//│ 							LH_P2 _lh_dfs_LH_P2_0¹¹ _lh_dfs_LH_P2_1¹¹ => dfs₁₀(_lh_dfs_arg1⁷, [LH_P2 _lh_dfs_LH_P2_0¹¹ mappend₁₀([LH_C _lh_dfs_LH_C_0⁵ _lh_dfs_LH_P2_1¹¹], _lh_dfs_LH_P2_1¹⁰)], _lh_dfs_LH_C_1⁵)
+//│ 							| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 			where
+//│ 			def inList₁₀(_lh_inList_arg1¹², _lh_inList_arg2¹²) = 
+//│ 				case _lh_inList_arg2¹² of {
+//│ 					LH_C _lh_inList_LH_C_0⁷ _lh_inList_LH_C_1⁷ => if (_lh_inList_arg1¹² == _lh_inList_LH_C_0⁷) then [True] else inList₁₀(_lh_inList_arg1¹², _lh_inList_LH_C_1⁷)
+//│ 					| LH_N  => [False]
+//│ 					| _  => error⁰}
+//│ 			def mappend₁₀(xs⁸, ys⁸) = 
+//│ 				case xs⁸ of {
+//│ 					LH_C h¹⁰ t⁸ => [LH_C h¹⁰ mappend₁₀(t⁸, ys⁸)]
+//│ 					| LH_N  => ys⁸}
+//│ 		def inList₂₀(_lh_inList_arg1¹³, _lh_inList_arg2¹³) = 
+//│ 			case _lh_inList_arg2¹³ of {
+//│ 				LH_C _lh_inList_LH_C_0⁴ _lh_inList_LH_C_1⁴ => if (_lh_inList_arg1¹³ == _lh_inList_LH_C_0⁴) then [True] else inList₂₀(_lh_inList_arg1¹³, _lh_inList_LH_C_1⁴)
+//│ 				| LH_N  => [False]
+//│ 				| _  => error⁰}
+//│ 		def map₀₀(f⁵, ls²) = 
+//│ 			case ls² of {
+//│ 				LH_C h⁷ t⁵ => [LH_C f⁵(h⁷) map₀₀(f⁵, t⁵)]
+//│ 				| LH_N  => [LH_N]}
+//│ 		def snd₀₀(_lh_snd_arg1⁴) = 
+//│ 			case _lh_snd_arg1⁴ of {
+//│ 				LH_P2 _lh_snd_LH_P2_0³ _lh_snd_LH_P2_1³ => _lh_snd_LH_P2_1³
+//│ 				| _  => error⁰}
+//│ 		def snd₁₀(_lh_snd_arg1⁵) = 
+//│ 			case _lh_snd_arg1⁵ of {
+//│ 				LH_P2 _lh_snd_LH_P2_0² _lh_snd_LH_P2_1² => _lh_snd_LH_P2_1²
+//│ 				| _  => error⁰}
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

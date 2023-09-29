@@ -244,6 +244,9 @@ object ProdStratEnum {
     consFloat(using d.noExprId).toStrat(),
     ProdFun(consFloat(using d.noExprId).toStrat(), prodFloat(using d.noExprId).toStrat())(using d.noExprId).toStrat()
   )
+  def prodFloatUnaryOp(using id: ExprId, d: Deforest) = ProdFun(
+    consFloat(using d.noExprId).toStrat(), prodFloat(using d.noExprId).toStrat()
+  )
   def prodIntEq(using id: ExprId, d: Deforest) = ProdFun(
     consInt(using d.noExprId).toStrat(),
     ProdFun(consInt(using d.noExprId).toStrat(), prodBool(using d.noExprId).toStrat())(using d.noExprId).toStrat()
@@ -378,6 +381,8 @@ class Deforest(var debug: Boolean) {
           prodBoolUnaryOp(using e.uid, this)
         else if Deforest.lumberhackFloatBinOps(primitive) then
           prodFloatBinOp(using e.uid, this)
+        else if Deforest.lumberhackFloatUnaryOps(primitive) then
+          prodFloatUnaryOp(using e.uid, this)
         else if primitive == "error" then
           freshVar("_lh_rigid_error_var")(using e.uid)._1
         else if (Set("primitive", "primId") ++ Deforest.lumberhackPolyOps)(primitive) then
@@ -1109,7 +1114,7 @@ object CallTree {
 object Deforest {
   lazy val lumberhackKeywords: Set[String] =
     (lumberhackIntFun ++ lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackBoolUnaryOps ++ lumberhackPolyOps
-      ++ lumberhackFloatBinOps)
+      ++ lumberhackFloatBinOps ++ lumberhackFloatUnaryOps)
       + "string_of_int" + "int_of_char" + "char_of_int" + "ceiling" + "float_of_int" + "int_of_float" + "string_of_float"
       + "primitive" + "primId" + "error" + "lazy" + "force" + "lumberhack_obj_magic"
   lazy val lumberhackPolyOps: Set[String] = Set("polyEq", "polyLt", "polyGt", "polyLeq", "polyGeq", "polyNeq")
@@ -1122,7 +1127,8 @@ object Deforest {
   lazy val lumberhackIntComparisonOps: Set[String] = Set("==", ">", "<", ">=", "<=", "/=")
   lazy val lumberhackBoolBinOps: Set[String] = Set("&&", "||")
   lazy val lumberhackBoolUnaryOps: Set[String] = Set("not")
-  lazy val lumberhackFloatBinOps: Set[String] = Set("+.", "-.", "*.", "/.")
+  lazy val lumberhackFloatBinOps: Set[String] = Set("+.", "-.", "*.", "/.", "**")
+  lazy val lumberhackFloatUnaryOps: Set[String] = Set("sqrt", "tan", "sin", "cos")
 
   def filterKnots(k: Path, v: Path)(using d: Deforest) = v.reachable(d.callsInfo) &&
     v.p.nonEmpty && k.p.nonEmpty &&

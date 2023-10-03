@@ -105,13 +105,13 @@ main(3)
 //│ 	where
 //│ 	def fromTo₀(a³, b³) = 
 //│ 		if (a³ < (b³ + 1)) then 
-//│ 			let hx² = a³
-//│ 			in let tx² = fromTo₀((a³ + 1), b³)
+//│ 			let tx² = fromTo₀((a³ + 1), b³)
+//│ 			in let hx² = a³
 //│ 			in (fun ys² -> ys²(hx², tx²)) else (fun ys³ -> [N])
 //│ 	def fromTo₁(a⁴, b⁴) = 
 //│ 		if (a⁴ < (b⁴ + 1)) then 
-//│ 			let hy² = a⁴
-//│ 			in let ty² = fromTo₁((a⁴ + 1), b⁴)
+//│ 			let ty² = fromTo₁((a⁴ + 1), b⁴)
+//│ 			in let hy² = a⁴
 //│ 			in (fun hx³ -> (fun tx³ -> [C [P2 hx³ hy²] zip₀(tx³, ty²)])) else (fun hx⁴ -> (fun tx⁴ -> [N]))
 //│ 	def zip₀(xs², ys⁴) = 
 //│ 		xs²(ys⁴)
@@ -278,21 +278,21 @@ mapZip(
 //│ def map₀(f⁶, ls⁶) = 
 //│ 	case ls⁶ of {
 //│ 		C h⁴ t⁴ => 
-//│ 			let hx² = f⁶(h⁴)
-//│ 			in let tx² = map₀(f⁶, t⁴)
+//│ 			let tx² = map₀(f⁶, t⁴)
+//│ 			in let hx² = f⁶(h⁴)
 //│ 			in (fun ys³ -> ys³(hx², tx²))
 //│ 		| N  => (fun ys⁴ -> (fun f⁷ -> [N]))}
 //│ def map₁(f⁸, ls⁷) = 
 //│ 	case ls⁷ of {
 //│ 		C h³ t³ => 
-//│ 			let hy² = f⁸(h³)
-//│ 			in let ty² = map₁(f⁸, t³)
+//│ 			let ty² = map₁(f⁸, t³)
+//│ 			in let hy² = f⁸(h³)
 //│ 			in (fun hx³ -> (fun tx³ -> 
-//│ 				let h⁵ = 	
-//│ 					let a² = hx³
-//│ 					in let b² = hy²
+//│ 				let t⁵ = zip₀(tx³, ty²)
+//│ 				in let h⁵ = 	
+//│ 					let b² = hy²
+//│ 					in let a² = hx³
 //│ 					in (fun _lh_dummy⁰ -> (a² + b²))
-//│ 				in let t⁵ = zip₀(tx³, ty²)
 //│ 				in (fun f⁹ -> [C f⁹(h⁵) mapZip₀(f⁹, t⁵)])))
 //│ 		| N  => (fun hx⁴ -> (fun tx⁴ -> (fun f¹⁰ -> [N])))}
 //│ def zip₀(xs², ys²) = 

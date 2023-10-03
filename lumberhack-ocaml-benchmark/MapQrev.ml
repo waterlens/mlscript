@@ -46,8 +46,8 @@ let rec map_d0 f_2 xs_0 =
 let rec qrev_d0 a_1 ys_0 =
   (match ys_0 with
     | `C(h_0, t_0) -> 
-      ((qrev_d0 (let rec h_1 = h_0 in
-        (let rec t_1 = a_1 in
+      ((qrev_d0 (let rec t_1 = a_1 in
+        (let rec h_1 = h_0 in
           (fun f_1 -> 
             (`C((f_1 h_1), ((map_d0 f_1) t_1))))))) t_0)
     | `N -> 
@@ -70,8 +70,8 @@ let rec map_d0_d1 f_6 xs_2 =
 let rec qrev_d0_d0 a_2 ys_1 =
   (match ys_1 with
     | `C(h_2, t_2) -> 
-      ((qrev_d0_d0 (let rec h_3 = h_2 in
-        (let rec t_3 = a_2 in
+      ((qrev_d0_d0 (let rec t_3 = a_2 in
+        (let rec h_3 = h_2 in
           (fun f_5 -> 
             (`C((f_5 h_3), ((map_d0_d1 f_5) t_3))))))) t_2)
     | `N -> 

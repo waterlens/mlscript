@@ -42,11 +42,11 @@ let rec sum_d0 ls_1 =
   (ls_1 99);;
 let rec enumFromTo_d0 a_0 b_0 =
   (if (a_0 <= b_0) then
-    (let rec h_0 = a_0 in
-      (let rec t_0 = ((enumFromTo_d0 (a_0 + 1)) b_0) in
+    (let rec t_0 = ((enumFromTo_d0 (a_0 + 1)) b_0) in
+      (let rec h_0 = a_0 in
         (fun f_1 -> 
-          (let rec h_1 = (f_1 h_0) in
-            (let rec t_1 = ((map_d0 f_1) t_0) in
+          (let rec t_1 = ((map_d0 f_1) t_0) in
+            (let rec h_1 = (f_1 h_0) in
               (fun _lh_dummy_0 -> 
                 (h_1 + (sum_d0 t_1))))))))
   else
@@ -57,20 +57,20 @@ and testSumMapEnum_d0 n_0 =
     (x_0 * x_0))) ((enumFromTo_d0 1) n_0)));;
 
 (* lumberhack_pop_out *)
-let rec map_d0_d0 f_4 ls_3 =
-  (ls_3 f_4);;
-let rec map_d0_d1 f_3 ls_2 =
-  (ls_2 f_3);;
-let rec sum_d0_d0 ls_5 =
-  (ls_5 99);;
-let rec sum_d0_d1 ls_4 =
+let rec map_d0_d0 f_6 ls_5 =
+  (ls_5 f_6);;
+let rec map_d0_d1 f_5 ls_2 =
+  (ls_2 f_5);;
+let rec sum_d0_d0 ls_4 =
   (ls_4 99);;
+let rec sum_d0_d1 ls_3 =
+  (ls_3 99);;
 let rec enumFromTo_d0_d0 a_1 b_1 _lh_popOutId_0_0 _lh_popOutId_1_0 =
   (if (a_1 <= b_1) then
-    (let rec h_2 = a_1 in
-      (let rec t_2 = ((enumFromTo_d0_d0 (a_1 + 1)) b_1) in
-        (let rec h_3 = (_lh_popOutId_0_0 h_2) in
-          (let rec t_3 = ((map_d0_d0 _lh_popOutId_0_0) t_2) in
+    (let rec t_2 = ((enumFromTo_d0_d0 (a_1 + 1)) b_1) in
+      (let rec h_2 = a_1 in
+        (let rec t_3 = ((map_d0_d0 _lh_popOutId_0_0) t_2) in
+          (let rec h_3 = (_lh_popOutId_0_0 h_2) in
             (h_3 + (sum_d0_d0 t_3))))))
   else
     0)

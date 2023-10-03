@@ -158,12 +158,12 @@ testUnzipZip(primId(50000))
 //│ 		case xs² of {
 //│ 			C x¹ xt¹ => case ys² of {
 //│ 				C y¹ yt¹ => 
-//│ 					let h² = 	
-//│ 						let a⁷ = x¹
-//│ 						in let b⁷ = y¹
+//│ 					let t² = zip₀(xt¹, yt¹)
+//│ 					in let h² = 	
+//│ 						let b⁷ = y¹
+//│ 						in let a⁷ = x¹
 //│ 						in (fun t³ -> case unzip₀(t³) of {
 //│ 							Pair atail¹ btail¹ => [Pair [C a⁷ atail¹] [C b⁷ btail¹]]})
-//│ 					in let t² = zip₀(xt¹, yt¹)
 //│ 					in (fun _lh_dummy⁰ -> h²(t²))
 //│ 				| N  => (fun _lh_dummy¹ -> [Pair [N] [N]])}
 //│ 			| N  => (fun _lh_dummy² -> [Pair [N] [N]])}
@@ -334,11 +334,11 @@ testZipUnzip(primId(50000))
 //│ 			C h¹ t¹ => case h¹ of {
 //│ 				Pair a¹ b¹ => case unzip₀(t¹) of {
 //│ 					Pair atail¹ btail¹ => [Pair 
-//│ 						let x² = a¹
-//│ 						in let xt² = atail¹
+//│ 						let xt² = atail¹
+//│ 						in let x² = a¹
 //│ 						in (fun ys⁴ -> ys⁴(xt², x²)) 
-//│ 						let y² = b¹
-//│ 						in let yt² = btail¹
+//│ 						let yt² = btail¹
+//│ 						in let y² = b¹
 //│ 						in (fun xt³ -> (fun x³ -> [C [Pair x³ y²] zip₀(xt³, yt²)]))]}}
 //│ 			| N  => [Pair (fun ys⁵ -> [N]) (fun xt⁴ -> (fun x⁴ -> [N]))]}
 //│ 	def zip₀(xs⁴, ys⁶) = 
@@ -570,17 +570,17 @@ testZipMapBothUnzip(primId(50000))
 //│ 			C h³ t³ => case h³ of {
 //│ 				Pair a¹ b¹ => case unzip₀(t³) of {
 //│ 					Pair atail¹ btail¹ => [Pair 
-//│ 						let h⁵ = a¹
-//│ 						in let t⁵ = atail¹
+//│ 						let t⁵ = atail¹
+//│ 						in let h⁵ = a¹
 //│ 						in (fun f³ -> 
-//│ 							let x⁶ = f³(h⁵)
-//│ 							in let xt² = map₀(f³, t⁵)
+//│ 							let xt² = map₀(f³, t⁵)
+//│ 							in let x⁶ = f³(h⁵)
 //│ 							in (fun ys⁵ -> ys⁵(xt², x⁶))) 
-//│ 						let h⁶ = b¹
-//│ 						in let t⁶ = btail¹
+//│ 						let t⁶ = btail¹
+//│ 						in let h⁶ = b¹
 //│ 						in (fun f⁴ -> 
-//│ 							let y² = f⁴(h⁶)
-//│ 							in let yt² = map₁(f⁴, t⁶)
+//│ 							let yt² = map₁(f⁴, t⁶)
+//│ 							in let y² = f⁴(h⁶)
 //│ 							in (fun xt³ -> (fun x⁷ -> [C [Pair x⁷ y²] zip₀(xt³, yt²)])))]}}
 //│ 			| N  => [Pair (fun f⁵ -> (fun ys⁶ -> [N])) (fun f⁶ -> (fun xt⁴ -> (fun x⁸ -> [N])))]}
 //│ 	def zip₀(xs⁴, ys⁴) = 

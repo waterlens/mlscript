@@ -45,9 +45,9 @@ let rec sumTree_d0 t_0 =
 let rec sqTree_d0 t_1 =
   (match t_1 with
     | `T(v_0, l_0, r_0) -> 
-      (let rec v_1 = (v_0 * v_0) in
+      (let rec r_1 = (sqTree_d0 r_0) in
         (let rec l_1 = (sqTree_d0 l_0) in
-          (let rec r_1 = (sqTree_d0 r_0) in
+          (let rec v_1 = (v_0 * v_0) in
             (fun _lh_dummy_0 -> 
               ((v_1 + (sumTree_d0 l_1)) + (sumTree_d0 r_1))))))
     | `L -> 
@@ -62,18 +62,18 @@ let rec genTree_d0_d0 n_3 =
     (`T(n_3, (genTree_d0_d0 (n_3 - 1)), (genTree_d0_d0 (n_3 - 1))))
   else
     (`L));;
-let rec sumTree_d0_d0 t_3 =
-  (t_3 99);;
-let rec sumTree_d0_d1 t_5 =
-  (t_5 99);;
-let rec sumTree_d0_d2 t_2 =
+let rec sumTree_d0_d0 t_4 =
+  (t_4 99);;
+let rec sumTree_d0_d1 t_2 =
   (t_2 99);;
-let rec sqTree_d0_d0 t_4 _lh_popOutId_0_0 =
-  (match t_4 with
+let rec sumTree_d0_d2 t_3 =
+  (t_3 99);;
+let rec sqTree_d0_d0 t_5 _lh_popOutId_0_0 =
+  (match t_5 with
     | `T(v_2, l_2, r_2) -> 
-      (let rec v_3 = (v_2 * v_2) in
+      (let rec r_3 = (sqTree_d0_d0 r_2) in
         (let rec l_3 = (sqTree_d0_d0 l_2) in
-          (let rec r_3 = (sqTree_d0_d0 r_2) in
+          (let rec v_3 = (v_2 * v_2) in
             ((v_3 + (sumTree_d0_d0 l_3)) + (sumTree_d0_d1 r_3)))))
     | `L -> 
       0)

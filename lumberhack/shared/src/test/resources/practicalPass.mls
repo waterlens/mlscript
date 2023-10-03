@@ -145,8 +145,8 @@ map(l)(
 //│ map₀(l₀, (fun x² -> case x² of {
 //│ 	K  => [T]}))
 //│ def l₀ = 
-//│ 	let h² = [K]
-//│ 	in let t² = (fun f⁵ -> [N])
+//│ 	let t² = (fun f⁵ -> [N])
+//│ 	in let h² = [K]
 //│ 	in (fun f⁴ -> [C f⁴(h²) map₀(t², f⁴)])
 //│ def map₀(ls²) = 
 //│ 	ls²
@@ -255,14 +255,14 @@ map(l)
 //│ >>>>>>> after fusion >>>>>>>
 //│ map₀(l₀)
 //│ def l₀ = 
-//│ 	let h² = [T]
-//│ 	in let t² = 	
-//│ 		let h³ = [TT]
-//│ 		in let t³ = 	
-//│ 			let h⁴ = [TTTT]
-//│ 			in let t⁴ = (fun _lh_dummy³ -> [N])
+//│ 	let t² = 	
+//│ 		let t³ = 	
+//│ 			let t⁴ = (fun _lh_dummy³ -> [N])
+//│ 			in let h⁴ = [TTTT]
 //│ 			in (fun _lh_dummy² -> [C h⁴ map₀(t⁴)])
+//│ 		in let h³ = [TT]
 //│ 		in (fun _lh_dummy¹ -> [C h³ map₀(t³)])
+//│ 	in let h² = [T]
 //│ 	in (fun _lh_dummy⁰ -> [C h² map₀(t²)])
 //│ def map₀(ls²) = 
 //│ 	ls²(99)
@@ -402,20 +402,20 @@ c(t)
 //│ def c₀(x²) = 
 //│ 	x²(99)
 //│ def t₀ = 
-//│ 	let n³ = [KK]
+//│ 	let r³ = bb₀
 //│ 	in let l³ = aa₀
-//│ 	in let r³ = bb₀
+//│ 	in let n³ = [KK]
 //│ 	in (fun _lh_dummy³ -> [T n³ c₀(l³) c₀(r³)])
 //│ 	where
 //│ 	def aa₀ = 
-//│ 		let n⁴ = [NN]
-//│ 		in let l⁴ = (fun _lh_dummy⁶ -> [LL])
-//│ 		in let r⁴ = (fun _lh_dummy⁵ -> [LL])
+//│ 		let r⁴ = (fun _lh_dummy⁶ -> [LL])
+//│ 		in let l⁴ = (fun _lh_dummy⁵ -> [LL])
+//│ 		in let n⁴ = [NN]
 //│ 		in (fun _lh_dummy⁴ -> [T n⁴ c₀(l⁴) c₀(r⁴)])
 //│ 	def bb₀ = 
-//│ 		let n² = [NN]
-//│ 		in let l² = (fun _lh_dummy² -> [LL])
-//│ 		in let r² = (fun _lh_dummy¹ -> [LL])
+//│ 		let r² = (fun _lh_dummy² -> [LL])
+//│ 		in let l² = (fun _lh_dummy¹ -> [LL])
+//│ 		in let n² = [NN]
 //│ 		in (fun _lh_dummy⁰ -> [T n² c₀(l²) c₀(r²)])
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -515,8 +515,8 @@ sum(mapa(mapb(primitive)))
 //│ def mapb₀(lsb²) = 
 //│ 	case lsb² of {
 //│ 		C hb¹ tb¹ => 
-//│ 			let ha² = primitive⁰(hb¹)
-//│ 			in let ta² = mapb₀(tb¹)
+//│ 			let ta² = mapb₀(tb¹)
+//│ 			in let ha² = primitive⁰(hb¹)
 //│ 			in (fun _lh_dummy¹ -> 
 //│ 				let t² = mapa₀(ta²)
 //│ 				in (fun _lh_dummy⁰ -> [S [N] sum₀(t²)]))
@@ -667,17 +667,17 @@ lastDrive(map(C(T, C(TT, N))))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ lastDrive₀(map₀(
-//│ 	let hhh³ = [K]
-//│ 	in let ttt³ = 	
-//│ 		let hhh⁴ = [KK]
-//│ 		in let ttt⁴ = (fun _lh_dummy³ -> (fun x⁵ -> x⁵))
+//│ 	let ttt³ = 	
+//│ 		let ttt⁴ = (fun _lh_dummy³ -> (fun x⁵ -> x⁵))
+//│ 		in let hhh⁴ = [KK]
 //│ 		in (fun _lh_dummy² -> 
-//│ 			let h² = (fun head⁴ -> head⁴)(hhh⁴)
-//│ 			in let t² = map₁(ttt⁴)
+//│ 			let t² = map₁(ttt⁴)
+//│ 			in let h² = (fun head⁴ -> head⁴)(hhh⁴)
 //│ 			in (fun x⁴ -> last₀(t², h²)))
+//│ 	in let hhh³ = [K]
 //│ 	in (fun _lh_dummy¹ -> 
-//│ 		let hh² = (fun head³ -> head³)(hhh³)
-//│ 		in let tt² = map₁(ttt³)
+//│ 		let tt² = map₁(ttt³)
+//│ 		in let hh² = (fun head³ -> head³)(hhh³)
 //│ 		in (fun _lh_dummy⁰ -> [Some last₀(tt², hh²)]))))
 //│ def lastDrive₀(xs²) = 
 //│ 	xs²(99)

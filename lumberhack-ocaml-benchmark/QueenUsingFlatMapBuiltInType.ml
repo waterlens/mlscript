@@ -104,8 +104,8 @@ let rec safe_d0_d0 _lh_safe_arg1_0 _lh_safe_arg2_0 _lh_safe_arg3_0 =
       (failwith "error"));;
 let rec enumFromTo_d0_d0 a_0 b_0 =
   (if (a_0 <= b_0) then
-    (let rec _lh_flatMap_LH_C_0_0 = a_0 in
-      (let rec _lh_flatMap_LH_C_1_0 = ((enumFromTo_d0_d0 (a_0 + 1)) b_0) in
+    (let rec _lh_flatMap_LH_C_1_0 = ((enumFromTo_d0_d0 (a_0 + 1)) b_0) in
+      (let rec _lh_flatMap_LH_C_0_0 = a_0 in
         (fun _lh_flatMap_arg1_0 -> 
           ((append_d1_d0 (_lh_flatMap_arg1_0 _lh_flatMap_LH_C_0_0)) ((flatMap_d1_d0 _lh_flatMap_arg1_0) _lh_flatMap_LH_C_1_0)))))
   else
@@ -127,12 +127,12 @@ and gen_d0_d0 _lh_gen_arg1_0 _lh_gen_arg2_0 =
       ((flatMap_d0_d0 (fun b_1 -> 
         ((flatMap_d1_d0 (fun q_0 -> 
           (if (((safe_d0_d0 q_0) 1) b_1) then
-            (let rec _lh_append_LH_C_0_0 = (`LH_C(q_0, b_1)) in
-              (let rec _lh_append_LH_C_1_0 = (fun _lh_append_arg2_3 -> 
-                _lh_append_arg2_3) in
+            (let rec _lh_append_LH_C_1_0 = (fun _lh_append_arg2_3 -> 
+              _lh_append_arg2_3) in
+              (let rec _lh_append_LH_C_0_0 = (`LH_C(q_0, b_1)) in
                 (fun _lh_append_arg2_4 -> 
-                  (let rec _lh_append_LH_C_0_1 = _lh_append_LH_C_0_0 in
-                    (let rec _lh_append_LH_C_1_1 = ((append_d1_d0 _lh_append_LH_C_1_0) _lh_append_arg2_4) in
+                  (let rec _lh_append_LH_C_1_1 = ((append_d1_d0 _lh_append_LH_C_1_0) _lh_append_arg2_4) in
+                    (let rec _lh_append_LH_C_0_1 = _lh_append_LH_C_0_0 in
                       (fun _lh_append_arg2_5 -> 
                         (`LH_C(_lh_append_LH_C_0_1, ((append_d0_d0 _lh_append_LH_C_1_1) _lh_append_arg2_5)))))))))
           else
@@ -144,14 +144,14 @@ and testQueenUsingFlatMapBuiltInType_d0_d0 _lh_testQueenUsingFlatMapBuiltInType_
   (nsoln_d0_d0 _lh_testQueenUsingFlatMapBuiltInType_arg1_0);;
 
 (* lumberhack_pop_out *)
-let rec append_d0_d0_d0 _lh_append_arg1_5 _lh_append_arg2_1_5 =
-  (_lh_append_arg1_5 _lh_append_arg2_1_5);;
-let rec append_d0_d0_d1 _lh_append_arg1_3 _lh_append_arg2_1_3 =
+let rec append_d0_d0_d0 _lh_append_arg1_3 _lh_append_arg2_1_3 =
   (_lh_append_arg1_3 _lh_append_arg2_1_3);;
-let rec append_d1_d0_d0 _lh_append_arg1_2 _lh_append_arg2_1_1 =
-  (_lh_append_arg1_2 _lh_append_arg2_1_1);;
-let rec append_d1_d0_d1 _lh_append_arg1_4 _lh_append_arg2_1_4 =
+let rec append_d0_d0_d1 _lh_append_arg1_4 _lh_append_arg2_1_4 =
   (_lh_append_arg1_4 _lh_append_arg2_1_4);;
+let rec append_d1_d0_d0 _lh_append_arg1_2 _lh_append_arg2_1_2 =
+  (_lh_append_arg1_2 _lh_append_arg2_1_2);;
+let rec append_d1_d0_d1 _lh_append_arg1_5 _lh_append_arg2_1_5 =
+  (_lh_append_arg1_5 _lh_append_arg2_1_5);;
 let rec flatMap_d1_d0_d0 _lh_flatMap_arg1_8 _lh_flatMap_arg2_4 =
   (_lh_flatMap_arg2_4 _lh_flatMap_arg1_8);;
 let rec flatMap_d1_d0_d1 _lh_flatMap_arg1_6 _lh_flatMap_arg2_2 =
@@ -172,12 +172,12 @@ let rec safe_d0_d0_d0 _lh_safe_arg1_1 _lh_safe_arg2_1 _lh_safe_arg3_1 =
       (failwith "error"));;
 let rec enumFromTo_d0_d0_d0 a_1 b_3 _lh_popOutId_0_0 =
   (if (a_1 <= b_3) then
-    (let rec _lh_flatMap_LH_C_0_2 = a_1 in
-      (let rec _lh_flatMap_LH_C_1_2 = ((enumFromTo_d0_d0_d0 (a_1 + 1)) b_3) in
+    (let rec _lh_flatMap_LH_C_1_2 = ((enumFromTo_d0_d0_d0 (a_1 + 1)) b_3) in
+      (let rec _lh_flatMap_LH_C_0_2 = a_1 in
         ((append_d1_d0_d1 (_lh_popOutId_0_0 _lh_flatMap_LH_C_0_2)) ((flatMap_d1_d0_d0 _lh_popOutId_0_0) _lh_flatMap_LH_C_1_2))))
   else
-    (fun _lh_append_arg2_1_2 -> 
-      _lh_append_arg2_1_2))
+    (fun _lh_append_arg2_1_1 -> 
+      _lh_append_arg2_1_1))
 and flatMap_d0_d0_d0 _lh_flatMap_arg1_7 _lh_flatMap_arg2_3 =
   (match _lh_flatMap_arg2_3 with
     | `LH_N -> 
@@ -194,12 +194,12 @@ and gen_d0_d0_d0 _lh_gen_arg1_1 _lh_gen_arg2_1 =
       ((flatMap_d0_d0_d0 (fun b_2 -> 
         ((flatMap_d1_d0_d1 (fun q_1 -> 
           (if (((safe_d0_d0_d0 q_1) 1) b_2) then
-            (let rec _lh_append_LH_C_0_2 = (`LH_C(q_1, b_2)) in
-              (let rec _lh_append_LH_C_1_2 = (fun _lh_append_arg2_7 -> 
-                _lh_append_arg2_7) in
+            (let rec _lh_append_LH_C_1_2 = (fun _lh_append_arg2_7 -> 
+              _lh_append_arg2_7) in
+              (let rec _lh_append_LH_C_0_2 = (`LH_C(q_1, b_2)) in
                 (fun _lh_append_arg2_8 -> 
-                  (let rec _lh_append_LH_C_0_3 = _lh_append_LH_C_0_2 in
-                    (let rec _lh_append_LH_C_1_3 = ((append_d1_d0_d0 _lh_append_LH_C_1_2) _lh_append_arg2_8) in
+                  (let rec _lh_append_LH_C_1_3 = ((append_d1_d0_d0 _lh_append_LH_C_1_2) _lh_append_arg2_8) in
+                    (let rec _lh_append_LH_C_0_3 = _lh_append_LH_C_0_2 in
                       (fun _lh_append_arg2_9 -> 
                         (`LH_C(_lh_append_LH_C_0_3, ((append_d0_d0_d0 _lh_append_LH_C_1_3) _lh_append_arg2_9)))))))))
           else

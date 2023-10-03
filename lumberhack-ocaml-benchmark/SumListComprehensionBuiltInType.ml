@@ -52,8 +52,8 @@ let rec sum_d0_d0 _lh_sum_arg1_0 =
   (_lh_sum_arg1_0 99);;
 let rec enumFromTo_d0_d0 a_1 b_1 =
   (if (a_1 <= b_1) then
-    (let rec _lh_listcomp_fun_ls_h_3 = a_1 in
-      (let rec _lh_listcomp_fun_ls_t_3 = ((enumFromTo_d0_d0 (a_1 + 1)) b_1) in
+    (let rec _lh_listcomp_fun_ls_t_3 = ((enumFromTo_d0_d0 (a_1 + 1)) b_1) in
+      (let rec _lh_listcomp_fun_ls_h_3 = a_1 in
         (fun _lh_listcomp_fun_5 -> 
           (let rec _lh_listcomp_fun_6 = (fun _lh_listcomp_fun_para_1 -> 
             ((((_lh_listcomp_fun_para_1 _lh_listcomp_fun_ls_h_3) _lh_listcomp_fun_6) _lh_listcomp_fun_ls_t_3) _lh_listcomp_fun_5)) in
@@ -63,11 +63,11 @@ let rec enumFromTo_d0_d0 a_1 b_1 =
       0))
 and enumFromTo_d1_d0 a_0 b_0 =
   (if (a_0 <= b_0) then
-    (let rec _lh_listcomp_fun_ls_h_0 = a_0 in
-      (let rec _lh_listcomp_fun_ls_t_0 = ((enumFromTo_d1_d0 (a_0 + 1)) b_0) in
+    (let rec _lh_listcomp_fun_ls_t_0 = ((enumFromTo_d1_d0 (a_0 + 1)) b_0) in
+      (let rec _lh_listcomp_fun_ls_h_0 = a_0 in
         (fun _lh_listcomp_fun_ls_h_1 _lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_1 _lh_listcomp_fun_1 -> 
-          (let rec _lh_sum_LH_C_0_0 = (_lh_listcomp_fun_ls_h_1 * _lh_listcomp_fun_ls_h_0) in
-            (let rec _lh_sum_LH_C_1_0 = (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0) in
+          (let rec _lh_sum_LH_C_1_0 = (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0) in
+            (let rec _lh_sum_LH_C_0_0 = (_lh_listcomp_fun_ls_h_1 * _lh_listcomp_fun_ls_h_0) in
               (fun _lh_dummy_0 -> 
                 (_lh_sum_LH_C_0_0 + (sum_d0_d0 _lh_sum_LH_C_1_0))))))))
   else
@@ -85,28 +85,28 @@ let rec sum_d0_d0_d1 _lh_sum_arg1_1 =
   (_lh_sum_arg1_1 99);;
 let rec enumFromTo_d0_d0_d0 a_2 b_2 _lh_popOutId_0_0 =
   (if (a_2 <= b_2) then
-    (let rec _lh_listcomp_fun_ls_h_4 = a_2 in
-      (let rec _lh_listcomp_fun_ls_t_4 = ((enumFromTo_d0_d0_d0 (a_2 + 1)) b_2) in
-        (let rec _lh_listcomp_fun_9 = (fun _lh_listcomp_fun_para_2 -> 
-          ((((_lh_listcomp_fun_para_2 _lh_listcomp_fun_ls_h_4) _lh_listcomp_fun_9) _lh_listcomp_fun_ls_t_4) _lh_popOutId_0_0)) in
-          (_lh_listcomp_fun_9 ((enumFromTo_d1_d0_d0 1) _lh_listcomp_fun_ls_h_4)))))
+    (let rec _lh_listcomp_fun_ls_t_4 = ((enumFromTo_d0_d0_d0 (a_2 + 1)) b_2) in
+      (let rec _lh_listcomp_fun_ls_h_4 = a_2 in
+        (let rec _lh_listcomp_fun_1_0 = (fun _lh_listcomp_fun_para_3 -> 
+          ((((_lh_listcomp_fun_para_3 _lh_listcomp_fun_ls_h_4) _lh_listcomp_fun_1_0) _lh_listcomp_fun_ls_t_4) _lh_popOutId_0_0)) in
+          (_lh_listcomp_fun_1_0 ((enumFromTo_d1_d0_d0 1) _lh_listcomp_fun_ls_h_4)))))
   else
     (fun _lh_dummy_2 -> 
       0))
 and enumFromTo_d1_d0_d0 a_3 b_3 _lh_popOutId_0_1 _lh_popOutId_1_0 _lh_popOutId_2_0 _lh_popOutId_3_0 =
   (if (a_3 <= b_3) then
     (fun _lh_dummy_3 -> 
-      (let rec _lh_listcomp_fun_ls_h_5 = a_3 in
-        (let rec _lh_listcomp_fun_ls_t_5 = ((enumFromTo_d1_d0_d0 (a_3 + 1)) b_3) in
-          (let rec _lh_sum_LH_C_0_1 = (_lh_popOutId_0_1 * _lh_listcomp_fun_ls_h_5) in
-            (let rec _lh_sum_LH_C_1_1 = (_lh_popOutId_1_0 _lh_listcomp_fun_ls_t_5) in
+      (let rec _lh_listcomp_fun_ls_t_5 = ((enumFromTo_d1_d0_d0 (a_3 + 1)) b_3) in
+        (let rec _lh_listcomp_fun_ls_h_5 = a_3 in
+          (let rec _lh_sum_LH_C_1_1 = (_lh_popOutId_1_0 _lh_listcomp_fun_ls_t_5) in
+            (let rec _lh_sum_LH_C_0_1 = (_lh_popOutId_0_1 * _lh_listcomp_fun_ls_h_5) in
               (_lh_sum_LH_C_0_1 + (sum_d0_d0_d0 _lh_sum_LH_C_1_1)))))))
   else
     (_lh_popOutId_3_0 _lh_popOutId_2_0))
 and testSumListComprehensionBuiltInType_d0_d0_d0 _lh_testSumListComprehensionBuiltInType_arg1_1 =
-  (sum_d0_d0_d1 (let rec _lh_listcomp_fun_1_1 = (fun _lh_listcomp_fun_para_3 -> 
-    (_lh_listcomp_fun_para_3 _lh_listcomp_fun_1_1)) in
-    (_lh_listcomp_fun_1_1 ((enumFromTo_d0_d0_d0 1) _lh_testSumListComprehensionBuiltInType_arg1_1))));;
+  (sum_d0_d0_d1 (let rec _lh_listcomp_fun_8 = (fun _lh_listcomp_fun_para_2 -> 
+    (_lh_listcomp_fun_para_2 _lh_listcomp_fun_8)) in
+    (_lh_listcomp_fun_8 ((enumFromTo_d0_d0_d0 1) _lh_testSumListComprehensionBuiltInType_arg1_1))));;
 
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_SumListComprehensionBuiltInType" (fun () -> ignore ((testSumListComprehensionBuiltInType_d0 1000)));

@@ -56,8 +56,8 @@ let rec map_d0 f_0 ls_2 =
 let rec map_d1 f_1 ls_3 =
   (match ls_3 with
     | `C(h_1, t_1) -> 
-      (let rec h_2 = (f_1 h_1) in
-        (let rec t_2 = ((map_d1 f_1) t_1) in
+      (let rec t_2 = ((map_d1 f_1) t_1) in
+        (let rec h_2 = (f_1 h_1) in
           (fun f_2 -> 
             (`C((f_2 h_2), ((map_d0 f_2) t_2))))))
     | `N -> 
@@ -86,8 +86,8 @@ let rec map_d0_d1 f_8 ls_1_0 =
 let rec map_d1_d0 f_4 ls_5 _lh_popOutId_0_0 =
   (match ls_5 with
     | `C(h_3, t_3) -> 
-      (let rec h_4 = (f_4 h_3) in
-        (let rec t_4 = ((map_d1_d0 f_4) t_3) in
+      (let rec t_4 = ((map_d1_d0 f_4) t_3) in
+        (let rec h_4 = (f_4 h_3) in
           (`C((_lh_popOutId_0_0 h_4), ((map_d0_d1 _lh_popOutId_0_0) t_4)))))
     | `N -> 
       (`N))

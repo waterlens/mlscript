@@ -65,8 +65,8 @@ last(C(1, C(2, N)))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ last₀([C 1 
-//│ 	let hh² = 2
-//│ 	in let tt² = (fun h³ -> [Some h³])
+//│ 	let tt² = (fun h³ -> [Some h³])
+//│ 	in let hh² = 2
 //│ 	in (fun h² -> last₀([C hh² tt²]))])
 //│ def last₀(xs²) = 
 //│ 	case xs² of {
@@ -83,8 +83,8 @@ last(C(1, C(2, N)))
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
 //│ last₀₀([C 1 
-//│ 	let hh¹ = 2
-//│ 	in let tt¹ = (fun h⁵ -> [Some h⁵])
+//│ 	let tt¹ = (fun h⁵ -> [Some h⁵])
+//│ 	in let hh¹ = 2
 //│ 	in (fun h⁶ -> last₀₁([C hh¹ tt¹]))])
 //│ def last₀₀(xs²) = 
 //│ 	case xs² of {
@@ -99,45 +99,45 @@ last(C(1, C(2, N)))
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C hh¹ tt¹]: 47 --->
 //│ 	case xs¹ of {C h³ t¹ => t¹(h³) | N  => [None]}: 29
-//│ [C 1 let hh¹ = 2
-//│ in let tt¹ = (fun h⁵ -> [Some h⁵])
+//│ [C 1 let tt¹ = (fun h⁵ -> [Some h⁵])
+//│ in let hh¹ = 2
 //│ in (fun h⁶ -> last₀₁([C hh¹ tt¹]))]: 52 --->
 //│ 	case xs² of {C h⁴ t² => t²(h⁴) | N  => [None]}: 36
 //│ ------------------
 //│ case xs¹ of {C h³ t¹ => t¹(h³) | N  => [None]}: 29 --->
 //│ 	[C hh¹ tt¹]: 47
 //│ case xs² of {C h⁴ t² => t²(h⁴) | N  => [None]}: 36 --->
-//│ 	[C 1 let hh¹ = 2
-//│ in let tt¹ = (fun h⁵ -> [Some h⁵])
+//│ 	[C 1 let tt¹ = (fun h⁵ -> [Some h⁵])
+//│ in let hh¹ = 2
 //│ in (fun h⁶ -> last₀₁([C hh¹ tt¹]))]: 52
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [C hh¹ tt¹]: 47 --->
 //│ 	case xs¹ of {C h³ t¹ => t¹(h³) | N  => [None]}: 29
-//│ [C 1 let hh¹ = 2
-//│ in let tt¹ = (fun h⁵ -> [Some h⁵])
+//│ [C 1 let tt¹ = (fun h⁵ -> [Some h⁵])
+//│ in let hh¹ = 2
 //│ in (fun h⁶ -> last₀₁([C hh¹ tt¹]))]: 52 --->
 //│ 	case xs² of {C h⁴ t² => t²(h⁴) | N  => [None]}: 36
 //│ ------------------
 //│ case xs¹ of {C h³ t¹ => t¹(h³) | N  => [None]}: 29 --->
 //│ 	[C hh¹ tt¹]: 47
 //│ case xs² of {C h⁴ t² => t²(h⁴) | N  => [None]}: 36 --->
-//│ 	[C 1 let hh¹ = 2
-//│ in let tt¹ = (fun h⁵ -> [Some h⁵])
+//│ 	[C 1 let tt¹ = (fun h⁵ -> [Some h⁵])
+//│ in let hh¹ = 2
 //│ in (fun h⁶ -> last₀₁([C hh¹ tt¹]))]: 52
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ last₀₀(
-//│ 	let h⁷ = 1
-//│ 	in let t³ = 	
-//│ 		let hh² = 2
-//│ 		in let tt² = (fun h⁸ -> [Some h⁸])
+//│ 	let t³ = 	
+//│ 		let tt² = (fun h⁸ -> [Some h⁸])
+//│ 		in let hh² = 2
 //│ 		in (fun h⁹ -> last₀₁(
-//│ 			let h¹⁰ = hh²
-//│ 			in let t⁴ = tt²
+//│ 			let t⁴ = tt²
+//│ 			in let h¹⁰ = hh²
 //│ 			in (fun _lh_dummy¹ -> t⁴(h¹⁰))))
+//│ 	in let h⁷ = 1
 //│ 	in (fun _lh_dummy⁰ -> t³(h⁷)))
 //│ def last₀₀(xs⁴) = 
 //│ 	xs⁴(99)

@@ -108,11 +108,11 @@ main
 //│ 			ls⁶(acc⁴)
 //│ 	def upto₀(a², b²) = 
 //│ 		if (a² > b²) then (fun f² -> (fun acc² -> acc²)) else 
-//│ 			let h⁴ = a²
-//│ 			in let t⁴ = upto₀((a² + 1), b²)
+//│ 			let t⁴ = upto₀((a² + 1), b²)
+//│ 			in let h⁴ = a²
 //│ 			in (fun f³ -> 
-//│ 				let h⁵ = f³(h⁴)
-//│ 				in let t⁵ = map₀(f³, t⁴)
+//│ 				let t⁵ = map₀(f³, t⁴)
+//│ 				in let h⁵ = f³(h⁴)
 //│ 				in (fun acc³ -> summ₀((acc³ + h⁵), t⁵)))
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -217,11 +217,11 @@ main
 //│ 		ls⁵(99)
 //│ 	def upto₀(a², b²) = 
 //│ 		if (a² > b²) then (fun f³ -> (fun _lh_dummy⁰ -> 0)) else 
-//│ 			let h⁴ = a²
-//│ 			in let t⁴ = upto₀((a² + 1), b²)
+//│ 			let t⁴ = upto₀((a² + 1), b²)
+//│ 			in let h⁴ = a²
 //│ 			in (fun f⁴ -> 
-//│ 				let h⁵ = f⁴(h⁴)
-//│ 				in let t⁵ = map₀(f⁴, t⁴)
+//│ 				let t⁵ = map₀(f⁴, t⁴)
+//│ 				in let h⁵ = f⁴(h⁴)
 //│ 				in (fun _lh_dummy¹ -> (h⁵ + sum₀(t⁵))))
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -488,16 +488,16 @@ main
 //│ 	def append2₀(xs⁴, ys⁴) = 
 //│ 		case xs⁴ of {
 //│ 			C h³ t³ => 
-//│ 				let h⁶ = h³
-//│ 				in let t⁶ = append2₀(t³, ys⁴)
+//│ 				let t⁶ = append2₀(t³, ys⁴)
+//│ 				in let h⁶ = h³
 //│ 				in (fun ys⁵ -> [C h⁶ append₀(t⁶, ys⁵)])
 //│ 			| N  => idList₀(ys⁴)}
 //│ 		where
 //│ 		def idList₀(ls²) = 
 //│ 			case ls² of {
 //│ 				C h⁵ t⁵ => 
-//│ 					let h⁷ = h⁵
-//│ 					in let t⁷ = idList₀(t⁵)
+//│ 					let t⁷ = idList₀(t⁵)
+//│ 					in let h⁷ = h⁵
 //│ 					in (fun ys⁷ -> [C h⁷ append₀(t⁷, ys⁷)])
 //│ 				| N  => (fun ys⁸ -> ys⁸)}
 //│ 	def append₀(xs⁵, ys⁶) = 
@@ -631,18 +631,18 @@ main
 //│ 	def map₀(ls⁴, f⁴) = 
 //│ 		case ls⁴ of {
 //│ 			C h³ t³ => 
-//│ 				let h⁷ = f⁴(h³)
-//│ 				in let t⁷ = map₀(t³, f⁴)
+//│ 				let t⁷ = map₀(t³, f⁴)
+//│ 				in let h⁷ = f⁴(h³)
 //│ 				in (fun ys⁴ -> 
-//│ 					let h⁸ = h⁷
-//│ 					in let t⁸ = append₁(t⁷, ys⁴)
+//│ 					let t⁸ = append₁(t⁷, ys⁴)
+//│ 					in let h⁸ = h⁷
 //│ 					in (fun ys⁵ -> [C h⁸ append₀(t⁸, ys⁵)]))
 //│ 			| N  => (fun ys⁶ -> ys⁶)}
 //│ 	def map₁(ls⁵, f⁵) = 
 //│ 		case ls⁵ of {
 //│ 			C h⁶ t⁶ => 
-//│ 				let h⁹ = f⁵(h⁶)
-//│ 				in let t⁹ = map₁(t⁶, f⁵)
+//│ 				let t⁹ = map₁(t⁶, f⁵)
+//│ 				in let h⁹ = f⁵(h⁶)
 //│ 				in (fun ys⁷ -> [C h⁹ append₀(t⁹, ys⁷)])
 //│ 			| N  => (fun ys⁸ -> ys⁸)}
 //│ 	def map₂(ls⁶, f⁶) = 
@@ -723,8 +723,8 @@ main
 //│ 	def append₁(xs³, ys³) = 
 //│ 		case xs³ of {
 //│ 			C h¹ t¹ => 
-//│ 				let h³ = h¹
-//│ 				in let t³ = append₁(t¹, ys³)
+//│ 				let t³ = append₁(t¹, ys³)
+//│ 				in let h³ = h¹
 //│ 				in (fun ys⁴ -> [C h³ append₀(t³, ys⁴)])
 //│ 			| N  => ys³}
 //│ <<<<<<< after fusion <<<<<<<
@@ -807,11 +807,11 @@ main
 //│ main₀
 //│ def main₀(x², y²) = 
 //│ 	append₀(append₁(x², 
-//│ 		let h⁴ = 1
-//│ 		in let t⁴ = 	
-//│ 			let h⁵ = 2
-//│ 			in let t⁵ = (fun ys⁸ -> ys⁸)
+//│ 		let t⁴ = 	
+//│ 			let t⁵ = (fun ys⁸ -> ys⁸)
+//│ 			in let h⁵ = 2
 //│ 			in (fun ys⁷ -> [C h⁵ append₀(t⁵, ys⁷)])
+//│ 		in let h⁴ = 1
 //│ 		in (fun ys⁶ -> [C h⁴ append₀(t⁴, ys⁶)])), y²)
 //│ 	where
 //│ 	def append₀(xs³, ys³) = 
@@ -819,8 +819,8 @@ main
 //│ 	def append₁(xs⁴, ys⁴) = 
 //│ 		case xs⁴ of {
 //│ 			C h² t² => 
-//│ 				let h³ = h²
-//│ 				in let t³ = append₁(t², ys⁴)
+//│ 				let t³ = append₁(t², ys⁴)
+//│ 				in let h³ = h²
 //│ 				in (fun ys⁵ -> [C h³ append₀(t³, ys⁵)])
 //│ 			| N  => ys⁴}
 //│ <<<<<<< after fusion <<<<<<<
@@ -900,8 +900,8 @@ ff
 //│ 	def flip₁(t⁵) = 
 //│ 		case t⁵ of {
 //│ 			T l¹ r¹ => 
-//│ 				let l³ = flip₁(l¹)
-//│ 				in let r³ = flip₁(r¹)
+//│ 				let r³ = flip₁(r¹)
+//│ 				in let l³ = flip₁(l¹)
 //│ 				in (fun _lh_dummy⁰ -> [T flip₀(l³) flip₀(r³)])
 //│ 			| N v¹ => 
 //│ 				let v³ = v¹
@@ -988,8 +988,8 @@ main
 //│ 				let v⁴ = (v³ * v³)
 //│ 				in (fun _lh_dummy⁰ -> v⁴)
 //│ 			| T l³ r³ => 
-//│ 				let l⁴ = squaretr₀(l³)
-//│ 				in let r⁴ = squaretr₀(r³)
+//│ 				let r⁴ = squaretr₀(r³)
+//│ 				in let l⁴ = squaretr₀(l³)
 //│ 				in (fun _lh_dummy¹ -> (sumtr₀(l⁴) + sumtr₀(r⁴)))}
 //│ 	def sumtr₀(t⁶) = 
 //│ 		t⁶(99)

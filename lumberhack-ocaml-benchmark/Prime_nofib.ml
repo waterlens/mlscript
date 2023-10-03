@@ -98,11 +98,11 @@ let rec isdivs_d0_d0 _lh_isdivs_arg1_0 _lh_isdivs_arg2_0 =
 let rec map_lz_d0_d0 f_0 ls_0 =
   (lazy ((Lazy.force ls_0) f_0));;
 let rec iterate_d0_d0 f_2 x_0 =
-  (lazy (let rec h_1 = x_0 in
-    (let rec t_1 = ((iterate_d0_d0 f_2) (f_2 x_0)) in
+  (lazy (let rec t_1 = ((iterate_d0_d0 f_2) (f_2 x_0)) in
+    (let rec h_1 = x_0 in
       (fun f_3 -> 
-        (let rec h_2 = (f_3 h_1) in
-          (let rec t_2 = ((map_lz_d0_d0 f_3) t_1) in
+        (let rec t_2 = ((map_lz_d0_d0 f_3) t_1) in
+          (let rec h_2 = (f_3 h_1) in
             (fun n_1 -> 
               (if (n_1 = 0) then
                 h_2
@@ -157,11 +157,11 @@ let rec map_lz_d0_d0_d0 f_8 ls_7 =
 let rec map_lz_d0_d0_d1 f_5 ls_5 =
   (lazy ((Lazy.force ls_5) f_5));;
 let rec iterate_d0_d0_d0 f_6 x_1 =
-  (lazy (let rec h_5 = x_1 in
-    (let rec t_5 = ((iterate_d0_d0_d0 f_6) (f_6 x_1)) in
+  (lazy (let rec t_5 = ((iterate_d0_d0_d0 f_6) (f_6 x_1)) in
+    (let rec h_5 = x_1 in
       (fun f_7 -> 
-        (let rec h_6 = (f_7 h_5) in
-          (let rec t_6 = ((map_lz_d0_d0_d0 f_7) t_5) in
+        (let rec t_6 = ((map_lz_d0_d0_d0 f_7) t_5) in
+          (let rec h_6 = (f_7 h_5) in
             (fun n_3 -> 
               (if (n_3 = 0) then
                 h_6

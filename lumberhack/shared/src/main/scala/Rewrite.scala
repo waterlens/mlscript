@@ -416,7 +416,7 @@ trait ExprRewrite { this: Expr =>
           else
             res
         }
-        val fused = (newIds zip newArgs).foldRight[Expr](inner){case (((_, param), argExpr), acc) => 
+        val fused = (newIds zip newArgs).foldLeft[Expr](inner){case (acc, ((_, param), argExpr)) => 
           // LetIn(param, Call(Ref(newd.lumberhackKeywordsIds("lazy")), argExpr.rewriteFusion), acc)
           LetIn(param, argExpr.rewriteFusion, acc)
         }

@@ -63,11 +63,11 @@ rev(C(1, C(2, N)), N)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ rev₀(
-//│ 	let h² = 1
-//│ 	in let t² = 	
-//│ 		let h³ = 2
-//│ 		in let t³ = (fun a⁴ -> a⁴)
+//│ 	let t² = 	
+//│ 		let t³ = (fun a⁴ -> a⁴)
+//│ 		in let h³ = 2
 //│ 		in (fun a³ -> rev₀(t³, [C h³ a³]))
+//│ 	in let h² = 1
 //│ 	in (fun a² -> rev₀(t², [C h² a²])), [N])
 //│ def rev₀(ys², a⁵) = 
 //│ 	ys²(a⁵)
@@ -139,11 +139,11 @@ rev(C(1, C(2, N)))(N)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ rev₀(
-//│ 	let h² = 1
-//│ 	in let t² = 	
-//│ 		let h³ = 2
-//│ 		in let t³ = (fun a⁶ -> a⁶)
+//│ 	let t² = 	
+//│ 		let t³ = (fun a⁶ -> a⁶)
+//│ 		in let h³ = 2
 //│ 		in (fun a⁵ -> rev₀(t³, [C h³ a⁵]))
+//│ 	in let h² = 1
 //│ 	in (fun a⁴ -> rev₀(t², [C h² a⁴])), [N])
 //│ def rev₀(ys²) = 
 //│ 	ys²
@@ -236,8 +236,8 @@ map(rev(primitive, N), ff)
 //│ def rev₀(ys², a²) = 
 //│ 	case ys² of {
 //│ 		C h³ t³ => rev₀(t³, 
-//│ 			let h⁴ = h³
-//│ 			in let t⁴ = a²
+//│ 			let t⁴ = a²
+//│ 			in let h⁴ = h³
 //│ 			in (fun f⁴ -> [C f⁴(h⁴) map₀(t⁴, f⁴)]))
 //│ 		| N  => a²}
 //│ <<<<<<< after fusion <<<<<<<
@@ -325,8 +325,8 @@ map(rev(primitive, N), ff)
 //│ def rev₀(ys², a²) = 
 //│ 	case ys² of {
 //│ 		C h³ t³ => rev₀(t³, 
-//│ 			let h⁴ = h³
-//│ 			in let t⁴ = a²
+//│ 			let t⁴ = a²
+//│ 			in let h⁴ = h³
 //│ 			in (fun f⁵ -> [C f⁵(h⁴) map₀(t⁴, f⁵)]))
 //│ 		| N  => a²}
 //│ <<<<<<< after fusion <<<<<<<
@@ -413,8 +413,8 @@ rev(N, map(primitive, ff))
 //│ def map₀(xs², f²) = 
 //│ 	case xs² of {
 //│ 		C h³ t³ => 
-//│ 			let h⁴ = f²(h³)
-//│ 			in let t⁴ = map₀(t³, f²)
+//│ 			let t⁴ = map₀(t³, f²)
+//│ 			in let h⁴ = f²(h³)
 //│ 			in (fun a³ -> rev₀([C h⁴ a³], t⁴))
 //│ 		| N  => (fun a⁴ -> a⁴)}
 //│ def rev₀(a², ys²) = 
@@ -503,8 +503,8 @@ rev(map(primitive, ff), N)
 //│ def map₀(xs²) = 
 //│ 	case xs² of {
 //│ 		C h³ t³ => (fun f⁴ -> 
-//│ 			let h⁴ = f⁴(h³)
-//│ 			in let t⁴ = map₀(t³, f⁴)
+//│ 			let t⁴ = map₀(t³, f⁴)
+//│ 			in let h⁴ = f⁴(h³)
 //│ 			in (fun a⁴ -> rev₀(t⁴, [C h⁴ a⁴])))
 //│ 		| N  => (fun f⁵ -> (fun a⁵ -> a⁵))}
 //│ def rev₀(ys²) = 

@@ -721,18 +721,18 @@ testBernoulli_nofib $ primId 1500
 //│ 			if (n⁷ < 0) then error⁰ else force⁰(ls²⁶, n⁷)
 //│ 		def enumFromTo₀₀(a¹¹, b⁹) = 
 //│ 			if (a¹¹ <= b⁹) then 
-//│ 				let hx¹¹ = a¹¹
-//│ 				in let tx¹¹ = enumFromTo₀₀((a¹¹ + 1), b⁹)
+//│ 				let tx¹¹ = enumFromTo₀₀((a¹¹ + 1), b⁹)
+//│ 				in let hx¹¹ = a¹¹
 //│ 				in (fun ys¹⁶ -> case force⁰(ys¹⁶) of {
 //│ 					LH_C hy⁹ ty⁹ => 
-//│ 						let _lh_listcomp_fun_ls_h² = 	
-//│ 							let _lh_bernoulli_LH_P2_0² = hx¹¹
-//│ 							in let _lh_bernoulli_LH_P2_1² = hy⁹
+//│ 						let _lh_listcomp_fun_ls_t² = zip_nl_lz₀₀(tx¹¹, ty⁹)
+//│ 						in let _lh_listcomp_fun_ls_h² = 	
+//│ 							let _lh_bernoulli_LH_P2_1² = hy⁹
+//│ 							in let _lh_bernoulli_LH_P2_0² = hx¹¹
 //│ 							in (fun _lh_listcomp_fun_ls_t³ -> (fun _lh_listcomp_fun³ -> (fun powers³ -> 
-//│ 								let h²⁰ = ((sum₁₀(zipWith_lz_nl₀₀((fun a¹² -> (fun b¹⁰ -> (a¹² * b¹⁰))), powers³, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1²)))) - _lh_bernoulli_LH_P2_0²) / (_lh_bernoulli_LH_P2_0² + 1))
-//│ 								in let t²⁰ = _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)
+//│ 								let t²⁰ = _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)
+//│ 								in let h²⁰ = ((sum₁₀(zipWith_lz_nl₀₀((fun a¹² -> (fun b¹⁰ -> (a¹² * b¹⁰))), powers³, tail₀₀(tail₁₀(_lh_bernoulli_LH_P2_1²)))) - _lh_bernoulli_LH_P2_0²) / (_lh_bernoulli_LH_P2_0² + 1))
 //│ 								in (fun _lh_dummy⁰ -> (h²⁰ + sum₀₀(t²⁰))))))
-//│ 						in let _lh_listcomp_fun_ls_t² = zip_nl_lz₀₀(tx¹¹, ty⁹)
 //│ 						in (fun _lh_listcomp_fun² -> (fun powers² -> _lh_listcomp_fun_ls_h²(_lh_listcomp_fun_ls_t², _lh_listcomp_fun², powers²)))
 //│ 					| LH_N  => (fun _lh_listcomp_fun⁴ -> (fun powers⁴ -> (fun _lh_dummy¹ -> 0)))}) else (fun ys¹⁷ -> (fun _lh_listcomp_fun⁵ -> (fun powers⁵ -> (fun _lh_dummy² -> 0))))
 //│ 		def neg_powers₀₀ = 
@@ -740,22 +740,22 @@ testBernoulli_nofib $ primId 1500
 //│ 			where
 //│ 			def iterate₀₀(f²⁶, x⁵) = 
 //│ 				lazy⁰(
-//│ 					let hx¹³ = x⁵
-//│ 					in let tx¹³ = iterate₀₀(f²⁶, f²⁶(x⁵))
+//│ 					let tx¹³ = iterate₀₀(f²⁶, f²⁶(x⁵))
+//│ 					in let hx¹³ = x⁵
 //│ 					in (fun f²⁷ -> (fun ys²³ -> case force⁰(ys²³) of {
 //│ 						LH_C hy⁷ ty⁷ => 
-//│ 							let hx¹⁴ = f²⁷(hx¹³, hy⁷)
-//│ 							in let tx¹⁴ = zipWith_lz_lz₁₀(f²⁷, tx¹³, ty⁷)
+//│ 							let tx¹⁴ = zipWith_lz_lz₁₀(f²⁷, tx¹³, ty⁷)
+//│ 							in let hx¹⁴ = f²⁷(hx¹³, hy⁷)
 //│ 							in (fun f²⁸ -> (fun hy¹⁰ -> (fun ty¹⁰ -> 
-//│ 								let h²² = f²⁸(hx¹⁴, hy¹⁰)
-//│ 								in let t²² = zipWith_lz_nl₀₀(f²⁸, tx¹⁴, ty¹⁰)
+//│ 								let t²² = zipWith_lz_nl₀₀(f²⁸, tx¹⁴, ty¹⁰)
+//│ 								in let h²² = f²⁸(hx¹⁴, hy¹⁰)
 //│ 								in (fun _lh_dummy⁴ -> (h²² + sum₁₀(t²²))))))
 //│ 						| LH_N  => (fun f²⁹ -> (fun hy¹¹ -> (fun ty¹¹ -> (fun _lh_dummy⁵ -> 0))))})))
 //│ 			def map_lz₀₀(f¹⁹, ls¹⁹) = 
 //│ 				lazy⁰(case force⁰(ls¹⁹) of {
 //│ 					LH_C h¹⁴ t¹⁴ => 
-//│ 						let h²¹ = f¹⁹(h¹⁴)
-//│ 						in let t²¹ = map_lz₀₀(f¹⁹, t¹⁴)
+//│ 						let t²¹ = map_lz₀₀(f¹⁹, t¹⁴)
+//│ 						in let h²¹ = f¹⁹(h¹⁴)
 //│ 						in (fun n⁴ -> if (n⁴ == 0) then h²¹ else atIndex_lz₀₀((n⁴ - 1), t²¹))
 //│ 					| LH_N  => (fun n⁵ -> error⁰)})
 //│ 			def powers₀₀ = 
@@ -781,8 +781,8 @@ testBernoulli_nofib $ primId 1500
 //│ 				lazy⁰(force⁰(xs¹⁴, f²¹, ys¹⁸))
 //│ 		def pascal₀₀ = 
 //│ 			lazy⁰([LH_C [LH_C 1 [LH_C 2 [LH_C 1 [LH_N]]]] map_lz₂₀((fun line² -> zipWith₀₀((fun a¹⁰ -> (fun b⁸ -> (a¹⁰ + b⁸))), mappend₀₀(line², 
-//│ 				let hx¹⁰ = 0
-//│ 				in let tx¹⁰ = (fun f¹⁸ -> (fun ys¹⁵ -> [LH_N]))
+//│ 				let tx¹⁰ = (fun f¹⁸ -> (fun ys¹⁵ -> [LH_N]))
+//│ 				in let hx¹⁰ = 0
 //│ 				in (fun f¹⁷ -> (fun ys¹⁴ -> case ys¹⁴ of {
 //│ 					LH_C hy⁸ ty⁸ => [LH_C f¹⁷(hx¹⁰, hy⁸) zipWith₀₀(f¹⁷, tx¹⁰, ty⁸)]
 //│ 					| LH_N  => [LH_N]}))), [LH_C 0 line²])), pascal₀₀)])
@@ -794,8 +794,8 @@ testBernoulli_nofib $ primId 1500
 //│ 			def mappend₀₀(xs¹⁷, ys²¹) = 
 //│ 				case xs¹⁷ of {
 //│ 					LH_C h¹⁶ t¹⁶ => 
-//│ 						let hx¹² = h¹⁶
-//│ 						in let tx¹² = mappend₀₀(t¹⁶, ys²¹)
+//│ 						let tx¹² = mappend₀₀(t¹⁶, ys²¹)
+//│ 						in let hx¹² = h¹⁶
 //│ 						in (fun f²⁵ -> (fun ys²² -> case ys²² of {
 //│ 							LH_C hy⁸ ty⁸ => [LH_C f²⁵(hx¹², hy⁸) zipWith₀₀(f²⁵, tx¹², ty⁸)]
 //│ 							| LH_N  => [LH_N]}))

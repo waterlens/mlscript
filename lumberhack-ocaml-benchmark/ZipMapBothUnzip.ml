@@ -77,17 +77,17 @@ and unzip_d0 ls_0 =
         | `Pair(a_0, b_0) -> 
           (match (unzip_d0 t_0) with
             | `Pair(atail_0, btail_0) -> 
-              (`Pair((let rec h_1 = a_0 in
-                (let rec t_1 = atail_0 in
+              (`Pair((let rec t_1 = atail_0 in
+                (let rec h_1 = a_0 in
                   (fun f_0 -> 
-                    (let rec x_0 = (f_0 h_1) in
-                      (let rec xt_0 = ((map_d0 f_0) t_1) in
+                    (let rec xt_0 = ((map_d0 f_0) t_1) in
+                      (let rec x_0 = (f_0 h_1) in
                         (fun ys_1 -> 
-                          ((ys_1 xt_0) x_0))))))), (let rec h_2 = b_0 in
-                (let rec t_2 = btail_0 in
+                          ((ys_1 xt_0) x_0))))))), (let rec t_2 = btail_0 in
+                (let rec h_2 = b_0 in
                   (fun f_1 -> 
-                    (let rec y_0 = (f_1 h_2) in
-                      (let rec yt_0 = ((map_d1 f_1) t_2) in
+                    (let rec yt_0 = ((map_d1 f_1) t_2) in
+                      (let rec y_0 = (f_1 h_2) in
                         (fun xt_1 x_1 -> 
                           (`C((`Pair(x_1, y_0)), ((zip_d0 xt_1) yt_0)))))))))))))
     | `N -> 
@@ -101,12 +101,12 @@ let rec makeZippedList_d0_d0 n_2 =
     (`C((`Pair(n_2, (n_2 + 1))), (makeZippedList_d0_d0 (n_2 - 1))))
   else
     (`N));;
-let rec map_d0_d0 f_6 ls_3 =
-  (ls_3 f_6);;
+let rec map_d0_d0 f_8 ls_5 =
+  (ls_5 f_8);;
 let rec map_d0_d1 f_1_3 ls_7 =
   (ls_7 f_1_3);;
-let rec map_d1_d0 f_8 ls_5 =
-  (ls_5 f_8);;
+let rec map_d1_d0 f_6 ls_3 =
+  (ls_3 f_6);;
 let rec map_d1_d1 f_7 ls_4 =
   (ls_4 f_7);;
 let rec zip_d0_d0 xs_4 ys_8 =
@@ -126,17 +126,17 @@ and unzip_d0_d0 ls_6 =
         | `Pair(a_1, b_1) -> 
           (match (unzip_d0_d0 t_3) with
             | `Pair(atail_1, btail_1) -> 
-              (`Pair((let rec h_4 = a_1 in
-                (let rec t_4 = atail_1 in
+              (`Pair((let rec t_4 = atail_1 in
+                (let rec h_4 = a_1 in
                   (fun f_9 -> 
-                    (let rec x_7 = (f_9 h_4) in
-                      (let rec xt_3 = ((map_d0_d1 f_9) t_4) in
+                    (let rec xt_3 = ((map_d0_d1 f_9) t_4) in
+                      (let rec x_7 = (f_9 h_4) in
                         (fun ys_6 -> 
-                          ((ys_6 xt_3) x_7))))))), (let rec h_5 = b_1 in
-                (let rec t_5 = btail_1 in
+                          ((ys_6 xt_3) x_7))))))), (let rec t_5 = btail_1 in
+                (let rec h_5 = b_1 in
                   (fun f_1_0 -> 
-                    (let rec y_1 = (f_1_0 h_5) in
-                      (let rec yt_1 = ((map_d1_d1 f_1_0) t_5) in
+                    (let rec yt_1 = ((map_d1_d1 f_1_0) t_5) in
+                      (let rec y_1 = (f_1_0 h_5) in
                         (fun xt_4 x_8 -> 
                           (`C((`Pair(x_8, y_1)), ((zip_d0_d0 xt_4) yt_1)))))))))))))
     | `N -> 

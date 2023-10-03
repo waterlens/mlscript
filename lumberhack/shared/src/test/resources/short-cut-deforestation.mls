@@ -77,8 +77,8 @@ all
 //│ 	def map₀(ls², f²) = 
 //│ 		case ls² of {
 //│ 			C h³ t³ => 
-//│ 				let h⁴ = f²(h³)
-//│ 				in let t⁴ = map₀(t³, f²)
+//│ 				let t⁴ = map₀(t³, f²)
+//│ 				in let h⁴ = f²(h³)
 //│ 				in (fun _lh_dummy⁰ -> if h⁴ then andd₀(t⁴) else [False])
 //│ 			| N  => (fun _lh_dummy¹ -> [True])}
 //│ <<<<<<< after fusion <<<<<<<
@@ -165,8 +165,8 @@ f
 //│ 	def map₀(ls⁵, f⁶) = 
 //│ 		case ls⁵ of {
 //│ 			C h³ t³ => 
-//│ 				let h⁴ = f⁶(h³)
-//│ 				in let t⁴ = map₀(t³, f⁶)
+//│ 				let t⁴ = map₀(t³, f⁶)
+//│ 				in let h⁴ = f⁶(h³)
 //│ 				in (fun f⁷ -> (fun ok³ -> case h⁴ of {
 //│ 					x² => if odd₀(x²) then [C f⁷(x²) ok³(t⁴)] else ok³(t⁴)}))
 //│ 			| N  => (fun f⁸ -> (fun ok⁴ -> [N]))}
@@ -291,8 +291,8 @@ f(C(1, C(2, C(3, C(4, N)))), x => x + 1, x => x * 2)
 //│ 	def map₀(ls⁵, f⁶) = 
 //│ 		case ls⁵ of {
 //│ 			C h³ t³ => 
-//│ 				let h⁴ = f⁶(h³)
-//│ 				in let t⁴ = map₀(t³, f⁶)
+//│ 				let t⁴ = map₀(t³, f⁶)
+//│ 				in let h⁴ = f⁶(h³)
 //│ 				in (fun f⁷ -> (fun ok³ -> case h⁴ of {
 //│ 					x⁵ => if odd₀(x⁵) then [C f⁷(x⁵) ok³(t⁴)] else ok³(t⁴)}))
 //│ 			| N  => (fun f⁸ -> (fun ok⁴ -> [N]))}
@@ -510,15 +510,15 @@ main(C(
 //│ 	where
 //│ 	def unlines₀(lss⁸) = 
 //│ 		concat₀(map₀(lss⁸, (fun xs¹¹ -> append₀(xs¹¹, 
-//│ 			let h⁷ = [NL]
-//│ 			in let t⁷ = (fun xss⁵ -> concat₀(xss⁵))
+//│ 			let t⁷ = (fun xss⁵ -> concat₀(xss⁵))
+//│ 			in let h⁷ = [NL]
 //│ 			in (fun xss⁴ -> [C h⁷ concatInner₀(t⁷, xss⁴)])))))
 //│ 		where
 //│ 		def append₀(xs⁹, ys²) = 
 //│ 			case xs⁹ of {
 //│ 				C h⁴ t⁴ => 
-//│ 					let h⁶ = h⁴
-//│ 					in let t⁶ = append₀(t⁴, ys²)
+//│ 					let t⁶ = append₀(t⁴, ys²)
+//│ 					in let h⁶ = h⁴
 //│ 					in (fun xss³ -> [C h⁶ concatInner₀(t⁶, xss³)])
 //│ 				| N  => ys²}
 //│ 		def concat₀(lss⁷) = 
@@ -529,8 +529,8 @@ main(C(
 //│ 		def map₀(xs¹⁰, f²) = 
 //│ 			case xs¹⁰ of {
 //│ 				C h³ t³ => 
-//│ 					let hh² = f²(h³)
-//│ 					in let tt² = map₀(t³, f²)
+//│ 					let tt² = map₀(t³, f²)
+//│ 					in let hh² = f²(h³)
 //│ 					in (fun _lh_dummy⁰ -> concatInner₀(hh², tt²))
 //│ 				| N  => (fun _lh_dummy¹ -> [N])}
 //│ <<<<<<< after fusion <<<<<<<

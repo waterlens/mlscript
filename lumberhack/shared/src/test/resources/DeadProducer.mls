@@ -725,16 +725,16 @@ words(C(2, C(1, C(2, C(1, C(2, N))))))
 //│ 	def break₀(p⁵, ls⁷) = 
 //│ 		case ls⁷ of {
 //│ 			N  => 
-//│ 				let w² = [N]
-//│ 				in let s''² = [N]
+//│ 				let s''² = [N]
+//│ 				in let w² = [N]
 //│ 				in (fun _lh_dummy⁰ -> [C w² words₀(s''²)])
 //│ 			| C x⁵ xs³ => if p⁵(x⁵) then 
-//│ 				let w³ = [N]
-//│ 				in let s''³ = [C x⁵ xs³]
+//│ 				let s''³ = [C x⁵ xs³]
+//│ 				in let w³ = [N]
 //│ 				in (fun _lh_dummy¹ -> [C w³ words₀(s''³)]) else case break1₀(p⁵, xs³) of {
 //│ 				P ys³ zs³ => 
-//│ 					let w⁴ = [C x⁵ ys³]
-//│ 					in let s''⁴ = zs³
+//│ 					let s''⁴ = zs³
+//│ 					in let w⁴ = [C x⁵ ys³]
 //│ 					in (fun _lh_dummy² -> [C w⁴ words₀(s''⁴)])}}
 //│ 		where
 //│ 		def break1₀(p⁴, ls⁶) = 
@@ -800,77 +800,77 @@ words(C(2, C(1, C(2, C(1, C(2, N))))))
 //│ words₀(s'') :: '47_callres <: [NoCons] ::: false
 //│ [C w words₀(s'')] :: C('w⁰, '47_callres) ::: true
 //│ (fun _lh_dummy -> [C w words₀(s'')]) :: '_lh_dummy⁰ => C('w⁰, '47_callres) ::: true
-//│ let s'' = [N]
-//│ in (fun _lh_dummy -> [C w words₀(s'')]) :: '_lh_dummy⁰ => C('w⁰, '47_callres) ::: true
 //│ let w = [N]
-//│ in let s'' = [N]
+//│ in (fun _lh_dummy -> [C w words₀(s'')]) :: '_lh_dummy⁰ => C('w⁰, '47_callres) ::: true
+//│ let s'' = [N]
+//│ in let w = [N]
 //│ in (fun _lh_dummy -> [C w words₀(s'')]) :: '_lh_dummy⁰ => C('w⁰, '47_callres) ::: true
 //│ p :: 'p¹ <: ['p⁰ | 'x¹ => '54_callres] ::: false
 //│ x :: 'x¹ <: [NoCons | 'x³ | 'h⁰] ::: false
 //│ p(x) :: '54_callres <: [Destruct(True, False)] ::: false
-//│ [N] :: N ::: true
 //│ x :: 'x¹ <: [NoCons | 'x³ | 'h⁰] ::: false
 //│ xs :: 'xs¹ <: ['ls⁰ | 't⁰] ::: false
 //│ [C x xs] :: C('x¹, 'xs¹) ::: true
+//│ [N] :: N ::: true
 //│ w :: 'w¹ <: [NoCons] ::: false
 //│ words₀ :: 'words₀ <: [C(Int, C(Int, C(Int, C(Int, C(Int, N))))) => '13_callres | 's''⁰ => '47_callres | 's''¹ => '62_callres | 's''² => '79_callres] ::: false
 //│ s'' :: 's''¹ <: ['s⁰] ::: false
 //│ words₀(s'') :: '62_callres <: [NoCons] ::: false
 //│ [C w words₀(s'')] :: C('w¹, '62_callres) ::: true
 //│ (fun _lh_dummy -> [C w words₀(s'')]) :: '_lh_dummy¹ => C('w¹, '62_callres) ::: true
-//│ let s'' = [C x xs]
-//│ in (fun _lh_dummy -> [C w words₀(s'')]) :: '_lh_dummy¹ => C('w¹, '62_callres) ::: true
 //│ let w = [N]
-//│ in let s'' = [C x xs]
+//│ in (fun _lh_dummy -> [C w words₀(s'')]) :: '_lh_dummy¹ => C('w¹, '62_callres) ::: true
+//│ let s'' = [C x xs]
+//│ in let w = [N]
 //│ in (fun _lh_dummy -> [C w words₀(s'')]) :: '_lh_dummy¹ => C('w¹, '62_callres) ::: true
 //│ break1₀ :: 'break1₀ <: ['p⁰ => '28_callres | 'p¹ => '69_callres] ::: false
 //│ p :: 'p¹ <: ['p⁰ | 'x¹ => '54_callres] ::: false
 //│ break1₀(p) :: '69_callres <: ['xs¹ => '71_callres] ::: false
 //│ xs :: 'xs¹ <: ['ls⁰ | 't⁰] ::: false
 //│ break1₀(p, xs) :: '71_callres <: [Destruct(P('ys¹, 'zs¹))] ::: false
+//│ zs :: 'zs¹ <: ['s''²] ::: false
 //│ x :: 'x¹ <: [NoCons | 'x³ | 'h⁰] ::: false
 //│ ys :: 'ys¹ <: [NoCons] ::: false
 //│ [C x ys] :: C('x¹, 'ys¹) ::: true
-//│ zs :: 'zs¹ <: ['s''²] ::: false
 //│ w :: 'w² <: [NoCons] ::: false
 //│ words₀ :: 'words₀ <: [C(Int, C(Int, C(Int, C(Int, C(Int, N))))) => '13_callres | 's''⁰ => '47_callres | 's''¹ => '62_callres | 's''² => '79_callres] ::: false
 //│ s'' :: 's''² <: ['s⁰] ::: false
 //│ words₀(s'') :: '79_callres <: [NoCons] ::: false
 //│ [C w words₀(s'')] :: C('w², '79_callres) ::: true
 //│ (fun _lh_dummy -> [C w words₀(s'')]) :: '_lh_dummy² => C('w², '79_callres) ::: true
-//│ let s'' = zs
-//│ in (fun _lh_dummy -> [C w words₀(s'')]) :: '_lh_dummy² => C('w², '79_callres) ::: true
 //│ let w = [C x ys]
-//│ in let s'' = zs
 //│ in (fun _lh_dummy -> [C w words₀(s'')]) :: '_lh_dummy² => C('w², '79_callres) ::: true
-//│ case break1₀(p, xs) of {P ys zs => let w = [C x ys]
-//│ in let s'' = zs
+//│ let s'' = zs
+//│ in let w = [C x ys]
+//│ in (fun _lh_dummy -> [C w words₀(s'')]) :: '_lh_dummy² => C('w², '79_callres) ::: true
+//│ case break1₀(p, xs) of {P ys zs => let s'' = zs
+//│ in let w = [C x ys]
 //│ in (fun _lh_dummy -> [C w words₀(s'')])} :: '84_matchres <: ['85_ifres] ::: false
-//│ if p(x) then let w = [N]
-//│ in let s'' = [C x xs]
-//│ in (fun _lh_dummy -> [C w words₀(s'')]) else case break1₀(p, xs) of {P ys zs => let w = [C x ys]
-//│ in let s'' = zs
+//│ if p(x) then let s'' = [C x xs]
+//│ in let w = [N]
+//│ in (fun _lh_dummy -> [C w words₀(s'')]) else case break1₀(p, xs) of {P ys zs => let s'' = zs
+//│ in let w = [C x ys]
 //│ in (fun _lh_dummy -> [C w words₀(s'')])} :: '85_ifres <: ['86_matchres] ::: false
-//│ case ls of {N  => let w = [N]
-//│ in let s'' = [N]
-//│ in (fun _lh_dummy -> [C w words₀(s'')]) | C x xs => if p(x) then let w = [N]
-//│ in let s'' = [C x xs]
-//│ in (fun _lh_dummy -> [C w words₀(s'')]) else case break1₀(p, xs) of {P ys zs => let w = [C x ys]
-//│ in let s'' = zs
+//│ case ls of {N  => let s'' = [N]
+//│ in let w = [N]
+//│ in (fun _lh_dummy -> [C w words₀(s'')]) | C x xs => if p(x) then let s'' = [C x xs]
+//│ in let w = [N]
+//│ in (fun _lh_dummy -> [C w words₀(s'')]) else case break1₀(p, xs) of {P ys zs => let s'' = zs
+//│ in let w = [C x ys]
 //│ in (fun _lh_dummy -> [C w words₀(s'')])}} :: '86_matchres <: ['110_callres] ::: false
-//│ (fun ls -> case ls of {N  => let w = [N]
-//│ in let s'' = [N]
-//│ in (fun _lh_dummy -> [C w words₀(s'')]) | C x xs => if p(x) then let w = [N]
-//│ in let s'' = [C x xs]
-//│ in (fun _lh_dummy -> [C w words₀(s'')]) else case break1₀(p, xs) of {P ys zs => let w = [C x ys]
-//│ in let s'' = zs
+//│ (fun ls -> case ls of {N  => let s'' = [N]
+//│ in let w = [N]
+//│ in (fun _lh_dummy -> [C w words₀(s'')]) | C x xs => if p(x) then let s'' = [C x xs]
+//│ in let w = [N]
+//│ in (fun _lh_dummy -> [C w words₀(s'')]) else case break1₀(p, xs) of {P ys zs => let s'' = zs
+//│ in let w = [C x ys]
 //│ in (fun _lh_dummy -> [C w words₀(s'')])}}) :: 'ls¹ => '86_matchres ::: true
-//│ (fun p -> (fun ls -> case ls of {N  => let w = [N]
-//│ in let s'' = [N]
-//│ in (fun _lh_dummy -> [C w words₀(s'')]) | C x xs => if p(x) then let w = [N]
-//│ in let s'' = [C x xs]
-//│ in (fun _lh_dummy -> [C w words₀(s'')]) else case break1₀(p, xs) of {P ys zs => let w = [C x ys]
-//│ in let s'' = zs
+//│ (fun p -> (fun ls -> case ls of {N  => let s'' = [N]
+//│ in let w = [N]
+//│ in (fun _lh_dummy -> [C w words₀(s'')]) | C x xs => if p(x) then let s'' = [C x xs]
+//│ in let w = [N]
+//│ in (fun _lh_dummy -> [C w words₀(s'')]) else case break1₀(p, xs) of {P ys zs => let s'' = zs
+//│ in let w = [C x ys]
 //│ in (fun _lh_dummy -> [C w words₀(s'')])}})) :: 'p¹ => 'ls¹ => '86_matchres ::: true
 //│ dropWhile₀ :: 'dropWhile₀ <: ['x² => '94_callres => '96_callres | 'f⁰ => '123_callres] ::: false
 //│ == :: Destruct(Int) => Destruct(Int) => Sum[True, False] ::: true
@@ -936,21 +936,21 @@ words(C(2, C(1, C(2, C(1, C(2, N))))))
 //│ and break_d0 p_1 ls_1 =
 //│   (match ls_1 with
 //│     | `N -> 
-//│       (let rec w_0 = (`N) in
-//│         (let rec s''_0 = (`N) in
+//│       (let rec s''_0 = (`N) in
+//│         (let rec w_0 = (`N) in
 //│           (fun _lh_dummy_0 -> 
 //│             (`C(w_0, (words_d0 s''_0))))))
 //│     | `C(x_1, xs_1) -> 
 //│       (if (p_1 x_1) then
-//│         (let rec w_1 = (`N) in
-//│           (let rec s''_1 = (`C(x_1, xs_1)) in
+//│         (let rec s''_1 = (`C(x_1, xs_1)) in
+//│           (let rec w_1 = (`N) in
 //│             (fun _lh_dummy_1 -> 
 //│               (`C(w_1, (words_d0 s''_1))))))
 //│       else
 //│         (match ((break1_d0 p_1) xs_1) with
 //│           | `P(ys_1, zs_1) -> 
-//│             (let rec w_2 = (`C(x_1, ys_1)) in
-//│               (let rec s''_2 = zs_1 in
+//│             (let rec s''_2 = zs_1 in
+//│               (let rec w_2 = (`C(x_1, ys_1)) in
 //│                 (fun _lh_dummy_2 -> 
 //│                   (`C(w_2, (words_d0 s''_2)))))))))
 //│ and dropWhile_d0 f_0 ls_2 =

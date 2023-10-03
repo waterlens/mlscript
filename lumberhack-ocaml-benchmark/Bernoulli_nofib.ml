@@ -260,22 +260,22 @@ let rec bernoulli_d0_d0 _lh_bernoulli_arg1_0 =
             (_lh_listcomp_fun_4 ((zip_nl_lz_d0_d0 ((enumFromTo_d0_d0 2) _lh_bernoulli_arg1_0)) pascal_d0_d0))))))))
 and enumFromTo_d0_d0 a_1 b_1 =
   (if (a_1 <= b_1) then
-    (let rec hx_1 = a_1 in
-      (let rec tx_1 = ((enumFromTo_d0_d0 (a_1 + 1)) b_1) in
+    (let rec tx_1 = ((enumFromTo_d0_d0 (a_1 + 1)) b_1) in
+      (let rec hx_1 = a_1 in
         (fun ys_4 -> 
           (match (Lazy.force ys_4) with
             | `LH_C(hy_1, ty_1) -> 
-              (let rec _lh_listcomp_fun_ls_h_0 = (let rec _lh_bernoulli_LH_P2_0_0 = hx_1 in
-                (let rec _lh_bernoulli_LH_P2_1_0 = hy_1 in
-                  (fun _lh_listcomp_fun_ls_t_0 _lh_listcomp_fun_0 powers_0 -> 
-                    (let rec h_1 = (((sum_d1_d0 (((zipWith_lz_nl_d0_d0 (fun a_2 b_2 -> 
-                      (a_2 * b_2))) powers_0) (tail_d0_d0 (tail_d1_d0 _lh_bernoulli_LH_P2_1_0)))) - _lh_bernoulli_LH_P2_0_0) / (_lh_bernoulli_LH_P2_0_0 + 1)) in
-                      (let rec t_1 = (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0) in
-                        (fun _lh_dummy_0 -> 
-                          (h_1 + (sum_d0_d0 t_1)))))))) in
-                (let rec _lh_listcomp_fun_ls_t_1 = ((zip_nl_lz_d0_d0 tx_1) ty_1) in
+              (let rec _lh_listcomp_fun_ls_t_0 = ((zip_nl_lz_d0_d0 tx_1) ty_1) in
+                (let rec _lh_listcomp_fun_ls_h_0 = (let rec _lh_bernoulli_LH_P2_1_0 = hy_1 in
+                  (let rec _lh_bernoulli_LH_P2_0_0 = hx_1 in
+                    (fun _lh_listcomp_fun_ls_t_1 _lh_listcomp_fun_0 powers_0 -> 
+                      (let rec t_1 = (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_1) in
+                        (let rec h_1 = (((sum_d1_d0 (((zipWith_lz_nl_d0_d0 (fun a_2 b_2 -> 
+                          (a_2 * b_2))) powers_0) (tail_d0_d0 (tail_d1_d0 _lh_bernoulli_LH_P2_1_0)))) - _lh_bernoulli_LH_P2_0_0) / (_lh_bernoulli_LH_P2_0_0 + 1)) in
+                          (fun _lh_dummy_0 -> 
+                            (h_1 + (sum_d0_d0 t_1)))))))) in
                   (fun _lh_listcomp_fun_1 powers_1 -> 
-                    (((_lh_listcomp_fun_ls_h_0 _lh_listcomp_fun_ls_t_1) _lh_listcomp_fun_1) powers_1))))
+                    (((_lh_listcomp_fun_ls_h_0 _lh_listcomp_fun_ls_t_0) _lh_listcomp_fun_1) powers_1))))
             | `LH_N -> 
               (fun _lh_listcomp_fun_2 powers_2 _lh_dummy_1 -> 
                 0)))))
@@ -283,16 +283,16 @@ and enumFromTo_d0_d0 a_1 b_1 =
     (fun ys_5 _lh_listcomp_fun_3 powers_3 _lh_dummy_2 -> 
       0))
 and iterate_d0_d0 f_1_0 x_1 =
-  (lazy (let rec hx_4 = x_1 in
-    (let rec tx_4 = ((iterate_d0_d0 f_1_0) (f_1_0 x_1)) in
+  (lazy (let rec tx_4 = ((iterate_d0_d0 f_1_0) (f_1_0 x_1)) in
+    (let rec hx_4 = x_1 in
       (fun f_1_1 ys_1_1 -> 
         (match (Lazy.force ys_1_1) with
           | `LH_C(hy_5, ty_5) -> 
-            (let rec hx_5 = ((f_1_1 hx_4) hy_5) in
-              (let rec tx_5 = (((zipWith_lz_lz_d1_d0 f_1_1) tx_4) ty_5) in
+            (let rec tx_5 = (((zipWith_lz_lz_d1_d0 f_1_1) tx_4) ty_5) in
+              (let rec hx_5 = ((f_1_1 hx_4) hy_5) in
                 (fun f_1_2 hy_6 ty_6 -> 
-                  (let rec h_9 = ((f_1_2 hx_5) hy_6) in
-                    (let rec t_9 = (((zipWith_lz_nl_d0_d0 f_1_2) tx_5) ty_6) in
+                  (let rec t_9 = (((zipWith_lz_nl_d0_d0 f_1_2) tx_5) ty_6) in
+                    (let rec h_9 = ((f_1_2 hx_5) hy_6) in
                       (fun _lh_dummy_4 -> 
                         (h_9 + (sum_d1_d0 t_9))))))))
           | `LH_N -> 
@@ -301,8 +301,8 @@ and iterate_d0_d0 f_1_0 x_1 =
 and map_lz_d0_d0 f_3 ls_1 =
   (lazy (match (Lazy.force ls_1) with
     | `LH_C(h_2, t_2) -> 
-      (let rec h_3 = (f_3 h_2) in
-        (let rec t_3 = ((map_lz_d0_d0 f_3) t_2) in
+      (let rec t_3 = ((map_lz_d0_d0 f_3) t_2) in
+        (let rec h_3 = (f_3 h_2) in
           (fun n_0 -> 
             (if (n_0 = 0) then
               h_3
@@ -314,8 +314,8 @@ and map_lz_d0_d0 f_3 ls_1 =
 and mappend_d0_d0 xs_5 ys_9 =
   (match xs_5 with
     | `LH_C(h_8, t_8) -> 
-      (let rec hx_3 = h_8 in
-        (let rec tx_3 = ((mappend_d0_d0 t_8) ys_9) in
+      (let rec tx_3 = ((mappend_d0_d0 t_8) ys_9) in
+        (let rec hx_3 = h_8 in
           (fun f_9 ys_1_0 -> 
             (match ys_1_0 with
               | `LH_C(hy_4, ty_4) -> 
@@ -333,9 +333,9 @@ and neg_powers_d0_d0 =
 and pascal_d0_d0 =
   (lazy (`LH_C((`LH_C(1, (`LH_C(2, (`LH_C(1, (`LH_N))))))), ((map_lz_d2_d0 (fun line_0 -> 
     (((zipWith_d0_d0 (fun a_0 b_0 -> 
-      (a_0 + b_0))) ((mappend_d0_d0 line_0) (let rec hx_0 = 0 in
-      (let rec tx_0 = (fun f_1 ys_2 -> 
-        (`LH_N)) in
+      (a_0 + b_0))) ((mappend_d0_d0 line_0) (let rec tx_0 = (fun f_1 ys_2 -> 
+      (`LH_N)) in
+      (let rec hx_0 = 0 in
         (fun f_2 ys_3 -> 
           (match ys_3 with
             | `LH_C(hy_0, ty_0) -> 
@@ -350,28 +350,28 @@ and testBernoulli_nofib_d0_d0 _lh_testBernoulli_nofib_arg1_0 =
   (bernoulli_d0_d0 _lh_testBernoulli_nofib_arg1_0);;
 
 (* lumberhack_pop_out *)
-let rec atIndex_lz_d0_d0_d0 n_5 ls_1_2 =
-  (if (n_5 < 0) then
+let rec atIndex_lz_d0_d0_d0 n_8 ls_1_7 =
+  (if (n_8 < 0) then
     (failwith "error")
   else
-    ((Lazy.force ls_1_2) n_5));;
+    ((Lazy.force ls_1_7) n_8));;
 let rec atIndex_lz_d0_d0_d1 n_4 ls_9 =
   (if (n_4 < 0) then
     (failwith "error")
   else
     ((Lazy.force ls_9) n_4));;
-let rec enumFrom_d0_d0_d0 a_8 =
-  (lazy (`LH_C(a_8, (enumFrom_d0_d0_d0 (a_8 + 1)))));;
-let rec head_lz_d0_d0_d0 ls_2_0 =
-  (match (Lazy.force ls_2_0) with
-    | `LH_C(h_1_8, t_1_8) -> 
-      h_1_8
+let rec enumFrom_d0_d0_d0 a_5 =
+  (lazy (`LH_C(a_5, (enumFrom_d0_d0_d0 (a_5 + 1)))));;
+let rec head_lz_d0_d0_d0 ls_1_8 =
+  (match (Lazy.force ls_1_8) with
+    | `LH_C(h_1_6, t_1_6) -> 
+      h_1_6
     | `LH_N -> 
       (failwith "error"));;
-let rec map_lz_d1_d0_d0 f_1_7 ls_1_4 =
+let rec map_lz_d1_d0_d0 f_1_6 ls_1_4 =
   (lazy (match (Lazy.force ls_1_4) with
     | `LH_C(h_1_2, t_1_2) -> 
-      (`LH_C((f_1_7 h_1_2), ((map_lz_d1_d0_d0 f_1_7) t_1_2)))
+      (`LH_C((f_1_6 h_1_2), ((map_lz_d1_d0_d0 f_1_6) t_1_2)))
     | `LH_N -> 
       (`LH_N)));;
 let rec map_lz_d2_d0_d0 f_1_4 ls_1_0 =
@@ -380,64 +380,64 @@ let rec map_lz_d2_d0_d0 f_1_4 ls_1_0 =
       (`LH_C((f_1_4 h_1_0), ((map_lz_d2_d0_d0 f_1_4) t_1_0)))
     | `LH_N -> 
       (`LH_N)));;
-let rec sum_d0_d0_d0 ls_1_9 =
-  (ls_1_9 99);;
-let rec sum_d0_d0_d1 ls_1_7 =
-  (ls_1_7 99);;
-let rec sum_d1_d0_d0 ls_1_6 =
-  (ls_1_6 99);;
-let rec sum_d1_d0_d1 ls_1_3 =
+let rec sum_d0_d0_d0 ls_1_3 =
   (ls_1_3 99);;
+let rec sum_d0_d0_d1 ls_1_6 =
+  (ls_1_6 99);;
+let rec sum_d1_d0_d0 ls_2_0 =
+  (ls_2_0 99);;
+let rec sum_d1_d0_d1 ls_1_2 =
+  (ls_1_2 99);;
 let rec tail_d0_d0_d0 ls_1_1 =
   (match ls_1_1 with
     | `LH_C(h_1_1, t_1_1) -> 
       t_1_1
     | `LH_N -> 
       (failwith "error"));;
-let rec tail_d1_d0_d0 ls_1_8 =
-  (match ls_1_8 with
+let rec tail_d1_d0_d0 ls_1_9 =
+  (match ls_1_9 with
     | `LH_C(h_1_7, t_1_7) -> 
       t_1_7
     | `LH_N -> 
       (failwith "error"));;
-let rec zipWith_lz_lz_d0_d0_d0 f_3_0 xs_1_5 ys_2_7 =
-  (lazy (match (Lazy.force xs_1_5) with
+let rec zipWith_lz_lz_d0_d0_d0 f_3_1 xs_1_6 ys_2_8 =
+  (lazy (match (Lazy.force xs_1_6) with
     | `LH_C(hx_1_1, tx_1_1) -> 
-      (match (Lazy.force ys_2_7) with
-        | `LH_C(hy_1_5, ty_1_5) -> 
-          (`LH_C(((f_3_0 hx_1_1) hy_1_5), (((zipWith_lz_lz_d0_d0_d0 f_3_0) tx_1_1) ty_1_5)))
+      (match (Lazy.force ys_2_8) with
+        | `LH_C(hy_1_6, ty_1_6) -> 
+          (`LH_C(((f_3_1 hx_1_1) hy_1_6), (((zipWith_lz_lz_d0_d0_d0 f_3_1) tx_1_1) ty_1_6)))
         | `LH_N -> 
           (`LH_N))
     | `LH_N -> 
       (`LH_N)));;
-let rec zipWith_lz_lz_d1_d0_d0 f_2_1 xs_1_1 ys_1_8 =
-  (lazy (((Lazy.force xs_1_1) f_2_1) ys_1_8));;
-let rec zipWith_lz_lz_d1_d0_d1 f_2_8 xs_1_3 ys_2_5 =
-  (lazy (((Lazy.force xs_1_3) f_2_8) ys_2_5));;
-let rec zipWith_lz_nl_d0_d0_d0 f_1_5 xs_6 ys_1_2 =
-  (match ys_1_2 with
+let rec zipWith_lz_lz_d1_d0_d0 f_2_8 xs_1_3 ys_2_2 =
+  (lazy (((Lazy.force xs_1_3) f_2_8) ys_2_2));;
+let rec zipWith_lz_lz_d1_d0_d1 f_2_9 xs_1_4 ys_2_3 =
+  (lazy (((Lazy.force xs_1_4) f_2_9) ys_2_3));;
+let rec zipWith_lz_nl_d0_d0_d0 f_2_5 xs_1_1 ys_1_8 =
+  (match ys_1_8 with
+    | `LH_C(hy_1_2, ty_1_2) -> 
+      ((((Lazy.force xs_1_1) f_2_5) hy_1_2) ty_1_2)
+    | `LH_N -> 
+      (fun _lh_dummy_9 -> 
+        0));;
+let rec zipWith_lz_nl_d0_d0_d1 f_1_9 xs_9 ys_1_5 =
+  (match ys_1_5 with
     | `LH_C(hy_8, ty_8) -> 
-      ((((Lazy.force xs_6) f_1_5) hy_8) ty_8)
+      ((((Lazy.force xs_9) f_1_9) hy_8) ty_8)
     | `LH_N -> 
       (fun _lh_dummy_6 -> 
         0));;
-let rec zipWith_lz_nl_d0_d0_d1 f_3_1 xs_1_6 ys_2_8 =
-  (match ys_2_8 with
-    | `LH_C(hy_1_6, ty_1_6) -> 
-      ((((Lazy.force xs_1_6) f_3_1) hy_1_6) ty_1_6)
-    | `LH_N -> 
-      (fun _lh_dummy_1_2 -> 
-        0));;
-let rec zipWith_d0_d0_d0 f_1_6 xs_7 ys_1_3 =
-  ((xs_7 f_1_6) ys_1_3);;
-let rec zipWith_d0_d0_d1 f_1_9 xs_8 ys_1_4 =
-  ((xs_8 f_1_9) ys_1_4);;
-let rec zipWith_d0_d0_d2 f_2_9 xs_1_4 ys_2_6 =
-  ((xs_1_4 f_2_9) ys_2_6);;
-let rec zip_nl_lz_d0_d0_d0 xs_9 ys_1_5 =
-  (xs_9 ys_1_5);;
-let rec zip_nl_lz_d0_d0_d1 xs_1_2 ys_2_1 =
-  (xs_1_2 ys_2_1);;
+let rec zipWith_d0_d0_d0 f_1_5 xs_7 ys_1_3 =
+  ((xs_7 f_1_5) ys_1_3);;
+let rec zipWith_d0_d0_d1 f_1_8 xs_8 ys_1_4 =
+  ((xs_8 f_1_8) ys_1_4);;
+let rec zipWith_d0_d0_d2 f_2_4 xs_1_0 ys_1_7 =
+  ((xs_1_0 f_2_4) ys_1_7);;
+let rec zip_nl_lz_d0_d0_d0 xs_6 ys_1_2 =
+  (xs_6 ys_1_2);;
+let rec zip_nl_lz_d0_d0_d1 xs_1_2 ys_1_9 =
+  (xs_1_2 ys_1_9);;
 let rec bernoulli_d0_d0_d0 _lh_bernoulli_arg1_1 =
   (match _lh_bernoulli_arg1_1 with
     | 0 -> 
@@ -452,92 +452,92 @@ let rec bernoulli_d0_d0_d0 _lh_bernoulli_arg1_1 =
           (((0 - 1) / 2) + (sum_d0_d0_d1 (let rec _lh_listcomp_fun_5 = (fun _lh_listcomp_fun_para_1 -> 
             ((_lh_listcomp_fun_para_1 _lh_listcomp_fun_5) powers_5)) in
             (_lh_listcomp_fun_5 ((zip_nl_lz_d0_d0_d1 ((enumFromTo_d0_d0_d0 2) _lh_bernoulli_arg1_1)) pascal_d0_d0_d0))))))))
-and enumFromTo_d0_d0_d0 a_6 b_5 _lh_popOutId_0_1 _lh_popOutId_1_1 _lh_popOutId_2_0 =
-  (if (a_6 <= b_5) then
-    (let rec hx_7 = a_6 in
-      (let rec tx_7 = ((enumFromTo_d0_d0_d0 (a_6 + 1)) b_5) in
+and enumFromTo_d0_d0_d0 a_8 b_6 _lh_popOutId_0_1 _lh_popOutId_1_1 _lh_popOutId_2_0 =
+  (if (a_8 <= b_6) then
+    (let rec tx_1_0 = ((enumFromTo_d0_d0_d0 (a_8 + 1)) b_6) in
+      (let rec hx_1_0 = a_8 in
         (match (Lazy.force _lh_popOutId_0_1) with
-          | `LH_C(hy_1_0, ty_1_0) -> 
-            (let rec _lh_listcomp_fun_ls_h_1 = (let rec _lh_bernoulli_LH_P2_0_1 = hx_7 in
-              (let rec _lh_bernoulli_LH_P2_1_1 = hy_1_0 in
-                (fun _lh_listcomp_fun_ls_t_2 _lh_listcomp_fun_6 powers_6 -> 
-                  (let rec h_1_6 = (((sum_d1_d0_d0 (((zipWith_lz_nl_d0_d0_d0 (fun a_7 b_6 -> 
-                    (a_7 * b_6))) powers_6) (tail_d0_d0_d0 (tail_d1_d0_d0 _lh_bernoulli_LH_P2_1_1)))) - _lh_bernoulli_LH_P2_0_1) / (_lh_bernoulli_LH_P2_0_1 + 1)) in
-                    (let rec t_1_6 = (_lh_listcomp_fun_6 _lh_listcomp_fun_ls_t_2) in
-                      (fun _lh_dummy_7 -> 
-                        (h_1_6 + (sum_d0_d0_d0 t_1_6)))))))) in
-              (let rec _lh_listcomp_fun_ls_t_3 = ((zip_nl_lz_d0_d0_d0 tx_7) ty_1_0) in
-                (((_lh_listcomp_fun_ls_h_1 _lh_listcomp_fun_ls_t_3) _lh_popOutId_1_1) _lh_popOutId_2_0)))
+          | `LH_C(hy_1_5, ty_1_5) -> 
+            (let rec _lh_listcomp_fun_ls_t_2 = ((zip_nl_lz_d0_d0_d0 tx_1_0) ty_1_5) in
+              (let rec _lh_listcomp_fun_ls_h_1 = (let rec _lh_bernoulli_LH_P2_1_1 = hy_1_5 in
+                (let rec _lh_bernoulli_LH_P2_0_1 = hx_1_0 in
+                  (fun _lh_listcomp_fun_ls_t_3 _lh_listcomp_fun_6 powers_6 -> 
+                    (let rec t_1_9 = (_lh_listcomp_fun_6 _lh_listcomp_fun_ls_t_3) in
+                      (let rec h_1_9 = (((sum_d1_d0_d0 (((zipWith_lz_nl_d0_d0_d0 (fun a_9 b_7 -> 
+                        (a_9 * b_7))) powers_6) (tail_d0_d0_d0 (tail_d1_d0_d0 _lh_bernoulli_LH_P2_1_1)))) - _lh_bernoulli_LH_P2_0_1) / (_lh_bernoulli_LH_P2_0_1 + 1)) in
+                        (fun _lh_dummy_1_0 -> 
+                          (h_1_9 + (sum_d0_d0_d0 t_1_9)))))))) in
+                (((_lh_listcomp_fun_ls_h_1 _lh_listcomp_fun_ls_t_2) _lh_popOutId_1_1) _lh_popOutId_2_0)))
           | `LH_N -> 
-            (fun _lh_dummy_8 -> 
+            (fun _lh_dummy_1_1 -> 
               0))))
   else
-    (fun _lh_dummy_9 -> 
+    (fun _lh_dummy_1_2 -> 
       0))
-and iterate_d0_d0_d0 f_2_4 x_3 =
-  (lazy (let rec hx_9 = x_3 in
-    (let rec tx_9 = ((iterate_d0_d0_d0 f_2_4) (f_2_4 x_3)) in
-      (fun f_2_5 ys_2_4 -> 
-        (match (Lazy.force ys_2_4) with
-          | `LH_C(hy_1_2, ty_1_2) -> 
-            (let rec hx_1_0 = ((f_2_5 hx_9) hy_1_2) in
-              (let rec tx_1_0 = (((zipWith_lz_lz_d1_d0_d0 f_2_5) tx_9) ty_1_2) in
-                (fun f_2_6 hy_1_3 ty_1_3 -> 
-                  (let rec h_1_9 = ((f_2_6 hx_1_0) hy_1_3) in
-                    (let rec t_1_9 = (((zipWith_lz_nl_d0_d0_d1 f_2_6) tx_1_0) ty_1_3) in
-                      (fun _lh_dummy_1_0 -> 
-                        (h_1_9 + (sum_d1_d0_d1 t_1_9))))))))
+and iterate_d0_d0_d0 f_2_0 x_3 =
+  (lazy (let rec tx_6 = ((iterate_d0_d0_d0 f_2_0) (f_2_0 x_3)) in
+    (let rec hx_6 = x_3 in
+      (fun f_2_1 ys_1_6 -> 
+        (match (Lazy.force ys_1_6) with
+          | `LH_C(hy_9, ty_9) -> 
+            (let rec tx_7 = (((zipWith_lz_lz_d1_d0_d0 f_2_1) tx_6) ty_9) in
+              (let rec hx_7 = ((f_2_1 hx_6) hy_9) in
+                (fun f_2_2 hy_1_0 ty_1_0 -> 
+                  (let rec t_1_5 = (((zipWith_lz_nl_d0_d0_d1 f_2_2) tx_7) ty_1_0) in
+                    (let rec h_1_5 = ((f_2_2 hx_7) hy_1_0) in
+                      (fun _lh_dummy_7 -> 
+                        (h_1_5 + (sum_d1_d0_d1 t_1_5))))))))
           | `LH_N -> 
-            (fun f_2_7 hy_1_4 ty_1_4 _lh_dummy_1_1 -> 
+            (fun f_2_3 hy_1_1 ty_1_1 _lh_dummy_8 -> 
               0))))))
-and map_lz_d0_d0_d0 f_1_8 ls_1_5 =
+and map_lz_d0_d0_d0 f_1_7 ls_1_5 =
   (lazy (match (Lazy.force ls_1_5) with
     | `LH_C(h_1_3, t_1_3) -> 
-      (let rec h_1_4 = (f_1_8 h_1_3) in
-        (let rec t_1_4 = ((map_lz_d0_d0_d0 f_1_8) t_1_3) in
-          (fun n_7 -> 
-            (if (n_7 = 0) then
+      (let rec t_1_4 = ((map_lz_d0_d0_d0 f_1_7) t_1_3) in
+        (let rec h_1_4 = (f_1_7 h_1_3) in
+          (fun n_6 -> 
+            (if (n_6 = 0) then
               h_1_4
             else
-              ((atIndex_lz_d0_d0_d1 (n_7 - 1)) t_1_4)))))
+              ((atIndex_lz_d0_d0_d1 (n_6 - 1)) t_1_4)))))
     | `LH_N -> 
-      (fun n_8 -> 
+      (fun n_7 -> 
         (failwith "error"))))
-and mappend_d0_d0_d0 xs_1_0 ys_1_6 =
-  (match xs_1_0 with
-    | `LH_C(h_1_5, t_1_5) -> 
-      (let rec hx_6 = h_1_5 in
-        (let rec tx_6 = ((mappend_d0_d0_d0 t_1_5) ys_1_6) in
-          (fun f_2_0 ys_1_7 -> 
-            (match ys_1_7 with
-              | `LH_C(hy_9, ty_9) -> 
-                (`LH_C(((f_2_0 hx_6) hy_9), (((zipWith_d0_d0_d0 f_2_0) tx_6) ty_9)))
+and mappend_d0_d0_d0 xs_1_5 ys_2_4 =
+  (match xs_1_5 with
+    | `LH_C(h_1_8, t_1_8) -> 
+      (let rec tx_9 = ((mappend_d0_d0_d0 t_1_8) ys_2_4) in
+        (let rec hx_9 = h_1_8 in
+          (fun f_3_0 ys_2_5 -> 
+            (match ys_2_5 with
+              | `LH_C(hy_1_4, ty_1_4) -> 
+                (`LH_C(((f_3_0 hx_9) hy_1_4), (((zipWith_d0_d0_d0 f_3_0) tx_9) ty_1_4)))
               | `LH_N -> 
                 (`LH_N)))))
     | `LH_N -> 
-      ys_1_6)
+      ys_2_4)
 and neg_powers_d0_d0_d0 =
-  (lazy ((map_lz_d0_d0_d0 ((zipWith_lz_lz_d1_d0_d1 (fun n_6 x_2 -> 
-    (if n_6 then
+  (lazy ((map_lz_d0_d0_d0 ((zipWith_lz_lz_d1_d0_d1 (fun n_5 x_2 -> 
+    (if n_5 then
       x_2
     else
       (0 - x_2)))) ((iterate_d0_d0_d0 not) true))) powers_d0_d0_d0))
 and pascal_d0_d0_d0 =
   (lazy (`LH_C((`LH_C(1, (`LH_C(2, (`LH_C(1, (`LH_N))))))), ((map_lz_d2_d0_d0 (fun line_1 -> 
-    (((zipWith_d0_d0_d1 (fun a_9 b_7 -> 
-      (a_9 + b_7))) ((mappend_d0_d0_d0 line_1) (let rec hx_8 = 0 in
-      (let rec tx_8 = (fun f_2_2 ys_2_2 -> 
-        (`LH_N)) in
-        (fun f_2_3 ys_2_3 -> 
-          (match ys_2_3 with
-            | `LH_C(hy_1_1, ty_1_1) -> 
-              (`LH_C(((f_2_3 hx_8) hy_1_1), (((zipWith_d0_d0_d2 f_2_3) tx_8) ty_1_1)))
+    (((zipWith_d0_d0_d1 (fun a_6 b_4 -> 
+      (a_6 + b_4))) ((mappend_d0_d0_d0 line_1) (let rec tx_8 = (fun f_2_6 ys_2_0 -> 
+      (`LH_N)) in
+      (let rec hx_8 = 0 in
+        (fun f_2_7 ys_2_1 -> 
+          (match ys_2_1 with
+            | `LH_C(hy_1_3, ty_1_3) -> 
+              (`LH_C(((f_2_7 hx_8) hy_1_3), (((zipWith_d0_d0_d2 f_2_7) tx_8) ty_1_3)))
             | `LH_N -> 
               (`LH_N))))))) (`LH_C(0, line_1))))) pascal_d0_d0_d0))))
 and powers_d0_d0_d0 =
   (lazy (`LH_C((enumFrom_d0_d0_d0 2), ((map_lz_d1_d0_d0 (fun p_1 -> 
-    (((zipWith_lz_lz_d0_d0_d0 (fun a_5 b_4 -> 
-      (a_5 * b_4))) (head_lz_d0_d0_d0 powers_d0_d0_d0)) p_1))) powers_d0_d0_d0))))
+    (((zipWith_lz_lz_d0_d0_d0 (fun a_7 b_5 -> 
+      (a_7 * b_5))) (head_lz_d0_d0_d0 powers_d0_d0_d0)) p_1))) powers_d0_d0_d0))))
 and testBernoulli_nofib_d0_d0_d0 _lh_testBernoulli_nofib_arg1_1 =
   (bernoulli_d0_d0_d0 _lh_testBernoulli_nofib_arg1_1);;
 

@@ -96,11 +96,11 @@ testMapmap $ primId 5000000
 //│ 	where
 //│ 	def enumFromTo₀₀(a², b²) = 
 //│ 		if (a² <= b²) then 
-//│ 			let h⁴ = a²
-//│ 			in let t⁴ = enumFromTo₀₀((a² + 1), b²)
+//│ 			let t⁴ = enumFromTo₀₀((a² + 1), b²)
+//│ 			in let h⁴ = a²
 //│ 			in (fun f⁶ -> 
-//│ 				let h⁵ = f⁶(h⁴)
-//│ 				in let t⁵ = map₁₀(f⁶, t⁴)
+//│ 				let t⁵ = map₁₀(f⁶, t⁴)
+//│ 				in let h⁵ = f⁶(h⁴)
 //│ 				in (fun f⁷ -> [LH_C f⁷(h⁵) map₀₀(f⁷, t⁵)])) else (fun f⁸ -> (fun f⁹ -> [LH_N]))
 //│ 	def map₀₀(f⁴, ls⁴) = 
 //│ 		ls⁴(f⁴)
@@ -119,7 +119,7 @@ testMapmap $ primId 5000000
 //│ testMapmap₀ _lh_testMapmap_arg1¹ = ((map₀ (\x⁴ -> (x⁴ + 1))) ((map₁ (\x⁵ -> (x⁵ + x⁵))) ((enumFromTo₀ 1) _lh_testMapmap_arg1¹)))
 //│ 
 //│ --- lumberhack ---
-//│ enumFromTo₀₀ a⁰ b⁰ = (if (a⁰ <= b⁰) then (let h⁰ = a⁰ in (let t⁰ = ((enumFromTo₀₀ (a⁰ + 1)) b⁰) in (\f² -> (let h¹ = (f² h⁰) in (let t¹ = ((map₁₀ f²) t⁰) in (\f³ -> ((f³ h¹):((map₀₀ f³) t¹)))))))) else (\f⁴ f⁵ -> []))
+//│ enumFromTo₀₀ a⁰ b⁰ = (if (a⁰ <= b⁰) then (let t⁰ = ((enumFromTo₀₀ (a⁰ + 1)) b⁰) in (let h⁰ = a⁰ in (\f² -> (let t¹ = ((map₁₀ f²) t⁰) in (let h¹ = (f² h⁰) in (\f³ -> ((f³ h¹):((map₀₀ f³) t¹)))))))) else (\f⁴ f⁵ -> []))
 //│ map₀₀ f⁰ ls⁰ = (ls⁰ f⁰)
 //│ map₁₀ f¹ ls¹ = (ls¹ f¹)
 //│ testMapmap₀₀ _lh_testMapmap_arg1⁰ = ((map₀₀ (\x⁰ -> (x⁰ + 1))) ((map₁₀ (\x¹ -> (x¹ + x¹))) ((enumFromTo₀₀ 1) _lh_testMapmap_arg1⁰)))
@@ -497,8 +497,8 @@ test $ primId 4
 //│ 			where
 //│ 			def enumFromTo₀₀(a², b²) = 
 //│ 				if (a² <= b²) then 
-//│ 					let _lh_listcomp_fun_ls_h⁴ = a²
-//│ 					in let _lh_listcomp_fun_ls_t⁴ = enumFromTo₀₀((a² + 1), b²)
+//│ 					let _lh_listcomp_fun_ls_t⁴ = enumFromTo₀₀((a² + 1), b²)
+//│ 					in let _lh_listcomp_fun_ls_h⁴ = a²
 //│ 					in (fun _lh_listcomp_fun_ls_h⁵ -> (fun _lh_listcomp_fun⁴ -> (fun _lh_listcomp_fun_ls_t⁵ -> (fun _lh_listcomp_fun⁵ -> if safe₀₀(_lh_listcomp_fun_ls_h⁴, 1, _lh_listcomp_fun_ls_h⁵) then [LH_C [LH_C _lh_listcomp_fun_ls_h⁴ _lh_listcomp_fun_ls_h⁵] _lh_listcomp_fun⁴(_lh_listcomp_fun_ls_t⁴)] else _lh_listcomp_fun⁴(_lh_listcomp_fun_ls_t⁴))))) else (fun _lh_listcomp_fun_ls_h⁶ -> (fun _lh_listcomp_fun⁶ -> (fun _lh_listcomp_fun_ls_t⁶ -> (fun _lh_listcomp_fun⁷ -> _lh_listcomp_fun⁷(_lh_listcomp_fun_ls_t⁶)))))
 //│ 			def safe₀₀(_lh_safe_arg1², _lh_safe_arg2², _lh_safe_arg3²) = 
 //│ 				case _lh_safe_arg3² of {
@@ -608,8 +608,8 @@ testSimpleRecursiveTypeExample $ primId 3
 //│ def testSimpleRecursiveTypeExample₀₀(_lh_testSimpleRecursiveTypeExample_arg1²) = 
 //│ 	let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> _lh_listcomp_fun_para²(_lh_listcomp_fun²))
 //│ 	in _lh_listcomp_fun²(
-//│ 		let _lh_listcomp_fun_ls_h² = _lh_testSimpleRecursiveTypeExample_arg1²
-//│ 		in let _lh_listcomp_fun_ls_t² = (fun _lh_listcomp_fun⁴ -> [LH_N])
+//│ 		let _lh_listcomp_fun_ls_t² = (fun _lh_listcomp_fun⁴ -> [LH_N])
+//│ 		in let _lh_listcomp_fun_ls_h² = _lh_testSimpleRecursiveTypeExample_arg1²
 //│ 		in (fun _lh_listcomp_fun³ -> [LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun³(_lh_listcomp_fun_ls_t²)]))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
@@ -621,7 +621,7 @@ testSimpleRecursiveTypeExample $ primId 3
 //│ testSimpleRecursiveTypeExample₀ _lh_testSimpleRecursiveTypeExample_arg1¹ = (let _lh_listcomp_fun¹ = (\_lh_listcomp_fun_para¹ -> (case _lh_listcomp_fun_para¹ of {(_lh_listcomp_fun_ls_h¹ : _lh_listcomp_fun_ls_t¹) -> (_lh_listcomp_fun_ls_h¹:(_lh_listcomp_fun¹ _lh_listcomp_fun_ls_t¹)); [] -> []})) in (_lh_listcomp_fun¹ (_lh_testSimpleRecursiveTypeExample_arg1¹:[])))
 //│ 
 //│ --- lumberhack ---
-//│ testSimpleRecursiveTypeExample₀₀ _lh_testSimpleRecursiveTypeExample_arg1⁰ = (let _lh_listcomp_fun⁰ = (\_lh_listcomp_fun_para⁰ -> (_lh_listcomp_fun_para⁰ _lh_listcomp_fun⁰)) in (_lh_listcomp_fun⁰ (let _lh_listcomp_fun_ls_h⁰ = _lh_testSimpleRecursiveTypeExample_arg1⁰ in (let _lh_listcomp_fun_ls_t⁰ = (\_lh_listcomp_fun¹ -> []) in (\_lh_listcomp_fun² -> (_lh_listcomp_fun_ls_h⁰:(_lh_listcomp_fun² _lh_listcomp_fun_ls_t⁰)))))))
+//│ testSimpleRecursiveTypeExample₀₀ _lh_testSimpleRecursiveTypeExample_arg1⁰ = (let _lh_listcomp_fun⁰ = (\_lh_listcomp_fun_para⁰ -> (_lh_listcomp_fun_para⁰ _lh_listcomp_fun⁰)) in (_lh_listcomp_fun⁰ (let _lh_listcomp_fun_ls_t⁰ = (\_lh_listcomp_fun¹ -> []) in (let _lh_listcomp_fun_ls_h⁰ = _lh_testSimpleRecursiveTypeExample_arg1⁰ in (\_lh_listcomp_fun² -> (_lh_listcomp_fun_ls_h⁰:(_lh_listcomp_fun² _lh_listcomp_fun_ls_t⁰)))))))
 //│ 
 //│ main :: IO ()
 //│ main = defaultMain [ bgroup "SimpleRecursiveTypeExample" [

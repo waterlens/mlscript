@@ -44,11 +44,11 @@ let rec sum_d0_d0 _lh_sum_arg1_0 =
   (_lh_sum_arg1_0 99);;
 let rec enumFromTo_d0_d0 a_0 b_0 =
   (if (a_0 <= b_0) then
-    (let rec h_0 = a_0 in
-      (let rec t_0 = ((enumFromTo_d0_d0 (a_0 + 1)) b_0) in
+    (let rec t_0 = ((enumFromTo_d0_d0 (a_0 + 1)) b_0) in
+      (let rec h_0 = a_0 in
         (fun f_0 -> 
-          (let rec _lh_sum_LH_C_0_0 = (f_0 h_0) in
-            (let rec _lh_sum_LH_C_1_0 = ((map_d0_d0 f_0) t_0) in
+          (let rec _lh_sum_LH_C_1_0 = ((map_d0_d0 f_0) t_0) in
+            (let rec _lh_sum_LH_C_0_0 = (f_0 h_0) in
               (fun _lh_dummy_0 -> 
                 (_lh_sum_LH_C_0_0 + (sum_d0_d0 _lh_sum_LH_C_1_0))))))))
   else
@@ -69,10 +69,10 @@ let rec sum_d0_d0_d1 _lh_sum_arg1_1 =
   (_lh_sum_arg1_1 99);;
 let rec enumFromTo_d0_d0_d0 a_1 b_1 _lh_popOutId_0_0 _lh_popOutId_1_0 =
   (if (a_1 <= b_1) then
-    (let rec h_1 = a_1 in
-      (let rec t_1 = ((enumFromTo_d0_d0_d0 (a_1 + 1)) b_1) in
-        (let rec _lh_sum_LH_C_0_1 = (_lh_popOutId_0_0 h_1) in
-          (let rec _lh_sum_LH_C_1_1 = ((map_d0_d0_d0 _lh_popOutId_0_0) t_1) in
+    (let rec t_1 = ((enumFromTo_d0_d0_d0 (a_1 + 1)) b_1) in
+      (let rec h_1 = a_1 in
+        (let rec _lh_sum_LH_C_1_1 = ((map_d0_d0_d0 _lh_popOutId_0_0) t_1) in
+          (let rec _lh_sum_LH_C_0_1 = (_lh_popOutId_0_0 h_1) in
             (_lh_sum_LH_C_0_1 + (sum_d0_d0_d0 _lh_sum_LH_C_1_1))))))
   else
     0)

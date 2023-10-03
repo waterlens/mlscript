@@ -43,8 +43,8 @@ let rec ff_d0 t_0 =
 and flip_d1 t_1 =
   (match t_1 with
     | `T(l_0, r_0) -> 
-      (let rec l_1 = (flip_d1 r_0) in
-        (let rec r_1 = (flip_d1 l_0) in
+      (let rec r_1 = (flip_d1 l_0) in
+        (let rec l_1 = (flip_d1 r_0) in
           (fun _lh_dummy_0 -> 
             (`T((flip_d0 r_1), (flip_d0 l_1))))))
     | `N(v_0) -> 
@@ -71,8 +71,8 @@ let rec ff_d0_d0 t_4 =
 and flip_d1_d0 t_6 _lh_popOutId_0_0 =
   (match t_6 with
     | `T(l_2, r_2) -> 
-      (let rec l_3 = (flip_d1_d0 r_2) in
-        (let rec r_3 = (flip_d1_d0 l_2) in
+      (let rec r_3 = (flip_d1_d0 l_2) in
+        (let rec l_3 = (flip_d1_d0 r_2) in
           (`T((flip_d0_d1 r_3), (flip_d0_d2 l_3)))))
     | `N(v_2) -> 
       (let rec v_3 = v_2 in

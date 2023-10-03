@@ -69,14 +69,14 @@ rev(C(AA, C(BB, C(CC, N))))(N)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ rev₀(
-//│ 	let h² = [AA]
-//│ 	in let t² = 	
-//│ 		let h³ = [BB]
-//│ 		in let t³ = 	
-//│ 			let h⁴ = [CC]
-//│ 			in let t⁴ = (fun a⁷ -> a⁷)
+//│ 	let t² = 	
+//│ 		let t³ = 	
+//│ 			let t⁴ = (fun a⁷ -> a⁷)
+//│ 			in let h⁴ = [CC]
 //│ 			in (fun a⁶ -> rev₀(t⁴, [C h⁴ a⁶]))
+//│ 		in let h³ = [BB]
 //│ 		in (fun a⁵ -> rev₀(t³, [C h³ a⁵]))
+//│ 	in let h² = [AA]
 //│ 	in (fun a⁴ -> rev₀(t², [C h² a⁴])), [N])
 //│ def rev₀(ls²) = 
 //│ 	ls²
@@ -193,17 +193,17 @@ rev(map(C(A, C(B, N)))(f))(N)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ rev₀(map₀(
-//│ 	let h⁴ = [A]
-//│ 	in let t⁴ = 	
-//│ 		let h⁶ = [B]
-//│ 		in let t⁶ = (fun f⁷ -> (fun a⁶ -> a⁶))
+//│ 	let t⁴ = 	
+//│ 		let t⁶ = (fun f⁷ -> (fun a⁶ -> a⁶))
+//│ 		in let h⁶ = [B]
 //│ 		in (fun f⁶ -> 
-//│ 			let h⁷ = f⁶(h⁶)
-//│ 			in let t⁷ = map₀(t⁶, f⁶)
+//│ 			let t⁷ = map₀(t⁶, f⁶)
+//│ 			in let h⁷ = f⁶(h⁶)
 //│ 			in (fun a⁵ -> rev₀(t⁷, [C h⁷ a⁵])))
+//│ 	in let h⁴ = [A]
 //│ 	in (fun f⁵ -> 
-//│ 		let h⁵ = f⁵(h⁴)
-//│ 		in let t⁵ = map₀(t⁴, f⁵)
+//│ 		let t⁵ = map₀(t⁴, f⁵)
+//│ 		in let h⁵ = f⁵(h⁴)
 //│ 		in (fun a⁴ -> rev₀(t⁵, [C h⁵ a⁴]))), f₀), [N])
 //│ def f₀(x²) = 
 //│ 	case x² of {
@@ -332,17 +332,17 @@ map(rev(C(A, C(AA, N)))(N))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ map₀(rev₀(
-//│ 	let h² = [B]
-//│ 	in let t² = 	
-//│ 		let h³ = [BB]
-//│ 		in let t³ = (fun a⁶ -> a⁶)
+//│ 	let t² = 	
+//│ 		let t³ = (fun a⁶ -> a⁶)
+//│ 		in let h³ = [BB]
 //│ 		in (fun a⁵ -> rev₀(t³, 
-//│ 			let hh³ = h³
-//│ 			in let tt³ = a⁵
+//│ 			let tt³ = a⁵
+//│ 			in let hh³ = h³
 //│ 			in (fun _lh_dummy¹ -> [C hh³ map₀(tt³)])))
+//│ 	in let h² = [B]
 //│ 	in (fun a⁴ -> rev₀(t², 
-//│ 		let hh² = h²
-//│ 		in let tt² = a⁴
+//│ 		let tt² = a⁴
+//│ 		in let hh² = h²
 //│ 		in (fun _lh_dummy⁰ -> [C hh² map₀(tt²)]))), (fun _lh_dummy² -> [N])))
 //│ def map₀(ls²) = 
 //│ 	ls²(99)
@@ -466,17 +466,17 @@ map(rev(N, C(A, C(B, N))), ff)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ map₀(rev₀((fun f² -> [N]), 
-//│ 	let h⁴ = [AA]
-//│ 	in let t⁴ = 	
-//│ 		let h⁶ = [BB]
-//│ 		in let t⁶ = (fun a⁴ -> a⁴)
+//│ 	let t⁴ = 	
+//│ 		let t⁶ = (fun a⁴ -> a⁴)
+//│ 		in let h⁶ = [BB]
 //│ 		in (fun a³ -> rev₀(
-//│ 			let h⁷ = h⁶
-//│ 			in let t⁷ = a³
+//│ 			let t⁷ = a³
+//│ 			in let h⁷ = h⁶
 //│ 			in (fun f⁴ -> [C f⁴(h⁷) map₀(t⁷, f⁴)]), t⁶))
+//│ 	in let h⁴ = [AA]
 //│ 	in (fun a² -> rev₀(
-//│ 		let h⁵ = h⁴
-//│ 		in let t⁵ = a²
+//│ 		let t⁵ = a²
+//│ 		in let h⁵ = h⁴
 //│ 		in (fun f³ -> [C f³(h⁵) map₀(t⁵, f³)]), t⁴))), ff₀)
 //│ def ff₀(x²) = 
 //│ 	x²
@@ -602,17 +602,17 @@ rev(N, map(C(A, C(B, N)), ff))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ rev₀([N], map₀(
-//│ 	let h⁴ = [AA]
-//│ 	in let t⁴ = 	
-//│ 		let h⁶ = [BB]
-//│ 		in let t⁶ = (fun f⁴ -> (fun a⁴ -> a⁴))
+//│ 	let t⁴ = 	
+//│ 		let t⁶ = (fun f⁴ -> (fun a⁴ -> a⁴))
+//│ 		in let h⁶ = [BB]
 //│ 		in (fun f³ -> 
-//│ 			let h⁷ = f³(h⁶)
-//│ 			in let t⁷ = map₀(t⁶, f³)
+//│ 			let t⁷ = map₀(t⁶, f³)
+//│ 			in let h⁷ = f³(h⁶)
 //│ 			in (fun a³ -> rev₀([C h⁷ a³], t⁷)))
+//│ 	in let h⁴ = [AA]
 //│ 	in (fun f² -> 
-//│ 		let h⁵ = f²(h⁴)
-//│ 		in let t⁵ = map₀(t⁴, f²)
+//│ 		let t⁵ = map₀(t⁴, f²)
+//│ 		in let h⁵ = f²(h⁴)
 //│ 		in (fun a² -> rev₀([C h⁵ a²], t⁵))), ff₀))
 //│ def ff₀(x²) = 
 //│ 	x²
@@ -707,8 +707,8 @@ revMap
 //│ 	def map₀(xs², f⁴) = 
 //│ 		case xs² of {
 //│ 			C h² t² => 
-//│ 				let h⁴ = f⁴(h²)
-//│ 				in let t⁴ = map₀(t², f⁴)
+//│ 				let t⁴ = map₀(t², f⁴)
+//│ 				in let h⁴ = f⁴(h²)
 //│ 				in (fun a² -> rev₀([C h⁴ a²], t⁴))
 //│ 			| N  => (fun a³ -> a³)}
 //│ 	def rev₀(a⁴, ys²) = 

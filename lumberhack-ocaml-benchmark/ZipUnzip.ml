@@ -63,11 +63,11 @@ and unzip_d0 ls_0 =
         | `Pair(a_0, b_0) -> 
           (match (unzip_d0 t_0) with
             | `Pair(atail_0, btail_0) -> 
-              (`Pair((let rec x_0 = a_0 in
-                (let rec xt_0 = atail_0 in
+              (`Pair((let rec xt_0 = atail_0 in
+                (let rec x_0 = a_0 in
                   (fun ys_1 -> 
-                    ((ys_1 xt_0) x_0)))), (let rec y_0 = b_0 in
-                (let rec yt_0 = btail_0 in
+                    ((ys_1 xt_0) x_0)))), (let rec yt_0 = btail_0 in
+                (let rec y_0 = b_0 in
                   (fun xt_1 x_1 -> 
                     (`C((`Pair(x_1, y_0)), ((zip_d0 xt_1) yt_0))))))))))
     | `N -> 
@@ -96,11 +96,11 @@ and unzip_d0_d0 ls_1 =
         | `Pair(a_1, b_1) -> 
           (match (unzip_d0_d0 t_1) with
             | `Pair(atail_1, btail_1) -> 
-              (`Pair((let rec x_3 = a_1 in
-                (let rec xt_3 = atail_1 in
+              (`Pair((let rec xt_3 = atail_1 in
+                (let rec x_3 = a_1 in
                   (fun ys_6 -> 
-                    ((ys_6 xt_3) x_3)))), (let rec y_1 = b_1 in
-                (let rec yt_1 = btail_1 in
+                    ((ys_6 xt_3) x_3)))), (let rec yt_1 = btail_1 in
+                (let rec y_1 = b_1 in
                   (fun xt_4 x_4 -> 
                     (`C((`Pair(x_4, y_1)), ((zip_d0_d0 xt_4) yt_1))))))))))
     | `N -> 

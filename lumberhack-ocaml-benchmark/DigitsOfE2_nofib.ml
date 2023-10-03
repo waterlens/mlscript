@@ -172,32 +172,32 @@ let rec take_lz_d0_d0 n_0 ls_4 =
     (`LH_N));;
 let rec e_d0_d0 _lh_e_arg1_0 =
   ((take_lz_d0_d0 _lh_e_arg1_0) ((fun b_0 -> 
-    ((append_lz_d0_d0 (let rec _lh_append_lz_LH_C_0_1 = '2' in
-      (let rec _lh_append_lz_LH_C_1_1 = (let rec _lh_append_lz_LH_C_0_2 = '.' in
-        (let rec _lh_append_lz_LH_C_1_2 = (fun _lh_append_lz_arg2_2 -> 
-          _lh_append_lz_arg2_2) in
-          (fun _lh_append_lz_arg2_3 -> 
-            (lazy (`LH_C(_lh_append_lz_LH_C_0_2, ((append_lz_d0_d0 _lh_append_lz_LH_C_1_2) _lh_append_lz_arg2_3))))))) in
+    ((append_lz_d0_d0 (let rec _lh_append_lz_LH_C_1_1 = (let rec _lh_append_lz_LH_C_1_2 = (fun _lh_append_lz_arg2_2 -> 
+      _lh_append_lz_arg2_2) in
+      (let rec _lh_append_lz_LH_C_0_1 = '.' in
+        (fun _lh_append_lz_arg2_3 -> 
+          (lazy (`LH_C(_lh_append_lz_LH_C_0_1, ((append_lz_d0_d0 _lh_append_lz_LH_C_1_2) _lh_append_lz_arg2_3))))))) in
+      (let rec _lh_append_lz_LH_C_0_2 = '2' in
         (fun _lh_append_lz_arg2_4 -> 
-          (lazy (`LH_C(_lh_append_lz_LH_C_0_1, ((append_lz_d0_d0 _lh_append_lz_LH_C_1_1) _lh_append_lz_arg2_4)))))))) b_0)) ((fun _lh_funcomp_x_0 -> 
+          (lazy (`LH_C(_lh_append_lz_LH_C_0_2, ((append_lz_d0_d0 _lh_append_lz_LH_C_1_1) _lh_append_lz_arg2_4)))))))) b_0)) ((fun _lh_funcomp_x_0 -> 
     (tail_lz_d0_d0 (concat_lz_d0_d0 _lh_funcomp_x_0))) ((map_lz_d0_d0 (fun _lh_funcomp_x_1 -> 
     (string_of_int (head_lz_d0_d0 _lh_funcomp_x_1)))) ((iterate_d0_d0 (fun _lh_funcomp_x_2 -> 
     ((fun _lh_funcomp_x_3 -> 
       ((carryPropagate_d0_d0 2) ((map_lz_d1_d0 (fun a_1 -> 
         (10 * a_1))) _lh_funcomp_x_3))) (tail_lz_d1_d0 _lh_funcomp_x_2)))) (lazy (`LH_C(2, ((enumFromThen_d0_d0 1) 1)))))))))
 and iterate_d0_d0 f_2 x_0 =
-  (lazy (let rec h_2 = x_0 in
-    (let rec t_2 = ((iterate_d0_d0 f_2) (f_2 x_0)) in
+  (lazy (let rec t_2 = ((iterate_d0_d0 f_2) (f_2 x_0)) in
+    (let rec h_2 = x_0 in
       (fun f_3 -> 
-        (let rec _lh_concat_lz_LH_C_0_0 = (f_3 h_2) in
-          (let rec _lh_concat_lz_LH_C_1_0 = ((map_lz_d0_d0 f_3) t_2) in
+        (let rec _lh_concat_lz_LH_C_1_0 = ((map_lz_d0_d0 f_3) t_2) in
+          (let rec _lh_concat_lz_LH_C_0_0 = (f_3 h_2) in
             (fun _lh_dummy_0 -> 
               (Lazy.force ((append_lz_d1_d0 _lh_concat_lz_LH_C_0_0) (concat_lz_d0_d0 _lh_concat_lz_LH_C_1_0))))))))))
 and map_lz_d1_d0 f_1 ls_1 =
   (lazy (match (Lazy.force ls_1) with
     | `LH_C(h_0, t_0) -> 
-      (let rec _lh_carryPropagate_LH_C_0_0 = (f_1 h_0) in
-        (let rec _lh_carryPropagate_LH_C_1_0 = ((map_lz_d1_d0 f_1) t_0) in
+      (let rec _lh_carryPropagate_LH_C_1_0 = ((map_lz_d1_d0 f_1) t_0) in
+        (let rec _lh_carryPropagate_LH_C_0_0 = (f_1 h_0) in
           (fun _lh_carryPropagate_arg1_0 -> 
             (let rec carryguess_0 = (_lh_carryPropagate_LH_C_0_0 / _lh_carryPropagate_arg1_0) in
               (let rec remainder_0 = (_lh_carryPropagate_LH_C_0_0 mod _lh_carryPropagate_arg1_0) in
@@ -228,19 +228,19 @@ and testDigitsOfE2_nofib_d0_d0 _lh_testDigitsOfE2_nofib_arg1_0 =
 let rec append_lz_d0_d0_d0 _lh_append_lz_arg1_2 _lh_append_lz_arg2_5 =
   (let rec _lh_matchIdent_7 = _lh_append_lz_arg1_2 in
     (_lh_matchIdent_7 _lh_append_lz_arg2_5));;
-let rec append_lz_d0_d0_d1 _lh_append_lz_arg1_5 _lh_append_lz_arg2_1_1 =
-  (let rec _lh_matchIdent_1_3 = _lh_append_lz_arg1_5 in
-    (_lh_matchIdent_1_3 _lh_append_lz_arg2_1_1));;
+let rec append_lz_d0_d0_d1 _lh_append_lz_arg1_4 _lh_append_lz_arg2_7 =
+  (let rec _lh_matchIdent_1_2 = _lh_append_lz_arg1_4 in
+    (_lh_matchIdent_1_2 _lh_append_lz_arg2_7));;
 let rec append_lz_d0_d0_d2 _lh_append_lz_arg1_3 _lh_append_lz_arg2_6 =
   (let rec _lh_matchIdent_8 = _lh_append_lz_arg1_3 in
     (_lh_matchIdent_8 _lh_append_lz_arg2_6));;
-let rec append_lz_d1_d0_d0 _lh_append_lz_arg1_4 _lh_append_lz_arg2_7 =
-  (let rec _lh_matchIdent_1_2 = _lh_append_lz_arg1_4 in
-    (match _lh_matchIdent_1_2 with
+let rec append_lz_d1_d0_d0 _lh_append_lz_arg1_5 _lh_append_lz_arg2_8 =
+  (let rec _lh_matchIdent_1_3 = _lh_append_lz_arg1_5 in
+    (match _lh_matchIdent_1_3 with
       | `LH_C(_lh_append_lz_LH_C_0_3, _lh_append_lz_LH_C_1_3) -> 
-        (lazy (`LH_C(_lh_append_lz_LH_C_0_3, ((append_lz_d1_d0_d0 _lh_append_lz_LH_C_1_3) _lh_append_lz_arg2_7))))
+        (lazy (`LH_C(_lh_append_lz_LH_C_0_3, ((append_lz_d1_d0_d0 _lh_append_lz_LH_C_1_3) _lh_append_lz_arg2_8))))
       | `LH_N -> 
-        _lh_append_lz_arg2_7
+        _lh_append_lz_arg2_8
       | _ -> 
         (failwith "error")));;
 let rec carryPropagate_d0_d0_d0 _lh_carryPropagate_arg1_4 _lh_carryPropagate_arg2_2 =
@@ -255,67 +255,67 @@ let rec concat_lz_d0_d0_d0 _lh_concat_lz_arg1_2 =
 let rec concat_lz_d0_d0_d1 _lh_concat_lz_arg1_1 =
   (lazy (let rec _lh_matchIdent_6 = (Lazy.force _lh_concat_lz_arg1_1) in
     (_lh_matchIdent_6 99)));;
-let rec enumFromThen_d0_d0_d0 a_2 t_8 =
-  (lazy (`LH_C(a_2, ((enumFromThen_d0_d0_d0 t_8) ((2 * t_8) - a_2)))));;
-let rec head_lz_d0_d0_d0 ls_1_1 =
-  (match (Lazy.force ls_1_1) with
-    | `LH_C(h_1_0, t_1_2) -> 
-      h_1_0
-    | `LH_N -> 
-      (failwith "error"));;
-let rec map_lz_d0_d0_d0 f_7 ls_9 =
-  (lazy ((Lazy.force ls_9) f_7));;
-let rec map_lz_d0_d0_d1 f_4 ls_7 =
-  (lazy ((Lazy.force ls_7) f_4));;
-let rec tail_lz_d0_d0_d0 ls_8 =
+let rec enumFromThen_d0_d0_d0 a_2 t_7 =
+  (lazy (`LH_C(a_2, ((enumFromThen_d0_d0_d0 t_7) ((2 * t_7) - a_2)))));;
+let rec head_lz_d0_d0_d0 ls_8 =
   (match (Lazy.force ls_8) with
     | `LH_C(h_7, t_9) -> 
-      t_9
+      h_7
     | `LH_N -> 
       (failwith "error"));;
-let rec tail_lz_d1_d0_d0 ls_6 =
-  (match (Lazy.force ls_6) with
-    | `LH_C(h_6, t_7) -> 
-      t_7
+let rec map_lz_d0_d0_d0 f_7 ls_1_0 =
+  (lazy ((Lazy.force ls_1_0) f_7));;
+let rec map_lz_d0_d0_d1 f_4 ls_6 =
+  (lazy ((Lazy.force ls_6) f_4));;
+let rec tail_lz_d0_d0_d0 ls_7 =
+  (match (Lazy.force ls_7) with
+    | `LH_C(h_6, t_8) -> 
+      t_8
     | `LH_N -> 
       (failwith "error"));;
-let rec take_lz_d0_d0_d0 n_1 ls_1_0 =
+let rec tail_lz_d1_d0_d0 ls_9 =
+  (match (Lazy.force ls_9) with
+    | `LH_C(h_8, t_1_0) -> 
+      t_1_0
+    | `LH_N -> 
+      (failwith "error"));;
+let rec take_lz_d0_d0_d0 n_1 ls_1_1 =
   (if (n_1 > 0) then
-    (match (Lazy.force ls_1_0) with
-      | `LH_C(h_9, t_1_1) -> 
-        (`LH_C(h_9, ((take_lz_d0_d0_d0 (n_1 - 1)) t_1_1)))
+    (match (Lazy.force ls_1_1) with
+      | `LH_C(h_1_0, t_1_2) -> 
+        (`LH_C(h_1_0, ((take_lz_d0_d0_d0 (n_1 - 1)) t_1_2)))
       | `LH_N -> 
         (`LH_N))
   else
     (`LH_N));;
 let rec e_d0_d0_d0 _lh_e_arg1_1 =
   ((take_lz_d0_d0_d0 _lh_e_arg1_1) ((fun b_1 -> 
-    ((append_lz_d0_d0_d0 (let rec _lh_append_lz_LH_C_0_4 = '2' in
-      (let rec _lh_append_lz_LH_C_1_4 = (let rec _lh_append_lz_LH_C_0_5 = '.' in
-        (let rec _lh_append_lz_LH_C_1_5 = (fun _lh_append_lz_arg2_8 -> 
-          _lh_append_lz_arg2_8) in
-          (fun _lh_append_lz_arg2_9 -> 
-            (lazy (`LH_C(_lh_append_lz_LH_C_0_5, ((append_lz_d0_d0_d1 _lh_append_lz_LH_C_1_5) _lh_append_lz_arg2_9))))))) in
+    ((append_lz_d0_d0_d0 (let rec _lh_append_lz_LH_C_1_4 = (let rec _lh_append_lz_LH_C_1_5 = (fun _lh_append_lz_arg2_9 -> 
+      _lh_append_lz_arg2_9) in
+      (let rec _lh_append_lz_LH_C_0_4 = '.' in
         (fun _lh_append_lz_arg2_1_0 -> 
-          (lazy (`LH_C(_lh_append_lz_LH_C_0_4, ((append_lz_d0_d0_d2 _lh_append_lz_LH_C_1_4) _lh_append_lz_arg2_1_0)))))))) b_1)) ((fun _lh_funcomp_x_4 -> 
+          (lazy (`LH_C(_lh_append_lz_LH_C_0_4, ((append_lz_d0_d0_d1 _lh_append_lz_LH_C_1_5) _lh_append_lz_arg2_1_0))))))) in
+      (let rec _lh_append_lz_LH_C_0_5 = '2' in
+        (fun _lh_append_lz_arg2_1_1 -> 
+          (lazy (`LH_C(_lh_append_lz_LH_C_0_5, ((append_lz_d0_d0_d2 _lh_append_lz_LH_C_1_4) _lh_append_lz_arg2_1_1)))))))) b_1)) ((fun _lh_funcomp_x_4 -> 
     (tail_lz_d0_d0_d0 (concat_lz_d0_d0_d0 _lh_funcomp_x_4))) ((map_lz_d0_d0_d1 (fun _lh_funcomp_x_5 -> 
     (string_of_int (head_lz_d0_d0_d0 _lh_funcomp_x_5)))) ((iterate_d0_d0_d0 (fun _lh_funcomp_x_6 -> 
     ((fun _lh_funcomp_x_7 -> 
       ((carryPropagate_d0_d0_d0 2) ((map_lz_d1_d0_d0 (fun a_3 -> 
         (10 * a_3))) _lh_funcomp_x_7))) (tail_lz_d1_d0_d0 _lh_funcomp_x_6)))) (lazy (`LH_C(2, ((enumFromThen_d0_d0_d0 1) 1)))))))))
 and iterate_d0_d0_d0 f_5 x_1 =
-  (lazy (let rec h_8 = x_1 in
-    (let rec t_1_0 = ((iterate_d0_d0_d0 f_5) (f_5 x_1)) in
+  (lazy (let rec t_1_1 = ((iterate_d0_d0_d0 f_5) (f_5 x_1)) in
+    (let rec h_9 = x_1 in
       (fun f_6 -> 
-        (let rec _lh_concat_lz_LH_C_0_1 = (f_6 h_8) in
-          (let rec _lh_concat_lz_LH_C_1_1 = ((map_lz_d0_d0_d0 f_6) t_1_0) in
+        (let rec _lh_concat_lz_LH_C_1_1 = ((map_lz_d0_d0_d0 f_6) t_1_1) in
+          (let rec _lh_concat_lz_LH_C_0_1 = (f_6 h_9) in
             (fun _lh_dummy_1 -> 
               (Lazy.force ((append_lz_d1_d0_d0 _lh_concat_lz_LH_C_0_1) (concat_lz_d0_d0_d1 _lh_concat_lz_LH_C_1_1))))))))))
 and map_lz_d1_d0_d0 f_8 ls_1_2 =
   (lazy (match (Lazy.force ls_1_2) with
     | `LH_C(h_1_1, t_1_3) -> 
-      (let rec _lh_carryPropagate_LH_C_0_3 = (f_8 h_1_1) in
-        (let rec _lh_carryPropagate_LH_C_1_3 = ((map_lz_d1_d0_d0 f_8) t_1_3) in
+      (let rec _lh_carryPropagate_LH_C_1_3 = ((map_lz_d1_d0_d0 f_8) t_1_3) in
+        (let rec _lh_carryPropagate_LH_C_0_3 = (f_8 h_1_1) in
           (fun _lh_carryPropagate_arg1_5 -> 
             (let rec carryguess_1 = (_lh_carryPropagate_LH_C_0_3 / _lh_carryPropagate_arg1_5) in
               (let rec remainder_1 = (_lh_carryPropagate_LH_C_0_3 mod _lh_carryPropagate_arg1_5) in

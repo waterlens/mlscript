@@ -66,18 +66,18 @@ let rec flatMap_d0_d0 _lh_flatMap_arg1_0 _lh_flatMap_arg2_0 =
       (failwith "error"))
 and testSumFlatmap_d0_d0 _lh_testSumFlatmap_arg1_0 =
   ((sum_d0_d0 0) ((flatMap_d0_d0 (fun a_1 -> 
-    (let rec h_0 = a_1 in
-      (let rec t_0 = (let rec h_1 = a_1 in
-        (let rec t_1 = (fun ys_0 -> 
-          ys_0) in
-          (fun ys_1 -> 
-            (let rec _lh_sum_LH_C_0_0 = h_1 in
-              (let rec _lh_sum_LH_C_1_0 = ((mappend_d0_d0 t_1) ys_1) in
-                (fun _lh_sum_arg1_1 -> 
-                  ((sum_d0_d0 (_lh_sum_arg1_1 + _lh_sum_LH_C_0_0)) _lh_sum_LH_C_1_0))))))) in
+    (let rec t_0 = (let rec t_1 = (fun ys_0 -> 
+      ys_0) in
+      (let rec h_0 = a_1 in
+        (fun ys_1 -> 
+          (let rec _lh_sum_LH_C_1_0 = ((mappend_d0_d0 t_1) ys_1) in
+            (let rec _lh_sum_LH_C_0_0 = h_0 in
+              (fun _lh_sum_arg1_1 -> 
+                ((sum_d0_d0 (_lh_sum_arg1_1 + _lh_sum_LH_C_0_0)) _lh_sum_LH_C_1_0))))))) in
+      (let rec h_1 = a_1 in
         (fun ys_2 -> 
-          (let rec _lh_sum_LH_C_0_1 = h_0 in
-            (let rec _lh_sum_LH_C_1_1 = ((mappend_d0_d0 t_0) ys_2) in
+          (let rec _lh_sum_LH_C_1_1 = ((mappend_d0_d0 t_0) ys_2) in
+            (let rec _lh_sum_LH_C_0_1 = h_1 in
               (fun _lh_sum_arg1_2 -> 
                 ((sum_d0_d0 (_lh_sum_arg1_2 + _lh_sum_LH_C_0_1)) _lh_sum_LH_C_1_1))))))))) ((enumFromTo_d0_d0 1) _lh_testSumFlatmap_arg1_0)));;
 
@@ -89,39 +89,39 @@ let rec enumFromTo_d0_d0_d0 a_2 b_1 =
     (`LH_N));;
 let rec mappend_d0_d0_d0 xs_1 ys_4 =
   (xs_1 ys_4);;
-let rec mappend_d0_d0_d1 xs_3 ys_6 =
-  (xs_3 ys_6);;
-let rec mappend_d0_d0_d2 xs_2 ys_5 =
+let rec mappend_d0_d0_d1 xs_2 ys_5 =
   (xs_2 ys_5);;
-let rec sum_d0_d0_d0 _lh_sum_arg1_5 _lh_sum_arg2_2 =
-  (_lh_sum_arg2_2 _lh_sum_arg1_5);;
-let rec sum_d0_d0_d1 _lh_sum_arg1_4 _lh_sum_arg2_1 =
+let rec mappend_d0_d0_d2 xs_3 ys_9 =
+  (xs_3 ys_9);;
+let rec sum_d0_d0_d0 _lh_sum_arg1_4 _lh_sum_arg2_1 =
   (_lh_sum_arg2_1 _lh_sum_arg1_4);;
-let rec sum_d0_d0_d2 _lh_sum_arg1_6 _lh_sum_arg2_3 =
-  (_lh_sum_arg2_3 _lh_sum_arg1_6);;
+let rec sum_d0_d0_d1 _lh_sum_arg1_7 _lh_sum_arg2_3 =
+  (_lh_sum_arg2_3 _lh_sum_arg1_7);;
+let rec sum_d0_d0_d2 _lh_sum_arg1_5 _lh_sum_arg2_2 =
+  (_lh_sum_arg2_2 _lh_sum_arg1_5);;
 let rec flatMap_d0_d0_d0 _lh_flatMap_arg1_1 _lh_flatMap_arg2_1 =
   (match _lh_flatMap_arg2_1 with
     | `LH_N -> 
-      (fun _lh_sum_arg1_7 -> 
-        _lh_sum_arg1_7)
+      (fun _lh_sum_arg1_6 -> 
+        _lh_sum_arg1_6)
     | `LH_C(_lh_flatMap_LH_C_0_1, _lh_flatMap_LH_C_1_1) -> 
       ((mappend_d0_d0_d0 (_lh_flatMap_arg1_1 _lh_flatMap_LH_C_0_1)) ((flatMap_d0_d0_d0 _lh_flatMap_arg1_1) _lh_flatMap_LH_C_1_1))
     | _ -> 
       (failwith "error"))
 and testSumFlatmap_d0_d0_d0 _lh_testSumFlatmap_arg1_1 =
   ((sum_d0_d0_d0 0) ((flatMap_d0_d0_d0 (fun a_3 -> 
-    (let rec h_2 = a_3 in
-      (let rec t_2 = (let rec h_3 = a_3 in
-        (let rec t_3 = (fun ys_7 -> 
-          ys_7) in
-          (fun ys_8 -> 
-            (let rec _lh_sum_LH_C_0_2 = h_3 in
-              (let rec _lh_sum_LH_C_1_2 = ((mappend_d0_d0_d1 t_3) ys_8) in
-                (fun _lh_sum_arg1_8 -> 
-                  ((sum_d0_d0_d1 (_lh_sum_arg1_8 + _lh_sum_LH_C_0_2)) _lh_sum_LH_C_1_2))))))) in
-        (fun ys_9 -> 
-          (let rec _lh_sum_LH_C_0_3 = h_2 in
-            (let rec _lh_sum_LH_C_1_3 = ((mappend_d0_d0_d2 t_2) ys_9) in
+    (let rec t_2 = (let rec t_3 = (fun ys_6 -> 
+      ys_6) in
+      (let rec h_2 = a_3 in
+        (fun ys_7 -> 
+          (let rec _lh_sum_LH_C_1_2 = ((mappend_d0_d0_d1 t_3) ys_7) in
+            (let rec _lh_sum_LH_C_0_2 = h_2 in
+              (fun _lh_sum_arg1_8 -> 
+                ((sum_d0_d0_d1 (_lh_sum_arg1_8 + _lh_sum_LH_C_0_2)) _lh_sum_LH_C_1_2))))))) in
+      (let rec h_3 = a_3 in
+        (fun ys_8 -> 
+          (let rec _lh_sum_LH_C_1_3 = ((mappend_d0_d0_d2 t_2) ys_8) in
+            (let rec _lh_sum_LH_C_0_3 = h_3 in
               (fun _lh_sum_arg1_9 -> 
                 ((sum_d0_d0_d2 (_lh_sum_arg1_9 + _lh_sum_LH_C_0_3)) _lh_sum_LH_C_1_3))))))))) ((enumFromTo_d0_d0_d0 1) _lh_testSumFlatmap_arg1_1)));;
 

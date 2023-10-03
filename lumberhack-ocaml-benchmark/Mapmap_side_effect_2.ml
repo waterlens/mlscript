@@ -1,5 +1,5 @@
 (*
-touch ./Mapmap_side_effect.mli && ocamlc ./Mapmap_side_effect.mli && ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Mapmap_side_effect.ml -o "./Mapmap_side_effect.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Mapmap_side_effect.out && rm ./*.cmx ./*.out ./*.cmi ./*.o ./*.mli
+touch ./Mapmap_side_effect_2.mli && ocamlc ./Mapmap_side_effect_2.mli && ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Mapmap_side_effect_2.ml -o "./Mapmap_side_effect_2.out" -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Mapmap_side_effect_2.out && rm ./*.cmx ./*.out ./*.cmi ./*.o ./*.mli
 *)
 (* #use "topfind";;
 #require "core_unix.command_unix";;
@@ -13,10 +13,10 @@ let rec listToTaggedList s = match s with
 (* let string_of_int i = listToTaggedList (explode_string (string_of_int i));; *)
 let string_of_float f = listToTaggedList (explode_string (string_of_float f))
 
-let manGlob = ref "";;
-let origGlob = ref "";;
-let lumGlob = ref "";;
-let popGlob = ref "";;
+let manGlob = ref 0;;
+let origGlob = ref 0;;
+let lumGlob = ref 0;;
+let popGlob = ref 0;;
 
 (* original *)
 let rec _lhManual ls_2 f1_0 f2_0 =
@@ -38,12 +38,12 @@ let rec map f_0 ls_0 =
       (`N));;
 let rec testManual ls_3 =
   (((_lhManual ls_3) (fun x_2 -> 
-    (let f = x_2 * x_2 in manGlob := (string_of_int f) ^ (!manGlob); f))) (fun x_3 -> 
-    (let f = x_3 + 1 in manGlob := (string_of_int f) ^ (!manGlob); f)))
+    (let f = x_2 * x_2 in manGlob := 10 * (!manGlob) + f; f))) (fun x_3 -> 
+    (let f = x_3 + 1 in manGlob := 10 * (!manGlob) + f; f)))
 and testMapmap ls_1 =
   ((map (fun x_3 -> 
-    (let f = x_3 + 1 in origGlob := ((string_of_int f) ^ !origGlob); f))) ((map (fun x_2 -> 
-      (let f = x_2 * x_2 in origGlob := ((string_of_int f) ^ !origGlob); f))) ls_1));;
+    (let f = x_3 + 1 in origGlob := 10 * (!origGlob) + f; f))) ((map (fun x_2 -> 
+      (let f = x_2 * x_2 in origGlob := 10 * (!origGlob) + f; f))) ls_1));;
 
 (* lumberhack *)
 let rec enumFromTo_d0 a_1 b_1 =
@@ -70,8 +70,8 @@ let rec map_d1 f_1 ls_3 =
         (`N)))
 and testMapmap_d0 ls_1 =
   ((map_d0 (fun x_3 -> 
-    (let f = x_3 + 1 in lumGlob := (string_of_int f) ^ (!lumGlob); f))) ((map_d1 (fun x_2 -> 
-      (let f = x_2 * x_2 in lumGlob := (string_of_int f) ^ (!lumGlob); f))) ls_1));;
+    (let f = x_3 + 1 in lumGlob := 10 * (!lumGlob) + f; f))) ((map_d1 (fun x_2 -> 
+      (let f = x_2 * x_2 in lumGlob := 10 * (!lumGlob) + f; f))) ls_1));;
 
 (* lumberhack_pop_out *)
 let rec enumFromTo_d0_d0 a_3 b_3 =
@@ -98,12 +98,12 @@ let rec map_d1_d0 f_4 ls_5 _lh_popOutId_0_0 =
       (`N))
 and testMapmap_d0_d0 ls_9 =
   ((map_d0_d0 (fun x_3 -> 
-    (let f = x_3 + 1 in popGlob := (!popGlob) ^ (string_of_int f); f))) ((map_d1_d0 (fun x_2 -> 
-      (let f = x_2 * x_2 in popGlob := (!popGlob) ^ (string_of_int f); f))) ls_9));;
+    (let f = x_3 + 1 in popGlob := 10 * (!popGlob) + f; f))) ((map_d1_d0 (fun x_2 -> 
+      (let f = x_2 * x_2 in popGlob := 10 * (!popGlob) + f; f))) ls_9));;
 
 Command_unix.run (Bench.make_command [
-  Bench.Test.create ~name:"original_Mapmap" (fun () -> ignore (let res = (testMapmap ((enumFromTo 1) 1000)) in origGlob := ""; res));
-  Bench.Test.create ~name:"manual_Mapmap" (fun () -> ignore (let res = (testManual ((enumFromTo 1) 1000)) in manGlob := ""; res));
-  Bench.Test.create ~name:"lumberhack_Mapmap" (fun () -> ignore (let res = (testMapmap_d0 ((enumFromTo_d1 1) 1000)) in lumGlob := ""; res));
-  Bench.Test.create ~name:"lumberhack_pop_out_Mapmap" (fun () -> ignore (let res = (testMapmap_d0_d0 ((enumFromTo_d1_d0 1) 1000)) in popGlob := ""; res));
+  Bench.Test.create ~name:"original_Mapmap" (fun () -> ignore (let res = (testMapmap ((enumFromTo 1) 1000)) in (* print_int !origGlob; *) origGlob := 0; res));
+  Bench.Test.create ~name:"manual_Mapmap" (fun () -> ignore (let res = (testManual ((enumFromTo 1) 1000)) in (* print_int !manGlob; *) manGlob := 0; res));
+  Bench.Test.create ~name:"lumberhack_Mapmap" (fun () -> ignore (let res = (testMapmap_d0 ((enumFromTo_d1 1) 1000)) in (* print_int !lumGlob; *) lumGlob := 0; res));
+  Bench.Test.create ~name:"lumberhack_pop_out_Mapmap" (fun () -> ignore (let res = (testMapmap_d0_d0 ((enumFromTo_d1_d0 1) 1000)) in (* print_int !popGlob; *) popGlob := 0; res));
 ])

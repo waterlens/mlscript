@@ -76,24 +76,24 @@ testUnzipZip(primId(50000))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ testUnzipZip₀(primId⁰(50000))
-//│ def testUnzipZip₀(n¹) = 
-//│ 	unzip₀(zip₀(primId⁰(enumFromTo₀(1, n¹)), primId⁰(enumFromTo₁(2, (n¹ + 3)))))
+//│ testUnzipZip_₀(primId⁰(50000))
+//│ def testUnzipZip_₀(n¹) = 
+//│ 	unzip_₀(zip_₀(primId⁰(enumFromTo_₀(1, n¹)), primId⁰(enumFromTo_₁(2, (n¹ + 3)))))
 //│ 	where
-//│ 	def enumFromTo₀(a³, b³) = 
-//│ 		if (a³ < b³) then [C a³ enumFromTo₀((a³ + 1), b³)] else [N]
-//│ 	def enumFromTo₁(a², b²) = 
-//│ 		if (a² < b²) then [C a² enumFromTo₁((a² + 1), b²)] else [N]
-//│ 	def unzip₀(ls¹) = 
+//│ 	def enumFromTo_₀(a³, b³) = 
+//│ 		if (a³ < b³) then [C a³ enumFromTo_₀((a³ + 1), b³)] else [N]
+//│ 	def enumFromTo_₁(a², b²) = 
+//│ 		if (a² < b²) then [C a² enumFromTo_₁((a² + 1), b²)] else [N]
+//│ 	def unzip_₀(ls¹) = 
 //│ 		case ls¹ of {
 //│ 			C h¹ t¹ => case h¹ of {
-//│ 				Pair a⁴ b⁴ => case unzip₀(t¹) of {
+//│ 				Pair a⁴ b⁴ => case unzip_₀(t¹) of {
 //│ 					Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}}
 //│ 			| N  => [Pair [N] [N]]}
-//│ 	def zip₀(xs¹, ys¹) = 
+//│ 	def zip_₀(xs¹, ys¹) = 
 //│ 		case xs¹ of {
 //│ 			C x¹ xt¹ => case ys¹ of {
-//│ 				C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)]
+//│ 				C y¹ yt¹ => [C [Pair x¹ y¹] zip_₀(xt¹, yt¹)]
 //│ 				| N  => [N]}
 //│ 			| N  => [N]}
 //│ <<<<<<< expanded program <<<<<<<
@@ -101,69 +101,69 @@ testUnzipZip(primId(50000))
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [Pair [C a⁴ atail¹] [C b⁴ btail¹]]: 161 --->
 //│ 	NoCons
-//│ 	case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}: 162
+//│ 	case unzip_₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}: 162
 //│ [Pair [N] [N]]: 166 --->
 //│ 	NoCons
-//│ 	case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}: 162
+//│ 	case unzip_₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}: 162
 //│ [Pair x¹ y¹]: 173 --->
-//│ 	case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}}: 163
-//│ [C [Pair x¹ y¹] zip₀(xt¹, yt¹)]: 179 --->
-//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167
+//│ 	case h¹ of {Pair a⁴ b⁴ => case unzip_₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}}: 163
+//│ [C [Pair x¹ y¹] zip_₀(xt¹, yt¹)]: 179 --->
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip_₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167
 //│ [N]: 180 --->
-//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip_₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167
 //│ [N]: 182 --->
-//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip_₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167
 //│ ------------------
-//│ case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}: 162 --->
+//│ case unzip_₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}: 162 --->
 //│ 	[Pair [C a⁴ atail¹] [C b⁴ btail¹]]: 161
 //│ 	[Pair [N] [N]]: 166
-//│ case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}}: 163 --->
+//│ case h¹ of {Pair a⁴ b⁴ => case unzip_₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}}: 163 --->
 //│ 	[Pair x¹ y¹]: 173
-//│ case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167 --->
-//│ 	[C [Pair x¹ y¹] zip₀(xt¹, yt¹)]: 179
+//│ case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip_₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167 --->
+//│ 	[C [Pair x¹ y¹] zip_₀(xt¹, yt¹)]: 179
 //│ 	[N]: 180
 //│ 	[N]: 182
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [Pair x¹ y¹]: 173 --->
-//│ 	case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}}: 163
-//│ [C [Pair x¹ y¹] zip₀(xt¹, yt¹)]: 179 --->
-//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167
+//│ 	case h¹ of {Pair a⁴ b⁴ => case unzip_₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}}: 163
+//│ [C [Pair x¹ y¹] zip_₀(xt¹, yt¹)]: 179 --->
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip_₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167
 //│ [N]: 180 --->
-//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip_₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167
 //│ [N]: 182 --->
-//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167
+//│ 	case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip_₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167
 //│ ------------------
-//│ case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}}: 163 --->
+//│ case h¹ of {Pair a⁴ b⁴ => case unzip_₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}}: 163 --->
 //│ 	[Pair x¹ y¹]: 173
-//│ case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167 --->
-//│ 	[C [Pair x¹ y¹] zip₀(xt¹, yt¹)]: 179
+//│ case ls¹ of {C h¹ t¹ => case h¹ of {Pair a⁴ b⁴ => case unzip_₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a⁴ atail¹] [C b⁴ btail¹]]}} | N  => [Pair [N] [N]]}: 167 --->
+//│ 	[C [Pair x¹ y¹] zip_₀(xt¹, yt¹)]: 179
 //│ 	[N]: 180
 //│ 	[N]: 182
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testUnzipZip₀(primId⁰(50000))
-//│ def testUnzipZip₀(n²) = 
-//│ 	unzip₀(zip₀(primId⁰(enumFromTo₀(1, n²)), primId⁰(enumFromTo₁(2, (n² + 3)))))
+//│ testUnzipZip_₀(primId⁰(50000))
+//│ def testUnzipZip_₀(n²) = 
+//│ 	unzip_₀(zip_₀(primId⁰(enumFromTo_₀(1, n²)), primId⁰(enumFromTo_₁(2, (n² + 3)))))
 //│ 	where
-//│ 	def enumFromTo₀(a⁵, b⁵) = 
-//│ 		if (a⁵ < b⁵) then [C a⁵ enumFromTo₀((a⁵ + 1), b⁵)] else [N]
-//│ 	def enumFromTo₁(a⁶, b⁶) = 
-//│ 		if (a⁶ < b⁶) then [C a⁶ enumFromTo₁((a⁶ + 1), b⁶)] else [N]
-//│ 	def unzip₀(ls²) = 
+//│ 	def enumFromTo_₀(a⁷, b⁷) = 
+//│ 		if (a⁷ < b⁷) then [C a⁷ enumFromTo_₀((a⁷ + 1), b⁷)] else [N]
+//│ 	def enumFromTo_₁(a⁶, b⁶) = 
+//│ 		if (a⁶ < b⁶) then [C a⁶ enumFromTo_₁((a⁶ + 1), b⁶)] else [N]
+//│ 	def unzip_₀(ls²) = 
 //│ 		ls²(99)
-//│ 	def zip₀(xs², ys²) = 
+//│ 	def zip_₀(xs², ys²) = 
 //│ 		case xs² of {
 //│ 			C x¹ xt¹ => case ys² of {
 //│ 				C y¹ yt¹ => 
-//│ 					let t² = zip₀(xt¹, yt¹)
+//│ 					let t² = zip_₀(xt¹, yt¹)
 //│ 					in let h² = 	
-//│ 						let b⁷ = y¹
-//│ 						in let a⁷ = x¹
-//│ 						in (fun t³ -> case unzip₀(t³) of {
-//│ 							Pair atail¹ btail¹ => [Pair [C a⁷ atail¹] [C b⁷ btail¹]]})
+//│ 						let b⁵ = y¹
+//│ 						in let a⁵ = x¹
+//│ 						in (fun t³ -> case unzip_₀(t³) of {
+//│ 							Pair atail¹ btail¹ => [Pair [C a⁵ atail¹] [C b⁵ btail¹]]})
 //│ 					in (fun _lh_dummy⁰ -> h²(t²))
 //│ 				| N  => (fun _lh_dummy¹ -> [Pair [N] [N]])}
 //│ 			| N  => (fun _lh_dummy² -> [Pair [N] [N]])}
@@ -252,96 +252,96 @@ testZipUnzip(primId(50000))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ testZipUnzip₀(primId⁰(50000))
-//│ def testZipUnzip₀(n²) = 
-//│ 	case unzip₀(primId⁰(makeZippedList₀(n²))) of {
-//│ 		Pair xs² ys² => zip₀(xs², ys²)}
+//│ testZipUnzip_₀(primId⁰(50000))
+//│ def testZipUnzip_₀(n²) = 
+//│ 	case unzip_₀(primId⁰(makeZippedList_₀(n²))) of {
+//│ 		Pair xs² ys² => zip_₀(xs², ys²)}
 //│ 	where
-//│ 	def makeZippedList₀(n³) = 
-//│ 		if (n³ > 0) then [C [Pair n³ (n³ + 1)] makeZippedList₀((n³ - 1))] else [N]
-//│ 	def unzip₀(ls¹) = 
+//│ 	def makeZippedList_₀(n³) = 
+//│ 		if (n³ > 0) then [C [Pair n³ (n³ + 1)] makeZippedList_₀((n³ - 1))] else [N]
+//│ 	def unzip_₀(ls¹) = 
 //│ 		case ls¹ of {
 //│ 			C h¹ t¹ => case h¹ of {
-//│ 				Pair a¹ b¹ => case unzip₀(t¹) of {
+//│ 				Pair a¹ b¹ => case unzip_₀(t¹) of {
 //│ 					Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}}
 //│ 			| N  => [Pair [N] [N]]}
-//│ 	def zip₀(xs³, ys³) = 
+//│ 	def zip_₀(xs³, ys³) = 
 //│ 		case xs³ of {
 //│ 			C x¹ xt¹ => case ys³ of {
-//│ 				C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)]
+//│ 				C y¹ yt¹ => [C [Pair x¹ y¹] zip_₀(xt¹, yt¹)]
 //│ 				| N  => [N]}
 //│ 			| N  => [N]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C a¹ atail¹]: 123 --->
-//│ 	case xs³ of {C x¹ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 149
+//│ 	case xs³ of {C x¹ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip_₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 149
 //│ [C b¹ btail¹]: 126 --->
-//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 147
+//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip_₀(xt¹, yt¹)] | N  => [N]}: 147
 //│ [Pair [C a¹ atail¹] [C b¹ btail¹]]: 127 --->
-//│ 	case unzip₀(primId⁰(makeZippedList₀(n²))) of {Pair xs² ys² => zip₀(xs², ys²)}: 91
-//│ 	case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 128
+//│ 	case unzip_₀(primId⁰(makeZippedList_₀(n²))) of {Pair xs² ys² => zip_₀(xs², ys²)}: 91
+//│ 	case unzip_₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 128
 //│ [N]: 130 --->
-//│ 	case xs³ of {C x¹ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 149
+//│ 	case xs³ of {C x¹ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip_₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 149
 //│ [N]: 131 --->
-//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 147
+//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip_₀(xt¹, yt¹)] | N  => [N]}: 147
 //│ [Pair [N] [N]]: 132 --->
-//│ 	case unzip₀(primId⁰(makeZippedList₀(n²))) of {Pair xs² ys² => zip₀(xs², ys²)}: 91
-//│ 	case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 128
+//│ 	case unzip_₀(primId⁰(makeZippedList_₀(n²))) of {Pair xs² ys² => zip_₀(xs², ys²)}: 91
+//│ 	case unzip_₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 128
 //│ ------------------
-//│ case unzip₀(primId⁰(makeZippedList₀(n²))) of {Pair xs² ys² => zip₀(xs², ys²)}: 91 --->
+//│ case unzip_₀(primId⁰(makeZippedList_₀(n²))) of {Pair xs² ys² => zip_₀(xs², ys²)}: 91 --->
 //│ 	[Pair [C a¹ atail¹] [C b¹ btail¹]]: 127
 //│ 	[Pair [N] [N]]: 132
-//│ case unzip₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 128 --->
+//│ case unzip_₀(t¹) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 128 --->
 //│ 	[Pair [C a¹ atail¹] [C b¹ btail¹]]: 127
 //│ 	[Pair [N] [N]]: 132
-//│ case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 147 --->
+//│ case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip_₀(xt¹, yt¹)] | N  => [N]}: 147 --->
 //│ 	[C b¹ btail¹]: 126
 //│ 	[N]: 131
-//│ case xs³ of {C x¹ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 149 --->
+//│ case xs³ of {C x¹ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip_₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 149 --->
 //│ 	[C a¹ atail¹]: 123
 //│ 	[N]: 130
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [C a¹ atail¹]: 123 --->
-//│ 	case xs³ of {C x¹ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 149
+//│ 	case xs³ of {C x¹ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip_₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 149
 //│ [C b¹ btail¹]: 126 --->
-//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 147
+//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip_₀(xt¹, yt¹)] | N  => [N]}: 147
 //│ [N]: 130 --->
-//│ 	case xs³ of {C x¹ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 149
+//│ 	case xs³ of {C x¹ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip_₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 149
 //│ [N]: 131 --->
-//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 147
+//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip_₀(xt¹, yt¹)] | N  => [N]}: 147
 //│ ------------------
-//│ case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 147 --->
+//│ case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip_₀(xt¹, yt¹)] | N  => [N]}: 147 --->
 //│ 	[C b¹ btail¹]: 126
 //│ 	[N]: 131
-//│ case xs³ of {C x¹ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 149 --->
+//│ case xs³ of {C x¹ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x¹ y¹] zip_₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 149 --->
 //│ 	[C a¹ atail¹]: 123
 //│ 	[N]: 130
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testZipUnzip₀(primId⁰(50000))
-//│ def testZipUnzip₀(n⁴) = 
-//│ 	case unzip₀(primId⁰(makeZippedList₀(n⁴))) of {
-//│ 		Pair xs² ys² => zip₀(xs², ys²)}
+//│ testZipUnzip_₀(primId⁰(50000))
+//│ def testZipUnzip_₀(n⁴) = 
+//│ 	case unzip_₀(primId⁰(makeZippedList_₀(n⁴))) of {
+//│ 		Pair xs² ys² => zip_₀(xs², ys²)}
 //│ 	where
-//│ 	def makeZippedList₀(n⁵) = 
-//│ 		if (n⁵ > 0) then [C [Pair n⁵ (n⁵ + 1)] makeZippedList₀((n⁵ - 1))] else [N]
-//│ 	def unzip₀(ls²) = 
+//│ 	def makeZippedList_₀(n⁵) = 
+//│ 		if (n⁵ > 0) then [C [Pair n⁵ (n⁵ + 1)] makeZippedList_₀((n⁵ - 1))] else [N]
+//│ 	def unzip_₀(ls²) = 
 //│ 		case ls² of {
 //│ 			C h¹ t¹ => case h¹ of {
-//│ 				Pair a¹ b¹ => case unzip₀(t¹) of {
+//│ 				Pair a¹ b¹ => case unzip_₀(t¹) of {
 //│ 					Pair atail¹ btail¹ => [Pair 
 //│ 						let xt² = atail¹
 //│ 						in let x² = a¹
 //│ 						in (fun ys⁴ -> ys⁴(xt², x²)) 
 //│ 						let yt² = btail¹
 //│ 						in let y² = b¹
-//│ 						in (fun xt³ -> (fun x³ -> [C [Pair x³ y²] zip₀(xt³, yt²)]))]}}
+//│ 						in (fun xt³ -> (fun x³ -> [C [Pair x³ y²] zip_₀(xt³, yt²)]))]}}
 //│ 			| N  => [Pair (fun ys⁵ -> [N]) (fun xt⁴ -> (fun x⁴ -> [N]))]}
-//│ 	def zip₀(xs⁴, ys⁶) = 
+//│ 	def zip_₀(xs⁴, ys⁶) = 
 //│ 		xs⁴(ys⁶)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
@@ -448,143 +448,143 @@ testZipMapBothUnzip(primId(50000))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ testZipMapBothUnzip₀(primId⁰(50000))
-//│ def testZipMapBothUnzip₀(n²) = 
-//│ 	case unzip₀(primId⁰(makeZippedList₀(n²))) of {
-//│ 		Pair xs² ys² => zip₀(map₀((fun x³ -> (x³ + 1)), xs²), map₁((fun x⁴ -> (x⁴ * x⁴)), ys²))}
+//│ testZipMapBothUnzip_₀(primId⁰(50000))
+//│ def testZipMapBothUnzip_₀(n²) = 
+//│ 	case unzip_₀(primId⁰(makeZippedList_₀(n²))) of {
+//│ 		Pair xs² ys² => zip_₀(map_₀((fun x³ -> (x³ + 1)), xs²), map_₁((fun x⁴ -> (x⁴ * x⁴)), ys²))}
 //│ 	where
-//│ 	def makeZippedList₀(n³) = 
-//│ 		if (n³ > 0) then [C [Pair n³ (n³ + 1)] makeZippedList₀((n³ - 1))] else [N]
-//│ 	def map₀(f¹, ls²) = 
+//│ 	def makeZippedList_₀(n³) = 
+//│ 		if (n³ > 0) then [C [Pair n³ (n³ + 1)] makeZippedList_₀((n³ - 1))] else [N]
+//│ 	def map_₀(f¹, ls²) = 
 //│ 		case ls² of {
-//│ 			C h² t² => [C f¹(h²) map₀(f¹, t²)]
+//│ 			C h² t² => [C f¹(h²) map_₀(f¹, t²)]
 //│ 			| N  => [N]}
-//│ 	def map₁(f², ls⁴) = 
+//│ 	def map_₁(f², ls⁴) = 
 //│ 		case ls⁴ of {
-//│ 			C h⁴ t⁴ => [C f²(h⁴) map₁(f², t⁴)]
+//│ 			C h⁴ t⁴ => [C f²(h⁴) map_₁(f², t⁴)]
 //│ 			| N  => [N]}
-//│ 	def unzip₀(ls³) = 
+//│ 	def unzip_₀(ls³) = 
 //│ 		case ls³ of {
 //│ 			C h³ t³ => case h³ of {
-//│ 				Pair a¹ b¹ => case unzip₀(t³) of {
+//│ 				Pair a¹ b¹ => case unzip_₀(t³) of {
 //│ 					Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}}
 //│ 			| N  => [Pair [N] [N]]}
-//│ 	def zip₀(xs³, ys³) = 
+//│ 	def zip_₀(xs³, ys³) = 
 //│ 		case xs³ of {
 //│ 			C x⁵ xt¹ => case ys³ of {
-//│ 				C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)]
+//│ 				C y¹ yt¹ => [C [Pair x⁵ y¹] zip_₀(xt¹, yt¹)]
 //│ 				| N  => [N]}
 //│ 			| N  => [N]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C f¹(h²) map₀(f¹, t²)]: 120 --->
-//│ 	case xs³ of {C x⁵ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 171
+//│ [C f¹(h²) map_₀(f¹, t²)]: 120 --->
+//│ 	case xs³ of {C x⁵ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip_₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 171
 //│ [N]: 121 --->
-//│ 	case xs³ of {C x⁵ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 171
+//│ 	case xs³ of {C x⁵ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip_₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 171
 //│ [C a¹ atail¹]: 181 --->
-//│ 	case ls² of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 122
+//│ 	case ls² of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 122
 //│ [C b¹ btail¹]: 184 --->
-//│ 	case ls⁴ of {C h⁴ t⁴ => [C f²(h⁴) map₁(f², t⁴)] | N  => [N]}: 227
+//│ 	case ls⁴ of {C h⁴ t⁴ => [C f²(h⁴) map_₁(f², t⁴)] | N  => [N]}: 227
 //│ [Pair [C a¹ atail¹] [C b¹ btail¹]]: 185 --->
-//│ 	case unzip₀(primId⁰(makeZippedList₀(n²))) of {Pair xs² ys² => zip₀(map₀((fun x³ -> (x³ + 1)), xs²), map₁((fun x⁴ -> (x⁴ * x⁴)), ys²))}: 155
-//│ 	case unzip₀(t³) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 186
+//│ 	case unzip_₀(primId⁰(makeZippedList_₀(n²))) of {Pair xs² ys² => zip_₀(map_₀((fun x³ -> (x³ + 1)), xs²), map_₁((fun x⁴ -> (x⁴ * x⁴)), ys²))}: 155
+//│ 	case unzip_₀(t³) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 186
 //│ [N]: 188 --->
-//│ 	case ls² of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 122
+//│ 	case ls² of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 122
 //│ [N]: 189 --->
-//│ 	case ls⁴ of {C h⁴ t⁴ => [C f²(h⁴) map₁(f², t⁴)] | N  => [N]}: 227
+//│ 	case ls⁴ of {C h⁴ t⁴ => [C f²(h⁴) map_₁(f², t⁴)] | N  => [N]}: 227
 //│ [Pair [N] [N]]: 190 --->
-//│ 	case unzip₀(primId⁰(makeZippedList₀(n²))) of {Pair xs² ys² => zip₀(map₀((fun x³ -> (x³ + 1)), xs²), map₁((fun x⁴ -> (x⁴ * x⁴)), ys²))}: 155
-//│ 	case unzip₀(t³) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 186
-//│ [C f²(h⁴) map₁(f², t⁴)]: 225 --->
-//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 169
+//│ 	case unzip_₀(primId⁰(makeZippedList_₀(n²))) of {Pair xs² ys² => zip_₀(map_₀((fun x³ -> (x³ + 1)), xs²), map_₁((fun x⁴ -> (x⁴ * x⁴)), ys²))}: 155
+//│ 	case unzip_₀(t³) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 186
+//│ [C f²(h⁴) map_₁(f², t⁴)]: 225 --->
+//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip_₀(xt¹, yt¹)] | N  => [N]}: 169
 //│ [N]: 226 --->
-//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 169
+//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip_₀(xt¹, yt¹)] | N  => [N]}: 169
 //│ ------------------
-//│ case ls² of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 122 --->
+//│ case ls² of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 122 --->
 //│ 	[C a¹ atail¹]: 181
 //│ 	[N]: 188
-//│ case unzip₀(primId⁰(makeZippedList₀(n²))) of {Pair xs² ys² => zip₀(map₀((fun x³ -> (x³ + 1)), xs²), map₁((fun x⁴ -> (x⁴ * x⁴)), ys²))}: 155 --->
+//│ case unzip_₀(primId⁰(makeZippedList_₀(n²))) of {Pair xs² ys² => zip_₀(map_₀((fun x³ -> (x³ + 1)), xs²), map_₁((fun x⁴ -> (x⁴ * x⁴)), ys²))}: 155 --->
 //│ 	[Pair [C a¹ atail¹] [C b¹ btail¹]]: 185
 //│ 	[Pair [N] [N]]: 190
-//│ case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 169 --->
-//│ 	[C f²(h⁴) map₁(f², t⁴)]: 225
+//│ case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip_₀(xt¹, yt¹)] | N  => [N]}: 169 --->
+//│ 	[C f²(h⁴) map_₁(f², t⁴)]: 225
 //│ 	[N]: 226
-//│ case xs³ of {C x⁵ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 171 --->
-//│ 	[C f¹(h²) map₀(f¹, t²)]: 120
+//│ case xs³ of {C x⁵ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip_₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 171 --->
+//│ 	[C f¹(h²) map_₀(f¹, t²)]: 120
 //│ 	[N]: 121
-//│ case unzip₀(t³) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 186 --->
+//│ case unzip_₀(t³) of {Pair atail¹ btail¹ => [Pair [C a¹ atail¹] [C b¹ btail¹]]}: 186 --->
 //│ 	[Pair [C a¹ atail¹] [C b¹ btail¹]]: 185
 //│ 	[Pair [N] [N]]: 190
-//│ case ls⁴ of {C h⁴ t⁴ => [C f²(h⁴) map₁(f², t⁴)] | N  => [N]}: 227 --->
+//│ case ls⁴ of {C h⁴ t⁴ => [C f²(h⁴) map_₁(f², t⁴)] | N  => [N]}: 227 --->
 //│ 	[C b¹ btail¹]: 184
 //│ 	[N]: 189
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C f¹(h²) map₀(f¹, t²)]: 120 --->
-//│ 	case xs³ of {C x⁵ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 171
+//│ [C f¹(h²) map_₀(f¹, t²)]: 120 --->
+//│ 	case xs³ of {C x⁵ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip_₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 171
 //│ [N]: 121 --->
-//│ 	case xs³ of {C x⁵ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 171
+//│ 	case xs³ of {C x⁵ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip_₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 171
 //│ [C a¹ atail¹]: 181 --->
-//│ 	case ls² of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 122
+//│ 	case ls² of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 122
 //│ [C b¹ btail¹]: 184 --->
-//│ 	case ls⁴ of {C h⁴ t⁴ => [C f²(h⁴) map₁(f², t⁴)] | N  => [N]}: 227
+//│ 	case ls⁴ of {C h⁴ t⁴ => [C f²(h⁴) map_₁(f², t⁴)] | N  => [N]}: 227
 //│ [N]: 188 --->
-//│ 	case ls² of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 122
+//│ 	case ls² of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 122
 //│ [N]: 189 --->
-//│ 	case ls⁴ of {C h⁴ t⁴ => [C f²(h⁴) map₁(f², t⁴)] | N  => [N]}: 227
-//│ [C f²(h⁴) map₁(f², t⁴)]: 225 --->
-//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 169
+//│ 	case ls⁴ of {C h⁴ t⁴ => [C f²(h⁴) map_₁(f², t⁴)] | N  => [N]}: 227
+//│ [C f²(h⁴) map_₁(f², t⁴)]: 225 --->
+//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip_₀(xt¹, yt¹)] | N  => [N]}: 169
 //│ [N]: 226 --->
-//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 169
+//│ 	case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip_₀(xt¹, yt¹)] | N  => [N]}: 169
 //│ ------------------
-//│ case ls² of {C h² t² => [C f¹(h²) map₀(f¹, t²)] | N  => [N]}: 122 --->
+//│ case ls² of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 122 --->
 //│ 	[C a¹ atail¹]: 181
 //│ 	[N]: 188
-//│ case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]}: 169 --->
-//│ 	[C f²(h⁴) map₁(f², t⁴)]: 225
+//│ case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip_₀(xt¹, yt¹)] | N  => [N]}: 169 --->
+//│ 	[C f²(h⁴) map_₁(f², t⁴)]: 225
 //│ 	[N]: 226
-//│ case xs³ of {C x⁵ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 171 --->
-//│ 	[C f¹(h²) map₀(f¹, t²)]: 120
+//│ case xs³ of {C x⁵ xt¹ => case ys³ of {C y¹ yt¹ => [C [Pair x⁵ y¹] zip_₀(xt¹, yt¹)] | N  => [N]} | N  => [N]}: 171 --->
+//│ 	[C f¹(h²) map_₀(f¹, t²)]: 120
 //│ 	[N]: 121
-//│ case ls⁴ of {C h⁴ t⁴ => [C f²(h⁴) map₁(f², t⁴)] | N  => [N]}: 227 --->
+//│ case ls⁴ of {C h⁴ t⁴ => [C f²(h⁴) map_₁(f², t⁴)] | N  => [N]}: 227 --->
 //│ 	[C b¹ btail¹]: 184
 //│ 	[N]: 189
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testZipMapBothUnzip₀(primId⁰(50000))
-//│ def testZipMapBothUnzip₀(n⁵) = 
-//│ 	case unzip₀(primId⁰(makeZippedList₀(n⁵))) of {
-//│ 		Pair xs² ys² => zip₀(map₀((fun x⁹ -> (x⁹ + 1)), xs²), map₁((fun x¹⁰ -> (x¹⁰ * x¹⁰)), ys²))}
+//│ testZipMapBothUnzip_₀(primId⁰(50000))
+//│ def testZipMapBothUnzip_₀(n⁵) = 
+//│ 	case unzip_₀(primId⁰(makeZippedList_₀(n⁵))) of {
+//│ 		Pair xs² ys² => zip_₀(map_₀((fun x⁹ -> (x⁹ + 1)), xs²), map_₁((fun x¹⁰ -> (x¹⁰ * x¹⁰)), ys²))}
 //│ 	where
-//│ 	def makeZippedList₀(n⁴) = 
-//│ 		if (n⁴ > 0) then [C [Pair n⁴ (n⁴ + 1)] makeZippedList₀((n⁴ - 1))] else [N]
-//│ 	def map₀(f⁸, ls⁷) = 
-//│ 		ls⁷(f⁸)
-//│ 	def map₁(f⁷, ls⁶) = 
+//│ 	def makeZippedList_₀(n⁴) = 
+//│ 		if (n⁴ > 0) then [C [Pair n⁴ (n⁴ + 1)] makeZippedList_₀((n⁴ - 1))] else [N]
+//│ 	def map_₀(f⁷, ls⁶) = 
 //│ 		ls⁶(f⁷)
-//│ 	def unzip₀(ls⁵) = 
+//│ 	def map_₁(f⁸, ls⁷) = 
+//│ 		ls⁷(f⁸)
+//│ 	def unzip_₀(ls⁵) = 
 //│ 		case ls⁵ of {
 //│ 			C h³ t³ => case h³ of {
-//│ 				Pair a¹ b¹ => case unzip₀(t³) of {
+//│ 				Pair a¹ b¹ => case unzip_₀(t³) of {
 //│ 					Pair atail¹ btail¹ => [Pair 
 //│ 						let t⁵ = atail¹
 //│ 						in let h⁵ = a¹
 //│ 						in (fun f³ -> 
-//│ 							let xt² = map₀(f³, t⁵)
+//│ 							let xt² = map_₀(f³, t⁵)
 //│ 							in let x⁶ = f³(h⁵)
-//│ 							in (fun ys⁵ -> ys⁵(xt², x⁶))) 
+//│ 							in (fun ys⁴ -> ys⁴(xt², x⁶))) 
 //│ 						let t⁶ = btail¹
 //│ 						in let h⁶ = b¹
 //│ 						in (fun f⁴ -> 
-//│ 							let yt² = map₁(f⁴, t⁶)
+//│ 							let yt² = map_₁(f⁴, t⁶)
 //│ 							in let y² = f⁴(h⁶)
-//│ 							in (fun xt³ -> (fun x⁷ -> [C [Pair x⁷ y²] zip₀(xt³, yt²)])))]}}
-//│ 			| N  => [Pair (fun f⁵ -> (fun ys⁶ -> [N])) (fun f⁶ -> (fun xt⁴ -> (fun x⁸ -> [N])))]}
-//│ 	def zip₀(xs⁴, ys⁴) = 
-//│ 		xs⁴(ys⁴)
+//│ 							in (fun xt³ -> (fun x⁷ -> [C [Pair x⁷ y²] zip_₀(xt³, yt²)])))]}}
+//│ 			| N  => [Pair (fun f⁵ -> (fun ys⁵ -> [N])) (fun f⁶ -> (fun xt⁴ -> (fun x⁸ -> [N])))]}
+//│ 	def zip_₀(xs⁴, ys⁶) = 
+//│ 		xs⁴(ys⁶)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>

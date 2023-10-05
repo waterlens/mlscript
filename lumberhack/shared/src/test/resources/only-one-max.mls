@@ -27,22 +27,22 @@ max(C(1, C(2, N)), 0)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ max₀([C 1 [C 2 [N]]], 0)
-//│ def max₀(ls¹, n¹) = 
+//│ max_₀([C 1 [C 2 [N]]], 0)
+//│ def max_₀(ls¹, n¹) = 
 //│ 	case ls¹ of {
-//│ 		C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹)
+//│ 		C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹)
 //│ 		| N  => n¹}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 55 --->
-//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹) | N  => n¹}: 49
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹) | N  => n¹}: 49
 //│ [C 2 [N]]: 56 --->
-//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹) | N  => n¹}: 49
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹) | N  => n¹}: 49
 //│ [C 1 [C 2 [N]]]: 57 --->
-//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹) | N  => n¹}: 49
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹) | N  => n¹}: 49
 //│ ------------------
-//│ case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹) | N  => n¹}: 49 --->
+//│ case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹) | N  => n¹}: 49 --->
 //│ 	[N]: 55
 //│ 	[C 2 [N]]: 56
 //│ 	[C 1 [C 2 [N]]]: 57
@@ -50,27 +50,27 @@ max(C(1, C(2, N)), 0)
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [N]: 55 --->
-//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹) | N  => n¹}: 49
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹) | N  => n¹}: 49
 //│ [C 2 [N]]: 56 --->
-//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹) | N  => n¹}: 49
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹) | N  => n¹}: 49
 //│ [C 1 [C 2 [N]]]: 57 --->
-//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹) | N  => n¹}: 49
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹) | N  => n¹}: 49
 //│ ------------------
-//│ case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹) | N  => n¹}: 49 --->
+//│ case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹) | N  => n¹}: 49 --->
 //│ 	[N]: 55
 //│ 	[C 2 [N]]: 56
 //│ 	[C 1 [C 2 [N]]]: 57
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ max₀(
+//│ max_₀(
 //│ 	let t² = 	
 //│ 		let t³ = (fun n⁴ -> n⁴)
 //│ 		in let h³ = 2
-//│ 		in (fun n³ -> if (h³ > n³) then max₀(t³, h³) else max₀(t³, n³))
+//│ 		in (fun n³ -> if (h³ > n³) then max_₀(t³, h³) else max_₀(t³, n³))
 //│ 	in let h² = 1
-//│ 	in (fun n² -> if (h² > n²) then max₀(t², h²) else max₀(t², n²)), 0)
-//│ def max₀(ls², n⁵) = 
+//│ 	in (fun n² -> if (h² > n²) then max_₀(t², h²) else max_₀(t², n²)), 0)
+//│ def max_₀(ls², n⁵) = 
 //│ 	ls²(n⁵)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
@@ -107,32 +107,32 @@ max(C(1, C(2, N)), primId(0))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ max₀([C 1 [C 2 [N]]], primId⁰(0))
-//│ def max₀(ls², n²) = 
+//│ max_₀([C 1 [C 2 [N]]], primId⁰(0))
+//│ def max_₀(ls², n²) = 
 //│ 	case ls² of {
-//│ 		C h² t² => if (h² > n²) then max₁(t², h²) else max₀(t², n²)
+//│ 		C h² t² => if (h² > n²) then max_₁(t², h²) else max_₀(t², n²)
 //│ 		| N  => n²}
 //│ 	where
-//│ 	def max₁(ls¹, n¹) = 
+//│ 	def max_₁(ls¹, n¹) = 
 //│ 		case ls¹ of {
-//│ 			C h¹ t¹ => if (h¹ > n¹) then max₁(t¹, h¹) else max₁(t¹, n¹)
+//│ 			C h¹ t¹ => if (h¹ > n¹) then max_₁(t¹, h¹) else max_₁(t¹, n¹)
 //│ 			| N  => n¹}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 78 --->
-//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₁(t¹, h¹) else max₁(t¹, n¹) | N  => n¹}: 51
-//│ 	case ls² of {C h² t² => if (h² > n²) then max₁(t², h²) else max₀(t², n²) | N  => n²}: 72
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₁(t¹, h¹) else max_₁(t¹, n¹) | N  => n¹}: 51
+//│ 	case ls² of {C h² t² => if (h² > n²) then max_₁(t², h²) else max_₀(t², n²) | N  => n²}: 72
 //│ [C 2 [N]]: 79 --->
-//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₁(t¹, h¹) else max₁(t¹, n¹) | N  => n¹}: 51
-//│ 	case ls² of {C h² t² => if (h² > n²) then max₁(t², h²) else max₀(t², n²) | N  => n²}: 72
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₁(t¹, h¹) else max_₁(t¹, n¹) | N  => n¹}: 51
+//│ 	case ls² of {C h² t² => if (h² > n²) then max_₁(t², h²) else max_₀(t², n²) | N  => n²}: 72
 //│ [C 1 [C 2 [N]]]: 80 --->
-//│ 	case ls² of {C h² t² => if (h² > n²) then max₁(t², h²) else max₀(t², n²) | N  => n²}: 72
+//│ 	case ls² of {C h² t² => if (h² > n²) then max_₁(t², h²) else max_₀(t², n²) | N  => n²}: 72
 //│ ------------------
-//│ case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max₁(t¹, h¹) else max₁(t¹, n¹) | N  => n¹}: 51 --->
+//│ case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₁(t¹, h¹) else max_₁(t¹, n¹) | N  => n¹}: 51 --->
 //│ 	[N]: 78
 //│ 	[C 2 [N]]: 79
-//│ case ls² of {C h² t² => if (h² > n²) then max₁(t², h²) else max₀(t², n²) | N  => n²}: 72 --->
+//│ case ls² of {C h² t² => if (h² > n²) then max_₁(t², h²) else max_₀(t², n²) | N  => n²}: 72 --->
 //│ 	[N]: 78
 //│ 	[C 2 [N]]: 79
 //│ 	[C 1 [C 2 [N]]]: 80
@@ -145,15 +145,15 @@ max(C(1, C(2, N)), primId(0))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ max₀([C 1 [C 2 [N]]], primId⁰(0))
-//│ def max₀(ls⁴, n⁴) = 
+//│ max_₀([C 1 [C 2 [N]]], primId⁰(0))
+//│ def max_₀(ls⁴, n⁴) = 
 //│ 	case ls⁴ of {
-//│ 		C h² t² => if (h² > n⁴) then max₁(t², h²) else max₀(t², n⁴)
+//│ 		C h² t² => if (h² > n⁴) then max_₁(t², h²) else max_₀(t², n⁴)
 //│ 		| N  => n⁴}
 //│ 	where
-//│ 	def max₁(ls³, n³) = 
+//│ 	def max_₁(ls³, n³) = 
 //│ 		case ls³ of {
-//│ 			C h¹ t¹ => if (h¹ > n³) then max₁(t¹, h¹) else max₁(t¹, n³)
+//│ 			C h¹ t¹ => if (h¹ > n³) then max_₁(t¹, h¹) else max_₁(t¹, n³)
 //│ 			| N  => n³}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
@@ -190,15 +190,15 @@ max(primId(C(1, C(2, N))), 0)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ max₀(primId⁰([C 1 [C 2 [N]]]), 0)
-//│ def max₀(ls², n²) = 
+//│ max_₀(primId⁰([C 1 [C 2 [N]]]), 0)
+//│ def max_₀(ls², n²) = 
 //│ 	case ls² of {
-//│ 		C h² t² => if (h² > n²) then max₁(t², h²) else max₀(t², n²)
+//│ 		C h² t² => if (h² > n²) then max_₁(t², h²) else max_₀(t², n²)
 //│ 		| N  => n²}
 //│ 	where
-//│ 	def max₁(ls¹, n¹) = 
+//│ 	def max_₁(ls¹, n¹) = 
 //│ 		case ls¹ of {
-//│ 			C h¹ t¹ => if (h¹ > n¹) then max₁(t¹, h¹) else max₁(t¹, n¹)
+//│ 			C h¹ t¹ => if (h¹ > n¹) then max_₁(t¹, h¹) else max_₁(t¹, n¹)
 //│ 			| N  => n¹}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
@@ -215,15 +215,15 @@ max(primId(C(1, C(2, N))), 0)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ max₀(primId⁰([C 1 [C 2 [N]]]), 0)
-//│ def max₀(ls⁴, n⁴) = 
+//│ max_₀(primId⁰([C 1 [C 2 [N]]]), 0)
+//│ def max_₀(ls⁴, n⁴) = 
 //│ 	case ls⁴ of {
-//│ 		C h² t² => if (h² > n⁴) then max₁(t², h²) else max₀(t², n⁴)
+//│ 		C h² t² => if (h² > n⁴) then max_₁(t², h²) else max_₀(t², n⁴)
 //│ 		| N  => n⁴}
 //│ 	where
-//│ 	def max₁(ls³, n³) = 
+//│ 	def max_₁(ls³, n³) = 
 //│ 		case ls³ of {
-//│ 			C h¹ t¹ => if (h¹ > n³) then max₁(t¹, h¹) else max₁(t¹, n³)
+//│ 			C h¹ t¹ => if (h¹ > n³) then max_₁(t¹, h¹) else max_₁(t¹, n³)
 //│ 			| N  => n³}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
@@ -257,10 +257,10 @@ max(primId(C(1, C(2, N))), primId(0))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ max₀(primId⁰([C 1 [C 2 [N]]]), primId⁰(0))
-//│ def max₀(ls¹, n¹) = 
+//│ max_₀(primId⁰([C 1 [C 2 [N]]]), primId⁰(0))
+//│ def max_₀(ls¹, n¹) = 
 //│ 	case ls¹ of {
-//│ 		C h¹ t¹ => if (h¹ > n¹) then max₀(t¹, h¹) else max₀(t¹, n¹)
+//│ 		C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹)
 //│ 		| N  => n¹}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
@@ -277,10 +277,10 @@ max(primId(C(1, C(2, N))), primId(0))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ max₀(primId⁰([C 1 [C 2 [N]]]), primId⁰(0))
-//│ def max₀(ls², n²) = 
+//│ max_₀(primId⁰([C 1 [C 2 [N]]]), primId⁰(0))
+//│ def max_₀(ls², n²) = 
 //│ 	case ls² of {
-//│ 		C h¹ t¹ => if (h¹ > n²) then max₀(t¹, h¹) else max₀(t¹, n²)
+//│ 		C h¹ t¹ => if (h¹ > n²) then max_₀(t¹, h¹) else max_₀(t¹, n²)
 //│ 		| N  => n²}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 

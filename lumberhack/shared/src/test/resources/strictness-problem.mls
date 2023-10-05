@@ -8,31 +8,31 @@ head $ [1..3]
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ head₀^634(enumFromTo₀^635(1, 3))
-//│ def enumFromTo₀(a⁵, b²) = if (a⁵ <= b²) then [LH_C a⁵ enumFromTo₀^615((a⁵ + 1), b²)] else [LH_N]
-//│ def head₀(ls¹⁹) = case ls¹⁹ of {
+//│ head_₀^634(enumFromTo_₀^635(1, 3))
+//│ def enumFromTo_₀(a⁵, b²) = if (a⁵ <= b²) then [LH_C a⁵ enumFromTo_₀^615((a⁵ + 1), b²)] else [LH_N]
+//│ def head_₀(ls¹⁹) = case ls¹⁹ of {
 //│ 	LH_C h²⁰ t²² => h²⁰
 //│ 	| LH_N  => error⁰}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [enumFromTo₀^635] (hopeless to continue)
-//│ 	[enumFromTo₀^635 · enumFromTo₀^615] ---> [enumFromTo₀^635] (using original def)
-//│ [head₀^634] (hopeless to continue)
+//│ [enumFromTo_₀^635] (hopeless to continue)
+//│ 	[enumFromTo_₀^635 · enumFromTo_₀^615] ---> [enumFromTo_₀^635] (using original def)
+//│ [head_₀^634] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ head₀₀(enumFromTo₀₀(1, 3))
-//│ def enumFromTo₀₀(a¹, b¹) = 
-//│ 	if (a¹ <= b¹) then [LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)] else [LH_N]
-//│ def head₀₀(ls¹) = 
+//│ head_₀_₀(enumFromTo_₀_₀(1, 3))
+//│ def enumFromTo_₀_₀(a¹, b¹) = 
+//│ 	if (a¹ <= b¹) then [LH_C a¹ enumFromTo_₀_₀((a¹ + 1), b¹)] else [LH_N]
+//│ def head_₀_₀(ls¹) = 
 //│ 	case ls¹ of {
 //│ 		LH_C h¹ t¹ => h¹
 //│ 		| LH_N  => error⁰}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)]: 48 --->
+//│ [LH_C a¹ enumFromTo_₀_₀((a¹ + 1), b¹)]: 48 --->
 //│ 	DeadCodeCons
 //│ 	case ls¹ of {LH_C h¹ t¹ => h¹ | LH_N  => error⁰}: 56
 //│ [LH_N]: 49 --->
@@ -40,7 +40,7 @@ head $ [1..3]
 //│ 	case ls¹ of {LH_C h¹ t¹ => h¹ | LH_N  => error⁰}: 56
 //│ ------------------
 //│ case ls¹ of {LH_C h¹ t¹ => h¹ | LH_N  => error⁰}: 56 --->
-//│ 	[LH_C a¹ enumFromTo₀₀((a¹ + 1), b¹)]: 48
+//│ 	[LH_C a¹ enumFromTo_₀_₀((a¹ + 1), b¹)]: 48
 //│ 	[LH_N]: 49
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -51,10 +51,10 @@ head $ [1..3]
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ head₀₀(enumFromTo₀₀(1, 3))
-//│ def enumFromTo₀₀(a², b²) = 
-//│ 	if (a² <= b²) then [LH_C a² enumFromTo₀₀((a² + 1), b²)] else [LH_N]
-//│ def head₀₀(ls²) = 
+//│ head_₀_₀(enumFromTo_₀_₀(1, 3))
+//│ def enumFromTo_₀_₀(a², b²) = 
+//│ 	if (a² <= b²) then [LH_C a² enumFromTo_₀_₀((a² + 1), b²)] else [LH_N]
+//│ def head_₀_₀(ls²) = 
 //│ 	case ls² of {
 //│ 		LH_C h¹ t¹ => h¹
 //│ 		| LH_N  => error⁰}
@@ -67,129 +67,129 @@ head ([1] ++ [])
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ head₀^628(mappend₀^629([LH_C 1 [LH_N]], [LH_N]))
-//│ def head₀(ls¹⁹) = case ls¹⁹ of {
+//│ head_₀^628(mappend_₀^629([LH_C 1 [LH_N]], [LH_N]))
+//│ def head_₀(ls¹⁹) = case ls¹⁹ of {
 //│ 	LH_C h²¹ t²³ => h²¹
 //│ 	| LH_N  => error⁰}
-//│ def mappend₀(xs⁹, ys⁹) = case xs⁹ of {
-//│ 	LH_C h²⁰ t²² => [LH_C h²⁰ mappend₀^613(t²², ys⁹)]
+//│ def mappend_₀(xs⁹, ys⁹) = case xs⁹ of {
+//│ 	LH_C h²⁰ t²² => [LH_C h²⁰ mappend_₀^613(t²², ys⁹)]
 //│ 	| LH_N  => ys⁹}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [head₀^628] (hopeless to continue)
-//│ [mappend₀^629] (hopeless to continue)
-//│ 	[mappend₀^629 · mappend₀^613] ---> [mappend₀^629] (using original def)
+//│ [head_₀^628] (hopeless to continue)
+//│ [mappend_₀^629] (hopeless to continue)
+//│ 	[mappend_₀^629 · mappend_₀^613] ---> [mappend_₀^629] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ head₀₀(mappend₀₀([LH_C 1 [LH_N]], [LH_N]))
-//│ def head₀₀(ls¹) = 
+//│ head_₀_₀(mappend_₀_₀([LH_C 1 [LH_N]], [LH_N]))
+//│ def head_₀_₀(ls¹) = 
 //│ 	case ls¹ of {
-//│ 		LH_C h³ t³ => h³
+//│ 		LH_C h² t² => h²
 //│ 		| LH_N  => error⁰}
-//│ def mappend₀₀(xs¹, ys¹) = 
+//│ def mappend_₀_₀(xs¹, ys¹) = 
 //│ 	case xs¹ of {
-//│ 		LH_C h² t² => [LH_C h² mappend₀₀(t², ys¹)]
+//│ 		LH_C h³ t³ => [LH_C h³ mappend_₀_₀(t³, ys¹)]
 //│ 		| LH_N  => ys¹}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [LH_C h² mappend₀₀(t², ys¹)]: 34 --->
+//│ [LH_C h³ mappend_₀_₀(t³, ys¹)]: 39 --->
 //│ 	DeadCodeCons
-//│ 	case ls¹ of {LH_C h³ t³ => h³ | LH_N  => error⁰}: 42
+//│ 	case ls¹ of {LH_C h² t² => h² | LH_N  => error⁰}: 30
 //│ [LH_N]: 47 --->
-//│ 	case xs¹ of {LH_C h² t² => [LH_C h² mappend₀₀(t², ys¹)] | LH_N  => ys¹}: 36
+//│ 	case xs¹ of {LH_C h³ t³ => [LH_C h³ mappend_₀_₀(t³, ys¹)] | LH_N  => ys¹}: 41
 //│ [LH_C 1 [LH_N]]: 48 --->
-//│ 	case xs¹ of {LH_C h² t² => [LH_C h² mappend₀₀(t², ys¹)] | LH_N  => ys¹}: 36
+//│ 	case xs¹ of {LH_C h³ t³ => [LH_C h³ mappend_₀_₀(t³, ys¹)] | LH_N  => ys¹}: 41
 //│ [LH_N]: 50 --->
 //│ 	DeadCodeCons
-//│ 	case ls¹ of {LH_C h³ t³ => h³ | LH_N  => error⁰}: 42
+//│ 	case ls¹ of {LH_C h² t² => h² | LH_N  => error⁰}: 30
 //│ ------------------
-//│ case xs¹ of {LH_C h² t² => [LH_C h² mappend₀₀(t², ys¹)] | LH_N  => ys¹}: 36 --->
+//│ case ls¹ of {LH_C h² t² => h² | LH_N  => error⁰}: 30 --->
+//│ 	[LH_C h³ mappend_₀_₀(t³, ys¹)]: 39
+//│ 	[LH_N]: 50
+//│ case xs¹ of {LH_C h³ t³ => [LH_C h³ mappend_₀_₀(t³, ys¹)] | LH_N  => ys¹}: 41 --->
 //│ 	[LH_N]: 47
 //│ 	[LH_C 1 [LH_N]]: 48
-//│ case ls¹ of {LH_C h³ t³ => h³ | LH_N  => error⁰}: 42 --->
-//│ 	[LH_C h² mappend₀₀(t², ys¹)]: 34
-//│ 	[LH_N]: 50
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [LH_N]: 47 --->
-//│ 	case xs¹ of {LH_C h² t² => [LH_C h² mappend₀₀(t², ys¹)] | LH_N  => ys¹}: 36
+//│ 	case xs¹ of {LH_C h³ t³ => [LH_C h³ mappend_₀_₀(t³, ys¹)] | LH_N  => ys¹}: 41
 //│ [LH_C 1 [LH_N]]: 48 --->
-//│ 	case xs¹ of {LH_C h² t² => [LH_C h² mappend₀₀(t², ys¹)] | LH_N  => ys¹}: 36
+//│ 	case xs¹ of {LH_C h³ t³ => [LH_C h³ mappend_₀_₀(t³, ys¹)] | LH_N  => ys¹}: 41
 //│ ------------------
-//│ case xs¹ of {LH_C h² t² => [LH_C h² mappend₀₀(t², ys¹)] | LH_N  => ys¹}: 36 --->
+//│ case xs¹ of {LH_C h³ t³ => [LH_C h³ mappend_₀_₀(t³, ys¹)] | LH_N  => ys¹}: 41 --->
 //│ 	[LH_N]: 47
 //│ 	[LH_C 1 [LH_N]]: 48
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ head₀₀(mappend₀₀(
+//│ head_₀_₀(mappend_₀_₀(
 //│ 	let t⁴ = (fun ys³ -> ys³)
 //│ 	in let h⁴ = 1
-//│ 	in (fun ys² -> [LH_C h⁴ mappend₀₀(t⁴, ys²)]), [LH_N]))
-//│ def head₀₀(ls²) = 
+//│ 	in (fun ys² -> [LH_C h⁴ mappend_₀_₀(t⁴, ys²)]), [LH_N]))
+//│ def head_₀_₀(ls²) = 
 //│ 	case ls² of {
-//│ 		LH_C h³ t³ => h³
+//│ 		LH_C h² t² => h²
 //│ 		| LH_N  => error⁰}
-//│ def mappend₀₀(xs², ys⁴) = 
+//│ def mappend_₀_₀(xs², ys⁴) = 
 //│ 	xs²(ys⁴)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [head₀₀^1] (hopeless to continue)
-//│ [mappend₀₀^2] (hopeless to continue)
-//│ [mappend₀₀^7] (hopeless to continue)
+//│ [head_₀_₀^1] (hopeless to continue)
+//│ [mappend_₀_₀^2] (hopeless to continue)
+//│ [mappend_₀_₀^7] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ head₀₀₀(mappend₀₀₀(
+//│ head_₀_₀_₀(mappend_₀_₀_₀(
 //│ 	let t³ = (fun ys⁵ -> ys⁵)
 //│ 	in let h³ = 1
-//│ 	in (fun ys⁶ -> [LH_C h³ mappend₀₀₁(t³, ys⁶)]), [LH_N]))
-//│ def head₀₀₀(ls¹) = 
+//│ 	in (fun ys⁶ -> [LH_C h³ mappend_₀_₀_₁(t³, ys⁶)]), [LH_N]))
+//│ def head_₀_₀_₀(ls¹) = 
 //│ 	case ls¹ of {
 //│ 		LH_C h² t² => h²
 //│ 		| LH_N  => error⁰}
-//│ def mappend₀₀₀(xs¹, ys³) = 
-//│ 	xs¹(ys³)
-//│ def mappend₀₀₁(xs², ys⁴) = 
+//│ def mappend_₀_₀_₀(xs², ys⁴) = 
 //│ 	xs²(ys⁴)
+//│ def mappend_₀_₀_₁(xs¹, ys³) = 
+//│ 	xs¹(ys³)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [LH_C h³ mappend₀₀₁(t³, ys⁶)]: 56 --->
+//│ [LH_C h³ mappend_₀_₀_₁(t³, ys⁶)]: 56 --->
 //│ 	case ls¹ of {LH_C h² t² => h² | LH_N  => error⁰}: 38
 //│ ------------------
 //│ case ls¹ of {LH_C h² t² => h² | LH_N  => error⁰}: 38 --->
-//│ 	[LH_C h³ mappend₀₀₁(t³, ys⁶)]: 56
+//│ 	[LH_C h³ mappend_₀_₀_₁(t³, ys⁶)]: 56
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [LH_C h³ mappend₀₀₁(t³, ys⁶)]: 56 --->
+//│ [LH_C h³ mappend_₀_₀_₁(t³, ys⁶)]: 56 --->
 //│ 	case ls¹ of {LH_C h² t² => h² | LH_N  => error⁰}: 38
 //│ ------------------
 //│ case ls¹ of {LH_C h² t² => h² | LH_N  => error⁰}: 38 --->
-//│ 	[LH_C h³ mappend₀₀₁(t³, ys⁶)]: 56
+//│ 	[LH_C h³ mappend_₀_₀_₁(t³, ys⁶)]: 56
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ head₀₀₀(mappend₀₀₀(
+//│ head_₀_₀_₀(mappend_₀_₀_₀(
 //│ 	let t⁴ = (fun ys⁷ -> ys⁷)
 //│ 	in let h⁴ = 1
 //│ 	in (fun ys⁸ -> 
 //│ 		let h⁵ = h⁴
 //│ 		in h⁵), [LH_N]))
-//│ def head₀₀₀(ls²) = 
+//│ def head_₀_₀_₀(ls²) = 
 //│ 	ls²
-//│ def mappend₀₀₀(xs³, ys⁹) = 
-//│ 	xs³(ys⁹)
-//│ def mappend₀₀₁(xs⁴, ys¹⁰) = 
+//│ def mappend_₀_₀_₀(xs⁴, ys¹⁰) = 
 //│ 	xs⁴(ys¹⁰)
+//│ def mappend_₀_₀_₁(xs³, ys⁹) = 
+//│ 	xs³(ys⁹)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -200,23 +200,23 @@ head $ f [1] []
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ head₀^628(f₀^629([LH_C 1 [LH_N]], [LH_N]))
-//│ def f₀(_lh_f_arg1¹, _lh_f_arg2¹) = if [True] then _lh_f_arg1¹ else _lh_f_arg2¹
-//│ def head₀(ls¹⁹) = case ls¹⁹ of {
+//│ head_₀^628(f_₀^629([LH_C 1 [LH_N]], [LH_N]))
+//│ def f_₀(_lh_f_arg1¹, _lh_f_arg2¹) = if [True] then _lh_f_arg1¹ else _lh_f_arg2¹
+//│ def head_₀(ls¹⁹) = case ls¹⁹ of {
 //│ 	LH_C h²⁰ t²² => h²⁰
 //│ 	| LH_N  => error⁰}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [f₀^629] (hopeless to continue)
-//│ [head₀^628] (hopeless to continue)
+//│ [f_₀^629] (hopeless to continue)
+//│ [head_₀^628] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ head₀₀(f₀₀([LH_C 1 [LH_N]], [LH_N]))
-//│ def f₀₀(_lh_f_arg1¹, _lh_f_arg2¹) = 
+//│ head_₀_₀(f_₀_₀([LH_C 1 [LH_N]], [LH_N]))
+//│ def f_₀_₀(_lh_f_arg1¹, _lh_f_arg2¹) = 
 //│ 	if [True] then _lh_f_arg1¹ else _lh_f_arg2¹
-//│ def head₀₀(ls¹) = 
+//│ def head_₀_₀(ls¹) = 
 //│ 	case ls¹ of {
 //│ 		LH_C h¹ t¹ => h¹
 //│ 		| LH_N  => error⁰}
@@ -245,11 +245,11 @@ head $ f [1] []
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ head₀₀(f₀₀(
+//│ head_₀_₀(f_₀_₀(
 //│ 	let h² = 1
 //│ 	in h², error⁰))
-//│ def f₀₀(_lh_f_arg1², _lh_f_arg2²) = 
+//│ def f_₀_₀(_lh_f_arg1², _lh_f_arg2²) = 
 //│ 	if [True] then _lh_f_arg1² else _lh_f_arg2²
-//│ def head₀₀(ls²) = 
+//│ def head_₀_₀(ls²) = 
 //│ 	ls²
 //│ <<<<<<< after fusion <<<<<<<

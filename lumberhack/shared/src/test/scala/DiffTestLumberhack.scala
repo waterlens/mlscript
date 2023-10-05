@@ -480,6 +480,11 @@ class OCamlGenTests(
   val mode: ModeType,
   backToBuiltInType: Boolean = false
 ) extends OCamlGen(usePolymorphicVariant, backToBuiltInType) {
+  var largeStrIdents = scala.collection.mutable.Map.empty[String, Int]
+  val largeStrPrefix = "lh_large_str_"
+  override def handleLargeString(s: String): Document =
+    val nextId = this.largeStrIdents.getOrElseUpdate(s, largeStrIdents.size)
+    Raw(s"${largeStrPrefix}${nextId}")
   def makeBenchFiles(programs: List[String -> Program]): String = {
     val useModule = mode.lhLessExpansion
     assert(programs.length >= 2)
@@ -487,7 +492,7 @@ class OCamlGenTests(
     val benchName = (programs.head._2.defAndExpr._2 match {
       case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId), _)) :: Nil
         if test.tree.name.startsWith("test") && primId.tree.name == "primId" =>
-        test.tree.name.drop(4).filter(_ <= 0x7f) // keep only valid ASCII characters
+        test.tree.name.drop(4).filter(_ <= 0x7f).reverse.dropWhile(_ == '_').reverse // keep only valid ASCII characters, and drop the possibly last "_"
       // with manually fuse tests
       case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId1), arg1))
         :: Expr.Call(Expr.Ref(testManual), Expr.Call(Expr.Ref(primId2), arg2))
@@ -495,7 +500,7 @@ class OCamlGenTests(
         if test.tree.name.startsWith("test") && primId1.tree.name == "primId"
           && testManual.tree.name.startsWith("testManual") && primId1 == primId2
           && arg1.pp(using InitPpConfig) == arg2.pp(using InitPpConfig) =>
-        test.tree.name.drop(4).filter(_ <= 0x7f) // keep only valid ASCII characters
+        test.tree.name.drop(4).filter(_ <= 0x7f).reverse.dropWhile(_ == '_').reverse // keep only valid ASCII characters, and drop the possibly last "_"
       case _ => lastWords(
         "benchmark requires a method of name `testxxx` calling a value wrapped in `primId`"
           + "\n and if there are manually fused benchmarks, there should be a call to `testManual`"
@@ -529,7 +534,9 @@ class OCamlGenTests(
       ) +
       (if useModule then "\nend;;\n" else "")
     }.mkString + "\n"
-
+    val largeStrDefs = this.largeStrIdents.map { case (s, id) =>
+      s"let ${largeStrPrefix}${id} = listToTaggedList (explode_string \"${s}\");;"
+    }.mkString("\n")
     val mergedDefsGen = originalDefsString + restMergedDefsString
 
     val benchRunGen = 
@@ -570,7 +577,7 @@ class OCamlGenTests(
         + s"&& ./$benchName.out "
         + "&& rm ./*.cmx ./*.out ./*.cmi ./*.o ./*.mli"
     val hsFileContent = Stacked(
-      Raw(s"(*\n$compileAndRunCommand\n*)") :: headers :: Nil
+      Raw(s"(*\n$compileAndRunCommand\n*)") :: headers :: (if largeStrDefs.nonEmpty then Raw(largeStrDefs) :: Nil else Nil)
         ::: (if this.usePolymorphicVariant then Nil else (Raw(generateTypeInfo(programs.head._2.d)) :: Nil))
         ::: (Raw(mergedDefsGen) :: mainGen :: Nil),
       false
@@ -596,7 +603,7 @@ object HaskellGenTests extends HaskellGen {
     val benchName = (programs.head._2.defAndExpr._2 match {
       case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId), _)) :: Nil
         if test.tree.name.startsWith("test") && primId.tree.name == "primId" =>
-        test.tree.name.drop(4).filter(_ <= 0x7f) // keep only valid ASCII characters
+        test.tree.name.drop(4).filter(_ <= 0x7f).reverse.dropWhile(_ == '_').reverse // keep only valid ASCII characters, and drop the possibly last "_"
       case _ => lastWords("benchmark requires a method of name `testxxx` calling a value wrapped in `primId`")
     }).emptyOrElse(programs.hashCode().toString())
     // val bigADT = HaskellGen.generateTypeInfo(original.d)

@@ -364,6 +364,8 @@ class Deforest(var debug: Boolean) {
         process(e).s
       // adding exprid here to the mkctor types changes the knot tying result and makes type checking slow because
       // the `recursiveConstr` later will be changed, since mkctor type's eq test and hashCode value relies on the exprId
+      case Call(Ref(fromLargeStr), Const(StrLit(largeStr))) if fromLargeStr.tree.name == "from_large_str" =>
+        NoProd()(using e.uid)
       case Const(IntLit(_)) => prodInt(using noExprId)
       case Const(DecLit(_)) => prodFloat(using noExprId) // floating point numbers as integers type
       case Const(CharLit(_)) => prodChar(using noExprId)
@@ -949,7 +951,7 @@ enum CallTree(val info: Str) {
           }.get
           // cannot be s"$name$id", or it will clash with defined names
           // Var(if id == 0 then name else name + s"_$id")
-          Var(name + toSubscript(s"$id"))
+          Var(name + toSubscript(s"_$id"))
         }))))
       }))
     case Continue(current, calls) =>
@@ -961,7 +963,7 @@ enum CallTree(val info: Str) {
           case Some(v) => Some(v + 1)
         }.get
         // Var(if id == 0 then name else name + s"_$id")
-        Var(name + toSubscript(s"$id"))
+        Var(name + toSubscript(s"_$id"))
       }))))
       calls.calls.foreach(_.generatePathToIdent)
   }
@@ -1116,7 +1118,7 @@ object Deforest {
     (lumberhackIntFun ++ lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackBoolUnaryOps ++ lumberhackPolyOps
       ++ lumberhackFloatBinOps ++ lumberhackFloatUnaryOps)
       + "string_of_int" + "int_of_char" + "char_of_int" + "ceiling" + "float_of_int" + "int_of_float" + "string_of_float"
-      + "primitive" + "primId" + "error" + "lazy" + "force" + "lumberhack_obj_magic"
+      + "primitive" + "primId" + "error" + "lazy" + "force" + "lumberhack_obj_magic" + "from_large_str"
   lazy val lumberhackPolyOps: Set[String] = Set("polyEq", "polyLt", "polyGt", "polyLeq", "polyGeq", "polyNeq")
   lazy val lumberhackBinOps = lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackFloatBinOps
   lazy val lumberhackIntFun: Set[String] = lumberhackIntValueFun ++ lumberhackIntComparisonFun

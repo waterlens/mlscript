@@ -29,8 +29,8 @@ f(A, ReturnValue, B)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ f₀([A], [ReturnValue], [B])
-//│ def f₀(a¹, ret¹) = 
+//│ f_₀([A], [ReturnValue], [B])
+//│ def f_₀(a¹, ret¹) = 
 //│ 	case a¹ of {
 //│ 		A  => (fun b² -> case b² of {
 //│ 			B  => ret¹})
@@ -59,9 +59,9 @@ f(A, ReturnValue, B)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀((fun ret² -> (fun b⁴ -> case b⁴ of {
+//│ f_₀((fun ret² -> (fun b⁴ -> case b⁴ of {
 //│ 	B  => ret²})), [ReturnValue], [B])
-//│ def f₀(a², ret³) = 
+//│ def f_₀(a², ret³) = 
 //│ 	a²(ret³)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
@@ -72,13 +72,13 @@ f(A, ReturnValue, B)
 //│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [f₀^1] (hopeless to continue)
+//│ [f_₀^1] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ f₀₀((fun ret³ -> (fun b¹ -> case b¹ of {
+//│ f_₀_₀((fun ret³ -> (fun b¹ -> case b¹ of {
 //│ 	B  => ret³})), [ReturnValue], [B])
-//│ def f₀₀(a¹, ret²) = 
+//│ def f_₀_₀(a¹, ret²) = 
 //│ 	a¹(ret²)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
@@ -99,8 +99,8 @@ f(A, ReturnValue, B)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀₀((fun ret⁴ -> (fun b² -> b²(ret⁴))), [ReturnValue], (fun ret⁵ -> ret⁵))
-//│ def f₀₀(a², ret⁶) = 
+//│ f_₀_₀((fun ret⁴ -> (fun b² -> b²(ret⁴))), [ReturnValue], (fun ret⁵ -> ret⁵))
+//│ def f_₀_₀(a², ret⁶) = 
 //│ 	a²(ret⁶)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
@@ -206,21 +206,21 @@ dropWhile(C(N))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ dropWhile₀([C [N]])
-//│ def dropWhile₀(ls¹) = 
+//│ dropWhile_₀([C [N]])
+//│ def dropWhile_₀(ls¹) = 
 //│ 	case ls¹ of {
 //│ 		N  => [C [N]]
-//│ 		| C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}
+//│ 		| C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 30 --->
 //│ 	NoCons
-//│ 	case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 27
+//│ 	case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}: 27
 //│ [C [N]]: 31 --->
-//│ 	case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 27
+//│ 	case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}: 27
 //│ ------------------
-//│ case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 27 --->
+//│ case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}: 27 --->
 //│ 	[N]: 30
 //│ 	[C [N]]: 31
 //│ <<<<<<< fusion matches <<<<<<<
@@ -232,46 +232,46 @@ dropWhile(C(N))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ dropWhile₀([C [N]])
-//│ def dropWhile₀(ls²) = 
+//│ dropWhile_₀([C [N]])
+//│ def dropWhile_₀(ls²) = 
 //│ 	case ls² of {
 //│ 		N  => [C [N]]
-//│ 		| C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}
+//│ 		| C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ dropWhile₀ :: 'dropWhile₀ <: [] ::: true
+//│ dropWhile_₀ :: 'dropWhile_₀ <: [] ::: true
 //│ [N] :: N ::: true
 //│ [C [N]] :: C(N) ::: true
-//│ dropWhile₀([C [N]]) :: '4_callres <: [] ::: true
+//│ dropWhile_₀([C [N]]) :: '4_callres <: [] ::: true
 //│ ls :: 'ls⁰ <: [] ::: true
 //│ [N] :: N ::: true
 //│ [C [N]] :: C(N) ::: true
 //│ [True] :: True ::: true
-//│ dropWhile₀ :: 'dropWhile₀ <: [] ::: true
+//│ dropWhile_₀ :: 'dropWhile_₀ <: [] ::: true
 //│ t :: 't⁰ <: [] ::: true
-//│ dropWhile₀(t) :: '11_callres <: [] ::: true
+//│ dropWhile_₀(t) :: '11_callres <: [] ::: true
 //│ t :: 't⁰ <: [] ::: true
 //│ [C t] :: C('t⁰) ::: true
-//│ if [True] then dropWhile₀(t) else [C t] :: '14_ifres <: [] ::: true
-//│ case ls of {N  => [C [N]] | C t => if [True] then dropWhile₀(t) else [C t]} :: '15_matchres <: [] ::: true
-//│ (fun ls -> case ls of {N  => [C [N]] | C t => if [True] then dropWhile₀(t) else [C t]}) :: 'ls⁰ => '15_matchres ::: true
+//│ if [True] then dropWhile_₀(t) else [C t] :: '14_ifres <: [] ::: true
+//│ case ls of {N  => [C [N]] | C t => if [True] then dropWhile_₀(t) else [C t]} :: '15_matchres <: [] ::: true
+//│ (fun ls -> case ls of {N  => [C [N]] | C t => if [True] then dropWhile_₀(t) else [C t]}) :: 'ls⁰ => '15_matchres ::: true
 //│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec dropWhile_d0 ls_0 =
+//│ let rec dropWhile__d0 ls_0 =
 //│   (match ls_0 with
 //│     | `N -> 
 //│       (`C((`N)))
 //│     | `C(t_0) -> 
 //│       (if true then
-//│         (dropWhile_d0 t_0)
+//│         (dropWhile__d0 t_0)
 //│       else
 //│         (`C(t_0))));;
-//│ (dropWhile_d0 (`C((`N))))
+//│ (dropWhile__d0 (`C((`N))))
 //│ 
 //│ --------------- ocaml repl result -----------------
 //│ [ok]
@@ -319,21 +319,21 @@ fun dropWhile(ls) = if ls is
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (fun x¹ -> 2)(dropWhile₀([C [N]]))
-//│ def dropWhile₀(ls¹) = 
+//│ (fun x¹ -> 2)(dropWhile_₀([C [N]]))
+//│ def dropWhile_₀(ls¹) = 
 //│ 	case ls¹ of {
 //│ 		N  => [C [N]]
-//│ 		| C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}
+//│ 		| C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 35 --->
 //│ 	DeadCodeCons
-//│ 	case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 30
+//│ 	case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}: 30
 //│ [C [N]]: 36 --->
-//│ 	case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 30
+//│ 	case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}: 30
 //│ ------------------
-//│ case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 30 --->
+//│ case ls¹ of {N  => [C [N]] | C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}: 30 --->
 //│ 	[N]: 35
 //│ 	[C [N]]: 36
 //│ <<<<<<< fusion matches <<<<<<<
@@ -345,11 +345,11 @@ fun dropWhile(ls) = if ls is
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (fun x² -> 2)(dropWhile₀([C [N]]))
-//│ def dropWhile₀(ls²) = 
+//│ (fun x² -> 2)(dropWhile_₀([C [N]]))
+//│ def dropWhile_₀(ls²) = 
 //│ 	case ls² of {
 //│ 		N  => [C [N]]
-//│ 		| C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}
+//│ 		| C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
@@ -357,38 +357,38 @@ fun dropWhile(ls) = if ls is
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
 //│ 2 :: Int ::: false
 //│ (fun x -> 2) :: 'x⁰ => Int ::: true
-//│ dropWhile₀ :: 'dropWhile₀ <: [] ::: true
+//│ dropWhile_₀ :: 'dropWhile_₀ <: [] ::: true
 //│ [N] :: N ::: true
 //│ [C [N]] :: C(N) ::: true
-//│ dropWhile₀([C [N]]) :: '6_callres <: [] ::: true
-//│ (fun x -> 2)(dropWhile₀([C [N]])) :: '7_callres <: [] ::: true
+//│ dropWhile_₀([C [N]]) :: '6_callres <: [] ::: true
+//│ (fun x -> 2)(dropWhile_₀([C [N]])) :: '7_callres <: [] ::: true
 //│ ls :: 'ls⁰ <: [] ::: true
 //│ [N] :: N ::: true
 //│ [C [N]] :: C(N) ::: true
 //│ [True] :: True ::: true
-//│ dropWhile₀ :: 'dropWhile₀ <: [] ::: true
+//│ dropWhile_₀ :: 'dropWhile_₀ <: [] ::: true
 //│ t :: 't⁰ <: [] ::: true
-//│ dropWhile₀(t) :: '14_callres <: [] ::: true
+//│ dropWhile_₀(t) :: '14_callres <: [] ::: true
 //│ t :: 't⁰ <: [] ::: true
 //│ [C t] :: C('t⁰) ::: true
-//│ if [True] then dropWhile₀(t) else [C t] :: '17_ifres <: [] ::: true
-//│ case ls of {N  => [C [N]] | C t => if [True] then dropWhile₀(t) else [C t]} :: '18_matchres <: [] ::: true
-//│ (fun ls -> case ls of {N  => [C [N]] | C t => if [True] then dropWhile₀(t) else [C t]}) :: 'ls⁰ => '18_matchres ::: true
+//│ if [True] then dropWhile_₀(t) else [C t] :: '17_ifres <: [] ::: true
+//│ case ls of {N  => [C [N]] | C t => if [True] then dropWhile_₀(t) else [C t]} :: '18_matchres <: [] ::: true
+//│ (fun ls -> case ls of {N  => [C [N]] | C t => if [True] then dropWhile_₀(t) else [C t]}) :: 'ls⁰ => '18_matchres ::: true
 //│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec dropWhile_d0 ls_0 =
+//│ let rec dropWhile__d0 ls_0 =
 //│   (match ls_0 with
 //│     | `N -> 
 //│       (`C((`N)))
 //│     | `C(t_0) -> 
 //│       (if true then
-//│         (dropWhile_d0 t_0)
+//│         (dropWhile__d0 t_0)
 //│       else
 //│         (`C(t_0))));;
 //│ ((fun x_0 -> 
-//│   2) (dropWhile_d0 (`C((`N)))))
+//│   2) (dropWhile__d0 (`C((`N)))))
 //│ 
 //│ --------------- ocaml repl result -----------------
 //│ [ok]
@@ -442,23 +442,23 @@ f(dropWhile(C(N)))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ f₀(dropWhile₀([C [N]]))
-//│ def dropWhile₀(ls¹) = 
+//│ f_₀(dropWhile_₀([C [N]]))
+//│ def dropWhile_₀(ls¹) = 
 //│ 	case ls¹ of {
 //│ 		N  => [N]
-//│ 		| C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}
-//│ def f₀(x¹) = 
-//│ 	[Pair f₀([C [N]]) f₀(x¹)]
+//│ 		| C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}
+//│ def f_₀(x¹) = 
+//│ 	[Pair f_₀([C [N]]) f_₀(x¹)]
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 49 --->
 //│ 	DeadCodeCons
-//│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 36
+//│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}: 36
 //│ [C [N]]: 50 --->
-//│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 36
+//│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}: 36
 //│ ------------------
-//│ case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 36 --->
+//│ case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}: 36 --->
 //│ 	[N]: 49
 //│ 	[C [N]]: 50
 //│ <<<<<<< fusion matches <<<<<<<
@@ -470,60 +470,60 @@ f(dropWhile(C(N)))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀(dropWhile₀([C [N]]))
-//│ def dropWhile₀(ls²) = 
+//│ f_₀(dropWhile_₀([C [N]]))
+//│ def dropWhile_₀(ls²) = 
 //│ 	case ls² of {
 //│ 		N  => [N]
-//│ 		| C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}
-//│ def f₀(x²) = 
-//│ 	[Pair f₀([C [N]]) f₀(x²)]
+//│ 		| C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}
+//│ def f_₀(x²) = 
+//│ 	[Pair f_₀([C [N]]) f_₀(x²)]
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ f₀ :: 'f₀ <: [] ::: true
-//│ dropWhile₀ :: 'dropWhile₀ <: [] ::: true
+//│ f_₀ :: 'f_₀ <: [] ::: true
+//│ dropWhile_₀ :: 'dropWhile_₀ <: [] ::: true
 //│ [N] :: N ::: true
 //│ [C [N]] :: C(N) ::: true
-//│ dropWhile₀([C [N]]) :: '5_callres <: [] ::: true
-//│ f₀(dropWhile₀([C [N]])) :: '6_callres <: [] ::: true
+//│ dropWhile_₀([C [N]]) :: '5_callres <: [] ::: true
+//│ f_₀(dropWhile_₀([C [N]])) :: '6_callres <: [] ::: true
 //│ ls :: 'ls⁰ <: [] ::: true
 //│ [N] :: N ::: true
 //│ [True] :: True ::: true
-//│ dropWhile₀ :: 'dropWhile₀ <: [] ::: true
+//│ dropWhile_₀ :: 'dropWhile_₀ <: [] ::: true
 //│ t :: 't⁰ <: [] ::: true
-//│ dropWhile₀(t) :: '12_callres <: [] ::: true
+//│ dropWhile_₀(t) :: '12_callres <: [] ::: true
 //│ t :: 't⁰ <: [] ::: true
 //│ [C t] :: C('t⁰) ::: true
-//│ if [True] then dropWhile₀(t) else [C t] :: '15_ifres <: [] ::: true
-//│ case ls of {N  => [N] | C t => if [True] then dropWhile₀(t) else [C t]} :: '16_matchres <: [] ::: true
-//│ (fun ls -> case ls of {N  => [N] | C t => if [True] then dropWhile₀(t) else [C t]}) :: 'ls⁰ => '16_matchres ::: true
-//│ f₀ :: 'f₀ <: [] ::: true
+//│ if [True] then dropWhile_₀(t) else [C t] :: '15_ifres <: [] ::: true
+//│ case ls of {N  => [N] | C t => if [True] then dropWhile_₀(t) else [C t]} :: '16_matchres <: [] ::: true
+//│ (fun ls -> case ls of {N  => [N] | C t => if [True] then dropWhile_₀(t) else [C t]}) :: 'ls⁰ => '16_matchres ::: true
+//│ f_₀ :: 'f_₀ <: [] ::: true
 //│ [N] :: N ::: true
 //│ [C [N]] :: C(N) ::: true
-//│ f₀([C [N]]) :: '21_callres <: [] ::: true
-//│ f₀ :: 'f₀ <: [] ::: true
+//│ f_₀([C [N]]) :: '21_callres <: [] ::: true
+//│ f_₀ :: 'f_₀ <: [] ::: true
 //│ x :: 'x⁰ <: [] ::: true
-//│ f₀(x) :: '24_callres <: [] ::: true
-//│ [Pair f₀([C [N]]) f₀(x)] :: Pair('21_callres, '24_callres) ::: true
-//│ (fun x -> [Pair f₀([C [N]]) f₀(x)]) :: 'x⁰ => Pair('21_callres, '24_callres) ::: true
+//│ f_₀(x) :: '24_callres <: [] ::: true
+//│ [Pair f_₀([C [N]]) f_₀(x)] :: Pair('21_callres, '24_callres) ::: true
+//│ (fun x -> [Pair f_₀([C [N]]) f_₀(x)]) :: 'x⁰ => Pair('21_callres, '24_callres) ::: true
 //│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec dropWhile_d0 ls_0 =
+//│ let rec dropWhile__d0 ls_0 =
 //│   (match ls_0 with
 //│     | `N -> 
 //│       (`N)
 //│     | `C(t_0) -> 
 //│       (if true then
-//│         (dropWhile_d0 t_0)
+//│         (dropWhile__d0 t_0)
 //│       else
 //│         (`C(t_0))))
-//│ and f_d0 x_0 =
-//│   (`Pair((f_d0 (`C((`N)))), (f_d0 x_0)));;
-//│ (f_d0 (dropWhile_d0 (`C((`N)))))
+//│ and f__d0 x_0 =
+//│   (`Pair((f__d0 (`C((`N)))), (f__d0 x_0)));;
+//│ (f__d0 (dropWhile__d0 (`C((`N)))))
 //│ 
 //│ --------------- ocaml repl result -----------------
 //│ [ok]
@@ -591,32 +591,32 @@ f(dropWhile(C(N)))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ f₀(dropWhile₀([C [N]]))
-//│ def dropWhile₀(ls¹) = 
+//│ f_₀(dropWhile_₀([C [N]]))
+//│ def dropWhile_₀(ls¹) = 
 //│ 	case ls¹ of {
 //│ 		N  => [N]
-//│ 		| C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}
-//│ def f₀(x²) = 
-//│ 	let x³ = f₀([C [N]])
+//│ 		| C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}
+//│ def f_₀(x²) = 
+//│ 	let x³ = f_₀([C [N]])
 //│ 	in case x³ of {
 //│ 		C a¹ => [N]
-//│ 		| N  => f₀(x³)}
+//│ 		| N  => f_₀(x³)}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 35 --->
 //│ 	DeadCodeCons
 //│ 	NoCons
-//│ 	case x³ of {C a¹ => [N] | N  => f₀(x³)}: 39
+//│ 	case x³ of {C a¹ => [N] | N  => f_₀(x³)}: 39
 //│ [N]: 55 --->
 //│ 	DeadCodeCons
-//│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 51
+//│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}: 51
 //│ [C [N]]: 56 --->
-//│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 51
+//│ 	case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}: 51
 //│ ------------------
-//│ case x³ of {C a¹ => [N] | N  => f₀(x³)}: 39 --->
+//│ case x³ of {C a¹ => [N] | N  => f_₀(x³)}: 39 --->
 //│ 	[N]: 35
-//│ case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}: 51 --->
+//│ case ls¹ of {N  => [N] | C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}: 51 --->
 //│ 	[N]: 55
 //│ 	[C [N]]: 56
 //│ <<<<<<< fusion matches <<<<<<<
@@ -628,73 +628,73 @@ f(dropWhile(C(N)))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀(dropWhile₀([C [N]]))
-//│ def dropWhile₀(ls²) = 
+//│ f_₀(dropWhile_₀([C [N]]))
+//│ def dropWhile_₀(ls²) = 
 //│ 	case ls² of {
 //│ 		N  => [N]
-//│ 		| C t¹ => if [True] then dropWhile₀(t¹) else [C t¹]}
-//│ def f₀(x⁴) = 
-//│ 	let x⁵ = f₀([C [N]])
+//│ 		| C t¹ => if [True] then dropWhile_₀(t¹) else [C t¹]}
+//│ def f_₀(x⁴) = 
+//│ 	let x⁵ = f_₀([C [N]])
 //│ 	in case x⁵ of {
 //│ 		C a¹ => [N]
-//│ 		| N  => f₀(x⁵)}
+//│ 		| N  => f_₀(x⁵)}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ f₀ :: 'f₀ <: [] ::: true
-//│ dropWhile₀ :: 'dropWhile₀ <: [] ::: true
+//│ f_₀ :: 'f_₀ <: [] ::: true
+//│ dropWhile_₀ :: 'dropWhile_₀ <: [] ::: true
 //│ [N] :: N ::: true
 //│ [C [N]] :: C(N) ::: true
-//│ dropWhile₀([C [N]]) :: '5_callres <: [] ::: true
-//│ f₀(dropWhile₀([C [N]])) :: '6_callres <: [] ::: true
-//│ f₀ :: 'f₀ <: [] ::: true
+//│ dropWhile_₀([C [N]]) :: '5_callres <: [] ::: true
+//│ f_₀(dropWhile_₀([C [N]])) :: '6_callres <: [] ::: true
+//│ f_₀ :: 'f_₀ <: [] ::: true
 //│ [N] :: N ::: true
 //│ [C [N]] :: C(N) ::: true
-//│ f₀([C [N]]) :: '10_callres <: [] ::: true
+//│ f_₀([C [N]]) :: '10_callres <: [] ::: true
 //│ x :: 'x¹ <: [] ::: true
 //│ [N] :: N ::: true
-//│ f₀ :: 'f₀ <: [] ::: true
+//│ f_₀ :: 'f_₀ <: [] ::: true
 //│ x :: 'x¹ <: [] ::: true
-//│ f₀(x) :: '15_callres <: [] ::: true
-//│ case x of {C a => [N] | N  => f₀(x)} :: '16_matchres <: [] ::: true
-//│ let x = f₀([C [N]])
-//│ in case x of {C a => [N] | N  => f₀(x)} :: '16_matchres <: [] ::: true
-//│ (fun x -> let x = f₀([C [N]])
-//│ in case x of {C a => [N] | N  => f₀(x)}) :: 'x⁰ => '16_matchres ::: true
+//│ f_₀(x) :: '15_callres <: [] ::: true
+//│ case x of {C a => [N] | N  => f_₀(x)} :: '16_matchres <: [] ::: true
+//│ let x = f_₀([C [N]])
+//│ in case x of {C a => [N] | N  => f_₀(x)} :: '16_matchres <: [] ::: true
+//│ (fun x -> let x = f_₀([C [N]])
+//│ in case x of {C a => [N] | N  => f_₀(x)}) :: 'x⁰ => '16_matchres ::: true
 //│ ls :: 'ls⁰ <: [] ::: true
 //│ [N] :: N ::: true
 //│ [True] :: True ::: true
-//│ dropWhile₀ :: 'dropWhile₀ <: [] ::: true
+//│ dropWhile_₀ :: 'dropWhile_₀ <: [] ::: true
 //│ t :: 't⁰ <: [] ::: true
-//│ dropWhile₀(t) :: '24_callres <: [] ::: true
+//│ dropWhile_₀(t) :: '24_callres <: [] ::: true
 //│ t :: 't⁰ <: [] ::: true
 //│ [C t] :: C('t⁰) ::: true
-//│ if [True] then dropWhile₀(t) else [C t] :: '27_ifres <: [] ::: true
-//│ case ls of {N  => [N] | C t => if [True] then dropWhile₀(t) else [C t]} :: '28_matchres <: [] ::: true
-//│ (fun ls -> case ls of {N  => [N] | C t => if [True] then dropWhile₀(t) else [C t]}) :: 'ls⁰ => '28_matchres ::: true
+//│ if [True] then dropWhile_₀(t) else [C t] :: '27_ifres <: [] ::: true
+//│ case ls of {N  => [N] | C t => if [True] then dropWhile_₀(t) else [C t]} :: '28_matchres <: [] ::: true
+//│ (fun ls -> case ls of {N  => [N] | C t => if [True] then dropWhile_₀(t) else [C t]}) :: 'ls⁰ => '28_matchres ::: true
 //│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec dropWhile_d0 ls_0 =
+//│ let rec dropWhile__d0 ls_0 =
 //│   (match ls_0 with
 //│     | `N -> 
 //│       (`N)
 //│     | `C(t_0) -> 
 //│       (if true then
-//│         (dropWhile_d0 t_0)
+//│         (dropWhile__d0 t_0)
 //│       else
 //│         (`C(t_0))))
-//│ and f_d0 x_0 =
-//│   (let rec x_1 = (f_d0 (`C((`N)))) in
+//│ and f__d0 x_0 =
+//│   (let rec x_1 = (f__d0 (`C((`N)))) in
 //│     (match x_1 with
 //│       | `C(a_0) -> 
 //│         (`N)
 //│       | `N -> 
-//│         (f_d0 x_1)));;
-//│ (f_d0 (dropWhile_d0 (`C((`N)))))
+//│         (f__d0 x_1)));;
+//│ (f__d0 (dropWhile__d0 (`C((`N)))))
 //│ 
 //│ --------------- ocaml repl result -----------------
 //│ [ok]
@@ -828,122 +828,122 @@ fun words1(ls) =
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (fun x⁶ -> 2)(words0₀)
-//│ def words0₀(ls⁴) = 
-//│ 	let mident² = dropWhile₂((fun x³ -> [False]), ls⁴)
+//│ (fun x⁶ -> 2)(words0_₀)
+//│ def words0_₀(ls⁴) = 
+//│ 	let mident² = dropWhile_₂((fun x³ -> [False]), ls⁴)
 //│ 	in case mident² of {
 //│ 		N  => [N]
-//│ 		| _  => break₀(mident²)}
+//│ 		| _  => break_₀(mident²)}
 //│ 	where
-//│ 	def break₀(ls⁸) = 
+//│ 	def break_₀(ls⁸) = 
 //│ 		case ls⁸ of {
 //│ 			N  => 
 //│ 				let fst² = [N]
 //│ 				in let snd² = [N]
-//│ 				in [C fst² words1₁(snd²)]
+//│ 				in [C fst² words1_₁(snd²)]
 //│ 			| C h⁴ t⁴ => 
 //│ 				let fst³ = [N]
 //│ 				in let snd³ = [C h⁴ t⁴]
-//│ 				in [C fst³ words1₀(snd³)]}
+//│ 				in [C fst³ words1_₀(snd³)]}
 //│ 		where
-//│ 		def words1₀(ls¹⁰) = 
-//│ 			let mident⁴ = dropWhile₀((fun x⁵ -> [False]), ls¹⁰)
+//│ 		def words1_₀(ls¹⁰) = 
+//│ 			let mident⁴ = dropWhile_₀((fun x⁵ -> [False]), ls¹⁰)
 //│ 			in case mident⁴ of {
 //│ 				N  => [N]
-//│ 				| _  => break₀(mident⁴)}
+//│ 				| _  => break_₀(mident⁴)}
 //│ 			where
-//│ 			def dropWhile₀(p³, ls⁹) = 
+//│ 			def dropWhile_₀(p³, ls⁹) = 
 //│ 				case ls⁹ of {
 //│ 					N  => [N]
-//│ 					| C h⁵ t⁵ => if p³(h⁵) then dropWhile₀(p³, t⁵) else [C h⁵ t⁵]}
-//│ 		def words1₁(ls⁵) = 
-//│ 			let mident³ = dropWhile₁((fun x⁴ -> [False]), ls⁵)
+//│ 					| C h⁵ t⁵ => if p³(h⁵) then dropWhile_₀(p³, t⁵) else [C h⁵ t⁵]}
+//│ 		def words1_₁(ls⁵) = 
+//│ 			let mident³ = dropWhile_₁((fun x⁴ -> [False]), ls⁵)
 //│ 			in case mident³ of {
 //│ 				N  => [N]
-//│ 				| _  => break₀(mident³)}
+//│ 				| _  => break_₀(mident³)}
 //│ 			where
-//│ 			def dropWhile₁(p¹, ls⁶) = 
+//│ 			def dropWhile_₁(p¹, ls⁶) = 
 //│ 				case ls⁶ of {
 //│ 					N  => [N]
-//│ 					| C h² t² => if p¹(h²) then dropWhile₁(p¹, t²) else [C h² t²]}
-//│ 	def dropWhile₂(p², ls⁷) = 
+//│ 					| C h² t² => if p¹(h²) then dropWhile_₁(p¹, t²) else [C h² t²]}
+//│ 	def dropWhile_₂(p², ls⁷) = 
 //│ 		case ls⁷ of {
 //│ 			N  => [N]
-//│ 			| C h³ t³ => if p²(h³) then dropWhile₂(p², t³) else [C h³ t³]}
+//│ 			| C h³ t³ => if p²(h³) then dropWhile_₂(p², t³) else [C h³ t³]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 102 --->
-//│ 	case mident³ of {N  => [N] | _  => break₀(mident³)}: 98
+//│ 	case mident³ of {N  => [N] | _  => break_₀(mident³)}: 98
 //│ 	case ls⁸ of {N  => let fst² = [N]
 //│ in let snd² = [N]
-//│ in [C fst² words1₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
+//│ in [C fst² words1_₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
 //│ in let snd³ = [C h⁴ t⁴]
-//│ in [C fst³ words1₀(snd³)]}: 156
+//│ in [C fst³ words1_₀(snd³)]}: 156
 //│ [C h² t²]: 113 --->
-//│ 	case mident³ of {N  => [N] | _  => break₀(mident³)}: 98
+//│ 	case mident³ of {N  => [N] | _  => break_₀(mident³)}: 98
 //│ 	case ls⁸ of {N  => let fst² = [N]
 //│ in let snd² = [N]
-//│ in [C fst² words1₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
+//│ in [C fst² words1_₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
 //│ in let snd³ = [C h⁴ t⁴]
-//│ in [C fst³ words1₀(snd³)]}: 156
+//│ in [C fst³ words1_₀(snd³)]}: 156
 //│ [N]: 119 --->
-//│ 	case mident² of {N  => [N] | _  => break₀(mident²)}: 84
+//│ 	case mident² of {N  => [N] | _  => break_₀(mident²)}: 84
 //│ 	case ls⁸ of {N  => let fst² = [N]
 //│ in let snd² = [N]
-//│ in [C fst² words1₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
+//│ in [C fst² words1_₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
 //│ in let snd³ = [C h⁴ t⁴]
-//│ in [C fst³ words1₀(snd³)]}: 156
+//│ in [C fst³ words1_₀(snd³)]}: 156
 //│ [C h³ t³]: 130 --->
-//│ 	case mident² of {N  => [N] | _  => break₀(mident²)}: 84
+//│ 	case mident² of {N  => [N] | _  => break_₀(mident²)}: 84
 //│ 	case ls⁸ of {N  => let fst² = [N]
 //│ in let snd² = [N]
-//│ in [C fst² words1₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
+//│ in [C fst² words1_₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
 //│ in let snd³ = [C h⁴ t⁴]
-//│ in [C fst³ words1₀(snd³)]}: 156
+//│ in [C fst³ words1_₀(snd³)]}: 156
 //│ [N]: 137 --->
-//│ 	case ls⁶ of {N  => [N] | C h² t² => if p¹(h²) then dropWhile₁(p¹, t²) else [C h² t²]}: 115
+//│ 	case ls⁶ of {N  => [N] | C h² t² => if p¹(h²) then dropWhile_₁(p¹, t²) else [C h² t²]}: 115
 //│ [C h⁴ t⁴]: 148 --->
-//│ 	case ls⁹ of {N  => [N] | C h⁵ t⁵ => if p³(h⁵) then dropWhile₀(p³, t⁵) else [C h⁵ t⁵]}: 172
+//│ 	case ls⁹ of {N  => [N] | C h⁵ t⁵ => if p³(h⁵) then dropWhile_₀(p³, t⁵) else [C h⁵ t⁵]}: 172
 //│ [N]: 159 --->
 //│ 	case ls⁸ of {N  => let fst² = [N]
 //│ in let snd² = [N]
-//│ in [C fst² words1₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
+//│ in [C fst² words1_₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
 //│ in let snd³ = [C h⁴ t⁴]
-//│ in [C fst³ words1₀(snd³)]}: 156
-//│ 	case mident⁴ of {N  => [N] | _  => break₀(mident⁴)}: 186
+//│ in [C fst³ words1_₀(snd³)]}: 156
+//│ 	case mident⁴ of {N  => [N] | _  => break_₀(mident⁴)}: 186
 //│ [C h⁵ t⁵]: 170 --->
 //│ 	case ls⁸ of {N  => let fst² = [N]
 //│ in let snd² = [N]
-//│ in [C fst² words1₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
+//│ in [C fst² words1_₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
 //│ in let snd³ = [C h⁴ t⁴]
-//│ in [C fst³ words1₀(snd³)]}: 156
-//│ 	case mident⁴ of {N  => [N] | _  => break₀(mident⁴)}: 186
+//│ in [C fst³ words1_₀(snd³)]}: 156
+//│ 	case mident⁴ of {N  => [N] | _  => break_₀(mident⁴)}: 186
 //│ ------------------
-//│ case mident² of {N  => [N] | _  => break₀(mident²)}: 84 --->
+//│ case mident² of {N  => [N] | _  => break_₀(mident²)}: 84 --->
 //│ 	[N]: 119
 //│ 	[C h³ t³]: 130
-//│ case mident³ of {N  => [N] | _  => break₀(mident³)}: 98 --->
+//│ case mident³ of {N  => [N] | _  => break_₀(mident³)}: 98 --->
 //│ 	[N]: 102
 //│ 	[C h² t²]: 113
-//│ case ls⁶ of {N  => [N] | C h² t² => if p¹(h²) then dropWhile₁(p¹, t²) else [C h² t²]}: 115 --->
+//│ case ls⁶ of {N  => [N] | C h² t² => if p¹(h²) then dropWhile_₁(p¹, t²) else [C h² t²]}: 115 --->
 //│ 	DeadCodeProd
 //│ 	[N]: 137
 //│ case ls⁸ of {N  => let fst² = [N]
 //│ in let snd² = [N]
-//│ in [C fst² words1₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
+//│ in [C fst² words1_₁(snd²)] | C h⁴ t⁴ => let fst³ = [N]
 //│ in let snd³ = [C h⁴ t⁴]
-//│ in [C fst³ words1₀(snd³)]}: 156 --->
+//│ in [C fst³ words1_₀(snd³)]}: 156 --->
 //│ 	[N]: 102
 //│ 	[C h² t²]: 113
 //│ 	[N]: 119
 //│ 	[C h³ t³]: 130
 //│ 	[N]: 159
 //│ 	[C h⁵ t⁵]: 170
-//│ case ls⁹ of {N  => [N] | C h⁵ t⁵ => if p³(h⁵) then dropWhile₀(p³, t⁵) else [C h⁵ t⁵]}: 172 --->
+//│ case ls⁹ of {N  => [N] | C h⁵ t⁵ => if p³(h⁵) then dropWhile_₀(p³, t⁵) else [C h⁵ t⁵]}: 172 --->
 //│ 	DeadCodeProd
 //│ 	[C h⁴ t⁴]: 148
-//│ case mident⁴ of {N  => [N] | _  => break₀(mident⁴)}: 186 --->
+//│ case mident⁴ of {N  => [N] | _  => break_₀(mident⁴)}: 186 --->
 //│ 	[N]: 159
 //│ 	[C h⁵ t⁵]: 170
 //│ <<<<<<< fusion matches <<<<<<<
@@ -955,48 +955,48 @@ fun words1(ls) =
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (fun x⁷ -> 2)(words0₀)
-//│ def words0₀(ls¹²) = 
-//│ 	let mident⁶ = dropWhile₂((fun x⁹ -> [False]), ls¹²)
-//│ 	in case mident⁶ of {
+//│ (fun x⁷ -> 2)(words0_₀)
+//│ def words0_₀(ls¹⁴) = 
+//│ 	let mident⁵ = dropWhile_₂((fun x⁸ -> [False]), ls¹⁴)
+//│ 	in case mident⁵ of {
 //│ 		N  => [N]
-//│ 		| _  => break₀(mident⁶)}
+//│ 		| _  => break_₀(mident⁵)}
 //│ 	where
-//│ 	def break₀(ls¹⁷) = 
-//│ 		case ls¹⁷ of {
+//│ 	def break_₀(ls¹³) = 
+//│ 		case ls¹³ of {
 //│ 			N  => 
 //│ 				let fst⁴ = [N]
 //│ 				in let snd⁴ = [N]
-//│ 				in [C fst⁴ words1₁(snd⁴)]
+//│ 				in [C fst⁴ words1_₁(snd⁴)]
 //│ 			| C h⁴ t⁴ => 
 //│ 				let fst⁵ = [N]
 //│ 				in let snd⁵ = [C h⁴ t⁴]
-//│ 				in [C fst⁵ words1₀(snd⁵)]}
+//│ 				in [C fst⁵ words1_₀(snd⁵)]}
 //│ 		where
-//│ 		def words1₀(ls¹⁴) = 
-//│ 			let mident⁷ = dropWhile₀((fun x¹⁰ -> [False]), ls¹⁴)
+//│ 		def words1_₀(ls¹⁶) = 
+//│ 			let mident⁷ = dropWhile_₀((fun x¹⁰ -> [False]), ls¹⁶)
 //│ 			in case mident⁷ of {
 //│ 				N  => [N]
-//│ 				| _  => break₀(mident⁷)}
+//│ 				| _  => break_₀(mident⁷)}
 //│ 			where
-//│ 			def dropWhile₀(p⁵, ls¹⁵) = 
-//│ 				case ls¹⁵ of {
+//│ 			def dropWhile_₀(p⁵, ls¹²) = 
+//│ 				case ls¹² of {
 //│ 					N  => [N]
-//│ 					| C h⁵ t⁵ => if p⁵(h⁵) then dropWhile₀(p⁵, t⁵) else [C h⁵ t⁵]}
-//│ 		def words1₁(ls¹¹) = 
-//│ 			let mident⁵ = dropWhile₁((fun x⁸ -> [False]), ls¹¹)
-//│ 			in case mident⁵ of {
+//│ 					| C h⁵ t⁵ => if p⁵(h⁵) then dropWhile_₀(p⁵, t⁵) else [C h⁵ t⁵]}
+//│ 		def words1_₁(ls¹⁵) = 
+//│ 			let mident⁶ = dropWhile_₁((fun x⁹ -> [False]), ls¹⁵)
+//│ 			in case mident⁶ of {
 //│ 				N  => [N]
-//│ 				| _  => break₀(mident⁵)}
+//│ 				| _  => break_₀(mident⁶)}
 //│ 			where
-//│ 			def dropWhile₁(p⁶, ls¹⁶) = 
-//│ 				case ls¹⁶ of {
+//│ 			def dropWhile_₁(p⁶, ls¹⁷) = 
+//│ 				case ls¹⁷ of {
 //│ 					N  => [N]
-//│ 					| C h² t² => if p⁶(h²) then dropWhile₁(p⁶, t²) else [C h² t²]}
-//│ 	def dropWhile₂(p⁴, ls¹³) = 
-//│ 		case ls¹³ of {
+//│ 					| C h² t² => if p⁶(h²) then dropWhile_₁(p⁶, t²) else [C h² t²]}
+//│ 	def dropWhile_₂(p⁴, ls¹¹) = 
+//│ 		case ls¹¹ of {
 //│ 			N  => [N]
-//│ 			| C h³ t³ => if p⁴(h³) then dropWhile₂(p⁴, t³) else [C h³ t³]}
+//│ 			| C h³ t³ => if p⁴(h³) then dropWhile_₂(p⁴, t³) else [C h³ t³]}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
@@ -1004,211 +1004,211 @@ fun words1(ls) =
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
 //│ 2 :: Int ::: false
 //│ (fun x -> 2) :: 'x⁰ => Int ::: true
-//│ words0₀ :: 'words0₀ <: [] ::: true
-//│ (fun x -> 2)(words0₀) :: '4_callres <: [] ::: true
-//│ dropWhile₁ :: 'dropWhile₁ <: [] ::: true
-//│ [False] :: False ::: true
-//│ (fun x -> [False]) :: 'x¹ => False ::: true
-//│ dropWhile₁((fun x -> [False])) :: '8_callres <: [] ::: true
+//│ words0_₀ :: 'words0_₀ <: [] ::: true
+//│ (fun x -> 2)(words0_₀) :: '4_callres <: [] ::: true
 //│ ls :: 'ls⁰ <: [] ::: true
-//│ dropWhile₁((fun x -> [False]), ls) :: '10_callres <: [] ::: true
-//│ mident :: 'mident⁰ <: [] ::: true
-//│ [N] :: N ::: true
-//│ break₀ :: 'break₀ <: [] ::: true
-//│ mident :: 'mident⁰ <: [] ::: true
-//│ break₀(mident) :: '15_callres <: [] ::: true
-//│ case mident of {N  => [N] | _  => break₀(mident)} :: '16_matchres <: [] ::: true
-//│ let mident = dropWhile₁((fun x -> [False]), ls)
-//│ in case mident of {N  => [N] | _  => break₀(mident)} :: '16_matchres <: [] ::: true
-//│ (fun ls -> let mident = dropWhile₁((fun x -> [False]), ls)
-//│ in case mident of {N  => [N] | _  => break₀(mident)}) :: 'ls⁰ => '16_matchres ::: true
-//│ dropWhile₂ :: 'dropWhile₂ <: [] ::: true
-//│ [False] :: False ::: true
-//│ (fun x -> [False]) :: 'x² => False ::: true
-//│ dropWhile₂((fun x -> [False])) :: '22_callres <: [] ::: true
-//│ ls :: 'ls¹ <: [] ::: true
-//│ dropWhile₂((fun x -> [False]), ls) :: '24_callres <: [] ::: true
-//│ mident :: 'mident¹ <: [] ::: true
-//│ [N] :: N ::: true
-//│ break₀ :: 'break₀ <: [] ::: true
-//│ mident :: 'mident¹ <: [] ::: true
-//│ break₀(mident) :: '29_callres <: [] ::: true
-//│ case mident of {N  => [N] | _  => break₀(mident)} :: '30_matchres <: [] ::: true
-//│ let mident = dropWhile₂((fun x -> [False]), ls)
-//│ in case mident of {N  => [N] | _  => break₀(mident)} :: '30_matchres <: [] ::: true
-//│ (fun ls -> let mident = dropWhile₂((fun x -> [False]), ls)
-//│ in case mident of {N  => [N] | _  => break₀(mident)}) :: 'ls¹ => '30_matchres ::: true
-//│ ls :: 'ls² <: [] ::: true
 //│ [N] :: N ::: true
 //│ p :: 'p⁰ <: [] ::: true
 //│ h :: 'h⁰ <: [] ::: true
-//│ p(h) :: '37_callres <: [] ::: true
-//│ dropWhile₂ :: 'dropWhile₂ <: [] ::: true
+//│ p(h) :: '9_callres <: [] ::: true
+//│ dropWhile_₂ :: 'dropWhile_₂ <: [] ::: true
 //│ p :: 'p⁰ <: [] ::: true
-//│ dropWhile₂(p) :: '40_callres <: [] ::: true
+//│ dropWhile_₂(p) :: '12_callres <: [] ::: true
 //│ t :: 't⁰ <: [] ::: true
-//│ dropWhile₂(p, t) :: '42_callres <: [] ::: true
+//│ dropWhile_₂(p, t) :: '14_callres <: [] ::: true
 //│ h :: 'h⁰ <: [] ::: true
 //│ t :: 't⁰ <: [] ::: true
 //│ [C h t] :: C('h⁰, 't⁰) ::: true
-//│ if p(h) then dropWhile₂(p, t) else [C h t] :: '46_ifres <: [] ::: true
-//│ case ls of {N  => [N] | C h t => if p(h) then dropWhile₂(p, t) else [C h t]} :: '47_matchres <: [] ::: true
-//│ (fun ls -> case ls of {N  => [N] | C h t => if p(h) then dropWhile₂(p, t) else [C h t]}) :: 'ls² => '47_matchres ::: true
-//│ (fun p -> (fun ls -> case ls of {N  => [N] | C h t => if p(h) then dropWhile₂(p, t) else [C h t]})) :: 'p⁰ => 'ls² => '47_matchres ::: true
-//│ dropWhile₀ :: 'dropWhile₀ <: [] ::: true
-//│ [False] :: False ::: true
-//│ (fun x -> [False]) :: 'x³ => False ::: true
-//│ dropWhile₀((fun x -> [False])) :: '53_callres <: [] ::: true
-//│ ls :: 'ls³ <: [] ::: true
-//│ dropWhile₀((fun x -> [False]), ls) :: '55_callres <: [] ::: true
-//│ mident :: 'mident² <: [] ::: true
-//│ [N] :: N ::: true
-//│ break₀ :: 'break₀ <: [] ::: true
-//│ mident :: 'mident² <: [] ::: true
-//│ break₀(mident) :: '60_callres <: [] ::: true
-//│ case mident of {N  => [N] | _  => break₀(mident)} :: '61_matchres <: [] ::: true
-//│ let mident = dropWhile₀((fun x -> [False]), ls)
-//│ in case mident of {N  => [N] | _  => break₀(mident)} :: '61_matchres <: [] ::: true
-//│ (fun ls -> let mident = dropWhile₀((fun x -> [False]), ls)
-//│ in case mident of {N  => [N] | _  => break₀(mident)}) :: 'ls³ => '61_matchres ::: true
-//│ ls :: 'ls⁴ <: [] ::: true
+//│ if p(h) then dropWhile_₂(p, t) else [C h t] :: '18_ifres <: [] ::: true
+//│ case ls of {N  => [N] | C h t => if p(h) then dropWhile_₂(p, t) else [C h t]} :: '19_matchres <: [] ::: true
+//│ (fun ls -> case ls of {N  => [N] | C h t => if p(h) then dropWhile_₂(p, t) else [C h t]}) :: 'ls⁰ => '19_matchres ::: true
+//│ (fun p -> (fun ls -> case ls of {N  => [N] | C h t => if p(h) then dropWhile_₂(p, t) else [C h t]})) :: 'p⁰ => 'ls⁰ => '19_matchres ::: true
+//│ ls :: 'ls¹ <: [] ::: true
 //│ [N] :: N ::: true
 //│ p :: 'p¹ <: [] ::: true
 //│ h :: 'h¹ <: [] ::: true
-//│ p(h) :: '68_callres <: [] ::: true
-//│ dropWhile₀ :: 'dropWhile₀ <: [] ::: true
+//│ p(h) :: '26_callres <: [] ::: true
+//│ dropWhile_₀ :: 'dropWhile_₀ <: [] ::: true
 //│ p :: 'p¹ <: [] ::: true
-//│ dropWhile₀(p) :: '71_callres <: [] ::: true
+//│ dropWhile_₀(p) :: '29_callres <: [] ::: true
 //│ t :: 't¹ <: [] ::: true
-//│ dropWhile₀(p, t) :: '73_callres <: [] ::: true
+//│ dropWhile_₀(p, t) :: '31_callres <: [] ::: true
 //│ h :: 'h¹ <: [] ::: true
 //│ t :: 't¹ <: [] ::: true
 //│ [C h t] :: C('h¹, 't¹) ::: true
-//│ if p(h) then dropWhile₀(p, t) else [C h t] :: '77_ifres <: [] ::: true
-//│ case ls of {N  => [N] | C h t => if p(h) then dropWhile₀(p, t) else [C h t]} :: '78_matchres <: [] ::: true
-//│ (fun ls -> case ls of {N  => [N] | C h t => if p(h) then dropWhile₀(p, t) else [C h t]}) :: 'ls⁴ => '78_matchres ::: true
-//│ (fun p -> (fun ls -> case ls of {N  => [N] | C h t => if p(h) then dropWhile₀(p, t) else [C h t]})) :: 'p¹ => 'ls⁴ => '78_matchres ::: true
-//│ ls :: 'ls⁵ <: [] ::: true
-//│ [N] :: N ::: true
-//│ p :: 'p² <: [] ::: true
-//│ h :: 'h² <: [] ::: true
-//│ p(h) :: '85_callres <: [] ::: true
-//│ dropWhile₁ :: 'dropWhile₁ <: [] ::: true
-//│ p :: 'p² <: [] ::: true
-//│ dropWhile₁(p) :: '88_callres <: [] ::: true
-//│ t :: 't² <: [] ::: true
-//│ dropWhile₁(p, t) :: '90_callres <: [] ::: true
-//│ h :: 'h² <: [] ::: true
-//│ t :: 't² <: [] ::: true
-//│ [C h t] :: C('h², 't²) ::: true
-//│ if p(h) then dropWhile₁(p, t) else [C h t] :: '94_ifres <: [] ::: true
-//│ case ls of {N  => [N] | C h t => if p(h) then dropWhile₁(p, t) else [C h t]} :: '95_matchres <: [] ::: true
-//│ (fun ls -> case ls of {N  => [N] | C h t => if p(h) then dropWhile₁(p, t) else [C h t]}) :: 'ls⁵ => '95_matchres ::: true
-//│ (fun p -> (fun ls -> case ls of {N  => [N] | C h t => if p(h) then dropWhile₁(p, t) else [C h t]})) :: 'p² => 'ls⁵ => '95_matchres ::: true
-//│ ls :: 'ls⁶ <: [] ::: true
+//│ if p(h) then dropWhile_₀(p, t) else [C h t] :: '35_ifres <: [] ::: true
+//│ case ls of {N  => [N] | C h t => if p(h) then dropWhile_₀(p, t) else [C h t]} :: '36_matchres <: [] ::: true
+//│ (fun ls -> case ls of {N  => [N] | C h t => if p(h) then dropWhile_₀(p, t) else [C h t]}) :: 'ls¹ => '36_matchres ::: true
+//│ (fun p -> (fun ls -> case ls of {N  => [N] | C h t => if p(h) then dropWhile_₀(p, t) else [C h t]})) :: 'p¹ => 'ls¹ => '36_matchres ::: true
+//│ ls :: 'ls² <: [] ::: true
 //│ [N] :: N ::: true
 //│ [N] :: N ::: true
 //│ fst :: 'fst⁰ <: [] ::: true
-//│ words1₁ :: 'words1₁ <: [] ::: true
+//│ words1_₁ :: 'words1_₁ <: [] ::: true
 //│ snd :: 'snd⁰ <: [] ::: true
-//│ words1₁(snd) :: '104_callres <: [] ::: true
-//│ [C fst words1₁(snd)] :: C('fst⁰, '104_callres) ::: true
+//│ words1_₁(snd) :: '45_callres <: [] ::: true
+//│ [C fst words1_₁(snd)] :: C('fst⁰, '45_callres) ::: true
 //│ let snd = [N]
-//│ in [C fst words1₁(snd)] :: C('fst⁰, '104_callres) ::: true
+//│ in [C fst words1_₁(snd)] :: C('fst⁰, '45_callres) ::: true
 //│ let fst = [N]
 //│ in let snd = [N]
-//│ in [C fst words1₁(snd)] :: C('fst⁰, '104_callres) ::: true
+//│ in [C fst words1_₁(snd)] :: C('fst⁰, '45_callres) ::: true
 //│ [N] :: N ::: true
+//│ h :: 'h² <: [] ::: true
+//│ t :: 't² <: [] ::: true
+//│ [C h t] :: C('h², 't²) ::: true
+//│ fst :: 'fst¹ <: [] ::: true
+//│ words1_₀ :: 'words1_₀ <: [] ::: true
+//│ snd :: 'snd¹ <: [] ::: true
+//│ words1_₀(snd) :: '56_callres <: [] ::: true
+//│ [C fst words1_₀(snd)] :: C('fst¹, '56_callres) ::: true
+//│ let snd = [C h t]
+//│ in [C fst words1_₀(snd)] :: C('fst¹, '56_callres) ::: true
+//│ let fst = [N]
+//│ in let snd = [C h t]
+//│ in [C fst words1_₀(snd)] :: C('fst¹, '56_callres) ::: true
+//│ case ls of {N  => let fst = [N]
+//│ in let snd = [N]
+//│ in [C fst words1_₁(snd)] | C h t => let fst = [N]
+//│ in let snd = [C h t]
+//│ in [C fst words1_₀(snd)]} :: '60_matchres <: [] ::: true
+//│ (fun ls -> case ls of {N  => let fst = [N]
+//│ in let snd = [N]
+//│ in [C fst words1_₁(snd)] | C h t => let fst = [N]
+//│ in let snd = [C h t]
+//│ in [C fst words1_₀(snd)]}) :: 'ls² => '60_matchres ::: true
+//│ dropWhile_₂ :: 'dropWhile_₂ <: [] ::: true
+//│ [False] :: False ::: true
+//│ (fun x -> [False]) :: 'x¹ => False ::: true
+//│ dropWhile_₂((fun x -> [False])) :: '65_callres <: [] ::: true
+//│ ls :: 'ls³ <: [] ::: true
+//│ dropWhile_₂((fun x -> [False]), ls) :: '67_callres <: [] ::: true
+//│ mident :: 'mident⁰ <: [] ::: true
+//│ [N] :: N ::: true
+//│ break_₀ :: 'break_₀ <: [] ::: true
+//│ mident :: 'mident⁰ <: [] ::: true
+//│ break_₀(mident) :: '72_callres <: [] ::: true
+//│ case mident of {N  => [N] | _  => break_₀(mident)} :: '73_matchres <: [] ::: true
+//│ let mident = dropWhile_₂((fun x -> [False]), ls)
+//│ in case mident of {N  => [N] | _  => break_₀(mident)} :: '73_matchres <: [] ::: true
+//│ (fun ls -> let mident = dropWhile_₂((fun x -> [False]), ls)
+//│ in case mident of {N  => [N] | _  => break_₀(mident)}) :: 'ls³ => '73_matchres ::: true
+//│ dropWhile_₁ :: 'dropWhile_₁ <: [] ::: true
+//│ [False] :: False ::: true
+//│ (fun x -> [False]) :: 'x² => False ::: true
+//│ dropWhile_₁((fun x -> [False])) :: '79_callres <: [] ::: true
+//│ ls :: 'ls⁴ <: [] ::: true
+//│ dropWhile_₁((fun x -> [False]), ls) :: '81_callres <: [] ::: true
+//│ mident :: 'mident¹ <: [] ::: true
+//│ [N] :: N ::: true
+//│ break_₀ :: 'break_₀ <: [] ::: true
+//│ mident :: 'mident¹ <: [] ::: true
+//│ break_₀(mident) :: '86_callres <: [] ::: true
+//│ case mident of {N  => [N] | _  => break_₀(mident)} :: '87_matchres <: [] ::: true
+//│ let mident = dropWhile_₁((fun x -> [False]), ls)
+//│ in case mident of {N  => [N] | _  => break_₀(mident)} :: '87_matchres <: [] ::: true
+//│ (fun ls -> let mident = dropWhile_₁((fun x -> [False]), ls)
+//│ in case mident of {N  => [N] | _  => break_₀(mident)}) :: 'ls⁴ => '87_matchres ::: true
+//│ dropWhile_₀ :: 'dropWhile_₀ <: [] ::: true
+//│ [False] :: False ::: true
+//│ (fun x -> [False]) :: 'x³ => False ::: true
+//│ dropWhile_₀((fun x -> [False])) :: '93_callres <: [] ::: true
+//│ ls :: 'ls⁵ <: [] ::: true
+//│ dropWhile_₀((fun x -> [False]), ls) :: '95_callres <: [] ::: true
+//│ mident :: 'mident² <: [] ::: true
+//│ [N] :: N ::: true
+//│ break_₀ :: 'break_₀ <: [] ::: true
+//│ mident :: 'mident² <: [] ::: true
+//│ break_₀(mident) :: '100_callres <: [] ::: true
+//│ case mident of {N  => [N] | _  => break_₀(mident)} :: '101_matchres <: [] ::: true
+//│ let mident = dropWhile_₀((fun x -> [False]), ls)
+//│ in case mident of {N  => [N] | _  => break_₀(mident)} :: '101_matchres <: [] ::: true
+//│ (fun ls -> let mident = dropWhile_₀((fun x -> [False]), ls)
+//│ in case mident of {N  => [N] | _  => break_₀(mident)}) :: 'ls⁵ => '101_matchres ::: true
+//│ ls :: 'ls⁶ <: [] ::: true
+//│ [N] :: N ::: true
+//│ p :: 'p² <: [] ::: true
+//│ h :: 'h³ <: [] ::: true
+//│ p(h) :: '108_callres <: [] ::: true
+//│ dropWhile_₁ :: 'dropWhile_₁ <: [] ::: true
+//│ p :: 'p² <: [] ::: true
+//│ dropWhile_₁(p) :: '111_callres <: [] ::: true
+//│ t :: 't³ <: [] ::: true
+//│ dropWhile_₁(p, t) :: '113_callres <: [] ::: true
 //│ h :: 'h³ <: [] ::: true
 //│ t :: 't³ <: [] ::: true
 //│ [C h t] :: C('h³, 't³) ::: true
-//│ fst :: 'fst¹ <: [] ::: true
-//│ words1₀ :: 'words1₀ <: [] ::: true
-//│ snd :: 'snd¹ <: [] ::: true
-//│ words1₀(snd) :: '115_callres <: [] ::: true
-//│ [C fst words1₀(snd)] :: C('fst¹, '115_callres) ::: true
-//│ let snd = [C h t]
-//│ in [C fst words1₀(snd)] :: C('fst¹, '115_callres) ::: true
-//│ let fst = [N]
-//│ in let snd = [C h t]
-//│ in [C fst words1₀(snd)] :: C('fst¹, '115_callres) ::: true
-//│ case ls of {N  => let fst = [N]
-//│ in let snd = [N]
-//│ in [C fst words1₁(snd)] | C h t => let fst = [N]
-//│ in let snd = [C h t]
-//│ in [C fst words1₀(snd)]} :: '119_matchres <: [] ::: true
-//│ (fun ls -> case ls of {N  => let fst = [N]
-//│ in let snd = [N]
-//│ in [C fst words1₁(snd)] | C h t => let fst = [N]
-//│ in let snd = [C h t]
-//│ in [C fst words1₀(snd)]}) :: 'ls⁶ => '119_matchres ::: true
+//│ if p(h) then dropWhile_₁(p, t) else [C h t] :: '117_ifres <: [] ::: true
+//│ case ls of {N  => [N] | C h t => if p(h) then dropWhile_₁(p, t) else [C h t]} :: '118_matchres <: [] ::: true
+//│ (fun ls -> case ls of {N  => [N] | C h t => if p(h) then dropWhile_₁(p, t) else [C h t]}) :: 'ls⁶ => '118_matchres ::: true
+//│ (fun p -> (fun ls -> case ls of {N  => [N] | C h t => if p(h) then dropWhile_₁(p, t) else [C h t]})) :: 'p² => 'ls⁶ => '118_matchres ::: true
 //│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec break_d0 ls_6 =
-//│   (match ls_6 with
+//│ let rec break__d0 ls_2 =
+//│   (match ls_2 with
 //│     | `N -> 
 //│       (let rec fst_0 = (`N) in
 //│         (let rec snd_0 = (`N) in
-//│           (`C(fst_0, (words1_d1 snd_0)))))
-//│     | `C(h_3, t_3) -> 
+//│           (`C(fst_0, (words1__d1 snd_0)))))
+//│     | `C(h_2, t_2) -> 
 //│       (let rec fst_1 = (`N) in
-//│         (let rec snd_1 = (`C(h_3, t_3)) in
-//│           (`C(fst_1, (words1_d0 snd_1))))))
-//│ and dropWhile_d0 p_1 ls_4 =
-//│   (match ls_4 with
+//│         (let rec snd_1 = (`C(h_2, t_2)) in
+//│           (`C(fst_1, (words1__d0 snd_1))))))
+//│ and dropWhile__d0 p_1 ls_1 =
+//│   (match ls_1 with
 //│     | `N -> 
 //│       (`N)
 //│     | `C(h_1, t_1) -> 
 //│       (if (p_1 h_1) then
-//│         ((dropWhile_d0 p_1) t_1)
+//│         ((dropWhile__d0 p_1) t_1)
 //│       else
 //│         (`C(h_1, t_1))))
-//│ and dropWhile_d1 p_2 ls_5 =
-//│   (match ls_5 with
+//│ and dropWhile__d1 p_2 ls_6 =
+//│   (match ls_6 with
 //│     | `N -> 
 //│       (`N)
-//│     | `C(h_2, t_2) -> 
-//│       (if (p_2 h_2) then
-//│         ((dropWhile_d1 p_2) t_2)
+//│     | `C(h_3, t_3) -> 
+//│       (if (p_2 h_3) then
+//│         ((dropWhile__d1 p_2) t_3)
 //│       else
-//│         (`C(h_2, t_2))))
-//│ and dropWhile_d2 p_0 ls_2 =
-//│   (match ls_2 with
+//│         (`C(h_3, t_3))))
+//│ and dropWhile__d2 p_0 ls_0 =
+//│   (match ls_0 with
 //│     | `N -> 
 //│       (`N)
 //│     | `C(h_0, t_0) -> 
 //│       (if (p_0 h_0) then
-//│         ((dropWhile_d2 p_0) t_0)
+//│         ((dropWhile__d2 p_0) t_0)
 //│       else
 //│         (`C(h_0, t_0))))
-//│ and words0_d0 ls_1 =
-//│   (let rec mident_1 = ((dropWhile_d2 (fun x_2 -> 
-//│     false)) ls_1) in
-//│     (match mident_1 with
-//│       | `N -> 
-//│         (`N)
-//│       | _ -> 
-//│         (break_d0 mident_1)))
-//│ and words1_d0 ls_3 =
-//│   (let rec mident_2 = ((dropWhile_d0 (fun x_3 -> 
+//│ and words0__d0 ls_3 =
+//│   (let rec mident_0 = ((dropWhile__d2 (fun x_1 -> 
 //│     false)) ls_3) in
-//│     (match mident_2 with
-//│       | `N -> 
-//│         (`N)
-//│       | _ -> 
-//│         (break_d0 mident_2)))
-//│ and words1_d1 ls_0 =
-//│   (let rec mident_0 = ((dropWhile_d1 (fun x_1 -> 
-//│     false)) ls_0) in
 //│     (match mident_0 with
 //│       | `N -> 
 //│         (`N)
 //│       | _ -> 
-//│         (break_d0 mident_0)));;
+//│         (break__d0 mident_0)))
+//│ and words1__d0 ls_5 =
+//│   (let rec mident_2 = ((dropWhile__d0 (fun x_3 -> 
+//│     false)) ls_5) in
+//│     (match mident_2 with
+//│       | `N -> 
+//│         (`N)
+//│       | _ -> 
+//│         (break__d0 mident_2)))
+//│ and words1__d1 ls_4 =
+//│   (let rec mident_1 = ((dropWhile__d1 (fun x_2 -> 
+//│     false)) ls_4) in
+//│     (match mident_1 with
+//│       | `N -> 
+//│         (`N)
+//│       | _ -> 
+//│         (break__d0 mident_1)));;
 //│ ((fun x_0 -> 
-//│   2) words0_d0)
+//│   2) words0__d0)
 //│ 
 //│ --------------- ocaml repl result -----------------
 //│ [ok]
@@ -1263,23 +1263,23 @@ fun break(x) = break(f(C(x)))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (fun x⁷ -> 2)((fun x⁸ -> break₀(f₁(x⁸))))
-//│ def break₀(x⁴) = 
-//│ 	break₀(f₀([C x⁴]))
+//│ (fun x⁷ -> 2)((fun x⁸ -> break_₀(f_₁(x⁸))))
+//│ def break_₀(x⁴) = 
+//│ 	break_₀(f_₀([C x⁴]))
 //│ 	where
-//│ 	def f₀(x⁵) = 
+//│ 	def f_₀(x⁵) = 
 //│ 		case x⁵ of {
-//│ 			C t¹ => if [True] then f₀(t¹) else x⁵}
-//│ def f₁(x⁶) = 
+//│ 			C t¹ => if [True] then f_₀(t¹) else x⁵}
+//│ def f_₁(x⁶) = 
 //│ 	case x⁶ of {
-//│ 		C t² => if [True] then f₁(t²) else x⁶}
+//│ 		C t² => if [True] then f_₁(t²) else x⁶}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C x⁴]: 29 --->
-//│ 	case x⁵ of {C t¹ => if [True] then f₀(t¹) else x⁵}: 40
+//│ 	case x⁵ of {C t¹ => if [True] then f_₀(t¹) else x⁵}: 40
 //│ ------------------
-//│ case x⁵ of {C t¹ => if [True] then f₀(t¹) else x⁵}: 40 --->
+//│ case x⁵ of {C t¹ => if [True] then f_₀(t¹) else x⁵}: 40 --->
 //│ 	DeadCodeProd
 //│ 	[C x⁴]: 29
 //│ <<<<<<< fusion matches <<<<<<<
@@ -1291,16 +1291,16 @@ fun break(x) = break(f(C(x)))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (fun x⁹ -> 2)((fun x¹⁰ -> break₀(f₁(x¹⁰))))
-//│ def break₀(x¹¹) = 
-//│ 	break₀(f₀([C x¹¹]))
+//│ (fun x⁹ -> 2)((fun x¹⁰ -> break_₀(f_₁(x¹⁰))))
+//│ def break_₀(x¹¹) = 
+//│ 	break_₀(f_₀([C x¹¹]))
 //│ 	where
-//│ 	def f₀(x¹²) = 
+//│ 	def f_₀(x¹²) = 
 //│ 		case x¹² of {
-//│ 			C t¹ => if [True] then f₀(t¹) else x¹²}
-//│ def f₁(x¹³) = 
+//│ 			C t¹ => if [True] then f_₀(t¹) else x¹²}
+//│ def f_₁(x¹³) = 
 //│ 	case x¹³ of {
-//│ 		C t² => if [True] then f₁(t²) else x¹³}
+//│ 		C t² => if [True] then f_₁(t²) else x¹³}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
@@ -1308,61 +1308,61 @@ fun break(x) = break(f(C(x)))
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
 //│ 2 :: Int ::: false
 //│ (fun x -> 2) :: 'x⁰ => Int ::: true
-//│ break₀ :: 'break₀ <: [] ::: true
-//│ f₁ :: 'f₁ <: [] ::: true
+//│ break_₀ :: 'break_₀ <: [] ::: true
+//│ f_₁ :: 'f_₁ <: [] ::: true
 //│ x :: 'x¹ <: [] ::: true
-//│ f₁(x) :: '6_callres <: [] ::: true
-//│ break₀(f₁(x)) :: '7_callres <: [] ::: true
-//│ (fun x -> break₀(f₁(x))) :: 'x¹ => '7_callres ::: true
-//│ (fun x -> 2)((fun x -> break₀(f₁(x)))) :: '9_callres <: [] ::: true
-//│ break₀ :: 'break₀ <: [] ::: true
-//│ f₀ :: 'f₀ <: [] ::: true
+//│ f_₁(x) :: '6_callres <: [] ::: true
+//│ break_₀(f_₁(x)) :: '7_callres <: [] ::: true
+//│ (fun x -> break_₀(f_₁(x))) :: 'x¹ => '7_callres ::: true
+//│ (fun x -> 2)((fun x -> break_₀(f_₁(x)))) :: '9_callres <: [] ::: true
+//│ break_₀ :: 'break_₀ <: [] ::: true
+//│ f_₀ :: 'f_₀ <: [] ::: true
 //│ x :: 'x² <: [] ::: true
 //│ [C x] :: C('x²) ::: true
-//│ f₀([C x]) :: '14_callres <: [] ::: true
-//│ break₀(f₀([C x])) :: '15_callres <: [] ::: true
-//│ (fun x -> break₀(f₀([C x]))) :: 'x² => '15_callres ::: true
+//│ f_₀([C x]) :: '14_callres <: [] ::: true
+//│ break_₀(f_₀([C x])) :: '15_callres <: [] ::: true
+//│ (fun x -> break_₀(f_₀([C x]))) :: 'x² => '15_callres ::: true
 //│ x :: 'x³ <: [] ::: true
 //│ [True] :: True ::: true
-//│ f₀ :: 'f₀ <: [] ::: true
+//│ f_₀ :: 'f_₀ <: [] ::: true
 //│ t :: 't⁰ <: [] ::: true
-//│ f₀(t) :: '21_callres <: [] ::: true
+//│ f_₀(t) :: '21_callres <: [] ::: true
 //│ x :: 'x³ <: [] ::: true
-//│ if [True] then f₀(t) else x :: '23_ifres <: [] ::: true
-//│ case x of {C t => if [True] then f₀(t) else x} :: '24_matchres <: [] ::: true
-//│ (fun x -> case x of {C t => if [True] then f₀(t) else x}) :: 'x³ => '24_matchres ::: true
+//│ if [True] then f_₀(t) else x :: '23_ifres <: [] ::: true
+//│ case x of {C t => if [True] then f_₀(t) else x} :: '24_matchres <: [] ::: true
+//│ (fun x -> case x of {C t => if [True] then f_₀(t) else x}) :: 'x³ => '24_matchres ::: true
 //│ x :: 'x⁴ <: [] ::: true
 //│ [True] :: True ::: true
-//│ f₁ :: 'f₁ <: [] ::: true
+//│ f_₁ :: 'f_₁ <: [] ::: true
 //│ t :: 't¹ <: [] ::: true
-//│ f₁(t) :: '30_callres <: [] ::: true
+//│ f_₁(t) :: '30_callres <: [] ::: true
 //│ x :: 'x⁴ <: [] ::: true
-//│ if [True] then f₁(t) else x :: '32_ifres <: [] ::: true
-//│ case x of {C t => if [True] then f₁(t) else x} :: '33_matchres <: [] ::: true
-//│ (fun x -> case x of {C t => if [True] then f₁(t) else x}) :: 'x⁴ => '33_matchres ::: true
+//│ if [True] then f_₁(t) else x :: '32_ifres <: [] ::: true
+//│ case x of {C t => if [True] then f_₁(t) else x} :: '33_matchres <: [] ::: true
+//│ (fun x -> case x of {C t => if [True] then f_₁(t) else x}) :: 'x⁴ => '33_matchres ::: true
 //│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec break_d0 x_2 =
-//│   (break_d0 (f_d0 (`C(x_2))))
-//│ and f_d0 x_3 =
+//│ let rec break__d0 x_2 =
+//│   (break__d0 (f__d0 (`C(x_2))))
+//│ and f__d0 x_3 =
 //│   (match x_3 with
 //│     | `C(t_0) -> 
 //│       (if true then
-//│         (f_d0 t_0)
+//│         (f__d0 t_0)
 //│       else
 //│         x_3))
-//│ and f_d1 x_4 =
+//│ and f__d1 x_4 =
 //│   (match x_4 with
 //│     | `C(t_1) -> 
 //│       (if true then
-//│         (f_d1 t_1)
+//│         (f__d1 t_1)
 //│       else
 //│         x_4));;
 //│ ((fun x_0 -> 
 //│   2) (fun x_1 -> 
-//│   (break_d0 (f_d1 x_1))))
+//│   (break__d0 (f__d1 x_1))))
 //│ 
 //│ --------------- ocaml repl result -----------------
 //│ [ok]
@@ -1432,23 +1432,23 @@ fun g(t) = C(t)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ (fun x⁶ -> 2)((fun x⁷ -> f₀(prodType₀(x⁷))))
-//│ def f₀(x⁴) = 
+//│ (fun x⁶ -> 2)((fun x⁷ -> f_₀(prodType_₀(x⁷))))
+//│ def f_₀(x⁴) = 
 //│ 	case x⁴ of {
-//│ 		C t⁴ => if [True] then f₀(t⁴) else f₀(g₀(t⁴))}
+//│ 		C t⁴ => if [True] then f_₀(t⁴) else f_₀(g_₀(t⁴))}
 //│ 	where
-//│ 	def g₀(t³) = 
+//│ 	def g_₀(t³) = 
 //│ 		[C t³]
-//│ def prodType₀(x⁵) = 
+//│ def prodType_₀(x⁵) = 
 //│ 	case x⁵ of {
-//│ 		C t⁵ => if [True] then t⁵ else prodType₀(t⁵)}
+//│ 		C t⁵ => if [True] then t⁵ else prodType_₀(t⁵)}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [C t³]: 36 --->
-//│ 	case x⁴ of {C t⁴ => if [True] then f₀(t⁴) else f₀(g₀(t⁴))}: 49
+//│ 	case x⁴ of {C t⁴ => if [True] then f_₀(t⁴) else f_₀(g_₀(t⁴))}: 49
 //│ ------------------
-//│ case x⁴ of {C t⁴ => if [True] then f₀(t⁴) else f₀(g₀(t⁴))}: 49 --->
+//│ case x⁴ of {C t⁴ => if [True] then f_₀(t⁴) else f_₀(g_₀(t⁴))}: 49 --->
 //│ 	DeadCodeProd
 //│ 	[C t³]: 36
 //│ <<<<<<< fusion matches <<<<<<<
@@ -1460,16 +1460,16 @@ fun g(t) = C(t)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ (fun x⁸ -> 2)((fun x⁹ -> f₀(prodType₀(x⁹))))
-//│ def f₀(x¹⁰) = 
+//│ (fun x⁸ -> 2)((fun x⁹ -> f_₀(prodType_₀(x⁹))))
+//│ def f_₀(x¹⁰) = 
 //│ 	case x¹⁰ of {
-//│ 		C t⁴ => if [True] then f₀(t⁴) else f₀(g₀(t⁴))}
+//│ 		C t⁴ => if [True] then f_₀(t⁴) else f_₀(g_₀(t⁴))}
 //│ 	where
-//│ 	def g₀(t⁶) = 
+//│ 	def g_₀(t⁶) = 
 //│ 		[C t⁶]
-//│ def prodType₀(x¹¹) = 
+//│ def prodType_₀(x¹¹) = 
 //│ 	case x¹¹ of {
-//│ 		C t⁵ => if [True] then t⁵ else prodType₀(t⁵)}
+//│ 		C t⁵ => if [True] then t⁵ else prodType_₀(t⁵)}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
@@ -1477,61 +1477,61 @@ fun g(t) = C(t)
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
 //│ 2 :: Int ::: false
 //│ (fun x -> 2) :: 'x⁰ => Int ::: true
-//│ f₀ :: 'f₀ <: [] ::: true
-//│ prodType₀ :: 'prodType₀ <: [] ::: true
+//│ f_₀ :: 'f_₀ <: [] ::: true
+//│ prodType_₀ :: 'prodType_₀ <: [] ::: true
 //│ x :: 'x¹ <: [] ::: true
-//│ prodType₀(x) :: '6_callres <: [] ::: true
-//│ f₀(prodType₀(x)) :: '7_callres <: [] ::: true
-//│ (fun x -> f₀(prodType₀(x))) :: 'x¹ => '7_callres ::: true
-//│ (fun x -> 2)((fun x -> f₀(prodType₀(x)))) :: '9_callres <: [] ::: true
+//│ prodType_₀(x) :: '6_callres <: [] ::: true
+//│ f_₀(prodType_₀(x)) :: '7_callres <: [] ::: true
+//│ (fun x -> f_₀(prodType_₀(x))) :: 'x¹ => '7_callres ::: true
+//│ (fun x -> 2)((fun x -> f_₀(prodType_₀(x)))) :: '9_callres <: [] ::: true
 //│ t :: 't⁰ <: [] ::: true
 //│ [C t] :: C('t⁰) ::: true
 //│ (fun t -> [C t]) :: 't⁰ => C('t⁰) ::: true
 //│ x :: 'x² <: [] ::: true
 //│ [True] :: True ::: true
-//│ f₀ :: 'f₀ <: [] ::: true
+//│ f_₀ :: 'f_₀ <: [] ::: true
 //│ t :: 't¹ <: [] ::: true
-//│ f₀(t) :: '17_callres <: [] ::: true
-//│ f₀ :: 'f₀ <: [] ::: true
-//│ g₀ :: 'g₀ <: [] ::: true
+//│ f_₀(t) :: '17_callres <: [] ::: true
+//│ f_₀ :: 'f_₀ <: [] ::: true
+//│ g_₀ :: 'g_₀ <: [] ::: true
 //│ t :: 't¹ <: [] ::: true
-//│ g₀(t) :: '21_callres <: [] ::: true
-//│ f₀(g₀(t)) :: '22_callres <: [] ::: true
-//│ if [True] then f₀(t) else f₀(g₀(t)) :: '23_ifres <: [] ::: true
-//│ case x of {C t => if [True] then f₀(t) else f₀(g₀(t))} :: '24_matchres <: [] ::: true
-//│ (fun x -> case x of {C t => if [True] then f₀(t) else f₀(g₀(t))}) :: 'x² => '24_matchres ::: true
+//│ g_₀(t) :: '21_callres <: [] ::: true
+//│ f_₀(g_₀(t)) :: '22_callres <: [] ::: true
+//│ if [True] then f_₀(t) else f_₀(g_₀(t)) :: '23_ifres <: [] ::: true
+//│ case x of {C t => if [True] then f_₀(t) else f_₀(g_₀(t))} :: '24_matchres <: [] ::: true
+//│ (fun x -> case x of {C t => if [True] then f_₀(t) else f_₀(g_₀(t))}) :: 'x² => '24_matchres ::: true
 //│ x :: 'x³ <: [] ::: true
 //│ [True] :: True ::: true
 //│ t :: 't² <: [] ::: true
-//│ prodType₀ :: 'prodType₀ <: [] ::: true
+//│ prodType_₀ :: 'prodType_₀ <: [] ::: true
 //│ t :: 't² <: [] ::: true
-//│ prodType₀(t) :: '31_callres <: [] ::: true
-//│ if [True] then t else prodType₀(t) :: '32_ifres <: [] ::: true
-//│ case x of {C t => if [True] then t else prodType₀(t)} :: '33_matchres <: [] ::: true
-//│ (fun x -> case x of {C t => if [True] then t else prodType₀(t)}) :: 'x³ => '33_matchres ::: true
+//│ prodType_₀(t) :: '31_callres <: [] ::: true
+//│ if [True] then t else prodType_₀(t) :: '32_ifres <: [] ::: true
+//│ case x of {C t => if [True] then t else prodType_₀(t)} :: '33_matchres <: [] ::: true
+//│ (fun x -> case x of {C t => if [True] then t else prodType_₀(t)}) :: 'x³ => '33_matchres ::: true
 //│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec f_d0 x_2 =
+//│ let rec f__d0 x_2 =
 //│   (match x_2 with
 //│     | `C(t_1) -> 
 //│       (if true then
-//│         (f_d0 t_1)
+//│         (f__d0 t_1)
 //│       else
-//│         (f_d0 (g_d0 t_1))))
-//│ and g_d0 t_0 =
+//│         (f__d0 (g__d0 t_1))))
+//│ and g__d0 t_0 =
 //│   (`C(t_0))
-//│ and prodType_d0 x_3 =
+//│ and prodType__d0 x_3 =
 //│   (match x_3 with
 //│     | `C(t_2) -> 
 //│       (if true then
 //│         t_2
 //│       else
-//│         (prodType_d0 t_2)));;
+//│         (prodType__d0 t_2)));;
 //│ ((fun x_0 -> 
 //│   2) (fun x_1 -> 
-//│   (f_d0 (prodType_d0 x_1))))
+//│   (f__d0 (prodType__d0 x_1))))
 //│ 
 //│ --------------- ocaml repl result -----------------
 //│ [ok]

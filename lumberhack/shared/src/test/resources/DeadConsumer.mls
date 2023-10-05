@@ -46,10 +46,10 @@ f(g(D))                                   // D gets fused and becomes x => x, g 
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ f₀(g₀([D]))
-//│ def f₀(x³) = 
-//│ 	if [True] then lazy⁰(f₀(x³)) else lazy⁰(f₀([C]))
-//│ def g₀(x²) = 
+//│ f_₀(g_₀([D]))
+//│ def f_₀(x³) = 
+//│ 	if [True] then lazy⁰(f_₀(x³)) else lazy⁰(f_₀([C]))
+//│ def g_₀(x²) = 
 //│ 	case x² of {
 //│ 		D  => x²
 //│ 		| C  => x²}
@@ -71,10 +71,10 @@ f(g(D))                                   // D gets fused and becomes x => x, g 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀(g₀([D]))
-//│ def f₀(x⁵) = 
-//│ 	if [True] then lazy⁰(f₀(x⁵)) else lazy⁰(f₀([C]))
-//│ def g₀(x⁴) = 
+//│ f_₀(g_₀([D]))
+//│ def f_₀(x⁵) = 
+//│ 	if [True] then lazy⁰(f_₀(x⁵)) else lazy⁰(f_₀([C]))
+//│ def g_₀(x⁴) = 
 //│ 	case x⁴ of {
 //│ 		D  => x⁴
 //│ 		| C  => x⁴}
@@ -83,43 +83,43 @@ f(g(D))                                   // D gets fused and becomes x => x, g 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ f₀ :: 'f₀ <: [] ::: true
-//│ g₀ :: 'g₀ <: [] ::: true
+//│ f_₀ :: 'f_₀ <: [] ::: true
+//│ g_₀ :: 'g_₀ <: [] ::: true
 //│ [D] :: D ::: true
-//│ g₀([D]) :: '4_callres <: [] ::: true
-//│ f₀(g₀([D])) :: '5_callres <: [] ::: true
+//│ g_₀([D]) :: '4_callres <: [] ::: true
+//│ f_₀(g_₀([D])) :: '5_callres <: [] ::: true
 //│ x :: 'x⁰ <: [] ::: true
 //│ x :: 'x⁰ <: [] ::: true
 //│ x :: 'x⁰ <: [] ::: true
 //│ case x of {D  => x | C  => x} :: '9_matchres <: [] ::: true
 //│ (fun x -> case x of {D  => x | C  => x}) :: 'x⁰ => '9_matchres ::: true
 //│ [True] :: True ::: true
-//│ f₀ :: 'f₀ <: [] ::: true
+//│ f_₀ :: 'f_₀ <: [] ::: true
 //│ x :: 'x¹ <: [] ::: true
-//│ f₀(x) :: '15_callres <: [] ::: true
-//│ lazy(f₀(x)) :: '15_callres <: [] ::: true
-//│ f₀ :: 'f₀ <: [] ::: true
+//│ f_₀(x) :: '15_callres <: [] ::: true
+//│ lazy(f_₀(x)) :: '15_callres <: [] ::: true
+//│ f_₀ :: 'f_₀ <: [] ::: true
 //│ [C] :: C ::: true
-//│ f₀([C]) :: '20_callres <: [] ::: true
-//│ lazy(f₀([C])) :: '20_callres <: [] ::: true
-//│ if [True] then lazy(f₀(x)) else lazy(f₀([C])) :: '22_ifres <: [] ::: true
-//│ (fun x -> if [True] then lazy(f₀(x)) else lazy(f₀([C]))) :: 'x¹ => '22_ifres ::: true
+//│ f_₀([C]) :: '20_callres <: [] ::: true
+//│ lazy(f_₀([C])) :: '20_callres <: [] ::: true
+//│ if [True] then lazy(f_₀(x)) else lazy(f_₀([C])) :: '22_ifres <: [] ::: true
+//│ (fun x -> if [True] then lazy(f_₀(x)) else lazy(f_₀([C]))) :: 'x¹ => '22_ifres ::: true
 //│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec f_d0 x_1 =
+//│ let rec f__d0 x_1 =
 //│   (if true then
-//│     (lazy (f_d0 x_1))
+//│     (lazy (f__d0 x_1))
 //│   else
-//│     (lazy (f_d0 (`C))))
-//│ and g_d0 x_0 =
+//│     (lazy (f__d0 (`C))))
+//│ and g__d0 x_0 =
 //│   (match x_0 with
 //│     | `D -> 
 //│       x_0
 //│     | `C -> 
 //│       x_0);;
-//│ (f_d0 (g_d0 (`D)))
+//│ (f__d0 (g__d0 (`D)))
 //│ 
 //│ --------------- ocaml repl result -----------------
 //│ [ok]

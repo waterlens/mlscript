@@ -41,64 +41,64 @@ and testMapmap ls_1 =
     (x_1 * x_1))) ls_1));;
 
 (* lumberhack *)
-let rec enumFromTo_d0 a_1 b_1 =
+let rec enumFromTo__d0 a_1 b_1 =
   (if (a_1 <= b_1) then
-    (`C(a_1, ((enumFromTo_d0 (a_1 + 1)) b_1)))
+    (`C(a_1, ((enumFromTo__d0 (a_1 + 1)) b_1)))
   else
     (`N));;
-let rec enumFromTo_d1 a_0 b_0 =
+let rec enumFromTo__d1 a_0 b_0 =
   (if (a_0 <= b_0) then
-    (`C(a_0, ((enumFromTo_d1 (a_0 + 1)) b_0)))
+    (`C(a_0, ((enumFromTo__d1 (a_0 + 1)) b_0)))
   else
     (`N));;
-let rec map_d0 f_0 ls_2 =
-  (ls_2 f_0);;
-let rec map_d1 f_1 ls_3 =
-  (match ls_3 with
-    | `C(h_1, t_1) -> 
-      (let rec t_2 = ((map_d1 f_1) t_1) in
-        (let rec h_2 = (f_1 h_1) in
+let rec map__d0 f_0 ls_0 =
+  (ls_0 f_0);;
+let rec map__d1 f_1 ls_2 =
+  (match ls_2 with
+    | `C(h_0, t_0) -> 
+      (let rec t_1 = ((map__d1 f_1) t_0) in
+        (let rec h_1 = (f_1 h_0) in
           (fun f_2 -> 
-            (`C((f_2 h_2), ((map_d0 f_2) t_2))))))
+            (`C((f_2 h_1), ((map__d0 f_2) t_1))))))
     | `N -> 
       (fun f_3 -> 
         (`N)))
-and testMapmap_d0 ls_1 =
-  ((map_d0 (fun x_0 -> 
-    (x_0 + 1))) ((map_d1 (fun x_1 -> 
+and testMapmap__d0 ls_1 =
+  ((map__d0 (fun x_0 -> 
+    (x_0 + 1))) ((map__d1 (fun x_1 -> 
     (x_1 * x_1))) ls_1));;
 
 (* lumberhack_pop_out *)
-let rec enumFromTo_d0_d0 a_3 b_3 =
+let rec enumFromTo__d0__d0 a_3 b_3 =
   (if (a_3 <= b_3) then
-    (`C(a_3, ((enumFromTo_d0_d0 (a_3 + 1)) b_3)))
+    (`C(a_3, ((enumFromTo__d0__d0 (a_3 + 1)) b_3)))
   else
     (`N));;
-let rec enumFromTo_d1_d0 a_2 b_2 =
+let rec enumFromTo__d1__d0 a_2 b_2 =
   (if (a_2 <= b_2) then
-    (`C(a_2, ((enumFromTo_d1_d0 (a_2 + 1)) b_2)))
+    (`C(a_2, ((enumFromTo__d1__d0 (a_2 + 1)) b_2)))
   else
     (`N));;
-let rec map_d0_d0 f_7 ls_7 =
-  (ls_7 f_7);;
-let rec map_d0_d1 f_8 ls_1_0 =
-  (ls_1_0 f_8);;
-let rec map_d1_d0 f_4 ls_5 _lh_popOutId_0_0 =
+let rec map__d0__d0 f_8 ls_9 =
+  (ls_9 f_8);;
+let rec map__d0__d1 f_7 ls_8 =
+  (ls_8 f_7);;
+let rec map__d1__d0 f_4 ls_5 _lh_popOutId_0_0 =
   (match ls_5 with
     | `C(h_3, t_3) -> 
-      (let rec t_4 = ((map_d1_d0 f_4) t_3) in
+      (let rec t_4 = ((map__d1__d0 f_4) t_3) in
         (let rec h_4 = (f_4 h_3) in
-          (`C((_lh_popOutId_0_0 h_4), ((map_d0_d1 _lh_popOutId_0_0) t_4)))))
+          (`C((_lh_popOutId_0_0 h_4), ((map__d0__d1 _lh_popOutId_0_0) t_4)))))
     | `N -> 
       (`N))
-and testMapmap_d0_d0 ls_9 =
-  ((map_d0_d0 (fun x_6 -> 
-    (x_6 + 1))) ((map_d1_d0 (fun x_7 -> 
-    (x_7 * x_7))) ls_9));;
+and testMapmap__d0__d0 ls_1_0 =
+  ((map__d0__d0 (fun x_6 -> 
+    (x_6 + 1))) ((map__d1__d0 (fun x_7 -> 
+    (x_7 * x_7))) ls_1_0));;
 
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_Mapmap" (fun () -> ignore ((testMapmap ((enumFromTo 1) 100000))));
   Bench.Test.create ~name:"manual_Mapmap" (fun () -> ignore ((testManual ((enumFromTo 1) 100000))));
-  Bench.Test.create ~name:"lumberhack_Mapmap" (fun () -> ignore ((testMapmap_d0 ((enumFromTo_d1 1) 100000))));
-  Bench.Test.create ~name:"lumberhack_pop_out_Mapmap" (fun () -> ignore ((testMapmap_d0_d0 ((enumFromTo_d1_d0 1) 100000))));
+  Bench.Test.create ~name:"lumberhack_Mapmap" (fun () -> ignore ((testMapmap__d0 ((enumFromTo__d1 1) 100000))));
+  Bench.Test.create ~name:"lumberhack_pop_out_Mapmap" (fun () -> ignore ((testMapmap__d0__d0 ((enumFromTo__d1__d0 1) 100000))));
 ])

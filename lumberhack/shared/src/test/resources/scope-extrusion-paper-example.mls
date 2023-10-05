@@ -20,8 +20,8 @@ f(C(1, C(2, N)))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ f₀([C 1 [C 2 [N]]])
-//│ def f₀(xs¹, a¹) = 
+//│ f_₀([C 1 [C 2 [N]]])
+//│ def f_₀(xs¹, a¹) = 
 //│ 	primitive⁰(case xs¹ of {
 //│ 		C h¹ t¹ => primitive⁰(h¹, t¹, a¹)})
 //│ <<<<<<< expanded program <<<<<<<
@@ -43,11 +43,11 @@ f(C(1, C(2, N)))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀(
+//│ f_₀(
 //│ 	let t² = [C 2 [N]]
 //│ 	in let h² = 1
 //│ 	in (fun a² -> primitive⁰(h², t², a²)))
-//│ def f₀(xs², a³) = 
+//│ def f_₀(xs², a³) = 
 //│ 	primitive⁰(xs²(a³))
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -73,21 +73,21 @@ f(cs)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ f₀(cs₀)
-//│ def cs₀ = 
-//│ 	[C 1 [C 2 cs₀]]
-//│ def f₀(xs¹, a¹) = 
+//│ f_₀(cs_₀)
+//│ def cs_₀ = 
+//│ 	[C 1 [C 2 cs_₀]]
+//│ def f_₀(xs¹, a¹) = 
 //│ 	primitive⁰(case xs¹ of {
 //│ 		C h¹ t¹ => primitive⁰(h¹, t¹, a¹)})
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [C 2 cs₀]]: 26 --->
+//│ [C 1 [C 2 cs_₀]]: 26 --->
 //│ 	NoCons
 //│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, t¹, a¹)}: 36
 //│ ------------------
 //│ case xs¹ of {C h¹ t¹ => primitive⁰(h¹, t¹, a¹)}: 36 --->
-//│ 	[C 1 [C 2 cs₀]]: 26
+//│ 	[C 1 [C 2 cs_₀]]: 26
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -97,10 +97,10 @@ f(cs)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀(cs₀)
-//│ def cs₀ = 
-//│ 	[C 1 [C 2 cs₀]]
-//│ def f₀(xs², a²) = 
+//│ f_₀(cs_₀)
+//│ def cs_₀ = 
+//│ 	[C 1 [C 2 cs_₀]]
+//│ def f_₀(xs², a²) = 
 //│ 	primitive⁰(case xs² of {
 //│ 		C h¹ t¹ => primitive⁰(h¹, t¹, a²)})
 //│ <<<<<<< after fusion <<<<<<<
@@ -138,46 +138,46 @@ f(g(42))(0)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ f₀(g₀(42), 0)
-//│ def f₀(xs¹, a¹) = 
+//│ f_₀(g_₀(42), 0)
+//│ def f_₀(xs¹, a¹) = 
 //│ 	primitive⁰(case xs¹ of {
-//│ 		C h¹ t¹ => primitive⁰(h¹, f₀(t¹, a¹), a¹)
+//│ 		C h¹ t¹ => primitive⁰(h¹, f_₀(t¹, a¹), a¹)
 //│ 		| N  => primitive⁰(a¹)})
-//│ def g₀(init¹) = 
-//│ 	if (init¹ > 0) then [C 1 g₀((init¹ - 1))] else [N]
+//│ def g_₀(init¹) = 
+//│ 	if (init¹ > 0) then [C 1 g_₀((init¹ - 1))] else [N]
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 g₀((init¹ - 1))]: 78 --->
-//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, a¹), a¹) | N  => primitive⁰(a¹)}: 61
+//│ [C 1 g_₀((init¹ - 1))]: 78 --->
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f_₀(t¹, a¹), a¹) | N  => primitive⁰(a¹)}: 61
 //│ [N]: 79 --->
-//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, a¹), a¹) | N  => primitive⁰(a¹)}: 61
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f_₀(t¹, a¹), a¹) | N  => primitive⁰(a¹)}: 61
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, a¹), a¹) | N  => primitive⁰(a¹)}: 61 --->
-//│ 	[C 1 g₀((init¹ - 1))]: 78
+//│ case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f_₀(t¹, a¹), a¹) | N  => primitive⁰(a¹)}: 61 --->
+//│ 	[C 1 g_₀((init¹ - 1))]: 78
 //│ 	[N]: 79
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C 1 g₀((init¹ - 1))]: 78 --->
-//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, a¹), a¹) | N  => primitive⁰(a¹)}: 61
+//│ [C 1 g_₀((init¹ - 1))]: 78 --->
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f_₀(t¹, a¹), a¹) | N  => primitive⁰(a¹)}: 61
 //│ [N]: 79 --->
-//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, a¹), a¹) | N  => primitive⁰(a¹)}: 61
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f_₀(t¹, a¹), a¹) | N  => primitive⁰(a¹)}: 61
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, a¹), a¹) | N  => primitive⁰(a¹)}: 61 --->
-//│ 	[C 1 g₀((init¹ - 1))]: 78
+//│ case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f_₀(t¹, a¹), a¹) | N  => primitive⁰(a¹)}: 61 --->
+//│ 	[C 1 g_₀((init¹ - 1))]: 78
 //│ 	[N]: 79
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀(g₀(42), 0)
-//│ def f₀(xs², a²) = 
+//│ f_₀(g_₀(42), 0)
+//│ def f_₀(xs², a²) = 
 //│ 	primitive⁰(xs²(a²))
-//│ def g₀(init²) = 
+//│ def g_₀(init²) = 
 //│ 	if (init² > 0) then 
-//│ 		let t² = g₀((init² - 1))
+//│ 		let t² = g_₀((init² - 1))
 //│ 		in let h² = 1
-//│ 		in (fun a³ -> primitive⁰(h², f₀(t², a³), a³)) else (fun a⁴ -> primitive⁰(a⁴))
+//│ 		in (fun a³ -> primitive⁰(h², f_₀(t², a³), a³)) else (fun a⁴ -> primitive⁰(a⁴))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -216,46 +216,46 @@ f(g(42))(0)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ f₀(g₀(42), 0)
-//│ def f₀(xs¹, a¹) = 
+//│ f_₀(g_₀(42), 0)
+//│ def f_₀(xs¹, a¹) = 
 //│ 	primitive⁰(case xs¹ of {
-//│ 		C h¹ t¹ => primitive⁰(h¹, f₀(t¹, (a¹ + 1)), a¹)
+//│ 		C h¹ t¹ => primitive⁰(h¹, f_₀(t¹, (a¹ + 1)), a¹)
 //│ 		| N  => primitive⁰(a¹)})
-//│ def g₀(init¹) = 
-//│ 	if (init¹ > 0) then [C 1 g₀((init¹ - 1))] else [N]
+//│ def g_₀(init¹) = 
+//│ 	if (init¹ > 0) then [C 1 g_₀((init¹ - 1))] else [N]
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 g₀((init¹ - 1))]: 86 --->
-//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, (a¹ + 1)), a¹) | N  => primitive⁰(a¹)}: 69
+//│ [C 1 g_₀((init¹ - 1))]: 86 --->
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f_₀(t¹, (a¹ + 1)), a¹) | N  => primitive⁰(a¹)}: 69
 //│ [N]: 87 --->
-//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, (a¹ + 1)), a¹) | N  => primitive⁰(a¹)}: 69
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f_₀(t¹, (a¹ + 1)), a¹) | N  => primitive⁰(a¹)}: 69
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, (a¹ + 1)), a¹) | N  => primitive⁰(a¹)}: 69 --->
-//│ 	[C 1 g₀((init¹ - 1))]: 86
+//│ case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f_₀(t¹, (a¹ + 1)), a¹) | N  => primitive⁰(a¹)}: 69 --->
+//│ 	[C 1 g_₀((init¹ - 1))]: 86
 //│ 	[N]: 87
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C 1 g₀((init¹ - 1))]: 86 --->
-//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, (a¹ + 1)), a¹) | N  => primitive⁰(a¹)}: 69
+//│ [C 1 g_₀((init¹ - 1))]: 86 --->
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f_₀(t¹, (a¹ + 1)), a¹) | N  => primitive⁰(a¹)}: 69
 //│ [N]: 87 --->
-//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, (a¹ + 1)), a¹) | N  => primitive⁰(a¹)}: 69
+//│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f_₀(t¹, (a¹ + 1)), a¹) | N  => primitive⁰(a¹)}: 69
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f₀(t¹, (a¹ + 1)), a¹) | N  => primitive⁰(a¹)}: 69 --->
-//│ 	[C 1 g₀((init¹ - 1))]: 86
+//│ case xs¹ of {C h¹ t¹ => primitive⁰(h¹, f_₀(t¹, (a¹ + 1)), a¹) | N  => primitive⁰(a¹)}: 69 --->
+//│ 	[C 1 g_₀((init¹ - 1))]: 86
 //│ 	[N]: 87
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀(g₀(42), 0)
-//│ def f₀(xs², a²) = 
+//│ f_₀(g_₀(42), 0)
+//│ def f_₀(xs², a²) = 
 //│ 	primitive⁰(xs²(a²))
-//│ def g₀(init²) = 
+//│ def g_₀(init²) = 
 //│ 	if (init² > 0) then 
-//│ 		let t² = g₀((init² - 1))
+//│ 		let t² = g_₀((init² - 1))
 //│ 		in let h² = 1
-//│ 		in (fun a³ -> primitive⁰(h², f₀(t², (a³ + 1)), a³)) else (fun a⁴ -> primitive⁰(a⁴))
+//│ 		in (fun a³ -> primitive⁰(h², f_₀(t², (a³ + 1)), a³)) else (fun a⁴ -> primitive⁰(a⁴))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -295,17 +295,17 @@ f(g(42))(0)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ f₀(g₀(42), 0)
-//│ def f₀(xs¹, a¹) = 
+//│ f_₀(g_₀(42), 0)
+//│ def f_₀(xs¹, a¹) = 
 //│ 	primitive⁰(case xs¹ of {
 //│ 		C h¹ t¹ => primitive⁰(h¹, t¹, a¹)
 //│ 		| N  => primitive⁰(a¹)})
-//│ def g₀(init¹) = 
-//│ 	if (init¹ > 0) then [C 1 [C 2 g₀((init¹ - 1))]] else [N]
+//│ def g_₀(init¹) = 
+//│ 	if (init¹ > 0) then [C 1 [C 2 g_₀((init¹ - 1))]] else [N]
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [C 2 g₀((init¹ - 1))]]: 58 --->
+//│ [C 1 [C 2 g_₀((init¹ - 1))]]: 58 --->
 //│ 	NoCons
 //│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, t¹, a¹) | N  => primitive⁰(a¹)}: 74
 //│ [N]: 59 --->
@@ -313,7 +313,7 @@ f(g(42))(0)
 //│ 	case xs¹ of {C h¹ t¹ => primitive⁰(h¹, t¹, a¹) | N  => primitive⁰(a¹)}: 74
 //│ ------------------
 //│ case xs¹ of {C h¹ t¹ => primitive⁰(h¹, t¹, a¹) | N  => primitive⁰(a¹)}: 74 --->
-//│ 	[C 1 [C 2 g₀((init¹ - 1))]]: 58
+//│ 	[C 1 [C 2 g_₀((init¹ - 1))]]: 58
 //│ 	[N]: 59
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -324,13 +324,13 @@ f(g(42))(0)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f₀(g₀(42), 0)
-//│ def f₀(xs², a²) = 
+//│ f_₀(g_₀(42), 0)
+//│ def f_₀(xs², a²) = 
 //│ 	primitive⁰(case xs² of {
 //│ 		C h¹ t¹ => primitive⁰(h¹, t¹, a²)
 //│ 		| N  => primitive⁰(a²)})
-//│ def g₀(init²) = 
-//│ 	if (init² > 0) then [C 1 [C 2 g₀((init² - 1))]] else [N]
+//│ def g_₀(init²) = 
+//│ 	if (init² > 0) then [C 1 [C 2 g_₀((init² - 1))]] else [N]
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>

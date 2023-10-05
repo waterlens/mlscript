@@ -47,45 +47,45 @@ map(x => x + 1, nrev(primId(fromEnumTo(1, 4))))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ map₀((fun x¹ -> (x¹ + 1)), nrev₀(primId⁰(fromEnumTo₀(1, 4))))
-//│ def fromEnumTo₀(a¹, b¹) = 
-//│ 	if (a¹ <= b¹) then [C a¹ fromEnumTo₀((a¹ + 1), b¹)] else [N]
-//│ def map₀(f¹, ls³) = 
+//│ map_₀((fun x¹ -> (x¹ + 1)), nrev_₀(primId⁰(fromEnumTo_₀(1, 4))))
+//│ def fromEnumTo_₀(a¹, b¹) = 
+//│ 	if (a¹ <= b¹) then [C a¹ fromEnumTo_₀((a¹ + 1), b¹)] else [N]
+//│ def map_₀(f¹, ls³) = 
 //│ 	case ls³ of {
-//│ 		C h⁵ t⁵ => [C f¹(h⁵) map₀(f¹, t⁵)]
+//│ 		C h⁵ t⁵ => [C f¹(h⁵) map_₀(f¹, t⁵)]
 //│ 		| N  => [N]}
-//│ def nrev₀(ls²) = 
+//│ def nrev_₀(ls²) = 
 //│ 	case ls² of {
-//│ 		C h⁴ t⁴ => append₀(nrev₀(t⁴), [C h⁴ [N]])
+//│ 		C h⁴ t⁴ => append_₀(nrev_₀(t⁴), [C h⁴ [N]])
 //│ 		| N  => [N]}
 //│ 	where
-//│ 	def append₀(xs¹, ys¹) = 
+//│ 	def append_₀(xs¹, ys¹) = 
 //│ 		case xs¹ of {
 //│ 			N  => ys¹
-//│ 			| C h³ t³ => [C h³ append₀(t³, ys¹)]}
+//│ 			| C h³ t³ => [C h³ append_₀(t³, ys¹)]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h³ append₀(t³, ys¹)]: 86 --->
-//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ append₀(t³, ys¹)]}: 87
-//│ 	case ls³ of {C h⁵ t⁵ => [C f¹(h⁵) map₀(f¹, t⁵)] | N  => [N]}: 114
+//│ [C h³ append_₀(t³, ys¹)]: 86 --->
+//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ append_₀(t³, ys¹)]}: 87
+//│ 	case ls³ of {C h⁵ t⁵ => [C f¹(h⁵) map_₀(f¹, t⁵)] | N  => [N]}: 114
 //│ [N]: 97 --->
-//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ append₀(t³, ys¹)]}: 87
-//│ 	case ls³ of {C h⁵ t⁵ => [C f¹(h⁵) map₀(f¹, t⁵)] | N  => [N]}: 114
+//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ append_₀(t³, ys¹)]}: 87
+//│ 	case ls³ of {C h⁵ t⁵ => [C f¹(h⁵) map_₀(f¹, t⁵)] | N  => [N]}: 114
 //│ [C h⁴ [N]]: 98 --->
-//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ append₀(t³, ys¹)]}: 87
-//│ 	case ls³ of {C h⁵ t⁵ => [C f¹(h⁵) map₀(f¹, t⁵)] | N  => [N]}: 114
+//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ append_₀(t³, ys¹)]}: 87
+//│ 	case ls³ of {C h⁵ t⁵ => [C f¹(h⁵) map_₀(f¹, t⁵)] | N  => [N]}: 114
 //│ [N]: 100 --->
-//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ append₀(t³, ys¹)]}: 87
-//│ 	case ls³ of {C h⁵ t⁵ => [C f¹(h⁵) map₀(f¹, t⁵)] | N  => [N]}: 114
+//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ append_₀(t³, ys¹)]}: 87
+//│ 	case ls³ of {C h⁵ t⁵ => [C f¹(h⁵) map_₀(f¹, t⁵)] | N  => [N]}: 114
 //│ ------------------
-//│ case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ append₀(t³, ys¹)]}: 87 --->
-//│ 	[C h³ append₀(t³, ys¹)]: 86
+//│ case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ append_₀(t³, ys¹)]}: 87 --->
+//│ 	[C h³ append_₀(t³, ys¹)]: 86
 //│ 	[N]: 97
 //│ 	[C h⁴ [N]]: 98
 //│ 	[N]: 100
-//│ case ls³ of {C h⁵ t⁵ => [C f¹(h⁵) map₀(f¹, t⁵)] | N  => [N]}: 114 --->
-//│ 	[C h³ append₀(t³, ys¹)]: 86
+//│ case ls³ of {C h⁵ t⁵ => [C f¹(h⁵) map_₀(f¹, t⁵)] | N  => [N]}: 114 --->
+//│ 	[C h³ append_₀(t³, ys¹)]: 86
 //│ 	[N]: 97
 //│ 	[C h⁴ [N]]: 98
 //│ 	[N]: 100
@@ -98,22 +98,22 @@ map(x => x + 1, nrev(primId(fromEnumTo(1, 4))))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ map₀((fun x² -> (x² + 1)), nrev₀(primId⁰(fromEnumTo₀(1, 4))))
-//│ def fromEnumTo₀(a², b²) = 
-//│ 	if (a² <= b²) then [C a² fromEnumTo₀((a² + 1), b²)] else [N]
-//│ def map₀(f², ls⁵) = 
+//│ map_₀((fun x² -> (x² + 1)), nrev_₀(primId⁰(fromEnumTo_₀(1, 4))))
+//│ def fromEnumTo_₀(a², b²) = 
+//│ 	if (a² <= b²) then [C a² fromEnumTo_₀((a² + 1), b²)] else [N]
+//│ def map_₀(f², ls⁵) = 
 //│ 	case ls⁵ of {
-//│ 		C h⁵ t⁵ => [C f²(h⁵) map₀(f², t⁵)]
+//│ 		C h⁵ t⁵ => [C f²(h⁵) map_₀(f², t⁵)]
 //│ 		| N  => [N]}
-//│ def nrev₀(ls⁴) = 
+//│ def nrev_₀(ls⁴) = 
 //│ 	case ls⁴ of {
-//│ 		C h⁴ t⁴ => append₀(nrev₀(t⁴), [C h⁴ [N]])
+//│ 		C h⁴ t⁴ => append_₀(nrev_₀(t⁴), [C h⁴ [N]])
 //│ 		| N  => [N]}
 //│ 	where
-//│ 	def append₀(xs², ys²) = 
+//│ 	def append_₀(xs², ys²) = 
 //│ 		case xs² of {
 //│ 			N  => ys²
-//│ 			| C h³ t³ => [C h³ append₀(t³, ys²)]}
+//│ 			| C h³ t³ => [C h³ append_₀(t³, ys²)]}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -161,81 +161,81 @@ nrev(map(x => x + 1, primId(fromEnumTo(1, 6))))
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ nrev₀(map₀((fun x¹ -> (x¹ + 1)), primId⁰(fromEnumTo₀(1, 6))))
-//│ def fromEnumTo₀(a¹, b¹) = 
-//│ 	if (a¹ <= b¹) then [C a¹ fromEnumTo₀((a¹ + 1), b¹)] else [N]
-//│ def map₀(f¹, ls³) = 
+//│ nrev_₀(map_₀((fun x¹ -> (x¹ + 1)), primId⁰(fromEnumTo_₀(1, 6))))
+//│ def fromEnumTo_₀(a¹, b¹) = 
+//│ 	if (a¹ <= b¹) then [C a¹ fromEnumTo_₀((a¹ + 1), b¹)] else [N]
+//│ def map_₀(f¹, ls³) = 
 //│ 	case ls³ of {
-//│ 		C h⁴ t⁴ => [C f¹(h⁴) map₀(f¹, t⁴)]
+//│ 		C h⁴ t⁴ => [C f¹(h⁴) map_₀(f¹, t⁴)]
 //│ 		| N  => [N]}
-//│ def nrev₀(ls²) = 
+//│ def nrev_₀(ls²) = 
 //│ 	case ls² of {
-//│ 		C h³ t³ => append₀(nrev₀(t³), [C h³ [N]])
+//│ 		C h³ t³ => append_₀(nrev_₀(t³), [C h³ [N]])
 //│ 		| N  => [N]}
 //│ 	where
-//│ 	def append₀(xs¹, ys¹) = 
+//│ 	def append_₀(xs¹, ys¹) = 
 //│ 		case xs¹ of {
 //│ 			N  => ys¹
-//│ 			| C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys¹)]}
+//│ 			| C h⁵ t⁵ => [C h⁵ append_₀(t⁵, ys¹)]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 85 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => ys¹ | C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys¹)]}: 134
+//│ 	case xs¹ of {N  => ys¹ | C h⁵ t⁵ => [C h⁵ append_₀(t⁵, ys¹)]}: 134
 //│ [C h³ [N]]: 86 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => ys¹ | C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys¹)]}: 134
+//│ 	case xs¹ of {N  => ys¹ | C h⁵ t⁵ => [C h⁵ append_₀(t⁵, ys¹)]}: 134
 //│ [N]: 88 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => ys¹ | C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys¹)]}: 134
-//│ [C f¹(h⁴) map₀(f¹, t⁴)]: 100 --->
-//│ 	case ls² of {C h³ t³ => append₀(nrev₀(t³), [C h³ [N]]) | N  => [N]}: 89
+//│ 	case xs¹ of {N  => ys¹ | C h⁵ t⁵ => [C h⁵ append_₀(t⁵, ys¹)]}: 134
+//│ [C f¹(h⁴) map_₀(f¹, t⁴)]: 100 --->
+//│ 	case ls² of {C h³ t³ => append_₀(nrev_₀(t³), [C h³ [N]]) | N  => [N]}: 89
 //│ [N]: 101 --->
-//│ 	case ls² of {C h³ t³ => append₀(nrev₀(t³), [C h³ [N]]) | N  => [N]}: 89
-//│ [C h⁵ append₀(t⁵, ys¹)]: 133 --->
+//│ 	case ls² of {C h³ t³ => append_₀(nrev_₀(t³), [C h³ [N]]) | N  => [N]}: 89
+//│ [C h⁵ append_₀(t⁵, ys¹)]: 133 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => ys¹ | C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys¹)]}: 134
+//│ 	case xs¹ of {N  => ys¹ | C h⁵ t⁵ => [C h⁵ append_₀(t⁵, ys¹)]}: 134
 //│ ------------------
-//│ case ls² of {C h³ t³ => append₀(nrev₀(t³), [C h³ [N]]) | N  => [N]}: 89 --->
-//│ 	[C f¹(h⁴) map₀(f¹, t⁴)]: 100
+//│ case ls² of {C h³ t³ => append_₀(nrev_₀(t³), [C h³ [N]]) | N  => [N]}: 89 --->
+//│ 	[C f¹(h⁴) map_₀(f¹, t⁴)]: 100
 //│ 	[N]: 101
-//│ case xs¹ of {N  => ys¹ | C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys¹)]}: 134 --->
+//│ case xs¹ of {N  => ys¹ | C h⁵ t⁵ => [C h⁵ append_₀(t⁵, ys¹)]}: 134 --->
 //│ 	[N]: 85
 //│ 	[C h³ [N]]: 86
 //│ 	[N]: 88
-//│ 	[C h⁵ append₀(t⁵, ys¹)]: 133
+//│ 	[C h⁵ append_₀(t⁵, ys¹)]: 133
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C f¹(h⁴) map₀(f¹, t⁴)]: 100 --->
-//│ 	case ls² of {C h³ t³ => append₀(nrev₀(t³), [C h³ [N]]) | N  => [N]}: 89
+//│ [C f¹(h⁴) map_₀(f¹, t⁴)]: 100 --->
+//│ 	case ls² of {C h³ t³ => append_₀(nrev_₀(t³), [C h³ [N]]) | N  => [N]}: 89
 //│ [N]: 101 --->
-//│ 	case ls² of {C h³ t³ => append₀(nrev₀(t³), [C h³ [N]]) | N  => [N]}: 89
+//│ 	case ls² of {C h³ t³ => append_₀(nrev_₀(t³), [C h³ [N]]) | N  => [N]}: 89
 //│ ------------------
-//│ case ls² of {C h³ t³ => append₀(nrev₀(t³), [C h³ [N]]) | N  => [N]}: 89 --->
-//│ 	[C f¹(h⁴) map₀(f¹, t⁴)]: 100
+//│ case ls² of {C h³ t³ => append_₀(nrev_₀(t³), [C h³ [N]]) | N  => [N]}: 89 --->
+//│ 	[C f¹(h⁴) map_₀(f¹, t⁴)]: 100
 //│ 	[N]: 101
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ nrev₀(map₀((fun x² -> (x² + 1)), primId⁰(fromEnumTo₀(1, 6))))
-//│ def fromEnumTo₀(a², b²) = 
-//│ 	if (a² <= b²) then [C a² fromEnumTo₀((a² + 1), b²)] else [N]
-//│ def map₀(f², ls⁵) = 
+//│ nrev_₀(map_₀((fun x² -> (x² + 1)), primId⁰(fromEnumTo_₀(1, 6))))
+//│ def fromEnumTo_₀(a², b²) = 
+//│ 	if (a² <= b²) then [C a² fromEnumTo_₀((a² + 1), b²)] else [N]
+//│ def map_₀(f², ls⁵) = 
 //│ 	case ls⁵ of {
 //│ 		C h⁴ t⁴ => 
-//│ 			let t⁶ = map₀(f², t⁴)
+//│ 			let t⁶ = map_₀(f², t⁴)
 //│ 			in let h⁶ = f²(h⁴)
-//│ 			in (fun _lh_dummy⁰ -> append₀(nrev₀(t⁶), [C h⁶ [N]]))
+//│ 			in (fun _lh_dummy⁰ -> append_₀(nrev_₀(t⁶), [C h⁶ [N]]))
 //│ 		| N  => (fun _lh_dummy¹ -> [N])}
-//│ def nrev₀(ls⁴) = 
+//│ def nrev_₀(ls⁴) = 
 //│ 	ls⁴(99)
 //│ 	where
-//│ 	def append₀(xs², ys²) = 
+//│ 	def append_₀(xs², ys²) = 
 //│ 		case xs² of {
 //│ 			N  => ys²
-//│ 			| C h⁵ t⁵ => [C h⁵ append₀(t⁵, ys²)]}
+//│ 			| C h⁵ t⁵ => [C h⁵ append_₀(t⁵, ys²)]}
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -285,72 +285,72 @@ t(4)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ t₀(4)
-//│ def t₀(n¹) = 
-//│ 	nrev₀(map₀((fun x¹ -> (x¹ + 1)), primId⁰(fromEnumTo₀(1, n¹))))
+//│ t_₀(4)
+//│ def t_₀(n¹) = 
+//│ 	nrev_₀(map_₀((fun x¹ -> (x¹ + 1)), primId⁰(fromEnumTo_₀(1, n¹))))
 //│ 	where
-//│ 	def fromEnumTo₀(a¹, b¹) = 
-//│ 		if (a¹ <= b¹) then [C a¹ fromEnumTo₀((a¹ + 1), b¹)] else [N]
-//│ 	def map₀(f¹, ls³) = 
+//│ 	def fromEnumTo_₀(a¹, b¹) = 
+//│ 		if (a¹ <= b¹) then [C a¹ fromEnumTo_₀((a¹ + 1), b¹)] else [N]
+//│ 	def map_₀(f¹, ls³) = 
 //│ 		case ls³ of {
-//│ 			C h⁵ t⁶ => [C f¹(h⁵) map₀(f¹, t⁶)]
+//│ 			C h⁵ t⁶ => [C f¹(h⁵) map_₀(f¹, t⁶)]
 //│ 			| N  => [N]}
-//│ 	def nrev₀(ls²) = 
+//│ 	def nrev_₀(ls²) = 
 //│ 		case ls² of {
-//│ 			C h³ t⁴ => append₀(nrev₁(t⁴), [C h³ [N]])
+//│ 			C h³ t⁴ => append_₀(nrev_₁(t⁴), [C h³ [N]])
 //│ 			| N  => [N]}
 //│ 		where
-//│ 		def append₀(xs¹, ys¹) = 
+//│ 		def append_₀(xs¹, ys¹) = 
 //│ 			case xs¹ of {
 //│ 				N  => ys¹
-//│ 				| C h⁴ t⁵ => [C h⁴ append₀(t⁵, ys¹)]}
-//│ 		def nrev₁(ls⁴) = 
+//│ 				| C h⁴ t⁵ => [C h⁴ append_₀(t⁵, ys¹)]}
+//│ 		def nrev_₁(ls⁴) = 
 //│ 			case ls⁴ of {
-//│ 				C h⁶ t⁷ => append₁(nrev₁(t⁷), [C h⁶ [N]])
+//│ 				C h⁶ t⁷ => append_₁(nrev_₁(t⁷), [C h⁶ [N]])
 //│ 				| N  => [N]}
 //│ 			where
-//│ 			def append₁(xs², ys²) = 
+//│ 			def append_₁(xs², ys²) = 
 //│ 				case xs² of {
 //│ 					N  => ys²
-//│ 					| C h⁷ t⁸ => [C h⁷ append₁(t⁸, ys²)]}
+//│ 					| C h⁷ t⁸ => [C h⁷ append_₁(t⁸, ys²)]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C f¹(h⁵) map₀(f¹, t⁶)]: 155 --->
-//│ 	case ls² of {C h³ t⁴ => append₀(nrev₁(t⁴), [C h³ [N]]) | N  => [N]}: 112
-//│ 	case ls⁴ of {C h⁶ t⁷ => append₁(nrev₁(t⁷), [C h⁶ [N]]) | N  => [N]}: 171
+//│ [C f¹(h⁵) map_₀(f¹, t⁶)]: 155 --->
+//│ 	case ls² of {C h³ t⁴ => append_₀(nrev_₁(t⁴), [C h³ [N]]) | N  => [N]}: 112
+//│ 	case ls⁴ of {C h⁶ t⁷ => append_₁(nrev_₁(t⁷), [C h⁶ [N]]) | N  => [N]}: 171
 //│ [N]: 156 --->
-//│ 	case ls² of {C h³ t⁴ => append₀(nrev₁(t⁴), [C h³ [N]]) | N  => [N]}: 112
-//│ 	case ls⁴ of {C h⁶ t⁷ => append₁(nrev₁(t⁷), [C h⁶ [N]]) | N  => [N]}: 171
+//│ 	case ls² of {C h³ t⁴ => append_₀(nrev_₁(t⁴), [C h³ [N]]) | N  => [N]}: 112
+//│ 	case ls⁴ of {C h⁶ t⁷ => append_₁(nrev_₁(t⁷), [C h⁶ [N]]) | N  => [N]}: 171
 //│ [N]: 167 --->
-//│ 	case xs¹ of {N  => ys¹ | C h⁴ t⁵ => [C h⁴ append₀(t⁵, ys¹)]}: 143
-//│ 	case xs² of {N  => ys² | C h⁷ t⁸ => [C h⁷ append₁(t⁸, ys²)]}: 182
+//│ 	case xs¹ of {N  => ys¹ | C h⁴ t⁵ => [C h⁴ append_₀(t⁵, ys¹)]}: 143
+//│ 	case xs² of {N  => ys² | C h⁷ t⁸ => [C h⁷ append_₁(t⁸, ys²)]}: 182
 //│ [C h⁶ [N]]: 168 --->
-//│ 	case xs¹ of {N  => ys¹ | C h⁴ t⁵ => [C h⁴ append₀(t⁵, ys¹)]}: 143
-//│ 	case xs² of {N  => ys² | C h⁷ t⁸ => [C h⁷ append₁(t⁸, ys²)]}: 182
+//│ 	case xs¹ of {N  => ys¹ | C h⁴ t⁵ => [C h⁴ append_₀(t⁵, ys¹)]}: 143
+//│ 	case xs² of {N  => ys² | C h⁷ t⁸ => [C h⁷ append_₁(t⁸, ys²)]}: 182
 //│ [N]: 170 --->
-//│ 	case xs¹ of {N  => ys¹ | C h⁴ t⁵ => [C h⁴ append₀(t⁵, ys¹)]}: 143
-//│ 	case xs² of {N  => ys² | C h⁷ t⁸ => [C h⁷ append₁(t⁸, ys²)]}: 182
-//│ [C h⁷ append₁(t⁸, ys²)]: 181 --->
-//│ 	case xs¹ of {N  => ys¹ | C h⁴ t⁵ => [C h⁴ append₀(t⁵, ys¹)]}: 143
-//│ 	case xs² of {N  => ys² | C h⁷ t⁸ => [C h⁷ append₁(t⁸, ys²)]}: 182
+//│ 	case xs¹ of {N  => ys¹ | C h⁴ t⁵ => [C h⁴ append_₀(t⁵, ys¹)]}: 143
+//│ 	case xs² of {N  => ys² | C h⁷ t⁸ => [C h⁷ append_₁(t⁸, ys²)]}: 182
+//│ [C h⁷ append_₁(t⁸, ys²)]: 181 --->
+//│ 	case xs¹ of {N  => ys¹ | C h⁴ t⁵ => [C h⁴ append_₀(t⁵, ys¹)]}: 143
+//│ 	case xs² of {N  => ys² | C h⁷ t⁸ => [C h⁷ append_₁(t⁸, ys²)]}: 182
 //│ ------------------
-//│ case ls² of {C h³ t⁴ => append₀(nrev₁(t⁴), [C h³ [N]]) | N  => [N]}: 112 --->
-//│ 	[C f¹(h⁵) map₀(f¹, t⁶)]: 155
+//│ case ls² of {C h³ t⁴ => append_₀(nrev_₁(t⁴), [C h³ [N]]) | N  => [N]}: 112 --->
+//│ 	[C f¹(h⁵) map_₀(f¹, t⁶)]: 155
 //│ 	[N]: 156
-//│ case xs¹ of {N  => ys¹ | C h⁴ t⁵ => [C h⁴ append₀(t⁵, ys¹)]}: 143 --->
+//│ case xs¹ of {N  => ys¹ | C h⁴ t⁵ => [C h⁴ append_₀(t⁵, ys¹)]}: 143 --->
 //│ 	[N]: 167
 //│ 	[C h⁶ [N]]: 168
 //│ 	[N]: 170
-//│ 	[C h⁷ append₁(t⁸, ys²)]: 181
-//│ case ls⁴ of {C h⁶ t⁷ => append₁(nrev₁(t⁷), [C h⁶ [N]]) | N  => [N]}: 171 --->
-//│ 	[C f¹(h⁵) map₀(f¹, t⁶)]: 155
+//│ 	[C h⁷ append_₁(t⁸, ys²)]: 181
+//│ case ls⁴ of {C h⁶ t⁷ => append_₁(nrev_₁(t⁷), [C h⁶ [N]]) | N  => [N]}: 171 --->
+//│ 	[C f¹(h⁵) map_₀(f¹, t⁶)]: 155
 //│ 	[N]: 156
-//│ case xs² of {N  => ys² | C h⁷ t⁸ => [C h⁷ append₁(t⁸, ys²)]}: 182 --->
+//│ case xs² of {N  => ys² | C h⁷ t⁸ => [C h⁷ append_₁(t⁸, ys²)]}: 182 --->
 //│ 	[N]: 167
 //│ 	[C h⁶ [N]]: 168
 //│ 	[N]: 170
-//│ 	[C h⁷ append₁(t⁸, ys²)]: 181
+//│ 	[C h⁷ append_₁(t⁸, ys²)]: 181
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -360,32 +360,32 @@ t(4)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ t₀(4)
-//│ def t₀(n²) = 
-//│ 	nrev₀(map₀((fun x² -> (x² + 1)), primId⁰(fromEnumTo₀(1, n²))))
+//│ t_₀(4)
+//│ def t_₀(n²) = 
+//│ 	nrev_₀(map_₀((fun x² -> (x² + 1)), primId⁰(fromEnumTo_₀(1, n²))))
 //│ 	where
-//│ 	def fromEnumTo₀(a², b²) = 
-//│ 		if (a² <= b²) then [C a² fromEnumTo₀((a² + 1), b²)] else [N]
-//│ 	def map₀(f², ls⁷) = 
-//│ 		case ls⁷ of {
-//│ 			C h⁵ t⁶ => [C f²(h⁵) map₀(f², t⁶)]
+//│ 	def fromEnumTo_₀(a², b²) = 
+//│ 		if (a² <= b²) then [C a² fromEnumTo_₀((a² + 1), b²)] else [N]
+//│ 	def map_₀(f², ls⁵) = 
+//│ 		case ls⁵ of {
+//│ 			C h⁵ t⁶ => [C f²(h⁵) map_₀(f², t⁶)]
 //│ 			| N  => [N]}
-//│ 	def nrev₀(ls⁶) = 
+//│ 	def nrev_₀(ls⁶) = 
 //│ 		case ls⁶ of {
-//│ 			C h³ t⁴ => append₀(nrev₁(t⁴), [C h³ [N]])
+//│ 			C h³ t⁴ => append_₀(nrev_₁(t⁴), [C h³ [N]])
 //│ 			| N  => [N]}
 //│ 		where
-//│ 		def append₀(xs⁴, ys⁴) = 
-//│ 			case xs⁴ of {
-//│ 				N  => ys⁴
-//│ 				| C h⁴ t⁵ => [C h⁴ append₀(t⁵, ys⁴)]}
-//│ 		def nrev₁(ls⁵) = 
-//│ 			case ls⁵ of {
-//│ 				C h⁶ t⁷ => append₁(nrev₁(t⁷), [C h⁶ [N]])
+//│ 		def append_₀(xs³, ys³) = 
+//│ 			case xs³ of {
+//│ 				N  => ys³
+//│ 				| C h⁴ t⁵ => [C h⁴ append_₀(t⁵, ys³)]}
+//│ 		def nrev_₁(ls⁷) = 
+//│ 			case ls⁷ of {
+//│ 				C h⁶ t⁷ => append_₁(nrev_₁(t⁷), [C h⁶ [N]])
 //│ 				| N  => [N]}
 //│ 			where
-//│ 			def append₁(xs³, ys³) = 
-//│ 				case xs³ of {
-//│ 					N  => ys³
-//│ 					| C h⁷ t⁸ => [C h⁷ append₁(t⁸, ys³)]}
+//│ 			def append_₁(xs⁴, ys⁴) = 
+//│ 				case xs⁴ of {
+//│ 					N  => ys⁴
+//│ 					| C h⁷ t⁸ => [C h⁷ append_₁(t⁸, ys⁴)]}
 //│ <<<<<<< after fusion <<<<<<<

@@ -36,53 +36,53 @@ let rec testMapQrev ls_0 =
     (x_0 + 1))) ((qrev (`N)) ls_0));;
 
 (* lumberhack *)
-let rec enumFromTo_d0 a_0 b_0 =
+let rec enumFromTo__d0 a_0 b_0 =
   (if (a_0 <= b_0) then
-    (`C(a_0, ((enumFromTo_d0 (a_0 + 1)) b_0)))
+    (`C(a_0, ((enumFromTo__d0 (a_0 + 1)) b_0)))
   else
     (`N));;
-let rec map_d0 f_2 xs_0 =
+let rec map__d0 f_2 xs_0 =
   (xs_0 f_2);;
-let rec qrev_d0 a_1 ys_0 =
+let rec qrev__d0 a_1 ys_0 =
   (match ys_0 with
     | `C(h_0, t_0) -> 
-      ((qrev_d0 (let rec t_1 = a_1 in
+      ((qrev__d0 (let rec t_1 = a_1 in
         (let rec h_1 = h_0 in
           (fun f_1 -> 
-            (`C((f_1 h_1), ((map_d0 f_1) t_1))))))) t_0)
+            (`C((f_1 h_1), ((map__d0 f_1) t_1))))))) t_0)
     | `N -> 
       a_1)
-and testMapQrev_d0 ls_0 =
-  ((map_d0 (fun x_0 -> 
-    (x_0 + 1))) ((qrev_d0 (fun f_0 -> 
+and testMapQrev__d0 ls_0 =
+  ((map__d0 (fun x_0 -> 
+    (x_0 + 1))) ((qrev__d0 (fun f_0 -> 
     (`N))) ls_0));;
 
 (* lumberhack_pop_out *)
-let rec enumFromTo_d0_d0 a_3 b_1 =
+let rec enumFromTo__d0__d0 a_3 b_1 =
   (if (a_3 <= b_1) then
-    (`C(a_3, ((enumFromTo_d0_d0 (a_3 + 1)) b_1)))
+    (`C(a_3, ((enumFromTo__d0__d0 (a_3 + 1)) b_1)))
   else
     (`N));;
-let rec map_d0_d0 f_3 xs_1 =
-  (xs_1 f_3);;
-let rec map_d0_d1 f_6 xs_2 =
+let rec map__d0__d0 f_6 xs_2 =
   (xs_2 f_6);;
-let rec qrev_d0_d0 a_2 ys_1 =
+let rec map__d0__d1 f_5 xs_1 =
+  (xs_1 f_5);;
+let rec qrev__d0__d0 a_2 ys_1 =
   (match ys_1 with
     | `C(h_2, t_2) -> 
-      ((qrev_d0_d0 (let rec t_3 = a_2 in
+      ((qrev__d0__d0 (let rec t_3 = a_2 in
         (let rec h_3 = h_2 in
-          (fun f_5 -> 
-            (`C((f_5 h_3), ((map_d0_d1 f_5) t_3))))))) t_2)
+          (fun f_3 -> 
+            (`C((f_3 h_3), ((map__d0__d1 f_3) t_3))))))) t_2)
     | `N -> 
       a_2)
-and testMapQrev_d0_d0 ls_1 =
-  ((map_d0_d0 (fun x_1 -> 
-    (x_1 + 1))) ((qrev_d0_d0 (fun f_4 -> 
+and testMapQrev__d0__d0 ls_1 =
+  ((map__d0__d0 (fun x_1 -> 
+    (x_1 + 1))) ((qrev__d0__d0 (fun f_4 -> 
     (`N))) ls_1));;
 
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_MapQrev" (fun () -> ignore ((testMapQrev ((enumFromTo 1) 10000))));
-  Bench.Test.create ~name:"lumberhack_MapQrev" (fun () -> ignore ((testMapQrev_d0 ((enumFromTo_d0 1) 10000))));
-  Bench.Test.create ~name:"lumberhack_pop_out_MapQrev" (fun () -> ignore ((testMapQrev_d0_d0 ((enumFromTo_d0_d0 1) 10000))));
+  Bench.Test.create ~name:"lumberhack_MapQrev" (fun () -> ignore ((testMapQrev__d0 ((enumFromTo__d0 1) 10000))));
+  Bench.Test.create ~name:"lumberhack_pop_out_MapQrev" (fun () -> ignore ((testMapQrev__d0__d0 ((enumFromTo__d0__d0 1) 10000))));
 ])

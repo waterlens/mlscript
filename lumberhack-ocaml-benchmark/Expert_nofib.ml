@@ -4660,97 +4660,113 @@ let rec concat__d3 lss_2 =
 let rec dropWhile__d0 _lh_dropWhile_arg1_8 _lh_dropWhile_arg2_8 =
   (match _lh_dropWhile_arg2_8 with
     | `LH_N -> 
-      (failwith "error")
+      (fun _lh_dummy_8_7 -> 
+        (failwith "error"))
     | `LH_C(_lh_dropWhile_LH_C_0_8, _lh_dropWhile_LH_C_1_8) -> 
       (if (_lh_dropWhile_arg1_8 _lh_dropWhile_LH_C_0_8) then
         ((dropWhile__d0 _lh_dropWhile_arg1_8) _lh_dropWhile_LH_C_1_8)
       else
         (let rec t_1_8_5 = _lh_dropWhile_LH_C_1_8 in
-          t_1_8_5))
+          (fun _lh_dummy_8_8 -> 
+            t_1_8_5)))
     | _ -> 
       (failwith "error"));;
 let rec dropWhile__d1 _lh_dropWhile_arg1_5 _lh_dropWhile_arg2_5 =
   (match _lh_dropWhile_arg2_5 with
     | `LH_N -> 
-      (failwith "error")
+      (fun _lh_dummy_5_9 -> 
+        (failwith "error"))
     | `LH_C(_lh_dropWhile_LH_C_0_5, _lh_dropWhile_LH_C_1_5) -> 
       (if (_lh_dropWhile_arg1_5 _lh_dropWhile_LH_C_0_5) then
         ((dropWhile__d1 _lh_dropWhile_arg1_5) _lh_dropWhile_LH_C_1_5)
       else
         (let rec t_1_5_2 = _lh_dropWhile_LH_C_1_5 in
-          t_1_5_2))
+          (fun _lh_dummy_6_0 -> 
+            t_1_5_2)))
     | _ -> 
       (failwith "error"));;
 let rec dropWhile__d2 _lh_dropWhile_arg1_4 _lh_dropWhile_arg2_4 =
   (match _lh_dropWhile_arg2_4 with
     | `LH_N -> 
-      (failwith "error")
+      (fun _lh_dummy_2_5 -> 
+        (failwith "error"))
     | `LH_C(_lh_dropWhile_LH_C_0_4, _lh_dropWhile_LH_C_1_4) -> 
       (if (_lh_dropWhile_arg1_4 _lh_dropWhile_LH_C_0_4) then
         ((dropWhile__d2 _lh_dropWhile_arg1_4) _lh_dropWhile_LH_C_1_4)
       else
         (let rec t_8_5 = _lh_dropWhile_LH_C_1_4 in
-          t_8_5))
+          (fun _lh_dummy_2_6 -> 
+            t_8_5)))
     | _ -> 
       (failwith "error"));;
 let rec dropWhile__d3 _lh_dropWhile_arg1_1_0 _lh_dropWhile_arg2_1_0 =
   (match _lh_dropWhile_arg2_1_0 with
     | `LH_N -> 
-      (failwith "error")
+      (fun _lh_dummy_9_1 -> 
+        (failwith "error"))
     | `LH_C(_lh_dropWhile_LH_C_0_1_0, _lh_dropWhile_LH_C_1_1_0) -> 
       (if (_lh_dropWhile_arg1_1_0 _lh_dropWhile_LH_C_0_1_0) then
         ((dropWhile__d3 _lh_dropWhile_arg1_1_0) _lh_dropWhile_LH_C_1_1_0)
       else
         (let rec t_1_8_8 = _lh_dropWhile_LH_C_1_1_0 in
-          t_1_8_8))
+          (fun _lh_dummy_9_2 -> 
+            t_1_8_8)))
     | _ -> 
       (failwith "error"));;
 let rec dropWhile__d4 _lh_dropWhile_arg1_6 _lh_dropWhile_arg2_6 =
   (match _lh_dropWhile_arg2_6 with
     | `LH_N -> 
-      (failwith "error")
+      (fun _lh_dummy_8_3 -> 
+        (failwith "error"))
     | `LH_C(_lh_dropWhile_LH_C_0_6, _lh_dropWhile_LH_C_1_6) -> 
       (if (_lh_dropWhile_arg1_6 _lh_dropWhile_LH_C_0_6) then
         ((dropWhile__d4 _lh_dropWhile_arg1_6) _lh_dropWhile_LH_C_1_6)
       else
         (let rec t_1_7_6 = _lh_dropWhile_LH_C_1_6 in
-          t_1_7_6))
+          (fun _lh_dummy_8_4 -> 
+            t_1_7_6)))
     | _ -> 
       (failwith "error"));;
 let rec dropWhile__d6 _lh_dropWhile_arg1_2 _lh_dropWhile_arg2_2 =
   (match _lh_dropWhile_arg2_2 with
     | `LH_N -> 
-      (failwith "error")
+      (fun _lh_dummy_2_1 -> 
+        (failwith "error"))
     | `LH_C(_lh_dropWhile_LH_C_0_2, _lh_dropWhile_LH_C_1_2) -> 
       (if (_lh_dropWhile_arg1_2 _lh_dropWhile_LH_C_0_2) then
         ((dropWhile__d6 _lh_dropWhile_arg1_2) _lh_dropWhile_LH_C_1_2)
       else
         (let rec t_8_3 = _lh_dropWhile_LH_C_1_2 in
-          t_8_3))
+          (fun _lh_dummy_2_2 -> 
+            t_8_3)))
     | _ -> 
       (failwith "error"));;
 let rec dropWhile__d7 _lh_dropWhile_arg1_9 _lh_dropWhile_arg2_9 =
   (match _lh_dropWhile_arg2_9 with
     | `LH_N -> 
-      (failwith "error")
+      (fun _lh_dummy_8_9 -> 
+        (failwith "error"))
     | `LH_C(_lh_dropWhile_LH_C_0_9, _lh_dropWhile_LH_C_1_9) -> 
       (if (_lh_dropWhile_arg1_9 _lh_dropWhile_LH_C_0_9) then
         ((dropWhile__d7 _lh_dropWhile_arg1_9) _lh_dropWhile_LH_C_1_9)
       else
         (let rec t_1_8_7 = _lh_dropWhile_LH_C_1_9 in
-          t_1_8_7))
+          (fun _lh_dummy_9_0 -> 
+            t_1_8_7)))
     | _ -> 
       (failwith "error"));;
 let rec dropWhile__d8 _lh_dropWhile_arg1_7 _lh_dropWhile_arg2_7 =
   (match _lh_dropWhile_arg2_7 with
     | `LH_N -> 
-      (failwith "error")
+      (fun _lh_dummy_8_5 -> 
+        (failwith "error"))
     | `LH_C(_lh_dropWhile_LH_C_0_7, _lh_dropWhile_LH_C_1_7) -> 
       (if (_lh_dropWhile_arg1_7 _lh_dropWhile_LH_C_0_7) then
         ((dropWhile__d8 _lh_dropWhile_arg1_7) _lh_dropWhile_LH_C_1_7)
       else
         (let rec t_1_8_0 = _lh_dropWhile_LH_C_1_7 in
-          t_1_8_0))
+          (fun _lh_dummy_8_6 -> 
+            t_1_8_0)))
     | _ -> 
       (failwith "error"));;
 let rec drop__d0 _lh_drop_arg1_2 _lh_drop_arg2_2 =
@@ -5723,9 +5739,9 @@ let rec success__d8 _lh_success_arg1_5 =
 let rec success__d9 _lh_success_arg1_7 =
   (`Answer(_lh_success_arg1_7));;
 let rec tail__d0 ls_2_7 =
-  ls_2_7;;
+  (ls_2_7 99);;
 let rec tail__d1 ls_4_2 =
-  ls_4_2;;
+  (ls_4_2 99);;
 let rec tail__d1_d0 ls_3_1 =
   (match ls_3_1 with
     | `LH_C(h_1_3_4, t_1_7_1) -> 
@@ -5733,11 +5749,11 @@ let rec tail__d1_d0 ls_3_1 =
     | `LH_N -> 
       (failwith "error"));;
 let rec tail__d2 ls_1_3 =
-  ls_1_3;;
+  (ls_1_3 99);;
 let rec tail__d3 ls_2_9 =
-  ls_2_9;;
+  (ls_2_9 99);;
 let rec tail__d4 ls_3_6 =
-  ls_3_6;;
+  (ls_3_6 99);;
 let rec tail__d5 ls_6 =
   (match ls_6 with
     | `LH_C(h_6, t_6) -> 
@@ -5751,11 +5767,11 @@ let rec tail__d6 ls_4 =
     | `LH_N -> 
       (failwith "error"));;
 let rec tail__d7 ls_0 =
-  ls_0;;
+  (ls_0 99);;
 let rec tail__d8 ls_2_3 =
-  ls_2_3;;
+  (ls_2_3 99);;
 let rec tail__d9 ls_1_9 =
-  ls_1_9;;
+  (ls_1_9 99);;
 let rec takeWhile__d0 _lh_takeWhile_arg1_4 _lh_takeWhile_arg2_4 =
   (match _lh_takeWhile_arg2_4 with
     | `LH_N -> 
@@ -5949,12 +5965,12 @@ let rec ask__d0 _lh_ask_arg1_0 _lh_ask_arg2_0 _lh_ask_arg3_0 =
 and break__d1 _lh_break_arg1_7 _lh_break_arg2_4 =
   (match _lh_break_arg2_4 with
     | `LH_N -> 
-      (`LH_P2((`LH_N), (fun _lh_dummy_7_5 -> 
+      (`LH_P2((`LH_N), (fun _lh_dummy_8_1 -> 
         (`LH_N))))
     | `LH_C(_lh_break_LH_C_0_4, _lh_break_LH_C_1_4) -> 
       (if (_lh_break_arg1_7 _lh_break_LH_C_0_4) then
         (`LH_P2((`LH_N), (let rec _lh_lines_LH_C_1_2 = _lh_break_LH_C_1_4 in
-          (fun _lh_dummy_7_6 -> 
+          (fun _lh_dummy_8_2 -> 
             (lines__d0 _lh_lines_LH_C_1_2)))))
       else
         (let rec _lh_matchIdent_1_3_8 = ((break__d1 _lh_break_arg1_7) _lh_break_LH_C_1_4) in
@@ -6102,47 +6118,47 @@ and definitions__d0 _lh_definitions_arg1_0 =
 and display__d0 _lh_display_arg1_0 _lh_display_arg2_0 _lh_display_arg3_0 =
   (match _lh_display_arg1_0 with
     | `LH_N -> 
-      (let rec t_8_6 = (let rec t_8_7 = (let rec t_8_8 = (let rec t_8_9 = (let rec t_9_0 = (let rec t_9_1 = (let rec t_9_2 = (let rec t_9_3 = (let rec t_9_4 = (let rec t_9_5 = (let rec t_9_6 = (let rec t_9_7 = (let rec t_9_8 = (let rec t_9_9 = (let rec t_1_0_0 = (let rec t_1_0_1 = (let rec t_1_0_2 = (let rec t_1_0_3 = (let rec t_1_0_4 = (let rec t_1_0_5 = (fun _lh_dummy_2_3 -> 
+      (let rec t_8_6 = (let rec t_8_7 = (let rec t_8_8 = (let rec t_8_9 = (let rec t_9_0 = (let rec t_9_1 = (let rec t_9_2 = (let rec t_9_3 = (let rec t_9_4 = (let rec t_9_5 = (let rec t_9_6 = (let rec t_9_7 = (let rec t_9_8 = (let rec t_9_9 = (let rec t_1_0_0 = (let rec t_1_0_1 = (let rec t_1_0_2 = (let rec t_1_0_3 = (let rec t_1_0_4 = (let rec t_1_0_5 = (fun _lh_dummy_2_7 -> 
         0) in
-        (fun _lh_dummy_2_4 -> 
-          (1 + (length__d0 t_1_0_5)))) in
-        (fun _lh_dummy_2_5 -> 
-          (1 + (length__d0 t_1_0_4)))) in
-        (fun _lh_dummy_2_6 -> 
-          (1 + (length__d0 t_1_0_3)))) in
-        (fun _lh_dummy_2_7 -> 
-          (1 + (length__d0 t_1_0_2)))) in
         (fun _lh_dummy_2_8 -> 
-          (1 + (length__d0 t_1_0_1)))) in
+          (1 + (length__d0 t_1_0_5)))) in
         (fun _lh_dummy_2_9 -> 
-          (1 + (length__d0 t_1_0_0)))) in
+          (1 + (length__d0 t_1_0_4)))) in
         (fun _lh_dummy_3_0 -> 
-          (1 + (length__d0 t_9_9)))) in
+          (1 + (length__d0 t_1_0_3)))) in
         (fun _lh_dummy_3_1 -> 
-          (1 + (length__d0 t_9_8)))) in
+          (1 + (length__d0 t_1_0_2)))) in
         (fun _lh_dummy_3_2 -> 
-          (1 + (length__d0 t_9_7)))) in
+          (1 + (length__d0 t_1_0_1)))) in
         (fun _lh_dummy_3_3 -> 
-          (1 + (length__d0 t_9_6)))) in
+          (1 + (length__d0 t_1_0_0)))) in
         (fun _lh_dummy_3_4 -> 
-          (1 + (length__d0 t_9_5)))) in
+          (1 + (length__d0 t_9_9)))) in
         (fun _lh_dummy_3_5 -> 
-          (1 + (length__d0 t_9_4)))) in
+          (1 + (length__d0 t_9_8)))) in
         (fun _lh_dummy_3_6 -> 
-          (1 + (length__d0 t_9_3)))) in
+          (1 + (length__d0 t_9_7)))) in
         (fun _lh_dummy_3_7 -> 
-          (1 + (length__d0 t_9_2)))) in
+          (1 + (length__d0 t_9_6)))) in
         (fun _lh_dummy_3_8 -> 
-          (1 + (length__d0 t_9_1)))) in
+          (1 + (length__d0 t_9_5)))) in
         (fun _lh_dummy_3_9 -> 
-          (1 + (length__d0 t_9_0)))) in
+          (1 + (length__d0 t_9_4)))) in
         (fun _lh_dummy_4_0 -> 
-          (1 + (length__d0 t_8_9)))) in
+          (1 + (length__d0 t_9_3)))) in
         (fun _lh_dummy_4_1 -> 
-          (1 + (length__d0 t_8_8)))) in
+          (1 + (length__d0 t_9_2)))) in
         (fun _lh_dummy_4_2 -> 
-          (1 + (length__d0 t_8_7)))) in
+          (1 + (length__d0 t_9_1)))) in
         (fun _lh_dummy_4_3 -> 
+          (1 + (length__d0 t_9_0)))) in
+        (fun _lh_dummy_4_4 -> 
+          (1 + (length__d0 t_8_9)))) in
+        (fun _lh_dummy_4_5 -> 
+          (1 + (length__d0 t_8_8)))) in
+        (fun _lh_dummy_4_6 -> 
+          (1 + (length__d0 t_8_7)))) in
+        (fun _lh_dummy_4_7 -> 
           (1 + (length__d0 t_8_6))))
     | `LH_C(_lh_display_LH_C_0_0, _lh_display_LH_C_1_0) -> 
       (match _lh_display_LH_C_0_0 with
@@ -6201,17 +6217,17 @@ and display__d0 _lh_display_arg1_0 _lh_display_arg2_0 _lh_display_arg3_0 =
             (let rec h_9_6 = '|' in
               (fun ys_9_8 -> 
                 (let rec t_1_2_4 = ((mappend__d1_d0 t_1_2_3) ys_9_8) in
-                  (fun _lh_dummy_4_4 -> 
+                  (fun _lh_dummy_4_8 -> 
                     (1 + (length__d0 t_1_2_4))))))) in
             (let rec h_9_7 = '?' in
               (fun ys_9_9 -> 
                 (let rec t_1_2_5 = ((mappend__d1_d0 t_1_2_2) ys_9_9) in
-                  (fun _lh_dummy_4_5 -> 
+                  (fun _lh_dummy_4_9 -> 
                     (1 + (length__d0 t_1_2_5))))))))) (((display__d0 _lh_display_LH_C_1_0) _lh_display_arg2_0) (tail__d5 _lh_display_arg3_0)))
         | `Soln(_lh_display_Soln_0_0, _lh_display_Soln_1_0) -> 
           (let rec sol_0 = ((showVars__d0 _lh_display_Soln_0_0) _lh_display_arg2_0) in
             (let rec etc_0 = (if ((_lh_display_arg3_0 = (`LH_N)) || ((head__d1_d0 _lh_display_arg3_0) = false)) then
-              (fun _lh_dummy_4_6 -> 
+              (fun _lh_dummy_5_0 -> 
                 0)
             else
               (((display__d0 _lh_display_LH_C_1_0) _lh_display_arg2_0) (tail__d6 _lh_display_arg3_0))) in
@@ -6251,42 +6267,42 @@ and display__d0 _lh_display_arg1_0 _lh_display_arg2_0 _lh_display_arg3_0 =
                 (let rec h_1_0_8 = '|' in
                   (fun ys_1_1_2 -> 
                     (let rec t_1_4_4 = ((mappend__d1_d3 t_1_4_3) ys_1_1_2) in
-                      (fun _lh_dummy_4_7 -> 
+                      (fun _lh_dummy_5_1 -> 
                         (1 + (length__d0 t_1_4_4))))))) in
                 (let rec h_1_0_9 = '?' in
                   (fun ys_1_1_3 -> 
                     (let rec t_1_4_5 = ((mappend__d1_d3 t_1_4_2) ys_1_1_3) in
-                      (fun _lh_dummy_4_8 -> 
+                      (fun _lh_dummy_5_2 -> 
                         (1 + (length__d0 t_1_4_5))))))) in
                 (let rec h_1_1_0 = 'e' in
                   (fun ys_1_1_4 -> 
                     (let rec t_1_4_6 = ((mappend__d1_d3 t_1_4_1) ys_1_1_4) in
-                      (fun _lh_dummy_4_9 -> 
+                      (fun _lh_dummy_5_3 -> 
                         (1 + (length__d0 t_1_4_6))))))) in
                 (let rec h_1_1_1 = 'r' in
                   (fun ys_1_1_5 -> 
                     (let rec t_1_4_7 = ((mappend__d1_d3 t_1_4_0) ys_1_1_5) in
-                      (fun _lh_dummy_5_0 -> 
+                      (fun _lh_dummy_5_4 -> 
                         (1 + (length__d0 t_1_4_7))))))) in
                 (let rec h_1_1_2 = 'o' in
                   (fun ys_1_1_6 -> 
                     (let rec t_1_4_8 = ((mappend__d1_d3 t_1_3_9) ys_1_1_6) in
-                      (fun _lh_dummy_5_1 -> 
+                      (fun _lh_dummy_5_5 -> 
                         (1 + (length__d0 t_1_4_8))))))) in
                 (let rec h_1_1_3 = 'M' in
                   (fun ys_1_1_7 -> 
                     (let rec t_1_4_9 = ((mappend__d1_d3 t_1_3_8) ys_1_1_7) in
-                      (fun _lh_dummy_5_2 -> 
+                      (fun _lh_dummy_5_6 -> 
                         (1 + (length__d0 t_1_4_9))))))) in
                 (let rec h_1_1_4 = ' ' in
                   (fun ys_1_1_8 -> 
                     (let rec t_1_5_0 = ((mappend__d1_d3 t_1_3_7) ys_1_1_8) in
-                      (fun _lh_dummy_5_3 -> 
+                      (fun _lh_dummy_5_7 -> 
                         (1 + (length__d0 t_1_5_0))))))) in
                 (let rec h_1_1_5 = '.' in
                   (fun ys_1_1_9 -> 
                     (let rec t_1_5_1 = ((mappend__d1_d3 t_1_3_6) ys_1_1_9) in
-                      (fun _lh_dummy_5_4 -> 
+                      (fun _lh_dummy_5_8 -> 
                         (1 + (length__d0 t_1_5_1))))))))) etc_0)))
         | _ -> 
           (failwith "error"))
@@ -6315,7 +6331,7 @@ and dropWhile__d1_d0 _lh_dropWhile_arg1_1 _lh_dropWhile_arg2_1 =
 and dropWhile__d5 _lh_dropWhile_arg1_3 _lh_dropWhile_arg2_3 =
   (match _lh_dropWhile_arg2_3 with
     | `LH_N -> 
-      (fun _lh_dummy_2_1 -> 
+      (fun _lh_dummy_2_3 -> 
         (`LH_N))
     | `LH_C(_lh_dropWhile_LH_C_0_3, _lh_dropWhile_LH_C_1_3) -> 
       (if (_lh_dropWhile_arg1_3 _lh_dropWhile_LH_C_0_3) then
@@ -6323,7 +6339,7 @@ and dropWhile__d5 _lh_dropWhile_arg1_3 _lh_dropWhile_arg2_3 =
       else
         (let rec _lh_words_LH_C_1_2 = _lh_dropWhile_LH_C_1_3 in
           (let rec _lh_words_LH_C_0_2 = _lh_dropWhile_LH_C_0_3 in
-            (fun _lh_dummy_2_2 -> 
+            (fun _lh_dummy_2_4 -> 
               (let rec _lh_matchIdent_2_5 = ((break__d0 isSpace__d1) (`LH_C(_lh_words_LH_C_0_2, _lh_words_LH_C_1_2))) in
                 (match _lh_matchIdent_2_5 with
                   | `LH_P2(_lh_words_LH_P2_0_2, _lh_words_LH_P2_1_2) -> 
@@ -7527,10 +7543,10 @@ and solve__d0 _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
                                                                                           | `LH_C(_lh_listcomp_fun_ls_h_1_6, _lh_listcomp_fun_ls_t_1_7) -> 
                                                                                             (let rec t_1_6_2 = (_lh_listcomp_fun_2_8 _lh_listcomp_fun_ls_t_1_7) in
                                                                                               (let rec h_1_2_5 = (((solve__d0 _lh_solve_arg1_0) _lh_listcomp_fun_ls_h_1_6) _lh_solve_LH_C_0_8) in
-                                                                                                (fun _lh_dummy_5_7 -> 
+                                                                                                (fun _lh_dummy_6_3 -> 
                                                                                                   ((mappend__d3_d9 h_1_2_5) (concat__d0 t_1_6_2)))))
                                                                                           | `LH_N -> 
-                                                                                            (fun _lh_dummy_5_8 -> 
+                                                                                            (fun _lh_dummy_6_4 -> 
                                                                                               (`LH_N)))) in
                                                                                         (_lh_listcomp_fun_2_8 (((solve__d0 _lh_solve_arg1_0) _lh_solve_arg2_0) _lh_solve_LH_C_0_7))))
                                                                                     | _ -> 
@@ -7682,10 +7698,10 @@ and solve__d0 _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
                                                                                       | `LH_C(_lh_listcomp_fun_ls_h_1_7, _lh_listcomp_fun_ls_t_1_8) -> 
                                                                                         (let rec t_1_6_3 = (_lh_listcomp_fun_2_9 _lh_listcomp_fun_ls_t_1_8) in
                                                                                           (let rec h_1_2_6 = (((solve__d0 _lh_solve_arg1_0) _lh_listcomp_fun_ls_h_1_7) _lh_solve_LH_C_0_1_3) in
-                                                                                            (fun _lh_dummy_5_9 -> 
+                                                                                            (fun _lh_dummy_6_5 -> 
                                                                                               ((mappend__d3_d9 h_1_2_6) (concat__d0 t_1_6_3)))))
                                                                                       | `LH_N -> 
-                                                                                        (fun _lh_dummy_6_0 -> 
+                                                                                        (fun _lh_dummy_6_6 -> 
                                                                                           (`LH_N)))) in
                                                                                     (_lh_listcomp_fun_2_9 (((solve__d0 _lh_solve_arg1_0) _lh_solve_arg2_0) _lh_solve_LH_C_0_1_2))))
                                                                                 | _ -> 
@@ -7837,10 +7853,10 @@ and solve__d0 _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
                                                                                   | `LH_C(_lh_listcomp_fun_ls_h_1_8, _lh_listcomp_fun_ls_t_1_9) -> 
                                                                                     (let rec t_1_6_4 = (_lh_listcomp_fun_3_0 _lh_listcomp_fun_ls_t_1_9) in
                                                                                       (let rec h_1_2_7 = (((solve__d0 _lh_solve_arg1_0) _lh_listcomp_fun_ls_h_1_8) _lh_solve_LH_C_0_1_8) in
-                                                                                        (fun _lh_dummy_6_1 -> 
+                                                                                        (fun _lh_dummy_6_7 -> 
                                                                                           ((mappend__d3_d9 h_1_2_7) (concat__d0 t_1_6_4)))))
                                                                                   | `LH_N -> 
-                                                                                    (fun _lh_dummy_6_2 -> 
+                                                                                    (fun _lh_dummy_6_8 -> 
                                                                                       (`LH_N)))) in
                                                                                 (_lh_listcomp_fun_3_0 (((solve__d0 _lh_solve_arg1_0) _lh_solve_arg2_0) _lh_solve_LH_C_0_1_7))))
                                                                             | _ -> 
@@ -7992,10 +8008,10 @@ and solve__d0 _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
                                                                               | `LH_C(_lh_listcomp_fun_ls_h_1_9, _lh_listcomp_fun_ls_t_2_0) -> 
                                                                                 (let rec t_1_6_5 = (_lh_listcomp_fun_3_1 _lh_listcomp_fun_ls_t_2_0) in
                                                                                   (let rec h_1_2_8 = (((solve__d0 _lh_solve_arg1_0) _lh_listcomp_fun_ls_h_1_9) _lh_solve_LH_C_0_2_3) in
-                                                                                    (fun _lh_dummy_6_3 -> 
+                                                                                    (fun _lh_dummy_6_9 -> 
                                                                                       ((mappend__d3_d9 h_1_2_8) (concat__d0 t_1_6_5)))))
                                                                               | `LH_N -> 
-                                                                                (fun _lh_dummy_6_4 -> 
+                                                                                (fun _lh_dummy_7_0 -> 
                                                                                   (`LH_N)))) in
                                                                             (_lh_listcomp_fun_3_1 (((solve__d0 _lh_solve_arg1_0) _lh_solve_arg2_0) _lh_solve_LH_C_0_2_2))))
                                                                         | _ -> 
@@ -8147,10 +8163,10 @@ and solve__d0 _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
                                                                           | `LH_C(_lh_listcomp_fun_ls_h_2_0, _lh_listcomp_fun_ls_t_2_1) -> 
                                                                             (let rec t_1_6_6 = (_lh_listcomp_fun_3_2 _lh_listcomp_fun_ls_t_2_1) in
                                                                               (let rec h_1_2_9 = (((solve__d0 _lh_solve_arg1_0) _lh_listcomp_fun_ls_h_2_0) _lh_solve_LH_C_0_2_8) in
-                                                                                (fun _lh_dummy_6_5 -> 
+                                                                                (fun _lh_dummy_7_1 -> 
                                                                                   ((mappend__d3_d9 h_1_2_9) (concat__d0 t_1_6_6)))))
                                                                           | `LH_N -> 
-                                                                            (fun _lh_dummy_6_6 -> 
+                                                                            (fun _lh_dummy_7_2 -> 
                                                                               (`LH_N)))) in
                                                                         (_lh_listcomp_fun_3_2 (((solve__d0 _lh_solve_arg1_0) _lh_solve_arg2_0) _lh_solve_LH_C_0_2_7))))
                                                                     | _ -> 
@@ -8302,10 +8318,10 @@ and solve__d0 _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
                                                                       | `LH_C(_lh_listcomp_fun_ls_h_2_1, _lh_listcomp_fun_ls_t_2_2) -> 
                                                                         (let rec t_1_6_7 = (_lh_listcomp_fun_3_3 _lh_listcomp_fun_ls_t_2_2) in
                                                                           (let rec h_1_3_0 = (((solve__d0 _lh_solve_arg1_0) _lh_listcomp_fun_ls_h_2_1) _lh_solve_LH_C_0_3_3) in
-                                                                            (fun _lh_dummy_6_7 -> 
+                                                                            (fun _lh_dummy_7_3 -> 
                                                                               ((mappend__d3_d9 h_1_3_0) (concat__d0 t_1_6_7)))))
                                                                       | `LH_N -> 
-                                                                        (fun _lh_dummy_6_8 -> 
+                                                                        (fun _lh_dummy_7_4 -> 
                                                                           (`LH_N)))) in
                                                                     (_lh_listcomp_fun_3_3 (((solve__d0 _lh_solve_arg1_0) _lh_solve_arg2_0) _lh_solve_LH_C_0_3_2))))
                                                                 | _ -> 
@@ -8457,10 +8473,10 @@ and solve__d0 _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
                                                                   | `LH_C(_lh_listcomp_fun_ls_h_2_2, _lh_listcomp_fun_ls_t_2_3) -> 
                                                                     (let rec t_1_6_8 = (_lh_listcomp_fun_3_4 _lh_listcomp_fun_ls_t_2_3) in
                                                                       (let rec h_1_3_1 = (((solve__d0 _lh_solve_arg1_0) _lh_listcomp_fun_ls_h_2_2) _lh_solve_LH_C_0_3_8) in
-                                                                        (fun _lh_dummy_6_9 -> 
+                                                                        (fun _lh_dummy_7_5 -> 
                                                                           ((mappend__d3_d9 h_1_3_1) (concat__d0 t_1_6_8)))))
                                                                   | `LH_N -> 
-                                                                    (fun _lh_dummy_7_0 -> 
+                                                                    (fun _lh_dummy_7_6 -> 
                                                                       (`LH_N)))) in
                                                                 (_lh_listcomp_fun_3_4 (((solve__d0 _lh_solve_arg1_0) _lh_solve_arg2_0) _lh_solve_LH_C_0_3_7))))
                                                             | _ -> 
@@ -8612,10 +8628,10 @@ and solve__d0 _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
                                                               | `LH_C(_lh_listcomp_fun_ls_h_2_3, _lh_listcomp_fun_ls_t_2_4) -> 
                                                                 (let rec t_1_6_9 = (_lh_listcomp_fun_3_5 _lh_listcomp_fun_ls_t_2_4) in
                                                                   (let rec h_1_3_2 = (((solve__d0 _lh_solve_arg1_0) _lh_listcomp_fun_ls_h_2_3) _lh_solve_LH_C_0_4_3) in
-                                                                    (fun _lh_dummy_7_1 -> 
+                                                                    (fun _lh_dummy_7_7 -> 
                                                                       ((mappend__d3_d9 h_1_3_2) (concat__d0 t_1_6_9)))))
                                                               | `LH_N -> 
-                                                                (fun _lh_dummy_7_2 -> 
+                                                                (fun _lh_dummy_7_8 -> 
                                                                   (`LH_N)))) in
                                                             (_lh_listcomp_fun_3_5 (((solve__d0 _lh_solve_arg1_0) _lh_solve_arg2_0) _lh_solve_LH_C_0_4_2))))
                                                         | _ -> 
@@ -8767,10 +8783,10 @@ and solve__d0 _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
                                                           | `LH_C(_lh_listcomp_fun_ls_h_2_4, _lh_listcomp_fun_ls_t_2_5) -> 
                                                             (let rec t_1_7_0 = (_lh_listcomp_fun_3_6 _lh_listcomp_fun_ls_t_2_5) in
                                                               (let rec h_1_3_3 = (((solve__d0 _lh_solve_arg1_0) _lh_listcomp_fun_ls_h_2_4) _lh_solve_LH_C_0_4_8) in
-                                                                (fun _lh_dummy_7_3 -> 
+                                                                (fun _lh_dummy_7_9 -> 
                                                                   ((mappend__d3_d9 h_1_3_3) (concat__d0 t_1_7_0)))))
                                                           | `LH_N -> 
-                                                            (fun _lh_dummy_7_4 -> 
+                                                            (fun _lh_dummy_8_0 -> 
                                                               (`LH_N)))) in
                                                         (_lh_listcomp_fun_3_6 (((solve__d0 _lh_solve_arg1_0) _lh_solve_arg2_0) _lh_solve_LH_C_0_4_7))))
                                                     | _ -> 
@@ -9049,7 +9065,7 @@ and subst__d1 _lh_subst_arg1_3 _lh_subst_arg2_3 =
             (`LH_N))) in
         (_lh_listcomp_fun_4_7 _lh_subst_Term_1_3)) in
         (let rec _lh_showPhrase_Term_0_2 = _lh_subst_Term_0_3 in
-          (fun _lh_dummy_7_7 -> 
+          (fun _lh_dummy_9_3 -> 
             (match _lh_showPhrase_Term_1_2 with
               | `LH_N -> 
                 _lh_showPhrase_Term_0_2
@@ -9077,7 +9093,7 @@ and subst__d1 _lh_subst_arg1_3 _lh_subst_arg2_3 =
       (let rec lookup_4 = ((find__d2 _lh_subst_arg1_3) _lh_subst_Var_0_3) in
         (if (fails__d1 lookup_4) then
           (let rec _lh_showPhrase_Var_0_2 = _lh_subst_Var_0_3 in
-            (fun _lh_dummy_7_8 -> 
+            (fun _lh_dummy_9_4 -> 
               _lh_showPhrase_Var_0_2))
         else
           ((subst__d1 _lh_subst_arg1_3) (answer__d2 lookup_4))))
@@ -9332,10 +9348,10 @@ and vars__d1 _lh_vars_arg1_1 =
             | `LH_C(_lh_listcomp_fun_ls_h_1_4, _lh_listcomp_fun_ls_t_1_5) -> 
               (let rec t_1_5_8 = (_lh_listcomp_fun_2_6 _lh_listcomp_fun_ls_t_1_5) in
                 (let rec h_1_2_1 = (names_1 _lh_listcomp_fun_ls_h_1_4) in
-                  (fun _lh_dummy_5_5 -> 
+                  (fun _lh_dummy_6_1 -> 
                     ((mappend__d4_d5 h_1_2_1) (concat__d3 t_1_5_8)))))
             | `LH_N -> 
-              (fun _lh_dummy_5_6 -> 
+              (fun _lh_dummy_6_2 -> 
                 (`LH_N)))) in
           (_lh_listcomp_fun_2_6 _lh_names_Term_1_1)))
       | _ -> 
@@ -9516,97 +9532,113 @@ let rec concat__d3 lss_2 =
 let rec dropWhile__d0 _lh_dropWhile_arg1_8 _lh_dropWhile_arg2_8 =
   (match _lh_dropWhile_arg2_8 with
     | `LH_N -> 
-      (failwith "error")
+      (fun _lh_dummy_8_7 -> 
+        (failwith "error"))
     | `LH_C(_lh_dropWhile_LH_C_0_8, _lh_dropWhile_LH_C_1_8) -> 
       (if (_lh_dropWhile_arg1_8 _lh_dropWhile_LH_C_0_8) then
         ((dropWhile__d0 _lh_dropWhile_arg1_8) _lh_dropWhile_LH_C_1_8)
       else
         (let rec t_1_8_5 = _lh_dropWhile_LH_C_1_8 in
-          t_1_8_5))
+          (fun _lh_dummy_8_8 -> 
+            t_1_8_5)))
     | _ -> 
       (failwith "error"));;
 let rec dropWhile__d1 _lh_dropWhile_arg1_5 _lh_dropWhile_arg2_5 =
   (match _lh_dropWhile_arg2_5 with
     | `LH_N -> 
-      (failwith "error")
+      (fun _lh_dummy_5_9 -> 
+        (failwith "error"))
     | `LH_C(_lh_dropWhile_LH_C_0_5, _lh_dropWhile_LH_C_1_5) -> 
       (if (_lh_dropWhile_arg1_5 _lh_dropWhile_LH_C_0_5) then
         ((dropWhile__d1 _lh_dropWhile_arg1_5) _lh_dropWhile_LH_C_1_5)
       else
         (let rec t_1_5_2 = _lh_dropWhile_LH_C_1_5 in
-          t_1_5_2))
+          (fun _lh_dummy_6_0 -> 
+            t_1_5_2)))
     | _ -> 
       (failwith "error"));;
 let rec dropWhile__d2 _lh_dropWhile_arg1_4 _lh_dropWhile_arg2_4 =
   (match _lh_dropWhile_arg2_4 with
     | `LH_N -> 
-      (failwith "error")
+      (fun _lh_dummy_2_5 -> 
+        (failwith "error"))
     | `LH_C(_lh_dropWhile_LH_C_0_4, _lh_dropWhile_LH_C_1_4) -> 
       (if (_lh_dropWhile_arg1_4 _lh_dropWhile_LH_C_0_4) then
         ((dropWhile__d2 _lh_dropWhile_arg1_4) _lh_dropWhile_LH_C_1_4)
       else
         (let rec t_8_5 = _lh_dropWhile_LH_C_1_4 in
-          t_8_5))
+          (fun _lh_dummy_2_6 -> 
+            t_8_5)))
     | _ -> 
       (failwith "error"));;
 let rec dropWhile__d3 _lh_dropWhile_arg1_1_0 _lh_dropWhile_arg2_1_0 =
   (match _lh_dropWhile_arg2_1_0 with
     | `LH_N -> 
-      (failwith "error")
+      (fun _lh_dummy_9_1 -> 
+        (failwith "error"))
     | `LH_C(_lh_dropWhile_LH_C_0_1_0, _lh_dropWhile_LH_C_1_1_0) -> 
       (if (_lh_dropWhile_arg1_1_0 _lh_dropWhile_LH_C_0_1_0) then
         ((dropWhile__d3 _lh_dropWhile_arg1_1_0) _lh_dropWhile_LH_C_1_1_0)
       else
         (let rec t_1_8_8 = _lh_dropWhile_LH_C_1_1_0 in
-          t_1_8_8))
+          (fun _lh_dummy_9_2 -> 
+            t_1_8_8)))
     | _ -> 
       (failwith "error"));;
 let rec dropWhile__d4 _lh_dropWhile_arg1_6 _lh_dropWhile_arg2_6 =
   (match _lh_dropWhile_arg2_6 with
     | `LH_N -> 
-      (failwith "error")
+      (fun _lh_dummy_8_3 -> 
+        (failwith "error"))
     | `LH_C(_lh_dropWhile_LH_C_0_6, _lh_dropWhile_LH_C_1_6) -> 
       (if (_lh_dropWhile_arg1_6 _lh_dropWhile_LH_C_0_6) then
         ((dropWhile__d4 _lh_dropWhile_arg1_6) _lh_dropWhile_LH_C_1_6)
       else
         (let rec t_1_7_6 = _lh_dropWhile_LH_C_1_6 in
-          t_1_7_6))
+          (fun _lh_dummy_8_4 -> 
+            t_1_7_6)))
     | _ -> 
       (failwith "error"));;
 let rec dropWhile__d6 _lh_dropWhile_arg1_2 _lh_dropWhile_arg2_2 =
   (match _lh_dropWhile_arg2_2 with
     | `LH_N -> 
-      (failwith "error")
+      (fun _lh_dummy_2_1 -> 
+        (failwith "error"))
     | `LH_C(_lh_dropWhile_LH_C_0_2, _lh_dropWhile_LH_C_1_2) -> 
       (if (_lh_dropWhile_arg1_2 _lh_dropWhile_LH_C_0_2) then
         ((dropWhile__d6 _lh_dropWhile_arg1_2) _lh_dropWhile_LH_C_1_2)
       else
         (let rec t_8_3 = _lh_dropWhile_LH_C_1_2 in
-          t_8_3))
+          (fun _lh_dummy_2_2 -> 
+            t_8_3)))
     | _ -> 
       (failwith "error"));;
 let rec dropWhile__d7 _lh_dropWhile_arg1_9 _lh_dropWhile_arg2_9 =
   (match _lh_dropWhile_arg2_9 with
     | `LH_N -> 
-      (failwith "error")
+      (fun _lh_dummy_8_9 -> 
+        (failwith "error"))
     | `LH_C(_lh_dropWhile_LH_C_0_9, _lh_dropWhile_LH_C_1_9) -> 
       (if (_lh_dropWhile_arg1_9 _lh_dropWhile_LH_C_0_9) then
         ((dropWhile__d7 _lh_dropWhile_arg1_9) _lh_dropWhile_LH_C_1_9)
       else
         (let rec t_1_8_7 = _lh_dropWhile_LH_C_1_9 in
-          t_1_8_7))
+          (fun _lh_dummy_9_0 -> 
+            t_1_8_7)))
     | _ -> 
       (failwith "error"));;
 let rec dropWhile__d8 _lh_dropWhile_arg1_7 _lh_dropWhile_arg2_7 =
   (match _lh_dropWhile_arg2_7 with
     | `LH_N -> 
-      (failwith "error")
+      (fun _lh_dummy_8_5 -> 
+        (failwith "error"))
     | `LH_C(_lh_dropWhile_LH_C_0_7, _lh_dropWhile_LH_C_1_7) -> 
       (if (_lh_dropWhile_arg1_7 _lh_dropWhile_LH_C_0_7) then
         ((dropWhile__d8 _lh_dropWhile_arg1_7) _lh_dropWhile_LH_C_1_7)
       else
         (let rec t_1_8_0 = _lh_dropWhile_LH_C_1_7 in
-          t_1_8_0))
+          (fun _lh_dummy_8_6 -> 
+            t_1_8_0)))
     | _ -> 
       (failwith "error"));;
 let rec drop__d0 _lh_drop_arg1_2 _lh_drop_arg2_2 =
@@ -10577,9 +10609,9 @@ let rec success__d8 _lh_success_arg1_5 =
 let rec success__d9 _lh_success_arg1_7 =
   (`Answer(_lh_success_arg1_7));;
 let rec tail__d0 ls_2_7 =
-  ls_2_7;;
+  (ls_2_7 99);;
 let rec tail__d1 ls_4_2 =
-  ls_4_2;;
+  (ls_4_2 99);;
 let rec tail__d1_d0 ls_3_1 =
   (match ls_3_1 with
     | `LH_C(h_1_3_4, t_1_7_1) -> 
@@ -10587,11 +10619,11 @@ let rec tail__d1_d0 ls_3_1 =
     | `LH_N -> 
       (failwith "error"));;
 let rec tail__d2 ls_1_3 =
-  ls_1_3;;
+  (ls_1_3 99);;
 let rec tail__d3 ls_2_9 =
-  ls_2_9;;
+  (ls_2_9 99);;
 let rec tail__d4 ls_3_6 =
-  ls_3_6;;
+  (ls_3_6 99);;
 let rec tail__d5 ls_6 =
   (match ls_6 with
     | `LH_C(h_6, t_6) -> 
@@ -10605,11 +10637,11 @@ let rec tail__d6 ls_4 =
     | `LH_N -> 
       (failwith "error"));;
 let rec tail__d7 ls_0 =
-  ls_0;;
+  (ls_0 99);;
 let rec tail__d8 ls_2_3 =
-  ls_2_3;;
+  (ls_2_3 99);;
 let rec tail__d9 ls_1_9 =
-  ls_1_9;;
+  (ls_1_9 99);;
 let rec takeWhile__d0 _lh_takeWhile_arg1_4 _lh_takeWhile_arg2_4 =
   (match _lh_takeWhile_arg2_4 with
     | `LH_N -> 
@@ -10800,12 +10832,12 @@ let rec ask__d0 _lh_ask_arg1_0 _lh_ask_arg2_0 _lh_ask_arg3_0 =
 and break__d1 _lh_break_arg1_7 _lh_break_arg2_4 =
   (match _lh_break_arg2_4 with
     | `LH_N -> 
-      (`LH_P2((`LH_N), (fun _lh_dummy_7_5 -> 
+      (`LH_P2((`LH_N), (fun _lh_dummy_8_1 -> 
         (`LH_N))))
     | `LH_C(_lh_break_LH_C_0_4, _lh_break_LH_C_1_4) -> 
       (if (_lh_break_arg1_7 _lh_break_LH_C_0_4) then
         (`LH_P2((`LH_N), (let rec _lh_lines_LH_C_1_2 = _lh_break_LH_C_1_4 in
-          (fun _lh_dummy_7_6 -> 
+          (fun _lh_dummy_8_2 -> 
             (lines__d0 _lh_lines_LH_C_1_2)))))
       else
         (let rec _lh_matchIdent_1_3_8 = ((break__d1 _lh_break_arg1_7) _lh_break_LH_C_1_4) in
@@ -10953,47 +10985,47 @@ and definitions__d0 _lh_definitions_arg1_0 =
 and display__d0 _lh_display_arg1_0 _lh_display_arg2_0 _lh_display_arg3_0 =
   (match _lh_display_arg1_0 with
     | `LH_N -> 
-      (let rec t_8_6 = (let rec t_8_7 = (let rec t_8_8 = (let rec t_8_9 = (let rec t_9_0 = (let rec t_9_1 = (let rec t_9_2 = (let rec t_9_3 = (let rec t_9_4 = (let rec t_9_5 = (let rec t_9_6 = (let rec t_9_7 = (let rec t_9_8 = (let rec t_9_9 = (let rec t_1_0_0 = (let rec t_1_0_1 = (let rec t_1_0_2 = (let rec t_1_0_3 = (let rec t_1_0_4 = (let rec t_1_0_5 = (fun _lh_dummy_2_3 -> 
+      (let rec t_8_6 = (let rec t_8_7 = (let rec t_8_8 = (let rec t_8_9 = (let rec t_9_0 = (let rec t_9_1 = (let rec t_9_2 = (let rec t_9_3 = (let rec t_9_4 = (let rec t_9_5 = (let rec t_9_6 = (let rec t_9_7 = (let rec t_9_8 = (let rec t_9_9 = (let rec t_1_0_0 = (let rec t_1_0_1 = (let rec t_1_0_2 = (let rec t_1_0_3 = (let rec t_1_0_4 = (let rec t_1_0_5 = (fun _lh_dummy_2_7 -> 
         0) in
-        (fun _lh_dummy_2_4 -> 
-          (1 + (length__d0 t_1_0_5)))) in
-        (fun _lh_dummy_2_5 -> 
-          (1 + (length__d0 t_1_0_4)))) in
-        (fun _lh_dummy_2_6 -> 
-          (1 + (length__d0 t_1_0_3)))) in
-        (fun _lh_dummy_2_7 -> 
-          (1 + (length__d0 t_1_0_2)))) in
         (fun _lh_dummy_2_8 -> 
-          (1 + (length__d0 t_1_0_1)))) in
+          (1 + (length__d0 t_1_0_5)))) in
         (fun _lh_dummy_2_9 -> 
-          (1 + (length__d0 t_1_0_0)))) in
+          (1 + (length__d0 t_1_0_4)))) in
         (fun _lh_dummy_3_0 -> 
-          (1 + (length__d0 t_9_9)))) in
+          (1 + (length__d0 t_1_0_3)))) in
         (fun _lh_dummy_3_1 -> 
-          (1 + (length__d0 t_9_8)))) in
+          (1 + (length__d0 t_1_0_2)))) in
         (fun _lh_dummy_3_2 -> 
-          (1 + (length__d0 t_9_7)))) in
+          (1 + (length__d0 t_1_0_1)))) in
         (fun _lh_dummy_3_3 -> 
-          (1 + (length__d0 t_9_6)))) in
+          (1 + (length__d0 t_1_0_0)))) in
         (fun _lh_dummy_3_4 -> 
-          (1 + (length__d0 t_9_5)))) in
+          (1 + (length__d0 t_9_9)))) in
         (fun _lh_dummy_3_5 -> 
-          (1 + (length__d0 t_9_4)))) in
+          (1 + (length__d0 t_9_8)))) in
         (fun _lh_dummy_3_6 -> 
-          (1 + (length__d0 t_9_3)))) in
+          (1 + (length__d0 t_9_7)))) in
         (fun _lh_dummy_3_7 -> 
-          (1 + (length__d0 t_9_2)))) in
+          (1 + (length__d0 t_9_6)))) in
         (fun _lh_dummy_3_8 -> 
-          (1 + (length__d0 t_9_1)))) in
+          (1 + (length__d0 t_9_5)))) in
         (fun _lh_dummy_3_9 -> 
-          (1 + (length__d0 t_9_0)))) in
+          (1 + (length__d0 t_9_4)))) in
         (fun _lh_dummy_4_0 -> 
-          (1 + (length__d0 t_8_9)))) in
+          (1 + (length__d0 t_9_3)))) in
         (fun _lh_dummy_4_1 -> 
-          (1 + (length__d0 t_8_8)))) in
+          (1 + (length__d0 t_9_2)))) in
         (fun _lh_dummy_4_2 -> 
-          (1 + (length__d0 t_8_7)))) in
+          (1 + (length__d0 t_9_1)))) in
         (fun _lh_dummy_4_3 -> 
+          (1 + (length__d0 t_9_0)))) in
+        (fun _lh_dummy_4_4 -> 
+          (1 + (length__d0 t_8_9)))) in
+        (fun _lh_dummy_4_5 -> 
+          (1 + (length__d0 t_8_8)))) in
+        (fun _lh_dummy_4_6 -> 
+          (1 + (length__d0 t_8_7)))) in
+        (fun _lh_dummy_4_7 -> 
           (1 + (length__d0 t_8_6))))
     | `LH_C(_lh_display_LH_C_0_0, _lh_display_LH_C_1_0) -> 
       (match _lh_display_LH_C_0_0 with
@@ -11052,17 +11084,17 @@ and display__d0 _lh_display_arg1_0 _lh_display_arg2_0 _lh_display_arg3_0 =
             (let rec h_9_6 = '|' in
               (fun ys_9_8 -> 
                 (let rec t_1_2_4 = ((mappend__d1_d0 t_1_2_3) ys_9_8) in
-                  (fun _lh_dummy_4_4 -> 
+                  (fun _lh_dummy_4_8 -> 
                     (1 + (length__d0 t_1_2_4))))))) in
             (let rec h_9_7 = '?' in
               (fun ys_9_9 -> 
                 (let rec t_1_2_5 = ((mappend__d1_d0 t_1_2_2) ys_9_9) in
-                  (fun _lh_dummy_4_5 -> 
+                  (fun _lh_dummy_4_9 -> 
                     (1 + (length__d0 t_1_2_5))))))))) (((display__d0 _lh_display_LH_C_1_0) _lh_display_arg2_0) (tail__d5 _lh_display_arg3_0)))
         | `Soln(_lh_display_Soln_0_0, _lh_display_Soln_1_0) -> 
           (let rec sol_0 = ((showVars__d0 _lh_display_Soln_0_0) _lh_display_arg2_0) in
             (let rec etc_0 = (if ((_lh_display_arg3_0 = (`LH_N)) || ((head__d1_d0 _lh_display_arg3_0) = false)) then
-              (fun _lh_dummy_4_6 -> 
+              (fun _lh_dummy_5_0 -> 
                 0)
             else
               (((display__d0 _lh_display_LH_C_1_0) _lh_display_arg2_0) (tail__d6 _lh_display_arg3_0))) in
@@ -11102,42 +11134,42 @@ and display__d0 _lh_display_arg1_0 _lh_display_arg2_0 _lh_display_arg3_0 =
                 (let rec h_1_0_8 = '|' in
                   (fun ys_1_1_2 -> 
                     (let rec t_1_4_4 = ((mappend__d1_d3 t_1_4_3) ys_1_1_2) in
-                      (fun _lh_dummy_4_7 -> 
+                      (fun _lh_dummy_5_1 -> 
                         (1 + (length__d0 t_1_4_4))))))) in
                 (let rec h_1_0_9 = '?' in
                   (fun ys_1_1_3 -> 
                     (let rec t_1_4_5 = ((mappend__d1_d3 t_1_4_2) ys_1_1_3) in
-                      (fun _lh_dummy_4_8 -> 
+                      (fun _lh_dummy_5_2 -> 
                         (1 + (length__d0 t_1_4_5))))))) in
                 (let rec h_1_1_0 = 'e' in
                   (fun ys_1_1_4 -> 
                     (let rec t_1_4_6 = ((mappend__d1_d3 t_1_4_1) ys_1_1_4) in
-                      (fun _lh_dummy_4_9 -> 
+                      (fun _lh_dummy_5_3 -> 
                         (1 + (length__d0 t_1_4_6))))))) in
                 (let rec h_1_1_1 = 'r' in
                   (fun ys_1_1_5 -> 
                     (let rec t_1_4_7 = ((mappend__d1_d3 t_1_4_0) ys_1_1_5) in
-                      (fun _lh_dummy_5_0 -> 
+                      (fun _lh_dummy_5_4 -> 
                         (1 + (length__d0 t_1_4_7))))))) in
                 (let rec h_1_1_2 = 'o' in
                   (fun ys_1_1_6 -> 
                     (let rec t_1_4_8 = ((mappend__d1_d3 t_1_3_9) ys_1_1_6) in
-                      (fun _lh_dummy_5_1 -> 
+                      (fun _lh_dummy_5_5 -> 
                         (1 + (length__d0 t_1_4_8))))))) in
                 (let rec h_1_1_3 = 'M' in
                   (fun ys_1_1_7 -> 
                     (let rec t_1_4_9 = ((mappend__d1_d3 t_1_3_8) ys_1_1_7) in
-                      (fun _lh_dummy_5_2 -> 
+                      (fun _lh_dummy_5_6 -> 
                         (1 + (length__d0 t_1_4_9))))))) in
                 (let rec h_1_1_4 = ' ' in
                   (fun ys_1_1_8 -> 
                     (let rec t_1_5_0 = ((mappend__d1_d3 t_1_3_7) ys_1_1_8) in
-                      (fun _lh_dummy_5_3 -> 
+                      (fun _lh_dummy_5_7 -> 
                         (1 + (length__d0 t_1_5_0))))))) in
                 (let rec h_1_1_5 = '.' in
                   (fun ys_1_1_9 -> 
                     (let rec t_1_5_1 = ((mappend__d1_d3 t_1_3_6) ys_1_1_9) in
-                      (fun _lh_dummy_5_4 -> 
+                      (fun _lh_dummy_5_8 -> 
                         (1 + (length__d0 t_1_5_1))))))))) etc_0)))
         | _ -> 
           (failwith "error"))
@@ -11166,7 +11198,7 @@ and dropWhile__d1_d0 _lh_dropWhile_arg1_1 _lh_dropWhile_arg2_1 =
 and dropWhile__d5 _lh_dropWhile_arg1_3 _lh_dropWhile_arg2_3 =
   (match _lh_dropWhile_arg2_3 with
     | `LH_N -> 
-      (fun _lh_dummy_2_1 -> 
+      (fun _lh_dummy_2_3 -> 
         (`LH_N))
     | `LH_C(_lh_dropWhile_LH_C_0_3, _lh_dropWhile_LH_C_1_3) -> 
       (if (_lh_dropWhile_arg1_3 _lh_dropWhile_LH_C_0_3) then
@@ -11174,7 +11206,7 @@ and dropWhile__d5 _lh_dropWhile_arg1_3 _lh_dropWhile_arg2_3 =
       else
         (let rec _lh_words_LH_C_1_2 = _lh_dropWhile_LH_C_1_3 in
           (let rec _lh_words_LH_C_0_2 = _lh_dropWhile_LH_C_0_3 in
-            (fun _lh_dummy_2_2 -> 
+            (fun _lh_dummy_2_4 -> 
               (let rec _lh_matchIdent_2_5 = ((break__d0 isSpace__d1) (`LH_C(_lh_words_LH_C_0_2, _lh_words_LH_C_1_2))) in
                 (match _lh_matchIdent_2_5 with
                   | `LH_P2(_lh_words_LH_P2_0_2, _lh_words_LH_P2_1_2) -> 
@@ -12378,10 +12410,10 @@ and solve__d0 _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
                                                                                           | `LH_C(_lh_listcomp_fun_ls_h_1_6, _lh_listcomp_fun_ls_t_1_7) -> 
                                                                                             (let rec t_1_6_2 = (_lh_listcomp_fun_2_8 _lh_listcomp_fun_ls_t_1_7) in
                                                                                               (let rec h_1_2_5 = (((solve__d0 _lh_solve_arg1_0) _lh_listcomp_fun_ls_h_1_6) _lh_solve_LH_C_0_8) in
-                                                                                                (fun _lh_dummy_5_7 -> 
+                                                                                                (fun _lh_dummy_6_3 -> 
                                                                                                   ((mappend__d3_d9 h_1_2_5) (concat__d0 t_1_6_2)))))
                                                                                           | `LH_N -> 
-                                                                                            (fun _lh_dummy_5_8 -> 
+                                                                                            (fun _lh_dummy_6_4 -> 
                                                                                               (`LH_N)))) in
                                                                                         (_lh_listcomp_fun_2_8 (((solve__d0 _lh_solve_arg1_0) _lh_solve_arg2_0) _lh_solve_LH_C_0_7))))
                                                                                     | _ -> 
@@ -12533,10 +12565,10 @@ and solve__d0 _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
                                                                                       | `LH_C(_lh_listcomp_fun_ls_h_1_7, _lh_listcomp_fun_ls_t_1_8) -> 
                                                                                         (let rec t_1_6_3 = (_lh_listcomp_fun_2_9 _lh_listcomp_fun_ls_t_1_8) in
                                                                                           (let rec h_1_2_6 = (((solve__d0 _lh_solve_arg1_0) _lh_listcomp_fun_ls_h_1_7) _lh_solve_LH_C_0_1_3) in
-                                                                                            (fun _lh_dummy_5_9 -> 
+                                                                                            (fun _lh_dummy_6_5 -> 
                                                                                               ((mappend__d3_d9 h_1_2_6) (concat__d0 t_1_6_3)))))
                                                                                       | `LH_N -> 
-                                                                                        (fun _lh_dummy_6_0 -> 
+                                                                                        (fun _lh_dummy_6_6 -> 
                                                                                           (`LH_N)))) in
                                                                                     (_lh_listcomp_fun_2_9 (((solve__d0 _lh_solve_arg1_0) _lh_solve_arg2_0) _lh_solve_LH_C_0_1_2))))
                                                                                 | _ -> 
@@ -12688,10 +12720,10 @@ and solve__d0 _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
                                                                                   | `LH_C(_lh_listcomp_fun_ls_h_1_8, _lh_listcomp_fun_ls_t_1_9) -> 
                                                                                     (let rec t_1_6_4 = (_lh_listcomp_fun_3_0 _lh_listcomp_fun_ls_t_1_9) in
                                                                                       (let rec h_1_2_7 = (((solve__d0 _lh_solve_arg1_0) _lh_listcomp_fun_ls_h_1_8) _lh_solve_LH_C_0_1_8) in
-                                                                                        (fun _lh_dummy_6_1 -> 
+                                                                                        (fun _lh_dummy_6_7 -> 
                                                                                           ((mappend__d3_d9 h_1_2_7) (concat__d0 t_1_6_4)))))
                                                                                   | `LH_N -> 
-                                                                                    (fun _lh_dummy_6_2 -> 
+                                                                                    (fun _lh_dummy_6_8 -> 
                                                                                       (`LH_N)))) in
                                                                                 (_lh_listcomp_fun_3_0 (((solve__d0 _lh_solve_arg1_0) _lh_solve_arg2_0) _lh_solve_LH_C_0_1_7))))
                                                                             | _ -> 
@@ -12843,10 +12875,10 @@ and solve__d0 _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
                                                                               | `LH_C(_lh_listcomp_fun_ls_h_1_9, _lh_listcomp_fun_ls_t_2_0) -> 
                                                                                 (let rec t_1_6_5 = (_lh_listcomp_fun_3_1 _lh_listcomp_fun_ls_t_2_0) in
                                                                                   (let rec h_1_2_8 = (((solve__d0 _lh_solve_arg1_0) _lh_listcomp_fun_ls_h_1_9) _lh_solve_LH_C_0_2_3) in
-                                                                                    (fun _lh_dummy_6_3 -> 
+                                                                                    (fun _lh_dummy_6_9 -> 
                                                                                       ((mappend__d3_d9 h_1_2_8) (concat__d0 t_1_6_5)))))
                                                                               | `LH_N -> 
-                                                                                (fun _lh_dummy_6_4 -> 
+                                                                                (fun _lh_dummy_7_0 -> 
                                                                                   (`LH_N)))) in
                                                                             (_lh_listcomp_fun_3_1 (((solve__d0 _lh_solve_arg1_0) _lh_solve_arg2_0) _lh_solve_LH_C_0_2_2))))
                                                                         | _ -> 
@@ -12998,10 +13030,10 @@ and solve__d0 _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
                                                                           | `LH_C(_lh_listcomp_fun_ls_h_2_0, _lh_listcomp_fun_ls_t_2_1) -> 
                                                                             (let rec t_1_6_6 = (_lh_listcomp_fun_3_2 _lh_listcomp_fun_ls_t_2_1) in
                                                                               (let rec h_1_2_9 = (((solve__d0 _lh_solve_arg1_0) _lh_listcomp_fun_ls_h_2_0) _lh_solve_LH_C_0_2_8) in
-                                                                                (fun _lh_dummy_6_5 -> 
+                                                                                (fun _lh_dummy_7_1 -> 
                                                                                   ((mappend__d3_d9 h_1_2_9) (concat__d0 t_1_6_6)))))
                                                                           | `LH_N -> 
-                                                                            (fun _lh_dummy_6_6 -> 
+                                                                            (fun _lh_dummy_7_2 -> 
                                                                               (`LH_N)))) in
                                                                         (_lh_listcomp_fun_3_2 (((solve__d0 _lh_solve_arg1_0) _lh_solve_arg2_0) _lh_solve_LH_C_0_2_7))))
                                                                     | _ -> 
@@ -13153,10 +13185,10 @@ and solve__d0 _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
                                                                       | `LH_C(_lh_listcomp_fun_ls_h_2_1, _lh_listcomp_fun_ls_t_2_2) -> 
                                                                         (let rec t_1_6_7 = (_lh_listcomp_fun_3_3 _lh_listcomp_fun_ls_t_2_2) in
                                                                           (let rec h_1_3_0 = (((solve__d0 _lh_solve_arg1_0) _lh_listcomp_fun_ls_h_2_1) _lh_solve_LH_C_0_3_3) in
-                                                                            (fun _lh_dummy_6_7 -> 
+                                                                            (fun _lh_dummy_7_3 -> 
                                                                               ((mappend__d3_d9 h_1_3_0) (concat__d0 t_1_6_7)))))
                                                                       | `LH_N -> 
-                                                                        (fun _lh_dummy_6_8 -> 
+                                                                        (fun _lh_dummy_7_4 -> 
                                                                           (`LH_N)))) in
                                                                     (_lh_listcomp_fun_3_3 (((solve__d0 _lh_solve_arg1_0) _lh_solve_arg2_0) _lh_solve_LH_C_0_3_2))))
                                                                 | _ -> 
@@ -13308,10 +13340,10 @@ and solve__d0 _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
                                                                   | `LH_C(_lh_listcomp_fun_ls_h_2_2, _lh_listcomp_fun_ls_t_2_3) -> 
                                                                     (let rec t_1_6_8 = (_lh_listcomp_fun_3_4 _lh_listcomp_fun_ls_t_2_3) in
                                                                       (let rec h_1_3_1 = (((solve__d0 _lh_solve_arg1_0) _lh_listcomp_fun_ls_h_2_2) _lh_solve_LH_C_0_3_8) in
-                                                                        (fun _lh_dummy_6_9 -> 
+                                                                        (fun _lh_dummy_7_5 -> 
                                                                           ((mappend__d3_d9 h_1_3_1) (concat__d0 t_1_6_8)))))
                                                                   | `LH_N -> 
-                                                                    (fun _lh_dummy_7_0 -> 
+                                                                    (fun _lh_dummy_7_6 -> 
                                                                       (`LH_N)))) in
                                                                 (_lh_listcomp_fun_3_4 (((solve__d0 _lh_solve_arg1_0) _lh_solve_arg2_0) _lh_solve_LH_C_0_3_7))))
                                                             | _ -> 
@@ -13463,10 +13495,10 @@ and solve__d0 _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
                                                               | `LH_C(_lh_listcomp_fun_ls_h_2_3, _lh_listcomp_fun_ls_t_2_4) -> 
                                                                 (let rec t_1_6_9 = (_lh_listcomp_fun_3_5 _lh_listcomp_fun_ls_t_2_4) in
                                                                   (let rec h_1_3_2 = (((solve__d0 _lh_solve_arg1_0) _lh_listcomp_fun_ls_h_2_3) _lh_solve_LH_C_0_4_3) in
-                                                                    (fun _lh_dummy_7_1 -> 
+                                                                    (fun _lh_dummy_7_7 -> 
                                                                       ((mappend__d3_d9 h_1_3_2) (concat__d0 t_1_6_9)))))
                                                               | `LH_N -> 
-                                                                (fun _lh_dummy_7_2 -> 
+                                                                (fun _lh_dummy_7_8 -> 
                                                                   (`LH_N)))) in
                                                             (_lh_listcomp_fun_3_5 (((solve__d0 _lh_solve_arg1_0) _lh_solve_arg2_0) _lh_solve_LH_C_0_4_2))))
                                                         | _ -> 
@@ -13618,10 +13650,10 @@ and solve__d0 _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
                                                           | `LH_C(_lh_listcomp_fun_ls_h_2_4, _lh_listcomp_fun_ls_t_2_5) -> 
                                                             (let rec t_1_7_0 = (_lh_listcomp_fun_3_6 _lh_listcomp_fun_ls_t_2_5) in
                                                               (let rec h_1_3_3 = (((solve__d0 _lh_solve_arg1_0) _lh_listcomp_fun_ls_h_2_4) _lh_solve_LH_C_0_4_8) in
-                                                                (fun _lh_dummy_7_3 -> 
+                                                                (fun _lh_dummy_7_9 -> 
                                                                   ((mappend__d3_d9 h_1_3_3) (concat__d0 t_1_7_0)))))
                                                           | `LH_N -> 
-                                                            (fun _lh_dummy_7_4 -> 
+                                                            (fun _lh_dummy_8_0 -> 
                                                               (`LH_N)))) in
                                                         (_lh_listcomp_fun_3_6 (((solve__d0 _lh_solve_arg1_0) _lh_solve_arg2_0) _lh_solve_LH_C_0_4_7))))
                                                     | _ -> 
@@ -13900,7 +13932,7 @@ and subst__d1 _lh_subst_arg1_3 _lh_subst_arg2_3 =
             (`LH_N))) in
         (_lh_listcomp_fun_4_7 _lh_subst_Term_1_3)) in
         (let rec _lh_showPhrase_Term_0_2 = _lh_subst_Term_0_3 in
-          (fun _lh_dummy_7_7 -> 
+          (fun _lh_dummy_9_3 -> 
             (match _lh_showPhrase_Term_1_2 with
               | `LH_N -> 
                 _lh_showPhrase_Term_0_2
@@ -13928,7 +13960,7 @@ and subst__d1 _lh_subst_arg1_3 _lh_subst_arg2_3 =
       (let rec lookup_4 = ((find__d2 _lh_subst_arg1_3) _lh_subst_Var_0_3) in
         (if (fails__d1 lookup_4) then
           (let rec _lh_showPhrase_Var_0_2 = _lh_subst_Var_0_3 in
-            (fun _lh_dummy_7_8 -> 
+            (fun _lh_dummy_9_4 -> 
               _lh_showPhrase_Var_0_2))
         else
           ((subst__d1 _lh_subst_arg1_3) (answer__d2 lookup_4))))
@@ -14175,10 +14207,10 @@ and vars__d1 _lh_vars_arg1_1 =
             | `LH_C(_lh_listcomp_fun_ls_h_1_4, _lh_listcomp_fun_ls_t_1_5) -> 
               (let rec t_1_5_8 = (_lh_listcomp_fun_2_6 _lh_listcomp_fun_ls_t_1_5) in
                 (let rec h_1_2_1 = (names_1 _lh_listcomp_fun_ls_h_1_4) in
-                  (fun _lh_dummy_5_5 -> 
+                  (fun _lh_dummy_6_1 -> 
                     ((mappend__d4_d5 h_1_2_1) (concat__d3 t_1_5_8)))))
             | `LH_N -> 
-              (fun _lh_dummy_5_6 -> 
+              (fun _lh_dummy_6_2 -> 
                 (`LH_N)))) in
           (_lh_listcomp_fun_2_6 _lh_names_Term_1_1)))
       | _ -> 

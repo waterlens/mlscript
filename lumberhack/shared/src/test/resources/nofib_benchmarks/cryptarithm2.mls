@@ -5268,8 +5268,8 @@ testCryptarithm2_nofib $ primId 1
 //│ 				LH_C _lh_listcomp_fun_ls_h⁵ _lh_listcomp_fun_ls_t⁵ => 
 //│ 					let _lh_sum_LH_C_1⁵ = _lh_listcomp_fun¹¹(_lh_listcomp_fun_ls_t⁵)
 //│ 					in let _lh_sum_LH_C_0⁵ = expand²(_lh_listcomp_fun_ls_h⁵)
-//│ 					in (fun _lh_dummy²³ -> (_lh_sum_LH_C_0⁵ + sum_₁_₀(_lh_sum_LH_C_1⁵)))
-//│ 				| LH_N  => (fun _lh_dummy²⁴ -> 0)})
+//│ 					in (fun _lh_dummy²⁵ -> (_lh_sum_LH_C_0⁵ + sum_₁_₀(_lh_sum_LH_C_1⁵)))
+//│ 				| LH_N  => (fun _lh_dummy²⁶ -> 0)})
 //│ 			in _lh_listcomp_fun¹¹(_lh_puzzle_arg1²))
 //│ 		in let botVal² = expand²(_lh_puzzle_arg2²)
 //│ 		in if (length_₀_₀(nub_₀_₀(mappend_₃_₀(concat_₀_₀(_lh_puzzle_arg1²), _lh_puzzle_arg2²))) > 10) then error⁰ else if (topVal² /= botVal²) then error⁰ else unlines_₀_₀(
@@ -5349,16 +5349,16 @@ testCryptarithm2_nofib $ primId 1
 //│ 				LH_C h⁷⁶ t⁷⁶ => foldl_₀_₀(f⁷¹, f⁷¹(i¹³, h⁷⁶), t⁷⁶)
 //│ 				| LH_N  => i¹³}
 //│ 		def fromJust_₀_₀(_lh_fromJust_arg1²) = 
-//│ 			_lh_fromJust_arg1²
+//│ 			_lh_fromJust_arg1²(99)
 //│ 		def length_₀_₀(ls⁶⁸) = 
 //│ 			ls⁶⁸(99)
 //│ 		def lookup_₀_₀(_lh_lookup_arg1⁶, _lh_lookup_arg2⁶) = 
 //│ 			case _lh_lookup_arg2⁶ of {
-//│ 				LH_N  => error⁰
+//│ 				LH_N  => (fun _lh_dummy⁸ -> error⁰)
 //│ 				| LH_C _lh_lookup_LH_C_0⁴ _lh_lookup_LH_C_1⁴ => case _lh_lookup_LH_C_0⁴ of {
 //│ 					LH_P2 _lh_lookup_LH_P2_0⁴ _lh_lookup_LH_P2_1⁴ => if polyEq⁰(_lh_lookup_arg1⁶, _lh_lookup_LH_P2_0⁴) then 
 //│ 						let _lh_fromJust_Just_0² = _lh_lookup_LH_P2_1⁴
-//│ 						in _lh_fromJust_Just_0² else lookup_₀_₀(_lh_lookup_arg1⁶, _lh_lookup_LH_C_1⁴)
+//│ 						in (fun _lh_dummy⁹ -> _lh_fromJust_Just_0²) else lookup_₀_₀(_lh_lookup_arg1⁶, _lh_lookup_LH_C_1⁴)
 //│ 					| _  => error⁰}
 //│ 				| _  => error⁰}
 //│ 		def map_₂_₀(f⁷⁵, ls⁷⁸) = 
@@ -5373,10 +5373,10 @@ testCryptarithm2_nofib $ primId 1
 //│ 			xs⁶⁹(ys⁸⁵)
 //│ 		def nub_₀_₀(_lh_nub_arg1²) = 
 //│ 			case _lh_nub_arg1² of {
-//│ 				LH_N  => (fun _lh_dummy²⁹ -> 0)
+//│ 				LH_N  => (fun _lh_dummy³¹ -> 0)
 //│ 				| LH_C _lh_nub_LH_C_0¹ _lh_nub_LH_C_1¹ => 
 //│ 					let t¹⁹⁶ = nub_₀_₀(filter_₀_₀((fun y² -> not⁰(polyEq⁰(_lh_nub_LH_C_0¹, y²))), _lh_nub_LH_C_1¹))
-//│ 					in (fun _lh_dummy³⁰ -> (1 + length_₀_₀(t¹⁹⁶)))
+//│ 					in (fun _lh_dummy³² -> (1 + length_₀_₀(t¹⁹⁶)))
 //│ 				| _  => error⁰}
 //│ 			where
 //│ 			def filter_₀_₀(f⁵³, ls⁶⁵) = 
@@ -5447,8 +5447,8 @@ testCryptarithm2_nofib $ primId 1
 //│ 						LH_C h¹³⁹ t¹³⁹ => 
 //│ 							let t²¹⁸ = map_₄_₀(f¹¹⁶, t¹³⁹)
 //│ 							in let h²¹⁷ = f¹¹⁶(h¹³⁹)
-//│ 							in (fun _lh_dummy⁴² -> mappend_₇_₀(h²¹⁷, concat_₃_₀(t²¹⁸)))
-//│ 						| LH_N  => (fun _lh_dummy⁴⁴ -> (fun f¹¹⁷ -> (fun _lh_dummy⁴³ -> [LH_N])))}
+//│ 							in (fun _lh_dummy⁴⁴ -> mappend_₇_₀(h²¹⁷, concat_₃_₀(t²¹⁸)))
+//│ 						| LH_N  => (fun _lh_dummy⁴⁶ -> (fun f¹¹⁷ -> (fun _lh_dummy⁴⁵ -> [LH_N])))}
 //│ 				def runStateT_₃_₀(_lh_runStateT_arg1⁸²) = 
 //│ 					_lh_runStateT_arg1⁸²
 //│ 				def runStateT_₄_₀(_lh_runStateT_arg1⁸¹) = 
@@ -5503,7 +5503,7 @@ testCryptarithm2_nofib $ primId 1
 //│ 				case _lh_guard_arg1² of {
 //│ 					True  => 
 //│ 						let _lh_runStateT_StateT_0⁷⁷ = (fun s⁸⁷ -> 
-//│ 							let t¹⁸⁰ = (fun f⁸⁸ -> (fun _lh_dummy²¹ -> (fun ys⁹⁰ -> ys⁹⁰)))
+//│ 							let t¹⁸⁰ = (fun f⁸⁸ -> (fun _lh_dummy²³ -> (fun ys⁹⁰ -> ys⁹⁰)))
 //│ 							in let h¹⁸⁰ = 	
 //│ 								let _lh_bind_LH_P2_1³⁶ = s⁸⁷
 //│ 								in let _lh_bind_LH_P2_0³⁶ = [Unit]
@@ -5511,17 +5511,17 @@ testCryptarithm2_nofib $ primId 1
 //│ 							in (fun f⁸⁷ -> 
 //│ 								let t¹⁸¹ = map_₆_₀(f⁸⁷, t¹⁸⁰)
 //│ 								in let h¹⁸¹ = f⁸⁷(h¹⁸⁰)
-//│ 								in (fun _lh_dummy²⁰ -> mappend_₉_₀(h¹⁸¹, concat_₅_₀(t¹⁸¹)))))
+//│ 								in (fun _lh_dummy²² -> mappend_₉_₀(h¹⁸¹, concat_₅_₀(t¹⁸¹)))))
 //│ 						in _lh_runStateT_StateT_0⁷⁷
 //│ 					| False  => 
-//│ 						let _lh_runStateT_StateT_0⁷⁸ = (fun s⁸⁸ -> (fun f⁸⁹ -> (fun _lh_dummy²² -> (fun ys⁹¹ -> ys⁹¹))))
+//│ 						let _lh_runStateT_StateT_0⁷⁸ = (fun s⁸⁸ -> (fun f⁸⁹ -> (fun _lh_dummy²⁴ -> (fun ys⁹¹ -> ys⁹¹))))
 //│ 						in _lh_runStateT_StateT_0⁷⁸
 //│ 					| _  => error⁰}
 //│ 			def mapM_₀_₀(_lh_mapM_arg1², _lh_mapM_arg2²) = 
 //│ 				foldr_₀_₀((fun a¹³ -> (fun r² -> bind_₄_₀(_lh_mapM_arg1²(a¹³), (fun x¹⁰ -> bind_₅_₀(r², (fun xs⁶⁷ -> return_₀_₀(
 //│ 					let _lh_sum_LH_C_1⁴ = xs⁶⁷
 //│ 					in let _lh_sum_LH_C_0⁴ = x¹⁰
-//│ 					in (fun _lh_dummy¹³ -> (_lh_sum_LH_C_0⁴ + sum_₀_₀(_lh_sum_LH_C_1⁴)))))))))), return_₁_₀((fun _lh_dummy¹⁴ -> 0)), _lh_mapM_arg2²)
+//│ 					in (fun _lh_dummy¹⁵ -> (_lh_sum_LH_C_0⁴ + sum_₀_₀(_lh_sum_LH_C_1⁴)))))))))), return_₁_₀((fun _lh_dummy¹⁶ -> 0)), _lh_mapM_arg2²)
 //│ 				where
 //│ 				def bind_₄_₀(_lh_bind_arg1³⁰, _lh_bind_arg2³⁵) = 
 //│ 					[StateT (fun s⁷⁴ -> concat_₆_₀(map_₇_₀((fun as³⁰ -> 
@@ -5557,8 +5557,8 @@ testCryptarithm2_nofib $ primId 1
 //│ 							LH_C h¹⁴⁰ t¹⁴⁰ => 
 //│ 								let t²⁰⁴ = map_₈_₀(f¹⁰², t¹⁴⁰)
 //│ 								in let h²⁰³ = f¹⁰²(h¹⁴⁰)
-//│ 								in (fun _lh_dummy³² -> mappend_₁₁_₀(h²⁰³, concat_₇_₀(t²⁰⁴)))
-//│ 							| LH_N  => (fun _lh_dummy³³ -> (fun ys¹¹³ -> ys¹¹³))}
+//│ 								in (fun _lh_dummy³⁴ -> mappend_₁₁_₀(h²⁰³, concat_₇_₀(t²⁰⁴)))
+//│ 							| LH_N  => (fun _lh_dummy³⁵ -> (fun ys¹¹³ -> ys¹¹³))}
 //│ 					def runStateT_₁₁_₀(_lh_runStateT_arg1⁷³) = 
 //│ 						_lh_runStateT_arg1⁷³
 //│ 					def runStateT_₁₂_₀(_lh_runStateT_arg1⁵⁹) = 
@@ -5646,7 +5646,7 @@ testCryptarithm2_nofib $ primId 1
 //│ 						| _  => error⁰}
 //│ 				def get_₀_₀ = 
 //│ 					let _lh_runStateT_StateT_0⁸² = (fun s⁹⁴ -> 
-//│ 						let t²⁰⁶ = (fun f¹⁰⁵ -> (fun _lh_dummy³⁶ -> (fun f¹⁰⁶ -> (fun _lh_dummy³⁵ -> [LH_N]))))
+//│ 						let t²⁰⁶ = (fun f¹⁰⁵ -> (fun _lh_dummy³⁸ -> (fun f¹⁰⁶ -> (fun _lh_dummy³⁷ -> [LH_N]))))
 //│ 						in let h²⁰⁵ = 	
 //│ 							let _lh_bind_LH_P2_1³⁹ = s⁹⁴
 //│ 							in let _lh_bind_LH_P2_0³⁹ = s⁹⁴
@@ -5654,7 +5654,7 @@ testCryptarithm2_nofib $ primId 1
 //│ 						in (fun f¹⁰⁴ -> 
 //│ 							let t²⁰⁷ = map_₉_₀(f¹⁰⁴, t²⁰⁶)
 //│ 							in let h²⁰⁶ = f¹⁰⁴(h²⁰⁵)
-//│ 							in (fun _lh_dummy³⁴ -> mappend_₁₂_₀(h²⁰⁶, concat_₈_₀(t²⁰⁷)))))
+//│ 							in (fun _lh_dummy³⁶ -> mappend_₁₂_₀(h²⁰⁶, concat_₈_₀(t²⁰⁷)))))
 //│ 					in _lh_runStateT_StateT_0⁸²
 //│ 				def lookup_₁_₀(_lh_lookup_arg1⁷, _lh_lookup_arg2⁷) = 
 //│ 					case _lh_lookup_arg2⁷ of {
@@ -5682,8 +5682,8 @@ testCryptarithm2_nofib $ primId 1
 //│ 									in (fun f⁷⁷ -> 
 //│ 										let t¹⁷⁶ = map_₁₃_₀(f⁷⁷, t¹⁷⁵)
 //│ 										in let h¹⁷⁶ = f⁷⁷(h¹⁷⁵)
-//│ 										in (fun _lh_dummy¹⁵ -> mappend_₁₆_₀(h¹⁷⁶, concat_₁₂_₀(t¹⁷⁶))))
-//│ 								| LH_N  => (fun f⁸⁰ -> (fun _lh_dummy¹⁷ -> (fun f⁸¹ -> (fun _lh_dummy¹⁶ -> (fun ys⁸⁷ -> ys⁸⁷)))))})
+//│ 										in (fun _lh_dummy¹⁷ -> mappend_₁₆_₀(h¹⁷⁶, concat_₁₂_₀(t¹⁷⁶))))
+//│ 								| LH_N  => (fun f⁸⁰ -> (fun _lh_dummy¹⁹ -> (fun f⁸¹ -> (fun _lh_dummy¹⁸ -> (fun ys⁸⁷ -> ys⁸⁷)))))})
 //│ 							in _lh_listcomp_fun¹⁰(xs⁷¹)), (fun iis⁴ -> 
 //│ 						let _lh_matchIdent⁶¹ = iis⁴
 //│ 						in _lh_matchIdent⁶¹(_lh_permute_arg1⁴, st¹⁰)))))
@@ -5772,7 +5772,7 @@ testCryptarithm2_nofib $ primId 1
 //│ 								in (fun f¹¹⁵ -> 
 //│ 									let t²¹⁷ = map_₁₂_₀(f¹¹⁵, t²¹⁶)
 //│ 									in let h²¹⁶ = f¹¹⁵(h²¹⁵)
-//│ 									in (fun _lh_dummy⁴¹ -> mappend_₁₅_₀(h²¹⁶, concat_₁₁_₀(t²¹⁷)))))), _lh_lift_arg1⁵)))
+//│ 									in (fun _lh_dummy⁴³ -> mappend_₁₅_₀(h²¹⁶, concat_₁₁_₀(t²¹⁷)))))), _lh_lift_arg1⁵)))
 //│ 						in _lh_runStateT_StateT_0⁸⁶
 //│ 						where
 //│ 						def concat_₁₂_₀(lss⁴⁹) = 
@@ -5794,7 +5794,7 @@ testCryptarithm2_nofib $ primId 1
 //│ 							ls⁸⁰(f⁷⁶, i¹⁴)
 //│ 					def put_₀_₀(_lh_put_arg1⁴) = 
 //│ 						let _lh_runStateT_StateT_0⁶⁸ = (fun s⁷⁷ -> 
-//│ 							let t¹⁷¹ = (fun f⁶⁸ -> (fun _lh_dummy¹⁰ -> (fun ys⁸⁰ -> ys⁸⁰)))
+//│ 							let t¹⁷¹ = (fun f⁶⁸ -> (fun _lh_dummy¹² -> (fun ys⁸⁰ -> ys⁸⁰)))
 //│ 							in let h¹⁷¹ = 	
 //│ 								let _lh_bind_LH_P2_1³³ = _lh_put_arg1⁴
 //│ 								in let _lh_bind_LH_P2_0³³ = [Unit]
@@ -5802,7 +5802,7 @@ testCryptarithm2_nofib $ primId 1
 //│ 							in (fun f⁶⁷ -> 
 //│ 								let t¹⁷² = map_₁₀_₀(f⁶⁷, t¹⁷¹)
 //│ 								in let h¹⁷² = f⁶⁷(h¹⁷¹)
-//│ 								in (fun _lh_dummy⁹ -> mappend_₁₃_₀(h¹⁷², concat_₉_₀(t¹⁷²)))))
+//│ 								in (fun _lh_dummy¹¹ -> mappend_₁₃_₀(h¹⁷², concat_₉_₀(t¹⁷²)))))
 //│ 						in _lh_runStateT_StateT_0⁶⁸
 //│ 					def return_₅_₀(_lh_return_arg1²⁴) = 
 //│ 						let _lh_runStateT_StateT_0⁸⁰ = (fun s⁹¹ -> 
@@ -5826,7 +5826,7 @@ testCryptarithm2_nofib $ primId 1
 //│ 											in (fun f¹⁰¹ -> 
 //│ 												let t²⁰³ = map_₇_₀(f¹⁰¹, t²⁰²)
 //│ 												in let h²⁰² = f¹⁰¹(h²⁰¹)
-//│ 												in (fun _lh_dummy³¹ -> mappend_₁₀_₀(h²⁰², concat_₆_₀(t²⁰³)))))))))
+//│ 												in (fun _lh_dummy³³ -> mappend_₁₀_₀(h²⁰², concat_₆_₀(t²⁰³)))))))))
 //│ 						in _lh_runStateT_StateT_0⁸⁰
 //│ 				def return_₆_₀(_lh_return_arg1²⁶) = 
 //│ 					let _lh_runStateT_StateT_0⁸⁵ = (fun s⁹⁷ -> 
@@ -5841,7 +5841,7 @@ testCryptarithm2_nofib $ primId 1
 //│ 							in (fun f¹¹² -> 
 //│ 								let t²¹² = map_₇_₀(f¹¹², t²¹¹)
 //│ 								in let h²¹¹ = f¹¹²(h²¹⁰)
-//│ 								in (fun _lh_dummy⁴⁰ -> mappend_₁₀_₀(h²¹¹, concat_₆_₀(t²¹²))))))
+//│ 								in (fun _lh_dummy⁴² -> mappend_₁₀_₀(h²¹¹, concat_₆_₀(t²¹²))))))
 //│ 					in _lh_runStateT_StateT_0⁸⁵
 //│ 			def select_₁_₀(_lh_select_arg1⁵) = 
 //│ 				bind_₁₀_₀(get_₂_₀, (fun st⁹ -> 
@@ -5871,7 +5871,7 @@ testCryptarithm2_nofib $ primId 1
 //│ 						| _  => error⁰}
 //│ 				def get_₂_₀ = 
 //│ 					let _lh_runStateT_StateT_0⁸³ = (fun s⁹⁵ -> 
-//│ 						let t²⁰⁸ = (fun f¹⁰⁹ -> (fun _lh_dummy³⁹ -> (fun f¹¹⁰ -> (fun _lh_dummy³⁸ -> (fun ys¹¹⁶ -> ys¹¹⁶)))))
+//│ 						let t²⁰⁸ = (fun f¹⁰⁹ -> (fun _lh_dummy⁴¹ -> (fun f¹¹⁰ -> (fun _lh_dummy⁴⁰ -> (fun ys¹¹⁶ -> ys¹¹⁶)))))
 //│ 						in let h²⁰⁷ = 	
 //│ 							let _lh_bind_LH_P2_1⁴⁰ = s⁹⁵
 //│ 							in let _lh_bind_LH_P2_0⁴⁰ = s⁹⁵
@@ -5879,7 +5879,7 @@ testCryptarithm2_nofib $ primId 1
 //│ 						in (fun f¹⁰⁸ -> 
 //│ 							let t²⁰⁹ = map_₁₄_₀(f¹⁰⁸, t²⁰⁸)
 //│ 							in let h²⁰⁸ = f¹⁰⁸(h²⁰⁷)
-//│ 							in (fun _lh_dummy³⁷ -> mappend_₁₇_₀(h²⁰⁸, concat_₁₃_₀(t²⁰⁹)))))
+//│ 							in (fun _lh_dummy³⁹ -> mappend_₁₇_₀(h²⁰⁸, concat_₁₃_₀(t²⁰⁹)))))
 //│ 					in _lh_runStateT_StateT_0⁸³
 //│ 				def lookup_₂_₀(_lh_lookup_arg1⁸, _lh_lookup_arg2⁸) = 
 //│ 					case _lh_lookup_arg2⁸ of {
@@ -5907,8 +5907,8 @@ testCryptarithm2_nofib $ primId 1
 //│ 									in (fun f⁹⁵ -> 
 //│ 										let t¹⁹⁴ = map_₁₈_₀(f⁹⁵, t¹⁹³)
 //│ 										in let h¹⁹⁴ = f⁹⁵(h¹⁹³)
-//│ 										in (fun _lh_dummy²⁶ -> mappend_₂₁_₀(h¹⁹⁴, concat_₁₇_₀(t¹⁹⁴))))
-//│ 								| LH_N  => (fun f⁹⁸ -> (fun _lh_dummy²⁸ -> (fun f⁹⁹ -> (fun _lh_dummy²⁷ -> (fun ys¹⁰⁴ -> ys¹⁰⁴)))))})
+//│ 										in (fun _lh_dummy²⁸ -> mappend_₂₁_₀(h¹⁹⁴, concat_₁₇_₀(t¹⁹⁴))))
+//│ 								| LH_N  => (fun f⁹⁸ -> (fun _lh_dummy³⁰ -> (fun f⁹⁹ -> (fun _lh_dummy²⁹ -> (fun ys¹⁰⁴ -> ys¹⁰⁴)))))})
 //│ 							in _lh_listcomp_fun¹³(xs⁷⁵)), (fun iis⁵ -> 
 //│ 						let _lh_matchIdent⁶⁶ = iis⁵
 //│ 						in _lh_matchIdent⁶⁶(_lh_permute_arg1⁶, st¹²)))))
@@ -5974,7 +5974,7 @@ testCryptarithm2_nofib $ primId 1
 //│ 							| _  => error⁰}
 //│ 					def get_₃_₀ = 
 //│ 						let _lh_runStateT_StateT_0⁷⁵ = (fun s⁸⁵ -> 
-//│ 							let t¹⁷⁸ = (fun f⁸⁴ -> (fun _lh_dummy¹⁹ -> (fun ys⁸⁸ -> ys⁸⁸)))
+//│ 							let t¹⁷⁸ = (fun f⁸⁴ -> (fun _lh_dummy²¹ -> (fun ys⁸⁸ -> ys⁸⁸)))
 //│ 							in let h¹⁷⁸ = 	
 //│ 								let _lh_bind_LH_P2_1³⁵ = s⁸⁵
 //│ 								in let _lh_bind_LH_P2_0³⁵ = s⁸⁵
@@ -5982,7 +5982,7 @@ testCryptarithm2_nofib $ primId 1
 //│ 							in (fun f⁸³ -> 
 //│ 								let t¹⁷⁹ = map_₁₆_₀(f⁸³, t¹⁷⁸)
 //│ 								in let h¹⁷⁹ = f⁸³(h¹⁷⁸)
-//│ 								in (fun _lh_dummy¹⁸ -> mappend_₁₉_₀(h¹⁷⁹, concat_₁₅_₀(t¹⁷⁹)))))
+//│ 								in (fun _lh_dummy²⁰ -> mappend_₁₉_₀(h¹⁷⁹, concat_₁₅_₀(t¹⁷⁹)))))
 //│ 						in _lh_runStateT_StateT_0⁷⁵
 //│ 					def lift_₁_₀(_lh_lift_arg1⁴) = 
 //│ 						let _lh_runStateT_StateT_0⁶⁵ = (fun s⁷³ -> concat_₁₇_₀(map_₁₈_₀((fun x⁸ -> 
@@ -5997,7 +5997,7 @@ testCryptarithm2_nofib $ primId 1
 //│ 								in (fun f⁶⁶ -> 
 //│ 									let t¹⁷⁰ = map_₁₇_₀(f⁶⁶, t¹⁶⁹)
 //│ 									in let h¹⁷⁰ = f⁶⁶(h¹⁶⁹)
-//│ 									in (fun _lh_dummy⁸ -> mappend_₂₀_₀(h¹⁷⁰, concat_₁₆_₀(t¹⁷⁰)))))), _lh_lift_arg1⁴)))
+//│ 									in (fun _lh_dummy¹⁰ -> mappend_₂₀_₀(h¹⁷⁰, concat_₁₆_₀(t¹⁷⁰)))))), _lh_lift_arg1⁴)))
 //│ 						in _lh_runStateT_StateT_0⁶⁵
 //│ 						where
 //│ 						def concat_₁₇_₀(lss⁴⁷) = 
@@ -6019,7 +6019,7 @@ testCryptarithm2_nofib $ primId 1
 //│ 							ls⁹⁵(f¹¹⁸, i²¹)
 //│ 					def put_₁_₀(_lh_put_arg1⁵) = 
 //│ 						let _lh_runStateT_StateT_0⁷⁰ = (fun s⁷⁹ -> 
-//│ 							let t¹⁷³ = (fun f⁷⁰ -> (fun _lh_dummy¹² -> (fun ys⁸² -> ys⁸²)))
+//│ 							let t¹⁷³ = (fun f⁷⁰ -> (fun _lh_dummy¹⁴ -> (fun ys⁸² -> ys⁸²)))
 //│ 							in let h¹⁷³ = 	
 //│ 								let _lh_bind_LH_P2_1³⁴ = _lh_put_arg1⁵
 //│ 								in let _lh_bind_LH_P2_0³⁴ = [Unit]
@@ -6027,7 +6027,7 @@ testCryptarithm2_nofib $ primId 1
 //│ 							in (fun f⁶⁹ -> 
 //│ 								let t¹⁷⁴ = map_₁₅_₀(f⁶⁹, t¹⁷³)
 //│ 								in let h¹⁷⁴ = f⁶⁹(h¹⁷³)
-//│ 								in (fun _lh_dummy¹¹ -> mappend_₁₈_₀(h¹⁷⁴, concat_₁₄_₀(t¹⁷⁴)))))
+//│ 								in (fun _lh_dummy¹³ -> mappend_₁₈_₀(h¹⁷⁴, concat_₁₄_₀(t¹⁷⁴)))))
 //│ 						in _lh_runStateT_StateT_0⁷⁰
 //│ 					def return_₇_₀(_lh_return_arg1¹⁸) = 
 //│ 						let _lh_runStateT_StateT_0⁵⁸ = (fun s⁶⁶ -> 
@@ -6066,7 +6066,7 @@ testCryptarithm2_nofib $ primId 1
 //│ 							in (fun f⁹⁴ -> 
 //│ 								let t¹⁹² = map_₅_₀(f⁹⁴, t¹⁹¹)
 //│ 								in let h¹⁹² = f⁹⁴(h¹⁹¹)
-//│ 								in (fun _lh_dummy²⁵ -> mappend_₈_₀(h¹⁹², concat_₄_₀(t¹⁹²))))))
+//│ 								in (fun _lh_dummy²⁷ -> mappend_₈_₀(h¹⁹², concat_₄_₀(t¹⁹²))))))
 //│ 					in _lh_runStateT_StateT_0⁷⁹
 //│ 			def sum_₀_₀(_lh_sum_arg1⁵) = 
 //│ 				_lh_sum_arg1⁵(99)

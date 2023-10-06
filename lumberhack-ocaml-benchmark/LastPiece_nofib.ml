@@ -1796,7 +1796,7 @@ let rec foldr__d0 f_1 i_1 ls_1 =
 let rec foldr__d1 f_0 i_0 ls_0 =
   ((ls_0 f_0) i_0);;
 let rec fromJust__d0 _lh_fromJust_arg1_0 =
-  _lh_fromJust_arg1_0;;
+  (_lh_fromJust_arg1_0 99);;
 let rec indent__d0 _lh_indent_arg1_0 =
   (if (_lh_indent_arg1_0 <= 0) then
     (`LH_N)
@@ -11429,7 +11429,8 @@ and testLastPiece_nofib__d0 _lh_testLastPiece_nofib_arg1_0 =
             (failwith "error")))))
   in (let rec initialBoard_0 = (fromJust__d0 ((((fit__d0 emptyBoard__d0) (`LH_P2(1, 1))) 'a') (let rec _lh_fit_LH_C_1_1_2_9 = (let rec _lh_fit_LH_C_1_1_3_0 = (fun _lh_fit_arg1_1_6_5 _lh_fit_arg2_1_6_5 _lh_fit_arg3_1_6_5 -> 
     (let rec _lh_fromJust_Just_0_0 = (((extend__d0 _lh_fit_arg1_1_6_5) _lh_fit_arg2_1_6_5) _lh_fit_arg3_1_6_5) in
-      _lh_fromJust_Just_0_0)) in
+      (fun _lh_dummy_0 -> 
+        _lh_fromJust_Just_0_0))) in
     (let rec _lh_fit_LH_C_0_1_2_9 = (let rec _lh_addIntInt_LH_P2_1_2_6_0 = 1 in
       (let rec _lh_addIntInt_LH_P2_0_2_6_0 = 1 in
         (fun _lh_addIntInt_LH_P2_0_2_6_1 _lh_addIntInt_LH_P2_1_2_6_1 -> 
@@ -11471,7 +11472,8 @@ and testLastPiece_nofib__d0 _lh_testLastPiece_nofib_arg1_0 =
             | `Just(_lh_fit_Just_0_1_2_9) -> 
               ((((fit__d0 _lh_fit_Just_0_1_2_9) _lh_fit_arg2_1_6_6) _lh_fit_arg3_1_6_6) _lh_fit_LH_C_1_1_3_0)
             | `Nothing -> 
-              (failwith "error")
+              (fun _lh_dummy_1 -> 
+                (failwith "error"))
             | _ -> 
               (failwith "error")))))) in
     (let rec _lh_fit_LH_C_0_1_3_0 = (let rec _lh_addIntInt_LH_P2_1_2_6_2 = 0 in
@@ -11515,7 +11517,8 @@ and testLastPiece_nofib__d0 _lh_testLastPiece_nofib_arg1_0 =
             | `Just(_lh_fit_Just_0_1_3_0) -> 
               ((((fit__d0 _lh_fit_Just_0_1_3_0) _lh_fit_arg2_1_6_7) _lh_fit_arg3_1_6_7) _lh_fit_LH_C_1_1_2_9)
             | `Nothing -> 
-              (failwith "error")
+              (fun _lh_dummy_2 -> 
+                (failwith "error"))
             | _ -> 
               (failwith "error")))))))) in
     (let rec solutions_0 = ((((search__d0 (`LH_P2(1, 2))) (`Female)) initialBoard_0) initialPieces__d0) in
@@ -11599,7 +11602,7 @@ let rec foldr__d0 f_1 i_1 ls_1 =
 let rec foldr__d1 f_0 i_0 ls_0 =
   ((ls_0 f_0) i_0);;
 let rec fromJust__d0 _lh_fromJust_arg1_0 =
-  _lh_fromJust_arg1_0;;
+  (_lh_fromJust_arg1_0 99);;
 let rec indent__d0 _lh_indent_arg1_0 =
   (if (_lh_indent_arg1_0 <= 0) then
     (`LH_N)
@@ -21211,7 +21214,8 @@ and testLastPiece_nofib__d0 _lh_testLastPiece_nofib_arg1_0 =
             (failwith "error")))))
   in (let rec initialBoard_0 = (fromJust__d0 ((((fit__d0 emptyBoard__d0) (`LH_P2(1, 1))) 'a') (let rec _lh_fit_LH_C_1_1_2_9 = (let rec _lh_fit_LH_C_1_1_3_0 = (fun _lh_fit_arg1_1_6_5 _lh_fit_arg2_1_6_5 _lh_fit_arg3_1_6_5 -> 
     (let rec _lh_fromJust_Just_0_0 = (((extend__d0 _lh_fit_arg1_1_6_5) _lh_fit_arg2_1_6_5) _lh_fit_arg3_1_6_5) in
-      _lh_fromJust_Just_0_0)) in
+      (fun _lh_dummy_0 -> 
+        _lh_fromJust_Just_0_0))) in
     (let rec _lh_fit_LH_C_0_1_2_9 = (let rec _lh_addIntInt_LH_P2_1_2_6_0 = 1 in
       (let rec _lh_addIntInt_LH_P2_0_2_6_0 = 1 in
         (fun _lh_addIntInt_LH_P2_0_2_6_1 _lh_addIntInt_LH_P2_1_2_6_1 -> 
@@ -21253,7 +21257,8 @@ and testLastPiece_nofib__d0 _lh_testLastPiece_nofib_arg1_0 =
             | `Just(_lh_fit_Just_0_1_2_9) -> 
               ((((fit__d0 _lh_fit_Just_0_1_2_9) _lh_fit_arg2_1_6_6) _lh_fit_arg3_1_6_6) _lh_fit_LH_C_1_1_3_0)
             | `Nothing -> 
-              (failwith "error")
+              (fun _lh_dummy_1 -> 
+                (failwith "error"))
             | _ -> 
               (failwith "error")))))) in
     (let rec _lh_fit_LH_C_0_1_3_0 = (let rec _lh_addIntInt_LH_P2_1_2_6_2 = 0 in
@@ -21297,7 +21302,8 @@ and testLastPiece_nofib__d0 _lh_testLastPiece_nofib_arg1_0 =
             | `Just(_lh_fit_Just_0_1_3_0) -> 
               ((((fit__d0 _lh_fit_Just_0_1_3_0) _lh_fit_arg2_1_6_7) _lh_fit_arg3_1_6_7) _lh_fit_LH_C_1_1_2_9)
             | `Nothing -> 
-              (failwith "error")
+              (fun _lh_dummy_2 -> 
+                (failwith "error"))
             | _ -> 
               (failwith "error")))))))) in
     (let rec solutions_0 = ((((search__d0 (`LH_P2(1, 2))) (`Female)) initialBoard_0) initialPieces__d0) in

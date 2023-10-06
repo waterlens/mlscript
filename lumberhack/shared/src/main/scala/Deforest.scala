@@ -588,7 +588,7 @@ class Deforest(var debug: Boolean) {
           handle(r.addPath(prod.path) -> NoCons()(using noExprId).toStrat(cons.path))
           handle(NoProd()(using noExprId).toStrat(cons.path.neg) -> l.addPath(prod.path.neg))
         case (np@NoProd(), dtor@Destruct(ds)) =>
-          // isNotDeadBranch.update(dtor, (0 until ds.length).toSet)
+          isNotDeadBranch.update(dtor, (0 until ds.length).toSet)
           // isNotDead += np
           given Int = numOfTypeCtor + 1
           if this.isRealCtorOrDtor(dtor.euid) then {
@@ -640,12 +640,21 @@ class Deforest(var debug: Boolean) {
             given Int = numOfTypeCtor + 1
             (ds.indexWhere {case Destructor(ds_ctor, argCons) => ds_ctor == ctor || ds_ctor.name == "_"}) match {
               case -1 =>
+                isNotDeadBranch.updateWith(dtors) {
+                  case None => Some(Set(-1))
+                  case Some(idxs) => Some(idxs + (-1))
+                }
+                // if (this.isRealCtorOrDtor(prod.s.euid) && this.isRealCtorOrDtor(cons.s.euid)) then {
+                //   fusionMatch.updateWith(prod.s.euid)(_.map(_ + cons.s.euid).orElse(Some(Set(cons.s.euid))))
+                //   dtorSources += cons.s.asInstanceOf[Destruct] -> (dtorSources(cons.s.asInstanceOf[Destruct]) + prod.s)
+                //   ctorDestinations += prod.s.asInstanceOf[MkCtor] -> (ctorDestinations(prod.s.asInstanceOf[MkCtor]) + cons.s)
+                // }
                 lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
               case armIndex => {
-                // isNotDeadBranch.updateWith(dtors) {
-                  // case None => Some(Set(armIndex))
-                  // case Some(idxs) => Some(idxs + armIndex)
-                // }
+                isNotDeadBranch.updateWith(dtors) {
+                  case None => Some(Set(armIndex))
+                  case Some(idxs) => Some(idxs + armIndex)
+                }
                 val Destructor(ds_ctor, argCons) = ds(armIndex)  
                 if ds_ctor == ctor then {
                   assert(args.size == argCons.size)

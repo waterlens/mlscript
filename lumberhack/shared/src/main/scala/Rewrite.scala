@@ -329,7 +329,8 @@ trait ExprRewrite { this: Expr =>
     // goesIntoDeadCodeCons: Set[ExprId]
   ): Expr = this.deforest.Trace.trace(s"fusion handling ${this.pp(using InitPpConfig)}"){
     def inexpensiveMatchingArmBody(e: Expr): Boolean = e match {
-      case _: (Function | Const | Ref) => true
+      case _: (Function | Const) => true
+      case Ref(Ident(_, Var(v), _)) => v != "error"
       case Ctor(_, args) => args.forall(a => inexpensiveMatchingArmBody(a))
       case Sequence(a, b) => inexpensiveMatchingArmBody(a) && inexpensiveMatchingArmBody(b)
       case IfThenElse(b, t, f) => inexpensiveMatchingArmBody(b) && inexpensiveMatchingArmBody(t) && inexpensiveMatchingArmBody(f)
@@ -371,7 +372,12 @@ trait ExprRewrite { this: Expr =>
         if fusionMatch.valuesIterator.contains(this.uid) then {
           val extrudedIds = scopeExtrusionInfo(this.uid)
           // make a call the triggerd the computation moved due to deforestation to keep termination behavior
-          val noNeedThunking = arms.forall { case (_, _, body) => inexpensiveMatchingArmBody(body) }
+          val noNeedThunking = {
+            val nonDeadBranches = newd.isNotDeadBranch(newd.dtorExprToType(this.uid))
+            arms.zipWithIndex.filter(x => nonDeadBranches(x._2)).forall {
+              case ((_, _, body), _) => inexpensiveMatchingArmBody(body)
+            } && !nonDeadBranches(-1)
+          }
           if extrudedIds.isEmpty && (!noNeedThunking) then
             Call(scrut.rewriteFusion, Const(IntLit(99)))
           else
@@ -414,7 +420,12 @@ trait ExprRewrite { this: Expr =>
           val res = extrudedIds.foldRight(innerAfterExtrusionHandling){ (newId, acc) =>
             Function(newId._2, acc)
           }
-          val noNeedThunking = newd.exprs(matchId).asInstanceOf[Match].arms.forall { case (_, _, body) => inexpensiveMatchingArmBody(body) }
+          val noNeedThunking = {
+            val nonDeadBranches = newd.isNotDeadBranch(newd.dtorExprToType(matchId))
+            newd.exprs(matchId).asInstanceOf[Match].arms.zipWithIndex.filter(x => nonDeadBranches(x._2)).forall {
+              case ((_, _, body), _) => inexpensiveMatchingArmBody(body)
+            } && !nonDeadBranches(-1)
+          }
           
           if extrudedIds.isEmpty && (!noNeedThunking) then
             Function(newd.nextIdent(false, Var("_lh_dummy")), res)

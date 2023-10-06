@@ -265,6 +265,11 @@ class FusionStrategy(d: Deforest) {
     // }.toMap
     finallyFilteredStrategies._2.keys.map { de =>
       val expr = d.exprs(de.euid).asInstanceOf[Expr.Match]
+      // expr.uid -> (finallyFilteredStrategies._2(de).flatMap {
+      //   case MkCtor(c, _) =>
+      //     val (_, ids, body) = expr.arms.find(c == _._1).getOrElse(expr.arms.find(_._1.name == "_").get)
+      //     body.outOfScopeIds(using (ids ++ d.prgm.get.defAndExpr._1.keys).toSet)
+      // }).toList
       expr.uid -> (expr.arms.flatMap { (_, ids, body) =>
         body.outOfScopeIds(using (ids ++ d.prgm.get.defAndExpr._1.keys).toSet)
       }.distinct)

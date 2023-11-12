@@ -159,7 +159,7 @@ class DiffTestLumberhack extends DiffTests {
           }.mkString("\n"))
           output("<<<<<<<<<< deadcode elimination info <<<<<<<<<<")
         try {
-          ocamlGen.makeBenchFiles(List(
+          ocamlGen.makeBenchFilesSeparate(List(
             ("original" -> originalProgram),
             ("lumberhack" -> iterativeProcessRes._1.deadCodeToMagic),
             ("lumberhack_pop_out" -> iterativeProcessRes._1.deadCodeToMagic.popOutLambdas(using mode.lhLessExpansion)._1),
@@ -592,6 +592,170 @@ class OCamlGenTests(
     hsFw.close()
 
     hsFileContent
+  }
+
+  def makeBenchFilesSeparate(programs: List[String -> Program]): Unit = {
+    assert(mode.lhLessExpansion)
+    assert(programs.length >= 2)
+    assert(programs.head._1 == "original")
+    val benchName = (programs.head._2.defAndExpr._2 match {
+      case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId), _)) :: Nil
+        if test.tree.name.startsWith("test") && primId.tree.name == "primId" =>
+        test.tree.name.drop(4).filter(_ <= 0x7f).reverse.dropWhile(_ == '_').reverse // keep only valid ASCII characters, and drop the possibly last "_"
+      // with manually fuse tests
+      case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId1), arg1))
+        :: Expr.Call(Expr.Ref(testManual), Expr.Call(Expr.Ref(primId2), arg2))
+        :: Nil
+        if test.tree.name.startsWith("test") && primId1.tree.name == "primId"
+          && testManual.tree.name.startsWith("testManual") && primId1 == primId2
+          && arg1.pp(using InitPpConfig) == arg2.pp(using InitPpConfig) =>
+        test.tree.name.drop(4).filter(_ <= 0x7f).reverse.dropWhile(_ == '_').reverse // keep only valid ASCII characters, and drop the possibly last "_"
+      case _ => lastWords(
+        "benchmark requires a method of name `testxxx` calling a value wrapped in `primId`"
+          + "\n and if there are manually fused benchmarks, there should be a call to `testManual`"
+          + "with exact the same parameter following the `testxxx`"
+      )
+    }).emptyOrElse(programs.hashCode().toString())
+
+    val commonFileString = (
+      "Lumherhack_Common",
+      """
+module Lumherhack_Common = struct
+let explode_string s = List.init (String.length s) (String.get s);;
+let rec listToTaggedList s = match s with
+  | h::t -> `LH_C(h, listToTaggedList(t))
+  | [] -> `LH_N;;
+let string_of_int i = listToTaggedList (explode_string (string_of_int i));;
+let string_of_float f = listToTaggedList (explode_string (string_of_float f))
+end;;
+"""
+    )
+
+    val largeStrFileString = {
+      // val largeStrDefs = this.largeStrIdents.map { case (s, id) =>
+      //   s"let ${largeStrPrefix}${id} = listToTaggedList (explode_string \"${s}\");;"
+      // }.mkString("\n")
+      // (
+      //   "Lumberhack_LargeStr",
+      //   "open Lumherhack_Common.Lumherhack_Common;;\n" +
+      //   s"module Lumberhack_LargeStr = struct\n$largeStrDefs\nend;;\n"
+      // )
+      ("Lumberhack_LargeStr", "")
+    }
+
+    val originalDefsString = (
+      "Module_original",
+      "\n(* original *)\n" +
+      "open Lumherhack_Common.Lumherhack_Common;;\n" +
+      "open Lumberhack_LargeStr.Lumberhack_LargeStr;;\n" +
+      "module Module_original = struct\n" +
+      apply(
+        Program(
+          programs.head._2.contents.filter(_.isLeft)
+        )(using programs.head._2.d),
+        false
+      ) +
+      "\nend;;\n"
+    )
+
+    val restMergedDefsString = programs.tail.map { case (name, prgm) =>
+      (
+        s"Module_$name",
+        (
+          s"\n\n(* $name *)\n" +
+          "open Lumherhack_Common.Lumherhack_Common;;\n" +
+          "open Lumberhack_LargeStr.Lumberhack_LargeStr;;\n" +
+          s"module Module_$name = struct\n" +
+          apply(
+            Program(
+              prgm.contents.filter {
+                case Left(ProgDef(id, _)) =>
+                  !(id.tree.name.startsWith("_lhManual") || id.tree.name.startsWith("testManual"))
+                case _ => false
+              }
+            )(using prgm.d),
+            false
+          ) +
+          "\nend;;\n"
+        )
+      )
+    }
+
+    val mainFileString = {
+      val compileAndRunCommand = {
+        val allFileNames =
+          (commonFileString ::
+          largeStrFileString ::
+          originalDefsString ::
+          restMergedDefsString).map("./" + _._1 + ".ml") :+ "./main.ml"
+        "ocamlfind ocamlopt -rectypes -thread -O3 -w -A " +
+        allFileNames.mkString(" ") +
+        s" -o $benchName.out" +
+        s" -linkpkg -package \"core_unix.command_unix\" -linkpkg -package \"core_bench\" "+
+        s"&& ./$benchName.out +time"
+      }
+      
+      val mainGen = {
+        val benchRunGen = 
+          (programs.head._2.defAndExpr._2 match {
+            case e :: Nil =>
+              (s"original_${benchName}" ->
+                s"let open Module_original.Module_original in (${this.rec(e).print})") :: Nil
+            case e :: m :: Nil => List(
+              (s"original_${benchName}" -> s"let open Module_original.Module_original in (${this.rec(e).print})"),
+              (s"manual_${benchName}" -> s"let open Module_original.Module_original in (${this.rec(e).print})")
+            )
+            case _ => lastWords("unreachable")
+          }).appendedAll(programs.tail.map { case (name, prgm) =>
+            s"${name}_${benchName}" -> s"let open Module_$name.Module_$name in (${this.rec(prgm.defAndExpr._2.head).print})"
+          })
+        stack(
+          Raw("Command_unix.run (Bench.make_command ["),
+          Indented(Stacked(
+            benchRunGen.map { case (name, doc) =>
+              Raw(s"Bench.Test.create ~name:\"$name\" (fun () -> ignore ($doc));")
+            },
+            false
+          )),
+          Raw("])")
+        )
+      }
+
+      (
+        "main",
+        Stacked(
+          Raw(s"(*\n$compileAndRunCommand\n*)") ::
+          Raw("open Core_bench;;") ::
+          mainGen ::
+          Nil,
+          false
+        ).print
+      )
+    }
+
+    import sys.process.*
+    import java.io._
+    val pathPrefix = s"./nofib-ocaml-gen/$benchName"
+    s"mkdir -p $pathPrefix".!
+    (commonFileString ::
+    (
+      "Lumberhack_LargeStr",
+      {
+        val largeStrDefs = this.largeStrIdents.map { case (s, id) =>
+          s"let ${largeStrPrefix}${id} = listToTaggedList (explode_string \"${s}\");;"
+        }.mkString("\n")
+        "open Lumherhack_Common.Lumherhack_Common;;\n" +
+        s"module Lumberhack_LargeStr = struct\n$largeStrDefs\nend;;\n"
+      }
+    ) ::
+    originalDefsString ::
+    restMergedDefsString :::
+    (mainFileString :: Nil)).foreach { case (fileName, fileContent) =>
+      // s"touch $pathPrefix/$fileName.ml".!
+      val fw = new FileWriter(s"$pathPrefix/$fileName.ml", false)
+      fw.write(fileContent + "\n")
+      fw.close()
+    }
   }
 }
 

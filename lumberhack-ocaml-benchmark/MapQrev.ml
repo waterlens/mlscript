@@ -14,6 +14,7 @@ let string_of_int i = listToTaggedList (explode_string (string_of_int i));;
 let string_of_float f = listToTaggedList (explode_string (string_of_float f))
 
 (* original *)
+module Module_original = struct
 let rec enumFromTo a_0 b_0 =
   (if (a_0 <= b_0) then
     (`C(a_0, ((enumFromTo (a_0 + 1)) b_0)))
@@ -34,8 +35,11 @@ let rec qrev a_1 ys_0 =
 let rec testMapQrev ls_0 =
   ((map (fun x_0 -> 
     (x_0 + 1))) ((qrev (`N)) ls_0));;
+end;;
+
 
 (* lumberhack *)
+module Module_lumberhack = struct
 let rec enumFromTo__d0 a_0 b_0 =
   (if (a_0 <= b_0) then
     (`C(a_0, ((enumFromTo__d0 (a_0 + 1)) b_0)))
@@ -56,33 +60,36 @@ and testMapQrev__d0 ls_0 =
   ((map__d0 (fun x_0 -> 
     (x_0 + 1))) ((qrev__d0 (fun f_0 -> 
     (`N))) ls_0));;
+end;;
+
 
 (* lumberhack_pop_out *)
-let rec enumFromTo__d0__d0 a_3 b_1 =
-  (if (a_3 <= b_1) then
-    (`C(a_3, ((enumFromTo__d0__d0 (a_3 + 1)) b_1)))
+module Module_lumberhack_pop_out = struct
+let rec enumFromTo__d0 a_0 b_0 =
+  (if (a_0 <= b_0) then
+    (`C(a_0, ((enumFromTo__d0 (a_0 + 1)) b_0)))
   else
     (`N));;
-let rec map__d0__d0 f_6 xs_2 =
-  (xs_2 f_6);;
-let rec map__d0__d1 f_5 xs_1 =
-  (xs_1 f_5);;
-let rec qrev__d0__d0 a_2 ys_1 =
-  (match ys_1 with
-    | `C(h_2, t_2) -> 
-      ((qrev__d0__d0 (let rec t_3 = a_2 in
-        (let rec h_3 = h_2 in
-          (fun f_3 -> 
-            (`C((f_3 h_3), ((map__d0__d1 f_3) t_3))))))) t_2)
+let rec map__d0 f_2 xs_0 =
+  (xs_0 f_2);;
+let rec qrev__d0 a_1 ys_0 =
+  (match ys_0 with
+    | `C(h_0, t_0) -> 
+      ((qrev__d0 (let rec t_1 = a_1 in
+        (let rec h_1 = h_0 in
+          (fun f_1 -> 
+            (`C((f_1 h_1), ((map__d0 f_1) t_1))))))) t_0)
     | `N -> 
-      a_2)
-and testMapQrev__d0__d0 ls_1 =
-  ((map__d0__d0 (fun x_1 -> 
-    (x_1 + 1))) ((qrev__d0__d0 (fun f_4 -> 
-    (`N))) ls_1));;
+      a_1)
+and testMapQrev__d0 ls_0 =
+  ((map__d0 (fun x_0 -> 
+    (x_0 + 1))) ((qrev__d0 (fun f_0 -> 
+    (`N))) ls_0));;
+end;;
+
 
 Command_unix.run (Bench.make_command [
-  Bench.Test.create ~name:"original_MapQrev" (fun () -> ignore ((testMapQrev ((enumFromTo 1) 10000))));
-  Bench.Test.create ~name:"lumberhack_MapQrev" (fun () -> ignore ((testMapQrev__d0 ((enumFromTo__d0 1) 10000))));
-  Bench.Test.create ~name:"lumberhack_pop_out_MapQrev" (fun () -> ignore ((testMapQrev__d0__d0 ((enumFromTo__d0__d0 1) 10000))));
+  Bench.Test.create ~name:"original_MapQrev" (fun () -> ignore (let open Module_original in ((testMapQrev ((enumFromTo 1) 10000)))));
+  Bench.Test.create ~name:"lumberhack_MapQrev" (fun () -> ignore (let open Module_lumberhack in ((testMapQrev__d0 ((enumFromTo__d0 1) 10000)))));
+  Bench.Test.create ~name:"lumberhack_pop_out_MapQrev" (fun () -> ignore (let open Module_lumberhack_pop_out in ((testMapQrev__d0 ((enumFromTo__d0 1) 10000)))));
 ])

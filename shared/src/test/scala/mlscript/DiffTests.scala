@@ -168,7 +168,7 @@ class DiffTests
       lhGenOCaml: Bool = false,
       lhGenDistill: Bool = false,
       lhNoIter: Bool = false,
-      lhLessExpansion: Bool = false,
+      lhLessExpansion: Bool = true,
       
     ) extends ModeType {
       def isDebugging: Bool = dbg || dbgSimplif

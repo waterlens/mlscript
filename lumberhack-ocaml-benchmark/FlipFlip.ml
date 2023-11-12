@@ -14,6 +14,7 @@ let string_of_int i = listToTaggedList (explode_string (string_of_int i));;
 let string_of_float f = listToTaggedList (explode_string (string_of_float f))
 
 (* original *)
+module Module_original = struct
 let rec flip t_0 =
   (match t_0 with
     | `T(l_0, r_0) -> 
@@ -29,8 +30,11 @@ let rec ff t_1 =
   (flip (flip t_1))
 and testFlipFlip t_2 =
   (ff t_2);;
+end;;
+
 
 (* lumberhack *)
+module Module_lumberhack = struct
 let rec flip__d0 t_0 =
   (t_0 99);;
 let rec genTree__d0 n_0 i_0 =
@@ -53,35 +57,36 @@ and flip__d1 t_1 =
           (`N(v_1)))))
 and testFlipFlip__d0 t_3 =
   (ff__d0 t_3);;
+end;;
+
 
 (* lumberhack_pop_out *)
-let rec flip__d0__d0 t_8 =
-  (t_8 99);;
-let rec flip__d0__d1 t_9 =
-  (t_9 99);;
-let rec flip__d0__d2 t_4 =
-  (t_4 99);;
-let rec genTree__d0__d0 n_1 i_1 =
-  (if (n_1 <= 0) then
-    (`N(i_1))
+module Module_lumberhack_pop_out = struct
+let rec flip__d0 t_0 =
+  (t_0 99);;
+let rec genTree__d0 n_0 i_0 =
+  (if (n_0 <= 0) then
+    (`N(i_0))
   else
-    (`T(((genTree__d0__d0 (n_1 - 1)) i_1), ((genTree__d0__d0 (n_1 - 1)) (i_1 + 1)))));;
-let rec ff__d0__d0 t_7 =
-  (flip__d0__d0 (flip__d1__d0 t_7))
-and flip__d1__d0 t_5 _lh_popOutId_0_0 =
-  (match t_5 with
-    | `T(l_2, r_2) -> 
-      (let rec r_3 = (flip__d1__d0 l_2) in
-        (let rec l_3 = (flip__d1__d0 r_2) in
-          (`T((flip__d0__d1 r_3), (flip__d0__d2 l_3)))))
-    | `N(v_2) -> 
-      (let rec v_3 = v_2 in
-        (`N(v_3))))
-and testFlipFlip__d0__d0 t_6 =
-  (ff__d0__d0 t_6);;
+    (`T(((genTree__d0 (n_0 - 1)) i_0), ((genTree__d0 (n_0 - 1)) (i_0 + 1)))));;
+let rec ff__d0 t_2 =
+  (flip__d0 (flip__d1 t_2))
+and flip__d1 t_1 _lh_popOutId_0_0 =
+  (match t_1 with
+    | `T(l_0, r_0) -> 
+      (let rec r_1 = (flip__d1 l_0) in
+        (let rec l_1 = (flip__d1 r_0) in
+          (`T((flip__d0 r_1), (flip__d0 l_1)))))
+    | `N(v_0) -> 
+      (let rec v_1 = v_0 in
+        (`N(v_1))))
+and testFlipFlip__d0 t_3 =
+  (ff__d0 t_3);;
+end;;
+
 
 Command_unix.run (Bench.make_command [
-  Bench.Test.create ~name:"original_FlipFlip" (fun () -> ignore ((testFlipFlip ((genTree 17) 0))));
-  Bench.Test.create ~name:"lumberhack_FlipFlip" (fun () -> ignore ((testFlipFlip__d0 ((genTree__d0 17) 0))));
-  Bench.Test.create ~name:"lumberhack_pop_out_FlipFlip" (fun () -> ignore ((testFlipFlip__d0__d0 ((genTree__d0__d0 17) 0))));
+  Bench.Test.create ~name:"original_FlipFlip" (fun () -> ignore (let open Module_original in ((testFlipFlip ((genTree 17) 0)))));
+  Bench.Test.create ~name:"lumberhack_FlipFlip" (fun () -> ignore (let open Module_lumberhack in ((testFlipFlip__d0 ((genTree__d0 17) 0)))));
+  Bench.Test.create ~name:"lumberhack_pop_out_FlipFlip" (fun () -> ignore (let open Module_lumberhack_pop_out in ((testFlipFlip__d0 ((genTree__d0 17) 0)))));
 ])

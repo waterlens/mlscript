@@ -14,6 +14,7 @@ let string_of_int i = listToTaggedList (explode_string (string_of_int i));;
 let string_of_float f = listToTaggedList (explode_string (string_of_float f))
 
 (* original *)
+module Module_original = struct
 let rec tak__d0 _lh_tak_arg1_1 _lh_tak_arg2_1 _lh_tak_arg3_1 =
   (if (not (_lh_tak_arg2_1 < _lh_tak_arg1_1)) then
     _lh_tak_arg3_1
@@ -21,27 +22,35 @@ let rec tak__d0 _lh_tak_arg1_1 _lh_tak_arg2_1 _lh_tak_arg3_1 =
     (((tak__d0 (((tak__d0 (_lh_tak_arg1_1 - 1)) _lh_tak_arg2_1) _lh_tak_arg3_1)) (((tak__d0 (_lh_tak_arg2_1 - 1)) _lh_tak_arg3_1) _lh_tak_arg1_1)) (((tak__d0 (_lh_tak_arg3_1 - 1)) _lh_tak_arg1_1) _lh_tak_arg2_1)));;
 let rec testTak_nofib__d0 _lh_testTak_nofib_arg1_1 =
   (((tak__d0 31) 16) 8);;
+end;;
+
 
 (* lumberhack *)
-let rec tak__d0__d0 _lh_tak_arg1_0 _lh_tak_arg2_0 _lh_tak_arg3_0 =
+module Module_lumberhack = struct
+let rec tak__d0 _lh_tak_arg1_0 _lh_tak_arg2_0 _lh_tak_arg3_0 =
   (if (not (_lh_tak_arg2_0 < _lh_tak_arg1_0)) then
     _lh_tak_arg3_0
   else
-    (((tak__d0__d0 (((tak__d0__d0 (_lh_tak_arg1_0 - 1)) _lh_tak_arg2_0) _lh_tak_arg3_0)) (((tak__d0__d0 (_lh_tak_arg2_0 - 1)) _lh_tak_arg3_0) _lh_tak_arg1_0)) (((tak__d0__d0 (_lh_tak_arg3_0 - 1)) _lh_tak_arg1_0) _lh_tak_arg2_0)));;
-let rec testTak_nofib__d0__d0 _lh_testTak_nofib_arg1_0 =
-  (((tak__d0__d0 31) 16) 8);;
+    (((tak__d0 (((tak__d0 (_lh_tak_arg1_0 - 1)) _lh_tak_arg2_0) _lh_tak_arg3_0)) (((tak__d0 (_lh_tak_arg2_0 - 1)) _lh_tak_arg3_0) _lh_tak_arg1_0)) (((tak__d0 (_lh_tak_arg3_0 - 1)) _lh_tak_arg1_0) _lh_tak_arg2_0)));;
+let rec testTak_nofib__d0 _lh_testTak_nofib_arg1_0 =
+  (((tak__d0 31) 16) 8);;
+end;;
+
 
 (* lumberhack_pop_out *)
-let rec tak__d0__d0__d0 _lh_tak_arg1_1 _lh_tak_arg2_1 _lh_tak_arg3_1 =
-  (if (not (_lh_tak_arg2_1 < _lh_tak_arg1_1)) then
-    _lh_tak_arg3_1
+module Module_lumberhack_pop_out = struct
+let rec tak__d0 _lh_tak_arg1_0 _lh_tak_arg2_0 _lh_tak_arg3_0 =
+  (if (not (_lh_tak_arg2_0 < _lh_tak_arg1_0)) then
+    _lh_tak_arg3_0
   else
-    (((tak__d0__d0__d0 (((tak__d0__d0__d0 (_lh_tak_arg1_1 - 1)) _lh_tak_arg2_1) _lh_tak_arg3_1)) (((tak__d0__d0__d0 (_lh_tak_arg2_1 - 1)) _lh_tak_arg3_1) _lh_tak_arg1_1)) (((tak__d0__d0__d0 (_lh_tak_arg3_1 - 1)) _lh_tak_arg1_1) _lh_tak_arg2_1)));;
-let rec testTak_nofib__d0__d0__d0 _lh_testTak_nofib_arg1_1 =
-  (((tak__d0__d0__d0 31) 16) 8);;
+    (((tak__d0 (((tak__d0 (_lh_tak_arg1_0 - 1)) _lh_tak_arg2_0) _lh_tak_arg3_0)) (((tak__d0 (_lh_tak_arg2_0 - 1)) _lh_tak_arg3_0) _lh_tak_arg1_0)) (((tak__d0 (_lh_tak_arg3_0 - 1)) _lh_tak_arg1_0) _lh_tak_arg2_0)));;
+let rec testTak_nofib__d0 _lh_testTak_nofib_arg1_0 =
+  (((tak__d0 31) 16) 8);;
+end;;
+
 
 Command_unix.run (Bench.make_command [
-  Bench.Test.create ~name:"original_Tak_nofib" (fun () -> ignore ((testTak_nofib__d0 0)));
-  Bench.Test.create ~name:"lumberhack_Tak_nofib" (fun () -> ignore ((testTak_nofib__d0__d0 0)));
-  Bench.Test.create ~name:"lumberhack_pop_out_Tak_nofib" (fun () -> ignore ((testTak_nofib__d0__d0__d0 0)));
+  Bench.Test.create ~name:"original_Tak_nofib" (fun () -> ignore (let open Module_original in ((testTak_nofib__d0 0))));
+  Bench.Test.create ~name:"lumberhack_Tak_nofib" (fun () -> ignore (let open Module_lumberhack in ((testTak_nofib__d0 0))));
+  Bench.Test.create ~name:"lumberhack_pop_out_Tak_nofib" (fun () -> ignore (let open Module_lumberhack_pop_out in ((testTak_nofib__d0 0))));
 ])

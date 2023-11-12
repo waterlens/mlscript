@@ -1616,70 +1616,160 @@ fun head(ls) = if ls is
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [head^45] (hopeless to continue)
+//│ [line^46]
+//│ 	[line^46 · break^27]
+//│ 		[line^46 · break^27 · break^15] ---> [line^46 · break^27] (only one)
+//│ 	[line^46 · line^32] (hopeless to continue)
+//│ 		[line^46 · line^32 · break^27] (using original def)
+//│ 			[line^46 · line^32 · break^27 · break^15] ---> [line^46 · line^32 · break^27] (using original def)
+//│ 		[line^46 · line^32 · line^32] ---> [line^46 · line^32] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ head_₀(line_₀(primId⁰([C 2 [C 2 [C 1 [C 2 [N]]]]])))
+//│ def head_₀(ls⁶) = 
+//│ 	case ls⁶ of {
+//│ 		C h⁶ t⁶ => h⁶
+//│ 		| N  => error⁰}
+//│ def line_₀(ls⁵) = 
+//│ 	case break_₀(ls⁵) of {
+//│ 		P fst⁴ snd⁴ => [C fst⁴ case snd⁴ of {
+//│ 			C h⁵ t⁵ => line_₁(t⁵)
+//│ 			| N  => [N]}]}
+//│ 	where
+//│ 	def break_₀(ls⁴) = 
+//│ 		case ls⁴ of {
+//│ 			N  => [P [N] [N]]
+//│ 			| C h⁴ t⁴ => if (h⁴ == 1) then [P [N] [C h⁴ t⁴]] else case break_₀(t⁴) of {
+//│ 				P fst³ snd³ => [P [C h⁴ fst³] snd³]}}
+//│ 	def line_₁(ls⁷) = 
+//│ 		case break_₁(ls⁷) of {
+//│ 			P fst⁵ snd⁵ => [C fst⁵ case snd⁵ of {
+//│ 				C h⁷ t⁷ => line_₁(t⁷)
+//│ 				| N  => [N]}]}
+//│ 		where
+//│ 		def break_₁(ls³) = 
+//│ 			case ls³ of {
+//│ 				N  => [P [N] [N]]
+//│ 				| C h³ t³ => if (h³ == 1) then [P [N] [C h³ t³]] else case break_₁(t³) of {
+//│ 					P fst² snd² => [P [C h³ fst²] snd²]}}
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 3 --->
-//│ 	case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}: 36
-//│ [P [N] [N]]: 4 --->
-//│ 	case break(t⁰) of {P fst⁰ snd⁰ => [P [C h⁰ fst⁰] snd⁰]}: 23
-//│ 	case break(ls¹) of {P fst¹ snd¹ => [C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]}: 38
-//│ [C h⁰ t⁰]: 13 --->
-//│ 	case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}: 36
-//│ [P [N] [C h⁰ t⁰]]: 14 --->
-//│ 	case break(t⁰) of {P fst⁰ snd⁰ => [P [C h⁰ fst⁰] snd⁰]}: 23
-//│ 	case break(ls¹) of {P fst¹ snd¹ => [C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]}: 38
-//│ [P [C h⁰ fst⁰] snd⁰]: 22 --->
-//│ 	case break(t⁰) of {P fst⁰ snd⁰ => [P [C h⁰ fst⁰] snd⁰]}: 23
-//│ 	case break(ls¹) of {P fst¹ snd¹ => [C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]}: 38
-//│ [C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]: 37 --->
-//│ 	DeadCodeCons
-//│ 	case ls² of {C h² t² => h² | N  => error⁰}: 43
+//│ [N]: 62 --->
+//│ 	case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}: 139
+//│ [P [N] [N]]: 63 --->
+//│ 	case break_₁(t³) of {P fst² snd² => [P [C h³ fst²] snd²]}: 82
+//│ 	case break_₁(ls⁷) of {P fst⁵ snd⁵ => [C fst⁵ case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}]}: 141
+//│ [C h³ t³]: 72 --->
+//│ 	case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}: 139
+//│ [P [N] [C h³ t³]]: 73 --->
+//│ 	case break_₁(t³) of {P fst² snd² => [P [C h³ fst²] snd²]}: 82
+//│ 	case break_₁(ls⁷) of {P fst⁵ snd⁵ => [C fst⁵ case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}]}: 141
+//│ [P [C h³ fst²] snd²]: 81 --->
+//│ 	case break_₁(t³) of {P fst² snd² => [P [C h³ fst²] snd²]}: 82
+//│ 	case break_₁(ls⁷) of {P fst⁵ snd⁵ => [C fst⁵ case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}]}: 141
+//│ [N]: 88 --->
+//│ 	case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}: 121
+//│ [P [N] [N]]: 89 --->
+//│ 	case break_₀(t⁴) of {P fst³ snd³ => [P [C h⁴ fst³] snd³]}: 108
+//│ 	case break_₀(ls⁵) of {P fst⁴ snd⁴ => [C fst⁴ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}]}: 123
+//│ [C h⁴ t⁴]: 98 --->
+//│ 	case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}: 121
+//│ [P [N] [C h⁴ t⁴]]: 99 --->
+//│ 	case break_₀(t⁴) of {P fst³ snd³ => [P [C h⁴ fst³] snd³]}: 108
+//│ 	case break_₀(ls⁵) of {P fst⁴ snd⁴ => [C fst⁴ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}]}: 123
+//│ [P [C h⁴ fst³] snd³]: 107 --->
+//│ 	case break_₀(t⁴) of {P fst³ snd³ => [P [C h⁴ fst³] snd³]}: 108
+//│ 	case break_₀(ls⁵) of {P fst⁴ snd⁴ => [C fst⁴ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}]}: 123
+//│ [C fst⁴ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}]: 122 --->
+//│ 	case ls⁶ of {C h⁶ t⁶ => h⁶ | N  => error⁰}: 128
 //│ ------------------
-//│ case break(t⁰) of {P fst⁰ snd⁰ => [P [C h⁰ fst⁰] snd⁰]}: 23 --->
-//│ 	[P [N] [N]]: 4
-//│ 	[P [N] [C h⁰ t⁰]]: 14
-//│ 	[P [C h⁰ fst⁰] snd⁰]: 22
-//│ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}: 36 --->
-//│ 	[N]: 3
-//│ 	[C h⁰ t⁰]: 13
-//│ case break(ls¹) of {P fst¹ snd¹ => [C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]}: 38 --->
-//│ 	[P [N] [N]]: 4
-//│ 	[P [N] [C h⁰ t⁰]]: 14
-//│ 	[P [C h⁰ fst⁰] snd⁰]: 22
-//│ case ls² of {C h² t² => h² | N  => error⁰}: 43 --->
-//│ 	[C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]: 37
+//│ case break_₁(t³) of {P fst² snd² => [P [C h³ fst²] snd²]}: 82 --->
+//│ 	[P [N] [N]]: 63
+//│ 	[P [N] [C h³ t³]]: 73
+//│ 	[P [C h³ fst²] snd²]: 81
+//│ case break_₀(t⁴) of {P fst³ snd³ => [P [C h⁴ fst³] snd³]}: 108 --->
+//│ 	[P [N] [N]]: 89
+//│ 	[P [N] [C h⁴ t⁴]]: 99
+//│ 	[P [C h⁴ fst³] snd³]: 107
+//│ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}: 121 --->
+//│ 	[N]: 88
+//│ 	[C h⁴ t⁴]: 98
+//│ case break_₀(ls⁵) of {P fst⁴ snd⁴ => [C fst⁴ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}]}: 123 --->
+//│ 	[P [N] [N]]: 89
+//│ 	[P [N] [C h⁴ t⁴]]: 99
+//│ 	[P [C h⁴ fst³] snd³]: 107
+//│ case ls⁶ of {C h⁶ t⁶ => h⁶ | N  => error⁰}: 128 --->
+//│ 	[C fst⁴ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}]: 122
+//│ case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}: 139 --->
+//│ 	[N]: 62
+//│ 	[C h³ t³]: 72
+//│ case break_₁(ls⁷) of {P fst⁵ snd⁵ => [C fst⁵ case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}]}: 141 --->
+//│ 	[P [N] [N]]: 63
+//│ 	[P [N] [C h³ t³]]: 73
+//│ 	[P [C h³ fst²] snd²]: 81
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [N]: 3 --->
-//│ 	case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}: 36
-//│ [C h⁰ t⁰]: 13 --->
-//│ 	case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}: 36
+//│ [N]: 62 --->
+//│ 	case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}: 139
+//│ [C h³ t³]: 72 --->
+//│ 	case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}: 139
+//│ [N]: 88 --->
+//│ 	case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}: 121
+//│ [C h⁴ t⁴]: 98 --->
+//│ 	case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}: 121
+//│ [C fst⁴ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}]: 122 --->
+//│ 	case ls⁶ of {C h⁶ t⁶ => h⁶ | N  => error⁰}: 128
 //│ ------------------
-//│ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}: 36 --->
-//│ 	[N]: 3
-//│ 	[C h⁰ t⁰]: 13
+//│ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}: 121 --->
+//│ 	[N]: 88
+//│ 	[C h⁴ t⁴]: 98
+//│ case ls⁶ of {C h⁶ t⁶ => h⁶ | N  => error⁰}: 128 --->
+//│ 	[C fst⁴ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}]: 122
+//│ case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}: 139 --->
+//│ 	[N]: 62
+//│ 	[C h³ t³]: 72
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ head(line(primId⁰([C 2 [C 2 [C 1 [C 2 [N]]]]])))
-//│ def break(ls³) = case ls³ of {
-//│ 	N  => [P [N] (fun _lh_dummy⁰ -> [N])]
-//│ 	| C h⁰ t⁰ => if (h⁰ == 1) then [P [N] 
-//│ 		let t³ = t⁰
-//│ 		in (fun _lh_dummy¹ -> line(t³))] else case break(t⁰) of {
-//│ 		P fst⁰ snd⁰ => [P [C h⁰ fst⁰] snd⁰]}}
-//│ def head(ls⁵) = case ls⁵ of {
-//│ 	C h² t² => h²
-//│ 	| N  => error⁰}
-//│ def line(ls⁴) = case break(ls⁴) of {
-//│ 	P fst¹ snd¹ => [C fst¹ snd¹(99)]}
+//│ head_₀(line_₀(primId⁰([C 2 [C 2 [C 1 [C 2 [N]]]]])))
+//│ def head_₀(ls⁸) = 
+//│ 	ls⁸
+//│ def line_₀(ls¹¹) = 
+//│ 	case break_₀(ls¹¹) of {
+//│ 		P fst⁴ snd⁴ => 
+//│ 			let h⁸ = fst⁴
+//│ 			in h⁸}
+//│ 	where
+//│ 	def break_₀(ls¹²) = 
+//│ 		case ls¹² of {
+//│ 			N  => [P [N] (fun _lh_dummy² -> [N])]
+//│ 			| C h⁴ t⁴ => if (h⁴ == 1) then [P [N] 
+//│ 				let t⁹ = t⁴
+//│ 				in (fun _lh_dummy³ -> line_₁(t⁹))] else case break_₀(t⁴) of {
+//│ 				P fst³ snd³ => [P [C h⁴ fst³] snd³]}}
+//│ 	def line_₁(ls¹⁰) = 
+//│ 		case break_₁(ls¹⁰) of {
+//│ 			P fst⁵ snd⁵ => [C fst⁵ snd⁵(99)]}
+//│ 		where
+//│ 		def break_₁(ls⁹) = 
+//│ 			case ls⁹ of {
+//│ 				N  => [P [N] (fun _lh_dummy⁰ -> [N])]
+//│ 				| C h³ t³ => if (h³ == 1) then [P [N] 
+//│ 					let t⁸ = t³
+//│ 					in (fun _lh_dummy¹ -> line_₁(t⁸))] else case break_₁(t³) of {
+//│ 					P fst² snd² => [P [C h³ fst²] snd²]}}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ head :: 'head <: ['14_callres => '15_callres] ::: false
-//│ line :: 'line <: ['13_callres => '14_callres | 't¹ => '30_callres] ::: false
+//│ head_₀ :: 'head_₀ <: ['14_callres => '15_callres] ::: false
+//│ line_₀ :: 'line_₀ <: ['13_callres => '14_callres] ::: false
 //│ primId :: NoProd ::: true
 //│ 2 :: Int ::: false
 //│ 2 :: Int ::: false
@@ -1690,65 +1780,122 @@ fun head(ls) = if ls is
 //│ [C 1 [C 2 [N]]] :: C(Int, C(Int, N)) ::: true
 //│ [C 2 [C 1 [C 2 [N]]]] :: C(Int, C(Int, C(Int, N))) ::: true
 //│ [C 2 [C 2 [C 1 [C 2 [N]]]]] :: C(Int, C(Int, C(Int, C(Int, N)))) ::: true
-//│ primId([C 2 [C 2 [C 1 [C 2 [N]]]]]) :: '13_callres <: ['ls¹] ::: false
-//│ line(primId([C 2 [C 2 [C 1 [C 2 [N]]]]])) :: '14_callres <: ['ls²] ::: false
-//│ head(line(primId([C 2 [C 2 [C 1 [C 2 [N]]]]]))) :: '15_callres <: [NoCons] ::: false
-//│ ls :: 'ls⁰ <: [Destruct(N, C('h⁰, 't⁰))] ::: false
+//│ primId([C 2 [C 2 [C 1 [C 2 [N]]]]]) :: '13_callres <: ['ls³] ::: false
+//│ line_₀(primId([C 2 [C 2 [C 1 [C 2 [N]]]]])) :: '14_callres <: ['ls⁰] ::: false
+//│ head_₀(line_₀(primId([C 2 [C 2 [C 1 [C 2 [N]]]]]))) :: '15_callres <: [NoCons] ::: false
+//│ ls :: 'ls⁰ <: ['15_callres] ::: false
+//│ (fun ls -> ls) :: 'ls⁰ => 'ls⁰ ::: true
+//│ ls :: 'ls¹ <: [Destruct(N, C('h⁰, 't⁰))] ::: false
 //│ [N] :: N ::: true
 //│ [N] :: N ::: true
 //│ (fun _lh_dummy -> [N]) :: '_lh_dummy⁰ => N ::: true
 //│ [P [N] (fun _lh_dummy -> [N])] :: P(N, '_lh_dummy⁰ => N) ::: true
 //│ == :: Destruct(Int) => Destruct(Int) => Sum[True, False] ::: true
-//│ h :: 'h⁰ <: [DeadCodeCons | NoCons | Destruct(Int)] ::: false
-//│ ==(h) :: '23_callres <: [Int => '25_callres] ::: false
+//│ h :: 'h⁰ <: [DeadCodeCons | Destruct(Int)] ::: false
+//│ ==(h) :: '25_callres <: [Int => '27_callres] ::: false
 //│ 1 :: Int ::: false
-//│ (h == 1) :: '25_callres <: [Destruct(True, False)] ::: false
+//│ (h == 1) :: '27_callres <: [Destruct(True, False)] ::: false
 //│ [N] :: N ::: true
-//│ t :: 't⁰ <: ['t¹ | 'ls⁰] ::: false
-//│ line :: 'line <: ['13_callres => '14_callres | 't¹ => '30_callres] ::: false
-//│ t :: 't¹ <: ['ls¹] ::: false
-//│ line(t) :: '30_callres <: ['52_callres] ::: true
-//│ (fun _lh_dummy -> line(t)) :: '_lh_dummy¹ => '30_callres ::: true
+//│ t :: 't⁰ <: ['t¹ | 'ls¹] ::: false
+//│ line_₁ :: 'line_₁ <: ['t¹ => '32_callres | 't³ => '80_callres] ::: false
+//│ t :: 't¹ <: ['ls²] ::: false
+//│ line_₁(t) :: '32_callres <: ['54_callres] ::: true
+//│ (fun _lh_dummy -> line_₁(t)) :: '_lh_dummy¹ => '32_callres ::: true
 //│ let t = t
-//│ in (fun _lh_dummy -> line(t)) :: '_lh_dummy¹ => '30_callres ::: true
+//│ in (fun _lh_dummy -> line_₁(t)) :: '_lh_dummy¹ => '32_callres ::: true
 //│ [P [N] let t = t
-//│ in (fun _lh_dummy -> line(t))] :: P(N, '_lh_dummy¹ => '30_callres) ::: true
-//│ break :: 'break <: ['t⁰ => '36_callres | 'ls¹ => '48_callres] ::: false
-//│ t :: 't⁰ <: ['t¹ | 'ls⁰] ::: false
-//│ break(t) :: '36_callres <: [Destruct(P('fst⁰, 'snd⁰))] ::: false
-//│ h :: 'h⁰ <: [DeadCodeCons | NoCons | Destruct(Int)] ::: false
-//│ fst :: 'fst⁰ <: [DeadCodeCons | NoCons] ::: false
+//│ in (fun _lh_dummy -> line_₁(t))] :: P(N, '_lh_dummy¹ => '32_callres) ::: true
+//│ break_₁ :: 'break_₁ <: ['t⁰ => '38_callres | 'ls² => '50_callres] ::: false
+//│ t :: 't⁰ <: ['t¹ | 'ls¹] ::: false
+//│ break_₁(t) :: '38_callres <: [Destruct(P('fst⁰, 'snd⁰))] ::: false
+//│ h :: 'h⁰ <: [DeadCodeCons | Destruct(Int)] ::: false
+//│ fst :: 'fst⁰ <: [DeadCodeCons | DeadCodeCons] ::: true
 //│ [C h fst] :: C('h⁰, 'fst⁰) ::: true
 //│ snd :: 'snd⁰ <: ['snd¹] ::: false
 //│ [P [C h fst] snd] :: P(C('h⁰, 'fst⁰), 'snd⁰) ::: true
-//│ case break(t) of {P fst snd => [P [C h fst] snd]} :: '42_matchres <: ['43_ifres] ::: false
+//│ case break_₁(t) of {P fst snd => [P [C h fst] snd]} :: '44_matchres <: ['45_ifres] ::: false
 //│ if (h == 1) then [P [N] let t = t
-//│ in (fun _lh_dummy -> line(t))] else case break(t) of {P fst snd => [P [C h fst] snd]} :: '43_ifres <: ['44_matchres] ::: false
+//│ in (fun _lh_dummy -> line_₁(t))] else case break_₁(t) of {P fst snd => [P [C h fst] snd]} :: '45_ifres <: ['46_matchres] ::: false
 //│ case ls of {N  => [P [N] (fun _lh_dummy -> [N])] | C h t => if (h == 1) then [P [N] let t = t
-//│ in (fun _lh_dummy -> line(t))] else case break(t) of {P fst snd => [P [C h fst] snd]}} :: '44_matchres <: ['36_callres | '48_callres] ::: false
+//│ in (fun _lh_dummy -> line_₁(t))] else case break_₁(t) of {P fst snd => [P [C h fst] snd]}} :: '46_matchres <: ['38_callres | '50_callres] ::: false
 //│ (fun ls -> case ls of {N  => [P [N] (fun _lh_dummy -> [N])] | C h t => if (h == 1) then [P [N] let t = t
-//│ in (fun _lh_dummy -> line(t))] else case break(t) of {P fst snd => [P [C h fst] snd]}}) :: 'ls⁰ => '44_matchres ::: true
-//│ break :: 'break <: ['t⁰ => '36_callres | 'ls¹ => '48_callres] ::: false
-//│ ls :: 'ls¹ <: ['ls⁰] ::: false
-//│ break(ls) :: '48_callres <: [Destruct(P('fst¹, 'snd¹))] ::: false
-//│ fst :: 'fst¹ <: [DeadCodeCons | 'h¹] ::: false
-//│ snd :: 'snd¹ <: [Int => '52_callres] ::: false
+//│ in (fun _lh_dummy -> line_₁(t))] else case break_₁(t) of {P fst snd => [P [C h fst] snd]}}) :: 'ls¹ => '46_matchres ::: true
+//│ break_₁ :: 'break_₁ <: ['t⁰ => '38_callres | 'ls² => '50_callres] ::: false
+//│ ls :: 'ls² <: ['ls¹] ::: false
+//│ break_₁(ls) :: '50_callres <: [Destruct(P('fst¹, 'snd¹))] ::: false
+//│ fst :: 'fst¹ <: [DeadCodeCons | DeadCodeCons] ::: true
+//│ snd :: 'snd¹ <: [Int => '54_callres] ::: false
 //│ 99 :: Int ::: false
-//│ snd(99) :: '52_callres <: [DeadCodeCons | 't²] ::: true
-//│ [C fst snd(99)] :: C('fst¹, '52_callres) ::: true
-//│ case break(ls) of {P fst snd => [C fst snd(99)]} :: '54_matchres <: ['14_callres | '30_callres] ::: false
-//│ (fun ls -> case break(ls) of {P fst snd => [C fst snd(99)]}) :: 'ls¹ => '54_matchres ::: true
-//│ ls :: 'ls² <: [Destruct(C('h¹, 't²), N)] ::: false
-//│ h :: 'h¹ <: ['59_matchres] ::: false
-//│ error :: '_lh_rigid_error_var <: [DeadCodeCons] ::: true
-//│ case ls of {C h t => h | N  => error} :: '59_matchres <: ['15_callres] ::: false
-//│ (fun ls -> case ls of {C h t => h | N  => error}) :: 'ls² => '59_matchres ::: true
+//│ snd(99) :: '54_callres <: [DeadCodeCons | DeadCodeCons] ::: true
+//│ [C fst snd(99)] :: C('fst¹, '54_callres) ::: true
+//│ case break_₁(ls) of {P fst snd => [C fst snd(99)]} :: '56_matchres <: ['32_callres | '80_callres] ::: true
+//│ (fun ls -> case break_₁(ls) of {P fst snd => [C fst snd(99)]}) :: 'ls² => '56_matchres ::: true
+//│ break_₀ :: 'break_₀ <: ['ls³ => '60_callres | 't² => '86_callres] ::: false
+//│ ls :: 'ls³ <: ['ls⁴] ::: false
+//│ break_₀(ls) :: '60_callres <: [Destruct(P('fst², 'snd²))] ::: false
+//│ fst :: 'fst² <: ['h¹] ::: false
+//│ h :: 'h¹ <: ['64_matchres] ::: false
+//│ let h = fst
+//│ in h :: 'h¹ <: ['64_matchres] ::: false
+//│ case break_₀(ls) of {P fst snd => let h = fst
+//│ in h} :: '64_matchres <: ['14_callres] ::: false
+//│ (fun ls -> case break_₀(ls) of {P fst snd => let h = fst
+//│ in h}) :: 'ls³ => '64_matchres ::: true
+//│ ls :: 'ls⁴ <: [Destruct(N, C('h², 't²))] ::: false
+//│ [N] :: N ::: true
+//│ [N] :: N ::: true
+//│ (fun _lh_dummy -> [N]) :: '_lh_dummy² => N ::: true
+//│ [P [N] (fun _lh_dummy -> [N])] :: P(N, '_lh_dummy² => N) ::: true
+//│ == :: Destruct(Int) => Destruct(Int) => Sum[True, False] ::: true
+//│ h :: 'h² <: [NoCons | Destruct(Int)] ::: false
+//│ ==(h) :: '73_callres <: [Int => '75_callres] ::: false
+//│ 1 :: Int ::: false
+//│ (h == 1) :: '75_callres <: [Destruct(True, False)] ::: false
+//│ [N] :: N ::: true
+//│ t :: 't² <: ['t³ | 'ls⁴] ::: false
+//│ line_₁ :: 'line_₁ <: ['t¹ => '32_callres | 't³ => '80_callres] ::: false
+//│ t :: 't³ <: ['ls²] ::: false
+//│ line_₁(t) :: '80_callres <: [DeadCodeCons] ::: true
+//│ (fun _lh_dummy -> line_₁(t)) :: '_lh_dummy³ => '80_callres ::: true
+//│ let t = t
+//│ in (fun _lh_dummy -> line_₁(t)) :: '_lh_dummy³ => '80_callres ::: true
+//│ [P [N] let t = t
+//│ in (fun _lh_dummy -> line_₁(t))] :: P(N, '_lh_dummy³ => '80_callres) ::: true
+//│ break_₀ :: 'break_₀ <: ['ls³ => '60_callres | 't² => '86_callres] ::: false
+//│ t :: 't² <: ['t³ | 'ls⁴] ::: false
+//│ break_₀(t) :: '86_callres <: [Destruct(P('fst³, 'snd³))] ::: false
+//│ h :: 'h² <: [NoCons | Destruct(Int)] ::: false
+//│ fst :: 'fst³ <: [NoCons] ::: false
+//│ [C h fst] :: C('h², 'fst³) ::: true
+//│ snd :: 'snd³ <: ['snd²] ::: true
+//│ [P [C h fst] snd] :: P(C('h², 'fst³), 'snd³) ::: true
+//│ case break_₀(t) of {P fst snd => [P [C h fst] snd]} :: '92_matchres <: ['93_ifres] ::: false
+//│ if (h == 1) then [P [N] let t = t
+//│ in (fun _lh_dummy -> line_₁(t))] else case break_₀(t) of {P fst snd => [P [C h fst] snd]} :: '93_ifres <: ['94_matchres] ::: false
+//│ case ls of {N  => [P [N] (fun _lh_dummy -> [N])] | C h t => if (h == 1) then [P [N] let t = t
+//│ in (fun _lh_dummy -> line_₁(t))] else case break_₀(t) of {P fst snd => [P [C h fst] snd]}} :: '94_matchres <: ['60_callres | '86_callres] ::: false
+//│ (fun ls -> case ls of {N  => [P [N] (fun _lh_dummy -> [N])] | C h t => if (h == 1) then [P [N] let t = t
+//│ in (fun _lh_dummy -> line_₁(t))] else case break_₀(t) of {P fst snd => [P [C h fst] snd]}}) :: 'ls⁴ => '94_matchres ::: true
 //│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec break ls_0 =
-//│   (match ls_0 with
+//│ let rec break__d0 ls_4 =
+//│   (match ls_4 with
+//│     | `N -> 
+//│       (`P((`N), (fun _lh_dummy_2 -> 
+//│         (`N))))
+//│     | `C(h_2, t_2) -> 
+//│       (if (h_2 = 1) then
+//│         (`P((`N), (let rec t_3 = t_2 in
+//│           (fun _lh_dummy_3 -> 
+//│             (line__d1 t_3)))))
+//│       else
+//│         (match (break__d0 t_2) with
+//│           | `P(fst_3, snd_3) -> 
+//│             (`P((`C(h_2, fst_3)), snd_3)))))
+//│ and break__d1 ls_1 =
+//│   (match ls_1 with
 //│     | `N -> 
 //│       (`P((`N), (fun _lh_dummy_0 -> 
 //│         (`N))))
@@ -1756,22 +1903,23 @@ fun head(ls) = if ls is
 //│       (if (h_0 = 1) then
 //│         (`P((`N), (let rec t_1 = t_0 in
 //│           (fun _lh_dummy_1 -> 
-//│             (line t_1)))))
+//│             (line__d1 t_1)))))
 //│       else
-//│         (match (break t_0) with
+//│         (match (break__d1 t_0) with
 //│           | `P(fst_0, snd_0) -> 
 //│             (`P((`C(h_0, fst_0)), snd_0)))))
-//│ and head ls_2 =
-//│   (match ls_2 with
-//│     | `C(h_1, t_2) -> 
-//│       h_1
-//│     | `N -> 
-//│       (failwith "error"))
-//│ and line ls_1 =
-//│   (match (break ls_1) with
+//│ and head__d0 ls_0 =
+//│   ls_0
+//│ and line__d0 ls_3 =
+//│   (match (break__d0 ls_3) with
+//│     | `P(fst_2, snd_2) -> 
+//│       (let rec h_1 = fst_2 in
+//│         h_1))
+//│ and line__d1 ls_2 =
+//│   (match (break__d1 ls_2) with
 //│     | `P(fst_1, snd_1) -> 
 //│       (`C(fst_1, (snd_1 99))));;
-//│ (head (line (`C(2, (`C(2, (`C(1, (`C(2, (`N)))))))))))
+//│ (head__d0 (line__d0 (`C(2, (`C(2, (`C(1, (`C(2, (`N)))))))))))
 //│ 
 //│ --------------- ocaml repl result -----------------
 //│ [ok]

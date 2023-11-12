@@ -120,97 +120,58 @@ testBinaryTrees_nofib $ primId 17
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [testBinaryTrees_nofib_₀^887] (hopeless to continue)
-//│ 	[testBinaryTrees_nofib_₀^887 · check_₀^810] (using original def)
-//│ 		[testBinaryTrees_nofib_₀^887 · check_₀^810 · check'_₀^802] (using original def)
-//│ 			[testBinaryTrees_nofib_₀^887 · check_₀^810 · check'_₀^802 · check'_₀^820] ---> [testBinaryTrees_nofib_₀^887 · check_₀^810 · check'_₀^802] (using original def)
-//│ 			[testBinaryTrees_nofib_₀^887 · check_₀^810 · check'_₀^802 · check'_₀^825] ---> [testBinaryTrees_nofib_₀^887 · check_₀^810 · check'_₀^802] (using original def)
-//│ 	[testBinaryTrees_nofib_₀^887 · make_₀^811] (using original def)
-//│ 		[testBinaryTrees_nofib_₀^887 · make_₀^811 · make_₀^867] ---> [testBinaryTrees_nofib_₀^887 · make_₀^811] (using original def)
-//│ 		[testBinaryTrees_nofib_₀^887 · make_₀^811 · make_₀^876] ---> [testBinaryTrees_nofib_₀^887 · make_₀^811] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ testBinaryTrees_nofib_₀_₀(primId⁰(17))
-//│ def testBinaryTrees_nofib_₀_₀(_lh_testBinaryTrees_nofib_arg1¹) = 
-//│ 	check_₀_₀(make_₀_₀(0, _lh_testBinaryTrees_nofib_arg1¹))
-//│ 	where
-//│ 	def check_₀_₀(_lh_check_arg1¹) = 
-//│ 		check'_₀_₀([True], 0, _lh_check_arg1¹)
-//│ 		where
-//│ 		def check'_₀_₀(_lh_check'_arg1¹, _lh_check'_arg2¹, _lh_check'_arg3¹) = 
-//│ 			case _lh_check'_arg3¹ of {
-//│ 				Nil  => _lh_check'_arg2¹
-//│ 				| Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀_₀(not⁰(_lh_check'_arg1¹), check'_₀_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹)
-//│ 				| _  => error⁰}
-//│ 	def make_₀_₀(_lh_make_arg1¹, _lh_make_arg2¹) = 
-//│ 		case _lh_make_arg2¹ of {
-//│ 			0  => [Node _lh_make_arg1¹ [Nil] [Nil]]
-//│ 			| _  => 
-//│ 				let i2¹ = (2 * _lh_make_arg1¹)
-//│ 				in let d2¹ = (_lh_make_arg2¹ - 1)
-//│ 				in [Node _lh_make_arg1¹ make_₀_₀((i2¹ - 1), d2¹) make_₀_₀(i2¹, d2¹)]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [Nil]: 93 --->
-//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀_₀(not⁰(_lh_check'_arg1¹), check'_₀_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 156
-//│ [Nil]: 94 --->
-//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀_₀(not⁰(_lh_check'_arg1¹), check'_₀_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 156
-//│ [Node _lh_make_arg1¹ [Nil] [Nil]]: 95 --->
-//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀_₀(not⁰(_lh_check'_arg1¹), check'_₀_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 156
-//│ [Node _lh_make_arg1¹ make_₀_₀((i2¹ - 1), d2¹) make_₀_₀(i2¹, d2¹)]: 121 --->
-//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀_₀(not⁰(_lh_check'_arg1¹), check'_₀_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 156
+//│ [Nil]: 853 --->
+//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀(not⁰(_lh_check'_arg1¹), check'_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 847
+//│ [Nil]: 854 --->
+//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀(not⁰(_lh_check'_arg1¹), check'_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 847
+//│ [Node _lh_make_arg1¹ [Nil] [Nil]]: 855 --->
+//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀(not⁰(_lh_check'_arg1¹), check'_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 847
+//│ [Node _lh_make_arg1¹ make_₀((i2¹ - 1), d2¹) make_₀(i2¹, d2¹)]: 881 --->
+//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀(not⁰(_lh_check'_arg1¹), check'_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 847
 //│ ------------------
-//│ case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀_₀(not⁰(_lh_check'_arg1¹), check'_₀_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 156 --->
-//│ 	[Nil]: 93
-//│ 	[Nil]: 94
-//│ 	[Node _lh_make_arg1¹ [Nil] [Nil]]: 95
-//│ 	[Node _lh_make_arg1¹ make_₀_₀((i2¹ - 1), d2¹) make_₀_₀(i2¹, d2¹)]: 121
+//│ case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀(not⁰(_lh_check'_arg1¹), check'_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 847 --->
+//│ 	[Nil]: 853
+//│ 	[Nil]: 854
+//│ 	[Node _lh_make_arg1¹ [Nil] [Nil]]: 855
+//│ 	[Node _lh_make_arg1¹ make_₀((i2¹ - 1), d2¹) make_₀(i2¹, d2¹)]: 881
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [Nil]: 93 --->
-//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀_₀(not⁰(_lh_check'_arg1¹), check'_₀_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 156
-//│ [Nil]: 94 --->
-//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀_₀(not⁰(_lh_check'_arg1¹), check'_₀_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 156
-//│ [Node _lh_make_arg1¹ [Nil] [Nil]]: 95 --->
-//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀_₀(not⁰(_lh_check'_arg1¹), check'_₀_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 156
-//│ [Node _lh_make_arg1¹ make_₀_₀((i2¹ - 1), d2¹) make_₀_₀(i2¹, d2¹)]: 121 --->
-//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀_₀(not⁰(_lh_check'_arg1¹), check'_₀_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 156
+//│ [Nil]: 853 --->
+//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀(not⁰(_lh_check'_arg1¹), check'_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 847
+//│ [Nil]: 854 --->
+//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀(not⁰(_lh_check'_arg1¹), check'_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 847
+//│ [Node _lh_make_arg1¹ [Nil] [Nil]]: 855 --->
+//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀(not⁰(_lh_check'_arg1¹), check'_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 847
+//│ [Node _lh_make_arg1¹ make_₀((i2¹ - 1), d2¹) make_₀(i2¹, d2¹)]: 881 --->
+//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀(not⁰(_lh_check'_arg1¹), check'_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 847
 //│ ------------------
-//│ case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀_₀(not⁰(_lh_check'_arg1¹), check'_₀_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 156 --->
-//│ 	[Nil]: 93
-//│ 	[Nil]: 94
-//│ 	[Node _lh_make_arg1¹ [Nil] [Nil]]: 95
-//│ 	[Node _lh_make_arg1¹ make_₀_₀((i2¹ - 1), d2¹) make_₀_₀(i2¹, d2¹)]: 121
+//│ case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_₀(not⁰(_lh_check'_arg1¹), check'_₀(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 847 --->
+//│ 	[Nil]: 853
+//│ 	[Nil]: 854
+//│ 	[Node _lh_make_arg1¹ [Nil] [Nil]]: 855
+//│ 	[Node _lh_make_arg1¹ make_₀((i2¹ - 1), d2¹) make_₀(i2¹, d2¹)]: 881
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testBinaryTrees_nofib_₀_₀(primId⁰(17))
-//│ def testBinaryTrees_nofib_₀_₀(_lh_testBinaryTrees_nofib_arg1²) = 
-//│ 	check_₀_₀(make_₀_₀(0, _lh_testBinaryTrees_nofib_arg1²))
-//│ 	where
-//│ 	def check_₀_₀(_lh_check_arg1²) = 
-//│ 		check'_₀_₀([True], 0, _lh_check_arg1²)
-//│ 		where
-//│ 		def check'_₀_₀(_lh_check'_arg1⁶, _lh_check'_arg2⁶, _lh_check'_arg3²) = 
-//│ 			_lh_check'_arg3²(_lh_check'_arg2⁶, _lh_check'_arg1⁶)
-//│ 	def make_₀_₀(_lh_make_arg1², _lh_make_arg2²) = 
-//│ 		case _lh_make_arg2² of {
-//│ 			0  => 
-//│ 				let _lh_check'_Node_2² = (fun _lh_check'_arg2⁴ -> (fun _lh_check'_arg1⁴ -> _lh_check'_arg2⁴))
-//│ 				in let _lh_check'_Node_1² = (fun _lh_check'_arg2³ -> (fun _lh_check'_arg1³ -> _lh_check'_arg2³))
-//│ 				in let _lh_check'_Node_0² = _lh_make_arg1²
-//│ 				in (fun _lh_check'_arg2² -> (fun _lh_check'_arg1² -> check'_₀_₀(not⁰(_lh_check'_arg1²), check'_₀_₀(_lh_check'_arg1², if _lh_check'_arg1² then (_lh_check'_arg2² + _lh_check'_Node_0²) else (_lh_check'_arg2² - _lh_check'_Node_0²), _lh_check'_Node_1²), _lh_check'_Node_2²)))
-//│ 			| _  => 
-//│ 				let i2² = (2 * _lh_make_arg1²)
-//│ 				in let d2² = (_lh_make_arg2² - 1)
-//│ 				in let _lh_check'_Node_2³ = make_₀_₀(i2², d2²)
-//│ 				in let _lh_check'_Node_1³ = make_₀_₀((i2² - 1), d2²)
-//│ 				in let _lh_check'_Node_0³ = _lh_make_arg1²
-//│ 				in (fun _lh_check'_arg2⁵ -> (fun _lh_check'_arg1⁵ -> check'_₀_₀(not⁰(_lh_check'_arg1⁵), check'_₀_₀(_lh_check'_arg1⁵, if _lh_check'_arg1⁵ then (_lh_check'_arg2⁵ + _lh_check'_Node_0³) else (_lh_check'_arg2⁵ - _lh_check'_Node_0³), _lh_check'_Node_1³), _lh_check'_Node_2³)))}
+//│ testBinaryTrees_nofib_₀(primId⁰(17))
+//│ def check'_₀(_lh_check'_arg1², _lh_check'_arg2², _lh_check'_arg3²) = _lh_check'_arg3²(_lh_check'_arg2², _lh_check'_arg1²)
+//│ def check_₀(_lh_check_arg1²) = check'_₀([True], 0, _lh_check_arg1²)
+//│ def make_₀(_lh_make_arg1², _lh_make_arg2²) = case _lh_make_arg2² of {
+//│ 	0  => 
+//│ 		let _lh_check'_Node_2² = (fun _lh_check'_arg2⁵ -> (fun _lh_check'_arg1⁵ -> _lh_check'_arg2⁵))
+//│ 		in let _lh_check'_Node_1² = (fun _lh_check'_arg2⁴ -> (fun _lh_check'_arg1⁴ -> _lh_check'_arg2⁴))
+//│ 		in let _lh_check'_Node_0² = _lh_make_arg1²
+//│ 		in (fun _lh_check'_arg2³ -> (fun _lh_check'_arg1³ -> check'_₀(not⁰(_lh_check'_arg1³), check'_₀(_lh_check'_arg1³, if _lh_check'_arg1³ then (_lh_check'_arg2³ + _lh_check'_Node_0²) else (_lh_check'_arg2³ - _lh_check'_Node_0²), _lh_check'_Node_1²), _lh_check'_Node_2²)))
+//│ 	| _  => 
+//│ 		let i2² = (2 * _lh_make_arg1²)
+//│ 		in let d2² = (_lh_make_arg2² - 1)
+//│ 		in let _lh_check'_Node_2³ = make_₀(i2², d2²)
+//│ 		in let _lh_check'_Node_1³ = make_₀((i2² - 1), d2²)
+//│ 		in let _lh_check'_Node_0³ = _lh_make_arg1²
+//│ 		in (fun _lh_check'_arg2⁶ -> (fun _lh_check'_arg1⁶ -> check'_₀(not⁰(_lh_check'_arg1⁶), check'_₀(_lh_check'_arg1⁶, if _lh_check'_arg1⁶ then (_lh_check'_arg2⁶ + _lh_check'_Node_0³) else (_lh_check'_arg2⁶ - _lh_check'_Node_0³), _lh_check'_Node_1³), _lh_check'_Node_2³)))}
+//│ def testBinaryTrees_nofib_₀(_lh_testBinaryTrees_nofib_arg1²) = check_₀(make_₀(0, _lh_testBinaryTrees_nofib_arg1²))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>

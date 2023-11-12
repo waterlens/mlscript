@@ -86,148 +86,89 @@ testExp38_nofib $ primId 8
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [testExp38_nofib_₀^789] (hopeless to continue)
-//│ 	[testExp38_nofib_₀^789 · fromInteger_₀^720] (using original def)
-//│ 		[testExp38_nofib_₀^789 · fromInteger_₀^720 · fromInteger_₀^763] ---> [testExp38_nofib_₀^789 · fromInteger_₀^720] (using original def)
-//│ 	[testExp38_nofib_₀^789 · fromInteger_₁^724] (using original def)
-//│ 		[testExp38_nofib_₀^789 · fromInteger_₁^724 · fromInteger_₁^779] ---> [testExp38_nofib_₀^789 · fromInteger_₁^724] (using original def)
-//│ 	[testExp38_nofib_₀^789 · int_₀^718] (using original def)
-//│ 		[testExp38_nofib_₀^789 · int_₀^718 · int_₀^695] ---> [testExp38_nofib_₀^789 · int_₀^718] (using original def)
-//│ 	[testExp38_nofib_₀^789 · p_₀^719] (using original def)
-//│ 		[testExp38_nofib_₀^789 · p_₀^719 · natMult_₀^705] (using original def)
-//│ 			[testExp38_nofib_₀^789 · p_₀^719 · natMult_₀^705 · natMult_₀^745] ---> [testExp38_nofib_₀^789 · p_₀^719 · natMult_₀^705] (using original def)
-//│ 			[testExp38_nofib_₀^789 · p_₀^719 · natMult_₀^705 · natPlus_₀^744] (using original def)
-//│ 				[testExp38_nofib_₀^789 · p_₀^719 · natMult_₀^705 · natPlus_₀^744 · natPlus_₀^732] ---> [testExp38_nofib_₀^789 · p_₀^719 · natMult_₀^705 · natPlus_₀^744] (using original def)
-//│ 		[testExp38_nofib_₀^789 · p_₀^719 · p_₀^708] ---> [testExp38_nofib_₀^789 · p_₀^719] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ testExp38_nofib_₀_₀(primId⁰(8))
-//│ def testExp38_nofib_₀_₀(_lh_testExp38_nofib_arg1¹) = 
-//│ 	int_₀_₀(p_₀_₀(fromInteger_₀_₀(3), fromInteger_₁_₀(_lh_testExp38_nofib_arg1¹)))
-//│ 	where
-//│ 	def fromInteger_₀_₀(_lh_fromInteger_arg1³) = 
-//│ 		if (_lh_fromInteger_arg1³ < 1) then [Z] else [S fromInteger_₀_₀((_lh_fromInteger_arg1³ - 1))]
-//│ 	def fromInteger_₁_₀(_lh_fromInteger_arg1²) = 
-//│ 		if (_lh_fromInteger_arg1² < 1) then [Z] else [S fromInteger_₁_₀((_lh_fromInteger_arg1² - 1))]
-//│ 	def int_₀_₀(_lh_int_arg1¹) = 
-//│ 		case _lh_int_arg1¹ of {
-//│ 			Z  => 0
-//│ 			| S _lh_int_S_0¹ => (1 + int_₀_₀(_lh_int_S_0¹))
-//│ 			| _  => error⁰}
-//│ 	def p_₀_₀(_lh_p_arg1¹, _lh_p_arg2¹) = 
-//│ 		case _lh_p_arg2¹ of {
-//│ 			Z  => [S [Z]]
-//│ 			| S _lh_p_S_0¹ => natMult_₀_₀(_lh_p_arg1¹, p_₀_₀(_lh_p_arg1¹, _lh_p_S_0¹))
-//│ 			| _  => error⁰}
-//│ 		where
-//│ 		def natMult_₀_₀(_lh_natMult_arg1¹, _lh_natMult_arg2¹) = 
-//│ 			case _lh_natMult_arg2¹ of {
-//│ 				Z  => [Z]
-//│ 				| S _lh_natMult_S_0¹ => natPlus_₀_₀(natMult_₀_₀(_lh_natMult_arg1¹, _lh_natMult_S_0¹), _lh_natMult_arg1¹)
-//│ 				| _  => error⁰}
-//│ 			where
-//│ 			def natPlus_₀_₀(_lh_natPlus_arg1¹, _lh_natPlus_arg2¹) = 
-//│ 				case _lh_natPlus_arg1¹ of {
-//│ 					Z  => _lh_natPlus_arg2¹
-//│ 					| S _lh_natPlus_S_0¹ => [S natPlus_₀_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2¹)]
-//│ 					| _  => error⁰}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [Z]: 118 --->
-//│ 	case _lh_int_arg1¹ of {Z  => 0 | S _lh_int_S_0¹ => (1 + int_₀_₀(_lh_int_S_0¹)) | _  => error⁰}: 143
-//│ 	case _lh_natMult_arg2¹ of {Z  => [Z] | S _lh_natMult_S_0¹ => natPlus_₀_₀(natMult_₀_₀(_lh_natMult_arg1¹, _lh_natMult_S_0¹), _lh_natMult_arg1¹) | _  => error⁰}: 201
-//│ [S [Z]]: 119 --->
-//│ 	case _lh_int_arg1¹ of {Z  => 0 | S _lh_int_S_0¹ => (1 + int_₀_₀(_lh_int_S_0¹)) | _  => error⁰}: 143
-//│ 	case _lh_natMult_arg2¹ of {Z  => [Z] | S _lh_natMult_S_0¹ => natPlus_₀_₀(natMult_₀_₀(_lh_natMult_arg1¹, _lh_natMult_S_0¹), _lh_natMult_arg1¹) | _  => error⁰}: 201
-//│ [Z]: 150 --->
-//│ 	case _lh_p_arg2¹ of {Z  => [S [Z]] | S _lh_p_S_0¹ => natMult_₀_₀(_lh_p_arg1¹, p_₀_₀(_lh_p_arg1¹, _lh_p_S_0¹)) | _  => error⁰}: 130
-//│ [S fromInteger_₁_₀((_lh_fromInteger_arg1² - 1))]: 158 --->
-//│ 	case _lh_p_arg2¹ of {Z  => [S [Z]] | S _lh_p_S_0¹ => natMult_₀_₀(_lh_p_arg1¹, p_₀_₀(_lh_p_arg1¹, _lh_p_S_0¹)) | _  => error⁰}: 130
-//│ [Z]: 166 --->
-//│ 	case _lh_int_arg1¹ of {Z  => 0 | S _lh_int_S_0¹ => (1 + int_₀_₀(_lh_int_S_0¹)) | _  => error⁰}: 143
-//│ 	case _lh_natPlus_arg1¹ of {Z  => _lh_natPlus_arg2¹ | S _lh_natPlus_S_0¹ => [S natPlus_₀_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2¹)] | _  => error⁰}: 186
-//│ 	case _lh_natMult_arg2¹ of {Z  => [Z] | S _lh_natMult_S_0¹ => natPlus_₀_₀(natMult_₀_₀(_lh_natMult_arg1¹, _lh_natMult_S_0¹), _lh_natMult_arg1¹) | _  => error⁰}: 201
-//│ [S fromInteger_₀_₀((_lh_fromInteger_arg1³ - 1))]: 174 --->
-//│ 	case _lh_int_arg1¹ of {Z  => 0 | S _lh_int_S_0¹ => (1 + int_₀_₀(_lh_int_S_0¹)) | _  => error⁰}: 143
-//│ 	case _lh_natPlus_arg1¹ of {Z  => _lh_natPlus_arg2¹ | S _lh_natPlus_S_0¹ => [S natPlus_₀_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2¹)] | _  => error⁰}: 186
-//│ 	case _lh_natMult_arg2¹ of {Z  => [Z] | S _lh_natMult_S_0¹ => natPlus_₀_₀(natMult_₀_₀(_lh_natMult_arg1¹, _lh_natMult_S_0¹), _lh_natMult_arg1¹) | _  => error⁰}: 201
-//│ [S natPlus_₀_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2¹)]: 184 --->
-//│ 	case _lh_int_arg1¹ of {Z  => 0 | S _lh_int_S_0¹ => (1 + int_₀_₀(_lh_int_S_0¹)) | _  => error⁰}: 143
-//│ 	case _lh_natPlus_arg1¹ of {Z  => _lh_natPlus_arg2¹ | S _lh_natPlus_S_0¹ => [S natPlus_₀_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2¹)] | _  => error⁰}: 186
-//│ 	case _lh_natMult_arg2¹ of {Z  => [Z] | S _lh_natMult_S_0¹ => natPlus_₀_₀(natMult_₀_₀(_lh_natMult_arg1¹, _lh_natMult_S_0¹), _lh_natMult_arg1¹) | _  => error⁰}: 201
-//│ [Z]: 190 --->
-//│ 	case _lh_int_arg1¹ of {Z  => 0 | S _lh_int_S_0¹ => (1 + int_₀_₀(_lh_int_S_0¹)) | _  => error⁰}: 143
-//│ 	case _lh_natPlus_arg1¹ of {Z  => _lh_natPlus_arg2¹ | S _lh_natPlus_S_0¹ => [S natPlus_₀_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2¹)] | _  => error⁰}: 186
-//│ 	case _lh_natMult_arg2¹ of {Z  => [Z] | S _lh_natMult_S_0¹ => natPlus_₀_₀(natMult_₀_₀(_lh_natMult_arg1¹, _lh_natMult_S_0¹), _lh_natMult_arg1¹) | _  => error⁰}: 201
+//│ [Z]: 703 --->
+//│ 	case _lh_int_arg1¹ of {Z  => 0 | S _lh_int_S_0¹ => (1 + int_₀(_lh_int_S_0¹)) | _  => error⁰}: 700
+//│ 	case _lh_natMult_arg2¹ of {Z  => [Z] | S _lh_natMult_S_0¹ => natPlus_₀(natMult_₀(_lh_natMult_arg1¹, _lh_natMult_S_0¹), _lh_natMult_arg1¹) | _  => error⁰}: 754
+//│ [S [Z]]: 704 --->
+//│ 	case _lh_int_arg1¹ of {Z  => 0 | S _lh_int_S_0¹ => (1 + int_₀(_lh_int_S_0¹)) | _  => error⁰}: 700
+//│ 	case _lh_natMult_arg2¹ of {Z  => [Z] | S _lh_natMult_S_0¹ => natPlus_₀(natMult_₀(_lh_natMult_arg1¹, _lh_natMult_S_0¹), _lh_natMult_arg1¹) | _  => error⁰}: 754
+//│ [S natPlus_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2¹)]: 737 --->
+//│ 	case _lh_int_arg1¹ of {Z  => 0 | S _lh_int_S_0¹ => (1 + int_₀(_lh_int_S_0¹)) | _  => error⁰}: 700
+//│ 	case _lh_natPlus_arg1¹ of {Z  => _lh_natPlus_arg2¹ | S _lh_natPlus_S_0¹ => [S natPlus_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2¹)] | _  => error⁰}: 739
+//│ 	case _lh_natMult_arg2¹ of {Z  => [Z] | S _lh_natMult_S_0¹ => natPlus_₀(natMult_₀(_lh_natMult_arg1¹, _lh_natMult_S_0¹), _lh_natMult_arg1¹) | _  => error⁰}: 754
+//│ [Z]: 743 --->
+//│ 	case _lh_int_arg1¹ of {Z  => 0 | S _lh_int_S_0¹ => (1 + int_₀(_lh_int_S_0¹)) | _  => error⁰}: 700
+//│ 	case _lh_natPlus_arg1¹ of {Z  => _lh_natPlus_arg2¹ | S _lh_natPlus_S_0¹ => [S natPlus_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2¹)] | _  => error⁰}: 739
+//│ 	case _lh_natMult_arg2¹ of {Z  => [Z] | S _lh_natMult_S_0¹ => natPlus_₀(natMult_₀(_lh_natMult_arg1¹, _lh_natMult_S_0¹), _lh_natMult_arg1¹) | _  => error⁰}: 754
+//│ [Z]: 762 --->
+//│ 	case _lh_int_arg1¹ of {Z  => 0 | S _lh_int_S_0¹ => (1 + int_₀(_lh_int_S_0¹)) | _  => error⁰}: 700
+//│ 	case _lh_natPlus_arg1¹ of {Z  => _lh_natPlus_arg2¹ | S _lh_natPlus_S_0¹ => [S natPlus_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2¹)] | _  => error⁰}: 739
+//│ 	case _lh_natMult_arg2¹ of {Z  => [Z] | S _lh_natMult_S_0¹ => natPlus_₀(natMult_₀(_lh_natMult_arg1¹, _lh_natMult_S_0¹), _lh_natMult_arg1¹) | _  => error⁰}: 754
+//│ [S fromInteger_₀((_lh_fromInteger_arg1¹ - 1))]: 770 --->
+//│ 	case _lh_int_arg1¹ of {Z  => 0 | S _lh_int_S_0¹ => (1 + int_₀(_lh_int_S_0¹)) | _  => error⁰}: 700
+//│ 	case _lh_natPlus_arg1¹ of {Z  => _lh_natPlus_arg2¹ | S _lh_natPlus_S_0¹ => [S natPlus_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2¹)] | _  => error⁰}: 739
+//│ 	case _lh_natMult_arg2¹ of {Z  => [Z] | S _lh_natMult_S_0¹ => natPlus_₀(natMult_₀(_lh_natMult_arg1¹, _lh_natMult_S_0¹), _lh_natMult_arg1¹) | _  => error⁰}: 754
+//│ [Z]: 778 --->
+//│ 	case _lh_p_arg2¹ of {Z  => [S [Z]] | S _lh_p_S_0¹ => natMult_₀(_lh_p_arg1¹, p_₀(_lh_p_arg1¹, _lh_p_S_0¹)) | _  => error⁰}: 715
+//│ [S fromInteger_₁((_lh_fromInteger_arg1² - 1))]: 786 --->
+//│ 	case _lh_p_arg2¹ of {Z  => [S [Z]] | S _lh_p_S_0¹ => natMult_₀(_lh_p_arg1¹, p_₀(_lh_p_arg1¹, _lh_p_S_0¹)) | _  => error⁰}: 715
 //│ ------------------
-//│ case _lh_p_arg2¹ of {Z  => [S [Z]] | S _lh_p_S_0¹ => natMult_₀_₀(_lh_p_arg1¹, p_₀_₀(_lh_p_arg1¹, _lh_p_S_0¹)) | _  => error⁰}: 130 --->
-//│ 	[Z]: 150
-//│ 	[S fromInteger_₁_₀((_lh_fromInteger_arg1² - 1))]: 158
-//│ case _lh_int_arg1¹ of {Z  => 0 | S _lh_int_S_0¹ => (1 + int_₀_₀(_lh_int_S_0¹)) | _  => error⁰}: 143 --->
-//│ 	[Z]: 118
-//│ 	[S [Z]]: 119
-//│ 	[Z]: 166
-//│ 	[S fromInteger_₀_₀((_lh_fromInteger_arg1³ - 1))]: 174
-//│ 	[S natPlus_₀_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2¹)]: 184
-//│ 	[Z]: 190
-//│ case _lh_natPlus_arg1¹ of {Z  => _lh_natPlus_arg2¹ | S _lh_natPlus_S_0¹ => [S natPlus_₀_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2¹)] | _  => error⁰}: 186 --->
-//│ 	[Z]: 166
-//│ 	[S fromInteger_₀_₀((_lh_fromInteger_arg1³ - 1))]: 174
-//│ 	[S natPlus_₀_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2¹)]: 184
-//│ 	[Z]: 190
-//│ case _lh_natMult_arg2¹ of {Z  => [Z] | S _lh_natMult_S_0¹ => natPlus_₀_₀(natMult_₀_₀(_lh_natMult_arg1¹, _lh_natMult_S_0¹), _lh_natMult_arg1¹) | _  => error⁰}: 201 --->
-//│ 	[Z]: 118
-//│ 	[S [Z]]: 119
-//│ 	[Z]: 166
-//│ 	[S fromInteger_₀_₀((_lh_fromInteger_arg1³ - 1))]: 174
-//│ 	[S natPlus_₀_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2¹)]: 184
-//│ 	[Z]: 190
+//│ case _lh_int_arg1¹ of {Z  => 0 | S _lh_int_S_0¹ => (1 + int_₀(_lh_int_S_0¹)) | _  => error⁰}: 700 --->
+//│ 	[Z]: 703
+//│ 	[S [Z]]: 704
+//│ 	[S natPlus_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2¹)]: 737
+//│ 	[Z]: 743
+//│ 	[Z]: 762
+//│ 	[S fromInteger_₀((_lh_fromInteger_arg1¹ - 1))]: 770
+//│ case _lh_p_arg2¹ of {Z  => [S [Z]] | S _lh_p_S_0¹ => natMult_₀(_lh_p_arg1¹, p_₀(_lh_p_arg1¹, _lh_p_S_0¹)) | _  => error⁰}: 715 --->
+//│ 	[Z]: 778
+//│ 	[S fromInteger_₁((_lh_fromInteger_arg1² - 1))]: 786
+//│ case _lh_natPlus_arg1¹ of {Z  => _lh_natPlus_arg2¹ | S _lh_natPlus_S_0¹ => [S natPlus_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2¹)] | _  => error⁰}: 739 --->
+//│ 	[S natPlus_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2¹)]: 737
+//│ 	[Z]: 743
+//│ 	[Z]: 762
+//│ 	[S fromInteger_₀((_lh_fromInteger_arg1¹ - 1))]: 770
+//│ case _lh_natMult_arg2¹ of {Z  => [Z] | S _lh_natMult_S_0¹ => natPlus_₀(natMult_₀(_lh_natMult_arg1¹, _lh_natMult_S_0¹), _lh_natMult_arg1¹) | _  => error⁰}: 754 --->
+//│ 	[Z]: 703
+//│ 	[S [Z]]: 704
+//│ 	[S natPlus_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2¹)]: 737
+//│ 	[Z]: 743
+//│ 	[Z]: 762
+//│ 	[S fromInteger_₀((_lh_fromInteger_arg1¹ - 1))]: 770
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [Z]: 150 --->
-//│ 	case _lh_p_arg2¹ of {Z  => [S [Z]] | S _lh_p_S_0¹ => natMult_₀_₀(_lh_p_arg1¹, p_₀_₀(_lh_p_arg1¹, _lh_p_S_0¹)) | _  => error⁰}: 130
-//│ [S fromInteger_₁_₀((_lh_fromInteger_arg1² - 1))]: 158 --->
-//│ 	case _lh_p_arg2¹ of {Z  => [S [Z]] | S _lh_p_S_0¹ => natMult_₀_₀(_lh_p_arg1¹, p_₀_₀(_lh_p_arg1¹, _lh_p_S_0¹)) | _  => error⁰}: 130
+//│ [Z]: 778 --->
+//│ 	case _lh_p_arg2¹ of {Z  => [S [Z]] | S _lh_p_S_0¹ => natMult_₀(_lh_p_arg1¹, p_₀(_lh_p_arg1¹, _lh_p_S_0¹)) | _  => error⁰}: 715
+//│ [S fromInteger_₁((_lh_fromInteger_arg1² - 1))]: 786 --->
+//│ 	case _lh_p_arg2¹ of {Z  => [S [Z]] | S _lh_p_S_0¹ => natMult_₀(_lh_p_arg1¹, p_₀(_lh_p_arg1¹, _lh_p_S_0¹)) | _  => error⁰}: 715
 //│ ------------------
-//│ case _lh_p_arg2¹ of {Z  => [S [Z]] | S _lh_p_S_0¹ => natMult_₀_₀(_lh_p_arg1¹, p_₀_₀(_lh_p_arg1¹, _lh_p_S_0¹)) | _  => error⁰}: 130 --->
-//│ 	[Z]: 150
-//│ 	[S fromInteger_₁_₀((_lh_fromInteger_arg1² - 1))]: 158
+//│ case _lh_p_arg2¹ of {Z  => [S [Z]] | S _lh_p_S_0¹ => natMult_₀(_lh_p_arg1¹, p_₀(_lh_p_arg1¹, _lh_p_S_0¹)) | _  => error⁰}: 715 --->
+//│ 	[Z]: 778
+//│ 	[S fromInteger_₁((_lh_fromInteger_arg1² - 1))]: 786
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testExp38_nofib_₀_₀(primId⁰(8))
-//│ def testExp38_nofib_₀_₀(_lh_testExp38_nofib_arg1²) = 
-//│ 	int_₀_₀(p_₀_₀(fromInteger_₀_₀(3), fromInteger_₁_₀(_lh_testExp38_nofib_arg1²)))
-//│ 	where
-//│ 	def fromInteger_₀_₀(_lh_fromInteger_arg1⁵) = 
-//│ 		if (_lh_fromInteger_arg1⁵ < 1) then [Z] else [S fromInteger_₀_₀((_lh_fromInteger_arg1⁵ - 1))]
-//│ 	def fromInteger_₁_₀(_lh_fromInteger_arg1⁴) = 
-//│ 		if (_lh_fromInteger_arg1⁴ < 1) then (fun _lh_p_arg1² -> [S [Z]]) else 
-//│ 			let _lh_p_S_0² = fromInteger_₁_₀((_lh_fromInteger_arg1⁴ - 1))
-//│ 			in (fun _lh_p_arg1³ -> natMult_₀_₀(_lh_p_arg1³, p_₀_₀(_lh_p_arg1³, _lh_p_S_0²)))
-//│ 	def int_₀_₀(_lh_int_arg1²) = 
-//│ 		case _lh_int_arg1² of {
-//│ 			Z  => 0
-//│ 			| S _lh_int_S_0¹ => (1 + int_₀_₀(_lh_int_S_0¹))
-//│ 			| _  => error⁰}
-//│ 	def p_₀_₀(_lh_p_arg1⁴, _lh_p_arg2²) = 
-//│ 		_lh_p_arg2²(_lh_p_arg1⁴)
-//│ 		where
-//│ 		def natMult_₀_₀(_lh_natMult_arg1², _lh_natMult_arg2²) = 
-//│ 			case _lh_natMult_arg2² of {
-//│ 				Z  => [Z]
-//│ 				| S _lh_natMult_S_0¹ => natPlus_₀_₀(natMult_₀_₀(_lh_natMult_arg1², _lh_natMult_S_0¹), _lh_natMult_arg1²)
-//│ 				| _  => error⁰}
-//│ 			where
-//│ 			def natPlus_₀_₀(_lh_natPlus_arg1², _lh_natPlus_arg2²) = 
-//│ 				case _lh_natPlus_arg1² of {
-//│ 					Z  => _lh_natPlus_arg2²
-//│ 					| S _lh_natPlus_S_0¹ => [S natPlus_₀_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2²)]
-//│ 					| _  => error⁰}
+//│ testExp38_nofib_₀(primId⁰(8))
+//│ def fromInteger_₀(_lh_fromInteger_arg1³) = if (_lh_fromInteger_arg1³ < 1) then [Z] else [S fromInteger_₀((_lh_fromInteger_arg1³ - 1))]
+//│ def fromInteger_₁(_lh_fromInteger_arg1⁴) = if (_lh_fromInteger_arg1⁴ < 1) then (fun _lh_p_arg1² -> [S [Z]]) else 
+//│ 	let _lh_p_S_0² = fromInteger_₁((_lh_fromInteger_arg1⁴ - 1))
+//│ 	in (fun _lh_p_arg1³ -> natMult_₀(_lh_p_arg1³, p_₀(_lh_p_arg1³, _lh_p_S_0²)))
+//│ def int_₀(_lh_int_arg1²) = case _lh_int_arg1² of {
+//│ 	Z  => 0
+//│ 	| S _lh_int_S_0¹ => (1 + int_₀(_lh_int_S_0¹))
+//│ 	| _  => error⁰}
+//│ def natMult_₀(_lh_natMult_arg1², _lh_natMult_arg2²) = case _lh_natMult_arg2² of {
+//│ 	Z  => [Z]
+//│ 	| S _lh_natMult_S_0¹ => natPlus_₀(natMult_₀(_lh_natMult_arg1², _lh_natMult_S_0¹), _lh_natMult_arg1²)
+//│ 	| _  => error⁰}
+//│ def natPlus_₀(_lh_natPlus_arg1², _lh_natPlus_arg2²) = case _lh_natPlus_arg1² of {
+//│ 	Z  => _lh_natPlus_arg2²
+//│ 	| S _lh_natPlus_S_0¹ => [S natPlus_₀(_lh_natPlus_S_0¹, _lh_natPlus_arg2²)]
+//│ 	| _  => error⁰}
+//│ def p_₀(_lh_p_arg1⁴, _lh_p_arg2²) = _lh_p_arg2²(_lh_p_arg1⁴)
+//│ def testExp38_nofib_₀(_lh_testExp38_nofib_arg1²) = int_₀(p_₀(fromInteger_₀(3), fromInteger_₁(_lh_testExp38_nofib_arg1²)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>

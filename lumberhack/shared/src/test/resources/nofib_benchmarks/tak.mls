@@ -25,24 +25,6 @@ testTak_nofib $ primId 0
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [testTak_nofib_₀^721] (hopeless to continue)
-//│ 	[testTak_nofib_₀^721 · tak_₀^664] (using original def)
-//│ 		[testTak_nofib_₀^721 · tak_₀^664 · tak_₀^680] ---> [testTak_nofib_₀^721 · tak_₀^664] (using original def)
-//│ 		[testTak_nofib_₀^721 · tak_₀^664 · tak_₀^681] ---> [testTak_nofib_₀^721 · tak_₀^664] (using original def)
-//│ 		[testTak_nofib_₀^721 · tak_₀^664 · tak_₀^693] ---> [testTak_nofib_₀^721 · tak_₀^664] (using original def)
-//│ 		[testTak_nofib_₀^721 · tak_₀^664 · tak_₀^705] ---> [testTak_nofib_₀^721 · tak_₀^664] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ testTak_nofib_₀_₀(primId⁰(0))
-//│ def testTak_nofib_₀_₀(_lh_testTak_nofib_arg1¹) = 
-//│ 	tak_₀_₀(31, 16, 8)
-//│ 	where
-//│ 	def tak_₀_₀(_lh_tak_arg1¹, _lh_tak_arg2¹, _lh_tak_arg3¹) = 
-//│ 		if not⁰((_lh_tak_arg2¹ < _lh_tak_arg1¹)) then _lh_tak_arg3¹ else tak_₀_₀(tak_₀_₀((_lh_tak_arg1¹ - 1), _lh_tak_arg2¹, _lh_tak_arg3¹), tak_₀_₀((_lh_tak_arg2¹ - 1), _lh_tak_arg3¹, _lh_tak_arg1¹), tak_₀_₀((_lh_tak_arg3¹ - 1), _lh_tak_arg1¹, _lh_tak_arg2¹))
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ 
 //│ ------------------
@@ -56,12 +38,9 @@ testTak_nofib $ primId 0
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testTak_nofib_₀_₀(primId⁰(0))
-//│ def testTak_nofib_₀_₀(_lh_testTak_nofib_arg1²) = 
-//│ 	tak_₀_₀(31, 16, 8)
-//│ 	where
-//│ 	def tak_₀_₀(_lh_tak_arg1², _lh_tak_arg2², _lh_tak_arg3²) = 
-//│ 		if not⁰((_lh_tak_arg2² < _lh_tak_arg1²)) then _lh_tak_arg3² else tak_₀_₀(tak_₀_₀((_lh_tak_arg1² - 1), _lh_tak_arg2², _lh_tak_arg3²), tak_₀_₀((_lh_tak_arg2² - 1), _lh_tak_arg3², _lh_tak_arg1²), tak_₀_₀((_lh_tak_arg3² - 1), _lh_tak_arg1², _lh_tak_arg2²))
+//│ testTak_nofib_₀(primId⁰(0))
+//│ def tak_₀(_lh_tak_arg1², _lh_tak_arg2², _lh_tak_arg3²) = if not⁰((_lh_tak_arg2² < _lh_tak_arg1²)) then _lh_tak_arg3² else tak_₀(tak_₀((_lh_tak_arg1² - 1), _lh_tak_arg2², _lh_tak_arg3²), tak_₀((_lh_tak_arg2² - 1), _lh_tak_arg3², _lh_tak_arg1²), tak_₀((_lh_tak_arg3² - 1), _lh_tak_arg1², _lh_tak_arg2²))
+//│ def testTak_nofib_₀(_lh_testTak_nofib_arg1²) = tak_₀(31, 16, 8)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>

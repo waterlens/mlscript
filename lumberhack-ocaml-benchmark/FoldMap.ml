@@ -14,6 +14,7 @@ let string_of_int i = listToTaggedList (explode_string (string_of_int i));;
 let string_of_float f = listToTaggedList (explode_string (string_of_float f))
 
 (* original *)
+module Module_original = struct
 let rec enumFromTo a_0 b_0 =
   (if (a_0 <= b_0) then
     (`C(a_0, ((enumFromTo (a_0 + 1)) b_0)))
@@ -35,8 +36,11 @@ let rec testFoldMap n_0 =
   (((foldl (fun i_0 x_0 -> 
     (i_0 + x_0))) 0) ((map (fun x_1 -> 
     (x_1 * x_1))) ((enumFromTo 1) n_0)));;
+end;;
+
 
 (* lumberhack *)
+module Module_lumberhack = struct
 let rec enumFromTo__d0 a_0 b_0 =
   (if (a_0 <= b_0) then
     (`C(a_0, ((enumFromTo__d0 (a_0 + 1)) b_0)))
@@ -58,32 +62,35 @@ and testFoldMap__d0 n_0 =
   (((foldl__d0 (fun i_0 x_0 -> 
     (i_0 + x_0))) 0) ((map__d0 (fun x_1 -> 
     (x_1 * x_1))) ((enumFromTo__d0 1) n_0)));;
+end;;
+
 
 (* lumberhack_pop_out *)
-let rec enumFromTo__d0__d0 a_1 b_1 =
-  (if (a_1 <= b_1) then
-    (`C(a_1, ((enumFromTo__d0__d0 (a_1 + 1)) b_1)))
+module Module_lumberhack_pop_out = struct
+let rec enumFromTo__d0 a_0 b_0 =
+  (if (a_0 <= b_0) then
+    (`C(a_0, ((enumFromTo__d0 (a_0 + 1)) b_0)))
   else
     (`N));;
-let rec foldl__d0__d0 f_7 s_5 ls_3 =
-  ((ls_3 f_7) s_5);;
-let rec foldl__d0__d1 f_8 s_6 ls_4 =
-  ((ls_4 f_8) s_6);;
-let rec map__d0__d0 f_4 ls_2 _lh_popOutId_0_0 _lh_popOutId_1_0 =
-  (match ls_2 with
-    | `C(h_2, t_2) -> 
-      (let rec t_3 = ((map__d0__d0 f_4) t_2) in
-        (let rec h_3 = (f_4 h_2) in
-          (((foldl__d0__d1 _lh_popOutId_0_0) ((_lh_popOutId_0_0 _lh_popOutId_1_0) h_3)) t_3)))
+let rec foldl__d0 f_0 s_0 ls_0 =
+  ((ls_0 f_0) s_0);;
+let rec map__d0 f_1 ls_1 _lh_popOutId_0_0 _lh_popOutId_1_0 =
+  (match ls_1 with
+    | `C(h_0, t_0) -> 
+      (let rec t_1 = ((map__d0 f_1) t_0) in
+        (let rec h_1 = (f_1 h_0) in
+          (((foldl__d0 _lh_popOutId_0_0) ((_lh_popOutId_0_0 _lh_popOutId_1_0) h_1)) t_1)))
     | `N -> 
       _lh_popOutId_1_0)
-and testFoldMap__d0__d0 n_1 =
-  (((foldl__d0__d0 (fun i_1 x_2 -> 
-    (i_1 + x_2))) 0) ((map__d0__d0 (fun x_3 -> 
-    (x_3 * x_3))) ((enumFromTo__d0__d0 1) n_1)));;
+and testFoldMap__d0 n_0 =
+  (((foldl__d0 (fun i_0 x_0 -> 
+    (i_0 + x_0))) 0) ((map__d0 (fun x_1 -> 
+    (x_1 * x_1))) ((enumFromTo__d0 1) n_0)));;
+end;;
+
 
 Command_unix.run (Bench.make_command [
-  Bench.Test.create ~name:"original_FoldMap" (fun () -> ignore ((testFoldMap 300000)));
-  Bench.Test.create ~name:"lumberhack_FoldMap" (fun () -> ignore ((testFoldMap__d0 300000)));
-  Bench.Test.create ~name:"lumberhack_pop_out_FoldMap" (fun () -> ignore ((testFoldMap__d0__d0 300000)));
+  Bench.Test.create ~name:"original_FoldMap" (fun () -> ignore (let open Module_original in ((testFoldMap 300000))));
+  Bench.Test.create ~name:"lumberhack_FoldMap" (fun () -> ignore (let open Module_lumberhack in ((testFoldMap__d0 300000))));
+  Bench.Test.create ~name:"lumberhack_pop_out_FoldMap" (fun () -> ignore (let open Module_lumberhack_pop_out in ((testFoldMap__d0 300000))));
 ])

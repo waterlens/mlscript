@@ -892,214 +892,161 @@ words "1 2 4"
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [words_₀^843]
-//│ 	[words_₀^843 · break_₀^741]
-//│ 		[words_₀^843 · break_₀^741 · break1_₀^775]
-//│ 			[words_₀^843 · break_₀^741 · break1_₀^775 · break1_₀^806] ---> [words_₀^843 · break_₀^741 · break1_₀^775] (only one)
-//│ 	[words_₀^843 · dropWhile_₀^729]
-//│ 		[words_₀^843 · dropWhile_₀^729 · dropWhile_₀^830] ---> [words_₀^843 · dropWhile_₀^729] (only one)
-//│ 	[words_₀^843 · words_₀^753] ---> [words_₀^843] (only one)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ words_₀_₀([LH_C '1' [LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]])
-//│ def words_₀_₀(_lh_words_arg1¹) = 
-//│ 	let _lh_matchIdent⁶ = dropWhile_₀_₀((fun x² -> polyEq⁰(x², ' ')), _lh_words_arg1¹)
-//│ 	in case _lh_matchIdent⁶ of {
-//│ 		LH_N  => [LH_N]
-//│ 		| _  => 
-//│ 			let _lh_matchIdent⁷ = break_₀_₀((fun x³ -> polyEq⁰(x³, ' ')), _lh_matchIdent⁶)
-//│ 			in case _lh_matchIdent⁷ of {
-//│ 				LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀_₀(_lh_words_LH_P2_1¹)]
-//│ 				| _  => error⁰}}
-//│ 	where
-//│ 	def break_₀_₀(_lh_break_arg1¹, _lh_break_arg2¹) = 
-//│ 		case _lh_break_arg2¹ of {
-//│ 			LH_N  => [LH_P2 [LH_N] [LH_N]]
-//│ 			| LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹ => if _lh_break_arg1¹(_lh_break_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]] else 
-//│ 				let _lh_matchIdent⁵ = break1_₀_₀(_lh_break_arg1¹, _lh_break_LH_C_1¹)
-//│ 				in case _lh_matchIdent⁵ of {
-//│ 					LH_P2 _lh_break_LH_P2_0¹ _lh_break_LH_P2_1¹ => [LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹]
-//│ 					| _  => error⁰}
-//│ 			| _  => error⁰}
-//│ 		where
-//│ 		def break1_₀_₀(_lh_break1_arg1¹, _lh_break1_arg2¹) = 
-//│ 			case _lh_break1_arg2¹ of {
-//│ 				LH_N  => [LH_P2 [LH_N] [LH_N]]
-//│ 				| LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹ => if _lh_break1_arg1¹(_lh_break1_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]] else 
-//│ 					let _lh_matchIdent⁴ = break1_₀_₀(_lh_break1_arg1¹, _lh_break1_LH_C_1¹)
-//│ 					in case _lh_matchIdent⁴ of {
-//│ 						LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹]
-//│ 						| _  => error⁰}
-//│ 				| _  => error⁰}
-//│ 	def dropWhile_₀_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_arg2¹) = 
-//│ 		case _lh_dropWhile_arg2¹ of {
-//│ 			LH_N  => [LH_N]
-//│ 			| LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹]
-//│ 			| _  => error⁰}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [LH_N]: 130 --->
-//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 205
-//│ [LH_P2 [LH_N] [LH_N]]: 131 --->
-//│ 	case _lh_matchIdent⁴ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰}: 152
-//│ 	case _lh_matchIdent⁵ of {LH_P2 _lh_break_LH_P2_0¹ _lh_break_LH_P2_1¹ => [LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹] | _  => error⁰}: 183
-//│ [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]: 138 --->
-//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 205
-//│ [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]]: 139 --->
-//│ 	case _lh_matchIdent⁴ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰}: 152
-//│ 	case _lh_matchIdent⁵ of {LH_P2 _lh_break_LH_P2_0¹ _lh_break_LH_P2_1¹ => [LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹] | _  => error⁰}: 183
-//│ [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹]: 150 --->
-//│ 	case _lh_matchIdent⁴ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰}: 152
-//│ 	case _lh_matchIdent⁵ of {LH_P2 _lh_break_LH_P2_0¹ _lh_break_LH_P2_1¹ => [LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹] | _  => error⁰}: 183
-//│ [LH_N]: 161 --->
-//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 205
-//│ [LH_P2 [LH_N] [LH_N]]: 162 --->
-//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}: 237
-//│ [LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]: 169 --->
-//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 205
-//│ [LH_P2 [LH_N] [LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]]: 170 --->
-//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}: 237
-//│ [LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹]: 181 --->
-//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}: 237
-//│ [LH_N]: 191 --->
-//│ 	case _lh_break_arg2¹ of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹ => if _lh_break_arg1¹(_lh_break_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]] else let _lh_matchIdent⁵ = break1_₀_₀(_lh_break_arg1¹, _lh_break_LH_C_1¹)
-//│ in case _lh_matchIdent⁵ of {LH_P2 _lh_break_LH_P2_0¹ _lh_break_LH_P2_1¹ => [LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹] | _  => error⁰} | _  => error⁰}: 187
-//│ 	case _lh_matchIdent⁶ of {LH_N  => [LH_N] | _  => let _lh_matchIdent⁷ = break_₀_₀((fun x³ -> polyEq⁰(x³, ' ')), _lh_matchIdent⁶)
-//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}}: 239
-//│ [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹]: 202 --->
-//│ 	case _lh_break_arg2¹ of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹ => if _lh_break_arg1¹(_lh_break_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]] else let _lh_matchIdent⁵ = break1_₀_₀(_lh_break_arg1¹, _lh_break_LH_C_1¹)
-//│ in case _lh_matchIdent⁵ of {LH_P2 _lh_break_LH_P2_0¹ _lh_break_LH_P2_1¹ => [LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹] | _  => error⁰} | _  => error⁰}: 187
-//│ 	case _lh_matchIdent⁶ of {LH_N  => [LH_N] | _  => let _lh_matchIdent⁷ = break_₀_₀((fun x³ -> polyEq⁰(x³, ' ')), _lh_matchIdent⁶)
-//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}}: 239
-//│ [LH_N]: 248 --->
-//│ 	case _lh_break1_arg2¹ of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹ => if _lh_break1_arg1¹(_lh_break1_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]] else let _lh_matchIdent⁴ = break1_₀_₀(_lh_break1_arg1¹, _lh_break1_LH_C_1¹)
-//│ in case _lh_matchIdent⁴ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰} | _  => error⁰}: 156
-//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 205
-//│ [LH_C '4' [LH_N]]: 249 --->
-//│ 	case _lh_break1_arg2¹ of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹ => if _lh_break1_arg1¹(_lh_break1_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]] else let _lh_matchIdent⁴ = break1_₀_₀(_lh_break1_arg1¹, _lh_break1_LH_C_1¹)
-//│ in case _lh_matchIdent⁴ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰} | _  => error⁰}: 156
-//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 205
-//│ [LH_C ' ' [LH_C '4' [LH_N]]]: 250 --->
-//│ 	case _lh_break1_arg2¹ of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹ => if _lh_break1_arg1¹(_lh_break1_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]] else let _lh_matchIdent⁴ = break1_₀_₀(_lh_break1_arg1¹, _lh_break1_LH_C_1¹)
-//│ in case _lh_matchIdent⁴ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰} | _  => error⁰}: 156
-//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 205
-//│ [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]: 251 --->
-//│ 	case _lh_break1_arg2¹ of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹ => if _lh_break1_arg1¹(_lh_break1_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]] else let _lh_matchIdent⁴ = break1_₀_₀(_lh_break1_arg1¹, _lh_break1_LH_C_1¹)
-//│ in case _lh_matchIdent⁴ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰} | _  => error⁰}: 156
-//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 205
-//│ [LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]: 252 --->
-//│ 	case _lh_break1_arg2¹ of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹ => if _lh_break1_arg1¹(_lh_break1_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]] else let _lh_matchIdent⁴ = break1_₀_₀(_lh_break1_arg1¹, _lh_break1_LH_C_1¹)
-//│ in case _lh_matchIdent⁴ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰} | _  => error⁰}: 156
-//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 205
-//│ [LH_C '1' [LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]]: 253 --->
-//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 205
+//│ [LH_N]: 765 --->
+//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 840
+//│ [LH_P2 [LH_N] [LH_N]]: 766 --->
+//│ 	case _lh_matchIdent⁵ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}: 758
+//│ [LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]: 773 --->
+//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 840
+//│ [LH_P2 [LH_N] [LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]]: 774 --->
+//│ 	case _lh_matchIdent⁵ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}: 758
+//│ [LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹]: 785 --->
+//│ 	case _lh_matchIdent⁵ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}: 758
+//│ [LH_N]: 796 --->
+//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 840
+//│ [LH_P2 [LH_N] [LH_N]]: 797 --->
+//│ 	case _lh_matchIdent⁶ of {LH_P2 _lh_break_LH_P2_0¹ _lh_break_LH_P2_1¹ => [LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹] | _  => error⁰}: 787
+//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰}: 818
+//│ [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]: 804 --->
+//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 840
+//│ [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]]: 805 --->
+//│ 	case _lh_matchIdent⁶ of {LH_P2 _lh_break_LH_P2_0¹ _lh_break_LH_P2_1¹ => [LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹] | _  => error⁰}: 787
+//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰}: 818
+//│ [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹]: 816 --->
+//│ 	case _lh_matchIdent⁶ of {LH_P2 _lh_break_LH_P2_0¹ _lh_break_LH_P2_1¹ => [LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹] | _  => error⁰}: 787
+//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰}: 818
+//│ [LH_N]: 826 --->
+//│ 	case _lh_matchIdent⁴ of {LH_N  => [LH_N] | _  => let _lh_matchIdent⁵ = break_₀((fun x⁵ -> polyEq⁰(x⁵, ' ')), _lh_matchIdent⁴)
+//│ in case _lh_matchIdent⁵ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}}: 760
+//│ 	case _lh_break_arg2¹ of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹ => if _lh_break_arg1¹(_lh_break_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]] else let _lh_matchIdent⁶ = break1_₀(_lh_break_arg1¹, _lh_break_LH_C_1¹)
+//│ in case _lh_matchIdent⁶ of {LH_P2 _lh_break_LH_P2_0¹ _lh_break_LH_P2_1¹ => [LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹] | _  => error⁰} | _  => error⁰}: 791
+//│ [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹]: 837 --->
+//│ 	case _lh_matchIdent⁴ of {LH_N  => [LH_N] | _  => let _lh_matchIdent⁵ = break_₀((fun x⁵ -> polyEq⁰(x⁵, ' ')), _lh_matchIdent⁴)
+//│ in case _lh_matchIdent⁵ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}}: 760
+//│ 	case _lh_break_arg2¹ of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹ => if _lh_break_arg1¹(_lh_break_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]] else let _lh_matchIdent⁶ = break1_₀(_lh_break_arg1¹, _lh_break_LH_C_1¹)
+//│ in case _lh_matchIdent⁶ of {LH_P2 _lh_break_LH_P2_0¹ _lh_break_LH_P2_1¹ => [LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹] | _  => error⁰} | _  => error⁰}: 791
+//│ [LH_N]: 849 --->
+//│ 	case _lh_break1_arg2¹ of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹ => if _lh_break1_arg1¹(_lh_break1_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]] else let _lh_matchIdent⁷ = break1_₀(_lh_break1_arg1¹, _lh_break1_LH_C_1¹)
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰} | _  => error⁰}: 822
+//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 840
+//│ [LH_C '4' [LH_N]]: 850 --->
+//│ 	case _lh_break1_arg2¹ of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹ => if _lh_break1_arg1¹(_lh_break1_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]] else let _lh_matchIdent⁷ = break1_₀(_lh_break1_arg1¹, _lh_break1_LH_C_1¹)
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰} | _  => error⁰}: 822
+//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 840
+//│ [LH_C ' ' [LH_C '4' [LH_N]]]: 851 --->
+//│ 	case _lh_break1_arg2¹ of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹ => if _lh_break1_arg1¹(_lh_break1_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]] else let _lh_matchIdent⁷ = break1_₀(_lh_break1_arg1¹, _lh_break1_LH_C_1¹)
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰} | _  => error⁰}: 822
+//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 840
+//│ [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]: 852 --->
+//│ 	case _lh_break1_arg2¹ of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹ => if _lh_break1_arg1¹(_lh_break1_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]] else let _lh_matchIdent⁷ = break1_₀(_lh_break1_arg1¹, _lh_break1_LH_C_1¹)
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰} | _  => error⁰}: 822
+//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 840
+//│ [LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]: 853 --->
+//│ 	case _lh_break1_arg2¹ of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹ => if _lh_break1_arg1¹(_lh_break1_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]] else let _lh_matchIdent⁷ = break1_₀(_lh_break1_arg1¹, _lh_break1_LH_C_1¹)
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰} | _  => error⁰}: 822
+//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 840
+//│ [LH_C '1' [LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]]: 854 --->
+//│ 	case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 840
 //│ ------------------
-//│ case _lh_matchIdent⁴ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰}: 152 --->
-//│ 	[LH_P2 [LH_N] [LH_N]]: 131
-//│ 	[LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]]: 139
-//│ 	[LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹]: 150
-//│ case _lh_break1_arg2¹ of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹ => if _lh_break1_arg1¹(_lh_break1_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]] else let _lh_matchIdent⁴ = break1_₀_₀(_lh_break1_arg1¹, _lh_break1_LH_C_1¹)
-//│ in case _lh_matchIdent⁴ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰} | _  => error⁰}: 156 --->
-//│ 	[LH_N]: 248
-//│ 	[LH_C '4' [LH_N]]: 249
-//│ 	[LH_C ' ' [LH_C '4' [LH_N]]]: 250
-//│ 	[LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]: 251
-//│ 	[LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]: 252
-//│ case _lh_matchIdent⁵ of {LH_P2 _lh_break_LH_P2_0¹ _lh_break_LH_P2_1¹ => [LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹] | _  => error⁰}: 183 --->
-//│ 	[LH_P2 [LH_N] [LH_N]]: 131
-//│ 	[LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]]: 139
-//│ 	[LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹]: 150
-//│ case _lh_break_arg2¹ of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹ => if _lh_break_arg1¹(_lh_break_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]] else let _lh_matchIdent⁵ = break1_₀_₀(_lh_break_arg1¹, _lh_break_LH_C_1¹)
-//│ in case _lh_matchIdent⁵ of {LH_P2 _lh_break_LH_P2_0¹ _lh_break_LH_P2_1¹ => [LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹] | _  => error⁰} | _  => error⁰}: 187 --->
-//│ 	[LH_N]: 191
-//│ 	[LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹]: 202
-//│ case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 205 --->
-//│ 	[LH_N]: 130
-//│ 	[LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]: 138
-//│ 	[LH_N]: 161
-//│ 	[LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]: 169
-//│ 	[LH_N]: 248
-//│ 	[LH_C '4' [LH_N]]: 249
-//│ 	[LH_C ' ' [LH_C '4' [LH_N]]]: 250
-//│ 	[LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]: 251
-//│ 	[LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]: 252
-//│ 	[LH_C '1' [LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]]: 253
-//│ case _lh_matchIdent⁷ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}: 237 --->
-//│ 	[LH_P2 [LH_N] [LH_N]]: 162
-//│ 	[LH_P2 [LH_N] [LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]]: 170
-//│ 	[LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹]: 181
-//│ case _lh_matchIdent⁶ of {LH_N  => [LH_N] | _  => let _lh_matchIdent⁷ = break_₀_₀((fun x³ -> polyEq⁰(x³, ' ')), _lh_matchIdent⁶)
-//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}}: 239 --->
-//│ 	[LH_N]: 191
-//│ 	[LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹]: 202
+//│ case _lh_matchIdent⁵ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}: 758 --->
+//│ 	[LH_P2 [LH_N] [LH_N]]: 766
+//│ 	[LH_P2 [LH_N] [LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]]: 774
+//│ 	[LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹]: 785
+//│ case _lh_matchIdent⁴ of {LH_N  => [LH_N] | _  => let _lh_matchIdent⁵ = break_₀((fun x⁵ -> polyEq⁰(x⁵, ' ')), _lh_matchIdent⁴)
+//│ in case _lh_matchIdent⁵ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}}: 760 --->
+//│ 	[LH_N]: 826
+//│ 	[LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹]: 837
+//│ case _lh_matchIdent⁶ of {LH_P2 _lh_break_LH_P2_0¹ _lh_break_LH_P2_1¹ => [LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹] | _  => error⁰}: 787 --->
+//│ 	[LH_P2 [LH_N] [LH_N]]: 797
+//│ 	[LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]]: 805
+//│ 	[LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹]: 816
+//│ case _lh_break_arg2¹ of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹ => if _lh_break_arg1¹(_lh_break_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]] else let _lh_matchIdent⁶ = break1_₀(_lh_break_arg1¹, _lh_break_LH_C_1¹)
+//│ in case _lh_matchIdent⁶ of {LH_P2 _lh_break_LH_P2_0¹ _lh_break_LH_P2_1¹ => [LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹] | _  => error⁰} | _  => error⁰}: 791 --->
+//│ 	[LH_N]: 826
+//│ 	[LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹]: 837
+//│ case _lh_matchIdent⁷ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰}: 818 --->
+//│ 	[LH_P2 [LH_N] [LH_N]]: 797
+//│ 	[LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]]: 805
+//│ 	[LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹]: 816
+//│ case _lh_break1_arg2¹ of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹ => if _lh_break1_arg1¹(_lh_break1_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]] else let _lh_matchIdent⁷ = break1_₀(_lh_break1_arg1¹, _lh_break1_LH_C_1¹)
+//│ in case _lh_matchIdent⁷ of {LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹] | _  => error⁰} | _  => error⁰}: 822 --->
+//│ 	[LH_N]: 849
+//│ 	[LH_C '4' [LH_N]]: 850
+//│ 	[LH_C ' ' [LH_C '4' [LH_N]]]: 851
+//│ 	[LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]: 852
+//│ 	[LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]: 853
+//│ case _lh_dropWhile_arg2¹ of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1¹(_lh_dropWhile_LH_C_0¹) then dropWhile_₀(_lh_dropWhile_arg1¹, _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹] | _  => error⁰}: 840 --->
+//│ 	[LH_N]: 765
+//│ 	[LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]: 773
+//│ 	[LH_N]: 796
+//│ 	[LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]: 804
+//│ 	[LH_N]: 849
+//│ 	[LH_C '4' [LH_N]]: 850
+//│ 	[LH_C ' ' [LH_C '4' [LH_N]]]: 851
+//│ 	[LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]: 852
+//│ 	[LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]: 853
+//│ 	[LH_C '1' [LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]]: 854
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [LH_P2 [LH_N] [LH_N]]: 162 --->
-//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}: 237
-//│ [LH_P2 [LH_N] [LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]]: 170 --->
-//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}: 237
-//│ [LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹]: 181 --->
-//│ 	case _lh_matchIdent⁷ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}: 237
+//│ [LH_P2 [LH_N] [LH_N]]: 766 --->
+//│ 	case _lh_matchIdent⁵ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}: 758
+//│ [LH_P2 [LH_N] [LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]]: 774 --->
+//│ 	case _lh_matchIdent⁵ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}: 758
+//│ [LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹]: 785 --->
+//│ 	case _lh_matchIdent⁵ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}: 758
 //│ ------------------
-//│ case _lh_matchIdent⁷ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}: 237 --->
-//│ 	[LH_P2 [LH_N] [LH_N]]: 162
-//│ 	[LH_P2 [LH_N] [LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]]: 170
-//│ 	[LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹]: 181
+//│ case _lh_matchIdent⁵ of {LH_P2 _lh_words_LH_P2_0¹ _lh_words_LH_P2_1¹ => [LH_C _lh_words_LH_P2_0¹ words_₀(_lh_words_LH_P2_1¹)] | _  => error⁰}: 758 --->
+//│ 	[LH_P2 [LH_N] [LH_N]]: 766
+//│ 	[LH_P2 [LH_N] [LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]]: 774
+//│ 	[LH_P2 [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹] _lh_break_LH_P2_1¹]: 785
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ words_₀_₀([LH_C '1' [LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]])
-//│ def words_₀_₀(_lh_words_arg1²) = 
-//│ 	let _lh_matchIdent¹⁰ = dropWhile_₀_₀((fun x⁴ -> polyEq⁰(x⁴, ' ')), _lh_words_arg1²)
-//│ 	in case _lh_matchIdent¹⁰ of {
+//│ words_₀([LH_C '1' [LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]])
+//│ def break1_₀(_lh_break1_arg1², _lh_break1_arg2²) = case _lh_break1_arg2² of {
+//│ 	LH_N  => [LH_P2 [LH_N] [LH_N]]
+//│ 	| LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹ => if _lh_break1_arg1²(_lh_break1_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]] else 
+//│ 		let _lh_matchIdent¹¹ = break1_₀(_lh_break1_arg1², _lh_break1_LH_C_1¹)
+//│ 		in case _lh_matchIdent¹¹ of {
+//│ 			LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹]
+//│ 			| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def break_₀(_lh_break_arg1², _lh_break_arg2²) = case _lh_break_arg2² of {
+//│ 	LH_N  => 
+//│ 		let _lh_words_LH_P2_1² = [LH_N]
+//│ 		in let _lh_words_LH_P2_0² = [LH_N]
+//│ 		in (fun _lh_dummy⁰ -> [LH_C _lh_words_LH_P2_0² words_₀(_lh_words_LH_P2_1²)])
+//│ 	| LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹ => if _lh_break_arg1²(_lh_break_LH_C_0¹) then 
+//│ 		let _lh_words_LH_P2_1³ = [LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]
+//│ 		in let _lh_words_LH_P2_0³ = [LH_N]
+//│ 		in (fun _lh_dummy¹ -> [LH_C _lh_words_LH_P2_0³ words_₀(_lh_words_LH_P2_1³)]) else 
+//│ 		let _lh_matchIdent¹⁰ = break1_₀(_lh_break_arg1², _lh_break_LH_C_1¹)
+//│ 		in case _lh_matchIdent¹⁰ of {
+//│ 			LH_P2 _lh_break_LH_P2_0¹ _lh_break_LH_P2_1¹ => 
+//│ 				let _lh_words_LH_P2_1⁴ = _lh_break_LH_P2_1¹
+//│ 				in let _lh_words_LH_P2_0⁴ = [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹]
+//│ 				in (fun _lh_dummy² -> [LH_C _lh_words_LH_P2_0⁴ words_₀(_lh_words_LH_P2_1⁴)])
+//│ 			| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def dropWhile_₀(_lh_dropWhile_arg1², _lh_dropWhile_arg2²) = case _lh_dropWhile_arg2² of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1²(_lh_dropWhile_LH_C_0¹) then dropWhile_₀(_lh_dropWhile_arg1², _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹]
+//│ 	| _  => error⁰}
+//│ def words_₀(_lh_words_arg1²) = 
+//│ 	let _lh_matchIdent⁸ = dropWhile_₀((fun x⁶ -> polyEq⁰(x⁶, ' ')), _lh_words_arg1²)
+//│ 	in case _lh_matchIdent⁸ of {
 //│ 		LH_N  => [LH_N]
 //│ 		| _  => 
-//│ 			let _lh_matchIdent¹¹ = break_₀_₀((fun x⁵ -> polyEq⁰(x⁵, ' ')), _lh_matchIdent¹⁰)
-//│ 			in _lh_matchIdent¹¹(99)}
-//│ 	where
-//│ 	def break_₀_₀(_lh_break_arg1², _lh_break_arg2²) = 
-//│ 		case _lh_break_arg2² of {
-//│ 			LH_N  => 
-//│ 				let _lh_words_LH_P2_1² = [LH_N]
-//│ 				in let _lh_words_LH_P2_0² = [LH_N]
-//│ 				in (fun _lh_dummy⁰ -> [LH_C _lh_words_LH_P2_0² words_₀_₀(_lh_words_LH_P2_1²)])
-//│ 			| LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹ => if _lh_break_arg1²(_lh_break_LH_C_0¹) then 
-//│ 				let _lh_words_LH_P2_1³ = [LH_C _lh_break_LH_C_0¹ _lh_break_LH_C_1¹]
-//│ 				in let _lh_words_LH_P2_0³ = [LH_N]
-//│ 				in (fun _lh_dummy¹ -> [LH_C _lh_words_LH_P2_0³ words_₀_₀(_lh_words_LH_P2_1³)]) else 
-//│ 				let _lh_matchIdent⁹ = break1_₀_₀(_lh_break_arg1², _lh_break_LH_C_1¹)
-//│ 				in case _lh_matchIdent⁹ of {
-//│ 					LH_P2 _lh_break_LH_P2_0¹ _lh_break_LH_P2_1¹ => 
-//│ 						let _lh_words_LH_P2_1⁴ = _lh_break_LH_P2_1¹
-//│ 						in let _lh_words_LH_P2_0⁴ = [LH_C _lh_break_LH_C_0¹ _lh_break_LH_P2_0¹]
-//│ 						in (fun _lh_dummy² -> [LH_C _lh_words_LH_P2_0⁴ words_₀_₀(_lh_words_LH_P2_1⁴)])
-//│ 					| _  => error⁰}
-//│ 			| _  => error⁰}
-//│ 		where
-//│ 		def break1_₀_₀(_lh_break1_arg1², _lh_break1_arg2²) = 
-//│ 			case _lh_break1_arg2² of {
-//│ 				LH_N  => [LH_P2 [LH_N] [LH_N]]
-//│ 				| LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹ => if _lh_break1_arg1²(_lh_break1_LH_C_0¹) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_C_1¹]] else 
-//│ 					let _lh_matchIdent⁸ = break1_₀_₀(_lh_break1_arg1², _lh_break1_LH_C_1¹)
-//│ 					in case _lh_matchIdent⁸ of {
-//│ 						LH_P2 _lh_break1_LH_P2_0¹ _lh_break1_LH_P2_1¹ => [LH_P2 [LH_C _lh_break1_LH_C_0¹ _lh_break1_LH_P2_0¹] _lh_break1_LH_P2_1¹]
-//│ 						| _  => error⁰}
-//│ 				| _  => error⁰}
-//│ 	def dropWhile_₀_₀(_lh_dropWhile_arg1², _lh_dropWhile_arg2²) = 
-//│ 		case _lh_dropWhile_arg2² of {
-//│ 			LH_N  => [LH_N]
-//│ 			| LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹ => if _lh_dropWhile_arg1²(_lh_dropWhile_LH_C_0¹) then dropWhile_₀_₀(_lh_dropWhile_arg1², _lh_dropWhile_LH_C_1¹) else [LH_C _lh_dropWhile_LH_C_0¹ _lh_dropWhile_LH_C_1¹]
-//│ 			| _  => error⁰}
+//│ 			let _lh_matchIdent⁹ = break_₀((fun x⁷ -> polyEq⁰(x⁷, ' ')), _lh_matchIdent⁸)
+//│ 			in _lh_matchIdent⁹(99)}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ words_₀_₀ :: 'words_₀_₀ <: [LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_N))))) => '13_callres | '_lh_words_LH_P2_1⁰ => '51_callres | '_lh_words_LH_P2_1¹ => '66_callres | '_lh_words_LH_P2_1² => '84_callres] ::: false
+//│ words_₀ :: 'words_₀ <: [LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_N))))) => '13_callres | '_lh_words_LH_P2_1⁰ => '49_callres | '_lh_words_LH_P2_1¹ => '64_callres | '_lh_words_LH_P2_1² => '82_callres] ::: false
 //│ '1' :: Char ::: false
 //│ ' ' :: Char ::: false
 //│ '2' :: Char ::: false
@@ -1111,193 +1058,193 @@ words "1 2 4"
 //│ [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]] :: LH_C(Char, LH_C(Char, LH_C(Char, LH_N))) ::: true
 //│ [LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]] :: LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_N)))) ::: true
 //│ [LH_C '1' [LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]] :: LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_N))))) ::: true
-//│ words_₀_₀([LH_C '1' [LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]]) :: '13_callres <: [NoCons] ::: false
+//│ words_₀([LH_C '1' [LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]]) :: '13_callres <: [NoCons] ::: false
+//│ dropWhile_₀ :: 'dropWhile_₀ <: ['x⁰ => '19_callres => '21_callres | '_lh_dropWhile_arg1⁰ => '133_callres] ::: false
+//│ polyEq :: NoProd ::: true
+//│ x :: 'x⁰ <: [NoCons] ::: false
+//│ polyEq(x) :: '17_callres <: [Char => '19_callres] ::: false
+//│ ' ' :: Char ::: false
+//│ polyEq(x, ' ') :: '19_callres <: ['130_callres] ::: false
+//│ (fun x -> polyEq(x, ' ')) :: 'x⁰ => '19_callres ::: true
+//│ dropWhile_₀((fun x -> polyEq(x, ' '))) :: '21_callres <: ['_lh_words_arg1⁰ => '23_callres] ::: false
+//│ _lh_words_arg1 :: '_lh_words_arg1⁰ <: ['_lh_dropWhile_arg2⁰] ::: false
+//│ dropWhile_₀((fun x -> polyEq(x, ' ')), _lh_words_arg1) :: '23_callres <: ['_lh_matchIdent⁰] ::: false
+//│ _lh_matchIdent :: '_lh_matchIdent⁰ <: ['_lh_break_arg2⁰ | Destruct(LH_N, _)] ::: false
+//│ [LH_N] :: LH_N ::: true
+//│ break_₀ :: 'break_₀ <: ['x¹ => '31_callres => '33_callres] ::: false
+//│ polyEq :: NoProd ::: true
+//│ x :: 'x¹ <: [NoCons] ::: false
+//│ polyEq(x) :: '29_callres <: [Char => '31_callres] ::: false
+//│ ' ' :: Char ::: false
+//│ polyEq(x, ' ') :: '31_callres <: ['101_callres | '56_callres] ::: false
+//│ (fun x -> polyEq(x, ' ')) :: 'x¹ => '31_callres ::: true
+//│ break_₀((fun x -> polyEq(x, ' '))) :: '33_callres <: ['_lh_matchIdent⁰ => '35_callres] ::: false
+//│ _lh_matchIdent :: '_lh_matchIdent⁰ <: ['_lh_break_arg2⁰ | Destruct(LH_N, _)] ::: false
+//│ break_₀((fun x -> polyEq(x, ' ')), _lh_matchIdent) :: '35_callres <: ['_lh_matchIdent¹] ::: false
+//│ _lh_matchIdent :: '_lh_matchIdent¹ <: [Int => '38_callres] ::: false
+//│ 99 :: Int ::: false
+//│ _lh_matchIdent(99) :: '38_callres <: ['40_matchres] ::: false
+//│ let _lh_matchIdent = break_₀((fun x -> polyEq(x, ' ')), _lh_matchIdent)
+//│ in _lh_matchIdent(99) :: '38_callres <: ['40_matchres] ::: false
+//│ case _lh_matchIdent of {LH_N  => [LH_N] | _  => let _lh_matchIdent = break_₀((fun x -> polyEq(x, ' ')), _lh_matchIdent)
+//│ in _lh_matchIdent(99)} :: '40_matchres <: ['13_callres | '82_callres | '64_callres | '49_callres] ::: false
+//│ let _lh_matchIdent = dropWhile_₀((fun x -> polyEq(x, ' ')), _lh_words_arg1)
+//│ in case _lh_matchIdent of {LH_N  => [LH_N] | _  => let _lh_matchIdent = break_₀((fun x -> polyEq(x, ' ')), _lh_matchIdent)
+//│ in _lh_matchIdent(99)} :: '40_matchres <: ['13_callres | '82_callres | '64_callres | '49_callres] ::: false
+//│ (fun _lh_words_arg1 -> let _lh_matchIdent = dropWhile_₀((fun x -> polyEq(x, ' ')), _lh_words_arg1)
+//│ in case _lh_matchIdent of {LH_N  => [LH_N] | _  => let _lh_matchIdent = break_₀((fun x -> polyEq(x, ' ')), _lh_matchIdent)
+//│ in _lh_matchIdent(99)}) :: '_lh_words_arg1⁰ => '40_matchres ::: true
+//│ _lh_break_arg2 :: '_lh_break_arg2⁰ <: [Destruct(LH_N, LH_C('_lh_break_LH_C_0⁰, '_lh_break_LH_C_1⁰), _)] ::: false
+//│ [LH_N] :: LH_N ::: true
+//│ [LH_N] :: LH_N ::: true
+//│ _lh_words_LH_P2_0 :: '_lh_words_LH_P2_0⁰ <: [NoCons] ::: false
+//│ words_₀ :: 'words_₀ <: [LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_N))))) => '13_callres | '_lh_words_LH_P2_1⁰ => '49_callres | '_lh_words_LH_P2_1¹ => '64_callres | '_lh_words_LH_P2_1² => '82_callres] ::: false
+//│ _lh_words_LH_P2_1 :: '_lh_words_LH_P2_1⁰ <: ['_lh_words_arg1⁰] ::: false
+//│ words_₀(_lh_words_LH_P2_1) :: '49_callres <: [NoCons] ::: false
+//│ [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)] :: LH_C('_lh_words_LH_P2_0⁰, '49_callres) ::: true
+//│ (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) :: '_lh_dummy⁰ => LH_C('_lh_words_LH_P2_0⁰, '49_callres) ::: true
+//│ let _lh_words_LH_P2_0 = [LH_N]
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) :: '_lh_dummy⁰ => LH_C('_lh_words_LH_P2_0⁰, '49_callres) ::: true
+//│ let _lh_words_LH_P2_1 = [LH_N]
+//│ in let _lh_words_LH_P2_0 = [LH_N]
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) :: '_lh_dummy⁰ => LH_C('_lh_words_LH_P2_0⁰, '49_callres) ::: true
+//│ _lh_break_arg1 :: '_lh_break_arg1⁰ <: ['_lh_break_LH_C_0⁰ => '56_callres | '_lh_break1_arg1⁰] ::: false
+//│ _lh_break_LH_C_0 :: '_lh_break_LH_C_0⁰ <: [NoCons | '_lh_dropWhile_LH_C_0⁰ | 'x¹] ::: false
+//│ _lh_break_arg1(_lh_break_LH_C_0) :: '56_callres <: [Destruct(True, False)] ::: false
+//│ _lh_break_LH_C_0 :: '_lh_break_LH_C_0⁰ <: [NoCons | '_lh_dropWhile_LH_C_0⁰ | 'x¹] ::: false
+//│ _lh_break_LH_C_1 :: '_lh_break_LH_C_1⁰ <: ['_lh_dropWhile_LH_C_1⁰ | '_lh_break1_arg2⁰] ::: false
+//│ [LH_C _lh_break_LH_C_0 _lh_break_LH_C_1] :: LH_C('_lh_break_LH_C_0⁰, '_lh_break_LH_C_1⁰) ::: true
+//│ [LH_N] :: LH_N ::: true
+//│ _lh_words_LH_P2_0 :: '_lh_words_LH_P2_0¹ <: [NoCons] ::: false
+//│ words_₀ :: 'words_₀ <: [LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_N))))) => '13_callres | '_lh_words_LH_P2_1⁰ => '49_callres | '_lh_words_LH_P2_1¹ => '64_callres | '_lh_words_LH_P2_1² => '82_callres] ::: false
+//│ _lh_words_LH_P2_1 :: '_lh_words_LH_P2_1¹ <: ['_lh_words_arg1⁰] ::: false
+//│ words_₀(_lh_words_LH_P2_1) :: '64_callres <: [NoCons] ::: false
+//│ [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)] :: LH_C('_lh_words_LH_P2_0¹, '64_callres) ::: true
+//│ (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) :: '_lh_dummy¹ => LH_C('_lh_words_LH_P2_0¹, '64_callres) ::: true
+//│ let _lh_words_LH_P2_0 = [LH_N]
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) :: '_lh_dummy¹ => LH_C('_lh_words_LH_P2_0¹, '64_callres) ::: true
+//│ let _lh_words_LH_P2_1 = [LH_C _lh_break_LH_C_0 _lh_break_LH_C_1]
+//│ in let _lh_words_LH_P2_0 = [LH_N]
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) :: '_lh_dummy¹ => LH_C('_lh_words_LH_P2_0¹, '64_callres) ::: true
+//│ break1_₀ :: 'break1_₀ <: ['_lh_break_arg1⁰ => '71_callres | '_lh_break1_arg1⁰ => '109_callres] ::: false
+//│ _lh_break_arg1 :: '_lh_break_arg1⁰ <: ['_lh_break_LH_C_0⁰ => '56_callres | '_lh_break1_arg1⁰] ::: false
+//│ break1_₀(_lh_break_arg1) :: '71_callres <: ['_lh_break_LH_C_1⁰ => '73_callres] ::: false
+//│ _lh_break_LH_C_1 :: '_lh_break_LH_C_1⁰ <: ['_lh_dropWhile_LH_C_1⁰ | '_lh_break1_arg2⁰] ::: false
+//│ break1_₀(_lh_break_arg1, _lh_break_LH_C_1) :: '73_callres <: ['_lh_matchIdent²] ::: false
+//│ _lh_matchIdent :: '_lh_matchIdent² <: [Destruct(LH_P2('_lh_break_LH_P2_0⁰, '_lh_break_LH_P2_1⁰), _)] ::: false
+//│ _lh_break_LH_P2_1 :: '_lh_break_LH_P2_1⁰ <: ['_lh_words_LH_P2_1²] ::: false
+//│ _lh_break_LH_C_0 :: '_lh_break_LH_C_0⁰ <: [NoCons | '_lh_dropWhile_LH_C_0⁰ | 'x¹] ::: false
+//│ _lh_break_LH_P2_0 :: '_lh_break_LH_P2_0⁰ <: [NoCons] ::: false
+//│ [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0] :: LH_C('_lh_break_LH_C_0⁰, '_lh_break_LH_P2_0⁰) ::: true
+//│ _lh_words_LH_P2_0 :: '_lh_words_LH_P2_0² <: [NoCons] ::: false
+//│ words_₀ :: 'words_₀ <: [LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_N))))) => '13_callres | '_lh_words_LH_P2_1⁰ => '49_callres | '_lh_words_LH_P2_1¹ => '64_callres | '_lh_words_LH_P2_1² => '82_callres] ::: false
+//│ _lh_words_LH_P2_1 :: '_lh_words_LH_P2_1² <: ['_lh_words_arg1⁰] ::: false
+//│ words_₀(_lh_words_LH_P2_1) :: '82_callres <: [NoCons] ::: false
+//│ [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)] :: LH_C('_lh_words_LH_P2_0², '82_callres) ::: true
+//│ (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) :: '_lh_dummy² => LH_C('_lh_words_LH_P2_0², '82_callres) ::: true
+//│ let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) :: '_lh_dummy² => LH_C('_lh_words_LH_P2_0², '82_callres) ::: true
+//│ let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
+//│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) :: '_lh_dummy² => LH_C('_lh_words_LH_P2_0², '82_callres) ::: true
+//│ error :: '_lh_rigid_error_var <: [DeadCodeCons] ::: true
+//│ case _lh_matchIdent of {LH_P2 _lh_break_LH_P2_0 _lh_break_LH_P2_1 => let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
+//│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) | _  => error} :: '88_matchres <: ['90_ifres] ::: false
+//│ let _lh_matchIdent = break1_₀(_lh_break_arg1, _lh_break_LH_C_1)
+//│ in case _lh_matchIdent of {LH_P2 _lh_break_LH_P2_0 _lh_break_LH_P2_1 => let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
+//│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) | _  => error} :: '88_matchres <: ['90_ifres] ::: false
+//│ if _lh_break_arg1(_lh_break_LH_C_0) then let _lh_words_LH_P2_1 = [LH_C _lh_break_LH_C_0 _lh_break_LH_C_1]
+//│ in let _lh_words_LH_P2_0 = [LH_N]
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) else let _lh_matchIdent = break1_₀(_lh_break_arg1, _lh_break_LH_C_1)
+//│ in case _lh_matchIdent of {LH_P2 _lh_break_LH_P2_0 _lh_break_LH_P2_1 => let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
+//│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) | _  => error} :: '90_ifres <: ['92_matchres] ::: false
+//│ error :: '_lh_rigid_error_var <: [DeadCodeCons] ::: true
+//│ case _lh_break_arg2 of {LH_N  => let _lh_words_LH_P2_1 = [LH_N]
+//│ in let _lh_words_LH_P2_0 = [LH_N]
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) | LH_C _lh_break_LH_C_0 _lh_break_LH_C_1 => if _lh_break_arg1(_lh_break_LH_C_0) then let _lh_words_LH_P2_1 = [LH_C _lh_break_LH_C_0 _lh_break_LH_C_1]
+//│ in let _lh_words_LH_P2_0 = [LH_N]
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) else let _lh_matchIdent = break1_₀(_lh_break_arg1, _lh_break_LH_C_1)
+//│ in case _lh_matchIdent of {LH_P2 _lh_break_LH_P2_0 _lh_break_LH_P2_1 => let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
+//│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) | _  => error} | _  => error} :: '92_matchres <: ['35_callres] ::: false
+//│ (fun _lh_break_arg2 -> case _lh_break_arg2 of {LH_N  => let _lh_words_LH_P2_1 = [LH_N]
+//│ in let _lh_words_LH_P2_0 = [LH_N]
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) | LH_C _lh_break_LH_C_0 _lh_break_LH_C_1 => if _lh_break_arg1(_lh_break_LH_C_0) then let _lh_words_LH_P2_1 = [LH_C _lh_break_LH_C_0 _lh_break_LH_C_1]
+//│ in let _lh_words_LH_P2_0 = [LH_N]
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) else let _lh_matchIdent = break1_₀(_lh_break_arg1, _lh_break_LH_C_1)
+//│ in case _lh_matchIdent of {LH_P2 _lh_break_LH_P2_0 _lh_break_LH_P2_1 => let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
+//│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) | _  => error} | _  => error}) :: '_lh_break_arg2⁰ => '92_matchres ::: true
+//│ (fun _lh_break_arg1 -> (fun _lh_break_arg2 -> case _lh_break_arg2 of {LH_N  => let _lh_words_LH_P2_1 = [LH_N]
+//│ in let _lh_words_LH_P2_0 = [LH_N]
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) | LH_C _lh_break_LH_C_0 _lh_break_LH_C_1 => if _lh_break_arg1(_lh_break_LH_C_0) then let _lh_words_LH_P2_1 = [LH_C _lh_break_LH_C_0 _lh_break_LH_C_1]
+//│ in let _lh_words_LH_P2_0 = [LH_N]
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) else let _lh_matchIdent = break1_₀(_lh_break_arg1, _lh_break_LH_C_1)
+//│ in case _lh_matchIdent of {LH_P2 _lh_break_LH_P2_0 _lh_break_LH_P2_1 => let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
+//│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀(_lh_words_LH_P2_1)]) | _  => error} | _  => error})) :: '_lh_break_arg1⁰ => '_lh_break_arg2⁰ => '92_matchres ::: true
 //│ _lh_break1_arg2 :: '_lh_break1_arg2⁰ <: [Destruct(LH_N, LH_C('_lh_break1_LH_C_0⁰, '_lh_break1_LH_C_1⁰), _)] ::: false
 //│ [LH_N] :: LH_N ::: true
 //│ [LH_N] :: LH_N ::: true
 //│ [LH_P2 [LH_N] [LH_N]] :: LH_P2(LH_N, LH_N) ::: true
-//│ _lh_break1_arg1 :: '_lh_break1_arg1⁰ <: ['_lh_break1_LH_C_0⁰ => '20_callres] ::: false
-//│ _lh_break1_LH_C_0 :: '_lh_break1_LH_C_0⁰ <: [NoCons | 'x¹ | '_lh_dropWhile_LH_C_0⁰] ::: false
-//│ _lh_break1_arg1(_lh_break1_LH_C_0) :: '20_callres <: [Destruct(True, False)] ::: false
+//│ _lh_break1_arg1 :: '_lh_break1_arg1⁰ <: ['_lh_break1_LH_C_0⁰ => '101_callres] ::: false
+//│ _lh_break1_LH_C_0 :: '_lh_break1_LH_C_0⁰ <: [NoCons | '_lh_dropWhile_LH_C_0⁰ | 'x¹] ::: false
+//│ _lh_break1_arg1(_lh_break1_LH_C_0) :: '101_callres <: [Destruct(True, False)] ::: false
 //│ [LH_N] :: LH_N ::: true
-//│ _lh_break1_LH_C_0 :: '_lh_break1_LH_C_0⁰ <: [NoCons | 'x¹ | '_lh_dropWhile_LH_C_0⁰] ::: false
+//│ _lh_break1_LH_C_0 :: '_lh_break1_LH_C_0⁰ <: [NoCons | '_lh_dropWhile_LH_C_0⁰ | 'x¹] ::: false
 //│ _lh_break1_LH_C_1 :: '_lh_break1_LH_C_1⁰ <: ['_lh_dropWhile_LH_C_1⁰ | '_lh_break1_arg2⁰] ::: false
 //│ [LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1] :: LH_C('_lh_break1_LH_C_0⁰, '_lh_break1_LH_C_1⁰) ::: true
 //│ [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1]] :: LH_P2(LH_N, LH_C('_lh_break1_LH_C_0⁰, '_lh_break1_LH_C_1⁰)) ::: true
-//│ break1_₀_₀ :: 'break1_₀_₀ <: ['_lh_break1_arg1⁰ => '28_callres | '_lh_break_arg1⁰ => '73_callres] ::: false
-//│ _lh_break1_arg1 :: '_lh_break1_arg1⁰ <: ['_lh_break1_LH_C_0⁰ => '20_callres] ::: false
-//│ break1_₀_₀(_lh_break1_arg1) :: '28_callres <: ['_lh_break1_LH_C_1⁰ => '30_callres] ::: false
+//│ break1_₀ :: 'break1_₀ <: ['_lh_break_arg1⁰ => '71_callres | '_lh_break1_arg1⁰ => '109_callres] ::: false
+//│ _lh_break1_arg1 :: '_lh_break1_arg1⁰ <: ['_lh_break1_LH_C_0⁰ => '101_callres] ::: false
+//│ break1_₀(_lh_break1_arg1) :: '109_callres <: ['_lh_break1_LH_C_1⁰ => '111_callres] ::: false
 //│ _lh_break1_LH_C_1 :: '_lh_break1_LH_C_1⁰ <: ['_lh_dropWhile_LH_C_1⁰ | '_lh_break1_arg2⁰] ::: false
-//│ break1_₀_₀(_lh_break1_arg1, _lh_break1_LH_C_1) :: '30_callres <: ['_lh_matchIdent⁰] ::: false
-//│ _lh_matchIdent :: '_lh_matchIdent⁰ <: [Destruct(LH_P2('_lh_break1_LH_P2_0⁰, '_lh_break1_LH_P2_1⁰), _)] ::: false
-//│ _lh_break1_LH_C_0 :: '_lh_break1_LH_C_0⁰ <: [NoCons | 'x¹ | '_lh_dropWhile_LH_C_0⁰] ::: false
+//│ break1_₀(_lh_break1_arg1, _lh_break1_LH_C_1) :: '111_callres <: ['_lh_matchIdent³] ::: false
+//│ _lh_matchIdent :: '_lh_matchIdent³ <: [Destruct(LH_P2('_lh_break1_LH_P2_0⁰, '_lh_break1_LH_P2_1⁰), _)] ::: false
+//│ _lh_break1_LH_C_0 :: '_lh_break1_LH_C_0⁰ <: [NoCons | '_lh_dropWhile_LH_C_0⁰ | 'x¹] ::: false
 //│ _lh_break1_LH_P2_0 :: '_lh_break1_LH_P2_0⁰ <: [NoCons] ::: false
 //│ [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] :: LH_C('_lh_break1_LH_C_0⁰, '_lh_break1_LH_P2_0⁰) ::: true
 //│ _lh_break1_LH_P2_1 :: '_lh_break1_LH_P2_1⁰ <: ['_lh_break_LH_P2_1⁰] ::: false
 //│ [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] :: LH_P2(LH_C('_lh_break1_LH_C_0⁰, '_lh_break1_LH_P2_0⁰), '_lh_break1_LH_P2_1⁰) ::: true
 //│ error :: '_lh_rigid_error_var <: [DeadCodeCons] ::: true
-//│ case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} :: '38_matchres <: ['40_ifres] ::: false
-//│ let _lh_matchIdent = break1_₀_₀(_lh_break1_arg1, _lh_break1_LH_C_1)
-//│ in case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} :: '38_matchres <: ['40_ifres] ::: false
-//│ if _lh_break1_arg1(_lh_break1_LH_C_0) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1]] else let _lh_matchIdent = break1_₀_₀(_lh_break1_arg1, _lh_break1_LH_C_1)
-//│ in case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} :: '40_ifres <: ['42_matchres] ::: false
+//│ case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} :: '119_matchres <: ['121_ifres] ::: false
+//│ let _lh_matchIdent = break1_₀(_lh_break1_arg1, _lh_break1_LH_C_1)
+//│ in case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} :: '119_matchres <: ['121_ifres] ::: false
+//│ if _lh_break1_arg1(_lh_break1_LH_C_0) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1]] else let _lh_matchIdent = break1_₀(_lh_break1_arg1, _lh_break1_LH_C_1)
+//│ in case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} :: '121_ifres <: ['123_matchres] ::: false
 //│ error :: '_lh_rigid_error_var <: [DeadCodeCons] ::: true
-//│ case _lh_break1_arg2 of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1 => if _lh_break1_arg1(_lh_break1_LH_C_0) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1]] else let _lh_matchIdent = break1_₀_₀(_lh_break1_arg1, _lh_break1_LH_C_1)
-//│ in case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} | _  => error} :: '42_matchres <: ['30_callres | '75_callres] ::: false
-//│ (fun _lh_break1_arg2 -> case _lh_break1_arg2 of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1 => if _lh_break1_arg1(_lh_break1_LH_C_0) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1]] else let _lh_matchIdent = break1_₀_₀(_lh_break1_arg1, _lh_break1_LH_C_1)
-//│ in case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} | _  => error}) :: '_lh_break1_arg2⁰ => '42_matchres ::: true
-//│ (fun _lh_break1_arg1 -> (fun _lh_break1_arg2 -> case _lh_break1_arg2 of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1 => if _lh_break1_arg1(_lh_break1_LH_C_0) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1]] else let _lh_matchIdent = break1_₀_₀(_lh_break1_arg1, _lh_break1_LH_C_1)
-//│ in case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} | _  => error})) :: '_lh_break1_arg1⁰ => '_lh_break1_arg2⁰ => '42_matchres ::: true
-//│ _lh_break_arg2 :: '_lh_break_arg2⁰ <: [Destruct(LH_N, LH_C('_lh_break_LH_C_0⁰, '_lh_break_LH_C_1⁰), _)] ::: false
-//│ [LH_N] :: LH_N ::: true
-//│ [LH_N] :: LH_N ::: true
-//│ _lh_words_LH_P2_0 :: '_lh_words_LH_P2_0⁰ <: [NoCons] ::: false
-//│ words_₀_₀ :: 'words_₀_₀ <: [LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_N))))) => '13_callres | '_lh_words_LH_P2_1⁰ => '51_callres | '_lh_words_LH_P2_1¹ => '66_callres | '_lh_words_LH_P2_1² => '84_callres] ::: false
-//│ _lh_words_LH_P2_1 :: '_lh_words_LH_P2_1⁰ <: ['_lh_words_arg1⁰] ::: false
-//│ words_₀_₀(_lh_words_LH_P2_1) :: '51_callres <: [NoCons] ::: false
-//│ [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)] :: LH_C('_lh_words_LH_P2_0⁰, '51_callres) ::: true
-//│ (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) :: '_lh_dummy⁰ => LH_C('_lh_words_LH_P2_0⁰, '51_callres) ::: true
-//│ let _lh_words_LH_P2_0 = [LH_N]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) :: '_lh_dummy⁰ => LH_C('_lh_words_LH_P2_0⁰, '51_callres) ::: true
-//│ let _lh_words_LH_P2_1 = [LH_N]
-//│ in let _lh_words_LH_P2_0 = [LH_N]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) :: '_lh_dummy⁰ => LH_C('_lh_words_LH_P2_0⁰, '51_callres) ::: true
-//│ _lh_break_arg1 :: '_lh_break_arg1⁰ <: ['_lh_break1_arg1⁰ | '_lh_break_LH_C_0⁰ => '58_callres] ::: false
-//│ _lh_break_LH_C_0 :: '_lh_break_LH_C_0⁰ <: [NoCons | 'x¹ | '_lh_dropWhile_LH_C_0⁰] ::: false
-//│ _lh_break_arg1(_lh_break_LH_C_0) :: '58_callres <: [Destruct(True, False)] ::: false
-//│ _lh_break_LH_C_0 :: '_lh_break_LH_C_0⁰ <: [NoCons | 'x¹ | '_lh_dropWhile_LH_C_0⁰] ::: false
-//│ _lh_break_LH_C_1 :: '_lh_break_LH_C_1⁰ <: ['_lh_break1_arg2⁰ | '_lh_dropWhile_LH_C_1⁰] ::: false
-//│ [LH_C _lh_break_LH_C_0 _lh_break_LH_C_1] :: LH_C('_lh_break_LH_C_0⁰, '_lh_break_LH_C_1⁰) ::: true
-//│ [LH_N] :: LH_N ::: true
-//│ _lh_words_LH_P2_0 :: '_lh_words_LH_P2_0¹ <: [NoCons] ::: false
-//│ words_₀_₀ :: 'words_₀_₀ <: [LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_N))))) => '13_callres | '_lh_words_LH_P2_1⁰ => '51_callres | '_lh_words_LH_P2_1¹ => '66_callres | '_lh_words_LH_P2_1² => '84_callres] ::: false
-//│ _lh_words_LH_P2_1 :: '_lh_words_LH_P2_1¹ <: ['_lh_words_arg1⁰] ::: false
-//│ words_₀_₀(_lh_words_LH_P2_1) :: '66_callres <: [NoCons] ::: false
-//│ [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)] :: LH_C('_lh_words_LH_P2_0¹, '66_callres) ::: true
-//│ (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) :: '_lh_dummy¹ => LH_C('_lh_words_LH_P2_0¹, '66_callres) ::: true
-//│ let _lh_words_LH_P2_0 = [LH_N]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) :: '_lh_dummy¹ => LH_C('_lh_words_LH_P2_0¹, '66_callres) ::: true
-//│ let _lh_words_LH_P2_1 = [LH_C _lh_break_LH_C_0 _lh_break_LH_C_1]
-//│ in let _lh_words_LH_P2_0 = [LH_N]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) :: '_lh_dummy¹ => LH_C('_lh_words_LH_P2_0¹, '66_callres) ::: true
-//│ break1_₀_₀ :: 'break1_₀_₀ <: ['_lh_break1_arg1⁰ => '28_callres | '_lh_break_arg1⁰ => '73_callres] ::: false
-//│ _lh_break_arg1 :: '_lh_break_arg1⁰ <: ['_lh_break1_arg1⁰ | '_lh_break_LH_C_0⁰ => '58_callres] ::: false
-//│ break1_₀_₀(_lh_break_arg1) :: '73_callres <: ['_lh_break_LH_C_1⁰ => '75_callres] ::: false
-//│ _lh_break_LH_C_1 :: '_lh_break_LH_C_1⁰ <: ['_lh_break1_arg2⁰ | '_lh_dropWhile_LH_C_1⁰] ::: false
-//│ break1_₀_₀(_lh_break_arg1, _lh_break_LH_C_1) :: '75_callres <: ['_lh_matchIdent¹] ::: false
-//│ _lh_matchIdent :: '_lh_matchIdent¹ <: [Destruct(LH_P2('_lh_break_LH_P2_0⁰, '_lh_break_LH_P2_1⁰), _)] ::: false
-//│ _lh_break_LH_P2_1 :: '_lh_break_LH_P2_1⁰ <: ['_lh_words_LH_P2_1²] ::: false
-//│ _lh_break_LH_C_0 :: '_lh_break_LH_C_0⁰ <: [NoCons | 'x¹ | '_lh_dropWhile_LH_C_0⁰] ::: false
-//│ _lh_break_LH_P2_0 :: '_lh_break_LH_P2_0⁰ <: [NoCons] ::: false
-//│ [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0] :: LH_C('_lh_break_LH_C_0⁰, '_lh_break_LH_P2_0⁰) ::: true
-//│ _lh_words_LH_P2_0 :: '_lh_words_LH_P2_0² <: [NoCons] ::: false
-//│ words_₀_₀ :: 'words_₀_₀ <: [LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_N))))) => '13_callres | '_lh_words_LH_P2_1⁰ => '51_callres | '_lh_words_LH_P2_1¹ => '66_callres | '_lh_words_LH_P2_1² => '84_callres] ::: false
-//│ _lh_words_LH_P2_1 :: '_lh_words_LH_P2_1² <: ['_lh_words_arg1⁰] ::: false
-//│ words_₀_₀(_lh_words_LH_P2_1) :: '84_callres <: [NoCons] ::: false
-//│ [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)] :: LH_C('_lh_words_LH_P2_0², '84_callres) ::: true
-//│ (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) :: '_lh_dummy² => LH_C('_lh_words_LH_P2_0², '84_callres) ::: true
-//│ let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) :: '_lh_dummy² => LH_C('_lh_words_LH_P2_0², '84_callres) ::: true
-//│ let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
-//│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) :: '_lh_dummy² => LH_C('_lh_words_LH_P2_0², '84_callres) ::: true
-//│ error :: '_lh_rigid_error_var <: [DeadCodeCons] ::: true
-//│ case _lh_matchIdent of {LH_P2 _lh_break_LH_P2_0 _lh_break_LH_P2_1 => let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
-//│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) | _  => error} :: '90_matchres <: ['92_ifres] ::: false
-//│ let _lh_matchIdent = break1_₀_₀(_lh_break_arg1, _lh_break_LH_C_1)
-//│ in case _lh_matchIdent of {LH_P2 _lh_break_LH_P2_0 _lh_break_LH_P2_1 => let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
-//│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) | _  => error} :: '90_matchres <: ['92_ifres] ::: false
-//│ if _lh_break_arg1(_lh_break_LH_C_0) then let _lh_words_LH_P2_1 = [LH_C _lh_break_LH_C_0 _lh_break_LH_C_1]
-//│ in let _lh_words_LH_P2_0 = [LH_N]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) else let _lh_matchIdent = break1_₀_₀(_lh_break_arg1, _lh_break_LH_C_1)
-//│ in case _lh_matchIdent of {LH_P2 _lh_break_LH_P2_0 _lh_break_LH_P2_1 => let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
-//│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) | _  => error} :: '92_ifres <: ['94_matchres] ::: false
-//│ error :: '_lh_rigid_error_var <: [DeadCodeCons] ::: true
-//│ case _lh_break_arg2 of {LH_N  => let _lh_words_LH_P2_1 = [LH_N]
-//│ in let _lh_words_LH_P2_0 = [LH_N]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) | LH_C _lh_break_LH_C_0 _lh_break_LH_C_1 => if _lh_break_arg1(_lh_break_LH_C_0) then let _lh_words_LH_P2_1 = [LH_C _lh_break_LH_C_0 _lh_break_LH_C_1]
-//│ in let _lh_words_LH_P2_0 = [LH_N]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) else let _lh_matchIdent = break1_₀_₀(_lh_break_arg1, _lh_break_LH_C_1)
-//│ in case _lh_matchIdent of {LH_P2 _lh_break_LH_P2_0 _lh_break_LH_P2_1 => let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
-//│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) | _  => error} | _  => error} :: '94_matchres <: ['136_callres] ::: false
-//│ (fun _lh_break_arg2 -> case _lh_break_arg2 of {LH_N  => let _lh_words_LH_P2_1 = [LH_N]
-//│ in let _lh_words_LH_P2_0 = [LH_N]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) | LH_C _lh_break_LH_C_0 _lh_break_LH_C_1 => if _lh_break_arg1(_lh_break_LH_C_0) then let _lh_words_LH_P2_1 = [LH_C _lh_break_LH_C_0 _lh_break_LH_C_1]
-//│ in let _lh_words_LH_P2_0 = [LH_N]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) else let _lh_matchIdent = break1_₀_₀(_lh_break_arg1, _lh_break_LH_C_1)
-//│ in case _lh_matchIdent of {LH_P2 _lh_break_LH_P2_0 _lh_break_LH_P2_1 => let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
-//│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) | _  => error} | _  => error}) :: '_lh_break_arg2⁰ => '94_matchres ::: true
-//│ (fun _lh_break_arg1 -> (fun _lh_break_arg2 -> case _lh_break_arg2 of {LH_N  => let _lh_words_LH_P2_1 = [LH_N]
-//│ in let _lh_words_LH_P2_0 = [LH_N]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) | LH_C _lh_break_LH_C_0 _lh_break_LH_C_1 => if _lh_break_arg1(_lh_break_LH_C_0) then let _lh_words_LH_P2_1 = [LH_C _lh_break_LH_C_0 _lh_break_LH_C_1]
-//│ in let _lh_words_LH_P2_0 = [LH_N]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) else let _lh_matchIdent = break1_₀_₀(_lh_break_arg1, _lh_break_LH_C_1)
-//│ in case _lh_matchIdent of {LH_P2 _lh_break_LH_P2_0 _lh_break_LH_P2_1 => let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
-//│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_₀_₀(_lh_words_LH_P2_1)]) | _  => error} | _  => error})) :: '_lh_break_arg1⁰ => '_lh_break_arg2⁰ => '94_matchres ::: true
+//│ case _lh_break1_arg2 of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1 => if _lh_break1_arg1(_lh_break1_LH_C_0) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1]] else let _lh_matchIdent = break1_₀(_lh_break1_arg1, _lh_break1_LH_C_1)
+//│ in case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} | _  => error} :: '123_matchres <: ['73_callres | '111_callres] ::: false
+//│ (fun _lh_break1_arg2 -> case _lh_break1_arg2 of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1 => if _lh_break1_arg1(_lh_break1_LH_C_0) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1]] else let _lh_matchIdent = break1_₀(_lh_break1_arg1, _lh_break1_LH_C_1)
+//│ in case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} | _  => error}) :: '_lh_break1_arg2⁰ => '123_matchres ::: true
+//│ (fun _lh_break1_arg1 -> (fun _lh_break1_arg2 -> case _lh_break1_arg2 of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1 => if _lh_break1_arg1(_lh_break1_LH_C_0) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1]] else let _lh_matchIdent = break1_₀(_lh_break1_arg1, _lh_break1_LH_C_1)
+//│ in case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} | _  => error})) :: '_lh_break1_arg1⁰ => '_lh_break1_arg2⁰ => '123_matchres ::: true
 //│ _lh_dropWhile_arg2 :: '_lh_dropWhile_arg2⁰ <: [Destruct(LH_N, LH_C('_lh_dropWhile_LH_C_0⁰, '_lh_dropWhile_LH_C_1⁰), _)] ::: false
 //│ [LH_N] :: LH_N ::: true
-//│ _lh_dropWhile_arg1 :: '_lh_dropWhile_arg1⁰ <: ['_lh_dropWhile_LH_C_0⁰ => '101_callres] ::: false
+//│ _lh_dropWhile_arg1 :: '_lh_dropWhile_arg1⁰ <: ['_lh_dropWhile_LH_C_0⁰ => '130_callres] ::: false
 //│ _lh_dropWhile_LH_C_0 :: '_lh_dropWhile_LH_C_0⁰ <: ['_lh_break_LH_C_0⁰ | 'x⁰] ::: false
-//│ _lh_dropWhile_arg1(_lh_dropWhile_LH_C_0) :: '101_callres <: [Destruct(True, False)] ::: false
-//│ dropWhile_₀_₀ :: 'dropWhile_₀_₀ <: ['_lh_dropWhile_arg1⁰ => '104_callres | 'x⁰ => '120_callres => '122_callres] ::: false
-//│ _lh_dropWhile_arg1 :: '_lh_dropWhile_arg1⁰ <: ['_lh_dropWhile_LH_C_0⁰ => '101_callres] ::: false
-//│ dropWhile_₀_₀(_lh_dropWhile_arg1) :: '104_callres <: ['_lh_dropWhile_LH_C_1⁰ => '106_callres] ::: false
+//│ _lh_dropWhile_arg1(_lh_dropWhile_LH_C_0) :: '130_callres <: [Destruct(True, False)] ::: false
+//│ dropWhile_₀ :: 'dropWhile_₀ <: ['x⁰ => '19_callres => '21_callres | '_lh_dropWhile_arg1⁰ => '133_callres] ::: false
+//│ _lh_dropWhile_arg1 :: '_lh_dropWhile_arg1⁰ <: ['_lh_dropWhile_LH_C_0⁰ => '130_callres] ::: false
+//│ dropWhile_₀(_lh_dropWhile_arg1) :: '133_callres <: ['_lh_dropWhile_LH_C_1⁰ => '135_callres] ::: false
 //│ _lh_dropWhile_LH_C_1 :: '_lh_dropWhile_LH_C_1⁰ <: ['_lh_break_LH_C_1⁰ | '_lh_dropWhile_arg2⁰] ::: false
-//│ dropWhile_₀_₀(_lh_dropWhile_arg1, _lh_dropWhile_LH_C_1) :: '106_callres <: ['110_ifres] ::: false
+//│ dropWhile_₀(_lh_dropWhile_arg1, _lh_dropWhile_LH_C_1) :: '135_callres <: ['139_ifres] ::: false
 //│ _lh_dropWhile_LH_C_0 :: '_lh_dropWhile_LH_C_0⁰ <: ['_lh_break_LH_C_0⁰ | 'x⁰] ::: false
 //│ _lh_dropWhile_LH_C_1 :: '_lh_dropWhile_LH_C_1⁰ <: ['_lh_break_LH_C_1⁰ | '_lh_dropWhile_arg2⁰] ::: false
 //│ [LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1] :: LH_C('_lh_dropWhile_LH_C_0⁰, '_lh_dropWhile_LH_C_1⁰) ::: true
-//│ if _lh_dropWhile_arg1(_lh_dropWhile_LH_C_0) then dropWhile_₀_₀(_lh_dropWhile_arg1, _lh_dropWhile_LH_C_1) else [LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1] :: '110_ifres <: ['112_matchres] ::: false
+//│ if _lh_dropWhile_arg1(_lh_dropWhile_LH_C_0) then dropWhile_₀(_lh_dropWhile_arg1, _lh_dropWhile_LH_C_1) else [LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1] :: '139_ifres <: ['141_matchres] ::: false
 //│ error :: '_lh_rigid_error_var <: [DeadCodeCons] ::: true
-//│ case _lh_dropWhile_arg2 of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1 => if _lh_dropWhile_arg1(_lh_dropWhile_LH_C_0) then dropWhile_₀_₀(_lh_dropWhile_arg1, _lh_dropWhile_LH_C_1) else [LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1] | _  => error} :: '112_matchres <: ['106_callres | '124_callres] ::: false
-//│ (fun _lh_dropWhile_arg2 -> case _lh_dropWhile_arg2 of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1 => if _lh_dropWhile_arg1(_lh_dropWhile_LH_C_0) then dropWhile_₀_₀(_lh_dropWhile_arg1, _lh_dropWhile_LH_C_1) else [LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1] | _  => error}) :: '_lh_dropWhile_arg2⁰ => '112_matchres ::: true
-//│ (fun _lh_dropWhile_arg1 -> (fun _lh_dropWhile_arg2 -> case _lh_dropWhile_arg2 of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1 => if _lh_dropWhile_arg1(_lh_dropWhile_LH_C_0) then dropWhile_₀_₀(_lh_dropWhile_arg1, _lh_dropWhile_LH_C_1) else [LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1] | _  => error})) :: '_lh_dropWhile_arg1⁰ => '_lh_dropWhile_arg2⁰ => '112_matchres ::: true
-//│ dropWhile_₀_₀ :: 'dropWhile_₀_₀ <: ['_lh_dropWhile_arg1⁰ => '104_callres | 'x⁰ => '120_callres => '122_callres] ::: false
-//│ polyEq :: NoProd ::: true
-//│ x :: 'x⁰ <: [NoCons] ::: false
-//│ polyEq(x) :: '118_callres <: [Char => '120_callres] ::: false
-//│ ' ' :: Char ::: false
-//│ polyEq(x, ' ') :: '120_callres <: ['101_callres] ::: false
-//│ (fun x -> polyEq(x, ' ')) :: 'x⁰ => '120_callres ::: true
-//│ dropWhile_₀_₀((fun x -> polyEq(x, ' '))) :: '122_callres <: ['_lh_words_arg1⁰ => '124_callres] ::: false
-//│ _lh_words_arg1 :: '_lh_words_arg1⁰ <: ['_lh_dropWhile_arg2⁰] ::: false
-//│ dropWhile_₀_₀((fun x -> polyEq(x, ' ')), _lh_words_arg1) :: '124_callres <: ['_lh_matchIdent²] ::: false
-//│ _lh_matchIdent :: '_lh_matchIdent² <: ['_lh_break_arg2⁰ | Destruct(LH_N, _)] ::: false
-//│ [LH_N] :: LH_N ::: true
-//│ break_₀_₀ :: 'break_₀_₀ <: ['x¹ => '132_callres => '134_callres] ::: false
-//│ polyEq :: NoProd ::: true
-//│ x :: 'x¹ <: [NoCons] ::: false
-//│ polyEq(x) :: '130_callres <: [Char => '132_callres] ::: false
-//│ ' ' :: Char ::: false
-//│ polyEq(x, ' ') :: '132_callres <: ['20_callres | '58_callres] ::: false
-//│ (fun x -> polyEq(x, ' ')) :: 'x¹ => '132_callres ::: true
-//│ break_₀_₀((fun x -> polyEq(x, ' '))) :: '134_callres <: ['_lh_matchIdent² => '136_callres] ::: false
-//│ _lh_matchIdent :: '_lh_matchIdent² <: ['_lh_break_arg2⁰ | Destruct(LH_N, _)] ::: false
-//│ break_₀_₀((fun x -> polyEq(x, ' ')), _lh_matchIdent) :: '136_callres <: ['_lh_matchIdent³] ::: false
-//│ _lh_matchIdent :: '_lh_matchIdent³ <: [Int => '139_callres] ::: false
-//│ 99 :: Int ::: false
-//│ _lh_matchIdent(99) :: '139_callres <: ['141_matchres] ::: false
-//│ let _lh_matchIdent = break_₀_₀((fun x -> polyEq(x, ' ')), _lh_matchIdent)
-//│ in _lh_matchIdent(99) :: '139_callres <: ['141_matchres] ::: false
-//│ case _lh_matchIdent of {LH_N  => [LH_N] | _  => let _lh_matchIdent = break_₀_₀((fun x -> polyEq(x, ' ')), _lh_matchIdent)
-//│ in _lh_matchIdent(99)} :: '141_matchres <: ['13_callres | '51_callres | '66_callres | '84_callres] ::: false
-//│ let _lh_matchIdent = dropWhile_₀_₀((fun x -> polyEq(x, ' ')), _lh_words_arg1)
-//│ in case _lh_matchIdent of {LH_N  => [LH_N] | _  => let _lh_matchIdent = break_₀_₀((fun x -> polyEq(x, ' ')), _lh_matchIdent)
-//│ in _lh_matchIdent(99)} :: '141_matchres <: ['13_callres | '51_callres | '66_callres | '84_callres] ::: false
-//│ (fun _lh_words_arg1 -> let _lh_matchIdent = dropWhile_₀_₀((fun x -> polyEq(x, ' ')), _lh_words_arg1)
-//│ in case _lh_matchIdent of {LH_N  => [LH_N] | _  => let _lh_matchIdent = break_₀_₀((fun x -> polyEq(x, ' ')), _lh_matchIdent)
-//│ in _lh_matchIdent(99)}) :: '_lh_words_arg1⁰ => '141_matchres ::: true
+//│ case _lh_dropWhile_arg2 of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1 => if _lh_dropWhile_arg1(_lh_dropWhile_LH_C_0) then dropWhile_₀(_lh_dropWhile_arg1, _lh_dropWhile_LH_C_1) else [LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1] | _  => error} :: '141_matchres <: ['23_callres | '135_callres] ::: false
+//│ (fun _lh_dropWhile_arg2 -> case _lh_dropWhile_arg2 of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1 => if _lh_dropWhile_arg1(_lh_dropWhile_LH_C_0) then dropWhile_₀(_lh_dropWhile_arg1, _lh_dropWhile_LH_C_1) else [LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1] | _  => error}) :: '_lh_dropWhile_arg2⁰ => '141_matchres ::: true
+//│ (fun _lh_dropWhile_arg1 -> (fun _lh_dropWhile_arg2 -> case _lh_dropWhile_arg2 of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1 => if _lh_dropWhile_arg1(_lh_dropWhile_LH_C_0) then dropWhile_₀(_lh_dropWhile_arg1, _lh_dropWhile_LH_C_1) else [LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1] | _  => error})) :: '_lh_dropWhile_arg1⁰ => '_lh_dropWhile_arg2⁰ => '141_matchres ::: true
 //│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec break1__d0__d0 _lh_break1_arg1_0 _lh_break1_arg2_0 =
+//│ let rec break1__d0 _lh_break1_arg1_0 _lh_break1_arg2_0 =
 //│   (match _lh_break1_arg2_0 with
 //│     | `LH_N -> 
 //│       (`LH_P2((`LH_N), (`LH_N)))
@@ -1305,61 +1252,61 @@ words "1 2 4"
 //│       (if (_lh_break1_arg1_0 _lh_break1_LH_C_0_0) then
 //│         (`LH_P2((`LH_N), (`LH_C(_lh_break1_LH_C_0_0, _lh_break1_LH_C_1_0))))
 //│       else
-//│         (let rec _lh_matchIdent_0 = ((break1__d0__d0 _lh_break1_arg1_0) _lh_break1_LH_C_1_0) in
-//│           (match _lh_matchIdent_0 with
+//│         (let rec _lh_matchIdent_3 = ((break1__d0 _lh_break1_arg1_0) _lh_break1_LH_C_1_0) in
+//│           (match _lh_matchIdent_3 with
 //│             | `LH_P2(_lh_break1_LH_P2_0_0, _lh_break1_LH_P2_1_0) -> 
 //│               (`LH_P2((`LH_C(_lh_break1_LH_C_0_0, _lh_break1_LH_P2_0_0)), _lh_break1_LH_P2_1_0))
 //│             | _ -> 
 //│               (failwith "error"))))
 //│     | _ -> 
 //│       (failwith "error"))
-//│ and break__d0__d0 _lh_break_arg1_0 _lh_break_arg2_0 =
+//│ and break__d0 _lh_break_arg1_0 _lh_break_arg2_0 =
 //│   (match _lh_break_arg2_0 with
 //│     | `LH_N -> 
 //│       (let rec _lh_words_LH_P2_1_0 = (`LH_N) in
 //│         (let rec _lh_words_LH_P2_0_0 = (`LH_N) in
 //│           (fun _lh_dummy_0 -> 
-//│             (`LH_C(_lh_words_LH_P2_0_0, (words__d0__d0 _lh_words_LH_P2_1_0))))))
+//│             (`LH_C(_lh_words_LH_P2_0_0, (words__d0 _lh_words_LH_P2_1_0))))))
 //│     | `LH_C(_lh_break_LH_C_0_0, _lh_break_LH_C_1_0) -> 
 //│       (if (_lh_break_arg1_0 _lh_break_LH_C_0_0) then
 //│         (let rec _lh_words_LH_P2_1_1 = (`LH_C(_lh_break_LH_C_0_0, _lh_break_LH_C_1_0)) in
 //│           (let rec _lh_words_LH_P2_0_1 = (`LH_N) in
 //│             (fun _lh_dummy_1 -> 
-//│               (`LH_C(_lh_words_LH_P2_0_1, (words__d0__d0 _lh_words_LH_P2_1_1))))))
+//│               (`LH_C(_lh_words_LH_P2_0_1, (words__d0 _lh_words_LH_P2_1_1))))))
 //│       else
-//│         (let rec _lh_matchIdent_1 = ((break1__d0__d0 _lh_break_arg1_0) _lh_break_LH_C_1_0) in
-//│           (match _lh_matchIdent_1 with
+//│         (let rec _lh_matchIdent_2 = ((break1__d0 _lh_break_arg1_0) _lh_break_LH_C_1_0) in
+//│           (match _lh_matchIdent_2 with
 //│             | `LH_P2(_lh_break_LH_P2_0_0, _lh_break_LH_P2_1_0) -> 
 //│               (let rec _lh_words_LH_P2_1_2 = _lh_break_LH_P2_1_0 in
 //│                 (let rec _lh_words_LH_P2_0_2 = (`LH_C(_lh_break_LH_C_0_0, _lh_break_LH_P2_0_0)) in
 //│                   (fun _lh_dummy_2 -> 
-//│                     (`LH_C(_lh_words_LH_P2_0_2, (words__d0__d0 _lh_words_LH_P2_1_2))))))
+//│                     (`LH_C(_lh_words_LH_P2_0_2, (words__d0 _lh_words_LH_P2_1_2))))))
 //│             | _ -> 
 //│               (failwith "error"))))
 //│     | _ -> 
 //│       (failwith "error"))
-//│ and dropWhile__d0__d0 _lh_dropWhile_arg1_0 _lh_dropWhile_arg2_0 =
+//│ and dropWhile__d0 _lh_dropWhile_arg1_0 _lh_dropWhile_arg2_0 =
 //│   (match _lh_dropWhile_arg2_0 with
 //│     | `LH_N -> 
 //│       (`LH_N)
 //│     | `LH_C(_lh_dropWhile_LH_C_0_0, _lh_dropWhile_LH_C_1_0) -> 
 //│       (if (_lh_dropWhile_arg1_0 _lh_dropWhile_LH_C_0_0) then
-//│         ((dropWhile__d0__d0 _lh_dropWhile_arg1_0) _lh_dropWhile_LH_C_1_0)
+//│         ((dropWhile__d0 _lh_dropWhile_arg1_0) _lh_dropWhile_LH_C_1_0)
 //│       else
 //│         (`LH_C(_lh_dropWhile_LH_C_0_0, _lh_dropWhile_LH_C_1_0)))
 //│     | _ -> 
 //│       (failwith "error"))
-//│ and words__d0__d0 _lh_words_arg1_0 =
-//│   (let rec _lh_matchIdent_2 = ((dropWhile__d0__d0 (fun x_0 -> 
+//│ and words__d0 _lh_words_arg1_0 =
+//│   (let rec _lh_matchIdent_0 = ((dropWhile__d0 (fun x_0 -> 
 //│     (x_0 = ' '))) _lh_words_arg1_0) in
-//│     (match _lh_matchIdent_2 with
+//│     (match _lh_matchIdent_0 with
 //│       | `LH_N -> 
 //│         (`LH_N)
 //│       | _ -> 
-//│         (let rec _lh_matchIdent_3 = ((break__d0__d0 (fun x_1 -> 
-//│           (x_1 = ' '))) _lh_matchIdent_2) in
-//│           (_lh_matchIdent_3 99))));;
-//│ (words__d0__d0 (`LH_C('1', (`LH_C(' ', (`LH_C('2', (`LH_C(' ', (`LH_C('4', (`LH_N))))))))))))
+//│         (let rec _lh_matchIdent_1 = ((break__d0 (fun x_1 -> 
+//│           (x_1 = ' '))) _lh_matchIdent_0) in
+//│           (_lh_matchIdent_1 99))));;
+//│ (words__d0 (`LH_C('1', (`LH_C(' ', (`LH_C('2', (`LH_C(' ', (`LH_C('4', (`LH_N))))))))))))
 //│ 
 //│ --------------- ocaml repl result -----------------
 //│ [ok]

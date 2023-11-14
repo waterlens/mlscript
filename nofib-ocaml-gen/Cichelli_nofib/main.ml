@@ -4,6 +4,6 @@ ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Lumherhack_Common.ml ./Lumberha
 open Core_bench;;
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_Cichelli_nofib" (fun () -> ignore (let open Module_original.Module_original in ((testCichelli_nofib__d0 6))));
-  Bench.Test.create ~name:"lumberhack_Cichelli_nofib" (fun () -> ignore (let open Module_lumberhack.Module_lumberhack in ((testCichelli_nofib__d0__d0 6))));
-  Bench.Test.create ~name:"lumberhack_pop_out_Cichelli_nofib" (fun () -> ignore (let open Module_lumberhack_pop_out.Module_lumberhack_pop_out in ((testCichelli_nofib__d0__d0 6))));
+  Bench.Test.create ~name:"lumberhack_Cichelli_nofib" (fun () -> ignore (let open Module_lumberhack.Module_lumberhack in ((testCichelli_nofib__d0 6))));
+  Bench.Test.create ~name:"lumberhack_pop_out_Cichelli_nofib" (fun () -> ignore (let open Module_lumberhack_pop_out.Module_lumberhack_pop_out in ((testCichelli_nofib__d0 6))));
 ])

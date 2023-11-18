@@ -3,6 +3,8 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_original = struct
+type 'a lh_list = [`LH_C of 'a * 'l | `LH_N] as 'l
+type 'a lh_tree = [`Node of 'a * ('t lh_list)] as 't
 let rec abs_lh _lh_abs_arg1_0 =
   (if (_lh_abs_arg1_0 > 0) then
     _lh_abs_arg1_0
@@ -126,6 +128,45 @@ let rec mappend_lh xs_1 ys_1 =
       (`LH_C(h_6, ((mappend_lh t_6) ys_1)))
     | `LH_N -> 
       ys_1);;
+let rec concat_lh: (('a lh_list) lh_list) -> ('a lh_list) = fun lss_0 ->
+  (match lss_0 with
+    | `LH_C(h_8, t_8) -> 
+      ((mappend_lh h_8) (concat_lh t_8))
+    | `LH_N -> 
+            (`LH_N));;
+let rec mapTree_lh: ('a -> 'b) -> ('a lh_tree -> 'b lh_tree) = fun _lh_mapTree_arg1_0 _lh_mapTree_arg2_0 ->
+  (match _lh_mapTree_arg2_0 with
+    | `Node(_lh_mapTree_Node_0_0, _lh_mapTree_Node_1_0) -> 
+      (`Node((_lh_mapTree_arg1_0 _lh_mapTree_Node_0_0), ((map_lh (mapTree_lh _lh_mapTree_arg1_0)) _lh_mapTree_Node_1_0)))
+    | _ -> 
+      (failwith "error"));;
+let rec foldTree_lh: ('a -> ('b lh_list) -> 'b) -> ('a lh_tree) -> 'b = fun _lh_foldTree_arg1_0 _lh_foldTree_arg2_0 ->
+  (match _lh_foldTree_arg2_0 with
+    | `Node(_lh_foldTree_Node_0_0, _lh_foldTree_Node_1_0) -> 
+      ((_lh_foldTree_arg1_0 _lh_foldTree_Node_0_0) ((map_lh (foldTree_lh _lh_foldTree_arg1_0)) _lh_foldTree_Node_1_0))
+    | _ -> 
+      (failwith "error"));;
+let filterTree_lh: ('a -> bool) -> ('a lh_tree -> 'a lh_tree) = fun _lh_filterTree_arg1_0 ->
+  (let rec f_8 = (fun a_3 cs_0 -> 
+    (`Node(a_3, ((filter_lh (fun _lh_funcomp_x_8 -> 
+      (_lh_filterTree_arg1_0 (label_lh _lh_funcomp_x_8)))) cs_0)))) in
+    (foldTree_lh f_8));;
+let rec initTree_lh: ('a -> 'a lh_list) -> 'a -> ('a lh_tree) = fun _lh_initTree_arg1_0 _lh_initTree_arg2_0 ->
+  (`Node(_lh_initTree_arg2_0, ((map_lh (initTree_lh _lh_initTree_arg1_0)) (_lh_initTree_arg1_0 _lh_initTree_arg2_0))));;
+let prune_lh: ('a -> bool) -> ('a lh_tree -> 'a lh_tree) = fun _lh_prune_arg1_0 ->
+  (filterTree_lh (fun _lh_funcomp_x_2 -> 
+    (not (_lh_prune_arg1_0 _lh_funcomp_x_2))));;
+let rec leaves_lh: 'a lh_tree -> 'a lh_list = fun _lh_leaves_arg1_0 ->
+  (match _lh_leaves_arg1_0 with
+    | `Node(_lh_leaves_Node_0_0, _lh_leaves_Node_1_0) -> 
+      (match _lh_leaves_Node_1_0 with
+        | `LH_N -> 
+          (`LH_C(_lh_leaves_Node_0_0, (`LH_N)))
+        | _ -> 
+          (concat_lh ((map_lh leaves_lh) _lh_leaves_Node_1_0)))
+    | _ -> 
+      (failwith "error"));;
+
 let rec maxLevel_lh _lh_maxLevel_arg1_0 =
   (match _lh_maxLevel_arg1_0 with
     | `LH_N -> 
@@ -293,12 +334,6 @@ and complete_lh _lh_complete_arg1_0 _lh_complete_arg2_0 =
       ((maxLevel_lh _lh_complete_arg2_0) = _lh_complete_CSP_0_0)
     | _ -> 
       (failwith "error"))
-and concat_lh lss_0 =
-  (match lss_0 with
-    | `LH_C(h_8, t_8) -> 
-      ((mappend_lh h_8) (concat_lh t_8))
-    | `LH_N -> 
-      (`LH_N))
 and domainWipeOut_lh _lh_domainWipeOut_arg1_0 _lh_domainWipeOut_arg2_0 =
   (match _lh_domainWipeOut_arg1_0 with
     | `CSP(_lh_domainWipeOut_CSP_0_0, _lh_domainWipeOut_CSP_1_0, _lh_domainWipeOut_CSP_2_0) -> 
@@ -408,29 +443,6 @@ and fillTable_lh _lh_fillTable_arg1_0 _lh_fillTable_arg2_0 _lh_fillTable_arg3_0 
           (failwith "error"))
     | _ -> 
       (failwith "error"))
-and filterTree_lh _lh_filterTree_arg1_0 =
-  (let rec f_8 = (fun a_3 cs_0 -> 
-    (`Node(a_3, ((filter_lh (fun _lh_funcomp_x_8 -> 
-      (_lh_filterTree_arg1_0 (label_lh _lh_funcomp_x_8)))) cs_0)))) in
-    (foldTree_lh f_8))
-and foldTree_lh _lh_foldTree_arg1_0 _lh_foldTree_arg2_0 =
-  (match _lh_foldTree_arg2_0 with
-    | `Node(_lh_foldTree_Node_0_0, _lh_foldTree_Node_1_0) -> 
-      ((_lh_foldTree_arg1_0 _lh_foldTree_Node_0_0) ((map_lh (foldTree_lh _lh_foldTree_arg1_0)) _lh_foldTree_Node_1_0))
-    | _ -> 
-      (failwith "error"))
-and initTree_lh _lh_initTree_arg1_0 _lh_initTree_arg2_0 =
-  (`Node(_lh_initTree_arg2_0, ((map_lh (initTree_lh _lh_initTree_arg1_0)) (_lh_initTree_arg1_0 _lh_initTree_arg2_0))))
-and leaves_lh _lh_leaves_arg1_0 =
-  (match _lh_leaves_arg1_0 with
-    | `Node(_lh_leaves_Node_0_0, _lh_leaves_Node_1_0) -> 
-      (match _lh_leaves_Node_1_0 with
-        | `LH_N -> 
-          (`LH_C(_lh_leaves_Node_0_0, (`LH_N)))
-        | _ -> 
-          (concat_lh ((map_lh leaves_lh) _lh_leaves_Node_1_0)))
-    | _ -> 
-      (failwith "error"))
 and lookupCache_lh _lh_lookupCache_arg1_0 _lh_lookupCache_arg2_0 =
   (let rec f_1_0 = (fun _lh_f_arg1_3 _lh_f_arg2_2 -> 
     (match _lh_f_arg2_2 with
@@ -450,12 +462,6 @@ and lookupCache_lh _lh_lookupCache_arg1_0 _lh_lookupCache_arg2_0 =
       | _ -> 
         (failwith "error"))) in
     ((mapTree_lh (f_1_0 _lh_lookupCache_arg1_0)) _lh_lookupCache_arg2_0))
-and mapTree_lh _lh_mapTree_arg1_0 _lh_mapTree_arg2_0 =
-  (match _lh_mapTree_arg2_0 with
-    | `Node(_lh_mapTree_Node_0_0, _lh_mapTree_Node_1_0) -> 
-      (`Node((_lh_mapTree_arg1_0 _lh_mapTree_Node_0_0), ((map_lh (mapTree_lh _lh_mapTree_arg1_0)) _lh_mapTree_Node_1_0)))
-    | _ -> 
-      (failwith "error"))
 and mkTree_lh _lh_mkTree_arg1_0 =
   (match _lh_mkTree_arg1_0 with
     | `CSP(_lh_mkTree_CSP_0_0, _lh_mkTree_CSP_1_0, _lh_mkTree_CSP_2_0) -> 
@@ -482,9 +488,6 @@ and nubBy_lh _lh_nubBy_arg1_0 _lh_nubBy_arg2_0 =
         (not ((_lh_nubBy_arg1_0 _lh_nubBy_LH_C_0_0) y_0)))) _lh_nubBy_LH_C_1_0))))
     | _ -> 
       (failwith "error"))
-and prune_lh _lh_prune_arg1_0 =
-  (filterTree_lh (fun _lh_funcomp_x_2 -> 
-    (not (_lh_prune_arg1_0 _lh_funcomp_x_2))))
 and queens_lh _lh_queens_arg1_0 =
   (`CSP(_lh_queens_arg1_0, _lh_queens_arg1_0, safe_lh))
 and reverse_lh ls_7 =

@@ -175,8 +175,43 @@ let rec concat_lh lss_0 =
     | `LH_C(h_7, t_7) -> 
       ((mappend_lh h_7) (concat_lh t_7))
     | `LH_N -> 
-      (`LH_N))
-and cons'_lh _lh_cons'_arg1_0 _lh_cons'_arg2_0 =
+      (`LH_N));;
+let rec unlines_lh _lh_unlines_arg1_0 =
+  (concat_lh ((map_lh (fun l_1 -> 
+    ((mappend_lh l_1) (`LH_C('|', (`LH_N)))))) _lh_unlines_arg1_0));;
+let rec unwords_lh _lh_unwords_arg1_0 =
+  (match _lh_unwords_arg1_0 with
+    | `LH_N -> 
+      (`LH_N)
+    | `LH_C(_lh_unwords_LH_C_0_0, _lh_unwords_LH_C_1_0) -> 
+      (let rec go_0 = (fun _lh_go_arg1_0 -> 
+        (match _lh_go_arg1_0 with
+          | `LH_N -> 
+            (`LH_N)
+          | `LH_C(_lh_go_LH_C_0_0, _lh_go_LH_C_1_0) -> 
+            (`LH_C(' ', ((mappend_lh _lh_go_LH_C_0_0) (go_0 _lh_go_LH_C_1_0))))
+          | _ -> 
+            (failwith "error"))) in
+        ((mappend_lh _lh_unwords_LH_C_0_0) (go_0 _lh_unwords_LH_C_1_0)))
+    | _ -> 
+      (failwith "error"));;
+let rec words_lh _lh_words_arg1_0 =
+  (let rec _lh_matchIdent_4 = ((dropWhile_lh isSpace_lh) _lh_words_arg1_0) in
+    (match _lh_matchIdent_4 with
+      | `LH_N -> 
+        (`LH_N)
+      | `LH_C(_lh_words_LH_C_0_0, _lh_words_LH_C_1_0) -> 
+        (let rec _lh_matchIdent_5 = ((break_lh isSpace_lh) (`LH_C(_lh_words_LH_C_0_0, _lh_words_LH_C_1_0))) in
+          (match _lh_matchIdent_5 with
+            | `LH_P2(_lh_words_LH_P2_0_0, _lh_words_LH_P2_1_0) -> 
+              (`LH_C(_lh_words_LH_P2_0_0, (words_lh _lh_words_LH_P2_1_0)))
+            | _ -> 
+              (failwith "error")))
+      | _ -> 
+        (failwith "error")));;
+let splitAt_lh _lh_splitAt_arg1_0 _lh_splitAt_arg2_0 =
+  (`LH_P2(((take_lh _lh_splitAt_arg1_0) _lh_splitAt_arg2_0), ((drop_lh _lh_splitAt_arg1_0) _lh_splitAt_arg2_0)));;
+let rec cons'_lh _lh_cons'_arg1_0 _lh_cons'_arg2_0 =
   (match _lh_cons'_arg2_0 with
     | `LH_P2(_lh_cons'_LH_P2_0_0, _lh_cons'_LH_P2_1_0) -> 
       (if (not (null_lh _lh_cons'_LH_P2_1_0)) then
@@ -282,8 +317,6 @@ and single'_lh _lh_single'_arg1_0 =
       (((null_lh _lh_single'_LH_P2_0_0) && (single_lh _lh_single'_LH_P2_1_0)) || ((single_lh _lh_single'_LH_P2_0_0) && (null_lh _lh_single'_LH_P2_1_0)))
     | _ -> 
       (failwith "error"))
-and splitAt_lh _lh_splitAt_arg1_0 _lh_splitAt_arg2_0 =
-  (`LH_P2(((take_lh _lh_splitAt_arg1_0) _lh_splitAt_arg2_0), ((drop_lh _lh_splitAt_arg1_0) _lh_splitAt_arg2_0)))
 and startr_lh _lh_startr_arg1_0 =
   (if (_lh_startr_arg1_0 <= maxw_lh) then
     (`LH_P3(((cons'_lh (`LH_P3(0, 0, 0))) nil'_lh), _lh_startr_arg1_0, 1))
@@ -410,46 +443,13 @@ and unformat_lh _lh_unformat_arg1_0 =
   ((fold1_lh (fun xs_1 ys_1 -> 
     ((mappend_lh ((mappend_lh xs_1) (`LH_C(_lh_unformat_arg1_0, (`LH_N))))) ys_1))) (fun x_1 -> 
     x_1))
-and unlines_lh _lh_unlines_arg1_0 =
-  (concat_lh ((map_lh (fun l_1 -> 
-    ((mappend_lh l_1) (`LH_C('|', (`LH_N)))))) _lh_unlines_arg1_0))
 and unparas_lh _lh_unparas_arg1_0 =
   ((unformat_lh (`LH_N)) _lh_unparas_arg1_0)
 and unparse_lh _lh_unparse_arg1_0 =
   ((fun _lh_funcomp_x_0 -> 
     ((fun _lh_funcomp_x_1 -> 
       (unlines_lh ((map_lh unwords_lh) _lh_funcomp_x_1))) (unparas_lh _lh_funcomp_x_0))) _lh_unparse_arg1_0)
-and unwords_lh _lh_unwords_arg1_0 =
-  (match _lh_unwords_arg1_0 with
-    | `LH_N -> 
-      (`LH_N)
-    | `LH_C(_lh_unwords_LH_C_0_0, _lh_unwords_LH_C_1_0) -> 
-      (let rec go_0 = (fun _lh_go_arg1_0 -> 
-        (match _lh_go_arg1_0 with
-          | `LH_N -> 
-            (`LH_N)
-          | `LH_C(_lh_go_LH_C_0_0, _lh_go_LH_C_1_0) -> 
-            (`LH_C(' ', ((mappend_lh _lh_go_LH_C_0_0) (go_0 _lh_go_LH_C_1_0))))
-          | _ -> 
-            (failwith "error"))) in
-        ((mappend_lh _lh_unwords_LH_C_0_0) (go_0 _lh_unwords_LH_C_1_0)))
-    | _ -> 
-      (failwith "error"))
 and width_tl_lh _lh_width_tl_arg1_0 =
   (fst3_lh _lh_width_tl_arg1_0)
-and words_lh _lh_words_arg1_0 =
-  (let rec _lh_matchIdent_4 = ((dropWhile_lh isSpace_lh) _lh_words_arg1_0) in
-    (match _lh_matchIdent_4 with
-      | `LH_N -> 
-        (`LH_N)
-      | `LH_C(_lh_words_LH_C_0_0, _lh_words_LH_C_1_0) -> 
-        (let rec _lh_matchIdent_5 = ((break_lh isSpace_lh) (`LH_C(_lh_words_LH_C_0_0, _lh_words_LH_C_1_0))) in
-          (match _lh_matchIdent_5 with
-            | `LH_P2(_lh_words_LH_P2_0_0, _lh_words_LH_P2_1_0) -> 
-              (`LH_C(_lh_words_LH_P2_0_0, (words_lh _lh_words_LH_P2_1_0)))
-            | _ -> 
-              (failwith "error")))
-      | _ -> 
-        (failwith "error")));;
 end;;
 

@@ -434,6 +434,15 @@ let rec zipWith_lh f_3 xs_0 ys_0 =
           (`LH_N))
     | `LH_N -> 
       (`LH_N));;
+let rec concat_lh lss_0 =
+  (match lss_0 with
+    | `LH_C(h_8, t_8) -> 
+      ((mappend_lh h_8) (concat_lh t_8))
+    | `LH_N -> 
+      (`LH_N));;
+let unlines_lh _lh_unlines_arg1_0 =
+  (concat_lh ((map_lh (fun l_0 -> 
+    ((mappend_lh l_0) (`LH_C('|', (`LH_N)))))) _lh_unlines_arg1_0));;
 let rec bishopmoves_lh _lh_bishopmoves_arg1_0 _lh_bishopmoves_arg2_0 _lh_bishopmoves_arg3_0 =
   ((((((moveLine_lh _lh_bishopmoves_arg3_0) _lh_bishopmoves_arg1_0) _lh_bishopmoves_arg2_0) (fun xy_5 -> 
     (let rec _lh_matchIdent_4_2 = xy_5 in
@@ -469,12 +478,6 @@ and compact_lh _lh_compact_arg1_0 =
       (`Soln(_lh_compact_Solution_0_0, (((foldr_lh insertCompact_lh) (`LH_N)) _lh_compact_Solution_1_0)))
     | _ -> 
       (failwith "error"))
-and concat_lh lss_0 =
-  (match lss_0 with
-    | `LH_C(h_8, t_8) -> 
-      ((mappend_lh h_8) (concat_lh t_8))
-    | `LH_N -> 
-      (`LH_N))
 and insertCompact_lh _lh_insertCompact_arg1_0 _lh_insertCompact_arg2_0 =
   (match _lh_insertCompact_arg1_0 with
     | `LH_P2(_lh_insertCompact_LH_P2_0_0, _lh_insertCompact_LH_P2_1_0) -> 
@@ -1165,9 +1168,6 @@ and tryMove_lh _lh_tryMove_arg1_0 _lh_tryMove_arg2_0 _lh_tryMove_arg3_0 _lh_tryM
           (failwith "error"))
     | _ -> 
       (failwith "error"))
-and unlines_lh _lh_unlines_arg1_0 =
-  (concat_lh ((map_lh (fun l_0 -> 
-    ((mappend_lh l_0) (`LH_C('|', (`LH_N)))))) _lh_unlines_arg1_0))
 and words_lh _lh_words_arg1_0 =
   (let rec _lh_matchIdent_2_5 = ((dropWhile_lh (fun x_3 -> 
     (x_3 = ' '))) _lh_words_arg1_0) in

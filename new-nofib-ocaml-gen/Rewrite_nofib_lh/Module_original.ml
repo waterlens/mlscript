@@ -298,9 +298,20 @@ let rec zip_lz_nl_lh xs_1 ys_1 =
           (`LH_N))
     | `LH_N -> 
       (`LH_N));;
-let rec apply_lh _lh_apply_arg1_0 _lh_apply_arg2_0 =
-  ((getOrElse_lh ((assoc_lh _lh_apply_arg1_0) _lh_apply_arg2_0)) (`Var(_lh_apply_arg2_0)))
-and assoc_lh _lh_assoc_arg1_0 _lh_assoc_arg2_0 =
+let rec concat_lh lss_0 =
+  (match lss_0 with
+    | `LH_C(h_8, t_8) -> 
+      ((mappend_lh h_8) (concat_lh t_8))
+    | `LH_N -> 
+      (`LH_N));;
+let listify_lh _lh_listify_arg1_0 =
+  ((getOrElse_lh ((lift_lh box_lh) _lh_listify_arg1_0)) (`LH_N));;
+let sift_lh _lh_sift_arg1_0 =
+  ((fun _lh_funcomp_x_1_1 -> 
+    (concat_lh ((map_lh listify_lh) _lh_funcomp_x_1_1))) _lh_sift_arg1_0);;
+let first_ok_lh _lh_first_ok_arg1_0 =
+  (((foldr_lh orElse_lh) (`Nothing)) _lh_first_ok_arg1_0);;
+let assoc_lh _lh_assoc_arg1_0 _lh_assoc_arg2_0 =
   (let rec match_x_0 = (fun uv_0 -> 
     (let rec _lh_matchIdent_1_3 = uv_0 in
       (match _lh_matchIdent_1_3 with
@@ -308,8 +319,18 @@ and assoc_lh _lh_assoc_arg1_0 _lh_assoc_arg2_0 =
           ((maybeX_lh (_lh_assoc_arg2_0 = _lh_assoc_LH_P2_0_0)) _lh_assoc_LH_P2_1_0)
         | _ -> 
           (failwith "error")))) in
-    (first_ok_lh ((map_lh match_x_0) _lh_assoc_arg1_0)))
-and comp_sub_lh _lh_comp_sub_arg1_0 _lh_comp_sub_arg2_0 =
+    (first_ok_lh ((map_lh match_x_0) _lh_assoc_arg1_0)));;
+let apply_lh _lh_apply_arg1_0 _lh_apply_arg2_0 =
+  ((getOrElse_lh ((assoc_lh _lh_apply_arg1_0) _lh_apply_arg2_0)) (`Var(_lh_apply_arg2_0)));;
+let rec expr_fold_lh _lh_expr_fold_arg1_0 _lh_expr_fold_arg2_0 _lh_expr_fold_arg3_0 =
+  (match _lh_expr_fold_arg3_0 with
+    | `Var(_lh_expr_fold_Var_0_0) -> 
+      (_lh_expr_fold_arg2_0 _lh_expr_fold_Var_0_0)
+    | `Func(_lh_expr_fold_Func_0_0, _lh_expr_fold_Func_1_0) -> 
+      ((_lh_expr_fold_arg1_0 _lh_expr_fold_Func_0_0) ((map_lh ((expr_fold_lh _lh_expr_fold_arg1_0) _lh_expr_fold_arg2_0)) _lh_expr_fold_Func_1_0))
+    | _ -> 
+      (failwith "error"))
+let rec comp_sub_lh _lh_comp_sub_arg1_0 _lh_comp_sub_arg2_0 =
   ((mappend_lh (let rec _lh_listcomp_fun_7 = (fun _lh_listcomp_fun_para_7 -> 
     (match _lh_listcomp_fun_para_7 with
       | `LH_C(_lh_listcomp_fun_ls_h_7, _lh_listcomp_fun_ls_t_7) -> 
@@ -321,12 +342,6 @@ and comp_sub_lh _lh_comp_sub_arg1_0 _lh_comp_sub_arg2_0 =
       | `LH_N -> 
         (`LH_N))) in
     (_lh_listcomp_fun_7 _lh_comp_sub_arg2_0))) _lh_comp_sub_arg1_0)
-and concat_lh lss_0 =
-  (match lss_0 with
-    | `LH_C(h_8, t_8) -> 
-      ((mappend_lh h_8) (concat_lh t_8))
-    | `LH_N -> 
-      (`LH_N))
 and cost_lh _lh_cost_arg1_0 =
   (match _lh_cost_arg1_0 with
     | `LH_P2(_lh_cost_LH_P2_0_0, _lh_cost_LH_P2_1_0) -> 
@@ -376,16 +391,6 @@ and eqListExpr_lh _lh_eqListExpr_arg1_0 _lh_eqListExpr_arg2_0 =
           false)
     | _ -> 
       false)
-and expr_fold_lh _lh_expr_fold_arg1_0 _lh_expr_fold_arg2_0 _lh_expr_fold_arg3_0 =
-  (match _lh_expr_fold_arg3_0 with
-    | `Var(_lh_expr_fold_Var_0_0) -> 
-      (_lh_expr_fold_arg2_0 _lh_expr_fold_Var_0_0)
-    | `Func(_lh_expr_fold_Func_0_0, _lh_expr_fold_Func_1_0) -> 
-      ((_lh_expr_fold_arg1_0 _lh_expr_fold_Func_0_0) ((map_lh ((expr_fold_lh _lh_expr_fold_arg1_0) _lh_expr_fold_arg2_0)) _lh_expr_fold_Func_1_0))
-    | _ -> 
-      (failwith "error"))
-and first_ok_lh _lh_first_ok_arg1_0 =
-  (((foldr_lh orElse_lh) (`Nothing)) _lh_first_ok_arg1_0)
 and geRewrite_lh _lh_geRewrite_arg1_0 _lh_geRewrite_arg2_0 _lh_geRewrite_arg3_0 =
   ((inList_lh (_lh_geRewrite_arg1_0 (`LH_P2(_lh_geRewrite_arg2_0, _lh_geRewrite_arg3_0)))) (`LH_C((`Greater), (`LH_C((`Equal), (`LH_N))))))
 and inside_lh _lh_inside_arg1_0 _lh_inside_arg2_0 =
@@ -400,8 +405,6 @@ and inside_lh _lh_inside_arg1_0 _lh_inside_arg2_0 =
       | `LH_N -> 
         (`LH_N))) in
     (_lh_listcomp_fun_8 (subterms_lh _lh_inside_arg2_0))))
-and listify_lh _lh_listify_arg1_0 =
-  ((getOrElse_lh ((lift_lh box_lh) _lh_listify_arg1_0)) (`LH_N))
 and map_dnet_lh _lh_map_dnet_arg1_0 _lh_map_dnet_arg2_0 =
   (match _lh_map_dnet_arg2_0 with
     | `Switch(_lh_map_dnet_Switch_0_0, _lh_map_dnet_Switch_1_0) -> 
@@ -1246,9 +1249,6 @@ and rewrite_lh _lh_rewrite_arg1_0 =
           (failwith "error"))
     | _ -> 
       (failwith "error"))
-and sift_lh _lh_sift_arg1_0 =
-  ((fun _lh_funcomp_x_1_1 -> 
-    (concat_lh ((map_lh listify_lh) _lh_funcomp_x_1_1))) _lh_sift_arg1_0)
 and simplify_lh _lh_simplify_arg1_0 =
   (let rec f_4 = (fun t_1_0 -> 
     ((getOrElse_lh ((lift_lh f_4) (_lh_simplify_arg1_0 t_1_0))) t_1_0)) in

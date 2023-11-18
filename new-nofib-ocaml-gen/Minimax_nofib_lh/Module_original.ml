@@ -323,6 +323,12 @@ let rec win7_lh =
   (`LH_C((`LH_C(1, (`LH_C(0, (`LH_C(0, (`LH_N))))))), (`LH_C((`LH_C(0, (`LH_C(1, (`LH_C(0, (`LH_N))))))), (`LH_C((`LH_C(0, (`LH_C(0, (`LH_C(1, (`LH_N))))))), (`LH_N)))))));;
 let rec win8_lh =
   (`LH_C((`LH_C(0, (`LH_C(0, (`LH_C(1, (`LH_N))))))), (`LH_C((`LH_C(0, (`LH_C(1, (`LH_C(0, (`LH_N))))))), (`LH_C((`LH_C(1, (`LH_C(0, (`LH_C(0, (`LH_N))))))), (`LH_N)))))));;
+let rec concat_lh lss_0 =
+  (match lss_0 with
+    | `LH_C(h_5, t_5) -> 
+      ((mappend_lh h_5) (concat_lh t_5))
+    | `LH_N -> 
+      (`LH_N));;
 let rec alternate_lh _lh_alternate_arg1_0 _lh_alternate_arg2_0 _lh_alternate_arg3_0 _lh_alternate_arg4_0 =
   (if (fullBoard_lh _lh_alternate_arg4_0) then
     (`LH_N)
@@ -347,12 +353,6 @@ and bestMove_lh _lh_bestMove_arg1_0 _lh_bestMove_arg2_0 _lh_bestMove_arg3_0 _lh_
   ((fun _lh_funcomp_x_1 -> 
     (((mise_lh _lh_bestMove_arg2_0) _lh_bestMove_arg3_0) (cropTree_lh _lh_funcomp_x_1))) ((fun _lh_funcomp_x_2 -> 
     ((mapTree_lh static_lh) ((searchTree_lh _lh_bestMove_arg1_0) _lh_funcomp_x_2))) _lh_funcomp_x_0))
-and concat_lh lss_0 =
-  (match lss_0 with
-    | `LH_C(h_5, t_5) -> 
-      ((mappend_lh h_5) (concat_lh t_5))
-    | `LH_N -> 
-      (`LH_N))
 and cropTree_lh _lh_cropTree_arg1_0 =
   (match _lh_cropTree_arg1_0 with
     | `Branch(_lh_cropTree_Branch_0_0, _lh_cropTree_Branch_1_0) -> 

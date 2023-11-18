@@ -3,6 +3,7 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_original = struct
+type ('s, 'a) lh_state = [`MyState of 's -> [`LH_P2 of 's * 'a]]
 let rec eqList_lh _lh_eqList_arg1_0 _lh_eqList_arg2_0 =
   (match _lh_eqList_arg1_0 with
     | `LH_N -> 
@@ -66,6 +67,23 @@ let rec null_lh _lh_null_arg1_0 =
       false
     | _ -> 
       (failwith "error"));;
+let myBind_lh: ('s, 'a) lh_state -> ('a -> (('s, 'b) lh_state)) -> (('s, 'b) lh_state) = fun _lh_myBind_arg1_0 _lh_myBind_arg2_0 ->
+  (`MyState((fun s_1 -> 
+    (let rec _lh_matchIdent_4 = ((myRunState_lh _lh_myBind_arg1_0) s_1) in
+      (match _lh_matchIdent_4 with
+        | `LH_P2(_lh_myBind_LH_P2_0_0, _lh_myBind_LH_P2_1_0) -> 
+          ((myRunState_lh (_lh_myBind_arg2_0 _lh_myBind_LH_P2_1_0)) _lh_myBind_LH_P2_0_0)
+        | _ -> 
+          (failwith "error"))))));;
+let myEvalState_lh: ('s, 'a) lh_state -> 'a -> 'a = fun _lh_myEvalState_arg1_0 _lh_myEvalState_arg2_0 ->
+  (let rec _lh_matchIdent_1 = ((myRunState_lh _lh_myEvalState_arg1_0) _lh_myEvalState_arg2_0) in
+    (match _lh_matchIdent_1 with
+      | `LH_P2(_lh_myEvalState_LH_P2_0_0, _lh_myEvalState_LH_P2_1_0) -> 
+        _lh_myEvalState_LH_P2_1_0
+      | _ -> 
+        (failwith "error")));;
+let withEnv_lh _lh_withEnv_arg1_0 _lh_withEnv_arg2_0 =
+  (myReturn_lh ((myEvalState_lh _lh_withEnv_arg2_0) _lh_withEnv_arg1_0));;
 let rec apply_lh _lh_apply_arg1_0 _lh_apply_arg2_0 =
   (match _lh_apply_arg1_0 with
     | `Thunk(_lh_apply_Thunk_0_0, _lh_apply_Thunk_1_0) -> 
@@ -244,21 +262,6 @@ and mainSimple_lh _lh_mainSimple_arg1_0 =
     ((failwith "error") (`LH_C('A', (`LH_C('r', (`LH_C('g', (`LH_C('s', (`LH_C(':', (`LH_C(' ', (`LH_C('n', (`LH_C('u', (`LH_C('m', (`LH_C('b', (`LH_C('e', (`LH_C('r', (`LH_C('-', (`LH_C('t', (`LH_C('o', (`LH_C('-', (`LH_C('s', (`LH_C('u', (`LH_C('m', (`LH_C('-', (`LH_C('u', (`LH_C('p', (`LH_C('-', (`LH_C('t', (`LH_C('o', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))
   else
     (showTerm_lh ((simpleEval_lh (`LH_N)) (`App(sum0_lh, (`Con((head_lh _lh_mainSimple_arg1_0))))))))
-and myBind_lh _lh_myBind_arg1_0 _lh_myBind_arg2_0 =
-  (`MyState((fun s_1 -> 
-    (let rec _lh_matchIdent_4 = ((myRunState_lh _lh_myBind_arg1_0) s_1) in
-      (match _lh_matchIdent_4 with
-        | `LH_P2(_lh_myBind_LH_P2_0_0, _lh_myBind_LH_P2_1_0) -> 
-          ((myRunState_lh (_lh_myBind_arg2_0 _lh_myBind_LH_P2_1_0)) _lh_myBind_LH_P2_0_0)
-        | _ -> 
-          (failwith "error"))))))
-and myEvalState_lh _lh_myEvalState_arg1_0 _lh_myEvalState_arg2_0 =
-  (let rec _lh_matchIdent_1 = ((myRunState_lh _lh_myEvalState_arg1_0) _lh_myEvalState_arg2_0) in
-    (match _lh_matchIdent_1 with
-      | `LH_P2(_lh_myEvalState_LH_P2_0_0, _lh_myEvalState_LH_P2_1_0) -> 
-        _lh_myEvalState_LH_P2_1_0
-      | _ -> 
-        (failwith "error")))
 and partialSum0_lh =
   (`Lam((`LH_C('s', (`LH_C('u', (`LH_C('m', (`LH_N))))))), (`Lam((`LH_C('n', (`LH_N))), (`IfZero((`Var((`LH_C('n', (`LH_N))))), (`Con(0)), (`Add((`Var((`LH_C('n', (`LH_N))))), (`App((`Var((`LH_C('s', (`LH_C('u', (`LH_C('m', (`LH_N))))))))), nMinus1_lh))))))))))
 and pp_lh _lh_pp_arg1_0 =
@@ -374,8 +377,6 @@ and traverseCon_lh _lh_traverseCon_arg1_0 =
         | _ -> 
           ((failwith "error") ((mappend_lh (`LH_C('N', (`LH_C('o', (`LH_C('t', (`LH_C(' ', (`LH_C('a', (`LH_C(' ', (`LH_C('C', (`LH_C('o', (`LH_C('n', (`LH_C(':', (`LH_C(' ', (`LH_N)))))))))))))))))))))))) (showTerm_lh t'_0)))))))
 and traverseTerm_lh _lh_traverseTerm_arg1_0 =
-  (eval_lh _lh_traverseTerm_arg1_0)
-and withEnv_lh _lh_withEnv_arg1_0 _lh_withEnv_arg2_0 =
-  (myReturn_lh ((myEvalState_lh _lh_withEnv_arg2_0) _lh_withEnv_arg1_0));;
+  (eval_lh _lh_traverseTerm_arg1_0);;
 end;;
 

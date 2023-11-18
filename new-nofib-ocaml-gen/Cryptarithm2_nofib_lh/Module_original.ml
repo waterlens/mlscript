@@ -104,6 +104,28 @@ let rec mappend_lh xs_0 ys_0 =
       (`LH_C(h_5, ((mappend_lh t_5) ys_0)))
     | `LH_N -> 
       ys_0);;
+let rec concat_lh lss_0 =
+  (match lss_0 with
+    | `LH_C(h_7, t_7) -> 
+      ((mappend_lh h_7) (concat_lh t_7))
+    | `LH_N -> 
+      (`LH_N));;
+let unlines_lh _lh_unlines_arg1_0 =
+  (concat_lh ((map_lh (fun l_0 -> 
+    ((mappend_lh l_0) (`LH_C('n', (`LH_N)))))) _lh_unlines_arg1_0));;
+let unzip_lh _lh_unzip_arg1_0 =
+  (((foldr_lh (fun ab_0 asbs_0 -> 
+    (let rec _lh_matchIdent_0 = ab_0 in
+      (match _lh_matchIdent_0 with
+        | `LH_P2(_lh_unzip_LH_P2_0_0, _lh_unzip_LH_P2_1_0) -> 
+          (let rec _lh_matchIdent_1 = asbs_0 in
+            (match _lh_matchIdent_1 with
+              | `LH_P2(_lh_unzip_LH_P2_0_1, _lh_unzip_LH_P2_1_1) -> 
+                (`LH_P2((`LH_C(_lh_unzip_LH_P2_0_0, _lh_unzip_LH_P2_0_1)), (`LH_C(_lh_unzip_LH_P2_1_0, _lh_unzip_LH_P2_1_1))))
+              | _ -> 
+                (failwith "error")))
+        | _ -> 
+          (failwith "error"))))) (`LH_P2((`LH_N), (`LH_N)))) _lh_unzip_arg1_0);;
 let rec put_lh _lh_put_arg1_0 =
   (`StateT((fun s_3 -> 
     (`LH_C((`LH_P2((`Unit), _lh_put_arg1_0)), (`LH_N))))));;
@@ -144,7 +166,38 @@ let rec sum_lh _lh_sum_arg1_0 =
       (_lh_sum_LH_C_0_0 + (sum_lh _lh_sum_LH_C_1_0))
     | _ -> 
       (failwith "error"));;
-let rec bind_lh _lh_bind_arg1_0 _lh_bind_arg2_0 =
+let rec transpose_lh _lh_transpose_arg1_0 =
+  (match _lh_transpose_arg1_0 with
+    | `LH_N -> 
+      (`LH_N)
+    | `LH_C(_lh_transpose_LH_C_0_0, _lh_transpose_LH_C_1_0) -> 
+      (match _lh_transpose_LH_C_0_0 with
+        | `LH_N -> 
+          (transpose_lh _lh_transpose_LH_C_1_0)
+        | `LH_C(_lh_transpose_LH_C_0_1, _lh_transpose_LH_C_1_1) -> 
+          (let rec _lh_matchIdent_8 = (unzip_lh (let rec _lh_listcomp_fun_3 = (fun _lh_listcomp_fun_para_3 -> 
+            (match _lh_listcomp_fun_para_3 with
+              | `LH_C(_lh_listcomp_fun_ls_h_3, _lh_listcomp_fun_ls_t_3) -> 
+                (match _lh_listcomp_fun_ls_h_3 with
+                  | `LH_C(_lh_transpose_LH_C_0_2, _lh_transpose_LH_C_1_2) -> 
+                    (`LH_C((`LH_P2(_lh_transpose_LH_C_0_2, _lh_transpose_LH_C_1_2)), (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3)))
+                  | _ -> 
+                    (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3))
+              | `LH_N -> 
+                (`LH_N))) in
+            (_lh_listcomp_fun_3 _lh_transpose_LH_C_1_0))) in
+            (match _lh_matchIdent_8 with
+              | `LH_P2(_lh_transpose_LH_P2_0_0, _lh_transpose_LH_P2_1_0) -> 
+                ((((combine_lh _lh_transpose_LH_C_0_1) _lh_transpose_LH_P2_0_0) _lh_transpose_LH_C_1_1) _lh_transpose_LH_P2_1_0)
+              | _ -> 
+                (failwith "error")))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"))
+and combine_lh _lh_combine_arg1_0 _lh_combine_arg2_0 _lh_combine_arg3_0 _lh_combine_arg4_0 =
+  (`LH_C((`LH_C(_lh_combine_arg1_0, _lh_combine_arg2_0)), (transpose_lh (`LH_C(_lh_combine_arg3_0, _lh_combine_arg4_0)))));;
+let bind_lh _lh_bind_arg1_0 _lh_bind_arg2_0 =
   (`StateT((fun s_2 -> 
     (concat_lh ((map_lh (fun as_0 -> 
       (let rec _lh_matchIdent_7 = as_0 in
@@ -152,35 +205,27 @@ let rec bind_lh _lh_bind_arg1_0 _lh_bind_arg2_0 =
           | `LH_P2(_lh_bind_LH_P2_0_0, _lh_bind_LH_P2_1_0) -> 
             ((runStateT_lh (_lh_bind_arg2_0 _lh_bind_LH_P2_0_0)) _lh_bind_LH_P2_1_0)
           | _ -> 
-            (failwith "error"))))) ((runStateT_lh _lh_bind_arg1_0) s_2))))))
-and combine_lh _lh_combine_arg1_0 _lh_combine_arg2_0 _lh_combine_arg3_0 _lh_combine_arg4_0 =
-  (`LH_C((`LH_C(_lh_combine_arg1_0, _lh_combine_arg2_0)), (transpose_lh (`LH_C(_lh_combine_arg3_0, _lh_combine_arg4_0)))))
-and concat_lh lss_0 =
-  (match lss_0 with
-    | `LH_C(h_7, t_7) -> 
-      ((mappend_lh h_7) (concat_lh t_7))
-    | `LH_N -> 
-      (`LH_N))
-and execStateT_lh _lh_execStateT_arg1_0 _lh_execStateT_arg2_0 =
+            (failwith "error"))))) ((runStateT_lh _lh_bind_arg1_0) s_2))))));;
+let execStateT_lh _lh_execStateT_arg1_0 _lh_execStateT_arg2_0 =
   (concat_lh ((map_lh (fun x_1 -> 
     (let rec _lh_matchIdent_4 = x_1 in
       (match _lh_matchIdent_4 with
         | `LH_P2(_lh_execStateT_LH_P2_0_0, _lh_execStateT_LH_P2_1_0) -> 
           (`LH_C(_lh_execStateT_LH_P2_1_0, (`LH_N)))
         | _ -> 
-          (failwith "error"))))) ((runStateT_lh _lh_execStateT_arg1_0) _lh_execStateT_arg2_0)))
-and lift_lh _lh_lift_arg1_0 =
+          (failwith "error"))))) ((runStateT_lh _lh_execStateT_arg1_0) _lh_execStateT_arg2_0)));;
+let lift_lh _lh_lift_arg1_0 =
   (`StateT((fun s_1 -> 
     (concat_lh ((map_lh (fun x_2 -> 
-      (`LH_C((`LH_P2(x_2, s_1)), (`LH_N))))) _lh_lift_arg1_0)))))
-and listDiff_lh =
-  (foldl_lh delete_lh)
-and mapM_lh _lh_mapM_arg1_0 _lh_mapM_arg2_0 =
+      (`LH_C((`LH_P2(x_2, s_1)), (`LH_N))))) _lh_lift_arg1_0)))));;
+let listDiff_lh =
+  (foldl_lh delete_lh);;
+let mapM_lh _lh_mapM_arg1_0 _lh_mapM_arg2_0 =
   (((foldr_lh (fun a_2 r_0 -> 
     ((bind_lh (_lh_mapM_arg1_0 a_2)) (fun x_0 -> 
       ((bind_lh r_0) (fun xs_1 -> 
-        (return_lh (`LH_C(x_0, xs_1))))))))) (return_lh (`LH_N))) _lh_mapM_arg2_0)
-and nub_lh _lh_nub_arg1_0 =
+        (return_lh (`LH_C(x_0, xs_1))))))))) (return_lh (`LH_N))) _lh_mapM_arg2_0);;
+let rec nub_lh _lh_nub_arg1_0 =
   (match _lh_nub_arg1_0 with
     | `LH_N -> 
       (`LH_N)
@@ -188,8 +233,8 @@ and nub_lh _lh_nub_arg1_0 =
       (`LH_C(_lh_nub_LH_C_0_0, (nub_lh ((filter_lh (fun y_0 -> 
         (not (_lh_nub_LH_C_0_0 = y_0)))) _lh_nub_LH_C_1_0))))
     | _ -> 
-      (failwith "error"))
-and permute_lh _lh_permute_arg1_0 =
+      (failwith "error"));;
+let rec permute_lh _lh_permute_arg1_0 =
   ((bind_lh get_lh) (fun st_1 -> 
     ((bind_lh (let rec xs_2 = (digits_lh st_1) in
       (lift_lh (let rec _lh_listcomp_fun_2 = (fun _lh_listcomp_fun_para_2 -> 
@@ -298,50 +343,5 @@ and testCryptarithm2_nofib_lh _lh_testCryptarithm2_nofib_arg1_0 =
     else
       (`LH_N))), (`LH_N))))))))))))) in
       ((puzzle_lh args_0) (`LH_C('N', (`LH_C('I', (`LH_C('N', (`LH_C('E', (`LH_C('T', (`LH_C('Y', (`LH_N))))))))))))))))) ((enumFromTo_lh 1) _lh_testCryptarithm2_nofib_arg1_0))
-and transpose_lh _lh_transpose_arg1_0 =
-  (match _lh_transpose_arg1_0 with
-    | `LH_N -> 
-      (`LH_N)
-    | `LH_C(_lh_transpose_LH_C_0_0, _lh_transpose_LH_C_1_0) -> 
-      (match _lh_transpose_LH_C_0_0 with
-        | `LH_N -> 
-          (transpose_lh _lh_transpose_LH_C_1_0)
-        | `LH_C(_lh_transpose_LH_C_0_1, _lh_transpose_LH_C_1_1) -> 
-          (let rec _lh_matchIdent_8 = (unzip_lh (let rec _lh_listcomp_fun_3 = (fun _lh_listcomp_fun_para_3 -> 
-            (match _lh_listcomp_fun_para_3 with
-              | `LH_C(_lh_listcomp_fun_ls_h_3, _lh_listcomp_fun_ls_t_3) -> 
-                (match _lh_listcomp_fun_ls_h_3 with
-                  | `LH_C(_lh_transpose_LH_C_0_2, _lh_transpose_LH_C_1_2) -> 
-                    (`LH_C((`LH_P2(_lh_transpose_LH_C_0_2, _lh_transpose_LH_C_1_2)), (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3)))
-                  | _ -> 
-                    (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3))
-              | `LH_N -> 
-                (`LH_N))) in
-            (_lh_listcomp_fun_3 _lh_transpose_LH_C_1_0))) in
-            (match _lh_matchIdent_8 with
-              | `LH_P2(_lh_transpose_LH_P2_0_0, _lh_transpose_LH_P2_1_0) -> 
-                ((((combine_lh _lh_transpose_LH_C_0_1) _lh_transpose_LH_P2_0_0) _lh_transpose_LH_C_1_1) _lh_transpose_LH_P2_1_0)
-              | _ -> 
-                (failwith "error")))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"))
-and unlines_lh _lh_unlines_arg1_0 =
-  (concat_lh ((map_lh (fun l_0 -> 
-    ((mappend_lh l_0) (`LH_C('n', (`LH_N)))))) _lh_unlines_arg1_0))
-and unzip_lh _lh_unzip_arg1_0 =
-  (((foldr_lh (fun ab_0 asbs_0 -> 
-    (let rec _lh_matchIdent_0 = ab_0 in
-      (match _lh_matchIdent_0 with
-        | `LH_P2(_lh_unzip_LH_P2_0_0, _lh_unzip_LH_P2_1_0) -> 
-          (let rec _lh_matchIdent_1 = asbs_0 in
-            (match _lh_matchIdent_1 with
-              | `LH_P2(_lh_unzip_LH_P2_0_1, _lh_unzip_LH_P2_1_1) -> 
-                (`LH_P2((`LH_C(_lh_unzip_LH_P2_0_0, _lh_unzip_LH_P2_0_1)), (`LH_C(_lh_unzip_LH_P2_1_0, _lh_unzip_LH_P2_1_1))))
-              | _ -> 
-                (failwith "error")))
-        | _ -> 
-          (failwith "error"))))) (`LH_P2((`LH_N), (`LH_N)))) _lh_unzip_arg1_0);;
 end;;
 

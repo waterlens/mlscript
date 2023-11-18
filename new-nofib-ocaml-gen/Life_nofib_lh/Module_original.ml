@@ -169,8 +169,14 @@ let rec concat_lh lss_0 =
     | `LH_C(h_6, t_6) -> 
       ((mappend_lh h_6) (concat_lh t_6))
     | `LH_N -> 
-      (`LH_N))
-and disp_lh _lh_disp_arg1_0 =
+      (`LH_N));;
+let rec shiftl_lh _lh_shiftl_arg1_0 _lh_shiftl_arg2_0 =
+  ((mappend_lh (tail_lh _lh_shiftl_arg2_0)) (`LH_C(_lh_shiftl_arg1_0, (`LH_N))));;
+let rec shiftr_lh _lh_shiftr_arg1_0 _lh_shiftr_arg2_0 =
+  ((mappend_lh (`LH_C(_lh_shiftr_arg1_0, (`LH_N)))) (init_lh _lh_shiftr_arg2_0));;
+let shift_lh _lh_shift_arg1_0 _lh_shift_arg2_0 =
+  (((zip3_lh ((shiftr_lh _lh_shift_arg1_0) _lh_shift_arg2_0)) _lh_shift_arg2_0) ((shiftl_lh _lh_shift_arg1_0) _lh_shift_arg2_0));;
+let rec disp_lh _lh_disp_arg1_0 =
   (match _lh_disp_arg1_0 with
     | `LH_P2(_lh_disp_LH_P2_0_0, _lh_disp_LH_P2_1_0) -> 
       ((mappend_lh ((mappend_lh _lh_disp_LH_P2_0_0) (`LH_C('n', (`LH_C('n', (`LH_N))))))) ((fun _lh_funcomp_x_4 -> 
@@ -196,12 +202,6 @@ and row_lh _lh_row_arg1_0 =
       ((((zipWith3_lh elt_lh) ((shift_lh 0) _lh_row_LH_P3_0_0)) ((shift_lh 0) _lh_row_LH_P3_1_0)) ((shift_lh 0) _lh_row_LH_P3_2_0))
     | _ -> 
       (failwith "error"))
-and shift_lh _lh_shift_arg1_0 _lh_shift_arg2_0 =
-  (((zip3_lh ((shiftr_lh _lh_shift_arg1_0) _lh_shift_arg2_0)) _lh_shift_arg2_0) ((shiftl_lh _lh_shift_arg1_0) _lh_shift_arg2_0))
-and shiftl_lh _lh_shiftl_arg1_0 _lh_shiftl_arg2_0 =
-  ((mappend_lh (tail_lh _lh_shiftl_arg2_0)) (`LH_C(_lh_shiftl_arg1_0, (`LH_N))))
-and shiftr_lh _lh_shiftr_arg1_0 _lh_shiftr_arg2_0 =
-  ((mappend_lh (`LH_C(_lh_shiftr_arg1_0, (`LH_N)))) (init_lh _lh_shiftr_arg2_0))
 and testLife_nofib_lh _lh_testLife_nofib_arg1_0 =
   (generations_lh _lh_testLife_nofib_arg1_0);;
 end;;

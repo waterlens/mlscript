@@ -160,13 +160,20 @@ class DiffTestLumberhack extends DiffTests {
           output("<<<<<<<<<< deadcode elimination info <<<<<<<<<<")
         try {
           ocamlGen.makeBenchFilesSeparate(List(
-            ("original" -> originalProgram),
+            ("original" -> {
+              val p = FromHaskell(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output);
+              p.d(p)
+              val newp = p.copyToNewDeforestWithDeadDefElim
+              newp.d(newp)
+              newp
+            }),
             ("lumberhack" -> iterativeProcessRes._1.deadCodeToMagic),
             ("lumberhack_pop_out" -> iterativeProcessRes._1.deadCodeToMagic.popOutLambdas(using mode.lhLessExpansion)._1),
           ))
           output("benchmark file generated")
         } catch { case e =>
-          output(s"cannot generate benchmark files: ${e.getMessage()}\n")
+          output(s"cannot generate benchmark files: \n")
+          e.printStackTrace()
           // output(s"cannot generate benchmark files: ${e.getMessage()}\n${e.getStackTrace().mkString("\n")}")
           val progStr = ocamlGen(iterativeProcessRes._1.deadCodeToMagic)
           // val clipboard = java.awt.Toolkit.getDefaultToolkit.getSystemClipboard
@@ -735,7 +742,7 @@ end;;
 
     import sys.process.*
     import java.io._
-    val pathPrefix = s"./nofib-ocaml-gen/$benchName"
+    val pathPrefix = s"./new-nofib-ocaml-gen/$benchName"
     s"mkdir -p $pathPrefix".!
     (commonFileString ::
     (

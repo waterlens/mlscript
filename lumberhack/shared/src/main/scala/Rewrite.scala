@@ -318,6 +318,38 @@ trait ExprRewrite { this: Expr =>
     } 
   }
 
+  def copyWithDeadDefElim(using ctx: RewriteCtx, newd: Deforest): Expr = {
+    this match {
+      case Const(lit) => Const(lit)
+      case Call(lhs, rhs) => Call(lhs.copyWithDeadDefElim, rhs.copyWithDeadDefElim)
+      case Sequence(f, s) => Sequence(f.copyWithDeadDefElim, s.copyWithDeadDefElim)
+      case Ctor(name, args) => Ctor(name, args.map(_.copyWithDeadDefElim))
+      case LetIn(id, rhs, body) =>
+        val newId = id.copyToNewDeforest
+        LetIn(newId, rhs.copyWithDeadDefElim(using ctx + (id -> newId)), body.copyWithDeadDefElim(using ctx + (id -> newId)))
+      case LetGroup(defs, body) =>
+        val newIdsMap = (defs.keys.map(i => i -> i.copyToNewDeforest)).toMap
+        val newCtx = ctx ++ newIdsMap
+        LetGroup(
+          defs.map { case (d, rhs) =>
+            newIdsMap(d) -> rhs.copyWithDeadDefElim(using newCtx)
+          },
+          body.copyWithDeadDefElim(using newCtx)
+        )
+      case Match(scrut, arms) =>
+        Match(scrut.copyWithDeadDefElim, arms.map {(ctor, args, body) =>
+          val newArgs = args.map(a => a -> a.copyToNewDeforest)
+          given RewriteCtx = ctx ++ newArgs
+          (ctor, newArgs.map(_._2), body.copyWithDeadDefElim)
+        })
+      case IfThenElse(s, t, e) => IfThenElse(s.copyWithDeadDefElim, t.copyWithDeadDefElim, e.copyWithDeadDefElim)
+      case Function(param, body) =>
+        val newParam = param.copyToNewDeforest
+        Function(newParam, body.copyWithDeadDefElim(using ctx + (param -> newParam)))
+      case ref@Ref(id) => Ref(ctx(id)) // a parameter or match binder or builtin keyword
+    } 
+  }
+
   // TODO: add lazy to let bindings introduced by fusion
   def rewriteFusion(using
     ctx: RewriteCtx,
@@ -655,6 +687,28 @@ trait ProgramRewrite { this: Program =>
       ++ newDefs
     ) -> newd
     
+  }
+
+  lazy val copyToNewDeforestWithDeadDefElim = {
+    given newd: Deforest(false)
+    def getAllCalls(calls: Set[Ident]): Set[Ident] = {
+      val newCalls = this.d.callsInfo._2.filterKeys(id => calls(id)).values.flatten.map(_.id).toSet ++ calls
+      if newCalls.size == calls.size then calls else getAllCalls(newCalls)
+    }
+    val newCalls = getAllCalls(this.d.callsInfo._1.map(_._1).toSet)
+    println(newCalls.size)
+    val newInitCtx = newCalls.map(
+      i => i -> newd.nextIdent(i.isDef, Var(i.tree.name + "_lh"))
+    ) ++ newd.lumberhackKeywordsIds.values.map(id => id -> id) |> (_.toMap)
+    
+    Program(
+      this.contents.flatMap {
+        case Left(ProgDef(id, body)) if newInitCtx.contains(id) =>
+          Some(Left(ProgDef(newInitCtx(id), body.copyWithDeadDefElim(using newInitCtx, newd))))
+        case Left(ProgDef(id, body)) => None
+        case Right(expr) => Some(Right(expr.copyWithDeadDefElim(using newInitCtx, newd)))
+      }
+    )
   }
 
   def rewrite(d: Deforest, fusionStrategy: FusionStrategy): Program = {

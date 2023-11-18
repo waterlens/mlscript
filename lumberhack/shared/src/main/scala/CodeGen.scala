@@ -650,7 +650,7 @@ fun filter(f, ls) = if ls is
   LH_C(h, t) then if f(h) then LH_C(h, filter(f, t)) else filter(f, t)
   LH_N then LH_N
 fun filter_lz(f, ls) = lazy(if force(ls) is
-  LH_C(h, t) then if f(h) then LH_C(h, filter_lz(f, t)) else filter_lz(f, t)
+  LH_C(h, t) then if f(h) then LH_C(h, filter_lz(f, t)) else force(filter_lz(f, t))
   LH_N then LH_N)
 
 fun foldl(f, i, ls) = if ls is

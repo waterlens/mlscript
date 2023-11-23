@@ -159,21 +159,25 @@ class DiffTestLumberhack extends DiffTests {
           }.mkString("\n"))
           output("<<<<<<<<<< deadcode elimination info <<<<<<<<<<")
         try {
-          ocamlGen.makeBenchFilesSeparate(List(
-            ("original" -> {
-              val p = FromHaskell(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output);
-              p.d(p)
-              val newp = p.copyToNewDeforestWithDeadDefElim
-              newp.d(newp)
-              newp
-            }),
-            ("lumberhack" -> iterativeProcessRes._1.deadCodeToMagic),
-            ("lumberhack_pop_out" -> iterativeProcessRes._1.deadCodeToMagic.popOutLambdas(using mode.lhLessExpansion)._1),
-          ))
+          ocamlGen.makeBenchFilesSeparate((
+            Some("original" -> {
+              if mode.lhInHaskell then
+                val p = FromHaskell(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output);
+                p.d(p)
+                val newp = p.copyToNewDeforestWithDeadDefElim
+                newp.d(newp)
+                newp
+              else originalProgram
+            }) ::
+            (if mode.lhInHaskell then Some("lumberhack_only_expanded" -> originalProgram) else None) ::
+            Some("lumberhack" -> iterativeProcessRes._1.deadCodeToMagic) :: 
+            Some("lumberhack_pop_out" -> iterativeProcessRes._1.deadCodeToMagic.popOutLambdas(using mode.lhLessExpansion)._1) ::
+            Nil
+          ).flatten)
           output("benchmark file generated")
         } catch { case e =>
-          output(s"cannot generate benchmark files: \n")
-          e.printStackTrace()
+          output(s"cannot generate benchmark files: ${e.getMessage()}\n")
+          // e.printStackTrace()
           // output(s"cannot generate benchmark files: ${e.getMessage()}\n${e.getStackTrace().mkString("\n")}")
           val progStr = ocamlGen(iterativeProcessRes._1.deadCodeToMagic)
           // val clipboard = java.awt.Toolkit.getDefaultToolkit.getSystemClipboard
@@ -742,7 +746,7 @@ end;;
 
     import sys.process.*
     import java.io._
-    val pathPrefix = s"./new-nofib-ocaml-gen/$benchName"
+    val pathPrefix = if benchName.contains("_nofib") then s"./new-nofib-ocaml-gen/$benchName" else s"./ocaml-gen/$benchName"
     s"mkdir -p $pathPrefix".!
     (commonFileString ::
     (

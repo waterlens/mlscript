@@ -696,7 +696,7 @@ trait ProgramRewrite { this: Program =>
       if newCalls.size == calls.size then calls else getAllCalls(newCalls)
     }
     val newCalls = getAllCalls(this.d.callsInfo._1.map(_._1).toSet)
-    println(newCalls.size)
+    // println(newCalls.size)
     val newInitCtx = newCalls.map(
       i => i -> newd.nextIdent(i.isDef, Var(i.tree.name + "_lh"))
     ) ++ newd.lumberhackKeywordsIds.values.map(id => id -> id) |> (_.toMap)

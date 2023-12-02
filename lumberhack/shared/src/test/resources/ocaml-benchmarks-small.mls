@@ -2984,3 +2984,351 @@ testSumSquareTree(primId(18))
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
+
+
+:lhInHaskell
+:lhGenOCaml
+summ xs = case xs of { [] -> 0; (h:t) -> h + (summ t) }
+append xs ys = case xs of { [] -> ys; (h:t) -> h:(append t ys) }
+flatten xss = case xss of { [] -> []; (h:t) -> append h (flatten t) }
+testSumFlatten n = summ $ flatten n
+sum2 ls = let k = ls in k 99
+append2 xs ys p = case xs of { [] -> ys p; (h:t) -> let tt = append2 t ys in let hh = h in hh + sum2 tt }
+flatten2 ls p = case ls of { [] -> 0; (h:t) -> append2 h (flatten2 t) p }
+testManual n = sum2 $ flatten2 n
+testSumFlatten $ primId [primId [1..n] | n <- primId [1..1000]]
+testManual $ primId [primId [1..n] | n <- primId [1..1000]]
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testSumFlatten_₀^956(primId⁰(
+//│ 	let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> case _lh_listcomp_fun_para² of {
+//│ 		LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => [LH_C primId⁰(enumFromTo_₁^960(1, _lh_listcomp_fun_ls_h²)) _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)]
+//│ 		| LH_N  => [LH_N]})
+//│ 	in _lh_listcomp_fun²(primId⁰(enumFromTo_₀^975(1, 1000)))))
+//│ testManual_₀^985(primId⁰(
+//│ 	let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {
+//│ 		LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C primId⁰(enumFromTo_₃^989(1, _lh_listcomp_fun_ls_h³)) _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]
+//│ 		| LH_N  => [LH_N]})
+//│ 	in _lh_listcomp_fun³(primId⁰(enumFromTo_₂^1004(1, 1000)))))
+//│ def append2_₀(_lh_append2_arg1¹, _lh_append2_arg2¹, _lh_append2_arg3¹) = 
+//│ 	let _lh_matchIdent⁶ = _lh_append2_arg1¹
+//│ 	in case _lh_matchIdent⁶ of {
+//│ 		LH_N  => _lh_append2_arg2¹(_lh_append2_arg3¹)
+//│ 		| LH_C _lh_append2_LH_C_0¹ _lh_append2_LH_C_1¹ => 
+//│ 			let tt¹ = append2_₀^812(_lh_append2_LH_C_1¹, _lh_append2_arg2¹)
+//│ 			in let hh¹ = _lh_append2_LH_C_0¹
+//│ 			in (hh¹ + sum2_₀^821(tt¹))
+//│ 		| _  => error⁰}
+//│ def append_₀(_lh_append_arg1¹, _lh_append_arg2¹) = 
+//│ 	let _lh_matchIdent⁵ = _lh_append_arg1¹
+//│ 	in case _lh_matchIdent⁵ of {
+//│ 		LH_N  => _lh_append_arg2¹
+//│ 		| LH_C _lh_append_LH_C_0¹ _lh_append_LH_C_1¹ => [LH_C _lh_append_LH_C_0¹ append_₀^790(_lh_append_LH_C_1¹, _lh_append_arg2¹)]
+//│ 		| _  => error⁰}
+//│ def enumFromTo_₀(a⁸, b⁵) = if (a⁸ <= b⁵) then [LH_C a⁸ enumFromTo_₀^928((a⁸ + 1), b⁵)] else [LH_N]
+//│ def enumFromTo_₁(a⁵, b²) = if (a⁵ <= b²) then [LH_C a⁵ enumFromTo_₁^772((a⁵ + 1), b²)] else [LH_N]
+//│ def enumFromTo_₂(a⁷, b⁴) = if (a⁷ <= b⁴) then [LH_C a⁷ enumFromTo_₂^888((a⁷ + 1), b⁴)] else [LH_N]
+//│ def enumFromTo_₃(a⁶, b³) = if (a⁶ <= b³) then [LH_C a⁶ enumFromTo_₃^862((a⁶ + 1), b³)] else [LH_N]
+//│ def flatten2_₀(_lh_flatten2_arg1¹, _lh_flatten2_arg2¹) = 
+//│ 	let _lh_matchIdent⁷ = _lh_flatten2_arg1¹
+//│ 	in case _lh_matchIdent⁷ of {
+//│ 		LH_N  => 0
+//│ 		| LH_C _lh_flatten2_LH_C_0¹ _lh_flatten2_LH_C_1¹ => append2_₀^836(_lh_flatten2_LH_C_0¹, flatten2_₀^839(_lh_flatten2_LH_C_1¹), _lh_flatten2_arg2¹)
+//│ 		| _  => error⁰}
+//│ def flatten_₀(_lh_flatten_arg1¹) = 
+//│ 	let _lh_matchIdent⁹ = _lh_flatten_arg1¹
+//│ 	in case _lh_matchIdent⁹ of {
+//│ 		LH_N  => [LH_N]
+//│ 		| LH_C _lh_flatten_LH_C_0¹ _lh_flatten_LH_C_1¹ => append_₀^945(_lh_flatten_LH_C_0¹, flatten_₀^948(_lh_flatten_LH_C_1¹))
+//│ 		| _  => error⁰}
+//│ def sum2_₀(_lh_sum2_arg1²) = 
+//│ 	let k² = _lh_sum2_arg1²
+//│ 	in k²(99)
+//│ def sum2_₁(_lh_sum2_arg1¹) = 
+//│ 	let k¹ = _lh_sum2_arg1¹
+//│ 	in k¹(99)
+//│ def summ_₀(_lh_summ_arg1¹) = 
+//│ 	let _lh_matchIdent⁸ = _lh_summ_arg1¹
+//│ 	in case _lh_matchIdent⁸ of {
+//│ 		LH_N  => 0
+//│ 		| LH_C _lh_summ_LH_C_0¹ _lh_summ_LH_C_1¹ => (_lh_summ_LH_C_0¹ + summ_₀^908(_lh_summ_LH_C_1¹))
+//│ 		| _  => error⁰}
+//│ def testManual_₀(_lh_testManual_arg1¹) = sum2_₁^850(flatten2_₀^851(_lh_testManual_arg1¹))
+//│ def testSumFlatten_₀(_lh_testSumFlatten_arg1¹) = summ_₀^801(flatten_₀^802(_lh_testSumFlatten_arg1¹))
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec append2__d0 _lh_append2_arg1_1 _lh_append2_arg2_1 _lh_append2_arg3_1 =
+//│ 		  (let rec _lh_matchIdent_6 = _lh_append2_arg1_1 in
+//│ 		    (match _lh_matchIdent_6 with
+//│ 		      | `LH_N -> 
+//│ 		        (_lh_append2_arg2_1 _lh_append2_arg3_1)
+//│ 		      | `LH_C(_lh_append2_LH_C_0_1, _lh_append2_LH_C_1_1) -> 
+//│ 		        (let rec tt_1 = ((append2__d0 _lh_append2_LH_C_1_1) _lh_append2_arg2_1) in
+//│ 		          (let rec hh_1 = _lh_append2_LH_C_0_1 in
+//│ 		            (hh_1 + (sum2__d0 tt_1))))
+//│ 		      | _ -> 
+//│ 		        (failwith "error")))
+//│ 		and append__d0 _lh_append_arg1_1 _lh_append_arg2_1 =
+//│ 		  (let rec _lh_matchIdent_5 = _lh_append_arg1_1 in
+//│ 		    (match _lh_matchIdent_5 with
+//│ 		      | `LH_N -> 
+//│ 		        _lh_append_arg2_1
+//│ 		      | `LH_C(_lh_append_LH_C_0_1, _lh_append_LH_C_1_1) -> 
+//│ 		        (`LH_C(_lh_append_LH_C_0_1, ((append__d0 _lh_append_LH_C_1_1) _lh_append_arg2_1)))
+//│ 		      | _ -> 
+//│ 		        (failwith "error")))
+//│ 		and enumFromTo__d0 a_8 b_5 =
+//│ 		  (if (a_8 <= b_5) then
+//│ 		    (`LH_C(a_8, ((enumFromTo__d0 (a_8 + 1)) b_5)))
+//│ 		  else
+//│ 		    (`LH_N))
+//│ 		and enumFromTo__d1 a_5 b_2 =
+//│ 		  (if (a_5 <= b_2) then
+//│ 		    (`LH_C(a_5, ((enumFromTo__d1 (a_5 + 1)) b_2)))
+//│ 		  else
+//│ 		    (`LH_N))
+//│ 		and enumFromTo__d2 a_7 b_4 =
+//│ 		  (if (a_7 <= b_4) then
+//│ 		    (`LH_C(a_7, ((enumFromTo__d2 (a_7 + 1)) b_4)))
+//│ 		  else
+//│ 		    (`LH_N))
+//│ 		and enumFromTo__d3 a_6 b_3 =
+//│ 		  (if (a_6 <= b_3) then
+//│ 		    (`LH_C(a_6, ((enumFromTo__d3 (a_6 + 1)) b_3)))
+//│ 		  else
+//│ 		    (`LH_N))
+//│ 		and flatten2__d0 _lh_flatten2_arg1_1 _lh_flatten2_arg2_1 =
+//│ 		  (let rec _lh_matchIdent_7 = _lh_flatten2_arg1_1 in
+//│ 		    (match _lh_matchIdent_7 with
+//│ 		      | `LH_N -> 
+//│ 		        0
+//│ 		      | `LH_C(_lh_flatten2_LH_C_0_1, _lh_flatten2_LH_C_1_1) -> 
+//│ 		        (((append2__d0 _lh_flatten2_LH_C_0_1) (flatten2__d0 _lh_flatten2_LH_C_1_1)) _lh_flatten2_arg2_1)
+//│ 		      | _ -> 
+//│ 		        (failwith "error")))
+//│ 		and flatten__d0 _lh_flatten_arg1_1 =
+//│ 		  (let rec _lh_matchIdent_9 = _lh_flatten_arg1_1 in
+//│ 		    (match _lh_matchIdent_9 with
+//│ 		      | `LH_N -> 
+//│ 		        (`LH_N)
+//│ 		      | `LH_C(_lh_flatten_LH_C_0_1, _lh_flatten_LH_C_1_1) -> 
+//│ 		        ((append__d0 _lh_flatten_LH_C_0_1) (flatten__d0 _lh_flatten_LH_C_1_1))
+//│ 		      | _ -> 
+//│ 		        (failwith "error")))
+//│ 		and sum2__d0 _lh_sum2_arg1_2 =
+//│ 		  (let rec k_2 = _lh_sum2_arg1_2 in
+//│ 		    (k_2 99))
+//│ 		and sum2__d1 _lh_sum2_arg1_1 =
+//│ 		  (let rec k_1 = _lh_sum2_arg1_1 in
+//│ 		    (k_1 99))
+//│ 		and summ__d0 _lh_summ_arg1_1 =
+//│ 		  (let rec _lh_matchIdent_8 = _lh_summ_arg1_1 in
+//│ 		    (match _lh_matchIdent_8 with
+//│ 		      | `LH_N -> 
+//│ 		        0
+//│ 		      | `LH_C(_lh_summ_LH_C_0_1, _lh_summ_LH_C_1_1) -> 
+//│ 		        (_lh_summ_LH_C_0_1 + (summ__d0 _lh_summ_LH_C_1_1))
+//│ 		      | _ -> 
+//│ 		        (failwith "error")))
+//│ 		and testManual__d0 _lh_testManual_arg1_1 =
+//│ 		  (sum2__d1 (flatten2__d0 _lh_testManual_arg1_1))
+//│ 		and testSumFlatten__d0 _lh_testSumFlatten_arg1_1 =
+//│ 		  (summ__d0 (flatten__d0 _lh_testSumFlatten_arg1_1));;
+//│ 		(testSumFlatten__d0 (let rec _lh_listcomp_fun_2 = (fun _lh_listcomp_fun_para_2 -> 
+//│ 		  (match _lh_listcomp_fun_para_2 with
+//│ 		    | `LH_C(_lh_listcomp_fun_ls_h_2, _lh_listcomp_fun_ls_t_2) -> 
+//│ 		      (`LH_C(((enumFromTo__d1 1) _lh_listcomp_fun_ls_h_2), (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_2)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N))) in
+//│ 		  (_lh_listcomp_fun_2 ((enumFromTo__d0 1) 1000))))
+//│ 		(testManual__d0 (let rec _lh_listcomp_fun_3 = (fun _lh_listcomp_fun_para_3 -> 
+//│ 		  (match _lh_listcomp_fun_para_3 with
+//│ 		    | `LH_C(_lh_listcomp_fun_ls_h_3, _lh_listcomp_fun_ls_t_3) -> 
+//│ 		      (`LH_C(((enumFromTo__d3 1) _lh_listcomp_fun_ls_h_3), (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N))) in
+//│ 		  (_lh_listcomp_fun_3 ((enumFromTo__d2 1) 1000))))
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_C _lh_append_LH_C_0¹ append_₀(_lh_append_LH_C_1¹, _lh_append_arg2¹)]: 795 --->
+//│ 	case _lh_matchIdent⁸ of {LH_N  => 0 | LH_C _lh_summ_LH_C_0¹ _lh_summ_LH_C_1¹ => (_lh_summ_LH_C_0¹ + summ_₀(_lh_summ_LH_C_1¹)) | _  => error⁰}: 913
+//│ [LH_N]: 944 --->
+//│ 	case _lh_matchIdent⁸ of {LH_N  => 0 | LH_C _lh_summ_LH_C_0¹ _lh_summ_LH_C_1¹ => (_lh_summ_LH_C_0¹ + summ_₀(_lh_summ_LH_C_1¹)) | _  => error⁰}: 913
+//│ ------------------
+//│ case _lh_matchIdent⁸ of {LH_N  => 0 | LH_C _lh_summ_LH_C_0¹ _lh_summ_LH_C_1¹ => (_lh_summ_LH_C_0¹ + summ_₀(_lh_summ_LH_C_1¹)) | _  => error⁰}: 913 --->
+//│ 	[LH_C _lh_append_LH_C_0¹ append_₀(_lh_append_LH_C_1¹, _lh_append_arg2¹)]: 795
+//│ 	[LH_N]: 944
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_C _lh_append_LH_C_0¹ append_₀(_lh_append_LH_C_1¹, _lh_append_arg2¹)]: 795 --->
+//│ 	case _lh_matchIdent⁸ of {LH_N  => 0 | LH_C _lh_summ_LH_C_0¹ _lh_summ_LH_C_1¹ => (_lh_summ_LH_C_0¹ + summ_₀(_lh_summ_LH_C_1¹)) | _  => error⁰}: 913
+//│ [LH_N]: 944 --->
+//│ 	case _lh_matchIdent⁸ of {LH_N  => 0 | LH_C _lh_summ_LH_C_0¹ _lh_summ_LH_C_1¹ => (_lh_summ_LH_C_0¹ + summ_₀(_lh_summ_LH_C_1¹)) | _  => error⁰}: 913
+//│ ------------------
+//│ case _lh_matchIdent⁸ of {LH_N  => 0 | LH_C _lh_summ_LH_C_0¹ _lh_summ_LH_C_1¹ => (_lh_summ_LH_C_0¹ + summ_₀(_lh_summ_LH_C_1¹)) | _  => error⁰}: 913 --->
+//│ 	[LH_C _lh_append_LH_C_0¹ append_₀(_lh_append_LH_C_1¹, _lh_append_arg2¹)]: 795
+//│ 	[LH_N]: 944
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testSumFlatten_₀(primId⁰(
+//│ 	let _lh_listcomp_fun⁴ = (fun _lh_listcomp_fun_para⁴ -> case _lh_listcomp_fun_para⁴ of {
+//│ 		LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => [LH_C primId⁰(enumFromTo_₁(1, _lh_listcomp_fun_ls_h²)) _lh_listcomp_fun⁴(_lh_listcomp_fun_ls_t²)]
+//│ 		| LH_N  => [LH_N]})
+//│ 	in _lh_listcomp_fun⁴(primId⁰(enumFromTo_₀(1, 1000)))))
+//│ testManual_₀(primId⁰(
+//│ 	let _lh_listcomp_fun⁵ = (fun _lh_listcomp_fun_para⁵ -> case _lh_listcomp_fun_para⁵ of {
+//│ 		LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => [LH_C primId⁰(enumFromTo_₃(1, _lh_listcomp_fun_ls_h³)) _lh_listcomp_fun⁵(_lh_listcomp_fun_ls_t³)]
+//│ 		| LH_N  => [LH_N]})
+//│ 	in _lh_listcomp_fun⁵(primId⁰(enumFromTo_₂(1, 1000)))))
+//│ def append2_₀(_lh_append2_arg1², _lh_append2_arg2², _lh_append2_arg3²) = 
+//│ 	let _lh_matchIdent¹⁴ = _lh_append2_arg1²
+//│ 	in case _lh_matchIdent¹⁴ of {
+//│ 		LH_N  => _lh_append2_arg2²(_lh_append2_arg3²)
+//│ 		| LH_C _lh_append2_LH_C_0¹ _lh_append2_LH_C_1¹ => 
+//│ 			let tt² = append2_₀(_lh_append2_LH_C_1¹, _lh_append2_arg2²)
+//│ 			in let hh² = _lh_append2_LH_C_0¹
+//│ 			in (hh² + sum2_₀(tt²))
+//│ 		| _  => error⁰}
+//│ def append_₀(_lh_append_arg1², _lh_append_arg2²) = 
+//│ 	let _lh_matchIdent¹¹ = _lh_append_arg1²
+//│ 	in case _lh_matchIdent¹¹ of {
+//│ 		LH_N  => _lh_append_arg2²
+//│ 		| LH_C _lh_append_LH_C_0¹ _lh_append_LH_C_1¹ => 
+//│ 			let _lh_summ_LH_C_1² = append_₀(_lh_append_LH_C_1¹, _lh_append_arg2²)
+//│ 			in let _lh_summ_LH_C_0² = _lh_append_LH_C_0¹
+//│ 			in (fun _lh_dummy⁰ -> (_lh_summ_LH_C_0² + summ_₀(_lh_summ_LH_C_1²)))
+//│ 		| _  => error⁰}
+//│ def enumFromTo_₀(a¹⁰, b⁷) = if (a¹⁰ <= b⁷) then [LH_C a¹⁰ enumFromTo_₀((a¹⁰ + 1), b⁷)] else [LH_N]
+//│ def enumFromTo_₁(a⁹, b⁶) = if (a⁹ <= b⁶) then [LH_C a⁹ enumFromTo_₁((a⁹ + 1), b⁶)] else [LH_N]
+//│ def enumFromTo_₂(a¹², b⁹) = if (a¹² <= b⁹) then [LH_C a¹² enumFromTo_₂((a¹² + 1), b⁹)] else [LH_N]
+//│ def enumFromTo_₃(a¹¹, b⁸) = if (a¹¹ <= b⁸) then [LH_C a¹¹ enumFromTo_₃((a¹¹ + 1), b⁸)] else [LH_N]
+//│ def flatten2_₀(_lh_flatten2_arg1², _lh_flatten2_arg2²) = 
+//│ 	let _lh_matchIdent¹⁰ = _lh_flatten2_arg1²
+//│ 	in case _lh_matchIdent¹⁰ of {
+//│ 		LH_N  => 0
+//│ 		| LH_C _lh_flatten2_LH_C_0¹ _lh_flatten2_LH_C_1¹ => append2_₀(_lh_flatten2_LH_C_0¹, flatten2_₀(_lh_flatten2_LH_C_1¹), _lh_flatten2_arg2²)
+//│ 		| _  => error⁰}
+//│ def flatten_₀(_lh_flatten_arg1²) = 
+//│ 	let _lh_matchIdent¹² = _lh_flatten_arg1²
+//│ 	in case _lh_matchIdent¹² of {
+//│ 		LH_N  => (fun _lh_dummy¹ -> 0)
+//│ 		| LH_C _lh_flatten_LH_C_0¹ _lh_flatten_LH_C_1¹ => append_₀(_lh_flatten_LH_C_0¹, flatten_₀(_lh_flatten_LH_C_1¹))
+//│ 		| _  => error⁰}
+//│ def sum2_₀(_lh_sum2_arg1⁴) = 
+//│ 	let k⁴ = _lh_sum2_arg1⁴
+//│ 	in k⁴(99)
+//│ def sum2_₁(_lh_sum2_arg1³) = 
+//│ 	let k³ = _lh_sum2_arg1³
+//│ 	in k³(99)
+//│ def summ_₀(_lh_summ_arg1²) = 
+//│ 	let _lh_matchIdent¹³ = _lh_summ_arg1²
+//│ 	in _lh_matchIdent¹³(99)
+//│ def testManual_₀(_lh_testManual_arg1²) = sum2_₁(flatten2_₀(_lh_testManual_arg1²))
+//│ def testSumFlatten_₀(_lh_testSumFlatten_arg1²) = summ_₀(flatten_₀(_lh_testSumFlatten_arg1²))
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+
+:lhInHaskell
+:lhGenOCaml
+testZipEnumEnum n = zip [1..n] [1..n]
+testZipEnumEnum $ primId 100000
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ testZipEnumEnum_₀^694(primId⁰(100000))
+//│ def enumFromTo_₀(a⁶, b³) = if (a⁶ <= b³) then [LH_C a⁶ enumFromTo_₀^680((a⁶ + 1), b³)] else [LH_N]
+//│ def enumFromTo_₁(a⁵, b²) = if (a⁵ <= b²) then [LH_C a⁵ enumFromTo_₁^660((a⁵ + 1), b²)] else [LH_N]
+//│ def testZipEnumEnum_₀(_lh_testZipEnumEnum_arg1¹) = zip_₀^640(enumFromTo_₀^641(1, _lh_testZipEnumEnum_arg1¹), enumFromTo_₁^647(1, _lh_testZipEnumEnum_arg1¹))
+//│ def zip_₀(xs⁹, ys⁹) = case xs⁹ of {
+//│ 	LH_C hx⁸ tx⁸ => case ys⁹ of {
+//│ 		LH_C hy⁸ ty⁸ => [LH_C [LH_P2 hx⁸ hy⁸] zip_₀^628(tx⁸, ty⁸)]
+//│ 		| LH_N  => [LH_N]}
+//│ 	| LH_N  => [LH_N]}
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec enumFromTo__d0 a_6 b_3 =
+//│ 		  (if (a_6 <= b_3) then
+//│ 		    (`LH_C(a_6, ((enumFromTo__d0 (a_6 + 1)) b_3)))
+//│ 		  else
+//│ 		    (`LH_N))
+//│ 		and enumFromTo__d1 a_5 b_2 =
+//│ 		  (if (a_5 <= b_2) then
+//│ 		    (`LH_C(a_5, ((enumFromTo__d1 (a_5 + 1)) b_2)))
+//│ 		  else
+//│ 		    (`LH_N))
+//│ 		and testZipEnumEnum__d0 _lh_testZipEnumEnum_arg1_1 =
+//│ 		  ((zip__d0 ((enumFromTo__d0 1) _lh_testZipEnumEnum_arg1_1)) ((enumFromTo__d1 1) _lh_testZipEnumEnum_arg1_1))
+//│ 		and zip__d0 xs_9 ys_9 =
+//│ 		  (match xs_9 with
+//│ 		    | `LH_C(hx_8, tx_8) -> 
+//│ 		      (match ys_9 with
+//│ 		        | `LH_C(hy_8, ty_8) -> 
+//│ 		          (`LH_C((`LH_P2(hx_8, hy_8)), ((zip__d0 tx_8) ty_8)))
+//│ 		        | `LH_N -> 
+//│ 		          (`LH_N))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N));;
+//│ 		(testZipEnumEnum__d0 100000)
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [LH_C a⁵ enumFromTo_₁((a⁵ + 1), b²)]: 669 --->
+//│ 	case ys⁹ of {LH_C hy⁸ ty⁸ => [LH_C [LH_P2 hx⁸ hy⁸] zip_₀(tx⁸, ty⁸)] | LH_N  => [LH_N]}: 635
+//│ [LH_N]: 670 --->
+//│ 	case ys⁹ of {LH_C hy⁸ ty⁸ => [LH_C [LH_P2 hx⁸ hy⁸] zip_₀(tx⁸, ty⁸)] | LH_N  => [LH_N]}: 635
+//│ [LH_C a⁶ enumFromTo_₀((a⁶ + 1), b³)]: 689 --->
+//│ 	case xs⁹ of {LH_C hx⁸ tx⁸ => case ys⁹ of {LH_C hy⁸ ty⁸ => [LH_C [LH_P2 hx⁸ hy⁸] zip_₀(tx⁸, ty⁸)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 637
+//│ [LH_N]: 690 --->
+//│ 	case xs⁹ of {LH_C hx⁸ tx⁸ => case ys⁹ of {LH_C hy⁸ ty⁸ => [LH_C [LH_P2 hx⁸ hy⁸] zip_₀(tx⁸, ty⁸)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 637
+//│ ------------------
+//│ case ys⁹ of {LH_C hy⁸ ty⁸ => [LH_C [LH_P2 hx⁸ hy⁸] zip_₀(tx⁸, ty⁸)] | LH_N  => [LH_N]}: 635 --->
+//│ 	[LH_C a⁵ enumFromTo_₁((a⁵ + 1), b²)]: 669
+//│ 	[LH_N]: 670
+//│ case xs⁹ of {LH_C hx⁸ tx⁸ => case ys⁹ of {LH_C hy⁸ ty⁸ => [LH_C [LH_P2 hx⁸ hy⁸] zip_₀(tx⁸, ty⁸)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 637 --->
+//│ 	[LH_C a⁶ enumFromTo_₀((a⁶ + 1), b³)]: 689
+//│ 	[LH_N]: 690
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [LH_C a⁵ enumFromTo_₁((a⁵ + 1), b²)]: 669 --->
+//│ 	case ys⁹ of {LH_C hy⁸ ty⁸ => [LH_C [LH_P2 hx⁸ hy⁸] zip_₀(tx⁸, ty⁸)] | LH_N  => [LH_N]}: 635
+//│ [LH_N]: 670 --->
+//│ 	case ys⁹ of {LH_C hy⁸ ty⁸ => [LH_C [LH_P2 hx⁸ hy⁸] zip_₀(tx⁸, ty⁸)] | LH_N  => [LH_N]}: 635
+//│ [LH_C a⁶ enumFromTo_₀((a⁶ + 1), b³)]: 689 --->
+//│ 	case xs⁹ of {LH_C hx⁸ tx⁸ => case ys⁹ of {LH_C hy⁸ ty⁸ => [LH_C [LH_P2 hx⁸ hy⁸] zip_₀(tx⁸, ty⁸)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 637
+//│ [LH_N]: 690 --->
+//│ 	case xs⁹ of {LH_C hx⁸ tx⁸ => case ys⁹ of {LH_C hy⁸ ty⁸ => [LH_C [LH_P2 hx⁸ hy⁸] zip_₀(tx⁸, ty⁸)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 637
+//│ ------------------
+//│ case ys⁹ of {LH_C hy⁸ ty⁸ => [LH_C [LH_P2 hx⁸ hy⁸] zip_₀(tx⁸, ty⁸)] | LH_N  => [LH_N]}: 635 --->
+//│ 	[LH_C a⁵ enumFromTo_₁((a⁵ + 1), b²)]: 669
+//│ 	[LH_N]: 670
+//│ case xs⁹ of {LH_C hx⁸ tx⁸ => case ys⁹ of {LH_C hy⁸ ty⁸ => [LH_C [LH_P2 hx⁸ hy⁸] zip_₀(tx⁸, ty⁸)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 637 --->
+//│ 	[LH_C a⁶ enumFromTo_₀((a⁶ + 1), b³)]: 689
+//│ 	[LH_N]: 690
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ testZipEnumEnum_₀(primId⁰(100000))
+//│ def enumFromTo_₀(a⁸, b⁵) = if (a⁸ <= b⁵) then 
+//│ 	let tx¹¹ = enumFromTo_₀((a⁸ + 1), b⁵)
+//│ 	in let hx¹¹ = a⁸
+//│ 	in (fun ys¹¹ -> ys¹¹(hx¹¹, tx¹¹)) else (fun ys¹² -> [LH_N])
+//│ def enumFromTo_₁(a⁷, b⁴) = if (a⁷ <= b⁴) then 
+//│ 	let ty⁹ = enumFromTo_₁((a⁷ + 1), b⁴)
+//│ 	in let hy⁹ = a⁷
+//│ 	in (fun hx⁹ -> (fun tx⁹ -> [LH_C [LH_P2 hx⁹ hy⁹] zip_₀(tx⁹, ty⁹)])) else (fun hx¹⁰ -> (fun tx¹⁰ -> [LH_N]))
+//│ def testZipEnumEnum_₀(_lh_testZipEnumEnum_arg1²) = zip_₀(enumFromTo_₀(1, _lh_testZipEnumEnum_arg1²), enumFromTo_₁(1, _lh_testZipEnumEnum_arg1²))
+//│ def zip_₀(xs¹⁰, ys¹⁰) = xs¹⁰(ys¹⁰)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ benchmark file generated
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

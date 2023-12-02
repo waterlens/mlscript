@@ -557,7 +557,7 @@ class OCamlGenTests(
             (s"original_${benchName}" -> s"let open Module_original in (${this.rec(e).print})") :: Nil
           case e :: m :: Nil =>
             (s"original_${benchName}" -> s"let open Module_original in (${this.rec(e).print})")
-            :: (s"manual_${benchName}" -> s"let open Module_original in (${this.rec(e).print})") :: Nil
+            :: (s"manual_${benchName}" -> s"let open Module_original in (${this.rec(m).print})") :: Nil
           case _ => lastWords("unreachable")
         }).appendedAll(programs.tail.map { case (name, prgm) =>
           s"${name}_${benchName}" -> s"let open Module_$name in (${this.rec(prgm.defAndExpr._2.head).print})"
@@ -714,7 +714,7 @@ end;;
                 s"let open Module_original.Module_original in (${this.rec(e).print})") :: Nil
             case e :: m :: Nil => List(
               (s"original_${benchName}" -> s"let open Module_original.Module_original in (${this.rec(e).print})"),
-              (s"manual_${benchName}" -> s"let open Module_original.Module_original in (${this.rec(e).print})")
+              (s"manual_${benchName}" -> s"let open Module_original.Module_original in (${this.rec(m).print})")
             )
             case _ => lastWords("unreachable")
           }).appendedAll(programs.tail.map { case (name, prgm) =>
@@ -756,7 +756,8 @@ end;;
           s"let ${largeStrPrefix}${id} = listToTaggedList (explode_string \"${s}\");;"
         }.mkString("\n")
         "open Lumherhack_Common.Lumherhack_Common;;\n" +
-        s"module Lumberhack_LargeStr = struct\n$largeStrDefs\nend;;\n"
+        s"module Lumberhack_LargeStr = struct\n$largeStrDefs\n" +
+        s"${if this.usePolymorphicVariant then "end" else (generateTypeInfo(programs.head._2.d) + "\nend")};;\n"
       }
     ) ::
     originalDefsString ::

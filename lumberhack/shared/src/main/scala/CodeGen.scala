@@ -1172,7 +1172,7 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
     val ctorFields = {
       val res = MutMap.empty[String, List[String]]
       allCtors.collect { case ProdStratEnum.MkCtor(ctor, args)
-        if !(Set("True", "False", "Int", "_")(ctor.name) || ctor.name.startsWith("LH_")) => 
+        if !(Set("True", "False", "Int", "_")(ctor.name)) => 
         val fields = res.getOrElseUpdate(
           ctor.name,
           args.map { _ =>
@@ -1183,7 +1183,7 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
         assert(fields.length == args.length)
       }
       allDtors.collect { case ConsStratEnum.Destruct(dtors) => dtors.collect {
-        case Destructor(ctor, args) if !(Set("True", "False", "Int", "_")(ctor.name) || ctor.name.startsWith("LH_")) =>
+        case Destructor(ctor, args) if !(Set("True", "False", "Int", "_")(ctor.name)) =>
           val fields = res.getOrElseUpdate(
             ctor.name,
             args.map { _ =>

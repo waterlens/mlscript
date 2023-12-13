@@ -540,6 +540,7 @@ class Deforest(var debug: Boolean) {
     ProdStratEnum.NoProd
   ]
   val isNotDeadBranch = mutable.Map.empty[Destruct, Set[Int]]
+  val errorTypes = scala.collection.mutable.Set.empty[ProdStratEnum | ConsStratEnum]
   def resolveConstraints: Unit = {
     // if constraint resolver has already been executed, do not execute it more than once
     if lowerBounds.keys.nonEmpty || upperBounds.keys.nonEmpty then return ()
@@ -547,6 +548,7 @@ class Deforest(var debug: Boolean) {
       val prod = c._1
       val cons = c._2
 
+      if errorTypes.contains(prod.s) || errorTypes.contains(cons.s) then return
       (prod.s, cons.s) match
         case (_: ProdVar, _) | (_, _: ConsVar) => cache.get(c) match
           case S(inCache) =>
@@ -649,7 +651,9 @@ class Deforest(var debug: Boolean) {
                 //   dtorSources += cons.s.asInstanceOf[Destruct] -> (dtorSources(cons.s.asInstanceOf[Destruct]) + prod.s)
                 //   ctorDestinations += prod.s.asInstanceOf[MkCtor] -> (ctorDestinations(prod.s.asInstanceOf[MkCtor]) + cons.s)
                 // }
-                lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
+                // lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
+                errorTypes += prod.s
+                errorTypes += cons.s
               case armIndex => {
                 isNotDeadBranch.updateWith(dtors) {
                   case None => Some(Set(armIndex))
@@ -676,26 +680,31 @@ class Deforest(var debug: Boolean) {
               }
             }
           } else {
-            if ds.exists(d => d.ctor != ctor && d.ctor.name != "_") then lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
+            if ds.exists(d => d.ctor != ctor && d.ctor.name != "_") then
+              errorTypes += prod.s
+              errorTypes += cons.s
+              // lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
           }
         case (sum@Sum(ctors), Destruct(ds)) =>
           // isNotDead += sum
           given Int = numOfTypeCtor + 1
           ctors.foreach { ctorStrat => ctorStrat.s match
             case MkCtor(ctor, args) => {
-              val d = ds.find(d => d.ctor == ctor || d.ctor.name == "_") match {
-                case Some(value) => value
-                case None => lastWords(s"${ctor.name} cannot be found in $ds")
-              }
-              assert(args.size == d.argCons.size && d.ctor.name != "_")
-              if d.ctor.name == "_" then {
-                args lazyZip d.argCons foreach {
-                  case (a, c) => handle(a.addPath(prod.path ::: ctorStrat.path), c.addPath(cons.path))
-                }
-              } else {
-                (prod :: Nil) lazyZip d.argCons foreach { case (a, c) =>
-                  handle(a.addPath(prod.path ::: ctorStrat.path), c.addPath(cons.path))
-                }
+              ds.find(d => d.ctor == ctor || d.ctor.name == "_") match {
+                case Some(value) if args.size == value.argCons.size && value.ctor.name != "_" =>
+                  val d = value
+                  if d.ctor.name == "_" then {
+                    args lazyZip d.argCons foreach {
+                      case (a, c) => handle(a.addPath(prod.path ::: ctorStrat.path), c.addPath(cons.path))
+                    }
+                  } else {
+                    (prod :: Nil) lazyZip d.argCons foreach { case (a, c) =>
+                      handle(a.addPath(prod.path ::: ctorStrat.path), c.addPath(cons.path))
+                    }
+                  }
+                case _ => // lastWords(s"${ctor.name} cannot be found in $ds")
+                  errorTypes += prod.s
+                  errorTypes += cons.s
               }
             }
           }
@@ -708,7 +717,9 @@ class Deforest(var debug: Boolean) {
           (prod :: Nil) lazyZip dtor.argCons foreach { case (a, c) =>
             handle(a.addPath(prod.path), c.addPath(cons.path))
           }
-        case _ => lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
+        case _ => 
+          errorTypes += prod.s
+          errorTypes += cons.s
     }()
     
     given Cache = scala.collection.mutable.Map.empty

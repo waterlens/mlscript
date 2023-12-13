@@ -205,6 +205,9 @@ class DiffTestLumberhack extends DiffTests {
         }
         output("<<<<<<<<<< Generated OCaml <<<<<<<<<<")
 
+      if newD.errorTypes.nonEmpty then
+        throw Exception(s"type error ${newD.errorTypes}")
+      
       if allowErr then throw Exception("expect to fail but pass")
     } catch {
       case e => if allowErr then {

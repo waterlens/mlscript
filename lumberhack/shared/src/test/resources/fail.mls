@@ -355,8 +355,59 @@ id(c)(id(p))
 //│ def id(x⁰) = x⁰
 //│ def p = [C p^3]
 //│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [c^12] (hopeless to continue)
+//│ 	[c^12 · c^6] ---> [c^12] (using original def)
+//│ [id^11] (hopeless to continue)
+//│ [id^14] (hopeless to continue)
+//│ [p^15] (hopeless to continue)
+//│ 	[p^15 · p^3] ---> [p^15] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ id_₀(c_₀, id_₁(p_₀))
+//│ def c_₀(a¹) = 
+//│ 	case a¹ of {
+//│ 		C i¹ => c_₀(i¹)}
+//│ def id_₀(x²) = 
+//│ 	x²
+//│ def id_₁(x¹) = 
+//│ 	x¹
+//│ def p_₀ = 
+//│ 	[C p_₀]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C p_₀]: 19 --->
+//│ 	case a¹ of {C i¹ => c_₀(i¹)}: 24
+//│ ------------------
+//│ case a¹ of {C i¹ => c_₀(i¹)}: 24 --->
+//│ 	[C p_₀]: 19
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [C p_₀]: 19 --->
+//│ 	case a¹ of {C i¹ => c_₀(i¹)}: 24
+//│ ------------------
+//│ case a¹ of {C i¹ => c_₀(i¹)}: 24 --->
+//│ 	[C p_₀]: 19
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ id_₀(c_₀, id_₁(p_₀))
+//│ def c_₀(a²) = 
+//│ 	a²(99)
+//│ def id_₀(x⁴) = 
+//│ 	x⁴
+//│ def id_₁(x³) = 
+//│ 	x³
+//│ def p_₀ = 
+//│ 	let i² = p_₀
+//│ 	in (fun _lh_dummy⁰ -> c_₀(i²))
+//│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: type error C('p) <: '16_callres => '17_callres
+//│ java.lang.Exception: type error HashSet(Destruct(List(Destructor(C,List(Strat(ConsVar(5,i⁰)))))), MkCtor(C,List(Strat(ProdVar(1,p)))), ConsFun(Strat(ProdVar(9,16_callres)),Strat(ConsVar(10,17_callres))), ProdFun(Strat(ConsVar(4,a⁰)),Strat(ProdVar(7,9_matchres))))
 //│ !!!!!!ERROR!!!!!!
 
 
@@ -744,8 +795,63 @@ c(id(p))
 //│ 	| _  => id^3([ID x⁰])}
 //│ def p = [C p^9]
 //│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [c^17] (hopeless to continue)
+//│ 	[c^17 · c^12] ---> [c^17] (using original def)
+//│ [id^18] (hopeless to continue)
+//│ 	[id^18 · id^3] ---> [id^18] (using original def)
+//│ [p^19] (hopeless to continue)
+//│ 	[p^19 · p^9] ---> [p^19] (using original def)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ c_₀(id_₀(p_₀))
+//│ def c_₀(y¹) = 
+//│ 	case y¹ of {
+//│ 		C aa¹ => c_₀(aa¹)}
+//│ def id_₀(x¹) = 
+//│ 	case x¹ of {
+//│ 		ID b¹ => b¹
+//│ 		| _  => id_₀([ID x¹])}
+//│ def p_₀ = 
+//│ 	[C p_₀]
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [C p_₀]: 23 --->
+//│ 	case y¹ of {C aa¹ => c_₀(aa¹)}: 28
+//│ 	case x¹ of {ID b¹ => b¹ | _  => id_₀([ID x¹])}: 36
+//│ [ID x¹]: 34 --->
+//│ 	case x¹ of {ID b¹ => b¹ | _  => id_₀([ID x¹])}: 36
+//│ ------------------
+//│ case y¹ of {C aa¹ => c_₀(aa¹)}: 28 --->
+//│ 	[C p_₀]: 23
+//│ case x¹ of {ID b¹ => b¹ | _  => id_₀([ID x¹])}: 36 --->
+//│ 	[C p_₀]: 23
+//│ 	[ID x¹]: 34
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ c_₀(id_₀(p_₀))
+//│ def c_₀(y²) = 
+//│ 	case y² of {
+//│ 		C aa¹ => c_₀(aa¹)}
+//│ def id_₀(x²) = 
+//│ 	case x² of {
+//│ 		ID b¹ => b¹
+//│ 		| _  => id_₀([ID x²])}
+//│ def p_₀ = 
+//│ 	[C p_₀]
+//│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: Internal Error: type error ID('x⁰) <: Destruct(C('aa⁰))
+//│ java.lang.Exception: type error HashSet(Destruct(List(Destructor(C,List(Strat(ConsVar(8,aa⁰)))))), MkCtor(ID,List(Strat(ProdVar(3,x⁰)))))
 //│ !!!!!!ERROR!!!!!!
 
 

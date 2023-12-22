@@ -15,8 +15,8 @@ let rec genTree n_0 i_0 =
   else
     (`T(((genTree (n_0 - 1)) i_0), ((genTree (n_0 - 1)) (i_0 + 1)))));;
 let rec ff t_1 =
-  (flip (flip t_1))
-and testFlipFlip t_2 =
+  (flip (flip t_1));;
+let rec testFlipFlip t_2 =
   (ff t_2);;
 end;;
 

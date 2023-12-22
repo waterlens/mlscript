@@ -22,8 +22,8 @@ f(g(D))                                   // D gets fused and becomes x => x, g 
 //│ 		  (if true then
 //│ 		    (lazy (f x_0))
 //│ 		  else
-//│ 		    (lazy (f (`C))))
-//│ 		and g x_1 =
+//│ 		    (lazy (f (`C))));;
+//│ 		let rec g x_1 =
 //│ 		  (match x_1 with
 //│ 		    | `D -> 
 //│ 		      x_1
@@ -32,8 +32,9 @@ f(g(D))                                   // D gets fused and becomes x => x, g 
 //│ 		(f (g (`D)))
 //│ 		....... ocaml repl result .......
 //│ 		[ok]
-//│ 		                    val f : [> `C ] -> ('a lazy_t as 'a) = <fun>
-//│ 		val g : ([< `C | `D ] as 'a) -> 'a = <fun>
+//│ 		        val f : [> `C ] -> ('a lazy_t as 'a) = <fun>
+//│ 		[ok]
+//│ 		            val g : ([< `C | `D ] as 'a) -> 'a = <fun>
 //│ 		....... ocaml repl result .......
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
@@ -108,17 +109,17 @@ f(g(D))                                   // D gets fused and becomes x => x, g 
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec f__d0 x_1 =
-//│   (if true then
-//│     (lazy (f__d0 x_1))
-//│   else
-//│     (lazy (f__d0 (`C))))
-//│ and g__d0 x_0 =
+//│ let rec g__d0 x_0 =
 //│   (match x_0 with
 //│     | `D -> 
 //│       x_0
 //│     | `C -> 
 //│       x_0);;
+//│ let rec f__d0 x_1 =
+//│   (if true then
+//│     (lazy (f__d0 x_1))
+//│   else
+//│     (lazy (f__d0 (`C))));;
 //│ (f__d0 (g__d0 (`D)))
 //│ 
 //│ --------------- ocaml repl result -----------------

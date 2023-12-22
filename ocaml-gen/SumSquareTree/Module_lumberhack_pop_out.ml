@@ -19,8 +19,8 @@ let rec sqTree__d0 t_1 _lh_popOutId_0_0 =
           (let rec v_1 = (v_0 * v_0) in
             ((v_1 + (sumTree__d0 l_1)) + (sumTree__d0 r_1)))))
     | `L -> 
-      0)
-and testSumSquareTree__d0 n_0 =
+      0);;
+let rec testSumSquareTree__d0 n_0 =
   (sumTree__d0 (sqTree__d0 (genTree__d0 n_0)));;
 end;;
 

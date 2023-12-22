@@ -4,92 +4,81 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_lumberhack_only_expanded = struct
-let rec and__d0 _lh_and_arg1_1 =
-  (match _lh_and_arg1_1 with
+let rec append_lh _lh_append_arg1_0 _lh_append_arg2_0 =
+  (match _lh_append_arg1_0 with
     | `LH_N -> 
-      true
-    | `LH_C(_lh_and_LH_C_0_1, _lh_and_LH_C_1_1) -> 
-      (if _lh_and_LH_C_0_1 then
-        (and__d0 _lh_and_LH_C_1_1)
-      else
-        false)
+      _lh_append_arg2_0
+    | `LH_C(_lh_append_LH_C_0_0, _lh_append_LH_C_1_0) -> 
+      (`LH_C(_lh_append_LH_C_0_0, ((append_lh _lh_append_LH_C_1_0) _lh_append_arg2_0)))
     | _ -> 
       (failwith "error"));;
-let rec append__d0 _lh_append_arg1_1 _lh_append_arg2_1 =
-  (match _lh_append_arg1_1 with
-    | `LH_N -> 
-      _lh_append_arg2_1
-    | `LH_C(_lh_append_LH_C_0_1, _lh_append_LH_C_1_1) -> 
-      (`LH_C(_lh_append_LH_C_0_1, ((append__d0 _lh_append_LH_C_1_1) _lh_append_arg2_1)))
-    | _ -> 
-      (failwith "error"));;
-let rec enumFromTo__d0 a_5 b_2 =
-  (if (a_5 <= b_2) then
-    (`LH_C(a_5, ((enumFromTo__d0 (a_5 + 1)) b_2)))
+let rec enumFromTo_lh a_0 b_0 =
+  (if (a_0 <= b_0) then
+    (`LH_C(a_0, ((enumFromTo_lh (a_0 + 1)) b_0)))
   else
     (`LH_N));;
-let rec enumFromTo__d1 a_6 b_3 =
-  (if (a_6 <= b_3) then
-    (`LH_C(a_6, ((enumFromTo__d1 (a_6 + 1)) b_3)))
-  else
-    (`LH_N));;
-let rec length__d0 ls_2_0 =
-  (match ls_2_0 with
-    | `LH_C(h_2_1, t_2_3) -> 
-      (1 + (length__d0 t_2_3))
-    | `LH_N -> 
-      0);;
-let rec length__d1 ls_1_9 =
-  (match ls_1_9 with
-    | `LH_C(h_2_0, t_2_2) -> 
-      (1 + (length__d1 t_2_2))
-    | `LH_N -> 
-      0);;
-let rec zip__d0 xs_9 ys_9 =
-  (match xs_9 with
-    | `LH_C(hx_8, tx_8) -> 
-      (match ys_9 with
-        | `LH_C(hy_8, ty_8) -> 
-          (`LH_C((`LH_P2(hx_8, hy_8)), ((zip__d0 tx_8) ty_8)))
+let rec zip_lh xs_0 ys_0 =
+  (match xs_0 with
+    | `LH_C(hx_0, tx_0) -> 
+      (match ys_0 with
+        | `LH_C(hy_0, ty_0) -> 
+          (`LH_C((`LH_P2(hx_0, hy_0)), ((zip_lh tx_0) ty_0)))
         | `LH_N -> 
           (`LH_N))
     | `LH_N -> 
       (`LH_N));;
-let rec queens__d0 _lh_queens_arg1_1 =
-  (match _lh_queens_arg1_1 with
+let rec length_lh ls_0 =
+  (match ls_0 with
+    | `LH_C(h_0, t_0) -> 
+      (1 + (length_lh t_0))
+    | `LH_N -> 
+      0);;
+let rec and_lh _lh_and_arg1_0 =
+  (match _lh_and_arg1_0 with
+    | `LH_N -> 
+      true
+    | `LH_C(_lh_and_LH_C_0_0, _lh_and_LH_C_1_0) -> 
+      (if _lh_and_LH_C_0_0 then
+        (and_lh _lh_and_LH_C_1_0)
+      else
+        false)
+    | _ -> 
+      (failwith "error"));;
+let rec safe_lh _lh_safe_arg1_0 _lh_safe_arg2_0 =
+  (let rec m_0 = ((length_lh _lh_safe_arg1_0) + 1) in
+    (and_lh (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
+      (match _lh_listcomp_fun_para_0 with
+        | `LH_C(_lh_listcomp_fun_ls_h_0, _lh_listcomp_fun_ls_t_0) -> 
+          (match _lh_listcomp_fun_ls_h_0 with
+            | `LH_P2(_lh_safe_LH_P2_0_0, _lh_safe_LH_P2_1_0) -> 
+              (`LH_C((((_lh_safe_LH_P2_1_0 <> _lh_safe_arg2_0) && ((_lh_safe_LH_P2_0_0 + _lh_safe_LH_P2_1_0) <> (m_0 + _lh_safe_arg2_0))) && ((_lh_safe_LH_P2_0_0 - _lh_safe_LH_P2_1_0) <> (m_0 - _lh_safe_arg2_0))), (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0)))
+            | _ -> 
+              (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0))
+        | `LH_N -> 
+          (`LH_N))) in
+      (_lh_listcomp_fun_0 ((zip_lh ((enumFromTo_lh 1) (m_0 - 1))) _lh_safe_arg1_0)))));;
+let rec queens_lh _lh_queens_arg1_0 =
+  (match _lh_queens_arg1_0 with
     | 0 -> 
       (`LH_C((`LH_N), (`LH_N)))
     | _ -> 
-      (let rec _lh_listcomp_fun_3 = (fun _lh_listcomp_fun_para_3 -> 
-        (match _lh_listcomp_fun_para_3 with
-          | `LH_C(_lh_listcomp_fun_ls_h_3, _lh_listcomp_fun_ls_t_3) -> 
-            (let rec _lh_listcomp_fun_4 = (fun _lh_listcomp_fun_para_4 -> 
-              (match _lh_listcomp_fun_para_4 with
-                | `LH_C(_lh_listcomp_fun_ls_h_4, _lh_listcomp_fun_ls_t_4) -> 
-                  (if ((safe__d0 _lh_listcomp_fun_ls_h_3) _lh_listcomp_fun_ls_h_4) then
-                    (`LH_C(((append__d0 _lh_listcomp_fun_ls_h_3) (`LH_C(_lh_listcomp_fun_ls_h_4, (`LH_N)))), (_lh_listcomp_fun_4 _lh_listcomp_fun_ls_t_4)))
+      (let rec _lh_listcomp_fun_1 = (fun _lh_listcomp_fun_para_1 -> 
+        (match _lh_listcomp_fun_para_1 with
+          | `LH_C(_lh_listcomp_fun_ls_h_1, _lh_listcomp_fun_ls_t_1) -> 
+            (let rec _lh_listcomp_fun_2 = (fun _lh_listcomp_fun_para_2 -> 
+              (match _lh_listcomp_fun_para_2 with
+                | `LH_C(_lh_listcomp_fun_ls_h_2, _lh_listcomp_fun_ls_t_2) -> 
+                  (if ((safe_lh _lh_listcomp_fun_ls_h_1) _lh_listcomp_fun_ls_h_2) then
+                    (`LH_C(((append_lh _lh_listcomp_fun_ls_h_1) (`LH_C(_lh_listcomp_fun_ls_h_2, (`LH_N)))), (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_2)))
                   else
-                    (_lh_listcomp_fun_4 _lh_listcomp_fun_ls_t_4))
+                    (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_2))
                 | `LH_N -> 
-                  (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3))) in
-              (_lh_listcomp_fun_4 ((enumFromTo__d0 1) 9)))
+                  (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_1))) in
+              (_lh_listcomp_fun_2 ((enumFromTo_lh 1) 9)))
           | `LH_N -> 
             (`LH_N))) in
-        (_lh_listcomp_fun_3 (queens__d0 (_lh_queens_arg1_1 - 1)))))
-and safe__d0 _lh_safe_arg1_1 _lh_safe_arg2_1 =
-  (let rec m_1 = ((length__d1 _lh_safe_arg1_1) + 1) in
-    (and__d0 (let rec _lh_listcomp_fun_5 = (fun _lh_listcomp_fun_para_5 -> 
-      (match _lh_listcomp_fun_para_5 with
-        | `LH_C(_lh_listcomp_fun_ls_h_5, _lh_listcomp_fun_ls_t_5) -> 
-          (match _lh_listcomp_fun_ls_h_5 with
-            | `LH_P2(_lh_safe_LH_P2_0_1, _lh_safe_LH_P2_1_1) -> 
-              (`LH_C((((_lh_safe_LH_P2_1_1 <> _lh_safe_arg2_1) && ((_lh_safe_LH_P2_0_1 + _lh_safe_LH_P2_1_1) <> (m_1 + _lh_safe_arg2_1))) && ((_lh_safe_LH_P2_0_1 - _lh_safe_LH_P2_1_1) <> (m_1 - _lh_safe_arg2_1))), (_lh_listcomp_fun_5 _lh_listcomp_fun_ls_t_5)))
-            | _ -> 
-              (_lh_listcomp_fun_5 _lh_listcomp_fun_ls_t_5))
-        | `LH_N -> 
-          (`LH_N))) in
-      (_lh_listcomp_fun_5 ((zip__d0 ((enumFromTo__d1 1) (m_1 - 1))) _lh_safe_arg1_1)))))
-and testAnotherQueenNineBuiltInType__d0 _lh_testAnotherQueenNineBuiltInType_arg1_1 =
-  (length__d0 (queens__d0 _lh_testAnotherQueenNineBuiltInType_arg1_1));;
+        (_lh_listcomp_fun_1 (queens_lh (_lh_queens_arg1_0 - 1)))));;
+let rec testAnotherQueenNineBuiltInType_lh _lh_testAnotherQueenNineBuiltInType_arg1_0 =
+  (length_lh (queens_lh _lh_testAnotherQueenNineBuiltInType_arg1_0));;
 end;;
 

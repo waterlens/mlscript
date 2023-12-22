@@ -4,7 +4,7 @@ ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Lumherhack_Common.ml ./Lumberha
 open Core_bench;;
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_ZipEnumEnum_lh" (fun () -> ignore (let open Module_original.Module_original in ((testZipEnumEnum_lh 100000))));
-  Bench.Test.create ~name:"lumberhack_only_expanded_ZipEnumEnum_lh" (fun () -> ignore (let open Module_lumberhack_only_expanded.Module_lumberhack_only_expanded in ((testZipEnumEnum__d0 100000))));
-  Bench.Test.create ~name:"lumberhack_ZipEnumEnum_lh" (fun () -> ignore (let open Module_lumberhack.Module_lumberhack in ((testZipEnumEnum__d0 100000))));
-  Bench.Test.create ~name:"lumberhack_pop_out_ZipEnumEnum_lh" (fun () -> ignore (let open Module_lumberhack_pop_out.Module_lumberhack_pop_out in ((testZipEnumEnum__d0 100000))));
+  Bench.Test.create ~name:"lumberhack_only_expanded_ZipEnumEnum_lh" (fun () -> ignore (let open Module_lumberhack_only_expanded.Module_lumberhack_only_expanded in ((testZipEnumEnum_lh 100000))));
+  Bench.Test.create ~name:"lumberhack_ZipEnumEnum_lh" (fun () -> ignore (let open Module_lumberhack.Module_lumberhack in ((testZipEnumEnum_lh 100000))));
+  Bench.Test.create ~name:"lumberhack_pop_out_ZipEnumEnum_lh" (fun () -> ignore (let open Module_lumberhack_pop_out.Module_lumberhack_pop_out in ((testZipEnumEnum_lh 100000))));
 ])

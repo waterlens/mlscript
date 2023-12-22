@@ -19,8 +19,8 @@ inter(l1)(l2)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [inter^20]
-//│ 	[inter^20 · inter^5] ---> [inter^20] (only one)
+//│ [inter^20] (hopeless to continue)
+//│ 	[inter^20 · inter^5] ---> [inter^20] (using original def)
 //│ [l1^21] (hopeless to continue)
 //│ [l2^23] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
@@ -99,8 +99,8 @@ map(l)(
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [l^20] (hopeless to continue)
-//│ [map^19]
-//│ 	[map^19 · map^5] ---> [map^19] (only one)
+//│ [map^19] (hopeless to continue)
+//│ 	[map^19 · map^5] ---> [map^19] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -181,8 +181,8 @@ map(l)
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [l^22] (hopeless to continue)
-//│ [map^21]
-//│ 	[map^21 · map^7] ---> [map^21] (only one)
+//│ [map^21] (hopeless to continue)
+//│ 	[map^21 · map^7] ---> [map^21] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -300,9 +300,9 @@ c(t)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [c^28]
-//│ 	[c^28 · c^18] ---> [c^28] (only one)
-//│ 	[c^28 · c^21] ---> [c^28] (only one)
+//│ [c^28] (hopeless to continue)
+//│ 	[c^28 · c^18] ---> [c^28] (using original def)
+//│ 	[c^28 · c^21] ---> [c^28] (using original def)
 //│ [t^29] (hopeless to continue)
 //│ 	[t^29 · aa^10] (using original def)
 //│ 	[t^29 · bb^11] (using original def)
@@ -448,12 +448,12 @@ sum(mapa(mapb(primitive)))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [mapa^33]
-//│ 	[mapa^33 · mapa^14] ---> [mapa^33] (only one)
-//│ [mapb^34]
-//│ 	[mapb^34 · mapb^25] ---> [mapb^34] (only one)
-//│ [sum^32]
-//│ 	[sum^32 · sum^3] ---> [sum^32] (only one)
+//│ [mapa^33] (hopeless to continue)
+//│ 	[mapa^33 · mapa^14] ---> [mapa^33] (using original def)
+//│ [mapb^34] (hopeless to continue)
+//│ 	[mapb^34 · mapb^25] ---> [mapb^34] (using original def)
+//│ [sum^32] (hopeless to continue)
+//│ 	[sum^32 · sum^3] ---> [sum^32] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -557,12 +557,11 @@ lastDrive(map(C(T, C(TT, N))))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [lastDrive^37]
-//│ 	[lastDrive^37 · last^29]
-//│ 		[lastDrive^37 · last^29 · last^19] ---> [lastDrive^37 · last^29] (only one)
-//│ [map^38]
-//│ 	[map^38 · map^10]
-//│ 		[map^38 · map^10 · map^10] ---> [map^38 · map^10] (only one)
+//│ [lastDrive^37] (hopeless to continue)
+//│ 	[lastDrive^37 · last^29] (using original def)
+//│ 		[lastDrive^37 · last^29 · last^19] ---> [lastDrive^37 · last^29] (using original def)
+//│ [map^38] (hopeless to continue)
+//│ 	[map^38 · map^10] ---> [map^38] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -576,117 +575,178 @@ lastDrive(map(C(T, C(TT, N))))
 //│ 		case ys¹ of {
 //│ 			N  => (fun x² -> x²)
 //│ 			| C h¹ t¹ => (fun x³ -> last_₀(t¹, h¹))}
-//│ def map_₀(ls²) = 
-//│ 	case ls² of {
+//│ def map_₀(ls¹) = 
+//│ 	case ls¹ of {
 //│ 		N  => [N]
-//│ 		| C hhh² ttt² => [C (fun head² -> case head² of {
+//│ 		| C hhh¹ ttt¹ => [C (fun head¹ -> case head¹ of {
 //│ 			T  => [K]
-//│ 			| TT  => [KK]})(hhh²) map_₁(ttt²)]}
-//│ 	where
-//│ 	def map_₁(ls¹) = 
-//│ 		case ls¹ of {
-//│ 			N  => [N]
-//│ 			| C hhh¹ ttt¹ => [C (fun head¹ -> case head¹ of {
-//│ 				T  => [K]
-//│ 				| TT  => [KK]})(hhh¹) map_₁(ttt¹)]}
+//│ 			| TT  => [KK]})(hhh¹) map_₀(ttt¹)]}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 47 --->
-//│ 	case ys¹ of {N  => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> last_₀(t¹, h¹))}: 95
-//│ [C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₁(ttt¹)]: 58 --->
-//│ 	case ys¹ of {N  => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> last_₀(t¹, h¹))}: 95
-//│ [N]: 62 --->
-//│ 	case xs¹ of {N  => [None] | C hh¹ tt¹ => [Some last_₀(tt¹, hh¹)]}: 84
-//│ [C (fun head² -> case head² of {T  => [K] | TT  => [KK]})(hhh²) map_₁(ttt²)]: 73 --->
-//│ 	case xs¹ of {N  => [None] | C hh¹ tt¹ => [Some last_₀(tt¹, hh¹)]}: 84
-//│ [T]: 99 --->
-//│ 	case head² of {T  => [K] | TT  => [KK]}: 66
-//│ [TT]: 100 --->
+//│ 	case xs¹ of {N  => [None] | C hh¹ tt¹ => [Some last_₀(tt¹, hh¹)]}: 69
+//│ 	case ys¹ of {N  => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> last_₀(t¹, h¹))}: 80
+//│ [C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₀(ttt¹)]: 58 --->
+//│ 	case xs¹ of {N  => [None] | C hh¹ tt¹ => [Some last_₀(tt¹, hh¹)]}: 69
+//│ 	case ys¹ of {N  => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> last_₀(t¹, h¹))}: 80
+//│ [T]: 84 --->
 //│ 	case head¹ of {T  => [K] | TT  => [KK]}: 51
-//│ [N]: 101 --->
-//│ 	case ls¹ of {N  => [N] | C hhh¹ ttt¹ => [C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₁(ttt¹)]}: 59
-//│ [C [TT] [N]]: 102 --->
-//│ 	case ls¹ of {N  => [N] | C hhh¹ ttt¹ => [C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₁(ttt¹)]}: 59
-//│ [C [T] [C [TT] [N]]]: 103 --->
-//│ 	case ls² of {N  => [N] | C hhh² ttt² => [C (fun head² -> case head² of {T  => [K] | TT  => [KK]})(hhh²) map_₁(ttt²)]}: 74
+//│ [TT]: 85 --->
+//│ 	case head¹ of {T  => [K] | TT  => [KK]}: 51
+//│ [N]: 86 --->
+//│ 	case ls¹ of {N  => [N] | C hhh¹ ttt¹ => [C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₀(ttt¹)]}: 59
+//│ [C [TT] [N]]: 87 --->
+//│ 	case ls¹ of {N  => [N] | C hhh¹ ttt¹ => [C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₀(ttt¹)]}: 59
+//│ [C [T] [C [TT] [N]]]: 88 --->
+//│ 	case ls¹ of {N  => [N] | C hhh¹ ttt¹ => [C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₀(ttt¹)]}: 59
 //│ ------------------
 //│ case head¹ of {T  => [K] | TT  => [KK]}: 51 --->
-//│ 	[TT]: 100
-//│ case ls¹ of {N  => [N] | C hhh¹ ttt¹ => [C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₁(ttt¹)]}: 59 --->
-//│ 	[N]: 101
-//│ 	[C [TT] [N]]: 102
-//│ case head² of {T  => [K] | TT  => [KK]}: 66 --->
-//│ 	[T]: 99
-//│ case ls² of {N  => [N] | C hhh² ttt² => [C (fun head² -> case head² of {T  => [K] | TT  => [KK]})(hhh²) map_₁(ttt²)]}: 74 --->
-//│ 	[C [T] [C [TT] [N]]]: 103
-//│ case xs¹ of {N  => [None] | C hh¹ tt¹ => [Some last_₀(tt¹, hh¹)]}: 84 --->
-//│ 	[N]: 62
-//│ 	[C (fun head² -> case head² of {T  => [K] | TT  => [KK]})(hhh²) map_₁(ttt²)]: 73
-//│ case ys¹ of {N  => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> last_₀(t¹, h¹))}: 95 --->
+//│ 	[T]: 84
+//│ 	[TT]: 85
+//│ case ls¹ of {N  => [N] | C hhh¹ ttt¹ => [C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₀(ttt¹)]}: 59 --->
+//│ 	[N]: 86
+//│ 	[C [TT] [N]]: 87
+//│ 	[C [T] [C [TT] [N]]]: 88
+//│ case xs¹ of {N  => [None] | C hh¹ tt¹ => [Some last_₀(tt¹, hh¹)]}: 69 --->
 //│ 	[N]: 47
-//│ 	[C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₁(ttt¹)]: 58
+//│ 	[C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₀(ttt¹)]: 58
+//│ case ys¹ of {N  => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> last_₀(t¹, h¹))}: 80 --->
+//│ 	[N]: 47
+//│ 	[C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₀(ttt¹)]: 58
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [N]: 47 --->
-//│ 	case ys¹ of {N  => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> last_₀(t¹, h¹))}: 95
-//│ [C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₁(ttt¹)]: 58 --->
-//│ 	case ys¹ of {N  => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> last_₀(t¹, h¹))}: 95
-//│ [N]: 62 --->
-//│ 	case xs¹ of {N  => [None] | C hh¹ tt¹ => [Some last_₀(tt¹, hh¹)]}: 84
-//│ [C (fun head² -> case head² of {T  => [K] | TT  => [KK]})(hhh²) map_₁(ttt²)]: 73 --->
-//│ 	case xs¹ of {N  => [None] | C hh¹ tt¹ => [Some last_₀(tt¹, hh¹)]}: 84
-//│ [T]: 99 --->
-//│ 	case head² of {T  => [K] | TT  => [KK]}: 66
-//│ [TT]: 100 --->
+//│ [T]: 84 --->
 //│ 	case head¹ of {T  => [K] | TT  => [KK]}: 51
-//│ [N]: 101 --->
-//│ 	case ls¹ of {N  => [N] | C hhh¹ ttt¹ => [C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₁(ttt¹)]}: 59
-//│ [C [TT] [N]]: 102 --->
-//│ 	case ls¹ of {N  => [N] | C hhh¹ ttt¹ => [C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₁(ttt¹)]}: 59
-//│ [C [T] [C [TT] [N]]]: 103 --->
-//│ 	case ls² of {N  => [N] | C hhh² ttt² => [C (fun head² -> case head² of {T  => [K] | TT  => [KK]})(hhh²) map_₁(ttt²)]}: 74
+//│ [TT]: 85 --->
+//│ 	case head¹ of {T  => [K] | TT  => [KK]}: 51
+//│ [N]: 86 --->
+//│ 	case ls¹ of {N  => [N] | C hhh¹ ttt¹ => [C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₀(ttt¹)]}: 59
+//│ [C [TT] [N]]: 87 --->
+//│ 	case ls¹ of {N  => [N] | C hhh¹ ttt¹ => [C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₀(ttt¹)]}: 59
+//│ [C [T] [C [TT] [N]]]: 88 --->
+//│ 	case ls¹ of {N  => [N] | C hhh¹ ttt¹ => [C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₀(ttt¹)]}: 59
 //│ ------------------
 //│ case head¹ of {T  => [K] | TT  => [KK]}: 51 --->
-//│ 	[TT]: 100
-//│ case ls¹ of {N  => [N] | C hhh¹ ttt¹ => [C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₁(ttt¹)]}: 59 --->
-//│ 	[N]: 101
-//│ 	[C [TT] [N]]: 102
-//│ case head² of {T  => [K] | TT  => [KK]}: 66 --->
-//│ 	[T]: 99
-//│ case ls² of {N  => [N] | C hhh² ttt² => [C (fun head² -> case head² of {T  => [K] | TT  => [KK]})(hhh²) map_₁(ttt²)]}: 74 --->
-//│ 	[C [T] [C [TT] [N]]]: 103
-//│ case xs¹ of {N  => [None] | C hh¹ tt¹ => [Some last_₀(tt¹, hh¹)]}: 84 --->
-//│ 	[N]: 62
-//│ 	[C (fun head² -> case head² of {T  => [K] | TT  => [KK]})(hhh²) map_₁(ttt²)]: 73
-//│ case ys¹ of {N  => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> last_₀(t¹, h¹))}: 95 --->
-//│ 	[N]: 47
-//│ 	[C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₁(ttt¹)]: 58
+//│ 	[T]: 84
+//│ 	[TT]: 85
+//│ case ls¹ of {N  => [N] | C hhh¹ ttt¹ => [C (fun head¹ -> case head¹ of {T  => [K] | TT  => [KK]})(hhh¹) map_₀(ttt¹)]}: 59 --->
+//│ 	[N]: 86
+//│ 	[C [TT] [N]]: 87
+//│ 	[C [T] [C [TT] [N]]]: 88
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ lastDrive_₀(map_₀(
-//│ 	let ttt³ = 	
-//│ 		let ttt⁴ = (fun _lh_dummy³ -> (fun x⁵ -> x⁵))
-//│ 		in let hhh⁴ = [KK]
-//│ 		in (fun _lh_dummy² -> 
-//│ 			let t² = map_₁(ttt⁴)
-//│ 			in let h² = (fun head⁴ -> head⁴)(hhh⁴)
-//│ 			in (fun x⁴ -> last_₀(t², h²)))
-//│ 	in let hhh³ = [K]
-//│ 	in (fun _lh_dummy¹ -> 
-//│ 		let tt² = map_₁(ttt³)
-//│ 		in let hh² = (fun head³ -> head³)(hhh³)
-//│ 		in (fun _lh_dummy⁰ -> [Some last_₀(tt², hh²)]))))
+//│ 	let ttt² = 	
+//│ 		let ttt³ = (fun _lh_dummy² -> [N])
+//│ 		in let hhh³ = [KK]
+//│ 		in (fun _lh_dummy¹ -> [C (fun head³ -> head³)(hhh³) map_₀(ttt³)])
+//│ 	in let hhh² = [K]
+//│ 	in (fun _lh_dummy⁰ -> [C (fun head² -> head²)(hhh²) map_₀(ttt²)])))
 //│ def lastDrive_₀(xs²) = 
-//│ 	xs²(99)
+//│ 	case xs² of {
+//│ 		N  => [None]
+//│ 		| C hh¹ tt¹ => [Some last_₀(tt¹, hh¹)]}
 //│ 	where
 //│ 	def last_₀(ys²) = 
-//│ 		ys²
-//│ def map_₀(ls⁴) = 
-//│ 	ls⁴(99)
+//│ 		case ys² of {
+//│ 			N  => (fun x⁴ -> x⁴)
+//│ 			| C h¹ t¹ => (fun x⁵ -> last_₀(t¹, h¹))}
+//│ def map_₀(ls²) = 
+//│ 	ls²(99)
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
+//│ 
+//│ >>>>>>> expansion >>>>>>>
+//│ [lastDrive_₀^1] (hopeless to continue)
+//│ 	[lastDrive_₀^1 · last_₀^37] (using original def)
+//│ 		[lastDrive_₀^1 · last_₀^37 · last_₀^48] ---> [lastDrive_₀^1 · last_₀^37] (using original def)
+//│ [map_₀^10] (hopeless to continue)
+//│ [map_₀^22] (hopeless to continue)
+//│ [map_₀^2] (hopeless to continue)
+//│ <<<<<<< expansion <<<<<<<
+//│ 
+//│ >>>>>>> expanded program >>>>>>>
+//│ lastDrive_₀_₀(map_₀_₂(
+//│ 	let ttt² = 	
+//│ 		let ttt³ = (fun _lh_dummy³ -> [N])
+//│ 		in let hhh² = [KK]
+//│ 		in (fun _lh_dummy⁴ -> [C (fun head² -> head²)(hhh²) map_₀_₀(ttt³)])
+//│ 	in let hhh³ = [K]
+//│ 	in (fun _lh_dummy⁵ -> [C (fun head³ -> head³)(hhh³) map_₀_₁(ttt²)])))
+//│ def lastDrive_₀_₀(xs¹) = 
+//│ 	case xs¹ of {
+//│ 		N  => [None]
+//│ 		| C hh¹ tt¹ => [Some last_₀_₀(tt¹, hh¹)]}
 //│ 	where
-//│ 	def map_₁(ls³) = 
-//│ 		ls³(99)
+//│ 	def last_₀_₀(ys¹) = 
+//│ 		case ys¹ of {
+//│ 			N  => (fun x² -> x²)
+//│ 			| C h¹ t¹ => (fun x³ -> last_₀_₀(t¹, h¹))}
+//│ def map_₀_₀(ls²) = 
+//│ 	ls²(99)
+//│ def map_₀_₁(ls¹) = 
+//│ 	ls¹(99)
+//│ def map_₀_₂(ls³) = 
+//│ 	ls³(99)
+//│ <<<<<<< expanded program <<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ [N]: 91 --->
+//│ 	case ys¹ of {N  => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> last_₀_₀(t¹, h¹))}: 83
+//│ [C (fun head² -> head²)(hhh²) map_₀_₀(ttt³)]: 101 --->
+//│ 	case ys¹ of {N  => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> last_₀_₀(t¹, h¹))}: 83
+//│ [C (fun head³ -> head³)(hhh³) map_₀_₁(ttt²)]: 113 --->
+//│ 	case xs¹ of {N  => [None] | C hh¹ tt¹ => [Some last_₀_₀(tt¹, hh¹)]}: 64
+//│ ------------------
+//│ case xs¹ of {N  => [None] | C hh¹ tt¹ => [Some last_₀_₀(tt¹, hh¹)]}: 64 --->
+//│ 	[C (fun head³ -> head³)(hhh³) map_₀_₁(ttt²)]: 113
+//│ case ys¹ of {N  => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> last_₀_₀(t¹, h¹))}: 83 --->
+//│ 	[N]: 91
+//│ 	[C (fun head² -> head²)(hhh²) map_₀_₀(ttt³)]: 101
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ [N]: 91 --->
+//│ 	case ys¹ of {N  => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> last_₀_₀(t¹, h¹))}: 83
+//│ [C (fun head² -> head²)(hhh²) map_₀_₀(ttt³)]: 101 --->
+//│ 	case ys¹ of {N  => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> last_₀_₀(t¹, h¹))}: 83
+//│ [C (fun head³ -> head³)(hhh³) map_₀_₁(ttt²)]: 113 --->
+//│ 	case xs¹ of {N  => [None] | C hh¹ tt¹ => [Some last_₀_₀(tt¹, hh¹)]}: 64
+//│ ------------------
+//│ case xs¹ of {N  => [None] | C hh¹ tt¹ => [Some last_₀_₀(tt¹, hh¹)]}: 64 --->
+//│ 	[C (fun head³ -> head³)(hhh³) map_₀_₁(ttt²)]: 113
+//│ case ys¹ of {N  => (fun x² -> x²) | C h¹ t¹ => (fun x³ -> last_₀_₀(t¹, h¹))}: 83 --->
+//│ 	[N]: 91
+//│ 	[C (fun head² -> head²)(hhh²) map_₀_₀(ttt³)]: 101
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ lastDrive_₀_₀(map_₀_₂(
+//│ 	let ttt⁴ = 	
+//│ 		let ttt⁵ = (fun _lh_dummy⁶ -> (fun x⁴ -> x⁴))
+//│ 		in let hhh⁴ = [KK]
+//│ 		in (fun _lh_dummy⁷ -> 
+//│ 			let t² = map_₀_₀(ttt⁵)
+//│ 			in let h² = (fun head⁴ -> head⁴)(hhh⁴)
+//│ 			in (fun x⁵ -> last_₀_₀(t², h²)))
+//│ 	in let hhh⁵ = [K]
+//│ 	in (fun _lh_dummy⁸ -> 
+//│ 		let tt² = map_₀_₁(ttt⁴)
+//│ 		in let hh² = (fun head⁵ -> head⁵)(hhh⁵)
+//│ 		in (fun _lh_dummy⁹ -> [Some last_₀_₀(tt², hh²)]))))
+//│ def lastDrive_₀_₀(xs²) = 
+//│ 	xs²(99)
+//│ 	where
+//│ 	def last_₀_₀(ys²) = 
+//│ 		ys²
+//│ def map_₀_₀(ls⁵) = 
+//│ 	ls⁵(99)
+//│ def map_₀_₁(ls⁴) = 
+//│ 	ls⁴(99)
+//│ def map_₀_₂(ls⁶) = 
+//│ 	ls⁶(99)
 //│ <<<<<<< after fusion <<<<<<<

@@ -4,261 +4,167 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_lumberhack_only_expanded = struct
-let rec drop__d0 _lh_drop_arg1_2 _lh_drop_arg2_2 =
-  (match _lh_drop_arg2_2 with
-    | `LH_C(_lh_drop_LH_C_0_2, _lh_drop_LH_C_1_2) -> 
-      (if (_lh_drop_arg1_2 = 0) then
-        (`LH_C(_lh_drop_LH_C_0_2, _lh_drop_LH_C_1_2))
-      else
-        ((drop__d0 (_lh_drop_arg1_2 - 1)) _lh_drop_LH_C_1_2))
-    | _ -> 
-      (failwith "error"));;
-let rec drop__d1 _lh_drop_arg1_1 _lh_drop_arg2_1 =
-  (match _lh_drop_arg2_1 with
-    | `LH_C(_lh_drop_LH_C_0_1, _lh_drop_LH_C_1_1) -> 
-      (if (_lh_drop_arg1_1 = 0) then
-        (`LH_C(_lh_drop_LH_C_0_1, _lh_drop_LH_C_1_1))
-      else
-        ((drop__d1 (_lh_drop_arg1_1 - 1)) _lh_drop_LH_C_1_1))
-    | _ -> 
-      (failwith "error"));;
-let rec enumFromThenTo__d0 a_5 t_2_3 b_2 =
-  (if (a_5 <= b_2) then
-    (`LH_C(a_5, (((enumFromThenTo__d0 t_2_3) ((2 * t_2_3) - a_5)) b_2)))
+let rec enumFromThenTo_lh a_0 t_1 b_0 =
+  (if (a_0 <= b_0) then
+    (`LH_C(a_0, (((enumFromThenTo_lh t_1) ((2 * t_1) - a_0)) b_0)))
   else
     (`LH_N));;
-let rec enumFromThenTo__d1 a_9 t_3_0 b_3 =
-  (if (a_9 <= b_3) then
-    (`LH_C(a_9, (((enumFromThenTo__d1 t_3_0) ((2 * t_3_0) - a_9)) b_3)))
-  else
-    (`LH_N));;
-let rec findk__d0 _lh_findk_arg1_1 _lh_findk_arg2_1 _lh_findk_arg3_1 _lh_findk_arg4_1 =
-  (match _lh_findk_arg4_1 with
+let rec length_lh ls_2 =
+  (match ls_2 with
+    | `LH_C(h_2, t_3) -> 
+      (1 + (length_lh t_3))
     | `LH_N -> 
-      _lh_findk_arg2_1
-    | `LH_C(_lh_findk_LH_C_0_1, _lh_findk_LH_C_1_1) -> 
-      (match _lh_findk_LH_C_0_1 with
-        | `LH_P2(_lh_findk_LH_P2_0_1, _lh_findk_LH_P2_1_1) -> 
-          (if ((_lh_findk_LH_P2_0_1 + _lh_findk_LH_P2_1_1) >= _lh_findk_arg3_1) then
-            ((((findk__d0 (_lh_findk_arg1_1 + 1)) _lh_findk_arg1_1) (_lh_findk_LH_P2_0_1 + _lh_findk_LH_P2_1_1)) _lh_findk_LH_C_1_1)
-          else
-            ((((findk__d0 (_lh_findk_arg1_1 + 1)) _lh_findk_arg2_1) _lh_findk_arg3_1) _lh_findk_LH_C_1_1))
-        | _ -> 
-          (failwith "error"))
+      0);;
+let rec drop_lh _lh_drop_arg1_0 _lh_drop_arg2_0 =
+  (match _lh_drop_arg2_0 with
+    | `LH_C(_lh_drop_LH_C_0_0, _lh_drop_LH_C_1_0) -> 
+      (if (_lh_drop_arg1_0 = 0) then
+        (`LH_C(_lh_drop_LH_C_0_0, _lh_drop_LH_C_1_0))
+      else
+        ((drop_lh (_lh_drop_arg1_0 - 1)) _lh_drop_LH_C_1_0))
     | _ -> 
       (failwith "error"));;
-let rec inList__d0 _lh_inList_arg1_1 _lh_inList_arg2_1 =
-  (match _lh_inList_arg2_1 with
-    | `LH_C(_lh_inList_LH_C_0_1, _lh_inList_LH_C_1_1) -> 
-      (if (_lh_inList_arg1_1 = _lh_inList_LH_C_0_1) then
+let rec reverse_helper_lh ls_4 a_1 =
+  (match ls_4 with
+    | `LH_C(h_3, t_4) -> 
+      ((reverse_helper_lh t_4) (`LH_C(h_3, a_1)))
+    | `LH_N -> 
+      a_1);;
+let rec inList_lh _lh_inList_arg1_0 _lh_inList_arg2_0 =
+  (match _lh_inList_arg2_0 with
+    | `LH_C(_lh_inList_LH_C_0_0, _lh_inList_LH_C_1_0) -> 
+      (if (_lh_inList_arg1_0 = _lh_inList_LH_C_0_0) then
         true
       else
-        ((inList__d0 _lh_inList_arg1_1) _lh_inList_LH_C_1_1))
+        ((inList_lh _lh_inList_arg1_0) _lh_inList_LH_C_1_0))
     | `LH_N -> 
       false
     | _ -> 
       (failwith "error"));;
-let rec length__d0 ls_2_1 =
-  (match ls_2_1 with
-    | `LH_C(h_2_0, t_2_4) -> 
-      (1 + (length__d0 t_2_4))
+let rec findk_lh _lh_findk_arg1_0 _lh_findk_arg2_0 _lh_findk_arg3_0 _lh_findk_arg4_0 =
+  (match _lh_findk_arg4_0 with
     | `LH_N -> 
-      0);;
-let rec length__d1 ls_2_9 =
-  (match ls_2_9 with
-    | `LH_C(h_2_7, t_3_3) -> 
-      (1 + (length__d1 t_3_3))
-    | `LH_N -> 
-      0);;
-let rec map__d0 f_1_2 ls_2_7 =
-  (match ls_2_7 with
-    | `LH_C(h_2_5, t_3_1) -> 
-      (`LH_C((f_1_2 h_2_5), ((map__d0 f_1_2) t_3_1)))
-    | `LH_N -> 
-      (`LH_N));;
-let rec map__d1 f_1_3 ls_3_0 =
-  (match ls_3_0 with
-    | `LH_C(h_2_8, t_3_4) -> 
-      (`LH_C((f_1_3 h_2_8), ((map__d1 f_1_3) t_3_4)))
-    | `LH_N -> 
-      (`LH_N));;
-let rec max__d0 _lh_max_arg1_2 _lh_max_arg2_2 =
-  (if (_lh_max_arg1_2 > _lh_max_arg2_2) then
-    _lh_max_arg1_2
-  else
-    _lh_max_arg2_2);;
-let rec max__d1 _lh_max_arg1_1 _lh_max_arg2_1 =
-  (if (_lh_max_arg1_1 > _lh_max_arg2_1) then
-    _lh_max_arg1_1
-  else
-    _lh_max_arg2_1);;
-let rec reverse_helper__d0 ls_2_5 a_8 =
-  (match ls_2_5 with
-    | `LH_C(h_2_3, t_2_8) -> 
-      ((reverse_helper__d0 t_2_8) (`LH_C(h_2_3, a_8)))
-    | `LH_N -> 
-      a_8);;
-let rec reverse_helper__d1 ls_2_3 a_6 =
-  (match ls_2_3 with
-    | `LH_C(h_2_1, t_2_5) -> 
-      ((reverse_helper__d1 t_2_5) (`LH_C(h_2_1, a_6)))
-    | `LH_N -> 
-      a_6);;
-let rec reverse_helper__d2 ls_2_4 a_7 =
-  (match ls_2_4 with
-    | `LH_C(h_2_2, t_2_6) -> 
-      ((reverse_helper__d2 t_2_6) (`LH_C(h_2_2, a_7)))
-    | `LH_N -> 
-      a_7);;
-let rec snd__d0 _lh_snd_arg1_1 =
-  (match _lh_snd_arg1_1 with
-    | `LH_P2(_lh_snd_LH_P2_0_1, _lh_snd_LH_P2_1_1) -> 
-      _lh_snd_LH_P2_1_1
+      _lh_findk_arg2_0
+    | `LH_C(_lh_findk_LH_C_0_0, _lh_findk_LH_C_1_0) -> 
+      (match _lh_findk_LH_C_0_0 with
+        | `LH_P2(_lh_findk_LH_P2_0_0, _lh_findk_LH_P2_1_0) -> 
+          (if ((_lh_findk_LH_P2_0_0 + _lh_findk_LH_P2_1_0) >= _lh_findk_arg3_0) then
+            ((((findk_lh (_lh_findk_arg1_0 + 1)) _lh_findk_arg1_0) (_lh_findk_LH_P2_0_0 + _lh_findk_LH_P2_1_0)) _lh_findk_LH_C_1_0)
+          else
+            ((((findk_lh (_lh_findk_arg1_0 + 1)) _lh_findk_arg2_0) _lh_findk_arg3_0) _lh_findk_LH_C_1_0))
+        | _ -> 
+          (failwith "error"))
     | _ -> 
       (failwith "error"));;
-let rec snd__d1 _lh_snd_arg1_2 =
-  (match _lh_snd_arg1_2 with
-    | `LH_P2(_lh_snd_LH_P2_0_2, _lh_snd_LH_P2_1_2) -> 
-      _lh_snd_LH_P2_1_2
-    | _ -> 
-      (failwith "error"));;
-let rec take__d0 n_4 ls_2_6 =
-  (if (n_4 > 0) then
-    (match ls_2_6 with
-      | `LH_C(h_2_4, t_2_9) -> 
-        (`LH_C(h_2_4, ((take__d0 (n_4 - 1)) t_2_9)))
-      | `LH_N -> 
-        (`LH_N))
-  else
-    (`LH_N));;
-let rec take__d1 n_5 ls_2_8 =
-  (if (n_5 > 0) then
-    (match ls_2_8 with
-      | `LH_C(h_2_6, t_3_2) -> 
-        (`LH_C(h_2_6, ((take__d1 (n_5 - 1)) t_3_2)))
-      | `LH_N -> 
-        (`LH_N))
-  else
-    (`LH_N));;
-let rec zip__d0 xs_9 ys_9 =
-  (match xs_9 with
-    | `LH_C(hx_8, tx_8) -> 
-      (match ys_9 with
-        | `LH_C(hy_8, ty_8) -> 
-          (`LH_C((`LH_P2(hx_8, hy_8)), ((zip__d0 tx_8) ty_8)))
+let rec zip_lh xs_0 ys_0 =
+  (match xs_0 with
+    | `LH_C(hx_0, tx_0) -> 
+      (match ys_0 with
+        | `LH_C(hy_0, ty_0) -> 
+          (`LH_C((`LH_P2(hx_0, hy_0)), ((zip_lh tx_0) ty_0)))
         | `LH_N -> 
           (`LH_N))
     | `LH_N -> 
       (`LH_N));;
-let rec algb1__d0 _lh_algb1_arg1_2 _lh_algb1_arg2_2 =
-  (match _lh_algb1_arg1_2 with
+let rec take_lh n_0 ls_1 =
+  (if (n_0 > 0) then
+    (match ls_1 with
+      | `LH_C(h_1, t_2) -> 
+        (`LH_C(h_1, ((take_lh (n_0 - 1)) t_2)))
+      | `LH_N -> 
+        (`LH_N))
+  else
+    (`LH_N));;
+let rec map_lh f_0 ls_0 =
+  (match ls_0 with
+    | `LH_C(h_0, t_0) -> 
+      (`LH_C((f_0 h_0), ((map_lh f_0) t_0)))
     | `LH_N -> 
-      ((map__d0 snd__d0) _lh_algb1_arg2_2)
-    | `LH_C(_lh_algb1_LH_C_0_2, _lh_algb1_LH_C_1_2) -> 
-      ((algb1__d0 _lh_algb1_LH_C_1_2) ((((algb2__d0 _lh_algb1_LH_C_0_2) 0) 0) _lh_algb1_arg2_2))
+      (`LH_N));;
+let rec snd_lh _lh_snd_arg1_0 =
+  (match _lh_snd_arg1_0 with
+    | `LH_P2(_lh_snd_LH_P2_0_0, _lh_snd_LH_P2_1_0) -> 
+      _lh_snd_LH_P2_1_0
     | _ -> 
-      (failwith "error"))
-and algb1__d1 _lh_algb1_arg1_1 _lh_algb1_arg2_1 =
-  (match _lh_algb1_arg1_1 with
-    | `LH_N -> 
-      ((map__d1 snd__d1) _lh_algb1_arg2_1)
-    | `LH_C(_lh_algb1_LH_C_0_1, _lh_algb1_LH_C_1_1) -> 
-      ((algb1__d1 _lh_algb1_LH_C_1_1) ((((algb2__d1 _lh_algb1_LH_C_0_1) 0) 0) _lh_algb1_arg2_1))
-    | _ -> 
-      (failwith "error"))
-and algb2__d0 _lh_algb2_arg1_1 _lh_algb2_arg2_1 _lh_algb2_arg3_1 _lh_algb2_arg4_1 =
-  (match _lh_algb2_arg4_1 with
+      (failwith "error"));;
+let rec max_lh _lh_max_arg1_0 _lh_max_arg2_0 =
+  (if (_lh_max_arg1_0 > _lh_max_arg2_0) then
+    _lh_max_arg1_0
+  else
+    _lh_max_arg2_0);;
+let rec reverse_lh ls_3 =
+  ((reverse_helper_lh ls_3) (`LH_N));;
+let rec algb2_lh _lh_algb2_arg1_0 _lh_algb2_arg2_0 _lh_algb2_arg3_0 _lh_algb2_arg4_0 =
+  (match _lh_algb2_arg4_0 with
     | `LH_N -> 
       (`LH_N)
-    | `LH_C(_lh_algb2_LH_C_0_1, _lh_algb2_LH_C_1_1) -> 
-      (match _lh_algb2_LH_C_0_1 with
-        | `LH_P2(_lh_algb2_LH_P2_0_1, _lh_algb2_LH_P2_1_1) -> 
-          (let rec kjcurr_1 = (if (_lh_algb2_arg1_1 = _lh_algb2_LH_P2_0_1) then
-            (_lh_algb2_arg2_1 + 1)
+    | `LH_C(_lh_algb2_LH_C_0_0, _lh_algb2_LH_C_1_0) -> 
+      (match _lh_algb2_LH_C_0_0 with
+        | `LH_P2(_lh_algb2_LH_P2_0_0, _lh_algb2_LH_P2_1_0) -> 
+          (let rec kjcurr_0 = (if (_lh_algb2_arg1_0 = _lh_algb2_LH_P2_0_0) then
+            (_lh_algb2_arg2_0 + 1)
           else
-            ((max__d0 _lh_algb2_arg3_1) _lh_algb2_LH_P2_1_1)) in
-            (`LH_C((`LH_P2(_lh_algb2_LH_P2_0_1, kjcurr_1)), ((((algb2__d0 _lh_algb2_arg1_1) _lh_algb2_LH_P2_1_1) kjcurr_1) _lh_algb2_LH_C_1_1))))
+            ((max_lh _lh_algb2_arg3_0) _lh_algb2_LH_P2_1_0)) in
+            (`LH_C((`LH_P2(_lh_algb2_LH_P2_0_0, kjcurr_0)), ((((algb2_lh _lh_algb2_arg1_0) _lh_algb2_LH_P2_1_0) kjcurr_0) _lh_algb2_LH_C_1_0))))
         | _ -> 
           (failwith "error"))
     | _ -> 
-      (failwith "error"))
-and algb2__d1 _lh_algb2_arg1_2 _lh_algb2_arg2_2 _lh_algb2_arg3_2 _lh_algb2_arg4_2 =
-  (match _lh_algb2_arg4_2 with
+      (failwith "error"));;
+let rec algb1_lh _lh_algb1_arg1_0 _lh_algb1_arg2_0 =
+  (match _lh_algb1_arg1_0 with
     | `LH_N -> 
-      (`LH_N)
-    | `LH_C(_lh_algb2_LH_C_0_2, _lh_algb2_LH_C_1_2) -> 
-      (match _lh_algb2_LH_C_0_2 with
-        | `LH_P2(_lh_algb2_LH_P2_0_2, _lh_algb2_LH_P2_1_2) -> 
-          (let rec kjcurr_2 = (if (_lh_algb2_arg1_2 = _lh_algb2_LH_P2_0_2) then
-            (_lh_algb2_arg2_2 + 1)
-          else
-            ((max__d1 _lh_algb2_arg3_2) _lh_algb2_LH_P2_1_2)) in
-            (`LH_C((`LH_P2(_lh_algb2_LH_P2_0_2, kjcurr_2)), ((((algb2__d1 _lh_algb2_arg1_2) _lh_algb2_LH_P2_1_2) kjcurr_2) _lh_algb2_LH_C_1_2))))
-        | _ -> 
-          (failwith "error"))
+      ((map_lh snd_lh) _lh_algb1_arg2_0)
+    | `LH_C(_lh_algb1_LH_C_0_0, _lh_algb1_LH_C_1_0) -> 
+      ((algb1_lh _lh_algb1_LH_C_1_0) ((((algb2_lh _lh_algb1_LH_C_0_0) 0) 0) _lh_algb1_arg2_0))
     | _ -> 
-      (failwith "error"))
-and algb__d0 _lh_algb_arg1_1 _lh_algb_arg2_1 =
-  (`LH_C(0, ((algb1__d0 _lh_algb_arg1_1) (let rec _lh_listcomp_fun_1 = (fun _lh_listcomp_fun_para_1 -> 
-    (match _lh_listcomp_fun_para_1 with
-      | `LH_C(_lh_listcomp_fun_ls_h_1, _lh_listcomp_fun_ls_t_1) -> 
-        (`LH_C((`LH_P2(_lh_listcomp_fun_ls_h_1, 0)), (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_1)))
+      (failwith "error"));;
+let rec algb_lh _lh_algb_arg1_0 _lh_algb_arg2_0 =
+  (`LH_C(0, ((algb1_lh _lh_algb_arg1_0) (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
+    (match _lh_listcomp_fun_para_0 with
+      | `LH_C(_lh_listcomp_fun_ls_h_0, _lh_listcomp_fun_ls_t_0) -> 
+        (`LH_C((`LH_P2(_lh_listcomp_fun_ls_h_0, 0)), (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0)))
       | `LH_N -> 
         (`LH_N))) in
-    (_lh_listcomp_fun_1 _lh_algb_arg2_1)))))
-and algb__d1 _lh_algb_arg1_2 _lh_algb_arg2_2 =
-  (`LH_C(0, ((algb1__d1 _lh_algb_arg1_2) (let rec _lh_listcomp_fun_2 = (fun _lh_listcomp_fun_para_2 -> 
-    (match _lh_listcomp_fun_para_2 with
-      | `LH_C(_lh_listcomp_fun_ls_h_2, _lh_listcomp_fun_ls_t_2) -> 
-        (`LH_C((`LH_P2(_lh_listcomp_fun_ls_h_2, 0)), (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_2)))
-      | `LH_N -> 
-        (`LH_N))) in
-    (_lh_listcomp_fun_2 _lh_algb_arg2_2)))))
-and algc__d0 _lh_algc_arg1_1 _lh_algc_arg2_1 _lh_algc_arg3_1 _lh_algc_arg4_1 =
-  (match _lh_algc_arg4_1 with
+    (_lh_listcomp_fun_0 _lh_algb_arg2_0)))));;
+let rec algc_lh _lh_algc_arg1_0 _lh_algc_arg2_0 _lh_algc_arg3_0 _lh_algc_arg4_0 =
+  (match _lh_algc_arg4_0 with
     | `LH_N -> 
-      (fun x_4 -> 
-        x_4)
+      (fun x_0 -> 
+        x_0)
     | _ -> 
-      (match _lh_algc_arg3_1 with
-        | `LH_C(_lh_algc_LH_C_0_1, _lh_algc_LH_C_1_1) -> 
-          (match _lh_algc_LH_C_1_1 with
+      (match _lh_algc_arg3_0 with
+        | `LH_C(_lh_algc_LH_C_0_0, _lh_algc_LH_C_1_0) -> 
+          (match _lh_algc_LH_C_1_0 with
             | `LH_N -> 
-              (if ((inList__d0 _lh_algc_LH_C_0_1) _lh_algc_arg4_1) then
-                (fun t_2_7 -> 
-                  (`LH_C(_lh_algc_LH_C_0_1, t_2_7)))
+              (if ((inList_lh _lh_algc_LH_C_0_0) _lh_algc_arg4_0) then
+                (fun t_5 -> 
+                  (`LH_C(_lh_algc_LH_C_0_0, t_5)))
               else
-                (fun x_5 -> 
-                  x_5))
+                (fun x_1 -> 
+                  x_1))
             | _ -> 
-              (let rec m2_2 = (_lh_algc_arg1_1 / 2) in
-                (let rec xs1_2 = ((take__d0 m2_2) _lh_algc_arg3_1) in
-                  (let rec xs2_2 = ((drop__d0 m2_2) _lh_algc_arg3_1) in
-                    (let rec l1_2 = ((algb__d0 xs1_2) _lh_algc_arg4_1) in
-                      (let rec l2_2 = (reverse__d0 ((algb__d1 (reverse__d1 xs2_2)) (reverse__d2 _lh_algc_arg4_1))) in
-                        (let rec k_2 = ((((findk__d0 0) 0) (0 - 1)) ((zip__d0 l1_2) l2_2)) in
-                          (fun _lh_funcomp_x_2 -> 
-                            (((((algc__d0 m2_2) k_2) xs1_2) ((take__d1 k_2) _lh_algc_arg4_1)) (((((algc__d0 (_lh_algc_arg1_1 - m2_2)) (_lh_algc_arg2_1 - k_2)) xs2_2) ((drop__d1 k_2) _lh_algc_arg4_1)) _lh_funcomp_x_2))))))))))
+              (let rec m2_0 = (_lh_algc_arg1_0 / 2) in
+                (let rec xs1_0 = ((take_lh m2_0) _lh_algc_arg3_0) in
+                  (let rec xs2_0 = ((drop_lh m2_0) _lh_algc_arg3_0) in
+                    (let rec l1_0 = ((algb_lh xs1_0) _lh_algc_arg4_0) in
+                      (let rec l2_0 = (reverse_lh ((algb_lh (reverse_lh xs2_0)) (reverse_lh _lh_algc_arg4_0))) in
+                        (let rec k_0 = ((((findk_lh 0) 0) (0 - 1)) ((zip_lh l1_0) l2_0)) in
+                          (fun _lh_funcomp_x_0 -> 
+                            (((((algc_lh m2_0) k_0) xs1_0) ((take_lh k_0) _lh_algc_arg4_0)) (((((algc_lh (_lh_algc_arg1_0 - m2_0)) (_lh_algc_arg2_0 - k_0)) xs2_0) ((drop_lh k_0) _lh_algc_arg4_0)) _lh_funcomp_x_0))))))))))
         | _ -> 
-          (let rec m2_3 = (_lh_algc_arg1_1 / 2) in
-            (let rec xs1_3 = ((take__d0 m2_3) _lh_algc_arg3_1) in
-              (let rec xs2_3 = ((drop__d0 m2_3) _lh_algc_arg3_1) in
-                (let rec l1_3 = ((algb__d0 xs1_3) _lh_algc_arg4_1) in
-                  (let rec l2_3 = (reverse__d0 ((algb__d1 (reverse__d1 xs2_3)) (reverse__d2 _lh_algc_arg4_1))) in
-                    (let rec k_3 = ((((findk__d0 0) 0) (0 - 1)) ((zip__d0 l1_3) l2_3)) in
-                      (fun _lh_funcomp_x_3 -> 
-                        (((((algc__d0 m2_3) k_3) xs1_3) ((take__d1 k_3) _lh_algc_arg4_1)) (((((algc__d0 (_lh_algc_arg1_1 - m2_3)) (_lh_algc_arg2_1 - k_3)) xs2_3) ((drop__d1 k_3) _lh_algc_arg4_1)) _lh_funcomp_x_3)))))))))))
-and lcssMain__d0 _lh_lcssMain_arg1_1 _lh_lcssMain_arg2_1 _lh_lcssMain_arg3_1 _lh_lcssMain_arg4_1 _lh_lcssMain_arg5_1 _lh_lcssMain_arg6_1 =
-  ((lcss__d0 (((enumFromThenTo__d0 _lh_lcssMain_arg1_1) _lh_lcssMain_arg2_1) _lh_lcssMain_arg3_1)) (((enumFromThenTo__d1 _lh_lcssMain_arg4_1) _lh_lcssMain_arg5_1) _lh_lcssMain_arg6_1))
-and lcss__d0 _lh_lcss_arg1_1 _lh_lcss_arg2_1 =
-  (((((algc__d0 (length__d0 _lh_lcss_arg1_1)) (length__d1 _lh_lcss_arg2_1)) _lh_lcss_arg1_1) _lh_lcss_arg2_1) (`LH_N))
-and reverse__d0 ls_2_2 =
-  ((reverse_helper__d0 ls_2_2) (`LH_N))
-and reverse__d1 ls_2_0 =
-  ((reverse_helper__d1 ls_2_0) (`LH_N))
-and reverse__d2 ls_1_9 =
-  ((reverse_helper__d2 ls_1_9) (`LH_N))
-and testLCSS_nofib__d0 _lh_testLCSS_nofib_arg1_1 =
-  ((((((lcssMain__d0 1) 2) 60) 30) 31) 90);;
+          (let rec m2_1 = (_lh_algc_arg1_0 / 2) in
+            (let rec xs1_1 = ((take_lh m2_1) _lh_algc_arg3_0) in
+              (let rec xs2_1 = ((drop_lh m2_1) _lh_algc_arg3_0) in
+                (let rec l1_1 = ((algb_lh xs1_1) _lh_algc_arg4_0) in
+                  (let rec l2_1 = (reverse_lh ((algb_lh (reverse_lh xs2_1)) (reverse_lh _lh_algc_arg4_0))) in
+                    (let rec k_1 = ((((findk_lh 0) 0) (0 - 1)) ((zip_lh l1_1) l2_1)) in
+                      (fun _lh_funcomp_x_1 -> 
+                        (((((algc_lh m2_1) k_1) xs1_1) ((take_lh k_1) _lh_algc_arg4_0)) (((((algc_lh (_lh_algc_arg1_0 - m2_1)) (_lh_algc_arg2_0 - k_1)) xs2_1) ((drop_lh k_1) _lh_algc_arg4_0)) _lh_funcomp_x_1)))))))))));;
+let rec lcss_lh _lh_lcss_arg1_0 _lh_lcss_arg2_0 =
+  (((((algc_lh (length_lh _lh_lcss_arg1_0)) (length_lh _lh_lcss_arg2_0)) _lh_lcss_arg1_0) _lh_lcss_arg2_0) (`LH_N));;
+let rec lcssMain_lh _lh_lcssMain_arg1_0 _lh_lcssMain_arg2_0 _lh_lcssMain_arg3_0 _lh_lcssMain_arg4_0 _lh_lcssMain_arg5_0 _lh_lcssMain_arg6_0 =
+  ((lcss_lh (((enumFromThenTo_lh _lh_lcssMain_arg1_0) _lh_lcssMain_arg2_0) _lh_lcssMain_arg3_0)) (((enumFromThenTo_lh _lh_lcssMain_arg4_0) _lh_lcssMain_arg5_0) _lh_lcssMain_arg6_0));;
+let rec testLCSS_nofib_lh _lh_testLCSS_nofib_arg1_0 =
+  ((((((lcssMain_lh 1) 2) 60) 30) 31) 90);;
 end;;
 

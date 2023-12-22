@@ -482,6 +482,7 @@ class Deforest(var debug: Boolean) {
   }(r => s"=> ${r.pp(using InitPpConfig)}")
 
   def apply(p: Program): Ls[Ident -> ProdStrat] = trace(s"apply ${summary(p.pp(using InitPpConfig))}") {
+    if constraints.nonEmpty then return Nil
     val vars: Map[Ident, Strat[ProdVar]] = p.contents.collect {
       case L(ProgDef(id, body)) =>
         id -> freshVar(id.pp(using InitPpConfig))(using noExprId)._1.toStrat()
@@ -541,6 +542,7 @@ class Deforest(var debug: Boolean) {
   ]
   val isNotDeadBranch = mutable.Map.empty[Destruct, Set[Int]]
   val errorTypes = scala.collection.mutable.Set.empty[ProdStratEnum | ConsStratEnum]
+  // var errCnt = 0
   def resolveConstraints: Unit = {
     // if constraint resolver has already been executed, do not execute it more than once
     if lowerBounds.keys.nonEmpty || upperBounds.keys.nonEmpty then return ()
@@ -548,28 +550,34 @@ class Deforest(var debug: Boolean) {
       val prod = c._1
       val cons = c._2
 
-      if errorTypes.contains(prod.s) || errorTypes.contains(cons.s) then return
-      (prod.s, cons.s) match
-        case (_: ProdVar, _) | (_, _: ConsVar) => cache.get(c) match
-          case S(inCache) =>
-            log(s">> done [${prod.pp(using InitPpConfig)} : ${cons.pp(using InitPpConfig)}]")
-            log(s">> with [${inCache._1._1.pp(using InitPpConfig)} : ${inCache._1._2.pp(using InitPpConfig)}]")
-            // register knots that actually pass through type ctors
-            if inCache._2 < numOfTypeCtor || true then {
-              recursiveConstr.updateWith(c) {
-                case Some(m) =>
-                  m += (prod.path.rev ::: cons.path) -> (inCache._1._1.path.rev ::: inCache._1._2.path)
-                  Some(m)
-                case None => Some({
-                  val m = mutable.Set.empty[Path -> Path]
-                  m += (prod.path.rev ::: cons.path) -> (inCache._1._1.path.rev ::: inCache._1._2.path)
-                  m
-                })
-              }
-            }
-            return
-          case N => ()
-        case _ => ()
+      // if errorTypes.contains(prod.s) || errorTypes.contains(cons.s) then return
+      cache.get(c) match
+        case S(inCache) =>
+          log(s">> done [${prod.pp(using InitPpConfig)} : ${cons.pp(using InitPpConfig)}]")
+          log(s">> with [${inCache._1._1.pp(using InitPpConfig)} : ${inCache._1._2.pp(using InitPpConfig)}]")
+          return ()
+        case N => ()
+      // (prod.s, cons.s) match
+      //   case (_: ProdVar, _) | (_, _: ConsVar) => cache.get(c) match
+      //     case S(inCache) =>
+      //       log(s">> done [${prod.pp(using InitPpConfig)} : ${cons.pp(using InitPpConfig)}]")
+      //       log(s">> with [${inCache._1._1.pp(using InitPpConfig)} : ${inCache._1._2.pp(using InitPpConfig)}]")
+      //       // register knots that actually pass through type ctors
+      //       if inCache._2 < numOfTypeCtor || true then {
+      //         recursiveConstr.updateWith(c) {
+      //           case Some(m) =>
+      //             m += (prod.path.rev ::: cons.path) -> (inCache._1._1.path.rev ::: inCache._1._2.path)
+      //             Some(m)
+      //           case None => Some({
+      //             val m = mutable.Set.empty[Path -> Path]
+      //             m += (prod.path.rev ::: cons.path) -> (inCache._1._1.path.rev ::: inCache._1._2.path)
+      //             m
+      //           })
+      //         }
+      //       }
+      //       return
+      //     case N => ()
+      //   case _ => ()
 
       // given Cache = cache + (c -> (c -> numOfTypeCtor))
       cache += (c -> (c -> numOfTypeCtor))
@@ -652,8 +660,8 @@ class Deforest(var debug: Boolean) {
                 //   ctorDestinations += prod.s.asInstanceOf[MkCtor] -> (ctorDestinations(prod.s.asInstanceOf[MkCtor]) + cons.s)
                 // }
                 // lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
-                errorTypes += prod.s
-                errorTypes += cons.s
+                // errorTypes += prod.s
+                // errorTypes += cons.s
               case armIndex => {
                 isNotDeadBranch.updateWith(dtors) {
                   case None => Some(Set(armIndex))
@@ -680,9 +688,9 @@ class Deforest(var debug: Boolean) {
               }
             }
           } else {
-            if ds.exists(d => d.ctor != ctor && d.ctor.name != "_") then
-              errorTypes += prod.s
-              errorTypes += cons.s
+            if ds.exists(d => d.ctor != ctor && d.ctor.name != "_") then ()
+              // errorTypes += prod.s
+              // errorTypes += cons.s
               // lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
           }
         case (sum@Sum(ctors), Destruct(ds)) =>
@@ -703,8 +711,8 @@ class Deforest(var debug: Boolean) {
                     }
                   }
                 case _ => // lastWords(s"${ctor.name} cannot be found in $ds")
-                  errorTypes += prod.s
-                  errorTypes += cons.s
+                  // errorTypes += prod.s
+                  // errorTypes += cons.s
               }
             }
           }
@@ -717,9 +725,12 @@ class Deforest(var debug: Boolean) {
           (prod :: Nil) lazyZip dtor.argCons foreach { case (a, c) =>
             handle(a.addPath(prod.path), c.addPath(cons.path))
           }
-        case _ => 
-          errorTypes += prod.s
-          errorTypes += cons.s
+        case _ =>
+          // println(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
+          // if {errCnt += 1; errCnt} > 1000 then
+          //   lastWords(s"type error ${prod.pp(using InitPpConfig)} <: ${cons.pp(using InitPpConfig)}")
+          // errorTypes += prod.s
+          // errorTypes += cons.s
     }()
     
     given Cache = scala.collection.mutable.Map.empty

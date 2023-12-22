@@ -3,15 +3,25 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_original = struct
+let rec map f_0 ls_1 =
+  (match ls_1 with
+    | `C(h_1, t_1) -> 
+      (`C((f_0 h_1), ((map f_0) t_1)))
+    | `N -> 
+      (`N));;
 let rec makeZippedList n_0 =
   (if (n_0 > 0) then
     (`C((`Pair(n_0, (n_0 + 1))), (makeZippedList (n_0 - 1))))
   else
     (`N));;
-let rec map f_0 ls_1 =
-  (match ls_1 with
-    | `C(h_1, t_1) -> 
-      (`C((f_0 h_1), ((map f_0) t_1)))
+let rec zip xs_0 ys_0 =
+  (match xs_0 with
+    | `C(x_0, xt_0) -> 
+      (match ys_0 with
+        | `C(y_0, yt_0) -> 
+          (`C((`Pair(x_0, y_0)), ((zip xt_0) yt_0)))
+        | `N -> 
+          (`N))
     | `N -> 
       (`N));;
 let rec unzip ls_0 =
@@ -24,16 +34,6 @@ let rec unzip ls_0 =
               (`Pair((`C(a_0, atail_0)), (`C(b_0, btail_0))))))
     | `N -> 
       (`Pair((`N), (`N))));;
-let rec zip xs_0 ys_0 =
-  (match xs_0 with
-    | `C(x_0, xt_0) -> 
-      (match ys_0 with
-        | `C(y_0, yt_0) -> 
-          (`C((`Pair(x_0, y_0)), ((zip xt_0) yt_0)))
-        | `N -> 
-          (`N))
-    | `N -> 
-      (`N));;
 let rec testZipMapBothUnzip n_1 =
   (match (unzip (makeZippedList n_1)) with
     | `Pair(xs_1, ys_1) -> 

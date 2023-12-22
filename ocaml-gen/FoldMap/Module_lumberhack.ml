@@ -20,8 +20,8 @@ let rec map__d0 f_1 ls_1 =
             (((foldl__d0 f_2) ((f_2 s_1) h_1)) t_1))))
     | `N -> 
       (fun f_3 s_2 -> 
-        s_2))
-and testFoldMap__d0 n_0 =
+        s_2));;
+let rec testFoldMap__d0 n_0 =
   (((foldl__d0 (fun i_0 x_0 -> 
     (i_0 + x_0))) 0) ((map__d0 (fun x_1 -> 
     (x_1 * x_1))) ((enumFromTo__d0 1) n_0)));;

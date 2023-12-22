@@ -691,11 +691,7 @@ trait ProgramRewrite { this: Program =>
 
   lazy val copyToNewDeforestWithDeadDefElim = {
     given newd: Deforest(false)
-    def getAllCalls(calls: Set[Ident]): Set[Ident] = {
-      val newCalls = this.d.callsInfo._2.filterKeys(id => calls(id)).values.flatten.map(_.id).toSet ++ calls
-      if newCalls.size == calls.size then calls else getAllCalls(newCalls)
-    }
-    val newCalls = getAllCalls(this.d.callsInfo._1.map(_._1).toSet)
+    val newCalls = this.usedDefs
     // println(newCalls.size)
     val newInitCtx = newCalls.map(
       i => i -> newd.nextIdent(i.isDef, Var(i.tree.name + "_lh"))

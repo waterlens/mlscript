@@ -16,9 +16,8 @@ c(p)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [c^12]
-//│ 	[c^12 · c^5]
-//│ 		[c^12 · c^5 · c^5] ---> [c^12] (only one)
+//│ [c^12] (hopeless to continue)
+//│ 	[c^12 · c^5] ---> [c^12] (using original def)
 //│ [p^13] (hopeless to continue)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
@@ -26,28 +25,20 @@ c(p)
 //│ c_₀(p_₀)
 //│ def c_₀(x¹) = 
 //│ 	case x¹ of {
-//│ 		Pair a¹ b¹ => c_₁([Pair b¹ a¹])}
-//│ 	where
-//│ 	def c_₁(x²) = 
-//│ 		case x² of {
-//│ 			Pair a² b² => c_₀([Pair b² a²])}
+//│ 		Pair a¹ b¹ => c_₀([Pair b¹ a¹])}
 //│ def p_₀ = 
 //│ 	[Pair [A] [B]]
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [Pair b¹ a¹]: 19 --->
-//│ 	case x² of {Pair a² b² => c_₀([Pair b² a²])}: 29
-//│ [Pair b² a²]: 27 --->
-//│ 	case x¹ of {Pair a¹ b¹ => c_₁([Pair b¹ a¹])}: 21
-//│ [Pair [A] [B]]: 33 --->
-//│ 	case x¹ of {Pair a¹ b¹ => c_₁([Pair b¹ a¹])}: 21
+//│ 	case x¹ of {Pair a¹ b¹ => c_₀([Pair b¹ a¹])}: 21
+//│ [Pair [A] [B]]: 25 --->
+//│ 	case x¹ of {Pair a¹ b¹ => c_₀([Pair b¹ a¹])}: 21
 //│ ------------------
-//│ case x¹ of {Pair a¹ b¹ => c_₁([Pair b¹ a¹])}: 21 --->
-//│ 	[Pair b² a²]: 27
-//│ 	[Pair [A] [B]]: 33
-//│ case x² of {Pair a² b² => c_₀([Pair b² a²])}: 29 --->
+//│ case x¹ of {Pair a¹ b¹ => c_₀([Pair b¹ a¹])}: 21 --->
 //│ 	[Pair b¹ a¹]: 19
+//│ 	[Pair [A] [B]]: 25
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -58,13 +49,9 @@ c(p)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ c_₀(p_₀)
-//│ def c_₀(x³) = 
-//│ 	case x³ of {
-//│ 		Pair a¹ b¹ => c_₁([Pair b¹ a¹])}
-//│ 	where
-//│ 	def c_₁(x⁴) = 
-//│ 		case x⁴ of {
-//│ 			Pair a² b² => c_₀([Pair b² a²])}
+//│ def c_₀(x²) = 
+//│ 	case x² of {
+//│ 		Pair a¹ b¹ => c_₀([Pair b¹ a¹])}
 //│ def p_₀ = 
 //│ 	[Pair [A] [B]]
 //│ <<<<<<< after fusion <<<<<<<

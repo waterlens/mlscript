@@ -734,19 +734,10 @@ c(p(0))
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [c^49] (hopeless to continue)
-//│ [p^50]
-//│ 	[p^50 · f^28] (hopeless to continue)
-//│ 	[p^50 · p^12] (hopeless to continue)
-//│ 		[p^50 · p^12 · f^28] (using original def)
-//│ 		[p^50 · p^12 · p^12] ---> [p^50 · p^12] (using original def)
-//│ 		[p^50 · p^12 · p^20] ---> [p^50 · p^12] (using original def)
-//│ 	[p^50 · p^20]
-//│ 		[p^50 · p^20 · f^28] (hopeless to continue)
-//│ 		[p^50 · p^20 · p^12] (hopeless to continue)
-//│ 			[p^50 · p^20 · p^12 · f^28] (using original def)
-//│ 			[p^50 · p^20 · p^12 · p^12] ---> [p^50 · p^20 · p^12] (using original def)
-//│ 			[p^50 · p^20 · p^12 · p^20] ---> [p^50 · p^20 · p^12] (using original def)
-//│ 		[p^50 · p^20 · p^20] ---> [p^50 · p^20] (only one)
+//│ [p^50] (hopeless to continue)
+//│ 	[p^50 · f^28] (using original def)
+//│ 	[p^50 · p^12] ---> [p^50] (using original def)
+//│ 	[p^50 · p^20] ---> [p^50] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -755,81 +746,39 @@ c(p(0))
 //│ 	case xx¹ of {
 //│ 		C aa¹ => primitive⁰(aa¹)
 //│ 		| N  => [N]}
-//│ def p_₀(x³) = 
-//│ 	if (x³ == 0) then [N] else if (x³ >= 2) then [C p_₁((x³ - 1))] else 
-//│ 		let temp³ = [C p_₂((x³ + 1))]
-//│ 		in f_₀(temp³)
-//│ 		temp³
+//│ def p_₀(x¹) = 
+//│ 	if (x¹ == 0) then [N] else if (x¹ >= 2) then [C p_₀((x¹ - 1))] else 
+//│ 		let temp¹ = [C p_₀((x¹ + 1))]
+//│ 		in f_₀(temp¹)
+//│ 		temp¹
 //│ 	where
 //│ 	def f_₀(z¹) = 
 //│ 		case z¹ of {
 //│ 			C b¹ => b¹
 //│ 			| N  => 1}
-//│ 	def p_₁(x¹) = 
-//│ 		if (x¹ == 0) then [N] else if (x¹ >= 2) then [C p_₁((x¹ - 1))] else 
-//│ 			let temp¹ = [C p_₁((x¹ + 1))]
-//│ 			in f_₁(temp¹)
-//│ 			temp¹
-//│ 		where
-//│ 		def f_₁(z⁴) = 
-//│ 			case z⁴ of {
-//│ 				C b⁴ => b⁴
-//│ 				| N  => 1}
-//│ 	def p_₂(x²) = 
-//│ 		if (x² == 0) then [N] else if (x² >= 2) then [C p_₃((x² - 1))] else 
-//│ 			let temp² = [C p_₂((x² + 1))]
-//│ 			in f_₂(temp²)
-//│ 			temp²
-//│ 		where
-//│ 		def f_₂(z³) = 
-//│ 			case z³ of {
-//│ 				C b³ => b³
-//│ 				| N  => 1}
-//│ 		def p_₃(x⁴) = 
-//│ 			if (x⁴ == 0) then [N] else if (x⁴ >= 2) then [C p_₃((x⁴ - 1))] else 
-//│ 				let temp⁴ = [C p_₃((x⁴ + 1))]
-//│ 				in f_₃(temp⁴)
-//│ 				temp⁴
-//│ 			where
-//│ 			def f_₃(z²) = 
-//│ 				case z² of {
-//│ 					C b² => b²
-//│ 					| N  => 1}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C p_₁((x¹ + 1))]: 107 --->
+//│ [N]: 71 --->
 //│ 	DeadCodeCons
 //│ 	NoCons
-//│ 	case z⁴ of {C b⁴ => b⁴ | N  => 1}: 79
-//│ [C p_₂((x² + 1))]: 143 --->
+//│ 	case xx¹ of {C aa¹ => primitive⁰(aa¹) | N  => [N]}: 59
+//│ [C p_₀((x¹ - 1))]: 84 --->
 //│ 	DeadCodeCons
 //│ 	NoCons
-//│ 	case z³ of {C b³ => b³ | N  => 1}: 74
-//│ [N]: 158 --->
 //│ 	case xx¹ of {C aa¹ => primitive⁰(aa¹) | N  => [N]}: 59
-//│ [C p_₁((x³ - 1))]: 171 --->
-//│ 	case xx¹ of {C aa¹ => primitive⁰(aa¹) | N  => [N]}: 59
-//│ [C p_₂((x³ + 1))]: 179 --->
+//│ [C p_₀((x¹ + 1))]: 92 --->
+//│ 	DeadCodeCons
+//│ 	NoCons
 //│ 	case xx¹ of {C aa¹ => primitive⁰(aa¹) | N  => [N]}: 59
 //│ 	case z¹ of {C b¹ => b¹ | N  => 1}: 64
-//│ [C p_₃((x⁴ + 1))]: 215 --->
-//│ 	NoCons
-//│ 	DeadCodeCons
-//│ 	case z² of {C b² => b² | N  => 1}: 69
 //│ ------------------
 //│ case xx¹ of {C aa¹ => primitive⁰(aa¹) | N  => [N]}: 59 --->
-//│ 	[N]: 158
-//│ 	[C p_₁((x³ - 1))]: 171
-//│ 	[C p_₂((x³ + 1))]: 179
+//│ 	[N]: 71
+//│ 	[C p_₀((x¹ - 1))]: 84
+//│ 	[C p_₀((x¹ + 1))]: 92
 //│ case z¹ of {C b¹ => b¹ | N  => 1}: 64 --->
-//│ 	[C p_₂((x³ + 1))]: 179
-//│ case z² of {C b² => b² | N  => 1}: 69 --->
-//│ 	[C p_₃((x⁴ + 1))]: 215
-//│ case z³ of {C b³ => b³ | N  => 1}: 74 --->
-//│ 	[C p_₂((x² + 1))]: 143
-//│ case z⁴ of {C b⁴ => b⁴ | N  => 1}: 79 --->
-//│ 	[C p_₁((x¹ + 1))]: 107
+//│ 	[C p_₀((x¹ + 1))]: 92
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -844,46 +793,16 @@ c(p(0))
 //│ 	case xx² of {
 //│ 		C aa¹ => primitive⁰(aa¹)
 //│ 		| N  => [N]}
-//│ def p_₀(x⁷) = 
-//│ 	if (x⁷ == 0) then [N] else if (x⁷ >= 2) then [C p_₁((x⁷ - 1))] else 
-//│ 		let temp⁷ = [C p_₂((x⁷ + 1))]
-//│ 		in f_₀(temp⁷)
-//│ 		temp⁷
+//│ def p_₀(x²) = 
+//│ 	if (x² == 0) then [N] else if (x² >= 2) then [C p_₀((x² - 1))] else 
+//│ 		let temp² = [C p_₀((x² + 1))]
+//│ 		in f_₀(temp²)
+//│ 		temp²
 //│ 	where
-//│ 	def f_₀(z⁶) = 
-//│ 		case z⁶ of {
+//│ 	def f_₀(z²) = 
+//│ 		case z² of {
 //│ 			C b¹ => b¹
 //│ 			| N  => 1}
-//│ 	def p_₁(x⁶) = 
-//│ 		if (x⁶ == 0) then [N] else if (x⁶ >= 2) then [C p_₁((x⁶ - 1))] else 
-//│ 			let temp⁶ = [C p_₁((x⁶ + 1))]
-//│ 			in f_₁(temp⁶)
-//│ 			temp⁶
-//│ 		where
-//│ 		def f_₁(z⁵) = 
-//│ 			case z⁵ of {
-//│ 				C b⁴ => b⁴
-//│ 				| N  => 1}
-//│ 	def p_₂(x⁸) = 
-//│ 		if (x⁸ == 0) then [N] else if (x⁸ >= 2) then [C p_₃((x⁸ - 1))] else 
-//│ 			let temp⁸ = [C p_₂((x⁸ + 1))]
-//│ 			in f_₂(temp⁸)
-//│ 			temp⁸
-//│ 		where
-//│ 		def f_₂(z⁷) = 
-//│ 			case z⁷ of {
-//│ 				C b³ => b³
-//│ 				| N  => 1}
-//│ 		def p_₃(x⁵) = 
-//│ 			if (x⁵ == 0) then [N] else if (x⁵ >= 2) then [C p_₃((x⁵ - 1))] else 
-//│ 				let temp⁵ = [C p_₃((x⁵ + 1))]
-//│ 				in f_₃(temp⁵)
-//│ 				temp⁵
-//│ 			where
-//│ 			def f_₃(z⁸) = 
-//│ 				case z⁸ of {
-//│ 					C b² => b²
-//│ 					| N  => 1}
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -977,17 +896,14 @@ f(t)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [f^26]
-//│ 	[f^26 · f^12] ---> [f^26] (only one)
-//│ 	[f^26 · f^15] ---> [f^26] (only one)
-//│ 	[f^26 · f^19] ---> [f^26] (only one)
-//│ [t^27]
-//│ 	[t^27 · t^3] ---> [t^27] (only one)
-//│ 	[t^27 · t^4] ---> [t^27] (only one)
-//│ 	[t^27 · t^6] (hopeless to continue)
-//│ 		[t^27 · t^6 · t^3] ---> [t^27 · t^6] (using original def)
-//│ 		[t^27 · t^6 · t^4] ---> [t^27 · t^6] (using original def)
-//│ 		[t^27 · t^6 · t^6] ---> [t^27 · t^6] (using original def)
+//│ [f^26] (hopeless to continue)
+//│ 	[f^26 · f^12] ---> [f^26] (using original def)
+//│ 	[f^26 · f^15] ---> [f^26] (using original def)
+//│ 	[f^26 · f^19] ---> [f^26] (using original def)
+//│ [t^27] (hopeless to continue)
+//│ 	[t^27 · t^3] ---> [t^27] (using original def)
+//│ 	[t^27 · t^4] ---> [t^27] (using original def)
+//│ 	[t^27 · t^6] ---> [t^27] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -997,32 +913,21 @@ f(t)
 //│ 		T a¹ l¹ r¹ => case r¹ of {
 //│ 			T b¹ ll¹ rr¹ => [T a¹ [T b¹ f_₀(rr¹) f_₀(ll¹)] f_₀(l¹)]}}
 //│ def t_₀ = 
-//│ 	[T [X] [T [Y] t_₀ t_₀] t_₁]
-//│ 	where
-//│ 	def t_₁ = 
-//│ 		[T [X] [T [Y] t_₁ t_₁] t_₁]
+//│ 	[T [X] [T [Y] t_₀ t_₀] t_₀]
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [T [Y] t_₁ t_₁]: 51 --->
+//│ [T [Y] t_₀ t_₀]: 51 --->
 //│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ f_₀(rr¹) f_₀(ll¹)] f_₀(l¹)]}}: 45
-//│ [T [X] [T [Y] t_₁ t_₁] t_₁]: 53 --->
-//│ 	case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ f_₀(rr¹) f_₀(ll¹)] f_₀(l¹)]}: 44
-//│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ f_₀(rr¹) f_₀(ll¹)] f_₀(l¹)]}}: 45
-//│ [T [Y] t_₀ t_₀]: 58 --->
-//│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ f_₀(rr¹) f_₀(ll¹)] f_₀(l¹)]}}: 45
-//│ [T [X] [T [Y] t_₀ t_₀] t_₁]: 60 --->
+//│ [T [X] [T [Y] t_₀ t_₀] t_₀]: 53 --->
 //│ 	case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ f_₀(rr¹) f_₀(ll¹)] f_₀(l¹)]}: 44
 //│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ f_₀(rr¹) f_₀(ll¹)] f_₀(l¹)]}}: 45
 //│ ------------------
 //│ case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ f_₀(rr¹) f_₀(ll¹)] f_₀(l¹)]}: 44 --->
-//│ 	[T [X] [T [Y] t_₁ t_₁] t_₁]: 53
-//│ 	[T [X] [T [Y] t_₀ t_₀] t_₁]: 60
+//│ 	[T [X] [T [Y] t_₀ t_₀] t_₀]: 53
 //│ case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ f_₀(rr¹) f_₀(ll¹)] f_₀(l¹)]}}: 45 --->
-//│ 	[T [Y] t_₁ t_₁]: 51
-//│ 	[T [X] [T [Y] t_₁ t_₁] t_₁]: 53
-//│ 	[T [Y] t_₀ t_₀]: 58
-//│ 	[T [X] [T [Y] t_₀ t_₀] t_₁]: 60
+//│ 	[T [Y] t_₀ t_₀]: 51
+//│ 	[T [X] [T [Y] t_₀ t_₀] t_₀]: 53
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -1038,8 +943,5 @@ f(t)
 //│ 		T a¹ l¹ r¹ => case r¹ of {
 //│ 			T b¹ ll¹ rr¹ => [T a¹ [T b¹ f_₀(rr¹) f_₀(ll¹)] f_₀(l¹)]}}
 //│ def t_₀ = 
-//│ 	[T [X] [T [Y] t_₀ t_₀] t_₁]
-//│ 	where
-//│ 	def t_₁ = 
-//│ 		[T [X] [T [Y] t_₁ t_₁] t_₁]
+//│ 	[T [X] [T [Y] t_₀ t_₀] t_₀]
 //│ <<<<<<< after fusion <<<<<<<

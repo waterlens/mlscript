@@ -8,12 +8,6 @@ let rec enumFromTo_lh a_0 b_0 =
     (`LH_C(a_0, ((enumFromTo_lh (a_0 + 1)) b_0)))
   else
     (`LH_N));;
-let rec sum_lh ls_0 =
-  (match ls_0 with
-    | `LH_C(h_0, t_0) -> 
-      (h_0 + (sum_lh t_0))
-    | `LH_N -> 
-      0);;
 let rec sum_lh _lh_sum_arg1_0 =
   (match _lh_sum_arg1_0 with
     | `LH_N -> 

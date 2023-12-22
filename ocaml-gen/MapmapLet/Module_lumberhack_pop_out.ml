@@ -20,8 +20,8 @@ let rec map__d1 f_0 ls_0 _lh_popOutId_0_0 =
             (let rec r_1 = (_lh_popOutId_0_0 h_1) in
               (`C(r_1, ((map__d0 _lh_popOutId_0_0) t_1)))))))
     | `N -> 
-      (`N))
-and testMapmapLet__d0 ls_1 =
+      (`N));;
+let rec testMapmapLet__d0 ls_1 =
   ((map__d0 (fun x_0 -> 
     (x_0 + 1))) ((map__d1 (fun x_1 -> 
     (x_1 * x_1))) ls_1));;

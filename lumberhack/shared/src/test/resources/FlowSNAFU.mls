@@ -413,6 +413,8 @@ f(dropWhile(C(N)))
 //│ 	| C t⁰ => if [True] then dropWhile^4(t⁰) else [C t⁰]}
 //│ def f(x⁰) = [Pair f^12([C [N]]) f^16(x⁰)]
 //│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec f x_0 =
+//│ 		  (`Pair((f (`C((`N)))), (f x_0)));;
 //│ 		let rec dropWhile ls_0 =
 //│ 		  (match ls_0 with
 //│ 		    | `N -> 
@@ -421,14 +423,13 @@ f(dropWhile(C(N)))
 //│ 		      (if true then
 //│ 		        (dropWhile t_0)
 //│ 		      else
-//│ 		        (`C(t_0))))
-//│ 		and f x_0 =
-//│ 		  (`Pair((f (`C((`N)))), (f x_0)));;
+//│ 		        (`C(t_0))));;
 //│ 		(f (dropWhile (`C((`N)))))
 //│ 		....... ocaml repl result .......
 //│ 		[ok]
-//│ 		                    val dropWhile : ([< `C of 'a | `N ] as 'a) -> [> `C of 'a | `N ] = <fun>
-//│ 		val f : [> `C of [> `N ] ] -> ([> `Pair of 'a * 'a ] as 'a) = <fun>
+//│ 		  val f : [> `C of [> `N ] ] -> ([> `Pair of 'a * 'a ] as 'a) = <fun>
+//│ 		[ok]
+//│ 		                  val dropWhile : ([< `C of 'a | `N ] as 'a) -> [> `C of 'a | `N ] = <fun>
 //│ 		....... ocaml repl result .......
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
@@ -436,9 +437,9 @@ f(dropWhile(C(N)))
 //│ >>>>>>> expansion >>>>>>>
 //│ [dropWhile^22] (hopeless to continue)
 //│ 	[dropWhile^22 · dropWhile^4] ---> [dropWhile^22] (using original def)
-//│ [f^21]
-//│ 	[f^21 · f^12] ---> [f^21] (only one)
-//│ 	[f^21 · f^16] ---> [f^21] (only one)
+//│ [f^21] (hopeless to continue)
+//│ 	[f^21 · f^12] ---> [f^21] (using original def)
+//│ 	[f^21 · f^16] ---> [f^21] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -520,8 +521,8 @@ f(dropWhile(C(N)))
 //│       (if true then
 //│         (dropWhile__d0 t_0)
 //│       else
-//│         (`C(t_0))))
-//│ and f__d0 x_0 =
+//│         (`C(t_0))));;
+//│ let rec f__d0 x_0 =
 //│   (`Pair((f__d0 (`C((`N)))), (f__d0 x_0)));;
 //│ (f__d0 (dropWhile__d0 (`C((`N)))))
 //│ 
@@ -557,6 +558,13 @@ f(dropWhile(C(N)))
 //│ 		C a⁰ => [N]
 //│ 		| N  => f^18(x¹)}
 //│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec f x_0 =
+//│ 		  (let rec x_1 = (f (`C((`N)))) in
+//│ 		    (match x_1 with
+//│ 		      | `C(a_0) -> 
+//│ 		        (`N)
+//│ 		      | `N -> 
+//│ 		        (f x_1)));;
 //│ 		let rec dropWhile ls_0 =
 //│ 		  (match ls_0 with
 //│ 		    | `N -> 
@@ -565,19 +573,13 @@ f(dropWhile(C(N)))
 //│ 		      (if true then
 //│ 		        (dropWhile t_0)
 //│ 		      else
-//│ 		        (`C(t_0))))
-//│ 		and f x_0 =
-//│ 		  (let rec x_1 = (f (`C((`N)))) in
-//│ 		    (match x_1 with
-//│ 		      | `C(a_0) -> 
-//│ 		        (`N)
-//│ 		      | `N -> 
-//│ 		        (f x_1)));;
+//│ 		        (`C(t_0))));;
 //│ 		(f (dropWhile (`C((`N)))))
 //│ 		....... ocaml repl result .......
 //│ 		[ok]
-//│ 		                              val dropWhile : ([< `C of 'a | `N ] as 'a) -> [> `C of 'a | `N ] = <fun>
-//│ 		val f : [ `C of [> `N ] as 'a | `N ] -> [ `C of 'a | `N ] = <fun>
+//│ 		            val f : [ `C of [> `N ] as 'a | `N ] -> [ `C of 'a | `N ] = <fun>
+//│ 		[ok]
+//│ 		                  val dropWhile : ([< `C of 'a | `N ] as 'a) -> [> `C of 'a | `N ] = <fun>
 //│ 		....... ocaml repl result .......
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
@@ -686,8 +688,8 @@ f(dropWhile(C(N)))
 //│       (if true then
 //│         (dropWhile__d0 t_0)
 //│       else
-//│         (`C(t_0))))
-//│ and f__d0 x_0 =
+//│         (`C(t_0))));;
+//│ let rec f__d0 x_0 =
 //│   (let rec x_1 = (f__d0 (`C((`N)))) in
 //│     (match x_1 with
 //│       | `C(a_0) -> 
@@ -757,6 +759,15 @@ fun words1(ls) =
 //│ 		N  => [N]
 //│ 		| _  => break^63(mident¹)}
 //│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec dropWhile p_0 ls_1 =
+//│ 		  (match ls_1 with
+//│ 		    | `N -> 
+//│ 		      (`N)
+//│ 		    | `C(h_1, t_1) -> 
+//│ 		      (if (p_0 h_1) then
+//│ 		        ((dropWhile p_0) t_1)
+//│ 		      else
+//│ 		        (`C(h_1, t_1))));;
 //│ 		let rec break ls_0 =
 //│ 		  (match ls_0 with
 //│ 		    | `N -> 
@@ -767,24 +778,8 @@ fun words1(ls) =
 //│ 		      (let rec fst_1 = (`N) in
 //│ 		        (let rec snd_1 = (`C(h_0, t_0)) in
 //│ 		          (`C(fst_1, (words1 snd_1))))))
-//│ 		and dropWhile p_0 ls_1 =
-//│ 		  (match ls_1 with
-//│ 		    | `N -> 
-//│ 		      (`N)
-//│ 		    | `C(h_1, t_1) -> 
-//│ 		      (if (p_0 h_1) then
-//│ 		        ((dropWhile p_0) t_1)
-//│ 		      else
-//│ 		        (`C(h_1, t_1))))
-//│ 		and words0 ls_2 =
-//│ 		  (let rec mident_0 = ((dropWhile (fun x_0 -> 
-//│ 		    false)) ls_2) in
-//│ 		    (match mident_0 with
-//│ 		      | `N -> 
-//│ 		        (`N)
-//│ 		      | _ -> 
-//│ 		        (break mident_0)))
-//│ 		and words1 ls_3 =
+//│ 		and
+//│ 		words1 ls_3 =
 //│ 		  (let rec mident_1 = ((dropWhile (fun x_1 -> 
 //│ 		    false)) ls_3) in
 //│ 		    (match mident_1 with
@@ -792,20 +787,30 @@ fun words1(ls) =
 //│ 		        (`N)
 //│ 		      | _ -> 
 //│ 		        (break mident_1)));;
+//│ 		let rec words0 ls_2 =
+//│ 		  (let rec mident_0 = ((dropWhile (fun x_0 -> 
+//│ 		    false)) ls_2) in
+//│ 		    (match mident_0 with
+//│ 		      | `N -> 
+//│ 		        (`N)
+//│ 		      | _ -> 
+//│ 		        (break mident_0)));;
 //│ 		((fun x_2 -> 
 //│ 		  2) words0)
 //│ 		....... ocaml repl result .......
 //│ 		[ok]
-//│ 		                                                                    val break :
+//│ 		                val dropWhile :
+//│ 		  ('a -> bool) -> ([< `C of 'a * 'b | `N ] as 'b) -> [> `C of 'a * 'b | `N ] =
+//│ 		  <fun>
+//│ 		[ok]
+//│ 		                                      val break :
 //│ 		  [ `C of 'a * ([ `C of 'a * 'b | `N ] as 'b) | `N ] ->
 //│ 		  ([> `C of [> `N ] * 'c | `N ] as 'c) = <fun>
-//│ 		val dropWhile :
-//│ 		  ('a -> bool) -> ([ `C of 'a * 'b | `N ] as 'b) -> [ `C of 'a * 'b | `N ] =
-//│ 		  <fun>
-//│ 		val words0 :
+//│ 		val words1 :
 //│ 		  ([ `C of 'b * 'a | `N ] as 'a) -> ([> `C of [> `N ] * 'c | `N ] as 'c) =
 //│ 		  <fun>
-//│ 		val words1 :
+//│ 		[ok]
+//│ 		                val words0 :
 //│ 		  ([ `C of 'b * 'a | `N ] as 'a) -> ([> `C of [> `N ] * 'c | `N ] as 'c) =
 //│ 		  <fun>
 //│ 		....... ocaml repl result .......
@@ -1146,6 +1151,33 @@ fun words1(ls) =
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
+//│ let rec dropWhile__d2 p_0 ls_0 =
+//│   (match ls_0 with
+//│     | `N -> 
+//│       (`N)
+//│     | `C(h_0, t_0) -> 
+//│       (if (p_0 h_0) then
+//│         ((dropWhile__d2 p_0) t_0)
+//│       else
+//│         (`C(h_0, t_0))));;
+//│ let rec dropWhile__d1 p_2 ls_6 =
+//│   (match ls_6 with
+//│     | `N -> 
+//│       (`N)
+//│     | `C(h_3, t_3) -> 
+//│       (if (p_2 h_3) then
+//│         ((dropWhile__d1 p_2) t_3)
+//│       else
+//│         (`C(h_3, t_3))));;
+//│ let rec dropWhile__d0 p_1 ls_1 =
+//│   (match ls_1 with
+//│     | `N -> 
+//│       (`N)
+//│     | `C(h_1, t_1) -> 
+//│       (if (p_1 h_1) then
+//│         ((dropWhile__d0 p_1) t_1)
+//│       else
+//│         (`C(h_1, t_1))));;
 //│ let rec break__d0 ls_2 =
 //│   (match ls_2 with
 //│     | `N -> 
@@ -1156,42 +1188,8 @@ fun words1(ls) =
 //│       (let rec fst_1 = (`N) in
 //│         (let rec snd_1 = (`C(h_2, t_2)) in
 //│           (`C(fst_1, (words1__d0 snd_1))))))
-//│ and dropWhile__d0 p_1 ls_1 =
-//│   (match ls_1 with
-//│     | `N -> 
-//│       (`N)
-//│     | `C(h_1, t_1) -> 
-//│       (if (p_1 h_1) then
-//│         ((dropWhile__d0 p_1) t_1)
-//│       else
-//│         (`C(h_1, t_1))))
-//│ and dropWhile__d1 p_2 ls_6 =
-//│   (match ls_6 with
-//│     | `N -> 
-//│       (`N)
-//│     | `C(h_3, t_3) -> 
-//│       (if (p_2 h_3) then
-//│         ((dropWhile__d1 p_2) t_3)
-//│       else
-//│         (`C(h_3, t_3))))
-//│ and dropWhile__d2 p_0 ls_0 =
-//│   (match ls_0 with
-//│     | `N -> 
-//│       (`N)
-//│     | `C(h_0, t_0) -> 
-//│       (if (p_0 h_0) then
-//│         ((dropWhile__d2 p_0) t_0)
-//│       else
-//│         (`C(h_0, t_0))))
-//│ and words0__d0 ls_3 =
-//│   (let rec mident_0 = ((dropWhile__d2 (fun x_1 -> 
-//│     false)) ls_3) in
-//│     (match mident_0 with
-//│       | `N -> 
-//│         (`N)
-//│       | _ -> 
-//│         (break__d0 mident_0)))
-//│ and words1__d0 ls_5 =
+//│ and
+//│ words1__d0 ls_5 =
 //│   (let rec mident_2 = ((dropWhile__d0 (fun x_3 -> 
 //│     false)) ls_5) in
 //│     (match mident_2 with
@@ -1199,7 +1197,8 @@ fun words1(ls) =
 //│         (`N)
 //│       | _ -> 
 //│         (break__d0 mident_2)))
-//│ and words1__d1 ls_4 =
+//│ and
+//│ words1__d1 ls_4 =
 //│   (let rec mident_1 = ((dropWhile__d1 (fun x_2 -> 
 //│     false)) ls_4) in
 //│     (match mident_1 with
@@ -1207,6 +1206,14 @@ fun words1(ls) =
 //│         (`N)
 //│       | _ -> 
 //│         (break__d0 mident_1)));;
+//│ let rec words0__d0 ls_3 =
+//│   (let rec mident_0 = ((dropWhile__d2 (fun x_1 -> 
+//│     false)) ls_3) in
+//│     (match mident_0 with
+//│       | `N -> 
+//│         (`N)
+//│       | _ -> 
+//│         (break__d0 mident_0)));;
 //│ ((fun x_0 -> 
 //│   2) words0__d0)
 //│ 
@@ -1233,22 +1240,23 @@ fun break(x) = break(f(C(x)))
 //│ def f(x⁰) = case x⁰ of {
 //│ 	C t⁰ => if [True] then f^3(t⁰) else x⁰}
 //│ 		---------- unoptimized ocaml gen ----------
-//│ 		let rec break x_1 =
-//│ 		  (break (f (`C(x_1))))
-//│ 		and f x_0 =
+//│ 		let rec f x_0 =
 //│ 		  (match x_0 with
 //│ 		    | `C(t_0) -> 
 //│ 		      (if true then
 //│ 		        (f t_0)
 //│ 		      else
 //│ 		        x_0));;
+//│ 		let rec break x_1 =
+//│ 		  (break (f (`C(x_1))));;
 //│ 		((fun x_2 -> 
 //│ 		  2) (fun x_3 -> 
 //│ 		  (break (f x_3))))
 //│ 		....... ocaml repl result .......
 //│ 		[ok]
-//│ 		                val break : ([ `C of 'a ] as 'a) -> 'b = <fun>
-//│ 		val f : ([ `C of 'a ] as 'a) -> 'a = <fun>
+//│ 		            val f : ([< `C of 'a ] as 'a) -> 'a = <fun>
+//│ 		[ok]
+//│ 		    val break : ([ `C of 'a ] as 'a) -> 'b = <fun>
 //│ 		....... ocaml repl result .......
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
@@ -1344,22 +1352,22 @@ fun break(x) = break(f(C(x)))
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec break__d0 x_2 =
-//│   (break__d0 (f__d0 (`C(x_2))))
-//│ and f__d0 x_3 =
+//│ let rec f__d0 x_3 =
 //│   (match x_3 with
 //│     | `C(t_0) -> 
 //│       (if true then
 //│         (f__d0 t_0)
 //│       else
-//│         x_3))
-//│ and f__d1 x_4 =
+//│         x_3));;
+//│ let rec f__d1 x_4 =
 //│   (match x_4 with
 //│     | `C(t_1) -> 
 //│       (if true then
 //│         (f__d1 t_1)
 //│       else
 //│         x_4));;
+//│ let rec break__d0 x_2 =
+//│   (break__d0 (f__d0 (`C(x_2))));;
 //│ ((fun x_0 -> 
 //│   2) (fun x_1 -> 
 //│   (break__d0 (f__d1 x_1))))
@@ -1394,30 +1402,32 @@ fun g(t) = C(t)
 //│ def prodType(x⁰) = case x⁰ of {
 //│ 	C t⁰ => if [True] then t⁰ else prodType^4(t⁰)}
 //│ 		---------- unoptimized ocaml gen ----------
-//│ 		let rec f x_1 =
-//│ 		  (match x_1 with
-//│ 		    | `C(t_1) -> 
-//│ 		      (if true then
-//│ 		        (f t_1)
-//│ 		      else
-//│ 		        (f (g t_1))))
-//│ 		and g t_2 =
-//│ 		  (`C(t_2))
-//│ 		and prodType x_0 =
+//│ 		let rec g t_2 =
+//│ 		  (`C(t_2));;
+//│ 		let rec prodType x_0 =
 //│ 		  (match x_0 with
 //│ 		    | `C(t_0) -> 
 //│ 		      (if true then
 //│ 		        t_0
 //│ 		      else
 //│ 		        (prodType t_0)));;
+//│ 		let rec f x_1 =
+//│ 		  (match x_1 with
+//│ 		    | `C(t_1) -> 
+//│ 		      (if true then
+//│ 		        (f t_1)
+//│ 		      else
+//│ 		        (f (g t_1))));;
 //│ 		((fun x_2 -> 
 //│ 		  2) (fun x_3 -> 
 //│ 		  (f (prodType x_3))))
 //│ 		....... ocaml repl result .......
 //│ 		[ok]
-//│ 		                              val f : ([ `C of 'a ] as 'a) -> 'b = <fun>
-//│ 		val g : ([ `C of 'a ] as 'a) -> 'a = <fun>
-//│ 		val prodType : ([< `C of 'a ] as 'a) -> 'a = <fun>
+//│ 		  val g : 'a -> [> `C of 'a ] = <fun>
+//│ 		[ok]
+//│ 		              val prodType : ([< `C of 'a ] as 'a) -> 'a = <fun>
+//│ 		[ok]
+//│ 		              val f : ([ `C of 'a ] as 'a) -> 'b = <fun>
 //│ 		....... ocaml repl result .......
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
@@ -1513,22 +1523,22 @@ fun g(t) = C(t)
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec f__d0 x_2 =
-//│   (match x_2 with
-//│     | `C(t_1) -> 
-//│       (if true then
-//│         (f__d0 t_1)
-//│       else
-//│         (f__d0 (g__d0 t_1))))
-//│ and g__d0 t_0 =
-//│   (`C(t_0))
-//│ and prodType__d0 x_3 =
+//│ let rec g__d0 t_0 =
+//│   (`C(t_0));;
+//│ let rec prodType__d0 x_3 =
 //│   (match x_3 with
 //│     | `C(t_2) -> 
 //│       (if true then
 //│         t_2
 //│       else
 //│         (prodType__d0 t_2)));;
+//│ let rec f__d0 x_2 =
+//│   (match x_2 with
+//│     | `C(t_1) -> 
+//│       (if true then
+//│         (f__d0 t_1)
+//│       else
+//│         (f__d0 (g__d0 t_1))));;
 //│ ((fun x_0 -> 
 //│   2) (fun x_1 -> 
 //│   (f__d0 (prodType__d0 x_1))))
@@ -1586,14 +1596,14 @@ fun head(ls) = if ls is
 //│ 		      else
 //│ 		        (match (break t_0) with
 //│ 		          | `P(fst_0, snd_0) -> 
-//│ 		            (`P((`C(h_0, fst_0)), snd_0)))))
-//│ 		and head ls_2 =
+//│ 		            (`P((`C(h_0, fst_0)), snd_0)))));;
+//│ 		let rec head ls_2 =
 //│ 		  (match ls_2 with
 //│ 		    | `C(h_2, t_2) -> 
 //│ 		      h_2
 //│ 		    | `N -> 
-//│ 		      (failwith "error"))
-//│ 		and line ls_1 =
+//│ 		      (failwith "error"));;
+//│ 		let rec line ls_1 =
 //│ 		  (match (break ls_1) with
 //│ 		    | `P(fst_1, snd_1) -> 
 //│ 		      (`C(fst_1, (match snd_1 with
@@ -1604,12 +1614,14 @@ fun head(ls) = if ls is
 //│ 		(head (line (`C(2, (`C(2, (`C(1, (`C(2, (`N)))))))))))
 //│ 		....... ocaml repl result .......
 //│ 		[ok]
-//│ 		                                                val break :
+//│ 		                    val break :
 //│ 		  ([< `C of int * 'a | `N ] as 'a) ->
-//│ 		  [ `P of ([> `C of int * 'b | `N ] as 'b) * [ `C of int * 'a | `N ] ] =
+//│ 		  [ `P of ([> `C of int * 'b | `N ] as 'b) * [> `C of int * 'a | `N ] ] =
 //│ 		  <fun>
-//│ 		val head : [< `C of 'a * 'b | `N ] -> 'a = <fun>
-//│ 		val line :
+//│ 		[ok]
+//│ 		            val head : [< `C of 'a * 'b | `N ] -> 'a = <fun>
+//│ 		[ok]
+//│ 		                val line :
 //│ 		  ([< `C of int * 'a | `N ] as 'a) ->
 //│ 		  ([> `C of ([> `C of int * 'c | `N ] as 'c) * 'b | `N ] as 'b) = <fun>
 //│ 		....... ocaml repl result .......
@@ -1618,119 +1630,71 @@ fun head(ls) = if ls is
 //│ 
 //│ >>>>>>> expansion >>>>>>>
 //│ [head^45] (hopeless to continue)
-//│ [line^46]
-//│ 	[line^46 · break^27]
-//│ 		[line^46 · break^27 · break^15] ---> [line^46 · break^27] (only one)
-//│ 	[line^46 · line^32] (hopeless to continue)
-//│ 		[line^46 · line^32 · break^27] (using original def)
-//│ 			[line^46 · line^32 · break^27 · break^15] ---> [line^46 · line^32 · break^27] (using original def)
-//│ 		[line^46 · line^32 · line^32] ---> [line^46 · line^32] (using original def)
+//│ [line^46] (hopeless to continue)
+//│ 	[line^46 · break^27] (using original def)
+//│ 		[line^46 · break^27 · break^15] ---> [line^46 · break^27] (using original def)
+//│ 	[line^46 · line^32] ---> [line^46] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
 //│ head_₀(line_₀(primId⁰([C 2 [C 2 [C 1 [C 2 [N]]]]])))
-//│ def head_₀(ls⁶) = 
-//│ 	case ls⁶ of {
-//│ 		C h⁶ t⁶ => h⁶
+//│ def head_₀(ls⁵) = 
+//│ 	case ls⁵ of {
+//│ 		C h⁵ t⁵ => h⁵
 //│ 		| N  => error⁰}
-//│ def line_₀(ls⁵) = 
-//│ 	case break_₀(ls⁵) of {
-//│ 		P fst⁴ snd⁴ => [C fst⁴ case snd⁴ of {
-//│ 			C h⁵ t⁵ => line_₁(t⁵)
+//│ def line_₀(ls⁴) = 
+//│ 	case break_₀(ls⁴) of {
+//│ 		P fst³ snd³ => [C fst³ case snd³ of {
+//│ 			C h⁴ t⁴ => line_₀(t⁴)
 //│ 			| N  => [N]}]}
 //│ 	where
-//│ 	def break_₀(ls⁴) = 
-//│ 		case ls⁴ of {
+//│ 	def break_₀(ls³) = 
+//│ 		case ls³ of {
 //│ 			N  => [P [N] [N]]
-//│ 			| C h⁴ t⁴ => if (h⁴ == 1) then [P [N] [C h⁴ t⁴]] else case break_₀(t⁴) of {
-//│ 				P fst³ snd³ => [P [C h⁴ fst³] snd³]}}
-//│ 	def line_₁(ls⁷) = 
-//│ 		case break_₁(ls⁷) of {
-//│ 			P fst⁵ snd⁵ => [C fst⁵ case snd⁵ of {
-//│ 				C h⁷ t⁷ => line_₁(t⁷)
-//│ 				| N  => [N]}]}
-//│ 		where
-//│ 		def break_₁(ls³) = 
-//│ 			case ls³ of {
-//│ 				N  => [P [N] [N]]
-//│ 				| C h³ t³ => if (h³ == 1) then [P [N] [C h³ t³]] else case break_₁(t³) of {
-//│ 					P fst² snd² => [P [C h³ fst²] snd²]}}
+//│ 			| C h³ t³ => if (h³ == 1) then [P [N] [C h³ t³]] else case break_₀(t³) of {
+//│ 				P fst² snd² => [P [C h³ fst²] snd²]}}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [N]: 62 --->
-//│ 	case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}: 139
+//│ 	case snd³ of {C h⁴ t⁴ => line_₀(t⁴) | N  => [N]}: 95
 //│ [P [N] [N]]: 63 --->
-//│ 	case break_₁(t³) of {P fst² snd² => [P [C h³ fst²] snd²]}: 82
-//│ 	case break_₁(ls⁷) of {P fst⁵ snd⁵ => [C fst⁵ case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}]}: 141
+//│ 	case break_₀(t³) of {P fst² snd² => [P [C h³ fst²] snd²]}: 82
+//│ 	case break_₀(ls⁴) of {P fst³ snd³ => [C fst³ case snd³ of {C h⁴ t⁴ => line_₀(t⁴) | N  => [N]}]}: 97
 //│ [C h³ t³]: 72 --->
-//│ 	case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}: 139
+//│ 	case snd³ of {C h⁴ t⁴ => line_₀(t⁴) | N  => [N]}: 95
 //│ [P [N] [C h³ t³]]: 73 --->
-//│ 	case break_₁(t³) of {P fst² snd² => [P [C h³ fst²] snd²]}: 82
-//│ 	case break_₁(ls⁷) of {P fst⁵ snd⁵ => [C fst⁵ case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}]}: 141
+//│ 	case break_₀(t³) of {P fst² snd² => [P [C h³ fst²] snd²]}: 82
+//│ 	case break_₀(ls⁴) of {P fst³ snd³ => [C fst³ case snd³ of {C h⁴ t⁴ => line_₀(t⁴) | N  => [N]}]}: 97
 //│ [P [C h³ fst²] snd²]: 81 --->
-//│ 	case break_₁(t³) of {P fst² snd² => [P [C h³ fst²] snd²]}: 82
-//│ 	case break_₁(ls⁷) of {P fst⁵ snd⁵ => [C fst⁵ case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}]}: 141
-//│ [N]: 88 --->
-//│ 	case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}: 121
-//│ [P [N] [N]]: 89 --->
-//│ 	case break_₀(t⁴) of {P fst³ snd³ => [P [C h⁴ fst³] snd³]}: 108
-//│ 	case break_₀(ls⁵) of {P fst⁴ snd⁴ => [C fst⁴ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}]}: 123
-//│ [C h⁴ t⁴]: 98 --->
-//│ 	case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}: 121
-//│ [P [N] [C h⁴ t⁴]]: 99 --->
-//│ 	case break_₀(t⁴) of {P fst³ snd³ => [P [C h⁴ fst³] snd³]}: 108
-//│ 	case break_₀(ls⁵) of {P fst⁴ snd⁴ => [C fst⁴ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}]}: 123
-//│ [P [C h⁴ fst³] snd³]: 107 --->
-//│ 	case break_₀(t⁴) of {P fst³ snd³ => [P [C h⁴ fst³] snd³]}: 108
-//│ 	case break_₀(ls⁵) of {P fst⁴ snd⁴ => [C fst⁴ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}]}: 123
-//│ [C fst⁴ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}]: 122 --->
-//│ 	case ls⁶ of {C h⁶ t⁶ => h⁶ | N  => error⁰}: 128
+//│ 	case break_₀(t³) of {P fst² snd² => [P [C h³ fst²] snd²]}: 82
+//│ 	case break_₀(ls⁴) of {P fst³ snd³ => [C fst³ case snd³ of {C h⁴ t⁴ => line_₀(t⁴) | N  => [N]}]}: 97
+//│ [C fst³ case snd³ of {C h⁴ t⁴ => line_₀(t⁴) | N  => [N]}]: 96 --->
+//│ 	DeadCodeCons
+//│ 	case ls⁵ of {C h⁵ t⁵ => h⁵ | N  => error⁰}: 102
 //│ ------------------
-//│ case break_₁(t³) of {P fst² snd² => [P [C h³ fst²] snd²]}: 82 --->
+//│ case break_₀(t³) of {P fst² snd² => [P [C h³ fst²] snd²]}: 82 --->
 //│ 	[P [N] [N]]: 63
 //│ 	[P [N] [C h³ t³]]: 73
 //│ 	[P [C h³ fst²] snd²]: 81
-//│ case break_₀(t⁴) of {P fst³ snd³ => [P [C h⁴ fst³] snd³]}: 108 --->
-//│ 	[P [N] [N]]: 89
-//│ 	[P [N] [C h⁴ t⁴]]: 99
-//│ 	[P [C h⁴ fst³] snd³]: 107
-//│ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}: 121 --->
-//│ 	[N]: 88
-//│ 	[C h⁴ t⁴]: 98
-//│ case break_₀(ls⁵) of {P fst⁴ snd⁴ => [C fst⁴ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}]}: 123 --->
-//│ 	[P [N] [N]]: 89
-//│ 	[P [N] [C h⁴ t⁴]]: 99
-//│ 	[P [C h⁴ fst³] snd³]: 107
-//│ case ls⁶ of {C h⁶ t⁶ => h⁶ | N  => error⁰}: 128 --->
-//│ 	[C fst⁴ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}]: 122
-//│ case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}: 139 --->
+//│ case snd³ of {C h⁴ t⁴ => line_₀(t⁴) | N  => [N]}: 95 --->
 //│ 	[N]: 62
 //│ 	[C h³ t³]: 72
-//│ case break_₁(ls⁷) of {P fst⁵ snd⁵ => [C fst⁵ case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}]}: 141 --->
+//│ case break_₀(ls⁴) of {P fst³ snd³ => [C fst³ case snd³ of {C h⁴ t⁴ => line_₀(t⁴) | N  => [N]}]}: 97 --->
 //│ 	[P [N] [N]]: 63
 //│ 	[P [N] [C h³ t³]]: 73
 //│ 	[P [C h³ fst²] snd²]: 81
+//│ case ls⁵ of {C h⁵ t⁵ => h⁵ | N  => error⁰}: 102 --->
+//│ 	[C fst³ case snd³ of {C h⁴ t⁴ => line_₀(t⁴) | N  => [N]}]: 96
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [N]: 62 --->
-//│ 	case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}: 139
+//│ 	case snd³ of {C h⁴ t⁴ => line_₀(t⁴) | N  => [N]}: 95
 //│ [C h³ t³]: 72 --->
-//│ 	case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}: 139
-//│ [N]: 88 --->
-//│ 	case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}: 121
-//│ [C h⁴ t⁴]: 98 --->
-//│ 	case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}: 121
-//│ [C fst⁴ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}]: 122 --->
-//│ 	case ls⁶ of {C h⁶ t⁶ => h⁶ | N  => error⁰}: 128
+//│ 	case snd³ of {C h⁴ t⁴ => line_₀(t⁴) | N  => [N]}: 95
 //│ ------------------
-//│ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}: 121 --->
-//│ 	[N]: 88
-//│ 	[C h⁴ t⁴]: 98
-//│ case ls⁶ of {C h⁶ t⁶ => h⁶ | N  => error⁰}: 128 --->
-//│ 	[C fst⁴ case snd⁴ of {C h⁵ t⁵ => line_₁(t⁵) | N  => [N]}]: 122
-//│ case snd⁵ of {C h⁷ t⁷ => line_₁(t⁷) | N  => [N]}: 139 --->
+//│ case snd³ of {C h⁴ t⁴ => line_₀(t⁴) | N  => [N]}: 95 --->
 //│ 	[N]: 62
 //│ 	[C h³ t³]: 72
 //│ <<<<<<< new fusion strategy <<<<<<<
@@ -1738,38 +1702,27 @@ fun head(ls) = if ls is
 //│ >>>>>>> after fusion >>>>>>>
 //│ head_₀(line_₀(primId⁰([C 2 [C 2 [C 1 [C 2 [N]]]]])))
 //│ def head_₀(ls⁸) = 
-//│ 	ls⁸
-//│ def line_₀(ls¹¹) = 
-//│ 	case break_₀(ls¹¹) of {
-//│ 		P fst⁴ snd⁴ => 
-//│ 			let h⁸ = fst⁴
-//│ 			in h⁸}
+//│ 	case ls⁸ of {
+//│ 		C h⁵ t⁵ => h⁵
+//│ 		| N  => error⁰}
+//│ def line_₀(ls⁷) = 
+//│ 	case break_₀(ls⁷) of {
+//│ 		P fst³ snd³ => [C fst³ snd³(99)]}
 //│ 	where
-//│ 	def break_₀(ls¹²) = 
-//│ 		case ls¹² of {
-//│ 			N  => [P [N] (fun _lh_dummy² -> [N])]
-//│ 			| C h⁴ t⁴ => if (h⁴ == 1) then [P [N] 
-//│ 				let t⁹ = t⁴
-//│ 				in (fun _lh_dummy³ -> line_₁(t⁹))] else case break_₀(t⁴) of {
-//│ 				P fst³ snd³ => [P [C h⁴ fst³] snd³]}}
-//│ 	def line_₁(ls¹⁰) = 
-//│ 		case break_₁(ls¹⁰) of {
-//│ 			P fst⁵ snd⁵ => [C fst⁵ snd⁵(99)]}
-//│ 		where
-//│ 		def break_₁(ls⁹) = 
-//│ 			case ls⁹ of {
-//│ 				N  => [P [N] (fun _lh_dummy⁰ -> [N])]
-//│ 				| C h³ t³ => if (h³ == 1) then [P [N] 
-//│ 					let t⁸ = t³
-//│ 					in (fun _lh_dummy¹ -> line_₁(t⁸))] else case break_₁(t³) of {
-//│ 					P fst² snd² => [P [C h³ fst²] snd²]}}
+//│ 	def break_₀(ls⁶) = 
+//│ 		case ls⁶ of {
+//│ 			N  => [P [N] (fun _lh_dummy⁰ -> [N])]
+//│ 			| C h³ t³ => if (h³ == 1) then [P [N] 
+//│ 				let t⁶ = t³
+//│ 				in (fun _lh_dummy¹ -> line_₀(t⁶))] else case break_₀(t³) of {
+//│ 				P fst² snd² => [P [C h³ fst²] snd²]}}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
 //│ head_₀ :: 'head_₀ <: ['14_callres => '15_callres] ::: false
-//│ line_₀ :: 'line_₀ <: ['13_callres => '14_callres] ::: false
+//│ line_₀ :: 'line_₀ <: ['13_callres => '14_callres | 't¹ => '30_callres] ::: false
 //│ primId :: NoProd ::: true
 //│ 2 :: Int ::: false
 //│ 2 :: Int ::: false
@@ -1780,122 +1733,65 @@ fun head(ls) = if ls is
 //│ [C 1 [C 2 [N]]] :: C(Int, C(Int, N)) ::: true
 //│ [C 2 [C 1 [C 2 [N]]]] :: C(Int, C(Int, C(Int, N))) ::: true
 //│ [C 2 [C 2 [C 1 [C 2 [N]]]]] :: C(Int, C(Int, C(Int, C(Int, N)))) ::: true
-//│ primId([C 2 [C 2 [C 1 [C 2 [N]]]]]) :: '13_callres <: ['ls³] ::: false
-//│ line_₀(primId([C 2 [C 2 [C 1 [C 2 [N]]]]])) :: '14_callres <: ['ls⁰] ::: false
+//│ primId([C 2 [C 2 [C 1 [C 2 [N]]]]]) :: '13_callres <: ['ls¹] ::: false
+//│ line_₀(primId([C 2 [C 2 [C 1 [C 2 [N]]]]])) :: '14_callres <: ['ls²] ::: false
 //│ head_₀(line_₀(primId([C 2 [C 2 [C 1 [C 2 [N]]]]]))) :: '15_callres <: [NoCons] ::: false
-//│ ls :: 'ls⁰ <: ['15_callres] ::: false
-//│ (fun ls -> ls) :: 'ls⁰ => 'ls⁰ ::: true
-//│ ls :: 'ls¹ <: [Destruct(N, C('h⁰, 't⁰))] ::: false
+//│ ls :: 'ls⁰ <: [Destruct(N, C('h⁰, 't⁰))] ::: false
 //│ [N] :: N ::: true
 //│ [N] :: N ::: true
 //│ (fun _lh_dummy -> [N]) :: '_lh_dummy⁰ => N ::: true
 //│ [P [N] (fun _lh_dummy -> [N])] :: P(N, '_lh_dummy⁰ => N) ::: true
 //│ == :: Destruct(Int) => Destruct(Int) => Sum[True, False] ::: true
-//│ h :: 'h⁰ <: [DeadCodeCons | Destruct(Int)] ::: false
-//│ ==(h) :: '25_callres <: [Int => '27_callres] ::: false
+//│ h :: 'h⁰ <: [DeadCodeCons | NoCons | Destruct(Int)] ::: false
+//│ ==(h) :: '23_callres <: [Int => '25_callres] ::: false
 //│ 1 :: Int ::: false
-//│ (h == 1) :: '27_callres <: [Destruct(True, False)] ::: false
+//│ (h == 1) :: '25_callres <: [Destruct(True, False)] ::: false
 //│ [N] :: N ::: true
-//│ t :: 't⁰ <: ['t¹ | 'ls¹] ::: false
-//│ line_₁ :: 'line_₁ <: ['t¹ => '32_callres | 't³ => '80_callres] ::: false
-//│ t :: 't¹ <: ['ls²] ::: false
-//│ line_₁(t) :: '32_callres <: ['54_callres] ::: true
-//│ (fun _lh_dummy -> line_₁(t)) :: '_lh_dummy¹ => '32_callres ::: true
+//│ t :: 't⁰ <: ['t¹ | 'ls⁰] ::: false
+//│ line_₀ :: 'line_₀ <: ['13_callres => '14_callres | 't¹ => '30_callres] ::: false
+//│ t :: 't¹ <: ['ls¹] ::: false
+//│ line_₀(t) :: '30_callres <: ['52_callres] ::: true
+//│ (fun _lh_dummy -> line_₀(t)) :: '_lh_dummy¹ => '30_callres ::: true
 //│ let t = t
-//│ in (fun _lh_dummy -> line_₁(t)) :: '_lh_dummy¹ => '32_callres ::: true
+//│ in (fun _lh_dummy -> line_₀(t)) :: '_lh_dummy¹ => '30_callres ::: true
 //│ [P [N] let t = t
-//│ in (fun _lh_dummy -> line_₁(t))] :: P(N, '_lh_dummy¹ => '32_callres) ::: true
-//│ break_₁ :: 'break_₁ <: ['t⁰ => '38_callres | 'ls² => '50_callres] ::: false
-//│ t :: 't⁰ <: ['t¹ | 'ls¹] ::: false
-//│ break_₁(t) :: '38_callres <: [Destruct(P('fst⁰, 'snd⁰))] ::: false
-//│ h :: 'h⁰ <: [DeadCodeCons | Destruct(Int)] ::: false
-//│ fst :: 'fst⁰ <: [DeadCodeCons | DeadCodeCons] ::: true
+//│ in (fun _lh_dummy -> line_₀(t))] :: P(N, '_lh_dummy¹ => '30_callres) ::: true
+//│ break_₀ :: 'break_₀ <: ['t⁰ => '36_callres | 'ls¹ => '48_callres] ::: false
+//│ t :: 't⁰ <: ['t¹ | 'ls⁰] ::: false
+//│ break_₀(t) :: '36_callres <: [Destruct(P('fst⁰, 'snd⁰))] ::: false
+//│ h :: 'h⁰ <: [DeadCodeCons | NoCons | Destruct(Int)] ::: false
+//│ fst :: 'fst⁰ <: [DeadCodeCons | NoCons] ::: false
 //│ [C h fst] :: C('h⁰, 'fst⁰) ::: true
 //│ snd :: 'snd⁰ <: ['snd¹] ::: false
 //│ [P [C h fst] snd] :: P(C('h⁰, 'fst⁰), 'snd⁰) ::: true
-//│ case break_₁(t) of {P fst snd => [P [C h fst] snd]} :: '44_matchres <: ['45_ifres] ::: false
+//│ case break_₀(t) of {P fst snd => [P [C h fst] snd]} :: '42_matchres <: ['43_ifres] ::: false
 //│ if (h == 1) then [P [N] let t = t
-//│ in (fun _lh_dummy -> line_₁(t))] else case break_₁(t) of {P fst snd => [P [C h fst] snd]} :: '45_ifres <: ['46_matchres] ::: false
+//│ in (fun _lh_dummy -> line_₀(t))] else case break_₀(t) of {P fst snd => [P [C h fst] snd]} :: '43_ifres <: ['44_matchres] ::: false
 //│ case ls of {N  => [P [N] (fun _lh_dummy -> [N])] | C h t => if (h == 1) then [P [N] let t = t
-//│ in (fun _lh_dummy -> line_₁(t))] else case break_₁(t) of {P fst snd => [P [C h fst] snd]}} :: '46_matchres <: ['38_callres | '50_callres] ::: false
+//│ in (fun _lh_dummy -> line_₀(t))] else case break_₀(t) of {P fst snd => [P [C h fst] snd]}} :: '44_matchres <: ['36_callres | '48_callres] ::: false
 //│ (fun ls -> case ls of {N  => [P [N] (fun _lh_dummy -> [N])] | C h t => if (h == 1) then [P [N] let t = t
-//│ in (fun _lh_dummy -> line_₁(t))] else case break_₁(t) of {P fst snd => [P [C h fst] snd]}}) :: 'ls¹ => '46_matchres ::: true
-//│ break_₁ :: 'break_₁ <: ['t⁰ => '38_callres | 'ls² => '50_callres] ::: false
-//│ ls :: 'ls² <: ['ls¹] ::: false
-//│ break_₁(ls) :: '50_callres <: [Destruct(P('fst¹, 'snd¹))] ::: false
-//│ fst :: 'fst¹ <: [DeadCodeCons | DeadCodeCons] ::: true
-//│ snd :: 'snd¹ <: [Int => '54_callres] ::: false
+//│ in (fun _lh_dummy -> line_₀(t))] else case break_₀(t) of {P fst snd => [P [C h fst] snd]}}) :: 'ls⁰ => '44_matchres ::: true
+//│ break_₀ :: 'break_₀ <: ['t⁰ => '36_callres | 'ls¹ => '48_callres] ::: false
+//│ ls :: 'ls¹ <: ['ls⁰] ::: false
+//│ break_₀(ls) :: '48_callres <: [Destruct(P('fst¹, 'snd¹))] ::: false
+//│ fst :: 'fst¹ <: [DeadCodeCons | 'h¹] ::: false
+//│ snd :: 'snd¹ <: [Int => '52_callres] ::: false
 //│ 99 :: Int ::: false
-//│ snd(99) :: '54_callres <: [DeadCodeCons | DeadCodeCons] ::: true
-//│ [C fst snd(99)] :: C('fst¹, '54_callres) ::: true
-//│ case break_₁(ls) of {P fst snd => [C fst snd(99)]} :: '56_matchres <: ['32_callres | '80_callres] ::: true
-//│ (fun ls -> case break_₁(ls) of {P fst snd => [C fst snd(99)]}) :: 'ls² => '56_matchres ::: true
-//│ break_₀ :: 'break_₀ <: ['ls³ => '60_callres | 't² => '86_callres] ::: false
-//│ ls :: 'ls³ <: ['ls⁴] ::: false
-//│ break_₀(ls) :: '60_callres <: [Destruct(P('fst², 'snd²))] ::: false
-//│ fst :: 'fst² <: ['h¹] ::: false
-//│ h :: 'h¹ <: ['64_matchres] ::: false
-//│ let h = fst
-//│ in h :: 'h¹ <: ['64_matchres] ::: false
-//│ case break_₀(ls) of {P fst snd => let h = fst
-//│ in h} :: '64_matchres <: ['14_callres] ::: false
-//│ (fun ls -> case break_₀(ls) of {P fst snd => let h = fst
-//│ in h}) :: 'ls³ => '64_matchres ::: true
-//│ ls :: 'ls⁴ <: [Destruct(N, C('h², 't²))] ::: false
-//│ [N] :: N ::: true
-//│ [N] :: N ::: true
-//│ (fun _lh_dummy -> [N]) :: '_lh_dummy² => N ::: true
-//│ [P [N] (fun _lh_dummy -> [N])] :: P(N, '_lh_dummy² => N) ::: true
-//│ == :: Destruct(Int) => Destruct(Int) => Sum[True, False] ::: true
-//│ h :: 'h² <: [NoCons | Destruct(Int)] ::: false
-//│ ==(h) :: '73_callres <: [Int => '75_callres] ::: false
-//│ 1 :: Int ::: false
-//│ (h == 1) :: '75_callres <: [Destruct(True, False)] ::: false
-//│ [N] :: N ::: true
-//│ t :: 't² <: ['t³ | 'ls⁴] ::: false
-//│ line_₁ :: 'line_₁ <: ['t¹ => '32_callres | 't³ => '80_callres] ::: false
-//│ t :: 't³ <: ['ls²] ::: false
-//│ line_₁(t) :: '80_callres <: [DeadCodeCons] ::: true
-//│ (fun _lh_dummy -> line_₁(t)) :: '_lh_dummy³ => '80_callres ::: true
-//│ let t = t
-//│ in (fun _lh_dummy -> line_₁(t)) :: '_lh_dummy³ => '80_callres ::: true
-//│ [P [N] let t = t
-//│ in (fun _lh_dummy -> line_₁(t))] :: P(N, '_lh_dummy³ => '80_callres) ::: true
-//│ break_₀ :: 'break_₀ <: ['ls³ => '60_callres | 't² => '86_callres] ::: false
-//│ t :: 't² <: ['t³ | 'ls⁴] ::: false
-//│ break_₀(t) :: '86_callres <: [Destruct(P('fst³, 'snd³))] ::: false
-//│ h :: 'h² <: [NoCons | Destruct(Int)] ::: false
-//│ fst :: 'fst³ <: [NoCons] ::: false
-//│ [C h fst] :: C('h², 'fst³) ::: true
-//│ snd :: 'snd³ <: ['snd²] ::: true
-//│ [P [C h fst] snd] :: P(C('h², 'fst³), 'snd³) ::: true
-//│ case break_₀(t) of {P fst snd => [P [C h fst] snd]} :: '92_matchres <: ['93_ifres] ::: false
-//│ if (h == 1) then [P [N] let t = t
-//│ in (fun _lh_dummy -> line_₁(t))] else case break_₀(t) of {P fst snd => [P [C h fst] snd]} :: '93_ifres <: ['94_matchres] ::: false
-//│ case ls of {N  => [P [N] (fun _lh_dummy -> [N])] | C h t => if (h == 1) then [P [N] let t = t
-//│ in (fun _lh_dummy -> line_₁(t))] else case break_₀(t) of {P fst snd => [P [C h fst] snd]}} :: '94_matchres <: ['60_callres | '86_callres] ::: false
-//│ (fun ls -> case ls of {N  => [P [N] (fun _lh_dummy -> [N])] | C h t => if (h == 1) then [P [N] let t = t
-//│ in (fun _lh_dummy -> line_₁(t))] else case break_₀(t) of {P fst snd => [P [C h fst] snd]}}) :: 'ls⁴ => '94_matchres ::: true
+//│ snd(99) :: '52_callres <: [DeadCodeCons | 't²] ::: true
+//│ [C fst snd(99)] :: C('fst¹, '52_callres) ::: true
+//│ case break_₀(ls) of {P fst snd => [C fst snd(99)]} :: '54_matchres <: ['14_callres | '30_callres] ::: false
+//│ (fun ls -> case break_₀(ls) of {P fst snd => [C fst snd(99)]}) :: 'ls¹ => '54_matchres ::: true
+//│ ls :: 'ls² <: [Destruct(C('h¹, 't²), N)] ::: false
+//│ h :: 'h¹ <: ['59_matchres] ::: false
+//│ error :: '_lh_rigid_error_var <: [DeadCodeCons] ::: true
+//│ case ls of {C h t => h | N  => error} :: '59_matchres <: ['15_callres] ::: false
+//│ (fun ls -> case ls of {C h t => h | N  => error}) :: 'ls² => '59_matchres ::: true
 //│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec break__d0 ls_4 =
-//│   (match ls_4 with
-//│     | `N -> 
-//│       (`P((`N), (fun _lh_dummy_2 -> 
-//│         (`N))))
-//│     | `C(h_2, t_2) -> 
-//│       (if (h_2 = 1) then
-//│         (`P((`N), (let rec t_3 = t_2 in
-//│           (fun _lh_dummy_3 -> 
-//│             (line__d1 t_3)))))
-//│       else
-//│         (match (break__d0 t_2) with
-//│           | `P(fst_3, snd_3) -> 
-//│             (`P((`C(h_2, fst_3)), snd_3)))))
-//│ and break__d1 ls_1 =
-//│   (match ls_1 with
+//│ let rec break__d0 ls_0 =
+//│   (match ls_0 with
 //│     | `N -> 
 //│       (`P((`N), (fun _lh_dummy_0 -> 
 //│         (`N))))
@@ -1903,22 +1799,22 @@ fun head(ls) = if ls is
 //│       (if (h_0 = 1) then
 //│         (`P((`N), (let rec t_1 = t_0 in
 //│           (fun _lh_dummy_1 -> 
-//│             (line__d1 t_1)))))
+//│             (line__d0 t_1)))))
 //│       else
-//│         (match (break__d1 t_0) with
+//│         (match (break__d0 t_0) with
 //│           | `P(fst_0, snd_0) -> 
 //│             (`P((`C(h_0, fst_0)), snd_0)))))
-//│ and head__d0 ls_0 =
-//│   ls_0
-//│ and line__d0 ls_3 =
-//│   (match (break__d0 ls_3) with
-//│     | `P(fst_2, snd_2) -> 
-//│       (let rec h_1 = fst_2 in
-//│         h_1))
-//│ and line__d1 ls_2 =
-//│   (match (break__d1 ls_2) with
+//│ and
+//│ line__d0 ls_1 =
+//│   (match (break__d0 ls_1) with
 //│     | `P(fst_1, snd_1) -> 
 //│       (`C(fst_1, (snd_1 99))));;
+//│ let rec head__d0 ls_2 =
+//│   (match ls_2 with
+//│     | `C(h_1, t_2) -> 
+//│       h_1
+//│     | `N -> 
+//│       (failwith "error"));;
 //│ (head__d0 (line__d0 (`C(2, (`C(2, (`C(1, (`C(2, (`N)))))))))))
 //│ 
 //│ --------------- ocaml repl result -----------------

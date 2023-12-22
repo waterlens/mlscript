@@ -39,14 +39,14 @@ main(N)
 //│ 		    | `N -> 
 //│ 		      (g (`C((`N))))
 //│ 		    | `C(t_2) -> 
-//│ 		      (`G))
-//│ 		and h x_2 =
+//│ 		      (`G));;
+//│ 		let rec h x_2 =
 //│ 		  (match x_2 with
 //│ 		    | `N -> 
 //│ 		      (`H)
 //│ 		    | `C(t_3) -> 
-//│ 		      (`H))
-//│ 		and main x_0 =
+//│ 		      (`H));;
+//│ 		let rec main x_0 =
 //│ 		  (match x_0 with
 //│ 		    | `C(t_0) -> 
 //│ 		      (`G)
@@ -62,9 +62,11 @@ main(N)
 //│ 		(main (`N))
 //│ 		....... ocaml repl result .......
 //│ 		[ok]
-//│ 		                                                val g : [< `C of [> `N ] | `N > `C ] -> [> `G | `H ] = <fun>
-//│ 		val h : [< `C of [> `N ] | `N > `C ] -> [> `G | `H ] = <fun>
-//│ 		val main : [< `C of [< `C of [> `N ] | `N > `C ] | `N > `C ] -> [> `G | `H ] =
+//│ 		          val g : [< `C of [> `N ] | `N > `C ] -> [> `G ] = <fun>
+//│ 		[ok]
+//│ 		            val h : [< `C of 'a | `N ] -> [> `H ] = <fun>
+//│ 		[ok]
+//│ 		                          val main : [< `C of [< `C of [> `N ] | `N > `C ] | `N > `C ] -> [> `G | `H ] =
 //│ 		  <fun>
 //│ 		....... ocaml repl result .......
 //│ 		---------- unoptimized ocaml gen ----------
@@ -175,19 +177,19 @@ main(N)
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
+//│ let rec h__d0 x_1 =
+//│   (match x_1 with
+//│     | `N -> 
+//│       (`H)
+//│     | `C(t_1) -> 
+//│       (`H));;
 //│ let rec g__d0 x_0 =
 //│   (match x_0 with
 //│     | `N -> 
 //│       (g__d0 (`C((`N))))
 //│     | `C(t_0) -> 
-//│       (`G))
-//│ and h__d0 x_1 =
-//│   (match x_1 with
-//│     | `N -> 
-//│       (`H)
-//│     | `C(t_1) -> 
-//│       (`H))
-//│ and main__d0 x_2 =
+//│       (`G));;
+//│ let rec main__d0 x_2 =
 //│   (match x_2 with
 //│     | `C(t_2) -> 
 //│       (`G)
@@ -248,19 +250,19 @@ main(N)
 //│ 	C t⁰ => [G]
 //│ 	| n⁰ => hiddenDeadBranch^3(n⁰)}
 //│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec h x_2 =
+//│ 		  (match x_2 with
+//│ 		    | `N -> 
+//│ 		      (`H)
+//│ 		    | `C(t_3) -> 
+//│ 		      (`H));;
 //│ 		let rec g x_1 =
 //│ 		  (match x_1 with
 //│ 		    | `N -> 
 //│ 		      (g (`C((`N))))
 //│ 		    | `C(t_2) -> 
-//│ 		      (`G))
-//│ 		and h x_2 =
-//│ 		  (match x_2 with
-//│ 		    | `N -> 
-//│ 		      (`H)
-//│ 		    | `C(t_3) -> 
-//│ 		      (`H))
-//│ 		and hiddenDeadBranch n_1 =
+//│ 		      (`G));;
+//│ 		let rec hiddenDeadBranch n_1 =
 //│ 		  (match n_1 with
 //│ 		    | `C(t_1) -> 
 //│ 		      (let rec dummy_0 = (hiddenDeadBranch (`C(t_1))) in
@@ -269,8 +271,8 @@ main(N)
 //│ 		        else
 //│ 		          (h t_1)))
 //│ 		    | `N -> 
-//│ 		      (`G))
-//│ 		and main x_0 =
+//│ 		      (`G));;
+//│ 		let rec main x_0 =
 //│ 		  (match x_0 with
 //│ 		    | `C(t_0) -> 
 //│ 		      (`G)
@@ -279,15 +281,18 @@ main(N)
 //│ 		(main (`N))
 //│ 		....... ocaml repl result .......
 //│ 		[ok]
-//│ 		                                                      Line 16, characters 15-22:
-//│ 		16 |       (let rec dummy_0 = (hiddenDeadBranch (`C(t_1))) in
-//│ 		                    ^^^^^^^
+//│ 		          val h : [< `C of 'a | `N ] -> [> `H ] = <fun>
+//│ 		[ok]
+//│ 		            val g : [< `C of [> `N ] | `N > `C ] -> [> `G ] = <fun>
+//│ 		[ok]
+//│ 		                    Line 5, characters 15-22:
+//│ 		5 |       (let rec dummy_0 = (hiddenDeadBranch (`C(t_1))) in
+//│ 		                   ^^^^^^^
 //│ 		Warning 26 [unused-var]: unused variable dummy_0.
-//│ 		val g : [< `C of [> `N ] | `N > `C ] -> [> `G | `H ] = <fun>
-//│ 		val h : [< `C of [> `N ] | `N > `C ] -> [> `G | `H ] = <fun>
 //│ 		val hiddenDeadBranch :
 //│ 		  [< `C of [< `C of [> `N ] | `N > `C ] | `N > `C ] -> [> `G | `H ] = <fun>
-//│ 		val main : [< `C of [< `C of [> `N ] | `N > `C ] | `N > `C ] -> [> `G | `H ] =
+//│ 		[ok]
+//│ 		            val main : [< `C of [< `C of [> `N ] | `N > `C ] | `N > `C ] -> [> `G | `H ] =
 //│ 		  <fun>
 //│ 		....... ocaml repl result .......
 //│ 		---------- unoptimized ocaml gen ----------
@@ -433,14 +438,14 @@ main(N)
 //│     | `N -> 
 //│       (g__d0 (`C((`N))))
 //│     | `C(t_0) -> 
-//│       (`G))
-//│ and h__d0 x_2 =
+//│       (`G));;
+//│ let rec h__d0 x_2 =
 //│   (match x_2 with
 //│     | `N -> 
 //│       (`H)
 //│     | `C(t_3) -> 
-//│       (`H))
-//│ and hiddenDeadBranch__d0 n_0 =
+//│       (`H));;
+//│ let rec hiddenDeadBranch__d0 n_0 =
 //│   (match n_0 with
 //│     | `C(t_1) -> 
 //│       (let rec dummy_0 = (hiddenDeadBranch__d0 (`C(t_1))) in
@@ -449,8 +454,8 @@ main(N)
 //│         else
 //│           (h__d0 t_1)))
 //│     | `N -> 
-//│       (`G))
-//│ and main__d0 x_1 =
+//│       (`G));;
+//│ let rec main__d0 x_1 =
 //│   (match x_1 with
 //│     | `C(t_2) -> 
 //│       (`G)
@@ -510,6 +515,26 @@ words(C(2, C(1, C(2, C(1, C(2, N))))))
 //│ 		| _  => case break^67((fun x³ -> (x³ == 1)), scrut⁰) of {
 //│ 			P w⁰ s''⁰ => [C w⁰ words^78(s''⁰)]}}
 //│ 		---------- unoptimized ocaml gen ----------
+//│ 		let rec dropWhile f_0 ls_2 =
+//│ 		  (match ls_2 with
+//│ 		    | `N -> 
+//│ 		      (`N)
+//│ 		    | `C(h_0, t_0) -> 
+//│ 		      (if (f_0 h_0) then
+//│ 		        ((dropWhile f_0) t_0)
+//│ 		      else
+//│ 		        (`C(h_0, t_0))));;
+//│ 		let rec break1 p_1 ls_1 =
+//│ 		  (match ls_1 with
+//│ 		    | `N -> 
+//│ 		      (`P((`N), (`N)))
+//│ 		    | `C(x_1, xs_1) -> 
+//│ 		      (if (p_1 x_1) then
+//│ 		        (`P((`N), (`C(x_1, xs_1))))
+//│ 		      else
+//│ 		        (match ((break1 p_1) xs_1) with
+//│ 		          | `P(ys_1, zs_1) -> 
+//│ 		            (`P((`C(x_1, ys_1)), zs_1)))));;
 //│ 		let rec break p_0 ls_0 =
 //│ 		  (match ls_0 with
 //│ 		    | `N -> 
@@ -520,28 +545,8 @@ words(C(2, C(1, C(2, C(1, C(2, N))))))
 //│ 		      else
 //│ 		        (match ((break1 p_0) xs_0) with
 //│ 		          | `P(ys_0, zs_0) -> 
-//│ 		            (`P((`C(x_0, ys_0)), zs_0)))))
-//│ 		and break1 p_1 ls_1 =
-//│ 		  (match ls_1 with
-//│ 		    | `N -> 
-//│ 		      (`P((`N), (`N)))
-//│ 		    | `C(x_1, xs_1) -> 
-//│ 		      (if (p_1 x_1) then
-//│ 		        (`P((`N), (`C(x_1, xs_1))))
-//│ 		      else
-//│ 		        (match ((break1 p_1) xs_1) with
-//│ 		          | `P(ys_1, zs_1) -> 
-//│ 		            (`P((`C(x_1, ys_1)), zs_1)))))
-//│ 		and dropWhile f_0 ls_2 =
-//│ 		  (match ls_2 with
-//│ 		    | `N -> 
-//│ 		      (`N)
-//│ 		    | `C(h_0, t_0) -> 
-//│ 		      (if (f_0 h_0) then
-//│ 		        ((dropWhile f_0) t_0)
-//│ 		      else
-//│ 		        (`C(h_0, t_0))))
-//│ 		and words s_0 =
+//│ 		            (`P((`C(x_0, ys_0)), zs_0)))));;
+//│ 		let rec words s_0 =
 //│ 		  (let rec scrut_0 = ((dropWhile (fun x_2 -> 
 //│ 		    (x_2 = 1))) s_0) in
 //│ 		    (match scrut_0 with
@@ -555,22 +560,24 @@ words(C(2, C(1, C(2, C(1, C(2, N))))))
 //│ 		(words (`C(2, (`C(1, (`C(2, (`C(1, (`C(2, (`N))))))))))))
 //│ 		....... ocaml repl result .......
 //│ 		[ok]
-//│ 		                                                                                  val break :
-//│ 		  (int -> bool) ->
-//│ 		  [ `C of int * ([ `C of int * 'a | `N ] as 'a) | `N ] ->
-//│ 		  [ `P of
-//│ 		      [> `C of int * ([> `C of int * 'b | `N ] as 'b) | `N ] *
-//│ 		      [ `C of int * 'a | `N ] ] =
+//│ 		                val dropWhile :
+//│ 		  ('a -> bool) -> ([< `C of 'a * 'b | `N ] as 'b) -> [> `C of 'a * 'b | `N ] =
 //│ 		  <fun>
-//│ 		val break1 :
-//│ 		  (int -> bool) ->
-//│ 		  ([ `C of int * 'a | `N ] as 'a) ->
-//│ 		  [ `P of ([> `C of int * 'b | `N ] as 'b) * [ `C of int * 'a | `N ] ] =
+//│ 		[ok]
+//│ 		                      val break1 :
+//│ 		  ('a -> bool) ->
+//│ 		  ([< `C of 'a * 'b | `N ] as 'b) ->
+//│ 		  [ `P of ([> `C of 'a * 'c | `N ] as 'c) * [> `C of 'a * 'b | `N ] ] = <fun>
+//│ 		[ok]
+//│ 		                      val break :
+//│ 		  ('a -> bool) ->
+//│ 		  [< `C of 'a * ([< `C of 'a * 'b | `N ] as 'b) | `N ] ->
+//│ 		  [> `P of
+//│ 		       [> `C of 'a * ([> `C of 'a * 'c | `N ] as 'c) | `N ] *
+//│ 		       [> `C of 'a * 'b | `N ] ] =
 //│ 		  <fun>
-//│ 		val dropWhile :
-//│ 		  (int -> bool) -> ([ `C of int * 'a | `N ] as 'a) -> [ `C of int * 'a | `N ] =
-//│ 		  <fun>
-//│ 		val words :
+//│ 		[ok]
+//│ 		                      val words :
 //│ 		  ([ `C of int * 'a | `N ] as 'a) ->
 //│ 		  ([> `C of [> `C of int * ([> `C of int * 'c | `N ] as 'c) | `N ] * 'b | `N
 //│ 		   ] as 'b) =
@@ -580,13 +587,13 @@ words(C(2, C(1, C(2, C(1, C(2, N))))))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [words^103]
-//│ 	[words^103 · break^67]
-//│ 		[words^103 · break^67 · break1^13]
-//│ 			[words^103 · break^67 · break1^13 · break1^40] ---> [words^103 · break^67 · break1^13] (only one)
-//│ 	[words^103 · dropWhile^55]
-//│ 		[words^103 · dropWhile^55 · dropWhile^91] ---> [words^103 · dropWhile^55] (only one)
-//│ 	[words^103 · words^78] ---> [words^103] (only one)
+//│ [words^103] (hopeless to continue)
+//│ 	[words^103 · break^67] (using original def)
+//│ 		[words^103 · break^67 · break1^13] (using original def)
+//│ 			[words^103 · break^67 · break1^13 · break1^40] ---> [words^103 · break^67 · break1^13] (using original def)
+//│ 	[words^103 · dropWhile^55] (using original def)
+//│ 		[words^103 · dropWhile^55 · dropWhile^91] ---> [words^103 · dropWhile^55] (using original def)
+//│ 	[words^103 · words^78] ---> [words^103] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -922,6 +929,15 @@ words(C(2, C(1, C(2, C(1, C(2, N))))))
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
+//│ let rec dropWhile__d0 f_0 ls_2 =
+//│   (match ls_2 with
+//│     | `N -> 
+//│       (`N)
+//│     | `C(h_0, t_0) -> 
+//│       (if (f_0 h_0) then
+//│         ((dropWhile__d0 f_0) t_0)
+//│       else
+//│         (`C(h_0, t_0))));;
 //│ let rec break1__d0 p_0 ls_0 =
 //│   (match ls_0 with
 //│     | `N -> 
@@ -932,8 +948,8 @@ words(C(2, C(1, C(2, C(1, C(2, N))))))
 //│       else
 //│         (match ((break1__d0 p_0) xs_0) with
 //│           | `P(ys_0, zs_0) -> 
-//│             (`P((`C(x_0, ys_0)), zs_0)))))
-//│ and break__d0 p_1 ls_1 =
+//│             (`P((`C(x_0, ys_0)), zs_0)))));;
+//│ let rec break__d0 p_1 ls_1 =
 //│   (match ls_1 with
 //│     | `N -> 
 //│       (let rec s''_0 = (`N) in
@@ -953,16 +969,8 @@ words(C(2, C(1, C(2, C(1, C(2, N))))))
 //│               (let rec w_2 = (`C(x_1, ys_1)) in
 //│                 (fun _lh_dummy_2 -> 
 //│                   (`C(w_2, (words__d0 s''_2)))))))))
-//│ and dropWhile__d0 f_0 ls_2 =
-//│   (match ls_2 with
-//│     | `N -> 
-//│       (`N)
-//│     | `C(h_0, t_0) -> 
-//│       (if (f_0 h_0) then
-//│         ((dropWhile__d0 f_0) t_0)
-//│       else
-//│         (`C(h_0, t_0))))
-//│ and words__d0 s_0 =
+//│ and
+//│ words__d0 s_0 =
 //│   (let rec scrut_0 = ((dropWhile__d0 (fun x_2 -> 
 //│     (x_2 = 1))) s_0) in
 //│     (match scrut_0 with

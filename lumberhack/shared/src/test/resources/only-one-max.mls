@@ -21,9 +21,9 @@ max(C(1, C(2, N)), 0)
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [max^22]
-//│ 	[max^22 · max^12] ---> [max^22] (only one)
-//│ 	[max^22 · max^7] ---> [max^22] (only one)
+//│ [max^22] (hopeless to continue)
+//│ 	[max^22 · max^12] ---> [max^22] (using original def)
+//│ 	[max^22 · max^7] ---> [max^22] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -99,62 +99,57 @@ max(C(1, C(2, N)), primId(0))
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [max^22]
-//│ 	[max^22 · max^12] ---> [max^22] (only one)
-//│ 	[max^22 · max^7] (hopeless to continue)
-//│ 		[max^22 · max^7 · max^12] ---> [max^22 · max^7] (using original def)
-//│ 		[max^22 · max^7 · max^7] ---> [max^22 · max^7] (using original def)
+//│ [max^22] (hopeless to continue)
+//│ 	[max^22 · max^12] ---> [max^22] (using original def)
+//│ 	[max^22 · max^7] ---> [max^22] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
 //│ max_₀([C 1 [C 2 [N]]], primId⁰(0))
-//│ def max_₀(ls², n²) = 
-//│ 	case ls² of {
-//│ 		C h² t² => if (h² > n²) then max_₁(t², h²) else max_₀(t², n²)
-//│ 		| N  => n²}
-//│ 	where
-//│ 	def max_₁(ls¹, n¹) = 
-//│ 		case ls¹ of {
-//│ 			C h¹ t¹ => if (h¹ > n¹) then max_₁(t¹, h¹) else max_₁(t¹, n¹)
-//│ 			| N  => n¹}
+//│ def max_₀(ls¹, n¹) = 
+//│ 	case ls¹ of {
+//│ 		C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹)
+//│ 		| N  => n¹}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 78 --->
-//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₁(t¹, h¹) else max_₁(t¹, n¹) | N  => n¹}: 51
-//│ 	case ls² of {C h² t² => if (h² > n²) then max_₁(t², h²) else max_₀(t², n²) | N  => n²}: 72
-//│ [C 2 [N]]: 79 --->
-//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₁(t¹, h¹) else max_₁(t¹, n¹) | N  => n¹}: 51
-//│ 	case ls² of {C h² t² => if (h² > n²) then max_₁(t², h²) else max_₀(t², n²) | N  => n²}: 72
-//│ [C 1 [C 2 [N]]]: 80 --->
-//│ 	case ls² of {C h² t² => if (h² > n²) then max_₁(t², h²) else max_₀(t², n²) | N  => n²}: 72
+//│ [N]: 57 --->
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹) | N  => n¹}: 51
+//│ [C 2 [N]]: 58 --->
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹) | N  => n¹}: 51
+//│ [C 1 [C 2 [N]]]: 59 --->
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹) | N  => n¹}: 51
 //│ ------------------
-//│ case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₁(t¹, h¹) else max_₁(t¹, n¹) | N  => n¹}: 51 --->
-//│ 	[N]: 78
-//│ 	[C 2 [N]]: 79
-//│ case ls² of {C h² t² => if (h² > n²) then max_₁(t², h²) else max_₀(t², n²) | N  => n²}: 72 --->
-//│ 	[N]: 78
-//│ 	[C 2 [N]]: 79
-//│ 	[C 1 [C 2 [N]]]: 80
+//│ case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹) | N  => n¹}: 51 --->
+//│ 	[N]: 57
+//│ 	[C 2 [N]]: 58
+//│ 	[C 1 [C 2 [N]]]: 59
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
+//│ [N]: 57 --->
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹) | N  => n¹}: 51
+//│ [C 2 [N]]: 58 --->
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹) | N  => n¹}: 51
+//│ [C 1 [C 2 [N]]]: 59 --->
+//│ 	case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹) | N  => n¹}: 51
 //│ ------------------
-//│ 
+//│ case ls¹ of {C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹) | N  => n¹}: 51 --->
+//│ 	[N]: 57
+//│ 	[C 2 [N]]: 58
+//│ 	[C 1 [C 2 [N]]]: 59
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ max_₀([C 1 [C 2 [N]]], primId⁰(0))
-//│ def max_₀(ls⁴, n⁴) = 
-//│ 	case ls⁴ of {
-//│ 		C h² t² => if (h² > n⁴) then max_₁(t², h²) else max_₀(t², n⁴)
-//│ 		| N  => n⁴}
-//│ 	where
-//│ 	def max_₁(ls³, n³) = 
-//│ 		case ls³ of {
-//│ 			C h¹ t¹ => if (h¹ > n³) then max_₁(t¹, h¹) else max_₁(t¹, n³)
-//│ 			| N  => n³}
+//│ max_₀(
+//│ 	let t² = 	
+//│ 		let t³ = (fun n⁴ -> n⁴)
+//│ 		in let h³ = 2
+//│ 		in (fun n³ -> if (h³ > n³) then max_₀(t³, h³) else max_₀(t³, n³))
+//│ 	in let h² = 1
+//│ 	in (fun n² -> if (h² > n²) then max_₀(t², h²) else max_₀(t², n²)), primId⁰(0))
+//│ def max_₀(ls², n⁵) = 
+//│ 	ls²(n⁵)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -182,24 +177,17 @@ max(primId(C(1, C(2, N))), 0)
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [max^22]
-//│ 	[max^22 · max^12] ---> [max^22] (only one)
-//│ 	[max^22 · max^7] (hopeless to continue)
-//│ 		[max^22 · max^7 · max^12] ---> [max^22 · max^7] (using original def)
-//│ 		[max^22 · max^7 · max^7] ---> [max^22 · max^7] (using original def)
+//│ [max^22] (hopeless to continue)
+//│ 	[max^22 · max^12] ---> [max^22] (using original def)
+//│ 	[max^22 · max^7] ---> [max^22] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
 //│ max_₀(primId⁰([C 1 [C 2 [N]]]), 0)
-//│ def max_₀(ls², n²) = 
-//│ 	case ls² of {
-//│ 		C h² t² => if (h² > n²) then max_₁(t², h²) else max_₀(t², n²)
-//│ 		| N  => n²}
-//│ 	where
-//│ 	def max_₁(ls¹, n¹) = 
-//│ 		case ls¹ of {
-//│ 			C h¹ t¹ => if (h¹ > n¹) then max_₁(t¹, h¹) else max_₁(t¹, n¹)
-//│ 			| N  => n¹}
+//│ def max_₀(ls¹, n¹) = 
+//│ 	case ls¹ of {
+//│ 		C h¹ t¹ => if (h¹ > n¹) then max_₀(t¹, h¹) else max_₀(t¹, n¹)
+//│ 		| N  => n¹}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
@@ -216,15 +204,10 @@ max(primId(C(1, C(2, N))), 0)
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ max_₀(primId⁰([C 1 [C 2 [N]]]), 0)
-//│ def max_₀(ls⁴, n⁴) = 
-//│ 	case ls⁴ of {
-//│ 		C h² t² => if (h² > n⁴) then max_₁(t², h²) else max_₀(t², n⁴)
-//│ 		| N  => n⁴}
-//│ 	where
-//│ 	def max_₁(ls³, n³) = 
-//│ 		case ls³ of {
-//│ 			C h¹ t¹ => if (h¹ > n³) then max_₁(t¹, h¹) else max_₁(t¹, n³)
-//│ 			| N  => n³}
+//│ def max_₀(ls², n²) = 
+//│ 	case ls² of {
+//│ 		C h¹ t¹ => if (h¹ > n²) then max_₀(t¹, h¹) else max_₀(t¹, n²)
+//│ 		| N  => n²}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -251,9 +234,9 @@ max(primId(C(1, C(2, N))), primId(0))
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [max^22]
-//│ 	[max^22 · max^12] ---> [max^22] (only one)
-//│ 	[max^22 · max^7] ---> [max^22] (only one)
+//│ [max^22] (hopeless to continue)
+//│ 	[max^22 · max^12] ---> [max^22] (using original def)
+//│ 	[max^22 · max^7] ---> [max^22] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>

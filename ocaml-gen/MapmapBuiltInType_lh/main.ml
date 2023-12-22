@@ -4,7 +4,7 @@ ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Lumherhack_Common.ml ./Lumberha
 open Core_bench;;
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_MapmapBuiltInType_lh" (fun () -> ignore (let open Module_original.Module_original in ((testMapmapBuiltInType_lh ((enumFromTo_lh 1) 100000)))));
-  Bench.Test.create ~name:"lumberhack_only_expanded_MapmapBuiltInType_lh" (fun () -> ignore (let open Module_lumberhack_only_expanded.Module_lumberhack_only_expanded in ((testMapmapBuiltInType__d0 ((enumFromTo__d0 1) 100000)))));
-  Bench.Test.create ~name:"lumberhack_MapmapBuiltInType_lh" (fun () -> ignore (let open Module_lumberhack.Module_lumberhack in ((testMapmapBuiltInType__d0 ((enumFromTo__d0 1) 100000)))));
-  Bench.Test.create ~name:"lumberhack_pop_out_MapmapBuiltInType_lh" (fun () -> ignore (let open Module_lumberhack_pop_out.Module_lumberhack_pop_out in ((testMapmapBuiltInType__d0 ((enumFromTo__d0 1) 100000)))));
+  Bench.Test.create ~name:"lumberhack_only_expanded_MapmapBuiltInType_lh" (fun () -> ignore (let open Module_lumberhack_only_expanded.Module_lumberhack_only_expanded in ((testMapmapBuiltInType_lh ((enumFromTo_lh 1) 100000)))));
+  Bench.Test.create ~name:"lumberhack_MapmapBuiltInType_lh" (fun () -> ignore (let open Module_lumberhack.Module_lumberhack in ((testMapmapBuiltInType_lh ((enumFromTo_lh 1) 100000)))));
+  Bench.Test.create ~name:"lumberhack_pop_out_MapmapBuiltInType_lh" (fun () -> ignore (let open Module_lumberhack_pop_out.Module_lumberhack_pop_out in ((testMapmapBuiltInType_lh ((enumFromTo_lh 1) 100000)))));
 ])

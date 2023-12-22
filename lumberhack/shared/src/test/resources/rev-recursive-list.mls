@@ -23,12 +23,12 @@ rev(l)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [l^30]
-//│ 	[l^30 · l^27] ---> [l^30] (only one)
-//│ [rev^29]
-//│ 	[rev^29 · concat^14]
-//│ 		[rev^29 · concat^14 · concat^4] ---> [rev^29 · concat^14] (only one)
-//│ 	[rev^29 · rev^15] ---> [rev^29] (only one)
+//│ [l^30] (hopeless to continue)
+//│ 	[l^30 · l^27] ---> [l^30] (using original def)
+//│ [rev^29] (hopeless to continue)
+//│ 	[rev^29 · concat^14] (using original def)
+//│ 		[rev^29 · concat^14 · concat^4] ---> [rev^29 · concat^14] (using original def)
+//│ 	[rev^29 · rev^15] ---> [rev^29] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -117,12 +117,12 @@ rev(l)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [l^32]
-//│ 	[l^32 · l^28] ---> [l^32] (only one)
-//│ [rev^31]
-//│ 	[rev^31 · concat^14]
-//│ 		[rev^31 · concat^14 · concat^4] ---> [rev^31 · concat^14] (only one)
-//│ 	[rev^31 · rev^15] ---> [rev^31] (only one)
+//│ [l^32] (hopeless to continue)
+//│ 	[l^32 · l^28] ---> [l^32] (using original def)
+//│ [rev^31] (hopeless to continue)
+//│ 	[rev^31 · concat^14] (using original def)
+//│ 		[rev^31 · concat^14 · concat^4] ---> [rev^31 · concat^14] (using original def)
+//│ 	[rev^31 · rev^15] ---> [rev^31] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -328,10 +328,10 @@ rev(l, N)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [l^19]
-//│ 	[l^19 · l^15] ---> [l^19] (only one)
-//│ [rev^18]
-//│ 	[rev^18 · rev^2] ---> [rev^18] (only one)
+//│ [l^19] (hopeless to continue)
+//│ 	[l^19 · l^15] ---> [l^19] (using original def)
+//│ [rev^18] (hopeless to continue)
+//│ 	[rev^18 · rev^2] ---> [rev^18] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -396,11 +396,10 @@ rev(l, N)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [l^19]
-//│ 	[l^19 · l^15] ---> [l^19] (only one)
-//│ [rev^18]
-//│ 	[rev^18 · rev^2]
-//│ 		[rev^18 · rev^2 · rev^2] ---> [rev^18] (only one)
+//│ [l^19] (hopeless to continue)
+//│ 	[l^19 · l^15] ---> [l^19] (using original def)
+//│ [rev^18] (hopeless to continue)
+//│ 	[rev^18 · rev^2] ---> [rev^18] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -409,51 +408,41 @@ rev(l, N)
 //│ 	[C [A] [C [B] l_₀]]
 //│ def rev_₀(ls¹, a¹) = 
 //│ 	case ls¹ of {
-//│ 		C h¹ t¹ => rev_₁(t¹, [C h¹ a¹])
+//│ 		C h¹ t¹ => rev_₀(t¹, [C h¹ a¹])
 //│ 		| N  => a¹}
-//│ 	where
-//│ 	def rev_₁(ls², a²) = 
-//│ 		case ls² of {
-//│ 			C h² t² => rev_₀(t², [C h² a²])
-//│ 			| N  => a²}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C [B] l_₀]: 38 --->
-//│ 	case ls² of {C h² t² => rev_₀(t², [C h² a²]) | N  => a²}: 49
-//│ [C [A] [C [B] l_₀]]: 39 --->
-//│ 	case ls¹ of {C h¹ t¹ => rev_₁(t¹, [C h¹ a¹]) | N  => a¹}: 32
+//│ [C [B] l_₀]: 26 --->
+//│ 	case ls¹ of {C h¹ t¹ => rev_₀(t¹, [C h¹ a¹]) | N  => a¹}: 37
+//│ [C [A] [C [B] l_₀]]: 27 --->
+//│ 	case ls¹ of {C h¹ t¹ => rev_₀(t¹, [C h¹ a¹]) | N  => a¹}: 37
 //│ ------------------
-//│ case ls¹ of {C h¹ t¹ => rev_₁(t¹, [C h¹ a¹]) | N  => a¹}: 32 --->
-//│ 	[C [A] [C [B] l_₀]]: 39
-//│ case ls² of {C h² t² => rev_₀(t², [C h² a²]) | N  => a²}: 49 --->
-//│ 	[C [B] l_₀]: 38
+//│ case ls¹ of {C h¹ t¹ => rev_₀(t¹, [C h¹ a¹]) | N  => a¹}: 37 --->
+//│ 	[C [B] l_₀]: 26
+//│ 	[C [A] [C [B] l_₀]]: 27
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C [B] l_₀]: 38 --->
-//│ 	case ls² of {C h² t² => rev_₀(t², [C h² a²]) | N  => a²}: 49
-//│ [C [A] [C [B] l_₀]]: 39 --->
-//│ 	case ls¹ of {C h¹ t¹ => rev_₁(t¹, [C h¹ a¹]) | N  => a¹}: 32
+//│ [C [B] l_₀]: 26 --->
+//│ 	case ls¹ of {C h¹ t¹ => rev_₀(t¹, [C h¹ a¹]) | N  => a¹}: 37
+//│ [C [A] [C [B] l_₀]]: 27 --->
+//│ 	case ls¹ of {C h¹ t¹ => rev_₀(t¹, [C h¹ a¹]) | N  => a¹}: 37
 //│ ------------------
-//│ case ls¹ of {C h¹ t¹ => rev_₁(t¹, [C h¹ a¹]) | N  => a¹}: 32 --->
-//│ 	[C [A] [C [B] l_₀]]: 39
-//│ case ls² of {C h² t² => rev_₀(t², [C h² a²]) | N  => a²}: 49 --->
-//│ 	[C [B] l_₀]: 38
+//│ case ls¹ of {C h¹ t¹ => rev_₀(t¹, [C h¹ a¹]) | N  => a¹}: 37 --->
+//│ 	[C [B] l_₀]: 26
+//│ 	[C [A] [C [B] l_₀]]: 27
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ rev_₀(l_₀, [N])
 //│ def l_₀ = 
-//│ 	let t³ = 	
-//│ 		let t⁴ = l_₀
-//│ 		in let h⁴ = [B]
-//│ 		in (fun a⁵ -> rev_₀(t⁴, [C h⁴ a⁵]))
-//│ 	in let h³ = [A]
-//│ 	in (fun a⁴ -> rev_₁(t³, [C h³ a⁴]))
-//│ def rev_₀(ls³, a³) = 
-//│ 	ls³(a³)
-//│ 	where
-//│ 	def rev_₁(ls⁴, a⁶) = 
-//│ 		ls⁴(a⁶)
+//│ 	let t² = 	
+//│ 		let t³ = l_₀
+//│ 		in let h³ = [B]
+//│ 		in (fun a³ -> rev_₀(t³, [C h³ a³]))
+//│ 	in let h² = [A]
+//│ 	in (fun a² -> rev_₀(t², [C h² a²]))
+//│ def rev_₀(ls², a⁴) = 
+//│ 	ls²(a⁴)
 //│ <<<<<<< after fusion <<<<<<<

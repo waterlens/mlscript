@@ -4,7 +4,7 @@ ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Lumherhack_Common.ml ./Lumberha
 open Core_bench;;
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_Calendar_nofib_lh" (fun () -> ignore (let open Module_original.Module_original in ((testCalendar_nofib_lh 100))));
-  Bench.Test.create ~name:"lumberhack_only_expanded_Calendar_nofib_lh" (fun () -> ignore (let open Module_lumberhack_only_expanded.Module_lumberhack_only_expanded in ((testCalendar_nofib__d0 100))));
-  Bench.Test.create ~name:"lumberhack_Calendar_nofib_lh" (fun () -> ignore (let open Module_lumberhack.Module_lumberhack in ((testCalendar_nofib__d0 100))));
-  Bench.Test.create ~name:"lumberhack_pop_out_Calendar_nofib_lh" (fun () -> ignore (let open Module_lumberhack_pop_out.Module_lumberhack_pop_out in ((testCalendar_nofib__d0 100))));
+  Bench.Test.create ~name:"lumberhack_only_expanded_Calendar_nofib_lh" (fun () -> ignore (let open Module_lumberhack_only_expanded.Module_lumberhack_only_expanded in ((testCalendar_nofib_lh 100))));
+  Bench.Test.create ~name:"lumberhack_Calendar_nofib_lh" (fun () -> ignore (let open Module_lumberhack.Module_lumberhack in ((testCalendar_nofib_lh 100))));
+  Bench.Test.create ~name:"lumberhack_pop_out_Calendar_nofib_lh" (fun () -> ignore (let open Module_lumberhack_pop_out.Module_lumberhack_pop_out in ((testCalendar_nofib_lh 100))));
 ])

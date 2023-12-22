@@ -4,7 +4,7 @@ ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Lumherhack_Common.ml ./Lumberha
 open Core_bench;;
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_Expert_nofib_lh" (fun () -> ignore (let open Module_original.Module_original in ((testExpert_nofib_lh 3))));
-  Bench.Test.create ~name:"lumberhack_only_expanded_Expert_nofib_lh" (fun () -> ignore (let open Module_lumberhack_only_expanded.Module_lumberhack_only_expanded in ((testExpert_nofib__d0 3))));
-  Bench.Test.create ~name:"lumberhack_Expert_nofib_lh" (fun () -> ignore (let open Module_lumberhack.Module_lumberhack in ((testExpert_nofib__d0 3))));
-  Bench.Test.create ~name:"lumberhack_pop_out_Expert_nofib_lh" (fun () -> ignore (let open Module_lumberhack_pop_out.Module_lumberhack_pop_out in ((testExpert_nofib__d0 3))));
+  Bench.Test.create ~name:"lumberhack_only_expanded_Expert_nofib_lh" (fun () -> ignore (let open Module_lumberhack_only_expanded.Module_lumberhack_only_expanded in ((testExpert_nofib_lh 3))));
+  Bench.Test.create ~name:"lumberhack_Expert_nofib_lh" (fun () -> ignore (let open Module_lumberhack.Module_lumberhack in ((testExpert_nofib_lh 3))));
+  Bench.Test.create ~name:"lumberhack_pop_out_Expert_nofib_lh" (fun () -> ignore (let open Module_lumberhack_pop_out.Module_lumberhack_pop_out in ((testExpert_nofib_lh 3))));
 ])

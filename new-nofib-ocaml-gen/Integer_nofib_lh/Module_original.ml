@@ -21,8 +21,8 @@ let rec intbench_lh _lh_intbench_arg1_0 _lh_intbench_arg2_0 _lh_intbench_arg3_0 
           (_lh_listcomp_fun_1 (((enumFromThenTo_lh _lh_intbench_arg5_0) (_lh_intbench_arg2_0 + _lh_intbench_arg6_0)) _lh_intbench_arg7_0)))
       | `LH_N -> 
         (`LH_N))) in
-    (_lh_listcomp_fun_0 (((enumFromThenTo_lh _lh_intbench_arg2_0) (_lh_intbench_arg2_0 + _lh_intbench_arg3_0)) _lh_intbench_arg4_0)))
-and integerbench_lh _lh_integerbench_arg1_0 _lh_integerbench_arg2_0 _lh_integerbench_arg3_0 _lh_integerbench_arg4_0 _lh_integerbench_arg5_0 _lh_integerbench_arg6_0 _lh_integerbench_arg7_0 =
+    (_lh_listcomp_fun_0 (((enumFromThenTo_lh _lh_intbench_arg2_0) (_lh_intbench_arg2_0 + _lh_intbench_arg3_0)) _lh_intbench_arg4_0)));;
+let rec integerbench_lh _lh_integerbench_arg1_0 _lh_integerbench_arg2_0 _lh_integerbench_arg3_0 _lh_integerbench_arg4_0 _lh_integerbench_arg5_0 _lh_integerbench_arg6_0 _lh_integerbench_arg7_0 =
   (let rec _lh_listcomp_fun_2 = (fun _lh_listcomp_fun_para_2 -> 
     (match _lh_listcomp_fun_para_2 with
       | `LH_C(_lh_listcomp_fun_ls_h_2, _lh_listcomp_fun_ls_t_2) -> 
@@ -35,11 +35,11 @@ and integerbench_lh _lh_integerbench_arg1_0 _lh_integerbench_arg2_0 _lh_integerb
           (_lh_listcomp_fun_3 (((enumFromThenTo_lh _lh_integerbench_arg5_0) (_lh_integerbench_arg2_0 + _lh_integerbench_arg6_0)) _lh_integerbench_arg7_0)))
       | `LH_N -> 
         (`LH_N))) in
-    (_lh_listcomp_fun_2 (((enumFromThenTo_lh _lh_integerbench_arg2_0) (_lh_integerbench_arg2_0 + _lh_integerbench_arg3_0)) _lh_integerbench_arg4_0)))
-let runbench_lh: (int -> int -> 'a) -> (int -> int -> 'a) -> ([`LH_C of char * 'b | `LH_N] as 'b) -> int -> int -> int -> int -> int -> int -> int = fun _lh_runbench_arg1_0 _lh_runbench_arg2_0 _lh_runbench_arg3_0 _lh_runbench_arg4_0 _lh_runbench_arg5_0 _lh_runbench_arg6_0 _lh_runbench_arg7_0 _lh_runbench_arg8_0 _lh_runbench_arg9_0 ->
+    (_lh_listcomp_fun_2 (((enumFromThenTo_lh _lh_integerbench_arg2_0) (_lh_integerbench_arg2_0 + _lh_integerbench_arg3_0)) _lh_integerbench_arg4_0)));;
+let rec runbench_lh _lh_runbench_arg1_0 _lh_runbench_arg2_0 _lh_runbench_arg3_0 _lh_runbench_arg4_0 _lh_runbench_arg5_0 _lh_runbench_arg6_0 _lh_runbench_arg7_0 _lh_runbench_arg8_0 _lh_runbench_arg9_0 =
   (let rec _dum_0 = (`LH_P2((((((((intbench_lh _lh_runbench_arg2_0) _lh_runbench_arg4_0) _lh_runbench_arg5_0) _lh_runbench_arg6_0) _lh_runbench_arg4_0) _lh_runbench_arg5_0) _lh_runbench_arg6_0), (((((((integerbench_lh _lh_runbench_arg1_0) _lh_runbench_arg4_0) _lh_runbench_arg5_0) _lh_runbench_arg6_0) _lh_runbench_arg4_0) _lh_runbench_arg5_0) _lh_runbench_arg6_0))) in
     0);;
-let runalltests_lh _lh_runalltests_arg1_0 _lh_runalltests_arg2_0 _lh_runalltests_arg3_0 _lh_runalltests_arg4_0 _lh_runalltests_arg5_0 _lh_runalltests_arg6_0 =
+let rec runalltests_lh _lh_runalltests_arg1_0 _lh_runalltests_arg2_0 _lh_runalltests_arg3_0 _lh_runalltests_arg4_0 _lh_runalltests_arg5_0 _lh_runalltests_arg6_0 =
   (`LH_C((((((((((runbench_lh (fun a_1 b_1 -> 
     (a_1 + b_1))) (fun a_2 b_2 -> 
     (a_2 + b_2))) (`LH_C('(', (`LH_C('+', (`LH_C(')', (`LH_N)))))))) _lh_runalltests_arg1_0) _lh_runalltests_arg2_0) _lh_runalltests_arg3_0) _lh_runalltests_arg1_0) _lh_runalltests_arg2_0) _lh_runalltests_arg3_0), (`LH_C((((((((((runbench_lh (fun a_3 b_3 -> 
@@ -61,7 +61,7 @@ let runalltests_lh _lh_runalltests_arg1_0 _lh_runalltests_arg2_0 _lh_runalltests
     (a_1_8 > b_1_8))) (`LH_C('(', (`LH_C('>', (`LH_C(')', (`LH_N)))))))) _lh_runalltests_arg1_0) _lh_runalltests_arg2_0) _lh_runalltests_arg3_0) _lh_runalltests_arg1_0) _lh_runalltests_arg2_0) _lh_runalltests_arg3_0), (`LH_C((((((((((runbench_lh (fun a_1_9 b_1_9 -> 
     (a_1_9 >= b_1_9))) (fun a_2_0 b_2_0 -> 
     (a_2_0 >= b_2_0))) (`LH_C('(', (`LH_C('>', (`LH_C('=', (`LH_C(')', (`LH_N)))))))))) _lh_runalltests_arg1_0) _lh_runalltests_arg2_0) _lh_runalltests_arg3_0) _lh_runalltests_arg1_0) _lh_runalltests_arg2_0) _lh_runalltests_arg3_0), (`LH_N)))))))))))))))))))));;
-let testInteger_nofib_lh _lh_testInteger_nofib_arg1_0 =
+let rec testInteger_nofib_lh _lh_testInteger_nofib_arg1_0 =
   ((((((runalltests_lh (0 - _lh_testInteger_nofib_arg1_0)) 31) (0 + _lh_testInteger_nofib_arg1_0)) (0 - _lh_testInteger_nofib_arg1_0)) 31) (0 + _lh_testInteger_nofib_arg1_0));;
 end;;
 

@@ -1322,41 +1322,54 @@ let string_of_int i = listToTaggedList (explode_string (string_of_int i));;
 let string_of_float f = listToTaggedList (explode_string (string_of_float f))""")
   )
 
-  override def apply(p: Program, bigLetRec: Boolean = true): String = {
-    val callsInfo = p.d.callsInfo._2.toMap
-    def isIndependent(id: Ident): Boolean = {
-      val callees = callsInfo(id)
-      // if want to use big let rec, should always return false
-      (callees.isEmpty || callees.forall(_.id == id)) && (!bigLetRec)
-    }
-
-    val sortedContent = p.contents.sortBy {
-      case Left(progDef) => progDef.id.tree.name
-      case Right(expr) => ""
-    }
-
-    val independentDefs = sortedContent.collect {
-      case Left(df) if isIndependent(df.id) => (Raw("let rec ") <:> transFromProgDef(df) <:> Raw(";;")).print
-    }.mkString("\n")
-    val laterDefs = sortedContent.collect {
-      case Left(df) if !isIndependent(df.id) => transFromProgDef(df).print
-    }.mkString("\nand ")
+  override def apply(p: Program, bigLetRec: Boolean = false): String = {
+    p.d(p)
+    val orderedDefStr = (p.topLevelDefsOrder.map(_.toSeq.sortBy(_.tree.name)).map { defGroup =>
+      val defBody = defGroup.map { d =>
+        val body = p.defAndExpr._1(d)
+        transFromProgDef(ProgDef(d, body)).print
+      }
+      s"let rec ${defBody.mkString("\nand\n")};;"
+    }).mkString("\n")
     Stacked(
-      { if independentDefs.nonEmpty then 
-        Raw(independentDefs) :: Nil
-      else
-        Nil
-      } :::
-      { if laterDefs.nonEmpty then
-        ("let rec " <:> Raw(laterDefs) <:> ";;") :: Nil
-      else
-        Nil
-      } :::
-      sortedContent.collect {
-        case R(e) => rec(e)
-      },
+      Raw(orderedDefStr) ::
+      p.defAndExpr._2.map(x => rec(x)),
       emptyLines = false
     ).print
+    // val callsInfo = p.d.callsInfo._2.toMap
+    // def isIndependent(id: Ident): Boolean = {
+    //   val callees = callsInfo(id)
+    //   // if want to use big let rec, should always return false
+    //   (callees.isEmpty || callees.forall(_.id == id)) && (!bigLetRec)
+    // }
+
+    // val sortedContent = p.contents.sortBy {
+    //   case Left(progDef) => progDef.id.tree.name
+    //   case Right(expr) => ""
+    // }
+
+    // val independentDefs = sortedContent.collect {
+    //   case Left(df) if isIndependent(df.id) => (Raw("let rec ") <:> transFromProgDef(df) <:> Raw(";;")).print
+    // }.mkString("\n")
+    // val laterDefs = sortedContent.collect {
+    //   case Left(df) if !isIndependent(df.id) => transFromProgDef(df).print
+    // }.mkString("\nand ")
+    // Stacked(
+    //   { if independentDefs.nonEmpty then 
+    //     Raw(independentDefs) :: Nil
+    //   else
+    //     Nil
+    //   } :::
+    //   { if laterDefs.nonEmpty then
+    //     ("let rec " <:> Raw(laterDefs) <:> ";;") :: Nil
+    //   else
+    //     Nil
+    //   } :::
+    //   sortedContent.collect {
+    //     case R(e) => rec(e)
+    //   },
+    //   emptyLines = false
+    // ).print
   }
   override def transformId(id: Ident): Document = {
     def fromSubscript(i: String) = i.flatMap {

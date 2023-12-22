@@ -19,8 +19,8 @@ let rec enumFromTo__d0 a_0 b_0 =
                 (h_1 + (sum__d0 t_1))))))))
   else
     (fun f_2 _lh_dummy_1 -> 
-      0))
-and testSumMapEnum__d0 n_0 =
+      0));;
+let rec testSumMapEnum__d0 n_0 =
   (sum__d0 ((map__d0 (fun x_0 -> 
     (x_0 * x_0))) ((enumFromTo__d0 1) n_0)));;
 end;;

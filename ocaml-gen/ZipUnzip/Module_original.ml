@@ -3,11 +3,6 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_original = struct
-let rec makeZippedList n_0 =
-  (if (n_0 > 0) then
-    (`C((`Pair(n_0, (n_0 + 1))), (makeZippedList (n_0 - 1))))
-  else
-    (`N));;
 let rec unzip ls_0 =
   (match ls_0 with
     | `C(h_0, t_0) -> 
@@ -28,6 +23,11 @@ let rec zip xs_0 ys_0 =
           (`N))
     | `N -> 
       (`N));;
+let rec makeZippedList n_0 =
+  (if (n_0 > 0) then
+    (`C((`Pair(n_0, (n_0 + 1))), (makeZippedList (n_0 - 1))))
+  else
+    (`N));;
 let rec testZipUnzip n_1 =
   (match (unzip (makeZippedList n_1)) with
     | `Pair(xs_1, ys_1) -> 

@@ -16,10 +16,10 @@ let rec enumFromTo__d0 a_0 b_0 _lh_popOutId_0_0 _lh_popOutId_1_0 =
           (let rec h_1 = (_lh_popOutId_0_0 h_0) in
             ((summ__d0 (_lh_popOutId_1_0 + h_1)) t_1)))))
   else
-    _lh_popOutId_1_0)
-and sum__d0 ls_1 =
-  ((summ__d0 0) ls_1)
-and testSumMapEnumSumAcc__d0 n_0 =
+    _lh_popOutId_1_0);;
+let rec sum__d0 ls_1 =
+  ((summ__d0 0) ls_1);;
+let rec testSumMapEnumSumAcc__d0 n_0 =
   (sum__d0 ((map__d0 (fun x_0 -> 
     (x_0 * x_0))) ((enumFromTo__d0 1) n_0)));;
 end;;

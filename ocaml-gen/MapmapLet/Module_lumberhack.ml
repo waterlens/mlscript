@@ -22,8 +22,8 @@ let rec map__d1 f_0 ls_0 =
                 (`C(r_1, ((map__d0 f_1) t_1))))))))
     | `N -> 
       (fun f_2 -> 
-        (`N)))
-and testMapmapLet__d0 ls_1 =
+        (`N)));;
+let rec testMapmapLet__d0 ls_1 =
   ((map__d0 (fun x_0 -> 
     (x_0 + 1))) ((map__d1 (fun x_1 -> 
     (x_1 * x_1))) ls_1));;

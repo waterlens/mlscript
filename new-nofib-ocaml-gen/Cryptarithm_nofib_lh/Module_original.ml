@@ -3,6 +3,28 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_original = struct
+let rec enumFromTo_lh a_0 b_0 =
+  (if (a_0 <= b_0) then
+    (`LH_C(a_0, ((enumFromTo_lh (a_0 + 1)) b_0)))
+  else
+    (`LH_N));;
+let rec expand_lh _lh_expand_arg1_0 _lh_expand_arg2_0 _lh_expand_arg3_0 _lh_expand_arg4_0 _lh_expand_arg5_0 _lh_expand_arg6_0 =
+  (((((_lh_expand_arg6_0 + (_lh_expand_arg5_0 * 10)) + (_lh_expand_arg4_0 * 100)) + (_lh_expand_arg3_0 * 1000)) + (_lh_expand_arg2_0 * 10000)) + (_lh_expand_arg1_0 * 100000));;
+let rec map_lh f_0 ls_0 =
+  (match ls_0 with
+    | `LH_C(h_0, t_0) -> 
+      (`LH_C((f_0 h_0), ((map_lh f_0) t_0)))
+    | `LH_N -> 
+      (`LH_N));;
+let rec filter_lh f_1 ls_1 =
+  (match ls_1 with
+    | `LH_C(h_1, t_1) -> 
+      (if (f_1 h_1) then
+        (`LH_C(h_1, ((filter_lh f_1) t_1)))
+      else
+        ((filter_lh f_1) t_1))
+    | `LH_N -> 
+      (`LH_N));;
 let rec addj_lh _lh_addj_arg1_0 _lh_addj_arg2_0 =
   (match _lh_addj_arg2_0 with
     | `LH_N -> 
@@ -17,28 +39,6 @@ let rec addj_lh _lh_addj_arg1_0 _lh_addj_arg2_0 =
         (_lh_listcomp_fun_0 ((addj_lh _lh_addj_arg1_0) _lh_addj_LH_C_1_0)))))
     | _ -> 
       (failwith "error"));;
-let rec enumFromTo_lh a_0 b_0 =
-  (if (a_0 <= b_0) then
-    (`LH_C(a_0, ((enumFromTo_lh (a_0 + 1)) b_0)))
-  else
-    (`LH_N));;
-let rec expand_lh _lh_expand_arg1_0 _lh_expand_arg2_0 _lh_expand_arg3_0 _lh_expand_arg4_0 _lh_expand_arg5_0 _lh_expand_arg6_0 =
-  (((((_lh_expand_arg6_0 + (_lh_expand_arg5_0 * 10)) + (_lh_expand_arg4_0 * 100)) + (_lh_expand_arg3_0 * 1000)) + (_lh_expand_arg2_0 * 10000)) + (_lh_expand_arg1_0 * 100000));;
-let rec filter_lh f_1 ls_1 =
-  (match ls_1 with
-    | `LH_C(h_1, t_1) -> 
-      (if (f_1 h_1) then
-        (`LH_C(h_1, ((filter_lh f_1) t_1)))
-      else
-        ((filter_lh f_1) t_1))
-    | `LH_N -> 
-      (`LH_N));;
-let rec map_lh f_0 ls_0 =
-  (match ls_0 with
-    | `LH_C(h_0, t_0) -> 
-      (`LH_C((f_0 h_0), ((map_lh f_0) t_0)))
-    | `LH_N -> 
-      (`LH_N));;
 let rec take_lh n_0 ls_2 =
   (if (n_0 > 0) then
     (match ls_2 with
@@ -93,8 +93,8 @@ let rec condition_lh _lh_condition_arg1_0 =
         | _ -> 
           (failwith "error"))
     | _ -> 
-      (failwith "error"))
-and permutations_lh _lh_permutations_arg1_0 =
+      (failwith "error"));;
+let rec permutations_lh _lh_permutations_arg1_0 =
   (match _lh_permutations_arg1_0 with
     | `LH_N -> 
       (`LH_C((`LH_N), (`LH_N)))
@@ -113,8 +113,8 @@ and permutations_lh _lh_permutations_arg1_0 =
             (`LH_N))) in
         (_lh_listcomp_fun_1 (permutations_lh _lh_permutations_LH_C_1_0)))
     | _ -> 
-      (failwith "error"))
-and testCryptarithm_nofib_lh _lh_testCryptarithm_nofib_arg1_0 =
+      (failwith "error"));;
+let rec testCryptarithm_nofib_lh _lh_testCryptarithm_nofib_arg1_0 =
   ((map_lh (fun i_0 -> 
     (let rec p0_0 = ((take_lh 10) ((enumFromTo_lh 0) (9 + i_0))) in
       ((filter_lh condition_lh) (permutations_lh p0_0))))) ((enumFromTo_lh 1) _lh_testCryptarithm_nofib_arg1_0));;

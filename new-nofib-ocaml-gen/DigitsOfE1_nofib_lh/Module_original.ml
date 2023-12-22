@@ -3,13 +3,13 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_original = struct
+let rec aux_lh _lh_aux_arg1_0 =
+  (lazy (`LH_C(1, (lazy (`LH_C(_lh_aux_arg1_0, (lazy (`LH_C(1, (aux_lh (_lh_aux_arg1_0 + 2)))))))))));;
 let rec abs_lh _lh_abs_arg1_0 =
   (if (_lh_abs_arg1_0 < 0) then
     (0 - _lh_abs_arg1_0)
   else
     _lh_abs_arg1_0);;
-let rec aux_lh _lh_aux_arg1_0 =
-  (lazy (`LH_C(1, (lazy (`LH_C(_lh_aux_arg1_0, (lazy (`LH_C(1, (aux_lh (_lh_aux_arg1_0 + 2)))))))))));;
 let rec signum_lh _lh_signum_arg1_0 =
   (match _lh_signum_arg1_0 with
     | 0 -> 
@@ -20,8 +20,8 @@ let rec signum_lh _lh_signum_arg1_0 =
       else
         (0 - 1)));;
 let rec eContFrac_lh =
-  (lazy (`LH_C(2, (aux_lh 2))))
-and ratTrans_lh _lh_ratTrans_arg1_0 _lh_ratTrans_arg2_0 =
+  (lazy (`LH_C(2, (aux_lh 2))));;
+let rec ratTrans_lh _lh_ratTrans_arg1_0 _lh_ratTrans_arg2_0 =
   (match _lh_ratTrans_arg1_0 with
     | `LH_P4(_lh_ratTrans_LH_P4_0_0, _lh_ratTrans_LH_P4_1_0, _lh_ratTrans_LH_P4_2_0, _lh_ratTrans_LH_P4_3_0) -> 
       (let rec _lh_matchIdent_1 = (Lazy.force _lh_ratTrans_arg2_0) in
@@ -40,8 +40,8 @@ and ratTrans_lh _lh_ratTrans_arg1_0 _lh_ratTrans_arg2_0 =
           | _ -> 
             (failwith "error")))
     | _ -> 
-      (failwith "error"))
-and takeDigits_lh _lh_takeDigits_arg1_0 _lh_takeDigits_arg2_0 =
+      (failwith "error"));;
+let rec takeDigits_lh _lh_takeDigits_arg1_0 _lh_takeDigits_arg2_0 =
   (if (_lh_takeDigits_arg1_0 > 0) then
     (let rec _lh_matchIdent_0 = (Lazy.force _lh_takeDigits_arg2_0) in
       (match _lh_matchIdent_0 with
@@ -52,8 +52,8 @@ and takeDigits_lh _lh_takeDigits_arg1_0 _lh_takeDigits_arg2_0 =
         | _ -> 
           (failwith "error")))
   else
-    (`LH_N))
-and testDigitsOfE1_nofib_lh _lh_testDigitsOfE1_nofib_arg1_0 =
+    (`LH_N));;
+let rec testDigitsOfE1_nofib_lh _lh_testDigitsOfE1_nofib_arg1_0 =
   ((takeDigits_lh _lh_testDigitsOfE1_nofib_arg1_0) eContFrac_lh);;
 end;;
 

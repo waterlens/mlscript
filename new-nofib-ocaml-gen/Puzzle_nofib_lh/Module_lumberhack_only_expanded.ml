@@ -4,472 +4,115 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_lumberhack_only_expanded = struct
-let rec adamPos__d0 _lh_adamPos_arg1_4 =
-  (match _lh_adamPos_arg1_4 with
-    | `State(_lh_adamPos_State_0_4, _lh_adamPos_State_1_4, _lh_adamPos_State_2_4, _lh_adamPos_State_3_4) -> 
-      _lh_adamPos_State_3_4
+let rec totalTime_lh _lh_totalTime_arg1_0 =
+  (match _lh_totalTime_arg1_0 with
+    | `LH_C(_lh_totalTime_LH_C_0_0, _lh_totalTime_LH_C_1_0) -> 
+      (match _lh_totalTime_LH_C_0_0 with
+        | `LH_P2(_lh_totalTime_LH_P2_0_0, _lh_totalTime_LH_P2_1_0) -> 
+          _lh_totalTime_LH_P2_0_0
+        | _ -> 
+          (failwith "error"))
     | _ -> 
       (failwith "error"));;
-let rec adamPos__d1 _lh_adamPos_arg1_3 =
-  (match _lh_adamPos_arg1_3 with
-    | `State(_lh_adamPos_State_0_3, _lh_adamPos_State_1_3, _lh_adamPos_State_2_3, _lh_adamPos_State_3_3) -> 
-      _lh_adamPos_State_3_3
-    | _ -> 
-      (failwith "error"));;
-let rec adamPos__d2 _lh_adamPos_arg1_2 =
-  (match _lh_adamPos_arg1_2 with
-    | `State(_lh_adamPos_State_0_2, _lh_adamPos_State_1_2, _lh_adamPos_State_2_2, _lh_adamPos_State_3_2) -> 
-      _lh_adamPos_State_3_2
-    | _ -> 
-      (failwith "error"));;
-let rec adamPos__d3 _lh_adamPos_arg1_1 =
-  (match _lh_adamPos_arg1_1 with
-    | `State(_lh_adamPos_State_0_1, _lh_adamPos_State_1_1, _lh_adamPos_State_2_1, _lh_adamPos_State_3_1) -> 
-      _lh_adamPos_State_3_1
-    | _ -> 
-      (failwith "error"));;
-let rec all__d0 _lh_all_arg1_2 _lh_all_arg2_2 =
-  (match _lh_all_arg2_2 with
+let rec reverse_helper_lh ls_3 a_0 =
+  (match ls_3 with
+    | `LH_C(h_4, t_4) -> 
+      ((reverse_helper_lh t_4) (`LH_C(h_4, a_0)))
     | `LH_N -> 
-      true
-    | `LH_C(_lh_all_LH_C_0_2, _lh_all_LH_C_1_2) -> 
-      (if (_lh_all_arg1_2 _lh_all_LH_C_0_2) then
-        ((all__d0 _lh_all_arg1_2) _lh_all_LH_C_1_2)
-      else
-        false)
-    | _ -> 
-      (failwith "error"));;
-let rec all__d1 _lh_all_arg1_1 _lh_all_arg2_1 =
-  (match _lh_all_arg2_1 with
-    | `LH_N -> 
-      true
-    | `LH_C(_lh_all_LH_C_0_1, _lh_all_LH_C_1_1) -> 
-      (if (_lh_all_arg1_1 _lh_all_LH_C_0_1) then
-        ((all__d1 _lh_all_arg1_1) _lh_all_LH_C_1_1)
-      else
-        false)
-    | _ -> 
-      (failwith "error"));;
-let rec bonoPos__d0 _lh_bonoPos_arg1_2 =
-  (match _lh_bonoPos_arg1_2 with
-    | `State(_lh_bonoPos_State_0_2, _lh_bonoPos_State_1_2, _lh_bonoPos_State_2_2, _lh_bonoPos_State_3_2) -> 
-      _lh_bonoPos_State_0_2
-    | _ -> 
-      (failwith "error"));;
-let rec bonoPos__d1 _lh_bonoPos_arg1_4 =
-  (match _lh_bonoPos_arg1_4 with
-    | `State(_lh_bonoPos_State_0_4, _lh_bonoPos_State_1_4, _lh_bonoPos_State_2_4, _lh_bonoPos_State_3_4) -> 
-      _lh_bonoPos_State_0_4
-    | _ -> 
-      (failwith "error"));;
-let rec bonoPos__d2 _lh_bonoPos_arg1_1 =
-  (match _lh_bonoPos_arg1_1 with
-    | `State(_lh_bonoPos_State_0_1, _lh_bonoPos_State_1_1, _lh_bonoPos_State_2_1, _lh_bonoPos_State_3_1) -> 
-      _lh_bonoPos_State_0_1
-    | _ -> 
-      (failwith "error"));;
-let rec bonoPos__d3 _lh_bonoPos_arg1_3 =
-  (match _lh_bonoPos_arg1_3 with
-    | `State(_lh_bonoPos_State_0_3, _lh_bonoPos_State_1_3, _lh_bonoPos_State_2_3, _lh_bonoPos_State_3_3) -> 
-      _lh_bonoPos_State_0_3
-    | _ -> 
-      (failwith "error"));;
-let rec edgePos__d0 _lh_edgePos_arg1_4 =
-  (match _lh_edgePos_arg1_4 with
-    | `State(_lh_edgePos_State_0_4, _lh_edgePos_State_1_4, _lh_edgePos_State_2_4, _lh_edgePos_State_3_4) -> 
-      _lh_edgePos_State_1_4
-    | _ -> 
-      (failwith "error"));;
-let rec edgePos__d1 _lh_edgePos_arg1_2 =
-  (match _lh_edgePos_arg1_2 with
-    | `State(_lh_edgePos_State_0_2, _lh_edgePos_State_1_2, _lh_edgePos_State_2_2, _lh_edgePos_State_3_2) -> 
-      _lh_edgePos_State_1_2
-    | _ -> 
-      (failwith "error"));;
-let rec edgePos__d2 _lh_edgePos_arg1_1 =
-  (match _lh_edgePos_arg1_1 with
-    | `State(_lh_edgePos_State_0_1, _lh_edgePos_State_1_1, _lh_edgePos_State_2_1, _lh_edgePos_State_3_1) -> 
-      _lh_edgePos_State_1_1
-    | _ -> 
-      (failwith "error"));;
-let rec edgePos__d3 _lh_edgePos_arg1_3 =
-  (match _lh_edgePos_arg1_3 with
-    | `State(_lh_edgePos_State_0_3, _lh_edgePos_State_1_3, _lh_edgePos_State_2_3, _lh_edgePos_State_3_3) -> 
-      _lh_edgePos_State_1_3
-    | _ -> 
-      (failwith "error"));;
-let rec finalState__d0 =
-  (`State((`RightBank), (`RightBank), (`RightBank), (`RightBank)));;
-let rec foldr__d0 f_1_2 i_3 ls_2_1 =
-  (match ls_2_1 with
-    | `LH_C(h_3_7, t_3_9) -> 
-      ((f_1_2 h_3_7) (((foldr__d0 f_1_2) i_3) t_3_9))
-    | `LH_N -> 
-      i_3);;
-let rec initialState__d0 =
-  (`State((`LeftBank), (`LeftBank), (`LeftBank), (`LeftBank)));;
-let rec larryPos__d0 _lh_larryPos_arg1_1 =
-  (match _lh_larryPos_arg1_1 with
-    | `State(_lh_larryPos_State_0_1, _lh_larryPos_State_1_1, _lh_larryPos_State_2_1, _lh_larryPos_State_3_1) -> 
-      _lh_larryPos_State_2_1
-    | _ -> 
-      (failwith "error"));;
-let rec larryPos__d1 _lh_larryPos_arg1_2 =
-  (match _lh_larryPos_arg1_2 with
-    | `State(_lh_larryPos_State_0_2, _lh_larryPos_State_1_2, _lh_larryPos_State_2_2, _lh_larryPos_State_3_2) -> 
-      _lh_larryPos_State_2_2
-    | _ -> 
-      (failwith "error"));;
-let rec larryPos__d2 _lh_larryPos_arg1_4 =
-  (match _lh_larryPos_arg1_4 with
-    | `State(_lh_larryPos_State_0_4, _lh_larryPos_State_1_4, _lh_larryPos_State_2_4, _lh_larryPos_State_3_4) -> 
-      _lh_larryPos_State_2_4
-    | _ -> 
-      (failwith "error"));;
-let rec larryPos__d3 _lh_larryPos_arg1_3 =
-  (match _lh_larryPos_arg1_3 with
-    | `State(_lh_larryPos_State_0_3, _lh_larryPos_State_1_3, _lh_larryPos_State_2_3, _lh_larryPos_State_3_3) -> 
-      _lh_larryPos_State_2_3
-    | _ -> 
-      (failwith "error"));;
-let rec length__d0 ls_2_2 =
-  (match ls_2_2 with
-    | `LH_C(h_4_7, t_4_9) -> 
-      (1 + (length__d0 t_4_9))
+      a_0);;
+let rec length_lh ls_1 =
+  (match ls_1 with
+    | `LH_C(h_1, t_1) -> 
+      (1 + (length_lh t_1))
     | `LH_N -> 
       0);;
-let rec mappend__d0 xs_1_8 ys_1_8 =
-  (match xs_1_8 with
-    | `LH_C(h_3_1, t_3_3) -> 
-      (`LH_C(h_3_1, ((mappend__d0 t_3_3) ys_1_8)))
+let rec mappend_lh xs_0 ys_0 =
+  (match xs_0 with
+    | `LH_C(h_2, t_2) -> 
+      (`LH_C(h_2, ((mappend_lh t_2) ys_0)))
     | `LH_N -> 
-      ys_1_8);;
-let rec mappend__d1 xs_2_0 ys_2_0 =
-  (match xs_2_0 with
-    | `LH_C(h_3_3, t_3_5) -> 
-      (`LH_C(h_3_3, ((mappend__d1 t_3_5) ys_2_0)))
+      ys_0);;
+let rec foldr_lh f_0 i_0 ls_0 =
+  (match ls_0 with
+    | `LH_C(h_0, t_0) -> 
+      ((f_0 h_0) (((foldr_lh f_0) i_0) t_0))
     | `LH_N -> 
-      ys_2_0);;
-let rec mappend__d1_d0 xs_1_9 ys_1_9 =
-  (match xs_1_9 with
-    | `LH_C(h_3_2, t_3_4) -> 
-      (`LH_C(h_3_2, ((mappend__d1_d0 t_3_4) ys_1_9)))
-    | `LH_N -> 
-      ys_1_9);;
-let rec mappend__d1_d1 xs_4_8 ys_4_8 =
-  (match xs_4_8 with
-    | `LH_C(h_6_4, t_6_6) -> 
-      (`LH_C(h_6_4, ((mappend__d1_d1 t_6_6) ys_4_8)))
-    | `LH_N -> 
-      ys_4_8);;
-let rec mappend__d1_d2 xs_4_0 ys_4_0 =
-  (match xs_4_0 with
-    | `LH_C(h_5_5, t_5_7) -> 
-      (`LH_C(h_5_5, ((mappend__d1_d2 t_5_7) ys_4_0)))
-    | `LH_N -> 
-      ys_4_0);;
-let rec mappend__d1_d3 xs_4_2 ys_4_2 =
-  (match xs_4_2 with
-    | `LH_C(h_5_7, t_5_9) -> 
-      (`LH_C(h_5_7, ((mappend__d1_d3 t_5_9) ys_4_2)))
-    | `LH_N -> 
-      ys_4_2);;
-let rec mappend__d1_d4 xs_1_5 ys_1_5 =
-  (match xs_1_5 with
-    | `LH_C(h_2_8, t_3_0) -> 
-      (`LH_C(h_2_8, ((mappend__d1_d4 t_3_0) ys_1_5)))
-    | `LH_N -> 
-      ys_1_5);;
-let rec mappend__d1_d5 xs_4_3 ys_4_3 =
-  (match xs_4_3 with
-    | `LH_C(h_5_8, t_6_0) -> 
-      (`LH_C(h_5_8, ((mappend__d1_d5 t_6_0) ys_4_3)))
-    | `LH_N -> 
-      ys_4_3);;
-let rec mappend__d1_d6 xs_2_8 ys_2_8 =
-  (match xs_2_8 with
-    | `LH_C(h_4_2, t_4_4) -> 
-      (`LH_C(h_4_2, ((mappend__d1_d6 t_4_4) ys_2_8)))
-    | `LH_N -> 
-      ys_2_8);;
-let rec mappend__d1_d7 xs_3_7 ys_3_7 =
-  (match xs_3_7 with
-    | `LH_C(h_5_2, t_5_4) -> 
-      (`LH_C(h_5_2, ((mappend__d1_d7 t_5_4) ys_3_7)))
-    | `LH_N -> 
-      ys_3_7);;
-let rec mappend__d1_d8 xs_1_2 ys_1_2 =
-  (match xs_1_2 with
-    | `LH_C(h_2_4, t_2_6) -> 
-      (`LH_C(h_2_4, ((mappend__d1_d8 t_2_6) ys_1_2)))
-    | `LH_N -> 
-      ys_1_2);;
-let rec mappend__d1_d9 xs_3_8 ys_3_8 =
-  (match xs_3_8 with
-    | `LH_C(h_5_3, t_5_5) -> 
-      (`LH_C(h_5_3, ((mappend__d1_d9 t_5_5) ys_3_8)))
-    | `LH_N -> 
-      ys_3_8);;
-let rec mappend__d2 xs_3_0 ys_3_0 =
-  (match xs_3_0 with
-    | `LH_C(h_4_4, t_4_6) -> 
-      (`LH_C(h_4_4, ((mappend__d2 t_4_6) ys_3_0)))
-    | `LH_N -> 
-      ys_3_0);;
-let rec mappend__d2_d0 xs_3_2 ys_3_2 =
-  (match xs_3_2 with
-    | `LH_C(h_4_6, t_4_8) -> 
-      (`LH_C(h_4_6, ((mappend__d2_d0 t_4_8) ys_3_2)))
-    | `LH_N -> 
-      ys_3_2);;
-let rec mappend__d2_d1 xs_1_4 ys_1_4 =
-  (match xs_1_4 with
-    | `LH_C(h_2_6, t_2_8) -> 
-      (`LH_C(h_2_6, ((mappend__d2_d1 t_2_8) ys_1_4)))
-    | `LH_N -> 
-      ys_1_4);;
-let rec mappend__d2_d2 xs_2_9 ys_2_9 =
-  (match xs_2_9 with
-    | `LH_C(h_4_3, t_4_5) -> 
-      (`LH_C(h_4_3, ((mappend__d2_d2 t_4_5) ys_2_9)))
-    | `LH_N -> 
-      ys_2_9);;
-let rec mappend__d2_d3 xs_1_0 ys_1_0 =
-  (match xs_1_0 with
-    | `LH_C(h_2_1, t_2_3) -> 
-      (`LH_C(h_2_1, ((mappend__d2_d3 t_2_3) ys_1_0)))
-    | `LH_N -> 
-      ys_1_0);;
-let rec mappend__d2_d4 xs_4_5 ys_4_5 =
-  (match xs_4_5 with
-    | `LH_C(h_6_1, t_6_3) -> 
-      (`LH_C(h_6_1, ((mappend__d2_d4 t_6_3) ys_4_5)))
-    | `LH_N -> 
-      ys_4_5);;
-let rec mappend__d2_d5 xs_3_6 ys_3_6 =
-  (match xs_3_6 with
-    | `LH_C(h_5_1, t_5_3) -> 
-      (`LH_C(h_5_1, ((mappend__d2_d5 t_5_3) ys_3_6)))
-    | `LH_N -> 
-      ys_3_6);;
-let rec mappend__d2_d6 xs_1_3 ys_1_3 =
-  (match xs_1_3 with
-    | `LH_C(h_2_5, t_2_7) -> 
-      (`LH_C(h_2_5, ((mappend__d2_d6 t_2_7) ys_1_3)))
-    | `LH_N -> 
-      ys_1_3);;
-let rec mappend__d2_d7 xs_3_3 ys_3_3 =
-  (match xs_3_3 with
-    | `LH_C(h_4_8, t_5_0) -> 
-      (`LH_C(h_4_8, ((mappend__d2_d7 t_5_0) ys_3_3)))
-    | `LH_N -> 
-      ys_3_3);;
-let rec mappend__d2_d8 xs_9 ys_9 =
-  (match xs_9 with
-    | `LH_C(h_2_0, t_2_2) -> 
-      (`LH_C(h_2_0, ((mappend__d2_d8 t_2_2) ys_9)))
-    | `LH_N -> 
-      ys_9);;
-let rec mappend__d2_d9 xs_2_5 ys_2_5 =
-  (match xs_2_5 with
-    | `LH_C(h_3_9, t_4_1) -> 
-      (`LH_C(h_3_9, ((mappend__d2_d9 t_4_1) ys_2_5)))
-    | `LH_N -> 
-      ys_2_5);;
-let rec mappend__d3 xs_2_1 ys_2_1 =
-  (match xs_2_1 with
-    | `LH_C(h_3_4, t_3_6) -> 
-      (`LH_C(h_3_4, ((mappend__d3 t_3_6) ys_2_1)))
-    | `LH_N -> 
-      ys_2_1);;
-let rec mappend__d3_d0 xs_2_7 ys_2_7 =
-  (match xs_2_7 with
-    | `LH_C(h_4_1, t_4_3) -> 
-      (`LH_C(h_4_1, ((mappend__d3_d0 t_4_3) ys_2_7)))
-    | `LH_N -> 
-      ys_2_7);;
-let rec mappend__d3_d1 xs_2_4 ys_2_4 =
-  (match xs_2_4 with
-    | `LH_C(h_3_8, t_4_0) -> 
-      (`LH_C(h_3_8, ((mappend__d3_d1 t_4_0) ys_2_4)))
-    | `LH_N -> 
-      ys_2_4);;
-let rec mappend__d3_d2 xs_4_1 ys_4_1 =
-  (match xs_4_1 with
-    | `LH_C(h_5_6, t_5_8) -> 
-      (`LH_C(h_5_6, ((mappend__d3_d2 t_5_8) ys_4_1)))
-    | `LH_N -> 
-      ys_4_1);;
-let rec mappend__d3_d3 xs_3_4 ys_3_4 =
-  (match xs_3_4 with
-    | `LH_C(h_4_9, t_5_1) -> 
-      (`LH_C(h_4_9, ((mappend__d3_d3 t_5_1) ys_3_4)))
-    | `LH_N -> 
-      ys_3_4);;
-let rec mappend__d3_d4 xs_4_9 ys_4_9 =
-  (match xs_4_9 with
-    | `LH_C(h_6_5, t_6_7) -> 
-      (`LH_C(h_6_5, ((mappend__d3_d4 t_6_7) ys_4_9)))
-    | `LH_N -> 
-      ys_4_9);;
-let rec mappend__d3_d5 xs_3_1 ys_3_1 =
-  (match xs_3_1 with
-    | `LH_C(h_4_5, t_4_7) -> 
-      (`LH_C(h_4_5, ((mappend__d3_d5 t_4_7) ys_3_1)))
-    | `LH_N -> 
-      ys_3_1);;
-let rec mappend__d3_d6 xs_2_2 ys_2_2 =
-  (match xs_2_2 with
-    | `LH_C(h_3_5, t_3_7) -> 
-      (`LH_C(h_3_5, ((mappend__d3_d6 t_3_7) ys_2_2)))
-    | `LH_N -> 
-      ys_2_2);;
-let rec mappend__d3_d7 xs_2_6 ys_2_6 =
-  (match xs_2_6 with
-    | `LH_C(h_4_0, t_4_2) -> 
-      (`LH_C(h_4_0, ((mappend__d3_d7 t_4_2) ys_2_6)))
-    | `LH_N -> 
-      ys_2_6);;
-let rec mappend__d3_d8 xs_1_7 ys_1_7 =
-  (match xs_1_7 with
-    | `LH_C(h_3_0, t_3_2) -> 
-      (`LH_C(h_3_0, ((mappend__d3_d8 t_3_2) ys_1_7)))
-    | `LH_N -> 
-      ys_1_7);;
-let rec mappend__d3_d9 xs_2_3 ys_2_3 =
-  (match xs_2_3 with
-    | `LH_C(h_3_6, t_3_8) -> 
-      (`LH_C(h_3_6, ((mappend__d3_d9 t_3_8) ys_2_3)))
-    | `LH_N -> 
-      ys_2_3);;
-let rec mappend__d4 xs_3_5 ys_3_5 =
-  (match xs_3_5 with
-    | `LH_C(h_5_0, t_5_2) -> 
-      (`LH_C(h_5_0, ((mappend__d4 t_5_2) ys_3_5)))
-    | `LH_N -> 
-      ys_3_5);;
-let rec mappend__d4_d0 xs_1_1 ys_1_1 =
-  (match xs_1_1 with
-    | `LH_C(h_2_2, t_2_4) -> 
-      (`LH_C(h_2_2, ((mappend__d4_d0 t_2_4) ys_1_1)))
-    | `LH_N -> 
-      ys_1_1);;
-let rec mappend__d5 xs_4_4 ys_4_4 =
-  (match xs_4_4 with
-    | `LH_C(h_5_9, t_6_1) -> 
-      (`LH_C(h_5_9, ((mappend__d5 t_6_1) ys_4_4)))
-    | `LH_N -> 
-      ys_4_4);;
-let rec mappend__d6 xs_4_7 ys_4_7 =
-  (match xs_4_7 with
-    | `LH_C(h_6_3, t_6_5) -> 
-      (`LH_C(h_6_3, ((mappend__d6 t_6_5) ys_4_7)))
-    | `LH_N -> 
-      ys_4_7);;
-let rec mappend__d7 xs_1_6 ys_1_6 =
-  (match xs_1_6 with
-    | `LH_C(h_2_9, t_3_1) -> 
-      (`LH_C(h_2_9, ((mappend__d7 t_3_1) ys_1_6)))
-    | `LH_N -> 
-      ys_1_6);;
-let rec mappend__d8 xs_3_9 ys_3_9 =
-  (match xs_3_9 with
-    | `LH_C(h_5_4, t_5_6) -> 
-      (`LH_C(h_5_4, ((mappend__d8 t_5_6) ys_3_9)))
-    | `LH_N -> 
-      ys_3_9);;
-let rec mappend__d9 xs_4_6 ys_4_6 =
-  (match xs_4_6 with
-    | `LH_C(h_6_2, t_6_4) -> 
-      (`LH_C(h_6_2, ((mappend__d9 t_6_4) ys_4_6)))
-    | `LH_N -> 
-      ys_4_6);;
-let rec opposite__d0 _lh_opposite_arg1_1 =
-  (match _lh_opposite_arg1_1 with
+      i_0);;
+let rec bonoPos_lh _lh_bonoPos_arg1_0 =
+  (match _lh_bonoPos_arg1_0 with
+    | `State(_lh_bonoPos_State_0_0, _lh_bonoPos_State_1_0, _lh_bonoPos_State_2_0, _lh_bonoPos_State_3_0) -> 
+      _lh_bonoPos_State_0_0
+    | _ -> 
+      (failwith "error"));;
+let rec adamPos_lh _lh_adamPos_arg1_0 =
+  (match _lh_adamPos_arg1_0 with
+    | `State(_lh_adamPos_State_0_0, _lh_adamPos_State_1_0, _lh_adamPos_State_2_0, _lh_adamPos_State_3_0) -> 
+      _lh_adamPos_State_3_0
+    | _ -> 
+      (failwith "error"));;
+let rec larryPos_lh _lh_larryPos_arg1_0 =
+  (match _lh_larryPos_arg1_0 with
+    | `State(_lh_larryPos_State_0_0, _lh_larryPos_State_1_0, _lh_larryPos_State_2_0, _lh_larryPos_State_3_0) -> 
+      _lh_larryPos_State_2_0
+    | _ -> 
+      (failwith "error"));;
+let rec edgePos_lh _lh_edgePos_arg1_0 =
+  (match _lh_edgePos_arg1_0 with
+    | `State(_lh_edgePos_State_0_0, _lh_edgePos_State_1_0, _lh_edgePos_State_2_0, _lh_edgePos_State_3_0) -> 
+      _lh_edgePos_State_1_0
+    | _ -> 
+      (failwith "error"));;
+let rec finalState_lh =
+  (`State((`RightBank), (`RightBank), (`RightBank), (`RightBank)));;
+let rec initialState_lh =
+  (`State((`LeftBank), (`LeftBank), (`LeftBank), (`LeftBank)));;
+let rec updateState_lh _lh_updateState_arg1_0 _lh_updateState_arg2_0 _lh_updateState_arg3_0 =
+  (match _lh_updateState_arg1_0 with
+    | `State(_lh_updateState_State_0_0, _lh_updateState_State_1_0, _lh_updateState_State_2_0, _lh_updateState_State_3_0) -> 
+      (match _lh_updateState_arg2_0 with
+        | `Bono -> 
+          (`State(_lh_updateState_arg3_0, _lh_updateState_State_1_0, _lh_updateState_State_2_0, _lh_updateState_State_3_0))
+        | `Edge -> 
+          (`State(_lh_updateState_State_0_0, _lh_updateState_arg3_0, _lh_updateState_State_2_0, _lh_updateState_State_3_0))
+        | `Larry -> 
+          (`State(_lh_updateState_State_0_0, _lh_updateState_State_1_0, _lh_updateState_arg3_0, _lh_updateState_State_3_0))
+        | `Adam -> 
+          (`State(_lh_updateState_State_0_0, _lh_updateState_State_1_0, _lh_updateState_State_2_0, _lh_updateState_arg3_0))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec opposite_lh _lh_opposite_arg1_0 =
+  (match _lh_opposite_arg1_0 with
     | `LeftBank -> 
       (`RightBank)
     | `RightBank -> 
       (`LeftBank)
     | _ -> 
       (failwith "error"));;
-let rec reverse_helper__d0 ls_2_0 a_5 =
-  (match ls_2_0 with
-    | `LH_C(h_2_7, t_2_9) -> 
-      ((reverse_helper__d0 t_2_9) (`LH_C(h_2_7, a_5)))
+let rec succItem_lh _lh_succItem_arg1_0 =
+  (match _lh_succItem_arg1_0 with
+    | `Bono -> 
+      (`Edge)
+    | `Edge -> 
+      (`Larry)
+    | `Larry -> 
+      (`Adam)
+    | _ -> 
+      (failwith "error"));;
+let rec all_lh _lh_all_arg1_0 _lh_all_arg2_0 =
+  (match _lh_all_arg2_0 with
     | `LH_N -> 
-      a_5);;
-let rec succItem__d0 _lh_succItem_arg1_1 =
-  (match _lh_succItem_arg1_1 with
-    | `Bono -> 
-      (`Edge)
-    | `Edge -> 
-      (`Larry)
-    | `Larry -> 
-      (`Adam)
+      true
+    | `LH_C(_lh_all_LH_C_0_0, _lh_all_LH_C_1_0) -> 
+      (if (_lh_all_arg1_0 _lh_all_LH_C_0_0) then
+        ((all_lh _lh_all_arg1_0) _lh_all_LH_C_1_0)
+      else
+        false)
     | _ -> 
       (failwith "error"));;
-let rec succItem__d1 _lh_succItem_arg1_3 =
-  (match _lh_succItem_arg1_3 with
-    | `Bono -> 
-      (`Edge)
-    | `Edge -> 
-      (`Larry)
-    | `Larry -> 
-      (`Adam)
-    | _ -> 
-      (failwith "error"));;
-let rec succItem__d2 _lh_succItem_arg1_2 =
-  (match _lh_succItem_arg1_2 with
-    | `Bono -> 
-      (`Edge)
-    | `Edge -> 
-      (`Larry)
-    | `Larry -> 
-      (`Adam)
-    | _ -> 
-      (failwith "error"));;
-let rec succItem__d3 _lh_succItem_arg1_4 =
-  (match _lh_succItem_arg1_4 with
-    | `Bono -> 
-      (`Edge)
-    | `Edge -> 
-      (`Larry)
-    | `Larry -> 
-      (`Adam)
-    | _ -> 
-      (failwith "error"));;
-let rec totalTime__d0 _lh_totalTime_arg1_2 =
-  (match _lh_totalTime_arg1_2 with
-    | `LH_C(_lh_totalTime_LH_C_0_2, _lh_totalTime_LH_C_1_2) -> 
-      (match _lh_totalTime_LH_C_0_2 with
-        | `LH_P2(_lh_totalTime_LH_P2_0_2, _lh_totalTime_LH_P2_1_2) -> 
-          _lh_totalTime_LH_P2_0_2
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec totalTime__d1 _lh_totalTime_arg1_3 =
-  (match _lh_totalTime_arg1_3 with
-    | `LH_C(_lh_totalTime_LH_C_0_3, _lh_totalTime_LH_C_1_3) -> 
-      (match _lh_totalTime_LH_C_0_3 with
-        | `LH_P2(_lh_totalTime_LH_P2_0_3, _lh_totalTime_LH_P2_1_3) -> 
-          _lh_totalTime_LH_P2_0_3
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec totalTime__d2 _lh_totalTime_arg1_1 =
-  (match _lh_totalTime_arg1_1 with
-    | `LH_C(_lh_totalTime_LH_C_0_1, _lh_totalTime_LH_C_1_1) -> 
-      (match _lh_totalTime_LH_C_0_1 with
-        | `LH_P2(_lh_totalTime_LH_P2_0_1, _lh_totalTime_LH_P2_1_1) -> 
-          _lh_totalTime_LH_P2_0_1
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec u2times__d0 _lh_u2times_arg1_2 =
-  (match _lh_u2times_arg1_2 with
+let rec u2times_lh _lh_u2times_arg1_0 =
+  (match _lh_u2times_arg1_0 with
     | `Bono -> 
       10
     | `Edge -> 
@@ -480,410 +123,194 @@ let rec u2times__d0 _lh_u2times_arg1_2 =
       1
     | _ -> 
       (failwith "error"));;
-let rec u2times__d1 _lh_u2times_arg1_1 =
-  (match _lh_u2times_arg1_1 with
+let rec reverse_lh ls_2 =
+  ((reverse_helper_lh ls_2) (`LH_N));;
+let rec writeItem_lh _lh_writeItem_arg1_0 _lh_writeItem_arg2_0 _lh_writeItem_arg3_0 =
+  (match _lh_writeItem_arg1_0 with
     | `Bono -> 
-      10
+      (match _lh_writeItem_arg2_0 with
+        | `LeftBank -> 
+          ((mappend_lh (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('B', (`LH_C('o', (`LH_C('n', (`LH_C('o', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_0)
+        | `RightBank -> 
+          ((mappend_lh (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('B', (`LH_C('o', (`LH_C('n', (`LH_C('o', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_0)
+        | _ -> 
+          (failwith "error"))
     | `Edge -> 
-      5
+      (match _lh_writeItem_arg2_0 with
+        | `LeftBank -> 
+          ((mappend_lh (`LH_C('T', (`LH_C('h', (`LH_C('e', (`LH_C(' ', (`LH_C('E', (`LH_C('d', (`LH_C('g', (`LH_C('e', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_0)
+        | `RightBank -> 
+          ((mappend_lh (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('T', (`LH_C('h', (`LH_C('e', (`LH_C(' ', (`LH_C('E', (`LH_C('d', (`LH_C('g', (`LH_C('e', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_0)
+        | _ -> 
+          (failwith "error"))
     | `Larry -> 
-      2
+      (match _lh_writeItem_arg2_0 with
+        | `LeftBank -> 
+          ((mappend_lh (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('L', (`LH_C('a', (`LH_C('r', (`LH_C('r', (`LH_C('y', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_0)
+        | `RightBank -> 
+          ((mappend_lh (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('L', (`LH_C('a', (`LH_C('r', (`LH_C('r', (`LH_C('y', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_0)
+        | _ -> 
+          (failwith "error"))
     | `Adam -> 
-      1
-    | _ -> 
-      (failwith "error"));;
-let rec updateState__d0 _lh_updateState_arg1_3 _lh_updateState_arg2_3 _lh_updateState_arg3_3 =
-  (match _lh_updateState_arg1_3 with
-    | `State(_lh_updateState_State_0_3, _lh_updateState_State_1_3, _lh_updateState_State_2_3, _lh_updateState_State_3_3) -> 
-      (match _lh_updateState_arg2_3 with
-        | `Bono -> 
-          (`State(_lh_updateState_arg3_3, _lh_updateState_State_1_3, _lh_updateState_State_2_3, _lh_updateState_State_3_3))
-        | `Edge -> 
-          (`State(_lh_updateState_State_0_3, _lh_updateState_arg3_3, _lh_updateState_State_2_3, _lh_updateState_State_3_3))
-        | `Larry -> 
-          (`State(_lh_updateState_State_0_3, _lh_updateState_State_1_3, _lh_updateState_arg3_3, _lh_updateState_State_3_3))
-        | `Adam -> 
-          (`State(_lh_updateState_State_0_3, _lh_updateState_State_1_3, _lh_updateState_State_2_3, _lh_updateState_arg3_3))
+      (match _lh_writeItem_arg2_0 with
+        | `LeftBank -> 
+          ((mappend_lh (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('A', (`LH_C('d', (`LH_C('a', (`LH_C('m', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_0)
+        | `RightBank -> 
+          ((mappend_lh (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('A', (`LH_C('d', (`LH_C('a', (`LH_C('m', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_0)
         | _ -> 
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
-let rec updateState__d1 _lh_updateState_arg1_2 _lh_updateState_arg2_2 _lh_updateState_arg3_2 =
-  (match _lh_updateState_arg1_2 with
-    | `State(_lh_updateState_State_0_2, _lh_updateState_State_1_2, _lh_updateState_State_2_2, _lh_updateState_State_3_2) -> 
-      (match _lh_updateState_arg2_2 with
-        | `Bono -> 
-          (`State(_lh_updateState_arg3_2, _lh_updateState_State_1_2, _lh_updateState_State_2_2, _lh_updateState_State_3_2))
-        | `Edge -> 
-          (`State(_lh_updateState_State_0_2, _lh_updateState_arg3_2, _lh_updateState_State_2_2, _lh_updateState_State_3_2))
-        | `Larry -> 
-          (`State(_lh_updateState_State_0_2, _lh_updateState_State_1_2, _lh_updateState_arg3_2, _lh_updateState_State_3_2))
-        | `Adam -> 
-          (`State(_lh_updateState_State_0_2, _lh_updateState_State_1_2, _lh_updateState_State_2_2, _lh_updateState_arg3_2))
-        | _ -> 
-          (failwith "error"))
+let rec position_lh _lh_position_arg1_0 =
+  (match _lh_position_arg1_0 with
+    | `Bono -> 
+      bonoPos_lh
+    | `Edge -> 
+      edgePos_lh
+    | `Larry -> 
+      larryPos_lh
+    | `Adam -> 
+      adamPos_lh
     | _ -> 
       (failwith "error"));;
-let rec updateState__d2 _lh_updateState_arg1_1 _lh_updateState_arg2_1 _lh_updateState_arg3_1 =
-  (match _lh_updateState_arg1_1 with
-    | `State(_lh_updateState_State_0_1, _lh_updateState_State_1_1, _lh_updateState_State_2_1, _lh_updateState_State_3_1) -> 
-      (match _lh_updateState_arg2_1 with
-        | `Bono -> 
-          (`State(_lh_updateState_arg3_1, _lh_updateState_State_1_1, _lh_updateState_State_2_1, _lh_updateState_State_3_1))
-        | `Edge -> 
-          (`State(_lh_updateState_State_0_1, _lh_updateState_arg3_1, _lh_updateState_State_2_1, _lh_updateState_State_3_1))
-        | `Larry -> 
-          (`State(_lh_updateState_State_0_1, _lh_updateState_State_1_1, _lh_updateState_arg3_1, _lh_updateState_State_3_1))
-        | `Adam -> 
-          (`State(_lh_updateState_State_0_1, _lh_updateState_State_1_1, _lh_updateState_State_2_1, _lh_updateState_arg3_1))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec concat__d0 lss_1 =
-  (match lss_1 with
-    | `LH_C(h_2_3, t_2_5) -> 
-      ((mappend__d0 h_2_3) (concat__d0 t_2_5))
+let rec itemFromTo_lh _lh_itemFromTo_arg1_0 _lh_itemFromTo_arg2_0 =
+  (if (_lh_itemFromTo_arg1_0 = _lh_itemFromTo_arg2_0) then
+    (`LH_C(_lh_itemFromTo_arg1_0, (`LH_N)))
+  else
+    (`LH_C(_lh_itemFromTo_arg1_0, ((itemFromTo_lh (succItem_lh _lh_itemFromTo_arg1_0)) _lh_itemFromTo_arg2_0))));;
+let rec concat_lh lss_0 =
+  (match lss_0 with
+    | `LH_C(h_3, t_3) -> 
+      ((mappend_lh h_3) (concat_lh t_3))
     | `LH_N -> 
-      (`LH_N))
-and concat__d1 lss_2 =
-  (match lss_2 with
-    | `LH_C(h_6_0, t_6_2) -> 
-      ((mappend__d1 h_6_0) (concat__d1 t_6_2))
-    | `LH_N -> 
-      (`LH_N))
-and itemFromTo__d0 _lh_itemFromTo_arg1_2 _lh_itemFromTo_arg2_2 =
-  (if (_lh_itemFromTo_arg1_2 = _lh_itemFromTo_arg2_2) then
-    (`LH_C(_lh_itemFromTo_arg1_2, (`LH_N)))
-  else
-    (`LH_C(_lh_itemFromTo_arg1_2, ((itemFromTo__d0 (succItem__d0 _lh_itemFromTo_arg1_2)) _lh_itemFromTo_arg2_2))))
-and itemFromTo__d1 _lh_itemFromTo_arg1_3 _lh_itemFromTo_arg2_3 =
-  (if (_lh_itemFromTo_arg1_3 = _lh_itemFromTo_arg2_3) then
-    (`LH_C(_lh_itemFromTo_arg1_3, (`LH_N)))
-  else
-    (`LH_C(_lh_itemFromTo_arg1_3, ((itemFromTo__d1 (succItem__d1 _lh_itemFromTo_arg1_3)) _lh_itemFromTo_arg2_3))))
-and itemFromTo__d2 _lh_itemFromTo_arg1_1 _lh_itemFromTo_arg2_1 =
-  (if (_lh_itemFromTo_arg1_1 = _lh_itemFromTo_arg2_1) then
-    (`LH_C(_lh_itemFromTo_arg1_1, (`LH_N)))
-  else
-    (`LH_C(_lh_itemFromTo_arg1_1, ((itemFromTo__d2 (succItem__d2 _lh_itemFromTo_arg1_1)) _lh_itemFromTo_arg2_1))))
-and minSolutions__d0 _lh_minSolutions_arg1_1 =
-  (match _lh_minSolutions_arg1_1 with
+      (`LH_N));;
+let rec notSeen_lh _lh_notSeen_arg1_0 =
+  (all_lh (fun _s_0 -> 
+    (let rec _lh_matchIdent_0 = _s_0 in
+      (match _lh_matchIdent_0 with
+        | `LH_P2(_lh_notSeen_LH_P2_0_0, _lh_notSeen_LH_P2_1_0) -> 
+          (_lh_notSeen_arg1_0 <> _lh_notSeen_LH_P2_1_0)
+        | _ -> 
+          (failwith "error")))));;
+let rec minSolutions_lh _lh_minSolutions_arg1_0 =
+  (match _lh_minSolutions_arg1_0 with
     | `LH_N -> 
       (`LH_N)
-    | `LH_C(_lh_minSolutions_LH_C_0_2, _lh_minSolutions_LH_C_1_2) -> 
-      (let rec minAcc_1 = (fun minSoFar_1 mins_3 ls_2_4 -> 
-        (let rec _lh_matchIdent_6 = ls_2_4 in
-          (match _lh_matchIdent_6 with
+    | `LH_C(_lh_minSolutions_LH_C_0_0, _lh_minSolutions_LH_C_1_0) -> 
+      (let rec minAcc_0 = (fun minSoFar_0 mins_1 ls_4 -> 
+        (let rec _lh_matchIdent_1 = ls_4 in
+          (match _lh_matchIdent_1 with
             | `LH_N -> 
-              mins_3
-            | `LH_C(_lh_minSolutions_LH_C_0_3, _lh_minSolutions_LH_C_1_3) -> 
-              (let rec total_1 = (totalTime__d0 _lh_minSolutions_LH_C_0_3) in
-                (if (minSoFar_1 < total_1) then
-                  (((minAcc_1 minSoFar_1) mins_3) _lh_minSolutions_LH_C_1_3)
+              mins_1
+            | `LH_C(_lh_minSolutions_LH_C_0_1, _lh_minSolutions_LH_C_1_1) -> 
+              (let rec total_0 = (totalTime_lh _lh_minSolutions_LH_C_0_1) in
+                (if (minSoFar_0 < total_0) then
+                  (((minAcc_0 minSoFar_0) mins_1) _lh_minSolutions_LH_C_1_1)
                 else
-                  (if (minSoFar_1 = total_1) then
-                    (((minAcc_1 minSoFar_1) (`LH_C(_lh_minSolutions_LH_C_0_3, mins_3))) _lh_minSolutions_LH_C_1_3)
+                  (if (minSoFar_0 = total_0) then
+                    (((minAcc_0 minSoFar_0) (`LH_C(_lh_minSolutions_LH_C_0_1, mins_1))) _lh_minSolutions_LH_C_1_1)
                   else
-                    (((minAcc_1 total_1) (`LH_C(_lh_minSolutions_LH_C_0_3, (`LH_N)))) _lh_minSolutions_LH_C_1_3))))
+                    (((minAcc_0 total_0) (`LH_C(_lh_minSolutions_LH_C_0_1, (`LH_N)))) _lh_minSolutions_LH_C_1_1))))
             | _ -> 
               (failwith "error")))) in
-        (reverse__d0 (((minAcc_1 (totalTime__d1 _lh_minSolutions_LH_C_0_2)) (`LH_C(_lh_minSolutions_LH_C_0_2, (`LH_N)))) _lh_minSolutions_LH_C_1_2)))
+        (reverse_lh (((minAcc_0 (totalTime_lh _lh_minSolutions_LH_C_0_0)) (`LH_C(_lh_minSolutions_LH_C_0_0, (`LH_N)))) _lh_minSolutions_LH_C_1_0)))
     | _ -> 
-      (failwith "error"))
-and notSeen__d0 _lh_notSeen_arg1_2 =
-  (all__d0 (fun _s_2 -> 
-    (let rec _lh_matchIdent_5 = _s_2 in
-      (match _lh_matchIdent_5 with
-        | `LH_P2(_lh_notSeen_LH_P2_0_2, _lh_notSeen_LH_P2_1_2) -> 
-          (_lh_notSeen_arg1_2 <> _lh_notSeen_LH_P2_1_2)
-        | _ -> 
-          (failwith "error")))))
-and notSeen__d1 _lh_notSeen_arg1_1 =
-  (all__d1 (fun _s_1 -> 
-    (let rec _lh_matchIdent_3 = _s_1 in
-      (match _lh_matchIdent_3 with
-        | `LH_P2(_lh_notSeen_LH_P2_0_1, _lh_notSeen_LH_P2_1_1) -> 
-          (_lh_notSeen_arg1_1 <> _lh_notSeen_LH_P2_1_1)
-        | _ -> 
-          (failwith "error")))))
-and position__d0 _lh_position_arg1_1 =
-  (match _lh_position_arg1_1 with
-    | `Bono -> 
-      bonoPos__d0
-    | `Edge -> 
-      edgePos__d0
-    | `Larry -> 
-      larryPos__d0
-    | `Adam -> 
-      adamPos__d0
+      (failwith "error"));;
+let rec writeState_lh _lh_writeState_arg1_0 _lh_funcomp_x_0 =
+  ((fun _lh_funcomp_x_1 -> 
+    ((fun _lh_funcomp_x_2 -> 
+      ((fun _lh_funcomp_x_3 -> 
+        ((fun _lh_funcomp_x_4 -> 
+          ((fun s_0 -> 
+            ((mappend_lh (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) s_0)) (((writeItem_lh (`Bono)) (bonoPos_lh _lh_writeState_arg1_0)) _lh_funcomp_x_4))) (((writeItem_lh (`Edge)) (edgePos_lh _lh_writeState_arg1_0)) _lh_funcomp_x_3))) (((writeItem_lh (`Larry)) (larryPos_lh _lh_writeState_arg1_0)) _lh_funcomp_x_2))) (((writeItem_lh (`Adam)) (adamPos_lh _lh_writeState_arg1_0)) _lh_funcomp_x_1))) ((fun s_1 -> 
+    ((mappend_lh (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) s_1)) _lh_funcomp_x_0));;
+let rec transfer_lh _lh_transfer_arg1_0 _lh_transfer_arg2_0 _lh_transfer_arg3_0 _lh_transfer_arg4_0 _lh_transfer_arg5_0 =
+  (if (_lh_transfer_arg1_0 = _lh_transfer_arg2_0) then
+    (`LH_C((`LH_C((`LH_P2(_lh_transfer_arg4_0, _lh_transfer_arg2_0)), _lh_transfer_arg5_0)), (`LH_N)))
+  else
+    (let rec newHistory_0 = (`LH_C((`LH_P2(_lh_transfer_arg4_0, _lh_transfer_arg2_0)), _lh_transfer_arg5_0)) in
+      (let rec newLocation_0 = (opposite_lh _lh_transfer_arg3_0) in
+        (let rec moveOne_0 = (concat_lh (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
+          (match _lh_listcomp_fun_para_0 with
+            | `LH_C(_lh_listcomp_fun_ls_h_0, _lh_listcomp_fun_ls_t_0) -> 
+              (if (((position_lh _lh_listcomp_fun_ls_h_0) _lh_transfer_arg2_0) = _lh_transfer_arg3_0) then
+                (let rec newDest_0 = (((updateState_lh _lh_transfer_arg2_0) _lh_listcomp_fun_ls_h_0) newLocation_0) in
+                  (if ((notSeen_lh newDest_0) _lh_transfer_arg5_0) then
+                    (let rec newTime_0 = (_lh_transfer_arg4_0 + (u2times_lh _lh_listcomp_fun_ls_h_0)) in
+                      (`LH_C((((((transfer_lh _lh_transfer_arg1_0) newDest_0) newLocation_0) newTime_0) newHistory_0), (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0))))
+                  else
+                    (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0)))
+              else
+                (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0))
+            | `LH_N -> 
+              (`LH_N))) in
+          (_lh_listcomp_fun_0 ((itemFromTo_lh (`Bono)) (`Adam))))) in
+          (let rec moveTwo_0 = (concat_lh (let rec _lh_listcomp_fun_1 = (fun _lh_listcomp_fun_para_1 -> 
+            (match _lh_listcomp_fun_para_1 with
+              | `LH_C(_lh_listcomp_fun_ls_h_1, _lh_listcomp_fun_ls_t_1) -> 
+                (let rec _lh_listcomp_fun_2 = (fun _lh_listcomp_fun_para_2 -> 
+                  (match _lh_listcomp_fun_para_2 with
+                    | `LH_C(_lh_listcomp_fun_ls_h_2, _lh_listcomp_fun_ls_t_2) -> 
+                      (if ((((position_lh _lh_listcomp_fun_ls_h_1) _lh_transfer_arg2_0) = _lh_transfer_arg3_0) && (((position_lh _lh_listcomp_fun_ls_h_2) _lh_transfer_arg2_0) = _lh_transfer_arg3_0)) then
+                        (let rec newDest_1 = (((updateState_lh (((updateState_lh _lh_transfer_arg2_0) _lh_listcomp_fun_ls_h_1) newLocation_0)) _lh_listcomp_fun_ls_h_2) newLocation_0) in
+                          (if ((notSeen_lh newDest_1) _lh_transfer_arg5_0) then
+                            (let rec newTime_1 = (_lh_transfer_arg4_0 + (u2times_lh _lh_listcomp_fun_ls_h_1)) in
+                              (`LH_C((((((transfer_lh _lh_transfer_arg1_0) newDest_1) newLocation_0) newTime_1) newHistory_0), (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_2))))
+                          else
+                            (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_2)))
+                      else
+                        (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_2))
+                    | `LH_N -> 
+                      (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_1))) in
+                  (_lh_listcomp_fun_2 ((itemFromTo_lh (succItem_lh _lh_listcomp_fun_ls_h_1)) (`Adam))))
+              | `LH_N -> 
+                (`LH_N))) in
+            (_lh_listcomp_fun_1 ((itemFromTo_lh (`Bono)) (`Larry))))) in
+            ((mappend_lh moveOne_0) moveTwo_0))))));;
+let rec writeHistory_lh _lh_writeHistory_arg1_0 =
+  (match _lh_writeHistory_arg1_0 with
+    | `LH_N -> 
+      (fun x_4 -> 
+        x_4)
     | _ -> 
-      (failwith "error"))
-and position__d1 _lh_position_arg1_3 =
-  (match _lh_position_arg1_3 with
-    | `Bono -> 
-      bonoPos__d1
-    | `Edge -> 
-      edgePos__d1
-    | `Larry -> 
-      larryPos__d1
-    | `Adam -> 
-      adamPos__d1
+      (((foldr_lh (fun timestate_0 acc_0 -> 
+        (let rec _lh_matchIdent_2 = timestate_0 in
+          (match _lh_matchIdent_2 with
+            | `LH_P2(_lh_writeHistory_LH_P2_0_0, _lh_writeHistory_LH_P2_1_0) -> 
+              (fun _lh_funcomp_x_9 -> 
+                ((fun _lh_funcomp_x_1_0 -> 
+                  ((fun _lh_funcomp_x_1_1 -> 
+                    ((fun _lh_funcomp_x_1_2 -> 
+                      ((fun x_5 -> 
+                        ((mappend_lh (`LH_C('T', (`LH_C('i', (`LH_C('m', (`LH_C('e', (`LH_C(':', (`LH_C(' ', (`LH_N)))))))))))))) x_5)) ((fun x_6 -> 
+                        ((mappend_lh (string_of_int ((totalTime_lh _lh_writeHistory_arg1_0) - _lh_writeHistory_LH_P2_0_0))) x_6)) _lh_funcomp_x_1_2))) ((fun x_7 -> 
+                      (`LH_C('|', x_7))) _lh_funcomp_x_1_1))) ((writeState_lh _lh_writeHistory_LH_P2_1_0) _lh_funcomp_x_1_0))) (acc_0 _lh_funcomp_x_9)))
+            | _ -> 
+              (failwith "error"))))) (fun x_8 -> 
+        x_8)) _lh_writeHistory_arg1_0));;
+let rec writeSolutions_lh _lh_writeSolutions_arg1_0 _lh_writeSolutions_arg2_0 =
+  (match _lh_writeSolutions_arg1_0 with
+    | `LH_N -> 
+      (fun x_0 -> 
+        x_0)
+    | `LH_C(_lh_writeSolutions_LH_C_0_0, _lh_writeSolutions_LH_C_1_0) -> 
+      (fun _lh_funcomp_x_5 -> 
+        ((fun _lh_funcomp_x_6 -> 
+          ((fun _lh_funcomp_x_7 -> 
+            ((fun _lh_funcomp_x_8 -> 
+              ((fun x_1 -> 
+                ((mappend_lh (`LH_C('S', (`LH_C('o', (`LH_C('l', (`LH_C('u', (`LH_C('t', (`LH_C('i', (`LH_C('o', (`LH_C('n', (`LH_C(' ', (`LH_N)))))))))))))))))))) x_1)) ((fun x_2 -> 
+                ((mappend_lh (string_of_int _lh_writeSolutions_arg2_0)) x_2)) _lh_funcomp_x_8))) ((fun x_3 -> 
+              (`LH_C('|', x_3))) _lh_funcomp_x_7))) ((writeHistory_lh _lh_writeSolutions_LH_C_0_0) _lh_funcomp_x_6))) (((writeSolutions_lh _lh_writeSolutions_LH_C_1_0) (_lh_writeSolutions_arg2_0 + 1)) _lh_funcomp_x_5)))
     | _ -> 
-      (failwith "error"))
-and position__d2 _lh_position_arg1_2 =
-  (match _lh_position_arg1_2 with
-    | `Bono -> 
-      bonoPos__d2
-    | `Edge -> 
-      edgePos__d2
-    | `Larry -> 
-      larryPos__d2
-    | `Adam -> 
-      adamPos__d2
-    | _ -> 
-      (failwith "error"))
-and reverse__d0 ls_2_3 =
-  ((reverse_helper__d0 ls_2_3) (`LH_N))
-and testPuzzle_nofib__d0 _lh_testPuzzle_nofib_arg1_1 =
-  (let rec time_1 = (if ((length__d0 _lh_testPuzzle_nofib_arg1_1) = 1) then
+      (failwith "error"));;
+let rec testPuzzle_nofib_lh _lh_testPuzzle_nofib_arg1_0 =
+  (let rec time_0 = (if ((length_lh _lh_testPuzzle_nofib_arg1_0) = 1) then
     0
   else
     ((failwith "error") (`LH_C('p', (`LH_C('u', (`LH_C('z', (`LH_C('z', (`LH_C('l', (`LH_C('e', (`LH_C(' ', (`LH_C('e', (`LH_C('x', (`LH_C('p', (`LH_C('e', (`LH_C('c', (`LH_C('t', (`LH_C('s', (`LH_C(' ', (`LH_C('e', (`LH_C('x', (`LH_C('a', (`LH_C('c', (`LH_C('t', (`LH_C('l', (`LH_C('y', (`LH_C(' ', (`LH_C('o', (`LH_C('n', (`LH_C('e', (`LH_C(' ', (`LH_C('a', (`LH_C('r', (`LH_C('g', (`LH_C('u', (`LH_C('m', (`LH_C('e', (`LH_C('n', (`LH_C('t', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) in
-    (let rec solutions_1 = (((((transfer__d0 initialState__d0) finalState__d0) (`RightBank)) time_1) (`LH_N)) in
-      (let rec mins_2 = (minSolutions__d0 solutions_1) in
-        (((writeSolutions__d0 mins_2) 1) (`LH_N)))))
-and transfer__d0 _lh_transfer_arg1_1 _lh_transfer_arg2_1 _lh_transfer_arg3_1 _lh_transfer_arg4_1 _lh_transfer_arg5_1 =
-  (if (_lh_transfer_arg1_1 = _lh_transfer_arg2_1) then
-    (`LH_C((`LH_C((`LH_P2(_lh_transfer_arg4_1, _lh_transfer_arg2_1)), _lh_transfer_arg5_1)), (`LH_N)))
-  else
-    (let rec newHistory_1 = (`LH_C((`LH_P2(_lh_transfer_arg4_1, _lh_transfer_arg2_1)), _lh_transfer_arg5_1)) in
-      (let rec newLocation_1 = (opposite__d0 _lh_transfer_arg3_1) in
-        (let rec moveOne_1 = (concat__d0 (let rec _lh_listcomp_fun_3 = (fun _lh_listcomp_fun_para_3 -> 
-          (match _lh_listcomp_fun_para_3 with
-            | `LH_C(_lh_listcomp_fun_ls_h_3, _lh_listcomp_fun_ls_t_3) -> 
-              (if (((position__d0 _lh_listcomp_fun_ls_h_3) _lh_transfer_arg2_1) = _lh_transfer_arg3_1) then
-                (let rec newDest_2 = (((updateState__d0 _lh_transfer_arg2_1) _lh_listcomp_fun_ls_h_3) newLocation_1) in
-                  (if ((notSeen__d0 newDest_2) _lh_transfer_arg5_1) then
-                    (let rec newTime_2 = (_lh_transfer_arg4_1 + (u2times__d0 _lh_listcomp_fun_ls_h_3)) in
-                      (`LH_C((((((transfer__d0 _lh_transfer_arg1_1) newDest_2) newLocation_1) newTime_2) newHistory_1), (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3))))
-                  else
-                    (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3)))
-              else
-                (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3))
-            | `LH_N -> 
-              (`LH_N))) in
-          (_lh_listcomp_fun_3 ((itemFromTo__d0 (`Bono)) (`Adam))))) in
-          (let rec moveTwo_1 = (concat__d1 (let rec _lh_listcomp_fun_4 = (fun _lh_listcomp_fun_para_4 -> 
-            (match _lh_listcomp_fun_para_4 with
-              | `LH_C(_lh_listcomp_fun_ls_h_4, _lh_listcomp_fun_ls_t_4) -> 
-                (let rec _lh_listcomp_fun_5 = (fun _lh_listcomp_fun_para_5 -> 
-                  (match _lh_listcomp_fun_para_5 with
-                    | `LH_C(_lh_listcomp_fun_ls_h_5, _lh_listcomp_fun_ls_t_5) -> 
-                      (if ((((position__d1 _lh_listcomp_fun_ls_h_4) _lh_transfer_arg2_1) = _lh_transfer_arg3_1) && (((position__d2 _lh_listcomp_fun_ls_h_5) _lh_transfer_arg2_1) = _lh_transfer_arg3_1)) then
-                        (let rec newDest_3 = (((updateState__d1 (((updateState__d2 _lh_transfer_arg2_1) _lh_listcomp_fun_ls_h_4) newLocation_1)) _lh_listcomp_fun_ls_h_5) newLocation_1) in
-                          (if ((notSeen__d1 newDest_3) _lh_transfer_arg5_1) then
-                            (let rec newTime_3 = (_lh_transfer_arg4_1 + (u2times__d1 _lh_listcomp_fun_ls_h_4)) in
-                              (`LH_C((((((transfer__d0 _lh_transfer_arg1_1) newDest_3) newLocation_1) newTime_3) newHistory_1), (_lh_listcomp_fun_5 _lh_listcomp_fun_ls_t_5))))
-                          else
-                            (_lh_listcomp_fun_5 _lh_listcomp_fun_ls_t_5)))
-                      else
-                        (_lh_listcomp_fun_5 _lh_listcomp_fun_ls_t_5))
-                    | `LH_N -> 
-                      (_lh_listcomp_fun_4 _lh_listcomp_fun_ls_t_4))) in
-                  (_lh_listcomp_fun_5 ((itemFromTo__d2 (succItem__d3 _lh_listcomp_fun_ls_h_4)) (`Adam))))
-              | `LH_N -> 
-                (`LH_N))) in
-            (_lh_listcomp_fun_4 ((itemFromTo__d1 (`Bono)) (`Larry))))) in
-            ((mappend__d2 moveOne_1) moveTwo_1))))))
-and writeHistory__d0 _lh_writeHistory_arg1_1 =
-  (match _lh_writeHistory_arg1_1 with
-    | `LH_N -> 
-      (fun x_1_5 -> 
-        x_1_5)
-    | _ -> 
-      (((foldr__d0 (fun timestate_1 acc_1 -> 
-        (let rec _lh_matchIdent_4 = timestate_1 in
-          (match _lh_matchIdent_4 with
-            | `LH_P2(_lh_writeHistory_LH_P2_0_1, _lh_writeHistory_LH_P2_1_1) -> 
-              (fun _lh_funcomp_x_2_2 -> 
-                ((fun _lh_funcomp_x_2_3 -> 
-                  ((fun _lh_funcomp_x_2_4 -> 
-                    ((fun _lh_funcomp_x_2_5 -> 
-                      ((fun x_1_6 -> 
-                        ((mappend__d5 (`LH_C('T', (`LH_C('i', (`LH_C('m', (`LH_C('e', (`LH_C(':', (`LH_C(' ', (`LH_N)))))))))))))) x_1_6)) ((fun x_1_7 -> 
-                        ((mappend__d6 (string_of_int ((totalTime__d2 _lh_writeHistory_arg1_1) - _lh_writeHistory_LH_P2_0_1))) x_1_7)) _lh_funcomp_x_2_5))) ((fun x_1_8 -> 
-                      (`LH_C('|', x_1_8))) _lh_funcomp_x_2_4))) ((writeState__d0 _lh_writeHistory_LH_P2_1_1) _lh_funcomp_x_2_3))) (acc_1 _lh_funcomp_x_2_2)))
-            | _ -> 
-              (failwith "error"))))) (fun x_1_9 -> 
-        x_1_9)) _lh_writeHistory_arg1_1))
-and writeItem__d0 _lh_writeItem_arg1_4 _lh_writeItem_arg2_4 _lh_writeItem_arg3_4 =
-  (match _lh_writeItem_arg1_4 with
-    | `Bono -> 
-      (match _lh_writeItem_arg2_4 with
-        | `LeftBank -> 
-          ((mappend__d9 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('B', (`LH_C('o', (`LH_C('n', (`LH_C('o', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_4)
-        | `RightBank -> 
-          ((mappend__d1_d0 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('B', (`LH_C('o', (`LH_C('n', (`LH_C('o', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_4)
-        | _ -> 
-          (failwith "error"))
-    | `Edge -> 
-      (match _lh_writeItem_arg2_4 with
-        | `LeftBank -> 
-          ((mappend__d1_d1 (`LH_C('T', (`LH_C('h', (`LH_C('e', (`LH_C(' ', (`LH_C('E', (`LH_C('d', (`LH_C('g', (`LH_C('e', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_4)
-        | `RightBank -> 
-          ((mappend__d1_d2 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('T', (`LH_C('h', (`LH_C('e', (`LH_C(' ', (`LH_C('E', (`LH_C('d', (`LH_C('g', (`LH_C('e', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_4)
-        | _ -> 
-          (failwith "error"))
-    | `Larry -> 
-      (match _lh_writeItem_arg2_4 with
-        | `LeftBank -> 
-          ((mappend__d1_d3 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('L', (`LH_C('a', (`LH_C('r', (`LH_C('r', (`LH_C('y', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_4)
-        | `RightBank -> 
-          ((mappend__d1_d4 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('L', (`LH_C('a', (`LH_C('r', (`LH_C('r', (`LH_C('y', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_4)
-        | _ -> 
-          (failwith "error"))
-    | `Adam -> 
-      (match _lh_writeItem_arg2_4 with
-        | `LeftBank -> 
-          ((mappend__d1_d5 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('A', (`LH_C('d', (`LH_C('a', (`LH_C('m', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_4)
-        | `RightBank -> 
-          ((mappend__d1_d6 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('A', (`LH_C('d', (`LH_C('a', (`LH_C('m', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_4)
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"))
-and writeItem__d1 _lh_writeItem_arg1_1 _lh_writeItem_arg2_1 _lh_writeItem_arg3_1 =
-  (match _lh_writeItem_arg1_1 with
-    | `Bono -> 
-      (match _lh_writeItem_arg2_1 with
-        | `LeftBank -> 
-          ((mappend__d1_d7 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('B', (`LH_C('o', (`LH_C('n', (`LH_C('o', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_1)
-        | `RightBank -> 
-          ((mappend__d1_d8 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('B', (`LH_C('o', (`LH_C('n', (`LH_C('o', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_1)
-        | _ -> 
-          (failwith "error"))
-    | `Edge -> 
-      (match _lh_writeItem_arg2_1 with
-        | `LeftBank -> 
-          ((mappend__d1_d9 (`LH_C('T', (`LH_C('h', (`LH_C('e', (`LH_C(' ', (`LH_C('E', (`LH_C('d', (`LH_C('g', (`LH_C('e', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_1)
-        | `RightBank -> 
-          ((mappend__d2_d0 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('T', (`LH_C('h', (`LH_C('e', (`LH_C(' ', (`LH_C('E', (`LH_C('d', (`LH_C('g', (`LH_C('e', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_1)
-        | _ -> 
-          (failwith "error"))
-    | `Larry -> 
-      (match _lh_writeItem_arg2_1 with
-        | `LeftBank -> 
-          ((mappend__d2_d1 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('L', (`LH_C('a', (`LH_C('r', (`LH_C('r', (`LH_C('y', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_1)
-        | `RightBank -> 
-          ((mappend__d2_d2 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('L', (`LH_C('a', (`LH_C('r', (`LH_C('r', (`LH_C('y', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_1)
-        | _ -> 
-          (failwith "error"))
-    | `Adam -> 
-      (match _lh_writeItem_arg2_1 with
-        | `LeftBank -> 
-          ((mappend__d2_d3 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('A', (`LH_C('d', (`LH_C('a', (`LH_C('m', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_1)
-        | `RightBank -> 
-          ((mappend__d2_d4 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('A', (`LH_C('d', (`LH_C('a', (`LH_C('m', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_1)
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"))
-and writeItem__d2 _lh_writeItem_arg1_2 _lh_writeItem_arg2_2 _lh_writeItem_arg3_2 =
-  (match _lh_writeItem_arg1_2 with
-    | `Bono -> 
-      (match _lh_writeItem_arg2_2 with
-        | `LeftBank -> 
-          ((mappend__d2_d5 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('B', (`LH_C('o', (`LH_C('n', (`LH_C('o', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_2)
-        | `RightBank -> 
-          ((mappend__d2_d6 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('B', (`LH_C('o', (`LH_C('n', (`LH_C('o', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_2)
-        | _ -> 
-          (failwith "error"))
-    | `Edge -> 
-      (match _lh_writeItem_arg2_2 with
-        | `LeftBank -> 
-          ((mappend__d2_d7 (`LH_C('T', (`LH_C('h', (`LH_C('e', (`LH_C(' ', (`LH_C('E', (`LH_C('d', (`LH_C('g', (`LH_C('e', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_2)
-        | `RightBank -> 
-          ((mappend__d2_d8 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('T', (`LH_C('h', (`LH_C('e', (`LH_C(' ', (`LH_C('E', (`LH_C('d', (`LH_C('g', (`LH_C('e', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_2)
-        | _ -> 
-          (failwith "error"))
-    | `Larry -> 
-      (match _lh_writeItem_arg2_2 with
-        | `LeftBank -> 
-          ((mappend__d2_d9 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('L', (`LH_C('a', (`LH_C('r', (`LH_C('r', (`LH_C('y', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_2)
-        | `RightBank -> 
-          ((mappend__d3_d0 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('L', (`LH_C('a', (`LH_C('r', (`LH_C('r', (`LH_C('y', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_2)
-        | _ -> 
-          (failwith "error"))
-    | `Adam -> 
-      (match _lh_writeItem_arg2_2 with
-        | `LeftBank -> 
-          ((mappend__d3_d1 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('A', (`LH_C('d', (`LH_C('a', (`LH_C('m', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_2)
-        | `RightBank -> 
-          ((mappend__d3_d2 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('A', (`LH_C('d', (`LH_C('a', (`LH_C('m', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_2)
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"))
-and writeItem__d3 _lh_writeItem_arg1_3 _lh_writeItem_arg2_3 _lh_writeItem_arg3_3 =
-  (match _lh_writeItem_arg1_3 with
-    | `Bono -> 
-      (match _lh_writeItem_arg2_3 with
-        | `LeftBank -> 
-          ((mappend__d3_d3 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('B', (`LH_C('o', (`LH_C('n', (`LH_C('o', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_3)
-        | `RightBank -> 
-          ((mappend__d3_d4 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('B', (`LH_C('o', (`LH_C('n', (`LH_C('o', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_3)
-        | _ -> 
-          (failwith "error"))
-    | `Edge -> 
-      (match _lh_writeItem_arg2_3 with
-        | `LeftBank -> 
-          ((mappend__d3_d5 (`LH_C('T', (`LH_C('h', (`LH_C('e', (`LH_C(' ', (`LH_C('E', (`LH_C('d', (`LH_C('g', (`LH_C('e', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_3)
-        | `RightBank -> 
-          ((mappend__d3_d6 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('T', (`LH_C('h', (`LH_C('e', (`LH_C(' ', (`LH_C('E', (`LH_C('d', (`LH_C('g', (`LH_C('e', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_3)
-        | _ -> 
-          (failwith "error"))
-    | `Larry -> 
-      (match _lh_writeItem_arg2_3 with
-        | `LeftBank -> 
-          ((mappend__d3_d7 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('L', (`LH_C('a', (`LH_C('r', (`LH_C('r', (`LH_C('y', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_3)
-        | `RightBank -> 
-          ((mappend__d3_d8 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('L', (`LH_C('a', (`LH_C('r', (`LH_C('r', (`LH_C('y', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_3)
-        | _ -> 
-          (failwith "error"))
-    | `Adam -> 
-      (match _lh_writeItem_arg2_3 with
-        | `LeftBank -> 
-          ((mappend__d3_d9 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('A', (`LH_C('d', (`LH_C('a', (`LH_C('m', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_3)
-        | `RightBank -> 
-          ((mappend__d4_d0 (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('|', (`LH_C(' ', (`LH_C('A', (`LH_C('d', (`LH_C('a', (`LH_C('m', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) _lh_writeItem_arg3_3)
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"))
-and writeSolutions__d0 _lh_writeSolutions_arg1_1 _lh_writeSolutions_arg2_1 =
-  (match _lh_writeSolutions_arg1_1 with
-    | `LH_N -> 
-      (fun x_1_1 -> 
-        x_1_1)
-    | `LH_C(_lh_writeSolutions_LH_C_0_1, _lh_writeSolutions_LH_C_1_1) -> 
-      (fun _lh_funcomp_x_1_8 -> 
-        ((fun _lh_funcomp_x_1_9 -> 
-          ((fun _lh_funcomp_x_2_0 -> 
-            ((fun _lh_funcomp_x_2_1 -> 
-              ((fun x_1_2 -> 
-                ((mappend__d3 (`LH_C('S', (`LH_C('o', (`LH_C('l', (`LH_C('u', (`LH_C('t', (`LH_C('i', (`LH_C('o', (`LH_C('n', (`LH_C(' ', (`LH_N)))))))))))))))))))) x_1_2)) ((fun x_1_3 -> 
-                ((mappend__d4 (string_of_int _lh_writeSolutions_arg2_1)) x_1_3)) _lh_funcomp_x_2_1))) ((fun x_1_4 -> 
-              (`LH_C('|', x_1_4))) _lh_funcomp_x_2_0))) ((writeHistory__d0 _lh_writeSolutions_LH_C_0_1) _lh_funcomp_x_1_9))) (((writeSolutions__d0 _lh_writeSolutions_LH_C_1_1) (_lh_writeSolutions_arg2_1 + 1)) _lh_funcomp_x_1_8)))
-    | _ -> 
-      (failwith "error"))
-and writeState__d0 _lh_writeState_arg1_1 _lh_funcomp_x_1_3 =
-  ((fun _lh_funcomp_x_1_4 -> 
-    ((fun _lh_funcomp_x_1_5 -> 
-      ((fun _lh_funcomp_x_1_6 -> 
-        ((fun _lh_funcomp_x_1_7 -> 
-          ((fun s_2 -> 
-            ((mappend__d8 (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) s_2)) (((writeItem__d0 (`Bono)) (bonoPos__d3 _lh_writeState_arg1_1)) _lh_funcomp_x_1_7))) (((writeItem__d1 (`Edge)) (edgePos__d3 _lh_writeState_arg1_1)) _lh_funcomp_x_1_6))) (((writeItem__d2 (`Larry)) (larryPos__d3 _lh_writeState_arg1_1)) _lh_funcomp_x_1_5))) (((writeItem__d3 (`Adam)) (adamPos__d3 _lh_writeState_arg1_1)) _lh_funcomp_x_1_4))) ((fun s_3 -> 
-    ((mappend__d7 (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('|', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) s_3)) _lh_funcomp_x_1_3));;
+    (let rec solutions_0 = (((((transfer_lh initialState_lh) finalState_lh) (`RightBank)) time_0) (`LH_N)) in
+      (let rec mins_0 = (minSolutions_lh solutions_0) in
+        (((writeSolutions_lh mins_0) 1) (`LH_N)))));;
 end;;
 

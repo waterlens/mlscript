@@ -4,7 +4,7 @@ ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Lumherhack_Common.ml ./Lumberha
 open Core_bench;;
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_Minimax_nofib_lh" (fun () -> ignore (let open Module_original.Module_original in ((testMinimax_nofib_lh (`LH_C('1', (`LH_C('8', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_N)))))))))))))))));
-  Bench.Test.create ~name:"lumberhack_only_expanded_Minimax_nofib_lh" (fun () -> ignore (let open Module_lumberhack_only_expanded.Module_lumberhack_only_expanded in ((testMinimax_nofib__d0 (`LH_C('1', (`LH_C('8', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_N)))))))))))))))));
-  Bench.Test.create ~name:"lumberhack_Minimax_nofib_lh" (fun () -> ignore (let open Module_lumberhack.Module_lumberhack in ((testMinimax_nofib__d0 (`LH_C('1', (`LH_C('8', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_N)))))))))))))))));
-  Bench.Test.create ~name:"lumberhack_pop_out_Minimax_nofib_lh" (fun () -> ignore (let open Module_lumberhack_pop_out.Module_lumberhack_pop_out in ((testMinimax_nofib__d0 (`LH_C('1', (`LH_C('8', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_N)))))))))))))))));
+  Bench.Test.create ~name:"lumberhack_only_expanded_Minimax_nofib_lh" (fun () -> ignore (let open Module_lumberhack_only_expanded.Module_lumberhack_only_expanded in ((testMinimax_nofib_lh (`LH_C('1', (`LH_C('8', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_N)))))))))))))))));
+  Bench.Test.create ~name:"lumberhack_Minimax_nofib_lh" (fun () -> ignore (let open Module_lumberhack.Module_lumberhack in ((testMinimax_nofib_lh__d0 (`LH_C('1', (`LH_C('8', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_N)))))))))))))))));
+  Bench.Test.create ~name:"lumberhack_pop_out_Minimax_nofib_lh" (fun () -> ignore (let open Module_lumberhack_pop_out.Module_lumberhack_pop_out in ((testMinimax_nofib_lh__d0 (`LH_C('1', (`LH_C('8', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_N)))))))))))))))));
 ])

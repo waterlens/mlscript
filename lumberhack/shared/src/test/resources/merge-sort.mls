@@ -55,18 +55,16 @@ msort(primId(C(2, C(1, C(3, N)))))
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [msort^77]
-//│ 	[msort^77 · firsts^63]
-//│ 		[msort^77 · firsts^63 · firsts^8] ---> [msort^77 · firsts^63] (only one)
-//│ 	[msort^77 · merge^61]
-//│ 		[msort^77 · merge^61 · merge^37] (hopeless to continue)
-//│ 			[msort^77 · merge^61 · merge^37 · merge^37] ---> [msort^77 · merge^61 · merge^37] (using original def)
-//│ 			[msort^77 · merge^61 · merge^37 · merge^44] ---> [msort^77 · merge^61 · merge^37] (using original def)
-//│ 		[msort^77 · merge^61 · merge^44] ---> [msort^77 · merge^61] (only one)
-//│ 	[msort^77 · msort^62] ---> [msort^77] (only one)
-//│ 	[msort^77 · msort^68] ---> [msort^77] (only one)
-//│ 	[msort^77 · seconds^69]
-//│ 		[msort^77 · seconds^69 · seconds^20] ---> [msort^77 · seconds^69] (only one)
+//│ [msort^77] (hopeless to continue)
+//│ 	[msort^77 · firsts^63] (using original def)
+//│ 		[msort^77 · firsts^63 · firsts^8] ---> [msort^77 · firsts^63] (using original def)
+//│ 	[msort^77 · merge^61] (using original def)
+//│ 		[msort^77 · merge^61 · merge^37] ---> [msort^77 · merge^61] (using original def)
+//│ 		[msort^77 · merge^61 · merge^44] ---> [msort^77 · merge^61] (using original def)
+//│ 	[msort^77 · msort^62] ---> [msort^77] (using original def)
+//│ 	[msort^77 · msort^68] ---> [msort^77] (using original def)
+//│ 	[msort^77 · seconds^69] (using original def)
+//│ 		[msort^77 · seconds^69 · seconds^20] ---> [msort^77 · seconds^69] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
@@ -89,14 +87,7 @@ msort(primId(C(2, C(1, C(3, N)))))
 //│ 			N  => ys¹
 //│ 			| C hx¹ tx¹ => case ys¹ of {
 //│ 				N  => xs⁴
-//│ 				| C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₁(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}}
-//│ 		where
-//│ 		def merge_₁(xs⁶, ys²) = 
-//│ 			case xs⁶ of {
-//│ 				N  => ys²
-//│ 				| C hx² tx² => case ys² of {
-//│ 					N  => xs⁶
-//│ 					| C hy² ty² => if (hy² > hx²) then [C hx² merge_₁(tx², ys²)] else [C hy² merge_₁(xs⁶, ty²)]}}
+//│ 				| C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₀(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}}
 //│ 	def seconds_₀(xs⁵) = 
 //│ 		case xs⁵ of {
 //│ 			N  => [N]
@@ -112,97 +103,75 @@ msort(primId(C(2, C(1, C(3, N)))))
 //│ 	case xs³ of {N  => [N] | C h³ t³ => case t³ of {N  => [C h³ [N]] | C hh³ tt³ => [C h³ firsts_₀(tt³)]}}: 100
 //│ 	case t⁴ of {N  => [N] | C hh⁴ tt⁴ => [C hh⁴ seconds_₀(tt⁴)]}: 139
 //│ 	case xs⁵ of {N  => [N] | C h⁴ t⁴ => case t⁴ of {N  => [N] | C hh⁴ tt⁴ => [C hh⁴ seconds_₀(tt⁴)]}}: 140
-//│ 	case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}: 189
-//│ 	case ls¹ of {N  => [N] | C h⁵ t⁵ => case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}}: 190
+//│ 	case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}: 161
+//│ 	case ls¹ of {N  => [N] | C h⁵ t⁵ => case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}}: 162
 //│ [N]: 92 --->
 //│ 	DeadCodeCons
 //│ 	case t³ of {N  => [C h³ [N]] | C hh³ tt³ => [C h³ firsts_₀(tt³)]}: 99
 //│ 	case xs³ of {N  => [N] | C h³ t³ => case t³ of {N  => [C h³ [N]] | C hh³ tt³ => [C h³ firsts_₀(tt³)]}}: 100
 //│ 	case t⁴ of {N  => [N] | C hh⁴ tt⁴ => [C hh⁴ seconds_₀(tt⁴)]}: 139
 //│ 	case xs⁵ of {N  => [N] | C h⁴ t⁴ => case t⁴ of {N  => [N] | C hh⁴ tt⁴ => [C hh⁴ seconds_₀(tt⁴)]}}: 140
-//│ 	case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}: 189
+//│ 	case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}: 161
 //│ [C h³ [N]]: 93 --->
 //│ 	DeadCodeCons
 //│ 	case t³ of {N  => [C h³ [N]] | C hh³ tt³ => [C h³ firsts_₀(tt³)]}: 99
 //│ 	case xs³ of {N  => [N] | C h³ t³ => case t³ of {N  => [C h³ [N]] | C hh³ tt³ => [C h³ firsts_₀(tt³)]}}: 100
 //│ 	case t⁴ of {N  => [N] | C hh⁴ tt⁴ => [C hh⁴ seconds_₀(tt⁴)]}: 139
 //│ 	case xs⁵ of {N  => [N] | C h⁴ t⁴ => case t⁴ of {N  => [N] | C hh⁴ tt⁴ => [C hh⁴ seconds_₀(tt⁴)]}}: 140
-//│ 	case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}: 189
-//│ 	case ls¹ of {N  => [N] | C h⁵ t⁵ => case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}}: 190
+//│ 	case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}: 161
+//│ 	case ls¹ of {N  => [N] | C h⁵ t⁵ => case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}}: 162
 //│ [C h³ firsts_₀(tt³)]: 98 --->
 //│ 	DeadCodeCons
 //│ 	case t³ of {N  => [C h³ [N]] | C hh³ tt³ => [C h³ firsts_₀(tt³)]}: 99
 //│ 	case xs³ of {N  => [N] | C h³ t³ => case t³ of {N  => [C h³ [N]] | C hh³ tt³ => [C h³ firsts_₀(tt³)]}}: 100
 //│ 	case t⁴ of {N  => [N] | C hh⁴ tt⁴ => [C hh⁴ seconds_₀(tt⁴)]}: 139
 //│ 	case xs⁵ of {N  => [N] | C h⁴ t⁴ => case t⁴ of {N  => [N] | C hh⁴ tt⁴ => [C hh⁴ seconds_₀(tt⁴)]}}: 140
-//│ 	case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}: 189
-//│ 	case ls¹ of {N  => [N] | C h⁵ t⁵ => case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}}: 190
-//│ [C hx¹ merge_₁(tx¹, ys¹)]: 117 --->
+//│ 	case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}: 161
+//│ 	case ls¹ of {N  => [N] | C h⁵ t⁵ => case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}}: 162
+//│ [C hx¹ merge_₀(tx¹, ys¹)]: 117 --->
 //│ 	NoCons
-//│ 	case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₁(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}: 126
-//│ 	case xs⁴ of {N  => ys¹ | C hx¹ tx¹ => case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₁(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}}: 127
-//│ 	case ys² of {N  => xs⁶ | C hy² ty² => if (hy² > hx²) then [C hx² merge_₁(tx², ys²)] else [C hy² merge_₁(xs⁶, ty²)]}: 166
-//│ 	case xs⁶ of {N  => ys² | C hx² tx² => case ys² of {N  => xs⁶ | C hy² ty² => if (hy² > hx²) then [C hx² merge_₁(tx², ys²)] else [C hy² merge_₁(xs⁶, ty²)]}}: 167
+//│ 	case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₀(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}: 126
+//│ 	case xs⁴ of {N  => ys¹ | C hx¹ tx¹ => case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₀(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}}: 127
 //│ [C hy¹ merge_₀(xs⁴, ty¹)]: 124 --->
 //│ 	NoCons
-//│ 	case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₁(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}: 126
-//│ 	case xs⁴ of {N  => ys¹ | C hx¹ tx¹ => case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₁(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}}: 127
-//│ 	case ys² of {N  => xs⁶ | C hy² ty² => if (hy² > hx²) then [C hx² merge_₁(tx², ys²)] else [C hy² merge_₁(xs⁶, ty²)]}: 166
-//│ 	case xs⁶ of {N  => ys² | C hx² tx² => case ys² of {N  => xs⁶ | C hy² ty² => if (hy² > hx²) then [C hx² merge_₁(tx², ys²)] else [C hy² merge_₁(xs⁶, ty²)]}}: 167
+//│ 	case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₀(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}: 126
+//│ 	case xs⁴ of {N  => ys¹ | C hx¹ tx¹ => case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₀(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}}: 127
 //│ [N]: 131 --->
 //│ 	DeadCodeCons
 //│ 	case t³ of {N  => [C h³ [N]] | C hh³ tt³ => [C h³ firsts_₀(tt³)]}: 99
 //│ 	case xs³ of {N  => [N] | C h³ t³ => case t³ of {N  => [C h³ [N]] | C hh³ tt³ => [C h³ firsts_₀(tt³)]}}: 100
 //│ 	case t⁴ of {N  => [N] | C hh⁴ tt⁴ => [C hh⁴ seconds_₀(tt⁴)]}: 139
 //│ 	case xs⁵ of {N  => [N] | C h⁴ t⁴ => case t⁴ of {N  => [N] | C hh⁴ tt⁴ => [C hh⁴ seconds_₀(tt⁴)]}}: 140
-//│ 	case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}: 189
-//│ 	case ls¹ of {N  => [N] | C h⁵ t⁵ => case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}}: 190
+//│ 	case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}: 161
+//│ 	case ls¹ of {N  => [N] | C h⁵ t⁵ => case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}}: 162
 //│ [N]: 133 --->
 //│ 	DeadCodeCons
 //│ 	case t³ of {N  => [C h³ [N]] | C hh³ tt³ => [C h³ firsts_₀(tt³)]}: 99
 //│ 	case xs³ of {N  => [N] | C h³ t³ => case t³ of {N  => [C h³ [N]] | C hh³ tt³ => [C h³ firsts_₀(tt³)]}}: 100
 //│ 	case t⁴ of {N  => [N] | C hh⁴ tt⁴ => [C hh⁴ seconds_₀(tt⁴)]}: 139
 //│ 	case xs⁵ of {N  => [N] | C h⁴ t⁴ => case t⁴ of {N  => [N] | C hh⁴ tt⁴ => [C hh⁴ seconds_₀(tt⁴)]}}: 140
-//│ 	case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}: 189
-//│ 	case ls¹ of {N  => [N] | C h⁵ t⁵ => case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}}: 190
+//│ 	case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}: 161
+//│ 	case ls¹ of {N  => [N] | C h⁵ t⁵ => case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}}: 162
 //│ [C hh⁴ seconds_₀(tt⁴)]: 138 --->
 //│ 	DeadCodeCons
 //│ 	case t³ of {N  => [C h³ [N]] | C hh³ tt³ => [C h³ firsts_₀(tt³)]}: 99
 //│ 	case xs³ of {N  => [N] | C h³ t³ => case t³ of {N  => [C h³ [N]] | C hh³ tt³ => [C h³ firsts_₀(tt³)]}}: 100
 //│ 	case t⁴ of {N  => [N] | C hh⁴ tt⁴ => [C hh⁴ seconds_₀(tt⁴)]}: 139
 //│ 	case xs⁵ of {N  => [N] | C h⁴ t⁴ => case t⁴ of {N  => [N] | C hh⁴ tt⁴ => [C hh⁴ seconds_₀(tt⁴)]}}: 140
-//│ 	case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}: 189
-//│ 	case ls¹ of {N  => [N] | C h⁵ t⁵ => case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}}: 190
-//│ [C hx² merge_₁(tx², ys²)]: 157 --->
+//│ 	case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}: 161
+//│ 	case ls¹ of {N  => [N] | C h⁵ t⁵ => case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}}: 162
+//│ [N]: 143 --->
 //│ 	NoCons
-//│ 	case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₁(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}: 126
-//│ 	case xs⁴ of {N  => ys¹ | C hx¹ tx¹ => case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₁(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}}: 127
-//│ 	case ys² of {N  => xs⁶ | C hy² ty² => if (hy² > hx²) then [C hx² merge_₁(tx², ys²)] else [C hy² merge_₁(xs⁶, ty²)]}: 166
-//│ 	case xs⁶ of {N  => ys² | C hx² tx² => case ys² of {N  => xs⁶ | C hy² ty² => if (hy² > hx²) then [C hx² merge_₁(tx², ys²)] else [C hy² merge_₁(xs⁶, ty²)]}}: 167
-//│ [C hy² merge_₁(xs⁶, ty²)]: 164 --->
+//│ 	case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₀(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}: 126
+//│ 	case xs⁴ of {N  => ys¹ | C hx¹ tx¹ => case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₀(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}}: 127
+//│ [N]: 146 --->
 //│ 	NoCons
-//│ 	case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₁(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}: 126
-//│ 	case xs⁴ of {N  => ys¹ | C hx¹ tx¹ => case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₁(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}}: 127
-//│ 	case ys² of {N  => xs⁶ | C hy² ty² => if (hy² > hx²) then [C hx² merge_₁(tx², ys²)] else [C hy² merge_₁(xs⁶, ty²)]}: 166
-//│ 	case xs⁶ of {N  => ys² | C hx² tx² => case ys² of {N  => xs⁶ | C hy² ty² => if (hy² > hx²) then [C hx² merge_₁(tx², ys²)] else [C hy² merge_₁(xs⁶, ty²)]}}: 167
-//│ [N]: 171 --->
+//│ 	case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₀(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}: 126
+//│ 	case xs⁴ of {N  => ys¹ | C hx¹ tx¹ => case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₀(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}}: 127
+//│ [C h⁵ [N]]: 147 --->
 //│ 	NoCons
-//│ 	case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₁(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}: 126
-//│ 	case xs⁴ of {N  => ys¹ | C hx¹ tx¹ => case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₁(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}}: 127
-//│ 	case ys² of {N  => xs⁶ | C hy² ty² => if (hy² > hx²) then [C hx² merge_₁(tx², ys²)] else [C hy² merge_₁(xs⁶, ty²)]}: 166
-//│ 	case xs⁶ of {N  => ys² | C hx² tx² => case ys² of {N  => xs⁶ | C hy² ty² => if (hy² > hx²) then [C hx² merge_₁(tx², ys²)] else [C hy² merge_₁(xs⁶, ty²)]}}: 167
-//│ [N]: 174 --->
-//│ 	NoCons
-//│ 	case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₁(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}: 126
-//│ 	case xs⁴ of {N  => ys¹ | C hx¹ tx¹ => case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₁(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}}: 127
-//│ 	case ys² of {N  => xs⁶ | C hy² ty² => if (hy² > hx²) then [C hx² merge_₁(tx², ys²)] else [C hy² merge_₁(xs⁶, ty²)]}: 166
-//│ 	case xs⁶ of {N  => ys² | C hx² tx² => case ys² of {N  => xs⁶ | C hy² ty² => if (hy² > hx²) then [C hx² merge_₁(tx², ys²)] else [C hy² merge_₁(xs⁶, ty²)]}}: 167
-//│ [C h⁵ [N]]: 175 --->
-//│ 	NoCons
-//│ 	case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₁(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}: 126
-//│ 	case xs⁴ of {N  => ys¹ | C hx¹ tx¹ => case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₁(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}}: 127
-//│ 	case ys² of {N  => xs⁶ | C hy² ty² => if (hy² > hx²) then [C hx² merge_₁(tx², ys²)] else [C hy² merge_₁(xs⁶, ty²)]}: 166
-//│ 	case xs⁶ of {N  => ys² | C hx² tx² => case ys² of {N  => xs⁶ | C hy² ty² => if (hy² > hx²) then [C hx² merge_₁(tx², ys²)] else [C hy² merge_₁(xs⁶, ty²)]}}: 167
+//│ 	case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₀(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}: 126
+//│ 	case xs⁴ of {N  => ys¹ | C hx¹ tx¹ => case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₀(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}}: 127
 //│ ------------------
 //│ case t³ of {N  => [C h³ [N]] | C hh³ tt³ => [C h³ firsts_₀(tt³)]}: 99 --->
 //│ 	NoProd
@@ -222,22 +191,18 @@ msort(primId(C(2, C(1, C(3, N)))))
 //│ 	[N]: 131
 //│ 	[N]: 133
 //│ 	[C hh⁴ seconds_₀(tt⁴)]: 138
-//│ case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₁(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}: 126 --->
-//│ 	[C hx¹ merge_₁(tx¹, ys¹)]: 117
+//│ case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₀(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}: 126 --->
+//│ 	[C hx¹ merge_₀(tx¹, ys¹)]: 117
 //│ 	[C hy¹ merge_₀(xs⁴, ty¹)]: 124
-//│ 	[C hx² merge_₁(tx², ys²)]: 157
-//│ 	[C hy² merge_₁(xs⁶, ty²)]: 164
-//│ 	[N]: 171
-//│ 	[N]: 174
-//│ 	[C h⁵ [N]]: 175
-//│ case xs⁴ of {N  => ys¹ | C hx¹ tx¹ => case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₁(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}}: 127 --->
-//│ 	[C hx¹ merge_₁(tx¹, ys¹)]: 117
+//│ 	[N]: 143
+//│ 	[N]: 146
+//│ 	[C h⁵ [N]]: 147
+//│ case xs⁴ of {N  => ys¹ | C hx¹ tx¹ => case ys¹ of {N  => xs⁴ | C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₀(tx¹, ys¹)] else [C hy¹ merge_₀(xs⁴, ty¹)]}}: 127 --->
+//│ 	[C hx¹ merge_₀(tx¹, ys¹)]: 117
 //│ 	[C hy¹ merge_₀(xs⁴, ty¹)]: 124
-//│ 	[C hx² merge_₁(tx², ys²)]: 157
-//│ 	[C hy² merge_₁(xs⁶, ty²)]: 164
-//│ 	[N]: 171
-//│ 	[N]: 174
-//│ 	[C h⁵ [N]]: 175
+//│ 	[N]: 143
+//│ 	[N]: 146
+//│ 	[C h⁵ [N]]: 147
 //│ case t⁴ of {N  => [N] | C hh⁴ tt⁴ => [C hh⁴ seconds_₀(tt⁴)]}: 139 --->
 //│ 	NoProd
 //│ 	[N]: 89
@@ -256,23 +221,7 @@ msort(primId(C(2, C(1, C(3, N)))))
 //│ 	[N]: 131
 //│ 	[N]: 133
 //│ 	[C hh⁴ seconds_₀(tt⁴)]: 138
-//│ case ys² of {N  => xs⁶ | C hy² ty² => if (hy² > hx²) then [C hx² merge_₁(tx², ys²)] else [C hy² merge_₁(xs⁶, ty²)]}: 166 --->
-//│ 	[C hx¹ merge_₁(tx¹, ys¹)]: 117
-//│ 	[C hy¹ merge_₀(xs⁴, ty¹)]: 124
-//│ 	[C hx² merge_₁(tx², ys²)]: 157
-//│ 	[C hy² merge_₁(xs⁶, ty²)]: 164
-//│ 	[N]: 171
-//│ 	[N]: 174
-//│ 	[C h⁵ [N]]: 175
-//│ case xs⁶ of {N  => ys² | C hx² tx² => case ys² of {N  => xs⁶ | C hy² ty² => if (hy² > hx²) then [C hx² merge_₁(tx², ys²)] else [C hy² merge_₁(xs⁶, ty²)]}}: 167 --->
-//│ 	[C hx¹ merge_₁(tx¹, ys¹)]: 117
-//│ 	[C hy¹ merge_₀(xs⁴, ty¹)]: 124
-//│ 	[C hx² merge_₁(tx², ys²)]: 157
-//│ 	[C hy² merge_₁(xs⁶, ty²)]: 164
-//│ 	[N]: 171
-//│ 	[N]: 174
-//│ 	[C h⁵ [N]]: 175
-//│ case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}: 189 --->
+//│ case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}: 161 --->
 //│ 	NoProd
 //│ 	[N]: 89
 //│ 	[N]: 92
@@ -281,7 +230,7 @@ msort(primId(C(2, C(1, C(3, N)))))
 //│ 	[N]: 131
 //│ 	[N]: 133
 //│ 	[C hh⁴ seconds_₀(tt⁴)]: 138
-//│ case ls¹ of {N  => [N] | C h⁵ t⁵ => case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}}: 190 --->
+//│ case ls¹ of {N  => [N] | C h⁵ t⁵ => case t⁵ of {N  => [C h⁵ [N]] | C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls¹)), msort_₀(seconds_₀(ls¹)))}}: 162 --->
 //│ 	NoProd
 //│ 	[N]: 89
 //│ 	[C h³ [N]]: 93
@@ -306,25 +255,18 @@ msort(primId(C(2, C(1, C(3, N)))))
 //│ 			N  => [C h⁵ [N]]
 //│ 			| C hh⁵ tt⁵ => merge_₀(msort_₀(firsts_₀(ls²)), msort_₀(seconds_₀(ls²)))}}
 //│ 	where
-//│ 	def firsts_₀(xs⁷) = 
-//│ 		case xs⁷ of {
+//│ 	def firsts_₀(xs⁶) = 
+//│ 		case xs⁶ of {
 //│ 			N  => [N]
 //│ 			| C h³ t³ => case t³ of {
 //│ 				N  => [C h³ [N]]
 //│ 				| C hh³ tt³ => [C h³ firsts_₀(tt³)]}}
-//│ 	def merge_₀(xs¹⁰, ys⁴) = 
-//│ 		case xs¹⁰ of {
-//│ 			N  => ys⁴
-//│ 			| C hx¹ tx¹ => case ys⁴ of {
-//│ 				N  => xs¹⁰
-//│ 				| C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₁(tx¹, ys⁴)] else [C hy¹ merge_₀(xs¹⁰, ty¹)]}}
-//│ 		where
-//│ 		def merge_₁(xs⁹, ys³) = 
-//│ 			case xs⁹ of {
-//│ 				N  => ys³
-//│ 				| C hx² tx² => case ys³ of {
-//│ 					N  => xs⁹
-//│ 					| C hy² ty² => if (hy² > hx²) then [C hx² merge_₁(tx², ys³)] else [C hy² merge_₁(xs⁹, ty²)]}}
+//│ 	def merge_₀(xs⁷, ys²) = 
+//│ 		case xs⁷ of {
+//│ 			N  => ys²
+//│ 			| C hx¹ tx¹ => case ys² of {
+//│ 				N  => xs⁷
+//│ 				| C hy¹ ty¹ => if (hy¹ > hx¹) then [C hx¹ merge_₀(tx¹, ys²)] else [C hy¹ merge_₀(xs⁷, ty¹)]}}
 //│ 	def seconds_₀(xs⁸) = 
 //│ 		case xs⁸ of {
 //│ 			N  => [N]

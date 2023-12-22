@@ -60,10 +60,13 @@ class DiffTestLumberhack extends DiffTests {
         // before resolving constraints, there isn't any potential knots to tie,
         // so the method to tie the knot actually does not matter, will always get the
         // same result as "withoutKnotTying"
-        val initCallTree = CallTree.callTreeWithoutKnotTying (p.d)
-        // val initCallTree = CallTree.callTreeUsingSplitKnot(p.d)
-        val res = p.expandedWithNewDeforest(initCallTree)
-        res
+        // val initCallTree = CallTree.callTreeWithoutKnotTying (p.d)
+        // // val initCallTree = CallTree.callTreeUsingSplitKnot(p.d)
+        // val res = p.expandedWithNewDeforest(initCallTree)
+        // res
+        val newp = p.copyToNewDeforestWithDeadDefElim
+        newp.d(newp)
+        (newp, newp.d)
       else if mode.lhInOCaml then
         val p = FromOcaml(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output)
         p.d(p) // duplicate multiple usages here to enbale polymorphism
@@ -91,12 +94,15 @@ class DiffTestLumberhack extends DiffTests {
         val progStr = (new OCamlGenTests(true, mode))(originalProgram)
         output(progStr.linesIterator.map("\t\t" + _).mkString("\n"))
         if mode.dbg then {
-          val decl :: mainExpr :: Nil = progStr.split(";;").toList : @unchecked
+          val declAndMainList = progStr.split(";;").toList
+          val (decls, mainExprs) = declAndMainList.splitAt(declAndMainList.length - 1)
           output("\t\t....... ocaml repl result .......")
           val ocamlRepl = new OCamlReplHost()
-          ocamlRepl.execute(decl + ";;") match {
-            case OCamlReplHost.Reply.Err(msg) => throw Exception(msg) 
-            case ok => output(ok.toString.linesIterator.map("\t\t" + _).mkString("\n"))
+          decls.foreach { d =>
+            ocamlRepl.execute(d + ";;") match {
+              case OCamlReplHost.Reply.Err(msg) => throw Exception(msg) 
+              case ok => output(ok.toString.linesIterator.map("\t\t" + _).mkString("\n"))
+            }
           }
           ocamlRepl.terminate()
           output("\t\t....... ocaml repl result .......")
@@ -189,16 +195,29 @@ class DiffTestLumberhack extends DiffTests {
             val declAndMainExpr = progStr.split(";;").toList
             output("\n--------------- ocaml repl result -----------------")
             val ocamlRepl = new OCamlReplHost()
-            (declAndMainExpr match {
-              case decl :: mainExpr :: Nil => {
-                ocamlRepl.execute(decl + ";;").flatMap(_ => ocamlRepl.execute(mainExpr + ";;"))
+            val (decls, mainExprs) = declAndMainExpr.splitAt(declAndMainExpr.length - 1)
+            decls.foreach { d =>
+              ocamlRepl.execute(d + ";;") match {
+                case OCamlReplHost.Reply.Err(msg) => throw Exception(msg) 
+                case ok => // output(ok.toString.linesIterator.map("\t\t" + _).mkString("\n"))
               }
-              case mainExpr :: Nil => ocamlRepl.execute(mainExpr + ";;")
-              case _ => lastWords("unknown program structure")
-            }) match {
-              case OCamlReplHost.Reply.Err(msg) => throw Exception(msg) 
-              case ok => output(ok.toString)
             }
+            mainExprs.foreach { e =>
+              ocamlRepl.execute(e + ";;") match {
+                case OCamlReplHost.Reply.Err(msg) => throw Exception(msg) 
+                case ok => output(ok.toString.linesIterator.mkString("\n"))
+              }
+            }
+            // (declAndMainExpr match {
+            //   case decl :: mainExpr :: Nil => {
+            //     ocamlRepl.execute(decl + ";;").flatMap(_ => ocamlRepl.execute(mainExpr + ";;"))
+            //   }
+            //   case mainExpr :: Nil => ocamlRepl.execute(mainExpr + ";;")
+            //   case _ => lastWords("unknown program structure")
+            // }) match {
+            //   case OCamlReplHost.Reply.Err(msg) => throw Exception(msg) 
+            //   case ok => output(ok.toString)
+            // }
             ocamlRepl.terminate()
             output("\n--------------- ocaml repl result -----------------")
           }

@@ -3,15 +3,6 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_original = struct
-let rec append_lz_lh _lh_append_lz_arg1_0 _lh_append_lz_arg2_0 =
-  (let rec _lh_matchIdent_1 = _lh_append_lz_arg1_0 in
-    (match _lh_matchIdent_1 with
-      | `LH_C(_lh_append_lz_LH_C_0_0, _lh_append_lz_LH_C_1_0) -> 
-        (lazy (`LH_C(_lh_append_lz_LH_C_0_0, ((append_lz_lh _lh_append_lz_LH_C_1_0) _lh_append_lz_arg2_0))))
-      | `LH_N -> 
-        _lh_append_lz_arg2_0
-      | _ -> 
-        (failwith "error")));;
 let rec atIndex_lz_lh n_0 ls_3 =
   (if (n_0 < 0) then
     (failwith "error")
@@ -24,28 +15,32 @@ let rec atIndex_lz_lh n_0 ls_3 =
           ((atIndex_lz_lh (n_0 - 1)) t_4))
       | `LH_N -> 
         (failwith "error")));;
-let rec enumFromThenTo_lh a_0 t_3 b_0 =
-  (if (a_0 <= b_0) then
-    (`LH_C(a_0, (((enumFromThenTo_lh t_3) ((2 * t_3) - a_0)) b_0)))
-  else
-    (`LH_N));;
-let rec head_lz_lh ls_1 =
-  (match (Lazy.force ls_1) with
-    | `LH_C(h_1, t_1) -> 
-      h_1
-    | `LH_N -> 
-      (failwith "error"));;
 let rec map_lz_lh f_0 ls_0 =
   (lazy (match (Lazy.force ls_0) with
     | `LH_C(h_0, t_0) -> 
       (`LH_C((f_0 h_0), ((map_lz_lh f_0) t_0)))
     | `LH_N -> 
       (`LH_N)));;
+let rec append_lz_lh _lh_append_lz_arg1_0 _lh_append_lz_arg2_0 =
+  (let rec _lh_matchIdent_1 = _lh_append_lz_arg1_0 in
+    (match _lh_matchIdent_1 with
+      | `LH_C(_lh_append_lz_LH_C_0_0, _lh_append_lz_LH_C_1_0) -> 
+        (lazy (`LH_C(_lh_append_lz_LH_C_0_0, ((append_lz_lh _lh_append_lz_LH_C_1_0) _lh_append_lz_arg2_0))))
+      | `LH_N -> 
+        _lh_append_lz_arg2_0
+      | _ -> 
+        (failwith "error")));;
 let rec min_lh _lh_min_arg1_0 _lh_min_arg2_0 =
   (if (_lh_min_arg1_0 > _lh_min_arg2_0) then
     _lh_min_arg2_0
   else
     _lh_min_arg1_0);;
+let rec tail_lz_lh ls_2 =
+  (match (Lazy.force ls_2) with
+    | `LH_C(h_2, t_2) -> 
+      t_2
+    | `LH_N -> 
+      (failwith "error"));;
 let rec notDivBy_lh _lh_notDivBy_arg1_0 _lh_notDivBy_arg2_0 _lh_notDivBy_arg3_0 =
   (let rec _lh_matchIdent_2 = (Lazy.force _lh_notDivBy_arg2_0) in
     (match _lh_matchIdent_2 with
@@ -61,10 +56,15 @@ let rec notDivBy_lh _lh_notDivBy_arg1_0 _lh_notDivBy_arg2_0 _lh_notDivBy_arg3_0 
                 (failwith "error"))))
       | _ -> 
         (failwith "error")));;
-let rec tail_lz_lh ls_2 =
-  (match (Lazy.force ls_2) with
-    | `LH_C(h_2, t_2) -> 
-      t_2
+let rec enumFromThenTo_lh a_0 t_3 b_0 =
+  (if (a_0 <= b_0) then
+    (`LH_C(a_0, (((enumFromThenTo_lh t_3) ((2 * t_3) - a_0)) b_0)))
+  else
+    (`LH_N));;
+let rec head_lz_lh ls_1 =
+  (match (Lazy.force ls_1) with
+    | `LH_C(h_1, t_1) -> 
+      h_1
     | `LH_N -> 
       (failwith "error"));;
 let rec zipWith_lz_lz_lh f_1 xs_0 ys_0 =
@@ -77,6 +77,14 @@ let rec zipWith_lz_lz_lh f_1 xs_0 ys_0 =
           (`LH_N))
     | `LH_N -> 
       (`LH_N)));;
+let rec squares_lh _lh_squares_arg1_0 =
+  ((map_lz_lh (fun p_0 -> 
+    (p_0 * p_0))) _lh_squares_arg1_0);;
+let rec noFactor_lh _lh_noFactor_arg1_0 _lh_noFactor_arg2_0 _lh_noFactor_arg3_0 _lh_noFactor_arg4_0 =
+  (if (_lh_noFactor_arg1_0 <= 2) then
+    true
+  else
+    (((notDivBy_lh _lh_noFactor_arg2_0) _lh_noFactor_arg3_0) _lh_noFactor_arg4_0));;
 let rec nextSize_lh _lh_nextSize_arg1_0 _lh_nextSize_arg2_0 =
   (match _lh_nextSize_arg1_0 with
     | `Wheel(_lh_nextSize_Wheel_0_0, _lh_nextSize_Wheel_1_0) -> 
@@ -103,17 +111,8 @@ let rec nextSize_lh _lh_nextSize_arg1_0 _lh_nextSize_arg2_0 =
             (`LH_N))) in
         (_lh_listcomp_fun_3 (((enumFromThenTo_lh 0) _lh_nextSize_Wheel_0_0) ((_lh_nextSize_arg2_0 - 1) * _lh_nextSize_Wheel_0_0))))))
     | _ -> 
-      (failwith "error"))
-and noFactor_lh _lh_noFactor_arg1_0 _lh_noFactor_arg2_0 _lh_noFactor_arg3_0 _lh_noFactor_arg4_0 =
-  (if (_lh_noFactor_arg1_0 <= 2) then
-    true
-  else
-    (((notDivBy_lh _lh_noFactor_arg2_0) _lh_noFactor_arg3_0) _lh_noFactor_arg4_0))
-and prime_lh _lh_prime_arg1_0 =
-  ((atIndex_lz_lh _lh_prime_arg1_0) (primes_lh _lh_prime_arg1_0))
-and primes_lh _lh_primes_arg1_0 =
-  (lazy ((((sieve_lh (wheels_lh (primes_lh _lh_primes_arg1_0))) (primes_lh _lh_primes_arg1_0)) (squares_lh (primes_lh _lh_primes_arg1_0))) _lh_primes_arg1_0))
-and sieve_lh _lh_sieve_arg1_0 _lh_sieve_arg2_0 _lh_sieve_arg3_0 _lh_sieve_arg4_0 =
+      (failwith "error"));;
+let rec sieve_lh _lh_sieve_arg1_0 _lh_sieve_arg2_0 _lh_sieve_arg3_0 _lh_sieve_arg4_0 =
   (let rec _lh_matchIdent_0 = (Lazy.force _lh_sieve_arg1_0) in
     (match _lh_matchIdent_0 with
       | `LH_C(_lh_sieve_LH_C_0_0, _lh_sieve_LH_C_1_0) -> 
@@ -144,13 +143,14 @@ and sieve_lh _lh_sieve_arg1_0 _lh_sieve_arg2_0 _lh_sieve_arg3_0 _lh_sieve_arg4_0
           | _ -> 
             (failwith "error"))
       | _ -> 
-        (failwith "error")))
-and squares_lh _lh_squares_arg1_0 =
-  ((map_lz_lh (fun p_0 -> 
-    (p_0 * p_0))) _lh_squares_arg1_0)
-and testWheelSieve1_nofib_lh _lh_testWheelSieve1_nofib_arg1_0 =
-  (prime_lh _lh_testWheelSieve1_nofib_arg1_0)
-and wheels_lh _lh_wheels_arg1_0 =
+        (failwith "error")));;
+let rec wheels_lh _lh_wheels_arg1_0 =
   (lazy (`LH_C((`Wheel(1, (`LH_C(1, (`LH_N))))), (((zipWith_lz_lz_lh nextSize_lh) (wheels_lh _lh_wheels_arg1_0)) _lh_wheels_arg1_0))));;
+let rec primes_lh _lh_primes_arg1_0 =
+  (lazy ((((sieve_lh (wheels_lh (primes_lh _lh_primes_arg1_0))) (primes_lh _lh_primes_arg1_0)) (squares_lh (primes_lh _lh_primes_arg1_0))) _lh_primes_arg1_0));;
+let rec prime_lh _lh_prime_arg1_0 =
+  ((atIndex_lz_lh _lh_prime_arg1_0) (primes_lh _lh_prime_arg1_0));;
+let rec testWheelSieve1_nofib_lh _lh_testWheelSieve1_nofib_arg1_0 =
+  (prime_lh _lh_testWheelSieve1_nofib_arg1_0);;
 end;;
 

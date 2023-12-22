@@ -3,17 +3,6 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_original = struct
-let rec dropWhile_lh _lh_dropWhile_arg1_0 _lh_dropWhile_arg2_0 =
-  (match _lh_dropWhile_arg2_0 with
-    | `LH_N -> 
-      (`LH_N)
-    | `LH_C(_lh_dropWhile_LH_C_0_0, _lh_dropWhile_LH_C_1_0) -> 
-      (if (_lh_dropWhile_arg1_0 _lh_dropWhile_LH_C_0_0) then
-        ((dropWhile_lh _lh_dropWhile_arg1_0) _lh_dropWhile_LH_C_1_0)
-      else
-        (`LH_C(_lh_dropWhile_LH_C_0_0, _lh_dropWhile_LH_C_1_0)))
-    | _ -> 
-      (failwith "error"));;
 let rec insertT_lh _lh_insertT_arg1_0 _lh_insertT_arg2_0 _lh_insertT_arg3_0 =
   (match _lh_insertT_arg3_0 with
     | `Node(_lh_insertT_Node_0_0, _lh_insertT_Node_1_0, _lh_insertT_Node_2_0) -> 
@@ -34,11 +23,22 @@ let rec insertT_lh _lh_insertT_arg1_0 _lh_insertT_arg2_0 _lh_insertT_arg3_0 =
       (`Leaf(_lh_insertT_arg1_0, _lh_insertT_arg2_0))
     | _ -> 
       (failwith "error"));;
+let rec dropWhile_lh _lh_dropWhile_arg1_0 _lh_dropWhile_arg2_0 =
+  (match _lh_dropWhile_arg2_0 with
+    | `LH_N -> 
+      (`LH_N)
+    | `LH_C(_lh_dropWhile_LH_C_0_0, _lh_dropWhile_LH_C_1_0) -> 
+      (if (_lh_dropWhile_arg1_0 _lh_dropWhile_LH_C_0_0) then
+        ((dropWhile_lh _lh_dropWhile_arg1_0) _lh_dropWhile_LH_C_1_0)
+      else
+        (`LH_C(_lh_dropWhile_LH_C_0_0, _lh_dropWhile_LH_C_1_0)))
+    | _ -> 
+      (failwith "error"));;
+let rec isSpace_lh _lh_isSpace_arg1_0 =
+  ((_lh_isSpace_arg1_0 = ' ') || (_lh_isSpace_arg1_0 = '|'));;
 let rec isDigit_lh _lh_isDigit_arg1_0 =
   (let rec n_0 = (int_of_char _lh_isDigit_arg1_0) in
     ((n_0 >= 48) && (n_0 <= 57)));;
-let rec isSpace_lh _lh_isSpace_arg1_0 =
-  ((_lh_isSpace_arg1_0 = ' ') || (_lh_isSpace_arg1_0 = '|'));;
 let rec lookupT_lh _lh_lookupT_arg1_0 _lh_lookupT_arg2_0 =
   (match _lh_lookupT_arg2_0 with
     | `Node(_lh_lookupT_Node_0_0, _lh_lookupT_Node_1_0, _lh_lookupT_Node_2_0) -> 
@@ -55,6 +55,19 @@ let rec lookupT_lh _lh_lookupT_arg1_0 _lh_lookupT_arg2_0 =
       (`Nothing)
     | _ -> 
       (failwith "error"));;
+let rec readInt_lh _lh_readInt_arg1_0 =
+  (let rec readInt'_0 = (fun _lh_readInt'_arg1_0 _lh_readInt'_arg2_0 -> 
+    (match _lh_readInt'_arg2_0 with
+      | `LH_C(_lh_readInt'_LH_C_0_0, _lh_readInt'_LH_C_1_0) -> 
+        (if (isDigit_lh _lh_readInt'_LH_C_0_0) then
+          ((readInt'_0 (((_lh_readInt'_arg1_0 * 10) + (int_of_char _lh_readInt'_LH_C_0_0)) - (int_of_char '0'))) _lh_readInt'_LH_C_1_0)
+        else
+          (let rec s'_0 = ((dropWhile_lh isSpace_lh) (`LH_C(_lh_readInt'_LH_C_0_0, _lh_readInt'_LH_C_1_0))) in
+            (`LH_P2(_lh_readInt'_arg1_0, s'_0))))
+      | _ -> 
+        (let rec s'_1 = ((dropWhile_lh isSpace_lh) _lh_readInt'_arg2_0) in
+          (`LH_P2(_lh_readInt'_arg1_0, s'_1))))) in
+    ((readInt'_0 0) _lh_readInt_arg1_0));;
 let rec join_lh _lh_join_arg1_0 _lh_join_arg2_0 _lh_join_arg3_0 =
   (match _lh_join_arg1_0 with
     | `Empty -> 
@@ -91,21 +104,8 @@ let rec join_lh _lh_join_arg1_0 _lh_join_arg2_0 _lh_join_arg3_0 =
                 | `Node(_lh_join_Node_0_1, _lh_join_Node_1_1, _lh_join_Node_2_1) -> 
                   (((join_lh _lh_join_Node_1_1) _lh_join_arg2_0) (((join_lh _lh_join_Node_2_1) _lh_join_arg2_0) _lh_join_arg3_0))
                 | _ -> 
-                  (failwith "error")))))
-and readInt_lh _lh_readInt_arg1_0 =
-  (let rec readInt'_0 = (fun _lh_readInt'_arg1_0 _lh_readInt'_arg2_0 -> 
-    (match _lh_readInt'_arg2_0 with
-      | `LH_C(_lh_readInt'_LH_C_0_0, _lh_readInt'_LH_C_1_0) -> 
-        (if (isDigit_lh _lh_readInt'_LH_C_0_0) then
-          ((readInt'_0 (((_lh_readInt'_arg1_0 * 10) + (int_of_char _lh_readInt'_LH_C_0_0)) - (int_of_char '0'))) _lh_readInt'_LH_C_1_0)
-        else
-          (let rec s'_0 = ((dropWhile_lh isSpace_lh) (`LH_C(_lh_readInt'_LH_C_0_0, _lh_readInt'_LH_C_1_0))) in
-            (`LH_P2(_lh_readInt'_arg1_0, s'_0))))
-      | _ -> 
-        (let rec s'_1 = ((dropWhile_lh isSpace_lh) _lh_readInt'_arg2_0) in
-          (`LH_P2(_lh_readInt'_arg1_0, s'_1))))) in
-    ((readInt'_0 0) _lh_readInt_arg1_0))
-and readTree_lh _lh_readTree_arg1_0 _lh_readTree_arg2_0 _lh_readTree_arg3_0 =
+                  (failwith "error")))));;
+let rec readTree_lh _lh_readTree_arg1_0 _lh_readTree_arg2_0 _lh_readTree_arg3_0 =
   (match _lh_readTree_arg2_0 with
     | `LH_N -> 
       _lh_readTree_arg3_0
@@ -127,8 +127,8 @@ and readTree_lh _lh_readTree_arg1_0 _lh_readTree_arg2_0 _lh_readTree_arg3_0 =
                 | _ -> 
                   (failwith "error")))
           | _ -> 
-            (failwith "error"))))
-and testTreejoin_nofib_lh _lh_testTreejoin_nofib_arg1_0 =
+            (failwith "error"))));;
+let rec testTreejoin_nofib_lh _lh_testTreejoin_nofib_arg1_0 =
   (let rec c1_0 = lh_large_str_0 in
     (let rec c2_0 = lh_large_str_1 in
       (let rec a_0 = (((readTree_lh (fun x___0 -> 

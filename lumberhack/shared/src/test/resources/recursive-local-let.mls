@@ -73,25 +73,32 @@ f(A)
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ 
+//│ [A]: 21 --->
+//│ 	case x¹ of {A  => let t¹ = f_₀(t¹)
+//│ in [B]}: 18
 //│ ------------------
-//│ 
+//│ case x¹ of {A  => let t¹ = f_₀(t¹)
+//│ in [B]}: 18 --->
+//│ 	[A]: 21
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
+//│ [A]: 21 --->
+//│ 	case x¹ of {A  => let t¹ = f_₀(t¹)
+//│ in [B]}: 18
 //│ ------------------
-//│ 
+//│ case x¹ of {A  => let t¹ = f_₀(t¹)
+//│ in [B]}: 18 --->
+//│ 	[A]: 21
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀([A])
+//│ f_₀((fun _lh_dummy⁰ -> 
+//│ 	let t² = f_₀(t²)
+//│ 	in [B]))
 //│ def f_₀(x²) = 
-//│ 	case x² of {
-//│ 		A  => 
-//│ 			let t² = f_₀(t²)
-//│ 			in [B]}
+//│ 	x²(99)
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception: type error HashSet(MkCtor(B,List()), Destruct(List(Destructor(A,List()))))
+//│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!

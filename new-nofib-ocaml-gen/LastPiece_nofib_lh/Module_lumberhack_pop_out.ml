@@ -51,94 +51,6 @@ let rec compareIntInt_lh _lh_compareIntInt_arg1_0 _lh_compareIntInt_arg2_0 =
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
-let rec flip_lh _lh_flip_arg1_0 =
-  (match _lh_flip_arg1_0 with
-    | `Male -> 
-      (`Female)
-    | `Female -> 
-      (`Male)
-    | _ -> 
-      (failwith "error"));;
-let rec pickOne_lh _lh_pickOne_arg1_0 =
-  (let rec go_0 = (fun _lh_go_arg1_0 _lh_go_arg2_0 -> 
-    (match _lh_go_arg2_0 with
-      | `LH_N -> 
-        (fun _lh_listcomp_fun_9_3 _lh_search_arg2_8 -> 
-          (`LH_N))
-      | `LH_C(_lh_go_LH_C_0_0, _lh_go_LH_C_1_0) -> 
-        (let rec _lh_listcomp_fun_ls_t_7_1 = ((go_0 (fun _lh_funcomp_x_4 -> 
-          ((fun p_1_1 -> 
-            (`LH_C(_lh_go_LH_C_0_0, p_1_1))) (_lh_go_arg1_0 _lh_funcomp_x_4)))) _lh_go_LH_C_1_0) in
-          (let rec _lh_listcomp_fun_ls_h_2_5 = (let rec _lh_search_LH_P2_1_4_7 = (_lh_go_arg1_0 _lh_go_LH_C_1_0) in
-            (let rec _lh_search_LH_P2_0_1 = _lh_go_LH_C_0_0 in
-              (fun _lh_listcomp_fun_ls_t_7_2 _lh_listcomp_fun_9_4 _lh_search_arg2_9 -> 
-                ((((_lh_search_LH_P2_0_1 _lh_listcomp_fun_ls_t_7_2) _lh_listcomp_fun_9_4) _lh_search_LH_P2_1_4_7) _lh_search_arg2_9)))) in
-            (fun _lh_listcomp_fun_9_5 _lh_search_arg2_1_0 -> 
-              (((_lh_listcomp_fun_ls_h_2_5 _lh_listcomp_fun_ls_t_7_1) _lh_listcomp_fun_9_5) _lh_search_arg2_1_0))))
-      | _ -> 
-        (failwith "error"))) in
-    ((go_0 (fun x_6 -> 
-      x_6)) _lh_pickOne_arg1_0));;
-let rec next_lh _lh_next_arg1_0 =
-  (match _lh_next_arg1_0 with
-    | `LH_P2(_lh_next_LH_P2_0_0, _lh_next_LH_P2_1_0) -> 
-      (`LH_P2(_lh_next_LH_P2_0_0, (_lh_next_LH_P2_1_0 + 1)))
-    | _ -> 
-      (failwith "error"));;
-let rec mapMaybe_lh _lh_mapMaybe_arg1_0 _lh_mapMaybe_arg2_0 =
-  (match _lh_mapMaybe_arg2_0 with
-    | `LH_N -> 
-      (`LH_N)
-    | `LH_C(_lh_mapMaybe_LH_C_0_0, _lh_mapMaybe_LH_C_1_0) -> 
-      (let rec _lh_matchIdent_1_1_7 = (_lh_mapMaybe_arg1_0 _lh_mapMaybe_LH_C_0_0) in
-        ((_lh_matchIdent_1_1_7 _lh_mapMaybe_LH_C_1_0) _lh_mapMaybe_arg1_0))
-    | _ -> 
-      (failwith "error"));;
-let rec isJust_lh _lh_isJust_arg1_0 =
-  (match _lh_isJust_arg1_0 with
-    | `Just(_lh_isJust_Just_0_0) -> 
-      true
-    | `Nothing -> 
-      false
-    | _ -> 
-      (failwith "error"));;
-let rec maxRow_lh =
-  8;;
-let rec snd_lh _lh_snd_arg1_0 =
-  (match _lh_snd_arg1_0 with
-    | `LH_P2(_lh_snd_LH_P2_0_0, _lh_snd_LH_P2_1_0) -> 
-      _lh_snd_LH_P2_1_0
-    | _ -> 
-      (failwith "error"));;
-let rec length_lh ls_0 =
-  (match ls_0 with
-    | `LH_C(h_2, t_2) -> 
-      (1 + (length_lh t_2))
-    | `LH_N -> 
-      0);;
-let rec myMin_lh _lh_myMin_arg1_0 _lh_myMin_arg2_0 =
-  (if (_lh_myMin_arg1_0 > _lh_myMin_arg2_0) then
-    _lh_myMin_arg1_0
-  else
-    _lh_myMin_arg2_0);;
-let rec extend_maybe_lh _lh_extend_maybe_arg1_1_4_7 _lh_extend_maybe_arg2_0 _lh_extend_maybe_arg3_1_4_7 =
-  ((_lh_extend_maybe_arg2_0 _lh_extend_maybe_arg1_1_4_7) _lh_extend_maybe_arg3_1_4_7);;
-let rec mappend_lh xs_0 ys_0 =
-  (match xs_0 with
-    | `LH_C(h_3, t_3) -> 
-      (`LH_C(h_3, ((mappend_lh t_3) ys_0)))
-    | `LH_N -> 
-      ys_0);;
-let rec foldr_lh f_6 i_5 ls_2 =
-  ((ls_2 f_6) i_5);;
-let rec addIntInt_lh _lh_addIntInt_arg1_0 _lh_addIntInt_arg2_0 =
-  (match _lh_addIntInt_arg1_0 with
-    | `LH_P2(_lh_addIntInt_LH_P2_0_3_4_2, _lh_addIntInt_LH_P2_1_3_4_2) -> 
-      ((_lh_addIntInt_arg2_0 _lh_addIntInt_LH_P2_0_3_4_2) _lh_addIntInt_LH_P2_1_3_4_2)
-    | _ -> 
-      (failwith "error"));;
-let rec emptyBoard_lh =
-  (`Tip);;
 let rec insert_lh _lh_insert_arg1_0 _lh_insert_arg2_0 _lh_insert_arg3_0 =
   (match _lh_insert_arg3_0 with
     | `Tip -> 
@@ -301,6 +213,36 @@ let rec insert_lh _lh_insert_arg1_0 _lh_insert_arg2_0 _lh_insert_arg3_0 =
             (failwith "error")))
     | _ -> 
       (failwith "error"));;
+let rec extend_lh _lh_extend_arg1_0 _lh_extend_arg2_0 _lh_extend_arg3_0 =
+  (((insert_lh _lh_extend_arg2_0) _lh_extend_arg3_0) _lh_extend_arg1_0);;
+let rec flip_lh _lh_flip_arg1_0 =
+  (match _lh_flip_arg1_0 with
+    | `Male -> 
+      (`Female)
+    | `Female -> 
+      (`Male)
+    | _ -> 
+      (failwith "error"));;
+let rec pickOne_lh _lh_pickOne_arg1_0 =
+  (let rec go_0 = (fun _lh_go_arg1_0 _lh_go_arg2_0 -> 
+    (match _lh_go_arg2_0 with
+      | `LH_N -> 
+        (fun _lh_listcomp_fun_9_3 _lh_search_arg2_8 -> 
+          (`LH_N))
+      | `LH_C(_lh_go_LH_C_0_0, _lh_go_LH_C_1_0) -> 
+        (let rec _lh_listcomp_fun_ls_t_7_1 = ((go_0 (fun _lh_funcomp_x_4 -> 
+          ((fun p_1_1 -> 
+            (`LH_C(_lh_go_LH_C_0_0, p_1_1))) (_lh_go_arg1_0 _lh_funcomp_x_4)))) _lh_go_LH_C_1_0) in
+          (let rec _lh_listcomp_fun_ls_h_2_5 = (let rec _lh_search_LH_P2_1_4_7 = (_lh_go_arg1_0 _lh_go_LH_C_1_0) in
+            (let rec _lh_search_LH_P2_0_1 = _lh_go_LH_C_0_0 in
+              (fun _lh_listcomp_fun_ls_t_7_2 _lh_listcomp_fun_9_4 _lh_search_arg2_9 -> 
+                ((((_lh_search_LH_P2_0_1 _lh_listcomp_fun_ls_t_7_2) _lh_listcomp_fun_9_4) _lh_search_LH_P2_1_4_7) _lh_search_arg2_9)))) in
+            (fun _lh_listcomp_fun_9_5 _lh_search_arg2_1_0 -> 
+              (((_lh_listcomp_fun_ls_h_2_5 _lh_listcomp_fun_ls_t_7_1) _lh_listcomp_fun_9_5) _lh_search_arg2_1_0))))
+      | _ -> 
+        (failwith "error"))) in
+    ((go_0 (fun x_6 -> 
+      x_6)) _lh_pickOne_arg1_0));;
 let rec mapLookup_lh _lh_mapLookup_arg1_0 _lh_mapLookup_arg2_0 =
   (match _lh_mapLookup_arg2_0 with
     | `Tip -> 
@@ -318,18 +260,31 @@ let rec mapLookup_lh _lh_mapLookup_arg1_0 _lh_mapLookup_arg2_0 =
             (failwith "error")))
     | _ -> 
       (failwith "error"));;
-let rec map_lh f_3 ls_1 _lh_popOutId_0_0 _lh_popOutId_1_0 =
-  (match ls_1 with
-    | `LH_C(h_4, t_4) -> 
-      (let rec t_5 = ((map_lh f_3) t_4) in
-        (let rec h_5 = (f_3 h_4) in
-          ((_lh_popOutId_0_0 h_5) (((foldr_lh _lh_popOutId_0_0) _lh_popOutId_1_0) t_5))))
-    | `LH_N -> 
-      _lh_popOutId_1_0);;
-let rec extend_lh _lh_extend_arg1_0 _lh_extend_arg2_0 _lh_extend_arg3_0 =
-  (((insert_lh _lh_extend_arg2_0) _lh_extend_arg3_0) _lh_extend_arg1_0);;
 let rec check_lh _lh_check_arg1_0 _lh_check_arg2_0 =
   ((mapLookup_lh _lh_check_arg2_0) _lh_check_arg1_0);;
+let rec next_lh _lh_next_arg1_0 =
+  (match _lh_next_arg1_0 with
+    | `LH_P2(_lh_next_LH_P2_0_0, _lh_next_LH_P2_1_0) -> 
+      (`LH_P2(_lh_next_LH_P2_0_0, (_lh_next_LH_P2_1_0 + 1)))
+    | _ -> 
+      (failwith "error"));;
+let rec mapMaybe_lh _lh_mapMaybe_arg1_0 _lh_mapMaybe_arg2_0 =
+  (match _lh_mapMaybe_arg2_0 with
+    | `LH_N -> 
+      (`LH_N)
+    | `LH_C(_lh_mapMaybe_LH_C_0_0, _lh_mapMaybe_LH_C_1_0) -> 
+      (let rec _lh_matchIdent_1_1_7 = (_lh_mapMaybe_arg1_0 _lh_mapMaybe_LH_C_0_0) in
+        ((_lh_matchIdent_1_1_7 _lh_mapMaybe_LH_C_1_0) _lh_mapMaybe_arg1_0))
+    | _ -> 
+      (failwith "error"));;
+let rec isJust_lh _lh_isJust_arg1_0 =
+  (match _lh_isJust_arg1_0 with
+    | `Just(_lh_isJust_Just_0_0) -> 
+      true
+    | `Nothing -> 
+      false
+    | _ -> 
+      (failwith "error"));;
 let rec search_lh _lh_search_arg1_0 _lh_search_arg2_4 _lh_search_arg3_0 _lh_search_arg4_0 =
   (match _lh_search_arg1_0 with
     | `LH_P2(_lh_search_LH_P2_0_0, _lh_search_LH_P2_1_2_7) -> 
@@ -369,6 +324,49 @@ try_lh _lh_try_arg1_0 _lh_try_arg2_0 _lh_try_arg3_0 _lh_try_arg4_0 =
               ((mapMaybe_lh _lh_mapMaybe_arg1_2) _lh_mapMaybe_LH_C_1_2))
           | _ -> 
             (failwith "error")))
+    | _ -> 
+      (failwith "error"));;
+let rec maxRow_lh =
+  8;;
+let rec snd_lh _lh_snd_arg1_0 =
+  (match _lh_snd_arg1_0 with
+    | `LH_P2(_lh_snd_LH_P2_0_0, _lh_snd_LH_P2_1_0) -> 
+      _lh_snd_LH_P2_1_0
+    | _ -> 
+      (failwith "error"));;
+let rec length_lh ls_0 =
+  (match ls_0 with
+    | `LH_C(h_2, t_2) -> 
+      (1 + (length_lh t_2))
+    | `LH_N -> 
+      0);;
+let rec myMin_lh _lh_myMin_arg1_0 _lh_myMin_arg2_0 =
+  (if (_lh_myMin_arg1_0 > _lh_myMin_arg2_0) then
+    _lh_myMin_arg1_0
+  else
+    _lh_myMin_arg2_0);;
+let rec extend_maybe_lh _lh_extend_maybe_arg1_1_4_7 _lh_extend_maybe_arg2_0 _lh_extend_maybe_arg3_1_4_7 =
+  ((_lh_extend_maybe_arg2_0 _lh_extend_maybe_arg1_1_4_7) _lh_extend_maybe_arg3_1_4_7);;
+let rec mappend_lh xs_0 ys_0 =
+  (match xs_0 with
+    | `LH_C(h_3, t_3) -> 
+      (`LH_C(h_3, ((mappend_lh t_3) ys_0)))
+    | `LH_N -> 
+      ys_0);;
+let rec foldr_lh f_6 i_5 ls_2 =
+  ((ls_2 f_6) i_5);;
+let rec map_lh f_3 ls_1 _lh_popOutId_0_0 _lh_popOutId_1_0 =
+  (match ls_1 with
+    | `LH_C(h_4, t_4) -> 
+      (let rec t_5 = ((map_lh f_3) t_4) in
+        (let rec h_5 = (f_3 h_4) in
+          ((_lh_popOutId_0_0 h_5) (((foldr_lh _lh_popOutId_0_0) _lh_popOutId_1_0) t_5))))
+    | `LH_N -> 
+      _lh_popOutId_1_0);;
+let rec addIntInt_lh _lh_addIntInt_arg1_0 _lh_addIntInt_arg2_0 =
+  (match _lh_addIntInt_arg1_0 with
+    | `LH_P2(_lh_addIntInt_LH_P2_0_3_4_2, _lh_addIntInt_LH_P2_1_3_4_2) -> 
+      ((_lh_addIntInt_arg2_0 _lh_addIntInt_LH_P2_0_3_4_2) _lh_addIntInt_LH_P2_1_3_4_2)
     | _ -> 
       (failwith "error"));;
 let rec nPiece_lh _lh_nPiece_arg1_0 _lh_listcomp_fun_ls_t_4_8 _lh_listcomp_fun_6_3 _lh_search_LH_P2_1_3_2 _lh_search_arg2_5 =
@@ -4821,6 +4819,8 @@ let rec lPiece_lh _lh_lPiece_arg1_0 _lh_listcomp_fun_ls_t_9_2 _lh_listcomp_fun_1
                 (failwith "error"))))))));;
 let rec initialPieces_lh _lh_initialPieces_arg1_0 =
   (`LH_C((bPiece_lh 0), (`LH_C((cPiece_lh 0), (`LH_C((dPiece_lh 0), (`LH_C((ePiece_lh 0), (`LH_C((fPiece_lh 0), (`LH_C((gPiece_lh 0), (`LH_C((hPiece_lh 0), (`LH_C((iPiece_lh 0), (`LH_C((jPiece_lh 0), (`LH_C((kPiece_lh 0), (`LH_C((lPiece_lh 0), (`LH_C((mPiece_lh 0), (`LH_C((nPiece_lh 0), (`LH_N)))))))))))))))))))))))))));;
+let rec emptyBoard_lh =
+  (`Tip);;
 let rec testLastPiece_nofib_lh _lh_testLastPiece_nofib_arg1_0 =
   let rec nonEmptySet_0 = (fun _lh_nonEmptySet_arg1_0 -> 
     (match _lh_nonEmptySet_arg1_0 with

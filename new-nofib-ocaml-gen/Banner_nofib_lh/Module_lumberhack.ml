@@ -8,6 +8,10 @@ let rec foldr_lh__d0 f_5 i_2 ls_2_6 =
   ((ls_2_6 f_5) i_2);;
 let rec foldr_lh__d1 f_6 i_3 ls_2_7 =
   ((ls_2_7 f_6) i_3);;
+let rec unzip_lh__d0 _lh_unzip_arg1_0 =
+  (((foldr_lh__d1 (fun ab_0 asbs_1 -> 
+    (let rec _lh_matchIdent_2 = ab_0 in
+      (_lh_matchIdent_2 asbs_1)))) (`LH_P2((`LH_N), (`LH_N)))) _lh_unzip_arg1_0);;
 let rec map_lh__d1 f_3_6 ls_4_3 =
   (ls_4_3 f_3_6);;
 let rec concat_lh__d1 lss_1 =
@@ -16,6 +20,60 @@ let rec mappend_lh__d4 xs_6 ys_4_1 =
   (xs_6 ys_4_1);;
 let rec map_lh__d2 f_3_5 ls_3_8 =
   (ls_3_8 f_3_5);;
+let rec combine_lh__d0 _lh_combine_arg1_0 _lh_combine_arg2_0 _lh_combine_arg3_0 _lh_combine_arg4_0 =
+  (let rec t_1_3_1 = (transpose_lh__d0 (`LH_C(_lh_combine_arg3_0, _lh_combine_arg4_0))) in
+    (let rec h_1_3_1 = (`LH_C(_lh_combine_arg1_0, _lh_combine_arg2_0)) in
+      (fun f_3_7 -> 
+        (let rec t_1_3_2 = ((map_lh__d1 f_3_7) t_1_3_1) in
+          (let rec h_1_3_2 = (f_3_7 h_1_3_1) in
+            (fun f_3_8 -> 
+              (let rec t_1_3_3 = ((map_lh__d2 f_3_8) t_1_3_2) in
+                (let rec h_1_3_3 = (f_3_8 h_1_3_2) in
+                  (fun _lh_dummy_3 -> 
+                    ((mappend_lh__d4 h_1_3_3) (concat_lh__d1 t_1_3_3)))))))))))
+and
+transpose_lh__d0 _lh_transpose_arg1_0 =
+  (match _lh_transpose_arg1_0 with
+    | `LH_N -> 
+      (fun f_0 f_1 _lh_dummy_0 -> 
+        (`LH_N))
+    | `LH_C(_lh_transpose_LH_C_0_0, _lh_transpose_LH_C_1_0) -> 
+      (match _lh_transpose_LH_C_0_0 with
+        | `LH_N -> 
+          (transpose_lh__d0 _lh_transpose_LH_C_1_0)
+        | `LH_C(_lh_transpose_LH_C_0_1, _lh_transpose_LH_C_1_1) -> 
+          (let rec _lh_matchIdent_0 = (unzip_lh__d0 (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
+            (match _lh_listcomp_fun_para_0 with
+              | `LH_C(_lh_listcomp_fun_ls_h_0, _lh_listcomp_fun_ls_t_0) -> 
+                (match _lh_listcomp_fun_ls_h_0 with
+                  | `LH_C(_lh_transpose_LH_C_0_2, _lh_transpose_LH_C_1_2) -> 
+                    (let rec t_2_7 = (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0) in
+                      (let rec h_2_7 = (let rec _lh_unzip_LH_P2_1_0 = _lh_transpose_LH_C_1_2 in
+                        (let rec _lh_unzip_LH_P2_0_0 = _lh_transpose_LH_C_0_2 in
+                          (fun asbs_0 -> 
+                            (let rec _lh_matchIdent_1 = asbs_0 in
+                              (match _lh_matchIdent_1 with
+                                | `LH_P2(_lh_unzip_LH_P2_0_1, _lh_unzip_LH_P2_1_1) -> 
+                                  (`LH_P2((`LH_C(_lh_unzip_LH_P2_0_0, _lh_unzip_LH_P2_0_1)), (`LH_C(_lh_unzip_LH_P2_1_0, _lh_unzip_LH_P2_1_1))))
+                                | _ -> 
+                                  (failwith "error")))))) in
+                        (fun f_2 i_0 -> 
+                          ((f_2 h_2_7) (((foldr_lh__d0 f_2) i_0) t_2_7)))))
+                  | _ -> 
+                    (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0))
+              | `LH_N -> 
+                (fun f_3 i_1 -> 
+                  i_1))) in
+            (_lh_listcomp_fun_0 _lh_transpose_LH_C_1_0))) in
+            (match _lh_matchIdent_0 with
+              | `LH_P2(_lh_transpose_LH_P2_0_0, _lh_transpose_LH_P2_1_0) -> 
+                ((((combine_lh__d0 _lh_transpose_LH_C_0_1) _lh_transpose_LH_P2_0_0) _lh_transpose_LH_C_1_1) _lh_transpose_LH_P2_1_0)
+              | _ -> 
+                (failwith "error")))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
 let rec mappend_lh__d1 xs_1 ys_1 =
   (xs_1 ys_1);;
 let rec foldr1_lh__d0 _lh_foldr1_arg1_0 _lh_foldr1_arg2_0 =
@@ -28,6 +86,25 @@ let rec foldr1_lh__d0 _lh_foldr1_arg1_0 _lh_foldr1_arg2_0 =
           ((_lh_foldr1_arg1_0 _lh_foldr1_LH_C_0_0) ((foldr1_lh__d0 _lh_foldr1_arg1_0) _lh_foldr1_LH_C_1_0)))
     | _ -> 
       (failwith "error"));;
+let rec mappend_lh__d2 xs_3 ys_3 =
+  (match xs_3 with
+    | `LH_C(h_3_9, t_3_9) -> 
+      (let rec t_4_0 = ((mappend_lh__d2 t_3_9) ys_3) in
+        (let rec h_4_0 = h_3_9 in
+          (fun ys_4 -> 
+            (`LH_C(h_4_0, ((mappend_lh__d1 t_4_0) ys_4))))))
+    | `LH_N -> 
+      ys_3);;
+let rec join_lh__d0 _lh_join_arg1_0 =
+  ((foldr1_lh__d0 (fun xs_5 ys_3_7 -> 
+    ((mappend_lh__d1 ((mappend_lh__d2 xs_5) (let rec t_1_2_9 = (let rec t_1_3_0 = (fun ys_3_8 -> 
+      ys_3_8) in
+      (let rec h_1_2_9 = ' ' in
+        (fun ys_3_9 -> 
+          (`LH_C(h_1_2_9, ((mappend_lh__d1 t_1_3_0) ys_3_9)))))) in
+      (let rec h_1_3_0 = ' ' in
+        (fun ys_4_0 -> 
+          (`LH_C(h_1_3_0, ((mappend_lh__d1 t_1_2_9) ys_4_0)))))))) ys_3_7))) _lh_join_arg1_0);;
 let rec atIndex_lh__d8 n_8 ls_9 =
   (if (n_8 < 0) then
     (failwith "error")
@@ -158,316 +235,6 @@ let rec atIndex_lh__d2 n_1_3_1 ls_7_0 =
     (failwith "error")
   else
     (ls_7_0 n_1_3_1));;
-let rec isUpper_lh__d0 _lh_isUpper_arg1_0 =
-  (let rec n_4_4 = (int_of_char _lh_isUpper_arg1_0) in
-    ((n_4_4 >= 65) && (n_4_4 <= 90)));;
-let rec atIndex_lh__d6_d1 n_5 ls_5 =
-  (if (n_5 < 0) then
-    (failwith "error")
-  else
-    (ls_5 n_5));;
-let rec atIndex_lh__d5_d6 n_6 ls_6 =
-  (if (n_6 < 0) then
-    (failwith "error")
-  else
-    (ls_6 n_6));;
-let rec atIndex_lh__d6_d0 n_4_5 ls_1_8 =
-  (if (n_4_5 < 0) then
-    (failwith "error")
-  else
-    (ls_1_8 n_4_5));;
-let rec atIndex_lh__d6_d2 n_4_7 ls_2_0 =
-  (if (n_4_7 < 0) then
-    (failwith "error")
-  else
-    (ls_2_0 n_4_7));;
-let rec atIndex_lh__d5_d9 n_0 ls_0 =
-  (if (n_0 < 0) then
-    (failwith "error")
-  else
-    (ls_0 n_0));;
-let rec atIndex_lh__d6_d4 n_5_1 ls_2_4 =
-  (if (n_5_1 < 0) then
-    (failwith "error")
-  else
-    (ls_2_4 n_5_1));;
-let rec atIndex_lh__d5_d7 n_6_5 ls_2_9 =
-  (if (n_6_5 < 0) then
-    (failwith "error")
-  else
-    (ls_2_9 n_6_5));;
-let rec atIndex_lh__d5_d5 n_1_0_4 ls_4_4 =
-  (if (n_1_0_4 < 0) then
-    (failwith "error")
-  else
-    (ls_4_4 n_1_0_4));;
-let rec atIndex_lh__d6_d3 n_1_1_5 ls_5_4 =
-  (if (n_1_1_5 < 0) then
-    (failwith "error")
-  else
-    (ls_5_4 n_1_1_5));;
-let rec atIndex_lh__d5_d8 n_1_2_1 ls_6_0 =
-  (if (n_1_2_1 < 0) then
-    (failwith "error")
-  else
-    (ls_6_0 n_1_2_1));;
-let rec atIndex_lh__d3_d3 n_4 ls_4 =
-  (if (n_4 < 0) then
-    (failwith "error")
-  else
-    (ls_4 n_4));;
-let rec atIndex_lh__d3_d8 n_4_6 ls_1_9 =
-  (if (n_4_6 < 0) then
-    (failwith "error")
-  else
-    (ls_1_9 n_4_6));;
-let rec atIndex_lh__d3_d7 n_6_7 ls_3_2 =
-  (if (n_6_7 < 0) then
-    (failwith "error")
-  else
-    (ls_3_2 n_6_7));;
-let rec atIndex_lh__d3_d1 n_6_9 ls_3_4 =
-  (if (n_6_9 < 0) then
-    (failwith "error")
-  else
-    (ls_3_4 n_6_9));;
-let rec atIndex_lh__d4_d6 n_9_9 ls_3_7 =
-  (if (n_9_9 < 0) then
-    (failwith "error")
-  else
-    (ls_3_7 n_9_9));;
-let rec atIndex_lh__d3_d6 n_1_0_5 ls_4_5 =
-  (if (n_1_0_5 < 0) then
-    (failwith "error")
-  else
-    (ls_4_5 n_1_0_5));;
-let rec atIndex_lh__d2_d8 n_1_1_9 ls_5_9 =
-  (if (n_1_1_9 < 0) then
-    (failwith "error")
-  else
-    (ls_5_9 n_1_1_9));;
-let rec atIndex_lh__d3_d5 n_2 ls_2 =
-  (if (n_2 < 0) then
-    (failwith "error")
-  else
-    (ls_2 n_2));;
-let rec atIndex_lh__d4_d0 n_1_2_3 ls_6_1 =
-  (if (n_1_2_3 < 0) then
-    (failwith "error")
-  else
-    (ls_6_1 n_1_2_3));;
-let rec atIndex_lh__d2_d6 n_9 ls_1_0 =
-  (if (n_9 < 0) then
-    (failwith "error")
-  else
-    (ls_1_0 n_9));;
-let rec atIndex_lh__d4_d1 n_7 ls_8 =
-  (if (n_7 < 0) then
-    (failwith "error")
-  else
-    (ls_8 n_7));;
-let rec atIndex_lh__d5_d1 n_3_8 ls_1_2 =
-  (if (n_3_8 < 0) then
-    (failwith "error")
-  else
-    (ls_1_2 n_3_8));;
-let rec atIndex_lh__d4_d4 n_1_0 ls_1_1 =
-  (if (n_1_0 < 0) then
-    (failwith "error")
-  else
-    (ls_1_1 n_1_0));;
-let rec atIndex_lh__d3_d4 n_3_9 ls_1_3 =
-  (if (n_3_9 < 0) then
-    (failwith "error")
-  else
-    (ls_1_3 n_3_9));;
-let rec atIndex_lh__d3_d9 n_4_0 ls_1_4 =
-  (if (n_4_0 < 0) then
-    (failwith "error")
-  else
-    (ls_1_4 n_4_0));;
-let rec atIndex_lh__d2_d9 n_4_3 ls_1_7 =
-  (if (n_4_3 < 0) then
-    (failwith "error")
-  else
-    (ls_1_7 n_4_3));;
-let rec atIndex_lh__d4_d7 n_4_9 ls_2_2 =
-  (if (n_4_9 < 0) then
-    (failwith "error")
-  else
-    (ls_2_2 n_4_9));;
-let rec atIndex_lh__d4_d5 n_5_0 ls_2_3 =
-  (if (n_5_0 < 0) then
-    (failwith "error")
-  else
-    (ls_2_3 n_5_0));;
-let rec atIndex_lh__d4_d3 n_1_0_6 ls_4_6 =
-  (if (n_1_0_6 < 0) then
-    (failwith "error")
-  else
-    (ls_4_6 n_1_0_6));;
-let rec atIndex_lh__d3_d2 n_1_0_7 ls_4_7 =
-  (if (n_1_0_7 < 0) then
-    (failwith "error")
-  else
-    (ls_4_7 n_1_0_7));;
-let rec atIndex_lh__d3_d0 n_1_0_9 ls_4_9 =
-  (if (n_1_0_9 < 0) then
-    (failwith "error")
-  else
-    (ls_4_9 n_1_0_9));;
-let rec atIndex_lh__d5_d0 n_1_1_0 ls_5_0 =
-  (if (n_1_1_0 < 0) then
-    (failwith "error")
-  else
-    (ls_5_0 n_1_1_0));;
-let rec atIndex_lh__d4_d8 n_1_1_1 ls_5_1 =
-  (if (n_1_1_1 < 0) then
-    (failwith "error")
-  else
-    (ls_5_1 n_1_1_1));;
-let rec atIndex_lh__d4_d2 n_1_1_3 ls_5_3 =
-  (if (n_1_1_3 < 0) then
-    (failwith "error")
-  else
-    (ls_5_3 n_1_1_3));;
-let rec atIndex_lh__d2_d7 n_1_2_8 ls_6_7 =
-  (if (n_1_2_8 < 0) then
-    (failwith "error")
-  else
-    (ls_6_7 n_1_2_8));;
-let rec atIndex_lh__d4_d9 n_1_3_2 ls_7_1 =
-  (if (n_1_3_2 < 0) then
-    (failwith "error")
-  else
-    (ls_7_1 n_1_3_2));;
-let rec reverse_helper_lh__d0 ls_7 a_0 =
-  (ls_7 a_0);;
-let rec isSpace_lh__d0 _lh_isSpace_arg1_0 =
-  (let rec n_1_1_4 = (int_of_char _lh_isSpace_arg1_0) in
-    (n_1_1_4 = 32));;
-let rec isLower_lh__d0 _lh_isLower_arg1_0 =
-  (let rec n_1_2_0 = (int_of_char _lh_isLower_arg1_0) in
-    ((n_1_2_0 >= 97) && (n_1_2_0 <= 122)));;
-let rec isDigit_lh__d0 _lh_isDigit_arg1_0 =
-  (let rec n_1_2_2 = (int_of_char _lh_isDigit_arg1_0) in
-    ((n_1_2_2 >= 48) && (n_1_2_2 <= 57)));;
-let rec atIndex_lh__d5_d3 n_1_3_3 ls_7_2 =
-  (if (n_1_3_3 < 0) then
-    (failwith "error")
-  else
-    (ls_7_2 n_1_3_3));;
-let rec slant_lh__d0 _lh_slant_arg1_1 =
-  (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_N))))), (`LH_C((`LH_C(' ', (`LH_N))), (`LH_C((`LH_N), (`LH_N)))))))))));;
-let rec mappend_lh__d3 xs_0 ys_0 =
-  (match xs_0 with
-    | `LH_C(h_0, t_0) -> 
-      (`LH_C(h_0, ((mappend_lh__d3 t_0) ys_0)))
-    | `LH_N -> 
-      ys_0);;
-let rec blank_lh__d0 _lh_blank_arg1_0 =
-  (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_N)))))))))));;
-let rec punct_lh__d0 _lh_punct_arg1_0 =
-  (let rec _lh_listcomp_fun_ls_t_1 = (let rec _lh_listcomp_fun_ls_t_2 = (let rec _lh_listcomp_fun_ls_t_3 = (let rec _lh_listcomp_fun_ls_t_4 = (let rec _lh_listcomp_fun_ls_t_5 = (let rec _lh_listcomp_fun_ls_t_6 = (let rec _lh_listcomp_fun_ls_t_7 = (fun _lh_listcomp_fun_1 _lh_picChar_arg1_0 -> 
-    (`LH_N)) in
-    (let rec _lh_listcomp_fun_ls_h_1 = (let rec _lh_picChar_LH_P2_1_0 = (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(';', (`LH_C(';', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(';', (`LH_C(';', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(';', (`LH_C(';', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_N))))))))))) in
-      (let rec _lh_picChar_LH_P2_0_0 = ';' in
-        (fun _lh_listcomp_fun_ls_t_8 _lh_listcomp_fun_2 _lh_picChar_arg1_1 -> 
-          (if (_lh_picChar_LH_P2_0_0 = _lh_picChar_arg1_1) then
-            (`LH_C(_lh_picChar_LH_P2_1_0, (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_8)))
-          else
-            (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_8))))) in
-      (fun _lh_listcomp_fun_3 _lh_picChar_arg1_2 -> 
-        (((_lh_listcomp_fun_ls_h_1 _lh_listcomp_fun_ls_t_7) _lh_listcomp_fun_3) _lh_picChar_arg1_2)))) in
-    (let rec _lh_listcomp_fun_ls_h_2 = (let rec _lh_picChar_LH_P2_1_1 = (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(':', (`LH_C(':', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(':', (`LH_C(':', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_N))))))))))) in
-      (let rec _lh_picChar_LH_P2_0_1 = ':' in
-        (fun _lh_listcomp_fun_ls_t_9 _lh_listcomp_fun_4 _lh_picChar_arg1_3 -> 
-          (if (_lh_picChar_LH_P2_0_1 = _lh_picChar_arg1_3) then
-            (`LH_C(_lh_picChar_LH_P2_1_1, (_lh_listcomp_fun_4 _lh_listcomp_fun_ls_t_9)))
-          else
-            (_lh_listcomp_fun_4 _lh_listcomp_fun_ls_t_9))))) in
-      (fun _lh_listcomp_fun_5 _lh_picChar_arg1_4 -> 
-        (((_lh_listcomp_fun_ls_h_2 _lh_listcomp_fun_ls_t_6) _lh_listcomp_fun_5) _lh_picChar_arg1_4)))) in
-    (let rec _lh_listcomp_fun_ls_h_3 = (let rec _lh_picChar_LH_P2_1_2 = (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('+', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('+', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C('+', (`LH_C('+', (`LH_C('+', (`LH_C('+', (`LH_C('+', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('+', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('+', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_N))))))))))) in
-      (let rec _lh_picChar_LH_P2_0_2 = '+' in
-        (fun _lh_listcomp_fun_ls_t_1_0 _lh_listcomp_fun_6 _lh_picChar_arg1_5 -> 
-          (if (_lh_picChar_LH_P2_0_2 = _lh_picChar_arg1_5) then
-            (`LH_C(_lh_picChar_LH_P2_1_2, (_lh_listcomp_fun_6 _lh_listcomp_fun_ls_t_1_0)))
-          else
-            (_lh_listcomp_fun_6 _lh_listcomp_fun_ls_t_1_0))))) in
-      (fun _lh_listcomp_fun_7 _lh_picChar_arg1_6 -> 
-        (((_lh_listcomp_fun_ls_h_3 _lh_listcomp_fun_ls_t_5) _lh_listcomp_fun_7) _lh_picChar_arg1_6)))) in
-    (let rec _lh_listcomp_fun_ls_h_4 = (let rec _lh_picChar_LH_P2_1_3 = (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_N))))))))))) in
-      (let rec _lh_picChar_LH_P2_0_3 = '-' in
-        (fun _lh_listcomp_fun_ls_t_1_1 _lh_listcomp_fun_8 _lh_picChar_arg1_7 -> 
-          (if (_lh_picChar_LH_P2_0_3 = _lh_picChar_arg1_7) then
-            (`LH_C(_lh_picChar_LH_P2_1_3, (_lh_listcomp_fun_8 _lh_listcomp_fun_ls_t_1_1)))
-          else
-            (_lh_listcomp_fun_8 _lh_listcomp_fun_ls_t_1_1))))) in
-      (fun _lh_listcomp_fun_9 _lh_picChar_arg1_8 -> 
-        (((_lh_listcomp_fun_ls_h_4 _lh_listcomp_fun_ls_t_4) _lh_listcomp_fun_9) _lh_picChar_arg1_8)))) in
-    (let rec _lh_listcomp_fun_ls_h_5 = (let rec _lh_picChar_LH_P2_1_4 = (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('!', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('!', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('!', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('!', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_N))))))))))) in
-      (let rec _lh_picChar_LH_P2_0_4 = '!' in
-        (fun _lh_listcomp_fun_ls_t_1_2 _lh_listcomp_fun_1_0 _lh_picChar_arg1_9 -> 
-          (if (_lh_picChar_LH_P2_0_4 = _lh_picChar_arg1_9) then
-            (`LH_C(_lh_picChar_LH_P2_1_4, (_lh_listcomp_fun_1_0 _lh_listcomp_fun_ls_t_1_2)))
-          else
-            (_lh_listcomp_fun_1_0 _lh_listcomp_fun_ls_t_1_2))))) in
-      (fun _lh_listcomp_fun_1_1 _lh_picChar_arg1_1_0 -> 
-        (((_lh_listcomp_fun_ls_h_5 _lh_listcomp_fun_ls_t_3) _lh_listcomp_fun_1_1) _lh_picChar_arg1_1_0)))) in
-    (let rec _lh_listcomp_fun_ls_h_6 = (let rec _lh_picChar_LH_P2_1_5 = (`LH_C((`LH_C(' ', (`LH_C('?', (`LH_C('?', (`LH_C('?', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C('?', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('?', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('?', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('?', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_N))))))))))) in
-      (let rec _lh_picChar_LH_P2_0_5 = '?' in
-        (fun _lh_listcomp_fun_ls_t_1_3 _lh_listcomp_fun_1_2 _lh_picChar_arg1_1_1 -> 
-          (if (_lh_picChar_LH_P2_0_5 = _lh_picChar_arg1_1_1) then
-            (`LH_C(_lh_picChar_LH_P2_1_5, (_lh_listcomp_fun_1_2 _lh_listcomp_fun_ls_t_1_3)))
-          else
-            (_lh_listcomp_fun_1_2 _lh_listcomp_fun_ls_t_1_3))))) in
-      (fun _lh_listcomp_fun_1_3 _lh_picChar_arg1_1_2 -> 
-        (((_lh_listcomp_fun_ls_h_6 _lh_listcomp_fun_ls_t_2) _lh_listcomp_fun_1_3) _lh_picChar_arg1_1_2)))) in
-    (let rec _lh_listcomp_fun_ls_h_7 = (let rec _lh_picChar_LH_P2_1_6 = (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('.', (`LH_C('.', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('.', (`LH_C('.', (`LH_C(' ', (`LH_N))))))))))), (`LH_N))))))))))) in
-      (let rec _lh_picChar_LH_P2_0_6 = '.' in
-        (fun _lh_listcomp_fun_ls_t_1_4 _lh_listcomp_fun_1_4 _lh_picChar_arg1_1_3 -> 
-          (if (_lh_picChar_LH_P2_0_6 = _lh_picChar_arg1_1_3) then
-            (`LH_C(_lh_picChar_LH_P2_1_6, (_lh_listcomp_fun_1_4 _lh_listcomp_fun_ls_t_1_4)))
-          else
-            (_lh_listcomp_fun_1_4 _lh_listcomp_fun_ls_t_1_4))))) in
-      (fun _lh_listcomp_fun_1_5 _lh_picChar_arg1_1_4 -> 
-        (((_lh_listcomp_fun_ls_h_7 _lh_listcomp_fun_ls_t_1) _lh_listcomp_fun_1_5) _lh_picChar_arg1_1_4))));;
-let rec atIndex_lh__d5_d4 n_7_0 ls_3_5 =
-  (if (n_7_0 < 0) then
-    (failwith "error")
-  else
-    (ls_3_5 n_7_0));;
-let rec head_lh__d0 ls_6_2 =
-  (match ls_6_2 with
-    | `LH_C(h_1_3_4, t_1_3_4) -> 
-      h_1_3_4
-    | `LH_N -> 
-      (failwith "error"));;
-let rec atIndex_lh__d5_d2 n_1_2_4 ls_6_3 =
-  (if (n_1_2_4 < 0) then
-    (failwith "error")
-  else
-    (ls_6_3 n_1_2_4));;
-let rec map_lh__d0 f_7 ls_3_0 =
-  (ls_3_0 f_7);;
-let rec concat_lh__d0 lss_0 =
-  (lss_0 99);;
-let rec mappend_lh__d0 xs_2 ys_2 =
-  (xs_2 ys_2);;
-let rec unzip_lh__d0 _lh_unzip_arg1_0 =
-  (((foldr_lh__d1 (fun ab_0 asbs_1 -> 
-    (let rec _lh_matchIdent_2 = ab_0 in
-      (_lh_matchIdent_2 asbs_1)))) (`LH_P2((`LH_N), (`LH_N)))) _lh_unzip_arg1_0);;
-let rec mappend_lh__d2 xs_3 ys_3 =
-  (match xs_3 with
-    | `LH_C(h_3_9, t_3_9) -> 
-      (let rec t_4_0 = ((mappend_lh__d2 t_3_9) ys_3) in
-        (let rec h_4_0 = h_3_9 in
-          (fun ys_4 -> 
-            (`LH_C(h_4_0, ((mappend_lh__d1 t_4_0) ys_4))))))
-    | `LH_N -> 
-      ys_3);;
 let rec alphas_lh__d0 _lh_alphas_arg1_0 =
   (let rec t_1 = (let rec t_2 = (let rec t_3 = (let rec t_4 = (let rec t_5 = (let rec t_6 = (let rec t_7 = (let rec t_8 = (let rec t_9 = (let rec t_1_0 = (let rec t_1_1 = (let rec t_1_2 = (let rec t_1_3 = (let rec t_1_4 = (let rec t_1_5 = (let rec t_1_6 = (let rec t_1_7 = (let rec t_1_8 = (let rec t_1_9 = (let rec t_2_0 = (let rec t_2_1 = (let rec t_2_2 = (let rec t_2_3 = (let rec t_2_4 = (let rec t_2_5 = (let rec t_2_6 = (fun n_1_1 -> 
     (failwith "error")) in
@@ -627,6 +394,59 @@ let rec alphas_lh__d0 _lh_alphas_arg1_0 =
           h_2_6
         else
           ((atIndex_lh__d1_d6 (n_3_7 - 1)) t_1)))));;
+let rec isUpper_lh__d0 _lh_isUpper_arg1_0 =
+  (let rec n_4_4 = (int_of_char _lh_isUpper_arg1_0) in
+    ((n_4_4 >= 65) && (n_4_4 <= 90)));;
+let rec atIndex_lh__d6_d1 n_5 ls_5 =
+  (if (n_5 < 0) then
+    (failwith "error")
+  else
+    (ls_5 n_5));;
+let rec atIndex_lh__d5_d6 n_6 ls_6 =
+  (if (n_6 < 0) then
+    (failwith "error")
+  else
+    (ls_6 n_6));;
+let rec atIndex_lh__d6_d0 n_4_5 ls_1_8 =
+  (if (n_4_5 < 0) then
+    (failwith "error")
+  else
+    (ls_1_8 n_4_5));;
+let rec atIndex_lh__d6_d2 n_4_7 ls_2_0 =
+  (if (n_4_7 < 0) then
+    (failwith "error")
+  else
+    (ls_2_0 n_4_7));;
+let rec atIndex_lh__d5_d9 n_0 ls_0 =
+  (if (n_0 < 0) then
+    (failwith "error")
+  else
+    (ls_0 n_0));;
+let rec atIndex_lh__d6_d4 n_5_1 ls_2_4 =
+  (if (n_5_1 < 0) then
+    (failwith "error")
+  else
+    (ls_2_4 n_5_1));;
+let rec atIndex_lh__d5_d7 n_6_5 ls_2_9 =
+  (if (n_6_5 < 0) then
+    (failwith "error")
+  else
+    (ls_2_9 n_6_5));;
+let rec atIndex_lh__d5_d5 n_1_0_4 ls_4_4 =
+  (if (n_1_0_4 < 0) then
+    (failwith "error")
+  else
+    (ls_4_4 n_1_0_4));;
+let rec atIndex_lh__d6_d3 n_1_1_5 ls_5_4 =
+  (if (n_1_1_5 < 0) then
+    (failwith "error")
+  else
+    (ls_5_4 n_1_1_5));;
+let rec atIndex_lh__d5_d8 n_1_2_1 ls_6_0 =
+  (if (n_1_2_1 < 0) then
+    (failwith "error")
+  else
+    (ls_6_0 n_1_2_1));;
 let rec digits_lh__d0 _lh_digits_arg1_0 =
   (let rec t_2_9 = (let rec t_3_0 = (let rec t_3_1 = (let rec t_3_2 = (let rec t_3_3 = (let rec t_3_4 = (let rec t_3_5 = (let rec t_3_6 = (let rec t_3_7 = (let rec t_3_8 = (fun n_5_2 -> 
     (failwith "error")) in
@@ -690,6 +510,136 @@ let rec digits_lh__d0 _lh_digits_arg1_0 =
           h_3_8
         else
           ((atIndex_lh__d6_d4 (n_6_2 - 1)) t_2_9)))));;
+let rec atIndex_lh__d3_d3 n_4 ls_4 =
+  (if (n_4 < 0) then
+    (failwith "error")
+  else
+    (ls_4 n_4));;
+let rec atIndex_lh__d3_d8 n_4_6 ls_1_9 =
+  (if (n_4_6 < 0) then
+    (failwith "error")
+  else
+    (ls_1_9 n_4_6));;
+let rec atIndex_lh__d3_d7 n_6_7 ls_3_2 =
+  (if (n_6_7 < 0) then
+    (failwith "error")
+  else
+    (ls_3_2 n_6_7));;
+let rec atIndex_lh__d3_d1 n_6_9 ls_3_4 =
+  (if (n_6_9 < 0) then
+    (failwith "error")
+  else
+    (ls_3_4 n_6_9));;
+let rec atIndex_lh__d4_d6 n_9_9 ls_3_7 =
+  (if (n_9_9 < 0) then
+    (failwith "error")
+  else
+    (ls_3_7 n_9_9));;
+let rec atIndex_lh__d3_d6 n_1_0_5 ls_4_5 =
+  (if (n_1_0_5 < 0) then
+    (failwith "error")
+  else
+    (ls_4_5 n_1_0_5));;
+let rec atIndex_lh__d2_d8 n_1_1_9 ls_5_9 =
+  (if (n_1_1_9 < 0) then
+    (failwith "error")
+  else
+    (ls_5_9 n_1_1_9));;
+let rec atIndex_lh__d3_d5 n_2 ls_2 =
+  (if (n_2 < 0) then
+    (failwith "error")
+  else
+    (ls_2 n_2));;
+let rec atIndex_lh__d4_d0 n_1_2_3 ls_6_1 =
+  (if (n_1_2_3 < 0) then
+    (failwith "error")
+  else
+    (ls_6_1 n_1_2_3));;
+let rec atIndex_lh__d2_d6 n_9 ls_1_0 =
+  (if (n_9 < 0) then
+    (failwith "error")
+  else
+    (ls_1_0 n_9));;
+let rec atIndex_lh__d4_d1 n_7 ls_8 =
+  (if (n_7 < 0) then
+    (failwith "error")
+  else
+    (ls_8 n_7));;
+let rec atIndex_lh__d5_d1 n_3_8 ls_1_2 =
+  (if (n_3_8 < 0) then
+    (failwith "error")
+  else
+    (ls_1_2 n_3_8));;
+let rec atIndex_lh__d4_d4 n_1_0 ls_1_1 =
+  (if (n_1_0 < 0) then
+    (failwith "error")
+  else
+    (ls_1_1 n_1_0));;
+let rec atIndex_lh__d3_d4 n_3_9 ls_1_3 =
+  (if (n_3_9 < 0) then
+    (failwith "error")
+  else
+    (ls_1_3 n_3_9));;
+let rec atIndex_lh__d3_d9 n_4_0 ls_1_4 =
+  (if (n_4_0 < 0) then
+    (failwith "error")
+  else
+    (ls_1_4 n_4_0));;
+let rec atIndex_lh__d2_d9 n_4_3 ls_1_7 =
+  (if (n_4_3 < 0) then
+    (failwith "error")
+  else
+    (ls_1_7 n_4_3));;
+let rec atIndex_lh__d4_d7 n_4_9 ls_2_2 =
+  (if (n_4_9 < 0) then
+    (failwith "error")
+  else
+    (ls_2_2 n_4_9));;
+let rec atIndex_lh__d4_d5 n_5_0 ls_2_3 =
+  (if (n_5_0 < 0) then
+    (failwith "error")
+  else
+    (ls_2_3 n_5_0));;
+let rec atIndex_lh__d4_d3 n_1_0_6 ls_4_6 =
+  (if (n_1_0_6 < 0) then
+    (failwith "error")
+  else
+    (ls_4_6 n_1_0_6));;
+let rec atIndex_lh__d3_d2 n_1_0_7 ls_4_7 =
+  (if (n_1_0_7 < 0) then
+    (failwith "error")
+  else
+    (ls_4_7 n_1_0_7));;
+let rec atIndex_lh__d3_d0 n_1_0_9 ls_4_9 =
+  (if (n_1_0_9 < 0) then
+    (failwith "error")
+  else
+    (ls_4_9 n_1_0_9));;
+let rec atIndex_lh__d5_d0 n_1_1_0 ls_5_0 =
+  (if (n_1_1_0 < 0) then
+    (failwith "error")
+  else
+    (ls_5_0 n_1_1_0));;
+let rec atIndex_lh__d4_d8 n_1_1_1 ls_5_1 =
+  (if (n_1_1_1 < 0) then
+    (failwith "error")
+  else
+    (ls_5_1 n_1_1_1));;
+let rec atIndex_lh__d4_d2 n_1_1_3 ls_5_3 =
+  (if (n_1_1_3 < 0) then
+    (failwith "error")
+  else
+    (ls_5_3 n_1_1_3));;
+let rec atIndex_lh__d2_d7 n_1_2_8 ls_6_7 =
+  (if (n_1_2_8 < 0) then
+    (failwith "error")
+  else
+    (ls_6_7 n_1_2_8));;
+let rec atIndex_lh__d4_d9 n_1_3_2 ls_7_1 =
+  (if (n_1_3_2 < 0) then
+    (failwith "error")
+  else
+    (ls_7_1 n_1_3_2));;
 let rec alphas_lh__d1 _lh_alphas_arg1_1 =
   (let rec t_9_8 = (let rec t_9_9 = (let rec t_1_0_0 = (let rec t_1_0_1 = (let rec t_1_0_2 = (let rec t_1_0_3 = (let rec t_1_0_4 = (let rec t_1_0_5 = (let rec t_1_0_6 = (let rec t_1_0_7 = (let rec t_1_0_8 = (let rec t_1_0_9 = (let rec t_1_1_0 = (let rec t_1_1_1 = (let rec t_1_1_2 = (let rec t_1_1_3 = (let rec t_1_1_4 = (let rec t_1_1_5 = (let rec t_1_1_6 = (let rec t_1_1_7 = (let rec t_1_1_8 = (let rec t_1_1_9 = (let rec t_1_2_0 = (let rec t_1_2_1 = (let rec t_1_2_2 = (let rec t_1_2_3 = (fun n_7_1 -> 
     (failwith "error")) in
@@ -849,6 +799,8 @@ let rec alphas_lh__d1 _lh_alphas_arg1_1 =
           h_1_2_3
         else
           ((atIndex_lh__d4_d2 (n_9_7 - 1)) t_9_8)))));;
+let rec reverse_helper_lh__d0 ls_7 a_0 =
+  (ls_7 a_0);;
 let rec slant_lh__d1 _lh_slant_arg1_0 =
   (let rec t_1_2_4 = (let rec t_1_2_5 = (let rec t_1_2_6 = (let rec t_1_2_7 = (let rec t_1_2_8 = (fun a_1 -> 
     a_1) in
@@ -867,90 +819,114 @@ let rec slant_lh__d1 _lh_slant_arg1_0 =
     (let rec h_1_2_8 = (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))) in
       (fun a_6 -> 
         ((reverse_helper_lh__d0 t_1_2_4) (`LH_C(h_1_2_8, a_6))))));;
+let rec isSpace_lh__d0 _lh_isSpace_arg1_0 =
+  (let rec n_1_1_4 = (int_of_char _lh_isSpace_arg1_0) in
+    (n_1_1_4 = 32));;
 let rec reverse_lh__d0 ls_5_6 =
   ((reverse_helper_lh__d0 ls_5_6) (`LH_N));;
-let rec mappend_lh__d5 xs_4 ys_7 =
-  (match xs_4 with
-    | `LH_C(h_4_2, t_4_2) -> 
-      (let rec t_4_3 = ((mappend_lh__d5 t_4_2) ys_7) in
-        (let rec h_4_3 = h_4_2 in
-          (fun ys_8 -> 
-            (`LH_C(h_4_3, ((mappend_lh__d4 t_4_3) ys_8))))))
-    | `LH_N -> 
-      ys_7);;
-let rec replicate_lh__d0 _lh_replicate_arg1_0 _lh_replicate_arg2_0 =
-  (if (_lh_replicate_arg1_0 = 0) then
-    (fun _lh_dummy_1 f_4 -> 
-      (`LH_N))
+let rec isLower_lh__d0 _lh_isLower_arg1_0 =
+  (let rec n_1_2_0 = (int_of_char _lh_isLower_arg1_0) in
+    ((n_1_2_0 >= 97) && (n_1_2_0 <= 122)));;
+let rec isDigit_lh__d0 _lh_isDigit_arg1_0 =
+  (let rec n_1_2_2 = (int_of_char _lh_isDigit_arg1_0) in
+    ((n_1_2_2 >= 48) && (n_1_2_2 <= 57)));;
+let rec atIndex_lh__d5_d3 n_1_3_3 ls_7_2 =
+  (if (n_1_3_3 < 0) then
+    (failwith "error")
   else
-    (let rec t_2_8 = ((replicate_lh__d0 (_lh_replicate_arg1_0 - 1)) _lh_replicate_arg2_0) in
-      (let rec h_2_8 = _lh_replicate_arg2_0 in
-        (fun _lh_dummy_2 -> 
-          ((mappend_lh__d0 h_2_8) (concat_lh__d0 t_2_8))))));;
-let rec combine_lh__d0 _lh_combine_arg1_0 _lh_combine_arg2_0 _lh_combine_arg3_0 _lh_combine_arg4_0 =
-  (let rec t_1_3_1 = (transpose_lh__d0 (`LH_C(_lh_combine_arg3_0, _lh_combine_arg4_0))) in
-    (let rec h_1_3_1 = (`LH_C(_lh_combine_arg1_0, _lh_combine_arg2_0)) in
-      (fun f_3_7 -> 
-        (let rec t_1_3_2 = ((map_lh__d1 f_3_7) t_1_3_1) in
-          (let rec h_1_3_2 = (f_3_7 h_1_3_1) in
-            (fun f_3_8 -> 
-              (let rec t_1_3_3 = ((map_lh__d2 f_3_8) t_1_3_2) in
-                (let rec h_1_3_3 = (f_3_8 h_1_3_2) in
-                  (fun _lh_dummy_3 -> 
-                    ((mappend_lh__d4 h_1_3_3) (concat_lh__d1 t_1_3_3)))))))))))
-and
-transpose_lh__d0 _lh_transpose_arg1_0 =
-  (match _lh_transpose_arg1_0 with
+    (ls_7_2 n_1_3_3));;
+let rec slant_lh__d0 _lh_slant_arg1_1 =
+  (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_N))))), (`LH_C((`LH_C(' ', (`LH_N))), (`LH_C((`LH_N), (`LH_N)))))))))));;
+let rec mappend_lh__d3 xs_0 ys_0 =
+  (match xs_0 with
+    | `LH_C(h_0, t_0) -> 
+      (`LH_C(h_0, ((mappend_lh__d3 t_0) ys_0)))
     | `LH_N -> 
-      (fun f_0 f_1 _lh_dummy_0 -> 
-        (`LH_N))
-    | `LH_C(_lh_transpose_LH_C_0_0, _lh_transpose_LH_C_1_0) -> 
-      (match _lh_transpose_LH_C_0_0 with
-        | `LH_N -> 
-          (transpose_lh__d0 _lh_transpose_LH_C_1_0)
-        | `LH_C(_lh_transpose_LH_C_0_1, _lh_transpose_LH_C_1_1) -> 
-          (let rec _lh_matchIdent_0 = (unzip_lh__d0 (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
-            (match _lh_listcomp_fun_para_0 with
-              | `LH_C(_lh_listcomp_fun_ls_h_0, _lh_listcomp_fun_ls_t_0) -> 
-                (match _lh_listcomp_fun_ls_h_0 with
-                  | `LH_C(_lh_transpose_LH_C_0_2, _lh_transpose_LH_C_1_2) -> 
-                    (let rec t_2_7 = (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0) in
-                      (let rec h_2_7 = (let rec _lh_unzip_LH_P2_1_0 = _lh_transpose_LH_C_1_2 in
-                        (let rec _lh_unzip_LH_P2_0_0 = _lh_transpose_LH_C_0_2 in
-                          (fun asbs_0 -> 
-                            (let rec _lh_matchIdent_1 = asbs_0 in
-                              (match _lh_matchIdent_1 with
-                                | `LH_P2(_lh_unzip_LH_P2_0_1, _lh_unzip_LH_P2_1_1) -> 
-                                  (`LH_P2((`LH_C(_lh_unzip_LH_P2_0_0, _lh_unzip_LH_P2_0_1)), (`LH_C(_lh_unzip_LH_P2_1_0, _lh_unzip_LH_P2_1_1))))
-                                | _ -> 
-                                  (failwith "error")))))) in
-                        (fun f_2 i_0 -> 
-                          ((f_2 h_2_7) (((foldr_lh__d0 f_2) i_0) t_2_7)))))
-                  | _ -> 
-                    (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0))
-              | `LH_N -> 
-                (fun f_3 i_1 -> 
-                  i_1))) in
-            (_lh_listcomp_fun_0 _lh_transpose_LH_C_1_0))) in
-            (match _lh_matchIdent_0 with
-              | `LH_P2(_lh_transpose_LH_P2_0_0, _lh_transpose_LH_P2_1_0) -> 
-                ((((combine_lh__d0 _lh_transpose_LH_C_0_1) _lh_transpose_LH_P2_0_0) _lh_transpose_LH_C_1_1) _lh_transpose_LH_P2_1_0)
-              | _ -> 
-                (failwith "error")))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
+      ys_0);;
+let rec blank_lh__d0 _lh_blank_arg1_0 =
+  (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_N)))))))))));;
+let rec punct_lh__d0 _lh_punct_arg1_0 =
+  (let rec _lh_listcomp_fun_ls_t_1 = (let rec _lh_listcomp_fun_ls_t_2 = (let rec _lh_listcomp_fun_ls_t_3 = (let rec _lh_listcomp_fun_ls_t_4 = (let rec _lh_listcomp_fun_ls_t_5 = (let rec _lh_listcomp_fun_ls_t_6 = (let rec _lh_listcomp_fun_ls_t_7 = (fun _lh_listcomp_fun_1 _lh_picChar_arg1_0 -> 
+    (`LH_N)) in
+    (let rec _lh_listcomp_fun_ls_h_1 = (let rec _lh_picChar_LH_P2_1_0 = (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(';', (`LH_C(';', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(';', (`LH_C(';', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(';', (`LH_C(';', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_N))))))))))) in
+      (let rec _lh_picChar_LH_P2_0_0 = ';' in
+        (fun _lh_listcomp_fun_ls_t_8 _lh_listcomp_fun_2 _lh_picChar_arg1_1 -> 
+          (if (_lh_picChar_LH_P2_0_0 = _lh_picChar_arg1_1) then
+            (`LH_C(_lh_picChar_LH_P2_1_0, (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_8)))
+          else
+            (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_8))))) in
+      (fun _lh_listcomp_fun_3 _lh_picChar_arg1_2 -> 
+        (((_lh_listcomp_fun_ls_h_1 _lh_listcomp_fun_ls_t_7) _lh_listcomp_fun_3) _lh_picChar_arg1_2)))) in
+    (let rec _lh_listcomp_fun_ls_h_2 = (let rec _lh_picChar_LH_P2_1_1 = (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(':', (`LH_C(':', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(':', (`LH_C(':', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_N))))))))))) in
+      (let rec _lh_picChar_LH_P2_0_1 = ':' in
+        (fun _lh_listcomp_fun_ls_t_9 _lh_listcomp_fun_4 _lh_picChar_arg1_3 -> 
+          (if (_lh_picChar_LH_P2_0_1 = _lh_picChar_arg1_3) then
+            (`LH_C(_lh_picChar_LH_P2_1_1, (_lh_listcomp_fun_4 _lh_listcomp_fun_ls_t_9)))
+          else
+            (_lh_listcomp_fun_4 _lh_listcomp_fun_ls_t_9))))) in
+      (fun _lh_listcomp_fun_5 _lh_picChar_arg1_4 -> 
+        (((_lh_listcomp_fun_ls_h_2 _lh_listcomp_fun_ls_t_6) _lh_listcomp_fun_5) _lh_picChar_arg1_4)))) in
+    (let rec _lh_listcomp_fun_ls_h_3 = (let rec _lh_picChar_LH_P2_1_2 = (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('+', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('+', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C('+', (`LH_C('+', (`LH_C('+', (`LH_C('+', (`LH_C('+', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('+', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('+', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_N))))))))))) in
+      (let rec _lh_picChar_LH_P2_0_2 = '+' in
+        (fun _lh_listcomp_fun_ls_t_1_0 _lh_listcomp_fun_6 _lh_picChar_arg1_5 -> 
+          (if (_lh_picChar_LH_P2_0_2 = _lh_picChar_arg1_5) then
+            (`LH_C(_lh_picChar_LH_P2_1_2, (_lh_listcomp_fun_6 _lh_listcomp_fun_ls_t_1_0)))
+          else
+            (_lh_listcomp_fun_6 _lh_listcomp_fun_ls_t_1_0))))) in
+      (fun _lh_listcomp_fun_7 _lh_picChar_arg1_6 -> 
+        (((_lh_listcomp_fun_ls_h_3 _lh_listcomp_fun_ls_t_5) _lh_listcomp_fun_7) _lh_picChar_arg1_6)))) in
+    (let rec _lh_listcomp_fun_ls_h_4 = (let rec _lh_picChar_LH_P2_1_3 = (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_N))))))))))) in
+      (let rec _lh_picChar_LH_P2_0_3 = '-' in
+        (fun _lh_listcomp_fun_ls_t_1_1 _lh_listcomp_fun_8 _lh_picChar_arg1_7 -> 
+          (if (_lh_picChar_LH_P2_0_3 = _lh_picChar_arg1_7) then
+            (`LH_C(_lh_picChar_LH_P2_1_3, (_lh_listcomp_fun_8 _lh_listcomp_fun_ls_t_1_1)))
+          else
+            (_lh_listcomp_fun_8 _lh_listcomp_fun_ls_t_1_1))))) in
+      (fun _lh_listcomp_fun_9 _lh_picChar_arg1_8 -> 
+        (((_lh_listcomp_fun_ls_h_4 _lh_listcomp_fun_ls_t_4) _lh_listcomp_fun_9) _lh_picChar_arg1_8)))) in
+    (let rec _lh_listcomp_fun_ls_h_5 = (let rec _lh_picChar_LH_P2_1_4 = (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('!', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('!', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('!', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('!', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_N))))))))))) in
+      (let rec _lh_picChar_LH_P2_0_4 = '!' in
+        (fun _lh_listcomp_fun_ls_t_1_2 _lh_listcomp_fun_1_0 _lh_picChar_arg1_9 -> 
+          (if (_lh_picChar_LH_P2_0_4 = _lh_picChar_arg1_9) then
+            (`LH_C(_lh_picChar_LH_P2_1_4, (_lh_listcomp_fun_1_0 _lh_listcomp_fun_ls_t_1_2)))
+          else
+            (_lh_listcomp_fun_1_0 _lh_listcomp_fun_ls_t_1_2))))) in
+      (fun _lh_listcomp_fun_1_1 _lh_picChar_arg1_1_0 -> 
+        (((_lh_listcomp_fun_ls_h_5 _lh_listcomp_fun_ls_t_3) _lh_listcomp_fun_1_1) _lh_picChar_arg1_1_0)))) in
+    (let rec _lh_listcomp_fun_ls_h_6 = (let rec _lh_picChar_LH_P2_1_5 = (`LH_C((`LH_C(' ', (`LH_C('?', (`LH_C('?', (`LH_C('?', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C('?', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('?', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C('?', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('?', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_N))))))))))) in
+      (let rec _lh_picChar_LH_P2_0_5 = '?' in
+        (fun _lh_listcomp_fun_ls_t_1_3 _lh_listcomp_fun_1_2 _lh_picChar_arg1_1_1 -> 
+          (if (_lh_picChar_LH_P2_0_5 = _lh_picChar_arg1_1_1) then
+            (`LH_C(_lh_picChar_LH_P2_1_5, (_lh_listcomp_fun_1_2 _lh_listcomp_fun_ls_t_1_3)))
+          else
+            (_lh_listcomp_fun_1_2 _lh_listcomp_fun_ls_t_1_3))))) in
+      (fun _lh_listcomp_fun_1_3 _lh_picChar_arg1_1_2 -> 
+        (((_lh_listcomp_fun_ls_h_6 _lh_listcomp_fun_ls_t_2) _lh_listcomp_fun_1_3) _lh_picChar_arg1_1_2)))) in
+    (let rec _lh_listcomp_fun_ls_h_7 = (let rec _lh_picChar_LH_P2_1_6 = (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('.', (`LH_C('.', (`LH_C(' ', (`LH_N))))))))))), (`LH_C((`LH_C(' ', (`LH_C(' ', (`LH_C('.', (`LH_C('.', (`LH_C(' ', (`LH_N))))))))))), (`LH_N))))))))))) in
+      (let rec _lh_picChar_LH_P2_0_6 = '.' in
+        (fun _lh_listcomp_fun_ls_t_1_4 _lh_listcomp_fun_1_4 _lh_picChar_arg1_1_3 -> 
+          (if (_lh_picChar_LH_P2_0_6 = _lh_picChar_arg1_1_3) then
+            (`LH_C(_lh_picChar_LH_P2_1_6, (_lh_listcomp_fun_1_4 _lh_listcomp_fun_ls_t_1_4)))
+          else
+            (_lh_listcomp_fun_1_4 _lh_listcomp_fun_ls_t_1_4))))) in
+      (fun _lh_listcomp_fun_1_5 _lh_picChar_arg1_1_4 -> 
+        (((_lh_listcomp_fun_ls_h_7 _lh_listcomp_fun_ls_t_1) _lh_listcomp_fun_1_5) _lh_picChar_arg1_1_4))));;
+let rec atIndex_lh__d5_d4 n_7_0 ls_3_5 =
+  (if (n_7_0 < 0) then
+    (failwith "error")
+  else
+    (ls_3_5 n_7_0));;
+let rec head_lh__d0 ls_6_2 =
+  (match ls_6_2 with
+    | `LH_C(h_1_3_4, t_1_3_4) -> 
+      h_1_3_4
+    | `LH_N -> 
       (failwith "error"));;
-let rec join_lh__d0 _lh_join_arg1_0 =
-  ((foldr1_lh__d0 (fun xs_5 ys_3_7 -> 
-    ((mappend_lh__d1 ((mappend_lh__d2 xs_5) (let rec t_1_2_9 = (let rec t_1_3_0 = (fun ys_3_8 -> 
-      ys_3_8) in
-      (let rec h_1_2_9 = ' ' in
-        (fun ys_3_9 -> 
-          (`LH_C(h_1_2_9, ((mappend_lh__d1 t_1_3_0) ys_3_9)))))) in
-      (let rec h_1_3_0 = ' ' in
-        (fun ys_4_0 -> 
-          (`LH_C(h_1_3_0, ((mappend_lh__d1 t_1_2_9) ys_4_0)))))))) ys_3_7))) _lh_join_arg1_0);;
+let rec atIndex_lh__d5_d2 n_1_2_4 ls_6_3 =
+  (if (n_1_2_4 < 0) then
+    (failwith "error")
+  else
+    (ls_6_3 n_1_2_4));;
 let rec picChar_lh__d0 _lh_picChar_arg1_1_5 =
   (if (isUpper_lh__d0 _lh_picChar_arg1_1_5) then
     ((atIndex_lh__d5_d2 ((int_of_char _lh_picChar_arg1_1_5) - (int_of_char 'A'))) (alphas_lh__d0 0))
@@ -973,6 +949,15 @@ let rec picChar_lh__d0 _lh_picChar_arg1_1_5 =
               (head_lh__d0 ((mappend_lh__d3 (let rec _lh_listcomp_fun_1_6 = (fun _lh_listcomp_fun_para_1 -> 
                 ((_lh_listcomp_fun_para_1 _lh_listcomp_fun_1_6) _lh_picChar_arg1_1_5)) in
                 (_lh_listcomp_fun_1_6 (punct_lh__d0 0)))) (`LH_C((`LH_C((`LH_N), (`LH_N))), (`LH_N)))))))))));;
+let rec mappend_lh__d5 xs_4 ys_7 =
+  (match xs_4 with
+    | `LH_C(h_4_2, t_4_2) -> 
+      (let rec t_4_3 = ((mappend_lh__d5 t_4_2) ys_7) in
+        (let rec h_4_3 = h_4_2 in
+          (fun ys_8 -> 
+            (`LH_C(h_4_3, ((mappend_lh__d4 t_4_3) ys_8))))))
+    | `LH_N -> 
+      ys_7);;
 let rec unlines_lh__d0 _lh_unlines_arg1_0 =
   (concat_lh__d1 ((map_lh__d2 (fun l_0 -> 
     ((mappend_lh__d5 l_0) (let rec t_4_1 = (fun ys_5 -> 
@@ -980,6 +965,8 @@ let rec unlines_lh__d0 _lh_unlines_arg1_0 =
       (let rec h_4_1 = 'n' in
         (fun ys_6 -> 
           (`LH_C(h_4_1, ((mappend_lh__d4 t_4_1) ys_6))))))))) _lh_unlines_arg1_0));;
+let rec map_lh__d0 f_7 ls_3_0 =
+  (ls_3_0 f_7);;
 let rec say_lh__d0 _lh_say_arg1_0 =
   ((fun _lh_funcomp_x_0 -> 
     ((fun _lh_funcomp_x_1 -> 
@@ -987,6 +974,19 @@ let rec say_lh__d0 _lh_say_arg1_0 =
         ((fun _lh_funcomp_x_3 -> 
           ((fun x_0 -> 
             (`LH_C('n', x_0))) (unlines_lh__d0 _lh_funcomp_x_3))) ((map_lh__d1 join_lh__d0) _lh_funcomp_x_2))) (transpose_lh__d0 _lh_funcomp_x_1))) ((map_lh__d0 picChar_lh__d0) _lh_funcomp_x_0))) _lh_say_arg1_0);;
+let rec concat_lh__d0 lss_0 =
+  (lss_0 99);;
+let rec mappend_lh__d0 xs_2 ys_2 =
+  (xs_2 ys_2);;
+let rec replicate_lh__d0 _lh_replicate_arg1_0 _lh_replicate_arg2_0 =
+  (if (_lh_replicate_arg1_0 = 0) then
+    (fun _lh_dummy_1 f_4 -> 
+      (`LH_N))
+  else
+    (let rec t_2_8 = ((replicate_lh__d0 (_lh_replicate_arg1_0 - 1)) _lh_replicate_arg2_0) in
+      (let rec h_2_8 = _lh_replicate_arg2_0 in
+        (fun _lh_dummy_2 -> 
+          ((mappend_lh__d0 h_2_8) (concat_lh__d0 t_2_8))))));;
 let rec testBanner_nofib_lh__d0 _lh_testBanner_nofib_arg1_0 =
   (say_lh__d0 (concat_lh__d0 ((replicate_lh__d0 _lh_testBanner_nofib_arg1_0) (let rec t_4_4 = (let rec t_4_5 = (let rec t_4_6 = (let rec t_4_7 = (let rec t_4_8 = (let rec t_4_9 = (let rec t_5_0 = (let rec t_5_1 = (let rec t_5_2 = (let rec t_5_3 = (let rec t_5_4 = (let rec t_5_5 = (let rec t_5_6 = (let rec t_5_7 = (let rec t_5_8 = (let rec t_5_9 = (let rec t_6_0 = (let rec t_6_1 = (let rec t_6_2 = (let rec t_6_3 = (let rec t_6_4 = (let rec t_6_5 = (let rec t_6_6 = (let rec t_6_7 = (let rec t_6_8 = (let rec t_6_9 = (let rec t_7_0 = (fun ys_9 -> 
     ys_9) in

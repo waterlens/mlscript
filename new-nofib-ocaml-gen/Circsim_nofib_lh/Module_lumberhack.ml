@@ -35,8 +35,37 @@ let rec pid_lh _lh_pid_arg1_0 =
       _lh_pid_PS_0_0
     | _ -> 
       (failwith "error"));;
+let rec collect_outputs_lh _lh_collect_outputs_arg1_0 =
+  (match _lh_collect_outputs_arg1_0 with
+    | `LH_P4(_lh_collect_outputs_LH_P4_0_0, _lh_collect_outputs_LH_P4_1_0, _lh_collect_outputs_LH_P4_2_0, _lh_collect_outputs_LH_P4_3_0) -> 
+      let rec third_0 = (fun _lh_third_arg1_0 -> 
+        (match _lh_third_arg1_0 with
+          | `LH_P3(_lh_third_LH_P3_0_0, _lh_third_LH_P3_1_0, _lh_third_LH_P3_2_0) -> 
+            _lh_third_LH_P3_2_0
+          | _ -> 
+            (failwith "error")))
+      and get_output_0 = (fun _lh_get_output_arg1_0 _lh_get_output_arg2_0 -> 
+        (match _lh_get_output_arg2_0 with
+          | `LH_P2(_lh_get_output_LH_P2_0_0, _lh_get_output_LH_P2_1_0) -> 
+            (third_0 (head_lh (let rec _lh_listcomp_fun_1_2 = (fun _lh_listcomp_fun_para_8 -> 
+              (match _lh_listcomp_fun_para_8 with
+                | `LH_C(_lh_listcomp_fun_ls_h_8, _lh_listcomp_fun_ls_t_9) -> 
+                  (if (_lh_get_output_LH_P2_1_0 = (pid_lh _lh_listcomp_fun_ls_h_8)) then
+                    (`LH_C((head_lh (inports_lh _lh_listcomp_fun_ls_h_8)), (_lh_listcomp_fun_1_2 _lh_listcomp_fun_ls_t_9)))
+                  else
+                    (_lh_listcomp_fun_1_2 _lh_listcomp_fun_ls_t_9))
+                | `LH_N -> 
+                  (`LH_N))) in
+              (_lh_listcomp_fun_1_2 _lh_get_output_arg1_0))))
+          | _ -> 
+            (failwith "error")))
+      in ((map_lh (get_output_0 _lh_collect_outputs_LH_P4_3_0)) _lh_collect_outputs_LH_P4_2_0)
+    | _ -> 
+      (failwith "error"));;
 let rec simulate_lh _lh_simulate_arg1_1 _lh_simulate_arg2_0 =
   (_lh_simulate_arg2_0 _lh_simulate_arg1_1);;
+let rec circuit_simulate_lh _lh_circuit_simulate_arg1_0 _lh_circuit_simulate_arg2_0 =
+  ((map_lh collect_outputs_lh) ((simulate_lh _lh_circuit_simulate_arg1_0) _lh_circuit_simulate_arg2_0));;
 let rec enumFromTo_lh a_0 b_0 =
   (if (a_0 <= b_0) then
     (`LH_C(a_0, ((enumFromTo_lh (a_0 + 1)) b_0)))
@@ -47,6 +76,10 @@ let rec until_lh _lh_until_arg1_0 _lh_until_arg2_0 _lh_until_arg3_0 =
     _lh_until_arg3_0
   else
     (((until_lh _lh_until_arg1_0) _lh_until_arg2_0) (_lh_until_arg2_0 _lh_until_arg3_0)));;
+let rec nearest_power_of_two_lh _lh_nearest_power_of_two_arg1_0 =
+  (((until_lh (fun a_1 -> 
+    (a_1 >= _lh_nearest_power_of_two_arg1_0))) (fun a_2 -> 
+    (a_2 * 2))) 1);;
 let rec tail_lh ls_0 =
   (match ls_0 with
     | `LH_C(h_0, t_0) -> 
@@ -78,12 +111,43 @@ let rec compType_lh _lh_compType_arg1_0 =
       _lh_compType_PS_1_0
     | _ -> 
       (failwith "error"));;
+let rec updateOutports_lh _lh_updateOutports_arg1_0 _lh_updateOutports_arg2_0 =
+  (`PS((pid_lh _lh_updateOutports_arg1_0), (compType_lh _lh_updateOutports_arg1_0), (pathDepth_lh _lh_updateOutports_arg1_0), (inports_lh _lh_updateOutports_arg1_0), _lh_updateOutports_arg2_0));;
 let rec outports_lh _lh_outports_arg1_0 =
   (match _lh_outports_arg1_0 with
     | `PS(_lh_outports_PS_0_0, _lh_outports_PS_1_0, _lh_outports_PS_2_0, _lh_outports_PS_3_0, _lh_outports_PS_4_0) -> 
       _lh_outports_PS_4_0
     | _ -> 
       (failwith "error"));;
+let rec update_requests_lh _lh_update_requests_arg1_0 _lh_update_requests_arg2_0 =
+  ((updateOutports_lh _lh_update_requests_arg2_0) (let rec _lh_listcomp_fun_4 = (fun _lh_listcomp_fun_para_4 -> 
+    (match _lh_listcomp_fun_para_4 with
+      | `LH_C(_lh_listcomp_fun_ls_h_4, _lh_listcomp_fun_ls_t_4) -> 
+        (match _lh_listcomp_fun_ls_h_4 with
+          | `LH_P6(_lh_update_requests_LH_P6_0_0, _lh_update_requests_LH_P6_1_0, _lh_update_requests_LH_P6_2_0, _lh_update_requests_LH_P6_3_0, _lh_update_requests_LH_P6_4_0, _lh_update_requests_LH_P6_5_0) -> 
+            (`LH_C((`LH_P6(_lh_update_requests_LH_P6_0_0, _lh_update_requests_LH_P6_1_0, _lh_update_requests_arg1_0, _lh_update_requests_LH_P6_3_0, _lh_update_requests_arg1_0, _lh_update_requests_LH_P6_5_0)), (_lh_listcomp_fun_4 _lh_listcomp_fun_ls_t_4)))
+          | _ -> 
+            (_lh_listcomp_fun_4 _lh_listcomp_fun_ls_t_4))
+      | `LH_N -> 
+        (`LH_N))) in
+    (_lh_listcomp_fun_4 (outports_lh _lh_update_requests_arg2_0))));;
+let rec check_depth_lh _lh_check_depth_arg1_0 _lh_check_depth_arg2_0 =
+  (if ((pathDepth_lh _lh_check_depth_arg2_0) = _lh_check_depth_arg1_0) then
+    _lh_check_depth_arg2_0
+  else
+    ((update_requests_lh false) _lh_check_depth_arg2_0));;
+let rec acknowledge_lh _lh_acknowledge_arg1_0 _lh_acknowledge_arg2_0 =
+  let rec check_lr_requests_0 = (fun _lh_check_lr_requests_arg1_0 -> 
+    (match _lh_check_lr_requests_arg1_0 with
+      | `LH_P6(_lh_check_lr_requests_LH_P6_0_0, _lh_check_lr_requests_LH_P6_1_0, _lh_check_lr_requests_LH_P6_2_0, _lh_check_lr_requests_LH_P6_3_0, _lh_check_lr_requests_LH_P6_4_0, _lh_check_lr_requests_LH_P6_5_0) -> 
+        (_lh_check_lr_requests_LH_P6_2_0 || _lh_check_lr_requests_LH_P6_4_0)
+      | _ -> 
+        (failwith "error")))
+  and check_requests_0 = (fun _lh_check_requests_arg1_0 -> 
+    (or_lh ((map_lh check_lr_requests_0) _lh_check_requests_arg1_0)))
+  in (let rec states1_2 = ((map_lh (check_depth_lh _lh_acknowledge_arg1_0)) _lh_acknowledge_arg2_0) in
+    (not (or_lh ((map_lh (fun _lh_funcomp_x_2 -> 
+      (check_requests_0 (outports_lh _lh_funcomp_x_2)))) states1_2))));;
 let rec snd_lh _lh_snd_arg1_0 =
   _lh_snd_arg1_0;;
 let rec foldr_lh f_9 i_1 ls_5 =
@@ -92,6 +156,51 @@ let rec foldr_lh f_9 i_1 ls_5 =
       ((f_9 h_7) (((foldr_lh f_9) i_1) t_7))
     | `LH_N -> 
       i_1);;
+let rec unzip_lh _lh_unzip_arg1_0 =
+  (((foldr_lh (fun ab_0 asbs_0 -> 
+    (let rec _lh_matchIdent_1_3 = ab_0 in
+      (match _lh_matchIdent_1_3 with
+        | `LH_P2(_lh_unzip_LH_P2_0_0, _lh_unzip_LH_P2_1_0) -> 
+          (let rec _lh_matchIdent_1_4 = asbs_0 in
+            (match _lh_matchIdent_1_4 with
+              | `LH_P2(_lh_unzip_LH_P2_0_1, _lh_unzip_LH_P2_1_1) -> 
+                (`LH_P2((`LH_C(_lh_unzip_LH_P2_0_0, _lh_unzip_LH_P2_0_1)), (`LH_C(_lh_unzip_LH_P2_1_0, _lh_unzip_LH_P2_1_1))))
+              | _ -> 
+                (failwith "error")))
+        | _ -> 
+          (failwith "error"))))) (`LH_P2((`LH_N), (`LH_N)))) _lh_unzip_arg1_0);;
+let rec combine_lh _lh_combine_arg1_0 _lh_combine_arg2_0 _lh_combine_arg3_0 _lh_combine_arg4_0 =
+  (`LH_C((`LH_C(_lh_combine_arg1_0, _lh_combine_arg2_0)), (transpose_lh (`LH_C(_lh_combine_arg3_0, _lh_combine_arg4_0)))))
+and
+transpose_lh _lh_transpose_arg1_0 =
+  (match _lh_transpose_arg1_0 with
+    | `LH_N -> 
+      (`LH_N)
+    | `LH_C(_lh_transpose_LH_C_0_0, _lh_transpose_LH_C_1_0) -> 
+      (match _lh_transpose_LH_C_0_0 with
+        | `LH_N -> 
+          (transpose_lh _lh_transpose_LH_C_1_0)
+        | `LH_C(_lh_transpose_LH_C_0_1, _lh_transpose_LH_C_1_1) -> 
+          (let rec _lh_matchIdent_1_1 = (unzip_lh (let rec _lh_listcomp_fun_5 = (fun _lh_listcomp_fun_para_5 -> 
+            (match _lh_listcomp_fun_para_5 with
+              | `LH_C(_lh_listcomp_fun_ls_h_5, _lh_listcomp_fun_ls_t_5) -> 
+                (match _lh_listcomp_fun_ls_h_5 with
+                  | `LH_C(_lh_transpose_LH_C_0_2, _lh_transpose_LH_C_1_2) -> 
+                    (`LH_C((`LH_P2(_lh_transpose_LH_C_0_2, _lh_transpose_LH_C_1_2)), (_lh_listcomp_fun_5 _lh_listcomp_fun_ls_t_5)))
+                  | _ -> 
+                    (_lh_listcomp_fun_5 _lh_listcomp_fun_ls_t_5))
+              | `LH_N -> 
+                (`LH_N))) in
+            (_lh_listcomp_fun_5 _lh_transpose_LH_C_1_0))) in
+            (match _lh_matchIdent_1_1 with
+              | `LH_P2(_lh_transpose_LH_P2_0_0, _lh_transpose_LH_P2_1_0) -> 
+                ((((combine_lh _lh_transpose_LH_C_0_1) _lh_transpose_LH_P2_0_0) _lh_transpose_LH_C_1_1) _lh_transpose_LH_P2_1_0)
+              | _ -> 
+                (failwith "error")))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
 let rec drop_lh _lh_drop_arg1_0 _lh_drop_arg2_0 =
   (match _lh_drop_arg2_0 with
     | `LH_N -> 
@@ -112,6 +221,8 @@ let rec take_lh n_0 ls_6 =
         (`LH_N))
   else
     (`LH_N));;
+let rec splitAt_lh _lh_splitAt_arg1_0 _lh_splitAt_arg2_0 =
+  (`LH_P2(((take_lh _lh_splitAt_arg1_0) _lh_splitAt_arg2_0), ((drop_lh _lh_splitAt_arg1_0) _lh_splitAt_arg2_0)));;
 let rec length_lh ls_1 =
   (match ls_1 with
     | `LH_C(h_1, t_1) -> 
@@ -120,6 +231,71 @@ let rec length_lh ls_1 =
       0);;
 let rec upsweep_lh _lh_upsweep_arg1_3 _lh_upsweep_arg2_0 =
   (_lh_upsweep_arg2_0 _lh_upsweep_arg1_3);;
+let rec put_lh _lh_put_arg1_0 =
+  (match _lh_put_arg1_0 with
+    | `LH_C(_lh_put_LH_C_0_0, _lh_put_LH_C_1_0) -> 
+      (match _lh_put_LH_C_1_0 with
+        | `LH_N -> 
+          (let rec _lh_upsweep_Cell_0_0 = _lh_put_LH_C_0_0 in
+            (fun _lh_upsweep_arg1_0 -> 
+              (`LH_P2(_lh_upsweep_Cell_0_0, (fun _lh_downsweep_arg2_0 _lh_downsweep_arg1_1 -> 
+                (`Cell(_lh_downsweep_arg2_0)))))))
+        | _ -> 
+          (let rec _lh_matchIdent_2 = ((splitAt_lh ((length_lh _lh_put_arg1_0) / 2)) _lh_put_arg1_0) in
+            (match _lh_matchIdent_2 with
+              | `LH_P2(_lh_put_LH_P2_0_0, _lh_put_LH_P2_1_0) -> 
+                (let rec _lh_upsweep_Node_2_0 = (put_lh _lh_put_LH_P2_1_0) in
+                  (let rec _lh_upsweep_Node_1_0 = (put_lh _lh_put_LH_P2_0_0) in
+                    (fun _lh_upsweep_arg1_1 -> 
+                      (let rec _lh_matchIdent_3 = ((upsweep_lh _lh_upsweep_arg1_1) _lh_upsweep_Node_1_0) in
+                        (match _lh_matchIdent_3 with
+                          | `LH_P2(_lh_upsweep_LH_P2_0_0, _lh_upsweep_LH_P2_1_0) -> 
+                            (let rec _lh_matchIdent_4 = ((upsweep_lh _lh_upsweep_arg1_1) _lh_upsweep_Node_2_0) in
+                              (match _lh_matchIdent_4 with
+                                | `LH_P2(_lh_upsweep_LH_P2_0_1, _lh_upsweep_LH_P2_1_1) -> 
+                                  (`LH_P2(((_lh_upsweep_arg1_1 _lh_upsweep_LH_P2_0_0) _lh_upsweep_LH_P2_0_1), (let rec _lh_downsweep_Node_2_1 = _lh_upsweep_LH_P2_1_1 in
+                                    (let rec _lh_downsweep_Node_1_1 = _lh_upsweep_LH_P2_1_0 in
+                                      (let rec _lh_downsweep_Node_0_0 = (let rec _lh_downsweep_LH_P2_1_2 = _lh_upsweep_LH_P2_0_1 in
+                                        (let rec _lh_downsweep_LH_P2_0_2 = _lh_upsweep_LH_P2_0_0 in
+                                          (fun _lh_downsweep_Node_1_2 _lh_downsweep_Node_2_2 _lh_downsweep_arg1_2 _lh_downsweep_arg2_1 -> 
+                                            (let rec _lh_matchIdent_5 = (((_lh_downsweep_arg1_2 _lh_downsweep_LH_P2_0_2) _lh_downsweep_LH_P2_1_2) _lh_downsweep_arg2_1) in
+                                              (((_lh_matchIdent_5 _lh_downsweep_Node_1_2) _lh_downsweep_Node_2_2) _lh_downsweep_arg1_2))))) in
+                                        (fun _lh_downsweep_arg2_2 _lh_downsweep_arg1_3 -> 
+                                          ((((_lh_downsweep_Node_0_0 _lh_downsweep_Node_1_1) _lh_downsweep_Node_2_1) _lh_downsweep_arg1_3) _lh_downsweep_arg2_2)))))))
+                                | _ -> 
+                                  (failwith "error")))
+                          | _ -> 
+                            (failwith "error"))))))
+              | _ -> 
+                (failwith "error"))))
+    | _ -> 
+      (let rec _lh_matchIdent_6 = ((splitAt_lh ((length_lh _lh_put_arg1_0) / 2)) _lh_put_arg1_0) in
+        (match _lh_matchIdent_6 with
+          | `LH_P2(_lh_put_LH_P2_0_1, _lh_put_LH_P2_1_1) -> 
+            (let rec _lh_upsweep_Node_2_1 = (put_lh _lh_put_LH_P2_1_1) in
+              (let rec _lh_upsweep_Node_1_1 = (put_lh _lh_put_LH_P2_0_1) in
+                (fun _lh_upsweep_arg1_2 -> 
+                  (let rec _lh_matchIdent_7 = ((upsweep_lh _lh_upsweep_arg1_2) _lh_upsweep_Node_1_1) in
+                    (match _lh_matchIdent_7 with
+                      | `LH_P2(_lh_upsweep_LH_P2_0_2, _lh_upsweep_LH_P2_1_2) -> 
+                        (let rec _lh_matchIdent_8 = ((upsweep_lh _lh_upsweep_arg1_2) _lh_upsweep_Node_2_1) in
+                          (match _lh_matchIdent_8 with
+                            | `LH_P2(_lh_upsweep_LH_P2_0_3, _lh_upsweep_LH_P2_1_3) -> 
+                              (`LH_P2(((_lh_upsweep_arg1_2 _lh_upsweep_LH_P2_0_2) _lh_upsweep_LH_P2_0_3), (let rec _lh_downsweep_Node_2_3 = _lh_upsweep_LH_P2_1_3 in
+                                (let rec _lh_downsweep_Node_1_3 = _lh_upsweep_LH_P2_1_2 in
+                                  (let rec _lh_downsweep_Node_0_1 = (let rec _lh_downsweep_LH_P2_1_3 = _lh_upsweep_LH_P2_0_3 in
+                                    (let rec _lh_downsweep_LH_P2_0_3 = _lh_upsweep_LH_P2_0_2 in
+                                      (fun _lh_downsweep_Node_1_4 _lh_downsweep_Node_2_4 _lh_downsweep_arg1_4 _lh_downsweep_arg2_3 -> 
+                                        (let rec _lh_matchIdent_9 = (((_lh_downsweep_arg1_4 _lh_downsweep_LH_P2_0_3) _lh_downsweep_LH_P2_1_3) _lh_downsweep_arg2_3) in
+                                          (((_lh_matchIdent_9 _lh_downsweep_Node_1_4) _lh_downsweep_Node_2_4) _lh_downsweep_arg1_4))))) in
+                                    (fun _lh_downsweep_arg2_4 _lh_downsweep_arg1_5 -> 
+                                      ((((_lh_downsweep_Node_0_1 _lh_downsweep_Node_1_3) _lh_downsweep_Node_2_3) _lh_downsweep_arg1_5) _lh_downsweep_arg2_4)))))))
+                            | _ -> 
+                              (failwith "error")))
+                      | _ -> 
+                        (failwith "error"))))))
+          | _ -> 
+            (failwith "error"))));;
 let rec downsweep_lh _lh_downsweep_arg1_6 _lh_downsweep_arg2_5 _lh_downsweep_arg3_0 =
   ((_lh_downsweep_arg3_0 _lh_downsweep_arg2_5) _lh_downsweep_arg1_6);;
 let rec mappend_lh xs_8 ys_3 =
@@ -128,6 +304,65 @@ let rec mappend_lh xs_8 ys_3 =
       (`LH_C(h_5, ((mappend_lh t_5) ys_3)))
     | `LH_N -> 
       ys_3);;
+let rec get_lh _lh_get_arg1_0 =
+  (match _lh_get_arg1_0 with
+    | `Cell(_lh_get_Cell_0_0) -> 
+      (`LH_C(_lh_get_Cell_0_0, (`LH_N)))
+    | `Node(_lh_get_Node_0_0, _lh_get_Node_1_0, _lh_get_Node_2_0) -> 
+      ((mappend_lh (get_lh _lh_get_Node_1_0)) (get_lh _lh_get_Node_2_0))
+    | _ -> 
+      (failwith "error"));;
+let rec sweep_ud_lh _lh_sweep_ud_arg1_0 _lh_sweep_ud_arg2_0 _lh_sweep_ud_arg3_0 _lh_sweep_ud_arg4_0 =
+  (let rec _lh_matchIdent_1_0 = ((upsweep_lh _lh_sweep_ud_arg1_0) _lh_sweep_ud_arg4_0) in
+    (match _lh_matchIdent_1_0 with
+      | `LH_P2(_lh_sweep_ud_LH_P2_0_0, _lh_sweep_ud_LH_P2_1_0) -> 
+        (let rec _lh_scanlr_LH_P2_1_0 = (((downsweep_lh _lh_sweep_ud_arg2_0) _lh_sweep_ud_arg3_0) _lh_sweep_ud_LH_P2_1_0) in
+          (let rec _lh_scanlr_LH_P2_0_0 = _lh_sweep_ud_LH_P2_0_0 in
+            (fun _lh_scanlr_arg1_1 _lh_scanlr_arg2_1 _lh_scanlr_arg3_1 _lh_scanlr_arg4_1 -> 
+              (match _lh_scanlr_LH_P2_0_0 with
+                | `LH_P2(_lh_scanlr_LH_P2_0_1, _lh_scanlr_LH_P2_1_1) -> 
+                  (let rec ans_0 = (`LH_P2(((_lh_scanlr_arg2_1 _lh_scanlr_LH_P2_1_1) _lh_scanlr_arg4_1), ((_lh_scanlr_arg1_1 _lh_scanlr_arg3_1) _lh_scanlr_LH_P2_0_1))) in
+                    (let rec _lh_snd_LH_P2_1_0 = (get_lh _lh_scanlr_LH_P2_1_0) in
+                      _lh_snd_LH_P2_1_0))
+                | _ -> 
+                  (failwith "error")))))
+      | _ -> 
+        (failwith "error")));;
+let rec scanlr_lh _lh_scanlr_arg1_0 _lh_scanlr_arg2_0 _lh_scanlr_arg3_0 _lh_scanlr_arg4_0 _lh_scanlr_arg5_0 =
+  let rec down_0 = (fun _lh_down_arg1_0 _lh_down_arg2_0 _lh_down_arg3_0 _lh_down_arg4_0 _lh_down_arg5_0 -> 
+    (match _lh_down_arg3_0 with
+      | `LH_P2(_lh_down_LH_P2_0_0, _lh_down_LH_P2_1_0) -> 
+        (match _lh_down_arg4_0 with
+          | `LH_P2(_lh_down_LH_P2_0_1, _lh_down_LH_P2_1_1) -> 
+            (match _lh_down_arg5_0 with
+              | `LH_P2(_lh_down_LH_P2_0_2, _lh_down_LH_P2_1_2) -> 
+                (let rec _lh_downsweep_LH_P2_1_0 = (`LH_P2(((_lh_down_arg1_0 _lh_down_LH_P2_0_2) _lh_down_LH_P2_0_0), _lh_down_LH_P2_1_2)) in
+                  (let rec _lh_downsweep_LH_P2_0_0 = (`LH_P2(_lh_down_LH_P2_0_2, ((_lh_down_arg2_0 _lh_down_LH_P2_1_1) _lh_down_LH_P2_1_2))) in
+                    (fun _lh_downsweep_Node_1_0 _lh_downsweep_Node_2_0 _lh_downsweep_arg1_0 -> 
+                      (let rec _lh_matchIdent_0 = (let rec _lh_downsweep_LH_P2_1_1 = (((downsweep_lh _lh_downsweep_arg1_0) _lh_downsweep_LH_P2_1_0) _lh_downsweep_Node_2_0) in
+                        (let rec _lh_downsweep_LH_P2_0_1 = (((downsweep_lh _lh_downsweep_arg1_0) _lh_downsweep_LH_P2_0_0) _lh_downsweep_Node_1_0) in
+                          (`Node((`Unit), _lh_downsweep_LH_P2_0_1, _lh_downsweep_LH_P2_1_1)))) in
+                        _lh_matchIdent_0))))
+              | _ -> 
+                (failwith "error"))
+          | _ -> 
+            (failwith "error"))
+      | _ -> 
+        (failwith "error")))
+  and up_0 = (fun _lh_up_arg1_0 _lh_up_arg2_0 _lh_up_arg3_0 _lh_up_arg4_0 -> 
+    (match _lh_up_arg3_0 with
+      | `LH_P2(_lh_up_LH_P2_0_0, _lh_up_LH_P2_1_0) -> 
+        (match _lh_up_arg4_0 with
+          | `LH_P2(_lh_up_LH_P2_0_1, _lh_up_LH_P2_1_1) -> 
+            (`LH_P2(((_lh_up_arg1_0 _lh_up_LH_P2_0_0) _lh_up_LH_P2_0_1), ((_lh_up_arg2_0 _lh_up_LH_P2_1_0) _lh_up_LH_P2_1_1)))
+          | _ -> 
+            (failwith "error"))
+      | _ -> 
+        (failwith "error")))
+  in (let rec xs'_0 = ((map_lh (fun x_0 -> 
+    (`LH_P2(x_0, x_0)))) _lh_scanlr_arg5_0) in
+    (let rec _lh_matchIdent_1 = ((((sweep_ud_lh ((up_0 _lh_scanlr_arg1_0) _lh_scanlr_arg2_0)) ((down_0 _lh_scanlr_arg1_0) _lh_scanlr_arg2_0)) (`LH_P2(_lh_scanlr_arg3_0, _lh_scanlr_arg4_0))) (put_lh xs'_0)) in
+      ((((_lh_matchIdent_1 _lh_scanlr_arg1_0) _lh_scanlr_arg2_0) _lh_scanlr_arg3_0) _lh_scanlr_arg4_0)));;
 let rec send_left_lh _lh_send_left_arg1_0 _lh_send_left_arg2_0 =
   (match _lh_send_left_arg1_0 with
     | `LH_P8(_lh_send_left_LH_P8_0_0, _lh_send_left_LH_P8_1_0, _lh_send_left_LH_P8_2_0, _lh_send_left_LH_P8_3_0, _lh_send_left_LH_P8_4_0, _lh_send_left_LH_P8_5_0, _lh_send_left_LH_P8_6_0, _lh_send_left_LH_P8_7_0) -> 
@@ -156,6 +391,8 @@ let rec send_right_lh _lh_send_right_arg1_0 _lh_send_right_arg2_0 =
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
+let rec send_lh _lh_send_arg1_0 =
+  (((((scanlr_lh send_right_lh) send_left_lh) emptyPacket_lh) emptyPacket_lh) _lh_send_arg1_0);;
 let rec zipWith_lh f_4 xs_4 ys_0 =
   (match xs_4 with
     | `LH_C(hx_0, tx_0) -> 
@@ -166,6 +403,18 @@ let rec zipWith_lh f_4 xs_4 ys_0 =
           (`LH_N))
     | `LH_N -> 
       (`LH_N));;
+let rec make_packet_lh _lh_make_packet_arg1_0 =
+  (let rec _lh_listcomp_fun_3 = (fun _lh_listcomp_fun_para_3 -> 
+    (match _lh_listcomp_fun_para_3 with
+      | `LH_C(_lh_listcomp_fun_ls_h_3, _lh_listcomp_fun_ls_t_3) -> 
+        (match _lh_listcomp_fun_ls_h_3 with
+          | `LH_P6(_lh_make_packet_LH_P6_0_0, _lh_make_packet_LH_P6_1_0, _lh_make_packet_LH_P6_2_0, _lh_make_packet_LH_P6_3_0, _lh_make_packet_LH_P6_4_0, _lh_make_packet_LH_P6_5_0) -> 
+            (`LH_C((`LH_P8((pid_lh _lh_make_packet_arg1_0), _lh_make_packet_LH_P6_0_0, _lh_make_packet_LH_P6_1_0, _lh_make_packet_LH_P6_2_0, _lh_make_packet_LH_P6_3_0, _lh_make_packet_LH_P6_4_0, _lh_make_packet_LH_P6_5_0, 1)), (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3)))
+          | _ -> 
+            (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3))
+      | `LH_N -> 
+        (`LH_N))) in
+    (_lh_listcomp_fun_3 (outports_lh _lh_make_packet_arg1_0)));;
 let rec maximum_lh _lh_maximum_arg1_0 =
   (match _lh_maximum_arg1_0 with
     | `LH_C(_lh_maximum_LH_C_0_0, _lh_maximum_LH_C_1_0) -> 
@@ -183,6 +432,11 @@ let rec maximum_lh _lh_maximum_arg1_0 =
         ((go_0 _lh_maximum_LH_C_0_0) _lh_maximum_LH_C_1_0))
     | _ -> 
       (failwith "error"));;
+let rec pad_packets_lh _lh_pad_packets_arg1_0 =
+  (let rec pad_0 = (fun xs_6 -> 
+    (let rec max_ps_0 = (maximum_lh ((map_lh length_lh) _lh_pad_packets_arg1_0)) in
+      ((take_lh max_ps_0) ((mappend_lh xs_6) ((copy_lh max_ps_0) emptyPacket_lh))))) in
+    ((map_lh pad_0) _lh_pad_packets_arg1_0));;
 let rec check_left_lh _lh_check_left_arg1_0 _lh_check_left_arg2_0 =
   (match _lh_check_left_arg1_0 with
     | `LH_P8(_lh_check_left_LH_P8_0_0, _lh_check_left_LH_P8_1_0, _lh_check_left_LH_P8_2_0, _lh_check_left_LH_P8_3_0, _lh_check_left_LH_P8_4_0, _lh_check_left_LH_P8_5_0, _lh_check_left_LH_P8_6_0, _lh_check_left_LH_P8_7_0) -> 
@@ -222,14 +476,112 @@ let rec check_right_lh _lh_check_right_arg1_0 _lh_check_right_arg2_0 =
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
+let rec update_o_lh _lh_update_o_arg1_0 _lh_update_o_arg2_0 =
+  (match _lh_update_o_arg1_0 with
+    | `LH_P2(_lh_update_o_LH_P2_0_0, _lh_update_o_LH_P2_1_0) -> 
+      ((check_left_lh _lh_update_o_LH_P2_0_0) ((check_right_lh _lh_update_o_LH_P2_1_0) _lh_update_o_arg2_0))
+    | _ -> 
+      (failwith "error"));;
 let rec compare_and_update_lh _lh_compare_and_update_arg1_0 _lh_compare_and_update_arg2_1 =
   (_lh_compare_and_update_arg1_0 _lh_compare_and_update_arg2_1);;
+let rec up_i_lh _lh_up_i_arg1_0 _lh_up_i_arg2_0 =
+  (match _lh_up_i_arg1_0 with
+    | `LH_P8(_lh_up_i_LH_P8_0_0, _lh_up_i_LH_P8_1_0, _lh_up_i_LH_P8_2_0, _lh_up_i_LH_P8_3_0, _lh_up_i_LH_P8_4_0, _lh_up_i_LH_P8_5_0, _lh_up_i_LH_P8_6_0, _lh_up_i_LH_P8_7_0) -> 
+      ((map_lh (compare_and_update_lh (let rec _lh_compare_and_update_LH_P3_2_0 = _lh_up_i_LH_P8_2_0 in
+        (let rec _lh_compare_and_update_LH_P3_1_0 = _lh_up_i_LH_P8_1_0 in
+          (let rec _lh_compare_and_update_LH_P3_0_0 = _lh_up_i_LH_P8_0_0 in
+            (fun _lh_compare_and_update_arg2_0 -> 
+              (match _lh_compare_and_update_arg2_0 with
+                | `LH_P3(_lh_compare_and_update_LH_P3_0_1, _lh_compare_and_update_LH_P3_1_1, _lh_compare_and_update_LH_P3_2_1) -> 
+                  (if ((`LH_P2(_lh_compare_and_update_LH_P3_0_0, _lh_compare_and_update_LH_P3_1_0)) = (`LH_P2(_lh_compare_and_update_LH_P3_0_1, _lh_compare_and_update_LH_P3_1_1))) then
+                    (`LH_P3(_lh_compare_and_update_LH_P3_0_1, _lh_compare_and_update_LH_P3_1_1, _lh_compare_and_update_LH_P3_2_0))
+                  else
+                    (`LH_P3(_lh_compare_and_update_LH_P3_0_1, _lh_compare_and_update_LH_P3_1_1, _lh_compare_and_update_LH_P3_2_1)))
+                | _ -> 
+                  (failwith "error")))))))) _lh_up_i_arg2_0)
+    | _ -> 
+      (failwith "error"));;
+let rec update_i_lh _lh_update_i_arg1_0 _lh_update_i_arg2_0 =
+  (match _lh_update_i_arg1_0 with
+    | `LH_P2(_lh_update_i_LH_P2_0_0, _lh_update_i_LH_P2_1_0) -> 
+      ((up_i_lh _lh_update_i_LH_P2_0_0) ((up_i_lh _lh_update_i_LH_P2_1_0) _lh_update_i_arg2_0))
+    | _ -> 
+      (failwith "error"));;
+let rec updateInports_lh _lh_updateInports_arg1_0 _lh_updateInports_arg2_0 =
+  (`PS((pid_lh _lh_updateInports_arg1_0), (compType_lh _lh_updateInports_arg1_0), (pathDepth_lh _lh_updateInports_arg1_0), _lh_updateInports_arg2_0, (outports_lh _lh_updateInports_arg1_0)));;
+let rec update_io_lh _lh_update_io_arg1_0 _lh_update_io_arg2_0 _lh_update_io_arg3_0 =
+  (let rec update_is_0 = (fun state_0 -> 
+    ((updateInports_lh state_0) (((foldr_lh update_i_lh) (inports_lh state_0)) _lh_update_io_arg2_0))) in
+    (let rec update_os_0 = (fun state_1 -> 
+      (if ((pathDepth_lh state_1) = _lh_update_io_arg1_0) then
+        ((updateOutports_lh state_1) (((zipWith_lh update_o_lh) _lh_update_io_arg2_0) (outports_lh state_1)))
+      else
+        state_1)) in
+      (update_os_0 (update_is_0 _lh_update_io_arg3_0))));;
+let rec do_send_lh _lh_do_send_arg1_0 _lh_do_send_arg2_0 =
+  (let rec states1_0 = ((map_lh (check_depth_lh _lh_do_send_arg1_0)) _lh_do_send_arg2_0) in
+    (let rec send_results_0 = ((map_lh (fun _lh_funcomp_x_0 -> 
+      (snd_lh (send_lh _lh_funcomp_x_0)))) ((fun _lh_funcomp_x_1 -> 
+      (transpose_lh (pad_packets_lh _lh_funcomp_x_1))) ((map_lh make_packet_lh) states1_0))) in
+      (let rec pss'_0 = (transpose_lh send_results_0) in
+        (((zipWith_lh (update_io_lh _lh_do_send_arg1_0)) pss'_0) _lh_do_send_arg2_0))));;
+let rec do_sends_lh _lh_do_sends_arg1_0 _lh_do_sends_arg2_0 =
+  (((until_lh (acknowledge_lh _lh_do_sends_arg1_0)) (do_send_lh _lh_do_sends_arg1_0)) _lh_do_sends_arg2_0);;
 let rec foldl_lh f_7 i_0 ls_2 =
   (match ls_2 with
     | `LH_C(h_2, t_2) -> 
       (((foldl_lh f_7) ((f_7 i_0) h_2)) t_2)
     | `LH_N -> 
       i_0);;
+let rec store_inputs_lh _lh_store_inputs_arg1_0 _lh_store_inputs_arg2_0 =
+  (match _lh_store_inputs_arg2_0 with
+    | `PS(_lh_store_inputs_PS_0_0, _lh_store_inputs_PS_1_0, _lh_store_inputs_PS_2_0, _lh_store_inputs_PS_3_0, _lh_store_inputs_PS_4_0) -> 
+      (match _lh_store_inputs_PS_1_0 with
+        | `Inp -> 
+          (head_lh (let rec _lh_listcomp_fun_6 = (fun _lh_listcomp_fun_para_6 -> 
+            (((((_lh_listcomp_fun_para_6 _lh_listcomp_fun_6) _lh_store_inputs_PS_0_0) _lh_store_inputs_PS_2_0) _lh_store_inputs_PS_3_0) _lh_store_inputs_PS_4_0)) in
+            (_lh_listcomp_fun_6 _lh_store_inputs_arg1_0)))
+        | _ -> 
+          _lh_store_inputs_arg2_0)
+    | _ -> 
+      _lh_store_inputs_arg2_0);;
+let rec update_outports_lh _lh_update_outports_arg1_0 _lh_update_outports_arg2_0 =
+  ((updateOutports_lh _lh_update_outports_arg1_0) (let rec _lh_listcomp_fun_1_1 = (fun _lh_listcomp_fun_para_7 -> 
+    (match _lh_listcomp_fun_para_7 with
+      | `LH_C(_lh_listcomp_fun_ls_h_7, _lh_listcomp_fun_ls_t_8) -> 
+        (match _lh_listcomp_fun_ls_h_7 with
+          | `LH_P6(_lh_update_outports_LH_P6_0_0, _lh_update_outports_LH_P6_1_0, _lh_update_outports_LH_P6_2_0, _lh_update_outports_LH_P6_3_0, _lh_update_outports_LH_P6_4_0, _lh_update_outports_LH_P6_5_0) -> 
+            (`LH_C((`LH_P6(_lh_update_outports_LH_P6_0_0, _lh_update_outports_arg2_0, _lh_update_outports_LH_P6_2_0, _lh_update_outports_LH_P6_3_0, _lh_update_outports_LH_P6_4_0, _lh_update_outports_LH_P6_5_0)), (_lh_listcomp_fun_1_1 _lh_listcomp_fun_ls_t_8)))
+          | _ -> 
+            (_lh_listcomp_fun_1_1 _lh_listcomp_fun_ls_t_8))
+      | `LH_N -> 
+        (`LH_N))) in
+    (_lh_listcomp_fun_1_1 (outports_lh _lh_update_outports_arg1_0))));;
+let rec zip_lh xs_7 ys_2 =
+  (match xs_7 with
+    | `LH_C(hx_2, tx_2) -> 
+      (match ys_2 with
+        | `LH_C(hy_4, ty_4) -> 
+          (let rec _lh_listcomp_fun_ls_t_6 = ((zip_lh tx_2) ty_4) in
+            (let rec _lh_listcomp_fun_ls_h_6 = (let rec _lh_store_inputs_LH_P2_1_0 = hy_4 in
+              (let rec _lh_store_inputs_LH_P2_0_0 = hx_2 in
+                (fun _lh_listcomp_fun_ls_t_7 _lh_listcomp_fun_7 _lh_store_inputs_PS_0_1 _lh_store_inputs_PS_2_1 _lh_store_inputs_PS_3_1 _lh_store_inputs_PS_4_1 -> 
+                  (match _lh_store_inputs_LH_P2_0_0 with
+                    | `LH_P2(_lh_store_inputs_LH_P2_0_1, _lh_store_inputs_LH_P2_1_1) -> 
+                      (if (_lh_store_inputs_PS_0_1 = _lh_store_inputs_LH_P2_1_1) then
+                        (`LH_C(((update_outports_lh (`PS(_lh_store_inputs_PS_0_1, (`Inp), _lh_store_inputs_PS_2_1, _lh_store_inputs_PS_3_1, _lh_store_inputs_PS_4_1))) _lh_store_inputs_LH_P2_1_0), (_lh_listcomp_fun_7 _lh_listcomp_fun_ls_t_7)))
+                      else
+                        (_lh_listcomp_fun_7 _lh_listcomp_fun_ls_t_7))
+                    | _ -> 
+                      (_lh_listcomp_fun_7 _lh_listcomp_fun_ls_t_7))))) in
+              (fun _lh_listcomp_fun_8 _lh_store_inputs_PS_0_2 _lh_store_inputs_PS_2_2 _lh_store_inputs_PS_3_2 _lh_store_inputs_PS_4_2 -> 
+                ((((((_lh_listcomp_fun_ls_h_6 _lh_listcomp_fun_ls_t_6) _lh_listcomp_fun_8) _lh_store_inputs_PS_0_2) _lh_store_inputs_PS_2_2) _lh_store_inputs_PS_3_2) _lh_store_inputs_PS_4_2))))
+        | `LH_N -> 
+          (fun _lh_listcomp_fun_9 _lh_store_inputs_PS_0_3 _lh_store_inputs_PS_2_3 _lh_store_inputs_PS_3_3 _lh_store_inputs_PS_4_3 -> 
+            (`LH_N)))
+    | `LH_N -> 
+      (fun _lh_listcomp_fun_1_0 _lh_store_inputs_PS_0_4 _lh_store_inputs_PS_2_4 _lh_store_inputs_PS_3_4 _lh_store_inputs_PS_4_4 -> 
+        (`LH_N)));;
 let rec xor_lh _lh_xor_arg1_0 _lh_xor_arg2_0 =
   (if (_lh_xor_arg1_0 = _lh_xor_arg2_0) then
     (`T)
@@ -250,131 +602,6 @@ let rec or2_lh _lh_or2_arg1_0 _lh_or2_arg2_0 =
     (`T)
   else
     (`F));;
-let rec emptyState_lh =
-  (`PS((0 - 1), (`None), (0 - 1), (`LH_N), (`LH_N)));;
-let rec zipWith_lz_nl_lh f_5 xs_5 ys_1 =
-  ((ys_1 f_5) xs_5);;
-let rec critical_path_depth_lh _lh_critical_path_depth_arg1_0 =
-  (_lh_critical_path_depth_arg1_0 99);;
-let rec scanl_lh _lh_scanl_arg1_0 _lh_scanl_arg2_0 _lh_scanl_arg3_0 =
-  (`LH_C(_lh_scanl_arg2_0, (let rec _lh_matchIdent_1_2 = _lh_scanl_arg3_0 in
-    (match _lh_matchIdent_1_2 with
-      | `LH_N -> 
-        (`LH_N)
-      | `LH_C(_lh_scanl_LH_C_0_0, _lh_scanl_LH_C_1_0) -> 
-        (((scanl_lh _lh_scanl_arg1_0) ((_lh_scanl_arg1_0 _lh_scanl_arg2_0) _lh_scanl_LH_C_0_0)) _lh_scanl_LH_C_1_0)
-      | _ -> 
-        (failwith "error")))));;
-let rec collect_outputs_lh _lh_collect_outputs_arg1_0 =
-  (match _lh_collect_outputs_arg1_0 with
-    | `LH_P4(_lh_collect_outputs_LH_P4_0_0, _lh_collect_outputs_LH_P4_1_0, _lh_collect_outputs_LH_P4_2_0, _lh_collect_outputs_LH_P4_3_0) -> 
-      let rec third_0 = (fun _lh_third_arg1_0 -> 
-        (match _lh_third_arg1_0 with
-          | `LH_P3(_lh_third_LH_P3_0_0, _lh_third_LH_P3_1_0, _lh_third_LH_P3_2_0) -> 
-            _lh_third_LH_P3_2_0
-          | _ -> 
-            (failwith "error")))
-      and get_output_0 = (fun _lh_get_output_arg1_0 _lh_get_output_arg2_0 -> 
-        (match _lh_get_output_arg2_0 with
-          | `LH_P2(_lh_get_output_LH_P2_0_0, _lh_get_output_LH_P2_1_0) -> 
-            (third_0 (head_lh (let rec _lh_listcomp_fun_1_2 = (fun _lh_listcomp_fun_para_8 -> 
-              (match _lh_listcomp_fun_para_8 with
-                | `LH_C(_lh_listcomp_fun_ls_h_8, _lh_listcomp_fun_ls_t_9) -> 
-                  (if (_lh_get_output_LH_P2_1_0 = (pid_lh _lh_listcomp_fun_ls_h_8)) then
-                    (`LH_C((head_lh (inports_lh _lh_listcomp_fun_ls_h_8)), (_lh_listcomp_fun_1_2 _lh_listcomp_fun_ls_t_9)))
-                  else
-                    (_lh_listcomp_fun_1_2 _lh_listcomp_fun_ls_t_9))
-                | `LH_N -> 
-                  (`LH_N))) in
-              (_lh_listcomp_fun_1_2 _lh_get_output_arg1_0))))
-          | _ -> 
-            (failwith "error")))
-      in ((map_lh (get_output_0 _lh_collect_outputs_LH_P4_3_0)) _lh_collect_outputs_LH_P4_2_0)
-    | _ -> 
-      (failwith "error"));;
-let rec nearest_power_of_two_lh _lh_nearest_power_of_two_arg1_0 =
-  (((until_lh (fun a_1 -> 
-    (a_1 >= _lh_nearest_power_of_two_arg1_0))) (fun a_2 -> 
-    (a_2 * 2))) 1);;
-let rec updateOutports_lh _lh_updateOutports_arg1_0 _lh_updateOutports_arg2_0 =
-  (`PS((pid_lh _lh_updateOutports_arg1_0), (compType_lh _lh_updateOutports_arg1_0), (pathDepth_lh _lh_updateOutports_arg1_0), (inports_lh _lh_updateOutports_arg1_0), _lh_updateOutports_arg2_0));;
-let rec unzip_lh _lh_unzip_arg1_0 =
-  (((foldr_lh (fun ab_0 asbs_0 -> 
-    (let rec _lh_matchIdent_1_3 = ab_0 in
-      (match _lh_matchIdent_1_3 with
-        | `LH_P2(_lh_unzip_LH_P2_0_0, _lh_unzip_LH_P2_1_0) -> 
-          (let rec _lh_matchIdent_1_4 = asbs_0 in
-            (match _lh_matchIdent_1_4 with
-              | `LH_P2(_lh_unzip_LH_P2_0_1, _lh_unzip_LH_P2_1_1) -> 
-                (`LH_P2((`LH_C(_lh_unzip_LH_P2_0_0, _lh_unzip_LH_P2_0_1)), (`LH_C(_lh_unzip_LH_P2_1_0, _lh_unzip_LH_P2_1_1))))
-              | _ -> 
-                (failwith "error")))
-        | _ -> 
-          (failwith "error"))))) (`LH_P2((`LH_N), (`LH_N)))) _lh_unzip_arg1_0);;
-let rec splitAt_lh _lh_splitAt_arg1_0 _lh_splitAt_arg2_0 =
-  (`LH_P2(((take_lh _lh_splitAt_arg1_0) _lh_splitAt_arg2_0), ((drop_lh _lh_splitAt_arg1_0) _lh_splitAt_arg2_0)));;
-let rec get_lh _lh_get_arg1_0 =
-  (match _lh_get_arg1_0 with
-    | `Cell(_lh_get_Cell_0_0) -> 
-      (`LH_C(_lh_get_Cell_0_0, (`LH_N)))
-    | `Node(_lh_get_Node_0_0, _lh_get_Node_1_0, _lh_get_Node_2_0) -> 
-      ((mappend_lh (get_lh _lh_get_Node_1_0)) (get_lh _lh_get_Node_2_0))
-    | _ -> 
-      (failwith "error"));;
-let rec make_packet_lh _lh_make_packet_arg1_0 =
-  (let rec _lh_listcomp_fun_3 = (fun _lh_listcomp_fun_para_3 -> 
-    (match _lh_listcomp_fun_para_3 with
-      | `LH_C(_lh_listcomp_fun_ls_h_3, _lh_listcomp_fun_ls_t_3) -> 
-        (match _lh_listcomp_fun_ls_h_3 with
-          | `LH_P6(_lh_make_packet_LH_P6_0_0, _lh_make_packet_LH_P6_1_0, _lh_make_packet_LH_P6_2_0, _lh_make_packet_LH_P6_3_0, _lh_make_packet_LH_P6_4_0, _lh_make_packet_LH_P6_5_0) -> 
-            (`LH_C((`LH_P8((pid_lh _lh_make_packet_arg1_0), _lh_make_packet_LH_P6_0_0, _lh_make_packet_LH_P6_1_0, _lh_make_packet_LH_P6_2_0, _lh_make_packet_LH_P6_3_0, _lh_make_packet_LH_P6_4_0, _lh_make_packet_LH_P6_5_0, 1)), (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3)))
-          | _ -> 
-            (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_3))
-      | `LH_N -> 
-        (`LH_N))) in
-    (_lh_listcomp_fun_3 (outports_lh _lh_make_packet_arg1_0)));;
-let rec pad_packets_lh _lh_pad_packets_arg1_0 =
-  (let rec pad_0 = (fun xs_6 -> 
-    (let rec max_ps_0 = (maximum_lh ((map_lh length_lh) _lh_pad_packets_arg1_0)) in
-      ((take_lh max_ps_0) ((mappend_lh xs_6) ((copy_lh max_ps_0) emptyPacket_lh))))) in
-    ((map_lh pad_0) _lh_pad_packets_arg1_0));;
-let rec update_o_lh _lh_update_o_arg1_0 _lh_update_o_arg2_0 =
-  (match _lh_update_o_arg1_0 with
-    | `LH_P2(_lh_update_o_LH_P2_0_0, _lh_update_o_LH_P2_1_0) -> 
-      ((check_left_lh _lh_update_o_LH_P2_0_0) ((check_right_lh _lh_update_o_LH_P2_1_0) _lh_update_o_arg2_0))
-    | _ -> 
-      (failwith "error"));;
-let rec up_i_lh _lh_up_i_arg1_0 _lh_up_i_arg2_0 =
-  (match _lh_up_i_arg1_0 with
-    | `LH_P8(_lh_up_i_LH_P8_0_0, _lh_up_i_LH_P8_1_0, _lh_up_i_LH_P8_2_0, _lh_up_i_LH_P8_3_0, _lh_up_i_LH_P8_4_0, _lh_up_i_LH_P8_5_0, _lh_up_i_LH_P8_6_0, _lh_up_i_LH_P8_7_0) -> 
-      ((map_lh (compare_and_update_lh (let rec _lh_compare_and_update_LH_P3_2_0 = _lh_up_i_LH_P8_2_0 in
-        (let rec _lh_compare_and_update_LH_P3_1_0 = _lh_up_i_LH_P8_1_0 in
-          (let rec _lh_compare_and_update_LH_P3_0_0 = _lh_up_i_LH_P8_0_0 in
-            (fun _lh_compare_and_update_arg2_0 -> 
-              (match _lh_compare_and_update_arg2_0 with
-                | `LH_P3(_lh_compare_and_update_LH_P3_0_1, _lh_compare_and_update_LH_P3_1_1, _lh_compare_and_update_LH_P3_2_1) -> 
-                  (if ((`LH_P2(_lh_compare_and_update_LH_P3_0_0, _lh_compare_and_update_LH_P3_1_0)) = (`LH_P2(_lh_compare_and_update_LH_P3_0_1, _lh_compare_and_update_LH_P3_1_1))) then
-                    (`LH_P3(_lh_compare_and_update_LH_P3_0_1, _lh_compare_and_update_LH_P3_1_1, _lh_compare_and_update_LH_P3_2_0))
-                  else
-                    (`LH_P3(_lh_compare_and_update_LH_P3_0_1, _lh_compare_and_update_LH_P3_1_1, _lh_compare_and_update_LH_P3_2_1)))
-                | _ -> 
-                  (failwith "error")))))))) _lh_up_i_arg2_0)
-    | _ -> 
-      (failwith "error"));;
-let rec updateInports_lh _lh_updateInports_arg1_0 _lh_updateInports_arg2_0 =
-  (`PS((pid_lh _lh_updateInports_arg1_0), (compType_lh _lh_updateInports_arg1_0), (pathDepth_lh _lh_updateInports_arg1_0), _lh_updateInports_arg2_0, (outports_lh _lh_updateInports_arg1_0)));;
-let rec store_inputs_lh _lh_store_inputs_arg1_0 _lh_store_inputs_arg2_0 =
-  (match _lh_store_inputs_arg2_0 with
-    | `PS(_lh_store_inputs_PS_0_0, _lh_store_inputs_PS_1_0, _lh_store_inputs_PS_2_0, _lh_store_inputs_PS_3_0, _lh_store_inputs_PS_4_0) -> 
-      (match _lh_store_inputs_PS_1_0 with
-        | `Inp -> 
-          (head_lh (let rec _lh_listcomp_fun_6 = (fun _lh_listcomp_fun_para_6 -> 
-            (((((_lh_listcomp_fun_para_6 _lh_listcomp_fun_6) _lh_store_inputs_PS_0_0) _lh_store_inputs_PS_2_0) _lh_store_inputs_PS_3_0) _lh_store_inputs_PS_4_0)) in
-            (_lh_listcomp_fun_6 _lh_store_inputs_arg1_0)))
-        | _ -> 
-          _lh_store_inputs_arg2_0)
-    | _ -> 
-      _lh_store_inputs_arg2_0);;
 let rec apply_component_lh _lh_apply_component_arg1_0 _lh_apply_component_arg2_0 =
   (match _lh_apply_component_arg1_0 with
     | `Inp -> 
@@ -455,250 +682,6 @@ let rec apply_component_lh _lh_apply_component_arg1_0 _lh_apply_component_arg2_0
       (`Nothing)
     | _ -> 
       (failwith "error"));;
-let rec enumFrom_lh a_3 =
-  (lazy (let rec tx_1 = (enumFrom_lh (a_3 + 1)) in
-    (let rec hx_1 = a_3 in
-      (fun f_6 hy_3 ty_3 -> 
-        (`LH_C(((f_6 hx_1) hy_3), (((zipWith_lz_nl_lh f_6) tx_1) ty_3)))))));;
-let rec concat_lh lss_0 =
-  (match lss_0 with
-    | `LH_C(h_4, t_4) -> 
-      ((mappend_lh h_4) (concat_lh t_4))
-    | `LH_N -> 
-      (`LH_N));;
-let rec circuit_simulate_lh _lh_circuit_simulate_arg1_0 _lh_circuit_simulate_arg2_0 =
-  ((map_lh collect_outputs_lh) ((simulate_lh _lh_circuit_simulate_arg1_0) _lh_circuit_simulate_arg2_0));;
-let rec update_requests_lh _lh_update_requests_arg1_0 _lh_update_requests_arg2_0 =
-  ((updateOutports_lh _lh_update_requests_arg2_0) (let rec _lh_listcomp_fun_4 = (fun _lh_listcomp_fun_para_4 -> 
-    (match _lh_listcomp_fun_para_4 with
-      | `LH_C(_lh_listcomp_fun_ls_h_4, _lh_listcomp_fun_ls_t_4) -> 
-        (match _lh_listcomp_fun_ls_h_4 with
-          | `LH_P6(_lh_update_requests_LH_P6_0_0, _lh_update_requests_LH_P6_1_0, _lh_update_requests_LH_P6_2_0, _lh_update_requests_LH_P6_3_0, _lh_update_requests_LH_P6_4_0, _lh_update_requests_LH_P6_5_0) -> 
-            (`LH_C((`LH_P6(_lh_update_requests_LH_P6_0_0, _lh_update_requests_LH_P6_1_0, _lh_update_requests_arg1_0, _lh_update_requests_LH_P6_3_0, _lh_update_requests_arg1_0, _lh_update_requests_LH_P6_5_0)), (_lh_listcomp_fun_4 _lh_listcomp_fun_ls_t_4)))
-          | _ -> 
-            (_lh_listcomp_fun_4 _lh_listcomp_fun_ls_t_4))
-      | `LH_N -> 
-        (`LH_N))) in
-    (_lh_listcomp_fun_4 (outports_lh _lh_update_requests_arg2_0))));;
-let rec combine_lh _lh_combine_arg1_0 _lh_combine_arg2_0 _lh_combine_arg3_0 _lh_combine_arg4_0 =
-  (`LH_C((`LH_C(_lh_combine_arg1_0, _lh_combine_arg2_0)), (transpose_lh (`LH_C(_lh_combine_arg3_0, _lh_combine_arg4_0)))))
-and
-transpose_lh _lh_transpose_arg1_0 =
-  (match _lh_transpose_arg1_0 with
-    | `LH_N -> 
-      (`LH_N)
-    | `LH_C(_lh_transpose_LH_C_0_0, _lh_transpose_LH_C_1_0) -> 
-      (match _lh_transpose_LH_C_0_0 with
-        | `LH_N -> 
-          (transpose_lh _lh_transpose_LH_C_1_0)
-        | `LH_C(_lh_transpose_LH_C_0_1, _lh_transpose_LH_C_1_1) -> 
-          (let rec _lh_matchIdent_1_1 = (unzip_lh (let rec _lh_listcomp_fun_5 = (fun _lh_listcomp_fun_para_5 -> 
-            (match _lh_listcomp_fun_para_5 with
-              | `LH_C(_lh_listcomp_fun_ls_h_5, _lh_listcomp_fun_ls_t_5) -> 
-                (match _lh_listcomp_fun_ls_h_5 with
-                  | `LH_C(_lh_transpose_LH_C_0_2, _lh_transpose_LH_C_1_2) -> 
-                    (`LH_C((`LH_P2(_lh_transpose_LH_C_0_2, _lh_transpose_LH_C_1_2)), (_lh_listcomp_fun_5 _lh_listcomp_fun_ls_t_5)))
-                  | _ -> 
-                    (_lh_listcomp_fun_5 _lh_listcomp_fun_ls_t_5))
-              | `LH_N -> 
-                (`LH_N))) in
-            (_lh_listcomp_fun_5 _lh_transpose_LH_C_1_0))) in
-            (match _lh_matchIdent_1_1 with
-              | `LH_P2(_lh_transpose_LH_P2_0_0, _lh_transpose_LH_P2_1_0) -> 
-                ((((combine_lh _lh_transpose_LH_C_0_1) _lh_transpose_LH_P2_0_0) _lh_transpose_LH_C_1_1) _lh_transpose_LH_P2_1_0)
-              | _ -> 
-                (failwith "error")))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec put_lh _lh_put_arg1_0 =
-  (match _lh_put_arg1_0 with
-    | `LH_C(_lh_put_LH_C_0_0, _lh_put_LH_C_1_0) -> 
-      (match _lh_put_LH_C_1_0 with
-        | `LH_N -> 
-          (let rec _lh_upsweep_Cell_0_0 = _lh_put_LH_C_0_0 in
-            (fun _lh_upsweep_arg1_0 -> 
-              (`LH_P2(_lh_upsweep_Cell_0_0, (fun _lh_downsweep_arg2_0 _lh_downsweep_arg1_1 -> 
-                (`Cell(_lh_downsweep_arg2_0)))))))
-        | _ -> 
-          (let rec _lh_matchIdent_2 = ((splitAt_lh ((length_lh _lh_put_arg1_0) / 2)) _lh_put_arg1_0) in
-            (match _lh_matchIdent_2 with
-              | `LH_P2(_lh_put_LH_P2_0_0, _lh_put_LH_P2_1_0) -> 
-                (let rec _lh_upsweep_Node_2_0 = (put_lh _lh_put_LH_P2_1_0) in
-                  (let rec _lh_upsweep_Node_1_0 = (put_lh _lh_put_LH_P2_0_0) in
-                    (fun _lh_upsweep_arg1_1 -> 
-                      (let rec _lh_matchIdent_3 = ((upsweep_lh _lh_upsweep_arg1_1) _lh_upsweep_Node_1_0) in
-                        (match _lh_matchIdent_3 with
-                          | `LH_P2(_lh_upsweep_LH_P2_0_0, _lh_upsweep_LH_P2_1_0) -> 
-                            (let rec _lh_matchIdent_4 = ((upsweep_lh _lh_upsweep_arg1_1) _lh_upsweep_Node_2_0) in
-                              (match _lh_matchIdent_4 with
-                                | `LH_P2(_lh_upsweep_LH_P2_0_1, _lh_upsweep_LH_P2_1_1) -> 
-                                  (`LH_P2(((_lh_upsweep_arg1_1 _lh_upsweep_LH_P2_0_0) _lh_upsweep_LH_P2_0_1), (let rec _lh_downsweep_Node_2_1 = _lh_upsweep_LH_P2_1_1 in
-                                    (let rec _lh_downsweep_Node_1_1 = _lh_upsweep_LH_P2_1_0 in
-                                      (let rec _lh_downsweep_Node_0_0 = (let rec _lh_downsweep_LH_P2_1_2 = _lh_upsweep_LH_P2_0_1 in
-                                        (let rec _lh_downsweep_LH_P2_0_2 = _lh_upsweep_LH_P2_0_0 in
-                                          (fun _lh_downsweep_Node_1_2 _lh_downsweep_Node_2_2 _lh_downsweep_arg1_2 _lh_downsweep_arg2_1 -> 
-                                            (let rec _lh_matchIdent_5 = (((_lh_downsweep_arg1_2 _lh_downsweep_LH_P2_0_2) _lh_downsweep_LH_P2_1_2) _lh_downsweep_arg2_1) in
-                                              (((_lh_matchIdent_5 _lh_downsweep_Node_1_2) _lh_downsweep_Node_2_2) _lh_downsweep_arg1_2))))) in
-                                        (fun _lh_downsweep_arg2_2 _lh_downsweep_arg1_3 -> 
-                                          ((((_lh_downsweep_Node_0_0 _lh_downsweep_Node_1_1) _lh_downsweep_Node_2_1) _lh_downsweep_arg1_3) _lh_downsweep_arg2_2)))))))
-                                | _ -> 
-                                  (failwith "error")))
-                          | _ -> 
-                            (failwith "error"))))))
-              | _ -> 
-                (failwith "error"))))
-    | _ -> 
-      (let rec _lh_matchIdent_6 = ((splitAt_lh ((length_lh _lh_put_arg1_0) / 2)) _lh_put_arg1_0) in
-        (match _lh_matchIdent_6 with
-          | `LH_P2(_lh_put_LH_P2_0_1, _lh_put_LH_P2_1_1) -> 
-            (let rec _lh_upsweep_Node_2_1 = (put_lh _lh_put_LH_P2_1_1) in
-              (let rec _lh_upsweep_Node_1_1 = (put_lh _lh_put_LH_P2_0_1) in
-                (fun _lh_upsweep_arg1_2 -> 
-                  (let rec _lh_matchIdent_7 = ((upsweep_lh _lh_upsweep_arg1_2) _lh_upsweep_Node_1_1) in
-                    (match _lh_matchIdent_7 with
-                      | `LH_P2(_lh_upsweep_LH_P2_0_2, _lh_upsweep_LH_P2_1_2) -> 
-                        (let rec _lh_matchIdent_8 = ((upsweep_lh _lh_upsweep_arg1_2) _lh_upsweep_Node_2_1) in
-                          (match _lh_matchIdent_8 with
-                            | `LH_P2(_lh_upsweep_LH_P2_0_3, _lh_upsweep_LH_P2_1_3) -> 
-                              (`LH_P2(((_lh_upsweep_arg1_2 _lh_upsweep_LH_P2_0_2) _lh_upsweep_LH_P2_0_3), (let rec _lh_downsweep_Node_2_3 = _lh_upsweep_LH_P2_1_3 in
-                                (let rec _lh_downsweep_Node_1_3 = _lh_upsweep_LH_P2_1_2 in
-                                  (let rec _lh_downsweep_Node_0_1 = (let rec _lh_downsweep_LH_P2_1_3 = _lh_upsweep_LH_P2_0_3 in
-                                    (let rec _lh_downsweep_LH_P2_0_3 = _lh_upsweep_LH_P2_0_2 in
-                                      (fun _lh_downsweep_Node_1_4 _lh_downsweep_Node_2_4 _lh_downsweep_arg1_4 _lh_downsweep_arg2_3 -> 
-                                        (let rec _lh_matchIdent_9 = (((_lh_downsweep_arg1_4 _lh_downsweep_LH_P2_0_3) _lh_downsweep_LH_P2_1_3) _lh_downsweep_arg2_3) in
-                                          (((_lh_matchIdent_9 _lh_downsweep_Node_1_4) _lh_downsweep_Node_2_4) _lh_downsweep_arg1_4))))) in
-                                    (fun _lh_downsweep_arg2_4 _lh_downsweep_arg1_5 -> 
-                                      ((((_lh_downsweep_Node_0_1 _lh_downsweep_Node_1_3) _lh_downsweep_Node_2_3) _lh_downsweep_arg1_5) _lh_downsweep_arg2_4)))))))
-                            | _ -> 
-                              (failwith "error")))
-                      | _ -> 
-                        (failwith "error"))))))
-          | _ -> 
-            (failwith "error"))));;
-let rec sweep_ud_lh _lh_sweep_ud_arg1_0 _lh_sweep_ud_arg2_0 _lh_sweep_ud_arg3_0 _lh_sweep_ud_arg4_0 =
-  (let rec _lh_matchIdent_1_0 = ((upsweep_lh _lh_sweep_ud_arg1_0) _lh_sweep_ud_arg4_0) in
-    (match _lh_matchIdent_1_0 with
-      | `LH_P2(_lh_sweep_ud_LH_P2_0_0, _lh_sweep_ud_LH_P2_1_0) -> 
-        (let rec _lh_scanlr_LH_P2_1_0 = (((downsweep_lh _lh_sweep_ud_arg2_0) _lh_sweep_ud_arg3_0) _lh_sweep_ud_LH_P2_1_0) in
-          (let rec _lh_scanlr_LH_P2_0_0 = _lh_sweep_ud_LH_P2_0_0 in
-            (fun _lh_scanlr_arg1_1 _lh_scanlr_arg2_1 _lh_scanlr_arg3_1 _lh_scanlr_arg4_1 -> 
-              (match _lh_scanlr_LH_P2_0_0 with
-                | `LH_P2(_lh_scanlr_LH_P2_0_1, _lh_scanlr_LH_P2_1_1) -> 
-                  (let rec ans_0 = (`LH_P2(((_lh_scanlr_arg2_1 _lh_scanlr_LH_P2_1_1) _lh_scanlr_arg4_1), ((_lh_scanlr_arg1_1 _lh_scanlr_arg3_1) _lh_scanlr_LH_P2_0_1))) in
-                    (let rec _lh_snd_LH_P2_1_0 = (get_lh _lh_scanlr_LH_P2_1_0) in
-                      _lh_snd_LH_P2_1_0))
-                | _ -> 
-                  (failwith "error")))))
-      | _ -> 
-        (failwith "error")));;
-let rec update_i_lh _lh_update_i_arg1_0 _lh_update_i_arg2_0 =
-  (match _lh_update_i_arg1_0 with
-    | `LH_P2(_lh_update_i_LH_P2_0_0, _lh_update_i_LH_P2_1_0) -> 
-      ((up_i_lh _lh_update_i_LH_P2_0_0) ((up_i_lh _lh_update_i_LH_P2_1_0) _lh_update_i_arg2_0))
-    | _ -> 
-      (failwith "error"));;
-let rec update_outports_lh _lh_update_outports_arg1_0 _lh_update_outports_arg2_0 =
-  ((updateOutports_lh _lh_update_outports_arg1_0) (let rec _lh_listcomp_fun_1_1 = (fun _lh_listcomp_fun_para_7 -> 
-    (match _lh_listcomp_fun_para_7 with
-      | `LH_C(_lh_listcomp_fun_ls_h_7, _lh_listcomp_fun_ls_t_8) -> 
-        (match _lh_listcomp_fun_ls_h_7 with
-          | `LH_P6(_lh_update_outports_LH_P6_0_0, _lh_update_outports_LH_P6_1_0, _lh_update_outports_LH_P6_2_0, _lh_update_outports_LH_P6_3_0, _lh_update_outports_LH_P6_4_0, _lh_update_outports_LH_P6_5_0) -> 
-            (`LH_C((`LH_P6(_lh_update_outports_LH_P6_0_0, _lh_update_outports_arg2_0, _lh_update_outports_LH_P6_2_0, _lh_update_outports_LH_P6_3_0, _lh_update_outports_LH_P6_4_0, _lh_update_outports_LH_P6_5_0)), (_lh_listcomp_fun_1_1 _lh_listcomp_fun_ls_t_8)))
-          | _ -> 
-            (_lh_listcomp_fun_1_1 _lh_listcomp_fun_ls_t_8))
-      | `LH_N -> 
-        (`LH_N))) in
-    (_lh_listcomp_fun_1_1 (outports_lh _lh_update_outports_arg1_0))));;
-let rec restore_requests_lh _lh_restore_requests_arg1_0 _lh_restore_requests_arg2_0 =
-  let rec restore_0 = (fun _lh_restore_arg1_0 _lh_restore_arg2_0 -> 
-    ((updateOutports_lh _lh_restore_arg2_0) (((zipWith_lh restore_outport_0) (outports_lh _lh_restore_arg1_0)) (outports_lh _lh_restore_arg2_0))))
-  and restore_outport_0 = (fun _lh_restore_outport_arg1_0 _lh_restore_outport_arg2_0 -> 
-    (match _lh_restore_outport_arg1_0 with
-      | `LH_P6(_lh_restore_outport_LH_P6_0_0, _lh_restore_outport_LH_P6_1_0, _lh_restore_outport_LH_P6_2_0, _lh_restore_outport_LH_P6_3_0, _lh_restore_outport_LH_P6_4_0, _lh_restore_outport_LH_P6_5_0) -> 
-        (match _lh_restore_outport_arg2_0 with
-          | `LH_P6(_lh_restore_outport_LH_P6_0_1, _lh_restore_outport_LH_P6_1_1, _lh_restore_outport_LH_P6_2_1, _lh_restore_outport_LH_P6_3_1, _lh_restore_outport_LH_P6_4_1, _lh_restore_outport_LH_P6_5_1) -> 
-            (`LH_P6(_lh_restore_outport_LH_P6_0_0, _lh_restore_outport_LH_P6_1_1, _lh_restore_outport_LH_P6_2_0, _lh_restore_outport_LH_P6_3_0, _lh_restore_outport_LH_P6_4_0, _lh_restore_outport_LH_P6_5_0))
-          | _ -> 
-            (failwith "error"))
-      | _ -> 
-        (failwith "error")))
-  in (((zipWith_lh restore_0) _lh_restore_requests_arg1_0) _lh_restore_requests_arg2_0);;
-let rec check_depth_lh _lh_check_depth_arg1_0 _lh_check_depth_arg2_0 =
-  (if ((pathDepth_lh _lh_check_depth_arg2_0) = _lh_check_depth_arg1_0) then
-    _lh_check_depth_arg2_0
-  else
-    ((update_requests_lh false) _lh_check_depth_arg2_0));;
-let rec scanlr_lh _lh_scanlr_arg1_0 _lh_scanlr_arg2_0 _lh_scanlr_arg3_0 _lh_scanlr_arg4_0 _lh_scanlr_arg5_0 =
-  let rec down_0 = (fun _lh_down_arg1_0 _lh_down_arg2_0 _lh_down_arg3_0 _lh_down_arg4_0 _lh_down_arg5_0 -> 
-    (match _lh_down_arg3_0 with
-      | `LH_P2(_lh_down_LH_P2_0_0, _lh_down_LH_P2_1_0) -> 
-        (match _lh_down_arg4_0 with
-          | `LH_P2(_lh_down_LH_P2_0_1, _lh_down_LH_P2_1_1) -> 
-            (match _lh_down_arg5_0 with
-              | `LH_P2(_lh_down_LH_P2_0_2, _lh_down_LH_P2_1_2) -> 
-                (let rec _lh_downsweep_LH_P2_1_0 = (`LH_P2(((_lh_down_arg1_0 _lh_down_LH_P2_0_2) _lh_down_LH_P2_0_0), _lh_down_LH_P2_1_2)) in
-                  (let rec _lh_downsweep_LH_P2_0_0 = (`LH_P2(_lh_down_LH_P2_0_2, ((_lh_down_arg2_0 _lh_down_LH_P2_1_1) _lh_down_LH_P2_1_2))) in
-                    (fun _lh_downsweep_Node_1_0 _lh_downsweep_Node_2_0 _lh_downsweep_arg1_0 -> 
-                      (let rec _lh_matchIdent_0 = (let rec _lh_downsweep_LH_P2_1_1 = (((downsweep_lh _lh_downsweep_arg1_0) _lh_downsweep_LH_P2_1_0) _lh_downsweep_Node_2_0) in
-                        (let rec _lh_downsweep_LH_P2_0_1 = (((downsweep_lh _lh_downsweep_arg1_0) _lh_downsweep_LH_P2_0_0) _lh_downsweep_Node_1_0) in
-                          (`Node((`Unit), _lh_downsweep_LH_P2_0_1, _lh_downsweep_LH_P2_1_1)))) in
-                        _lh_matchIdent_0))))
-              | _ -> 
-                (failwith "error"))
-          | _ -> 
-            (failwith "error"))
-      | _ -> 
-        (failwith "error")))
-  and up_0 = (fun _lh_up_arg1_0 _lh_up_arg2_0 _lh_up_arg3_0 _lh_up_arg4_0 -> 
-    (match _lh_up_arg3_0 with
-      | `LH_P2(_lh_up_LH_P2_0_0, _lh_up_LH_P2_1_0) -> 
-        (match _lh_up_arg4_0 with
-          | `LH_P2(_lh_up_LH_P2_0_1, _lh_up_LH_P2_1_1) -> 
-            (`LH_P2(((_lh_up_arg1_0 _lh_up_LH_P2_0_0) _lh_up_LH_P2_0_1), ((_lh_up_arg2_0 _lh_up_LH_P2_1_0) _lh_up_LH_P2_1_1)))
-          | _ -> 
-            (failwith "error"))
-      | _ -> 
-        (failwith "error")))
-  in (let rec xs'_0 = ((map_lh (fun x_0 -> 
-    (`LH_P2(x_0, x_0)))) _lh_scanlr_arg5_0) in
-    (let rec _lh_matchIdent_1 = ((((sweep_ud_lh ((up_0 _lh_scanlr_arg1_0) _lh_scanlr_arg2_0)) ((down_0 _lh_scanlr_arg1_0) _lh_scanlr_arg2_0)) (`LH_P2(_lh_scanlr_arg3_0, _lh_scanlr_arg4_0))) (put_lh xs'_0)) in
-      ((((_lh_matchIdent_1 _lh_scanlr_arg1_0) _lh_scanlr_arg2_0) _lh_scanlr_arg3_0) _lh_scanlr_arg4_0)));;
-let rec update_io_lh _lh_update_io_arg1_0 _lh_update_io_arg2_0 _lh_update_io_arg3_0 =
-  (let rec update_is_0 = (fun state_0 -> 
-    ((updateInports_lh state_0) (((foldr_lh update_i_lh) (inports_lh state_0)) _lh_update_io_arg2_0))) in
-    (let rec update_os_0 = (fun state_1 -> 
-      (if ((pathDepth_lh state_1) = _lh_update_io_arg1_0) then
-        ((updateOutports_lh state_1) (((zipWith_lh update_o_lh) _lh_update_io_arg2_0) (outports_lh state_1)))
-      else
-        state_1)) in
-      (update_os_0 (update_is_0 _lh_update_io_arg3_0))));;
-let rec zip_lh xs_7 ys_2 =
-  (match xs_7 with
-    | `LH_C(hx_2, tx_2) -> 
-      (match ys_2 with
-        | `LH_C(hy_4, ty_4) -> 
-          (let rec _lh_listcomp_fun_ls_t_6 = ((zip_lh tx_2) ty_4) in
-            (let rec _lh_listcomp_fun_ls_h_6 = (let rec _lh_store_inputs_LH_P2_1_0 = hy_4 in
-              (let rec _lh_store_inputs_LH_P2_0_0 = hx_2 in
-                (fun _lh_listcomp_fun_ls_t_7 _lh_listcomp_fun_7 _lh_store_inputs_PS_0_1 _lh_store_inputs_PS_2_1 _lh_store_inputs_PS_3_1 _lh_store_inputs_PS_4_1 -> 
-                  (match _lh_store_inputs_LH_P2_0_0 with
-                    | `LH_P2(_lh_store_inputs_LH_P2_0_1, _lh_store_inputs_LH_P2_1_1) -> 
-                      (if (_lh_store_inputs_PS_0_1 = _lh_store_inputs_LH_P2_1_1) then
-                        (`LH_C(((update_outports_lh (`PS(_lh_store_inputs_PS_0_1, (`Inp), _lh_store_inputs_PS_2_1, _lh_store_inputs_PS_3_1, _lh_store_inputs_PS_4_1))) _lh_store_inputs_LH_P2_1_0), (_lh_listcomp_fun_7 _lh_listcomp_fun_ls_t_7)))
-                      else
-                        (_lh_listcomp_fun_7 _lh_listcomp_fun_ls_t_7))
-                    | _ -> 
-                      (_lh_listcomp_fun_7 _lh_listcomp_fun_ls_t_7))))) in
-              (fun _lh_listcomp_fun_8 _lh_store_inputs_PS_0_2 _lh_store_inputs_PS_2_2 _lh_store_inputs_PS_3_2 _lh_store_inputs_PS_4_2 -> 
-                ((((((_lh_listcomp_fun_ls_h_6 _lh_listcomp_fun_ls_t_6) _lh_listcomp_fun_8) _lh_store_inputs_PS_0_2) _lh_store_inputs_PS_2_2) _lh_store_inputs_PS_3_2) _lh_store_inputs_PS_4_2))))
-        | `LH_N -> 
-          (fun _lh_listcomp_fun_9 _lh_store_inputs_PS_0_3 _lh_store_inputs_PS_2_3 _lh_store_inputs_PS_3_3 _lh_store_inputs_PS_4_3 -> 
-            (`LH_N)))
-    | `LH_N -> 
-      (fun _lh_listcomp_fun_1_0 _lh_store_inputs_PS_0_4 _lh_store_inputs_PS_2_4 _lh_store_inputs_PS_3_4 _lh_store_inputs_PS_4_4 -> 
-        (`LH_N)));;
 let rec simulate_component_lh _lh_simulate_component_arg1_0 _lh_simulate_component_arg2_0 =
   (let rec out_signals_0 = (let rec _lh_listcomp_fun_1_3 = (fun _lh_listcomp_fun_para_9 -> 
     (match _lh_listcomp_fun_para_9 with
@@ -721,36 +704,22 @@ let rec simulate_component_lh _lh_simulate_component_arg1_0 _lh_simulate_compone
               (failwith "error")))
       else
         _lh_simulate_component_arg2_0)));;
-let rec init_dffs_lh _lh_init_dffs_arg1_0 =
-  (if ((compType_lh _lh_init_dffs_arg1_0) = (`Dff)) then
-    ((update_outports_lh _lh_init_dffs_arg1_0) (`F))
-  else
-    _lh_init_dffs_arg1_0);;
-let rec acknowledge_lh _lh_acknowledge_arg1_0 _lh_acknowledge_arg2_0 =
-  let rec check_lr_requests_0 = (fun _lh_check_lr_requests_arg1_0 -> 
-    (match _lh_check_lr_requests_arg1_0 with
-      | `LH_P6(_lh_check_lr_requests_LH_P6_0_0, _lh_check_lr_requests_LH_P6_1_0, _lh_check_lr_requests_LH_P6_2_0, _lh_check_lr_requests_LH_P6_3_0, _lh_check_lr_requests_LH_P6_4_0, _lh_check_lr_requests_LH_P6_5_0) -> 
-        (_lh_check_lr_requests_LH_P6_2_0 || _lh_check_lr_requests_LH_P6_4_0)
-      | _ -> 
-        (failwith "error")))
-  and check_requests_0 = (fun _lh_check_requests_arg1_0 -> 
-    (or_lh ((map_lh check_lr_requests_0) _lh_check_requests_arg1_0)))
-  in (let rec states1_2 = ((map_lh (check_depth_lh _lh_acknowledge_arg1_0)) _lh_acknowledge_arg2_0) in
-    (not (or_lh ((map_lh (fun _lh_funcomp_x_2 -> 
-      (check_requests_0 (outports_lh _lh_funcomp_x_2)))) states1_2))));;
-let rec send_lh _lh_send_arg1_0 =
-  (((((scanlr_lh send_right_lh) send_left_lh) emptyPacket_lh) emptyPacket_lh) _lh_send_arg1_0);;
 let rec simulate_components_lh _lh_simulate_components_arg1_0 _lh_simulate_components_arg2_0 =
   ((map_lh (simulate_component_lh _lh_simulate_components_arg1_0)) _lh_simulate_components_arg2_0);;
-let rec do_send_lh _lh_do_send_arg1_0 _lh_do_send_arg2_0 =
-  (let rec states1_0 = ((map_lh (check_depth_lh _lh_do_send_arg1_0)) _lh_do_send_arg2_0) in
-    (let rec send_results_0 = ((map_lh (fun _lh_funcomp_x_0 -> 
-      (snd_lh (send_lh _lh_funcomp_x_0)))) ((fun _lh_funcomp_x_1 -> 
-      (transpose_lh (pad_packets_lh _lh_funcomp_x_1))) ((map_lh make_packet_lh) states1_0))) in
-      (let rec pss'_0 = (transpose_lh send_results_0) in
-        (((zipWith_lh (update_io_lh _lh_do_send_arg1_0)) pss'_0) _lh_do_send_arg2_0))));;
-let rec do_sends_lh _lh_do_sends_arg1_0 _lh_do_sends_arg2_0 =
-  (((until_lh (acknowledge_lh _lh_do_sends_arg1_0)) (do_send_lh _lh_do_sends_arg1_0)) _lh_do_sends_arg2_0);;
+let rec restore_requests_lh _lh_restore_requests_arg1_0 _lh_restore_requests_arg2_0 =
+  let rec restore_0 = (fun _lh_restore_arg1_0 _lh_restore_arg2_0 -> 
+    ((updateOutports_lh _lh_restore_arg2_0) (((zipWith_lh restore_outport_0) (outports_lh _lh_restore_arg1_0)) (outports_lh _lh_restore_arg2_0))))
+  and restore_outport_0 = (fun _lh_restore_outport_arg1_0 _lh_restore_outport_arg2_0 -> 
+    (match _lh_restore_outport_arg1_0 with
+      | `LH_P6(_lh_restore_outport_LH_P6_0_0, _lh_restore_outport_LH_P6_1_0, _lh_restore_outport_LH_P6_2_0, _lh_restore_outport_LH_P6_3_0, _lh_restore_outport_LH_P6_4_0, _lh_restore_outport_LH_P6_5_0) -> 
+        (match _lh_restore_outport_arg2_0 with
+          | `LH_P6(_lh_restore_outport_LH_P6_0_1, _lh_restore_outport_LH_P6_1_1, _lh_restore_outport_LH_P6_2_1, _lh_restore_outport_LH_P6_3_1, _lh_restore_outport_LH_P6_4_1, _lh_restore_outport_LH_P6_5_1) -> 
+            (`LH_P6(_lh_restore_outport_LH_P6_0_0, _lh_restore_outport_LH_P6_1_1, _lh_restore_outport_LH_P6_2_0, _lh_restore_outport_LH_P6_3_0, _lh_restore_outport_LH_P6_4_0, _lh_restore_outport_LH_P6_5_0))
+          | _ -> 
+            (failwith "error"))
+      | _ -> 
+        (failwith "error")))
+  in (((zipWith_lh restore_0) _lh_restore_requests_arg1_0) _lh_restore_requests_arg2_0);;
 let rec do_cycle_lh _lh_do_cycle_arg1_0 _lh_do_cycle_arg2_0 _lh_do_cycle_arg3_0 =
   (match _lh_do_cycle_arg2_0 with
     | `LH_P4(_lh_do_cycle_LH_P4_0_0, _lh_do_cycle_LH_P4_1_0, _lh_do_cycle_LH_P4_2_0, _lh_do_cycle_LH_P4_3_0) -> 
@@ -763,6 +732,37 @@ let rec do_cycle_lh _lh_do_cycle_arg1_0 _lh_do_cycle_arg2_0 _lh_do_cycle_arg3_0 
                 (`LH_P4(_lh_do_cycle_LH_P4_0_0, _lh_do_cycle_LH_P4_1_0, _lh_do_cycle_LH_P4_2_0, states4_0)))))))
     | _ -> 
       (failwith "error"));;
+let rec emptyState_lh =
+  (`PS((0 - 1), (`None), (0 - 1), (`LH_N), (`LH_N)));;
+let rec zipWith_lz_nl_lh f_5 xs_5 ys_1 =
+  ((ys_1 f_5) xs_5);;
+let rec critical_path_depth_lh _lh_critical_path_depth_arg1_0 =
+  (_lh_critical_path_depth_arg1_0 99);;
+let rec init_dffs_lh _lh_init_dffs_arg1_0 =
+  (if ((compType_lh _lh_init_dffs_arg1_0) = (`Dff)) then
+    ((update_outports_lh _lh_init_dffs_arg1_0) (`F))
+  else
+    _lh_init_dffs_arg1_0);;
+let rec enumFrom_lh a_3 =
+  (lazy (let rec tx_1 = (enumFrom_lh (a_3 + 1)) in
+    (let rec hx_1 = a_3 in
+      (fun f_6 hy_3 ty_3 -> 
+        (`LH_C(((f_6 hx_1) hy_3), (((zipWith_lz_nl_lh f_6) tx_1) ty_3)))))));;
+let rec concat_lh lss_0 =
+  (match lss_0 with
+    | `LH_C(h_4, t_4) -> 
+      ((mappend_lh h_4) (concat_lh t_4))
+    | `LH_N -> 
+      (`LH_N));;
+let rec scanl_lh _lh_scanl_arg1_0 _lh_scanl_arg2_0 _lh_scanl_arg3_0 =
+  (`LH_C(_lh_scanl_arg2_0, (let rec _lh_matchIdent_1_2 = _lh_scanl_arg3_0 in
+    (match _lh_matchIdent_1_2 with
+      | `LH_N -> 
+        (`LH_N)
+      | `LH_C(_lh_scanl_LH_C_0_0, _lh_scanl_LH_C_1_0) -> 
+        (((scanl_lh _lh_scanl_arg1_0) ((_lh_scanl_arg1_0 _lh_scanl_arg2_0) _lh_scanl_LH_C_0_0)) _lh_scanl_LH_C_1_0)
+      | _ -> 
+        (failwith "error")))));;
 let rec regs_lh _lh_regs_arg1_0 =
   let rec ilabel_0 = (fun _lh_ilabel_arg1_0 _lh_ilabel_arg2_0 -> 
     (`LH_P2(((mappend_lh (`LH_C('x', (`LH_N)))) (string_of_int _lh_ilabel_arg1_0)), _lh_ilabel_arg2_0)))

@@ -10,6 +10,18 @@ let rec foldl_lh__d0 f_0 i_0 ls_1 =
       (((foldl_lh__d0 f_0) ((f_0 i_0) h_1)) t_1)
     | `LH_N -> 
       i_0);;
+let rec foldl1_lh__d0 _lh_foldl1_arg1_0 _lh_foldl1_arg2_0 =
+  (match _lh_foldl1_arg2_0 with
+    | `LH_C(_lh_foldl1_LH_C_0_0, _lh_foldl1_LH_C_1_0) -> 
+      (((foldl_lh__d0 _lh_foldl1_arg1_0) _lh_foldl1_LH_C_0_0) _lh_foldl1_LH_C_1_0)
+    | _ -> 
+      (failwith "error"));;
+let rec maximum_lh__d0 _lh_maximum_arg1_0 =
+  ((foldl1_lh__d0 (fun x_0 y_0 -> 
+    (if (x_0 > y_0) then
+      x_0
+    else
+      y_0))) _lh_maximum_arg1_0);;
 let rec dropWhile_lh__d0 _lh_dropWhile_arg1_0 _lh_dropWhile_arg2_0 =
   (match _lh_dropWhile_arg2_0 with
     | `LH_N -> 
@@ -36,6 +48,20 @@ let rec filter_lz_lh__d0 f_1 ls_4 =
         (Lazy.force ((filter_lz_lh__d0 f_1) t_3)))
     | `LH_N -> 
       (`LH_N)));;
+let rec nub_lz_lh__d0 _lh_nub_lz_arg1_0 =
+  (lazy (let rec _lh_matchIdent_1 = (Lazy.force _lh_nub_lz_arg1_0) in
+    (match _lh_matchIdent_1 with
+      | `LH_N -> 
+        (fun _lh_take_lz_arg1_1 -> 
+          (`LH_N))
+      | `LH_C(_lh_nub_lz_LH_C_0_0, _lh_nub_lz_LH_C_1_0) -> 
+        (let rec _lh_take_lz_LH_C_1_0 = (nub_lz_lh__d0 ((filter_lz_lh__d0 (fun y_1 -> 
+          (not (_lh_nub_lz_LH_C_0_0 = y_1)))) _lh_nub_lz_LH_C_1_0)) in
+          (let rec _lh_take_lz_LH_C_0_0 = _lh_nub_lz_LH_C_0_0 in
+            (fun _lh_take_lz_arg1_2 -> 
+              (`LH_C(_lh_take_lz_LH_C_0_0, ((take_lz_lh__d0 (_lh_take_lz_arg1_2 - 1)) _lh_take_lz_LH_C_1_0))))))
+      | _ -> 
+        (failwith "error"))));;
 let rec take_lh__d1 n_0 ls_0 =
   (if (n_0 > 0) then
     (match ls_0 with
@@ -72,44 +98,16 @@ let rec power_lh__d0 _lh_power_arg1_0 _lh_power_arg2_0 =
     1
   else
     (_lh_power_arg1_0 * ((power_lh__d0 _lh_power_arg1_0) (_lh_power_arg2_0 - 1))));;
+let rec infRand_lh__d0 _lh_infRand_arg1_0 =
+  (let rec f_4 = (fun x_2 -> 
+    (lazy (`LH_C(((x_2 mod _lh_infRand_arg1_0) + 1), (f_4 (((97 * x_2) + 11) mod ((power_lh__d0 2) 7))))))) in
+    (f_4 37));;
 let rec length_lh__d1 ls_3 =
   (ls_3 99);;
 let rec filter_lh__d1 f_2 ls_5 =
   (ls_5 f_2);;
 let rec filter_lh__d2 f_7 ls_8 =
   (ls_8 f_7);;
-let rec length_lh__d0 ls_6 =
-  (ls_6 99);;
-let rec foldl1_lh__d0 _lh_foldl1_arg1_0 _lh_foldl1_arg2_0 =
-  (match _lh_foldl1_arg2_0 with
-    | `LH_C(_lh_foldl1_LH_C_0_0, _lh_foldl1_LH_C_1_0) -> 
-      (((foldl_lh__d0 _lh_foldl1_arg1_0) _lh_foldl1_LH_C_0_0) _lh_foldl1_LH_C_1_0)
-    | _ -> 
-      (failwith "error"));;
-let rec nub_lz_lh__d0 _lh_nub_lz_arg1_0 =
-  (lazy (let rec _lh_matchIdent_1 = (Lazy.force _lh_nub_lz_arg1_0) in
-    (match _lh_matchIdent_1 with
-      | `LH_N -> 
-        (fun _lh_take_lz_arg1_1 -> 
-          (`LH_N))
-      | `LH_C(_lh_nub_lz_LH_C_0_0, _lh_nub_lz_LH_C_1_0) -> 
-        (let rec _lh_take_lz_LH_C_1_0 = (nub_lz_lh__d0 ((filter_lz_lh__d0 (fun y_1 -> 
-          (not (_lh_nub_lz_LH_C_0_0 = y_1)))) _lh_nub_lz_LH_C_1_0)) in
-          (let rec _lh_take_lz_LH_C_0_0 = _lh_nub_lz_LH_C_0_0 in
-            (fun _lh_take_lz_arg1_2 -> 
-              (`LH_C(_lh_take_lz_LH_C_0_0, ((take_lz_lh__d0 (_lh_take_lz_arg1_2 - 1)) _lh_take_lz_LH_C_1_0))))))
-      | _ -> 
-        (failwith "error"))));;
-let rec infRand_lh__d0 _lh_infRand_arg1_0 =
-  (let rec f_4 = (fun x_2 -> 
-    (lazy (`LH_C(((x_2 mod _lh_infRand_arg1_0) + 1), (f_4 (((97 * x_2) + 11) mod ((power_lh__d0 2) 7))))))) in
-    (f_4 37));;
-let rec maximum_lh__d0 _lh_maximum_arg1_0 =
-  ((foldl1_lh__d0 (fun x_0 y_0 -> 
-    (if (x_0 > y_0) then
-      x_0
-    else
-      y_0))) _lh_maximum_arg1_0);;
 let rec enumFromTo_lh__d1 a_1 b_1 _lh_popOutId_0_1 _lh_popOutId_1_0 _lh_popOutId_2_0 _lh_popOutId_3_0 =
   (if (a_1 <= b_1) then
     (let rec _lh_listcomp_fun_ls_t_1 = ((enumFromTo_lh__d1 (a_1 + 1)) b_1) in
@@ -124,6 +122,8 @@ let rec enumFromTo_lh__d1 a_1 b_1 _lh_popOutId_0_1 _lh_popOutId_1_0 _lh_popOutId
   else
     (fun _lh_dummy_1 -> 
       0));;
+let rec length_lh__d0 ls_6 =
+  (ls_6 99);;
 let rec simulate_lh__d0 _lh_simulate_arg1_0 _lh_simulate_arg2_2 _lh_simulate_arg3_2 =
   ((float_of_int (length_lh__d0 ((filter_lh__d0 (fun x_3 -> 
     x_3)) (let rec _lh_listcomp_fun_5 = (fun _lh_listcomp_fun_para_1 -> 

@@ -22,49 +22,6 @@ let rec rands_lh _lh_rands_arg1_0 _lh_rands_arg2_0 =
                   (lazy (`LH_C((z_0 + 2147483562), ((rands_lh s1''_0) s2''_0))))
                 else
                   (lazy (`LH_C(z_0, ((rands_lh s1''_0) s2''_0))))))))))));;
-let rec doInput_lh _lh_doInput_arg1_2 _lh_doInput_arg2_0 =
-  (_lh_doInput_arg2_0 _lh_doInput_arg1_2);;
-let rec even_lh _lh_even_arg1_0 =
-  ((_lh_even_arg1_0 mod 2) = 0);;
-let rec divmod_lh _lh_divmod_arg1_0 _lh_divmod_arg2_0 =
-  (`LH_P2((_lh_divmod_arg1_0 / _lh_divmod_arg2_0), (_lh_divmod_arg1_0 mod _lh_divmod_arg2_0)));;
-let rec take_lz_lh n_0 ls_0 =
-  (if (n_0 > 0) then
-    (match (Lazy.force ls_0) with
-      | `LH_C(h_0, t_0) -> 
-        (`LH_C(h_0, ((take_lz_lh (n_0 - 1)) t_0)))
-      | `LH_N -> 
-        (`LH_N))
-  else
-    (`LH_N));;
-let rec iterate_lh f_5 x_3 =
-  (lazy (`LH_C(x_3, ((iterate_lh f_5) (f_5 x_3)))));;
-let rec foldl_lh f_7 i_0 ls_3 =
-  ((ls_3 f_7) i_0);;
-let rec drop_lz_lh _lh_drop_lz_arg1_0 _lh_drop_lz_arg2_0 =
-  (let rec _lh_matchIdent_6 = (Lazy.force _lh_drop_lz_arg2_0) in
-    (match _lh_matchIdent_6 with
-      | `LH_N -> 
-        (lazy (`LH_N))
-      | `LH_C(_lh_drop_lz_LH_C_0_0, _lh_drop_lz_LH_C_1_0) -> 
-        (if (_lh_drop_lz_arg1_0 > 0) then
-          ((drop_lz_lh (_lh_drop_lz_arg1_0 - 1)) _lh_drop_lz_LH_C_1_0)
-        else
-          _lh_drop_lz_LH_C_1_0)
-      | _ -> 
-        (failwith "error")));;
-let rec length_lh ls_2 =
-  (match ls_2 with
-    | `LH_C(h_1, t_1) -> 
-      (1 + (length_lh t_1))
-    | `LH_N -> 
-      0);;
-let rec int_val_of_string_lh _lh_int_val_of_string_arg1_0 =
-  (let rec f_6 = (fun _lh_f_arg1_1 _lh_f_arg2_3 -> 
-    ((_lh_f_arg1_1 _lh_f_arg2_3) f_6)) in
-    ((f_6 _lh_int_val_of_string_arg1_0) 0));;
-let rec int_val_of_char_lh _lh_int_val_of_char_arg1_0 =
-  ((int_of_char _lh_int_val_of_char_arg1_0) - 48);;
 let rec randomInts_lh _lh_randomInts_arg1_0 _lh_randomInts_arg2_0 =
   (if ((1 <= _lh_randomInts_arg1_0) && (_lh_randomInts_arg1_0 <= 2147483562)) then
     (if ((1 <= _lh_randomInts_arg2_0) && (_lh_randomInts_arg2_0 <= 2147483398)) then
@@ -73,6 +30,14 @@ let rec randomInts_lh _lh_randomInts_arg1_0 _lh_randomInts_arg2_0 =
       ((failwith "error") (`LH_C('r', (`LH_C('a', (`LH_C('n', (`LH_C('d', (`LH_C('o', (`LH_C('m', (`LH_C('I', (`LH_C('n', (`LH_C('t', (`LH_C('s', (`LH_C(':', (`LH_C(' ', (`LH_C('B', (`LH_C('a', (`LH_C('d', (`LH_C(' ', (`LH_C('s', (`LH_C('e', (`LH_C('c', (`LH_C('o', (`LH_C('n', (`LH_C('d', (`LH_C(' ', (`LH_C('s', (`LH_C('e', (`LH_C('e', (`LH_C('d', (`LH_C('.', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
   else
     ((failwith "error") (`LH_C('r', (`LH_C('a', (`LH_C('n', (`LH_C('d', (`LH_C('o', (`LH_C('m', (`LH_C('I', (`LH_C('n', (`LH_C('t', (`LH_C('s', (`LH_C(':', (`LH_C(' ', (`LH_C('B', (`LH_C('a', (`LH_C('d', (`LH_C(' ', (`LH_C('f', (`LH_C('i', (`LH_C('r', (`LH_C('s', (`LH_C('t', (`LH_C(' ', (`LH_C('s', (`LH_C('e', (`LH_C('e', (`LH_C('d', (`LH_C('.', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))));;
+let rec doInput_lh _lh_doInput_arg1_2 _lh_doInput_arg2_0 =
+  (_lh_doInput_arg2_0 _lh_doInput_arg1_2);;
+let rec process_lh _lh_process_arg1_0 =
+  ((doInput_lh ((randomInts_lh 111) 47)) _lh_process_arg1_0);;
+let rec even_lh _lh_even_arg1_0 =
+  ((_lh_even_arg1_0 mod 2) = 0);;
+let rec divmod_lh _lh_divmod_arg1_0 _lh_divmod_arg2_0 =
+  (`LH_P2((_lh_divmod_arg1_0 / _lh_divmod_arg2_0), (_lh_divmod_arg1_0 mod _lh_divmod_arg2_0)));;
 let rec findKQ_lh _lh_findKQ_arg1_0 =
   (let rec f_1 = (fun _lh_f_arg1_0 -> 
     (match _lh_f_arg1_0 with
@@ -89,6 +54,17 @@ let rec findKQ_lh _lh_findKQ_arg1_0 =
       | _ -> 
         (failwith "error"))) in
     (f_1 (`LH_P2(0, (_lh_findKQ_arg1_0 - 1)))));;
+let rec take_lz_lh n_0 ls_0 =
+  (if (n_0 > 0) then
+    (match (Lazy.force ls_0) with
+      | `LH_C(h_0, t_0) -> 
+        (`LH_C(h_0, ((take_lz_lh (n_0 - 1)) t_0)))
+      | `LH_N -> 
+        (`LH_N))
+  else
+    (`LH_N));;
+let rec iterate_lh f_5 x_3 =
+  (lazy (`LH_C(x_3, ((iterate_lh f_5) (f_5 x_3)))));;
 let rec powerMod_lh _lh_powerMod_arg1_0 _lh_powerMod_arg2_0 _lh_powerMod_arg3_0 =
   (match _lh_powerMod_arg2_0 with
     | 0 -> 
@@ -106,31 +82,6 @@ let rec powerMod_lh _lh_powerMod_arg1_0 _lh_powerMod_arg2_0 _lh_powerMod_arg3_0 
             else
               ((g_0 a_0) b_0)))) in
           (((f_0 a'_0) (_lh_powerMod_arg2_0 - 1)) a'_0))));;
-let rec makeNumber_lh _lh_makeNumber_arg1_0 =
-  ((foldl_lh (fun a_3 x_2 -> 
-    ((a_3 * _lh_makeNumber_arg1_0) + x_2))) 0);;
-let rec map_lh f_8 ls_4 _lh_popOutId_0_0 _lh_popOutId_1_0 =
-  (match ls_4 with
-    | `LH_C(h_2, t_2) -> 
-      (let rec t_3 = ((map_lh f_8) t_2) in
-        (let rec h_3 = (f_8 h_2) in
-          (((foldl_lh _lh_popOutId_0_0) ((_lh_popOutId_0_0 _lh_popOutId_1_0) h_3)) t_3)))
-    | `LH_N -> 
-      _lh_popOutId_1_0);;
-let rec chop_lh _lh_chop_arg1_0 =
-  (let rec chop'_0 = (fun a_2 n_2 -> 
-    (let rec _lh_matchIdent_8 = ((divmod_lh n_2) _lh_chop_arg1_0) in
-      (match _lh_matchIdent_8 with
-        | `LH_P2(_lh_chop_LH_P2_0_0, _lh_chop_LH_P2_1_0) -> 
-          (if (n_2 = 0) then
-            a_2
-          else
-            ((chop'_0 (`LH_C(_lh_chop_LH_P2_1_0, a_2))) _lh_chop_LH_P2_0_0))
-        | _ -> 
-          (failwith "error")))) in
-    (chop'_0 (`LH_N)));;
-let rec process_lh _lh_process_arg1_0 =
-  ((doInput_lh ((randomInts_lh 111) 47)) _lh_process_arg1_0);;
 let rec singleTestX_lh _lh_singleTestX_arg1_0 _lh_singleTestX_arg2_0 _lh_singleTestX_arg3_0 =
   (match _lh_singleTestX_arg2_0 with
     | `LH_P2(_lh_singleTestX_LH_P2_0_0, _lh_singleTestX_LH_P2_1_0) -> 
@@ -159,6 +110,19 @@ let rec singleTestX_lh _lh_singleTestX_arg1_0 _lh_singleTestX_arg2_0 _lh_singleT
                 (failwith "error")))))
     | _ -> 
       (failwith "error"));;
+let rec foldl_lh f_7 i_0 ls_3 =
+  ((ls_3 f_7) i_0);;
+let rec makeNumber_lh _lh_makeNumber_arg1_0 =
+  ((foldl_lh (fun a_3 x_2 -> 
+    ((a_3 * _lh_makeNumber_arg1_0) + x_2))) 0);;
+let rec map_lh f_8 ls_4 _lh_popOutId_0_0 _lh_popOutId_1_0 =
+  (match ls_4 with
+    | `LH_C(h_2, t_2) -> 
+      (let rec t_3 = ((map_lh f_8) t_2) in
+        (let rec h_3 = (f_8 h_2) in
+          (((foldl_lh _lh_popOutId_0_0) ((_lh_popOutId_0_0 _lh_popOutId_1_0) h_3)) t_3)))
+    | `LH_N -> 
+      _lh_popOutId_1_0);;
 let rec uniform_lh _lh_uniform_arg1_0 _lh_uniform_arg2_0 =
   (match _lh_uniform_arg1_0 with
     | `LH_C(_lh_uniform_LH_C_0_0, _lh_uniform_LH_C_1_0) -> 
@@ -226,6 +190,18 @@ let rec uniform_lh _lh_uniform_arg1_0 _lh_uniform_arg2_0 =
               (failwith "error")))
     | _ -> 
       (failwith "error"));;
+let rec drop_lz_lh _lh_drop_lz_arg1_0 _lh_drop_lz_arg2_0 =
+  (let rec _lh_matchIdent_6 = (Lazy.force _lh_drop_lz_arg2_0) in
+    (match _lh_matchIdent_6 with
+      | `LH_N -> 
+        (lazy (`LH_N))
+      | `LH_C(_lh_drop_lz_LH_C_0_0, _lh_drop_lz_LH_C_1_0) -> 
+        (if (_lh_drop_lz_arg1_0 > 0) then
+          ((drop_lz_lh (_lh_drop_lz_arg1_0 - 1)) _lh_drop_lz_LH_C_1_0)
+        else
+          _lh_drop_lz_LH_C_1_0)
+      | _ -> 
+        (failwith "error")));;
 let rec splitAt_lz_lh _lh_splitAt_lz_arg1_0 _lh_splitAt_lz_arg2_0 ns_1 _lh_singleTest_arg1_0 _lh_singleTest_arg2_0 k_1 mTest_1 =
   (let rec _lh_random_LH_P2_1_0 = ((drop_lz_lh _lh_splitAt_lz_arg1_0) _lh_splitAt_lz_arg2_0) in
     (let rec _lh_random_LH_P2_0_0 = ((take_lz_lh _lh_splitAt_lz_arg1_0) _lh_splitAt_lz_arg2_0) in
@@ -243,6 +219,24 @@ let rec splitAt_lz_lh _lh_splitAt_lz_arg1_0 _lh_splitAt_lz_arg2_0 ns_1 _lh_singl
                         (`LH_C((`LH_C('P', (`LH_C('r', (`LH_C('o', (`LH_C('b', (`LH_C('a', (`LH_C('b', (`LH_C('l', (`LH_C('y', (`LH_C(' ', (`LH_C('p', (`LH_C('r', (`LH_C('i', (`LH_C('m', (`LH_C('e', (`LH_N))))))))))))))))))))))))))))), (_lh_doLine_arg2_2 _lh_doLine_LH_P2_1_2)))
                       else
                         (`LH_C((`LH_C('C', (`LH_C('o', (`LH_C('m', (`LH_C('p', (`LH_C('o', (`LH_C('s', (`LH_C('i', (`LH_C('t', (`LH_C('e', (`LH_N))))))))))))))))))), (_lh_doLine_arg2_2 _lh_doLine_LH_P2_1_2))))))))))))));;
+let rec length_lh ls_2 =
+  (match ls_2 with
+    | `LH_C(h_1, t_1) -> 
+      (1 + (length_lh t_1))
+    | `LH_N -> 
+      0);;
+let rec chop_lh _lh_chop_arg1_0 =
+  (let rec chop'_0 = (fun a_2 n_2 -> 
+    (let rec _lh_matchIdent_8 = ((divmod_lh n_2) _lh_chop_arg1_0) in
+      (match _lh_matchIdent_8 with
+        | `LH_P2(_lh_chop_LH_P2_0_0, _lh_chop_LH_P2_1_0) -> 
+          (if (n_2 = 0) then
+            a_2
+          else
+            ((chop'_0 (`LH_C(_lh_chop_LH_P2_1_0, a_2))) _lh_chop_LH_P2_0_0))
+        | _ -> 
+          (failwith "error")))) in
+    (chop'_0 (`LH_N)));;
 let rec random_lh _lh_random_arg1_0 _lh_random_arg2_0 =
   (let rec ns_0 = ((chop_lh 65536) _lh_random_arg1_0) in
     (let rec _lh_matchIdent_0 = ((splitAt_lz_lh (length_lh ns_0)) _lh_random_arg2_0) in
@@ -273,10 +267,16 @@ let rec multiTest_lh _lh_multiTest_arg1_0 _lh_multiTest_arg2_0 _lh_multiTest_arg
               (`LH_C((`LH_C('C', (`LH_C('o', (`LH_C('m', (`LH_C('p', (`LH_C('o', (`LH_C('s', (`LH_C('i', (`LH_C('t', (`LH_C('e', (`LH_N))))))))))))))))))), (_lh_doLine_arg2_1 _lh_doLine_LH_P2_1_1)))))))
     else
       ((mTest_0 _lh_multiTest_arg1_0) _lh_multiTest_arg2_0)));;
+let rec int_val_of_string_lh _lh_int_val_of_string_arg1_0 =
+  (let rec f_6 = (fun _lh_f_arg1_1 _lh_f_arg2_3 -> 
+    ((_lh_f_arg1_1 _lh_f_arg2_3) f_6)) in
+    ((f_6 _lh_int_val_of_string_arg1_0) 0));;
 let rec doLine_lh _lh_doLine_arg1_0 _lh_doLine_arg2_3 _lh_doLine_arg3_0 =
   (let rec n_1 = (int_val_of_string_lh _lh_doLine_arg1_0) in
     (let rec _lh_matchIdent_7 = (((multiTest_lh 100) _lh_doLine_arg3_0) n_1) in
       (_lh_matchIdent_7 _lh_doLine_arg2_3)));;
+let rec int_val_of_char_lh _lh_int_val_of_char_arg1_0 =
+  ((int_of_char _lh_int_val_of_char_arg1_0) - 48);;
 let rec break_lh _lh_break_arg1_0 _lh_break_arg2_0 =
   (match _lh_break_arg2_0 with
     | `LH_N -> 

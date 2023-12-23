@@ -10,11 +10,6 @@ let rec zip__d0 xs_0 ys_2 =
   (xs_0 ys_2);;
 let rec map__d1 f_5 ls_2 =
   (ls_2 f_5);;
-let rec makeZippedList__d0 n_0 =
-  (if (n_0 > 0) then
-    (`C((`Pair(n_0, (n_0 + 1))), (makeZippedList__d0 (n_0 - 1))))
-  else
-    (`N));;
 let rec unzip__d0 ls_0 =
   (match ls_0 with
     | `C(h_0, t_0) -> 
@@ -39,6 +34,11 @@ let rec unzip__d0 ls_0 =
       (`Pair((fun f_2 ys_1 -> 
         (`N)), (fun f_3 xt_2 x_2 -> 
         (`N)))));;
+let rec makeZippedList__d0 n_0 =
+  (if (n_0 > 0) then
+    (`C((`Pair(n_0, (n_0 + 1))), (makeZippedList__d0 (n_0 - 1))))
+  else
+    (`N));;
 let rec testZipMapBothUnzip__d0 n_1 =
   (match (unzip__d0 (makeZippedList__d0 n_1)) with
     | `Pair(xs_1, ys_3) -> 

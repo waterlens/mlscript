@@ -8,8 +8,6 @@ let rec flatMap_lh _lh_flatMap_arg1_2 _lh_flatMap_arg2_0 =
   (_lh_flatMap_arg2_0 _lh_flatMap_arg1_2);;
 let rec mappend_lh xs_0 ys_0 =
   (xs_0 ys_0);;
-let rec sum_lh _lh_sum_arg1_1 _lh_sum_arg2_0 =
-  (_lh_sum_arg2_0 _lh_sum_arg1_1);;
 let rec enumFromTo_lh a_0 b_0 =
   (if (a_0 <= b_0) then
     (let rec _lh_flatMap_LH_C_1_0 = ((enumFromTo_lh (a_0 + 1)) b_0) in
@@ -19,6 +17,8 @@ let rec enumFromTo_lh a_0 b_0 =
   else
     (fun _lh_flatMap_arg1_1 _lh_sum_arg1_0 -> 
       _lh_sum_arg1_0));;
+let rec sum_lh _lh_sum_arg1_1 _lh_sum_arg2_0 =
+  (_lh_sum_arg2_0 _lh_sum_arg1_1);;
 let rec testSumFlatmapEnum_lh _lh_testSumFlatmapEnum_arg1_0 =
   ((sum_lh 0) ((flatMap_lh (fun a_1 -> 
     (let rec t_0 = (let rec t_1 = (fun ys_1 -> 

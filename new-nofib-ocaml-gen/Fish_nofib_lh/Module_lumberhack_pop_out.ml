@@ -38,6 +38,15 @@ let rec vec_add_lh _lh_vec_add_arg1_0 _lh_vec_add_arg2_0 =
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
+let rec rot_lh _lh_rot_arg1_0 _lh_rot_arg2_0 _lh_rot_arg3_0 _lh_rot_arg4_0 =
+  (((_lh_rot_arg1_0 ((vec_add_lh _lh_rot_arg2_0) _lh_rot_arg3_0)) _lh_rot_arg4_0) ((vec_sub_lh (let rec _lh_vec_sub_LH_P2_1_0 = 0 in
+    (let rec _lh_vec_sub_LH_P2_0_0 = 0 in
+      (fun _lh_vec_sub_arg2_0 -> 
+        (match _lh_vec_sub_arg2_0 with
+          | `LH_P2(_lh_vec_sub_LH_P2_0_1, _lh_vec_sub_LH_P2_1_1) -> 
+            (`LH_P2((_lh_vec_sub_LH_P2_0_0 - _lh_vec_sub_LH_P2_0_1), (_lh_vec_sub_LH_P2_1_0 - _lh_vec_sub_LH_P2_1_1)))
+          | _ -> 
+            (failwith "error")))))) _lh_rot_arg3_0));;
 let rec scale_vec2_lh _lh_scale_vec2_arg1_0 _lh_scale_vec2_arg2_0 _lh_scale_vec2_arg3_0 =
   (match _lh_scale_vec2_arg1_0 with
     | `LH_P2(_lh_scale_vec2_LH_P2_0_0, _lh_scale_vec2_LH_P2_1_0) -> 
@@ -50,6 +59,12 @@ let rec mappend_lh xs_0 ys_0 =
       (`LH_C(h_0, ((mappend_lh t_0) ys_0)))
     | `LH_N -> 
       ys_0);;
+let rec beside_lh _lh_beside_arg1_0 _lh_beside_arg2_0 _lh_beside_arg3_0 _lh_beside_arg4_0 _lh_beside_arg5_0 _lh_beside_arg6_0 _lh_beside_arg7_0 =
+  ((mappend_lh (((_lh_beside_arg3_0 _lh_beside_arg5_0) (((scale_vec2_lh _lh_beside_arg6_0) _lh_beside_arg1_0) (_lh_beside_arg1_0 + _lh_beside_arg2_0))) _lh_beside_arg7_0)) (((_lh_beside_arg4_0 ((vec_add_lh _lh_beside_arg5_0) (((scale_vec2_lh _lh_beside_arg6_0) _lh_beside_arg1_0) (_lh_beside_arg1_0 + _lh_beside_arg2_0)))) (((scale_vec2_lh _lh_beside_arg6_0) _lh_beside_arg2_0) (_lh_beside_arg2_0 + _lh_beside_arg1_0))) _lh_beside_arg7_0));;
+let rec above_lh _lh_above_arg1_0 _lh_above_arg2_0 _lh_above_arg3_0 _lh_above_arg4_0 _lh_above_arg5_0 _lh_above_arg6_0 _lh_above_arg7_0 =
+  ((mappend_lh (((_lh_above_arg3_0 ((vec_add_lh _lh_above_arg5_0) (((scale_vec2_lh _lh_above_arg7_0) _lh_above_arg2_0) (_lh_above_arg1_0 + _lh_above_arg2_0)))) _lh_above_arg6_0) (((scale_vec2_lh _lh_above_arg7_0) _lh_above_arg1_0) (_lh_above_arg2_0 + _lh_above_arg1_0)))) (((_lh_above_arg4_0 _lh_above_arg5_0) _lh_above_arg6_0) (((scale_vec2_lh _lh_above_arg7_0) _lh_above_arg2_0) (_lh_above_arg1_0 + _lh_above_arg2_0))));;
+let rec quartet_lh _lh_quartet_arg1_0 _lh_quartet_arg2_0 _lh_quartet_arg3_0 _lh_quartet_arg4_0 =
+  ((((above_lh 1) 1) ((((beside_lh 1) 1) _lh_quartet_arg1_0) _lh_quartet_arg2_0)) ((((beside_lh 1) 1) _lh_quartet_arg3_0) _lh_quartet_arg4_0));;
 let rec tup2_lh _lh_tup2_arg1_0 _lh_tup2_arg2_0 =
   (match _lh_tup2_arg1_0 with
     | `LH_P2(_lh_tup2_LH_P2_0_0, _lh_tup2_LH_P2_1_0) -> 
@@ -60,25 +75,6 @@ let rec tup2_lh _lh_tup2_arg1_0 _lh_tup2_arg2_0 =
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
-let rec grid_lh _lh_grid_arg1_5_1 _lh_grid_arg2_5_1 _lh_grid_arg3_0 _lh_grid_arg4_5_1 _lh_grid_arg5_5_1 _lh_grid_arg6_5_1 =
-  (let rec _lh_listcomp_fun_5_1 = (fun _lh_listcomp_fun_para_0 -> 
-    ((((((_lh_listcomp_fun_para_0 _lh_grid_arg1_5_1) _lh_grid_arg2_5_1) _lh_grid_arg4_5_1) _lh_grid_arg5_5_1) _lh_grid_arg6_5_1) _lh_listcomp_fun_5_1)) in
-    (_lh_listcomp_fun_5_1 _lh_grid_arg3_0));;
-let rec nil_lh _lh_nil_arg1_0 _lh_nil_arg2_0 _lh_nil_arg3_0 =
-  (`LH_N);;
-let rec rot_lh _lh_rot_arg1_0 _lh_rot_arg2_0 _lh_rot_arg3_0 _lh_rot_arg4_0 =
-  (((_lh_rot_arg1_0 ((vec_add_lh _lh_rot_arg2_0) _lh_rot_arg3_0)) _lh_rot_arg4_0) ((vec_sub_lh (let rec _lh_vec_sub_LH_P2_1_0 = 0 in
-    (let rec _lh_vec_sub_LH_P2_0_0 = 0 in
-      (fun _lh_vec_sub_arg2_0 -> 
-        (match _lh_vec_sub_arg2_0 with
-          | `LH_P2(_lh_vec_sub_LH_P2_0_1, _lh_vec_sub_LH_P2_1_1) -> 
-            (`LH_P2((_lh_vec_sub_LH_P2_0_0 - _lh_vec_sub_LH_P2_0_1), (_lh_vec_sub_LH_P2_1_0 - _lh_vec_sub_LH_P2_1_1)))
-          | _ -> 
-            (failwith "error")))))) _lh_rot_arg3_0));;
-let rec beside_lh _lh_beside_arg1_0 _lh_beside_arg2_0 _lh_beside_arg3_0 _lh_beside_arg4_0 _lh_beside_arg5_0 _lh_beside_arg6_0 _lh_beside_arg7_0 =
-  ((mappend_lh (((_lh_beside_arg3_0 _lh_beside_arg5_0) (((scale_vec2_lh _lh_beside_arg6_0) _lh_beside_arg1_0) (_lh_beside_arg1_0 + _lh_beside_arg2_0))) _lh_beside_arg7_0)) (((_lh_beside_arg4_0 ((vec_add_lh _lh_beside_arg5_0) (((scale_vec2_lh _lh_beside_arg6_0) _lh_beside_arg1_0) (_lh_beside_arg1_0 + _lh_beside_arg2_0)))) (((scale_vec2_lh _lh_beside_arg6_0) _lh_beside_arg2_0) (_lh_beside_arg2_0 + _lh_beside_arg1_0))) _lh_beside_arg7_0));;
-let rec above_lh _lh_above_arg1_0 _lh_above_arg2_0 _lh_above_arg3_0 _lh_above_arg4_0 _lh_above_arg5_0 _lh_above_arg6_0 _lh_above_arg7_0 =
-  ((mappend_lh (((_lh_above_arg3_0 ((vec_add_lh _lh_above_arg5_0) (((scale_vec2_lh _lh_above_arg7_0) _lh_above_arg2_0) (_lh_above_arg1_0 + _lh_above_arg2_0)))) _lh_above_arg6_0) (((scale_vec2_lh _lh_above_arg7_0) _lh_above_arg1_0) (_lh_above_arg2_0 + _lh_above_arg1_0)))) (((_lh_above_arg4_0 _lh_above_arg5_0) _lh_above_arg6_0) (((scale_vec2_lh _lh_above_arg7_0) _lh_above_arg2_0) (_lh_above_arg1_0 + _lh_above_arg2_0))));;
 let rec r_tile_lh _lh_grid_arg1_5_0 _lh_grid_arg2_5_0 _lh_grid_arg4_5_0 _lh_grid_arg5_5_0 _lh_grid_arg6_5_0 _lh_listcomp_fun_5_0 =
   (let rec _lh_listcomp_fun_ls_t_0 = (let rec _lh_listcomp_fun_ls_t_1 = (let rec _lh_listcomp_fun_ls_t_2 = (let rec _lh_listcomp_fun_ls_t_3 = (let rec _lh_listcomp_fun_ls_t_4 = (let rec _lh_listcomp_fun_ls_t_5 = (let rec _lh_listcomp_fun_ls_t_6 = (let rec _lh_listcomp_fun_ls_t_7 = (let rec _lh_listcomp_fun_ls_t_8 = (let rec _lh_listcomp_fun_ls_t_9 = (let rec _lh_listcomp_fun_ls_t_1_0 = (let rec _lh_listcomp_fun_ls_t_1_1 = (let rec _lh_listcomp_fun_ls_t_1_2 = (let rec _lh_listcomp_fun_ls_t_1_3 = (let rec _lh_listcomp_fun_ls_t_1_4 = (let rec _lh_listcomp_fun_ls_t_1_5 = (let rec _lh_listcomp_fun_ls_t_1_6 = (let rec _lh_listcomp_fun_ls_t_1_7 = (let rec _lh_listcomp_fun_ls_t_1_8 = (let rec _lh_listcomp_fun_ls_t_1_9 = (let rec _lh_listcomp_fun_ls_t_2_0 = (let rec _lh_listcomp_fun_ls_t_2_1 = (let rec _lh_listcomp_fun_ls_t_2_2 = (let rec _lh_listcomp_fun_ls_t_2_3 = (let rec _lh_listcomp_fun_ls_t_2_4 = (fun _lh_grid_arg1_0 _lh_grid_arg2_0 _lh_grid_arg4_0 _lh_grid_arg5_0 _lh_grid_arg6_0 _lh_listcomp_fun_0 -> 
     (`LH_N)) in
@@ -281,8 +277,14 @@ let rec r_tile_lh _lh_grid_arg1_5_0 _lh_grid_arg2_5_0 _lh_grid_arg4_5_0 _lh_grid
             (fun _lh_grid_arg1_4_9 _lh_grid_arg2_4_9 _lh_grid_arg4_4_9 _lh_grid_arg5_4_9 _lh_grid_arg6_4_9 _lh_listcomp_fun_ls_t_4_9 _lh_listcomp_fun_4_9 -> 
               (`LH_C(((tup2_lh ((vec_add_lh ((vec_add_lh _lh_grid_arg4_4_9) (((scale_vec2_lh _lh_grid_arg5_4_9) _lh_grid_LH_P4_0_2_4) _lh_grid_arg1_4_9))) (((scale_vec2_lh _lh_grid_arg6_4_9) _lh_grid_LH_P4_1_2_4) _lh_grid_arg2_4_9))) ((vec_add_lh ((vec_add_lh _lh_grid_arg4_4_9) (((scale_vec2_lh _lh_grid_arg5_4_9) _lh_grid_LH_P4_2_2_4) _lh_grid_arg1_4_9))) (((scale_vec2_lh _lh_grid_arg6_4_9) _lh_grid_LH_P4_3_2_4) _lh_grid_arg2_4_9))), (_lh_listcomp_fun_4_9 _lh_listcomp_fun_ls_t_4_9)))))))) in
       (((((((_lh_listcomp_fun_ls_h_2_4 _lh_grid_arg1_5_0) _lh_grid_arg2_5_0) _lh_grid_arg4_5_0) _lh_grid_arg5_5_0) _lh_grid_arg6_5_0) _lh_listcomp_fun_ls_t_0) _lh_listcomp_fun_5_0)));;
+let rec grid_lh _lh_grid_arg1_5_1 _lh_grid_arg2_5_1 _lh_grid_arg3_0 _lh_grid_arg4_5_1 _lh_grid_arg5_5_1 _lh_grid_arg6_5_1 =
+  (let rec _lh_listcomp_fun_5_1 = (fun _lh_listcomp_fun_para_0 -> 
+    ((((((_lh_listcomp_fun_para_0 _lh_grid_arg1_5_1) _lh_grid_arg2_5_1) _lh_grid_arg4_5_1) _lh_grid_arg5_5_1) _lh_grid_arg6_5_1) _lh_listcomp_fun_5_1)) in
+    (_lh_listcomp_fun_5_1 _lh_grid_arg3_0));;
 let rec tile_to_grid_lh _lh_tile_to_grid_arg1_0 =
   (((grid_lh 16) 16) _lh_tile_to_grid_arg1_0);;
+let rec r_lh _lh_r_arg1_0 =
+  ((tile_to_grid_lh r_tile_lh) _lh_r_arg1_0);;
 let rec q_tile_lh _lh_grid_arg1_2_4_4 _lh_grid_arg2_2_4_4 _lh_grid_arg4_2_4_4 _lh_grid_arg5_2_4_4 _lh_grid_arg6_2_4_4 _lh_listcomp_fun_2_4_4 =
   (let rec _lh_listcomp_fun_ls_t_1_6_6 = (let rec _lh_listcomp_fun_ls_t_1_6_7 = (let rec _lh_listcomp_fun_ls_t_1_6_8 = (let rec _lh_listcomp_fun_ls_t_1_6_9 = (let rec _lh_listcomp_fun_ls_t_1_7_0 = (let rec _lh_listcomp_fun_ls_t_1_7_1 = (let rec _lh_listcomp_fun_ls_t_1_7_2 = (let rec _lh_listcomp_fun_ls_t_1_7_3 = (let rec _lh_listcomp_fun_ls_t_1_7_4 = (let rec _lh_listcomp_fun_ls_t_1_7_5 = (let rec _lh_listcomp_fun_ls_t_1_7_6 = (let rec _lh_listcomp_fun_ls_t_1_7_7 = (let rec _lh_listcomp_fun_ls_t_1_7_8 = (let rec _lh_listcomp_fun_ls_t_1_7_9 = (let rec _lh_listcomp_fun_ls_t_1_8_0 = (let rec _lh_listcomp_fun_ls_t_1_8_1 = (let rec _lh_listcomp_fun_ls_t_1_8_2 = (let rec _lh_listcomp_fun_ls_t_1_8_3 = (let rec _lh_listcomp_fun_ls_t_1_8_4 = (let rec _lh_listcomp_fun_ls_t_1_8_5 = (let rec _lh_listcomp_fun_ls_t_1_8_6 = (let rec _lh_listcomp_fun_ls_t_1_8_7 = (let rec _lh_listcomp_fun_ls_t_1_8_8 = (let rec _lh_listcomp_fun_ls_t_1_8_9 = (let rec _lh_listcomp_fun_ls_t_1_9_0 = (let rec _lh_listcomp_fun_ls_t_1_9_1 = (let rec _lh_listcomp_fun_ls_t_1_9_2 = (let rec _lh_listcomp_fun_ls_t_1_9_3 = (let rec _lh_listcomp_fun_ls_t_1_9_4 = (let rec _lh_listcomp_fun_ls_t_1_9_5 = (let rec _lh_listcomp_fun_ls_t_1_9_6 = (let rec _lh_listcomp_fun_ls_t_1_9_7 = (let rec _lh_listcomp_fun_ls_t_1_9_8 = (let rec _lh_listcomp_fun_ls_t_1_9_9 = (let rec _lh_listcomp_fun_ls_t_2_0_0 = (let rec _lh_listcomp_fun_ls_t_2_0_1 = (let rec _lh_listcomp_fun_ls_t_2_0_2 = (fun _lh_grid_arg1_1_7_0 _lh_grid_arg2_1_7_0 _lh_grid_arg4_1_7_0 _lh_grid_arg5_1_7_0 _lh_grid_arg6_1_7_0 _lh_listcomp_fun_1_7_0 -> 
     (`LH_N)) in
@@ -581,6 +583,8 @@ let rec q_tile_lh _lh_grid_arg1_2_4_4 _lh_grid_arg2_2_4_4 _lh_grid_arg4_2_4_4 _l
             (fun _lh_grid_arg1_2_4_3 _lh_grid_arg2_2_4_3 _lh_grid_arg4_2_4_3 _lh_grid_arg5_2_4_3 _lh_grid_arg6_2_4_3 _lh_listcomp_fun_ls_t_2_3_9 _lh_listcomp_fun_2_4_3 -> 
               (`LH_C(((tup2_lh ((vec_add_lh ((vec_add_lh _lh_grid_arg4_2_4_3) (((scale_vec2_lh _lh_grid_arg5_2_4_3) _lh_grid_LH_P4_0_1_1_9) _lh_grid_arg1_2_4_3))) (((scale_vec2_lh _lh_grid_arg6_2_4_3) _lh_grid_LH_P4_1_1_1_9) _lh_grid_arg2_2_4_3))) ((vec_add_lh ((vec_add_lh _lh_grid_arg4_2_4_3) (((scale_vec2_lh _lh_grid_arg5_2_4_3) _lh_grid_LH_P4_2_1_1_9) _lh_grid_arg1_2_4_3))) (((scale_vec2_lh _lh_grid_arg6_2_4_3) _lh_grid_LH_P4_3_1_1_9) _lh_grid_arg2_2_4_3))), (_lh_listcomp_fun_2_4_3 _lh_listcomp_fun_ls_t_2_3_9)))))))) in
       (((((((_lh_listcomp_fun_ls_h_1_1_9 _lh_grid_arg1_2_4_4) _lh_grid_arg2_2_4_4) _lh_grid_arg4_2_4_4) _lh_grid_arg5_2_4_4) _lh_grid_arg6_2_4_4) _lh_listcomp_fun_ls_t_1_6_6) _lh_listcomp_fun_2_4_4)));;
+let rec q_lh _lh_q_arg1_0 =
+  ((tile_to_grid_lh q_tile_lh) _lh_q_arg1_0);;
 let rec s_tile_lh _lh_grid_arg1_1_6_9 _lh_grid_arg2_1_6_9 _lh_grid_arg4_1_6_9 _lh_grid_arg5_1_6_9 _lh_grid_arg6_1_6_9 _lh_listcomp_fun_1_6_9 =
   (let rec _lh_listcomp_fun_ls_t_1_1_0 = (let rec _lh_listcomp_fun_ls_t_1_1_1 = (let rec _lh_listcomp_fun_ls_t_1_1_2 = (let rec _lh_listcomp_fun_ls_t_1_1_3 = (let rec _lh_listcomp_fun_ls_t_1_1_4 = (let rec _lh_listcomp_fun_ls_t_1_1_5 = (let rec _lh_listcomp_fun_ls_t_1_1_6 = (let rec _lh_listcomp_fun_ls_t_1_1_7 = (let rec _lh_listcomp_fun_ls_t_1_1_8 = (let rec _lh_listcomp_fun_ls_t_1_1_9 = (let rec _lh_listcomp_fun_ls_t_1_2_0 = (let rec _lh_listcomp_fun_ls_t_1_2_1 = (let rec _lh_listcomp_fun_ls_t_1_2_2 = (let rec _lh_listcomp_fun_ls_t_1_2_3 = (let rec _lh_listcomp_fun_ls_t_1_2_4 = (let rec _lh_listcomp_fun_ls_t_1_2_5 = (let rec _lh_listcomp_fun_ls_t_1_2_6 = (let rec _lh_listcomp_fun_ls_t_1_2_7 = (let rec _lh_listcomp_fun_ls_t_1_2_8 = (let rec _lh_listcomp_fun_ls_t_1_2_9 = (let rec _lh_listcomp_fun_ls_t_1_3_0 = (let rec _lh_listcomp_fun_ls_t_1_3_1 = (let rec _lh_listcomp_fun_ls_t_1_3_2 = (let rec _lh_listcomp_fun_ls_t_1_3_3 = (let rec _lh_listcomp_fun_ls_t_1_3_4 = (let rec _lh_listcomp_fun_ls_t_1_3_5 = (let rec _lh_listcomp_fun_ls_t_1_3_6 = (let rec _lh_listcomp_fun_ls_t_1_3_7 = (fun _lh_grid_arg1_1_1_3 _lh_grid_arg2_1_1_3 _lh_grid_arg4_1_1_3 _lh_grid_arg5_1_1_3 _lh_grid_arg6_1_1_3 _lh_listcomp_fun_1_1_3 -> 
     (`LH_N)) in
@@ -807,6 +811,8 @@ let rec s_tile_lh _lh_grid_arg1_1_6_9 _lh_grid_arg2_1_6_9 _lh_grid_arg4_1_6_9 _l
             (fun _lh_grid_arg1_1_6_8 _lh_grid_arg2_1_6_8 _lh_grid_arg4_1_6_8 _lh_grid_arg5_1_6_8 _lh_grid_arg6_1_6_8 _lh_listcomp_fun_ls_t_1_6_5 _lh_listcomp_fun_1_6_8 -> 
               (`LH_C(((tup2_lh ((vec_add_lh ((vec_add_lh _lh_grid_arg4_1_6_8) (((scale_vec2_lh _lh_grid_arg5_1_6_8) _lh_grid_LH_P4_0_8_2) _lh_grid_arg1_1_6_8))) (((scale_vec2_lh _lh_grid_arg6_1_6_8) _lh_grid_LH_P4_1_8_2) _lh_grid_arg2_1_6_8))) ((vec_add_lh ((vec_add_lh _lh_grid_arg4_1_6_8) (((scale_vec2_lh _lh_grid_arg5_1_6_8) _lh_grid_LH_P4_2_8_2) _lh_grid_arg1_1_6_8))) (((scale_vec2_lh _lh_grid_arg6_1_6_8) _lh_grid_LH_P4_3_8_2) _lh_grid_arg2_1_6_8))), (_lh_listcomp_fun_1_6_8 _lh_listcomp_fun_ls_t_1_6_5)))))))) in
       (((((((_lh_listcomp_fun_ls_h_8_2 _lh_grid_arg1_1_6_9) _lh_grid_arg2_1_6_9) _lh_grid_arg4_1_6_9) _lh_grid_arg5_1_6_9) _lh_grid_arg6_1_6_9) _lh_listcomp_fun_ls_t_1_1_0) _lh_listcomp_fun_1_6_9)));;
+let rec s_lh _lh_s_arg1_0 =
+  ((tile_to_grid_lh s_tile_lh) _lh_s_arg1_0);;
 let rec p_tile_lh _lh_grid_arg1_1_1_2 _lh_grid_arg2_1_1_2 _lh_grid_arg4_1_1_2 _lh_grid_arg5_1_1_2 _lh_grid_arg6_1_1_2 _lh_listcomp_fun_1_1_2 =
   (let rec _lh_listcomp_fun_ls_t_5_0 = (let rec _lh_listcomp_fun_ls_t_5_1 = (let rec _lh_listcomp_fun_ls_t_5_2 = (let rec _lh_listcomp_fun_ls_t_5_3 = (let rec _lh_listcomp_fun_ls_t_5_4 = (let rec _lh_listcomp_fun_ls_t_5_5 = (let rec _lh_listcomp_fun_ls_t_5_6 = (let rec _lh_listcomp_fun_ls_t_5_7 = (let rec _lh_listcomp_fun_ls_t_5_8 = (let rec _lh_listcomp_fun_ls_t_5_9 = (let rec _lh_listcomp_fun_ls_t_6_0 = (let rec _lh_listcomp_fun_ls_t_6_1 = (let rec _lh_listcomp_fun_ls_t_6_2 = (let rec _lh_listcomp_fun_ls_t_6_3 = (let rec _lh_listcomp_fun_ls_t_6_4 = (let rec _lh_listcomp_fun_ls_t_6_5 = (let rec _lh_listcomp_fun_ls_t_6_6 = (let rec _lh_listcomp_fun_ls_t_6_7 = (let rec _lh_listcomp_fun_ls_t_6_8 = (let rec _lh_listcomp_fun_ls_t_6_9 = (let rec _lh_listcomp_fun_ls_t_7_0 = (let rec _lh_listcomp_fun_ls_t_7_1 = (let rec _lh_listcomp_fun_ls_t_7_2 = (let rec _lh_listcomp_fun_ls_t_7_3 = (let rec _lh_listcomp_fun_ls_t_7_4 = (let rec _lh_listcomp_fun_ls_t_7_5 = (let rec _lh_listcomp_fun_ls_t_7_6 = (let rec _lh_listcomp_fun_ls_t_7_7 = (let rec _lh_listcomp_fun_ls_t_7_8 = (let rec _lh_listcomp_fun_ls_t_7_9 = (fun _lh_grid_arg1_5_2 _lh_grid_arg2_5_2 _lh_grid_arg4_5_2 _lh_grid_arg5_5_2 _lh_grid_arg6_5_2 _lh_listcomp_fun_5_2 -> 
     (`LH_N)) in
@@ -1049,22 +1055,34 @@ let rec p_tile_lh _lh_grid_arg1_1_1_2 _lh_grid_arg2_1_1_2 _lh_grid_arg4_1_1_2 _l
             (fun _lh_grid_arg1_1_1_1 _lh_grid_arg2_1_1_1 _lh_grid_arg4_1_1_1 _lh_grid_arg5_1_1_1 _lh_grid_arg6_1_1_1 _lh_listcomp_fun_ls_t_1_0_9 _lh_listcomp_fun_1_1_1 -> 
               (`LH_C(((tup2_lh ((vec_add_lh ((vec_add_lh _lh_grid_arg4_1_1_1) (((scale_vec2_lh _lh_grid_arg5_1_1_1) _lh_grid_LH_P4_0_5_4) _lh_grid_arg1_1_1_1))) (((scale_vec2_lh _lh_grid_arg6_1_1_1) _lh_grid_LH_P4_1_5_4) _lh_grid_arg2_1_1_1))) ((vec_add_lh ((vec_add_lh _lh_grid_arg4_1_1_1) (((scale_vec2_lh _lh_grid_arg5_1_1_1) _lh_grid_LH_P4_2_5_4) _lh_grid_arg1_1_1_1))) (((scale_vec2_lh _lh_grid_arg6_1_1_1) _lh_grid_LH_P4_3_5_4) _lh_grid_arg2_1_1_1))), (_lh_listcomp_fun_1_1_1 _lh_listcomp_fun_ls_t_1_0_9)))))))) in
       (((((((_lh_listcomp_fun_ls_h_5_4 _lh_grid_arg1_1_1_2) _lh_grid_arg2_1_1_2) _lh_grid_arg4_1_1_2) _lh_grid_arg5_1_1_2) _lh_grid_arg6_1_1_2) _lh_listcomp_fun_ls_t_5_0) _lh_listcomp_fun_1_1_2)));;
+let rec p_lh _lh_p_arg1_0 =
+  ((tile_to_grid_lh p_tile_lh) _lh_p_arg1_0);;
+let rec t_lh _lh_t_arg1_0 =
+  (((((quartet_lh p_lh) q_lh) r_lh) s_lh) _lh_t_arg1_0);;
+let rec nil_lh _lh_nil_arg1_0 _lh_nil_arg2_0 _lh_nil_arg3_0 =
+  (`LH_N);;
+let rec side1_lh _lh_side1_arg1_0 =
+  (((((quartet_lh nil_lh) nil_lh) (rot_lh t_lh)) t_lh) _lh_side1_arg1_0);;
+let rec cycle'_lh _lh_cycle'_arg1_0 =
+  ((((quartet_lh _lh_cycle'_arg1_0) (rot_lh (rot_lh (rot_lh _lh_cycle'_arg1_0)))) (rot_lh _lh_cycle'_arg1_0)) (rot_lh (rot_lh _lh_cycle'_arg1_0)));;
+let rec u_lh _lh_u_arg1_0 =
+  ((cycle'_lh (rot_lh q_lh)) _lh_u_arg1_0);;
+let rec corner1_lh _lh_corner1_arg1_0 =
+  (((((quartet_lh nil_lh) nil_lh) nil_lh) u_lh) _lh_corner1_arg1_0);;
+let rec corner2_lh _lh_corner2_arg1_0 =
+  (((((quartet_lh corner1_lh) side1_lh) (rot_lh side1_lh)) u_lh) _lh_corner2_arg1_0);;
+let rec side2_lh _lh_side2_arg1_0 =
+  (((((quartet_lh side1_lh) side1_lh) (rot_lh t_lh)) t_lh) _lh_side2_arg1_0);;
+let rec pseudocorner_lh _lh_pseudocorner_arg1_0 =
+  (((((quartet_lh corner2_lh) side2_lh) (rot_lh side2_lh)) (rot_lh t_lh)) _lh_pseudocorner_arg1_0);;
+let rec pseudolimit_lh _lh_pseudolimit_arg1_0 =
+  ((cycle'_lh pseudocorner_lh) _lh_pseudolimit_arg1_0);;
 let rec showFourTupleofInt_lh _lh_showFourTupleofInt_arg1_0 =
   (match _lh_showFourTupleofInt_arg1_0 with
     | `LH_P4(_lh_showFourTupleofInt_LH_P4_0_0, _lh_showFourTupleofInt_LH_P4_1_0, _lh_showFourTupleofInt_LH_P4_2_0, _lh_showFourTupleofInt_LH_P4_3_0) -> 
       ((mappend_lh ((mappend_lh ((mappend_lh ((mappend_lh ((mappend_lh ((mappend_lh ((mappend_lh ((mappend_lh (`LH_C('(', (`LH_N)))) (string_of_int _lh_showFourTupleofInt_LH_P4_0_0))) (`LH_C(',', (`LH_N))))) (string_of_int _lh_showFourTupleofInt_LH_P4_1_0))) (`LH_C(',', (`LH_N))))) (string_of_int _lh_showFourTupleofInt_LH_P4_2_0))) (`LH_C(',', (`LH_N))))) (string_of_int _lh_showFourTupleofInt_LH_P4_3_0))) (`LH_C(')', (`LH_N))))
     | _ -> 
       (failwith "error"));;
-let rec quartet_lh _lh_quartet_arg1_0 _lh_quartet_arg2_0 _lh_quartet_arg3_0 _lh_quartet_arg4_0 =
-  ((((above_lh 1) 1) ((((beside_lh 1) 1) _lh_quartet_arg1_0) _lh_quartet_arg2_0)) ((((beside_lh 1) 1) _lh_quartet_arg3_0) _lh_quartet_arg4_0));;
-let rec r_lh _lh_r_arg1_0 =
-  ((tile_to_grid_lh r_tile_lh) _lh_r_arg1_0);;
-let rec q_lh _lh_q_arg1_0 =
-  ((tile_to_grid_lh q_tile_lh) _lh_q_arg1_0);;
-let rec s_lh _lh_s_arg1_0 =
-  ((tile_to_grid_lh s_tile_lh) _lh_s_arg1_0);;
-let rec p_lh _lh_p_arg1_0 =
-  ((tile_to_grid_lh p_tile_lh) _lh_p_arg1_0);;
 let rec fmt_lh _lh_fmt_arg1_0 =
   (match _lh_fmt_arg1_0 with
     | `LH_N -> 
@@ -1089,24 +1107,6 @@ let rec fmt_lh _lh_fmt_arg1_0 =
               ((mappend_lh (showFourTupleofInt_lh _lh_fmt_LH_C_0_0)) s_3)) _lh_funcomp_x_3))) ((showl_0 _lh_fmt_LH_C_1_0) _lh_funcomp_x_2))) (`LH_N)))
     | _ -> 
       (failwith "error"));;
-let rec t_lh _lh_t_arg1_0 =
-  (((((quartet_lh p_lh) q_lh) r_lh) s_lh) _lh_t_arg1_0);;
-let rec cycle'_lh _lh_cycle'_arg1_0 =
-  ((((quartet_lh _lh_cycle'_arg1_0) (rot_lh (rot_lh (rot_lh _lh_cycle'_arg1_0)))) (rot_lh _lh_cycle'_arg1_0)) (rot_lh (rot_lh _lh_cycle'_arg1_0)));;
-let rec side1_lh _lh_side1_arg1_0 =
-  (((((quartet_lh nil_lh) nil_lh) (rot_lh t_lh)) t_lh) _lh_side1_arg1_0);;
-let rec u_lh _lh_u_arg1_0 =
-  ((cycle'_lh (rot_lh q_lh)) _lh_u_arg1_0);;
-let rec corner1_lh _lh_corner1_arg1_0 =
-  (((((quartet_lh nil_lh) nil_lh) nil_lh) u_lh) _lh_corner1_arg1_0);;
-let rec side2_lh _lh_side2_arg1_0 =
-  (((((quartet_lh side1_lh) side1_lh) (rot_lh t_lh)) t_lh) _lh_side2_arg1_0);;
-let rec corner2_lh _lh_corner2_arg1_0 =
-  (((((quartet_lh corner1_lh) side1_lh) (rot_lh side1_lh)) u_lh) _lh_corner2_arg1_0);;
-let rec pseudocorner_lh _lh_pseudocorner_arg1_0 =
-  (((((quartet_lh corner2_lh) side2_lh) (rot_lh side2_lh)) (rot_lh t_lh)) _lh_pseudocorner_arg1_0);;
-let rec pseudolimit_lh _lh_pseudolimit_arg1_0 =
-  ((cycle'_lh pseudocorner_lh) _lh_pseudolimit_arg1_0);;
 let rec testFish_nofib_lh _lh_testFish_nofib_arg1_0 =
   ((map_lh (fun i_0 -> 
     (let rec n_0 = ((min_lh 0) i_0) in

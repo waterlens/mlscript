@@ -1359,6 +1359,8 @@ fun break(x) = break(f(C(x)))
 //│         (f__d0 t_0)
 //│       else
 //│         x_3));;
+//│ let rec break__d0 x_2 =
+//│   (break__d0 (f__d0 (`C(x_2))));;
 //│ let rec f__d1 x_4 =
 //│   (match x_4 with
 //│     | `C(t_1) -> 
@@ -1366,8 +1368,6 @@ fun break(x) = break(f(C(x)))
 //│         (f__d1 t_1)
 //│       else
 //│         x_4));;
-//│ let rec break__d0 x_2 =
-//│   (break__d0 (f__d0 (`C(x_2))));;
 //│ ((fun x_0 -> 
 //│   2) (fun x_1 -> 
 //│   (break__d0 (f__d1 x_1))))
@@ -1404,13 +1404,6 @@ fun g(t) = C(t)
 //│ 		---------- unoptimized ocaml gen ----------
 //│ 		let rec g t_2 =
 //│ 		  (`C(t_2));;
-//│ 		let rec prodType x_0 =
-//│ 		  (match x_0 with
-//│ 		    | `C(t_0) -> 
-//│ 		      (if true then
-//│ 		        t_0
-//│ 		      else
-//│ 		        (prodType t_0)));;
 //│ 		let rec f x_1 =
 //│ 		  (match x_1 with
 //│ 		    | `C(t_1) -> 
@@ -1418,6 +1411,13 @@ fun g(t) = C(t)
 //│ 		        (f t_1)
 //│ 		      else
 //│ 		        (f (g t_1))));;
+//│ 		let rec prodType x_0 =
+//│ 		  (match x_0 with
+//│ 		    | `C(t_0) -> 
+//│ 		      (if true then
+//│ 		        t_0
+//│ 		      else
+//│ 		        (prodType t_0)));;
 //│ 		((fun x_2 -> 
 //│ 		  2) (fun x_3 -> 
 //│ 		  (f (prodType x_3))))
@@ -1425,9 +1425,9 @@ fun g(t) = C(t)
 //│ 		[ok]
 //│ 		  val g : 'a -> [> `C of 'a ] = <fun>
 //│ 		[ok]
-//│ 		              val prodType : ([< `C of 'a ] as 'a) -> 'a = <fun>
-//│ 		[ok]
 //│ 		              val f : ([ `C of 'a ] as 'a) -> 'b = <fun>
+//│ 		[ok]
+//│ 		              val prodType : ([< `C of 'a ] as 'a) -> 'a = <fun>
 //│ 		....... ocaml repl result .......
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
@@ -1525,13 +1525,6 @@ fun g(t) = C(t)
 //│ 
 //│ let rec g__d0 t_0 =
 //│   (`C(t_0));;
-//│ let rec prodType__d0 x_3 =
-//│   (match x_3 with
-//│     | `C(t_2) -> 
-//│       (if true then
-//│         t_2
-//│       else
-//│         (prodType__d0 t_2)));;
 //│ let rec f__d0 x_2 =
 //│   (match x_2 with
 //│     | `C(t_1) -> 
@@ -1539,6 +1532,13 @@ fun g(t) = C(t)
 //│         (f__d0 t_1)
 //│       else
 //│         (f__d0 (g__d0 t_1))));;
+//│ let rec prodType__d0 x_3 =
+//│   (match x_3 with
+//│     | `C(t_2) -> 
+//│       (if true then
+//│         t_2
+//│       else
+//│         (prodType__d0 t_2)));;
 //│ ((fun x_0 -> 
 //│   2) (fun x_1 -> 
 //│   (f__d0 (prodType__d0 x_1))))
@@ -1597,12 +1597,6 @@ fun head(ls) = if ls is
 //│ 		        (match (break t_0) with
 //│ 		          | `P(fst_0, snd_0) -> 
 //│ 		            (`P((`C(h_0, fst_0)), snd_0)))));;
-//│ 		let rec head ls_2 =
-//│ 		  (match ls_2 with
-//│ 		    | `C(h_2, t_2) -> 
-//│ 		      h_2
-//│ 		    | `N -> 
-//│ 		      (failwith "error"));;
 //│ 		let rec line ls_1 =
 //│ 		  (match (break ls_1) with
 //│ 		    | `P(fst_1, snd_1) -> 
@@ -1611,6 +1605,12 @@ fun head(ls) = if ls is
 //│ 		          (line t_1)
 //│ 		        | `N -> 
 //│ 		          (`N)))));;
+//│ 		let rec head ls_2 =
+//│ 		  (match ls_2 with
+//│ 		    | `C(h_2, t_2) -> 
+//│ 		      h_2
+//│ 		    | `N -> 
+//│ 		      (failwith "error"));;
 //│ 		(head (line (`C(2, (`C(2, (`C(1, (`C(2, (`N)))))))))))
 //│ 		....... ocaml repl result .......
 //│ 		[ok]
@@ -1619,11 +1619,11 @@ fun head(ls) = if ls is
 //│ 		  [ `P of ([> `C of int * 'b | `N ] as 'b) * [> `C of int * 'a | `N ] ] =
 //│ 		  <fun>
 //│ 		[ok]
-//│ 		            val head : [< `C of 'a * 'b | `N ] -> 'a = <fun>
-//│ 		[ok]
 //│ 		                val line :
 //│ 		  ([< `C of int * 'a | `N ] as 'a) ->
 //│ 		  ([> `C of ([> `C of int * 'c | `N ] as 'c) * 'b | `N ] as 'b) = <fun>
+//│ 		[ok]
+//│ 		            val head : [< `C of 'a * 'b | `N ] -> 'a = <fun>
 //│ 		....... ocaml repl result .......
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<

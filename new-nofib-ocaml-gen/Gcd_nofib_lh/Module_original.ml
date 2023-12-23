@@ -13,6 +13,16 @@ let rec abs_lh _lh_abs_arg1_0 =
     (0 - _lh_abs_arg1_0)
   else
     _lh_abs_arg1_0);;
+let rec f2_lh _lh_f2_arg1_0 =
+  (match _lh_f2_arg1_0 with
+    | `LH_P3(_lh_f2_LH_P3_0_0, _lh_f2_LH_P3_1_0, _lh_f2_LH_P3_2_0) -> 
+      (match _lh_f2_LH_P3_2_0 with
+        | `LH_P3(_lh_f2_LH_P3_0_1, _lh_f2_LH_P3_1_1, _lh_f2_LH_P3_2_1) -> 
+          (abs_lh ((_lh_f2_LH_P3_0_1 + _lh_f2_LH_P3_1_1) + _lh_f2_LH_P3_2_1))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
 let rec max'_lh _lh_max'_arg1_0 =
   (match _lh_max'_arg1_0 with
     | `LH_C(_lh_max'_LH_C_0_0, _lh_max'_LH_C_1_0) -> 
@@ -36,16 +46,6 @@ let rec map_lh f_0 ls_0 =
       (`LH_N));;
 let rec quotRem_lh _lh_quotRem_arg1_0 _lh_quotRem_arg2_0 =
   (`LH_P2((_lh_quotRem_arg1_0 / _lh_quotRem_arg2_0), (_lh_quotRem_arg1_0 mod _lh_quotRem_arg2_0)));;
-let rec f2_lh _lh_f2_arg1_0 =
-  (match _lh_f2_arg1_0 with
-    | `LH_P3(_lh_f2_LH_P3_0_0, _lh_f2_LH_P3_1_0, _lh_f2_LH_P3_2_0) -> 
-      (match _lh_f2_LH_P3_2_0 with
-        | `LH_P3(_lh_f2_LH_P3_0_1, _lh_f2_LH_P3_1_1, _lh_f2_LH_P3_2_1) -> 
-          (abs_lh ((_lh_f2_LH_P3_0_1 + _lh_f2_LH_P3_1_1) + _lh_f2_LH_P3_2_1))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
 let rec g_lh _lh_g_arg1_0 _lh_g_arg2_0 =
   (match _lh_g_arg1_0 with
     | `LH_P3(_lh_g_LH_P3_0_0, _lh_g_LH_P3_1_0, _lh_g_LH_P3_2_0) -> 

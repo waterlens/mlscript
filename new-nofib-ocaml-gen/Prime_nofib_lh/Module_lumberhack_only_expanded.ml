@@ -22,6 +22,12 @@ let rec filter_lh f_1 ls_1 =
       (`LH_N));;
 let rec isdivs_lh _lh_isdivs_arg1_0 _lh_isdivs_arg2_0 =
   ((_lh_isdivs_arg2_0 mod _lh_isdivs_arg1_0) <> 0);;
+let rec the_filter_lh _lh_the_filter_arg1_0 =
+  (match _lh_the_filter_arg1_0 with
+    | `LH_C(_lh_the_filter_LH_C_0_0, _lh_the_filter_LH_C_1_0) -> 
+      ((filter_lh (isdivs_lh _lh_the_filter_LH_C_0_0)) _lh_the_filter_LH_C_1_0)
+    | _ -> 
+      (failwith "error"));;
 let rec head_lh ls_2 =
   (match ls_2 with
     | `LH_C(h_2, t_2) -> 
@@ -46,12 +52,6 @@ let rec atIndex_lz_lh n_0 ls_3 =
           ((atIndex_lz_lh (n_0 - 1)) t_3))
       | `LH_N -> 
         (failwith "error")));;
-let rec the_filter_lh _lh_the_filter_arg1_0 =
-  (match _lh_the_filter_arg1_0 with
-    | `LH_C(_lh_the_filter_LH_C_0_0, _lh_the_filter_LH_C_1_0) -> 
-      ((filter_lh (isdivs_lh _lh_the_filter_LH_C_0_0)) _lh_the_filter_LH_C_1_0)
-    | _ -> 
-      (failwith "error"));;
 let rec prime_lh _lh_prime_arg1_0 =
   ((atIndex_lz_lh _lh_prime_arg1_0) ((map_lz_lh head_lh) ((iterate_lh the_filter_lh) ((enumFromTo_lh 2) (_lh_prime_arg1_0 * _lh_prime_arg1_0)))));;
 let rec testPrime_nofib_lh _lh_testPrime_nofib_arg1_0 =

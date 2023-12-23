@@ -6,12 +6,17 @@ open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_lumberhack = struct
 let rec foldl_lh__d0 f_2_5 i_2_3 ls_1_2 =
   ((ls_1_2 f_2_5) i_2_3);;
+let rec hash_lh__d0 _lh_hash_arg1_0 =
+  (((foldl_lh__d0 (fun acc_0 c_0 -> 
+    ((int_of_char c_0) + (acc_0 * 31)))) 0) _lh_hash_arg1_0);;
 let rec reverse_helper_lh__d5 ls_2 a_0 =
   (match ls_2 with
     | `LH_C(h_0, t_0) -> 
       ((reverse_helper_lh__d5 t_0) (`LH_C(h_0, a_0)))
     | `LH_N -> 
       a_0);;
+let rec reverse_lh__d5 ls_1 =
+  ((reverse_helper_lh__d5 ls_1) (`LH_N));;
 let rec compareList_lh__d2_d4 _lh_compareList_arg1_1_0 _lh_compareList_arg2_1_0 =
   (match _lh_compareList_arg1_1_0 with
     | `LH_N -> 
@@ -38,6 +43,11 @@ let rec compareList_lh__d2_d4 _lh_compareList_arg1_1_0 _lh_compareList_arg2_1_0 
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
+let rec gtList_lh__d1_d9 _lh_gtList_arg1_8 _lh_gtList_arg2_8 =
+  (let rec _lh_matchIdent_1_6 = ((compareList_lh__d2_d4 _lh_gtList_arg1_8) _lh_gtList_arg2_8) in
+    _lh_matchIdent_1_6);;
+let rec leList_lh__d1_d4 _lh_leList_arg1_1 _lh_leList_arg2_1 =
+  (not ((gtList_lh__d1_d9 _lh_leList_arg1_1) _lh_leList_arg2_1));;
 let rec foldr_lh__d2 f_1_9 i_1_8 ls_9 =
   (match ls_9 with
     | `LH_C(h_2_7, t_2_7) -> 
@@ -76,6 +86,42 @@ let rec compareList_lh__d2_d3 _lh_compareList_arg1_2_4 _lh_compareList_arg2_2_4 
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
+let rec gtList_lh__d1_d8 _lh_gtList_arg1_1_9 _lh_gtList_arg2_1_9 =
+  (let rec _lh_matchIdent_3_1 = ((compareList_lh__d2_d3 _lh_gtList_arg1_1_9) _lh_gtList_arg2_1_9) in
+    _lh_matchIdent_3_1);;
+let rec leList_lh__d1_d3 _lh_leList_arg1_8 _lh_leList_arg2_8 =
+  (not ((gtList_lh__d1_d8 _lh_leList_arg1_8) _lh_leList_arg2_8));;
+let rec treeSort2_lh__d0 _lh_treeSort2_arg1_0 =
+  let rec mkTree_0 = (fun _lh_mkTree_arg1_0 -> 
+    (let rec to_tree_0 = (fun _lh_to_tree_arg1_0 _lh_to_tree_arg2_0 -> 
+      (match _lh_to_tree_arg2_0 with
+        | `Tip2 -> 
+          (`Twig2(_lh_to_tree_arg1_0))
+        | `Twig2(_lh_to_tree_Twig2_0_0) -> 
+          (if ((leList_lh__d1_d3 _lh_to_tree_arg1_0) _lh_to_tree_Twig2_0_0) then
+            (`Branch2(_lh_to_tree_Twig2_0_0, (`Twig2(_lh_to_tree_arg1_0)), (`Tip2)))
+          else
+            (`Branch2(_lh_to_tree_Twig2_0_0, (`Tip2), (`Twig2(_lh_to_tree_arg1_0)))))
+        | `Branch2(_lh_to_tree_Branch2_0_0, _lh_to_tree_Branch2_1_0, _lh_to_tree_Branch2_2_0) -> 
+          (if ((leList_lh__d1_d4 _lh_to_tree_arg1_0) _lh_to_tree_Branch2_0_0) then
+            (`Branch2(_lh_to_tree_Branch2_0_0, ((to_tree_0 _lh_to_tree_arg1_0) _lh_to_tree_Branch2_1_0), _lh_to_tree_Branch2_2_0))
+          else
+            (`Branch2(_lh_to_tree_Branch2_0_0, _lh_to_tree_Branch2_1_0, ((to_tree_0 _lh_to_tree_arg1_0) _lh_to_tree_Branch2_2_0))))
+        | _ -> 
+          (failwith "error"))) in
+      (((foldr_lh__d2 to_tree_0) (`Tip2)) _lh_mkTree_arg1_0)))
+  and readTree_0 = (fun _lh_readTree_arg1_0 -> 
+    (match _lh_readTree_arg1_0 with
+      | `Tip2 -> 
+        (`LH_N)
+      | `Twig2(_lh_readTree_Twig2_0_0) -> 
+        (`LH_C(_lh_readTree_Twig2_0_0, (`LH_N)))
+      | `Branch2(_lh_readTree_Branch2_0_0, _lh_readTree_Branch2_1_0, _lh_readTree_Branch2_2_0) -> 
+        ((mappend_lh__d8 (readTree_0 _lh_readTree_Branch2_1_0)) (`LH_C(_lh_readTree_Branch2_0_0, (readTree_0 _lh_readTree_Branch2_2_0))))
+      | _ -> 
+        (failwith "error")))
+  in ((fun _lh_funcomp_x_0 -> 
+    (readTree_0 (mkTree_0 _lh_funcomp_x_0))) _lh_treeSort2_arg1_0);;
 let rec prependToAll_lh__d3 _lh_prependToAll_arg1_9 _lh_prependToAll_arg2_1 =
   (_lh_prependToAll_arg2_1 _lh_prependToAll_arg1_9);;
 let rec mappend_lh__d5 xs_7 ys_1_4 =
@@ -99,6 +145,8 @@ let rec select_lh__d0 _lh_select_arg1_0 _lh_select_arg2_0 _lh_select_arg3_0 =
         (`LH_P2(_lh_select_LH_P2_0_0, (`LH_C(_lh_select_arg2_0, _lh_select_LH_P2_1_0)))))
     | _ -> 
       (failwith "error"));;
+let rec partition_lh__d0 _lh_partition_arg1_0 _lh_partition_arg2_0 =
+  (((foldr_lh__d1 (select_lh__d0 _lh_partition_arg1_0)) (`LH_P2((`LH_N), (`LH_N)))) _lh_partition_arg2_0);;
 let rec compareList_lh__d1_d9 _lh_compareList_arg1_2_2 _lh_compareList_arg2_2_2 =
   (match _lh_compareList_arg1_2_2 with
     | `LH_N -> 
@@ -125,12 +173,63 @@ let rec compareList_lh__d1_d9 _lh_compareList_arg1_2_2 _lh_compareList_arg2_2_2 
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
+let rec ltList_lh__d3 _lh_ltList_arg1_1 _lh_ltList_arg2_1 =
+  (let rec _lh_matchIdent_3 = ((compareList_lh__d1_d9 _lh_ltList_arg1_1) _lh_ltList_arg2_1) in
+    _lh_matchIdent_3);;
+let rec geList_lh__d0 _lh_geList_arg1_0 _lh_geList_arg2_0 =
+  (not ((ltList_lh__d3 _lh_geList_arg1_0) _lh_geList_arg2_0));;
+let rec quickSort2_lh__d0 _lh_quickSort2_arg1_0 =
+  (match _lh_quickSort2_arg1_0 with
+    | `LH_N -> 
+      (`LH_N)
+    | `LH_C(_lh_quickSort2_LH_C_0_0, _lh_quickSort2_LH_C_1_0) -> 
+      (let rec _lh_matchIdent_1_0 = ((partition_lh__d0 ((fun x_1 y_0 -> 
+        ((geList_lh__d0 x_1) y_0)) _lh_quickSort2_LH_C_0_0)) _lh_quickSort2_LH_C_1_0) in
+        (match _lh_matchIdent_1_0 with
+          | `LH_P2(_lh_quickSort2_LH_P2_0_0, _lh_quickSort2_LH_P2_1_0) -> 
+            ((mappend_lh__d5 (quickSort2_lh__d0 _lh_quickSort2_LH_P2_0_0)) (`LH_C(_lh_quickSort2_LH_C_0_0, (quickSort2_lh__d0 _lh_quickSort2_LH_P2_1_0))))
+          | _ -> 
+            (failwith "error")))
+    | _ -> 
+      (failwith "error"));;
 let rec concat_lh__d0 lss_0 =
   (lss_0 99);;
 let rec mappend_lh__d1_d0 xs_4 ys_9 =
   (xs_4 ys_9);;
 let rec concat_lh__d1 lss_1 =
   (lss_1 99);;
+let rec map_lh__d0 f_2_1 ls_1_0 =
+  (match ls_1_0 with
+    | `LH_C(h_3_1, t_3_1) -> 
+      (let rec t_3_2 = ((map_lh__d0 f_2_1) t_3_1) in
+        (let rec h_3_2 = (f_2_1 h_3_1) in
+          (fun _lh_dummy_0 -> 
+            ((mappend_lh__d1_d0 h_3_2) (concat_lh__d1 t_3_2)))))
+    | `LH_N -> 
+      (fun _lh_dummy_1 f_2_2 i_2_0 -> 
+        i_2_0));;
+let rec mappend_lh__d1_d1 xs_9 ys_1_6 =
+  (match xs_9 with
+    | `LH_C(h_3_5, t_3_5) -> 
+      (let rec t_3_6 = ((mappend_lh__d1_d1 t_3_5) ys_1_6) in
+        (let rec h_3_6 = h_3_5 in
+          (fun ys_1_7 -> 
+            (let rec t_3_7 = ((mappend_lh__d1_d0 t_3_6) ys_1_7) in
+              (let rec h_3_7 = h_3_6 in
+                (fun f_2_4 i_2_2 -> 
+                  (((foldl_lh__d0 f_2_4) ((f_2_4 i_2_2) h_3_7)) t_3_7)))))))
+    | `LH_N -> 
+      ys_1_6);;
+let rec unlines_lh__d0 _lh_unlines_arg1_0 =
+  (concat_lh__d0 ((map_lh__d0 (fun l_0 -> 
+    ((mappend_lh__d1_d1 l_0) (let rec t_2_8 = (fun ys_1_2 -> 
+      ys_1_2) in
+      (let rec h_2_8 = '|' in
+        (fun ys_1_3 -> 
+          (let rec t_2_9 = ((mappend_lh__d1_d0 t_2_8) ys_1_3) in
+            (let rec h_2_9 = h_2_8 in
+              (fun f_2_0 i_1_9 -> 
+                (((foldl_lh__d0 f_2_0) ((f_2_0 i_1_9) h_2_9)) t_2_9)))))))))) _lh_unlines_arg1_0));;
 let rec prependToAll_lh__d0 _lh_prependToAll_arg1_1_2 _lh_prependToAll_arg2_4 =
   (_lh_prependToAll_arg2_4 _lh_prependToAll_arg1_1_2);;
 let rec prependToAll_lh__d2 _lh_prependToAll_arg1_1_3 _lh_prependToAll_arg2_5 =
@@ -200,6 +299,9 @@ let rec compareList_lh__d2_d0 _lh_compareList_arg1_2_5 _lh_compareList_arg2_2_5 
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
+let rec gtList_lh__d1_d5 _lh_gtList_arg1_4 _lh_gtList_arg2_4 =
+  (let rec _lh_matchIdent_1_2 = ((compareList_lh__d2_d0 _lh_gtList_arg1_4) _lh_gtList_arg2_4) in
+    _lh_matchIdent_1_2);;
 let rec compareList_lh__d2_d1 _lh_compareList_arg1_1_3 _lh_compareList_arg2_1_3 =
   (match _lh_compareList_arg1_1_3 with
     | `LH_N -> 
@@ -226,12 +328,43 @@ let rec compareList_lh__d2_d1 _lh_compareList_arg1_1_3 _lh_compareList_arg2_1_3 
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
+let rec gtList_lh__d1_d6 _lh_gtList_arg1_1 _lh_gtList_arg2_1 =
+  (let rec _lh_matchIdent_1 = ((compareList_lh__d2_d1 _lh_gtList_arg1_1) _lh_gtList_arg2_1) in
+    _lh_matchIdent_1);;
+let rec leList_lh__d1_d1 _lh_leList_arg1_6 _lh_leList_arg2_6 =
+  (not ((gtList_lh__d1_d6 _lh_leList_arg1_6) _lh_leList_arg2_6));;
 let rec mappend_lh__d6 xs_8 ys_1_5 =
   (match xs_8 with
     | `LH_C(h_3_4, t_3_4) -> 
       (`LH_C(h_3_4, ((mappend_lh__d6 t_3_4) ys_1_5)))
     | `LH_N -> 
       ys_1_5);;
+let rec quickSort_lh__d0 _lh_quickSort_arg1_0 =
+  (match _lh_quickSort_arg1_0 with
+    | `LH_N -> 
+      (`LH_N)
+    | `LH_C(_lh_quickSort_LH_C_0_0, _lh_quickSort_LH_C_1_0) -> 
+      ((mappend_lh__d6 (quickSort_lh__d0 (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
+        (match _lh_listcomp_fun_para_0 with
+          | `LH_C(_lh_listcomp_fun_ls_h_0, _lh_listcomp_fun_ls_t_0) -> 
+            (if ((leList_lh__d1_d1 _lh_listcomp_fun_ls_h_0) _lh_quickSort_LH_C_0_0) then
+              (`LH_C(_lh_listcomp_fun_ls_h_0, (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0)))
+            else
+              (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0))
+          | `LH_N -> 
+            (`LH_N))) in
+        (_lh_listcomp_fun_0 _lh_quickSort_LH_C_1_0)))) (`LH_C(_lh_quickSort_LH_C_0_0, (quickSort_lh__d0 (let rec _lh_listcomp_fun_1 = (fun _lh_listcomp_fun_para_1 -> 
+        (match _lh_listcomp_fun_para_1 with
+          | `LH_C(_lh_listcomp_fun_ls_h_1, _lh_listcomp_fun_ls_t_1) -> 
+            (if ((gtList_lh__d1_d5 _lh_listcomp_fun_ls_h_1) _lh_quickSort_LH_C_0_0) then
+              (`LH_C(_lh_listcomp_fun_ls_h_1, (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_1)))
+            else
+              (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_1))
+          | `LH_N -> 
+            (`LH_N))) in
+        (_lh_listcomp_fun_1 _lh_quickSort_LH_C_1_0))))))
+    | _ -> 
+      (failwith "error"));;
 let rec foldr_lh__d3 f_2_3 i_2_1 ls_1_1 =
   (match ls_1_1 with
     | `LH_C(h_3_3, t_3_3) -> 
@@ -270,6 +403,35 @@ let rec compareList_lh__d2_d5 _lh_compareList_arg1_1_6 _lh_compareList_arg2_1_6 
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
+let rec gtList_lh__d2_d0 _lh_gtList_arg1_2_0 _lh_gtList_arg2_2_0 =
+  (let rec _lh_matchIdent_3_2 = ((compareList_lh__d2_d5 _lh_gtList_arg1_2_0) _lh_gtList_arg2_2_0) in
+    _lh_matchIdent_3_2);;
+let rec leList_lh__d1_d5 _lh_leList_arg1_4 _lh_leList_arg2_4 =
+  (not ((gtList_lh__d2_d0 _lh_leList_arg1_4) _lh_leList_arg2_4));;
+let rec treeSort_lh__d0 _lh_treeSort_arg1_0 =
+  let rec mkTree_1 = (fun _lh_mkTree_arg1_1 -> 
+    (let rec to_tree_1 = (fun _lh_to_tree_arg1_1 _lh_to_tree_arg2_1 -> 
+      (match _lh_to_tree_arg2_1 with
+        | `Tip -> 
+          (`Branch(_lh_to_tree_arg1_1, (`Tip), (`Tip)))
+        | `Branch(_lh_to_tree_Branch_0_0, _lh_to_tree_Branch_1_0, _lh_to_tree_Branch_2_0) -> 
+          (if ((leList_lh__d1_d5 _lh_to_tree_arg1_1) _lh_to_tree_Branch_0_0) then
+            (`Branch(_lh_to_tree_Branch_0_0, ((to_tree_1 _lh_to_tree_arg1_1) _lh_to_tree_Branch_1_0), _lh_to_tree_Branch_2_0))
+          else
+            (`Branch(_lh_to_tree_Branch_0_0, _lh_to_tree_Branch_1_0, ((to_tree_1 _lh_to_tree_arg1_1) _lh_to_tree_Branch_2_0))))
+        | _ -> 
+          (failwith "error"))) in
+      (((foldr_lh__d3 to_tree_1) (`Tip)) _lh_mkTree_arg1_1)))
+  and readTree_1 = (fun _lh_readTree_arg1_1 -> 
+    (match _lh_readTree_arg1_1 with
+      | `Tip -> 
+        (`LH_N)
+      | `Branch(_lh_readTree_Branch_0_0, _lh_readTree_Branch_1_0, _lh_readTree_Branch_2_0) -> 
+        ((mappend_lh__d9 (readTree_1 _lh_readTree_Branch_1_0)) (`LH_C(_lh_readTree_Branch_0_0, (readTree_1 _lh_readTree_Branch_2_0))))
+      | _ -> 
+        (failwith "error")))
+  in ((fun _lh_funcomp_x_5 -> 
+    (readTree_1 (mkTree_1 _lh_funcomp_x_5))) _lh_treeSort_arg1_0);;
 let rec compareList_lh__d2_d2 _lh_compareList_arg1_1_9 _lh_compareList_arg2_1_9 =
   (match _lh_compareList_arg1_1_9 with
     | `LH_N -> 
@@ -296,12 +458,40 @@ let rec compareList_lh__d2_d2 _lh_compareList_arg1_1_9 _lh_compareList_arg2_1_9 
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
+let rec gtList_lh__d1_d7 _lh_gtList_arg1_7 _lh_gtList_arg2_7 =
+  (let rec _lh_matchIdent_1_5 = ((compareList_lh__d2_d2 _lh_gtList_arg1_7) _lh_gtList_arg2_7) in
+    _lh_matchIdent_1_5);;
+let rec leList_lh__d1_d2 _lh_leList_arg1_3 _lh_leList_arg2_3 =
+  (not ((gtList_lh__d1_d7 _lh_leList_arg1_3) _lh_leList_arg2_3));;
 let rec mappend_lh__d7 xs_5 ys_1_0 =
   (match xs_5 with
     | `LH_C(h_2_6, t_2_6) -> 
       (`LH_C(h_2_6, ((mappend_lh__d7 t_2_6) ys_1_0)))
     | `LH_N -> 
       ys_1_0);;
+let rec quickerSort_lh__d0 _lh_quickerSort_arg1_0 =
+  (match _lh_quickerSort_arg1_0 with
+    | `LH_N -> 
+      (`LH_N)
+    | `LH_C(_lh_quickerSort_LH_C_0_0, _lh_quickerSort_LH_C_1_0) -> 
+      (match _lh_quickerSort_LH_C_1_0 with
+        | `LH_N -> 
+          (`LH_C(_lh_quickerSort_LH_C_0_0, (`LH_N)))
+        | _ -> 
+          (let rec split_0 = (fun _lh_split_arg1_0 _lh_split_arg2_0 _lh_split_arg3_0 _lh_split_arg4_0 -> 
+            (match _lh_split_arg4_0 with
+              | `LH_N -> 
+                ((mappend_lh__d7 (quickerSort_lh__d0 _lh_split_arg2_0)) (`LH_C(_lh_split_arg1_0, (quickerSort_lh__d0 _lh_split_arg3_0))))
+              | `LH_C(_lh_split_LH_C_0_0, _lh_split_LH_C_1_0) -> 
+                (if ((leList_lh__d1_d2 _lh_split_LH_C_0_0) _lh_split_arg1_0) then
+                  ((((split_0 _lh_split_arg1_0) (`LH_C(_lh_split_LH_C_0_0, _lh_split_arg2_0))) _lh_split_arg3_0) _lh_split_LH_C_1_0)
+                else
+                  ((((split_0 _lh_split_arg1_0) _lh_split_arg2_0) (`LH_C(_lh_split_LH_C_0_0, _lh_split_arg3_0))) _lh_split_LH_C_1_0))
+              | _ -> 
+                (failwith "error"))) in
+            ((((split_0 _lh_quickerSort_LH_C_0_0) (`LH_N)) (`LH_N)) _lh_quickerSort_LH_C_1_0)))
+    | _ -> 
+      (failwith "error"));;
 let rec prependToAll_lh__d5 _lh_prependToAll_arg1_8 _lh_prependToAll_arg2_0 =
   (_lh_prependToAll_arg2_0 _lh_prependToAll_arg1_8);;
 let rec odd_lh__d0 _lh_odd_arg1_0 =
@@ -332,6 +522,11 @@ let rec compareList_lh__d1 _lh_compareList_arg1_2_1 _lh_compareList_arg2_2_1 =
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
+let rec gtList_lh__d1 _lh_gtList_arg1_2 _lh_gtList_arg2_2 =
+  (let rec _lh_matchIdent_4 = ((compareList_lh__d1 _lh_gtList_arg1_2) _lh_gtList_arg2_2) in
+    _lh_matchIdent_4);;
+let rec leList_lh__d1 _lh_leList_arg1_7 _lh_leList_arg2_7 =
+  (not ((gtList_lh__d1 _lh_leList_arg1_7) _lh_leList_arg2_7));;
 let rec compareList_lh__d2 _lh_compareList_arg1_5 _lh_compareList_arg2_5 =
   (match _lh_compareList_arg1_5 with
     | `LH_N -> 
@@ -358,6 +553,11 @@ let rec compareList_lh__d2 _lh_compareList_arg1_5 _lh_compareList_arg2_5 =
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
+let rec gtList_lh__d2 _lh_gtList_arg1_1_7 _lh_gtList_arg2_1_7 =
+  (let rec _lh_matchIdent_2_8 = ((compareList_lh__d2 _lh_gtList_arg1_1_7) _lh_gtList_arg2_1_7) in
+    _lh_matchIdent_2_8);;
+let rec leList_lh__d2 _lh_leList_arg1_9 _lh_leList_arg2_9 =
+  (not ((gtList_lh__d2 _lh_leList_arg1_9) _lh_leList_arg2_9));;
 let rec compareList_lh__d0 _lh_compareList_arg1_1_1 _lh_compareList_arg2_1_1 =
   (match _lh_compareList_arg1_1_1 with
     | `LH_N -> 
@@ -384,768 +584,13 @@ let rec compareList_lh__d0 _lh_compareList_arg1_1_1 _lh_compareList_arg2_1_1 =
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
-let rec odd_lh__d1 _lh_odd_arg1_1 =
-  ((_lh_odd_arg1_1 mod 2) = 0);;
-let rec foldr_lh__d0 f_1_7 i_1_6 ls_7 =
-  ((ls_7 f_1_7) i_1_6);;
-let rec compareList_lh__d1_d4 _lh_compareList_arg1_4 _lh_compareList_arg2_4 =
-  (match _lh_compareList_arg1_4 with
-    | `LH_N -> 
-      (match _lh_compareList_arg2_4 with
-        | `LH_N -> 
-          false
-        | `LH_C(_lh_compareList_LH_C_0_1_2, _lh_compareList_LH_C_1_1_2) -> 
-          false
-        | _ -> 
-          (failwith "error"))
-    | `LH_C(_lh_compareList_LH_C_0_1_3, _lh_compareList_LH_C_1_1_3) -> 
-      (match _lh_compareList_arg2_4 with
-        | `LH_N -> 
-          true
-        | `LH_C(_lh_compareList_LH_C_0_1_4, _lh_compareList_LH_C_1_1_4) -> 
-          (if ((int_of_char _lh_compareList_LH_C_0_1_3) = (int_of_char _lh_compareList_LH_C_0_1_4)) then
-            ((compareList_lh__d1_d4 _lh_compareList_LH_C_1_1_3) _lh_compareList_LH_C_1_1_4)
-          else
-            (if ((int_of_char _lh_compareList_LH_C_0_1_3) < (int_of_char _lh_compareList_LH_C_0_1_4)) then
-              false
-            else
-              true))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec compareList_lh__d1_d5 _lh_compareList_arg1_1 _lh_compareList_arg2_1 =
-  (match _lh_compareList_arg1_1 with
-    | `LH_N -> 
-      (match _lh_compareList_arg2_1 with
-        | `LH_N -> 
-          false
-        | `LH_C(_lh_compareList_LH_C_0_3, _lh_compareList_LH_C_1_3) -> 
-          false
-        | _ -> 
-          (failwith "error"))
-    | `LH_C(_lh_compareList_LH_C_0_4, _lh_compareList_LH_C_1_4) -> 
-      (match _lh_compareList_arg2_1 with
-        | `LH_N -> 
-          true
-        | `LH_C(_lh_compareList_LH_C_0_5, _lh_compareList_LH_C_1_5) -> 
-          (if ((int_of_char _lh_compareList_LH_C_0_4) = (int_of_char _lh_compareList_LH_C_0_5)) then
-            ((compareList_lh__d1_d5 _lh_compareList_LH_C_1_4) _lh_compareList_LH_C_1_5)
-          else
-            (if ((int_of_char _lh_compareList_LH_C_0_4) < (int_of_char _lh_compareList_LH_C_0_5)) then
-              false
-            else
-              true))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec compareList_lh__d1_d7 _lh_compareList_arg1_1_7 _lh_compareList_arg2_1_7 =
-  (match _lh_compareList_arg1_1_7 with
-    | `LH_N -> 
-      (match _lh_compareList_arg2_1_7 with
-        | `LH_N -> 
-          false
-        | `LH_C(_lh_compareList_LH_C_0_5_1, _lh_compareList_LH_C_1_5_1) -> 
-          false
-        | _ -> 
-          (failwith "error"))
-    | `LH_C(_lh_compareList_LH_C_0_5_2, _lh_compareList_LH_C_1_5_2) -> 
-      (match _lh_compareList_arg2_1_7 with
-        | `LH_N -> 
-          true
-        | `LH_C(_lh_compareList_LH_C_0_5_3, _lh_compareList_LH_C_1_5_3) -> 
-          (if ((int_of_char _lh_compareList_LH_C_0_5_2) = (int_of_char _lh_compareList_LH_C_0_5_3)) then
-            ((compareList_lh__d1_d7 _lh_compareList_LH_C_1_5_2) _lh_compareList_LH_C_1_5_3)
-          else
-            (if ((int_of_char _lh_compareList_LH_C_0_5_2) < (int_of_char _lh_compareList_LH_C_0_5_3)) then
-              false
-            else
-              true))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec compareList_lh__d7 _lh_compareList_arg1_1_2 _lh_compareList_arg2_1_2 =
-  (match _lh_compareList_arg1_1_2 with
-    | `LH_N -> 
-      (match _lh_compareList_arg2_1_2 with
-        | `LH_N -> 
-          false
-        | `LH_C(_lh_compareList_LH_C_0_3_6, _lh_compareList_LH_C_1_3_6) -> 
-          false
-        | _ -> 
-          (failwith "error"))
-    | `LH_C(_lh_compareList_LH_C_0_3_7, _lh_compareList_LH_C_1_3_7) -> 
-      (match _lh_compareList_arg2_1_2 with
-        | `LH_N -> 
-          true
-        | `LH_C(_lh_compareList_LH_C_0_3_8, _lh_compareList_LH_C_1_3_8) -> 
-          (if ((int_of_char _lh_compareList_LH_C_0_3_7) = (int_of_char _lh_compareList_LH_C_0_3_8)) then
-            ((compareList_lh__d7 _lh_compareList_LH_C_1_3_7) _lh_compareList_LH_C_1_3_8)
-          else
-            (if ((int_of_char _lh_compareList_LH_C_0_3_7) < (int_of_char _lh_compareList_LH_C_0_3_8)) then
-              false
-            else
-              true))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec compareList_lh__d9 _lh_compareList_arg1_1_4 _lh_compareList_arg2_1_4 =
-  (match _lh_compareList_arg1_1_4 with
-    | `LH_N -> 
-      (match _lh_compareList_arg2_1_4 with
-        | `LH_N -> 
-          false
-        | `LH_C(_lh_compareList_LH_C_0_4_2, _lh_compareList_LH_C_1_4_2) -> 
-          false
-        | _ -> 
-          (failwith "error"))
-    | `LH_C(_lh_compareList_LH_C_0_4_3, _lh_compareList_LH_C_1_4_3) -> 
-      (match _lh_compareList_arg2_1_4 with
-        | `LH_N -> 
-          true
-        | `LH_C(_lh_compareList_LH_C_0_4_4, _lh_compareList_LH_C_1_4_4) -> 
-          (if ((int_of_char _lh_compareList_LH_C_0_4_3) = (int_of_char _lh_compareList_LH_C_0_4_4)) then
-            ((compareList_lh__d9 _lh_compareList_LH_C_1_4_3) _lh_compareList_LH_C_1_4_4)
-          else
-            (if ((int_of_char _lh_compareList_LH_C_0_4_3) < (int_of_char _lh_compareList_LH_C_0_4_4)) then
-              false
-            else
-              true))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec compareList_lh__d8 _lh_compareList_arg1_2_3 _lh_compareList_arg2_2_3 =
-  (match _lh_compareList_arg1_2_3 with
-    | `LH_N -> 
-      (match _lh_compareList_arg2_2_3 with
-        | `LH_N -> 
-          false
-        | `LH_C(_lh_compareList_LH_C_0_6_9, _lh_compareList_LH_C_1_6_9) -> 
-          false
-        | _ -> 
-          (failwith "error"))
-    | `LH_C(_lh_compareList_LH_C_0_7_0, _lh_compareList_LH_C_1_7_0) -> 
-      (match _lh_compareList_arg2_2_3 with
-        | `LH_N -> 
-          true
-        | `LH_C(_lh_compareList_LH_C_0_7_1, _lh_compareList_LH_C_1_7_1) -> 
-          (if ((int_of_char _lh_compareList_LH_C_0_7_0) = (int_of_char _lh_compareList_LH_C_0_7_1)) then
-            ((compareList_lh__d8 _lh_compareList_LH_C_1_7_0) _lh_compareList_LH_C_1_7_1)
-          else
-            (if ((int_of_char _lh_compareList_LH_C_0_7_0) < (int_of_char _lh_compareList_LH_C_0_7_1)) then
-              false
-            else
-              true))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec compareList_lh__d1_d6 _lh_compareList_arg1_6 _lh_compareList_arg2_6 =
-  (match _lh_compareList_arg1_6 with
-    | `LH_N -> 
-      (match _lh_compareList_arg2_6 with
-        | `LH_N -> 
-          false
-        | `LH_C(_lh_compareList_LH_C_0_1_8, _lh_compareList_LH_C_1_1_8) -> 
-          false
-        | _ -> 
-          (failwith "error"))
-    | `LH_C(_lh_compareList_LH_C_0_1_9, _lh_compareList_LH_C_1_1_9) -> 
-      (match _lh_compareList_arg2_6 with
-        | `LH_N -> 
-          true
-        | `LH_C(_lh_compareList_LH_C_0_2_0, _lh_compareList_LH_C_1_2_0) -> 
-          (if ((int_of_char _lh_compareList_LH_C_0_1_9) = (int_of_char _lh_compareList_LH_C_0_2_0)) then
-            ((compareList_lh__d1_d6 _lh_compareList_LH_C_1_1_9) _lh_compareList_LH_C_1_2_0)
-          else
-            (if ((int_of_char _lh_compareList_LH_C_0_1_9) < (int_of_char _lh_compareList_LH_C_0_2_0)) then
-              false
-            else
-              true))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec compareList_lh__d1_d8 _lh_compareList_arg1_1_8 _lh_compareList_arg2_1_8 =
-  (match _lh_compareList_arg1_1_8 with
-    | `LH_N -> 
-      (match _lh_compareList_arg2_1_8 with
-        | `LH_N -> 
-          false
-        | `LH_C(_lh_compareList_LH_C_0_5_4, _lh_compareList_LH_C_1_5_4) -> 
-          true
-        | _ -> 
-          (failwith "error"))
-    | `LH_C(_lh_compareList_LH_C_0_5_5, _lh_compareList_LH_C_1_5_5) -> 
-      (match _lh_compareList_arg2_1_8 with
-        | `LH_N -> 
-          false
-        | `LH_C(_lh_compareList_LH_C_0_5_6, _lh_compareList_LH_C_1_5_6) -> 
-          (if ((int_of_char _lh_compareList_LH_C_0_5_5) = (int_of_char _lh_compareList_LH_C_0_5_6)) then
-            ((compareList_lh__d1_d8 _lh_compareList_LH_C_1_5_5) _lh_compareList_LH_C_1_5_6)
-          else
-            (if ((int_of_char _lh_compareList_LH_C_0_5_5) < (int_of_char _lh_compareList_LH_C_0_5_6)) then
-              true
-            else
-              false))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec compareList_lh__d1_d3 _lh_compareList_arg1_2_0 _lh_compareList_arg2_2_0 =
-  (match _lh_compareList_arg1_2_0 with
-    | `LH_N -> 
-      (match _lh_compareList_arg2_2_0 with
-        | `LH_N -> 
-          false
-        | `LH_C(_lh_compareList_LH_C_0_6_0, _lh_compareList_LH_C_1_6_0) -> 
-          false
-        | _ -> 
-          (failwith "error"))
-    | `LH_C(_lh_compareList_LH_C_0_6_1, _lh_compareList_LH_C_1_6_1) -> 
-      (match _lh_compareList_arg2_2_0 with
-        | `LH_N -> 
-          true
-        | `LH_C(_lh_compareList_LH_C_0_6_2, _lh_compareList_LH_C_1_6_2) -> 
-          (if ((int_of_char _lh_compareList_LH_C_0_6_1) = (int_of_char _lh_compareList_LH_C_0_6_2)) then
-            ((compareList_lh__d1_d3 _lh_compareList_LH_C_1_6_1) _lh_compareList_LH_C_1_6_2)
-          else
-            (if ((int_of_char _lh_compareList_LH_C_0_6_1) < (int_of_char _lh_compareList_LH_C_0_6_2)) then
-              false
-            else
-              true))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec compareList_lh__d5 _lh_compareList_arg1_8 _lh_compareList_arg2_8 =
-  (match _lh_compareList_arg1_8 with
-    | `LH_N -> 
-      (match _lh_compareList_arg2_8 with
-        | `LH_N -> 
-          (`EQ)
-        | `LH_C(_lh_compareList_LH_C_0_2_4, _lh_compareList_LH_C_1_2_4) -> 
-          (`LT)
-        | _ -> 
-          (failwith "error"))
-    | `LH_C(_lh_compareList_LH_C_0_2_5, _lh_compareList_LH_C_1_2_5) -> 
-      (match _lh_compareList_arg2_8 with
-        | `LH_N -> 
-          (`GT)
-        | `LH_C(_lh_compareList_LH_C_0_2_6, _lh_compareList_LH_C_1_2_6) -> 
-          (if ((int_of_char _lh_compareList_LH_C_0_2_5) = (int_of_char _lh_compareList_LH_C_0_2_6)) then
-            ((compareList_lh__d5 _lh_compareList_LH_C_1_2_5) _lh_compareList_LH_C_1_2_6)
-          else
-            (if ((int_of_char _lh_compareList_LH_C_0_2_5) < (int_of_char _lh_compareList_LH_C_0_2_6)) then
-              (`LT)
-            else
-              (`GT)))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec compareList_lh__d1_d2 _lh_compareList_arg1_9 _lh_compareList_arg2_9 =
-  (match _lh_compareList_arg1_9 with
-    | `LH_N -> 
-      (match _lh_compareList_arg2_9 with
-        | `LH_N -> 
-          false
-        | `LH_C(_lh_compareList_LH_C_0_2_7, _lh_compareList_LH_C_1_2_7) -> 
-          false
-        | _ -> 
-          (failwith "error"))
-    | `LH_C(_lh_compareList_LH_C_0_2_8, _lh_compareList_LH_C_1_2_8) -> 
-      (match _lh_compareList_arg2_9 with
-        | `LH_N -> 
-          true
-        | `LH_C(_lh_compareList_LH_C_0_2_9, _lh_compareList_LH_C_1_2_9) -> 
-          (if ((int_of_char _lh_compareList_LH_C_0_2_8) = (int_of_char _lh_compareList_LH_C_0_2_9)) then
-            ((compareList_lh__d1_d2 _lh_compareList_LH_C_1_2_8) _lh_compareList_LH_C_1_2_9)
-          else
-            (if ((int_of_char _lh_compareList_LH_C_0_2_8) < (int_of_char _lh_compareList_LH_C_0_2_9)) then
-              false
-            else
-              true))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec compareList_lh__d6 _lh_compareList_arg1_1_5 _lh_compareList_arg2_1_5 =
-  (match _lh_compareList_arg1_1_5 with
-    | `LH_N -> 
-      (match _lh_compareList_arg2_1_5 with
-        | `LH_N -> 
-          false
-        | `LH_C(_lh_compareList_LH_C_0_4_5, _lh_compareList_LH_C_1_4_5) -> 
-          false
-        | _ -> 
-          (failwith "error"))
-    | `LH_C(_lh_compareList_LH_C_0_4_6, _lh_compareList_LH_C_1_4_6) -> 
-      (match _lh_compareList_arg2_1_5 with
-        | `LH_N -> 
-          true
-        | `LH_C(_lh_compareList_LH_C_0_4_7, _lh_compareList_LH_C_1_4_7) -> 
-          (if ((int_of_char _lh_compareList_LH_C_0_4_6) = (int_of_char _lh_compareList_LH_C_0_4_7)) then
-            ((compareList_lh__d6 _lh_compareList_LH_C_1_4_6) _lh_compareList_LH_C_1_4_7)
-          else
-            (if ((int_of_char _lh_compareList_LH_C_0_4_6) < (int_of_char _lh_compareList_LH_C_0_4_7)) then
-              false
-            else
-              true))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec compareList_lh__d1_d1 _lh_compareList_arg1_3 _lh_compareList_arg2_3 =
-  (match _lh_compareList_arg1_3 with
-    | `LH_N -> 
-      (match _lh_compareList_arg2_3 with
-        | `LH_N -> 
-          false
-        | `LH_C(_lh_compareList_LH_C_0_9, _lh_compareList_LH_C_1_9) -> 
-          false
-        | _ -> 
-          (failwith "error"))
-    | `LH_C(_lh_compareList_LH_C_0_1_0, _lh_compareList_LH_C_1_1_0) -> 
-      (match _lh_compareList_arg2_3 with
-        | `LH_N -> 
-          true
-        | `LH_C(_lh_compareList_LH_C_0_1_1, _lh_compareList_LH_C_1_1_1) -> 
-          (if ((int_of_char _lh_compareList_LH_C_0_1_0) = (int_of_char _lh_compareList_LH_C_0_1_1)) then
-            ((compareList_lh__d1_d1 _lh_compareList_LH_C_1_1_0) _lh_compareList_LH_C_1_1_1)
-          else
-            (if ((int_of_char _lh_compareList_LH_C_0_1_0) < (int_of_char _lh_compareList_LH_C_0_1_1)) then
-              false
-            else
-              true))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec compareList_lh__d1_d0 _lh_compareList_arg1_0 _lh_compareList_arg2_0 =
-  (match _lh_compareList_arg1_0 with
-    | `LH_N -> 
-      (match _lh_compareList_arg2_0 with
-        | `LH_N -> 
-          false
-        | `LH_C(_lh_compareList_LH_C_0_0, _lh_compareList_LH_C_1_0) -> 
-          false
-        | _ -> 
-          (failwith "error"))
-    | `LH_C(_lh_compareList_LH_C_0_1, _lh_compareList_LH_C_1_1) -> 
-      (match _lh_compareList_arg2_0 with
-        | `LH_N -> 
-          true
-        | `LH_C(_lh_compareList_LH_C_0_2, _lh_compareList_LH_C_1_2) -> 
-          (if ((int_of_char _lh_compareList_LH_C_0_1) = (int_of_char _lh_compareList_LH_C_0_2)) then
-            ((compareList_lh__d1_d0 _lh_compareList_LH_C_1_1) _lh_compareList_LH_C_1_2)
-          else
-            (if ((int_of_char _lh_compareList_LH_C_0_1) < (int_of_char _lh_compareList_LH_C_0_2)) then
-              false
-            else
-              true))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec prependToAll_lh__d1 _lh_prependToAll_arg1_1_0 _lh_prependToAll_arg2_2 =
-  (_lh_prependToAll_arg2_2 _lh_prependToAll_arg1_1_0);;
-let rec prependToAll_lh__d4 _lh_prependToAll_arg1_1_1 _lh_prependToAll_arg2_3 =
-  (_lh_prependToAll_arg2_3 _lh_prependToAll_arg1_1_1);;
-let rec mappend_lh__d3 xs_0 ys_2 =
-  (xs_0 ys_2);;
-let rec compareList_lh__d4 _lh_compareList_arg1_2 _lh_compareList_arg2_2 =
-  (match _lh_compareList_arg1_2 with
-    | `LH_N -> 
-      (match _lh_compareList_arg2_2 with
-        | `LH_N -> 
-          false
-        | `LH_C(_lh_compareList_LH_C_0_6, _lh_compareList_LH_C_1_6) -> 
-          true
-        | _ -> 
-          (failwith "error"))
-    | `LH_C(_lh_compareList_LH_C_0_7, _lh_compareList_LH_C_1_7) -> 
-      (match _lh_compareList_arg2_2 with
-        | `LH_N -> 
-          false
-        | `LH_C(_lh_compareList_LH_C_0_8, _lh_compareList_LH_C_1_8) -> 
-          (if ((int_of_char _lh_compareList_LH_C_0_7) = (int_of_char _lh_compareList_LH_C_0_8)) then
-            ((compareList_lh__d4 _lh_compareList_LH_C_1_7) _lh_compareList_LH_C_1_8)
-          else
-            (if ((int_of_char _lh_compareList_LH_C_0_7) < (int_of_char _lh_compareList_LH_C_0_8)) then
-              true
-            else
-              false))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec mappend_lh__d1 xs_1 ys_4 =
-  (xs_1 ys_4);;
-let rec compareList_lh__d3 _lh_compareList_arg1_7 _lh_compareList_arg2_7 =
-  (match _lh_compareList_arg1_7 with
-    | `LH_N -> 
-      (match _lh_compareList_arg2_7 with
-        | `LH_N -> 
-          false
-        | `LH_C(_lh_compareList_LH_C_0_2_1, _lh_compareList_LH_C_1_2_1) -> 
-          true
-        | _ -> 
-          (failwith "error"))
-    | `LH_C(_lh_compareList_LH_C_0_2_2, _lh_compareList_LH_C_1_2_2) -> 
-      (match _lh_compareList_arg2_7 with
-        | `LH_N -> 
-          false
-        | `LH_C(_lh_compareList_LH_C_0_2_3, _lh_compareList_LH_C_1_2_3) -> 
-          (if ((int_of_char _lh_compareList_LH_C_0_2_2) = (int_of_char _lh_compareList_LH_C_0_2_3)) then
-            ((compareList_lh__d3 _lh_compareList_LH_C_1_2_2) _lh_compareList_LH_C_1_2_3)
-          else
-            (if ((int_of_char _lh_compareList_LH_C_0_2_2) < (int_of_char _lh_compareList_LH_C_0_2_3)) then
-              true
-            else
-              false))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec mappend_lh__d0 xs_3 ys_8 =
-  (xs_3 ys_8);;
-let rec mappend_lh__d2 xs_6 ys_1_1 =
-  (xs_6 ys_1_1);;
-let rec mappend_lh__d4 xs_1_0 ys_1_8 =
-  (xs_1_0 ys_1_8);;
-let rec hash_lh__d0 _lh_hash_arg1_0 =
-  (((foldl_lh__d0 (fun acc_0 c_0 -> 
-    ((int_of_char c_0) + (acc_0 * 31)))) 0) _lh_hash_arg1_0);;
-let rec reverse_lh__d5 ls_1 =
-  ((reverse_helper_lh__d5 ls_1) (`LH_N));;
-let rec gtList_lh__d1_d9 _lh_gtList_arg1_8 _lh_gtList_arg2_8 =
-  (let rec _lh_matchIdent_1_6 = ((compareList_lh__d2_d4 _lh_gtList_arg1_8) _lh_gtList_arg2_8) in
-    _lh_matchIdent_1_6);;
-let rec gtList_lh__d1_d8 _lh_gtList_arg1_1_9 _lh_gtList_arg2_1_9 =
-  (let rec _lh_matchIdent_3_1 = ((compareList_lh__d2_d3 _lh_gtList_arg1_1_9) _lh_gtList_arg2_1_9) in
-    _lh_matchIdent_3_1);;
-let rec partition_lh__d0 _lh_partition_arg1_0 _lh_partition_arg2_0 =
-  (((foldr_lh__d1 (select_lh__d0 _lh_partition_arg1_0)) (`LH_P2((`LH_N), (`LH_N)))) _lh_partition_arg2_0);;
-let rec ltList_lh__d3 _lh_ltList_arg1_1 _lh_ltList_arg2_1 =
-  (let rec _lh_matchIdent_3 = ((compareList_lh__d1_d9 _lh_ltList_arg1_1) _lh_ltList_arg2_1) in
-    _lh_matchIdent_3);;
-let rec map_lh__d0 f_2_1 ls_1_0 =
-  (match ls_1_0 with
-    | `LH_C(h_3_1, t_3_1) -> 
-      (let rec t_3_2 = ((map_lh__d0 f_2_1) t_3_1) in
-        (let rec h_3_2 = (f_2_1 h_3_1) in
-          (fun _lh_dummy_0 -> 
-            ((mappend_lh__d1_d0 h_3_2) (concat_lh__d1 t_3_2)))))
-    | `LH_N -> 
-      (fun _lh_dummy_1 f_2_2 i_2_0 -> 
-        i_2_0));;
-let rec mappend_lh__d1_d1 xs_9 ys_1_6 =
-  (match xs_9 with
-    | `LH_C(h_3_5, t_3_5) -> 
-      (let rec t_3_6 = ((mappend_lh__d1_d1 t_3_5) ys_1_6) in
-        (let rec h_3_6 = h_3_5 in
-          (fun ys_1_7 -> 
-            (let rec t_3_7 = ((mappend_lh__d1_d0 t_3_6) ys_1_7) in
-              (let rec h_3_7 = h_3_6 in
-                (fun f_2_4 i_2_2 -> 
-                  (((foldl_lh__d0 f_2_4) ((f_2_4 i_2_2) h_3_7)) t_3_7)))))))
-    | `LH_N -> 
-      ys_1_6);;
-let rec gtList_lh__d1_d5 _lh_gtList_arg1_4 _lh_gtList_arg2_4 =
-  (let rec _lh_matchIdent_1_2 = ((compareList_lh__d2_d0 _lh_gtList_arg1_4) _lh_gtList_arg2_4) in
-    _lh_matchIdent_1_2);;
-let rec gtList_lh__d1_d6 _lh_gtList_arg1_1 _lh_gtList_arg2_1 =
-  (let rec _lh_matchIdent_1 = ((compareList_lh__d2_d1 _lh_gtList_arg1_1) _lh_gtList_arg2_1) in
-    _lh_matchIdent_1);;
-let rec gtList_lh__d2_d0 _lh_gtList_arg1_2_0 _lh_gtList_arg2_2_0 =
-  (let rec _lh_matchIdent_3_2 = ((compareList_lh__d2_d5 _lh_gtList_arg1_2_0) _lh_gtList_arg2_2_0) in
-    _lh_matchIdent_3_2);;
-let rec gtList_lh__d1_d7 _lh_gtList_arg1_7 _lh_gtList_arg2_7 =
-  (let rec _lh_matchIdent_1_5 = ((compareList_lh__d2_d2 _lh_gtList_arg1_7) _lh_gtList_arg2_7) in
-    _lh_matchIdent_1_5);;
-let rec gtList_lh__d1 _lh_gtList_arg1_2 _lh_gtList_arg2_2 =
-  (let rec _lh_matchIdent_4 = ((compareList_lh__d1 _lh_gtList_arg1_2) _lh_gtList_arg2_2) in
-    _lh_matchIdent_4);;
-let rec gtList_lh__d2 _lh_gtList_arg1_1_7 _lh_gtList_arg2_1_7 =
-  (let rec _lh_matchIdent_2_8 = ((compareList_lh__d2 _lh_gtList_arg1_1_7) _lh_gtList_arg2_1_7) in
-    _lh_matchIdent_2_8);;
 let rec gtList_lh__d0 _lh_gtList_arg1_9 _lh_gtList_arg2_9 =
   (let rec _lh_matchIdent_1_7 = ((compareList_lh__d0 _lh_gtList_arg1_9) _lh_gtList_arg2_9) in
     _lh_matchIdent_1_7);;
-let rec gtList_lh__d1_d1 _lh_gtList_arg1_6 _lh_gtList_arg2_6 =
-  (let rec _lh_matchIdent_1_4 = ((compareList_lh__d1_d4 _lh_gtList_arg1_6) _lh_gtList_arg2_6) in
-    _lh_matchIdent_1_4);;
-let rec gtList_lh__d1_d2 _lh_gtList_arg1_1_4 _lh_gtList_arg2_1_4 =
-  (let rec _lh_matchIdent_2_3 = ((compareList_lh__d1_d5 _lh_gtList_arg1_1_4) _lh_gtList_arg2_1_4) in
-    _lh_matchIdent_2_3);;
-let rec gtList_lh__d1_d4 _lh_gtList_arg1_0 _lh_gtList_arg2_0 =
-  (let rec _lh_matchIdent_0 = ((compareList_lh__d1_d7 _lh_gtList_arg1_0) _lh_gtList_arg2_0) in
-    _lh_matchIdent_0);;
-let rec gtList_lh__d4 _lh_gtList_arg1_5 _lh_gtList_arg2_5 =
-  (let rec _lh_matchIdent_1_3 = ((compareList_lh__d7 _lh_gtList_arg1_5) _lh_gtList_arg2_5) in
-    _lh_matchIdent_1_3);;
-let rec gtList_lh__d6 _lh_gtList_arg1_1_1 _lh_gtList_arg2_1_1 =
-  (let rec _lh_matchIdent_2_0 = ((compareList_lh__d9 _lh_gtList_arg1_1_1) _lh_gtList_arg2_1_1) in
-    _lh_matchIdent_2_0);;
-let rec gtList_lh__d5 _lh_gtList_arg1_1_6 _lh_gtList_arg2_1_6 =
-  (let rec _lh_matchIdent_2_7 = ((compareList_lh__d8 _lh_gtList_arg1_1_6) _lh_gtList_arg2_1_6) in
-    _lh_matchIdent_2_7);;
-let rec gtList_lh__d1_d3 _lh_gtList_arg1_1_0 _lh_gtList_arg2_1_0 =
-  (let rec _lh_matchIdent_1_9 = ((compareList_lh__d1_d6 _lh_gtList_arg1_1_0) _lh_gtList_arg2_1_0) in
-    _lh_matchIdent_1_9);;
-let rec ltList_lh__d2 _lh_ltList_arg1_3 _lh_ltList_arg2_3 =
-  (let rec _lh_matchIdent_1_8 = ((compareList_lh__d1_d8 _lh_ltList_arg1_3) _lh_ltList_arg2_3) in
-    _lh_matchIdent_1_8);;
-let rec gtList_lh__d1_d0 _lh_gtList_arg1_1_8 _lh_gtList_arg2_1_8 =
-  (let rec _lh_matchIdent_2_9 = ((compareList_lh__d1_d3 _lh_gtList_arg1_1_8) _lh_gtList_arg2_1_8) in
-    _lh_matchIdent_2_9);;
-let rec eqList_lh__d0 _lh_eqList_arg1_0 _lh_eqList_arg2_0 =
-  (((compareList_lh__d5 _lh_eqList_arg1_0) _lh_eqList_arg2_0) = (`EQ));;
-let rec gtList_lh__d9 _lh_gtList_arg1_3 _lh_gtList_arg2_3 =
-  (let rec _lh_matchIdent_1_1 = ((compareList_lh__d1_d2 _lh_gtList_arg1_3) _lh_gtList_arg2_3) in
-    _lh_matchIdent_1_1);;
-let rec gtList_lh__d3 _lh_gtList_arg1_1_5 _lh_gtList_arg2_1_5 =
-  (let rec _lh_matchIdent_2_4 = ((compareList_lh__d6 _lh_gtList_arg1_1_5) _lh_gtList_arg2_1_5) in
-    _lh_matchIdent_2_4);;
-let rec gtList_lh__d8 _lh_gtList_arg1_1_3 _lh_gtList_arg2_1_3 =
-  (let rec _lh_matchIdent_2_2 = ((compareList_lh__d1_d1 _lh_gtList_arg1_1_3) _lh_gtList_arg2_1_3) in
-    _lh_matchIdent_2_2);;
-let rec gtList_lh__d7 _lh_gtList_arg1_1_2 _lh_gtList_arg2_1_2 =
-  (let rec _lh_matchIdent_2_1 = ((compareList_lh__d1_d0 _lh_gtList_arg1_1_2) _lh_gtList_arg2_1_2) in
-    _lh_matchIdent_2_1);;
-let rec reverse_helper_lh__d3 ls_4 a_2 =
-  (match ls_4 with
-    | `LH_C(h_3, t_3) -> 
-      ((reverse_helper_lh__d3 t_3) (let rec t_4 = a_2 in
-        (let rec h_4 = h_3 in
-          (fun ys_3 -> 
-            (`LH_C(h_4, ((mappend_lh__d3 t_4) ys_3)))))))
-    | `LH_N -> 
-      a_2);;
-let rec ltList_lh__d1 _lh_ltList_arg1_0 _lh_ltList_arg2_0 =
-  (let rec _lh_matchIdent_2 = ((compareList_lh__d4 _lh_ltList_arg1_0) _lh_ltList_arg2_0) in
-    _lh_matchIdent_2);;
-let rec ltList_lh__d0 _lh_ltList_arg1_2 _lh_ltList_arg2_2 =
-  (let rec _lh_matchIdent_5 = ((compareList_lh__d3 _lh_ltList_arg1_2) _lh_ltList_arg2_2) in
-    _lh_matchIdent_5);;
-let rec reverse_helper_lh__d0 ls_3 a_1 =
-  (match ls_3 with
-    | `LH_C(h_1, t_1) -> 
-      ((reverse_helper_lh__d0 t_1) (let rec t_2 = a_1 in
-        (let rec h_2 = h_1 in
-          (fun ys_1 -> 
-            (`LH_C(h_2, ((mappend_lh__d0 t_2) ys_1)))))))
-    | `LH_N -> 
-      a_1);;
-let rec reverse_helper_lh__d1 ls_6 a_4 =
-  (match ls_6 with
-    | `LH_C(h_2_3, t_2_3) -> 
-      ((reverse_helper_lh__d1 t_2_3) (let rec t_2_4 = a_4 in
-        (let rec h_2_4 = h_2_3 in
-          (fun ys_7 -> 
-            (`LH_C(h_2_4, ((mappend_lh__d1 t_2_4) ys_7)))))))
-    | `LH_N -> 
-      a_4);;
-let rec reverse_helper_lh__d2 ls_5 a_3 =
-  (match ls_5 with
-    | `LH_C(h_5, t_5) -> 
-      ((reverse_helper_lh__d2 t_5) (let rec t_6 = a_3 in
-        (let rec h_6 = h_5 in
-          (fun ys_5 -> 
-            (`LH_C(h_6, ((mappend_lh__d2 t_6) ys_5)))))))
-    | `LH_N -> 
-      a_3);;
-let rec reverse_helper_lh__d4 ls_1_5 a_5 =
-  (match ls_1_5 with
-    | `LH_C(h_3_9, t_3_9) -> 
-      ((reverse_helper_lh__d4 t_3_9) (let rec t_4_0 = a_5 in
-        (let rec h_4_0 = h_3_9 in
-          (fun ys_2_2 -> 
-            (`LH_C(h_4_0, ((mappend_lh__d4 t_4_0) ys_2_2)))))))
-    | `LH_N -> 
-      a_5);;
-let rec leList_lh__d1_d4 _lh_leList_arg1_1 _lh_leList_arg2_1 =
-  (not ((gtList_lh__d1_d9 _lh_leList_arg1_1) _lh_leList_arg2_1));;
-let rec leList_lh__d1_d3 _lh_leList_arg1_8 _lh_leList_arg2_8 =
-  (not ((gtList_lh__d1_d8 _lh_leList_arg1_8) _lh_leList_arg2_8));;
-let rec geList_lh__d0 _lh_geList_arg1_0 _lh_geList_arg2_0 =
-  (not ((ltList_lh__d3 _lh_geList_arg1_0) _lh_geList_arg2_0));;
-let rec unlines_lh__d0 _lh_unlines_arg1_0 =
-  (concat_lh__d0 ((map_lh__d0 (fun l_0 -> 
-    ((mappend_lh__d1_d1 l_0) (let rec t_2_8 = (fun ys_1_2 -> 
-      ys_1_2) in
-      (let rec h_2_8 = '|' in
-        (fun ys_1_3 -> 
-          (let rec t_2_9 = ((mappend_lh__d1_d0 t_2_8) ys_1_3) in
-            (let rec h_2_9 = h_2_8 in
-              (fun f_2_0 i_1_9 -> 
-                (((foldl_lh__d0 f_2_0) ((f_2_0 i_1_9) h_2_9)) t_2_9)))))))))) _lh_unlines_arg1_0));;
-let rec leList_lh__d1_d1 _lh_leList_arg1_6 _lh_leList_arg2_6 =
-  (not ((gtList_lh__d1_d6 _lh_leList_arg1_6) _lh_leList_arg2_6));;
-let rec leList_lh__d1_d5 _lh_leList_arg1_4 _lh_leList_arg2_4 =
-  (not ((gtList_lh__d2_d0 _lh_leList_arg1_4) _lh_leList_arg2_4));;
-let rec leList_lh__d1_d2 _lh_leList_arg1_3 _lh_leList_arg2_3 =
-  (not ((gtList_lh__d1_d7 _lh_leList_arg1_3) _lh_leList_arg2_3));;
-let rec leList_lh__d1 _lh_leList_arg1_7 _lh_leList_arg2_7 =
-  (not ((gtList_lh__d1 _lh_leList_arg1_7) _lh_leList_arg2_7));;
-let rec leList_lh__d2 _lh_leList_arg1_9 _lh_leList_arg2_9 =
-  (not ((gtList_lh__d2 _lh_leList_arg1_9) _lh_leList_arg2_9));;
 let rec leList_lh__d0 _lh_leList_arg1_1_5 _lh_leList_arg2_1_5 =
   (not ((gtList_lh__d0 _lh_leList_arg1_1_5) _lh_leList_arg2_1_5));;
-let rec leList_lh__d7 _lh_leList_arg1_0 _lh_leList_arg2_0 =
-  (not ((gtList_lh__d1_d1 _lh_leList_arg1_0) _lh_leList_arg2_0));;
-let rec leList_lh__d8 _lh_leList_arg1_2 _lh_leList_arg2_2 =
-  (not ((gtList_lh__d1_d2 _lh_leList_arg1_2) _lh_leList_arg2_2));;
-let rec leList_lh__d1_d0 _lh_leList_arg1_5 _lh_leList_arg2_5 =
-  (not ((gtList_lh__d1_d4 _lh_leList_arg1_5) _lh_leList_arg2_5));;
-let rec leList_lh__d9 _lh_leList_arg1_1_2 _lh_leList_arg2_1_2 =
-  (not ((gtList_lh__d1_d3 _lh_leList_arg1_1_2) _lh_leList_arg2_1_2));;
-let rec leList_lh__d6 _lh_leList_arg1_1_0 _lh_leList_arg2_1_0 =
-  (not ((gtList_lh__d1_d0 _lh_leList_arg1_1_0) _lh_leList_arg2_1_0));;
-let rec leList_lh__d5 _lh_leList_arg1_1_1 _lh_leList_arg2_1_1 =
-  (not ((gtList_lh__d9 _lh_leList_arg1_1_1) _lh_leList_arg2_1_1));;
-let rec leList_lh__d4 _lh_leList_arg1_1_3 _lh_leList_arg2_1_3 =
-  (not ((gtList_lh__d8 _lh_leList_arg1_1_3) _lh_leList_arg2_1_3));;
-let rec leList_lh__d3 _lh_leList_arg1_1_4 _lh_leList_arg2_1_4 =
-  (not ((gtList_lh__d7 _lh_leList_arg1_1_4) _lh_leList_arg2_1_4));;
-let rec reverse_lh__d3 ls_0 =
-  ((reverse_helper_lh__d3 ls_0) (fun ys_0 -> 
-    ys_0));;
-let rec reverse_lh__d0 ls_1_3 =
-  ((reverse_helper_lh__d0 ls_1_3) (fun ys_2_0 -> 
-    ys_2_0));;
-let rec reverse_lh__d1 ls_1_4 =
-  ((reverse_helper_lh__d1 ls_1_4) (fun ys_2_1 -> 
-    ys_2_1));;
-let rec reverse_lh__d2 ls_1_6 =
-  ((reverse_helper_lh__d2 ls_1_6) (fun ys_2_3 -> 
-    ys_2_3));;
-let rec reverse_lh__d4 ls_1_7 =
-  ((reverse_helper_lh__d4 ls_1_7) (fun ys_2_4 -> 
-    ys_2_4));;
-let rec treeSort2_lh__d0 _lh_treeSort2_arg1_0 =
-  let rec mkTree_0 = (fun _lh_mkTree_arg1_0 -> 
-    (let rec to_tree_0 = (fun _lh_to_tree_arg1_0 _lh_to_tree_arg2_0 -> 
-      (match _lh_to_tree_arg2_0 with
-        | `Tip2 -> 
-          (`Twig2(_lh_to_tree_arg1_0))
-        | `Twig2(_lh_to_tree_Twig2_0_0) -> 
-          (if ((leList_lh__d1_d3 _lh_to_tree_arg1_0) _lh_to_tree_Twig2_0_0) then
-            (`Branch2(_lh_to_tree_Twig2_0_0, (`Twig2(_lh_to_tree_arg1_0)), (`Tip2)))
-          else
-            (`Branch2(_lh_to_tree_Twig2_0_0, (`Tip2), (`Twig2(_lh_to_tree_arg1_0)))))
-        | `Branch2(_lh_to_tree_Branch2_0_0, _lh_to_tree_Branch2_1_0, _lh_to_tree_Branch2_2_0) -> 
-          (if ((leList_lh__d1_d4 _lh_to_tree_arg1_0) _lh_to_tree_Branch2_0_0) then
-            (`Branch2(_lh_to_tree_Branch2_0_0, ((to_tree_0 _lh_to_tree_arg1_0) _lh_to_tree_Branch2_1_0), _lh_to_tree_Branch2_2_0))
-          else
-            (`Branch2(_lh_to_tree_Branch2_0_0, _lh_to_tree_Branch2_1_0, ((to_tree_0 _lh_to_tree_arg1_0) _lh_to_tree_Branch2_2_0))))
-        | _ -> 
-          (failwith "error"))) in
-      (((foldr_lh__d2 to_tree_0) (`Tip2)) _lh_mkTree_arg1_0)))
-  and readTree_0 = (fun _lh_readTree_arg1_0 -> 
-    (match _lh_readTree_arg1_0 with
-      | `Tip2 -> 
-        (`LH_N)
-      | `Twig2(_lh_readTree_Twig2_0_0) -> 
-        (`LH_C(_lh_readTree_Twig2_0_0, (`LH_N)))
-      | `Branch2(_lh_readTree_Branch2_0_0, _lh_readTree_Branch2_1_0, _lh_readTree_Branch2_2_0) -> 
-        ((mappend_lh__d8 (readTree_0 _lh_readTree_Branch2_1_0)) (`LH_C(_lh_readTree_Branch2_0_0, (readTree_0 _lh_readTree_Branch2_2_0))))
-      | _ -> 
-        (failwith "error")))
-  in ((fun _lh_funcomp_x_0 -> 
-    (readTree_0 (mkTree_0 _lh_funcomp_x_0))) _lh_treeSort2_arg1_0);;
-let rec quickSort2_lh__d0 _lh_quickSort2_arg1_0 =
-  (match _lh_quickSort2_arg1_0 with
-    | `LH_N -> 
-      (`LH_N)
-    | `LH_C(_lh_quickSort2_LH_C_0_0, _lh_quickSort2_LH_C_1_0) -> 
-      (let rec _lh_matchIdent_1_0 = ((partition_lh__d0 ((fun x_1 y_0 -> 
-        ((geList_lh__d0 x_1) y_0)) _lh_quickSort2_LH_C_0_0)) _lh_quickSort2_LH_C_1_0) in
-        (match _lh_matchIdent_1_0 with
-          | `LH_P2(_lh_quickSort2_LH_P2_0_0, _lh_quickSort2_LH_P2_1_0) -> 
-            ((mappend_lh__d5 (quickSort2_lh__d0 _lh_quickSort2_LH_P2_0_0)) (`LH_C(_lh_quickSort2_LH_C_0_0, (quickSort2_lh__d0 _lh_quickSort2_LH_P2_1_0))))
-          | _ -> 
-            (failwith "error")))
-    | _ -> 
-      (failwith "error"));;
-let rec quickSort_lh__d0 _lh_quickSort_arg1_0 =
-  (match _lh_quickSort_arg1_0 with
-    | `LH_N -> 
-      (`LH_N)
-    | `LH_C(_lh_quickSort_LH_C_0_0, _lh_quickSort_LH_C_1_0) -> 
-      ((mappend_lh__d6 (quickSort_lh__d0 (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
-        (match _lh_listcomp_fun_para_0 with
-          | `LH_C(_lh_listcomp_fun_ls_h_0, _lh_listcomp_fun_ls_t_0) -> 
-            (if ((leList_lh__d1_d1 _lh_listcomp_fun_ls_h_0) _lh_quickSort_LH_C_0_0) then
-              (`LH_C(_lh_listcomp_fun_ls_h_0, (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0)))
-            else
-              (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0))
-          | `LH_N -> 
-            (`LH_N))) in
-        (_lh_listcomp_fun_0 _lh_quickSort_LH_C_1_0)))) (`LH_C(_lh_quickSort_LH_C_0_0, (quickSort_lh__d0 (let rec _lh_listcomp_fun_1 = (fun _lh_listcomp_fun_para_1 -> 
-        (match _lh_listcomp_fun_para_1 with
-          | `LH_C(_lh_listcomp_fun_ls_h_1, _lh_listcomp_fun_ls_t_1) -> 
-            (if ((gtList_lh__d1_d5 _lh_listcomp_fun_ls_h_1) _lh_quickSort_LH_C_0_0) then
-              (`LH_C(_lh_listcomp_fun_ls_h_1, (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_1)))
-            else
-              (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_1))
-          | `LH_N -> 
-            (`LH_N))) in
-        (_lh_listcomp_fun_1 _lh_quickSort_LH_C_1_0))))))
-    | _ -> 
-      (failwith "error"));;
-let rec treeSort_lh__d0 _lh_treeSort_arg1_0 =
-  let rec mkTree_1 = (fun _lh_mkTree_arg1_1 -> 
-    (let rec to_tree_1 = (fun _lh_to_tree_arg1_1 _lh_to_tree_arg2_1 -> 
-      (match _lh_to_tree_arg2_1 with
-        | `Tip -> 
-          (`Branch(_lh_to_tree_arg1_1, (`Tip), (`Tip)))
-        | `Branch(_lh_to_tree_Branch_0_0, _lh_to_tree_Branch_1_0, _lh_to_tree_Branch_2_0) -> 
-          (if ((leList_lh__d1_d5 _lh_to_tree_arg1_1) _lh_to_tree_Branch_0_0) then
-            (`Branch(_lh_to_tree_Branch_0_0, ((to_tree_1 _lh_to_tree_arg1_1) _lh_to_tree_Branch_1_0), _lh_to_tree_Branch_2_0))
-          else
-            (`Branch(_lh_to_tree_Branch_0_0, _lh_to_tree_Branch_1_0, ((to_tree_1 _lh_to_tree_arg1_1) _lh_to_tree_Branch_2_0))))
-        | _ -> 
-          (failwith "error"))) in
-      (((foldr_lh__d3 to_tree_1) (`Tip)) _lh_mkTree_arg1_1)))
-  and readTree_1 = (fun _lh_readTree_arg1_1 -> 
-    (match _lh_readTree_arg1_1 with
-      | `Tip -> 
-        (`LH_N)
-      | `Branch(_lh_readTree_Branch_0_0, _lh_readTree_Branch_1_0, _lh_readTree_Branch_2_0) -> 
-        ((mappend_lh__d9 (readTree_1 _lh_readTree_Branch_1_0)) (`LH_C(_lh_readTree_Branch_0_0, (readTree_1 _lh_readTree_Branch_2_0))))
-      | _ -> 
-        (failwith "error")))
-  in ((fun _lh_funcomp_x_5 -> 
-    (readTree_1 (mkTree_1 _lh_funcomp_x_5))) _lh_treeSort_arg1_0);;
-let rec quickerSort_lh__d0 _lh_quickerSort_arg1_0 =
-  (match _lh_quickerSort_arg1_0 with
-    | `LH_N -> 
-      (`LH_N)
-    | `LH_C(_lh_quickerSort_LH_C_0_0, _lh_quickerSort_LH_C_1_0) -> 
-      (match _lh_quickerSort_LH_C_1_0 with
-        | `LH_N -> 
-          (`LH_C(_lh_quickerSort_LH_C_0_0, (`LH_N)))
-        | _ -> 
-          (let rec split_0 = (fun _lh_split_arg1_0 _lh_split_arg2_0 _lh_split_arg3_0 _lh_split_arg4_0 -> 
-            (match _lh_split_arg4_0 with
-              | `LH_N -> 
-                ((mappend_lh__d7 (quickerSort_lh__d0 _lh_split_arg2_0)) (`LH_C(_lh_split_arg1_0, (quickerSort_lh__d0 _lh_split_arg3_0))))
-              | `LH_C(_lh_split_LH_C_0_0, _lh_split_LH_C_1_0) -> 
-                (if ((leList_lh__d1_d2 _lh_split_LH_C_0_0) _lh_split_arg1_0) then
-                  ((((split_0 _lh_split_arg1_0) (`LH_C(_lh_split_LH_C_0_0, _lh_split_arg2_0))) _lh_split_arg3_0) _lh_split_LH_C_1_0)
-                else
-                  ((((split_0 _lh_split_arg1_0) _lh_split_arg2_0) (`LH_C(_lh_split_LH_C_0_0, _lh_split_arg3_0))) _lh_split_LH_C_1_0))
-              | _ -> 
-                (failwith "error"))) in
-            ((((split_0 _lh_quickerSort_LH_C_0_0) (`LH_N)) (`LH_N)) _lh_quickerSort_LH_C_1_0)))
-    | _ -> 
-      (failwith "error"));;
+let rec odd_lh__d1 _lh_odd_arg1_1 =
+  ((_lh_odd_arg1_1 mod 2) = 0);;
 let rec heapSort_lh__d0 _lh_heapSort_arg1_0 =
   let rec div2_0 = (fun _lh_div2_arg1_0 -> 
     (_lh_div2_arg1_0 / 2))
@@ -1204,6 +649,429 @@ let rec heapSort_lh__d0 _lh_heapSort_arg1_0 =
       | _ -> 
         (failwith "error")))
   in (clear_0 ((heap_0 0) _lh_heapSort_arg1_0));;
+let rec foldr_lh__d0 f_1_7 i_1_6 ls_7 =
+  ((ls_7 f_1_7) i_1_6);;
+let rec compareList_lh__d1_d4 _lh_compareList_arg1_4 _lh_compareList_arg2_4 =
+  (match _lh_compareList_arg1_4 with
+    | `LH_N -> 
+      (match _lh_compareList_arg2_4 with
+        | `LH_N -> 
+          false
+        | `LH_C(_lh_compareList_LH_C_0_1_2, _lh_compareList_LH_C_1_1_2) -> 
+          false
+        | _ -> 
+          (failwith "error"))
+    | `LH_C(_lh_compareList_LH_C_0_1_3, _lh_compareList_LH_C_1_1_3) -> 
+      (match _lh_compareList_arg2_4 with
+        | `LH_N -> 
+          true
+        | `LH_C(_lh_compareList_LH_C_0_1_4, _lh_compareList_LH_C_1_1_4) -> 
+          (if ((int_of_char _lh_compareList_LH_C_0_1_3) = (int_of_char _lh_compareList_LH_C_0_1_4)) then
+            ((compareList_lh__d1_d4 _lh_compareList_LH_C_1_1_3) _lh_compareList_LH_C_1_1_4)
+          else
+            (if ((int_of_char _lh_compareList_LH_C_0_1_3) < (int_of_char _lh_compareList_LH_C_0_1_4)) then
+              false
+            else
+              true))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec gtList_lh__d1_d1 _lh_gtList_arg1_6 _lh_gtList_arg2_6 =
+  (let rec _lh_matchIdent_1_4 = ((compareList_lh__d1_d4 _lh_gtList_arg1_6) _lh_gtList_arg2_6) in
+    _lh_matchIdent_1_4);;
+let rec leList_lh__d7 _lh_leList_arg1_0 _lh_leList_arg2_0 =
+  (not ((gtList_lh__d1_d1 _lh_leList_arg1_0) _lh_leList_arg2_0));;
+let rec compareList_lh__d1_d5 _lh_compareList_arg1_1 _lh_compareList_arg2_1 =
+  (match _lh_compareList_arg1_1 with
+    | `LH_N -> 
+      (match _lh_compareList_arg2_1 with
+        | `LH_N -> 
+          false
+        | `LH_C(_lh_compareList_LH_C_0_3, _lh_compareList_LH_C_1_3) -> 
+          false
+        | _ -> 
+          (failwith "error"))
+    | `LH_C(_lh_compareList_LH_C_0_4, _lh_compareList_LH_C_1_4) -> 
+      (match _lh_compareList_arg2_1 with
+        | `LH_N -> 
+          true
+        | `LH_C(_lh_compareList_LH_C_0_5, _lh_compareList_LH_C_1_5) -> 
+          (if ((int_of_char _lh_compareList_LH_C_0_4) = (int_of_char _lh_compareList_LH_C_0_5)) then
+            ((compareList_lh__d1_d5 _lh_compareList_LH_C_1_4) _lh_compareList_LH_C_1_5)
+          else
+            (if ((int_of_char _lh_compareList_LH_C_0_4) < (int_of_char _lh_compareList_LH_C_0_5)) then
+              false
+            else
+              true))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec gtList_lh__d1_d2 _lh_gtList_arg1_1_4 _lh_gtList_arg2_1_4 =
+  (let rec _lh_matchIdent_2_3 = ((compareList_lh__d1_d5 _lh_gtList_arg1_1_4) _lh_gtList_arg2_1_4) in
+    _lh_matchIdent_2_3);;
+let rec leList_lh__d8 _lh_leList_arg1_2 _lh_leList_arg2_2 =
+  (not ((gtList_lh__d1_d2 _lh_leList_arg1_2) _lh_leList_arg2_2));;
+let rec compareList_lh__d1_d7 _lh_compareList_arg1_1_7 _lh_compareList_arg2_1_7 =
+  (match _lh_compareList_arg1_1_7 with
+    | `LH_N -> 
+      (match _lh_compareList_arg2_1_7 with
+        | `LH_N -> 
+          false
+        | `LH_C(_lh_compareList_LH_C_0_5_1, _lh_compareList_LH_C_1_5_1) -> 
+          false
+        | _ -> 
+          (failwith "error"))
+    | `LH_C(_lh_compareList_LH_C_0_5_2, _lh_compareList_LH_C_1_5_2) -> 
+      (match _lh_compareList_arg2_1_7 with
+        | `LH_N -> 
+          true
+        | `LH_C(_lh_compareList_LH_C_0_5_3, _lh_compareList_LH_C_1_5_3) -> 
+          (if ((int_of_char _lh_compareList_LH_C_0_5_2) = (int_of_char _lh_compareList_LH_C_0_5_3)) then
+            ((compareList_lh__d1_d7 _lh_compareList_LH_C_1_5_2) _lh_compareList_LH_C_1_5_3)
+          else
+            (if ((int_of_char _lh_compareList_LH_C_0_5_2) < (int_of_char _lh_compareList_LH_C_0_5_3)) then
+              false
+            else
+              true))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec gtList_lh__d1_d4 _lh_gtList_arg1_0 _lh_gtList_arg2_0 =
+  (let rec _lh_matchIdent_0 = ((compareList_lh__d1_d7 _lh_gtList_arg1_0) _lh_gtList_arg2_0) in
+    _lh_matchIdent_0);;
+let rec leList_lh__d1_d0 _lh_leList_arg1_5 _lh_leList_arg2_5 =
+  (not ((gtList_lh__d1_d4 _lh_leList_arg1_5) _lh_leList_arg2_5));;
+let rec compareList_lh__d7 _lh_compareList_arg1_1_2 _lh_compareList_arg2_1_2 =
+  (match _lh_compareList_arg1_1_2 with
+    | `LH_N -> 
+      (match _lh_compareList_arg2_1_2 with
+        | `LH_N -> 
+          false
+        | `LH_C(_lh_compareList_LH_C_0_3_6, _lh_compareList_LH_C_1_3_6) -> 
+          false
+        | _ -> 
+          (failwith "error"))
+    | `LH_C(_lh_compareList_LH_C_0_3_7, _lh_compareList_LH_C_1_3_7) -> 
+      (match _lh_compareList_arg2_1_2 with
+        | `LH_N -> 
+          true
+        | `LH_C(_lh_compareList_LH_C_0_3_8, _lh_compareList_LH_C_1_3_8) -> 
+          (if ((int_of_char _lh_compareList_LH_C_0_3_7) = (int_of_char _lh_compareList_LH_C_0_3_8)) then
+            ((compareList_lh__d7 _lh_compareList_LH_C_1_3_7) _lh_compareList_LH_C_1_3_8)
+          else
+            (if ((int_of_char _lh_compareList_LH_C_0_3_7) < (int_of_char _lh_compareList_LH_C_0_3_8)) then
+              false
+            else
+              true))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec gtList_lh__d4 _lh_gtList_arg1_5 _lh_gtList_arg2_5 =
+  (let rec _lh_matchIdent_1_3 = ((compareList_lh__d7 _lh_gtList_arg1_5) _lh_gtList_arg2_5) in
+    _lh_matchIdent_1_3);;
+let rec compareList_lh__d9 _lh_compareList_arg1_1_4 _lh_compareList_arg2_1_4 =
+  (match _lh_compareList_arg1_1_4 with
+    | `LH_N -> 
+      (match _lh_compareList_arg2_1_4 with
+        | `LH_N -> 
+          false
+        | `LH_C(_lh_compareList_LH_C_0_4_2, _lh_compareList_LH_C_1_4_2) -> 
+          false
+        | _ -> 
+          (failwith "error"))
+    | `LH_C(_lh_compareList_LH_C_0_4_3, _lh_compareList_LH_C_1_4_3) -> 
+      (match _lh_compareList_arg2_1_4 with
+        | `LH_N -> 
+          true
+        | `LH_C(_lh_compareList_LH_C_0_4_4, _lh_compareList_LH_C_1_4_4) -> 
+          (if ((int_of_char _lh_compareList_LH_C_0_4_3) = (int_of_char _lh_compareList_LH_C_0_4_4)) then
+            ((compareList_lh__d9 _lh_compareList_LH_C_1_4_3) _lh_compareList_LH_C_1_4_4)
+          else
+            (if ((int_of_char _lh_compareList_LH_C_0_4_3) < (int_of_char _lh_compareList_LH_C_0_4_4)) then
+              false
+            else
+              true))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec gtList_lh__d6 _lh_gtList_arg1_1_1 _lh_gtList_arg2_1_1 =
+  (let rec _lh_matchIdent_2_0 = ((compareList_lh__d9 _lh_gtList_arg1_1_1) _lh_gtList_arg2_1_1) in
+    _lh_matchIdent_2_0);;
+let rec compareList_lh__d8 _lh_compareList_arg1_2_3 _lh_compareList_arg2_2_3 =
+  (match _lh_compareList_arg1_2_3 with
+    | `LH_N -> 
+      (match _lh_compareList_arg2_2_3 with
+        | `LH_N -> 
+          false
+        | `LH_C(_lh_compareList_LH_C_0_6_9, _lh_compareList_LH_C_1_6_9) -> 
+          false
+        | _ -> 
+          (failwith "error"))
+    | `LH_C(_lh_compareList_LH_C_0_7_0, _lh_compareList_LH_C_1_7_0) -> 
+      (match _lh_compareList_arg2_2_3 with
+        | `LH_N -> 
+          true
+        | `LH_C(_lh_compareList_LH_C_0_7_1, _lh_compareList_LH_C_1_7_1) -> 
+          (if ((int_of_char _lh_compareList_LH_C_0_7_0) = (int_of_char _lh_compareList_LH_C_0_7_1)) then
+            ((compareList_lh__d8 _lh_compareList_LH_C_1_7_0) _lh_compareList_LH_C_1_7_1)
+          else
+            (if ((int_of_char _lh_compareList_LH_C_0_7_0) < (int_of_char _lh_compareList_LH_C_0_7_1)) then
+              false
+            else
+              true))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec gtList_lh__d5 _lh_gtList_arg1_1_6 _lh_gtList_arg2_1_6 =
+  (let rec _lh_matchIdent_2_7 = ((compareList_lh__d8 _lh_gtList_arg1_1_6) _lh_gtList_arg2_1_6) in
+    _lh_matchIdent_2_7);;
+let rec compareList_lh__d1_d6 _lh_compareList_arg1_6 _lh_compareList_arg2_6 =
+  (match _lh_compareList_arg1_6 with
+    | `LH_N -> 
+      (match _lh_compareList_arg2_6 with
+        | `LH_N -> 
+          false
+        | `LH_C(_lh_compareList_LH_C_0_1_8, _lh_compareList_LH_C_1_1_8) -> 
+          false
+        | _ -> 
+          (failwith "error"))
+    | `LH_C(_lh_compareList_LH_C_0_1_9, _lh_compareList_LH_C_1_1_9) -> 
+      (match _lh_compareList_arg2_6 with
+        | `LH_N -> 
+          true
+        | `LH_C(_lh_compareList_LH_C_0_2_0, _lh_compareList_LH_C_1_2_0) -> 
+          (if ((int_of_char _lh_compareList_LH_C_0_1_9) = (int_of_char _lh_compareList_LH_C_0_2_0)) then
+            ((compareList_lh__d1_d6 _lh_compareList_LH_C_1_1_9) _lh_compareList_LH_C_1_2_0)
+          else
+            (if ((int_of_char _lh_compareList_LH_C_0_1_9) < (int_of_char _lh_compareList_LH_C_0_2_0)) then
+              false
+            else
+              true))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec gtList_lh__d1_d3 _lh_gtList_arg1_1_0 _lh_gtList_arg2_1_0 =
+  (let rec _lh_matchIdent_1_9 = ((compareList_lh__d1_d6 _lh_gtList_arg1_1_0) _lh_gtList_arg2_1_0) in
+    _lh_matchIdent_1_9);;
+let rec leList_lh__d9 _lh_leList_arg1_1_2 _lh_leList_arg2_1_2 =
+  (not ((gtList_lh__d1_d3 _lh_leList_arg1_1_2) _lh_leList_arg2_1_2));;
+let rec compareList_lh__d1_d8 _lh_compareList_arg1_1_8 _lh_compareList_arg2_1_8 =
+  (match _lh_compareList_arg1_1_8 with
+    | `LH_N -> 
+      (match _lh_compareList_arg2_1_8 with
+        | `LH_N -> 
+          false
+        | `LH_C(_lh_compareList_LH_C_0_5_4, _lh_compareList_LH_C_1_5_4) -> 
+          true
+        | _ -> 
+          (failwith "error"))
+    | `LH_C(_lh_compareList_LH_C_0_5_5, _lh_compareList_LH_C_1_5_5) -> 
+      (match _lh_compareList_arg2_1_8 with
+        | `LH_N -> 
+          false
+        | `LH_C(_lh_compareList_LH_C_0_5_6, _lh_compareList_LH_C_1_5_6) -> 
+          (if ((int_of_char _lh_compareList_LH_C_0_5_5) = (int_of_char _lh_compareList_LH_C_0_5_6)) then
+            ((compareList_lh__d1_d8 _lh_compareList_LH_C_1_5_5) _lh_compareList_LH_C_1_5_6)
+          else
+            (if ((int_of_char _lh_compareList_LH_C_0_5_5) < (int_of_char _lh_compareList_LH_C_0_5_6)) then
+              true
+            else
+              false))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec ltList_lh__d2 _lh_ltList_arg1_3 _lh_ltList_arg2_3 =
+  (let rec _lh_matchIdent_1_8 = ((compareList_lh__d1_d8 _lh_ltList_arg1_3) _lh_ltList_arg2_3) in
+    _lh_matchIdent_1_8);;
+let rec compareList_lh__d1_d3 _lh_compareList_arg1_2_0 _lh_compareList_arg2_2_0 =
+  (match _lh_compareList_arg1_2_0 with
+    | `LH_N -> 
+      (match _lh_compareList_arg2_2_0 with
+        | `LH_N -> 
+          false
+        | `LH_C(_lh_compareList_LH_C_0_6_0, _lh_compareList_LH_C_1_6_0) -> 
+          false
+        | _ -> 
+          (failwith "error"))
+    | `LH_C(_lh_compareList_LH_C_0_6_1, _lh_compareList_LH_C_1_6_1) -> 
+      (match _lh_compareList_arg2_2_0 with
+        | `LH_N -> 
+          true
+        | `LH_C(_lh_compareList_LH_C_0_6_2, _lh_compareList_LH_C_1_6_2) -> 
+          (if ((int_of_char _lh_compareList_LH_C_0_6_1) = (int_of_char _lh_compareList_LH_C_0_6_2)) then
+            ((compareList_lh__d1_d3 _lh_compareList_LH_C_1_6_1) _lh_compareList_LH_C_1_6_2)
+          else
+            (if ((int_of_char _lh_compareList_LH_C_0_6_1) < (int_of_char _lh_compareList_LH_C_0_6_2)) then
+              false
+            else
+              true))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec gtList_lh__d1_d0 _lh_gtList_arg1_1_8 _lh_gtList_arg2_1_8 =
+  (let rec _lh_matchIdent_2_9 = ((compareList_lh__d1_d3 _lh_gtList_arg1_1_8) _lh_gtList_arg2_1_8) in
+    _lh_matchIdent_2_9);;
+let rec leList_lh__d6 _lh_leList_arg1_1_0 _lh_leList_arg2_1_0 =
+  (not ((gtList_lh__d1_d0 _lh_leList_arg1_1_0) _lh_leList_arg2_1_0));;
+let rec compareList_lh__d5 _lh_compareList_arg1_8 _lh_compareList_arg2_8 =
+  (match _lh_compareList_arg1_8 with
+    | `LH_N -> 
+      (match _lh_compareList_arg2_8 with
+        | `LH_N -> 
+          (`EQ)
+        | `LH_C(_lh_compareList_LH_C_0_2_4, _lh_compareList_LH_C_1_2_4) -> 
+          (`LT)
+        | _ -> 
+          (failwith "error"))
+    | `LH_C(_lh_compareList_LH_C_0_2_5, _lh_compareList_LH_C_1_2_5) -> 
+      (match _lh_compareList_arg2_8 with
+        | `LH_N -> 
+          (`GT)
+        | `LH_C(_lh_compareList_LH_C_0_2_6, _lh_compareList_LH_C_1_2_6) -> 
+          (if ((int_of_char _lh_compareList_LH_C_0_2_5) = (int_of_char _lh_compareList_LH_C_0_2_6)) then
+            ((compareList_lh__d5 _lh_compareList_LH_C_1_2_5) _lh_compareList_LH_C_1_2_6)
+          else
+            (if ((int_of_char _lh_compareList_LH_C_0_2_5) < (int_of_char _lh_compareList_LH_C_0_2_6)) then
+              (`LT)
+            else
+              (`GT)))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec eqList_lh__d0 _lh_eqList_arg1_0 _lh_eqList_arg2_0 =
+  (((compareList_lh__d5 _lh_eqList_arg1_0) _lh_eqList_arg2_0) = (`EQ));;
+let rec compareList_lh__d1_d2 _lh_compareList_arg1_9 _lh_compareList_arg2_9 =
+  (match _lh_compareList_arg1_9 with
+    | `LH_N -> 
+      (match _lh_compareList_arg2_9 with
+        | `LH_N -> 
+          false
+        | `LH_C(_lh_compareList_LH_C_0_2_7, _lh_compareList_LH_C_1_2_7) -> 
+          false
+        | _ -> 
+          (failwith "error"))
+    | `LH_C(_lh_compareList_LH_C_0_2_8, _lh_compareList_LH_C_1_2_8) -> 
+      (match _lh_compareList_arg2_9 with
+        | `LH_N -> 
+          true
+        | `LH_C(_lh_compareList_LH_C_0_2_9, _lh_compareList_LH_C_1_2_9) -> 
+          (if ((int_of_char _lh_compareList_LH_C_0_2_8) = (int_of_char _lh_compareList_LH_C_0_2_9)) then
+            ((compareList_lh__d1_d2 _lh_compareList_LH_C_1_2_8) _lh_compareList_LH_C_1_2_9)
+          else
+            (if ((int_of_char _lh_compareList_LH_C_0_2_8) < (int_of_char _lh_compareList_LH_C_0_2_9)) then
+              false
+            else
+              true))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec gtList_lh__d9 _lh_gtList_arg1_3 _lh_gtList_arg2_3 =
+  (let rec _lh_matchIdent_1_1 = ((compareList_lh__d1_d2 _lh_gtList_arg1_3) _lh_gtList_arg2_3) in
+    _lh_matchIdent_1_1);;
+let rec leList_lh__d5 _lh_leList_arg1_1_1 _lh_leList_arg2_1_1 =
+  (not ((gtList_lh__d9 _lh_leList_arg1_1_1) _lh_leList_arg2_1_1));;
+let rec compareList_lh__d6 _lh_compareList_arg1_1_5 _lh_compareList_arg2_1_5 =
+  (match _lh_compareList_arg1_1_5 with
+    | `LH_N -> 
+      (match _lh_compareList_arg2_1_5 with
+        | `LH_N -> 
+          false
+        | `LH_C(_lh_compareList_LH_C_0_4_5, _lh_compareList_LH_C_1_4_5) -> 
+          false
+        | _ -> 
+          (failwith "error"))
+    | `LH_C(_lh_compareList_LH_C_0_4_6, _lh_compareList_LH_C_1_4_6) -> 
+      (match _lh_compareList_arg2_1_5 with
+        | `LH_N -> 
+          true
+        | `LH_C(_lh_compareList_LH_C_0_4_7, _lh_compareList_LH_C_1_4_7) -> 
+          (if ((int_of_char _lh_compareList_LH_C_0_4_6) = (int_of_char _lh_compareList_LH_C_0_4_7)) then
+            ((compareList_lh__d6 _lh_compareList_LH_C_1_4_6) _lh_compareList_LH_C_1_4_7)
+          else
+            (if ((int_of_char _lh_compareList_LH_C_0_4_6) < (int_of_char _lh_compareList_LH_C_0_4_7)) then
+              false
+            else
+              true))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec gtList_lh__d3 _lh_gtList_arg1_1_5 _lh_gtList_arg2_1_5 =
+  (let rec _lh_matchIdent_2_4 = ((compareList_lh__d6 _lh_gtList_arg1_1_5) _lh_gtList_arg2_1_5) in
+    _lh_matchIdent_2_4);;
+let rec compareList_lh__d1_d1 _lh_compareList_arg1_3 _lh_compareList_arg2_3 =
+  (match _lh_compareList_arg1_3 with
+    | `LH_N -> 
+      (match _lh_compareList_arg2_3 with
+        | `LH_N -> 
+          false
+        | `LH_C(_lh_compareList_LH_C_0_9, _lh_compareList_LH_C_1_9) -> 
+          false
+        | _ -> 
+          (failwith "error"))
+    | `LH_C(_lh_compareList_LH_C_0_1_0, _lh_compareList_LH_C_1_1_0) -> 
+      (match _lh_compareList_arg2_3 with
+        | `LH_N -> 
+          true
+        | `LH_C(_lh_compareList_LH_C_0_1_1, _lh_compareList_LH_C_1_1_1) -> 
+          (if ((int_of_char _lh_compareList_LH_C_0_1_0) = (int_of_char _lh_compareList_LH_C_0_1_1)) then
+            ((compareList_lh__d1_d1 _lh_compareList_LH_C_1_1_0) _lh_compareList_LH_C_1_1_1)
+          else
+            (if ((int_of_char _lh_compareList_LH_C_0_1_0) < (int_of_char _lh_compareList_LH_C_0_1_1)) then
+              false
+            else
+              true))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec gtList_lh__d8 _lh_gtList_arg1_1_3 _lh_gtList_arg2_1_3 =
+  (let rec _lh_matchIdent_2_2 = ((compareList_lh__d1_d1 _lh_gtList_arg1_1_3) _lh_gtList_arg2_1_3) in
+    _lh_matchIdent_2_2);;
+let rec leList_lh__d4 _lh_leList_arg1_1_3 _lh_leList_arg2_1_3 =
+  (not ((gtList_lh__d8 _lh_leList_arg1_1_3) _lh_leList_arg2_1_3));;
+let rec compareList_lh__d1_d0 _lh_compareList_arg1_0 _lh_compareList_arg2_0 =
+  (match _lh_compareList_arg1_0 with
+    | `LH_N -> 
+      (match _lh_compareList_arg2_0 with
+        | `LH_N -> 
+          false
+        | `LH_C(_lh_compareList_LH_C_0_0, _lh_compareList_LH_C_1_0) -> 
+          false
+        | _ -> 
+          (failwith "error"))
+    | `LH_C(_lh_compareList_LH_C_0_1, _lh_compareList_LH_C_1_1) -> 
+      (match _lh_compareList_arg2_0 with
+        | `LH_N -> 
+          true
+        | `LH_C(_lh_compareList_LH_C_0_2, _lh_compareList_LH_C_1_2) -> 
+          (if ((int_of_char _lh_compareList_LH_C_0_1) = (int_of_char _lh_compareList_LH_C_0_2)) then
+            ((compareList_lh__d1_d0 _lh_compareList_LH_C_1_1) _lh_compareList_LH_C_1_2)
+          else
+            (if ((int_of_char _lh_compareList_LH_C_0_1) < (int_of_char _lh_compareList_LH_C_0_2)) then
+              false
+            else
+              true))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec gtList_lh__d7 _lh_gtList_arg1_1_2 _lh_gtList_arg2_1_2 =
+  (let rec _lh_matchIdent_2_1 = ((compareList_lh__d1_d0 _lh_gtList_arg1_1_2) _lh_gtList_arg2_1_2) in
+    _lh_matchIdent_2_1);;
+let rec leList_lh__d3 _lh_leList_arg1_1_4 _lh_leList_arg2_1_4 =
+  (not ((gtList_lh__d7 _lh_leList_arg1_1_4) _lh_leList_arg2_1_4));;
 let rec mergeSort_lh__d0 _lh_mergeSort_arg1_0 =
   let rec merge_lists_0 = (fun _lh_merge_lists_arg1_0 -> 
     ((_lh_merge_lists_arg1_0 merge_lists_0) merge_0))
@@ -1388,6 +1256,138 @@ let rec mergeSort_lh__d0 _lh_mergeSort_arg1_0 =
                 (failwith "error")))))
   in ((fun _lh_funcomp_x_4 -> 
     (merge_lists_0 ((runsplit_0 (`LH_N)) _lh_funcomp_x_4))) _lh_mergeSort_arg1_0);;
+let rec prependToAll_lh__d1 _lh_prependToAll_arg1_1_0 _lh_prependToAll_arg2_2 =
+  (_lh_prependToAll_arg2_2 _lh_prependToAll_arg1_1_0);;
+let rec prependToAll_lh__d4 _lh_prependToAll_arg1_1_1 _lh_prependToAll_arg2_3 =
+  (_lh_prependToAll_arg2_3 _lh_prependToAll_arg1_1_1);;
+let rec mappend_lh__d3 xs_0 ys_2 =
+  (xs_0 ys_2);;
+let rec reverse_helper_lh__d3 ls_4 a_2 =
+  (match ls_4 with
+    | `LH_C(h_3, t_3) -> 
+      ((reverse_helper_lh__d3 t_3) (let rec t_4 = a_2 in
+        (let rec h_4 = h_3 in
+          (fun ys_3 -> 
+            (`LH_C(h_4, ((mappend_lh__d3 t_4) ys_3)))))))
+    | `LH_N -> 
+      a_2);;
+let rec reverse_lh__d3 ls_0 =
+  ((reverse_helper_lh__d3 ls_0) (fun ys_0 -> 
+    ys_0));;
+let rec compareList_lh__d4 _lh_compareList_arg1_2 _lh_compareList_arg2_2 =
+  (match _lh_compareList_arg1_2 with
+    | `LH_N -> 
+      (match _lh_compareList_arg2_2 with
+        | `LH_N -> 
+          false
+        | `LH_C(_lh_compareList_LH_C_0_6, _lh_compareList_LH_C_1_6) -> 
+          true
+        | _ -> 
+          (failwith "error"))
+    | `LH_C(_lh_compareList_LH_C_0_7, _lh_compareList_LH_C_1_7) -> 
+      (match _lh_compareList_arg2_2 with
+        | `LH_N -> 
+          false
+        | `LH_C(_lh_compareList_LH_C_0_8, _lh_compareList_LH_C_1_8) -> 
+          (if ((int_of_char _lh_compareList_LH_C_0_7) = (int_of_char _lh_compareList_LH_C_0_8)) then
+            ((compareList_lh__d4 _lh_compareList_LH_C_1_7) _lh_compareList_LH_C_1_8)
+          else
+            (if ((int_of_char _lh_compareList_LH_C_0_7) < (int_of_char _lh_compareList_LH_C_0_8)) then
+              true
+            else
+              false))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec ltList_lh__d1 _lh_ltList_arg1_0 _lh_ltList_arg2_0 =
+  (let rec _lh_matchIdent_2 = ((compareList_lh__d4 _lh_ltList_arg1_0) _lh_ltList_arg2_0) in
+    _lh_matchIdent_2);;
+let rec mappend_lh__d1 xs_1 ys_4 =
+  (xs_1 ys_4);;
+let rec compareList_lh__d3 _lh_compareList_arg1_7 _lh_compareList_arg2_7 =
+  (match _lh_compareList_arg1_7 with
+    | `LH_N -> 
+      (match _lh_compareList_arg2_7 with
+        | `LH_N -> 
+          false
+        | `LH_C(_lh_compareList_LH_C_0_2_1, _lh_compareList_LH_C_1_2_1) -> 
+          true
+        | _ -> 
+          (failwith "error"))
+    | `LH_C(_lh_compareList_LH_C_0_2_2, _lh_compareList_LH_C_1_2_2) -> 
+      (match _lh_compareList_arg2_7 with
+        | `LH_N -> 
+          false
+        | `LH_C(_lh_compareList_LH_C_0_2_3, _lh_compareList_LH_C_1_2_3) -> 
+          (if ((int_of_char _lh_compareList_LH_C_0_2_2) = (int_of_char _lh_compareList_LH_C_0_2_3)) then
+            ((compareList_lh__d3 _lh_compareList_LH_C_1_2_2) _lh_compareList_LH_C_1_2_3)
+          else
+            (if ((int_of_char _lh_compareList_LH_C_0_2_2) < (int_of_char _lh_compareList_LH_C_0_2_3)) then
+              true
+            else
+              false))
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec ltList_lh__d0 _lh_ltList_arg1_2 _lh_ltList_arg2_2 =
+  (let rec _lh_matchIdent_5 = ((compareList_lh__d3 _lh_ltList_arg1_2) _lh_ltList_arg2_2) in
+    _lh_matchIdent_5);;
+let rec mappend_lh__d0 xs_3 ys_8 =
+  (xs_3 ys_8);;
+let rec mappend_lh__d2 xs_6 ys_1_1 =
+  (xs_6 ys_1_1);;
+let rec mappend_lh__d4 xs_1_0 ys_1_8 =
+  (xs_1_0 ys_1_8);;
+let rec reverse_helper_lh__d0 ls_3 a_1 =
+  (match ls_3 with
+    | `LH_C(h_1, t_1) -> 
+      ((reverse_helper_lh__d0 t_1) (let rec t_2 = a_1 in
+        (let rec h_2 = h_1 in
+          (fun ys_1 -> 
+            (`LH_C(h_2, ((mappend_lh__d0 t_2) ys_1)))))))
+    | `LH_N -> 
+      a_1);;
+let rec reverse_lh__d0 ls_1_3 =
+  ((reverse_helper_lh__d0 ls_1_3) (fun ys_2_0 -> 
+    ys_2_0));;
+let rec reverse_helper_lh__d1 ls_6 a_4 =
+  (match ls_6 with
+    | `LH_C(h_2_3, t_2_3) -> 
+      ((reverse_helper_lh__d1 t_2_3) (let rec t_2_4 = a_4 in
+        (let rec h_2_4 = h_2_3 in
+          (fun ys_7 -> 
+            (`LH_C(h_2_4, ((mappend_lh__d1 t_2_4) ys_7)))))))
+    | `LH_N -> 
+      a_4);;
+let rec reverse_lh__d1 ls_1_4 =
+  ((reverse_helper_lh__d1 ls_1_4) (fun ys_2_1 -> 
+    ys_2_1));;
+let rec reverse_helper_lh__d2 ls_5 a_3 =
+  (match ls_5 with
+    | `LH_C(h_5, t_5) -> 
+      ((reverse_helper_lh__d2 t_5) (let rec t_6 = a_3 in
+        (let rec h_6 = h_5 in
+          (fun ys_5 -> 
+            (`LH_C(h_6, ((mappend_lh__d2 t_6) ys_5)))))))
+    | `LH_N -> 
+      a_3);;
+let rec reverse_lh__d2 ls_1_6 =
+  ((reverse_helper_lh__d2 ls_1_6) (fun ys_2_3 -> 
+    ys_2_3));;
+let rec reverse_helper_lh__d4 ls_1_5 a_5 =
+  (match ls_1_5 with
+    | `LH_C(h_3_9, t_3_9) -> 
+      ((reverse_helper_lh__d4 t_3_9) (let rec t_4_0 = a_5 in
+        (let rec h_4_0 = h_3_9 in
+          (fun ys_2_2 -> 
+            (`LH_C(h_4_0, ((mappend_lh__d4 t_4_0) ys_2_2)))))))
+    | `LH_N -> 
+      a_5);;
+let rec reverse_lh__d4 ls_1_7 =
+  ((reverse_helper_lh__d4 ls_1_7) (fun ys_2_4 -> 
+    ys_2_4));;
 let rec insertSort_lh__d0 _lh_insertSort_arg1_0 =
   (match _lh_insertSort_arg1_0 with
     | `LH_N -> 

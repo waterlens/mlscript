@@ -6,11 +6,6 @@ open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_lumberhack = struct
 let rec zip__d0 xs_1 ys_3 =
   (xs_1 ys_3);;
-let rec makeZippedList__d0 n_1 =
-  (if (n_1 > 0) then
-    (`C((`Pair(n_1, (n_1 + 1))), (makeZippedList__d0 (n_1 - 1))))
-  else
-    (`N));;
 let rec unzip__d0 ls_0 =
   (match ls_0 with
     | `C(h_0, t_0) -> 
@@ -29,6 +24,11 @@ let rec unzip__d0 ls_0 =
       (`Pair((fun ys_2 -> 
         (`N)), (fun xt_2 x_2 -> 
         (`N)))));;
+let rec makeZippedList__d0 n_1 =
+  (if (n_1 > 0) then
+    (`C((`Pair(n_1, (n_1 + 1))), (makeZippedList__d0 (n_1 - 1))))
+  else
+    (`N));;
 let rec testZipUnzip__d0 n_0 =
   (match (unzip__d0 (makeZippedList__d0 n_0)) with
     | `Pair(xs_0, ys_0) -> 

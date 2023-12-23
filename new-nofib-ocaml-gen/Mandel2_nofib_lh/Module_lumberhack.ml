@@ -49,10 +49,18 @@ let rec qmn_lh =
   (0.0 -. 1.5);;
 let rec qmx_lh =
   1.5;;
+let rec delta_q_lh =
+  ((qmx_lh -. qmn_lh) /. (float_of_int (size_lh - 1)));;
+let rec nq_lh _lh_nq_arg1_0 =
+  (qmn_lh +. ((float_of_int _lh_nq_arg1_0) *. delta_q_lh));;
 let rec pmn_lh =
   (0.0 -. 2.25);;
 let rec pmx_lh =
   0.75;;
+let rec delta_p_lh =
+  ((pmx_lh -. pmn_lh) /. (float_of_int (size_lh - 1)));;
+let rec np_lh _lh_np_arg1_0 =
+  (pmn_lh +. ((float_of_int _lh_np_arg1_0) *. delta_p_lh));;
 let rec m_lh =
   20;;
 let rec num_cols_lh =
@@ -63,35 +71,6 @@ let rec new_x_lh _lh_new_x_arg1_0 _lh_new_x_arg2_0 _lh_new_x_arg3_0 =
   (((_lh_new_x_arg1_0 *. _lh_new_x_arg1_0) -. (_lh_new_x_arg2_0 *. _lh_new_x_arg2_0)) +. _lh_new_x_arg3_0);;
 let rec radius_lh _lh_radius_arg1_0 _lh_radius_arg2_0 =
   ((_lh_radius_arg1_0 *. _lh_radius_arg1_0) +. (_lh_radius_arg2_0 *. _lh_radius_arg2_0));;
-let rec strEq_lh _lh_strEq_arg1_0 _lh_strEq_arg2_0 =
-  (match _lh_strEq_arg1_0 with
-    | `LH_C(_lh_strEq_LH_C_0_0, _lh_strEq_LH_C_1_0) -> 
-      (let rec _lh_matchIdent_2 = _lh_strEq_arg2_0 in
-        (match _lh_matchIdent_2 with
-          | `LH_C(_lh_strEq_LH_C_0_1, _lh_strEq_LH_C_1_1) -> 
-            (if (_lh_strEq_LH_C_0_0 = _lh_strEq_LH_C_0_1) then
-              ((strEq_lh _lh_strEq_LH_C_1_0) _lh_strEq_LH_C_1_1)
-            else
-              false)
-          | `LH_N -> 
-            false
-          | _ -> 
-            (failwith "error")))
-    | `LH_N -> 
-      (let rec _lh_matchIdent_3 = _lh_strEq_arg2_0 in
-        (match _lh_matchIdent_3 with
-          | `LH_C(_lh_strEq_LH_C_0_2, _lh_strEq_LH_C_1_2) -> 
-            false
-          | `LH_N -> 
-            true
-          | _ -> 
-            (failwith "error")))
-    | _ -> 
-      (failwith "error"));;
-let rec delta_q_lh =
-  ((qmx_lh -. qmn_lh) /. (float_of_int (size_lh - 1)));;
-let rec delta_p_lh =
-  ((pmx_lh -. pmn_lh) /. (float_of_int (size_lh - 1)));;
 let rec check_radius_lh _lh_check_radius_arg1_0 _lh_check_radius_arg2_0 _lh_check_radius_arg3_0 _lh_check_radius_arg4_0 _lh_check_radius_arg5_0 =
   (let rec xn_0 = (((new_x_lh _lh_check_radius_arg4_0) _lh_check_radius_arg5_0) _lh_check_radius_arg1_0) in
     (let rec yn_0 = (((new_y_lh _lh_check_radius_arg4_0) _lh_check_radius_arg5_0) _lh_check_radius_arg2_0) in
@@ -104,10 +83,6 @@ let rec check_radius_lh _lh_check_radius_arg1_0 _lh_check_radius_arg2_0 _lh_chec
               kp_0
             else
               (((((check_radius_lh _lh_check_radius_arg1_0) _lh_check_radius_arg2_0) kp_0) xn_0) yn_0)))))));;
-let rec nq_lh _lh_nq_arg1_0 =
-  (qmn_lh +. ((float_of_int _lh_nq_arg1_0) *. delta_q_lh));;
-let rec np_lh _lh_np_arg1_0 =
-  (pmn_lh +. ((float_of_int _lh_np_arg1_0) *. delta_p_lh));;
 let rec point_colour_lh _lh_point_colour_arg1_0 =
   (match _lh_point_colour_arg1_0 with
     | `LH_P2(_lh_point_colour_LH_P2_0_0, _lh_point_colour_LH_P2_1_0) -> 
@@ -183,6 +158,31 @@ let rec check_perim_lh _lh_check_perim_arg1_0 _lh_check_perim_arg2_0 =
                             check_sides_0)))))))))
         | _ -> 
           (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec strEq_lh _lh_strEq_arg1_0 _lh_strEq_arg2_0 =
+  (match _lh_strEq_arg1_0 with
+    | `LH_C(_lh_strEq_LH_C_0_0, _lh_strEq_LH_C_1_0) -> 
+      (let rec _lh_matchIdent_2 = _lh_strEq_arg2_0 in
+        (match _lh_matchIdent_2 with
+          | `LH_C(_lh_strEq_LH_C_0_1, _lh_strEq_LH_C_1_1) -> 
+            (if (_lh_strEq_LH_C_0_0 = _lh_strEq_LH_C_0_1) then
+              ((strEq_lh _lh_strEq_LH_C_1_0) _lh_strEq_LH_C_1_1)
+            else
+              false)
+          | `LH_N -> 
+            false
+          | _ -> 
+            (failwith "error")))
+    | `LH_N -> 
+      (let rec _lh_matchIdent_3 = _lh_strEq_arg2_0 in
+        (match _lh_matchIdent_3 with
+          | `LH_C(_lh_strEq_LH_C_0_2, _lh_strEq_LH_C_1_2) -> 
+            false
+          | `LH_N -> 
+            true
+          | _ -> 
+            (failwith "error")))
     | _ -> 
       (failwith "error"));;
 let rec build_tree_lh _lh_build_tree_arg1_0 _lh_build_tree_arg2_0 =

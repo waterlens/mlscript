@@ -15,6 +15,8 @@ let rec reverse_helper_lh ls_3 a_2 =
       ((reverse_helper_lh t_5) (`LH_C(h_4, a_2)))
     | `LH_N -> 
       a_2);;
+let rec reverse_lh ls_2 =
+  ((reverse_helper_lh ls_2) (`LH_N));;
 let rec enumFromThenTo_lh a_1 t_1 b_1 =
   (if (a_1 <= b_1) then
     (`LH_C(a_1, (((enumFromThenTo_lh t_1) ((2 * t_1) - a_1)) b_1)))
@@ -32,12 +34,23 @@ let rec length_lh ls_1 =
       (1 + (length_lh t_2))
     | `LH_N -> 
       0);;
+let rec pad_lh _lh_pad_arg1_0 _lh_pad_arg2_0 =
+  ((mappend_lh (let rec _lh_listcomp_fun_6 = (fun _lh_listcomp_fun_para_6 -> 
+    (match _lh_listcomp_fun_para_6 with
+      | `LH_C(_lh_listcomp_fun_ls_h_6, _lh_listcomp_fun_ls_t_6) -> 
+        (`LH_C('0', (_lh_listcomp_fun_6 _lh_listcomp_fun_ls_t_6)))
+      | `LH_N -> 
+        (`LH_N))) in
+    (_lh_listcomp_fun_6 ((enumFromTo_lh 1) (_lh_pad_arg2_0 - (length_lh _lh_pad_arg1_0)))))) _lh_pad_arg1_0);;
 let rec foldl_lh f_0 i_0 ls_0 =
   (match ls_0 with
     | `LH_C(h_0, t_0) -> 
       (((foldl_lh f_0) ((f_0 i_0) h_0)) t_0)
     | `LH_N -> 
       i_0);;
+let rec mknum_lh _lh_mknum_arg1_0 =
+  (((foldl_lh (fun u_0 c_2 -> 
+    ((u_0 * 10) + ((int_of_char c_2) - (int_of_char '0'))))) 0) _lh_mknum_arg1_0);;
 let rec max_lh _lh_max_arg1_0 _lh_max_arg2_0 =
   (if (_lh_max_arg1_0 > _lh_max_arg2_0) then
     _lh_max_arg1_0
@@ -59,25 +72,6 @@ let rec span_lh _lh_span_arg1_0 _lh_span_arg2_0 =
         (`LH_P2((`LH_N), (`LH_C(_lh_span_LH_C_0_0, _lh_span_LH_C_1_0)))))
     | _ -> 
       (failwith "error"));;
-let rec reverse_lh ls_2 =
-  ((reverse_helper_lh ls_2) (`LH_N));;
-let rec pad_lh _lh_pad_arg1_0 _lh_pad_arg2_0 =
-  ((mappend_lh (let rec _lh_listcomp_fun_6 = (fun _lh_listcomp_fun_para_6 -> 
-    (match _lh_listcomp_fun_para_6 with
-      | `LH_C(_lh_listcomp_fun_ls_h_6, _lh_listcomp_fun_ls_t_6) -> 
-        (`LH_C('0', (_lh_listcomp_fun_6 _lh_listcomp_fun_ls_t_6)))
-      | `LH_N -> 
-        (`LH_N))) in
-    (_lh_listcomp_fun_6 ((enumFromTo_lh 1) (_lh_pad_arg2_0 - (length_lh _lh_pad_arg1_0)))))) _lh_pad_arg1_0);;
-let rec mknum_lh _lh_mknum_arg1_0 =
-  (((foldl_lh (fun u_0 c_2 -> 
-    ((u_0 * 10) + ((int_of_char c_2) - (int_of_char '0'))))) 0) _lh_mknum_arg1_0);;
-let rec concat_lh lss_0 =
-  (match lss_0 with
-    | `LH_C(h_3, t_4) -> 
-      ((mappend_lh h_3) (concat_lh t_4))
-    | `LH_N -> 
-      (`LH_N));;
 let rec alphabeticRule_lh _lh_alphabeticRule_arg1_0 =
   (match _lh_alphabeticRule_arg1_0 with
     | `LH_C(_lh_alphabeticRule_LH_C_0_0, _lh_alphabeticRule_LH_C_1_0) -> 
@@ -203,6 +197,12 @@ numericRule_lh _lh_numericRule_arg1_0 =
             (failwith "error"))
       | _ -> 
         (failwith "error")));;
+let rec concat_lh lss_0 =
+  (match lss_0 with
+    | `LH_C(h_3, t_4) -> 
+      ((mappend_lh h_3) (concat_lh t_4))
+    | `LH_N -> 
+      (`LH_N));;
 let rec testGenRegexs_nofib_lh _lh_testGenRegexs_nofib_arg1_0 =
   (concat_lh (expand_lh _lh_testGenRegexs_nofib_arg1_0));;
 end;;

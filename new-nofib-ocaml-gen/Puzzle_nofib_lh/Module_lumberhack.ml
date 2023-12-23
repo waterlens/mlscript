@@ -38,6 +38,18 @@ let rec edgePos_lh__d3 _lh_edgePos_arg1_2 =
       _lh_edgePos_State_1_2
     | _ -> 
       (failwith "error"));;
+let rec position_lh__d0 _lh_position_arg1_0 =
+  (match _lh_position_arg1_0 with
+    | `Bono -> 
+      bonoPos_lh__d3
+    | `Edge -> 
+      edgePos_lh__d3
+    | `Larry -> 
+      larryPos_lh__d3
+    | `Adam -> 
+      adamPos_lh__d3
+    | _ -> 
+      (failwith "error"));;
 let rec u2times_lh__d0 _lh_u2times_arg1_1 =
   (match _lh_u2times_arg1_1 with
     | `Bono -> 
@@ -61,6 +73,23 @@ let rec all_lh__d0 _lh_all_arg1_0 _lh_all_arg2_0 =
         false)
     | _ -> 
       (failwith "error"));;
+let rec notSeen_lh__d0 _lh_notSeen_arg1_1 =
+  (all_lh__d0 (fun _s_1 -> 
+    (let rec _lh_matchIdent_3 = _s_1 in
+      (match _lh_matchIdent_3 with
+        | `LH_P2(_lh_notSeen_LH_P2_0_1, _lh_notSeen_LH_P2_1_1) -> 
+          (_lh_notSeen_arg1_1 <> _lh_notSeen_LH_P2_1_1)
+        | _ -> 
+          (failwith "error")))));;
+let rec mappend_lh__d4_d2 xs_2_9 ys_1_2_0_0 =
+  (match xs_2_9 with
+    | `LH_C(h_1_1_4_7, t_1_1_4_7) -> 
+      (let rec t_1_1_4_8 = ((mappend_lh__d4_d2 t_1_1_4_7) ys_1_2_0_0) in
+        (let rec h_1_1_4_8 = h_1_1_4_7 in
+          (fun ys_1_2_0_1 -> 
+            (`LH_C(h_1_1_4_8, ((mappend_lh__d4_d4 t_1_1_4_8) ys_1_2_0_1))))))
+    | `LH_N -> 
+      ys_1_2_0_0);;
 let rec succItem_lh__d0 _lh_succItem_arg1_3 =
   (match _lh_succItem_arg1_3 with
     | `Bono -> 
@@ -157,6 +186,18 @@ let rec adamPos_lh__d5 _lh_adamPos_arg1_4 =
       _lh_adamPos_State_3_4
     | _ -> 
       (failwith "error"));;
+let rec position_lh__d2 _lh_position_arg1_1 =
+  (match _lh_position_arg1_1 with
+    | `Bono -> 
+      bonoPos_lh__d5
+    | `Edge -> 
+      edgePos_lh__d5
+    | `Larry -> 
+      larryPos_lh__d5
+    | `Adam -> 
+      adamPos_lh__d5
+    | _ -> 
+      (failwith "error"));;
 let rec all_lh__d1 _lh_all_arg1_1 _lh_all_arg2_1 =
   (match _lh_all_arg2_1 with
     | `LH_N -> 
@@ -168,6 +209,14 @@ let rec all_lh__d1 _lh_all_arg1_1 _lh_all_arg2_1 =
         false)
     | _ -> 
       (failwith "error"));;
+let rec notSeen_lh__d1 _lh_notSeen_arg1_0 =
+  (all_lh__d1 (fun _s_0 -> 
+    (let rec _lh_matchIdent_1 = _s_0 in
+      (match _lh_matchIdent_1 with
+        | `LH_P2(_lh_notSeen_LH_P2_0_0, _lh_notSeen_LH_P2_1_0) -> 
+          (_lh_notSeen_arg1_0 <> _lh_notSeen_LH_P2_1_0)
+        | _ -> 
+          (failwith "error")))));;
 let rec succItem_lh__d1 _lh_succItem_arg1_2 =
   (match _lh_succItem_arg1_2 with
     | `Bono -> 
@@ -278,12 +327,124 @@ let rec larryPos_lh__d4 _lh_larryPos_arg1_2 =
       _lh_larryPos_State_2_2
     | _ -> 
       (failwith "error"));;
+let rec position_lh__d1 _lh_position_arg1_2 =
+  (match _lh_position_arg1_2 with
+    | `Bono -> 
+      bonoPos_lh__d4
+    | `Edge -> 
+      edgePos_lh__d4
+    | `Larry -> 
+      larryPos_lh__d4
+    | `Adam -> 
+      adamPos_lh__d4
+    | _ -> 
+      (failwith "error"));;
 let rec mappend_lh__d4_d3 xs_3_6 ys_1_2_0_8 =
   (match xs_3_6 with
     | `LH_C(h_1_1_5_2, t_1_1_5_2) -> 
       (`LH_C(h_1_1_5_2, ((mappend_lh__d4_d3 t_1_1_5_2) ys_1_2_0_8)))
     | `LH_N -> 
       ys_1_2_0_8);;
+let rec itemFromTo_lh__d0 _lh_itemFromTo_arg1_0 _lh_itemFromTo_arg2_0 =
+  (if (_lh_itemFromTo_arg1_0 = _lh_itemFromTo_arg2_0) then
+    (let rec _lh_listcomp_fun_ls_t_0 = (fun _lh_listcomp_fun_0 _lh_transfer_arg1_0 _lh_transfer_arg2_0 _lh_transfer_arg3_0 _lh_transfer_arg4_0 _lh_transfer_arg5_0 newHistory_0 newLocation_0 _lh_dummy_0 ys_4_0_4 -> 
+      ys_4_0_4) in
+      (let rec _lh_listcomp_fun_ls_h_0 = _lh_itemFromTo_arg1_0 in
+        (fun _lh_listcomp_fun_1 _lh_transfer_arg1_1 _lh_transfer_arg2_1 _lh_transfer_arg3_1 _lh_transfer_arg4_1 _lh_transfer_arg5_1 newHistory_1 newLocation_1 -> 
+          (if (((position_lh__d0 _lh_listcomp_fun_ls_h_0) _lh_transfer_arg2_1) = _lh_transfer_arg3_1) then
+            (let rec newDest_0 = (((updateState_lh__d0 _lh_transfer_arg2_1) _lh_listcomp_fun_ls_h_0) newLocation_1) in
+              (if ((notSeen_lh__d0 newDest_0) _lh_transfer_arg5_1) then
+                (let rec newTime_0 = (_lh_transfer_arg4_1 + (u2times_lh__d0 _lh_listcomp_fun_ls_h_0)) in
+                  (let rec t_3_8_2 = (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_0) in
+                    (let rec h_3_8_2 = (((((transfer_lh__d0 _lh_transfer_arg1_1) newDest_0) newLocation_1) newTime_0) newHistory_1) in
+                      (fun _lh_dummy_1 -> 
+                        ((mappend_lh__d4_d2 h_3_8_2) (concat_lh__d1 t_3_8_2))))))
+              else
+                (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_0)))
+          else
+            (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_0)))))
+  else
+    (let rec _lh_listcomp_fun_ls_t_1 = ((itemFromTo_lh__d0 (succItem_lh__d0 _lh_itemFromTo_arg1_0)) _lh_itemFromTo_arg2_0) in
+      (let rec _lh_listcomp_fun_ls_h_1 = _lh_itemFromTo_arg1_0 in
+        (fun _lh_listcomp_fun_2 _lh_transfer_arg1_2 _lh_transfer_arg2_2 _lh_transfer_arg3_2 _lh_transfer_arg4_2 _lh_transfer_arg5_2 newHistory_2 newLocation_2 -> 
+          (if (((position_lh__d0 _lh_listcomp_fun_ls_h_1) _lh_transfer_arg2_2) = _lh_transfer_arg3_2) then
+            (let rec newDest_1 = (((updateState_lh__d0 _lh_transfer_arg2_2) _lh_listcomp_fun_ls_h_1) newLocation_2) in
+              (if ((notSeen_lh__d0 newDest_1) _lh_transfer_arg5_2) then
+                (let rec newTime_1 = (_lh_transfer_arg4_2 + (u2times_lh__d0 _lh_listcomp_fun_ls_h_1)) in
+                  (let rec t_3_8_3 = (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_1) in
+                    (let rec h_3_8_3 = (((((transfer_lh__d0 _lh_transfer_arg1_2) newDest_1) newLocation_2) newTime_1) newHistory_2) in
+                      (fun _lh_dummy_2 -> 
+                        ((mappend_lh__d4_d2 h_3_8_3) (concat_lh__d1 t_3_8_3))))))
+              else
+                (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_1)))
+          else
+            (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_1))))))
+and
+itemFromTo_lh__d1 _lh_itemFromTo_arg1_1 _lh_itemFromTo_arg2_1 =
+  (if (_lh_itemFromTo_arg1_1 = _lh_itemFromTo_arg2_1) then
+    (let rec _lh_listcomp_fun_ls_t_2 = (fun _lh_listcomp_fun_ls_h_2 _lh_listcomp_fun_5 _lh_transfer_arg1_4 _lh_transfer_arg2_4 _lh_transfer_arg3_4 _lh_transfer_arg4_4 _lh_transfer_arg5_4 newHistory_4 newLocation_4 _lh_listcomp_fun_ls_t_3 _lh_listcomp_fun_6 -> 
+      (_lh_listcomp_fun_6 _lh_listcomp_fun_ls_t_3)) in
+      (let rec _lh_listcomp_fun_ls_h_3 = _lh_itemFromTo_arg1_1 in
+        (fun _lh_listcomp_fun_ls_h_4 _lh_listcomp_fun_7 _lh_transfer_arg1_5 _lh_transfer_arg2_5 _lh_transfer_arg3_5 _lh_transfer_arg4_5 _lh_transfer_arg5_5 newHistory_5 newLocation_5 _lh_listcomp_fun_ls_t_4 _lh_listcomp_fun_8 -> 
+          (if ((((position_lh__d1 _lh_listcomp_fun_ls_h_4) _lh_transfer_arg2_5) = _lh_transfer_arg3_5) && (((position_lh__d2 _lh_listcomp_fun_ls_h_3) _lh_transfer_arg2_5) = _lh_transfer_arg3_5)) then
+            (let rec newDest_2 = (((updateState_lh__d1 (((updateState_lh__d2 _lh_transfer_arg2_5) _lh_listcomp_fun_ls_h_4) newLocation_5)) _lh_listcomp_fun_ls_h_3) newLocation_5) in
+              (if ((notSeen_lh__d1 newDest_2) _lh_transfer_arg5_5) then
+                (let rec newTime_2 = (_lh_transfer_arg4_5 + (u2times_lh__d1 _lh_listcomp_fun_ls_h_4)) in
+                  (let rec t_1_1_5_0 = (_lh_listcomp_fun_7 _lh_listcomp_fun_ls_t_2) in
+                    (let rec h_1_1_5_0 = (((((transfer_lh__d0 _lh_transfer_arg1_5) newDest_2) newLocation_5) newTime_2) newHistory_5) in
+                      (fun _lh_dummy_3 -> 
+                        ((mappend_lh__d4_d3 h_1_1_5_0) (concat_lh__d3 t_1_1_5_0))))))
+              else
+                (_lh_listcomp_fun_7 _lh_listcomp_fun_ls_t_2)))
+          else
+            (_lh_listcomp_fun_7 _lh_listcomp_fun_ls_t_2)))))
+  else
+    (let rec _lh_listcomp_fun_ls_t_5 = ((itemFromTo_lh__d1 (succItem_lh__d1 _lh_itemFromTo_arg1_1)) _lh_itemFromTo_arg2_1) in
+      (let rec _lh_listcomp_fun_ls_h_5 = _lh_itemFromTo_arg1_1 in
+        (fun _lh_listcomp_fun_ls_h_6 _lh_listcomp_fun_9 _lh_transfer_arg1_6 _lh_transfer_arg2_6 _lh_transfer_arg3_6 _lh_transfer_arg4_6 _lh_transfer_arg5_6 newHistory_6 newLocation_6 _lh_listcomp_fun_ls_t_6 _lh_listcomp_fun_1_0 -> 
+          (if ((((position_lh__d1 _lh_listcomp_fun_ls_h_6) _lh_transfer_arg2_6) = _lh_transfer_arg3_6) && (((position_lh__d2 _lh_listcomp_fun_ls_h_5) _lh_transfer_arg2_6) = _lh_transfer_arg3_6)) then
+            (let rec newDest_3 = (((updateState_lh__d1 (((updateState_lh__d2 _lh_transfer_arg2_6) _lh_listcomp_fun_ls_h_6) newLocation_6)) _lh_listcomp_fun_ls_h_5) newLocation_6) in
+              (if ((notSeen_lh__d1 newDest_3) _lh_transfer_arg5_6) then
+                (let rec newTime_3 = (_lh_transfer_arg4_6 + (u2times_lh__d1 _lh_listcomp_fun_ls_h_6)) in
+                  (let rec t_1_1_5_1 = (_lh_listcomp_fun_9 _lh_listcomp_fun_ls_t_5) in
+                    (let rec h_1_1_5_1 = (((((transfer_lh__d0 _lh_transfer_arg1_6) newDest_3) newLocation_6) newTime_3) newHistory_6) in
+                      (fun _lh_dummy_4 -> 
+                        ((mappend_lh__d4_d3 h_1_1_5_1) (concat_lh__d3 t_1_1_5_1))))))
+              else
+                (_lh_listcomp_fun_9 _lh_listcomp_fun_ls_t_5)))
+          else
+            (_lh_listcomp_fun_9 _lh_listcomp_fun_ls_t_5))))))
+and
+itemFromTo_lh__d2 _lh_itemFromTo_arg1_2 _lh_itemFromTo_arg2_2 =
+  (if (_lh_itemFromTo_arg1_2 = _lh_itemFromTo_arg2_2) then
+    (let rec _lh_listcomp_fun_ls_t_7 = (fun _lh_listcomp_fun_1_1 _lh_transfer_arg1_7 _lh_transfer_arg2_7 _lh_transfer_arg3_7 _lh_transfer_arg4_7 _lh_transfer_arg5_7 newHistory_7 newLocation_7 _lh_dummy_5 -> 
+      (`LH_N)) in
+      (let rec _lh_listcomp_fun_ls_h_7 = _lh_itemFromTo_arg1_2 in
+        (fun _lh_listcomp_fun_1_2 _lh_transfer_arg1_8 _lh_transfer_arg2_8 _lh_transfer_arg3_8 _lh_transfer_arg4_8 _lh_transfer_arg5_8 newHistory_8 newLocation_8 -> 
+          (let rec _lh_listcomp_fun_1_3 = (fun _lh_listcomp_fun_para_2 -> 
+            (((((((((((_lh_listcomp_fun_para_2 _lh_listcomp_fun_ls_h_7) _lh_listcomp_fun_1_3) _lh_transfer_arg1_8) _lh_transfer_arg2_8) _lh_transfer_arg3_8) _lh_transfer_arg4_8) _lh_transfer_arg5_8) newHistory_8) newLocation_8) _lh_listcomp_fun_ls_t_7) _lh_listcomp_fun_1_2)) in
+            (_lh_listcomp_fun_1_3 ((itemFromTo_lh__d1 (succItem_lh__d3 _lh_listcomp_fun_ls_h_7)) (`Adam)))))))
+  else
+    (let rec _lh_listcomp_fun_ls_t_8 = ((itemFromTo_lh__d2 (succItem_lh__d2 _lh_itemFromTo_arg1_2)) _lh_itemFromTo_arg2_2) in
+      (let rec _lh_listcomp_fun_ls_h_8 = _lh_itemFromTo_arg1_2 in
+        (fun _lh_listcomp_fun_1_4 _lh_transfer_arg1_9 _lh_transfer_arg2_9 _lh_transfer_arg3_9 _lh_transfer_arg4_9 _lh_transfer_arg5_9 newHistory_9 newLocation_9 -> 
+          (let rec _lh_listcomp_fun_1_5 = (fun _lh_listcomp_fun_para_3 -> 
+            (((((((((((_lh_listcomp_fun_para_3 _lh_listcomp_fun_ls_h_8) _lh_listcomp_fun_1_5) _lh_transfer_arg1_9) _lh_transfer_arg2_9) _lh_transfer_arg3_9) _lh_transfer_arg4_9) _lh_transfer_arg5_9) newHistory_9) newLocation_9) _lh_listcomp_fun_ls_t_8) _lh_listcomp_fun_1_4)) in
+            (_lh_listcomp_fun_1_5 ((itemFromTo_lh__d1 (succItem_lh__d3 _lh_listcomp_fun_ls_h_8)) (`Adam))))))))
+and
+transfer_lh__d0 _lh_transfer_arg1_3 _lh_transfer_arg2_3 _lh_transfer_arg3_3 _lh_transfer_arg4_3 _lh_transfer_arg5_3 =
+  (if (_lh_transfer_arg1_3 = _lh_transfer_arg2_3) then
+    (`LH_C((`LH_C((`LH_P2(_lh_transfer_arg4_3, _lh_transfer_arg2_3)), _lh_transfer_arg5_3)), (`LH_N)))
+  else
+    (let rec newHistory_3 = (`LH_C((`LH_P2(_lh_transfer_arg4_3, _lh_transfer_arg2_3)), _lh_transfer_arg5_3)) in
+      (let rec newLocation_3 = (opposite_lh__d0 _lh_transfer_arg3_3) in
+        (let rec moveOne_0 = (concat_lh__d0 (let rec _lh_listcomp_fun_3 = (fun _lh_listcomp_fun_para_0 -> 
+          ((((((((_lh_listcomp_fun_para_0 _lh_listcomp_fun_3) _lh_transfer_arg1_3) _lh_transfer_arg2_3) _lh_transfer_arg3_3) _lh_transfer_arg4_3) _lh_transfer_arg5_3) newHistory_3) newLocation_3)) in
+          (_lh_listcomp_fun_3 ((itemFromTo_lh__d0 (`Bono)) (`Adam))))) in
+          (let rec moveTwo_0 = (concat_lh__d2 (let rec _lh_listcomp_fun_4 = (fun _lh_listcomp_fun_para_1 -> 
+            ((((((((_lh_listcomp_fun_para_1 _lh_listcomp_fun_4) _lh_transfer_arg1_3) _lh_transfer_arg2_3) _lh_transfer_arg3_3) _lh_transfer_arg4_3) _lh_transfer_arg5_3) newHistory_3) newLocation_3)) in
+            (_lh_listcomp_fun_4 ((itemFromTo_lh__d2 (`Bono)) (`Larry))))) in
+            ((mappend_lh__d4_d4 moveOne_0) moveTwo_0))))));;
 let rec length_lh__d0 ls_9 =
   (match ls_9 with
     | `LH_C(h_1_1_4_9, t_1_1_4_9) -> 
@@ -378,267 +539,6 @@ let rec mappend_lh__d1_d4 xs_1_7 ys_4_0_5 =
   (xs_1_7 ys_4_0_5);;
 let rec writeItem_lh__d1 _lh_writeItem_arg1_2 _lh_writeItem_arg2_6 _lh_writeItem_arg3_6 =
   ((_lh_writeItem_arg1_2 _lh_writeItem_arg2_6) _lh_writeItem_arg3_6);;
-let rec mappend_lh__d6 xs_1_8 ys_1_1_5_2 =
-  (match xs_1_8 with
-    | `LH_C(h_1_1_1_0, t_1_1_1_0) -> 
-      (`LH_C(h_1_1_1_0, ((mappend_lh__d6 t_1_1_1_0) ys_1_1_5_2)))
-    | `LH_N -> 
-      ys_1_1_5_2);;
-let rec reverse_helper_lh__d1 ls_3 a_3 =
-  (ls_3 a_3);;
-let rec mappend_lh__d0 xs_1_0 ys_3_9_7 =
-  (xs_1_0 ys_3_9_7);;
-let rec mappend_lh__d2 xs_1_3 ys_4_0_0 =
-  (xs_1_3 ys_4_0_0);;
-let rec mappend_lh__d5 xs_1_6 ys_4_0_3 =
-  (match xs_1_6 with
-    | `LH_C(h_3_8_1, t_3_8_1) -> 
-      (`LH_C(h_3_8_1, ((mappend_lh__d5 t_3_8_1) ys_4_0_3)))
-    | `LH_N -> 
-      ys_4_0_3);;
-let rec writeSolutions_lh__d0 _lh_writeSolutions_arg1_0 _lh_writeSolutions_arg2_0 =
-  (_lh_writeSolutions_arg1_0 _lh_writeSolutions_arg2_0);;
-let rec mappend_lh__d4 xs_2_0 ys_1_1_5_4 =
-  (xs_2_0 ys_1_1_5_4);;
-let rec mappend_lh__d1_d8 xs_5 ys_3_9_2 =
-  (match xs_5 with
-    | `LH_C(h_3_7_6, t_3_7_6) -> 
-      (`LH_C(h_3_7_6, ((mappend_lh__d1_d8 t_3_7_6) ys_3_9_2)))
-    | `LH_N -> 
-      ys_3_9_2);;
-let rec mappend_lh__d1_d9 xs_9 ys_3_9_6 =
-  (xs_9 ys_3_9_6);;
-let rec foldr_lh__d1 f_1 i_1 ls_5 =
-  (match ls_5 with
-    | `LH_C(h_3_7_9, t_3_7_9) -> 
-      ((f_1 h_3_7_9) (((foldr_lh__d1 f_1) i_1) t_3_7_9))
-    | `LH_N -> 
-      i_1);;
-let rec mappend_lh__d2_d1 xs_3 ys_3_9_0 =
-  (xs_3 ys_3_9_0);;
-let rec mappend_lh__d2_d3 xs_1_5 ys_4_0_2 =
-  (xs_1_5 ys_4_0_2);;
-let rec larryPos_lh__d1 _lh_larryPos_arg1_1 =
-  (match _lh_larryPos_arg1_1 with
-    | `State(_lh_larryPos_State_0_1, _lh_larryPos_State_1_1, _lh_larryPos_State_2_1, _lh_larryPos_State_3_1) -> 
-      _lh_larryPos_State_2_1
-    | _ -> 
-      (failwith "error"));;
-let rec writeItem_lh__d4 _lh_writeItem_arg1_7 _lh_writeItem_arg2_1_9 _lh_writeItem_arg3_1_9 =
-  ((_lh_writeItem_arg1_7 _lh_writeItem_arg2_1_9) _lh_writeItem_arg3_1_9);;
-let rec mappend_lh__d2_d6 xs_3_8 ys_1_2_1_0 =
-  (xs_3_8 ys_1_2_1_0);;
-let rec writeItem_lh__d6 _lh_writeItem_arg1_8 _lh_writeItem_arg2_2_0 _lh_writeItem_arg3_2_0 =
-  ((_lh_writeItem_arg1_8 _lh_writeItem_arg2_2_0) _lh_writeItem_arg3_2_0);;
-let rec mappend_lh__d2_d7 xs_4_3 ys_1_2_1_5 =
-  (xs_4_3 ys_1_2_1_5);;
-let rec bonoPos_lh__d1 _lh_bonoPos_arg1_0 =
-  (match _lh_bonoPos_arg1_0 with
-    | `State(_lh_bonoPos_State_0_0, _lh_bonoPos_State_1_0, _lh_bonoPos_State_2_0, _lh_bonoPos_State_3_0) -> 
-      _lh_bonoPos_State_0_0
-    | _ -> 
-      (failwith "error"));;
-let rec edgePos_lh__d1 _lh_edgePos_arg1_1 =
-  (match _lh_edgePos_arg1_1 with
-    | `State(_lh_edgePos_State_0_1, _lh_edgePos_State_1_1, _lh_edgePos_State_2_1, _lh_edgePos_State_3_1) -> 
-      _lh_edgePos_State_1_1
-    | _ -> 
-      (failwith "error"));;
-let rec mappend_lh__d2_d0 xs_2_1 ys_1_1_5_5 =
-  (xs_2_1 ys_1_1_5_5);;
-let rec mappend_lh__d2_d5 xs_2_2 ys_1_1_5_6 =
-  (xs_2_2 ys_1_1_5_6);;
-let rec mappend_lh__d2_d4 xs_3_2 ys_1_2_0_4 =
-  (xs_3_2 ys_1_2_0_4);;
-let rec adamPos_lh__d1 _lh_adamPos_arg1_5 =
-  (match _lh_adamPos_arg1_5 with
-    | `State(_lh_adamPos_State_0_5, _lh_adamPos_State_1_5, _lh_adamPos_State_2_5, _lh_adamPos_State_3_5) -> 
-      _lh_adamPos_State_3_5
-    | _ -> 
-      (failwith "error"));;
-let rec mappend_lh__d2_d8 xs_3_5 ys_1_2_0_7 =
-  (xs_3_5 ys_1_2_0_7);;
-let rec mappend_lh__d2_d9 xs_3_7 ys_1_2_0_9 =
-  (xs_3_7 ys_1_2_0_9);;
-let rec mappend_lh__d2_d2 xs_4_2 ys_1_2_1_4 =
-  (xs_4_2 ys_1_2_1_4);;
-let rec writeItem_lh__d7 _lh_writeItem_arg1_9 _lh_writeItem_arg2_2_1 _lh_writeItem_arg3_2_1 =
-  ((_lh_writeItem_arg1_9 _lh_writeItem_arg2_2_1) _lh_writeItem_arg3_2_1);;
-let rec writeItem_lh__d5 _lh_writeItem_arg1_1_0 _lh_writeItem_arg2_2_2 _lh_writeItem_arg3_2_2 =
-  ((_lh_writeItem_arg1_1_0 _lh_writeItem_arg2_2_2) _lh_writeItem_arg3_2_2);;
-let rec totalTime_lh__d3 _lh_totalTime_arg1_2 =
-  (match _lh_totalTime_arg1_2 with
-    | `LH_C(_lh_totalTime_LH_C_0_2, _lh_totalTime_LH_C_1_2) -> 
-      (match _lh_totalTime_LH_C_0_2 with
-        | `LH_P2(_lh_totalTime_LH_P2_0_2, _lh_totalTime_LH_P2_1_2) -> 
-          _lh_totalTime_LH_P2_0_2
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec reverse_helper_lh__d3 ls_1 a_1 =
-  (ls_1 a_1);;
-let rec writeSolutions_lh__d1 _lh_writeSolutions_arg1_2 _lh_writeSolutions_arg2_7 =
-  (_lh_writeSolutions_arg1_2 _lh_writeSolutions_arg2_7);;
-let rec writeSolutions_lh__d2 _lh_writeSolutions_arg1_3 _lh_writeSolutions_arg2_8 =
-  (_lh_writeSolutions_arg1_3 _lh_writeSolutions_arg2_8);;
-let rec totalTime_lh__d1 _lh_totalTime_arg1_4 =
-  (match _lh_totalTime_arg1_4 with
-    | `LH_C(_lh_totalTime_LH_C_0_4, _lh_totalTime_LH_C_1_4) -> 
-      (match _lh_totalTime_LH_C_0_4 with
-        | `LH_P2(_lh_totalTime_LH_P2_0_4, _lh_totalTime_LH_P2_1_4) -> 
-          _lh_totalTime_LH_P2_0_4
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec totalTime_lh__d0 _lh_totalTime_arg1_0 =
-  (match _lh_totalTime_arg1_0 with
-    | `LH_C(_lh_totalTime_LH_C_0_0, _lh_totalTime_LH_C_1_0) -> 
-      (match _lh_totalTime_LH_C_0_0 with
-        | `LH_P2(_lh_totalTime_LH_P2_0_0, _lh_totalTime_LH_P2_1_0) -> 
-          _lh_totalTime_LH_P2_0_0
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec writeItem_lh__d8 _lh_writeItem_arg1_0 _lh_writeItem_arg2_0 _lh_writeItem_arg3_0 =
-  ((_lh_writeItem_arg1_0 _lh_writeItem_arg2_0) _lh_writeItem_arg3_0);;
-let rec mappend_lh__d3_d9 xs_2 ys_3_8_9 =
-  (xs_2 ys_3_8_9);;
-let rec larryPos_lh__d2 _lh_larryPos_arg1_0 =
-  (match _lh_larryPos_arg1_0 with
-    | `State(_lh_larryPos_State_0_0, _lh_larryPos_State_1_0, _lh_larryPos_State_2_0, _lh_larryPos_State_3_0) -> 
-      _lh_larryPos_State_2_0
-    | _ -> 
-      (failwith "error"));;
-let rec mappend_lh__d3_d5 xs_7 ys_3_9_4 =
-  (xs_7 ys_3_9_4);;
-let rec bonoPos_lh__d2 _lh_bonoPos_arg1_1 =
-  (match _lh_bonoPos_arg1_1 with
-    | `State(_lh_bonoPos_State_0_1, _lh_bonoPos_State_1_1, _lh_bonoPos_State_2_1, _lh_bonoPos_State_3_1) -> 
-      _lh_bonoPos_State_0_1
-    | _ -> 
-      (failwith "error"));;
-let rec mappend_lh__d3_d3 xs_1_4 ys_4_0_1 =
-  (xs_1_4 ys_4_0_1);;
-let rec mappend_lh__d4_d0 xs_2_5 ys_1_1_5_9 =
-  (xs_2_5 ys_1_1_5_9);;
-let rec mappend_lh__d3_d8 xs_2_7 ys_1_1_6_8 =
-  (xs_2_7 ys_1_1_6_8);;
-let rec mappend_lh__d3_d7 xs_2_8 ys_1_1_6_9 =
-  (xs_2_8 ys_1_1_6_9);;
-let rec writeItem_lh__d1_d0 _lh_writeItem_arg1_4 _lh_writeItem_arg2_1_6 _lh_writeItem_arg3_1_6 =
-  ((_lh_writeItem_arg1_4 _lh_writeItem_arg2_1_6) _lh_writeItem_arg3_1_6);;
-let rec writeItem_lh__d9 _lh_writeItem_arg1_5 _lh_writeItem_arg2_1_7 _lh_writeItem_arg3_1_7 =
-  ((_lh_writeItem_arg1_5 _lh_writeItem_arg2_1_7) _lh_writeItem_arg3_1_7);;
-let rec mappend_lh__d3_d2 xs_3_3 ys_1_2_0_5 =
-  (xs_3_3 ys_1_2_0_5);;
-let rec adamPos_lh__d2 _lh_adamPos_arg1_1 =
-  (match _lh_adamPos_arg1_1 with
-    | `State(_lh_adamPos_State_0_1, _lh_adamPos_State_1_1, _lh_adamPos_State_2_1, _lh_adamPos_State_3_1) -> 
-      _lh_adamPos_State_3_1
-    | _ -> 
-      (failwith "error"));;
-let rec writeItem_lh__d1_d1 _lh_writeItem_arg1_3 _lh_writeItem_arg2_1_5 _lh_writeItem_arg3_1_5 =
-  ((_lh_writeItem_arg1_3 _lh_writeItem_arg2_1_5) _lh_writeItem_arg3_1_5);;
-let rec mappend_lh__d3_d4 xs_3_0 ys_1_2_0_2 =
-  (xs_3_0 ys_1_2_0_2);;
-let rec mappend_lh__d3_d6 xs_3_1 ys_1_2_0_3 =
-  (xs_3_1 ys_1_2_0_3);;
-let rec mappend_lh__d4_d1 xs_4_4 ys_1_2_1_6 =
-  (xs_4_4 ys_1_2_1_6);;
-let rec edgePos_lh__d2 _lh_edgePos_arg1_5 =
-  (match _lh_edgePos_arg1_5 with
-    | `State(_lh_edgePos_State_0_5, _lh_edgePos_State_1_5, _lh_edgePos_State_2_5, _lh_edgePos_State_3_5) -> 
-      _lh_edgePos_State_1_5
-    | _ -> 
-      (failwith "error"));;
-let rec foldr_lh__d2 f_2 i_2 ls_6 =
-  (match ls_6 with
-    | `LH_C(h_3_8_0, t_3_8_0) -> 
-      ((f_2 h_3_8_0) (((foldr_lh__d2 f_2) i_2) t_3_8_0))
-    | `LH_N -> 
-      i_2);;
-let rec mappend_lh__d3_d1 xs_3_4 ys_1_2_0_6 =
-  (xs_3_4 ys_1_2_0_6);;
-let rec totalTime_lh__d4 _lh_totalTime_arg1_3 =
-  (match _lh_totalTime_arg1_3 with
-    | `LH_C(_lh_totalTime_LH_C_0_3, _lh_totalTime_LH_C_1_3) -> 
-      (match _lh_totalTime_LH_C_0_3 with
-        | `LH_P2(_lh_totalTime_LH_P2_0_3, _lh_totalTime_LH_P2_1_3) -> 
-          _lh_totalTime_LH_P2_0_3
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
-let rec mappend_lh__d3_d0 xs_4_1 ys_1_2_1_3 =
-  (match xs_4_1 with
-    | `LH_C(h_1_1_5_3, t_1_1_5_3) -> 
-      (`LH_C(h_1_1_5_3, ((mappend_lh__d3_d0 t_1_1_5_3) ys_1_2_1_3)))
-    | `LH_N -> 
-      ys_1_2_1_3);;
-let rec position_lh__d0 _lh_position_arg1_0 =
-  (match _lh_position_arg1_0 with
-    | `Bono -> 
-      bonoPos_lh__d3
-    | `Edge -> 
-      edgePos_lh__d3
-    | `Larry -> 
-      larryPos_lh__d3
-    | `Adam -> 
-      adamPos_lh__d3
-    | _ -> 
-      (failwith "error"));;
-let rec notSeen_lh__d0 _lh_notSeen_arg1_1 =
-  (all_lh__d0 (fun _s_1 -> 
-    (let rec _lh_matchIdent_3 = _s_1 in
-      (match _lh_matchIdent_3 with
-        | `LH_P2(_lh_notSeen_LH_P2_0_1, _lh_notSeen_LH_P2_1_1) -> 
-          (_lh_notSeen_arg1_1 <> _lh_notSeen_LH_P2_1_1)
-        | _ -> 
-          (failwith "error")))));;
-let rec mappend_lh__d4_d2 xs_2_9 ys_1_2_0_0 =
-  (match xs_2_9 with
-    | `LH_C(h_1_1_4_7, t_1_1_4_7) -> 
-      (let rec t_1_1_4_8 = ((mappend_lh__d4_d2 t_1_1_4_7) ys_1_2_0_0) in
-        (let rec h_1_1_4_8 = h_1_1_4_7 in
-          (fun ys_1_2_0_1 -> 
-            (`LH_C(h_1_1_4_8, ((mappend_lh__d4_d4 t_1_1_4_8) ys_1_2_0_1))))))
-    | `LH_N -> 
-      ys_1_2_0_0);;
-let rec position_lh__d2 _lh_position_arg1_1 =
-  (match _lh_position_arg1_1 with
-    | `Bono -> 
-      bonoPos_lh__d5
-    | `Edge -> 
-      edgePos_lh__d5
-    | `Larry -> 
-      larryPos_lh__d5
-    | `Adam -> 
-      adamPos_lh__d5
-    | _ -> 
-      (failwith "error"));;
-let rec notSeen_lh__d1 _lh_notSeen_arg1_0 =
-  (all_lh__d1 (fun _s_0 -> 
-    (let rec _lh_matchIdent_1 = _s_0 in
-      (match _lh_matchIdent_1 with
-        | `LH_P2(_lh_notSeen_LH_P2_0_0, _lh_notSeen_LH_P2_1_0) -> 
-          (_lh_notSeen_arg1_0 <> _lh_notSeen_LH_P2_1_0)
-        | _ -> 
-          (failwith "error")))));;
-let rec position_lh__d1 _lh_position_arg1_2 =
-  (match _lh_position_arg1_2 with
-    | `Bono -> 
-      bonoPos_lh__d4
-    | `Edge -> 
-      edgePos_lh__d4
-    | `Larry -> 
-      larryPos_lh__d4
-    | `Adam -> 
-      adamPos_lh__d4
-    | _ -> 
-      (failwith "error"));;
 let rec writeState_lh__d0 _lh_writeState_arg1_2 _lh_funcomp_x_1_8 =
   ((fun _lh_funcomp_x_1_9 -> 
     ((fun _lh_funcomp_x_2_0 -> 
@@ -1774,6 +1674,134 @@ let rec writeState_lh__d0 _lh_writeState_arg1_2 _lh_funcomp_x_1_8 =
       (let rec h_1_1_0_9 = '-' in
         (fun ys_1_1_5_1 -> 
           (`LH_C(h_1_1_0_9, ((mappend_lh__d1_d2 t_1_0_6_9) ys_1_1_5_1))))))) s_5)) _lh_funcomp_x_1_8));;
+let rec mappend_lh__d6 xs_1_8 ys_1_1_5_2 =
+  (match xs_1_8 with
+    | `LH_C(h_1_1_1_0, t_1_1_1_0) -> 
+      (`LH_C(h_1_1_1_0, ((mappend_lh__d6 t_1_1_1_0) ys_1_1_5_2)))
+    | `LH_N -> 
+      ys_1_1_5_2);;
+let rec writeHistory_lh__d0 _lh_writeHistory_arg1_0 =
+  (match _lh_writeHistory_arg1_0 with
+    | `LH_N -> 
+      (fun x_0 -> 
+        x_0)
+    | _ -> 
+      (((foldr_lh__d0 (fun timestate_0 acc_0 -> 
+        (let rec _lh_matchIdent_0 = timestate_0 in
+          (match _lh_matchIdent_0 with
+            | `LH_P2(_lh_writeHistory_LH_P2_0_0, _lh_writeHistory_LH_P2_1_0) -> 
+              (fun _lh_funcomp_x_0 -> 
+                ((fun _lh_funcomp_x_1 -> 
+                  ((fun _lh_funcomp_x_2 -> 
+                    ((fun _lh_funcomp_x_3 -> 
+                      ((fun x_1 -> 
+                        ((mappend_lh__d7 (let rec t_0 = (let rec t_1 = (let rec t_2 = (let rec t_3 = (let rec t_4 = (let rec t_5 = (fun ys_0 -> 
+                          ys_0) in
+                          (let rec h_0 = ' ' in
+                            (fun ys_1 -> 
+                              (`LH_C(h_0, ((mappend_lh__d7 t_5) ys_1)))))) in
+                          (let rec h_1 = ':' in
+                            (fun ys_2 -> 
+                              (`LH_C(h_1, ((mappend_lh__d7 t_4) ys_2)))))) in
+                          (let rec h_2 = 'e' in
+                            (fun ys_3 -> 
+                              (`LH_C(h_2, ((mappend_lh__d7 t_3) ys_3)))))) in
+                          (let rec h_3 = 'm' in
+                            (fun ys_4 -> 
+                              (`LH_C(h_3, ((mappend_lh__d7 t_2) ys_4)))))) in
+                          (let rec h_4 = 'i' in
+                            (fun ys_5 -> 
+                              (`LH_C(h_4, ((mappend_lh__d7 t_1) ys_5)))))) in
+                          (let rec h_5 = 'T' in
+                            (fun ys_6 -> 
+                              (`LH_C(h_5, ((mappend_lh__d7 t_0) ys_6))))))) x_1)) ((fun x_2 -> 
+                        ((mappend_lh__d6 (string_of_int ((totalTime_lh__d2 _lh_writeHistory_arg1_0) - _lh_writeHistory_LH_P2_0_0))) x_2)) _lh_funcomp_x_3))) ((fun x_3 -> 
+                      (`LH_C('|', x_3))) _lh_funcomp_x_2))) ((writeState_lh__d0 _lh_writeHistory_LH_P2_1_0) _lh_funcomp_x_1))) (acc_0 _lh_funcomp_x_0)))
+            | _ -> 
+              (failwith "error"))))) (fun x_4 -> 
+        x_4)) _lh_writeHistory_arg1_0));;
+let rec reverse_helper_lh__d1 ls_3 a_3 =
+  (ls_3 a_3);;
+let rec mappend_lh__d0 xs_1_0 ys_3_9_7 =
+  (xs_1_0 ys_3_9_7);;
+let rec mappend_lh__d2 xs_1_3 ys_4_0_0 =
+  (xs_1_3 ys_4_0_0);;
+let rec mappend_lh__d5 xs_1_6 ys_4_0_3 =
+  (match xs_1_6 with
+    | `LH_C(h_3_8_1, t_3_8_1) -> 
+      (`LH_C(h_3_8_1, ((mappend_lh__d5 t_3_8_1) ys_4_0_3)))
+    | `LH_N -> 
+      ys_4_0_3);;
+let rec writeSolutions_lh__d0 _lh_writeSolutions_arg1_0 _lh_writeSolutions_arg2_0 =
+  (_lh_writeSolutions_arg1_0 _lh_writeSolutions_arg2_0);;
+let rec mappend_lh__d4 xs_2_0 ys_1_1_5_4 =
+  (xs_2_0 ys_1_1_5_4);;
+let rec mappend_lh__d1_d8 xs_5 ys_3_9_2 =
+  (match xs_5 with
+    | `LH_C(h_3_7_6, t_3_7_6) -> 
+      (`LH_C(h_3_7_6, ((mappend_lh__d1_d8 t_3_7_6) ys_3_9_2)))
+    | `LH_N -> 
+      ys_3_9_2);;
+let rec mappend_lh__d1_d9 xs_9 ys_3_9_6 =
+  (xs_9 ys_3_9_6);;
+let rec foldr_lh__d1 f_1 i_1 ls_5 =
+  (match ls_5 with
+    | `LH_C(h_3_7_9, t_3_7_9) -> 
+      ((f_1 h_3_7_9) (((foldr_lh__d1 f_1) i_1) t_3_7_9))
+    | `LH_N -> 
+      i_1);;
+let rec mappend_lh__d2_d1 xs_3 ys_3_9_0 =
+  (xs_3 ys_3_9_0);;
+let rec mappend_lh__d2_d3 xs_1_5 ys_4_0_2 =
+  (xs_1_5 ys_4_0_2);;
+let rec larryPos_lh__d1 _lh_larryPos_arg1_1 =
+  (match _lh_larryPos_arg1_1 with
+    | `State(_lh_larryPos_State_0_1, _lh_larryPos_State_1_1, _lh_larryPos_State_2_1, _lh_larryPos_State_3_1) -> 
+      _lh_larryPos_State_2_1
+    | _ -> 
+      (failwith "error"));;
+let rec writeItem_lh__d4 _lh_writeItem_arg1_7 _lh_writeItem_arg2_1_9 _lh_writeItem_arg3_1_9 =
+  ((_lh_writeItem_arg1_7 _lh_writeItem_arg2_1_9) _lh_writeItem_arg3_1_9);;
+let rec mappend_lh__d2_d6 xs_3_8 ys_1_2_1_0 =
+  (xs_3_8 ys_1_2_1_0);;
+let rec writeItem_lh__d6 _lh_writeItem_arg1_8 _lh_writeItem_arg2_2_0 _lh_writeItem_arg3_2_0 =
+  ((_lh_writeItem_arg1_8 _lh_writeItem_arg2_2_0) _lh_writeItem_arg3_2_0);;
+let rec mappend_lh__d2_d7 xs_4_3 ys_1_2_1_5 =
+  (xs_4_3 ys_1_2_1_5);;
+let rec bonoPos_lh__d1 _lh_bonoPos_arg1_0 =
+  (match _lh_bonoPos_arg1_0 with
+    | `State(_lh_bonoPos_State_0_0, _lh_bonoPos_State_1_0, _lh_bonoPos_State_2_0, _lh_bonoPos_State_3_0) -> 
+      _lh_bonoPos_State_0_0
+    | _ -> 
+      (failwith "error"));;
+let rec edgePos_lh__d1 _lh_edgePos_arg1_1 =
+  (match _lh_edgePos_arg1_1 with
+    | `State(_lh_edgePos_State_0_1, _lh_edgePos_State_1_1, _lh_edgePos_State_2_1, _lh_edgePos_State_3_1) -> 
+      _lh_edgePos_State_1_1
+    | _ -> 
+      (failwith "error"));;
+let rec mappend_lh__d2_d0 xs_2_1 ys_1_1_5_5 =
+  (xs_2_1 ys_1_1_5_5);;
+let rec mappend_lh__d2_d5 xs_2_2 ys_1_1_5_6 =
+  (xs_2_2 ys_1_1_5_6);;
+let rec mappend_lh__d2_d4 xs_3_2 ys_1_2_0_4 =
+  (xs_3_2 ys_1_2_0_4);;
+let rec adamPos_lh__d1 _lh_adamPos_arg1_5 =
+  (match _lh_adamPos_arg1_5 with
+    | `State(_lh_adamPos_State_0_5, _lh_adamPos_State_1_5, _lh_adamPos_State_2_5, _lh_adamPos_State_3_5) -> 
+      _lh_adamPos_State_3_5
+    | _ -> 
+      (failwith "error"));;
+let rec mappend_lh__d2_d8 xs_3_5 ys_1_2_0_7 =
+  (xs_3_5 ys_1_2_0_7);;
+let rec mappend_lh__d2_d9 xs_3_7 ys_1_2_0_9 =
+  (xs_3_7 ys_1_2_0_9);;
+let rec mappend_lh__d2_d2 xs_4_2 ys_1_2_1_4 =
+  (xs_4_2 ys_1_2_1_4);;
+let rec writeItem_lh__d7 _lh_writeItem_arg1_9 _lh_writeItem_arg2_2_1 _lh_writeItem_arg3_2_1 =
+  ((_lh_writeItem_arg1_9 _lh_writeItem_arg2_2_1) _lh_writeItem_arg3_2_1);;
+let rec writeItem_lh__d5 _lh_writeItem_arg1_1_0 _lh_writeItem_arg2_2_2 _lh_writeItem_arg3_2_2 =
+  ((_lh_writeItem_arg1_1_0 _lh_writeItem_arg2_2_2) _lh_writeItem_arg3_2_2);;
 let rec writeState_lh__d1 _lh_writeState_arg1_1 _lh_funcomp_x_1_3 =
   ((fun _lh_funcomp_x_1_4 -> 
     ((fun _lh_funcomp_x_1_5 -> 
@@ -2909,9 +2937,137 @@ let rec writeState_lh__d1 _lh_writeState_arg1_1 _lh_funcomp_x_1_3 =
       (let rec h_7_4_6 = '-' in
         (fun ys_7_7_8 -> 
           (`LH_C(h_7_4_6, ((mappend_lh__d2_d4 t_7_0_6) ys_7_7_8))))))) s_3)) _lh_funcomp_x_1_3));;
+let rec totalTime_lh__d3 _lh_totalTime_arg1_2 =
+  (match _lh_totalTime_arg1_2 with
+    | `LH_C(_lh_totalTime_LH_C_0_2, _lh_totalTime_LH_C_1_2) -> 
+      (match _lh_totalTime_LH_C_0_2 with
+        | `LH_P2(_lh_totalTime_LH_P2_0_2, _lh_totalTime_LH_P2_1_2) -> 
+          _lh_totalTime_LH_P2_0_2
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec writeHistory_lh__d1 _lh_writeHistory_arg1_2 =
+  (match _lh_writeHistory_arg1_2 with
+    | `LH_N -> 
+      (fun x_1_0 -> 
+        x_1_0)
+    | _ -> 
+      (((foldr_lh__d1 (fun timestate_2 acc_2 -> 
+        (let rec _lh_matchIdent_4 = timestate_2 in
+          (match _lh_matchIdent_4 with
+            | `LH_P2(_lh_writeHistory_LH_P2_0_2, _lh_writeHistory_LH_P2_1_2) -> 
+              (fun _lh_funcomp_x_2_3 -> 
+                ((fun _lh_funcomp_x_2_4 -> 
+                  ((fun _lh_funcomp_x_2_5 -> 
+                    ((fun _lh_funcomp_x_2_6 -> 
+                      ((fun x_1_1 -> 
+                        ((mappend_lh__d1_d9 (let rec t_1_1_1_1 = (let rec t_1_1_1_2 = (let rec t_1_1_1_3 = (let rec t_1_1_1_4 = (let rec t_1_1_1_5 = (let rec t_1_1_1_6 = (fun ys_1_1_6_1 -> 
+                          ys_1_1_6_1) in
+                          (let rec h_1_1_1_1 = ' ' in
+                            (fun ys_1_1_6_2 -> 
+                              (`LH_C(h_1_1_1_1, ((mappend_lh__d1_d9 t_1_1_1_6) ys_1_1_6_2)))))) in
+                          (let rec h_1_1_1_2 = ':' in
+                            (fun ys_1_1_6_3 -> 
+                              (`LH_C(h_1_1_1_2, ((mappend_lh__d1_d9 t_1_1_1_5) ys_1_1_6_3)))))) in
+                          (let rec h_1_1_1_3 = 'e' in
+                            (fun ys_1_1_6_4 -> 
+                              (`LH_C(h_1_1_1_3, ((mappend_lh__d1_d9 t_1_1_1_4) ys_1_1_6_4)))))) in
+                          (let rec h_1_1_1_4 = 'm' in
+                            (fun ys_1_1_6_5 -> 
+                              (`LH_C(h_1_1_1_4, ((mappend_lh__d1_d9 t_1_1_1_3) ys_1_1_6_5)))))) in
+                          (let rec h_1_1_1_5 = 'i' in
+                            (fun ys_1_1_6_6 -> 
+                              (`LH_C(h_1_1_1_5, ((mappend_lh__d1_d9 t_1_1_1_2) ys_1_1_6_6)))))) in
+                          (let rec h_1_1_1_6 = 'T' in
+                            (fun ys_1_1_6_7 -> 
+                              (`LH_C(h_1_1_1_6, ((mappend_lh__d1_d9 t_1_1_1_1) ys_1_1_6_7))))))) x_1_1)) ((fun x_1_2 -> 
+                        ((mappend_lh__d1_d8 (string_of_int ((totalTime_lh__d3 _lh_writeHistory_arg1_2) - _lh_writeHistory_LH_P2_0_2))) x_1_2)) _lh_funcomp_x_2_6))) ((fun x_1_3 -> 
+                      (`LH_C('|', x_1_3))) _lh_funcomp_x_2_5))) ((writeState_lh__d1 _lh_writeHistory_LH_P2_1_2) _lh_funcomp_x_2_4))) (acc_2 _lh_funcomp_x_2_3)))
+            | _ -> 
+              (failwith "error"))))) (fun x_1_4 -> 
+        x_1_4)) _lh_writeHistory_arg1_2));;
+let rec reverse_helper_lh__d3 ls_1 a_1 =
+  (ls_1 a_1);;
 let rec reverse_lh__d0 ls_7 =
   ((reverse_helper_lh__d3 ls_7) (fun _lh_writeSolutions_arg2_2 x_1_5 -> 
     x_1_5));;
+let rec writeSolutions_lh__d1 _lh_writeSolutions_arg1_2 _lh_writeSolutions_arg2_7 =
+  (_lh_writeSolutions_arg1_2 _lh_writeSolutions_arg2_7);;
+let rec writeSolutions_lh__d2 _lh_writeSolutions_arg1_3 _lh_writeSolutions_arg2_8 =
+  (_lh_writeSolutions_arg1_3 _lh_writeSolutions_arg2_8);;
+let rec totalTime_lh__d1 _lh_totalTime_arg1_4 =
+  (match _lh_totalTime_arg1_4 with
+    | `LH_C(_lh_totalTime_LH_C_0_4, _lh_totalTime_LH_C_1_4) -> 
+      (match _lh_totalTime_LH_C_0_4 with
+        | `LH_P2(_lh_totalTime_LH_P2_0_4, _lh_totalTime_LH_P2_1_4) -> 
+          _lh_totalTime_LH_P2_0_4
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec totalTime_lh__d0 _lh_totalTime_arg1_0 =
+  (match _lh_totalTime_arg1_0 with
+    | `LH_C(_lh_totalTime_LH_C_0_0, _lh_totalTime_LH_C_1_0) -> 
+      (match _lh_totalTime_LH_C_0_0 with
+        | `LH_P2(_lh_totalTime_LH_P2_0_0, _lh_totalTime_LH_P2_1_0) -> 
+          _lh_totalTime_LH_P2_0_0
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
+let rec writeItem_lh__d8 _lh_writeItem_arg1_0 _lh_writeItem_arg2_0 _lh_writeItem_arg3_0 =
+  ((_lh_writeItem_arg1_0 _lh_writeItem_arg2_0) _lh_writeItem_arg3_0);;
+let rec mappend_lh__d3_d9 xs_2 ys_3_8_9 =
+  (xs_2 ys_3_8_9);;
+let rec larryPos_lh__d2 _lh_larryPos_arg1_0 =
+  (match _lh_larryPos_arg1_0 with
+    | `State(_lh_larryPos_State_0_0, _lh_larryPos_State_1_0, _lh_larryPos_State_2_0, _lh_larryPos_State_3_0) -> 
+      _lh_larryPos_State_2_0
+    | _ -> 
+      (failwith "error"));;
+let rec mappend_lh__d3_d5 xs_7 ys_3_9_4 =
+  (xs_7 ys_3_9_4);;
+let rec bonoPos_lh__d2 _lh_bonoPos_arg1_1 =
+  (match _lh_bonoPos_arg1_1 with
+    | `State(_lh_bonoPos_State_0_1, _lh_bonoPos_State_1_1, _lh_bonoPos_State_2_1, _lh_bonoPos_State_3_1) -> 
+      _lh_bonoPos_State_0_1
+    | _ -> 
+      (failwith "error"));;
+let rec mappend_lh__d3_d3 xs_1_4 ys_4_0_1 =
+  (xs_1_4 ys_4_0_1);;
+let rec mappend_lh__d4_d0 xs_2_5 ys_1_1_5_9 =
+  (xs_2_5 ys_1_1_5_9);;
+let rec mappend_lh__d3_d8 xs_2_7 ys_1_1_6_8 =
+  (xs_2_7 ys_1_1_6_8);;
+let rec mappend_lh__d3_d7 xs_2_8 ys_1_1_6_9 =
+  (xs_2_8 ys_1_1_6_9);;
+let rec writeItem_lh__d1_d0 _lh_writeItem_arg1_4 _lh_writeItem_arg2_1_6 _lh_writeItem_arg3_1_6 =
+  ((_lh_writeItem_arg1_4 _lh_writeItem_arg2_1_6) _lh_writeItem_arg3_1_6);;
+let rec writeItem_lh__d9 _lh_writeItem_arg1_5 _lh_writeItem_arg2_1_7 _lh_writeItem_arg3_1_7 =
+  ((_lh_writeItem_arg1_5 _lh_writeItem_arg2_1_7) _lh_writeItem_arg3_1_7);;
+let rec mappend_lh__d3_d2 xs_3_3 ys_1_2_0_5 =
+  (xs_3_3 ys_1_2_0_5);;
+let rec adamPos_lh__d2 _lh_adamPos_arg1_1 =
+  (match _lh_adamPos_arg1_1 with
+    | `State(_lh_adamPos_State_0_1, _lh_adamPos_State_1_1, _lh_adamPos_State_2_1, _lh_adamPos_State_3_1) -> 
+      _lh_adamPos_State_3_1
+    | _ -> 
+      (failwith "error"));;
+let rec writeItem_lh__d1_d1 _lh_writeItem_arg1_3 _lh_writeItem_arg2_1_5 _lh_writeItem_arg3_1_5 =
+  ((_lh_writeItem_arg1_3 _lh_writeItem_arg2_1_5) _lh_writeItem_arg3_1_5);;
+let rec mappend_lh__d3_d4 xs_3_0 ys_1_2_0_2 =
+  (xs_3_0 ys_1_2_0_2);;
+let rec mappend_lh__d3_d6 xs_3_1 ys_1_2_0_3 =
+  (xs_3_1 ys_1_2_0_3);;
+let rec mappend_lh__d4_d1 xs_4_4 ys_1_2_1_6 =
+  (xs_4_4 ys_1_2_1_6);;
+let rec edgePos_lh__d2 _lh_edgePos_arg1_5 =
+  (match _lh_edgePos_arg1_5 with
+    | `State(_lh_edgePos_State_0_5, _lh_edgePos_State_1_5, _lh_edgePos_State_2_5, _lh_edgePos_State_3_5) -> 
+      _lh_edgePos_State_1_5
+    | _ -> 
+      (failwith "error"));;
 let rec writeState_lh__d2 _lh_writeState_arg1_0 _lh_funcomp_x_8 =
   ((fun _lh_funcomp_x_9 -> 
     ((fun _lh_funcomp_x_1_0 -> 
@@ -4047,186 +4203,30 @@ let rec writeState_lh__d2 _lh_writeState_arg1_0 _lh_funcomp_x_8 =
       (let rec h_3_7_4 = '-' in
         (fun ys_3_8_8 -> 
           (`LH_C(h_3_7_4, ((mappend_lh__d3_d6 t_3_3_4) ys_3_8_8))))))) s_1)) _lh_funcomp_x_8));;
-let rec itemFromTo_lh__d0 _lh_itemFromTo_arg1_0 _lh_itemFromTo_arg2_0 =
-  (if (_lh_itemFromTo_arg1_0 = _lh_itemFromTo_arg2_0) then
-    (let rec _lh_listcomp_fun_ls_t_0 = (fun _lh_listcomp_fun_0 _lh_transfer_arg1_0 _lh_transfer_arg2_0 _lh_transfer_arg3_0 _lh_transfer_arg4_0 _lh_transfer_arg5_0 newHistory_0 newLocation_0 _lh_dummy_0 ys_4_0_4 -> 
-      ys_4_0_4) in
-      (let rec _lh_listcomp_fun_ls_h_0 = _lh_itemFromTo_arg1_0 in
-        (fun _lh_listcomp_fun_1 _lh_transfer_arg1_1 _lh_transfer_arg2_1 _lh_transfer_arg3_1 _lh_transfer_arg4_1 _lh_transfer_arg5_1 newHistory_1 newLocation_1 -> 
-          (if (((position_lh__d0 _lh_listcomp_fun_ls_h_0) _lh_transfer_arg2_1) = _lh_transfer_arg3_1) then
-            (let rec newDest_0 = (((updateState_lh__d0 _lh_transfer_arg2_1) _lh_listcomp_fun_ls_h_0) newLocation_1) in
-              (if ((notSeen_lh__d0 newDest_0) _lh_transfer_arg5_1) then
-                (let rec newTime_0 = (_lh_transfer_arg4_1 + (u2times_lh__d0 _lh_listcomp_fun_ls_h_0)) in
-                  (let rec t_3_8_2 = (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_0) in
-                    (let rec h_3_8_2 = (((((transfer_lh__d0 _lh_transfer_arg1_1) newDest_0) newLocation_1) newTime_0) newHistory_1) in
-                      (fun _lh_dummy_1 -> 
-                        ((mappend_lh__d4_d2 h_3_8_2) (concat_lh__d1 t_3_8_2))))))
-              else
-                (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_0)))
-          else
-            (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_0)))))
-  else
-    (let rec _lh_listcomp_fun_ls_t_1 = ((itemFromTo_lh__d0 (succItem_lh__d0 _lh_itemFromTo_arg1_0)) _lh_itemFromTo_arg2_0) in
-      (let rec _lh_listcomp_fun_ls_h_1 = _lh_itemFromTo_arg1_0 in
-        (fun _lh_listcomp_fun_2 _lh_transfer_arg1_2 _lh_transfer_arg2_2 _lh_transfer_arg3_2 _lh_transfer_arg4_2 _lh_transfer_arg5_2 newHistory_2 newLocation_2 -> 
-          (if (((position_lh__d0 _lh_listcomp_fun_ls_h_1) _lh_transfer_arg2_2) = _lh_transfer_arg3_2) then
-            (let rec newDest_1 = (((updateState_lh__d0 _lh_transfer_arg2_2) _lh_listcomp_fun_ls_h_1) newLocation_2) in
-              (if ((notSeen_lh__d0 newDest_1) _lh_transfer_arg5_2) then
-                (let rec newTime_1 = (_lh_transfer_arg4_2 + (u2times_lh__d0 _lh_listcomp_fun_ls_h_1)) in
-                  (let rec t_3_8_3 = (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_1) in
-                    (let rec h_3_8_3 = (((((transfer_lh__d0 _lh_transfer_arg1_2) newDest_1) newLocation_2) newTime_1) newHistory_2) in
-                      (fun _lh_dummy_2 -> 
-                        ((mappend_lh__d4_d2 h_3_8_3) (concat_lh__d1 t_3_8_3))))))
-              else
-                (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_1)))
-          else
-            (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_1))))))
-and
-itemFromTo_lh__d1 _lh_itemFromTo_arg1_1 _lh_itemFromTo_arg2_1 =
-  (if (_lh_itemFromTo_arg1_1 = _lh_itemFromTo_arg2_1) then
-    (let rec _lh_listcomp_fun_ls_t_2 = (fun _lh_listcomp_fun_ls_h_2 _lh_listcomp_fun_5 _lh_transfer_arg1_4 _lh_transfer_arg2_4 _lh_transfer_arg3_4 _lh_transfer_arg4_4 _lh_transfer_arg5_4 newHistory_4 newLocation_4 _lh_listcomp_fun_ls_t_3 _lh_listcomp_fun_6 -> 
-      (_lh_listcomp_fun_6 _lh_listcomp_fun_ls_t_3)) in
-      (let rec _lh_listcomp_fun_ls_h_3 = _lh_itemFromTo_arg1_1 in
-        (fun _lh_listcomp_fun_ls_h_4 _lh_listcomp_fun_7 _lh_transfer_arg1_5 _lh_transfer_arg2_5 _lh_transfer_arg3_5 _lh_transfer_arg4_5 _lh_transfer_arg5_5 newHistory_5 newLocation_5 _lh_listcomp_fun_ls_t_4 _lh_listcomp_fun_8 -> 
-          (if ((((position_lh__d1 _lh_listcomp_fun_ls_h_4) _lh_transfer_arg2_5) = _lh_transfer_arg3_5) && (((position_lh__d2 _lh_listcomp_fun_ls_h_3) _lh_transfer_arg2_5) = _lh_transfer_arg3_5)) then
-            (let rec newDest_2 = (((updateState_lh__d1 (((updateState_lh__d2 _lh_transfer_arg2_5) _lh_listcomp_fun_ls_h_4) newLocation_5)) _lh_listcomp_fun_ls_h_3) newLocation_5) in
-              (if ((notSeen_lh__d1 newDest_2) _lh_transfer_arg5_5) then
-                (let rec newTime_2 = (_lh_transfer_arg4_5 + (u2times_lh__d1 _lh_listcomp_fun_ls_h_4)) in
-                  (let rec t_1_1_5_0 = (_lh_listcomp_fun_7 _lh_listcomp_fun_ls_t_2) in
-                    (let rec h_1_1_5_0 = (((((transfer_lh__d0 _lh_transfer_arg1_5) newDest_2) newLocation_5) newTime_2) newHistory_5) in
-                      (fun _lh_dummy_3 -> 
-                        ((mappend_lh__d4_d3 h_1_1_5_0) (concat_lh__d3 t_1_1_5_0))))))
-              else
-                (_lh_listcomp_fun_7 _lh_listcomp_fun_ls_t_2)))
-          else
-            (_lh_listcomp_fun_7 _lh_listcomp_fun_ls_t_2)))))
-  else
-    (let rec _lh_listcomp_fun_ls_t_5 = ((itemFromTo_lh__d1 (succItem_lh__d1 _lh_itemFromTo_arg1_1)) _lh_itemFromTo_arg2_1) in
-      (let rec _lh_listcomp_fun_ls_h_5 = _lh_itemFromTo_arg1_1 in
-        (fun _lh_listcomp_fun_ls_h_6 _lh_listcomp_fun_9 _lh_transfer_arg1_6 _lh_transfer_arg2_6 _lh_transfer_arg3_6 _lh_transfer_arg4_6 _lh_transfer_arg5_6 newHistory_6 newLocation_6 _lh_listcomp_fun_ls_t_6 _lh_listcomp_fun_1_0 -> 
-          (if ((((position_lh__d1 _lh_listcomp_fun_ls_h_6) _lh_transfer_arg2_6) = _lh_transfer_arg3_6) && (((position_lh__d2 _lh_listcomp_fun_ls_h_5) _lh_transfer_arg2_6) = _lh_transfer_arg3_6)) then
-            (let rec newDest_3 = (((updateState_lh__d1 (((updateState_lh__d2 _lh_transfer_arg2_6) _lh_listcomp_fun_ls_h_6) newLocation_6)) _lh_listcomp_fun_ls_h_5) newLocation_6) in
-              (if ((notSeen_lh__d1 newDest_3) _lh_transfer_arg5_6) then
-                (let rec newTime_3 = (_lh_transfer_arg4_6 + (u2times_lh__d1 _lh_listcomp_fun_ls_h_6)) in
-                  (let rec t_1_1_5_1 = (_lh_listcomp_fun_9 _lh_listcomp_fun_ls_t_5) in
-                    (let rec h_1_1_5_1 = (((((transfer_lh__d0 _lh_transfer_arg1_6) newDest_3) newLocation_6) newTime_3) newHistory_6) in
-                      (fun _lh_dummy_4 -> 
-                        ((mappend_lh__d4_d3 h_1_1_5_1) (concat_lh__d3 t_1_1_5_1))))))
-              else
-                (_lh_listcomp_fun_9 _lh_listcomp_fun_ls_t_5)))
-          else
-            (_lh_listcomp_fun_9 _lh_listcomp_fun_ls_t_5))))))
-and
-itemFromTo_lh__d2 _lh_itemFromTo_arg1_2 _lh_itemFromTo_arg2_2 =
-  (if (_lh_itemFromTo_arg1_2 = _lh_itemFromTo_arg2_2) then
-    (let rec _lh_listcomp_fun_ls_t_7 = (fun _lh_listcomp_fun_1_1 _lh_transfer_arg1_7 _lh_transfer_arg2_7 _lh_transfer_arg3_7 _lh_transfer_arg4_7 _lh_transfer_arg5_7 newHistory_7 newLocation_7 _lh_dummy_5 -> 
-      (`LH_N)) in
-      (let rec _lh_listcomp_fun_ls_h_7 = _lh_itemFromTo_arg1_2 in
-        (fun _lh_listcomp_fun_1_2 _lh_transfer_arg1_8 _lh_transfer_arg2_8 _lh_transfer_arg3_8 _lh_transfer_arg4_8 _lh_transfer_arg5_8 newHistory_8 newLocation_8 -> 
-          (let rec _lh_listcomp_fun_1_3 = (fun _lh_listcomp_fun_para_2 -> 
-            (((((((((((_lh_listcomp_fun_para_2 _lh_listcomp_fun_ls_h_7) _lh_listcomp_fun_1_3) _lh_transfer_arg1_8) _lh_transfer_arg2_8) _lh_transfer_arg3_8) _lh_transfer_arg4_8) _lh_transfer_arg5_8) newHistory_8) newLocation_8) _lh_listcomp_fun_ls_t_7) _lh_listcomp_fun_1_2)) in
-            (_lh_listcomp_fun_1_3 ((itemFromTo_lh__d1 (succItem_lh__d3 _lh_listcomp_fun_ls_h_7)) (`Adam)))))))
-  else
-    (let rec _lh_listcomp_fun_ls_t_8 = ((itemFromTo_lh__d2 (succItem_lh__d2 _lh_itemFromTo_arg1_2)) _lh_itemFromTo_arg2_2) in
-      (let rec _lh_listcomp_fun_ls_h_8 = _lh_itemFromTo_arg1_2 in
-        (fun _lh_listcomp_fun_1_4 _lh_transfer_arg1_9 _lh_transfer_arg2_9 _lh_transfer_arg3_9 _lh_transfer_arg4_9 _lh_transfer_arg5_9 newHistory_9 newLocation_9 -> 
-          (let rec _lh_listcomp_fun_1_5 = (fun _lh_listcomp_fun_para_3 -> 
-            (((((((((((_lh_listcomp_fun_para_3 _lh_listcomp_fun_ls_h_8) _lh_listcomp_fun_1_5) _lh_transfer_arg1_9) _lh_transfer_arg2_9) _lh_transfer_arg3_9) _lh_transfer_arg4_9) _lh_transfer_arg5_9) newHistory_9) newLocation_9) _lh_listcomp_fun_ls_t_8) _lh_listcomp_fun_1_4)) in
-            (_lh_listcomp_fun_1_5 ((itemFromTo_lh__d1 (succItem_lh__d3 _lh_listcomp_fun_ls_h_8)) (`Adam))))))))
-and
-transfer_lh__d0 _lh_transfer_arg1_3 _lh_transfer_arg2_3 _lh_transfer_arg3_3 _lh_transfer_arg4_3 _lh_transfer_arg5_3 =
-  (if (_lh_transfer_arg1_3 = _lh_transfer_arg2_3) then
-    (`LH_C((`LH_C((`LH_P2(_lh_transfer_arg4_3, _lh_transfer_arg2_3)), _lh_transfer_arg5_3)), (`LH_N)))
-  else
-    (let rec newHistory_3 = (`LH_C((`LH_P2(_lh_transfer_arg4_3, _lh_transfer_arg2_3)), _lh_transfer_arg5_3)) in
-      (let rec newLocation_3 = (opposite_lh__d0 _lh_transfer_arg3_3) in
-        (let rec moveOne_0 = (concat_lh__d0 (let rec _lh_listcomp_fun_3 = (fun _lh_listcomp_fun_para_0 -> 
-          ((((((((_lh_listcomp_fun_para_0 _lh_listcomp_fun_3) _lh_transfer_arg1_3) _lh_transfer_arg2_3) _lh_transfer_arg3_3) _lh_transfer_arg4_3) _lh_transfer_arg5_3) newHistory_3) newLocation_3)) in
-          (_lh_listcomp_fun_3 ((itemFromTo_lh__d0 (`Bono)) (`Adam))))) in
-          (let rec moveTwo_0 = (concat_lh__d2 (let rec _lh_listcomp_fun_4 = (fun _lh_listcomp_fun_para_1 -> 
-            ((((((((_lh_listcomp_fun_para_1 _lh_listcomp_fun_4) _lh_transfer_arg1_3) _lh_transfer_arg2_3) _lh_transfer_arg3_3) _lh_transfer_arg4_3) _lh_transfer_arg5_3) newHistory_3) newLocation_3)) in
-            (_lh_listcomp_fun_4 ((itemFromTo_lh__d2 (`Bono)) (`Larry))))) in
-            ((mappend_lh__d4_d4 moveOne_0) moveTwo_0))))));;
-let rec writeHistory_lh__d0 _lh_writeHistory_arg1_0 =
-  (match _lh_writeHistory_arg1_0 with
+let rec foldr_lh__d2 f_2 i_2 ls_6 =
+  (match ls_6 with
+    | `LH_C(h_3_8_0, t_3_8_0) -> 
+      ((f_2 h_3_8_0) (((foldr_lh__d2 f_2) i_2) t_3_8_0))
     | `LH_N -> 
-      (fun x_0 -> 
-        x_0)
+      i_2);;
+let rec mappend_lh__d3_d1 xs_3_4 ys_1_2_0_6 =
+  (xs_3_4 ys_1_2_0_6);;
+let rec totalTime_lh__d4 _lh_totalTime_arg1_3 =
+  (match _lh_totalTime_arg1_3 with
+    | `LH_C(_lh_totalTime_LH_C_0_3, _lh_totalTime_LH_C_1_3) -> 
+      (match _lh_totalTime_LH_C_0_3 with
+        | `LH_P2(_lh_totalTime_LH_P2_0_3, _lh_totalTime_LH_P2_1_3) -> 
+          _lh_totalTime_LH_P2_0_3
+        | _ -> 
+          (failwith "error"))
     | _ -> 
-      (((foldr_lh__d0 (fun timestate_0 acc_0 -> 
-        (let rec _lh_matchIdent_0 = timestate_0 in
-          (match _lh_matchIdent_0 with
-            | `LH_P2(_lh_writeHistory_LH_P2_0_0, _lh_writeHistory_LH_P2_1_0) -> 
-              (fun _lh_funcomp_x_0 -> 
-                ((fun _lh_funcomp_x_1 -> 
-                  ((fun _lh_funcomp_x_2 -> 
-                    ((fun _lh_funcomp_x_3 -> 
-                      ((fun x_1 -> 
-                        ((mappend_lh__d7 (let rec t_0 = (let rec t_1 = (let rec t_2 = (let rec t_3 = (let rec t_4 = (let rec t_5 = (fun ys_0 -> 
-                          ys_0) in
-                          (let rec h_0 = ' ' in
-                            (fun ys_1 -> 
-                              (`LH_C(h_0, ((mappend_lh__d7 t_5) ys_1)))))) in
-                          (let rec h_1 = ':' in
-                            (fun ys_2 -> 
-                              (`LH_C(h_1, ((mappend_lh__d7 t_4) ys_2)))))) in
-                          (let rec h_2 = 'e' in
-                            (fun ys_3 -> 
-                              (`LH_C(h_2, ((mappend_lh__d7 t_3) ys_3)))))) in
-                          (let rec h_3 = 'm' in
-                            (fun ys_4 -> 
-                              (`LH_C(h_3, ((mappend_lh__d7 t_2) ys_4)))))) in
-                          (let rec h_4 = 'i' in
-                            (fun ys_5 -> 
-                              (`LH_C(h_4, ((mappend_lh__d7 t_1) ys_5)))))) in
-                          (let rec h_5 = 'T' in
-                            (fun ys_6 -> 
-                              (`LH_C(h_5, ((mappend_lh__d7 t_0) ys_6))))))) x_1)) ((fun x_2 -> 
-                        ((mappend_lh__d6 (string_of_int ((totalTime_lh__d2 _lh_writeHistory_arg1_0) - _lh_writeHistory_LH_P2_0_0))) x_2)) _lh_funcomp_x_3))) ((fun x_3 -> 
-                      (`LH_C('|', x_3))) _lh_funcomp_x_2))) ((writeState_lh__d0 _lh_writeHistory_LH_P2_1_0) _lh_funcomp_x_1))) (acc_0 _lh_funcomp_x_0)))
-            | _ -> 
-              (failwith "error"))))) (fun x_4 -> 
-        x_4)) _lh_writeHistory_arg1_0));;
-let rec writeHistory_lh__d1 _lh_writeHistory_arg1_2 =
-  (match _lh_writeHistory_arg1_2 with
+      (failwith "error"));;
+let rec mappend_lh__d3_d0 xs_4_1 ys_1_2_1_3 =
+  (match xs_4_1 with
+    | `LH_C(h_1_1_5_3, t_1_1_5_3) -> 
+      (`LH_C(h_1_1_5_3, ((mappend_lh__d3_d0 t_1_1_5_3) ys_1_2_1_3)))
     | `LH_N -> 
-      (fun x_1_0 -> 
-        x_1_0)
-    | _ -> 
-      (((foldr_lh__d1 (fun timestate_2 acc_2 -> 
-        (let rec _lh_matchIdent_4 = timestate_2 in
-          (match _lh_matchIdent_4 with
-            | `LH_P2(_lh_writeHistory_LH_P2_0_2, _lh_writeHistory_LH_P2_1_2) -> 
-              (fun _lh_funcomp_x_2_3 -> 
-                ((fun _lh_funcomp_x_2_4 -> 
-                  ((fun _lh_funcomp_x_2_5 -> 
-                    ((fun _lh_funcomp_x_2_6 -> 
-                      ((fun x_1_1 -> 
-                        ((mappend_lh__d1_d9 (let rec t_1_1_1_1 = (let rec t_1_1_1_2 = (let rec t_1_1_1_3 = (let rec t_1_1_1_4 = (let rec t_1_1_1_5 = (let rec t_1_1_1_6 = (fun ys_1_1_6_1 -> 
-                          ys_1_1_6_1) in
-                          (let rec h_1_1_1_1 = ' ' in
-                            (fun ys_1_1_6_2 -> 
-                              (`LH_C(h_1_1_1_1, ((mappend_lh__d1_d9 t_1_1_1_6) ys_1_1_6_2)))))) in
-                          (let rec h_1_1_1_2 = ':' in
-                            (fun ys_1_1_6_3 -> 
-                              (`LH_C(h_1_1_1_2, ((mappend_lh__d1_d9 t_1_1_1_5) ys_1_1_6_3)))))) in
-                          (let rec h_1_1_1_3 = 'e' in
-                            (fun ys_1_1_6_4 -> 
-                              (`LH_C(h_1_1_1_3, ((mappend_lh__d1_d9 t_1_1_1_4) ys_1_1_6_4)))))) in
-                          (let rec h_1_1_1_4 = 'm' in
-                            (fun ys_1_1_6_5 -> 
-                              (`LH_C(h_1_1_1_4, ((mappend_lh__d1_d9 t_1_1_1_3) ys_1_1_6_5)))))) in
-                          (let rec h_1_1_1_5 = 'i' in
-                            (fun ys_1_1_6_6 -> 
-                              (`LH_C(h_1_1_1_5, ((mappend_lh__d1_d9 t_1_1_1_2) ys_1_1_6_6)))))) in
-                          (let rec h_1_1_1_6 = 'T' in
-                            (fun ys_1_1_6_7 -> 
-                              (`LH_C(h_1_1_1_6, ((mappend_lh__d1_d9 t_1_1_1_1) ys_1_1_6_7))))))) x_1_1)) ((fun x_1_2 -> 
-                        ((mappend_lh__d1_d8 (string_of_int ((totalTime_lh__d3 _lh_writeHistory_arg1_2) - _lh_writeHistory_LH_P2_0_2))) x_1_2)) _lh_funcomp_x_2_6))) ((fun x_1_3 -> 
-                      (`LH_C('|', x_1_3))) _lh_funcomp_x_2_5))) ((writeState_lh__d1 _lh_writeHistory_LH_P2_1_2) _lh_funcomp_x_2_4))) (acc_2 _lh_funcomp_x_2_3)))
-            | _ -> 
-              (failwith "error"))))) (fun x_1_4 -> 
-        x_1_4)) _lh_writeHistory_arg1_2));;
+      ys_1_2_1_3);;
 let rec writeHistory_lh__d2 _lh_writeHistory_arg1_1 =
   (match _lh_writeHistory_arg1_1 with
     | `LH_N -> 

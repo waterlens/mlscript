@@ -18,6 +18,14 @@ let rec append_lh _lh_append_arg1_0 _lh_append_arg2_0 =
       (`LH_C(_lh_append_LH_C_0_0, ((append_lh _lh_append_LH_C_1_0) _lh_append_arg2_0)))
     | _ -> 
       (failwith "error"));;
+let rec flatMap_lh _lh_flatMap_arg1_0 _lh_flatMap_arg2_0 =
+  (match _lh_flatMap_arg2_0 with
+    | `LH_N -> 
+      (`LH_N)
+    | `LH_C(_lh_flatMap_LH_C_0_0, _lh_flatMap_LH_C_1_0) -> 
+      ((append_lh (_lh_flatMap_arg1_0 _lh_flatMap_LH_C_0_0)) ((flatMap_lh _lh_flatMap_arg1_0) _lh_flatMap_LH_C_1_0))
+    | _ -> 
+      (failwith "error"));;
 let rec enumFromTo_lh a_0 b_0 =
   (if (a_0 <= b_0) then
     (`LH_C(a_0, ((enumFromTo_lh (a_0 + 1)) b_0)))
@@ -29,14 +37,6 @@ let rec safe_lh _lh_safe_arg1_0 _lh_safe_arg2_0 _lh_safe_arg3_0 =
       true
     | `LH_C(_lh_safe_LH_C_0_0, _lh_safe_LH_C_1_0) -> 
       ((((_lh_safe_arg1_0 <> _lh_safe_LH_C_0_0) && (_lh_safe_arg1_0 <> (_lh_safe_LH_C_0_0 + _lh_safe_arg2_0))) && (_lh_safe_arg1_0 <> (_lh_safe_LH_C_0_0 - _lh_safe_arg2_0))) && (((safe_lh _lh_safe_arg1_0) (_lh_safe_arg2_0 + 1)) _lh_safe_LH_C_1_0))
-    | _ -> 
-      (failwith "error"));;
-let rec flatMap_lh _lh_flatMap_arg1_0 _lh_flatMap_arg2_0 =
-  (match _lh_flatMap_arg2_0 with
-    | `LH_N -> 
-      (`LH_N)
-    | `LH_C(_lh_flatMap_LH_C_0_0, _lh_flatMap_LH_C_1_0) -> 
-      ((append_lh (_lh_flatMap_arg1_0 _lh_flatMap_LH_C_0_0)) ((flatMap_lh _lh_flatMap_arg1_0) _lh_flatMap_LH_C_1_0))
     | _ -> 
       (failwith "error"));;
 let rec gen_lh _lh_gen_arg1_0 _lh_gen_arg2_0 =

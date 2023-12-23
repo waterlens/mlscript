@@ -22,14 +22,6 @@ let rec and_lh__d1 _lh_and_arg1_0 =
   (_lh_and_arg1_0 99);;
 let rec zip_lh__d0 xs_0 ys_2 =
   (xs_0 ys_2);;
-let rec and_lh__d0 _lh_and_arg1_1 =
-  (_lh_and_arg1_1 99);;
-let rec length_lh__d0 ls_1 =
-  (match ls_1 with
-    | `LH_C(h_1, t_1) -> 
-      (1 + (length_lh__d0 t_1))
-    | `LH_N -> 
-      0);;
 let rec enumFromTo_lh__d1 a_0 b_0 _lh_popOutId_0_1 _lh_popOutId_1_1 _lh_popOutId_2_1 _lh_popOutId_3_0 =
   (if (a_0 <= b_0) then
     (let rec tx_0 = ((enumFromTo_lh__d1 (a_0 + 1)) b_0) in
@@ -54,6 +46,8 @@ let rec enumFromTo_lh__d1 a_0 b_0 _lh_popOutId_0_1 _lh_popOutId_1_1 _lh_popOutId
   else
     (fun _lh_dummy_2 -> 
       true));;
+let rec and_lh__d0 _lh_and_arg1_1 =
+  (_lh_and_arg1_1 99);;
 let rec safe_lh__d0 _lh_safe_arg1_0 _lh_safe_arg2_0 =
   (let rec m_0 = ((length_lh__d1 _lh_safe_arg1_0) + 1) in
     (and_lh__d0 (let rec _lh_listcomp_fun_2 = (fun _lh_listcomp_fun_para_2 -> 
@@ -83,6 +77,12 @@ let rec queens_lh__d0 _lh_queens_arg1_0 =
           | `LH_N -> 
             (`LH_N))) in
         (_lh_listcomp_fun_0 (queens_lh__d0 (_lh_queens_arg1_0 - 1)))));;
+let rec length_lh__d0 ls_1 =
+  (match ls_1 with
+    | `LH_C(h_1, t_1) -> 
+      (1 + (length_lh__d0 t_1))
+    | `LH_N -> 
+      0);;
 let rec testAnotherQueenNineBuiltInType_lh__d0 _lh_testAnotherQueenNineBuiltInType_arg1_0 =
   (length_lh__d0 (queens_lh__d0 _lh_testAnotherQueenNineBuiltInType_arg1_0));;
 end;;

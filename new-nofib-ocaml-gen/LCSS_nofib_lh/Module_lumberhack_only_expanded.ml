@@ -30,6 +30,8 @@ let rec reverse_helper_lh ls_4 a_1 =
       ((reverse_helper_lh t_4) (`LH_C(h_3, a_1)))
     | `LH_N -> 
       a_1);;
+let rec reverse_lh ls_3 =
+  ((reverse_helper_lh ls_3) (`LH_N));;
 let rec inList_lh _lh_inList_arg1_0 _lh_inList_arg2_0 =
   (match _lh_inList_arg2_0 with
     | `LH_C(_lh_inList_LH_C_0_0, _lh_inList_LH_C_1_0) -> 
@@ -92,8 +94,6 @@ let rec max_lh _lh_max_arg1_0 _lh_max_arg2_0 =
     _lh_max_arg1_0
   else
     _lh_max_arg2_0);;
-let rec reverse_lh ls_3 =
-  ((reverse_helper_lh ls_3) (`LH_N));;
 let rec algb2_lh _lh_algb2_arg1_0 _lh_algb2_arg2_0 _lh_algb2_arg3_0 _lh_algb2_arg4_0 =
   (match _lh_algb2_arg4_0 with
     | `LH_N -> 

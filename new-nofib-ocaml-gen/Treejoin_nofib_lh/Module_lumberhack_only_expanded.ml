@@ -40,6 +40,42 @@ let rec isSpace_lh _lh_isSpace_arg1_0 =
 let rec isDigit_lh _lh_isDigit_arg1_0 =
   (let rec n_0 = (int_of_char _lh_isDigit_arg1_0) in
     ((n_0 >= 48) && (n_0 <= 57)));;
+let rec readInt_lh _lh_readInt_arg1_0 =
+  (let rec readInt'_0 = (fun _lh_readInt'_arg1_0 _lh_readInt'_arg2_0 -> 
+    (match _lh_readInt'_arg2_0 with
+      | `LH_C(_lh_readInt'_LH_C_0_0, _lh_readInt'_LH_C_1_0) -> 
+        (if (isDigit_lh _lh_readInt'_LH_C_0_0) then
+          ((readInt'_0 (((_lh_readInt'_arg1_0 * 10) + (int_of_char _lh_readInt'_LH_C_0_0)) - (int_of_char '0'))) _lh_readInt'_LH_C_1_0)
+        else
+          (let rec s'_0 = ((dropWhile_lh isSpace_lh) (`LH_C(_lh_readInt'_LH_C_0_0, _lh_readInt'_LH_C_1_0))) in
+            (`LH_P2(_lh_readInt'_arg1_0, s'_0))))
+      | _ -> 
+        (let rec s'_1 = ((dropWhile_lh isSpace_lh) _lh_readInt'_arg2_0) in
+          (`LH_P2(_lh_readInt'_arg1_0, s'_1))))) in
+    ((readInt'_0 0) _lh_readInt_arg1_0));;
+let rec readTree_lh _lh_readTree_arg1_0 _lh_readTree_arg2_0 _lh_readTree_arg3_0 =
+  (match _lh_readTree_arg2_0 with
+    | `LH_N -> 
+      _lh_readTree_arg3_0
+    | _ -> 
+      (let rec _lh_matchIdent_2 = (readInt_lh _lh_readTree_arg2_0) in
+        (match _lh_matchIdent_2 with
+          | `LH_P2(_lh_readTree_LH_P2_0_0, _lh_readTree_LH_P2_1_0) -> 
+            (let rec _lh_matchIdent_3 = (readInt_lh _lh_readTree_LH_P2_1_0) in
+              (match _lh_matchIdent_3 with
+                | `LH_P2(_lh_readTree_LH_P2_0_1, _lh_readTree_LH_P2_1_1) -> 
+                  (let rec _lh_matchIdent_4 = (readInt_lh _lh_readTree_LH_P2_1_1) in
+                    (match _lh_matchIdent_4 with
+                      | `LH_P2(_lh_readTree_LH_P2_0_2, _lh_readTree_LH_P2_1_2) -> 
+                        (let rec e_0 = (`LH_P3(_lh_readTree_LH_P2_0_0, _lh_readTree_LH_P2_0_1, _lh_readTree_LH_P2_0_2)) in
+                          (let rec k_0 = (_lh_readTree_arg1_0 e_0) in
+                            (((readTree_lh _lh_readTree_arg1_0) _lh_readTree_LH_P2_1_2) (((insertT_lh k_0) e_0) _lh_readTree_arg3_0))))
+                      | _ -> 
+                        (failwith "error")))
+                | _ -> 
+                  (failwith "error")))
+          | _ -> 
+            (failwith "error"))));;
 let rec lookupT_lh _lh_lookupT_arg1_0 _lh_lookupT_arg2_0 =
   (match _lh_lookupT_arg2_0 with
     | `Node(_lh_lookupT_Node_0_0, _lh_lookupT_Node_1_0, _lh_lookupT_Node_2_0) -> 
@@ -56,19 +92,6 @@ let rec lookupT_lh _lh_lookupT_arg1_0 _lh_lookupT_arg2_0 =
       (`Nothing)
     | _ -> 
       (failwith "error"));;
-let rec readInt_lh _lh_readInt_arg1_0 =
-  (let rec readInt'_0 = (fun _lh_readInt'_arg1_0 _lh_readInt'_arg2_0 -> 
-    (match _lh_readInt'_arg2_0 with
-      | `LH_C(_lh_readInt'_LH_C_0_0, _lh_readInt'_LH_C_1_0) -> 
-        (if (isDigit_lh _lh_readInt'_LH_C_0_0) then
-          ((readInt'_0 (((_lh_readInt'_arg1_0 * 10) + (int_of_char _lh_readInt'_LH_C_0_0)) - (int_of_char '0'))) _lh_readInt'_LH_C_1_0)
-        else
-          (let rec s'_0 = ((dropWhile_lh isSpace_lh) (`LH_C(_lh_readInt'_LH_C_0_0, _lh_readInt'_LH_C_1_0))) in
-            (`LH_P2(_lh_readInt'_arg1_0, s'_0))))
-      | _ -> 
-        (let rec s'_1 = ((dropWhile_lh isSpace_lh) _lh_readInt'_arg2_0) in
-          (`LH_P2(_lh_readInt'_arg1_0, s'_1))))) in
-    ((readInt'_0 0) _lh_readInt_arg1_0));;
 let rec join_lh _lh_join_arg1_0 _lh_join_arg2_0 _lh_join_arg3_0 =
   (match _lh_join_arg1_0 with
     | `Empty -> 
@@ -106,29 +129,6 @@ let rec join_lh _lh_join_arg1_0 _lh_join_arg2_0 _lh_join_arg3_0 =
                   (((join_lh _lh_join_Node_1_1) _lh_join_arg2_0) (((join_lh _lh_join_Node_2_1) _lh_join_arg2_0) _lh_join_arg3_0))
                 | _ -> 
                   (failwith "error")))));;
-let rec readTree_lh _lh_readTree_arg1_0 _lh_readTree_arg2_0 _lh_readTree_arg3_0 =
-  (match _lh_readTree_arg2_0 with
-    | `LH_N -> 
-      _lh_readTree_arg3_0
-    | _ -> 
-      (let rec _lh_matchIdent_2 = (readInt_lh _lh_readTree_arg2_0) in
-        (match _lh_matchIdent_2 with
-          | `LH_P2(_lh_readTree_LH_P2_0_0, _lh_readTree_LH_P2_1_0) -> 
-            (let rec _lh_matchIdent_3 = (readInt_lh _lh_readTree_LH_P2_1_0) in
-              (match _lh_matchIdent_3 with
-                | `LH_P2(_lh_readTree_LH_P2_0_1, _lh_readTree_LH_P2_1_1) -> 
-                  (let rec _lh_matchIdent_4 = (readInt_lh _lh_readTree_LH_P2_1_1) in
-                    (match _lh_matchIdent_4 with
-                      | `LH_P2(_lh_readTree_LH_P2_0_2, _lh_readTree_LH_P2_1_2) -> 
-                        (let rec e_0 = (`LH_P3(_lh_readTree_LH_P2_0_0, _lh_readTree_LH_P2_0_1, _lh_readTree_LH_P2_0_2)) in
-                          (let rec k_0 = (_lh_readTree_arg1_0 e_0) in
-                            (((readTree_lh _lh_readTree_arg1_0) _lh_readTree_LH_P2_1_2) (((insertT_lh k_0) e_0) _lh_readTree_arg3_0))))
-                      | _ -> 
-                        (failwith "error")))
-                | _ -> 
-                  (failwith "error")))
-          | _ -> 
-            (failwith "error"))));;
 let rec testTreejoin_nofib_lh _lh_testTreejoin_nofib_arg1_0 =
   (let rec c1_0 = lh_large_str_0 in
     (let rec c2_0 = lh_large_str_1 in

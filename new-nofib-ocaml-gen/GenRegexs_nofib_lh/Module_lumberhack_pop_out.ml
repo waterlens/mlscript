@@ -10,8 +10,17 @@ let rec mappend_lh__d0 xs_1 ys_3 =
       (`LH_C(h_6, ((mappend_lh__d0 t_7) ys_3)))
     | `LH_N -> 
       ys_3);;
+let rec concat_lh__d0 lss_0 =
+  (match lss_0 with
+    | `LH_C(h_7, t_8) -> 
+      ((mappend_lh__d0 h_7) (concat_lh__d0 t_8))
+    | `LH_N -> 
+      (`LH_N));;
 let rec foldl_lh__d1 f_6 i_6 ls_5 =
   ((ls_5 f_6) i_6);;
+let rec mknum_lh__d1 _lh_mknum_arg1_0 =
+  (((foldl_lh__d1 (fun u_0 c_0 -> 
+    ((u_0 * 10) + ((int_of_char c_0) - (int_of_char '0'))))) 0) _lh_mknum_arg1_0);;
 let rec mappend_lh__d1 xs_0 ys_2 =
   (match xs_0 with
     | `LH_C(h_4, t_4) -> 
@@ -20,12 +29,24 @@ let rec mappend_lh__d1 xs_0 ys_2 =
       ys_2);;
 let rec mappend_lh__d2 xs_2 ys_4 =
   (xs_2 ys_4);;
+let rec enumFromTo_lh__d3 a_3 b_1 _lh_popOutId_0_1 _lh_popOutId_1_0 =
+  (if (a_3 <= b_1) then
+    (let rec _lh_listcomp_fun_ls_t_2 = ((enumFromTo_lh__d3 (a_3 + 1)) b_1) in
+      (let rec t_1 = (_lh_popOutId_0_1 _lh_listcomp_fun_ls_t_2) in
+        (let rec h_1 = '0' in
+          (`LH_C(h_1, ((mappend_lh__d2 t_1) _lh_popOutId_1_0))))))
+  else
+    _lh_popOutId_1_0);;
 let rec length_lh__d2 ls_2 =
   (match ls_2 with
     | `LH_C(h_2, t_2) -> 
       (1 + (length_lh__d2 t_2))
     | `LH_N -> 
       0);;
+let rec pad_lh__d0 _lh_pad_arg1_0 _lh_pad_arg2_0 =
+  ((mappend_lh__d2 (let rec _lh_listcomp_fun_5 = (fun _lh_listcomp_fun_para_2 -> 
+    (_lh_listcomp_fun_para_2 _lh_listcomp_fun_5)) in
+    (_lh_listcomp_fun_5 ((enumFromTo_lh__d3 1) (_lh_pad_arg2_0 - (length_lh__d2 _lh_pad_arg1_0)))))) _lh_pad_arg1_0);;
 let rec max_lh__d0 _lh_max_arg1_0 _lh_max_arg2_0 =
   (if (_lh_max_arg1_0 > _lh_max_arg2_0) then
     _lh_max_arg1_0
@@ -33,6 +54,9 @@ let rec max_lh__d0 _lh_max_arg1_0 _lh_max_arg2_0 =
     _lh_max_arg2_0);;
 let rec foldl_lh__d0 f_0 i_0 ls_0 =
   ((ls_0 f_0) i_0);;
+let rec mknum_lh__d0 _lh_mknum_arg1_1 =
+  (((foldl_lh__d0 (fun u_1 c_1 -> 
+    ((u_1 * 10) + ((int_of_char c_1) - (int_of_char '0'))))) 0) _lh_mknum_arg1_1);;
 let rec foldl_lh__d3 f_1 i_1 ls_1 =
   ((ls_1 f_1) i_1);;
 let rec length_lh__d1 ls_6 =
@@ -51,33 +75,9 @@ let rec foldl_lh__d2 f_2 i_2 ls_3 =
   ((ls_3 f_2) i_2);;
 let rec reverse_helper_lh__d0 ls_4 a_4 =
   (ls_4 a_4);;
-let rec concat_lh__d0 lss_0 =
-  (match lss_0 with
-    | `LH_C(h_7, t_8) -> 
-      ((mappend_lh__d0 h_7) (concat_lh__d0 t_8))
-    | `LH_N -> 
-      (`LH_N));;
-let rec mknum_lh__d1 _lh_mknum_arg1_0 =
-  (((foldl_lh__d1 (fun u_0 c_0 -> 
-    ((u_0 * 10) + ((int_of_char c_0) - (int_of_char '0'))))) 0) _lh_mknum_arg1_0);;
-let rec enumFromTo_lh__d3 a_3 b_1 _lh_popOutId_0_1 _lh_popOutId_1_0 =
-  (if (a_3 <= b_1) then
-    (let rec _lh_listcomp_fun_ls_t_2 = ((enumFromTo_lh__d3 (a_3 + 1)) b_1) in
-      (let rec t_1 = (_lh_popOutId_0_1 _lh_listcomp_fun_ls_t_2) in
-        (let rec h_1 = '0' in
-          (`LH_C(h_1, ((mappend_lh__d2 t_1) _lh_popOutId_1_0))))))
-  else
-    _lh_popOutId_1_0);;
-let rec mknum_lh__d0 _lh_mknum_arg1_1 =
-  (((foldl_lh__d0 (fun u_1 c_1 -> 
-    ((u_1 * 10) + ((int_of_char c_1) - (int_of_char '0'))))) 0) _lh_mknum_arg1_1);;
 let rec reverse_lh__d0 ls_7 =
   ((reverse_helper_lh__d0 ls_7) (fun _lh_alphabeticRule_LH_C_1_7 _lh_listcomp_fun_1_8 -> 
     (`LH_N)));;
-let rec pad_lh__d0 _lh_pad_arg1_0 _lh_pad_arg2_0 =
-  ((mappend_lh__d2 (let rec _lh_listcomp_fun_5 = (fun _lh_listcomp_fun_para_2 -> 
-    (_lh_listcomp_fun_para_2 _lh_listcomp_fun_5)) in
-    (_lh_listcomp_fun_5 ((enumFromTo_lh__d3 1) (_lh_pad_arg2_0 - (length_lh__d2 _lh_pad_arg1_0)))))) _lh_pad_arg1_0);;
 let rec alphabeticRule_lh__d0 _lh_alphabeticRule_arg1_0 =
   (match _lh_alphabeticRule_arg1_0 with
     | `LH_C(_lh_alphabeticRule_LH_C_0_0, _lh_alphabeticRule_LH_C_1_1) -> 

@@ -1324,7 +1324,7 @@ let string_of_float f = listToTaggedList (explode_string (string_of_float f))"""
 
   override def apply(p: Program, bigLetRec: Boolean = false): String = {
     p.d(p)
-    val orderedDefStr = (p.topLevelDefsOrder.map(_.toSeq.sortBy(_.tree.name)).map { defGroup =>
+    val orderedDefStr = (p.topLevelDefsOrder.map(_.sortBy(_.tree.name)).map { defGroup =>
       val defBody = defGroup.map { d =>
         val body = p.defAndExpr._1(d)
         transFromProgDef(ProgDef(d, body)).print

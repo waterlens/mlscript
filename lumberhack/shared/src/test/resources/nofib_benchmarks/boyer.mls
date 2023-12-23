@@ -452,6 +452,22 @@ testBoyer_nofib $ primId 5
 //│ 		          (failwith "error"))
 //│ 		    | _ -> 
 //│ 		      (failwith "error"));;
+//│ 		let rec apply_subst_lh _lh_apply_subst_arg1_0 _lh_apply_subst_arg2_0 =
+//│ 		  (match _lh_apply_subst_arg2_0 with
+//│ 		    | `Var(_lh_apply_subst_Var_0_0) -> 
+//│ 		      (let rec _lh_matchIdent_0 = ((find_lh _lh_apply_subst_Var_0_0) _lh_apply_subst_arg1_0) in
+//│ 		        (match _lh_matchIdent_0 with
+//│ 		          | `LH_P2(_lh_apply_subst_LH_P2_0_0, _lh_apply_subst_LH_P2_1_0) -> 
+//│ 		            (if _lh_apply_subst_LH_P2_0_0 then
+//│ 		              _lh_apply_subst_LH_P2_1_0
+//│ 		            else
+//│ 		              (`Var(_lh_apply_subst_Var_0_0)))
+//│ 		          | _ -> 
+//│ 		            (failwith "error")))
+//│ 		    | `Fun(_lh_apply_subst_Fun_0_0, _lh_apply_subst_Fun_1_0, _lh_apply_subst_Fun_2_0) -> 
+//│ 		      (`Fun(_lh_apply_subst_Fun_0_0, ((map_lh (apply_subst_lh _lh_apply_subst_arg1_0)) _lh_apply_subst_Fun_1_0), _lh_apply_subst_Fun_2_0))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"));;
 //│ 		let rec termEq_lh _lh_termEq_arg1_0 _lh_termEq_arg2_0 =
 //│ 		  (match _lh_termEq_arg1_0 with
 //│ 		    | `Var(_lh_termEq_Var_0_0) -> 
@@ -488,27 +504,6 @@ testBoyer_nofib $ primId 5
 //│ 		          (failwith "error"))
 //│ 		    | _ -> 
 //│ 		      (failwith "error"));;
-//│ 		let rec replicate_lh _lh_replicate_arg1_0 _lh_replicate_arg2_0 =
-//│ 		  (if (_lh_replicate_arg1_0 = 0) then
-//│ 		    (`LH_N)
-//│ 		  else
-//│ 		    (`LH_C(_lh_replicate_arg2_0, ((replicate_lh (_lh_replicate_arg1_0 - 1)) _lh_replicate_arg2_0))));;
-//│ 		let rec apply_subst_lh _lh_apply_subst_arg1_0 _lh_apply_subst_arg2_0 =
-//│ 		  (match _lh_apply_subst_arg2_0 with
-//│ 		    | `Var(_lh_apply_subst_Var_0_0) -> 
-//│ 		      (let rec _lh_matchIdent_0 = ((find_lh _lh_apply_subst_Var_0_0) _lh_apply_subst_arg1_0) in
-//│ 		        (match _lh_matchIdent_0 with
-//│ 		          | `LH_P2(_lh_apply_subst_LH_P2_0_0, _lh_apply_subst_LH_P2_1_0) -> 
-//│ 		            (if _lh_apply_subst_LH_P2_0_0 then
-//│ 		              _lh_apply_subst_LH_P2_1_0
-//│ 		            else
-//│ 		              (`Var(_lh_apply_subst_Var_0_0)))
-//│ 		          | _ -> 
-//│ 		            (failwith "error")))
-//│ 		    | `Fun(_lh_apply_subst_Fun_0_0, _lh_apply_subst_Fun_1_0, _lh_apply_subst_Fun_2_0) -> 
-//│ 		      (`Fun(_lh_apply_subst_Fun_0_0, ((map_lh (apply_subst_lh _lh_apply_subst_arg1_0)) _lh_apply_subst_Fun_1_0), _lh_apply_subst_Fun_2_0))
-//│ 		    | _ -> 
-//│ 		      (failwith "error"));;
 //│ 		let rec termInList_lh _lh_termInList_arg1_0 _lh_termInList_arg2_0 =
 //│ 		  (match _lh_termInList_arg2_0 with
 //│ 		    | `LH_C(_lh_termInList_LH_C_0_0, _lh_termInList_LH_C_1_0) -> 
@@ -520,6 +515,65 @@ testBoyer_nofib $ primId 5
 //│ 		      false
 //│ 		    | _ -> 
 //│ 		      (failwith "error"));;
+//│ 		let rec truep_lh _lh_truep_arg1_0 _lh_truep_arg2_0 =
+//│ 		  (match _lh_truep_arg1_0 with
+//│ 		    | `Fun(_lh_truep_Fun_0_0, _lh_truep_Fun_1_0, _lh_truep_Fun_2_0) -> 
+//│ 		      (match _lh_truep_Fun_0_0 with
+//│ 		        | `TRUE -> 
+//│ 		          true
+//│ 		        | _ -> 
+//│ 		          ((termInList_lh _lh_truep_arg1_0) _lh_truep_arg2_0))
+//│ 		    | _ -> 
+//│ 		      ((termInList_lh _lh_truep_arg1_0) _lh_truep_arg2_0));;
+//│ 		let rec falsep_lh _lh_falsep_arg1_0 _lh_falsep_arg2_0 =
+//│ 		  (match _lh_falsep_arg1_0 with
+//│ 		    | `Fun(_lh_falsep_Fun_0_0, _lh_falsep_Fun_1_0, _lh_falsep_Fun_2_0) -> 
+//│ 		      (match _lh_falsep_Fun_0_0 with
+//│ 		        | `FALSE -> 
+//│ 		          true
+//│ 		        | _ -> 
+//│ 		          ((termInList_lh _lh_falsep_arg1_0) _lh_falsep_arg2_0))
+//│ 		    | _ -> 
+//│ 		      ((termInList_lh _lh_falsep_arg1_0) _lh_falsep_arg2_0));;
+//│ 		let rec tautologyp_lh _lh_tautologyp_arg1_0 _lh_tautologyp_arg2_0 _lh_tautologyp_arg3_0 =
+//│ 		  (if ((truep_lh _lh_tautologyp_arg1_0) _lh_tautologyp_arg2_0) then
+//│ 		    true
+//│ 		  else
+//│ 		    (if ((falsep_lh _lh_tautologyp_arg1_0) _lh_tautologyp_arg3_0) then
+//│ 		      false
+//│ 		    else
+//│ 		      (let rec _lh_matchIdent_2 = _lh_tautologyp_arg1_0 in
+//│ 		        (match _lh_matchIdent_2 with
+//│ 		          | `Fun(_lh_tautologyp_Fun_0_0, _lh_tautologyp_Fun_1_0, _lh_tautologyp_Fun_2_0) -> 
+//│ 		            (match _lh_tautologyp_Fun_0_0 with
+//│ 		              | `IF -> 
+//│ 		                (match _lh_tautologyp_Fun_1_0 with
+//│ 		                  | `LH_C(_lh_tautologyp_LH_C_0_0, _lh_tautologyp_LH_C_1_0) -> 
+//│ 		                    (match _lh_tautologyp_LH_C_1_0 with
+//│ 		                      | `LH_C(_lh_tautologyp_LH_C_0_1, _lh_tautologyp_LH_C_1_1) -> 
+//│ 		                        (match _lh_tautologyp_LH_C_1_1 with
+//│ 		                          | `LH_C(_lh_tautologyp_LH_C_0_2, _lh_tautologyp_LH_C_1_2) -> 
+//│ 		                            (match _lh_tautologyp_LH_C_1_2 with
+//│ 		                              | `LH_N -> 
+//│ 		                                (if ((truep_lh _lh_tautologyp_LH_C_0_0) _lh_tautologyp_arg2_0) then
+//│ 		                                  (((tautologyp_lh _lh_tautologyp_LH_C_0_1) _lh_tautologyp_arg2_0) _lh_tautologyp_arg3_0)
+//│ 		                                else
+//│ 		                                  (if ((falsep_lh _lh_tautologyp_LH_C_0_0) _lh_tautologyp_arg3_0) then
+//│ 		                                    (((tautologyp_lh _lh_tautologyp_LH_C_0_2) _lh_tautologyp_arg2_0) _lh_tautologyp_arg3_0)
+//│ 		                                  else
+//│ 		                                    ((((tautologyp_lh _lh_tautologyp_LH_C_0_1) (`LH_C(_lh_tautologyp_LH_C_0_0, _lh_tautologyp_arg2_0))) _lh_tautologyp_arg3_0) && (((tautologyp_lh _lh_tautologyp_LH_C_0_2) _lh_tautologyp_arg2_0) (`LH_C(_lh_tautologyp_LH_C_0_0, _lh_tautologyp_arg3_0))))))
+//│ 		                              | _ -> 
+//│ 		                                false)
+//│ 		                          | _ -> 
+//│ 		                            false)
+//│ 		                      | _ -> 
+//│ 		                        false)
+//│ 		                  | _ -> 
+//│ 		                    false)
+//│ 		              | _ -> 
+//│ 		                false)
+//│ 		          | _ -> 
+//│ 		            false))));;
 //│ 		let rec one_way_unify1_lh _lh_one_way_unify1_arg1_0 _lh_one_way_unify1_arg2_0 _lh_one_way_unify1_arg3_0 =
 //│ 		  (match _lh_one_way_unify1_arg2_0 with
 //│ 		    | `Var(_lh_one_way_unify1_Var_0_0) -> 
@@ -572,67 +626,8 @@ testBoyer_nofib $ primId 5
 //│ 		          (`LH_P2(false, (`LH_N))))
 //│ 		    | _ -> 
 //│ 		      (`LH_P2(false, (`LH_N))));;
-//│ 		let rec truep_lh _lh_truep_arg1_0 _lh_truep_arg2_0 =
-//│ 		  (match _lh_truep_arg1_0 with
-//│ 		    | `Fun(_lh_truep_Fun_0_0, _lh_truep_Fun_1_0, _lh_truep_Fun_2_0) -> 
-//│ 		      (match _lh_truep_Fun_0_0 with
-//│ 		        | `TRUE -> 
-//│ 		          true
-//│ 		        | _ -> 
-//│ 		          ((termInList_lh _lh_truep_arg1_0) _lh_truep_arg2_0))
-//│ 		    | _ -> 
-//│ 		      ((termInList_lh _lh_truep_arg1_0) _lh_truep_arg2_0));;
-//│ 		let rec falsep_lh _lh_falsep_arg1_0 _lh_falsep_arg2_0 =
-//│ 		  (match _lh_falsep_arg1_0 with
-//│ 		    | `Fun(_lh_falsep_Fun_0_0, _lh_falsep_Fun_1_0, _lh_falsep_Fun_2_0) -> 
-//│ 		      (match _lh_falsep_Fun_0_0 with
-//│ 		        | `FALSE -> 
-//│ 		          true
-//│ 		        | _ -> 
-//│ 		          ((termInList_lh _lh_falsep_arg1_0) _lh_falsep_arg2_0))
-//│ 		    | _ -> 
-//│ 		      ((termInList_lh _lh_falsep_arg1_0) _lh_falsep_arg2_0));;
 //│ 		let rec one_way_unify_lh _lh_one_way_unify_arg1_0 _lh_one_way_unify_arg2_0 =
 //│ 		  (((one_way_unify1_lh _lh_one_way_unify_arg1_0) _lh_one_way_unify_arg2_0) (`LH_N));;
-//│ 		let rec tautologyp_lh _lh_tautologyp_arg1_0 _lh_tautologyp_arg2_0 _lh_tautologyp_arg3_0 =
-//│ 		  (if ((truep_lh _lh_tautologyp_arg1_0) _lh_tautologyp_arg2_0) then
-//│ 		    true
-//│ 		  else
-//│ 		    (if ((falsep_lh _lh_tautologyp_arg1_0) _lh_tautologyp_arg3_0) then
-//│ 		      false
-//│ 		    else
-//│ 		      (let rec _lh_matchIdent_2 = _lh_tautologyp_arg1_0 in
-//│ 		        (match _lh_matchIdent_2 with
-//│ 		          | `Fun(_lh_tautologyp_Fun_0_0, _lh_tautologyp_Fun_1_0, _lh_tautologyp_Fun_2_0) -> 
-//│ 		            (match _lh_tautologyp_Fun_0_0 with
-//│ 		              | `IF -> 
-//│ 		                (match _lh_tautologyp_Fun_1_0 with
-//│ 		                  | `LH_C(_lh_tautologyp_LH_C_0_0, _lh_tautologyp_LH_C_1_0) -> 
-//│ 		                    (match _lh_tautologyp_LH_C_1_0 with
-//│ 		                      | `LH_C(_lh_tautologyp_LH_C_0_1, _lh_tautologyp_LH_C_1_1) -> 
-//│ 		                        (match _lh_tautologyp_LH_C_1_1 with
-//│ 		                          | `LH_C(_lh_tautologyp_LH_C_0_2, _lh_tautologyp_LH_C_1_2) -> 
-//│ 		                            (match _lh_tautologyp_LH_C_1_2 with
-//│ 		                              | `LH_N -> 
-//│ 		                                (if ((truep_lh _lh_tautologyp_LH_C_0_0) _lh_tautologyp_arg2_0) then
-//│ 		                                  (((tautologyp_lh _lh_tautologyp_LH_C_0_1) _lh_tautologyp_arg2_0) _lh_tautologyp_arg3_0)
-//│ 		                                else
-//│ 		                                  (if ((falsep_lh _lh_tautologyp_LH_C_0_0) _lh_tautologyp_arg3_0) then
-//│ 		                                    (((tautologyp_lh _lh_tautologyp_LH_C_0_2) _lh_tautologyp_arg2_0) _lh_tautologyp_arg3_0)
-//│ 		                                  else
-//│ 		                                    ((((tautologyp_lh _lh_tautologyp_LH_C_0_1) (`LH_C(_lh_tautologyp_LH_C_0_0, _lh_tautologyp_arg2_0))) _lh_tautologyp_arg3_0) && (((tautologyp_lh _lh_tautologyp_LH_C_0_2) _lh_tautologyp_arg2_0) (`LH_C(_lh_tautologyp_LH_C_0_0, _lh_tautologyp_arg3_0))))))
-//│ 		                              | _ -> 
-//│ 		                                false)
-//│ 		                          | _ -> 
-//│ 		                            false)
-//│ 		                      | _ -> 
-//│ 		                        false)
-//│ 		                  | _ -> 
-//│ 		                    false)
-//│ 		              | _ -> 
-//│ 		                false)
-//│ 		          | _ -> 
-//│ 		            false))));;
 //│ 		let rec rewrite_lh _lh_rewrite_arg1_0 =
 //│ 		  (match _lh_rewrite_arg1_0 with
 //│ 		    | `Var(_lh_rewrite_Var_0_0) -> 
@@ -756,6 +751,11 @@ testBoyer_nofib $ primId 5
 //│ 		  in (let rec subst0_0 = (`LH_C((`LH_P2((`X), (f_1 ((plus_0 ((plus_0 a_0) b_0)) ((plus_0 c_0) zero_0))))), (`LH_C((`LH_P2((`Y), (f_1 ((times_0 ((times_0 a_0) b_0)) ((plus_0 c_0) d_0))))), (`LH_C((`LH_P2((`Z), (f_1 (reverse__0 ((append_0 ((append_0 a_0) b_0)) nil_0))))), (`LH_C((`LH_P2((`U), ((equal_0 ((plus_0 a_0) b_0)) ((difference_0 x_0) y_0)))), (`LH_C((`LH_P2((`W), ((lessp_0 ((remainder_0 a_0) b_0)) ((member_0 a_0) (length__0 b_0))))), (`LH_N))))))))))) in
 //│ 		    (let rec theorem_0 = ((implies_0 ((and__0 ((implies_0 _lh_test0_arg1_0) y_0)) ((and__0 ((implies_0 y_0) z_0)) ((and__0 ((implies_0 z_0) u_0)) ((implies_0 u_0) w_0))))) ((implies_0 x_0) w_0)) in
 //│ 		      (tautp_lh ((apply_subst_lh subst0_0) theorem_0))));;
+//│ 		let rec replicate_lh _lh_replicate_arg1_0 _lh_replicate_arg2_0 =
+//│ 		  (if (_lh_replicate_arg1_0 = 0) then
+//│ 		    (`LH_N)
+//│ 		  else
+//│ 		    (`LH_C(_lh_replicate_arg2_0, ((replicate_lh (_lh_replicate_arg1_0 - 1)) _lh_replicate_arg2_0))));;
 //│ 		let rec testBoyer_nofib_lh _lh_testBoyer_nofib_arg1_0 =
 //│ 		  ((all_lh test0_lh) ((replicate_lh _lh_testBoyer_nofib_arg1_0) (`Var((`X)))));;
 //│ 		(testBoyer_nofib_lh 5)

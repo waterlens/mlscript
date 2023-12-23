@@ -20,40 +20,14 @@ let rec mappend_lh xs_0 ys_0 =
       (`LH_C(h_3, ((mappend_lh t_3) ys_0)))
     | `LH_N -> 
       ys_0);;
-let rec length_lh ls_2 =
-  (match ls_2 with
-    | `LH_C(h_2, t_2) -> 
-      (1 + (length_lh t_2))
-    | `LH_N -> 
-      0);;
-let rec readChar_lh _lh_readChar_arg1_0 _lh_readChar_arg2_0 _lh_readChar_arg3_0 =
-  (match _lh_readChar_arg3_0 with
-    | `LH_N -> 
-      (_lh_readChar_arg1_0 (`LH_N))
-    | `LH_C(_lh_readChar_LH_C_0_0, _lh_readChar_LH_C_1_0) -> 
-      ((_lh_readChar_arg2_0 _lh_readChar_LH_C_0_0) _lh_readChar_LH_C_1_0)
-    | _ -> 
-      (failwith "error"));;
-let rec end_lh _lh_end_arg1_0 =
-  (`LH_N);;
-let rec cls_lh =
-  (`LH_C('L', (`LH_N)));;
-let rec reverse_helper_lh ls_4 a_0 =
-  (match ls_4 with
-    | `LH_C(h_5, t_5) -> 
-      ((reverse_helper_lh t_5) (`LH_C(h_5, a_0)))
-    | `LH_N -> 
-      a_0);;
-let rec writeChar_lh _lh_writeChar_arg1_0 _lh_writeChar_arg2_0 _lh_writeChar_arg3_0 =
-  (`LH_C(_lh_writeChar_arg1_0, (_lh_writeChar_arg2_0 _lh_writeChar_arg3_0)));;
-let rec tail_lh ls_1 =
-  (match ls_1 with
-    | `LH_C(h_1, t_1) -> 
-      t_1
-    | `LH_N -> 
-      (failwith "error"));;
 let rec goto_lh _lh_goto_arg1_0 _lh_goto_arg2_0 =
   (`LH_C('E', (`LH_C('[', ((mappend_lh (string_of_int _lh_goto_arg2_0)) ((mappend_lh (`LH_C(';', (string_of_int _lh_goto_arg1_0)))) (`LH_C('H', (`LH_N)))))))));;
+let rec at_lh _lh_at_arg1_0 _lh_at_arg2_0 =
+  (match _lh_at_arg1_0 with
+    | `LH_P2(_lh_at_LH_P2_0_0, _lh_at_LH_P2_1_0) -> 
+      ((mappend_lh ((goto_lh _lh_at_LH_P2_0_0) _lh_at_LH_P2_1_0)) _lh_at_arg2_0)
+    | _ -> 
+      (failwith "error"));;
 let rec concat_lh lss_0 =
   (match lss_0 with
     | `LH_C(h_4, t_4) -> 
@@ -62,23 +36,31 @@ let rec concat_lh lss_0 =
       (`LH_N));;
 let rec writeString_lh _lh_writeString_arg1_0 _lh_writeString_arg2_0 _lh_writeString_arg3_0 =
   ((mappend_lh _lh_writeString_arg1_0) (_lh_writeString_arg2_0 _lh_writeString_arg3_0));;
+let rec writes_lh _lh_writes_arg1_0 =
+  (writeString_lh (concat_lh _lh_writes_arg1_0));;
+let rec length_lh ls_2 =
+  (match ls_2 with
+    | `LH_C(h_2, t_2) -> 
+      (1 + (length_lh t_2))
+    | `LH_N -> 
+      0);;
 let rec highlight_lh _lh_highlight_arg1_0 =
   ((mappend_lh ((mappend_lh (`LH_C('E', (`LH_C('S', (`LH_C('C', (`LH_C('[', (`LH_C('7', (`LH_C('m', (`LH_N)))))))))))))) _lh_highlight_arg1_0)) (`LH_C('E', (`LH_C('S', (`LH_C('C', (`LH_C('[', (`LH_C('0', (`LH_C('m', (`LH_N))))))))))))));;
+let rec readChar_lh _lh_readChar_arg1_0 _lh_readChar_arg2_0 _lh_readChar_arg3_0 =
+  (match _lh_readChar_arg3_0 with
+    | `LH_N -> 
+      (_lh_readChar_arg1_0 (`LH_N))
+    | `LH_C(_lh_readChar_LH_C_0_0, _lh_readChar_LH_C_1_0) -> 
+      ((_lh_readChar_arg2_0 _lh_readChar_LH_C_0_0) _lh_readChar_LH_C_1_0)
+    | _ -> 
+      (failwith "error"));;
 let rec pressAnyKey_lh _lh_pressAnyKey_arg1_0 =
   ((readChar_lh _lh_pressAnyKey_arg1_0) (fun c_0 -> 
     _lh_pressAnyKey_arg1_0));;
-let rec reverse_lh ls_3 =
-  ((reverse_helper_lh ls_3) (`LH_N));;
-let rec ringBell_lh _lh_ringBell_arg1_0 _lh_ringBell_arg2_0 =
-  (((writeChar_lh 'B') _lh_ringBell_arg1_0) _lh_ringBell_arg2_0);;
-let rec at_lh _lh_at_arg1_0 _lh_at_arg2_0 =
-  (match _lh_at_arg1_0 with
-    | `LH_P2(_lh_at_LH_P2_0_0, _lh_at_LH_P2_1_0) -> 
-      ((mappend_lh ((goto_lh _lh_at_LH_P2_0_0) _lh_at_LH_P2_1_0)) _lh_at_arg2_0)
-    | _ -> 
-      (failwith "error"));;
-let rec writes_lh _lh_writes_arg1_0 =
-  (writeString_lh (concat_lh _lh_writes_arg1_0));;
+let rec end_lh _lh_end_arg1_0 =
+  (`LH_N);;
+let rec cls_lh =
+  (`LH_C('L', (`LH_N)));;
 let rec writeAt_lh _lh_writeAt_arg1_0 _lh_writeAt_arg2_0 =
   (match _lh_writeAt_arg1_0 with
     | `LH_P2(_lh_writeAt_LH_P2_0_0, _lh_writeAt_LH_P2_1_0) -> 
@@ -91,8 +73,26 @@ let rec moveTo_lh _lh_moveTo_arg1_0 =
       (writeString_lh ((goto_lh _lh_moveTo_LH_P2_0_0) _lh_moveTo_LH_P2_1_0))
     | _ -> 
       (failwith "error"));;
+let rec reverse_helper_lh ls_4 a_0 =
+  (match ls_4 with
+    | `LH_C(h_5, t_5) -> 
+      ((reverse_helper_lh t_5) (`LH_C(h_5, a_0)))
+    | `LH_N -> 
+      a_0);;
+let rec reverse_lh ls_3 =
+  ((reverse_helper_lh ls_3) (`LH_N));;
 let rec return_lh _lh_return_arg1_0 _lh_return_arg2_0 =
   (_lh_return_arg2_0 (reverse_lh _lh_return_arg1_0));;
+let rec writeChar_lh _lh_writeChar_arg1_0 _lh_writeChar_arg2_0 _lh_writeChar_arg3_0 =
+  (`LH_C(_lh_writeChar_arg1_0, (_lh_writeChar_arg2_0 _lh_writeChar_arg3_0)));;
+let rec tail_lh ls_1 =
+  (match ls_1 with
+    | `LH_C(h_1, t_1) -> 
+      t_1
+    | `LH_N -> 
+      (failwith "error"));;
+let rec ringBell_lh _lh_ringBell_arg1_0 _lh_ringBell_arg2_0 =
+  (((writeChar_lh 'B') _lh_ringBell_arg1_0) _lh_ringBell_arg2_0);;
 let rec delete_lh _lh_delete_arg1_0 _lh_delete_arg2_0 _lh_delete_arg3_0 _lh_delete_arg4_0 =
   (if (_lh_delete_arg1_0 > 0) then
     ((writeString_lh (`LH_C('B', (`LH_C('S', (`LH_C('_', (`LH_C('B', (`LH_C('S', (`LH_N)))))))))))) ((((loop_lh (_lh_delete_arg1_0 - 1)) (tail_lh _lh_delete_arg2_0)) _lh_delete_arg3_0) _lh_delete_arg4_0))

@@ -11,6 +11,23 @@ let rec ampOp_lh _lh_ampOp_arg1_0 _lh_ampOp_arg2_0 =
         (`LH_P3((_lh_ampOp_LH_P3_0_0 * _lh_ampOp_arg1_0), ((_lh_ampOp_LH_P3_1_0 + (_lh_ampOp_LH_P3_0_0 * 2)) * y_0), (_lh_ampOp_LH_P3_2_0 * y_0))))
     | _ -> 
       (failwith "error"));;
+let rec divmod_lh _lh_divmod_arg1_0 _lh_divmod_arg2_0 _lh_hashOp_LH_P3_0_0 _lh_hashOp_LH_P3_1_0 _lh_hashOp_LH_P3_2_0 k_0 =
+  (let rec _lh_hashOp_LH_P2_1_0 = (_lh_divmod_arg1_0 mod _lh_divmod_arg2_0) in
+    (let rec _lh_hashOp_LH_P2_0_0 = (_lh_divmod_arg1_0 / _lh_divmod_arg2_0) in
+      (if ((_lh_hashOp_LH_P3_0_0 > _lh_hashOp_LH_P3_1_0) || ((_lh_hashOp_LH_P2_1_0 + _lh_hashOp_LH_P3_0_0) >= _lh_hashOp_LH_P3_2_0)) then
+        (Lazy.force ((hashOp_lh k_0) (`LH_P3(_lh_hashOp_LH_P3_0_0, _lh_hashOp_LH_P3_1_0, _lh_hashOp_LH_P3_2_0))))
+      else
+        (`LH_C((string_of_int _lh_hashOp_LH_P2_0_0), ((hashOp_lh k_0) (`LH_P3((_lh_hashOp_LH_P3_0_0 * 10), ((_lh_hashOp_LH_P3_1_0 - (_lh_hashOp_LH_P2_0_0 * _lh_hashOp_LH_P3_2_0)) * 10), _lh_hashOp_LH_P3_2_0))))))))
+and
+hashOp_lh _lh_hashOp_arg1_0 _lh_hashOp_arg2_0 =
+  (lazy (let rec k_2 = (_lh_hashOp_arg1_0 + 1) in
+    (let rec _lh_matchIdent_1 = ((ampOp_lh k_2) _lh_hashOp_arg2_0) in
+      (match _lh_matchIdent_1 with
+        | `LH_P3(_lh_hashOp_LH_P3_0_1, _lh_hashOp_LH_P3_1_1, _lh_hashOp_LH_P3_2_1) -> 
+          (let rec _lh_matchIdent_2 = ((divmod_lh ((_lh_hashOp_LH_P3_0_1 * 3) + _lh_hashOp_LH_P3_1_1)) _lh_hashOp_LH_P3_2_1) in
+            ((((_lh_matchIdent_2 _lh_hashOp_LH_P3_0_1) _lh_hashOp_LH_P3_1_1) _lh_hashOp_LH_P3_2_1) k_2))
+        | _ -> 
+          (failwith "error")))));;
 let rec take_lz_lh n_0 ls_0 =
   (if (n_0 > 0) then
     (match (Lazy.force ls_0) with
@@ -43,34 +60,17 @@ let rec mappend_lh xs_0 ys_0 =
       (`LH_C(h_2, ((mappend_lh t_2) ys_0)))
     | `LH_N -> 
       ys_0);;
-let rec replicate_lh _lh_replicate_arg1_0 _lh_replicate_arg2_0 =
-  (if (_lh_replicate_arg1_0 > 0) then
-    (`LH_C(_lh_replicate_arg2_0, ((replicate_lh (_lh_replicate_arg1_0 - 1)) _lh_replicate_arg2_0)))
-  else
-    (`LH_N));;
-let rec divmod_lh _lh_divmod_arg1_0 _lh_divmod_arg2_0 _lh_hashOp_LH_P3_0_0 _lh_hashOp_LH_P3_1_0 _lh_hashOp_LH_P3_2_0 k_0 =
-  (let rec _lh_hashOp_LH_P2_1_0 = (_lh_divmod_arg1_0 mod _lh_divmod_arg2_0) in
-    (let rec _lh_hashOp_LH_P2_0_0 = (_lh_divmod_arg1_0 / _lh_divmod_arg2_0) in
-      (if ((_lh_hashOp_LH_P3_0_0 > _lh_hashOp_LH_P3_1_0) || ((_lh_hashOp_LH_P2_1_0 + _lh_hashOp_LH_P3_0_0) >= _lh_hashOp_LH_P3_2_0)) then
-        (Lazy.force ((hashOp_lh k_0) (`LH_P3(_lh_hashOp_LH_P3_0_0, _lh_hashOp_LH_P3_1_0, _lh_hashOp_LH_P3_2_0))))
-      else
-        (`LH_C((string_of_int _lh_hashOp_LH_P2_0_0), ((hashOp_lh k_0) (`LH_P3((_lh_hashOp_LH_P3_0_0 * 10), ((_lh_hashOp_LH_P3_1_0 - (_lh_hashOp_LH_P2_0_0 * _lh_hashOp_LH_P3_2_0)) * 10), _lh_hashOp_LH_P3_2_0))))))))
-and
-hashOp_lh _lh_hashOp_arg1_0 _lh_hashOp_arg2_0 =
-  (lazy (let rec k_2 = (_lh_hashOp_arg1_0 + 1) in
-    (let rec _lh_matchIdent_1 = ((ampOp_lh k_2) _lh_hashOp_arg2_0) in
-      (match _lh_matchIdent_1 with
-        | `LH_P3(_lh_hashOp_LH_P3_0_1, _lh_hashOp_LH_P3_1_1, _lh_hashOp_LH_P3_2_1) -> 
-          (let rec _lh_matchIdent_2 = ((divmod_lh ((_lh_hashOp_LH_P3_0_1 * 3) + _lh_hashOp_LH_P3_1_1)) _lh_hashOp_LH_P3_2_1) in
-            ((((_lh_matchIdent_2 _lh_hashOp_LH_P3_0_1) _lh_hashOp_LH_P3_1_1) _lh_hashOp_LH_P3_2_1) k_2))
-        | _ -> 
-          (failwith "error")))));;
 let rec concat_lh lss_0 =
   (match lss_0 with
     | `LH_C(h_1, t_1) -> 
       ((mappend_lh h_1) (concat_lh t_1))
     | `LH_N -> 
       (`LH_N));;
+let rec replicate_lh _lh_replicate_arg1_0 _lh_replicate_arg2_0 =
+  (if (_lh_replicate_arg1_0 > 0) then
+    (`LH_C(_lh_replicate_arg2_0, ((replicate_lh (_lh_replicate_arg1_0 - 1)) _lh_replicate_arg2_0)))
+  else
+    (`LH_N));;
 let rec percOp_lh _lh_percOp_arg1_0 _lh_percOp_arg2_0 _lh_percOp_arg3_0 =
   (if (_lh_percOp_arg1_0 >= _lh_percOp_arg3_0) then
     (`LH_N)

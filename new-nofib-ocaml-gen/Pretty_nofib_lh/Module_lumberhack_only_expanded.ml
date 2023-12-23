@@ -6,6 +6,8 @@ open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_lumberhack_only_expanded = struct
 let rec cNil_lh =
   (`CNil);;
+let rec ppNil_lh _lh_ppNil_arg1_0 _lh_ppNil_arg2_0 =
+  (`MkPrettyRep(cNil_lh, 0, true, (_lh_ppNil_arg1_0 >= 0)));;
 let rec foldr1_lh _lh_foldr1_arg1_0 _lh_foldr1_arg2_0 =
   (match _lh_foldr1_arg2_0 with
     | `LH_C(_lh_foldr1_LH_C_0_0, _lh_foldr1_LH_C_1_0) -> 
@@ -36,40 +38,6 @@ let rec orL_lh _lh_orL_arg1_0 _lh_orL_arg2_0 =
       (failwith "error"));;
 let rec cAppend_lh _lh_cAppend_arg1_0 _lh_cAppend_arg2_0 =
   (`CAppend(_lh_cAppend_arg1_0, _lh_cAppend_arg2_0));;
-let rec cCh_lh _lh_cCh_arg1_0 =
-  (`CCh(_lh_cCh_arg1_0));;
-let rec cIndent_lh _lh_cIndent_arg1_0 _lh_cIndent_arg2_0 =
-  (`CIndent(_lh_cIndent_arg1_0, _lh_cIndent_arg2_0));;
-let rec cStr_lh _lh_cStr_arg1_0 =
-  (`CStr(_lh_cStr_arg1_0));;
-let rec length_lh ls_0 =
-  (match ls_0 with
-    | `LH_C(h_0, t_0) -> 
-      (1 + (length_lh t_0))
-    | `LH_N -> 
-      0);;
-let rec copy_lh _lh_copy_arg1_0 _lh_copy_arg2_0 =
-  (if (_lh_copy_arg1_0 <= 0) then
-    (`LH_N)
-  else
-    (`LH_C(_lh_copy_arg2_0, ((copy_lh (_lh_copy_arg1_0 - 1)) _lh_copy_arg2_0))));;
-let rec mkIndent_lh _lh_mkIndent_arg1_0 _lh_mkIndent_arg2_0 =
-  (match _lh_mkIndent_arg1_0 with
-    | 0 -> 
-      _lh_mkIndent_arg2_0
-    | _ -> 
-      (if (_lh_mkIndent_arg1_0 >= 8) then
-        (`LH_C('|', ((mkIndent_lh (_lh_mkIndent_arg1_0 - 8)) _lh_mkIndent_arg2_0)))
-      else
-        (`LH_C(' ', ((mkIndent_lh (_lh_mkIndent_arg1_0 - 1)) _lh_mkIndent_arg2_0)))));;
-let rec mappend_lh xs_0 ys_0 =
-  (match xs_0 with
-    | `LH_C(h_1, t_1) -> 
-      (`LH_C(h_1, ((mappend_lh t_1) ys_0)))
-    | `LH_N -> 
-      ys_0);;
-let rec ppNil_lh _lh_ppNil_arg1_0 _lh_ppNil_arg2_0 =
-  (`MkPrettyRep(cNil_lh, 0, true, (_lh_ppNil_arg1_0 >= 0)));;
 let rec ppAbove_lh _lh_ppAbove_arg1_0 _lh_ppAbove_arg2_0 _lh_ppAbove_arg3_0 _lh_ppAbove_arg4_0 =
   (let rec _lh_matchIdent_7 = ((_lh_ppAbove_arg1_0 _lh_ppAbove_arg3_0) true) in
     (match _lh_matchIdent_7 with
@@ -86,6 +54,16 @@ let rec ppAbove_lh _lh_ppAbove_arg1_0 _lh_ppAbove_arg2_0 _lh_ppAbove_arg3_0 _lh_
               (failwith "error")))
       | _ -> 
         (failwith "error")));;
+let rec ppAboves_lh _lh_ppAboves_arg1_0 =
+  (match _lh_ppAboves_arg1_0 with
+    | `LH_N -> 
+      ppNil_lh
+    | _ -> 
+      ((foldr1_lh ppAbove_lh) _lh_ppAboves_arg1_0));;
+let rec cCh_lh _lh_cCh_arg1_0 =
+  (`CCh(_lh_cCh_arg1_0));;
+let rec cIndent_lh _lh_cIndent_arg1_0 _lh_cIndent_arg2_0 =
+  (`CIndent(_lh_cIndent_arg1_0, _lh_cIndent_arg2_0));;
 let rec ppBesideSP_lh _lh_ppBesideSP_arg1_0 _lh_ppBesideSP_arg2_0 _lh_ppBesideSP_arg3_0 _lh_ppBesideSP_arg4_0 =
   (let rec _lh_matchIdent_3 = ((_lh_ppBesideSP_arg1_0 _lh_ppBesideSP_arg3_0) false) in
     (match _lh_matchIdent_3 with
@@ -110,9 +88,25 @@ let rec ppBesideSP_lh _lh_ppBesideSP_arg1_0 _lh_ppBesideSP_arg2_0 _lh_ppBesideSP
                 (failwith "error"))))
       | _ -> 
         (failwith "error")));;
+let rec ppCat_lh _lh_ppCat_arg1_0 =
+  (match _lh_ppCat_arg1_0 with
+    | `LH_N -> 
+      ppNil_lh
+    | _ -> 
+      ((foldr1_lh ppBesideSP_lh) _lh_ppCat_arg1_0));;
+let rec cStr_lh _lh_cStr_arg1_0 =
+  (`CStr(_lh_cStr_arg1_0));;
+let rec length_lh ls_0 =
+  (match ls_0 with
+    | `LH_C(h_0, t_0) -> 
+      (1 + (length_lh t_0))
+    | `LH_N -> 
+      0);;
 let rec ppStr_lh _lh_ppStr_arg1_0 _lh_ppStr_arg2_0 _lh_ppStr_arg3_0 =
   (let rec ls_1 = (length_lh _lh_ppStr_arg1_0) in
     (`MkPrettyRep((cStr_lh _lh_ppStr_arg1_0), ls_1, false, (_lh_ppStr_arg2_0 >= ls_1))));;
+let rec ppInt_lh _lh_ppInt_arg1_0 =
+  (ppStr_lh (string_of_int _lh_ppInt_arg1_0));;
 let rec ppChar_lh _lh_ppChar_arg1_0 _lh_ppChar_arg2_0 _lh_ppChar_arg3_0 =
   (`MkPrettyRep((cCh_lh _lh_ppChar_arg1_0), 1, false, (_lh_ppChar_arg2_0 >= 1)));;
 let rec ppHang_lh _lh_ppHang_arg1_0 _lh_ppHang_arg2_0 _lh_ppHang_arg3_0 _lh_ppHang_arg4_0 _lh_ppHang_arg5_0 =
@@ -138,6 +132,13 @@ let rec ppHang_lh _lh_ppHang_arg1_0 _lh_ppHang_arg2_0 _lh_ppHang_arg3_0 _lh_ppHa
               (failwith "error")))
       | _ -> 
         (failwith "error")));;
+let rec pp'SP_lh _lh_pp'SP_arg1_0 =
+  ((ppStr_lh (`LH_C(',', (`LH_C(' ', (`LH_N)))))) _lh_pp'SP_arg1_0);;
+let rec copy_lh _lh_copy_arg1_0 _lh_copy_arg2_0 =
+  (if (_lh_copy_arg1_0 <= 0) then
+    (`LH_N)
+  else
+    (`LH_C(_lh_copy_arg2_0, ((copy_lh (_lh_copy_arg1_0 - 1)) _lh_copy_arg2_0))));;
 let rec ppBeside_lh _lh_ppBeside_arg1_0 _lh_ppBeside_arg2_0 _lh_ppBeside_arg3_0 _lh_ppBeside_arg4_0 =
   (let rec _lh_matchIdent_5 = ((_lh_ppBeside_arg1_0 _lh_ppBeside_arg3_0) false) in
     (match _lh_matchIdent_5 with
@@ -150,6 +151,27 @@ let rec ppBeside_lh _lh_ppBeside_arg1_0 _lh_ppBeside_arg2_0 _lh_ppBeside_arg3_0 
               (failwith "error")))
       | _ -> 
         (failwith "error")));;
+let rec ppBesides_lh _lh_ppBesides_arg1_0 =
+  (match _lh_ppBesides_arg1_0 with
+    | `LH_N -> 
+      ppNil_lh
+    | _ -> 
+      ((foldr1_lh ppBeside_lh) _lh_ppBesides_arg1_0));;
+let rec mkIndent_lh _lh_mkIndent_arg1_0 _lh_mkIndent_arg2_0 =
+  (match _lh_mkIndent_arg1_0 with
+    | 0 -> 
+      _lh_mkIndent_arg2_0
+    | _ -> 
+      (if (_lh_mkIndent_arg1_0 >= 8) then
+        (`LH_C('|', ((mkIndent_lh (_lh_mkIndent_arg1_0 - 8)) _lh_mkIndent_arg2_0)))
+      else
+        (`LH_C(' ', ((mkIndent_lh (_lh_mkIndent_arg1_0 - 1)) _lh_mkIndent_arg2_0)))));;
+let rec mappend_lh xs_0 ys_0 =
+  (match xs_0 with
+    | `LH_C(h_1, t_1) -> 
+      (`LH_C(h_1, ((mappend_lh t_1) ys_0)))
+    | `LH_N -> 
+      ys_0);;
 let rec flattenS_lh _lh_flattenS_arg1_0 _lh_flattenS_arg2_0 =
   (match _lh_flattenS_arg2_0 with
     | `LH_N -> 
@@ -295,28 +317,6 @@ flatten_lh _lh_flatten_arg1_0 _lh_flatten_arg2_0 _lh_flatten_arg3_0 _lh_flatten_
                           (failwith "error"))
                     | _ -> 
                       (failwith "error"))))));;
-let rec ppAboves_lh _lh_ppAboves_arg1_0 =
-  (match _lh_ppAboves_arg1_0 with
-    | `LH_N -> 
-      ppNil_lh
-    | _ -> 
-      ((foldr1_lh ppAbove_lh) _lh_ppAboves_arg1_0));;
-let rec ppCat_lh _lh_ppCat_arg1_0 =
-  (match _lh_ppCat_arg1_0 with
-    | `LH_N -> 
-      ppNil_lh
-    | _ -> 
-      ((foldr1_lh ppBesideSP_lh) _lh_ppCat_arg1_0));;
-let rec ppInt_lh _lh_ppInt_arg1_0 =
-  (ppStr_lh (string_of_int _lh_ppInt_arg1_0));;
-let rec pp'SP_lh _lh_pp'SP_arg1_0 =
-  ((ppStr_lh (`LH_C(',', (`LH_C(' ', (`LH_N)))))) _lh_pp'SP_arg1_0);;
-let rec ppBesides_lh _lh_ppBesides_arg1_0 =
-  (match _lh_ppBesides_arg1_0 with
-    | `LH_N -> 
-      ppNil_lh
-    | _ -> 
-      ((foldr1_lh ppBeside_lh) _lh_ppBesides_arg1_0));;
 let rec cShow_lh _lh_cShow_arg1_0 =
   ((((flatten_lh 0) true) _lh_cShow_arg1_0) (`LH_N));;
 let rec ppShow_lh _lh_ppShow_arg1_0 _lh_ppShow_arg2_0 =

@@ -12,6 +12,25 @@ let rec comp_magnitude_lh__d0 _lh_comp_magnitude_arg1_0 =
       ((_lh_comp_magnitude_Complex_0_0 *. _lh_comp_magnitude_Complex_0_0) +. (_lh_comp_magnitude_Complex_1_0 *. _lh_comp_magnitude_Complex_1_0))
     | _ -> 
       (failwith "error"));;
+let rec diverge_lh__d0 _lh_diverge_arg1_0 _lh_diverge_arg2_0 =
+  ((comp_magnitude_lh__d0 _lh_diverge_arg1_0) > _lh_diverge_arg2_0);;
+let rec take_lz_lh__d0 n_0 ls_1 =
+  (if (n_0 > 0) then
+    (match (Lazy.force ls_1) with
+      | `LH_C(h_0, t_0) -> 
+        (let rec _lh_whenDiverge_LH_C_1_0 = ((take_lz_lh__d0 (n_0 - 1)) t_0) in
+          (let rec _lh_whenDiverge_LH_C_0_0 = h_0 in
+            (fun _lh_whenDiverge_arg2_1 walkIt_1 -> 
+              (if ((diverge_lh__d0 _lh_whenDiverge_LH_C_0_0) _lh_whenDiverge_arg2_1) then
+                0
+              else
+                (1 + (walkIt_1 _lh_whenDiverge_LH_C_1_0))))))
+      | `LH_N -> 
+        (fun _lh_whenDiverge_arg2_2 walkIt_2 -> 
+          0))
+  else
+    (fun _lh_whenDiverge_arg2_3 walkIt_3 -> 
+      0));;
 let rec map_lz_lh__d0 f_6 ls_4 =
   (lazy (match (Lazy.force ls_4) with
     | `LH_C(h_3, t_5) -> 
@@ -37,8 +56,19 @@ let rec comp_times_lh__d0 _lh_comp_times_arg1_0 _lh_comp_times_arg2_0 =
       (failwith "error"));;
 let rec comp_plus_lh__d0 _lh_comp_plus_arg1_0 _lh_comp_plus_arg2_0 =
   (_lh_comp_plus_arg1_0 _lh_comp_plus_arg2_0);;
+let rec mandel_lh__d0 _lh_mandel_arg1_0 =
+  (let rec infiniteMandel_0 = (lazy (`LH_C(_lh_mandel_arg1_0, ((map_lz_lh__d0 (fun z_0 -> 
+    ((comp_plus_lh__d0 ((comp_times_lh__d0 z_0) z_0)) _lh_mandel_arg1_0))) infiniteMandel_0)))) in
+    infiniteMandel_0);;
+let rec whenDiverge_lh__d0 _lh_whenDiverge_arg1_0 _lh_whenDiverge_arg2_0 _lh_whenDiverge_arg3_0 =
+  (let rec walkIt_0 = (fun ls_0 -> 
+    (let rec _lh_matchIdent_0 = ls_0 in
+      ((_lh_matchIdent_0 _lh_whenDiverge_arg2_0) walkIt_0))) in
+    (walkIt_0 ((take_lz_lh__d0 _lh_whenDiverge_arg1_0) (mandel_lh__d0 _lh_whenDiverge_arg3_0))));;
 let rec map_lh__d1 f_3 ls_3 =
   (ls_3 f_3);;
+let rec parallelMandel_lh__d0 _lh_parallelMandel_arg1_0 _lh_parallelMandel_arg2_0 _lh_parallelMandel_arg3_0 =
+  ((map_lh__d1 ((whenDiverge_lh__d0 _lh_parallelMandel_arg2_0) _lh_parallelMandel_arg3_0)) _lh_parallelMandel_arg1_0);;
 let rec map_lh__d0 f_2 ls_2 =
   (ls_2 f_2);;
 let rec myMax_lh__d0 _lh_myMax_arg1_0 _lh_myMax_arg2_0 =
@@ -46,12 +76,6 @@ let rec myMax_lh__d0 _lh_myMax_arg1_0 _lh_myMax_arg2_0 =
     _lh_myMax_arg1_0
   else
     _lh_myMax_arg2_0);;
-let rec diverge_lh__d0 _lh_diverge_arg1_0 _lh_diverge_arg2_0 =
-  ((comp_magnitude_lh__d0 _lh_diverge_arg1_0) > _lh_diverge_arg2_0);;
-let rec mandel_lh__d0 _lh_mandel_arg1_0 =
-  (let rec infiniteMandel_0 = (lazy (`LH_C(_lh_mandel_arg1_0, ((map_lz_lh__d0 (fun z_0 -> 
-    ((comp_plus_lh__d0 ((comp_times_lh__d0 z_0) z_0)) _lh_mandel_arg1_0))) infiniteMandel_0)))) in
-    infiniteMandel_0);;
 let rec enumFromTo_lh__d0 a_0 b_0 =
   (if (a_0 <= b_0) then
     (let rec _lh_listcomp_fun_ls_t_0 = ((enumFromTo_lh__d0 (a_0 + 1)) b_0) in
@@ -67,23 +91,6 @@ let rec enumFromTo_lh__d0 a_0 b_0 =
   else
     (fun _lh_listcomp_fun_ls_h_2 _lh_listcomp_fun_2 windowToViewport_1 _lh_listcomp_fun_ls_t_2 _lh_listcomp_fun_3 -> 
       (_lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_2)));;
-let rec take_lz_lh__d0 n_0 ls_1 =
-  (if (n_0 > 0) then
-    (match (Lazy.force ls_1) with
-      | `LH_C(h_0, t_0) -> 
-        (let rec _lh_whenDiverge_LH_C_1_0 = ((take_lz_lh__d0 (n_0 - 1)) t_0) in
-          (let rec _lh_whenDiverge_LH_C_0_0 = h_0 in
-            (fun _lh_whenDiverge_arg2_1 walkIt_1 -> 
-              (if ((diverge_lh__d0 _lh_whenDiverge_LH_C_0_0) _lh_whenDiverge_arg2_1) then
-                0
-              else
-                (1 + (walkIt_1 _lh_whenDiverge_LH_C_1_0))))))
-      | `LH_N -> 
-        (fun _lh_whenDiverge_arg2_2 walkIt_2 -> 
-          0))
-  else
-    (fun _lh_whenDiverge_arg2_3 walkIt_3 -> 
-      0));;
 let rec enumFromTo_lh__d1 a_1 b_1 =
   (if (a_1 <= b_1) then
     (let rec _lh_listcomp_fun_ls_t_3 = ((enumFromTo_lh__d1 (a_1 + 1)) b_1) in
@@ -95,13 +102,6 @@ let rec enumFromTo_lh__d1 a_1 b_1 =
   else
     (fun _lh_listcomp_fun_6 _lh_mandelset_arg5_1 windowToViewport_3 f_4 f_5 -> 
       (`LH_N)));;
-let rec whenDiverge_lh__d0 _lh_whenDiverge_arg1_0 _lh_whenDiverge_arg2_0 _lh_whenDiverge_arg3_0 =
-  (let rec walkIt_0 = (fun ls_0 -> 
-    (let rec _lh_matchIdent_0 = ls_0 in
-      ((_lh_matchIdent_0 _lh_whenDiverge_arg2_0) walkIt_0))) in
-    (walkIt_0 ((take_lz_lh__d0 _lh_whenDiverge_arg1_0) (mandel_lh__d0 _lh_whenDiverge_arg3_0))));;
-let rec parallelMandel_lh__d0 _lh_parallelMandel_arg1_0 _lh_parallelMandel_arg2_0 _lh_parallelMandel_arg3_0 =
-  ((map_lh__d1 ((whenDiverge_lh__d0 _lh_parallelMandel_arg2_0) _lh_parallelMandel_arg3_0)) _lh_parallelMandel_arg1_0);;
 let rec mandelset_lh__d0 _lh_mandelset_arg1_0 _lh_mandelset_arg2_0 _lh_mandelset_arg3_0 _lh_mandelset_arg4_0 _lh_mandelset_arg5_2 _lh_mandelset_arg6_0 _lh_mandelset_arg7_0 =
   (let rec prettyRGB_0 = (fun s_0 -> 
     (let rec t_3 = (_lh_mandelset_arg7_0 - s_0) in

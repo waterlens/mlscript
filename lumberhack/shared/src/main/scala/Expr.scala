@@ -4,8 +4,6 @@ package lumberhack
 import mlscript.utils.*, shorthands.*
 import lumberhack.utils.*
 import scala.collection.mutable.Map as MutMap
-import mlscript.utils.algorithms.topologicalSort
-import mlscript.utils.algorithms.CyclicGraphError
 
 case class Ident(isDef: Bool, tree: Var, uid: Uid[Ident]) {
   def pp(using config: PrettyPrintConfig): Str = s"${tree.name}${if config.showIuid then s"${toSuperscript(uid.toString)}" else ""}"
@@ -80,72 +78,51 @@ case class Program(contents: Ls[ProgDef \/ Expr])(using val d: Deforest) extends
 
   lazy val callSpanningForestWithCycle = CallTree.callTreeWithoutKnotTying(this.d)
 
-  lazy val topLevelDefsOrder: List[Set[Ident]] = {
+  lazy val topLevelDefsOrder: List[List[Ident]] = {
     val callGraph = d.callsInfo._2.map(_.mapSecond(_.map(_.id))).toMap
-    type SCC = (Int, Map[Ident, Int])
-
-    def getScc(i: Ident)(initScc: SCC)(path: List[Ident]): SCC = {
-      val called = callGraph(i)
-      // reserve one id number in case the current one needed to be inserted later
-      val tmpRes = called.foldLeft(initScc) { case scc -> id =>
-        val (elems, rest) = path.span(_ != id)
-        if rest.nonEmpty then
-          // found a cycle, update the ids in the scc store so that identifiers in the same scc have same id
-          val thisSccElems = id :: elems
-          val alreadyGroupedIdNums = thisSccElems.flatMap(scc._2.get(_))
-          if alreadyGroupedIdNums.isEmpty then // creat a new set of scc
-            (scc._1 + 1, scc._2 ++ thisSccElems.map(_ -> scc._1))
-          else // merge the current set of scc with a previous one
-            val allAlreadyInGroupIdents = alreadyGroupedIdNums.flatMap(idNum => scc._2.filter(idNum == _._2).keys)
-            val idNum = alreadyGroupedIdNums.min
-            (scc._1, scc._2 ++ thisSccElems.map(_ -> idNum) ++ allAlreadyInGroupIdents.map(_ -> idNum))
-        else // no cycle yet, perform dfs
-          if scc._2.contains(id) then
-            scc
-          else
-            getScc(id)(scc)(id :: path)
+    var nextIndex = 0
+    val indecies = MutMap.empty[Ident, Int]
+    val lowlinks = MutMap.empty[Ident, Int]
+    var stack: List[Ident] = Nil
+    val onStack = scala.collection.mutable.Set.empty[Ident]
+    def getCurrentScc(i: Ident)(acc: List[Ident]): List[Ident] = {
+      val h :: t = stack : @unchecked
+      stack = t
+      onStack.remove(h)
+      if h != i then
+        getCurrentScc(i)(h :: acc)
+      else
+        h :: acc
+    }
+    def dfs(i: Ident)(res: List[List[Ident]]): List[List[Ident]] = {
+      indecies += i -> nextIndex
+      lowlinks += i -> nextIndex
+      nextIndex += 1
+      stack = i :: stack
+      onStack += i
+      val tmpRes = callGraph(i).foldLeft(res) { case acc -> w =>
+        if !indecies.contains(w) then
+          val tmp = dfs(w)(acc)
+          lowlinks(i) = lowlinks(i).min(lowlinks(w))
+          tmp
+        else if onStack.contains(w) then
+          lowlinks(i) = lowlinks(i).min(indecies(w))
+          acc
+        else
+          acc
       }
-      if tmpRes._2.contains(i) then
+      if lowlinks(i) == indecies(i) then
+        getCurrentScc(i)(Nil) :: tmpRes
+      else
         tmpRes
+    }
+
+    d.callsInfo._1.foldLeft[List[List[Ident]]](Nil) { case acc -> r =>
+      if !indecies.contains(r.id) then
+        dfs(r.id)(acc)
       else
-        // use the previously reserved id number
-        (tmpRes._1 + 1, tmpRes._2 + (i -> (tmpRes._1)))
-    }
-
-    val (_, resScc) = d.callsInfo._1.foldLeft((0 -> Map.empty): SCC) { case (scc -> r) =>
-      if scc._2.contains(r.id) then
-        scc
-      else
-        getScc(r.id)(scc)(r.id :: Nil)
-    }
-
-    val resSccRev = resScc.foldLeft(Map.empty[Int, Set[Ident]]) { case (res, id -> idNum) =>
-      res.updatedWith(idNum)(opt => Some(opt.getOrElse(Set()) + id))
-    }
-
-    val sccGroupDAG = (
-      resSccRev.foldLeft(Set.empty[Int -> Int]) { case (dag, (idNum, ids)) =>
-        ids.foldLeft(dag) { case (res, id) =>
-          val calleeIdNums = callGraph(id).flatMap { callee =>
-            val calleeIdNum = resScc(callee)
-            if calleeIdNum == idNum then None else Some(calleeIdNum)
-          }
-          res ++ calleeIdNums.map(idNum -> _)
-        }
-      },
-      resSccRev.keys
-    )
-
-    val topoRes = try {
-      topologicalSort(sccGroupDAG._1, sccGroupDAG._2)
-    } catch { case e: CyclicGraphError =>
-      lastWords(
-        "\n" +
-        e.getMessage() + "\n" +
-        resSccRev.toString() + "\n"
-      )
-    }
-    topoRes.map(idNum => resSccRev(idNum)).toList
+        acc
+    }.reverse
   }
 }
 

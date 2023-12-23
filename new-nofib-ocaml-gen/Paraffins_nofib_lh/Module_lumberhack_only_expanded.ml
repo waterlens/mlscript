@@ -32,16 +32,6 @@ let rec remainders_lh _lh_remainders_arg1_0 =
       (`LH_C((`LH_C(_lh_remainders_LH_C_0_0, _lh_remainders_LH_C_1_0)), (remainders_lh _lh_remainders_LH_C_1_0)))
     | _ -> 
       (failwith "error"));;
-let rec enumFromTo_lh a_0 b_0 =
-  (if (a_0 <= b_0) then
-    (`LH_C(a_0, ((enumFromTo_lh (a_0 + 1)) b_0)))
-  else
-    (`LH_N));;
-let rec max_lh _lh_max_arg1_0 _lh_max_arg2_0 =
-  (if (_lh_max_arg1_0 > _lh_max_arg2_0) then
-    _lh_max_arg1_0
-  else
-    _lh_max_arg2_0);;
 let rec bcp_generator_lh _lh_bcp_generator_arg1_0 _lh_bcp_generator_arg2_0 =
   (if (odd_lh _lh_bcp_generator_arg2_0) then
     (`LH_N)
@@ -63,6 +53,11 @@ let rec bcp_generator_lh _lh_bcp_generator_arg1_0 _lh_bcp_generator_arg2_0 =
         | `LH_N -> 
           (`LH_N))) in
       (_lh_listcomp_fun_8 (remainders_lh ((atIndex_lz_lh (_lh_bcp_generator_arg2_0 / 2)) _lh_bcp_generator_arg1_0)))));;
+let rec enumFromTo_lh a_0 b_0 =
+  (if (a_0 <= b_0) then
+    (`LH_C(a_0, ((enumFromTo_lh (a_0 + 1)) b_0)))
+  else
+    (`LH_N));;
 let rec three_partitions_lh _lh_three_partitions_arg1_0 =
   (let rec _lh_listcomp_fun_3 = (fun _lh_listcomp_fun_para_3 -> 
     (match _lh_listcomp_fun_para_3 with
@@ -83,32 +78,6 @@ let rec three_partitions_lh _lh_three_partitions_arg1_0 =
       | `LH_N -> 
         (`LH_N))) in
     (_lh_listcomp_fun_3 ((enumFromTo_lh 0) (_lh_three_partitions_arg1_0 / 3))));;
-let rec four_partitions_lh _lh_four_partitions_arg1_0 =
-  (let rec _lh_listcomp_fun_1_1 = (fun _lh_listcomp_fun_para_1_1 -> 
-    (match _lh_listcomp_fun_para_1_1 with
-      | `LH_C(_lh_listcomp_fun_ls_h_1_1, _lh_listcomp_fun_ls_t_1_1) -> 
-        (let rec _lh_listcomp_fun_1_2 = (fun _lh_listcomp_fun_para_1_2 -> 
-          (match _lh_listcomp_fun_para_1_2 with
-            | `LH_C(_lh_listcomp_fun_ls_h_1_2, _lh_listcomp_fun_ls_t_1_2) -> 
-              (let rec _lh_listcomp_fun_1_3 = (fun _lh_listcomp_fun_para_1_3 -> 
-                (match _lh_listcomp_fun_para_1_3 with
-                  | `LH_C(_lh_listcomp_fun_ls_h_1_3, _lh_listcomp_fun_ls_t_1_3) -> 
-                    (let rec _lh_listcomp_fun_1_4 = (fun _lh_listcomp_fun_para_1_4 -> 
-                      (match _lh_listcomp_fun_para_1_4 with
-                        | `LH_C(_lh_listcomp_fun_ls_h_1_4, _lh_listcomp_fun_ls_t_1_4) -> 
-                          (`LH_C((`LH_P4(_lh_listcomp_fun_ls_h_1_1, _lh_listcomp_fun_ls_h_1_2, _lh_listcomp_fun_ls_h_1_3, _lh_listcomp_fun_ls_h_1_4)), (_lh_listcomp_fun_1_4 _lh_listcomp_fun_ls_t_1_4)))
-                        | `LH_N -> 
-                          (_lh_listcomp_fun_1_3 _lh_listcomp_fun_ls_t_1_3))) in
-                      (_lh_listcomp_fun_1_4 (`LH_C((_lh_four_partitions_arg1_0 - ((_lh_listcomp_fun_ls_h_1_1 + _lh_listcomp_fun_ls_h_1_2) + _lh_listcomp_fun_ls_h_1_3)), (`LH_N)))))
-                  | `LH_N -> 
-                    (_lh_listcomp_fun_1_2 _lh_listcomp_fun_ls_t_1_2))) in
-                (_lh_listcomp_fun_1_3 ((enumFromTo_lh ((max_lh _lh_listcomp_fun_ls_h_1_2) (((int_of_float (ceil ((float_of_int _lh_four_partitions_arg1_0) /. (float_of_int 2)))) - _lh_listcomp_fun_ls_h_1_1) - _lh_listcomp_fun_ls_h_1_2))) (((_lh_four_partitions_arg1_0 - _lh_listcomp_fun_ls_h_1_1) - _lh_listcomp_fun_ls_h_1_2) / 2))))
-            | `LH_N -> 
-              (_lh_listcomp_fun_1_1 _lh_listcomp_fun_ls_t_1_1))) in
-          (_lh_listcomp_fun_1_2 ((enumFromTo_lh _lh_listcomp_fun_ls_h_1_1) ((_lh_four_partitions_arg1_0 - _lh_listcomp_fun_ls_h_1_1) / 3))))
-      | `LH_N -> 
-        (`LH_N))) in
-    (_lh_listcomp_fun_1_1 ((enumFromTo_lh 0) (_lh_four_partitions_arg1_0 / 4))));;
 let rec rads_of_size_n_lh _lh_rads_of_size_n_arg1_0 _lh_rads_of_size_n_arg2_0 =
   (let rec _lh_listcomp_fun_2_0 = (fun _lh_listcomp_fun_para_2_0 -> 
     (match _lh_listcomp_fun_para_2_0 with
@@ -153,6 +122,55 @@ let rec rads_of_size_n_lh _lh_rads_of_size_n_arg1_0 _lh_rads_of_size_n_arg2_0 =
       | `LH_N -> 
         (`LH_N))) in
     (_lh_listcomp_fun_2_0 (three_partitions_lh (_lh_rads_of_size_n_arg2_0 - 1))));;
+let rec radical_generator_lh _lh_radical_generator_arg1_0 =
+  (let rec radicals_3 = (lazy (`LH_C((`LH_C((`H), (`LH_N))), (let rec _lh_listcomp_fun_1_0 = (fun _lh_listcomp_fun_para_1_0 -> 
+    (match _lh_listcomp_fun_para_1_0 with
+      | `LH_C(_lh_listcomp_fun_ls_h_1_0, _lh_listcomp_fun_ls_t_1_0) -> 
+        (lazy (`LH_C(((rads_of_size_n_lh radicals_3) _lh_listcomp_fun_ls_h_1_0), (_lh_listcomp_fun_1_0 _lh_listcomp_fun_ls_t_1_0))))
+      | `LH_N -> 
+        (lazy (`LH_N)))) in
+    (_lh_listcomp_fun_1_0 ((enumFromTo_lh 1) _lh_radical_generator_arg1_0)))))) in
+    radicals_3);;
+let rec bcp_until_lh _lh_bcp_until_arg1_0 =
+  (let rec radicals_2 = (radical_generator_lh (_lh_bcp_until_arg1_0 / 2)) in
+    (let rec _lh_listcomp_fun_2 = (fun _lh_listcomp_fun_para_2 -> 
+      (match _lh_listcomp_fun_para_2 with
+        | `LH_C(_lh_listcomp_fun_ls_h_2, _lh_listcomp_fun_ls_t_2) -> 
+          (`LH_C((length_lh ((bcp_generator_lh radicals_2) _lh_listcomp_fun_ls_h_2)), (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_2)))
+        | `LH_N -> 
+          (`LH_N))) in
+      (_lh_listcomp_fun_2 ((enumFromTo_lh 1) _lh_bcp_until_arg1_0))));;
+let rec max_lh _lh_max_arg1_0 _lh_max_arg2_0 =
+  (if (_lh_max_arg1_0 > _lh_max_arg2_0) then
+    _lh_max_arg1_0
+  else
+    _lh_max_arg2_0);;
+let rec four_partitions_lh _lh_four_partitions_arg1_0 =
+  (let rec _lh_listcomp_fun_1_1 = (fun _lh_listcomp_fun_para_1_1 -> 
+    (match _lh_listcomp_fun_para_1_1 with
+      | `LH_C(_lh_listcomp_fun_ls_h_1_1, _lh_listcomp_fun_ls_t_1_1) -> 
+        (let rec _lh_listcomp_fun_1_2 = (fun _lh_listcomp_fun_para_1_2 -> 
+          (match _lh_listcomp_fun_para_1_2 with
+            | `LH_C(_lh_listcomp_fun_ls_h_1_2, _lh_listcomp_fun_ls_t_1_2) -> 
+              (let rec _lh_listcomp_fun_1_3 = (fun _lh_listcomp_fun_para_1_3 -> 
+                (match _lh_listcomp_fun_para_1_3 with
+                  | `LH_C(_lh_listcomp_fun_ls_h_1_3, _lh_listcomp_fun_ls_t_1_3) -> 
+                    (let rec _lh_listcomp_fun_1_4 = (fun _lh_listcomp_fun_para_1_4 -> 
+                      (match _lh_listcomp_fun_para_1_4 with
+                        | `LH_C(_lh_listcomp_fun_ls_h_1_4, _lh_listcomp_fun_ls_t_1_4) -> 
+                          (`LH_C((`LH_P4(_lh_listcomp_fun_ls_h_1_1, _lh_listcomp_fun_ls_h_1_2, _lh_listcomp_fun_ls_h_1_3, _lh_listcomp_fun_ls_h_1_4)), (_lh_listcomp_fun_1_4 _lh_listcomp_fun_ls_t_1_4)))
+                        | `LH_N -> 
+                          (_lh_listcomp_fun_1_3 _lh_listcomp_fun_ls_t_1_3))) in
+                      (_lh_listcomp_fun_1_4 (`LH_C((_lh_four_partitions_arg1_0 - ((_lh_listcomp_fun_ls_h_1_1 + _lh_listcomp_fun_ls_h_1_2) + _lh_listcomp_fun_ls_h_1_3)), (`LH_N)))))
+                  | `LH_N -> 
+                    (_lh_listcomp_fun_1_2 _lh_listcomp_fun_ls_t_1_2))) in
+                (_lh_listcomp_fun_1_3 ((enumFromTo_lh ((max_lh _lh_listcomp_fun_ls_h_1_2) (((int_of_float (ceil ((float_of_int _lh_four_partitions_arg1_0) /. (float_of_int 2)))) - _lh_listcomp_fun_ls_h_1_1) - _lh_listcomp_fun_ls_h_1_2))) (((_lh_four_partitions_arg1_0 - _lh_listcomp_fun_ls_h_1_1) - _lh_listcomp_fun_ls_h_1_2) / 2))))
+            | `LH_N -> 
+              (_lh_listcomp_fun_1_1 _lh_listcomp_fun_ls_t_1_1))) in
+          (_lh_listcomp_fun_1_2 ((enumFromTo_lh _lh_listcomp_fun_ls_h_1_1) ((_lh_four_partitions_arg1_0 - _lh_listcomp_fun_ls_h_1_1) / 3))))
+      | `LH_N -> 
+        (`LH_N))) in
+    (_lh_listcomp_fun_1_1 ((enumFromTo_lh 0) (_lh_four_partitions_arg1_0 / 4))));;
 let rec ccp_generator_lh _lh_ccp_generator_arg1_0 _lh_ccp_generator_arg2_0 =
   (let rec _lh_listcomp_fun_1_5 = (fun _lh_listcomp_fun_para_1_5 -> 
     (match _lh_listcomp_fun_para_1_5 with
@@ -210,24 +228,6 @@ let rec ccp_generator_lh _lh_ccp_generator_arg1_0 _lh_ccp_generator_arg2_0 =
       | `LH_N -> 
         (`LH_N))) in
     (_lh_listcomp_fun_1_5 (four_partitions_lh (_lh_ccp_generator_arg2_0 - 1))));;
-let rec radical_generator_lh _lh_radical_generator_arg1_0 =
-  (let rec radicals_3 = (lazy (`LH_C((`LH_C((`H), (`LH_N))), (let rec _lh_listcomp_fun_1_0 = (fun _lh_listcomp_fun_para_1_0 -> 
-    (match _lh_listcomp_fun_para_1_0 with
-      | `LH_C(_lh_listcomp_fun_ls_h_1_0, _lh_listcomp_fun_ls_t_1_0) -> 
-        (lazy (`LH_C(((rads_of_size_n_lh radicals_3) _lh_listcomp_fun_ls_h_1_0), (_lh_listcomp_fun_1_0 _lh_listcomp_fun_ls_t_1_0))))
-      | `LH_N -> 
-        (lazy (`LH_N)))) in
-    (_lh_listcomp_fun_1_0 ((enumFromTo_lh 1) _lh_radical_generator_arg1_0)))))) in
-    radicals_3);;
-let rec bcp_until_lh _lh_bcp_until_arg1_0 =
-  (let rec radicals_2 = (radical_generator_lh (_lh_bcp_until_arg1_0 / 2)) in
-    (let rec _lh_listcomp_fun_2 = (fun _lh_listcomp_fun_para_2 -> 
-      (match _lh_listcomp_fun_para_2 with
-        | `LH_C(_lh_listcomp_fun_ls_h_2, _lh_listcomp_fun_ls_t_2) -> 
-          (`LH_C((length_lh ((bcp_generator_lh radicals_2) _lh_listcomp_fun_ls_h_2)), (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_2)))
-        | `LH_N -> 
-          (`LH_N))) in
-      (_lh_listcomp_fun_2 ((enumFromTo_lh 1) _lh_bcp_until_arg1_0))));;
 let rec ccp_until_lh _lh_ccp_until_arg1_0 =
   (let rec radicals_0 = (radical_generator_lh (_lh_ccp_until_arg1_0 / 2)) in
     (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 

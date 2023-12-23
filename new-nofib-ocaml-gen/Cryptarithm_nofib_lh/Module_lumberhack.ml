@@ -35,16 +35,6 @@ let rec addj_lh__d0 _lh_addj_arg1_0 _lh_addj_arg2_0 =
       (failwith "error"));;
 let rec permutations_lh__d1 _lh_permutations_arg1_1 =
   (_lh_permutations_arg1_1 99);;
-let rec map_lh__d0 f_1 ls_1 =
-  (ls_1 f_1);;
-let rec expand_lh__d1 _lh_expand_arg1_2 _lh_expand_arg2_2 _lh_expand_arg3_2 _lh_expand_arg4_2 _lh_expand_arg5_2 _lh_expand_arg6_2 =
-  (((((_lh_expand_arg6_2 + (_lh_expand_arg5_2 * 10)) + (_lh_expand_arg4_2 * 100)) + (_lh_expand_arg3_2 * 1000)) + (_lh_expand_arg2_2 * 10000)) + (_lh_expand_arg1_2 * 100000));;
-let rec expand_lh__d2 _lh_expand_arg1_1 _lh_expand_arg2_1 _lh_expand_arg3_1 _lh_expand_arg4_1 _lh_expand_arg5_1 _lh_expand_arg6_1 =
-  (((((_lh_expand_arg6_1 + (_lh_expand_arg5_1 * 10)) + (_lh_expand_arg4_1 * 100)) + (_lh_expand_arg3_1 * 1000)) + (_lh_expand_arg2_1 * 10000)) + (_lh_expand_arg1_1 * 100000));;
-let rec expand_lh__d0 _lh_expand_arg1_0 _lh_expand_arg2_0 _lh_expand_arg3_0 _lh_expand_arg4_0 _lh_expand_arg5_0 _lh_expand_arg6_0 =
-  (((((_lh_expand_arg6_0 + (_lh_expand_arg5_0 * 10)) + (_lh_expand_arg4_0 * 100)) + (_lh_expand_arg3_0 * 1000)) + (_lh_expand_arg2_0 * 10000)) + (_lh_expand_arg1_0 * 100000));;
-let rec permutations_lh__d0 _lh_permutations_arg1_0 =
-  (_lh_permutations_arg1_0 99);;
 let rec enumFromTo_lh__d0 a_0 b_0 =
   (if (a_0 <= b_0) then
     (let rec t_1 = ((enumFromTo_lh__d0 (a_0 + 1)) b_0) in
@@ -69,6 +59,8 @@ let rec enumFromTo_lh__d0 a_0 b_0 =
   else
     (fun n_1 _lh_dummy_1 -> 
       (`LH_C((`LH_N), (`LH_N)))));;
+let rec map_lh__d0 f_1 ls_1 =
+  (ls_1 f_1);;
 let rec enumFromTo_lh__d1 a_1 b_1 =
   (if (a_1 <= b_1) then
     (let rec t_2 = ((enumFromTo_lh__d1 (a_1 + 1)) b_1) in
@@ -78,6 +70,12 @@ let rec enumFromTo_lh__d1 a_1 b_1 =
   else
     (fun f_3 -> 
       (`LH_N)));;
+let rec expand_lh__d1 _lh_expand_arg1_2 _lh_expand_arg2_2 _lh_expand_arg3_2 _lh_expand_arg4_2 _lh_expand_arg5_2 _lh_expand_arg6_2 =
+  (((((_lh_expand_arg6_2 + (_lh_expand_arg5_2 * 10)) + (_lh_expand_arg4_2 * 100)) + (_lh_expand_arg3_2 * 1000)) + (_lh_expand_arg2_2 * 10000)) + (_lh_expand_arg1_2 * 100000));;
+let rec expand_lh__d2 _lh_expand_arg1_1 _lh_expand_arg2_1 _lh_expand_arg3_1 _lh_expand_arg4_1 _lh_expand_arg5_1 _lh_expand_arg6_1 =
+  (((((_lh_expand_arg6_1 + (_lh_expand_arg5_1 * 10)) + (_lh_expand_arg4_1 * 100)) + (_lh_expand_arg3_1 * 1000)) + (_lh_expand_arg2_1 * 10000)) + (_lh_expand_arg1_1 * 100000));;
+let rec expand_lh__d0 _lh_expand_arg1_0 _lh_expand_arg2_0 _lh_expand_arg3_0 _lh_expand_arg4_0 _lh_expand_arg5_0 _lh_expand_arg6_0 =
+  (((((_lh_expand_arg6_0 + (_lh_expand_arg5_0 * 10)) + (_lh_expand_arg4_0 * 100)) + (_lh_expand_arg3_0 * 1000)) + (_lh_expand_arg2_0 * 10000)) + (_lh_expand_arg1_0 * 100000));;
 let rec condition_lh__d0 _lh_condition_arg1_0 =
   (match _lh_condition_arg1_0 with
     | `LH_C(_lh_condition_LH_C_0_0, _lh_condition_LH_C_1_0) -> 
@@ -124,6 +122,8 @@ let rec condition_lh__d0 _lh_condition_arg1_0 =
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
+let rec permutations_lh__d0 _lh_permutations_arg1_0 =
+  (_lh_permutations_arg1_0 99);;
 let rec testCryptarithm_nofib_lh__d0 _lh_testCryptarithm_nofib_arg1_0 =
   ((map_lh__d0 (fun i_0 -> 
     (let rec p0_0 = ((take_lh__d0 10) ((enumFromTo_lh__d0 0) (9 + i_0))) in

@@ -34,6 +34,8 @@ let rec delete_lh _lh_delete_arg1_0 _lh_delete_arg2_0 =
       (`LH_N)
     | _ -> 
       (failwith "error"));;
+let rec listDiff_lh =
+  (foldl_lh delete_lh);;
 let rec compareTuple2_lh _lh_compareTuple2_arg1_0 _lh_compareTuple2_arg2_0 =
   (match _lh_compareTuple2_arg1_0 with
     | `LH_P2(_lh_compareTuple2_LH_P2_0_0, _lh_compareTuple2_LH_P2_1_0) -> 
@@ -93,6 +95,9 @@ rqsort_lh _lh_rqsort_arg1_0 _lh_rqsort_arg2_0 _lh_rqsort_arg3_0 =
           ((((((rqpart_lh _lh_rqsort_arg1_0) _lh_rqsort_LH_C_0_0) _lh_rqsort_LH_C_1_0) (`LH_N)) (`LH_N)) _lh_rqsort_arg3_0))
     | _ -> 
       (failwith "error"));;
+let rec sort_lh _lh_sort_arg1_0 =
+  (((qsort_lh (fun a_1 b_1 -> 
+    ((compareTuple2_lh a_1) b_1))) _lh_sort_arg1_0) (`LH_N));;
 let rec mappend_lh xs_0 ys_0 =
   (match xs_0 with
     | `LH_C(h_3, t_3) -> 
@@ -105,20 +110,6 @@ let rec sum_lh ls_3 =
       (h_4 + (sum_lh t_4))
     | `LH_N -> 
       0);;
-let rec filter_lh f_1 ls_1 =
-  (match ls_1 with
-    | `LH_C(h_1, t_1) -> 
-      (if (f_1 h_1) then
-        (`LH_C(h_1, ((filter_lh f_1) t_1)))
-      else
-        ((filter_lh f_1) t_1))
-    | `LH_N -> 
-      (`LH_N));;
-let rec listDiff_lh =
-  (foldl_lh delete_lh);;
-let rec sort_lh _lh_sort_arg1_0 =
-  (((qsort_lh (fun a_1 b_1 -> 
-    ((compareTuple2_lh a_1) b_1))) _lh_sort_arg1_0) (`LH_N));;
 let rec perms_lh _lh_perms_arg1_0 _lh_perms_arg2_0 =
   (match _lh_perms_arg2_0 with
     | `LH_N -> 
@@ -135,6 +126,15 @@ let rec perms_lh _lh_perms_arg1_0 _lh_perms_arg2_0 =
                 (`LH_C(_lh_perms_LH_C_0_0, x_2)))) ((perms_lh (_lh_perms_arg1_0 - 1)) _lh_perms_LH_C_1_0))) ((perms_lh _lh_perms_arg1_0) _lh_perms_LH_C_1_0))
             | _ -> 
               (failwith "error"))));;
+let rec filter_lh f_1 ls_1 =
+  (match ls_1 with
+    | `LH_C(h_1, t_1) -> 
+      (if (f_1 h_1) then
+        (`LH_C(h_1, ((filter_lh f_1) t_1)))
+      else
+        ((filter_lh f_1) t_1))
+    | `LH_N -> 
+      (`LH_N));;
 let rec awards_lh _lh_awards_arg1_0 =
   (let rec sumscores_0 = ((map_lh (fun p_0 -> 
     (`LH_P2((sum_lh p_0), p_0)))) ((perms_lh 3) _lh_awards_arg1_0)) in

@@ -415,10 +415,67 @@ testLambda_nofib $ primId 80
 //│ 		      (`LH_C(h_1, ((mappend_lh t_1) ys_0)))
 //│ 		    | `LH_N -> 
 //│ 		      ys_0);;
+//│ 		let rec showTerm_lh _lh_showTerm_arg1_0 =
+//│ 		  (match _lh_showTerm_arg1_0 with
+//│ 		    | `Con(_lh_showTerm_Con_0_0) -> 
+//│ 		      ((mappend_lh (`LH_C('C', (`LH_C('o', (`LH_C('n', (`LH_C(' ', (`LH_N)))))))))) (string_of_int _lh_showTerm_Con_0_0))
+//│ 		    | _ -> 
+//│ 		      ((failwith "error") (`LH_C('u', (`LH_C('n', (`LH_C('i', (`LH_C('m', (`LH_C('p', (`LH_C('l', (`LH_C('e', (`LH_C('m', (`LH_C('e', (`LH_C('n', (`LH_C('t', (`LH_C('e', (`LH_C('d', (`LH_N)))))))))))))))))))))))))))));;
 //│ 		let rec nMinus1_lh =
 //│ 		  (`Add((`Var((`LH_C('n', (`LH_N))))), (`Con((0 - 1)))));;
+//│ 		let rec partialSum0_lh =
+//│ 		  (`Lam((`LH_C('s', (`LH_C('u', (`LH_C('m', (`LH_N))))))), (`Lam((`LH_C('n', (`LH_N))), (`IfZero((`Var((`LH_C('n', (`LH_N))))), (`Con(0)), (`Add((`Var((`LH_C('n', (`LH_N))))), (`App((`Var((`LH_C('s', (`LH_C('u', (`LH_C('m', (`LH_N))))))))), nMinus1_lh))))))))));;
 //│ 		let rec lfxx_lh =
 //│ 		  (`Lam((`LH_C('x', (`LH_N))), (`App((`Var((`LH_C('F', (`LH_N))))), (`App((`Var((`LH_C('x', (`LH_N))))), (`Var((`LH_C('x', (`LH_N)))))))))));;
+//│ 		let rec fix_lh =
+//│ 		  (`Lam((`LH_C('F', (`LH_N))), (`App(lfxx_lh, lfxx_lh))));;
+//│ 		let rec sum0_lh =
+//│ 		  (`App(fix_lh, partialSum0_lh));;
+//│ 		let rec bracket_lh _lh_bracket_arg1_0 _lh_bracket_arg2_0 _lh_bracket_arg3_0 =
+//│ 		  (if (_lh_bracket_arg2_0 <= _lh_bracket_arg1_0) then
+//│ 		    ((mappend_lh ((mappend_lh (`LH_C('(', (`LH_N)))) _lh_bracket_arg3_0)) (`LH_C(')', (`LH_N))))
+//│ 		  else
+//│ 		    _lh_bracket_arg3_0);;
+//│ 		let rec flatMap_lh _lh_flatMap_arg1_0 _lh_flatMap_arg2_0 =
+//│ 		  (match _lh_flatMap_arg2_0 with
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)
+//│ 		    | `LH_C(_lh_flatMap_LH_C_0_0, _lh_flatMap_LH_C_1_0) -> 
+//│ 		      ((mappend_lh (_lh_flatMap_arg1_0 _lh_flatMap_LH_C_0_0)) ((flatMap_lh _lh_flatMap_arg1_0) _lh_flatMap_LH_C_1_0))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"));;
+//│ 		let rec pp_lh _lh_pp_arg1_0 =
+//│ 		  ((ppn_lh 0) _lh_pp_arg1_0)
+//│ 		and
+//│ 		ppenv_lh _lh_ppenv_arg1_0 =
+//│ 		  ((mappend_lh ((mappend_lh (`LH_C('[', (`LH_N)))) ((flatMap_lh (fun vt_0 -> 
+//│ 		    (let rec _lh_matchIdent_2 = vt_0 in
+//│ 		      (match _lh_matchIdent_2 with
+//│ 		        | `LH_P2(_lh_ppenv_LH_P2_0_0, _lh_ppenv_LH_P2_1_0) -> 
+//│ 		          ((mappend_lh ((mappend_lh ((mappend_lh _lh_ppenv_LH_P2_0_0) (`LH_C('=', (`LH_N))))) (pp_lh _lh_ppenv_LH_P2_1_0))) (`LH_C(',', (`LH_C(' ', (`LH_N))))))
+//│ 		        | _ -> 
+//│ 		          (failwith "error"))))) _lh_ppenv_arg1_0))) (`LH_C(']', (`LH_N))))
+//│ 		and
+//│ 		ppn_lh _lh_ppn_arg1_0 _lh_ppn_arg2_0 =
+//│ 		  (match _lh_ppn_arg2_0 with
+//│ 		    | `Var(_lh_ppn_Var_0_0) -> 
+//│ 		      _lh_ppn_Var_0_0
+//│ 		    | `Con(_lh_ppn_Con_0_0) -> 
+//│ 		      (string_of_int _lh_ppn_Con_0_0)
+//│ 		    | `Incr -> 
+//│ 		      (`LH_C('I', (`LH_C('N', (`LH_C('C', (`LH_C('R', (`LH_N)))))))))
+//│ 		    | `Lam(_lh_ppn_Lam_0_0, _lh_ppn_Lam_1_0) -> 
+//│ 		      (((bracket_lh _lh_ppn_arg1_0) 0) ((mappend_lh ((mappend_lh ((mappend_lh (`LH_C('@', (`LH_N)))) _lh_ppn_Lam_0_0)) (`LH_C('.', (`LH_C(' ', (`LH_N))))))) ((ppn_lh (0 - 1)) _lh_ppn_Lam_1_0)))
+//│ 		    | `Add(_lh_ppn_Add_0_0, _lh_ppn_Add_1_0) -> 
+//│ 		      (((bracket_lh _lh_ppn_arg1_0) 1) ((mappend_lh ((mappend_lh ((ppn_lh 1) _lh_ppn_Add_0_0)) (`LH_C(' ', (`LH_C('+', (`LH_C(' ', (`LH_N))))))))) ((ppn_lh 1) _lh_ppn_Add_1_0)))
+//│ 		    | `App(_lh_ppn_App_0_0, _lh_ppn_App_1_0) -> 
+//│ 		      (((bracket_lh _lh_ppn_arg1_0) 2) ((mappend_lh ((mappend_lh ((ppn_lh 2) _lh_ppn_App_0_0)) (`LH_C(' ', (`LH_N))))) ((ppn_lh 2) _lh_ppn_App_1_0)))
+//│ 		    | `IfZero(_lh_ppn_IfZero_0_0, _lh_ppn_IfZero_1_0, _lh_ppn_IfZero_2_0) -> 
+//│ 		      (((bracket_lh _lh_ppn_arg1_0) 0) ((mappend_lh ((mappend_lh ((mappend_lh ((mappend_lh ((mappend_lh (`LH_C('I', (`LH_C('F', (`LH_C(' ', (`LH_N)))))))) ((ppn_lh 0) _lh_ppn_IfZero_0_0))) (`LH_C(' ', (`LH_C('T', (`LH_C('H', (`LH_C('E', (`LH_C('N', (`LH_C(' ', (`LH_N))))))))))))))) ((ppn_lh 0) _lh_ppn_IfZero_1_0))) (`LH_C(' ', (`LH_C('E', (`LH_C('L', (`LH_C('S', (`LH_C('E', (`LH_C(' ', (`LH_N))))))))))))))) ((ppn_lh 0) _lh_ppn_IfZero_2_0)))
+//│ 		    | `Thunk(_lh_ppn_Thunk_0_0, _lh_ppn_Thunk_1_0) -> 
+//│ 		      (((bracket_lh _lh_ppn_arg1_0) 0) ((mappend_lh ((mappend_lh ((ppn_lh 3) _lh_ppn_Thunk_0_0)) (`LH_C(':', (`LH_C(':', (`LH_N))))))) (ppenv_lh _lh_ppn_Thunk_1_0)))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"));;
 //│ 		let rec eqList_lh _lh_eqList_arg1_0 _lh_eqList_arg2_0 =
 //│ 		  (match _lh_eqList_arg1_0 with
 //│ 		    | `LH_N -> 
@@ -438,63 +495,6 @@ testLambda_nofib $ primId 80
 //│ 		          (failwith "error"))
 //│ 		    | _ -> 
 //│ 		      (failwith "error"));;
-//│ 		let rec myMaybe_lh _lh_myMaybe_arg1_0 _lh_myMaybe_arg2_0 _lh_myMaybe_arg3_0 =
-//│ 		  (match _lh_myMaybe_arg3_0 with
-//│ 		    | `Nothing -> 
-//│ 		      (_lh_myMaybe_arg1_0 99)
-//│ 		    | `Just(_lh_myMaybe_Just_0_0) -> 
-//│ 		      (_lh_myMaybe_arg2_0 _lh_myMaybe_Just_0_0)
-//│ 		    | _ -> 
-//│ 		      (failwith "error"));;
-//│ 		let rec head_lh ls_0 =
-//│ 		  (match ls_0 with
-//│ 		    | `LH_C(h_0, t_0) -> 
-//│ 		      h_0
-//│ 		    | `LH_N -> 
-//│ 		      (failwith "error"));;
-//│ 		let rec null_lh _lh_null_arg1_0 =
-//│ 		  (match _lh_null_arg1_0 with
-//│ 		    | `LH_N -> 
-//│ 		      true
-//│ 		    | `LH_C(_lh_null_LH_C_0_0, _lh_null_LH_C_1_0) -> 
-//│ 		      false
-//│ 		    | _ -> 
-//│ 		      (failwith "error"));;
-//│ 		let rec myRunState_lh _lh_myRunState_arg1_0 =
-//│ 		  (match _lh_myRunState_arg1_0 with
-//│ 		    | `MyState(_lh_myRunState_MyState_0_0) -> 
-//│ 		      _lh_myRunState_MyState_0_0
-//│ 		    | _ -> 
-//│ 		      (failwith "error"));;
-//│ 		let rec myReturn_lh _lh_myReturn_arg1_0 =
-//│ 		  (`MyState((fun s_2 -> 
-//│ 		    (`LH_P2(s_2, _lh_myReturn_arg1_0)))));;
-//│ 		let rec myGet_lh =
-//│ 		  (`MyState((fun s_0 -> 
-//│ 		    (`LH_P2(s_0, s_0)))));;
-//│ 		let rec showTerm_lh _lh_showTerm_arg1_0 =
-//│ 		  (match _lh_showTerm_arg1_0 with
-//│ 		    | `Con(_lh_showTerm_Con_0_0) -> 
-//│ 		      ((mappend_lh (`LH_C('C', (`LH_C('o', (`LH_C('n', (`LH_C(' ', (`LH_N)))))))))) (string_of_int _lh_showTerm_Con_0_0))
-//│ 		    | _ -> 
-//│ 		      ((failwith "error") (`LH_C('u', (`LH_C('n', (`LH_C('i', (`LH_C('m', (`LH_C('p', (`LH_C('l', (`LH_C('e', (`LH_C('m', (`LH_C('e', (`LH_C('n', (`LH_C('t', (`LH_C('e', (`LH_C('d', (`LH_N)))))))))))))))))))))))))))));;
-//│ 		let rec partialSum0_lh =
-//│ 		  (`Lam((`LH_C('s', (`LH_C('u', (`LH_C('m', (`LH_N))))))), (`Lam((`LH_C('n', (`LH_N))), (`IfZero((`Var((`LH_C('n', (`LH_N))))), (`Con(0)), (`Add((`Var((`LH_C('n', (`LH_N))))), (`App((`Var((`LH_C('s', (`LH_C('u', (`LH_C('m', (`LH_N))))))))), nMinus1_lh))))))))));;
-//│ 		let rec fix_lh =
-//│ 		  (`Lam((`LH_C('F', (`LH_N))), (`App(lfxx_lh, lfxx_lh))));;
-//│ 		let rec bracket_lh _lh_bracket_arg1_0 _lh_bracket_arg2_0 _lh_bracket_arg3_0 =
-//│ 		  (if (_lh_bracket_arg2_0 <= _lh_bracket_arg1_0) then
-//│ 		    ((mappend_lh ((mappend_lh (`LH_C('(', (`LH_N)))) _lh_bracket_arg3_0)) (`LH_C(')', (`LH_N))))
-//│ 		  else
-//│ 		    _lh_bracket_arg3_0);;
-//│ 		let rec flatMap_lh _lh_flatMap_arg1_0 _lh_flatMap_arg2_0 =
-//│ 		  (match _lh_flatMap_arg2_0 with
-//│ 		    | `LH_N -> 
-//│ 		      (`LH_N)
-//│ 		    | `LH_C(_lh_flatMap_LH_C_0_0, _lh_flatMap_LH_C_1_0) -> 
-//│ 		      ((mappend_lh (_lh_flatMap_arg1_0 _lh_flatMap_LH_C_0_0)) ((flatMap_lh _lh_flatMap_arg1_0) _lh_flatMap_LH_C_1_0))
-//│ 		    | _ -> 
-//│ 		      (failwith "error"));;
 //│ 		let rec lookup_lh _lh_lookup_arg1_0 _lh_lookup_arg2_0 =
 //│ 		  (match _lh_lookup_arg2_0 with
 //│ 		    | `LH_N -> 
@@ -508,6 +508,14 @@ testLambda_nofib $ primId 80
 //│ 		            ((lookup_lh _lh_lookup_arg1_0) _lh_lookup_LH_C_1_0))
 //│ 		        | _ -> 
 //│ 		          (failwith "error"))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"));;
+//│ 		let rec myMaybe_lh _lh_myMaybe_arg1_0 _lh_myMaybe_arg2_0 _lh_myMaybe_arg3_0 =
+//│ 		  (match _lh_myMaybe_arg3_0 with
+//│ 		    | `Nothing -> 
+//│ 		      (_lh_myMaybe_arg1_0 99)
+//│ 		    | `Just(_lh_myMaybe_Just_0_0) -> 
+//│ 		      (_lh_myMaybe_arg2_0 _lh_myMaybe_Just_0_0)
 //│ 		    | _ -> 
 //│ 		      (failwith "error"));;
 //│ 		let rec eqEnv_lh _lh_eqEnv_arg1_0 _lh_eqEnv_arg2_0 =
@@ -590,66 +598,6 @@ testLambda_nofib $ primId 80
 //│ 		          (failwith "error"))
 //│ 		    | _ -> 
 //│ 		      (failwith "error"));;
-//│ 		let rec incr_lh _lh_incr_arg1_0 =
-//│ 		  (myReturn_lh (`Unit));;
-//│ 		let rec myBind_lh _lh_myBind_arg1_0 _lh_myBind_arg2_0 =
-//│ 		  (`MyState((fun s_1 -> 
-//│ 		    (let rec _lh_matchIdent_4 = ((myRunState_lh _lh_myBind_arg1_0) s_1) in
-//│ 		      (match _lh_matchIdent_4 with
-//│ 		        | `LH_P2(_lh_myBind_LH_P2_0_0, _lh_myBind_LH_P2_1_0) -> 
-//│ 		          ((myRunState_lh (_lh_myBind_arg2_0 _lh_myBind_LH_P2_1_0)) _lh_myBind_LH_P2_0_0)
-//│ 		        | _ -> 
-//│ 		          (failwith "error"))))));;
-//│ 		let rec myEvalState_lh _lh_myEvalState_arg1_0 _lh_myEvalState_arg2_0 =
-//│ 		  (let rec _lh_matchIdent_1 = ((myRunState_lh _lh_myEvalState_arg1_0) _lh_myEvalState_arg2_0) in
-//│ 		    (match _lh_matchIdent_1 with
-//│ 		      | `LH_P2(_lh_myEvalState_LH_P2_0_0, _lh_myEvalState_LH_P2_1_0) -> 
-//│ 		        _lh_myEvalState_LH_P2_1_0
-//│ 		      | _ -> 
-//│ 		        (failwith "error")));;
-//│ 		let rec sum0_lh =
-//│ 		  (`App(fix_lh, partialSum0_lh));;
-//│ 		let rec pp_lh _lh_pp_arg1_0 =
-//│ 		  ((ppn_lh 0) _lh_pp_arg1_0)
-//│ 		and
-//│ 		ppenv_lh _lh_ppenv_arg1_0 =
-//│ 		  ((mappend_lh ((mappend_lh (`LH_C('[', (`LH_N)))) ((flatMap_lh (fun vt_0 -> 
-//│ 		    (let rec _lh_matchIdent_2 = vt_0 in
-//│ 		      (match _lh_matchIdent_2 with
-//│ 		        | `LH_P2(_lh_ppenv_LH_P2_0_0, _lh_ppenv_LH_P2_1_0) -> 
-//│ 		          ((mappend_lh ((mappend_lh ((mappend_lh _lh_ppenv_LH_P2_0_0) (`LH_C('=', (`LH_N))))) (pp_lh _lh_ppenv_LH_P2_1_0))) (`LH_C(',', (`LH_C(' ', (`LH_N))))))
-//│ 		        | _ -> 
-//│ 		          (failwith "error"))))) _lh_ppenv_arg1_0))) (`LH_C(']', (`LH_N))))
-//│ 		and
-//│ 		ppn_lh _lh_ppn_arg1_0 _lh_ppn_arg2_0 =
-//│ 		  (match _lh_ppn_arg2_0 with
-//│ 		    | `Var(_lh_ppn_Var_0_0) -> 
-//│ 		      _lh_ppn_Var_0_0
-//│ 		    | `Con(_lh_ppn_Con_0_0) -> 
-//│ 		      (string_of_int _lh_ppn_Con_0_0)
-//│ 		    | `Incr -> 
-//│ 		      (`LH_C('I', (`LH_C('N', (`LH_C('C', (`LH_C('R', (`LH_N)))))))))
-//│ 		    | `Lam(_lh_ppn_Lam_0_0, _lh_ppn_Lam_1_0) -> 
-//│ 		      (((bracket_lh _lh_ppn_arg1_0) 0) ((mappend_lh ((mappend_lh ((mappend_lh (`LH_C('@', (`LH_N)))) _lh_ppn_Lam_0_0)) (`LH_C('.', (`LH_C(' ', (`LH_N))))))) ((ppn_lh (0 - 1)) _lh_ppn_Lam_1_0)))
-//│ 		    | `Add(_lh_ppn_Add_0_0, _lh_ppn_Add_1_0) -> 
-//│ 		      (((bracket_lh _lh_ppn_arg1_0) 1) ((mappend_lh ((mappend_lh ((ppn_lh 1) _lh_ppn_Add_0_0)) (`LH_C(' ', (`LH_C('+', (`LH_C(' ', (`LH_N))))))))) ((ppn_lh 1) _lh_ppn_Add_1_0)))
-//│ 		    | `App(_lh_ppn_App_0_0, _lh_ppn_App_1_0) -> 
-//│ 		      (((bracket_lh _lh_ppn_arg1_0) 2) ((mappend_lh ((mappend_lh ((ppn_lh 2) _lh_ppn_App_0_0)) (`LH_C(' ', (`LH_N))))) ((ppn_lh 2) _lh_ppn_App_1_0)))
-//│ 		    | `IfZero(_lh_ppn_IfZero_0_0, _lh_ppn_IfZero_1_0, _lh_ppn_IfZero_2_0) -> 
-//│ 		      (((bracket_lh _lh_ppn_arg1_0) 0) ((mappend_lh ((mappend_lh ((mappend_lh ((mappend_lh ((mappend_lh (`LH_C('I', (`LH_C('F', (`LH_C(' ', (`LH_N)))))))) ((ppn_lh 0) _lh_ppn_IfZero_0_0))) (`LH_C(' ', (`LH_C('T', (`LH_C('H', (`LH_C('E', (`LH_C('N', (`LH_C(' ', (`LH_N))))))))))))))) ((ppn_lh 0) _lh_ppn_IfZero_1_0))) (`LH_C(' ', (`LH_C('E', (`LH_C('L', (`LH_C('S', (`LH_C('E', (`LH_C(' ', (`LH_N))))))))))))))) ((ppn_lh 0) _lh_ppn_IfZero_2_0)))
-//│ 		    | `Thunk(_lh_ppn_Thunk_0_0, _lh_ppn_Thunk_1_0) -> 
-//│ 		      (((bracket_lh _lh_ppn_arg1_0) 0) ((mappend_lh ((mappend_lh ((ppn_lh 3) _lh_ppn_Thunk_0_0)) (`LH_C(':', (`LH_C(':', (`LH_N))))))) (ppenv_lh _lh_ppn_Thunk_1_0)))
-//│ 		    | _ -> 
-//│ 		      (failwith "error"));;
-//│ 		let rec lookupVar_lh _lh_lookupVar_arg1_0 =
-//│ 		  (let rec lookup2_0 = (fun env_1 -> 
-//│ 		    (((myMaybe_lh (fun _dummy_1 -> 
-//│ 		      ((failwith "error") ((mappend_lh (`LH_C('u', (`LH_C('n', (`LH_C('d', (`LH_C('e', (`LH_C('f', (`LH_C('i', (`LH_C('n', (`LH_C('e', (`LH_C('d', (`LH_C(' ', (`LH_C('v', (`LH_C('a', (`LH_C('r', (`LH_C(':', (`LH_C(' ', (`LH_N)))))))))))))))))))))))))))))))) _lh_lookupVar_arg1_0)))) (fun x_0 -> 
-//│ 		      x_0)) ((lookup_lh _lh_lookupVar_arg1_0) env_1))) in
-//│ 		    ((myBind_lh myGet_lh) (fun env_2 -> 
-//│ 		      (myReturn_lh (lookup2_0 env_2)))));;
-//│ 		let rec withEnv_lh _lh_withEnv_arg1_0 _lh_withEnv_arg2_0 =
-//│ 		  (myReturn_lh ((myEvalState_lh _lh_withEnv_arg2_0) _lh_withEnv_arg1_0));;
 //│ 		let rec simpleApply_lh _lh_simpleApply_arg1_0 _lh_simpleApply_arg2_0 _lh_simpleApply_arg3_0 =
 //│ 		  (match _lh_simpleApply_arg2_0 with
 //│ 		    | `Thunk(_lh_simpleApply_Thunk_0_0, _lh_simpleApply_Thunk_1_0) -> 
@@ -713,14 +661,66 @@ testLambda_nofib $ primId 80
 //│ 		      ((simpleEval_lh _lh_simpleEval_Thunk_1_0) _lh_simpleEval_Thunk_0_0)
 //│ 		    | _ -> 
 //│ 		      (failwith "error"));;
-//│ 		let rec pushVar_lh _lh_pushVar_arg1_0 _lh_pushVar_arg2_0 _lh_pushVar_arg3_0 =
-//│ 		  ((myBind_lh myGet_lh) (fun env_3 -> 
-//│ 		    ((withEnv_lh (`LH_C((`LH_P2(_lh_pushVar_arg1_0, _lh_pushVar_arg2_0)), env_3))) _lh_pushVar_arg3_0)));;
+//│ 		let rec head_lh ls_0 =
+//│ 		  (match ls_0 with
+//│ 		    | `LH_C(h_0, t_0) -> 
+//│ 		      h_0
+//│ 		    | `LH_N -> 
+//│ 		      (failwith "error"));;
+//│ 		let rec null_lh _lh_null_arg1_0 =
+//│ 		  (match _lh_null_arg1_0 with
+//│ 		    | `LH_N -> 
+//│ 		      true
+//│ 		    | `LH_C(_lh_null_LH_C_0_0, _lh_null_LH_C_1_0) -> 
+//│ 		      false
+//│ 		    | _ -> 
+//│ 		      (failwith "error"));;
 //│ 		let rec mainSimple_lh _lh_mainSimple_arg1_0 =
 //│ 		  (if (null_lh _lh_mainSimple_arg1_0) then
 //│ 		    ((failwith "error") (`LH_C('A', (`LH_C('r', (`LH_C('g', (`LH_C('s', (`LH_C(':', (`LH_C(' ', (`LH_C('n', (`LH_C('u', (`LH_C('m', (`LH_C('b', (`LH_C('e', (`LH_C('r', (`LH_C('-', (`LH_C('t', (`LH_C('o', (`LH_C('-', (`LH_C('s', (`LH_C('u', (`LH_C('m', (`LH_C('-', (`LH_C('u', (`LH_C('p', (`LH_C('-', (`LH_C('t', (`LH_C('o', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))
 //│ 		  else
 //│ 		    (showTerm_lh ((simpleEval_lh (`LH_N)) (`App(sum0_lh, (`Con((head_lh _lh_mainSimple_arg1_0))))))));;
+//│ 		let rec myRunState_lh _lh_myRunState_arg1_0 =
+//│ 		  (match _lh_myRunState_arg1_0 with
+//│ 		    | `MyState(_lh_myRunState_MyState_0_0) -> 
+//│ 		      _lh_myRunState_MyState_0_0
+//│ 		    | _ -> 
+//│ 		      (failwith "error"));;
+//│ 		let rec myReturn_lh _lh_myReturn_arg1_0 =
+//│ 		  (`MyState((fun s_2 -> 
+//│ 		    (`LH_P2(s_2, _lh_myReturn_arg1_0)))));;
+//│ 		let rec incr_lh _lh_incr_arg1_0 =
+//│ 		  (myReturn_lh (`Unit));;
+//│ 		let rec myGet_lh =
+//│ 		  (`MyState((fun s_0 -> 
+//│ 		    (`LH_P2(s_0, s_0)))));;
+//│ 		let rec myBind_lh _lh_myBind_arg1_0 _lh_myBind_arg2_0 =
+//│ 		  (`MyState((fun s_1 -> 
+//│ 		    (let rec _lh_matchIdent_4 = ((myRunState_lh _lh_myBind_arg1_0) s_1) in
+//│ 		      (match _lh_matchIdent_4 with
+//│ 		        | `LH_P2(_lh_myBind_LH_P2_0_0, _lh_myBind_LH_P2_1_0) -> 
+//│ 		          ((myRunState_lh (_lh_myBind_arg2_0 _lh_myBind_LH_P2_1_0)) _lh_myBind_LH_P2_0_0)
+//│ 		        | _ -> 
+//│ 		          (failwith "error"))))));;
+//│ 		let rec lookupVar_lh _lh_lookupVar_arg1_0 =
+//│ 		  (let rec lookup2_0 = (fun env_1 -> 
+//│ 		    (((myMaybe_lh (fun _dummy_1 -> 
+//│ 		      ((failwith "error") ((mappend_lh (`LH_C('u', (`LH_C('n', (`LH_C('d', (`LH_C('e', (`LH_C('f', (`LH_C('i', (`LH_C('n', (`LH_C('e', (`LH_C('d', (`LH_C(' ', (`LH_C('v', (`LH_C('a', (`LH_C('r', (`LH_C(':', (`LH_C(' ', (`LH_N)))))))))))))))))))))))))))))))) _lh_lookupVar_arg1_0)))) (fun x_0 -> 
+//│ 		      x_0)) ((lookup_lh _lh_lookupVar_arg1_0) env_1))) in
+//│ 		    ((myBind_lh myGet_lh) (fun env_2 -> 
+//│ 		      (myReturn_lh (lookup2_0 env_2)))));;
+//│ 		let rec myEvalState_lh _lh_myEvalState_arg1_0 _lh_myEvalState_arg2_0 =
+//│ 		  (let rec _lh_matchIdent_1 = ((myRunState_lh _lh_myEvalState_arg1_0) _lh_myEvalState_arg2_0) in
+//│ 		    (match _lh_matchIdent_1 with
+//│ 		      | `LH_P2(_lh_myEvalState_LH_P2_0_0, _lh_myEvalState_LH_P2_1_0) -> 
+//│ 		        _lh_myEvalState_LH_P2_1_0
+//│ 		      | _ -> 
+//│ 		        (failwith "error")));;
+//│ 		let rec withEnv_lh _lh_withEnv_arg1_0 _lh_withEnv_arg2_0 =
+//│ 		  (myReturn_lh ((myEvalState_lh _lh_withEnv_arg2_0) _lh_withEnv_arg1_0));;
+//│ 		let rec pushVar_lh _lh_pushVar_arg1_0 _lh_pushVar_arg2_0 _lh_pushVar_arg3_0 =
+//│ 		  ((myBind_lh myGet_lh) (fun env_3 -> 
+//│ 		    ((withEnv_lh (`LH_C((`LH_P2(_lh_pushVar_arg1_0, _lh_pushVar_arg2_0)), env_3))) _lh_pushVar_arg3_0)));;
 //│ 		let rec apply_lh _lh_apply_arg1_0 _lh_apply_arg2_0 =
 //│ 		  (match _lh_apply_arg1_0 with
 //│ 		    | `Thunk(_lh_apply_Thunk_0_0, _lh_apply_Thunk_1_0) -> 

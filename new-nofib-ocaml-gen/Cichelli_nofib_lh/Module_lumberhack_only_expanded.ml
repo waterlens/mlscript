@@ -25,6 +25,9 @@ let rec member_lh _lh_member_arg1_0 _lh_member_arg2_0 =
       ((_lh_member_arg1_0 = _lh_member_LH_C_0_0) || ((member_lh _lh_member_arg1_0) _lh_member_LH_C_1_0))
     | _ -> 
       (failwith "error"));;
+let rec subset_lh _lh_subset_arg1_0 _lh_subset_arg2_0 =
+  ((all_lh (fun x_1 -> 
+    ((member_lh x_1) _lh_subset_arg2_0))) _lh_subset_arg1_0);;
 let rec ends_lh _lh_ends_arg1_0 =
   (match _lh_ends_arg1_0 with
     | `K(_lh_ends_K_0_0, _lh_ends_K_1_0, _lh_ends_K_2_0, _lh_ends_K_3_0) -> 
@@ -37,6 +40,17 @@ let rec mappend_lh xs_0 ys_0 =
       (`LH_C(h_5, ((mappend_lh t_5) ys_0)))
     | `LH_N -> 
       ys_0);;
+let rec union_lh _lh_union_arg1_0 _lh_union_arg2_0 =
+  ((mappend_lh _lh_union_arg1_0) (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
+    (match _lh_listcomp_fun_para_0 with
+      | `LH_C(_lh_listcomp_fun_ls_h_0, _lh_listcomp_fun_ls_t_0) -> 
+        (if (not ((member_lh _lh_listcomp_fun_ls_h_0) _lh_union_arg1_0)) then
+          (`LH_C(_lh_listcomp_fun_ls_h_0, (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0)))
+        else
+          (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0))
+      | `LH_N -> 
+        (`LH_N))) in
+    (_lh_listcomp_fun_0 _lh_union_arg2_0)));;
 let rec select_lh _lh_select_arg1_0 _lh_select_arg2_0 _lh_select_arg3_0 =
   (match _lh_select_arg3_0 with
     | `LH_P2(_lh_select_LH_P2_0_0, _lh_select_LH_P2_1_0) -> 
@@ -52,6 +66,25 @@ let rec foldr_lh f_1 i_0 ls_1 =
       ((f_1 h_1) (((foldr_lh f_1) i_0) t_1))
     | `LH_N -> 
       i_0);;
+let rec partition'_lh _lh_partition'_arg1_0 =
+  ((foldr_lh (select_lh _lh_partition'_arg1_0)) (`LH_P2((`LH_N), (`LH_N))));;
+let rec blocked'_lh _lh_blocked'_arg1_0 _lh_blocked'_arg2_0 =
+  (match _lh_blocked'_arg2_0 with
+    | `LH_N -> 
+      (`LH_N)
+    | `LH_C(_lh_blocked'_LH_C_0_0, _lh_blocked'_LH_C_1_0) -> 
+      (let rec ds'_0 = ((union_lh _lh_blocked'_arg1_0) (ends_lh _lh_blocked'_LH_C_0_0)) in
+        (let rec _lh_matchIdent_3 = ((partition'_lh (fun x_0 -> 
+          ((subset_lh (ends_lh x_0)) ds'_0))) _lh_blocked'_LH_C_1_0) in
+          (match _lh_matchIdent_3 with
+            | `LH_P2(_lh_blocked'_LH_P2_0_0, _lh_blocked'_LH_P2_1_0) -> 
+              ((mappend_lh (`LH_C(_lh_blocked'_LH_C_0_0, _lh_blocked'_LH_P2_0_0))) ((blocked'_lh ds'_0) _lh_blocked'_LH_P2_1_0))
+            | _ -> 
+              (failwith "error"))))
+    | _ -> 
+      (failwith "error"));;
+let rec blocked_lh _lh_blocked_arg1_0 =
+  ((blocked'_lh (`LH_N)) _lh_blocked_arg1_0);;
 let rec freqsorted_lh _lh_freqsorted_arg1_0 =
   _lh_freqsorted_arg1_0;;
 let rec enumFromTo_lh a_0 b_0 =
@@ -80,6 +113,8 @@ let rec first_lh _lh_first_arg1_0 _lh_first_arg2_0 =
             (failwith "error")))
     | _ -> 
       (failwith "error"));;
+let rec firstSuccess_lh _lh_firstSuccess_arg1_0 _lh_firstSuccess_arg2_0 =
+  ((first_lh 0) ((map_lh _lh_firstSuccess_arg1_0) _lh_firstSuccess_arg2_0));;
 let rec assocm_lh _lh_assocm_arg1_0 _lh_assocm_arg2_0 =
   (match _lh_assocm_arg2_0 with
     | `LH_N -> 
@@ -110,6 +145,14 @@ let rec histins_lh _lh_histins_arg1_0 _lh_histins_arg2_0 =
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
+let rec histo_lh _lh_histo_arg1_0 =
+  (((foldr_lh histins_lh) (`LH_N)) _lh_histo_arg1_0);;
+let rec concat_lh lss_0 =
+  (match lss_0 with
+    | `LH_C(h_6, t_6) -> 
+      ((mappend_lh h_6) (concat_lh t_6))
+    | `LH_N -> 
+      (`LH_N));;
 let rec last_lh _lh_last_arg1_0 =
   (match _lh_last_arg1_0 with
     | `LH_C(_lh_last_LH_C_0_0, _lh_last_LH_C_1_0) -> 
@@ -136,6 +179,11 @@ let rec length_lh ls_4 =
       (1 + (length_lh t_4))
     | `LH_N -> 
       0);;
+let rec attribkeys_lh _lh_attribkeys_arg1_0 =
+  ((map_lh (fun k_0 -> 
+    (`K(k_0, (head_lh k_0), (last_lh k_0), (length_lh k_0))))) _lh_attribkeys_arg1_0);;
+let rec freqtab_lh _lh_freqtab_arg1_0 =
+  (histo_lh (concat_lh ((map_lh ends_lh) (attribkeys_lh (keys_lh 0)))));;
 let rec assoc_lh _lh_assoc_arg1_0 _lh_assoc_arg2_0 =
   (match _lh_assoc_arg2_0 with
     | `LH_C(_lh_assoc_LH_C_0_0, _lh_assoc_LH_C_1_0) -> 
@@ -149,60 +197,17 @@ let rec assoc_lh _lh_assoc_arg1_0 _lh_assoc_arg2_0 =
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
-let rec min_lh _lh_min_arg1_0 _lh_min_arg2_0 =
-  (if (_lh_min_arg1_0 < _lh_min_arg2_0) then
-    _lh_min_arg1_0
-  else
-    _lh_min_arg2_0);;
-let rec max_lh _lh_max_arg1_0 _lh_max_arg2_0 =
-  (if (_lh_max_arg1_0 > _lh_max_arg2_0) then
-    _lh_max_arg1_0
-  else
-    _lh_max_arg2_0);;
-let rec take_lh n_0 ls_3 =
-  (if (n_0 > 0) then
-    (match ls_3 with
-      | `LH_C(h_3, t_3) -> 
-        (`LH_C(h_3, ((take_lh (n_0 - 1)) t_3)))
-      | `LH_N -> 
-        (`LH_N))
-  else
-    (`LH_N));;
-let rec subset_lh _lh_subset_arg1_0 _lh_subset_arg2_0 =
-  ((all_lh (fun x_1 -> 
-    ((member_lh x_1) _lh_subset_arg2_0))) _lh_subset_arg1_0);;
-let rec union_lh _lh_union_arg1_0 _lh_union_arg2_0 =
-  ((mappend_lh _lh_union_arg1_0) (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
-    (match _lh_listcomp_fun_para_0 with
-      | `LH_C(_lh_listcomp_fun_ls_h_0, _lh_listcomp_fun_ls_t_0) -> 
-        (if (not ((member_lh _lh_listcomp_fun_ls_h_0) _lh_union_arg1_0)) then
-          (`LH_C(_lh_listcomp_fun_ls_h_0, (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0)))
-        else
-          (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0))
-      | `LH_N -> 
-        (`LH_N))) in
-    (_lh_listcomp_fun_0 _lh_union_arg2_0)));;
-let rec partition'_lh _lh_partition'_arg1_0 =
-  ((foldr_lh (select_lh _lh_partition'_arg1_0)) (`LH_P2((`LH_N), (`LH_N))));;
-let rec firstSuccess_lh _lh_firstSuccess_arg1_0 _lh_firstSuccess_arg2_0 =
-  ((first_lh 0) ((map_lh _lh_firstSuccess_arg1_0) _lh_firstSuccess_arg2_0));;
-let rec histo_lh _lh_histo_arg1_0 =
-  (((foldr_lh histins_lh) (`LH_N)) _lh_histo_arg1_0);;
-let rec concat_lh lss_0 =
-  (match lss_0 with
-    | `LH_C(h_6, t_6) -> 
-      ((mappend_lh h_6) (concat_lh t_6))
-    | `LH_N -> 
-      (`LH_N));;
-let rec attribkeys_lh _lh_attribkeys_arg1_0 =
-  ((map_lh (fun k_0 -> 
-    (`K(k_0, (head_lh k_0), (last_lh k_0), (length_lh k_0))))) _lh_attribkeys_arg1_0);;
 let rec hash_lh _lh_hash_arg1_0 _lh_hash_arg2_0 =
   (match _lh_hash_arg2_0 with
     | `K(_lh_hash_K_0_0, _lh_hash_K_1_0, _lh_hash_K_2_0, _lh_hash_K_3_0) -> 
       ((_lh_hash_K_3_0 + ((assoc_lh _lh_hash_K_1_0) _lh_hash_arg1_0)) + ((assoc_lh _lh_hash_K_2_0) _lh_hash_arg1_0))
     | _ -> 
       (failwith "error"));;
+let rec min_lh _lh_min_arg1_0 _lh_min_arg2_0 =
+  (if (_lh_min_arg1_0 < _lh_min_arg2_0) then
+    _lh_min_arg1_0
+  else
+    _lh_min_arg2_0);;
 let rec minm_lh _lh_minm_arg1_0 _lh_minm_arg2_0 =
   (match _lh_minm_arg1_0 with
     | `Nothing -> 
@@ -211,6 +216,11 @@ let rec minm_lh _lh_minm_arg1_0 _lh_minm_arg2_0 =
       ((min_lh _lh_minm_Just_0_0) _lh_minm_arg2_0)
     | _ -> 
       (failwith "error"));;
+let rec max_lh _lh_max_arg1_0 _lh_max_arg2_0 =
+  (if (_lh_max_arg1_0 > _lh_max_arg2_0) then
+    _lh_max_arg1_0
+  else
+    _lh_max_arg2_0);;
 let rec maxm_lh _lh_maxm_arg1_0 _lh_maxm_arg2_0 =
   (match _lh_maxm_arg1_0 with
     | `Nothing -> 
@@ -219,23 +229,6 @@ let rec maxm_lh _lh_maxm_arg1_0 _lh_maxm_arg2_0 =
       ((max_lh _lh_maxm_Just_0_0) _lh_maxm_arg2_0)
     | _ -> 
       (failwith "error"));;
-let rec blocked'_lh _lh_blocked'_arg1_0 _lh_blocked'_arg2_0 =
-  (match _lh_blocked'_arg2_0 with
-    | `LH_N -> 
-      (`LH_N)
-    | `LH_C(_lh_blocked'_LH_C_0_0, _lh_blocked'_LH_C_1_0) -> 
-      (let rec ds'_0 = ((union_lh _lh_blocked'_arg1_0) (ends_lh _lh_blocked'_LH_C_0_0)) in
-        (let rec _lh_matchIdent_3 = ((partition'_lh (fun x_0 -> 
-          ((subset_lh (ends_lh x_0)) ds'_0))) _lh_blocked'_LH_C_1_0) in
-          (match _lh_matchIdent_3 with
-            | `LH_P2(_lh_blocked'_LH_P2_0_0, _lh_blocked'_LH_P2_1_0) -> 
-              ((mappend_lh (`LH_C(_lh_blocked'_LH_C_0_0, _lh_blocked'_LH_P2_0_0))) ((blocked'_lh ds'_0) _lh_blocked'_LH_P2_1_0))
-            | _ -> 
-              (failwith "error"))))
-    | _ -> 
-      (failwith "error"));;
-let rec freqtab_lh _lh_freqtab_arg1_0 =
-  (histo_lh (concat_lh ((map_lh ends_lh) (attribkeys_lh (keys_lh 0)))));;
 let rec hinsert_lh _lh_hinsert_arg1_0 _lh_hinsert_arg2_0 =
   (match _lh_hinsert_arg2_0 with
     | `H(_lh_hinsert_H_0_0, _lh_hinsert_H_1_0, _lh_hinsert_H_2_0) -> 
@@ -247,8 +240,6 @@ let rec hinsert_lh _lh_hinsert_arg1_0 _lh_hinsert_arg2_0 =
             (`Just((`H((`Just(lo'_0)), (`Just(hi'_0)), (`LH_C(_lh_hinsert_arg1_0, _lh_hinsert_H_2_0)))))))))
     | _ -> 
       (failwith "error"));;
-let rec blocked_lh _lh_blocked_arg1_0 =
-  ((blocked'_lh (`LH_N)) _lh_blocked_arg1_0);;
 let rec findhash'_lh _lh_findhash'_arg1_0 _lh_findhash'_arg2_0 _lh_findhash'_arg3_0 =
   (match _lh_findhash'_arg3_0 with
     | `LH_N -> 
@@ -321,6 +312,15 @@ let rec findhash'_lh _lh_findhash'_arg1_0 _lh_findhash'_arg2_0 _lh_findhash'_arg
       (failwith "error"));;
 let rec findhash_lh _lh_findhash_arg1_0 =
   (((findhash'_lh (`H((`Nothing), (`Nothing), (`LH_N)))) (`LH_N)) _lh_findhash_arg1_0);;
+let rec take_lh n_0 ls_3 =
+  (if (n_0 > 0) then
+    (match ls_3 with
+      | `LH_C(h_3, t_3) -> 
+        (`LH_C(h_3, ((take_lh (n_0 - 1)) t_3)))
+      | `LH_N -> 
+        (`LH_N))
+  else
+    (`LH_N));;
 let rec cichelli_lh _lh_cichelli_arg1_0 =
   (let rec attribkeys'_0 = (attribkeys_lh ((mappend_lh (keys_lh 0)) ((take_lh (_lh_cichelli_arg1_0 mod 2)) (keys_lh 0)))) in
     (let rec hashkeys_0 = ((fun _lh_funcomp_x_0 -> 

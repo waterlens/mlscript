@@ -38,6 +38,12 @@ let rec dotPlus_lh _lh_dotPlus_arg1_0 _lh_dotPlus_arg2_0 =
                   (failwith "error"))
             | _ -> 
               (failwith "error"))));;
+let rec propagate_lh _lh_propagate_arg1_0 _lh_propagate_arg2_0 _lh_propagate_arg3_0 =
+  (match _lh_propagate_arg3_0 with
+    | `State(_lh_propagate_State_0_0, _lh_propagate_State_1_0) -> 
+      (`State(((dotPlus_lh _lh_propagate_State_0_0) ((scalarMut_lh _lh_propagate_arg1_0) _lh_propagate_State_1_0)), ((dotPlus_lh _lh_propagate_State_1_0) ((scalarMut_lh _lh_propagate_arg1_0) _lh_propagate_arg2_0))))
+    | _ -> 
+      (failwith "error"));;
 let rec zipWith_lz_lz_lh f_0 xs_0 ys_0 =
   (lazy (match (Lazy.force xs_0) with
     | `LH_C(hx_0, tx_0) -> 
@@ -48,12 +54,33 @@ let rec zipWith_lz_lz_lh f_0 xs_0 ys_0 =
           (`LH_N))
     | `LH_N -> 
       (`LH_N)));;
+let rec runExperiment_lh _lh_runExperiment_arg1_0 _lh_runExperiment_arg2_0 _lh_runExperiment_arg3_0 _lh_runExperiment_arg4_0 =
+  (lazy (let rec stream_0 = ((((runExperiment_lh _lh_runExperiment_arg1_0) _lh_runExperiment_arg2_0) _lh_runExperiment_arg3_0) _lh_runExperiment_arg4_0) in
+    (`LH_C(_lh_runExperiment_arg4_0, (((zipWith_lz_lz_lh (propagate_lh _lh_runExperiment_arg2_0)) ((_lh_runExperiment_arg1_0 _lh_runExperiment_arg3_0) stream_0)) stream_0)))));;
 let rec mappend_lh xs_1 ys_1 =
   (match xs_1 with
     | `LH_C(h_1, t_1) -> 
       (`LH_C(h_1, ((mappend_lh t_1) ys_1)))
     | `LH_N -> 
       ys_1);;
+let rec concat_lh lss_0 =
+  (match lss_0 with
+    | `LH_C(h_2, t_2) -> 
+      ((mappend_lh h_2) (concat_lh t_2))
+    | `LH_N -> 
+      (`LH_N));;
+let rec show_lh _lh_show_arg1_0 =
+  (match _lh_show_arg1_0 with
+    | `State(_lh_show_State_0_0, _lh_show_State_1_0) -> 
+      (concat_lh (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
+        (match _lh_listcomp_fun_para_0 with
+          | `LH_C(_lh_listcomp_fun_ls_h_0, _lh_listcomp_fun_ls_t_0) -> 
+            (`LH_C(((mappend_lh (string_of_float _lh_listcomp_fun_ls_h_0)) (`LH_C('t', (`LH_N)))), (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0)))
+          | `LH_N -> 
+            (`LH_N))) in
+        (_lh_listcomp_fun_0 _lh_show_State_0_0)))
+    | _ -> 
+      (failwith "error"));;
 let rec dotMult_lh _lh_dotMult_arg1_0 _lh_dotMult_arg2_0 =
   (match _lh_dotMult_arg2_0 with
     | `LH_N -> 
@@ -72,18 +99,6 @@ let rec dotMult_lh _lh_dotMult_arg1_0 _lh_dotMult_arg2_0 =
                   (failwith "error"))
             | _ -> 
               (failwith "error"))));;
-let rec propagate_lh _lh_propagate_arg1_0 _lh_propagate_arg2_0 _lh_propagate_arg3_0 =
-  (match _lh_propagate_arg3_0 with
-    | `State(_lh_propagate_State_0_0, _lh_propagate_State_1_0) -> 
-      (`State(((dotPlus_lh _lh_propagate_State_0_0) ((scalarMut_lh _lh_propagate_arg1_0) _lh_propagate_State_1_0)), ((dotPlus_lh _lh_propagate_State_1_0) ((scalarMut_lh _lh_propagate_arg1_0) _lh_propagate_arg2_0))))
-    | _ -> 
-      (failwith "error"));;
-let rec concat_lh lss_0 =
-  (match lss_0 with
-    | `LH_C(h_2, t_2) -> 
-      ((mappend_lh h_2) (concat_lh t_2))
-    | `LH_N -> 
-      (`LH_N));;
 let rec testforce_lh _lh_testforce_arg1_0 _lh_testforce_arg2_0 =
   (lazy (let rec _lh_matchIdent_0 = (Lazy.force _lh_testforce_arg2_0) in
     (match _lh_matchIdent_0 with
@@ -95,21 +110,6 @@ let rec testforce_lh _lh_testforce_arg1_0 _lh_testforce_arg2_0 =
             (failwith "error"))
       | _ -> 
         (failwith "error"))));;
-let rec runExperiment_lh _lh_runExperiment_arg1_0 _lh_runExperiment_arg2_0 _lh_runExperiment_arg3_0 _lh_runExperiment_arg4_0 =
-  (lazy (let rec stream_0 = ((((runExperiment_lh _lh_runExperiment_arg1_0) _lh_runExperiment_arg2_0) _lh_runExperiment_arg3_0) _lh_runExperiment_arg4_0) in
-    (`LH_C(_lh_runExperiment_arg4_0, (((zipWith_lz_lz_lh (propagate_lh _lh_runExperiment_arg2_0)) ((_lh_runExperiment_arg1_0 _lh_runExperiment_arg3_0) stream_0)) stream_0)))));;
-let rec show_lh _lh_show_arg1_0 =
-  (match _lh_show_arg1_0 with
-    | `State(_lh_show_State_0_0, _lh_show_State_1_0) -> 
-      (concat_lh (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
-        (match _lh_listcomp_fun_para_0 with
-          | `LH_C(_lh_listcomp_fun_ls_h_0, _lh_listcomp_fun_ls_t_0) -> 
-            (`LH_C(((mappend_lh (string_of_float _lh_listcomp_fun_ls_h_0)) (`LH_C('t', (`LH_N)))), (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0)))
-          | `LH_N -> 
-            (`LH_N))) in
-        (_lh_listcomp_fun_0 _lh_show_State_0_0)))
-    | _ -> 
-      (failwith "error"));;
 let rec testAtom_nofib_lh _lh_testAtom_nofib_arg1_0 =
   (concat_lh (let rec _lh_listcomp_fun_1 = (fun _lh_listcomp_fun_para_1 -> 
     (match _lh_listcomp_fun_para_1 with

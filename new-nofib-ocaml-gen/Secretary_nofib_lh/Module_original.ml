@@ -51,12 +51,34 @@ let rec filter_lz_lh f_1 ls_1 =
         (Lazy.force ((filter_lz_lh f_1) t_1)))
     | `LH_N -> 
       (`LH_N)));;
+let rec nub_lz_lh _lh_nub_lz_arg1_0 =
+  (lazy (let rec _lh_matchIdent_1 = (Lazy.force _lh_nub_lz_arg1_0) in
+    (match _lh_matchIdent_1 with
+      | `LH_N -> 
+        (`LH_N)
+      | `LH_C(_lh_nub_lz_LH_C_0_0, _lh_nub_lz_LH_C_1_0) -> 
+        (`LH_C(_lh_nub_lz_LH_C_0_0, (nub_lz_lh ((filter_lz_lh (fun y_1 -> 
+          (not (_lh_nub_lz_LH_C_0_0 = y_1)))) _lh_nub_lz_LH_C_1_0))))
+      | _ -> 
+        (failwith "error"))));;
 let rec foldl_lh f_2 i_0 ls_2 =
   (match ls_2 with
     | `LH_C(h_2, t_2) -> 
       (((foldl_lh f_2) ((f_2 i_0) h_2)) t_2)
     | `LH_N -> 
       i_0);;
+let rec foldl1_lh _lh_foldl1_arg1_0 _lh_foldl1_arg2_0 =
+  (match _lh_foldl1_arg2_0 with
+    | `LH_C(_lh_foldl1_LH_C_0_0, _lh_foldl1_LH_C_1_0) -> 
+      (((foldl_lh _lh_foldl1_arg1_0) _lh_foldl1_LH_C_0_0) _lh_foldl1_LH_C_1_0)
+    | _ -> 
+      (failwith "error"));;
+let rec maximum_lh _lh_maximum_arg1_0 =
+  ((foldl1_lh (fun x_0 y_0 -> 
+    (if (x_0 > y_0) then
+      x_0
+    else
+      y_0))) _lh_maximum_arg1_0);;
 let rec take_lh n_0 ls_3 =
   (if (n_0 > 0) then
     (match ls_3 with
@@ -77,6 +99,10 @@ let rec power_lh _lh_power_arg1_0 _lh_power_arg2_0 =
     1
   else
     (_lh_power_arg1_0 * ((power_lh _lh_power_arg1_0) (_lh_power_arg2_0 - 1))));;
+let rec infRand_lh _lh_infRand_arg1_0 =
+  (let rec f_3 = (fun x_3 -> 
+    (lazy (`LH_C(((x_3 mod _lh_infRand_arg1_0) + 1), (f_3 (((97 * x_3) + 11) mod ((power_lh 2) 7))))))) in
+    (f_3 37));;
 let rec filter_lh f_0 ls_0 =
   (match ls_0 with
     | `LH_C(h_0, t_0) -> 
@@ -86,32 +112,6 @@ let rec filter_lh f_0 ls_0 =
         ((filter_lh f_0) t_0))
     | `LH_N -> 
       (`LH_N));;
-let rec nub_lz_lh _lh_nub_lz_arg1_0 =
-  (lazy (let rec _lh_matchIdent_1 = (Lazy.force _lh_nub_lz_arg1_0) in
-    (match _lh_matchIdent_1 with
-      | `LH_N -> 
-        (`LH_N)
-      | `LH_C(_lh_nub_lz_LH_C_0_0, _lh_nub_lz_LH_C_1_0) -> 
-        (`LH_C(_lh_nub_lz_LH_C_0_0, (nub_lz_lh ((filter_lz_lh (fun y_1 -> 
-          (not (_lh_nub_lz_LH_C_0_0 = y_1)))) _lh_nub_lz_LH_C_1_0))))
-      | _ -> 
-        (failwith "error"))));;
-let rec foldl1_lh _lh_foldl1_arg1_0 _lh_foldl1_arg2_0 =
-  (match _lh_foldl1_arg2_0 with
-    | `LH_C(_lh_foldl1_LH_C_0_0, _lh_foldl1_LH_C_1_0) -> 
-      (((foldl_lh _lh_foldl1_arg1_0) _lh_foldl1_LH_C_0_0) _lh_foldl1_LH_C_1_0)
-    | _ -> 
-      (failwith "error"));;
-let rec infRand_lh _lh_infRand_arg1_0 =
-  (let rec f_3 = (fun x_3 -> 
-    (lazy (`LH_C(((x_3 mod _lh_infRand_arg1_0) + 1), (f_3 (((97 * x_3) + 11) mod ((power_lh 2) 7))))))) in
-    (f_3 37));;
-let rec maximum_lh _lh_maximum_arg1_0 =
-  ((foldl1_lh (fun x_0 y_0 -> 
-    (if (x_0 > y_0) then
-      x_0
-    else
-      y_0))) _lh_maximum_arg1_0);;
 let rec simulate_lh _lh_simulate_arg1_0 _lh_simulate_arg2_0 _lh_simulate_arg3_0 =
   ((float_of_int (length_lh ((filter_lh (fun x_1 -> 
     x_1)) (let rec _lh_listcomp_fun_1 = (fun _lh_listcomp_fun_para_1 -> 

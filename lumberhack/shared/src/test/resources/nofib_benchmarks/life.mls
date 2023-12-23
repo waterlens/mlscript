@@ -209,6 +209,12 @@ testLife_nofib $ primId 15
 //│ 		      (`LH_C(h_5, ((mappend_lh t_5) ys_1)))
 //│ 		    | `LH_N -> 
 //│ 		      ys_1);;
+//│ 		let rec concat_lh lss_0 =
+//│ 		  (match lss_0 with
+//│ 		    | `LH_C(h_6, t_6) -> 
+//│ 		      ((mappend_lh h_6) (concat_lh t_6))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N));;
 //│ 		let rec map_lh f_0 ls_0 =
 //│ 		  (match ls_0 with
 //│ 		    | `LH_C(h_0, t_0) -> 
@@ -221,12 +227,22 @@ testLife_nofib $ primId 15
 //│ 		      ((f_2 h_2) (((foldr_lh f_2) i_0) t_2))
 //│ 		    | `LH_N -> 
 //│ 		      i_0);;
+//│ 		let rec glue_lh _lh_glue_arg1_0 _lh_glue_arg2_0 _lh_glue_arg3_0 =
+//│ 		  ((mappend_lh ((mappend_lh _lh_glue_arg2_0) _lh_glue_arg1_0)) _lh_glue_arg3_0);;
 //│ 		let rec star_lh _lh_star_arg1_0 =
 //│ 		  (match _lh_star_arg1_0 with
 //│ 		    | 0 -> 
 //│ 		      (`LH_C(' ', (`LH_C(' ', (`LH_N)))))
 //│ 		    | 1 -> 
 //│ 		      (`LH_C(' ', (`LH_C('o', (`LH_N)))))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"));;
+//│ 		let rec disp_lh _lh_disp_arg1_0 =
+//│ 		  (match _lh_disp_arg1_0 with
+//│ 		    | `LH_P2(_lh_disp_LH_P2_0_0, _lh_disp_LH_P2_1_0) -> 
+//│ 		      ((mappend_lh ((mappend_lh _lh_disp_LH_P2_0_0) (`LH_C('n', (`LH_C('n', (`LH_N))))))) ((fun _lh_funcomp_x_4 -> 
+//│ 		        (((foldr_lh (glue_lh (`LH_C('n', (`LH_N))))) (`LH_N)) ((map_lh (fun _lh_funcomp_x_5 -> 
+//│ 		          (concat_lh ((map_lh star_lh) _lh_funcomp_x_5)))) _lh_funcomp_x_4))) _lh_disp_LH_P2_1_0))
 //│ 		    | _ -> 
 //│ 		      (failwith "error"));;
 //│ 		let rec map_lz_lh f_1 ls_1 =
@@ -241,6 +257,8 @@ testLife_nofib $ primId 15
 //│ 		      t_3
 //│ 		    | `LH_N -> 
 //│ 		      (failwith "error"));;
+//│ 		let rec shiftl_lh _lh_shiftl_arg1_0 _lh_shiftl_arg2_0 =
+//│ 		  ((mappend_lh (tail_lh _lh_shiftl_arg2_0)) (`LH_C(_lh_shiftl_arg1_0, (`LH_N))));;
 //│ 		let rec init_lh _lh_init_arg1_0 =
 //│ 		  (match _lh_init_arg1_0 with
 //│ 		    | `LH_C(_lh_init_LH_C_0_0, _lh_init_LH_C_1_0) -> 
@@ -251,6 +269,8 @@ testLife_nofib $ primId 15
 //│ 		          (`LH_C(_lh_init_LH_C_0_0, (init_lh _lh_init_LH_C_1_0))))
 //│ 		    | _ -> 
 //│ 		      (failwith "error"));;
+//│ 		let rec shiftr_lh _lh_shiftr_arg1_0 _lh_shiftr_arg2_0 =
+//│ 		  ((mappend_lh (`LH_C(_lh_shiftr_arg1_0, (`LH_N)))) (init_lh _lh_shiftr_arg2_0));;
 //│ 		let rec zip3_lh _lh_zip3_arg1_0 _lh_zip3_arg2_0 _lh_zip3_arg3_0 =
 //│ 		  (let rec _lh_matchIdent_0 = _lh_zip3_arg1_0 in
 //│ 		    (match _lh_matchIdent_0 with
@@ -274,6 +294,8 @@ testLife_nofib $ primId 15
 //│ 		        (`LH_N)
 //│ 		      | _ -> 
 //│ 		        (failwith "error")));;
+//│ 		let rec shift_lh _lh_shift_arg1_0 _lh_shift_arg2_0 =
+//│ 		  (((zip3_lh ((shiftr_lh _lh_shift_arg1_0) _lh_shift_arg2_0)) _lh_shift_arg2_0) ((shiftl_lh _lh_shift_arg1_0) _lh_shift_arg2_0));;
 //│ 		let rec zipWith3_lh _lh_zipWith3_arg1_0 _lh_zipWith3_arg2_0 _lh_zipWith3_arg3_0 _lh_zipWith3_arg4_0 =
 //│ 		  (let rec _lh_matchIdent_3 = _lh_zipWith3_arg2_0 in
 //│ 		    (match _lh_matchIdent_3 with
@@ -318,6 +340,14 @@ testLife_nofib $ primId 15
 //│ 		          (failwith "error"))
 //│ 		    | _ -> 
 //│ 		      (failwith "error"));;
+//│ 		let rec row_lh _lh_row_arg1_0 =
+//│ 		  (match _lh_row_arg1_0 with
+//│ 		    | `LH_P3(_lh_row_LH_P3_0_0, _lh_row_LH_P3_1_0, _lh_row_LH_P3_2_0) -> 
+//│ 		      ((((zipWith3_lh elt_lh) ((shift_lh 0) _lh_row_LH_P3_0_0)) ((shift_lh 0) _lh_row_LH_P3_1_0)) ((shift_lh 0) _lh_row_LH_P3_2_0))
+//│ 		    | _ -> 
+//│ 		      (failwith "error"));;
+//│ 		let rec gen_lh _lh_gen_arg1_0 _lh_gen_arg2_0 =
+//│ 		  ((map_lh row_lh) ((shift_lh ((copy_lh _lh_gen_arg1_0) 0)) _lh_gen_arg2_0));;
 //│ 		let rec take_lh n_0 ls_4 =
 //│ 		  (if (n_0 > 0) then
 //│ 		    (match ls_4 with
@@ -327,36 +357,6 @@ testLife_nofib $ primId 15
 //│ 		        (`LH_N))
 //│ 		  else
 //│ 		    (`LH_N));;
-//│ 		let rec concat_lh lss_0 =
-//│ 		  (match lss_0 with
-//│ 		    | `LH_C(h_6, t_6) -> 
-//│ 		      ((mappend_lh h_6) (concat_lh t_6))
-//│ 		    | `LH_N -> 
-//│ 		      (`LH_N));;
-//│ 		let rec glue_lh _lh_glue_arg1_0 _lh_glue_arg2_0 _lh_glue_arg3_0 =
-//│ 		  ((mappend_lh ((mappend_lh _lh_glue_arg2_0) _lh_glue_arg1_0)) _lh_glue_arg3_0);;
-//│ 		let rec shiftl_lh _lh_shiftl_arg1_0 _lh_shiftl_arg2_0 =
-//│ 		  ((mappend_lh (tail_lh _lh_shiftl_arg2_0)) (`LH_C(_lh_shiftl_arg1_0, (`LH_N))));;
-//│ 		let rec shiftr_lh _lh_shiftr_arg1_0 _lh_shiftr_arg2_0 =
-//│ 		  ((mappend_lh (`LH_C(_lh_shiftr_arg1_0, (`LH_N)))) (init_lh _lh_shiftr_arg2_0));;
-//│ 		let rec disp_lh _lh_disp_arg1_0 =
-//│ 		  (match _lh_disp_arg1_0 with
-//│ 		    | `LH_P2(_lh_disp_LH_P2_0_0, _lh_disp_LH_P2_1_0) -> 
-//│ 		      ((mappend_lh ((mappend_lh _lh_disp_LH_P2_0_0) (`LH_C('n', (`LH_C('n', (`LH_N))))))) ((fun _lh_funcomp_x_4 -> 
-//│ 		        (((foldr_lh (glue_lh (`LH_C('n', (`LH_N))))) (`LH_N)) ((map_lh (fun _lh_funcomp_x_5 -> 
-//│ 		          (concat_lh ((map_lh star_lh) _lh_funcomp_x_5)))) _lh_funcomp_x_4))) _lh_disp_LH_P2_1_0))
-//│ 		    | _ -> 
-//│ 		      (failwith "error"));;
-//│ 		let rec shift_lh _lh_shift_arg1_0 _lh_shift_arg2_0 =
-//│ 		  (((zip3_lh ((shiftr_lh _lh_shift_arg1_0) _lh_shift_arg2_0)) _lh_shift_arg2_0) ((shiftl_lh _lh_shift_arg1_0) _lh_shift_arg2_0));;
-//│ 		let rec row_lh _lh_row_arg1_0 =
-//│ 		  (match _lh_row_arg1_0 with
-//│ 		    | `LH_P3(_lh_row_LH_P3_0_0, _lh_row_LH_P3_1_0, _lh_row_LH_P3_2_0) -> 
-//│ 		      ((((zipWith3_lh elt_lh) ((shift_lh 0) _lh_row_LH_P3_0_0)) ((shift_lh 0) _lh_row_LH_P3_1_0)) ((shift_lh 0) _lh_row_LH_P3_2_0))
-//│ 		    | _ -> 
-//│ 		      (failwith "error"));;
-//│ 		let rec gen_lh _lh_gen_arg1_0 _lh_gen_arg2_0 =
-//│ 		  ((map_lh row_lh) ((shift_lh ((copy_lh _lh_gen_arg1_0) 0)) _lh_gen_arg2_0));;
 //│ 		let rec generations_lh _lh_generations_arg1_0 =
 //│ 		  ((fun _lh_funcomp_x_0 -> 
 //│ 		    ((fun _lh_funcomp_x_1 -> 

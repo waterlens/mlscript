@@ -9,51 +9,51 @@ flatten
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ flatten_lh^29
-//│ def flatten_lh(_lh_flatten_arg1⁰) = case _lh_flatten_arg1⁰ of {
+//│ flatten_lh_₁^29
+//│ def flatten_lh_₁(_lh_flatten_arg1⁰) = case _lh_flatten_arg1⁰ of {
 //│ 	Leaf _lh_flatten_Leaf_0⁰ => [LH_C _lh_flatten_Leaf_0⁰ [LH_N]]
-//│ 	| Node _lh_flatten_Node_0⁰ _lh_flatten_Node_1⁰ => mappend_lh^17(flatten_lh^18(_lh_flatten_Node_0⁰), flatten_lh^22(_lh_flatten_Node_1⁰))
+//│ 	| Node _lh_flatten_Node_0⁰ _lh_flatten_Node_1⁰ => mappend_lh_₁^17(flatten_lh_₁^18(_lh_flatten_Node_0⁰), flatten_lh_₁^22(_lh_flatten_Node_1⁰))
 //│ 	| _  => error⁰}
-//│ def mappend_lh(xs⁰, ys⁰) = case xs⁰ of {
-//│ 	LH_C h⁰ t⁰ => [LH_C h⁰ mappend_lh^3(t⁰, ys⁰)]
+//│ def mappend_lh_₁(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	LH_C h⁰ t⁰ => [LH_C h⁰ mappend_lh_₁^3(t⁰, ys⁰)]
 //│ 	| LH_N  => ys⁰}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [flatten_lh^29] (hopeless to continue)
-//│ 	[flatten_lh^29 · flatten_lh^18] ---> [flatten_lh^29] (using original def)
-//│ 	[flatten_lh^29 · flatten_lh^22] ---> [flatten_lh^29] (using original def)
-//│ 	[flatten_lh^29 · mappend_lh^17] (using original def)
-//│ 		[flatten_lh^29 · mappend_lh^17 · mappend_lh^3] ---> [flatten_lh^29 · mappend_lh^17] (using original def)
+//│ [flatten_lh_₁^29] (hopeless to continue)
+//│ 	[flatten_lh_₁^29 · flatten_lh_₁^18] ---> [flatten_lh_₁^29] (using original def)
+//│ 	[flatten_lh_₁^29 · flatten_lh_₁^22] ---> [flatten_lh_₁^29] (using original def)
+//│ 	[flatten_lh_₁^29 · mappend_lh_₁^17] (using original def)
+//│ 		[flatten_lh_₁^29 · mappend_lh_₁^17 · mappend_lh_₁^3] ---> [flatten_lh_₁^29 · mappend_lh_₁^17] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ flatten_lh_₀
-//│ def flatten_lh_₀(_lh_flatten_arg1¹) = 
+//│ flatten_lh_₁_₀
+//│ def flatten_lh_₁_₀(_lh_flatten_arg1¹) = 
 //│ 	case _lh_flatten_arg1¹ of {
 //│ 		Leaf _lh_flatten_Leaf_0¹ => [LH_C _lh_flatten_Leaf_0¹ [LH_N]]
-//│ 		| Node _lh_flatten_Node_0¹ _lh_flatten_Node_1¹ => mappend_lh_₀(flatten_lh_₀(_lh_flatten_Node_0¹), flatten_lh_₀(_lh_flatten_Node_1¹))
+//│ 		| Node _lh_flatten_Node_0¹ _lh_flatten_Node_1¹ => mappend_lh_₁_₀(flatten_lh_₁_₀(_lh_flatten_Node_0¹), flatten_lh_₁_₀(_lh_flatten_Node_1¹))
 //│ 		| _  => error⁰}
 //│ 	where
-//│ 	def mappend_lh_₀(xs¹, ys¹) = 
+//│ 	def mappend_lh_₁_₀(xs¹, ys¹) = 
 //│ 		case xs¹ of {
-//│ 			LH_C h¹ t¹ => [LH_C h¹ mappend_lh_₀(t¹, ys¹)]
+//│ 			LH_C h¹ t¹ => [LH_C h¹ mappend_lh_₁_₀(t¹, ys¹)]
 //│ 			| LH_N  => ys¹}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [LH_C h¹ mappend_lh_₀(t¹, ys¹)]: 37 --->
+//│ [LH_C h¹ mappend_lh_₁_₀(t¹, ys¹)]: 37 --->
 //│ 	NoCons
-//│ 	case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend_lh_₀(t¹, ys¹)] | LH_N  => ys¹}: 39
+//│ 	case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend_lh_₁_₀(t¹, ys¹)] | LH_N  => ys¹}: 39
 //│ [LH_N]: 44 --->
 //│ 	NoCons
-//│ 	case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend_lh_₀(t¹, ys¹)] | LH_N  => ys¹}: 39
+//│ 	case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend_lh_₁_₀(t¹, ys¹)] | LH_N  => ys¹}: 39
 //│ [LH_C _lh_flatten_Leaf_0¹ [LH_N]]: 45 --->
 //│ 	NoCons
-//│ 	case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend_lh_₀(t¹, ys¹)] | LH_N  => ys¹}: 39
+//│ 	case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend_lh_₁_₀(t¹, ys¹)] | LH_N  => ys¹}: 39
 //│ ------------------
-//│ case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend_lh_₀(t¹, ys¹)] | LH_N  => ys¹}: 39 --->
-//│ 	[LH_C h¹ mappend_lh_₀(t¹, ys¹)]: 37
+//│ case xs¹ of {LH_C h¹ t¹ => [LH_C h¹ mappend_lh_₁_₀(t¹, ys¹)] | LH_N  => ys¹}: 39 --->
+//│ 	[LH_C h¹ mappend_lh_₁_₀(t¹, ys¹)]: 37
 //│ 	[LH_N]: 44
 //│ 	[LH_C _lh_flatten_Leaf_0¹ [LH_N]]: 45
 //│ <<<<<<< fusion matches <<<<<<<
@@ -65,16 +65,16 @@ flatten
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ flatten_lh_₀
-//│ def flatten_lh_₀(_lh_flatten_arg1²) = 
+//│ flatten_lh_₁_₀
+//│ def flatten_lh_₁_₀(_lh_flatten_arg1²) = 
 //│ 	case _lh_flatten_arg1² of {
 //│ 		Leaf _lh_flatten_Leaf_0¹ => [LH_C _lh_flatten_Leaf_0¹ [LH_N]]
-//│ 		| Node _lh_flatten_Node_0¹ _lh_flatten_Node_1¹ => mappend_lh_₀(flatten_lh_₀(_lh_flatten_Node_0¹), flatten_lh_₀(_lh_flatten_Node_1¹))
+//│ 		| Node _lh_flatten_Node_0¹ _lh_flatten_Node_1¹ => mappend_lh_₁_₀(flatten_lh_₁_₀(_lh_flatten_Node_0¹), flatten_lh_₁_₀(_lh_flatten_Node_1¹))
 //│ 		| _  => error⁰}
 //│ 	where
-//│ 	def mappend_lh_₀(xs², ys²) = 
+//│ 	def mappend_lh_₁_₀(xs², ys²) = 
 //│ 		case xs² of {
-//│ 			LH_C h¹ t¹ => [LH_C h¹ mappend_lh_₀(t¹, ys²)]
+//│ 			LH_C h¹ t¹ => [LH_C h¹ mappend_lh_₁_₀(t¹, ys²)]
 //│ 			| LH_N  => ys²}
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -86,25 +86,25 @@ flatten
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ flatten_lh^18
-//│ def flatten_lh(_lh_flatten_arg1⁰, _lh_flatten_arg2⁰) = case _lh_flatten_arg1⁰ of {
+//│ flatten_lh_₁^18
+//│ def flatten_lh_₁(_lh_flatten_arg1⁰, _lh_flatten_arg2⁰) = case _lh_flatten_arg1⁰ of {
 //│ 	Leaf _lh_flatten_Leaf_0⁰ => [LH_C _lh_flatten_Leaf_0⁰ _lh_flatten_arg2⁰]
-//│ 	| Node _lh_flatten_Node_0⁰ _lh_flatten_Node_1⁰ => flatten_lh^5(_lh_flatten_Node_0⁰, flatten_lh^8(_lh_flatten_Node_1⁰, _lh_flatten_arg2⁰))
+//│ 	| Node _lh_flatten_Node_0⁰ _lh_flatten_Node_1⁰ => flatten_lh_₁^5(_lh_flatten_Node_0⁰, flatten_lh_₁^8(_lh_flatten_Node_1⁰, _lh_flatten_arg2⁰))
 //│ 	| _  => error⁰}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [flatten_lh^18] (hopeless to continue)
-//│ 	[flatten_lh^18 · flatten_lh^5] ---> [flatten_lh^18] (using original def)
-//│ 	[flatten_lh^18 · flatten_lh^8] ---> [flatten_lh^18] (using original def)
+//│ [flatten_lh_₁^18] (hopeless to continue)
+//│ 	[flatten_lh_₁^18 · flatten_lh_₁^5] ---> [flatten_lh_₁^18] (using original def)
+//│ 	[flatten_lh_₁^18 · flatten_lh_₁^8] ---> [flatten_lh_₁^18] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ flatten_lh_₀
-//│ def flatten_lh_₀(_lh_flatten_arg1¹, _lh_flatten_arg2¹) = 
+//│ flatten_lh_₁_₀
+//│ def flatten_lh_₁_₀(_lh_flatten_arg1¹, _lh_flatten_arg2¹) = 
 //│ 	case _lh_flatten_arg1¹ of {
 //│ 		Leaf _lh_flatten_Leaf_0¹ => [LH_C _lh_flatten_Leaf_0¹ _lh_flatten_arg2¹]
-//│ 		| Node _lh_flatten_Node_0¹ _lh_flatten_Node_1¹ => flatten_lh_₀(_lh_flatten_Node_0¹, flatten_lh_₀(_lh_flatten_Node_1¹, _lh_flatten_arg2¹))
+//│ 		| Node _lh_flatten_Node_0¹ _lh_flatten_Node_1¹ => flatten_lh_₁_₀(_lh_flatten_Node_0¹, flatten_lh_₁_₀(_lh_flatten_Node_1¹, _lh_flatten_arg2¹))
 //│ 		| _  => error⁰}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
@@ -121,11 +121,11 @@ flatten
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ flatten_lh_₀
-//│ def flatten_lh_₀(_lh_flatten_arg1², _lh_flatten_arg2²) = 
+//│ flatten_lh_₁_₀
+//│ def flatten_lh_₁_₀(_lh_flatten_arg1², _lh_flatten_arg2²) = 
 //│ 	case _lh_flatten_arg1² of {
 //│ 		Leaf _lh_flatten_Leaf_0¹ => [LH_C _lh_flatten_Leaf_0¹ _lh_flatten_arg2²]
-//│ 		| Node _lh_flatten_Node_0¹ _lh_flatten_Node_1¹ => flatten_lh_₀(_lh_flatten_Node_0¹, flatten_lh_₀(_lh_flatten_Node_1¹, _lh_flatten_arg2²))
+//│ 		| Node _lh_flatten_Node_0¹ _lh_flatten_Node_1¹ => flatten_lh_₁_₀(_lh_flatten_Node_0¹, flatten_lh_₁_₀(_lh_flatten_Node_1¹, _lh_flatten_arg2²))
 //│ 		| _  => error⁰}
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -138,30 +138,30 @@ flatten
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ flatten_lh^25
-//│ def flatten_lh(_lh_flatten_arg1⁰) = walk_lh^1(_lh_flatten_arg1⁰, [LH_N])
-//│ def walk_lh(_lh_walk_arg1⁰) = case _lh_walk_arg1⁰ of {
+//│ flatten_lh_₁^25
+//│ def flatten_lh_₁(_lh_flatten_arg1⁰) = walk_lh_₁^19(_lh_flatten_arg1⁰, [LH_N])
+//│ def walk_lh_₁(_lh_walk_arg1⁰) = case _lh_walk_arg1⁰ of {
 //│ 	Leaf _lh_walk_Leaf_0⁰ => (fun t⁰ -> [LH_C _lh_walk_Leaf_0⁰ t⁰])
-//│ 	| Node _lh_walk_Node_0⁰ _lh_walk_Node_1⁰ => (fun _lh_funcomp_x⁰ -> walk_lh^12(_lh_walk_Node_0⁰, walk_lh^15(_lh_walk_Node_1⁰, _lh_funcomp_x⁰)))
+//│ 	| Node _lh_walk_Node_0⁰ _lh_walk_Node_1⁰ => (fun _lh_funcomp_x⁰ -> walk_lh_₁^6(_lh_walk_Node_0⁰, walk_lh_₁^9(_lh_walk_Node_1⁰, _lh_funcomp_x⁰)))
 //│ 	| _  => error⁰}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [flatten_lh^25] (hopeless to continue)
-//│ 	[flatten_lh^25 · walk_lh^1] (using original def)
-//│ 		[flatten_lh^25 · walk_lh^1 · walk_lh^12] ---> [flatten_lh^25 · walk_lh^1] (using original def)
-//│ 		[flatten_lh^25 · walk_lh^1 · walk_lh^15] ---> [flatten_lh^25 · walk_lh^1] (using original def)
+//│ [flatten_lh_₁^25] (hopeless to continue)
+//│ 	[flatten_lh_₁^25 · walk_lh_₁^19] (using original def)
+//│ 		[flatten_lh_₁^25 · walk_lh_₁^19 · walk_lh_₁^6] ---> [flatten_lh_₁^25 · walk_lh_₁^19] (using original def)
+//│ 		[flatten_lh_₁^25 · walk_lh_₁^19 · walk_lh_₁^9] ---> [flatten_lh_₁^25 · walk_lh_₁^19] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ flatten_lh_₀
-//│ def flatten_lh_₀(_lh_flatten_arg1¹) = 
-//│ 	walk_lh_₀(_lh_flatten_arg1¹, [LH_N])
+//│ flatten_lh_₁_₀
+//│ def flatten_lh_₁_₀(_lh_flatten_arg1¹) = 
+//│ 	walk_lh_₁_₀(_lh_flatten_arg1¹, [LH_N])
 //│ 	where
-//│ 	def walk_lh_₀(_lh_walk_arg1¹) = 
+//│ 	def walk_lh_₁_₀(_lh_walk_arg1¹) = 
 //│ 		case _lh_walk_arg1¹ of {
 //│ 			Leaf _lh_walk_Leaf_0¹ => (fun t¹ -> [LH_C _lh_walk_Leaf_0¹ t¹])
-//│ 			| Node _lh_walk_Node_0¹ _lh_walk_Node_1¹ => (fun _lh_funcomp_x¹ -> walk_lh_₀(_lh_walk_Node_0¹, walk_lh_₀(_lh_walk_Node_1¹, _lh_funcomp_x¹)))
+//│ 			| Node _lh_walk_Node_0¹ _lh_walk_Node_1¹ => (fun _lh_funcomp_x¹ -> walk_lh_₁_₀(_lh_walk_Node_0¹, walk_lh_₁_₀(_lh_walk_Node_1¹, _lh_funcomp_x¹)))
 //│ 			| _  => error⁰}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
@@ -178,14 +178,14 @@ flatten
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ flatten_lh_₀
-//│ def flatten_lh_₀(_lh_flatten_arg1²) = 
-//│ 	walk_lh_₀(_lh_flatten_arg1², [LH_N])
+//│ flatten_lh_₁_₀
+//│ def flatten_lh_₁_₀(_lh_flatten_arg1²) = 
+//│ 	walk_lh_₁_₀(_lh_flatten_arg1², [LH_N])
 //│ 	where
-//│ 	def walk_lh_₀(_lh_walk_arg1²) = 
+//│ 	def walk_lh_₁_₀(_lh_walk_arg1²) = 
 //│ 		case _lh_walk_arg1² of {
 //│ 			Leaf _lh_walk_Leaf_0¹ => (fun t² -> [LH_C _lh_walk_Leaf_0¹ t²])
-//│ 			| Node _lh_walk_Node_0¹ _lh_walk_Node_1¹ => (fun _lh_funcomp_x² -> walk_lh_₀(_lh_walk_Node_0¹, walk_lh_₀(_lh_walk_Node_1¹, _lh_funcomp_x²)))
+//│ 			| Node _lh_walk_Node_0¹ _lh_walk_Node_1¹ => (fun _lh_funcomp_x² -> walk_lh_₁_₀(_lh_walk_Node_0¹, walk_lh_₁_₀(_lh_walk_Node_1¹, _lh_funcomp_x²)))
 //│ 			| _  => error⁰}
 //│ <<<<<<< after fusion <<<<<<<
 
@@ -201,82 +201,82 @@ flatten
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ flatten_lh^39
-//│ def apply_lh(_lh_apply_arg1⁰, _lh_apply_arg2⁰) = case _lh_apply_arg1⁰ of {
+//│ flatten_lh_₁^39
+//│ def apply_lh_₁(_lh_apply_arg1⁰, _lh_apply_arg2⁰) = case _lh_apply_arg1⁰ of {
 //│ 	LamCons _lh_apply_LamCons_0⁰ => [LH_C _lh_apply_LamCons_0⁰ _lh_apply_arg2⁰]
-//│ 	| LamO _lh_apply_LamO_0⁰ _lh_apply_LamO_1⁰ => apply_lh^26(_lh_apply_LamO_0⁰, apply_lh^29(_lh_apply_LamO_1⁰, _lh_apply_arg2⁰))
+//│ 	| LamO _lh_apply_LamO_0⁰ _lh_apply_LamO_1⁰ => apply_lh_₁^5(_lh_apply_LamO_0⁰, apply_lh_₁^8(_lh_apply_LamO_1⁰, _lh_apply_arg2⁰))
 //│ 	| _  => error⁰}
-//│ def flatten_lh(_lh_flatten_arg1⁰) = apply_lh^1(walk_lh^2(_lh_flatten_arg1⁰), [LH_N])
-//│ def walk_lh(_lh_walk_arg1⁰) = case _lh_walk_arg1⁰ of {
+//│ def flatten_lh_₁(_lh_flatten_arg1⁰) = apply_lh_₁^31(walk_lh_₁^32(_lh_flatten_arg1⁰), [LH_N])
+//│ def walk_lh_₁(_lh_walk_arg1⁰) = case _lh_walk_arg1⁰ of {
 //│ 	Leaf _lh_walk_Leaf_0⁰ => [LamCons _lh_walk_Leaf_0⁰]
-//│ 	| Node _lh_walk_Node_0⁰ _lh_walk_Node_1⁰ => [LamO walk_lh^12(_lh_walk_Node_0⁰) walk_lh^15(_lh_walk_Node_1⁰)]
+//│ 	| Node _lh_walk_Node_0⁰ _lh_walk_Node_1⁰ => [LamO walk_lh_₁^21(_lh_walk_Node_0⁰) walk_lh_₁^24(_lh_walk_Node_1⁰)]
 //│ 	| _  => error⁰}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> expansion >>>>>>>
-//│ [flatten_lh^39] (hopeless to continue)
-//│ 	[flatten_lh^39 · apply_lh^1] (using original def)
-//│ 		[flatten_lh^39 · apply_lh^1 · apply_lh^26] ---> [flatten_lh^39 · apply_lh^1] (using original def)
-//│ 		[flatten_lh^39 · apply_lh^1 · apply_lh^29] ---> [flatten_lh^39 · apply_lh^1] (using original def)
-//│ 	[flatten_lh^39 · walk_lh^2] (using original def)
-//│ 		[flatten_lh^39 · walk_lh^2 · walk_lh^12] ---> [flatten_lh^39 · walk_lh^2] (using original def)
-//│ 		[flatten_lh^39 · walk_lh^2 · walk_lh^15] ---> [flatten_lh^39 · walk_lh^2] (using original def)
+//│ [flatten_lh_₁^39] (hopeless to continue)
+//│ 	[flatten_lh_₁^39 · apply_lh_₁^31] (using original def)
+//│ 		[flatten_lh_₁^39 · apply_lh_₁^31 · apply_lh_₁^5] ---> [flatten_lh_₁^39 · apply_lh_₁^31] (using original def)
+//│ 		[flatten_lh_₁^39 · apply_lh_₁^31 · apply_lh_₁^8] ---> [flatten_lh_₁^39 · apply_lh_₁^31] (using original def)
+//│ 	[flatten_lh_₁^39 · walk_lh_₁^32] (using original def)
+//│ 		[flatten_lh_₁^39 · walk_lh_₁^32 · walk_lh_₁^21] ---> [flatten_lh_₁^39 · walk_lh_₁^32] (using original def)
+//│ 		[flatten_lh_₁^39 · walk_lh_₁^32 · walk_lh_₁^24] ---> [flatten_lh_₁^39 · walk_lh_₁^32] (using original def)
 //│ <<<<<<< expansion <<<<<<<
 //│ 
 //│ >>>>>>> expanded program >>>>>>>
-//│ flatten_lh_₀
-//│ def flatten_lh_₀(_lh_flatten_arg1¹) = 
-//│ 	apply_lh_₀(walk_lh_₀(_lh_flatten_arg1¹), [LH_N])
+//│ flatten_lh_₁_₀
+//│ def flatten_lh_₁_₀(_lh_flatten_arg1¹) = 
+//│ 	apply_lh_₁_₀(walk_lh_₁_₀(_lh_flatten_arg1¹), [LH_N])
 //│ 	where
-//│ 	def apply_lh_₀(_lh_apply_arg1¹, _lh_apply_arg2¹) = 
+//│ 	def apply_lh_₁_₀(_lh_apply_arg1¹, _lh_apply_arg2¹) = 
 //│ 		case _lh_apply_arg1¹ of {
 //│ 			LamCons _lh_apply_LamCons_0¹ => [LH_C _lh_apply_LamCons_0¹ _lh_apply_arg2¹]
-//│ 			| LamO _lh_apply_LamO_0¹ _lh_apply_LamO_1¹ => apply_lh_₀(_lh_apply_LamO_0¹, apply_lh_₀(_lh_apply_LamO_1¹, _lh_apply_arg2¹))
+//│ 			| LamO _lh_apply_LamO_0¹ _lh_apply_LamO_1¹ => apply_lh_₁_₀(_lh_apply_LamO_0¹, apply_lh_₁_₀(_lh_apply_LamO_1¹, _lh_apply_arg2¹))
 //│ 			| _  => error⁰}
-//│ 	def walk_lh_₀(_lh_walk_arg1¹) = 
+//│ 	def walk_lh_₁_₀(_lh_walk_arg1¹) = 
 //│ 		case _lh_walk_arg1¹ of {
 //│ 			Leaf _lh_walk_Leaf_0¹ => [LamCons _lh_walk_Leaf_0¹]
-//│ 			| Node _lh_walk_Node_0¹ _lh_walk_Node_1¹ => [LamO walk_lh_₀(_lh_walk_Node_0¹) walk_lh_₀(_lh_walk_Node_1¹)]
+//│ 			| Node _lh_walk_Node_0¹ _lh_walk_Node_1¹ => [LamO walk_lh_₁_₀(_lh_walk_Node_0¹) walk_lh_₁_₀(_lh_walk_Node_1¹)]
 //│ 			| _  => error⁰}
 //│ <<<<<<< expanded program <<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [LamCons _lh_walk_Leaf_0¹]: 42 --->
-//│ 	case _lh_apply_arg1¹ of {LamCons _lh_apply_LamCons_0¹ => [LH_C _lh_apply_LamCons_0¹ _lh_apply_arg2¹] | LamO _lh_apply_LamO_0¹ _lh_apply_LamO_1¹ => apply_lh_₀(_lh_apply_LamO_0¹, apply_lh_₀(_lh_apply_LamO_1¹, _lh_apply_arg2¹)) | _  => error⁰}: 67
-//│ [LamO walk_lh_₀(_lh_walk_Node_0¹) walk_lh_₀(_lh_walk_Node_1¹)]: 49 --->
-//│ 	case _lh_apply_arg1¹ of {LamCons _lh_apply_LamCons_0¹ => [LH_C _lh_apply_LamCons_0¹ _lh_apply_arg2¹] | LamO _lh_apply_LamO_0¹ _lh_apply_LamO_1¹ => apply_lh_₀(_lh_apply_LamO_0¹, apply_lh_₀(_lh_apply_LamO_1¹, _lh_apply_arg2¹)) | _  => error⁰}: 67
+//│ 	case _lh_apply_arg1¹ of {LamCons _lh_apply_LamCons_0¹ => [LH_C _lh_apply_LamCons_0¹ _lh_apply_arg2¹] | LamO _lh_apply_LamO_0¹ _lh_apply_LamO_1¹ => apply_lh_₁_₀(_lh_apply_LamO_0¹, apply_lh_₁_₀(_lh_apply_LamO_1¹, _lh_apply_arg2¹)) | _  => error⁰}: 75
+//│ [LamO walk_lh_₁_₀(_lh_walk_Node_0¹) walk_lh_₁_₀(_lh_walk_Node_1¹)]: 49 --->
+//│ 	case _lh_apply_arg1¹ of {LamCons _lh_apply_LamCons_0¹ => [LH_C _lh_apply_LamCons_0¹ _lh_apply_arg2¹] | LamO _lh_apply_LamO_0¹ _lh_apply_LamO_1¹ => apply_lh_₁_₀(_lh_apply_LamO_0¹, apply_lh_₁_₀(_lh_apply_LamO_1¹, _lh_apply_arg2¹)) | _  => error⁰}: 75
 //│ ------------------
-//│ case _lh_apply_arg1¹ of {LamCons _lh_apply_LamCons_0¹ => [LH_C _lh_apply_LamCons_0¹ _lh_apply_arg2¹] | LamO _lh_apply_LamO_0¹ _lh_apply_LamO_1¹ => apply_lh_₀(_lh_apply_LamO_0¹, apply_lh_₀(_lh_apply_LamO_1¹, _lh_apply_arg2¹)) | _  => error⁰}: 67 --->
+//│ case _lh_apply_arg1¹ of {LamCons _lh_apply_LamCons_0¹ => [LH_C _lh_apply_LamCons_0¹ _lh_apply_arg2¹] | LamO _lh_apply_LamO_0¹ _lh_apply_LamO_1¹ => apply_lh_₁_₀(_lh_apply_LamO_0¹, apply_lh_₁_₀(_lh_apply_LamO_1¹, _lh_apply_arg2¹)) | _  => error⁰}: 75 --->
 //│ 	[LamCons _lh_walk_Leaf_0¹]: 42
-//│ 	[LamO walk_lh_₀(_lh_walk_Node_0¹) walk_lh_₀(_lh_walk_Node_1¹)]: 49
+//│ 	[LamO walk_lh_₁_₀(_lh_walk_Node_0¹) walk_lh_₁_₀(_lh_walk_Node_1¹)]: 49
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [LamCons _lh_walk_Leaf_0¹]: 42 --->
-//│ 	case _lh_apply_arg1¹ of {LamCons _lh_apply_LamCons_0¹ => [LH_C _lh_apply_LamCons_0¹ _lh_apply_arg2¹] | LamO _lh_apply_LamO_0¹ _lh_apply_LamO_1¹ => apply_lh_₀(_lh_apply_LamO_0¹, apply_lh_₀(_lh_apply_LamO_1¹, _lh_apply_arg2¹)) | _  => error⁰}: 67
-//│ [LamO walk_lh_₀(_lh_walk_Node_0¹) walk_lh_₀(_lh_walk_Node_1¹)]: 49 --->
-//│ 	case _lh_apply_arg1¹ of {LamCons _lh_apply_LamCons_0¹ => [LH_C _lh_apply_LamCons_0¹ _lh_apply_arg2¹] | LamO _lh_apply_LamO_0¹ _lh_apply_LamO_1¹ => apply_lh_₀(_lh_apply_LamO_0¹, apply_lh_₀(_lh_apply_LamO_1¹, _lh_apply_arg2¹)) | _  => error⁰}: 67
+//│ 	case _lh_apply_arg1¹ of {LamCons _lh_apply_LamCons_0¹ => [LH_C _lh_apply_LamCons_0¹ _lh_apply_arg2¹] | LamO _lh_apply_LamO_0¹ _lh_apply_LamO_1¹ => apply_lh_₁_₀(_lh_apply_LamO_0¹, apply_lh_₁_₀(_lh_apply_LamO_1¹, _lh_apply_arg2¹)) | _  => error⁰}: 75
+//│ [LamO walk_lh_₁_₀(_lh_walk_Node_0¹) walk_lh_₁_₀(_lh_walk_Node_1¹)]: 49 --->
+//│ 	case _lh_apply_arg1¹ of {LamCons _lh_apply_LamCons_0¹ => [LH_C _lh_apply_LamCons_0¹ _lh_apply_arg2¹] | LamO _lh_apply_LamO_0¹ _lh_apply_LamO_1¹ => apply_lh_₁_₀(_lh_apply_LamO_0¹, apply_lh_₁_₀(_lh_apply_LamO_1¹, _lh_apply_arg2¹)) | _  => error⁰}: 75
 //│ ------------------
-//│ case _lh_apply_arg1¹ of {LamCons _lh_apply_LamCons_0¹ => [LH_C _lh_apply_LamCons_0¹ _lh_apply_arg2¹] | LamO _lh_apply_LamO_0¹ _lh_apply_LamO_1¹ => apply_lh_₀(_lh_apply_LamO_0¹, apply_lh_₀(_lh_apply_LamO_1¹, _lh_apply_arg2¹)) | _  => error⁰}: 67 --->
+//│ case _lh_apply_arg1¹ of {LamCons _lh_apply_LamCons_0¹ => [LH_C _lh_apply_LamCons_0¹ _lh_apply_arg2¹] | LamO _lh_apply_LamO_0¹ _lh_apply_LamO_1¹ => apply_lh_₁_₀(_lh_apply_LamO_0¹, apply_lh_₁_₀(_lh_apply_LamO_1¹, _lh_apply_arg2¹)) | _  => error⁰}: 75 --->
 //│ 	[LamCons _lh_walk_Leaf_0¹]: 42
-//│ 	[LamO walk_lh_₀(_lh_walk_Node_0¹) walk_lh_₀(_lh_walk_Node_1¹)]: 49
+//│ 	[LamO walk_lh_₁_₀(_lh_walk_Node_0¹) walk_lh_₁_₀(_lh_walk_Node_1¹)]: 49
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ flatten_lh_₀
-//│ def flatten_lh_₀(_lh_flatten_arg1²) = 
-//│ 	apply_lh_₀(walk_lh_₀(_lh_flatten_arg1²), [LH_N])
+//│ flatten_lh_₁_₀
+//│ def flatten_lh_₁_₀(_lh_flatten_arg1²) = 
+//│ 	apply_lh_₁_₀(walk_lh_₁_₀(_lh_flatten_arg1²), [LH_N])
 //│ 	where
-//│ 	def apply_lh_₀(_lh_apply_arg1², _lh_apply_arg2⁴) = 
+//│ 	def apply_lh_₁_₀(_lh_apply_arg1², _lh_apply_arg2⁴) = 
 //│ 		_lh_apply_arg1²(_lh_apply_arg2⁴)
-//│ 	def walk_lh_₀(_lh_walk_arg1²) = 
+//│ 	def walk_lh_₁_₀(_lh_walk_arg1²) = 
 //│ 		case _lh_walk_arg1² of {
 //│ 			Leaf _lh_walk_Leaf_0¹ => 
 //│ 				let _lh_apply_LamCons_0² = _lh_walk_Leaf_0¹
 //│ 				in (fun _lh_apply_arg2² -> [LH_C _lh_apply_LamCons_0² _lh_apply_arg2²])
 //│ 			| Node _lh_walk_Node_0¹ _lh_walk_Node_1¹ => 
-//│ 				let _lh_apply_LamO_1² = walk_lh_₀(_lh_walk_Node_1¹)
-//│ 				in let _lh_apply_LamO_0² = walk_lh_₀(_lh_walk_Node_0¹)
-//│ 				in (fun _lh_apply_arg2³ -> apply_lh_₀(_lh_apply_LamO_0², apply_lh_₀(_lh_apply_LamO_1², _lh_apply_arg2³)))
+//│ 				let _lh_apply_LamO_1² = walk_lh_₁_₀(_lh_walk_Node_1¹)
+//│ 				in let _lh_apply_LamO_0² = walk_lh_₁_₀(_lh_walk_Node_0¹)
+//│ 				in (fun _lh_apply_arg2³ -> apply_lh_₁_₀(_lh_apply_LamO_0², apply_lh_₁_₀(_lh_apply_LamO_1², _lh_apply_arg2³)))
 //│ 			| _  => error⁰}
 //│ <<<<<<< after fusion <<<<<<<

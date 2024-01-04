@@ -66,7 +66,9 @@ class DiffTestLumberhack extends DiffTests {
         // res
         val newp = p.copyToNewDeforestWithDeadDefElim
         newp.d(newp)
-        (newp, newp.d)
+        val res = newp.expandedWithLimit(newp.contents.length * 2)
+        res._2(res._1)
+        res
       else if mode.lhInOCaml then
         val p = FromOcaml(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output)
         p.d(p) // duplicate multiple usages here to enbale polymorphism

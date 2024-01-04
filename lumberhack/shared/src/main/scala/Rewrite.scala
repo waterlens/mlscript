@@ -318,6 +318,49 @@ trait ExprRewrite { this: Expr =>
     } 
   }
 
+  def rewriteExpandTwo(using
+    ctx: Map[Ident, Ident],
+    currentPath: List[Ref],
+    pathToIdent: Map[List[Ref], Ident],
+    knots: Map[List[Ref], List[Ref]],
+    newd: Deforest,
+    inDef: Option[Ident]
+  ): Expr = this match {
+    case ref@Ref(id) =>
+      if id.isDef then
+        val newPath = ref :: currentPath
+        Ref(pathToIdent(knots.getOrElse(newPath, newPath)))
+      else
+        Ref(ctx(id))
+    case Const(lit) => Const(lit)
+    case IfThenElse(s, t, e) => IfThenElse(s.rewriteExpandTwo, t.rewriteExpandTwo, e.rewriteExpandTwo)
+    case Call(lhs, rhs) => Call(lhs.rewriteExpandTwo, rhs.rewriteExpandTwo)
+    case Sequence(f, s) => Sequence(f.rewriteExpandTwo, s.rewriteExpandTwo)
+    case Ctor(name, args) => Ctor(name, args.map(_.rewriteExpandTwo))
+    case LetIn(id, rhs, body) =>
+      val newId = id.copyToNewDeforest
+      val newCtx = ctx + (id -> newId)
+      LetIn(newId, rhs.rewriteExpandTwo(using newCtx), body.rewriteExpandTwo(using newCtx))
+    case LetGroup(defs, body) =>
+      val newIdsMap = (defs.keys.map(i => i -> i.copyToNewDeforest)).toMap
+      val newCtx = ctx ++ newIdsMap
+      LetGroup(
+        defs.map { case (d, rhs) =>
+          newIdsMap(d) -> rhs.rewriteExpandTwo(using newCtx)
+        },
+        body.rewriteExpandTwo(using newCtx)
+      )
+    case Match(scrut, arms) =>
+      Match(scrut.rewriteExpandTwo, arms.map {(ctor, args, body) =>
+        val newArgs = args.map(a => a -> a.copyToNewDeforest)
+        val newCtx = ctx ++ newArgs
+        (ctor, newArgs.map(_._2), body.rewriteExpandTwo(using newCtx))
+      })
+    case Function(param, body) =>
+      val newParam = param.copyToNewDeforest
+      Function(newParam, body.rewriteExpandTwo(using ctx + (param -> newParam)))
+  }
+
   def copyWithDeadDefElim(using ctx: RewriteCtx, newd: Deforest): Expr = {
     this match {
       case Const(lit) => Const(lit)
@@ -651,6 +694,88 @@ trait ProgramRewrite { this: Program =>
         L(ProgDef(ctx(id), copyExpr(body)))
       }.toList
     ) -> refMaps.toMap -> ctx
+  }
+
+  def expansionBFSWithLimit(
+    toVisit: List[List[Ref]],
+    visited: List[List[Ref] -> Ident],
+    knots: Map[List[Ref], List[Ref]],
+    nameMap: Map[String, Int]
+  )(using
+    newd: Deforest,
+    limit: Int,
+    callGraph: Map[Ident, Set[Ref]]
+  ): List[List[Ref] -> Ident] -> Map[List[Ref], List[Ref]] = {
+    def keepSearching(caller: Ident, h: List[Ref], t: List[List[Ref]]) = {
+      val callee = callGraph(caller).map(_ :: h)
+      val newNameMap = nameMap.updatedWith(caller.tree.name)(opt => Some(opt.getOrElse(0) + 1))
+      expansionBFSWithLimit(
+        t ++ callee,
+        (h -> newd.nextIdent(
+          true,
+          Var(caller.tree.name + toSubscript(s"_${newNameMap(caller.tree.name)}")))
+        ) :: visited,
+        knots,
+        newNameMap
+      )
+    }
+    toVisit match {
+      case Nil => visited -> knots
+      case h :: t => {
+        val caller = h.head.id
+        val possibleKnotPath = h.tail.span(_.id != caller)._2
+        if possibleKnotPath.size > 0 then
+          expansionBFSWithLimit(t, visited, knots + (h -> possibleKnotPath), nameMap)
+        else
+          if visited.size < limit then
+            keepSearching(caller, h, t)
+          else
+            visited.find(_._1.head.id == caller) match {
+              case Some((prevPath, id)) => expansionBFSWithLimit(t, visited, knots + (h -> prevPath), nameMap)
+              case None => keepSearching(caller, h, t)
+            }
+      }
+    }
+  }
+
+  def expandedWithLimit(
+    lim: Int,
+    knots: Option[Map[Path, Set[Path]]] = None
+  ): Program -> Deforest = {
+    given newd: Deforest(false)
+    // val copiedOriginalProgam -> refMaps -> initContext = this.copyDefsToNewDeforest
+    val initCtx: Map[Ident, Ident] = newd.lumberhackKeywordsIds.values.map(id => id -> id).toMap
+    val callGraph = this.d.callsInfo
+
+    val res = expansionBFSWithLimit(callGraph._1.map(_ :: Nil).toList, Nil, Map.empty, Map.empty)(using newd, lim, callGraph._2.toMap)
+
+    assert({
+      val newIds = res._1.map(_._2)
+      val newIdsSet = newIds.toSet
+      res._2.values.forall(p => res._1.exists(_._1 == p)) && newIds.size == newIds.toSet.size
+    })
+
+    val newDefs = res._1.map { case path -> id =>
+      Left(ProgDef(
+        id,
+        this.defAndExpr._1(path.head.id).rewriteExpandTwo(
+          using initCtx, path, res._1.toMap, res._2, newd, Some(id)
+        )
+      ))
+    }
+    val newTopLevelExprs = this.defAndExpr._2.map(e => Right(e.rewriteExpandTwo(
+      using initCtx, Nil, res._1.toMap, res._2, newd, None
+    )))
+
+    // println("\n" + res._1.map { case path -> id =>
+    //   path.map(_.pp(using InitPpConfig.showRefEuidOn)).mkString(" · ") + s" :: ${id.tree.name}"
+    // }.mkString("\n"))
+
+    // println("\n" + res._2.map { case later -> knot =>
+    //   later.map(_.pp(using InitPpConfig.showRefEuidOn)).mkString(" · ") + " -> " + knot.map(_.pp(using InitPpConfig.showRefEuidOn)).mkString(" · ")
+    // }.mkString("\n"))
+
+    Program(newDefs ::: newTopLevelExprs)(using newd) -> newd
   }
 
   def expandedWithNewDeforest(callTrees: CallTrees): Program -> Deforest = {

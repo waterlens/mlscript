@@ -4,7 +4,7 @@ ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Lumherhack_Common.ml ./Lumberha
 open Core_bench;;
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_Constraints_nofib_lh" (fun () -> ignore (let open Module_original_________________.Module_original_________________ in ((testConstraints_nofib_lh 5))));
-  Bench.Test.create ~name:"lumberhack_only_expanded_Constraints_nofib_lh" (fun () -> ignore (let open Module_lumberhack_only_expanded_.Module_lumberhack_only_expanded_ in ((testConstraints_nofib_lh 5))));
-  Bench.Test.create ~name:"lumberhack_Constraints_nofib_lh" (fun () -> ignore (let open Module_lumberhack_______________.Module_lumberhack_______________ in ((testConstraints_nofib_lh__d0 5))));
-  Bench.Test.create ~name:"lumberhack_pop_out_Constraints_nofib_lh" (fun () -> ignore (let open Module_lumberhack_pop_out_______.Module_lumberhack_pop_out_______ in ((testConstraints_nofib_lh__d0 5))));
+  Bench.Test.create ~name:"lumberhack_only_expanded_Constraints_nofib_lh" (fun () -> ignore (let open Module_lumberhack_only_expanded_.Module_lumberhack_only_expanded_ in ((testConstraints_nofib_lh__d1 5))));
+  Bench.Test.create ~name:"lumberhack_Constraints_nofib_lh" (fun () -> ignore (let open Module_lumberhack_______________.Module_lumberhack_______________ in ((testConstraints_nofib_lh__d1__d0 5))));
+  Bench.Test.create ~name:"lumberhack_pop_out_Constraints_nofib_lh" (fun () -> ignore (let open Module_lumberhack_pop_out_______.Module_lumberhack_pop_out_______ in ((testConstraints_nofib_lh__d1__d0 5))));
 ])

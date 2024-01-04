@@ -17,25 +17,25 @@ Command_unix.run (Bench.make_command [
     | `LH_N -> 
       (`LH_N))) in
   (_lh_listcomp_fun_1 ((enumFromTo_lh 1) 1000)))))));
-  Bench.Test.create ~name:"lumberhack_only_expanded_SumFlatten_lh" (fun () -> ignore (let open Module_lumberhack_only_expanded_.Module_lumberhack_only_expanded_ in ((testSumFlatten_lh (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
+  Bench.Test.create ~name:"lumberhack_only_expanded_SumFlatten_lh" (fun () -> ignore (let open Module_lumberhack_only_expanded_.Module_lumberhack_only_expanded_ in ((testSumFlatten_lh__d1 (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
   (match _lh_listcomp_fun_para_0 with
     | `LH_C(_lh_listcomp_fun_ls_h_0, _lh_listcomp_fun_ls_t_0) -> 
-      (`LH_C(((enumFromTo_lh 1) _lh_listcomp_fun_ls_h_0), (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0)))
+      (`LH_C(((enumFromTo_lh__d4 1) _lh_listcomp_fun_ls_h_0), (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0)))
     | `LH_N -> 
       (`LH_N))) in
-  (_lh_listcomp_fun_0 ((enumFromTo_lh 1) 1000)))))));
-  Bench.Test.create ~name:"lumberhack_SumFlatten_lh" (fun () -> ignore (let open Module_lumberhack_______________.Module_lumberhack_______________ in ((testSumFlatten_lh (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
+  (_lh_listcomp_fun_0 ((enumFromTo_lh__d3 1) 1000)))))));
+  Bench.Test.create ~name:"lumberhack_SumFlatten_lh" (fun () -> ignore (let open Module_lumberhack_______________.Module_lumberhack_______________ in ((testSumFlatten_lh__d1 (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
   (match _lh_listcomp_fun_para_0 with
     | `LH_C(_lh_listcomp_fun_ls_h_0, _lh_listcomp_fun_ls_t_0) -> 
-      (`LH_C(((enumFromTo_lh 1) _lh_listcomp_fun_ls_h_0), (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0)))
+      (`LH_C(((enumFromTo_lh__d4 1) _lh_listcomp_fun_ls_h_0), (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0)))
     | `LH_N -> 
       (`LH_N))) in
-  (_lh_listcomp_fun_0 ((enumFromTo_lh 1) 1000)))))));
-  Bench.Test.create ~name:"lumberhack_pop_out_SumFlatten_lh" (fun () -> ignore (let open Module_lumberhack_pop_out_______.Module_lumberhack_pop_out_______ in ((testSumFlatten_lh (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
+  (_lh_listcomp_fun_0 ((enumFromTo_lh__d3 1) 1000)))))));
+  Bench.Test.create ~name:"lumberhack_pop_out_SumFlatten_lh" (fun () -> ignore (let open Module_lumberhack_pop_out_______.Module_lumberhack_pop_out_______ in ((testSumFlatten_lh__d1 (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
   (match _lh_listcomp_fun_para_0 with
     | `LH_C(_lh_listcomp_fun_ls_h_0, _lh_listcomp_fun_ls_t_0) -> 
-      (`LH_C(((enumFromTo_lh 1) _lh_listcomp_fun_ls_h_0), (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0)))
+      (`LH_C(((enumFromTo_lh__d4 1) _lh_listcomp_fun_ls_h_0), (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0)))
     | `LH_N -> 
       (`LH_N))) in
-  (_lh_listcomp_fun_0 ((enumFromTo_lh 1) 1000)))))));
+  (_lh_listcomp_fun_0 ((enumFromTo_lh__d3 1) 1000)))))));
 ])

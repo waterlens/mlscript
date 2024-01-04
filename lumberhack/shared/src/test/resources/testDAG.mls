@@ -14,35 +14,35 @@ a
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ a_lh^18
-//│ def a_lh = b_lh^3
-//│ def b_lh = c_lh^4
-//│ def c_lh = c_lh^8(d_lh^9)
-//│ def d_lh = f_lh^11(d_lh^12, e_lh^14, a_lh^16)
-//│ def e_lh = d_lh^1
-//│ def f_lh = g_lh^2
-//│ def g_lh = g_lh^5(f_lh^6)
+//│ a_lh_₁^18
+//│ def a_lh_₁ = b_lh_₁^17
+//│ def b_lh_₁ = c_lh_₁^16
+//│ def c_lh_₁ = c_lh_₁^13(d_lh_₁^14)
+//│ def d_lh_₁ = f_lh_₁^6(d_lh_₁^7, e_lh_₁^9, a_lh_₁^11)
+//│ def e_lh_₁ = d_lh_₁^4
+//│ def f_lh_₁ = g_lh_₁^5
+//│ def g_lh_₁ = g_lh_₁^1(f_lh_₁^2)
 //│ 		---------- unoptimized ocaml gen ----------
-//│ 		let rec f_lh =
-//│ 		  g_lh
+//│ 		let rec f_lh__d1 =
+//│ 		  g_lh__d1
 //│ 		and
-//│ 		g_lh =
-//│ 		  (g_lh f_lh);;
-//│ 		let rec a_lh =
-//│ 		  b_lh
+//│ 		g_lh__d1 =
+//│ 		  (g_lh__d1 f_lh__d1);;
+//│ 		let rec a_lh__d1 =
+//│ 		  b_lh__d1
 //│ 		and
-//│ 		b_lh =
-//│ 		  c_lh
+//│ 		b_lh__d1 =
+//│ 		  c_lh__d1
 //│ 		and
-//│ 		c_lh =
-//│ 		  (c_lh d_lh)
+//│ 		c_lh__d1 =
+//│ 		  (c_lh__d1 d_lh__d1)
 //│ 		and
-//│ 		d_lh =
-//│ 		  (((f_lh d_lh) e_lh) a_lh)
+//│ 		d_lh__d1 =
+//│ 		  (((f_lh__d1 d_lh__d1) e_lh__d1) a_lh__d1)
 //│ 		and
-//│ 		e_lh =
-//│ 		  d_lh;;
-//│ 		a_lh
+//│ 		e_lh__d1 =
+//│ 		  d_lh__d1;;
+//│ 		a_lh__d1
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -59,40 +59,40 @@ a
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ a_lh
-//│ def a_lh = b_lh
-//│ def b_lh = c_lh
-//│ def c_lh = c_lh(d_lh)
-//│ def d_lh = f_lh(d_lh, e_lh, a_lh)
-//│ def e_lh = d_lh
-//│ def f_lh = g_lh
-//│ def g_lh = g_lh(f_lh)
+//│ a_lh_₁
+//│ def a_lh_₁ = b_lh_₁
+//│ def b_lh_₁ = c_lh_₁
+//│ def c_lh_₁ = c_lh_₁(d_lh_₁)
+//│ def d_lh_₁ = f_lh_₁(d_lh_₁, e_lh_₁, a_lh_₁)
+//│ def e_lh_₁ = d_lh_₁
+//│ def f_lh_₁ = g_lh_₁
+//│ def g_lh_₁ = g_lh_₁(f_lh_₁)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec f_lh =
-//│   g_lh
+//│ let rec f_lh__d1 =
+//│   g_lh__d1
 //│ and
-//│ g_lh =
-//│   (g_lh f_lh);;
-//│ let rec a_lh =
-//│   b_lh
+//│ g_lh__d1 =
+//│   (g_lh__d1 f_lh__d1);;
+//│ let rec a_lh__d1 =
+//│   b_lh__d1
 //│ and
-//│ b_lh =
-//│   c_lh
+//│ b_lh__d1 =
+//│   c_lh__d1
 //│ and
-//│ c_lh =
-//│   (c_lh d_lh)
+//│ c_lh__d1 =
+//│   (c_lh__d1 d_lh__d1)
 //│ and
-//│ d_lh =
-//│   (((f_lh d_lh) e_lh) a_lh)
+//│ d_lh__d1 =
+//│   (((f_lh__d1 d_lh__d1) e_lh__d1) a_lh__d1)
 //│ and
-//│ e_lh =
-//│   d_lh;;
-//│ a_lh
+//│ e_lh__d1 =
+//│   d_lh__d1;;
+//│ a_lh__d1
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
 
 :lhInHaskell
@@ -105,21 +105,27 @@ main
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ main_lh^7
-//│ def a_lh = f_lh^2
-//│ def b_lh = a_lh^6
-//│ def f_lh = f_lh^1
-//│ def main_lh = b_lh^3(a_lh^4)
+//│ main_lh_₁^9
+//│ def a_lh_₁ = f_lh_₁^5
+//│ def a_lh_₂ = f_lh_₂^2
+//│ def b_lh_₁ = a_lh_₂^4
+//│ def f_lh_₁ = f_lh_₁^3
+//│ def f_lh_₂ = f_lh_₂^1
+//│ def main_lh_₁ = b_lh_₁^6(a_lh_₁^7)
 //│ 		---------- unoptimized ocaml gen ----------
-//│ 		let rec f_lh =
-//│ 		  f_lh;;
-//│ 		let rec a_lh =
-//│ 		  f_lh;;
-//│ 		let rec b_lh =
-//│ 		  a_lh;;
-//│ 		let rec main_lh =
-//│ 		  (b_lh a_lh);;
-//│ 		main_lh
+//│ 		let rec f_lh__d2 =
+//│ 		  f_lh__d2;;
+//│ 		let rec a_lh__d2 =
+//│ 		  f_lh__d2;;
+//│ 		let rec b_lh__d1 =
+//│ 		  a_lh__d2;;
+//│ 		let rec f_lh__d1 =
+//│ 		  f_lh__d1;;
+//│ 		let rec a_lh__d1 =
+//│ 		  f_lh__d1;;
+//│ 		let rec main_lh__d1 =
+//│ 		  (b_lh__d1 a_lh__d1);;
+//│ 		main_lh__d1
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -136,26 +142,32 @@ main
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ main_lh
-//│ def a_lh = f_lh
-//│ def b_lh = a_lh
-//│ def f_lh = f_lh
-//│ def main_lh = b_lh(a_lh)
+//│ main_lh_₁
+//│ def a_lh_₁ = f_lh_₁
+//│ def a_lh_₂ = f_lh_₂
+//│ def b_lh_₁ = a_lh_₂
+//│ def f_lh_₁ = f_lh_₁
+//│ def f_lh_₂ = f_lh_₂
+//│ def main_lh_₁ = b_lh_₁(a_lh_₁)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec f_lh =
-//│   f_lh;;
-//│ let rec a_lh =
-//│   f_lh;;
-//│ let rec b_lh =
-//│   a_lh;;
-//│ let rec main_lh =
-//│   (b_lh a_lh);;
-//│ main_lh
+//│ let rec f_lh__d2 =
+//│   f_lh__d2;;
+//│ let rec a_lh__d2 =
+//│   f_lh__d2;;
+//│ let rec b_lh__d1 =
+//│   a_lh__d2;;
+//│ let rec f_lh__d1 =
+//│   f_lh__d1;;
+//│ let rec a_lh__d1 =
+//│   f_lh__d1;;
+//│ let rec main_lh__d1 =
+//│   (b_lh__d1 a_lh__d1);;
+//│ main_lh__d1
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
 
 :lhInHaskell
@@ -172,38 +184,59 @@ a
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ a_lh^21
-//│ def a_lh = b_lh^5
-//│ def b_lh = e_lh^6(f_lh^7, c_lh^9)
-//│ def c_lh = g_lh^15(d_lh^16)
-//│ def d_lh = c_lh^12(h_lh^13)
-//│ def e_lh = a_lh^1(f_lh^2)
-//│ def f_lh = g_lh^4
-//│ def g_lh = f_lh^11
-//│ def h_lh = d_lh^18(g_lh^19)
+//│ a_lh_₁^27
+//│ def a_lh_₁ = b_lh_₁^26
+//│ def b_lh_₁ = e_lh_₁^21(f_lh_₁^22, c_lh_₁^24)
+//│ def c_lh_₁ = g_lh_₁^15(d_lh_₁^16)
+//│ def d_lh_₁ = c_lh_₁^9(h_lh_₁^10)
+//│ def e_lh_₁ = a_lh_₁^18(f_lh_₂^19)
+//│ def f_lh_₁ = g_lh_₂^14
+//│ def f_lh_₂ = g_lh_₃^13
+//│ def f_lh_₃ = g_lh_₁^6
+//│ def f_lh_₄ = g_lh_₄^1
+//│ def g_lh_₁ = f_lh_₃^12
+//│ def g_lh_₂ = f_lh_₁^8
+//│ def g_lh_₃ = f_lh_₂^7
+//│ def g_lh_₄ = f_lh_₄^2
+//│ def h_lh_₁ = d_lh_₁^3(g_lh_₄^4)
 //│ 		---------- unoptimized ocaml gen ----------
-//│ 		let rec f_lh =
-//│ 		  g_lh
+//│ 		let rec f_lh__d4 =
+//│ 		  g_lh__d4
 //│ 		and
-//│ 		g_lh =
-//│ 		  f_lh;;
-//│ 		let rec c_lh =
-//│ 		  (g_lh d_lh)
+//│ 		g_lh__d4 =
+//│ 		  f_lh__d4;;
+//│ 		let rec f_lh__d3 =
+//│ 		  g_lh__d1
 //│ 		and
-//│ 		d_lh =
-//│ 		  (c_lh h_lh)
+//│ 		g_lh__d1 =
+//│ 		  f_lh__d3;;
+//│ 		let rec c_lh__d1 =
+//│ 		  (g_lh__d1 d_lh__d1)
 //│ 		and
-//│ 		h_lh =
-//│ 		  (d_lh g_lh);;
-//│ 		let rec a_lh =
-//│ 		  b_lh
+//│ 		d_lh__d1 =
+//│ 		  (c_lh__d1 h_lh__d1)
 //│ 		and
-//│ 		b_lh =
-//│ 		  ((e_lh f_lh) c_lh)
+//│ 		h_lh__d1 =
+//│ 		  (d_lh__d1 g_lh__d4);;
+//│ 		let rec f_lh__d2 =
+//│ 		  g_lh__d3
 //│ 		and
-//│ 		e_lh =
-//│ 		  (a_lh f_lh);;
-//│ 		a_lh
+//│ 		g_lh__d3 =
+//│ 		  f_lh__d2;;
+//│ 		let rec f_lh__d1 =
+//│ 		  g_lh__d2
+//│ 		and
+//│ 		g_lh__d2 =
+//│ 		  f_lh__d1;;
+//│ 		let rec a_lh__d1 =
+//│ 		  b_lh__d1
+//│ 		and
+//│ 		b_lh__d1 =
+//│ 		  ((e_lh__d1 f_lh__d1) c_lh__d1)
+//│ 		and
+//│ 		e_lh__d1 =
+//│ 		  (a_lh__d1 f_lh__d2);;
+//│ 		a_lh__d1
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -220,43 +253,64 @@ a
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ a_lh
-//│ def a_lh = b_lh
-//│ def b_lh = e_lh(f_lh, c_lh)
-//│ def c_lh = g_lh(d_lh)
-//│ def d_lh = c_lh(h_lh)
-//│ def e_lh = a_lh(f_lh)
-//│ def f_lh = g_lh
-//│ def g_lh = f_lh
-//│ def h_lh = d_lh(g_lh)
+//│ a_lh_₁
+//│ def a_lh_₁ = b_lh_₁
+//│ def b_lh_₁ = e_lh_₁(f_lh_₁, c_lh_₁)
+//│ def c_lh_₁ = g_lh_₁(d_lh_₁)
+//│ def d_lh_₁ = c_lh_₁(h_lh_₁)
+//│ def e_lh_₁ = a_lh_₁(f_lh_₂)
+//│ def f_lh_₁ = g_lh_₂
+//│ def f_lh_₂ = g_lh_₃
+//│ def f_lh_₃ = g_lh_₁
+//│ def f_lh_₄ = g_lh_₄
+//│ def g_lh_₁ = f_lh_₃
+//│ def g_lh_₂ = f_lh_₁
+//│ def g_lh_₃ = f_lh_₂
+//│ def g_lh_₄ = f_lh_₄
+//│ def h_lh_₁ = d_lh_₁(g_lh_₄)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec f_lh =
-//│   g_lh
+//│ let rec f_lh__d2 =
+//│   g_lh__d3
 //│ and
-//│ g_lh =
-//│   f_lh;;
-//│ let rec c_lh =
-//│   (g_lh d_lh)
+//│ g_lh__d3 =
+//│   f_lh__d2;;
+//│ let rec f_lh__d1 =
+//│   g_lh__d2
 //│ and
-//│ d_lh =
-//│   (c_lh h_lh)
+//│ g_lh__d2 =
+//│   f_lh__d1;;
+//│ let rec f_lh__d4 =
+//│   g_lh__d4
 //│ and
-//│ h_lh =
-//│   (d_lh g_lh);;
-//│ let rec a_lh =
-//│   b_lh
+//│ g_lh__d4 =
+//│   f_lh__d4;;
+//│ let rec f_lh__d3 =
+//│   g_lh__d1
 //│ and
-//│ b_lh =
-//│   ((e_lh f_lh) c_lh)
+//│ g_lh__d1 =
+//│   f_lh__d3;;
+//│ let rec c_lh__d1 =
+//│   (g_lh__d1 d_lh__d1)
 //│ and
-//│ e_lh =
-//│   (a_lh f_lh);;
-//│ a_lh
+//│ d_lh__d1 =
+//│   (c_lh__d1 h_lh__d1)
+//│ and
+//│ h_lh__d1 =
+//│   (d_lh__d1 g_lh__d4);;
+//│ let rec a_lh__d1 =
+//│   b_lh__d1
+//│ and
+//│ b_lh__d1 =
+//│   ((e_lh__d1 f_lh__d1) c_lh__d1)
+//│ and
+//│ e_lh__d1 =
+//│   (a_lh__d1 f_lh__d2);;
+//│ a_lh__d1
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
 
 
@@ -270,24 +324,24 @@ a
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ a_lh^7
-//│ def a_lh = b_lh^1
-//│ def b_lh = c_lh^2
-//│ def c_lh = a_lh^3(d_lh^4)
-//│ def d_lh = b_lh^6
+//│ a_lh_₁^7
+//│ def a_lh_₁ = b_lh_₁^6
+//│ def b_lh_₁ = c_lh_₁^5
+//│ def c_lh_₁ = a_lh_₁^2(d_lh_₁^3)
+//│ def d_lh_₁ = b_lh_₁^1
 //│ 		---------- unoptimized ocaml gen ----------
-//│ 		let rec a_lh =
-//│ 		  b_lh
+//│ 		let rec a_lh__d1 =
+//│ 		  b_lh__d1
 //│ 		and
-//│ 		b_lh =
-//│ 		  c_lh
+//│ 		b_lh__d1 =
+//│ 		  c_lh__d1
 //│ 		and
-//│ 		c_lh =
-//│ 		  (a_lh d_lh)
+//│ 		c_lh__d1 =
+//│ 		  (a_lh__d1 d_lh__d1)
 //│ 		and
-//│ 		d_lh =
-//│ 		  b_lh;;
-//│ 		a_lh
+//│ 		d_lh__d1 =
+//│ 		  b_lh__d1;;
+//│ 		a_lh__d1
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -304,29 +358,29 @@ a
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ a_lh
-//│ def a_lh = b_lh
-//│ def b_lh = c_lh
-//│ def c_lh = a_lh(d_lh)
-//│ def d_lh = b_lh
+//│ a_lh_₁
+//│ def a_lh_₁ = b_lh_₁
+//│ def b_lh_₁ = c_lh_₁
+//│ def c_lh_₁ = a_lh_₁(d_lh_₁)
+//│ def d_lh_₁ = b_lh_₁
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec a_lh =
-//│   b_lh
+//│ let rec a_lh__d1 =
+//│   b_lh__d1
 //│ and
-//│ b_lh =
-//│   c_lh
+//│ b_lh__d1 =
+//│   c_lh__d1
 //│ and
-//│ c_lh =
-//│   (a_lh d_lh)
+//│ c_lh__d1 =
+//│   (a_lh__d1 d_lh__d1)
 //│ and
-//│ d_lh =
-//│   b_lh;;
-//│ a_lh
+//│ d_lh__d1 =
+//│   b_lh__d1;;
+//│ a_lh__d1
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
 
 :lhInHaskell
@@ -339,24 +393,24 @@ a
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ a_lh^7
-//│ def a_lh = b_lh^1
-//│ def b_lh = c_lh^2
-//│ def c_lh = b_lh^3(d_lh^4)
-//│ def d_lh = a_lh^6
+//│ a_lh_₁^7
+//│ def a_lh_₁ = b_lh_₁^6
+//│ def b_lh_₁ = c_lh_₁^5
+//│ def c_lh_₁ = b_lh_₁^2(d_lh_₁^3)
+//│ def d_lh_₁ = a_lh_₁^1
 //│ 		---------- unoptimized ocaml gen ----------
-//│ 		let rec a_lh =
-//│ 		  b_lh
+//│ 		let rec a_lh__d1 =
+//│ 		  b_lh__d1
 //│ 		and
-//│ 		b_lh =
-//│ 		  c_lh
+//│ 		b_lh__d1 =
+//│ 		  c_lh__d1
 //│ 		and
-//│ 		c_lh =
-//│ 		  (b_lh d_lh)
+//│ 		c_lh__d1 =
+//│ 		  (b_lh__d1 d_lh__d1)
 //│ 		and
-//│ 		d_lh =
-//│ 		  a_lh;;
-//│ 		a_lh
+//│ 		d_lh__d1 =
+//│ 		  a_lh__d1;;
+//│ 		a_lh__d1
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -373,29 +427,29 @@ a
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ a_lh
-//│ def a_lh = b_lh
-//│ def b_lh = c_lh
-//│ def c_lh = b_lh(d_lh)
-//│ def d_lh = a_lh
+//│ a_lh_₁
+//│ def a_lh_₁ = b_lh_₁
+//│ def b_lh_₁ = c_lh_₁
+//│ def c_lh_₁ = b_lh_₁(d_lh_₁)
+//│ def d_lh_₁ = a_lh_₁
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec a_lh =
-//│   b_lh
+//│ let rec a_lh__d1 =
+//│   b_lh__d1
 //│ and
-//│ b_lh =
-//│   c_lh
+//│ b_lh__d1 =
+//│   c_lh__d1
 //│ and
-//│ c_lh =
-//│   (b_lh d_lh)
+//│ c_lh__d1 =
+//│   (b_lh__d1 d_lh__d1)
 //│ and
-//│ d_lh =
-//│   a_lh;;
-//│ a_lh
+//│ d_lh__d1 =
+//│   a_lh__d1;;
+//│ a_lh__d1
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
 
 :lhInHaskell
@@ -405,12 +459,12 @@ a
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ a_lh^2
-//│ def a_lh = a_lh^1
+//│ a_lh_₁^2
+//│ def a_lh_₁ = a_lh_₁^1
 //│ 		---------- unoptimized ocaml gen ----------
-//│ 		let rec a_lh =
-//│ 		  a_lh;;
-//│ 		a_lh
+//│ 		let rec a_lh__d1 =
+//│ 		  a_lh__d1;;
+//│ 		a_lh__d1
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -427,17 +481,17 @@ a
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ a_lh
-//│ def a_lh = a_lh
+//│ a_lh_₁
+//│ def a_lh_₁ = a_lh_₁
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec a_lh =
-//│   a_lh;;
-//│ a_lh
+//│ let rec a_lh__d1 =
+//│   a_lh__d1;;
+//│ a_lh__d1
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
 
 
@@ -451,23 +505,30 @@ main
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ main_lh^9
-//│ def a_lh = f_lh^2(main_lh^3)
-//│ def b_lh = a_lh^8
-//│ def f_lh = f_lh^1
-//│ def main_lh = a_lh^5(b_lh^6)
+//│ main_lh_₁^13
+//│ def a_lh_₁ = f_lh_₁^7(main_lh_₁^8)
+//│ def a_lh_₂ = f_lh_₂^2(main_lh_₁^3)
+//│ def b_lh_₁ = a_lh_₂^6
+//│ def f_lh_₁ = f_lh_₁^5
+//│ def f_lh_₂ = f_lh_₂^1
+//│ def main_lh_₁ = a_lh_₁^10(b_lh_₁^11)
 //│ 		---------- unoptimized ocaml gen ----------
-//│ 		let rec f_lh =
-//│ 		  f_lh;;
-//│ 		let rec a_lh =
-//│ 		  (f_lh main_lh)
+//│ 		let rec f_lh__d2 =
+//│ 		  f_lh__d2;;
+//│ 		let rec f_lh__d1 =
+//│ 		  f_lh__d1;;
+//│ 		let rec a_lh__d1 =
+//│ 		  (f_lh__d1 main_lh__d1)
 //│ 		and
-//│ 		b_lh =
-//│ 		  a_lh
+//│ 		a_lh__d2 =
+//│ 		  (f_lh__d2 main_lh__d1)
 //│ 		and
-//│ 		main_lh =
-//│ 		  (a_lh b_lh);;
-//│ 		main_lh
+//│ 		b_lh__d1 =
+//│ 		  a_lh__d2
+//│ 		and
+//│ 		main_lh__d1 =
+//│ 		  (a_lh__d1 b_lh__d1);;
+//│ 		main_lh__d1
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -484,28 +545,35 @@ main
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ main_lh
-//│ def a_lh = f_lh(main_lh)
-//│ def b_lh = a_lh
-//│ def f_lh = f_lh
-//│ def main_lh = a_lh(b_lh)
+//│ main_lh_₁
+//│ def a_lh_₁ = f_lh_₁(main_lh_₁)
+//│ def a_lh_₂ = f_lh_₂(main_lh_₁)
+//│ def b_lh_₁ = a_lh_₂
+//│ def f_lh_₁ = f_lh_₁
+//│ def f_lh_₂ = f_lh_₂
+//│ def main_lh_₁ = a_lh_₁(b_lh_₁)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec f_lh =
-//│   f_lh;;
-//│ let rec a_lh =
-//│   (f_lh main_lh)
+//│ let rec f_lh__d1 =
+//│   f_lh__d1;;
+//│ let rec f_lh__d2 =
+//│   f_lh__d2;;
+//│ let rec a_lh__d1 =
+//│   (f_lh__d1 main_lh__d1)
 //│ and
-//│ b_lh =
-//│   a_lh
+//│ a_lh__d2 =
+//│   (f_lh__d2 main_lh__d1)
 //│ and
-//│ main_lh =
-//│   (a_lh b_lh);;
-//│ main_lh
+//│ b_lh__d1 =
+//│   a_lh__d2
+//│ and
+//│ main_lh__d1 =
+//│   (a_lh__d1 b_lh__d1);;
+//│ main_lh__d1
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
 
 :lhInHaskell
@@ -517,18 +585,18 @@ a
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ a_lh^4
-//│ def a_lh = b_lh^1
-//│ def b_lh = c_lh^2
-//│ def c_lh = 1
+//│ a_lh_₁^4
+//│ def a_lh_₁ = b_lh_₁^3
+//│ def b_lh_₁ = c_lh_₁^2
+//│ def c_lh_₁ = 1
 //│ 		---------- unoptimized ocaml gen ----------
-//│ 		let rec c_lh =
+//│ 		let rec c_lh__d1 =
 //│ 		  1;;
-//│ 		let rec b_lh =
-//│ 		  c_lh;;
-//│ 		let rec a_lh =
-//│ 		  b_lh;;
-//│ 		a_lh
+//│ 		let rec b_lh__d1 =
+//│ 		  c_lh__d1;;
+//│ 		let rec a_lh__d1 =
+//│ 		  b_lh__d1;;
+//│ 		a_lh__d1
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -545,21 +613,21 @@ a
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ a_lh
-//│ def a_lh = b_lh
-//│ def b_lh = c_lh
-//│ def c_lh = 1
+//│ a_lh_₁
+//│ def a_lh_₁ = b_lh_₁
+//│ def b_lh_₁ = c_lh_₁
+//│ def c_lh_₁ = 1
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec c_lh =
+//│ let rec c_lh__d1 =
 //│   1;;
-//│ let rec b_lh =
-//│   c_lh;;
-//│ let rec a_lh =
-//│   b_lh;;
-//│ a_lh
+//│ let rec b_lh__d1 =
+//│   c_lh__d1;;
+//│ let rec a_lh__d1 =
+//│   b_lh__d1;;
+//│ a_lh__d1
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

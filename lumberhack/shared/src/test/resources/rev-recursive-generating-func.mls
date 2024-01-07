@@ -28,83 +28,55 @@ rev(genCountDown(4))
 //│ [C 1 [C 2 [C 3 [C 4 [N]]]]]
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [genCountDown^44] (hopeless to continue)
-//│ 	[genCountDown^44 · genCountDown^32] ---> [genCountDown^44] (using original def)
-//│ [rev^43] (hopeless to continue)
-//│ 	[rev^43 · concat^14] (using original def)
-//│ 		[rev^43 · concat^14 · concat^4] ---> [rev^43 · concat^14] (using original def)
-//│ 	[rev^43 · rev^15] ---> [rev^43] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ rev_₀(genCountDown_₀(4))
-//│ def genCountDown_₀(n¹) = 
-//│ 	if (n¹ > 0) then [C n¹ genCountDown_₀((n¹ - 1))] else [N]
-//│ def rev_₀(ls¹) = 
-//│ 	case ls¹ of {
-//│ 		C h² t² => concat_₀(rev_₀(t²), [C h² [N]])
-//│ 		| N  => [N]}
-//│ 	where
-//│ 	def concat_₀(xs¹, ys¹) = 
-//│ 		case xs¹ of {
-//│ 			N  => ys¹
-//│ 			| C h³ t³ => [C h³ concat_₀(t³, ys¹)]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 55 --->
+//│ [C h⁰ concat(t⁰, ys⁰)]: 9 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ concat_₀(t³, ys¹)]}: 87
-//│ [C h² [N]]: 56 --->
+//│ 	case xs⁰ of {N  => ys⁰ | C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}: 10
+//│ [N]: 20 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ concat_₀(t³, ys¹)]}: 87
-//│ [N]: 58 --->
+//│ 	case xs⁰ of {N  => ys⁰ | C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}: 10
+//│ [C h¹ [N]]: 21 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ concat_₀(t³, ys¹)]}: 87
-//│ [C n¹ genCountDown_₀((n¹ - 1))]: 74 --->
-//│ 	case ls¹ of {C h² t² => concat_₀(rev_₀(t²), [C h² [N]]) | N  => [N]}: 59
-//│ [N]: 75 --->
-//│ 	case ls¹ of {C h² t² => concat_₀(rev_₀(t²), [C h² [N]]) | N  => [N]}: 59
-//│ [C h³ concat_₀(t³, ys¹)]: 86 --->
+//│ 	case xs⁰ of {N  => ys⁰ | C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}: 10
+//│ [N]: 23 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ concat_₀(t³, ys¹)]}: 87
+//│ 	case xs⁰ of {N  => ys⁰ | C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}: 10
+//│ [C n⁰ genCountDown((n⁰ - 1))]: 39 --->
+//│ 	case ls⁰ of {C h¹ t¹ => concat(rev(t¹), [C h¹ [N]]) | N  => [N]}: 24
+//│ [N]: 40 --->
+//│ 	case ls⁰ of {C h¹ t¹ => concat(rev(t¹), [C h¹ [N]]) | N  => [N]}: 24
 //│ ------------------
-//│ case ls¹ of {C h² t² => concat_₀(rev_₀(t²), [C h² [N]]) | N  => [N]}: 59 --->
-//│ 	[C n¹ genCountDown_₀((n¹ - 1))]: 74
-//│ 	[N]: 75
-//│ case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ concat_₀(t³, ys¹)]}: 87 --->
-//│ 	[N]: 55
-//│ 	[C h² [N]]: 56
-//│ 	[N]: 58
-//│ 	[C h³ concat_₀(t³, ys¹)]: 86
+//│ case xs⁰ of {N  => ys⁰ | C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}: 10 --->
+//│ 	[C h⁰ concat(t⁰, ys⁰)]: 9
+//│ 	[N]: 20
+//│ 	[C h¹ [N]]: 21
+//│ 	[N]: 23
+//│ case ls⁰ of {C h¹ t¹ => concat(rev(t¹), [C h¹ [N]]) | N  => [N]}: 24 --->
+//│ 	[C n⁰ genCountDown((n⁰ - 1))]: 39
+//│ 	[N]: 40
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C n¹ genCountDown_₀((n¹ - 1))]: 74 --->
-//│ 	case ls¹ of {C h² t² => concat_₀(rev_₀(t²), [C h² [N]]) | N  => [N]}: 59
-//│ [N]: 75 --->
-//│ 	case ls¹ of {C h² t² => concat_₀(rev_₀(t²), [C h² [N]]) | N  => [N]}: 59
+//│ [C n⁰ genCountDown((n⁰ - 1))]: 39 --->
+//│ 	case ls⁰ of {C h¹ t¹ => concat(rev(t¹), [C h¹ [N]]) | N  => [N]}: 24
+//│ [N]: 40 --->
+//│ 	case ls⁰ of {C h¹ t¹ => concat(rev(t¹), [C h¹ [N]]) | N  => [N]}: 24
 //│ ------------------
-//│ case ls¹ of {C h² t² => concat_₀(rev_₀(t²), [C h² [N]]) | N  => [N]}: 59 --->
-//│ 	[C n¹ genCountDown_₀((n¹ - 1))]: 74
-//│ 	[N]: 75
+//│ case ls⁰ of {C h¹ t¹ => concat(rev(t¹), [C h¹ [N]]) | N  => [N]}: 24 --->
+//│ 	[C n⁰ genCountDown((n⁰ - 1))]: 39
+//│ 	[N]: 40
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ rev_₀(genCountDown_₀(4))
-//│ def genCountDown_₀(n²) = 
-//│ 	if (n² > 0) then 
-//│ 		let t⁴ = genCountDown_₀((n² - 1))
-//│ 		in let h⁴ = n²
-//│ 		in (fun _lh_dummy⁰ -> concat_₀(rev_₀(t⁴), [C h⁴ [N]])) else (fun _lh_dummy¹ -> [N])
-//│ def rev_₀(ls²) = 
-//│ 	ls²(99)
-//│ 	where
-//│ 	def concat_₀(xs², ys²) = 
-//│ 		case xs² of {
-//│ 			N  => ys²
-//│ 			| C h³ t³ => [C h³ concat_₀(t³, ys²)]}
+//│ rev(genCountDown(4))
+//│ def concat(xs¹, ys¹) = case xs¹ of {
+//│ 	N  => ys¹
+//│ 	| C h⁰ t⁰ => [C h⁰ concat(t⁰, ys¹)]}
+//│ def genCountDown(n¹) = if (n¹ > 0) then 
+//│ 	let t² = genCountDown((n¹ - 1))
+//│ 	in let h² = n¹
+//│ 	in (fun _lh_dummy⁰ -> concat(rev(t²), [C h² [N]])) else (fun _lh_dummy¹ -> [N])
+//│ def rev(ls¹) = ls¹(99)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -134,83 +106,55 @@ rev(genCountDown(primitive))
 //│ 	| N  => [N]}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [genCountDown^44] (hopeless to continue)
-//│ 	[genCountDown^44 · genCountDown^32] ---> [genCountDown^44] (using original def)
-//│ [rev^43] (hopeless to continue)
-//│ 	[rev^43 · concat^14] (using original def)
-//│ 		[rev^43 · concat^14 · concat^4] ---> [rev^43 · concat^14] (using original def)
-//│ 	[rev^43 · rev^15] ---> [rev^43] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ rev_₀(genCountDown_₀(primitive⁰))
-//│ def genCountDown_₀(n¹) = 
-//│ 	if (n¹ > 0) then [C n¹ genCountDown_₀((n¹ - 1))] else [N]
-//│ def rev_₀(ls¹) = 
-//│ 	case ls¹ of {
-//│ 		C h² t² => concat_₀(rev_₀(t²), [C h² [N]])
-//│ 		| N  => [N]}
-//│ 	where
-//│ 	def concat_₀(xs¹, ys¹) = 
-//│ 		case xs¹ of {
-//│ 			N  => ys¹
-//│ 			| C h³ t³ => [C h³ concat_₀(t³, ys¹)]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 55 --->
+//│ [C h⁰ concat(t⁰, ys⁰)]: 9 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ concat_₀(t³, ys¹)]}: 87
-//│ [C h² [N]]: 56 --->
+//│ 	case xs⁰ of {N  => ys⁰ | C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}: 10
+//│ [N]: 20 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ concat_₀(t³, ys¹)]}: 87
-//│ [N]: 58 --->
+//│ 	case xs⁰ of {N  => ys⁰ | C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}: 10
+//│ [C h¹ [N]]: 21 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ concat_₀(t³, ys¹)]}: 87
-//│ [C n¹ genCountDown_₀((n¹ - 1))]: 74 --->
-//│ 	case ls¹ of {C h² t² => concat_₀(rev_₀(t²), [C h² [N]]) | N  => [N]}: 59
-//│ [N]: 75 --->
-//│ 	case ls¹ of {C h² t² => concat_₀(rev_₀(t²), [C h² [N]]) | N  => [N]}: 59
-//│ [C h³ concat_₀(t³, ys¹)]: 86 --->
+//│ 	case xs⁰ of {N  => ys⁰ | C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}: 10
+//│ [N]: 23 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ concat_₀(t³, ys¹)]}: 87
+//│ 	case xs⁰ of {N  => ys⁰ | C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}: 10
+//│ [C n⁰ genCountDown((n⁰ - 1))]: 39 --->
+//│ 	case ls⁰ of {C h¹ t¹ => concat(rev(t¹), [C h¹ [N]]) | N  => [N]}: 24
+//│ [N]: 40 --->
+//│ 	case ls⁰ of {C h¹ t¹ => concat(rev(t¹), [C h¹ [N]]) | N  => [N]}: 24
 //│ ------------------
-//│ case ls¹ of {C h² t² => concat_₀(rev_₀(t²), [C h² [N]]) | N  => [N]}: 59 --->
-//│ 	[C n¹ genCountDown_₀((n¹ - 1))]: 74
-//│ 	[N]: 75
-//│ case xs¹ of {N  => ys¹ | C h³ t³ => [C h³ concat_₀(t³, ys¹)]}: 87 --->
-//│ 	[N]: 55
-//│ 	[C h² [N]]: 56
-//│ 	[N]: 58
-//│ 	[C h³ concat_₀(t³, ys¹)]: 86
+//│ case xs⁰ of {N  => ys⁰ | C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}: 10 --->
+//│ 	[C h⁰ concat(t⁰, ys⁰)]: 9
+//│ 	[N]: 20
+//│ 	[C h¹ [N]]: 21
+//│ 	[N]: 23
+//│ case ls⁰ of {C h¹ t¹ => concat(rev(t¹), [C h¹ [N]]) | N  => [N]}: 24 --->
+//│ 	[C n⁰ genCountDown((n⁰ - 1))]: 39
+//│ 	[N]: 40
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C n¹ genCountDown_₀((n¹ - 1))]: 74 --->
-//│ 	case ls¹ of {C h² t² => concat_₀(rev_₀(t²), [C h² [N]]) | N  => [N]}: 59
-//│ [N]: 75 --->
-//│ 	case ls¹ of {C h² t² => concat_₀(rev_₀(t²), [C h² [N]]) | N  => [N]}: 59
+//│ [C n⁰ genCountDown((n⁰ - 1))]: 39 --->
+//│ 	case ls⁰ of {C h¹ t¹ => concat(rev(t¹), [C h¹ [N]]) | N  => [N]}: 24
+//│ [N]: 40 --->
+//│ 	case ls⁰ of {C h¹ t¹ => concat(rev(t¹), [C h¹ [N]]) | N  => [N]}: 24
 //│ ------------------
-//│ case ls¹ of {C h² t² => concat_₀(rev_₀(t²), [C h² [N]]) | N  => [N]}: 59 --->
-//│ 	[C n¹ genCountDown_₀((n¹ - 1))]: 74
-//│ 	[N]: 75
+//│ case ls⁰ of {C h¹ t¹ => concat(rev(t¹), [C h¹ [N]]) | N  => [N]}: 24 --->
+//│ 	[C n⁰ genCountDown((n⁰ - 1))]: 39
+//│ 	[N]: 40
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ rev_₀(genCountDown_₀(primitive⁰))
-//│ def genCountDown_₀(n²) = 
-//│ 	if (n² > 0) then 
-//│ 		let t⁴ = genCountDown_₀((n² - 1))
-//│ 		in let h⁴ = n²
-//│ 		in (fun _lh_dummy⁰ -> concat_₀(rev_₀(t⁴), [C h⁴ [N]])) else (fun _lh_dummy¹ -> [N])
-//│ def rev_₀(ls²) = 
-//│ 	ls²(99)
-//│ 	where
-//│ 	def concat_₀(xs², ys²) = 
-//│ 		case xs² of {
-//│ 			N  => ys²
-//│ 			| C h³ t³ => [C h³ concat_₀(t³, ys²)]}
+//│ rev(genCountDown(primitive⁰))
+//│ def concat(xs¹, ys¹) = case xs¹ of {
+//│ 	N  => ys¹
+//│ 	| C h⁰ t⁰ => [C h⁰ concat(t⁰, ys¹)]}
+//│ def genCountDown(n¹) = if (n¹ > 0) then 
+//│ 	let t² = genCountDown((n¹ - 1))
+//│ 	in let h² = n¹
+//│ 	in (fun _lh_dummy⁰ -> concat(rev(t²), [C h² [N]])) else (fun _lh_dummy¹ -> [N])
+//│ def rev(ls¹) = ls¹(99)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -231,52 +175,33 @@ rev(genCountDown(10), N)
 //│ 	| N  => a⁰}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [genCountDown^31] (hopeless to continue)
-//│ 	[genCountDown^31 · genCountDown^19] ---> [genCountDown^31] (using original def)
-//│ [rev^30] (hopeless to continue)
-//│ 	[rev^30 · rev^2] ---> [rev^30] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ rev_₀(genCountDown_₀(10), [N])
-//│ def genCountDown_₀(n¹) = 
-//│ 	if (n¹ > 0) then [C n¹ genCountDown_₀((n¹ - 1))] else [N]
-//│ def rev_₀(ls¹, a¹) = 
-//│ 	case ls¹ of {
-//│ 		C h¹ t¹ => rev_₀(t¹, [C h¹ a¹])
-//│ 		| N  => a¹}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C n¹ genCountDown_₀((n¹ - 1))]: 62 --->
-//│ 	case ls¹ of {C h¹ t¹ => rev_₀(t¹, [C h¹ a¹]) | N  => a¹}: 46
-//│ [N]: 63 --->
-//│ 	case ls¹ of {C h¹ t¹ => rev_₀(t¹, [C h¹ a¹]) | N  => a¹}: 46
+//│ [C n⁰ genCountDown((n⁰ - 1))]: 26 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => rev(t⁰, [C h⁰ a⁰]) | N  => a⁰}: 10
+//│ [N]: 27 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => rev(t⁰, [C h⁰ a⁰]) | N  => a⁰}: 10
 //│ ------------------
-//│ case ls¹ of {C h¹ t¹ => rev_₀(t¹, [C h¹ a¹]) | N  => a¹}: 46 --->
-//│ 	[C n¹ genCountDown_₀((n¹ - 1))]: 62
-//│ 	[N]: 63
+//│ case ls⁰ of {C h⁰ t⁰ => rev(t⁰, [C h⁰ a⁰]) | N  => a⁰}: 10 --->
+//│ 	[C n⁰ genCountDown((n⁰ - 1))]: 26
+//│ 	[N]: 27
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C n¹ genCountDown_₀((n¹ - 1))]: 62 --->
-//│ 	case ls¹ of {C h¹ t¹ => rev_₀(t¹, [C h¹ a¹]) | N  => a¹}: 46
-//│ [N]: 63 --->
-//│ 	case ls¹ of {C h¹ t¹ => rev_₀(t¹, [C h¹ a¹]) | N  => a¹}: 46
+//│ [C n⁰ genCountDown((n⁰ - 1))]: 26 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => rev(t⁰, [C h⁰ a⁰]) | N  => a⁰}: 10
+//│ [N]: 27 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => rev(t⁰, [C h⁰ a⁰]) | N  => a⁰}: 10
 //│ ------------------
-//│ case ls¹ of {C h¹ t¹ => rev_₀(t¹, [C h¹ a¹]) | N  => a¹}: 46 --->
-//│ 	[C n¹ genCountDown_₀((n¹ - 1))]: 62
-//│ 	[N]: 63
+//│ case ls⁰ of {C h⁰ t⁰ => rev(t⁰, [C h⁰ a⁰]) | N  => a⁰}: 10 --->
+//│ 	[C n⁰ genCountDown((n⁰ - 1))]: 26
+//│ 	[N]: 27
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ rev_₀(genCountDown_₀(10), [N])
-//│ def genCountDown_₀(n²) = 
-//│ 	if (n² > 0) then 
-//│ 		let t² = genCountDown_₀((n² - 1))
-//│ 		in let h² = n²
-//│ 		in (fun a³ -> rev_₀(t², [C h² a³])) else (fun a⁴ -> a⁴)
-//│ def rev_₀(ls², a²) = 
-//│ 	ls²(a²)
+//│ rev(genCountDown(10), [N])
+//│ def genCountDown(n¹) = if (n¹ > 0) then 
+//│ 	let t¹ = genCountDown((n¹ - 1))
+//│ 	in let h¹ = n¹
+//│ 	in (fun a² -> rev(t¹, [C h¹ a²])) else (fun a³ -> a³)
+//│ def rev(ls¹, a¹) = ls¹(a¹)
 //│ <<<<<<< after fusion <<<<<<<

@@ -18,82 +18,31 @@ if f(N) is
 //│ 	| C a⁰ => primitive⁰}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^6] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ case f_₀([N]) of {
-//│ 	K  => 0
-//│ 	| L  => 1}
-//│ def f_₀(x¹) = 
-//│ 	case x¹ of {
-//│ 		N  => [K]
-//│ 		| C a¹ => primitive⁰}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [K]: 13 --->
-//│ 	case f_₀([N]) of {K  => 0 | L  => 1}: 22
-//│ [N]: 18 --->
-//│ 	case x¹ of {N  => [K] | C a¹ => primitive⁰}: 15
+//│ [K]: 2 --->
+//│ 	case f([N]) of {K  => 0 | L  => 1}: 11
+//│ [N]: 7 --->
+//│ 	case x⁰ of {N  => [K] | C a⁰ => primitive⁰}: 4
 //│ ------------------
-//│ case x¹ of {N  => [K] | C a¹ => primitive⁰}: 15 --->
-//│ 	[N]: 18
-//│ case f_₀([N]) of {K  => 0 | L  => 1}: 22 --->
-//│ 	[K]: 13
+//│ case x⁰ of {N  => [K] | C a⁰ => primitive⁰}: 4 --->
+//│ 	[N]: 7
+//│ case f([N]) of {K  => 0 | L  => 1}: 11 --->
+//│ 	[K]: 2
 //│ 	NoProd
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [N]: 18 --->
-//│ 	case x¹ of {N  => [K] | C a¹ => primitive⁰}: 15
+//│ [N]: 7 --->
+//│ 	case x⁰ of {N  => [K] | C a⁰ => primitive⁰}: 4
 //│ ------------------
-//│ case x¹ of {N  => [K] | C a¹ => primitive⁰}: 15 --->
-//│ 	[N]: 18
+//│ case x⁰ of {N  => [K] | C a⁰ => primitive⁰}: 4 --->
+//│ 	[N]: 7
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ case f_₀([K]) of {
+//│ case f([K]) of {
 //│ 	K  => 0
 //│ 	| L  => 1}
-//│ def f_₀(x²) = 
-//│ 	x²
-//│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ ~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~
-//│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f_₀^1] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ case f_₀_₀([K]) of {
-//│ 	K  => 0
-//│ 	| L  => 1}
-//│ def f_₀_₀(x¹) = 
-//│ 	x¹
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ [K]: 12 --->
-//│ 	case f_₀_₀([K]) of {K  => 0 | L  => 1}: 16
-//│ ------------------
-//│ case f_₀_₀([K]) of {K  => 0 | L  => 1}: 16 --->
-//│ 	[K]: 12
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ [K]: 12 --->
-//│ 	case f_₀_₀([K]) of {K  => 0 | L  => 1}: 16
-//│ ------------------
-//│ case f_₀_₀([K]) of {K  => 0 | L  => 1}: 16 --->
-//│ 	[K]: 12
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ f_₀_₀(0)
-//│ def f_₀_₀(x²) = 
-//│ 	x²
+//│ def f(x¹) = x¹
 //│ <<<<<<< after fusion <<<<<<<
 

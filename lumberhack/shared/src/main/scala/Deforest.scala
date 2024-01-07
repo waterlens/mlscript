@@ -366,6 +366,9 @@ class Deforest(var debug: Boolean) {
       // the `recursiveConstr` later will be changed, since mkctor type's eq test and hashCode value relies on the exprId
       case Call(Ref(fromLargeStr), Const(StrLit(largeStr))) if fromLargeStr.tree.name == "from_large_str" =>
         NoProd()(using e.uid)
+      case Call(Ref(err), callee) if err.tree.name == "error" =>
+        process(callee.primIdize(using this, None))
+        freshVar("_lh_rigid_error_var")(using e.uid)._1
       case Const(IntLit(_)) => prodInt(using noExprId)
       case Const(DecLit(_)) => prodFloat(using noExprId) // floating point numbers as integers type
       case Const(CharLit(_)) => prodChar(using noExprId)

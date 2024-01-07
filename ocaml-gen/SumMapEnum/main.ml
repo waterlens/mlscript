@@ -4,6 +4,6 @@ ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Lumherhack_Common.ml ./Lumberha
 open Core_bench;;
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_SumMapEnum" (fun () -> ignore (let open Module_original___________.Module_original___________ in ((testSumMapEnum 300000))));
-  Bench.Test.create ~name:"lumberhack_SumMapEnum" (fun () -> ignore (let open Module_lumberhack_________.Module_lumberhack_________ in ((testSumMapEnum__d0 300000))));
-  Bench.Test.create ~name:"lumberhack_pop_out_SumMapEnum" (fun () -> ignore (let open Module_lumberhack_pop_out_.Module_lumberhack_pop_out_ in ((testSumMapEnum__d0 300000))));
+  Bench.Test.create ~name:"lumberhack_SumMapEnum" (fun () -> ignore (let open Module_lumberhack_________.Module_lumberhack_________ in ((testSumMapEnum 300000))));
+  Bench.Test.create ~name:"lumberhack_pop_out_SumMapEnum" (fun () -> ignore (let open Module_lumberhack_pop_out_.Module_lumberhack_pop_out_ in ((testSumMapEnum 300000))));
 ])

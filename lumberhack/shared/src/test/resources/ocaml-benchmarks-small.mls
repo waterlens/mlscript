@@ -191,79 +191,20 @@ testManual(primId(enumFromTo(1, 500000)))
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [enumFromTo^136] (hopeless to continue)
-//│ 	[enumFromTo^136 · enumFromTo^7] ---> [enumFromTo^136] (using original def)
-//│ [enumFromTo^145] (hopeless to continue)
-//│ 	[enumFromTo^145 · enumFromTo^7] ---> [enumFromTo^145] (using original def)
-//│ [testLastFilter^134] (hopeless to continue)
-//│ 	[testLastFilter^134 · filter^63] (using original def)
-//│ 		[testLastFilter^134 · filter^63 · filter^26] ---> [testLastFilter^134 · filter^63] (using original def)
-//│ 		[testLastFilter^134 · filter^63 · filter^32] ---> [testLastFilter^134 · filter^63] (using original def)
-//│ 	[testLastFilter^134 · lastDrive^62] (using original def)
-//│ 		[testLastFilter^134 · lastDrive^62 · last^43] (using original def)
-//│ 			[testLastFilter^134 · lastDrive^62 · last^43 · last^54] ---> [testLastFilter^134 · lastDrive^62 · last^43] (using original def)
-//│ [testManual^143] (hopeless to continue)
-//│ 	[testManual^143 · _lhManualLastFilterDrive^123] (using original def)
-//│ 		[testManual^143 · _lhManualLastFilterDrive^123 · _lhManualLastFilterDrive^89] ---> [testManual^143 · _lhManualLastFilterDrive^123] (using original def)
-//│ 		[testManual^143 · _lhManualLastFilterDrive^123 · _lhManualLastFilter^79] (using original def)
-//│ 			[testManual^143 · _lhManualLastFilterDrive^123 · _lhManualLastFilter^79 · _lhManualLastFilter^103] ---> [testManual^143 · _lhManualLastFilterDrive^123 · _lhManualLastFilter^79] (using original def)
-//│ 			[testManual^143 · _lhManualLastFilterDrive^123 · _lhManualLastFilter^79 · _lhManualLastFilter^110] ---> [testManual^143 · _lhManualLastFilterDrive^123 · _lhManualLastFilter^79] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ testLastFilter_₀(primId⁰(enumFromTo_₀(1, 500000)))
-//│ testManual_₀(primId⁰(enumFromTo_₁(1, 500000)))
-//│ def enumFromTo_₀(a⁷, b²) = 
-//│ 	if (a⁷ <= b²) then [C a⁷ enumFromTo_₀((a⁷ + 1), b²)] else [N]
-//│ def enumFromTo_₁(a⁴, b¹) = 
-//│ 	if (a⁴ <= b¹) then [C a⁴ enumFromTo_₁((a⁴ + 1), b¹)] else [N]
-//│ def testLastFilter_₀(ls⁸) = 
-//│ 	lastDrive_₀(filter_₀(ls⁸, (fun x² -> (x² < 1000))))
-//│ 	where
-//│ 	def filter_₀(ls¹³, f⁵) = 
-//│ 		case ls¹³ of {
-//│ 			C h⁹ t⁹ => if f⁵(h⁹) then [C h⁹ filter_₀(t⁹, f⁵)] else filter_₀(t⁹, f⁵)
-//│ 			| N  => [N]}
-//│ 	def lastDrive_₀(ls⁷) = 
-//│ 		case ls⁷ of {
-//│ 			C h⁵ t⁵ => [Some last_₀(h⁵, t⁵)]
-//│ 			| N  => [None]}
-//│ 		where
-//│ 		def last_₀(a⁶, ls¹¹) = 
-//│ 			case ls¹¹ of {
-//│ 				N  => a⁶
-//│ 				| C h⁷ t⁷ => last_₀(h⁷, t⁷)}
-//│ def testManual_₀(ls⁹) = 
-//│ 	_lhManualLastFilterDrive_₀(ls⁹, (fun x³ -> (x³ < 1000)))
-//│ 	where
-//│ 	def _lhManualLastFilterDrive_₀(ls¹⁰, f³) = 
-//│ 		case ls¹⁰ of {
-//│ 			C h⁶ t⁶ => if f³(h⁶) then 
-//│ 				let a⁵ = _lhManualLastFilter_₀(t⁶, f³, h⁶)
-//│ 				in [Some a⁵] else _lhManualLastFilterDrive_₀(t⁶, f³)
-//│ 			| N  => [None]}
-//│ 		where
-//│ 		def _lhManualLastFilter_₀(ls¹², f⁴, a⁸) = 
-//│ 			case ls¹² of {
-//│ 				C h⁸ t⁸ => if f⁴(h⁸) then _lhManualLastFilter_₀(t⁸, f⁴, h⁸) else _lhManualLastFilter_₀(t⁸, f⁴, a⁸)
-//│ 				| N  => a⁸}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h⁹ filter_₀(t⁹, f⁵)]: 294 --->
-//│ 	case ls⁷ of {C h⁵ t⁵ => [Some last_₀(h⁵, t⁵)] | N  => [None]}: 180
-//│ 	case ls¹¹ of {N  => a⁶ | C h⁷ t⁷ => last_₀(h⁷, t⁷)}: 237
-//│ [N]: 301 --->
-//│ 	case ls⁷ of {C h⁵ t⁵ => [Some last_₀(h⁵, t⁵)] | N  => [None]}: 180
-//│ 	case ls¹¹ of {N  => a⁶ | C h⁷ t⁷ => last_₀(h⁷, t⁷)}: 237
+//│ [C h⁰ filter(t⁰, f⁰)]: 31 --->
+//│ 	case ls¹ of {C h¹ t¹ => [Some last(h¹, t¹)] | N  => [None]}: 50
+//│ 	case ls² of {N  => a¹ | C h² t² => last(h², t²)}: 59
+//│ [N]: 38 --->
+//│ 	case ls¹ of {C h¹ t¹ => [Some last(h¹, t¹)] | N  => [None]}: 50
+//│ 	case ls² of {N  => a¹ | C h² t² => last(h², t²)}: 59
 //│ ------------------
-//│ case ls⁷ of {C h⁵ t⁵ => [Some last_₀(h⁵, t⁵)] | N  => [None]}: 180 --->
-//│ 	[C h⁹ filter_₀(t⁹, f⁵)]: 294
-//│ 	[N]: 301
-//│ case ls¹¹ of {N  => a⁶ | C h⁷ t⁷ => last_₀(h⁷, t⁷)}: 237 --->
-//│ 	[C h⁹ filter_₀(t⁹, f⁵)]: 294
-//│ 	[N]: 301
+//│ case ls¹ of {C h¹ t¹ => [Some last(h¹, t¹)] | N  => [None]}: 50 --->
+//│ 	[C h⁰ filter(t⁰, f⁰)]: 31
+//│ 	[N]: 38
+//│ case ls² of {N  => a¹ | C h² t² => last(h², t²)}: 59 --->
+//│ 	[C h⁰ filter(t⁰, f⁰)]: 31
+//│ 	[N]: 38
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -273,42 +214,28 @@ testManual(primId(enumFromTo(1, 500000)))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testLastFilter_₀(primId⁰(enumFromTo_₀(1, 500000)))
-//│ testManual_₀(primId⁰(enumFromTo_₁(1, 500000)))
-//│ def enumFromTo_₀(a¹¹, b⁴) = 
-//│ 	if (a¹¹ <= b⁴) then [C a¹¹ enumFromTo_₀((a¹¹ + 1), b⁴)] else [N]
-//│ def enumFromTo_₁(a⁹, b³) = 
-//│ 	if (a⁹ <= b³) then [C a⁹ enumFromTo_₁((a⁹ + 1), b³)] else [N]
-//│ def testLastFilter_₀(ls¹⁸) = 
-//│ 	lastDrive_₀(filter_₀(ls¹⁸, (fun x⁵ -> (x⁵ < 1000))))
-//│ 	where
-//│ 	def filter_₀(ls¹⁵, f⁶) = 
-//│ 		case ls¹⁵ of {
-//│ 			C h⁹ t⁹ => if f⁶(h⁹) then [C h⁹ filter_₀(t⁹, f⁶)] else filter_₀(t⁹, f⁶)
-//│ 			| N  => [N]}
-//│ 	def lastDrive_₀(ls¹⁴) = 
-//│ 		case ls¹⁴ of {
-//│ 			C h⁵ t⁵ => [Some last_₀(h⁵, t⁵)]
-//│ 			| N  => [None]}
-//│ 		where
-//│ 		def last_₀(a¹², ls¹⁹) = 
-//│ 			case ls¹⁹ of {
-//│ 				N  => a¹²
-//│ 				| C h⁷ t⁷ => last_₀(h⁷, t⁷)}
-//│ def testManual_₀(ls¹⁶) = 
-//│ 	_lhManualLastFilterDrive_₀(ls¹⁶, (fun x⁴ -> (x⁴ < 1000)))
-//│ 	where
-//│ 	def _lhManualLastFilterDrive_₀(ls¹⁷, f⁷) = 
-//│ 		case ls¹⁷ of {
-//│ 			C h⁶ t⁶ => if f⁷(h⁶) then 
-//│ 				let a¹⁰ = _lhManualLastFilter_₀(t⁶, f⁷, h⁶)
-//│ 				in [Some a¹⁰] else _lhManualLastFilterDrive_₀(t⁶, f⁷)
-//│ 			| N  => [None]}
-//│ 		where
-//│ 		def _lhManualLastFilter_₀(ls²⁰, f⁸, a¹³) = 
-//│ 			case ls²⁰ of {
-//│ 				C h⁸ t⁸ => if f⁸(h⁸) then _lhManualLastFilter_₀(t⁸, f⁸, h⁸) else _lhManualLastFilter_₀(t⁸, f⁸, a¹³)
-//│ 				| N  => a¹³}
+//│ testLastFilter(primId⁰(enumFromTo(1, 500000)))
+//│ testManual(primId⁰(enumFromTo(1, 500000)))
+//│ def _lhManualLastFilter(ls⁹, f³, a⁴) = case ls⁹ of {
+//│ 	C h⁴ t⁴ => if f³(h⁴) then _lhManualLastFilter(t⁴, f³, h⁴) else _lhManualLastFilter(t⁴, f³, a⁴)
+//│ 	| N  => a⁴}
+//│ def _lhManualLastFilterDrive(ls¹⁰, f⁴) = case ls¹⁰ of {
+//│ 	C h³ t³ => if f⁴(h³) then 
+//│ 		let a⁵ = _lhManualLastFilter(t³, f⁴, h³)
+//│ 		in [Some a⁵] else _lhManualLastFilterDrive(t³, f⁴)
+//│ 	| N  => [None]}
+//│ def enumFromTo(a⁷, b¹) = if (a⁷ <= b¹) then [C a⁷ enumFromTo((a⁷ + 1), b¹)] else [N]
+//│ def filter(ls¹², f⁵) = case ls¹² of {
+//│ 	C h⁰ t⁰ => if f⁵(h⁰) then [C h⁰ filter(t⁰, f⁵)] else filter(t⁰, f⁵)
+//│ 	| N  => [N]}
+//│ def last(a⁶, ls¹¹) = case ls¹¹ of {
+//│ 	N  => a⁶
+//│ 	| C h² t² => last(h², t²)}
+//│ def lastDrive(ls⁷) = case ls⁷ of {
+//│ 	C h¹ t¹ => [Some last(h¹, t¹)]
+//│ 	| N  => [None]}
+//│ def testLastFilter(ls⁸) = lastDrive(filter(ls⁸, (fun x² -> (x² < 1000))))
+//│ def testManual(ls¹³) = _lhManualLastFilterDrive(ls¹³, (fun x³ -> (x³ < 1000)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
@@ -377,95 +304,54 @@ testLastFilterEnum(primId(500000))
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [testLastFilterEnum^79] (hopeless to continue)
-//│ 	[testLastFilterEnum^79 · enumFromTo^64] (using original def)
-//│ 		[testLastFilterEnum^79 · enumFromTo^64 · enumFromTo^7] ---> [testLastFilterEnum^79 · enumFromTo^64] (using original def)
-//│ 	[testLastFilterEnum^79 · filter^63] (using original def)
-//│ 		[testLastFilterEnum^79 · filter^63 · filter^26] ---> [testLastFilterEnum^79 · filter^63] (using original def)
-//│ 		[testLastFilterEnum^79 · filter^63 · filter^32] ---> [testLastFilterEnum^79 · filter^63] (using original def)
-//│ 	[testLastFilterEnum^79 · lastDrive^62] (using original def)
-//│ 		[testLastFilterEnum^79 · lastDrive^62 · last^43] (using original def)
-//│ 			[testLastFilterEnum^79 · lastDrive^62 · last^43 · last^54] ---> [testLastFilterEnum^79 · lastDrive^62 · last^43] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ testLastFilterEnum_₀(primId⁰(500000))
-//│ def testLastFilterEnum_₀(n¹) = 
-//│ 	lastDrive_₀(filter_₀(enumFromTo_₀(1, n¹), (fun x¹ -> (x¹ < 1000))))
-//│ 	where
-//│ 	def enumFromTo_₀(a², b¹) = 
-//│ 		if (a² <= b¹) then [C a² enumFromTo_₀((a² + 1), b¹)] else [N]
-//│ 	def filter_₀(ls⁴, f¹) = 
-//│ 		case ls⁴ of {
-//│ 			C h⁴ t⁴ => if f¹(h⁴) then [C h⁴ filter_₀(t⁴, f¹)] else filter_₀(t⁴, f¹)
-//│ 			| N  => [N]}
-//│ 	def lastDrive_₀(ls³) = 
-//│ 		case ls³ of {
-//│ 			C h³ t³ => [Some last_₀(h³, t³)]
-//│ 			| N  => [None]}
-//│ 		where
-//│ 		def last_₀(a³, ls⁵) = 
-//│ 			case ls⁵ of {
-//│ 				N  => a³
-//│ 				| C h⁵ t⁵ => last_₀(h⁵, t⁵)}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C a² enumFromTo_₀((a² + 1), b¹)]: 99 --->
-//│ 	case ls⁴ of {C h⁴ t⁴ => if f¹(h⁴) then [C h⁴ filter_₀(t⁴, f¹)] else filter_₀(t⁴, f¹) | N  => [N]}: 132
-//│ [N]: 100 --->
-//│ 	case ls⁴ of {C h⁴ t⁴ => if f¹(h⁴) then [C h⁴ filter_₀(t⁴, f¹)] else filter_₀(t⁴, f¹) | N  => [N]}: 132
-//│ [C h⁴ filter_₀(t⁴, f¹)]: 124 --->
-//│ 	case ls³ of {C h³ t³ => [Some last_₀(h³, t³)] | N  => [None]}: 112
-//│ 	case ls⁵ of {N  => a³ | C h⁵ t⁵ => last_₀(h⁵, t⁵)}: 159
-//│ [N]: 131 --->
-//│ 	case ls³ of {C h³ t³ => [Some last_₀(h³, t³)] | N  => [None]}: 112
-//│ 	case ls⁵ of {N  => a³ | C h⁵ t⁵ => last_₀(h⁵, t⁵)}: 159
+//│ [C a⁰ enumFromTo((a⁰ + 1), b⁰)]: 16 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => if f⁰(h⁰) then [C h⁰ filter(t⁰, f⁰)] else filter(t⁰, f⁰) | N  => [N]}: 39
+//│ [N]: 17 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => if f⁰(h⁰) then [C h⁰ filter(t⁰, f⁰)] else filter(t⁰, f⁰) | N  => [N]}: 39
+//│ [C h⁰ filter(t⁰, f⁰)]: 31 --->
+//│ 	case ls¹ of {C h¹ t¹ => [Some last(h¹, t¹)] | N  => [None]}: 50
+//│ 	case ls² of {N  => a¹ | C h² t² => last(h², t²)}: 59
+//│ [N]: 38 --->
+//│ 	case ls¹ of {C h¹ t¹ => [Some last(h¹, t¹)] | N  => [None]}: 50
+//│ 	case ls² of {N  => a¹ | C h² t² => last(h², t²)}: 59
 //│ ------------------
-//│ case ls³ of {C h³ t³ => [Some last_₀(h³, t³)] | N  => [None]}: 112 --->
-//│ 	[C h⁴ filter_₀(t⁴, f¹)]: 124
-//│ 	[N]: 131
-//│ case ls⁴ of {C h⁴ t⁴ => if f¹(h⁴) then [C h⁴ filter_₀(t⁴, f¹)] else filter_₀(t⁴, f¹) | N  => [N]}: 132 --->
-//│ 	[C a² enumFromTo_₀((a² + 1), b¹)]: 99
-//│ 	[N]: 100
-//│ case ls⁵ of {N  => a³ | C h⁵ t⁵ => last_₀(h⁵, t⁵)}: 159 --->
-//│ 	[C h⁴ filter_₀(t⁴, f¹)]: 124
-//│ 	[N]: 131
+//│ case ls⁰ of {C h⁰ t⁰ => if f⁰(h⁰) then [C h⁰ filter(t⁰, f⁰)] else filter(t⁰, f⁰) | N  => [N]}: 39 --->
+//│ 	[C a⁰ enumFromTo((a⁰ + 1), b⁰)]: 16
+//│ 	[N]: 17
+//│ case ls¹ of {C h¹ t¹ => [Some last(h¹, t¹)] | N  => [None]}: 50 --->
+//│ 	[C h⁰ filter(t⁰, f⁰)]: 31
+//│ 	[N]: 38
+//│ case ls² of {N  => a¹ | C h² t² => last(h², t²)}: 59 --->
+//│ 	[C h⁰ filter(t⁰, f⁰)]: 31
+//│ 	[N]: 38
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C a² enumFromTo_₀((a² + 1), b¹)]: 99 --->
-//│ 	case ls⁴ of {C h⁴ t⁴ => if f¹(h⁴) then [C h⁴ filter_₀(t⁴, f¹)] else filter_₀(t⁴, f¹) | N  => [N]}: 132
-//│ [N]: 100 --->
-//│ 	case ls⁴ of {C h⁴ t⁴ => if f¹(h⁴) then [C h⁴ filter_₀(t⁴, f¹)] else filter_₀(t⁴, f¹) | N  => [N]}: 132
+//│ [C a⁰ enumFromTo((a⁰ + 1), b⁰)]: 16 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => if f⁰(h⁰) then [C h⁰ filter(t⁰, f⁰)] else filter(t⁰, f⁰) | N  => [N]}: 39
+//│ [N]: 17 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => if f⁰(h⁰) then [C h⁰ filter(t⁰, f⁰)] else filter(t⁰, f⁰) | N  => [N]}: 39
 //│ ------------------
-//│ case ls⁴ of {C h⁴ t⁴ => if f¹(h⁴) then [C h⁴ filter_₀(t⁴, f¹)] else filter_₀(t⁴, f¹) | N  => [N]}: 132 --->
-//│ 	[C a² enumFromTo_₀((a² + 1), b¹)]: 99
-//│ 	[N]: 100
+//│ case ls⁰ of {C h⁰ t⁰ => if f⁰(h⁰) then [C h⁰ filter(t⁰, f⁰)] else filter(t⁰, f⁰) | N  => [N]}: 39 --->
+//│ 	[C a⁰ enumFromTo((a⁰ + 1), b⁰)]: 16
+//│ 	[N]: 17
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testLastFilterEnum_₀(primId⁰(500000))
-//│ def testLastFilterEnum_₀(n²) = 
-//│ 	lastDrive_₀(filter_₀(enumFromTo_₀(1, n²), (fun x² -> (x² < 1000))))
-//│ 	where
-//│ 	def enumFromTo_₀(a⁵, b²) = 
-//│ 		if (a⁵ <= b²) then 
-//│ 			let t⁶ = enumFromTo_₀((a⁵ + 1), b²)
-//│ 			in let h⁶ = a⁵
-//│ 			in (fun f³ -> if f³(h⁶) then [C h⁶ filter_₀(t⁶, f³)] else filter_₀(t⁶, f³)) else (fun f⁴ -> [N])
-//│ 	def filter_₀(ls⁷, f²) = 
-//│ 		ls⁷(f²)
-//│ 	def lastDrive_₀(ls⁶) = 
-//│ 		case ls⁶ of {
-//│ 			C h³ t³ => [Some last_₀(h³, t³)]
-//│ 			| N  => [None]}
-//│ 		where
-//│ 		def last_₀(a⁴, ls⁸) = 
-//│ 			case ls⁸ of {
-//│ 				N  => a⁴
-//│ 				| C h⁵ t⁵ => last_₀(h⁵, t⁵)}
+//│ testLastFilterEnum(primId⁰(500000))
+//│ def enumFromTo(a³, b¹) = if (a³ <= b¹) then 
+//│ 	let t³ = enumFromTo((a³ + 1), b¹)
+//│ 	in let h³ = a³
+//│ 	in (fun f² -> if f²(h³) then [C h³ filter(t³, f²)] else filter(t³, f²)) else (fun f³ -> [N])
+//│ def filter(ls⁵, f¹) = ls⁵(f¹)
+//│ def last(a², ls⁴) = case ls⁴ of {
+//│ 	N  => a²
+//│ 	| C h² t² => last(h², t²)}
+//│ def lastDrive(ls³) = case ls³ of {
+//│ 	C h¹ t¹ => [Some last(h¹, t¹)]
+//│ 	| N  => [None]}
+//│ def testLastFilterEnum(n¹) = lastDrive(filter(enumFromTo(1, n¹), (fun x¹ -> (x¹ < 1000))))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
@@ -529,96 +415,38 @@ testManual(primId(enumFromTo(1, 100000)))
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [enumFromTo^103] (hopeless to continue)
-//│ 	[enumFromTo^103 · enumFromTo^7] ---> [enumFromTo^103] (using original def)
-//│ [enumFromTo^94] (hopeless to continue)
-//│ 	[enumFromTo^94 · enumFromTo^7] ---> [enumFromTo^94] (using original def)
-//│ [testManual^101] (hopeless to continue)
-//│ 	[testManual^101 · _lhManual^74] (using original def)
-//│ 		[testManual^101 · _lhManual^74 · _lhManual^61] ---> [testManual^101 · _lhManual^74] (using original def)
-//│ [testMapmap^92] (hopeless to continue)
-//│ 	[testMapmap^92 · map^35] (using original def)
-//│ 		[testMapmap^92 · map^35 · map^25] ---> [testMapmap^92 · map^35] (using original def)
-//│ 	[testMapmap^92 · map^43] (using original def)
-//│ 		[testMapmap^92 · map^43 · map^25] ---> [testMapmap^92 · map^43] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ testMapmap_₀(primId⁰(enumFromTo_₁(1, 100000)))
-//│ testManual_₀(primId⁰(enumFromTo_₀(1, 100000)))
-//│ def enumFromTo_₀(a¹, b¹) = 
-//│ 	if (a¹ <= b¹) then [C a¹ enumFromTo_₀((a¹ + 1), b¹)] else [N]
-//│ def enumFromTo_₁(a², b²) = 
-//│ 	if (a² <= b²) then [C a² enumFromTo_₁((a² + 1), b²)] else [N]
-//│ def testManual_₀(ls⁴) = 
-//│ 	_lhManual_₀(ls⁴, (fun x⁴ -> (x⁴ * x⁴)), (fun x⁵ -> (x⁵ + 1)))
-//│ 	where
-//│ 	def _lhManual_₀(ls⁶, f1¹, f2¹) = 
-//│ 		case ls⁶ of {
-//│ 			C h³ t³ => [C f2¹(f1¹(h³)) _lhManual_₀(t³, f1¹, f2¹)]
-//│ 			| N  => [N]}
-//│ def testMapmap_₀(ls⁸) = 
-//│ 	map_₀((fun x⁶ -> (x⁶ + 1)), map_₁((fun x⁷ -> (x⁷ * x⁷)), ls⁸))
-//│ 	where
-//│ 	def map_₀(f², ls⁷) = 
-//│ 		case ls⁷ of {
-//│ 			C h⁴ t⁴ => [C f²(h⁴) map_₀(f², t⁴)]
-//│ 			| N  => [N]}
-//│ 	def map_₁(f¹, ls⁵) = 
-//│ 		case ls⁵ of {
-//│ 			C h² t² => [C f¹(h²) map_₁(f¹, t²)]
-//│ 			| N  => [N]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C f¹(h²) map_₁(f¹, t²)]: 137 --->
-//│ 	case ls⁷ of {C h⁴ t⁴ => [C f²(h⁴) map_₀(f², t⁴)] | N  => [N]}: 192
-//│ [N]: 138 --->
-//│ 	case ls⁷ of {C h⁴ t⁴ => [C f²(h⁴) map_₀(f², t⁴)] | N  => [N]}: 192
+//│ [C f⁰(h⁰) map(f⁰, t⁰)]: 30 --->
+//│ 	NoCons
+//│ 	case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 32
+//│ [N]: 31 --->
+//│ 	NoCons
+//│ 	case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 32
 //│ ------------------
-//│ case ls⁷ of {C h⁴ t⁴ => [C f²(h⁴) map_₀(f², t⁴)] | N  => [N]}: 192 --->
-//│ 	[C f¹(h²) map_₁(f¹, t²)]: 137
-//│ 	[N]: 138
+//│ case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 32 --->
+//│ 	NoProd
+//│ 	[C f⁰(h⁰) map(f⁰, t⁰)]: 30
+//│ 	[N]: 31
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C f¹(h²) map_₁(f¹, t²)]: 137 --->
-//│ 	case ls⁷ of {C h⁴ t⁴ => [C f²(h⁴) map_₀(f², t⁴)] | N  => [N]}: 192
-//│ [N]: 138 --->
-//│ 	case ls⁷ of {C h⁴ t⁴ => [C f²(h⁴) map_₀(f², t⁴)] | N  => [N]}: 192
+//│ 
 //│ ------------------
-//│ case ls⁷ of {C h⁴ t⁴ => [C f²(h⁴) map_₀(f², t⁴)] | N  => [N]}: 192 --->
-//│ 	[C f¹(h²) map_₁(f¹, t²)]: 137
-//│ 	[N]: 138
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testMapmap_₀(primId⁰(enumFromTo_₁(1, 100000)))
-//│ testManual_₀(primId⁰(enumFromTo_₀(1, 100000)))
-//│ def enumFromTo_₀(a⁴, b⁴) = 
-//│ 	if (a⁴ <= b⁴) then [C a⁴ enumFromTo_₀((a⁴ + 1), b⁴)] else [N]
-//│ def enumFromTo_₁(a³, b³) = 
-//│ 	if (a³ <= b³) then [C a³ enumFromTo_₁((a³ + 1), b³)] else [N]
-//│ def testManual_₀(ls¹²) = 
-//│ 	_lhManual_₀(ls¹², (fun x¹⁰ -> (x¹⁰ * x¹⁰)), (fun x¹¹ -> (x¹¹ + 1)))
-//│ 	where
-//│ 	def _lhManual_₀(ls¹³, f1², f2²) = 
-//│ 		case ls¹³ of {
-//│ 			C h³ t³ => [C f2²(f1²(h³)) _lhManual_₀(t³, f1², f2²)]
-//│ 			| N  => [N]}
-//│ def testMapmap_₀(ls¹⁰) = 
-//│ 	map_₀((fun x⁸ -> (x⁸ + 1)), map_₁((fun x⁹ -> (x⁹ * x⁹)), ls¹⁰))
-//│ 	where
-//│ 	def map_₀(f³, ls⁹) = 
-//│ 		ls⁹(f³)
-//│ 	def map_₁(f⁴, ls¹¹) = 
-//│ 		case ls¹¹ of {
-//│ 			C h² t² => 
-//│ 				let t⁵ = map_₁(f⁴, t²)
-//│ 				in let h⁵ = f⁴(h²)
-//│ 				in (fun f⁵ -> [C f⁵(h⁵) map_₀(f⁵, t⁵)])
-//│ 			| N  => (fun f⁶ -> [N])}
+//│ testMapmap(primId⁰(enumFromTo(1, 100000)))
+//│ testManual(primId⁰(enumFromTo(1, 100000)))
+//│ def _lhManual(ls⁶, f1¹, f2¹) = case ls⁶ of {
+//│ 	C h¹ t¹ => [C f2¹(f1¹(h¹)) _lhManual(t¹, f1¹, f2¹)]
+//│ 	| N  => [N]}
+//│ def enumFromTo(a¹, b¹) = if (a¹ <= b¹) then [C a¹ enumFromTo((a¹ + 1), b¹)] else [N]
+//│ def map(f¹, ls⁴) = case ls⁴ of {
+//│ 	C h⁰ t⁰ => [C f¹(h⁰) map(f¹, t⁰)]
+//│ 	| N  => [N]}
+//│ def testManual(ls⁷) = _lhManual(ls⁷, (fun x⁶ -> (x⁶ * x⁶)), (fun x⁷ -> (x⁷ + 1)))
+//│ def testMapmap(ls⁵) = map((fun x⁴ -> (x⁴ + 1)), map((fun x⁵ -> (x⁵ * x⁵)), ls⁵))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
@@ -666,84 +494,38 @@ testMapmapLet(primId(enumFromTo(1, 100000)))
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [enumFromTo^59] (hopeless to continue)
-//│ 	[enumFromTo^59 · enumFromTo^7] ---> [enumFromTo^59] (using original def)
-//│ [testMapmapLet^57] (hopeless to continue)
-//│ 	[testMapmapLet^57 · map^37] (using original def)
-//│ 		[testMapmapLet^57 · map^37 · map^26] ---> [testMapmapLet^57 · map^37] (using original def)
-//│ 	[testMapmapLet^57 · map^45] (using original def)
-//│ 		[testMapmapLet^57 · map^45 · map^26] ---> [testMapmapLet^57 · map^45] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ testMapmapLet_₀(primId⁰(enumFromTo_₀(1, 100000)))
-//│ def enumFromTo_₀(a¹, b¹) = 
-//│ 	if (a¹ <= b¹) then [C a¹ enumFromTo_₀((a¹ + 1), b¹)] else [N]
-//│ def testMapmapLet_₀(ls³) = 
-//│ 	map_₀((fun x² -> (x² + 1)), map_₁((fun x³ -> (x³ * x³)), ls³))
-//│ 	where
-//│ 	def map_₀(f², ls⁴) = 
-//│ 		case ls⁴ of {
-//│ 			C h² t² => 
-//│ 				let r² = f²(h²)
-//│ 				in [C r² map_₀(f², t²)]
-//│ 			| N  => [N]}
-//│ 	def map_₁(f¹, ls²) = 
-//│ 		case ls² of {
-//│ 			C h¹ t¹ => 
-//│ 				let r¹ = f¹(h¹)
-//│ 				in [C r¹ map_₁(f¹, t¹)]
-//│ 			| N  => [N]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C r¹ map_₁(f¹, t¹)]: 76 --->
-//│ 	case ls⁴ of {C h² t² => let r² = f²(h²)
-//│ in [C r² map_₀(f², t²)] | N  => [N]}: 135
-//│ [N]: 78 --->
-//│ 	case ls⁴ of {C h² t² => let r² = f²(h²)
-//│ in [C r² map_₀(f², t²)] | N  => [N]}: 135
+//│ [C r⁰ map(f⁰, t⁰)]: 31 --->
+//│ 	NoCons
+//│ 	case ls⁰ of {C h⁰ t⁰ => let r⁰ = f⁰(h⁰)
+//│ in [C r⁰ map(f⁰, t⁰)] | N  => [N]}: 34
+//│ [N]: 33 --->
+//│ 	NoCons
+//│ 	case ls⁰ of {C h⁰ t⁰ => let r⁰ = f⁰(h⁰)
+//│ in [C r⁰ map(f⁰, t⁰)] | N  => [N]}: 34
 //│ ------------------
-//│ case ls⁴ of {C h² t² => let r² = f²(h²)
-//│ in [C r² map_₀(f², t²)] | N  => [N]}: 135 --->
-//│ 	[C r¹ map_₁(f¹, t¹)]: 76
-//│ 	[N]: 78
+//│ case ls⁰ of {C h⁰ t⁰ => let r⁰ = f⁰(h⁰)
+//│ in [C r⁰ map(f⁰, t⁰)] | N  => [N]}: 34 --->
+//│ 	NoProd
+//│ 	[C r⁰ map(f⁰, t⁰)]: 31
+//│ 	[N]: 33
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C r¹ map_₁(f¹, t¹)]: 76 --->
-//│ 	case ls⁴ of {C h² t² => let r² = f²(h²)
-//│ in [C r² map_₀(f², t²)] | N  => [N]}: 135
-//│ [N]: 78 --->
-//│ 	case ls⁴ of {C h² t² => let r² = f²(h²)
-//│ in [C r² map_₀(f², t²)] | N  => [N]}: 135
+//│ 
 //│ ------------------
-//│ case ls⁴ of {C h² t² => let r² = f²(h²)
-//│ in [C r² map_₀(f², t²)] | N  => [N]}: 135 --->
-//│ 	[C r¹ map_₁(f¹, t¹)]: 76
-//│ 	[N]: 78
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testMapmapLet_₀(primId⁰(enumFromTo_₀(1, 100000)))
-//│ def enumFromTo_₀(a², b²) = 
-//│ 	if (a² <= b²) then [C a² enumFromTo_₀((a² + 1), b²)] else [N]
-//│ def testMapmapLet_₀(ls⁶) = 
-//│ 	map_₀((fun x⁴ -> (x⁴ + 1)), map_₁((fun x⁵ -> (x⁵ * x⁵)), ls⁶))
-//│ 	where
-//│ 	def map_₀(f⁶, ls⁷) = 
-//│ 		ls⁷(f⁶)
-//│ 	def map_₁(f³, ls⁵) = 
-//│ 		case ls⁵ of {
-//│ 			C h¹ t¹ => 
-//│ 				let r³ = f³(h¹)
-//│ 				in let t³ = map_₁(f³, t¹)
-//│ 				in let h³ = r³
-//│ 				in (fun f⁴ -> 
-//│ 					let r⁴ = f⁴(h³)
-//│ 					in [C r⁴ map_₀(f⁴, t³)])
-//│ 			| N  => (fun f⁵ -> [N])}
+//│ testMapmapLet(primId⁰(enumFromTo(1, 100000)))
+//│ def enumFromTo(a¹, b¹) = if (a¹ <= b¹) then [C a¹ enumFromTo((a¹ + 1), b¹)] else [N]
+//│ def map(f¹, ls²) = case ls² of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let r¹ = f¹(h⁰)
+//│ 		in [C r¹ map(f¹, t⁰)]
+//│ 	| N  => [N]}
+//│ def testMapmapLet(ls³) = map((fun x² -> (x² + 1)), map((fun x³ -> (x³ * x³)), ls³))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
@@ -1218,93 +1000,55 @@ testSumMapEnumSumAcc(primId(300000))
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [testSumMapEnumSumAcc^72] (hopeless to continue)
-//│ 	[testSumMapEnumSumAcc^72 · enumFromTo^64] (using original def)
-//│ 		[testSumMapEnumSumAcc^72 · enumFromTo^64 · enumFromTo^21] ---> [testSumMapEnumSumAcc^72 · enumFromTo^64] (using original def)
-//│ 	[testSumMapEnumSumAcc^72 · map^56] (using original def)
-//│ 		[testSumMapEnumSumAcc^72 · map^56 · map^5] ---> [testSumMapEnumSumAcc^72 · map^56] (using original def)
-//│ 	[testSumMapEnumSumAcc^72 · sum^55] (using original def)
-//│ 		[testSumMapEnumSumAcc^72 · sum^55 · summ^35] (using original def)
-//│ 			[testSumMapEnumSumAcc^72 · sum^55 · summ^35 · summ^43] ---> [testSumMapEnumSumAcc^72 · sum^55 · summ^35] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ testSumMapEnumSumAcc_₀(primId⁰(300000))
-//│ def testSumMapEnumSumAcc_₀(n¹) = 
-//│ 	sum_₀(map_₀((fun x¹ -> (x¹ * x¹)), enumFromTo_₀(1, n¹)))
-//│ 	where
-//│ 	def enumFromTo_₀(a¹, b¹) = 
-//│ 		if (a¹ <= b¹) then [C a¹ enumFromTo_₀((a¹ + 1), b¹)] else [N]
-//│ 	def map_₀(f¹, ls³) = 
-//│ 		case ls³ of {
-//│ 			C h² t² => [C f¹(h²) map_₀(f¹, t²)]
-//│ 			| N  => [N]}
-//│ 	def sum_₀(ls⁵) = 
-//│ 		summ_₀(0, ls⁵)
-//│ 		where
-//│ 		def summ_₀(acc¹, ls⁴) = 
-//│ 			case ls⁴ of {
-//│ 				N  => acc¹
-//│ 				| C h³ t³ => summ_₀((acc¹ + h³), t³)}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C a¹ enumFromTo_₀((a¹ + 1), b¹)]: 92 --->
-//│ 	case ls³ of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 108
-//│ [N]: 93 --->
-//│ 	case ls³ of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 108
-//│ [C f¹(h²) map_₀(f¹, t²)]: 106 --->
-//│ 	case ls⁴ of {N  => acc¹ | C h³ t³ => summ_₀((acc¹ + h³), t³)}: 122
-//│ [N]: 107 --->
-//│ 	case ls⁴ of {N  => acc¹ | C h³ t³ => summ_₀((acc¹ + h³), t³)}: 122
+//│ [C f⁰(h⁰) map(f⁰, t⁰)]: 10 --->
+//│ 	case ls² of {N  => acc⁰ | C h¹ t¹ => summ((acc⁰ + h¹), t¹)}: 52
+//│ [N]: 11 --->
+//│ 	case ls² of {N  => acc⁰ | C h¹ t¹ => summ((acc⁰ + h¹), t¹)}: 52
+//│ [C a⁰ enumFromTo((a⁰ + 1), b⁰)]: 30 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12
+//│ [N]: 31 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12
 //│ ------------------
-//│ case ls³ of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 108 --->
-//│ 	[C a¹ enumFromTo_₀((a¹ + 1), b¹)]: 92
-//│ 	[N]: 93
-//│ case ls⁴ of {N  => acc¹ | C h³ t³ => summ_₀((acc¹ + h³), t³)}: 122 --->
-//│ 	[C f¹(h²) map_₀(f¹, t²)]: 106
-//│ 	[N]: 107
+//│ case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12 --->
+//│ 	[C a⁰ enumFromTo((a⁰ + 1), b⁰)]: 30
+//│ 	[N]: 31
+//│ case ls² of {N  => acc⁰ | C h¹ t¹ => summ((acc⁰ + h¹), t¹)}: 52 --->
+//│ 	[C f⁰(h⁰) map(f⁰, t⁰)]: 10
+//│ 	[N]: 11
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C a¹ enumFromTo_₀((a¹ + 1), b¹)]: 92 --->
-//│ 	case ls³ of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 108
-//│ [N]: 93 --->
-//│ 	case ls³ of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 108
-//│ [C f¹(h²) map_₀(f¹, t²)]: 106 --->
-//│ 	case ls⁴ of {N  => acc¹ | C h³ t³ => summ_₀((acc¹ + h³), t³)}: 122
-//│ [N]: 107 --->
-//│ 	case ls⁴ of {N  => acc¹ | C h³ t³ => summ_₀((acc¹ + h³), t³)}: 122
+//│ [C f⁰(h⁰) map(f⁰, t⁰)]: 10 --->
+//│ 	case ls² of {N  => acc⁰ | C h¹ t¹ => summ((acc⁰ + h¹), t¹)}: 52
+//│ [N]: 11 --->
+//│ 	case ls² of {N  => acc⁰ | C h¹ t¹ => summ((acc⁰ + h¹), t¹)}: 52
+//│ [C a⁰ enumFromTo((a⁰ + 1), b⁰)]: 30 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12
+//│ [N]: 31 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12
 //│ ------------------
-//│ case ls³ of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 108 --->
-//│ 	[C a¹ enumFromTo_₀((a¹ + 1), b¹)]: 92
-//│ 	[N]: 93
-//│ case ls⁴ of {N  => acc¹ | C h³ t³ => summ_₀((acc¹ + h³), t³)}: 122 --->
-//│ 	[C f¹(h²) map_₀(f¹, t²)]: 106
-//│ 	[N]: 107
+//│ case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12 --->
+//│ 	[C a⁰ enumFromTo((a⁰ + 1), b⁰)]: 30
+//│ 	[N]: 31
+//│ case ls² of {N  => acc⁰ | C h¹ t¹ => summ((acc⁰ + h¹), t¹)}: 52 --->
+//│ 	[C f⁰(h⁰) map(f⁰, t⁰)]: 10
+//│ 	[N]: 11
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testSumMapEnumSumAcc_₀(primId⁰(300000))
-//│ def testSumMapEnumSumAcc_₀(n²) = 
-//│ 	sum_₀(map_₀((fun x² -> (x² * x²)), enumFromTo_₀(1, n²)))
-//│ 	where
-//│ 	def enumFromTo_₀(a², b²) = 
-//│ 		if (a² <= b²) then 
-//│ 			let t⁴ = enumFromTo_₀((a² + 1), b²)
-//│ 			in let h⁴ = a²
-//│ 			in (fun f³ -> 
-//│ 				let t⁵ = map_₀(f³, t⁴)
-//│ 				in let h⁵ = f³(h⁴)
-//│ 				in (fun acc² -> summ_₀((acc² + h⁵), t⁵))) else (fun f⁴ -> (fun acc³ -> acc³))
-//│ 	def map_₀(f², ls⁶) = 
-//│ 		ls⁶(f²)
-//│ 	def sum_₀(ls⁷) = 
-//│ 		summ_₀(0, ls⁷)
-//│ 		where
-//│ 		def summ_₀(acc⁴, ls⁸) = 
-//│ 			ls⁸(acc⁴)
+//│ testSumMapEnumSumAcc(primId⁰(300000))
+//│ def enumFromTo(a¹, b¹) = if (a¹ <= b¹) then 
+//│ 	let t² = enumFromTo((a¹ + 1), b¹)
+//│ 	in let h² = a¹
+//│ 	in (fun f² -> 
+//│ 		let t³ = map(f², t²)
+//│ 		in let h³ = f²(h²)
+//│ 		in (fun acc² -> summ((acc² + h³), t³))) else (fun f³ -> (fun acc³ -> acc³))
+//│ def map(f¹, ls³) = ls³(f¹)
+//│ def sum(ls⁴) = summ(0, ls⁴)
+//│ def summ(acc¹, ls⁵) = ls⁵(acc¹)
+//│ def testSumMapEnumSumAcc(n¹) = sum(map((fun x¹ -> (x¹ * x¹)), enumFromTo(1, n¹)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
@@ -1359,86 +1103,54 @@ testSumMapEnum(primId(300000))
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [testSumMapEnum^63] (hopeless to continue)
-//│ 	[testSumMapEnum^63 · enumFromTo^55] (using original def)
-//│ 		[testSumMapEnum^63 · enumFromTo^55 · enumFromTo^21] ---> [testSumMapEnum^63 · enumFromTo^55] (using original def)
-//│ 	[testSumMapEnum^63 · map^47] (using original def)
-//│ 		[testSumMapEnum^63 · map^47 · map^5] ---> [testSumMapEnum^63 · map^47] (using original def)
-//│ 	[testSumMapEnum^63 · sum^46] (using original def)
-//│ 		[testSumMapEnum^63 · sum^46 · sum^39] ---> [testSumMapEnum^63 · sum^46] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ testSumMapEnum_₀(primId⁰(300000))
-//│ def testSumMapEnum_₀(n¹) = 
-//│ 	sum_₀(map_₀((fun x¹ -> (x¹ * x¹)), enumFromTo_₀(1, n¹)))
-//│ 	where
-//│ 	def enumFromTo_₀(a¹, b¹) = 
-//│ 		if (a¹ <= b¹) then [C a¹ enumFromTo_₀((a¹ + 1), b¹)] else [N]
-//│ 	def map_₀(f¹, ls²) = 
-//│ 		case ls² of {
-//│ 			C h² t² => [C f¹(h²) map_₀(f¹, t²)]
-//│ 			| N  => [N]}
-//│ 	def sum_₀(ls³) = 
-//│ 		case ls³ of {
-//│ 			C h³ t³ => (h³ + sum_₀(t³))
-//│ 			| N  => 0}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C f¹(h²) map_₀(f¹, t²)]: 94 --->
-//│ 	case ls³ of {C h³ t³ => (h³ + sum_₀(t³)) | N  => 0}: 128
-//│ [N]: 95 --->
-//│ 	case ls³ of {C h³ t³ => (h³ + sum_₀(t³)) | N  => 0}: 128
-//│ [C a¹ enumFromTo_₀((a¹ + 1), b¹)]: 114 --->
-//│ 	case ls² of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 96
-//│ [N]: 115 --->
-//│ 	case ls² of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 96
+//│ [C f⁰(h⁰) map(f⁰, t⁰)]: 10 --->
+//│ 	case ls¹ of {C h¹ t¹ => (h¹ + sum(t¹)) | N  => 0}: 44
+//│ [N]: 11 --->
+//│ 	case ls¹ of {C h¹ t¹ => (h¹ + sum(t¹)) | N  => 0}: 44
+//│ [C a⁰ enumFromTo((a⁰ + 1), b⁰)]: 30 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12
+//│ [N]: 31 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12
 //│ ------------------
-//│ case ls² of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 96 --->
-//│ 	[C a¹ enumFromTo_₀((a¹ + 1), b¹)]: 114
-//│ 	[N]: 115
-//│ case ls³ of {C h³ t³ => (h³ + sum_₀(t³)) | N  => 0}: 128 --->
-//│ 	[C f¹(h²) map_₀(f¹, t²)]: 94
-//│ 	[N]: 95
+//│ case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12 --->
+//│ 	[C a⁰ enumFromTo((a⁰ + 1), b⁰)]: 30
+//│ 	[N]: 31
+//│ case ls¹ of {C h¹ t¹ => (h¹ + sum(t¹)) | N  => 0}: 44 --->
+//│ 	[C f⁰(h⁰) map(f⁰, t⁰)]: 10
+//│ 	[N]: 11
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C f¹(h²) map_₀(f¹, t²)]: 94 --->
-//│ 	case ls³ of {C h³ t³ => (h³ + sum_₀(t³)) | N  => 0}: 128
-//│ [N]: 95 --->
-//│ 	case ls³ of {C h³ t³ => (h³ + sum_₀(t³)) | N  => 0}: 128
-//│ [C a¹ enumFromTo_₀((a¹ + 1), b¹)]: 114 --->
-//│ 	case ls² of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 96
-//│ [N]: 115 --->
-//│ 	case ls² of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 96
+//│ [C f⁰(h⁰) map(f⁰, t⁰)]: 10 --->
+//│ 	case ls¹ of {C h¹ t¹ => (h¹ + sum(t¹)) | N  => 0}: 44
+//│ [N]: 11 --->
+//│ 	case ls¹ of {C h¹ t¹ => (h¹ + sum(t¹)) | N  => 0}: 44
+//│ [C a⁰ enumFromTo((a⁰ + 1), b⁰)]: 30 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12
+//│ [N]: 31 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12
 //│ ------------------
-//│ case ls² of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 96 --->
-//│ 	[C a¹ enumFromTo_₀((a¹ + 1), b¹)]: 114
-//│ 	[N]: 115
-//│ case ls³ of {C h³ t³ => (h³ + sum_₀(t³)) | N  => 0}: 128 --->
-//│ 	[C f¹(h²) map_₀(f¹, t²)]: 94
-//│ 	[N]: 95
+//│ case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12 --->
+//│ 	[C a⁰ enumFromTo((a⁰ + 1), b⁰)]: 30
+//│ 	[N]: 31
+//│ case ls¹ of {C h¹ t¹ => (h¹ + sum(t¹)) | N  => 0}: 44 --->
+//│ 	[C f⁰(h⁰) map(f⁰, t⁰)]: 10
+//│ 	[N]: 11
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testSumMapEnum_₀(primId⁰(300000))
-//│ def testSumMapEnum_₀(n²) = 
-//│ 	sum_₀(map_₀((fun x² -> (x² * x²)), enumFromTo_₀(1, n²)))
-//│ 	where
-//│ 	def enumFromTo_₀(a², b²) = 
-//│ 		if (a² <= b²) then 
-//│ 			let t⁴ = enumFromTo_₀((a² + 1), b²)
-//│ 			in let h⁴ = a²
-//│ 			in (fun f³ -> 
-//│ 				let t⁵ = map_₀(f³, t⁴)
-//│ 				in let h⁵ = f³(h⁴)
-//│ 				in (fun _lh_dummy⁰ -> (h⁵ + sum_₀(t⁵)))) else (fun f⁴ -> (fun _lh_dummy¹ -> 0))
-//│ 	def map_₀(f², ls⁴) = 
-//│ 		ls⁴(f²)
-//│ 	def sum_₀(ls⁵) = 
-//│ 		ls⁵(99)
+//│ testSumMapEnum(primId⁰(300000))
+//│ def enumFromTo(a¹, b¹) = if (a¹ <= b¹) then 
+//│ 	let t² = enumFromTo((a¹ + 1), b¹)
+//│ 	in let h² = a¹
+//│ 	in (fun f² -> 
+//│ 		let t³ = map(f², t²)
+//│ 		in let h³ = f²(h²)
+//│ 		in (fun _lh_dummy⁰ -> (h³ + sum(t³)))) else (fun f³ -> (fun _lh_dummy¹ -> 0))
+//│ def map(f¹, ls²) = ls²(f¹)
+//│ def sum(ls³) = ls³(99)
+//│ def testSumMapEnum(n¹) = sum(map((fun x¹ -> (x¹ * x¹)), enumFromTo(1, n¹)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
@@ -1928,83 +1640,34 @@ testFlipFlip(primId(genTree(17, 0)))
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [genTree^58] (hopeless to continue)
-//│ 	[genTree^58 · genTree^17] ---> [genTree^58] (using original def)
-//│ 	[genTree^58 · genTree^8] ---> [genTree^58] (using original def)
-//│ [testFlipFlip^56] (hopeless to continue)
-//│ 	[testFlipFlip^56 · ff^52] (using original def)
-//│ 		[testFlipFlip^56 · ff^52 · flip^46] (using original def)
-//│ 			[testFlipFlip^56 · ff^52 · flip^46 · flip^35] ---> [testFlipFlip^56 · ff^52 · flip^46] (using original def)
-//│ 			[testFlipFlip^56 · ff^52 · flip^46 · flip^38] ---> [testFlipFlip^56 · ff^52 · flip^46] (using original def)
-//│ 		[testFlipFlip^56 · ff^52 · flip^47] (using original def)
-//│ 			[testFlipFlip^56 · ff^52 · flip^47 · flip^35] ---> [testFlipFlip^56 · ff^52 · flip^47] (using original def)
-//│ 			[testFlipFlip^56 · ff^52 · flip^47 · flip^38] ---> [testFlipFlip^56 · ff^52 · flip^47] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ testFlipFlip_₀(primId⁰(genTree_₀(17, 0)))
-//│ def genTree_₀(n¹, i¹) = 
-//│ 	if (n¹ <= 0) then [N i¹] else [T genTree_₀((n¹ - 1), i¹) genTree_₀((n¹ - 1), (i¹ + 1))]
-//│ def testFlipFlip_₀(t⁶) = 
-//│ 	ff_₀(t⁶)
-//│ 	where
-//│ 	def ff_₀(t⁴) = 
-//│ 		flip_₀(flip_₁(t⁴))
-//│ 		where
-//│ 		def flip_₀(t³) = 
-//│ 			case t³ of {
-//│ 				T l¹ r¹ => [T flip_₀(r¹) flip_₀(l¹)]
-//│ 				| N v¹ => [N v¹]}
-//│ 		def flip_₁(t⁵) = 
-//│ 			case t⁵ of {
-//│ 				T l² r² => [T flip_₁(r²) flip_₁(l²)]
-//│ 				| N v² => [N v²]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [T flip_₁(r²) flip_₁(l²)]: 123 --->
-//│ 	case t³ of {T l¹ r¹ => [T flip_₀(r¹) flip_₀(l¹)] | N v¹ => [N v¹]}: 75
-//│ [N v²]: 125 --->
-//│ 	case t³ of {T l¹ r¹ => [T flip_₀(r¹) flip_₀(l¹)] | N v¹ => [N v¹]}: 75
+//│ [T flip(r⁰) flip(l⁰)]: 41 --->
+//│ 	NoCons
+//│ 	case t⁰ of {T l⁰ r⁰ => [T flip(r⁰) flip(l⁰)] | N v⁰ => [N v⁰]}: 44
+//│ [N v⁰]: 43 --->
+//│ 	NoCons
+//│ 	case t⁰ of {T l⁰ r⁰ => [T flip(r⁰) flip(l⁰)] | N v⁰ => [N v⁰]}: 44
 //│ ------------------
-//│ case t³ of {T l¹ r¹ => [T flip_₀(r¹) flip_₀(l¹)] | N v¹ => [N v¹]}: 75 --->
-//│ 	[T flip_₁(r²) flip_₁(l²)]: 123
-//│ 	[N v²]: 125
+//│ case t⁰ of {T l⁰ r⁰ => [T flip(r⁰) flip(l⁰)] | N v⁰ => [N v⁰]}: 44 --->
+//│ 	NoProd
+//│ 	[T flip(r⁰) flip(l⁰)]: 41
+//│ 	[N v⁰]: 43
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [T flip_₁(r²) flip_₁(l²)]: 123 --->
-//│ 	case t³ of {T l¹ r¹ => [T flip_₀(r¹) flip_₀(l¹)] | N v¹ => [N v¹]}: 75
-//│ [N v²]: 125 --->
-//│ 	case t³ of {T l¹ r¹ => [T flip_₀(r¹) flip_₀(l¹)] | N v¹ => [N v¹]}: 75
+//│ 
 //│ ------------------
-//│ case t³ of {T l¹ r¹ => [T flip_₀(r¹) flip_₀(l¹)] | N v¹ => [N v¹]}: 75 --->
-//│ 	[T flip_₁(r²) flip_₁(l²)]: 123
-//│ 	[N v²]: 125
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testFlipFlip_₀(primId⁰(genTree_₀(17, 0)))
-//│ def genTree_₀(n², i²) = 
-//│ 	if (n² <= 0) then [N i²] else [T genTree_₀((n² - 1), i²) genTree_₀((n² - 1), (i² + 1))]
-//│ def testFlipFlip_₀(t¹⁰) = 
-//│ 	ff_₀(t¹⁰)
-//│ 	where
-//│ 	def ff_₀(t⁹) = 
-//│ 		flip_₀(flip_₁(t⁹))
-//│ 		where
-//│ 		def flip_₀(t⁷) = 
-//│ 			t⁷(99)
-//│ 		def flip_₁(t⁸) = 
-//│ 			case t⁸ of {
-//│ 				T l² r² => 
-//│ 					let r³ = flip_₁(l²)
-//│ 					in let l³ = flip_₁(r²)
-//│ 					in (fun _lh_dummy⁰ -> [T flip_₀(r³) flip_₀(l³)])
-//│ 				| N v² => 
-//│ 					let v³ = v²
-//│ 					in (fun _lh_dummy¹ -> [N v³])}
+//│ testFlipFlip(primId⁰(genTree(17, 0)))
+//│ def ff(t⁴) = flip(flip(t⁴))
+//│ def flip(t³) = case t³ of {
+//│ 	T l⁰ r⁰ => [T flip(r⁰) flip(l⁰)]
+//│ 	| N v⁰ => [N v⁰]}
+//│ def genTree(n¹, i¹) = if (n¹ <= 0) then [N i¹] else [T genTree((n¹ - 1), i¹) genTree((n¹ - 1), (i¹ + 1))]
+//│ def testFlipFlip(t⁵) = ff(t⁵)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
@@ -2064,71 +1727,39 @@ testFoldMap(primId(300000))
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [testFoldMap^81] (hopeless to continue)
-//│ 	[testFoldMap^81 · enumFromTo^72] (using original def)
-//│ 		[testFoldMap^81 · enumFromTo^72 · enumFromTo^38] ---> [testFoldMap^81 · enumFromTo^72] (using original def)
-//│ 	[testFoldMap^81 · foldl^52] (using original def)
-//│ 		[testFoldMap^81 · foldl^52 · foldl^16] ---> [testFoldMap^81 · foldl^52] (using original def)
-//│ 	[testFoldMap^81 · map^63] (using original def)
-//│ 		[testFoldMap^81 · map^63 · map^5] ---> [testFoldMap^81 · map^63] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ testFoldMap_₀(primId⁰(300000))
-//│ def testFoldMap_₀(n¹) = 
-//│ 	foldl_₀((fun i¹ -> (fun x² -> (i¹ + x²))), 0, map_₀((fun x³ -> (x³ * x³)), primId⁰(enumFromTo_₀(1, n¹))))
-//│ 	where
-//│ 	def enumFromTo_₀(a¹, b¹) = 
-//│ 		if (a¹ <= b¹) then [C a¹ enumFromTo_₀((a¹ + 1), b¹)] else [N]
-//│ 	def foldl_₀(f², s¹, ls²) = 
-//│ 		case ls² of {
-//│ 			C h² t² => foldl_₀(f², f²(s¹, h²), t²)
-//│ 			| N  => s¹}
-//│ 	def map_₀(f³, ls³) = 
-//│ 		case ls³ of {
-//│ 			C h³ t³ => [C f³(h³) map_₀(f³, t³)]
-//│ 			| N  => [N]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C f³(h³) map_₀(f³, t³)]: 112 --->
-//│ 	case ls² of {C h² t² => foldl_₀(f², f²(s¹, h²), t²) | N  => s¹}: 99
-//│ [N]: 113 --->
-//│ 	case ls² of {C h² t² => foldl_₀(f², f²(s¹, h²), t²) | N  => s¹}: 99
+//│ [C f⁰(h⁰) map(f⁰, t⁰)]: 10 --->
+//│ 	case ls¹ of {C h¹ t¹ => foldl(f¹, f¹(s⁰, h¹), t¹) | N  => s⁰}: 28
+//│ [N]: 11 --->
+//│ 	case ls¹ of {C h¹ t¹ => foldl(f¹, f¹(s⁰, h¹), t¹) | N  => s⁰}: 28
 //│ ------------------
-//│ case ls² of {C h² t² => foldl_₀(f², f²(s¹, h²), t²) | N  => s¹}: 99 --->
-//│ 	[C f³(h³) map_₀(f³, t³)]: 112
-//│ 	[N]: 113
+//│ case ls¹ of {C h¹ t¹ => foldl(f¹, f¹(s⁰, h¹), t¹) | N  => s⁰}: 28 --->
+//│ 	[C f⁰(h⁰) map(f⁰, t⁰)]: 10
+//│ 	[N]: 11
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C f³(h³) map_₀(f³, t³)]: 112 --->
-//│ 	case ls² of {C h² t² => foldl_₀(f², f²(s¹, h²), t²) | N  => s¹}: 99
-//│ [N]: 113 --->
-//│ 	case ls² of {C h² t² => foldl_₀(f², f²(s¹, h²), t²) | N  => s¹}: 99
+//│ [C f⁰(h⁰) map(f⁰, t⁰)]: 10 --->
+//│ 	case ls¹ of {C h¹ t¹ => foldl(f¹, f¹(s⁰, h¹), t¹) | N  => s⁰}: 28
+//│ [N]: 11 --->
+//│ 	case ls¹ of {C h¹ t¹ => foldl(f¹, f¹(s⁰, h¹), t¹) | N  => s⁰}: 28
 //│ ------------------
-//│ case ls² of {C h² t² => foldl_₀(f², f²(s¹, h²), t²) | N  => s¹}: 99 --->
-//│ 	[C f³(h³) map_₀(f³, t³)]: 112
-//│ 	[N]: 113
+//│ case ls¹ of {C h¹ t¹ => foldl(f¹, f¹(s⁰, h¹), t¹) | N  => s⁰}: 28 --->
+//│ 	[C f⁰(h⁰) map(f⁰, t⁰)]: 10
+//│ 	[N]: 11
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testFoldMap_₀(primId⁰(300000))
-//│ def testFoldMap_₀(n²) = 
-//│ 	foldl_₀((fun i² -> (fun x⁴ -> (i² + x⁴))), 0, map_₀((fun x⁵ -> (x⁵ * x⁵)), primId⁰(enumFromTo_₀(1, n²))))
-//│ 	where
-//│ 	def enumFromTo_₀(a², b²) = 
-//│ 		if (a² <= b²) then [C a² enumFromTo_₀((a² + 1), b²)] else [N]
-//│ 	def foldl_₀(f⁴, s², ls⁴) = 
-//│ 		ls⁴(f⁴, s²)
-//│ 	def map_₀(f⁵, ls⁵) = 
-//│ 		case ls⁵ of {
-//│ 			C h³ t³ => 
-//│ 				let t⁴ = map_₀(f⁵, t³)
-//│ 				in let h⁴ = f⁵(h³)
-//│ 				in (fun f⁶ -> (fun s³ -> foldl_₀(f⁶, f⁶(s³, h⁴), t⁴)))
-//│ 			| N  => (fun f⁷ -> (fun s⁴ -> s⁴))}
+//│ testFoldMap(primId⁰(300000))
+//│ def enumFromTo(a¹, b¹) = if (a¹ <= b¹) then [C a¹ enumFromTo((a¹ + 1), b¹)] else [N]
+//│ def foldl(f⁵, s³, ls³) = ls³(f⁵, s³)
+//│ def map(f², ls²) = case ls² of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let t² = map(f², t⁰)
+//│ 		in let h² = f²(h⁰)
+//│ 		in (fun f³ -> (fun s¹ -> foldl(f³, f³(s¹, h²), t²)))
+//│ 	| N  => (fun f⁴ -> (fun s² -> s²))}
+//│ def testFoldMap(n¹) = foldl((fun i¹ -> (fun x² -> (i¹ + x²))), 0, map((fun x³ -> (x³ * x³)), primId⁰(enumFromTo(1, n¹))))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
@@ -2182,71 +1813,39 @@ testMapQrev(primId(enumFromTo(1, 10000)))
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [enumFromTo^64] (hopeless to continue)
-//│ 	[enumFromTo^64 · enumFromTo^7] ---> [enumFromTo^64] (using original def)
-//│ [testMapQrev^62] (hopeless to continue)
-//│ 	[testMapQrev^62 · map^47] (using original def)
-//│ 		[testMapQrev^62 · map^47 · map^25] ---> [testMapQrev^62 · map^47] (using original def)
-//│ 	[testMapQrev^62 · qrev^55] (using original def)
-//│ 		[testMapQrev^62 · qrev^55 · qrev^36] ---> [testMapQrev^62 · qrev^55] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ testMapQrev_₀(primId⁰(enumFromTo_₀(1, 10000)))
-//│ def enumFromTo_₀(a², b¹) = 
-//│ 	if (a² <= b¹) then [C a² enumFromTo_₀((a² + 1), b¹)] else [N]
-//│ def testMapQrev_₀(ls¹) = 
-//│ 	map_₀((fun x¹ -> (x¹ + 1)), qrev_₀([N], ls¹))
-//│ 	where
-//│ 	def map_₀(f¹, xs¹) = 
-//│ 		case xs¹ of {
-//│ 			C h³ t³ => [C f¹(h³) map_₀(f¹, t³)]
-//│ 			| N  => [N]}
-//│ 	def qrev_₀(a³, ys¹) = 
-//│ 		case ys¹ of {
-//│ 			C h² t² => qrev_₀([C h² a³], t²)
-//│ 			| N  => a³}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 80 --->
-//│ 	case xs¹ of {C h³ t³ => [C f¹(h³) map_₀(f¹, t³)] | N  => [N]}: 129
-//│ [C h² a³]: 110 --->
-//│ 	case xs¹ of {C h³ t³ => [C f¹(h³) map_₀(f¹, t³)] | N  => [N]}: 129
+//│ [C h¹ a¹]: 39 --->
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 32
+//│ [N]: 56 --->
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 32
 //│ ------------------
-//│ case xs¹ of {C h³ t³ => [C f¹(h³) map_₀(f¹, t³)] | N  => [N]}: 129 --->
-//│ 	[N]: 80
-//│ 	[C h² a³]: 110
+//│ case xs⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 32 --->
+//│ 	[C h¹ a¹]: 39
+//│ 	[N]: 56
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [N]: 80 --->
-//│ 	case xs¹ of {C h³ t³ => [C f¹(h³) map_₀(f¹, t³)] | N  => [N]}: 129
-//│ [C h² a³]: 110 --->
-//│ 	case xs¹ of {C h³ t³ => [C f¹(h³) map_₀(f¹, t³)] | N  => [N]}: 129
+//│ [C h¹ a¹]: 39 --->
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 32
+//│ [N]: 56 --->
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 32
 //│ ------------------
-//│ case xs¹ of {C h³ t³ => [C f¹(h³) map_₀(f¹, t³)] | N  => [N]}: 129 --->
-//│ 	[N]: 80
-//│ 	[C h² a³]: 110
+//│ case xs⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 32 --->
+//│ 	[C h¹ a¹]: 39
+//│ 	[N]: 56
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testMapQrev_₀(primId⁰(enumFromTo_₀(1, 10000)))
-//│ def enumFromTo_₀(a⁴, b²) = 
-//│ 	if (a⁴ <= b²) then [C a⁴ enumFromTo_₀((a⁴ + 1), b²)] else [N]
-//│ def testMapQrev_₀(ls²) = 
-//│ 	map_₀((fun x² -> (x² + 1)), qrev_₀((fun f² -> [N]), ls²))
-//│ 	where
-//│ 	def map_₀(f⁴, xs²) = 
-//│ 		xs²(f⁴)
-//│ 	def qrev_₀(a⁵, ys²) = 
-//│ 		case ys² of {
-//│ 			C h² t² => qrev_₀(
-//│ 				let t⁴ = a⁵
-//│ 				in let h⁴ = h²
-//│ 				in (fun f³ -> [C f³(h⁴) map_₀(f³, t⁴)]), t²)
-//│ 			| N  => a⁵}
+//│ testMapQrev(primId⁰(enumFromTo(1, 10000)))
+//│ def enumFromTo(a², b¹) = if (a² <= b¹) then [C a² enumFromTo((a² + 1), b¹)] else [N]
+//│ def map(f¹, xs¹) = xs¹(f¹)
+//│ def qrev(a³, ys¹) = case ys¹ of {
+//│ 	C h¹ t¹ => qrev(
+//│ 		let t² = a³
+//│ 		in let h² = h¹
+//│ 		in (fun f² -> [C f²(h²) map(f², t²)]), t¹)
+//│ 	| N  => a³}
+//│ def testMapQrev(ls¹) = map((fun x¹ -> (x¹ + 1)), qrev((fun f³ -> [N]), ls¹))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
@@ -2321,96 +1920,44 @@ testManual(primId(enumFromTo(1, 10000)))
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [enumFromTo^103] (hopeless to continue)
-//│ 	[enumFromTo^103 · enumFromTo^7] ---> [enumFromTo^103] (using original def)
-//│ [enumFromTo^94] (hopeless to continue)
-//│ 	[enumFromTo^94 · enumFromTo^7] ---> [enumFromTo^94] (using original def)
-//│ [testManual^101] (hopeless to continue)
-//│ 	[testManual^101 · _lhManualQrevMap^79] (using original def)
-//│ 		[testManual^101 · _lhManualQrevMap^79 · _lhManualQrevMap^48] ---> [testManual^101 · _lhManualQrevMap^79] (using original def)
-//│ [testQrevMap^92] (hopeless to continue)
-//│ 	[testQrevMap^92 · map^67] (using original def)
-//│ 		[testQrevMap^92 · map^67 · map^25] ---> [testQrevMap^92 · map^67] (using original def)
-//│ 	[testQrevMap^92 · qrev^64] (using original def)
-//│ 		[testQrevMap^92 · qrev^64 · qrev^36] ---> [testQrevMap^92 · qrev^64] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ testQrevMap_₀(primId⁰(enumFromTo_₁(1, 10000)))
-//│ testManual_₀(primId⁰(enumFromTo_₀(1, 10000)))
-//│ def enumFromTo_₀(a⁴, b¹) = 
-//│ 	if (a⁴ <= b¹) then [C a⁴ enumFromTo_₀((a⁴ + 1), b¹)] else [N]
-//│ def enumFromTo_₁(a⁵, b²) = 
-//│ 	if (a⁵ <= b²) then [C a⁵ enumFromTo_₁((a⁵ + 1), b²)] else [N]
-//│ def testManual_₀(ls²) = 
-//│ 	_lhManualQrevMap_₀((fun x² -> (x² + 1)), ls², [N])
-//│ 	where
-//│ 	def _lhManualQrevMap_₀(f³, xs³, a⁶) = 
-//│ 		case xs³ of {
-//│ 			C h⁵ t⁵ => _lhManualQrevMap_₀(f³, t⁵, [C f³(h⁵) a⁶])
-//│ 			| N  => a⁶}
-//│ def testQrevMap_₀(ls³) = 
-//│ 	qrev_₀([N], map_₀((fun x³ -> (x³ + 1)), ls³))
-//│ 	where
-//│ 	def map_₀(f², xs²) = 
-//│ 		case xs² of {
-//│ 			C h⁴ t⁴ => [C f²(h⁴) map_₀(f², t⁴)]
-//│ 			| N  => [N]}
-//│ 	def qrev_₀(a³, ys¹) = 
-//│ 		case ys¹ of {
-//│ 			C h³ t³ => qrev_₀([C h³ a³], t³)
-//│ 			| N  => a³}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C f²(h⁴) map_₀(f², t⁴)]: 164 --->
-//│ 	case ys¹ of {C h³ t³ => qrev_₀([C h³ a³], t³) | N  => a³}: 119
-//│ [N]: 165 --->
-//│ 	case ys¹ of {C h³ t³ => qrev_₀([C h³ a³], t³) | N  => a³}: 119
+//│ [C f⁰(h⁰) map(f⁰, t⁰)]: 30 --->
+//│ 	case ys⁰ of {C h¹ t¹ => qrev([C h¹ a¹], t¹) | N  => a¹}: 44
+//│ [N]: 31 --->
+//│ 	case ys⁰ of {C h¹ t¹ => qrev([C h¹ a¹], t¹) | N  => a¹}: 44
 //│ ------------------
-//│ case ys¹ of {C h³ t³ => qrev_₀([C h³ a³], t³) | N  => a³}: 119 --->
-//│ 	[C f²(h⁴) map_₀(f², t⁴)]: 164
-//│ 	[N]: 165
+//│ case ys⁰ of {C h¹ t¹ => qrev([C h¹ a¹], t¹) | N  => a¹}: 44 --->
+//│ 	[C f⁰(h⁰) map(f⁰, t⁰)]: 30
+//│ 	[N]: 31
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C f²(h⁴) map_₀(f², t⁴)]: 164 --->
-//│ 	case ys¹ of {C h³ t³ => qrev_₀([C h³ a³], t³) | N  => a³}: 119
-//│ [N]: 165 --->
-//│ 	case ys¹ of {C h³ t³ => qrev_₀([C h³ a³], t³) | N  => a³}: 119
+//│ [C f⁰(h⁰) map(f⁰, t⁰)]: 30 --->
+//│ 	case ys⁰ of {C h¹ t¹ => qrev([C h¹ a¹], t¹) | N  => a¹}: 44
+//│ [N]: 31 --->
+//│ 	case ys⁰ of {C h¹ t¹ => qrev([C h¹ a¹], t¹) | N  => a¹}: 44
 //│ ------------------
-//│ case ys¹ of {C h³ t³ => qrev_₀([C h³ a³], t³) | N  => a³}: 119 --->
-//│ 	[C f²(h⁴) map_₀(f², t⁴)]: 164
-//│ 	[N]: 165
+//│ case ys⁰ of {C h¹ t¹ => qrev([C h¹ a¹], t¹) | N  => a¹}: 44 --->
+//│ 	[C f⁰(h⁰) map(f⁰, t⁰)]: 30
+//│ 	[N]: 31
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testQrevMap_₀(primId⁰(enumFromTo_₁(1, 10000)))
-//│ testManual_₀(primId⁰(enumFromTo_₀(1, 10000)))
-//│ def enumFromTo_₀(a¹⁰, b⁴) = 
-//│ 	if (a¹⁰ <= b⁴) then [C a¹⁰ enumFromTo_₀((a¹⁰ + 1), b⁴)] else [N]
-//│ def enumFromTo_₁(a⁹, b³) = 
-//│ 	if (a⁹ <= b³) then [C a⁹ enumFromTo_₁((a⁹ + 1), b³)] else [N]
-//│ def testManual_₀(ls⁵) = 
-//│ 	_lhManualQrevMap_₀((fun x⁵ -> (x⁵ + 1)), ls⁵, [N])
-//│ 	where
-//│ 	def _lhManualQrevMap_₀(f⁵, xs⁵, a¹¹) = 
-//│ 		case xs⁵ of {
-//│ 			C h⁵ t⁵ => _lhManualQrevMap_₀(f⁵, t⁵, [C f⁵(h⁵) a¹¹])
-//│ 			| N  => a¹¹}
-//│ def testQrevMap_₀(ls⁴) = 
-//│ 	qrev_₀([N], map_₀((fun x⁴ -> (x⁴ + 1)), ls⁴))
-//│ 	where
-//│ 	def map_₀(f⁴, xs⁴) = 
-//│ 		case xs⁴ of {
-//│ 			C h⁴ t⁴ => 
-//│ 				let t⁶ = map_₀(f⁴, t⁴)
-//│ 				in let h⁶ = f⁴(h⁴)
-//│ 				in (fun a⁷ -> qrev_₀([C h⁶ a⁷], t⁶))
-//│ 			| N  => (fun a⁸ -> a⁸)}
-//│ 	def qrev_₀(a¹², ys²) = 
-//│ 		ys²(a¹²)
+//│ testQrevMap(primId⁰(enumFromTo(1, 10000)))
+//│ testManual(primId⁰(enumFromTo(1, 10000)))
+//│ def _lhManualQrevMap(f³, xs³, a⁵) = case xs³ of {
+//│ 	C h² t² => _lhManualQrevMap(f³, t², [C f³(h²) a⁵])
+//│ 	| N  => a⁵}
+//│ def enumFromTo(a⁷, b¹) = if (a⁷ <= b¹) then [C a⁷ enumFromTo((a⁷ + 1), b¹)] else [N]
+//│ def map(f², xs²) = case xs² of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let t³ = map(f², t⁰)
+//│ 		in let h³ = f²(h⁰)
+//│ 		in (fun a³ -> qrev([C h³ a³], t³))
+//│ 	| N  => (fun a⁴ -> a⁴)}
+//│ def qrev(a⁶, ys¹) = ys¹(a⁶)
+//│ def testManual(ls³) = _lhManualQrevMap((fun x³ -> (x³ + 1)), ls³, [N])
+//│ def testQrevMap(ls²) = qrev([N], map((fun x² -> (x² + 1)), ls²))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
@@ -2882,75 +2429,40 @@ testSumSquareTree(primId(18))
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [testSumSquareTree^68] (hopeless to continue)
-//│ 	[testSumSquareTree^68 · genTree^61] (using original def)
-//│ 		[testSumSquareTree^68 · genTree^61 · genTree^40] ---> [testSumSquareTree^68 · genTree^61] (using original def)
-//│ 		[testSumSquareTree^68 · genTree^61 · genTree^47] ---> [testSumSquareTree^68 · genTree^61] (using original def)
-//│ 	[testSumSquareTree^68 · sqTree^59] (using original def)
-//│ 		[testSumSquareTree^68 · sqTree^59 · sqTree^10] ---> [testSumSquareTree^68 · sqTree^59] (using original def)
-//│ 		[testSumSquareTree^68 · sqTree^59 · sqTree^7] ---> [testSumSquareTree^68 · sqTree^59] (using original def)
-//│ 	[testSumSquareTree^68 · sumTree^58] (using original def)
-//│ 		[testSumSquareTree^68 · sumTree^58 · sumTree^22] ---> [testSumSquareTree^68 · sumTree^58] (using original def)
-//│ 		[testSumSquareTree^68 · sumTree^58 · sumTree^27] ---> [testSumSquareTree^68 · sumTree^58] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ testSumSquareTree_₀(primId⁰(18))
-//│ def testSumSquareTree_₀(n²) = 
-//│ 	sumTree_₀(sqTree_₀(primId⁰(genTree_₀(n²))))
-//│ 	where
-//│ 	def genTree_₀(n³) = 
-//│ 		if (n³ > 0) then [T n³ genTree_₀((n³ - 1)) genTree_₀((n³ - 1))] else [L]
-//│ 	def sqTree_₀(t³) = 
-//│ 		case t³ of {
-//│ 			T v³ l³ r³ => [T (v³ * v³) sqTree_₀(l³) sqTree_₀(r³)]
-//│ 			| L  => [L]}
-//│ 	def sumTree_₀(t²) = 
-//│ 		case t² of {
-//│ 			T v² l² r² => ((v² + sumTree_₀(l²)) + sumTree_₀(r²))
-//│ 			| L  => 0}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [T (v³ * v³) sqTree_₀(l³) sqTree_₀(r³)]: 102 --->
-//│ 	case t² of {T v² l² r² => ((v² + sumTree_₀(l²)) + sumTree_₀(r²)) | L  => 0}: 88
-//│ [L]: 103 --->
-//│ 	case t² of {T v² l² r² => ((v² + sumTree_₀(l²)) + sumTree_₀(r²)) | L  => 0}: 88
+//│ [T (v⁰ * v⁰) sqTree(l⁰) sqTree(r⁰)]: 13 --->
+//│ 	case t¹ of {T v¹ l¹ r¹ => ((v¹ + sumTree(l¹)) + sumTree(r¹)) | L  => 0}: 32
+//│ [L]: 14 --->
+//│ 	case t¹ of {T v¹ l¹ r¹ => ((v¹ + sumTree(l¹)) + sumTree(r¹)) | L  => 0}: 32
 //│ ------------------
-//│ case t² of {T v² l² r² => ((v² + sumTree_₀(l²)) + sumTree_₀(r²)) | L  => 0}: 88 --->
-//│ 	[T (v³ * v³) sqTree_₀(l³) sqTree_₀(r³)]: 102
-//│ 	[L]: 103
+//│ case t¹ of {T v¹ l¹ r¹ => ((v¹ + sumTree(l¹)) + sumTree(r¹)) | L  => 0}: 32 --->
+//│ 	[T (v⁰ * v⁰) sqTree(l⁰) sqTree(r⁰)]: 13
+//│ 	[L]: 14
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [T (v³ * v³) sqTree_₀(l³) sqTree_₀(r³)]: 102 --->
-//│ 	case t² of {T v² l² r² => ((v² + sumTree_₀(l²)) + sumTree_₀(r²)) | L  => 0}: 88
-//│ [L]: 103 --->
-//│ 	case t² of {T v² l² r² => ((v² + sumTree_₀(l²)) + sumTree_₀(r²)) | L  => 0}: 88
+//│ [T (v⁰ * v⁰) sqTree(l⁰) sqTree(r⁰)]: 13 --->
+//│ 	case t¹ of {T v¹ l¹ r¹ => ((v¹ + sumTree(l¹)) + sumTree(r¹)) | L  => 0}: 32
+//│ [L]: 14 --->
+//│ 	case t¹ of {T v¹ l¹ r¹ => ((v¹ + sumTree(l¹)) + sumTree(r¹)) | L  => 0}: 32
 //│ ------------------
-//│ case t² of {T v² l² r² => ((v² + sumTree_₀(l²)) + sumTree_₀(r²)) | L  => 0}: 88 --->
-//│ 	[T (v³ * v³) sqTree_₀(l³) sqTree_₀(r³)]: 102
-//│ 	[L]: 103
+//│ case t¹ of {T v¹ l¹ r¹ => ((v¹ + sumTree(l¹)) + sumTree(r¹)) | L  => 0}: 32 --->
+//│ 	[T (v⁰ * v⁰) sqTree(l⁰) sqTree(r⁰)]: 13
+//│ 	[L]: 14
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testSumSquareTree_₀(primId⁰(18))
-//│ def testSumSquareTree_₀(n⁴) = 
-//│ 	sumTree_₀(sqTree_₀(primId⁰(genTree_₀(n⁴))))
-//│ 	where
-//│ 	def genTree_₀(n⁵) = 
-//│ 		if (n⁵ > 0) then [T n⁵ genTree_₀((n⁵ - 1)) genTree_₀((n⁵ - 1))] else [L]
-//│ 	def sqTree_₀(t⁵) = 
-//│ 		case t⁵ of {
-//│ 			T v³ l³ r³ => 
-//│ 				let r⁴ = sqTree_₀(r³)
-//│ 				in let l⁴ = sqTree_₀(l³)
-//│ 				in let v⁴ = (v³ * v³)
-//│ 				in (fun _lh_dummy⁰ -> ((v⁴ + sumTree_₀(l⁴)) + sumTree_₀(r⁴)))
-//│ 			| L  => (fun _lh_dummy¹ -> 0)}
-//│ 	def sumTree_₀(t⁴) = 
-//│ 		t⁴(99)
+//│ testSumSquareTree(primId⁰(18))
+//│ def genTree(n²) = if (n² > 0) then [T n² genTree((n² - 1)) genTree((n² - 1))] else [L]
+//│ def sqTree(t²) = case t² of {
+//│ 	T v⁰ l⁰ r⁰ => 
+//│ 		let r² = sqTree(r⁰)
+//│ 		in let l² = sqTree(l⁰)
+//│ 		in let v² = (v⁰ * v⁰)
+//│ 		in (fun _lh_dummy⁰ -> ((v² + sumTree(l²)) + sumTree(r²)))
+//│ 	| L  => (fun _lh_dummy¹ -> 0)}
+//│ def sumTree(t³) = t³(99)
+//│ def testSumSquareTree(n³) = sumTree(sqTree(primId⁰(genTree(n³))))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>

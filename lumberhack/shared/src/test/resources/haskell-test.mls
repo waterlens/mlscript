@@ -26,86 +26,54 @@ testMapmap $ primId 5000000
 //│ 		---------- unoptimized haskell gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [testMapmap_lh_₁^73] (hopeless to continue)
-//│ 	[testMapmap_lh_₁^73 · enumFromTo_lh_₁^65] (using original def)
-//│ 		[testMapmap_lh_₁^73 · enumFromTo_lh_₁^65 · enumFromTo_lh_₁^35] ---> [testMapmap_lh_₁^73 · enumFromTo_lh_₁^65] (using original def)
-//│ 	[testMapmap_lh_₁^73 · map_lh_₁^57] (using original def)
-//│ 		[testMapmap_lh_₁^73 · map_lh_₁^57 · map_lh_₁^19] ---> [testMapmap_lh_₁^73 · map_lh_₁^57] (using original def)
-//│ 	[testMapmap_lh_₁^73 · map_lh_₂^49] (using original def)
-//│ 		[testMapmap_lh_₁^73 · map_lh_₂^49 · map_lh_₂^5] ---> [testMapmap_lh_₁^73 · map_lh_₂^49] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ testMapmap_lh_₁_₀(primId⁰(5000000))
-//│ def testMapmap_lh_₁_₀(_lh_testMapmap_arg1¹) = 
-//│ 	map_lh_₂_₀((fun x² -> (x² + 1)), map_lh_₁_₀((fun x³ -> (x³ + x³)), enumFromTo_lh_₁_₀(1, _lh_testMapmap_arg1¹)))
-//│ 	where
-//│ 	def enumFromTo_lh_₁_₀(a¹, b¹) = 
-//│ 		if (a¹ <= b¹) then [LH_C a¹ enumFromTo_lh_₁_₀((a¹ + 1), b¹)] else [LH_N]
-//│ 	def map_lh_₁_₀(f³, ls³) = 
-//│ 		case ls³ of {
-//│ 			LH_C h³ t³ => [LH_C f³(h³) map_lh_₁_₀(f³, t³)]
-//│ 			| LH_N  => [LH_N]}
-//│ 	def map_lh_₂_₀(f², ls²) = 
-//│ 		case ls² of {
-//│ 			LH_C h² t² => [LH_C f²(h²) map_lh_₂_₀(f², t²)]
-//│ 			| LH_N  => [LH_N]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [LH_C a¹ enumFromTo_lh_₁_₀((a¹ + 1), b¹)]: 131 --->
-//│ 	case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map_lh_₁_₀(f³, t³)] | LH_N  => [LH_N]}: 147
-//│ [LH_N]: 132 --->
-//│ 	case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map_lh_₁_₀(f³, t³)] | LH_N  => [LH_N]}: 147
-//│ [LH_C f³(h³) map_lh_₁_₀(f³, t³)]: 145 --->
-//│ 	case ls² of {LH_C h² t² => [LH_C f²(h²) map_lh_₂_₀(f², t²)] | LH_N  => [LH_N]}: 113
-//│ [LH_N]: 146 --->
-//│ 	case ls² of {LH_C h² t² => [LH_C f²(h²) map_lh_₂_₀(f², t²)] | LH_N  => [LH_N]}: 113
+//│ [LH_C f¹(h¹) map_lh_₁(f¹, t¹)]: 24 --->
+//│ 	case ls⁰ of {LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map_lh_₂(f⁰, t⁰)] | LH_N  => [LH_N]}: 12
+//│ [LH_N]: 25 --->
+//│ 	case ls⁰ of {LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map_lh_₂(f⁰, t⁰)] | LH_N  => [LH_N]}: 12
+//│ [LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)]: 44 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => [LH_C f¹(h¹) map_lh_₁(f¹, t¹)] | LH_N  => [LH_N]}: 26
+//│ [LH_N]: 45 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => [LH_C f¹(h¹) map_lh_₁(f¹, t¹)] | LH_N  => [LH_N]}: 26
 //│ ------------------
-//│ case ls² of {LH_C h² t² => [LH_C f²(h²) map_lh_₂_₀(f², t²)] | LH_N  => [LH_N]}: 113 --->
-//│ 	[LH_C f³(h³) map_lh_₁_₀(f³, t³)]: 145
-//│ 	[LH_N]: 146
-//│ case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map_lh_₁_₀(f³, t³)] | LH_N  => [LH_N]}: 147 --->
-//│ 	[LH_C a¹ enumFromTo_lh_₁_₀((a¹ + 1), b¹)]: 131
-//│ 	[LH_N]: 132
+//│ case ls⁰ of {LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map_lh_₂(f⁰, t⁰)] | LH_N  => [LH_N]}: 12 --->
+//│ 	[LH_C f¹(h¹) map_lh_₁(f¹, t¹)]: 24
+//│ 	[LH_N]: 25
+//│ case ls¹ of {LH_C h¹ t¹ => [LH_C f¹(h¹) map_lh_₁(f¹, t¹)] | LH_N  => [LH_N]}: 26 --->
+//│ 	[LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)]: 44
+//│ 	[LH_N]: 45
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [LH_C a¹ enumFromTo_lh_₁_₀((a¹ + 1), b¹)]: 131 --->
-//│ 	case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map_lh_₁_₀(f³, t³)] | LH_N  => [LH_N]}: 147
-//│ [LH_N]: 132 --->
-//│ 	case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map_lh_₁_₀(f³, t³)] | LH_N  => [LH_N]}: 147
-//│ [LH_C f³(h³) map_lh_₁_₀(f³, t³)]: 145 --->
-//│ 	case ls² of {LH_C h² t² => [LH_C f²(h²) map_lh_₂_₀(f², t²)] | LH_N  => [LH_N]}: 113
-//│ [LH_N]: 146 --->
-//│ 	case ls² of {LH_C h² t² => [LH_C f²(h²) map_lh_₂_₀(f², t²)] | LH_N  => [LH_N]}: 113
+//│ [LH_C f¹(h¹) map_lh_₁(f¹, t¹)]: 24 --->
+//│ 	case ls⁰ of {LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map_lh_₂(f⁰, t⁰)] | LH_N  => [LH_N]}: 12
+//│ [LH_N]: 25 --->
+//│ 	case ls⁰ of {LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map_lh_₂(f⁰, t⁰)] | LH_N  => [LH_N]}: 12
+//│ [LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)]: 44 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => [LH_C f¹(h¹) map_lh_₁(f¹, t¹)] | LH_N  => [LH_N]}: 26
+//│ [LH_N]: 45 --->
+//│ 	case ls¹ of {LH_C h¹ t¹ => [LH_C f¹(h¹) map_lh_₁(f¹, t¹)] | LH_N  => [LH_N]}: 26
 //│ ------------------
-//│ case ls² of {LH_C h² t² => [LH_C f²(h²) map_lh_₂_₀(f², t²)] | LH_N  => [LH_N]}: 113 --->
-//│ 	[LH_C f³(h³) map_lh_₁_₀(f³, t³)]: 145
-//│ 	[LH_N]: 146
-//│ case ls³ of {LH_C h³ t³ => [LH_C f³(h³) map_lh_₁_₀(f³, t³)] | LH_N  => [LH_N]}: 147 --->
-//│ 	[LH_C a¹ enumFromTo_lh_₁_₀((a¹ + 1), b¹)]: 131
-//│ 	[LH_N]: 132
+//│ case ls⁰ of {LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map_lh_₂(f⁰, t⁰)] | LH_N  => [LH_N]}: 12 --->
+//│ 	[LH_C f¹(h¹) map_lh_₁(f¹, t¹)]: 24
+//│ 	[LH_N]: 25
+//│ case ls¹ of {LH_C h¹ t¹ => [LH_C f¹(h¹) map_lh_₁(f¹, t¹)] | LH_N  => [LH_N]}: 26 --->
+//│ 	[LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)]: 44
+//│ 	[LH_N]: 45
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testMapmap_lh_₁_₀(primId⁰(5000000))
-//│ def testMapmap_lh_₁_₀(_lh_testMapmap_arg1²) = 
-//│ 	map_lh_₂_₀((fun x⁴ -> (x⁴ + 1)), map_lh_₁_₀((fun x⁵ -> (x⁵ + x⁵)), enumFromTo_lh_₁_₀(1, _lh_testMapmap_arg1²)))
-//│ 	where
-//│ 	def enumFromTo_lh_₁_₀(a², b²) = 
-//│ 		if (a² <= b²) then 
-//│ 			let t⁴ = enumFromTo_lh_₁_₀((a² + 1), b²)
-//│ 			in let h⁴ = a²
-//│ 			in (fun f⁵ -> 
-//│ 				let t⁵ = map_lh_₁_₀(f⁵, t⁴)
-//│ 				in let h⁵ = f⁵(h⁴)
-//│ 				in (fun f⁶ -> [LH_C f⁶(h⁵) map_lh_₂_₀(f⁶, t⁵)])) else (fun f⁷ -> (fun f⁸ -> [LH_N]))
-//│ 	def map_lh_₁_₀(f⁹, ls⁵) = 
-//│ 		ls⁵(f⁹)
-//│ 	def map_lh_₂_₀(f⁴, ls⁴) = 
-//│ 		ls⁴(f⁴)
+//│ testMapmap_lh_₁(primId⁰(5000000))
+//│ def enumFromTo_lh_₁(a¹, b¹) = if (a¹ <= b¹) then 
+//│ 	let t² = enumFromTo_lh_₁((a¹ + 1), b¹)
+//│ 	in let h² = a¹
+//│ 	in (fun f⁴ -> 
+//│ 		let t³ = map_lh_₁(f⁴, t²)
+//│ 		in let h³ = f⁴(h²)
+//│ 		in (fun f⁵ -> [LH_C f⁵(h³) map_lh_₂(f⁵, t³)])) else (fun f⁶ -> (fun f⁷ -> [LH_N]))
+//│ def map_lh_₁(f³, ls³) = ls³(f³)
+//│ def map_lh_₂(f², ls²) = ls²(f²)
+//│ def testMapmap_lh_₁(_lh_testMapmap_arg1¹) = map_lh_₂((fun x² -> (x² + 1)), map_lh_₁((fun x³ -> (x³ + x³)), enumFromTo_lh_₁(1, _lh_testMapmap_arg1¹)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated Haskell >>>>>>>>>>
@@ -119,14 +87,14 @@ testMapmap $ primId 5000000
 //│ testMapmap_lh_₁ _lh_testMapmap_arg1⁰ = ((map_lh_₂ (\x⁰ -> (x⁰ + 1))) ((map_lh_₁ (\x¹ -> (x¹ + x¹))) ((enumFromTo_lh_₁ 1) _lh_testMapmap_arg1⁰)))
 //│ 
 //│ --- lumberhack ---
-//│ enumFromTo_lh_₁_₀ a⁰ b⁰ = (if (a⁰ <= b⁰) then (let t⁰ = ((enumFromTo_lh_₁_₀ (a⁰ + 1)) b⁰) in (let h⁰ = a⁰ in (\f¹ -> (let t¹ = ((map_lh_₁_₀ f¹) t⁰) in (let h¹ = (f¹ h⁰) in (\f² -> ((f² h¹):((map_lh_₂_₀ f²) t¹)))))))) else (\f³ f⁴ -> []))
-//│ map_lh_₁_₀ f⁵ ls¹ = (ls¹ f⁵)
-//│ map_lh_₂_₀ f⁰ ls⁰ = (ls⁰ f⁰)
-//│ testMapmap_lh_₁_₀ _lh_testMapmap_arg1⁰ = ((map_lh_₂_₀ (\x⁰ -> (x⁰ + 1))) ((map_lh_₁_₀ (\x¹ -> (x¹ + x¹))) ((enumFromTo_lh_₁_₀ 1) _lh_testMapmap_arg1⁰)))
+//│ enumFromTo_lh_₁ a⁰ b⁰ = (if (a⁰ <= b⁰) then (let t⁰ = ((enumFromTo_lh_₁ (a⁰ + 1)) b⁰) in (let h⁰ = a⁰ in (\f² -> (let t¹ = ((map_lh_₁ f²) t⁰) in (let h¹ = (f² h⁰) in (\f³ -> ((f³ h¹):((map_lh_₂ f³) t¹)))))))) else (\f⁴ f⁵ -> []))
+//│ map_lh_₁ f¹ ls¹ = (ls¹ f¹)
+//│ map_lh_₂ f⁰ ls⁰ = (ls⁰ f⁰)
+//│ testMapmap_lh_₁ _lh_testMapmap_arg1⁰ = ((map_lh_₂ (\x⁰ -> (x⁰ + 1))) ((map_lh_₁ (\x¹ -> (x¹ + x¹))) ((enumFromTo_lh_₁ 1) _lh_testMapmap_arg1⁰)))
 //│ 
 //│ main :: IO ()
 //│ main = defaultMain [ bgroup "Mapmap_lh" [
-//│     bench "lumberhack_Mapmap_lh" $ nf testMapmap_lh_₁_₀ 5000000
+//│     bench "lumberhack_Mapmap_lh" $ nf testMapmap_lh_₁ 5000000
 //│   , bench "original_Mapmap_lh" $ nf testMapmap_lh_₁ 5000000 ] ]
 //│ <<<<<<<<<< Generated Haskell <<<<<<<<<<
 
@@ -181,91 +149,44 @@ testQueen $ primId 12
 //│ 		---------- unoptimized haskell gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [testQueen_lh_₁^151] (hopeless to continue)
-//│ 	[testQueen_lh_₁^151 · nsoln_lh_₁^147] (using original def)
-//│ 		[testQueen_lh_₁^151 · nsoln_lh_₁^147 · gen_lh_₁^140] (using original def)
-//│ 			[testQueen_lh_₁^151 · nsoln_lh_₁^147 · gen_lh_₁^140 · enumFromTo_lh_₁^102] (using original def)
-//│ 				[testQueen_lh_₁^151 · nsoln_lh_₁^147 · gen_lh_₁^140 · enumFromTo_lh_₁^102 · enumFromTo_lh_₁^57] ---> [testQueen_lh_₁^151 · nsoln_lh_₁^147 · gen_lh_₁^140 · enumFromTo_lh_₁^102] (using original def)
-//│ 			[testQueen_lh_₁^151 · nsoln_lh_₁^147 · gen_lh_₁^140 · gen_lh_₁^114] ---> [testQueen_lh_₁^151 · nsoln_lh_₁^147 · gen_lh_₁^140] (using original def)
-//│ 			[testQueen_lh_₁^151 · nsoln_lh_₁^147 · gen_lh_₁^140 · safe_lh_₁^77] (using original def)
-//│ 				[testQueen_lh_₁^151 · nsoln_lh_₁^147 · gen_lh_₁^140 · safe_lh_₁^77 · safe_lh_₁^34] ---> [testQueen_lh_₁^151 · nsoln_lh_₁^147 · gen_lh_₁^140 · safe_lh_₁^77] (using original def)
-//│ 		[testQueen_lh_₁^151 · nsoln_lh_₁^147 · length_lh_₁^139] (using original def)
-//│ 			[testQueen_lh_₁^151 · nsoln_lh_₁^147 · length_lh_₁^139 · length_lh_₁^132] ---> [testQueen_lh_₁^151 · nsoln_lh_₁^147 · length_lh_₁^139] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ testQueen_lh_₁_₀(primId⁰(12))
-//│ def testQueen_lh_₁_₀(_lh_testQueen_arg1¹) = 
-//│ 	nsoln_lh_₁_₀(_lh_testQueen_arg1¹)
-//│ 	where
-//│ 	def nsoln_lh_₁_₀(_lh_nsoln_arg1¹) = 
-//│ 		length_lh_₁_₀(gen_lh_₁_₀(_lh_nsoln_arg1¹, _lh_nsoln_arg1¹))
-//│ 		where
-//│ 		def gen_lh_₁_₀(_lh_gen_arg1¹, _lh_gen_arg2¹) = 
-//│ 			case _lh_gen_arg1¹ of {
-//│ 				0  => [LH_C [LH_N] [LH_N]]
-//│ 				| _  => 
-//│ 					let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> case _lh_listcomp_fun_para² of {
-//│ 						LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => 
-//│ 							let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {
-//│ 								LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if safe_lh_₁_₀(_lh_listcomp_fun_ls_h³, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)
-//│ 								| LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
-//│ 							in _lh_listcomp_fun³(primId⁰(enumFromTo_lh_₁_₀(1, _lh_gen_arg2¹)))
-//│ 						| LH_N  => [LH_N]})
-//│ 					in _lh_listcomp_fun²(gen_lh_₁_₀((_lh_gen_arg1¹ - 1), _lh_gen_arg2¹))}
-//│ 			where
-//│ 			def enumFromTo_lh_₁_₀(a¹, b¹) = 
-//│ 				if (a¹ <= b¹) then [LH_C a¹ enumFromTo_lh_₁_₀((a¹ + 1), b¹)] else [LH_N]
-//│ 			def safe_lh_₁_₀(_lh_safe_arg1¹, _lh_safe_arg2¹, _lh_safe_arg3¹) = 
-//│ 				case _lh_safe_arg3¹ of {
-//│ 					LH_N  => [True]
-//│ 					| LH_C _lh_safe_LH_C_0¹ _lh_safe_LH_C_1¹ => ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0¹) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ - _lh_safe_arg2¹))) && safe_lh_₁_₀(_lh_safe_arg1¹, (_lh_safe_arg2¹ + 1), _lh_safe_LH_C_1¹))
-//│ 					| _  => error⁰}
-//│ 		def length_lh_₁_₀(ls¹) = 
-//│ 			case ls¹ of {
-//│ 				LH_C h¹ t¹ => (1 + length_lh_₁_₀(t¹))
-//│ 				| LH_N  => 0}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [LH_N]: 181 --->
+//│ [LH_N]: 72 --->
 //│ 	DeadCodeCons
-//│ 	case _lh_safe_arg3¹ of {LH_N  => [True] | LH_C _lh_safe_LH_C_0¹ _lh_safe_LH_C_1¹ => ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0¹) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ - _lh_safe_arg2¹))) && safe_lh_₁_₀(_lh_safe_arg1¹, (_lh_safe_arg2¹ + 1), _lh_safe_LH_C_1¹)) | _  => error⁰}: 302
-//│ [LH_N]: 182 --->
-//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if safe_lh_₁_₀(_lh_listcomp_fun_ls_h³, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
-//│ in _lh_listcomp_fun³(primId⁰(enumFromTo_lh_₁_₀(1, _lh_gen_arg2¹))) | LH_N  => [LH_N]}: 220
-//│ 	case ls¹ of {LH_C h¹ t¹ => (1 + length_lh_₁_₀(t¹)) | LH_N  => 0}: 254
-//│ [LH_C [LH_N] [LH_N]]: 183 --->
-//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if safe_lh_₁_₀(_lh_listcomp_fun_ls_h³, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
-//│ in _lh_listcomp_fun³(primId⁰(enumFromTo_lh_₁_₀(1, _lh_gen_arg2¹))) | LH_N  => [LH_N]}: 220
-//│ 	case ls¹ of {LH_C h¹ t¹ => (1 + length_lh_₁_₀(t¹)) | LH_N  => 0}: 254
-//│ [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²]: 195 --->
+//│ 	case _lh_safe_arg3⁰ of {LH_N  => [True] | LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && safe_lh_₁(_lh_safe_arg1⁰, (_lh_safe_arg2⁰ + 1), _lh_safe_LH_C_1⁰)) | _  => error⁰}: 47
+//│ [LH_N]: 73 --->
+//│ 	case _lh_listcomp_fun_para⁰ of {LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h⁰) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹) | LH_N  => _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)})
+//│ in _lh_listcomp_fun¹(primId⁰(enumFromTo_lh_₁(1, _lh_gen_arg2⁰))) | LH_N  => [LH_N]}: 111
+//│ 	case ls⁰ of {LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰)) | LH_N  => 0}: 137
+//│ [LH_C [LH_N] [LH_N]]: 74 --->
+//│ 	case _lh_listcomp_fun_para⁰ of {LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h⁰) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹) | LH_N  => _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)})
+//│ in _lh_listcomp_fun¹(primId⁰(enumFromTo_lh_₁(1, _lh_gen_arg2⁰))) | LH_N  => [LH_N]}: 111
+//│ 	case ls⁰ of {LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰)) | LH_N  => 0}: 137
+//│ [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰]: 86 --->
 //│ 	DeadCodeCons
-//│ 	case _lh_safe_arg3¹ of {LH_N  => [True] | LH_C _lh_safe_LH_C_0¹ _lh_safe_LH_C_1¹ => ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0¹) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ - _lh_safe_arg2¹))) && safe_lh_₁_₀(_lh_safe_arg1¹, (_lh_safe_arg2¹ + 1), _lh_safe_LH_C_1¹)) | _  => error⁰}: 302
-//│ [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]: 199 --->
-//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if safe_lh_₁_₀(_lh_listcomp_fun_ls_h³, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
-//│ in _lh_listcomp_fun³(primId⁰(enumFromTo_lh_₁_₀(1, _lh_gen_arg2¹))) | LH_N  => [LH_N]}: 220
-//│ 	case ls¹ of {LH_C h¹ t¹ => (1 + length_lh_₁_₀(t¹)) | LH_N  => 0}: 254
-//│ [LH_N]: 219 --->
-//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if safe_lh_₁_₀(_lh_listcomp_fun_ls_h³, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
-//│ in _lh_listcomp_fun³(primId⁰(enumFromTo_lh_₁_₀(1, _lh_gen_arg2¹))) | LH_N  => [LH_N]}: 220
-//│ 	case ls¹ of {LH_C h¹ t¹ => (1 + length_lh_₁_₀(t¹)) | LH_N  => 0}: 254
+//│ 	case _lh_safe_arg3⁰ of {LH_N  => [True] | LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && safe_lh_₁(_lh_safe_arg1⁰, (_lh_safe_arg2⁰ + 1), _lh_safe_LH_C_1⁰)) | _  => error⁰}: 47
+//│ [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)]: 90 --->
+//│ 	case _lh_listcomp_fun_para⁰ of {LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h⁰) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹) | LH_N  => _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)})
+//│ in _lh_listcomp_fun¹(primId⁰(enumFromTo_lh_₁(1, _lh_gen_arg2⁰))) | LH_N  => [LH_N]}: 111
+//│ 	case ls⁰ of {LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰)) | LH_N  => 0}: 137
+//│ [LH_N]: 110 --->
+//│ 	case _lh_listcomp_fun_para⁰ of {LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h⁰) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹) | LH_N  => _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)})
+//│ in _lh_listcomp_fun¹(primId⁰(enumFromTo_lh_₁(1, _lh_gen_arg2⁰))) | LH_N  => [LH_N]}: 111
+//│ 	case ls⁰ of {LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰)) | LH_N  => 0}: 137
 //│ ------------------
-//│ case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if safe_lh_₁_₀(_lh_listcomp_fun_ls_h³, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
-//│ in _lh_listcomp_fun³(primId⁰(enumFromTo_lh_₁_₀(1, _lh_gen_arg2¹))) | LH_N  => [LH_N]}: 220 --->
-//│ 	[LH_N]: 182
-//│ 	[LH_C [LH_N] [LH_N]]: 183
-//│ 	[LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]: 199
-//│ 	[LH_N]: 219
-//│ case ls¹ of {LH_C h¹ t¹ => (1 + length_lh_₁_₀(t¹)) | LH_N  => 0}: 254 --->
-//│ 	[LH_N]: 182
-//│ 	[LH_C [LH_N] [LH_N]]: 183
-//│ 	[LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]: 199
-//│ 	[LH_N]: 219
-//│ case _lh_safe_arg3¹ of {LH_N  => [True] | LH_C _lh_safe_LH_C_0¹ _lh_safe_LH_C_1¹ => ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0¹) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ - _lh_safe_arg2¹))) && safe_lh_₁_₀(_lh_safe_arg1¹, (_lh_safe_arg2¹ + 1), _lh_safe_LH_C_1¹)) | _  => error⁰}: 302 --->
-//│ 	[LH_N]: 181
-//│ 	[LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²]: 195
+//│ case _lh_safe_arg3⁰ of {LH_N  => [True] | LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && safe_lh_₁(_lh_safe_arg1⁰, (_lh_safe_arg2⁰ + 1), _lh_safe_LH_C_1⁰)) | _  => error⁰}: 47 --->
+//│ 	[LH_N]: 72
+//│ 	[LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰]: 86
+//│ case _lh_listcomp_fun_para⁰ of {LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h⁰) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹) | LH_N  => _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)})
+//│ in _lh_listcomp_fun¹(primId⁰(enumFromTo_lh_₁(1, _lh_gen_arg2⁰))) | LH_N  => [LH_N]}: 111 --->
+//│ 	[LH_N]: 73
+//│ 	[LH_C [LH_N] [LH_N]]: 74
+//│ 	[LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)]: 90
+//│ 	[LH_N]: 110
+//│ case ls⁰ of {LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰)) | LH_N  => 0}: 137 --->
+//│ 	[LH_N]: 73
+//│ 	[LH_C [LH_N] [LH_N]]: 74
+//│ 	[LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)]: 90
+//│ 	[LH_N]: 110
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -275,37 +196,28 @@ testQueen $ primId 12
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testQueen_lh_₁_₀(primId⁰(12))
-//│ def testQueen_lh_₁_₀(_lh_testQueen_arg1²) = 
-//│ 	nsoln_lh_₁_₀(_lh_testQueen_arg1²)
-//│ 	where
-//│ 	def nsoln_lh_₁_₀(_lh_nsoln_arg1²) = 
-//│ 		length_lh_₁_₀(gen_lh_₁_₀(_lh_nsoln_arg1², _lh_nsoln_arg1²))
-//│ 		where
-//│ 		def gen_lh_₁_₀(_lh_gen_arg1², _lh_gen_arg2²) = 
-//│ 			case _lh_gen_arg1² of {
-//│ 				0  => [LH_C [LH_N] [LH_N]]
-//│ 				| _  => 
-//│ 					let _lh_listcomp_fun⁴ = (fun _lh_listcomp_fun_para⁴ -> case _lh_listcomp_fun_para⁴ of {
-//│ 						LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => 
-//│ 							let _lh_listcomp_fun⁵ = (fun _lh_listcomp_fun_para⁵ -> case _lh_listcomp_fun_para⁵ of {
-//│ 								LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if safe_lh_₁_₀(_lh_listcomp_fun_ls_h³, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun⁵(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun⁵(_lh_listcomp_fun_ls_t³)
-//│ 								| LH_N  => _lh_listcomp_fun⁴(_lh_listcomp_fun_ls_t²)})
-//│ 							in _lh_listcomp_fun⁵(primId⁰(enumFromTo_lh_₁_₀(1, _lh_gen_arg2²)))
-//│ 						| LH_N  => [LH_N]})
-//│ 					in _lh_listcomp_fun⁴(gen_lh_₁_₀((_lh_gen_arg1² - 1), _lh_gen_arg2²))}
-//│ 			where
-//│ 			def enumFromTo_lh_₁_₀(a², b²) = 
-//│ 				if (a² <= b²) then [LH_C a² enumFromTo_lh_₁_₀((a² + 1), b²)] else [LH_N]
-//│ 			def safe_lh_₁_₀(_lh_safe_arg1², _lh_safe_arg2², _lh_safe_arg3²) = 
-//│ 				case _lh_safe_arg3² of {
-//│ 					LH_N  => [True]
-//│ 					| LH_C _lh_safe_LH_C_0¹ _lh_safe_LH_C_1¹ => ((((_lh_safe_arg1² /= _lh_safe_LH_C_0¹) && (_lh_safe_arg1² /= (_lh_safe_LH_C_0¹ + _lh_safe_arg2²))) && (_lh_safe_arg1² /= (_lh_safe_LH_C_0¹ - _lh_safe_arg2²))) && safe_lh_₁_₀(_lh_safe_arg1², (_lh_safe_arg2² + 1), _lh_safe_LH_C_1¹))
-//│ 					| _  => error⁰}
-//│ 		def length_lh_₁_₀(ls²) = 
-//│ 			case ls² of {
-//│ 				LH_C h¹ t¹ => (1 + length_lh_₁_₀(t¹))
-//│ 				| LH_N  => 0}
+//│ testQueen_lh_₁(primId⁰(12))
+//│ def enumFromTo_lh_₁(a¹, b¹) = if (a¹ <= b¹) then [LH_C a¹ enumFromTo_lh_₁((a¹ + 1), b¹)] else [LH_N]
+//│ def gen_lh_₁(_lh_gen_arg1¹, _lh_gen_arg2¹) = case _lh_gen_arg1¹ of {
+//│ 	0  => [LH_C [LH_N] [LH_N]]
+//│ 	| _  => 
+//│ 		let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> case _lh_listcomp_fun_para² of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => 
+//│ 				let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {
+//│ 					LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h⁰) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t¹)
+//│ 					| LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t⁰)})
+//│ 				in _lh_listcomp_fun³(primId⁰(enumFromTo_lh_₁(1, _lh_gen_arg2¹)))
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun²(gen_lh_₁((_lh_gen_arg1¹ - 1), _lh_gen_arg2¹))}
+//│ def length_lh_₁(ls¹) = case ls¹ of {
+//│ 	LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰))
+//│ 	| LH_N  => 0}
+//│ def nsoln_lh_₁(_lh_nsoln_arg1¹) = length_lh_₁(gen_lh_₁(_lh_nsoln_arg1¹, _lh_nsoln_arg1¹))
+//│ def safe_lh_₁(_lh_safe_arg1¹, _lh_safe_arg2¹, _lh_safe_arg3¹) = case _lh_safe_arg3¹ of {
+//│ 	LH_N  => [True]
+//│ 	| LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2¹))) && safe_lh_₁(_lh_safe_arg1¹, (_lh_safe_arg2¹ + 1), _lh_safe_LH_C_1⁰))
+//│ 	| _  => error⁰}
+//│ def testQueen_lh_₁(_lh_testQueen_arg1¹) = nsoln_lh_₁(_lh_testQueen_arg1¹)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated Haskell >>>>>>>>>>
@@ -321,16 +233,16 @@ testQueen $ primId 12
 //│ testQueen_lh_₁ _lh_testQueen_arg1⁰ = (nsoln_lh_₁ _lh_testQueen_arg1⁰)
 //│ 
 //│ --- lumberhack ---
-//│ enumFromTo_lh_₁_₀ a⁰ b⁰ = (if (a⁰ <= b⁰) then (a⁰:((enumFromTo_lh_₁_₀ (a⁰ + 1)) b⁰)) else [])
-//│ gen_lh_₁_₀ _lh_gen_arg1⁰ _lh_gen_arg2⁰ = (case _lh_gen_arg1⁰ of {0 -> ([]:[]); _ -> (let _lh_listcomp_fun⁰ = (\_lh_listcomp_fun_para⁰ -> (case _lh_listcomp_fun_para⁰ of {(_lh_listcomp_fun_ls_h⁰ : _lh_listcomp_fun_ls_t⁰) -> (let _lh_listcomp_fun¹ = (\_lh_listcomp_fun_para¹ -> (case _lh_listcomp_fun_para¹ of {(_lh_listcomp_fun_ls_h¹ : _lh_listcomp_fun_ls_t¹) -> (if (((safe_lh_₁_₀ _lh_listcomp_fun_ls_h¹) 1) _lh_listcomp_fun_ls_h⁰) then ((_lh_listcomp_fun_ls_h¹:_lh_listcomp_fun_ls_h⁰):(_lh_listcomp_fun¹ _lh_listcomp_fun_ls_t¹)) else (_lh_listcomp_fun¹ _lh_listcomp_fun_ls_t¹)); [] -> (_lh_listcomp_fun⁰ _lh_listcomp_fun_ls_t⁰)})) in (_lh_listcomp_fun¹ ((enumFromTo_lh_₁_₀ 1) _lh_gen_arg2⁰))); [] -> []})) in (_lh_listcomp_fun⁰ ((gen_lh_₁_₀ (_lh_gen_arg1⁰ - 1)) _lh_gen_arg2⁰)))})
-//│ length_lh_₁_₀ ls⁰ = (case ls⁰ of {(h⁰ : t⁰) -> (1 + (length_lh_₁_₀ t⁰)); [] -> 0})
-//│ nsoln_lh_₁_₀ _lh_nsoln_arg1⁰ = (length_lh_₁_₀ ((gen_lh_₁_₀ _lh_nsoln_arg1⁰) _lh_nsoln_arg1⁰))
-//│ safe_lh_₁_₀ _lh_safe_arg1⁰ _lh_safe_arg2⁰ _lh_safe_arg3⁰ = (case _lh_safe_arg3⁰ of {[] -> True; (_lh_safe_LH_C_0⁰ : _lh_safe_LH_C_1⁰) -> ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && (((safe_lh_₁_₀ _lh_safe_arg1⁰) (_lh_safe_arg2⁰ + 1)) _lh_safe_LH_C_1⁰)); _ -> error})
-//│ testQueen_lh_₁_₀ _lh_testQueen_arg1⁰ = (nsoln_lh_₁_₀ _lh_testQueen_arg1⁰)
+//│ enumFromTo_lh_₁ a⁰ b⁰ = (if (a⁰ <= b⁰) then (a⁰:((enumFromTo_lh_₁ (a⁰ + 1)) b⁰)) else [])
+//│ gen_lh_₁ _lh_gen_arg1⁰ _lh_gen_arg2⁰ = (case _lh_gen_arg1⁰ of {0 -> ([]:[]); _ -> (let _lh_listcomp_fun⁰ = (\_lh_listcomp_fun_para⁰ -> (case _lh_listcomp_fun_para⁰ of {(_lh_listcomp_fun_ls_h⁰ : _lh_listcomp_fun_ls_t⁰) -> (let _lh_listcomp_fun¹ = (\_lh_listcomp_fun_para¹ -> (case _lh_listcomp_fun_para¹ of {(_lh_listcomp_fun_ls_h¹ : _lh_listcomp_fun_ls_t¹) -> (if (((safe_lh_₁ _lh_listcomp_fun_ls_h¹) 1) _lh_listcomp_fun_ls_h⁰) then ((_lh_listcomp_fun_ls_h¹:_lh_listcomp_fun_ls_h⁰):(_lh_listcomp_fun¹ _lh_listcomp_fun_ls_t¹)) else (_lh_listcomp_fun¹ _lh_listcomp_fun_ls_t¹)); [] -> (_lh_listcomp_fun⁰ _lh_listcomp_fun_ls_t⁰)})) in (_lh_listcomp_fun¹ ((enumFromTo_lh_₁ 1) _lh_gen_arg2⁰))); [] -> []})) in (_lh_listcomp_fun⁰ ((gen_lh_₁ (_lh_gen_arg1⁰ - 1)) _lh_gen_arg2⁰)))})
+//│ length_lh_₁ ls⁰ = (case ls⁰ of {(h⁰ : t⁰) -> (1 + (length_lh_₁ t⁰)); [] -> 0})
+//│ nsoln_lh_₁ _lh_nsoln_arg1⁰ = (length_lh_₁ ((gen_lh_₁ _lh_nsoln_arg1⁰) _lh_nsoln_arg1⁰))
+//│ safe_lh_₁ _lh_safe_arg1⁰ _lh_safe_arg2⁰ _lh_safe_arg3⁰ = (case _lh_safe_arg3⁰ of {[] -> True; (_lh_safe_LH_C_0⁰ : _lh_safe_LH_C_1⁰) -> ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && (((safe_lh_₁ _lh_safe_arg1⁰) (_lh_safe_arg2⁰ + 1)) _lh_safe_LH_C_1⁰)); _ -> error})
+//│ testQueen_lh_₁ _lh_testQueen_arg1⁰ = (nsoln_lh_₁ _lh_testQueen_arg1⁰)
 //│ 
 //│ main :: IO ()
 //│ main = defaultMain [ bgroup "Queen_lh" [
-//│     bench "lumberhack_Queen_lh" $ nf testQueen_lh_₁_₀ 12
+//│     bench "lumberhack_Queen_lh" $ nf testQueen_lh_₁ 12
 //│   , bench "original_Queen_lh" $ nf testQueen_lh_₁ 12 ] ]
 //│ <<<<<<<<<< Generated Haskell <<<<<<<<<<
 
@@ -371,144 +283,88 @@ test $ primId 4
 //│ def test_lh_₁(_lh_test_arg1⁰) = nsoln_lh_₁^145(_lh_test_arg1⁰)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [test_lh_₁^149] (hopeless to continue)
-//│ 	[test_lh_₁^149 · nsoln_lh_₁^145] (using original def)
-//│ 		[test_lh_₁^149 · nsoln_lh_₁^145 · gen_lh_₁^138] (using original def)
-//│ 			[test_lh_₁^149 · nsoln_lh_₁^145 · gen_lh_₁^138 · enumFromTo_lh_₁^101] (using original def)
-//│ 				[test_lh_₁^149 · nsoln_lh_₁^145 · gen_lh_₁^138 · enumFromTo_lh_₁^101 · enumFromTo_lh_₁^57] ---> [test_lh_₁^149 · nsoln_lh_₁^145 · gen_lh_₁^138 · enumFromTo_lh_₁^101] (using original def)
-//│ 			[test_lh_₁^149 · nsoln_lh_₁^145 · gen_lh_₁^138 · gen_lh_₁^112] ---> [test_lh_₁^149 · nsoln_lh_₁^145 · gen_lh_₁^138] (using original def)
-//│ 			[test_lh_₁^149 · nsoln_lh_₁^145 · gen_lh_₁^138 · safe_lh_₁^77] (using original def)
-//│ 				[test_lh_₁^149 · nsoln_lh_₁^145 · gen_lh_₁^138 · safe_lh_₁^77 · safe_lh_₁^34] ---> [test_lh_₁^149 · nsoln_lh_₁^145 · gen_lh_₁^138 · safe_lh_₁^77] (using original def)
-//│ 		[test_lh_₁^149 · nsoln_lh_₁^145 · length_lh_₁^137] (using original def)
-//│ 			[test_lh_₁^149 · nsoln_lh_₁^145 · length_lh_₁^137 · length_lh_₁^130] ---> [test_lh_₁^149 · nsoln_lh_₁^145 · length_lh_₁^137] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ test_lh_₁_₀(primId⁰(4))
-//│ def test_lh_₁_₀(_lh_test_arg1¹) = 
-//│ 	nsoln_lh_₁_₀(_lh_test_arg1¹)
-//│ 	where
-//│ 	def nsoln_lh_₁_₀(_lh_nsoln_arg1¹) = 
-//│ 		length_lh_₁_₀(gen_lh_₁_₀(_lh_nsoln_arg1¹, _lh_nsoln_arg1¹))
-//│ 		where
-//│ 		def gen_lh_₁_₀(_lh_gen_arg1¹, _lh_gen_arg2¹) = 
-//│ 			case _lh_gen_arg1¹ of {
-//│ 				0  => [LH_C [LH_N] [LH_N]]
-//│ 				| _  => 
-//│ 					let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> case _lh_listcomp_fun_para² of {
-//│ 						LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => 
-//│ 							let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {
-//│ 								LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if safe_lh_₁_₀(_lh_listcomp_fun_ls_h³, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)
-//│ 								| LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
-//│ 							in _lh_listcomp_fun³(enumFromTo_lh_₁_₀(1, _lh_gen_arg2¹))
-//│ 						| LH_N  => [LH_N]})
-//│ 					in _lh_listcomp_fun²(gen_lh_₁_₀((_lh_gen_arg1¹ - 1), _lh_gen_arg2¹))}
-//│ 			where
-//│ 			def enumFromTo_lh_₁_₀(a¹, b¹) = 
-//│ 				if (a¹ <= b¹) then [LH_C a¹ enumFromTo_lh_₁_₀((a¹ + 1), b¹)] else [LH_N]
-//│ 			def safe_lh_₁_₀(_lh_safe_arg1¹, _lh_safe_arg2¹, _lh_safe_arg3¹) = 
-//│ 				case _lh_safe_arg3¹ of {
-//│ 					LH_N  => [True]
-//│ 					| LH_C _lh_safe_LH_C_0¹ _lh_safe_LH_C_1¹ => ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0¹) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ - _lh_safe_arg2¹))) && safe_lh_₁_₀(_lh_safe_arg1¹, (_lh_safe_arg2¹ + 1), _lh_safe_LH_C_1¹))
-//│ 					| _  => error⁰}
-//│ 		def length_lh_₁_₀(ls¹) = 
-//│ 			case ls¹ of {
-//│ 				LH_C h¹ t¹ => (1 + length_lh_₁_₀(t¹))
-//│ 				| LH_N  => 0}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [LH_N]: 155 --->
+//│ [LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)]: 66 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h⁰) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹) | LH_N  => _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)}: 98
+//│ [LH_N]: 67 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h⁰) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹) | LH_N  => _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)}: 98
+//│ [LH_N]: 72 --->
 //│ 	DeadCodeCons
-//│ 	case _lh_safe_arg3¹ of {LH_N  => [True] | LH_C _lh_safe_LH_C_0¹ _lh_safe_LH_C_1¹ => ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0¹) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ - _lh_safe_arg2¹))) && safe_lh_₁_₀(_lh_safe_arg1¹, (_lh_safe_arg2¹ + 1), _lh_safe_LH_C_1¹)) | _  => error⁰}: 275
-//│ [LH_N]: 156 --->
-//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if safe_lh_₁_₀(_lh_listcomp_fun_ls_h³, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
-//│ in _lh_listcomp_fun³(enumFromTo_lh_₁_₀(1, _lh_gen_arg2¹)) | LH_N  => [LH_N]}: 192
-//│ 	case ls¹ of {LH_C h¹ t¹ => (1 + length_lh_₁_₀(t¹)) | LH_N  => 0}: 300
-//│ [LH_C [LH_N] [LH_N]]: 157 --->
-//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if safe_lh_₁_₀(_lh_listcomp_fun_ls_h³, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
-//│ in _lh_listcomp_fun³(enumFromTo_lh_₁_₀(1, _lh_gen_arg2¹)) | LH_N  => [LH_N]}: 192
-//│ 	case ls¹ of {LH_C h¹ t¹ => (1 + length_lh_₁_₀(t¹)) | LH_N  => 0}: 300
-//│ [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²]: 169 --->
+//│ 	case _lh_safe_arg3⁰ of {LH_N  => [True] | LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && safe_lh_₁(_lh_safe_arg1⁰, (_lh_safe_arg2⁰ + 1), _lh_safe_LH_C_1⁰)) | _  => error⁰}: 47
+//│ [LH_N]: 73 --->
+//│ 	case _lh_listcomp_fun_para⁰ of {LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h⁰) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹) | LH_N  => _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)})
+//│ in _lh_listcomp_fun¹(enumFromTo_lh_₁(1, _lh_gen_arg2⁰)) | LH_N  => [LH_N]}: 109
+//│ 	case ls⁰ of {LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰)) | LH_N  => 0}: 135
+//│ [LH_C [LH_N] [LH_N]]: 74 --->
+//│ 	case _lh_listcomp_fun_para⁰ of {LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h⁰) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹) | LH_N  => _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)})
+//│ in _lh_listcomp_fun¹(enumFromTo_lh_₁(1, _lh_gen_arg2⁰)) | LH_N  => [LH_N]}: 109
+//│ 	case ls⁰ of {LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰)) | LH_N  => 0}: 135
+//│ [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰]: 86 --->
 //│ 	DeadCodeCons
-//│ 	case _lh_safe_arg3¹ of {LH_N  => [True] | LH_C _lh_safe_LH_C_0¹ _lh_safe_LH_C_1¹ => ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0¹) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ - _lh_safe_arg2¹))) && safe_lh_₁_₀(_lh_safe_arg1¹, (_lh_safe_arg2¹ + 1), _lh_safe_LH_C_1¹)) | _  => error⁰}: 275
-//│ [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]: 173 --->
-//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if safe_lh_₁_₀(_lh_listcomp_fun_ls_h³, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
-//│ in _lh_listcomp_fun³(enumFromTo_lh_₁_₀(1, _lh_gen_arg2¹)) | LH_N  => [LH_N]}: 192
-//│ 	case ls¹ of {LH_C h¹ t¹ => (1 + length_lh_₁_₀(t¹)) | LH_N  => 0}: 300
-//│ [LH_N]: 191 --->
-//│ 	case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if safe_lh_₁_₀(_lh_listcomp_fun_ls_h³, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
-//│ in _lh_listcomp_fun³(enumFromTo_lh_₁_₀(1, _lh_gen_arg2¹)) | LH_N  => [LH_N]}: 192
-//│ 	case ls¹ of {LH_C h¹ t¹ => (1 + length_lh_₁_₀(t¹)) | LH_N  => 0}: 300
-//│ [LH_C a¹ enumFromTo_lh_₁_₀((a¹ + 1), b¹)]: 224 --->
-//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if safe_lh_₁_₀(_lh_listcomp_fun_ls_h³, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 181
-//│ [LH_N]: 225 --->
-//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if safe_lh_₁_₀(_lh_listcomp_fun_ls_h³, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 181
+//│ 	case _lh_safe_arg3⁰ of {LH_N  => [True] | LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && safe_lh_₁(_lh_safe_arg1⁰, (_lh_safe_arg2⁰ + 1), _lh_safe_LH_C_1⁰)) | _  => error⁰}: 47
+//│ [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)]: 90 --->
+//│ 	case _lh_listcomp_fun_para⁰ of {LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h⁰) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹) | LH_N  => _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)})
+//│ in _lh_listcomp_fun¹(enumFromTo_lh_₁(1, _lh_gen_arg2⁰)) | LH_N  => [LH_N]}: 109
+//│ 	case ls⁰ of {LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰)) | LH_N  => 0}: 135
+//│ [LH_N]: 108 --->
+//│ 	case _lh_listcomp_fun_para⁰ of {LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h⁰) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹) | LH_N  => _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)})
+//│ in _lh_listcomp_fun¹(enumFromTo_lh_₁(1, _lh_gen_arg2⁰)) | LH_N  => [LH_N]}: 109
+//│ 	case ls⁰ of {LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰)) | LH_N  => 0}: 135
 //│ ------------------
-//│ case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if safe_lh_₁_₀(_lh_listcomp_fun_ls_h³, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 181 --->
-//│ 	[LH_C a¹ enumFromTo_lh_₁_₀((a¹ + 1), b¹)]: 224
-//│ 	[LH_N]: 225
-//│ case _lh_listcomp_fun_para² of {LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if safe_lh_₁_₀(_lh_listcomp_fun_ls_h³, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)})
-//│ in _lh_listcomp_fun³(enumFromTo_lh_₁_₀(1, _lh_gen_arg2¹)) | LH_N  => [LH_N]}: 192 --->
-//│ 	[LH_N]: 156
-//│ 	[LH_C [LH_N] [LH_N]]: 157
-//│ 	[LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]: 173
-//│ 	[LH_N]: 191
-//│ case _lh_safe_arg3¹ of {LH_N  => [True] | LH_C _lh_safe_LH_C_0¹ _lh_safe_LH_C_1¹ => ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0¹) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0¹ - _lh_safe_arg2¹))) && safe_lh_₁_₀(_lh_safe_arg1¹, (_lh_safe_arg2¹ + 1), _lh_safe_LH_C_1¹)) | _  => error⁰}: 275 --->
-//│ 	[LH_N]: 155
-//│ 	[LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²]: 169
-//│ case ls¹ of {LH_C h¹ t¹ => (1 + length_lh_₁_₀(t¹)) | LH_N  => 0}: 300 --->
-//│ 	[LH_N]: 156
-//│ 	[LH_C [LH_N] [LH_N]]: 157
-//│ 	[LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]: 173
-//│ 	[LH_N]: 191
+//│ case _lh_safe_arg3⁰ of {LH_N  => [True] | LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && safe_lh_₁(_lh_safe_arg1⁰, (_lh_safe_arg2⁰ + 1), _lh_safe_LH_C_1⁰)) | _  => error⁰}: 47 --->
+//│ 	[LH_N]: 72
+//│ 	[LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰]: 86
+//│ case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h⁰) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹) | LH_N  => _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)}: 98 --->
+//│ 	[LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)]: 66
+//│ 	[LH_N]: 67
+//│ case _lh_listcomp_fun_para⁰ of {LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h⁰) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹) | LH_N  => _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)})
+//│ in _lh_listcomp_fun¹(enumFromTo_lh_₁(1, _lh_gen_arg2⁰)) | LH_N  => [LH_N]}: 109 --->
+//│ 	[LH_N]: 73
+//│ 	[LH_C [LH_N] [LH_N]]: 74
+//│ 	[LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)]: 90
+//│ 	[LH_N]: 108
+//│ case ls⁰ of {LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰)) | LH_N  => 0}: 135 --->
+//│ 	[LH_N]: 73
+//│ 	[LH_C [LH_N] [LH_N]]: 74
+//│ 	[LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)]: 90
+//│ 	[LH_N]: 108
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [LH_C a¹ enumFromTo_lh_₁_₀((a¹ + 1), b¹)]: 224 --->
-//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if safe_lh_₁_₀(_lh_listcomp_fun_ls_h³, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 181
-//│ [LH_N]: 225 --->
-//│ 	case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if safe_lh_₁_₀(_lh_listcomp_fun_ls_h³, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 181
+//│ [LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)]: 66 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h⁰) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹) | LH_N  => _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)}: 98
+//│ [LH_N]: 67 --->
+//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h⁰) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹) | LH_N  => _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)}: 98
 //│ ------------------
-//│ case _lh_listcomp_fun_para³ of {LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => if safe_lh_₁_₀(_lh_listcomp_fun_ls_h³, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³) | LH_N  => _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)}: 181 --->
-//│ 	[LH_C a¹ enumFromTo_lh_₁_₀((a¹ + 1), b¹)]: 224
-//│ 	[LH_N]: 225
+//│ case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h⁰) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹) | LH_N  => _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)}: 98 --->
+//│ 	[LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)]: 66
+//│ 	[LH_N]: 67
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ test_lh_₁_₀(primId⁰(4))
-//│ def test_lh_₁_₀(_lh_test_arg1²) = 
-//│ 	nsoln_lh_₁_₀(_lh_test_arg1²)
-//│ 	where
-//│ 	def nsoln_lh_₁_₀(_lh_nsoln_arg1²) = 
-//│ 		length_lh_₁_₀(gen_lh_₁_₀(_lh_nsoln_arg1², _lh_nsoln_arg1²))
-//│ 		where
-//│ 		def gen_lh_₁_₀(_lh_gen_arg1², _lh_gen_arg2²) = 
-//│ 			case _lh_gen_arg1² of {
-//│ 				0  => [LH_C [LH_N] [LH_N]]
-//│ 				| _  => 
-//│ 					let _lh_listcomp_fun⁴ = (fun _lh_listcomp_fun_para⁴ -> case _lh_listcomp_fun_para⁴ of {
-//│ 						LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => 
-//│ 							let _lh_listcomp_fun⁵ = (fun _lh_listcomp_fun_para⁵ -> _lh_listcomp_fun_para⁵(_lh_listcomp_fun_ls_h², _lh_listcomp_fun⁵, _lh_listcomp_fun_ls_t², _lh_listcomp_fun⁴))
-//│ 							in _lh_listcomp_fun⁵(enumFromTo_lh_₁_₀(1, _lh_gen_arg2²))
-//│ 						| LH_N  => [LH_N]})
-//│ 					in _lh_listcomp_fun⁴(gen_lh_₁_₀((_lh_gen_arg1² - 1), _lh_gen_arg2²))}
-//│ 			where
-//│ 			def enumFromTo_lh_₁_₀(a², b²) = 
-//│ 				if (a² <= b²) then 
-//│ 					let _lh_listcomp_fun_ls_t⁴ = enumFromTo_lh_₁_₀((a² + 1), b²)
-//│ 					in let _lh_listcomp_fun_ls_h⁴ = a²
-//│ 					in (fun _lh_listcomp_fun_ls_h⁵ -> (fun _lh_listcomp_fun⁶ -> (fun _lh_listcomp_fun_ls_t⁵ -> (fun _lh_listcomp_fun⁷ -> if safe_lh_₁_₀(_lh_listcomp_fun_ls_h⁴, 1, _lh_listcomp_fun_ls_h⁵) then [LH_C [LH_C _lh_listcomp_fun_ls_h⁴ _lh_listcomp_fun_ls_h⁵] _lh_listcomp_fun⁶(_lh_listcomp_fun_ls_t⁴)] else _lh_listcomp_fun⁶(_lh_listcomp_fun_ls_t⁴))))) else (fun _lh_listcomp_fun_ls_h⁶ -> (fun _lh_listcomp_fun⁸ -> (fun _lh_listcomp_fun_ls_t⁶ -> (fun _lh_listcomp_fun⁹ -> _lh_listcomp_fun⁹(_lh_listcomp_fun_ls_t⁶)))))
-//│ 			def safe_lh_₁_₀(_lh_safe_arg1², _lh_safe_arg2², _lh_safe_arg3²) = 
-//│ 				case _lh_safe_arg3² of {
-//│ 					LH_N  => [True]
-//│ 					| LH_C _lh_safe_LH_C_0¹ _lh_safe_LH_C_1¹ => ((((_lh_safe_arg1² /= _lh_safe_LH_C_0¹) && (_lh_safe_arg1² /= (_lh_safe_LH_C_0¹ + _lh_safe_arg2²))) && (_lh_safe_arg1² /= (_lh_safe_LH_C_0¹ - _lh_safe_arg2²))) && safe_lh_₁_₀(_lh_safe_arg1², (_lh_safe_arg2² + 1), _lh_safe_LH_C_1¹))
-//│ 					| _  => error⁰}
-//│ 		def length_lh_₁_₀(ls²) = 
-//│ 			case ls² of {
-//│ 				LH_C h¹ t¹ => (1 + length_lh_₁_₀(t¹))
-//│ 				| LH_N  => 0}
+//│ test_lh_₁(primId⁰(4))
+//│ def enumFromTo_lh_₁(a¹, b¹) = if (a¹ <= b¹) then 
+//│ 	let _lh_listcomp_fun_ls_t² = enumFromTo_lh_₁((a¹ + 1), b¹)
+//│ 	in let _lh_listcomp_fun_ls_h² = a¹
+//│ 	in (fun _lh_listcomp_fun_ls_h³ -> (fun _lh_listcomp_fun⁴ -> (fun _lh_listcomp_fun_ls_t³ -> (fun _lh_listcomp_fun⁵ -> if safe_lh_₁(_lh_listcomp_fun_ls_h², 1, _lh_listcomp_fun_ls_h³) then [LH_C [LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_h³] _lh_listcomp_fun⁴(_lh_listcomp_fun_ls_t²)] else _lh_listcomp_fun⁴(_lh_listcomp_fun_ls_t²))))) else (fun _lh_listcomp_fun_ls_h⁴ -> (fun _lh_listcomp_fun⁶ -> (fun _lh_listcomp_fun_ls_t⁴ -> (fun _lh_listcomp_fun⁷ -> _lh_listcomp_fun⁷(_lh_listcomp_fun_ls_t⁴)))))
+//│ def gen_lh_₁(_lh_gen_arg1¹, _lh_gen_arg2¹) = case _lh_gen_arg1¹ of {
+//│ 	0  => [LH_C [LH_N] [LH_N]]
+//│ 	| _  => 
+//│ 		let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> case _lh_listcomp_fun_para² of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => 
+//│ 				let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> _lh_listcomp_fun_para³(_lh_listcomp_fun_ls_h⁰, _lh_listcomp_fun³, _lh_listcomp_fun_ls_t⁰, _lh_listcomp_fun²))
+//│ 				in _lh_listcomp_fun³(enumFromTo_lh_₁(1, _lh_gen_arg2¹))
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun²(gen_lh_₁((_lh_gen_arg1¹ - 1), _lh_gen_arg2¹))}
+//│ def length_lh_₁(ls¹) = case ls¹ of {
+//│ 	LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰))
+//│ 	| LH_N  => 0}
+//│ def nsoln_lh_₁(_lh_nsoln_arg1¹) = length_lh_₁(gen_lh_₁(_lh_nsoln_arg1¹, _lh_nsoln_arg1¹))
+//│ def safe_lh_₁(_lh_safe_arg1¹, _lh_safe_arg2¹, _lh_safe_arg3¹) = case _lh_safe_arg3¹ of {
+//│ 	LH_N  => [True]
+//│ 	| LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2¹))) && safe_lh_₁(_lh_safe_arg1¹, (_lh_safe_arg2¹ + 1), _lh_safe_LH_C_1⁰))
+//│ 	| _  => error⁰}
+//│ def test_lh_₁(_lh_test_arg1¹) = nsoln_lh_₁(_lh_test_arg1¹)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -568,49 +424,36 @@ testSimpleRecursiveTypeExample $ primId 3
 //│ 		---------- unoptimized haskell gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [testSimpleRecursiveTypeExample_lh_₁^17] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ testSimpleRecursiveTypeExample_lh_₁_₀(primId⁰(3))
-//│ def testSimpleRecursiveTypeExample_lh_₁_₀(_lh_testSimpleRecursiveTypeExample_arg1¹) = 
-//│ 	let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {
-//│ 		LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)]
-//│ 		| LH_N  => [LH_N]})
-//│ 	in _lh_listcomp_fun¹([LH_C _lh_testSimpleRecursiveTypeExample_arg1¹ [LH_N]])
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [LH_N]: 33 --->
-//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 29
-//│ [LH_C _lh_testSimpleRecursiveTypeExample_arg1¹ [LH_N]]: 34 --->
-//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 29
+//│ [LH_N]: 12 --->
+//│ 	case _lh_listcomp_fun_para⁰ of {LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => [LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)] | LH_N  => [LH_N]}: 8
+//│ [LH_C _lh_testSimpleRecursiveTypeExample_arg1⁰ [LH_N]]: 13 --->
+//│ 	case _lh_listcomp_fun_para⁰ of {LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => [LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)] | LH_N  => [LH_N]}: 8
 //│ ------------------
-//│ case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 29 --->
-//│ 	[LH_N]: 33
-//│ 	[LH_C _lh_testSimpleRecursiveTypeExample_arg1¹ [LH_N]]: 34
+//│ case _lh_listcomp_fun_para⁰ of {LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => [LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)] | LH_N  => [LH_N]}: 8 --->
+//│ 	[LH_N]: 12
+//│ 	[LH_C _lh_testSimpleRecursiveTypeExample_arg1⁰ [LH_N]]: 13
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [LH_N]: 33 --->
-//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 29
-//│ [LH_C _lh_testSimpleRecursiveTypeExample_arg1¹ [LH_N]]: 34 --->
-//│ 	case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 29
+//│ [LH_N]: 12 --->
+//│ 	case _lh_listcomp_fun_para⁰ of {LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => [LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)] | LH_N  => [LH_N]}: 8
+//│ [LH_C _lh_testSimpleRecursiveTypeExample_arg1⁰ [LH_N]]: 13 --->
+//│ 	case _lh_listcomp_fun_para⁰ of {LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => [LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)] | LH_N  => [LH_N]}: 8
 //│ ------------------
-//│ case _lh_listcomp_fun_para¹ of {LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] | LH_N  => [LH_N]}: 29 --->
-//│ 	[LH_N]: 33
-//│ 	[LH_C _lh_testSimpleRecursiveTypeExample_arg1¹ [LH_N]]: 34
+//│ case _lh_listcomp_fun_para⁰ of {LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => [LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)] | LH_N  => [LH_N]}: 8 --->
+//│ 	[LH_N]: 12
+//│ 	[LH_C _lh_testSimpleRecursiveTypeExample_arg1⁰ [LH_N]]: 13
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testSimpleRecursiveTypeExample_lh_₁_₀(primId⁰(3))
-//│ def testSimpleRecursiveTypeExample_lh_₁_₀(_lh_testSimpleRecursiveTypeExample_arg1²) = 
-//│ 	let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> _lh_listcomp_fun_para²(_lh_listcomp_fun²))
-//│ 	in _lh_listcomp_fun²(
-//│ 		let _lh_listcomp_fun_ls_t² = (fun _lh_listcomp_fun⁴ -> [LH_N])
-//│ 		in let _lh_listcomp_fun_ls_h² = _lh_testSimpleRecursiveTypeExample_arg1²
-//│ 		in (fun _lh_listcomp_fun³ -> [LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun³(_lh_listcomp_fun_ls_t²)]))
+//│ testSimpleRecursiveTypeExample_lh_₁(primId⁰(3))
+//│ def testSimpleRecursiveTypeExample_lh_₁(_lh_testSimpleRecursiveTypeExample_arg1¹) = 
+//│ 	let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> _lh_listcomp_fun_para¹(_lh_listcomp_fun¹))
+//│ 	in _lh_listcomp_fun¹(
+//│ 		let _lh_listcomp_fun_ls_t¹ = (fun _lh_listcomp_fun³ -> [LH_N])
+//│ 		in let _lh_listcomp_fun_ls_h¹ = _lh_testSimpleRecursiveTypeExample_arg1¹
+//│ 		in (fun _lh_listcomp_fun² -> [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹)]))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated Haskell >>>>>>>>>>
@@ -621,11 +464,11 @@ testSimpleRecursiveTypeExample $ primId 3
 //│ (testSimpleRecursiveTypeExample_lh_₁ 3)
 //│ 
 //│ --- lumberhack ---
-//│ testSimpleRecursiveTypeExample_lh_₁_₀ _lh_testSimpleRecursiveTypeExample_arg1⁰ = (let _lh_listcomp_fun⁰ = (\_lh_listcomp_fun_para⁰ -> (_lh_listcomp_fun_para⁰ _lh_listcomp_fun⁰)) in (_lh_listcomp_fun⁰ (let _lh_listcomp_fun_ls_t⁰ = (\_lh_listcomp_fun¹ -> []) in (let _lh_listcomp_fun_ls_h⁰ = _lh_testSimpleRecursiveTypeExample_arg1⁰ in (\_lh_listcomp_fun² -> (_lh_listcomp_fun_ls_h⁰:(_lh_listcomp_fun² _lh_listcomp_fun_ls_t⁰)))))))
+//│ testSimpleRecursiveTypeExample_lh_₁ _lh_testSimpleRecursiveTypeExample_arg1⁰ = (let _lh_listcomp_fun⁰ = (\_lh_listcomp_fun_para⁰ -> (_lh_listcomp_fun_para⁰ _lh_listcomp_fun⁰)) in (_lh_listcomp_fun⁰ (let _lh_listcomp_fun_ls_t⁰ = (\_lh_listcomp_fun¹ -> []) in (let _lh_listcomp_fun_ls_h⁰ = _lh_testSimpleRecursiveTypeExample_arg1⁰ in (\_lh_listcomp_fun² -> (_lh_listcomp_fun_ls_h⁰:(_lh_listcomp_fun² _lh_listcomp_fun_ls_t⁰)))))))
 //│ 
 //│ main :: IO ()
 //│ main = defaultMain [ bgroup "SimpleRecursiveTypeExample_lh" [
-//│     bench "lumberhack_SimpleRecursiveTypeExample_lh" $ nf testSimpleRecursiveTypeExample_lh_₁_₀ 3
+//│     bench "lumberhack_SimpleRecursiveTypeExample_lh" $ nf testSimpleRecursiveTypeExample_lh_₁ 3
 //│   , bench "original_SimpleRecursiveTypeExample_lh" $ nf testSimpleRecursiveTypeExample_lh_₁ 3 ] ]
 //│ <<<<<<<<<< Generated Haskell <<<<<<<<<<
 

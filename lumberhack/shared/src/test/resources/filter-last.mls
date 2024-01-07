@@ -28,47 +28,17 @@ lastFilter
 //│ def lastFilter(ls³, f¹) = lastDrive^42(filter^43(ls³, f¹))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [lastFilter^51] (hopeless to continue)
-//│ 	[lastFilter^51 · filter^43] (using original def)
-//│ 		[lastFilter^51 · filter^43 · filter^12] ---> [lastFilter^51 · filter^43] (using original def)
-//│ 		[lastFilter^51 · filter^43 · filter^6] ---> [lastFilter^51 · filter^43] (using original def)
-//│ 	[lastFilter^51 · lastDrive^42] (using original def)
-//│ 		[lastFilter^51 · lastDrive^42 · last^23] (using original def)
-//│ 			[lastFilter^51 · lastDrive^42 · last^23 · last^34] ---> [lastFilter^51 · lastDrive^42 · last^23] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ lastFilter_₀
-//│ def lastFilter_₀(ls⁴, f²) = 
-//│ 	lastDrive_₀(filter_₀(ls⁴, f²))
-//│ 	where
-//│ 	def filter_₀(ls⁷, f³) = 
-//│ 		case ls⁷ of {
-//│ 			C h⁵ t⁵ => if f³(h⁵) then [C h⁵ filter_₀(t⁵, f³)] else filter_₀(t⁵, f³)
-//│ 			| N  => [N]}
-//│ 	def lastDrive_₀(ls⁶) = 
-//│ 		case ls⁶ of {
-//│ 			C h⁴ t⁴ => [Some last_₀(t⁴, h⁴)]
-//│ 			| N  => [None]}
-//│ 		where
-//│ 		def last_₀(a¹, ls⁵) = 
-//│ 			case ls⁵ of {
-//│ 				N  => a¹
-//│ 				| C h³ t³ => last_₀(h³, t³)}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h⁵ filter_₀(t⁵, f³)]: 91 --->
+//│ [C h⁰ filter(t⁰, f⁰)]: 11 --->
 //│ 	NoCons
-//│ 	case ls⁶ of {C h⁴ t⁴ => [Some last_₀(t⁴, h⁴)] | N  => [None]}: 79
-//│ [N]: 98 --->
+//│ 	case ls¹ of {C h¹ t¹ => [Some last(t¹, h¹)] | N  => [None]}: 30
+//│ [N]: 18 --->
 //│ 	NoCons
-//│ 	case ls⁶ of {C h⁴ t⁴ => [Some last_₀(t⁴, h⁴)] | N  => [None]}: 79
+//│ 	case ls¹ of {C h¹ t¹ => [Some last(t¹, h¹)] | N  => [None]}: 30
 //│ ------------------
-//│ case ls⁶ of {C h⁴ t⁴ => [Some last_₀(t⁴, h⁴)] | N  => [None]}: 79 --->
-//│ 	[C h⁵ filter_₀(t⁵, f³)]: 91
-//│ 	[N]: 98
+//│ case ls¹ of {C h¹ t¹ => [Some last(t¹, h¹)] | N  => [None]}: 30 --->
+//│ 	[C h⁰ filter(t⁰, f⁰)]: 11
+//│ 	[N]: 18
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -78,21 +48,15 @@ lastFilter
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ lastFilter_₀
-//│ def lastFilter_₀(ls⁸, f⁴) = 
-//│ 	lastDrive_₀(filter_₀(ls⁸, f⁴))
-//│ 	where
-//│ 	def filter_₀(ls¹¹, f⁵) = 
-//│ 		case ls¹¹ of {
-//│ 			C h⁵ t⁵ => if f⁵(h⁵) then [C h⁵ filter_₀(t⁵, f⁵)] else filter_₀(t⁵, f⁵)
-//│ 			| N  => [N]}
-//│ 	def lastDrive_₀(ls¹⁰) = 
-//│ 		case ls¹⁰ of {
-//│ 			C h⁴ t⁴ => [Some last_₀(t⁴, h⁴)]
-//│ 			| N  => [None]}
-//│ 		where
-//│ 		def last_₀(a², ls⁹) = 
-//│ 			case ls⁹ of {
-//│ 				N  => a²
-//│ 				| C h³ t³ => last_₀(h³, t³)}
+//│ lastFilter
+//│ def filter(ls⁴, f²) = case ls⁴ of {
+//│ 	C h⁰ t⁰ => if f²(h⁰) then [C h⁰ filter(t⁰, f²)] else filter(t⁰, f²)
+//│ 	| N  => [N]}
+//│ def last(a¹, ls⁶) = case ls⁶ of {
+//│ 	N  => a¹
+//│ 	| C h² t² => last(h², t²)}
+//│ def lastDrive(ls⁵) = case ls⁵ of {
+//│ 	C h¹ t¹ => [Some last(t¹, h¹)]
+//│ 	| N  => [None]}
+//│ def lastFilter(ls⁷, f³) = lastDrive(filter(ls⁷, f³))
 //│ <<<<<<< after fusion <<<<<<<

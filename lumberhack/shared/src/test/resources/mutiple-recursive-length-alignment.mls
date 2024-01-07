@@ -26,66 +26,42 @@ c(p1)(p2)
 //│ def p2 = [D [D [D p2^4]]]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [c^25] (hopeless to continue)
-//│ 	[c^25 · c^13] ---> [c^25] (using original def)
-//│ [p1^26] (hopeless to continue)
-//│ 	[p1^26 · p1^1] ---> [p1^26] (using original def)
-//│ [p2^28] (hopeless to continue)
-//│ 	[p2^28 · p2^4] ---> [p2^28] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ c_₀(p1_₀, p2_₀)
-//│ def c_₀(x¹) = 
-//│ 	case x¹ of {
-//│ 		C aa¹ => case aa¹ of {
-//│ 			C a2¹ => case a2¹ of {
-//│ 				C a3¹ => (fun y¹ -> case y¹ of {
-//│ 					D bb¹ => case bb¹ of {
-//│ 						D cc¹ => c_₀(a3¹, cc¹)}})}}}
-//│ def p1_₀ = 
-//│ 	[C [C p1_₀]]
-//│ def p2_₀ = 
-//│ 	[D [D [D p2_₀]]]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C p1_₀]: 31 --->
-//│ 	case a2¹ of {C a3¹ => (fun y¹ -> case y¹ of {D bb¹ => case bb¹ of {D cc¹ => c_₀(a3¹, cc¹)}})}: 50
-//│ 	case aa¹ of {C a2¹ => case a2¹ of {C a3¹ => (fun y¹ -> case y¹ of {D bb¹ => case bb¹ of {D cc¹ => c_₀(a3¹, cc¹)}})}}: 51
-//│ 	case x¹ of {C aa¹ => case aa¹ of {C a2¹ => case a2¹ of {C a3¹ => (fun y¹ -> case y¹ of {D bb¹ => case bb¹ of {D cc¹ => c_₀(a3¹, cc¹)}})}}}: 52
-//│ [C [C p1_₀]]: 32 --->
-//│ 	case a2¹ of {C a3¹ => (fun y¹ -> case y¹ of {D bb¹ => case bb¹ of {D cc¹ => c_₀(a3¹, cc¹)}})}: 50
-//│ 	case aa¹ of {C a2¹ => case a2¹ of {C a3¹ => (fun y¹ -> case y¹ of {D bb¹ => case bb¹ of {D cc¹ => c_₀(a3¹, cc¹)}})}}: 51
-//│ 	case x¹ of {C aa¹ => case aa¹ of {C a2¹ => case a2¹ of {C a3¹ => (fun y¹ -> case y¹ of {D bb¹ => case bb¹ of {D cc¹ => c_₀(a3¹, cc¹)}})}}}: 52
-//│ [D p2_₀]: 34 --->
-//│ 	case bb¹ of {D cc¹ => c_₀(a3¹, cc¹)}: 47
-//│ 	case y¹ of {D bb¹ => case bb¹ of {D cc¹ => c_₀(a3¹, cc¹)}}: 48
-//│ [D [D p2_₀]]: 35 --->
-//│ 	case bb¹ of {D cc¹ => c_₀(a3¹, cc¹)}: 47
-//│ 	case y¹ of {D bb¹ => case bb¹ of {D cc¹ => c_₀(a3¹, cc¹)}}: 48
-//│ [D [D [D p2_₀]]]: 36 --->
-//│ 	case bb¹ of {D cc¹ => c_₀(a3¹, cc¹)}: 47
-//│ 	case y¹ of {D bb¹ => case bb¹ of {D cc¹ => c_₀(a3¹, cc¹)}}: 48
+//│ [C p1]: 2 --->
+//│ 	case a2⁰ of {C a3⁰ => (fun y⁰ -> case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c(a3⁰, cc⁰)}})}: 21
+//│ 	case aa⁰ of {C a2⁰ => case a2⁰ of {C a3⁰ => (fun y⁰ -> case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c(a3⁰, cc⁰)}})}}: 22
+//│ 	case x⁰ of {C aa⁰ => case aa⁰ of {C a2⁰ => case a2⁰ of {C a3⁰ => (fun y⁰ -> case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c(a3⁰, cc⁰)}})}}}: 23
+//│ [C [C p1]]: 3 --->
+//│ 	case a2⁰ of {C a3⁰ => (fun y⁰ -> case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c(a3⁰, cc⁰)}})}: 21
+//│ 	case aa⁰ of {C a2⁰ => case a2⁰ of {C a3⁰ => (fun y⁰ -> case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c(a3⁰, cc⁰)}})}}: 22
+//│ 	case x⁰ of {C aa⁰ => case aa⁰ of {C a2⁰ => case a2⁰ of {C a3⁰ => (fun y⁰ -> case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c(a3⁰, cc⁰)}})}}}: 23
+//│ [D p2]: 5 --->
+//│ 	case bb⁰ of {D cc⁰ => c(a3⁰, cc⁰)}: 18
+//│ 	case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c(a3⁰, cc⁰)}}: 19
+//│ [D [D p2]]: 6 --->
+//│ 	case bb⁰ of {D cc⁰ => c(a3⁰, cc⁰)}: 18
+//│ 	case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c(a3⁰, cc⁰)}}: 19
+//│ [D [D [D p2]]]: 7 --->
+//│ 	case bb⁰ of {D cc⁰ => c(a3⁰, cc⁰)}: 18
+//│ 	case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c(a3⁰, cc⁰)}}: 19
 //│ ------------------
-//│ case bb¹ of {D cc¹ => c_₀(a3¹, cc¹)}: 47 --->
-//│ 	[D p2_₀]: 34
-//│ 	[D [D p2_₀]]: 35
-//│ 	[D [D [D p2_₀]]]: 36
-//│ case y¹ of {D bb¹ => case bb¹ of {D cc¹ => c_₀(a3¹, cc¹)}}: 48 --->
-//│ 	[D p2_₀]: 34
-//│ 	[D [D p2_₀]]: 35
-//│ 	[D [D [D p2_₀]]]: 36
-//│ case a2¹ of {C a3¹ => (fun y¹ -> case y¹ of {D bb¹ => case bb¹ of {D cc¹ => c_₀(a3¹, cc¹)}})}: 50 --->
-//│ 	[C p1_₀]: 31
-//│ 	[C [C p1_₀]]: 32
-//│ case aa¹ of {C a2¹ => case a2¹ of {C a3¹ => (fun y¹ -> case y¹ of {D bb¹ => case bb¹ of {D cc¹ => c_₀(a3¹, cc¹)}})}}: 51 --->
-//│ 	[C p1_₀]: 31
-//│ 	[C [C p1_₀]]: 32
-//│ case x¹ of {C aa¹ => case aa¹ of {C a2¹ => case a2¹ of {C a3¹ => (fun y¹ -> case y¹ of {D bb¹ => case bb¹ of {D cc¹ => c_₀(a3¹, cc¹)}})}}}: 52 --->
-//│ 	[C p1_₀]: 31
-//│ 	[C [C p1_₀]]: 32
+//│ case bb⁰ of {D cc⁰ => c(a3⁰, cc⁰)}: 18 --->
+//│ 	[D p2]: 5
+//│ 	[D [D p2]]: 6
+//│ 	[D [D [D p2]]]: 7
+//│ case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c(a3⁰, cc⁰)}}: 19 --->
+//│ 	[D p2]: 5
+//│ 	[D [D p2]]: 6
+//│ 	[D [D [D p2]]]: 7
+//│ case a2⁰ of {C a3⁰ => (fun y⁰ -> case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c(a3⁰, cc⁰)}})}: 21 --->
+//│ 	[C p1]: 2
+//│ 	[C [C p1]]: 3
+//│ case aa⁰ of {C a2⁰ => case a2⁰ of {C a3⁰ => (fun y⁰ -> case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c(a3⁰, cc⁰)}})}}: 22 --->
+//│ 	[C p1]: 2
+//│ 	[C [C p1]]: 3
+//│ case x⁰ of {C aa⁰ => case aa⁰ of {C a2⁰ => case a2⁰ of {C a3⁰ => (fun y⁰ -> case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c(a3⁰, cc⁰)}})}}}: 23 --->
+//│ 	[C p1]: 2
+//│ 	[C [C p1]]: 3
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -95,18 +71,15 @@ c(p1)(p2)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ c_₀(p1_₀, p2_₀)
-//│ def c_₀(x²) = 
-//│ 	case x² of {
-//│ 		C aa¹ => case aa¹ of {
-//│ 			C a2¹ => case a2¹ of {
-//│ 				C a3¹ => (fun y² -> case y² of {
-//│ 					D bb¹ => case bb¹ of {
-//│ 						D cc¹ => c_₀(a3¹, cc¹)}})}}}
-//│ def p1_₀ = 
-//│ 	[C [C p1_₀]]
-//│ def p2_₀ = 
-//│ 	[D [D [D p2_₀]]]
+//│ c(p1, p2)
+//│ def c(x¹) = case x¹ of {
+//│ 	C aa⁰ => case aa⁰ of {
+//│ 		C a2⁰ => case a2⁰ of {
+//│ 			C a3⁰ => (fun y¹ -> case y¹ of {
+//│ 				D bb⁰ => case bb⁰ of {
+//│ 					D cc⁰ => c(a3⁰, cc⁰)}})}}}
+//│ def p1 = [C [C p1]]
+//│ def p2 = [D [D [D p2]]]
 //│ <<<<<<< after fusion <<<<<<<
 
 // WRONG: manually do the fusion on top of the previous fusion result, since `c0` is used twice, it is wrong
@@ -139,83 +112,42 @@ c0(p10)(p20)
 //│ def p21 = [D [D [D p20^30]]]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [c0^34] (hopeless to continue)
-//│ [p10^35] (hopeless to continue)
-//│ 	[p10^35 · p11^5] (using original def)
-//│ 		[p10^35 · p11^5 · c1^8] (using original def)
-//│ 		[p10^35 · p11^5 · p12^9] (using original def)
-//│ 			[p10^35 · p11^5 · p12^9 · c0^18] (using original def)
-//│ 			[p10^35 · p11^5 · p12^9 · p10^19] ---> [p10^35] (using original def)
-//│ [p20^37] (hopeless to continue)
-//│ 	[p20^37 · p21^26] (using original def)
-//│ 		[p20^37 · p21^26 · p20^30] ---> [p20^37] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ c0_₀(p10_₀, p20_₀)
-//│ def c0_₀(x³) = 
-//│ 	x³
-//│ def p10_₀ = 
-//│ 	p11_₀
-//│ 	where
-//│ 	def p11_₀(y³) = 
-//│ 		case y³ of {
-//│ 			D bb³ => case bb³ of {
-//│ 				D cc³ => c1_₀(p12_₀, cc³)}}
-//│ 		where
-//│ 		def c1_₀(x⁴) = 
-//│ 			x⁴
-//│ 		def p12_₀(y²) = 
-//│ 			case y² of {
-//│ 				D bb² => case bb² of {
-//│ 					D cc² => c0_₁(p10_₀, cc²)}}
-//│ 			where
-//│ 			def c0_₁(x²) = 
-//│ 				x²
-//│ def p20_₀ = 
-//│ 	[D [D [D p21_₀]]]
-//│ 	where
-//│ 	def p21_₀ = 
-//│ 		[D [D [D p20_₀]]]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [D p20_₀]: 64 --->
-//│ 	case bb² of {D cc² => c0_₁(p10_₀, cc²)}: 46
-//│ 	case bb³ of {D cc³ => c1_₀(p12_₀, cc³)}: 60
-//│ [D [D p20_₀]]: 65 --->
-//│ 	case y² of {D bb² => case bb² of {D cc² => c0_₁(p10_₀, cc²)}}: 47
-//│ 	case y³ of {D bb³ => case bb³ of {D cc³ => c1_₀(p12_₀, cc³)}}: 61
-//│ [D [D [D p20_₀]]]: 66 --->
-//│ 	case bb² of {D cc² => c0_₁(p10_₀, cc²)}: 46
-//│ 	case bb³ of {D cc³ => c1_₀(p12_₀, cc³)}: 60
-//│ [D p21_₀]: 71 --->
-//│ 	case y² of {D bb² => case bb² of {D cc² => c0_₁(p10_₀, cc²)}}: 47
-//│ 	case y³ of {D bb³ => case bb³ of {D cc³ => c1_₀(p12_₀, cc³)}}: 61
-//│ [D [D p21_₀]]: 72 --->
-//│ 	case bb² of {D cc² => c0_₁(p10_₀, cc²)}: 46
-//│ 	case bb³ of {D cc³ => c1_₀(p12_₀, cc³)}: 60
-//│ [D [D [D p21_₀]]]: 73 --->
-//│ 	case y² of {D bb² => case bb² of {D cc² => c0_₁(p10_₀, cc²)}}: 47
-//│ 	case y³ of {D bb³ => case bb³ of {D cc³ => c1_₀(p12_₀, cc³)}}: 61
+//│ [D p21]: 27 --->
+//│ 	case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c1(p12, cc⁰)}}: 14
+//│ 	case y¹ of {D bb¹ => case bb¹ of {D cc¹ => c0(p10, cc¹)}}: 24
+//│ [D [D p21]]: 28 --->
+//│ 	case bb⁰ of {D cc⁰ => c1(p12, cc⁰)}: 13
+//│ 	case bb¹ of {D cc¹ => c0(p10, cc¹)}: 23
+//│ [D [D [D p21]]]: 29 --->
+//│ 	case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c1(p12, cc⁰)}}: 14
+//│ 	case y¹ of {D bb¹ => case bb¹ of {D cc¹ => c0(p10, cc¹)}}: 24
+//│ [D p20]: 31 --->
+//│ 	case bb⁰ of {D cc⁰ => c1(p12, cc⁰)}: 13
+//│ 	case bb¹ of {D cc¹ => c0(p10, cc¹)}: 23
+//│ [D [D p20]]: 32 --->
+//│ 	case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c1(p12, cc⁰)}}: 14
+//│ 	case y¹ of {D bb¹ => case bb¹ of {D cc¹ => c0(p10, cc¹)}}: 24
+//│ [D [D [D p20]]]: 33 --->
+//│ 	case bb⁰ of {D cc⁰ => c1(p12, cc⁰)}: 13
+//│ 	case bb¹ of {D cc¹ => c0(p10, cc¹)}: 23
 //│ ------------------
-//│ case bb² of {D cc² => c0_₁(p10_₀, cc²)}: 46 --->
-//│ 	[D p20_₀]: 64
-//│ 	[D [D [D p20_₀]]]: 66
-//│ 	[D [D p21_₀]]: 72
-//│ case y² of {D bb² => case bb² of {D cc² => c0_₁(p10_₀, cc²)}}: 47 --->
-//│ 	[D [D p20_₀]]: 65
-//│ 	[D p21_₀]: 71
-//│ 	[D [D [D p21_₀]]]: 73
-//│ case bb³ of {D cc³ => c1_₀(p12_₀, cc³)}: 60 --->
-//│ 	[D p20_₀]: 64
-//│ 	[D [D [D p20_₀]]]: 66
-//│ 	[D [D p21_₀]]: 72
-//│ case y³ of {D bb³ => case bb³ of {D cc³ => c1_₀(p12_₀, cc³)}}: 61 --->
-//│ 	[D [D p20_₀]]: 65
-//│ 	[D p21_₀]: 71
-//│ 	[D [D [D p21_₀]]]: 73
+//│ case bb⁰ of {D cc⁰ => c1(p12, cc⁰)}: 13 --->
+//│ 	[D [D p21]]: 28
+//│ 	[D p20]: 31
+//│ 	[D [D [D p20]]]: 33
+//│ case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c1(p12, cc⁰)}}: 14 --->
+//│ 	[D p21]: 27
+//│ 	[D [D [D p21]]]: 29
+//│ 	[D [D p20]]: 32
+//│ case bb¹ of {D cc¹ => c0(p10, cc¹)}: 23 --->
+//│ 	[D [D p21]]: 28
+//│ 	[D p20]: 31
+//│ 	[D [D [D p20]]]: 33
+//│ case y¹ of {D bb¹ => case bb¹ of {D cc¹ => c0(p10, cc¹)}}: 24 --->
+//│ 	[D p21]: 27
+//│ 	[D [D [D p21]]]: 29
+//│ 	[D [D p20]]: 32
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -225,31 +157,18 @@ c0(p10)(p20)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ c0_₀(p10_₀, p20_₀)
-//│ def c0_₀(x⁷) = 
-//│ 	x⁷
-//│ def p10_₀ = 
-//│ 	p11_₀
-//│ 	where
-//│ 	def p11_₀(y⁴) = 
-//│ 		case y⁴ of {
-//│ 			D bb³ => case bb³ of {
-//│ 				D cc³ => c1_₀(p12_₀, cc³)}}
-//│ 		where
-//│ 		def c1_₀(x⁵) = 
-//│ 			x⁵
-//│ 		def p12_₀(y⁵) = 
-//│ 			case y⁵ of {
-//│ 				D bb² => case bb² of {
-//│ 					D cc² => c0_₁(p10_₀, cc²)}}
-//│ 			where
-//│ 			def c0_₁(x⁶) = 
-//│ 				x⁶
-//│ def p20_₀ = 
-//│ 	[D [D [D p21_₀]]]
-//│ 	where
-//│ 	def p21_₀ = 
-//│ 		[D [D [D p20_₀]]]
+//│ c0(p10, p20)
+//│ def c0(x²) = x²
+//│ def c1(x³) = x³
+//│ def p10 = p11
+//│ def p11(y²) = case y² of {
+//│ 	D bb⁰ => case bb⁰ of {
+//│ 		D cc⁰ => c1(p12, cc⁰)}}
+//│ def p12(y³) = case y³ of {
+//│ 	D bb¹ => case bb¹ of {
+//│ 		D cc¹ => c0(p10, cc¹)}}
+//│ def p20 = [D [D [D p21]]]
+//│ def p21 = [D [D [D p20]]]
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: after duplicating the used-more-than-once `c0`, the result is correct
@@ -284,83 +203,42 @@ c0(p10)(p20)
 //│ def p21 = [D [D [D p20^32]]]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [c0^36] (hopeless to continue)
-//│ [p10^37] (hopeless to continue)
-//│ 	[p10^37 · p11^7] (using original def)
-//│ 		[p10^37 · p11^7 · c1^10] (using original def)
-//│ 		[p10^37 · p11^7 · p12^11] (using original def)
-//│ 			[p10^37 · p11^7 · p12^11 · id^20] (using original def)
-//│ 			[p10^37 · p11^7 · p12^11 · p10^21] ---> [p10^37] (using original def)
-//│ [p20^39] (hopeless to continue)
-//│ 	[p20^39 · p21^28] (using original def)
-//│ 		[p20^39 · p21^28 · p20^32] ---> [p20^39] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ c0_₀(p10_₀, p20_₀)
-//│ def c0_₀(x³) = 
-//│ 	x³
-//│ def p10_₀ = 
-//│ 	p11_₀
-//│ 	where
-//│ 	def p11_₀(y³) = 
-//│ 		case y³ of {
-//│ 			D bb³ => case bb³ of {
-//│ 				D cc³ => c1_₀(p12_₀, cc³)}}
-//│ 		where
-//│ 		def c1_₀(x⁵) = 
-//│ 			x⁵
-//│ 		def p12_₀(y²) = 
-//│ 			case y² of {
-//│ 				D bb² => case bb² of {
-//│ 					D cc² => id_₀(p10_₀, cc²)}}
-//│ 			where
-//│ 			def id_₀(x⁴) = 
-//│ 				x⁴
-//│ def p20_₀ = 
-//│ 	[D [D [D p21_₀]]]
-//│ 	where
-//│ 	def p21_₀ = 
-//│ 		[D [D [D p20_₀]]]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [D p21_₀]: 52 --->
-//│ 	case y² of {D bb² => case bb² of {D cc² => id_₀(p10_₀, cc²)}}: 49
-//│ 	case y³ of {D bb³ => case bb³ of {D cc³ => c1_₀(p12_₀, cc³)}}: 63
-//│ [D [D p21_₀]]: 53 --->
-//│ 	case bb² of {D cc² => id_₀(p10_₀, cc²)}: 48
-//│ 	case bb³ of {D cc³ => c1_₀(p12_₀, cc³)}: 62
-//│ [D [D [D p21_₀]]]: 54 --->
-//│ 	case y² of {D bb² => case bb² of {D cc² => id_₀(p10_₀, cc²)}}: 49
-//│ 	case y³ of {D bb³ => case bb³ of {D cc³ => c1_₀(p12_₀, cc³)}}: 63
-//│ [D p20_₀]: 69 --->
-//│ 	case bb² of {D cc² => id_₀(p10_₀, cc²)}: 48
-//│ 	case bb³ of {D cc³ => c1_₀(p12_₀, cc³)}: 62
-//│ [D [D p20_₀]]: 70 --->
-//│ 	case y² of {D bb² => case bb² of {D cc² => id_₀(p10_₀, cc²)}}: 49
-//│ 	case y³ of {D bb³ => case bb³ of {D cc³ => c1_₀(p12_₀, cc³)}}: 63
-//│ [D [D [D p20_₀]]]: 71 --->
-//│ 	case bb² of {D cc² => id_₀(p10_₀, cc²)}: 48
-//│ 	case bb³ of {D cc³ => c1_₀(p12_₀, cc³)}: 62
+//│ [D p21]: 29 --->
+//│ 	case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c1(p12, cc⁰)}}: 16
+//│ 	case y¹ of {D bb¹ => case bb¹ of {D cc¹ => id(p10, cc¹)}}: 26
+//│ [D [D p21]]: 30 --->
+//│ 	case bb⁰ of {D cc⁰ => c1(p12, cc⁰)}: 15
+//│ 	case bb¹ of {D cc¹ => id(p10, cc¹)}: 25
+//│ [D [D [D p21]]]: 31 --->
+//│ 	case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c1(p12, cc⁰)}}: 16
+//│ 	case y¹ of {D bb¹ => case bb¹ of {D cc¹ => id(p10, cc¹)}}: 26
+//│ [D p20]: 33 --->
+//│ 	case bb⁰ of {D cc⁰ => c1(p12, cc⁰)}: 15
+//│ 	case bb¹ of {D cc¹ => id(p10, cc¹)}: 25
+//│ [D [D p20]]: 34 --->
+//│ 	case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c1(p12, cc⁰)}}: 16
+//│ 	case y¹ of {D bb¹ => case bb¹ of {D cc¹ => id(p10, cc¹)}}: 26
+//│ [D [D [D p20]]]: 35 --->
+//│ 	case bb⁰ of {D cc⁰ => c1(p12, cc⁰)}: 15
+//│ 	case bb¹ of {D cc¹ => id(p10, cc¹)}: 25
 //│ ------------------
-//│ case bb² of {D cc² => id_₀(p10_₀, cc²)}: 48 --->
-//│ 	[D [D p21_₀]]: 53
-//│ 	[D p20_₀]: 69
-//│ 	[D [D [D p20_₀]]]: 71
-//│ case y² of {D bb² => case bb² of {D cc² => id_₀(p10_₀, cc²)}}: 49 --->
-//│ 	[D p21_₀]: 52
-//│ 	[D [D [D p21_₀]]]: 54
-//│ 	[D [D p20_₀]]: 70
-//│ case bb³ of {D cc³ => c1_₀(p12_₀, cc³)}: 62 --->
-//│ 	[D [D p21_₀]]: 53
-//│ 	[D p20_₀]: 69
-//│ 	[D [D [D p20_₀]]]: 71
-//│ case y³ of {D bb³ => case bb³ of {D cc³ => c1_₀(p12_₀, cc³)}}: 63 --->
-//│ 	[D p21_₀]: 52
-//│ 	[D [D [D p21_₀]]]: 54
-//│ 	[D [D p20_₀]]: 70
+//│ case bb⁰ of {D cc⁰ => c1(p12, cc⁰)}: 15 --->
+//│ 	[D [D p21]]: 30
+//│ 	[D p20]: 33
+//│ 	[D [D [D p20]]]: 35
+//│ case y⁰ of {D bb⁰ => case bb⁰ of {D cc⁰ => c1(p12, cc⁰)}}: 16 --->
+//│ 	[D p21]: 29
+//│ 	[D [D [D p21]]]: 31
+//│ 	[D [D p20]]: 34
+//│ case bb¹ of {D cc¹ => id(p10, cc¹)}: 25 --->
+//│ 	[D [D p21]]: 30
+//│ 	[D p20]: 33
+//│ 	[D [D [D p20]]]: 35
+//│ case y¹ of {D bb¹ => case bb¹ of {D cc¹ => id(p10, cc¹)}}: 26 --->
+//│ 	[D p21]: 29
+//│ 	[D [D [D p21]]]: 31
+//│ 	[D [D p20]]: 34
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -370,29 +248,17 @@ c0(p10)(p20)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ c0_₀(p10_₀, p20_₀)
-//│ def c0_₀(x⁷) = 
-//│ 	x⁷
-//│ def p10_₀ = 
-//│ 	p11_₀
-//│ 	where
-//│ 	def p11_₀(y⁴) = 
-//│ 		case y⁴ of {
-//│ 			D bb³ => case bb³ of {
-//│ 				D cc³ => c1_₀(p12_₀, cc³)}}
-//│ 		where
-//│ 		def c1_₀(x⁶) = 
-//│ 			x⁶
-//│ 		def p12_₀(y⁵) = 
-//│ 			case y⁵ of {
-//│ 				D bb² => case bb² of {
-//│ 					D cc² => id_₀(p10_₀, cc²)}}
-//│ 			where
-//│ 			def id_₀(x⁸) = 
-//│ 				x⁸
-//│ def p20_₀ = 
-//│ 	[D [D [D p21_₀]]]
-//│ 	where
-//│ 	def p21_₀ = 
-//│ 		[D [D [D p20_₀]]]
+//│ c0(p10, p20)
+//│ def c0(x³) = x³
+//│ def c1(x⁴) = x⁴
+//│ def id(x⁵) = x⁵
+//│ def p10 = p11
+//│ def p11(y²) = case y² of {
+//│ 	D bb⁰ => case bb⁰ of {
+//│ 		D cc⁰ => c1(p12, cc⁰)}}
+//│ def p12(y³) = case y³ of {
+//│ 	D bb¹ => case bb¹ of {
+//│ 		D cc¹ => id(p10, cc¹)}}
+//│ def p20 = [D [D [D p21]]]
+//│ def p21 = [D [D [D p20]]]
 //│ <<<<<<< after fusion <<<<<<<

@@ -19,30 +19,17 @@ inter(N)(N)
 //│ [N]
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [inter^14] (hopeless to continue)
-//│ 	[inter^14 · inter^5] ---> [inter^14] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ inter_₀([N], [N])
-//│ def inter_₀(xs¹) = 
-//│ 	case xs¹ of {
-//│ 		N  => (fun ys² -> ys²)
-//│ 		| C h¹ t¹ => (fun ys³ -> [C h¹ inter_₀(ys³, t¹)])}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 33 --->
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ inter_₀(ys³, t¹)])}: 30
-//│ [N]: 35 --->
+//│ [N]: 15 --->
+//│ 	case xs⁰ of {N  => (fun ys⁰ -> ys⁰) | C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}: 12
+//│ [N]: 17 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ inter_₀(ys³, t¹)])}: 30
+//│ 	case xs⁰ of {N  => (fun ys⁰ -> ys⁰) | C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}: 12
 //│ ------------------
-//│ case xs¹ of {N  => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ inter_₀(ys³, t¹)])}: 30 --->
+//│ case xs⁰ of {N  => (fun ys⁰ -> ys⁰) | C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}: 12 --->
 //│ 	DeadCodeProd
-//│ 	[N]: 33
-//│ 	[N]: 35
+//│ 	[N]: 15
+//│ 	[N]: 17
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -52,11 +39,10 @@ inter(N)(N)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ inter_₀([N], [N])
-//│ def inter_₀(xs²) = 
-//│ 	case xs² of {
-//│ 		N  => (fun ys⁴ -> ys⁴)
-//│ 		| C h¹ t¹ => (fun ys⁵ -> [C h¹ inter_₀(ys⁵, t¹)])}
+//│ inter([N], [N])
+//│ def inter(xs¹) = case xs¹ of {
+//│ 	N  => (fun ys² -> ys²)
+//│ 	| C h⁰ t⁰ => (fun ys³ -> [C h⁰ inter(ys³, t⁰)])}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -86,51 +72,32 @@ inter(l1)(l2)
 //│ [C 1 [C 9 [C 2 [C 10 [N]]]]]
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [inter^24] (hopeless to continue)
-//│ 	[inter^24 · inter^5] ---> [inter^24] (using original def)
-//│ [l1^25] (hopeless to continue)
-//│ [l2^27] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ inter_₀(l1_₀, l2_₀)
-//│ def inter_₀(xs¹) = 
-//│ 	case xs¹ of {
-//│ 		N  => (fun ys² -> ys²)
-//│ 		| C h¹ t¹ => (fun ys³ -> [C h¹ inter_₀(ys³, t¹)])}
-//│ def l1_₀ = 
-//│ 	[C 1 [C 2 [N]]]
-//│ def l2_₀ = 
-//│ 	[C 9 [C 10 [N]]]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 31 --->
+//│ [N]: 16 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ inter_₀(ys³, t¹)])}: 45
-//│ [C 2 [N]]: 32 --->
+//│ 	case xs⁰ of {N  => (fun ys⁰ -> ys⁰) | C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}: 12
+//│ [C 2 [N]]: 17 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ inter_₀(ys³, t¹)])}: 45
-//│ [C 1 [C 2 [N]]]: 33 --->
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ inter_₀(ys³, t¹)])}: 45
-//│ [N]: 49 --->
+//│ 	case xs⁰ of {N  => (fun ys⁰ -> ys⁰) | C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}: 12
+//│ [C 1 [C 2 [N]]]: 18 --->
+//│ 	case xs⁰ of {N  => (fun ys⁰ -> ys⁰) | C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}: 12
+//│ [N]: 21 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ inter_₀(ys³, t¹)])}: 45
-//│ [C 10 [N]]: 50 --->
+//│ 	case xs⁰ of {N  => (fun ys⁰ -> ys⁰) | C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}: 12
+//│ [C 10 [N]]: 22 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ inter_₀(ys³, t¹)])}: 45
-//│ [C 9 [C 10 [N]]]: 51 --->
+//│ 	case xs⁰ of {N  => (fun ys⁰ -> ys⁰) | C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}: 12
+//│ [C 9 [C 10 [N]]]: 23 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ inter_₀(ys³, t¹)])}: 45
+//│ 	case xs⁰ of {N  => (fun ys⁰ -> ys⁰) | C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}: 12
 //│ ------------------
-//│ case xs¹ of {N  => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ inter_₀(ys³, t¹)])}: 45 --->
-//│ 	[N]: 31
-//│ 	[C 2 [N]]: 32
-//│ 	[C 1 [C 2 [N]]]: 33
-//│ 	[N]: 49
-//│ 	[C 10 [N]]: 50
-//│ 	[C 9 [C 10 [N]]]: 51
+//│ case xs⁰ of {N  => (fun ys⁰ -> ys⁰) | C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}: 12 --->
+//│ 	[N]: 16
+//│ 	[C 2 [N]]: 17
+//│ 	[C 1 [C 2 [N]]]: 18
+//│ 	[N]: 21
+//│ 	[C 10 [N]]: 22
+//│ 	[C 9 [C 10 [N]]]: 23
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -140,15 +107,12 @@ inter(l1)(l2)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ inter_₀(l1_₀, l2_₀)
-//│ def inter_₀(xs²) = 
-//│ 	case xs² of {
-//│ 		N  => (fun ys⁴ -> ys⁴)
-//│ 		| C h¹ t¹ => (fun ys⁵ -> [C h¹ inter_₀(ys⁵, t¹)])}
-//│ def l1_₀ = 
-//│ 	[C 1 [C 2 [N]]]
-//│ def l2_₀ = 
-//│ 	[C 9 [C 10 [N]]]
+//│ inter(l1, l2)
+//│ def inter(xs¹) = case xs¹ of {
+//│ 	N  => (fun ys² -> ys²)
+//│ 	| C h⁰ t⁰ => (fun ys³ -> [C h⁰ inter(ys³, t⁰)])}
+//│ def l1 = [C 1 [C 2 [N]]]
+//│ def l2 = [C 9 [C 10 [N]]]
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -172,42 +136,21 @@ inter(l1)(l2)
 //│ def l2 = [C 9 l2^20]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [inter^22] (hopeless to continue)
-//│ 	[inter^22 · inter^5] ---> [inter^22] (using original def)
-//│ [l1^23] (hopeless to continue)
-//│ 	[l1^23 · l1^16] ---> [l1^23] (using original def)
-//│ [l2^25] (hopeless to continue)
-//│ 	[l2^25 · l2^20] ---> [l2^25] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ inter_₀(l1_₀, l2_₀)
-//│ def inter_₀(xs¹) = 
-//│ 	case xs¹ of {
-//│ 		N  => (fun ys² -> ys²)
-//│ 		| C h¹ t¹ => (fun ys³ -> [C h¹ inter_₀(ys³, t¹)])}
-//│ def l1_₀ = 
-//│ 	[C 1 [C 2 l1_₀]]
-//│ def l2_₀ = 
-//│ 	[C 9 l2_₀]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 2 l1_₀]: 30 --->
+//│ [C 2 l1]: 17 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ inter_₀(ys³, t¹)])}: 46
-//│ [C 1 [C 2 l1_₀]]: 31 --->
+//│ 	case xs⁰ of {N  => (fun ys⁰ -> ys⁰) | C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}: 12
+//│ [C 1 [C 2 l1]]: 18 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ inter_₀(ys³, t¹)])}: 46
-//│ [C 9 l2_₀]: 34 --->
+//│ 	case xs⁰ of {N  => (fun ys⁰ -> ys⁰) | C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}: 12
+//│ [C 9 l2]: 21 --->
 //│ 	NoCons
-//│ 	case xs¹ of {N  => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ inter_₀(ys³, t¹)])}: 46
+//│ 	case xs⁰ of {N  => (fun ys⁰ -> ys⁰) | C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}: 12
 //│ ------------------
-//│ case xs¹ of {N  => (fun ys² -> ys²) | C h¹ t¹ => (fun ys³ -> [C h¹ inter_₀(ys³, t¹)])}: 46 --->
-//│ 	[C 2 l1_₀]: 30
-//│ 	[C 1 [C 2 l1_₀]]: 31
-//│ 	[C 9 l2_₀]: 34
+//│ case xs⁰ of {N  => (fun ys⁰ -> ys⁰) | C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}: 12 --->
+//│ 	[C 2 l1]: 17
+//│ 	[C 1 [C 2 l1]]: 18
+//│ 	[C 9 l2]: 21
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -217,15 +160,12 @@ inter(l1)(l2)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ inter_₀(l1_₀, l2_₀)
-//│ def inter_₀(xs²) = 
-//│ 	case xs² of {
-//│ 		N  => (fun ys⁴ -> ys⁴)
-//│ 		| C h¹ t¹ => (fun ys⁵ -> [C h¹ inter_₀(ys⁵, t¹)])}
-//│ def l1_₀ = 
-//│ 	[C 1 [C 2 l1_₀]]
-//│ def l2_₀ = 
-//│ 	[C 9 l2_₀]
+//│ inter(l1, l2)
+//│ def inter(xs¹) = case xs¹ of {
+//│ 	N  => (fun ys² -> ys²)
+//│ 	| C h⁰ t⁰ => (fun ys³ -> [C h⁰ inter(ys³, t⁰)])}
+//│ def l1 = [C 1 [C 2 l1]]
+//│ def l2 = [C 9 l2]
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -255,47 +195,26 @@ f(C(A))
 //│ 		| B  => f^14([C b⁰])}}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^21] (hopeless to continue)
-//│ 	[f^21 · g^4] (using original def)
-//│ 		[f^21 · g^4 · f^14] ---> [f^21] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀([C [A]])
-//│ def f_₀(x¹) = 
-//│ 	case x¹ of {
-//│ 		C a¹ => case a¹ of {
-//│ 			A  => [N]
-//│ 			| B  => g_₀([D a¹])}}
-//│ 	where
-//│ 	def g_₀(y¹) = 
-//│ 		case y¹ of {
-//│ 			D b¹ => case b¹ of {
-//│ 				A  => [N]
-//│ 				| B  => f_₀([C b¹])}}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C b¹]: 30 --->
-//│ 	case x¹ of {C a¹ => case a¹ of {A  => [N] | B  => g_₀([D a¹])}}: 43
-//│ [D a¹]: 40 --->
-//│ 	case y¹ of {D b¹ => case b¹ of {A  => [N] | B  => f_₀([C b¹])}}: 33
-//│ [A]: 46 --->
-//│ 	case b¹ of {A  => [N] | B  => f_₀([C b¹])}: 32
-//│ 	case a¹ of {A  => [N] | B  => g_₀([D a¹])}: 42
-//│ [C [A]]: 47 --->
-//│ 	case x¹ of {C a¹ => case a¹ of {A  => [N] | B  => g_₀([D a¹])}}: 43
+//│ [D a⁰]: 6 --->
+//│ 	case y⁰ of {D b⁰ => case b⁰ of {A  => [N] | B  => f([C b⁰])}}: 19
+//│ [C b⁰]: 16 --->
+//│ 	case x⁰ of {C a⁰ => case a⁰ of {A  => [N] | B  => g([D a⁰])}}: 9
+//│ [A]: 22 --->
+//│ 	case a⁰ of {A  => [N] | B  => g([D a⁰])}: 8
+//│ 	case b⁰ of {A  => [N] | B  => f([C b⁰])}: 18
+//│ [C [A]]: 23 --->
+//│ 	case x⁰ of {C a⁰ => case a⁰ of {A  => [N] | B  => g([D a⁰])}}: 9
 //│ ------------------
-//│ case b¹ of {A  => [N] | B  => f_₀([C b¹])}: 32 --->
-//│ 	[A]: 46
-//│ case y¹ of {D b¹ => case b¹ of {A  => [N] | B  => f_₀([C b¹])}}: 33 --->
-//│ 	[D a¹]: 40
-//│ case a¹ of {A  => [N] | B  => g_₀([D a¹])}: 42 --->
-//│ 	[A]: 46
-//│ case x¹ of {C a¹ => case a¹ of {A  => [N] | B  => g_₀([D a¹])}}: 43 --->
-//│ 	[C b¹]: 30
-//│ 	[C [A]]: 47
+//│ case a⁰ of {A  => [N] | B  => g([D a⁰])}: 8 --->
+//│ 	[A]: 22
+//│ case x⁰ of {C a⁰ => case a⁰ of {A  => [N] | B  => g([D a⁰])}}: 9 --->
+//│ 	[C b⁰]: 16
+//│ 	[C [A]]: 23
+//│ case b⁰ of {A  => [N] | B  => f([C b⁰])}: 18 --->
+//│ 	[A]: 22
+//│ case y⁰ of {D b⁰ => case b⁰ of {A  => [N] | B  => f([C b⁰])}}: 19 --->
+//│ 	[D a⁰]: 6
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -305,18 +224,15 @@ f(C(A))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀([C [A]])
-//│ def f_₀(x²) = 
-//│ 	case x² of {
-//│ 		C a¹ => case a¹ of {
-//│ 			A  => [N]
-//│ 			| B  => g_₀([D a¹])}}
-//│ 	where
-//│ 	def g_₀(y²) = 
-//│ 		case y² of {
-//│ 			D b¹ => case b¹ of {
-//│ 				A  => [N]
-//│ 				| B  => f_₀([C b¹])}}
+//│ f([C [A]])
+//│ def f(x¹) = case x¹ of {
+//│ 	C a⁰ => case a⁰ of {
+//│ 		A  => [N]
+//│ 		| B  => g([D a⁰])}}
+//│ def g(y¹) = case y¹ of {
+//│ 	D b⁰ => case b⁰ of {
+//│ 		A  => [N]
+//│ 		| B  => f([C b⁰])}}
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -334,46 +250,28 @@ f(C(A))
 //│ def f(a¹) = if [False] then c^8(a¹) else [Unit]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^14] (hopeless to continue)
-//│ 	[f^14 · c^8] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀([C [A]])
-//│ def f_₀(a³) = 
-//│ 	if [False] then c_₀(a³) else [Unit]
-//│ 	where
-//│ 	def c_₀(x¹) = 
-//│ 		case x¹ of {
-//│ 			C a² => primitive⁰(a²)}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C [A]]: 33 --->
-//│ 	case x¹ of {C a² => primitive⁰(a²)}: 22
+//│ [C [A]]: 16 --->
+//│ 	case x⁰ of {C a⁰ => primitive⁰(a⁰)}: 5
 //│ ------------------
-//│ case x¹ of {C a² => primitive⁰(a²)}: 22 --->
-//│ 	[C [A]]: 33
+//│ case x⁰ of {C a⁰ => primitive⁰(a⁰)}: 5 --->
+//│ 	[C [A]]: 16
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C [A]]: 33 --->
-//│ 	case x¹ of {C a² => primitive⁰(a²)}: 22
+//│ [C [A]]: 16 --->
+//│ 	case x⁰ of {C a⁰ => primitive⁰(a⁰)}: 5
 //│ ------------------
-//│ case x¹ of {C a² => primitive⁰(a²)}: 22 --->
-//│ 	[C [A]]: 33
+//│ case x⁰ of {C a⁰ => primitive⁰(a⁰)}: 5 --->
+//│ 	[C [A]]: 16
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀(
-//│ 	let a⁴ = [A]
-//│ 	in (fun _lh_dummy⁰ -> primitive⁰(a⁴)))
-//│ def f_₀(a⁵) = 
-//│ 	if [False] then c_₀(a⁵) else [Unit]
-//│ 	where
-//│ 	def c_₀(x²) = 
-//│ 		x²(99)
+//│ f(
+//│ 	let a² = [A]
+//│ 	in (fun _lh_dummy⁰ -> primitive⁰(a²)))
+//│ def c(x¹) = x¹(99)
+//│ def f(a³) = if [False] then c(a³) else [Unit]
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -398,55 +296,38 @@ f(C(1, N), C(2, N))
 //│ 		| _  => error⁰}}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^17] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀([C 1 [N]], [C 2 [N]])
-//│ def f_₀(xs¹, ys¹) = 
-//│ 	case xs¹ of {
-//│ 		N  => 0
-//│ 		| _  => case xs¹ of {
-//│ 			C h¹ t¹ => case ys¹ of {
-//│ 				C hh¹ yt¹ => (h¹ + hh¹)
-//│ 				| _  => h¹}
-//│ 			| _  => error⁰}}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [N]]: 45 --->
-//│ 	case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰}: 38
-//│ 	case xs¹ of {N  => 0 | _  => case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰}}: 39
-//│ [C 2 [N]]: 49 --->
-//│ 	case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 36
+//│ [C 1 [N]]: 20 --->
+//│ 	case xs⁰ of {C h⁰ t⁰ => case ys⁰ of {C hh⁰ yt⁰ => (h⁰ + hh⁰) | _  => h⁰} | _  => error⁰}: 13
+//│ 	case xs⁰ of {N  => 0 | _  => case xs⁰ of {C h⁰ t⁰ => case ys⁰ of {C hh⁰ yt⁰ => (h⁰ + hh⁰) | _  => h⁰} | _  => error⁰}}: 14
+//│ [C 2 [N]]: 24 --->
+//│ 	case ys⁰ of {C hh⁰ yt⁰ => (h⁰ + hh⁰) | _  => h⁰}: 11
 //│ ------------------
-//│ case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 36 --->
-//│ 	[C 2 [N]]: 49
-//│ case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰}: 38 --->
-//│ 	[C 1 [N]]: 45
-//│ case xs¹ of {N  => 0 | _  => case xs¹ of {C h¹ t¹ => case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹} | _  => error⁰}}: 39 --->
-//│ 	[C 1 [N]]: 45
+//│ case ys⁰ of {C hh⁰ yt⁰ => (h⁰ + hh⁰) | _  => h⁰}: 11 --->
+//│ 	[C 2 [N]]: 24
+//│ case xs⁰ of {C h⁰ t⁰ => case ys⁰ of {C hh⁰ yt⁰ => (h⁰ + hh⁰) | _  => h⁰} | _  => error⁰}: 13 --->
+//│ 	[C 1 [N]]: 20
+//│ case xs⁰ of {N  => 0 | _  => case xs⁰ of {C h⁰ t⁰ => case ys⁰ of {C hh⁰ yt⁰ => (h⁰ + hh⁰) | _  => h⁰} | _  => error⁰}}: 14 --->
+//│ 	[C 1 [N]]: 20
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C 2 [N]]: 49 --->
-//│ 	case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 36
+//│ [C 2 [N]]: 24 --->
+//│ 	case ys⁰ of {C hh⁰ yt⁰ => (h⁰ + hh⁰) | _  => h⁰}: 11
 //│ ------------------
-//│ case ys¹ of {C hh¹ yt¹ => (h¹ + hh¹) | _  => h¹}: 36 --->
-//│ 	[C 2 [N]]: 49
+//│ case ys⁰ of {C hh⁰ yt⁰ => (h⁰ + hh⁰) | _  => h⁰}: 11 --->
+//│ 	[C 2 [N]]: 24
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀([C 1 [N]], 
-//│ 	let hh² = 2
-//│ 	in (fun h² -> (h² + hh²)))
-//│ def f_₀(xs², ys²) = 
-//│ 	case xs² of {
-//│ 		N  => 0
-//│ 		| _  => case xs² of {
-//│ 			C h¹ t¹ => ys²(h¹)
-//│ 			| _  => error⁰}}
+//│ f([C 1 [N]], 
+//│ 	let hh¹ = 2
+//│ 	in (fun h¹ -> (h¹ + hh¹)))
+//│ def f(xs¹, ys¹) = case xs¹ of {
+//│ 	N  => 0
+//│ 	| _  => case xs¹ of {
+//│ 		C h⁰ t⁰ => ys¹(h⁰)
+//│ 		| _  => error⁰}}
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -467,29 +348,15 @@ f(C(1, N))
 //│ 		| _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^33] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀([C 1 [N]])
-//│ def f_₀(xs¹) = 
-//│ 	case xs¹ of {
-//│ 		N  => 0
-//│ 		| _  => case xs¹ of {
-//│ 			C h¹ t¹ => h¹
-//│ 			| _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [N]]: 73 --->
-//│ 	case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}: 67
-//│ 	case xs¹ of {N  => 0 | _  => case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}}: 68
+//│ [C 1 [N]]: 36 --->
+//│ 	case xs⁰ of {C h⁰ t⁰ => h⁰ | _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}: 30
+//│ 	case xs⁰ of {N  => 0 | _  => case xs⁰ of {C h⁰ t⁰ => h⁰ | _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}}: 31
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}: 67 --->
-//│ 	[C 1 [N]]: 73
-//│ case xs¹ of {N  => 0 | _  => case xs¹ of {C h¹ t¹ => h¹ | _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}}: 68 --->
-//│ 	[C 1 [N]]: 73
+//│ case xs⁰ of {C h⁰ t⁰ => h⁰ | _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}: 30 --->
+//│ 	[C 1 [N]]: 36
+//│ case xs⁰ of {N  => 0 | _  => case xs⁰ of {C h⁰ t⁰ => h⁰ | _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}}: 31 --->
+//│ 	[C 1 [N]]: 36
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -499,13 +366,12 @@ f(C(1, N))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀([C 1 [N]])
-//│ def f_₀(xs²) = 
-//│ 	case xs² of {
-//│ 		N  => 0
-//│ 		| _  => case xs² of {
-//│ 			C h¹ t¹ => h¹
-//│ 			| _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}}
+//│ f([C 1 [N]])
+//│ def f(xs¹) = case xs¹ of {
+//│ 	N  => 0
+//│ 	| _  => case xs¹ of {
+//│ 		C h⁰ t⁰ => h⁰
+//│ 		| _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}}
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -522,38 +388,25 @@ f(C(1, N), 0)
 //│ 	| _  => (y⁰ + 1)}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^11] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀([C 1 [N]], 0)
-//│ def f_₀(x¹, y¹) = 
-//│ 	case x¹ of {
-//│ 		N  => y¹
-//│ 		| _  => (y¹ + 1)}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C 1 [N]]: 31 --->
-//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ [C 1 [N]]: 14 --->
+//│ 	case x⁰ of {N  => y⁰ | _  => (y⁰ + 1)}: 8
 //│ ------------------
-//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
-//│ 	[C 1 [N]]: 31
+//│ case x⁰ of {N  => y⁰ | _  => (y⁰ + 1)}: 8 --->
+//│ 	[C 1 [N]]: 14
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C 1 [N]]: 31 --->
-//│ 	case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25
+//│ [C 1 [N]]: 14 --->
+//│ 	case x⁰ of {N  => y⁰ | _  => (y⁰ + 1)}: 8
 //│ ------------------
-//│ case x¹ of {N  => y¹ | _  => (y¹ + 1)}: 25 --->
-//│ 	[C 1 [N]]: 31
+//│ case x⁰ of {N  => y⁰ | _  => (y⁰ + 1)}: 8 --->
+//│ 	[C 1 [N]]: 14
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀((fun y² -> (y² + 1)), 0)
-//│ def f_₀(x², y³) = 
-//│ 	x²(y³)
+//│ f((fun y¹ -> (y¹ + 1)), 0)
+//│ def f(x¹, y²) = x¹(y²)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -583,51 +436,32 @@ zip(C(1,N), C(2,N))
 //│ 			| _  => [N]}}}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [zip^24] (hopeless to continue)
-//│ 	[zip^24 · zip^10] ---> [zip^24] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ zip_₀([C 1 [N]], [C 2 [N]])
-//│ def zip_₀(xs², ys²) = 
-//│ 	case xs² of {
-//│ 		N  => [N]
-//│ 		| _  => case ys² of {
-//│ 			N  => [N]
-//│ 			| _  => case xs² of {
-//│ 				C xs³ xt¹ => case ys² of {
-//│ 					C ys³ yt¹ => [C [P2 xs³ ys³] zip_₀(xt¹, yt¹)]
-//│ 					| _  => [N]}
-//│ 				| _  => [N]}}}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 58 --->
-//│ 	case xs² of {C xs³ xt¹ => case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip_₀(xt¹, yt¹)] | _  => [N]} | _  => [N]}: 51
-//│ 	case xs² of {N  => [N] | _  => case ys² of {N  => [N] | _  => case xs² of {C xs³ xt¹ => case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip_₀(xt¹, yt¹)] | _  => [N]} | _  => [N]}}}: 53
-//│ [C 1 [N]]: 59 --->
-//│ 	case xs² of {C xs³ xt¹ => case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip_₀(xt¹, yt¹)] | _  => [N]} | _  => [N]}: 51
-//│ 	case xs² of {N  => [N] | _  => case ys² of {N  => [N] | _  => case xs² of {C xs³ xt¹ => case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip_₀(xt¹, yt¹)] | _  => [N]} | _  => [N]}}}: 53
-//│ [N]: 62 --->
-//│ 	case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip_₀(xt¹, yt¹)] | _  => [N]}: 49
-//│ 	case ys² of {N  => [N] | _  => case xs² of {C xs³ xt¹ => case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip_₀(xt¹, yt¹)] | _  => [N]} | _  => [N]}}: 52
-//│ [C 2 [N]]: 63 --->
-//│ 	case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip_₀(xt¹, yt¹)] | _  => [N]}: 49
-//│ 	case ys² of {N  => [N] | _  => case xs² of {C xs³ xt¹ => case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip_₀(xt¹, yt¹)] | _  => [N]} | _  => [N]}}: 52
+//│ [N]: 26 --->
+//│ 	case xs⁰ of {C xs¹ xt⁰ => case ys⁰ of {C ys¹ yt⁰ => [C [P2 xs¹ ys¹] zip(xt⁰, yt⁰)] | _  => [N]} | _  => [N]}: 19
+//│ 	case xs⁰ of {N  => [N] | _  => case ys⁰ of {N  => [N] | _  => case xs⁰ of {C xs¹ xt⁰ => case ys⁰ of {C ys¹ yt⁰ => [C [P2 xs¹ ys¹] zip(xt⁰, yt⁰)] | _  => [N]} | _  => [N]}}}: 21
+//│ [C 1 [N]]: 27 --->
+//│ 	case xs⁰ of {C xs¹ xt⁰ => case ys⁰ of {C ys¹ yt⁰ => [C [P2 xs¹ ys¹] zip(xt⁰, yt⁰)] | _  => [N]} | _  => [N]}: 19
+//│ 	case xs⁰ of {N  => [N] | _  => case ys⁰ of {N  => [N] | _  => case xs⁰ of {C xs¹ xt⁰ => case ys⁰ of {C ys¹ yt⁰ => [C [P2 xs¹ ys¹] zip(xt⁰, yt⁰)] | _  => [N]} | _  => [N]}}}: 21
+//│ [N]: 30 --->
+//│ 	case ys⁰ of {C ys¹ yt⁰ => [C [P2 xs¹ ys¹] zip(xt⁰, yt⁰)] | _  => [N]}: 17
+//│ 	case ys⁰ of {N  => [N] | _  => case xs⁰ of {C xs¹ xt⁰ => case ys⁰ of {C ys¹ yt⁰ => [C [P2 xs¹ ys¹] zip(xt⁰, yt⁰)] | _  => [N]} | _  => [N]}}: 20
+//│ [C 2 [N]]: 31 --->
+//│ 	case ys⁰ of {C ys¹ yt⁰ => [C [P2 xs¹ ys¹] zip(xt⁰, yt⁰)] | _  => [N]}: 17
+//│ 	case ys⁰ of {N  => [N] | _  => case xs⁰ of {C xs¹ xt⁰ => case ys⁰ of {C ys¹ yt⁰ => [C [P2 xs¹ ys¹] zip(xt⁰, yt⁰)] | _  => [N]} | _  => [N]}}: 20
 //│ ------------------
-//│ case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip_₀(xt¹, yt¹)] | _  => [N]}: 49 --->
-//│ 	[N]: 62
-//│ 	[C 2 [N]]: 63
-//│ case xs² of {C xs³ xt¹ => case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip_₀(xt¹, yt¹)] | _  => [N]} | _  => [N]}: 51 --->
-//│ 	[N]: 58
-//│ 	[C 1 [N]]: 59
-//│ case ys² of {N  => [N] | _  => case xs² of {C xs³ xt¹ => case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip_₀(xt¹, yt¹)] | _  => [N]} | _  => [N]}}: 52 --->
-//│ 	[N]: 62
-//│ 	[C 2 [N]]: 63
-//│ case xs² of {N  => [N] | _  => case ys² of {N  => [N] | _  => case xs² of {C xs³ xt¹ => case ys² of {C ys³ yt¹ => [C [P2 xs³ ys³] zip_₀(xt¹, yt¹)] | _  => [N]} | _  => [N]}}}: 53 --->
-//│ 	[N]: 58
-//│ 	[C 1 [N]]: 59
+//│ case ys⁰ of {C ys¹ yt⁰ => [C [P2 xs¹ ys¹] zip(xt⁰, yt⁰)] | _  => [N]}: 17 --->
+//│ 	[N]: 30
+//│ 	[C 2 [N]]: 31
+//│ case xs⁰ of {C xs¹ xt⁰ => case ys⁰ of {C ys¹ yt⁰ => [C [P2 xs¹ ys¹] zip(xt⁰, yt⁰)] | _  => [N]} | _  => [N]}: 19 --->
+//│ 	[N]: 26
+//│ 	[C 1 [N]]: 27
+//│ case ys⁰ of {N  => [N] | _  => case xs⁰ of {C xs¹ xt⁰ => case ys⁰ of {C ys¹ yt⁰ => [C [P2 xs¹ ys¹] zip(xt⁰, yt⁰)] | _  => [N]} | _  => [N]}}: 20 --->
+//│ 	[N]: 30
+//│ 	[C 2 [N]]: 31
+//│ case xs⁰ of {N  => [N] | _  => case ys⁰ of {N  => [N] | _  => case xs⁰ of {C xs¹ xt⁰ => case ys⁰ of {C ys¹ yt⁰ => [C [P2 xs¹ ys¹] zip(xt⁰, yt⁰)] | _  => [N]} | _  => [N]}}}: 21 --->
+//│ 	[N]: 26
+//│ 	[C 1 [N]]: 27
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -637,17 +471,16 @@ zip(C(1,N), C(2,N))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ zip_₀([C 1 [N]], [C 2 [N]])
-//│ def zip_₀(xs⁴, ys⁴) = 
-//│ 	case xs⁴ of {
+//│ zip([C 1 [N]], [C 2 [N]])
+//│ def zip(xs², ys²) = case xs² of {
+//│ 	N  => [N]
+//│ 	| _  => case ys² of {
 //│ 		N  => [N]
-//│ 		| _  => case ys⁴ of {
-//│ 			N  => [N]
-//│ 			| _  => case xs⁴ of {
-//│ 				C xs³ xt¹ => case ys⁴ of {
-//│ 					C ys³ yt¹ => [C [P2 xs³ ys³] zip_₀(xt¹, yt¹)]
-//│ 					| _  => [N]}
-//│ 				| _  => [N]}}}
+//│ 		| _  => case xs² of {
+//│ 			C xs¹ xt⁰ => case ys² of {
+//│ 				C ys¹ yt⁰ => [C [P2 xs¹ ys¹] zip(xt⁰, yt⁰)]
+//│ 				| _  => [N]}
+//│ 			| _  => [N]}}}
 //│ <<<<<<< after fusion <<<<<<<
 
 // NOTE: type error: f x = x f cannot be well typed in haskell
@@ -667,29 +500,16 @@ f(C(3, N))
 //│ 	| N  => (fun ff¹ -> [N])}(f^11)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^14] (hopeless to continue)
-//│ 	[f^14 · f^11] ---> [f^14] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀([C 3 [N]])
-//│ def f_₀(x¹) = 
-//│ 	case x¹ of {
-//│ 		C h¹ t¹ => (fun ff² -> [C h¹ ff²(t¹)])
-//│ 		| N  => (fun ff³ -> [N])}(f_₀)
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 34 --->
-//│ 	case x¹ of {C h¹ t¹ => (fun ff² -> [C h¹ ff²(t¹)]) | N  => (fun ff³ -> [N])}: 28
-//│ [C 3 [N]]: 35 --->
-//│ 	case x¹ of {C h¹ t¹ => (fun ff² -> [C h¹ ff²(t¹)]) | N  => (fun ff³ -> [N])}: 28
+//│ [N]: 16 --->
+//│ 	case x⁰ of {C h⁰ t⁰ => (fun ff⁰ -> [C h⁰ ff⁰(t⁰)]) | N  => (fun ff¹ -> [N])}: 10
+//│ [C 3 [N]]: 17 --->
+//│ 	case x⁰ of {C h⁰ t⁰ => (fun ff⁰ -> [C h⁰ ff⁰(t⁰)]) | N  => (fun ff¹ -> [N])}: 10
 //│ ------------------
-//│ case x¹ of {C h¹ t¹ => (fun ff² -> [C h¹ ff²(t¹)]) | N  => (fun ff³ -> [N])}: 28 --->
+//│ case x⁰ of {C h⁰ t⁰ => (fun ff⁰ -> [C h⁰ ff⁰(t⁰)]) | N  => (fun ff¹ -> [N])}: 10 --->
 //│ 	DeadCodeProd
-//│ 	[N]: 34
-//│ 	[C 3 [N]]: 35
+//│ 	[N]: 16
+//│ 	[C 3 [N]]: 17
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -699,11 +519,10 @@ f(C(3, N))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀([C 3 [N]])
-//│ def f_₀(x²) = 
-//│ 	case x² of {
-//│ 		C h¹ t¹ => (fun ff⁴ -> [C h¹ ff⁴(t¹)])
-//│ 		| N  => (fun ff⁵ -> [N])}(f_₀)
+//│ f([C 3 [N]])
+//│ def f(x¹) = case x¹ of {
+//│ 	C h⁰ t⁰ => (fun ff² -> [C h⁰ ff²(t⁰)])
+//│ 	| N  => (fun ff³ -> [N])}(f)
 //│ <<<<<<< after fusion <<<<<<<
 
 // a more minimal example requiring recursive type after fusion
@@ -721,25 +540,13 @@ f(N)
 //│ 	N  => (fun ff⁰ -> 1)}(f^5)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^8] (hopeless to continue)
-//│ 	[f^8 · f^5] ---> [f^8] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀([N])
-//│ def f_₀(x¹) = 
-//│ 	case x¹ of {
-//│ 		N  => (fun ff¹ -> 1)}(f_₀)
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 19 --->
-//│ 	case x¹ of {N  => (fun ff¹ -> 1)}: 14
+//│ [N]: 9 --->
+//│ 	case x⁰ of {N  => (fun ff⁰ -> 1)}: 4
 //│ ------------------
-//│ case x¹ of {N  => (fun ff¹ -> 1)}: 14 --->
+//│ case x⁰ of {N  => (fun ff⁰ -> 1)}: 4 --->
 //│ 	DeadCodeProd
-//│ 	[N]: 19
+//│ 	[N]: 9
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -749,10 +556,9 @@ f(N)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀([N])
-//│ def f_₀(x²) = 
-//│ 	case x² of {
-//│ 		N  => (fun ff² -> 1)}(f_₀)
+//│ f([N])
+//│ def f(x¹) = case x¹ of {
+//│ 	N  => (fun ff¹ -> 1)}(f)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -1051,7 +857,7 @@ words "1 2 4"
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ words_lh_₁ :: 'words_lh_₁ <: [LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_N))))) => '13_callres | '_lh_words_LH_P2_1⁰ => '69_callres | '_lh_words_LH_P2_1¹ => '84_callres | '_lh_words_LH_P2_1² => '102_callres] ::: false
+//│ words_lh_₁ :: 'words_lh_₁ <: [] ::: true
 //│ '1' :: Char ::: false
 //│ ' ' :: Char ::: false
 //│ '2' :: Char ::: false
@@ -1063,68 +869,68 @@ words "1 2 4"
 //│ [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]] :: LH_C(Char, LH_C(Char, LH_C(Char, LH_N))) ::: true
 //│ [LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]] :: LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_N)))) ::: true
 //│ [LH_C '1' [LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]] :: LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_N))))) ::: true
-//│ words_lh_₁([LH_C '1' [LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]]) :: '13_callres <: [NoCons] ::: false
-//│ _lh_break1_arg2 :: '_lh_break1_arg2⁰ <: [Destruct(LH_N, LH_C('_lh_break1_LH_C_0⁰, '_lh_break1_LH_C_1⁰), _)] ::: false
+//│ words_lh_₁([LH_C '1' [LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]]) :: '13_callres <: [] ::: true
+//│ _lh_break1_arg2 :: '_lh_break1_arg2⁰ <: [] ::: true
 //│ [LH_N] :: LH_N ::: true
 //│ [LH_N] :: LH_N ::: true
 //│ [LH_P2 [LH_N] [LH_N]] :: LH_P2(LH_N, LH_N) ::: true
-//│ _lh_break1_arg1 :: '_lh_break1_arg1⁰ <: ['_lh_break1_LH_C_0⁰ => '20_callres] ::: false
-//│ _lh_break1_LH_C_0 :: '_lh_break1_LH_C_0⁰ <: [NoCons | 'x¹ | '_lh_dropWhile_LH_C_0⁰] ::: false
-//│ _lh_break1_arg1(_lh_break1_LH_C_0) :: '20_callres <: [Destruct(True, False)] ::: false
+//│ _lh_break1_arg1 :: '_lh_break1_arg1⁰ <: [] ::: true
+//│ _lh_break1_LH_C_0 :: '_lh_break1_LH_C_0⁰ <: [] ::: true
+//│ _lh_break1_arg1(_lh_break1_LH_C_0) :: '20_callres <: [] ::: true
 //│ [LH_N] :: LH_N ::: true
-//│ _lh_break1_LH_C_0 :: '_lh_break1_LH_C_0⁰ <: [NoCons | 'x¹ | '_lh_dropWhile_LH_C_0⁰] ::: false
-//│ _lh_break1_LH_C_1 :: '_lh_break1_LH_C_1⁰ <: ['_lh_dropWhile_LH_C_1⁰ | '_lh_break1_arg2⁰] ::: false
+//│ _lh_break1_LH_C_0 :: '_lh_break1_LH_C_0⁰ <: [] ::: true
+//│ _lh_break1_LH_C_1 :: '_lh_break1_LH_C_1⁰ <: [] ::: true
 //│ [LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1] :: LH_C('_lh_break1_LH_C_0⁰, '_lh_break1_LH_C_1⁰) ::: true
 //│ [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1]] :: LH_P2(LH_N, LH_C('_lh_break1_LH_C_0⁰, '_lh_break1_LH_C_1⁰)) ::: true
-//│ break1_lh_₁ :: 'break1_lh_₁ <: ['_lh_break1_arg1⁰ => '28_callres | '_lh_break_arg1⁰ => '91_callres] ::: false
-//│ _lh_break1_arg1 :: '_lh_break1_arg1⁰ <: ['_lh_break1_LH_C_0⁰ => '20_callres] ::: false
-//│ break1_lh_₁(_lh_break1_arg1) :: '28_callres <: ['_lh_break1_LH_C_1⁰ => '30_callres] ::: false
-//│ _lh_break1_LH_C_1 :: '_lh_break1_LH_C_1⁰ <: ['_lh_dropWhile_LH_C_1⁰ | '_lh_break1_arg2⁰] ::: false
-//│ break1_lh_₁(_lh_break1_arg1, _lh_break1_LH_C_1) :: '30_callres <: ['_lh_matchIdent⁰] ::: false
-//│ _lh_matchIdent :: '_lh_matchIdent⁰ <: [Destruct(LH_P2('_lh_break1_LH_P2_0⁰, '_lh_break1_LH_P2_1⁰), _)] ::: false
-//│ _lh_break1_LH_C_0 :: '_lh_break1_LH_C_0⁰ <: [NoCons | 'x¹ | '_lh_dropWhile_LH_C_0⁰] ::: false
-//│ _lh_break1_LH_P2_0 :: '_lh_break1_LH_P2_0⁰ <: [NoCons] ::: false
+//│ break1_lh_₁ :: 'break1_lh_₁ <: [] ::: true
+//│ _lh_break1_arg1 :: '_lh_break1_arg1⁰ <: [] ::: true
+//│ break1_lh_₁(_lh_break1_arg1) :: '28_callres <: [] ::: true
+//│ _lh_break1_LH_C_1 :: '_lh_break1_LH_C_1⁰ <: [] ::: true
+//│ break1_lh_₁(_lh_break1_arg1, _lh_break1_LH_C_1) :: '30_callres <: [] ::: true
+//│ _lh_matchIdent :: '_lh_matchIdent⁰ <: [] ::: true
+//│ _lh_break1_LH_C_0 :: '_lh_break1_LH_C_0⁰ <: [] ::: true
+//│ _lh_break1_LH_P2_0 :: '_lh_break1_LH_P2_0⁰ <: [] ::: true
 //│ [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] :: LH_C('_lh_break1_LH_C_0⁰, '_lh_break1_LH_P2_0⁰) ::: true
-//│ _lh_break1_LH_P2_1 :: '_lh_break1_LH_P2_1⁰ <: ['_lh_break_LH_P2_1⁰] ::: false
+//│ _lh_break1_LH_P2_1 :: '_lh_break1_LH_P2_1⁰ <: [] ::: true
 //│ [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] :: LH_P2(LH_C('_lh_break1_LH_C_0⁰, '_lh_break1_LH_P2_0⁰), '_lh_break1_LH_P2_1⁰) ::: true
-//│ error :: '_lh_rigid_error_var <: [DeadCodeCons] ::: true
-//│ case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} :: '38_matchres <: ['40_ifres] ::: false
+//│ error :: '_lh_rigid_error_var <: [] ::: true
+//│ case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} :: '38_matchres <: [] ::: true
 //│ let _lh_matchIdent = break1_lh_₁(_lh_break1_arg1, _lh_break1_LH_C_1)
-//│ in case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} :: '38_matchres <: ['40_ifres] ::: false
+//│ in case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} :: '38_matchres <: [] ::: true
 //│ if _lh_break1_arg1(_lh_break1_LH_C_0) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1]] else let _lh_matchIdent = break1_lh_₁(_lh_break1_arg1, _lh_break1_LH_C_1)
-//│ in case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} :: '40_ifres <: ['42_matchres] ::: false
-//│ error :: '_lh_rigid_error_var <: [DeadCodeCons] ::: true
+//│ in case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} :: '40_ifres <: [] ::: true
+//│ error :: '_lh_rigid_error_var <: [] ::: true
 //│ case _lh_break1_arg2 of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1 => if _lh_break1_arg1(_lh_break1_LH_C_0) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1]] else let _lh_matchIdent = break1_lh_₁(_lh_break1_arg1, _lh_break1_LH_C_1)
-//│ in case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} | _  => error} :: '42_matchres <: ['30_callres | '93_callres] ::: false
+//│ in case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} | _  => error} :: '42_matchres <: [] ::: true
 //│ (fun _lh_break1_arg2 -> case _lh_break1_arg2 of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1 => if _lh_break1_arg1(_lh_break1_LH_C_0) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1]] else let _lh_matchIdent = break1_lh_₁(_lh_break1_arg1, _lh_break1_LH_C_1)
 //│ in case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} | _  => error}) :: '_lh_break1_arg2⁰ => '42_matchres ::: true
 //│ (fun _lh_break1_arg1 -> (fun _lh_break1_arg2 -> case _lh_break1_arg2 of {LH_N  => [LH_P2 [LH_N] [LH_N]] | LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1 => if _lh_break1_arg1(_lh_break1_LH_C_0) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0 _lh_break1_LH_C_1]] else let _lh_matchIdent = break1_lh_₁(_lh_break1_arg1, _lh_break1_LH_C_1)
 //│ in case _lh_matchIdent of {LH_P2 _lh_break1_LH_P2_0 _lh_break1_LH_P2_1 => [LH_P2 [LH_C _lh_break1_LH_C_0 _lh_break1_LH_P2_0] _lh_break1_LH_P2_1] | _  => error} | _  => error})) :: '_lh_break1_arg1⁰ => '_lh_break1_arg2⁰ => '42_matchres ::: true
-//│ _lh_dropWhile_arg2 :: '_lh_dropWhile_arg2⁰ <: [Destruct(LH_N, LH_C('_lh_dropWhile_LH_C_0⁰, '_lh_dropWhile_LH_C_1⁰), _)] ::: false
+//│ _lh_dropWhile_arg2 :: '_lh_dropWhile_arg2⁰ <: [] ::: true
 //│ [LH_N] :: LH_N ::: true
-//│ _lh_dropWhile_arg1 :: '_lh_dropWhile_arg1⁰ <: ['_lh_dropWhile_LH_C_0⁰ => '49_callres] ::: false
-//│ _lh_dropWhile_LH_C_0 :: '_lh_dropWhile_LH_C_0⁰ <: ['x⁰ | '_lh_break_LH_C_0⁰] ::: false
-//│ _lh_dropWhile_arg1(_lh_dropWhile_LH_C_0) :: '49_callres <: [Destruct(True, False)] ::: false
-//│ dropWhile_lh_₁ :: 'dropWhile_lh_₁ <: ['_lh_dropWhile_arg1⁰ => '52_callres | 'x⁰ => '120_callres => '122_callres] ::: false
-//│ _lh_dropWhile_arg1 :: '_lh_dropWhile_arg1⁰ <: ['_lh_dropWhile_LH_C_0⁰ => '49_callres] ::: false
-//│ dropWhile_lh_₁(_lh_dropWhile_arg1) :: '52_callres <: ['_lh_dropWhile_LH_C_1⁰ => '54_callres] ::: false
-//│ _lh_dropWhile_LH_C_1 :: '_lh_dropWhile_LH_C_1⁰ <: ['_lh_dropWhile_arg2⁰ | '_lh_break_LH_C_1⁰] ::: false
-//│ dropWhile_lh_₁(_lh_dropWhile_arg1, _lh_dropWhile_LH_C_1) :: '54_callres <: ['58_ifres] ::: false
-//│ _lh_dropWhile_LH_C_0 :: '_lh_dropWhile_LH_C_0⁰ <: ['x⁰ | '_lh_break_LH_C_0⁰] ::: false
-//│ _lh_dropWhile_LH_C_1 :: '_lh_dropWhile_LH_C_1⁰ <: ['_lh_dropWhile_arg2⁰ | '_lh_break_LH_C_1⁰] ::: false
+//│ _lh_dropWhile_arg1 :: '_lh_dropWhile_arg1⁰ <: [] ::: true
+//│ _lh_dropWhile_LH_C_0 :: '_lh_dropWhile_LH_C_0⁰ <: [] ::: true
+//│ _lh_dropWhile_arg1(_lh_dropWhile_LH_C_0) :: '49_callres <: [] ::: true
+//│ dropWhile_lh_₁ :: 'dropWhile_lh_₁ <: [] ::: true
+//│ _lh_dropWhile_arg1 :: '_lh_dropWhile_arg1⁰ <: [] ::: true
+//│ dropWhile_lh_₁(_lh_dropWhile_arg1) :: '52_callres <: [] ::: true
+//│ _lh_dropWhile_LH_C_1 :: '_lh_dropWhile_LH_C_1⁰ <: [] ::: true
+//│ dropWhile_lh_₁(_lh_dropWhile_arg1, _lh_dropWhile_LH_C_1) :: '54_callres <: [] ::: true
+//│ _lh_dropWhile_LH_C_0 :: '_lh_dropWhile_LH_C_0⁰ <: [] ::: true
+//│ _lh_dropWhile_LH_C_1 :: '_lh_dropWhile_LH_C_1⁰ <: [] ::: true
 //│ [LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1] :: LH_C('_lh_dropWhile_LH_C_0⁰, '_lh_dropWhile_LH_C_1⁰) ::: true
-//│ if _lh_dropWhile_arg1(_lh_dropWhile_LH_C_0) then dropWhile_lh_₁(_lh_dropWhile_arg1, _lh_dropWhile_LH_C_1) else [LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1] :: '58_ifres <: ['60_matchres] ::: false
-//│ error :: '_lh_rigid_error_var <: [DeadCodeCons] ::: true
-//│ case _lh_dropWhile_arg2 of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1 => if _lh_dropWhile_arg1(_lh_dropWhile_LH_C_0) then dropWhile_lh_₁(_lh_dropWhile_arg1, _lh_dropWhile_LH_C_1) else [LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1] | _  => error} :: '60_matchres <: ['54_callres | '124_callres] ::: false
+//│ if _lh_dropWhile_arg1(_lh_dropWhile_LH_C_0) then dropWhile_lh_₁(_lh_dropWhile_arg1, _lh_dropWhile_LH_C_1) else [LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1] :: '58_ifres <: [] ::: true
+//│ error :: '_lh_rigid_error_var <: [] ::: true
+//│ case _lh_dropWhile_arg2 of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1 => if _lh_dropWhile_arg1(_lh_dropWhile_LH_C_0) then dropWhile_lh_₁(_lh_dropWhile_arg1, _lh_dropWhile_LH_C_1) else [LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1] | _  => error} :: '60_matchres <: [] ::: true
 //│ (fun _lh_dropWhile_arg2 -> case _lh_dropWhile_arg2 of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1 => if _lh_dropWhile_arg1(_lh_dropWhile_LH_C_0) then dropWhile_lh_₁(_lh_dropWhile_arg1, _lh_dropWhile_LH_C_1) else [LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1] | _  => error}) :: '_lh_dropWhile_arg2⁰ => '60_matchres ::: true
 //│ (fun _lh_dropWhile_arg1 -> (fun _lh_dropWhile_arg2 -> case _lh_dropWhile_arg2 of {LH_N  => [LH_N] | LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1 => if _lh_dropWhile_arg1(_lh_dropWhile_LH_C_0) then dropWhile_lh_₁(_lh_dropWhile_arg1, _lh_dropWhile_LH_C_1) else [LH_C _lh_dropWhile_LH_C_0 _lh_dropWhile_LH_C_1] | _  => error})) :: '_lh_dropWhile_arg1⁰ => '_lh_dropWhile_arg2⁰ => '60_matchres ::: true
-//│ _lh_break_arg2 :: '_lh_break_arg2⁰ <: [Destruct(LH_N, LH_C('_lh_break_LH_C_0⁰, '_lh_break_LH_C_1⁰), _)] ::: false
+//│ _lh_break_arg2 :: '_lh_break_arg2⁰ <: [] ::: true
 //│ [LH_N] :: LH_N ::: true
 //│ [LH_N] :: LH_N ::: true
-//│ _lh_words_LH_P2_0 :: '_lh_words_LH_P2_0⁰ <: [NoCons] ::: false
-//│ words_lh_₁ :: 'words_lh_₁ <: [LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_N))))) => '13_callres | '_lh_words_LH_P2_1⁰ => '69_callres | '_lh_words_LH_P2_1¹ => '84_callres | '_lh_words_LH_P2_1² => '102_callres] ::: false
-//│ _lh_words_LH_P2_1 :: '_lh_words_LH_P2_1⁰ <: ['_lh_words_arg1⁰] ::: false
-//│ words_lh_₁(_lh_words_LH_P2_1) :: '69_callres <: [NoCons] ::: false
+//│ _lh_words_LH_P2_0 :: '_lh_words_LH_P2_0⁰ <: [] ::: true
+//│ words_lh_₁ :: 'words_lh_₁ <: [] ::: true
+//│ _lh_words_LH_P2_1 :: '_lh_words_LH_P2_1⁰ <: [] ::: true
+//│ words_lh_₁(_lh_words_LH_P2_1) :: '69_callres <: [] ::: true
 //│ [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)] :: LH_C('_lh_words_LH_P2_0⁰, '69_callres) ::: true
 //│ (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)]) :: '_lh_dummy⁰ => LH_C('_lh_words_LH_P2_0⁰, '69_callres) ::: true
 //│ let _lh_words_LH_P2_0 = [LH_N]
@@ -1132,17 +938,17 @@ words "1 2 4"
 //│ let _lh_words_LH_P2_1 = [LH_N]
 //│ in let _lh_words_LH_P2_0 = [LH_N]
 //│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)]) :: '_lh_dummy⁰ => LH_C('_lh_words_LH_P2_0⁰, '69_callres) ::: true
-//│ _lh_break_arg1 :: '_lh_break_arg1⁰ <: ['_lh_break1_arg1⁰ | '_lh_break_LH_C_0⁰ => '76_callres] ::: false
-//│ _lh_break_LH_C_0 :: '_lh_break_LH_C_0⁰ <: [NoCons | '_lh_dropWhile_LH_C_0⁰ | 'x¹] ::: false
-//│ _lh_break_arg1(_lh_break_LH_C_0) :: '76_callres <: [Destruct(True, False)] ::: false
-//│ _lh_break_LH_C_0 :: '_lh_break_LH_C_0⁰ <: [NoCons | '_lh_dropWhile_LH_C_0⁰ | 'x¹] ::: false
-//│ _lh_break_LH_C_1 :: '_lh_break_LH_C_1⁰ <: ['_lh_break1_arg2⁰ | '_lh_dropWhile_LH_C_1⁰] ::: false
+//│ _lh_break_arg1 :: '_lh_break_arg1⁰ <: [] ::: true
+//│ _lh_break_LH_C_0 :: '_lh_break_LH_C_0⁰ <: [] ::: true
+//│ _lh_break_arg1(_lh_break_LH_C_0) :: '76_callres <: [] ::: true
+//│ _lh_break_LH_C_0 :: '_lh_break_LH_C_0⁰ <: [] ::: true
+//│ _lh_break_LH_C_1 :: '_lh_break_LH_C_1⁰ <: [] ::: true
 //│ [LH_C _lh_break_LH_C_0 _lh_break_LH_C_1] :: LH_C('_lh_break_LH_C_0⁰, '_lh_break_LH_C_1⁰) ::: true
 //│ [LH_N] :: LH_N ::: true
-//│ _lh_words_LH_P2_0 :: '_lh_words_LH_P2_0¹ <: [NoCons] ::: false
-//│ words_lh_₁ :: 'words_lh_₁ <: [LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_N))))) => '13_callres | '_lh_words_LH_P2_1⁰ => '69_callres | '_lh_words_LH_P2_1¹ => '84_callres | '_lh_words_LH_P2_1² => '102_callres] ::: false
-//│ _lh_words_LH_P2_1 :: '_lh_words_LH_P2_1¹ <: ['_lh_words_arg1⁰] ::: false
-//│ words_lh_₁(_lh_words_LH_P2_1) :: '84_callres <: [NoCons] ::: false
+//│ _lh_words_LH_P2_0 :: '_lh_words_LH_P2_0¹ <: [] ::: true
+//│ words_lh_₁ :: 'words_lh_₁ <: [] ::: true
+//│ _lh_words_LH_P2_1 :: '_lh_words_LH_P2_1¹ <: [] ::: true
+//│ words_lh_₁(_lh_words_LH_P2_1) :: '84_callres <: [] ::: true
 //│ [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)] :: LH_C('_lh_words_LH_P2_0¹, '84_callres) ::: true
 //│ (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)]) :: '_lh_dummy¹ => LH_C('_lh_words_LH_P2_0¹, '84_callres) ::: true
 //│ let _lh_words_LH_P2_0 = [LH_N]
@@ -1150,20 +956,20 @@ words "1 2 4"
 //│ let _lh_words_LH_P2_1 = [LH_C _lh_break_LH_C_0 _lh_break_LH_C_1]
 //│ in let _lh_words_LH_P2_0 = [LH_N]
 //│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)]) :: '_lh_dummy¹ => LH_C('_lh_words_LH_P2_0¹, '84_callres) ::: true
-//│ break1_lh_₁ :: 'break1_lh_₁ <: ['_lh_break1_arg1⁰ => '28_callres | '_lh_break_arg1⁰ => '91_callres] ::: false
-//│ _lh_break_arg1 :: '_lh_break_arg1⁰ <: ['_lh_break1_arg1⁰ | '_lh_break_LH_C_0⁰ => '76_callres] ::: false
-//│ break1_lh_₁(_lh_break_arg1) :: '91_callres <: ['_lh_break_LH_C_1⁰ => '93_callres] ::: false
-//│ _lh_break_LH_C_1 :: '_lh_break_LH_C_1⁰ <: ['_lh_break1_arg2⁰ | '_lh_dropWhile_LH_C_1⁰] ::: false
-//│ break1_lh_₁(_lh_break_arg1, _lh_break_LH_C_1) :: '93_callres <: ['_lh_matchIdent¹] ::: false
-//│ _lh_matchIdent :: '_lh_matchIdent¹ <: [Destruct(LH_P2('_lh_break_LH_P2_0⁰, '_lh_break_LH_P2_1⁰), _)] ::: false
-//│ _lh_break_LH_P2_1 :: '_lh_break_LH_P2_1⁰ <: ['_lh_words_LH_P2_1²] ::: false
-//│ _lh_break_LH_C_0 :: '_lh_break_LH_C_0⁰ <: [NoCons | '_lh_dropWhile_LH_C_0⁰ | 'x¹] ::: false
-//│ _lh_break_LH_P2_0 :: '_lh_break_LH_P2_0⁰ <: [NoCons] ::: false
+//│ break1_lh_₁ :: 'break1_lh_₁ <: [] ::: true
+//│ _lh_break_arg1 :: '_lh_break_arg1⁰ <: [] ::: true
+//│ break1_lh_₁(_lh_break_arg1) :: '91_callres <: [] ::: true
+//│ _lh_break_LH_C_1 :: '_lh_break_LH_C_1⁰ <: [] ::: true
+//│ break1_lh_₁(_lh_break_arg1, _lh_break_LH_C_1) :: '93_callres <: [] ::: true
+//│ _lh_matchIdent :: '_lh_matchIdent¹ <: [] ::: true
+//│ _lh_break_LH_P2_1 :: '_lh_break_LH_P2_1⁰ <: [] ::: true
+//│ _lh_break_LH_C_0 :: '_lh_break_LH_C_0⁰ <: [] ::: true
+//│ _lh_break_LH_P2_0 :: '_lh_break_LH_P2_0⁰ <: [] ::: true
 //│ [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0] :: LH_C('_lh_break_LH_C_0⁰, '_lh_break_LH_P2_0⁰) ::: true
-//│ _lh_words_LH_P2_0 :: '_lh_words_LH_P2_0² <: [NoCons] ::: false
-//│ words_lh_₁ :: 'words_lh_₁ <: [LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_C(Char, LH_N))))) => '13_callres | '_lh_words_LH_P2_1⁰ => '69_callres | '_lh_words_LH_P2_1¹ => '84_callres | '_lh_words_LH_P2_1² => '102_callres] ::: false
-//│ _lh_words_LH_P2_1 :: '_lh_words_LH_P2_1² <: ['_lh_words_arg1⁰] ::: false
-//│ words_lh_₁(_lh_words_LH_P2_1) :: '102_callres <: [NoCons] ::: false
+//│ _lh_words_LH_P2_0 :: '_lh_words_LH_P2_0² <: [] ::: true
+//│ words_lh_₁ :: 'words_lh_₁ <: [] ::: true
+//│ _lh_words_LH_P2_1 :: '_lh_words_LH_P2_1² <: [] ::: true
+//│ words_lh_₁(_lh_words_LH_P2_1) :: '102_callres <: [] ::: true
 //│ [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)] :: LH_C('_lh_words_LH_P2_0², '102_callres) ::: true
 //│ (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)]) :: '_lh_dummy² => LH_C('_lh_words_LH_P2_0², '102_callres) ::: true
 //│ let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
@@ -1171,21 +977,21 @@ words "1 2 4"
 //│ let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
 //│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
 //│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)]) :: '_lh_dummy² => LH_C('_lh_words_LH_P2_0², '102_callres) ::: true
-//│ error :: '_lh_rigid_error_var <: [DeadCodeCons] ::: true
+//│ error :: '_lh_rigid_error_var <: [] ::: true
 //│ case _lh_matchIdent of {LH_P2 _lh_break_LH_P2_0 _lh_break_LH_P2_1 => let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
 //│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)]) | _  => error} :: '108_matchres <: ['110_ifres] ::: false
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)]) | _  => error} :: '108_matchres <: [] ::: true
 //│ let _lh_matchIdent = break1_lh_₁(_lh_break_arg1, _lh_break_LH_C_1)
 //│ in case _lh_matchIdent of {LH_P2 _lh_break_LH_P2_0 _lh_break_LH_P2_1 => let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
 //│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)]) | _  => error} :: '108_matchres <: ['110_ifres] ::: false
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)]) | _  => error} :: '108_matchres <: [] ::: true
 //│ if _lh_break_arg1(_lh_break_LH_C_0) then let _lh_words_LH_P2_1 = [LH_C _lh_break_LH_C_0 _lh_break_LH_C_1]
 //│ in let _lh_words_LH_P2_0 = [LH_N]
 //│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)]) else let _lh_matchIdent = break1_lh_₁(_lh_break_arg1, _lh_break_LH_C_1)
 //│ in case _lh_matchIdent of {LH_P2 _lh_break_LH_P2_0 _lh_break_LH_P2_1 => let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
 //│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)]) | _  => error} :: '110_ifres <: ['112_matchres] ::: false
-//│ error :: '_lh_rigid_error_var <: [DeadCodeCons] ::: true
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)]) | _  => error} :: '110_ifres <: [] ::: true
+//│ error :: '_lh_rigid_error_var <: [] ::: true
 //│ case _lh_break_arg2 of {LH_N  => let _lh_words_LH_P2_1 = [LH_N]
 //│ in let _lh_words_LH_P2_0 = [LH_N]
 //│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)]) | LH_C _lh_break_LH_C_0 _lh_break_LH_C_1 => if _lh_break_arg1(_lh_break_LH_C_0) then let _lh_words_LH_P2_1 = [LH_C _lh_break_LH_C_0 _lh_break_LH_C_1]
@@ -1193,7 +999,7 @@ words "1 2 4"
 //│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)]) else let _lh_matchIdent = break1_lh_₁(_lh_break_arg1, _lh_break_LH_C_1)
 //│ in case _lh_matchIdent of {LH_P2 _lh_break_LH_P2_0 _lh_break_LH_P2_1 => let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
 //│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
-//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)]) | _  => error} | _  => error} :: '112_matchres <: ['136_callres] ::: false
+//│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)]) | _  => error} | _  => error} :: '112_matchres <: [] ::: true
 //│ (fun _lh_break_arg2 -> case _lh_break_arg2 of {LH_N  => let _lh_words_LH_P2_1 = [LH_N]
 //│ in let _lh_words_LH_P2_0 = [LH_N]
 //│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)]) | LH_C _lh_break_LH_C_0 _lh_break_LH_C_1 => if _lh_break_arg1(_lh_break_LH_C_0) then let _lh_words_LH_P2_1 = [LH_C _lh_break_LH_C_0 _lh_break_LH_C_1]
@@ -1210,38 +1016,38 @@ words "1 2 4"
 //│ in case _lh_matchIdent of {LH_P2 _lh_break_LH_P2_0 _lh_break_LH_P2_1 => let _lh_words_LH_P2_1 = _lh_break_LH_P2_1
 //│ in let _lh_words_LH_P2_0 = [LH_C _lh_break_LH_C_0 _lh_break_LH_P2_0]
 //│ in (fun _lh_dummy -> [LH_C _lh_words_LH_P2_0 words_lh_₁(_lh_words_LH_P2_1)]) | _  => error} | _  => error})) :: '_lh_break_arg1⁰ => '_lh_break_arg2⁰ => '112_matchres ::: true
-//│ dropWhile_lh_₁ :: 'dropWhile_lh_₁ <: ['_lh_dropWhile_arg1⁰ => '52_callres | 'x⁰ => '120_callres => '122_callres] ::: false
+//│ dropWhile_lh_₁ :: 'dropWhile_lh_₁ <: [] ::: true
 //│ polyEq :: NoProd ::: true
-//│ x :: 'x⁰ <: [NoCons] ::: false
-//│ polyEq(x) :: '118_callres <: [Char => '120_callres] ::: false
+//│ x :: 'x⁰ <: [] ::: true
+//│ polyEq(x) :: '118_callres <: [] ::: true
 //│ ' ' :: Char ::: false
-//│ polyEq(x, ' ') :: '120_callres <: ['49_callres] ::: false
+//│ polyEq(x, ' ') :: '120_callres <: [] ::: true
 //│ (fun x -> polyEq(x, ' ')) :: 'x⁰ => '120_callres ::: true
-//│ dropWhile_lh_₁((fun x -> polyEq(x, ' '))) :: '122_callres <: ['_lh_words_arg1⁰ => '124_callres] ::: false
-//│ _lh_words_arg1 :: '_lh_words_arg1⁰ <: ['_lh_dropWhile_arg2⁰] ::: false
-//│ dropWhile_lh_₁((fun x -> polyEq(x, ' ')), _lh_words_arg1) :: '124_callres <: ['_lh_matchIdent²] ::: false
-//│ _lh_matchIdent :: '_lh_matchIdent² <: ['_lh_break_arg2⁰ | Destruct(LH_N, _)] ::: false
+//│ dropWhile_lh_₁((fun x -> polyEq(x, ' '))) :: '122_callres <: [] ::: true
+//│ _lh_words_arg1 :: '_lh_words_arg1⁰ <: [] ::: true
+//│ dropWhile_lh_₁((fun x -> polyEq(x, ' ')), _lh_words_arg1) :: '124_callres <: [] ::: true
+//│ _lh_matchIdent :: '_lh_matchIdent² <: [] ::: true
 //│ [LH_N] :: LH_N ::: true
-//│ break_lh_₁ :: 'break_lh_₁ <: ['x¹ => '132_callres => '134_callres] ::: false
+//│ break_lh_₁ :: 'break_lh_₁ <: [] ::: true
 //│ polyEq :: NoProd ::: true
-//│ x :: 'x¹ <: [NoCons] ::: false
-//│ polyEq(x) :: '130_callres <: [Char => '132_callres] ::: false
+//│ x :: 'x¹ <: [] ::: true
+//│ polyEq(x) :: '130_callres <: [] ::: true
 //│ ' ' :: Char ::: false
-//│ polyEq(x, ' ') :: '132_callres <: ['20_callres | '76_callres] ::: false
+//│ polyEq(x, ' ') :: '132_callres <: [] ::: true
 //│ (fun x -> polyEq(x, ' ')) :: 'x¹ => '132_callres ::: true
-//│ break_lh_₁((fun x -> polyEq(x, ' '))) :: '134_callres <: ['_lh_matchIdent² => '136_callres] ::: false
-//│ _lh_matchIdent :: '_lh_matchIdent² <: ['_lh_break_arg2⁰ | Destruct(LH_N, _)] ::: false
-//│ break_lh_₁((fun x -> polyEq(x, ' ')), _lh_matchIdent) :: '136_callres <: ['_lh_matchIdent³] ::: false
-//│ _lh_matchIdent :: '_lh_matchIdent³ <: [Int => '139_callres] ::: false
+//│ break_lh_₁((fun x -> polyEq(x, ' '))) :: '134_callres <: [] ::: true
+//│ _lh_matchIdent :: '_lh_matchIdent² <: [] ::: true
+//│ break_lh_₁((fun x -> polyEq(x, ' ')), _lh_matchIdent) :: '136_callres <: [] ::: true
+//│ _lh_matchIdent :: '_lh_matchIdent³ <: [] ::: true
 //│ 99 :: Int ::: false
-//│ _lh_matchIdent(99) :: '139_callres <: ['141_matchres] ::: false
+//│ _lh_matchIdent(99) :: '139_callres <: [] ::: true
 //│ let _lh_matchIdent = break_lh_₁((fun x -> polyEq(x, ' ')), _lh_matchIdent)
-//│ in _lh_matchIdent(99) :: '139_callres <: ['141_matchres] ::: false
+//│ in _lh_matchIdent(99) :: '139_callres <: [] ::: true
 //│ case _lh_matchIdent of {LH_N  => [LH_N] | _  => let _lh_matchIdent = break_lh_₁((fun x -> polyEq(x, ' ')), _lh_matchIdent)
-//│ in _lh_matchIdent(99)} :: '141_matchres <: ['13_callres | '69_callres | '84_callres | '102_callres] ::: false
+//│ in _lh_matchIdent(99)} :: '141_matchres <: [] ::: true
 //│ let _lh_matchIdent = dropWhile_lh_₁((fun x -> polyEq(x, ' ')), _lh_words_arg1)
 //│ in case _lh_matchIdent of {LH_N  => [LH_N] | _  => let _lh_matchIdent = break_lh_₁((fun x -> polyEq(x, ' ')), _lh_matchIdent)
-//│ in _lh_matchIdent(99)} :: '141_matchres <: ['13_callres | '69_callres | '84_callres | '102_callres] ::: false
+//│ in _lh_matchIdent(99)} :: '141_matchres <: [] ::: true
 //│ (fun _lh_words_arg1 -> let _lh_matchIdent = dropWhile_lh_₁((fun x -> polyEq(x, ' ')), _lh_words_arg1)
 //│ in case _lh_matchIdent of {LH_N  => [LH_N] | _  => let _lh_matchIdent = break_lh_₁((fun x -> polyEq(x, ' ')), _lh_matchIdent)
 //│ in _lh_matchIdent(99)}) :: '_lh_words_arg1⁰ => '141_matchres ::: true
@@ -1441,175 +1247,134 @@ words(C(2, C(1, C(2, C(1, C(2, N))))))
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [words^101] (hopeless to continue)
-//│ 	[words^101 · break^66] (using original def)
-//│ 		[words^101 · break^66 · break1^13] (using original def)
-//│ 			[words^101 · break^66 · break1^13 · break1^40] ---> [words^101 · break^66 · break1^13] (using original def)
-//│ 	[words^101 · dropWhile^55] (using original def)
-//│ 		[words^101 · dropWhile^55 · dropWhile^89] ---> [words^101 · dropWhile^55] (using original def)
-//│ 	[words^101 · words^77] ---> [words^101] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ words_₀([C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]])
-//│ def words_₀(s¹) = 
-//│ 	case dropWhile_₀((fun x⁵ -> (x⁵ == 1)), s¹) of {
-//│ 		N  => [N]
-//│ 		| s'¹ => case break_₀((fun x⁶ -> (x⁶ == 1)), s'¹) of {
-//│ 			P w¹ s''¹ => [C w¹ words_₀(s''¹)]}}
-//│ 	where
-//│ 	def break_₀(p², ls⁴) = 
-//│ 		case ls⁴ of {
-//│ 			N  => [P [N] [N]]
-//│ 			| C x⁴ xs² => if p²(x⁴) then [P [N] [C x⁴ xs²]] else case break1_₀(p², xs²) of {
-//│ 				P ys² zs² => [P [C x⁴ ys²] zs²]}}
-//│ 		where
-//│ 		def break1_₀(p³, ls⁵) = 
-//│ 			case ls⁵ of {
-//│ 				N  => [P [N] [N]]
-//│ 				| C x⁷ xs³ => if p³(x⁷) then [P [N] [C x⁷ xs³]] else case break1_₀(p³, xs³) of {
-//│ 					P ys³ zs³ => [P [C x⁷ ys³] zs³]}}
-//│ 	def dropWhile_₀(f¹, ls³) = 
-//│ 		case ls³ of {
-//│ 			N  => [N]
-//│ 			| C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 115 --->
-//│ 	case dropWhile_₀((fun x⁵ -> (x⁵ == 1)), s¹) of {N  => [N] | s'¹ => case break_₀((fun x⁶ -> (x⁶ == 1)), s'¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}}: 185
-//│ [C h¹ t¹]: 126 --->
-//│ 	case ls⁴ of {N  => [P [N] [N]] | C x⁴ xs² => if p²(x⁴) then [P [N] [C x⁴ xs²]] else case break1_₀(p², xs²) of {P ys² zs² => [P [C x⁴ ys²] zs²]}}: 155
-//│ 	case dropWhile_₀((fun x⁵ -> (x⁵ == 1)), s¹) of {N  => [N] | s'¹ => case break_₀((fun x⁶ -> (x⁶ == 1)), s'¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}}: 185
-//│ [N]: 133 --->
-//│ 	case ls³ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 128
-//│ [P [N] [N]]: 134 --->
-//│ 	case break_₀((fun x⁶ -> (x⁶ == 1)), s'¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}: 184
-//│ [C x⁴ xs²]: 141 --->
-//│ 	case ls³ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 128
-//│ [P [N] [C x⁴ xs²]]: 142 --->
-//│ 	case break_₀((fun x⁶ -> (x⁶ == 1)), s'¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}: 184
-//│ [P [C x⁴ ys²] zs²]: 152 --->
-//│ 	case break_₀((fun x⁶ -> (x⁶ == 1)), s'¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}: 184
-//│ [N]: 189 --->
-//│ 	case ls³ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 128
-//│ [P [N] [N]]: 190 --->
-//│ 	case break1_₀(p², xs²) of {P ys² zs² => [P [C x⁴ ys²] zs²]}: 153
-//│ 	case break1_₀(p³, xs³) of {P ys³ zs³ => [P [C x⁷ ys³] zs³]}: 209
-//│ [C x⁷ xs³]: 197 --->
-//│ 	case ls³ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 128
-//│ [P [N] [C x⁷ xs³]]: 198 --->
-//│ 	case break1_₀(p², xs²) of {P ys² zs² => [P [C x⁴ ys²] zs²]}: 153
-//│ 	case break1_₀(p³, xs³) of {P ys³ zs³ => [P [C x⁷ ys³] zs³]}: 209
-//│ [P [C x⁷ ys³] zs³]: 208 --->
-//│ 	case break1_₀(p², xs²) of {P ys² zs² => [P [C x⁴ ys²] zs²]}: 153
-//│ 	case break1_₀(p³, xs³) of {P ys³ zs³ => [P [C x⁷ ys³] zs³]}: 209
-//│ [N]: 220 --->
-//│ 	case ls³ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 128
-//│ 	case ls⁵ of {N  => [P [N] [N]] | C x⁷ xs³ => if p³(x⁷) then [P [N] [C x⁷ xs³]] else case break1_₀(p³, xs³) of {P ys³ zs³ => [P [C x⁷ ys³] zs³]}}: 211
-//│ [C 2 [N]]: 221 --->
-//│ 	case ls³ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 128
-//│ 	case ls⁵ of {N  => [P [N] [N]] | C x⁷ xs³ => if p³(x⁷) then [P [N] [C x⁷ xs³]] else case break1_₀(p³, xs³) of {P ys³ zs³ => [P [C x⁷ ys³] zs³]}}: 211
-//│ [C 1 [C 2 [N]]]: 222 --->
-//│ 	case ls³ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 128
-//│ 	case ls⁵ of {N  => [P [N] [N]] | C x⁷ xs³ => if p³(x⁷) then [P [N] [C x⁷ xs³]] else case break1_₀(p³, xs³) of {P ys³ zs³ => [P [C x⁷ ys³] zs³]}}: 211
-//│ [C 2 [C 1 [C 2 [N]]]]: 223 --->
-//│ 	case ls³ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 128
-//│ 	case ls⁵ of {N  => [P [N] [N]] | C x⁷ xs³ => if p³(x⁷) then [P [N] [C x⁷ xs³]] else case break1_₀(p³, xs³) of {P ys³ zs³ => [P [C x⁷ ys³] zs³]}}: 211
-//│ [C 1 [C 2 [C 1 [C 2 [N]]]]]: 224 --->
-//│ 	case ls³ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 128
-//│ 	case ls⁵ of {N  => [P [N] [N]] | C x⁷ xs³ => if p³(x⁷) then [P [N] [C x⁷ xs³]] else case break1_₀(p³, xs³) of {P ys³ zs³ => [P [C x⁷ ys³] zs³]}}: 211
-//│ [C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]]: 225 --->
-//│ 	case ls³ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 128
+//│ [N]: 3 --->
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 98
+//│ [P [N] [N]]: 4 --->
+//│ 	case break((fun x³ -> (x³ == 1)), s'⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}: 81
+//│ [C x⁰ xs⁰]: 11 --->
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 98
+//│ [P [N] [C x⁰ xs⁰]]: 12 --->
+//│ 	case break((fun x³ -> (x³ == 1)), s'⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}: 81
+//│ [P [C x⁰ ys⁰] zs⁰]: 22 --->
+//│ 	case break((fun x³ -> (x³ == 1)), s'⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}: 81
+//│ [N]: 30 --->
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 98
+//│ [P [N] [N]]: 31 --->
+//│ 	case break1(p⁰, xs⁰) of {P ys⁰ zs⁰ => [P [C x⁰ ys⁰] zs⁰]}: 23
+//│ 	case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}: 50
+//│ [C x¹ xs¹]: 38 --->
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 98
+//│ [P [N] [C x¹ xs¹]]: 39 --->
+//│ 	case break1(p⁰, xs⁰) of {P ys⁰ zs⁰ => [P [C x⁰ ys⁰] zs⁰]}: 23
+//│ 	case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}: 50
+//│ [P [C x¹ ys¹] zs¹]: 49 --->
+//│ 	case break1(p⁰, xs⁰) of {P ys⁰ zs⁰ => [P [C x⁰ ys⁰] zs⁰]}: 23
+//│ 	case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}: 50
+//│ [N]: 85 --->
+//│ 	case dropWhile((fun x² -> (x² == 1)), s⁰) of {N  => [N] | s'⁰ => case break((fun x³ -> (x³ == 1)), s'⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}}: 82
+//│ [C h⁰ t⁰]: 96 --->
+//│ 	case ls⁰ of {N  => [P [N] [N]] | C x⁰ xs⁰ => if p⁰(x⁰) then [P [N] [C x⁰ xs⁰]] else case break1(p⁰, xs⁰) of {P ys⁰ zs⁰ => [P [C x⁰ ys⁰] zs⁰]}}: 25
+//│ 	case dropWhile((fun x² -> (x² == 1)), s⁰) of {N  => [N] | s'⁰ => case break((fun x³ -> (x³ == 1)), s'⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}}: 82
+//│ [N]: 107 --->
+//│ 	case ls¹ of {N  => [P [N] [N]] | C x¹ xs¹ => if p¹(x¹) then [P [N] [C x¹ xs¹]] else case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}}: 52
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 98
+//│ [C 2 [N]]: 108 --->
+//│ 	case ls¹ of {N  => [P [N] [N]] | C x¹ xs¹ => if p¹(x¹) then [P [N] [C x¹ xs¹]] else case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}}: 52
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 98
+//│ [C 1 [C 2 [N]]]: 109 --->
+//│ 	case ls¹ of {N  => [P [N] [N]] | C x¹ xs¹ => if p¹(x¹) then [P [N] [C x¹ xs¹]] else case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}}: 52
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 98
+//│ [C 2 [C 1 [C 2 [N]]]]: 110 --->
+//│ 	case ls¹ of {N  => [P [N] [N]] | C x¹ xs¹ => if p¹(x¹) then [P [N] [C x¹ xs¹]] else case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}}: 52
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 98
+//│ [C 1 [C 2 [C 1 [C 2 [N]]]]]: 111 --->
+//│ 	case ls¹ of {N  => [P [N] [N]] | C x¹ xs¹ => if p¹(x¹) then [P [N] [C x¹ xs¹]] else case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}}: 52
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 98
+//│ [C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]]: 112 --->
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 98
 //│ ------------------
-//│ case ls³ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 128 --->
-//│ 	[N]: 133
-//│ 	[C x⁴ xs²]: 141
-//│ 	[N]: 189
-//│ 	[C x⁷ xs³]: 197
-//│ 	[N]: 220
-//│ 	[C 2 [N]]: 221
-//│ 	[C 1 [C 2 [N]]]: 222
-//│ 	[C 2 [C 1 [C 2 [N]]]]: 223
-//│ 	[C 1 [C 2 [C 1 [C 2 [N]]]]]: 224
-//│ 	[C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]]: 225
-//│ case break1_₀(p², xs²) of {P ys² zs² => [P [C x⁴ ys²] zs²]}: 153 --->
-//│ 	[P [N] [N]]: 190
-//│ 	[P [N] [C x⁷ xs³]]: 198
-//│ 	[P [C x⁷ ys³] zs³]: 208
-//│ case ls⁴ of {N  => [P [N] [N]] | C x⁴ xs² => if p²(x⁴) then [P [N] [C x⁴ xs²]] else case break1_₀(p², xs²) of {P ys² zs² => [P [C x⁴ ys²] zs²]}}: 155 --->
-//│ 	[C h¹ t¹]: 126
-//│ case break_₀((fun x⁶ -> (x⁶ == 1)), s'¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}: 184 --->
-//│ 	[P [N] [N]]: 134
-//│ 	[P [N] [C x⁴ xs²]]: 142
-//│ 	[P [C x⁴ ys²] zs²]: 152
-//│ case dropWhile_₀((fun x⁵ -> (x⁵ == 1)), s¹) of {N  => [N] | s'¹ => case break_₀((fun x⁶ -> (x⁶ == 1)), s'¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}}: 185 --->
-//│ 	[N]: 115
-//│ 	[C h¹ t¹]: 126
-//│ case break1_₀(p³, xs³) of {P ys³ zs³ => [P [C x⁷ ys³] zs³]}: 209 --->
-//│ 	[P [N] [N]]: 190
-//│ 	[P [N] [C x⁷ xs³]]: 198
-//│ 	[P [C x⁷ ys³] zs³]: 208
-//│ case ls⁵ of {N  => [P [N] [N]] | C x⁷ xs³ => if p³(x⁷) then [P [N] [C x⁷ xs³]] else case break1_₀(p³, xs³) of {P ys³ zs³ => [P [C x⁷ ys³] zs³]}}: 211 --->
-//│ 	[N]: 220
-//│ 	[C 2 [N]]: 221
-//│ 	[C 1 [C 2 [N]]]: 222
-//│ 	[C 2 [C 1 [C 2 [N]]]]: 223
-//│ 	[C 1 [C 2 [C 1 [C 2 [N]]]]]: 224
+//│ case break1(p⁰, xs⁰) of {P ys⁰ zs⁰ => [P [C x⁰ ys⁰] zs⁰]}: 23 --->
+//│ 	[P [N] [N]]: 31
+//│ 	[P [N] [C x¹ xs¹]]: 39
+//│ 	[P [C x¹ ys¹] zs¹]: 49
+//│ case ls⁰ of {N  => [P [N] [N]] | C x⁰ xs⁰ => if p⁰(x⁰) then [P [N] [C x⁰ xs⁰]] else case break1(p⁰, xs⁰) of {P ys⁰ zs⁰ => [P [C x⁰ ys⁰] zs⁰]}}: 25 --->
+//│ 	[C h⁰ t⁰]: 96
+//│ case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}: 50 --->
+//│ 	[P [N] [N]]: 31
+//│ 	[P [N] [C x¹ xs¹]]: 39
+//│ 	[P [C x¹ ys¹] zs¹]: 49
+//│ case ls¹ of {N  => [P [N] [N]] | C x¹ xs¹ => if p¹(x¹) then [P [N] [C x¹ xs¹]] else case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}}: 52 --->
+//│ 	[N]: 107
+//│ 	[C 2 [N]]: 108
+//│ 	[C 1 [C 2 [N]]]: 109
+//│ 	[C 2 [C 1 [C 2 [N]]]]: 110
+//│ 	[C 1 [C 2 [C 1 [C 2 [N]]]]]: 111
+//│ case break((fun x³ -> (x³ == 1)), s'⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}: 81 --->
+//│ 	[P [N] [N]]: 4
+//│ 	[P [N] [C x⁰ xs⁰]]: 12
+//│ 	[P [C x⁰ ys⁰] zs⁰]: 22
+//│ case dropWhile((fun x² -> (x² == 1)), s⁰) of {N  => [N] | s'⁰ => case break((fun x³ -> (x³ == 1)), s'⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}}: 82 --->
+//│ 	[N]: 85
+//│ 	[C h⁰ t⁰]: 96
+//│ case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 98 --->
+//│ 	[N]: 3
+//│ 	[C x⁰ xs⁰]: 11
+//│ 	[N]: 30
+//│ 	[C x¹ xs¹]: 38
+//│ 	[N]: 107
+//│ 	[C 2 [N]]: 108
+//│ 	[C 1 [C 2 [N]]]: 109
+//│ 	[C 2 [C 1 [C 2 [N]]]]: 110
+//│ 	[C 1 [C 2 [C 1 [C 2 [N]]]]]: 111
+//│ 	[C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]]: 112
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [P [N] [N]]: 134 --->
-//│ 	case break_₀((fun x⁶ -> (x⁶ == 1)), s'¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}: 184
-//│ [P [N] [C x⁴ xs²]]: 142 --->
-//│ 	case break_₀((fun x⁶ -> (x⁶ == 1)), s'¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}: 184
-//│ [P [C x⁴ ys²] zs²]: 152 --->
-//│ 	case break_₀((fun x⁶ -> (x⁶ == 1)), s'¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}: 184
+//│ [P [N] [N]]: 4 --->
+//│ 	case break((fun x³ -> (x³ == 1)), s'⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}: 81
+//│ [P [N] [C x⁰ xs⁰]]: 12 --->
+//│ 	case break((fun x³ -> (x³ == 1)), s'⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}: 81
+//│ [P [C x⁰ ys⁰] zs⁰]: 22 --->
+//│ 	case break((fun x³ -> (x³ == 1)), s'⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}: 81
 //│ ------------------
-//│ case break_₀((fun x⁶ -> (x⁶ == 1)), s'¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}: 184 --->
-//│ 	[P [N] [N]]: 134
-//│ 	[P [N] [C x⁴ xs²]]: 142
-//│ 	[P [C x⁴ ys²] zs²]: 152
+//│ case break((fun x³ -> (x³ == 1)), s'⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}: 81 --->
+//│ 	[P [N] [N]]: 4
+//│ 	[P [N] [C x⁰ xs⁰]]: 12
+//│ 	[P [C x⁰ ys⁰] zs⁰]: 22
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ words_₀([C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]])
-//│ def words_₀(s²) = 
-//│ 	case dropWhile_₀((fun x⁸ -> (x⁸ == 1)), s²) of {
-//│ 		N  => [N]
-//│ 		| s'¹ => break_₀((fun x⁹ -> (x⁹ == 1)), s'¹, 99)}
-//│ 	where
-//│ 	def break_₀(p⁴, ls⁷) = 
-//│ 		case ls⁷ of {
-//│ 			N  => 
-//│ 				let s''² = [N]
-//│ 				in let w² = [N]
-//│ 				in (fun _lh_dummy⁰ -> [C w² words_₀(s''²)])
-//│ 			| C x⁴ xs² => if p⁴(x⁴) then 
-//│ 				let s''³ = [C x⁴ xs²]
-//│ 				in let w³ = [N]
-//│ 				in (fun _lh_dummy¹ -> [C w³ words_₀(s''³)]) else case break1_₀(p⁴, xs²) of {
-//│ 				P ys² zs² => 
-//│ 					let s''⁴ = zs²
-//│ 					in let w⁴ = [C x⁴ ys²]
-//│ 					in (fun _lh_dummy² -> [C w⁴ words_₀(s''⁴)])}}
-//│ 		where
-//│ 		def break1_₀(p⁵, ls⁸) = 
-//│ 			case ls⁸ of {
-//│ 				N  => [P [N] [N]]
-//│ 				| C x⁷ xs³ => if p⁵(x⁷) then [P [N] [C x⁷ xs³]] else case break1_₀(p⁵, xs³) of {
-//│ 					P ys³ zs³ => [P [C x⁷ ys³] zs³]}}
-//│ 	def dropWhile_₀(f², ls⁶) = 
-//│ 		case ls⁶ of {
-//│ 			N  => [N]
-//│ 			| C h¹ t¹ => if f²(h¹) then dropWhile_₀(f², t¹) else [C h¹ t¹]}
+//│ words([C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]])
+//│ def break(p², ls³) = case ls³ of {
+//│ 	N  => 
+//│ 		let s''¹ = [N]
+//│ 		in let w¹ = [N]
+//│ 		in (fun _lh_dummy⁰ -> [C w¹ words(s''¹)])
+//│ 	| C x⁰ xs⁰ => if p²(x⁰) then 
+//│ 		let s''² = [C x⁰ xs⁰]
+//│ 		in let w² = [N]
+//│ 		in (fun _lh_dummy¹ -> [C w² words(s''²)]) else case break1(p², xs⁰) of {
+//│ 		P ys⁰ zs⁰ => 
+//│ 			let s''³ = zs⁰
+//│ 			in let w³ = [C x⁰ ys⁰]
+//│ 			in (fun _lh_dummy² -> [C w³ words(s''³)])}}
+//│ def break1(p³, ls⁴) = case ls⁴ of {
+//│ 	N  => [P [N] [N]]
+//│ 	| C x¹ xs¹ => if p³(x¹) then [P [N] [C x¹ xs¹]] else case break1(p³, xs¹) of {
+//│ 		P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}}
+//│ def dropWhile(f¹, ls⁵) = case ls⁵ of {
+//│ 	N  => [N]
+//│ 	| C h⁰ t⁰ => if f¹(h⁰) then dropWhile(f¹, t⁰) else [C h⁰ t⁰]}
+//│ def words(s¹) = case dropWhile((fun x⁴ -> (x⁴ == 1)), s¹) of {
+//│ 	N  => [N]
+//│ 	| s'⁰ => break((fun x⁵ -> (x⁵ == 1)), s'⁰, 99)}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ words_₀ :: 'words_₀ <: [C(Int, C(Int, C(Int, C(Int, C(Int, N))))) => '13_callres | 's''⁰ => '37_callres | 's''¹ => '52_callres | 's''² => '69_callres] ::: false
+//│ words :: 'words <: [] ::: true
 //│ 2 :: Int ::: false
 //│ 1 :: Int ::: false
 //│ 2 :: Int ::: false
@@ -1621,211 +1386,211 @@ words(C(2, C(1, C(2, C(1, C(2, N))))))
 //│ [C 2 [C 1 [C 2 [N]]]] :: C(Int, C(Int, C(Int, N))) ::: true
 //│ [C 1 [C 2 [C 1 [C 2 [N]]]]] :: C(Int, C(Int, C(Int, C(Int, N)))) ::: true
 //│ [C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]] :: C(Int, C(Int, C(Int, C(Int, C(Int, N))))) ::: true
-//│ words_₀([C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]]) :: '13_callres <: [NoCons] ::: false
-//│ ls :: 'ls⁰ <: [Destruct(N, C('h⁰, 't⁰))] ::: false
-//│ [N] :: N ::: true
-//│ f :: 'f⁰ <: ['h⁰ => '18_callres] ::: false
-//│ h :: 'h⁰ <: ['x¹ | 'x⁰] ::: false
-//│ f(h) :: '18_callres <: [Destruct(True, False)] ::: false
-//│ dropWhile_₀ :: 'dropWhile_₀ <: ['f⁰ => '21_callres | 'x¹ => '84_callres => '86_callres] ::: false
-//│ f :: 'f⁰ <: ['h⁰ => '18_callres] ::: false
-//│ dropWhile_₀(f) :: '21_callres <: ['t⁰ => '23_callres] ::: false
-//│ t :: 't⁰ <: ['ls⁰ | 'xs⁰] ::: false
-//│ dropWhile_₀(f, t) :: '23_callres <: ['27_ifres] ::: false
-//│ h :: 'h⁰ <: ['x¹ | 'x⁰] ::: false
-//│ t :: 't⁰ <: ['ls⁰ | 'xs⁰] ::: false
-//│ [C h t] :: C('h⁰, 't⁰) ::: true
-//│ if f(h) then dropWhile_₀(f, t) else [C h t] :: '27_ifres <: ['28_matchres] ::: false
-//│ case ls of {N  => [N] | C h t => if f(h) then dropWhile_₀(f, t) else [C h t]} :: '28_matchres <: ['23_callres | '88_callres] ::: false
-//│ (fun ls -> case ls of {N  => [N] | C h t => if f(h) then dropWhile_₀(f, t) else [C h t]}) :: 'ls⁰ => '28_matchres ::: true
-//│ (fun f -> (fun ls -> case ls of {N  => [N] | C h t => if f(h) then dropWhile_₀(f, t) else [C h t]})) :: 'f⁰ => 'ls⁰ => '28_matchres ::: true
-//│ ls :: 'ls¹ <: [Destruct(N, C('x⁰, 'xs⁰))] ::: false
+//│ words([C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]]) :: '13_callres <: [] ::: true
+//│ ls :: 'ls⁰ <: [] ::: true
 //│ [N] :: N ::: true
 //│ [N] :: N ::: true
-//│ w :: 'w⁰ <: [NoCons] ::: false
-//│ words_₀ :: 'words_₀ <: [C(Int, C(Int, C(Int, C(Int, C(Int, N))))) => '13_callres | 's''⁰ => '37_callres | 's''¹ => '52_callres | 's''² => '69_callres] ::: false
-//│ s'' :: 's''⁰ <: ['s⁰] ::: false
-//│ words_₀(s'') :: '37_callres <: [NoCons] ::: false
-//│ [C w words_₀(s'')] :: C('w⁰, '37_callres) ::: true
-//│ (fun _lh_dummy -> [C w words_₀(s'')]) :: '_lh_dummy⁰ => C('w⁰, '37_callres) ::: true
+//│ w :: 'w⁰ <: [] ::: true
+//│ words :: 'words <: [] ::: true
+//│ s'' :: 's''⁰ <: [] ::: true
+//│ words(s'') :: '20_callres <: [] ::: true
+//│ [C w words(s'')] :: C('w⁰, '20_callres) ::: true
+//│ (fun _lh_dummy -> [C w words(s'')]) :: '_lh_dummy⁰ => C('w⁰, '20_callres) ::: true
 //│ let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) :: '_lh_dummy⁰ => C('w⁰, '37_callres) ::: true
+//│ in (fun _lh_dummy -> [C w words(s'')]) :: '_lh_dummy⁰ => C('w⁰, '20_callres) ::: true
 //│ let s'' = [N]
 //│ in let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) :: '_lh_dummy⁰ => C('w⁰, '37_callres) ::: true
-//│ p :: 'p⁰ <: ['x⁰ => '44_callres | 'p¹] ::: false
-//│ x :: 'x⁰ <: [NoCons | 'h⁰ | 'x²] ::: false
-//│ p(x) :: '44_callres <: [Destruct(True, False)] ::: false
-//│ x :: 'x⁰ <: [NoCons | 'h⁰ | 'x²] ::: false
-//│ xs :: 'xs⁰ <: ['t⁰ | 'ls²] ::: false
+//│ in (fun _lh_dummy -> [C w words(s'')]) :: '_lh_dummy⁰ => C('w⁰, '20_callres) ::: true
+//│ p :: 'p⁰ <: [] ::: true
+//│ x :: 'x⁰ <: [] ::: true
+//│ p(x) :: '27_callres <: [] ::: true
+//│ x :: 'x⁰ <: [] ::: true
+//│ xs :: 'xs⁰ <: [] ::: true
 //│ [C x xs] :: C('x⁰, 'xs⁰) ::: true
 //│ [N] :: N ::: true
-//│ w :: 'w¹ <: [NoCons] ::: false
-//│ words_₀ :: 'words_₀ <: [C(Int, C(Int, C(Int, C(Int, C(Int, N))))) => '13_callres | 's''⁰ => '37_callres | 's''¹ => '52_callres | 's''² => '69_callres] ::: false
-//│ s'' :: 's''¹ <: ['s⁰] ::: false
-//│ words_₀(s'') :: '52_callres <: [NoCons] ::: false
-//│ [C w words_₀(s'')] :: C('w¹, '52_callres) ::: true
-//│ (fun _lh_dummy -> [C w words_₀(s'')]) :: '_lh_dummy¹ => C('w¹, '52_callres) ::: true
+//│ w :: 'w¹ <: [] ::: true
+//│ words :: 'words <: [] ::: true
+//│ s'' :: 's''¹ <: [] ::: true
+//│ words(s'') :: '35_callres <: [] ::: true
+//│ [C w words(s'')] :: C('w¹, '35_callres) ::: true
+//│ (fun _lh_dummy -> [C w words(s'')]) :: '_lh_dummy¹ => C('w¹, '35_callres) ::: true
 //│ let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) :: '_lh_dummy¹ => C('w¹, '52_callres) ::: true
+//│ in (fun _lh_dummy -> [C w words(s'')]) :: '_lh_dummy¹ => C('w¹, '35_callres) ::: true
 //│ let s'' = [C x xs]
 //│ in let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) :: '_lh_dummy¹ => C('w¹, '52_callres) ::: true
-//│ break1_₀ :: 'break1_₀ <: ['p⁰ => '59_callres | 'p¹ => '118_callres] ::: false
-//│ p :: 'p⁰ <: ['x⁰ => '44_callres | 'p¹] ::: false
-//│ break1_₀(p) :: '59_callres <: ['xs⁰ => '61_callres] ::: false
-//│ xs :: 'xs⁰ <: ['t⁰ | 'ls²] ::: false
-//│ break1_₀(p, xs) :: '61_callres <: [Destruct(P('ys⁰, 'zs⁰))] ::: false
-//│ zs :: 'zs⁰ <: ['s''²] ::: false
-//│ x :: 'x⁰ <: [NoCons | 'h⁰ | 'x²] ::: false
-//│ ys :: 'ys⁰ <: [NoCons] ::: false
+//│ in (fun _lh_dummy -> [C w words(s'')]) :: '_lh_dummy¹ => C('w¹, '35_callres) ::: true
+//│ break1 :: 'break1 <: [] ::: true
+//│ p :: 'p⁰ <: [] ::: true
+//│ break1(p) :: '42_callres <: [] ::: true
+//│ xs :: 'xs⁰ <: [] ::: true
+//│ break1(p, xs) :: '44_callres <: [] ::: true
+//│ zs :: 'zs⁰ <: [] ::: true
+//│ x :: 'x⁰ <: [] ::: true
+//│ ys :: 'ys⁰ <: [] ::: true
 //│ [C x ys] :: C('x⁰, 'ys⁰) ::: true
-//│ w :: 'w² <: [NoCons] ::: false
-//│ words_₀ :: 'words_₀ <: [C(Int, C(Int, C(Int, C(Int, C(Int, N))))) => '13_callres | 's''⁰ => '37_callres | 's''¹ => '52_callres | 's''² => '69_callres] ::: false
-//│ s'' :: 's''² <: ['s⁰] ::: false
-//│ words_₀(s'') :: '69_callres <: [NoCons] ::: false
-//│ [C w words_₀(s'')] :: C('w², '69_callres) ::: true
-//│ (fun _lh_dummy -> [C w words_₀(s'')]) :: '_lh_dummy² => C('w², '69_callres) ::: true
+//│ w :: 'w² <: [] ::: true
+//│ words :: 'words <: [] ::: true
+//│ s'' :: 's''² <: [] ::: true
+//│ words(s'') :: '52_callres <: [] ::: true
+//│ [C w words(s'')] :: C('w², '52_callres) ::: true
+//│ (fun _lh_dummy -> [C w words(s'')]) :: '_lh_dummy² => C('w², '52_callres) ::: true
 //│ let w = [C x ys]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) :: '_lh_dummy² => C('w², '69_callres) ::: true
+//│ in (fun _lh_dummy -> [C w words(s'')]) :: '_lh_dummy² => C('w², '52_callres) ::: true
 //│ let s'' = zs
 //│ in let w = [C x ys]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) :: '_lh_dummy² => C('w², '69_callres) ::: true
-//│ case break1_₀(p, xs) of {P ys zs => let s'' = zs
+//│ in (fun _lh_dummy -> [C w words(s'')]) :: '_lh_dummy² => C('w², '52_callres) ::: true
+//│ case break1(p, xs) of {P ys zs => let s'' = zs
 //│ in let w = [C x ys]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')])} :: '74_matchres <: ['75_ifres] ::: false
+//│ in (fun _lh_dummy -> [C w words(s'')])} :: '57_matchres <: [] ::: true
 //│ if p(x) then let s'' = [C x xs]
 //│ in let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) else case break1_₀(p, xs) of {P ys zs => let s'' = zs
+//│ in (fun _lh_dummy -> [C w words(s'')]) else case break1(p, xs) of {P ys zs => let s'' = zs
 //│ in let w = [C x ys]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')])} :: '75_ifres <: ['76_matchres] ::: false
+//│ in (fun _lh_dummy -> [C w words(s'')])} :: '58_ifres <: [] ::: true
 //│ case ls of {N  => let s'' = [N]
 //│ in let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) | C x xs => if p(x) then let s'' = [C x xs]
+//│ in (fun _lh_dummy -> [C w words(s'')]) | C x xs => if p(x) then let s'' = [C x xs]
 //│ in let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) else case break1_₀(p, xs) of {P ys zs => let s'' = zs
+//│ in (fun _lh_dummy -> [C w words(s'')]) else case break1(p, xs) of {P ys zs => let s'' = zs
 //│ in let w = [C x ys]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')])}} :: '76_matchres <: ['99_callres] ::: false
+//│ in (fun _lh_dummy -> [C w words(s'')])}} :: '59_matchres <: [] ::: true
 //│ (fun ls -> case ls of {N  => let s'' = [N]
 //│ in let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) | C x xs => if p(x) then let s'' = [C x xs]
+//│ in (fun _lh_dummy -> [C w words(s'')]) | C x xs => if p(x) then let s'' = [C x xs]
 //│ in let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) else case break1_₀(p, xs) of {P ys zs => let s'' = zs
+//│ in (fun _lh_dummy -> [C w words(s'')]) else case break1(p, xs) of {P ys zs => let s'' = zs
 //│ in let w = [C x ys]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')])}}) :: 'ls¹ => '76_matchres ::: true
+//│ in (fun _lh_dummy -> [C w words(s'')])}}) :: 'ls⁰ => '59_matchres ::: true
 //│ (fun p -> (fun ls -> case ls of {N  => let s'' = [N]
 //│ in let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) | C x xs => if p(x) then let s'' = [C x xs]
+//│ in (fun _lh_dummy -> [C w words(s'')]) | C x xs => if p(x) then let s'' = [C x xs]
 //│ in let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) else case break1_₀(p, xs) of {P ys zs => let s'' = zs
+//│ in (fun _lh_dummy -> [C w words(s'')]) else case break1(p, xs) of {P ys zs => let s'' = zs
 //│ in let w = [C x ys]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')])}})) :: 'p⁰ => 'ls¹ => '76_matchres ::: true
-//│ dropWhile_₀ :: 'dropWhile_₀ <: ['f⁰ => '21_callres | 'x¹ => '84_callres => '86_callres] ::: false
-//│ == :: Destruct(Int) => Destruct(Int) => Sum[True, False] ::: true
-//│ x :: 'x¹ <: [Destruct(Int)] ::: false
-//│ ==(x) :: '82_callres <: [Int => '84_callres] ::: false
-//│ 1 :: Int ::: false
-//│ (x == 1) :: '84_callres <: ['18_callres] ::: false
-//│ (fun x -> (x == 1)) :: 'x¹ => '84_callres ::: true
-//│ dropWhile_₀((fun x -> (x == 1))) :: '86_callres <: ['s⁰ => '88_callres] ::: false
-//│ s :: 's⁰ <: ['ls⁰] ::: false
-//│ dropWhile_₀((fun x -> (x == 1)), s) :: '88_callres <: [Destruct(N, _('s'⁰))] ::: false
-//│ [N] :: N ::: true
-//│ break_₀ :: 'break_₀ <: ['x² => '95_callres => '97_callres] ::: false
-//│ == :: Destruct(Int) => Destruct(Int) => Sum[True, False] ::: true
-//│ x :: 'x² <: [Destruct(Int)] ::: false
-//│ ==(x) :: '93_callres <: [Int => '95_callres] ::: false
-//│ 1 :: Int ::: false
-//│ (x == 1) :: '95_callres <: ['44_callres | '110_callres] ::: false
-//│ (fun x -> (x == 1)) :: 'x² => '95_callres ::: true
-//│ break_₀((fun x -> (x == 1))) :: '97_callres <: ['s'⁰ => '99_callres] ::: false
-//│ s' :: 's'⁰ <: ['ls¹] ::: false
-//│ break_₀((fun x -> (x == 1)), s') :: '99_callres <: [Int => '101_callres] ::: false
-//│ 99 :: Int ::: false
-//│ break_₀((fun x -> (x == 1)), s', 99) :: '101_callres <: ['102_matchres] ::: false
-//│ case dropWhile_₀((fun x -> (x == 1)), s) of {N  => [N] | s' => break_₀((fun x -> (x == 1)), s', 99)} :: '102_matchres <: ['13_callres | '37_callres | '52_callres | '69_callres] ::: false
-//│ (fun s -> case dropWhile_₀((fun x -> (x == 1)), s) of {N  => [N] | s' => break_₀((fun x -> (x == 1)), s', 99)}) :: 's⁰ => '102_matchres ::: true
-//│ ls :: 'ls² <: [Destruct(N, C('x³, 'xs¹))] ::: false
+//│ in (fun _lh_dummy -> [C w words(s'')])}})) :: 'p⁰ => 'ls⁰ => '59_matchres ::: true
+//│ ls :: 'ls¹ <: [] ::: true
 //│ [N] :: N ::: true
 //│ [N] :: N ::: true
 //│ [P [N] [N]] :: P(N, N) ::: true
-//│ p :: 'p¹ <: ['x³ => '110_callres] ::: false
-//│ x :: 'x³ <: [NoCons | 'h⁰ | 'x²] ::: false
-//│ p(x) :: '110_callres <: [Destruct(True, False)] ::: false
+//│ p :: 'p¹ <: [] ::: true
+//│ x :: 'x¹ <: [] ::: true
+//│ p(x) :: '68_callres <: [] ::: true
 //│ [N] :: N ::: true
-//│ x :: 'x³ <: [NoCons | 'h⁰ | 'x²] ::: false
-//│ xs :: 'xs¹ <: ['t⁰ | 'ls²] ::: false
-//│ [C x xs] :: C('x³, 'xs¹) ::: true
-//│ [P [N] [C x xs]] :: P(N, C('x³, 'xs¹)) ::: true
-//│ break1_₀ :: 'break1_₀ <: ['p⁰ => '59_callres | 'p¹ => '118_callres] ::: false
-//│ p :: 'p¹ <: ['x³ => '110_callres] ::: false
-//│ break1_₀(p) :: '118_callres <: ['xs¹ => '120_callres] ::: false
-//│ xs :: 'xs¹ <: ['t⁰ | 'ls²] ::: false
-//│ break1_₀(p, xs) :: '120_callres <: [Destruct(P('ys¹, 'zs¹))] ::: false
-//│ x :: 'x³ <: [NoCons | 'h⁰ | 'x²] ::: false
-//│ ys :: 'ys¹ <: [NoCons] ::: false
-//│ [C x ys] :: C('x³, 'ys¹) ::: true
-//│ zs :: 'zs¹ <: ['zs⁰] ::: false
-//│ [P [C x ys] zs] :: P(C('x³, 'ys¹), 'zs¹) ::: true
-//│ case break1_₀(p, xs) of {P ys zs => [P [C x ys] zs]} :: '126_matchres <: ['127_ifres] ::: false
-//│ if p(x) then [P [N] [C x xs]] else case break1_₀(p, xs) of {P ys zs => [P [C x ys] zs]} :: '127_ifres <: ['128_matchres] ::: false
-//│ case ls of {N  => [P [N] [N]] | C x xs => if p(x) then [P [N] [C x xs]] else case break1_₀(p, xs) of {P ys zs => [P [C x ys] zs]}} :: '128_matchres <: ['61_callres | '120_callres] ::: false
-//│ (fun ls -> case ls of {N  => [P [N] [N]] | C x xs => if p(x) then [P [N] [C x xs]] else case break1_₀(p, xs) of {P ys zs => [P [C x ys] zs]}}) :: 'ls² => '128_matchres ::: true
-//│ (fun p -> (fun ls -> case ls of {N  => [P [N] [N]] | C x xs => if p(x) then [P [N] [C x xs]] else case break1_₀(p, xs) of {P ys zs => [P [C x ys] zs]}})) :: 'p¹ => 'ls² => '128_matchres ::: true
+//│ x :: 'x¹ <: [] ::: true
+//│ xs :: 'xs¹ <: [] ::: true
+//│ [C x xs] :: C('x¹, 'xs¹) ::: true
+//│ [P [N] [C x xs]] :: P(N, C('x¹, 'xs¹)) ::: true
+//│ break1 :: 'break1 <: [] ::: true
+//│ p :: 'p¹ <: [] ::: true
+//│ break1(p) :: '76_callres <: [] ::: true
+//│ xs :: 'xs¹ <: [] ::: true
+//│ break1(p, xs) :: '78_callres <: [] ::: true
+//│ x :: 'x¹ <: [] ::: true
+//│ ys :: 'ys¹ <: [] ::: true
+//│ [C x ys] :: C('x¹, 'ys¹) ::: true
+//│ zs :: 'zs¹ <: [] ::: true
+//│ [P [C x ys] zs] :: P(C('x¹, 'ys¹), 'zs¹) ::: true
+//│ case break1(p, xs) of {P ys zs => [P [C x ys] zs]} :: '84_matchres <: [] ::: true
+//│ if p(x) then [P [N] [C x xs]] else case break1(p, xs) of {P ys zs => [P [C x ys] zs]} :: '85_ifres <: [] ::: true
+//│ case ls of {N  => [P [N] [N]] | C x xs => if p(x) then [P [N] [C x xs]] else case break1(p, xs) of {P ys zs => [P [C x ys] zs]}} :: '86_matchres <: [] ::: true
+//│ (fun ls -> case ls of {N  => [P [N] [N]] | C x xs => if p(x) then [P [N] [C x xs]] else case break1(p, xs) of {P ys zs => [P [C x ys] zs]}}) :: 'ls¹ => '86_matchres ::: true
+//│ (fun p -> (fun ls -> case ls of {N  => [P [N] [N]] | C x xs => if p(x) then [P [N] [C x xs]] else case break1(p, xs) of {P ys zs => [P [C x ys] zs]}})) :: 'p¹ => 'ls¹ => '86_matchres ::: true
+//│ dropWhile :: 'dropWhile <: [] ::: true
+//│ == :: Destruct(Int) => Destruct(Int) => Sum[True, False] ::: true
+//│ x :: 'x² <: [] ::: true
+//│ ==(x) :: '92_callres <: [] ::: true
+//│ 1 :: Int ::: false
+//│ (x == 1) :: '94_callres <: [] ::: true
+//│ (fun x -> (x == 1)) :: 'x² => '94_callres ::: true
+//│ dropWhile((fun x -> (x == 1))) :: '96_callres <: [] ::: true
+//│ s :: 's⁰ <: [] ::: true
+//│ dropWhile((fun x -> (x == 1)), s) :: '98_callres <: [] ::: true
+//│ [N] :: N ::: true
+//│ break :: 'break <: [] ::: true
+//│ == :: Destruct(Int) => Destruct(Int) => Sum[True, False] ::: true
+//│ x :: 'x³ <: [] ::: true
+//│ ==(x) :: '103_callres <: [] ::: true
+//│ 1 :: Int ::: false
+//│ (x == 1) :: '105_callres <: [] ::: true
+//│ (fun x -> (x == 1)) :: 'x³ => '105_callres ::: true
+//│ break((fun x -> (x == 1))) :: '107_callres <: [] ::: true
+//│ s' :: 's'⁰ <: [] ::: true
+//│ break((fun x -> (x == 1)), s') :: '109_callres <: [] ::: true
+//│ 99 :: Int ::: false
+//│ break((fun x -> (x == 1)), s', 99) :: '111_callres <: [] ::: true
+//│ case dropWhile((fun x -> (x == 1)), s) of {N  => [N] | s' => break((fun x -> (x == 1)), s', 99)} :: '112_matchres <: [] ::: true
+//│ (fun s -> case dropWhile((fun x -> (x == 1)), s) of {N  => [N] | s' => break((fun x -> (x == 1)), s', 99)}) :: 's⁰ => '112_matchres ::: true
+//│ ls :: 'ls² <: [] ::: true
+//│ [N] :: N ::: true
+//│ f :: 'f⁰ <: [] ::: true
+//│ h :: 'h⁰ <: [] ::: true
+//│ f(h) :: '118_callres <: [] ::: true
+//│ dropWhile :: 'dropWhile <: [] ::: true
+//│ f :: 'f⁰ <: [] ::: true
+//│ dropWhile(f) :: '121_callres <: [] ::: true
+//│ t :: 't⁰ <: [] ::: true
+//│ dropWhile(f, t) :: '123_callres <: [] ::: true
+//│ h :: 'h⁰ <: [] ::: true
+//│ t :: 't⁰ <: [] ::: true
+//│ [C h t] :: C('h⁰, 't⁰) ::: true
+//│ if f(h) then dropWhile(f, t) else [C h t] :: '127_ifres <: [] ::: true
+//│ case ls of {N  => [N] | C h t => if f(h) then dropWhile(f, t) else [C h t]} :: '128_matchres <: [] ::: true
+//│ (fun ls -> case ls of {N  => [N] | C h t => if f(h) then dropWhile(f, t) else [C h t]}) :: 'ls² => '128_matchres ::: true
+//│ (fun f -> (fun ls -> case ls of {N  => [N] | C h t => if f(h) then dropWhile(f, t) else [C h t]})) :: 'f⁰ => 'ls² => '128_matchres ::: true
 //│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec dropWhile__d0 f_0 ls_0 =
-//│   (match ls_0 with
+//│ let rec break1 p_1 ls_1 =
+//│   (match ls_1 with
+//│     | `N -> 
+//│       (`P((`N), (`N)))
+//│     | `C(x_1, xs_1) -> 
+//│       (if (p_1 x_1) then
+//│         (`P((`N), (`C(x_1, xs_1))))
+//│       else
+//│         (match ((break1 p_1) xs_1) with
+//│           | `P(ys_1, zs_1) -> 
+//│             (`P((`C(x_1, ys_1)), zs_1)))));;
+//│ let rec dropWhile f_0 ls_2 =
+//│   (match ls_2 with
 //│     | `N -> 
 //│       (`N)
 //│     | `C(h_0, t_0) -> 
 //│       (if (f_0 h_0) then
-//│         ((dropWhile__d0 f_0) t_0)
+//│         ((dropWhile f_0) t_0)
 //│       else
 //│         (`C(h_0, t_0))));;
-//│ let rec break1__d0 p_1 ls_2 =
-//│   (match ls_2 with
-//│     | `N -> 
-//│       (`P((`N), (`N)))
-//│     | `C(x_3, xs_1) -> 
-//│       (if (p_1 x_3) then
-//│         (`P((`N), (`C(x_3, xs_1))))
-//│       else
-//│         (match ((break1__d0 p_1) xs_1) with
-//│           | `P(ys_1, zs_1) -> 
-//│             (`P((`C(x_3, ys_1)), zs_1)))));;
-//│ let rec break__d0 p_0 ls_1 =
-//│   (match ls_1 with
+//│ let rec break p_0 ls_0 =
+//│   (match ls_0 with
 //│     | `N -> 
 //│       (let rec s''_0 = (`N) in
 //│         (let rec w_0 = (`N) in
 //│           (fun _lh_dummy_0 -> 
-//│             (`C(w_0, (words__d0 s''_0))))))
+//│             (`C(w_0, (words s''_0))))))
 //│     | `C(x_0, xs_0) -> 
 //│       (if (p_0 x_0) then
 //│         (let rec s''_1 = (`C(x_0, xs_0)) in
 //│           (let rec w_1 = (`N) in
 //│             (fun _lh_dummy_1 -> 
-//│               (`C(w_1, (words__d0 s''_1))))))
+//│               (`C(w_1, (words s''_1))))))
 //│       else
-//│         (match ((break1__d0 p_0) xs_0) with
+//│         (match ((break1 p_0) xs_0) with
 //│           | `P(ys_0, zs_0) -> 
 //│             (let rec s''_2 = zs_0 in
 //│               (let rec w_2 = (`C(x_0, ys_0)) in
 //│                 (fun _lh_dummy_2 -> 
-//│                   (`C(w_2, (words__d0 s''_2)))))))))
+//│                   (`C(w_2, (words s''_2)))))))))
 //│ and
-//│ words__d0 s_0 =
-//│   (match ((dropWhile__d0 (fun x_1 -> 
-//│     (x_1 = 1))) s_0) with
+//│ words s_0 =
+//│   (match ((dropWhile (fun x_2 -> 
+//│     (x_2 = 1))) s_0) with
 //│     | `N -> 
 //│       (`N)
 //│     | s'_0 -> 
-//│       (((break__d0 (fun x_2 -> 
-//│         (x_2 = 1))) s'_0) 99));;
-//│ (words__d0 (`C(2, (`C(1, (`C(2, (`C(1, (`C(2, (`N))))))))))))
+//│       (((break (fun x_3 -> 
+//│         (x_3 = 1))) s'_0) 99));;
+//│ (words (`C(2, (`C(1, (`C(2, (`C(1, (`C(2, (`N))))))))))))
 //│ 
 //│ --------------- ocaml repl result -----------------
 //│ [ok]

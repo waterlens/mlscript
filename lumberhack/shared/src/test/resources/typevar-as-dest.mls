@@ -18,24 +18,13 @@ Ok(f(C(A)))
 //│ [Ok [C [A]]]
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^5] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ [Ok f_₀([C [A]])]
-//│ def f_₀(a¹) = 
-//│ 	case a¹ of {
-//│ 		C d¹ => a¹}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C [A]]: 16 --->
+//│ [C [A]]: 7 --->
 //│ 	NoCons
-//│ 	case a¹ of {C d¹ => a¹}: 12
+//│ 	case a⁰ of {C d⁰ => a⁰}: 3
 //│ ------------------
-//│ case a¹ of {C d¹ => a¹}: 12 --->
-//│ 	[C [A]]: 16
+//│ case a⁰ of {C d⁰ => a⁰}: 3 --->
+//│ 	[C [A]]: 7
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -45,10 +34,9 @@ Ok(f(C(A)))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ [Ok f_₀([C [A]])]
-//│ def f_₀(a²) = 
-//│ 	case a² of {
-//│ 		C d¹ => a²}
+//│ [Ok f([C [A]])]
+//│ def f(a¹) = case a¹ of {
+//│ 	C d⁰ => a¹}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -77,29 +65,13 @@ wrapInRes(f(C(A)))
 //│ 	[Res2 y⁰]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^16] (hopeless to continue)
-//│ [wrapInRes^15] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ wrapInRes_₀(f_₀([C [A]]))
-//│ def f_₀(x¹) = 
-//│ 	primitive⁰(x¹)
-//│ 	case x¹ of {
-//│ 		C a¹ => x¹}
-//│ def wrapInRes_₀(y¹) = 
-//│ 	[Res1 y¹]
-//│ 	[Res2 y¹]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C [A]]: 38 --->
+//│ [C [A]]: 18 --->
 //│ 	NoCons
-//│ 	case x¹ of {C a¹ => x¹}: 26
+//│ 	case x⁰ of {C a⁰ => x⁰}: 6
 //│ ------------------
-//│ case x¹ of {C a¹ => x¹}: 26 --->
-//│ 	[C [A]]: 38
+//│ case x⁰ of {C a⁰ => x⁰}: 6 --->
+//│ 	[C [A]]: 18
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -109,12 +81,12 @@ wrapInRes(f(C(A)))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ wrapInRes_₀(f_₀([C [A]]))
-//│ def f_₀(x²) = 
-//│ 	primitive⁰(x²)
-//│ 	case x² of {
-//│ 		C a¹ => x²}
-//│ def wrapInRes_₀(y²) = 
-//│ 	[Res1 y²]
-//│ 	[Res2 y²]
+//│ wrapInRes(f([C [A]]))
+//│ def f(x¹) = 
+//│ 	primitive⁰(x¹)
+//│ 	case x¹ of {
+//│ 		C a⁰ => x¹}
+//│ def wrapInRes(y¹) = 
+//│ 	[Res1 y¹]
+//│ 	[Res2 y¹]
 //│ <<<<<<< after fusion <<<<<<<

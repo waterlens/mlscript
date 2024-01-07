@@ -5,6 +5,6 @@ open Core_bench;;
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_LastFilter" (fun () -> ignore (let open Module_original___________.Module_original___________ in ((testLastFilter ((enumFromTo 1) 500000)))));
   Bench.Test.create ~name:"manual_LastFilter" (fun () -> ignore (let open Module_original___________.Module_original___________ in ((testManual ((enumFromTo 1) 500000)))));
-  Bench.Test.create ~name:"lumberhack_LastFilter" (fun () -> ignore (let open Module_lumberhack_________.Module_lumberhack_________ in ((testLastFilter__d0 ((enumFromTo__d0 1) 500000)))));
-  Bench.Test.create ~name:"lumberhack_pop_out_LastFilter" (fun () -> ignore (let open Module_lumberhack_pop_out_.Module_lumberhack_pop_out_ in ((testLastFilter__d0 ((enumFromTo__d0 1) 500000)))));
+  Bench.Test.create ~name:"lumberhack_LastFilter" (fun () -> ignore (let open Module_lumberhack_________.Module_lumberhack_________ in ((testLastFilter ((enumFromTo 1) 500000)))));
+  Bench.Test.create ~name:"lumberhack_pop_out_LastFilter" (fun () -> ignore (let open Module_lumberhack_pop_out_.Module_lumberhack_pop_out_ in ((testLastFilter ((enumFromTo 1) 500000)))));
 ])

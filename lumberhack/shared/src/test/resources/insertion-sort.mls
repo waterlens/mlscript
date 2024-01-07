@@ -27,57 +27,33 @@ testInsertionSortPolyVar(primId(C(1, C(4, C(2, N)))))
 //│ [C 1 [C 2 [C 4 [N]]]]
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [testInsertionSortPolyVar^41] (hopeless to continue)
-//│ 	[testInsertionSortPolyVar^41 · isort^37] (using original def)
-//│ 		[testInsertionSortPolyVar^41 · isort^37 · insert^3] (using original def)
-//│ 			[testInsertionSortPolyVar^41 · isort^37 · insert^3 · insert^27] ---> [testInsertionSortPolyVar^41 · isort^37 · insert^3] (using original def)
-//│ 		[testInsertionSortPolyVar^41 · isort^37 · isort^6] ---> [testInsertionSortPolyVar^41 · isort^37] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ testInsertionSortPolyVar_₀(primId⁰([C 1 [C 4 [C 2 [N]]]]))
-//│ def testInsertionSortPolyVar_₀(xs⁵) = 
-//│ 	isort_₀(xs⁵)
-//│ 	where
-//│ 	def isort_₀(xs⁶) = 
-//│ 		case xs⁶ of {
-//│ 			N  => [N]
-//│ 			| C x¹ xs⁷ => insert_₀(x¹, isort_₀(xs⁷))}
-//│ 		where
-//│ 		def insert_₀(y¹, xs⁴) = 
-//│ 			case xs⁴ of {
-//│ 				N  => [C y¹ [N]]
-//│ 				| C z¹ zs¹ => if (z¹ > y¹) then [C y¹ [C z¹ zs¹]] else [C z¹ insert_₀(y¹, zs¹)]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 54 --->
+//│ [N]: 2 --->
 //│ 	NoCons
-//│ 	case xs⁴ of {N  => [C y¹ [N]] | C z¹ zs¹ => if (z¹ > y¹) then [C y¹ [C z¹ zs¹]] else [C z¹ insert_₀(y¹, zs¹)]}: 74
-//│ [C y¹ [N]]: 55 --->
+//│ 	case xs² of {N  => [C y⁰ [N]] | C z⁰ zs⁰ => if (z⁰ > y⁰) then [C y⁰ [C z⁰ zs⁰]] else [C z⁰ insert(y⁰, zs⁰)]}: 34
+//│ [N]: 14 --->
 //│ 	NoCons
-//│ 	case xs⁴ of {N  => [C y¹ [N]] | C z¹ zs¹ => if (z¹ > y¹) then [C y¹ [C z¹ zs¹]] else [C z¹ insert_₀(y¹, zs¹)]}: 74
-//│ [C z¹ zs¹]: 64 --->
+//│ 	case xs² of {N  => [C y⁰ [N]] | C z⁰ zs⁰ => if (z⁰ > y⁰) then [C y⁰ [C z⁰ zs⁰]] else [C z⁰ insert(y⁰, zs⁰)]}: 34
+//│ [C y⁰ [N]]: 15 --->
 //│ 	NoCons
-//│ 	case xs⁴ of {N  => [C y¹ [N]] | C z¹ zs¹ => if (z¹ > y¹) then [C y¹ [C z¹ zs¹]] else [C z¹ insert_₀(y¹, zs¹)]}: 74
-//│ [C y¹ [C z¹ zs¹]]: 65 --->
+//│ 	case xs² of {N  => [C y⁰ [N]] | C z⁰ zs⁰ => if (z⁰ > y⁰) then [C y⁰ [C z⁰ zs⁰]] else [C z⁰ insert(y⁰, zs⁰)]}: 34
+//│ [C z⁰ zs⁰]: 24 --->
 //│ 	NoCons
-//│ 	case xs⁴ of {N  => [C y¹ [N]] | C z¹ zs¹ => if (z¹ > y¹) then [C y¹ [C z¹ zs¹]] else [C z¹ insert_₀(y¹, zs¹)]}: 74
-//│ [C z¹ insert_₀(y¹, zs¹)]: 72 --->
+//│ 	case xs² of {N  => [C y⁰ [N]] | C z⁰ zs⁰ => if (z⁰ > y⁰) then [C y⁰ [C z⁰ zs⁰]] else [C z⁰ insert(y⁰, zs⁰)]}: 34
+//│ [C y⁰ [C z⁰ zs⁰]]: 25 --->
 //│ 	NoCons
-//│ 	case xs⁴ of {N  => [C y¹ [N]] | C z¹ zs¹ => if (z¹ > y¹) then [C y¹ [C z¹ zs¹]] else [C z¹ insert_₀(y¹, zs¹)]}: 74
-//│ [N]: 82 --->
+//│ 	case xs² of {N  => [C y⁰ [N]] | C z⁰ zs⁰ => if (z⁰ > y⁰) then [C y⁰ [C z⁰ zs⁰]] else [C z⁰ insert(y⁰, zs⁰)]}: 34
+//│ [C z⁰ insert(y⁰, zs⁰)]: 32 --->
 //│ 	NoCons
-//│ 	case xs⁴ of {N  => [C y¹ [N]] | C z¹ zs¹ => if (z¹ > y¹) then [C y¹ [C z¹ zs¹]] else [C z¹ insert_₀(y¹, zs¹)]}: 74
+//│ 	case xs² of {N  => [C y⁰ [N]] | C z⁰ zs⁰ => if (z⁰ > y⁰) then [C y⁰ [C z⁰ zs⁰]] else [C z⁰ insert(y⁰, zs⁰)]}: 34
 //│ ------------------
-//│ case xs⁴ of {N  => [C y¹ [N]] | C z¹ zs¹ => if (z¹ > y¹) then [C y¹ [C z¹ zs¹]] else [C z¹ insert_₀(y¹, zs¹)]}: 74 --->
-//│ 	[N]: 54
-//│ 	[C y¹ [N]]: 55
-//│ 	[C z¹ zs¹]: 64
-//│ 	[C y¹ [C z¹ zs¹]]: 65
-//│ 	[C z¹ insert_₀(y¹, zs¹)]: 72
-//│ 	[N]: 82
+//│ case xs² of {N  => [C y⁰ [N]] | C z⁰ zs⁰ => if (z⁰ > y⁰) then [C y⁰ [C z⁰ zs⁰]] else [C z⁰ insert(y⁰, zs⁰)]}: 34 --->
+//│ 	[N]: 2
+//│ 	[N]: 14
+//│ 	[C y⁰ [N]]: 15
+//│ 	[C z⁰ zs⁰]: 24
+//│ 	[C y⁰ [C z⁰ zs⁰]]: 25
+//│ 	[C z⁰ insert(y⁰, zs⁰)]: 32
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -87,19 +63,14 @@ testInsertionSortPolyVar(primId(C(1, C(4, C(2, N)))))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testInsertionSortPolyVar_₀(primId⁰([C 1 [C 4 [C 2 [N]]]]))
-//│ def testInsertionSortPolyVar_₀(xs⁹) = 
-//│ 	isort_₀(xs⁹)
-//│ 	where
-//│ 	def isort_₀(xs¹⁰) = 
-//│ 		case xs¹⁰ of {
-//│ 			N  => [N]
-//│ 			| C x¹ xs⁷ => insert_₀(x¹, isort_₀(xs⁷))}
-//│ 		where
-//│ 		def insert_₀(y², xs⁸) = 
-//│ 			case xs⁸ of {
-//│ 				N  => [C y² [N]]
-//│ 				| C z¹ zs¹ => if (z¹ > y²) then [C y² [C z¹ zs¹]] else [C z¹ insert_₀(y², zs¹)]}
+//│ testInsertionSortPolyVar(primId⁰([C 1 [C 4 [C 2 [N]]]]))
+//│ def insert(y¹, xs⁵) = case xs⁵ of {
+//│ 	N  => [C y¹ [N]]
+//│ 	| C z⁰ zs⁰ => if (z⁰ > y¹) then [C y¹ [C z⁰ zs⁰]] else [C z⁰ insert(y¹, zs⁰)]}
+//│ def isort(xs⁴) = case xs⁴ of {
+//│ 	N  => [N]
+//│ 	| C x⁰ xs¹ => insert(x⁰, isort(xs¹))}
+//│ def testInsertionSortPolyVar(xs⁶) = isort(xs⁶)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>

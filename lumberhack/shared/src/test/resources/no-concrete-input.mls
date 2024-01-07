@@ -19,30 +19,13 @@ g
 //│ def g(b⁰) = f^8(b⁰)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [g^12] (hopeless to continue)
-//│ 	[g^12 · f^8] (using original def)
-//│ 		[g^12 · f^8 · f^2] ---> [g^12 · f^8] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ g_₀
-//│ def g_₀(b¹) = 
-//│ 	f_₀(b¹)
-//│ 	where
-//│ 	def f_₀(a¹) = 
-//│ 		case a¹ of {
-//│ 			A aa¹ => f_₀([B])
-//│ 			| B  => [OK]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [B]: 19 --->
-//│ 	case a¹ of {A aa¹ => f_₀([B]) | B  => [OK]}: 22
+//│ [B]: 3 --->
+//│ 	case a⁰ of {A aa⁰ => f([B]) | B  => [OK]}: 6
 //│ ------------------
-//│ case a¹ of {A aa¹ => f_₀([B]) | B  => [OK]}: 22 --->
+//│ case a⁰ of {A aa⁰ => f([B]) | B  => [OK]}: 6 --->
 //│ 	NoProd
-//│ 	[B]: 19
+//│ 	[B]: 3
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -52,14 +35,11 @@ g
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ g_₀
-//│ def g_₀(b²) = 
-//│ 	f_₀(b²)
-//│ 	where
-//│ 	def f_₀(a²) = 
-//│ 		case a² of {
-//│ 			A aa¹ => f_₀([B])
-//│ 			| B  => [OK]}
+//│ g
+//│ def f(a¹) = case a¹ of {
+//│ 	A aa⁰ => f([B])
+//│ 	| B  => [OK]}
+//│ def g(b¹) = f(b¹)
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: when the top level result is consumed by nocons
@@ -79,30 +59,13 @@ primitive(g)
 //│ def g(b⁰) = f^8(b⁰)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [g^13] (hopeless to continue)
-//│ 	[g^13 · f^8] (using original def)
-//│ 		[g^13 · f^8 · f^2] ---> [g^13 · f^8] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ primitive⁰(g_₀)
-//│ def g_₀(b¹) = 
-//│ 	f_₀(b¹)
-//│ 	where
-//│ 	def f_₀(a¹) = 
-//│ 		case a¹ of {
-//│ 			A aa¹ => f_₀([B])
-//│ 			| B  => [OK]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [B]: 21 --->
-//│ 	case a¹ of {A aa¹ => f_₀([B]) | B  => [OK]}: 24
+//│ [B]: 3 --->
+//│ 	case a⁰ of {A aa⁰ => f([B]) | B  => [OK]}: 6
 //│ ------------------
-//│ case a¹ of {A aa¹ => f_₀([B]) | B  => [OK]}: 24 --->
+//│ case a⁰ of {A aa⁰ => f([B]) | B  => [OK]}: 6 --->
 //│ 	NoProd
-//│ 	[B]: 21
+//│ 	[B]: 3
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -112,14 +75,11 @@ primitive(g)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ primitive⁰(g_₀)
-//│ def g_₀(b²) = 
-//│ 	f_₀(b²)
-//│ 	where
-//│ 	def f_₀(a²) = 
-//│ 		case a² of {
-//│ 			A aa¹ => f_₀([B])
-//│ 			| B  => [OK]}
+//│ primitive⁰(g)
+//│ def f(a¹) = case a¹ of {
+//│ 	A aa⁰ => f([B])
+//│ 	| B  => [OK]}
+//│ def g(b¹) = f(b¹)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -141,32 +101,13 @@ k
 //│ def k(a¹) = g^11(f^12(a¹))
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [k^17] (hopeless to continue)
-//│ 	[k^17 · f^12] (using original def)
-//│ 	[k^17 · g^11] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ k_₀
-//│ def k_₀(a²) = 
-//│ 	g_₀(f_₀(a²))
-//│ 	where
-//│ 	def f_₀(a³) = 
-//│ 		if primitive⁰ then [B] else a³
-//│ 	def g_₀(x¹) = 
-//│ 		case x¹ of {
-//│ 			B  => [C]
-//│ 			| D  => [E]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [B]: 30 --->
-//│ 	case x¹ of {B  => [C] | D  => [E]}: 27
+//│ [B]: 2 --->
+//│ 	case x⁰ of {B  => [C] | D  => [E]}: 9
 //│ ------------------
-//│ case x¹ of {B  => [C] | D  => [E]}: 27 --->
+//│ case x⁰ of {B  => [C] | D  => [E]}: 9 --->
 //│ 	NoProd
-//│ 	[B]: 30
+//│ 	[B]: 2
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -176,14 +117,10 @@ k
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ k_₀
-//│ def k_₀(a⁴) = 
-//│ 	g_₀(f_₀(a⁴))
-//│ 	where
-//│ 	def f_₀(a⁵) = 
-//│ 		if primitive⁰ then [B] else a⁵
-//│ 	def g_₀(x²) = 
-//│ 		case x² of {
-//│ 			B  => [C]
-//│ 			| D  => [E]}
+//│ k
+//│ def f(a²) = if primitive⁰ then [B] else a²
+//│ def g(x¹) = case x¹ of {
+//│ 	B  => [C]
+//│ 	| D  => [E]}
+//│ def k(a³) = g(f(a³))
 //│ <<<<<<< after fusion <<<<<<<

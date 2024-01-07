@@ -5,6 +5,6 @@ open Core_bench;;
 Command_unix.run (Bench.make_command [
   Bench.Test.create ~name:"original_Pretty_nofib_lh" (fun () -> ignore (let open Module_original_________________.Module_original_________________ in ((testPretty_nofib_lh 0))));
   Bench.Test.create ~name:"lumberhack_only_expanded_Pretty_nofib_lh" (fun () -> ignore (let open Module_lumberhack_only_expanded_.Module_lumberhack_only_expanded_ in ((testPretty_nofib_lh__d1 0))));
-  Bench.Test.create ~name:"lumberhack_Pretty_nofib_lh" (fun () -> ignore (let open Module_lumberhack_______________.Module_lumberhack_______________ in ((testPretty_nofib_lh__d1__d0 0))));
-  Bench.Test.create ~name:"lumberhack_pop_out_Pretty_nofib_lh" (fun () -> ignore (let open Module_lumberhack_pop_out_______.Module_lumberhack_pop_out_______ in ((testPretty_nofib_lh__d1__d0 0))));
+  Bench.Test.create ~name:"lumberhack_Pretty_nofib_lh" (fun () -> ignore (let open Module_lumberhack_______________.Module_lumberhack_______________ in ((testPretty_nofib_lh__d1 0))));
+  Bench.Test.create ~name:"lumberhack_pop_out_Pretty_nofib_lh" (fun () -> ignore (let open Module_lumberhack_pop_out_______.Module_lumberhack_pop_out_______ in ((testPretty_nofib_lh__d1 0))));
 ])

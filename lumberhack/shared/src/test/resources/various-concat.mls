@@ -27,36 +27,14 @@ appendThree(
 //│ [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [appendThree^25] (hopeless to continue)
-//│ 	[appendThree^25 · append^13] (using original def)
-//│ 		[appendThree^25 · append^13 · append^3] ---> [appendThree^25 · append^13] (using original def)
-//│ 	[appendThree^25 · append^14] (using original def)
-//│ 		[appendThree^25 · append^14 · append^3] ---> [appendThree^25 · append^14] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ appendThree_₀(primId⁰([C 1 [C 2 [N]]]), primId⁰([C 3 [C 4 [N]]]), primId⁰([C 5 [C 6 [N]]]))
-//│ def appendThree_₀(xs², ys², zs¹) = 
-//│ 	append_₀(append_₁(xs², ys²), zs¹)
-//│ 	where
-//│ 	def append_₀(xs⁴, ys⁴) = 
-//│ 		case xs⁴ of {
-//│ 			C h² t² => [C h² append_₀(t², ys⁴)]
-//│ 			| N  => ys⁴}
-//│ 	def append_₁(xs³, ys³) = 
-//│ 		case xs³ of {
-//│ 			C h¹ t¹ => [C h¹ append_₁(t¹, ys³)]
-//│ 			| N  => ys³}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h¹ append_₁(t¹, ys³)]: 69 --->
-//│ 	case xs⁴ of {C h² t² => [C h² append_₀(t², ys⁴)] | N  => ys⁴}: 83
+//│ [C h⁰ append(t⁰, ys⁰)]: 8 --->
+//│ 	NoCons
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
 //│ ------------------
-//│ case xs⁴ of {C h² t² => [C h² append_₀(t², ys⁴)] | N  => ys⁴}: 83 --->
+//│ case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10 --->
 //│ 	NoProd
-//│ 	[C h¹ append_₁(t¹, ys³)]: 69
+//│ 	[C h⁰ append(t⁰, ys⁰)]: 8
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -66,18 +44,11 @@ appendThree(
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ appendThree_₀(primId⁰([C 1 [C 2 [N]]]), primId⁰([C 3 [C 4 [N]]]), primId⁰([C 5 [C 6 [N]]]))
-//│ def appendThree_₀(xs⁵, ys⁵, zs²) = 
-//│ 	append_₀(append_₁(xs⁵, ys⁵), zs²)
-//│ 	where
-//│ 	def append_₀(xs⁷, ys⁷) = 
-//│ 		case xs⁷ of {
-//│ 			C h² t² => [C h² append_₀(t², ys⁷)]
-//│ 			| N  => ys⁷}
-//│ 	def append_₁(xs⁶, ys⁶) = 
-//│ 		case xs⁶ of {
-//│ 			C h¹ t¹ => [C h¹ append_₁(t¹, ys⁶)]
-//│ 			| N  => ys⁶}
+//│ appendThree(primId⁰([C 1 [C 2 [N]]]), primId⁰([C 3 [C 4 [N]]]), primId⁰([C 5 [C 6 [N]]]))
+//│ def append(xs², ys²) = case xs² of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys²)]
+//│ 	| N  => ys²}
+//│ def appendThree(xs³, ys³, zs¹) = append(append(xs³, ys³), zs¹)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -116,36 +87,13 @@ appendThree(
 //│ [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [appendThree^37] (hopeless to continue)
-//│ 	[appendThree^37 · append'^26] (using original def)
-//│ 		[appendThree^37 · append'^26 · append'^15] ---> [appendThree^37 · append'^26] (using original def)
-//│ 	[appendThree^37 · append^25] (using original def)
-//│ 		[appendThree^37 · append^25 · append^3] ---> [appendThree^37 · append^25] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ appendThree_₀(primId⁰([C 1 [C 2 [N]]]), primId⁰([C 3 [C 4 [N]]]), primId⁰([C 5 [C 6 [N]]]))
-//│ def appendThree_₀(xs³, ys³, zs¹) = 
-//│ 	append_₀(append'_₀(xs³, ys³), zs¹)
-//│ 	where
-//│ 	def append'_₀(xs⁴, ys⁴) = 
-//│ 		case xs⁴ of {
-//│ 			C h² t² => [C h² append'_₀(t², ys⁴)]
-//│ 			| N  => ys⁴}
-//│ 	def append_₀(xs⁵, ys⁵) = 
-//│ 		case xs⁵ of {
-//│ 			C h³ t³ => [C h³ append_₀(t³, ys⁵)]
-//│ 			| N  => ys⁵}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h² append'_₀(t², ys⁴)]: 81 --->
-//│ 	case xs⁵ of {C h³ t³ => [C h³ append_₀(t³, ys⁵)] | N  => ys⁵}: 95
+//│ [C h¹ append'(t¹, ys¹)]: 20 --->
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
 //│ ------------------
-//│ case xs⁵ of {C h³ t³ => [C h³ append_₀(t³, ys⁵)] | N  => ys⁵}: 95 --->
+//│ case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10 --->
 //│ 	NoProd
-//│ 	[C h² append'_₀(t², ys⁴)]: 81
+//│ 	[C h¹ append'(t¹, ys¹)]: 20
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -155,18 +103,14 @@ appendThree(
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ appendThree_₀(primId⁰([C 1 [C 2 [N]]]), primId⁰([C 3 [C 4 [N]]]), primId⁰([C 5 [C 6 [N]]]))
-//│ def appendThree_₀(xs⁶, ys⁶, zs²) = 
-//│ 	append_₀(append'_₀(xs⁶, ys⁶), zs²)
-//│ 	where
-//│ 	def append'_₀(xs⁷, ys⁷) = 
-//│ 		case xs⁷ of {
-//│ 			C h² t² => [C h² append'_₀(t², ys⁷)]
-//│ 			| N  => ys⁷}
-//│ 	def append_₀(xs⁸, ys⁸) = 
-//│ 		case xs⁸ of {
-//│ 			C h³ t³ => [C h³ append_₀(t³, ys⁸)]
-//│ 			| N  => ys⁸}
+//│ appendThree(primId⁰([C 1 [C 2 [N]]]), primId⁰([C 3 [C 4 [N]]]), primId⁰([C 5 [C 6 [N]]]))
+//│ def append(xs³, ys³) = case xs³ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys³)]
+//│ 	| N  => ys³}
+//│ def append'(xs⁴, ys⁴) = case xs⁴ of {
+//│ 	C h¹ t¹ => [C h¹ append'(t¹, ys⁴)]
+//│ 	| N  => ys⁴}
+//│ def appendThree(xs⁵, ys⁵, zs¹) = append(append'(xs⁵, ys⁵), zs¹)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -205,114 +149,44 @@ main(11, 22)
 //│ [C 11 [C 12 [C 13 [C 14 [C 15 [C 16 [C 17 [C 18 [C 19 [C 20 [C 21 [C 11 [C 12 [C 13 [C 14 [C 15 [C 16 [C 17 [C 18 [C 19 [C 20 [C 21 [C 11 [C 12 [C 13 [C 14 [C 15 [C 16 [C 17 [C 18 [C 19 [C 20 [C 21 [N]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [main^78] (hopeless to continue)
-//│ 	[main^78 · appendThree^57] (using original def)
-//│ 		[main^78 · appendThree^57 · append'^26] (using original def)
-//│ 			[main^78 · appendThree^57 · append'^26 · append'^15] ---> [main^78 · appendThree^57 · append'^26] (using original def)
-//│ 		[main^78 · appendThree^57 · append^25] (using original def)
-//│ 			[main^78 · appendThree^57 · append^25 · append^3] ---> [main^78 · appendThree^57 · append^25] (using original def)
-//│ 	[main^78 · fromTo^58] (using original def)
-//│ 		[main^78 · fromTo^58 · fromTo^43] ---> [main^78 · fromTo^58] (using original def)
-//│ 	[main^78 · fromTo^64] (using original def)
-//│ 		[main^78 · fromTo^64 · fromTo^43] ---> [main^78 · fromTo^64] (using original def)
-//│ 	[main^78 · fromTo^70] (using original def)
-//│ 		[main^78 · fromTo^70 · fromTo^43] ---> [main^78 · fromTo^70] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ main_₀(11, 22)
-//│ def main_₀(a⁵, b⁵) = 
-//│ 	appendThree_₀(fromTo_₀(a⁵, b⁵), fromTo_₁(a⁵, b⁵), fromTo_₂(a⁵, b⁵))
-//│ 	where
-//│ 	def appendThree_₀(xs⁵, ys⁵, zs¹) = 
-//│ 		append_₀(append'_₀(xs⁵, ys⁵), zs¹)
-//│ 		where
-//│ 		def append'_₀(xs⁴, ys⁴) = 
-//│ 			case xs⁴ of {
-//│ 				C h³ t³ => [C h³ append'_₀(t³, ys⁴)]
-//│ 				| N  => ys⁴}
-//│ 		def append_₀(xs³, ys³) = 
-//│ 			case xs³ of {
-//│ 				C h² t² => [C h² append_₀(t², ys³)]
-//│ 				| N  => ys³}
-//│ 	def fromTo_₀(a³, b³) = 
-//│ 		if (a³ < b³) then [C a³ fromTo_₀((a³ + 1), b³)] else [N]
-//│ 	def fromTo_₁(a⁴, b⁴) = 
-//│ 		if (a⁴ < b⁴) then [C a⁴ fromTo_₁((a⁴ + 1), b⁴)] else [N]
-//│ 	def fromTo_₂(a², b²) = 
-//│ 		if (a² < b²) then [C a² fromTo_₂((a² + 1), b²)] else [N]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C a³ fromTo_₀((a³ + 1), b³)]: 130 --->
-//│ 	case xs⁴ of {C h³ t³ => [C h³ append'_₀(t³, ys⁴)] | N  => ys⁴}: 144
-//│ [N]: 131 --->
-//│ 	case xs⁴ of {C h³ t³ => [C h³ append'_₀(t³, ys⁴)] | N  => ys⁴}: 144
-//│ [C h³ append'_₀(t³, ys⁴)]: 142 --->
-//│ 	case xs³ of {C h² t² => [C h² append_₀(t², ys³)] | N  => ys³}: 112
-//│ [C a⁴ fromTo_₁((a⁴ + 1), b⁴)]: 162 --->
-//│ 	case xs³ of {C h² t² => [C h² append_₀(t², ys³)] | N  => ys³}: 112
-//│ [N]: 163 --->
-//│ 	case xs³ of {C h² t² => [C h² append_₀(t², ys³)] | N  => ys³}: 112
+//│ [C h¹ append'(t¹, ys¹)]: 20 --->
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
+//│ [C a⁰ fromTo((a⁰ + 1), b⁰)]: 52 --->
+//│ 	NoCons
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
+//│ 	case xs¹ of {C h¹ t¹ => [C h¹ append'(t¹, ys¹)] | N  => ys¹}: 22
+//│ [N]: 53 --->
+//│ 	NoCons
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
+//│ 	case xs¹ of {C h¹ t¹ => [C h¹ append'(t¹, ys¹)] | N  => ys¹}: 22
 //│ ------------------
-//│ case xs³ of {C h² t² => [C h² append_₀(t², ys³)] | N  => ys³}: 112 --->
-//│ 	[C h³ append'_₀(t³, ys⁴)]: 142
-//│ 	[C a⁴ fromTo_₁((a⁴ + 1), b⁴)]: 162
-//│ 	[N]: 163
-//│ case xs⁴ of {C h³ t³ => [C h³ append'_₀(t³, ys⁴)] | N  => ys⁴}: 144 --->
-//│ 	[C a³ fromTo_₀((a³ + 1), b³)]: 130
-//│ 	[N]: 131
+//│ case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10 --->
+//│ 	[C h¹ append'(t¹, ys¹)]: 20
+//│ 	[C a⁰ fromTo((a⁰ + 1), b⁰)]: 52
+//│ 	[N]: 53
+//│ case xs¹ of {C h¹ t¹ => [C h¹ append'(t¹, ys¹)] | N  => ys¹}: 22 --->
+//│ 	[C a⁰ fromTo((a⁰ + 1), b⁰)]: 52
+//│ 	[N]: 53
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C a³ fromTo_₀((a³ + 1), b³)]: 130 --->
-//│ 	case xs⁴ of {C h³ t³ => [C h³ append'_₀(t³, ys⁴)] | N  => ys⁴}: 144
-//│ [N]: 131 --->
-//│ 	case xs⁴ of {C h³ t³ => [C h³ append'_₀(t³, ys⁴)] | N  => ys⁴}: 144
-//│ [C h³ append'_₀(t³, ys⁴)]: 142 --->
-//│ 	case xs³ of {C h² t² => [C h² append_₀(t², ys³)] | N  => ys³}: 112
-//│ [C a⁴ fromTo_₁((a⁴ + 1), b⁴)]: 162 --->
-//│ 	case xs³ of {C h² t² => [C h² append_₀(t², ys³)] | N  => ys³}: 112
-//│ [N]: 163 --->
-//│ 	case xs³ of {C h² t² => [C h² append_₀(t², ys³)] | N  => ys³}: 112
+//│ 
 //│ ------------------
-//│ case xs³ of {C h² t² => [C h² append_₀(t², ys³)] | N  => ys³}: 112 --->
-//│ 	[C h³ append'_₀(t³, ys⁴)]: 142
-//│ 	[C a⁴ fromTo_₁((a⁴ + 1), b⁴)]: 162
-//│ 	[N]: 163
-//│ case xs⁴ of {C h³ t³ => [C h³ append'_₀(t³, ys⁴)] | N  => ys⁴}: 144 --->
-//│ 	[C a³ fromTo_₀((a³ + 1), b³)]: 130
-//│ 	[N]: 131
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ main_₀(11, 22)
-//│ def main_₀(a⁷, b⁷) = 
-//│ 	appendThree_₀(fromTo_₀(a⁷, b⁷), fromTo_₁(a⁷, b⁷), fromTo_₂(a⁷, b⁷))
-//│ 	where
-//│ 	def appendThree_₀(xs⁷, ys¹², zs²) = 
-//│ 		append_₀(append'_₀(xs⁷, ys¹²), zs²)
-//│ 		where
-//│ 		def append'_₀(xs⁶, ys¹¹) = 
-//│ 			xs⁶(ys¹¹)
-//│ 		def append_₀(xs⁸, ys¹³) = 
-//│ 			xs⁸(ys¹³)
-//│ 	def fromTo_₀(a⁹, b⁹) = 
-//│ 		if (a⁹ < b⁹) then 
-//│ 			let t⁵ = fromTo_₀((a⁹ + 1), b⁹)
-//│ 			in let h⁵ = a⁹
-//│ 			in (fun ys⁸ -> 
-//│ 				let t⁶ = append'_₀(t⁵, ys⁸)
-//│ 				in let h⁶ = h⁵
-//│ 				in (fun ys⁹ -> [C h⁶ append_₀(t⁶, ys⁹)])) else (fun ys¹⁰ -> ys¹⁰)
-//│ 	def fromTo_₁(a⁸, b⁸) = 
-//│ 		if (a⁸ < b⁸) then 
-//│ 			let t⁴ = fromTo_₁((a⁸ + 1), b⁸)
-//│ 			in let h⁴ = a⁸
-//│ 			in (fun ys⁶ -> [C h⁴ append_₀(t⁴, ys⁶)]) else (fun ys⁷ -> ys⁷)
-//│ 	def fromTo_₂(a⁶, b⁶) = 
-//│ 		if (a⁶ < b⁶) then [C a⁶ fromTo_₂((a⁶ + 1), b⁶)] else [N]
+//│ main(11, 22)
+//│ def append(xs⁴, ys⁴) = case xs⁴ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁴)]
+//│ 	| N  => ys⁴}
+//│ def append'(xs³, ys³) = case xs³ of {
+//│ 	C h¹ t¹ => [C h¹ append'(t¹, ys³)]
+//│ 	| N  => ys³}
+//│ def appendThree(xs⁵, ys⁵, zs¹) = append(append'(xs⁵, ys⁵), zs¹)
+//│ def fromTo(a³, b³) = if (a³ < b³) then [C a³ fromTo((a³ + 1), b³)] else [N]
+//│ def main(a², b²) = appendThree(fromTo(a², b²), fromTo(a², b²), fromTo(a², b²))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -355,98 +229,39 @@ appendThree(
 //│ [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [appendThree^36] (hopeless to continue)
-//│ 	[appendThree^36 · append^24] (using original def)
-//│ 		[appendThree^36 · append^24 · append^12] ---> [appendThree^36 · append^24] (using original def)
-//│ 		[appendThree^36 · append^24 · idList^18] (using original def)
-//│ 			[appendThree^36 · append^24 · idList^18 · idList^3] ---> [appendThree^36 · append^24 · idList^18] (using original def)
-//│ 	[appendThree^36 · append^25] (using original def)
-//│ 		[appendThree^36 · append^25 · append^12] ---> [appendThree^36 · append^25] (using original def)
-//│ 		[appendThree^36 · append^25 · idList^18] (using original def)
-//│ 			[appendThree^36 · append^25 · idList^18 · idList^3] ---> [appendThree^36 · append^25 · idList^18] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ appendThree_₀(primId⁰([C 1 [C 2 [N]]]), primId⁰([C 3 [C 4 [N]]]), primId⁰([C 5 [C 6 [N]]]))
-//│ def appendThree_₀(xs², ys², zs¹) = 
-//│ 	append_₀(append_₁(xs², ys²), zs¹)
-//│ 	where
-//│ 	def append_₀(xs⁴, ys⁴) = 
-//│ 		case xs⁴ of {
-//│ 			C h⁵ t⁵ => [C h⁵ append_₀(t⁵, ys⁴)]
-//│ 			| N  => idList_₀(ys⁴)}
-//│ 		where
-//│ 		def idList_₀(l¹) = 
-//│ 			case l¹ of {
-//│ 				C h² t² => [C h² idList_₀(t²)]
-//│ 				| N  => [N]}
-//│ 	def append_₁(xs³, ys³) = 
-//│ 		case xs³ of {
-//│ 			C h⁴ t⁴ => [C h⁴ append_₁(t⁴, ys³)]
-//│ 			| N  => idList_₁(ys³)}
-//│ 		where
-//│ 		def idList_₁(l²) = 
-//│ 			case l² of {
-//│ 				C h³ t³ => [C h³ idList_₁(t³)]
-//│ 				| N  => [N]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h³ idList_₁(t³)]: 87 --->
-//│ 	case xs⁴ of {C h⁵ t⁵ => [C h⁵ append_₀(t⁵, ys⁴)] | N  => idList_₀(ys⁴)}: 116
-//│ [N]: 88 --->
-//│ 	case xs⁴ of {C h⁵ t⁵ => [C h⁵ append_₀(t⁵, ys⁴)] | N  => idList_₀(ys⁴)}: 116
-//│ [C h⁴ append_₁(t⁴, ys³)]: 98 --->
-//│ 	case xs⁴ of {C h⁵ t⁵ => [C h⁵ append_₀(t⁵, ys⁴)] | N  => idList_₀(ys⁴)}: 116
+//│ [C h⁰ idList(t⁰)]: 6 --->
+//│ 	NoCons
+//│ 	case xs⁰ of {C h¹ t¹ => [C h¹ append(t¹, ys⁰)] | N  => idList(ys⁰)}: 21
+//│ [N]: 7 --->
+//│ 	NoCons
+//│ 	case xs⁰ of {C h¹ t¹ => [C h¹ append(t¹, ys⁰)] | N  => idList(ys⁰)}: 21
+//│ [C h¹ append(t¹, ys⁰)]: 17 --->
+//│ 	NoCons
+//│ 	case xs⁰ of {C h¹ t¹ => [C h¹ append(t¹, ys⁰)] | N  => idList(ys⁰)}: 21
 //│ ------------------
-//│ case xs⁴ of {C h⁵ t⁵ => [C h⁵ append_₀(t⁵, ys⁴)] | N  => idList_₀(ys⁴)}: 116 --->
-//│ 	[C h³ idList_₁(t³)]: 87
-//│ 	[N]: 88
-//│ 	[C h⁴ append_₁(t⁴, ys³)]: 98
+//│ case xs⁰ of {C h¹ t¹ => [C h¹ append(t¹, ys⁰)] | N  => idList(ys⁰)}: 21 --->
+//│ 	NoProd
+//│ 	[C h⁰ idList(t⁰)]: 6
+//│ 	[N]: 7
+//│ 	[C h¹ append(t¹, ys⁰)]: 17
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C h³ idList_₁(t³)]: 87 --->
-//│ 	case xs⁴ of {C h⁵ t⁵ => [C h⁵ append_₀(t⁵, ys⁴)] | N  => idList_₀(ys⁴)}: 116
-//│ [N]: 88 --->
-//│ 	case xs⁴ of {C h⁵ t⁵ => [C h⁵ append_₀(t⁵, ys⁴)] | N  => idList_₀(ys⁴)}: 116
-//│ [C h⁴ append_₁(t⁴, ys³)]: 98 --->
-//│ 	case xs⁴ of {C h⁵ t⁵ => [C h⁵ append_₀(t⁵, ys⁴)] | N  => idList_₀(ys⁴)}: 116
+//│ 
 //│ ------------------
-//│ case xs⁴ of {C h⁵ t⁵ => [C h⁵ append_₀(t⁵, ys⁴)] | N  => idList_₀(ys⁴)}: 116 --->
-//│ 	[C h³ idList_₁(t³)]: 87
-//│ 	[N]: 88
-//│ 	[C h⁴ append_₁(t⁴, ys³)]: 98
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ appendThree_₀(primId⁰([C 1 [C 2 [N]]]), primId⁰([C 3 [C 4 [N]]]), primId⁰([C 5 [C 6 [N]]]))
-//│ def appendThree_₀(xs⁶, ys⁹, zs²) = 
-//│ 	append_₀(append_₁(xs⁶, ys⁹), zs²)
-//│ 	where
-//│ 	def append_₀(xs⁷, ys¹⁰) = 
-//│ 		xs⁷(ys¹⁰)
-//│ 		where
-//│ 		def idList_₀(l³) = 
-//│ 			case l³ of {
-//│ 				C h² t² => [C h² idList_₀(t²)]
-//│ 				| N  => [N]}
-//│ 	def append_₁(xs⁵, ys⁷) = 
-//│ 		case xs⁵ of {
-//│ 			C h⁴ t⁴ => 
-//│ 				let t⁷ = append_₁(t⁴, ys⁷)
-//│ 				in let h⁷ = h⁴
-//│ 				in (fun ys⁸ -> [C h⁷ append_₀(t⁷, ys⁸)])
-//│ 			| N  => idList_₁(ys⁷)}
-//│ 		where
-//│ 		def idList_₁(l⁴) = 
-//│ 			case l⁴ of {
-//│ 				C h³ t³ => 
-//│ 					let t⁶ = idList_₁(t³)
-//│ 					in let h⁶ = h³
-//│ 					in (fun ys⁵ -> [C h⁶ append_₀(t⁶, ys⁵)])
-//│ 				| N  => (fun ys⁶ -> idList_₀(ys⁶))}
+//│ appendThree(primId⁰([C 1 [C 2 [N]]]), primId⁰([C 3 [C 4 [N]]]), primId⁰([C 5 [C 6 [N]]]))
+//│ def append(xs², ys²) = case xs² of {
+//│ 	C h¹ t¹ => [C h¹ append(t¹, ys²)]
+//│ 	| N  => idList(ys²)}
+//│ def appendThree(xs³, ys³, zs¹) = append(append(xs³, ys³), zs¹)
+//│ def idList(l¹) = case l¹ of {
+//│ 	C h⁰ t⁰ => [C h⁰ idList(t⁰)]
+//│ 	| N  => [N]}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -492,30 +307,6 @@ main(primId(C(
 //│ [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [main^28] (hopeless to continue)
-//│ 	[main^28 · concat^24] (using original def)
-//│ 		[main^28 · concat^24 · append^14] (using original def)
-//│ 			[main^28 · concat^24 · append^14 · append^3] ---> [main^28 · concat^24 · append^14] (using original def)
-//│ 		[main^28 · concat^24 · concat^17] ---> [main^28 · concat^24] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ main_₀(primId⁰([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]))
-//│ def main_₀(xss¹) = 
-//│ 	concat_₀(xss¹)
-//│ 	where
-//│ 	def concat_₀(lss¹) = 
-//│ 		case lss¹ of {
-//│ 			C hh¹ tt¹ => append_₀(hh¹, concat_₀(tt¹))
-//│ 			| N  => [N]}
-//│ 		where
-//│ 		def append_₀(xs¹, ys¹) = 
-//│ 			case xs¹ of {
-//│ 				C h¹ t¹ => [C h¹ append_₀(t¹, ys¹)]
-//│ 				| N  => ys¹}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ 
 //│ ------------------
@@ -529,19 +320,14 @@ main(primId(C(
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ main_₀(primId⁰([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]))
-//│ def main_₀(xss²) = 
-//│ 	concat_₀(xss²)
-//│ 	where
-//│ 	def concat_₀(lss²) = 
-//│ 		case lss² of {
-//│ 			C hh¹ tt¹ => append_₀(hh¹, concat_₀(tt¹))
-//│ 			| N  => [N]}
-//│ 		where
-//│ 		def append_₀(xs², ys²) = 
-//│ 			case xs² of {
-//│ 				C h¹ t¹ => [C h¹ append_₀(t¹, ys²)]
-//│ 				| N  => ys²}
+//│ main(primId⁰([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]))
+//│ def append(xs¹, ys¹) = case xs¹ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys¹)]
+//│ 	| N  => ys¹}
+//│ def concat(lss¹) = case lss¹ of {
+//│ 	C hh⁰ tt⁰ => append(hh⁰, concat(tt⁰))
+//│ 	| N  => [N]}
+//│ def main(xss¹) = concat(xss¹)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -597,32 +383,6 @@ main(primId(C(
 //│ [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [main^34] (hopeless to continue)
-//│ 	[main^34 · concat^30] (using original def)
-//│ 		[main^34 · concat^30 · concat^14] ---> [main^34 · concat^30] (using original def)
-//│ 		[main^34 · concat^30 · concat^23] ---> [main^34 · concat^30] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ main_₀(primId⁰([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]))
-//│ def main_₀(xss¹) = 
-//│ 	concat_₀(xss¹)
-//│ 	where
-//│ 	def concat_₀(lss¹) = 
-//│ 		case lss¹ of {
-//│ 			C h² t² => case h² of {
-//│ 				xs¹ => 
-//│ 					let ok2¹ = (fun args2¹ -> case args2¹ of {
-//│ 						C h³ t³ => case h³ of {
-//│ 							x¹ => [C x¹ ok2¹(t³)]
-//│ 							| _  => ok2¹(t³)}
-//│ 						| _  => concat_₀(t²)})
-//│ 					in ok2¹(xs¹)
-//│ 				| _  => concat_₀(t²)}
-//│ 			| _  => [N]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ 
 //│ ------------------
@@ -636,22 +396,19 @@ main(primId(C(
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ main_₀(primId⁰([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]))
-//│ def main_₀(xss²) = 
-//│ 	concat_₀(xss²)
-//│ 	where
-//│ 	def concat_₀(lss²) = 
-//│ 		case lss² of {
-//│ 			C h² t² => case h² of {
-//│ 				xs¹ => 
-//│ 					let ok2² = (fun args2² -> case args2² of {
-//│ 						C h³ t³ => case h³ of {
-//│ 							x¹ => [C x¹ ok2²(t³)]
-//│ 							| _  => ok2²(t³)}
-//│ 						| _  => concat_₀(t²)})
-//│ 					in ok2²(xs¹)
-//│ 				| _  => concat_₀(t²)}
-//│ 			| _  => [N]}
+//│ main(primId⁰([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]))
+//│ def concat(lss¹) = case lss¹ of {
+//│ 	C h⁰ t⁰ => case h⁰ of {
+//│ 		xs⁰ => 
+//│ 			let ok2¹ = (fun args2¹ -> case args2¹ of {
+//│ 				C h¹ t¹ => case h¹ of {
+//│ 					x⁰ => [C x⁰ ok2¹(t¹)]
+//│ 					| _  => ok2¹(t¹)}
+//│ 				| _  => concat(t⁰)})
+//│ 			in ok2¹(xs⁰)
+//│ 		| _  => concat(t⁰)}
+//│ 	| _  => [N]}
+//│ def main(xss¹) = concat(xss¹)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -695,30 +452,6 @@ main(primId(C(
 //│ [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [main^28] (hopeless to continue)
-//│ 	[main^28 · concat^24] (using original def)
-//│ 		[main^28 · concat^24 · concatInner^2] (using original def)
-//│ 			[main^28 · concat^24 · concatInner^2 · concatInner^12] ---> [main^28 · concat^24 · concatInner^2] (using original def)
-//│ 			[main^28 · concat^24 · concatInner^2 · concat^18] ---> [main^28 · concat^24] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ main_₀(primId⁰([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]))
-//│ def main_₀(xss³) = 
-//│ 	concat_₀(xss³)
-//│ 	where
-//│ 	def concat_₀(lss¹) = 
-//│ 		case lss¹ of {
-//│ 			C hh¹ tt¹ => concatInner_₀(hh¹, tt¹)
-//│ 			| N  => [N]}
-//│ 		where
-//│ 		def concatInner_₀(xs¹, xss²) = 
-//│ 			case xs¹ of {
-//│ 				C h¹ t¹ => [C h¹ concatInner_₀(t¹, xss²)]
-//│ 				| N  => concat_₀(xss²)}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ 
 //│ ------------------
@@ -732,19 +465,14 @@ main(primId(C(
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ main_₀(primId⁰([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]))
-//│ def main_₀(xss⁵) = 
-//│ 	concat_₀(xss⁵)
-//│ 	where
-//│ 	def concat_₀(lss²) = 
-//│ 		case lss² of {
-//│ 			C hh¹ tt¹ => concatInner_₀(hh¹, tt¹)
-//│ 			| N  => [N]}
-//│ 		where
-//│ 		def concatInner_₀(xs², xss⁴) = 
-//│ 			case xs² of {
-//│ 				C h¹ t¹ => [C h¹ concatInner_₀(t¹, xss⁴)]
-//│ 				| N  => concat_₀(xss⁴)}
+//│ main(primId⁰([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]))
+//│ def concat(lss¹) = case lss¹ of {
+//│ 	C hh⁰ tt⁰ => concatInner(hh⁰, tt⁰)
+//│ 	| N  => [N]}
+//│ def concatInner(xs¹, xss²) = case xs¹ of {
+//│ 	C h⁰ t⁰ => [C h⁰ concatInner(t⁰, xss²)]
+//│ 	| N  => concat(xss²)}
+//│ def main(xss³) = concat(xss³)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>

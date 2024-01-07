@@ -4,39 +4,30 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_lumberhack_pop_out_ = struct
-let rec map__d0 f_0 ls_0 =
-  (ls_0 f_0);;
-let rec map__d1 f_1 ls_2 _lh_popOutId_0_0 =
+let rec _lhManual ls_2 f1_0 f2_0 =
   (match ls_2 with
-    | `C(h_0, t_0) -> 
-      (let rec t_1 = ((map__d1 f_1) t_0) in
-        (let rec h_1 = (f_1 h_0) in
-          (`C((_lh_popOutId_0_0 h_1), ((map__d0 _lh_popOutId_0_0) t_1)))))
+    | `C(h_1, t_1) -> 
+      (`C((f2_0 (f1_0 h_1)), (((_lhManual t_1) f1_0) f2_0)))
     | `N -> 
       (`N));;
-let rec testMapmap__d0 ls_1 =
-  ((map__d0 (fun x_0 -> 
-    (x_0 + 1))) ((map__d1 (fun x_1 -> 
-    (x_1 * x_1))) ls_1));;
-let rec enumFromTo__d0 a_1 b_1 =
-  (if (a_1 <= b_1) then
-    (`C(a_1, ((enumFromTo__d0 (a_1 + 1)) b_1)))
-  else
-    (`N));;
-let rec enumFromTo__d1 a_0 b_0 =
-  (if (a_0 <= b_0) then
-    (`C(a_0, ((enumFromTo__d1 (a_0 + 1)) b_0)))
-  else
-    (`N));;
-let rec _lhManual__d0 ls_4 f1_0 f2_0 =
-  (match ls_4 with
-    | `C(h_2, t_2) -> 
-      (`C((f2_0 (f1_0 h_2)), (((_lhManual__d0 t_2) f1_0) f2_0)))
-    | `N -> 
-      (`N));;
-let rec testManual__d0 ls_3 =
-  (((_lhManual__d0 ls_3) (fun x_2 -> 
+let rec testManual ls_3 =
+  (((_lhManual ls_3) (fun x_2 -> 
     (x_2 * x_2))) (fun x_3 -> 
     (x_3 + 1)));;
+let rec enumFromTo a_0 b_0 =
+  (if (a_0 <= b_0) then
+    (`C(a_0, ((enumFromTo (a_0 + 1)) b_0)))
+  else
+    (`N));;
+let rec map f_0 ls_0 =
+  (match ls_0 with
+    | `C(h_0, t_0) -> 
+      (`C((f_0 h_0), ((map f_0) t_0)))
+    | `N -> 
+      (`N));;
+let rec testMapmap ls_1 =
+  ((map (fun x_0 -> 
+    (x_0 + 1))) ((map (fun x_1 -> 
+    (x_1 * x_1))) ls_1));;
 end;;
 

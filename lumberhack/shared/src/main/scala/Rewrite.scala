@@ -646,6 +646,22 @@ trait ExprRewrite { this: Expr =>
       case Ref(id) => Ref(id)
       case Sequence(fst, snd) => Sequence(fst.deadCodeToMagic, snd.deadCodeToMagic)
     }
+
+  def primIdize(using d: Deforest, inDef: Option[Ident]): Expr =
+    Call(
+      Ref(d.lumberhackKeywordsIds("primId")), 
+      this match {
+        case c: (Const | Ref) => c
+        case Call(f, p) => Call(f.primIdize, p.primIdize)
+        case Ctor(n, args) => Ctor(n, args.map(_.primIdize))
+        case LetIn(id, value, body) => LetIn(id, value.primIdize, body.primIdize)
+        case LetGroup(defs, body) => LetGroup(defs.mapValues(_.primIdize).toMap, body.primIdize)
+        case Match(scrut, arms) => Match(scrut.primIdize, arms.map((n, args, body) => (n, args, body.primIdize)))
+        case IfThenElse(cond, thenn, elze) => IfThenElse(cond.primIdize, thenn.primIdize, elze.primIdize)
+        case Sequence(f, s) => Sequence(f.primIdize, s.primIdize)
+        case Function(p, body) => Function(p, body.primIdize)
+      }
+    )
 }
 
 trait ProgramRewrite { this: Program =>

@@ -27,93 +27,55 @@ main
 //│ def upto(a⁰, b⁰) = if (a⁰ > b⁰) then [N] else [C a⁰ upto^22((a⁰ + 1), b⁰)]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [main^72] (hopeless to continue)
-//│ 	[main^72 · map^56] (using original def)
-//│ 		[main^72 · map^56 · map^5] ---> [main^72 · map^56] (using original def)
-//│ 	[main^72 · sum^55] (using original def)
-//│ 		[main^72 · sum^55 · summ^35] (using original def)
-//│ 			[main^72 · sum^55 · summ^35 · summ^43] ---> [main^72 · sum^55 · summ^35] (using original def)
-//│ 	[main^72 · upto^64] (using original def)
-//│ 		[main^72 · upto^64 · upto^22] ---> [main^72 · upto^64] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ main_₀
-//│ def main_₀(n¹) = 
-//│ 	sum_₀(map_₀((fun x¹ -> (x¹ * x¹)), upto_₀(1, n¹)))
-//│ 	where
-//│ 	def map_₀(f¹, ls⁵) = 
-//│ 		case ls⁵ of {
-//│ 			C h³ t³ => [C f¹(h³) map_₀(f¹, t³)]
-//│ 			| N  => [N]}
-//│ 	def sum_₀(ls³) = 
-//│ 		summ_₀(0, ls³)
-//│ 		where
-//│ 		def summ_₀(acc¹, ls⁴) = 
-//│ 			case ls⁴ of {
-//│ 				N  => acc¹
-//│ 				| C h² t² => summ_₀((acc¹ + h²), t²)}
-//│ 	def upto_₀(a¹, b¹) = 
-//│ 		if (a¹ > b¹) then [N] else [C a¹ upto_₀((a¹ + 1), b¹)]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C f¹(h³) map_₀(f¹, t³)]: 119 --->
-//│ 	case ls⁴ of {N  => acc¹ | C h² t² => summ_₀((acc¹ + h²), t²)}: 107
-//│ [N]: 120 --->
-//│ 	case ls⁴ of {N  => acc¹ | C h² t² => summ_₀((acc¹ + h²), t²)}: 107
-//│ [N]: 129 --->
-//│ 	case ls⁵ of {C h³ t³ => [C f¹(h³) map_₀(f¹, t³)] | N  => [N]}: 121
-//│ [C a¹ upto_₀((a¹ + 1), b¹)]: 140 --->
-//│ 	case ls⁵ of {C h³ t³ => [C f¹(h³) map_₀(f¹, t³)] | N  => [N]}: 121
+//│ [C f⁰(h⁰) map(f⁰, t⁰)]: 10 --->
+//│ 	case ls² of {N  => acc⁰ | C h¹ t¹ => summ((acc⁰ + h¹), t¹)}: 52
+//│ [N]: 11 --->
+//│ 	case ls² of {N  => acc⁰ | C h¹ t¹ => summ((acc⁰ + h¹), t¹)}: 52
+//│ [N]: 20 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12
+//│ [C a⁰ upto((a⁰ + 1), b⁰)]: 31 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12
 //│ ------------------
-//│ case ls⁴ of {N  => acc¹ | C h² t² => summ_₀((acc¹ + h²), t²)}: 107 --->
-//│ 	[C f¹(h³) map_₀(f¹, t³)]: 119
-//│ 	[N]: 120
-//│ case ls⁵ of {C h³ t³ => [C f¹(h³) map_₀(f¹, t³)] | N  => [N]}: 121 --->
-//│ 	[N]: 129
-//│ 	[C a¹ upto_₀((a¹ + 1), b¹)]: 140
+//│ case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12 --->
+//│ 	[N]: 20
+//│ 	[C a⁰ upto((a⁰ + 1), b⁰)]: 31
+//│ case ls² of {N  => acc⁰ | C h¹ t¹ => summ((acc⁰ + h¹), t¹)}: 52 --->
+//│ 	[C f⁰(h⁰) map(f⁰, t⁰)]: 10
+//│ 	[N]: 11
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C f¹(h³) map_₀(f¹, t³)]: 119 --->
-//│ 	case ls⁴ of {N  => acc¹ | C h² t² => summ_₀((acc¹ + h²), t²)}: 107
-//│ [N]: 120 --->
-//│ 	case ls⁴ of {N  => acc¹ | C h² t² => summ_₀((acc¹ + h²), t²)}: 107
-//│ [N]: 129 --->
-//│ 	case ls⁵ of {C h³ t³ => [C f¹(h³) map_₀(f¹, t³)] | N  => [N]}: 121
-//│ [C a¹ upto_₀((a¹ + 1), b¹)]: 140 --->
-//│ 	case ls⁵ of {C h³ t³ => [C f¹(h³) map_₀(f¹, t³)] | N  => [N]}: 121
+//│ [C f⁰(h⁰) map(f⁰, t⁰)]: 10 --->
+//│ 	case ls² of {N  => acc⁰ | C h¹ t¹ => summ((acc⁰ + h¹), t¹)}: 52
+//│ [N]: 11 --->
+//│ 	case ls² of {N  => acc⁰ | C h¹ t¹ => summ((acc⁰ + h¹), t¹)}: 52
+//│ [N]: 20 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12
+//│ [C a⁰ upto((a⁰ + 1), b⁰)]: 31 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12
 //│ ------------------
-//│ case ls⁴ of {N  => acc¹ | C h² t² => summ_₀((acc¹ + h²), t²)}: 107 --->
-//│ 	[C f¹(h³) map_₀(f¹, t³)]: 119
-//│ 	[N]: 120
-//│ case ls⁵ of {C h³ t³ => [C f¹(h³) map_₀(f¹, t³)] | N  => [N]}: 121 --->
-//│ 	[N]: 129
-//│ 	[C a¹ upto_₀((a¹ + 1), b¹)]: 140
+//│ case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12 --->
+//│ 	[N]: 20
+//│ 	[C a⁰ upto((a⁰ + 1), b⁰)]: 31
+//│ case ls² of {N  => acc⁰ | C h¹ t¹ => summ((acc⁰ + h¹), t¹)}: 52 --->
+//│ 	[C f⁰(h⁰) map(f⁰, t⁰)]: 10
+//│ 	[N]: 11
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ main_₀
-//│ def main_₀(n²) = 
-//│ 	sum_₀(map_₀((fun x² -> (x² * x²)), upto_₀(1, n²)))
-//│ 	where
-//│ 	def map_₀(f², ls⁶) = 
-//│ 		ls⁶(f²)
-//│ 	def sum_₀(ls⁷) = 
-//│ 		summ_₀(0, ls⁷)
-//│ 		where
-//│ 		def summ_₀(acc², ls⁸) = 
-//│ 			ls⁸(acc²)
-//│ 	def upto_₀(a², b²) = 
-//│ 		if (a² > b²) then (fun f³ -> (fun acc³ -> acc³)) else 
-//│ 			let t⁴ = upto_₀((a² + 1), b²)
-//│ 			in let h⁴ = a²
-//│ 			in (fun f⁴ -> 
-//│ 				let t⁵ = map_₀(f⁴, t⁴)
-//│ 				in let h⁵ = f⁴(h⁴)
-//│ 				in (fun acc⁴ -> summ_₀((acc⁴ + h⁵), t⁵)))
+//│ main
+//│ def main(n¹) = sum(map((fun x¹ -> (x¹ * x¹)), upto(1, n¹)))
+//│ def map(f¹, ls³) = ls³(f¹)
+//│ def sum(ls⁴) = summ(0, ls⁴)
+//│ def summ(acc³, ls⁵) = ls⁵(acc³)
+//│ def upto(a¹, b¹) = if (a¹ > b¹) then (fun f² -> (fun acc¹ -> acc¹)) else 
+//│ 	let t² = upto((a¹ + 1), b¹)
+//│ 	in let h² = a¹
+//│ 	in (fun f³ -> 
+//│ 		let t³ = map(f³, t²)
+//│ 		in let h³ = f³(h²)
+//│ 		in (fun acc² -> summ((acc² + h³), t³)))
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -143,86 +105,54 @@ main
 //│ def upto(a⁰, b⁰) = if (a⁰ > b⁰) then [N] else [C a⁰ upto^22((a⁰ + 1), b⁰)]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [main^63] (hopeless to continue)
-//│ 	[main^63 · map^47] (using original def)
-//│ 		[main^63 · map^47 · map^5] ---> [main^63 · map^47] (using original def)
-//│ 	[main^63 · sum^46] (using original def)
-//│ 		[main^63 · sum^46 · sum^39] ---> [main^63 · sum^46] (using original def)
-//│ 	[main^63 · upto^55] (using original def)
-//│ 		[main^63 · upto^55 · upto^22] ---> [main^63 · upto^55] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ main_₀
-//│ def main_₀(n¹) = 
-//│ 	sum_₀(map_₀((fun x¹ -> (x¹ * x¹)), upto_₀(1, n¹)))
-//│ 	where
-//│ 	def map_₀(f¹, ls²) = 
-//│ 		case ls² of {
-//│ 			C h² t² => [C f¹(h²) map_₀(f¹, t²)]
-//│ 			| N  => [N]}
-//│ 	def sum_₀(ls³) = 
-//│ 		case ls³ of {
-//│ 			C h³ t³ => (h³ + sum_₀(t³))
-//│ 			| N  => 0}
-//│ 	def upto_₀(a¹, b¹) = 
-//│ 		if (a¹ > b¹) then [N] else [C a¹ upto_₀((a¹ + 1), b¹)]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C f¹(h²) map_₀(f¹, t²)]: 73 --->
-//│ 	case ls³ of {C h³ t³ => (h³ + sum_₀(t³)) | N  => 0}: 124
-//│ [N]: 74 --->
-//│ 	case ls³ of {C h³ t³ => (h³ + sum_₀(t³)) | N  => 0}: 124
-//│ [N]: 100 --->
-//│ 	case ls² of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 75
-//│ [C a¹ upto_₀((a¹ + 1), b¹)]: 111 --->
-//│ 	case ls² of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 75
+//│ [C f⁰(h⁰) map(f⁰, t⁰)]: 10 --->
+//│ 	case ls¹ of {C h¹ t¹ => (h¹ + sum(t¹)) | N  => 0}: 44
+//│ [N]: 11 --->
+//│ 	case ls¹ of {C h¹ t¹ => (h¹ + sum(t¹)) | N  => 0}: 44
+//│ [N]: 20 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12
+//│ [C a⁰ upto((a⁰ + 1), b⁰)]: 31 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12
 //│ ------------------
-//│ case ls² of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 75 --->
-//│ 	[N]: 100
-//│ 	[C a¹ upto_₀((a¹ + 1), b¹)]: 111
-//│ case ls³ of {C h³ t³ => (h³ + sum_₀(t³)) | N  => 0}: 124 --->
-//│ 	[C f¹(h²) map_₀(f¹, t²)]: 73
-//│ 	[N]: 74
+//│ case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12 --->
+//│ 	[N]: 20
+//│ 	[C a⁰ upto((a⁰ + 1), b⁰)]: 31
+//│ case ls¹ of {C h¹ t¹ => (h¹ + sum(t¹)) | N  => 0}: 44 --->
+//│ 	[C f⁰(h⁰) map(f⁰, t⁰)]: 10
+//│ 	[N]: 11
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C f¹(h²) map_₀(f¹, t²)]: 73 --->
-//│ 	case ls³ of {C h³ t³ => (h³ + sum_₀(t³)) | N  => 0}: 124
-//│ [N]: 74 --->
-//│ 	case ls³ of {C h³ t³ => (h³ + sum_₀(t³)) | N  => 0}: 124
-//│ [N]: 100 --->
-//│ 	case ls² of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 75
-//│ [C a¹ upto_₀((a¹ + 1), b¹)]: 111 --->
-//│ 	case ls² of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 75
+//│ [C f⁰(h⁰) map(f⁰, t⁰)]: 10 --->
+//│ 	case ls¹ of {C h¹ t¹ => (h¹ + sum(t¹)) | N  => 0}: 44
+//│ [N]: 11 --->
+//│ 	case ls¹ of {C h¹ t¹ => (h¹ + sum(t¹)) | N  => 0}: 44
+//│ [N]: 20 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12
+//│ [C a⁰ upto((a⁰ + 1), b⁰)]: 31 --->
+//│ 	case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12
 //│ ------------------
-//│ case ls² of {C h² t² => [C f¹(h²) map_₀(f¹, t²)] | N  => [N]}: 75 --->
-//│ 	[N]: 100
-//│ 	[C a¹ upto_₀((a¹ + 1), b¹)]: 111
-//│ case ls³ of {C h³ t³ => (h³ + sum_₀(t³)) | N  => 0}: 124 --->
-//│ 	[C f¹(h²) map_₀(f¹, t²)]: 73
-//│ 	[N]: 74
+//│ case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)] | N  => [N]}: 12 --->
+//│ 	[N]: 20
+//│ 	[C a⁰ upto((a⁰ + 1), b⁰)]: 31
+//│ case ls¹ of {C h¹ t¹ => (h¹ + sum(t¹)) | N  => 0}: 44 --->
+//│ 	[C f⁰(h⁰) map(f⁰, t⁰)]: 10
+//│ 	[N]: 11
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ main_₀
-//│ def main_₀(n²) = 
-//│ 	sum_₀(map_₀((fun x² -> (x² * x²)), upto_₀(1, n²)))
-//│ 	where
-//│ 	def map_₀(f², ls⁴) = 
-//│ 		ls⁴(f²)
-//│ 	def sum_₀(ls⁵) = 
-//│ 		ls⁵(99)
-//│ 	def upto_₀(a², b²) = 
-//│ 		if (a² > b²) then (fun f³ -> (fun _lh_dummy⁰ -> 0)) else 
-//│ 			let t⁴ = upto_₀((a² + 1), b²)
-//│ 			in let h⁴ = a²
-//│ 			in (fun f⁴ -> 
-//│ 				let t⁵ = map_₀(f⁴, t⁴)
-//│ 				in let h⁵ = f⁴(h⁴)
-//│ 				in (fun _lh_dummy¹ -> (h⁵ + sum_₀(t⁵))))
+//│ main
+//│ def main(n¹) = sum(map((fun x¹ -> (x¹ * x¹)), upto(1, n¹)))
+//│ def map(f¹, ls²) = ls²(f¹)
+//│ def sum(ls³) = ls³(99)
+//│ def upto(a¹, b¹) = if (a¹ > b¹) then (fun f² -> (fun _lh_dummy⁰ -> 0)) else 
+//│ 	let t² = upto((a¹ + 1), b¹)
+//│ 	in let h² = a¹
+//│ 	in (fun f³ -> 
+//│ 		let t³ = map(f³, t²)
+//│ 		in let h³ = f³(h²)
+//│ 		in (fun _lh_dummy¹ -> (h³ + sum(t³))))
 //│ <<<<<<< after fusion <<<<<<<
 
 // WRONG: cannot fuse at all if there is no concrete input
@@ -241,36 +171,14 @@ main
 //│ def main(x⁰, y⁰, z⁰) = append^13(append^14(x⁰, y⁰), z⁰)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [main^25] (hopeless to continue)
-//│ 	[main^25 · append^13] (using original def)
-//│ 		[main^25 · append^13 · append^3] ---> [main^25 · append^13] (using original def)
-//│ 	[main^25 · append^14] (using original def)
-//│ 		[main^25 · append^14 · append^3] ---> [main^25 · append^14] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ main_₀
-//│ def main_₀(x¹, y¹, z¹) = 
-//│ 	append_₀(append_₁(x¹, y¹), z¹)
-//│ 	where
-//│ 	def append_₀(xs², ys²) = 
-//│ 		case xs² of {
-//│ 			C h² t² => [C h² append_₀(t², ys²)]
-//│ 			| N  => ys²}
-//│ 	def append_₁(xs¹, ys¹) = 
-//│ 		case xs¹ of {
-//│ 			C h¹ t¹ => [C h¹ append_₁(t¹, ys¹)]
-//│ 			| N  => ys¹}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h¹ append_₁(t¹, ys¹)]: 45 --->
-//│ 	case xs² of {C h² t² => [C h² append_₀(t², ys²)] | N  => ys²}: 59
+//│ [C h⁰ append(t⁰, ys⁰)]: 8 --->
+//│ 	NoCons
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
 //│ ------------------
-//│ case xs² of {C h² t² => [C h² append_₀(t², ys²)] | N  => ys²}: 59 --->
+//│ case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10 --->
 //│ 	NoProd
-//│ 	[C h¹ append_₁(t¹, ys¹)]: 45
+//│ 	[C h⁰ append(t⁰, ys⁰)]: 8
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -280,18 +188,11 @@ main
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ main_₀
-//│ def main_₀(x², y², z²) = 
-//│ 	append_₀(append_₁(x², y²), z²)
-//│ 	where
-//│ 	def append_₀(xs⁴, ys⁴) = 
-//│ 		case xs⁴ of {
-//│ 			C h² t² => [C h² append_₀(t², ys⁴)]
-//│ 			| N  => ys⁴}
-//│ 	def append_₁(xs³, ys³) = 
-//│ 		case xs³ of {
-//│ 			C h¹ t¹ => [C h¹ append_₁(t¹, ys³)]
-//│ 			| N  => ys³}
+//│ main
+//│ def append(xs¹, ys¹) = case xs¹ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys¹)]
+//│ 	| N  => ys¹}
+//│ def main(x¹, y¹, z¹) = append(append(x¹, y¹), z¹)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -323,48 +224,19 @@ main
 //│ def main(x⁰, y⁰, z⁰) = append^34(append2^35(x⁰, y⁰), z⁰)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [main^46] (hopeless to continue)
-//│ 	[main^46 · append2^35] (using original def)
-//│ 		[main^46 · append2^35 · append2^22] ---> [main^46 · append2^35] (using original def)
-//│ 		[main^46 · append2^35 · idList^28] (using original def)
-//│ 	[main^46 · append^34] (using original def)
-//│ 		[main^46 · append^34 · append^3] ---> [main^46 · append^34] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ main_₀
-//│ def main_₀(x¹, y¹, z¹) = 
-//│ 	append_₀(append2_₀(x¹, y¹), z¹)
-//│ 	where
-//│ 	def append2_₀(xs², ys²) = 
-//│ 		case xs² of {
-//│ 			C h³ t³ => [C h³ append2_₀(t³, ys²)]
-//│ 			| N  => idList_₀(ys²)}
-//│ 		where
-//│ 		def idList_₀(ls¹) = 
-//│ 			case ls¹ of {
-//│ 				C h⁵ t⁵ => [C h⁵ t⁵]
-//│ 				| N  => [N]}
-//│ 	def append_₀(xs³, ys³) = 
-//│ 		case xs³ of {
-//│ 			C h⁴ t⁴ => [C h⁴ append_₀(t⁴, ys³)]
-//│ 			| N  => ys³}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h³ append2_₀(t³, ys²)]: 66 --->
-//│ 	case xs³ of {C h⁴ t⁴ => [C h⁴ append_₀(t⁴, ys³)] | N  => ys³}: 82
-//│ [C h⁵ t⁵]: 88 --->
-//│ 	case xs³ of {C h⁴ t⁴ => [C h⁴ append_₀(t⁴, ys³)] | N  => ys³}: 82
-//│ [N]: 89 --->
-//│ 	case xs³ of {C h⁴ t⁴ => [C h⁴ append_₀(t⁴, ys³)] | N  => ys³}: 82
+//│ [C h¹ t¹]: 16 --->
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
+//│ [N]: 17 --->
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
+//│ [C h² append2(t², ys¹)]: 27 --->
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
 //│ ------------------
-//│ case xs³ of {C h⁴ t⁴ => [C h⁴ append_₀(t⁴, ys³)] | N  => ys³}: 82 --->
+//│ case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10 --->
 //│ 	NoProd
-//│ 	[C h³ append2_₀(t³, ys²)]: 66
-//│ 	[C h⁵ t⁵]: 88
-//│ 	[N]: 89
+//│ 	[C h¹ t¹]: 16
+//│ 	[N]: 17
+//│ 	[C h² append2(t², ys¹)]: 27
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -374,23 +246,17 @@ main
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ main_₀
-//│ def main_₀(x², y², z²) = 
-//│ 	append_₀(append2_₀(x², y²), z²)
-//│ 	where
-//│ 	def append2_₀(xs⁴, ys⁴) = 
-//│ 		case xs⁴ of {
-//│ 			C h³ t³ => [C h³ append2_₀(t³, ys⁴)]
-//│ 			| N  => idList_₀(ys⁴)}
-//│ 		where
-//│ 		def idList_₀(ls²) = 
-//│ 			case ls² of {
-//│ 				C h⁵ t⁵ => [C h⁵ t⁵]
-//│ 				| N  => [N]}
-//│ 	def append_₀(xs⁵, ys⁵) = 
-//│ 		case xs⁵ of {
-//│ 			C h⁴ t⁴ => [C h⁴ append_₀(t⁴, ys⁵)]
-//│ 			| N  => ys⁵}
+//│ main
+//│ def append(xs², ys²) = case xs² of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys²)]
+//│ 	| N  => ys²}
+//│ def append2(xs³, ys³) = case xs³ of {
+//│ 	C h² t² => [C h² append2(t², ys³)]
+//│ 	| N  => idList(ys³)}
+//│ def idList(ls¹) = case ls¹ of {
+//│ 	C h¹ t¹ => [C h¹ t¹]
+//│ 	| N  => [N]}
+//│ def main(x¹, y¹, z¹) = append(append2(x¹, y¹), z¹)
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: will fuse if idList is recursive (this idea can be generalized to other
@@ -422,86 +288,50 @@ main
 //│ def main(x⁰, y⁰, z⁰) = append^36(append2^37(x⁰, y⁰), z⁰)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [main^48] (hopeless to continue)
-//│ 	[main^48 · append2^37] (using original def)
-//│ 		[main^48 · append2^37 · append2^24] ---> [main^48 · append2^37] (using original def)
-//│ 		[main^48 · append2^37 · idList^30] (using original def)
-//│ 			[main^48 · append2^37 · idList^30 · idList^15] ---> [main^48 · append2^37 · idList^30] (using original def)
-//│ 	[main^48 · append^36] (using original def)
-//│ 		[main^48 · append^36 · append^3] ---> [main^48 · append^36] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ main_₀
-//│ def main_₀(x¹, y¹, z¹) = 
-//│ 	append_₀(append2_₀(x¹, y¹), z¹)
-//│ 	where
-//│ 	def append2_₀(xs², ys²) = 
-//│ 		case xs² of {
-//│ 			C h³ t³ => [C h³ append2_₀(t³, ys²)]
-//│ 			| N  => idList_₀(ys²)}
-//│ 		where
-//│ 		def idList_₀(ls¹) = 
-//│ 			case ls¹ of {
-//│ 				C h⁵ t⁵ => [C h⁵ idList_₀(t⁵)]
-//│ 				| N  => [N]}
-//│ 	def append_₀(xs³, ys³) = 
-//│ 		case xs³ of {
-//│ 			C h⁴ t⁴ => [C h⁴ append_₀(t⁴, ys³)]
-//│ 			| N  => ys³}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h³ append2_₀(t³, ys²)]: 56 --->
-//│ 	case xs³ of {C h⁴ t⁴ => [C h⁴ append_₀(t⁴, ys³)] | N  => ys³}: 84
-//│ [C h⁵ idList_₀(t⁵)]: 92 --->
-//│ 	case xs³ of {C h⁴ t⁴ => [C h⁴ append_₀(t⁴, ys³)] | N  => ys³}: 84
-//│ [N]: 93 --->
-//│ 	case xs³ of {C h⁴ t⁴ => [C h⁴ append_₀(t⁴, ys³)] | N  => ys³}: 84
+//│ [C h¹ idList(t¹)]: 18 --->
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
+//│ [N]: 19 --->
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
+//│ [C h² append2(t², ys¹)]: 29 --->
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
 //│ ------------------
-//│ case xs³ of {C h⁴ t⁴ => [C h⁴ append_₀(t⁴, ys³)] | N  => ys³}: 84 --->
-//│ 	[C h³ append2_₀(t³, ys²)]: 56
-//│ 	[C h⁵ idList_₀(t⁵)]: 92
-//│ 	[N]: 93
+//│ case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10 --->
+//│ 	[C h¹ idList(t¹)]: 18
+//│ 	[N]: 19
+//│ 	[C h² append2(t², ys¹)]: 29
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C h³ append2_₀(t³, ys²)]: 56 --->
-//│ 	case xs³ of {C h⁴ t⁴ => [C h⁴ append_₀(t⁴, ys³)] | N  => ys³}: 84
-//│ [C h⁵ idList_₀(t⁵)]: 92 --->
-//│ 	case xs³ of {C h⁴ t⁴ => [C h⁴ append_₀(t⁴, ys³)] | N  => ys³}: 84
-//│ [N]: 93 --->
-//│ 	case xs³ of {C h⁴ t⁴ => [C h⁴ append_₀(t⁴, ys³)] | N  => ys³}: 84
+//│ [C h¹ idList(t¹)]: 18 --->
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
+//│ [N]: 19 --->
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
+//│ [C h² append2(t², ys¹)]: 29 --->
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
 //│ ------------------
-//│ case xs³ of {C h⁴ t⁴ => [C h⁴ append_₀(t⁴, ys³)] | N  => ys³}: 84 --->
-//│ 	[C h³ append2_₀(t³, ys²)]: 56
-//│ 	[C h⁵ idList_₀(t⁵)]: 92
-//│ 	[N]: 93
+//│ case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10 --->
+//│ 	[C h¹ idList(t¹)]: 18
+//│ 	[N]: 19
+//│ 	[C h² append2(t², ys¹)]: 29
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ main_₀
-//│ def main_₀(x², y², z²) = 
-//│ 	append_₀(append2_₀(x², y²), z²)
-//│ 	where
-//│ 	def append2_₀(xs⁴, ys⁴) = 
-//│ 		case xs⁴ of {
-//│ 			C h³ t³ => 
-//│ 				let t⁶ = append2_₀(t³, ys⁴)
-//│ 				in let h⁶ = h³
-//│ 				in (fun ys⁵ -> [C h⁶ append_₀(t⁶, ys⁵)])
-//│ 			| N  => idList_₀(ys⁴)}
-//│ 		where
-//│ 		def idList_₀(ls²) = 
-//│ 			case ls² of {
-//│ 				C h⁵ t⁵ => 
-//│ 					let t⁷ = idList_₀(t⁵)
-//│ 					in let h⁷ = h⁵
-//│ 					in (fun ys⁷ -> [C h⁷ append_₀(t⁷, ys⁷)])
-//│ 				| N  => (fun ys⁸ -> ys⁸)}
-//│ 	def append_₀(xs⁵, ys⁶) = 
-//│ 		xs⁵(ys⁶)
+//│ main
+//│ def append(xs², ys²) = xs²(ys²)
+//│ def append2(xs³, ys⁵) = case xs³ of {
+//│ 	C h² t² => 
+//│ 		let t⁴ = append2(t², ys⁵)
+//│ 		in let h⁴ = h²
+//│ 		in (fun ys⁶ -> [C h⁴ append(t⁴, ys⁶)])
+//│ 	| N  => idList(ys⁵)}
+//│ def idList(ls¹) = case ls¹ of {
+//│ 	C h¹ t¹ => 
+//│ 		let t³ = idList(t¹)
+//│ 		in let h³ = h¹
+//│ 		in (fun ys³ -> [C h³ append(t³, ys³)])
+//│ 	| N  => (fun ys⁴ -> ys⁴)}
+//│ def main(x¹, y¹, z¹) = append(append2(x¹, y¹), z¹)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -536,119 +366,38 @@ main
 //│ 	| N  => [N]}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [main^51] (hopeless to continue)
-//│ 	[main^51 · append^13] (using original def)
-//│ 		[main^51 · append^13 · append^3] ---> [main^51 · append^13] (using original def)
-//│ 	[main^51 · append^14] (using original def)
-//│ 		[main^51 · append^14 · append^3] ---> [main^51 · append^14] (using original def)
-//│ 	[main^51 · map^15] (using original def)
-//│ 		[main^51 · map^15 · map^41] ---> [main^51 · map^15] (using original def)
-//│ 	[main^51 · map^21] (using original def)
-//│ 		[main^51 · map^21 · map^41] ---> [main^51 · map^21] (using original def)
-//│ 	[main^51 · map^28] (using original def)
-//│ 		[main^51 · map^28 · map^41] ---> [main^51 · map^28] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ main_₀
-//│ def main_₀(x¹, y¹, z¹) = 
-//│ 	append_₀(append_₁(map_₀(x¹, primitive⁰), map_₁(y¹, primitive⁰)), map_₂(z¹, primitive⁰))
-//│ 	where
-//│ 	def append_₀(xs¹, ys¹) = 
-//│ 		case xs¹ of {
-//│ 			C h² t² => [C h² append_₀(t², ys¹)]
-//│ 			| N  => ys¹}
-//│ 	def append_₁(xs², ys²) = 
-//│ 		case xs² of {
-//│ 			C h⁵ t⁵ => [C h⁵ append_₁(t⁵, ys²)]
-//│ 			| N  => ys²}
-//│ 	def map_₀(ls¹, f¹) = 
-//│ 		case ls¹ of {
-//│ 			C h³ t³ => [C f¹(h³) map_₀(t³, f¹)]
-//│ 			| N  => [N]}
-//│ 	def map_₁(ls³, f³) = 
-//│ 		case ls³ of {
-//│ 			C h⁶ t⁶ => [C f³(h⁶) map_₁(t⁶, f³)]
-//│ 			| N  => [N]}
-//│ 	def map_₂(ls², f²) = 
-//│ 		case ls² of {
-//│ 			C h⁴ t⁴ => [C f²(h⁴) map_₂(t⁴, f²)]
-//│ 			| N  => [N]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C f¹(h³) map_₀(t³, f¹)]: 73 --->
-//│ 	case xs² of {C h⁵ t⁵ => [C h⁵ append_₁(t⁵, ys²)] | N  => ys²}: 125
-//│ [N]: 74 --->
-//│ 	case xs² of {C h⁵ t⁵ => [C h⁵ append_₁(t⁵, ys²)] | N  => ys²}: 125
-//│ [C h⁵ append_₁(t⁵, ys²)]: 123 --->
-//│ 	case xs¹ of {C h² t² => [C h² append_₀(t², ys¹)] | N  => ys¹}: 61
-//│ [C f³(h⁶) map_₁(t⁶, f³)]: 137 --->
-//│ 	case xs¹ of {C h² t² => [C h² append_₀(t², ys¹)] | N  => ys¹}: 61
-//│ [N]: 138 --->
-//│ 	case xs¹ of {C h² t² => [C h² append_₀(t², ys¹)] | N  => ys¹}: 61
+//│ [C h⁰ append(t⁰, ys⁰)]: 8 --->
+//│ 	NoCons
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
+//│ [C f⁰(h¹) map(t¹, f⁰)]: 46 --->
+//│ 	NoCons
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
+//│ [N]: 47 --->
+//│ 	NoCons
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
 //│ ------------------
-//│ case xs¹ of {C h² t² => [C h² append_₀(t², ys¹)] | N  => ys¹}: 61 --->
-//│ 	[C h⁵ append_₁(t⁵, ys²)]: 123
-//│ 	[C f³(h⁶) map_₁(t⁶, f³)]: 137
-//│ 	[N]: 138
-//│ case xs² of {C h⁵ t⁵ => [C h⁵ append_₁(t⁵, ys²)] | N  => ys²}: 125 --->
-//│ 	[C f¹(h³) map_₀(t³, f¹)]: 73
-//│ 	[N]: 74
+//│ case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10 --->
+//│ 	[C h⁰ append(t⁰, ys⁰)]: 8
+//│ 	[C f⁰(h¹) map(t¹, f⁰)]: 46
+//│ 	[N]: 47
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C f¹(h³) map_₀(t³, f¹)]: 73 --->
-//│ 	case xs² of {C h⁵ t⁵ => [C h⁵ append_₁(t⁵, ys²)] | N  => ys²}: 125
-//│ [N]: 74 --->
-//│ 	case xs² of {C h⁵ t⁵ => [C h⁵ append_₁(t⁵, ys²)] | N  => ys²}: 125
-//│ [C h⁵ append_₁(t⁵, ys²)]: 123 --->
-//│ 	case xs¹ of {C h² t² => [C h² append_₀(t², ys¹)] | N  => ys¹}: 61
-//│ [C f³(h⁶) map_₁(t⁶, f³)]: 137 --->
-//│ 	case xs¹ of {C h² t² => [C h² append_₀(t², ys¹)] | N  => ys¹}: 61
-//│ [N]: 138 --->
-//│ 	case xs¹ of {C h² t² => [C h² append_₀(t², ys¹)] | N  => ys¹}: 61
+//│ 
 //│ ------------------
-//│ case xs¹ of {C h² t² => [C h² append_₀(t², ys¹)] | N  => ys¹}: 61 --->
-//│ 	[C h⁵ append_₁(t⁵, ys²)]: 123
-//│ 	[C f³(h⁶) map_₁(t⁶, f³)]: 137
-//│ 	[N]: 138
-//│ case xs² of {C h⁵ t⁵ => [C h⁵ append_₁(t⁵, ys²)] | N  => ys²}: 125 --->
-//│ 	[C f¹(h³) map_₀(t³, f¹)]: 73
-//│ 	[N]: 74
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ main_₀
-//│ def main_₀(x², y², z²) = 
-//│ 	append_₀(append_₁(map_₀(x², primitive⁰), map_₁(y², primitive⁰)), map_₂(z², primitive⁰))
-//│ 	where
-//│ 	def append_₀(xs³, ys⁶) = 
-//│ 		xs³(ys⁶)
-//│ 	def append_₁(xs⁴, ys⁷) = 
-//│ 		xs⁴(ys⁷)
-//│ 	def map_₀(ls⁴, f⁴) = 
-//│ 		case ls⁴ of {
-//│ 			C h³ t³ => 
-//│ 				let t⁷ = map_₀(t³, f⁴)
-//│ 				in let h⁷ = f⁴(h³)
-//│ 				in (fun ys³ -> 
-//│ 					let t⁸ = append_₁(t⁷, ys³)
-//│ 					in let h⁸ = h⁷
-//│ 					in (fun ys⁴ -> [C h⁸ append_₀(t⁸, ys⁴)]))
-//│ 			| N  => (fun ys⁵ -> ys⁵)}
-//│ 	def map_₁(ls⁶, f⁶) = 
-//│ 		case ls⁶ of {
-//│ 			C h⁶ t⁶ => 
-//│ 				let t⁹ = map_₁(t⁶, f⁶)
-//│ 				in let h⁹ = f⁶(h⁶)
-//│ 				in (fun ys⁸ -> [C h⁹ append_₀(t⁹, ys⁸)])
-//│ 			| N  => (fun ys⁹ -> ys⁹)}
-//│ 	def map_₂(ls⁵, f⁵) = 
-//│ 		case ls⁵ of {
-//│ 			C h⁴ t⁴ => [C f⁵(h⁴) map_₂(t⁴, f⁵)]
-//│ 			| N  => [N]}
+//│ main
+//│ def append(xs¹, ys¹) = case xs¹ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys¹)]
+//│ 	| N  => ys¹}
+//│ def main(x¹, y¹, z¹) = append(append(map(x¹, primitive⁰), map(y¹, primitive⁰)), map(z¹, primitive⁰))
+//│ def map(ls¹, f¹) = case ls¹ of {
+//│ 	C h¹ t¹ => [C f¹(h¹) map(t¹, f¹)]
+//│ 	| N  => [N]}
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -668,65 +417,32 @@ main
 //│ def main(x⁰, y⁰) = append^13(append^14(x⁰, [N]), y⁰)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [main^24] (hopeless to continue)
-//│ 	[main^24 · append^13] (using original def)
-//│ 		[main^24 · append^13 · append^3] ---> [main^24 · append^13] (using original def)
-//│ 	[main^24 · append^14] (using original def)
-//│ 		[main^24 · append^14 · append^3] ---> [main^24 · append^14] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ main_₀
-//│ def main_₀(x¹, y¹) = 
-//│ 	append_₀(append_₁(x¹, [N]), y¹)
-//│ 	where
-//│ 	def append_₀(xs², ys²) = 
-//│ 		case xs² of {
-//│ 			C h² t² => [C h² append_₀(t², ys²)]
-//│ 			| N  => ys²}
-//│ 	def append_₁(xs¹, ys¹) = 
-//│ 		case xs¹ of {
-//│ 			C h¹ t¹ => [C h¹ append_₁(t¹, ys¹)]
-//│ 			| N  => ys¹}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h¹ append_₁(t¹, ys¹)]: 32 --->
-//│ 	case xs² of {C h² t² => [C h² append_₀(t², ys²)] | N  => ys²}: 57
-//│ [N]: 41 --->
-//│ 	case xs² of {C h² t² => [C h² append_₀(t², ys²)] | N  => ys²}: 57
+//│ [C h⁰ append(t⁰, ys⁰)]: 8 --->
+//│ 	NoCons
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
+//│ [N]: 17 --->
+//│ 	NoCons
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
 //│ ------------------
-//│ case xs² of {C h² t² => [C h² append_₀(t², ys²)] | N  => ys²}: 57 --->
-//│ 	[C h¹ append_₁(t¹, ys¹)]: 32
-//│ 	[N]: 41
+//│ case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10 --->
+//│ 	NoProd
+//│ 	[C h⁰ append(t⁰, ys⁰)]: 8
+//│ 	[N]: 17
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C h¹ append_₁(t¹, ys¹)]: 32 --->
-//│ 	case xs² of {C h² t² => [C h² append_₀(t², ys²)] | N  => ys²}: 57
-//│ [N]: 41 --->
-//│ 	case xs² of {C h² t² => [C h² append_₀(t², ys²)] | N  => ys²}: 57
+//│ 
 //│ ------------------
-//│ case xs² of {C h² t² => [C h² append_₀(t², ys²)] | N  => ys²}: 57 --->
-//│ 	[C h¹ append_₁(t¹, ys¹)]: 32
-//│ 	[N]: 41
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ main_₀
-//│ def main_₀(x², y²) = 
-//│ 	append_₀(append_₁(x², (fun ys⁵ -> ys⁵)), y²)
-//│ 	where
-//│ 	def append_₀(xs⁴, ys⁶) = 
-//│ 		xs⁴(ys⁶)
-//│ 	def append_₁(xs³, ys³) = 
-//│ 		case xs³ of {
-//│ 			C h¹ t¹ => 
-//│ 				let t³ = append_₁(t¹, ys³)
-//│ 				in let h³ = h¹
-//│ 				in (fun ys⁴ -> [C h³ append_₀(t³, ys⁴)])
-//│ 			| N  => ys³}
+//│ main
+//│ def append(xs¹, ys¹) = case xs¹ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys¹)]
+//│ 	| N  => ys¹}
+//│ def main(x¹, y¹) = append(append(x¹, [N]), y¹)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -746,83 +462,40 @@ main
 //│ def main(x⁰, y⁰) = append^13(append^14(x⁰, [C 1 [C 2 [N]]]), y⁰)
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [main^28] (hopeless to continue)
-//│ 	[main^28 · append^13] (using original def)
-//│ 		[main^28 · append^13 · append^3] ---> [main^28 · append^13] (using original def)
-//│ 	[main^28 · append^14] (using original def)
-//│ 		[main^28 · append^14 · append^3] ---> [main^28 · append^14] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ main_₀
-//│ def main_₀(x¹, y¹) = 
-//│ 	append_₀(append_₁(x¹, [C 1 [C 2 [N]]]), y¹)
-//│ 	where
-//│ 	def append_₀(xs¹, ys¹) = 
-//│ 		case xs¹ of {
-//│ 			C h¹ t¹ => [C h¹ append_₀(t¹, ys¹)]
-//│ 			| N  => ys¹}
-//│ 	def append_₁(xs², ys²) = 
-//│ 		case xs² of {
-//│ 			C h² t² => [C h² append_₁(t², ys²)]
-//│ 			| N  => ys²}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C h² append_₁(t², ys²)]: 48 --->
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ append_₀(t¹, ys¹)] | N  => ys¹}: 38
-//│ [N]: 59 --->
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ append_₀(t¹, ys¹)] | N  => ys¹}: 38
-//│ [C 2 [N]]: 60 --->
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ append_₀(t¹, ys¹)] | N  => ys¹}: 38
-//│ [C 1 [C 2 [N]]]: 61 --->
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ append_₀(t¹, ys¹)] | N  => ys¹}: 38
+//│ [C h⁰ append(t⁰, ys⁰)]: 8 --->
+//│ 	NoCons
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
+//│ [N]: 19 --->
+//│ 	NoCons
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
+//│ [C 2 [N]]: 20 --->
+//│ 	NoCons
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
+//│ [C 1 [C 2 [N]]]: 21 --->
+//│ 	NoCons
+//│ 	case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => [C h¹ append_₀(t¹, ys¹)] | N  => ys¹}: 38 --->
-//│ 	[C h² append_₁(t², ys²)]: 48
-//│ 	[N]: 59
-//│ 	[C 2 [N]]: 60
-//│ 	[C 1 [C 2 [N]]]: 61
+//│ case xs⁰ of {C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)] | N  => ys⁰}: 10 --->
+//│ 	NoProd
+//│ 	[C h⁰ append(t⁰, ys⁰)]: 8
+//│ 	[N]: 19
+//│ 	[C 2 [N]]: 20
+//│ 	[C 1 [C 2 [N]]]: 21
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [C h² append_₁(t², ys²)]: 48 --->
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ append_₀(t¹, ys¹)] | N  => ys¹}: 38
-//│ [N]: 59 --->
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ append_₀(t¹, ys¹)] | N  => ys¹}: 38
-//│ [C 2 [N]]: 60 --->
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ append_₀(t¹, ys¹)] | N  => ys¹}: 38
-//│ [C 1 [C 2 [N]]]: 61 --->
-//│ 	case xs¹ of {C h¹ t¹ => [C h¹ append_₀(t¹, ys¹)] | N  => ys¹}: 38
+//│ 
 //│ ------------------
-//│ case xs¹ of {C h¹ t¹ => [C h¹ append_₀(t¹, ys¹)] | N  => ys¹}: 38 --->
-//│ 	[C h² append_₁(t², ys²)]: 48
-//│ 	[N]: 59
-//│ 	[C 2 [N]]: 60
-//│ 	[C 1 [C 2 [N]]]: 61
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ main_₀
-//│ def main_₀(x², y²) = 
-//│ 	append_₀(append_₁(x², 
-//│ 		let t⁴ = 	
-//│ 			let t⁵ = (fun ys⁸ -> ys⁸)
-//│ 			in let h⁵ = 2
-//│ 			in (fun ys⁷ -> [C h⁵ append_₀(t⁵, ys⁷)])
-//│ 		in let h⁴ = 1
-//│ 		in (fun ys⁶ -> [C h⁴ append_₀(t⁴, ys⁶)])), y²)
-//│ 	where
-//│ 	def append_₀(xs³, ys³) = 
-//│ 		xs³(ys³)
-//│ 	def append_₁(xs⁴, ys⁴) = 
-//│ 		case xs⁴ of {
-//│ 			C h² t² => 
-//│ 				let t³ = append_₁(t², ys⁴)
-//│ 				in let h³ = h²
-//│ 				in (fun ys⁵ -> [C h³ append_₀(t³, ys⁵)])
-//│ 			| N  => ys⁴}
+//│ main
+//│ def append(xs¹, ys¹) = case xs¹ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys¹)]
+//│ 	| N  => ys¹}
+//│ def main(x¹, y¹) = append(append(x¹, [C 1 [C 2 [N]]]), y¹)
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -843,69 +516,32 @@ ff
 //│ 	| N v⁰ => [N v⁰]}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [ff^19] (hopeless to continue)
-//│ 	[ff^19 · flip^13] (using original def)
-//│ 		[ff^19 · flip^13 · flip^2] ---> [ff^19 · flip^13] (using original def)
-//│ 		[ff^19 · flip^13 · flip^5] ---> [ff^19 · flip^13] (using original def)
-//│ 	[ff^19 · flip^14] (using original def)
-//│ 		[ff^19 · flip^14 · flip^2] ---> [ff^19 · flip^14] (using original def)
-//│ 		[ff^19 · flip^14 · flip^5] ---> [ff^19 · flip^14] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ ff_₀
-//│ def ff_₀(t³) = 
-//│ 	flip_₀(flip_₁(t³))
-//│ 	where
-//│ 	def flip_₀(t⁴) = 
-//│ 		case t⁴ of {
-//│ 			T l² r² => [T flip_₀(l²) flip_₀(r²)]
-//│ 			| N v² => [N v²]}
-//│ 	def flip_₁(t²) = 
-//│ 		case t² of {
-//│ 			T l¹ r¹ => [T flip_₁(l¹) flip_₁(r¹)]
-//│ 			| N v¹ => [N v¹]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [T flip_₁(l¹) flip_₁(r¹)]: 27 --->
-//│ 	case t⁴ of {T l² r² => [T flip_₀(l²) flip_₀(r²)] | N v² => [N v²]}: 48
-//│ [N v¹]: 29 --->
-//│ 	case t⁴ of {T l² r² => [T flip_₀(l²) flip_₀(r²)] | N v² => [N v²]}: 48
+//│ [T flip(l⁰) flip(r⁰)]: 8 --->
+//│ 	NoCons
+//│ 	case t⁰ of {T l⁰ r⁰ => [T flip(l⁰) flip(r⁰)] | N v⁰ => [N v⁰]}: 11
+//│ [N v⁰]: 10 --->
+//│ 	NoCons
+//│ 	case t⁰ of {T l⁰ r⁰ => [T flip(l⁰) flip(r⁰)] | N v⁰ => [N v⁰]}: 11
 //│ ------------------
-//│ case t⁴ of {T l² r² => [T flip_₀(l²) flip_₀(r²)] | N v² => [N v²]}: 48 --->
-//│ 	[T flip_₁(l¹) flip_₁(r¹)]: 27
-//│ 	[N v¹]: 29
+//│ case t⁰ of {T l⁰ r⁰ => [T flip(l⁰) flip(r⁰)] | N v⁰ => [N v⁰]}: 11 --->
+//│ 	NoProd
+//│ 	[T flip(l⁰) flip(r⁰)]: 8
+//│ 	[N v⁰]: 10
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [T flip_₁(l¹) flip_₁(r¹)]: 27 --->
-//│ 	case t⁴ of {T l² r² => [T flip_₀(l²) flip_₀(r²)] | N v² => [N v²]}: 48
-//│ [N v¹]: 29 --->
-//│ 	case t⁴ of {T l² r² => [T flip_₀(l²) flip_₀(r²)] | N v² => [N v²]}: 48
+//│ 
 //│ ------------------
-//│ case t⁴ of {T l² r² => [T flip_₀(l²) flip_₀(r²)] | N v² => [N v²]}: 48 --->
-//│ 	[T flip_₁(l¹) flip_₁(r¹)]: 27
-//│ 	[N v¹]: 29
+//│ 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ ff_₀
-//│ def ff_₀(t⁶) = 
-//│ 	flip_₀(flip_₁(t⁶))
-//│ 	where
-//│ 	def flip_₀(t⁷) = 
-//│ 		t⁷(99)
-//│ 	def flip_₁(t⁵) = 
-//│ 		case t⁵ of {
-//│ 			T l¹ r¹ => 
-//│ 				let r³ = flip_₁(r¹)
-//│ 				in let l³ = flip_₁(l¹)
-//│ 				in (fun _lh_dummy⁰ -> [T flip_₀(l³) flip_₀(r³)])
-//│ 			| N v¹ => 
-//│ 				let v³ = v¹
-//│ 				in (fun _lh_dummy¹ -> [N v³])}
+//│ ff
+//│ def ff(t³) = flip(flip(t³))
+//│ def flip(t²) = case t² of {
+//│ 	T l⁰ r⁰ => [T flip(l⁰) flip(r⁰)]
+//│ 	| N v⁰ => [N v⁰]}
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT:
@@ -930,67 +566,38 @@ main
 //│ 	| T l¹ r¹ => (sumtr^20(l¹) + sumtr^24(r¹))}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [main^36] (hopeless to continue)
-//│ 	[main^36 · squaretr^31] (using original def)
-//│ 		[main^36 · squaretr^31 · squaretr^11] ---> [main^36 · squaretr^31] (using original def)
-//│ 		[main^36 · squaretr^31 · squaretr^8] ---> [main^36 · squaretr^31] (using original def)
-//│ 	[main^36 · sumtr^30] (using original def)
-//│ 		[main^36 · sumtr^30 · sumtr^20] ---> [main^36 · sumtr^30] (using original def)
-//│ 		[main^36 · sumtr^30 · sumtr^24] ---> [main^36 · sumtr^30] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ main_₀
-//│ def main_₀(t⁴) = 
-//│ 	sumtr_₀(squaretr_₀(t⁴))
-//│ 	where
-//│ 	def squaretr_₀(t⁵) = 
-//│ 		case t⁵ of {
-//│ 			N v³ => [N (v³ * v³)]
-//│ 			| T l³ r³ => [T squaretr_₀(l³) squaretr_₀(r³)]}
-//│ 	def sumtr_₀(t³) = 
-//│ 		case t³ of {
-//│ 			N v² => v²
-//│ 			| T l² r² => (sumtr_₀(l²) + sumtr_₀(r²))}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N (v³ * v³)]: 62 --->
-//│ 	case t³ of {N v² => v² | T l² r² => (sumtr_₀(l²) + sumtr_₀(r²))}: 48
-//│ [T squaretr_₀(l³) squaretr_₀(r³)]: 69 --->
-//│ 	case t³ of {N v² => v² | T l² r² => (sumtr_₀(l²) + sumtr_₀(r²))}: 48
+//│ [N (v⁰ * v⁰)]: 7 --->
+//│ 	case t¹ of {N v¹ => v¹ | T l¹ r¹ => (sumtr(l¹) + sumtr(r¹))}: 28
+//│ [T squaretr(l⁰) squaretr(r⁰)]: 14 --->
+//│ 	case t¹ of {N v¹ => v¹ | T l¹ r¹ => (sumtr(l¹) + sumtr(r¹))}: 28
 //│ ------------------
-//│ case t³ of {N v² => v² | T l² r² => (sumtr_₀(l²) + sumtr_₀(r²))}: 48 --->
-//│ 	[N (v³ * v³)]: 62
-//│ 	[T squaretr_₀(l³) squaretr_₀(r³)]: 69
+//│ case t¹ of {N v¹ => v¹ | T l¹ r¹ => (sumtr(l¹) + sumtr(r¹))}: 28 --->
+//│ 	[N (v⁰ * v⁰)]: 7
+//│ 	[T squaretr(l⁰) squaretr(r⁰)]: 14
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [N (v³ * v³)]: 62 --->
-//│ 	case t³ of {N v² => v² | T l² r² => (sumtr_₀(l²) + sumtr_₀(r²))}: 48
-//│ [T squaretr_₀(l³) squaretr_₀(r³)]: 69 --->
-//│ 	case t³ of {N v² => v² | T l² r² => (sumtr_₀(l²) + sumtr_₀(r²))}: 48
+//│ [N (v⁰ * v⁰)]: 7 --->
+//│ 	case t¹ of {N v¹ => v¹ | T l¹ r¹ => (sumtr(l¹) + sumtr(r¹))}: 28
+//│ [T squaretr(l⁰) squaretr(r⁰)]: 14 --->
+//│ 	case t¹ of {N v¹ => v¹ | T l¹ r¹ => (sumtr(l¹) + sumtr(r¹))}: 28
 //│ ------------------
-//│ case t³ of {N v² => v² | T l² r² => (sumtr_₀(l²) + sumtr_₀(r²))}: 48 --->
-//│ 	[N (v³ * v³)]: 62
-//│ 	[T squaretr_₀(l³) squaretr_₀(r³)]: 69
+//│ case t¹ of {N v¹ => v¹ | T l¹ r¹ => (sumtr(l¹) + sumtr(r¹))}: 28 --->
+//│ 	[N (v⁰ * v⁰)]: 7
+//│ 	[T squaretr(l⁰) squaretr(r⁰)]: 14
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ main_₀
-//│ def main_₀(t⁷) = 
-//│ 	sumtr_₀(squaretr_₀(t⁷))
-//│ 	where
-//│ 	def squaretr_₀(t⁸) = 
-//│ 		case t⁸ of {
-//│ 			N v³ => 
-//│ 				let v⁴ = (v³ * v³)
-//│ 				in (fun _lh_dummy⁰ -> v⁴)
-//│ 			| T l³ r³ => 
-//│ 				let r⁴ = squaretr_₀(r³)
-//│ 				in let l⁴ = squaretr_₀(l³)
-//│ 				in (fun _lh_dummy¹ -> (sumtr_₀(l⁴) + sumtr_₀(r⁴)))}
-//│ 	def sumtr_₀(t⁶) = 
-//│ 		t⁶(99)
+//│ main
+//│ def main(t⁵) = sumtr(squaretr(t⁵))
+//│ def squaretr(t³) = case t³ of {
+//│ 	N v⁰ => 
+//│ 		let v² = (v⁰ * v⁰)
+//│ 		in (fun _lh_dummy⁰ -> v²)
+//│ 	| T l⁰ r⁰ => 
+//│ 		let r² = squaretr(r⁰)
+//│ 		in let l² = squaretr(l⁰)
+//│ 		in (fun _lh_dummy¹ -> (sumtr(l²) + sumtr(r²)))}
+//│ def sumtr(t⁴) = t⁴(99)
 //│ <<<<<<< after fusion <<<<<<<

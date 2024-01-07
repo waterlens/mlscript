@@ -58,46 +58,31 @@ f(A)
 //│ 		in [B]}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^9] (hopeless to continue)
-//│ 	[f^9 · f^2] ---> [f^9] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀([A])
-//│ def f_₀(x¹) = 
-//│ 	case x¹ of {
-//│ 		A  => 
-//│ 			let t¹ = f_₀(t¹)
-//│ 			in [B]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [A]: 21 --->
-//│ 	case x¹ of {A  => let t¹ = f_₀(t¹)
-//│ in [B]}: 18
+//│ [A]: 10 --->
+//│ 	case x⁰ of {A  => let t⁰ = f(t⁰)
+//│ in [B]}: 7
 //│ ------------------
-//│ case x¹ of {A  => let t¹ = f_₀(t¹)
-//│ in [B]}: 18 --->
-//│ 	[A]: 21
+//│ case x⁰ of {A  => let t⁰ = f(t⁰)
+//│ in [B]}: 7 --->
+//│ 	[A]: 10
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [A]: 21 --->
-//│ 	case x¹ of {A  => let t¹ = f_₀(t¹)
-//│ in [B]}: 18
+//│ [A]: 10 --->
+//│ 	case x⁰ of {A  => let t⁰ = f(t⁰)
+//│ in [B]}: 7
 //│ ------------------
-//│ case x¹ of {A  => let t¹ = f_₀(t¹)
-//│ in [B]}: 18 --->
-//│ 	[A]: 21
+//│ case x⁰ of {A  => let t⁰ = f(t⁰)
+//│ in [B]}: 7 --->
+//│ 	[A]: 10
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀((fun _lh_dummy⁰ -> 
-//│ 	let t² = f_₀(t²)
+//│ f((fun _lh_dummy⁰ -> 
+//│ 	let t¹ = f(t¹)
 //│ 	in [B]))
-//│ def f_₀(x²) = 
-//│ 	x²(99)
+//│ def f(x¹) = x¹(99)
 //│ <<<<<<< after fusion <<<<<<<
 //│ !!!!!!ERROR!!!!!!
 //│ java.lang.Exception: expect to fail but pass

@@ -4,23 +4,23 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_lumberhack_pop_out_ = struct
-let rec genTree__d0 n_1 =
-  (if (n_1 > 0) then
-    (`T(n_1, (genTree__d0 (n_1 - 1)), (genTree__d0 (n_1 - 1))))
-  else
-    (`L));;
-let rec sumTree__d0 t_0 =
-  (t_0 99);;
-let rec sqTree__d0 t_1 _lh_popOutId_0_0 =
-  (match t_1 with
+let rec sumTree t_1 =
+  (t_1 99);;
+let rec sqTree t_0 _lh_popOutId_0_0 =
+  (match t_0 with
     | `T(v_0, l_0, r_0) -> 
-      (let rec r_1 = (sqTree__d0 r_0) in
-        (let rec l_1 = (sqTree__d0 l_0) in
+      (let rec r_1 = (sqTree r_0) in
+        (let rec l_1 = (sqTree l_0) in
           (let rec v_1 = (v_0 * v_0) in
-            ((v_1 + (sumTree__d0 l_1)) + (sumTree__d0 r_1)))))
+            ((v_1 + (sumTree l_1)) + (sumTree r_1)))))
     | `L -> 
       0);;
-let rec testSumSquareTree__d0 n_0 =
-  (sumTree__d0 (sqTree__d0 (genTree__d0 n_0)));;
+let rec genTree n_0 =
+  (if (n_0 > 0) then
+    (`T(n_0, (genTree (n_0 - 1)), (genTree (n_0 - 1))))
+  else
+    (`L));;
+let rec testSumSquareTree n_1 =
+  (sumTree (sqTree (genTree n_1)));;
 end;;
 

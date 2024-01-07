@@ -255,7 +255,7 @@ class DiffTestLumberhack extends DiffTests {
     val _output = if mode.stdout || mode.verbose || count == 0 then output else { (str: String) => buf.append(str); () }
 
     val (expandedP, expandedD, callTree) =
-      if mode.lhLessExpansion && count == 0 && mode.lhInHaskell && mode.lhGenOCaml then
+      if mode.lhLessExpansion && count == 0 && mode.lhInHaskell && mode.lhGenOCaml || true then
         (p, d, None)
       else
         val res = expander(using p, d, mode, _output)
@@ -272,7 +272,7 @@ class DiffTestLumberhack extends DiffTests {
     val newEvalRess = evalRes.flatMap(r => evalRess.map(rs => r :: rs))
     if stop then
       if count > 0 then (p, d, evalRess) else (fusedP, fusedD, newEvalRess)
-    else if count > 10 || mode.lhNoIter then
+    else if count > 10 || mode.lhNoIter || true then
       (fusedP, fusedD, newEvalRess)
     else
       keepFuse(fusedP, fusedD, mode, evaluate, output, count + 1, newEvalRess)

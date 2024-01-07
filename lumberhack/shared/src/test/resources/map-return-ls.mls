@@ -20,33 +20,14 @@ map(map(primId(C(1, C(2, N))), x => x * x), x => x + x)
 //│ [C 2 [C 8 [N]]]
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [map^15] (hopeless to continue)
-//│ 	[map^15 · map^5] ---> [map^15] (using original def)
-//│ [map^16] (hopeless to continue)
-//│ 	[map^16 · map^5] ---> [map^16] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ map_₀(map_₁(primId⁰([C 1 [C 2 [N]]]), (fun x² -> (x² * x²))), (fun x³ -> (x³ + x³)))
-//│ def map_₀(ls¹, f¹) = 
-//│ 	case ls¹ of {
-//│ 		C h¹ t¹ => [C f¹(h¹) map_₀(t¹, f¹)]
-//│ 		| N  => ls¹}
-//│ def map_₁(ls², f²) = 
-//│ 	case ls² of {
-//│ 		C h² t² => [C f²(h²) map_₁(t², f²)]
-//│ 		| N  => ls²}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C f²(h²) map_₁(t², f²)]: 63 --->
+//│ [C f⁰(h⁰) map(t⁰, f⁰)]: 10 --->
 //│ 	NoCons
-//│ 	case ls¹ of {C h¹ t¹ => [C f¹(h¹) map_₀(t¹, f¹)] | N  => ls¹}: 51
+//│ 	case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(t⁰, f⁰)] | N  => ls⁰}: 12
 //│ ------------------
-//│ case ls¹ of {C h¹ t¹ => [C f¹(h¹) map_₀(t¹, f¹)] | N  => ls¹}: 51 --->
+//│ case ls⁰ of {C h⁰ t⁰ => [C f⁰(h⁰) map(t⁰, f⁰)] | N  => ls⁰}: 12 --->
 //│ 	NoProd
-//│ 	[C f²(h²) map_₁(t², f²)]: 63
+//│ 	[C f⁰(h⁰) map(t⁰, f⁰)]: 10
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -56,15 +37,10 @@ map(map(primId(C(1, C(2, N))), x => x * x), x => x + x)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ map_₀(map_₁(primId⁰([C 1 [C 2 [N]]]), (fun x⁴ -> (x⁴ * x⁴))), (fun x⁵ -> (x⁵ + x⁵)))
-//│ def map_₀(ls³, f³) = 
-//│ 	case ls³ of {
-//│ 		C h¹ t¹ => [C f³(h¹) map_₀(t¹, f³)]
-//│ 		| N  => ls³}
-//│ def map_₁(ls⁴, f⁴) = 
-//│ 	case ls⁴ of {
-//│ 		C h² t² => [C f⁴(h²) map_₁(t², f⁴)]
-//│ 		| N  => ls⁴}
+//│ map(map(primId⁰([C 1 [C 2 [N]]]), (fun x² -> (x² * x²))), (fun x³ -> (x³ + x³)))
+//│ def map(ls¹, f¹) = case ls¹ of {
+//│ 	C h⁰ t⁰ => [C f¹(h⁰) map(t⁰, f¹)]
+//│ 	| N  => ls¹}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>

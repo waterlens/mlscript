@@ -16,52 +16,39 @@ f(a => if (if a is
 //│ def f(c⁰) = [P c⁰([A]) c⁰([A])]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^9] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀((fun a¹ -> case case a¹ of {
-//│ 	A  => [B]} of {
-//│ 	B  => 0}))
-//│ def f_₀(c¹) = 
-//│ 	[P c¹([A]) c¹([A])]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [A]: 18 --->
-//│ 	case a¹ of {A  => [B]}: 28
-//│ [A]: 21 --->
-//│ 	case a¹ of {A  => [B]}: 28
-//│ [B]: 27 --->
-//│ 	case case a¹ of {A  => [B]} of {B  => 0}: 30
+//│ [A]: 2 --->
+//│ 	case a⁰ of {A  => [B]}: 12
+//│ [A]: 5 --->
+//│ 	case a⁰ of {A  => [B]}: 12
+//│ [B]: 11 --->
+//│ 	case case a⁰ of {A  => [B]} of {B  => 0}: 14
 //│ ------------------
-//│ case a¹ of {A  => [B]}: 28 --->
-//│ 	[A]: 18
-//│ 	[A]: 21
-//│ case case a¹ of {A  => [B]} of {B  => 0}: 30 --->
-//│ 	[B]: 27
+//│ case a⁰ of {A  => [B]}: 12 --->
+//│ 	[A]: 2
+//│ 	[A]: 5
+//│ case case a⁰ of {A  => [B]} of {B  => 0}: 14 --->
+//│ 	[B]: 11
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [A]: 18 --->
-//│ 	case a¹ of {A  => [B]}: 28
-//│ [A]: 21 --->
-//│ 	case a¹ of {A  => [B]}: 28
-//│ [B]: 27 --->
-//│ 	case case a¹ of {A  => [B]} of {B  => 0}: 30
+//│ [A]: 2 --->
+//│ 	case a⁰ of {A  => [B]}: 12
+//│ [A]: 5 --->
+//│ 	case a⁰ of {A  => [B]}: 12
+//│ [B]: 11 --->
+//│ 	case case a⁰ of {A  => [B]} of {B  => 0}: 14
 //│ ------------------
-//│ case a¹ of {A  => [B]}: 28 --->
-//│ 	[A]: 18
-//│ 	[A]: 21
-//│ case case a¹ of {A  => [B]} of {B  => 0}: 30 --->
-//│ 	[B]: 27
+//│ case a⁰ of {A  => [B]}: 12 --->
+//│ 	[A]: 2
+//│ 	[A]: 5
+//│ case case a⁰ of {A  => [B]} of {B  => 0}: 14 --->
+//│ 	[B]: 11
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀((fun a² -> a²))
-//│ def f_₀(c²) = 
-//│ 	[P c²(0) c²(0)]
+//│ f((fun a¹ -> a¹))
+//│ def f(c¹) = [P c¹(0) c¹(0)]
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -79,44 +66,31 @@ f(a => if a is
 //│ def f(c⁰) = [P c⁰([A]) c⁰([B])]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^9] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀((fun a¹ -> case a¹ of {
-//│ 	A  => [B]
-//│ 	| B  => [C]}))
-//│ def f_₀(c¹) = 
-//│ 	[P c¹([A]) c¹([B])]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [A]: 17 --->
-//│ 	case a¹ of {A  => [B] | B  => [C]}: 28
-//│ [B]: 20 --->
-//│ 	case a¹ of {A  => [B] | B  => [C]}: 28
+//│ [A]: 2 --->
+//│ 	case a⁰ of {A  => [B] | B  => [C]}: 13
+//│ [B]: 5 --->
+//│ 	case a⁰ of {A  => [B] | B  => [C]}: 13
 //│ ------------------
-//│ case a¹ of {A  => [B] | B  => [C]}: 28 --->
-//│ 	[A]: 17
-//│ 	[B]: 20
+//│ case a⁰ of {A  => [B] | B  => [C]}: 13 --->
+//│ 	[A]: 2
+//│ 	[B]: 5
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [A]: 17 --->
-//│ 	case a¹ of {A  => [B] | B  => [C]}: 28
-//│ [B]: 20 --->
-//│ 	case a¹ of {A  => [B] | B  => [C]}: 28
+//│ [A]: 2 --->
+//│ 	case a⁰ of {A  => [B] | B  => [C]}: 13
+//│ [B]: 5 --->
+//│ 	case a⁰ of {A  => [B] | B  => [C]}: 13
 //│ ------------------
-//│ case a¹ of {A  => [B] | B  => [C]}: 28 --->
-//│ 	[A]: 17
-//│ 	[B]: 20
+//│ case a⁰ of {A  => [B] | B  => [C]}: 13 --->
+//│ 	[A]: 2
+//│ 	[B]: 5
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀((fun a² -> a²))
-//│ def f_₀(c²) = 
-//│ 	[P c²([B]) c²([C])]
+//│ f((fun a¹ -> a¹))
+//│ def f(c¹) = [P c¹([B]) c¹([C])]
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: after the detection and elimination of multiple matches
@@ -139,32 +113,18 @@ f(a => if a is
 //│ 	[P c⁰([A]) c⁰(aa⁰)]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^15] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀((fun a¹ -> case a¹ of {
-//│ 	A  => [B]}))
-//│ def f_₀(c¹) = 
-//│ 	let aa¹ = [A]
-//│ 	in case aa¹ of {
-//│ 	A  => [C]}
-//│ 	[P c¹([A]) c¹(aa¹)]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [A]: 21 --->
-//│ 	case aa¹ of {A  => [C]}: 24
-//│ 	case a¹ of {A  => [B]}: 38
-//│ [A]: 26 --->
-//│ 	case a¹ of {A  => [B]}: 38
+//│ [A]: 1 --->
+//│ 	case aa⁰ of {A  => [C]}: 4
+//│ 	case a⁰ of {A  => [B]}: 18
+//│ [A]: 6 --->
+//│ 	case a⁰ of {A  => [B]}: 18
 //│ ------------------
-//│ case aa¹ of {A  => [C]}: 24 --->
-//│ 	[A]: 21
-//│ case a¹ of {A  => [B]}: 38 --->
-//│ 	[A]: 21
-//│ 	[A]: 26
+//│ case aa⁰ of {A  => [C]}: 4 --->
+//│ 	[A]: 1
+//│ case a⁰ of {A  => [B]}: 18 --->
+//│ 	[A]: 1
+//│ 	[A]: 6
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -174,13 +134,13 @@ f(a => if a is
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀((fun a² -> case a² of {
+//│ f((fun a¹ -> case a¹ of {
 //│ 	A  => [B]}))
-//│ def f_₀(c²) = 
-//│ 	let aa² = [A]
-//│ 	in case aa² of {
+//│ def f(c¹) = 
+//│ 	let aa¹ = [A]
+//│ 	in case aa¹ of {
 //│ 	A  => [C]}
-//│ 	[P c²([A]) c²(aa²)]
+//│ 	[P c¹([A]) c¹(aa¹)]
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: after the detection and elimination of multiple matches
@@ -201,31 +161,17 @@ f(a =>
 //│ def f(c⁰) = [P c⁰([A]) c⁰([B])]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^9] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀((fun a¹ -> 
-//│ 	primitive⁰(a¹)
-//│ 	[D case a¹ of {
-//│ 		A  => [B]
-//│ 		| B  => [C]}]))
-//│ def f_₀(c¹) = 
-//│ 	[P c¹([A]) c¹([B])]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [A]: 22 --->
+//│ [A]: 2 --->
 //│ 	NoCons
-//│ 	case a¹ of {A  => [B] | B  => [C]}: 36
-//│ [B]: 25 --->
+//│ 	case a⁰ of {A  => [B] | B  => [C]}: 16
+//│ [B]: 5 --->
 //│ 	NoCons
-//│ 	case a¹ of {A  => [B] | B  => [C]}: 36
+//│ 	case a⁰ of {A  => [B] | B  => [C]}: 16
 //│ ------------------
-//│ case a¹ of {A  => [B] | B  => [C]}: 36 --->
-//│ 	[A]: 22
-//│ 	[B]: 25
+//│ case a⁰ of {A  => [B] | B  => [C]}: 16 --->
+//│ 	[A]: 2
+//│ 	[B]: 5
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -235,13 +181,12 @@ f(a =>
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀((fun a² -> 
-//│ 	primitive⁰(a²)
-//│ 	[D case a² of {
+//│ f((fun a¹ -> 
+//│ 	primitive⁰(a¹)
+//│ 	[D case a¹ of {
 //│ 		A  => [B]
 //│ 		| B  => [C]}]))
-//│ def f_₀(c²) = 
-//│ 	[P c²([A]) c²([B])]
+//│ def f(c¹) = [P c¹([A]) c¹([B])]
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -263,60 +208,45 @@ f(a => if (if a is
 //│ def f(c⁰) = [P c⁰([A]) c⁰([B])]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^9] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀((fun a¹ -> case case a¹ of {
-//│ 	A  => [X]
-//│ 	| B  => [Y]} of {
-//│ 	X  => 0
-//│ 	| Y  => 1}))
-//│ def f_₀(c¹) = 
-//│ 	[P c¹([A]) c¹([B])]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [A]: 20 --->
-//│ 	case a¹ of {A  => [X] | B  => [Y]}: 31
-//│ [B]: 23 --->
-//│ 	case a¹ of {A  => [X] | B  => [Y]}: 31
-//│ [X]: 29 --->
-//│ 	case case a¹ of {A  => [X] | B  => [Y]} of {X  => 0 | Y  => 1}: 34
-//│ [Y]: 30 --->
-//│ 	case case a¹ of {A  => [X] | B  => [Y]} of {X  => 0 | Y  => 1}: 34
+//│ [A]: 2 --->
+//│ 	case a⁰ of {A  => [X] | B  => [Y]}: 13
+//│ [B]: 5 --->
+//│ 	case a⁰ of {A  => [X] | B  => [Y]}: 13
+//│ [X]: 11 --->
+//│ 	case case a⁰ of {A  => [X] | B  => [Y]} of {X  => 0 | Y  => 1}: 16
+//│ [Y]: 12 --->
+//│ 	case case a⁰ of {A  => [X] | B  => [Y]} of {X  => 0 | Y  => 1}: 16
 //│ ------------------
-//│ case a¹ of {A  => [X] | B  => [Y]}: 31 --->
-//│ 	[A]: 20
-//│ 	[B]: 23
-//│ case case a¹ of {A  => [X] | B  => [Y]} of {X  => 0 | Y  => 1}: 34 --->
-//│ 	[X]: 29
-//│ 	[Y]: 30
+//│ case a⁰ of {A  => [X] | B  => [Y]}: 13 --->
+//│ 	[A]: 2
+//│ 	[B]: 5
+//│ case case a⁰ of {A  => [X] | B  => [Y]} of {X  => 0 | Y  => 1}: 16 --->
+//│ 	[X]: 11
+//│ 	[Y]: 12
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [A]: 20 --->
-//│ 	case a¹ of {A  => [X] | B  => [Y]}: 31
-//│ [B]: 23 --->
-//│ 	case a¹ of {A  => [X] | B  => [Y]}: 31
-//│ [X]: 29 --->
-//│ 	case case a¹ of {A  => [X] | B  => [Y]} of {X  => 0 | Y  => 1}: 34
-//│ [Y]: 30 --->
-//│ 	case case a¹ of {A  => [X] | B  => [Y]} of {X  => 0 | Y  => 1}: 34
+//│ [A]: 2 --->
+//│ 	case a⁰ of {A  => [X] | B  => [Y]}: 13
+//│ [B]: 5 --->
+//│ 	case a⁰ of {A  => [X] | B  => [Y]}: 13
+//│ [X]: 11 --->
+//│ 	case case a⁰ of {A  => [X] | B  => [Y]} of {X  => 0 | Y  => 1}: 16
+//│ [Y]: 12 --->
+//│ 	case case a⁰ of {A  => [X] | B  => [Y]} of {X  => 0 | Y  => 1}: 16
 //│ ------------------
-//│ case a¹ of {A  => [X] | B  => [Y]}: 31 --->
-//│ 	[A]: 20
-//│ 	[B]: 23
-//│ case case a¹ of {A  => [X] | B  => [Y]} of {X  => 0 | Y  => 1}: 34 --->
-//│ 	[X]: 29
-//│ 	[Y]: 30
+//│ case a⁰ of {A  => [X] | B  => [Y]}: 13 --->
+//│ 	[A]: 2
+//│ 	[B]: 5
+//│ case case a⁰ of {A  => [X] | B  => [Y]} of {X  => 0 | Y  => 1}: 16 --->
+//│ 	[X]: 11
+//│ 	[Y]: 12
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀((fun a² -> a²))
-//│ def f_₀(c²) = 
-//│ 	[P c²(0) c²(1)]
+//│ f((fun a¹ -> a¹))
+//│ def f(c¹) = [P c¹(0) c¹(1)]
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT:
@@ -338,66 +268,51 @@ f(a => if (if a is
 //│ def f(c⁰) = [P c⁰([A]) c⁰([B])]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^9] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀((fun a¹ -> case case a¹ of {
-//│ 	A  => [X]
-//│ 	| B  => if (1 > 2) then [X] else [Y]} of {
-//│ 	X  => 0
-//│ 	| Y  => 1}))
-//│ def f_₀(c¹) = 
-//│ 	[P c¹([A]) c¹([B])]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [A]: 27 --->
-//│ 	case a¹ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]}: 45
-//│ [B]: 30 --->
-//│ 	case a¹ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]}: 45
-//│ [X]: 36 --->
-//│ 	case case a¹ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]} of {X  => 0 | Y  => 1}: 48
-//│ [X]: 42 --->
-//│ 	case case a¹ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]} of {X  => 0 | Y  => 1}: 48
-//│ [Y]: 43 --->
-//│ 	case case a¹ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]} of {X  => 0 | Y  => 1}: 48
+//│ [A]: 2 --->
+//│ 	case a⁰ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]}: 20
+//│ [B]: 5 --->
+//│ 	case a⁰ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]}: 20
+//│ [X]: 11 --->
+//│ 	case case a⁰ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]} of {X  => 0 | Y  => 1}: 23
+//│ [X]: 17 --->
+//│ 	case case a⁰ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]} of {X  => 0 | Y  => 1}: 23
+//│ [Y]: 18 --->
+//│ 	case case a⁰ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]} of {X  => 0 | Y  => 1}: 23
 //│ ------------------
-//│ case a¹ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]}: 45 --->
-//│ 	[A]: 27
-//│ 	[B]: 30
-//│ case case a¹ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]} of {X  => 0 | Y  => 1}: 48 --->
-//│ 	[X]: 36
-//│ 	[X]: 42
-//│ 	[Y]: 43
+//│ case a⁰ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]}: 20 --->
+//│ 	[A]: 2
+//│ 	[B]: 5
+//│ case case a⁰ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]} of {X  => 0 | Y  => 1}: 23 --->
+//│ 	[X]: 11
+//│ 	[X]: 17
+//│ 	[Y]: 18
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [A]: 27 --->
-//│ 	case a¹ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]}: 45
-//│ [B]: 30 --->
-//│ 	case a¹ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]}: 45
-//│ [X]: 36 --->
-//│ 	case case a¹ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]} of {X  => 0 | Y  => 1}: 48
-//│ [X]: 42 --->
-//│ 	case case a¹ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]} of {X  => 0 | Y  => 1}: 48
-//│ [Y]: 43 --->
-//│ 	case case a¹ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]} of {X  => 0 | Y  => 1}: 48
+//│ [A]: 2 --->
+//│ 	case a⁰ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]}: 20
+//│ [B]: 5 --->
+//│ 	case a⁰ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]}: 20
+//│ [X]: 11 --->
+//│ 	case case a⁰ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]} of {X  => 0 | Y  => 1}: 23
+//│ [X]: 17 --->
+//│ 	case case a⁰ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]} of {X  => 0 | Y  => 1}: 23
+//│ [Y]: 18 --->
+//│ 	case case a⁰ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]} of {X  => 0 | Y  => 1}: 23
 //│ ------------------
-//│ case a¹ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]}: 45 --->
-//│ 	[A]: 27
-//│ 	[B]: 30
-//│ case case a¹ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]} of {X  => 0 | Y  => 1}: 48 --->
-//│ 	[X]: 36
-//│ 	[X]: 42
-//│ 	[Y]: 43
+//│ case a⁰ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]}: 20 --->
+//│ 	[A]: 2
+//│ 	[B]: 5
+//│ case case a⁰ of {A  => [X] | B  => if (1 > 2) then [X] else [Y]} of {X  => 0 | Y  => 1}: 23 --->
+//│ 	[X]: 11
+//│ 	[X]: 17
+//│ 	[Y]: 18
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀((fun a² -> a²(99)))
-//│ def f_₀(c²) = 
-//│ 	[P c²((fun _lh_dummy⁰ -> 0)) c²((fun _lh_dummy¹ -> if (1 > 2) then 0 else 1))]
+//│ f((fun a¹ -> a¹(99)))
+//│ def f(c¹) = [P c¹((fun _lh_dummy⁰ -> 0)) c¹((fun _lh_dummy¹ -> if (1 > 2) then 0 else 1))]
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: after the detection and elimination of multiple matches
@@ -429,53 +344,38 @@ f(a => if (if a is
 //│ def f(c⁰) = [P c⁰([A]) c⁰([B])]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^9] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀((fun a¹ -> case case a¹ of {
-//│ 	A  => [X]
-//│ 	| B  => primitive⁰} of {
-//│ 	X  => 0
-//│ 	| Y  => 1}))
-//│ def f_₀(c¹) = 
-//│ 	[P c¹([A]) c¹([B])]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [A]: 20 --->
-//│ 	case a¹ of {A  => [X] | B  => primitive⁰}: 31
-//│ [B]: 23 --->
-//│ 	case a¹ of {A  => [X] | B  => primitive⁰}: 31
-//│ [X]: 29 --->
-//│ 	case case a¹ of {A  => [X] | B  => primitive⁰} of {X  => 0 | Y  => 1}: 34
+//│ [A]: 2 --->
+//│ 	case a⁰ of {A  => [X] | B  => primitive⁰}: 13
+//│ [B]: 5 --->
+//│ 	case a⁰ of {A  => [X] | B  => primitive⁰}: 13
+//│ [X]: 11 --->
+//│ 	case case a⁰ of {A  => [X] | B  => primitive⁰} of {X  => 0 | Y  => 1}: 16
 //│ ------------------
-//│ case a¹ of {A  => [X] | B  => primitive⁰}: 31 --->
-//│ 	[A]: 20
-//│ 	[B]: 23
-//│ case case a¹ of {A  => [X] | B  => primitive⁰} of {X  => 0 | Y  => 1}: 34 --->
-//│ 	[X]: 29
+//│ case a⁰ of {A  => [X] | B  => primitive⁰}: 13 --->
+//│ 	[A]: 2
+//│ 	[B]: 5
+//│ case case a⁰ of {A  => [X] | B  => primitive⁰} of {X  => 0 | Y  => 1}: 16 --->
+//│ 	[X]: 11
 //│ 	NoProd
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [A]: 20 --->
-//│ 	case a¹ of {A  => [X] | B  => primitive⁰}: 31
-//│ [B]: 23 --->
-//│ 	case a¹ of {A  => [X] | B  => primitive⁰}: 31
+//│ [A]: 2 --->
+//│ 	case a⁰ of {A  => [X] | B  => primitive⁰}: 13
+//│ [B]: 5 --->
+//│ 	case a⁰ of {A  => [X] | B  => primitive⁰}: 13
 //│ ------------------
-//│ case a¹ of {A  => [X] | B  => primitive⁰}: 31 --->
-//│ 	[A]: 20
-//│ 	[B]: 23
+//│ case a⁰ of {A  => [X] | B  => primitive⁰}: 13 --->
+//│ 	[A]: 2
+//│ 	[B]: 5
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀((fun a² -> case a² of {
+//│ f((fun a¹ -> case a¹ of {
 //│ 	X  => 0
 //│ 	| Y  => 1}))
-//│ def f_₀(c²) = 
-//│ 	[P c²([X]) c²(primitive⁰)]
+//│ def f(c¹) = [P c¹([X]) c¹(primitive⁰)]
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: after the detection and elimination of multiple matches
@@ -504,38 +404,16 @@ f(a => g(a))
 //│ 	| Y  => 2}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^23] (hopeless to continue)
-//│ [g^24] (hopeless to continue)
-//│ 	[g^24 · h^14] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀((fun a¹ -> g_₀(a¹)))
-//│ def f_₀(c¹) = 
-//│ 	[P c¹([X]) c¹(primitive⁰)]
-//│ def g_₀(x¹) = 
-//│ 	h_₀(x¹)
-//│ 	case x¹ of {
-//│ 		X  => 0
-//│ 		| Y  => 1}
-//│ 	where
-//│ 	def h_₀(y¹) = 
-//│ 		case y¹ of {
-//│ 			X  => primitive⁰
-//│ 			| Y  => 2}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [X]: 35 --->
-//│ 	case y¹ of {X  => primitive⁰ | Y  => 2}: 32
-//│ 	case x¹ of {X  => 0 | Y  => 1}: 48
+//│ [X]: 2 --->
+//│ 	case y⁰ of {X  => primitive⁰ | Y  => 2}: 12
+//│ 	case x⁰ of {X  => 0 | Y  => 1}: 20
 //│ ------------------
-//│ case y¹ of {X  => primitive⁰ | Y  => 2}: 32 --->
-//│ 	[X]: 35
+//│ case y⁰ of {X  => primitive⁰ | Y  => 2}: 12 --->
+//│ 	[X]: 2
 //│ 	NoProd
-//│ case x¹ of {X  => 0 | Y  => 1}: 48 --->
-//│ 	[X]: 35
+//│ case x⁰ of {X  => 0 | Y  => 1}: 20 --->
+//│ 	[X]: 2
 //│ 	NoProd
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
@@ -546,19 +424,16 @@ f(a => g(a))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀((fun a² -> g_₀(a²)))
-//│ def f_₀(c²) = 
-//│ 	[P c²([X]) c²(primitive⁰)]
-//│ def g_₀(x²) = 
-//│ 	h_₀(x²)
-//│ 	case x² of {
+//│ f((fun a¹ -> g(a¹)))
+//│ def f(c¹) = [P c¹([X]) c¹(primitive⁰)]
+//│ def g(x¹) = 
+//│ 	h(x¹)
+//│ 	case x¹ of {
 //│ 		X  => 0
 //│ 		| Y  => 1}
-//│ 	where
-//│ 	def h_₀(y²) = 
-//│ 		case y² of {
-//│ 			X  => primitive⁰
-//│ 			| Y  => 2}
+//│ def h(y¹) = case y¹ of {
+//│ 	X  => primitive⁰
+//│ 	| Y  => 2}
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -584,52 +459,32 @@ f(A)(C(K))
 //│ 	C y¹ => y¹}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^14] (hopeless to continue)
-//│ 	[f^14 · g^4] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀([A], [C [K]])
-//│ def f_₀(cond¹) = 
-//│ 	case cond¹ of {
-//│ 		A  => (fun x² -> x²)
-//│ 		| _  => (fun x³ -> g_₀(x³))}
-//│ 	where
-//│ 	def g_₀(y²) = 
-//│ 		case y² of {
-//│ 			C y³ => y³}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [A]: 34 --->
-//│ 	case cond¹ of {A  => (fun x² -> x²) | _  => (fun x³ -> g_₀(x³))}: 27
-//│ [C [K]]: 37 --->
+//│ [A]: 15 --->
+//│ 	case cond⁰ of {A  => (fun x⁰ -> x⁰) | _  => (fun x¹ -> g(x¹))}: 8
+//│ [C [K]]: 18 --->
 //│ 	NoCons
-//│ 	case y² of {C y³ => y³}: 31
+//│ 	case y⁰ of {C y¹ => y¹}: 12
 //│ ------------------
-//│ case cond¹ of {A  => (fun x² -> x²) | _  => (fun x³ -> g_₀(x³))}: 27 --->
-//│ 	[A]: 34
-//│ case y² of {C y³ => y³}: 31 --->
-//│ 	[C [K]]: 37
+//│ case cond⁰ of {A  => (fun x⁰ -> x⁰) | _  => (fun x¹ -> g(x¹))}: 8 --->
+//│ 	[A]: 15
+//│ case y⁰ of {C y¹ => y¹}: 12 --->
+//│ 	[C [K]]: 18
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [A]: 34 --->
-//│ 	case cond¹ of {A  => (fun x² -> x²) | _  => (fun x³ -> g_₀(x³))}: 27
+//│ [A]: 15 --->
+//│ 	case cond⁰ of {A  => (fun x⁰ -> x⁰) | _  => (fun x¹ -> g(x¹))}: 8
 //│ ------------------
-//│ case cond¹ of {A  => (fun x² -> x²) | _  => (fun x³ -> g_₀(x³))}: 27 --->
-//│ 	[A]: 34
+//│ case cond⁰ of {A  => (fun x⁰ -> x⁰) | _  => (fun x¹ -> g(x¹))}: 8 --->
+//│ 	[A]: 15
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀((fun x⁴ -> x⁴), [C [K]])
-//│ def f_₀(cond²) = 
-//│ 	cond²
-//│ 	where
-//│ 	def g_₀(y⁴) = 
-//│ 		case y⁴ of {
-//│ 			C y³ => y³}
+//│ f((fun x² -> x²), [C [K]])
+//│ def f(cond¹) = cond¹
+//│ def g(y²) = case y² of {
+//│ 	C y¹ => y¹}
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -660,28 +515,13 @@ f(C(A))
 //│ 	C a⁰ => a⁰}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^12] (hopeless to continue)
-//│ 	[f^12 · g^3] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀([C [A]])
-//│ def f_₀(x¹) = 
-//│ 	if primitive⁰ then x¹ else g_₀(x¹)
-//│ 	where
-//│ 	def g_₀(y¹) = 
-//│ 		case y¹ of {
-//│ 			C a¹ => a¹}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C [A]]: 29 --->
+//│ [C [A]]: 14 --->
 //│ 	NoCons
-//│ 	case y¹ of {C a¹ => a¹}: 18
+//│ 	case y⁰ of {C a⁰ => a⁰}: 10
 //│ ------------------
-//│ case y¹ of {C a¹ => a¹}: 18 --->
-//│ 	[C [A]]: 29
+//│ case y⁰ of {C a⁰ => a⁰}: 10 --->
+//│ 	[C [A]]: 14
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -691,13 +531,10 @@ f(C(A))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀([C [A]])
-//│ def f_₀(x²) = 
-//│ 	if primitive⁰ then x² else g_₀(x²)
-//│ 	where
-//│ 	def g_₀(y²) = 
-//│ 		case y² of {
-//│ 			C a¹ => a¹}
+//│ f([C [A]])
+//│ def f(x¹) = if primitive⁰ then x¹ else g(x¹)
+//│ def g(y¹) = case y¹ of {
+//│ 	C a⁰ => a⁰}
 //│ <<<<<<< after fusion <<<<<<<
 
 // CORRECT: after the detection and elimination of multiple matches
@@ -732,53 +569,27 @@ c(p(0))
 //│ 	temp⁰
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [c^49] (hopeless to continue)
-//│ [p^50] (hopeless to continue)
-//│ 	[p^50 · f^28] (using original def)
-//│ 	[p^50 · p^12] ---> [p^50] (using original def)
-//│ 	[p^50 · p^20] ---> [p^50] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ c_₀(p_₀(0))
-//│ def c_₀(xx¹) = 
-//│ 	case xx¹ of {
-//│ 		C aa¹ => primitive⁰(aa¹)
-//│ 		| N  => [N]}
-//│ def p_₀(x¹) = 
-//│ 	if (x¹ == 0) then [N] else if (x¹ >= 2) then [C p_₀((x¹ - 1))] else 
-//│ 		let temp¹ = [C p_₀((x¹ + 1))]
-//│ 		in f_₀(temp¹)
-//│ 		temp¹
-//│ 	where
-//│ 	def f_₀(z¹) = 
-//│ 		case z¹ of {
-//│ 			C b¹ => b¹
-//│ 			| N  => 1}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 71 --->
+//│ [N]: 6 --->
+//│ 	NoCons
+//│ 	DeadCodeCons
+//│ 	case xx⁰ of {C aa⁰ => primitive⁰(aa⁰) | N  => [N]}: 47
+//│ [C p((x⁰ - 1))]: 19 --->
+//│ 	NoCons
+//│ 	DeadCodeCons
+//│ 	case xx⁰ of {C aa⁰ => primitive⁰(aa⁰) | N  => [N]}: 47
+//│ [C p((x⁰ + 1))]: 27 --->
 //│ 	DeadCodeCons
 //│ 	NoCons
-//│ 	case xx¹ of {C aa¹ => primitive⁰(aa¹) | N  => [N]}: 59
-//│ [C p_₀((x¹ - 1))]: 84 --->
-//│ 	DeadCodeCons
-//│ 	NoCons
-//│ 	case xx¹ of {C aa¹ => primitive⁰(aa¹) | N  => [N]}: 59
-//│ [C p_₀((x¹ + 1))]: 92 --->
-//│ 	DeadCodeCons
-//│ 	NoCons
-//│ 	case xx¹ of {C aa¹ => primitive⁰(aa¹) | N  => [N]}: 59
-//│ 	case z¹ of {C b¹ => b¹ | N  => 1}: 64
+//│ 	case z⁰ of {C b⁰ => b⁰ | N  => 1}: 40
+//│ 	case xx⁰ of {C aa⁰ => primitive⁰(aa⁰) | N  => [N]}: 47
 //│ ------------------
-//│ case xx¹ of {C aa¹ => primitive⁰(aa¹) | N  => [N]}: 59 --->
-//│ 	[N]: 71
-//│ 	[C p_₀((x¹ - 1))]: 84
-//│ 	[C p_₀((x¹ + 1))]: 92
-//│ case z¹ of {C b¹ => b¹ | N  => 1}: 64 --->
-//│ 	[C p_₀((x¹ + 1))]: 92
+//│ case z⁰ of {C b⁰ => b⁰ | N  => 1}: 40 --->
+//│ 	[C p((x⁰ + 1))]: 27
+//│ case xx⁰ of {C aa⁰ => primitive⁰(aa⁰) | N  => [N]}: 47 --->
+//│ 	[N]: 6
+//│ 	[C p((x⁰ - 1))]: 19
+//│ 	[C p((x⁰ + 1))]: 27
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -788,21 +599,17 @@ c(p(0))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ c_₀(p_₀(0))
-//│ def c_₀(xx²) = 
-//│ 	case xx² of {
-//│ 		C aa¹ => primitive⁰(aa¹)
-//│ 		| N  => [N]}
-//│ def p_₀(x²) = 
-//│ 	if (x² == 0) then [N] else if (x² >= 2) then [C p_₀((x² - 1))] else 
-//│ 		let temp² = [C p_₀((x² + 1))]
-//│ 		in f_₀(temp²)
-//│ 		temp²
-//│ 	where
-//│ 	def f_₀(z²) = 
-//│ 		case z² of {
-//│ 			C b¹ => b¹
-//│ 			| N  => 1}
+//│ c(p(0))
+//│ def c(xx¹) = case xx¹ of {
+//│ 	C aa⁰ => primitive⁰(aa⁰)
+//│ 	| N  => [N]}
+//│ def f(z¹) = case z¹ of {
+//│ 	C b⁰ => b⁰
+//│ 	| N  => 1}
+//│ def p(x¹) = if (x¹ == 0) then [N] else if (x¹ >= 2) then [C p((x¹ - 1))] else 
+//│ 	let temp¹ = [C p((x¹ + 1))]
+//│ 	in f(temp¹)
+//│ 	temp¹
 //│ <<<<<<< after fusion <<<<<<<
 
 
@@ -829,34 +636,15 @@ f(C)
 //│ 	C  => [H]}
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^18] (hopeless to continue)
-//│ 	[f^18 · g^2] (using original def)
-//│ 	[f^18 · h^5] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀([C])
-//│ def f_₀(xf¹) = 
-//│ 	if primitive⁰ then g_₀(xf¹) else h_₀(xf¹)
-//│ 	where
-//│ 	def g_₀(xg¹) = 
-//│ 		case xg¹ of {
-//│ 			C  => [G]}
-//│ 	def h_₀(xh¹) = 
-//│ 		case xh¹ of {
-//│ 			C  => [H]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C]: 39 --->
-//│ 	case xg¹ of {C  => [G]}: 23
-//│ 	case xh¹ of {C  => [H]}: 27
+//│ [C]: 19 --->
+//│ 	case xg⁰ of {C  => [G]}: 12
+//│ 	case xh⁰ of {C  => [H]}: 16
 //│ ------------------
-//│ case xg¹ of {C  => [G]}: 23 --->
-//│ 	[C]: 39
-//│ case xh¹ of {C  => [H]}: 27 --->
-//│ 	[C]: 39
+//│ case xg⁰ of {C  => [G]}: 12 --->
+//│ 	[C]: 19
+//│ case xh⁰ of {C  => [H]}: 16 --->
+//│ 	[C]: 19
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -866,16 +654,12 @@ f(C)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀([C])
-//│ def f_₀(xf²) = 
-//│ 	if primitive⁰ then g_₀(xf²) else h_₀(xf²)
-//│ 	where
-//│ 	def g_₀(xg²) = 
-//│ 		case xg² of {
-//│ 			C  => [G]}
-//│ 	def h_₀(xh²) = 
-//│ 		case xh² of {
-//│ 			C  => [H]}
+//│ f([C])
+//│ def f(xf¹) = if primitive⁰ then g(xf¹) else h(xf¹)
+//│ def g(xg¹) = case xg¹ of {
+//│ 	C  => [G]}
+//│ def h(xh¹) = case xh¹ of {
+//│ 	C  => [H]}
 //│ <<<<<<< after fusion <<<<<<<
 
 // WRONG: wrong knots, because the knots are tied using only one
@@ -895,39 +679,18 @@ f(t)
 //│ def t = [T [X] [T [Y] t^3 t^4] t^6]
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^26] (hopeless to continue)
-//│ 	[f^26 · f^12] ---> [f^26] (using original def)
-//│ 	[f^26 · f^15] ---> [f^26] (using original def)
-//│ 	[f^26 · f^19] ---> [f^26] (using original def)
-//│ [t^27] (hopeless to continue)
-//│ 	[t^27 · t^3] ---> [t^27] (using original def)
-//│ 	[t^27 · t^4] ---> [t^27] (using original def)
-//│ 	[t^27 · t^6] ---> [t^27] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀(t_₀)
-//│ def f_₀(x¹) = 
-//│ 	case x¹ of {
-//│ 		T a¹ l¹ r¹ => case r¹ of {
-//│ 			T b¹ ll¹ rr¹ => [T a¹ [T b¹ f_₀(rr¹) f_₀(ll¹)] f_₀(l¹)]}}
-//│ def t_₀ = 
-//│ 	[T [X] [T [Y] t_₀ t_₀] t_₀]
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [T [Y] t_₀ t_₀]: 51 --->
-//│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ f_₀(rr¹) f_₀(ll¹)] f_₀(l¹)]}}: 45
-//│ [T [X] [T [Y] t_₀ t_₀] t_₀]: 53 --->
-//│ 	case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ f_₀(rr¹) f_₀(ll¹)] f_₀(l¹)]}: 44
-//│ 	case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ f_₀(rr¹) f_₀(ll¹)] f_₀(l¹)]}}: 45
+//│ [T [Y] t t]: 5 --->
+//│ 	case x⁰ of {T a⁰ l⁰ r⁰ => case r⁰ of {T b⁰ ll⁰ rr⁰ => [T a⁰ [T b⁰ f(rr⁰) f(ll⁰)] f(l⁰)]}}: 24
+//│ [T [X] [T [Y] t t] t]: 7 --->
+//│ 	case r⁰ of {T b⁰ ll⁰ rr⁰ => [T a⁰ [T b⁰ f(rr⁰) f(ll⁰)] f(l⁰)]}: 23
+//│ 	case x⁰ of {T a⁰ l⁰ r⁰ => case r⁰ of {T b⁰ ll⁰ rr⁰ => [T a⁰ [T b⁰ f(rr⁰) f(ll⁰)] f(l⁰)]}}: 24
 //│ ------------------
-//│ case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ f_₀(rr¹) f_₀(ll¹)] f_₀(l¹)]}: 44 --->
-//│ 	[T [X] [T [Y] t_₀ t_₀] t_₀]: 53
-//│ case x¹ of {T a¹ l¹ r¹ => case r¹ of {T b¹ ll¹ rr¹ => [T a¹ [T b¹ f_₀(rr¹) f_₀(ll¹)] f_₀(l¹)]}}: 45 --->
-//│ 	[T [Y] t_₀ t_₀]: 51
-//│ 	[T [X] [T [Y] t_₀ t_₀] t_₀]: 53
+//│ case r⁰ of {T b⁰ ll⁰ rr⁰ => [T a⁰ [T b⁰ f(rr⁰) f(ll⁰)] f(l⁰)]}: 23 --->
+//│ 	[T [X] [T [Y] t t] t]: 7
+//│ case x⁰ of {T a⁰ l⁰ r⁰ => case r⁰ of {T b⁰ ll⁰ rr⁰ => [T a⁰ [T b⁰ f(rr⁰) f(ll⁰)] f(l⁰)]}}: 24 --->
+//│ 	[T [Y] t t]: 5
+//│ 	[T [X] [T [Y] t t] t]: 7
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -937,11 +700,9 @@ f(t)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀(t_₀)
-//│ def f_₀(x²) = 
-//│ 	case x² of {
-//│ 		T a¹ l¹ r¹ => case r¹ of {
-//│ 			T b¹ ll¹ rr¹ => [T a¹ [T b¹ f_₀(rr¹) f_₀(ll¹)] f_₀(l¹)]}}
-//│ def t_₀ = 
-//│ 	[T [X] [T [Y] t_₀ t_₀] t_₀]
+//│ f(t)
+//│ def f(x¹) = case x¹ of {
+//│ 	T a⁰ l⁰ r⁰ => case r⁰ of {
+//│ 		T b⁰ ll⁰ rr⁰ => [T a⁰ [T b⁰ f(rr⁰) f(ll⁰)] f(l⁰)]}}
+//│ def t = [T [X] [T [Y] t t] t]
 //│ <<<<<<< after fusion <<<<<<<

@@ -72,46 +72,20 @@ main(N)
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [main^29] (hopeless to continue)
-//│ 	[main^29 · g^5] (using original def)
-//│ 		[main^29 · g^5 · g^17] ---> [main^29 · g^5] (using original def)
-//│ 	[main^29 · h^8] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ main_₀([N])
-//│ def main_₀(x⁵) = 
-//│ 	case x⁵ of {
-//│ 		C t⁶ => [G]
-//│ 		| n¹ => case n¹ of {
-//│ 			C t⁷ => if [True] then g_₀(t⁷) else h_₀(t⁷)
-//│ 			| N  => [G]}}
-//│ 	where
-//│ 	def g_₀(x³) = 
-//│ 		case x³ of {
-//│ 			N  => g_₀([C [N]])
-//│ 			| C t⁴ => [G]}
-//│ 	def h_₀(x⁴) = 
-//│ 		case x⁴ of {
-//│ 			N  => [H]
-//│ 			| C t⁵ => [H]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C [N]]: 35 --->
-//│ 	case x³ of {N  => g_₀([C [N]]) | C t⁴ => [G]}: 38
-//│ [N]: 61 --->
-//│ 	case n¹ of {C t⁷ => if [True] then g_₀(t⁷) else h_₀(t⁷) | N  => [G]}: 57
-//│ 	case x⁵ of {C t⁶ => [G] | n¹ => case n¹ of {C t⁷ => if [True] then g_₀(t⁷) else h_₀(t⁷) | N  => [G]}}: 58
+//│ [C [N]]: 19 --->
+//│ 	case x¹ of {N  => g([C [N]]) | C t² => [G]}: 22
+//│ [N]: 30 --->
+//│ 	case n⁰ of {C t¹ => if [True] then g(t¹) else h(t¹) | N  => [G]}: 13
+//│ 	case x⁰ of {C t⁰ => [G] | n⁰ => case n⁰ of {C t¹ => if [True] then g(t¹) else h(t¹) | N  => [G]}}: 14
 //│ ------------------
-//│ case x³ of {N  => g_₀([C [N]]) | C t⁴ => [G]}: 38 --->
+//│ case n⁰ of {C t¹ => if [True] then g(t¹) else h(t¹) | N  => [G]}: 13 --->
+//│ 	[N]: 30
+//│ case x⁰ of {C t⁰ => [G] | n⁰ => case n⁰ of {C t¹ => if [True] then g(t¹) else h(t¹) | N  => [G]}}: 14 --->
+//│ 	[N]: 30
+//│ case x¹ of {N  => g([C [N]]) | C t² => [G]}: 22 --->
 //│ 	DeadCodeProd
-//│ 	[C [N]]: 35
-//│ case n¹ of {C t⁷ => if [True] then g_₀(t⁷) else h_₀(t⁷) | N  => [G]}: 57 --->
-//│ 	[N]: 61
-//│ case x⁵ of {C t⁶ => [G] | n¹ => case n¹ of {C t⁷ => if [True] then g_₀(t⁷) else h_₀(t⁷) | N  => [G]}}: 58 --->
-//│ 	[N]: 61
+//│ 	[C [N]]: 19
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -121,88 +95,84 @@ main(N)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ main_₀([N])
-//│ def main_₀(x⁸) = 
-//│ 	case x⁸ of {
-//│ 		C t⁶ => [G]
-//│ 		| n¹ => case n¹ of {
-//│ 			C t⁷ => if [True] then g_₀(t⁷) else h_₀(t⁷)
-//│ 			| N  => [G]}}
-//│ 	where
-//│ 	def g_₀(x⁶) = 
-//│ 		case x⁶ of {
-//│ 			N  => g_₀([C [N]])
-//│ 			| C t⁴ => [G]}
-//│ 	def h_₀(x⁷) = 
-//│ 		case x⁷ of {
-//│ 			N  => [H]
-//│ 			| C t⁵ => [H]}
+//│ main([N])
+//│ def g(x⁴) = case x⁴ of {
+//│ 	N  => g([C [N]])
+//│ 	| C t² => [G]}
+//│ def h(x⁵) = case x⁵ of {
+//│ 	N  => [H]
+//│ 	| C t³ => [H]}
+//│ def main(x³) = case x³ of {
+//│ 	C t⁰ => [G]
+//│ 	| n⁰ => case n⁰ of {
+//│ 		C t¹ => if [True] then g(t¹) else h(t¹)
+//│ 		| N  => [G]}}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ main_₀ :: 'main_₀ <: [] ::: true
+//│ main :: 'main <: [] ::: true
 //│ [N] :: N ::: true
-//│ main_₀([N]) :: '3_callres <: [] ::: true
+//│ main([N]) :: '3_callres <: [] ::: true
 //│ x :: 'x⁰ <: [] ::: true
-//│ g_₀ :: 'g_₀ <: [] ::: true
-//│ [N] :: N ::: true
-//│ [C [N]] :: C(N) ::: true
-//│ g_₀([C [N]]) :: '8_callres <: [] ::: true
-//│ [G] :: G ::: true
-//│ case x of {N  => g_₀([C [N]]) | C t => [G]} :: '10_matchres <: [] ::: true
-//│ (fun x -> case x of {N  => g_₀([C [N]]) | C t => [G]}) :: 'x⁰ => '10_matchres ::: true
-//│ x :: 'x¹ <: [] ::: true
-//│ [H] :: H ::: true
-//│ [H] :: H ::: true
-//│ case x of {N  => [H] | C t => [H]} :: '15_matchres <: [] ::: true
-//│ (fun x -> case x of {N  => [H] | C t => [H]}) :: 'x¹ => '15_matchres ::: true
-//│ x :: 'x² <: [] ::: true
 //│ [G] :: G ::: true
 //│ n :: 'n⁰ <: [] ::: true
 //│ [True] :: True ::: true
-//│ g_₀ :: 'g_₀ <: [] ::: true
-//│ t :: 't³ <: [] ::: true
-//│ g_₀(t) :: '23_callres <: [] ::: true
-//│ h_₀ :: 'h_₀ <: [] ::: true
-//│ t :: 't³ <: [] ::: true
-//│ h_₀(t) :: '26_callres <: [] ::: true
-//│ if [True] then g_₀(t) else h_₀(t) :: '27_ifres <: [] ::: true
+//│ g :: 'g <: [] ::: true
+//│ t :: 't¹ <: [] ::: true
+//│ g(t) :: '10_callres <: [] ::: true
+//│ h :: 'h <: [] ::: true
+//│ t :: 't¹ <: [] ::: true
+//│ h(t) :: '13_callres <: [] ::: true
+//│ if [True] then g(t) else h(t) :: '14_ifres <: [] ::: true
 //│ [G] :: G ::: true
-//│ case n of {C t => if [True] then g_₀(t) else h_₀(t) | N  => [G]} :: '29_matchres <: [] ::: true
-//│ case x of {C t => [G] | n => case n of {C t => if [True] then g_₀(t) else h_₀(t) | N  => [G]}} :: '30_matchres <: [] ::: true
-//│ (fun x -> case x of {C t => [G] | n => case n of {C t => if [True] then g_₀(t) else h_₀(t) | N  => [G]}}) :: 'x² => '30_matchres ::: true
+//│ case n of {C t => if [True] then g(t) else h(t) | N  => [G]} :: '16_matchres <: [] ::: true
+//│ case x of {C t => [G] | n => case n of {C t => if [True] then g(t) else h(t) | N  => [G]}} :: '17_matchres <: [] ::: true
+//│ (fun x -> case x of {C t => [G] | n => case n of {C t => if [True] then g(t) else h(t) | N  => [G]}}) :: 'x⁰ => '17_matchres ::: true
+//│ x :: 'x¹ <: [] ::: true
+//│ g :: 'g <: [] ::: true
+//│ [N] :: N ::: true
+//│ [C [N]] :: C(N) ::: true
+//│ g([C [N]]) :: '23_callres <: [] ::: true
+//│ [G] :: G ::: true
+//│ case x of {N  => g([C [N]]) | C t => [G]} :: '25_matchres <: [] ::: true
+//│ (fun x -> case x of {N  => g([C [N]]) | C t => [G]}) :: 'x¹ => '25_matchres ::: true
+//│ x :: 'x² <: [] ::: true
+//│ [H] :: H ::: true
+//│ [H] :: H ::: true
+//│ case x of {N  => [H] | C t => [H]} :: '30_matchres <: [] ::: true
+//│ (fun x -> case x of {N  => [H] | C t => [H]}) :: 'x² => '30_matchres ::: true
 //│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec h__d0 x_1 =
+//│ let rec g x_1 =
 //│   (match x_1 with
 //│     | `N -> 
-//│       (`H)
-//│     | `C(t_1) -> 
-//│       (`H));;
-//│ let rec g__d0 x_0 =
-//│   (match x_0 with
-//│     | `N -> 
-//│       (g__d0 (`C((`N))))
-//│     | `C(t_0) -> 
-//│       (`G));;
-//│ let rec main__d0 x_2 =
-//│   (match x_2 with
+//│       (g (`C((`N))))
 //│     | `C(t_2) -> 
+//│       (`G));;
+//│ let rec h x_2 =
+//│   (match x_2 with
+//│     | `N -> 
+//│       (`H)
+//│     | `C(t_3) -> 
+//│       (`H));;
+//│ let rec main x_0 =
+//│   (match x_0 with
+//│     | `C(t_0) -> 
 //│       (`G)
 //│     | n_0 -> 
 //│       (match n_0 with
-//│         | `C(t_3) -> 
+//│         | `C(t_1) -> 
 //│           (if true then
-//│             (g__d0 t_3)
+//│             (g t_1)
 //│           else
-//│             (h__d0 t_3))
+//│             (h t_1))
 //│         | `N -> 
 //│           (`G)));;
-//│ (main__d0 (`N))
+//│ (main (`N))
 //│ 
 //│ --------------- ocaml repl result -----------------
 //│ [ok]
@@ -298,59 +268,26 @@ main(N)
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [main^38] (hopeless to continue)
-//│ 	[main^38 · hiddenDeadBranch^3] (using original def)
-//│ 		[main^38 · hiddenDeadBranch^3 · g^14] (using original def)
-//│ 			[main^38 · hiddenDeadBranch^3 · g^14 · g^26] ---> [main^38 · hiddenDeadBranch^3 · g^14] (using original def)
-//│ 		[main^38 · hiddenDeadBranch^3 · h^17] (using original def)
-//│ 		[main^38 · hiddenDeadBranch^3 · hiddenDeadBranch^9] ---> [main^38 · hiddenDeadBranch^3] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ main_₀([N])
-//│ def main_₀(x⁴) = 
-//│ 	case x⁴ of {
-//│ 		C t⁶ => [G]
-//│ 		| n³ => hiddenDeadBranch_₀(n³)}
-//│ 	where
-//│ 	def hiddenDeadBranch_₀(n²) = 
-//│ 		case n² of {
-//│ 			C t⁵ => 
-//│ 				let dummy¹ = hiddenDeadBranch_₀([C t⁵])
-//│ 				in if [True] then g_₀(t⁵) else h_₀(t⁵)
-//│ 			| N  => [G]}
-//│ 		where
-//│ 		def g_₀(x³) = 
-//│ 			case x³ of {
-//│ 				N  => g_₀([C [N]])
-//│ 				| C t⁴ => [G]}
-//│ 		def h_₀(x⁵) = 
-//│ 			case x⁵ of {
-//│ 				N  => [H]
-//│ 				| C t⁷ => [H]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [C [N]]: 44 --->
-//│ 	case x³ of {N  => g_₀([C [N]]) | C t⁴ => [G]}: 47
-//│ [C t⁵]: 52 --->
-//│ 	case n² of {C t⁵ => let dummy¹ = hiddenDeadBranch_₀([C t⁵])
-//│ in if [True] then g_₀(t⁵) else h_₀(t⁵) | N  => [G]}: 64
-//│ [N]: 79 --->
-//│ 	case n² of {C t⁵ => let dummy¹ = hiddenDeadBranch_₀([C t⁵])
-//│ in if [True] then g_₀(t⁵) else h_₀(t⁵) | N  => [G]}: 64
-//│ 	case x⁴ of {C t⁶ => [G] | n³ => hiddenDeadBranch_₀(n³)}: 71
+//│ [C t¹]: 11 --->
+//│ 	case n¹ of {C t¹ => let dummy⁰ = hiddenDeadBranch([C t¹])
+//│ in if [True] then g(t¹) else h(t¹) | N  => [G]}: 23
+//│ [C [N]]: 28 --->
+//│ 	case x¹ of {N  => g([C [N]]) | C t² => [G]}: 31
+//│ [N]: 39 --->
+//│ 	case x⁰ of {C t⁰ => [G] | n⁰ => hiddenDeadBranch(n⁰)}: 6
+//│ 	case n¹ of {C t¹ => let dummy⁰ = hiddenDeadBranch([C t¹])
+//│ in if [True] then g(t¹) else h(t¹) | N  => [G]}: 23
 //│ ------------------
-//│ case x³ of {N  => g_₀([C [N]]) | C t⁴ => [G]}: 47 --->
+//│ case x⁰ of {C t⁰ => [G] | n⁰ => hiddenDeadBranch(n⁰)}: 6 --->
+//│ 	[N]: 39
+//│ case n¹ of {C t¹ => let dummy⁰ = hiddenDeadBranch([C t¹])
+//│ in if [True] then g(t¹) else h(t¹) | N  => [G]}: 23 --->
+//│ 	[C t¹]: 11
+//│ 	[N]: 39
+//│ case x¹ of {N  => g([C [N]]) | C t² => [G]}: 31 --->
 //│ 	DeadCodeProd
-//│ 	[C [N]]: 44
-//│ case n² of {C t⁵ => let dummy¹ = hiddenDeadBranch_₀([C t⁵])
-//│ in if [True] then g_₀(t⁵) else h_₀(t⁵) | N  => [G]}: 64 --->
-//│ 	[C t⁵]: 52
-//│ 	[N]: 79
-//│ case x⁴ of {C t⁶ => [G] | n³ => hiddenDeadBranch_₀(n³)}: 71 --->
-//│ 	[N]: 79
+//│ 	[C [N]]: 28
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -360,70 +297,64 @@ main(N)
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ main_₀([N])
-//│ def main_₀(x⁷) = 
-//│ 	case x⁷ of {
-//│ 		C t⁶ => [G]
-//│ 		| n³ => hiddenDeadBranch_₀(n³)}
-//│ 	where
-//│ 	def hiddenDeadBranch_₀(n⁴) = 
-//│ 		case n⁴ of {
-//│ 			C t⁵ => 
-//│ 				let dummy² = hiddenDeadBranch_₀([C t⁵])
-//│ 				in if [True] then g_₀(t⁵) else h_₀(t⁵)
-//│ 			| N  => [G]}
-//│ 		where
-//│ 		def g_₀(x⁶) = 
-//│ 			case x⁶ of {
-//│ 				N  => g_₀([C [N]])
-//│ 				| C t⁴ => [G]}
-//│ 		def h_₀(x⁸) = 
-//│ 			case x⁸ of {
-//│ 				N  => [H]
-//│ 				| C t⁷ => [H]}
+//│ main([N])
+//│ def g(x⁴) = case x⁴ of {
+//│ 	N  => g([C [N]])
+//│ 	| C t² => [G]}
+//│ def h(x⁵) = case x⁵ of {
+//│ 	N  => [H]
+//│ 	| C t³ => [H]}
+//│ def hiddenDeadBranch(n²) = case n² of {
+//│ 	C t¹ => 
+//│ 		let dummy¹ = hiddenDeadBranch([C t¹])
+//│ 		in if [True] then g(t¹) else h(t¹)
+//│ 	| N  => [G]}
+//│ def main(x³) = case x³ of {
+//│ 	C t⁰ => [G]
+//│ 	| n⁰ => hiddenDeadBranch(n⁰)}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ main_₀ :: 'main_₀ <: [] ::: true
+//│ main :: 'main <: [] ::: true
 //│ [N] :: N ::: true
-//│ main_₀([N]) :: '3_callres <: [] ::: true
+//│ main([N]) :: '3_callres <: [] ::: true
 //│ x :: 'x⁰ <: [] ::: true
-//│ g_₀ :: 'g_₀ <: [] ::: true
-//│ [N] :: N ::: true
-//│ [C [N]] :: C(N) ::: true
-//│ g_₀([C [N]]) :: '8_callres <: [] ::: true
 //│ [G] :: G ::: true
-//│ case x of {N  => g_₀([C [N]]) | C t => [G]} :: '10_matchres <: [] ::: true
-//│ (fun x -> case x of {N  => g_₀([C [N]]) | C t => [G]}) :: 'x⁰ => '10_matchres ::: true
+//│ hiddenDeadBranch :: 'hiddenDeadBranch <: [] ::: true
 //│ n :: 'n⁰ <: [] ::: true
-//│ hiddenDeadBranch_₀ :: 'hiddenDeadBranch_₀ <: [] ::: true
+//│ hiddenDeadBranch(n) :: '8_callres <: [] ::: true
+//│ case x of {C t => [G] | n => hiddenDeadBranch(n)} :: '9_matchres <: [] ::: true
+//│ (fun x -> case x of {C t => [G] | n => hiddenDeadBranch(n)}) :: 'x⁰ => '9_matchres ::: true
+//│ n :: 'n¹ <: [] ::: true
+//│ hiddenDeadBranch :: 'hiddenDeadBranch <: [] ::: true
 //│ t :: 't¹ <: [] ::: true
 //│ [C t] :: C('t¹) ::: true
-//│ hiddenDeadBranch_₀([C t]) :: '16_callres <: [] ::: true
+//│ hiddenDeadBranch([C t]) :: '15_callres <: [] ::: true
 //│ [True] :: True ::: true
-//│ g_₀ :: 'g_₀ <: [] ::: true
+//│ g :: 'g <: [] ::: true
 //│ t :: 't¹ <: [] ::: true
-//│ g_₀(t) :: '20_callres <: [] ::: true
-//│ h_₀ :: 'h_₀ <: [] ::: true
+//│ g(t) :: '19_callres <: [] ::: true
+//│ h :: 'h <: [] ::: true
 //│ t :: 't¹ <: [] ::: true
-//│ h_₀(t) :: '23_callres <: [] ::: true
-//│ if [True] then g_₀(t) else h_₀(t) :: '24_ifres <: [] ::: true
-//│ let dummy = hiddenDeadBranch_₀([C t])
-//│ in if [True] then g_₀(t) else h_₀(t) :: '24_ifres <: [] ::: true
+//│ h(t) :: '22_callres <: [] ::: true
+//│ if [True] then g(t) else h(t) :: '23_ifres <: [] ::: true
+//│ let dummy = hiddenDeadBranch([C t])
+//│ in if [True] then g(t) else h(t) :: '23_ifres <: [] ::: true
 //│ [G] :: G ::: true
-//│ case n of {C t => let dummy = hiddenDeadBranch_₀([C t])
-//│ in if [True] then g_₀(t) else h_₀(t) | N  => [G]} :: '27_matchres <: [] ::: true
-//│ (fun n -> case n of {C t => let dummy = hiddenDeadBranch_₀([C t])
-//│ in if [True] then g_₀(t) else h_₀(t) | N  => [G]}) :: 'n⁰ => '27_matchres ::: true
+//│ case n of {C t => let dummy = hiddenDeadBranch([C t])
+//│ in if [True] then g(t) else h(t) | N  => [G]} :: '26_matchres <: [] ::: true
+//│ (fun n -> case n of {C t => let dummy = hiddenDeadBranch([C t])
+//│ in if [True] then g(t) else h(t) | N  => [G]}) :: 'n¹ => '26_matchres ::: true
 //│ x :: 'x¹ <: [] ::: true
+//│ g :: 'g <: [] ::: true
+//│ [N] :: N ::: true
+//│ [C [N]] :: C(N) ::: true
+//│ g([C [N]]) :: '32_callres <: [] ::: true
 //│ [G] :: G ::: true
-//│ hiddenDeadBranch_₀ :: 'hiddenDeadBranch_₀ <: [] ::: true
-//│ n :: 'n¹ <: [] ::: true
-//│ hiddenDeadBranch_₀(n) :: '33_callres <: [] ::: true
-//│ case x of {C t => [G] | n => hiddenDeadBranch_₀(n)} :: '34_matchres <: [] ::: true
-//│ (fun x -> case x of {C t => [G] | n => hiddenDeadBranch_₀(n)}) :: 'x¹ => '34_matchres ::: true
+//│ case x of {N  => g([C [N]]) | C t => [G]} :: '34_matchres <: [] ::: true
+//│ (fun x -> case x of {N  => g([C [N]]) | C t => [G]}) :: 'x¹ => '34_matchres ::: true
 //│ x :: 'x² <: [] ::: true
 //│ [H] :: H ::: true
 //│ [H] :: H ::: true
@@ -433,35 +364,35 @@ main(N)
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec g__d0 x_0 =
-//│   (match x_0 with
+//│ let rec g x_1 =
+//│   (match x_1 with
 //│     | `N -> 
-//│       (g__d0 (`C((`N))))
-//│     | `C(t_0) -> 
+//│       (g (`C((`N))))
+//│     | `C(t_2) -> 
 //│       (`G));;
-//│ let rec h__d0 x_2 =
+//│ let rec h x_2 =
 //│   (match x_2 with
 //│     | `N -> 
 //│       (`H)
 //│     | `C(t_3) -> 
 //│       (`H));;
-//│ let rec hiddenDeadBranch__d0 n_0 =
-//│   (match n_0 with
+//│ let rec hiddenDeadBranch n_1 =
+//│   (match n_1 with
 //│     | `C(t_1) -> 
-//│       (let rec dummy_0 = (hiddenDeadBranch__d0 (`C(t_1))) in
+//│       (let rec dummy_0 = (hiddenDeadBranch (`C(t_1))) in
 //│         (if true then
-//│           (g__d0 t_1)
+//│           (g t_1)
 //│         else
-//│           (h__d0 t_1)))
+//│           (h t_1)))
 //│     | `N -> 
 //│       (`G));;
-//│ let rec main__d0 x_1 =
-//│   (match x_1 with
-//│     | `C(t_2) -> 
+//│ let rec main x_0 =
+//│   (match x_0 with
+//│     | `C(t_0) -> 
 //│       (`G)
-//│     | n_1 -> 
-//│       (hiddenDeadBranch__d0 n_1));;
-//│ (main__d0 (`N))
+//│     | n_0 -> 
+//│       (hiddenDeadBranch n_0));;
+//│ (main (`N))
 //│ 
 //│ --------------- ocaml repl result -----------------
 //│ [ok]
@@ -586,179 +517,138 @@ words(C(2, C(1, C(2, C(1, C(2, N))))))
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [words^103] (hopeless to continue)
-//│ 	[words^103 · break^67] (using original def)
-//│ 		[words^103 · break^67 · break1^13] (using original def)
-//│ 			[words^103 · break^67 · break1^13 · break1^40] ---> [words^103 · break^67 · break1^13] (using original def)
-//│ 	[words^103 · dropWhile^55] (using original def)
-//│ 		[words^103 · dropWhile^55 · dropWhile^91] ---> [words^103 · dropWhile^55] (using original def)
-//│ 	[words^103 · words^78] ---> [words^103] (using original def)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ words_₀([C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]])
-//│ def words_₀(s¹) = 
-//│ 	let scrut¹ = dropWhile_₀((fun x⁶ -> (x⁶ == 1)), s¹)
-//│ 	in case scrut¹ of {
-//│ 		N  => [N]
-//│ 		| _  => case break_₀((fun x⁷ -> (x⁷ == 1)), scrut¹) of {
-//│ 			P w¹ s''¹ => [C w¹ words_₀(s''¹)]}}
-//│ 	where
-//│ 	def break_₀(p³, ls⁴) = 
-//│ 		case ls⁴ of {
-//│ 			N  => [P [N] [N]]
-//│ 			| C x⁵ xs³ => if p³(x⁵) then [P [N] [C x⁵ xs³]] else case break1_₀(p³, xs³) of {
-//│ 				P ys³ zs³ => [P [C x⁵ ys³] zs³]}}
-//│ 		where
-//│ 		def break1_₀(p², ls³) = 
-//│ 			case ls³ of {
-//│ 				N  => [P [N] [N]]
-//│ 				| C x⁴ xs² => if p²(x⁴) then [P [N] [C x⁴ xs²]] else case break1_₀(p², xs²) of {
-//│ 					P ys² zs² => [P [C x⁴ ys²] zs²]}}
-//│ 	def dropWhile_₀(f¹, ls⁵) = 
-//│ 		case ls⁵ of {
-//│ 			N  => [N]
-//│ 			| C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 118 --->
-//│ 	case ls⁵ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 215
-//│ [P [N] [N]]: 119 --->
-//│ 	case break1_₀(p², xs²) of {P ys² zs² => [P [C x⁴ ys²] zs²]}: 138
-//│ 	case break1_₀(p³, xs³) of {P ys³ zs³ => [P [C x⁵ ys³] zs³]}: 165
-//│ [C x⁴ xs²]: 126 --->
-//│ 	case ls⁵ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 215
-//│ [P [N] [C x⁴ xs²]]: 127 --->
-//│ 	case break1_₀(p², xs²) of {P ys² zs² => [P [C x⁴ ys²] zs²]}: 138
-//│ 	case break1_₀(p³, xs³) of {P ys³ zs³ => [P [C x⁵ ys³] zs³]}: 165
-//│ [P [C x⁴ ys²] zs²]: 137 --->
-//│ 	case break1_₀(p², xs²) of {P ys² zs² => [P [C x⁴ ys²] zs²]}: 138
-//│ 	case break1_₀(p³, xs³) of {P ys³ zs³ => [P [C x⁵ ys³] zs³]}: 165
-//│ [N]: 145 --->
-//│ 	case ls⁵ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 215
-//│ [P [N] [N]]: 146 --->
-//│ 	case break_₀((fun x⁷ -> (x⁷ == 1)), scrut¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}: 197
-//│ [C x⁵ xs³]: 153 --->
-//│ 	case ls⁵ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 215
-//│ [P [N] [C x⁵ xs³]]: 154 --->
-//│ 	case break_₀((fun x⁷ -> (x⁷ == 1)), scrut¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}: 197
-//│ [P [C x⁵ ys³] zs³]: 164 --->
-//│ 	case break_₀((fun x⁷ -> (x⁷ == 1)), scrut¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}: 197
-//│ [N]: 202 --->
-//│ 	case ls⁴ of {N  => [P [N] [N]] | C x⁵ xs³ => if p³(x⁵) then [P [N] [C x⁵ xs³]] else case break1_₀(p³, xs³) of {P ys³ zs³ => [P [C x⁵ ys³] zs³]}}: 167
-//│ 	case scrut¹ of {N  => [N] | _  => case break_₀((fun x⁷ -> (x⁷ == 1)), scrut¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}}: 198
-//│ [C h¹ t¹]: 213 --->
-//│ 	case ls⁴ of {N  => [P [N] [N]] | C x⁵ xs³ => if p³(x⁵) then [P [N] [C x⁵ xs³]] else case break1_₀(p³, xs³) of {P ys³ zs³ => [P [C x⁵ ys³] zs³]}}: 167
-//│ 	case scrut¹ of {N  => [N] | _  => case break_₀((fun x⁷ -> (x⁷ == 1)), scrut¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}}: 198
-//│ [N]: 224 --->
-//│ 	case ls³ of {N  => [P [N] [N]] | C x⁴ xs² => if p²(x⁴) then [P [N] [C x⁴ xs²]] else case break1_₀(p², xs²) of {P ys² zs² => [P [C x⁴ ys²] zs²]}}: 140
-//│ 	case ls⁵ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 215
-//│ [C 2 [N]]: 225 --->
-//│ 	case ls³ of {N  => [P [N] [N]] | C x⁴ xs² => if p²(x⁴) then [P [N] [C x⁴ xs²]] else case break1_₀(p², xs²) of {P ys² zs² => [P [C x⁴ ys²] zs²]}}: 140
-//│ 	case ls⁵ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 215
-//│ [C 1 [C 2 [N]]]: 226 --->
-//│ 	case ls³ of {N  => [P [N] [N]] | C x⁴ xs² => if p²(x⁴) then [P [N] [C x⁴ xs²]] else case break1_₀(p², xs²) of {P ys² zs² => [P [C x⁴ ys²] zs²]}}: 140
-//│ 	case ls⁵ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 215
-//│ [C 2 [C 1 [C 2 [N]]]]: 227 --->
-//│ 	case ls³ of {N  => [P [N] [N]] | C x⁴ xs² => if p²(x⁴) then [P [N] [C x⁴ xs²]] else case break1_₀(p², xs²) of {P ys² zs² => [P [C x⁴ ys²] zs²]}}: 140
-//│ 	case ls⁵ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 215
-//│ [C 1 [C 2 [C 1 [C 2 [N]]]]]: 228 --->
-//│ 	case ls³ of {N  => [P [N] [N]] | C x⁴ xs² => if p²(x⁴) then [P [N] [C x⁴ xs²]] else case break1_₀(p², xs²) of {P ys² zs² => [P [C x⁴ ys²] zs²]}}: 140
-//│ 	case ls⁵ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 215
-//│ [C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]]: 229 --->
-//│ 	case ls⁵ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 215
+//│ [N]: 3 --->
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 100
+//│ [P [N] [N]]: 4 --->
+//│ 	case break((fun x³ -> (x³ == 1)), scrut⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}: 82
+//│ [C x⁰ xs⁰]: 11 --->
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 100
+//│ [P [N] [C x⁰ xs⁰]]: 12 --->
+//│ 	case break((fun x³ -> (x³ == 1)), scrut⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}: 82
+//│ [P [C x⁰ ys⁰] zs⁰]: 22 --->
+//│ 	case break((fun x³ -> (x³ == 1)), scrut⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}: 82
+//│ [N]: 30 --->
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 100
+//│ [P [N] [N]]: 31 --->
+//│ 	case break1(p⁰, xs⁰) of {P ys⁰ zs⁰ => [P [C x⁰ ys⁰] zs⁰]}: 23
+//│ 	case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}: 50
+//│ [C x¹ xs¹]: 38 --->
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 100
+//│ [P [N] [C x¹ xs¹]]: 39 --->
+//│ 	case break1(p⁰, xs⁰) of {P ys⁰ zs⁰ => [P [C x⁰ ys⁰] zs⁰]}: 23
+//│ 	case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}: 50
+//│ [P [C x¹ ys¹] zs¹]: 49 --->
+//│ 	case break1(p⁰, xs⁰) of {P ys⁰ zs⁰ => [P [C x⁰ ys⁰] zs⁰]}: 23
+//│ 	case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}: 50
+//│ [N]: 87 --->
+//│ 	case ls⁰ of {N  => [P [N] [N]] | C x⁰ xs⁰ => if p⁰(x⁰) then [P [N] [C x⁰ xs⁰]] else case break1(p⁰, xs⁰) of {P ys⁰ zs⁰ => [P [C x⁰ ys⁰] zs⁰]}}: 25
+//│ 	case scrut⁰ of {N  => [N] | _  => case break((fun x³ -> (x³ == 1)), scrut⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}}: 83
+//│ [C h⁰ t⁰]: 98 --->
+//│ 	case ls⁰ of {N  => [P [N] [N]] | C x⁰ xs⁰ => if p⁰(x⁰) then [P [N] [C x⁰ xs⁰]] else case break1(p⁰, xs⁰) of {P ys⁰ zs⁰ => [P [C x⁰ ys⁰] zs⁰]}}: 25
+//│ 	case scrut⁰ of {N  => [N] | _  => case break((fun x³ -> (x³ == 1)), scrut⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}}: 83
+//│ [N]: 109 --->
+//│ 	case ls¹ of {N  => [P [N] [N]] | C x¹ xs¹ => if p¹(x¹) then [P [N] [C x¹ xs¹]] else case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}}: 52
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 100
+//│ [C 2 [N]]: 110 --->
+//│ 	case ls¹ of {N  => [P [N] [N]] | C x¹ xs¹ => if p¹(x¹) then [P [N] [C x¹ xs¹]] else case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}}: 52
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 100
+//│ [C 1 [C 2 [N]]]: 111 --->
+//│ 	case ls¹ of {N  => [P [N] [N]] | C x¹ xs¹ => if p¹(x¹) then [P [N] [C x¹ xs¹]] else case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}}: 52
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 100
+//│ [C 2 [C 1 [C 2 [N]]]]: 112 --->
+//│ 	case ls¹ of {N  => [P [N] [N]] | C x¹ xs¹ => if p¹(x¹) then [P [N] [C x¹ xs¹]] else case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}}: 52
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 100
+//│ [C 1 [C 2 [C 1 [C 2 [N]]]]]: 113 --->
+//│ 	case ls¹ of {N  => [P [N] [N]] | C x¹ xs¹ => if p¹(x¹) then [P [N] [C x¹ xs¹]] else case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}}: 52
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 100
+//│ [C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]]: 114 --->
+//│ 	case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 100
 //│ ------------------
-//│ case break1_₀(p², xs²) of {P ys² zs² => [P [C x⁴ ys²] zs²]}: 138 --->
-//│ 	[P [N] [N]]: 119
-//│ 	[P [N] [C x⁴ xs²]]: 127
-//│ 	[P [C x⁴ ys²] zs²]: 137
-//│ case ls³ of {N  => [P [N] [N]] | C x⁴ xs² => if p²(x⁴) then [P [N] [C x⁴ xs²]] else case break1_₀(p², xs²) of {P ys² zs² => [P [C x⁴ ys²] zs²]}}: 140 --->
-//│ 	[N]: 224
-//│ 	[C 2 [N]]: 225
-//│ 	[C 1 [C 2 [N]]]: 226
-//│ 	[C 2 [C 1 [C 2 [N]]]]: 227
-//│ 	[C 1 [C 2 [C 1 [C 2 [N]]]]]: 228
-//│ case break1_₀(p³, xs³) of {P ys³ zs³ => [P [C x⁵ ys³] zs³]}: 165 --->
-//│ 	[P [N] [N]]: 119
-//│ 	[P [N] [C x⁴ xs²]]: 127
-//│ 	[P [C x⁴ ys²] zs²]: 137
-//│ case ls⁴ of {N  => [P [N] [N]] | C x⁵ xs³ => if p³(x⁵) then [P [N] [C x⁵ xs³]] else case break1_₀(p³, xs³) of {P ys³ zs³ => [P [C x⁵ ys³] zs³]}}: 167 --->
-//│ 	[N]: 202
-//│ 	[C h¹ t¹]: 213
-//│ case break_₀((fun x⁷ -> (x⁷ == 1)), scrut¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}: 197 --->
-//│ 	[P [N] [N]]: 146
-//│ 	[P [N] [C x⁵ xs³]]: 154
-//│ 	[P [C x⁵ ys³] zs³]: 164
-//│ case scrut¹ of {N  => [N] | _  => case break_₀((fun x⁷ -> (x⁷ == 1)), scrut¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}}: 198 --->
-//│ 	[N]: 202
-//│ 	[C h¹ t¹]: 213
-//│ case ls⁵ of {N  => [N] | C h¹ t¹ => if f¹(h¹) then dropWhile_₀(f¹, t¹) else [C h¹ t¹]}: 215 --->
-//│ 	[N]: 118
-//│ 	[C x⁴ xs²]: 126
-//│ 	[N]: 145
-//│ 	[C x⁵ xs³]: 153
-//│ 	[N]: 224
-//│ 	[C 2 [N]]: 225
-//│ 	[C 1 [C 2 [N]]]: 226
-//│ 	[C 2 [C 1 [C 2 [N]]]]: 227
-//│ 	[C 1 [C 2 [C 1 [C 2 [N]]]]]: 228
-//│ 	[C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]]: 229
+//│ case break1(p⁰, xs⁰) of {P ys⁰ zs⁰ => [P [C x⁰ ys⁰] zs⁰]}: 23 --->
+//│ 	[P [N] [N]]: 31
+//│ 	[P [N] [C x¹ xs¹]]: 39
+//│ 	[P [C x¹ ys¹] zs¹]: 49
+//│ case ls⁰ of {N  => [P [N] [N]] | C x⁰ xs⁰ => if p⁰(x⁰) then [P [N] [C x⁰ xs⁰]] else case break1(p⁰, xs⁰) of {P ys⁰ zs⁰ => [P [C x⁰ ys⁰] zs⁰]}}: 25 --->
+//│ 	[N]: 87
+//│ 	[C h⁰ t⁰]: 98
+//│ case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}: 50 --->
+//│ 	[P [N] [N]]: 31
+//│ 	[P [N] [C x¹ xs¹]]: 39
+//│ 	[P [C x¹ ys¹] zs¹]: 49
+//│ case ls¹ of {N  => [P [N] [N]] | C x¹ xs¹ => if p¹(x¹) then [P [N] [C x¹ xs¹]] else case break1(p¹, xs¹) of {P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}}: 52 --->
+//│ 	[N]: 109
+//│ 	[C 2 [N]]: 110
+//│ 	[C 1 [C 2 [N]]]: 111
+//│ 	[C 2 [C 1 [C 2 [N]]]]: 112
+//│ 	[C 1 [C 2 [C 1 [C 2 [N]]]]]: 113
+//│ case break((fun x³ -> (x³ == 1)), scrut⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}: 82 --->
+//│ 	[P [N] [N]]: 4
+//│ 	[P [N] [C x⁰ xs⁰]]: 12
+//│ 	[P [C x⁰ ys⁰] zs⁰]: 22
+//│ case scrut⁰ of {N  => [N] | _  => case break((fun x³ -> (x³ == 1)), scrut⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}}: 83 --->
+//│ 	[N]: 87
+//│ 	[C h⁰ t⁰]: 98
+//│ case ls² of {N  => [N] | C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}: 100 --->
+//│ 	[N]: 3
+//│ 	[C x⁰ xs⁰]: 11
+//│ 	[N]: 30
+//│ 	[C x¹ xs¹]: 38
+//│ 	[N]: 109
+//│ 	[C 2 [N]]: 110
+//│ 	[C 1 [C 2 [N]]]: 111
+//│ 	[C 2 [C 1 [C 2 [N]]]]: 112
+//│ 	[C 1 [C 2 [C 1 [C 2 [N]]]]]: 113
+//│ 	[C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]]: 114
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [P [N] [N]]: 146 --->
-//│ 	case break_₀((fun x⁷ -> (x⁷ == 1)), scrut¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}: 197
-//│ [P [N] [C x⁵ xs³]]: 154 --->
-//│ 	case break_₀((fun x⁷ -> (x⁷ == 1)), scrut¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}: 197
-//│ [P [C x⁵ ys³] zs³]: 164 --->
-//│ 	case break_₀((fun x⁷ -> (x⁷ == 1)), scrut¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}: 197
+//│ [P [N] [N]]: 4 --->
+//│ 	case break((fun x³ -> (x³ == 1)), scrut⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}: 82
+//│ [P [N] [C x⁰ xs⁰]]: 12 --->
+//│ 	case break((fun x³ -> (x³ == 1)), scrut⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}: 82
+//│ [P [C x⁰ ys⁰] zs⁰]: 22 --->
+//│ 	case break((fun x³ -> (x³ == 1)), scrut⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}: 82
 //│ ------------------
-//│ case break_₀((fun x⁷ -> (x⁷ == 1)), scrut¹) of {P w¹ s''¹ => [C w¹ words_₀(s''¹)]}: 197 --->
-//│ 	[P [N] [N]]: 146
-//│ 	[P [N] [C x⁵ xs³]]: 154
-//│ 	[P [C x⁵ ys³] zs³]: 164
+//│ case break((fun x³ -> (x³ == 1)), scrut⁰) of {P w⁰ s''⁰ => [C w⁰ words(s''⁰)]}: 82 --->
+//│ 	[P [N] [N]]: 4
+//│ 	[P [N] [C x⁰ xs⁰]]: 12
+//│ 	[P [C x⁰ ys⁰] zs⁰]: 22
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ words_₀([C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]])
-//│ def words_₀(s²) = 
-//│ 	let scrut² = dropWhile_₀((fun x⁸ -> (x⁸ == 1)), s²)
-//│ 	in case scrut² of {
+//│ words([C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]])
+//│ def break(p², ls³) = case ls³ of {
+//│ 	N  => 
+//│ 		let s''¹ = [N]
+//│ 		in let w¹ = [N]
+//│ 		in (fun _lh_dummy⁰ -> [C w¹ words(s''¹)])
+//│ 	| C x⁰ xs⁰ => if p²(x⁰) then 
+//│ 		let s''² = [C x⁰ xs⁰]
+//│ 		in let w² = [N]
+//│ 		in (fun _lh_dummy¹ -> [C w² words(s''²)]) else case break1(p², xs⁰) of {
+//│ 		P ys⁰ zs⁰ => 
+//│ 			let s''³ = zs⁰
+//│ 			in let w³ = [C x⁰ ys⁰]
+//│ 			in (fun _lh_dummy² -> [C w³ words(s''³)])}}
+//│ def break1(p³, ls⁴) = case ls⁴ of {
+//│ 	N  => [P [N] [N]]
+//│ 	| C x¹ xs¹ => if p³(x¹) then [P [N] [C x¹ xs¹]] else case break1(p³, xs¹) of {
+//│ 		P ys¹ zs¹ => [P [C x¹ ys¹] zs¹]}}
+//│ def dropWhile(f¹, ls⁵) = case ls⁵ of {
+//│ 	N  => [N]
+//│ 	| C h⁰ t⁰ => if f¹(h⁰) then dropWhile(f¹, t⁰) else [C h⁰ t⁰]}
+//│ def words(s¹) = 
+//│ 	let scrut¹ = dropWhile((fun x⁴ -> (x⁴ == 1)), s¹)
+//│ 	in case scrut¹ of {
 //│ 		N  => [N]
-//│ 		| _  => break_₀((fun x⁹ -> (x⁹ == 1)), scrut², 99)}
-//│ 	where
-//│ 	def break_₀(p⁵, ls⁷) = 
-//│ 		case ls⁷ of {
-//│ 			N  => 
-//│ 				let s''² = [N]
-//│ 				in let w² = [N]
-//│ 				in (fun _lh_dummy⁰ -> [C w² words_₀(s''²)])
-//│ 			| C x⁵ xs³ => if p⁵(x⁵) then 
-//│ 				let s''³ = [C x⁵ xs³]
-//│ 				in let w³ = [N]
-//│ 				in (fun _lh_dummy¹ -> [C w³ words_₀(s''³)]) else case break1_₀(p⁵, xs³) of {
-//│ 				P ys³ zs³ => 
-//│ 					let s''⁴ = zs³
-//│ 					in let w⁴ = [C x⁵ ys³]
-//│ 					in (fun _lh_dummy² -> [C w⁴ words_₀(s''⁴)])}}
-//│ 		where
-//│ 		def break1_₀(p⁴, ls⁶) = 
-//│ 			case ls⁶ of {
-//│ 				N  => [P [N] [N]]
-//│ 				| C x⁴ xs² => if p⁴(x⁴) then [P [N] [C x⁴ xs²]] else case break1_₀(p⁴, xs²) of {
-//│ 					P ys² zs² => [P [C x⁴ ys²] zs²]}}
-//│ 	def dropWhile_₀(f², ls⁸) = 
-//│ 		case ls⁸ of {
-//│ 			N  => [N]
-//│ 			| C h¹ t¹ => if f²(h¹) then dropWhile_₀(f², t¹) else [C h¹ t¹]}
+//│ 		| _  => break((fun x⁵ -> (x⁵ == 1)), scrut¹, 99)}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ words_₀ :: 'words_₀ <: [C(Int, C(Int, C(Int, C(Int, C(Int, N))))) => '13_callres | 's''⁰ => '47_callres | 's''¹ => '62_callres | 's''² => '79_callres] ::: false
+//│ words :: 'words <: [] ::: true
 //│ 2 :: Int ::: false
 //│ 1 :: Int ::: false
 //│ 2 :: Int ::: false
@@ -770,216 +660,216 @@ words(C(2, C(1, C(2, C(1, C(2, N))))))
 //│ [C 2 [C 1 [C 2 [N]]]] :: C(Int, C(Int, C(Int, N))) ::: true
 //│ [C 1 [C 2 [C 1 [C 2 [N]]]]] :: C(Int, C(Int, C(Int, C(Int, N)))) ::: true
 //│ [C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]] :: C(Int, C(Int, C(Int, C(Int, C(Int, N))))) ::: true
-//│ words_₀([C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]]) :: '13_callres <: [NoCons] ::: false
-//│ ls :: 'ls⁰ <: [Destruct(N, C('x⁰, 'xs⁰))] ::: false
+//│ words([C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]]) :: '13_callres <: [] ::: true
+//│ ls :: 'ls⁰ <: [] ::: true
+//│ [N] :: N ::: true
+//│ [N] :: N ::: true
+//│ w :: 'w⁰ <: [] ::: true
+//│ words :: 'words <: [] ::: true
+//│ s'' :: 's''⁰ <: [] ::: true
+//│ words(s'') :: '20_callres <: [] ::: true
+//│ [C w words(s'')] :: C('w⁰, '20_callres) ::: true
+//│ (fun _lh_dummy -> [C w words(s'')]) :: '_lh_dummy⁰ => C('w⁰, '20_callres) ::: true
+//│ let w = [N]
+//│ in (fun _lh_dummy -> [C w words(s'')]) :: '_lh_dummy⁰ => C('w⁰, '20_callres) ::: true
+//│ let s'' = [N]
+//│ in let w = [N]
+//│ in (fun _lh_dummy -> [C w words(s'')]) :: '_lh_dummy⁰ => C('w⁰, '20_callres) ::: true
+//│ p :: 'p⁰ <: [] ::: true
+//│ x :: 'x⁰ <: [] ::: true
+//│ p(x) :: '27_callres <: [] ::: true
+//│ x :: 'x⁰ <: [] ::: true
+//│ xs :: 'xs⁰ <: [] ::: true
+//│ [C x xs] :: C('x⁰, 'xs⁰) ::: true
+//│ [N] :: N ::: true
+//│ w :: 'w¹ <: [] ::: true
+//│ words :: 'words <: [] ::: true
+//│ s'' :: 's''¹ <: [] ::: true
+//│ words(s'') :: '35_callres <: [] ::: true
+//│ [C w words(s'')] :: C('w¹, '35_callres) ::: true
+//│ (fun _lh_dummy -> [C w words(s'')]) :: '_lh_dummy¹ => C('w¹, '35_callres) ::: true
+//│ let w = [N]
+//│ in (fun _lh_dummy -> [C w words(s'')]) :: '_lh_dummy¹ => C('w¹, '35_callres) ::: true
+//│ let s'' = [C x xs]
+//│ in let w = [N]
+//│ in (fun _lh_dummy -> [C w words(s'')]) :: '_lh_dummy¹ => C('w¹, '35_callres) ::: true
+//│ break1 :: 'break1 <: [] ::: true
+//│ p :: 'p⁰ <: [] ::: true
+//│ break1(p) :: '42_callres <: [] ::: true
+//│ xs :: 'xs⁰ <: [] ::: true
+//│ break1(p, xs) :: '44_callres <: [] ::: true
+//│ zs :: 'zs⁰ <: [] ::: true
+//│ x :: 'x⁰ <: [] ::: true
+//│ ys :: 'ys⁰ <: [] ::: true
+//│ [C x ys] :: C('x⁰, 'ys⁰) ::: true
+//│ w :: 'w² <: [] ::: true
+//│ words :: 'words <: [] ::: true
+//│ s'' :: 's''² <: [] ::: true
+//│ words(s'') :: '52_callres <: [] ::: true
+//│ [C w words(s'')] :: C('w², '52_callres) ::: true
+//│ (fun _lh_dummy -> [C w words(s'')]) :: '_lh_dummy² => C('w², '52_callres) ::: true
+//│ let w = [C x ys]
+//│ in (fun _lh_dummy -> [C w words(s'')]) :: '_lh_dummy² => C('w², '52_callres) ::: true
+//│ let s'' = zs
+//│ in let w = [C x ys]
+//│ in (fun _lh_dummy -> [C w words(s'')]) :: '_lh_dummy² => C('w², '52_callres) ::: true
+//│ case break1(p, xs) of {P ys zs => let s'' = zs
+//│ in let w = [C x ys]
+//│ in (fun _lh_dummy -> [C w words(s'')])} :: '57_matchres <: [] ::: true
+//│ if p(x) then let s'' = [C x xs]
+//│ in let w = [N]
+//│ in (fun _lh_dummy -> [C w words(s'')]) else case break1(p, xs) of {P ys zs => let s'' = zs
+//│ in let w = [C x ys]
+//│ in (fun _lh_dummy -> [C w words(s'')])} :: '58_ifres <: [] ::: true
+//│ case ls of {N  => let s'' = [N]
+//│ in let w = [N]
+//│ in (fun _lh_dummy -> [C w words(s'')]) | C x xs => if p(x) then let s'' = [C x xs]
+//│ in let w = [N]
+//│ in (fun _lh_dummy -> [C w words(s'')]) else case break1(p, xs) of {P ys zs => let s'' = zs
+//│ in let w = [C x ys]
+//│ in (fun _lh_dummy -> [C w words(s'')])}} :: '59_matchres <: [] ::: true
+//│ (fun ls -> case ls of {N  => let s'' = [N]
+//│ in let w = [N]
+//│ in (fun _lh_dummy -> [C w words(s'')]) | C x xs => if p(x) then let s'' = [C x xs]
+//│ in let w = [N]
+//│ in (fun _lh_dummy -> [C w words(s'')]) else case break1(p, xs) of {P ys zs => let s'' = zs
+//│ in let w = [C x ys]
+//│ in (fun _lh_dummy -> [C w words(s'')])}}) :: 'ls⁰ => '59_matchres ::: true
+//│ (fun p -> (fun ls -> case ls of {N  => let s'' = [N]
+//│ in let w = [N]
+//│ in (fun _lh_dummy -> [C w words(s'')]) | C x xs => if p(x) then let s'' = [C x xs]
+//│ in let w = [N]
+//│ in (fun _lh_dummy -> [C w words(s'')]) else case break1(p, xs) of {P ys zs => let s'' = zs
+//│ in let w = [C x ys]
+//│ in (fun _lh_dummy -> [C w words(s'')])}})) :: 'p⁰ => 'ls⁰ => '59_matchres ::: true
+//│ ls :: 'ls¹ <: [] ::: true
 //│ [N] :: N ::: true
 //│ [N] :: N ::: true
 //│ [P [N] [N]] :: P(N, N) ::: true
-//│ p :: 'p⁰ <: ['x⁰ => '20_callres] ::: false
-//│ x :: 'x⁰ <: [NoCons | 'x³ | 'h⁰] ::: false
-//│ p(x) :: '20_callres <: [Destruct(True, False)] ::: false
+//│ p :: 'p¹ <: [] ::: true
+//│ x :: 'x¹ <: [] ::: true
+//│ p(x) :: '68_callres <: [] ::: true
 //│ [N] :: N ::: true
-//│ x :: 'x⁰ <: [NoCons | 'x³ | 'h⁰] ::: false
-//│ xs :: 'xs⁰ <: ['t⁰ | 'ls⁰] ::: false
-//│ [C x xs] :: C('x⁰, 'xs⁰) ::: true
-//│ [P [N] [C x xs]] :: P(N, C('x⁰, 'xs⁰)) ::: true
-//│ break1_₀ :: 'break1_₀ <: ['p⁰ => '28_callres | 'p¹ => '69_callres] ::: false
-//│ p :: 'p⁰ <: ['x⁰ => '20_callres] ::: false
-//│ break1_₀(p) :: '28_callres <: ['xs⁰ => '30_callres] ::: false
-//│ xs :: 'xs⁰ <: ['t⁰ | 'ls⁰] ::: false
-//│ break1_₀(p, xs) :: '30_callres <: [Destruct(P('ys⁰, 'zs⁰))] ::: false
-//│ x :: 'x⁰ <: [NoCons | 'x³ | 'h⁰] ::: false
-//│ ys :: 'ys⁰ <: [NoCons] ::: false
-//│ [C x ys] :: C('x⁰, 'ys⁰) ::: true
-//│ zs :: 'zs⁰ <: ['zs¹] ::: false
-//│ [P [C x ys] zs] :: P(C('x⁰, 'ys⁰), 'zs⁰) ::: true
-//│ case break1_₀(p, xs) of {P ys zs => [P [C x ys] zs]} :: '36_matchres <: ['37_ifres] ::: false
-//│ if p(x) then [P [N] [C x xs]] else case break1_₀(p, xs) of {P ys zs => [P [C x ys] zs]} :: '37_ifres <: ['38_matchres] ::: false
-//│ case ls of {N  => [P [N] [N]] | C x xs => if p(x) then [P [N] [C x xs]] else case break1_₀(p, xs) of {P ys zs => [P [C x ys] zs]}} :: '38_matchres <: ['30_callres | '71_callres] ::: false
-//│ (fun ls -> case ls of {N  => [P [N] [N]] | C x xs => if p(x) then [P [N] [C x xs]] else case break1_₀(p, xs) of {P ys zs => [P [C x ys] zs]}}) :: 'ls⁰ => '38_matchres ::: true
-//│ (fun p -> (fun ls -> case ls of {N  => [P [N] [N]] | C x xs => if p(x) then [P [N] [C x xs]] else case break1_₀(p, xs) of {P ys zs => [P [C x ys] zs]}})) :: 'p⁰ => 'ls⁰ => '38_matchres ::: true
-//│ ls :: 'ls¹ <: [Destruct(N, C('x¹, 'xs¹))] ::: false
-//│ [N] :: N ::: true
-//│ [N] :: N ::: true
-//│ w :: 'w⁰ <: [NoCons] ::: false
-//│ words_₀ :: 'words_₀ <: [C(Int, C(Int, C(Int, C(Int, C(Int, N))))) => '13_callres | 's''⁰ => '47_callres | 's''¹ => '62_callres | 's''² => '79_callres] ::: false
-//│ s'' :: 's''⁰ <: ['s⁰] ::: false
-//│ words_₀(s'') :: '47_callres <: [NoCons] ::: false
-//│ [C w words_₀(s'')] :: C('w⁰, '47_callres) ::: true
-//│ (fun _lh_dummy -> [C w words_₀(s'')]) :: '_lh_dummy⁰ => C('w⁰, '47_callres) ::: true
-//│ let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) :: '_lh_dummy⁰ => C('w⁰, '47_callres) ::: true
-//│ let s'' = [N]
-//│ in let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) :: '_lh_dummy⁰ => C('w⁰, '47_callres) ::: true
-//│ p :: 'p¹ <: ['p⁰ | 'x¹ => '54_callres] ::: false
-//│ x :: 'x¹ <: [NoCons | 'x³ | 'h⁰] ::: false
-//│ p(x) :: '54_callres <: [Destruct(True, False)] ::: false
-//│ x :: 'x¹ <: [NoCons | 'x³ | 'h⁰] ::: false
-//│ xs :: 'xs¹ <: ['ls⁰ | 't⁰] ::: false
+//│ x :: 'x¹ <: [] ::: true
+//│ xs :: 'xs¹ <: [] ::: true
 //│ [C x xs] :: C('x¹, 'xs¹) ::: true
-//│ [N] :: N ::: true
-//│ w :: 'w¹ <: [NoCons] ::: false
-//│ words_₀ :: 'words_₀ <: [C(Int, C(Int, C(Int, C(Int, C(Int, N))))) => '13_callres | 's''⁰ => '47_callres | 's''¹ => '62_callres | 's''² => '79_callres] ::: false
-//│ s'' :: 's''¹ <: ['s⁰] ::: false
-//│ words_₀(s'') :: '62_callres <: [NoCons] ::: false
-//│ [C w words_₀(s'')] :: C('w¹, '62_callres) ::: true
-//│ (fun _lh_dummy -> [C w words_₀(s'')]) :: '_lh_dummy¹ => C('w¹, '62_callres) ::: true
-//│ let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) :: '_lh_dummy¹ => C('w¹, '62_callres) ::: true
-//│ let s'' = [C x xs]
-//│ in let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) :: '_lh_dummy¹ => C('w¹, '62_callres) ::: true
-//│ break1_₀ :: 'break1_₀ <: ['p⁰ => '28_callres | 'p¹ => '69_callres] ::: false
-//│ p :: 'p¹ <: ['p⁰ | 'x¹ => '54_callres] ::: false
-//│ break1_₀(p) :: '69_callres <: ['xs¹ => '71_callres] ::: false
-//│ xs :: 'xs¹ <: ['ls⁰ | 't⁰] ::: false
-//│ break1_₀(p, xs) :: '71_callres <: [Destruct(P('ys¹, 'zs¹))] ::: false
-//│ zs :: 'zs¹ <: ['s''²] ::: false
-//│ x :: 'x¹ <: [NoCons | 'x³ | 'h⁰] ::: false
-//│ ys :: 'ys¹ <: [NoCons] ::: false
+//│ [P [N] [C x xs]] :: P(N, C('x¹, 'xs¹)) ::: true
+//│ break1 :: 'break1 <: [] ::: true
+//│ p :: 'p¹ <: [] ::: true
+//│ break1(p) :: '76_callres <: [] ::: true
+//│ xs :: 'xs¹ <: [] ::: true
+//│ break1(p, xs) :: '78_callres <: [] ::: true
+//│ x :: 'x¹ <: [] ::: true
+//│ ys :: 'ys¹ <: [] ::: true
 //│ [C x ys] :: C('x¹, 'ys¹) ::: true
-//│ w :: 'w² <: [NoCons] ::: false
-//│ words_₀ :: 'words_₀ <: [C(Int, C(Int, C(Int, C(Int, C(Int, N))))) => '13_callres | 's''⁰ => '47_callres | 's''¹ => '62_callres | 's''² => '79_callres] ::: false
-//│ s'' :: 's''² <: ['s⁰] ::: false
-//│ words_₀(s'') :: '79_callres <: [NoCons] ::: false
-//│ [C w words_₀(s'')] :: C('w², '79_callres) ::: true
-//│ (fun _lh_dummy -> [C w words_₀(s'')]) :: '_lh_dummy² => C('w², '79_callres) ::: true
-//│ let w = [C x ys]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) :: '_lh_dummy² => C('w², '79_callres) ::: true
-//│ let s'' = zs
-//│ in let w = [C x ys]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) :: '_lh_dummy² => C('w², '79_callres) ::: true
-//│ case break1_₀(p, xs) of {P ys zs => let s'' = zs
-//│ in let w = [C x ys]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')])} :: '84_matchres <: ['85_ifres] ::: false
-//│ if p(x) then let s'' = [C x xs]
-//│ in let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) else case break1_₀(p, xs) of {P ys zs => let s'' = zs
-//│ in let w = [C x ys]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')])} :: '85_ifres <: ['86_matchres] ::: false
-//│ case ls of {N  => let s'' = [N]
-//│ in let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) | C x xs => if p(x) then let s'' = [C x xs]
-//│ in let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) else case break1_₀(p, xs) of {P ys zs => let s'' = zs
-//│ in let w = [C x ys]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')])}} :: '86_matchres <: ['110_callres] ::: false
-//│ (fun ls -> case ls of {N  => let s'' = [N]
-//│ in let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) | C x xs => if p(x) then let s'' = [C x xs]
-//│ in let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) else case break1_₀(p, xs) of {P ys zs => let s'' = zs
-//│ in let w = [C x ys]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')])}}) :: 'ls¹ => '86_matchres ::: true
-//│ (fun p -> (fun ls -> case ls of {N  => let s'' = [N]
-//│ in let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) | C x xs => if p(x) then let s'' = [C x xs]
-//│ in let w = [N]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')]) else case break1_₀(p, xs) of {P ys zs => let s'' = zs
-//│ in let w = [C x ys]
-//│ in (fun _lh_dummy -> [C w words_₀(s'')])}})) :: 'p¹ => 'ls¹ => '86_matchres ::: true
-//│ dropWhile_₀ :: 'dropWhile_₀ <: ['x² => '94_callres => '96_callres | 'f⁰ => '123_callres] ::: false
+//│ zs :: 'zs¹ <: [] ::: true
+//│ [P [C x ys] zs] :: P(C('x¹, 'ys¹), 'zs¹) ::: true
+//│ case break1(p, xs) of {P ys zs => [P [C x ys] zs]} :: '84_matchres <: [] ::: true
+//│ if p(x) then [P [N] [C x xs]] else case break1(p, xs) of {P ys zs => [P [C x ys] zs]} :: '85_ifres <: [] ::: true
+//│ case ls of {N  => [P [N] [N]] | C x xs => if p(x) then [P [N] [C x xs]] else case break1(p, xs) of {P ys zs => [P [C x ys] zs]}} :: '86_matchres <: [] ::: true
+//│ (fun ls -> case ls of {N  => [P [N] [N]] | C x xs => if p(x) then [P [N] [C x xs]] else case break1(p, xs) of {P ys zs => [P [C x ys] zs]}}) :: 'ls¹ => '86_matchres ::: true
+//│ (fun p -> (fun ls -> case ls of {N  => [P [N] [N]] | C x xs => if p(x) then [P [N] [C x xs]] else case break1(p, xs) of {P ys zs => [P [C x ys] zs]}})) :: 'p¹ => 'ls¹ => '86_matchres ::: true
+//│ dropWhile :: 'dropWhile <: [] ::: true
 //│ == :: Destruct(Int) => Destruct(Int) => Sum[True, False] ::: true
-//│ x :: 'x² <: [Destruct(Int)] ::: false
-//│ ==(x) :: '92_callres <: [Int => '94_callres] ::: false
+//│ x :: 'x² <: [] ::: true
+//│ ==(x) :: '92_callres <: [] ::: true
 //│ 1 :: Int ::: false
-//│ (x == 1) :: '94_callres <: ['120_callres] ::: false
+//│ (x == 1) :: '94_callres <: [] ::: true
 //│ (fun x -> (x == 1)) :: 'x² => '94_callres ::: true
-//│ dropWhile_₀((fun x -> (x == 1))) :: '96_callres <: ['s⁰ => '98_callres] ::: false
-//│ s :: 's⁰ <: ['ls²] ::: false
-//│ dropWhile_₀((fun x -> (x == 1)), s) :: '98_callres <: ['scrut⁰] ::: false
-//│ scrut :: 'scrut⁰ <: ['ls¹ | Destruct(N, _)] ::: false
+//│ dropWhile((fun x -> (x == 1))) :: '96_callres <: [] ::: true
+//│ s :: 's⁰ <: [] ::: true
+//│ dropWhile((fun x -> (x == 1)), s) :: '98_callres <: [] ::: true
+//│ scrut :: 'scrut⁰ <: [] ::: true
 //│ [N] :: N ::: true
-//│ break_₀ :: 'break_₀ <: ['x³ => '106_callres => '108_callres] ::: false
+//│ break :: 'break <: [] ::: true
 //│ == :: Destruct(Int) => Destruct(Int) => Sum[True, False] ::: true
-//│ x :: 'x³ <: [Destruct(Int)] ::: false
-//│ ==(x) :: '104_callres <: [Int => '106_callres] ::: false
+//│ x :: 'x³ <: [] ::: true
+//│ ==(x) :: '104_callres <: [] ::: true
 //│ 1 :: Int ::: false
-//│ (x == 1) :: '106_callres <: ['20_callres | '54_callres] ::: false
+//│ (x == 1) :: '106_callres <: [] ::: true
 //│ (fun x -> (x == 1)) :: 'x³ => '106_callres ::: true
-//│ break_₀((fun x -> (x == 1))) :: '108_callres <: ['scrut⁰ => '110_callres] ::: false
-//│ scrut :: 'scrut⁰ <: ['ls¹ | Destruct(N, _)] ::: false
-//│ break_₀((fun x -> (x == 1)), scrut) :: '110_callres <: [Int => '112_callres] ::: false
+//│ break((fun x -> (x == 1))) :: '108_callres <: [] ::: true
+//│ scrut :: 'scrut⁰ <: [] ::: true
+//│ break((fun x -> (x == 1)), scrut) :: '110_callres <: [] ::: true
 //│ 99 :: Int ::: false
-//│ break_₀((fun x -> (x == 1)), scrut, 99) :: '112_callres <: ['113_matchres] ::: false
-//│ case scrut of {N  => [N] | _  => break_₀((fun x -> (x == 1)), scrut, 99)} :: '113_matchres <: ['13_callres | '47_callres | '62_callres | '79_callres] ::: false
-//│ let scrut = dropWhile_₀((fun x -> (x == 1)), s)
-//│ in case scrut of {N  => [N] | _  => break_₀((fun x -> (x == 1)), scrut, 99)} :: '113_matchres <: ['13_callres | '47_callres | '62_callres | '79_callres] ::: false
-//│ (fun s -> let scrut = dropWhile_₀((fun x -> (x == 1)), s)
-//│ in case scrut of {N  => [N] | _  => break_₀((fun x -> (x == 1)), scrut, 99)}) :: 's⁰ => '113_matchres ::: true
-//│ ls :: 'ls² <: [Destruct(N, C('h⁰, 't⁰))] ::: false
+//│ break((fun x -> (x == 1)), scrut, 99) :: '112_callres <: [] ::: true
+//│ case scrut of {N  => [N] | _  => break((fun x -> (x == 1)), scrut, 99)} :: '113_matchres <: [] ::: true
+//│ let scrut = dropWhile((fun x -> (x == 1)), s)
+//│ in case scrut of {N  => [N] | _  => break((fun x -> (x == 1)), scrut, 99)} :: '113_matchres <: [] ::: true
+//│ (fun s -> let scrut = dropWhile((fun x -> (x == 1)), s)
+//│ in case scrut of {N  => [N] | _  => break((fun x -> (x == 1)), scrut, 99)}) :: 's⁰ => '113_matchres ::: true
+//│ ls :: 'ls² <: [] ::: true
 //│ [N] :: N ::: true
-//│ f :: 'f⁰ <: ['h⁰ => '120_callres] ::: false
-//│ h :: 'h⁰ <: ['x¹ | 'x²] ::: false
-//│ f(h) :: '120_callres <: [Destruct(True, False)] ::: false
-//│ dropWhile_₀ :: 'dropWhile_₀ <: ['x² => '94_callres => '96_callres | 'f⁰ => '123_callres] ::: false
-//│ f :: 'f⁰ <: ['h⁰ => '120_callres] ::: false
-//│ dropWhile_₀(f) :: '123_callres <: ['t⁰ => '125_callres] ::: false
-//│ t :: 't⁰ <: ['xs¹ | 'ls²] ::: false
-//│ dropWhile_₀(f, t) :: '125_callres <: ['129_ifres] ::: false
-//│ h :: 'h⁰ <: ['x¹ | 'x²] ::: false
-//│ t :: 't⁰ <: ['xs¹ | 'ls²] ::: false
+//│ f :: 'f⁰ <: [] ::: true
+//│ h :: 'h⁰ <: [] ::: true
+//│ f(h) :: '120_callres <: [] ::: true
+//│ dropWhile :: 'dropWhile <: [] ::: true
+//│ f :: 'f⁰ <: [] ::: true
+//│ dropWhile(f) :: '123_callres <: [] ::: true
+//│ t :: 't⁰ <: [] ::: true
+//│ dropWhile(f, t) :: '125_callres <: [] ::: true
+//│ h :: 'h⁰ <: [] ::: true
+//│ t :: 't⁰ <: [] ::: true
 //│ [C h t] :: C('h⁰, 't⁰) ::: true
-//│ if f(h) then dropWhile_₀(f, t) else [C h t] :: '129_ifres <: ['130_matchres] ::: false
-//│ case ls of {N  => [N] | C h t => if f(h) then dropWhile_₀(f, t) else [C h t]} :: '130_matchres <: ['98_callres | '125_callres] ::: false
-//│ (fun ls -> case ls of {N  => [N] | C h t => if f(h) then dropWhile_₀(f, t) else [C h t]}) :: 'ls² => '130_matchres ::: true
-//│ (fun f -> (fun ls -> case ls of {N  => [N] | C h t => if f(h) then dropWhile_₀(f, t) else [C h t]})) :: 'f⁰ => 'ls² => '130_matchres ::: true
+//│ if f(h) then dropWhile(f, t) else [C h t] :: '129_ifres <: [] ::: true
+//│ case ls of {N  => [N] | C h t => if f(h) then dropWhile(f, t) else [C h t]} :: '130_matchres <: [] ::: true
+//│ (fun ls -> case ls of {N  => [N] | C h t => if f(h) then dropWhile(f, t) else [C h t]}) :: 'ls² => '130_matchres ::: true
+//│ (fun f -> (fun ls -> case ls of {N  => [N] | C h t => if f(h) then dropWhile(f, t) else [C h t]})) :: 'f⁰ => 'ls² => '130_matchres ::: true
 //│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec dropWhile__d0 f_0 ls_2 =
+//│ let rec break1 p_1 ls_1 =
+//│   (match ls_1 with
+//│     | `N -> 
+//│       (`P((`N), (`N)))
+//│     | `C(x_1, xs_1) -> 
+//│       (if (p_1 x_1) then
+//│         (`P((`N), (`C(x_1, xs_1))))
+//│       else
+//│         (match ((break1 p_1) xs_1) with
+//│           | `P(ys_1, zs_1) -> 
+//│             (`P((`C(x_1, ys_1)), zs_1)))));;
+//│ let rec dropWhile f_0 ls_2 =
 //│   (match ls_2 with
 //│     | `N -> 
 //│       (`N)
 //│     | `C(h_0, t_0) -> 
 //│       (if (f_0 h_0) then
-//│         ((dropWhile__d0 f_0) t_0)
+//│         ((dropWhile f_0) t_0)
 //│       else
 //│         (`C(h_0, t_0))));;
-//│ let rec break1__d0 p_0 ls_0 =
+//│ let rec break p_0 ls_0 =
 //│   (match ls_0 with
-//│     | `N -> 
-//│       (`P((`N), (`N)))
-//│     | `C(x_0, xs_0) -> 
-//│       (if (p_0 x_0) then
-//│         (`P((`N), (`C(x_0, xs_0))))
-//│       else
-//│         (match ((break1__d0 p_0) xs_0) with
-//│           | `P(ys_0, zs_0) -> 
-//│             (`P((`C(x_0, ys_0)), zs_0)))));;
-//│ let rec break__d0 p_1 ls_1 =
-//│   (match ls_1 with
 //│     | `N -> 
 //│       (let rec s''_0 = (`N) in
 //│         (let rec w_0 = (`N) in
 //│           (fun _lh_dummy_0 -> 
-//│             (`C(w_0, (words__d0 s''_0))))))
-//│     | `C(x_1, xs_1) -> 
-//│       (if (p_1 x_1) then
-//│         (let rec s''_1 = (`C(x_1, xs_1)) in
+//│             (`C(w_0, (words s''_0))))))
+//│     | `C(x_0, xs_0) -> 
+//│       (if (p_0 x_0) then
+//│         (let rec s''_1 = (`C(x_0, xs_0)) in
 //│           (let rec w_1 = (`N) in
 //│             (fun _lh_dummy_1 -> 
-//│               (`C(w_1, (words__d0 s''_1))))))
+//│               (`C(w_1, (words s''_1))))))
 //│       else
-//│         (match ((break1__d0 p_1) xs_1) with
-//│           | `P(ys_1, zs_1) -> 
-//│             (let rec s''_2 = zs_1 in
-//│               (let rec w_2 = (`C(x_1, ys_1)) in
+//│         (match ((break1 p_0) xs_0) with
+//│           | `P(ys_0, zs_0) -> 
+//│             (let rec s''_2 = zs_0 in
+//│               (let rec w_2 = (`C(x_0, ys_0)) in
 //│                 (fun _lh_dummy_2 -> 
-//│                   (`C(w_2, (words__d0 s''_2)))))))))
+//│                   (`C(w_2, (words s''_2)))))))))
 //│ and
-//│ words__d0 s_0 =
-//│   (let rec scrut_0 = ((dropWhile__d0 (fun x_2 -> 
+//│ words s_0 =
+//│   (let rec scrut_0 = ((dropWhile (fun x_2 -> 
 //│     (x_2 = 1))) s_0) in
 //│     (match scrut_0 with
 //│       | `N -> 
 //│         (`N)
 //│       | _ -> 
-//│         (((break__d0 (fun x_3 -> 
+//│         (((break (fun x_3 -> 
 //│           (x_3 = 1))) scrut_0) 99)));;
-//│ (words__d0 (`C(2, (`C(1, (`C(2, (`C(1, (`C(2, (`N))))))))))))
+//│ (words (`C(2, (`C(1, (`C(2, (`C(1, (`C(2, (`N))))))))))))
 //│ 
 //│ --------------- ocaml repl result -----------------
 //│ [ok]

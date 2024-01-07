@@ -39,30 +39,13 @@ f(g(D))                                   // D gets fused and becomes x => x, g 
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
-//│ >>>>>>> expansion >>>>>>>
-//│ [f^19] (hopeless to continue)
-//│ 	[f^19 · f^3] ---> [f^19] (using original def)
-//│ 	[f^19 · f^8] ---> [f^19] (using original def)
-//│ [g^20] (hopeless to continue)
-//│ <<<<<<< expansion <<<<<<<
-//│ 
-//│ >>>>>>> expanded program >>>>>>>
-//│ f_₀(g_₀([D]))
-//│ def f_₀(x³) = 
-//│ 	if [True] then lazy⁰(f_₀(x³)) else lazy⁰(f_₀([C]))
-//│ def g_₀(x²) = 
-//│ 	case x² of {
-//│ 		D  => x²
-//│ 		| C  => x²}
-//│ <<<<<<< expanded program <<<<<<<
-//│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [D]: 44 --->
+//│ [D]: 21 --->
 //│ 	DeadCodeCons
-//│ 	case x² of {D  => x² | C  => x²}: 27
+//│ 	case x¹ of {D  => x¹ | C  => x¹}: 17
 //│ ------------------
-//│ case x² of {D  => x² | C  => x²}: 27 --->
-//│ 	[D]: 44
+//│ case x¹ of {D  => x¹ | C  => x¹}: 17 --->
+//│ 	[D]: 21
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
@@ -72,55 +55,53 @@ f(g(D))                                   // D gets fused and becomes x => x, g 
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f_₀(g_₀([D]))
-//│ def f_₀(x⁵) = 
-//│ 	if [True] then lazy⁰(f_₀(x⁵)) else lazy⁰(f_₀([C]))
-//│ def g_₀(x⁴) = 
-//│ 	case x⁴ of {
-//│ 		D  => x⁴
-//│ 		| C  => x⁴}
+//│ f(g([D]))
+//│ def f(x²) = if [True] then lazy⁰(f(x²)) else lazy⁰(f([C]))
+//│ def g(x³) = case x³ of {
+//│ 	D  => x³
+//│ 	| C  => x³}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ f_₀ :: 'f_₀ <: [] ::: true
-//│ g_₀ :: 'g_₀ <: [] ::: true
+//│ f :: 'f <: [] ::: true
+//│ g :: 'g <: [] ::: true
 //│ [D] :: D ::: true
-//│ g_₀([D]) :: '4_callres <: [] ::: true
-//│ f_₀(g_₀([D])) :: '5_callres <: [] ::: true
-//│ x :: 'x⁰ <: [] ::: true
-//│ x :: 'x⁰ <: [] ::: true
-//│ x :: 'x⁰ <: [] ::: true
-//│ case x of {D  => x | C  => x} :: '9_matchres <: [] ::: true
-//│ (fun x -> case x of {D  => x | C  => x}) :: 'x⁰ => '9_matchres ::: true
+//│ g([D]) :: '4_callres <: [] ::: true
+//│ f(g([D])) :: '5_callres <: [] ::: true
 //│ [True] :: True ::: true
-//│ f_₀ :: 'f_₀ <: [] ::: true
-//│ x :: 'x¹ <: [] ::: true
-//│ f_₀(x) :: '15_callres <: [] ::: true
-//│ lazy(f_₀(x)) :: '15_callres <: [] ::: true
-//│ f_₀ :: 'f_₀ <: [] ::: true
+//│ f :: 'f <: [] ::: true
+//│ x :: 'x⁰ <: [] ::: true
+//│ f(x) :: '10_callres <: [] ::: true
+//│ lazy(f(x)) :: '10_callres <: [] ::: true
+//│ f :: 'f <: [] ::: true
 //│ [C] :: C ::: true
-//│ f_₀([C]) :: '20_callres <: [] ::: true
-//│ lazy(f_₀([C])) :: '20_callres <: [] ::: true
-//│ if [True] then lazy(f_₀(x)) else lazy(f_₀([C])) :: '22_ifres <: [] ::: true
-//│ (fun x -> if [True] then lazy(f_₀(x)) else lazy(f_₀([C]))) :: 'x¹ => '22_ifres ::: true
+//│ f([C]) :: '15_callres <: [] ::: true
+//│ lazy(f([C])) :: '15_callres <: [] ::: true
+//│ if [True] then lazy(f(x)) else lazy(f([C])) :: '17_ifres <: [] ::: true
+//│ (fun x -> if [True] then lazy(f(x)) else lazy(f([C]))) :: 'x⁰ => '17_ifres ::: true
+//│ x :: 'x¹ <: [] ::: true
+//│ x :: 'x¹ <: [] ::: true
+//│ x :: 'x¹ <: [] ::: true
+//│ case x of {D  => x | C  => x} :: '22_matchres <: [] ::: true
+//│ (fun x -> case x of {D  => x | C  => x}) :: 'x¹ => '22_matchres ::: true
 //│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
 //│ 
-//│ let rec g__d0 x_0 =
-//│   (match x_0 with
-//│     | `D -> 
-//│       x_0
-//│     | `C -> 
-//│       x_0);;
-//│ let rec f__d0 x_1 =
+//│ let rec f x_0 =
 //│   (if true then
-//│     (lazy (f__d0 x_1))
+//│     (lazy (f x_0))
 //│   else
-//│     (lazy (f__d0 (`C))));;
-//│ (f__d0 (g__d0 (`D)))
+//│     (lazy (f (`C))));;
+//│ let rec g x_1 =
+//│   (match x_1 with
+//│     | `D -> 
+//│       x_1
+//│     | `C -> 
+//│       x_1);;
+//│ (f (g (`D)))
 //│ 
 //│ --------------- ocaml repl result -----------------
 //│ [ok]

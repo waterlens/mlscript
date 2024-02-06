@@ -27,10 +27,10 @@ let rec replicate_lh__d1 _lh_replicate_arg1_0 _lh_replicate_arg2_0 =
   (if (_lh_replicate_arg1_0 > 0) then
     (let rec t_1_7 = ((replicate_lh__d1 (_lh_replicate_arg1_0 - 1)) _lh_replicate_arg2_0) in
       (let rec h_1_7 = _lh_replicate_arg2_0 in
-        (fun _lh_dummy_4 -> 
+        (fun _lh_dummy_1 -> 
           ((mappend_lh__d6 h_1_7) (t_1_7 99)))))
   else
-    (fun _lh_dummy_5 ys_2_1 -> 
+    (fun _lh_dummy_2 ys_2_1 -> 
       ys_2_1));;
 let rec mappend_lh__d1 xs_0 ys_7 =
   (match xs_0 with
@@ -41,19 +41,18 @@ let rec mappend_lh__d1 xs_0 ys_7 =
             (`LH_C(h_6, (t_6 ys_8))))))
     | `LH_N -> 
       ys_7);;
-let rec take_lz_lh__d2 n_1 ls_1 =
+let rec take_lz_lh__d2 n_1 ls_1 _lh_popOutId_0_1 =
   (if (n_1 > 0) then
     (match (Lazy.force ls_1) with
       | `LH_C(h_1_5, t_1_5) -> 
         (let rec t_1_6 = ((take_lz_lh__d2 (n_1 - 1)) t_1_5) in
           (let rec h_1_6 = h_1_5 in
-            (fun _lh_dummy_1 -> 
-              ((mappend_lh__d6 h_1_6) (t_1_6 99)))))
+            ((mappend_lh__d6 h_1_6) (t_1_6 99))))
       | `LH_N -> 
-        (fun _lh_dummy_2 ys_1_8 -> 
+        (fun ys_1_8 -> 
           ys_1_8))
   else
-    (fun _lh_dummy_3 ys_1_9 -> 
+    (fun ys_1_9 -> 
       ys_1_9));;
 let rec drop_lz_lh__d1 _lh_drop_lz_arg1_0 _lh_drop_lz_arg2_0 =
   (if (_lh_drop_lz_arg1_0 > 0) then

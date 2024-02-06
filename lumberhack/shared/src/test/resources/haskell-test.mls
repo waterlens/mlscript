@@ -81,7 +81,7 @@ testMapmap $ primId 5000000
 //│ <<<<<<< consumer ids <<<<<<<
 //│ 
 //│ >>>>>>> floating out info >>>>>>>
-//│ enumFromTo_lh_₁ -> 3
+//│ enumFromTo_lh_₁ -> 4
 //│ <<<<<<< floating out info <<<<<<<
 //│ 
 //│ >>>>>>> after inlining >>>>>>>
@@ -100,13 +100,12 @@ testMapmap $ primId 5000000
 //│ 
 //│ >>>>>>> after floating out >>>>>>>
 //│ testMapmap_lh_₁(primId⁰(5000000))
-//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ def enumFromTo_lh_₁(a⁰, b⁰, _lh_popOutId_0⁰, _lh_popOutId_1⁰) = if (a⁰ <= b⁰) then 
 //│ 	let t⁰ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
 //│ 	in let h⁰ = a⁰
-//│ 	in (fun f² -> 
-//│ 		let t¹ = t⁰(f²)
-//│ 		in let h¹ = f²(h⁰)
-//│ 		in (fun f³ -> [LH_C f³(h¹) t¹(f³)])) else (fun f⁴ -> (fun f⁵ -> [LH_N]))
+//│ 	in let t¹ = t⁰(_lh_popOutId_0⁰)
+//│ 	in let h¹ = _lh_popOutId_0⁰(h⁰)
+//│ 	in [LH_C _lh_popOutId_1⁰(h¹) t¹(_lh_popOutId_1⁰)] else [LH_N]
 //│ def map_lh_₁(f¹, ls¹) = ls¹(f¹)
 //│ def map_lh_₂(f⁰, ls⁰) = ls⁰(f⁰)
 //│ def testMapmap_lh_₁(_lh_testMapmap_arg1⁰) = enumFromTo_lh_₁(1, _lh_testMapmap_arg1⁰, (fun x⁰ -> (x⁰ + x⁰)), (fun x¹ -> (x¹ + 1)))

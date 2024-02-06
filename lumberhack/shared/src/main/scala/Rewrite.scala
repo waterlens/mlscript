@@ -280,8 +280,8 @@ class FusionStrategy(d: Deforest) {
 
 enum CalledInfo {
   case NeverCalled
-  case NotAlwaysOrLinearlyCalled
-  case AlwaysCalledWithAtLeast(i: Int)
+  case NotLinearlyCalled
+  case LinearlyCalledWith(i: Int)
 }
 trait ExprRewrite { this: Expr =>
   // ctx should initially contain the keywords and the ids of original function definitions
@@ -719,45 +719,67 @@ trait ExprRewrite { this: Expr =>
       var neverCalledCnt = 0
       var notAlwaysCalledCnt = 0
       var alwaysCalled = 0
-      var alwaysCalledInfo: Option[CalledInfo.AlwaysCalledWithAtLeast] = None
+      var alwaysCalledInfo: Option[CalledInfo.LinearlyCalledWith] = None
       l foreach {
         case NeverCalled => neverCalledCnt += 1
-        case NotAlwaysOrLinearlyCalled => notAlwaysCalledCnt += 1
-        case i@AlwaysCalledWithAtLeast(v) => alwaysCalled += 1; alwaysCalledInfo = Some(i)
+        case NotLinearlyCalled => notAlwaysCalledCnt += 1
+        case i@LinearlyCalledWith(v) => alwaysCalled += 1; alwaysCalledInfo = Some(i)
       }
       if notAlwaysCalledCnt == 0 && alwaysCalled == 0 then
         NeverCalled
       else if alwaysCalled == 1 && notAlwaysCalledCnt == 0 then
         alwaysCalledInfo.get
       else // either there exists notalwayscalled or multiple always called
-        NotAlwaysOrLinearlyCalled
+        NotLinearlyCalled
     }
     def aggregateBranchInfo(armsInfos: List[CalledInfo]): CalledInfo = {
       if armsInfos.forall(_.isInstanceOf[NeverCalled.type]) then
         NeverCalled
-      else if armsInfos.exists(_.isInstanceOf[AlwaysCalledWithAtLeast]) && armsInfos.forall(!_.isInstanceOf[NotAlwaysOrLinearlyCalled.type]) then
-        AlwaysCalledWithAtLeast(
-          armsInfos.collect{ case AlwaysCalledWithAtLeast(i) => i }.min
+      else if armsInfos.exists(_.isInstanceOf[LinearlyCalledWith]) && armsInfos.forall(!_.isInstanceOf[NotLinearlyCalled.type]) then
+        LinearlyCalledWith(
+          armsInfos.collect{ case LinearlyCalledWith(i) => i }.min
         )
       else
-        NotAlwaysOrLinearlyCalled
+        NotLinearlyCalled
     }
     this match {
       case Const(_) => NeverCalled
-      case Ref(r) => if r == id then AlwaysCalledWithAtLeast(0) else NeverCalled
+      case Ref(r) => if r == id then LinearlyCalledWith(0) else NeverCalled
       case call: Call => {
         val (f, argsRev) = call.takeArgumentsOut
         f match {
           case Ref(caller)
             if caller == id && argsRev.forall(_.approxLinearlyAlwaysCalledNumOfArgsLet == NeverCalled) =>
-            AlwaysCalledWithAtLeast(argsRev.length)
+            LinearlyCalledWith(argsRev.length)
           case _ =>
             val info = (f :: argsRev).map(_.approxLinearlyAlwaysCalledNumOfArgsLet)
             aggregateInfo(info)
         }
       }
       case Ctor(_, args) => aggregateInfo(args.map(_.approxLinearlyAlwaysCalledNumOfArgsLet))
-      case LetIn(_, rhs, body) => aggregateInfo(List(rhs, body).map(_.approxLinearlyAlwaysCalledNumOfArgsLet))
+      case LetIn(name, rhs, body) =>
+        rhs match {
+          case call: Call =>
+            val (f, argsRev) = call.takeArgumentsOut
+            f match {
+              case Ref(r) if r == id =>
+                val info = body.approxLinearlyAlwaysCalledNumOfArgsLet(using name, Int.MaxValue)
+                val bodyInfo = body.approxLinearlyAlwaysCalledNumOfArgsLet
+                (info, bodyInfo) match
+                  case (NeverCalled, NeverCalled) => LinearlyCalledWith(argsRev.length)
+                  case (NeverCalled, NotLinearlyCalled) => NotLinearlyCalled
+                  case (NeverCalled, LinearlyCalledWith(i)) => NotLinearlyCalled
+                  case (NotLinearlyCalled, NeverCalled) => NotLinearlyCalled
+                  case (NotLinearlyCalled, NotLinearlyCalled) => NotLinearlyCalled
+                  case (NotLinearlyCalled, LinearlyCalledWith(i)) => NotLinearlyCalled
+                  case (LinearlyCalledWith(i), NeverCalled) => LinearlyCalledWith(i + argsRev.length)
+                  case (LinearlyCalledWith(i), NotLinearlyCalled) => NotLinearlyCalled
+                  case (LinearlyCalledWith(i1), LinearlyCalledWith(i2)) => NotLinearlyCalled
+              case _ => aggregateInfo(List(rhs, body).map(_.approxLinearlyAlwaysCalledNumOfArgsLet))
+            }
+          case _ => aggregateInfo(List(rhs, body).map(_.approxLinearlyAlwaysCalledNumOfArgsLet))
+        }
+        
       case LetGroup(lets, body) => aggregateInfo(
         (body :: lets.map(_._2).toList).map(_.approxLinearlyAlwaysCalledNumOfArgsLet)
       )
@@ -771,10 +793,11 @@ trait ExprRewrite { this: Expr =>
         val branchesInfo = aggregateBranchInfo(List(t, f).map(_.approxLinearlyAlwaysCalledNumOfArgsLet))
         aggregateInfo(scrutInfo :: branchesInfo :: Nil)
       case Function(_, body) => {
-        if willBeCalledWith > 0 then
-          body.approxLinearlyAlwaysCalledNumOfArgsLet(using id, willBeCalledWith - 1)
-        else
-          NeverCalled
+        body.approxLinearlyAlwaysCalledNumOfArgsLet(using id, willBeCalledWith - 1)
+        // if willBeCalledWith > 0 then
+        //   body.approxLinearlyAlwaysCalledNumOfArgsLet(using id, willBeCalledWith - 1)
+        // else
+        //   NeverCalled
       }
       case Sequence(f, s) => aggregateInfo(List(f, s).map(_.approxLinearlyAlwaysCalledNumOfArgsLet))
     }
@@ -807,16 +830,16 @@ trait ExprRewrite { this: Expr =>
           case call: Call =>
             val (f, argsRev) = call.takeArgumentsOut
             f match {
-              case Ref(caller) if caller == id && willBeCalledWith.isDefined =>
-                val info = body.approxLinearlyAlwaysCalledNumOfArgsLet(using name, willBeCalledWith.get)
+              case Ref(caller) if caller == id =>
+                val info = body.approxLinearlyAlwaysCalledNumOfArgsLet(using name, Int.MaxValue)
                 val bodyInfo = body.approxAlwaysCalledNumOfArgs
                 (info, bodyInfo) match {
                   case (NeverCalled, None) => Some(argsRev.length)
-                  case (NotAlwaysOrLinearlyCalled, None) => Some(argsRev.length)
-                  case (AlwaysCalledWithAtLeast(v), None) => Some(argsRev.length + v)
+                  case (NotLinearlyCalled, None) => Some(argsRev.length)
+                  case (LinearlyCalledWith(v), None) => Some(argsRev.length + v)
                   case (NeverCalled, Some(v)) => Some(List(v, argsRev.length).min)
-                  case (NotAlwaysOrLinearlyCalled, Some(v)) => Some(List(v, argsRev.length).min)
-                  case (AlwaysCalledWithAtLeast(v1), Some(v2)) => Some(List(v2, argsRev.length + v1).min)
+                  case (NotLinearlyCalled, Some(v)) => Some(List(v, argsRev.length).min)
+                  case (LinearlyCalledWith(v1), Some(v2)) => Some(List(v2, argsRev.length + v1).min)
                 }
               case _ => minExprList(List(rhs, body))
             }
@@ -1215,7 +1238,12 @@ trait ProgramRewrite { this: Program =>
         }
       val willBeCalledWithRec =
         this.defAndExpr._1(id).approxAlwaysCalledNumOfArgs(using id, Some(willBeCalledWithNonRec))
-      id -> willBeCalledWithRec.getOrElse(willBeCalledWithNonRec)
+      id -> {
+        willBeCalledWithRec match {
+          case Some(v) if v < willBeCalledWithNonRec => v
+          case _ => willBeCalledWithNonRec
+        }
+      }
     }.toMap
 
     res

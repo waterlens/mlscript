@@ -171,7 +171,7 @@ sum(mapa(mapb(primitive)))
 //│ <<<<<<< consumer ids <<<<<<<
 //│ 
 //│ >>>>>>> floating out info >>>>>>>
-//│ mapb -> 2
+//│ mapb -> 3
 //│ <<<<<<< floating out info <<<<<<<
 //│ 
 //│ >>>>>>> after inlining >>>>>>>
@@ -190,13 +190,12 @@ sum(mapa(mapb(primitive)))
 //│ >>>>>>> after floating out >>>>>>>
 //│ mapb(primitive⁰, 99, 99)
 //│ def mapa(lsa⁰) = lsa⁰(99)
-//│ def mapb(lsb⁰) = case lsb⁰ of {
+//│ def mapb(lsb⁰, _lh_popOutId_0⁰, _lh_popOutId_1⁰) = case lsb⁰ of {
 //│ 	C hb⁰ tb⁰ => 
 //│ 		let ta⁰ = mapb(tb⁰)
 //│ 		in let ha⁰ = primitive⁰(hb⁰)
-//│ 		in (fun _lh_dummy⁰ -> 
-//│ 			let t⁰ = ta⁰(99)
-//│ 			in (fun _lh_dummy¹ -> [S [N] t⁰(99)]))}
+//│ 		in let t⁰ = ta⁰(99)
+//│ 		in [S [N] t⁰(99)]}
 //│ def sum(ls⁰) = ls⁰(99)
 //│ <<<<<<< after floating out <<<<<<<
 
@@ -613,7 +612,7 @@ sum(mapa(mapb(primitive)))
 //│ <<<<<<< consumer ids <<<<<<<
 //│ 
 //│ >>>>>>> floating out info >>>>>>>
-//│ mapb -> 2
+//│ mapb -> 3
 //│ <<<<<<< floating out info <<<<<<<
 //│ 
 //│ >>>>>>> after inlining >>>>>>>
@@ -633,14 +632,13 @@ sum(mapa(mapb(primitive)))
 //│ >>>>>>> after floating out >>>>>>>
 //│ mapb(primitive⁰, 99, 99)
 //│ def mapa(lsa⁰) = lsa⁰(99)
-//│ def mapb(lsb⁰) = case lsb⁰ of {
+//│ def mapb(lsb⁰, _lh_popOutId_0⁰, _lh_popOutId_1⁰) = case lsb⁰ of {
 //│ 	C hb⁰ tb⁰ => 
 //│ 		let ta⁰ = mapb(tb⁰)
 //│ 		in let ha⁰ = primitive⁰(hb⁰)
-//│ 		in (fun _lh_dummy⁰ -> 
-//│ 			let t⁰ = ta⁰(99)
-//│ 			in (fun _lh_dummy¹ -> [S [N] t⁰(99)]))
-//│ 	| N  => (fun _lh_dummy² -> (fun _lh_dummy³ -> [N]))}
+//│ 		in let t⁰ = ta⁰(99)
+//│ 		in [S [N] t⁰(99)]
+//│ 	| N  => [N]}
 //│ def sum(ls⁰) = ls⁰(99)
 //│ <<<<<<< after floating out <<<<<<<
 

@@ -44,16 +44,14 @@ let rec stand_eqn_lh__d3 _lh_stand_eqn_arg1_0 _lh_stand_eqn_arg2_0 =
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
-let rec map_lh__d3 f_4_0 ls_1_6 =
+let rec map_lh__d3 f_3_8 ls_1_6 _lh_popOutId_0_3 =
   (match ls_1_6 with
     | `LH_C(h_3_4, t_4_1) -> 
-      (let rec t_4_2 = ((map_lh__d3 f_4_0) t_4_1) in
-        (let rec h_3_5 = (f_4_0 h_3_4) in
-          (fun ys_1_0 -> 
-            (`LH_C(h_3_5, (t_4_2 ys_1_0))))))
+      (let rec t_4_2 = ((map_lh__d3 f_3_8) t_4_1) in
+        (let rec h_3_5 = (f_3_8 h_3_4) in
+          (`LH_C(h_3_5, (t_4_2 _lh_popOutId_0_3)))))
     | `LH_N -> 
-      (fun ys_1_1 -> 
-        ys_1_1));;
+      _lh_popOutId_0_3);;
 let rec orElse_lh__d1 _lh_orElse_arg1_0 _lh_orElse_arg2_0 =
   (match _lh_orElse_arg1_0 with
     | `Nothing -> 
@@ -774,16 +772,14 @@ let rec atIndex_lh__d3 n_0 ls_8 =
           ((atIndex_lh__d3 (n_0 - 1)) t_3_2))
       | `LH_N -> 
         (failwith "error")));;
-let rec map_lh__d1_d2 f_3_3 ls_1_1 =
+let rec map_lh__d1_d2 f_3_3 ls_1_1 _lh_popOutId_0_2 =
   (match ls_1_1 with
     | `LH_C(h_2_8, t_3_4) -> 
       (let rec t_3_5 = ((map_lh__d1_d2 f_3_3) t_3_4) in
         (let rec h_2_9 = (f_3_3 h_2_8) in
-          (fun f_3_4 -> 
-            (`LH_C((f_3_4 h_2_9), (t_3_5 f_3_4))))))
+          (`LH_C((_lh_popOutId_0_2 h_2_9), (t_3_5 _lh_popOutId_0_2)))))
     | `LH_N -> 
-      (fun f_3_5 -> 
-        (`LH_N)));;
+      (`LH_N));;
 let rec sub_lh__d1 _lh_sub_arg1_0 _lh_sub_arg2_0 =
   (((expr_fold_lh__d1 (fun x_1_9 y_2 -> 
     (`Func(x_1_9, y_2)))) (apply_lh__d1 _lh_sub_arg2_0)) _lh_sub_arg1_0);;
@@ -825,11 +821,11 @@ let rec fst_lh__d3 _lh_fst_arg1_3 =
       _lh_fst_LH_P2_0_3
     | _ -> 
       (failwith "error"));;
-let rec map_lh__d1 f_3_7 ls_1_4 =
+let rec map_lh__d1 f_3_5 ls_1_4 =
   (match ls_1_4 with
     | `LH_C(h_3_2, t_3_8) -> 
-      (let rec _lh_inList_LH_C_1_1_2 = ((map_lh__d1 f_3_7) t_3_8) in
-        (let rec _lh_inList_LH_C_0_1_2 = (f_3_7 h_3_2) in
+      (let rec _lh_inList_LH_C_1_1_2 = ((map_lh__d1 f_3_5) t_3_8) in
+        (let rec _lh_inList_LH_C_0_1_2 = (f_3_5 h_3_2) in
           (fun _lh_inList_arg1_1_6 -> 
             (if (_lh_inList_arg1_1_6 = _lh_inList_LH_C_0_1_2) then
               true
@@ -895,9 +891,9 @@ let rec all_lh__d2 _lh_all_arg1_3 _lh_all_arg2_3 =
 let rec gtRewrite_lh__d1 _lh_gtRewrite_arg1_0 _lh_gtRewrite_arg2_0 _lh_gtRewrite_arg3_0 =
   ((_lh_gtRewrite_arg1_0 (`LH_P2(_lh_gtRewrite_arg2_0, _lh_gtRewrite_arg3_0))) = (`Greater));;
 let rec simplify_lh__d2 _lh_simplify_arg1_4 =
-  (let rec f_3_8 = (fun t_3_9 -> 
-    ((getOrElse_lh__d2 ((lift_lh__d1_d0 f_3_8) (_lh_simplify_arg1_4 t_3_9))) t_3_9)) in
-    f_3_8);;
+  (let rec f_3_6 = (fun t_3_9 -> 
+    ((getOrElse_lh__d2 ((lift_lh__d1_d0 f_3_6) (_lh_simplify_arg1_4 t_3_9))) t_3_9)) in
+    f_3_6);;
 let rec lhs_lh__d7 _lh_lhs_arg1_5 =
   (match _lh_lhs_arg1_5 with
     | `Eqn(_lh_lhs_Eqn_0_5, _lh_lhs_Eqn_1_5) -> 
@@ -933,10 +929,10 @@ let rec quant_lh__d1 _lh_quant_arg1_5 _lh_quant_arg2_5 _lh_quant_arg3_5 _lh_quan
   (let rec p_5 = (fun x_2_3 -> 
     ((_lh_quant_arg2_5 x_2_3) _lh_quant_arg3_5)) in
     ((_lh_quant_arg1_5 p_5) _lh_quant_arg4_5));;
-let rec map_lh__d5 f_3_9 ls_1_5 =
+let rec map_lh__d5 f_3_7 ls_1_5 =
   (match ls_1_5 with
     | `LH_C(h_3_3, t_4_0) -> 
-      (`LH_C((f_3_9 h_3_3), ((map_lh__d5 f_3_9) t_4_0)))
+      (`LH_C((f_3_7 h_3_3), ((map_lh__d5 f_3_7) t_4_0)))
     | `LH_N -> 
       (`LH_N));;
 let rec lift_lh__d2 _lh_lift_arg1_7 _lh_lift_arg2_7 =
@@ -989,13 +985,13 @@ let rec map_dnet_lh__d1 _lh_map_dnet_arg1_0 _lh_map_dnet_arg2_0 =
       (`Return((_lh_map_dnet_arg1_0 _lh_map_dnet_Return_0_0)))
     | _ -> 
       (failwith "error"));;
-let rec filter_lh__d1 f_4_1 ls_1_7 =
+let rec filter_lh__d1 f_3_9 ls_1_7 =
   (match ls_1_7 with
     | `LH_C(h_3_6, t_4_3) -> 
-      (if (f_4_1 h_3_6) then
-        (`LH_C(h_3_6, ((filter_lh__d1 f_4_1) t_4_3)))
+      (if (f_3_9 h_3_6) then
+        (`LH_C(h_3_6, ((filter_lh__d1 f_3_9) t_4_3)))
       else
-        ((filter_lh__d1 f_4_1) t_4_3))
+        ((filter_lh__d1 f_3_9) t_4_3))
     | `LH_N -> 
       (`LH_N));;
 let rec delete_eqns_lh__d1 _lh_delete_eqns_arg1_0 =
@@ -1019,14 +1015,14 @@ let rec quant_lh__d8 _lh_quant_arg1_7 _lh_quant_arg2_7 _lh_quant_arg3_7 _lh_quan
   (let rec p_7 = (fun x_2_5 -> 
     ((_lh_quant_arg2_7 x_2_5) _lh_quant_arg3_7)) in
     ((_lh_quant_arg1_7 p_7) _lh_quant_arg4_7));;
-let rec map_lh__d4 f_4_2 ls_1_8 _lh_popOutId_0_2 =
+let rec map_lh__d4 f_4_0 ls_1_8 _lh_popOutId_0_4 =
   (match ls_1_8 with
     | `LH_C(h_3_7, t_4_4) -> 
-      (let rec t_4_5 = ((map_lh__d4 f_4_2) t_4_4) in
-        (let rec h_3_8 = (f_4_2 h_3_7) in
-          (`LH_C(h_3_8, (t_4_5 _lh_popOutId_0_2)))))
+      (let rec t_4_5 = ((map_lh__d4 f_4_0) t_4_4) in
+        (let rec h_3_8 = (f_4_0 h_3_7) in
+          (`LH_C(h_3_8, (t_4_5 _lh_popOutId_0_4)))))
     | `LH_N -> 
-      _lh_popOutId_0_2);;
+      _lh_popOutId_0_4);;
 let rec geRewrite_lh__d2 _lh_geRewrite_arg1_3 _lh_geRewrite_arg2_3 _lh_geRewrite_arg3_3 =
   ((let rec _lh_inList_LH_C_1_1_5 = (let rec _lh_inList_LH_C_1_1_6 = (fun _lh_inList_arg1_2_1 -> 
     false) in
@@ -1086,10 +1082,10 @@ let rec sift_lh__d1 _lh_sift_arg1_1 =
     (concat_lh__d1 ((map_lh__d1_d3 listify_lh__d1) _lh_funcomp_x_1_2))) _lh_sift_arg1_1);;
 let rec orElseMap_lh__d2 _lh_orElseMap_arg1_3 _lh_orElseMap_arg2_3 _lh_orElseMap_arg3_3 =
   ((orElse_lh__d1 (_lh_orElseMap_arg1_3 _lh_orElseMap_arg3_3)) (_lh_orElseMap_arg2_3 _lh_orElseMap_arg3_3));;
-let rec map_lh__d1_d0 f_4_3 ls_2_0 =
+let rec map_lh__d1_d0 f_4_1 ls_2_0 =
   (match ls_2_0 with
     | `LH_C(h_4_0, t_4_7) -> 
-      (`LH_C((f_4_3 h_4_0), ((map_lh__d1_d0 f_4_3) t_4_7)))
+      (`LH_C((f_4_1 h_4_0), ((map_lh__d1_d0 f_4_1) t_4_7)))
     | `LH_N -> 
       (`LH_N));;
 let rec atIndex_lh__d2 n_1 ls_2_1 =
@@ -1129,10 +1125,10 @@ let rec quant_lh__d4 _lh_quant_arg1_9 _lh_quant_arg2_9 _lh_quant_arg3_9 _lh_quan
   (let rec p_9 = (fun x_2_8 -> 
     ((_lh_quant_arg2_9 x_2_8) _lh_quant_arg3_9)) in
     ((_lh_quant_arg1_9 p_9) _lh_quant_arg4_9));;
-let rec map_lh__d8 f_4_4 ls_2_3 =
+let rec map_lh__d8 f_4_2 ls_2_3 =
   (match ls_2_3 with
     | `LH_C(h_4_3, t_5_0) -> 
-      (`LH_C((f_4_4 h_4_3), ((map_lh__d8 f_4_4) t_5_0)))
+      (`LH_C((f_4_2 h_4_3), ((map_lh__d8 f_4_2) t_5_0)))
     | `LH_N -> 
       (`LH_N));;
 let rec takeWhile_lh__d1 _lh_takeWhile_arg1_0 _lh_takeWhile_arg2_0 =

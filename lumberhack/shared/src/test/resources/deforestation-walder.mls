@@ -198,7 +198,7 @@ main
 //│ <<<<<<< consumer ids <<<<<<<
 //│ 
 //│ >>>>>>> floating out info >>>>>>>
-//│ upto -> 3
+//│ upto -> 4
 //│ <<<<<<< floating out info <<<<<<<
 //│ 
 //│ >>>>>>> after inlining >>>>>>>
@@ -220,13 +220,12 @@ main
 //│ def main(n⁰) = upto(1, n⁰, (fun x⁰ -> (x⁰ * x⁰)), 99)
 //│ def map(f⁰, ls⁰) = ls⁰(f⁰)
 //│ def sum(ls¹) = ls¹(99)
-//│ def upto(a⁰, b⁰) = if (a⁰ > b⁰) then (fun f¹ -> (fun _lh_dummy⁰ -> 0)) else 
+//│ def upto(a⁰, b⁰, _lh_popOutId_0⁰, _lh_popOutId_1⁰) = if (a⁰ > b⁰) then 0 else 
 //│ 	let t⁰ = upto((a⁰ + 1), b⁰)
 //│ 	in let h⁰ = a⁰
-//│ 	in (fun f² -> 
-//│ 		let t¹ = t⁰(f²)
-//│ 		in let h¹ = f²(h⁰)
-//│ 		in (fun _lh_dummy¹ -> (h¹ + t¹(99))))
+//│ 	in let t¹ = t⁰(_lh_popOutId_0⁰)
+//│ 	in let h¹ = _lh_popOutId_0⁰(h⁰)
+//│ 	in (h¹ + t¹(99))
 //│ <<<<<<< after floating out <<<<<<<
 
 // WRONG: cannot fuse at all if there is no concrete input

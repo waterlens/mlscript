@@ -1530,7 +1530,7 @@ testSumMapEnum(primId(300000))
 //│ <<<<<<< consumer ids <<<<<<<
 //│ 
 //│ >>>>>>> floating out info >>>>>>>
-//│ enumFromTo -> 3
+//│ enumFromTo -> 4
 //│ <<<<<<< floating out info <<<<<<<
 //│ 
 //│ >>>>>>> after inlining >>>>>>>
@@ -1549,13 +1549,12 @@ testSumMapEnum(primId(300000))
 //│ 
 //│ >>>>>>> after floating out >>>>>>>
 //│ testSumMapEnum(primId⁰(300000))
-//│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ def enumFromTo(a⁰, b⁰, _lh_popOutId_0⁰, _lh_popOutId_1⁰) = if (a⁰ <= b⁰) then 
 //│ 	let t⁰ = enumFromTo((a⁰ + 1), b⁰)
 //│ 	in let h⁰ = a⁰
-//│ 	in (fun f¹ -> 
-//│ 		let t¹ = t⁰(f¹)
-//│ 		in let h¹ = f¹(h⁰)
-//│ 		in (fun _lh_dummy⁰ -> (h¹ + t¹(99)))) else (fun f² -> (fun _lh_dummy¹ -> 0))
+//│ 	in let t¹ = t⁰(_lh_popOutId_0⁰)
+//│ 	in let h¹ = _lh_popOutId_0⁰(h⁰)
+//│ 	in (h¹ + t¹(99)) else 0
 //│ def map(f⁰, ls⁰) = ls⁰(f⁰)
 //│ def sum(ls¹) = ls¹(99)
 //│ def testSumMapEnum(n⁰) = enumFromTo(1, n⁰, (fun x⁰ -> (x⁰ * x⁰)), 99)
@@ -2125,7 +2124,7 @@ testSumMapEnumBuiltInType $ primId 300000
 //│ <<<<<<< consumer ids <<<<<<<
 //│ 
 //│ >>>>>>> floating out info >>>>>>>
-//│ enumFromTo_lh_₁ -> 3
+//│ enumFromTo_lh_₁ -> 4
 //│ <<<<<<< floating out info <<<<<<<
 //│ 
 //│ >>>>>>> after inlining >>>>>>>
@@ -2144,14 +2143,13 @@ testSumMapEnumBuiltInType $ primId 300000
 //│ 
 //│ >>>>>>> after floating out >>>>>>>
 //│ testSumMapEnumBuiltInType_lh_₁(primId⁰(300000))
-//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ def enumFromTo_lh_₁(a⁰, b⁰, _lh_popOutId_0⁰, _lh_popOutId_1⁰) = if (a⁰ <= b⁰) then 
 //│ 	let t⁰ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
 //│ 	in let h⁰ = a⁰
-//│ 	in (fun f⁰ -> 
-//│ 		let _lh_sum_LH_C_1⁰ = t⁰(f⁰)
-//│ 		in let _lh_sum_LH_C_0⁰ = f⁰(h⁰)
-//│ 		in (fun _lh_dummy⁰ -> (_lh_sum_LH_C_0⁰ + _lh_sum_LH_C_1⁰(99)))) else (fun f¹ -> (fun _lh_dummy¹ -> 0))
-//│ def map_lh_₁(f², ls⁰) = ls⁰(f²)
+//│ 	in let _lh_sum_LH_C_1⁰ = t⁰(_lh_popOutId_0⁰)
+//│ 	in let _lh_sum_LH_C_0⁰ = _lh_popOutId_0⁰(h⁰)
+//│ 	in (_lh_sum_LH_C_0⁰ + _lh_sum_LH_C_1⁰(99)) else 0
+//│ def map_lh_₁(f⁰, ls⁰) = ls⁰(f⁰)
 //│ def sum_lh_₁(_lh_sum_arg1⁰) = _lh_sum_arg1⁰(99)
 //│ def testSumMapEnumBuiltInType_lh_₁(_lh_testSumMapEnumBuiltInType_arg1⁰) = enumFromTo_lh_₁(1, _lh_testSumMapEnumBuiltInType_arg1⁰, (fun x⁰ -> (x⁰ * x⁰)), 99)
 //│ <<<<<<< after floating out <<<<<<<

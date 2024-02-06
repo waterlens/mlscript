@@ -4092,8 +4092,8 @@ testClausify_nofib $ primId 10
 //│ 
 //│ >>>>>>> floating out info >>>>>>>
 //│ splitHelper_lh_₁ -> 2
-//│ interleave_lh_₂ -> 3
-//│ copy_lh_₁ -> 2
+//│ interleave_lh_₂ -> 4
+//│ copy_lh_₁ -> 4
 //│ interleave_lh_₁ -> 3
 //│ map_lh_₂ -> 3
 //│ split_lh_₁ -> 1
@@ -4486,13 +4486,12 @@ testClausify_nofib $ primId 10
 //│ 	LH_C _lh_contains_LH_C_0⁰ _lh_contains_LH_C_1⁰ => (polyEq⁰(_lh_contains_arg1⁰, _lh_contains_LH_C_0⁰) || contains_lh_₁(_lh_contains_arg1⁰, _lh_contains_LH_C_1⁰))
 //│ 	| LH_N  => [False]
 //│ 	| _  => error⁰}
-//│ def copy_lh_₁(_lh_copy_arg1⁰, _lh_copy_arg2⁰) = if (_lh_copy_arg1⁰ > 0) then 
+//│ def copy_lh_₁(_lh_copy_arg1⁰, _lh_copy_arg2⁰, _lh_popOutId_0⁰, _lh_popOutId_1⁰) = if (_lh_copy_arg1⁰ > 0) then 
 //│ 	let t⁰ = copy_lh_₁((_lh_copy_arg1⁰ - 1), _lh_copy_arg2⁰)
 //│ 	in let h⁰ = _lh_copy_arg2⁰
-//│ 	in (fun f⁰ -> 
-//│ 		let t¹ = t⁰(f⁰)
-//│ 		in let h¹ = f⁰(h⁰)
-//│ 		in (fun _lh_dummy⁰ -> h¹(t¹(99)))) else (fun f¹ -> (fun _lh_dummy¹ -> [LH_N]))
+//│ 	in let t¹ = t⁰(_lh_popOutId_0⁰)
+//│ 	in let h¹ = _lh_popOutId_0⁰(h⁰)
+//│ 	in h¹(t¹(99)) else [LH_N]
 //│ def copy_lh_₂(_lh_copy_arg1¹, _lh_copy_arg2¹) = if (_lh_copy_arg1¹ > 0) then [LH_C _lh_copy_arg2¹ copy_lh_₂((_lh_copy_arg1¹ - 1), _lh_copy_arg2¹)] else [LH_N]
 //│ def copy_lh_₃(_lh_copy_arg1², _lh_copy_arg2²) = if (_lh_copy_arg1² > 0) then [LH_C _lh_copy_arg2² copy_lh_₃((_lh_copy_arg1² - 1), _lh_copy_arg2²)] else [LH_N]
 //│ def disin_lh_₁(_lh_disin_arg1⁰) = case _lh_disin_arg1⁰ of {
@@ -4541,7 +4540,7 @@ testClausify_nofib $ primId 10
 //│ 	| Imp _lh_elim_Imp_0⁰ _lh_elim_Imp_1⁰ => [Dis [Not elim_lh_₁(_lh_elim_Imp_0⁰)] elim_lh_₁(_lh_elim_Imp_1⁰)]
 //│ 	| Eqv _lh_elim_Eqv_0⁰ _lh_elim_Eqv_1⁰ => [Con elim_lh_₁([Imp _lh_elim_Eqv_0⁰ _lh_elim_Eqv_1⁰]) elim_lh_₁([Imp _lh_elim_Eqv_1⁰ _lh_elim_Eqv_0⁰])]
 //│ 	| _  => error⁰}
-//│ def foldr_lh_₁(f², i⁰, ls⁰) = ls⁰(f², i⁰)
+//│ def foldr_lh_₁(f⁰, i⁰, ls⁰) = ls⁰(f⁰, i⁰)
 //│ def insert_lh_₁(_lh_insert_arg1², _lh_insert_arg2²) = case _lh_insert_arg2² of {
 //│ 	LH_N  => [LH_C _lh_insert_arg1² [LH_N]]
 //│ 	| LH_C _lh_insert_LH_C_0² _lh_insert_LH_C_1² => if polyLt⁰(_lh_insert_arg1², _lh_insert_LH_C_0²) then [LH_C _lh_insert_arg1² [LH_C _lh_insert_LH_C_0² _lh_insert_LH_C_1²]] else if polyGt⁰(_lh_insert_arg1², _lh_insert_LH_C_0²) then [LH_C _lh_insert_LH_C_0² insert_lh_₁(_lh_insert_arg1², _lh_insert_LH_C_1²)] else [LH_C _lh_insert_LH_C_0² _lh_insert_LH_C_1²]
@@ -4589,11 +4588,11 @@ testClausify_nofib $ primId 10
 //│ def length_lh_₂(ls⁴) = case ls⁴ of {
 //│ 	LH_C h²¹ t²¹ => (1 + length_lh_₂(t²¹))
 //│ 	| LH_N  => 0}
-//│ def map_lh_₁(f⁵, ls²) = ls²(f⁵)
-//│ def map_lh_₂(f⁴, ls¹, _lh_popOutId_0⁰) = case ls¹ of {
+//│ def map_lh_₁(f³, ls²) = ls²(f³)
+//│ def map_lh_₂(f², ls¹, _lh_popOutId_0¹) = case ls¹ of {
 //│ 	LH_C h¹⁰ t¹⁰ => 
-//│ 		let t¹¹ = map_lh_₂(f⁴, t¹⁰)
-//│ 		in let h¹¹ = f⁴(h¹⁰)
+//│ 		let t¹¹ = map_lh_₂(f², t¹⁰)
+//│ 		in let h¹¹ = f²(h¹⁰)
 //│ 		in h¹¹(t¹¹(99))
 //│ 	| LH_N  => (fun ys¹⁴ -> ys¹⁴)}
 //│ def mappend_lh_₁(xs⁰, ys⁰) = xs⁰(ys⁰)
@@ -4771,8 +4770,8 @@ testClausify_nofib $ primId 10
 //│ 	| _  => 
 //│ 		let t⁵ = _lh_splitHelper_arg2⁰
 //│ 		in let h⁵ = _lh_splitHelper_arg1⁰
-//│ 		in (fun f³ -> (fun i¹ -> f³(h⁵, t⁵(f³, i¹))))}
-//│ def split_lh_₁(_lh_split_arg1⁰) = splitHelper_lh_₁(_lh_split_arg1⁰, (fun f⁶ -> (fun i² -> i²)))
+//│ 		in (fun f¹ -> (fun i¹ -> f¹(h⁵, t⁵(f¹, i¹))))}
+//│ def split_lh_₁(_lh_split_arg1⁰) = splitHelper_lh_₁(_lh_split_arg1⁰, (fun f⁴ -> (fun i² -> i²)))
 //│ def spri_lh_₁(_lh_spri_arg1²) = case _lh_spri_arg1² of {
 //│ 	LH_C _lh_spri_LH_C_0⁴ _lh_spri_LH_C_1⁴ => case _lh_spri_LH_C_0⁴ of {
 //│ 		Ast _lh_spri_Ast_0² => case _lh_spri_LH_C_1⁴ of {

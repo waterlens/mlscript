@@ -426,61 +426,60 @@ let rec leap_lh__d2 _lh_leap_arg1_0 =
     ((_lh_leap_arg1_0 mod 400) = 0)
   else
     ((_lh_leap_arg1_0 mod 4) = 0));;
-let rec monthLengths_lh__d2 _lh_monthLengths_arg1_0 =
+let rec monthLengths_lh__d2 _lh_monthLengths_arg1_0 _lh_scanl_arg1_0 _lh_scanl_arg2_0 =
   (let rec feb_0 = (if (leap_lh__d2 _lh_monthLengths_arg1_0) then
     29
   else
     28) in
-    (let rec _lh_scanl_LH_C_1_0 = (let rec _lh_scanl_LH_C_1_1 = (let rec _lh_scanl_LH_C_1_2 = (let rec _lh_scanl_LH_C_1_3 = (let rec _lh_scanl_LH_C_1_4 = (let rec _lh_scanl_LH_C_1_5 = (let rec _lh_scanl_LH_C_1_6 = (let rec _lh_scanl_LH_C_1_7 = (let rec _lh_scanl_LH_C_1_8 = (let rec _lh_scanl_LH_C_1_9 = (let rec _lh_scanl_LH_C_1_1_0 = (let rec _lh_scanl_LH_C_1_1_1 = (fun _lh_scanl_arg1_0 _lh_scanl_arg2_0 -> 
+    (let rec _lh_scanl_LH_C_1_0 = (let rec _lh_scanl_LH_C_1_1 = (let rec _lh_scanl_LH_C_1_2 = (let rec _lh_scanl_LH_C_1_3 = (let rec _lh_scanl_LH_C_1_4 = (let rec _lh_scanl_LH_C_1_5 = (let rec _lh_scanl_LH_C_1_6 = (let rec _lh_scanl_LH_C_1_7 = (let rec _lh_scanl_LH_C_1_8 = (let rec _lh_scanl_LH_C_1_9 = (let rec _lh_scanl_LH_C_1_1_0 = (let rec _lh_scanl_LH_C_1_1_1 = (fun _lh_scanl_arg1_1 _lh_scanl_arg2_1 -> 
       (`LH_N)) in
       (let rec _lh_scanl_LH_C_0_0 = 31 in
-        (fun _lh_scanl_arg1_1 _lh_scanl_arg2_1 -> 
-          (`LH_C(((_lh_scanl_arg1_1 _lh_scanl_arg2_1) _lh_scanl_LH_C_0_0), (let rec _lh_matchIdent_0 = _lh_scanl_LH_C_1_1_1 in
-            ((_lh_matchIdent_0 _lh_scanl_arg1_1) ((_lh_scanl_arg1_1 _lh_scanl_arg2_1) _lh_scanl_LH_C_0_0)))))))) in
-      (let rec _lh_scanl_LH_C_0_1 = 30 in
         (fun _lh_scanl_arg1_2 _lh_scanl_arg2_2 -> 
-          (`LH_C(((_lh_scanl_arg1_2 _lh_scanl_arg2_2) _lh_scanl_LH_C_0_1), (let rec _lh_matchIdent_1 = _lh_scanl_LH_C_1_1_0 in
-            ((_lh_matchIdent_1 _lh_scanl_arg1_2) ((_lh_scanl_arg1_2 _lh_scanl_arg2_2) _lh_scanl_LH_C_0_1)))))))) in
-      (let rec _lh_scanl_LH_C_0_2 = 31 in
+          (`LH_C(((_lh_scanl_arg1_2 _lh_scanl_arg2_2) _lh_scanl_LH_C_0_0), (let rec _lh_matchIdent_0 = _lh_scanl_LH_C_1_1_1 in
+            ((_lh_matchIdent_0 _lh_scanl_arg1_2) ((_lh_scanl_arg1_2 _lh_scanl_arg2_2) _lh_scanl_LH_C_0_0)))))))) in
+      (let rec _lh_scanl_LH_C_0_1 = 30 in
         (fun _lh_scanl_arg1_3 _lh_scanl_arg2_3 -> 
-          (`LH_C(((_lh_scanl_arg1_3 _lh_scanl_arg2_3) _lh_scanl_LH_C_0_2), (let rec _lh_matchIdent_2 = _lh_scanl_LH_C_1_9 in
-            ((_lh_matchIdent_2 _lh_scanl_arg1_3) ((_lh_scanl_arg1_3 _lh_scanl_arg2_3) _lh_scanl_LH_C_0_2)))))))) in
-      (let rec _lh_scanl_LH_C_0_3 = 30 in
+          (`LH_C(((_lh_scanl_arg1_3 _lh_scanl_arg2_3) _lh_scanl_LH_C_0_1), (let rec _lh_matchIdent_1 = _lh_scanl_LH_C_1_1_0 in
+            ((_lh_matchIdent_1 _lh_scanl_arg1_3) ((_lh_scanl_arg1_3 _lh_scanl_arg2_3) _lh_scanl_LH_C_0_1)))))))) in
+      (let rec _lh_scanl_LH_C_0_2 = 31 in
         (fun _lh_scanl_arg1_4 _lh_scanl_arg2_4 -> 
-          (`LH_C(((_lh_scanl_arg1_4 _lh_scanl_arg2_4) _lh_scanl_LH_C_0_3), (let rec _lh_matchIdent_3 = _lh_scanl_LH_C_1_8 in
-            ((_lh_matchIdent_3 _lh_scanl_arg1_4) ((_lh_scanl_arg1_4 _lh_scanl_arg2_4) _lh_scanl_LH_C_0_3)))))))) in
-      (let rec _lh_scanl_LH_C_0_4 = 31 in
+          (`LH_C(((_lh_scanl_arg1_4 _lh_scanl_arg2_4) _lh_scanl_LH_C_0_2), (let rec _lh_matchIdent_2 = _lh_scanl_LH_C_1_9 in
+            ((_lh_matchIdent_2 _lh_scanl_arg1_4) ((_lh_scanl_arg1_4 _lh_scanl_arg2_4) _lh_scanl_LH_C_0_2)))))))) in
+      (let rec _lh_scanl_LH_C_0_3 = 30 in
         (fun _lh_scanl_arg1_5 _lh_scanl_arg2_5 -> 
-          (`LH_C(((_lh_scanl_arg1_5 _lh_scanl_arg2_5) _lh_scanl_LH_C_0_4), (let rec _lh_matchIdent_4 = _lh_scanl_LH_C_1_7 in
-            ((_lh_matchIdent_4 _lh_scanl_arg1_5) ((_lh_scanl_arg1_5 _lh_scanl_arg2_5) _lh_scanl_LH_C_0_4)))))))) in
-      (let rec _lh_scanl_LH_C_0_5 = 31 in
+          (`LH_C(((_lh_scanl_arg1_5 _lh_scanl_arg2_5) _lh_scanl_LH_C_0_3), (let rec _lh_matchIdent_3 = _lh_scanl_LH_C_1_8 in
+            ((_lh_matchIdent_3 _lh_scanl_arg1_5) ((_lh_scanl_arg1_5 _lh_scanl_arg2_5) _lh_scanl_LH_C_0_3)))))))) in
+      (let rec _lh_scanl_LH_C_0_4 = 31 in
         (fun _lh_scanl_arg1_6 _lh_scanl_arg2_6 -> 
-          (`LH_C(((_lh_scanl_arg1_6 _lh_scanl_arg2_6) _lh_scanl_LH_C_0_5), (let rec _lh_matchIdent_5 = _lh_scanl_LH_C_1_6 in
-            ((_lh_matchIdent_5 _lh_scanl_arg1_6) ((_lh_scanl_arg1_6 _lh_scanl_arg2_6) _lh_scanl_LH_C_0_5)))))))) in
-      (let rec _lh_scanl_LH_C_0_6 = 30 in
+          (`LH_C(((_lh_scanl_arg1_6 _lh_scanl_arg2_6) _lh_scanl_LH_C_0_4), (let rec _lh_matchIdent_4 = _lh_scanl_LH_C_1_7 in
+            ((_lh_matchIdent_4 _lh_scanl_arg1_6) ((_lh_scanl_arg1_6 _lh_scanl_arg2_6) _lh_scanl_LH_C_0_4)))))))) in
+      (let rec _lh_scanl_LH_C_0_5 = 31 in
         (fun _lh_scanl_arg1_7 _lh_scanl_arg2_7 -> 
-          (`LH_C(((_lh_scanl_arg1_7 _lh_scanl_arg2_7) _lh_scanl_LH_C_0_6), (let rec _lh_matchIdent_6 = _lh_scanl_LH_C_1_5 in
-            ((_lh_matchIdent_6 _lh_scanl_arg1_7) ((_lh_scanl_arg1_7 _lh_scanl_arg2_7) _lh_scanl_LH_C_0_6)))))))) in
-      (let rec _lh_scanl_LH_C_0_7 = 31 in
+          (`LH_C(((_lh_scanl_arg1_7 _lh_scanl_arg2_7) _lh_scanl_LH_C_0_5), (let rec _lh_matchIdent_5 = _lh_scanl_LH_C_1_6 in
+            ((_lh_matchIdent_5 _lh_scanl_arg1_7) ((_lh_scanl_arg1_7 _lh_scanl_arg2_7) _lh_scanl_LH_C_0_5)))))))) in
+      (let rec _lh_scanl_LH_C_0_6 = 30 in
         (fun _lh_scanl_arg1_8 _lh_scanl_arg2_8 -> 
-          (`LH_C(((_lh_scanl_arg1_8 _lh_scanl_arg2_8) _lh_scanl_LH_C_0_7), (let rec _lh_matchIdent_7 = _lh_scanl_LH_C_1_4 in
-            ((_lh_matchIdent_7 _lh_scanl_arg1_8) ((_lh_scanl_arg1_8 _lh_scanl_arg2_8) _lh_scanl_LH_C_0_7)))))))) in
-      (let rec _lh_scanl_LH_C_0_8 = 30 in
+          (`LH_C(((_lh_scanl_arg1_8 _lh_scanl_arg2_8) _lh_scanl_LH_C_0_6), (let rec _lh_matchIdent_6 = _lh_scanl_LH_C_1_5 in
+            ((_lh_matchIdent_6 _lh_scanl_arg1_8) ((_lh_scanl_arg1_8 _lh_scanl_arg2_8) _lh_scanl_LH_C_0_6)))))))) in
+      (let rec _lh_scanl_LH_C_0_7 = 31 in
         (fun _lh_scanl_arg1_9 _lh_scanl_arg2_9 -> 
-          (`LH_C(((_lh_scanl_arg1_9 _lh_scanl_arg2_9) _lh_scanl_LH_C_0_8), (let rec _lh_matchIdent_8 = _lh_scanl_LH_C_1_3 in
-            ((_lh_matchIdent_8 _lh_scanl_arg1_9) ((_lh_scanl_arg1_9 _lh_scanl_arg2_9) _lh_scanl_LH_C_0_8)))))))) in
-      (let rec _lh_scanl_LH_C_0_9 = 31 in
+          (`LH_C(((_lh_scanl_arg1_9 _lh_scanl_arg2_9) _lh_scanl_LH_C_0_7), (let rec _lh_matchIdent_7 = _lh_scanl_LH_C_1_4 in
+            ((_lh_matchIdent_7 _lh_scanl_arg1_9) ((_lh_scanl_arg1_9 _lh_scanl_arg2_9) _lh_scanl_LH_C_0_7)))))))) in
+      (let rec _lh_scanl_LH_C_0_8 = 30 in
         (fun _lh_scanl_arg1_1_0 _lh_scanl_arg2_1_0 -> 
-          (`LH_C(((_lh_scanl_arg1_1_0 _lh_scanl_arg2_1_0) _lh_scanl_LH_C_0_9), (let rec _lh_matchIdent_9 = _lh_scanl_LH_C_1_2 in
-            ((_lh_matchIdent_9 _lh_scanl_arg1_1_0) ((_lh_scanl_arg1_1_0 _lh_scanl_arg2_1_0) _lh_scanl_LH_C_0_9)))))))) in
-      (let rec _lh_scanl_LH_C_0_1_0 = feb_0 in
+          (`LH_C(((_lh_scanl_arg1_1_0 _lh_scanl_arg2_1_0) _lh_scanl_LH_C_0_8), (let rec _lh_matchIdent_8 = _lh_scanl_LH_C_1_3 in
+            ((_lh_matchIdent_8 _lh_scanl_arg1_1_0) ((_lh_scanl_arg1_1_0 _lh_scanl_arg2_1_0) _lh_scanl_LH_C_0_8)))))))) in
+      (let rec _lh_scanl_LH_C_0_9 = 31 in
         (fun _lh_scanl_arg1_1_1 _lh_scanl_arg2_1_1 -> 
-          (`LH_C(((_lh_scanl_arg1_1_1 _lh_scanl_arg2_1_1) _lh_scanl_LH_C_0_1_0), (let rec _lh_matchIdent_1_0 = _lh_scanl_LH_C_1_1 in
-            ((_lh_matchIdent_1_0 _lh_scanl_arg1_1_1) ((_lh_scanl_arg1_1_1 _lh_scanl_arg2_1_1) _lh_scanl_LH_C_0_1_0)))))))) in
-      (let rec _lh_scanl_LH_C_0_1_1 = 31 in
+          (`LH_C(((_lh_scanl_arg1_1_1 _lh_scanl_arg2_1_1) _lh_scanl_LH_C_0_9), (let rec _lh_matchIdent_9 = _lh_scanl_LH_C_1_2 in
+            ((_lh_matchIdent_9 _lh_scanl_arg1_1_1) ((_lh_scanl_arg1_1_1 _lh_scanl_arg2_1_1) _lh_scanl_LH_C_0_9)))))))) in
+      (let rec _lh_scanl_LH_C_0_1_0 = feb_0 in
         (fun _lh_scanl_arg1_1_2 _lh_scanl_arg2_1_2 -> 
-          (`LH_C(((_lh_scanl_arg1_1_2 _lh_scanl_arg2_1_2) _lh_scanl_LH_C_0_1_1), (let rec _lh_matchIdent_1_1 = _lh_scanl_LH_C_1_0 in
-            ((_lh_matchIdent_1_1 _lh_scanl_arg1_1_2) ((_lh_scanl_arg1_1_2 _lh_scanl_arg2_1_2) _lh_scanl_LH_C_0_1_1)))))))));;
+          (`LH_C(((_lh_scanl_arg1_1_2 _lh_scanl_arg2_1_2) _lh_scanl_LH_C_0_1_0), (let rec _lh_matchIdent_1_0 = _lh_scanl_LH_C_1_1 in
+            ((_lh_matchIdent_1_0 _lh_scanl_arg1_1_2) ((_lh_scanl_arg1_1_2 _lh_scanl_arg2_1_2) _lh_scanl_LH_C_0_1_0)))))))) in
+      (let rec _lh_scanl_LH_C_0_1_1 = 31 in
+        (`LH_C(((_lh_scanl_arg1_0 _lh_scanl_arg2_0) _lh_scanl_LH_C_0_1_1), (let rec _lh_matchIdent_1_1 = _lh_scanl_LH_C_1_0 in
+          ((_lh_matchIdent_1_1 _lh_scanl_arg1_0) ((_lh_scanl_arg1_0 _lh_scanl_arg2_0) _lh_scanl_LH_C_0_1_1))))))));;
 let rec take_lh__d2 n_0 ls_2 =
   (if (n_0 > 0) then
     (match ls_2 with

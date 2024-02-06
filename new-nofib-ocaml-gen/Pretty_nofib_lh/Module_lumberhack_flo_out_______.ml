@@ -44,30 +44,29 @@ let rec cIndent_lh__d2 _lh_cIndent_arg1_3 _lh_cIndent_arg2_3 =
   (`CIndent(_lh_cIndent_arg1_3, _lh_cIndent_arg2_3));;
 let rec cAppend_lh__d1 _lh_cAppend_arg1_6 _lh_cAppend_arg2_6 =
   (`CAppend(_lh_cAppend_arg1_6, _lh_cAppend_arg2_6));;
-let rec ppStr_lh__d3 _lh_ppStr_arg1_2 _lh_ppStr_arg2_2 _lh_ppStr_arg3_2 =
+let rec ppStr_lh__d3 _lh_ppStr_arg1_2 _lh_ppStr_arg2_2 _lh_ppStr_arg3_2 _lh_ppHang_arg2_0 _lh_ppHang_arg3_0 _lh_ppHang_arg4_0 _lh_ppHang_arg5_0 =
   (let rec ls_2 = (length_lh__d3 _lh_ppStr_arg1_2) in
     (let rec _lh_ppHang_MkPrettyRep_3_0 = (_lh_ppStr_arg2_2 >= ls_2) in
       (let rec _lh_ppHang_MkPrettyRep_2_0 = false in
         (let rec _lh_ppHang_MkPrettyRep_1_0 = ls_2 in
           (let rec _lh_ppHang_MkPrettyRep_0_0 = (cStr_lh__d3 _lh_ppStr_arg1_2) in
-            (fun _lh_ppHang_arg2_0 _lh_ppHang_arg3_0 _lh_ppHang_arg4_0 _lh_ppHang_arg5_0 -> 
-              (let rec _lh_matchIdent_0 = ((_lh_ppHang_arg3_0 (_lh_ppHang_arg4_0 - (_lh_ppHang_MkPrettyRep_1_0 + 1))) false) in
-                (match _lh_matchIdent_0 with
-                  | `MkPrettyRep(_lh_ppHang_MkPrettyRep_0_1, _lh_ppHang_MkPrettyRep_1_1, _lh_ppHang_MkPrettyRep_2_1, _lh_ppHang_MkPrettyRep_3_1) -> 
-                    (let rec _lh_matchIdent_1 = ((_lh_ppHang_arg3_0 (_lh_ppHang_arg4_0 - _lh_ppHang_arg2_0)) false) in
-                      (match _lh_matchIdent_1 with
-                        | `MkPrettyRep(_lh_ppHang_MkPrettyRep_0_2, _lh_ppHang_MkPrettyRep_1_2, _lh_ppHang_MkPrettyRep_2_2, _lh_ppHang_MkPrettyRep_3_2) -> 
-                          (if _lh_ppHang_MkPrettyRep_2_0 then
-                            ((_lh_ppHang_arg3_0 _lh_ppHang_arg4_0) _lh_ppHang_arg5_0)
+            (let rec _lh_matchIdent_0 = ((_lh_ppHang_arg3_0 (_lh_ppHang_arg4_0 - (_lh_ppHang_MkPrettyRep_1_0 + 1))) false) in
+              (match _lh_matchIdent_0 with
+                | `MkPrettyRep(_lh_ppHang_MkPrettyRep_0_1, _lh_ppHang_MkPrettyRep_1_1, _lh_ppHang_MkPrettyRep_2_1, _lh_ppHang_MkPrettyRep_3_1) -> 
+                  (let rec _lh_matchIdent_1 = ((_lh_ppHang_arg3_0 (_lh_ppHang_arg4_0 - _lh_ppHang_arg2_0)) false) in
+                    (match _lh_matchIdent_1 with
+                      | `MkPrettyRep(_lh_ppHang_MkPrettyRep_0_2, _lh_ppHang_MkPrettyRep_1_2, _lh_ppHang_MkPrettyRep_2_2, _lh_ppHang_MkPrettyRep_3_2) -> 
+                        (if _lh_ppHang_MkPrettyRep_2_0 then
+                          ((_lh_ppHang_arg3_0 _lh_ppHang_arg4_0) _lh_ppHang_arg5_0)
+                        else
+                          (if ((orL_lh__d1 (_lh_ppHang_MkPrettyRep_1_0 <= _lh_ppHang_arg2_0)) _lh_ppHang_MkPrettyRep_3_1) then
+                            (`MkPrettyRep(((cAppend_lh__d3 ((cAppend_lh__d1 _lh_ppHang_MkPrettyRep_0_0) (cCh_lh__d2 ' '))) ((cIndent_lh__d2 (_lh_ppHang_MkPrettyRep_1_0 + 1)) _lh_ppHang_MkPrettyRep_0_1)), ((_lh_ppHang_MkPrettyRep_1_0 + 1) + _lh_ppHang_MkPrettyRep_1_1), false, ((andL_lh__d1 _lh_ppHang_MkPrettyRep_3_0) _lh_ppHang_MkPrettyRep_3_1)))
                           else
-                            (if ((orL_lh__d1 (_lh_ppHang_MkPrettyRep_1_0 <= _lh_ppHang_arg2_0)) _lh_ppHang_MkPrettyRep_3_1) then
-                              (`MkPrettyRep(((cAppend_lh__d3 ((cAppend_lh__d1 _lh_ppHang_MkPrettyRep_0_0) (cCh_lh__d2 ' '))) ((cIndent_lh__d2 (_lh_ppHang_MkPrettyRep_1_0 + 1)) _lh_ppHang_MkPrettyRep_0_1)), ((_lh_ppHang_MkPrettyRep_1_0 + 1) + _lh_ppHang_MkPrettyRep_1_1), false, ((andL_lh__d1 _lh_ppHang_MkPrettyRep_3_0) _lh_ppHang_MkPrettyRep_3_1)))
-                            else
-                              (`MkPrettyRep(((cAppend_lh__d2 _lh_ppHang_MkPrettyRep_0_0) ((cAppend_lh__d4 cNL_lh__d1) ((cIndent_lh__d1 _lh_ppHang_arg2_0) _lh_ppHang_MkPrettyRep_0_2))), _lh_ppHang_MkPrettyRep_1_2, false, false))))
-                        | _ -> 
-                          (failwith "error")))
-                  | _ -> 
-                    (failwith "error")))))))));;
+                            (`MkPrettyRep(((cAppend_lh__d2 _lh_ppHang_MkPrettyRep_0_0) ((cAppend_lh__d4 cNL_lh__d1) ((cIndent_lh__d1 _lh_ppHang_arg2_0) _lh_ppHang_MkPrettyRep_0_2))), _lh_ppHang_MkPrettyRep_1_2, false, false))))
+                      | _ -> 
+                        (failwith "error")))
+                | _ -> 
+                  (failwith "error"))))))));;
 let rec mappend_lh__d1 xs_0 ys_0 =
   (match xs_0 with
     | `LH_C(h_0, t_0) -> 

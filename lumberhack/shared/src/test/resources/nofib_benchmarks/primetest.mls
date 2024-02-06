@@ -1215,15 +1215,15 @@ testPrimetest_nofib $ primId 0
 //│ <<<<<<< consumer ids <<<<<<<
 //│ 
 //│ >>>>>>> floating out info >>>>>>>
-//│ splitAt_lz_lh_₁ -> 2
+//│ splitAt_lz_lh_₁ -> 3
 //│ uniform_lh_₁ -> 2
-//│ map_lh_₂ -> 2
-//│ map_lh_₁ -> 2
+//│ map_lh_₂ -> 4
+//│ map_lh_₁ -> 4
 //│ break_lh_₁ -> 2
-//│ divmod_lh_₁ -> 2
-//│ divmod_lh_₂ -> 2
+//│ divmod_lh_₁ -> 5
+//│ divmod_lh_₂ -> 5
 //│ iterate_lh_₁ -> 2
-//│ map_lh_₃ -> 2
+//│ map_lh_₃ -> 4
 //│ <<<<<<< floating out info <<<<<<<
 //│ 
 //│ >>>>>>> after inlining >>>>>>>
@@ -1594,8 +1594,8 @@ testPrimetest_nofib $ primId 0
 //│ >>>>>>> after floating out >>>>>>>
 //│ testPrimetest_nofib_lh_₁(primId⁰(0))
 //│ def break_lh_₁(_lh_break_arg1⁰, _lh_break_arg2⁰) = case _lh_break_arg2⁰ of {
-//│ 	LH_N  => [LH_P2 (fun _lh_f_arg2² -> (fun f²¹ -> _lh_f_arg2²)) (fun _lh_dummy⁰ -> (fun _lh_doInput_arg1¹ -> [LH_N]))]
-//│ 	| LH_C _lh_break_LH_C_0⁰ _lh_break_LH_C_1⁰ => if _lh_break_arg1⁰(_lh_break_LH_C_0⁰) then [LH_P2 (fun _lh_f_arg2³ -> (fun f²² -> _lh_f_arg2³)) 
+//│ 	LH_N  => [LH_P2 (fun _lh_f_arg2² -> (fun f¹⁷ -> _lh_f_arg2²)) (fun _lh_dummy⁰ -> (fun _lh_doInput_arg1¹ -> [LH_N]))]
+//│ 	| LH_C _lh_break_LH_C_0⁰ _lh_break_LH_C_1⁰ => if _lh_break_arg1⁰(_lh_break_LH_C_0⁰) then [LH_P2 (fun _lh_f_arg2³ -> (fun f¹⁸ -> _lh_f_arg2³)) 
 //│ 		let _lh_lines_LH_C_1⁰ = _lh_break_LH_C_1⁰
 //│ 		in (fun _lh_dummy¹ -> 
 //│ 			let _lh_matchIdent²⁰ = break_lh_₁((fun x⁵ -> polyEq⁰(x⁵, '|')), _lh_lines_LH_C_1⁰)
@@ -1607,8 +1607,8 @@ testPrimetest_nofib $ primId 0
 //│ 					in let _lh_doInput_LH_C_0¹ = _lh_lines_LH_P2_0¹
 //│ 					in (fun _lh_doInput_arg1² -> 
 //│ 						let n⁷ = 	
-//│ 							let f²³ = (fun _lh_f_arg1⁴ -> (fun _lh_f_arg2⁴ -> _lh_f_arg1⁴(_lh_f_arg2⁴, f²³)))
-//│ 							in f²³(_lh_doInput_LH_C_0¹, 0)
+//│ 							let f¹⁹ = (fun _lh_f_arg1⁴ -> (fun _lh_f_arg2⁴ -> _lh_f_arg1⁴(_lh_f_arg2⁴, f¹⁹)))
+//│ 							in f¹⁹(_lh_doInput_LH_C_0¹, 0)
 //│ 						in let _lh_matchIdent²² = 	
 //│ 							let mTest³ = (fun k⁴ -> (fun rs² -> if (k⁴ == 0) then 
 //│ 								let _lh_doLine_LH_P2_1⁵ = rs²
@@ -1624,12 +1624,12 @@ testPrimetest_nofib $ primId 0
 //│ 										in let _lh_matchIdent²⁶ = splitAt_lz_lh_₁(length_lh_₁(ns⁵), rs²)
 //│ 										in _lh_matchIdent²⁶(ns⁵)
 //│ 									in _lh_matchIdent²⁴(n⁷, 
-//│ 										let f²⁴ = (fun _lh_f_arg1⁵ -> case _lh_f_arg1⁵ of {
+//│ 										let f²⁰ = (fun _lh_f_arg1⁵ -> case _lh_f_arg1⁵ of {
 //│ 											LH_P2 _lh_f_LH_P2_0⁴ _lh_f_LH_P2_1⁴ => 
 //│ 												let _lh_matchIdent²⁷ = divmod_lh_₁(_lh_f_LH_P2_1⁴, 2)
-//│ 												in _lh_matchIdent²⁷(_lh_f_LH_P2_0⁴, _lh_f_LH_P2_1⁴, f²⁴)
+//│ 												in _lh_matchIdent²⁷(_lh_f_LH_P2_0⁴, _lh_f_LH_P2_1⁴, f²⁰)
 //│ 											| _  => error⁰})
-//│ 										in f²⁴([LH_P2 0 (n⁷ - 1)]))
+//│ 										in f²⁰([LH_P2 0 (n⁷ - 1)]))
 //│ 								in _lh_matchIdent²³(k⁴, mTest³)))
 //│ 							in if ((n⁷ <= 1) || even_lh_₁(n⁷)) then 
 //│ 								let _lh_doLine_LH_P2_1⁶ = _lh_doInput_arg1²
@@ -1642,7 +1642,7 @@ testPrimetest_nofib $ primId 0
 //│ 			LH_P2 _lh_break_LH_P2_0⁰ _lh_break_LH_P2_1⁰ => [LH_P2 
 //│ 				let _lh_f_LH_C_1⁰ = _lh_break_LH_P2_0⁰
 //│ 				in let _lh_f_LH_C_0⁰ = _lh_break_LH_C_0⁰
-//│ 				in (fun _lh_f_arg2⁵ -> (fun f²⁵ -> f²⁵(_lh_f_LH_C_1⁰, ((10 * _lh_f_arg2⁵) + int_val_of_char_lh_₁(_lh_f_LH_C_0⁰))))) _lh_break_LH_P2_1⁰]
+//│ 				in (fun _lh_f_arg2⁵ -> (fun f²¹ -> f²¹(_lh_f_LH_C_1⁰, ((10 * _lh_f_arg2⁵) + int_val_of_char_lh_₁(_lh_f_LH_C_0⁰))))) _lh_break_LH_P2_1⁰]
 //│ 			| _  => error⁰}
 //│ 	| _  => error⁰}
 //│ def chop_lh_₁(_lh_chop_arg1⁰) = 
@@ -1650,19 +1650,19 @@ testPrimetest_nofib $ primId 0
 //│ 		let _lh_matchIdent⁰ = divmod_lh_₂(n⁰, _lh_chop_arg1⁰)
 //│ 		in _lh_matchIdent⁰(a², chop'⁰, n⁰)))
 //│ 	in chop'⁰([LH_N])
-//│ def divmod_lh_₁(_lh_divmod_arg1⁰, _lh_divmod_arg2⁰) = 
-//│ 	let _lh_f_LH_P2_1⁰ = (_lh_divmod_arg1⁰ % _lh_divmod_arg2⁰)
-//│ 	in let _lh_f_LH_P2_0⁰ = div⁰(_lh_divmod_arg1⁰, _lh_divmod_arg2⁰)
-//│ 	in (fun _lh_f_LH_P2_0¹ -> (fun _lh_f_LH_P2_1¹ -> (fun f⁸ -> if (_lh_f_LH_P2_1⁰ == 0) then f⁸([LH_P2 (_lh_f_LH_P2_0¹ + 1) _lh_f_LH_P2_0⁰]) else [LH_P2 _lh_f_LH_P2_0¹ _lh_f_LH_P2_1¹])))
-//│ def divmod_lh_₂(_lh_divmod_arg1¹, _lh_divmod_arg2¹) = 
+//│ def divmod_lh_₁(_lh_divmod_arg1⁰, _lh_divmod_arg2⁰, _lh_f_LH_P2_0⁰, _lh_f_LH_P2_1⁰, f⁴) = 
+//│ 	let _lh_f_LH_P2_1¹ = (_lh_divmod_arg1⁰ % _lh_divmod_arg2⁰)
+//│ 	in let _lh_f_LH_P2_0¹ = div⁰(_lh_divmod_arg1⁰, _lh_divmod_arg2⁰)
+//│ 	in if (_lh_f_LH_P2_1¹ == 0) then f⁴([LH_P2 (_lh_f_LH_P2_0⁰ + 1) _lh_f_LH_P2_0¹]) else [LH_P2 _lh_f_LH_P2_0⁰ _lh_f_LH_P2_1⁰]
+//│ def divmod_lh_₂(_lh_divmod_arg1¹, _lh_divmod_arg2¹, a¹⁰, chop'⁷, n¹³) = 
 //│ 	let _lh_chop_LH_P2_1⁰ = (_lh_divmod_arg1¹ % _lh_divmod_arg2¹)
 //│ 	in let _lh_chop_LH_P2_0⁰ = div⁰(_lh_divmod_arg1¹, _lh_divmod_arg2¹)
-//│ 	in (fun a¹⁰ -> (fun chop'⁷ -> (fun n¹³ -> if (n¹³ == 0) then a¹⁰ else chop'⁷([LH_C _lh_chop_LH_P2_1⁰ a¹⁰], _lh_chop_LH_P2_0⁰))))
+//│ 	in if (n¹³ == 0) then a¹⁰ else chop'⁷([LH_C _lh_chop_LH_P2_1⁰ a¹⁰], _lh_chop_LH_P2_0⁰)
 //│ def doInput_lh_₁(_lh_doInput_arg1⁴, _lh_doInput_arg2⁰) = _lh_doInput_arg2⁰(_lh_doInput_arg1⁴)
 //│ def doLine_lh_₁(_lh_doLine_arg1⁰, _lh_doLine_arg2⁹, _lh_doLine_arg3⁰) = 
 //│ 	let n¹⁴ = 	
-//│ 		let f³³ = (fun _lh_f_arg1⁹ -> (fun _lh_f_arg2⁷ -> _lh_f_arg1⁹(_lh_f_arg2⁷, f³³)))
-//│ 		in f³³(_lh_doLine_arg1⁰, 0)
+//│ 		let f²⁷ = (fun _lh_f_arg1⁹ -> (fun _lh_f_arg2⁷ -> _lh_f_arg1⁹(_lh_f_arg2⁷, f²⁷)))
+//│ 		in f²⁷(_lh_doLine_arg1⁰, 0)
 //│ 	in let _lh_matchIdent³⁸ = 	
 //│ 		let mTest⁵ = (fun k⁶ -> (fun rs⁴ -> if (k⁶ == 0) then 
 //│ 			let _lh_doLine_LH_P2_1⁹ = rs⁴
@@ -1678,12 +1678,12 @@ testPrimetest_nofib $ primId 0
 //│ 					in let _lh_matchIdent⁴² = splitAt_lz_lh_₁(length_lh_₁(ns⁷), rs⁴)
 //│ 					in _lh_matchIdent⁴²(ns⁷)
 //│ 				in _lh_matchIdent⁴⁰(n¹⁴, 
-//│ 					let f³⁴ = (fun _lh_f_arg1¹⁰ -> case _lh_f_arg1¹⁰ of {
+//│ 					let f²⁸ = (fun _lh_f_arg1¹⁰ -> case _lh_f_arg1¹⁰ of {
 //│ 						LH_P2 _lh_f_LH_P2_0⁷ _lh_f_LH_P2_1⁷ => 
 //│ 							let _lh_matchIdent⁴³ = divmod_lh_₁(_lh_f_LH_P2_1⁷, 2)
-//│ 							in _lh_matchIdent⁴³(_lh_f_LH_P2_0⁷, _lh_f_LH_P2_1⁷, f³⁴)
+//│ 							in _lh_matchIdent⁴³(_lh_f_LH_P2_0⁷, _lh_f_LH_P2_1⁷, f²⁸)
 //│ 						| _  => error⁰})
-//│ 					in f³⁴([LH_P2 0 (n¹⁴ - 1)]))
+//│ 					in f²⁸([LH_P2 0 (n¹⁴ - 1)]))
 //│ 			in _lh_matchIdent³⁹(k⁶, mTest⁵)))
 //│ 		in if ((n¹⁴ <= 1) || even_lh_₁(n¹⁴)) then 
 //│ 			let _lh_doLine_LH_P2_1¹⁰ = _lh_doLine_arg3⁰
@@ -1699,19 +1699,19 @@ testPrimetest_nofib $ primId 0
 //│ def even_lh_₁(_lh_even_arg1¹) = ((_lh_even_arg1¹ % 2) == 0)
 //│ def even_lh_₂(_lh_even_arg1⁰) = ((_lh_even_arg1⁰ % 2) == 0)
 //│ def findKQ_lh_₁(_lh_findKQ_arg1⁰) = 
-//│ 	let f²⁶ = (fun _lh_f_arg1⁶ -> case _lh_f_arg1⁶ of {
+//│ 	let f²² = (fun _lh_f_arg1⁶ -> case _lh_f_arg1⁶ of {
 //│ 		LH_P2 _lh_f_LH_P2_0⁵ _lh_f_LH_P2_1⁵ => 
 //│ 			let _lh_matchIdent²⁹ = divmod_lh_₁(_lh_f_LH_P2_1⁵, 2)
-//│ 			in _lh_matchIdent²⁹(_lh_f_LH_P2_0⁵, _lh_f_LH_P2_1⁵, f²⁶)
+//│ 			in _lh_matchIdent²⁹(_lh_f_LH_P2_0⁵, _lh_f_LH_P2_1⁵, f²²)
 //│ 		| _  => error⁰})
-//│ 	in f²⁶([LH_P2 0 (_lh_findKQ_arg1⁰ - 1)])
+//│ 	in f²²([LH_P2 0 (_lh_findKQ_arg1⁰ - 1)])
 //│ def foldl_lh_₁(f¹, i⁰, ls⁰) = ls⁰(f¹, i⁰)
 //│ def int_val_of_char_lh_₁(_lh_int_val_of_char_arg1⁰) = (int_of_char⁰(_lh_int_val_of_char_arg1⁰) - 48)
 //│ def int_val_of_string_lh_₁(_lh_int_val_of_string_arg1⁰) = 
-//│ 	let f⁹ = (fun _lh_f_arg1⁰ -> (fun _lh_f_arg2⁰ -> _lh_f_arg1⁰(_lh_f_arg2⁰, f⁹)))
-//│ 	in f⁹(_lh_int_val_of_string_arg1⁰, 0)
-//│ def iterate_lh_₁(f²⁷, x⁶) = lazy⁰(
-//│ 	let t¹⁶ = iterate_lh_₁(f²⁷, f²⁷(x⁶))
+//│ 	let f⁵ = (fun _lh_f_arg1⁰ -> (fun _lh_f_arg2⁰ -> _lh_f_arg1⁰(_lh_f_arg2⁰, f⁵)))
+//│ 	in f⁵(_lh_int_val_of_string_arg1⁰, 0)
+//│ def iterate_lh_₁(f²³, x⁶) = lazy⁰(
+//│ 	let t¹⁶ = iterate_lh_₁(f²³, f²³(x⁶))
 //│ 	in let h¹³ = x⁶
 //│ 	in (fun n⁹ -> [LH_C h¹³ if ((n⁹ - 1) > 0) then force⁰(t¹⁶, (n⁹ - 1)) else [LH_N]]))
 //│ def length_lh_₁(ls⁵) = case ls⁵ of {
@@ -1727,8 +1727,8 @@ testPrimetest_nofib $ primId 0
 //│ 			in let _lh_doInput_LH_C_0⁰ = _lh_lines_LH_P2_0⁰
 //│ 			in (fun _lh_doInput_arg1⁰ -> 
 //│ 				let n⁵ = 	
-//│ 					let f¹¹ = (fun _lh_f_arg1² -> (fun _lh_f_arg2¹ -> _lh_f_arg1²(_lh_f_arg2¹, f¹¹)))
-//│ 					in f¹¹(_lh_doInput_LH_C_0⁰, 0)
+//│ 					let f⁷ = (fun _lh_f_arg1² -> (fun _lh_f_arg2¹ -> _lh_f_arg1²(_lh_f_arg2¹, f⁷)))
+//│ 					in f⁷(_lh_doInput_LH_C_0⁰, 0)
 //│ 				in let _lh_matchIdent¹⁴ = 	
 //│ 					let mTest² = (fun k³ -> (fun rs¹ -> if (k³ == 0) then 
 //│ 						let _lh_doLine_LH_P2_1³ = rs¹
@@ -1744,12 +1744,12 @@ testPrimetest_nofib $ primId 0
 //│ 								in let _lh_matchIdent¹⁸ = splitAt_lz_lh_₁(length_lh_₁(ns⁴), rs¹)
 //│ 								in _lh_matchIdent¹⁸(ns⁴)
 //│ 							in _lh_matchIdent¹⁶(n⁵, 
-//│ 								let f¹² = (fun _lh_f_arg1³ -> case _lh_f_arg1³ of {
+//│ 								let f⁸ = (fun _lh_f_arg1³ -> case _lh_f_arg1³ of {
 //│ 									LH_P2 _lh_f_LH_P2_0³ _lh_f_LH_P2_1³ => 
 //│ 										let _lh_matchIdent¹⁹ = divmod_lh_₁(_lh_f_LH_P2_1³, 2)
-//│ 										in _lh_matchIdent¹⁹(_lh_f_LH_P2_0³, _lh_f_LH_P2_1³, f¹²)
+//│ 										in _lh_matchIdent¹⁹(_lh_f_LH_P2_0³, _lh_f_LH_P2_1³, f⁸)
 //│ 									| _  => error⁰})
-//│ 								in f¹²([LH_P2 0 (n⁵ - 1)]))
+//│ 								in f⁸([LH_P2 0 (n⁵ - 1)]))
 //│ 						in _lh_matchIdent¹⁵(k³, mTest²)))
 //│ 					in if ((n⁵ <= 1) || even_lh_₁(n⁵)) then 
 //│ 						let _lh_doLine_LH_P2_1⁴ = _lh_doInput_arg1⁰
@@ -1758,24 +1758,24 @@ testPrimetest_nofib $ primId 0
 //│ 				in _lh_matchIdent¹⁴((fun state⁰ -> _lh_doInput_LH_C_1⁰(state⁰))))
 //│ 		| _  => error⁰}
 //│ def makeNumber_lh_₁(_lh_makeNumber_arg1⁰, ls⁴) = ls⁴((fun a⁴ -> (fun x⁰ -> ((a⁴ * _lh_makeNumber_arg1⁰) + x⁰))), 0)
-//│ def map_lh_₁(f⁵, ls²) = case ls² of {
+//│ def map_lh_₁(f³, ls², _lh_popOutId_0¹, _lh_popOutId_1¹) = case ls² of {
 //│ 	LH_C h² t² => 
-//│ 		let t³ = map_lh_₁(f⁵, t²)
-//│ 		in let h³ = f⁵(h²)
-//│ 		in (fun f⁶ -> (fun i³ -> t³(f⁶, f⁶(i³, h³))))
-//│ 	| LH_N  => (fun f⁷ -> (fun i⁴ -> i⁴))}
-//│ def map_lh_₂(f², ls¹) = case ls¹ of {
+//│ 		let t³ = map_lh_₁(f³, t²)
+//│ 		in let h³ = f³(h²)
+//│ 		in t³(_lh_popOutId_0¹, _lh_popOutId_0¹(_lh_popOutId_1¹, h³))
+//│ 	| LH_N  => _lh_popOutId_1¹}
+//│ def map_lh_₂(f², ls¹, _lh_popOutId_0⁰, _lh_popOutId_1⁰) = case ls¹ of {
 //│ 	LH_C h⁰ t⁰ => 
 //│ 		let t¹ = map_lh_₂(f², t⁰)
 //│ 		in let h¹ = f²(h⁰)
-//│ 		in (fun f³ -> (fun i¹ -> t¹(f³, f³(i¹, h¹))))
-//│ 	| LH_N  => (fun f⁴ -> (fun i² -> i²))}
-//│ def map_lh_₃(f²⁸, ls⁶) = case ls⁶ of {
+//│ 		in t¹(_lh_popOutId_0⁰, _lh_popOutId_0⁰(_lh_popOutId_1⁰, h¹))
+//│ 	| LH_N  => _lh_popOutId_1⁰}
+//│ def map_lh_₃(f²⁴, ls⁶, _lh_popOutId_0², _lh_popOutId_1²) = case ls⁶ of {
 //│ 	LH_C h¹⁴ t¹⁷ => 
-//│ 		let t¹⁸ = map_lh_₃(f²⁸, t¹⁷)
-//│ 		in let h¹⁵ = f²⁸(h¹⁴)
-//│ 		in (fun f²⁹ -> (fun i¹³ -> t¹⁸(f²⁹, f²⁹(i¹³, h¹⁵))))
-//│ 	| LH_N  => (fun f³⁰ -> (fun i¹⁴ -> i¹⁴))}
+//│ 		let t¹⁸ = map_lh_₃(f²⁴, t¹⁷)
+//│ 		in let h¹⁵ = f²⁴(h¹⁴)
+//│ 		in t¹⁸(_lh_popOutId_0², _lh_popOutId_0²(_lh_popOutId_1², h¹⁵))
+//│ 	| LH_N  => _lh_popOutId_1²}
 //│ def multiTest_lh_₁(_lh_multiTest_arg1⁰, _lh_multiTest_arg2⁰, _lh_multiTest_arg3⁰) = 
 //│ 	let mTest¹ = (fun k¹ -> (fun rs⁰ -> if (k¹ == 0) then 
 //│ 		let _lh_doLine_LH_P2_1¹ = rs⁰
@@ -1791,12 +1791,12 @@ testPrimetest_nofib $ primId 0
 //│ 				in let _lh_matchIdent⁴ = splitAt_lz_lh_₁(length_lh_₁(ns¹), rs⁰)
 //│ 				in _lh_matchIdent⁴(ns¹)
 //│ 			in _lh_matchIdent²(_lh_multiTest_arg3⁰, 
-//│ 				let f¹⁰ = (fun _lh_f_arg1¹ -> case _lh_f_arg1¹ of {
+//│ 				let f⁶ = (fun _lh_f_arg1¹ -> case _lh_f_arg1¹ of {
 //│ 					LH_P2 _lh_f_LH_P2_0² _lh_f_LH_P2_1² => 
 //│ 						let _lh_matchIdent⁵ = divmod_lh_₁(_lh_f_LH_P2_1², 2)
-//│ 						in _lh_matchIdent⁵(_lh_f_LH_P2_0², _lh_f_LH_P2_1², f¹⁰)
+//│ 						in _lh_matchIdent⁵(_lh_f_LH_P2_0², _lh_f_LH_P2_1², f⁶)
 //│ 					| _  => error⁰})
-//│ 				in f¹⁰([LH_P2 0 (_lh_multiTest_arg3⁰ - 1)]))
+//│ 				in f⁶([LH_P2 0 (_lh_multiTest_arg3⁰ - 1)]))
 //│ 		in _lh_matchIdent¹(k¹, mTest¹)))
 //│ 	in if ((_lh_multiTest_arg3⁰ <= 1) || even_lh_₁(_lh_multiTest_arg3⁰)) then 
 //│ 		let _lh_doLine_LH_P2_1² = _lh_multiTest_arg2⁰
@@ -1882,8 +1882,8 @@ testPrimetest_nofib $ primId 0
 //│ 				in let _lh_doInput_LH_C_0² = _lh_lines_LH_P2_0²
 //│ 				in (fun _lh_doInput_arg1³ -> 
 //│ 					let n¹⁰ = 	
-//│ 						let f³¹ = (fun _lh_f_arg1⁷ -> (fun _lh_f_arg2⁶ -> _lh_f_arg1⁷(_lh_f_arg2⁶, f³¹)))
-//│ 						in f³¹(_lh_doInput_LH_C_0², 0)
+//│ 						let f²⁵ = (fun _lh_f_arg1⁷ -> (fun _lh_f_arg2⁶ -> _lh_f_arg1⁷(_lh_f_arg2⁶, f²⁵)))
+//│ 						in f²⁵(_lh_doInput_LH_C_0², 0)
 //│ 					in let _lh_matchIdent³² = 	
 //│ 						let mTest⁴ = (fun k⁵ -> (fun rs³ -> if (k⁵ == 0) then 
 //│ 							let _lh_doLine_LH_P2_1⁷ = rs³
@@ -1899,12 +1899,12 @@ testPrimetest_nofib $ primId 0
 //│ 									in let _lh_matchIdent³⁶ = splitAt_lz_lh_₁(length_lh_₁(ns⁶), rs³)
 //│ 									in _lh_matchIdent³⁶(ns⁶)
 //│ 								in _lh_matchIdent³⁴(n¹⁰, 
-//│ 									let f³² = (fun _lh_f_arg1⁸ -> case _lh_f_arg1⁸ of {
+//│ 									let f²⁶ = (fun _lh_f_arg1⁸ -> case _lh_f_arg1⁸ of {
 //│ 										LH_P2 _lh_f_LH_P2_0⁶ _lh_f_LH_P2_1⁶ => 
 //│ 											let _lh_matchIdent³⁷ = divmod_lh_₁(_lh_f_LH_P2_1⁶, 2)
-//│ 											in _lh_matchIdent³⁷(_lh_f_LH_P2_0⁶, _lh_f_LH_P2_1⁶, f³²)
+//│ 											in _lh_matchIdent³⁷(_lh_f_LH_P2_0⁶, _lh_f_LH_P2_1⁶, f²⁶)
 //│ 										| _  => error⁰})
-//│ 									in f³²([LH_P2 0 (n¹⁰ - 1)]))
+//│ 									in f²⁶([LH_P2 0 (n¹⁰ - 1)]))
 //│ 							in _lh_matchIdent³³(k⁵, mTest⁴)))
 //│ 						in if ((n¹⁰ <= 1) || even_lh_₁(n¹⁰)) then 
 //│ 							let _lh_doLine_LH_P2_1⁸ = _lh_doInput_arg1³
@@ -1917,19 +1917,19 @@ testPrimetest_nofib $ primId 0
 //│ 		LH_N  => case _lh_uniform_arg2⁰ of {
 //│ 			LH_C _lh_uniform_LH_C_0¹ _lh_uniform_LH_C_1¹ => case _lh_uniform_LH_C_1¹ of {
 //│ 				LH_N  => 
-//│ 					let t⁵ = (fun f¹³ -> (fun i⁵ -> i⁵))
+//│ 					let t⁵ = (fun f⁹ -> (fun i¹ -> i¹))
 //│ 					in let h⁵ = (_lh_uniform_LH_C_0¹ % _lh_uniform_LH_C_0⁰)
-//│ 					in (fun f¹⁴ -> (fun i⁶ -> t⁵(f¹⁴, f¹⁴(i⁶, h⁵))))
+//│ 					in (fun f¹⁰ -> (fun i² -> t⁵(f¹⁰, f¹⁰(i², h⁵))))
 //│ 				| _  => case _lh_uniform_arg2⁰ of {
 //│ 					LH_C _lh_uniform_LH_C_0² _lh_uniform_LH_C_1² => 
 //│ 						let t⁶ = (_lh_uniform_LH_C_0² % (_lh_uniform_LH_C_0⁰ + 1))
 //│ 						in if (t⁶ == _lh_uniform_LH_C_0⁰) then 
 //│ 							let t⁷ = uniform_lh_₁(_lh_uniform_LH_C_1⁰, _lh_uniform_LH_C_1²)
 //│ 							in let h⁶ = t⁶
-//│ 							in (fun f¹⁵ -> (fun i⁷ -> t⁷(f¹⁵, f¹⁵(i⁷, h⁶)))) else 
+//│ 							in (fun f¹¹ -> (fun i³ -> t⁷(f¹¹, f¹¹(i³, h⁶)))) else 
 //│ 							let t⁸ = map_lh_₁((fun x² -> (x² % 65536)), _lh_uniform_LH_C_1²)
 //│ 							in let h⁷ = t⁶
-//│ 							in (fun f¹⁶ -> (fun i⁸ -> t⁸(f¹⁶, f¹⁶(i⁸, h⁷))))
+//│ 							in (fun f¹² -> (fun i⁴ -> t⁸(f¹², f¹²(i⁴, h⁷))))
 //│ 					| _  => error⁰}}
 //│ 			| _  => case _lh_uniform_arg2⁰ of {
 //│ 				LH_C _lh_uniform_LH_C_0³ _lh_uniform_LH_C_1³ => 
@@ -1937,10 +1937,10 @@ testPrimetest_nofib $ primId 0
 //│ 					in if (t⁹ == _lh_uniform_LH_C_0⁰) then 
 //│ 						let t¹⁰ = uniform_lh_₁(_lh_uniform_LH_C_1⁰, _lh_uniform_LH_C_1³)
 //│ 						in let h⁸ = t⁹
-//│ 						in (fun f¹⁷ -> (fun i⁹ -> t¹⁰(f¹⁷, f¹⁷(i⁹, h⁸)))) else 
+//│ 						in (fun f¹³ -> (fun i⁵ -> t¹⁰(f¹³, f¹³(i⁵, h⁸)))) else 
 //│ 						let t¹¹ = map_lh_₂((fun x³ -> (x³ % 65536)), _lh_uniform_LH_C_1³)
 //│ 						in let h⁹ = t⁹
-//│ 						in (fun f¹⁸ -> (fun i¹⁰ -> t¹¹(f¹⁸, f¹⁸(i¹⁰, h⁹))))
+//│ 						in (fun f¹⁴ -> (fun i⁶ -> t¹¹(f¹⁴, f¹⁴(i⁶, h⁹))))
 //│ 				| _  => error⁰}}
 //│ 		| _  => case _lh_uniform_arg2⁰ of {
 //│ 			LH_C _lh_uniform_LH_C_0⁴ _lh_uniform_LH_C_1⁴ => 
@@ -1948,10 +1948,10 @@ testPrimetest_nofib $ primId 0
 //│ 				in if (t¹² == _lh_uniform_LH_C_0⁰) then 
 //│ 					let t¹³ = uniform_lh_₁(_lh_uniform_LH_C_1⁰, _lh_uniform_LH_C_1⁴)
 //│ 					in let h¹⁰ = t¹²
-//│ 					in (fun f¹⁹ -> (fun i¹¹ -> t¹³(f¹⁹, f¹⁹(i¹¹, h¹⁰)))) else 
+//│ 					in (fun f¹⁵ -> (fun i⁷ -> t¹³(f¹⁵, f¹⁵(i⁷, h¹⁰)))) else 
 //│ 					let t¹⁴ = map_lh_₃((fun x⁴ -> (x⁴ % 65536)), _lh_uniform_LH_C_1⁴)
 //│ 					in let h¹¹ = t¹²
-//│ 					in (fun f²⁰ -> (fun i¹² -> t¹⁴(f²⁰, f²⁰(i¹², h¹¹))))
+//│ 					in (fun f¹⁶ -> (fun i⁸ -> t¹⁴(f¹⁶, f¹⁶(i⁸, h¹¹))))
 //│ 			| _  => error⁰}}
 //│ 	| _  => error⁰}
 //│ <<<<<<< after floating out <<<<<<<

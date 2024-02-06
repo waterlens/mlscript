@@ -38,6 +38,28 @@ c(p)
 //│ 	Pair a⁰ b⁰ => c([Pair b⁰ a⁰])}
 //│ def p = [Pair [A] [B]]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ c(p)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	Pair a⁰ b⁰ => c([Pair b⁰ a⁰])}
+//│ def p = [Pair [A] [B]]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ c(p)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	Pair a⁰ b⁰ => c([Pair b⁰ a⁰])}
+//│ def p = [Pair [A] [B]]
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT:
 let p = Wrap(3)
@@ -76,6 +98,28 @@ c(p)
 //│ 	Wrap a⁰ => if (a⁰ > 0) then c([Wrap (a⁰ - 1)]) else [Wrap 0]}
 //│ def p = [Wrap 3]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ c(p)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	Wrap a⁰ => if (a⁰ > 0) then c([Wrap (a⁰ - 1)]) else [Wrap 0]}
+//│ def p = [Wrap 3]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ c(p)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	Wrap a⁰ => if (a⁰ > 0) then c([Wrap (a⁰ - 1)]) else [Wrap 0]}
+//│ def p = [Wrap 3]
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT:
 fun f(x) = if x is
@@ -120,6 +164,30 @@ f(C(A))
 //│ def g(y¹) = case y¹ of {
 //│ 	D b⁰ => f([C b⁰])}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f([C [A]])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	C a⁰ => f([C a⁰])}
+//│ def g(y⁰) = case y⁰ of {
+//│ 	D b⁰ => f([C b⁰])}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f([C [A]])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	C a⁰ => f([C a⁰])}
+//│ def g(y⁰) = case y⁰ of {
+//│ 	D b⁰ => f([C b⁰])}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -171,3 +239,27 @@ f(C(D(A)))
 //│ 		D d⁰ => d⁰
 //│ 		| C b⁰ => f([C [C b⁰]])}}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f([C [D [A]]])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	C a⁰ => case a⁰ of {
+//│ 		D d⁰ => d⁰
+//│ 		| C b⁰ => f([C [C b⁰]])}}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f([C [D [A]]])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	C a⁰ => case a⁰ of {
+//│ 		D d⁰ => d⁰
+//│ 		| C b⁰ => f([C [C b⁰]])}}
+//│ <<<<<<< after floating out <<<<<<<

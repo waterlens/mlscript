@@ -42,6 +42,26 @@ Ok(f(C(A)))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [Ok [C [A]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ [Ok f([C [A]])]
+//│ def f(a⁰) = case a⁰ of {
+//│ 	C d⁰ => a⁰}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ [Ok f([C [A]])]
+//│ def f(a⁰) = case a⁰ of {
+//│ 	C d⁰ => a⁰}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 fun f(x) =
@@ -90,3 +110,33 @@ wrapInRes(f(C(A)))
 //│ 	[Res1 y¹]
 //│ 	[Res2 y¹]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ wrapInRes(f([C [A]]))
+//│ def f(x⁰) = 
+//│ 	primitive⁰(x⁰)
+//│ 	case x⁰ of {
+//│ 		C a⁰ => x⁰}
+//│ def wrapInRes(y⁰) = 
+//│ 	[Res1 y⁰]
+//│ 	[Res2 y⁰]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ wrapInRes(f([C [A]]))
+//│ def f(x⁰) = 
+//│ 	primitive⁰(x⁰)
+//│ 	case x⁰ of {
+//│ 		C a⁰ => x⁰}
+//│ def wrapInRes(y⁰) = 
+//│ 	[Res1 y⁰]
+//│ 	[Res2 y⁰]
+//│ <<<<<<< after floating out <<<<<<<

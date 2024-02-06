@@ -127,6 +127,52 @@ testUnzipZip(primId(50000))
 //│ 	| N  => (fun _lh_dummy² -> [Pair [N] [N]])}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ unzip
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ zip -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testUnzipZip(primId⁰(50000))
+//│ def enumFromTo(a¹, b¹) = if (a¹ < b¹) then [C a¹ enumFromTo((a¹ + 1), b¹)] else [N]
+//│ def testUnzipZip(n⁰) = zip(primId⁰(enumFromTo(1, n⁰)), primId⁰(enumFromTo(2, (n⁰ + 3))), 99)
+//│ def unzip(ls⁰) = ls⁰(99)
+//│ def zip(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C x⁰ xt⁰ => case ys⁰ of {
+//│ 		C y⁰ yt⁰ => 
+//│ 			let t⁰ = zip(xt⁰, yt⁰)
+//│ 			in let h⁰ = 	
+//│ 				let b⁰ = y⁰
+//│ 				in let a⁰ = x⁰
+//│ 				in (fun t¹ -> case t¹(99) of {
+//│ 					Pair atail⁰ btail⁰ => [Pair [C a⁰ atail⁰] [C b⁰ btail⁰]]})
+//│ 			in (fun _lh_dummy⁰ -> h⁰(t⁰))
+//│ 		| N  => (fun _lh_dummy¹ -> [Pair [N] [N]])}
+//│ 	| N  => (fun _lh_dummy² -> [Pair [N] [N]])}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testUnzipZip(primId⁰(50000))
+//│ def enumFromTo(a¹, b¹) = if (a¹ < b¹) then [C a¹ enumFromTo((a¹ + 1), b¹)] else [N]
+//│ def testUnzipZip(n⁰) = zip(primId⁰(enumFromTo(1, n⁰)), primId⁰(enumFromTo(2, (n⁰ + 3))), 99)
+//│ def unzip(ls⁰) = ls⁰(99)
+//│ def zip(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C x⁰ xt⁰ => case ys⁰ of {
+//│ 		C y⁰ yt⁰ => 
+//│ 			let t⁰ = zip(xt⁰, yt⁰)
+//│ 			in let h⁰ = 	
+//│ 				let b⁰ = y⁰
+//│ 				in let a⁰ = x⁰
+//│ 				in (fun t¹ -> case t¹(99) of {
+//│ 					Pair atail⁰ btail⁰ => [Pair [C a⁰ atail⁰] [C b⁰ btail⁰]]})
+//│ 			in (fun _lh_dummy⁰ -> h⁰(t⁰))
+//│ 		| N  => (fun _lh_dummy¹ -> [Pair [N] [N]])}
+//│ 	| N  => (fun _lh_dummy² -> [Pair [N] [N]])}
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
@@ -265,6 +311,52 @@ testZipUnzip(primId(50000))
 //│ 	| N  => [Pair (fun ys⁴ -> [N]) (fun xt³ -> (fun x³ -> [N]))]}
 //│ def zip(xs², ys²) = xs²(ys²)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ zip
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ unzip -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testZipUnzip(primId⁰(50000))
+//│ def makeZippedList(n⁰) = if (n⁰ > 0) then [C [Pair n⁰ (n⁰ + 1)] makeZippedList((n⁰ - 1))] else [N]
+//│ def testZipUnzip(n¹) = case unzip(primId⁰(makeZippedList(n¹))) of {
+//│ 	Pair xs¹ ys³ => xs¹(ys³)}
+//│ def unzip(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => case h⁰ of {
+//│ 		Pair a⁰ b⁰ => case unzip(t⁰) of {
+//│ 			Pair atail⁰ btail⁰ => [Pair 
+//│ 				let xt⁰ = atail⁰
+//│ 				in let x⁰ = a⁰
+//│ 				in (fun ys¹ -> ys¹(xt⁰, x⁰)) 
+//│ 				let yt⁰ = btail⁰
+//│ 				in let y⁰ = b⁰
+//│ 				in (fun xt¹ -> (fun x¹ -> [C [Pair x¹ y⁰] xt¹(yt⁰)]))]}}
+//│ 	| N  => [Pair (fun ys² -> [N]) (fun xt² -> (fun x² -> [N]))]}
+//│ def zip(xs⁰, ys⁰) = xs⁰(ys⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testZipUnzip(primId⁰(50000))
+//│ def makeZippedList(n⁰) = if (n⁰ > 0) then [C [Pair n⁰ (n⁰ + 1)] makeZippedList((n⁰ - 1))] else [N]
+//│ def testZipUnzip(n¹) = case unzip(primId⁰(makeZippedList(n¹))) of {
+//│ 	Pair xs¹ ys³ => xs¹(ys³)}
+//│ def unzip(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => case h⁰ of {
+//│ 		Pair a⁰ b⁰ => case unzip(t⁰) of {
+//│ 			Pair atail⁰ btail⁰ => [Pair 
+//│ 				let xt⁰ = atail⁰
+//│ 				in let x⁰ = a⁰
+//│ 				in (fun ys¹ -> ys¹(xt⁰, x⁰)) 
+//│ 				let yt⁰ = btail⁰
+//│ 				in let y⁰ = b⁰
+//│ 				in (fun xt¹ -> (fun x¹ -> [C [Pair x¹ y⁰] xt¹(yt⁰)]))]}}
+//│ 	| N  => [Pair (fun ys² -> [N]) (fun xt² -> (fun x² -> [N]))]}
+//│ def zip(xs⁰, ys⁰) = xs⁰(ys⁰)
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
@@ -435,6 +527,62 @@ testZipMapBothUnzip(primId(50000))
 //│ 		| N  => [N]}
 //│ 	| N  => [N]}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ unzip -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testZipMapBothUnzip(primId⁰(50000))
+//│ def makeZippedList(n¹) = if (n¹ > 0) then [C [Pair n¹ (n¹ + 1)] makeZippedList((n¹ - 1))] else [N]
+//│ def map(f⁰, ls⁰) = ls⁰(f⁰)
+//│ def testZipMapBothUnzip(n⁰) = case unzip(primId⁰(makeZippedList(n⁰))) of {
+//│ 	Pair xs⁰ ys⁰ => zip(xs⁰((fun x⁰ -> (x⁰ + 1))), ys⁰((fun x¹ -> (x¹ * x¹))))}
+//│ def unzip(ls¹) = case ls¹ of {
+//│ 	C h⁰ t⁰ => case h⁰ of {
+//│ 		Pair a⁰ b⁰ => case unzip(t⁰) of {
+//│ 			Pair atail⁰ btail⁰ => [Pair 
+//│ 				let t¹ = atail⁰
+//│ 				in let h¹ = a⁰
+//│ 				in (fun f¹ -> [C f¹(h¹) t¹(f¹)]) 
+//│ 				let t² = btail⁰
+//│ 				in let h² = b⁰
+//│ 				in (fun f² -> [C f²(h²) t²(f²)])]}}
+//│ 	| N  => [Pair (fun f³ -> [N]) (fun f⁴ -> [N])]}
+//│ def zip(xs¹, ys¹) = case xs¹ of {
+//│ 	C x² xt⁰ => case ys¹ of {
+//│ 		C y⁰ yt⁰ => [C [Pair x² y⁰] zip(xt⁰, yt⁰)]
+//│ 		| N  => [N]}
+//│ 	| N  => [N]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testZipMapBothUnzip(primId⁰(50000))
+//│ def makeZippedList(n¹) = if (n¹ > 0) then [C [Pair n¹ (n¹ + 1)] makeZippedList((n¹ - 1))] else [N]
+//│ def map(f⁰, ls⁰) = ls⁰(f⁰)
+//│ def testZipMapBothUnzip(n⁰) = case unzip(primId⁰(makeZippedList(n⁰))) of {
+//│ 	Pair xs⁰ ys⁰ => zip(xs⁰((fun x⁰ -> (x⁰ + 1))), ys⁰((fun x¹ -> (x¹ * x¹))))}
+//│ def unzip(ls¹) = case ls¹ of {
+//│ 	C h⁰ t⁰ => case h⁰ of {
+//│ 		Pair a⁰ b⁰ => case unzip(t⁰) of {
+//│ 			Pair atail⁰ btail⁰ => [Pair 
+//│ 				let t¹ = atail⁰
+//│ 				in let h¹ = a⁰
+//│ 				in (fun f¹ -> [C f¹(h¹) t¹(f¹)]) 
+//│ 				let t² = btail⁰
+//│ 				in let h² = b⁰
+//│ 				in (fun f² -> [C f²(h²) t²(f²)])]}}
+//│ 	| N  => [Pair (fun f³ -> [N]) (fun f⁴ -> [N])]}
+//│ def zip(xs¹, ys¹) = case xs¹ of {
+//│ 	C x² xt⁰ => case ys¹ of {
+//│ 		C y⁰ yt⁰ => [C [Pair x² y⁰] zip(xt⁰, yt⁰)]
+//│ 		| N  => [N]}
+//│ 	| N  => [N]}
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated

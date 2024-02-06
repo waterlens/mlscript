@@ -79,6 +79,40 @@ testMapmapBuiltInType $ primId [1..100000]
 //│ def testMapmapBuiltInType_lh_₁(_lh_testMapmapBuiltInType_arg1¹) = map_lh_₂((fun x² -> (x² + 1)), map_lh_₁((fun x³ -> (x³ * x³)), _lh_testMapmapBuiltInType_arg1¹))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map_lh_₂
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ map_lh_₁ -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testMapmapBuiltInType_lh_₁(primId⁰(enumFromTo_lh_₁(1, 100000)))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then [LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)] else [LH_N]
+//│ def map_lh_₁(f¹, ls¹) = case ls¹ of {
+//│ 	LH_C h⁰ t⁰ => 
+//│ 		let t¹ = map_lh_₁(f¹, t⁰)
+//│ 		in let h¹ = f¹(h⁰)
+//│ 		in (fun f² -> [LH_C f²(h¹) t¹(f²)])
+//│ 	| LH_N  => (fun f³ -> [LH_N])}
+//│ def map_lh_₂(f⁰, ls⁰) = ls⁰(f⁰)
+//│ def testMapmapBuiltInType_lh_₁(_lh_testMapmapBuiltInType_arg1⁰) = map_lh_₁((fun x⁰ -> (x⁰ * x⁰)), _lh_testMapmapBuiltInType_arg1⁰, (fun x¹ -> (x¹ + 1)))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testMapmapBuiltInType_lh_₁(primId⁰(enumFromTo_lh_₁(1, 100000)))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then [LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)] else [LH_N]
+//│ def map_lh_₁(f¹, ls¹, _lh_popOutId_0⁰) = case ls¹ of {
+//│ 	LH_C h⁰ t⁰ => 
+//│ 		let t¹ = map_lh_₁(f¹, t⁰)
+//│ 		in let h¹ = f¹(h⁰)
+//│ 		in [LH_C _lh_popOutId_0⁰(h¹) t¹(_lh_popOutId_0⁰)]
+//│ 	| LH_N  => [LH_N]}
+//│ def map_lh_₂(f⁰, ls⁰) = ls⁰(f⁰)
+//│ def testMapmapBuiltInType_lh_₁(_lh_testMapmapBuiltInType_arg1⁰) = map_lh_₁((fun x⁰ -> (x⁰ * x⁰)), _lh_testMapmapBuiltInType_arg1⁰, (fun x¹ -> (x¹ + 1)))
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
@@ -238,6 +272,64 @@ testManual(primId(enumFromTo(1, 500000)))
 //│ def testManual(ls¹³) = _lhManualLastFilterDrive(ls¹³, (fun x³ -> (x³ < 1000)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testLastFilter(primId⁰(enumFromTo(1, 500000)))
+//│ testManual(primId⁰(enumFromTo(1, 500000)))
+//│ def _lhManualLastFilter(ls², f⁰, a⁰) = case ls² of {
+//│ 	C h¹ t¹ => if f⁰(h¹) then _lhManualLastFilter(t¹, f⁰, h¹) else _lhManualLastFilter(t¹, f⁰, a⁰)
+//│ 	| N  => a⁰}
+//│ def _lhManualLastFilterDrive(ls³, f¹) = case ls³ of {
+//│ 	C h² t² => if f¹(h²) then 
+//│ 		let a¹ = _lhManualLastFilter(t², f¹, h²)
+//│ 		in [Some a¹] else _lhManualLastFilterDrive(t², f¹)
+//│ 	| N  => [None]}
+//│ def enumFromTo(a³, b⁰) = if (a³ <= b⁰) then [C a³ enumFromTo((a³ + 1), b⁰)] else [N]
+//│ def filter(ls⁵, f²) = case ls⁵ of {
+//│ 	C h⁴ t⁴ => if f²(h⁴) then [C h⁴ filter(t⁴, f²)] else filter(t⁴, f²)
+//│ 	| N  => [N]}
+//│ def last(a², ls⁴) = case ls⁴ of {
+//│ 	N  => a²
+//│ 	| C h³ t³ => last(h³, t³)}
+//│ def lastDrive(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => [Some last(h⁰, t⁰)]
+//│ 	| N  => [None]}
+//│ def testLastFilter(ls¹) = lastDrive(filter(ls¹, (fun x⁰ -> (x⁰ < 1000))))
+//│ def testManual(ls⁶) = _lhManualLastFilterDrive(ls⁶, (fun x¹ -> (x¹ < 1000)))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testLastFilter(primId⁰(enumFromTo(1, 500000)))
+//│ testManual(primId⁰(enumFromTo(1, 500000)))
+//│ def _lhManualLastFilter(ls², f⁰, a⁰) = case ls² of {
+//│ 	C h¹ t¹ => if f⁰(h¹) then _lhManualLastFilter(t¹, f⁰, h¹) else _lhManualLastFilter(t¹, f⁰, a⁰)
+//│ 	| N  => a⁰}
+//│ def _lhManualLastFilterDrive(ls³, f¹) = case ls³ of {
+//│ 	C h² t² => if f¹(h²) then 
+//│ 		let a¹ = _lhManualLastFilter(t², f¹, h²)
+//│ 		in [Some a¹] else _lhManualLastFilterDrive(t², f¹)
+//│ 	| N  => [None]}
+//│ def enumFromTo(a³, b⁰) = if (a³ <= b⁰) then [C a³ enumFromTo((a³ + 1), b⁰)] else [N]
+//│ def filter(ls⁵, f²) = case ls⁵ of {
+//│ 	C h⁴ t⁴ => if f²(h⁴) then [C h⁴ filter(t⁴, f²)] else filter(t⁴, f²)
+//│ 	| N  => [N]}
+//│ def last(a², ls⁴) = case ls⁴ of {
+//│ 	N  => a²
+//│ 	| C h³ t³ => last(h³, t³)}
+//│ def lastDrive(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => [Some last(h⁰, t⁰)]
+//│ 	| N  => [None]}
+//│ def testLastFilter(ls¹) = lastDrive(filter(ls¹, (fun x⁰ -> (x⁰ < 1000))))
+//│ def testManual(ls⁶) = _lhManualLastFilterDrive(ls⁶, (fun x¹ -> (x¹ < 1000)))
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
@@ -354,6 +446,46 @@ testLastFilterEnum(primId(500000))
 //│ def testLastFilterEnum(n¹) = lastDrive(filter(enumFromTo(1, n¹), (fun x¹ -> (x¹ < 1000))))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ filter
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ enumFromTo -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testLastFilterEnum(primId⁰(500000))
+//│ def enumFromTo(a¹, b⁰) = if (a¹ <= b⁰) then 
+//│ 	let t² = enumFromTo((a¹ + 1), b⁰)
+//│ 	in let h² = a¹
+//│ 	in (fun f¹ -> if f¹(h²) then [C h² t²(f¹)] else t²(f¹)) else (fun f² -> [N])
+//│ def filter(ls², f⁰) = ls²(f⁰)
+//│ def last(a⁰, ls¹) = case ls¹ of {
+//│ 	N  => a⁰
+//│ 	| C h¹ t¹ => last(h¹, t¹)}
+//│ def lastDrive(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => [Some last(h⁰, t⁰)]
+//│ 	| N  => [None]}
+//│ def testLastFilterEnum(n⁰) = lastDrive(enumFromTo(1, n⁰, (fun x⁰ -> (x⁰ < 1000))))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testLastFilterEnum(primId⁰(500000))
+//│ def enumFromTo(a¹, b⁰, _lh_popOutId_0⁰) = if (a¹ <= b⁰) then 
+//│ 	let t² = enumFromTo((a¹ + 1), b⁰)
+//│ 	in let h² = a¹
+//│ 	in if _lh_popOutId_0⁰(h²) then [C h² t²(_lh_popOutId_0⁰)] else t²(_lh_popOutId_0⁰) else [N]
+//│ def filter(ls², f⁰) = ls²(f⁰)
+//│ def last(a⁰, ls¹) = case ls¹ of {
+//│ 	N  => a⁰
+//│ 	| C h¹ t¹ => last(h¹, t¹)}
+//│ def lastDrive(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => [Some last(h⁰, t⁰)]
+//│ 	| N  => [None]}
+//│ def testLastFilterEnum(n⁰) = lastDrive(enumFromTo(1, n⁰, (fun x⁰ -> (x⁰ < 1000))))
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
@@ -449,6 +581,42 @@ testManual(primId(enumFromTo(1, 100000)))
 //│ def testMapmap(ls⁵) = map((fun x⁴ -> (x⁴ + 1)), map((fun x⁵ -> (x⁵ * x⁵)), ls⁵))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testMapmap(primId⁰(enumFromTo(1, 100000)))
+//│ testManual(primId⁰(enumFromTo(1, 100000)))
+//│ def _lhManual(ls², f1⁰, f2⁰) = case ls² of {
+//│ 	C h¹ t¹ => [C f2⁰(f1⁰(h¹)) _lhManual(t¹, f1⁰, f2⁰)]
+//│ 	| N  => [N]}
+//│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ enumFromTo((a⁰ + 1), b⁰)] else [N]
+//│ def map(f⁰, ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)]
+//│ 	| N  => [N]}
+//│ def testManual(ls³) = _lhManual(ls³, (fun x² -> (x² * x²)), (fun x³ -> (x³ + 1)))
+//│ def testMapmap(ls¹) = map((fun x⁰ -> (x⁰ + 1)), map((fun x¹ -> (x¹ * x¹)), ls¹))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testMapmap(primId⁰(enumFromTo(1, 100000)))
+//│ testManual(primId⁰(enumFromTo(1, 100000)))
+//│ def _lhManual(ls², f1⁰, f2⁰) = case ls² of {
+//│ 	C h¹ t¹ => [C f2⁰(f1⁰(h¹)) _lhManual(t¹, f1⁰, f2⁰)]
+//│ 	| N  => [N]}
+//│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ enumFromTo((a⁰ + 1), b⁰)] else [N]
+//│ def map(f⁰, ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => [C f⁰(h⁰) map(f⁰, t⁰)]
+//│ 	| N  => [N]}
+//│ def testManual(ls³) = _lhManual(ls³, (fun x² -> (x² * x²)), (fun x³ -> (x³ + 1)))
+//│ def testMapmap(ls¹) = map((fun x⁰ -> (x⁰ + 1)), map((fun x¹ -> (x¹ * x¹)), ls¹))
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
@@ -527,6 +695,36 @@ testMapmapLet(primId(enumFromTo(1, 100000)))
 //│ 	| N  => [N]}
 //│ def testMapmapLet(ls³) = map((fun x² -> (x² + 1)), map((fun x³ -> (x³ * x³)), ls³))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testMapmapLet(primId⁰(enumFromTo(1, 100000)))
+//│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ enumFromTo((a⁰ + 1), b⁰)] else [N]
+//│ def map(f⁰, ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let r⁰ = f⁰(h⁰)
+//│ 		in [C r⁰ map(f⁰, t⁰)]
+//│ 	| N  => [N]}
+//│ def testMapmapLet(ls¹) = map((fun x⁰ -> (x⁰ + 1)), map((fun x¹ -> (x¹ * x¹)), ls¹))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testMapmapLet(primId⁰(enumFromTo(1, 100000)))
+//│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ enumFromTo((a⁰ + 1), b⁰)] else [N]
+//│ def map(f⁰, ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let r⁰ = f⁰(h⁰)
+//│ 		in [C r⁰ map(f⁰, t⁰)]
+//│ 	| N  => [N]}
+//│ def testMapmapLet(ls¹) = map((fun x⁰ -> (x⁰ + 1)), map((fun x¹ -> (x¹ * x¹)), ls¹))
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
@@ -772,6 +970,81 @@ testQueenUsingFlatMapBuiltInType $ primId 11
 //│ def testQueenUsingFlatMapBuiltInType_lh_₁(_lh_testQueenUsingFlatMapBuiltInType_arg1¹) = nsoln_lh_₁(_lh_testQueenUsingFlatMapBuiltInType_arg1¹)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ append_lh_₂, append_lh_₁, flatMap_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ gen_lh_₁ -> 2
+//│ enumFromTo_lh_₁ -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testQueenUsingFlatMapBuiltInType_lh_₁(primId⁰(11))
+//│ def append_lh_₁(_lh_append_arg1¹, _lh_append_arg2⁵) = _lh_append_arg1¹(_lh_append_arg2⁵)
+//│ def append_lh_₂(_lh_append_arg1⁰, _lh_append_arg2⁰) = _lh_append_arg1⁰(_lh_append_arg2⁰)
+//│ def enumFromTo_lh_₁(a⁰, b¹) = if (a⁰ <= b¹) then 
+//│ 	let _lh_flatMap_LH_C_1⁰ = enumFromTo_lh_₁((a⁰ + 1), b¹)
+//│ 	in let _lh_flatMap_LH_C_0⁰ = a⁰
+//│ 	in (fun _lh_flatMap_arg1⁰ -> _lh_flatMap_arg1⁰(_lh_flatMap_LH_C_0⁰, _lh_flatMap_LH_C_1⁰(_lh_flatMap_arg1⁰))) else (fun _lh_flatMap_arg1¹ -> (fun _lh_append_arg2⁶ -> _lh_append_arg2⁶))
+//│ def flatMap_lh_₁(_lh_flatMap_arg1², _lh_flatMap_arg2⁰) = _lh_flatMap_arg2⁰(_lh_flatMap_arg1²)
+//│ def flatMap_lh_₂(_lh_flatMap_arg1³, _lh_flatMap_arg2¹) = case _lh_flatMap_arg2¹ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_flatMap_LH_C_0¹ _lh_flatMap_LH_C_1¹ => _lh_flatMap_arg1³(_lh_flatMap_LH_C_0¹, flatMap_lh_₂(_lh_flatMap_arg1³, _lh_flatMap_LH_C_1¹))
+//│ 	| _  => error⁰}
+//│ def gen_lh_₁(_lh_gen_arg1⁰, _lh_gen_arg2⁰) = case _lh_gen_arg1⁰ of {
+//│ 	0  => [LH_C [LH_N] [LH_N]]
+//│ 	| _  => flatMap_lh_₂((fun b⁰ -> enumFromTo_lh_₁(1, _lh_gen_arg2⁰, (fun q⁰ -> if safe_lh_₁(q⁰, 1, b⁰) then 
+//│ 		let _lh_append_LH_C_1⁰ = (fun _lh_append_arg2¹ -> _lh_append_arg2¹)
+//│ 		in let _lh_append_LH_C_0⁰ = [LH_C q⁰ b⁰]
+//│ 		in (fun _lh_append_arg2² -> 
+//│ 			let _lh_append_LH_C_1¹ = _lh_append_LH_C_1⁰(_lh_append_arg2²)
+//│ 			in let _lh_append_LH_C_0¹ = _lh_append_LH_C_0⁰
+//│ 			in (fun _lh_append_arg2³ -> [LH_C _lh_append_LH_C_0¹ _lh_append_LH_C_1¹(_lh_append_arg2³)])) else (fun _lh_append_arg2⁴ -> _lh_append_arg2⁴)))), gen_lh_₁((_lh_gen_arg1⁰ - 1), _lh_gen_arg2⁰))}
+//│ def length_lh_₁(ls⁰) = case ls⁰ of {
+//│ 	LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰))
+//│ 	| LH_N  => 0}
+//│ def nsoln_lh_₁(_lh_nsoln_arg1⁰) = length_lh_₁(gen_lh_₁(_lh_nsoln_arg1⁰, _lh_nsoln_arg1⁰))
+//│ def safe_lh_₁(_lh_safe_arg1⁰, _lh_safe_arg2⁰, _lh_safe_arg3⁰) = case _lh_safe_arg3⁰ of {
+//│ 	LH_N  => [True]
+//│ 	| LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && safe_lh_₁(_lh_safe_arg1⁰, (_lh_safe_arg2⁰ + 1), _lh_safe_LH_C_1⁰))
+//│ 	| _  => error⁰}
+//│ def testQueenUsingFlatMapBuiltInType_lh_₁(_lh_testQueenUsingFlatMapBuiltInType_arg1⁰) = nsoln_lh_₁(_lh_testQueenUsingFlatMapBuiltInType_arg1⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testQueenUsingFlatMapBuiltInType_lh_₁(primId⁰(11))
+//│ def append_lh_₁(_lh_append_arg1¹, _lh_append_arg2⁵) = _lh_append_arg1¹(_lh_append_arg2⁵)
+//│ def append_lh_₂(_lh_append_arg1⁰, _lh_append_arg2⁰) = _lh_append_arg1⁰(_lh_append_arg2⁰)
+//│ def enumFromTo_lh_₁(a⁰, b¹, _lh_popOutId_0⁰) = if (a⁰ <= b¹) then 
+//│ 	let _lh_flatMap_LH_C_1⁰ = enumFromTo_lh_₁((a⁰ + 1), b¹)
+//│ 	in let _lh_flatMap_LH_C_0⁰ = a⁰
+//│ 	in _lh_popOutId_0⁰(_lh_flatMap_LH_C_0⁰, _lh_flatMap_LH_C_1⁰(_lh_popOutId_0⁰)) else (fun _lh_append_arg2⁶ -> _lh_append_arg2⁶)
+//│ def flatMap_lh_₁(_lh_flatMap_arg1⁰, _lh_flatMap_arg2⁰) = _lh_flatMap_arg2⁰(_lh_flatMap_arg1⁰)
+//│ def flatMap_lh_₂(_lh_flatMap_arg1¹, _lh_flatMap_arg2¹) = case _lh_flatMap_arg2¹ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_flatMap_LH_C_0¹ _lh_flatMap_LH_C_1¹ => _lh_flatMap_arg1¹(_lh_flatMap_LH_C_0¹, flatMap_lh_₂(_lh_flatMap_arg1¹, _lh_flatMap_LH_C_1¹))
+//│ 	| _  => error⁰}
+//│ def gen_lh_₁(_lh_gen_arg1⁰, _lh_gen_arg2⁰) = case _lh_gen_arg1⁰ of {
+//│ 	0  => [LH_C [LH_N] [LH_N]]
+//│ 	| _  => flatMap_lh_₂((fun b⁰ -> enumFromTo_lh_₁(1, _lh_gen_arg2⁰, (fun q⁰ -> if safe_lh_₁(q⁰, 1, b⁰) then 
+//│ 		let _lh_append_LH_C_1⁰ = (fun _lh_append_arg2¹ -> _lh_append_arg2¹)
+//│ 		in let _lh_append_LH_C_0⁰ = [LH_C q⁰ b⁰]
+//│ 		in (fun _lh_append_arg2² -> 
+//│ 			let _lh_append_LH_C_1¹ = _lh_append_LH_C_1⁰(_lh_append_arg2²)
+//│ 			in let _lh_append_LH_C_0¹ = _lh_append_LH_C_0⁰
+//│ 			in (fun _lh_append_arg2³ -> [LH_C _lh_append_LH_C_0¹ _lh_append_LH_C_1¹(_lh_append_arg2³)])) else (fun _lh_append_arg2⁴ -> _lh_append_arg2⁴)))), gen_lh_₁((_lh_gen_arg1⁰ - 1), _lh_gen_arg2⁰))}
+//│ def length_lh_₁(ls⁰) = case ls⁰ of {
+//│ 	LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰))
+//│ 	| LH_N  => 0}
+//│ def nsoln_lh_₁(_lh_nsoln_arg1⁰) = length_lh_₁(gen_lh_₁(_lh_nsoln_arg1⁰, _lh_nsoln_arg1⁰))
+//│ def safe_lh_₁(_lh_safe_arg1⁰, _lh_safe_arg2⁰, _lh_safe_arg3⁰) = case _lh_safe_arg3⁰ of {
+//│ 	LH_N  => [True]
+//│ 	| LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && safe_lh_₁(_lh_safe_arg1⁰, (_lh_safe_arg2⁰ + 1), _lh_safe_LH_C_1⁰))
+//│ 	| _  => error⁰}
+//│ def testQueenUsingFlatMapBuiltInType_lh_₁(_lh_testQueenUsingFlatMapBuiltInType_arg1⁰) = nsoln_lh_₁(_lh_testQueenUsingFlatMapBuiltInType_arg1⁰)
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
@@ -945,6 +1218,67 @@ testQueenBuiltInType $ primId 11
 //│ def testQueenBuiltInType_lh_₁(_lh_testQueenBuiltInType_arg1¹) = nsoln_lh_₁(_lh_testQueenBuiltInType_arg1¹)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ recursive consumer: gen_lh_₁
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ enumFromTo_lh_₁ -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testQueenBuiltInType_lh_₁(primId⁰(11))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let _lh_listcomp_fun_ls_t¹ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
+//│ 	in let _lh_listcomp_fun_ls_h¹ = a⁰
+//│ 	in (fun _lh_listcomp_fun_ls_h² -> (fun _lh_listcomp_fun² -> (fun _lh_listcomp_fun_ls_t² -> (fun _lh_listcomp_fun³ -> if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹))))) else (fun _lh_listcomp_fun_ls_h³ -> (fun _lh_listcomp_fun⁴ -> (fun _lh_listcomp_fun_ls_t³ -> (fun _lh_listcomp_fun⁵ -> _lh_listcomp_fun⁵(_lh_listcomp_fun_ls_t³)))))
+//│ def gen_lh_₁(_lh_gen_arg1⁰, _lh_gen_arg2⁰) = case _lh_gen_arg1⁰ of {
+//│ 	0  => [LH_C [LH_N] [LH_N]]
+//│ 	| _  => 
+//│ 		let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => 
+//│ 				let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> _lh_listcomp_fun_para¹(_lh_listcomp_fun_ls_h⁰, _lh_listcomp_fun¹, _lh_listcomp_fun_ls_t⁰, _lh_listcomp_fun⁰))
+//│ 				in _lh_listcomp_fun¹(enumFromTo_lh_₁(1, _lh_gen_arg2⁰))
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun⁰(gen_lh_₁((_lh_gen_arg1⁰ - 1), _lh_gen_arg2⁰))}
+//│ def length_lh_₁(ls⁰) = case ls⁰ of {
+//│ 	LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰))
+//│ 	| LH_N  => 0}
+//│ def nsoln_lh_₁(_lh_nsoln_arg1⁰) = length_lh_₁(gen_lh_₁(_lh_nsoln_arg1⁰, _lh_nsoln_arg1⁰))
+//│ def safe_lh_₁(_lh_safe_arg1⁰, _lh_safe_arg2⁰, _lh_safe_arg3⁰) = case _lh_safe_arg3⁰ of {
+//│ 	LH_N  => [True]
+//│ 	| LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && safe_lh_₁(_lh_safe_arg1⁰, (_lh_safe_arg2⁰ + 1), _lh_safe_LH_C_1⁰))
+//│ 	| _  => error⁰}
+//│ def testQueenBuiltInType_lh_₁(_lh_testQueenBuiltInType_arg1⁰) = nsoln_lh_₁(_lh_testQueenBuiltInType_arg1⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testQueenBuiltInType_lh_₁(primId⁰(11))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let _lh_listcomp_fun_ls_t¹ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
+//│ 	in let _lh_listcomp_fun_ls_h¹ = a⁰
+//│ 	in (fun _lh_listcomp_fun_ls_h² -> (fun _lh_listcomp_fun² -> (fun _lh_listcomp_fun_ls_t² -> (fun _lh_listcomp_fun³ -> if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹))))) else (fun _lh_listcomp_fun_ls_h³ -> (fun _lh_listcomp_fun⁴ -> (fun _lh_listcomp_fun_ls_t³ -> (fun _lh_listcomp_fun⁵ -> _lh_listcomp_fun⁵(_lh_listcomp_fun_ls_t³)))))
+//│ def gen_lh_₁(_lh_gen_arg1⁰, _lh_gen_arg2⁰) = case _lh_gen_arg1⁰ of {
+//│ 	0  => [LH_C [LH_N] [LH_N]]
+//│ 	| _  => 
+//│ 		let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => 
+//│ 				let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> _lh_listcomp_fun_para¹(_lh_listcomp_fun_ls_h⁰, _lh_listcomp_fun¹, _lh_listcomp_fun_ls_t⁰, _lh_listcomp_fun⁰))
+//│ 				in _lh_listcomp_fun¹(enumFromTo_lh_₁(1, _lh_gen_arg2⁰))
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun⁰(gen_lh_₁((_lh_gen_arg1⁰ - 1), _lh_gen_arg2⁰))}
+//│ def length_lh_₁(ls⁰) = case ls⁰ of {
+//│ 	LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰))
+//│ 	| LH_N  => 0}
+//│ def nsoln_lh_₁(_lh_nsoln_arg1⁰) = length_lh_₁(gen_lh_₁(_lh_nsoln_arg1⁰, _lh_nsoln_arg1⁰))
+//│ def safe_lh_₁(_lh_safe_arg1⁰, _lh_safe_arg2⁰, _lh_safe_arg3⁰) = case _lh_safe_arg3⁰ of {
+//│ 	LH_N  => [True]
+//│ 	| LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && safe_lh_₁(_lh_safe_arg1⁰, (_lh_safe_arg2⁰ + 1), _lh_safe_LH_C_1⁰))
+//│ 	| _  => error⁰}
+//│ def testQueenBuiltInType_lh_₁(_lh_testQueenBuiltInType_arg1⁰) = nsoln_lh_₁(_lh_testQueenBuiltInType_arg1⁰)
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
@@ -1051,6 +1385,44 @@ testSumMapEnumSumAcc(primId(300000))
 //│ def testSumMapEnumSumAcc(n¹) = sum(map((fun x¹ -> (x¹ * x¹)), enumFromTo(1, n¹)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ summ, map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ enumFromTo -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testSumMapEnumSumAcc(primId⁰(300000))
+//│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let t⁰ = enumFromTo((a⁰ + 1), b⁰)
+//│ 	in let h⁰ = a⁰
+//│ 	in (fun f¹ -> 
+//│ 		let t¹ = t⁰(f¹)
+//│ 		in let h¹ = f¹(h⁰)
+//│ 		in (fun acc¹ -> t¹((acc¹ + h¹)))) else (fun f² -> (fun acc² -> acc²))
+//│ def map(f⁰, ls⁰) = ls⁰(f⁰)
+//│ def sum(ls¹) = ls¹(0)
+//│ def summ(acc⁰, ls²) = ls²(acc⁰)
+//│ def testSumMapEnumSumAcc(n⁰) = sum(enumFromTo(1, n⁰, (fun x⁰ -> (x⁰ * x⁰))))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testSumMapEnumSumAcc(primId⁰(300000))
+//│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let t⁰ = enumFromTo((a⁰ + 1), b⁰)
+//│ 	in let h⁰ = a⁰
+//│ 	in (fun f¹ -> 
+//│ 		let t¹ = t⁰(f¹)
+//│ 		in let h¹ = f¹(h⁰)
+//│ 		in (fun acc¹ -> t¹((acc¹ + h¹)))) else (fun f² -> (fun acc² -> acc²))
+//│ def map(f⁰, ls⁰) = ls⁰(f⁰)
+//│ def sum(ls¹) = ls¹(0)
+//│ def summ(acc⁰, ls²) = ls²(acc⁰)
+//│ def testSumMapEnumSumAcc(n⁰) = sum(enumFromTo(1, n⁰, (fun x⁰ -> (x⁰ * x⁰))))
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
@@ -1152,6 +1524,42 @@ testSumMapEnum(primId(300000))
 //│ def sum(ls³) = ls³(99)
 //│ def testSumMapEnum(n¹) = sum(map((fun x¹ -> (x¹ * x¹)), enumFromTo(1, n¹)))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ sum, map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ enumFromTo -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testSumMapEnum(primId⁰(300000))
+//│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let t⁰ = enumFromTo((a⁰ + 1), b⁰)
+//│ 	in let h⁰ = a⁰
+//│ 	in (fun f¹ -> 
+//│ 		let t¹ = t⁰(f¹)
+//│ 		in let h¹ = f¹(h⁰)
+//│ 		in (fun _lh_dummy⁰ -> (h¹ + t¹(99)))) else (fun f² -> (fun _lh_dummy¹ -> 0))
+//│ def map(f⁰, ls⁰) = ls⁰(f⁰)
+//│ def sum(ls¹) = ls¹(99)
+//│ def testSumMapEnum(n⁰) = enumFromTo(1, n⁰, (fun x⁰ -> (x⁰ * x⁰)), 99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testSumMapEnum(primId⁰(300000))
+//│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let t⁰ = enumFromTo((a⁰ + 1), b⁰)
+//│ 	in let h⁰ = a⁰
+//│ 	in (fun f¹ -> 
+//│ 		let t¹ = t⁰(f¹)
+//│ 		in let h¹ = f¹(h⁰)
+//│ 		in (fun _lh_dummy⁰ -> (h¹ + t¹(99)))) else (fun f² -> (fun _lh_dummy¹ -> 0))
+//│ def map(f⁰, ls⁰) = ls⁰(f⁰)
+//│ def sum(ls¹) = ls¹(99)
+//│ def testSumMapEnum(n⁰) = enumFromTo(1, n⁰, (fun x⁰ -> (x⁰ * x⁰)), 99)
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
@@ -1496,6 +1904,120 @@ testAnotherQueenNineBuiltInType $ primId 9
 //│ def zip_lh_₁(xs¹, ys¹) = xs¹(ys¹)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ recursive consumer: queens_lh_₁
+//│ safe_lh_₁, and_lh_₁, zip_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ enumFromTo_lh_₂ -> 3
+//│ enumFromTo_lh_₁ -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testAnotherQueenNineBuiltInType_lh_₁(primId⁰(9))
+//│ def and_lh_₁(_lh_and_arg1⁰) = _lh_and_arg1⁰(99)
+//│ def append_lh_₁(_lh_append_arg1⁰, _lh_append_arg2⁰) = case _lh_append_arg1⁰ of {
+//│ 	LH_N  => _lh_append_arg2⁰
+//│ 	| LH_C _lh_append_LH_C_0⁰ _lh_append_LH_C_1⁰ => [LH_C _lh_append_LH_C_0⁰ append_lh_₁(_lh_append_LH_C_1⁰, _lh_append_arg2⁰)]
+//│ 	| _  => error⁰}
+//│ def enumFromTo_lh_₁(a¹, b¹) = if (a¹ <= b¹) then 
+//│ 	let _lh_listcomp_fun_ls_t³ = enumFromTo_lh_₁((a¹ + 1), b¹)
+//│ 	in let _lh_listcomp_fun_ls_h² = a¹
+//│ 	in (fun _lh_listcomp_fun_ls_h³ -> (fun _lh_listcomp_fun⁶ -> (fun _lh_listcomp_fun_ls_t⁴ -> (fun _lh_listcomp_fun⁷ -> if 
+//│ 		let m⁴ = (length_lh_₂(_lh_listcomp_fun_ls_h³) + 1)
+//│ 		in let _lh_listcomp_fun⁸ = (fun _lh_listcomp_fun_para² -> _lh_listcomp_fun_para²(_lh_listcomp_fun⁸, _lh_listcomp_fun_ls_h², m⁴))
+//│ 			in _lh_listcomp_fun⁸(enumFromTo_lh_₂(1, (m⁴ - 1), _lh_listcomp_fun_ls_h³))(99) then [LH_C append_lh_₁(_lh_listcomp_fun_ls_h³, [LH_C _lh_listcomp_fun_ls_h² [LH_N]]) _lh_listcomp_fun⁶(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun⁶(_lh_listcomp_fun_ls_t³))))) else (fun _lh_listcomp_fun_ls_h⁴ -> (fun _lh_listcomp_fun⁹ -> (fun _lh_listcomp_fun_ls_t⁵ -> (fun _lh_listcomp_fun¹⁰ -> _lh_listcomp_fun¹⁰(_lh_listcomp_fun_ls_t⁵)))))
+//│ def enumFromTo_lh_₂(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let tx⁰ = enumFromTo_lh_₂((a⁰ + 1), b⁰)
+//│ 	in let hx⁰ = a⁰
+//│ 	in (fun ys¹ -> case ys¹ of {
+//│ 		LH_C hy⁰ ty⁰ => 
+//│ 			let _lh_listcomp_fun_ls_t⁰ = tx⁰(ty⁰)
+//│ 			in let _lh_listcomp_fun_ls_h⁰ = 	
+//│ 				let _lh_safe_LH_P2_1⁰ = hy⁰
+//│ 				in let _lh_safe_LH_P2_0⁰ = hx⁰
+//│ 				in (fun _lh_listcomp_fun_ls_t¹ -> (fun _lh_listcomp_fun⁰ -> (fun _lh_safe_arg2⁰ -> (fun m⁰ -> 
+//│ 					let _lh_and_LH_C_1⁰ = _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t¹)
+//│ 					in let _lh_and_LH_C_0⁰ = (((_lh_safe_LH_P2_1⁰ /= _lh_safe_arg2⁰) && ((_lh_safe_LH_P2_0⁰ + _lh_safe_LH_P2_1⁰) /= (m⁰ + _lh_safe_arg2⁰))) && ((_lh_safe_LH_P2_0⁰ - _lh_safe_LH_P2_1⁰) /= (m⁰ - _lh_safe_arg2⁰)))
+//│ 					in (fun _lh_dummy⁰ -> if _lh_and_LH_C_0⁰ then _lh_and_LH_C_1⁰(99) else [False])))))
+//│ 			in (fun _lh_listcomp_fun¹ -> (fun _lh_safe_arg2¹ -> (fun m¹ -> _lh_listcomp_fun_ls_h⁰(_lh_listcomp_fun_ls_t⁰, _lh_listcomp_fun¹, _lh_safe_arg2¹, m¹))))
+//│ 		| LH_N  => (fun _lh_listcomp_fun² -> (fun _lh_safe_arg2² -> (fun m² -> (fun _lh_dummy¹ -> [True]))))}) else (fun ys² -> (fun _lh_listcomp_fun³ -> (fun _lh_safe_arg2³ -> (fun m³ -> (fun _lh_dummy² -> [True])))))
+//│ def length_lh_₁(ls⁰) = case ls⁰ of {
+//│ 	LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰))
+//│ 	| LH_N  => 0}
+//│ def length_lh_₂(ls¹) = case ls¹ of {
+//│ 	LH_C h¹ t¹ => (1 + length_lh_₂(t¹))
+//│ 	| LH_N  => 0}
+//│ def queens_lh_₁(_lh_queens_arg1⁰) = case _lh_queens_arg1⁰ of {
+//│ 	0  => [LH_C [LH_N] [LH_N]]
+//│ 	| _  => 
+//│ 		let _lh_listcomp_fun⁴ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t² => 
+//│ 				let _lh_listcomp_fun⁵ = (fun _lh_listcomp_fun_para¹ -> _lh_listcomp_fun_para¹(_lh_listcomp_fun_ls_h¹, _lh_listcomp_fun⁵, _lh_listcomp_fun_ls_t², _lh_listcomp_fun⁴))
+//│ 				in _lh_listcomp_fun⁵(enumFromTo_lh_₁(1, 9))
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun⁴(queens_lh_₁((_lh_queens_arg1⁰ - 1)))}
+//│ def safe_lh_₁(_lh_safe_arg1⁰, _lh_safe_arg2⁴) = 
+//│ 	let m⁵ = (length_lh_₂(_lh_safe_arg1⁰) + 1)
+//│ 	in let _lh_listcomp_fun¹¹ = (fun _lh_listcomp_fun_para³ -> _lh_listcomp_fun_para³(_lh_listcomp_fun¹¹, _lh_safe_arg2⁴, m⁵))
+//│ 		in _lh_listcomp_fun¹¹(enumFromTo_lh_₂(1, (m⁵ - 1), _lh_safe_arg1⁰))(99)
+//│ def testAnotherQueenNineBuiltInType_lh_₁(_lh_testAnotherQueenNineBuiltInType_arg1⁰) = length_lh_₁(queens_lh_₁(_lh_testAnotherQueenNineBuiltInType_arg1⁰))
+//│ def zip_lh_₁(xs⁰, ys⁰) = xs⁰(ys⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testAnotherQueenNineBuiltInType_lh_₁(primId⁰(9))
+//│ def and_lh_₁(_lh_and_arg1⁰) = _lh_and_arg1⁰(99)
+//│ def append_lh_₁(_lh_append_arg1⁰, _lh_append_arg2⁰) = case _lh_append_arg1⁰ of {
+//│ 	LH_N  => _lh_append_arg2⁰
+//│ 	| LH_C _lh_append_LH_C_0⁰ _lh_append_LH_C_1⁰ => [LH_C _lh_append_LH_C_0⁰ append_lh_₁(_lh_append_LH_C_1⁰, _lh_append_arg2⁰)]
+//│ 	| _  => error⁰}
+//│ def enumFromTo_lh_₁(a¹, b¹) = if (a¹ <= b¹) then 
+//│ 	let _lh_listcomp_fun_ls_t³ = enumFromTo_lh_₁((a¹ + 1), b¹)
+//│ 	in let _lh_listcomp_fun_ls_h² = a¹
+//│ 	in (fun _lh_listcomp_fun_ls_h³ -> (fun _lh_listcomp_fun⁶ -> (fun _lh_listcomp_fun_ls_t⁴ -> (fun _lh_listcomp_fun⁷ -> if 
+//│ 		let m⁴ = (length_lh_₂(_lh_listcomp_fun_ls_h³) + 1)
+//│ 		in let _lh_listcomp_fun⁸ = (fun _lh_listcomp_fun_para² -> _lh_listcomp_fun_para²(_lh_listcomp_fun⁸, _lh_listcomp_fun_ls_h², m⁴))
+//│ 			in _lh_listcomp_fun⁸(enumFromTo_lh_₂(1, (m⁴ - 1), _lh_listcomp_fun_ls_h³))(99) then [LH_C append_lh_₁(_lh_listcomp_fun_ls_h³, [LH_C _lh_listcomp_fun_ls_h² [LH_N]]) _lh_listcomp_fun⁶(_lh_listcomp_fun_ls_t³)] else _lh_listcomp_fun⁶(_lh_listcomp_fun_ls_t³))))) else (fun _lh_listcomp_fun_ls_h⁴ -> (fun _lh_listcomp_fun⁹ -> (fun _lh_listcomp_fun_ls_t⁵ -> (fun _lh_listcomp_fun¹⁰ -> _lh_listcomp_fun¹⁰(_lh_listcomp_fun_ls_t⁵)))))
+//│ def enumFromTo_lh_₂(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let tx⁰ = enumFromTo_lh_₂((a⁰ + 1), b⁰)
+//│ 	in let hx⁰ = a⁰
+//│ 	in (fun ys¹ -> case ys¹ of {
+//│ 		LH_C hy⁰ ty⁰ => 
+//│ 			let _lh_listcomp_fun_ls_t⁰ = tx⁰(ty⁰)
+//│ 			in let _lh_listcomp_fun_ls_h⁰ = 	
+//│ 				let _lh_safe_LH_P2_1⁰ = hy⁰
+//│ 				in let _lh_safe_LH_P2_0⁰ = hx⁰
+//│ 				in (fun _lh_listcomp_fun_ls_t¹ -> (fun _lh_listcomp_fun⁰ -> (fun _lh_safe_arg2⁰ -> (fun m⁰ -> 
+//│ 					let _lh_and_LH_C_1⁰ = _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t¹)
+//│ 					in let _lh_and_LH_C_0⁰ = (((_lh_safe_LH_P2_1⁰ /= _lh_safe_arg2⁰) && ((_lh_safe_LH_P2_0⁰ + _lh_safe_LH_P2_1⁰) /= (m⁰ + _lh_safe_arg2⁰))) && ((_lh_safe_LH_P2_0⁰ - _lh_safe_LH_P2_1⁰) /= (m⁰ - _lh_safe_arg2⁰)))
+//│ 					in (fun _lh_dummy⁰ -> if _lh_and_LH_C_0⁰ then _lh_and_LH_C_1⁰(99) else [False])))))
+//│ 			in (fun _lh_listcomp_fun¹ -> (fun _lh_safe_arg2¹ -> (fun m¹ -> _lh_listcomp_fun_ls_h⁰(_lh_listcomp_fun_ls_t⁰, _lh_listcomp_fun¹, _lh_safe_arg2¹, m¹))))
+//│ 		| LH_N  => (fun _lh_listcomp_fun² -> (fun _lh_safe_arg2² -> (fun m² -> (fun _lh_dummy¹ -> [True]))))}) else (fun ys² -> (fun _lh_listcomp_fun³ -> (fun _lh_safe_arg2³ -> (fun m³ -> (fun _lh_dummy² -> [True])))))
+//│ def length_lh_₁(ls⁰) = case ls⁰ of {
+//│ 	LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰))
+//│ 	| LH_N  => 0}
+//│ def length_lh_₂(ls¹) = case ls¹ of {
+//│ 	LH_C h¹ t¹ => (1 + length_lh_₂(t¹))
+//│ 	| LH_N  => 0}
+//│ def queens_lh_₁(_lh_queens_arg1⁰) = case _lh_queens_arg1⁰ of {
+//│ 	0  => [LH_C [LH_N] [LH_N]]
+//│ 	| _  => 
+//│ 		let _lh_listcomp_fun⁴ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t² => 
+//│ 				let _lh_listcomp_fun⁵ = (fun _lh_listcomp_fun_para¹ -> _lh_listcomp_fun_para¹(_lh_listcomp_fun_ls_h¹, _lh_listcomp_fun⁵, _lh_listcomp_fun_ls_t², _lh_listcomp_fun⁴))
+//│ 				in _lh_listcomp_fun⁵(enumFromTo_lh_₁(1, 9))
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun⁴(queens_lh_₁((_lh_queens_arg1⁰ - 1)))}
+//│ def safe_lh_₁(_lh_safe_arg1⁰, _lh_safe_arg2⁴) = 
+//│ 	let m⁵ = (length_lh_₂(_lh_safe_arg1⁰) + 1)
+//│ 	in let _lh_listcomp_fun¹¹ = (fun _lh_listcomp_fun_para³ -> _lh_listcomp_fun_para³(_lh_listcomp_fun¹¹, _lh_safe_arg2⁴, m⁵))
+//│ 		in _lh_listcomp_fun¹¹(enumFromTo_lh_₂(1, (m⁵ - 1), _lh_safe_arg1⁰))(99)
+//│ def testAnotherQueenNineBuiltInType_lh_₁(_lh_testAnotherQueenNineBuiltInType_arg1⁰) = length_lh_₁(queens_lh_₁(_lh_testAnotherQueenNineBuiltInType_arg1⁰))
+//│ def zip_lh_₁(xs⁰, ys⁰) = xs⁰(ys⁰)
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
@@ -1598,6 +2120,42 @@ testSumMapEnumBuiltInType $ primId 300000
 //│ def testSumMapEnumBuiltInType_lh_₁(_lh_testSumMapEnumBuiltInType_arg1¹) = sum_lh_₁(map_lh_₁((fun x¹ -> (x¹ * x¹)), enumFromTo_lh_₁(1, _lh_testSumMapEnumBuiltInType_arg1¹)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map_lh_₁, sum_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ enumFromTo_lh_₁ -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testSumMapEnumBuiltInType_lh_₁(primId⁰(300000))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let t⁰ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
+//│ 	in let h⁰ = a⁰
+//│ 	in (fun f⁰ -> 
+//│ 		let _lh_sum_LH_C_1⁰ = t⁰(f⁰)
+//│ 		in let _lh_sum_LH_C_0⁰ = f⁰(h⁰)
+//│ 		in (fun _lh_dummy⁰ -> (_lh_sum_LH_C_0⁰ + _lh_sum_LH_C_1⁰(99)))) else (fun f¹ -> (fun _lh_dummy¹ -> 0))
+//│ def map_lh_₁(f², ls⁰) = ls⁰(f²)
+//│ def sum_lh_₁(_lh_sum_arg1⁰) = _lh_sum_arg1⁰(99)
+//│ def testSumMapEnumBuiltInType_lh_₁(_lh_testSumMapEnumBuiltInType_arg1⁰) = enumFromTo_lh_₁(1, _lh_testSumMapEnumBuiltInType_arg1⁰, (fun x⁰ -> (x⁰ * x⁰)), 99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testSumMapEnumBuiltInType_lh_₁(primId⁰(300000))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let t⁰ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
+//│ 	in let h⁰ = a⁰
+//│ 	in (fun f⁰ -> 
+//│ 		let _lh_sum_LH_C_1⁰ = t⁰(f⁰)
+//│ 		in let _lh_sum_LH_C_0⁰ = f⁰(h⁰)
+//│ 		in (fun _lh_dummy⁰ -> (_lh_sum_LH_C_0⁰ + _lh_sum_LH_C_1⁰(99)))) else (fun f¹ -> (fun _lh_dummy¹ -> 0))
+//│ def map_lh_₁(f², ls⁰) = ls⁰(f²)
+//│ def sum_lh_₁(_lh_sum_arg1⁰) = _lh_sum_arg1⁰(99)
+//│ def testSumMapEnumBuiltInType_lh_₁(_lh_testSumMapEnumBuiltInType_arg1⁰) = enumFromTo_lh_₁(1, _lh_testSumMapEnumBuiltInType_arg1⁰, (fun x⁰ -> (x⁰ * x⁰)), 99)
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
@@ -1669,6 +2227,34 @@ testFlipFlip(primId(genTree(17, 0)))
 //│ def genTree(n¹, i¹) = if (n¹ <= 0) then [N i¹] else [T genTree((n¹ - 1), i¹) genTree((n¹ - 1), (i¹ + 1))]
 //│ def testFlipFlip(t⁵) = ff(t⁵)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testFlipFlip(primId⁰(genTree(17, 0)))
+//│ def ff(t¹) = flip(flip(t¹))
+//│ def flip(t⁰) = case t⁰ of {
+//│ 	T l⁰ r⁰ => [T flip(r⁰) flip(l⁰)]
+//│ 	| N v⁰ => [N v⁰]}
+//│ def genTree(n⁰, i⁰) = if (n⁰ <= 0) then [N i⁰] else [T genTree((n⁰ - 1), i⁰) genTree((n⁰ - 1), (i⁰ + 1))]
+//│ def testFlipFlip(t²) = ff(t²)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testFlipFlip(primId⁰(genTree(17, 0)))
+//│ def ff(t¹) = flip(flip(t¹))
+//│ def flip(t⁰) = case t⁰ of {
+//│ 	T l⁰ r⁰ => [T flip(r⁰) flip(l⁰)]
+//│ 	| N v⁰ => [N v⁰]}
+//│ def genTree(n⁰, i⁰) = if (n⁰ <= 0) then [N i⁰] else [T genTree((n⁰ - 1), i⁰) genTree((n⁰ - 1), (i⁰ + 1))]
+//│ def testFlipFlip(t²) = ff(t²)
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
@@ -1762,6 +2348,40 @@ testFoldMap(primId(300000))
 //│ def testFoldMap(n¹) = foldl((fun i¹ -> (fun x² -> (i¹ + x²))), 0, map((fun x³ -> (x³ * x³)), primId⁰(enumFromTo(1, n¹))))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ foldl
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ map -> 4
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testFoldMap(primId⁰(300000))
+//│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ enumFromTo((a⁰ + 1), b⁰)] else [N]
+//│ def foldl(f³, s², ls¹) = ls¹(f³, s²)
+//│ def map(f⁰, ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let t¹ = map(f⁰, t⁰)
+//│ 		in let h¹ = f⁰(h⁰)
+//│ 		in (fun f¹ -> (fun s⁰ -> t¹(f¹, f¹(s⁰, h¹))))
+//│ 	| N  => (fun f² -> (fun s¹ -> s¹))}
+//│ def testFoldMap(n⁰) = map((fun x⁰ -> (x⁰ * x⁰)), primId⁰(enumFromTo(1, n⁰)), (fun i⁰ -> (fun x¹ -> (i⁰ + x¹))), 0)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testFoldMap(primId⁰(300000))
+//│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ enumFromTo((a⁰ + 1), b⁰)] else [N]
+//│ def foldl(f¹, s⁰, ls¹) = ls¹(f¹, s⁰)
+//│ def map(f⁰, ls⁰, _lh_popOutId_0⁰, _lh_popOutId_1⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let t¹ = map(f⁰, t⁰)
+//│ 		in let h¹ = f⁰(h⁰)
+//│ 		in t¹(_lh_popOutId_0⁰, _lh_popOutId_0⁰(_lh_popOutId_1⁰, h¹))
+//│ 	| N  => _lh_popOutId_1⁰}
+//│ def testFoldMap(n⁰) = map((fun x⁰ -> (x⁰ * x⁰)), primId⁰(enumFromTo(1, n⁰)), (fun i⁰ -> (fun x¹ -> (i⁰ + x¹))), 0)
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
@@ -1847,6 +2467,41 @@ testMapQrev(primId(enumFromTo(1, 10000)))
 //│ 	| N  => a³}
 //│ def testMapQrev(ls¹) = map((fun x¹ -> (x¹ + 1)), qrev((fun f³ -> [N]), ls¹))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ qrev -> 2
+//│ testMapQrev -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testMapQrev(primId⁰(enumFromTo(1, 10000)))
+//│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ enumFromTo((a⁰ + 1), b⁰)] else [N]
+//│ def map(f⁰, xs⁰) = xs⁰(f⁰)
+//│ def qrev(a¹, ys⁰) = case ys⁰ of {
+//│ 	C h⁰ t⁰ => qrev(
+//│ 		let t¹ = a¹
+//│ 		in let h¹ = h⁰
+//│ 		in (fun f¹ -> [C f¹(h¹) t¹(f¹)]), t⁰)
+//│ 	| N  => a¹}
+//│ def testMapQrev(ls⁰) = qrev((fun f² -> [N]), ls⁰, (fun x⁰ -> (x⁰ + 1)))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testMapQrev(primId⁰(enumFromTo(1, 10000)))
+//│ def enumFromTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ enumFromTo((a⁰ + 1), b⁰)] else [N]
+//│ def map(f⁰, xs⁰) = xs⁰(f⁰)
+//│ def qrev(a¹, ys⁰) = case ys⁰ of {
+//│ 	C h⁰ t⁰ => qrev(
+//│ 		let t¹ = a¹
+//│ 		in let h¹ = h⁰
+//│ 		in (fun f¹ -> [C f¹(h¹) t¹(f¹)]), t⁰)
+//│ 	| N  => a¹}
+//│ def testMapQrev(ls⁰) = qrev((fun f² -> [N]), ls⁰, (fun x⁰ -> (x⁰ + 1)))
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
@@ -1959,6 +2614,50 @@ testManual(primId(enumFromTo(1, 10000)))
 //│ def testManual(ls³) = _lhManualQrevMap((fun x³ -> (x³ + 1)), ls³, [N])
 //│ def testQrevMap(ls²) = qrev([N], map((fun x² -> (x² + 1)), ls²))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ qrev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ map -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testQrevMap(primId⁰(enumFromTo(1, 10000)))
+//│ testManual(primId⁰(enumFromTo(1, 10000)))
+//│ def _lhManualQrevMap(f¹, xs¹, a²) = case xs¹ of {
+//│ 	C h² t² => _lhManualQrevMap(f¹, t², [C f¹(h²) a²])
+//│ 	| N  => a²}
+//│ def enumFromTo(a⁴, b⁰) = if (a⁴ <= b⁰) then [C a⁴ enumFromTo((a⁴ + 1), b⁰)] else [N]
+//│ def map(f⁰, xs⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let t¹ = map(f⁰, t⁰)
+//│ 		in let h¹ = f⁰(h⁰)
+//│ 		in (fun a⁰ -> t¹([C h¹ a⁰]))
+//│ 	| N  => (fun a¹ -> a¹)}
+//│ def qrev(a³, ys⁰) = ys⁰(a³)
+//│ def testManual(ls¹) = _lhManualQrevMap((fun x¹ -> (x¹ + 1)), ls¹, [N])
+//│ def testQrevMap(ls⁰) = map((fun x⁰ -> (x⁰ + 1)), ls⁰, [N])
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testQrevMap(primId⁰(enumFromTo(1, 10000)))
+//│ testManual(primId⁰(enumFromTo(1, 10000)))
+//│ def _lhManualQrevMap(f¹, xs¹, a⁰) = case xs¹ of {
+//│ 	C h² t² => _lhManualQrevMap(f¹, t², [C f¹(h²) a⁰])
+//│ 	| N  => a⁰}
+//│ def enumFromTo(a², b⁰) = if (a² <= b⁰) then [C a² enumFromTo((a² + 1), b⁰)] else [N]
+//│ def map(f⁰, xs⁰, _lh_popOutId_0⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let t¹ = map(f⁰, t⁰)
+//│ 		in let h¹ = f⁰(h⁰)
+//│ 		in t¹([C h¹ _lh_popOutId_0⁰])
+//│ 	| N  => _lh_popOutId_0⁰}
+//│ def qrev(a¹, ys⁰) = ys⁰(a¹)
+//│ def testManual(ls¹) = _lhManualQrevMap((fun x¹ -> (x¹ + 1)), ls¹, [N])
+//│ def testQrevMap(ls⁰) = map((fun x⁰ -> (x⁰ + 1)), ls⁰, [N])
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
@@ -2102,6 +2801,61 @@ testSumListComprehensionBuiltInType $ primId 1000
 //│ 	let _lh_listcomp_fun⁹ = (fun _lh_listcomp_fun_para³ -> _lh_listcomp_fun_para³(_lh_listcomp_fun⁹))
 //│ 	in _lh_listcomp_fun⁹(enumFromTo_lh_₁(1, _lh_testSumListComprehensionBuiltInType_arg1¹)))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ testSumListComprehensionBuiltInType_lh_₁, sum_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ enumFromTo_lh_₂ -> 2
+//│ enumFromTo_lh_₁ -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> _lh_listcomp_fun_para⁰(_lh_listcomp_fun⁰))
+//│ 	in _lh_listcomp_fun⁰(enumFromTo_lh_₁(1, primId⁰(1000)))(99)
+//│ def enumFromTo_lh_₁(a¹, b¹) = if (a¹ <= b¹) then 
+//│ 	let _lh_listcomp_fun_ls_t³ = enumFromTo_lh_₁((a¹ + 1), b¹)
+//│ 	in let _lh_listcomp_fun_ls_h³ = a¹
+//│ 	in (fun _lh_listcomp_fun⁵ -> 
+//│ 		let _lh_listcomp_fun⁶ = (fun _lh_listcomp_fun_para¹ -> _lh_listcomp_fun_para¹(_lh_listcomp_fun_ls_h³, _lh_listcomp_fun⁶, _lh_listcomp_fun_ls_t³, _lh_listcomp_fun⁵))
+//│ 		in _lh_listcomp_fun⁶(enumFromTo_lh_₂(1, _lh_listcomp_fun_ls_h³))) else (fun _lh_listcomp_fun⁷ -> (fun _lh_dummy¹ -> 0))
+//│ def enumFromTo_lh_₂(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let _lh_listcomp_fun_ls_t⁰ = enumFromTo_lh_₂((a⁰ + 1), b⁰)
+//│ 	in let _lh_listcomp_fun_ls_h⁰ = a⁰
+//│ 	in (fun _lh_listcomp_fun_ls_h¹ -> (fun _lh_listcomp_fun¹ -> (fun _lh_listcomp_fun_ls_t¹ -> (fun _lh_listcomp_fun² -> 
+//│ 		let _lh_sum_LH_C_1⁰ = _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t⁰)
+//│ 		in let _lh_sum_LH_C_0⁰ = (_lh_listcomp_fun_ls_h¹ * _lh_listcomp_fun_ls_h⁰)
+//│ 		in (fun _lh_dummy⁰ -> (_lh_sum_LH_C_0⁰ + _lh_sum_LH_C_1⁰(99))))))) else (fun _lh_listcomp_fun_ls_h² -> (fun _lh_listcomp_fun³ -> (fun _lh_listcomp_fun_ls_t² -> (fun _lh_listcomp_fun⁴ -> _lh_listcomp_fun⁴(_lh_listcomp_fun_ls_t²)))))
+//│ def sum_lh_₁(_lh_sum_arg1⁰) = _lh_sum_arg1⁰(99)
+//│ def testSumListComprehensionBuiltInType_lh_₁(_lh_testSumListComprehensionBuiltInType_arg1⁰) = 
+//│ 	let _lh_listcomp_fun⁸ = (fun _lh_listcomp_fun_para² -> _lh_listcomp_fun_para²(_lh_listcomp_fun⁸))
+//│ 	in _lh_listcomp_fun⁸(enumFromTo_lh_₁(1, _lh_testSumListComprehensionBuiltInType_arg1⁰))(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> _lh_listcomp_fun_para⁰(_lh_listcomp_fun⁰))
+//│ 	in _lh_listcomp_fun⁰(enumFromTo_lh_₁(1, primId⁰(1000)))(99)
+//│ def enumFromTo_lh_₁(a¹, b¹) = if (a¹ <= b¹) then 
+//│ 	let _lh_listcomp_fun_ls_t³ = enumFromTo_lh_₁((a¹ + 1), b¹)
+//│ 	in let _lh_listcomp_fun_ls_h³ = a¹
+//│ 	in (fun _lh_listcomp_fun⁵ -> 
+//│ 		let _lh_listcomp_fun⁶ = (fun _lh_listcomp_fun_para¹ -> _lh_listcomp_fun_para¹(_lh_listcomp_fun_ls_h³, _lh_listcomp_fun⁶, _lh_listcomp_fun_ls_t³, _lh_listcomp_fun⁵))
+//│ 		in _lh_listcomp_fun⁶(enumFromTo_lh_₂(1, _lh_listcomp_fun_ls_h³))) else (fun _lh_listcomp_fun⁷ -> (fun _lh_dummy¹ -> 0))
+//│ def enumFromTo_lh_₂(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let _lh_listcomp_fun_ls_t⁰ = enumFromTo_lh_₂((a⁰ + 1), b⁰)
+//│ 	in let _lh_listcomp_fun_ls_h⁰ = a⁰
+//│ 	in (fun _lh_listcomp_fun_ls_h¹ -> (fun _lh_listcomp_fun¹ -> (fun _lh_listcomp_fun_ls_t¹ -> (fun _lh_listcomp_fun² -> 
+//│ 		let _lh_sum_LH_C_1⁰ = _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t⁰)
+//│ 		in let _lh_sum_LH_C_0⁰ = (_lh_listcomp_fun_ls_h¹ * _lh_listcomp_fun_ls_h⁰)
+//│ 		in (fun _lh_dummy⁰ -> (_lh_sum_LH_C_0⁰ + _lh_sum_LH_C_1⁰(99))))))) else (fun _lh_listcomp_fun_ls_h² -> (fun _lh_listcomp_fun³ -> (fun _lh_listcomp_fun_ls_t² -> (fun _lh_listcomp_fun⁴ -> _lh_listcomp_fun⁴(_lh_listcomp_fun_ls_t²)))))
+//│ def sum_lh_₁(_lh_sum_arg1⁰) = _lh_sum_arg1⁰(99)
+//│ def testSumListComprehensionBuiltInType_lh_₁(_lh_testSumListComprehensionBuiltInType_arg1⁰) = 
+//│ 	let _lh_listcomp_fun⁸ = (fun _lh_listcomp_fun_para² -> _lh_listcomp_fun_para²(_lh_listcomp_fun⁸))
+//│ 	in _lh_listcomp_fun⁸(enumFromTo_lh_₁(1, _lh_testSumListComprehensionBuiltInType_arg1⁰))(99)
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
@@ -2248,6 +3002,63 @@ testSumFlatmapEnum $ primId 100000
 //│ 		in (fun _lh_sum_arg1³ -> sum_lh_₁((_lh_sum_arg1³ + _lh_sum_LH_C_0¹), _lh_sum_LH_C_1¹)))), enumFromTo_lh_₁(1, _lh_testSumFlatmapEnum_arg1¹)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ sum_lh_₁, flatMap_lh_₁, mappend_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ enumFromTo_lh_₁ -> 3
+//│ testSumFlatmapEnum_lh_₁ -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testSumFlatmapEnum_lh_₁(primId⁰(100000))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let _lh_flatMap_LH_C_1⁰ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
+//│ 	in let _lh_flatMap_LH_C_0⁰ = a⁰
+//│ 	in (fun _lh_flatMap_arg1⁰ -> _lh_flatMap_arg1⁰(_lh_flatMap_LH_C_0⁰, _lh_flatMap_LH_C_1⁰(_lh_flatMap_arg1⁰))) else (fun _lh_flatMap_arg1¹ -> (fun _lh_sum_arg1¹ -> _lh_sum_arg1¹))
+//│ def flatMap_lh_₁(_lh_flatMap_arg1², _lh_flatMap_arg2⁰) = _lh_flatMap_arg2⁰(_lh_flatMap_arg1²)
+//│ def mappend_lh_₁(xs⁰, ys⁰) = xs⁰(ys⁰)
+//│ def sum_lh_₁(_lh_sum_arg1⁰, _lh_sum_arg2⁰) = _lh_sum_arg2⁰(_lh_sum_arg1⁰)
+//│ def testSumFlatmapEnum_lh_₁(_lh_testSumFlatmapEnum_arg1⁰) = enumFromTo_lh_₁(1, _lh_testSumFlatmapEnum_arg1⁰, (fun a¹ -> 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun ys¹ -> ys¹)
+//│ 		in let h⁰ = a¹
+//│ 		in (fun ys² -> 
+//│ 			let _lh_sum_LH_C_1⁰ = t¹(ys²)
+//│ 			in let _lh_sum_LH_C_0⁰ = h⁰
+//│ 			in (fun _lh_sum_arg1² -> _lh_sum_LH_C_1⁰((_lh_sum_arg1² + _lh_sum_LH_C_0⁰))))
+//│ 	in let h¹ = a¹
+//│ 	in (fun ys³ -> 
+//│ 		let _lh_sum_LH_C_1¹ = t⁰(ys³)
+//│ 		in let _lh_sum_LH_C_0¹ = h¹
+//│ 		in (fun _lh_sum_arg1³ -> _lh_sum_LH_C_1¹((_lh_sum_arg1³ + _lh_sum_LH_C_0¹))))), 0)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testSumFlatmapEnum_lh_₁(primId⁰(100000))
+//│ def enumFromTo_lh_₁(a⁰, b⁰, _lh_popOutId_0⁰) = if (a⁰ <= b⁰) then 
+//│ 	let _lh_flatMap_LH_C_1⁰ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
+//│ 	in let _lh_flatMap_LH_C_0⁰ = a⁰
+//│ 	in _lh_popOutId_0⁰(_lh_flatMap_LH_C_0⁰, _lh_flatMap_LH_C_1⁰(_lh_popOutId_0⁰)) else (fun _lh_sum_arg1¹ -> _lh_sum_arg1¹)
+//│ def flatMap_lh_₁(_lh_flatMap_arg1⁰, _lh_flatMap_arg2⁰) = _lh_flatMap_arg2⁰(_lh_flatMap_arg1⁰)
+//│ def mappend_lh_₁(xs⁰, ys⁰) = xs⁰(ys⁰)
+//│ def sum_lh_₁(_lh_sum_arg1⁰, _lh_sum_arg2⁰) = _lh_sum_arg2⁰(_lh_sum_arg1⁰)
+//│ def testSumFlatmapEnum_lh_₁(_lh_testSumFlatmapEnum_arg1⁰) = enumFromTo_lh_₁(1, _lh_testSumFlatmapEnum_arg1⁰, (fun a¹ -> 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun ys¹ -> ys¹)
+//│ 		in let h⁰ = a¹
+//│ 		in (fun ys² -> 
+//│ 			let _lh_sum_LH_C_1⁰ = t¹(ys²)
+//│ 			in let _lh_sum_LH_C_0⁰ = h⁰
+//│ 			in (fun _lh_sum_arg1² -> _lh_sum_LH_C_1⁰((_lh_sum_arg1² + _lh_sum_LH_C_0⁰))))
+//│ 	in let h¹ = a¹
+//│ 	in (fun ys³ -> 
+//│ 		let _lh_sum_LH_C_1¹ = t⁰(ys³)
+//│ 		in let _lh_sum_LH_C_0¹ = h¹
+//│ 		in (fun _lh_sum_arg1³ -> _lh_sum_LH_C_1¹((_lh_sum_arg1³ + _lh_sum_LH_C_0¹))))), 0)
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
@@ -2378,6 +3189,63 @@ testSumFlatmap $ primId 100000
 //│ 		in (fun _lh_sum_arg1³ -> sum_lh_₁((_lh_sum_arg1³ + _lh_sum_LH_C_0¹), _lh_sum_LH_C_1¹)))), primId⁰(enumFromTo_lh_₁(1, _lh_testSumFlatmap_arg1¹))))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ sum_lh_₁, mappend_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ flatMap_lh_₁ -> 2
+//│ testSumFlatmap_lh_₁ -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testSumFlatmap_lh_₁(primId⁰(100000))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then [LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)] else [LH_N]
+//│ def flatMap_lh_₁(_lh_flatMap_arg1⁰, _lh_flatMap_arg2⁰) = case _lh_flatMap_arg2⁰ of {
+//│ 	LH_N  => (fun _lh_sum_arg1¹ -> _lh_sum_arg1¹)
+//│ 	| LH_C _lh_flatMap_LH_C_0⁰ _lh_flatMap_LH_C_1⁰ => _lh_flatMap_arg1⁰(_lh_flatMap_LH_C_0⁰, flatMap_lh_₁(_lh_flatMap_arg1⁰, _lh_flatMap_LH_C_1⁰))
+//│ 	| _  => error⁰}
+//│ def mappend_lh_₁(xs⁰, ys⁰) = xs⁰(ys⁰)
+//│ def sum_lh_₁(_lh_sum_arg1⁰, _lh_sum_arg2⁰) = _lh_sum_arg2⁰(_lh_sum_arg1⁰)
+//│ def testSumFlatmap_lh_₁(_lh_testSumFlatmap_arg1⁰) = flatMap_lh_₁((fun a¹ -> 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun ys¹ -> ys¹)
+//│ 		in let h⁰ = a¹
+//│ 		in (fun ys² -> 
+//│ 			let _lh_sum_LH_C_1⁰ = t¹(ys²)
+//│ 			in let _lh_sum_LH_C_0⁰ = h⁰
+//│ 			in (fun _lh_sum_arg1² -> _lh_sum_LH_C_1⁰((_lh_sum_arg1² + _lh_sum_LH_C_0⁰))))
+//│ 	in let h¹ = a¹
+//│ 	in (fun ys³ -> 
+//│ 		let _lh_sum_LH_C_1¹ = t⁰(ys³)
+//│ 		in let _lh_sum_LH_C_0¹ = h¹
+//│ 		in (fun _lh_sum_arg1³ -> _lh_sum_LH_C_1¹((_lh_sum_arg1³ + _lh_sum_LH_C_0¹))))), primId⁰(enumFromTo_lh_₁(1, _lh_testSumFlatmap_arg1⁰)), 0)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testSumFlatmap_lh_₁(primId⁰(100000))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then [LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)] else [LH_N]
+//│ def flatMap_lh_₁(_lh_flatMap_arg1⁰, _lh_flatMap_arg2⁰) = case _lh_flatMap_arg2⁰ of {
+//│ 	LH_N  => (fun _lh_sum_arg1¹ -> _lh_sum_arg1¹)
+//│ 	| LH_C _lh_flatMap_LH_C_0⁰ _lh_flatMap_LH_C_1⁰ => _lh_flatMap_arg1⁰(_lh_flatMap_LH_C_0⁰, flatMap_lh_₁(_lh_flatMap_arg1⁰, _lh_flatMap_LH_C_1⁰))
+//│ 	| _  => error⁰}
+//│ def mappend_lh_₁(xs⁰, ys⁰) = xs⁰(ys⁰)
+//│ def sum_lh_₁(_lh_sum_arg1⁰, _lh_sum_arg2⁰) = _lh_sum_arg2⁰(_lh_sum_arg1⁰)
+//│ def testSumFlatmap_lh_₁(_lh_testSumFlatmap_arg1⁰) = flatMap_lh_₁((fun a¹ -> 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun ys¹ -> ys¹)
+//│ 		in let h⁰ = a¹
+//│ 		in (fun ys² -> 
+//│ 			let _lh_sum_LH_C_1⁰ = t¹(ys²)
+//│ 			in let _lh_sum_LH_C_0⁰ = h⁰
+//│ 			in (fun _lh_sum_arg1² -> _lh_sum_LH_C_1⁰((_lh_sum_arg1² + _lh_sum_LH_C_0⁰))))
+//│ 	in let h¹ = a¹
+//│ 	in (fun ys³ -> 
+//│ 		let _lh_sum_LH_C_1¹ = t⁰(ys³)
+//│ 		in let _lh_sum_LH_C_0¹ = h¹
+//│ 		in (fun _lh_sum_arg1³ -> _lh_sum_LH_C_1¹((_lh_sum_arg1³ + _lh_sum_LH_C_0¹))))), primId⁰(enumFromTo_lh_₁(1, _lh_testSumFlatmap_arg1⁰)), 0)
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
@@ -2464,6 +3332,42 @@ testSumSquareTree(primId(18))
 //│ def sumTree(t³) = t³(99)
 //│ def testSumSquareTree(n³) = sumTree(sqTree(primId⁰(genTree(n³))))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ sumTree
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ sqTree -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testSumSquareTree(primId⁰(18))
+//│ def genTree(n⁰) = if (n⁰ > 0) then [T n⁰ genTree((n⁰ - 1)) genTree((n⁰ - 1))] else [L]
+//│ def sqTree(t⁰) = case t⁰ of {
+//│ 	T v⁰ l⁰ r⁰ => 
+//│ 		let r¹ = sqTree(r⁰)
+//│ 		in let l¹ = sqTree(l⁰)
+//│ 		in let v¹ = (v⁰ * v⁰)
+//│ 		in (fun _lh_dummy⁰ -> ((v¹ + l¹(99)) + r¹(99)))
+//│ 	| L  => (fun _lh_dummy¹ -> 0)}
+//│ def sumTree(t¹) = t¹(99)
+//│ def testSumSquareTree(n¹) = sqTree(primId⁰(genTree(n¹)), 99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testSumSquareTree(primId⁰(18))
+//│ def genTree(n⁰) = if (n⁰ > 0) then [T n⁰ genTree((n⁰ - 1)) genTree((n⁰ - 1))] else [L]
+//│ def sqTree(t⁰, _lh_popOutId_0⁰) = case t⁰ of {
+//│ 	T v⁰ l⁰ r⁰ => 
+//│ 		let r¹ = sqTree(r⁰)
+//│ 		in let l¹ = sqTree(l⁰)
+//│ 		in let v¹ = (v⁰ * v⁰)
+//│ 		in ((v¹ + l¹(99)) + r¹(99))
+//│ 	| L  => 0}
+//│ def sumTree(t¹) = t¹(99)
+//│ def testSumSquareTree(n¹) = sqTree(primId⁰(genTree(n¹)), 99)
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
@@ -2716,6 +3620,139 @@ testManual $ primId [primId [1..n] | n <- primId [1..1000]]
 //│ def testSumFlatten_lh_₁(_lh_testSumFlatten_arg1¹) = summ_lh_₁(flatten_lh_₁(_lh_testSumFlatten_arg1¹))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ summ_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ append_lh_₁ -> 2
+//│ flatten_lh_₁ -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testSumFlatten_lh_₁(primId⁰(
+//│ 	let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 		LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => [LH_C primId⁰(enumFromTo_lh_₄(1, _lh_listcomp_fun_ls_h⁰)) _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)]
+//│ 		| LH_N  => [LH_N]})
+//│ 	in _lh_listcomp_fun⁰(primId⁰(enumFromTo_lh_₃(1, 1000)))))
+//│ testManual_lh_₁(primId⁰(
+//│ 	let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {
+//│ 		LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C primId⁰(enumFromTo_lh_₁(1, _lh_listcomp_fun_ls_h¹)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)]
+//│ 		| LH_N  => [LH_N]})
+//│ 	in _lh_listcomp_fun¹(primId⁰(enumFromTo_lh_₂(1, 1000)))))
+//│ def append2_lh_₁(_lh_append2_arg1⁰, _lh_append2_arg2⁰, _lh_append2_arg3⁰) = 
+//│ 	let _lh_matchIdent⁴ = _lh_append2_arg1⁰
+//│ 	in case _lh_matchIdent⁴ of {
+//│ 		LH_N  => _lh_append2_arg2⁰(_lh_append2_arg3⁰)
+//│ 		| LH_C _lh_append2_LH_C_0⁰ _lh_append2_LH_C_1⁰ => 
+//│ 			let tt⁰ = append2_lh_₁(_lh_append2_LH_C_1⁰, _lh_append2_arg2⁰)
+//│ 			in let hh⁰ = _lh_append2_LH_C_0⁰
+//│ 			in (hh⁰ + sum2_lh_₂(tt⁰))
+//│ 		| _  => error⁰}
+//│ def append_lh_₁(_lh_append_arg1⁰, _lh_append_arg2⁰) = 
+//│ 	let _lh_matchIdent¹ = _lh_append_arg1⁰
+//│ 	in case _lh_matchIdent¹ of {
+//│ 		LH_N  => _lh_append_arg2⁰
+//│ 		| LH_C _lh_append_LH_C_0⁰ _lh_append_LH_C_1⁰ => 
+//│ 			let _lh_summ_LH_C_1⁰ = append_lh_₁(_lh_append_LH_C_1⁰, _lh_append_arg2⁰)
+//│ 			in let _lh_summ_LH_C_0⁰ = _lh_append_LH_C_0⁰
+//│ 			in (fun _lh_dummy⁰ -> (_lh_summ_LH_C_0⁰ + 
+//│ 				let _lh_matchIdent² = _lh_summ_LH_C_1⁰
+//│ 				in _lh_matchIdent²(99)))
+//│ 		| _  => error⁰}
+//│ def enumFromTo_lh_₁(a³, b³) = if (a³ <= b³) then [LH_C a³ enumFromTo_lh_₁((a³ + 1), b³)] else [LH_N]
+//│ def enumFromTo_lh_₂(a¹, b¹) = if (a¹ <= b¹) then [LH_C a¹ enumFromTo_lh_₂((a¹ + 1), b¹)] else [LH_N]
+//│ def enumFromTo_lh_₃(a², b²) = if (a² <= b²) then [LH_C a² enumFromTo_lh_₃((a² + 1), b²)] else [LH_N]
+//│ def enumFromTo_lh_₄(a⁰, b⁰) = if (a⁰ <= b⁰) then [LH_C a⁰ enumFromTo_lh_₄((a⁰ + 1), b⁰)] else [LH_N]
+//│ def flatten2_lh_₁(_lh_flatten2_arg1⁰, _lh_flatten2_arg2⁰) = 
+//│ 	let _lh_matchIdent⁰ = _lh_flatten2_arg1⁰
+//│ 	in case _lh_matchIdent⁰ of {
+//│ 		LH_N  => 0
+//│ 		| LH_C _lh_flatten2_LH_C_0⁰ _lh_flatten2_LH_C_1⁰ => append2_lh_₁(_lh_flatten2_LH_C_0⁰, flatten2_lh_₁(_lh_flatten2_LH_C_1⁰), _lh_flatten2_arg2⁰)
+//│ 		| _  => error⁰}
+//│ def flatten_lh_₁(_lh_flatten_arg1⁰) = 
+//│ 	let _lh_matchIdent⁶ = _lh_flatten_arg1⁰
+//│ 	in case _lh_matchIdent⁶ of {
+//│ 		LH_N  => (fun _lh_dummy¹ -> 0)
+//│ 		| LH_C _lh_flatten_LH_C_0⁰ _lh_flatten_LH_C_1⁰ => append_lh_₁(_lh_flatten_LH_C_0⁰, flatten_lh_₁(_lh_flatten_LH_C_1⁰))
+//│ 		| _  => error⁰}
+//│ def sum2_lh_₁(_lh_sum2_arg1¹) = 
+//│ 	let k¹ = _lh_sum2_arg1¹
+//│ 	in k¹(99)
+//│ def sum2_lh_₂(_lh_sum2_arg1⁰) = 
+//│ 	let k⁰ = _lh_sum2_arg1⁰
+//│ 	in k⁰(99)
+//│ def summ_lh_₁(_lh_summ_arg1⁰) = 
+//│ 	let _lh_matchIdent³ = _lh_summ_arg1⁰
+//│ 	in _lh_matchIdent³(99)
+//│ def testManual_lh_₁(_lh_testManual_arg1⁰) = sum2_lh_₁(flatten2_lh_₁(_lh_testManual_arg1⁰))
+//│ def testSumFlatten_lh_₁(_lh_testSumFlatten_arg1⁰) = 
+//│ 	let _lh_matchIdent⁵ = flatten_lh_₁(_lh_testSumFlatten_arg1⁰)
+//│ 	in _lh_matchIdent⁵(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testSumFlatten_lh_₁(primId⁰(
+//│ 	let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 		LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => [LH_C primId⁰(enumFromTo_lh_₄(1, _lh_listcomp_fun_ls_h⁰)) _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)]
+//│ 		| LH_N  => [LH_N]})
+//│ 	in _lh_listcomp_fun⁰(primId⁰(enumFromTo_lh_₃(1, 1000)))))
+//│ testManual_lh_₁(primId⁰(
+//│ 	let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {
+//│ 		LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => [LH_C primId⁰(enumFromTo_lh_₁(1, _lh_listcomp_fun_ls_h¹)) _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)]
+//│ 		| LH_N  => [LH_N]})
+//│ 	in _lh_listcomp_fun¹(primId⁰(enumFromTo_lh_₂(1, 1000)))))
+//│ def append2_lh_₁(_lh_append2_arg1⁰, _lh_append2_arg2⁰, _lh_append2_arg3⁰) = 
+//│ 	let _lh_matchIdent⁴ = _lh_append2_arg1⁰
+//│ 	in case _lh_matchIdent⁴ of {
+//│ 		LH_N  => _lh_append2_arg2⁰(_lh_append2_arg3⁰)
+//│ 		| LH_C _lh_append2_LH_C_0⁰ _lh_append2_LH_C_1⁰ => 
+//│ 			let tt⁰ = append2_lh_₁(_lh_append2_LH_C_1⁰, _lh_append2_arg2⁰)
+//│ 			in let hh⁰ = _lh_append2_LH_C_0⁰
+//│ 			in (hh⁰ + sum2_lh_₂(tt⁰))
+//│ 		| _  => error⁰}
+//│ def append_lh_₁(_lh_append_arg1⁰, _lh_append_arg2⁰) = 
+//│ 	let _lh_matchIdent¹ = _lh_append_arg1⁰
+//│ 	in case _lh_matchIdent¹ of {
+//│ 		LH_N  => _lh_append_arg2⁰
+//│ 		| LH_C _lh_append_LH_C_0⁰ _lh_append_LH_C_1⁰ => 
+//│ 			let _lh_summ_LH_C_1⁰ = append_lh_₁(_lh_append_LH_C_1⁰, _lh_append_arg2⁰)
+//│ 			in let _lh_summ_LH_C_0⁰ = _lh_append_LH_C_0⁰
+//│ 			in (fun _lh_dummy⁰ -> (_lh_summ_LH_C_0⁰ + 
+//│ 				let _lh_matchIdent² = _lh_summ_LH_C_1⁰
+//│ 				in _lh_matchIdent²(99)))
+//│ 		| _  => error⁰}
+//│ def enumFromTo_lh_₁(a³, b³) = if (a³ <= b³) then [LH_C a³ enumFromTo_lh_₁((a³ + 1), b³)] else [LH_N]
+//│ def enumFromTo_lh_₂(a¹, b¹) = if (a¹ <= b¹) then [LH_C a¹ enumFromTo_lh_₂((a¹ + 1), b¹)] else [LH_N]
+//│ def enumFromTo_lh_₃(a², b²) = if (a² <= b²) then [LH_C a² enumFromTo_lh_₃((a² + 1), b²)] else [LH_N]
+//│ def enumFromTo_lh_₄(a⁰, b⁰) = if (a⁰ <= b⁰) then [LH_C a⁰ enumFromTo_lh_₄((a⁰ + 1), b⁰)] else [LH_N]
+//│ def flatten2_lh_₁(_lh_flatten2_arg1⁰, _lh_flatten2_arg2⁰) = 
+//│ 	let _lh_matchIdent⁰ = _lh_flatten2_arg1⁰
+//│ 	in case _lh_matchIdent⁰ of {
+//│ 		LH_N  => 0
+//│ 		| LH_C _lh_flatten2_LH_C_0⁰ _lh_flatten2_LH_C_1⁰ => append2_lh_₁(_lh_flatten2_LH_C_0⁰, flatten2_lh_₁(_lh_flatten2_LH_C_1⁰), _lh_flatten2_arg2⁰)
+//│ 		| _  => error⁰}
+//│ def flatten_lh_₁(_lh_flatten_arg1⁰) = 
+//│ 	let _lh_matchIdent⁶ = _lh_flatten_arg1⁰
+//│ 	in case _lh_matchIdent⁶ of {
+//│ 		LH_N  => (fun _lh_dummy¹ -> 0)
+//│ 		| LH_C _lh_flatten_LH_C_0⁰ _lh_flatten_LH_C_1⁰ => append_lh_₁(_lh_flatten_LH_C_0⁰, flatten_lh_₁(_lh_flatten_LH_C_1⁰))
+//│ 		| _  => error⁰}
+//│ def sum2_lh_₁(_lh_sum2_arg1¹) = 
+//│ 	let k¹ = _lh_sum2_arg1¹
+//│ 	in k¹(99)
+//│ def sum2_lh_₂(_lh_sum2_arg1⁰) = 
+//│ 	let k⁰ = _lh_sum2_arg1⁰
+//│ 	in k⁰(99)
+//│ def summ_lh_₁(_lh_summ_arg1⁰) = 
+//│ 	let _lh_matchIdent³ = _lh_summ_arg1⁰
+//│ 	in _lh_matchIdent³(99)
+//│ def testManual_lh_₁(_lh_testManual_arg1⁰) = sum2_lh_₁(flatten2_lh_₁(_lh_testManual_arg1⁰))
+//│ def testSumFlatten_lh_₁(_lh_testSumFlatten_arg1⁰) = 
+//│ 	let _lh_matchIdent⁵ = flatten_lh_₁(_lh_testSumFlatten_arg1⁰)
+//│ 	in _lh_matchIdent⁵(99)
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
@@ -2812,6 +3849,43 @@ testZipEnumEnum $ primId 100000
 //│ def testZipEnumEnum_lh_₁(_lh_testZipEnumEnum_arg1¹) = zip_lh_₁(enumFromTo_lh_₁(1, _lh_testZipEnumEnum_arg1¹), enumFromTo_lh_₂(1, _lh_testZipEnumEnum_arg1¹))
 //│ def zip_lh_₁(xs¹, ys³) = xs¹(ys³)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ zip_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ enumFromTo_lh_₂ -> 2
+//│ enumFromTo_lh_₁ -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testZipEnumEnum_lh_₁(primId⁰(100000))
+//│ def enumFromTo_lh_₁(a¹, b¹) = if (a¹ <= b¹) then 
+//│ 	let tx² = enumFromTo_lh_₁((a¹ + 1), b¹)
+//│ 	in let hx² = a¹
+//│ 	in (fun ys⁰ -> ys⁰(hx², tx²)) else (fun ys¹ -> [LH_N])
+//│ def enumFromTo_lh_₂(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let ty⁰ = enumFromTo_lh_₂((a⁰ + 1), b⁰)
+//│ 	in let hy⁰ = a⁰
+//│ 	in (fun hx⁰ -> (fun tx⁰ -> [LH_C [LH_P2 hx⁰ hy⁰] tx⁰(ty⁰)])) else (fun hx¹ -> (fun tx¹ -> [LH_N]))
+//│ def testZipEnumEnum_lh_₁(_lh_testZipEnumEnum_arg1⁰) = enumFromTo_lh_₁(1, _lh_testZipEnumEnum_arg1⁰, enumFromTo_lh_₂(1, _lh_testZipEnumEnum_arg1⁰))
+//│ def zip_lh_₁(xs⁰, ys²) = xs⁰(ys²)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testZipEnumEnum_lh_₁(primId⁰(100000))
+//│ def enumFromTo_lh_₁(a¹, b¹) = if (a¹ <= b¹) then 
+//│ 	let tx² = enumFromTo_lh_₁((a¹ + 1), b¹)
+//│ 	in let hx² = a¹
+//│ 	in (fun ys⁰ -> ys⁰(hx², tx²)) else (fun ys¹ -> [LH_N])
+//│ def enumFromTo_lh_₂(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let ty⁰ = enumFromTo_lh_₂((a⁰ + 1), b⁰)
+//│ 	in let hy⁰ = a⁰
+//│ 	in (fun hx⁰ -> (fun tx⁰ -> [LH_C [LH_P2 hx⁰ hy⁰] tx⁰(ty⁰)])) else (fun hx¹ -> (fun tx¹ -> [LH_N]))
+//│ def testZipEnumEnum_lh_₁(_lh_testZipEnumEnum_arg1⁰) = enumFromTo_lh_₁(1, _lh_testZipEnumEnum_arg1⁰, enumFromTo_lh_₂(1, _lh_testZipEnumEnum_arg1⁰))
+//│ def zip_lh_₁(xs⁰, ys²) = xs⁰(ys²)
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated

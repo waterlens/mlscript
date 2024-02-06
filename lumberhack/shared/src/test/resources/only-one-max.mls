@@ -62,6 +62,36 @@ max(C(1, C(2, N)), 0)
 //│ >>>>>>> evaluate >>>>>>>
 //│ 2
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ max
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun n⁰ -> n⁰)
+//│ 		in let h⁰ = 2
+//│ 		in (fun n¹ -> if (h⁰ > n¹) then t¹(h⁰) else t¹(n¹))
+//│ 	in let h¹ = 1
+//│ 	in (fun n² -> if (h¹ > n²) then t⁰(h¹) else t⁰(n²))(0)
+//│ def max(ls⁰, n³) = ls⁰(n³)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun n⁰ -> n⁰)
+//│ 		in let h⁰ = 2
+//│ 		in (fun n¹ -> if (h⁰ > n¹) then t¹(h⁰) else t¹(n¹))
+//│ 	in let h¹ = 1
+//│ 	in (fun n² -> if (h¹ > n²) then t⁰(h¹) else t⁰(n²))(0)
+//│ def max(ls⁰, n³) = ls⁰(n³)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // original max with the initial `n` not provided: excessive expansion and no fusion due to strategy clash
@@ -125,6 +155,36 @@ max(C(1, C(2, N)), primId(0))
 //│ >>>>>>> evaluate >>>>>>>
 //│ 2
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ max
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun n⁰ -> n⁰)
+//│ 		in let h⁰ = 2
+//│ 		in (fun n¹ -> if (h⁰ > n¹) then t¹(h⁰) else t¹(n¹))
+//│ 	in let h¹ = 1
+//│ 	in (fun n² -> if (h¹ > n²) then t⁰(h¹) else t⁰(n²))(primId⁰(0))
+//│ def max(ls⁰, n³) = ls⁰(n³)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun n⁰ -> n⁰)
+//│ 		in let h⁰ = 2
+//│ 		in (fun n¹ -> if (h⁰ > n¹) then t¹(h⁰) else t¹(n¹))
+//│ 	in let h¹ = 1
+//│ 	in (fun n² -> if (h¹ > n²) then t⁰(h¹) else t⁰(n²))(primId⁰(0))
+//│ def max(ls⁰, n³) = ls⁰(n³)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // original max with the initial list provided as primitive: excessive expansion
@@ -168,6 +228,28 @@ max(primId(C(1, C(2, N))), 0)
 //│ >>>>>>> evaluate >>>>>>>
 //│ 2
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ max(primId⁰([C 1 [C 2 [N]]]), 0)
+//│ def max(ls⁰, n⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => if (h⁰ > n⁰) then max(t⁰, h⁰) else max(t⁰, n⁰)
+//│ 	| N  => n⁰}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ max(primId⁰([C 1 [C 2 [N]]]), 0)
+//│ def max(ls⁰, n⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => if (h⁰ > n⁰) then max(t⁰, h⁰) else max(t⁰, n⁰)
+//│ 	| N  => n⁰}
+//│ <<<<<<< after floating out <<<<<<<
 
 // original max with nothing provided (equivalent to provide all parameters as NoProd): can tie the good knot
 _LUMBERHACK_EVAL
@@ -210,3 +292,25 @@ max(primId(C(1, C(2, N))), primId(0))
 //│ >>>>>>> evaluate >>>>>>>
 //│ 2
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ max(primId⁰([C 1 [C 2 [N]]]), primId⁰(0))
+//│ def max(ls⁰, n⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => if (h⁰ > n⁰) then max(t⁰, h⁰) else max(t⁰, n⁰)
+//│ 	| N  => n⁰}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ max(primId⁰([C 1 [C 2 [N]]]), primId⁰(0))
+//│ def max(ls⁰, n⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => if (h⁰ > n⁰) then max(t⁰, h⁰) else max(t⁰, n⁰)
+//│ 	| N  => n⁰}
+//│ <<<<<<< after floating out <<<<<<<

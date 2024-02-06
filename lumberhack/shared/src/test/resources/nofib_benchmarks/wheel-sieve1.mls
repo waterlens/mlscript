@@ -671,6 +671,212 @@ testWheelSieve1_nofib $ primId 1000
 //│ 	| LH_N  => [LH_N]})
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ recursive consumer: sieve_lh_₁
+//│ nextSize_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ enumFromThenTo_lh_₁ -> 3
+//│ enumFromThenTo_lh_₂ -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testWheelSieve1_nofib_lh_₁(primId⁰(1000))
+//│ def append_lz_lh_₁(_lh_append_lz_arg1⁰, _lh_append_lz_arg2⁰) = 
+//│ 	let _lh_matchIdent³ = _lh_append_lz_arg1⁰
+//│ 	in case _lh_matchIdent³ of {
+//│ 		LH_C _lh_append_lz_LH_C_0⁰ _lh_append_lz_LH_C_1⁰ => lazy⁰([LH_C _lh_append_lz_LH_C_0⁰ append_lz_lh_₁(_lh_append_lz_LH_C_1⁰, _lh_append_lz_arg2⁰)])
+//│ 		| LH_N  => _lh_append_lz_arg2⁰
+//│ 		| _  => error⁰}
+//│ def atIndex_lz_lh_₁(n⁰, ls²) = if (n⁰ < 0) then error⁰ else case force⁰(ls²) of {
+//│ 	LH_C h² t² => if (n⁰ == 0) then h² else atIndex_lz_lh_₁((n⁰ - 1), t²)
+//│ 	| LH_N  => error⁰}
+//│ def enumFromThenTo_lh_₁(a⁰, t³, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let _lh_listcomp_fun_ls_t⁵ = enumFromThenTo_lh_₁(t³, ((2 * t³) - a⁰), b⁰)
+//│ 	in let _lh_listcomp_fun_ls_h³ = a⁰
+//│ 	in (fun _lh_listcomp_fun⁸ -> (fun _lh_sieve_Wheel_0⁴ -> (fun _lh_sieve_Wheel_1² -> (fun _lh_sieve_arg2⁴ -> (fun _lh_sieve_arg3⁴ -> 
+//│ 		let _lh_listcomp_fun⁹ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁴ _lh_listcomp_fun_ls_t⁶ => 
+//│ 				let _lh_listcomp_fun¹⁰ = (fun _lh_listcomp_fun_para⁴ -> _lh_listcomp_fun_para⁴(_lh_listcomp_fun¹⁰, _lh_sieve_Wheel_0⁴, _lh_sieve_arg2⁴, _lh_sieve_arg3⁴, _lh_listcomp_fun_ls_t⁶, _lh_listcomp_fun⁹))
+//│ 				in _lh_listcomp_fun¹⁰(
+//│ 					let _lh_listcomp_fun_ls_t⁷ = (fun _lh_listcomp_fun¹¹ -> (fun _lh_sieve_Wheel_0⁵ -> (fun _lh_sieve_arg2⁵ -> (fun _lh_sieve_arg3⁵ -> (fun _lh_listcomp_fun_ls_t⁸ -> (fun _lh_listcomp_fun¹² -> _lh_listcomp_fun¹²(_lh_listcomp_fun_ls_t⁸)))))))
+//│ 					in let _lh_listcomp_fun_ls_h⁵ = (_lh_listcomp_fun_ls_h⁴ + _lh_listcomp_fun_ls_h³)
+//│ 					in (fun _lh_listcomp_fun¹³ -> (fun _lh_sieve_Wheel_0⁶ -> (fun _lh_sieve_arg2⁶ -> (fun _lh_sieve_arg3⁶ -> (fun _lh_listcomp_fun_ls_t⁹ -> (fun _lh_listcomp_fun¹⁴ -> if noFactor_lh_₁(_lh_sieve_Wheel_0⁶, _lh_sieve_arg2⁶, _lh_sieve_arg3⁶, _lh_listcomp_fun_ls_h⁵) then [LH_C _lh_listcomp_fun_ls_h⁵ _lh_listcomp_fun¹³(_lh_listcomp_fun_ls_t⁷)] else _lh_listcomp_fun¹³(_lh_listcomp_fun_ls_t⁷))))))))
+//│ 			| LH_N  => _lh_listcomp_fun⁸(_lh_listcomp_fun_ls_t⁵)})
+//│ 		in _lh_listcomp_fun⁹(_lh_sieve_Wheel_1²)))))) else (fun _lh_listcomp_fun¹⁵ -> (fun _lh_sieve_Wheel_0⁷ -> (fun _lh_sieve_Wheel_1³ -> (fun _lh_sieve_arg2⁷ -> (fun _lh_sieve_arg3⁷ -> [LH_N])))))
+//│ def enumFromThenTo_lh_₂(a¹, t⁴, b¹) = if (a¹ <= b¹) then 
+//│ 	let _lh_listcomp_fun_ls_t¹⁰ = enumFromThenTo_lh_₂(t⁴, ((2 * t⁴) - a¹), b¹)
+//│ 	in let _lh_listcomp_fun_ls_h⁶ = a¹
+//│ 	in (fun _lh_listcomp_fun¹⁷ -> (fun _lh_nextSize_Wheel_1¹ -> (fun _lh_nextSize_arg2¹ -> 
+//│ 		let _lh_listcomp_fun¹⁸ = (fun _lh_listcomp_fun_para⁶ -> case _lh_listcomp_fun_para⁶ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁷ _lh_listcomp_fun_ls_t¹¹ => 
+//│ 				let _lh_listcomp_fun¹⁹ = (fun _lh_listcomp_fun_para⁷ -> _lh_listcomp_fun_para⁷(_lh_listcomp_fun¹⁹, _lh_nextSize_arg2¹, _lh_listcomp_fun_ls_t¹¹, _lh_listcomp_fun¹⁸))
+//│ 				in _lh_listcomp_fun¹⁹(
+//│ 					let _lh_listcomp_fun_ls_t¹² = (fun _lh_listcomp_fun²⁰ -> (fun _lh_nextSize_arg2² -> (fun _lh_listcomp_fun_ls_t¹³ -> (fun _lh_listcomp_fun²¹ -> _lh_listcomp_fun²¹(_lh_listcomp_fun_ls_t¹³)))))
+//│ 					in let _lh_listcomp_fun_ls_h⁸ = (_lh_listcomp_fun_ls_h⁷ + _lh_listcomp_fun_ls_h⁶)
+//│ 					in (fun _lh_listcomp_fun²² -> (fun _lh_nextSize_arg2³ -> (fun _lh_listcomp_fun_ls_t¹⁴ -> (fun _lh_listcomp_fun²³ -> if ((_lh_listcomp_fun_ls_h⁸ % _lh_nextSize_arg2³) > 0) then [LH_C _lh_listcomp_fun_ls_h⁸ _lh_listcomp_fun²²(_lh_listcomp_fun_ls_t¹²)] else _lh_listcomp_fun²²(_lh_listcomp_fun_ls_t¹²))))))
+//│ 			| LH_N  => _lh_listcomp_fun¹⁷(_lh_listcomp_fun_ls_t¹⁰)})
+//│ 		in _lh_listcomp_fun¹⁸(_lh_nextSize_Wheel_1¹)))) else (fun _lh_listcomp_fun²⁴ -> (fun _lh_nextSize_Wheel_1² -> (fun _lh_nextSize_arg2⁴ -> [LH_N])))
+//│ def head_lz_lh_₁(ls¹) = case force⁰(ls¹) of {
+//│ 	LH_C h¹ t¹ => h¹
+//│ 	| LH_N  => error⁰}
+//│ def map_lz_lh_₁(f⁰, ls⁰) = lazy⁰(case force⁰(ls⁰) of {
+//│ 	LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map_lz_lh_₁(f⁰, t⁰)]
+//│ 	| LH_N  => [LH_N]})
+//│ def min_lh_₁(_lh_min_arg1⁰, _lh_min_arg2⁰) = if (_lh_min_arg1⁰ > _lh_min_arg2⁰) then _lh_min_arg2⁰ else _lh_min_arg1⁰
+//│ def nextSize_lh_₁(_lh_nextSize_arg1⁰, _lh_nextSize_arg2⁰) = case _lh_nextSize_arg1⁰ of {
+//│ 	Wheel _lh_nextSize_Wheel_0⁰ _lh_nextSize_Wheel_1⁰ => [Wheel (_lh_nextSize_Wheel_0⁰ * _lh_nextSize_arg2⁰) 
+//│ 		let _lh_listcomp_fun¹⁶ = (fun _lh_listcomp_fun_para⁵ -> _lh_listcomp_fun_para⁵(_lh_listcomp_fun¹⁶, _lh_nextSize_Wheel_1⁰, _lh_nextSize_arg2⁰))
+//│ 		in _lh_listcomp_fun¹⁶(enumFromThenTo_lh_₂(0, _lh_nextSize_Wheel_0⁰, ((_lh_nextSize_arg2⁰ - 1) * _lh_nextSize_Wheel_0⁰)))]
+//│ 	| _  => error⁰}
+//│ def noFactor_lh_₁(_lh_noFactor_arg1⁰, _lh_noFactor_arg2⁰, _lh_noFactor_arg3⁰, _lh_noFactor_arg4⁰) = if (_lh_noFactor_arg1⁰ <= 2) then [True] else notDivBy_lh_₁(_lh_noFactor_arg2⁰, _lh_noFactor_arg3⁰, _lh_noFactor_arg4⁰)
+//│ def notDivBy_lh_₁(_lh_notDivBy_arg1⁰, _lh_notDivBy_arg2⁰, _lh_notDivBy_arg3⁰) = 
+//│ 	let _lh_matchIdent¹ = force⁰(_lh_notDivBy_arg2⁰)
+//│ 	in case _lh_matchIdent¹ of {
+//│ 		LH_C _lh_notDivBy_LH_C_0⁰ _lh_notDivBy_LH_C_1⁰ => if (_lh_notDivBy_LH_C_0⁰ > _lh_notDivBy_arg3⁰) then [True] else 
+//│ 			let _lh_matchIdent² = force⁰(_lh_notDivBy_arg1⁰)
+//│ 			in case _lh_matchIdent² of {
+//│ 				LH_C _lh_notDivBy_LH_C_0¹ _lh_notDivBy_LH_C_1¹ => (((_lh_notDivBy_arg3⁰ % _lh_notDivBy_LH_C_0¹) > 0) && notDivBy_lh_₁(_lh_notDivBy_LH_C_1¹, _lh_notDivBy_LH_C_1⁰, _lh_notDivBy_arg3⁰))
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ def prime_lh_₁(_lh_prime_arg1⁰) = atIndex_lz_lh_₁(_lh_prime_arg1⁰, primes_lh_₁(_lh_prime_arg1⁰))
+//│ def primes_lh_₁(_lh_primes_arg1⁰) = lazy⁰(sieve_lh_₁(wheels_lh_₁(primes_lh_₁(_lh_primes_arg1⁰)), primes_lh_₁(_lh_primes_arg1⁰), squares_lh_₁(primes_lh_₁(_lh_primes_arg1⁰)), _lh_primes_arg1⁰))
+//│ def sieve_lh_₁(_lh_sieve_arg1⁰, _lh_sieve_arg2⁰, _lh_sieve_arg3⁰, _lh_sieve_arg4⁰) = 
+//│ 	let _lh_matchIdent⁰ = force⁰(_lh_sieve_arg1⁰)
+//│ 	in case _lh_matchIdent⁰ of {
+//│ 		LH_C _lh_sieve_LH_C_0⁰ _lh_sieve_LH_C_1⁰ => case _lh_sieve_LH_C_0⁰ of {
+//│ 			Wheel _lh_sieve_Wheel_0⁰ _lh_sieve_Wheel_1⁰ => append_lz_lh_₁(
+//│ 				let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> _lh_listcomp_fun_para⁰(_lh_listcomp_fun⁰, _lh_sieve_Wheel_0⁰, _lh_sieve_Wheel_1⁰, _lh_sieve_arg2⁰, _lh_sieve_arg3⁰))
+//│ 				in _lh_listcomp_fun⁰(
+//│ 					let _lh_listcomp_fun_ls_t⁰ = enumFromThenTo_lh_₁((_lh_sieve_Wheel_0⁰ * 2), (_lh_sieve_Wheel_0⁰ * 3), (min_lh_₁((_lh_sieve_arg4⁰ * _lh_sieve_arg4⁰), (head_lz_lh_₁(_lh_sieve_arg2⁰) - 1)) * _lh_sieve_Wheel_0⁰))
+//│ 					in let _lh_listcomp_fun_ls_h⁰ = _lh_sieve_Wheel_0⁰
+//│ 					in (fun _lh_listcomp_fun¹ -> (fun _lh_sieve_Wheel_0¹ -> (fun _lh_sieve_Wheel_1¹ -> (fun _lh_sieve_arg2¹ -> (fun _lh_sieve_arg3¹ -> 
+//│ 						let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {
+//│ 							LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => 
+//│ 								let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para² -> _lh_listcomp_fun_para²(_lh_listcomp_fun³, _lh_sieve_Wheel_0¹, _lh_sieve_arg2¹, _lh_sieve_arg3¹, _lh_listcomp_fun_ls_t¹, _lh_listcomp_fun²))
+//│ 								in _lh_listcomp_fun³(
+//│ 									let _lh_listcomp_fun_ls_t² = (fun _lh_listcomp_fun⁴ -> (fun _lh_sieve_Wheel_0² -> (fun _lh_sieve_arg2² -> (fun _lh_sieve_arg3² -> (fun _lh_listcomp_fun_ls_t³ -> (fun _lh_listcomp_fun⁵ -> _lh_listcomp_fun⁵(_lh_listcomp_fun_ls_t³)))))))
+//│ 									in let _lh_listcomp_fun_ls_h² = (_lh_listcomp_fun_ls_h¹ + _lh_listcomp_fun_ls_h⁰)
+//│ 									in (fun _lh_listcomp_fun⁶ -> (fun _lh_sieve_Wheel_0³ -> (fun _lh_sieve_arg2³ -> (fun _lh_sieve_arg3³ -> (fun _lh_listcomp_fun_ls_t⁴ -> (fun _lh_listcomp_fun⁷ -> if noFactor_lh_₁(_lh_sieve_Wheel_0³, _lh_sieve_arg2³, _lh_sieve_arg3³, _lh_listcomp_fun_ls_h²) then [LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun⁶(_lh_listcomp_fun_ls_t²)] else _lh_listcomp_fun⁶(_lh_listcomp_fun_ls_t²))))))))
+//│ 							| LH_N  => _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t⁰)})
+//│ 						in _lh_listcomp_fun²(_lh_sieve_Wheel_1¹))))))), sieve_lh_₁(_lh_sieve_LH_C_1⁰, tail_lz_lh_₁(_lh_sieve_arg2⁰), tail_lz_lh_₂(_lh_sieve_arg3⁰), _lh_sieve_arg4⁰))
+//│ 			| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ def squares_lh_₁(_lh_squares_arg1⁰) = map_lz_lh_₁((fun p⁰ -> (p⁰ * p⁰)), _lh_squares_arg1⁰)
+//│ def tail_lz_lh_₁(ls⁴) = case force⁰(ls⁴) of {
+//│ 	LH_C h⁴ t⁶ => t⁶
+//│ 	| LH_N  => error⁰}
+//│ def tail_lz_lh_₂(ls³) = case force⁰(ls³) of {
+//│ 	LH_C h³ t⁵ => t⁵
+//│ 	| LH_N  => error⁰}
+//│ def testWheelSieve1_nofib_lh_₁(_lh_testWheelSieve1_nofib_arg1⁰) = prime_lh_₁(_lh_testWheelSieve1_nofib_arg1⁰)
+//│ def wheels_lh_₁(_lh_wheels_arg1⁰) = lazy⁰([LH_C [Wheel 1 [LH_C 1 [LH_N]]] zipWith_lz_lz_lh_₁(nextSize_lh_₁, wheels_lh_₁(_lh_wheels_arg1⁰), _lh_wheels_arg1⁰)])
+//│ def zipWith_lz_lz_lh_₁(f¹, xs⁰, ys⁰) = lazy⁰(case force⁰(xs⁰) of {
+//│ 	LH_C hx⁰ tx⁰ => case force⁰(ys⁰) of {
+//│ 		LH_C hy⁰ ty⁰ => [LH_C f¹(hx⁰, hy⁰) zipWith_lz_lz_lh_₁(f¹, tx⁰, ty⁰)]
+//│ 		| LH_N  => [LH_N]}
+//│ 	| LH_N  => [LH_N]})
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testWheelSieve1_nofib_lh_₁(primId⁰(1000))
+//│ def append_lz_lh_₁(_lh_append_lz_arg1⁰, _lh_append_lz_arg2⁰) = 
+//│ 	let _lh_matchIdent³ = _lh_append_lz_arg1⁰
+//│ 	in case _lh_matchIdent³ of {
+//│ 		LH_C _lh_append_lz_LH_C_0⁰ _lh_append_lz_LH_C_1⁰ => lazy⁰([LH_C _lh_append_lz_LH_C_0⁰ append_lz_lh_₁(_lh_append_lz_LH_C_1⁰, _lh_append_lz_arg2⁰)])
+//│ 		| LH_N  => _lh_append_lz_arg2⁰
+//│ 		| _  => error⁰}
+//│ def atIndex_lz_lh_₁(n⁰, ls²) = if (n⁰ < 0) then error⁰ else case force⁰(ls²) of {
+//│ 	LH_C h² t² => if (n⁰ == 0) then h² else atIndex_lz_lh_₁((n⁰ - 1), t²)
+//│ 	| LH_N  => error⁰}
+//│ def enumFromThenTo_lh_₁(a⁰, t³, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let _lh_listcomp_fun_ls_t⁵ = enumFromThenTo_lh_₁(t³, ((2 * t³) - a⁰), b⁰)
+//│ 	in let _lh_listcomp_fun_ls_h³ = a⁰
+//│ 	in (fun _lh_listcomp_fun⁸ -> (fun _lh_sieve_Wheel_0⁴ -> (fun _lh_sieve_Wheel_1² -> (fun _lh_sieve_arg2⁴ -> (fun _lh_sieve_arg3⁴ -> 
+//│ 		let _lh_listcomp_fun⁹ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁴ _lh_listcomp_fun_ls_t⁶ => 
+//│ 				let _lh_listcomp_fun¹⁰ = (fun _lh_listcomp_fun_para⁴ -> _lh_listcomp_fun_para⁴(_lh_listcomp_fun¹⁰, _lh_sieve_Wheel_0⁴, _lh_sieve_arg2⁴, _lh_sieve_arg3⁴, _lh_listcomp_fun_ls_t⁶, _lh_listcomp_fun⁹))
+//│ 				in _lh_listcomp_fun¹⁰(
+//│ 					let _lh_listcomp_fun_ls_t⁷ = (fun _lh_listcomp_fun¹¹ -> (fun _lh_sieve_Wheel_0⁵ -> (fun _lh_sieve_arg2⁵ -> (fun _lh_sieve_arg3⁵ -> (fun _lh_listcomp_fun_ls_t⁸ -> (fun _lh_listcomp_fun¹² -> _lh_listcomp_fun¹²(_lh_listcomp_fun_ls_t⁸)))))))
+//│ 					in let _lh_listcomp_fun_ls_h⁵ = (_lh_listcomp_fun_ls_h⁴ + _lh_listcomp_fun_ls_h³)
+//│ 					in (fun _lh_listcomp_fun¹³ -> (fun _lh_sieve_Wheel_0⁶ -> (fun _lh_sieve_arg2⁶ -> (fun _lh_sieve_arg3⁶ -> (fun _lh_listcomp_fun_ls_t⁹ -> (fun _lh_listcomp_fun¹⁴ -> if noFactor_lh_₁(_lh_sieve_Wheel_0⁶, _lh_sieve_arg2⁶, _lh_sieve_arg3⁶, _lh_listcomp_fun_ls_h⁵) then [LH_C _lh_listcomp_fun_ls_h⁵ _lh_listcomp_fun¹³(_lh_listcomp_fun_ls_t⁷)] else _lh_listcomp_fun¹³(_lh_listcomp_fun_ls_t⁷))))))))
+//│ 			| LH_N  => _lh_listcomp_fun⁸(_lh_listcomp_fun_ls_t⁵)})
+//│ 		in _lh_listcomp_fun⁹(_lh_sieve_Wheel_1²)))))) else (fun _lh_listcomp_fun¹⁵ -> (fun _lh_sieve_Wheel_0⁷ -> (fun _lh_sieve_Wheel_1³ -> (fun _lh_sieve_arg2⁷ -> (fun _lh_sieve_arg3⁷ -> [LH_N])))))
+//│ def enumFromThenTo_lh_₂(a¹, t⁴, b¹) = if (a¹ <= b¹) then 
+//│ 	let _lh_listcomp_fun_ls_t¹⁰ = enumFromThenTo_lh_₂(t⁴, ((2 * t⁴) - a¹), b¹)
+//│ 	in let _lh_listcomp_fun_ls_h⁶ = a¹
+//│ 	in (fun _lh_listcomp_fun¹⁷ -> (fun _lh_nextSize_Wheel_1¹ -> (fun _lh_nextSize_arg2¹ -> 
+//│ 		let _lh_listcomp_fun¹⁸ = (fun _lh_listcomp_fun_para⁶ -> case _lh_listcomp_fun_para⁶ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁷ _lh_listcomp_fun_ls_t¹¹ => 
+//│ 				let _lh_listcomp_fun¹⁹ = (fun _lh_listcomp_fun_para⁷ -> _lh_listcomp_fun_para⁷(_lh_listcomp_fun¹⁹, _lh_nextSize_arg2¹, _lh_listcomp_fun_ls_t¹¹, _lh_listcomp_fun¹⁸))
+//│ 				in _lh_listcomp_fun¹⁹(
+//│ 					let _lh_listcomp_fun_ls_t¹² = (fun _lh_listcomp_fun²⁰ -> (fun _lh_nextSize_arg2² -> (fun _lh_listcomp_fun_ls_t¹³ -> (fun _lh_listcomp_fun²¹ -> _lh_listcomp_fun²¹(_lh_listcomp_fun_ls_t¹³)))))
+//│ 					in let _lh_listcomp_fun_ls_h⁸ = (_lh_listcomp_fun_ls_h⁷ + _lh_listcomp_fun_ls_h⁶)
+//│ 					in (fun _lh_listcomp_fun²² -> (fun _lh_nextSize_arg2³ -> (fun _lh_listcomp_fun_ls_t¹⁴ -> (fun _lh_listcomp_fun²³ -> if ((_lh_listcomp_fun_ls_h⁸ % _lh_nextSize_arg2³) > 0) then [LH_C _lh_listcomp_fun_ls_h⁸ _lh_listcomp_fun²²(_lh_listcomp_fun_ls_t¹²)] else _lh_listcomp_fun²²(_lh_listcomp_fun_ls_t¹²))))))
+//│ 			| LH_N  => _lh_listcomp_fun¹⁷(_lh_listcomp_fun_ls_t¹⁰)})
+//│ 		in _lh_listcomp_fun¹⁸(_lh_nextSize_Wheel_1¹)))) else (fun _lh_listcomp_fun²⁴ -> (fun _lh_nextSize_Wheel_1² -> (fun _lh_nextSize_arg2⁴ -> [LH_N])))
+//│ def head_lz_lh_₁(ls¹) = case force⁰(ls¹) of {
+//│ 	LH_C h¹ t¹ => h¹
+//│ 	| LH_N  => error⁰}
+//│ def map_lz_lh_₁(f⁰, ls⁰) = lazy⁰(case force⁰(ls⁰) of {
+//│ 	LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map_lz_lh_₁(f⁰, t⁰)]
+//│ 	| LH_N  => [LH_N]})
+//│ def min_lh_₁(_lh_min_arg1⁰, _lh_min_arg2⁰) = if (_lh_min_arg1⁰ > _lh_min_arg2⁰) then _lh_min_arg2⁰ else _lh_min_arg1⁰
+//│ def nextSize_lh_₁(_lh_nextSize_arg1⁰, _lh_nextSize_arg2⁰) = case _lh_nextSize_arg1⁰ of {
+//│ 	Wheel _lh_nextSize_Wheel_0⁰ _lh_nextSize_Wheel_1⁰ => [Wheel (_lh_nextSize_Wheel_0⁰ * _lh_nextSize_arg2⁰) 
+//│ 		let _lh_listcomp_fun¹⁶ = (fun _lh_listcomp_fun_para⁵ -> _lh_listcomp_fun_para⁵(_lh_listcomp_fun¹⁶, _lh_nextSize_Wheel_1⁰, _lh_nextSize_arg2⁰))
+//│ 		in _lh_listcomp_fun¹⁶(enumFromThenTo_lh_₂(0, _lh_nextSize_Wheel_0⁰, ((_lh_nextSize_arg2⁰ - 1) * _lh_nextSize_Wheel_0⁰)))]
+//│ 	| _  => error⁰}
+//│ def noFactor_lh_₁(_lh_noFactor_arg1⁰, _lh_noFactor_arg2⁰, _lh_noFactor_arg3⁰, _lh_noFactor_arg4⁰) = if (_lh_noFactor_arg1⁰ <= 2) then [True] else notDivBy_lh_₁(_lh_noFactor_arg2⁰, _lh_noFactor_arg3⁰, _lh_noFactor_arg4⁰)
+//│ def notDivBy_lh_₁(_lh_notDivBy_arg1⁰, _lh_notDivBy_arg2⁰, _lh_notDivBy_arg3⁰) = 
+//│ 	let _lh_matchIdent¹ = force⁰(_lh_notDivBy_arg2⁰)
+//│ 	in case _lh_matchIdent¹ of {
+//│ 		LH_C _lh_notDivBy_LH_C_0⁰ _lh_notDivBy_LH_C_1⁰ => if (_lh_notDivBy_LH_C_0⁰ > _lh_notDivBy_arg3⁰) then [True] else 
+//│ 			let _lh_matchIdent² = force⁰(_lh_notDivBy_arg1⁰)
+//│ 			in case _lh_matchIdent² of {
+//│ 				LH_C _lh_notDivBy_LH_C_0¹ _lh_notDivBy_LH_C_1¹ => (((_lh_notDivBy_arg3⁰ % _lh_notDivBy_LH_C_0¹) > 0) && notDivBy_lh_₁(_lh_notDivBy_LH_C_1¹, _lh_notDivBy_LH_C_1⁰, _lh_notDivBy_arg3⁰))
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ def prime_lh_₁(_lh_prime_arg1⁰) = atIndex_lz_lh_₁(_lh_prime_arg1⁰, primes_lh_₁(_lh_prime_arg1⁰))
+//│ def primes_lh_₁(_lh_primes_arg1⁰) = lazy⁰(sieve_lh_₁(wheels_lh_₁(primes_lh_₁(_lh_primes_arg1⁰)), primes_lh_₁(_lh_primes_arg1⁰), squares_lh_₁(primes_lh_₁(_lh_primes_arg1⁰)), _lh_primes_arg1⁰))
+//│ def sieve_lh_₁(_lh_sieve_arg1⁰, _lh_sieve_arg2⁰, _lh_sieve_arg3⁰, _lh_sieve_arg4⁰) = 
+//│ 	let _lh_matchIdent⁰ = force⁰(_lh_sieve_arg1⁰)
+//│ 	in case _lh_matchIdent⁰ of {
+//│ 		LH_C _lh_sieve_LH_C_0⁰ _lh_sieve_LH_C_1⁰ => case _lh_sieve_LH_C_0⁰ of {
+//│ 			Wheel _lh_sieve_Wheel_0⁰ _lh_sieve_Wheel_1⁰ => append_lz_lh_₁(
+//│ 				let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> _lh_listcomp_fun_para⁰(_lh_listcomp_fun⁰, _lh_sieve_Wheel_0⁰, _lh_sieve_Wheel_1⁰, _lh_sieve_arg2⁰, _lh_sieve_arg3⁰))
+//│ 				in _lh_listcomp_fun⁰(
+//│ 					let _lh_listcomp_fun_ls_t⁰ = enumFromThenTo_lh_₁((_lh_sieve_Wheel_0⁰ * 2), (_lh_sieve_Wheel_0⁰ * 3), (min_lh_₁((_lh_sieve_arg4⁰ * _lh_sieve_arg4⁰), (head_lz_lh_₁(_lh_sieve_arg2⁰) - 1)) * _lh_sieve_Wheel_0⁰))
+//│ 					in let _lh_listcomp_fun_ls_h⁰ = _lh_sieve_Wheel_0⁰
+//│ 					in (fun _lh_listcomp_fun¹ -> (fun _lh_sieve_Wheel_0¹ -> (fun _lh_sieve_Wheel_1¹ -> (fun _lh_sieve_arg2¹ -> (fun _lh_sieve_arg3¹ -> 
+//│ 						let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {
+//│ 							LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => 
+//│ 								let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para² -> _lh_listcomp_fun_para²(_lh_listcomp_fun³, _lh_sieve_Wheel_0¹, _lh_sieve_arg2¹, _lh_sieve_arg3¹, _lh_listcomp_fun_ls_t¹, _lh_listcomp_fun²))
+//│ 								in _lh_listcomp_fun³(
+//│ 									let _lh_listcomp_fun_ls_t² = (fun _lh_listcomp_fun⁴ -> (fun _lh_sieve_Wheel_0² -> (fun _lh_sieve_arg2² -> (fun _lh_sieve_arg3² -> (fun _lh_listcomp_fun_ls_t³ -> (fun _lh_listcomp_fun⁵ -> _lh_listcomp_fun⁵(_lh_listcomp_fun_ls_t³)))))))
+//│ 									in let _lh_listcomp_fun_ls_h² = (_lh_listcomp_fun_ls_h¹ + _lh_listcomp_fun_ls_h⁰)
+//│ 									in (fun _lh_listcomp_fun⁶ -> (fun _lh_sieve_Wheel_0³ -> (fun _lh_sieve_arg2³ -> (fun _lh_sieve_arg3³ -> (fun _lh_listcomp_fun_ls_t⁴ -> (fun _lh_listcomp_fun⁷ -> if noFactor_lh_₁(_lh_sieve_Wheel_0³, _lh_sieve_arg2³, _lh_sieve_arg3³, _lh_listcomp_fun_ls_h²) then [LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun⁶(_lh_listcomp_fun_ls_t²)] else _lh_listcomp_fun⁶(_lh_listcomp_fun_ls_t²))))))))
+//│ 							| LH_N  => _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t⁰)})
+//│ 						in _lh_listcomp_fun²(_lh_sieve_Wheel_1¹))))))), sieve_lh_₁(_lh_sieve_LH_C_1⁰, tail_lz_lh_₁(_lh_sieve_arg2⁰), tail_lz_lh_₂(_lh_sieve_arg3⁰), _lh_sieve_arg4⁰))
+//│ 			| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ def squares_lh_₁(_lh_squares_arg1⁰) = map_lz_lh_₁((fun p⁰ -> (p⁰ * p⁰)), _lh_squares_arg1⁰)
+//│ def tail_lz_lh_₁(ls⁴) = case force⁰(ls⁴) of {
+//│ 	LH_C h⁴ t⁶ => t⁶
+//│ 	| LH_N  => error⁰}
+//│ def tail_lz_lh_₂(ls³) = case force⁰(ls³) of {
+//│ 	LH_C h³ t⁵ => t⁵
+//│ 	| LH_N  => error⁰}
+//│ def testWheelSieve1_nofib_lh_₁(_lh_testWheelSieve1_nofib_arg1⁰) = prime_lh_₁(_lh_testWheelSieve1_nofib_arg1⁰)
+//│ def wheels_lh_₁(_lh_wheels_arg1⁰) = lazy⁰([LH_C [Wheel 1 [LH_C 1 [LH_N]]] zipWith_lz_lz_lh_₁(nextSize_lh_₁, wheels_lh_₁(_lh_wheels_arg1⁰), _lh_wheels_arg1⁰)])
+//│ def zipWith_lz_lz_lh_₁(f¹, xs⁰, ys⁰) = lazy⁰(case force⁰(xs⁰) of {
+//│ 	LH_C hx⁰ tx⁰ => case force⁰(ys⁰) of {
+//│ 		LH_C hy⁰ ty⁰ => [LH_C f¹(hx⁰, hy⁰) zipWith_lz_lz_lh_₁(f¹, tx⁰, ty⁰)]
+//│ 		| LH_N  => [LH_N]}
+//│ 	| LH_N  => [LH_N]})
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

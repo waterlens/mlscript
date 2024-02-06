@@ -44,6 +44,28 @@ max(C(1, N))(0)
 //│ 	in (fun m² -> if (h¹ > m²) then max(t¹, h¹) else max(t¹, m²)), 0)
 //│ def max(ms¹) = ms¹
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ max
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ let t⁰ = (fun m⁰ -> m⁰)
+//│ in let h⁰ = 1
+//│ in if (h⁰ > 0) then t⁰(h⁰) else t⁰(0)
+//│ def max(ms⁰) = ms⁰
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ let t⁰ = (fun m⁰ -> m⁰)
+//│ in let h⁰ = 1
+//│ in if (h⁰ > 0) then t⁰(h⁰) else t⁰(0)
+//│ def max(ms⁰) = ms⁰
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -109,6 +131,40 @@ max(C(1, C(3, C(2, N))))(0)
 //│ 	in (fun m² -> if (h¹ > m²) then max(t¹, h¹) else max(t¹, m²)), 0)
 //│ def max(ms¹) = ms¹
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ max
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ let t⁰ = 	
+//│ 	let t¹ = 	
+//│ 		let t² = (fun m⁰ -> m⁰)
+//│ 		in let h⁰ = 2
+//│ 		in (fun m¹ -> if (h⁰ > m¹) then t²(h⁰) else t²(m¹))
+//│ 	in let h¹ = 3
+//│ 	in (fun m² -> if (h¹ > m²) then t¹(h¹) else t¹(m²))
+//│ in let h² = 1
+//│ in if (h² > 0) then t⁰(h²) else t⁰(0)
+//│ def max(ms⁰) = ms⁰
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ let t⁰ = 	
+//│ 	let t¹ = 	
+//│ 		let t² = (fun m⁰ -> m⁰)
+//│ 		in let h⁰ = 2
+//│ 		in (fun m¹ -> if (h⁰ > m¹) then t²(h⁰) else t²(m¹))
+//│ 	in let h¹ = 3
+//│ 	in (fun m² -> if (h¹ > m²) then t¹(h¹) else t¹(m²))
+//│ in let h² = 1
+//│ in if (h² > 0) then t⁰(h²) else t⁰(0)
+//│ def max(ms⁰) = ms⁰
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT: will not timeout now
@@ -176,6 +232,42 @@ max(
 //│ >>>>>>> evaluate >>>>>>>
 //│ 3
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ max(
+//│ 	let h⁰ = 1
+//│ 	in let t⁰ = 	
+//│ 		let h¹ = 3
+//│ 		in let t¹ = 	
+//│ 			let h² = 2
+//│ 			in let t² = (fun m⁰ -> m⁰)
+//│ 			in (fun m¹ -> if (h² > m¹) then max(t², h²) else max(t², m¹))
+//│ 		in (fun m² -> if (h¹ > m²) then max(t¹, h¹) else max(t¹, m²))
+//│ 	in (fun m³ -> if (h⁰ > m³) then max(t⁰, h⁰) else max(t⁰, m³)), 0)
+//│ def max(x⁰) = x⁰
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ max(
+//│ 	let h⁰ = 1
+//│ 	in let t⁰ = 	
+//│ 		let h¹ = 3
+//│ 		in let t¹ = 	
+//│ 			let h² = 2
+//│ 			in let t² = (fun m⁰ -> m⁰)
+//│ 			in (fun m¹ -> if (h² > m¹) then max(t², h²) else max(t², m¹))
+//│ 		in (fun m² -> if (h¹ > m²) then max(t¹, h¹) else max(t¹, m²))
+//│ 	in (fun m³ -> if (h⁰ > m³) then max(t⁰, h⁰) else max(t⁰, m³)), 0)
+//│ def max(x⁰) = x⁰
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT:
@@ -253,6 +345,54 @@ max(
 //│ def max4(x⁷) = x⁷
 //│ def max5(x¹¹) = x¹¹
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ max(
+//│ 	let h⁰ = 1
+//│ 	in let t⁰ = 	
+//│ 		let h¹ = 3
+//│ 		in let t¹ = 	
+//│ 			let h² = 2
+//│ 			in let t² = (fun m⁰ -> m⁰)
+//│ 			in (fun m¹ -> if (h² > m¹) then max0(t², h²) else max1(t², m¹))
+//│ 		in (fun m² -> if (h¹ > m²) then max2(t¹, h¹) else max3(t¹, m²))
+//│ 	in (fun m³ -> if (h⁰ > m³) then max4(t⁰, h⁰) else max5(t⁰, m³)), 0)
+//│ def max(y⁰) = y⁰
+//│ def max0(x⁴) = x⁴
+//│ def max1(x⁰) = x⁰
+//│ def max2(x²) = x²
+//│ def max3(x³) = x³
+//│ def max4(x¹) = x¹
+//│ def max5(x⁵) = x⁵
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ max(
+//│ 	let h⁰ = 1
+//│ 	in let t⁰ = 	
+//│ 		let h¹ = 3
+//│ 		in let t¹ = 	
+//│ 			let h² = 2
+//│ 			in let t² = (fun m⁰ -> m⁰)
+//│ 			in (fun m¹ -> if (h² > m¹) then max0(t², h²) else max1(t², m¹))
+//│ 		in (fun m² -> if (h¹ > m²) then max2(t¹, h¹) else max3(t¹, m²))
+//│ 	in (fun m³ -> if (h⁰ > m³) then max4(t⁰, h⁰) else max5(t⁰, m³)), 0)
+//│ def max(y⁰) = y⁰
+//│ def max0(x⁴) = x⁴
+//│ def max1(x⁰) = x⁰
+//│ def max2(x²) = x²
+//│ def max3(x³) = x³
+//│ def max4(x¹) = x¹
+//│ def max5(x⁵) = x⁵
+//│ <<<<<<< after floating out <<<<<<<
 
 // infinite list
 fun max(ms) = if ms is
@@ -321,3 +461,47 @@ max(l)(0)
 //│ 	in (fun m² -> if (h¹ > m²) then max(t¹, h¹) else max(t¹, m²))
 //│ def max(ms¹) = ms¹
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ max
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ l -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ l(0)
+//│ def l = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = 	
+//│ 				let t³ = l
+//│ 				in let h⁰ = 5
+//│ 				in (fun m⁰ -> if (h⁰ > m⁰) then t³(h⁰) else t³(m⁰))
+//│ 			in let h¹ = 2
+//│ 			in (fun m¹ -> if (h¹ > m¹) then t²(h¹) else t²(m¹))
+//│ 		in let h² = 3
+//│ 		in (fun m² -> if (h² > m²) then t¹(h²) else t¹(m²))
+//│ 	in let h³ = 1
+//│ 	in (fun m³ -> if (h³ > m³) then t⁰(h³) else t⁰(m³))
+//│ def max(ms⁰) = ms⁰
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ l(0)
+//│ def l = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = 	
+//│ 				let t³ = l
+//│ 				in let h⁰ = 5
+//│ 				in (fun m⁰ -> if (h⁰ > m⁰) then t³(h⁰) else t³(m⁰))
+//│ 			in let h¹ = 2
+//│ 			in (fun m¹ -> if (h¹ > m¹) then t²(h¹) else t²(m¹))
+//│ 		in let h² = 3
+//│ 		in (fun m² -> if (h² > m²) then t¹(h²) else t¹(m²))
+//│ 	in let h³ = 1
+//│ 	in (fun m³ -> if (h³ > m³) then t⁰(h³) else t⁰(m³))
+//│ def max(ms⁰) = ms⁰
+//│ <<<<<<< after floating out <<<<<<<

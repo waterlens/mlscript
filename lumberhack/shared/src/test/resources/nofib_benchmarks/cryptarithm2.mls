@@ -3460,6 +3460,759 @@ testCryptarithm2_nofib $ primId 1
 //│ 		| _  => error⁰})), [LH_P2 [LH_N] [LH_N]], _lh_unzip_arg1¹)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ runStateT_lh_₃, mappend_lh_₇, concat_lh_₄, mappend_lh_₄, map_lh_₁, mappend_lh_₂, concat_lh_₃, bind_lh_₁, map_lh_₅, select_lh_₂, runStateT_lh_₄, select_lh_₁, fromJust_lh_₁, runStateT_lh_₅, mappend_lh_₁, length_lh_₁, sum_lh_₁, mappend_lh_₃, concat_lh_₅, map_lh_₄, concat_lh_₂
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ nub_lh_₁ -> 2
+//│ lookup_lh_₁ -> 2
+//│ lookup_lh_₂ -> 2
+//│ guard_lh_₁ -> 4
+//│ mappend_lh_₅ -> 2
+//│ bind_lh_₆ -> 2
+//│ puzzle_lh_₁ -> 2
+//│ enumFromTo_lh_₁ -> 3
+//│ execStateT_lh_₁ -> 2
+//│ map_lh_₃ -> 3
+//│ testCryptarithm2_nofib_lh_₁ -> 1
+//│ concat_lh_₁ -> 1
+//│ lookup_lh_₃ -> 2
+//│ map_lh_₆ -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testCryptarithm2_nofib_lh_₁(primId⁰(1))
+//│ def bind_lh_₁(_lh_bind_arg1⁷, _lh_bind_arg2⁸) = 
+//│ 	let _lh_runStateT_StateT_0⁷ = (fun s²¹ -> _lh_bind_arg1⁷(s²¹, (fun as⁸ -> 
+//│ 		let _lh_matchIdent¹⁹ = as⁸
+//│ 		in _lh_matchIdent¹⁹(_lh_bind_arg2⁸)), 99))
+//│ 	in _lh_runStateT_StateT_0⁷
+//│ def bind_lh_₂(_lh_bind_arg1¹, _lh_bind_arg2¹) = [StateT (fun s⁹ -> map_lh_₆((fun as² -> 
+//│ 	let _lh_matchIdent⁶ = as²
+//│ 	in case _lh_matchIdent⁶ of {
+//│ 		LH_P2 _lh_bind_LH_P2_0¹ _lh_bind_LH_P2_1¹ => _lh_bind_arg2¹(_lh_bind_LH_P2_0¹, _lh_bind_LH_P2_1¹)
+//│ 		| _  => error⁰}), _lh_bind_arg1¹(s⁹), 99))]
+//│ def bind_lh_₃(_lh_bind_arg1³, _lh_bind_arg2⁴) = [StateT (fun s¹⁵ -> map_lh_₆((fun as⁴ -> 
+//│ 	let _lh_matchIdent¹⁰ = as⁴
+//│ 	in case _lh_matchIdent¹⁰ of {
+//│ 		LH_P2 _lh_bind_LH_P2_0⁴ _lh_bind_LH_P2_1⁴ => runStateT_lh_₆(_lh_bind_arg2⁴(_lh_bind_LH_P2_0⁴), _lh_bind_LH_P2_1⁴)
+//│ 		| _  => error⁰}), runStateT_lh_₆(_lh_bind_arg1³, s¹⁵), 99))]
+//│ def bind_lh_₄(_lh_bind_arg1⁰, _lh_bind_arg2⁰) = [StateT (fun s⁵ -> map_lh_₆((fun as⁰ -> 
+//│ 	let _lh_matchIdent² = as⁰
+//│ 	in case _lh_matchIdent² of {
+//│ 		LH_P2 _lh_bind_LH_P2_0⁰ _lh_bind_LH_P2_1⁰ => runStateT_lh_₆(_lh_bind_arg2⁰(_lh_bind_LH_P2_0⁰), _lh_bind_LH_P2_1⁰)
+//│ 		| _  => error⁰}), runStateT_lh_₆(_lh_bind_arg1⁰, s⁵), 99))]
+//│ def bind_lh_₅(_lh_bind_arg1⁶, _lh_bind_arg2⁷) = [StateT (fun s²⁰ -> map_lh_₆((fun as⁷ -> 
+//│ 	let _lh_matchIdent¹⁸ = as⁷
+//│ 	in case _lh_matchIdent¹⁸ of {
+//│ 		LH_P2 _lh_bind_LH_P2_0⁷ _lh_bind_LH_P2_1⁷ => runStateT_lh_₆(_lh_bind_arg2⁷(_lh_bind_LH_P2_0⁷), _lh_bind_LH_P2_1⁷)
+//│ 		| _  => error⁰}), runStateT_lh_₆(_lh_bind_arg1⁶, s²⁰), 99))]
+//│ def bind_lh_₆(_lh_bind_arg1², _lh_bind_arg2³) = 
+//│ 	let _lh_runStateT_StateT_0⁵ = (fun s¹⁴ -> map_lh_₆((fun as³ -> 
+//│ 		let _lh_matchIdent⁹ = as³
+//│ 		in case _lh_matchIdent⁹ of {
+//│ 			LH_P2 _lh_bind_LH_P2_0³ _lh_bind_LH_P2_1³ => runStateT_lh_₆(_lh_bind_arg2³(_lh_bind_LH_P2_0³), _lh_bind_LH_P2_1³)
+//│ 			| _  => error⁰}), runStateT_lh_₆(_lh_bind_arg1², s¹⁴), 99))
+//│ 	in _lh_runStateT_StateT_0⁵
+//│ def bind_lh_₇(_lh_bind_arg1⁵, _lh_bind_arg2⁶) = [StateT (fun s¹⁷ -> map_lh_₆((fun as⁶ -> 
+//│ 	let _lh_matchIdent¹⁵ = as⁶
+//│ 	in case _lh_matchIdent¹⁵ of {
+//│ 		LH_P2 _lh_bind_LH_P2_0⁶ _lh_bind_LH_P2_1⁶ => runStateT_lh_₆(_lh_bind_arg2⁶(_lh_bind_LH_P2_0⁶), _lh_bind_LH_P2_1⁶)
+//│ 		| _  => error⁰}), runStateT_lh_₆(_lh_bind_arg1⁵, s¹⁷), 99))]
+//│ def bind_lh_₈(_lh_bind_arg1⁴, _lh_bind_arg2⁵) = [StateT (fun s¹⁶ -> map_lh_₆((fun as⁵ -> 
+//│ 	let _lh_matchIdent¹¹ = as⁵
+//│ 	in case _lh_matchIdent¹¹ of {
+//│ 		LH_P2 _lh_bind_LH_P2_0⁵ _lh_bind_LH_P2_1⁵ => runStateT_lh_₆(_lh_bind_arg2⁵(_lh_bind_LH_P2_0⁵), _lh_bind_LH_P2_1⁵)
+//│ 		| _  => error⁰}), runStateT_lh_₆(_lh_bind_arg1⁴, s¹⁶), 99))]
+//│ def combine_lh_₁(_lh_combine_arg1⁰, _lh_combine_arg2⁰, _lh_combine_arg3⁰, _lh_combine_arg4⁰) = [LH_C [LH_C _lh_combine_arg1⁰ _lh_combine_arg2⁰] transpose_lh_₁([LH_C _lh_combine_arg3⁰ _lh_combine_arg4⁰])]
+//│ def concat_lh_₁(lss⁴) = case lss⁴ of {
+//│ 	LH_C h³² t³³ => mappend_lh_₅(h³², concat_lh_₁(t³³))
+//│ 	| LH_N  => (fun ys²⁶ -> ys²⁶)}
+//│ def concat_lh_₂(lss³) = lss³(99)
+//│ def concat_lh_₃(lss²) = lss²(99)
+//│ def concat_lh_₄(lss¹) = lss¹(99)
+//│ def concat_lh_₅(lss⁰) = lss⁰(99)
+//│ def delete_lh_₁(_lh_delete_arg1⁰, _lh_delete_arg2⁰) = case _lh_delete_arg1⁰ of {
+//│ 	LH_C _lh_delete_LH_C_0⁰ _lh_delete_LH_C_1⁰ => if polyEq⁰(_lh_delete_LH_C_0⁰, _lh_delete_arg2⁰) then delete_lh_₁(_lh_delete_LH_C_1⁰, _lh_delete_arg2⁰) else [LH_C _lh_delete_LH_C_0⁰ delete_lh_₁(_lh_delete_LH_C_1⁰, _lh_delete_arg2⁰)]
+//│ 	| LH_N  => [LH_N]
+//│ 	| _  => error⁰}
+//│ def digitEnv_lh_₁(_lh_digitEnv_arg1¹) = case _lh_digitEnv_arg1¹ of {
+//│ 	Digits _lh_digitEnv_Digits_0¹ _lh_digitEnv_Digits_1¹ => _lh_digitEnv_Digits_1¹
+//│ 	| _  => error⁰}
+//│ def digitEnv_lh_₂(_lh_digitEnv_arg1³) = case _lh_digitEnv_arg1³ of {
+//│ 	Digits _lh_digitEnv_Digits_0³ _lh_digitEnv_Digits_1³ => _lh_digitEnv_Digits_1³
+//│ 	| _  => error⁰}
+//│ def digitEnv_lh_₃(_lh_digitEnv_arg1²) = case _lh_digitEnv_arg1² of {
+//│ 	Digits _lh_digitEnv_Digits_0² _lh_digitEnv_Digits_1² => _lh_digitEnv_Digits_1²
+//│ 	| _  => error⁰}
+//│ def digitEnv_lh_₄(_lh_digitEnv_arg1⁰) = case _lh_digitEnv_arg1⁰ of {
+//│ 	Digits _lh_digitEnv_Digits_0⁰ _lh_digitEnv_Digits_1⁰ => _lh_digitEnv_Digits_1⁰
+//│ 	| _  => error⁰}
+//│ def digits_lh_₁(_lh_digits_arg1⁰) = case _lh_digits_arg1⁰ of {
+//│ 	Digits _lh_digits_Digits_0⁰ _lh_digits_Digits_1⁰ => _lh_digits_Digits_0⁰
+//│ 	| _  => error⁰}
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let t¹ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
+//│ 	in let h⁰ = a⁰
+//│ 	in (fun f⁰ -> [LH_C f⁰(h⁰) t¹(f⁰)]) else (fun f¹ -> [LH_N])
+//│ def enumFromTo_lh_₂(a⁴, b¹) = if (a⁴ <= b¹) then [LH_C a⁴ enumFromTo_lh_₂((a⁴ + 1), b¹)] else [LH_N]
+//│ def execStateT_lh_₁(_lh_execStateT_arg1⁰, _lh_execStateT_arg2⁰) = map_lh_₃((fun x² -> 
+//│ 	let _lh_matchIdent¹⁴ = x²
+//│ 	in case _lh_matchIdent¹⁴ of {
+//│ 		LH_P2 _lh_execStateT_LH_P2_0⁰ _lh_execStateT_LH_P2_1⁰ => 
+//│ 			let t²⁵ = (fun ys¹⁷ -> ys¹⁷)
+//│ 			in let h²⁴ = _lh_execStateT_LH_P2_1⁰
+//│ 			in (fun ys¹⁸ -> [LH_C h²⁴ t²⁵(ys¹⁸)])
+//│ 		| _  => error⁰}), runStateT_lh_₁(_lh_execStateT_arg1⁰, _lh_execStateT_arg2⁰), 99)
+//│ def filter_lh_₁(f¹⁴, ls¹¹) = case ls¹¹ of {
+//│ 	LH_C h²⁵ t²⁶ => if f¹⁴(h²⁵) then [LH_C h²⁵ filter_lh_₁(f¹⁴, t²⁶)] else filter_lh_₁(f¹⁴, t²⁶)
+//│ 	| LH_N  => [LH_N]}
+//│ def foldl_lh_₁(f³, i⁰, ls¹) = case ls¹ of {
+//│ 	LH_C h³ t⁴ => foldl_lh_₁(f³, f³(i⁰, h³), t⁴)
+//│ 	| LH_N  => i⁰}
+//│ def foldr_lh_₁(f⁴, i¹, ls⁴) = case ls⁴ of {
+//│ 	LH_C h⁷ t⁸ => f⁴(h⁷, foldr_lh_₁(f⁴, i¹, t⁸))
+//│ 	| LH_N  => i¹}
+//│ def fromJust_lh_₁(_lh_fromJust_arg1⁰) = _lh_fromJust_arg1⁰(99)
+//│ def get_lh_₁ = [StateT (fun s¹⁹ -> [LH_C [LH_P2 s¹⁹ s¹⁹] [LH_N]])]
+//│ def get_lh_₂ = [StateT (fun s¹³ -> [LH_C [LH_P2 s¹³ s¹³] [LH_N]])]
+//│ def guard_lh_₁(_lh_guard_arg1⁰) = case _lh_guard_arg1⁰ of {
+//│ 	True  => 
+//│ 		let _lh_runStateT_StateT_0³ = (fun s¹¹ -> 
+//│ 			let t⁹ = (fun f⁵ -> (fun _lh_dummy⁶ -> [LH_N]))
+//│ 			in let h⁸ = 	
+//│ 				let _lh_bind_LH_P2_1² = s¹¹
+//│ 				in let _lh_bind_LH_P2_0² = [Unit]
+//│ 				in (fun _lh_bind_arg2² -> runStateT_lh_₂(_lh_bind_arg2²(_lh_bind_LH_P2_0²), _lh_bind_LH_P2_1²))
+//│ 			in (fun f⁶ -> 
+//│ 				let t¹⁰ = t⁹(f⁶)
+//│ 				in let h⁹ = f⁶(h⁸)
+//│ 				in (fun _lh_dummy⁷ -> mappend_lh_₈(h⁹, t¹⁰(99)))))
+//│ 		in _lh_runStateT_StateT_0³
+//│ 	| False  => 
+//│ 		let _lh_runStateT_StateT_0⁴ = (fun s¹² -> (fun f⁷ -> (fun _lh_dummy⁸ -> [LH_N])))
+//│ 		in _lh_runStateT_StateT_0⁴
+//│ 	| _  => error⁰}
+//│ def length_lh_₁(ls¹⁰) = ls¹⁰(99)
+//│ def lift_lh_₁(_lh_lift_arg1⁰) = [StateT (fun s⁷ -> map_lh_₆((fun x¹ -> [LH_C [LH_P2 x¹ s⁷] [LH_N]]), _lh_lift_arg1⁰, 99))]
+//│ def listDiff_lh_₁ = foldl_lh_₁(delete_lh_₁)
+//│ def lookup_lh_₁(_lh_lookup_arg1⁰, _lh_lookup_arg2⁰) = case _lh_lookup_arg2⁰ of {
+//│ 	LH_N  => (fun _lh_dummy⁴ -> error⁰)
+//│ 	| LH_C _lh_lookup_LH_C_0⁰ _lh_lookup_LH_C_1⁰ => case _lh_lookup_LH_C_0⁰ of {
+//│ 		LH_P2 _lh_lookup_LH_P2_0⁰ _lh_lookup_LH_P2_1⁰ => if polyEq⁰(_lh_lookup_arg1⁰, _lh_lookup_LH_P2_0⁰) then 
+//│ 			let _lh_fromJust_Just_0⁰ = _lh_lookup_LH_P2_1⁰
+//│ 			in (fun _lh_dummy⁵ -> _lh_fromJust_Just_0⁰) else lookup_lh_₁(_lh_lookup_arg1⁰, _lh_lookup_LH_C_1⁰)
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def lookup_lh_₂(_lh_lookup_arg1¹, _lh_lookup_arg2¹) = case _lh_lookup_arg2¹ of {
+//│ 	LH_N  => (fun _lh_select_arg1² -> permute_lh_₁(_lh_select_arg1²))
+//│ 	| LH_C _lh_lookup_LH_C_0¹ _lh_lookup_LH_C_1¹ => case _lh_lookup_LH_C_0¹ of {
+//│ 		LH_P2 _lh_lookup_LH_P2_0¹ _lh_lookup_LH_P2_1¹ => if polyEq⁰(_lh_lookup_arg1¹, _lh_lookup_LH_P2_0¹) then 
+//│ 			let _lh_select_Just_0⁰ = _lh_lookup_LH_P2_1¹
+//│ 			in (fun _lh_select_arg1³ -> return_lh_₄(_lh_select_Just_0⁰)) else lookup_lh_₂(_lh_lookup_arg1¹, _lh_lookup_LH_C_1¹)
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def lookup_lh_₃(_lh_lookup_arg1², _lh_lookup_arg2²) = case _lh_lookup_arg2² of {
+//│ 	LH_N  => (fun _lh_select_arg1⁴ -> permute_lh_₂(_lh_select_arg1⁴))
+//│ 	| LH_C _lh_lookup_LH_C_0² _lh_lookup_LH_C_1² => case _lh_lookup_LH_C_0² of {
+//│ 		LH_P2 _lh_lookup_LH_P2_0² _lh_lookup_LH_P2_1² => if polyEq⁰(_lh_lookup_arg1², _lh_lookup_LH_P2_0²) then 
+//│ 			let _lh_select_Just_0¹ = _lh_lookup_LH_P2_1²
+//│ 			in (fun _lh_select_arg1⁵ -> return_lh_₅(_lh_select_Just_0¹)) else lookup_lh_₃(_lh_lookup_arg1², _lh_lookup_LH_C_1²)
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def mapM_lh_₁(_lh_mapM_arg1⁰, _lh_mapM_arg2⁰) = foldr_lh_₁((fun a¹ -> (fun r⁰ -> bind_lh_₈(_lh_mapM_arg1⁰(a¹), (fun x⁰ -> bind_lh_₇(r⁰, (fun xs¹ -> return_lh_₇([LH_C x⁰ xs¹]))))))), return_lh_₆([LH_N]), _lh_mapM_arg2⁰)
+//│ def map_lh_₁(f¹², ls⁸) = ls⁸(f¹²)
+//│ def map_lh_₂(f⁹, ls⁶) = case ls⁶ of {
+//│ 	LH_C h¹⁵ t¹⁶ => [LH_C f⁹(h¹⁵) map_lh_₂(f⁹, t¹⁶)]
+//│ 	| LH_N  => [LH_N]}
+//│ def map_lh_₃(f², ls⁰) = case ls⁰ of {
+//│ 	LH_C h¹ t² => 
+//│ 		let t³ = map_lh_₃(f², t²)
+//│ 		in let h² = f²(h¹)
+//│ 		in (fun _lh_dummy² -> h²(t³(99)))
+//│ 	| LH_N  => (fun _lh_dummy³ -> [LH_N])}
+//│ def map_lh_₄(f¹⁵, ls¹²) = ls¹²(f¹⁵)
+//│ def map_lh_₅(f¹³, ls⁹) = ls⁹(f¹³)
+//│ def map_lh_₆(f⁸, ls⁵) = case ls⁵ of {
+//│ 	LH_C h¹³ t¹⁴ => 
+//│ 		let t¹⁵ = map_lh_₆(f⁸, t¹⁴)
+//│ 		in let h¹⁴ = f⁸(h¹³)
+//│ 		in (fun _lh_dummy⁹ -> mappend_lh_₈(h¹⁴, t¹⁵(99)))
+//│ 	| LH_N  => (fun _lh_dummy¹⁰ -> [LH_N])}
+//│ def mappend_lh_₁(xs², ys¹) = xs²(ys¹)
+//│ def mappend_lh_₂(xs⁵, ys⁴) = xs⁵(ys⁴)
+//│ def mappend_lh_₃(xs⁰, ys⁰) = xs⁰(ys⁰)
+//│ def mappend_lh_₄(xs⁸, ys⁸) = xs⁸(ys⁸)
+//│ def mappend_lh_₅(xs⁶, ys⁵) = case xs⁶ of {
+//│ 	LH_C h¹⁰ t¹¹ => 
+//│ 		let t¹² = mappend_lh_₅(t¹¹, ys⁵)
+//│ 		in let h¹¹ = h¹⁰
+//│ 		in (fun ys⁶ -> [LH_C h¹¹ t¹²(ys⁶)])
+//│ 	| LH_N  => ys⁵}
+//│ def mappend_lh_₆(xs⁷, ys⁷) = case xs⁷ of {
+//│ 	LH_C h¹² t¹³ => [LH_C h¹² mappend_lh_₆(t¹³, ys⁷)]
+//│ 	| LH_N  => ys⁷}
+//│ def mappend_lh_₇(xs⁴, ys³) = xs⁴(ys³)
+//│ def mappend_lh_₈(xs³, ys²) = case xs³ of {
+//│ 	LH_C h⁵ t⁶ => [LH_C h⁵ mappend_lh_₈(t⁶, ys²)]
+//│ 	| LH_N  => ys²}
+//│ def nub_lh_₁(_lh_nub_arg1⁰) = case _lh_nub_arg1⁰ of {
+//│ 	LH_N  => (fun _lh_dummy⁰ -> 0)
+//│ 	| LH_C _lh_nub_LH_C_0⁰ _lh_nub_LH_C_1⁰ => 
+//│ 		let t⁰ = nub_lh_₁(filter_lh_₁((fun y⁰ -> not⁰(polyEq⁰(_lh_nub_LH_C_0⁰, y⁰))), _lh_nub_LH_C_1⁰))
+//│ 		in (fun _lh_dummy¹ -> (1 + t⁰(99)))
+//│ 	| _  => error⁰}
+//│ def permute_lh_₁(_lh_permute_arg1¹) = bind_lh_₈(get_lh_₂, (fun st⁴ -> bind_lh_₈(
+//│ 	let xs¹⁰ = digits_lh_₁(st⁴)
+//│ 	in lift_lh_₁(
+//│ 		let _lh_listcomp_fun⁴ = (fun _lh_listcomp_fun_para⁴ -> case _lh_listcomp_fun_para⁴ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁴ _lh_listcomp_fun_ls_t⁴ => [LH_C [LH_P2 _lh_listcomp_fun_ls_h⁴ listDiff_lh_₁(xs¹⁰, [LH_C _lh_listcomp_fun_ls_h⁴ [LH_N]])] _lh_listcomp_fun⁴(_lh_listcomp_fun_ls_t⁴)]
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun⁴(xs¹⁰)), (fun iis¹ -> 
+//│ 	let _lh_matchIdent¹⁷ = iis¹
+//│ 	in case _lh_matchIdent¹⁷ of {
+//│ 		LH_P2 _lh_permute_LH_P2_0¹ _lh_permute_LH_P2_1¹ => bind_lh_₈(put_lh_₁([Digits _lh_permute_LH_P2_1¹ [LH_C [LH_P2 _lh_permute_arg1¹ _lh_permute_LH_P2_0¹] digitEnv_lh_₄(st⁴)]]), (fun _p⁴ -> return_lh_₇(_lh_permute_LH_P2_0¹)))
+//│ 		| _  => error⁰}))))
+//│ def permute_lh_₂(_lh_permute_arg1⁰) = bind_lh_₈(get_lh_₂, (fun st³ -> bind_lh_₈(
+//│ 	let xs⁹ = digits_lh_₁(st³)
+//│ 	in lift_lh_₁(
+//│ 		let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> case _lh_listcomp_fun_para² of {
+//│ 			LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => [LH_C [LH_P2 _lh_listcomp_fun_ls_h² listDiff_lh_₁(xs⁹, [LH_C _lh_listcomp_fun_ls_h² [LH_N]])] _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)]
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun²(xs⁹)), (fun iis⁰ -> 
+//│ 	let _lh_matchIdent¹³ = iis⁰
+//│ 	in case _lh_matchIdent¹³ of {
+//│ 		LH_P2 _lh_permute_LH_P2_0⁰ _lh_permute_LH_P2_1⁰ => bind_lh_₈(put_lh_₁([Digits _lh_permute_LH_P2_1⁰ [LH_C [LH_P2 _lh_permute_arg1⁰ _lh_permute_LH_P2_0⁰] digitEnv_lh_₄(st³)]]), (fun _p³ -> return_lh_₇(_lh_permute_LH_P2_0⁰)))
+//│ 		| _  => error⁰}))))
+//│ def put_lh_₁(_lh_put_arg1⁰) = [StateT (fun s¹⁸ -> [LH_C [LH_P2 [Unit] _lh_put_arg1⁰] [LH_N]])]
+//│ def puzzle_lh_₁(_lh_puzzle_arg1⁰, _lh_puzzle_arg2⁰) = 
+//│ 	let solution⁰ = solve_lh_₁(transpose_lh_₁(map_lh_₂(reverse_lh_₁, _lh_puzzle_arg1⁰)), reverse_lh_₂(_lh_puzzle_arg2⁰), 0)
+//│ 	in let answer⁰ = 	
+//│ 		let _lh_matchIdent¹² = execStateT_lh_₁(solution⁰, [Digits enumFromTo_lh_₂(0, 9) [LH_N]])
+//│ 		in case _lh_matchIdent¹² of {
+//│ 			LH_C _lh_puzzle_LH_C_0⁰ _lh_puzzle_LH_C_1⁰ => _lh_puzzle_LH_C_0⁰
+//│ 			| LH_N  => error⁰
+//│ 			| _  => error⁰}
+//│ 	in let env⁰ = digitEnv_lh_₁(answer⁰)
+//│ 	in let look⁰ = (fun c⁰ -> lookup_lh_₁(c⁰, env⁰, 99))
+//│ 	in let expand⁰ = (fun ls⁷ -> foldl_lh_₁((fun a⁵ -> (fun b² -> ((a⁵ * 10) + look⁰(b²)))), 0, ls⁷))
+//│ 	in let topVal⁰ = let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => 
+//│ 				let _lh_sum_LH_C_1¹ = _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)
+//│ 				in let _lh_sum_LH_C_0¹ = expand⁰(_lh_listcomp_fun_ls_h⁰)
+//│ 				in (fun _lh_dummy¹¹ -> (_lh_sum_LH_C_0¹ + _lh_sum_LH_C_1¹(99)))
+//│ 			| LH_N  => (fun _lh_dummy¹² -> 0)})
+//│ 		in _lh_listcomp_fun⁰(_lh_puzzle_arg1⁰)(99)
+//│ 	in let botVal⁰ = expand⁰(_lh_puzzle_arg2⁰)
+//│ 	in if (nub_lh_₁(concat_lh_₁(_lh_puzzle_arg1⁰, _lh_puzzle_arg2⁰), 99) > 10) then error⁰ else if (topVal⁰ /= botVal⁰) then error⁰ else unlines_lh_₁(
+//│ 		let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => case _lh_listcomp_fun_ls_h¹ of {
+//│ 				LH_P2 _lh_puzzle_LH_P2_0⁰ _lh_puzzle_LH_P2_1⁰ => 
+//│ 					let t¹⁷ = _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)
+//│ 					in let h¹⁶ = let t¹⁸ = (fun ys⁹ -> ys⁹)
+//│ 						in let h¹⁷ = _lh_puzzle_LH_P2_0⁰
+//│ 						in (fun ys¹⁰ -> 
+//│ 							let t¹⁹ = t¹⁸(ys¹⁰)
+//│ 							in let h¹⁸ = h¹⁷
+//│ 							in (fun ys¹¹ -> [LH_C h¹⁸ t¹⁹(ys¹¹)]))(
+//│ 						let t²⁰ = 	
+//│ 							let t²¹ = 	
+//│ 								let t²² = 	
+//│ 									let t²³ = (fun ys¹² -> ys¹²)
+//│ 									in let h¹⁹ = ' '
+//│ 									in (fun ys¹³ -> [LH_C h¹⁹ t²³(ys¹³)])
+//│ 								in let h²⁰ = '>'
+//│ 								in (fun ys¹⁴ -> [LH_C h²⁰ t²²(ys¹⁴)])
+//│ 							in let h²¹ = '='
+//│ 							in (fun ys¹⁵ -> [LH_C h²¹ t²¹(ys¹⁵)])
+//│ 						in let h²² = ' '
+//│ 						in (fun ys¹⁶ -> [LH_C h²² t²⁰(ys¹⁶)]), string_of_int⁰(_lh_puzzle_LH_P2_1⁰))
+//│ 					in (fun f¹⁰ -> 
+//│ 						let t²⁴ = t¹⁷(f¹⁰)
+//│ 						in let h²³ = f¹⁰(h¹⁶)
+//│ 						in (fun _lh_dummy¹³ -> mappend_lh_₈(h²³, t²⁴(99))))
+//│ 				| _  => _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)}
+//│ 			| LH_N  => (fun f¹¹ -> (fun _lh_dummy¹⁴ -> [LH_N]))})
+//│ 		in _lh_listcomp_fun¹(digitEnv_lh_₂(answer⁰)))
+//│ def rest_lh_₁(_lh_rest_arg1⁰) = case _lh_rest_arg1⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_rest_LH_C_0⁰ _lh_rest_LH_C_1⁰ => _lh_rest_LH_C_1⁰
+//│ 	| _  => error⁰}
+//│ def return_lh_₁(_lh_return_arg1⁵) = [StateT (fun s⁶ -> [LH_C [LH_P2 _lh_return_arg1⁵ s⁶] [LH_N]])]
+//│ def return_lh_₂(_lh_return_arg1³) = [StateT (fun s³ -> [LH_C [LH_P2 _lh_return_arg1³ s³] [LH_N]])]
+//│ def return_lh_₃(_lh_return_arg1²) = [StateT (fun s² -> [LH_C [LH_P2 _lh_return_arg1² s²] [LH_N]])]
+//│ def return_lh_₄(_lh_return_arg1¹) = [StateT (fun s¹ -> [LH_C [LH_P2 _lh_return_arg1¹ s¹] [LH_N]])]
+//│ def return_lh_₅(_lh_return_arg1⁴) = [StateT (fun s⁴ -> [LH_C [LH_P2 _lh_return_arg1⁴ s⁴] [LH_N]])]
+//│ def return_lh_₆(_lh_return_arg1⁶) = [StateT (fun s¹⁰ -> [LH_C [LH_P2 _lh_return_arg1⁶ s¹⁰] [LH_N]])]
+//│ def return_lh_₇(_lh_return_arg1⁰) = [StateT (fun s⁰ -> [LH_C [LH_P2 _lh_return_arg1⁰ s⁰] [LH_N]])]
+//│ def reverse_helper_lh_₁(ls³, a³) = case ls³ of {
+//│ 	LH_C h⁶ t⁷ => reverse_helper_lh_₁(t⁷, [LH_C h⁶ a³])
+//│ 	| LH_N  => a³}
+//│ def reverse_helper_lh_₂(ls², a²) = case ls² of {
+//│ 	LH_C h⁴ t⁵ => reverse_helper_lh_₂(t⁵, [LH_C h⁴ a²])
+//│ 	| LH_N  => a²}
+//│ def reverse_lh_₁(ls¹³) = reverse_helper_lh_₁(ls¹³, [LH_N])
+//│ def reverse_lh_₂(ls¹⁴) = reverse_helper_lh_₂(ls¹⁴, [LH_N])
+//│ def runStateT_lh_₁(_lh_runStateT_arg1¹) = case _lh_runStateT_arg1¹ of {
+//│ 	StateT _lh_runStateT_StateT_0⁰ => _lh_runStateT_StateT_0⁰
+//│ 	| _  => error⁰}
+//│ def runStateT_lh_₂(_lh_runStateT_arg1³) = case _lh_runStateT_arg1³ of {
+//│ 	StateT _lh_runStateT_StateT_0⁶ => _lh_runStateT_StateT_0⁶
+//│ 	| _  => error⁰}
+//│ def runStateT_lh_₃(_lh_runStateT_arg1⁴) = _lh_runStateT_arg1⁴
+//│ def runStateT_lh_₄(_lh_runStateT_arg1⁵) = _lh_runStateT_arg1⁵
+//│ def runStateT_lh_₅(_lh_runStateT_arg1⁰) = _lh_runStateT_arg1⁰
+//│ def runStateT_lh_₆(_lh_runStateT_arg1²) = case _lh_runStateT_arg1² of {
+//│ 	StateT _lh_runStateT_StateT_0¹ => _lh_runStateT_StateT_0¹
+//│ 	| _  => error⁰}
+//│ def select_lh_₁(_lh_select_arg1¹) = bind_lh_₅(get_lh_₁, (fun st¹ -> 
+//│ 	let _lh_matchIdent¹ = lookup_lh_₂(_lh_select_arg1¹, digitEnv_lh_₃(st¹))
+//│ 	in _lh_matchIdent¹(_lh_select_arg1¹)))
+//│ def select_lh_₂(_lh_select_arg1⁰) = bind_lh_₆(get_lh_₂, (fun st⁰ -> 
+//│ 	let _lh_matchIdent⁰ = lookup_lh_₃(_lh_select_arg1⁰, digitEnv_lh_₄(st⁰))
+//│ 	in _lh_matchIdent⁰(_lh_select_arg1⁰)))
+//│ def solve_lh_₁(_lh_solve_arg1⁰, _lh_solve_arg2⁰, _lh_solve_arg3⁰) = case _lh_solve_arg2⁰ of {
+//│ 	LH_C _lh_solve_LH_C_0⁰ _lh_solve_LH_C_1⁰ => bind_lh_₄(
+//│ 		let _lh_matchIdent³ = _lh_solve_arg1⁰
+//│ 		in case _lh_matchIdent³ of {
+//│ 			LH_N  => return_lh_₁(_lh_solve_arg3⁰)
+//│ 			| LH_C _lh_solve_LH_C_0¹ _lh_solve_LH_C_1¹ => bind_lh_₃(mapM_lh_₁(select_lh_₁, _lh_solve_LH_C_0¹), (fun topNS⁰ -> return_lh_₂((sum_lh_₂(topNS⁰) + _lh_solve_arg3⁰))))
+//│ 			| _  => error⁰}, (fun topN⁰ -> bind_lh_₂(bind_lh_₆(get_lh_₂, (fun st² -> 
+//│ 		let _lh_matchIdent⁴ = lookup_lh_₃(_lh_solve_LH_C_0⁰, digitEnv_lh_₄(st²))
+//│ 		in _lh_matchIdent⁴(_lh_solve_LH_C_0⁰))), (fun botN⁰ -> 
+//│ 		let _lh_runStateT_StateT_0² = (fun s⁸ -> guard_lh_₁(((topN⁰ % 10) == botN⁰), s⁸, (fun as¹ -> 
+//│ 			let _lh_matchIdent⁵ = as¹
+//│ 			in _lh_matchIdent⁵((fun _s⁰ -> solve_lh_₁(rest_lh_₁(_lh_solve_arg1⁰), _lh_solve_LH_C_1⁰, div⁰(topN⁰, 10))))), 99))
+//│ 		in _lh_runStateT_StateT_0²))))
+//│ 	| _  => case _lh_solve_arg1⁰ of {
+//│ 		LH_N  => case _lh_solve_arg2⁰ of {
+//│ 			LH_N  => case _lh_solve_arg3⁰ of {
+//│ 				0  => return_lh_₃([Unit])
+//│ 				| _  => [StateT (fun _p⁰ -> [LH_N])]}
+//│ 			| _  => [StateT (fun _p¹ -> [LH_N])]}
+//│ 		| _  => [StateT (fun _p² -> [LH_N])]}}
+//│ def sum_lh_₁(_lh_sum_arg1¹) = _lh_sum_arg1¹(99)
+//│ def sum_lh_₂(_lh_sum_arg1⁰) = case _lh_sum_arg1⁰ of {
+//│ 	LH_N  => 0
+//│ 	| LH_C _lh_sum_LH_C_0⁰ _lh_sum_LH_C_1⁰ => (_lh_sum_LH_C_0⁰ + sum_lh_₂(_lh_sum_LH_C_1⁰))
+//│ 	| _  => error⁰}
+//│ def testCryptarithm2_nofib_lh_₁(_lh_testCryptarithm2_nofib_arg1⁰) = enumFromTo_lh_₁(1, _lh_testCryptarithm2_nofib_arg1⁰, (fun i² -> 
+//│ 	let args⁰ = [LH_C [LH_C 'T' [LH_C 'H' [LH_C 'I' [LH_C 'R' [LH_C 'T' [LH_C 'Y' [LH_N]]]]]]] [LH_C [LH_C 'T' [LH_C 'W' [LH_C 'E' [LH_C 'L' [LH_C 'V' [LH_C 'E' [LH_N]]]]]]] [LH_C [LH_C 'T' [LH_C 'W' [LH_C 'E' [LH_C 'L' [LH_C 'V' [LH_C 'E' [LH_N]]]]]]] [LH_C [LH_C 'T' [LH_C 'W' [LH_C 'E' [LH_C 'L' [LH_C 'V' [LH_C 'E' [LH_N]]]]]]] [LH_C [LH_C 'T' [LH_C 'W' [LH_C 'E' [LH_C 'L' [LH_C 'V' [LH_C 'E' [LH_N]]]]]]] [LH_C 
+//│ 		let t²⁷ = 	
+//│ 			let t²⁸ = 	
+//│ 				let t²⁹ = 	
+//│ 					let t³⁰ = 	
+//│ 						let t³¹ = 	
+//│ 							let t³² = (fun ys¹⁹ -> ys¹⁹)
+//│ 							in let h²⁶ = 'E'
+//│ 							in (fun ys²⁰ -> [LH_C h²⁶ t³²(ys²⁰)])
+//│ 						in let h²⁷ = 'V'
+//│ 						in (fun ys²¹ -> [LH_C h²⁷ t³¹(ys²¹)])
+//│ 					in let h²⁸ = 'L'
+//│ 					in (fun ys²² -> [LH_C h²⁸ t³⁰(ys²²)])
+//│ 				in let h²⁹ = 'E'
+//│ 				in (fun ys²³ -> [LH_C h²⁹ t²⁹(ys²³)])
+//│ 			in let h³⁰ = 'W'
+//│ 			in (fun ys²⁴ -> [LH_C h³⁰ t²⁸(ys²⁴)])
+//│ 		in let h³¹ = 'T'
+//│ 		in (fun ys²⁵ -> [LH_C h³¹ t²⁷(ys²⁵)])(if (i² > 999999) then [LH_C '1' [LH_N]] else [LH_N]) [LH_N]]]]]]]
+//│ 	in puzzle_lh_₁(args⁰, [LH_C 'N' [LH_C 'I' [LH_C 'N' [LH_C 'E' [LH_C 'T' [LH_C 'Y' [LH_N]]]]]]])))
+//│ def transpose_lh_₁(_lh_transpose_arg1⁰) = case _lh_transpose_arg1⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_transpose_LH_C_0⁰ _lh_transpose_LH_C_1⁰ => case _lh_transpose_LH_C_0⁰ of {
+//│ 		LH_N  => transpose_lh_₁(_lh_transpose_LH_C_1⁰)
+//│ 		| LH_C _lh_transpose_LH_C_0¹ _lh_transpose_LH_C_1¹ => 
+//│ 			let _lh_matchIdent¹⁶ = unzip_lh_₁(
+//│ 				let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {
+//│ 					LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => case _lh_listcomp_fun_ls_h³ of {
+//│ 						LH_C _lh_transpose_LH_C_0² _lh_transpose_LH_C_1² => [LH_C [LH_P2 _lh_transpose_LH_C_0² _lh_transpose_LH_C_1²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]
+//│ 						| _  => _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)}
+//│ 					| LH_N  => [LH_N]})
+//│ 				in _lh_listcomp_fun³(_lh_transpose_LH_C_1⁰))
+//│ 			in case _lh_matchIdent¹⁶ of {
+//│ 				LH_P2 _lh_transpose_LH_P2_0⁰ _lh_transpose_LH_P2_1⁰ => combine_lh_₁(_lh_transpose_LH_C_0¹, _lh_transpose_LH_P2_0⁰, _lh_transpose_LH_C_1¹, _lh_transpose_LH_P2_1⁰)
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def unlines_lh_₁(_lh_unlines_arg1⁰) = _lh_unlines_arg1⁰((fun l⁰ -> mappend_lh_₆(l⁰, [LH_C 'n' [LH_N]])), 99)
+//│ def unzip_lh_₁(_lh_unzip_arg1⁰) = foldr_lh_₁((fun ab⁰ -> (fun asbs⁰ -> 
+//│ 	let _lh_matchIdent⁷ = ab⁰
+//│ 	in case _lh_matchIdent⁷ of {
+//│ 		LH_P2 _lh_unzip_LH_P2_0⁰ _lh_unzip_LH_P2_1⁰ => 
+//│ 			let _lh_matchIdent⁸ = asbs⁰
+//│ 			in case _lh_matchIdent⁸ of {
+//│ 				LH_P2 _lh_unzip_LH_P2_0¹ _lh_unzip_LH_P2_1¹ => [LH_P2 [LH_C _lh_unzip_LH_P2_0⁰ _lh_unzip_LH_P2_0¹] [LH_C _lh_unzip_LH_P2_1⁰ _lh_unzip_LH_P2_1¹]]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})), [LH_P2 [LH_N] [LH_N]], _lh_unzip_arg1⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testCryptarithm2_nofib_lh_₁(primId⁰(1))
+//│ def bind_lh_₁(_lh_bind_arg1⁷, _lh_bind_arg2⁸) = 
+//│ 	let _lh_runStateT_StateT_0⁷ = (fun s²¹ -> _lh_bind_arg1⁷(s²¹, (fun as⁸ -> 
+//│ 		let _lh_matchIdent¹⁹ = as⁸
+//│ 		in _lh_matchIdent¹⁹(_lh_bind_arg2⁸)), 99))
+//│ 	in _lh_runStateT_StateT_0⁷
+//│ def bind_lh_₂(_lh_bind_arg1¹, _lh_bind_arg2¹) = [StateT (fun s⁹ -> map_lh_₆((fun as² -> 
+//│ 	let _lh_matchIdent⁶ = as²
+//│ 	in case _lh_matchIdent⁶ of {
+//│ 		LH_P2 _lh_bind_LH_P2_0¹ _lh_bind_LH_P2_1¹ => _lh_bind_arg2¹(_lh_bind_LH_P2_0¹, _lh_bind_LH_P2_1¹)
+//│ 		| _  => error⁰}), _lh_bind_arg1¹(s⁹), 99))]
+//│ def bind_lh_₃(_lh_bind_arg1³, _lh_bind_arg2⁴) = [StateT (fun s¹⁵ -> map_lh_₆((fun as⁴ -> 
+//│ 	let _lh_matchIdent¹⁰ = as⁴
+//│ 	in case _lh_matchIdent¹⁰ of {
+//│ 		LH_P2 _lh_bind_LH_P2_0⁴ _lh_bind_LH_P2_1⁴ => runStateT_lh_₆(_lh_bind_arg2⁴(_lh_bind_LH_P2_0⁴), _lh_bind_LH_P2_1⁴)
+//│ 		| _  => error⁰}), runStateT_lh_₆(_lh_bind_arg1³, s¹⁵), 99))]
+//│ def bind_lh_₄(_lh_bind_arg1⁰, _lh_bind_arg2⁰) = [StateT (fun s⁵ -> map_lh_₆((fun as⁰ -> 
+//│ 	let _lh_matchIdent² = as⁰
+//│ 	in case _lh_matchIdent² of {
+//│ 		LH_P2 _lh_bind_LH_P2_0⁰ _lh_bind_LH_P2_1⁰ => runStateT_lh_₆(_lh_bind_arg2⁰(_lh_bind_LH_P2_0⁰), _lh_bind_LH_P2_1⁰)
+//│ 		| _  => error⁰}), runStateT_lh_₆(_lh_bind_arg1⁰, s⁵), 99))]
+//│ def bind_lh_₅(_lh_bind_arg1⁶, _lh_bind_arg2⁷) = [StateT (fun s²⁰ -> map_lh_₆((fun as⁷ -> 
+//│ 	let _lh_matchIdent¹⁸ = as⁷
+//│ 	in case _lh_matchIdent¹⁸ of {
+//│ 		LH_P2 _lh_bind_LH_P2_0⁷ _lh_bind_LH_P2_1⁷ => runStateT_lh_₆(_lh_bind_arg2⁷(_lh_bind_LH_P2_0⁷), _lh_bind_LH_P2_1⁷)
+//│ 		| _  => error⁰}), runStateT_lh_₆(_lh_bind_arg1⁶, s²⁰), 99))]
+//│ def bind_lh_₆(_lh_bind_arg1², _lh_bind_arg2³) = 
+//│ 	let _lh_runStateT_StateT_0⁵ = (fun s¹⁴ -> map_lh_₆((fun as³ -> 
+//│ 		let _lh_matchIdent⁹ = as³
+//│ 		in case _lh_matchIdent⁹ of {
+//│ 			LH_P2 _lh_bind_LH_P2_0³ _lh_bind_LH_P2_1³ => runStateT_lh_₆(_lh_bind_arg2³(_lh_bind_LH_P2_0³), _lh_bind_LH_P2_1³)
+//│ 			| _  => error⁰}), runStateT_lh_₆(_lh_bind_arg1², s¹⁴), 99))
+//│ 	in _lh_runStateT_StateT_0⁵
+//│ def bind_lh_₇(_lh_bind_arg1⁵, _lh_bind_arg2⁶) = [StateT (fun s¹⁷ -> map_lh_₆((fun as⁶ -> 
+//│ 	let _lh_matchIdent¹⁵ = as⁶
+//│ 	in case _lh_matchIdent¹⁵ of {
+//│ 		LH_P2 _lh_bind_LH_P2_0⁶ _lh_bind_LH_P2_1⁶ => runStateT_lh_₆(_lh_bind_arg2⁶(_lh_bind_LH_P2_0⁶), _lh_bind_LH_P2_1⁶)
+//│ 		| _  => error⁰}), runStateT_lh_₆(_lh_bind_arg1⁵, s¹⁷), 99))]
+//│ def bind_lh_₈(_lh_bind_arg1⁴, _lh_bind_arg2⁵) = [StateT (fun s¹⁶ -> map_lh_₆((fun as⁵ -> 
+//│ 	let _lh_matchIdent¹¹ = as⁵
+//│ 	in case _lh_matchIdent¹¹ of {
+//│ 		LH_P2 _lh_bind_LH_P2_0⁵ _lh_bind_LH_P2_1⁵ => runStateT_lh_₆(_lh_bind_arg2⁵(_lh_bind_LH_P2_0⁵), _lh_bind_LH_P2_1⁵)
+//│ 		| _  => error⁰}), runStateT_lh_₆(_lh_bind_arg1⁴, s¹⁶), 99))]
+//│ def combine_lh_₁(_lh_combine_arg1⁰, _lh_combine_arg2⁰, _lh_combine_arg3⁰, _lh_combine_arg4⁰) = [LH_C [LH_C _lh_combine_arg1⁰ _lh_combine_arg2⁰] transpose_lh_₁([LH_C _lh_combine_arg3⁰ _lh_combine_arg4⁰])]
+//│ def concat_lh_₁(lss⁴) = case lss⁴ of {
+//│ 	LH_C h³² t³³ => mappend_lh_₅(h³², concat_lh_₁(t³³))
+//│ 	| LH_N  => (fun ys²⁶ -> ys²⁶)}
+//│ def concat_lh_₂(lss³) = lss³(99)
+//│ def concat_lh_₃(lss²) = lss²(99)
+//│ def concat_lh_₄(lss¹) = lss¹(99)
+//│ def concat_lh_₅(lss⁰) = lss⁰(99)
+//│ def delete_lh_₁(_lh_delete_arg1⁰, _lh_delete_arg2⁰) = case _lh_delete_arg1⁰ of {
+//│ 	LH_C _lh_delete_LH_C_0⁰ _lh_delete_LH_C_1⁰ => if polyEq⁰(_lh_delete_LH_C_0⁰, _lh_delete_arg2⁰) then delete_lh_₁(_lh_delete_LH_C_1⁰, _lh_delete_arg2⁰) else [LH_C _lh_delete_LH_C_0⁰ delete_lh_₁(_lh_delete_LH_C_1⁰, _lh_delete_arg2⁰)]
+//│ 	| LH_N  => [LH_N]
+//│ 	| _  => error⁰}
+//│ def digitEnv_lh_₁(_lh_digitEnv_arg1¹) = case _lh_digitEnv_arg1¹ of {
+//│ 	Digits _lh_digitEnv_Digits_0¹ _lh_digitEnv_Digits_1¹ => _lh_digitEnv_Digits_1¹
+//│ 	| _  => error⁰}
+//│ def digitEnv_lh_₂(_lh_digitEnv_arg1³) = case _lh_digitEnv_arg1³ of {
+//│ 	Digits _lh_digitEnv_Digits_0³ _lh_digitEnv_Digits_1³ => _lh_digitEnv_Digits_1³
+//│ 	| _  => error⁰}
+//│ def digitEnv_lh_₃(_lh_digitEnv_arg1²) = case _lh_digitEnv_arg1² of {
+//│ 	Digits _lh_digitEnv_Digits_0² _lh_digitEnv_Digits_1² => _lh_digitEnv_Digits_1²
+//│ 	| _  => error⁰}
+//│ def digitEnv_lh_₄(_lh_digitEnv_arg1⁰) = case _lh_digitEnv_arg1⁰ of {
+//│ 	Digits _lh_digitEnv_Digits_0⁰ _lh_digitEnv_Digits_1⁰ => _lh_digitEnv_Digits_1⁰
+//│ 	| _  => error⁰}
+//│ def digits_lh_₁(_lh_digits_arg1⁰) = case _lh_digits_arg1⁰ of {
+//│ 	Digits _lh_digits_Digits_0⁰ _lh_digits_Digits_1⁰ => _lh_digits_Digits_0⁰
+//│ 	| _  => error⁰}
+//│ def enumFromTo_lh_₁(a⁰, b⁰, _lh_popOutId_0⁰) = if (a⁰ <= b⁰) then 
+//│ 	let t¹ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
+//│ 	in let h⁰ = a⁰
+//│ 	in [LH_C _lh_popOutId_0⁰(h⁰) t¹(_lh_popOutId_0⁰)] else [LH_N]
+//│ def enumFromTo_lh_₂(a⁴, b¹) = if (a⁴ <= b¹) then [LH_C a⁴ enumFromTo_lh_₂((a⁴ + 1), b¹)] else [LH_N]
+//│ def execStateT_lh_₁(_lh_execStateT_arg1⁰, _lh_execStateT_arg2⁰) = map_lh_₃((fun x² -> 
+//│ 	let _lh_matchIdent¹⁴ = x²
+//│ 	in case _lh_matchIdent¹⁴ of {
+//│ 		LH_P2 _lh_execStateT_LH_P2_0⁰ _lh_execStateT_LH_P2_1⁰ => 
+//│ 			let t²⁵ = (fun ys¹⁷ -> ys¹⁷)
+//│ 			in let h²⁴ = _lh_execStateT_LH_P2_1⁰
+//│ 			in (fun ys¹⁸ -> [LH_C h²⁴ t²⁵(ys¹⁸)])
+//│ 		| _  => error⁰}), runStateT_lh_₁(_lh_execStateT_arg1⁰, _lh_execStateT_arg2⁰), 99)
+//│ def filter_lh_₁(f¹², ls¹¹) = case ls¹¹ of {
+//│ 	LH_C h²⁵ t²⁶ => if f¹²(h²⁵) then [LH_C h²⁵ filter_lh_₁(f¹², t²⁶)] else filter_lh_₁(f¹², t²⁶)
+//│ 	| LH_N  => [LH_N]}
+//│ def foldl_lh_₁(f¹, i⁰, ls¹) = case ls¹ of {
+//│ 	LH_C h³ t⁴ => foldl_lh_₁(f¹, f¹(i⁰, h³), t⁴)
+//│ 	| LH_N  => i⁰}
+//│ def foldr_lh_₁(f², i¹, ls⁴) = case ls⁴ of {
+//│ 	LH_C h⁷ t⁸ => f²(h⁷, foldr_lh_₁(f², i¹, t⁸))
+//│ 	| LH_N  => i¹}
+//│ def fromJust_lh_₁(_lh_fromJust_arg1⁰) = _lh_fromJust_arg1⁰(99)
+//│ def get_lh_₁ = [StateT (fun s¹⁹ -> [LH_C [LH_P2 s¹⁹ s¹⁹] [LH_N]])]
+//│ def get_lh_₂ = [StateT (fun s¹³ -> [LH_C [LH_P2 s¹³ s¹³] [LH_N]])]
+//│ def guard_lh_₁(_lh_guard_arg1⁰) = case _lh_guard_arg1⁰ of {
+//│ 	True  => 
+//│ 		let _lh_runStateT_StateT_0³ = (fun s¹¹ -> 
+//│ 			let t⁹ = (fun f³ -> (fun _lh_dummy⁴ -> [LH_N]))
+//│ 			in let h⁸ = 	
+//│ 				let _lh_bind_LH_P2_1² = s¹¹
+//│ 				in let _lh_bind_LH_P2_0² = [Unit]
+//│ 				in (fun _lh_bind_arg2² -> runStateT_lh_₂(_lh_bind_arg2²(_lh_bind_LH_P2_0²), _lh_bind_LH_P2_1²))
+//│ 			in (fun f⁴ -> 
+//│ 				let t¹⁰ = t⁹(f⁴)
+//│ 				in let h⁹ = f⁴(h⁸)
+//│ 				in (fun _lh_dummy⁵ -> mappend_lh_₈(h⁹, t¹⁰(99)))))
+//│ 		in _lh_runStateT_StateT_0³
+//│ 	| False  => 
+//│ 		let _lh_runStateT_StateT_0⁴ = (fun s¹² -> (fun f⁵ -> (fun _lh_dummy⁶ -> [LH_N])))
+//│ 		in _lh_runStateT_StateT_0⁴
+//│ 	| _  => error⁰}
+//│ def length_lh_₁(ls¹⁰) = ls¹⁰(99)
+//│ def lift_lh_₁(_lh_lift_arg1⁰) = [StateT (fun s⁷ -> map_lh_₆((fun x¹ -> [LH_C [LH_P2 x¹ s⁷] [LH_N]]), _lh_lift_arg1⁰, 99))]
+//│ def listDiff_lh_₁ = foldl_lh_₁(delete_lh_₁)
+//│ def lookup_lh_₁(_lh_lookup_arg1⁰, _lh_lookup_arg2⁰) = case _lh_lookup_arg2⁰ of {
+//│ 	LH_N  => (fun _lh_dummy² -> error⁰)
+//│ 	| LH_C _lh_lookup_LH_C_0⁰ _lh_lookup_LH_C_1⁰ => case _lh_lookup_LH_C_0⁰ of {
+//│ 		LH_P2 _lh_lookup_LH_P2_0⁰ _lh_lookup_LH_P2_1⁰ => if polyEq⁰(_lh_lookup_arg1⁰, _lh_lookup_LH_P2_0⁰) then 
+//│ 			let _lh_fromJust_Just_0⁰ = _lh_lookup_LH_P2_1⁰
+//│ 			in (fun _lh_dummy³ -> _lh_fromJust_Just_0⁰) else lookup_lh_₁(_lh_lookup_arg1⁰, _lh_lookup_LH_C_1⁰)
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def lookup_lh_₂(_lh_lookup_arg1¹, _lh_lookup_arg2¹) = case _lh_lookup_arg2¹ of {
+//│ 	LH_N  => (fun _lh_select_arg1² -> permute_lh_₁(_lh_select_arg1²))
+//│ 	| LH_C _lh_lookup_LH_C_0¹ _lh_lookup_LH_C_1¹ => case _lh_lookup_LH_C_0¹ of {
+//│ 		LH_P2 _lh_lookup_LH_P2_0¹ _lh_lookup_LH_P2_1¹ => if polyEq⁰(_lh_lookup_arg1¹, _lh_lookup_LH_P2_0¹) then 
+//│ 			let _lh_select_Just_0⁰ = _lh_lookup_LH_P2_1¹
+//│ 			in (fun _lh_select_arg1³ -> return_lh_₄(_lh_select_Just_0⁰)) else lookup_lh_₂(_lh_lookup_arg1¹, _lh_lookup_LH_C_1¹)
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def lookup_lh_₃(_lh_lookup_arg1², _lh_lookup_arg2²) = case _lh_lookup_arg2² of {
+//│ 	LH_N  => (fun _lh_select_arg1⁴ -> permute_lh_₂(_lh_select_arg1⁴))
+//│ 	| LH_C _lh_lookup_LH_C_0² _lh_lookup_LH_C_1² => case _lh_lookup_LH_C_0² of {
+//│ 		LH_P2 _lh_lookup_LH_P2_0² _lh_lookup_LH_P2_1² => if polyEq⁰(_lh_lookup_arg1², _lh_lookup_LH_P2_0²) then 
+//│ 			let _lh_select_Just_0¹ = _lh_lookup_LH_P2_1²
+//│ 			in (fun _lh_select_arg1⁵ -> return_lh_₅(_lh_select_Just_0¹)) else lookup_lh_₃(_lh_lookup_arg1², _lh_lookup_LH_C_1²)
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def mapM_lh_₁(_lh_mapM_arg1⁰, _lh_mapM_arg2⁰) = foldr_lh_₁((fun a¹ -> (fun r⁰ -> bind_lh_₈(_lh_mapM_arg1⁰(a¹), (fun x⁰ -> bind_lh_₇(r⁰, (fun xs¹ -> return_lh_₇([LH_C x⁰ xs¹]))))))), return_lh_₆([LH_N]), _lh_mapM_arg2⁰)
+//│ def map_lh_₁(f¹⁰, ls⁸) = ls⁸(f¹⁰)
+//│ def map_lh_₂(f⁷, ls⁶) = case ls⁶ of {
+//│ 	LH_C h¹⁵ t¹⁶ => [LH_C f⁷(h¹⁵) map_lh_₂(f⁷, t¹⁶)]
+//│ 	| LH_N  => [LH_N]}
+//│ def map_lh_₃(f⁰, ls⁰, _lh_popOutId_0¹) = case ls⁰ of {
+//│ 	LH_C h¹ t² => 
+//│ 		let t³ = map_lh_₃(f⁰, t²)
+//│ 		in let h² = f⁰(h¹)
+//│ 		in h²(t³(99))
+//│ 	| LH_N  => [LH_N]}
+//│ def map_lh_₄(f¹³, ls¹²) = ls¹²(f¹³)
+//│ def map_lh_₅(f¹¹, ls⁹) = ls⁹(f¹¹)
+//│ def map_lh_₆(f⁶, ls⁵, _lh_popOutId_0²) = case ls⁵ of {
+//│ 	LH_C h¹³ t¹⁴ => 
+//│ 		let t¹⁵ = map_lh_₆(f⁶, t¹⁴)
+//│ 		in let h¹⁴ = f⁶(h¹³)
+//│ 		in mappend_lh_₈(h¹⁴, t¹⁵(99))
+//│ 	| LH_N  => [LH_N]}
+//│ def mappend_lh_₁(xs², ys¹) = xs²(ys¹)
+//│ def mappend_lh_₂(xs⁵, ys⁴) = xs⁵(ys⁴)
+//│ def mappend_lh_₃(xs⁰, ys⁰) = xs⁰(ys⁰)
+//│ def mappend_lh_₄(xs⁸, ys⁸) = xs⁸(ys⁸)
+//│ def mappend_lh_₅(xs⁶, ys⁵) = case xs⁶ of {
+//│ 	LH_C h¹⁰ t¹¹ => 
+//│ 		let t¹² = mappend_lh_₅(t¹¹, ys⁵)
+//│ 		in let h¹¹ = h¹⁰
+//│ 		in (fun ys⁶ -> [LH_C h¹¹ t¹²(ys⁶)])
+//│ 	| LH_N  => ys⁵}
+//│ def mappend_lh_₆(xs⁷, ys⁷) = case xs⁷ of {
+//│ 	LH_C h¹² t¹³ => [LH_C h¹² mappend_lh_₆(t¹³, ys⁷)]
+//│ 	| LH_N  => ys⁷}
+//│ def mappend_lh_₇(xs⁴, ys³) = xs⁴(ys³)
+//│ def mappend_lh_₈(xs³, ys²) = case xs³ of {
+//│ 	LH_C h⁵ t⁶ => [LH_C h⁵ mappend_lh_₈(t⁶, ys²)]
+//│ 	| LH_N  => ys²}
+//│ def nub_lh_₁(_lh_nub_arg1⁰) = case _lh_nub_arg1⁰ of {
+//│ 	LH_N  => (fun _lh_dummy⁰ -> 0)
+//│ 	| LH_C _lh_nub_LH_C_0⁰ _lh_nub_LH_C_1⁰ => 
+//│ 		let t⁰ = nub_lh_₁(filter_lh_₁((fun y⁰ -> not⁰(polyEq⁰(_lh_nub_LH_C_0⁰, y⁰))), _lh_nub_LH_C_1⁰))
+//│ 		in (fun _lh_dummy¹ -> (1 + t⁰(99)))
+//│ 	| _  => error⁰}
+//│ def permute_lh_₁(_lh_permute_arg1¹) = bind_lh_₈(get_lh_₂, (fun st⁴ -> bind_lh_₈(
+//│ 	let xs¹⁰ = digits_lh_₁(st⁴)
+//│ 	in lift_lh_₁(
+//│ 		let _lh_listcomp_fun⁴ = (fun _lh_listcomp_fun_para⁴ -> case _lh_listcomp_fun_para⁴ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁴ _lh_listcomp_fun_ls_t⁴ => [LH_C [LH_P2 _lh_listcomp_fun_ls_h⁴ listDiff_lh_₁(xs¹⁰, [LH_C _lh_listcomp_fun_ls_h⁴ [LH_N]])] _lh_listcomp_fun⁴(_lh_listcomp_fun_ls_t⁴)]
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun⁴(xs¹⁰)), (fun iis¹ -> 
+//│ 	let _lh_matchIdent¹⁷ = iis¹
+//│ 	in case _lh_matchIdent¹⁷ of {
+//│ 		LH_P2 _lh_permute_LH_P2_0¹ _lh_permute_LH_P2_1¹ => bind_lh_₈(put_lh_₁([Digits _lh_permute_LH_P2_1¹ [LH_C [LH_P2 _lh_permute_arg1¹ _lh_permute_LH_P2_0¹] digitEnv_lh_₄(st⁴)]]), (fun _p⁴ -> return_lh_₇(_lh_permute_LH_P2_0¹)))
+//│ 		| _  => error⁰}))))
+//│ def permute_lh_₂(_lh_permute_arg1⁰) = bind_lh_₈(get_lh_₂, (fun st³ -> bind_lh_₈(
+//│ 	let xs⁹ = digits_lh_₁(st³)
+//│ 	in lift_lh_₁(
+//│ 		let _lh_listcomp_fun² = (fun _lh_listcomp_fun_para² -> case _lh_listcomp_fun_para² of {
+//│ 			LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t² => [LH_C [LH_P2 _lh_listcomp_fun_ls_h² listDiff_lh_₁(xs⁹, [LH_C _lh_listcomp_fun_ls_h² [LH_N]])] _lh_listcomp_fun²(_lh_listcomp_fun_ls_t²)]
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun²(xs⁹)), (fun iis⁰ -> 
+//│ 	let _lh_matchIdent¹³ = iis⁰
+//│ 	in case _lh_matchIdent¹³ of {
+//│ 		LH_P2 _lh_permute_LH_P2_0⁰ _lh_permute_LH_P2_1⁰ => bind_lh_₈(put_lh_₁([Digits _lh_permute_LH_P2_1⁰ [LH_C [LH_P2 _lh_permute_arg1⁰ _lh_permute_LH_P2_0⁰] digitEnv_lh_₄(st³)]]), (fun _p³ -> return_lh_₇(_lh_permute_LH_P2_0⁰)))
+//│ 		| _  => error⁰}))))
+//│ def put_lh_₁(_lh_put_arg1⁰) = [StateT (fun s¹⁸ -> [LH_C [LH_P2 [Unit] _lh_put_arg1⁰] [LH_N]])]
+//│ def puzzle_lh_₁(_lh_puzzle_arg1⁰, _lh_puzzle_arg2⁰) = 
+//│ 	let solution⁰ = solve_lh_₁(transpose_lh_₁(map_lh_₂(reverse_lh_₁, _lh_puzzle_arg1⁰)), reverse_lh_₂(_lh_puzzle_arg2⁰), 0)
+//│ 	in let answer⁰ = 	
+//│ 		let _lh_matchIdent¹² = execStateT_lh_₁(solution⁰, [Digits enumFromTo_lh_₂(0, 9) [LH_N]])
+//│ 		in case _lh_matchIdent¹² of {
+//│ 			LH_C _lh_puzzle_LH_C_0⁰ _lh_puzzle_LH_C_1⁰ => _lh_puzzle_LH_C_0⁰
+//│ 			| LH_N  => error⁰
+//│ 			| _  => error⁰}
+//│ 	in let env⁰ = digitEnv_lh_₁(answer⁰)
+//│ 	in let look⁰ = (fun c⁰ -> lookup_lh_₁(c⁰, env⁰, 99))
+//│ 	in let expand⁰ = (fun ls⁷ -> foldl_lh_₁((fun a⁵ -> (fun b² -> ((a⁵ * 10) + look⁰(b²)))), 0, ls⁷))
+//│ 	in let topVal⁰ = let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => 
+//│ 				let _lh_sum_LH_C_1¹ = _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)
+//│ 				in let _lh_sum_LH_C_0¹ = expand⁰(_lh_listcomp_fun_ls_h⁰)
+//│ 				in (fun _lh_dummy⁷ -> (_lh_sum_LH_C_0¹ + _lh_sum_LH_C_1¹(99)))
+//│ 			| LH_N  => (fun _lh_dummy⁸ -> 0)})
+//│ 		in _lh_listcomp_fun⁰(_lh_puzzle_arg1⁰)(99)
+//│ 	in let botVal⁰ = expand⁰(_lh_puzzle_arg2⁰)
+//│ 	in if (nub_lh_₁(concat_lh_₁(_lh_puzzle_arg1⁰, _lh_puzzle_arg2⁰), 99) > 10) then error⁰ else if (topVal⁰ /= botVal⁰) then error⁰ else unlines_lh_₁(
+//│ 		let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => case _lh_listcomp_fun_ls_h¹ of {
+//│ 				LH_P2 _lh_puzzle_LH_P2_0⁰ _lh_puzzle_LH_P2_1⁰ => 
+//│ 					let t¹⁷ = _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)
+//│ 					in let h¹⁶ = let t¹⁸ = (fun ys⁹ -> ys⁹)
+//│ 						in let h¹⁷ = _lh_puzzle_LH_P2_0⁰
+//│ 						in (fun ys¹⁰ -> 
+//│ 							let t¹⁹ = t¹⁸(ys¹⁰)
+//│ 							in let h¹⁸ = h¹⁷
+//│ 							in (fun ys¹¹ -> [LH_C h¹⁸ t¹⁹(ys¹¹)]))(
+//│ 						let t²⁰ = 	
+//│ 							let t²¹ = 	
+//│ 								let t²² = 	
+//│ 									let t²³ = (fun ys¹² -> ys¹²)
+//│ 									in let h¹⁹ = ' '
+//│ 									in (fun ys¹³ -> [LH_C h¹⁹ t²³(ys¹³)])
+//│ 								in let h²⁰ = '>'
+//│ 								in (fun ys¹⁴ -> [LH_C h²⁰ t²²(ys¹⁴)])
+//│ 							in let h²¹ = '='
+//│ 							in (fun ys¹⁵ -> [LH_C h²¹ t²¹(ys¹⁵)])
+//│ 						in let h²² = ' '
+//│ 						in (fun ys¹⁶ -> [LH_C h²² t²⁰(ys¹⁶)]), string_of_int⁰(_lh_puzzle_LH_P2_1⁰))
+//│ 					in (fun f⁸ -> 
+//│ 						let t²⁴ = t¹⁷(f⁸)
+//│ 						in let h²³ = f⁸(h¹⁶)
+//│ 						in (fun _lh_dummy⁹ -> mappend_lh_₈(h²³, t²⁴(99))))
+//│ 				| _  => _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)}
+//│ 			| LH_N  => (fun f⁹ -> (fun _lh_dummy¹⁰ -> [LH_N]))})
+//│ 		in _lh_listcomp_fun¹(digitEnv_lh_₂(answer⁰)))
+//│ def rest_lh_₁(_lh_rest_arg1⁰) = case _lh_rest_arg1⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_rest_LH_C_0⁰ _lh_rest_LH_C_1⁰ => _lh_rest_LH_C_1⁰
+//│ 	| _  => error⁰}
+//│ def return_lh_₁(_lh_return_arg1⁵) = [StateT (fun s⁶ -> [LH_C [LH_P2 _lh_return_arg1⁵ s⁶] [LH_N]])]
+//│ def return_lh_₂(_lh_return_arg1³) = [StateT (fun s³ -> [LH_C [LH_P2 _lh_return_arg1³ s³] [LH_N]])]
+//│ def return_lh_₃(_lh_return_arg1²) = [StateT (fun s² -> [LH_C [LH_P2 _lh_return_arg1² s²] [LH_N]])]
+//│ def return_lh_₄(_lh_return_arg1¹) = [StateT (fun s¹ -> [LH_C [LH_P2 _lh_return_arg1¹ s¹] [LH_N]])]
+//│ def return_lh_₅(_lh_return_arg1⁴) = [StateT (fun s⁴ -> [LH_C [LH_P2 _lh_return_arg1⁴ s⁴] [LH_N]])]
+//│ def return_lh_₆(_lh_return_arg1⁶) = [StateT (fun s¹⁰ -> [LH_C [LH_P2 _lh_return_arg1⁶ s¹⁰] [LH_N]])]
+//│ def return_lh_₇(_lh_return_arg1⁰) = [StateT (fun s⁰ -> [LH_C [LH_P2 _lh_return_arg1⁰ s⁰] [LH_N]])]
+//│ def reverse_helper_lh_₁(ls³, a³) = case ls³ of {
+//│ 	LH_C h⁶ t⁷ => reverse_helper_lh_₁(t⁷, [LH_C h⁶ a³])
+//│ 	| LH_N  => a³}
+//│ def reverse_helper_lh_₂(ls², a²) = case ls² of {
+//│ 	LH_C h⁴ t⁵ => reverse_helper_lh_₂(t⁵, [LH_C h⁴ a²])
+//│ 	| LH_N  => a²}
+//│ def reverse_lh_₁(ls¹³) = reverse_helper_lh_₁(ls¹³, [LH_N])
+//│ def reverse_lh_₂(ls¹⁴) = reverse_helper_lh_₂(ls¹⁴, [LH_N])
+//│ def runStateT_lh_₁(_lh_runStateT_arg1¹) = case _lh_runStateT_arg1¹ of {
+//│ 	StateT _lh_runStateT_StateT_0⁰ => _lh_runStateT_StateT_0⁰
+//│ 	| _  => error⁰}
+//│ def runStateT_lh_₂(_lh_runStateT_arg1³) = case _lh_runStateT_arg1³ of {
+//│ 	StateT _lh_runStateT_StateT_0⁶ => _lh_runStateT_StateT_0⁶
+//│ 	| _  => error⁰}
+//│ def runStateT_lh_₃(_lh_runStateT_arg1⁴) = _lh_runStateT_arg1⁴
+//│ def runStateT_lh_₄(_lh_runStateT_arg1⁵) = _lh_runStateT_arg1⁵
+//│ def runStateT_lh_₅(_lh_runStateT_arg1⁰) = _lh_runStateT_arg1⁰
+//│ def runStateT_lh_₆(_lh_runStateT_arg1²) = case _lh_runStateT_arg1² of {
+//│ 	StateT _lh_runStateT_StateT_0¹ => _lh_runStateT_StateT_0¹
+//│ 	| _  => error⁰}
+//│ def select_lh_₁(_lh_select_arg1¹) = bind_lh_₅(get_lh_₁, (fun st¹ -> 
+//│ 	let _lh_matchIdent¹ = lookup_lh_₂(_lh_select_arg1¹, digitEnv_lh_₃(st¹))
+//│ 	in _lh_matchIdent¹(_lh_select_arg1¹)))
+//│ def select_lh_₂(_lh_select_arg1⁰) = bind_lh_₆(get_lh_₂, (fun st⁰ -> 
+//│ 	let _lh_matchIdent⁰ = lookup_lh_₃(_lh_select_arg1⁰, digitEnv_lh_₄(st⁰))
+//│ 	in _lh_matchIdent⁰(_lh_select_arg1⁰)))
+//│ def solve_lh_₁(_lh_solve_arg1⁰, _lh_solve_arg2⁰, _lh_solve_arg3⁰) = case _lh_solve_arg2⁰ of {
+//│ 	LH_C _lh_solve_LH_C_0⁰ _lh_solve_LH_C_1⁰ => bind_lh_₄(
+//│ 		let _lh_matchIdent³ = _lh_solve_arg1⁰
+//│ 		in case _lh_matchIdent³ of {
+//│ 			LH_N  => return_lh_₁(_lh_solve_arg3⁰)
+//│ 			| LH_C _lh_solve_LH_C_0¹ _lh_solve_LH_C_1¹ => bind_lh_₃(mapM_lh_₁(select_lh_₁, _lh_solve_LH_C_0¹), (fun topNS⁰ -> return_lh_₂((sum_lh_₂(topNS⁰) + _lh_solve_arg3⁰))))
+//│ 			| _  => error⁰}, (fun topN⁰ -> bind_lh_₂(bind_lh_₆(get_lh_₂, (fun st² -> 
+//│ 		let _lh_matchIdent⁴ = lookup_lh_₃(_lh_solve_LH_C_0⁰, digitEnv_lh_₄(st²))
+//│ 		in _lh_matchIdent⁴(_lh_solve_LH_C_0⁰))), (fun botN⁰ -> 
+//│ 		let _lh_runStateT_StateT_0² = (fun s⁸ -> guard_lh_₁(((topN⁰ % 10) == botN⁰), s⁸, (fun as¹ -> 
+//│ 			let _lh_matchIdent⁵ = as¹
+//│ 			in _lh_matchIdent⁵((fun _s⁰ -> solve_lh_₁(rest_lh_₁(_lh_solve_arg1⁰), _lh_solve_LH_C_1⁰, div⁰(topN⁰, 10))))), 99))
+//│ 		in _lh_runStateT_StateT_0²))))
+//│ 	| _  => case _lh_solve_arg1⁰ of {
+//│ 		LH_N  => case _lh_solve_arg2⁰ of {
+//│ 			LH_N  => case _lh_solve_arg3⁰ of {
+//│ 				0  => return_lh_₃([Unit])
+//│ 				| _  => [StateT (fun _p⁰ -> [LH_N])]}
+//│ 			| _  => [StateT (fun _p¹ -> [LH_N])]}
+//│ 		| _  => [StateT (fun _p² -> [LH_N])]}}
+//│ def sum_lh_₁(_lh_sum_arg1¹) = _lh_sum_arg1¹(99)
+//│ def sum_lh_₂(_lh_sum_arg1⁰) = case _lh_sum_arg1⁰ of {
+//│ 	LH_N  => 0
+//│ 	| LH_C _lh_sum_LH_C_0⁰ _lh_sum_LH_C_1⁰ => (_lh_sum_LH_C_0⁰ + sum_lh_₂(_lh_sum_LH_C_1⁰))
+//│ 	| _  => error⁰}
+//│ def testCryptarithm2_nofib_lh_₁(_lh_testCryptarithm2_nofib_arg1⁰) = enumFromTo_lh_₁(1, _lh_testCryptarithm2_nofib_arg1⁰, (fun i² -> 
+//│ 	let args⁰ = [LH_C [LH_C 'T' [LH_C 'H' [LH_C 'I' [LH_C 'R' [LH_C 'T' [LH_C 'Y' [LH_N]]]]]]] [LH_C [LH_C 'T' [LH_C 'W' [LH_C 'E' [LH_C 'L' [LH_C 'V' [LH_C 'E' [LH_N]]]]]]] [LH_C [LH_C 'T' [LH_C 'W' [LH_C 'E' [LH_C 'L' [LH_C 'V' [LH_C 'E' [LH_N]]]]]]] [LH_C [LH_C 'T' [LH_C 'W' [LH_C 'E' [LH_C 'L' [LH_C 'V' [LH_C 'E' [LH_N]]]]]]] [LH_C [LH_C 'T' [LH_C 'W' [LH_C 'E' [LH_C 'L' [LH_C 'V' [LH_C 'E' [LH_N]]]]]]] [LH_C 
+//│ 		let t²⁷ = 	
+//│ 			let t²⁸ = 	
+//│ 				let t²⁹ = 	
+//│ 					let t³⁰ = 	
+//│ 						let t³¹ = 	
+//│ 							let t³² = (fun ys¹⁹ -> ys¹⁹)
+//│ 							in let h²⁶ = 'E'
+//│ 							in (fun ys²⁰ -> [LH_C h²⁶ t³²(ys²⁰)])
+//│ 						in let h²⁷ = 'V'
+//│ 						in (fun ys²¹ -> [LH_C h²⁷ t³¹(ys²¹)])
+//│ 					in let h²⁸ = 'L'
+//│ 					in (fun ys²² -> [LH_C h²⁸ t³⁰(ys²²)])
+//│ 				in let h²⁹ = 'E'
+//│ 				in (fun ys²³ -> [LH_C h²⁹ t²⁹(ys²³)])
+//│ 			in let h³⁰ = 'W'
+//│ 			in (fun ys²⁴ -> [LH_C h³⁰ t²⁸(ys²⁴)])
+//│ 		in let h³¹ = 'T'
+//│ 		in (fun ys²⁵ -> [LH_C h³¹ t²⁷(ys²⁵)])(if (i² > 999999) then [LH_C '1' [LH_N]] else [LH_N]) [LH_N]]]]]]]
+//│ 	in puzzle_lh_₁(args⁰, [LH_C 'N' [LH_C 'I' [LH_C 'N' [LH_C 'E' [LH_C 'T' [LH_C 'Y' [LH_N]]]]]]])))
+//│ def transpose_lh_₁(_lh_transpose_arg1⁰) = case _lh_transpose_arg1⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_transpose_LH_C_0⁰ _lh_transpose_LH_C_1⁰ => case _lh_transpose_LH_C_0⁰ of {
+//│ 		LH_N  => transpose_lh_₁(_lh_transpose_LH_C_1⁰)
+//│ 		| LH_C _lh_transpose_LH_C_0¹ _lh_transpose_LH_C_1¹ => 
+//│ 			let _lh_matchIdent¹⁶ = unzip_lh_₁(
+//│ 				let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para³ -> case _lh_listcomp_fun_para³ of {
+//│ 					LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t³ => case _lh_listcomp_fun_ls_h³ of {
+//│ 						LH_C _lh_transpose_LH_C_0² _lh_transpose_LH_C_1² => [LH_C [LH_P2 _lh_transpose_LH_C_0² _lh_transpose_LH_C_1²] _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)]
+//│ 						| _  => _lh_listcomp_fun³(_lh_listcomp_fun_ls_t³)}
+//│ 					| LH_N  => [LH_N]})
+//│ 				in _lh_listcomp_fun³(_lh_transpose_LH_C_1⁰))
+//│ 			in case _lh_matchIdent¹⁶ of {
+//│ 				LH_P2 _lh_transpose_LH_P2_0⁰ _lh_transpose_LH_P2_1⁰ => combine_lh_₁(_lh_transpose_LH_C_0¹, _lh_transpose_LH_P2_0⁰, _lh_transpose_LH_C_1¹, _lh_transpose_LH_P2_1⁰)
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def unlines_lh_₁(_lh_unlines_arg1⁰) = _lh_unlines_arg1⁰((fun l⁰ -> mappend_lh_₆(l⁰, [LH_C 'n' [LH_N]])), 99)
+//│ def unzip_lh_₁(_lh_unzip_arg1⁰) = foldr_lh_₁((fun ab⁰ -> (fun asbs⁰ -> 
+//│ 	let _lh_matchIdent⁷ = ab⁰
+//│ 	in case _lh_matchIdent⁷ of {
+//│ 		LH_P2 _lh_unzip_LH_P2_0⁰ _lh_unzip_LH_P2_1⁰ => 
+//│ 			let _lh_matchIdent⁸ = asbs⁰
+//│ 			in case _lh_matchIdent⁸ of {
+//│ 				LH_P2 _lh_unzip_LH_P2_0¹ _lh_unzip_LH_P2_1¹ => [LH_P2 [LH_C _lh_unzip_LH_P2_0⁰ _lh_unzip_LH_P2_0¹] [LH_C _lh_unzip_LH_P2_1⁰ _lh_unzip_LH_P2_1¹]]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})), [LH_P2 [LH_N] [LH_N]], _lh_unzip_arg1⁰)
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

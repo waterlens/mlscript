@@ -71,6 +71,40 @@ rev(C(AA, C(BB, C(CC, N))))(N)
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C [CC] [C [BB] [C [AA] [N]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ let t⁰ = 	
+//│ 	let t¹ = 	
+//│ 		let t² = (fun a⁰ -> a⁰)
+//│ 		in let h⁰ = [CC]
+//│ 		in (fun a¹ -> t²([C h⁰ a¹]))
+//│ 	in let h¹ = [BB]
+//│ 	in (fun a² -> t¹([C h¹ a²]))
+//│ in let h² = [AA]
+//│ in t⁰([C h² [N]])
+//│ def rev(ls⁰) = ls⁰
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ let t⁰ = 	
+//│ 	let t¹ = 	
+//│ 		let t² = (fun a⁰ -> a⁰)
+//│ 		in let h⁰ = [CC]
+//│ 		in (fun a¹ -> t²([C h⁰ a¹]))
+//│ 	in let h¹ = [BB]
+//│ 	in (fun a² -> t¹([C h¹ a²]))
+//│ in let h² = [AA]
+//│ in t⁰([C h² [N]])
+//│ def rev(ls⁰) = ls⁰
+//│ <<<<<<< after floating out <<<<<<<
 
 
 _LUMBERHACK_EVAL
@@ -177,6 +211,52 @@ rev(map(C(A, C(B, N)))(f))(N)
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C [BB] [C [AA] [N]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map, rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ let t⁰ = 	
+//│ 	let t¹ = (fun f¹ -> (fun a⁰ -> a⁰))
+//│ 	in let h⁰ = [B]
+//│ 	in (fun f² -> 
+//│ 		let t² = t¹(f²)
+//│ 		in let h¹ = f²(h⁰)
+//│ 		in (fun a¹ -> t²([C h¹ a¹])))
+//│ in let h² = [A]
+//│ in let t³ = t⁰(f)
+//│ in let h³ = f(h²)
+//│ in t³([C h³ [N]])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	A  => [AA]
+//│ 	| B  => [BB]}
+//│ def map(xs⁰) = xs⁰
+//│ def rev(ys⁰) = ys⁰
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ let t⁰ = 	
+//│ 	let t¹ = (fun f¹ -> (fun a⁰ -> a⁰))
+//│ 	in let h⁰ = [B]
+//│ 	in (fun f² -> 
+//│ 		let t² = t¹(f²)
+//│ 		in let h¹ = f²(h⁰)
+//│ 		in (fun a¹ -> t²([C h¹ a¹])))
+//│ in let h² = [A]
+//│ in let t³ = t⁰(f)
+//│ in let h³ = f(h²)
+//│ in t³([C h³ [N]])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	A  => [AA]
+//│ 	| B  => [BB]}
+//│ def map(xs⁰) = xs⁰
+//│ def rev(ys⁰) = ys⁰
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT:
@@ -289,6 +369,50 @@ map(rev(C(A, C(AA, N)))(N))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C [BB] [C [B] [N]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map, rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun a⁰ -> a⁰)
+//│ 		in let h⁰ = [BB]
+//│ 		in (fun a¹ -> t¹(
+//│ 			let tt⁰ = a¹
+//│ 			in let hh⁰ = h⁰
+//│ 			in (fun _lh_dummy⁰ -> [C hh⁰ tt⁰(99)])))
+//│ 	in let h¹ = [B]
+//│ 	in t⁰(
+//│ 		let tt¹ = (fun _lh_dummy¹ -> [N])
+//│ 		in let hh¹ = h¹
+//│ 		in (fun _lh_dummy² -> [C hh¹ tt¹(99)]))(99)
+//│ def map(ls⁰) = ls⁰(99)
+//│ def rev(lss⁰) = lss⁰
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun a⁰ -> a⁰)
+//│ 		in let h⁰ = [BB]
+//│ 		in (fun a¹ -> t¹(
+//│ 			let tt⁰ = a¹
+//│ 			in let hh⁰ = h⁰
+//│ 			in (fun _lh_dummy⁰ -> [C hh⁰ tt⁰(99)])))
+//│ 	in let h¹ = [B]
+//│ 	in t⁰(
+//│ 		let tt¹ = (fun _lh_dummy¹ -> [N])
+//│ 		in let hh¹ = h¹
+//│ 		in (fun _lh_dummy² -> [C hh¹ tt¹(99)]))(99)
+//│ def map(ls⁰) = ls⁰(99)
+//│ def rev(lss⁰) = lss⁰
+//│ <<<<<<< after floating out <<<<<<<
 
 _LUMBERHACK_EVAL
 fun map(xs, f) = if xs is
@@ -398,6 +522,52 @@ map(rev(N, C(A, C(B, N))), ff)
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C [BB] [C [AA] [N]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ ff, rev, map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun a⁰ -> a⁰)
+//│ 		in let h⁰ = [BB]
+//│ 		in (fun a¹ -> t¹(
+//│ 			let t² = a¹
+//│ 			in let h¹ = h⁰
+//│ 			in (fun f⁰ -> [C f⁰(h¹) t²(f⁰)])))
+//│ 	in let h² = [AA]
+//│ 	in (fun a² -> t⁰(
+//│ 		let t³ = a²
+//│ 		in let h³ = h²
+//│ 		in (fun f¹ -> [C f¹(h³) t³(f¹)])))((fun f² -> [N]), ff)
+//│ def ff(x⁰) = x⁰
+//│ def map(xs⁰, f³) = xs⁰(f³)
+//│ def rev(a³, ys⁰) = ys⁰(a³)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun a⁰ -> a⁰)
+//│ 		in let h⁰ = [BB]
+//│ 		in (fun a¹ -> t¹(
+//│ 			let t² = a¹
+//│ 			in let h¹ = h⁰
+//│ 			in (fun f⁰ -> [C f⁰(h¹) t²(f⁰)])))
+//│ 	in let h² = [AA]
+//│ 	in (fun a² -> t⁰(
+//│ 		let t³ = a²
+//│ 		in let h³ = h²
+//│ 		in (fun f¹ -> [C f¹(h³) t³(f¹)])))((fun f² -> [N]), ff)
+//│ def ff(x⁰) = x⁰
+//│ def map(xs⁰, f³) = xs⁰(f³)
+//│ def rev(a³, ys⁰) = ys⁰(a³)
+//│ <<<<<<< after floating out <<<<<<<
 
 _LUMBERHACK_EVAL
 fun map(xs, f) = if xs is
@@ -507,6 +677,52 @@ rev(N, map(C(A, C(B, N)), ff))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C [BB] [C [AA] [N]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ ff, rev, map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun f⁰ -> (fun a⁰ -> a⁰))
+//│ 		in let h⁰ = [BB]
+//│ 		in (fun f¹ -> 
+//│ 			let t² = t¹(f¹)
+//│ 			in let h¹ = f¹(h⁰)
+//│ 			in (fun a¹ -> t²([C h¹ a¹])))
+//│ 	in let h² = [AA]
+//│ 	in (fun f² -> 
+//│ 		let t³ = t⁰(f²)
+//│ 		in let h³ = f²(h²)
+//│ 		in (fun a² -> t³([C h³ a²])))(ff, [N])
+//│ def ff(x⁰) = x⁰
+//│ def map(xs⁰, f³) = xs⁰(f³)
+//│ def rev(a³, ys⁰) = ys⁰(a³)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun f⁰ -> (fun a⁰ -> a⁰))
+//│ 		in let h⁰ = [BB]
+//│ 		in (fun f¹ -> 
+//│ 			let t² = t¹(f¹)
+//│ 			in let h¹ = f¹(h⁰)
+//│ 			in (fun a¹ -> t²([C h¹ a¹])))
+//│ 	in let h² = [AA]
+//│ 	in (fun f² -> 
+//│ 		let t³ = t⁰(f²)
+//│ 		in let h³ = f²(h²)
+//│ 		in (fun a² -> t³([C h³ a²])))(ff, [N])
+//│ def ff(x⁰) = x⁰
+//│ def map(xs⁰, f³) = xs⁰(f³)
+//│ def rev(a³, ys⁰) = ys⁰(a³)
+//│ <<<<<<< after floating out <<<<<<<
 
 // NOTE: this example works when no concrete input is provided
 fun map(xs, f) = if xs is
@@ -572,3 +788,41 @@ revMap
 //│ def rev(a³, ys¹) = ys¹(a³)
 //│ def revMap(ls¹, f³) = rev([N], map(ls¹, f³))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ map -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ revMap
+//│ def ff(x⁰) = case x⁰ of {
+//│ 	A  => [AA]
+//│ 	| B  => [BB]}
+//│ def map(xs⁰, f⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let t¹ = map(t⁰, f⁰)
+//│ 		in let h¹ = f⁰(h⁰)
+//│ 		in (fun a⁰ -> t¹([C h¹ a⁰]))
+//│ 	| N  => (fun a¹ -> a¹)}
+//│ def rev(a², ys⁰) = ys⁰(a²)
+//│ def revMap(ls⁰, f¹) = map(ls⁰, f¹, [N])
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ revMap
+//│ def ff(x⁰) = case x⁰ of {
+//│ 	A  => [AA]
+//│ 	| B  => [BB]}
+//│ def map(xs⁰, f⁰, _lh_popOutId_0⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let t¹ = map(t⁰, f⁰)
+//│ 		in let h¹ = f⁰(h⁰)
+//│ 		in t¹([C h¹ _lh_popOutId_0⁰])
+//│ 	| N  => _lh_popOutId_0⁰}
+//│ def rev(a⁰, ys⁰) = ys⁰(a⁰)
+//│ def revMap(ls⁰, f¹) = map(ls⁰, f¹, [N])
+//│ <<<<<<< after floating out <<<<<<<

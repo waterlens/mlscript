@@ -57,6 +57,42 @@ last(C(1, C(2, N)))
 //│ 	C h⁰ t⁰ => t⁰(h⁰)
 //│ 	| N  => [None]}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ last
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ case [C 1 
+//│ 	let tt⁰ = (fun h⁰ -> [Some h⁰])
+//│ 	in let hh⁰ = 2
+//│ 	in (fun h¹ -> case [C hh⁰ tt⁰] of {
+//│ 		C h² t⁰ => t⁰(h²)
+//│ 		| N  => [None]})] of {
+//│ 	C h³ t¹ => t¹(h³)
+//│ 	| N  => [None]}
+//│ def last(xs⁰) = case xs⁰ of {
+//│ 	C h⁴ t² => t²(h⁴)
+//│ 	| N  => [None]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ case [C 1 
+//│ 	let tt⁰ = (fun h⁰ -> [Some h⁰])
+//│ 	in let hh⁰ = 2
+//│ 	in (fun h¹ -> case [C hh⁰ tt⁰] of {
+//│ 		C h² t⁰ => t⁰(h²)
+//│ 		| N  => [None]})] of {
+//│ 	C h³ t¹ => t¹(h³)
+//│ 	| N  => [None]}
+//│ def last(xs⁰) = case xs⁰ of {
+//│ 	C h⁴ t² => t²(h⁴)
+//│ 	| N  => [None]}
+//│ <<<<<<< after floating out <<<<<<<
 
 fun last(xs) = if xs is
   C(h, t) then if t is
@@ -98,6 +134,32 @@ last(primitive)
 //│ 		| N  => [Some h⁰]}
 //│ 	| N  => [None]}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ last(primitive⁰)
+//│ def last(xs⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => case t⁰ of {
+//│ 		C hh⁰ tt⁰ => last([C hh⁰ tt⁰])
+//│ 		| N  => [Some h⁰]}
+//│ 	| N  => [None]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ last(primitive⁰)
+//│ def last(xs⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => case t⁰ of {
+//│ 		C hh⁰ tt⁰ => last([C hh⁰ tt⁰])
+//│ 		| N  => [Some h⁰]}
+//│ 	| N  => [None]}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 fun map(ls, f) = if ls is
@@ -159,3 +221,35 @@ last(map(primitive, primitive))
 //│ 	C h⁰ t⁰ => [C f¹(h⁰) map(t⁰, f¹)]
 //│ 	| N  => [N]}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ last(map(primitive⁰, primitive⁰))
+//│ def last(xs⁰) = case xs⁰ of {
+//│ 	C h¹ t¹ => case t¹ of {
+//│ 		C hh⁰ tt⁰ => last([C hh⁰ tt⁰])
+//│ 		| N  => [Some h¹]}
+//│ 	| N  => [None]}
+//│ def map(ls⁰, f⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => [C f⁰(h⁰) map(t⁰, f⁰)]
+//│ 	| N  => [N]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ last(map(primitive⁰, primitive⁰))
+//│ def last(xs⁰) = case xs⁰ of {
+//│ 	C h¹ t¹ => case t¹ of {
+//│ 		C hh⁰ tt⁰ => last([C hh⁰ tt⁰])
+//│ 		| N  => [Some h¹]}
+//│ 	| N  => [None]}
+//│ def map(ls⁰, f⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => [C f⁰(h⁰) map(t⁰, f⁰)]
+//│ 	| N  => [N]}
+//│ <<<<<<< after floating out <<<<<<<

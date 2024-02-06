@@ -68,6 +68,34 @@ count(0, rev(N, N))
 //│ >>>>>>> evaluate >>>>>>>
 //│ 0
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ count
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ rev -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ rev((fun c⁰ -> c⁰), [N], 0)
+//│ def count(c¹, xs⁰) = xs⁰(c¹)
+//│ def rev(a⁰, ys⁰) = case ys⁰ of {
+//│ 	C h1⁰ t1⁰ => rev(
+//│ 		let t⁰ = a⁰
+//│ 		in (fun c² -> t⁰((c² + 1))), t1⁰)
+//│ 	| N  => a⁰}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ rev((fun c⁰ -> c⁰), [N], 0)
+//│ def count(c¹, xs⁰) = xs⁰(c¹)
+//│ def rev(a⁰, ys⁰) = case ys⁰ of {
+//│ 	C h1⁰ t1⁰ => rev(
+//│ 		let t⁰ = a⁰
+//│ 		in (fun c² -> t⁰((c² + 1))), t1⁰)
+//│ 	| N  => a⁰}
+//│ <<<<<<< after floating out <<<<<<<
 
 // NOTE: new way to push in?
 _LUMBERHACK_EVAL
@@ -152,6 +180,42 @@ count(0, rev(C(1, C(2, N)), N))
 //│ >>>>>>> evaluate >>>>>>>
 //│ 2
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ count
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ rev -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ rev(
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun c⁰ -> c⁰)
+//│ 		in (fun c¹ -> t¹((c¹ + 1)))
+//│ 	in (fun c² -> t⁰((c² + 1))), [N], 0)
+//│ def count(c³, xs⁰) = xs⁰(c³)
+//│ def rev(a⁰, ys⁰) = case ys⁰ of {
+//│ 	C h1⁰ t1⁰ => (fun a¹ -> rev(
+//│ 		let t² = a¹
+//│ 		in (fun c⁴ -> t²((c⁴ + 1))), t1⁰))
+//│ 	| N  => (fun a² -> a²)}(a⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ rev(
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun c⁰ -> c⁰)
+//│ 		in (fun c¹ -> t¹((c¹ + 1)))
+//│ 	in (fun c² -> t⁰((c² + 1))), [N], 0)
+//│ def count(c³, xs⁰) = xs⁰(c³)
+//│ def rev(a⁰, ys⁰) = case ys⁰ of {
+//│ 	C h1⁰ t1⁰ => (fun a¹ -> rev(
+//│ 		let t² = a¹
+//│ 		in (fun c⁴ -> t²((c⁴ + 1))), t1⁰))
+//│ 	| N  => (fun a² -> a²)}(a⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // WRONG:
@@ -224,6 +288,36 @@ count(rev(N, init))(0)
 //│ >>>>>>> evaluate >>>>>>>
 //│ 0
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ count
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ rev -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ rev((fun c⁰ -> c⁰), init, 0)
+//│ def count(xs⁰) = xs⁰
+//│ def init = [N]
+//│ def rev(a⁰, ys⁰) = case ys⁰ of {
+//│ 	C h1⁰ t1⁰ => rev(
+//│ 		let t⁰ = a⁰
+//│ 		in (fun c¹ -> t⁰((c¹ + 1))), t1⁰)
+//│ 	| N  => a⁰}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ rev((fun c⁰ -> c⁰), init, 0)
+//│ def count(xs⁰) = xs⁰
+//│ def init = [N]
+//│ def rev(a⁰, ys⁰) = case ys⁰ of {
+//│ 	C h1⁰ t1⁰ => rev(
+//│ 		let t⁰ = a⁰
+//│ 		in (fun c¹ -> t⁰((c¹ + 1))), t1⁰)
+//│ 	| N  => a⁰}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // WRONG:
@@ -294,6 +388,34 @@ idxSum(0, rev(N, N))
 //│ >>>>>>> evaluate >>>>>>>
 //│ 0
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ idxSum
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ rev -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ rev((fun i⁰ -> 0), [N], 0)
+//│ def idxSum(i¹, xs⁰) = xs⁰(i¹)
+//│ def rev(a⁰, ys⁰) = case ys⁰ of {
+//│ 	C h1⁰ t1⁰ => rev(
+//│ 		let t⁰ = a⁰
+//│ 		in (fun i² -> add⁰(i², t⁰(add⁰(i², 1)))), t1⁰)
+//│ 	| N  => a⁰}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ rev((fun i⁰ -> 0), [N], 0)
+//│ def idxSum(i¹, xs⁰) = xs⁰(i¹)
+//│ def rev(a⁰, ys⁰) = case ys⁰ of {
+//│ 	C h1⁰ t1⁰ => rev(
+//│ 		let t⁰ = a⁰
+//│ 		in (fun i² -> add⁰(i², t⁰(add⁰(i², 1)))), t1⁰)
+//│ 	| N  => a⁰}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -366,6 +488,36 @@ count(rev(N, init))
 //│ >>>>>>> evaluate >>>>>>>
 //│ 0
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ count
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ rev -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ rev((fun _lh_dummy⁰ -> 0), init, 99)
+//│ def count(xs⁰) = xs⁰(99)
+//│ def init = [N]
+//│ def rev(a⁰, ys⁰) = case ys⁰ of {
+//│ 	C h1⁰ t1⁰ => rev(
+//│ 		let t⁰ = a⁰
+//│ 		in (fun _lh_dummy¹ -> add⁰(1, t⁰(99))), t1⁰)
+//│ 	| N  => a⁰}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ rev((fun _lh_dummy⁰ -> 0), init, 99)
+//│ def count(xs⁰) = xs⁰(99)
+//│ def init = [N]
+//│ def rev(a⁰, ys⁰) = case ys⁰ of {
+//│ 	C h1⁰ t1⁰ => rev(
+//│ 		let t⁰ = a⁰
+//│ 		in (fun _lh_dummy¹ -> add⁰(1, t⁰(99))), t1⁰)
+//│ 	| N  => a⁰}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // WRONG:
@@ -409,6 +561,32 @@ rev(N, init)
 //│ 	in (fun a² -> rev([C h1¹ a²], t1¹))
 //│ def rev(a¹, ys¹) = ys¹(a¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ init -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ init([N])
+//│ def init = 
+//│ 	let t1⁰ = init
+//│ 	in let h1⁰ = 0
+//│ 	in (fun a¹ -> t1⁰([C h1⁰ a¹]))
+//│ def rev(a⁰, ys⁰) = ys⁰(a⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ init([N])
+//│ def init = 
+//│ 	let t1⁰ = init
+//│ 	in let h1⁰ = 0
+//│ 	in (fun a¹ -> t1⁰([C h1⁰ a¹]))
+//│ def rev(a⁰, ys⁰) = ys⁰(a⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 // WRONG:
 // _LUMBERHACK_ERROR
@@ -449,6 +627,32 @@ rev(N, init)
 //│ 	in (fun a² -> rev([C h1¹ a²], t1¹))
 //│ def rev(a¹, ys¹) = ys¹(a¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ init -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ init([N])
+//│ def init = 
+//│ 	let t1⁰ = init
+//│ 	in let h1⁰ = 0
+//│ 	in (fun a¹ -> t1⁰([C h1⁰ a¹]))
+//│ def rev(a⁰, ys⁰) = ys⁰(a⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ init([N])
+//│ def init = 
+//│ 	let t1⁰ = init
+//│ 	in let h1⁰ = 0
+//│ 	in (fun a¹ -> t1⁰([C h1⁰ a¹]))
+//│ def rev(a⁰, ys⁰) = ys⁰(a⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -512,3 +716,36 @@ rev(rev2, init)(1, init2)
 //│ def rev(a¹, ys¹) = ys¹(a¹)
 //│ def rev2(a2¹, ys2¹) = ys2¹(a2¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev2, rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ init -> 0
+//│ init2 -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ init(rev2, 1, init2)
+//│ def init = 
+//│ 	let t1⁰ = init
+//│ 	in (fun a¹ -> t1⁰(a¹))
+//│ def init2 = 
+//│ 	let t12⁰ = init2
+//│ 	in (fun a2¹ -> t12⁰(a2¹))
+//│ def rev(a⁰, ys⁰) = ys⁰(a⁰)
+//│ def rev2(a2⁰, ys2⁰) = ys2⁰(a2⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ init(rev2, 1, init2)
+//│ def init = 
+//│ 	let t1⁰ = init
+//│ 	in (fun a¹ -> t1⁰(a¹))
+//│ def init2 = 
+//│ 	let t12⁰ = init2
+//│ 	in (fun a2¹ -> t12⁰(a2¹))
+//│ def rev(a⁰, ys⁰) = ys⁰(a⁰)
+//│ def rev2(a2⁰, ys2⁰) = ys2⁰(a2⁰)
+//│ <<<<<<< after floating out <<<<<<<

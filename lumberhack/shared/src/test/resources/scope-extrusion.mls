@@ -60,6 +60,26 @@ if C(A, B(D)) is
 //│ >>>>>>> evaluate >>>>>>>
 //│ [OK]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ let bd⁰ = (fun a⁰ -> a⁰)
+//│ in let a¹ = [OK]
+//│ in bd⁰(a¹)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ let bd⁰ = (fun a⁰ -> a⁰)
+//│ in let a¹ = [OK]
+//│ in bd⁰(a¹)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 if C(A, B(D)) is
@@ -114,3 +134,25 @@ if C(A, B(D)) is
 //│ 	in let a² = [OK]
 //│ 	in (fun _lh_dummy⁰ -> bd¹(a²))(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let bd⁰ = (fun a⁰ -> (fun a¹ -> a¹)(a⁰))
+//│ 	in let a² = [OK]
+//│ 	in (fun _lh_dummy⁰ -> bd⁰(a²))(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let bd⁰ = (fun a⁰ -> (fun a¹ -> a¹)(a⁰))
+//│ 	in let a² = [OK]
+//│ 	in (fun _lh_dummy⁰ -> bd⁰(a²))(99)
+//│ <<<<<<< after floating out <<<<<<<

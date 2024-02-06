@@ -223,6 +223,76 @@ testDigitsOfE1_nofib $ primId 300
 //│ def testDigitsOfE1_nofib_lh_₁(_lh_testDigitsOfE1_nofib_arg1¹) = takeDigits_lh_₁(_lh_testDigitsOfE1_nofib_arg1¹, eContFrac_lh_₁)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testDigitsOfE1_nofib_lh_₁(primId⁰(300))
+//│ def abs_lh_₁(_lh_abs_arg1¹) = if (_lh_abs_arg1¹ < 0) then (0 - _lh_abs_arg1¹) else _lh_abs_arg1¹
+//│ def abs_lh_₂(_lh_abs_arg1⁰) = if (_lh_abs_arg1⁰ < 0) then (0 - _lh_abs_arg1⁰) else _lh_abs_arg1⁰
+//│ def aux_lh_₁(_lh_aux_arg1⁰) = lazy⁰([LH_C 1 lazy⁰([LH_C _lh_aux_arg1⁰ lazy⁰([LH_C 1 aux_lh_₁((_lh_aux_arg1⁰ + 2))])])])
+//│ def eContFrac_lh_₁ = lazy⁰([LH_C 2 aux_lh_₁(2)])
+//│ def ratTrans_lh_₁(_lh_ratTrans_arg1⁰, _lh_ratTrans_arg2⁰) = case _lh_ratTrans_arg1⁰ of {
+//│ 	LH_P4 _lh_ratTrans_LH_P4_0⁰ _lh_ratTrans_LH_P4_1⁰ _lh_ratTrans_LH_P4_2⁰ _lh_ratTrans_LH_P4_3⁰ => 
+//│ 		let _lh_matchIdent⁰ = force⁰(_lh_ratTrans_arg2⁰)
+//│ 		in case _lh_matchIdent⁰ of {
+//│ 			LH_N  => error⁰
+//│ 			| LH_C _lh_ratTrans_LH_C_0⁰ _lh_ratTrans_LH_C_1⁰ => if (_lh_ratTrans_LH_P4_3⁰ == 0) then ratTrans_lh_₁([LH_P4 _lh_ratTrans_LH_P4_1⁰ (_lh_ratTrans_LH_P4_0⁰ + (_lh_ratTrans_LH_C_0⁰ * _lh_ratTrans_LH_P4_1⁰)) _lh_ratTrans_LH_P4_3⁰ (_lh_ratTrans_LH_P4_2⁰ + (_lh_ratTrans_LH_C_0⁰ * _lh_ratTrans_LH_P4_3⁰))], _lh_ratTrans_LH_C_1⁰) else 
+//│ 				let q⁰ = div⁰(_lh_ratTrans_LH_P4_1⁰, _lh_ratTrans_LH_P4_3⁰)
+//│ 				in if ((((signum_lh_₁(_lh_ratTrans_LH_P4_2⁰) == signum_lh_₂(_lh_ratTrans_LH_P4_3⁰)) || (abs_lh_₂(_lh_ratTrans_LH_P4_2⁰) < abs_lh_₁(_lh_ratTrans_LH_P4_3⁰))) && (((_lh_ratTrans_LH_P4_2⁰ + _lh_ratTrans_LH_P4_3⁰) * q⁰) <= (_lh_ratTrans_LH_P4_0⁰ + _lh_ratTrans_LH_P4_1⁰))) && ((((_lh_ratTrans_LH_P4_2⁰ + _lh_ratTrans_LH_P4_3⁰) * q⁰) + (_lh_ratTrans_LH_P4_2⁰ + _lh_ratTrans_LH_P4_3⁰)) > (_lh_ratTrans_LH_P4_0⁰ + _lh_ratTrans_LH_P4_1⁰))) then lazy⁰([LH_C q⁰ ratTrans_lh_₁([LH_P4 _lh_ratTrans_LH_P4_2⁰ _lh_ratTrans_LH_P4_3⁰ (_lh_ratTrans_LH_P4_0⁰ - (q⁰ * _lh_ratTrans_LH_P4_2⁰)) (_lh_ratTrans_LH_P4_1⁰ - (q⁰ * _lh_ratTrans_LH_P4_3⁰))], lazy⁰([LH_C _lh_ratTrans_LH_C_0⁰ _lh_ratTrans_LH_C_1⁰]))]) else ratTrans_lh_₁([LH_P4 _lh_ratTrans_LH_P4_1⁰ (_lh_ratTrans_LH_P4_0⁰ + (_lh_ratTrans_LH_C_0⁰ * _lh_ratTrans_LH_P4_1⁰)) _lh_ratTrans_LH_P4_3⁰ (_lh_ratTrans_LH_P4_2⁰ + (_lh_ratTrans_LH_C_0⁰ * _lh_ratTrans_LH_P4_3⁰))], _lh_ratTrans_LH_C_1⁰)
+//│ 			| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def signum_lh_₁(_lh_signum_arg1¹) = case _lh_signum_arg1¹ of {
+//│ 	0  => 0
+//│ 	| _  => if (_lh_signum_arg1¹ > 0) then 1 else (0 - 1)}
+//│ def signum_lh_₂(_lh_signum_arg1⁰) = case _lh_signum_arg1⁰ of {
+//│ 	0  => 0
+//│ 	| _  => if (_lh_signum_arg1⁰ > 0) then 1 else (0 - 1)}
+//│ def takeDigits_lh_₁(_lh_takeDigits_arg1⁰, _lh_takeDigits_arg2⁰) = if (_lh_takeDigits_arg1⁰ > 0) then 
+//│ 	let _lh_matchIdent¹ = force⁰(_lh_takeDigits_arg2⁰)
+//│ 	in case _lh_matchIdent¹ of {
+//│ 		LH_N  => error⁰
+//│ 		| LH_C _lh_takeDigits_LH_C_0⁰ _lh_takeDigits_LH_C_1⁰ => [LH_C _lh_takeDigits_LH_C_0⁰ takeDigits_lh_₁((_lh_takeDigits_arg1⁰ - 1), ratTrans_lh_₁([LH_P4 10 0 0 1], _lh_takeDigits_LH_C_1⁰))]
+//│ 		| _  => error⁰} else [LH_N]
+//│ def testDigitsOfE1_nofib_lh_₁(_lh_testDigitsOfE1_nofib_arg1⁰) = takeDigits_lh_₁(_lh_testDigitsOfE1_nofib_arg1⁰, eContFrac_lh_₁)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testDigitsOfE1_nofib_lh_₁(primId⁰(300))
+//│ def abs_lh_₁(_lh_abs_arg1¹) = if (_lh_abs_arg1¹ < 0) then (0 - _lh_abs_arg1¹) else _lh_abs_arg1¹
+//│ def abs_lh_₂(_lh_abs_arg1⁰) = if (_lh_abs_arg1⁰ < 0) then (0 - _lh_abs_arg1⁰) else _lh_abs_arg1⁰
+//│ def aux_lh_₁(_lh_aux_arg1⁰) = lazy⁰([LH_C 1 lazy⁰([LH_C _lh_aux_arg1⁰ lazy⁰([LH_C 1 aux_lh_₁((_lh_aux_arg1⁰ + 2))])])])
+//│ def eContFrac_lh_₁ = lazy⁰([LH_C 2 aux_lh_₁(2)])
+//│ def ratTrans_lh_₁(_lh_ratTrans_arg1⁰, _lh_ratTrans_arg2⁰) = case _lh_ratTrans_arg1⁰ of {
+//│ 	LH_P4 _lh_ratTrans_LH_P4_0⁰ _lh_ratTrans_LH_P4_1⁰ _lh_ratTrans_LH_P4_2⁰ _lh_ratTrans_LH_P4_3⁰ => 
+//│ 		let _lh_matchIdent⁰ = force⁰(_lh_ratTrans_arg2⁰)
+//│ 		in case _lh_matchIdent⁰ of {
+//│ 			LH_N  => error⁰
+//│ 			| LH_C _lh_ratTrans_LH_C_0⁰ _lh_ratTrans_LH_C_1⁰ => if (_lh_ratTrans_LH_P4_3⁰ == 0) then ratTrans_lh_₁([LH_P4 _lh_ratTrans_LH_P4_1⁰ (_lh_ratTrans_LH_P4_0⁰ + (_lh_ratTrans_LH_C_0⁰ * _lh_ratTrans_LH_P4_1⁰)) _lh_ratTrans_LH_P4_3⁰ (_lh_ratTrans_LH_P4_2⁰ + (_lh_ratTrans_LH_C_0⁰ * _lh_ratTrans_LH_P4_3⁰))], _lh_ratTrans_LH_C_1⁰) else 
+//│ 				let q⁰ = div⁰(_lh_ratTrans_LH_P4_1⁰, _lh_ratTrans_LH_P4_3⁰)
+//│ 				in if ((((signum_lh_₁(_lh_ratTrans_LH_P4_2⁰) == signum_lh_₂(_lh_ratTrans_LH_P4_3⁰)) || (abs_lh_₂(_lh_ratTrans_LH_P4_2⁰) < abs_lh_₁(_lh_ratTrans_LH_P4_3⁰))) && (((_lh_ratTrans_LH_P4_2⁰ + _lh_ratTrans_LH_P4_3⁰) * q⁰) <= (_lh_ratTrans_LH_P4_0⁰ + _lh_ratTrans_LH_P4_1⁰))) && ((((_lh_ratTrans_LH_P4_2⁰ + _lh_ratTrans_LH_P4_3⁰) * q⁰) + (_lh_ratTrans_LH_P4_2⁰ + _lh_ratTrans_LH_P4_3⁰)) > (_lh_ratTrans_LH_P4_0⁰ + _lh_ratTrans_LH_P4_1⁰))) then lazy⁰([LH_C q⁰ ratTrans_lh_₁([LH_P4 _lh_ratTrans_LH_P4_2⁰ _lh_ratTrans_LH_P4_3⁰ (_lh_ratTrans_LH_P4_0⁰ - (q⁰ * _lh_ratTrans_LH_P4_2⁰)) (_lh_ratTrans_LH_P4_1⁰ - (q⁰ * _lh_ratTrans_LH_P4_3⁰))], lazy⁰([LH_C _lh_ratTrans_LH_C_0⁰ _lh_ratTrans_LH_C_1⁰]))]) else ratTrans_lh_₁([LH_P4 _lh_ratTrans_LH_P4_1⁰ (_lh_ratTrans_LH_P4_0⁰ + (_lh_ratTrans_LH_C_0⁰ * _lh_ratTrans_LH_P4_1⁰)) _lh_ratTrans_LH_P4_3⁰ (_lh_ratTrans_LH_P4_2⁰ + (_lh_ratTrans_LH_C_0⁰ * _lh_ratTrans_LH_P4_3⁰))], _lh_ratTrans_LH_C_1⁰)
+//│ 			| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def signum_lh_₁(_lh_signum_arg1¹) = case _lh_signum_arg1¹ of {
+//│ 	0  => 0
+//│ 	| _  => if (_lh_signum_arg1¹ > 0) then 1 else (0 - 1)}
+//│ def signum_lh_₂(_lh_signum_arg1⁰) = case _lh_signum_arg1⁰ of {
+//│ 	0  => 0
+//│ 	| _  => if (_lh_signum_arg1⁰ > 0) then 1 else (0 - 1)}
+//│ def takeDigits_lh_₁(_lh_takeDigits_arg1⁰, _lh_takeDigits_arg2⁰) = if (_lh_takeDigits_arg1⁰ > 0) then 
+//│ 	let _lh_matchIdent¹ = force⁰(_lh_takeDigits_arg2⁰)
+//│ 	in case _lh_matchIdent¹ of {
+//│ 		LH_N  => error⁰
+//│ 		| LH_C _lh_takeDigits_LH_C_0⁰ _lh_takeDigits_LH_C_1⁰ => [LH_C _lh_takeDigits_LH_C_0⁰ takeDigits_lh_₁((_lh_takeDigits_arg1⁰ - 1), ratTrans_lh_₁([LH_P4 10 0 0 1], _lh_takeDigits_LH_C_1⁰))]
+//│ 		| _  => error⁰} else [LH_N]
+//│ def testDigitsOfE1_nofib_lh_₁(_lh_testDigitsOfE1_nofib_arg1⁰) = takeDigits_lh_₁(_lh_testDigitsOfE1_nofib_arg1⁰, eContFrac_lh_₁)
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

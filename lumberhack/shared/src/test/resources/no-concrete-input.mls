@@ -41,6 +41,30 @@ g
 //│ 	| B  => [OK]}
 //│ def g(b¹) = f(b¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ g
+//│ def f(a⁰) = case a⁰ of {
+//│ 	A aa⁰ => f([B])
+//│ 	| B  => [OK]}
+//│ def g(b⁰) = f(b⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ g
+//│ def f(a⁰) = case a⁰ of {
+//│ 	A aa⁰ => f([B])
+//│ 	| B  => [OK]}
+//│ def g(b⁰) = f(b⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT: when the top level result is consumed by nocons
 fun f(a) = if a is
@@ -81,6 +105,30 @@ primitive(g)
 //│ 	| B  => [OK]}
 //│ def g(b¹) = f(b¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ primitive⁰(g)
+//│ def f(a⁰) = case a⁰ of {
+//│ 	A aa⁰ => f([B])
+//│ 	| B  => [OK]}
+//│ def g(b⁰) = f(b⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ primitive⁰(g)
+//│ def f(a⁰) = case a⁰ of {
+//│ 	A aa⁰ => f([B])
+//│ 	| B  => [OK]}
+//│ def g(b⁰) = f(b⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT: when the top level result is consumed by nocons
@@ -124,3 +172,29 @@ k
 //│ 	| D  => [E]}
 //│ def k(a³) = g(f(a³))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ k
+//│ def f(a⁰) = if primitive⁰ then [B] else a⁰
+//│ def g(x⁰) = case x⁰ of {
+//│ 	B  => [C]
+//│ 	| D  => [E]}
+//│ def k(a¹) = g(f(a¹))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ k
+//│ def f(a⁰) = if primitive⁰ then [B] else a⁰
+//│ def g(x⁰) = case x⁰ of {
+//│ 	B  => [C]
+//│ 	| D  => [E]}
+//│ def k(a¹) = g(f(a¹))
+//│ <<<<<<< after floating out <<<<<<<

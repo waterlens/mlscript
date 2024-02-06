@@ -38,6 +38,30 @@ c(p)
 //│ 	let a¹ = p
 //│ 	in (fun _lh_dummy⁰ -> c(a¹))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ c
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ p -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ p(99)
+//│ def c(x⁰) = x⁰(99)
+//│ def p = 
+//│ 	let a⁰ = p
+//│ 	in (fun _lh_dummy⁰ -> a⁰(99))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ p(99)
+//│ def c(x⁰) = x⁰(99)
+//│ def p = 
+//│ 	let a⁰ = p
+//│ 	in (fun _lh_dummy⁰ -> a⁰(99))
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT: correctly aligned recursive length
 let rec p = C(C(p))
@@ -92,6 +116,32 @@ c(p)
 //│ 			C y⁰ => c(y⁰)}}}
 //│ def p = [C [C p]]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ c(p)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	C a⁰ => case a⁰ of {
+//│ 		C b⁰ => case b⁰ of {
+//│ 			C y⁰ => c(y⁰)}}}
+//│ def p = [C [C p]]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ c(p)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	C a⁰ => case a⁰ of {
+//│ 		C b⁰ => case b⁰ of {
+//│ 			C y⁰ => c(y⁰)}}}
+//│ def p = [C [C p]]
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT: correctly aligned recursive length (using split knot)
 let rec p = C(C(p))
@@ -144,6 +194,38 @@ c(id(p))
 //│ 		in (fun _lh_dummy¹ -> c(a²))
 //│ 	in (fun _lh_dummy⁰ -> c(a¹))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ c
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ p -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ id(p, 99)
+//│ def c(x⁰) = x⁰(99)
+//│ def id(y⁰) = id2(y⁰)
+//│ def id2(yy⁰) = yy⁰
+//│ def p = 
+//│ 	let a⁰ = 	
+//│ 		let a¹ = p
+//│ 		in (fun _lh_dummy⁰ -> a¹(99))
+//│ 	in (fun _lh_dummy¹ -> a⁰(99))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ id(p, 99)
+//│ def c(x⁰) = x⁰(99)
+//│ def id(y⁰) = id2(y⁰)
+//│ def id2(yy⁰) = yy⁰
+//│ def p = 
+//│ 	let a⁰ = 	
+//│ 		let a¹ = p
+//│ 		in (fun _lh_dummy⁰ -> a¹(99))
+//│ 	in (fun _lh_dummy¹ -> a⁰(99))
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT: correctly aligned recursive length (using split knot)
@@ -199,6 +281,32 @@ ca(p)
 //│ 	C b⁰ => ca(b⁰)}
 //│ def p = [C [C [C p]]]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ ca(p)
+//│ def ca(x⁰) = case x⁰ of {
+//│ 	C a⁰ => cb(a⁰)}
+//│ def cb(x¹) = case x¹ of {
+//│ 	C b⁰ => ca(b⁰)}
+//│ def p = [C [C [C p]]]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ ca(p)
+//│ def ca(x⁰) = case x⁰ of {
+//│ 	C a⁰ => cb(a⁰)}
+//│ def cb(x¹) = case x¹ of {
+//│ 	C b⁰ => ca(b⁰)}
+//│ def p = [C [C [C p]]]
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT: correctly aligned recursive length (using split knot)
@@ -272,6 +380,47 @@ c1(p1)
 //│ 	let b² = p1
 //│ 	in (fun _lh_dummy³ -> c1(b²))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ c2, c1
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ p1 -> 0
+//│ p2 -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ p1(99)
+//│ def c1(x1⁰) = x1⁰(99)
+//│ def c2(x2⁰) = x2⁰(99)
+//│ def p1 = 
+//│ 	let a⁰ = 	
+//│ 		let b⁰ = 	
+//│ 			let a¹ = p2
+//│ 			in (fun _lh_dummy⁰ -> a¹(99))
+//│ 		in (fun _lh_dummy¹ -> b⁰(99))
+//│ 	in (fun _lh_dummy² -> a⁰(99))
+//│ def p2 = 
+//│ 	let b¹ = p1
+//│ 	in (fun _lh_dummy³ -> b¹(99))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ p1(99)
+//│ def c1(x1⁰) = x1⁰(99)
+//│ def c2(x2⁰) = x2⁰(99)
+//│ def p1 = 
+//│ 	let a⁰ = 	
+//│ 		let b⁰ = 	
+//│ 			let a¹ = p2
+//│ 			in (fun _lh_dummy⁰ -> a¹(99))
+//│ 		in (fun _lh_dummy¹ -> b⁰(99))
+//│ 	in (fun _lh_dummy² -> a⁰(99))
+//│ def p2 = 
+//│ 	let b¹ = p1
+//│ 	in (fun _lh_dummy³ -> b¹(99))
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT:
@@ -314,6 +463,32 @@ main(c)
 //│ 	let a¹ = p
 //│ 	in (fun _lh_dummy⁰ -> c(a¹))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ c
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ p -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main(c)
+//│ def c(x⁰) = x⁰(99)
+//│ def main(cc⁰) = cc⁰(p)
+//│ def p = 
+//│ 	let a⁰ = p
+//│ 	in (fun _lh_dummy⁰ -> a⁰(99))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main(c)
+//│ def c(x⁰) = x⁰(99)
+//│ def main(cc⁰) = cc⁰(p)
+//│ def p = 
+//│ 	let a⁰ = p
+//│ 	in (fun _lh_dummy⁰ -> a⁰(99))
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT:
@@ -365,6 +540,34 @@ main(p)
 //│ 		C d⁰ => c(d⁰)}}
 //│ def p = [C p]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main(p)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	C a⁰ => c(a⁰)}
+//│ def main(pp⁰) = case pp⁰ of {
+//│ 	C b⁰ => case b⁰ of {
+//│ 		C d⁰ => c(d⁰)}}
+//│ def p = [C p]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main(p)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	C a⁰ => c(a⁰)}
+//│ def main(pp⁰) = case pp⁰ of {
+//│ 	C b⁰ => case b⁰ of {
+//│ 		C d⁰ => c(d⁰)}}
+//│ def p = [C p]
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT:
 let rec p = C(p)
@@ -406,6 +609,32 @@ main(c, p)
 //│ 	let a¹ = p
 //│ 	in (fun _lh_dummy⁰ -> c(a¹))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ c
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ p -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main(c, p)
+//│ def c(x⁰) = x⁰(99)
+//│ def main(cc⁰, pp⁰) = cc⁰(pp⁰)
+//│ def p = 
+//│ 	let a⁰ = p
+//│ 	in (fun _lh_dummy⁰ -> a⁰(99))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main(c, p)
+//│ def c(x⁰) = x⁰(99)
+//│ def main(cc⁰, pp⁰) = cc⁰(pp⁰)
+//│ def p = 
+//│ 	let a⁰ = p
+//│ 	in (fun _lh_dummy⁰ -> a⁰(99))
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT:
@@ -457,6 +686,38 @@ a(p)
 //│ 	let aa¹ = p
 //│ 	in (fun _lh_dummy⁰ -> cons(aa¹))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ cons
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ p -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ a(p)
+//│ def a(x¹) = b(x¹)
+//│ def b(x⁰) = c(x⁰)
+//│ def c(x²) = d(cons, x²)
+//│ def cons(y⁰) = y⁰(99)
+//│ def d(cc⁰, x³) = cc⁰(x³)
+//│ def p = 
+//│ 	let aa⁰ = p
+//│ 	in (fun _lh_dummy⁰ -> aa⁰(99))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ a(p)
+//│ def a(x¹) = b(x¹)
+//│ def b(x⁰) = c(x⁰)
+//│ def c(x²) = d(cons, x²)
+//│ def cons(y⁰) = y⁰(99)
+//│ def d(cc⁰, x³) = cc⁰(x³)
+//│ def p = 
+//│ 	let aa⁰ = p
+//│ 	in (fun _lh_dummy⁰ -> aa⁰(99))
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT: `main` consumes one C, `c2` then recursively consumes one C at a time
@@ -521,3 +782,39 @@ c2(id(main))
 //│ def main = c(p)
 //│ def p = [C p]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ c1
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ id -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ c2(id(main))
+//│ def c(x⁰) = case x⁰ of {
+//│ 	C a⁰ => a⁰}
+//│ def c1(xx⁰) = xx⁰
+//│ def c2(z⁰) = case z⁰ of {
+//│ 	C b⁰ => c2(b⁰)}
+//│ def id(y⁰) = 
+//│ 	let aa⁰ = y⁰
+//│ 	in aa⁰
+//│ def main = c(p)
+//│ def p = [C p]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ c2(id(main))
+//│ def c(x⁰) = case x⁰ of {
+//│ 	C a⁰ => a⁰}
+//│ def c1(xx⁰) = xx⁰
+//│ def c2(z⁰) = case z⁰ of {
+//│ 	C b⁰ => c2(b⁰)}
+//│ def id(y⁰) = 
+//│ 	let aa⁰ = y⁰
+//│ 	in aa⁰
+//│ def main = c(p)
+//│ def p = [C p]
+//│ <<<<<<< after floating out <<<<<<<

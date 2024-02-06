@@ -77,6 +77,44 @@ main
 //│ 		in let h³ = f³(h²)
 //│ 		in (fun acc² -> summ((acc² + h³), t³)))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ summ, map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ upto -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main
+//│ def main(n⁰) = sum(upto(1, n⁰, (fun x⁰ -> (x⁰ * x⁰))))
+//│ def map(f⁰, ls⁰) = ls⁰(f⁰)
+//│ def sum(ls¹) = ls¹(0)
+//│ def summ(acc², ls²) = ls²(acc²)
+//│ def upto(a⁰, b⁰) = if (a⁰ > b⁰) then (fun f¹ -> (fun acc⁰ -> acc⁰)) else 
+//│ 	let t⁰ = upto((a⁰ + 1), b⁰)
+//│ 	in let h⁰ = a⁰
+//│ 	in (fun f² -> 
+//│ 		let t¹ = t⁰(f²)
+//│ 		in let h¹ = f²(h⁰)
+//│ 		in (fun acc¹ -> t¹((acc¹ + h¹))))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main
+//│ def main(n⁰) = sum(upto(1, n⁰, (fun x⁰ -> (x⁰ * x⁰))))
+//│ def map(f⁰, ls⁰) = ls⁰(f⁰)
+//│ def sum(ls¹) = ls¹(0)
+//│ def summ(acc², ls²) = ls²(acc²)
+//│ def upto(a⁰, b⁰) = if (a⁰ > b⁰) then (fun f¹ -> (fun acc⁰ -> acc⁰)) else 
+//│ 	let t⁰ = upto((a⁰ + 1), b⁰)
+//│ 	in let h⁰ = a⁰
+//│ 	in (fun f² -> 
+//│ 		let t¹ = t⁰(f²)
+//│ 		in let h¹ = f²(h⁰)
+//│ 		in (fun acc¹ -> t¹((acc¹ + h¹))))
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT: slightly different from actual example in wadler's paper: the sum is no longer tail recursive
@@ -154,6 +192,42 @@ main
 //│ 		in let h³ = f³(h²)
 //│ 		in (fun _lh_dummy¹ -> (h³ + sum(t³))))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ sum, map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ upto -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main
+//│ def main(n⁰) = upto(1, n⁰, (fun x⁰ -> (x⁰ * x⁰)), 99)
+//│ def map(f⁰, ls⁰) = ls⁰(f⁰)
+//│ def sum(ls¹) = ls¹(99)
+//│ def upto(a⁰, b⁰) = if (a⁰ > b⁰) then (fun f¹ -> (fun _lh_dummy⁰ -> 0)) else 
+//│ 	let t⁰ = upto((a⁰ + 1), b⁰)
+//│ 	in let h⁰ = a⁰
+//│ 	in (fun f² -> 
+//│ 		let t¹ = t⁰(f²)
+//│ 		in let h¹ = f²(h⁰)
+//│ 		in (fun _lh_dummy¹ -> (h¹ + t¹(99))))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main
+//│ def main(n⁰) = upto(1, n⁰, (fun x⁰ -> (x⁰ * x⁰)), 99)
+//│ def map(f⁰, ls⁰) = ls⁰(f⁰)
+//│ def sum(ls¹) = ls¹(99)
+//│ def upto(a⁰, b⁰) = if (a⁰ > b⁰) then (fun f¹ -> (fun _lh_dummy⁰ -> 0)) else 
+//│ 	let t⁰ = upto((a⁰ + 1), b⁰)
+//│ 	in let h⁰ = a⁰
+//│ 	in (fun f² -> 
+//│ 		let t¹ = t⁰(f²)
+//│ 		in let h¹ = f²(h⁰)
+//│ 		in (fun _lh_dummy¹ -> (h¹ + t¹(99))))
+//│ <<<<<<< after floating out <<<<<<<
 
 // WRONG: cannot fuse at all if there is no concrete input
 fun append(xs, ys) = if xs is
@@ -194,6 +268,30 @@ main
 //│ 	| N  => ys¹}
 //│ def main(x¹, y¹, z¹) = append(append(x¹, y¹), z¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def main(x⁰, y⁰, z⁰) = append(append(x⁰, y⁰), z⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def main(x⁰, y⁰, z⁰) = append(append(x⁰, y⁰), z⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // WRONG: cannot fuse if noprod flow into y
@@ -258,6 +356,42 @@ main
 //│ 	| N  => [N]}
 //│ def main(x¹, y¹, z¹) = append(append2(x¹, y¹), z¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def append2(xs¹, ys¹) = case xs¹ of {
+//│ 	C h² t² => [C h² append2(t², ys¹)]
+//│ 	| N  => idList(ys¹)}
+//│ def idList(ls⁰) = case ls⁰ of {
+//│ 	C h¹ t¹ => [C h¹ t¹]
+//│ 	| N  => [N]}
+//│ def main(x⁰, y⁰, z⁰) = append(append2(x⁰, y⁰), z⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def append2(xs¹, ys¹) = case xs¹ of {
+//│ 	C h² t² => [C h² append2(t², ys¹)]
+//│ 	| N  => idList(ys¹)}
+//│ def idList(ls⁰) = case ls⁰ of {
+//│ 	C h¹ t¹ => [C h¹ t¹]
+//│ 	| N  => [N]}
+//│ def main(x⁰, y⁰, z⁰) = append(append2(x⁰, y⁰), z⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT: will fuse if idList is recursive (this idea can be generalized to other
 // data structure? an id to traverse the data to expose its structure)
@@ -333,6 +467,51 @@ main
 //│ 	| N  => (fun ys⁴ -> ys⁴)}
 //│ def main(x¹, y¹, z¹) = append(append2(x¹, y¹), z¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ append
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ idList -> 1
+//│ append2 -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main
+//│ def append(xs⁰, ys⁰) = xs⁰(ys⁰)
+//│ def append2(xs¹, ys³) = case xs¹ of {
+//│ 	C h² t² => 
+//│ 		let t³ = append2(t², ys³)
+//│ 		in let h³ = h²
+//│ 		in (fun ys⁴ -> [C h³ t³(ys⁴)])
+//│ 	| N  => idList(ys³)}
+//│ def idList(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let t¹ = idList(t⁰)
+//│ 		in let h¹ = h⁰
+//│ 		in (fun ys¹ -> [C h¹ t¹(ys¹)])
+//│ 	| N  => (fun ys² -> ys²)}
+//│ def main(x⁰, y⁰, z⁰) = append2(x⁰, y⁰, z⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main
+//│ def append(xs⁰, ys⁰) = xs⁰(ys⁰)
+//│ def append2(xs¹, ys³) = case xs¹ of {
+//│ 	C h² t² => 
+//│ 		let t³ = append2(t², ys³)
+//│ 		in let h³ = h²
+//│ 		in (fun ys⁴ -> [C h³ t³(ys⁴)])
+//│ 	| N  => idList(ys³)}
+//│ def idList(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let t¹ = idList(t⁰)
+//│ 		in let h¹ = h⁰
+//│ 		in (fun ys¹ -> [C h¹ t¹(ys¹)])
+//│ 	| N  => (fun ys² -> ys²)}
+//│ def main(x⁰, y⁰, z⁰) = append2(x⁰, y⁰, z⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -399,6 +578,36 @@ main
 //│ 	C h¹ t¹ => [C f¹(h¹) map(t¹, f¹)]
 //│ 	| N  => [N]}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def main(x⁰, y⁰, z⁰) = append(append(map(x⁰, primitive⁰), map(y⁰, primitive⁰)), map(z⁰, primitive⁰))
+//│ def map(ls⁰, f⁰) = case ls⁰ of {
+//│ 	C h¹ t¹ => [C f⁰(h¹) map(t¹, f⁰)]
+//│ 	| N  => [N]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def main(x⁰, y⁰, z⁰) = append(append(map(x⁰, primitive⁰), map(y⁰, primitive⁰)), map(z⁰, primitive⁰))
+//│ def map(ls⁰, f⁰) = case ls⁰ of {
+//│ 	C h¹ t¹ => [C f⁰(h¹) map(t¹, f⁰)]
+//│ 	| N  => [N]}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT: will fuse
@@ -444,6 +653,30 @@ main
 //│ 	| N  => ys¹}
 //│ def main(x¹, y¹) = append(append(x¹, [N]), y¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def main(x⁰, y⁰) = append(append(x⁰, [N]), y⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def main(x⁰, y⁰) = append(append(x⁰, [N]), y⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT: will fuse
@@ -497,6 +730,30 @@ main
 //│ 	| N  => ys¹}
 //│ def main(x¹, y¹) = append(append(x¹, [C 1 [C 2 [N]]]), y¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def main(x⁰, y⁰) = append(append(x⁰, [C 1 [C 2 [N]]]), y⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def main(x⁰, y⁰) = append(append(x⁰, [C 1 [C 2 [N]]]), y⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -543,6 +800,30 @@ ff
 //│ 	T l⁰ r⁰ => [T flip(l⁰) flip(r⁰)]
 //│ 	| N v⁰ => [N v⁰]}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ ff
+//│ def ff(t¹) = flip(flip(t¹))
+//│ def flip(t⁰) = case t⁰ of {
+//│ 	T l⁰ r⁰ => [T flip(l⁰) flip(r⁰)]
+//│ 	| N v⁰ => [N v⁰]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ ff
+//│ def ff(t¹) = flip(flip(t¹))
+//│ def flip(t⁰) = case t⁰ of {
+//│ 	T l⁰ r⁰ => [T flip(l⁰) flip(r⁰)]
+//│ 	| N v⁰ => [N v⁰]}
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT:
 fun squaretr(t) = if t is
@@ -601,3 +882,39 @@ main
 //│ 		in (fun _lh_dummy¹ -> (sumtr(l²) + sumtr(r²)))}
 //│ def sumtr(t⁴) = t⁴(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ sumtr
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ squaretr -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main
+//│ def main(t²) = squaretr(t², 99)
+//│ def squaretr(t⁰) = case t⁰ of {
+//│ 	N v⁰ => 
+//│ 		let v¹ = (v⁰ * v⁰)
+//│ 		in (fun _lh_dummy⁰ -> v¹)
+//│ 	| T l⁰ r⁰ => 
+//│ 		let r¹ = squaretr(r⁰)
+//│ 		in let l¹ = squaretr(l⁰)
+//│ 		in (fun _lh_dummy¹ -> (l¹(99) + r¹(99)))}
+//│ def sumtr(t¹) = t¹(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main
+//│ def main(t²) = squaretr(t², 99)
+//│ def squaretr(t⁰, _lh_popOutId_0⁰) = case t⁰ of {
+//│ 	N v⁰ => 
+//│ 		let v¹ = (v⁰ * v⁰)
+//│ 		in v¹
+//│ 	| T l⁰ r⁰ => 
+//│ 		let r¹ = squaretr(r⁰)
+//│ 		in let l¹ = squaretr(l⁰)
+//│ 		in (l¹(99) + r¹(99))}
+//│ def sumtr(t¹) = t¹(99)
+//│ <<<<<<< after floating out <<<<<<<

@@ -48,6 +48,28 @@ inter(N)(N)
 //│ >>>>>>> evaluate >>>>>>>
 //│ [N]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ inter([N], [N])
+//│ def inter(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ inter([N], [N])
+//│ def inter(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 _LUMBERHACK_EVAL
@@ -118,6 +140,32 @@ inter(l1)(l2)
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 1 [C 9 [C 2 [C 10 [N]]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ inter(l1, l2)
+//│ def inter(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}
+//│ def l1 = [C 1 [C 2 [N]]]
+//│ def l2 = [C 9 [C 10 [N]]]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ inter(l1, l2)
+//│ def inter(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}
+//│ def l1 = [C 1 [C 2 [N]]]
+//│ def l2 = [C 9 [C 10 [N]]]
+//│ <<<<<<< after floating out <<<<<<<
 
 fun inter(xs) = if xs is
   N then ys => ys
@@ -167,6 +215,32 @@ inter(l1)(l2)
 //│ def l1 = [C 1 [C 2 l1]]
 //│ def l2 = [C 9 l2]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ inter(l1, l2)
+//│ def inter(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}
+//│ def l1 = [C 1 [C 2 l1]]
+//│ def l2 = [C 9 l2]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ inter(l1, l2)
+//│ def inter(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}
+//│ def l1 = [C 1 [C 2 l1]]
+//│ def l2 = [C 9 l2]
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // NOTE: maybe more fusion can be done
@@ -234,6 +308,38 @@ f(C(A))
 //│ 		A  => [N]
 //│ 		| B  => f([C b⁰])}}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f([C [A]])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	C a⁰ => case a⁰ of {
+//│ 		A  => [N]
+//│ 		| B  => g([D a⁰])}}
+//│ def g(y⁰) = case y⁰ of {
+//│ 	D b⁰ => case b⁰ of {
+//│ 		A  => [N]
+//│ 		| B  => f([C b⁰])}}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f([C [A]])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	C a⁰ => case a⁰ of {
+//│ 		A  => [N]
+//│ 		| B  => g([D a⁰])}}
+//│ def g(y⁰) = case y⁰ of {
+//│ 	D b⁰ => case b⁰ of {
+//│ 		A  => [N]
+//│ 		| B  => f([C b⁰])}}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // NOTE: problem resolved by thunking the computation inside the branch
@@ -273,6 +379,30 @@ f(C(A))
 //│ def c(x¹) = x¹(99)
 //│ def f(a³) = if [False] then c(a³) else [Unit]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ c
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f(
+//│ 	let a⁰ = [A]
+//│ 	in (fun _lh_dummy⁰ -> primitive⁰(a⁰)))
+//│ def c(x⁰) = x⁰(99)
+//│ def f(a¹) = if [False] then a¹(99) else [Unit]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f(
+//│ 	let a⁰ = [A]
+//│ 	in (fun _lh_dummy⁰ -> primitive⁰(a⁰)))
+//│ def c(x⁰) = x⁰(99)
+//│ def f(a¹) = if [False] then a¹(99) else [Unit]
+//│ <<<<<<< after floating out <<<<<<<
 
 
 fun f(xs, ys) = if xs is
@@ -329,6 +459,44 @@ f(C(1, N), C(2, N))
 //│ 		C h⁰ t⁰ => ys¹(h⁰)
 //│ 		| _  => error⁰}}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ f
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ case [C 1 [N]] of {
+//│ 	N  => 0
+//│ 	| _  => case [C 1 [N]] of {
+//│ 		C h⁰ t⁰ => 
+//│ 			let hh⁰ = 2
+//│ 			in (fun h¹ -> (h¹ + hh⁰))(h⁰)
+//│ 		| _  => error⁰}}
+//│ def f(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => 0
+//│ 	| _  => case xs⁰ of {
+//│ 		C h² t¹ => ys⁰(h²)
+//│ 		| _  => error⁰}}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ case [C 1 [N]] of {
+//│ 	N  => 0
+//│ 	| _  => case [C 1 [N]] of {
+//│ 		C h⁰ t⁰ => 
+//│ 			let hh⁰ = 2
+//│ 			in (fun h¹ -> (h¹ + hh⁰))(h⁰)
+//│ 		| _  => error⁰}}
+//│ def f(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => 0
+//│ 	| _  => case xs⁰ of {
+//│ 		C h² t¹ => ys⁰(h²)
+//│ 		| _  => error⁰}}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 fun f(xs) = if xs is
@@ -373,6 +541,32 @@ f(C(1, N))
 //│ 		C h⁰ t⁰ => h⁰
 //│ 		| _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f([C 1 [N]])
+//│ def f(xs⁰) = case xs⁰ of {
+//│ 	N  => 0
+//│ 	| _  => case xs⁰ of {
+//│ 		C h⁰ t⁰ => h⁰
+//│ 		| _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f([C 1 [N]])
+//│ def f(xs⁰) = case xs⁰ of {
+//│ 	N  => 0
+//│ 	| _  => case xs⁰ of {
+//│ 		C h⁰ t⁰ => h⁰
+//│ 		| _  => error⁰([LH_C 'm' [LH_C 'a' [LH_C 't' [LH_C 'c' [LH_C 'h' [LH_C ' ' [LH_C 'e' [LH_C 'r' [LH_C 'r' [LH_C 'o' [LH_C 'r' [LH_N]]]]]]]]]]]])}}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 fun f(x, y) = if x is
@@ -408,6 +602,24 @@ f(C(1, N), 0)
 //│ f((fun y¹ -> (y¹ + 1)), 0)
 //│ def f(x¹, y²) = x¹(y²)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ f
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ (fun y⁰ -> (y⁰ + 1))(0)
+//│ def f(x⁰, y¹) = x⁰(y¹)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ (fun y⁰ -> (y⁰ + 1))(0)
+//│ def f(x⁰, y¹) = x⁰(y¹)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // NOTE: after registering wildcard and id match, no type error
@@ -482,6 +694,40 @@ zip(C(1,N), C(2,N))
 //│ 				| _  => [N]}
 //│ 			| _  => [N]}}}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ zip([C 1 [N]], [C 2 [N]])
+//│ def zip(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => [N]
+//│ 	| _  => case ys⁰ of {
+//│ 		N  => [N]
+//│ 		| _  => case xs⁰ of {
+//│ 			C xs¹ xt⁰ => case ys⁰ of {
+//│ 				C ys¹ yt⁰ => [C [P2 xs¹ ys¹] zip(xt⁰, yt⁰)]
+//│ 				| _  => [N]}
+//│ 			| _  => [N]}}}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ zip([C 1 [N]], [C 2 [N]])
+//│ def zip(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => [N]
+//│ 	| _  => case ys⁰ of {
+//│ 		N  => [N]
+//│ 		| _  => case xs⁰ of {
+//│ 			C xs¹ xt⁰ => case ys⁰ of {
+//│ 				C ys¹ yt⁰ => [C [P2 xs¹ ys¹] zip(xt⁰, yt⁰)]
+//│ 				| _  => [N]}
+//│ 			| _  => [N]}}}
+//│ <<<<<<< after floating out <<<<<<<
 
 // NOTE: type error: f x = x f cannot be well typed in haskell
 fun f(x) =
@@ -524,6 +770,28 @@ f(C(3, N))
 //│ 	C h⁰ t⁰ => (fun ff² -> [C h⁰ ff²(t⁰)])
 //│ 	| N  => (fun ff³ -> [N])}(f)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f([C 3 [N]])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	C h⁰ t⁰ => (fun ff⁰ -> [C h⁰ ff⁰(t⁰)])
+//│ 	| N  => (fun ff¹ -> [N])}(f)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f([C 3 [N]])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	C h⁰ t⁰ => (fun ff⁰ -> [C h⁰ ff⁰(t⁰)])
+//│ 	| N  => (fun ff¹ -> [N])}(f)
+//│ <<<<<<< after floating out <<<<<<<
 
 // a more minimal example requiring recursive type after fusion
 fun f(x) =
@@ -560,6 +828,26 @@ f(N)
 //│ def f(x¹) = case x¹ of {
 //│ 	N  => (fun ff¹ -> 1)}(f)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f([N])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	N  => (fun ff⁰ -> 1)}(f)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f([N])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	N  => (fun ff⁰ -> 1)}(f)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // FIXME: still have error even after eliminating dead branches and unused definitions, need more
@@ -853,6 +1141,140 @@ words "1 2 4"
 //│ 			let _lh_matchIdent⁷ = break_lh_₁((fun x³ -> polyEq⁰(x³, ' ')), _lh_matchIdent⁶)
 //│ 			in _lh_matchIdent⁷(99)}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ words_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ break_lh_₁ -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ let _lh_matchIdent⁰ = dropWhile_lh_₁((fun x⁰ -> polyEq⁰(x⁰, ' ')), [LH_C '1' [LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]])
+//│ in case _lh_matchIdent⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| _  => 
+//│ 		let _lh_matchIdent¹ = break_lh_₁((fun x¹ -> polyEq⁰(x¹, ' ')), _lh_matchIdent⁰)
+//│ 		in _lh_matchIdent¹(99)}
+//│ def break1_lh_₁(_lh_break1_arg1⁰, _lh_break1_arg2⁰) = case _lh_break1_arg2⁰ of {
+//│ 	LH_N  => [LH_P2 [LH_N] [LH_N]]
+//│ 	| LH_C _lh_break1_LH_C_0⁰ _lh_break1_LH_C_1⁰ => if _lh_break1_arg1⁰(_lh_break1_LH_C_0⁰) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0⁰ _lh_break1_LH_C_1⁰]] else 
+//│ 		let _lh_matchIdent² = break1_lh_₁(_lh_break1_arg1⁰, _lh_break1_LH_C_1⁰)
+//│ 		in case _lh_matchIdent² of {
+//│ 			LH_P2 _lh_break1_LH_P2_0⁰ _lh_break1_LH_P2_1⁰ => [LH_P2 [LH_C _lh_break1_LH_C_0⁰ _lh_break1_LH_P2_0⁰] _lh_break1_LH_P2_1⁰]
+//│ 			| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def break_lh_₁(_lh_break_arg1⁰, _lh_break_arg2⁰) = case _lh_break_arg2⁰ of {
+//│ 	LH_N  => 
+//│ 		let _lh_words_LH_P2_1⁰ = [LH_N]
+//│ 		in let _lh_words_LH_P2_0⁰ = [LH_N]
+//│ 		in (fun _lh_dummy⁰ -> [LH_C _lh_words_LH_P2_0⁰ 
+//│ 			let _lh_matchIdent³ = dropWhile_lh_₁((fun x² -> polyEq⁰(x², ' ')), _lh_words_LH_P2_1⁰)
+//│ 			in case _lh_matchIdent³ of {
+//│ 				LH_N  => [LH_N]
+//│ 				| _  => 
+//│ 					let _lh_matchIdent⁴ = break_lh_₁((fun x³ -> polyEq⁰(x³, ' ')), _lh_matchIdent³)
+//│ 					in _lh_matchIdent⁴(99)}])
+//│ 	| LH_C _lh_break_LH_C_0⁰ _lh_break_LH_C_1⁰ => if _lh_break_arg1⁰(_lh_break_LH_C_0⁰) then 
+//│ 		let _lh_words_LH_P2_1¹ = [LH_C _lh_break_LH_C_0⁰ _lh_break_LH_C_1⁰]
+//│ 		in let _lh_words_LH_P2_0¹ = [LH_N]
+//│ 		in (fun _lh_dummy¹ -> [LH_C _lh_words_LH_P2_0¹ 
+//│ 			let _lh_matchIdent⁵ = dropWhile_lh_₁((fun x⁴ -> polyEq⁰(x⁴, ' ')), _lh_words_LH_P2_1¹)
+//│ 			in case _lh_matchIdent⁵ of {
+//│ 				LH_N  => [LH_N]
+//│ 				| _  => 
+//│ 					let _lh_matchIdent⁶ = break_lh_₁((fun x⁵ -> polyEq⁰(x⁵, ' ')), _lh_matchIdent⁵)
+//│ 					in _lh_matchIdent⁶(99)}]) else 
+//│ 		let _lh_matchIdent⁷ = break1_lh_₁(_lh_break_arg1⁰, _lh_break_LH_C_1⁰)
+//│ 		in case _lh_matchIdent⁷ of {
+//│ 			LH_P2 _lh_break_LH_P2_0⁰ _lh_break_LH_P2_1⁰ => 
+//│ 				let _lh_words_LH_P2_1² = _lh_break_LH_P2_1⁰
+//│ 				in let _lh_words_LH_P2_0² = [LH_C _lh_break_LH_C_0⁰ _lh_break_LH_P2_0⁰]
+//│ 				in (fun _lh_dummy² -> [LH_C _lh_words_LH_P2_0² 
+//│ 					let _lh_matchIdent⁸ = dropWhile_lh_₁((fun x⁶ -> polyEq⁰(x⁶, ' ')), _lh_words_LH_P2_1²)
+//│ 					in case _lh_matchIdent⁸ of {
+//│ 						LH_N  => [LH_N]
+//│ 						| _  => 
+//│ 							let _lh_matchIdent⁹ = break_lh_₁((fun x⁷ -> polyEq⁰(x⁷, ' ')), _lh_matchIdent⁸)
+//│ 							in _lh_matchIdent⁹(99)}])
+//│ 			| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def dropWhile_lh_₁(_lh_dropWhile_arg1⁰, _lh_dropWhile_arg2⁰) = case _lh_dropWhile_arg2⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_dropWhile_LH_C_0⁰ _lh_dropWhile_LH_C_1⁰ => if _lh_dropWhile_arg1⁰(_lh_dropWhile_LH_C_0⁰) then dropWhile_lh_₁(_lh_dropWhile_arg1⁰, _lh_dropWhile_LH_C_1⁰) else [LH_C _lh_dropWhile_LH_C_0⁰ _lh_dropWhile_LH_C_1⁰]
+//│ 	| _  => error⁰}
+//│ def words_lh_₁(_lh_words_arg1⁰) = 
+//│ 	let _lh_matchIdent¹⁰ = dropWhile_lh_₁((fun x⁸ -> polyEq⁰(x⁸, ' ')), _lh_words_arg1⁰)
+//│ 	in case _lh_matchIdent¹⁰ of {
+//│ 		LH_N  => [LH_N]
+//│ 		| _  => 
+//│ 			let _lh_matchIdent¹¹ = break_lh_₁((fun x⁹ -> polyEq⁰(x⁹, ' ')), _lh_matchIdent¹⁰)
+//│ 			in _lh_matchIdent¹¹(99)}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ let _lh_matchIdent⁰ = dropWhile_lh_₁((fun x⁰ -> polyEq⁰(x⁰, ' ')), [LH_C '1' [LH_C ' ' [LH_C '2' [LH_C ' ' [LH_C '4' [LH_N]]]]]])
+//│ in case _lh_matchIdent⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| _  => 
+//│ 		let _lh_matchIdent¹ = break_lh_₁((fun x¹ -> polyEq⁰(x¹, ' ')), _lh_matchIdent⁰)
+//│ 		in _lh_matchIdent¹(99)}
+//│ def break1_lh_₁(_lh_break1_arg1⁰, _lh_break1_arg2⁰) = case _lh_break1_arg2⁰ of {
+//│ 	LH_N  => [LH_P2 [LH_N] [LH_N]]
+//│ 	| LH_C _lh_break1_LH_C_0⁰ _lh_break1_LH_C_1⁰ => if _lh_break1_arg1⁰(_lh_break1_LH_C_0⁰) then [LH_P2 [LH_N] [LH_C _lh_break1_LH_C_0⁰ _lh_break1_LH_C_1⁰]] else 
+//│ 		let _lh_matchIdent² = break1_lh_₁(_lh_break1_arg1⁰, _lh_break1_LH_C_1⁰)
+//│ 		in case _lh_matchIdent² of {
+//│ 			LH_P2 _lh_break1_LH_P2_0⁰ _lh_break1_LH_P2_1⁰ => [LH_P2 [LH_C _lh_break1_LH_C_0⁰ _lh_break1_LH_P2_0⁰] _lh_break1_LH_P2_1⁰]
+//│ 			| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def break_lh_₁(_lh_break_arg1⁰, _lh_break_arg2⁰) = case _lh_break_arg2⁰ of {
+//│ 	LH_N  => 
+//│ 		let _lh_words_LH_P2_1⁰ = [LH_N]
+//│ 		in let _lh_words_LH_P2_0⁰ = [LH_N]
+//│ 		in (fun _lh_dummy⁰ -> [LH_C _lh_words_LH_P2_0⁰ 
+//│ 			let _lh_matchIdent³ = dropWhile_lh_₁((fun x² -> polyEq⁰(x², ' ')), _lh_words_LH_P2_1⁰)
+//│ 			in case _lh_matchIdent³ of {
+//│ 				LH_N  => [LH_N]
+//│ 				| _  => 
+//│ 					let _lh_matchIdent⁴ = break_lh_₁((fun x³ -> polyEq⁰(x³, ' ')), _lh_matchIdent³)
+//│ 					in _lh_matchIdent⁴(99)}])
+//│ 	| LH_C _lh_break_LH_C_0⁰ _lh_break_LH_C_1⁰ => if _lh_break_arg1⁰(_lh_break_LH_C_0⁰) then 
+//│ 		let _lh_words_LH_P2_1¹ = [LH_C _lh_break_LH_C_0⁰ _lh_break_LH_C_1⁰]
+//│ 		in let _lh_words_LH_P2_0¹ = [LH_N]
+//│ 		in (fun _lh_dummy¹ -> [LH_C _lh_words_LH_P2_0¹ 
+//│ 			let _lh_matchIdent⁵ = dropWhile_lh_₁((fun x⁴ -> polyEq⁰(x⁴, ' ')), _lh_words_LH_P2_1¹)
+//│ 			in case _lh_matchIdent⁵ of {
+//│ 				LH_N  => [LH_N]
+//│ 				| _  => 
+//│ 					let _lh_matchIdent⁶ = break_lh_₁((fun x⁵ -> polyEq⁰(x⁵, ' ')), _lh_matchIdent⁵)
+//│ 					in _lh_matchIdent⁶(99)}]) else 
+//│ 		let _lh_matchIdent⁷ = break1_lh_₁(_lh_break_arg1⁰, _lh_break_LH_C_1⁰)
+//│ 		in case _lh_matchIdent⁷ of {
+//│ 			LH_P2 _lh_break_LH_P2_0⁰ _lh_break_LH_P2_1⁰ => 
+//│ 				let _lh_words_LH_P2_1² = _lh_break_LH_P2_1⁰
+//│ 				in let _lh_words_LH_P2_0² = [LH_C _lh_break_LH_C_0⁰ _lh_break_LH_P2_0⁰]
+//│ 				in (fun _lh_dummy² -> [LH_C _lh_words_LH_P2_0² 
+//│ 					let _lh_matchIdent⁸ = dropWhile_lh_₁((fun x⁶ -> polyEq⁰(x⁶, ' ')), _lh_words_LH_P2_1²)
+//│ 					in case _lh_matchIdent⁸ of {
+//│ 						LH_N  => [LH_N]
+//│ 						| _  => 
+//│ 							let _lh_matchIdent⁹ = break_lh_₁((fun x⁷ -> polyEq⁰(x⁷, ' ')), _lh_matchIdent⁸)
+//│ 							in _lh_matchIdent⁹(99)}])
+//│ 			| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def dropWhile_lh_₁(_lh_dropWhile_arg1⁰, _lh_dropWhile_arg2⁰) = case _lh_dropWhile_arg2⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_dropWhile_LH_C_0⁰ _lh_dropWhile_LH_C_1⁰ => if _lh_dropWhile_arg1⁰(_lh_dropWhile_LH_C_0⁰) then dropWhile_lh_₁(_lh_dropWhile_arg1⁰, _lh_dropWhile_LH_C_1⁰) else [LH_C _lh_dropWhile_LH_C_0⁰ _lh_dropWhile_LH_C_1⁰]
+//│ 	| _  => error⁰}
+//│ def words_lh_₁(_lh_words_arg1⁰) = 
+//│ 	let _lh_matchIdent¹⁰ = dropWhile_lh_₁((fun x⁸ -> polyEq⁰(x⁸, ' ')), _lh_words_arg1⁰)
+//│ 	in case _lh_matchIdent¹⁰ of {
+//│ 		LH_N  => [LH_N]
+//│ 		| _  => 
+//│ 			let _lh_matchIdent¹¹ = break_lh_₁((fun x⁹ -> polyEq⁰(x⁹, ' ')), _lh_matchIdent¹⁰)
+//│ 			in _lh_matchIdent¹¹(99)}
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
@@ -1370,6 +1792,84 @@ words(C(2, C(1, C(2, C(1, C(2, N))))))
 //│ 	N  => [N]
 //│ 	| s'⁰ => break((fun x⁵ -> (x⁵ == 1)), s'⁰, 99)}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ words
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ break -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ case dropWhile((fun x⁰ -> (x⁰ == 1)), [C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]]) of {
+//│ 	N  => [N]
+//│ 	| s'⁰ => break((fun x¹ -> (x¹ == 1)), s'⁰, 99)}
+//│ def break(p⁰, ls⁰) = case ls⁰ of {
+//│ 	N  => 
+//│ 		let s''⁰ = [N]
+//│ 		in let w⁰ = [N]
+//│ 		in (fun _lh_dummy⁰ -> [C w⁰ case dropWhile((fun x² -> (x² == 1)), s''⁰) of {
+//│ 			N  => [N]
+//│ 			| s'¹ => break((fun x³ -> (x³ == 1)), s'¹, 99)}])
+//│ 	| C x⁴ xs⁰ => if p⁰(x⁴) then 
+//│ 		let s''¹ = [C x⁴ xs⁰]
+//│ 		in let w¹ = [N]
+//│ 		in (fun _lh_dummy¹ -> [C w¹ case dropWhile((fun x⁵ -> (x⁵ == 1)), s''¹) of {
+//│ 			N  => [N]
+//│ 			| s'² => break((fun x⁶ -> (x⁶ == 1)), s'², 99)}]) else case break1(p⁰, xs⁰) of {
+//│ 		P ys⁰ zs⁰ => 
+//│ 			let s''² = zs⁰
+//│ 			in let w² = [C x⁴ ys⁰]
+//│ 			in (fun _lh_dummy² -> [C w² case dropWhile((fun x⁷ -> (x⁷ == 1)), s''²) of {
+//│ 				N  => [N]
+//│ 				| s'³ => break((fun x⁸ -> (x⁸ == 1)), s'³, 99)}])}}
+//│ def break1(p¹, ls¹) = case ls¹ of {
+//│ 	N  => [P [N] [N]]
+//│ 	| C x⁹ xs¹ => if p¹(x⁹) then [P [N] [C x⁹ xs¹]] else case break1(p¹, xs¹) of {
+//│ 		P ys¹ zs¹ => [P [C x⁹ ys¹] zs¹]}}
+//│ def dropWhile(f⁰, ls²) = case ls² of {
+//│ 	N  => [N]
+//│ 	| C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}
+//│ def words(s⁰) = case dropWhile((fun x¹⁰ -> (x¹⁰ == 1)), s⁰) of {
+//│ 	N  => [N]
+//│ 	| s'⁴ => break((fun x¹¹ -> (x¹¹ == 1)), s'⁴, 99)}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ case dropWhile((fun x⁰ -> (x⁰ == 1)), [C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]]) of {
+//│ 	N  => [N]
+//│ 	| s'⁰ => break((fun x¹ -> (x¹ == 1)), s'⁰, 99)}
+//│ def break(p⁰, ls⁰, _lh_popOutId_0⁰) = case ls⁰ of {
+//│ 	N  => 
+//│ 		let s''⁰ = [N]
+//│ 		in let w⁰ = [N]
+//│ 		in [C w⁰ case dropWhile((fun x² -> (x² == 1)), s''⁰) of {
+//│ 			N  => [N]
+//│ 			| s'¹ => break((fun x³ -> (x³ == 1)), s'¹, 99)}]
+//│ 	| C x⁴ xs⁰ => if p⁰(x⁴) then 
+//│ 		let s''¹ = [C x⁴ xs⁰]
+//│ 		in let w¹ = [N]
+//│ 		in [C w¹ case dropWhile((fun x⁵ -> (x⁵ == 1)), s''¹) of {
+//│ 			N  => [N]
+//│ 			| s'² => break((fun x⁶ -> (x⁶ == 1)), s'², 99)}] else case break1(p⁰, xs⁰) of {
+//│ 		P ys⁰ zs⁰ => 
+//│ 			let s''² = zs⁰
+//│ 			in let w² = [C x⁴ ys⁰]
+//│ 			in [C w² case dropWhile((fun x⁷ -> (x⁷ == 1)), s''²) of {
+//│ 				N  => [N]
+//│ 				| s'³ => break((fun x⁸ -> (x⁸ == 1)), s'³, 99)}]}}
+//│ def break1(p¹, ls¹) = case ls¹ of {
+//│ 	N  => [P [N] [N]]
+//│ 	| C x⁹ xs¹ => if p¹(x⁹) then [P [N] [C x⁹ xs¹]] else case break1(p¹, xs¹) of {
+//│ 		P ys¹ zs¹ => [P [C x⁹ ys¹] zs¹]}}
+//│ def dropWhile(f⁰, ls²) = case ls² of {
+//│ 	N  => [N]
+//│ 	| C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}
+//│ def words(s⁰) = case dropWhile((fun x¹⁰ -> (x¹⁰ == 1)), s⁰) of {
+//│ 	N  => [N]
+//│ 	| s'⁴ => break((fun x¹¹ -> (x¹¹ == 1)), s'⁴, 99)}
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 

@@ -50,6 +50,24 @@ f(a => if (if a is
 //│ f((fun a¹ -> a¹))
 //│ def f(c¹) = [P c¹(0) c¹(0)]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ f -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f((fun a⁰ -> a⁰))
+//│ def f(c⁰) = [P c⁰(0) c⁰(0)]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f((fun a⁰ -> a⁰))
+//│ def f(c⁰) = [P c⁰(0) c⁰(0)]
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT:
@@ -92,6 +110,24 @@ f(a => if a is
 //│ f((fun a¹ -> a¹))
 //│ def f(c¹) = [P c¹([B]) c¹([C])]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ f -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f((fun a⁰ -> a⁰))
+//│ def f(c⁰) = [P c⁰([B]) c⁰([C])]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f((fun a⁰ -> a⁰))
+//│ def f(c⁰) = [P c⁰([B]) c⁰([C])]
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT: after the detection and elimination of multiple matches
 fun f(c) =
@@ -142,6 +178,34 @@ f(a => if a is
 //│ 	A  => [C]}
 //│ 	[P c¹([A]) c¹(aa¹)]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f((fun a⁰ -> case a⁰ of {
+//│ 	A  => [B]}))
+//│ def f(c⁰) = 
+//│ 	let aa⁰ = [A]
+//│ 	in case aa⁰ of {
+//│ 	A  => [C]}
+//│ 	[P c⁰([A]) c⁰(aa⁰)]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f((fun a⁰ -> case a⁰ of {
+//│ 	A  => [B]}))
+//│ def f(c⁰) = 
+//│ 	let aa⁰ = [A]
+//│ 	in case aa⁰ of {
+//│ 	A  => [C]}
+//│ 	[P c⁰([A]) c⁰(aa⁰)]
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT: after the detection and elimination of multiple matches
 fun f(c) = P(c(A), c(B))
@@ -188,6 +252,32 @@ f(a =>
 //│ 		| B  => [C]}]))
 //│ def f(c¹) = [P c¹([A]) c¹([B])]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f((fun a⁰ -> 
+//│ 	primitive⁰(a⁰)
+//│ 	[D case a⁰ of {
+//│ 		A  => [B]
+//│ 		| B  => [C]}]))
+//│ def f(c⁰) = [P c⁰([A]) c⁰([B])]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f((fun a⁰ -> 
+//│ 	primitive⁰(a⁰)
+//│ 	[D case a⁰ of {
+//│ 		A  => [B]
+//│ 		| B  => [C]}]))
+//│ def f(c⁰) = [P c⁰([A]) c⁰([B])]
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT:
@@ -248,6 +338,24 @@ f(a => if (if a is
 //│ f((fun a¹ -> a¹))
 //│ def f(c¹) = [P c¹(0) c¹(1)]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ f -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f((fun a⁰ -> a⁰))
+//│ def f(c⁰) = [P c⁰(0) c⁰(1)]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f((fun a⁰ -> a⁰))
+//│ def f(c⁰) = [P c⁰(0) c⁰(1)]
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT:
 // NOTE: as long as X or Y appears, it will do the fusion correctly
@@ -314,6 +422,24 @@ f(a => if (if a is
 //│ f((fun a¹ -> a¹(99)))
 //│ def f(c¹) = [P c¹((fun _lh_dummy⁰ -> 0)) c¹((fun _lh_dummy¹ -> if (1 > 2) then 0 else 1))]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ f -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f((fun a⁰ -> a⁰(99)))
+//│ def f(c⁰) = [P c⁰((fun _lh_dummy⁰ -> 0)) c⁰((fun _lh_dummy¹ -> if (1 > 2) then 0 else 1))]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f((fun a⁰ -> a⁰(99)))
+//│ def f(c⁰) = [P c⁰((fun _lh_dummy⁰ -> 0)) c⁰((fun _lh_dummy¹ -> if (1 > 2) then 0 else 1))]
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT: after the detection and elimination of multiple matches
 // NOTE: but maybe can be further fused by the idea below
@@ -377,6 +503,28 @@ f(a => if (if a is
 //│ 	| Y  => 1}))
 //│ def f(c¹) = [P c¹([X]) c¹(primitive⁰)]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ f -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f((fun a⁰ -> case a⁰ of {
+//│ 	X  => 0
+//│ 	| Y  => 1}))
+//│ def f(c⁰) = [P c⁰([X]) c⁰(primitive⁰)]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f((fun a⁰ -> case a⁰ of {
+//│ 	X  => 0
+//│ 	| Y  => 1}))
+//│ def f(c⁰) = [P c⁰([X]) c⁰(primitive⁰)]
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT: after the detection and elimination of multiple matches
 fun f(c) = P(c(X), c(primitive))
@@ -435,6 +583,40 @@ f(a => g(a))
 //│ 	X  => primitive⁰
 //│ 	| Y  => 2}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f((fun a⁰ -> g(a⁰)))
+//│ def f(c⁰) = [P c⁰([X]) c⁰(primitive⁰)]
+//│ def g(x⁰) = 
+//│ 	h(x⁰)
+//│ 	case x⁰ of {
+//│ 		X  => 0
+//│ 		| Y  => 1}
+//│ def h(y⁰) = case y⁰ of {
+//│ 	X  => primitive⁰
+//│ 	| Y  => 2}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f((fun a⁰ -> g(a⁰)))
+//│ def f(c⁰) = [P c⁰([X]) c⁰(primitive⁰)]
+//│ def g(x⁰) = 
+//│ 	h(x⁰)
+//│ 	case x⁰ of {
+//│ 		X  => 0
+//│ 		| Y  => 1}
+//│ def h(y⁰) = case y⁰ of {
+//│ 	X  => primitive⁰
+//│ 	| Y  => 2}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT: after the detection and elimination of multiple matches
@@ -486,6 +668,28 @@ f(A)(C(K))
 //│ def g(y²) = case y² of {
 //│ 	C y¹ => y¹}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ f
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ [C [K]]
+//│ def f(cond⁰) = cond⁰
+//│ def g(y⁰) = case y⁰ of {
+//│ 	C y¹ => y¹}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ [C [K]]
+//│ def f(cond⁰) = cond⁰
+//│ def g(y⁰) = case y⁰ of {
+//│ 	C y¹ => y¹}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // WRONG: here, we duplicate the consumer at the current approach/lazy eval?
@@ -536,6 +740,28 @@ f(C(A))
 //│ def g(y¹) = case y¹ of {
 //│ 	C a⁰ => a⁰}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f([C [A]])
+//│ def f(x⁰) = if primitive⁰ then x⁰ else g(x⁰)
+//│ def g(y⁰) = case y⁰ of {
+//│ 	C a⁰ => a⁰}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f([C [A]])
+//│ def f(x⁰) = if primitive⁰ then x⁰ else g(x⁰)
+//│ def g(y⁰) = case y⁰ of {
+//│ 	C a⁰ => a⁰}
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT: after the detection and elimination of multiple matches
 fun p(x) =
@@ -611,6 +837,42 @@ c(p(0))
 //│ 	in f(temp¹)
 //│ 	temp¹
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ c(p(0))
+//│ def c(xx⁰) = case xx⁰ of {
+//│ 	C aa⁰ => primitive⁰(aa⁰)
+//│ 	| N  => [N]}
+//│ def f(z⁰) = case z⁰ of {
+//│ 	C b⁰ => b⁰
+//│ 	| N  => 1}
+//│ def p(x⁰) = if (x⁰ == 0) then [N] else if (x⁰ >= 2) then [C p((x⁰ - 1))] else 
+//│ 	let temp⁰ = [C p((x⁰ + 1))]
+//│ 	in f(temp⁰)
+//│ 	temp⁰
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ c(p(0))
+//│ def c(xx⁰) = case xx⁰ of {
+//│ 	C aa⁰ => primitive⁰(aa⁰)
+//│ 	| N  => [N]}
+//│ def f(z⁰) = case z⁰ of {
+//│ 	C b⁰ => b⁰
+//│ 	| N  => 1}
+//│ def p(x⁰) = if (x⁰ == 0) then [N] else if (x⁰ >= 2) then [C p((x⁰ - 1))] else 
+//│ 	let temp⁰ = [C p((x⁰ + 1))]
+//│ 	in f(temp⁰)
+//│ 	temp⁰
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT: after the detection and elimination of multiple matches
@@ -661,6 +923,32 @@ f(C)
 //│ def h(xh¹) = case xh¹ of {
 //│ 	C  => [H]}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f([C])
+//│ def f(xf⁰) = if primitive⁰ then g(xf⁰) else h(xf⁰)
+//│ def g(xg⁰) = case xg⁰ of {
+//│ 	C  => [G]}
+//│ def h(xh⁰) = case xh⁰ of {
+//│ 	C  => [H]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f([C])
+//│ def f(xf⁰) = if primitive⁰ then g(xf⁰) else h(xf⁰)
+//│ def g(xg⁰) = case xg⁰ of {
+//│ 	C  => [G]}
+//│ def h(xh⁰) = case xh⁰ of {
+//│ 	C  => [H]}
+//│ <<<<<<< after floating out <<<<<<<
 
 // WRONG: wrong knots, because the knots are tied using only one
 // of the many variables in this function definition
@@ -706,3 +994,27 @@ f(t)
 //│ 		T b⁰ ll⁰ rr⁰ => [T a⁰ [T b⁰ f(rr⁰) f(ll⁰)] f(l⁰)]}}
 //│ def t = [T [X] [T [Y] t t] t]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f(t)
+//│ def f(x⁰) = case x⁰ of {
+//│ 	T a⁰ l⁰ r⁰ => case r⁰ of {
+//│ 		T b⁰ ll⁰ rr⁰ => [T a⁰ [T b⁰ f(rr⁰) f(ll⁰)] f(l⁰)]}}
+//│ def t = [T [X] [T [Y] t t] t]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f(t)
+//│ def f(x⁰) = case x⁰ of {
+//│ 	T a⁰ l⁰ r⁰ => case r⁰ of {
+//│ 		T b⁰ ll⁰ rr⁰ => [T a⁰ [T b⁰ f(rr⁰) f(ll⁰)] f(l⁰)]}}
+//│ def t = [T [X] [T [Y] t t] t]
+//│ <<<<<<< after floating out <<<<<<<

@@ -52,6 +52,36 @@ flatten
 //│ 	LH_C h⁰ t⁰ => [LH_C h⁰ mappend_lh_₁(t⁰, ys¹)]
 //│ 	| LH_N  => ys¹}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ flatten_lh_₁
+//│ def flatten_lh_₁(_lh_flatten_arg1⁰) = case _lh_flatten_arg1⁰ of {
+//│ 	Leaf _lh_flatten_Leaf_0⁰ => [LH_C _lh_flatten_Leaf_0⁰ [LH_N]]
+//│ 	| Node _lh_flatten_Node_0⁰ _lh_flatten_Node_1⁰ => mappend_lh_₁(flatten_lh_₁(_lh_flatten_Node_0⁰), flatten_lh_₁(_lh_flatten_Node_1⁰))
+//│ 	| _  => error⁰}
+//│ def mappend_lh_₁(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	LH_C h⁰ t⁰ => [LH_C h⁰ mappend_lh_₁(t⁰, ys⁰)]
+//│ 	| LH_N  => ys⁰}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ flatten_lh_₁
+//│ def flatten_lh_₁(_lh_flatten_arg1⁰) = case _lh_flatten_arg1⁰ of {
+//│ 	Leaf _lh_flatten_Leaf_0⁰ => [LH_C _lh_flatten_Leaf_0⁰ [LH_N]]
+//│ 	| Node _lh_flatten_Node_0⁰ _lh_flatten_Node_1⁰ => mappend_lh_₁(flatten_lh_₁(_lh_flatten_Node_0⁰), flatten_lh_₁(_lh_flatten_Node_1⁰))
+//│ 	| _  => error⁰}
+//│ def mappend_lh_₁(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	LH_C h⁰ t⁰ => [LH_C h⁰ mappend_lh_₁(t⁰, ys⁰)]
+//│ 	| LH_N  => ys⁰}
+//│ <<<<<<< after floating out <<<<<<<
 
 // NOTE: using accumulating parameter
 :lhInHaskell
@@ -87,6 +117,30 @@ flatten
 //│ 	| Node _lh_flatten_Node_0⁰ _lh_flatten_Node_1⁰ => flatten_lh_₁(_lh_flatten_Node_0⁰, flatten_lh_₁(_lh_flatten_Node_1⁰, _lh_flatten_arg2¹))
 //│ 	| _  => error⁰}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ flatten_lh_₁
+//│ def flatten_lh_₁(_lh_flatten_arg1⁰, _lh_flatten_arg2⁰) = case _lh_flatten_arg1⁰ of {
+//│ 	Leaf _lh_flatten_Leaf_0⁰ => [LH_C _lh_flatten_Leaf_0⁰ _lh_flatten_arg2⁰]
+//│ 	| Node _lh_flatten_Node_0⁰ _lh_flatten_Node_1⁰ => flatten_lh_₁(_lh_flatten_Node_0⁰, flatten_lh_₁(_lh_flatten_Node_1⁰, _lh_flatten_arg2⁰))
+//│ 	| _  => error⁰}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ flatten_lh_₁
+//│ def flatten_lh_₁(_lh_flatten_arg1⁰, _lh_flatten_arg2⁰) = case _lh_flatten_arg1⁰ of {
+//│ 	Leaf _lh_flatten_Leaf_0⁰ => [LH_C _lh_flatten_Leaf_0⁰ _lh_flatten_arg2⁰]
+//│ 	| Node _lh_flatten_Node_0⁰ _lh_flatten_Node_1⁰ => flatten_lh_₁(_lh_flatten_Node_0⁰, flatten_lh_₁(_lh_flatten_Node_1⁰, _lh_flatten_arg2⁰))
+//│ 	| _  => error⁰}
+//│ <<<<<<< after floating out <<<<<<<
 
 // NOTE: using higer order function (which is essentially the same as the above one?)
 :lhInHaskell
@@ -125,6 +179,32 @@ flatten
 //│ 	| Node _lh_walk_Node_0⁰ _lh_walk_Node_1⁰ => (fun _lh_funcomp_x¹ -> walk_lh_₁(_lh_walk_Node_0⁰, walk_lh_₁(_lh_walk_Node_1⁰, _lh_funcomp_x¹)))
 //│ 	| _  => error⁰}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ flatten_lh_₁
+//│ def flatten_lh_₁(_lh_flatten_arg1⁰) = walk_lh_₁(_lh_flatten_arg1⁰, [LH_N])
+//│ def walk_lh_₁(_lh_walk_arg1⁰) = case _lh_walk_arg1⁰ of {
+//│ 	Leaf _lh_walk_Leaf_0⁰ => (fun t⁰ -> [LH_C _lh_walk_Leaf_0⁰ t⁰])
+//│ 	| Node _lh_walk_Node_0⁰ _lh_walk_Node_1⁰ => (fun _lh_funcomp_x⁰ -> walk_lh_₁(_lh_walk_Node_0⁰, walk_lh_₁(_lh_walk_Node_1⁰, _lh_funcomp_x⁰)))
+//│ 	| _  => error⁰}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ flatten_lh_₁
+//│ def flatten_lh_₁(_lh_flatten_arg1⁰) = walk_lh_₁(_lh_flatten_arg1⁰, [LH_N])
+//│ def walk_lh_₁(_lh_walk_arg1⁰) = case _lh_walk_arg1⁰ of {
+//│ 	Leaf _lh_walk_Leaf_0⁰ => (fun t⁰ -> [LH_C _lh_walk_Leaf_0⁰ t⁰])
+//│ 	| Node _lh_walk_Node_0⁰ _lh_walk_Node_1⁰ => (fun _lh_funcomp_x⁰ -> walk_lh_₁(_lh_walk_Node_0⁰, walk_lh_₁(_lh_walk_Node_1⁰, _lh_funcomp_x⁰)))
+//│ 	| _  => error⁰}
+//│ <<<<<<< after floating out <<<<<<<
 
 // NOTE: defunctionalized,
 // after fusion this will be the same as the above one using higher order function
@@ -186,3 +266,41 @@ flatten
 //│ 		in (fun _lh_apply_arg2³ -> apply_lh_₁(_lh_apply_LamO_0¹, apply_lh_₁(_lh_apply_LamO_1¹, _lh_apply_arg2³)))
 //│ 	| _  => error⁰}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ apply_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ walk_lh_₁ -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ flatten_lh_₁
+//│ def apply_lh_₁(_lh_apply_arg1⁰, _lh_apply_arg2⁰) = _lh_apply_arg1⁰(_lh_apply_arg2⁰)
+//│ def flatten_lh_₁(_lh_flatten_arg1⁰) = walk_lh_₁(_lh_flatten_arg1⁰, [LH_N])
+//│ def walk_lh_₁(_lh_walk_arg1⁰) = case _lh_walk_arg1⁰ of {
+//│ 	Leaf _lh_walk_Leaf_0⁰ => 
+//│ 		let _lh_apply_LamCons_0⁰ = _lh_walk_Leaf_0⁰
+//│ 		in (fun _lh_apply_arg2¹ -> [LH_C _lh_apply_LamCons_0⁰ _lh_apply_arg2¹])
+//│ 	| Node _lh_walk_Node_0⁰ _lh_walk_Node_1⁰ => 
+//│ 		let _lh_apply_LamO_1⁰ = walk_lh_₁(_lh_walk_Node_1⁰)
+//│ 		in let _lh_apply_LamO_0⁰ = walk_lh_₁(_lh_walk_Node_0⁰)
+//│ 		in (fun _lh_apply_arg2² -> _lh_apply_LamO_0⁰(_lh_apply_LamO_1⁰(_lh_apply_arg2²)))
+//│ 	| _  => error⁰}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ flatten_lh_₁
+//│ def apply_lh_₁(_lh_apply_arg1⁰, _lh_apply_arg2⁰) = _lh_apply_arg1⁰(_lh_apply_arg2⁰)
+//│ def flatten_lh_₁(_lh_flatten_arg1⁰) = walk_lh_₁(_lh_flatten_arg1⁰, [LH_N])
+//│ def walk_lh_₁(_lh_walk_arg1⁰) = case _lh_walk_arg1⁰ of {
+//│ 	Leaf _lh_walk_Leaf_0⁰ => 
+//│ 		let _lh_apply_LamCons_0⁰ = _lh_walk_Leaf_0⁰
+//│ 		in (fun _lh_apply_arg2¹ -> [LH_C _lh_apply_LamCons_0⁰ _lh_apply_arg2¹])
+//│ 	| Node _lh_walk_Node_0⁰ _lh_walk_Node_1⁰ => 
+//│ 		let _lh_apply_LamO_1⁰ = walk_lh_₁(_lh_walk_Node_1⁰)
+//│ 		in let _lh_apply_LamO_0⁰ = walk_lh_₁(_lh_walk_Node_0⁰)
+//│ 		in (fun _lh_apply_arg2² -> _lh_apply_LamO_0⁰(_lh_apply_LamO_1⁰(_lh_apply_arg2²)))
+//│ 	| _  => error⁰}
+//│ <<<<<<< after floating out <<<<<<<

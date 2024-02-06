@@ -95,6 +95,46 @@ map(ff, l)
 //│ 	in (fun f² -> [C f²(h¹) map(f², t¹)])
 //│ def map(f¹, ls¹) = ls¹(f¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ ff, map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ l -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ l(ff)
+//│ def ff(x⁰) = x⁰
+//│ def l = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = (fun f¹ -> [N])
+//│ 			in let h⁰ = [TTTT]
+//│ 			in (fun f² -> [C f²(h⁰) t²(f²)])
+//│ 		in let h¹ = [TT]
+//│ 		in (fun f³ -> [C f³(h¹) t¹(f³)])
+//│ 	in let h² = [T]
+//│ 	in (fun f⁴ -> [C f⁴(h²) t⁰(f⁴)])
+//│ def map(f⁰, ls⁰) = ls⁰(f⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ l(ff)
+//│ def ff(x⁰) = x⁰
+//│ def l(f¹) = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = (fun f² -> [N])
+//│ 			in let h⁰ = [TTTT]
+//│ 			in (fun f³ -> [C f³(h⁰) t²(f³)])
+//│ 		in let h¹ = [TT]
+//│ 		in (fun f⁴ -> [C f⁴(h¹) t¹(f⁴)])
+//│ 	in let h² = [T]
+//│ 	in [C f¹(h²) t⁰(f¹)]
+//│ def map(f⁰, ls⁰) = ls⁰(f⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 // NOTE: this way of doing param pushing in is a local change
 _LUMBERHACK_EVAL
@@ -193,6 +233,52 @@ map(ff, l)
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C [T] [C [TT] [C [TTTT] [N]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ l -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ l(ff)
+//│ def ff(x⁰) = case x⁰ of {
+//│ 	K  => [T]
+//│ 	| KK  => [TT]
+//│ 	| KKKK  => [TTTT]}
+//│ def l = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = (fun f¹ -> [N])
+//│ 			in let h⁰ = [KKKK]
+//│ 			in (fun f² -> [C f²(h⁰) t²(f²)])
+//│ 		in let h¹ = [KK]
+//│ 		in (fun f³ -> [C f³(h¹) t¹(f³)])
+//│ 	in let h² = [K]
+//│ 	in (fun f⁴ -> [C f⁴(h²) t⁰(f⁴)])
+//│ def map(f⁰, ls⁰) = ls⁰(f⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ l(ff)
+//│ def ff(x⁰) = case x⁰ of {
+//│ 	K  => [T]
+//│ 	| KK  => [TT]
+//│ 	| KKKK  => [TTTT]}
+//│ def l(f¹) = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = (fun f² -> [N])
+//│ 			in let h⁰ = [KKKK]
+//│ 			in (fun f³ -> [C f³(h⁰) t²(f³)])
+//│ 		in let h¹ = [KK]
+//│ 		in (fun f⁴ -> [C f⁴(h¹) t¹(f⁴)])
+//│ 	in let h² = [K]
+//│ 	in [C f¹(h²) t⁰(f¹)]
+//│ def map(f⁰, ls⁰) = ls⁰(f⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -253,6 +339,34 @@ c(id(p))
 //│ def id2(yy¹) = yy¹
 //│ def p = [C [C [C id2(p)]]]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ c(id(p))
+//│ def c(x⁰) = case x⁰ of {
+//│ 	C a⁰ => case a⁰ of {
+//│ 		C b⁰ => c(b⁰)}}
+//│ def id(y⁰) = id2(y⁰)
+//│ def id2(yy⁰) = yy⁰
+//│ def p = [C [C [C id2(p)]]]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ c(id(p))
+//│ def c(x⁰) = case x⁰ of {
+//│ 	C a⁰ => case a⁰ of {
+//│ 		C b⁰ => c(b⁰)}}
+//│ def id(y⁰) = id2(y⁰)
+//│ def id2(yy⁰) = yy⁰
+//│ def p = [C [C [C id2(p)]]]
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // WRONG: no polymorphism
@@ -296,6 +410,32 @@ id(c)(id(p))
 //│ 	let i¹ = p
 //│ 	in (fun _lh_dummy⁰ -> c(i¹))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ c
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ p -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ id(c, id(p))
+//│ def c(a⁰) = a⁰(99)
+//│ def id(x⁰) = x⁰
+//│ def p = 
+//│ 	let i⁰ = p
+//│ 	in (fun _lh_dummy⁰ -> i⁰(99))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ id(c, id(p))
+//│ def c(a⁰) = a⁰(99)
+//│ def id(x⁰) = x⁰
+//│ def p = 
+//│ 	let i⁰ = p
+//│ 	in (fun _lh_dummy⁰ -> i⁰(99))
+//│ <<<<<<< after floating out <<<<<<<
 //│ !!!!!!ERROR!!!!!!
 //│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
@@ -339,6 +479,28 @@ c(p)
 //│ 	Pair a⁰ b⁰ => c([Pair b⁰ a⁰])}
 //│ def p = [Pair [A] [B]]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ c(p)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	Pair a⁰ b⁰ => c([Pair b⁰ a⁰])}
+//│ def p = [Pair [A] [B]]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ c(p)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	Pair a⁰ b⁰ => c([Pair b⁰ a⁰])}
+//│ def p = [Pair [A] [B]]
+//│ <<<<<<< after floating out <<<<<<<
 
 // WRONG: before the filter of strategies, 
 // it returns something like: C(1, C(9, C(2, ys => ys)))
@@ -401,6 +563,28 @@ inter(C(1, C(2, N)))(C(9, N))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 1 [C 9 [C 2 [N]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ inter([C 1 [C 2 [N]]], [C 9 [N]])
+//│ def inter(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ inter([C 1 [C 2 [N]]], [C 9 [N]])
+//│ def inter(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // WRONG:
@@ -479,6 +663,34 @@ typeCheck(inter(C(1, C(2, N)))(C(9, N)))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [OK]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ typeCheck(inter([C 1 [C 2 [N]]], [C 9 [N]]))
+//│ def inter(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}
+//│ def typeCheck(ls⁰) = case ls⁰ of {
+//│ 	C a⁰ b⁰ => typeCheck(b⁰)
+//│ 	| N  => [OK]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ typeCheck(inter([C 1 [C 2 [N]]], [C 9 [N]]))
+//│ def inter(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}
+//│ def typeCheck(ls⁰) = case ls⁰ of {
+//│ 	C a⁰ b⁰ => typeCheck(b⁰)
+//│ 	| N  => [OK]}
+//│ <<<<<<< after floating out <<<<<<<
 
 // TODO: seems to be correct
 _LUMBERHACK_EVAL
@@ -577,6 +789,54 @@ idxSum(rev(C(A, C(B, C(C, N))), N))(0)
 //│ >>>>>>> evaluate >>>>>>>
 //│ 3
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev, idxSum
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ let tt⁰ = 	
+//│ 	let tt¹ = 	
+//│ 		let tt² = (fun a⁰ -> a⁰)
+//│ 		in let hh⁰ = [C]
+//│ 		in (fun a¹ -> tt²(
+//│ 			let t⁰ = a¹
+//│ 			in (fun acc⁰ -> (acc⁰ + t⁰((acc⁰ + 1))))))
+//│ 	in let hh¹ = [B]
+//│ 	in (fun a² -> tt¹(
+//│ 		let t¹ = a²
+//│ 		in (fun acc¹ -> (acc¹ + t¹((acc¹ + 1))))))
+//│ in let hh² = [A]
+//│ in tt⁰(
+//│ 	let t² = (fun acc² -> 0)
+//│ 	in (fun acc³ -> (acc³ + t²((acc³ + 1)))), 0)
+//│ def idxSum(ls⁰) = ls⁰
+//│ def rev(lss⁰) = lss⁰
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ let tt⁰ = 	
+//│ 	let tt¹ = 	
+//│ 		let tt² = (fun a⁰ -> a⁰)
+//│ 		in let hh⁰ = [C]
+//│ 		in (fun a¹ -> tt²(
+//│ 			let t⁰ = a¹
+//│ 			in (fun acc⁰ -> (acc⁰ + t⁰((acc⁰ + 1))))))
+//│ 	in let hh¹ = [B]
+//│ 	in (fun a² -> tt¹(
+//│ 		let t¹ = a²
+//│ 		in (fun acc¹ -> (acc¹ + t¹((acc¹ + 1))))))
+//│ in let hh² = [A]
+//│ in tt⁰(
+//│ 	let t² = (fun acc² -> 0)
+//│ 	in (fun acc³ -> (acc³ + t²((acc³ + 1)))), 0)
+//│ def idxSum(ls⁰) = ls⁰
+//│ def rev(lss⁰) = lss⁰
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // WRONG: type
@@ -629,6 +889,34 @@ c(id(p))
 //│ 	| _  => id([ID x¹])}
 //│ def p = [C p]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ c(id(p))
+//│ def c(y⁰) = case y⁰ of {
+//│ 	C aa⁰ => c(aa⁰)}
+//│ def id(x⁰) = case x⁰ of {
+//│ 	ID b⁰ => b⁰
+//│ 	| _  => id([ID x⁰])}
+//│ def p = [C p]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ c(id(p))
+//│ def c(y⁰) = case y⁰ of {
+//│ 	C aa⁰ => c(aa⁰)}
+//│ def id(x⁰) = case x⁰ of {
+//│ 	ID b⁰ => b⁰
+//│ 	| _  => id([ID x⁰])}
+//│ def p = [C p]
+//│ <<<<<<< after floating out <<<<<<<
 //│ !!!!!!ERROR!!!!!!
 //│ java.lang.Exception: expect to fail but pass
 //│ !!!!!!ERROR!!!!!!
@@ -688,6 +976,32 @@ inter(l1(0))(l2)
 //│ def l1(x¹) = [C 1 [C 2 l1(add⁰(x¹, 1))]]
 //│ def l2 = [C 9 [C 8 l2]]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ inter(l1(0), l2)
+//│ def inter(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}
+//│ def l1(x⁰) = [C 1 [C 2 l1(add⁰(x⁰, 1))]]
+//│ def l2 = [C 9 [C 8 l2]]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ inter(l1(0), l2)
+//│ def inter(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}
+//│ def l1(x⁰) = [C 1 [C 2 l1(add⁰(x⁰, 1))]]
+//│ def l2 = [C 9 [C 8 l2]]
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // WRONG: explosion on branch and recursive strategies, and timeout
@@ -777,6 +1091,52 @@ max(C(1, C(3, C(2, N))))(0)
 //│ 		| False  => max(t¹, m²)}), 0)
 //│ def max(ms¹) = ms¹
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ max
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ let t⁰ = 	
+//│ 	let t¹ = 	
+//│ 		let t² = (fun m⁰ -> m⁰)
+//│ 		in let h⁰ = 2
+//│ 		in (fun m¹ -> case (h⁰ > m¹) of {
+//│ 			True  => t²(h⁰)
+//│ 			| False  => t²(m¹)})
+//│ 	in let h¹ = 3
+//│ 	in (fun m² -> case (h¹ > m²) of {
+//│ 		True  => t¹(h¹)
+//│ 		| False  => t¹(m²)})
+//│ in let h² = 1
+//│ in case (h² > 0) of {
+//│ 	True  => t⁰(h²)
+//│ 	| False  => t⁰(0)}
+//│ def max(ms⁰) = ms⁰
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ let t⁰ = 	
+//│ 	let t¹ = 	
+//│ 		let t² = (fun m⁰ -> m⁰)
+//│ 		in let h⁰ = 2
+//│ 		in (fun m¹ -> case (h⁰ > m¹) of {
+//│ 			True  => t²(h⁰)
+//│ 			| False  => t²(m¹)})
+//│ 	in let h¹ = 3
+//│ 	in (fun m² -> case (h¹ > m²) of {
+//│ 		True  => t¹(h¹)
+//│ 		| False  => t¹(m²)})
+//│ in let h² = 1
+//│ in case (h² > 0) of {
+//│ 	True  => t⁰(h²)
+//│ 	| False  => t⁰(0)}
+//│ def max(ms⁰) = ms⁰
+//│ <<<<<<< after floating out <<<<<<<
 
 // WRONG: multiple match
 fun last(ls) = if ls is
@@ -836,6 +1196,32 @@ last(C(1, C(2, C(3, N))))
 //│ 		| C hh⁰ tt⁰ => last(t⁰)}
 //│ 	| N  => [None]}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ last([C 1 [C 2 [C 3 [N]]]])
+//│ def last(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => case t⁰ of {
+//│ 		N  => [Some h⁰]
+//│ 		| C hh⁰ tt⁰ => last(t⁰)}
+//│ 	| N  => [None]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ last([C 1 [C 2 [C 3 [N]]]])
+//│ def last(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => case t⁰ of {
+//│ 		N  => [Some h⁰]
+//│ 		| C hh⁰ tt⁰ => last(t⁰)}
+//│ 	| N  => [None]}
+//│ <<<<<<< after floating out <<<<<<<
 
 // cannot have asymptotic complexity improvement, but which is a non-goal
 _LUMBERHACK_EVAL
@@ -933,6 +1319,48 @@ rev(C(1, C(2, C(3, N))))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 3 [C 2 [C 1 [N]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = (fun _lh_dummy⁰ -> [N])
+//│ 			in let h⁰ = 3
+//│ 			in (fun _lh_dummy¹ -> concat(t²(99), [C h⁰ [N]]))
+//│ 		in let h¹ = 2
+//│ 		in (fun _lh_dummy² -> concat(t¹(99), [C h¹ [N]]))
+//│ 	in let h² = 1
+//│ 	in (fun _lh_dummy³ -> concat(t⁰(99), [C h² [N]]))(99)
+//│ def concat(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h³ t³ => (fun ys¹ -> [C h³ concat(t³, ys¹)])}
+//│ def rev(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = (fun _lh_dummy⁰ -> [N])
+//│ 			in let h⁰ = 3
+//│ 			in (fun _lh_dummy¹ -> concat(t²(99), [C h⁰ [N]]))
+//│ 		in let h¹ = 2
+//│ 		in (fun _lh_dummy² -> concat(t¹(99), [C h¹ [N]]))
+//│ 	in let h² = 1
+//│ 	in (fun _lh_dummy³ -> concat(t⁰(99), [C h² [N]]))(99)
+//│ def concat(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h³ t³ => (fun ys¹ -> [C h³ concat(t³, ys¹)])}
+//│ def rev(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -991,6 +1419,34 @@ rev(primitive)
 //│ 	C h¹ t¹ => concat(rev(t¹), [C h¹ [N]])
 //│ 	| N  => [N]}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ rev(primitive⁰)
+//│ def concat(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ concat(t⁰, ys¹)])}
+//│ def rev(ls⁰) = case ls⁰ of {
+//│ 	C h¹ t¹ => concat(rev(t¹), [C h¹ [N]])
+//│ 	| N  => [N]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ rev(primitive⁰)
+//│ def concat(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ concat(t⁰, ys¹)])}
+//│ def rev(ls⁰) = case ls⁰ of {
+//│ 	C h¹ t¹ => concat(rev(t¹), [C h¹ [N]])
+//│ 	| N  => [N]}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // WRONG: we can do the fusion, despite that `p` here will be consumed by toplevelResult
@@ -1031,6 +1487,30 @@ main(0)
 //│ def main(y¹) = c(p)
 //│ def p = [C p]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main(0)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	C a⁰ => a⁰}
+//│ def main(y⁰) = c(p)
+//│ def p = [C p]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main(0)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	C a⁰ => a⁰}
+//│ def main(y⁰) = c(p)
+//│ def p = [C p]
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT: as long as the top level result is consumed
 fun f(a) = if primitive then B else a
@@ -1073,3 +1553,29 @@ k
 //│ 	| D  => [E]}
 //│ def k(a³) = g(f(a³))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ k
+//│ def f(a⁰) = if primitive⁰ then [B] else a⁰
+//│ def g(x⁰) = case x⁰ of {
+//│ 	B  => [C]
+//│ 	| D  => [E]}
+//│ def k(a¹) = g(f(a¹))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ k
+//│ def f(a⁰) = if primitive⁰ then [B] else a⁰
+//│ def g(x⁰) = case x⁰ of {
+//│ 	B  => [C]
+//│ 	| D  => [E]}
+//│ def k(a¹) = g(f(a¹))
+//│ <<<<<<< after floating out <<<<<<<

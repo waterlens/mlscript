@@ -168,6 +168,67 @@ testQueen_nofib $ primId 11
 //│ def testQueen_nofib_lh_₁(_lh_testQueen_nofib_arg1¹) = nsoln_lh_₁(_lh_testQueen_nofib_arg1¹)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ recursive consumer: gen_lh_₁
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ enumFromTo_lh_₁ -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testQueen_nofib_lh_₁(primId⁰(11))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let _lh_listcomp_fun_ls_t¹ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
+//│ 	in let _lh_listcomp_fun_ls_h¹ = a⁰
+//│ 	in (fun _lh_listcomp_fun_ls_h² -> (fun _lh_listcomp_fun² -> (fun _lh_listcomp_fun_ls_t² -> (fun _lh_listcomp_fun³ -> if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹))))) else (fun _lh_listcomp_fun_ls_h³ -> (fun _lh_listcomp_fun⁴ -> (fun _lh_listcomp_fun_ls_t³ -> (fun _lh_listcomp_fun⁵ -> _lh_listcomp_fun⁵(_lh_listcomp_fun_ls_t³)))))
+//│ def gen_lh_₁(_lh_gen_arg1⁰, _lh_gen_arg2⁰) = case _lh_gen_arg1⁰ of {
+//│ 	0  => [LH_C [LH_N] [LH_N]]
+//│ 	| _  => 
+//│ 		let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => 
+//│ 				let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> _lh_listcomp_fun_para¹(_lh_listcomp_fun_ls_h⁰, _lh_listcomp_fun¹, _lh_listcomp_fun_ls_t⁰, _lh_listcomp_fun⁰))
+//│ 				in _lh_listcomp_fun¹(enumFromTo_lh_₁(1, _lh_gen_arg2⁰))
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun⁰(gen_lh_₁((_lh_gen_arg1⁰ - 1), _lh_gen_arg2⁰))}
+//│ def length_lh_₁(ls⁰) = case ls⁰ of {
+//│ 	LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰))
+//│ 	| LH_N  => 0}
+//│ def nsoln_lh_₁(_lh_nsoln_arg1⁰) = length_lh_₁(gen_lh_₁(_lh_nsoln_arg1⁰, _lh_nsoln_arg1⁰))
+//│ def safe_lh_₁(_lh_safe_arg1⁰, _lh_safe_arg2⁰, _lh_safe_arg3⁰) = case _lh_safe_arg3⁰ of {
+//│ 	LH_N  => [True]
+//│ 	| LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && safe_lh_₁(_lh_safe_arg1⁰, (_lh_safe_arg2⁰ + 1), _lh_safe_LH_C_1⁰))
+//│ 	| _  => error⁰}
+//│ def testQueen_nofib_lh_₁(_lh_testQueen_nofib_arg1⁰) = nsoln_lh_₁(_lh_testQueen_nofib_arg1⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testQueen_nofib_lh_₁(primId⁰(11))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let _lh_listcomp_fun_ls_t¹ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
+//│ 	in let _lh_listcomp_fun_ls_h¹ = a⁰
+//│ 	in (fun _lh_listcomp_fun_ls_h² -> (fun _lh_listcomp_fun² -> (fun _lh_listcomp_fun_ls_t² -> (fun _lh_listcomp_fun³ -> if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹))))) else (fun _lh_listcomp_fun_ls_h³ -> (fun _lh_listcomp_fun⁴ -> (fun _lh_listcomp_fun_ls_t³ -> (fun _lh_listcomp_fun⁵ -> _lh_listcomp_fun⁵(_lh_listcomp_fun_ls_t³)))))
+//│ def gen_lh_₁(_lh_gen_arg1⁰, _lh_gen_arg2⁰) = case _lh_gen_arg1⁰ of {
+//│ 	0  => [LH_C [LH_N] [LH_N]]
+//│ 	| _  => 
+//│ 		let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => 
+//│ 				let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> _lh_listcomp_fun_para¹(_lh_listcomp_fun_ls_h⁰, _lh_listcomp_fun¹, _lh_listcomp_fun_ls_t⁰, _lh_listcomp_fun⁰))
+//│ 				in _lh_listcomp_fun¹(enumFromTo_lh_₁(1, _lh_gen_arg2⁰))
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun⁰(gen_lh_₁((_lh_gen_arg1⁰ - 1), _lh_gen_arg2⁰))}
+//│ def length_lh_₁(ls⁰) = case ls⁰ of {
+//│ 	LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰))
+//│ 	| LH_N  => 0}
+//│ def nsoln_lh_₁(_lh_nsoln_arg1⁰) = length_lh_₁(gen_lh_₁(_lh_nsoln_arg1⁰, _lh_nsoln_arg1⁰))
+//│ def safe_lh_₁(_lh_safe_arg1⁰, _lh_safe_arg2⁰, _lh_safe_arg3⁰) = case _lh_safe_arg3⁰ of {
+//│ 	LH_N  => [True]
+//│ 	| LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && safe_lh_₁(_lh_safe_arg1⁰, (_lh_safe_arg2⁰ + 1), _lh_safe_LH_C_1⁰))
+//│ 	| _  => error⁰}
+//│ def testQueen_nofib_lh_₁(_lh_testQueen_nofib_arg1⁰) = nsoln_lh_₁(_lh_testQueen_nofib_arg1⁰)
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

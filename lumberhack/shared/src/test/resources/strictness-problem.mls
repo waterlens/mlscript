@@ -41,6 +41,30 @@ head $ [1..3]
 //│ 	LH_C h⁰ t⁰ => h⁰
 //│ 	| LH_N  => error⁰}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ head_lh_₁(enumFromTo_lh_₁(1, 3))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then [LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)] else [LH_N]
+//│ def head_lh_₁(ls⁰) = case ls⁰ of {
+//│ 	LH_C h⁰ t⁰ => h⁰
+//│ 	| LH_N  => error⁰}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ head_lh_₁(enumFromTo_lh_₁(1, 3))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then [LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)] else [LH_N]
+//│ def head_lh_₁(ls⁰) = case ls⁰ of {
+//│ 	LH_C h⁰ t⁰ => h⁰
+//│ 	| LH_N  => error⁰}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // WRONG:
@@ -99,6 +123,36 @@ head ([1] ++ [])
 //│ 	| LH_N  => error⁰}
 //│ def mappend_lh_₁(xs¹, ys³) = xs¹(ys³)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ mappend_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ head_lh_₁(
+//│ 	let t⁰ = (fun ys⁰ -> ys⁰)
+//│ 	in let h⁰ = 1
+//│ 	in (fun ys¹ -> [LH_C h⁰ t⁰(ys¹)])([LH_N]))
+//│ def head_lh_₁(ls⁰) = case ls⁰ of {
+//│ 	LH_C h¹ t¹ => h¹
+//│ 	| LH_N  => error⁰}
+//│ def mappend_lh_₁(xs⁰, ys²) = xs⁰(ys²)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ head_lh_₁(
+//│ 	let t⁰ = (fun ys⁰ -> ys⁰)
+//│ 	in let h⁰ = 1
+//│ 	in (fun ys¹ -> [LH_C h⁰ t⁰(ys¹)])([LH_N]))
+//│ def head_lh_₁(ls⁰) = case ls⁰ of {
+//│ 	LH_C h¹ t¹ => h¹
+//│ 	| LH_N  => error⁰}
+//│ def mappend_lh_₁(xs⁰, ys²) = xs⁰(ys²)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // WRONG:
@@ -144,3 +198,27 @@ head $ f [1] []
 //│ def f_lh_₁(_lh_f_arg1¹, _lh_f_arg2¹) = if [True] then _lh_f_arg1¹ else _lh_f_arg2¹
 //│ def head_lh_₁(ls¹) = ls¹(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ head_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f_lh_₁(
+//│ 	let h⁰ = 1
+//│ 	in (fun _lh_dummy⁰ -> h⁰), (fun _lh_dummy¹ -> error⁰), 99)
+//│ def f_lh_₁(_lh_f_arg1⁰, _lh_f_arg2⁰) = if [True] then _lh_f_arg1⁰ else _lh_f_arg2⁰
+//│ def head_lh_₁(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f_lh_₁(
+//│ 	let h⁰ = 1
+//│ 	in (fun _lh_dummy⁰ -> h⁰), (fun _lh_dummy¹ -> error⁰), 99)
+//│ def f_lh_₁(_lh_f_arg1⁰, _lh_f_arg2⁰) = if [True] then _lh_f_arg1⁰ else _lh_f_arg2⁰
+//│ def head_lh_₁(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<

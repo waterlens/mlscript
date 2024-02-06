@@ -3262,6 +3262,1003 @@ testCalendar_nofib $ primId 100
 //│ 	| LH_N  => [LH_N]}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ concat_lh_₁, map_lh_₃, mappend_lh_₁, mappend_lh_₇, mappend_lh_₁₃, mappend_lh_₈, emptyPic_lh_₄, mappend_lh_₂, zipWith_lh_₂, mappend_lh_₅, emptyPic_lh_₃, pic_lh_₁, emptyPic_lh_₁, emptyPic_lh_₂, mappend_lh_₆, scanl_lh_₁, zip3_lh_₁, zipWith_lh_₁, length_lh_₁, mappend_lh_₁₀
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ mappend_lh_₃ -> 2
+//│ copy_lh_₉ -> 2
+//│ daynames_lh_₁ -> 1
+//│ map_lh_₂ -> 3
+//│ copy_lh_₁₀ -> 2
+//│ side_lh_₂ -> 6
+//│ side_lh_₁ -> 1
+//│ title_lh_₁ -> 2
+//│ unlines_lh_₁ -> 1
+//│ monthLengths_lh_₂ -> 1
+//│ monthNames_lh_₁ -> 0
+//│ banner_lh_₁ -> 2
+//│ end_lh_₁ -> 1
+//│ take_lh_₂ -> 2
+//│ monthLengths_lh_₁ -> 1
+//│ copy_lh_₂ -> 2
+//│ copy_lh_₆ -> 2
+//│ copy_lh_₃ -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testCalendar_nofib_lh_₁(primId⁰(100))
+//│ def banner_lh_₁(_lh_banner_arg1⁰) = 
+//│ 	let t⁸ = (fun ys¹⁴ -> ys¹⁴)
+//│ 	in let h⁷ = cjustify_lh_₁(75, string_of_int⁰(_lh_banner_arg1⁰))
+//│ 	in (fun ys¹⁵ -> 
+//│ 		let t⁹ = t⁸(ys¹⁵)
+//│ 		in let h⁸ = h⁷
+//│ 		in (fun ys¹⁶ -> [LH_C h⁸ t⁹(ys¹⁶)]))(
+//│ 	let _lh_emptyPic_LH_P2_1¹ = 75
+//│ 	in let _lh_emptyPic_LH_P2_0¹ = 1
+//│ 	in (fun _lh_dummy² -> copy_lh_₂(_lh_emptyPic_LH_P2_0¹, copy_lh_₁(_lh_emptyPic_LH_P2_1¹, ' ')))(99))
+//│ def block_lh_₁(_lh_block_arg1⁰, _lh_funcomp_x³) = (fun _lh_funcomp_x⁴ -> stack_lh_₁(map_lh_₄(spread_lh_₁, _lh_funcomp_x⁴)))(groop_lh_₁(_lh_block_arg1⁰, _lh_funcomp_x³))
+//│ def block_lh_₂(_lh_block_arg1¹, _lh_funcomp_x⁵) = (fun _lh_funcomp_x⁶ -> stack_lh_₁(map_lh_₅(spread_lh_₁, _lh_funcomp_x⁶)))(groop_lh_₁(_lh_block_arg1¹, _lh_funcomp_x⁵))
+//│ def body_lh_₁(_lh_funcomp_x⁰) = (fun _lh_funcomp_x¹ -> block_lh_₁(3, _lh_funcomp_x¹((fun _lh_funcomp_x² -> pad_lh_₁(_lh_funcomp_x²(99))))))(months_lh_₁(_lh_funcomp_x⁰))
+//│ def cal_lh_₁(_lh_cal_arg1⁰) = unlines_lh_₁(banner_lh_₁(_lh_cal_arg1⁰, body_lh_₁(_lh_cal_arg1⁰)))
+//│ def cjustify_lh_₁(_lh_cjustify_arg1¹, _lh_cjustify_arg2¹) = 
+//│ 	let m¹ = (_lh_cjustify_arg1¹ - length_lh_₂(_lh_cjustify_arg2¹))
+//│ 	in let halfm¹ = div⁰(m¹, 2)
+//│ 	in mappend_lh_₄(space_lh_₁(halfm¹, _lh_cjustify_arg2¹), space_lh_₂((m¹ - halfm¹)))
+//│ def cjustify_lh_₂(_lh_cjustify_arg1⁰, _lh_cjustify_arg2⁰) = 
+//│ 	let m⁰ = (_lh_cjustify_arg1⁰ - length_lh_₃(_lh_cjustify_arg2⁰))
+//│ 	in let halfm⁰ = div⁰(m⁰, 2)
+//│ 	in mappend_lh_₁₄(mappend_lh_₁₅(space_lh_₄(halfm⁰), _lh_cjustify_arg2⁰), space_lh_₃((m⁰ - halfm⁰)))
+//│ def concat_lh_₁(lss⁰) = lss⁰(99)
+//│ def copy_lh_₁(_lh_copy_arg1², _lh_copy_arg2²) = if (_lh_copy_arg1² > 0) then [LH_C _lh_copy_arg2² copy_lh_₁((_lh_copy_arg1² - 1), _lh_copy_arg2²)] else [LH_N]
+//│ def copy_lh_₁₀(_lh_copy_arg1³, _lh_copy_arg2³) = if (_lh_copy_arg1³ > 0) then 
+//│ 	let tx⁰ = copy_lh_₁₀((_lh_copy_arg1³ - 1), _lh_copy_arg2³)
+//│ 	in let hx⁰ = _lh_copy_arg2³
+//│ 	in (fun f⁷ -> (fun ys²¹ -> case ys²¹ of {
+//│ 		LH_C hy⁰ ty⁰ => 
+//│ 			let tx¹ = tx⁰(f⁷, ty⁰)
+//│ 			in let hx¹ = f⁷(hx⁰, hy⁰)
+//│ 			in (fun f⁸ -> (fun ys²² -> ys²²(f⁸, hx¹, tx¹)))
+//│ 		| LH_N  => (fun f⁹ -> (fun ys²³ -> (fun ys²⁴ -> ys²⁴)))})) else (fun f¹⁰ -> (fun ys²⁵ -> (fun f¹¹ -> (fun ys²⁶ -> (fun ys²⁷ -> ys²⁷)))))
+//│ def copy_lh_₁₁(_lh_copy_arg1⁸, _lh_copy_arg2⁸) = if (_lh_copy_arg1⁸ > 0) then [LH_C _lh_copy_arg2⁸ copy_lh_₁₁((_lh_copy_arg1⁸ - 1), _lh_copy_arg2⁸)] else [LH_N]
+//│ def copy_lh_₂(_lh_copy_arg1⁵, _lh_copy_arg2⁵) = if (_lh_copy_arg1⁵ > 0) then 
+//│ 	let t³³ = copy_lh_₂((_lh_copy_arg1⁵ - 1), _lh_copy_arg2⁵)
+//│ 	in let h³² = _lh_copy_arg2⁵
+//│ 	in (fun ys³³ -> [LH_C h³² t³³(ys³³)]) else (fun ys³⁴ -> ys³⁴)
+//│ def copy_lh_₃(_lh_copy_arg1⁷, _lh_copy_arg2⁷) = if (_lh_copy_arg1⁷ > 0) then 
+//│ 	let t³⁶ = copy_lh_₃((_lh_copy_arg1⁷ - 1), _lh_copy_arg2⁷)
+//│ 	in let h³⁵ = _lh_copy_arg2⁷
+//│ 	in (fun ys³⁷ -> [LH_C h³⁵ t³⁶(ys³⁷)]) else (fun ys³⁸ -> ys³⁸)
+//│ def copy_lh_₄(_lh_copy_arg1¹, _lh_copy_arg2¹) = if (_lh_copy_arg1¹ > 0) then [LH_C _lh_copy_arg2¹ copy_lh_₄((_lh_copy_arg1¹ - 1), _lh_copy_arg2¹)] else [LH_N]
+//│ def copy_lh_₅(_lh_copy_arg1⁴, _lh_copy_arg2⁴) = if (_lh_copy_arg1⁴ > 0) then [LH_C _lh_copy_arg2⁴ copy_lh_₅((_lh_copy_arg1⁴ - 1), _lh_copy_arg2⁴)] else [LH_N]
+//│ def copy_lh_₆(_lh_copy_arg1⁶, _lh_copy_arg2⁶) = if (_lh_copy_arg1⁶ > 0) then 
+//│ 	let ty¹ = copy_lh_₆((_lh_copy_arg1⁶ - 1), _lh_copy_arg2⁶)
+//│ 	in let hy¹ = _lh_copy_arg2⁶
+//│ 	in (fun f²⁹ -> (fun hx² -> (fun tx² -> 
+//│ 		let t³⁴ = tx²(f²⁹, ty¹)
+//│ 		in let h³³ = f²⁹(hx², hy¹)
+//│ 		in (fun ys³⁵ -> [LH_C h³³ t³⁴(ys³⁵)])))) else (fun f³⁰ -> (fun hx³ -> (fun tx³ -> (fun ys³⁶ -> ys³⁶))))
+//│ def copy_lh_₇(_lh_copy_arg1⁹, _lh_copy_arg2⁹) = if (_lh_copy_arg1⁹ > 0) then [LH_C _lh_copy_arg2⁹ copy_lh_₇((_lh_copy_arg1⁹ - 1), _lh_copy_arg2⁹)] else [LH_N]
+//│ def copy_lh_₈(_lh_copy_arg1¹⁰, _lh_copy_arg2¹⁰) = if (_lh_copy_arg1¹⁰ > 0) then [LH_C _lh_copy_arg2¹⁰ copy_lh_₈((_lh_copy_arg1¹⁰ - 1), _lh_copy_arg2¹⁰)] else [LH_N]
+//│ def copy_lh_₉(_lh_copy_arg1⁰, _lh_copy_arg2⁰) = if (_lh_copy_arg1⁰ > 0) then 
+//│ 	let t⁰ = copy_lh_₉((_lh_copy_arg1⁰ - 1), _lh_copy_arg2⁰)
+//│ 	in let h⁰ = _lh_copy_arg2⁰
+//│ 	in (fun ys¹ -> [LH_C h⁰ t⁰(ys¹)]) else (fun ys² -> ys²)
+//│ def date_lh_₁(_lh_date_arg1⁰, _lh_date_arg2⁰) = if ((_lh_date_arg2⁰ < 1) || (_lh_date_arg1⁰ < _lh_date_arg2⁰)) then [LH_C [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_N]]]] [LH_N]] else [LH_C rjustify_lh_₁(3, string_of_int⁰(_lh_date_arg2⁰)) [LH_N]]
+//│ def dates_lh_₁(_lh_dates_arg1⁰, _lh_dates_arg2⁰) = map_lh_₅((fun d⁰ -> date_lh_₁(_lh_dates_arg2⁰, d⁰)), enumFromTo_lh_₁((1 - _lh_dates_arg1⁰), (42 - _lh_dates_arg1⁰)))
+//│ def daynames_lh_₁ = 
+//│ 	let t⁶ = (fun ys¹¹ -> ys¹¹)
+//│ 	in let h⁵ = [LH_C ' ' [LH_C 'S' [LH_C 'u' [LH_C ' ' [LH_C 'M' [LH_C 'o' [LH_C ' ' [LH_C 'T' [LH_C 'u' [LH_C ' ' [LH_C 'W' [LH_C 'e' [LH_C ' ' [LH_C 'T' [LH_C 'h' [LH_C ' ' [LH_C 'F' [LH_C 'r' [LH_C ' ' [LH_C 'S' [LH_C 'a' [LH_N]]]]]]]]]]]]]]]]]]]]]]
+//│ 	in (fun ys¹² -> [LH_C h⁵ t⁶(ys¹²)])
+//│ def drop_lh_₁(_lh_drop_arg1⁰, _lh_drop_arg2⁰) = case _lh_drop_arg2⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰ => if (_lh_drop_arg1⁰ > 0) then drop_lh_₁((_lh_drop_arg1⁰ - 1), _lh_drop_LH_C_1⁰) else _lh_drop_LH_C_1⁰
+//│ 	| _  => error⁰}
+//│ def emptyPic_lh_₁(_lh_emptyPic_arg1²) = _lh_emptyPic_arg1²(99)
+//│ def emptyPic_lh_₂(_lh_emptyPic_arg1¹) = _lh_emptyPic_arg1¹(99)
+//│ def emptyPic_lh_₃(_lh_emptyPic_arg1³) = _lh_emptyPic_arg1³(99)
+//│ def emptyPic_lh_₄(_lh_emptyPic_arg1⁰) = _lh_emptyPic_arg1⁰(99)
+//│ def end_lh_₁(_lh_end_arg1⁰) = 
+//│ 	let _lh_emptyPic_LH_P2_1² = 25
+//│ 	in let _lh_emptyPic_LH_P2_0² = 1
+//│ 	in (fun _lh_dummy³ -> copy_lh_₈(_lh_emptyPic_LH_P2_0², copy_lh_₇(_lh_emptyPic_LH_P2_1², ' ')))(99)
+//│ def entries_lh_₁(_lh_entries_arg1⁰, _lh_entries_arg2⁰) = block_lh_₂(7, dates_lh_₁(_lh_entries_arg1⁰, _lh_entries_arg2⁰))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then [LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)] else [LH_N]
+//│ def firstDays_lh_₁(_lh_firstDays_arg1⁰) = take_lh_₂(12, map_lh_₅((fun a¹ -> (a¹ % 7)), [LH_C jan1st_lh_₁(_lh_firstDays_arg1⁰) 
+//│ 	let _lh_matchIdent³⁷ = monthLengths_lh_₂(_lh_firstDays_arg1⁰)
+//│ 	in _lh_matchIdent³⁷((fun a² -> (fun b¹ -> (a² + b¹))), jan1st_lh_₁(_lh_firstDays_arg1⁰))]))
+//│ def foldr1_lh_₁(_lh_foldr1_arg1⁰, _lh_foldr1_arg2⁰) = case _lh_foldr1_arg2⁰ of {
+//│ 	LH_C _lh_foldr1_LH_C_0⁰ _lh_foldr1_LH_C_1⁰ => foldr_lh_₁(_lh_foldr1_arg1⁰, _lh_foldr1_LH_C_0⁰, _lh_foldr1_LH_C_1⁰)
+//│ 	| _  => error⁰}
+//│ def foldr1_lh_₂(_lh_foldr1_arg1¹, _lh_foldr1_arg2¹) = case _lh_foldr1_arg2¹ of {
+//│ 	LH_C _lh_foldr1_LH_C_0¹ _lh_foldr1_LH_C_1¹ => foldr_lh_₂(_lh_foldr1_arg1¹, _lh_foldr1_LH_C_0¹, _lh_foldr1_LH_C_1¹)
+//│ 	| _  => error⁰}
+//│ def foldr_lh_₁(f⁰, i⁰, ls⁰) = case ls⁰ of {
+//│ 	LH_C h¹ t¹ => f⁰(h¹, foldr_lh_₁(f⁰, i⁰, t¹))
+//│ 	| LH_N  => i⁰}
+//│ def foldr_lh_₂(f², i¹, ls¹) = case ls¹ of {
+//│ 	LH_C h⁴ t⁵ => f²(h⁴, foldr_lh_₂(f², i¹, t⁵))
+//│ 	| LH_N  => i¹}
+//│ def groop_lh_₁(_lh_groop_arg1⁰, _lh_groop_arg2⁰) = case _lh_groop_arg2⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| _  => [LH_C take_lh_₁(_lh_groop_arg1⁰, _lh_groop_arg2⁰) groop_lh_₁(_lh_groop_arg1⁰, drop_lh_₁(_lh_groop_arg1⁰, _lh_groop_arg2⁰))]}
+//│ def jan1st_lh_₁(_lh_jan1st_arg1⁰) = 
+//│ 	let last⁰ = (_lh_jan1st_arg1⁰ - 1)
+//│ 	in (div⁰((div⁰((div⁰((_lh_jan1st_arg1⁰ + last⁰), 4) - last⁰), 100) + last⁰), 400) % 7)
+//│ def leap_lh_₁(_lh_leap_arg1¹) = if ((_lh_leap_arg1¹ % 100) == 0) then ((_lh_leap_arg1¹ % 400) == 0) else ((_lh_leap_arg1¹ % 4) == 0)
+//│ def leap_lh_₂(_lh_leap_arg1⁰) = if ((_lh_leap_arg1⁰ % 100) == 0) then ((_lh_leap_arg1⁰ % 400) == 0) else ((_lh_leap_arg1⁰ % 4) == 0)
+//│ def length_lh_₁(ls⁷) = ls⁷(99)
+//│ def length_lh_₂(ls¹¹) = case ls¹¹ of {
+//│ 	LH_C h³⁹ t⁴¹ => (1 + length_lh_₂(t⁴¹))
+//│ 	| LH_N  => 0}
+//│ def length_lh_₃(ls⁹) = case ls⁹ of {
+//│ 	LH_C h³⁴ t³⁵ => (1 + length_lh_₃(t³⁵))
+//│ 	| LH_N  => 0}
+//│ def map_lh_₁(f¹², ls⁵) = case ls⁵ of {
+//│ 	LH_C h¹⁵ t¹⁶ => [LH_C f¹²(h¹⁵) map_lh_₁(f¹², t¹⁶)]
+//│ 	| LH_N  => [LH_N]}
+//│ def map_lh_₂(f⁶, ls⁴) = case ls⁴ of {
+//│ 	LH_C h¹³ t¹⁴ => 
+//│ 		let t¹⁵ = map_lh_₂(f⁶, t¹⁴)
+//│ 		in let h¹⁴ = f⁶(h¹³)
+//│ 		in (fun _lh_dummy⁴ -> h¹⁴(t¹⁵(99)))
+//│ 	| LH_N  => (fun _lh_dummy⁵ -> (fun _lh_dummy⁶ -> 0))}
+//│ def map_lh_₃(f²⁸, ls⁸) = ls⁸(f²⁸)
+//│ def map_lh_₄(f³¹, ls¹⁰) = case ls¹⁰ of {
+//│ 	LH_C h³⁶ t³⁷ => [LH_C f³¹(h³⁶) map_lh_₄(f³¹, t³⁷)]
+//│ 	| LH_N  => [LH_N]}
+//│ def map_lh_₅(f¹³, ls⁶) = case ls⁶ of {
+//│ 	LH_C h¹⁹ t²⁰ => [LH_C f¹³(h¹⁹) map_lh_₅(f¹³, t²⁰)]
+//│ 	| LH_N  => [LH_N]}
+//│ def mappend_lh_₁(xs⁰, ys⁰) = xs⁰(ys⁰)
+//│ def mappend_lh_₁₀(xs³, ys⁶) = xs³(ys⁶)
+//│ def mappend_lh_₁₁(xs¹⁰, ys¹⁸) = case xs¹⁰ of {
+//│ 	LH_C h¹⁰ t¹¹ => [LH_C h¹⁰ mappend_lh_₁₁(t¹¹, ys¹⁸)]
+//│ 	| LH_N  => ys¹⁸}
+//│ def mappend_lh_₁₂(xs¹⁷, ys⁴⁰) = case xs¹⁷ of {
+//│ 	LH_C h³⁷ t³⁸ => [LH_C h³⁷ mappend_lh_₁₂(t³⁸, ys⁴⁰)]
+//│ 	| LH_N  => ys⁴⁰}
+//│ def mappend_lh_₁₃(xs¹², ys²⁰) = xs¹²(ys²⁰)
+//│ def mappend_lh_₁₄(xs⁸, ys¹³) = case xs⁸ of {
+//│ 	LH_C h⁶ t⁷ => [LH_C h⁶ mappend_lh_₁₄(t⁷, ys¹³)]
+//│ 	| LH_N  => ys¹³}
+//│ def mappend_lh_₁₅(xs¹⁴, ys²⁹) = case xs¹⁴ of {
+//│ 	LH_C h¹⁷ t¹⁸ => [LH_C h¹⁷ mappend_lh_₁₅(t¹⁸, ys²⁹)]
+//│ 	| LH_N  => ys²⁹}
+//│ def mappend_lh_₂(xs⁵, ys⁸) = xs⁵(ys⁸)
+//│ def mappend_lh_₃(xs¹, ys³) = case xs¹ of {
+//│ 	LH_C h² t² => 
+//│ 		let t³ = mappend_lh_₃(t², ys³)
+//│ 		in let h³ = h²
+//│ 		in (fun ys⁴ -> 
+//│ 			let t⁴ = t³(ys⁴)
+//│ 			in (fun _lh_dummy¹ -> (1 + t⁴(99))))
+//│ 	| LH_N  => ys³}
+//│ def mappend_lh_₄(xs¹¹, ys¹⁹) = case xs¹¹ of {
+//│ 	LH_C h¹² t¹³ => [LH_C h¹² mappend_lh_₄(t¹³, ys¹⁹)]
+//│ 	| LH_N  => ys¹⁹}
+//│ def mappend_lh_₅(xs⁶, ys⁹) = xs⁶(ys⁹)
+//│ def mappend_lh_₆(xs⁹, ys¹⁷) = xs⁹(ys¹⁷)
+//│ def mappend_lh_₇(xs⁴, ys⁷) = xs⁴(ys⁷)
+//│ def mappend_lh_₈(xs², ys⁵) = xs²(ys⁵)
+//│ def mappend_lh_₉(xs¹³, ys²⁸) = case xs¹³ of {
+//│ 	LH_C h¹⁶ t¹⁷ => [LH_C h¹⁶ mappend_lh_₉(t¹⁷, ys²⁸)]
+//│ 	| LH_N  => ys²⁸}
+//│ def monthLengths_lh_₁(_lh_monthLengths_arg1¹) = 
+//│ 	let feb¹ = if leap_lh_₁(_lh_monthLengths_arg1¹) then 29 else 28
+//│ 	in let _lh_zip3_LH_C_1¹⁶ = 	
+//│ 		let _lh_zip3_LH_C_1¹⁷ = 	
+//│ 			let _lh_zip3_LH_C_1¹⁸ = 	
+//│ 				let _lh_zip3_LH_C_1¹⁹ = 	
+//│ 					let _lh_zip3_LH_C_1²⁰ = 	
+//│ 						let _lh_zip3_LH_C_1²¹ = 	
+//│ 							let _lh_zip3_LH_C_1²² = 	
+//│ 								let _lh_zip3_LH_C_1²³ = 	
+//│ 									let _lh_zip3_LH_C_1²⁴ = 	
+//│ 										let _lh_zip3_LH_C_1²⁵ = 	
+//│ 											let _lh_zip3_LH_C_1²⁶ = 	
+//│ 												let _lh_zip3_LH_C_1²⁷ = (fun _lh_zip3_LH_C_0¹⁶ -> (fun _lh_zip3_LH_C_0¹⁷ -> (fun _lh_zip3_LH_C_1²⁸ -> (fun _lh_zip3_LH_C_1²⁹ -> (fun f¹⁵ -> [LH_N])))))
+//│ 												in let _lh_zip3_LH_C_0¹⁸ = 31
+//│ 												in (fun _lh_zip3_LH_C_0¹⁹ -> (fun _lh_zip3_LH_C_0²⁰ -> (fun _lh_zip3_LH_C_1³⁰ -> (fun _lh_zip3_LH_C_1³¹ -> 
+//│ 													let t²¹ = 	
+//│ 														let _lh_matchIdent²⁵ = _lh_zip3_LH_C_1³¹
+//│ 														in _lh_matchIdent²⁵(_lh_zip3_LH_C_1³⁰, _lh_zip3_LH_C_1²⁷)
+//│ 													in let h²⁰ = 	
+//│ 														let _lh_pic_LH_P3_2⁰ = _lh_zip3_LH_C_0¹⁸
+//│ 														in let _lh_pic_LH_P3_1⁰ = _lh_zip3_LH_C_0¹⁹
+//│ 														in let _lh_pic_LH_P3_0⁰ = _lh_zip3_LH_C_0²⁰
+//│ 														in (fun _lh_dummy⁸ -> title_lh_₁(_lh_pic_LH_P3_0⁰, table_lh_₁(_lh_pic_LH_P3_1⁰, _lh_pic_LH_P3_2⁰)))
+//│ 													in (fun f¹⁶ -> [LH_C f¹⁶(h²⁰) t²¹(f¹⁶)])))))
+//│ 											in let _lh_zip3_LH_C_0²¹ = 30
+//│ 											in (fun _lh_zip3_LH_C_0²² -> (fun _lh_zip3_LH_C_0²³ -> (fun _lh_zip3_LH_C_1³² -> (fun _lh_zip3_LH_C_1³³ -> 
+//│ 												let t²² = 	
+//│ 													let _lh_matchIdent²⁶ = _lh_zip3_LH_C_1³³
+//│ 													in _lh_matchIdent²⁶(_lh_zip3_LH_C_1³², _lh_zip3_LH_C_1²⁶)
+//│ 												in let h²¹ = 	
+//│ 													let _lh_pic_LH_P3_2¹ = _lh_zip3_LH_C_0²¹
+//│ 													in let _lh_pic_LH_P3_1¹ = _lh_zip3_LH_C_0²²
+//│ 													in let _lh_pic_LH_P3_0¹ = _lh_zip3_LH_C_0²³
+//│ 													in (fun _lh_dummy⁹ -> title_lh_₁(_lh_pic_LH_P3_0¹, table_lh_₁(_lh_pic_LH_P3_1¹, _lh_pic_LH_P3_2¹)))
+//│ 												in (fun f¹⁷ -> [LH_C f¹⁷(h²¹) t²²(f¹⁷)])))))
+//│ 										in let _lh_zip3_LH_C_0²⁴ = 31
+//│ 										in (fun _lh_zip3_LH_C_0²⁵ -> (fun _lh_zip3_LH_C_0²⁶ -> (fun _lh_zip3_LH_C_1³⁴ -> (fun _lh_zip3_LH_C_1³⁵ -> 
+//│ 											let t²³ = 	
+//│ 												let _lh_matchIdent²⁷ = _lh_zip3_LH_C_1³⁵
+//│ 												in _lh_matchIdent²⁷(_lh_zip3_LH_C_1³⁴, _lh_zip3_LH_C_1²⁵)
+//│ 											in let h²² = 	
+//│ 												let _lh_pic_LH_P3_2² = _lh_zip3_LH_C_0²⁴
+//│ 												in let _lh_pic_LH_P3_1² = _lh_zip3_LH_C_0²⁵
+//│ 												in let _lh_pic_LH_P3_0² = _lh_zip3_LH_C_0²⁶
+//│ 												in (fun _lh_dummy¹⁰ -> title_lh_₁(_lh_pic_LH_P3_0², table_lh_₁(_lh_pic_LH_P3_1², _lh_pic_LH_P3_2²)))
+//│ 											in (fun f¹⁸ -> [LH_C f¹⁸(h²²) t²³(f¹⁸)])))))
+//│ 									in let _lh_zip3_LH_C_0²⁷ = 30
+//│ 									in (fun _lh_zip3_LH_C_0²⁸ -> (fun _lh_zip3_LH_C_0²⁹ -> (fun _lh_zip3_LH_C_1³⁶ -> (fun _lh_zip3_LH_C_1³⁷ -> 
+//│ 										let t²⁴ = 	
+//│ 											let _lh_matchIdent²⁸ = _lh_zip3_LH_C_1³⁷
+//│ 											in _lh_matchIdent²⁸(_lh_zip3_LH_C_1³⁶, _lh_zip3_LH_C_1²⁴)
+//│ 										in let h²³ = 	
+//│ 											let _lh_pic_LH_P3_2³ = _lh_zip3_LH_C_0²⁷
+//│ 											in let _lh_pic_LH_P3_1³ = _lh_zip3_LH_C_0²⁸
+//│ 											in let _lh_pic_LH_P3_0³ = _lh_zip3_LH_C_0²⁹
+//│ 											in (fun _lh_dummy¹¹ -> title_lh_₁(_lh_pic_LH_P3_0³, table_lh_₁(_lh_pic_LH_P3_1³, _lh_pic_LH_P3_2³)))
+//│ 										in (fun f¹⁹ -> [LH_C f¹⁹(h²³) t²⁴(f¹⁹)])))))
+//│ 								in let _lh_zip3_LH_C_0³⁰ = 31
+//│ 								in (fun _lh_zip3_LH_C_0³¹ -> (fun _lh_zip3_LH_C_0³² -> (fun _lh_zip3_LH_C_1³⁸ -> (fun _lh_zip3_LH_C_1³⁹ -> 
+//│ 									let t²⁵ = 	
+//│ 										let _lh_matchIdent²⁹ = _lh_zip3_LH_C_1³⁹
+//│ 										in _lh_matchIdent²⁹(_lh_zip3_LH_C_1³⁸, _lh_zip3_LH_C_1²³)
+//│ 									in let h²⁴ = 	
+//│ 										let _lh_pic_LH_P3_2⁴ = _lh_zip3_LH_C_0³⁰
+//│ 										in let _lh_pic_LH_P3_1⁴ = _lh_zip3_LH_C_0³¹
+//│ 										in let _lh_pic_LH_P3_0⁴ = _lh_zip3_LH_C_0³²
+//│ 										in (fun _lh_dummy¹² -> title_lh_₁(_lh_pic_LH_P3_0⁴, table_lh_₁(_lh_pic_LH_P3_1⁴, _lh_pic_LH_P3_2⁴)))
+//│ 									in (fun f²⁰ -> [LH_C f²⁰(h²⁴) t²⁵(f²⁰)])))))
+//│ 							in let _lh_zip3_LH_C_0³³ = 31
+//│ 							in (fun _lh_zip3_LH_C_0³⁴ -> (fun _lh_zip3_LH_C_0³⁵ -> (fun _lh_zip3_LH_C_1⁴⁰ -> (fun _lh_zip3_LH_C_1⁴¹ -> 
+//│ 								let t²⁶ = 	
+//│ 									let _lh_matchIdent³⁰ = _lh_zip3_LH_C_1⁴¹
+//│ 									in _lh_matchIdent³⁰(_lh_zip3_LH_C_1⁴⁰, _lh_zip3_LH_C_1²²)
+//│ 								in let h²⁵ = 	
+//│ 									let _lh_pic_LH_P3_2⁵ = _lh_zip3_LH_C_0³³
+//│ 									in let _lh_pic_LH_P3_1⁵ = _lh_zip3_LH_C_0³⁴
+//│ 									in let _lh_pic_LH_P3_0⁵ = _lh_zip3_LH_C_0³⁵
+//│ 									in (fun _lh_dummy¹³ -> title_lh_₁(_lh_pic_LH_P3_0⁵, table_lh_₁(_lh_pic_LH_P3_1⁵, _lh_pic_LH_P3_2⁵)))
+//│ 								in (fun f²¹ -> [LH_C f²¹(h²⁵) t²⁶(f²¹)])))))
+//│ 						in let _lh_zip3_LH_C_0³⁶ = 30
+//│ 						in (fun _lh_zip3_LH_C_0³⁷ -> (fun _lh_zip3_LH_C_0³⁸ -> (fun _lh_zip3_LH_C_1⁴² -> (fun _lh_zip3_LH_C_1⁴³ -> 
+//│ 							let t²⁷ = 	
+//│ 								let _lh_matchIdent³¹ = _lh_zip3_LH_C_1⁴³
+//│ 								in _lh_matchIdent³¹(_lh_zip3_LH_C_1⁴², _lh_zip3_LH_C_1²¹)
+//│ 							in let h²⁶ = 	
+//│ 								let _lh_pic_LH_P3_2⁶ = _lh_zip3_LH_C_0³⁶
+//│ 								in let _lh_pic_LH_P3_1⁶ = _lh_zip3_LH_C_0³⁷
+//│ 								in let _lh_pic_LH_P3_0⁶ = _lh_zip3_LH_C_0³⁸
+//│ 								in (fun _lh_dummy¹⁴ -> title_lh_₁(_lh_pic_LH_P3_0⁶, table_lh_₁(_lh_pic_LH_P3_1⁶, _lh_pic_LH_P3_2⁶)))
+//│ 							in (fun f²² -> [LH_C f²²(h²⁶) t²⁷(f²²)])))))
+//│ 					in let _lh_zip3_LH_C_0³⁹ = 31
+//│ 					in (fun _lh_zip3_LH_C_0⁴⁰ -> (fun _lh_zip3_LH_C_0⁴¹ -> (fun _lh_zip3_LH_C_1⁴⁴ -> (fun _lh_zip3_LH_C_1⁴⁵ -> 
+//│ 						let t²⁸ = 	
+//│ 							let _lh_matchIdent³² = _lh_zip3_LH_C_1⁴⁵
+//│ 							in _lh_matchIdent³²(_lh_zip3_LH_C_1⁴⁴, _lh_zip3_LH_C_1²⁰)
+//│ 						in let h²⁷ = 	
+//│ 							let _lh_pic_LH_P3_2⁷ = _lh_zip3_LH_C_0³⁹
+//│ 							in let _lh_pic_LH_P3_1⁷ = _lh_zip3_LH_C_0⁴⁰
+//│ 							in let _lh_pic_LH_P3_0⁷ = _lh_zip3_LH_C_0⁴¹
+//│ 							in (fun _lh_dummy¹⁵ -> title_lh_₁(_lh_pic_LH_P3_0⁷, table_lh_₁(_lh_pic_LH_P3_1⁷, _lh_pic_LH_P3_2⁷)))
+//│ 						in (fun f²³ -> [LH_C f²³(h²⁷) t²⁸(f²³)])))))
+//│ 				in let _lh_zip3_LH_C_0⁴² = 30
+//│ 				in (fun _lh_zip3_LH_C_0⁴³ -> (fun _lh_zip3_LH_C_0⁴⁴ -> (fun _lh_zip3_LH_C_1⁴⁶ -> (fun _lh_zip3_LH_C_1⁴⁷ -> 
+//│ 					let t²⁹ = 	
+//│ 						let _lh_matchIdent³³ = _lh_zip3_LH_C_1⁴⁷
+//│ 						in _lh_matchIdent³³(_lh_zip3_LH_C_1⁴⁶, _lh_zip3_LH_C_1¹⁹)
+//│ 					in let h²⁸ = 	
+//│ 						let _lh_pic_LH_P3_2⁸ = _lh_zip3_LH_C_0⁴²
+//│ 						in let _lh_pic_LH_P3_1⁸ = _lh_zip3_LH_C_0⁴³
+//│ 						in let _lh_pic_LH_P3_0⁸ = _lh_zip3_LH_C_0⁴⁴
+//│ 						in (fun _lh_dummy¹⁶ -> title_lh_₁(_lh_pic_LH_P3_0⁸, table_lh_₁(_lh_pic_LH_P3_1⁸, _lh_pic_LH_P3_2⁸)))
+//│ 					in (fun f²⁴ -> [LH_C f²⁴(h²⁸) t²⁹(f²⁴)])))))
+//│ 			in let _lh_zip3_LH_C_0⁴⁵ = 31
+//│ 			in (fun _lh_zip3_LH_C_0⁴⁶ -> (fun _lh_zip3_LH_C_0⁴⁷ -> (fun _lh_zip3_LH_C_1⁴⁸ -> (fun _lh_zip3_LH_C_1⁴⁹ -> 
+//│ 				let t³⁰ = 	
+//│ 					let _lh_matchIdent³⁴ = _lh_zip3_LH_C_1⁴⁹
+//│ 					in _lh_matchIdent³⁴(_lh_zip3_LH_C_1⁴⁸, _lh_zip3_LH_C_1¹⁸)
+//│ 				in let h²⁹ = 	
+//│ 					let _lh_pic_LH_P3_2⁹ = _lh_zip3_LH_C_0⁴⁵
+//│ 					in let _lh_pic_LH_P3_1⁹ = _lh_zip3_LH_C_0⁴⁶
+//│ 					in let _lh_pic_LH_P3_0⁹ = _lh_zip3_LH_C_0⁴⁷
+//│ 					in (fun _lh_dummy¹⁷ -> title_lh_₁(_lh_pic_LH_P3_0⁹, table_lh_₁(_lh_pic_LH_P3_1⁹, _lh_pic_LH_P3_2⁹)))
+//│ 				in (fun f²⁵ -> [LH_C f²⁵(h²⁹) t³⁰(f²⁵)])))))
+//│ 		in let _lh_zip3_LH_C_0⁴⁸ = feb¹
+//│ 		in (fun _lh_zip3_LH_C_0⁴⁹ -> (fun _lh_zip3_LH_C_0⁵⁰ -> (fun _lh_zip3_LH_C_1⁵⁰ -> (fun _lh_zip3_LH_C_1⁵¹ -> 
+//│ 			let t³¹ = 	
+//│ 				let _lh_matchIdent³⁵ = _lh_zip3_LH_C_1⁵¹
+//│ 				in _lh_matchIdent³⁵(_lh_zip3_LH_C_1⁵⁰, _lh_zip3_LH_C_1¹⁷)
+//│ 			in let h³⁰ = 	
+//│ 				let _lh_pic_LH_P3_2¹⁰ = _lh_zip3_LH_C_0⁴⁸
+//│ 				in let _lh_pic_LH_P3_1¹⁰ = _lh_zip3_LH_C_0⁴⁹
+//│ 				in let _lh_pic_LH_P3_0¹⁰ = _lh_zip3_LH_C_0⁵⁰
+//│ 				in (fun _lh_dummy¹⁸ -> title_lh_₁(_lh_pic_LH_P3_0¹⁰, table_lh_₁(_lh_pic_LH_P3_1¹⁰, _lh_pic_LH_P3_2¹⁰)))
+//│ 			in (fun f²⁶ -> [LH_C f²⁶(h³⁰) t³¹(f²⁶)])))))
+//│ 	in let _lh_zip3_LH_C_0⁵¹ = 31
+//│ 	in (fun _lh_zip3_LH_C_0⁵² -> (fun _lh_zip3_LH_C_0⁵³ -> (fun _lh_zip3_LH_C_1⁵² -> (fun _lh_zip3_LH_C_1⁵³ -> 
+//│ 		let t³² = 	
+//│ 			let _lh_matchIdent³⁶ = _lh_zip3_LH_C_1⁵³
+//│ 			in _lh_matchIdent³⁶(_lh_zip3_LH_C_1⁵², _lh_zip3_LH_C_1¹⁶)
+//│ 		in let h³¹ = 	
+//│ 			let _lh_pic_LH_P3_2¹¹ = _lh_zip3_LH_C_0⁵¹
+//│ 			in let _lh_pic_LH_P3_1¹¹ = _lh_zip3_LH_C_0⁵²
+//│ 			in let _lh_pic_LH_P3_0¹¹ = _lh_zip3_LH_C_0⁵³
+//│ 			in (fun _lh_dummy¹⁹ -> title_lh_₁(_lh_pic_LH_P3_0¹¹, table_lh_₁(_lh_pic_LH_P3_1¹¹, _lh_pic_LH_P3_2¹¹)))
+//│ 		in (fun f²⁷ -> [LH_C f²⁷(h³¹) t³²(f²⁷)])))))
+//│ def monthLengths_lh_₂(_lh_monthLengths_arg1⁰) = 
+//│ 	let feb⁰ = if leap_lh_₂(_lh_monthLengths_arg1⁰) then 29 else 28
+//│ 	in let _lh_scanl_LH_C_1⁰ = 	
+//│ 		let _lh_scanl_LH_C_1¹ = 	
+//│ 			let _lh_scanl_LH_C_1² = 	
+//│ 				let _lh_scanl_LH_C_1³ = 	
+//│ 					let _lh_scanl_LH_C_1⁴ = 	
+//│ 						let _lh_scanl_LH_C_1⁵ = 	
+//│ 							let _lh_scanl_LH_C_1⁶ = 	
+//│ 								let _lh_scanl_LH_C_1⁷ = 	
+//│ 									let _lh_scanl_LH_C_1⁸ = 	
+//│ 										let _lh_scanl_LH_C_1⁹ = 	
+//│ 											let _lh_scanl_LH_C_1¹⁰ = 	
+//│ 												let _lh_scanl_LH_C_1¹¹ = (fun _lh_scanl_arg1⁰ -> (fun _lh_scanl_arg2⁰ -> [LH_N]))
+//│ 												in let _lh_scanl_LH_C_0⁰ = 31
+//│ 												in (fun _lh_scanl_arg1¹ -> (fun _lh_scanl_arg2¹ -> [LH_C _lh_scanl_arg1¹(_lh_scanl_arg2¹, _lh_scanl_LH_C_0⁰) 
+//│ 													let _lh_matchIdent⁰ = _lh_scanl_LH_C_1¹¹
+//│ 													in _lh_matchIdent⁰(_lh_scanl_arg1¹, _lh_scanl_arg1¹(_lh_scanl_arg2¹, _lh_scanl_LH_C_0⁰))]))
+//│ 											in let _lh_scanl_LH_C_0¹ = 30
+//│ 											in (fun _lh_scanl_arg1² -> (fun _lh_scanl_arg2² -> [LH_C _lh_scanl_arg1²(_lh_scanl_arg2², _lh_scanl_LH_C_0¹) 
+//│ 												let _lh_matchIdent¹ = _lh_scanl_LH_C_1¹⁰
+//│ 												in _lh_matchIdent¹(_lh_scanl_arg1², _lh_scanl_arg1²(_lh_scanl_arg2², _lh_scanl_LH_C_0¹))]))
+//│ 										in let _lh_scanl_LH_C_0² = 31
+//│ 										in (fun _lh_scanl_arg1³ -> (fun _lh_scanl_arg2³ -> [LH_C _lh_scanl_arg1³(_lh_scanl_arg2³, _lh_scanl_LH_C_0²) 
+//│ 											let _lh_matchIdent² = _lh_scanl_LH_C_1⁹
+//│ 											in _lh_matchIdent²(_lh_scanl_arg1³, _lh_scanl_arg1³(_lh_scanl_arg2³, _lh_scanl_LH_C_0²))]))
+//│ 									in let _lh_scanl_LH_C_0³ = 30
+//│ 									in (fun _lh_scanl_arg1⁴ -> (fun _lh_scanl_arg2⁴ -> [LH_C _lh_scanl_arg1⁴(_lh_scanl_arg2⁴, _lh_scanl_LH_C_0³) 
+//│ 										let _lh_matchIdent³ = _lh_scanl_LH_C_1⁸
+//│ 										in _lh_matchIdent³(_lh_scanl_arg1⁴, _lh_scanl_arg1⁴(_lh_scanl_arg2⁴, _lh_scanl_LH_C_0³))]))
+//│ 								in let _lh_scanl_LH_C_0⁴ = 31
+//│ 								in (fun _lh_scanl_arg1⁵ -> (fun _lh_scanl_arg2⁵ -> [LH_C _lh_scanl_arg1⁵(_lh_scanl_arg2⁵, _lh_scanl_LH_C_0⁴) 
+//│ 									let _lh_matchIdent⁴ = _lh_scanl_LH_C_1⁷
+//│ 									in _lh_matchIdent⁴(_lh_scanl_arg1⁵, _lh_scanl_arg1⁵(_lh_scanl_arg2⁵, _lh_scanl_LH_C_0⁴))]))
+//│ 							in let _lh_scanl_LH_C_0⁵ = 31
+//│ 							in (fun _lh_scanl_arg1⁶ -> (fun _lh_scanl_arg2⁶ -> [LH_C _lh_scanl_arg1⁶(_lh_scanl_arg2⁶, _lh_scanl_LH_C_0⁵) 
+//│ 								let _lh_matchIdent⁵ = _lh_scanl_LH_C_1⁶
+//│ 								in _lh_matchIdent⁵(_lh_scanl_arg1⁶, _lh_scanl_arg1⁶(_lh_scanl_arg2⁶, _lh_scanl_LH_C_0⁵))]))
+//│ 						in let _lh_scanl_LH_C_0⁶ = 30
+//│ 						in (fun _lh_scanl_arg1⁷ -> (fun _lh_scanl_arg2⁷ -> [LH_C _lh_scanl_arg1⁷(_lh_scanl_arg2⁷, _lh_scanl_LH_C_0⁶) 
+//│ 							let _lh_matchIdent⁶ = _lh_scanl_LH_C_1⁵
+//│ 							in _lh_matchIdent⁶(_lh_scanl_arg1⁷, _lh_scanl_arg1⁷(_lh_scanl_arg2⁷, _lh_scanl_LH_C_0⁶))]))
+//│ 					in let _lh_scanl_LH_C_0⁷ = 31
+//│ 					in (fun _lh_scanl_arg1⁸ -> (fun _lh_scanl_arg2⁸ -> [LH_C _lh_scanl_arg1⁸(_lh_scanl_arg2⁸, _lh_scanl_LH_C_0⁷) 
+//│ 						let _lh_matchIdent⁷ = _lh_scanl_LH_C_1⁴
+//│ 						in _lh_matchIdent⁷(_lh_scanl_arg1⁸, _lh_scanl_arg1⁸(_lh_scanl_arg2⁸, _lh_scanl_LH_C_0⁷))]))
+//│ 				in let _lh_scanl_LH_C_0⁸ = 30
+//│ 				in (fun _lh_scanl_arg1⁹ -> (fun _lh_scanl_arg2⁹ -> [LH_C _lh_scanl_arg1⁹(_lh_scanl_arg2⁹, _lh_scanl_LH_C_0⁸) 
+//│ 					let _lh_matchIdent⁸ = _lh_scanl_LH_C_1³
+//│ 					in _lh_matchIdent⁸(_lh_scanl_arg1⁹, _lh_scanl_arg1⁹(_lh_scanl_arg2⁹, _lh_scanl_LH_C_0⁸))]))
+//│ 			in let _lh_scanl_LH_C_0⁹ = 31
+//│ 			in (fun _lh_scanl_arg1¹⁰ -> (fun _lh_scanl_arg2¹⁰ -> [LH_C _lh_scanl_arg1¹⁰(_lh_scanl_arg2¹⁰, _lh_scanl_LH_C_0⁹) 
+//│ 				let _lh_matchIdent⁹ = _lh_scanl_LH_C_1²
+//│ 				in _lh_matchIdent⁹(_lh_scanl_arg1¹⁰, _lh_scanl_arg1¹⁰(_lh_scanl_arg2¹⁰, _lh_scanl_LH_C_0⁹))]))
+//│ 		in let _lh_scanl_LH_C_0¹⁰ = feb⁰
+//│ 		in (fun _lh_scanl_arg1¹¹ -> (fun _lh_scanl_arg2¹¹ -> [LH_C _lh_scanl_arg1¹¹(_lh_scanl_arg2¹¹, _lh_scanl_LH_C_0¹⁰) 
+//│ 			let _lh_matchIdent¹⁰ = _lh_scanl_LH_C_1¹
+//│ 			in _lh_matchIdent¹⁰(_lh_scanl_arg1¹¹, _lh_scanl_arg1¹¹(_lh_scanl_arg2¹¹, _lh_scanl_LH_C_0¹⁰))]))
+//│ 	in let _lh_scanl_LH_C_0¹¹ = 31
+//│ 	in (fun _lh_scanl_arg1¹² -> (fun _lh_scanl_arg2¹² -> [LH_C _lh_scanl_arg1¹²(_lh_scanl_arg2¹², _lh_scanl_LH_C_0¹¹) 
+//│ 		let _lh_matchIdent¹¹ = _lh_scanl_LH_C_1⁰
+//│ 		in _lh_matchIdent¹¹(_lh_scanl_arg1¹², _lh_scanl_arg1¹²(_lh_scanl_arg2¹², _lh_scanl_LH_C_0¹¹))]))
+//│ def monthNames_lh_₁ = 
+//│ 	let _lh_zip3_LH_C_1⁰ = 	
+//│ 		let _lh_zip3_LH_C_1¹ = 	
+//│ 			let _lh_zip3_LH_C_1² = 	
+//│ 				let _lh_zip3_LH_C_1³ = 	
+//│ 					let _lh_zip3_LH_C_1⁴ = 	
+//│ 						let _lh_zip3_LH_C_1⁵ = 	
+//│ 							let _lh_zip3_LH_C_1⁶ = 	
+//│ 								let _lh_zip3_LH_C_1⁷ = 	
+//│ 									let _lh_zip3_LH_C_1⁸ = 	
+//│ 										let _lh_zip3_LH_C_1⁹ = 	
+//│ 											let _lh_zip3_LH_C_1¹⁰ = 	
+//│ 												let _lh_zip3_LH_C_1¹¹ = (fun _lh_zip3_arg2⁰ -> (fun _lh_zip3_arg3⁰ -> (fun f¹ -> [LH_N])))
+//│ 												in let _lh_zip3_LH_C_0⁰ = [LH_C 'D' [LH_C 'e' [LH_C 'c' [LH_C 'e' [LH_C 'm' [LH_C 'b' [LH_C 'e' [LH_C 'r' [LH_N]]]]]]]]]
+//│ 												in (fun _lh_zip3_arg2¹ -> (fun _lh_zip3_arg3¹ -> 
+//│ 													let _lh_matchIdent¹² = _lh_zip3_arg2¹
+//│ 													in _lh_matchIdent¹²(_lh_zip3_LH_C_0⁰, _lh_zip3_LH_C_1¹¹, _lh_zip3_arg3¹)))
+//│ 											in let _lh_zip3_LH_C_0¹ = [LH_C 'N' [LH_C 'o' [LH_C 'v' [LH_C 'e' [LH_C 'm' [LH_C 'b' [LH_C 'e' [LH_C 'r' [LH_N]]]]]]]]]
+//│ 											in (fun _lh_zip3_arg2² -> (fun _lh_zip3_arg3² -> 
+//│ 												let _lh_matchIdent¹³ = _lh_zip3_arg2²
+//│ 												in _lh_matchIdent¹³(_lh_zip3_LH_C_0¹, _lh_zip3_LH_C_1¹⁰, _lh_zip3_arg3²)))
+//│ 										in let _lh_zip3_LH_C_0² = [LH_C 'O' [LH_C 'c' [LH_C 't' [LH_C 'o' [LH_C 'b' [LH_C 'e' [LH_C 'r' [LH_N]]]]]]]]
+//│ 										in (fun _lh_zip3_arg2³ -> (fun _lh_zip3_arg3³ -> 
+//│ 											let _lh_matchIdent¹⁴ = _lh_zip3_arg2³
+//│ 											in _lh_matchIdent¹⁴(_lh_zip3_LH_C_0², _lh_zip3_LH_C_1⁹, _lh_zip3_arg3³)))
+//│ 									in let _lh_zip3_LH_C_0³ = [LH_C 'S' [LH_C 'e' [LH_C 'p' [LH_C 't' [LH_C 'e' [LH_C 'm' [LH_C 'b' [LH_C 'e' [LH_C 'r' [LH_N]]]]]]]]]]
+//│ 									in (fun _lh_zip3_arg2⁴ -> (fun _lh_zip3_arg3⁴ -> 
+//│ 										let _lh_matchIdent¹⁵ = _lh_zip3_arg2⁴
+//│ 										in _lh_matchIdent¹⁵(_lh_zip3_LH_C_0³, _lh_zip3_LH_C_1⁸, _lh_zip3_arg3⁴)))
+//│ 								in let _lh_zip3_LH_C_0⁴ = [LH_C 'A' [LH_C 'u' [LH_C 'g' [LH_C 'u' [LH_C 's' [LH_C 't' [LH_N]]]]]]]
+//│ 								in (fun _lh_zip3_arg2⁵ -> (fun _lh_zip3_arg3⁵ -> 
+//│ 									let _lh_matchIdent¹⁶ = _lh_zip3_arg2⁵
+//│ 									in _lh_matchIdent¹⁶(_lh_zip3_LH_C_0⁴, _lh_zip3_LH_C_1⁷, _lh_zip3_arg3⁵)))
+//│ 							in let _lh_zip3_LH_C_0⁵ = [LH_C 'J' [LH_C 'u' [LH_C 'l' [LH_C 'y' [LH_N]]]]]
+//│ 							in (fun _lh_zip3_arg2⁶ -> (fun _lh_zip3_arg3⁶ -> 
+//│ 								let _lh_matchIdent¹⁷ = _lh_zip3_arg2⁶
+//│ 								in _lh_matchIdent¹⁷(_lh_zip3_LH_C_0⁵, _lh_zip3_LH_C_1⁶, _lh_zip3_arg3⁶)))
+//│ 						in let _lh_zip3_LH_C_0⁶ = [LH_C 'J' [LH_C 'u' [LH_C 'n' [LH_C 'e' [LH_N]]]]]
+//│ 						in (fun _lh_zip3_arg2⁷ -> (fun _lh_zip3_arg3⁷ -> 
+//│ 							let _lh_matchIdent¹⁸ = _lh_zip3_arg2⁷
+//│ 							in _lh_matchIdent¹⁸(_lh_zip3_LH_C_0⁶, _lh_zip3_LH_C_1⁵, _lh_zip3_arg3⁷)))
+//│ 					in let _lh_zip3_LH_C_0⁷ = [LH_C 'M' [LH_C 'a' [LH_C 'y' [LH_N]]]]
+//│ 					in (fun _lh_zip3_arg2⁸ -> (fun _lh_zip3_arg3⁸ -> 
+//│ 						let _lh_matchIdent¹⁹ = _lh_zip3_arg2⁸
+//│ 						in _lh_matchIdent¹⁹(_lh_zip3_LH_C_0⁷, _lh_zip3_LH_C_1⁴, _lh_zip3_arg3⁸)))
+//│ 				in let _lh_zip3_LH_C_0⁸ = [LH_C 'A' [LH_C 'p' [LH_C 'r' [LH_C 'i' [LH_C 'l' [LH_N]]]]]]
+//│ 				in (fun _lh_zip3_arg2⁹ -> (fun _lh_zip3_arg3⁹ -> 
+//│ 					let _lh_matchIdent²⁰ = _lh_zip3_arg2⁹
+//│ 					in _lh_matchIdent²⁰(_lh_zip3_LH_C_0⁸, _lh_zip3_LH_C_1³, _lh_zip3_arg3⁹)))
+//│ 			in let _lh_zip3_LH_C_0⁹ = [LH_C 'M' [LH_C 'a' [LH_C 'r' [LH_C 'c' [LH_C 'h' [LH_N]]]]]]
+//│ 			in (fun _lh_zip3_arg2¹⁰ -> (fun _lh_zip3_arg3¹⁰ -> 
+//│ 				let _lh_matchIdent²¹ = _lh_zip3_arg2¹⁰
+//│ 				in _lh_matchIdent²¹(_lh_zip3_LH_C_0⁹, _lh_zip3_LH_C_1², _lh_zip3_arg3¹⁰)))
+//│ 		in let _lh_zip3_LH_C_0¹⁰ = [LH_C 'F' [LH_C 'e' [LH_C 'b' [LH_C 'r' [LH_C 'u' [LH_C 'a' [LH_C 'r' [LH_C 'y' [LH_N]]]]]]]]]
+//│ 		in (fun _lh_zip3_arg2¹¹ -> (fun _lh_zip3_arg3¹¹ -> 
+//│ 			let _lh_matchIdent²² = _lh_zip3_arg2¹¹
+//│ 			in _lh_matchIdent²²(_lh_zip3_LH_C_0¹⁰, _lh_zip3_LH_C_1¹, _lh_zip3_arg3¹¹)))
+//│ 	in let _lh_zip3_LH_C_0¹¹ = [LH_C 'J' [LH_C 'a' [LH_C 'n' [LH_C 'u' [LH_C 'a' [LH_C 'r' [LH_C 'y' [LH_N]]]]]]]]
+//│ 	in (fun _lh_zip3_arg2¹² -> (fun _lh_zip3_arg3¹² -> 
+//│ 		let _lh_matchIdent²³ = _lh_zip3_arg2¹²
+//│ 		in _lh_matchIdent²³(_lh_zip3_LH_C_0¹¹, _lh_zip3_LH_C_1⁰, _lh_zip3_arg3¹²)))
+//│ def months_lh_₁(_lh_months_arg1⁰) = 
+//│ 	let _lh_matchIdent³⁸ = monthNames_lh_₁
+//│ 	in _lh_matchIdent³⁸(firstDays_lh_₁(_lh_months_arg1⁰), monthLengths_lh_₁(_lh_months_arg1⁰))
+//│ def pad_lh_₁(_lh_pad_arg1⁰) = side_lh_₂(0, mappend_lh_₇, _lh_pad_arg1⁰, mappend_lh_₉, side_lh_₁(0), end_lh_₁(0))
+//│ def pic_lh_₁(_lh_pic_arg1⁰) = _lh_pic_arg1⁰(99)
+//│ def rjustify_lh_₁(_lh_rjustify_arg1⁰, _lh_rjustify_arg2⁰) = mappend_lh_₁₅(space_lh_₄((_lh_rjustify_arg1⁰ - length_lh_₃(_lh_rjustify_arg2⁰))), _lh_rjustify_arg2⁰)
+//│ def scanl_lh_₁(_lh_scanl_arg1¹³, _lh_scanl_arg2¹³, _lh_scanl_arg3⁰) = [LH_C _lh_scanl_arg2¹³ 
+//│ 	let _lh_matchIdent³⁹ = _lh_scanl_arg3⁰
+//│ 	in _lh_matchIdent³⁹(_lh_scanl_arg1¹³, _lh_scanl_arg2¹³)]
+//│ def side_lh_₁(_lh_side_arg1⁰) = 
+//│ 	let _lh_emptyPic_LH_P2_1⁰ = 2
+//│ 	in let _lh_emptyPic_LH_P2_0⁰ = 8
+//│ 	in (fun _lh_dummy⁰ -> copy_lh_₆(_lh_emptyPic_LH_P2_0⁰, copy_lh_₅(_lh_emptyPic_LH_P2_1⁰, ' ')))(99)
+//│ def side_lh_₂(_lh_side_arg1¹) = 
+//│ 	let _lh_emptyPic_LH_P2_1³ = 2
+//│ 	in let _lh_emptyPic_LH_P2_0³ = 8
+//│ 	in (fun _lh_dummy⁷ -> copy_lh_₁₀(_lh_emptyPic_LH_P2_0³, copy_lh_₉(_lh_emptyPic_LH_P2_1³, ' ')))(99)
+//│ def space_lh_₁(_lh_space_arg1³) = copy_lh_₃(_lh_space_arg1³, ' ')
+//│ def space_lh_₂(_lh_space_arg1¹) = copy_lh_₄(_lh_space_arg1¹, ' ')
+//│ def space_lh_₃(_lh_space_arg1²) = copy_lh_₁₁(_lh_space_arg1², ' ')
+//│ def space_lh_₄(_lh_space_arg1⁰) = copy_lh_₁₁(_lh_space_arg1⁰, ' ')
+//│ def spread_lh_₁(_lh_spread_arg1⁰) = foldr1_lh_₂((fun a³ -> (fun b² -> zipWith_lh_₃(mappend_lh_₁₂, a³, b²))), _lh_spread_arg1⁰)
+//│ def stack_lh_₁(_lh_stack_arg1⁰) = foldr1_lh_₁((fun a⁴ -> (fun b³ -> mappend_lh_₁₁(a⁴, b³))), _lh_stack_arg1⁰)
+//│ def table_lh_₁(_lh_table_arg1⁰, _lh_table_arg2⁰) = daynames_lh_₁(entries_lh_₁(_lh_table_arg1⁰, _lh_table_arg2⁰))
+//│ def take_lh_₁(n¹, ls³) = if (n¹ > 0) then case ls³ of {
+//│ 	LH_C h¹¹ t¹² => [LH_C h¹¹ take_lh_₁((n¹ - 1), t¹²)]
+//│ 	| LH_N  => [LH_N]} else [LH_N]
+//│ def take_lh_₂(n⁰, ls²) = if (n⁰ > 0) then case ls² of {
+//│ 	LH_C h⁹ t¹⁰ => 
+//│ 		let _lh_zip3_LH_C_1¹² = take_lh_₂((n⁰ - 1), t¹⁰)
+//│ 		in let _lh_zip3_LH_C_0¹² = h⁹
+//│ 		in (fun _lh_zip3_LH_C_0¹³ -> (fun _lh_zip3_LH_C_1¹³ -> (fun _lh_zip3_arg3¹³ -> 
+//│ 			let _lh_matchIdent²⁴ = _lh_zip3_arg3¹³
+//│ 			in _lh_matchIdent²⁴(_lh_zip3_LH_C_0¹², _lh_zip3_LH_C_0¹³, _lh_zip3_LH_C_1¹², _lh_zip3_LH_C_1¹³))))
+//│ 	| LH_N  => (fun _lh_zip3_LH_C_0¹⁴ -> (fun _lh_zip3_LH_C_1¹⁴ -> (fun _lh_zip3_arg3¹⁴ -> (fun f⁴ -> [LH_N]))))} else (fun _lh_zip3_LH_C_0¹⁵ -> (fun _lh_zip3_LH_C_1¹⁵ -> (fun _lh_zip3_arg3¹⁵ -> (fun f⁵ -> [LH_N]))))
+//│ def testCalendar_nofib_lh_₁(_lh_testCalendar_nofib_arg1⁰) = map_lh_₁((fun n² -> cal_lh_₁(n², 99)), primId⁰(enumFromTo_lh_₁(2008, (2008 + _lh_testCalendar_nofib_arg1⁰))))
+//│ def title_lh_₁(_lh_title_arg1⁰) = 
+//│ 	let t¹⁹ = (fun ys³⁰ -> ys³⁰)
+//│ 	in let h¹⁸ = cjustify_lh_₂(21, _lh_title_arg1⁰)
+//│ 	in (fun ys³¹ -> [LH_C h¹⁸ t¹⁹(ys³¹)])
+//│ def unlines_lh_₁(_lh_unlines_arg1⁰) = map_lh_₂((fun l⁰ -> mappend_lh_₃(l⁰, 
+//│ 	let t³⁹ = (fun ys⁴¹ -> ys⁴¹)
+//│ 	in let h³⁸ = 'n'
+//│ 	in (fun ys⁴² -> 
+//│ 		let t⁴⁰ = t³⁹(ys⁴²)
+//│ 		in (fun _lh_dummy²⁰ -> (1 + t⁴⁰(99)))))), _lh_unlines_arg1⁰, 99)
+//│ def zip3_lh_₁(_lh_zip3_arg1⁰, _lh_zip3_arg2¹³, _lh_zip3_arg3¹⁶) = 
+//│ 	let _lh_matchIdent⁴⁰ = _lh_zip3_arg1⁰
+//│ 	in _lh_matchIdent⁴⁰(_lh_zip3_arg2¹³, _lh_zip3_arg3¹⁶)
+//│ def zipWith_lh_₁(f¹⁴, xs¹⁵, ys³²) = xs¹⁵(f¹⁴, ys³²)
+//│ def zipWith_lh_₂(f³, xs⁷, ys¹⁰) = xs⁷(f³, ys¹⁰)
+//│ def zipWith_lh_₃(f³², xs¹⁶, ys³⁹) = case xs¹⁶ of {
+//│ 	LH_C hx⁴ tx⁴ => case ys³⁹ of {
+//│ 		LH_C hy² ty² => [LH_C f³²(hx⁴, hy²) zipWith_lh_₃(f³², tx⁴, ty²)]
+//│ 		| LH_N  => [LH_N]}
+//│ 	| LH_N  => [LH_N]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testCalendar_nofib_lh_₁(primId⁰(100))
+//│ def banner_lh_₁(_lh_banner_arg1⁰) = 
+//│ 	let t⁸ = (fun ys¹⁴ -> ys¹⁴)
+//│ 	in let h⁷ = cjustify_lh_₁(75, string_of_int⁰(_lh_banner_arg1⁰))
+//│ 	in (fun ys¹⁵ -> 
+//│ 		let t⁹ = t⁸(ys¹⁵)
+//│ 		in let h⁸ = h⁷
+//│ 		in (fun ys¹⁶ -> [LH_C h⁸ t⁹(ys¹⁶)]))(
+//│ 	let _lh_emptyPic_LH_P2_1¹ = 75
+//│ 	in let _lh_emptyPic_LH_P2_0¹ = 1
+//│ 	in (fun _lh_dummy² -> copy_lh_₂(_lh_emptyPic_LH_P2_0¹, copy_lh_₁(_lh_emptyPic_LH_P2_1¹, ' ')))(99))
+//│ def block_lh_₁(_lh_block_arg1⁰, _lh_funcomp_x³) = (fun _lh_funcomp_x⁴ -> stack_lh_₁(map_lh_₄(spread_lh_₁, _lh_funcomp_x⁴)))(groop_lh_₁(_lh_block_arg1⁰, _lh_funcomp_x³))
+//│ def block_lh_₂(_lh_block_arg1¹, _lh_funcomp_x⁵) = (fun _lh_funcomp_x⁶ -> stack_lh_₁(map_lh_₅(spread_lh_₁, _lh_funcomp_x⁶)))(groop_lh_₁(_lh_block_arg1¹, _lh_funcomp_x⁵))
+//│ def body_lh_₁(_lh_funcomp_x⁰) = (fun _lh_funcomp_x¹ -> block_lh_₁(3, _lh_funcomp_x¹((fun _lh_funcomp_x² -> pad_lh_₁(_lh_funcomp_x²(99))))))(months_lh_₁(_lh_funcomp_x⁰))
+//│ def cal_lh_₁(_lh_cal_arg1⁰) = unlines_lh_₁(banner_lh_₁(_lh_cal_arg1⁰, body_lh_₁(_lh_cal_arg1⁰)))
+//│ def cjustify_lh_₁(_lh_cjustify_arg1¹, _lh_cjustify_arg2¹) = 
+//│ 	let m¹ = (_lh_cjustify_arg1¹ - length_lh_₂(_lh_cjustify_arg2¹))
+//│ 	in let halfm¹ = div⁰(m¹, 2)
+//│ 	in mappend_lh_₄(space_lh_₁(halfm¹, _lh_cjustify_arg2¹), space_lh_₂((m¹ - halfm¹)))
+//│ def cjustify_lh_₂(_lh_cjustify_arg1⁰, _lh_cjustify_arg2⁰) = 
+//│ 	let m⁰ = (_lh_cjustify_arg1⁰ - length_lh_₃(_lh_cjustify_arg2⁰))
+//│ 	in let halfm⁰ = div⁰(m⁰, 2)
+//│ 	in mappend_lh_₁₄(mappend_lh_₁₅(space_lh_₄(halfm⁰), _lh_cjustify_arg2⁰), space_lh_₃((m⁰ - halfm⁰)))
+//│ def concat_lh_₁(lss⁰) = lss⁰(99)
+//│ def copy_lh_₁(_lh_copy_arg1², _lh_copy_arg2²) = if (_lh_copy_arg1² > 0) then [LH_C _lh_copy_arg2² copy_lh_₁((_lh_copy_arg1² - 1), _lh_copy_arg2²)] else [LH_N]
+//│ def copy_lh_₁₀(_lh_copy_arg1³, _lh_copy_arg2³) = if (_lh_copy_arg1³ > 0) then 
+//│ 	let tx⁰ = copy_lh_₁₀((_lh_copy_arg1³ - 1), _lh_copy_arg2³)
+//│ 	in let hx⁰ = _lh_copy_arg2³
+//│ 	in (fun f⁷ -> (fun ys²¹ -> case ys²¹ of {
+//│ 		LH_C hy⁰ ty⁰ => 
+//│ 			let tx¹ = tx⁰(f⁷, ty⁰)
+//│ 			in let hx¹ = f⁷(hx⁰, hy⁰)
+//│ 			in (fun f⁸ -> (fun ys²² -> ys²²(f⁸, hx¹, tx¹)))
+//│ 		| LH_N  => (fun f⁹ -> (fun ys²³ -> (fun ys²⁴ -> ys²⁴)))})) else (fun f¹⁰ -> (fun ys²⁵ -> (fun f¹¹ -> (fun ys²⁶ -> (fun ys²⁷ -> ys²⁷)))))
+//│ def copy_lh_₁₁(_lh_copy_arg1⁸, _lh_copy_arg2⁸) = if (_lh_copy_arg1⁸ > 0) then [LH_C _lh_copy_arg2⁸ copy_lh_₁₁((_lh_copy_arg1⁸ - 1), _lh_copy_arg2⁸)] else [LH_N]
+//│ def copy_lh_₂(_lh_copy_arg1⁵, _lh_copy_arg2⁵) = if (_lh_copy_arg1⁵ > 0) then 
+//│ 	let t³³ = copy_lh_₂((_lh_copy_arg1⁵ - 1), _lh_copy_arg2⁵)
+//│ 	in let h³² = _lh_copy_arg2⁵
+//│ 	in (fun ys³³ -> [LH_C h³² t³³(ys³³)]) else (fun ys³⁴ -> ys³⁴)
+//│ def copy_lh_₃(_lh_copy_arg1⁷, _lh_copy_arg2⁷) = if (_lh_copy_arg1⁷ > 0) then 
+//│ 	let t³⁶ = copy_lh_₃((_lh_copy_arg1⁷ - 1), _lh_copy_arg2⁷)
+//│ 	in let h³⁵ = _lh_copy_arg2⁷
+//│ 	in (fun ys³⁷ -> [LH_C h³⁵ t³⁶(ys³⁷)]) else (fun ys³⁸ -> ys³⁸)
+//│ def copy_lh_₄(_lh_copy_arg1¹, _lh_copy_arg2¹) = if (_lh_copy_arg1¹ > 0) then [LH_C _lh_copy_arg2¹ copy_lh_₄((_lh_copy_arg1¹ - 1), _lh_copy_arg2¹)] else [LH_N]
+//│ def copy_lh_₅(_lh_copy_arg1⁴, _lh_copy_arg2⁴) = if (_lh_copy_arg1⁴ > 0) then [LH_C _lh_copy_arg2⁴ copy_lh_₅((_lh_copy_arg1⁴ - 1), _lh_copy_arg2⁴)] else [LH_N]
+//│ def copy_lh_₆(_lh_copy_arg1⁶, _lh_copy_arg2⁶) = if (_lh_copy_arg1⁶ > 0) then 
+//│ 	let ty¹ = copy_lh_₆((_lh_copy_arg1⁶ - 1), _lh_copy_arg2⁶)
+//│ 	in let hy¹ = _lh_copy_arg2⁶
+//│ 	in (fun f²⁹ -> (fun hx² -> (fun tx² -> 
+//│ 		let t³⁴ = tx²(f²⁹, ty¹)
+//│ 		in let h³³ = f²⁹(hx², hy¹)
+//│ 		in (fun ys³⁵ -> [LH_C h³³ t³⁴(ys³⁵)])))) else (fun f³⁰ -> (fun hx³ -> (fun tx³ -> (fun ys³⁶ -> ys³⁶))))
+//│ def copy_lh_₇(_lh_copy_arg1⁹, _lh_copy_arg2⁹) = if (_lh_copy_arg1⁹ > 0) then [LH_C _lh_copy_arg2⁹ copy_lh_₇((_lh_copy_arg1⁹ - 1), _lh_copy_arg2⁹)] else [LH_N]
+//│ def copy_lh_₈(_lh_copy_arg1¹⁰, _lh_copy_arg2¹⁰) = if (_lh_copy_arg1¹⁰ > 0) then [LH_C _lh_copy_arg2¹⁰ copy_lh_₈((_lh_copy_arg1¹⁰ - 1), _lh_copy_arg2¹⁰)] else [LH_N]
+//│ def copy_lh_₉(_lh_copy_arg1⁰, _lh_copy_arg2⁰) = if (_lh_copy_arg1⁰ > 0) then 
+//│ 	let t⁰ = copy_lh_₉((_lh_copy_arg1⁰ - 1), _lh_copy_arg2⁰)
+//│ 	in let h⁰ = _lh_copy_arg2⁰
+//│ 	in (fun ys¹ -> [LH_C h⁰ t⁰(ys¹)]) else (fun ys² -> ys²)
+//│ def date_lh_₁(_lh_date_arg1⁰, _lh_date_arg2⁰) = if ((_lh_date_arg2⁰ < 1) || (_lh_date_arg1⁰ < _lh_date_arg2⁰)) then [LH_C [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_N]]]] [LH_N]] else [LH_C rjustify_lh_₁(3, string_of_int⁰(_lh_date_arg2⁰)) [LH_N]]
+//│ def dates_lh_₁(_lh_dates_arg1⁰, _lh_dates_arg2⁰) = map_lh_₅((fun d⁰ -> date_lh_₁(_lh_dates_arg2⁰, d⁰)), enumFromTo_lh_₁((1 - _lh_dates_arg1⁰), (42 - _lh_dates_arg1⁰)))
+//│ def daynames_lh_₁(ys¹¹) = 
+//│ 	let t⁶ = (fun ys¹² -> ys¹²)
+//│ 	in let h⁵ = [LH_C ' ' [LH_C 'S' [LH_C 'u' [LH_C ' ' [LH_C 'M' [LH_C 'o' [LH_C ' ' [LH_C 'T' [LH_C 'u' [LH_C ' ' [LH_C 'W' [LH_C 'e' [LH_C ' ' [LH_C 'T' [LH_C 'h' [LH_C ' ' [LH_C 'F' [LH_C 'r' [LH_C ' ' [LH_C 'S' [LH_C 'a' [LH_N]]]]]]]]]]]]]]]]]]]]]]
+//│ 	in [LH_C h⁵ t⁶(ys¹¹)]
+//│ def drop_lh_₁(_lh_drop_arg1⁰, _lh_drop_arg2⁰) = case _lh_drop_arg2⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰ => if (_lh_drop_arg1⁰ > 0) then drop_lh_₁((_lh_drop_arg1⁰ - 1), _lh_drop_LH_C_1⁰) else _lh_drop_LH_C_1⁰
+//│ 	| _  => error⁰}
+//│ def emptyPic_lh_₁(_lh_emptyPic_arg1²) = _lh_emptyPic_arg1²(99)
+//│ def emptyPic_lh_₂(_lh_emptyPic_arg1¹) = _lh_emptyPic_arg1¹(99)
+//│ def emptyPic_lh_₃(_lh_emptyPic_arg1³) = _lh_emptyPic_arg1³(99)
+//│ def emptyPic_lh_₄(_lh_emptyPic_arg1⁰) = _lh_emptyPic_arg1⁰(99)
+//│ def end_lh_₁(_lh_end_arg1⁰) = 
+//│ 	let _lh_emptyPic_LH_P2_1² = 25
+//│ 	in let _lh_emptyPic_LH_P2_0² = 1
+//│ 	in (fun _lh_dummy³ -> copy_lh_₈(_lh_emptyPic_LH_P2_0², copy_lh_₇(_lh_emptyPic_LH_P2_1², ' ')))(99)
+//│ def entries_lh_₁(_lh_entries_arg1⁰, _lh_entries_arg2⁰) = block_lh_₂(7, dates_lh_₁(_lh_entries_arg1⁰, _lh_entries_arg2⁰))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then [LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)] else [LH_N]
+//│ def firstDays_lh_₁(_lh_firstDays_arg1⁰) = take_lh_₂(12, map_lh_₅((fun a¹ -> (a¹ % 7)), [LH_C jan1st_lh_₁(_lh_firstDays_arg1⁰) 
+//│ 	let _lh_matchIdent³⁷ = monthLengths_lh_₂(_lh_firstDays_arg1⁰)
+//│ 	in _lh_matchIdent³⁷((fun a² -> (fun b¹ -> (a² + b¹))), jan1st_lh_₁(_lh_firstDays_arg1⁰))]))
+//│ def foldr1_lh_₁(_lh_foldr1_arg1⁰, _lh_foldr1_arg2⁰) = case _lh_foldr1_arg2⁰ of {
+//│ 	LH_C _lh_foldr1_LH_C_0⁰ _lh_foldr1_LH_C_1⁰ => foldr_lh_₁(_lh_foldr1_arg1⁰, _lh_foldr1_LH_C_0⁰, _lh_foldr1_LH_C_1⁰)
+//│ 	| _  => error⁰}
+//│ def foldr1_lh_₂(_lh_foldr1_arg1¹, _lh_foldr1_arg2¹) = case _lh_foldr1_arg2¹ of {
+//│ 	LH_C _lh_foldr1_LH_C_0¹ _lh_foldr1_LH_C_1¹ => foldr_lh_₂(_lh_foldr1_arg1¹, _lh_foldr1_LH_C_0¹, _lh_foldr1_LH_C_1¹)
+//│ 	| _  => error⁰}
+//│ def foldr_lh_₁(f⁰, i⁰, ls⁰) = case ls⁰ of {
+//│ 	LH_C h¹ t¹ => f⁰(h¹, foldr_lh_₁(f⁰, i⁰, t¹))
+//│ 	| LH_N  => i⁰}
+//│ def foldr_lh_₂(f², i¹, ls¹) = case ls¹ of {
+//│ 	LH_C h⁴ t⁵ => f²(h⁴, foldr_lh_₂(f², i¹, t⁵))
+//│ 	| LH_N  => i¹}
+//│ def groop_lh_₁(_lh_groop_arg1⁰, _lh_groop_arg2⁰) = case _lh_groop_arg2⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| _  => [LH_C take_lh_₁(_lh_groop_arg1⁰, _lh_groop_arg2⁰) groop_lh_₁(_lh_groop_arg1⁰, drop_lh_₁(_lh_groop_arg1⁰, _lh_groop_arg2⁰))]}
+//│ def jan1st_lh_₁(_lh_jan1st_arg1⁰) = 
+//│ 	let last⁰ = (_lh_jan1st_arg1⁰ - 1)
+//│ 	in (div⁰((div⁰((div⁰((_lh_jan1st_arg1⁰ + last⁰), 4) - last⁰), 100) + last⁰), 400) % 7)
+//│ def leap_lh_₁(_lh_leap_arg1¹) = if ((_lh_leap_arg1¹ % 100) == 0) then ((_lh_leap_arg1¹ % 400) == 0) else ((_lh_leap_arg1¹ % 4) == 0)
+//│ def leap_lh_₂(_lh_leap_arg1⁰) = if ((_lh_leap_arg1⁰ % 100) == 0) then ((_lh_leap_arg1⁰ % 400) == 0) else ((_lh_leap_arg1⁰ % 4) == 0)
+//│ def length_lh_₁(ls⁷) = ls⁷(99)
+//│ def length_lh_₂(ls¹¹) = case ls¹¹ of {
+//│ 	LH_C h³⁹ t⁴¹ => (1 + length_lh_₂(t⁴¹))
+//│ 	| LH_N  => 0}
+//│ def length_lh_₃(ls⁹) = case ls⁹ of {
+//│ 	LH_C h³⁴ t³⁵ => (1 + length_lh_₃(t³⁵))
+//│ 	| LH_N  => 0}
+//│ def map_lh_₁(f¹², ls⁵) = case ls⁵ of {
+//│ 	LH_C h¹⁵ t¹⁶ => [LH_C f¹²(h¹⁵) map_lh_₁(f¹², t¹⁶)]
+//│ 	| LH_N  => [LH_N]}
+//│ def map_lh_₂(f⁶, ls⁴, _lh_popOutId_0⁰) = case ls⁴ of {
+//│ 	LH_C h¹³ t¹⁴ => 
+//│ 		let t¹⁵ = map_lh_₂(f⁶, t¹⁴)
+//│ 		in let h¹⁴ = f⁶(h¹³)
+//│ 		in h¹⁴(t¹⁵(99))
+//│ 	| LH_N  => (fun _lh_dummy⁴ -> 0)}
+//│ def map_lh_₃(f²⁸, ls⁸) = ls⁸(f²⁸)
+//│ def map_lh_₄(f³¹, ls¹⁰) = case ls¹⁰ of {
+//│ 	LH_C h³⁶ t³⁷ => [LH_C f³¹(h³⁶) map_lh_₄(f³¹, t³⁷)]
+//│ 	| LH_N  => [LH_N]}
+//│ def map_lh_₅(f¹³, ls⁶) = case ls⁶ of {
+//│ 	LH_C h¹⁹ t²⁰ => [LH_C f¹³(h¹⁹) map_lh_₅(f¹³, t²⁰)]
+//│ 	| LH_N  => [LH_N]}
+//│ def mappend_lh_₁(xs⁰, ys⁰) = xs⁰(ys⁰)
+//│ def mappend_lh_₁₀(xs³, ys⁶) = xs³(ys⁶)
+//│ def mappend_lh_₁₁(xs¹⁰, ys¹⁸) = case xs¹⁰ of {
+//│ 	LH_C h¹⁰ t¹¹ => [LH_C h¹⁰ mappend_lh_₁₁(t¹¹, ys¹⁸)]
+//│ 	| LH_N  => ys¹⁸}
+//│ def mappend_lh_₁₂(xs¹⁷, ys⁴⁰) = case xs¹⁷ of {
+//│ 	LH_C h³⁷ t³⁸ => [LH_C h³⁷ mappend_lh_₁₂(t³⁸, ys⁴⁰)]
+//│ 	| LH_N  => ys⁴⁰}
+//│ def mappend_lh_₁₃(xs¹², ys²⁰) = xs¹²(ys²⁰)
+//│ def mappend_lh_₁₄(xs⁸, ys¹³) = case xs⁸ of {
+//│ 	LH_C h⁶ t⁷ => [LH_C h⁶ mappend_lh_₁₄(t⁷, ys¹³)]
+//│ 	| LH_N  => ys¹³}
+//│ def mappend_lh_₁₅(xs¹⁴, ys²⁹) = case xs¹⁴ of {
+//│ 	LH_C h¹⁷ t¹⁸ => [LH_C h¹⁷ mappend_lh_₁₅(t¹⁸, ys²⁹)]
+//│ 	| LH_N  => ys²⁹}
+//│ def mappend_lh_₂(xs⁵, ys⁸) = xs⁵(ys⁸)
+//│ def mappend_lh_₃(xs¹, ys³) = case xs¹ of {
+//│ 	LH_C h² t² => 
+//│ 		let t³ = mappend_lh_₃(t², ys³)
+//│ 		in let h³ = h²
+//│ 		in (fun ys⁴ -> 
+//│ 			let t⁴ = t³(ys⁴)
+//│ 			in (fun _lh_dummy¹ -> (1 + t⁴(99))))
+//│ 	| LH_N  => ys³}
+//│ def mappend_lh_₄(xs¹¹, ys¹⁹) = case xs¹¹ of {
+//│ 	LH_C h¹² t¹³ => [LH_C h¹² mappend_lh_₄(t¹³, ys¹⁹)]
+//│ 	| LH_N  => ys¹⁹}
+//│ def mappend_lh_₅(xs⁶, ys⁹) = xs⁶(ys⁹)
+//│ def mappend_lh_₆(xs⁹, ys¹⁷) = xs⁹(ys¹⁷)
+//│ def mappend_lh_₇(xs⁴, ys⁷) = xs⁴(ys⁷)
+//│ def mappend_lh_₈(xs², ys⁵) = xs²(ys⁵)
+//│ def mappend_lh_₉(xs¹³, ys²⁸) = case xs¹³ of {
+//│ 	LH_C h¹⁶ t¹⁷ => [LH_C h¹⁶ mappend_lh_₉(t¹⁷, ys²⁸)]
+//│ 	| LH_N  => ys²⁸}
+//│ def monthLengths_lh_₁(_lh_monthLengths_arg1¹) = 
+//│ 	let feb¹ = if leap_lh_₁(_lh_monthLengths_arg1¹) then 29 else 28
+//│ 	in let _lh_zip3_LH_C_1¹⁶ = 	
+//│ 		let _lh_zip3_LH_C_1¹⁷ = 	
+//│ 			let _lh_zip3_LH_C_1¹⁸ = 	
+//│ 				let _lh_zip3_LH_C_1¹⁹ = 	
+//│ 					let _lh_zip3_LH_C_1²⁰ = 	
+//│ 						let _lh_zip3_LH_C_1²¹ = 	
+//│ 							let _lh_zip3_LH_C_1²² = 	
+//│ 								let _lh_zip3_LH_C_1²³ = 	
+//│ 									let _lh_zip3_LH_C_1²⁴ = 	
+//│ 										let _lh_zip3_LH_C_1²⁵ = 	
+//│ 											let _lh_zip3_LH_C_1²⁶ = 	
+//│ 												let _lh_zip3_LH_C_1²⁷ = (fun _lh_zip3_LH_C_0¹⁶ -> (fun _lh_zip3_LH_C_0¹⁷ -> (fun _lh_zip3_LH_C_1²⁸ -> (fun _lh_zip3_LH_C_1²⁹ -> (fun f¹⁵ -> [LH_N])))))
+//│ 												in let _lh_zip3_LH_C_0¹⁸ = 31
+//│ 												in (fun _lh_zip3_LH_C_0¹⁹ -> (fun _lh_zip3_LH_C_0²⁰ -> (fun _lh_zip3_LH_C_1³⁰ -> (fun _lh_zip3_LH_C_1³¹ -> 
+//│ 													let t²¹ = 	
+//│ 														let _lh_matchIdent²⁵ = _lh_zip3_LH_C_1³¹
+//│ 														in _lh_matchIdent²⁵(_lh_zip3_LH_C_1³⁰, _lh_zip3_LH_C_1²⁷)
+//│ 													in let h²⁰ = 	
+//│ 														let _lh_pic_LH_P3_2⁰ = _lh_zip3_LH_C_0¹⁸
+//│ 														in let _lh_pic_LH_P3_1⁰ = _lh_zip3_LH_C_0¹⁹
+//│ 														in let _lh_pic_LH_P3_0⁰ = _lh_zip3_LH_C_0²⁰
+//│ 														in (fun _lh_dummy⁶ -> title_lh_₁(_lh_pic_LH_P3_0⁰, table_lh_₁(_lh_pic_LH_P3_1⁰, _lh_pic_LH_P3_2⁰)))
+//│ 													in (fun f¹⁶ -> [LH_C f¹⁶(h²⁰) t²¹(f¹⁶)])))))
+//│ 											in let _lh_zip3_LH_C_0²¹ = 30
+//│ 											in (fun _lh_zip3_LH_C_0²² -> (fun _lh_zip3_LH_C_0²³ -> (fun _lh_zip3_LH_C_1³² -> (fun _lh_zip3_LH_C_1³³ -> 
+//│ 												let t²² = 	
+//│ 													let _lh_matchIdent²⁶ = _lh_zip3_LH_C_1³³
+//│ 													in _lh_matchIdent²⁶(_lh_zip3_LH_C_1³², _lh_zip3_LH_C_1²⁶)
+//│ 												in let h²¹ = 	
+//│ 													let _lh_pic_LH_P3_2¹ = _lh_zip3_LH_C_0²¹
+//│ 													in let _lh_pic_LH_P3_1¹ = _lh_zip3_LH_C_0²²
+//│ 													in let _lh_pic_LH_P3_0¹ = _lh_zip3_LH_C_0²³
+//│ 													in (fun _lh_dummy⁷ -> title_lh_₁(_lh_pic_LH_P3_0¹, table_lh_₁(_lh_pic_LH_P3_1¹, _lh_pic_LH_P3_2¹)))
+//│ 												in (fun f¹⁷ -> [LH_C f¹⁷(h²¹) t²²(f¹⁷)])))))
+//│ 										in let _lh_zip3_LH_C_0²⁴ = 31
+//│ 										in (fun _lh_zip3_LH_C_0²⁵ -> (fun _lh_zip3_LH_C_0²⁶ -> (fun _lh_zip3_LH_C_1³⁴ -> (fun _lh_zip3_LH_C_1³⁵ -> 
+//│ 											let t²³ = 	
+//│ 												let _lh_matchIdent²⁷ = _lh_zip3_LH_C_1³⁵
+//│ 												in _lh_matchIdent²⁷(_lh_zip3_LH_C_1³⁴, _lh_zip3_LH_C_1²⁵)
+//│ 											in let h²² = 	
+//│ 												let _lh_pic_LH_P3_2² = _lh_zip3_LH_C_0²⁴
+//│ 												in let _lh_pic_LH_P3_1² = _lh_zip3_LH_C_0²⁵
+//│ 												in let _lh_pic_LH_P3_0² = _lh_zip3_LH_C_0²⁶
+//│ 												in (fun _lh_dummy⁸ -> title_lh_₁(_lh_pic_LH_P3_0², table_lh_₁(_lh_pic_LH_P3_1², _lh_pic_LH_P3_2²)))
+//│ 											in (fun f¹⁸ -> [LH_C f¹⁸(h²²) t²³(f¹⁸)])))))
+//│ 									in let _lh_zip3_LH_C_0²⁷ = 30
+//│ 									in (fun _lh_zip3_LH_C_0²⁸ -> (fun _lh_zip3_LH_C_0²⁹ -> (fun _lh_zip3_LH_C_1³⁶ -> (fun _lh_zip3_LH_C_1³⁷ -> 
+//│ 										let t²⁴ = 	
+//│ 											let _lh_matchIdent²⁸ = _lh_zip3_LH_C_1³⁷
+//│ 											in _lh_matchIdent²⁸(_lh_zip3_LH_C_1³⁶, _lh_zip3_LH_C_1²⁴)
+//│ 										in let h²³ = 	
+//│ 											let _lh_pic_LH_P3_2³ = _lh_zip3_LH_C_0²⁷
+//│ 											in let _lh_pic_LH_P3_1³ = _lh_zip3_LH_C_0²⁸
+//│ 											in let _lh_pic_LH_P3_0³ = _lh_zip3_LH_C_0²⁹
+//│ 											in (fun _lh_dummy⁹ -> title_lh_₁(_lh_pic_LH_P3_0³, table_lh_₁(_lh_pic_LH_P3_1³, _lh_pic_LH_P3_2³)))
+//│ 										in (fun f¹⁹ -> [LH_C f¹⁹(h²³) t²⁴(f¹⁹)])))))
+//│ 								in let _lh_zip3_LH_C_0³⁰ = 31
+//│ 								in (fun _lh_zip3_LH_C_0³¹ -> (fun _lh_zip3_LH_C_0³² -> (fun _lh_zip3_LH_C_1³⁸ -> (fun _lh_zip3_LH_C_1³⁹ -> 
+//│ 									let t²⁵ = 	
+//│ 										let _lh_matchIdent²⁹ = _lh_zip3_LH_C_1³⁹
+//│ 										in _lh_matchIdent²⁹(_lh_zip3_LH_C_1³⁸, _lh_zip3_LH_C_1²³)
+//│ 									in let h²⁴ = 	
+//│ 										let _lh_pic_LH_P3_2⁴ = _lh_zip3_LH_C_0³⁰
+//│ 										in let _lh_pic_LH_P3_1⁴ = _lh_zip3_LH_C_0³¹
+//│ 										in let _lh_pic_LH_P3_0⁴ = _lh_zip3_LH_C_0³²
+//│ 										in (fun _lh_dummy¹⁰ -> title_lh_₁(_lh_pic_LH_P3_0⁴, table_lh_₁(_lh_pic_LH_P3_1⁴, _lh_pic_LH_P3_2⁴)))
+//│ 									in (fun f²⁰ -> [LH_C f²⁰(h²⁴) t²⁵(f²⁰)])))))
+//│ 							in let _lh_zip3_LH_C_0³³ = 31
+//│ 							in (fun _lh_zip3_LH_C_0³⁴ -> (fun _lh_zip3_LH_C_0³⁵ -> (fun _lh_zip3_LH_C_1⁴⁰ -> (fun _lh_zip3_LH_C_1⁴¹ -> 
+//│ 								let t²⁶ = 	
+//│ 									let _lh_matchIdent³⁰ = _lh_zip3_LH_C_1⁴¹
+//│ 									in _lh_matchIdent³⁰(_lh_zip3_LH_C_1⁴⁰, _lh_zip3_LH_C_1²²)
+//│ 								in let h²⁵ = 	
+//│ 									let _lh_pic_LH_P3_2⁵ = _lh_zip3_LH_C_0³³
+//│ 									in let _lh_pic_LH_P3_1⁵ = _lh_zip3_LH_C_0³⁴
+//│ 									in let _lh_pic_LH_P3_0⁵ = _lh_zip3_LH_C_0³⁵
+//│ 									in (fun _lh_dummy¹¹ -> title_lh_₁(_lh_pic_LH_P3_0⁵, table_lh_₁(_lh_pic_LH_P3_1⁵, _lh_pic_LH_P3_2⁵)))
+//│ 								in (fun f²¹ -> [LH_C f²¹(h²⁵) t²⁶(f²¹)])))))
+//│ 						in let _lh_zip3_LH_C_0³⁶ = 30
+//│ 						in (fun _lh_zip3_LH_C_0³⁷ -> (fun _lh_zip3_LH_C_0³⁸ -> (fun _lh_zip3_LH_C_1⁴² -> (fun _lh_zip3_LH_C_1⁴³ -> 
+//│ 							let t²⁷ = 	
+//│ 								let _lh_matchIdent³¹ = _lh_zip3_LH_C_1⁴³
+//│ 								in _lh_matchIdent³¹(_lh_zip3_LH_C_1⁴², _lh_zip3_LH_C_1²¹)
+//│ 							in let h²⁶ = 	
+//│ 								let _lh_pic_LH_P3_2⁶ = _lh_zip3_LH_C_0³⁶
+//│ 								in let _lh_pic_LH_P3_1⁶ = _lh_zip3_LH_C_0³⁷
+//│ 								in let _lh_pic_LH_P3_0⁶ = _lh_zip3_LH_C_0³⁸
+//│ 								in (fun _lh_dummy¹² -> title_lh_₁(_lh_pic_LH_P3_0⁶, table_lh_₁(_lh_pic_LH_P3_1⁶, _lh_pic_LH_P3_2⁶)))
+//│ 							in (fun f²² -> [LH_C f²²(h²⁶) t²⁷(f²²)])))))
+//│ 					in let _lh_zip3_LH_C_0³⁹ = 31
+//│ 					in (fun _lh_zip3_LH_C_0⁴⁰ -> (fun _lh_zip3_LH_C_0⁴¹ -> (fun _lh_zip3_LH_C_1⁴⁴ -> (fun _lh_zip3_LH_C_1⁴⁵ -> 
+//│ 						let t²⁸ = 	
+//│ 							let _lh_matchIdent³² = _lh_zip3_LH_C_1⁴⁵
+//│ 							in _lh_matchIdent³²(_lh_zip3_LH_C_1⁴⁴, _lh_zip3_LH_C_1²⁰)
+//│ 						in let h²⁷ = 	
+//│ 							let _lh_pic_LH_P3_2⁷ = _lh_zip3_LH_C_0³⁹
+//│ 							in let _lh_pic_LH_P3_1⁷ = _lh_zip3_LH_C_0⁴⁰
+//│ 							in let _lh_pic_LH_P3_0⁷ = _lh_zip3_LH_C_0⁴¹
+//│ 							in (fun _lh_dummy¹³ -> title_lh_₁(_lh_pic_LH_P3_0⁷, table_lh_₁(_lh_pic_LH_P3_1⁷, _lh_pic_LH_P3_2⁷)))
+//│ 						in (fun f²³ -> [LH_C f²³(h²⁷) t²⁸(f²³)])))))
+//│ 				in let _lh_zip3_LH_C_0⁴² = 30
+//│ 				in (fun _lh_zip3_LH_C_0⁴³ -> (fun _lh_zip3_LH_C_0⁴⁴ -> (fun _lh_zip3_LH_C_1⁴⁶ -> (fun _lh_zip3_LH_C_1⁴⁷ -> 
+//│ 					let t²⁹ = 	
+//│ 						let _lh_matchIdent³³ = _lh_zip3_LH_C_1⁴⁷
+//│ 						in _lh_matchIdent³³(_lh_zip3_LH_C_1⁴⁶, _lh_zip3_LH_C_1¹⁹)
+//│ 					in let h²⁸ = 	
+//│ 						let _lh_pic_LH_P3_2⁸ = _lh_zip3_LH_C_0⁴²
+//│ 						in let _lh_pic_LH_P3_1⁸ = _lh_zip3_LH_C_0⁴³
+//│ 						in let _lh_pic_LH_P3_0⁸ = _lh_zip3_LH_C_0⁴⁴
+//│ 						in (fun _lh_dummy¹⁴ -> title_lh_₁(_lh_pic_LH_P3_0⁸, table_lh_₁(_lh_pic_LH_P3_1⁸, _lh_pic_LH_P3_2⁸)))
+//│ 					in (fun f²⁴ -> [LH_C f²⁴(h²⁸) t²⁹(f²⁴)])))))
+//│ 			in let _lh_zip3_LH_C_0⁴⁵ = 31
+//│ 			in (fun _lh_zip3_LH_C_0⁴⁶ -> (fun _lh_zip3_LH_C_0⁴⁷ -> (fun _lh_zip3_LH_C_1⁴⁸ -> (fun _lh_zip3_LH_C_1⁴⁹ -> 
+//│ 				let t³⁰ = 	
+//│ 					let _lh_matchIdent³⁴ = _lh_zip3_LH_C_1⁴⁹
+//│ 					in _lh_matchIdent³⁴(_lh_zip3_LH_C_1⁴⁸, _lh_zip3_LH_C_1¹⁸)
+//│ 				in let h²⁹ = 	
+//│ 					let _lh_pic_LH_P3_2⁹ = _lh_zip3_LH_C_0⁴⁵
+//│ 					in let _lh_pic_LH_P3_1⁹ = _lh_zip3_LH_C_0⁴⁶
+//│ 					in let _lh_pic_LH_P3_0⁹ = _lh_zip3_LH_C_0⁴⁷
+//│ 					in (fun _lh_dummy¹⁵ -> title_lh_₁(_lh_pic_LH_P3_0⁹, table_lh_₁(_lh_pic_LH_P3_1⁹, _lh_pic_LH_P3_2⁹)))
+//│ 				in (fun f²⁵ -> [LH_C f²⁵(h²⁹) t³⁰(f²⁵)])))))
+//│ 		in let _lh_zip3_LH_C_0⁴⁸ = feb¹
+//│ 		in (fun _lh_zip3_LH_C_0⁴⁹ -> (fun _lh_zip3_LH_C_0⁵⁰ -> (fun _lh_zip3_LH_C_1⁵⁰ -> (fun _lh_zip3_LH_C_1⁵¹ -> 
+//│ 			let t³¹ = 	
+//│ 				let _lh_matchIdent³⁵ = _lh_zip3_LH_C_1⁵¹
+//│ 				in _lh_matchIdent³⁵(_lh_zip3_LH_C_1⁵⁰, _lh_zip3_LH_C_1¹⁷)
+//│ 			in let h³⁰ = 	
+//│ 				let _lh_pic_LH_P3_2¹⁰ = _lh_zip3_LH_C_0⁴⁸
+//│ 				in let _lh_pic_LH_P3_1¹⁰ = _lh_zip3_LH_C_0⁴⁹
+//│ 				in let _lh_pic_LH_P3_0¹⁰ = _lh_zip3_LH_C_0⁵⁰
+//│ 				in (fun _lh_dummy¹⁶ -> title_lh_₁(_lh_pic_LH_P3_0¹⁰, table_lh_₁(_lh_pic_LH_P3_1¹⁰, _lh_pic_LH_P3_2¹⁰)))
+//│ 			in (fun f²⁶ -> [LH_C f²⁶(h³⁰) t³¹(f²⁶)])))))
+//│ 	in let _lh_zip3_LH_C_0⁵¹ = 31
+//│ 	in (fun _lh_zip3_LH_C_0⁵² -> (fun _lh_zip3_LH_C_0⁵³ -> (fun _lh_zip3_LH_C_1⁵² -> (fun _lh_zip3_LH_C_1⁵³ -> 
+//│ 		let t³² = 	
+//│ 			let _lh_matchIdent³⁶ = _lh_zip3_LH_C_1⁵³
+//│ 			in _lh_matchIdent³⁶(_lh_zip3_LH_C_1⁵², _lh_zip3_LH_C_1¹⁶)
+//│ 		in let h³¹ = 	
+//│ 			let _lh_pic_LH_P3_2¹¹ = _lh_zip3_LH_C_0⁵¹
+//│ 			in let _lh_pic_LH_P3_1¹¹ = _lh_zip3_LH_C_0⁵²
+//│ 			in let _lh_pic_LH_P3_0¹¹ = _lh_zip3_LH_C_0⁵³
+//│ 			in (fun _lh_dummy¹⁷ -> title_lh_₁(_lh_pic_LH_P3_0¹¹, table_lh_₁(_lh_pic_LH_P3_1¹¹, _lh_pic_LH_P3_2¹¹)))
+//│ 		in (fun f²⁷ -> [LH_C f²⁷(h³¹) t³²(f²⁷)])))))
+//│ def monthLengths_lh_₂(_lh_monthLengths_arg1⁰) = 
+//│ 	let feb⁰ = if leap_lh_₂(_lh_monthLengths_arg1⁰) then 29 else 28
+//│ 	in let _lh_scanl_LH_C_1⁰ = 	
+//│ 		let _lh_scanl_LH_C_1¹ = 	
+//│ 			let _lh_scanl_LH_C_1² = 	
+//│ 				let _lh_scanl_LH_C_1³ = 	
+//│ 					let _lh_scanl_LH_C_1⁴ = 	
+//│ 						let _lh_scanl_LH_C_1⁵ = 	
+//│ 							let _lh_scanl_LH_C_1⁶ = 	
+//│ 								let _lh_scanl_LH_C_1⁷ = 	
+//│ 									let _lh_scanl_LH_C_1⁸ = 	
+//│ 										let _lh_scanl_LH_C_1⁹ = 	
+//│ 											let _lh_scanl_LH_C_1¹⁰ = 	
+//│ 												let _lh_scanl_LH_C_1¹¹ = (fun _lh_scanl_arg1⁰ -> (fun _lh_scanl_arg2⁰ -> [LH_N]))
+//│ 												in let _lh_scanl_LH_C_0⁰ = 31
+//│ 												in (fun _lh_scanl_arg1¹ -> (fun _lh_scanl_arg2¹ -> [LH_C _lh_scanl_arg1¹(_lh_scanl_arg2¹, _lh_scanl_LH_C_0⁰) 
+//│ 													let _lh_matchIdent⁰ = _lh_scanl_LH_C_1¹¹
+//│ 													in _lh_matchIdent⁰(_lh_scanl_arg1¹, _lh_scanl_arg1¹(_lh_scanl_arg2¹, _lh_scanl_LH_C_0⁰))]))
+//│ 											in let _lh_scanl_LH_C_0¹ = 30
+//│ 											in (fun _lh_scanl_arg1² -> (fun _lh_scanl_arg2² -> [LH_C _lh_scanl_arg1²(_lh_scanl_arg2², _lh_scanl_LH_C_0¹) 
+//│ 												let _lh_matchIdent¹ = _lh_scanl_LH_C_1¹⁰
+//│ 												in _lh_matchIdent¹(_lh_scanl_arg1², _lh_scanl_arg1²(_lh_scanl_arg2², _lh_scanl_LH_C_0¹))]))
+//│ 										in let _lh_scanl_LH_C_0² = 31
+//│ 										in (fun _lh_scanl_arg1³ -> (fun _lh_scanl_arg2³ -> [LH_C _lh_scanl_arg1³(_lh_scanl_arg2³, _lh_scanl_LH_C_0²) 
+//│ 											let _lh_matchIdent² = _lh_scanl_LH_C_1⁹
+//│ 											in _lh_matchIdent²(_lh_scanl_arg1³, _lh_scanl_arg1³(_lh_scanl_arg2³, _lh_scanl_LH_C_0²))]))
+//│ 									in let _lh_scanl_LH_C_0³ = 30
+//│ 									in (fun _lh_scanl_arg1⁴ -> (fun _lh_scanl_arg2⁴ -> [LH_C _lh_scanl_arg1⁴(_lh_scanl_arg2⁴, _lh_scanl_LH_C_0³) 
+//│ 										let _lh_matchIdent³ = _lh_scanl_LH_C_1⁸
+//│ 										in _lh_matchIdent³(_lh_scanl_arg1⁴, _lh_scanl_arg1⁴(_lh_scanl_arg2⁴, _lh_scanl_LH_C_0³))]))
+//│ 								in let _lh_scanl_LH_C_0⁴ = 31
+//│ 								in (fun _lh_scanl_arg1⁵ -> (fun _lh_scanl_arg2⁵ -> [LH_C _lh_scanl_arg1⁵(_lh_scanl_arg2⁵, _lh_scanl_LH_C_0⁴) 
+//│ 									let _lh_matchIdent⁴ = _lh_scanl_LH_C_1⁷
+//│ 									in _lh_matchIdent⁴(_lh_scanl_arg1⁵, _lh_scanl_arg1⁵(_lh_scanl_arg2⁵, _lh_scanl_LH_C_0⁴))]))
+//│ 							in let _lh_scanl_LH_C_0⁵ = 31
+//│ 							in (fun _lh_scanl_arg1⁶ -> (fun _lh_scanl_arg2⁶ -> [LH_C _lh_scanl_arg1⁶(_lh_scanl_arg2⁶, _lh_scanl_LH_C_0⁵) 
+//│ 								let _lh_matchIdent⁵ = _lh_scanl_LH_C_1⁶
+//│ 								in _lh_matchIdent⁵(_lh_scanl_arg1⁶, _lh_scanl_arg1⁶(_lh_scanl_arg2⁶, _lh_scanl_LH_C_0⁵))]))
+//│ 						in let _lh_scanl_LH_C_0⁶ = 30
+//│ 						in (fun _lh_scanl_arg1⁷ -> (fun _lh_scanl_arg2⁷ -> [LH_C _lh_scanl_arg1⁷(_lh_scanl_arg2⁷, _lh_scanl_LH_C_0⁶) 
+//│ 							let _lh_matchIdent⁶ = _lh_scanl_LH_C_1⁵
+//│ 							in _lh_matchIdent⁶(_lh_scanl_arg1⁷, _lh_scanl_arg1⁷(_lh_scanl_arg2⁷, _lh_scanl_LH_C_0⁶))]))
+//│ 					in let _lh_scanl_LH_C_0⁷ = 31
+//│ 					in (fun _lh_scanl_arg1⁸ -> (fun _lh_scanl_arg2⁸ -> [LH_C _lh_scanl_arg1⁸(_lh_scanl_arg2⁸, _lh_scanl_LH_C_0⁷) 
+//│ 						let _lh_matchIdent⁷ = _lh_scanl_LH_C_1⁴
+//│ 						in _lh_matchIdent⁷(_lh_scanl_arg1⁸, _lh_scanl_arg1⁸(_lh_scanl_arg2⁸, _lh_scanl_LH_C_0⁷))]))
+//│ 				in let _lh_scanl_LH_C_0⁸ = 30
+//│ 				in (fun _lh_scanl_arg1⁹ -> (fun _lh_scanl_arg2⁹ -> [LH_C _lh_scanl_arg1⁹(_lh_scanl_arg2⁹, _lh_scanl_LH_C_0⁸) 
+//│ 					let _lh_matchIdent⁸ = _lh_scanl_LH_C_1³
+//│ 					in _lh_matchIdent⁸(_lh_scanl_arg1⁹, _lh_scanl_arg1⁹(_lh_scanl_arg2⁹, _lh_scanl_LH_C_0⁸))]))
+//│ 			in let _lh_scanl_LH_C_0⁹ = 31
+//│ 			in (fun _lh_scanl_arg1¹⁰ -> (fun _lh_scanl_arg2¹⁰ -> [LH_C _lh_scanl_arg1¹⁰(_lh_scanl_arg2¹⁰, _lh_scanl_LH_C_0⁹) 
+//│ 				let _lh_matchIdent⁹ = _lh_scanl_LH_C_1²
+//│ 				in _lh_matchIdent⁹(_lh_scanl_arg1¹⁰, _lh_scanl_arg1¹⁰(_lh_scanl_arg2¹⁰, _lh_scanl_LH_C_0⁹))]))
+//│ 		in let _lh_scanl_LH_C_0¹⁰ = feb⁰
+//│ 		in (fun _lh_scanl_arg1¹¹ -> (fun _lh_scanl_arg2¹¹ -> [LH_C _lh_scanl_arg1¹¹(_lh_scanl_arg2¹¹, _lh_scanl_LH_C_0¹⁰) 
+//│ 			let _lh_matchIdent¹⁰ = _lh_scanl_LH_C_1¹
+//│ 			in _lh_matchIdent¹⁰(_lh_scanl_arg1¹¹, _lh_scanl_arg1¹¹(_lh_scanl_arg2¹¹, _lh_scanl_LH_C_0¹⁰))]))
+//│ 	in let _lh_scanl_LH_C_0¹¹ = 31
+//│ 	in (fun _lh_scanl_arg1¹² -> (fun _lh_scanl_arg2¹² -> [LH_C _lh_scanl_arg1¹²(_lh_scanl_arg2¹², _lh_scanl_LH_C_0¹¹) 
+//│ 		let _lh_matchIdent¹¹ = _lh_scanl_LH_C_1⁰
+//│ 		in _lh_matchIdent¹¹(_lh_scanl_arg1¹², _lh_scanl_arg1¹²(_lh_scanl_arg2¹², _lh_scanl_LH_C_0¹¹))]))
+//│ def monthNames_lh_₁ = 
+//│ 	let _lh_zip3_LH_C_1⁰ = 	
+//│ 		let _lh_zip3_LH_C_1¹ = 	
+//│ 			let _lh_zip3_LH_C_1² = 	
+//│ 				let _lh_zip3_LH_C_1³ = 	
+//│ 					let _lh_zip3_LH_C_1⁴ = 	
+//│ 						let _lh_zip3_LH_C_1⁵ = 	
+//│ 							let _lh_zip3_LH_C_1⁶ = 	
+//│ 								let _lh_zip3_LH_C_1⁷ = 	
+//│ 									let _lh_zip3_LH_C_1⁸ = 	
+//│ 										let _lh_zip3_LH_C_1⁹ = 	
+//│ 											let _lh_zip3_LH_C_1¹⁰ = 	
+//│ 												let _lh_zip3_LH_C_1¹¹ = (fun _lh_zip3_arg2⁰ -> (fun _lh_zip3_arg3⁰ -> (fun f¹ -> [LH_N])))
+//│ 												in let _lh_zip3_LH_C_0⁰ = [LH_C 'D' [LH_C 'e' [LH_C 'c' [LH_C 'e' [LH_C 'm' [LH_C 'b' [LH_C 'e' [LH_C 'r' [LH_N]]]]]]]]]
+//│ 												in (fun _lh_zip3_arg2¹ -> (fun _lh_zip3_arg3¹ -> 
+//│ 													let _lh_matchIdent¹² = _lh_zip3_arg2¹
+//│ 													in _lh_matchIdent¹²(_lh_zip3_LH_C_0⁰, _lh_zip3_LH_C_1¹¹, _lh_zip3_arg3¹)))
+//│ 											in let _lh_zip3_LH_C_0¹ = [LH_C 'N' [LH_C 'o' [LH_C 'v' [LH_C 'e' [LH_C 'm' [LH_C 'b' [LH_C 'e' [LH_C 'r' [LH_N]]]]]]]]]
+//│ 											in (fun _lh_zip3_arg2² -> (fun _lh_zip3_arg3² -> 
+//│ 												let _lh_matchIdent¹³ = _lh_zip3_arg2²
+//│ 												in _lh_matchIdent¹³(_lh_zip3_LH_C_0¹, _lh_zip3_LH_C_1¹⁰, _lh_zip3_arg3²)))
+//│ 										in let _lh_zip3_LH_C_0² = [LH_C 'O' [LH_C 'c' [LH_C 't' [LH_C 'o' [LH_C 'b' [LH_C 'e' [LH_C 'r' [LH_N]]]]]]]]
+//│ 										in (fun _lh_zip3_arg2³ -> (fun _lh_zip3_arg3³ -> 
+//│ 											let _lh_matchIdent¹⁴ = _lh_zip3_arg2³
+//│ 											in _lh_matchIdent¹⁴(_lh_zip3_LH_C_0², _lh_zip3_LH_C_1⁹, _lh_zip3_arg3³)))
+//│ 									in let _lh_zip3_LH_C_0³ = [LH_C 'S' [LH_C 'e' [LH_C 'p' [LH_C 't' [LH_C 'e' [LH_C 'm' [LH_C 'b' [LH_C 'e' [LH_C 'r' [LH_N]]]]]]]]]]
+//│ 									in (fun _lh_zip3_arg2⁴ -> (fun _lh_zip3_arg3⁴ -> 
+//│ 										let _lh_matchIdent¹⁵ = _lh_zip3_arg2⁴
+//│ 										in _lh_matchIdent¹⁵(_lh_zip3_LH_C_0³, _lh_zip3_LH_C_1⁸, _lh_zip3_arg3⁴)))
+//│ 								in let _lh_zip3_LH_C_0⁴ = [LH_C 'A' [LH_C 'u' [LH_C 'g' [LH_C 'u' [LH_C 's' [LH_C 't' [LH_N]]]]]]]
+//│ 								in (fun _lh_zip3_arg2⁵ -> (fun _lh_zip3_arg3⁵ -> 
+//│ 									let _lh_matchIdent¹⁶ = _lh_zip3_arg2⁵
+//│ 									in _lh_matchIdent¹⁶(_lh_zip3_LH_C_0⁴, _lh_zip3_LH_C_1⁷, _lh_zip3_arg3⁵)))
+//│ 							in let _lh_zip3_LH_C_0⁵ = [LH_C 'J' [LH_C 'u' [LH_C 'l' [LH_C 'y' [LH_N]]]]]
+//│ 							in (fun _lh_zip3_arg2⁶ -> (fun _lh_zip3_arg3⁶ -> 
+//│ 								let _lh_matchIdent¹⁷ = _lh_zip3_arg2⁶
+//│ 								in _lh_matchIdent¹⁷(_lh_zip3_LH_C_0⁵, _lh_zip3_LH_C_1⁶, _lh_zip3_arg3⁶)))
+//│ 						in let _lh_zip3_LH_C_0⁶ = [LH_C 'J' [LH_C 'u' [LH_C 'n' [LH_C 'e' [LH_N]]]]]
+//│ 						in (fun _lh_zip3_arg2⁷ -> (fun _lh_zip3_arg3⁷ -> 
+//│ 							let _lh_matchIdent¹⁸ = _lh_zip3_arg2⁷
+//│ 							in _lh_matchIdent¹⁸(_lh_zip3_LH_C_0⁶, _lh_zip3_LH_C_1⁵, _lh_zip3_arg3⁷)))
+//│ 					in let _lh_zip3_LH_C_0⁷ = [LH_C 'M' [LH_C 'a' [LH_C 'y' [LH_N]]]]
+//│ 					in (fun _lh_zip3_arg2⁸ -> (fun _lh_zip3_arg3⁸ -> 
+//│ 						let _lh_matchIdent¹⁹ = _lh_zip3_arg2⁸
+//│ 						in _lh_matchIdent¹⁹(_lh_zip3_LH_C_0⁷, _lh_zip3_LH_C_1⁴, _lh_zip3_arg3⁸)))
+//│ 				in let _lh_zip3_LH_C_0⁸ = [LH_C 'A' [LH_C 'p' [LH_C 'r' [LH_C 'i' [LH_C 'l' [LH_N]]]]]]
+//│ 				in (fun _lh_zip3_arg2⁹ -> (fun _lh_zip3_arg3⁹ -> 
+//│ 					let _lh_matchIdent²⁰ = _lh_zip3_arg2⁹
+//│ 					in _lh_matchIdent²⁰(_lh_zip3_LH_C_0⁸, _lh_zip3_LH_C_1³, _lh_zip3_arg3⁹)))
+//│ 			in let _lh_zip3_LH_C_0⁹ = [LH_C 'M' [LH_C 'a' [LH_C 'r' [LH_C 'c' [LH_C 'h' [LH_N]]]]]]
+//│ 			in (fun _lh_zip3_arg2¹⁰ -> (fun _lh_zip3_arg3¹⁰ -> 
+//│ 				let _lh_matchIdent²¹ = _lh_zip3_arg2¹⁰
+//│ 				in _lh_matchIdent²¹(_lh_zip3_LH_C_0⁹, _lh_zip3_LH_C_1², _lh_zip3_arg3¹⁰)))
+//│ 		in let _lh_zip3_LH_C_0¹⁰ = [LH_C 'F' [LH_C 'e' [LH_C 'b' [LH_C 'r' [LH_C 'u' [LH_C 'a' [LH_C 'r' [LH_C 'y' [LH_N]]]]]]]]]
+//│ 		in (fun _lh_zip3_arg2¹¹ -> (fun _lh_zip3_arg3¹¹ -> 
+//│ 			let _lh_matchIdent²² = _lh_zip3_arg2¹¹
+//│ 			in _lh_matchIdent²²(_lh_zip3_LH_C_0¹⁰, _lh_zip3_LH_C_1¹, _lh_zip3_arg3¹¹)))
+//│ 	in let _lh_zip3_LH_C_0¹¹ = [LH_C 'J' [LH_C 'a' [LH_C 'n' [LH_C 'u' [LH_C 'a' [LH_C 'r' [LH_C 'y' [LH_N]]]]]]]]
+//│ 	in (fun _lh_zip3_arg2¹² -> (fun _lh_zip3_arg3¹² -> 
+//│ 		let _lh_matchIdent²³ = _lh_zip3_arg2¹²
+//│ 		in _lh_matchIdent²³(_lh_zip3_LH_C_0¹¹, _lh_zip3_LH_C_1⁰, _lh_zip3_arg3¹²)))
+//│ def months_lh_₁(_lh_months_arg1⁰) = 
+//│ 	let _lh_matchIdent³⁸ = monthNames_lh_₁
+//│ 	in _lh_matchIdent³⁸(firstDays_lh_₁(_lh_months_arg1⁰), monthLengths_lh_₁(_lh_months_arg1⁰))
+//│ def pad_lh_₁(_lh_pad_arg1⁰) = side_lh_₂(0, mappend_lh_₇, _lh_pad_arg1⁰, mappend_lh_₉, side_lh_₁(0), end_lh_₁(0))
+//│ def pic_lh_₁(_lh_pic_arg1⁰) = _lh_pic_arg1⁰(99)
+//│ def rjustify_lh_₁(_lh_rjustify_arg1⁰, _lh_rjustify_arg2⁰) = mappend_lh_₁₅(space_lh_₄((_lh_rjustify_arg1⁰ - length_lh_₃(_lh_rjustify_arg2⁰))), _lh_rjustify_arg2⁰)
+//│ def scanl_lh_₁(_lh_scanl_arg1¹³, _lh_scanl_arg2¹³, _lh_scanl_arg3⁰) = [LH_C _lh_scanl_arg2¹³ 
+//│ 	let _lh_matchIdent³⁹ = _lh_scanl_arg3⁰
+//│ 	in _lh_matchIdent³⁹(_lh_scanl_arg1¹³, _lh_scanl_arg2¹³)]
+//│ def side_lh_₁(_lh_side_arg1⁰) = 
+//│ 	let _lh_emptyPic_LH_P2_1⁰ = 2
+//│ 	in let _lh_emptyPic_LH_P2_0⁰ = 8
+//│ 	in (fun _lh_dummy⁰ -> copy_lh_₆(_lh_emptyPic_LH_P2_0⁰, copy_lh_₅(_lh_emptyPic_LH_P2_1⁰, ' ')))(99)
+//│ def side_lh_₂(_lh_side_arg1¹) = 
+//│ 	let _lh_emptyPic_LH_P2_1³ = 2
+//│ 	in let _lh_emptyPic_LH_P2_0³ = 8
+//│ 	in (fun _lh_dummy⁵ -> copy_lh_₁₀(_lh_emptyPic_LH_P2_0³, copy_lh_₉(_lh_emptyPic_LH_P2_1³, ' ')))(99)
+//│ def space_lh_₁(_lh_space_arg1³) = copy_lh_₃(_lh_space_arg1³, ' ')
+//│ def space_lh_₂(_lh_space_arg1¹) = copy_lh_₄(_lh_space_arg1¹, ' ')
+//│ def space_lh_₃(_lh_space_arg1²) = copy_lh_₁₁(_lh_space_arg1², ' ')
+//│ def space_lh_₄(_lh_space_arg1⁰) = copy_lh_₁₁(_lh_space_arg1⁰, ' ')
+//│ def spread_lh_₁(_lh_spread_arg1⁰) = foldr1_lh_₂((fun a³ -> (fun b² -> zipWith_lh_₃(mappend_lh_₁₂, a³, b²))), _lh_spread_arg1⁰)
+//│ def stack_lh_₁(_lh_stack_arg1⁰) = foldr1_lh_₁((fun a⁴ -> (fun b³ -> mappend_lh_₁₁(a⁴, b³))), _lh_stack_arg1⁰)
+//│ def table_lh_₁(_lh_table_arg1⁰, _lh_table_arg2⁰) = daynames_lh_₁(entries_lh_₁(_lh_table_arg1⁰, _lh_table_arg2⁰))
+//│ def take_lh_₁(n¹, ls³) = if (n¹ > 0) then case ls³ of {
+//│ 	LH_C h¹¹ t¹² => [LH_C h¹¹ take_lh_₁((n¹ - 1), t¹²)]
+//│ 	| LH_N  => [LH_N]} else [LH_N]
+//│ def take_lh_₂(n⁰, ls²) = if (n⁰ > 0) then case ls² of {
+//│ 	LH_C h⁹ t¹⁰ => 
+//│ 		let _lh_zip3_LH_C_1¹² = take_lh_₂((n⁰ - 1), t¹⁰)
+//│ 		in let _lh_zip3_LH_C_0¹² = h⁹
+//│ 		in (fun _lh_zip3_LH_C_0¹³ -> (fun _lh_zip3_LH_C_1¹³ -> (fun _lh_zip3_arg3¹³ -> 
+//│ 			let _lh_matchIdent²⁴ = _lh_zip3_arg3¹³
+//│ 			in _lh_matchIdent²⁴(_lh_zip3_LH_C_0¹², _lh_zip3_LH_C_0¹³, _lh_zip3_LH_C_1¹², _lh_zip3_LH_C_1¹³))))
+//│ 	| LH_N  => (fun _lh_zip3_LH_C_0¹⁴ -> (fun _lh_zip3_LH_C_1¹⁴ -> (fun _lh_zip3_arg3¹⁴ -> (fun f⁴ -> [LH_N]))))} else (fun _lh_zip3_LH_C_0¹⁵ -> (fun _lh_zip3_LH_C_1¹⁵ -> (fun _lh_zip3_arg3¹⁵ -> (fun f⁵ -> [LH_N]))))
+//│ def testCalendar_nofib_lh_₁(_lh_testCalendar_nofib_arg1⁰) = map_lh_₁((fun n² -> cal_lh_₁(n², 99)), primId⁰(enumFromTo_lh_₁(2008, (2008 + _lh_testCalendar_nofib_arg1⁰))))
+//│ def title_lh_₁(_lh_title_arg1⁰, ys³⁰) = 
+//│ 	let t¹⁹ = (fun ys³¹ -> ys³¹)
+//│ 	in let h¹⁸ = cjustify_lh_₂(21, _lh_title_arg1⁰)
+//│ 	in [LH_C h¹⁸ t¹⁹(ys³⁰)]
+//│ def unlines_lh_₁(_lh_unlines_arg1⁰) = map_lh_₂((fun l⁰ -> mappend_lh_₃(l⁰, 
+//│ 	let t³⁹ = (fun ys⁴¹ -> ys⁴¹)
+//│ 	in let h³⁸ = 'n'
+//│ 	in (fun ys⁴² -> 
+//│ 		let t⁴⁰ = t³⁹(ys⁴²)
+//│ 		in (fun _lh_dummy¹⁸ -> (1 + t⁴⁰(99)))))), _lh_unlines_arg1⁰, 99)
+//│ def zip3_lh_₁(_lh_zip3_arg1⁰, _lh_zip3_arg2¹³, _lh_zip3_arg3¹⁶) = 
+//│ 	let _lh_matchIdent⁴⁰ = _lh_zip3_arg1⁰
+//│ 	in _lh_matchIdent⁴⁰(_lh_zip3_arg2¹³, _lh_zip3_arg3¹⁶)
+//│ def zipWith_lh_₁(f¹⁴, xs¹⁵, ys³²) = xs¹⁵(f¹⁴, ys³²)
+//│ def zipWith_lh_₂(f³, xs⁷, ys¹⁰) = xs⁷(f³, ys¹⁰)
+//│ def zipWith_lh_₃(f³², xs¹⁶, ys³⁹) = case xs¹⁶ of {
+//│ 	LH_C hx⁴ tx⁴ => case ys³⁹ of {
+//│ 		LH_C hy² ty² => [LH_C f³²(hx⁴, hy²) zipWith_lh_₃(f³², tx⁴, ty²)]
+//│ 		| LH_N  => [LH_N]}
+//│ 	| LH_N  => [LH_N]}
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

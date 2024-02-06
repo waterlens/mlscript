@@ -73,6 +73,40 @@ main(3)
 //│ 	[C [P2 1 3] [C [P2 2 4] [C [P2 3 5] [N]]]]
 //│ 	3
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main(3)
+//│ def fromTo(a⁰, b⁰) = if (a⁰ < (b⁰ + 1)) then [C a⁰ fromTo((a⁰ + 1), b⁰)] else [N]
+//│ def main(n⁰) = 
+//│ 	zip(fromTo(1, n⁰), fromTo((1 + 2), (n⁰ + 2)))
+//│ 	n⁰
+//│ def zip(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C hx⁰ tx⁰ => case ys⁰ of {
+//│ 		C hy⁰ ty⁰ => [C [P2 hx⁰ hy⁰] zip(tx⁰, ty⁰)]
+//│ 		| N  => [N]}
+//│ 	| N  => [N]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main(3)
+//│ def fromTo(a⁰, b⁰) = if (a⁰ < (b⁰ + 1)) then [C a⁰ fromTo((a⁰ + 1), b⁰)] else [N]
+//│ def main(n⁰) = 
+//│ 	zip(fromTo(1, n⁰), fromTo((1 + 2), (n⁰ + 2)))
+//│ 	n⁰
+//│ def zip(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C hx⁰ tx⁰ => case ys⁰ of {
+//│ 		C hy⁰ ty⁰ => [C [P2 hx⁰ hy⁰] zip(tx⁰, ty⁰)]
+//│ 		| N  => [N]}
+//│ 	| N  => [N]}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 _LUMBERHACK_EVAL
@@ -190,3 +224,51 @@ mapZip(
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 7 [C 9 [N]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ fp2, mapZip
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ zip -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ zip(map((fun x⁰ -> (x⁰ + 1)), primId⁰([C 1 [C 2 [N]]])), map((fun x¹ -> (x¹ + 2)), primId⁰([C 3 [C 4 [N]]])), fp2)
+//│ def fp2(p⁰) = p⁰(99)
+//│ def map(f³, ls⁰) = case ls⁰ of {
+//│ 	C h¹ t¹ => [C f³(h¹) map(f³, t¹)]
+//│ 	| N  => [N]}
+//│ def mapZip(f⁴, ls¹) = ls¹(f⁴)
+//│ def zip(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C hx⁰ tx⁰ => case ys⁰ of {
+//│ 		C hy⁰ ty⁰ => 
+//│ 			let t⁰ = zip(tx⁰, ty⁰)
+//│ 			in let h⁰ = 	
+//│ 				let b⁰ = hy⁰
+//│ 				in let a⁰ = hx⁰
+//│ 				in (fun _lh_dummy⁰ -> (a⁰ + b⁰))
+//│ 			in (fun f⁰ -> [C f⁰(h⁰) t⁰(f⁰)])
+//│ 		| N  => (fun f¹ -> [N])}
+//│ 	| N  => (fun f² -> [N])}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ zip(map((fun x⁰ -> (x⁰ + 1)), primId⁰([C 1 [C 2 [N]]])), map((fun x¹ -> (x¹ + 2)), primId⁰([C 3 [C 4 [N]]])), fp2)
+//│ def fp2(p⁰) = p⁰(99)
+//│ def map(f⁰, ls⁰) = case ls⁰ of {
+//│ 	C h¹ t¹ => [C f⁰(h¹) map(f⁰, t¹)]
+//│ 	| N  => [N]}
+//│ def mapZip(f¹, ls¹) = ls¹(f¹)
+//│ def zip(xs⁰, ys⁰, _lh_popOutId_0⁰) = case xs⁰ of {
+//│ 	C hx⁰ tx⁰ => case ys⁰ of {
+//│ 		C hy⁰ ty⁰ => 
+//│ 			let t⁰ = zip(tx⁰, ty⁰)
+//│ 			in let h⁰ = 	
+//│ 				let b⁰ = hy⁰
+//│ 				in let a⁰ = hx⁰
+//│ 				in (fun _lh_dummy⁰ -> (a⁰ + b⁰))
+//│ 			in [C _lh_popOutId_0⁰(h⁰) t⁰(_lh_popOutId_0⁰)]
+//│ 		| N  => [N]}
+//│ 	| N  => [N]}
+//│ <<<<<<< after floating out <<<<<<<

@@ -54,6 +54,26 @@ f(A, ReturnValue, B)
 //│ >>>>>>> evaluate >>>>>>>
 //│ [ReturnValue]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ f
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ (fun ret⁰ -> (fun b⁰ -> case b⁰ of {
+//│ 	B  => ret⁰}))([ReturnValue], [B])
+//│ def f(a⁰, ret¹) = a⁰(ret¹)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ (fun ret⁰ -> (fun b⁰ -> case b⁰ of {
+//│ 	B  => ret⁰}))([ReturnValue], [B])
+//│ def f(a⁰, ret¹) = a⁰(ret¹)
+//│ <<<<<<< after floating out <<<<<<<
 
 // NOTE: mlscript thinks this is ok, but not ocaml
 :lhError
@@ -172,6 +192,28 @@ dropWhile(C(N))
 //│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ dropWhile([C [N]])
+//│ def dropWhile(ls⁰) = case ls⁰ of {
+//│ 	N  => [C [N]]
+//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ dropWhile([C [N]])
+//│ def dropWhile(ls⁰) = case ls⁰ of {
+//│ 	N  => [C [N]]
+//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
@@ -270,6 +312,28 @@ fun dropWhile(ls) = if ls is
 //│ 	N  => [C [N]]
 //│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ (fun x⁰ -> 2)(dropWhile([C [N]]))
+//│ def dropWhile(ls⁰) = case ls⁰ of {
+//│ 	N  => [C [N]]
+//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ (fun x⁰ -> 2)(dropWhile([C [N]]))
+//│ def dropWhile(ls⁰) = case ls⁰ of {
+//│ 	N  => [C [N]]
+//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
@@ -378,6 +442,30 @@ f(dropWhile(C(N)))
 //│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
 //│ def f(x¹) = [Pair f([C [N]]) f(x¹)]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f(dropWhile([C [N]]))
+//│ def dropWhile(ls⁰) = case ls⁰ of {
+//│ 	N  => [N]
+//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
+//│ def f(x⁰) = [Pair f([C [N]]) f(x⁰)]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f(dropWhile([C [N]]))
+//│ def dropWhile(ls⁰) = case ls⁰ of {
+//│ 	N  => [N]
+//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
+//│ def f(x⁰) = [Pair f([C [N]]) f(x⁰)]
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
@@ -518,6 +606,38 @@ f(dropWhile(C(N)))
 //│ 		C a⁰ => [N]
 //│ 		| N  => f(x³)}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f(dropWhile([C [N]]))
+//│ def dropWhile(ls⁰) = case ls⁰ of {
+//│ 	N  => [N]
+//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
+//│ def f(x⁰) = 
+//│ 	let x¹ = f([C [N]])
+//│ 	in case x¹ of {
+//│ 		C a⁰ => [N]
+//│ 		| N  => f(x¹)}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f(dropWhile([C [N]]))
+//│ def dropWhile(ls⁰) = case ls⁰ of {
+//│ 	N  => [N]
+//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
+//│ def f(x⁰) = 
+//│ 	let x¹ = f([C [N]])
+//│ 	in case x¹ of {
+//│ 		C a⁰ => [N]
+//│ 		| N  => f(x¹)}
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
@@ -767,6 +887,66 @@ fun words1(ls) =
 //│ 		| _  => break(mident³)}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ (fun x⁰ -> 2)(words0)
+//│ def break(ls⁰) = case ls⁰ of {
+//│ 	N  => 
+//│ 		let fst⁰ = [N]
+//│ 		in let snd⁰ = [N]
+//│ 		in [C fst⁰ words1(snd⁰)]
+//│ 	| C h⁰ t⁰ => 
+//│ 		let fst¹ = [N]
+//│ 		in let snd¹ = [C h⁰ t⁰]
+//│ 		in [C fst¹ words1(snd¹)]}
+//│ def dropWhile(p⁰, ls¹) = case ls¹ of {
+//│ 	N  => [N]
+//│ 	| C h¹ t¹ => if p⁰(h¹) then dropWhile(p⁰, t¹) else [C h¹ t¹]}
+//│ def words0(ls²) = 
+//│ 	let mident⁰ = dropWhile((fun x¹ -> [False]), ls²)
+//│ 	in case mident⁰ of {
+//│ 		N  => [N]
+//│ 		| _  => break(mident⁰)}
+//│ def words1(ls³) = 
+//│ 	let mident¹ = dropWhile((fun x² -> [False]), ls³)
+//│ 	in case mident¹ of {
+//│ 		N  => [N]
+//│ 		| _  => break(mident¹)}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ (fun x⁰ -> 2)(words0)
+//│ def break(ls⁰) = case ls⁰ of {
+//│ 	N  => 
+//│ 		let fst⁰ = [N]
+//│ 		in let snd⁰ = [N]
+//│ 		in [C fst⁰ words1(snd⁰)]
+//│ 	| C h⁰ t⁰ => 
+//│ 		let fst¹ = [N]
+//│ 		in let snd¹ = [C h⁰ t⁰]
+//│ 		in [C fst¹ words1(snd¹)]}
+//│ def dropWhile(p⁰, ls¹) = case ls¹ of {
+//│ 	N  => [N]
+//│ 	| C h¹ t¹ => if p⁰(h¹) then dropWhile(p⁰, t¹) else [C h¹ t¹]}
+//│ def words0(ls²) = 
+//│ 	let mident⁰ = dropWhile((fun x¹ -> [False]), ls²)
+//│ 	in case mident⁰ of {
+//│ 		N  => [N]
+//│ 		| _  => break(mident⁰)}
+//│ def words1(ls³) = 
+//│ 	let mident¹ = dropWhile((fun x² -> [False]), ls³)
+//│ 	in case mident¹ of {
+//│ 		N  => [N]
+//│ 		| _  => break(mident¹)}
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
@@ -969,6 +1149,28 @@ fun break(x) = break(f(C(x)))
 //│ 	C t⁰ => if [True] then f(t⁰) else x⁶}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ (fun x⁰ -> 2)((fun x¹ -> break(f(x¹))))
+//│ def break(x³) = break(f([C x³]))
+//│ def f(x²) = case x² of {
+//│ 	C t⁰ => if [True] then f(t⁰) else x²}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ (fun x⁰ -> 2)((fun x¹ -> break(f(x¹))))
+//│ def break(x³) = break(f([C x³]))
+//│ def f(x²) = case x² of {
+//│ 	C t⁰ => if [True] then f(t⁰) else x²}
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
@@ -1097,6 +1299,32 @@ fun g(t) = C(t)
 //│ def prodType(x⁶) = case x⁶ of {
 //│ 	C t⁰ => if [True] then t⁰ else prodType(t⁰)}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ (fun x⁰ -> 2)((fun x¹ -> f(prodType(x¹))))
+//│ def f(x³) = case x³ of {
+//│ 	C t¹ => if [True] then f(t¹) else f(g(t¹))}
+//│ def g(t²) = [C t²]
+//│ def prodType(x²) = case x² of {
+//│ 	C t⁰ => if [True] then t⁰ else prodType(t⁰)}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ (fun x⁰ -> 2)((fun x¹ -> f(prodType(x¹))))
+//│ def f(x³) = case x³ of {
+//│ 	C t¹ => if [True] then f(t¹) else f(g(t¹))}
+//│ def g(t²) = [C t²]
+//│ def prodType(x²) = case x² of {
+//│ 	C t⁰ => if [True] then t⁰ else prodType(t⁰)}
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
@@ -1302,6 +1530,48 @@ fun head(ls) = if ls is
 //│ def line(ls⁴) = case break(ls⁴) of {
 //│ 	P fst¹ snd¹ => [C fst¹ snd¹(99)]}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ line
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ break -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ head(case break(primId⁰([C 2 [C 2 [C 1 [C 2 [N]]]]])) of {
+//│ 	P fst⁰ snd⁰ => [C fst⁰ snd⁰(99)]})
+//│ def break(ls⁰) = case ls⁰ of {
+//│ 	N  => [P [N] (fun _lh_dummy⁰ -> [N])]
+//│ 	| C h⁰ t⁰ => if (h⁰ == 1) then [P [N] 
+//│ 		let t¹ = t⁰
+//│ 		in (fun _lh_dummy¹ -> case break(t¹) of {
+//│ 			P fst¹ snd¹ => [C fst¹ snd¹(99)]})] else case break(t⁰) of {
+//│ 		P fst² snd² => [P [C h⁰ fst²] snd²]}}
+//│ def head(ls²) = case ls² of {
+//│ 	C h¹ t² => h¹
+//│ 	| N  => error⁰}
+//│ def line(ls¹) = case break(ls¹) of {
+//│ 	P fst³ snd³ => [C fst³ snd³(99)]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ head(case break(primId⁰([C 2 [C 2 [C 1 [C 2 [N]]]]])) of {
+//│ 	P fst⁰ snd⁰ => [C fst⁰ snd⁰(99)]})
+//│ def break(ls⁰) = case ls⁰ of {
+//│ 	N  => [P [N] (fun _lh_dummy⁰ -> [N])]
+//│ 	| C h⁰ t⁰ => if (h⁰ == 1) then [P [N] 
+//│ 		let t¹ = t⁰
+//│ 		in (fun _lh_dummy¹ -> case break(t¹) of {
+//│ 			P fst¹ snd¹ => [C fst¹ snd¹(99)]})] else case break(t⁰) of {
+//│ 		P fst² snd² => [P [C h⁰ fst²] snd²]}}
+//│ def head(ls²) = case ls² of {
+//│ 	C h¹ t² => h¹
+//│ 	| N  => error⁰}
+//│ def line(ls¹) = case break(ls¹) of {
+//│ 	P fst³ snd³ => [C fst³ snd³(99)]}
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 

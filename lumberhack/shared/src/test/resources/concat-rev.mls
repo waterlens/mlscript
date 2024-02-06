@@ -96,6 +96,48 @@ rev(C(1, C(2, C(3, N))))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 3 [C 2 [C 1 [N]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = (fun _lh_dummy⁰ -> [N])
+//│ 			in let h⁰ = 3
+//│ 			in (fun _lh_dummy¹ -> concat(t²(99), [C h⁰ [N]]))
+//│ 		in let h¹ = 2
+//│ 		in (fun _lh_dummy² -> concat(t¹(99), [C h¹ [N]]))
+//│ 	in let h² = 1
+//│ 	in (fun _lh_dummy³ -> concat(t⁰(99), [C h² [N]]))(99)
+//│ def concat(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h³ t³ => [C h³ concat(t³, ys⁰)]}
+//│ def rev(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = (fun _lh_dummy⁰ -> [N])
+//│ 			in let h⁰ = 3
+//│ 			in (fun _lh_dummy¹ -> concat(t²(99), [C h⁰ [N]]))
+//│ 		in let h¹ = 2
+//│ 		in (fun _lh_dummy² -> concat(t¹(99), [C h¹ [N]]))
+//│ 	in let h² = 1
+//│ 	in (fun _lh_dummy³ -> concat(t⁰(99), [C h² [N]]))(99)
+//│ def concat(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h³ t³ => [C h³ concat(t³, ys⁰)]}
+//│ def rev(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 // NOTE: global way to push in variables
 _LUMBERHACK_EVAL
@@ -193,6 +235,48 @@ rev(C(1, C(2, C(3, N))))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 3 [C 2 [C 1 [N]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = (fun _lh_dummy⁰ -> [N])
+//│ 			in let h⁰ = 3
+//│ 			in (fun _lh_dummy¹ -> concat(t²(99), [C h⁰ [N]]))
+//│ 		in let h¹ = 2
+//│ 		in (fun _lh_dummy² -> concat(t¹(99), [C h¹ [N]]))
+//│ 	in let h² = 1
+//│ 	in (fun _lh_dummy³ -> concat(t⁰(99), [C h² [N]]))(99)
+//│ def concat(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h³ t³ => (fun ys¹ -> [C h³ concat(t³, ys¹)])}
+//│ def rev(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = (fun _lh_dummy⁰ -> [N])
+//│ 			in let h⁰ = 3
+//│ 			in (fun _lh_dummy¹ -> concat(t²(99), [C h⁰ [N]]))
+//│ 		in let h¹ = 2
+//│ 		in (fun _lh_dummy² -> concat(t¹(99), [C h¹ [N]]))
+//│ 	in let h² = 1
+//│ 	in (fun _lh_dummy³ -> concat(t⁰(99), [C h² [N]]))(99)
+//│ def concat(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h³ t³ => (fun ys¹ -> [C h³ concat(t³, ys¹)])}
+//│ def rev(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // NOTE: if there is no concrete list provided as input, no fusion will be done
@@ -251,6 +335,34 @@ rev(primitive)
 //│ 	C h¹ t¹ => concat(rev(t¹), [C h¹ [N]])
 //│ 	| N  => [N]}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ rev(primitive⁰)
+//│ def concat(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}
+//│ def rev(ls⁰) = case ls⁰ of {
+//│ 	C h¹ t¹ => concat(rev(t¹), [C h¹ [N]])
+//│ 	| N  => [N]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ rev(primitive⁰)
+//│ def concat(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}
+//│ def rev(ls⁰) = case ls⁰ of {
+//│ 	C h¹ t¹ => concat(rev(t¹), [C h¹ [N]])
+//│ 	| N  => [N]}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // NOTE: if there is no concrete list provided as input, no fusion will be done
@@ -309,3 +421,31 @@ rev
 //│ 	C h¹ t¹ => concat(rev(t¹), [C h¹ [N]])
 //│ 	| N  => [N]}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ rev
+//│ def concat(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}
+//│ def rev(ls⁰) = case ls⁰ of {
+//│ 	C h¹ t¹ => concat(rev(t¹), [C h¹ [N]])
+//│ 	| N  => [N]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ rev
+//│ def concat(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}
+//│ def rev(ls⁰) = case ls⁰ of {
+//│ 	C h¹ t¹ => concat(rev(t¹), [C h¹ [N]])
+//│ 	| N  => [N]}
+//│ <<<<<<< after floating out <<<<<<<

@@ -388,6 +388,172 @@ testGcd_nofib $ primId 200
 //│ 	in max'_lh_₁(rs¹)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map_lh_₂, test_lh_₁, map_lh_₁, f2_lh_₁, f1_lh_₁, g_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ enumFromTo_lh_₂ -> 2
+//│ enumFromTo_lh_₁ -> 2
+//│ quotRem_lh_₁ -> 7
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testGcd_nofib_lh_₁(primId⁰(200))
+//│ def abs_lh_₁(_lh_abs_arg1⁰) = if (_lh_abs_arg1⁰ < 0) then (0 - _lh_abs_arg1⁰) else _lh_abs_arg1⁰
+//│ def enumFromTo_lh_₁(a¹, b¹) = if (a¹ <= b¹) then 
+//│ 	let _lh_listcomp_fun_ls_t¹ = enumFromTo_lh_₁((a¹ + 1), b¹)
+//│ 	in let _lh_listcomp_fun_ls_h¹ = a¹
+//│ 	in (fun _lh_listcomp_fun_ls_h² -> (fun _lh_listcomp_fun³ -> (fun _lh_listcomp_fun_ls_t² -> (fun _lh_listcomp_fun⁴ -> 
+//│ 		let t⁰ = _lh_listcomp_fun³(_lh_listcomp_fun_ls_t¹)
+//│ 		in let h⁰ = 	
+//│ 			let _lh_f1_LH_P2_1⁰ = _lh_listcomp_fun_ls_h¹
+//│ 			in let _lh_f1_LH_P2_0⁰ = _lh_listcomp_fun_ls_h²
+//│ 			in (fun _lh_dummy⁰ -> 
+//│ 				let _lh_f2_LH_P3_2⁰ = gcdE_lh_₁(_lh_f1_LH_P2_0⁰, _lh_f1_LH_P2_1⁰)
+//│ 				in (fun _lh_dummy¹ -> case _lh_f2_LH_P3_2⁰ of {
+//│ 					LH_P3 _lh_f2_LH_P3_0⁰ _lh_f2_LH_P3_1⁰ _lh_f2_LH_P3_2¹ => abs_lh_₁(((_lh_f2_LH_P3_0⁰ + _lh_f2_LH_P3_1⁰) + _lh_f2_LH_P3_2¹))
+//│ 					| _  => error⁰}))
+//│ 		in (fun f³ -> 
+//│ 			let t¹ = t⁰(f³)
+//│ 			in let h¹ = f³(h⁰)
+//│ 			in (fun f⁴ -> [LH_C f⁴(h¹) t¹(f⁴)])))))) else (fun _lh_listcomp_fun_ls_h³ -> (fun _lh_listcomp_fun⁵ -> (fun _lh_listcomp_fun_ls_t³ -> (fun _lh_listcomp_fun⁶ -> _lh_listcomp_fun⁶(_lh_listcomp_fun_ls_t³)))))
+//│ def enumFromTo_lh_₂(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let _lh_listcomp_fun_ls_t⁰ = enumFromTo_lh_₂((a⁰ + 1), b⁰)
+//│ 	in let _lh_listcomp_fun_ls_h⁰ = a⁰
+//│ 	in (fun _lh_listcomp_fun⁰ -> (fun ms⁰ -> 
+//│ 		let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para⁰ -> _lh_listcomp_fun_para⁰(_lh_listcomp_fun_ls_h⁰, _lh_listcomp_fun¹, _lh_listcomp_fun_ls_t⁰, _lh_listcomp_fun⁰))
+//│ 		in _lh_listcomp_fun¹(ms⁰))) else (fun _lh_listcomp_fun² -> (fun ms¹ -> (fun f⁰ -> (fun f¹ -> [LH_N]))))
+//│ def f1_lh_₁(_lh_f1_arg1⁰) = _lh_f1_arg1⁰(99)
+//│ def f2_lh_₁(_lh_f2_arg1⁰) = _lh_f2_arg1⁰(99)
+//│ def g_lh_₁(_lh_g_arg1⁰, _lh_g_arg2⁰) = case _lh_g_arg1⁰ of {
+//│ 	LH_P3 _lh_g_LH_P3_0² _lh_g_LH_P3_1² _lh_g_LH_P3_2² => case _lh_g_arg2⁰ of {
+//│ 		LH_P3 _lh_g_LH_P3_0³ _lh_g_LH_P3_1³ _lh_g_LH_P3_2³ => if (_lh_g_LH_P3_2³ == 0) then [LH_P3 _lh_g_LH_P3_2² _lh_g_LH_P3_0² _lh_g_LH_P3_1²] else 
+//│ 			let _lh_matchIdent¹ = quotRem_lh_₁(_lh_g_LH_P3_2², _lh_g_LH_P3_2³)
+//│ 			in _lh_matchIdent¹(_lh_g_LH_P3_0³, _lh_g_LH_P3_0², _lh_g_LH_P3_1³, _lh_g_LH_P3_1², _lh_g_LH_P3_2³)
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def gcdE_lh_₁(_lh_gcdE_arg1⁰, _lh_gcdE_arg2⁰) = case _lh_gcdE_arg1⁰ of {
+//│ 	0  => [LH_P3 _lh_gcdE_arg2⁰ 0 1]
+//│ 	| _  => case [LH_P3 1 0 _lh_gcdE_arg1⁰] of {
+//│ 		LH_P3 _lh_g_LH_P3_0⁰ _lh_g_LH_P3_1⁰ _lh_g_LH_P3_2⁰ => case [LH_P3 0 1 _lh_gcdE_arg2⁰] of {
+//│ 			LH_P3 _lh_g_LH_P3_0¹ _lh_g_LH_P3_1¹ _lh_g_LH_P3_2¹ => if (_lh_g_LH_P3_2¹ == 0) then [LH_P3 _lh_g_LH_P3_2⁰ _lh_g_LH_P3_0⁰ _lh_g_LH_P3_1⁰] else 
+//│ 				let _lh_matchIdent⁰ = quotRem_lh_₁(_lh_g_LH_P3_2⁰, _lh_g_LH_P3_2¹)
+//│ 				in _lh_matchIdent⁰(_lh_g_LH_P3_0¹, _lh_g_LH_P3_0⁰, _lh_g_LH_P3_1¹, _lh_g_LH_P3_1⁰, _lh_g_LH_P3_2¹)
+//│ 			| _  => error⁰}
+//│ 		| _  => error⁰}}
+//│ def map_lh_₁(f⁵, ls¹) = ls¹(f⁵)
+//│ def map_lh_₂(f², ls⁰) = ls⁰(f²)
+//│ def max'_lh_₁(_lh_max'_arg1⁰) = case _lh_max'_arg1⁰ of {
+//│ 	LH_C _lh_max'_LH_C_0⁰ _lh_max'_LH_C_1⁰ => case _lh_max'_LH_C_1⁰ of {
+//│ 		LH_N  => _lh_max'_LH_C_0⁰
+//│ 		| LH_C _lh_max'_LH_C_0¹ _lh_max'_LH_C_1¹ => if (_lh_max'_LH_C_0⁰ < _lh_max'_LH_C_0¹) then max'_lh_₁([LH_C _lh_max'_LH_C_0¹ _lh_max'_LH_C_1¹]) else max'_lh_₁([LH_C _lh_max'_LH_C_0⁰ _lh_max'_LH_C_1¹])
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def quotRem_lh_₁(_lh_quotRem_arg1⁰, _lh_quotRem_arg2⁰) = 
+//│ 	let _lh_g_LH_P2_1⁰ = (_lh_quotRem_arg1⁰ % _lh_quotRem_arg2⁰)
+//│ 	in let _lh_g_LH_P2_0⁰ = div⁰(_lh_quotRem_arg1⁰, _lh_quotRem_arg2⁰)
+//│ 	in (fun _lh_g_LH_P3_0⁴ -> (fun _lh_g_LH_P3_0⁵ -> (fun _lh_g_LH_P3_1⁴ -> (fun _lh_g_LH_P3_1⁵ -> (fun _lh_g_LH_P3_2⁴ -> case [LH_P3 _lh_g_LH_P3_0⁴ _lh_g_LH_P3_1⁴ _lh_g_LH_P3_2⁴] of {
+//│ 		LH_P3 _lh_g_LH_P3_0⁶ _lh_g_LH_P3_1⁶ _lh_g_LH_P3_2⁵ => case [LH_P3 (_lh_g_LH_P3_0⁵ - (_lh_g_LH_P2_0⁰ * _lh_g_LH_P3_0⁴)) (_lh_g_LH_P3_1⁵ - (_lh_g_LH_P2_0⁰ * _lh_g_LH_P3_1⁴)) _lh_g_LH_P2_1⁰] of {
+//│ 			LH_P3 _lh_g_LH_P3_0⁷ _lh_g_LH_P3_1⁷ _lh_g_LH_P3_2⁶ => if (_lh_g_LH_P3_2⁶ == 0) then [LH_P3 _lh_g_LH_P3_2⁵ _lh_g_LH_P3_0⁶ _lh_g_LH_P3_1⁶] else 
+//│ 				let _lh_matchIdent² = quotRem_lh_₁(_lh_g_LH_P3_2⁵, _lh_g_LH_P3_2⁶)
+//│ 				in _lh_matchIdent²(_lh_g_LH_P3_0⁷, _lh_g_LH_P3_0⁶, _lh_g_LH_P3_1⁷, _lh_g_LH_P3_1⁶, _lh_g_LH_P3_2⁶)
+//│ 			| _  => error⁰}
+//│ 		| _  => error⁰})))))
+//│ def testGcd_nofib_lh_₁(_lh_testGcd_nofib_arg1⁰) = 
+//│ 	let ns¹ = enumFromTo_lh_₂(5000, (5000 + _lh_testGcd_nofib_arg1⁰))
+//│ 	in let ms³ = enumFromTo_lh_₁(10000, (10000 + _lh_testGcd_nofib_arg1⁰))
+//│ 	in let tripls¹ = let _lh_listcomp_fun⁸ = (fun _lh_listcomp_fun_para² -> _lh_listcomp_fun_para²(_lh_listcomp_fun⁸, ms³))
+//│ 		in _lh_listcomp_fun⁸(ns¹)(f1_lh_₁)
+//│ 	in let rs¹ = tripls¹(f2_lh_₁)
+//│ 	in max'_lh_₁(rs¹)
+//│ def test_lh_₁(_lh_test_arg1⁰) = 
+//│ 	let ns⁰ = enumFromTo_lh_₂(5000, (5000 + _lh_test_arg1⁰))
+//│ 	in let ms² = enumFromTo_lh_₁(10000, (10000 + _lh_test_arg1⁰))
+//│ 	in let tripls⁰ = let _lh_listcomp_fun⁷ = (fun _lh_listcomp_fun_para¹ -> _lh_listcomp_fun_para¹(_lh_listcomp_fun⁷, ms²))
+//│ 		in _lh_listcomp_fun⁷(ns⁰)(f1_lh_₁)
+//│ 	in let rs⁰ = tripls⁰(f2_lh_₁)
+//│ 	in max'_lh_₁(rs⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testGcd_nofib_lh_₁(primId⁰(200))
+//│ def abs_lh_₁(_lh_abs_arg1⁰) = if (_lh_abs_arg1⁰ < 0) then (0 - _lh_abs_arg1⁰) else _lh_abs_arg1⁰
+//│ def enumFromTo_lh_₁(a¹, b¹) = if (a¹ <= b¹) then 
+//│ 	let _lh_listcomp_fun_ls_t¹ = enumFromTo_lh_₁((a¹ + 1), b¹)
+//│ 	in let _lh_listcomp_fun_ls_h¹ = a¹
+//│ 	in (fun _lh_listcomp_fun_ls_h² -> (fun _lh_listcomp_fun³ -> (fun _lh_listcomp_fun_ls_t² -> (fun _lh_listcomp_fun⁴ -> 
+//│ 		let t⁰ = _lh_listcomp_fun³(_lh_listcomp_fun_ls_t¹)
+//│ 		in let h⁰ = 	
+//│ 			let _lh_f1_LH_P2_1⁰ = _lh_listcomp_fun_ls_h¹
+//│ 			in let _lh_f1_LH_P2_0⁰ = _lh_listcomp_fun_ls_h²
+//│ 			in (fun _lh_dummy⁰ -> 
+//│ 				let _lh_f2_LH_P3_2⁰ = gcdE_lh_₁(_lh_f1_LH_P2_0⁰, _lh_f1_LH_P2_1⁰)
+//│ 				in (fun _lh_dummy¹ -> case _lh_f2_LH_P3_2⁰ of {
+//│ 					LH_P3 _lh_f2_LH_P3_0⁰ _lh_f2_LH_P3_1⁰ _lh_f2_LH_P3_2¹ => abs_lh_₁(((_lh_f2_LH_P3_0⁰ + _lh_f2_LH_P3_1⁰) + _lh_f2_LH_P3_2¹))
+//│ 					| _  => error⁰}))
+//│ 		in (fun f³ -> 
+//│ 			let t¹ = t⁰(f³)
+//│ 			in let h¹ = f³(h⁰)
+//│ 			in (fun f⁴ -> [LH_C f⁴(h¹) t¹(f⁴)])))))) else (fun _lh_listcomp_fun_ls_h³ -> (fun _lh_listcomp_fun⁵ -> (fun _lh_listcomp_fun_ls_t³ -> (fun _lh_listcomp_fun⁶ -> _lh_listcomp_fun⁶(_lh_listcomp_fun_ls_t³)))))
+//│ def enumFromTo_lh_₂(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let _lh_listcomp_fun_ls_t⁰ = enumFromTo_lh_₂((a⁰ + 1), b⁰)
+//│ 	in let _lh_listcomp_fun_ls_h⁰ = a⁰
+//│ 	in (fun _lh_listcomp_fun⁰ -> (fun ms⁰ -> 
+//│ 		let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para⁰ -> _lh_listcomp_fun_para⁰(_lh_listcomp_fun_ls_h⁰, _lh_listcomp_fun¹, _lh_listcomp_fun_ls_t⁰, _lh_listcomp_fun⁰))
+//│ 		in _lh_listcomp_fun¹(ms⁰))) else (fun _lh_listcomp_fun² -> (fun ms¹ -> (fun f⁰ -> (fun f¹ -> [LH_N]))))
+//│ def f1_lh_₁(_lh_f1_arg1⁰) = _lh_f1_arg1⁰(99)
+//│ def f2_lh_₁(_lh_f2_arg1⁰) = _lh_f2_arg1⁰(99)
+//│ def g_lh_₁(_lh_g_arg1⁰, _lh_g_arg2⁰) = case _lh_g_arg1⁰ of {
+//│ 	LH_P3 _lh_g_LH_P3_0² _lh_g_LH_P3_1² _lh_g_LH_P3_2² => case _lh_g_arg2⁰ of {
+//│ 		LH_P3 _lh_g_LH_P3_0³ _lh_g_LH_P3_1³ _lh_g_LH_P3_2³ => if (_lh_g_LH_P3_2³ == 0) then [LH_P3 _lh_g_LH_P3_2² _lh_g_LH_P3_0² _lh_g_LH_P3_1²] else 
+//│ 			let _lh_matchIdent¹ = quotRem_lh_₁(_lh_g_LH_P3_2², _lh_g_LH_P3_2³)
+//│ 			in _lh_matchIdent¹(_lh_g_LH_P3_0³, _lh_g_LH_P3_0², _lh_g_LH_P3_1³, _lh_g_LH_P3_1², _lh_g_LH_P3_2³)
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def gcdE_lh_₁(_lh_gcdE_arg1⁰, _lh_gcdE_arg2⁰) = case _lh_gcdE_arg1⁰ of {
+//│ 	0  => [LH_P3 _lh_gcdE_arg2⁰ 0 1]
+//│ 	| _  => case [LH_P3 1 0 _lh_gcdE_arg1⁰] of {
+//│ 		LH_P3 _lh_g_LH_P3_0⁰ _lh_g_LH_P3_1⁰ _lh_g_LH_P3_2⁰ => case [LH_P3 0 1 _lh_gcdE_arg2⁰] of {
+//│ 			LH_P3 _lh_g_LH_P3_0¹ _lh_g_LH_P3_1¹ _lh_g_LH_P3_2¹ => if (_lh_g_LH_P3_2¹ == 0) then [LH_P3 _lh_g_LH_P3_2⁰ _lh_g_LH_P3_0⁰ _lh_g_LH_P3_1⁰] else 
+//│ 				let _lh_matchIdent⁰ = quotRem_lh_₁(_lh_g_LH_P3_2⁰, _lh_g_LH_P3_2¹)
+//│ 				in _lh_matchIdent⁰(_lh_g_LH_P3_0¹, _lh_g_LH_P3_0⁰, _lh_g_LH_P3_1¹, _lh_g_LH_P3_1⁰, _lh_g_LH_P3_2¹)
+//│ 			| _  => error⁰}
+//│ 		| _  => error⁰}}
+//│ def map_lh_₁(f⁵, ls¹) = ls¹(f⁵)
+//│ def map_lh_₂(f², ls⁰) = ls⁰(f²)
+//│ def max'_lh_₁(_lh_max'_arg1⁰) = case _lh_max'_arg1⁰ of {
+//│ 	LH_C _lh_max'_LH_C_0⁰ _lh_max'_LH_C_1⁰ => case _lh_max'_LH_C_1⁰ of {
+//│ 		LH_N  => _lh_max'_LH_C_0⁰
+//│ 		| LH_C _lh_max'_LH_C_0¹ _lh_max'_LH_C_1¹ => if (_lh_max'_LH_C_0⁰ < _lh_max'_LH_C_0¹) then max'_lh_₁([LH_C _lh_max'_LH_C_0¹ _lh_max'_LH_C_1¹]) else max'_lh_₁([LH_C _lh_max'_LH_C_0⁰ _lh_max'_LH_C_1¹])
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def quotRem_lh_₁(_lh_quotRem_arg1⁰, _lh_quotRem_arg2⁰, _lh_g_LH_P3_0⁴, _lh_g_LH_P3_0⁵, _lh_g_LH_P3_1⁴, _lh_g_LH_P3_1⁵, _lh_g_LH_P3_2⁴) = 
+//│ 	let _lh_g_LH_P2_1⁰ = (_lh_quotRem_arg1⁰ % _lh_quotRem_arg2⁰)
+//│ 	in let _lh_g_LH_P2_0⁰ = div⁰(_lh_quotRem_arg1⁰, _lh_quotRem_arg2⁰)
+//│ 	in case [LH_P3 _lh_g_LH_P3_0⁴ _lh_g_LH_P3_1⁴ _lh_g_LH_P3_2⁴] of {
+//│ 		LH_P3 _lh_g_LH_P3_0⁶ _lh_g_LH_P3_1⁶ _lh_g_LH_P3_2⁵ => case [LH_P3 (_lh_g_LH_P3_0⁵ - (_lh_g_LH_P2_0⁰ * _lh_g_LH_P3_0⁴)) (_lh_g_LH_P3_1⁵ - (_lh_g_LH_P2_0⁰ * _lh_g_LH_P3_1⁴)) _lh_g_LH_P2_1⁰] of {
+//│ 			LH_P3 _lh_g_LH_P3_0⁷ _lh_g_LH_P3_1⁷ _lh_g_LH_P3_2⁶ => if (_lh_g_LH_P3_2⁶ == 0) then [LH_P3 _lh_g_LH_P3_2⁵ _lh_g_LH_P3_0⁶ _lh_g_LH_P3_1⁶] else 
+//│ 				let _lh_matchIdent² = quotRem_lh_₁(_lh_g_LH_P3_2⁵, _lh_g_LH_P3_2⁶)
+//│ 				in _lh_matchIdent²(_lh_g_LH_P3_0⁷, _lh_g_LH_P3_0⁶, _lh_g_LH_P3_1⁷, _lh_g_LH_P3_1⁶, _lh_g_LH_P3_2⁶)
+//│ 			| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ def testGcd_nofib_lh_₁(_lh_testGcd_nofib_arg1⁰) = 
+//│ 	let ns¹ = enumFromTo_lh_₂(5000, (5000 + _lh_testGcd_nofib_arg1⁰))
+//│ 	in let ms³ = enumFromTo_lh_₁(10000, (10000 + _lh_testGcd_nofib_arg1⁰))
+//│ 	in let tripls¹ = let _lh_listcomp_fun⁸ = (fun _lh_listcomp_fun_para² -> _lh_listcomp_fun_para²(_lh_listcomp_fun⁸, ms³))
+//│ 		in _lh_listcomp_fun⁸(ns¹)(f1_lh_₁)
+//│ 	in let rs¹ = tripls¹(f2_lh_₁)
+//│ 	in max'_lh_₁(rs¹)
+//│ def test_lh_₁(_lh_test_arg1⁰) = 
+//│ 	let ns⁰ = enumFromTo_lh_₂(5000, (5000 + _lh_test_arg1⁰))
+//│ 	in let ms² = enumFromTo_lh_₁(10000, (10000 + _lh_test_arg1⁰))
+//│ 	in let tripls⁰ = let _lh_listcomp_fun⁷ = (fun _lh_listcomp_fun_para¹ -> _lh_listcomp_fun_para¹(_lh_listcomp_fun⁷, ms²))
+//│ 		in _lh_listcomp_fun⁷(ns⁰)(f1_lh_₁)
+//│ 	in let rs⁰ = tripls⁰(f2_lh_₁)
+//│ 	in max'_lh_₁(rs⁰)
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

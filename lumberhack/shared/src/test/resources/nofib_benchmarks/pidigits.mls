@@ -560,6 +560,284 @@ testPiDigits_nofib $ primId 5000
 //│ def testPiDigits_nofib_lh_₁(_lh_testPiDigits_nofib_arg1¹) = pidgits_lh_₁(_lh_testPiDigits_nofib_arg1¹)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ recursive consumer: percOp_lh_₁
+//│ concat_lh_₁, mappend_lh_₃, mappend_lh_₂, mappend_lh_₅, hashOp_lh_₁, mappend_lh_₄
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ replicate_lh_₁ -> 2
+//│ mappend_lh_₁ -> 2
+//│ splitAt_lz_lh_₁ -> 2
+//│ mappend_lh_₆ -> 2
+//│ divmod_lh_₁ -> 6
+//│ take_lz_lh_₁ -> 3
+//│ take_lz_lh_₂ -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testPiDigits_nofib_lh_₁(primId⁰(5000))
+//│ def ampOp_lh_₁(_lh_ampOp_arg1⁰, _lh_ampOp_arg2⁰) = case _lh_ampOp_arg2⁰ of {
+//│ 	LH_P3 _lh_ampOp_LH_P3_0⁰ _lh_ampOp_LH_P3_1⁰ _lh_ampOp_LH_P3_2⁰ => 
+//│ 		let y⁰ = ((_lh_ampOp_arg1⁰ * 2) + 1)
+//│ 		in [LH_P3 (_lh_ampOp_LH_P3_0⁰ * _lh_ampOp_arg1⁰) ((_lh_ampOp_LH_P3_1⁰ + (_lh_ampOp_LH_P3_0⁰ * 2)) * y⁰) (_lh_ampOp_LH_P3_2⁰ * y⁰)]
+//│ 	| _  => error⁰}
+//│ def concat_lh_₁(lss⁰) = lss⁰(99)
+//│ def divmod_lh_₁(_lh_divmod_arg1⁰, _lh_divmod_arg2⁰) = 
+//│ 	let _lh_hashOp_LH_P2_1⁰ = (_lh_divmod_arg1⁰ % _lh_divmod_arg2⁰)
+//│ 	in let _lh_hashOp_LH_P2_0⁰ = div⁰(_lh_divmod_arg1⁰, _lh_divmod_arg2⁰)
+//│ 	in (fun _lh_hashOp_LH_P3_0⁰ -> (fun _lh_hashOp_LH_P3_1⁰ -> (fun _lh_hashOp_LH_P3_2⁰ -> (fun k¹ -> if ((_lh_hashOp_LH_P3_0⁰ > _lh_hashOp_LH_P3_1⁰) || ((_lh_hashOp_LH_P2_1⁰ + _lh_hashOp_LH_P3_0⁰) >= _lh_hashOp_LH_P3_2⁰)) then force⁰(lazy⁰(
+//│ 		let k² = (k¹ + 1)
+//│ 		in let _lh_matchIdent² = ampOp_lh_₁(k², [LH_P3 _lh_hashOp_LH_P3_0⁰ _lh_hashOp_LH_P3_1⁰ _lh_hashOp_LH_P3_2⁰])
+//│ 		in case _lh_matchIdent² of {
+//│ 			LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹ => 
+//│ 				let _lh_matchIdent³ = divmod_lh_₁(((_lh_hashOp_LH_P3_0¹ * 3) + _lh_hashOp_LH_P3_1¹), _lh_hashOp_LH_P3_2¹)
+//│ 				in _lh_matchIdent³(_lh_hashOp_LH_P3_0¹, _lh_hashOp_LH_P3_1¹, _lh_hashOp_LH_P3_2¹, k²)
+//│ 			| _  => error⁰})) else [LH_C string_of_int⁰(_lh_hashOp_LH_P2_0⁰) lazy⁰(
+//│ 		let k³ = (k¹ + 1)
+//│ 		in let _lh_matchIdent⁴ = ampOp_lh_₁(k³, [LH_P3 (_lh_hashOp_LH_P3_0⁰ * 10) ((_lh_hashOp_LH_P3_1⁰ - (_lh_hashOp_LH_P2_0⁰ * _lh_hashOp_LH_P3_2⁰)) * 10) _lh_hashOp_LH_P3_2⁰])
+//│ 		in case _lh_matchIdent⁴ of {
+//│ 			LH_P3 _lh_hashOp_LH_P3_0² _lh_hashOp_LH_P3_1² _lh_hashOp_LH_P3_2² => 
+//│ 				let _lh_matchIdent⁵ = divmod_lh_₁(((_lh_hashOp_LH_P3_0² * 3) + _lh_hashOp_LH_P3_1²), _lh_hashOp_LH_P3_2²)
+//│ 				in _lh_matchIdent⁵(_lh_hashOp_LH_P3_0², _lh_hashOp_LH_P3_1², _lh_hashOp_LH_P3_2², k³)
+//│ 			| _  => error⁰})]))))
+//│ def drop_lz_lh_₁(_lh_drop_lz_arg1⁰, _lh_drop_lz_arg2⁰) = if (_lh_drop_lz_arg1⁰ > 0) then lazy⁰(
+//│ 	let _lh_matchIdent¹ = force⁰(_lh_drop_lz_arg2⁰)
+//│ 	in case _lh_matchIdent¹ of {
+//│ 		LH_N  => [LH_N]
+//│ 		| LH_C _lh_drop_lz_LH_C_0⁰ _lh_drop_lz_LH_C_1⁰ => force⁰(drop_lz_lh_₁((_lh_drop_lz_arg1⁰ - 1), _lh_drop_lz_LH_C_1⁰))
+//│ 		| _  => error⁰}) else _lh_drop_lz_arg2⁰
+//│ def hashOp_lh_₁(_lh_hashOp_arg1⁰, _lh_hashOp_arg2⁰) = lazy⁰(
+//│ 	let k⁵ = (_lh_hashOp_arg1⁰ + 1)
+//│ 	in let _lh_matchIdent⁸ = ampOp_lh_₁(k⁵, _lh_hashOp_arg2⁰)
+//│ 	in case _lh_matchIdent⁸ of {
+//│ 		LH_P3 _lh_hashOp_LH_P3_0⁴ _lh_hashOp_LH_P3_1⁴ _lh_hashOp_LH_P3_2⁴ => 
+//│ 			let _lh_matchIdent⁹ = divmod_lh_₁(((_lh_hashOp_LH_P3_0⁴ * 3) + _lh_hashOp_LH_P3_1⁴), _lh_hashOp_LH_P3_2⁴)
+//│ 			in _lh_matchIdent⁹(_lh_hashOp_LH_P3_0⁴, _lh_hashOp_LH_P3_1⁴, _lh_hashOp_LH_P3_2⁴, k⁵)
+//│ 		| _  => error⁰})
+//│ def mappend_lh_₁(xs⁰, ys⁷) = case xs⁰ of {
+//│ 	LH_C h⁵ t⁵ => 
+//│ 		let t⁶ = mappend_lh_₁(t⁵, ys⁷)
+//│ 		in let h⁶ = h⁵
+//│ 		in (fun ys⁸ -> [LH_C h⁶ t⁶(ys⁸)])
+//│ 	| LH_N  => ys⁷}
+//│ def mappend_lh_₂(xs¹, ys¹⁶) = xs¹(ys¹⁶)
+//│ def mappend_lh_₃(xs³, ys²³) = xs³(ys²³)
+//│ def mappend_lh_₄(xs⁵, ys²⁸) = xs⁵(ys²⁸)
+//│ def mappend_lh_₅(xs², ys¹⁷) = xs²(ys¹⁷)
+//│ def mappend_lh_₆(xs⁴, ys²⁵) = case xs⁴ of {
+//│ 	LH_C h¹⁸ t¹⁸ => 
+//│ 		let t¹⁹ = mappend_lh_₆(t¹⁸, ys²⁵)
+//│ 		in let h¹⁹ = h¹⁸
+//│ 		in (fun ys²⁶ -> 
+//│ 			let t²⁰ = t¹⁹(ys²⁶)
+//│ 			in let h²⁰ = h¹⁹
+//│ 			in (fun ys²⁷ -> [LH_C h²⁰ t²⁰(ys²⁷)]))
+//│ 	| LH_N  => ys²⁵}
+//│ def min_lh_₁(_lh_min_arg1⁰, _lh_min_arg2⁰) = if (_lh_min_arg1⁰ > _lh_min_arg2⁰) then _lh_min_arg2⁰ else _lh_min_arg1⁰
+//│ def percOp_lh_₁(_lh_percOp_arg1⁰, _lh_percOp_arg2⁰, _lh_percOp_arg3⁰) = if (_lh_percOp_arg1⁰ >= _lh_percOp_arg3⁰) then [LH_N] else 
+//│ 	let k⁰ = (_lh_percOp_arg1⁰ + 10)
+//│ 	in let j⁰ = min_lh_₁(_lh_percOp_arg3⁰, k⁰)
+//│ 	in let _lh_matchIdent⁰ = if (k⁰ > _lh_percOp_arg3⁰) then 
+//│ 		let _lh_percOp_LH_P2_1⁰ = lazy⁰([LH_N])
+//│ 		in let _lh_percOp_LH_P2_0⁰ = take_lz_lh_₁((_lh_percOp_arg3⁰ % 10), _lh_percOp_arg2⁰, replicate_lh_₁((k⁰ - _lh_percOp_arg3⁰), [LH_C ' ' [LH_N]]))
+//│ 		in (fun _lh_percOp_arg3¹ -> (fun j¹ -> _lh_percOp_LH_P2_0⁰(99, 
+//│ 			let t⁰ = 	
+//│ 				let t¹ = (fun ys⁰ -> ys⁰)
+//│ 				in let h⁰ = ':'
+//│ 				in (fun ys¹ -> 
+//│ 					let t² = t¹(ys¹)
+//│ 					in let h¹ = h⁰
+//│ 					in (fun ys² -> [LH_C h¹ t²(ys²)]))
+//│ 			in let h² = 't'
+//│ 			in (fun ys³ -> 
+//│ 				let t³ = t⁰(ys³)
+//│ 				in let h³ = h²
+//│ 				in (fun ys⁴ -> [LH_C h³ t³(ys⁴)]))(mappend_lh_₁(string_of_int⁰(j¹), 
+//│ 			let t⁴ = (fun ys⁵ -> ys⁵)
+//│ 			in let h⁴ = 'n'
+//│ 			in (fun ys⁶ -> [LH_C h⁴ t⁴(ys⁶)]))), percOp_lh_₁(j¹, _lh_percOp_LH_P2_1⁰, _lh_percOp_arg3¹)))) else splitAt_lz_lh_₁(10, _lh_percOp_arg2⁰)
+//│ 	in _lh_matchIdent⁰(_lh_percOp_arg3⁰, j⁰)
+//│ def pidgits_lh_₁(_lh_pidgits_arg1⁰) = percOp_lh_₁(0, lazy⁰(
+//│ 	let k⁴ = (0 + 1)
+//│ 	in let _lh_matchIdent⁶ = ampOp_lh_₁(k⁴, [LH_P3 1 0 1])
+//│ 	in case _lh_matchIdent⁶ of {
+//│ 		LH_P3 _lh_hashOp_LH_P3_0³ _lh_hashOp_LH_P3_1³ _lh_hashOp_LH_P3_2³ => 
+//│ 			let _lh_matchIdent⁷ = divmod_lh_₁(((_lh_hashOp_LH_P3_0³ * 3) + _lh_hashOp_LH_P3_1³), _lh_hashOp_LH_P3_2³)
+//│ 			in _lh_matchIdent⁷(_lh_hashOp_LH_P3_0³, _lh_hashOp_LH_P3_1³, _lh_hashOp_LH_P3_2³, k⁴)
+//│ 		| _  => error⁰}), _lh_pidgits_arg1⁰)
+//│ def replicate_lh_₁(_lh_replicate_arg1⁰, _lh_replicate_arg2⁰) = if (_lh_replicate_arg1⁰ > 0) then 
+//│ 	let t¹⁷ = replicate_lh_₁((_lh_replicate_arg1⁰ - 1), _lh_replicate_arg2⁰)
+//│ 	in let h¹⁷ = _lh_replicate_arg2⁰
+//│ 	in (fun _lh_dummy⁴ -> mappend_lh_₆(h¹⁷, t¹⁷(99))) else (fun _lh_dummy⁵ -> (fun ys²⁴ -> ys²⁴))
+//│ def splitAt_lz_lh_₁(_lh_splitAt_lz_arg1⁰, _lh_splitAt_lz_arg2⁰) = 
+//│ 	let _lh_percOp_LH_P2_1¹ = drop_lz_lh_₁(_lh_splitAt_lz_arg1⁰, _lh_splitAt_lz_arg2⁰)
+//│ 	in let _lh_percOp_LH_P2_0¹ = take_lz_lh_₂(_lh_splitAt_lz_arg1⁰, _lh_splitAt_lz_arg2⁰)
+//│ 	in (fun _lh_percOp_arg3² -> (fun j² -> _lh_percOp_LH_P2_0¹(99, 
+//│ 		let t⁷ = 	
+//│ 			let t⁸ = (fun ys⁹ -> ys⁹)
+//│ 			in let h⁷ = ':'
+//│ 			in (fun ys¹⁰ -> 
+//│ 				let t⁹ = t⁸(ys¹⁰)
+//│ 				in let h⁸ = h⁷
+//│ 				in (fun ys¹¹ -> [LH_C h⁸ t⁹(ys¹¹)]))
+//│ 		in let h⁹ = 't'
+//│ 		in (fun ys¹² -> 
+//│ 			let t¹⁰ = t⁷(ys¹²)
+//│ 			in let h¹⁰ = h⁹
+//│ 			in (fun ys¹³ -> [LH_C h¹⁰ t¹⁰(ys¹³)]))(mappend_lh_₁(string_of_int⁰(j²), 
+//│ 		let t¹¹ = (fun ys¹⁴ -> ys¹⁴)
+//│ 		in let h¹¹ = 'n'
+//│ 		in (fun ys¹⁵ -> [LH_C h¹¹ t¹¹(ys¹⁵)]))), percOp_lh_₁(j², _lh_percOp_LH_P2_1¹, _lh_percOp_arg3²))))
+//│ def take_lz_lh_₁(n⁰, ls⁰) = if (n⁰ > 0) then case force⁰(ls⁰) of {
+//│ 	LH_C h¹² t¹² => 
+//│ 		let t¹³ = take_lz_lh_₁((n⁰ - 1), t¹²)
+//│ 		in let h¹³ = h¹²
+//│ 		in (fun ys¹⁸ -> 
+//│ 			let t¹⁴ = t¹³(ys¹⁸)
+//│ 			in let h¹⁴ = h¹³
+//│ 			in (fun _lh_dummy⁰ -> mappend_lh_₆(h¹⁴, t¹⁴(99))))
+//│ 	| LH_N  => (fun ys¹⁹ -> ys¹⁹)} else (fun ys²⁰ -> ys²⁰)
+//│ def take_lz_lh_₂(n¹, ls¹) = if (n¹ > 0) then case force⁰(ls¹) of {
+//│ 	LH_C h¹⁵ t¹⁵ => 
+//│ 		let t¹⁶ = take_lz_lh_₂((n¹ - 1), t¹⁵)
+//│ 		in let h¹⁶ = h¹⁵
+//│ 		in (fun _lh_dummy¹ -> mappend_lh_₆(h¹⁶, t¹⁶(99)))
+//│ 	| LH_N  => (fun _lh_dummy² -> (fun ys²¹ -> ys²¹))} else (fun _lh_dummy³ -> (fun ys²² -> ys²²))
+//│ def testPiDigits_nofib_lh_₁(_lh_testPiDigits_nofib_arg1⁰) = pidgits_lh_₁(_lh_testPiDigits_nofib_arg1⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testPiDigits_nofib_lh_₁(primId⁰(5000))
+//│ def ampOp_lh_₁(_lh_ampOp_arg1⁰, _lh_ampOp_arg2⁰) = case _lh_ampOp_arg2⁰ of {
+//│ 	LH_P3 _lh_ampOp_LH_P3_0⁰ _lh_ampOp_LH_P3_1⁰ _lh_ampOp_LH_P3_2⁰ => 
+//│ 		let y⁰ = ((_lh_ampOp_arg1⁰ * 2) + 1)
+//│ 		in [LH_P3 (_lh_ampOp_LH_P3_0⁰ * _lh_ampOp_arg1⁰) ((_lh_ampOp_LH_P3_1⁰ + (_lh_ampOp_LH_P3_0⁰ * 2)) * y⁰) (_lh_ampOp_LH_P3_2⁰ * y⁰)]
+//│ 	| _  => error⁰}
+//│ def concat_lh_₁(lss⁰) = lss⁰(99)
+//│ def divmod_lh_₁(_lh_divmod_arg1⁰, _lh_divmod_arg2⁰, _lh_hashOp_LH_P3_0⁰, _lh_hashOp_LH_P3_1⁰, _lh_hashOp_LH_P3_2⁰, k¹) = 
+//│ 	let _lh_hashOp_LH_P2_1⁰ = (_lh_divmod_arg1⁰ % _lh_divmod_arg2⁰)
+//│ 	in let _lh_hashOp_LH_P2_0⁰ = div⁰(_lh_divmod_arg1⁰, _lh_divmod_arg2⁰)
+//│ 	in if ((_lh_hashOp_LH_P3_0⁰ > _lh_hashOp_LH_P3_1⁰) || ((_lh_hashOp_LH_P2_1⁰ + _lh_hashOp_LH_P3_0⁰) >= _lh_hashOp_LH_P3_2⁰)) then force⁰(lazy⁰(
+//│ 		let k² = (k¹ + 1)
+//│ 		in let _lh_matchIdent² = ampOp_lh_₁(k², [LH_P3 _lh_hashOp_LH_P3_0⁰ _lh_hashOp_LH_P3_1⁰ _lh_hashOp_LH_P3_2⁰])
+//│ 		in case _lh_matchIdent² of {
+//│ 			LH_P3 _lh_hashOp_LH_P3_0¹ _lh_hashOp_LH_P3_1¹ _lh_hashOp_LH_P3_2¹ => 
+//│ 				let _lh_matchIdent³ = divmod_lh_₁(((_lh_hashOp_LH_P3_0¹ * 3) + _lh_hashOp_LH_P3_1¹), _lh_hashOp_LH_P3_2¹)
+//│ 				in _lh_matchIdent³(_lh_hashOp_LH_P3_0¹, _lh_hashOp_LH_P3_1¹, _lh_hashOp_LH_P3_2¹, k²)
+//│ 			| _  => error⁰})) else [LH_C string_of_int⁰(_lh_hashOp_LH_P2_0⁰) lazy⁰(
+//│ 		let k³ = (k¹ + 1)
+//│ 		in let _lh_matchIdent⁴ = ampOp_lh_₁(k³, [LH_P3 (_lh_hashOp_LH_P3_0⁰ * 10) ((_lh_hashOp_LH_P3_1⁰ - (_lh_hashOp_LH_P2_0⁰ * _lh_hashOp_LH_P3_2⁰)) * 10) _lh_hashOp_LH_P3_2⁰])
+//│ 		in case _lh_matchIdent⁴ of {
+//│ 			LH_P3 _lh_hashOp_LH_P3_0² _lh_hashOp_LH_P3_1² _lh_hashOp_LH_P3_2² => 
+//│ 				let _lh_matchIdent⁵ = divmod_lh_₁(((_lh_hashOp_LH_P3_0² * 3) + _lh_hashOp_LH_P3_1²), _lh_hashOp_LH_P3_2²)
+//│ 				in _lh_matchIdent⁵(_lh_hashOp_LH_P3_0², _lh_hashOp_LH_P3_1², _lh_hashOp_LH_P3_2², k³)
+//│ 			| _  => error⁰})]
+//│ def drop_lz_lh_₁(_lh_drop_lz_arg1⁰, _lh_drop_lz_arg2⁰) = if (_lh_drop_lz_arg1⁰ > 0) then lazy⁰(
+//│ 	let _lh_matchIdent¹ = force⁰(_lh_drop_lz_arg2⁰)
+//│ 	in case _lh_matchIdent¹ of {
+//│ 		LH_N  => [LH_N]
+//│ 		| LH_C _lh_drop_lz_LH_C_0⁰ _lh_drop_lz_LH_C_1⁰ => force⁰(drop_lz_lh_₁((_lh_drop_lz_arg1⁰ - 1), _lh_drop_lz_LH_C_1⁰))
+//│ 		| _  => error⁰}) else _lh_drop_lz_arg2⁰
+//│ def hashOp_lh_₁(_lh_hashOp_arg1⁰, _lh_hashOp_arg2⁰) = lazy⁰(
+//│ 	let k⁵ = (_lh_hashOp_arg1⁰ + 1)
+//│ 	in let _lh_matchIdent⁸ = ampOp_lh_₁(k⁵, _lh_hashOp_arg2⁰)
+//│ 	in case _lh_matchIdent⁸ of {
+//│ 		LH_P3 _lh_hashOp_LH_P3_0⁴ _lh_hashOp_LH_P3_1⁴ _lh_hashOp_LH_P3_2⁴ => 
+//│ 			let _lh_matchIdent⁹ = divmod_lh_₁(((_lh_hashOp_LH_P3_0⁴ * 3) + _lh_hashOp_LH_P3_1⁴), _lh_hashOp_LH_P3_2⁴)
+//│ 			in _lh_matchIdent⁹(_lh_hashOp_LH_P3_0⁴, _lh_hashOp_LH_P3_1⁴, _lh_hashOp_LH_P3_2⁴, k⁵)
+//│ 		| _  => error⁰})
+//│ def mappend_lh_₁(xs⁰, ys⁷) = case xs⁰ of {
+//│ 	LH_C h⁵ t⁵ => 
+//│ 		let t⁶ = mappend_lh_₁(t⁵, ys⁷)
+//│ 		in let h⁶ = h⁵
+//│ 		in (fun ys⁸ -> [LH_C h⁶ t⁶(ys⁸)])
+//│ 	| LH_N  => ys⁷}
+//│ def mappend_lh_₂(xs¹, ys¹⁶) = xs¹(ys¹⁶)
+//│ def mappend_lh_₃(xs³, ys²⁰) = xs³(ys²⁰)
+//│ def mappend_lh_₄(xs⁵, ys²⁵) = xs⁵(ys²⁵)
+//│ def mappend_lh_₅(xs², ys¹⁷) = xs²(ys¹⁷)
+//│ def mappend_lh_₆(xs⁴, ys²²) = case xs⁴ of {
+//│ 	LH_C h¹⁸ t¹⁸ => 
+//│ 		let t¹⁹ = mappend_lh_₆(t¹⁸, ys²²)
+//│ 		in let h¹⁹ = h¹⁸
+//│ 		in (fun ys²³ -> 
+//│ 			let t²⁰ = t¹⁹(ys²³)
+//│ 			in let h²⁰ = h¹⁹
+//│ 			in (fun ys²⁴ -> [LH_C h²⁰ t²⁰(ys²⁴)]))
+//│ 	| LH_N  => ys²²}
+//│ def min_lh_₁(_lh_min_arg1⁰, _lh_min_arg2⁰) = if (_lh_min_arg1⁰ > _lh_min_arg2⁰) then _lh_min_arg2⁰ else _lh_min_arg1⁰
+//│ def percOp_lh_₁(_lh_percOp_arg1⁰, _lh_percOp_arg2⁰, _lh_percOp_arg3⁰) = if (_lh_percOp_arg1⁰ >= _lh_percOp_arg3⁰) then [LH_N] else 
+//│ 	let k⁰ = (_lh_percOp_arg1⁰ + 10)
+//│ 	in let j⁰ = min_lh_₁(_lh_percOp_arg3⁰, k⁰)
+//│ 	in let _lh_matchIdent⁰ = if (k⁰ > _lh_percOp_arg3⁰) then 
+//│ 		let _lh_percOp_LH_P2_1⁰ = lazy⁰([LH_N])
+//│ 		in let _lh_percOp_LH_P2_0⁰ = take_lz_lh_₁((_lh_percOp_arg3⁰ % 10), _lh_percOp_arg2⁰, replicate_lh_₁((k⁰ - _lh_percOp_arg3⁰), [LH_C ' ' [LH_N]]))
+//│ 		in (fun _lh_percOp_arg3¹ -> (fun j¹ -> _lh_percOp_LH_P2_0⁰(99, 
+//│ 			let t⁰ = 	
+//│ 				let t¹ = (fun ys⁰ -> ys⁰)
+//│ 				in let h⁰ = ':'
+//│ 				in (fun ys¹ -> 
+//│ 					let t² = t¹(ys¹)
+//│ 					in let h¹ = h⁰
+//│ 					in (fun ys² -> [LH_C h¹ t²(ys²)]))
+//│ 			in let h² = 't'
+//│ 			in (fun ys³ -> 
+//│ 				let t³ = t⁰(ys³)
+//│ 				in let h³ = h²
+//│ 				in (fun ys⁴ -> [LH_C h³ t³(ys⁴)]))(mappend_lh_₁(string_of_int⁰(j¹), 
+//│ 			let t⁴ = (fun ys⁵ -> ys⁵)
+//│ 			in let h⁴ = 'n'
+//│ 			in (fun ys⁶ -> [LH_C h⁴ t⁴(ys⁶)]))), percOp_lh_₁(j¹, _lh_percOp_LH_P2_1⁰, _lh_percOp_arg3¹)))) else splitAt_lz_lh_₁(10, _lh_percOp_arg2⁰)
+//│ 	in _lh_matchIdent⁰(_lh_percOp_arg3⁰, j⁰)
+//│ def pidgits_lh_₁(_lh_pidgits_arg1⁰) = percOp_lh_₁(0, lazy⁰(
+//│ 	let k⁴ = (0 + 1)
+//│ 	in let _lh_matchIdent⁶ = ampOp_lh_₁(k⁴, [LH_P3 1 0 1])
+//│ 	in case _lh_matchIdent⁶ of {
+//│ 		LH_P3 _lh_hashOp_LH_P3_0³ _lh_hashOp_LH_P3_1³ _lh_hashOp_LH_P3_2³ => 
+//│ 			let _lh_matchIdent⁷ = divmod_lh_₁(((_lh_hashOp_LH_P3_0³ * 3) + _lh_hashOp_LH_P3_1³), _lh_hashOp_LH_P3_2³)
+//│ 			in _lh_matchIdent⁷(_lh_hashOp_LH_P3_0³, _lh_hashOp_LH_P3_1³, _lh_hashOp_LH_P3_2³, k⁴)
+//│ 		| _  => error⁰}), _lh_pidgits_arg1⁰)
+//│ def replicate_lh_₁(_lh_replicate_arg1⁰, _lh_replicate_arg2⁰) = if (_lh_replicate_arg1⁰ > 0) then 
+//│ 	let t¹⁷ = replicate_lh_₁((_lh_replicate_arg1⁰ - 1), _lh_replicate_arg2⁰)
+//│ 	in let h¹⁷ = _lh_replicate_arg2⁰
+//│ 	in (fun _lh_dummy⁴ -> mappend_lh_₆(h¹⁷, t¹⁷(99))) else (fun _lh_dummy⁵ -> (fun ys²¹ -> ys²¹))
+//│ def splitAt_lz_lh_₁(_lh_splitAt_lz_arg1⁰, _lh_splitAt_lz_arg2⁰) = 
+//│ 	let _lh_percOp_LH_P2_1¹ = drop_lz_lh_₁(_lh_splitAt_lz_arg1⁰, _lh_splitAt_lz_arg2⁰)
+//│ 	in let _lh_percOp_LH_P2_0¹ = take_lz_lh_₂(_lh_splitAt_lz_arg1⁰, _lh_splitAt_lz_arg2⁰)
+//│ 	in (fun _lh_percOp_arg3² -> (fun j² -> _lh_percOp_LH_P2_0¹(99, 
+//│ 		let t⁷ = 	
+//│ 			let t⁸ = (fun ys⁹ -> ys⁹)
+//│ 			in let h⁷ = ':'
+//│ 			in (fun ys¹⁰ -> 
+//│ 				let t⁹ = t⁸(ys¹⁰)
+//│ 				in let h⁸ = h⁷
+//│ 				in (fun ys¹¹ -> [LH_C h⁸ t⁹(ys¹¹)]))
+//│ 		in let h⁹ = 't'
+//│ 		in (fun ys¹² -> 
+//│ 			let t¹⁰ = t⁷(ys¹²)
+//│ 			in let h¹⁰ = h⁹
+//│ 			in (fun ys¹³ -> [LH_C h¹⁰ t¹⁰(ys¹³)]))(mappend_lh_₁(string_of_int⁰(j²), 
+//│ 		let t¹¹ = (fun ys¹⁴ -> ys¹⁴)
+//│ 		in let h¹¹ = 'n'
+//│ 		in (fun ys¹⁵ -> [LH_C h¹¹ t¹¹(ys¹⁵)]))), percOp_lh_₁(j², _lh_percOp_LH_P2_1¹, _lh_percOp_arg3²))))
+//│ def take_lz_lh_₁(n⁰, ls⁰, _lh_popOutId_0⁰) = if (n⁰ > 0) then case force⁰(ls⁰) of {
+//│ 	LH_C h¹² t¹² => (fun _lh_dummy⁰ -> 
+//│ 		let t¹³ = take_lz_lh_₁((n⁰ - 1), t¹²)
+//│ 		in let h¹³ = h¹²
+//│ 		in let t¹⁴ = t¹³(_lh_popOutId_0⁰)
+//│ 		in let h¹⁴ = h¹³
+//│ 		in mappend_lh_₆(h¹⁴, t¹⁴(99)))
+//│ 	| LH_N  => _lh_popOutId_0⁰} else _lh_popOutId_0⁰
+//│ def take_lz_lh_₂(n¹, ls¹) = if (n¹ > 0) then case force⁰(ls¹) of {
+//│ 	LH_C h¹⁵ t¹⁵ => 
+//│ 		let t¹⁶ = take_lz_lh_₂((n¹ - 1), t¹⁵)
+//│ 		in let h¹⁶ = h¹⁵
+//│ 		in (fun _lh_dummy¹ -> mappend_lh_₆(h¹⁶, t¹⁶(99)))
+//│ 	| LH_N  => (fun _lh_dummy² -> (fun ys¹⁸ -> ys¹⁸))} else (fun _lh_dummy³ -> (fun ys¹⁹ -> ys¹⁹))
+//│ def testPiDigits_nofib_lh_₁(_lh_testPiDigits_nofib_arg1⁰) = pidgits_lh_₁(_lh_testPiDigits_nofib_arg1⁰)
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

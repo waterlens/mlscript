@@ -194,6 +194,66 @@ testPrime_nofib $ primId 100
 //│ 	| _  => error⁰}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ atIndex_lz_lh_₁, map_lz_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ iterate_lh_₁ -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testPrime_nofib_lh_₁(primId⁰(100))
+//│ def atIndex_lz_lh_₁(n⁰, ls¹) = if (n⁰ < 0) then error⁰ else force⁰(ls¹, n⁰)
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then [LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)] else [LH_N]
+//│ def filter_lh_₁(f³, ls²) = case ls² of {
+//│ 	LH_C h² t² => if f³(h²) then [LH_C h² filter_lh_₁(f³, t²)] else filter_lh_₁(f³, t²)
+//│ 	| LH_N  => [LH_N]}
+//│ def head_lh_₁(ls³) = case ls³ of {
+//│ 	LH_C h³ t³ => h³
+//│ 	| LH_N  => error⁰}
+//│ def isdivs_lh_₁(_lh_isdivs_arg1⁰, _lh_isdivs_arg2⁰) = ((_lh_isdivs_arg2⁰ % _lh_isdivs_arg1⁰) /= 0)
+//│ def iterate_lh_₁(f¹, x⁰) = lazy⁰(
+//│ 	let t⁰ = iterate_lh_₁(f¹, f¹(x⁰))
+//│ 	in let h⁰ = x⁰
+//│ 	in (fun f² -> 
+//│ 		let t¹ = lazy⁰(force⁰(t⁰, f²))
+//│ 		in let h¹ = f²(h⁰)
+//│ 		in (fun n¹ -> if (n¹ == 0) then h¹ else if ((n¹ - 1) < 0) then error⁰ else force⁰(t¹, (n¹ - 1)))))
+//│ def map_lz_lh_₁(f⁰, ls⁰) = lazy⁰(force⁰(ls⁰, f⁰))
+//│ def prime_lh_₁(_lh_prime_arg1⁰) = if (_lh_prime_arg1⁰ < 0) then error⁰ else force⁰(lazy⁰(force⁰(iterate_lh_₁(the_filter_lh_₁, enumFromTo_lh_₁(2, (_lh_prime_arg1⁰ * _lh_prime_arg1⁰))), head_lh_₁)), _lh_prime_arg1⁰)
+//│ def testPrime_nofib_lh_₁(_lh_testPrime_nofib_arg1⁰) = prime_lh_₁(_lh_testPrime_nofib_arg1⁰)
+//│ def the_filter_lh_₁(_lh_the_filter_arg1⁰) = case _lh_the_filter_arg1⁰ of {
+//│ 	LH_C _lh_the_filter_LH_C_0⁰ _lh_the_filter_LH_C_1⁰ => filter_lh_₁(isdivs_lh_₁(_lh_the_filter_LH_C_0⁰), _lh_the_filter_LH_C_1⁰)
+//│ 	| _  => error⁰}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testPrime_nofib_lh_₁(primId⁰(100))
+//│ def atIndex_lz_lh_₁(n⁰, ls¹) = if (n⁰ < 0) then error⁰ else force⁰(ls¹, n⁰)
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then [LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)] else [LH_N]
+//│ def filter_lh_₁(f³, ls²) = case ls² of {
+//│ 	LH_C h² t² => if f³(h²) then [LH_C h² filter_lh_₁(f³, t²)] else filter_lh_₁(f³, t²)
+//│ 	| LH_N  => [LH_N]}
+//│ def head_lh_₁(ls³) = case ls³ of {
+//│ 	LH_C h³ t³ => h³
+//│ 	| LH_N  => error⁰}
+//│ def isdivs_lh_₁(_lh_isdivs_arg1⁰, _lh_isdivs_arg2⁰) = ((_lh_isdivs_arg2⁰ % _lh_isdivs_arg1⁰) /= 0)
+//│ def iterate_lh_₁(f¹, x⁰) = lazy⁰(
+//│ 	let t⁰ = iterate_lh_₁(f¹, f¹(x⁰))
+//│ 	in let h⁰ = x⁰
+//│ 	in (fun f² -> 
+//│ 		let t¹ = lazy⁰(force⁰(t⁰, f²))
+//│ 		in let h¹ = f²(h⁰)
+//│ 		in (fun n¹ -> if (n¹ == 0) then h¹ else if ((n¹ - 1) < 0) then error⁰ else force⁰(t¹, (n¹ - 1)))))
+//│ def map_lz_lh_₁(f⁰, ls⁰) = lazy⁰(force⁰(ls⁰, f⁰))
+//│ def prime_lh_₁(_lh_prime_arg1⁰) = if (_lh_prime_arg1⁰ < 0) then error⁰ else force⁰(lazy⁰(force⁰(iterate_lh_₁(the_filter_lh_₁, enumFromTo_lh_₁(2, (_lh_prime_arg1⁰ * _lh_prime_arg1⁰))), head_lh_₁)), _lh_prime_arg1⁰)
+//│ def testPrime_nofib_lh_₁(_lh_testPrime_nofib_arg1⁰) = prime_lh_₁(_lh_testPrime_nofib_arg1⁰)
+//│ def the_filter_lh_₁(_lh_the_filter_arg1⁰) = case _lh_the_filter_arg1⁰ of {
+//│ 	LH_C _lh_the_filter_LH_C_0⁰ _lh_the_filter_LH_C_1⁰ => filter_lh_₁(isdivs_lh_₁(_lh_the_filter_LH_C_0⁰), _lh_the_filter_LH_C_1⁰)
+//│ 	| _  => error⁰}
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

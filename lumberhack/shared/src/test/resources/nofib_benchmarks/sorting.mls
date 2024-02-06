@@ -11788,6 +11788,888 @@ testSorting_nofib $ primId 0
 //│ def unlines_lh_₁(_lh_unlines_arg1¹) = concat_lh_₁(map_lh_₁((fun l¹ -> mappend_lh_₁(l¹, [LH_C '|' [LH_N]])), _lh_unlines_arg1¹))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ concat_lh_₁, prependToAll_lh_₁, lines_lh_₁, intersperse_lh_₁, mergeSort_lh_₁, foldr_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ map_lh_₁ -> 3
+//│ break_lh_₁ -> 2
+//│ mangle_lh_₁ -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testSorting_nofib_lh_₁(primId⁰(0))
+//│ def break_lh_₁(_lh_break_arg1⁰, _lh_break_arg2⁰) = case _lh_break_arg2⁰ of {
+//│ 	LH_N  => [LH_P2 [LH_N] (fun _lh_dummy² -> [LH_N])]
+//│ 	| LH_C _lh_break_LH_C_0⁰ _lh_break_LH_C_1⁰ => if _lh_break_arg1⁰(_lh_break_LH_C_0⁰) then [LH_P2 [LH_N] 
+//│ 		let _lh_lines_LH_C_1⁰ = _lh_break_LH_C_1⁰
+//│ 		in (fun _lh_dummy³ -> case _lh_lines_LH_C_1⁰ of {
+//│ 			LH_N  => [LH_N]
+//│ 			| _  => 
+//│ 				let _lh_matchIdent⁷ = break_lh_₁((fun x² -> polyEq⁰(x², '|')), _lh_lines_LH_C_1⁰)
+//│ 				in case _lh_matchIdent⁷ of {
+//│ 					LH_P2 _lh_lines_LH_P2_0¹ _lh_lines_LH_P2_1¹ => [LH_C _lh_lines_LH_P2_0¹ 
+//│ 						let _lh_matchIdent⁸ = _lh_lines_LH_P2_1¹
+//│ 						in _lh_matchIdent⁸(99)]
+//│ 					| _  => error⁰}})] else 
+//│ 		let _lh_matchIdent⁹ = break_lh_₁(_lh_break_arg1⁰, _lh_break_LH_C_1⁰)
+//│ 		in case _lh_matchIdent⁹ of {
+//│ 			LH_P2 _lh_break_LH_P2_0⁰ _lh_break_LH_P2_1⁰ => [LH_P2 [LH_C _lh_break_LH_C_0⁰ _lh_break_LH_P2_0⁰] _lh_break_LH_P2_1⁰]
+//│ 			| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def compareList_lh_₁(_lh_compareList_arg1⁰, _lh_compareList_arg2⁰) = case _lh_compareList_arg1⁰ of {
+//│ 	LH_N  => case _lh_compareList_arg2⁰ of {
+//│ 		LH_N  => [EQ]
+//│ 		| LH_C _lh_compareList_LH_C_0⁰ _lh_compareList_LH_C_1⁰ => [LT]
+//│ 		| _  => error⁰}
+//│ 	| LH_C _lh_compareList_LH_C_0¹ _lh_compareList_LH_C_1¹ => case _lh_compareList_arg2⁰ of {
+//│ 		LH_N  => [GT]
+//│ 		| LH_C _lh_compareList_LH_C_0² _lh_compareList_LH_C_1² => if (int_of_char⁰(_lh_compareList_LH_C_0¹) == int_of_char⁰(_lh_compareList_LH_C_0²)) then compareList_lh_₁(_lh_compareList_LH_C_1¹, _lh_compareList_LH_C_1²) else if (int_of_char⁰(_lh_compareList_LH_C_0¹) < int_of_char⁰(_lh_compareList_LH_C_0²)) then [LT] else [GT]
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def concat_lh_₁(lss⁰) = lss⁰(99)
+//│ def eqList_lh_₁(_lh_eqList_arg1⁰, _lh_eqList_arg2⁰) = polyEq⁰(compareList_lh_₁(_lh_eqList_arg1⁰, _lh_eqList_arg2⁰), [EQ])
+//│ def foldl_lh_₁(f⁰, i⁰, ls²) = case ls² of {
+//│ 	LH_C h² t² => foldl_lh_₁(f⁰, f⁰(i⁰, h²), t²)
+//│ 	| LH_N  => i⁰}
+//│ def foldr_lh_₁(f¹, i¹, ls⁴) = ls⁴(f¹, i¹)
+//│ def foldr_lh_₂(f², i², ls⁵) = case ls⁵ of {
+//│ 	LH_C h⁷ t⁷ => f²(h⁷, foldr_lh_₂(f², i², t⁷))
+//│ 	| LH_N  => i²}
+//│ def foldr_lh_₃(f³, i³, ls⁶) = case ls⁶ of {
+//│ 	LH_C h¹⁰ t¹⁰ => f³(h¹⁰, foldr_lh_₃(f³, i³, t¹⁰))
+//│ 	| LH_N  => i³}
+//│ def geList_lh_₁(_lh_geList_arg1⁰, _lh_geList_arg2⁰) = not⁰(ltList_lh_₂(_lh_geList_arg1⁰, _lh_geList_arg2⁰))
+//│ def gtList_lh_₁(_lh_gtList_arg1⁰, _lh_gtList_arg2⁰) = 
+//│ 	let _lh_matchIdent¹ = compareList_lh_₁(_lh_gtList_arg1⁰, _lh_gtList_arg2⁰)
+//│ 	in case _lh_matchIdent¹ of {
+//│ 		GT  => [True]
+//│ 		| _  => [False]}
+//│ def gtList_lh_₂(_lh_gtList_arg1⁴, _lh_gtList_arg2⁴) = 
+//│ 	let _lh_matchIdent¹⁸ = compareList_lh_₁(_lh_gtList_arg1⁴, _lh_gtList_arg2⁴)
+//│ 	in case _lh_matchIdent¹⁸ of {
+//│ 		GT  => [True]
+//│ 		| _  => [False]}
+//│ def gtList_lh_₃(_lh_gtList_arg1², _lh_gtList_arg2²) = 
+//│ 	let _lh_matchIdent¹⁰ = compareList_lh_₁(_lh_gtList_arg1², _lh_gtList_arg2²)
+//│ 	in case _lh_matchIdent¹⁰ of {
+//│ 		GT  => [True]
+//│ 		| _  => [False]}
+//│ def gtList_lh_₄(_lh_gtList_arg1¹, _lh_gtList_arg2¹) = 
+//│ 	let _lh_matchIdent² = compareList_lh_₁(_lh_gtList_arg1¹, _lh_gtList_arg2¹)
+//│ 	in case _lh_matchIdent² of {
+//│ 		GT  => [True]
+//│ 		| _  => [False]}
+//│ def gtList_lh_₅(_lh_gtList_arg1³, _lh_gtList_arg2³) = 
+//│ 	let _lh_matchIdent¹³ = compareList_lh_₁(_lh_gtList_arg1³, _lh_gtList_arg2³)
+//│ 	in case _lh_matchIdent¹³ of {
+//│ 		GT  => [True]
+//│ 		| _  => [False]}
+//│ def hash_lh_₁(_lh_hash_arg1⁰) = foldl_lh_₁((fun acc⁰ -> (fun c⁰ -> (int_of_char⁰(c⁰) + (acc⁰ * 31)))), 0, _lh_hash_arg1⁰)
+//│ def heapSort_lh_₁(_lh_heapSort_arg1⁰) = 
+//│ 	let div2⁰ = (fun _lh_div2_arg1⁰ -> div⁰(_lh_div2_arg1⁰, 2))
+//│ 	and clear⁰ = (fun _lh_clear_arg1⁰ -> case _lh_clear_arg1⁰ of {
+//│ 			Tip  => [LH_N]
+//│ 			| Branch _lh_clear_Branch_0⁰ _lh_clear_Branch_1⁰ _lh_clear_Branch_2⁰ => [LH_C _lh_clear_Branch_0⁰ clear⁰(mix⁰(_lh_clear_Branch_1⁰, _lh_clear_Branch_2⁰))]
+//│ 			| _  => error⁰})
+//│ 	and mix⁰ = (fun _lh_mix_arg1⁰ -> (fun _lh_mix_arg2⁰ -> case _lh_mix_arg1⁰ of {
+//│ 			Tip  => _lh_mix_arg2⁰
+//│ 			| _  => case _lh_mix_arg2⁰ of {
+//│ 				Tip  => _lh_mix_arg1⁰
+//│ 				| _  => case _lh_mix_arg1⁰ of {
+//│ 					Branch _lh_mix_Branch_0⁰ _lh_mix_Branch_1⁰ _lh_mix_Branch_2⁰ => case _lh_mix_arg2⁰ of {
+//│ 						Branch _lh_mix_Branch_0¹ _lh_mix_Branch_1¹ _lh_mix_Branch_2¹ => if leList_lh_₁₁(_lh_mix_Branch_0⁰, _lh_mix_Branch_0¹) then [Branch _lh_mix_Branch_0⁰ mix⁰(_lh_mix_Branch_1⁰, _lh_mix_Branch_2⁰) [Branch _lh_mix_Branch_0¹ _lh_mix_Branch_1¹ _lh_mix_Branch_2¹]] else [Branch _lh_mix_Branch_0¹ [Branch _lh_mix_Branch_0⁰ _lh_mix_Branch_1⁰ _lh_mix_Branch_2⁰] mix⁰(_lh_mix_Branch_1¹, _lh_mix_Branch_2¹)]
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}}}))
+//│ 	and heap⁰ = (fun _lh_heap_arg1⁰ -> (fun _lh_heap_arg2⁰ -> case _lh_heap_arg2⁰ of {
+//│ 			LH_N  => [Tip]
+//│ 			| LH_C _lh_heap_LH_C_0⁰ _lh_heap_LH_C_1⁰ => to_heap⁰(_lh_heap_arg1⁰, _lh_heap_LH_C_0⁰, heap⁰((_lh_heap_arg1⁰ + 1), _lh_heap_LH_C_1⁰))
+//│ 			| _  => error⁰}))
+//│ 	and to_heap⁰ = (fun _lh_to_heap_arg1⁰ -> (fun _lh_to_heap_arg2⁰ -> (fun _lh_to_heap_arg3⁰ -> case _lh_to_heap_arg3⁰ of {
+//│ 			Tip  => [Branch _lh_to_heap_arg2⁰ [Tip] [Tip]]
+//│ 			| Branch _lh_to_heap_Branch_0⁰ _lh_to_heap_Branch_1⁰ _lh_to_heap_Branch_2⁰ => if (leList_lh_₁₃(_lh_to_heap_arg2⁰, _lh_to_heap_Branch_0⁰) && odd_lh_₁(_lh_to_heap_arg1⁰)) then [Branch _lh_to_heap_arg2⁰ to_heap⁰(div2⁰(_lh_to_heap_arg1⁰), _lh_to_heap_Branch_0⁰, _lh_to_heap_Branch_1⁰) _lh_to_heap_Branch_2⁰] else if leList_lh_₁₂(_lh_to_heap_arg2⁰, _lh_to_heap_Branch_0⁰) then [Branch _lh_to_heap_arg2⁰ _lh_to_heap_Branch_1⁰ to_heap⁰(div2⁰(_lh_to_heap_arg1⁰), _lh_to_heap_Branch_0⁰, _lh_to_heap_Branch_2⁰)] else if odd_lh_₂(_lh_to_heap_arg1⁰) then [Branch _lh_to_heap_Branch_0⁰ to_heap⁰(div2⁰(_lh_to_heap_arg1⁰), _lh_to_heap_arg2⁰, _lh_to_heap_Branch_1⁰) _lh_to_heap_Branch_2⁰] else [Branch _lh_to_heap_Branch_0⁰ _lh_to_heap_Branch_1⁰ to_heap⁰(div2⁰(_lh_to_heap_arg1⁰), _lh_to_heap_arg2⁰, _lh_to_heap_Branch_2⁰)]
+//│ 			| _  => error⁰}))) 
+//│ 	in clear⁰(heap⁰(0, _lh_heapSort_arg1⁰))
+//│ def insertSort_lh_₁(_lh_insertSort_arg1⁰) = case _lh_insertSort_arg1⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_insertSort_LH_C_0⁰ _lh_insertSort_LH_C_1⁰ => 
+//│ 		let trins⁰ = (fun _lh_trins_arg1⁰ -> (fun _lh_trins_arg2⁰ -> (fun _lh_trins_arg3⁰ -> case _lh_trins_arg2⁰ of {
+//│ 			LH_N  => case _lh_trins_arg3⁰ of {
+//│ 				LH_C _lh_trins_LH_C_0⁰ _lh_trins_LH_C_1⁰ => trins⁰([LH_N], mappend_lh_₉(reverse_lh_₅(_lh_trins_arg1⁰), [LH_C _lh_trins_LH_C_0⁰ [LH_N]]), _lh_trins_LH_C_1⁰)
+//│ 				| _  => case _lh_trins_arg3⁰ of {
+//│ 					LH_N  => mappend_lh_₁₀(reverse_lh_₅(_lh_trins_arg1⁰), _lh_trins_arg2⁰)
+//│ 					| _  => case _lh_trins_arg2⁰ of {
+//│ 						LH_C _lh_trins_LH_C_0¹ _lh_trins_LH_C_1¹ => case _lh_trins_arg3⁰ of {
+//│ 							LH_C _lh_trins_LH_C_0² _lh_trins_LH_C_1² => if ltList_lh_₂(_lh_trins_LH_C_0¹, _lh_trins_LH_C_0²) then trins⁰([LH_C _lh_trins_LH_C_0¹ _lh_trins_arg1⁰], _lh_trins_LH_C_1¹, [LH_C _lh_trins_LH_C_0² _lh_trins_LH_C_1²]) else trins⁰([LH_N], mappend_lh_₁₀(reverse_lh_₂(_lh_trins_arg1⁰), [LH_C _lh_trins_LH_C_0² [LH_C _lh_trins_LH_C_0¹ _lh_trins_LH_C_1¹]]), _lh_trins_LH_C_1²)
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}}}
+//│ 			| _  => case _lh_trins_arg3⁰ of {
+//│ 				LH_N  => mappend_lh_₇(reverse_lh_₃(_lh_trins_arg1⁰), _lh_trins_arg2⁰)
+//│ 				| _  => case _lh_trins_arg2⁰ of {
+//│ 					LH_C _lh_trins_LH_C_0³ _lh_trins_LH_C_1³ => case _lh_trins_arg3⁰ of {
+//│ 						LH_C _lh_trins_LH_C_0⁴ _lh_trins_LH_C_1⁴ => if ltList_lh_₂(_lh_trins_LH_C_0³, _lh_trins_LH_C_0⁴) then trins⁰([LH_C _lh_trins_LH_C_0³ _lh_trins_arg1⁰], _lh_trins_LH_C_1³, [LH_C _lh_trins_LH_C_0⁴ _lh_trins_LH_C_1⁴]) else trins⁰([LH_N], mappend_lh_₈(reverse_lh_₄(_lh_trins_arg1⁰), [LH_C _lh_trins_LH_C_0⁴ [LH_C _lh_trins_LH_C_0³ _lh_trins_LH_C_1³]]), _lh_trins_LH_C_1⁴)
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}}})))
+//│ 		in trins⁰([LH_N], [LH_C _lh_insertSort_LH_C_0⁰ [LH_N]], _lh_insertSort_LH_C_1⁰)
+//│ 	| _  => error⁰}
+//│ def intersperse_lh_₁(_lh_intersperse_arg1⁰, _lh_intersperse_arg2⁰) = _lh_intersperse_arg2⁰(_lh_intersperse_arg1⁰)
+//│ def leList_lh_₁(_lh_leList_arg1⁷, _lh_leList_arg2⁷) = not⁰(gtList_lh_₅(_lh_leList_arg1⁷, _lh_leList_arg2⁷))
+//│ def leList_lh_₁₀(_lh_leList_arg1⁵, _lh_leList_arg2⁵) = not⁰(gtList_lh_₅(_lh_leList_arg1⁵, _lh_leList_arg2⁵))
+//│ def leList_lh_₁₁(_lh_leList_arg1⁶, _lh_leList_arg2⁶) = not⁰(gtList_lh_₅(_lh_leList_arg1⁶, _lh_leList_arg2⁶))
+//│ def leList_lh_₁₂(_lh_leList_arg1³, _lh_leList_arg2³) = not⁰(gtList_lh_₅(_lh_leList_arg1³, _lh_leList_arg2³))
+//│ def leList_lh_₁₃(_lh_leList_arg1⁸, _lh_leList_arg2⁸) = not⁰(gtList_lh_₅(_lh_leList_arg1⁸, _lh_leList_arg2⁸))
+//│ def leList_lh_₁₄(_lh_leList_arg1⁰, _lh_leList_arg2⁰) = not⁰(gtList_lh_₅(_lh_leList_arg1⁰, _lh_leList_arg2⁰))
+//│ def leList_lh_₁₅(_lh_leList_arg1⁴, _lh_leList_arg2⁴) = not⁰(gtList_lh_₅(_lh_leList_arg1⁴, _lh_leList_arg2⁴))
+//│ def leList_lh_₁₆(_lh_leList_arg1¹², _lh_leList_arg2¹²) = not⁰(gtList_lh_₅(_lh_leList_arg1¹², _lh_leList_arg2¹²))
+//│ def leList_lh_₂(_lh_leList_arg1⁹, _lh_leList_arg2⁹) = not⁰(gtList_lh_₅(_lh_leList_arg1⁹, _lh_leList_arg2⁹))
+//│ def leList_lh_₃(_lh_leList_arg1¹⁵, _lh_leList_arg2¹⁵) = not⁰(gtList_lh_₅(_lh_leList_arg1¹⁵, _lh_leList_arg2¹⁵))
+//│ def leList_lh_₄(_lh_leList_arg1¹⁴, _lh_leList_arg2¹⁴) = not⁰(gtList_lh_₅(_lh_leList_arg1¹⁴, _lh_leList_arg2¹⁴))
+//│ def leList_lh_₅(_lh_leList_arg1¹¹, _lh_leList_arg2¹¹) = not⁰(gtList_lh_₅(_lh_leList_arg1¹¹, _lh_leList_arg2¹¹))
+//│ def leList_lh_₆(_lh_leList_arg1¹⁰, _lh_leList_arg2¹⁰) = not⁰(gtList_lh_₅(_lh_leList_arg1¹⁰, _lh_leList_arg2¹⁰))
+//│ def leList_lh_₇(_lh_leList_arg1¹, _lh_leList_arg2¹) = not⁰(gtList_lh_₅(_lh_leList_arg1¹, _lh_leList_arg2¹))
+//│ def leList_lh_₈(_lh_leList_arg1², _lh_leList_arg2²) = not⁰(gtList_lh_₅(_lh_leList_arg1², _lh_leList_arg2²))
+//│ def leList_lh_₉(_lh_leList_arg1¹³, _lh_leList_arg2¹³) = not⁰(gtList_lh_₅(_lh_leList_arg1¹³, _lh_leList_arg2¹³))
+//│ def lines_lh_₁(_lh_lines_arg1⁰) = case _lh_lines_arg1⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| _  => 
+//│ 		let _lh_matchIdent³ = break_lh_₁((fun x⁰ -> polyEq⁰(x⁰, '|')), _lh_lines_arg1⁰)
+//│ 		in case _lh_matchIdent³ of {
+//│ 			LH_P2 _lh_lines_LH_P2_0⁰ _lh_lines_LH_P2_1⁰ => [LH_C _lh_lines_LH_P2_0⁰ 
+//│ 				let _lh_matchIdent⁴ = _lh_lines_LH_P2_1⁰
+//│ 				in _lh_matchIdent⁴(99)]
+//│ 			| _  => error⁰}}
+//│ def ltList_lh_₁(_lh_ltList_arg1⁰, _lh_ltList_arg2⁰) = 
+//│ 	let _lh_matchIdent⁰ = compareList_lh_₁(_lh_ltList_arg1⁰, _lh_ltList_arg2⁰)
+//│ 	in case _lh_matchIdent⁰ of {
+//│ 		LT  => [True]
+//│ 		| _  => [False]}
+//│ def ltList_lh_₂(_lh_ltList_arg1¹, _lh_ltList_arg2¹) = 
+//│ 	let _lh_matchIdent⁶ = compareList_lh_₁(_lh_ltList_arg1¹, _lh_ltList_arg2¹)
+//│ 	in case _lh_matchIdent⁶ of {
+//│ 		LT  => [True]
+//│ 		| _  => [False]}
+//│ def mangle_lh_₁(_lh_mangle_arg1⁰) = 
+//│ 	let sort⁰ = (fun _lh_sort_arg1⁰ -> 
+//│ 		let _lh_intersperse_LH_C_1⁰ = 	
+//│ 			let _lh_prependToAll_LH_C_1⁰ = 	
+//│ 				let _lh_prependToAll_LH_C_1¹ = 	
+//│ 					let _lh_prependToAll_LH_C_1² = 	
+//│ 						let _lh_prependToAll_LH_C_1³ = 	
+//│ 							let _lh_prependToAll_LH_C_1⁴ = 	
+//│ 								let _lh_prependToAll_LH_C_1⁵ = 	
+//│ 									let _lh_prependToAll_LH_C_1⁶ = (fun _lh_prependToAll_arg1¹ -> (fun f⁶ -> (fun i⁴ -> i⁴)))
+//│ 									in let _lh_prependToAll_LH_C_0⁰ = treeSort2_lh_₁
+//│ 									in (fun _lh_prependToAll_arg1² -> 
+//│ 										let t¹⁶ = 	
+//│ 											let t¹⁷ = _lh_prependToAll_LH_C_1⁶(_lh_prependToAll_arg1²)
+//│ 											in let h¹⁶ = _lh_prependToAll_LH_C_0⁰
+//│ 											in (fun f⁷ -> (fun i⁵ -> f⁷(h¹⁶, t¹⁷(f⁷, i⁵))))
+//│ 										in let h¹⁷ = _lh_prependToAll_arg1²
+//│ 										in (fun f⁸ -> (fun i⁶ -> f⁸(h¹⁷, t¹⁶(f⁸, i⁶)))))
+//│ 								in let _lh_prependToAll_LH_C_0¹ = treeSort_lh_₁
+//│ 								in (fun _lh_prependToAll_arg1³ -> 
+//│ 									let t¹⁸ = 	
+//│ 										let t¹⁹ = _lh_prependToAll_LH_C_1⁵(_lh_prependToAll_arg1³)
+//│ 										in let h¹⁸ = _lh_prependToAll_LH_C_0¹
+//│ 										in (fun f⁹ -> (fun i⁷ -> f⁹(h¹⁸, t¹⁹(f⁹, i⁷))))
+//│ 									in let h¹⁹ = _lh_prependToAll_arg1³
+//│ 									in (fun f¹⁰ -> (fun i⁸ -> f¹⁰(h¹⁹, t¹⁸(f¹⁰, i⁸)))))
+//│ 							in let _lh_prependToAll_LH_C_0² = quickerSort_lh_₁
+//│ 							in (fun _lh_prependToAll_arg1⁴ -> 
+//│ 								let t²⁰ = 	
+//│ 									let t²¹ = _lh_prependToAll_LH_C_1⁴(_lh_prependToAll_arg1⁴)
+//│ 									in let h²⁰ = _lh_prependToAll_LH_C_0²
+//│ 									in (fun f¹¹ -> (fun i⁹ -> f¹¹(h²⁰, t²¹(f¹¹, i⁹))))
+//│ 								in let h²¹ = _lh_prependToAll_arg1⁴
+//│ 								in (fun f¹² -> (fun i¹⁰ -> f¹²(h²¹, t²⁰(f¹², i¹⁰)))))
+//│ 						in let _lh_prependToAll_LH_C_0³ = quickSort2_lh_₁
+//│ 						in (fun _lh_prependToAll_arg1⁵ -> 
+//│ 							let t²² = 	
+//│ 								let t²³ = _lh_prependToAll_LH_C_1³(_lh_prependToAll_arg1⁵)
+//│ 								in let h²² = _lh_prependToAll_LH_C_0³
+//│ 								in (fun f¹³ -> (fun i¹¹ -> f¹³(h²², t²³(f¹³, i¹¹))))
+//│ 							in let h²³ = _lh_prependToAll_arg1⁵
+//│ 							in (fun f¹⁴ -> (fun i¹² -> f¹⁴(h²³, t²²(f¹⁴, i¹²)))))
+//│ 					in let _lh_prependToAll_LH_C_0⁴ = quickSort_lh_₁
+//│ 					in (fun _lh_prependToAll_arg1⁶ -> 
+//│ 						let t²⁴ = 	
+//│ 							let t²⁵ = _lh_prependToAll_LH_C_1²(_lh_prependToAll_arg1⁶)
+//│ 							in let h²⁴ = _lh_prependToAll_LH_C_0⁴
+//│ 							in (fun f¹⁵ -> (fun i¹³ -> f¹⁵(h²⁴, t²⁵(f¹⁵, i¹³))))
+//│ 						in let h²⁵ = _lh_prependToAll_arg1⁶
+//│ 						in (fun f¹⁶ -> (fun i¹⁴ -> f¹⁶(h²⁵, t²⁴(f¹⁶, i¹⁴)))))
+//│ 				in let _lh_prependToAll_LH_C_0⁵ = mergeSort_lh_₁
+//│ 				in (fun _lh_prependToAll_arg1⁷ -> 
+//│ 					let t²⁶ = 	
+//│ 						let t²⁷ = _lh_prependToAll_LH_C_1¹(_lh_prependToAll_arg1⁷)
+//│ 						in let h²⁶ = _lh_prependToAll_LH_C_0⁵
+//│ 						in (fun f¹⁷ -> (fun i¹⁵ -> f¹⁷(h²⁶, t²⁷(f¹⁷, i¹⁵))))
+//│ 					in let h²⁷ = _lh_prependToAll_arg1⁷
+//│ 					in (fun f¹⁸ -> (fun i¹⁶ -> f¹⁸(h²⁷, t²⁶(f¹⁸, i¹⁶)))))
+//│ 			in let _lh_prependToAll_LH_C_0⁶ = insertSort_lh_₁
+//│ 			in (fun _lh_prependToAll_arg1⁸ -> 
+//│ 				let t²⁸ = 	
+//│ 					let t²⁹ = _lh_prependToAll_LH_C_1⁰(_lh_prependToAll_arg1⁸)
+//│ 					in let h²⁸ = _lh_prependToAll_LH_C_0⁶
+//│ 					in (fun f¹⁹ -> (fun i¹⁷ -> f¹⁹(h²⁸, t²⁹(f¹⁹, i¹⁷))))
+//│ 				in let h²⁹ = _lh_prependToAll_arg1⁸
+//│ 				in (fun f²⁰ -> (fun i¹⁸ -> f²⁰(h²⁹, t²⁸(f²⁰, i¹⁸)))))
+//│ 		in let _lh_intersperse_LH_C_0⁰ = heapSort_lh_₁
+//│ 		in (fun _lh_intersperse_arg1¹ -> 
+//│ 			let t³⁰ = _lh_intersperse_LH_C_1⁰(_lh_intersperse_arg1¹)
+//│ 			in let h³⁰ = _lh_intersperse_LH_C_0⁰
+//│ 			in (fun f²¹ -> (fun i¹⁹ -> f²¹(h³⁰, t³⁰(f²¹, i¹⁹)))))(reverse_lh_₁, (fun f²² -> (fun g⁰ -> (fun _lh_funcomp_x² -> f²²(g⁰(_lh_funcomp_x²))))), (fun x³ -> x³), _lh_sort_arg1⁰))
+//│ 	in (fun _lh_funcomp_x³ -> (fun _lh_funcomp_x⁴ -> unlines_lh_₁(sort⁰(_lh_funcomp_x⁴)))(case _lh_funcomp_x³ of {
+//│ 		LH_N  => [LH_N]
+//│ 		| _  => 
+//│ 			let _lh_matchIdent¹¹ = break_lh_₁((fun x⁴ -> polyEq⁰(x⁴, '|')), _lh_funcomp_x³)
+//│ 			in case _lh_matchIdent¹¹ of {
+//│ 				LH_P2 _lh_lines_LH_P2_0² _lh_lines_LH_P2_1² => [LH_C _lh_lines_LH_P2_0² 
+//│ 					let _lh_matchIdent¹² = _lh_lines_LH_P2_1²
+//│ 					in _lh_matchIdent¹²(99)]
+//│ 				| _  => error⁰}}))(_lh_mangle_arg1⁰)
+//│ def map_lh_₁(f⁵, ls⁷) = case ls⁷ of {
+//│ 	LH_C h¹³ t¹³ => 
+//│ 		let t¹⁴ = map_lh_₁(f⁵, t¹³)
+//│ 		in let h¹⁴ = f⁵(h¹³)
+//│ 		in (fun _lh_dummy⁰ -> mappend_lh_₁₀(h¹⁴, t¹⁴(99)))
+//│ 	| LH_N  => (fun _lh_dummy¹ -> [LH_N])}
+//│ def mappend_lh_₁(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	LH_C h⁰ t⁰ => [LH_C h⁰ mappend_lh_₁(t⁰, ys⁰)]
+//│ 	| LH_N  => ys⁰}
+//│ def mappend_lh_₁₀(xs³, ys³) = case xs³ of {
+//│ 	LH_C h⁵ t⁵ => [LH_C h⁵ mappend_lh_₁₀(t⁵, ys³)]
+//│ 	| LH_N  => ys³}
+//│ def mappend_lh_₂(xs⁵, ys⁵) = case xs⁵ of {
+//│ 	LH_C h⁸ t⁸ => [LH_C h⁸ mappend_lh_₂(t⁸, ys⁵)]
+//│ 	| LH_N  => ys⁵}
+//│ def mappend_lh_₃(xs¹, ys¹) = case xs¹ of {
+//│ 	LH_C h¹ t¹ => [LH_C h¹ mappend_lh_₃(t¹, ys¹)]
+//│ 	| LH_N  => ys¹}
+//│ def mappend_lh_₄(xs⁸, ys⁸) = case xs⁸ of {
+//│ 	LH_C h¹² t¹² => [LH_C h¹² mappend_lh_₄(t¹², ys⁸)]
+//│ 	| LH_N  => ys⁸}
+//│ def mappend_lh_₅(xs⁶, ys⁶) = case xs⁶ of {
+//│ 	LH_C h⁹ t⁹ => [LH_C h⁹ mappend_lh_₅(t⁹, ys⁶)]
+//│ 	| LH_N  => ys⁶}
+//│ def mappend_lh_₆(xs⁷, ys⁷) = case xs⁷ of {
+//│ 	LH_C h¹¹ t¹¹ => [LH_C h¹¹ mappend_lh_₆(t¹¹, ys⁷)]
+//│ 	| LH_N  => ys⁷}
+//│ def mappend_lh_₇(xs⁴, ys⁴) = case xs⁴ of {
+//│ 	LH_C h⁶ t⁶ => [LH_C h⁶ mappend_lh_₇(t⁶, ys⁴)]
+//│ 	| LH_N  => ys⁴}
+//│ def mappend_lh_₈(xs², ys²) = case xs² of {
+//│ 	LH_C h³ t³ => [LH_C h³ mappend_lh_₈(t³, ys²)]
+//│ 	| LH_N  => ys²}
+//│ def mappend_lh_₉(xs⁹, ys⁹) = case xs⁹ of {
+//│ 	LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ mappend_lh_₉(t¹⁵, ys⁹)]
+//│ 	| LH_N  => ys⁹}
+//│ def mergeSort_lh_₁(_lh_mergeSort_arg1⁰) = 
+//│ 	let merge_lists⁰ = (fun _lh_merge_lists_arg1⁰ -> _lh_merge_lists_arg1⁰(merge_lists⁰, merge⁰))
+//│ 	and runsplit⁰ = (fun _lh_runsplit_arg1⁰ -> (fun _lh_runsplit_arg2⁰ -> case _lh_runsplit_arg1⁰ of {
+//│ 			LH_N  => case _lh_runsplit_arg2⁰ of {
+//│ 				LH_N  => (fun merge_lists¹ -> (fun merge¹ -> [LH_N]))
+//│ 				| _  => case _lh_runsplit_arg2⁰ of {
+//│ 					LH_N  => 
+//│ 						let _lh_merge_lists_LH_C_1⁰ = (fun merge_lists² -> (fun merge² -> [LH_N]))
+//│ 						in let _lh_merge_lists_LH_C_0⁰ = _lh_runsplit_arg1⁰
+//│ 						in (fun merge_lists³ -> (fun merge³ -> merge³(_lh_merge_lists_LH_C_0⁰, merge_lists³(_lh_merge_lists_LH_C_1⁰))))
+//│ 					| _  => case _lh_runsplit_arg1⁰ of {
+//│ 						LH_N  => case _lh_runsplit_arg2⁰ of {
+//│ 							LH_C _lh_runsplit_LH_C_0⁰ _lh_runsplit_LH_C_1⁰ => runsplit⁰([LH_C _lh_runsplit_LH_C_0⁰ [LH_N]], _lh_runsplit_LH_C_1⁰)
+//│ 							| _  => case _lh_runsplit_arg1⁰ of {
+//│ 								LH_C _lh_runsplit_LH_C_0¹ _lh_runsplit_LH_C_1¹ => case _lh_runsplit_arg2⁰ of {
+//│ 									LH_C _lh_runsplit_LH_C_0² _lh_runsplit_LH_C_1² => 
+//│ 										let _lh_matchIdent¹⁴ = _lh_runsplit_LH_C_1¹
+//│ 										in case _lh_matchIdent¹⁴ of {
+//│ 											LH_N  => if gtList_lh_₄(_lh_runsplit_LH_C_0², _lh_runsplit_LH_C_0¹) then runsplit⁰([LH_C _lh_runsplit_LH_C_0¹ [LH_C _lh_runsplit_LH_C_0² [LH_N]]], _lh_runsplit_LH_C_1²) else if leList_lh_₄(_lh_runsplit_LH_C_0², _lh_runsplit_LH_C_0¹) then runsplit⁰([LH_C _lh_runsplit_LH_C_0² [LH_C _lh_runsplit_LH_C_0¹ _lh_runsplit_LH_C_1¹]], _lh_runsplit_LH_C_1²) else 
+//│ 												let _lh_merge_lists_LH_C_1¹ = runsplit⁰([LH_C _lh_runsplit_LH_C_0² [LH_N]], _lh_runsplit_LH_C_1²)
+//│ 												in let _lh_merge_lists_LH_C_0¹ = [LH_C _lh_runsplit_LH_C_0¹ _lh_runsplit_LH_C_1¹]
+//│ 												in (fun merge_lists⁴ -> (fun merge⁴ -> merge⁴(_lh_merge_lists_LH_C_0¹, merge_lists⁴(_lh_merge_lists_LH_C_1¹))))
+//│ 											| _  => if leList_lh_₂(_lh_runsplit_LH_C_0², _lh_runsplit_LH_C_0¹) then runsplit⁰([LH_C _lh_runsplit_LH_C_0² [LH_C _lh_runsplit_LH_C_0¹ _lh_matchIdent¹⁴]], _lh_runsplit_LH_C_1²) else 
+//│ 												let _lh_merge_lists_LH_C_1² = runsplit⁰([LH_C _lh_runsplit_LH_C_0² [LH_N]], _lh_runsplit_LH_C_1²)
+//│ 												in let _lh_merge_lists_LH_C_0² = [LH_C _lh_runsplit_LH_C_0¹ _lh_matchIdent¹⁴]
+//│ 												in (fun merge_lists⁵ -> (fun merge⁵ -> merge⁵(_lh_merge_lists_LH_C_0², merge_lists⁵(_lh_merge_lists_LH_C_1²))))}
+//│ 									| _  => error⁰}
+//│ 								| _  => error⁰}}
+//│ 						| _  => case _lh_runsplit_arg1⁰ of {
+//│ 							LH_C _lh_runsplit_LH_C_0³ _lh_runsplit_LH_C_1³ => case _lh_runsplit_arg2⁰ of {
+//│ 								LH_C _lh_runsplit_LH_C_0⁴ _lh_runsplit_LH_C_1⁴ => 
+//│ 									let _lh_matchIdent¹⁵ = _lh_runsplit_LH_C_1³
+//│ 									in case _lh_matchIdent¹⁵ of {
+//│ 										LH_N  => if gtList_lh_₃(_lh_runsplit_LH_C_0⁴, _lh_runsplit_LH_C_0³) then runsplit⁰([LH_C _lh_runsplit_LH_C_0³ [LH_C _lh_runsplit_LH_C_0⁴ [LH_N]]], _lh_runsplit_LH_C_1⁴) else if leList_lh_₈(_lh_runsplit_LH_C_0⁴, _lh_runsplit_LH_C_0³) then runsplit⁰([LH_C _lh_runsplit_LH_C_0⁴ [LH_C _lh_runsplit_LH_C_0³ _lh_runsplit_LH_C_1³]], _lh_runsplit_LH_C_1⁴) else 
+//│ 											let _lh_merge_lists_LH_C_1³ = runsplit⁰([LH_C _lh_runsplit_LH_C_0⁴ [LH_N]], _lh_runsplit_LH_C_1⁴)
+//│ 											in let _lh_merge_lists_LH_C_0³ = [LH_C _lh_runsplit_LH_C_0³ _lh_runsplit_LH_C_1³]
+//│ 											in (fun merge_lists⁶ -> (fun merge⁶ -> merge⁶(_lh_merge_lists_LH_C_0³, merge_lists⁶(_lh_merge_lists_LH_C_1³))))
+//│ 										| _  => if leList_lh_₅(_lh_runsplit_LH_C_0⁴, _lh_runsplit_LH_C_0³) then runsplit⁰([LH_C _lh_runsplit_LH_C_0⁴ [LH_C _lh_runsplit_LH_C_0³ _lh_matchIdent¹⁵]], _lh_runsplit_LH_C_1⁴) else 
+//│ 											let _lh_merge_lists_LH_C_1⁴ = runsplit⁰([LH_C _lh_runsplit_LH_C_0⁴ [LH_N]], _lh_runsplit_LH_C_1⁴)
+//│ 											in let _lh_merge_lists_LH_C_0⁴ = [LH_C _lh_runsplit_LH_C_0³ _lh_matchIdent¹⁵]
+//│ 											in (fun merge_lists⁷ -> (fun merge⁷ -> merge⁷(_lh_merge_lists_LH_C_0⁴, merge_lists⁷(_lh_merge_lists_LH_C_1⁴))))}
+//│ 								| _  => error⁰}
+//│ 							| _  => error⁰}}}}
+//│ 			| _  => case _lh_runsplit_arg2⁰ of {
+//│ 				LH_N  => 
+//│ 					let _lh_merge_lists_LH_C_1⁵ = (fun merge_lists⁸ -> (fun merge⁸ -> [LH_N]))
+//│ 					in let _lh_merge_lists_LH_C_0⁵ = _lh_runsplit_arg1⁰
+//│ 					in (fun merge_lists⁹ -> (fun merge⁹ -> merge⁹(_lh_merge_lists_LH_C_0⁵, merge_lists⁹(_lh_merge_lists_LH_C_1⁵))))
+//│ 				| _  => case _lh_runsplit_arg1⁰ of {
+//│ 					LH_N  => case _lh_runsplit_arg2⁰ of {
+//│ 						LH_C _lh_runsplit_LH_C_0⁵ _lh_runsplit_LH_C_1⁵ => runsplit⁰([LH_C _lh_runsplit_LH_C_0⁵ [LH_N]], _lh_runsplit_LH_C_1⁵)
+//│ 						| _  => case _lh_runsplit_arg1⁰ of {
+//│ 							LH_C _lh_runsplit_LH_C_0⁶ _lh_runsplit_LH_C_1⁶ => case _lh_runsplit_arg2⁰ of {
+//│ 								LH_C _lh_runsplit_LH_C_0⁷ _lh_runsplit_LH_C_1⁷ => 
+//│ 									let _lh_matchIdent¹⁶ = _lh_runsplit_LH_C_1⁶
+//│ 									in case _lh_matchIdent¹⁶ of {
+//│ 										LH_N  => if gtList_lh_₁(_lh_runsplit_LH_C_0⁷, _lh_runsplit_LH_C_0⁶) then runsplit⁰([LH_C _lh_runsplit_LH_C_0⁶ [LH_C _lh_runsplit_LH_C_0⁷ [LH_N]]], _lh_runsplit_LH_C_1⁷) else if leList_lh_₁(_lh_runsplit_LH_C_0⁷, _lh_runsplit_LH_C_0⁶) then runsplit⁰([LH_C _lh_runsplit_LH_C_0⁷ [LH_C _lh_runsplit_LH_C_0⁶ _lh_runsplit_LH_C_1⁶]], _lh_runsplit_LH_C_1⁷) else 
+//│ 											let _lh_merge_lists_LH_C_1⁶ = runsplit⁰([LH_C _lh_runsplit_LH_C_0⁷ [LH_N]], _lh_runsplit_LH_C_1⁷)
+//│ 											in let _lh_merge_lists_LH_C_0⁶ = [LH_C _lh_runsplit_LH_C_0⁶ _lh_runsplit_LH_C_1⁶]
+//│ 											in (fun merge_lists¹⁰ -> (fun merge¹⁰ -> merge¹⁰(_lh_merge_lists_LH_C_0⁶, merge_lists¹⁰(_lh_merge_lists_LH_C_1⁶))))
+//│ 										| _  => if leList_lh_₃(_lh_runsplit_LH_C_0⁷, _lh_runsplit_LH_C_0⁶) then runsplit⁰([LH_C _lh_runsplit_LH_C_0⁷ [LH_C _lh_runsplit_LH_C_0⁶ _lh_matchIdent¹⁶]], _lh_runsplit_LH_C_1⁷) else 
+//│ 											let _lh_merge_lists_LH_C_1⁷ = runsplit⁰([LH_C _lh_runsplit_LH_C_0⁷ [LH_N]], _lh_runsplit_LH_C_1⁷)
+//│ 											in let _lh_merge_lists_LH_C_0⁷ = [LH_C _lh_runsplit_LH_C_0⁶ _lh_matchIdent¹⁶]
+//│ 											in (fun merge_lists¹¹ -> (fun merge¹¹ -> merge¹¹(_lh_merge_lists_LH_C_0⁷, merge_lists¹¹(_lh_merge_lists_LH_C_1⁷))))}
+//│ 								| _  => error⁰}
+//│ 							| _  => error⁰}}
+//│ 					| _  => case _lh_runsplit_arg1⁰ of {
+//│ 						LH_C _lh_runsplit_LH_C_0⁸ _lh_runsplit_LH_C_1⁸ => case _lh_runsplit_arg2⁰ of {
+//│ 							LH_C _lh_runsplit_LH_C_0⁹ _lh_runsplit_LH_C_1⁹ => 
+//│ 								let _lh_matchIdent¹⁷ = _lh_runsplit_LH_C_1⁸
+//│ 								in case _lh_matchIdent¹⁷ of {
+//│ 									LH_N  => if gtList_lh_₂(_lh_runsplit_LH_C_0⁹, _lh_runsplit_LH_C_0⁸) then runsplit⁰([LH_C _lh_runsplit_LH_C_0⁸ [LH_C _lh_runsplit_LH_C_0⁹ [LH_N]]], _lh_runsplit_LH_C_1⁹) else if leList_lh_₇(_lh_runsplit_LH_C_0⁹, _lh_runsplit_LH_C_0⁸) then runsplit⁰([LH_C _lh_runsplit_LH_C_0⁹ [LH_C _lh_runsplit_LH_C_0⁸ _lh_runsplit_LH_C_1⁸]], _lh_runsplit_LH_C_1⁹) else 
+//│ 										let _lh_merge_lists_LH_C_1⁸ = runsplit⁰([LH_C _lh_runsplit_LH_C_0⁹ [LH_N]], _lh_runsplit_LH_C_1⁹)
+//│ 										in let _lh_merge_lists_LH_C_0⁸ = [LH_C _lh_runsplit_LH_C_0⁸ _lh_runsplit_LH_C_1⁸]
+//│ 										in (fun merge_lists¹² -> (fun merge¹² -> merge¹²(_lh_merge_lists_LH_C_0⁸, merge_lists¹²(_lh_merge_lists_LH_C_1⁸))))
+//│ 									| _  => if leList_lh_₆(_lh_runsplit_LH_C_0⁹, _lh_runsplit_LH_C_0⁸) then runsplit⁰([LH_C _lh_runsplit_LH_C_0⁹ [LH_C _lh_runsplit_LH_C_0⁸ _lh_matchIdent¹⁷]], _lh_runsplit_LH_C_1⁹) else 
+//│ 										let _lh_merge_lists_LH_C_1⁹ = runsplit⁰([LH_C _lh_runsplit_LH_C_0⁹ [LH_N]], _lh_runsplit_LH_C_1⁹)
+//│ 										in let _lh_merge_lists_LH_C_0⁹ = [LH_C _lh_runsplit_LH_C_0⁸ _lh_matchIdent¹⁷]
+//│ 										in (fun merge_lists¹³ -> (fun merge¹³ -> merge¹³(_lh_merge_lists_LH_C_0⁹, merge_lists¹³(_lh_merge_lists_LH_C_1⁹))))}
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}}}}))
+//│ 	and merge⁰ = (fun _lh_merge_arg1⁰ -> (fun _lh_merge_arg2⁰ -> case _lh_merge_arg1⁰ of {
+//│ 			LH_N  => _lh_merge_arg2⁰
+//│ 			| _  => case _lh_merge_arg2⁰ of {
+//│ 				LH_N  => _lh_merge_arg1⁰
+//│ 				| _  => case _lh_merge_arg1⁰ of {
+//│ 					LH_C _lh_merge_LH_C_0⁰ _lh_merge_LH_C_1⁰ => case _lh_merge_arg2⁰ of {
+//│ 						LH_C _lh_merge_LH_C_0¹ _lh_merge_LH_C_1¹ => if eqList_lh_₁(_lh_merge_LH_C_0⁰, _lh_merge_LH_C_0¹) then [LH_C _lh_merge_LH_C_0⁰ [LH_C _lh_merge_LH_C_0¹ merge⁰(_lh_merge_LH_C_1⁰, _lh_merge_LH_C_1¹)]] else if ltList_lh_₁(_lh_merge_LH_C_0⁰, _lh_merge_LH_C_0¹) then [LH_C _lh_merge_LH_C_0⁰ merge⁰(_lh_merge_LH_C_1⁰, [LH_C _lh_merge_LH_C_0¹ _lh_merge_LH_C_1¹])] else [LH_C _lh_merge_LH_C_0¹ merge⁰([LH_C _lh_merge_LH_C_0⁰ _lh_merge_LH_C_1⁰], _lh_merge_LH_C_1¹)]
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}}})) 
+//│ 	in (fun _lh_funcomp_x⁵ -> merge_lists⁰(runsplit⁰([LH_N], _lh_funcomp_x⁵)))(_lh_mergeSort_arg1⁰)
+//│ def odd_lh_₁(_lh_odd_arg1¹) = ((_lh_odd_arg1¹ mod 2) == 0)
+//│ def odd_lh_₂(_lh_odd_arg1⁰) = ((_lh_odd_arg1⁰ mod 2) == 0)
+//│ def partition_lh_₁(_lh_partition_arg1⁰, _lh_partition_arg2⁰) = foldr_lh_₃(select_lh_₁(_lh_partition_arg1⁰), [LH_P2 [LH_N] [LH_N]], _lh_partition_arg2⁰)
+//│ def prependToAll_lh_₁(_lh_prependToAll_arg1⁰, _lh_prependToAll_arg2⁰) = _lh_prependToAll_arg2⁰(_lh_prependToAll_arg1⁰)
+//│ def quickSort2_lh_₁(_lh_quickSort2_arg1⁰) = case _lh_quickSort2_arg1⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_quickSort2_LH_C_0⁰ _lh_quickSort2_LH_C_1⁰ => 
+//│ 		let _lh_matchIdent⁵ = partition_lh_₁((fun x¹ -> (fun y⁰ -> geList_lh_₁(x¹, y⁰)))(_lh_quickSort2_LH_C_0⁰), _lh_quickSort2_LH_C_1⁰)
+//│ 		in case _lh_matchIdent⁵ of {
+//│ 			LH_P2 _lh_quickSort2_LH_P2_0⁰ _lh_quickSort2_LH_P2_1⁰ => mappend_lh_₃(quickSort2_lh_₁(_lh_quickSort2_LH_P2_0⁰), [LH_C _lh_quickSort2_LH_C_0⁰ quickSort2_lh_₁(_lh_quickSort2_LH_P2_1⁰)])
+//│ 			| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def quickSort_lh_₁(_lh_quickSort_arg1⁰) = case _lh_quickSort_arg1⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_quickSort_LH_C_0⁰ _lh_quickSort_LH_C_1⁰ => mappend_lh_₄(quickSort_lh_₁(
+//│ 		let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => if leList_lh_₁₀(_lh_listcomp_fun_ls_h⁰, _lh_quickSort_LH_C_0⁰) then [LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)] else _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun⁰(_lh_quickSort_LH_C_1⁰)), [LH_C _lh_quickSort_LH_C_0⁰ quickSort_lh_₁(
+//│ 		let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if gtList_lh_₅(_lh_listcomp_fun_ls_h¹, _lh_quickSort_LH_C_0⁰) then [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun¹(_lh_quickSort_LH_C_1⁰))])
+//│ 	| _  => error⁰}
+//│ def quickerSort_lh_₁(_lh_quickerSort_arg1⁰) = case _lh_quickerSort_arg1⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_quickerSort_LH_C_0⁰ _lh_quickerSort_LH_C_1⁰ => case _lh_quickerSort_LH_C_1⁰ of {
+//│ 		LH_N  => [LH_C _lh_quickerSort_LH_C_0⁰ [LH_N]]
+//│ 		| _  => 
+//│ 			let split⁰ = (fun _lh_split_arg1⁰ -> (fun _lh_split_arg2⁰ -> (fun _lh_split_arg3⁰ -> (fun _lh_split_arg4⁰ -> case _lh_split_arg4⁰ of {
+//│ 				LH_N  => mappend_lh_₅(quickerSort_lh_₁(_lh_split_arg2⁰), [LH_C _lh_split_arg1⁰ quickerSort_lh_₁(_lh_split_arg3⁰)])
+//│ 				| LH_C _lh_split_LH_C_0⁰ _lh_split_LH_C_1⁰ => if leList_lh_₁₄(_lh_split_LH_C_0⁰, _lh_split_arg1⁰) then split⁰(_lh_split_arg1⁰, [LH_C _lh_split_LH_C_0⁰ _lh_split_arg2⁰], _lh_split_arg3⁰, _lh_split_LH_C_1⁰) else split⁰(_lh_split_arg1⁰, _lh_split_arg2⁰, [LH_C _lh_split_LH_C_0⁰ _lh_split_arg3⁰], _lh_split_LH_C_1⁰)
+//│ 				| _  => error⁰}))))
+//│ 			in split⁰(_lh_quickerSort_LH_C_0⁰, [LH_N], [LH_N], _lh_quickerSort_LH_C_1⁰)}
+//│ 	| _  => error⁰}
+//│ def reverse_helper_lh_₁(ls³, a⁰) = case ls³ of {
+//│ 	LH_C h⁴ t⁴ => reverse_helper_lh_₁(t⁴, [LH_C h⁴ a⁰])
+//│ 	| LH_N  => a⁰}
+//│ def reverse_lh_₁(ls⁸) = reverse_helper_lh_₁(ls⁸, [LH_N])
+//│ def reverse_lh_₂(ls⁹) = reverse_helper_lh_₁(ls⁹, [LH_N])
+//│ def reverse_lh_₃(ls⁰) = reverse_helper_lh_₁(ls⁰, [LH_N])
+//│ def reverse_lh_₄(ls¹⁰) = reverse_helper_lh_₁(ls¹⁰, [LH_N])
+//│ def reverse_lh_₅(ls¹) = reverse_helper_lh_₁(ls¹, [LH_N])
+//│ def select_lh_₁(_lh_select_arg1⁰, _lh_select_arg2⁰, _lh_select_arg3⁰) = case _lh_select_arg3⁰ of {
+//│ 	LH_P2 _lh_select_LH_P2_0⁰ _lh_select_LH_P2_1⁰ => if _lh_select_arg1⁰(_lh_select_arg2⁰) then [LH_P2 [LH_C _lh_select_arg2⁰ _lh_select_LH_P2_0⁰] _lh_select_LH_P2_1⁰] else [LH_P2 _lh_select_LH_P2_0⁰ [LH_C _lh_select_arg2⁰ _lh_select_LH_P2_1⁰]]
+//│ 	| _  => error⁰}
+//│ def testSorting_nofib_lh_₁(_lh_testSorting_nofib_arg1⁰) = 
+//│ 	let f⁴ = primId⁰([LH_C 'm' [LH_C 'o' [LH_C 'd' [LH_C 'u' [LH_C 'l' [LH_C 'e' [LH_C ' ' [LH_C 'M' [LH_C 'a' [LH_C 'i' [LH_C 'n' [LH_C ' ' [LH_C 'w' [LH_C 'h' [LH_C 'e' [LH_C 'r' [LH_C 'e' [LH_C '|' [LH_C '|' [LH_C 'i' [LH_C 'm' [LH_C 'p' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C ' ' [LH_C 'S' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '|' [LH_C '|' [LH_C 'i' [LH_C 'm' [LH_C 'p' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C ' ' [LH_C 'C' [LH_C 'o' [LH_C 'n' [LH_C 't' [LH_C 'r' [LH_C 'o' [LH_C 'l' [LH_C '.' [LH_C 'M' [LH_C 'o' [LH_C 'n' [LH_C 'a' [LH_C 'd' [LH_C ' ' [LH_C '(' [LH_C 'r' [LH_C 'e' [LH_C 'p' [LH_C 'l' [LH_C 'i' [LH_C 'c' [LH_C 'a' [LH_C 't' [LH_C 'e' [LH_C 'M' [LH_C '_' [LH_C ')' [LH_C '|' [LH_C 'i' [LH_C 'm' [LH_C 'p' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C ' ' [LH_C 'D' [LH_C 'a' [LH_C 't' [LH_C 'a' [LH_C '.' [LH_C 'L' [LH_C 'i' [LH_C 's' [LH_C 't' [LH_C ' ' [LH_C '(' [LH_C 'i' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'r' [LH_C 's' [LH_C 'p' [LH_C 'e' [LH_C 'r' [LH_C 's' [LH_C 'e' [LH_C ')' [LH_C '|' [LH_C 'i' [LH_C 'm' [LH_C 'p' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C ' ' [LH_C 'S' [LH_C 'y' [LH_C 's' [LH_C 't' [LH_C 'e' [LH_C 'm' [LH_C '.' [LH_C 'E' [LH_C 'n' [LH_C 'v' [LH_C 'i' [LH_C 'r' [LH_C 'o' [LH_C 'n' [LH_C 'm' [LH_C 'e' [LH_C 'n' [LH_C 't' [LH_C ' ' [LH_C '(' [LH_C 'g' [LH_C 'e' [LH_C 't' [LH_C 'A' [LH_C 'r' [LH_C 'g' [LH_C 's' [LH_C ')' [LH_C '|' [LH_C 'i' [LH_C 'm' [LH_C 'p' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C ' ' [LH_C 'N' [LH_C 'o' [LH_C 'f' [LH_C 'i' [LH_C 'b' [LH_C 'U' [LH_C 't' [LH_C 'i' [LH_C 'l' [LH_C 's' [LH_C ' ' [LH_C '(' [LH_C 'h' [LH_C 'a' [LH_C 's' [LH_C 'h' [LH_C ')' [LH_C '|' [LH_C '|' [LH_C 'm' [LH_C 'a' [LH_C 'i' [LH_C 'n' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'd' [LH_C 'o' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C '(' [LH_C 'n' [LH_C ':' [LH_C '_' [LH_C ')' [LH_C ' ' [LH_C '<' [LH_C '-' [LH_C ' ' [LH_C 'g' [LH_C 'e' [LH_C 't' [LH_C 'A' [LH_C 'r' [LH_C 'g' [LH_C 's' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C 'r' [LH_C 'e' [LH_C 'p' [LH_C 'l' [LH_C 'i' [LH_C 'c' [LH_C 'a' [LH_C 't' [LH_C 'e' [LH_C 'M' [LH_C '_' [LH_C ' ' [LH_C '(' [LH_C 'r' [LH_C 'e' [LH_C 'a' [LH_C 'd' [LH_C ' ' [LH_C 'n' [LH_C ')' [LH_C ' ' [LH_C '$' [LH_C ' ' [LH_C 'd' [LH_C 'o' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C '(' [LH_C '_' [LH_C ':' [LH_C 's' [LH_C ':' [LH_C '_' [LH_C ')' [LH_C ' ' [LH_C '<' [LH_C '-' [LH_C ' ' [LH_C 'g' [LH_C 'e' [LH_C 't' [LH_C 'A' [LH_C 'r' [LH_C 'g' [LH_C 's' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'f' [LH_C ' ' [LH_C '<' [LH_C '-' [LH_C ' ' [LH_C 'r' [LH_C 'e' [LH_C 'a' [LH_C 'd' [LH_C 'F' [LH_C 'i' [LH_C 'l' [LH_C 'e' [LH_C ' ' [LH_C 's' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'p' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 't' [LH_C ' ' [LH_C '(' [LH_C 'h' [LH_C 'a' [LH_C 's' [LH_C 'h' [LH_C ' ' [LH_C '(' [LH_C 'm' [LH_C 'a' [LH_C 'n' [LH_C 'g' [LH_C 'l' [LH_C 'e' [LH_C ' ' [LH_C 'f' [LH_C ')' [LH_C ')' [LH_C '|' [LH_C '|' [LH_C 'm' [LH_C 'a' [LH_C 'n' [LH_C 'g' [LH_C 'l' [LH_C 'e' [LH_C ' ' [LH_C ':' [LH_C ':' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C '{' [LH_C '-' [LH_C 'i' [LH_C 'n' [LH_C 'p' [LH_C 'u' [LH_C 't' [LH_C ' ' [LH_C 't' [LH_C 'o' [LH_C ' ' [LH_C 's' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '-' [LH_C '}' [LH_C ' ' [LH_C '-' [LH_C '>' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C '{' [LH_C '-' [LH_C 'o' [LH_C 'u' [LH_C 't' [LH_C 'p' [LH_C 'u' [LH_C 't' [LH_C '-' [LH_C '}' [LH_C '|' [LH_C 'm' [LH_C 'a' [LH_C 'n' [LH_C 'g' [LH_C 'l' [LH_C 'e' [LH_C ' ' [LH_C 'i' [LH_C 'n' [LH_C 'p' [LH_C 't' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C '(' [LH_C 'u' [LH_C 'n' [LH_C 'l' [LH_C 'i' [LH_C 'n' [LH_C 'e' [LH_C 's' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 's' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'l' [LH_C 'i' [LH_C 'n' [LH_C 'e' [LH_C 's' [LH_C ')' [LH_C ' ' [LH_C 'i' [LH_C 'n' [LH_C 'p' [LH_C 't' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C 'w' [LH_C 'h' [LH_C 'e' [LH_C 'r' [LH_C 'e' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 's' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'f' [LH_C 'o' [LH_C 'l' [LH_C 'd' [LH_C 'r' [LH_C ' ' [LH_C '(' [LH_C '.' [LH_C ')' [LH_C ' ' [LH_C 'i' [LH_C 'd' [LH_C ' ' [LH_C '(' [LH_C 'i' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'r' [LH_C 's' [LH_C 'p' [LH_C 'e' [LH_C 'r' [LH_C 's' [LH_C 'e' [LH_C ' ' [LH_C 'r' [LH_C 'e' [LH_C 'v' [LH_C 'e' [LH_C 'r' [LH_C 's' [LH_C 'e' [LH_C ' ' [LH_C 's' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C 's' [LH_C ')' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 's' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C 's' [LH_C ' ' [LH_C '=' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C '[' [LH_C ' ' [LH_C 'h' [LH_C 'e' [LH_C 'a' [LH_C 'p' [LH_C 'S' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ',' [LH_C ' ' [LH_C 'i' [LH_C 'n' [LH_C 's' [LH_C 'e' [LH_C 'r' [LH_C 't' [LH_C 'S' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ',' [LH_C ' ' [LH_C 'm' [LH_C 'e' [LH_C 'r' [LH_C 'g' [LH_C 'e' [LH_C 'S' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ',' [LH_C ' ' [LH_C 'q' [LH_C 'u' [LH_C 'i' [LH_C 'c' [LH_C 'k' [LH_C 'S' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ',' [LH_C ' ' [LH_C 'q' [LH_C 'u' [LH_C 'i' [LH_C 'c' [LH_C 'k' [LH_C 'S' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '2' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ',' [LH_C ' ' [LH_C 'q' [LH_C 'u' [LH_C 'i' [LH_C 'c' [LH_C 'k' [LH_C 'e' [LH_C 'r' [LH_C 'S' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ',' [LH_C ' ' [LH_C 't' [LH_C 'r' [LH_C 'e' [LH_C 'e' [LH_C 'S' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ',' [LH_C ' ' [LH_C 't' [LH_C 'r' [LH_C 'e' [LH_C 'e' [LH_C 'S' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '2' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ']' [LH_C '|' [LH_N]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]])
+//│ 	in hash_lh_₁(mangle_lh_₁(f⁴))
+//│ def treeSort2_lh_₁(_lh_treeSort2_arg1⁰) = 
+//│ 	let mkTree⁰ = (fun _lh_mkTree_arg1⁰ -> 
+//│ 			let to_tree⁰ = (fun _lh_to_tree_arg1⁰ -> (fun _lh_to_tree_arg2⁰ -> case _lh_to_tree_arg2⁰ of {
+//│ 				Tip2  => [Twig2 _lh_to_tree_arg1⁰]
+//│ 				| Twig2 _lh_to_tree_Twig2_0⁰ => if leList_lh_₁₅(_lh_to_tree_arg1⁰, _lh_to_tree_Twig2_0⁰) then [Branch2 _lh_to_tree_Twig2_0⁰ [Twig2 _lh_to_tree_arg1⁰] [Tip2]] else [Branch2 _lh_to_tree_Twig2_0⁰ [Tip2] [Twig2 _lh_to_tree_arg1⁰]]
+//│ 				| Branch2 _lh_to_tree_Branch2_0⁰ _lh_to_tree_Branch2_1⁰ _lh_to_tree_Branch2_2⁰ => if leList_lh_₁₆(_lh_to_tree_arg1⁰, _lh_to_tree_Branch2_0⁰) then [Branch2 _lh_to_tree_Branch2_0⁰ to_tree⁰(_lh_to_tree_arg1⁰, _lh_to_tree_Branch2_1⁰) _lh_to_tree_Branch2_2⁰] else [Branch2 _lh_to_tree_Branch2_0⁰ _lh_to_tree_Branch2_1⁰ to_tree⁰(_lh_to_tree_arg1⁰, _lh_to_tree_Branch2_2⁰)]
+//│ 				| _  => error⁰}))
+//│ 			in foldr_lh_₃(to_tree⁰, [Tip2], _lh_mkTree_arg1⁰))
+//│ 	and readTree⁰ = (fun _lh_readTree_arg1⁰ -> case _lh_readTree_arg1⁰ of {
+//│ 			Tip2  => [LH_N]
+//│ 			| Twig2 _lh_readTree_Twig2_0⁰ => [LH_C _lh_readTree_Twig2_0⁰ [LH_N]]
+//│ 			| Branch2 _lh_readTree_Branch2_0⁰ _lh_readTree_Branch2_1⁰ _lh_readTree_Branch2_2⁰ => mappend_lh_₆(readTree⁰(_lh_readTree_Branch2_1⁰), [LH_C _lh_readTree_Branch2_0⁰ readTree⁰(_lh_readTree_Branch2_2⁰)])
+//│ 			| _  => error⁰}) 
+//│ 	in (fun _lh_funcomp_x⁰ -> readTree⁰(mkTree⁰(_lh_funcomp_x⁰)))(_lh_treeSort2_arg1⁰)
+//│ def treeSort_lh_₁(_lh_treeSort_arg1⁰) = 
+//│ 	let mkTree¹ = (fun _lh_mkTree_arg1¹ -> 
+//│ 			let to_tree¹ = (fun _lh_to_tree_arg1¹ -> (fun _lh_to_tree_arg2¹ -> case _lh_to_tree_arg2¹ of {
+//│ 				Tip  => [Branch _lh_to_tree_arg1¹ [Tip] [Tip]]
+//│ 				| Branch _lh_to_tree_Branch_0⁰ _lh_to_tree_Branch_1⁰ _lh_to_tree_Branch_2⁰ => if leList_lh_₉(_lh_to_tree_arg1¹, _lh_to_tree_Branch_0⁰) then [Branch _lh_to_tree_Branch_0⁰ to_tree¹(_lh_to_tree_arg1¹, _lh_to_tree_Branch_1⁰) _lh_to_tree_Branch_2⁰] else [Branch _lh_to_tree_Branch_0⁰ _lh_to_tree_Branch_1⁰ to_tree¹(_lh_to_tree_arg1¹, _lh_to_tree_Branch_2⁰)]
+//│ 				| _  => error⁰}))
+//│ 			in foldr_lh_₂(to_tree¹, [Tip], _lh_mkTree_arg1¹))
+//│ 	and readTree¹ = (fun _lh_readTree_arg1¹ -> case _lh_readTree_arg1¹ of {
+//│ 			Tip  => [LH_N]
+//│ 			| Branch _lh_readTree_Branch_0⁰ _lh_readTree_Branch_1⁰ _lh_readTree_Branch_2⁰ => mappend_lh_₂(readTree¹(_lh_readTree_Branch_1⁰), [LH_C _lh_readTree_Branch_0⁰ readTree¹(_lh_readTree_Branch_2⁰)])
+//│ 			| _  => error⁰}) 
+//│ 	in (fun _lh_funcomp_x¹ -> readTree¹(mkTree¹(_lh_funcomp_x¹)))(_lh_treeSort_arg1⁰)
+//│ def unlines_lh_₁(_lh_unlines_arg1⁰) = map_lh_₁((fun l⁰ -> mappend_lh_₁(l⁰, [LH_C '|' [LH_N]])), _lh_unlines_arg1⁰, 99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testSorting_nofib_lh_₁(primId⁰(0))
+//│ def break_lh_₁(_lh_break_arg1⁰, _lh_break_arg2⁰) = case _lh_break_arg2⁰ of {
+//│ 	LH_N  => [LH_P2 [LH_N] (fun _lh_dummy⁰ -> [LH_N])]
+//│ 	| LH_C _lh_break_LH_C_0⁰ _lh_break_LH_C_1⁰ => if _lh_break_arg1⁰(_lh_break_LH_C_0⁰) then [LH_P2 [LH_N] 
+//│ 		let _lh_lines_LH_C_1⁰ = _lh_break_LH_C_1⁰
+//│ 		in (fun _lh_dummy¹ -> case _lh_lines_LH_C_1⁰ of {
+//│ 			LH_N  => [LH_N]
+//│ 			| _  => 
+//│ 				let _lh_matchIdent⁷ = break_lh_₁((fun x² -> polyEq⁰(x², '|')), _lh_lines_LH_C_1⁰)
+//│ 				in case _lh_matchIdent⁷ of {
+//│ 					LH_P2 _lh_lines_LH_P2_0¹ _lh_lines_LH_P2_1¹ => [LH_C _lh_lines_LH_P2_0¹ 
+//│ 						let _lh_matchIdent⁸ = _lh_lines_LH_P2_1¹
+//│ 						in _lh_matchIdent⁸(99)]
+//│ 					| _  => error⁰}})] else 
+//│ 		let _lh_matchIdent⁹ = break_lh_₁(_lh_break_arg1⁰, _lh_break_LH_C_1⁰)
+//│ 		in case _lh_matchIdent⁹ of {
+//│ 			LH_P2 _lh_break_LH_P2_0⁰ _lh_break_LH_P2_1⁰ => [LH_P2 [LH_C _lh_break_LH_C_0⁰ _lh_break_LH_P2_0⁰] _lh_break_LH_P2_1⁰]
+//│ 			| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def compareList_lh_₁(_lh_compareList_arg1⁰, _lh_compareList_arg2⁰) = case _lh_compareList_arg1⁰ of {
+//│ 	LH_N  => case _lh_compareList_arg2⁰ of {
+//│ 		LH_N  => [EQ]
+//│ 		| LH_C _lh_compareList_LH_C_0⁰ _lh_compareList_LH_C_1⁰ => [LT]
+//│ 		| _  => error⁰}
+//│ 	| LH_C _lh_compareList_LH_C_0¹ _lh_compareList_LH_C_1¹ => case _lh_compareList_arg2⁰ of {
+//│ 		LH_N  => [GT]
+//│ 		| LH_C _lh_compareList_LH_C_0² _lh_compareList_LH_C_1² => if (int_of_char⁰(_lh_compareList_LH_C_0¹) == int_of_char⁰(_lh_compareList_LH_C_0²)) then compareList_lh_₁(_lh_compareList_LH_C_1¹, _lh_compareList_LH_C_1²) else if (int_of_char⁰(_lh_compareList_LH_C_0¹) < int_of_char⁰(_lh_compareList_LH_C_0²)) then [LT] else [GT]
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def concat_lh_₁(lss⁰) = lss⁰(99)
+//│ def eqList_lh_₁(_lh_eqList_arg1⁰, _lh_eqList_arg2⁰) = polyEq⁰(compareList_lh_₁(_lh_eqList_arg1⁰, _lh_eqList_arg2⁰), [EQ])
+//│ def foldl_lh_₁(f⁰, i⁰, ls²) = case ls² of {
+//│ 	LH_C h² t² => foldl_lh_₁(f⁰, f⁰(i⁰, h²), t²)
+//│ 	| LH_N  => i⁰}
+//│ def foldr_lh_₁(f¹, i¹, ls⁴) = ls⁴(f¹, i¹)
+//│ def foldr_lh_₂(f², i², ls⁵) = case ls⁵ of {
+//│ 	LH_C h⁷ t⁷ => f²(h⁷, foldr_lh_₂(f², i², t⁷))
+//│ 	| LH_N  => i²}
+//│ def foldr_lh_₃(f³, i³, ls⁶) = case ls⁶ of {
+//│ 	LH_C h¹⁰ t¹⁰ => f³(h¹⁰, foldr_lh_₃(f³, i³, t¹⁰))
+//│ 	| LH_N  => i³}
+//│ def geList_lh_₁(_lh_geList_arg1⁰, _lh_geList_arg2⁰) = not⁰(ltList_lh_₂(_lh_geList_arg1⁰, _lh_geList_arg2⁰))
+//│ def gtList_lh_₁(_lh_gtList_arg1⁰, _lh_gtList_arg2⁰) = 
+//│ 	let _lh_matchIdent¹ = compareList_lh_₁(_lh_gtList_arg1⁰, _lh_gtList_arg2⁰)
+//│ 	in case _lh_matchIdent¹ of {
+//│ 		GT  => [True]
+//│ 		| _  => [False]}
+//│ def gtList_lh_₂(_lh_gtList_arg1⁴, _lh_gtList_arg2⁴) = 
+//│ 	let _lh_matchIdent¹⁸ = compareList_lh_₁(_lh_gtList_arg1⁴, _lh_gtList_arg2⁴)
+//│ 	in case _lh_matchIdent¹⁸ of {
+//│ 		GT  => [True]
+//│ 		| _  => [False]}
+//│ def gtList_lh_₃(_lh_gtList_arg1², _lh_gtList_arg2²) = 
+//│ 	let _lh_matchIdent¹⁰ = compareList_lh_₁(_lh_gtList_arg1², _lh_gtList_arg2²)
+//│ 	in case _lh_matchIdent¹⁰ of {
+//│ 		GT  => [True]
+//│ 		| _  => [False]}
+//│ def gtList_lh_₄(_lh_gtList_arg1¹, _lh_gtList_arg2¹) = 
+//│ 	let _lh_matchIdent² = compareList_lh_₁(_lh_gtList_arg1¹, _lh_gtList_arg2¹)
+//│ 	in case _lh_matchIdent² of {
+//│ 		GT  => [True]
+//│ 		| _  => [False]}
+//│ def gtList_lh_₅(_lh_gtList_arg1³, _lh_gtList_arg2³) = 
+//│ 	let _lh_matchIdent¹³ = compareList_lh_₁(_lh_gtList_arg1³, _lh_gtList_arg2³)
+//│ 	in case _lh_matchIdent¹³ of {
+//│ 		GT  => [True]
+//│ 		| _  => [False]}
+//│ def hash_lh_₁(_lh_hash_arg1⁰) = foldl_lh_₁((fun acc⁰ -> (fun c⁰ -> (int_of_char⁰(c⁰) + (acc⁰ * 31)))), 0, _lh_hash_arg1⁰)
+//│ def heapSort_lh_₁(_lh_heapSort_arg1⁰) = 
+//│ 	let div2⁰ = (fun _lh_div2_arg1⁰ -> div⁰(_lh_div2_arg1⁰, 2))
+//│ 	and clear⁰ = (fun _lh_clear_arg1⁰ -> case _lh_clear_arg1⁰ of {
+//│ 			Tip  => [LH_N]
+//│ 			| Branch _lh_clear_Branch_0⁰ _lh_clear_Branch_1⁰ _lh_clear_Branch_2⁰ => [LH_C _lh_clear_Branch_0⁰ clear⁰(mix⁰(_lh_clear_Branch_1⁰, _lh_clear_Branch_2⁰))]
+//│ 			| _  => error⁰})
+//│ 	and mix⁰ = (fun _lh_mix_arg1⁰ -> (fun _lh_mix_arg2⁰ -> case _lh_mix_arg1⁰ of {
+//│ 			Tip  => _lh_mix_arg2⁰
+//│ 			| _  => case _lh_mix_arg2⁰ of {
+//│ 				Tip  => _lh_mix_arg1⁰
+//│ 				| _  => case _lh_mix_arg1⁰ of {
+//│ 					Branch _lh_mix_Branch_0⁰ _lh_mix_Branch_1⁰ _lh_mix_Branch_2⁰ => case _lh_mix_arg2⁰ of {
+//│ 						Branch _lh_mix_Branch_0¹ _lh_mix_Branch_1¹ _lh_mix_Branch_2¹ => if leList_lh_₁₁(_lh_mix_Branch_0⁰, _lh_mix_Branch_0¹) then [Branch _lh_mix_Branch_0⁰ mix⁰(_lh_mix_Branch_1⁰, _lh_mix_Branch_2⁰) [Branch _lh_mix_Branch_0¹ _lh_mix_Branch_1¹ _lh_mix_Branch_2¹]] else [Branch _lh_mix_Branch_0¹ [Branch _lh_mix_Branch_0⁰ _lh_mix_Branch_1⁰ _lh_mix_Branch_2⁰] mix⁰(_lh_mix_Branch_1¹, _lh_mix_Branch_2¹)]
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}}}))
+//│ 	and heap⁰ = (fun _lh_heap_arg1⁰ -> (fun _lh_heap_arg2⁰ -> case _lh_heap_arg2⁰ of {
+//│ 			LH_N  => [Tip]
+//│ 			| LH_C _lh_heap_LH_C_0⁰ _lh_heap_LH_C_1⁰ => to_heap⁰(_lh_heap_arg1⁰, _lh_heap_LH_C_0⁰, heap⁰((_lh_heap_arg1⁰ + 1), _lh_heap_LH_C_1⁰))
+//│ 			| _  => error⁰}))
+//│ 	and to_heap⁰ = (fun _lh_to_heap_arg1⁰ -> (fun _lh_to_heap_arg2⁰ -> (fun _lh_to_heap_arg3⁰ -> case _lh_to_heap_arg3⁰ of {
+//│ 			Tip  => [Branch _lh_to_heap_arg2⁰ [Tip] [Tip]]
+//│ 			| Branch _lh_to_heap_Branch_0⁰ _lh_to_heap_Branch_1⁰ _lh_to_heap_Branch_2⁰ => if (leList_lh_₁₃(_lh_to_heap_arg2⁰, _lh_to_heap_Branch_0⁰) && odd_lh_₁(_lh_to_heap_arg1⁰)) then [Branch _lh_to_heap_arg2⁰ to_heap⁰(div2⁰(_lh_to_heap_arg1⁰), _lh_to_heap_Branch_0⁰, _lh_to_heap_Branch_1⁰) _lh_to_heap_Branch_2⁰] else if leList_lh_₁₂(_lh_to_heap_arg2⁰, _lh_to_heap_Branch_0⁰) then [Branch _lh_to_heap_arg2⁰ _lh_to_heap_Branch_1⁰ to_heap⁰(div2⁰(_lh_to_heap_arg1⁰), _lh_to_heap_Branch_0⁰, _lh_to_heap_Branch_2⁰)] else if odd_lh_₂(_lh_to_heap_arg1⁰) then [Branch _lh_to_heap_Branch_0⁰ to_heap⁰(div2⁰(_lh_to_heap_arg1⁰), _lh_to_heap_arg2⁰, _lh_to_heap_Branch_1⁰) _lh_to_heap_Branch_2⁰] else [Branch _lh_to_heap_Branch_0⁰ _lh_to_heap_Branch_1⁰ to_heap⁰(div2⁰(_lh_to_heap_arg1⁰), _lh_to_heap_arg2⁰, _lh_to_heap_Branch_2⁰)]
+//│ 			| _  => error⁰}))) 
+//│ 	in clear⁰(heap⁰(0, _lh_heapSort_arg1⁰))
+//│ def insertSort_lh_₁(_lh_insertSort_arg1⁰) = case _lh_insertSort_arg1⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_insertSort_LH_C_0⁰ _lh_insertSort_LH_C_1⁰ => 
+//│ 		let trins⁰ = (fun _lh_trins_arg1⁰ -> (fun _lh_trins_arg2⁰ -> (fun _lh_trins_arg3⁰ -> case _lh_trins_arg2⁰ of {
+//│ 			LH_N  => case _lh_trins_arg3⁰ of {
+//│ 				LH_C _lh_trins_LH_C_0⁰ _lh_trins_LH_C_1⁰ => trins⁰([LH_N], mappend_lh_₉(reverse_lh_₅(_lh_trins_arg1⁰), [LH_C _lh_trins_LH_C_0⁰ [LH_N]]), _lh_trins_LH_C_1⁰)
+//│ 				| _  => case _lh_trins_arg3⁰ of {
+//│ 					LH_N  => mappend_lh_₁₀(reverse_lh_₅(_lh_trins_arg1⁰), _lh_trins_arg2⁰)
+//│ 					| _  => case _lh_trins_arg2⁰ of {
+//│ 						LH_C _lh_trins_LH_C_0¹ _lh_trins_LH_C_1¹ => case _lh_trins_arg3⁰ of {
+//│ 							LH_C _lh_trins_LH_C_0² _lh_trins_LH_C_1² => if ltList_lh_₂(_lh_trins_LH_C_0¹, _lh_trins_LH_C_0²) then trins⁰([LH_C _lh_trins_LH_C_0¹ _lh_trins_arg1⁰], _lh_trins_LH_C_1¹, [LH_C _lh_trins_LH_C_0² _lh_trins_LH_C_1²]) else trins⁰([LH_N], mappend_lh_₁₀(reverse_lh_₂(_lh_trins_arg1⁰), [LH_C _lh_trins_LH_C_0² [LH_C _lh_trins_LH_C_0¹ _lh_trins_LH_C_1¹]]), _lh_trins_LH_C_1²)
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}}}
+//│ 			| _  => case _lh_trins_arg3⁰ of {
+//│ 				LH_N  => mappend_lh_₇(reverse_lh_₃(_lh_trins_arg1⁰), _lh_trins_arg2⁰)
+//│ 				| _  => case _lh_trins_arg2⁰ of {
+//│ 					LH_C _lh_trins_LH_C_0³ _lh_trins_LH_C_1³ => case _lh_trins_arg3⁰ of {
+//│ 						LH_C _lh_trins_LH_C_0⁴ _lh_trins_LH_C_1⁴ => if ltList_lh_₂(_lh_trins_LH_C_0³, _lh_trins_LH_C_0⁴) then trins⁰([LH_C _lh_trins_LH_C_0³ _lh_trins_arg1⁰], _lh_trins_LH_C_1³, [LH_C _lh_trins_LH_C_0⁴ _lh_trins_LH_C_1⁴]) else trins⁰([LH_N], mappend_lh_₈(reverse_lh_₄(_lh_trins_arg1⁰), [LH_C _lh_trins_LH_C_0⁴ [LH_C _lh_trins_LH_C_0³ _lh_trins_LH_C_1³]]), _lh_trins_LH_C_1⁴)
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}}})))
+//│ 		in trins⁰([LH_N], [LH_C _lh_insertSort_LH_C_0⁰ [LH_N]], _lh_insertSort_LH_C_1⁰)
+//│ 	| _  => error⁰}
+//│ def intersperse_lh_₁(_lh_intersperse_arg1⁰, _lh_intersperse_arg2⁰) = _lh_intersperse_arg2⁰(_lh_intersperse_arg1⁰)
+//│ def leList_lh_₁(_lh_leList_arg1⁷, _lh_leList_arg2⁷) = not⁰(gtList_lh_₅(_lh_leList_arg1⁷, _lh_leList_arg2⁷))
+//│ def leList_lh_₁₀(_lh_leList_arg1⁵, _lh_leList_arg2⁵) = not⁰(gtList_lh_₅(_lh_leList_arg1⁵, _lh_leList_arg2⁵))
+//│ def leList_lh_₁₁(_lh_leList_arg1⁶, _lh_leList_arg2⁶) = not⁰(gtList_lh_₅(_lh_leList_arg1⁶, _lh_leList_arg2⁶))
+//│ def leList_lh_₁₂(_lh_leList_arg1³, _lh_leList_arg2³) = not⁰(gtList_lh_₅(_lh_leList_arg1³, _lh_leList_arg2³))
+//│ def leList_lh_₁₃(_lh_leList_arg1⁸, _lh_leList_arg2⁸) = not⁰(gtList_lh_₅(_lh_leList_arg1⁸, _lh_leList_arg2⁸))
+//│ def leList_lh_₁₄(_lh_leList_arg1⁰, _lh_leList_arg2⁰) = not⁰(gtList_lh_₅(_lh_leList_arg1⁰, _lh_leList_arg2⁰))
+//│ def leList_lh_₁₅(_lh_leList_arg1⁴, _lh_leList_arg2⁴) = not⁰(gtList_lh_₅(_lh_leList_arg1⁴, _lh_leList_arg2⁴))
+//│ def leList_lh_₁₆(_lh_leList_arg1¹², _lh_leList_arg2¹²) = not⁰(gtList_lh_₅(_lh_leList_arg1¹², _lh_leList_arg2¹²))
+//│ def leList_lh_₂(_lh_leList_arg1⁹, _lh_leList_arg2⁹) = not⁰(gtList_lh_₅(_lh_leList_arg1⁹, _lh_leList_arg2⁹))
+//│ def leList_lh_₃(_lh_leList_arg1¹⁵, _lh_leList_arg2¹⁵) = not⁰(gtList_lh_₅(_lh_leList_arg1¹⁵, _lh_leList_arg2¹⁵))
+//│ def leList_lh_₄(_lh_leList_arg1¹⁴, _lh_leList_arg2¹⁴) = not⁰(gtList_lh_₅(_lh_leList_arg1¹⁴, _lh_leList_arg2¹⁴))
+//│ def leList_lh_₅(_lh_leList_arg1¹¹, _lh_leList_arg2¹¹) = not⁰(gtList_lh_₅(_lh_leList_arg1¹¹, _lh_leList_arg2¹¹))
+//│ def leList_lh_₆(_lh_leList_arg1¹⁰, _lh_leList_arg2¹⁰) = not⁰(gtList_lh_₅(_lh_leList_arg1¹⁰, _lh_leList_arg2¹⁰))
+//│ def leList_lh_₇(_lh_leList_arg1¹, _lh_leList_arg2¹) = not⁰(gtList_lh_₅(_lh_leList_arg1¹, _lh_leList_arg2¹))
+//│ def leList_lh_₈(_lh_leList_arg1², _lh_leList_arg2²) = not⁰(gtList_lh_₅(_lh_leList_arg1², _lh_leList_arg2²))
+//│ def leList_lh_₉(_lh_leList_arg1¹³, _lh_leList_arg2¹³) = not⁰(gtList_lh_₅(_lh_leList_arg1¹³, _lh_leList_arg2¹³))
+//│ def lines_lh_₁(_lh_lines_arg1⁰) = case _lh_lines_arg1⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| _  => 
+//│ 		let _lh_matchIdent³ = break_lh_₁((fun x⁰ -> polyEq⁰(x⁰, '|')), _lh_lines_arg1⁰)
+//│ 		in case _lh_matchIdent³ of {
+//│ 			LH_P2 _lh_lines_LH_P2_0⁰ _lh_lines_LH_P2_1⁰ => [LH_C _lh_lines_LH_P2_0⁰ 
+//│ 				let _lh_matchIdent⁴ = _lh_lines_LH_P2_1⁰
+//│ 				in _lh_matchIdent⁴(99)]
+//│ 			| _  => error⁰}}
+//│ def ltList_lh_₁(_lh_ltList_arg1⁰, _lh_ltList_arg2⁰) = 
+//│ 	let _lh_matchIdent⁰ = compareList_lh_₁(_lh_ltList_arg1⁰, _lh_ltList_arg2⁰)
+//│ 	in case _lh_matchIdent⁰ of {
+//│ 		LT  => [True]
+//│ 		| _  => [False]}
+//│ def ltList_lh_₂(_lh_ltList_arg1¹, _lh_ltList_arg2¹) = 
+//│ 	let _lh_matchIdent⁶ = compareList_lh_₁(_lh_ltList_arg1¹, _lh_ltList_arg2¹)
+//│ 	in case _lh_matchIdent⁶ of {
+//│ 		LT  => [True]
+//│ 		| _  => [False]}
+//│ def mangle_lh_₁(_lh_mangle_arg1⁰) = 
+//│ 	let sort⁰ = (fun _lh_sort_arg1⁰ -> 
+//│ 		let _lh_intersperse_LH_C_1⁰ = 	
+//│ 			let _lh_prependToAll_LH_C_1⁰ = 	
+//│ 				let _lh_prependToAll_LH_C_1¹ = 	
+//│ 					let _lh_prependToAll_LH_C_1² = 	
+//│ 						let _lh_prependToAll_LH_C_1³ = 	
+//│ 							let _lh_prependToAll_LH_C_1⁴ = 	
+//│ 								let _lh_prependToAll_LH_C_1⁵ = 	
+//│ 									let _lh_prependToAll_LH_C_1⁶ = (fun _lh_prependToAll_arg1¹ -> (fun f⁶ -> (fun i⁴ -> i⁴)))
+//│ 									in let _lh_prependToAll_LH_C_0⁰ = treeSort2_lh_₁
+//│ 									in (fun _lh_prependToAll_arg1² -> 
+//│ 										let t¹⁶ = 	
+//│ 											let t¹⁷ = _lh_prependToAll_LH_C_1⁶(_lh_prependToAll_arg1²)
+//│ 											in let h¹⁶ = _lh_prependToAll_LH_C_0⁰
+//│ 											in (fun f⁷ -> (fun i⁵ -> f⁷(h¹⁶, t¹⁷(f⁷, i⁵))))
+//│ 										in let h¹⁷ = _lh_prependToAll_arg1²
+//│ 										in (fun f⁸ -> (fun i⁶ -> f⁸(h¹⁷, t¹⁶(f⁸, i⁶)))))
+//│ 								in let _lh_prependToAll_LH_C_0¹ = treeSort_lh_₁
+//│ 								in (fun _lh_prependToAll_arg1³ -> 
+//│ 									let t¹⁸ = 	
+//│ 										let t¹⁹ = _lh_prependToAll_LH_C_1⁵(_lh_prependToAll_arg1³)
+//│ 										in let h¹⁸ = _lh_prependToAll_LH_C_0¹
+//│ 										in (fun f⁹ -> (fun i⁷ -> f⁹(h¹⁸, t¹⁹(f⁹, i⁷))))
+//│ 									in let h¹⁹ = _lh_prependToAll_arg1³
+//│ 									in (fun f¹⁰ -> (fun i⁸ -> f¹⁰(h¹⁹, t¹⁸(f¹⁰, i⁸)))))
+//│ 							in let _lh_prependToAll_LH_C_0² = quickerSort_lh_₁
+//│ 							in (fun _lh_prependToAll_arg1⁴ -> 
+//│ 								let t²⁰ = 	
+//│ 									let t²¹ = _lh_prependToAll_LH_C_1⁴(_lh_prependToAll_arg1⁴)
+//│ 									in let h²⁰ = _lh_prependToAll_LH_C_0²
+//│ 									in (fun f¹¹ -> (fun i⁹ -> f¹¹(h²⁰, t²¹(f¹¹, i⁹))))
+//│ 								in let h²¹ = _lh_prependToAll_arg1⁴
+//│ 								in (fun f¹² -> (fun i¹⁰ -> f¹²(h²¹, t²⁰(f¹², i¹⁰)))))
+//│ 						in let _lh_prependToAll_LH_C_0³ = quickSort2_lh_₁
+//│ 						in (fun _lh_prependToAll_arg1⁵ -> 
+//│ 							let t²² = 	
+//│ 								let t²³ = _lh_prependToAll_LH_C_1³(_lh_prependToAll_arg1⁵)
+//│ 								in let h²² = _lh_prependToAll_LH_C_0³
+//│ 								in (fun f¹³ -> (fun i¹¹ -> f¹³(h²², t²³(f¹³, i¹¹))))
+//│ 							in let h²³ = _lh_prependToAll_arg1⁵
+//│ 							in (fun f¹⁴ -> (fun i¹² -> f¹⁴(h²³, t²²(f¹⁴, i¹²)))))
+//│ 					in let _lh_prependToAll_LH_C_0⁴ = quickSort_lh_₁
+//│ 					in (fun _lh_prependToAll_arg1⁶ -> 
+//│ 						let t²⁴ = 	
+//│ 							let t²⁵ = _lh_prependToAll_LH_C_1²(_lh_prependToAll_arg1⁶)
+//│ 							in let h²⁴ = _lh_prependToAll_LH_C_0⁴
+//│ 							in (fun f¹⁵ -> (fun i¹³ -> f¹⁵(h²⁴, t²⁵(f¹⁵, i¹³))))
+//│ 						in let h²⁵ = _lh_prependToAll_arg1⁶
+//│ 						in (fun f¹⁶ -> (fun i¹⁴ -> f¹⁶(h²⁵, t²⁴(f¹⁶, i¹⁴)))))
+//│ 				in let _lh_prependToAll_LH_C_0⁵ = mergeSort_lh_₁
+//│ 				in (fun _lh_prependToAll_arg1⁷ -> 
+//│ 					let t²⁶ = 	
+//│ 						let t²⁷ = _lh_prependToAll_LH_C_1¹(_lh_prependToAll_arg1⁷)
+//│ 						in let h²⁶ = _lh_prependToAll_LH_C_0⁵
+//│ 						in (fun f¹⁷ -> (fun i¹⁵ -> f¹⁷(h²⁶, t²⁷(f¹⁷, i¹⁵))))
+//│ 					in let h²⁷ = _lh_prependToAll_arg1⁷
+//│ 					in (fun f¹⁸ -> (fun i¹⁶ -> f¹⁸(h²⁷, t²⁶(f¹⁸, i¹⁶)))))
+//│ 			in let _lh_prependToAll_LH_C_0⁶ = insertSort_lh_₁
+//│ 			in (fun _lh_prependToAll_arg1⁸ -> 
+//│ 				let t²⁸ = 	
+//│ 					let t²⁹ = _lh_prependToAll_LH_C_1⁰(_lh_prependToAll_arg1⁸)
+//│ 					in let h²⁸ = _lh_prependToAll_LH_C_0⁶
+//│ 					in (fun f¹⁹ -> (fun i¹⁷ -> f¹⁹(h²⁸, t²⁹(f¹⁹, i¹⁷))))
+//│ 				in let h²⁹ = _lh_prependToAll_arg1⁸
+//│ 				in (fun f²⁰ -> (fun i¹⁸ -> f²⁰(h²⁹, t²⁸(f²⁰, i¹⁸)))))
+//│ 		in let _lh_intersperse_LH_C_0⁰ = heapSort_lh_₁
+//│ 		in (fun _lh_intersperse_arg1¹ -> 
+//│ 			let t³⁰ = _lh_intersperse_LH_C_1⁰(_lh_intersperse_arg1¹)
+//│ 			in let h³⁰ = _lh_intersperse_LH_C_0⁰
+//│ 			in (fun f²¹ -> (fun i¹⁹ -> f²¹(h³⁰, t³⁰(f²¹, i¹⁹)))))(reverse_lh_₁, (fun f²² -> (fun g⁰ -> (fun _lh_funcomp_x² -> f²²(g⁰(_lh_funcomp_x²))))), (fun x³ -> x³), _lh_sort_arg1⁰))
+//│ 	in (fun _lh_funcomp_x³ -> (fun _lh_funcomp_x⁴ -> unlines_lh_₁(sort⁰(_lh_funcomp_x⁴)))(case _lh_funcomp_x³ of {
+//│ 		LH_N  => [LH_N]
+//│ 		| _  => 
+//│ 			let _lh_matchIdent¹¹ = break_lh_₁((fun x⁴ -> polyEq⁰(x⁴, '|')), _lh_funcomp_x³)
+//│ 			in case _lh_matchIdent¹¹ of {
+//│ 				LH_P2 _lh_lines_LH_P2_0² _lh_lines_LH_P2_1² => [LH_C _lh_lines_LH_P2_0² 
+//│ 					let _lh_matchIdent¹² = _lh_lines_LH_P2_1²
+//│ 					in _lh_matchIdent¹²(99)]
+//│ 				| _  => error⁰}}))(_lh_mangle_arg1⁰)
+//│ def map_lh_₁(f⁵, ls⁷, _lh_popOutId_0⁰) = case ls⁷ of {
+//│ 	LH_C h¹³ t¹³ => 
+//│ 		let t¹⁴ = map_lh_₁(f⁵, t¹³)
+//│ 		in let h¹⁴ = f⁵(h¹³)
+//│ 		in mappend_lh_₁₀(h¹⁴, t¹⁴(99))
+//│ 	| LH_N  => [LH_N]}
+//│ def mappend_lh_₁(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	LH_C h⁰ t⁰ => [LH_C h⁰ mappend_lh_₁(t⁰, ys⁰)]
+//│ 	| LH_N  => ys⁰}
+//│ def mappend_lh_₁₀(xs³, ys³) = case xs³ of {
+//│ 	LH_C h⁵ t⁵ => [LH_C h⁵ mappend_lh_₁₀(t⁵, ys³)]
+//│ 	| LH_N  => ys³}
+//│ def mappend_lh_₂(xs⁵, ys⁵) = case xs⁵ of {
+//│ 	LH_C h⁸ t⁸ => [LH_C h⁸ mappend_lh_₂(t⁸, ys⁵)]
+//│ 	| LH_N  => ys⁵}
+//│ def mappend_lh_₃(xs¹, ys¹) = case xs¹ of {
+//│ 	LH_C h¹ t¹ => [LH_C h¹ mappend_lh_₃(t¹, ys¹)]
+//│ 	| LH_N  => ys¹}
+//│ def mappend_lh_₄(xs⁸, ys⁸) = case xs⁸ of {
+//│ 	LH_C h¹² t¹² => [LH_C h¹² mappend_lh_₄(t¹², ys⁸)]
+//│ 	| LH_N  => ys⁸}
+//│ def mappend_lh_₅(xs⁶, ys⁶) = case xs⁶ of {
+//│ 	LH_C h⁹ t⁹ => [LH_C h⁹ mappend_lh_₅(t⁹, ys⁶)]
+//│ 	| LH_N  => ys⁶}
+//│ def mappend_lh_₆(xs⁷, ys⁷) = case xs⁷ of {
+//│ 	LH_C h¹¹ t¹¹ => [LH_C h¹¹ mappend_lh_₆(t¹¹, ys⁷)]
+//│ 	| LH_N  => ys⁷}
+//│ def mappend_lh_₇(xs⁴, ys⁴) = case xs⁴ of {
+//│ 	LH_C h⁶ t⁶ => [LH_C h⁶ mappend_lh_₇(t⁶, ys⁴)]
+//│ 	| LH_N  => ys⁴}
+//│ def mappend_lh_₈(xs², ys²) = case xs² of {
+//│ 	LH_C h³ t³ => [LH_C h³ mappend_lh_₈(t³, ys²)]
+//│ 	| LH_N  => ys²}
+//│ def mappend_lh_₉(xs⁹, ys⁹) = case xs⁹ of {
+//│ 	LH_C h¹⁵ t¹⁵ => [LH_C h¹⁵ mappend_lh_₉(t¹⁵, ys⁹)]
+//│ 	| LH_N  => ys⁹}
+//│ def mergeSort_lh_₁(_lh_mergeSort_arg1⁰) = 
+//│ 	let merge_lists⁰ = (fun _lh_merge_lists_arg1⁰ -> _lh_merge_lists_arg1⁰(merge_lists⁰, merge⁰))
+//│ 	and runsplit⁰ = (fun _lh_runsplit_arg1⁰ -> (fun _lh_runsplit_arg2⁰ -> case _lh_runsplit_arg1⁰ of {
+//│ 			LH_N  => case _lh_runsplit_arg2⁰ of {
+//│ 				LH_N  => (fun merge_lists¹ -> (fun merge¹ -> [LH_N]))
+//│ 				| _  => case _lh_runsplit_arg2⁰ of {
+//│ 					LH_N  => 
+//│ 						let _lh_merge_lists_LH_C_1⁰ = (fun merge_lists² -> (fun merge² -> [LH_N]))
+//│ 						in let _lh_merge_lists_LH_C_0⁰ = _lh_runsplit_arg1⁰
+//│ 						in (fun merge_lists³ -> (fun merge³ -> merge³(_lh_merge_lists_LH_C_0⁰, merge_lists³(_lh_merge_lists_LH_C_1⁰))))
+//│ 					| _  => case _lh_runsplit_arg1⁰ of {
+//│ 						LH_N  => case _lh_runsplit_arg2⁰ of {
+//│ 							LH_C _lh_runsplit_LH_C_0⁰ _lh_runsplit_LH_C_1⁰ => runsplit⁰([LH_C _lh_runsplit_LH_C_0⁰ [LH_N]], _lh_runsplit_LH_C_1⁰)
+//│ 							| _  => case _lh_runsplit_arg1⁰ of {
+//│ 								LH_C _lh_runsplit_LH_C_0¹ _lh_runsplit_LH_C_1¹ => case _lh_runsplit_arg2⁰ of {
+//│ 									LH_C _lh_runsplit_LH_C_0² _lh_runsplit_LH_C_1² => 
+//│ 										let _lh_matchIdent¹⁴ = _lh_runsplit_LH_C_1¹
+//│ 										in case _lh_matchIdent¹⁴ of {
+//│ 											LH_N  => if gtList_lh_₄(_lh_runsplit_LH_C_0², _lh_runsplit_LH_C_0¹) then runsplit⁰([LH_C _lh_runsplit_LH_C_0¹ [LH_C _lh_runsplit_LH_C_0² [LH_N]]], _lh_runsplit_LH_C_1²) else if leList_lh_₄(_lh_runsplit_LH_C_0², _lh_runsplit_LH_C_0¹) then runsplit⁰([LH_C _lh_runsplit_LH_C_0² [LH_C _lh_runsplit_LH_C_0¹ _lh_runsplit_LH_C_1¹]], _lh_runsplit_LH_C_1²) else 
+//│ 												let _lh_merge_lists_LH_C_1¹ = runsplit⁰([LH_C _lh_runsplit_LH_C_0² [LH_N]], _lh_runsplit_LH_C_1²)
+//│ 												in let _lh_merge_lists_LH_C_0¹ = [LH_C _lh_runsplit_LH_C_0¹ _lh_runsplit_LH_C_1¹]
+//│ 												in (fun merge_lists⁴ -> (fun merge⁴ -> merge⁴(_lh_merge_lists_LH_C_0¹, merge_lists⁴(_lh_merge_lists_LH_C_1¹))))
+//│ 											| _  => if leList_lh_₂(_lh_runsplit_LH_C_0², _lh_runsplit_LH_C_0¹) then runsplit⁰([LH_C _lh_runsplit_LH_C_0² [LH_C _lh_runsplit_LH_C_0¹ _lh_matchIdent¹⁴]], _lh_runsplit_LH_C_1²) else 
+//│ 												let _lh_merge_lists_LH_C_1² = runsplit⁰([LH_C _lh_runsplit_LH_C_0² [LH_N]], _lh_runsplit_LH_C_1²)
+//│ 												in let _lh_merge_lists_LH_C_0² = [LH_C _lh_runsplit_LH_C_0¹ _lh_matchIdent¹⁴]
+//│ 												in (fun merge_lists⁵ -> (fun merge⁵ -> merge⁵(_lh_merge_lists_LH_C_0², merge_lists⁵(_lh_merge_lists_LH_C_1²))))}
+//│ 									| _  => error⁰}
+//│ 								| _  => error⁰}}
+//│ 						| _  => case _lh_runsplit_arg1⁰ of {
+//│ 							LH_C _lh_runsplit_LH_C_0³ _lh_runsplit_LH_C_1³ => case _lh_runsplit_arg2⁰ of {
+//│ 								LH_C _lh_runsplit_LH_C_0⁴ _lh_runsplit_LH_C_1⁴ => 
+//│ 									let _lh_matchIdent¹⁵ = _lh_runsplit_LH_C_1³
+//│ 									in case _lh_matchIdent¹⁵ of {
+//│ 										LH_N  => if gtList_lh_₃(_lh_runsplit_LH_C_0⁴, _lh_runsplit_LH_C_0³) then runsplit⁰([LH_C _lh_runsplit_LH_C_0³ [LH_C _lh_runsplit_LH_C_0⁴ [LH_N]]], _lh_runsplit_LH_C_1⁴) else if leList_lh_₈(_lh_runsplit_LH_C_0⁴, _lh_runsplit_LH_C_0³) then runsplit⁰([LH_C _lh_runsplit_LH_C_0⁴ [LH_C _lh_runsplit_LH_C_0³ _lh_runsplit_LH_C_1³]], _lh_runsplit_LH_C_1⁴) else 
+//│ 											let _lh_merge_lists_LH_C_1³ = runsplit⁰([LH_C _lh_runsplit_LH_C_0⁴ [LH_N]], _lh_runsplit_LH_C_1⁴)
+//│ 											in let _lh_merge_lists_LH_C_0³ = [LH_C _lh_runsplit_LH_C_0³ _lh_runsplit_LH_C_1³]
+//│ 											in (fun merge_lists⁶ -> (fun merge⁶ -> merge⁶(_lh_merge_lists_LH_C_0³, merge_lists⁶(_lh_merge_lists_LH_C_1³))))
+//│ 										| _  => if leList_lh_₅(_lh_runsplit_LH_C_0⁴, _lh_runsplit_LH_C_0³) then runsplit⁰([LH_C _lh_runsplit_LH_C_0⁴ [LH_C _lh_runsplit_LH_C_0³ _lh_matchIdent¹⁵]], _lh_runsplit_LH_C_1⁴) else 
+//│ 											let _lh_merge_lists_LH_C_1⁴ = runsplit⁰([LH_C _lh_runsplit_LH_C_0⁴ [LH_N]], _lh_runsplit_LH_C_1⁴)
+//│ 											in let _lh_merge_lists_LH_C_0⁴ = [LH_C _lh_runsplit_LH_C_0³ _lh_matchIdent¹⁵]
+//│ 											in (fun merge_lists⁷ -> (fun merge⁷ -> merge⁷(_lh_merge_lists_LH_C_0⁴, merge_lists⁷(_lh_merge_lists_LH_C_1⁴))))}
+//│ 								| _  => error⁰}
+//│ 							| _  => error⁰}}}}
+//│ 			| _  => case _lh_runsplit_arg2⁰ of {
+//│ 				LH_N  => 
+//│ 					let _lh_merge_lists_LH_C_1⁵ = (fun merge_lists⁸ -> (fun merge⁸ -> [LH_N]))
+//│ 					in let _lh_merge_lists_LH_C_0⁵ = _lh_runsplit_arg1⁰
+//│ 					in (fun merge_lists⁹ -> (fun merge⁹ -> merge⁹(_lh_merge_lists_LH_C_0⁵, merge_lists⁹(_lh_merge_lists_LH_C_1⁵))))
+//│ 				| _  => case _lh_runsplit_arg1⁰ of {
+//│ 					LH_N  => case _lh_runsplit_arg2⁰ of {
+//│ 						LH_C _lh_runsplit_LH_C_0⁵ _lh_runsplit_LH_C_1⁵ => runsplit⁰([LH_C _lh_runsplit_LH_C_0⁵ [LH_N]], _lh_runsplit_LH_C_1⁵)
+//│ 						| _  => case _lh_runsplit_arg1⁰ of {
+//│ 							LH_C _lh_runsplit_LH_C_0⁶ _lh_runsplit_LH_C_1⁶ => case _lh_runsplit_arg2⁰ of {
+//│ 								LH_C _lh_runsplit_LH_C_0⁷ _lh_runsplit_LH_C_1⁷ => 
+//│ 									let _lh_matchIdent¹⁶ = _lh_runsplit_LH_C_1⁶
+//│ 									in case _lh_matchIdent¹⁶ of {
+//│ 										LH_N  => if gtList_lh_₁(_lh_runsplit_LH_C_0⁷, _lh_runsplit_LH_C_0⁶) then runsplit⁰([LH_C _lh_runsplit_LH_C_0⁶ [LH_C _lh_runsplit_LH_C_0⁷ [LH_N]]], _lh_runsplit_LH_C_1⁷) else if leList_lh_₁(_lh_runsplit_LH_C_0⁷, _lh_runsplit_LH_C_0⁶) then runsplit⁰([LH_C _lh_runsplit_LH_C_0⁷ [LH_C _lh_runsplit_LH_C_0⁶ _lh_runsplit_LH_C_1⁶]], _lh_runsplit_LH_C_1⁷) else 
+//│ 											let _lh_merge_lists_LH_C_1⁶ = runsplit⁰([LH_C _lh_runsplit_LH_C_0⁷ [LH_N]], _lh_runsplit_LH_C_1⁷)
+//│ 											in let _lh_merge_lists_LH_C_0⁶ = [LH_C _lh_runsplit_LH_C_0⁶ _lh_runsplit_LH_C_1⁶]
+//│ 											in (fun merge_lists¹⁰ -> (fun merge¹⁰ -> merge¹⁰(_lh_merge_lists_LH_C_0⁶, merge_lists¹⁰(_lh_merge_lists_LH_C_1⁶))))
+//│ 										| _  => if leList_lh_₃(_lh_runsplit_LH_C_0⁷, _lh_runsplit_LH_C_0⁶) then runsplit⁰([LH_C _lh_runsplit_LH_C_0⁷ [LH_C _lh_runsplit_LH_C_0⁶ _lh_matchIdent¹⁶]], _lh_runsplit_LH_C_1⁷) else 
+//│ 											let _lh_merge_lists_LH_C_1⁷ = runsplit⁰([LH_C _lh_runsplit_LH_C_0⁷ [LH_N]], _lh_runsplit_LH_C_1⁷)
+//│ 											in let _lh_merge_lists_LH_C_0⁷ = [LH_C _lh_runsplit_LH_C_0⁶ _lh_matchIdent¹⁶]
+//│ 											in (fun merge_lists¹¹ -> (fun merge¹¹ -> merge¹¹(_lh_merge_lists_LH_C_0⁷, merge_lists¹¹(_lh_merge_lists_LH_C_1⁷))))}
+//│ 								| _  => error⁰}
+//│ 							| _  => error⁰}}
+//│ 					| _  => case _lh_runsplit_arg1⁰ of {
+//│ 						LH_C _lh_runsplit_LH_C_0⁸ _lh_runsplit_LH_C_1⁸ => case _lh_runsplit_arg2⁰ of {
+//│ 							LH_C _lh_runsplit_LH_C_0⁹ _lh_runsplit_LH_C_1⁹ => 
+//│ 								let _lh_matchIdent¹⁷ = _lh_runsplit_LH_C_1⁸
+//│ 								in case _lh_matchIdent¹⁷ of {
+//│ 									LH_N  => if gtList_lh_₂(_lh_runsplit_LH_C_0⁹, _lh_runsplit_LH_C_0⁸) then runsplit⁰([LH_C _lh_runsplit_LH_C_0⁸ [LH_C _lh_runsplit_LH_C_0⁹ [LH_N]]], _lh_runsplit_LH_C_1⁹) else if leList_lh_₇(_lh_runsplit_LH_C_0⁹, _lh_runsplit_LH_C_0⁸) then runsplit⁰([LH_C _lh_runsplit_LH_C_0⁹ [LH_C _lh_runsplit_LH_C_0⁸ _lh_runsplit_LH_C_1⁸]], _lh_runsplit_LH_C_1⁹) else 
+//│ 										let _lh_merge_lists_LH_C_1⁸ = runsplit⁰([LH_C _lh_runsplit_LH_C_0⁹ [LH_N]], _lh_runsplit_LH_C_1⁹)
+//│ 										in let _lh_merge_lists_LH_C_0⁸ = [LH_C _lh_runsplit_LH_C_0⁸ _lh_runsplit_LH_C_1⁸]
+//│ 										in (fun merge_lists¹² -> (fun merge¹² -> merge¹²(_lh_merge_lists_LH_C_0⁸, merge_lists¹²(_lh_merge_lists_LH_C_1⁸))))
+//│ 									| _  => if leList_lh_₆(_lh_runsplit_LH_C_0⁹, _lh_runsplit_LH_C_0⁸) then runsplit⁰([LH_C _lh_runsplit_LH_C_0⁹ [LH_C _lh_runsplit_LH_C_0⁸ _lh_matchIdent¹⁷]], _lh_runsplit_LH_C_1⁹) else 
+//│ 										let _lh_merge_lists_LH_C_1⁹ = runsplit⁰([LH_C _lh_runsplit_LH_C_0⁹ [LH_N]], _lh_runsplit_LH_C_1⁹)
+//│ 										in let _lh_merge_lists_LH_C_0⁹ = [LH_C _lh_runsplit_LH_C_0⁸ _lh_matchIdent¹⁷]
+//│ 										in (fun merge_lists¹³ -> (fun merge¹³ -> merge¹³(_lh_merge_lists_LH_C_0⁹, merge_lists¹³(_lh_merge_lists_LH_C_1⁹))))}
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}}}}))
+//│ 	and merge⁰ = (fun _lh_merge_arg1⁰ -> (fun _lh_merge_arg2⁰ -> case _lh_merge_arg1⁰ of {
+//│ 			LH_N  => _lh_merge_arg2⁰
+//│ 			| _  => case _lh_merge_arg2⁰ of {
+//│ 				LH_N  => _lh_merge_arg1⁰
+//│ 				| _  => case _lh_merge_arg1⁰ of {
+//│ 					LH_C _lh_merge_LH_C_0⁰ _lh_merge_LH_C_1⁰ => case _lh_merge_arg2⁰ of {
+//│ 						LH_C _lh_merge_LH_C_0¹ _lh_merge_LH_C_1¹ => if eqList_lh_₁(_lh_merge_LH_C_0⁰, _lh_merge_LH_C_0¹) then [LH_C _lh_merge_LH_C_0⁰ [LH_C _lh_merge_LH_C_0¹ merge⁰(_lh_merge_LH_C_1⁰, _lh_merge_LH_C_1¹)]] else if ltList_lh_₁(_lh_merge_LH_C_0⁰, _lh_merge_LH_C_0¹) then [LH_C _lh_merge_LH_C_0⁰ merge⁰(_lh_merge_LH_C_1⁰, [LH_C _lh_merge_LH_C_0¹ _lh_merge_LH_C_1¹])] else [LH_C _lh_merge_LH_C_0¹ merge⁰([LH_C _lh_merge_LH_C_0⁰ _lh_merge_LH_C_1⁰], _lh_merge_LH_C_1¹)]
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}}})) 
+//│ 	in (fun _lh_funcomp_x⁵ -> merge_lists⁰(runsplit⁰([LH_N], _lh_funcomp_x⁵)))(_lh_mergeSort_arg1⁰)
+//│ def odd_lh_₁(_lh_odd_arg1¹) = ((_lh_odd_arg1¹ mod 2) == 0)
+//│ def odd_lh_₂(_lh_odd_arg1⁰) = ((_lh_odd_arg1⁰ mod 2) == 0)
+//│ def partition_lh_₁(_lh_partition_arg1⁰, _lh_partition_arg2⁰) = foldr_lh_₃(select_lh_₁(_lh_partition_arg1⁰), [LH_P2 [LH_N] [LH_N]], _lh_partition_arg2⁰)
+//│ def prependToAll_lh_₁(_lh_prependToAll_arg1⁰, _lh_prependToAll_arg2⁰) = _lh_prependToAll_arg2⁰(_lh_prependToAll_arg1⁰)
+//│ def quickSort2_lh_₁(_lh_quickSort2_arg1⁰) = case _lh_quickSort2_arg1⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_quickSort2_LH_C_0⁰ _lh_quickSort2_LH_C_1⁰ => 
+//│ 		let _lh_matchIdent⁵ = partition_lh_₁((fun x¹ -> (fun y⁰ -> geList_lh_₁(x¹, y⁰)))(_lh_quickSort2_LH_C_0⁰), _lh_quickSort2_LH_C_1⁰)
+//│ 		in case _lh_matchIdent⁵ of {
+//│ 			LH_P2 _lh_quickSort2_LH_P2_0⁰ _lh_quickSort2_LH_P2_1⁰ => mappend_lh_₃(quickSort2_lh_₁(_lh_quickSort2_LH_P2_0⁰), [LH_C _lh_quickSort2_LH_C_0⁰ quickSort2_lh_₁(_lh_quickSort2_LH_P2_1⁰)])
+//│ 			| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def quickSort_lh_₁(_lh_quickSort_arg1⁰) = case _lh_quickSort_arg1⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_quickSort_LH_C_0⁰ _lh_quickSort_LH_C_1⁰ => mappend_lh_₄(quickSort_lh_₁(
+//│ 		let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => if leList_lh_₁₀(_lh_listcomp_fun_ls_h⁰, _lh_quickSort_LH_C_0⁰) then [LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)] else _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun⁰(_lh_quickSort_LH_C_1⁰)), [LH_C _lh_quickSort_LH_C_0⁰ quickSort_lh_₁(
+//│ 		let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if gtList_lh_₅(_lh_listcomp_fun_ls_h¹, _lh_quickSort_LH_C_0⁰) then [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun¹(_lh_quickSort_LH_C_1⁰))])
+//│ 	| _  => error⁰}
+//│ def quickerSort_lh_₁(_lh_quickerSort_arg1⁰) = case _lh_quickerSort_arg1⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_quickerSort_LH_C_0⁰ _lh_quickerSort_LH_C_1⁰ => case _lh_quickerSort_LH_C_1⁰ of {
+//│ 		LH_N  => [LH_C _lh_quickerSort_LH_C_0⁰ [LH_N]]
+//│ 		| _  => 
+//│ 			let split⁰ = (fun _lh_split_arg1⁰ -> (fun _lh_split_arg2⁰ -> (fun _lh_split_arg3⁰ -> (fun _lh_split_arg4⁰ -> case _lh_split_arg4⁰ of {
+//│ 				LH_N  => mappend_lh_₅(quickerSort_lh_₁(_lh_split_arg2⁰), [LH_C _lh_split_arg1⁰ quickerSort_lh_₁(_lh_split_arg3⁰)])
+//│ 				| LH_C _lh_split_LH_C_0⁰ _lh_split_LH_C_1⁰ => if leList_lh_₁₄(_lh_split_LH_C_0⁰, _lh_split_arg1⁰) then split⁰(_lh_split_arg1⁰, [LH_C _lh_split_LH_C_0⁰ _lh_split_arg2⁰], _lh_split_arg3⁰, _lh_split_LH_C_1⁰) else split⁰(_lh_split_arg1⁰, _lh_split_arg2⁰, [LH_C _lh_split_LH_C_0⁰ _lh_split_arg3⁰], _lh_split_LH_C_1⁰)
+//│ 				| _  => error⁰}))))
+//│ 			in split⁰(_lh_quickerSort_LH_C_0⁰, [LH_N], [LH_N], _lh_quickerSort_LH_C_1⁰)}
+//│ 	| _  => error⁰}
+//│ def reverse_helper_lh_₁(ls³, a⁰) = case ls³ of {
+//│ 	LH_C h⁴ t⁴ => reverse_helper_lh_₁(t⁴, [LH_C h⁴ a⁰])
+//│ 	| LH_N  => a⁰}
+//│ def reverse_lh_₁(ls⁸) = reverse_helper_lh_₁(ls⁸, [LH_N])
+//│ def reverse_lh_₂(ls⁹) = reverse_helper_lh_₁(ls⁹, [LH_N])
+//│ def reverse_lh_₃(ls⁰) = reverse_helper_lh_₁(ls⁰, [LH_N])
+//│ def reverse_lh_₄(ls¹⁰) = reverse_helper_lh_₁(ls¹⁰, [LH_N])
+//│ def reverse_lh_₅(ls¹) = reverse_helper_lh_₁(ls¹, [LH_N])
+//│ def select_lh_₁(_lh_select_arg1⁰, _lh_select_arg2⁰, _lh_select_arg3⁰) = case _lh_select_arg3⁰ of {
+//│ 	LH_P2 _lh_select_LH_P2_0⁰ _lh_select_LH_P2_1⁰ => if _lh_select_arg1⁰(_lh_select_arg2⁰) then [LH_P2 [LH_C _lh_select_arg2⁰ _lh_select_LH_P2_0⁰] _lh_select_LH_P2_1⁰] else [LH_P2 _lh_select_LH_P2_0⁰ [LH_C _lh_select_arg2⁰ _lh_select_LH_P2_1⁰]]
+//│ 	| _  => error⁰}
+//│ def testSorting_nofib_lh_₁(_lh_testSorting_nofib_arg1⁰) = 
+//│ 	let f⁴ = primId⁰([LH_C 'm' [LH_C 'o' [LH_C 'd' [LH_C 'u' [LH_C 'l' [LH_C 'e' [LH_C ' ' [LH_C 'M' [LH_C 'a' [LH_C 'i' [LH_C 'n' [LH_C ' ' [LH_C 'w' [LH_C 'h' [LH_C 'e' [LH_C 'r' [LH_C 'e' [LH_C '|' [LH_C '|' [LH_C 'i' [LH_C 'm' [LH_C 'p' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C ' ' [LH_C 'S' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '|' [LH_C '|' [LH_C 'i' [LH_C 'm' [LH_C 'p' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C ' ' [LH_C 'C' [LH_C 'o' [LH_C 'n' [LH_C 't' [LH_C 'r' [LH_C 'o' [LH_C 'l' [LH_C '.' [LH_C 'M' [LH_C 'o' [LH_C 'n' [LH_C 'a' [LH_C 'd' [LH_C ' ' [LH_C '(' [LH_C 'r' [LH_C 'e' [LH_C 'p' [LH_C 'l' [LH_C 'i' [LH_C 'c' [LH_C 'a' [LH_C 't' [LH_C 'e' [LH_C 'M' [LH_C '_' [LH_C ')' [LH_C '|' [LH_C 'i' [LH_C 'm' [LH_C 'p' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C ' ' [LH_C 'D' [LH_C 'a' [LH_C 't' [LH_C 'a' [LH_C '.' [LH_C 'L' [LH_C 'i' [LH_C 's' [LH_C 't' [LH_C ' ' [LH_C '(' [LH_C 'i' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'r' [LH_C 's' [LH_C 'p' [LH_C 'e' [LH_C 'r' [LH_C 's' [LH_C 'e' [LH_C ')' [LH_C '|' [LH_C 'i' [LH_C 'm' [LH_C 'p' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C ' ' [LH_C 'S' [LH_C 'y' [LH_C 's' [LH_C 't' [LH_C 'e' [LH_C 'm' [LH_C '.' [LH_C 'E' [LH_C 'n' [LH_C 'v' [LH_C 'i' [LH_C 'r' [LH_C 'o' [LH_C 'n' [LH_C 'm' [LH_C 'e' [LH_C 'n' [LH_C 't' [LH_C ' ' [LH_C '(' [LH_C 'g' [LH_C 'e' [LH_C 't' [LH_C 'A' [LH_C 'r' [LH_C 'g' [LH_C 's' [LH_C ')' [LH_C '|' [LH_C 'i' [LH_C 'm' [LH_C 'p' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C ' ' [LH_C 'N' [LH_C 'o' [LH_C 'f' [LH_C 'i' [LH_C 'b' [LH_C 'U' [LH_C 't' [LH_C 'i' [LH_C 'l' [LH_C 's' [LH_C ' ' [LH_C '(' [LH_C 'h' [LH_C 'a' [LH_C 's' [LH_C 'h' [LH_C ')' [LH_C '|' [LH_C '|' [LH_C 'm' [LH_C 'a' [LH_C 'i' [LH_C 'n' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'd' [LH_C 'o' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C '(' [LH_C 'n' [LH_C ':' [LH_C '_' [LH_C ')' [LH_C ' ' [LH_C '<' [LH_C '-' [LH_C ' ' [LH_C 'g' [LH_C 'e' [LH_C 't' [LH_C 'A' [LH_C 'r' [LH_C 'g' [LH_C 's' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C 'r' [LH_C 'e' [LH_C 'p' [LH_C 'l' [LH_C 'i' [LH_C 'c' [LH_C 'a' [LH_C 't' [LH_C 'e' [LH_C 'M' [LH_C '_' [LH_C ' ' [LH_C '(' [LH_C 'r' [LH_C 'e' [LH_C 'a' [LH_C 'd' [LH_C ' ' [LH_C 'n' [LH_C ')' [LH_C ' ' [LH_C '$' [LH_C ' ' [LH_C 'd' [LH_C 'o' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C '(' [LH_C '_' [LH_C ':' [LH_C 's' [LH_C ':' [LH_C '_' [LH_C ')' [LH_C ' ' [LH_C '<' [LH_C '-' [LH_C ' ' [LH_C 'g' [LH_C 'e' [LH_C 't' [LH_C 'A' [LH_C 'r' [LH_C 'g' [LH_C 's' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'f' [LH_C ' ' [LH_C '<' [LH_C '-' [LH_C ' ' [LH_C 'r' [LH_C 'e' [LH_C 'a' [LH_C 'd' [LH_C 'F' [LH_C 'i' [LH_C 'l' [LH_C 'e' [LH_C ' ' [LH_C 's' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'p' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 't' [LH_C ' ' [LH_C '(' [LH_C 'h' [LH_C 'a' [LH_C 's' [LH_C 'h' [LH_C ' ' [LH_C '(' [LH_C 'm' [LH_C 'a' [LH_C 'n' [LH_C 'g' [LH_C 'l' [LH_C 'e' [LH_C ' ' [LH_C 'f' [LH_C ')' [LH_C ')' [LH_C '|' [LH_C '|' [LH_C 'm' [LH_C 'a' [LH_C 'n' [LH_C 'g' [LH_C 'l' [LH_C 'e' [LH_C ' ' [LH_C ':' [LH_C ':' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C '{' [LH_C '-' [LH_C 'i' [LH_C 'n' [LH_C 'p' [LH_C 'u' [LH_C 't' [LH_C ' ' [LH_C 't' [LH_C 'o' [LH_C ' ' [LH_C 's' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '-' [LH_C '}' [LH_C ' ' [LH_C '-' [LH_C '>' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C '{' [LH_C '-' [LH_C 'o' [LH_C 'u' [LH_C 't' [LH_C 'p' [LH_C 'u' [LH_C 't' [LH_C '-' [LH_C '}' [LH_C '|' [LH_C 'm' [LH_C 'a' [LH_C 'n' [LH_C 'g' [LH_C 'l' [LH_C 'e' [LH_C ' ' [LH_C 'i' [LH_C 'n' [LH_C 'p' [LH_C 't' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C '(' [LH_C 'u' [LH_C 'n' [LH_C 'l' [LH_C 'i' [LH_C 'n' [LH_C 'e' [LH_C 's' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 's' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'l' [LH_C 'i' [LH_C 'n' [LH_C 'e' [LH_C 's' [LH_C ')' [LH_C ' ' [LH_C 'i' [LH_C 'n' [LH_C 'p' [LH_C 't' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C 'w' [LH_C 'h' [LH_C 'e' [LH_C 'r' [LH_C 'e' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 's' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'f' [LH_C 'o' [LH_C 'l' [LH_C 'd' [LH_C 'r' [LH_C ' ' [LH_C '(' [LH_C '.' [LH_C ')' [LH_C ' ' [LH_C 'i' [LH_C 'd' [LH_C ' ' [LH_C '(' [LH_C 'i' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'r' [LH_C 's' [LH_C 'p' [LH_C 'e' [LH_C 'r' [LH_C 's' [LH_C 'e' [LH_C ' ' [LH_C 'r' [LH_C 'e' [LH_C 'v' [LH_C 'e' [LH_C 'r' [LH_C 's' [LH_C 'e' [LH_C ' ' [LH_C 's' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C 's' [LH_C ')' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 's' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C 's' [LH_C ' ' [LH_C '=' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C '[' [LH_C ' ' [LH_C 'h' [LH_C 'e' [LH_C 'a' [LH_C 'p' [LH_C 'S' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ',' [LH_C ' ' [LH_C 'i' [LH_C 'n' [LH_C 's' [LH_C 'e' [LH_C 'r' [LH_C 't' [LH_C 'S' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ',' [LH_C ' ' [LH_C 'm' [LH_C 'e' [LH_C 'r' [LH_C 'g' [LH_C 'e' [LH_C 'S' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ',' [LH_C ' ' [LH_C 'q' [LH_C 'u' [LH_C 'i' [LH_C 'c' [LH_C 'k' [LH_C 'S' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ',' [LH_C ' ' [LH_C 'q' [LH_C 'u' [LH_C 'i' [LH_C 'c' [LH_C 'k' [LH_C 'S' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '2' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ',' [LH_C ' ' [LH_C 'q' [LH_C 'u' [LH_C 'i' [LH_C 'c' [LH_C 'k' [LH_C 'e' [LH_C 'r' [LH_C 'S' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ',' [LH_C ' ' [LH_C 't' [LH_C 'r' [LH_C 'e' [LH_C 'e' [LH_C 'S' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ',' [LH_C ' ' [LH_C 't' [LH_C 'r' [LH_C 'e' [LH_C 'e' [LH_C 'S' [LH_C 'o' [LH_C 'r' [LH_C 't' [LH_C '2' [LH_C '|' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ']' [LH_C '|' [LH_N]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]])
+//│ 	in hash_lh_₁(mangle_lh_₁(f⁴))
+//│ def treeSort2_lh_₁(_lh_treeSort2_arg1⁰) = 
+//│ 	let mkTree⁰ = (fun _lh_mkTree_arg1⁰ -> 
+//│ 			let to_tree⁰ = (fun _lh_to_tree_arg1⁰ -> (fun _lh_to_tree_arg2⁰ -> case _lh_to_tree_arg2⁰ of {
+//│ 				Tip2  => [Twig2 _lh_to_tree_arg1⁰]
+//│ 				| Twig2 _lh_to_tree_Twig2_0⁰ => if leList_lh_₁₅(_lh_to_tree_arg1⁰, _lh_to_tree_Twig2_0⁰) then [Branch2 _lh_to_tree_Twig2_0⁰ [Twig2 _lh_to_tree_arg1⁰] [Tip2]] else [Branch2 _lh_to_tree_Twig2_0⁰ [Tip2] [Twig2 _lh_to_tree_arg1⁰]]
+//│ 				| Branch2 _lh_to_tree_Branch2_0⁰ _lh_to_tree_Branch2_1⁰ _lh_to_tree_Branch2_2⁰ => if leList_lh_₁₆(_lh_to_tree_arg1⁰, _lh_to_tree_Branch2_0⁰) then [Branch2 _lh_to_tree_Branch2_0⁰ to_tree⁰(_lh_to_tree_arg1⁰, _lh_to_tree_Branch2_1⁰) _lh_to_tree_Branch2_2⁰] else [Branch2 _lh_to_tree_Branch2_0⁰ _lh_to_tree_Branch2_1⁰ to_tree⁰(_lh_to_tree_arg1⁰, _lh_to_tree_Branch2_2⁰)]
+//│ 				| _  => error⁰}))
+//│ 			in foldr_lh_₃(to_tree⁰, [Tip2], _lh_mkTree_arg1⁰))
+//│ 	and readTree⁰ = (fun _lh_readTree_arg1⁰ -> case _lh_readTree_arg1⁰ of {
+//│ 			Tip2  => [LH_N]
+//│ 			| Twig2 _lh_readTree_Twig2_0⁰ => [LH_C _lh_readTree_Twig2_0⁰ [LH_N]]
+//│ 			| Branch2 _lh_readTree_Branch2_0⁰ _lh_readTree_Branch2_1⁰ _lh_readTree_Branch2_2⁰ => mappend_lh_₆(readTree⁰(_lh_readTree_Branch2_1⁰), [LH_C _lh_readTree_Branch2_0⁰ readTree⁰(_lh_readTree_Branch2_2⁰)])
+//│ 			| _  => error⁰}) 
+//│ 	in (fun _lh_funcomp_x⁰ -> readTree⁰(mkTree⁰(_lh_funcomp_x⁰)))(_lh_treeSort2_arg1⁰)
+//│ def treeSort_lh_₁(_lh_treeSort_arg1⁰) = 
+//│ 	let mkTree¹ = (fun _lh_mkTree_arg1¹ -> 
+//│ 			let to_tree¹ = (fun _lh_to_tree_arg1¹ -> (fun _lh_to_tree_arg2¹ -> case _lh_to_tree_arg2¹ of {
+//│ 				Tip  => [Branch _lh_to_tree_arg1¹ [Tip] [Tip]]
+//│ 				| Branch _lh_to_tree_Branch_0⁰ _lh_to_tree_Branch_1⁰ _lh_to_tree_Branch_2⁰ => if leList_lh_₉(_lh_to_tree_arg1¹, _lh_to_tree_Branch_0⁰) then [Branch _lh_to_tree_Branch_0⁰ to_tree¹(_lh_to_tree_arg1¹, _lh_to_tree_Branch_1⁰) _lh_to_tree_Branch_2⁰] else [Branch _lh_to_tree_Branch_0⁰ _lh_to_tree_Branch_1⁰ to_tree¹(_lh_to_tree_arg1¹, _lh_to_tree_Branch_2⁰)]
+//│ 				| _  => error⁰}))
+//│ 			in foldr_lh_₂(to_tree¹, [Tip], _lh_mkTree_arg1¹))
+//│ 	and readTree¹ = (fun _lh_readTree_arg1¹ -> case _lh_readTree_arg1¹ of {
+//│ 			Tip  => [LH_N]
+//│ 			| Branch _lh_readTree_Branch_0⁰ _lh_readTree_Branch_1⁰ _lh_readTree_Branch_2⁰ => mappend_lh_₂(readTree¹(_lh_readTree_Branch_1⁰), [LH_C _lh_readTree_Branch_0⁰ readTree¹(_lh_readTree_Branch_2⁰)])
+//│ 			| _  => error⁰}) 
+//│ 	in (fun _lh_funcomp_x¹ -> readTree¹(mkTree¹(_lh_funcomp_x¹)))(_lh_treeSort_arg1⁰)
+//│ def unlines_lh_₁(_lh_unlines_arg1⁰) = map_lh_₁((fun l⁰ -> mappend_lh_₁(l⁰, [LH_C '|' [LH_N]])), _lh_unlines_arg1⁰, 99)
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

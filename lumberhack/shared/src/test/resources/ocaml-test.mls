@@ -196,6 +196,36 @@ f val
 //│ 	in (fun _lh_listcomp_fun² -> [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹)]))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> _lh_listcomp_fun_para⁰(_lh_listcomp_fun⁰))
+//│ in _lh_listcomp_fun⁰(
+//│ 	let _lh_listcomp_fun_ls_t⁰ = 	
+//│ 		let _lh_listcomp_fun_ls_t¹ = (fun _lh_listcomp_fun¹ -> [LH_N])
+//│ 		in let _lh_listcomp_fun_ls_h⁰ = 2
+//│ 		in (fun _lh_listcomp_fun² -> [LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹)])
+//│ 	in let _lh_listcomp_fun_ls_h¹ = 1
+//│ 	in (fun _lh_listcomp_fun³ -> [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun³(_lh_listcomp_fun_ls_t⁰)]))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> _lh_listcomp_fun_para⁰(_lh_listcomp_fun⁰))
+//│ in _lh_listcomp_fun⁰(
+//│ 	let _lh_listcomp_fun_ls_t⁰ = 	
+//│ 		let _lh_listcomp_fun_ls_t¹ = (fun _lh_listcomp_fun¹ -> [LH_N])
+//│ 		in let _lh_listcomp_fun_ls_h⁰ = 2
+//│ 		in (fun _lh_listcomp_fun² -> [LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹)])
+//│ 	in let _lh_listcomp_fun_ls_h¹ = 1
+//│ 	in (fun _lh_listcomp_fun³ -> [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun³(_lh_listcomp_fun_ls_t⁰)]))
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
@@ -375,6 +405,65 @@ nsoln 10
 //│ 	| LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1¹ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2¹))) && (_lh_safe_arg1¹ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2¹))) && safe_lh_₁(_lh_safe_arg1¹, (_lh_safe_arg2¹ + 1), _lh_safe_LH_C_1⁰))
 //│ 	| _  => error⁰}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ recursive consumer: gen_lh_₁
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ enumFromTo_lh_₁ -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ nsoln_lh_₁(10)
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let _lh_listcomp_fun_ls_t¹ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
+//│ 	in let _lh_listcomp_fun_ls_h¹ = a⁰
+//│ 	in (fun _lh_listcomp_fun_ls_h² -> (fun _lh_listcomp_fun² -> (fun _lh_listcomp_fun_ls_t² -> (fun _lh_listcomp_fun³ -> if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹))))) else (fun _lh_listcomp_fun_ls_h³ -> (fun _lh_listcomp_fun⁴ -> (fun _lh_listcomp_fun_ls_t³ -> (fun _lh_listcomp_fun⁵ -> _lh_listcomp_fun⁵(_lh_listcomp_fun_ls_t³)))))
+//│ def gen_lh_₁(_lh_gen_arg1⁰, _lh_gen_arg2⁰) = case _lh_gen_arg1⁰ of {
+//│ 	0  => [LH_C [LH_N] [LH_N]]
+//│ 	| _  => 
+//│ 		let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => 
+//│ 				let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> _lh_listcomp_fun_para¹(_lh_listcomp_fun_ls_h⁰, _lh_listcomp_fun¹, _lh_listcomp_fun_ls_t⁰, _lh_listcomp_fun⁰))
+//│ 				in _lh_listcomp_fun¹(enumFromTo_lh_₁(1, _lh_gen_arg2⁰))
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun⁰(gen_lh_₁((_lh_gen_arg1⁰ - 1), _lh_gen_arg2⁰))}
+//│ def length_lh_₁(ls⁰) = case ls⁰ of {
+//│ 	LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰))
+//│ 	| LH_N  => 0}
+//│ def nsoln_lh_₁(_lh_nsoln_arg1⁰) = length_lh_₁(gen_lh_₁(_lh_nsoln_arg1⁰, _lh_nsoln_arg1⁰))
+//│ def safe_lh_₁(_lh_safe_arg1⁰, _lh_safe_arg2⁰, _lh_safe_arg3⁰) = case _lh_safe_arg3⁰ of {
+//│ 	LH_N  => [True]
+//│ 	| LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && safe_lh_₁(_lh_safe_arg1⁰, (_lh_safe_arg2⁰ + 1), _lh_safe_LH_C_1⁰))
+//│ 	| _  => error⁰}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ nsoln_lh_₁(10)
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let _lh_listcomp_fun_ls_t¹ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
+//│ 	in let _lh_listcomp_fun_ls_h¹ = a⁰
+//│ 	in (fun _lh_listcomp_fun_ls_h² -> (fun _lh_listcomp_fun² -> (fun _lh_listcomp_fun_ls_t² -> (fun _lh_listcomp_fun³ -> if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹))))) else (fun _lh_listcomp_fun_ls_h³ -> (fun _lh_listcomp_fun⁴ -> (fun _lh_listcomp_fun_ls_t³ -> (fun _lh_listcomp_fun⁵ -> _lh_listcomp_fun⁵(_lh_listcomp_fun_ls_t³)))))
+//│ def gen_lh_₁(_lh_gen_arg1⁰, _lh_gen_arg2⁰) = case _lh_gen_arg1⁰ of {
+//│ 	0  => [LH_C [LH_N] [LH_N]]
+//│ 	| _  => 
+//│ 		let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => 
+//│ 				let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> _lh_listcomp_fun_para¹(_lh_listcomp_fun_ls_h⁰, _lh_listcomp_fun¹, _lh_listcomp_fun_ls_t⁰, _lh_listcomp_fun⁰))
+//│ 				in _lh_listcomp_fun¹(enumFromTo_lh_₁(1, _lh_gen_arg2⁰))
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun⁰(gen_lh_₁((_lh_gen_arg1⁰ - 1), _lh_gen_arg2⁰))}
+//│ def length_lh_₁(ls⁰) = case ls⁰ of {
+//│ 	LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰))
+//│ 	| LH_N  => 0}
+//│ def nsoln_lh_₁(_lh_nsoln_arg1⁰) = length_lh_₁(gen_lh_₁(_lh_nsoln_arg1⁰, _lh_nsoln_arg1⁰))
+//│ def safe_lh_₁(_lh_safe_arg1⁰, _lh_safe_arg2⁰, _lh_safe_arg3⁰) = case _lh_safe_arg3⁰ of {
+//│ 	LH_N  => [True]
+//│ 	| LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && safe_lh_₁(_lh_safe_arg1⁰, (_lh_safe_arg2⁰ + 1), _lh_safe_LH_C_1⁰))
+//│ 	| _  => error⁰}
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`

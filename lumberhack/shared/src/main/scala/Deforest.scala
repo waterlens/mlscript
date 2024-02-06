@@ -322,6 +322,7 @@ class Deforest(var debug: Boolean) {
   def freshVar(n: Ident)(using ExprId): ((ProdStratEnum & ToStrat[ProdVar] & TypevarWithBoundary), (ConsStratEnum & ToStrat[ConsVar] & TypevarWithBoundary)) =
     freshVar(n.pp(using InitPpConfig.showIuidOn))
   
+  val tailPosExprIds = mutable.Set.empty[ExprId]
   val callsInfo = (mutable.Set.empty[Ref], mutable.Map.empty[Ident, Set[Ref]])
   val ctorExprToType = mutable.Map.empty[ExprId, MkCtor]
   val dtorExprToType = mutable.Map.empty[ExprId, Destruct]
@@ -356,18 +357,19 @@ class Deforest(var debug: Boolean) {
 
   // NOTE: the thing is that, to get recursive knots, we need the program to tyoe check, but to make a polymorphic program to
   // type check, we need to do the duplication of multiple-usage definitions, so seems that these two things has to be done in two steps
-  def process(e: Expr)(using ctx: Ctx, calls: mutable.Set[Ref]): ProdStrat = trace(s"process ${e.uid}: ${e.pp(using InitPpConfig)}") {
+  def process(e: Expr, isTail: Boolean)(using ctx: Ctx, calls: mutable.Set[Ref]): ProdStrat = trace(s"process ${e.uid}: ${e.pp(using InitPpConfig)}") {
+    if isTail then tailPosExprIds += e.uid else ()
     val res: ProdStratEnum = e match
       case Call(primFun@Ref(lazyOrForce), e) if Set("lazy", "force", "lumberhack_obj_magic")(lazyOrForce.tree.name) =>
         // registerExprToType(primFun, freshVar("_lh_rigid_error_var")(using e.uid)._1.toStrat())
         // treat the above annotations as identity functions to keep fusion
-        process(e).s
+        process(e, false).s
       // adding exprid here to the mkctor types changes the knot tying result and makes type checking slow because
       // the `recursiveConstr` later will be changed, since mkctor type's eq test and hashCode value relies on the exprId
       case Call(Ref(fromLargeStr), Const(StrLit(largeStr))) if fromLargeStr.tree.name == "from_large_str" =>
         NoProd()(using e.uid)
       case Call(Ref(err), callee) if err.tree.name == "error" =>
-        process(callee.primIdize(using this, None))
+        process(callee.primIdize(using this, None), false)
         freshVar("_lh_rigid_error_var")(using e.uid)._1
       case Const(IntLit(_)) => prodInt(using noExprId)
       case Const(DecLit(_)) => prodFloat(using noExprId) // floating point numbers as integers type
@@ -414,34 +416,34 @@ class Deforest(var debug: Boolean) {
         ctx(id).s.copy()(Some(r))(using e.uid)
       } else ctx(id).s.copy()(None)(using e.uid)
       case Call(f, a) =>
-        val fp = process(f)
-        val ap = process(a)
+        val fp = process(f, false)
+        val ap = process(a, false)
         val sv = freshVar(s"${e.uid}_callres")(using e.uid)
         constrain(fp, ConsFun(ap, sv._2.toStrat())(using noExprId).toStrat())
         sv._1
       case ce@Ctor(name, args) =>
-        val ctorType = MkCtor(name, args.map(process))(using e.uid)
+        val ctorType = MkCtor(name, args.map(a => process(a, false)))(using e.uid)
         this.ctorExprToType += ce.uid -> ctorType.asInstanceOf[MkCtor]
         ctorType
       case me@Match(scrut, arms) =>
-        val sp = process(scrut)
+        val sp = process(scrut, false)
         val (detrs, bodies) = arms.map { (v, as, e) =>
           if v.name.isCapitalized then { // normal pattern
             val as_tys = as.map(a => a -> freshVar(a)(using noExprId))
-            val ep = process(e)(using ctx ++ as_tys.map(v => v._1 -> v._2._1.toStrat()))
+            val ep = process(e, true && isTail)(using ctx ++ as_tys.map(v => v._1 -> v._2._1.toStrat()))
             (Destructor(v, as_tys.map(a_ty => a_ty._2._2.toStrat())), ep)
           } else if v.name == "_" then { // id pattern or wildcard pattern ("_", id :: Nil (or Nil), armBodyExpr)
             val newIdCtx = as.headOption.map { newId =>
               val idVar = freshVar(newId)(using noExprId)
               (newId -> idVar._1.toStrat(), idVar._2.toStrat())
             }
-            val ep = process(e)(using ctx ++ newIdCtx.map(_._1))
+            val ep = process(e, true && isTail)(using ctx ++ newIdCtx.map(_._1))
             (Destructor(v, newIdCtx.map(_._2).toList), ep)
           } else if v.name.toIntOption.isDefined then { // int literal pattern: ("3", Nil, armBodyExpr)
-            val ep = process(e)
+            val ep = process(e, true && isTail)
             (Destructor(Var("Int"), Nil), ep)
           } else if v.name.matches("'.'") then {
-            val ep = process(e)
+            val ep = process(e, true && isTail)
             (Destructor(Var("Char"), Nil), ep)
           } else { lastWords(s"unreachable: unknown kind of match arm: ${v.name}") }
         }.unzip
@@ -455,30 +457,30 @@ class Deforest(var debug: Boolean) {
       case Function(param, body) =>
         val sv = freshVar(param)(using noExprId)
         ProdFun(sv._2.toStrat(),
-          process(body)(using ctx + (param -> sv._1.toStrat()))
+          process(body, false)(using ctx + (param -> sv._1.toStrat()))
         )(using e.uid)
       case IfThenElse(scrut, thenn, elze) =>
-        constrain(process(scrut), consBool(using noExprId).toStrat())
+        constrain(process(scrut, false), consBool(using noExprId).toStrat())
         val res = freshVar(s"${e.uid}_ifres")(using e.uid)
-        constrain(process(thenn), res._2.toStrat())
-        constrain(process(elze), res._2.toStrat())
+        constrain(process(thenn, true && isTail), res._2.toStrat())
+        constrain(process(elze, true && isTail), res._2.toStrat())
         res._1
       case LetIn(id, rhs, body) =>
         val v = freshVar(id)(using noExprId)
-        constrain(process(rhs)(using ctx + (id -> v._1.toStrat())), v._2.toStrat())
-        process(body)(using ctx + (id -> v._1.toStrat())).s
+        constrain(process(rhs, false)(using ctx + (id -> v._1.toStrat())), v._2.toStrat())
+        process(body, true && isTail)(using ctx + (id -> v._1.toStrat())).s
       case LetGroup(defs, body) =>
         assert(defs.nonEmpty)
         val vs = defs.keys.map(k => k -> freshVar(k)(using noExprId)).toMap
         given newCtx: Ctx = ctx ++ vs.mapValues(_._1.toStrat()).toMap
         defs.foreach { case (id, rhs) =>
-          val t = process(rhs)(using newCtx)
+          val t = process(rhs, false)(using newCtx)
           constrain(t, vs(id)._2.toStrat())
         }
-        process(body)(using newCtx).s
+        process(body, true && isTail)(using newCtx).s
       case Sequence(fst, snd) =>
-        process(fst)
-        process(snd).s
+        process(fst, false)
+        process(snd, true && isTail).s
 
     // res.toStrat()
     registerExprToType(e, res.toStrat())
@@ -495,14 +497,14 @@ class Deforest(var debug: Boolean) {
     p.contents.map {
       case L(ProgDef(id, body)) => {
         val calls = mutable.Set.empty[Ref]
-        val p = process(body)(using ctx, calls)
+        val p = process(body, true)(using ctx, calls)
         val v = vars(id).s
         constrain(p, ConsVar(v.uid, v.name)()(using noExprId).toStrat())
         callsInfo._2.addOne(id -> calls.toSet)
       }
       case R(e) => {
         val calls = mutable.Set.empty[Ref]
-        val topLevelProd = process(e)(using ctx, calls)
+        val topLevelProd = process(e, true)(using ctx, calls)
         constrain(topLevelProd, NoCons()(using noExprId).toStrat())
         callsInfo._1.addAll(calls)
       }

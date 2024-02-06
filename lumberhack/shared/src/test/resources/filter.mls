@@ -74,6 +74,48 @@ filter(C(0, C(5, C(2, C(4, N)))))(predicate)
 //│ def filter(ls¹) = ls¹
 //│ def predicate(x¹) = (x¹ > 3)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ filter
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ let t⁰ = 	
+//│ 	let t¹ = 	
+//│ 		let t² = 	
+//│ 			let t³ = (fun f⁰ -> [N])
+//│ 			in let h⁰ = 4
+//│ 			in (fun f¹ -> if f¹(h⁰) then [C h⁰ t³(f¹)] else t³(f¹))
+//│ 		in let h¹ = 2
+//│ 		in (fun f² -> if f²(h¹) then [C h¹ t²(f²)] else t²(f²))
+//│ 	in let h² = 5
+//│ 	in (fun f³ -> if f³(h²) then [C h² t¹(f³)] else t¹(f³))
+//│ in let h³ = 0
+//│ in if predicate(h³) then [C h³ t⁰(predicate)] else t⁰(predicate)
+//│ def filter(ls⁰) = ls⁰
+//│ def predicate(x⁰) = (x⁰ > 3)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ let t⁰ = 	
+//│ 	let t¹ = 	
+//│ 		let t² = 	
+//│ 			let t³ = (fun f⁰ -> [N])
+//│ 			in let h⁰ = 4
+//│ 			in (fun f¹ -> if f¹(h⁰) then [C h⁰ t³(f¹)] else t³(f¹))
+//│ 		in let h¹ = 2
+//│ 		in (fun f² -> if f²(h¹) then [C h¹ t²(f²)] else t²(f²))
+//│ 	in let h² = 5
+//│ 	in (fun f³ -> if f³(h²) then [C h² t¹(f³)] else t¹(f³))
+//│ in let h³ = 0
+//│ in if predicate(h³) then [C h³ t⁰(predicate)] else t⁰(predicate)
+//│ def filter(ls⁰) = ls⁰
+//│ def predicate(x⁰) = (x⁰ > 3)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -156,6 +198,58 @@ filter(l)(predicate)
 //│ 	in (fun f² -> if f²(h¹) then [C h¹ filter(t¹, f²)] else filter(t¹, f²))
 //│ def predicate(x¹) = (x¹ > 3)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ filter
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ l -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ l(predicate)
+//│ def filter(ls⁰) = ls⁰
+//│ def l = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = 	
+//│ 				let t³ = 	
+//│ 					let t⁴ = l
+//│ 					in let h⁰ = 1
+//│ 					in (fun f⁰ -> if f⁰(h⁰) then [C h⁰ t⁴(f⁰)] else t⁴(f⁰))
+//│ 				in let h¹ = 4
+//│ 				in (fun f¹ -> if f¹(h¹) then [C h¹ t³(f¹)] else t³(f¹))
+//│ 			in let h² = 2
+//│ 			in (fun f² -> if f²(h²) then [C h² t²(f²)] else t²(f²))
+//│ 		in let h³ = 5
+//│ 		in (fun f³ -> if f³(h³) then [C h³ t¹(f³)] else t¹(f³))
+//│ 	in let h⁴ = 0
+//│ 	in (fun f⁴ -> if f⁴(h⁴) then [C h⁴ t⁰(f⁴)] else t⁰(f⁴))
+//│ def predicate(x⁰) = (x⁰ > 3)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ l(predicate)
+//│ def filter(ls⁰) = ls⁰
+//│ def l = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = 	
+//│ 				let t³ = 	
+//│ 					let t⁴ = l
+//│ 					in let h⁰ = 1
+//│ 					in (fun f⁰ -> if f⁰(h⁰) then [C h⁰ t⁴(f⁰)] else t⁴(f⁰))
+//│ 				in let h¹ = 4
+//│ 				in (fun f¹ -> if f¹(h¹) then [C h¹ t³(f¹)] else t³(f¹))
+//│ 			in let h² = 2
+//│ 			in (fun f² -> if f²(h²) then [C h² t²(f²)] else t²(f²))
+//│ 		in let h³ = 5
+//│ 		in (fun f³ -> if f³(h³) then [C h³ t¹(f³)] else t¹(f³))
+//│ 	in let h⁴ = 0
+//│ 	in (fun f⁴ -> if f⁴(h⁴) then [C h⁴ t⁰(f⁴)] else t⁰(f⁴))
+//│ def predicate(x⁰) = (x⁰ > 3)
+//│ <<<<<<< after floating out <<<<<<<
 
 // WRONG: infinite list and recusive length match
 // :stdout
@@ -233,3 +327,33 @@ filter(l)(predicate)
 //│ def l = [C 0 [C 5 [C 2 [C 4 [C 1 l]]]]]
 //│ def predicate(x¹) = (x¹ > 3)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ filter(l, predicate)
+//│ def filter(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => (fun f⁰ -> 
+//│ 		let tail⁰ = case t⁰ of {
+//│ 			C hh⁰ tt⁰ => if f⁰(hh⁰) then [C hh⁰ filter(tt⁰, f⁰)] else filter(tt⁰, f⁰)}
+//│ 		in if f⁰(h⁰) then [C h⁰ tail⁰] else tail⁰)}
+//│ def l = [C 0 [C 5 [C 2 [C 4 [C 1 l]]]]]
+//│ def predicate(x⁰) = (x⁰ > 3)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ filter(l, predicate)
+//│ def filter(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => (fun f⁰ -> 
+//│ 		let tail⁰ = case t⁰ of {
+//│ 			C hh⁰ tt⁰ => if f⁰(hh⁰) then [C hh⁰ filter(tt⁰, f⁰)] else filter(tt⁰, f⁰)}
+//│ 		in if f⁰(h⁰) then [C h⁰ tail⁰] else tail⁰)}
+//│ def l = [C 0 [C 5 [C 2 [C 4 [C 1 l]]]]]
+//│ def predicate(x⁰) = (x⁰ > 3)
+//│ <<<<<<< after floating out <<<<<<<

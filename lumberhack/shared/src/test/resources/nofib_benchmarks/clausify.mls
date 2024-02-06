@@ -4086,6 +4086,738 @@ testClausify_nofib $ primId 10
 //│ def while_lh_₂(_lh_while_arg1³, _lh_while_arg2³, _lh_while_arg3³) = if _lh_while_arg1³(_lh_while_arg3³) then while_lh_₂(_lh_while_arg1³, _lh_while_arg2³, _lh_while_arg2³(_lh_while_arg3³)) else _lh_while_arg3³
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ concat_lh_₁, mappend_lh_₁, mappend_lh_₃, mappend_lh_₄, map_lh_₁, mappend_lh_₂, mappend_lh_₅, concat_lh_₂, foldr_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ splitHelper_lh_₁ -> 2
+//│ interleave_lh_₂ -> 3
+//│ copy_lh_₁ -> 2
+//│ interleave_lh_₁ -> 3
+//│ map_lh_₂ -> 3
+//│ split_lh_₁ -> 1
+//│ disp_lh_₁ -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testClausify_nofib_lh_₁(primId⁰(10))
+//│ def clauseHelper_lh_₁(_lh_clauseHelper_arg1⁰, _lh_clauseHelper_arg2⁰) = case _lh_clauseHelper_arg1⁰ of {
+//│ 	Dis _lh_clauseHelper_Dis_0⁰ _lh_clauseHelper_Dis_1⁰ => clauseHelper_lh_₁(_lh_clauseHelper_Dis_0⁰, clauseHelper_lh_₁(_lh_clauseHelper_Dis_1⁰, _lh_clauseHelper_arg2⁰))
+//│ 	| Sym _lh_clauseHelper_Sym_0⁰ => case _lh_clauseHelper_arg2⁰ of {
+//│ 		LH_P2 _lh_clauseHelper_LH_P2_0⁰ _lh_clauseHelper_LH_P2_1⁰ => [LH_P2 insert_lh_₃(_lh_clauseHelper_Sym_0⁰, _lh_clauseHelper_LH_P2_0⁰) _lh_clauseHelper_LH_P2_1⁰]
+//│ 		| _  => error⁰}
+//│ 	| Not _lh_clauseHelper_Not_0⁰ => case _lh_clauseHelper_Not_0⁰ of {
+//│ 		Sym _lh_clauseHelper_Sym_0¹ => case _lh_clauseHelper_arg2⁰ of {
+//│ 			LH_P2 _lh_clauseHelper_LH_P2_0¹ _lh_clauseHelper_LH_P2_1¹ => [LH_P2 _lh_clauseHelper_LH_P2_0¹ insert_lh_₂(_lh_clauseHelper_Sym_0¹, _lh_clauseHelper_LH_P2_1¹)]
+//│ 			| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def clause_lh_₁(_lh_clause_arg1⁰) = clauseHelper_lh_₁(_lh_clause_arg1⁰, [LH_P2 [LH_N] [LH_N]])
+//│ def clauses_lh_₁(_lh_clauses_arg1⁰) = (fun _lh_funcomp_x² -> (fun _lh_funcomp_x³ -> (fun _lh_funcomp_x⁴ -> (fun _lh_funcomp_x⁵ -> (fun _lh_funcomp_x⁶ -> (fun _lh_funcomp_x⁷ -> (fun _lh_funcomp_x⁸ -> map_lh_₂(disp_lh_₁, _lh_funcomp_x⁸, 99))(unicl_lh_₁(_lh_funcomp_x⁷)))(split_lh_₁(_lh_funcomp_x⁶)))(disin_lh_₁(_lh_funcomp_x⁵)))(negin_lh_₁(_lh_funcomp_x⁴)))(elim_lh_₁(_lh_funcomp_x³)))(parse_lh_₁(_lh_funcomp_x²)))(_lh_clauses_arg1⁰)
+//│ def concat_lh_₁(lss⁰) = lss⁰(99)
+//│ def concat_lh_₂(lss¹) = lss¹(99)
+//│ def conjunct_lh_₁(_lh_conjunct_arg1¹) = case _lh_conjunct_arg1¹ of {
+//│ 	Con _lh_conjunct_Con_0¹ _lh_conjunct_Con_1¹ => [True]
+//│ 	| _  => [False]}
+//│ def conjunct_lh_₂(_lh_conjunct_arg1⁰) = case _lh_conjunct_arg1⁰ of {
+//│ 	Con _lh_conjunct_Con_0⁰ _lh_conjunct_Con_1⁰ => [True]
+//│ 	| _  => [False]}
+//│ def contains_lh_₁(_lh_contains_arg1⁰, _lh_contains_arg2⁰) = case _lh_contains_arg2⁰ of {
+//│ 	LH_C _lh_contains_LH_C_0⁰ _lh_contains_LH_C_1⁰ => (polyEq⁰(_lh_contains_arg1⁰, _lh_contains_LH_C_0⁰) || contains_lh_₁(_lh_contains_arg1⁰, _lh_contains_LH_C_1⁰))
+//│ 	| LH_N  => [False]
+//│ 	| _  => error⁰}
+//│ def copy_lh_₁(_lh_copy_arg1⁰, _lh_copy_arg2⁰) = if (_lh_copy_arg1⁰ > 0) then 
+//│ 	let t⁰ = copy_lh_₁((_lh_copy_arg1⁰ - 1), _lh_copy_arg2⁰)
+//│ 	in let h⁰ = _lh_copy_arg2⁰
+//│ 	in (fun f⁰ -> 
+//│ 		let t¹ = t⁰(f⁰)
+//│ 		in let h¹ = f⁰(h⁰)
+//│ 		in (fun _lh_dummy⁰ -> h¹(t¹(99)))) else (fun f¹ -> (fun _lh_dummy¹ -> [LH_N]))
+//│ def copy_lh_₂(_lh_copy_arg1¹, _lh_copy_arg2¹) = if (_lh_copy_arg1¹ > 0) then [LH_C _lh_copy_arg2¹ copy_lh_₂((_lh_copy_arg1¹ - 1), _lh_copy_arg2¹)] else [LH_N]
+//│ def copy_lh_₃(_lh_copy_arg1², _lh_copy_arg2²) = if (_lh_copy_arg1² > 0) then [LH_C _lh_copy_arg2² copy_lh_₃((_lh_copy_arg1² - 1), _lh_copy_arg2²)] else [LH_N]
+//│ def disin_lh_₁(_lh_disin_arg1⁰) = case _lh_disin_arg1⁰ of {
+//│ 	Dis _lh_disin_Dis_0⁰ _lh_disin_Dis_1⁰ => case _lh_disin_Dis_1⁰ of {
+//│ 		Con _lh_disin_Con_0⁰ _lh_disin_Con_1⁰ => [Con disin_lh_₁([Dis _lh_disin_Dis_0⁰ _lh_disin_Con_0⁰]) disin_lh_₁([Dis _lh_disin_Dis_0⁰ _lh_disin_Con_1⁰])]
+//│ 		| _  => case _lh_disin_Dis_0⁰ of {
+//│ 			Con _lh_disin_Con_0¹ _lh_disin_Con_1¹ => [Con disin_lh_₁([Dis _lh_disin_Con_0¹ _lh_disin_Dis_1⁰]) disin_lh_₁([Dis _lh_disin_Con_1¹ _lh_disin_Dis_1⁰])]
+//│ 			| _  => 
+//│ 				let dp⁰ = disin_lh_₁(_lh_disin_Dis_0⁰)
+//│ 				in let dq⁰ = disin_lh_₁(_lh_disin_Dis_1⁰)
+//│ 				in if (conjunct_lh_₁(dp⁰) || conjunct_lh_₂(dq⁰)) then disin_lh_₁([Dis dp⁰ dq⁰]) else [Dis dp⁰ dq⁰]}}
+//│ 	| Con _lh_disin_Con_0² _lh_disin_Con_1² => [Con disin_lh_₁(_lh_disin_Con_0²) disin_lh_₁(_lh_disin_Con_1²)]
+//│ 	| _  => _lh_disin_arg1⁰}
+//│ def disp_lh_₁(_lh_disp_arg1⁰) = case _lh_disp_arg1⁰ of {
+//│ 	LH_P2 _lh_disp_LH_P2_0⁰ _lh_disp_LH_P2_1⁰ => interleave_lh_₂(_lh_disp_LH_P2_0⁰, spaces_lh_₁(length_lh_₁(_lh_disp_LH_P2_0⁰)), 
+//│ 		let t¹³ = 	
+//│ 			let t¹⁴ = (fun ys¹⁵ -> ys¹⁵)
+//│ 			in let h¹³ = '='
+//│ 			in (fun ys¹⁶ -> 
+//│ 				let t¹⁵ = t¹⁴(ys¹⁶)
+//│ 				in let h¹⁴ = h¹³
+//│ 				in (fun ys¹⁷ -> 
+//│ 					let t¹⁶ = t¹⁵(ys¹⁷)
+//│ 					in let h¹⁵ = h¹⁴
+//│ 					in (fun ys¹⁸ -> [LH_C h¹⁵ t¹⁶(ys¹⁸)])))
+//│ 		in let h¹⁶ = '<'
+//│ 		in (fun ys¹⁹ -> 
+//│ 			let t¹⁷ = t¹³(ys¹⁹)
+//│ 			in let h¹⁷ = h¹⁶
+//│ 			in (fun ys²⁰ -> 
+//│ 				let t¹⁸ = t¹⁷(ys²⁰)
+//│ 				in let h¹⁸ = h¹⁷
+//│ 				in (fun ys²¹ -> [LH_C h¹⁸ t¹⁸(ys²¹)]))), interleave_lh_₁(spaces_lh_₂(length_lh_₂(_lh_disp_LH_P2_1⁰)), _lh_disp_LH_P2_1⁰, 
+//│ 		let t¹⁹ = (fun ys²² -> ys²²)
+//│ 		in let h¹⁹ = 'n'
+//│ 		in (fun ys²³ -> 
+//│ 			let t²⁰ = t¹⁹(ys²³)
+//│ 			in let h²⁰ = h¹⁹
+//│ 			in (fun ys²⁴ -> [LH_C h²⁰ t²⁰(ys²⁴)]))))
+//│ 	| _  => error⁰}
+//│ def elim_lh_₁(_lh_elim_arg1⁰) = case _lh_elim_arg1⁰ of {
+//│ 	Sym _lh_elim_Sym_0⁰ => [Sym _lh_elim_Sym_0⁰]
+//│ 	| Not _lh_elim_Not_0⁰ => [Not elim_lh_₁(_lh_elim_Not_0⁰)]
+//│ 	| Dis _lh_elim_Dis_0⁰ _lh_elim_Dis_1⁰ => [Dis elim_lh_₁(_lh_elim_Dis_0⁰) elim_lh_₁(_lh_elim_Dis_1⁰)]
+//│ 	| Con _lh_elim_Con_0⁰ _lh_elim_Con_1⁰ => [Con elim_lh_₁(_lh_elim_Con_0⁰) elim_lh_₁(_lh_elim_Con_1⁰)]
+//│ 	| Imp _lh_elim_Imp_0⁰ _lh_elim_Imp_1⁰ => [Dis [Not elim_lh_₁(_lh_elim_Imp_0⁰)] elim_lh_₁(_lh_elim_Imp_1⁰)]
+//│ 	| Eqv _lh_elim_Eqv_0⁰ _lh_elim_Eqv_1⁰ => [Con elim_lh_₁([Imp _lh_elim_Eqv_0⁰ _lh_elim_Eqv_1⁰]) elim_lh_₁([Imp _lh_elim_Eqv_1⁰ _lh_elim_Eqv_0⁰])]
+//│ 	| _  => error⁰}
+//│ def foldr_lh_₁(f², i⁰, ls⁰) = ls⁰(f², i⁰)
+//│ def insert_lh_₁(_lh_insert_arg1², _lh_insert_arg2²) = case _lh_insert_arg2² of {
+//│ 	LH_N  => [LH_C _lh_insert_arg1² [LH_N]]
+//│ 	| LH_C _lh_insert_LH_C_0² _lh_insert_LH_C_1² => if polyLt⁰(_lh_insert_arg1², _lh_insert_LH_C_0²) then [LH_C _lh_insert_arg1² [LH_C _lh_insert_LH_C_0² _lh_insert_LH_C_1²]] else if polyGt⁰(_lh_insert_arg1², _lh_insert_LH_C_0²) then [LH_C _lh_insert_LH_C_0² insert_lh_₁(_lh_insert_arg1², _lh_insert_LH_C_1²)] else [LH_C _lh_insert_LH_C_0² _lh_insert_LH_C_1²]
+//│ 	| _  => error⁰}
+//│ def insert_lh_₂(_lh_insert_arg1¹, _lh_insert_arg2¹) = case _lh_insert_arg2¹ of {
+//│ 	LH_N  => [LH_C _lh_insert_arg1¹ [LH_N]]
+//│ 	| LH_C _lh_insert_LH_C_0¹ _lh_insert_LH_C_1¹ => if polyLt⁰(_lh_insert_arg1¹, _lh_insert_LH_C_0¹) then [LH_C _lh_insert_arg1¹ [LH_C _lh_insert_LH_C_0¹ _lh_insert_LH_C_1¹]] else if polyGt⁰(_lh_insert_arg1¹, _lh_insert_LH_C_0¹) then [LH_C _lh_insert_LH_C_0¹ insert_lh_₂(_lh_insert_arg1¹, _lh_insert_LH_C_1¹)] else [LH_C _lh_insert_LH_C_0¹ _lh_insert_LH_C_1¹]
+//│ 	| _  => error⁰}
+//│ def insert_lh_₃(_lh_insert_arg1⁰, _lh_insert_arg2⁰) = case _lh_insert_arg2⁰ of {
+//│ 	LH_N  => [LH_C _lh_insert_arg1⁰ [LH_N]]
+//│ 	| LH_C _lh_insert_LH_C_0⁰ _lh_insert_LH_C_1⁰ => if polyLt⁰(_lh_insert_arg1⁰, _lh_insert_LH_C_0⁰) then [LH_C _lh_insert_arg1⁰ [LH_C _lh_insert_LH_C_0⁰ _lh_insert_LH_C_1⁰]] else if polyGt⁰(_lh_insert_arg1⁰, _lh_insert_LH_C_0⁰) then [LH_C _lh_insert_LH_C_0⁰ insert_lh_₃(_lh_insert_arg1⁰, _lh_insert_LH_C_1⁰)] else [LH_C _lh_insert_LH_C_0⁰ _lh_insert_LH_C_1⁰]
+//│ 	| _  => error⁰}
+//│ def interleave_lh_₁(_lh_interleave_arg1⁰, _lh_interleave_arg2⁰) = case _lh_interleave_arg1⁰ of {
+//│ 	LH_C _lh_interleave_LH_C_0⁰ _lh_interleave_LH_C_1⁰ => 
+//│ 		let t² = interleave_lh_₁(_lh_interleave_arg2⁰, _lh_interleave_LH_C_1⁰)
+//│ 		in let h² = _lh_interleave_LH_C_0⁰
+//│ 		in (fun ys¹ -> 
+//│ 			let t³ = t²(ys¹)
+//│ 			in let h³ = h²
+//│ 			in (fun ys² -> 
+//│ 				let t⁴ = t³(ys²)
+//│ 				in let h⁴ = h³
+//│ 				in (fun ys³ -> [LH_C h⁴ t⁴(ys³)])))
+//│ 	| LH_N  => (fun ys⁴ -> ys⁴)
+//│ 	| _  => error⁰}
+//│ def interleave_lh_₂(_lh_interleave_arg1¹, _lh_interleave_arg2¹) = case _lh_interleave_arg1¹ of {
+//│ 	LH_C _lh_interleave_LH_C_0¹ _lh_interleave_LH_C_1¹ => 
+//│ 		let t⁶ = interleave_lh_₂(_lh_interleave_arg2¹, _lh_interleave_LH_C_1¹)
+//│ 		in let h⁶ = _lh_interleave_LH_C_0¹
+//│ 		in (fun ys⁶ -> 
+//│ 			let t⁷ = t⁶(ys⁶)
+//│ 			in let h⁷ = h⁶
+//│ 			in (fun ys⁷ -> 
+//│ 				let t⁸ = t⁷(ys⁷)
+//│ 				in let h⁸ = h⁷
+//│ 				in (fun ys⁸ -> 
+//│ 					let t⁹ = t⁸(ys⁸)
+//│ 					in let h⁹ = h⁸
+//│ 					in (fun ys⁹ -> [LH_C h⁹ t⁹(ys⁹)]))))
+//│ 	| LH_N  => (fun ys¹⁰ -> ys¹⁰)
+//│ 	| _  => error⁰}
+//│ def length_lh_₁(ls³) = case ls³ of {
+//│ 	LH_C h¹² t¹² => (1 + length_lh_₁(t¹²))
+//│ 	| LH_N  => 0}
+//│ def length_lh_₂(ls⁴) = case ls⁴ of {
+//│ 	LH_C h²¹ t²¹ => (1 + length_lh_₂(t²¹))
+//│ 	| LH_N  => 0}
+//│ def map_lh_₁(f⁵, ls²) = ls²(f⁵)
+//│ def map_lh_₂(f⁴, ls¹) = case ls¹ of {
+//│ 	LH_C h¹⁰ t¹⁰ => 
+//│ 		let t¹¹ = map_lh_₂(f⁴, t¹⁰)
+//│ 		in let h¹¹ = f⁴(h¹⁰)
+//│ 		in (fun _lh_dummy² -> h¹¹(t¹¹(99)))
+//│ 	| LH_N  => (fun _lh_dummy³ -> (fun ys¹⁴ -> ys¹⁴))}
+//│ def mappend_lh_₁(xs⁰, ys⁰) = xs⁰(ys⁰)
+//│ def mappend_lh_₂(xs², ys¹¹) = xs²(ys¹¹)
+//│ def mappend_lh_₃(xs¹, ys⁵) = xs¹(ys⁵)
+//│ def mappend_lh_₄(xs⁴, ys¹³) = xs⁴(ys¹³)
+//│ def mappend_lh_₅(xs³, ys¹²) = xs³(ys¹²)
+//│ def negin_lh_₁(_lh_negin_arg1⁰) = case _lh_negin_arg1⁰ of {
+//│ 	Not _lh_negin_Not_0⁰ => case _lh_negin_Not_0⁰ of {
+//│ 		Not _lh_negin_Not_0¹ => negin_lh_₁(_lh_negin_Not_0¹)
+//│ 		| Con _lh_negin_Con_0⁰ _lh_negin_Con_1⁰ => [Dis negin_lh_₁([Not _lh_negin_Con_0⁰]) negin_lh_₁([Not _lh_negin_Con_1⁰])]
+//│ 		| Dis _lh_negin_Dis_0⁰ _lh_negin_Dis_1⁰ => [Con negin_lh_₁([Not _lh_negin_Dis_0⁰]) negin_lh_₁([Not _lh_negin_Dis_1⁰])]
+//│ 		| _  => _lh_negin_arg1⁰}
+//│ 	| Dis _lh_negin_Dis_0¹ _lh_negin_Dis_1¹ => [Dis negin_lh_₁(_lh_negin_Dis_0¹) negin_lh_₁(_lh_negin_Dis_1¹)]
+//│ 	| Con _lh_negin_Con_0¹ _lh_negin_Con_1¹ => [Con negin_lh_₁(_lh_negin_Con_0¹) negin_lh_₁(_lh_negin_Con_1¹)]
+//│ 	| _  => _lh_negin_arg1⁰}
+//│ def opri_lh_₁(_lh_opri_arg1¹) = case _lh_opri_arg1¹ of {
+//│ 	'('  => 0
+//│ 	| '='  => 1
+//│ 	| '>'  => 2
+//│ 	| '|'  => 3
+//│ 	| '&'  => 4
+//│ 	| '~'  => 5
+//│ 	| _  => error⁰}
+//│ def opri_lh_₂(_lh_opri_arg1³) = case _lh_opri_arg1³ of {
+//│ 	'('  => 0
+//│ 	| '='  => 1
+//│ 	| '>'  => 2
+//│ 	| '|'  => 3
+//│ 	| '&'  => 4
+//│ 	| '~'  => 5
+//│ 	| _  => error⁰}
+//│ def opri_lh_₃(_lh_opri_arg1²) = case _lh_opri_arg1² of {
+//│ 	'('  => 0
+//│ 	| '='  => 1
+//│ 	| '>'  => 2
+//│ 	| '|'  => 3
+//│ 	| '&'  => 4
+//│ 	| '~'  => 5
+//│ 	| _  => error⁰}
+//│ def opri_lh_₄(_lh_opri_arg1⁰) = case _lh_opri_arg1⁰ of {
+//│ 	'('  => 0
+//│ 	| '='  => 1
+//│ 	| '>'  => 2
+//│ 	| '|'  => 3
+//│ 	| '&'  => 4
+//│ 	| '~'  => 5
+//│ 	| _  => error⁰}
+//│ def parseHelper_lh_₁(_lh_parseHelper_arg1⁰, _lh_parseHelper_arg2⁰) = case _lh_parseHelper_arg1⁰ of {
+//│ 	LH_N  => redstar_lh_₁(_lh_parseHelper_arg2⁰)
+//│ 	| LH_C _lh_parseHelper_LH_C_0⁰ _lh_parseHelper_LH_C_1⁰ => case _lh_parseHelper_LH_C_0⁰ of {
+//│ 		' '  => parseHelper_lh_₁(_lh_parseHelper_LH_C_1⁰, _lh_parseHelper_arg2⁰)
+//│ 		| '('  => parseHelper_lh_₁(_lh_parseHelper_LH_C_1⁰, [LH_C [Lex '('] _lh_parseHelper_arg2⁰])
+//│ 		| ')'  => 
+//│ 			let _lh_matchIdent⁰ = redstar_lh_₂(_lh_parseHelper_arg2⁰)
+//│ 			in case _lh_matchIdent⁰ of {
+//│ 				LH_C _lh_parseHelper_LH_C_0¹ _lh_parseHelper_LH_C_1¹ => case _lh_parseHelper_LH_C_1¹ of {
+//│ 					LH_C _lh_parseHelper_LH_C_0² _lh_parseHelper_LH_C_1² => case _lh_parseHelper_LH_C_0² of {
+//│ 						Lex _lh_parseHelper_Lex_0⁰ => case _lh_parseHelper_Lex_0⁰ of {
+//│ 							'('  => parseHelper_lh_₁(_lh_parseHelper_LH_C_1⁰, [LH_C _lh_parseHelper_LH_C_0¹ _lh_parseHelper_LH_C_1²])
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 		| _  => if (polyLeq⁰('a', _lh_parseHelper_LH_C_0⁰) && polyLeq⁰(_lh_parseHelper_LH_C_0⁰, 'z')) then parseHelper_lh_₁(_lh_parseHelper_LH_C_1⁰, [LH_C [Ast [Sym _lh_parseHelper_LH_C_0⁰]] _lh_parseHelper_arg2⁰]) else if (spri_lh_₁(_lh_parseHelper_arg2⁰) > opri_lh_₁(_lh_parseHelper_LH_C_0⁰)) then parseHelper_lh_₁([LH_C _lh_parseHelper_LH_C_0⁰ _lh_parseHelper_LH_C_1⁰], red_lh_₁(_lh_parseHelper_arg2⁰)) else parseHelper_lh_₁(_lh_parseHelper_LH_C_1⁰, [LH_C [Lex _lh_parseHelper_LH_C_0⁰] _lh_parseHelper_arg2⁰])}
+//│ 	| _  => error⁰}
+//│ def parse_lh_₁(_lh_parse_arg1⁰) = 
+//│ 	let _lh_matchIdent¹ = parseHelper_lh_₁(_lh_parse_arg1⁰, [LH_N])
+//│ 	in case _lh_matchIdent¹ of {
+//│ 		LH_C _lh_parse_LH_C_0⁰ _lh_parse_LH_C_1⁰ => case _lh_parse_LH_C_0⁰ of {
+//│ 			Ast _lh_parse_Ast_0⁰ => case _lh_parse_LH_C_1⁰ of {
+//│ 				LH_N  => _lh_parse_Ast_0⁰
+//│ 				| _  => error⁰}
+//│ 			| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ def red_lh_₁(_lh_red_arg1²) = case _lh_red_arg1² of {
+//│ 	LH_C _lh_red_LH_C_0¹² _lh_red_LH_C_1¹² => case _lh_red_LH_C_0¹² of {
+//│ 		Ast _lh_red_Ast_0¹⁰ => case _lh_red_LH_C_1¹² of {
+//│ 			LH_C _lh_red_LH_C_0¹³ _lh_red_LH_C_1¹³ => case _lh_red_LH_C_0¹³ of {
+//│ 				Lex _lh_red_Lex_0² => case _lh_red_Lex_0² of {
+//│ 					'='  => case _lh_red_LH_C_1¹³ of {
+//│ 						LH_C _lh_red_LH_C_0¹⁴ _lh_red_LH_C_1¹⁴ => case _lh_red_LH_C_0¹⁴ of {
+//│ 							Ast _lh_red_Ast_0¹¹ => [LH_C [Ast [Eqv _lh_red_Ast_0¹¹ _lh_red_Ast_0¹⁰]] _lh_red_LH_C_1¹⁴]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '>'  => case _lh_red_LH_C_1¹³ of {
+//│ 						LH_C _lh_red_LH_C_0¹⁵ _lh_red_LH_C_1¹⁵ => case _lh_red_LH_C_0¹⁵ of {
+//│ 							Ast _lh_red_Ast_0¹² => [LH_C [Ast [Imp _lh_red_Ast_0¹² _lh_red_Ast_0¹⁰]] _lh_red_LH_C_1¹⁵]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '|'  => case _lh_red_LH_C_1¹³ of {
+//│ 						LH_C _lh_red_LH_C_0¹⁶ _lh_red_LH_C_1¹⁶ => case _lh_red_LH_C_0¹⁶ of {
+//│ 							Ast _lh_red_Ast_0¹³ => [LH_C [Ast [Dis _lh_red_Ast_0¹³ _lh_red_Ast_0¹⁰]] _lh_red_LH_C_1¹⁶]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '&'  => case _lh_red_LH_C_1¹³ of {
+//│ 						LH_C _lh_red_LH_C_0¹⁷ _lh_red_LH_C_1¹⁷ => case _lh_red_LH_C_0¹⁷ of {
+//│ 							Ast _lh_red_Ast_0¹⁴ => [LH_C [Ast [Con _lh_red_Ast_0¹⁴ _lh_red_Ast_0¹⁰]] _lh_red_LH_C_1¹⁷]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '~'  => [LH_C [Ast [Not _lh_red_Ast_0¹⁰]] _lh_red_LH_C_1¹³]
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 			| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def red_lh_₂(_lh_red_arg1¹) = case _lh_red_arg1¹ of {
+//│ 	LH_C _lh_red_LH_C_0⁶ _lh_red_LH_C_1⁶ => case _lh_red_LH_C_0⁶ of {
+//│ 		Ast _lh_red_Ast_0⁵ => case _lh_red_LH_C_1⁶ of {
+//│ 			LH_C _lh_red_LH_C_0⁷ _lh_red_LH_C_1⁷ => case _lh_red_LH_C_0⁷ of {
+//│ 				Lex _lh_red_Lex_0¹ => case _lh_red_Lex_0¹ of {
+//│ 					'='  => case _lh_red_LH_C_1⁷ of {
+//│ 						LH_C _lh_red_LH_C_0⁸ _lh_red_LH_C_1⁸ => case _lh_red_LH_C_0⁸ of {
+//│ 							Ast _lh_red_Ast_0⁶ => [LH_C [Ast [Eqv _lh_red_Ast_0⁶ _lh_red_Ast_0⁵]] _lh_red_LH_C_1⁸]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '>'  => case _lh_red_LH_C_1⁷ of {
+//│ 						LH_C _lh_red_LH_C_0⁹ _lh_red_LH_C_1⁹ => case _lh_red_LH_C_0⁹ of {
+//│ 							Ast _lh_red_Ast_0⁷ => [LH_C [Ast [Imp _lh_red_Ast_0⁷ _lh_red_Ast_0⁵]] _lh_red_LH_C_1⁹]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '|'  => case _lh_red_LH_C_1⁷ of {
+//│ 						LH_C _lh_red_LH_C_0¹⁰ _lh_red_LH_C_1¹⁰ => case _lh_red_LH_C_0¹⁰ of {
+//│ 							Ast _lh_red_Ast_0⁸ => [LH_C [Ast [Dis _lh_red_Ast_0⁸ _lh_red_Ast_0⁵]] _lh_red_LH_C_1¹⁰]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '&'  => case _lh_red_LH_C_1⁷ of {
+//│ 						LH_C _lh_red_LH_C_0¹¹ _lh_red_LH_C_1¹¹ => case _lh_red_LH_C_0¹¹ of {
+//│ 							Ast _lh_red_Ast_0⁹ => [LH_C [Ast [Con _lh_red_Ast_0⁹ _lh_red_Ast_0⁵]] _lh_red_LH_C_1¹¹]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '~'  => [LH_C [Ast [Not _lh_red_Ast_0⁵]] _lh_red_LH_C_1⁷]
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 			| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def red_lh_₃(_lh_red_arg1⁰) = case _lh_red_arg1⁰ of {
+//│ 	LH_C _lh_red_LH_C_0⁰ _lh_red_LH_C_1⁰ => case _lh_red_LH_C_0⁰ of {
+//│ 		Ast _lh_red_Ast_0⁰ => case _lh_red_LH_C_1⁰ of {
+//│ 			LH_C _lh_red_LH_C_0¹ _lh_red_LH_C_1¹ => case _lh_red_LH_C_0¹ of {
+//│ 				Lex _lh_red_Lex_0⁰ => case _lh_red_Lex_0⁰ of {
+//│ 					'='  => case _lh_red_LH_C_1¹ of {
+//│ 						LH_C _lh_red_LH_C_0² _lh_red_LH_C_1² => case _lh_red_LH_C_0² of {
+//│ 							Ast _lh_red_Ast_0¹ => [LH_C [Ast [Eqv _lh_red_Ast_0¹ _lh_red_Ast_0⁰]] _lh_red_LH_C_1²]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '>'  => case _lh_red_LH_C_1¹ of {
+//│ 						LH_C _lh_red_LH_C_0³ _lh_red_LH_C_1³ => case _lh_red_LH_C_0³ of {
+//│ 							Ast _lh_red_Ast_0² => [LH_C [Ast [Imp _lh_red_Ast_0² _lh_red_Ast_0⁰]] _lh_red_LH_C_1³]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '|'  => case _lh_red_LH_C_1¹ of {
+//│ 						LH_C _lh_red_LH_C_0⁴ _lh_red_LH_C_1⁴ => case _lh_red_LH_C_0⁴ of {
+//│ 							Ast _lh_red_Ast_0³ => [LH_C [Ast [Dis _lh_red_Ast_0³ _lh_red_Ast_0⁰]] _lh_red_LH_C_1⁴]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '&'  => case _lh_red_LH_C_1¹ of {
+//│ 						LH_C _lh_red_LH_C_0⁵ _lh_red_LH_C_1⁵ => case _lh_red_LH_C_0⁵ of {
+//│ 							Ast _lh_red_Ast_0⁴ => [LH_C [Ast [Con _lh_red_Ast_0⁴ _lh_red_Ast_0⁰]] _lh_red_LH_C_1⁵]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '~'  => [LH_C [Ast [Not _lh_red_Ast_0⁰]] _lh_red_LH_C_1¹]
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 			| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def redstar_lh_₁(_lh_redstar_arg1⁰) = while_lh_₁((fun _lh_funcomp_x⁰ -> (0 /= spri_lh_₂(_lh_funcomp_x⁰))), red_lh_₂, _lh_redstar_arg1⁰)
+//│ def redstar_lh_₂(_lh_redstar_arg1¹) = while_lh_₂((fun _lh_funcomp_x¹ -> (0 /= spri_lh_₃(_lh_funcomp_x¹))), red_lh_₃, _lh_redstar_arg1¹)
+//│ def spaces_lh_₁(_lh_spaces_arg1¹) = copy_lh_₂(_lh_spaces_arg1¹, ' ')
+//│ def spaces_lh_₂(_lh_spaces_arg1⁰) = copy_lh_₃(_lh_spaces_arg1⁰, ' ')
+//│ def splitHelper_lh_₁(_lh_splitHelper_arg1⁰, _lh_splitHelper_arg2⁰) = case _lh_splitHelper_arg1⁰ of {
+//│ 	Con _lh_splitHelper_Con_0⁰ _lh_splitHelper_Con_1⁰ => splitHelper_lh_₁(_lh_splitHelper_Con_0⁰, splitHelper_lh_₁(_lh_splitHelper_Con_1⁰, _lh_splitHelper_arg2⁰))
+//│ 	| _  => 
+//│ 		let t⁵ = _lh_splitHelper_arg2⁰
+//│ 		in let h⁵ = _lh_splitHelper_arg1⁰
+//│ 		in (fun f³ -> (fun i¹ -> f³(h⁵, t⁵(f³, i¹))))}
+//│ def split_lh_₁(_lh_split_arg1⁰) = splitHelper_lh_₁(_lh_split_arg1⁰, (fun f⁶ -> (fun i² -> i²)))
+//│ def spri_lh_₁(_lh_spri_arg1²) = case _lh_spri_arg1² of {
+//│ 	LH_C _lh_spri_LH_C_0⁴ _lh_spri_LH_C_1⁴ => case _lh_spri_LH_C_0⁴ of {
+//│ 		Ast _lh_spri_Ast_0² => case _lh_spri_LH_C_1⁴ of {
+//│ 			LH_C _lh_spri_LH_C_0⁵ _lh_spri_LH_C_1⁵ => case _lh_spri_LH_C_0⁵ of {
+//│ 				Lex _lh_spri_Lex_0² => opri_lh_₂(_lh_spri_Lex_0²)
+//│ 				| _  => 0}
+//│ 			| _  => 0}
+//│ 		| _  => 0}
+//│ 	| _  => 0}
+//│ def spri_lh_₂(_lh_spri_arg1¹) = case _lh_spri_arg1¹ of {
+//│ 	LH_C _lh_spri_LH_C_0² _lh_spri_LH_C_1² => case _lh_spri_LH_C_0² of {
+//│ 		Ast _lh_spri_Ast_0¹ => case _lh_spri_LH_C_1² of {
+//│ 			LH_C _lh_spri_LH_C_0³ _lh_spri_LH_C_1³ => case _lh_spri_LH_C_0³ of {
+//│ 				Lex _lh_spri_Lex_0¹ => opri_lh_₃(_lh_spri_Lex_0¹)
+//│ 				| _  => 0}
+//│ 			| _  => 0}
+//│ 		| _  => 0}
+//│ 	| _  => 0}
+//│ def spri_lh_₃(_lh_spri_arg1⁰) = case _lh_spri_arg1⁰ of {
+//│ 	LH_C _lh_spri_LH_C_0⁰ _lh_spri_LH_C_1⁰ => case _lh_spri_LH_C_0⁰ of {
+//│ 		Ast _lh_spri_Ast_0⁰ => case _lh_spri_LH_C_1⁰ of {
+//│ 			LH_C _lh_spri_LH_C_0¹ _lh_spri_LH_C_1¹ => case _lh_spri_LH_C_0¹ of {
+//│ 				Lex _lh_spri_Lex_0⁰ => opri_lh_₄(_lh_spri_Lex_0⁰)
+//│ 				| _  => 0}
+//│ 			| _  => 0}
+//│ 		| _  => 0}
+//│ 	| _  => 0}
+//│ def tautclause_lh_₁(_lh_tautclause_arg1⁰) = case _lh_tautclause_arg1⁰ of {
+//│ 	LH_P2 _lh_tautclause_LH_P2_0⁰ _lh_tautclause_LH_P2_1⁰ => polyNeq⁰(
+//│ 		let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => if contains_lh_₁(_lh_listcomp_fun_ls_h⁰, _lh_tautclause_LH_P2_1⁰) then [LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)] else _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun⁰(_lh_tautclause_LH_P2_0⁰), [LH_N])
+//│ 	| _  => error⁰}
+//│ def testClausify_nofib_lh_₁(_lh_testClausify_nofib_arg1⁰) = 
+//│ 	let xs⁵ = copy_lh_₁(_lh_testClausify_nofib_arg1⁰, [LH_C '(' [LH_C 'a' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'a' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'a' [LH_C ')' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C '(' [LH_C 'a' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'a' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'a' [LH_C ')' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C '(' [LH_C 'a' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'a' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'a' [LH_C ')' [LH_N]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]])
+//│ 	in xs⁵(clauses_lh_₁, 99)
+//│ def uniclHelper_lh_₁(_lh_uniclHelper_arg1⁰, _lh_uniclHelper_arg2⁰) = 
+//│ 	let cp⁰ = clause_lh_₁(_lh_uniclHelper_arg1⁰)
+//│ 	in if tautclause_lh_₁(cp⁰) then _lh_uniclHelper_arg2⁰ else insert_lh_₁(cp⁰, _lh_uniclHelper_arg2⁰)
+//│ def unicl_lh_₁(_lh_unicl_arg1⁰) = _lh_unicl_arg1⁰(uniclHelper_lh_₁, [LH_N])
+//│ def while_lh_₁(_lh_while_arg1⁰, _lh_while_arg2⁰, _lh_while_arg3⁰) = if _lh_while_arg1⁰(_lh_while_arg3⁰) then while_lh_₁(_lh_while_arg1⁰, _lh_while_arg2⁰, _lh_while_arg2⁰(_lh_while_arg3⁰)) else _lh_while_arg3⁰
+//│ def while_lh_₂(_lh_while_arg1¹, _lh_while_arg2¹, _lh_while_arg3¹) = if _lh_while_arg1¹(_lh_while_arg3¹) then while_lh_₂(_lh_while_arg1¹, _lh_while_arg2¹, _lh_while_arg2¹(_lh_while_arg3¹)) else _lh_while_arg3¹
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testClausify_nofib_lh_₁(primId⁰(10))
+//│ def clauseHelper_lh_₁(_lh_clauseHelper_arg1⁰, _lh_clauseHelper_arg2⁰) = case _lh_clauseHelper_arg1⁰ of {
+//│ 	Dis _lh_clauseHelper_Dis_0⁰ _lh_clauseHelper_Dis_1⁰ => clauseHelper_lh_₁(_lh_clauseHelper_Dis_0⁰, clauseHelper_lh_₁(_lh_clauseHelper_Dis_1⁰, _lh_clauseHelper_arg2⁰))
+//│ 	| Sym _lh_clauseHelper_Sym_0⁰ => case _lh_clauseHelper_arg2⁰ of {
+//│ 		LH_P2 _lh_clauseHelper_LH_P2_0⁰ _lh_clauseHelper_LH_P2_1⁰ => [LH_P2 insert_lh_₃(_lh_clauseHelper_Sym_0⁰, _lh_clauseHelper_LH_P2_0⁰) _lh_clauseHelper_LH_P2_1⁰]
+//│ 		| _  => error⁰}
+//│ 	| Not _lh_clauseHelper_Not_0⁰ => case _lh_clauseHelper_Not_0⁰ of {
+//│ 		Sym _lh_clauseHelper_Sym_0¹ => case _lh_clauseHelper_arg2⁰ of {
+//│ 			LH_P2 _lh_clauseHelper_LH_P2_0¹ _lh_clauseHelper_LH_P2_1¹ => [LH_P2 _lh_clauseHelper_LH_P2_0¹ insert_lh_₂(_lh_clauseHelper_Sym_0¹, _lh_clauseHelper_LH_P2_1¹)]
+//│ 			| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def clause_lh_₁(_lh_clause_arg1⁰) = clauseHelper_lh_₁(_lh_clause_arg1⁰, [LH_P2 [LH_N] [LH_N]])
+//│ def clauses_lh_₁(_lh_clauses_arg1⁰) = (fun _lh_funcomp_x² -> (fun _lh_funcomp_x³ -> (fun _lh_funcomp_x⁴ -> (fun _lh_funcomp_x⁵ -> (fun _lh_funcomp_x⁶ -> (fun _lh_funcomp_x⁷ -> (fun _lh_funcomp_x⁸ -> map_lh_₂(disp_lh_₁, _lh_funcomp_x⁸, 99))(unicl_lh_₁(_lh_funcomp_x⁷)))(split_lh_₁(_lh_funcomp_x⁶)))(disin_lh_₁(_lh_funcomp_x⁵)))(negin_lh_₁(_lh_funcomp_x⁴)))(elim_lh_₁(_lh_funcomp_x³)))(parse_lh_₁(_lh_funcomp_x²)))(_lh_clauses_arg1⁰)
+//│ def concat_lh_₁(lss⁰) = lss⁰(99)
+//│ def concat_lh_₂(lss¹) = lss¹(99)
+//│ def conjunct_lh_₁(_lh_conjunct_arg1¹) = case _lh_conjunct_arg1¹ of {
+//│ 	Con _lh_conjunct_Con_0¹ _lh_conjunct_Con_1¹ => [True]
+//│ 	| _  => [False]}
+//│ def conjunct_lh_₂(_lh_conjunct_arg1⁰) = case _lh_conjunct_arg1⁰ of {
+//│ 	Con _lh_conjunct_Con_0⁰ _lh_conjunct_Con_1⁰ => [True]
+//│ 	| _  => [False]}
+//│ def contains_lh_₁(_lh_contains_arg1⁰, _lh_contains_arg2⁰) = case _lh_contains_arg2⁰ of {
+//│ 	LH_C _lh_contains_LH_C_0⁰ _lh_contains_LH_C_1⁰ => (polyEq⁰(_lh_contains_arg1⁰, _lh_contains_LH_C_0⁰) || contains_lh_₁(_lh_contains_arg1⁰, _lh_contains_LH_C_1⁰))
+//│ 	| LH_N  => [False]
+//│ 	| _  => error⁰}
+//│ def copy_lh_₁(_lh_copy_arg1⁰, _lh_copy_arg2⁰) = if (_lh_copy_arg1⁰ > 0) then 
+//│ 	let t⁰ = copy_lh_₁((_lh_copy_arg1⁰ - 1), _lh_copy_arg2⁰)
+//│ 	in let h⁰ = _lh_copy_arg2⁰
+//│ 	in (fun f⁰ -> 
+//│ 		let t¹ = t⁰(f⁰)
+//│ 		in let h¹ = f⁰(h⁰)
+//│ 		in (fun _lh_dummy⁰ -> h¹(t¹(99)))) else (fun f¹ -> (fun _lh_dummy¹ -> [LH_N]))
+//│ def copy_lh_₂(_lh_copy_arg1¹, _lh_copy_arg2¹) = if (_lh_copy_arg1¹ > 0) then [LH_C _lh_copy_arg2¹ copy_lh_₂((_lh_copy_arg1¹ - 1), _lh_copy_arg2¹)] else [LH_N]
+//│ def copy_lh_₃(_lh_copy_arg1², _lh_copy_arg2²) = if (_lh_copy_arg1² > 0) then [LH_C _lh_copy_arg2² copy_lh_₃((_lh_copy_arg1² - 1), _lh_copy_arg2²)] else [LH_N]
+//│ def disin_lh_₁(_lh_disin_arg1⁰) = case _lh_disin_arg1⁰ of {
+//│ 	Dis _lh_disin_Dis_0⁰ _lh_disin_Dis_1⁰ => case _lh_disin_Dis_1⁰ of {
+//│ 		Con _lh_disin_Con_0⁰ _lh_disin_Con_1⁰ => [Con disin_lh_₁([Dis _lh_disin_Dis_0⁰ _lh_disin_Con_0⁰]) disin_lh_₁([Dis _lh_disin_Dis_0⁰ _lh_disin_Con_1⁰])]
+//│ 		| _  => case _lh_disin_Dis_0⁰ of {
+//│ 			Con _lh_disin_Con_0¹ _lh_disin_Con_1¹ => [Con disin_lh_₁([Dis _lh_disin_Con_0¹ _lh_disin_Dis_1⁰]) disin_lh_₁([Dis _lh_disin_Con_1¹ _lh_disin_Dis_1⁰])]
+//│ 			| _  => 
+//│ 				let dp⁰ = disin_lh_₁(_lh_disin_Dis_0⁰)
+//│ 				in let dq⁰ = disin_lh_₁(_lh_disin_Dis_1⁰)
+//│ 				in if (conjunct_lh_₁(dp⁰) || conjunct_lh_₂(dq⁰)) then disin_lh_₁([Dis dp⁰ dq⁰]) else [Dis dp⁰ dq⁰]}}
+//│ 	| Con _lh_disin_Con_0² _lh_disin_Con_1² => [Con disin_lh_₁(_lh_disin_Con_0²) disin_lh_₁(_lh_disin_Con_1²)]
+//│ 	| _  => _lh_disin_arg1⁰}
+//│ def disp_lh_₁(_lh_disp_arg1⁰) = case _lh_disp_arg1⁰ of {
+//│ 	LH_P2 _lh_disp_LH_P2_0⁰ _lh_disp_LH_P2_1⁰ => interleave_lh_₂(_lh_disp_LH_P2_0⁰, spaces_lh_₁(length_lh_₁(_lh_disp_LH_P2_0⁰)), 
+//│ 		let t¹³ = 	
+//│ 			let t¹⁴ = (fun ys¹⁵ -> ys¹⁵)
+//│ 			in let h¹³ = '='
+//│ 			in (fun ys¹⁶ -> 
+//│ 				let t¹⁵ = t¹⁴(ys¹⁶)
+//│ 				in let h¹⁴ = h¹³
+//│ 				in (fun ys¹⁷ -> 
+//│ 					let t¹⁶ = t¹⁵(ys¹⁷)
+//│ 					in let h¹⁵ = h¹⁴
+//│ 					in (fun ys¹⁸ -> [LH_C h¹⁵ t¹⁶(ys¹⁸)])))
+//│ 		in let h¹⁶ = '<'
+//│ 		in (fun ys¹⁹ -> 
+//│ 			let t¹⁷ = t¹³(ys¹⁹)
+//│ 			in let h¹⁷ = h¹⁶
+//│ 			in (fun ys²⁰ -> 
+//│ 				let t¹⁸ = t¹⁷(ys²⁰)
+//│ 				in let h¹⁸ = h¹⁷
+//│ 				in (fun ys²¹ -> [LH_C h¹⁸ t¹⁸(ys²¹)]))), interleave_lh_₁(spaces_lh_₂(length_lh_₂(_lh_disp_LH_P2_1⁰)), _lh_disp_LH_P2_1⁰, 
+//│ 		let t¹⁹ = (fun ys²² -> ys²²)
+//│ 		in let h¹⁹ = 'n'
+//│ 		in (fun ys²³ -> 
+//│ 			let t²⁰ = t¹⁹(ys²³)
+//│ 			in let h²⁰ = h¹⁹
+//│ 			in (fun ys²⁴ -> [LH_C h²⁰ t²⁰(ys²⁴)]))))
+//│ 	| _  => error⁰}
+//│ def elim_lh_₁(_lh_elim_arg1⁰) = case _lh_elim_arg1⁰ of {
+//│ 	Sym _lh_elim_Sym_0⁰ => [Sym _lh_elim_Sym_0⁰]
+//│ 	| Not _lh_elim_Not_0⁰ => [Not elim_lh_₁(_lh_elim_Not_0⁰)]
+//│ 	| Dis _lh_elim_Dis_0⁰ _lh_elim_Dis_1⁰ => [Dis elim_lh_₁(_lh_elim_Dis_0⁰) elim_lh_₁(_lh_elim_Dis_1⁰)]
+//│ 	| Con _lh_elim_Con_0⁰ _lh_elim_Con_1⁰ => [Con elim_lh_₁(_lh_elim_Con_0⁰) elim_lh_₁(_lh_elim_Con_1⁰)]
+//│ 	| Imp _lh_elim_Imp_0⁰ _lh_elim_Imp_1⁰ => [Dis [Not elim_lh_₁(_lh_elim_Imp_0⁰)] elim_lh_₁(_lh_elim_Imp_1⁰)]
+//│ 	| Eqv _lh_elim_Eqv_0⁰ _lh_elim_Eqv_1⁰ => [Con elim_lh_₁([Imp _lh_elim_Eqv_0⁰ _lh_elim_Eqv_1⁰]) elim_lh_₁([Imp _lh_elim_Eqv_1⁰ _lh_elim_Eqv_0⁰])]
+//│ 	| _  => error⁰}
+//│ def foldr_lh_₁(f², i⁰, ls⁰) = ls⁰(f², i⁰)
+//│ def insert_lh_₁(_lh_insert_arg1², _lh_insert_arg2²) = case _lh_insert_arg2² of {
+//│ 	LH_N  => [LH_C _lh_insert_arg1² [LH_N]]
+//│ 	| LH_C _lh_insert_LH_C_0² _lh_insert_LH_C_1² => if polyLt⁰(_lh_insert_arg1², _lh_insert_LH_C_0²) then [LH_C _lh_insert_arg1² [LH_C _lh_insert_LH_C_0² _lh_insert_LH_C_1²]] else if polyGt⁰(_lh_insert_arg1², _lh_insert_LH_C_0²) then [LH_C _lh_insert_LH_C_0² insert_lh_₁(_lh_insert_arg1², _lh_insert_LH_C_1²)] else [LH_C _lh_insert_LH_C_0² _lh_insert_LH_C_1²]
+//│ 	| _  => error⁰}
+//│ def insert_lh_₂(_lh_insert_arg1¹, _lh_insert_arg2¹) = case _lh_insert_arg2¹ of {
+//│ 	LH_N  => [LH_C _lh_insert_arg1¹ [LH_N]]
+//│ 	| LH_C _lh_insert_LH_C_0¹ _lh_insert_LH_C_1¹ => if polyLt⁰(_lh_insert_arg1¹, _lh_insert_LH_C_0¹) then [LH_C _lh_insert_arg1¹ [LH_C _lh_insert_LH_C_0¹ _lh_insert_LH_C_1¹]] else if polyGt⁰(_lh_insert_arg1¹, _lh_insert_LH_C_0¹) then [LH_C _lh_insert_LH_C_0¹ insert_lh_₂(_lh_insert_arg1¹, _lh_insert_LH_C_1¹)] else [LH_C _lh_insert_LH_C_0¹ _lh_insert_LH_C_1¹]
+//│ 	| _  => error⁰}
+//│ def insert_lh_₃(_lh_insert_arg1⁰, _lh_insert_arg2⁰) = case _lh_insert_arg2⁰ of {
+//│ 	LH_N  => [LH_C _lh_insert_arg1⁰ [LH_N]]
+//│ 	| LH_C _lh_insert_LH_C_0⁰ _lh_insert_LH_C_1⁰ => if polyLt⁰(_lh_insert_arg1⁰, _lh_insert_LH_C_0⁰) then [LH_C _lh_insert_arg1⁰ [LH_C _lh_insert_LH_C_0⁰ _lh_insert_LH_C_1⁰]] else if polyGt⁰(_lh_insert_arg1⁰, _lh_insert_LH_C_0⁰) then [LH_C _lh_insert_LH_C_0⁰ insert_lh_₃(_lh_insert_arg1⁰, _lh_insert_LH_C_1⁰)] else [LH_C _lh_insert_LH_C_0⁰ _lh_insert_LH_C_1⁰]
+//│ 	| _  => error⁰}
+//│ def interleave_lh_₁(_lh_interleave_arg1⁰, _lh_interleave_arg2⁰) = case _lh_interleave_arg1⁰ of {
+//│ 	LH_C _lh_interleave_LH_C_0⁰ _lh_interleave_LH_C_1⁰ => 
+//│ 		let t² = interleave_lh_₁(_lh_interleave_arg2⁰, _lh_interleave_LH_C_1⁰)
+//│ 		in let h² = _lh_interleave_LH_C_0⁰
+//│ 		in (fun ys¹ -> 
+//│ 			let t³ = t²(ys¹)
+//│ 			in let h³ = h²
+//│ 			in (fun ys² -> 
+//│ 				let t⁴ = t³(ys²)
+//│ 				in let h⁴ = h³
+//│ 				in (fun ys³ -> [LH_C h⁴ t⁴(ys³)])))
+//│ 	| LH_N  => (fun ys⁴ -> ys⁴)
+//│ 	| _  => error⁰}
+//│ def interleave_lh_₂(_lh_interleave_arg1¹, _lh_interleave_arg2¹) = case _lh_interleave_arg1¹ of {
+//│ 	LH_C _lh_interleave_LH_C_0¹ _lh_interleave_LH_C_1¹ => 
+//│ 		let t⁶ = interleave_lh_₂(_lh_interleave_arg2¹, _lh_interleave_LH_C_1¹)
+//│ 		in let h⁶ = _lh_interleave_LH_C_0¹
+//│ 		in (fun ys⁶ -> 
+//│ 			let t⁷ = t⁶(ys⁶)
+//│ 			in let h⁷ = h⁶
+//│ 			in (fun ys⁷ -> 
+//│ 				let t⁸ = t⁷(ys⁷)
+//│ 				in let h⁸ = h⁷
+//│ 				in (fun ys⁸ -> 
+//│ 					let t⁹ = t⁸(ys⁸)
+//│ 					in let h⁹ = h⁸
+//│ 					in (fun ys⁹ -> [LH_C h⁹ t⁹(ys⁹)]))))
+//│ 	| LH_N  => (fun ys¹⁰ -> ys¹⁰)
+//│ 	| _  => error⁰}
+//│ def length_lh_₁(ls³) = case ls³ of {
+//│ 	LH_C h¹² t¹² => (1 + length_lh_₁(t¹²))
+//│ 	| LH_N  => 0}
+//│ def length_lh_₂(ls⁴) = case ls⁴ of {
+//│ 	LH_C h²¹ t²¹ => (1 + length_lh_₂(t²¹))
+//│ 	| LH_N  => 0}
+//│ def map_lh_₁(f⁵, ls²) = ls²(f⁵)
+//│ def map_lh_₂(f⁴, ls¹, _lh_popOutId_0⁰) = case ls¹ of {
+//│ 	LH_C h¹⁰ t¹⁰ => 
+//│ 		let t¹¹ = map_lh_₂(f⁴, t¹⁰)
+//│ 		in let h¹¹ = f⁴(h¹⁰)
+//│ 		in h¹¹(t¹¹(99))
+//│ 	| LH_N  => (fun ys¹⁴ -> ys¹⁴)}
+//│ def mappend_lh_₁(xs⁰, ys⁰) = xs⁰(ys⁰)
+//│ def mappend_lh_₂(xs², ys¹¹) = xs²(ys¹¹)
+//│ def mappend_lh_₃(xs¹, ys⁵) = xs¹(ys⁵)
+//│ def mappend_lh_₄(xs⁴, ys¹³) = xs⁴(ys¹³)
+//│ def mappend_lh_₅(xs³, ys¹²) = xs³(ys¹²)
+//│ def negin_lh_₁(_lh_negin_arg1⁰) = case _lh_negin_arg1⁰ of {
+//│ 	Not _lh_negin_Not_0⁰ => case _lh_negin_Not_0⁰ of {
+//│ 		Not _lh_negin_Not_0¹ => negin_lh_₁(_lh_negin_Not_0¹)
+//│ 		| Con _lh_negin_Con_0⁰ _lh_negin_Con_1⁰ => [Dis negin_lh_₁([Not _lh_negin_Con_0⁰]) negin_lh_₁([Not _lh_negin_Con_1⁰])]
+//│ 		| Dis _lh_negin_Dis_0⁰ _lh_negin_Dis_1⁰ => [Con negin_lh_₁([Not _lh_negin_Dis_0⁰]) negin_lh_₁([Not _lh_negin_Dis_1⁰])]
+//│ 		| _  => _lh_negin_arg1⁰}
+//│ 	| Dis _lh_negin_Dis_0¹ _lh_negin_Dis_1¹ => [Dis negin_lh_₁(_lh_negin_Dis_0¹) negin_lh_₁(_lh_negin_Dis_1¹)]
+//│ 	| Con _lh_negin_Con_0¹ _lh_negin_Con_1¹ => [Con negin_lh_₁(_lh_negin_Con_0¹) negin_lh_₁(_lh_negin_Con_1¹)]
+//│ 	| _  => _lh_negin_arg1⁰}
+//│ def opri_lh_₁(_lh_opri_arg1¹) = case _lh_opri_arg1¹ of {
+//│ 	'('  => 0
+//│ 	| '='  => 1
+//│ 	| '>'  => 2
+//│ 	| '|'  => 3
+//│ 	| '&'  => 4
+//│ 	| '~'  => 5
+//│ 	| _  => error⁰}
+//│ def opri_lh_₂(_lh_opri_arg1³) = case _lh_opri_arg1³ of {
+//│ 	'('  => 0
+//│ 	| '='  => 1
+//│ 	| '>'  => 2
+//│ 	| '|'  => 3
+//│ 	| '&'  => 4
+//│ 	| '~'  => 5
+//│ 	| _  => error⁰}
+//│ def opri_lh_₃(_lh_opri_arg1²) = case _lh_opri_arg1² of {
+//│ 	'('  => 0
+//│ 	| '='  => 1
+//│ 	| '>'  => 2
+//│ 	| '|'  => 3
+//│ 	| '&'  => 4
+//│ 	| '~'  => 5
+//│ 	| _  => error⁰}
+//│ def opri_lh_₄(_lh_opri_arg1⁰) = case _lh_opri_arg1⁰ of {
+//│ 	'('  => 0
+//│ 	| '='  => 1
+//│ 	| '>'  => 2
+//│ 	| '|'  => 3
+//│ 	| '&'  => 4
+//│ 	| '~'  => 5
+//│ 	| _  => error⁰}
+//│ def parseHelper_lh_₁(_lh_parseHelper_arg1⁰, _lh_parseHelper_arg2⁰) = case _lh_parseHelper_arg1⁰ of {
+//│ 	LH_N  => redstar_lh_₁(_lh_parseHelper_arg2⁰)
+//│ 	| LH_C _lh_parseHelper_LH_C_0⁰ _lh_parseHelper_LH_C_1⁰ => case _lh_parseHelper_LH_C_0⁰ of {
+//│ 		' '  => parseHelper_lh_₁(_lh_parseHelper_LH_C_1⁰, _lh_parseHelper_arg2⁰)
+//│ 		| '('  => parseHelper_lh_₁(_lh_parseHelper_LH_C_1⁰, [LH_C [Lex '('] _lh_parseHelper_arg2⁰])
+//│ 		| ')'  => 
+//│ 			let _lh_matchIdent⁰ = redstar_lh_₂(_lh_parseHelper_arg2⁰)
+//│ 			in case _lh_matchIdent⁰ of {
+//│ 				LH_C _lh_parseHelper_LH_C_0¹ _lh_parseHelper_LH_C_1¹ => case _lh_parseHelper_LH_C_1¹ of {
+//│ 					LH_C _lh_parseHelper_LH_C_0² _lh_parseHelper_LH_C_1² => case _lh_parseHelper_LH_C_0² of {
+//│ 						Lex _lh_parseHelper_Lex_0⁰ => case _lh_parseHelper_Lex_0⁰ of {
+//│ 							'('  => parseHelper_lh_₁(_lh_parseHelper_LH_C_1⁰, [LH_C _lh_parseHelper_LH_C_0¹ _lh_parseHelper_LH_C_1²])
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 		| _  => if (polyLeq⁰('a', _lh_parseHelper_LH_C_0⁰) && polyLeq⁰(_lh_parseHelper_LH_C_0⁰, 'z')) then parseHelper_lh_₁(_lh_parseHelper_LH_C_1⁰, [LH_C [Ast [Sym _lh_parseHelper_LH_C_0⁰]] _lh_parseHelper_arg2⁰]) else if (spri_lh_₁(_lh_parseHelper_arg2⁰) > opri_lh_₁(_lh_parseHelper_LH_C_0⁰)) then parseHelper_lh_₁([LH_C _lh_parseHelper_LH_C_0⁰ _lh_parseHelper_LH_C_1⁰], red_lh_₁(_lh_parseHelper_arg2⁰)) else parseHelper_lh_₁(_lh_parseHelper_LH_C_1⁰, [LH_C [Lex _lh_parseHelper_LH_C_0⁰] _lh_parseHelper_arg2⁰])}
+//│ 	| _  => error⁰}
+//│ def parse_lh_₁(_lh_parse_arg1⁰) = 
+//│ 	let _lh_matchIdent¹ = parseHelper_lh_₁(_lh_parse_arg1⁰, [LH_N])
+//│ 	in case _lh_matchIdent¹ of {
+//│ 		LH_C _lh_parse_LH_C_0⁰ _lh_parse_LH_C_1⁰ => case _lh_parse_LH_C_0⁰ of {
+//│ 			Ast _lh_parse_Ast_0⁰ => case _lh_parse_LH_C_1⁰ of {
+//│ 				LH_N  => _lh_parse_Ast_0⁰
+//│ 				| _  => error⁰}
+//│ 			| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ def red_lh_₁(_lh_red_arg1²) = case _lh_red_arg1² of {
+//│ 	LH_C _lh_red_LH_C_0¹² _lh_red_LH_C_1¹² => case _lh_red_LH_C_0¹² of {
+//│ 		Ast _lh_red_Ast_0¹⁰ => case _lh_red_LH_C_1¹² of {
+//│ 			LH_C _lh_red_LH_C_0¹³ _lh_red_LH_C_1¹³ => case _lh_red_LH_C_0¹³ of {
+//│ 				Lex _lh_red_Lex_0² => case _lh_red_Lex_0² of {
+//│ 					'='  => case _lh_red_LH_C_1¹³ of {
+//│ 						LH_C _lh_red_LH_C_0¹⁴ _lh_red_LH_C_1¹⁴ => case _lh_red_LH_C_0¹⁴ of {
+//│ 							Ast _lh_red_Ast_0¹¹ => [LH_C [Ast [Eqv _lh_red_Ast_0¹¹ _lh_red_Ast_0¹⁰]] _lh_red_LH_C_1¹⁴]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '>'  => case _lh_red_LH_C_1¹³ of {
+//│ 						LH_C _lh_red_LH_C_0¹⁵ _lh_red_LH_C_1¹⁵ => case _lh_red_LH_C_0¹⁵ of {
+//│ 							Ast _lh_red_Ast_0¹² => [LH_C [Ast [Imp _lh_red_Ast_0¹² _lh_red_Ast_0¹⁰]] _lh_red_LH_C_1¹⁵]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '|'  => case _lh_red_LH_C_1¹³ of {
+//│ 						LH_C _lh_red_LH_C_0¹⁶ _lh_red_LH_C_1¹⁶ => case _lh_red_LH_C_0¹⁶ of {
+//│ 							Ast _lh_red_Ast_0¹³ => [LH_C [Ast [Dis _lh_red_Ast_0¹³ _lh_red_Ast_0¹⁰]] _lh_red_LH_C_1¹⁶]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '&'  => case _lh_red_LH_C_1¹³ of {
+//│ 						LH_C _lh_red_LH_C_0¹⁷ _lh_red_LH_C_1¹⁷ => case _lh_red_LH_C_0¹⁷ of {
+//│ 							Ast _lh_red_Ast_0¹⁴ => [LH_C [Ast [Con _lh_red_Ast_0¹⁴ _lh_red_Ast_0¹⁰]] _lh_red_LH_C_1¹⁷]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '~'  => [LH_C [Ast [Not _lh_red_Ast_0¹⁰]] _lh_red_LH_C_1¹³]
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 			| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def red_lh_₂(_lh_red_arg1¹) = case _lh_red_arg1¹ of {
+//│ 	LH_C _lh_red_LH_C_0⁶ _lh_red_LH_C_1⁶ => case _lh_red_LH_C_0⁶ of {
+//│ 		Ast _lh_red_Ast_0⁵ => case _lh_red_LH_C_1⁶ of {
+//│ 			LH_C _lh_red_LH_C_0⁷ _lh_red_LH_C_1⁷ => case _lh_red_LH_C_0⁷ of {
+//│ 				Lex _lh_red_Lex_0¹ => case _lh_red_Lex_0¹ of {
+//│ 					'='  => case _lh_red_LH_C_1⁷ of {
+//│ 						LH_C _lh_red_LH_C_0⁸ _lh_red_LH_C_1⁸ => case _lh_red_LH_C_0⁸ of {
+//│ 							Ast _lh_red_Ast_0⁶ => [LH_C [Ast [Eqv _lh_red_Ast_0⁶ _lh_red_Ast_0⁵]] _lh_red_LH_C_1⁸]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '>'  => case _lh_red_LH_C_1⁷ of {
+//│ 						LH_C _lh_red_LH_C_0⁹ _lh_red_LH_C_1⁹ => case _lh_red_LH_C_0⁹ of {
+//│ 							Ast _lh_red_Ast_0⁷ => [LH_C [Ast [Imp _lh_red_Ast_0⁷ _lh_red_Ast_0⁵]] _lh_red_LH_C_1⁹]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '|'  => case _lh_red_LH_C_1⁷ of {
+//│ 						LH_C _lh_red_LH_C_0¹⁰ _lh_red_LH_C_1¹⁰ => case _lh_red_LH_C_0¹⁰ of {
+//│ 							Ast _lh_red_Ast_0⁸ => [LH_C [Ast [Dis _lh_red_Ast_0⁸ _lh_red_Ast_0⁵]] _lh_red_LH_C_1¹⁰]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '&'  => case _lh_red_LH_C_1⁷ of {
+//│ 						LH_C _lh_red_LH_C_0¹¹ _lh_red_LH_C_1¹¹ => case _lh_red_LH_C_0¹¹ of {
+//│ 							Ast _lh_red_Ast_0⁹ => [LH_C [Ast [Con _lh_red_Ast_0⁹ _lh_red_Ast_0⁵]] _lh_red_LH_C_1¹¹]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '~'  => [LH_C [Ast [Not _lh_red_Ast_0⁵]] _lh_red_LH_C_1⁷]
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 			| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def red_lh_₃(_lh_red_arg1⁰) = case _lh_red_arg1⁰ of {
+//│ 	LH_C _lh_red_LH_C_0⁰ _lh_red_LH_C_1⁰ => case _lh_red_LH_C_0⁰ of {
+//│ 		Ast _lh_red_Ast_0⁰ => case _lh_red_LH_C_1⁰ of {
+//│ 			LH_C _lh_red_LH_C_0¹ _lh_red_LH_C_1¹ => case _lh_red_LH_C_0¹ of {
+//│ 				Lex _lh_red_Lex_0⁰ => case _lh_red_Lex_0⁰ of {
+//│ 					'='  => case _lh_red_LH_C_1¹ of {
+//│ 						LH_C _lh_red_LH_C_0² _lh_red_LH_C_1² => case _lh_red_LH_C_0² of {
+//│ 							Ast _lh_red_Ast_0¹ => [LH_C [Ast [Eqv _lh_red_Ast_0¹ _lh_red_Ast_0⁰]] _lh_red_LH_C_1²]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '>'  => case _lh_red_LH_C_1¹ of {
+//│ 						LH_C _lh_red_LH_C_0³ _lh_red_LH_C_1³ => case _lh_red_LH_C_0³ of {
+//│ 							Ast _lh_red_Ast_0² => [LH_C [Ast [Imp _lh_red_Ast_0² _lh_red_Ast_0⁰]] _lh_red_LH_C_1³]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '|'  => case _lh_red_LH_C_1¹ of {
+//│ 						LH_C _lh_red_LH_C_0⁴ _lh_red_LH_C_1⁴ => case _lh_red_LH_C_0⁴ of {
+//│ 							Ast _lh_red_Ast_0³ => [LH_C [Ast [Dis _lh_red_Ast_0³ _lh_red_Ast_0⁰]] _lh_red_LH_C_1⁴]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '&'  => case _lh_red_LH_C_1¹ of {
+//│ 						LH_C _lh_red_LH_C_0⁵ _lh_red_LH_C_1⁵ => case _lh_red_LH_C_0⁵ of {
+//│ 							Ast _lh_red_Ast_0⁴ => [LH_C [Ast [Con _lh_red_Ast_0⁴ _lh_red_Ast_0⁰]] _lh_red_LH_C_1⁵]
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}
+//│ 					| '~'  => [LH_C [Ast [Not _lh_red_Ast_0⁰]] _lh_red_LH_C_1¹]
+//│ 					| _  => error⁰}
+//│ 				| _  => error⁰}
+//│ 			| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ 	| _  => error⁰}
+//│ def redstar_lh_₁(_lh_redstar_arg1⁰) = while_lh_₁((fun _lh_funcomp_x⁰ -> (0 /= spri_lh_₂(_lh_funcomp_x⁰))), red_lh_₂, _lh_redstar_arg1⁰)
+//│ def redstar_lh_₂(_lh_redstar_arg1¹) = while_lh_₂((fun _lh_funcomp_x¹ -> (0 /= spri_lh_₃(_lh_funcomp_x¹))), red_lh_₃, _lh_redstar_arg1¹)
+//│ def spaces_lh_₁(_lh_spaces_arg1¹) = copy_lh_₂(_lh_spaces_arg1¹, ' ')
+//│ def spaces_lh_₂(_lh_spaces_arg1⁰) = copy_lh_₃(_lh_spaces_arg1⁰, ' ')
+//│ def splitHelper_lh_₁(_lh_splitHelper_arg1⁰, _lh_splitHelper_arg2⁰) = case _lh_splitHelper_arg1⁰ of {
+//│ 	Con _lh_splitHelper_Con_0⁰ _lh_splitHelper_Con_1⁰ => splitHelper_lh_₁(_lh_splitHelper_Con_0⁰, splitHelper_lh_₁(_lh_splitHelper_Con_1⁰, _lh_splitHelper_arg2⁰))
+//│ 	| _  => 
+//│ 		let t⁵ = _lh_splitHelper_arg2⁰
+//│ 		in let h⁵ = _lh_splitHelper_arg1⁰
+//│ 		in (fun f³ -> (fun i¹ -> f³(h⁵, t⁵(f³, i¹))))}
+//│ def split_lh_₁(_lh_split_arg1⁰) = splitHelper_lh_₁(_lh_split_arg1⁰, (fun f⁶ -> (fun i² -> i²)))
+//│ def spri_lh_₁(_lh_spri_arg1²) = case _lh_spri_arg1² of {
+//│ 	LH_C _lh_spri_LH_C_0⁴ _lh_spri_LH_C_1⁴ => case _lh_spri_LH_C_0⁴ of {
+//│ 		Ast _lh_spri_Ast_0² => case _lh_spri_LH_C_1⁴ of {
+//│ 			LH_C _lh_spri_LH_C_0⁵ _lh_spri_LH_C_1⁵ => case _lh_spri_LH_C_0⁵ of {
+//│ 				Lex _lh_spri_Lex_0² => opri_lh_₂(_lh_spri_Lex_0²)
+//│ 				| _  => 0}
+//│ 			| _  => 0}
+//│ 		| _  => 0}
+//│ 	| _  => 0}
+//│ def spri_lh_₂(_lh_spri_arg1¹) = case _lh_spri_arg1¹ of {
+//│ 	LH_C _lh_spri_LH_C_0² _lh_spri_LH_C_1² => case _lh_spri_LH_C_0² of {
+//│ 		Ast _lh_spri_Ast_0¹ => case _lh_spri_LH_C_1² of {
+//│ 			LH_C _lh_spri_LH_C_0³ _lh_spri_LH_C_1³ => case _lh_spri_LH_C_0³ of {
+//│ 				Lex _lh_spri_Lex_0¹ => opri_lh_₃(_lh_spri_Lex_0¹)
+//│ 				| _  => 0}
+//│ 			| _  => 0}
+//│ 		| _  => 0}
+//│ 	| _  => 0}
+//│ def spri_lh_₃(_lh_spri_arg1⁰) = case _lh_spri_arg1⁰ of {
+//│ 	LH_C _lh_spri_LH_C_0⁰ _lh_spri_LH_C_1⁰ => case _lh_spri_LH_C_0⁰ of {
+//│ 		Ast _lh_spri_Ast_0⁰ => case _lh_spri_LH_C_1⁰ of {
+//│ 			LH_C _lh_spri_LH_C_0¹ _lh_spri_LH_C_1¹ => case _lh_spri_LH_C_0¹ of {
+//│ 				Lex _lh_spri_Lex_0⁰ => opri_lh_₄(_lh_spri_Lex_0⁰)
+//│ 				| _  => 0}
+//│ 			| _  => 0}
+//│ 		| _  => 0}
+//│ 	| _  => 0}
+//│ def tautclause_lh_₁(_lh_tautclause_arg1⁰) = case _lh_tautclause_arg1⁰ of {
+//│ 	LH_P2 _lh_tautclause_LH_P2_0⁰ _lh_tautclause_LH_P2_1⁰ => polyNeq⁰(
+//│ 		let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => if contains_lh_₁(_lh_listcomp_fun_ls_h⁰, _lh_tautclause_LH_P2_1⁰) then [LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)] else _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun⁰(_lh_tautclause_LH_P2_0⁰), [LH_N])
+//│ 	| _  => error⁰}
+//│ def testClausify_nofib_lh_₁(_lh_testClausify_nofib_arg1⁰) = 
+//│ 	let xs⁵ = copy_lh_₁(_lh_testClausify_nofib_arg1⁰, [LH_C '(' [LH_C 'a' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'a' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'a' [LH_C ')' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C '(' [LH_C 'a' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'a' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'a' [LH_C ')' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C '(' [LH_C 'a' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'a' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'a' [LH_C ')' [LH_N]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]])
+//│ 	in xs⁵(clauses_lh_₁, 99)
+//│ def uniclHelper_lh_₁(_lh_uniclHelper_arg1⁰, _lh_uniclHelper_arg2⁰) = 
+//│ 	let cp⁰ = clause_lh_₁(_lh_uniclHelper_arg1⁰)
+//│ 	in if tautclause_lh_₁(cp⁰) then _lh_uniclHelper_arg2⁰ else insert_lh_₁(cp⁰, _lh_uniclHelper_arg2⁰)
+//│ def unicl_lh_₁(_lh_unicl_arg1⁰) = _lh_unicl_arg1⁰(uniclHelper_lh_₁, [LH_N])
+//│ def while_lh_₁(_lh_while_arg1⁰, _lh_while_arg2⁰, _lh_while_arg3⁰) = if _lh_while_arg1⁰(_lh_while_arg3⁰) then while_lh_₁(_lh_while_arg1⁰, _lh_while_arg2⁰, _lh_while_arg2⁰(_lh_while_arg3⁰)) else _lh_while_arg3⁰
+//│ def while_lh_₂(_lh_while_arg1¹, _lh_while_arg2¹, _lh_while_arg3¹) = if _lh_while_arg1¹(_lh_while_arg3¹) then while_lh_₂(_lh_while_arg1¹, _lh_while_arg2¹, _lh_while_arg2¹(_lh_while_arg3¹)) else _lh_while_arg3¹
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

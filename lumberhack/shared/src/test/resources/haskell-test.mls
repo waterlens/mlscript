@@ -76,6 +76,42 @@ testMapmap $ primId 5000000
 //│ def testMapmap_lh_₁(_lh_testMapmap_arg1¹) = map_lh_₂((fun x² -> (x² + 1)), map_lh_₁((fun x³ -> (x³ + x³)), enumFromTo_lh_₁(1, _lh_testMapmap_arg1¹)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map_lh_₂, map_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ enumFromTo_lh_₁ -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testMapmap_lh_₁(primId⁰(5000000))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let t⁰ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
+//│ 	in let h⁰ = a⁰
+//│ 	in (fun f² -> 
+//│ 		let t¹ = t⁰(f²)
+//│ 		in let h¹ = f²(h⁰)
+//│ 		in (fun f³ -> [LH_C f³(h¹) t¹(f³)])) else (fun f⁴ -> (fun f⁵ -> [LH_N]))
+//│ def map_lh_₁(f¹, ls¹) = ls¹(f¹)
+//│ def map_lh_₂(f⁰, ls⁰) = ls⁰(f⁰)
+//│ def testMapmap_lh_₁(_lh_testMapmap_arg1⁰) = enumFromTo_lh_₁(1, _lh_testMapmap_arg1⁰, (fun x⁰ -> (x⁰ + x⁰)), (fun x¹ -> (x¹ + 1)))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testMapmap_lh_₁(primId⁰(5000000))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let t⁰ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
+//│ 	in let h⁰ = a⁰
+//│ 	in (fun f² -> 
+//│ 		let t¹ = t⁰(f²)
+//│ 		in let h¹ = f²(h⁰)
+//│ 		in (fun f³ -> [LH_C f³(h¹) t¹(f³)])) else (fun f⁴ -> (fun f⁵ -> [LH_N]))
+//│ def map_lh_₁(f¹, ls¹) = ls¹(f¹)
+//│ def map_lh_₂(f⁰, ls⁰) = ls⁰(f⁰)
+//│ def testMapmap_lh_₁(_lh_testMapmap_arg1⁰) = enumFromTo_lh_₁(1, _lh_testMapmap_arg1⁰, (fun x⁰ -> (x⁰ + x⁰)), (fun x¹ -> (x¹ + 1)))
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated Haskell >>>>>>>>>>
 //│ import Criterion.Main
 //│ 
@@ -219,6 +255,64 @@ testQueen $ primId 12
 //│ 	| _  => error⁰}
 //│ def testQueen_lh_₁(_lh_testQueen_arg1¹) = nsoln_lh_₁(_lh_testQueen_arg1¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testQueen_lh_₁(primId⁰(12))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then [LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)] else [LH_N]
+//│ def gen_lh_₁(_lh_gen_arg1⁰, _lh_gen_arg2⁰) = case _lh_gen_arg1⁰ of {
+//│ 	0  => [LH_C [LH_N] [LH_N]]
+//│ 	| _  => 
+//│ 		let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => 
+//│ 				let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {
+//│ 					LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h⁰) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)
+//│ 					| LH_N  => _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)})
+//│ 				in _lh_listcomp_fun¹(primId⁰(enumFromTo_lh_₁(1, _lh_gen_arg2⁰)))
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun⁰(gen_lh_₁((_lh_gen_arg1⁰ - 1), _lh_gen_arg2⁰))}
+//│ def length_lh_₁(ls⁰) = case ls⁰ of {
+//│ 	LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰))
+//│ 	| LH_N  => 0}
+//│ def nsoln_lh_₁(_lh_nsoln_arg1⁰) = length_lh_₁(gen_lh_₁(_lh_nsoln_arg1⁰, _lh_nsoln_arg1⁰))
+//│ def safe_lh_₁(_lh_safe_arg1⁰, _lh_safe_arg2⁰, _lh_safe_arg3⁰) = case _lh_safe_arg3⁰ of {
+//│ 	LH_N  => [True]
+//│ 	| LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && safe_lh_₁(_lh_safe_arg1⁰, (_lh_safe_arg2⁰ + 1), _lh_safe_LH_C_1⁰))
+//│ 	| _  => error⁰}
+//│ def testQueen_lh_₁(_lh_testQueen_arg1⁰) = nsoln_lh_₁(_lh_testQueen_arg1⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testQueen_lh_₁(primId⁰(12))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then [LH_C a⁰ enumFromTo_lh_₁((a⁰ + 1), b⁰)] else [LH_N]
+//│ def gen_lh_₁(_lh_gen_arg1⁰, _lh_gen_arg2⁰) = case _lh_gen_arg1⁰ of {
+//│ 	0  => [LH_C [LH_N] [LH_N]]
+//│ 	| _  => 
+//│ 		let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => 
+//│ 				let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> case _lh_listcomp_fun_para¹ of {
+//│ 					LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_t¹ => if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h⁰) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h⁰] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t¹)
+//│ 					| LH_N  => _lh_listcomp_fun⁰(_lh_listcomp_fun_ls_t⁰)})
+//│ 				in _lh_listcomp_fun¹(primId⁰(enumFromTo_lh_₁(1, _lh_gen_arg2⁰)))
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun⁰(gen_lh_₁((_lh_gen_arg1⁰ - 1), _lh_gen_arg2⁰))}
+//│ def length_lh_₁(ls⁰) = case ls⁰ of {
+//│ 	LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰))
+//│ 	| LH_N  => 0}
+//│ def nsoln_lh_₁(_lh_nsoln_arg1⁰) = length_lh_₁(gen_lh_₁(_lh_nsoln_arg1⁰, _lh_nsoln_arg1⁰))
+//│ def safe_lh_₁(_lh_safe_arg1⁰, _lh_safe_arg2⁰, _lh_safe_arg3⁰) = case _lh_safe_arg3⁰ of {
+//│ 	LH_N  => [True]
+//│ 	| LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && safe_lh_₁(_lh_safe_arg1⁰, (_lh_safe_arg2⁰ + 1), _lh_safe_LH_C_1⁰))
+//│ 	| _  => error⁰}
+//│ def testQueen_lh_₁(_lh_testQueen_arg1⁰) = nsoln_lh_₁(_lh_testQueen_arg1⁰)
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated Haskell >>>>>>>>>>
 //│ import Criterion.Main
@@ -366,6 +460,67 @@ test $ primId 4
 //│ 	| _  => error⁰}
 //│ def test_lh_₁(_lh_test_arg1¹) = nsoln_lh_₁(_lh_test_arg1¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ recursive consumer: gen_lh_₁
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ enumFromTo_lh_₁ -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ test_lh_₁(primId⁰(4))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let _lh_listcomp_fun_ls_t¹ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
+//│ 	in let _lh_listcomp_fun_ls_h¹ = a⁰
+//│ 	in (fun _lh_listcomp_fun_ls_h² -> (fun _lh_listcomp_fun² -> (fun _lh_listcomp_fun_ls_t² -> (fun _lh_listcomp_fun³ -> if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹))))) else (fun _lh_listcomp_fun_ls_h³ -> (fun _lh_listcomp_fun⁴ -> (fun _lh_listcomp_fun_ls_t³ -> (fun _lh_listcomp_fun⁵ -> _lh_listcomp_fun⁵(_lh_listcomp_fun_ls_t³)))))
+//│ def gen_lh_₁(_lh_gen_arg1⁰, _lh_gen_arg2⁰) = case _lh_gen_arg1⁰ of {
+//│ 	0  => [LH_C [LH_N] [LH_N]]
+//│ 	| _  => 
+//│ 		let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => 
+//│ 				let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> _lh_listcomp_fun_para¹(_lh_listcomp_fun_ls_h⁰, _lh_listcomp_fun¹, _lh_listcomp_fun_ls_t⁰, _lh_listcomp_fun⁰))
+//│ 				in _lh_listcomp_fun¹(enumFromTo_lh_₁(1, _lh_gen_arg2⁰))
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun⁰(gen_lh_₁((_lh_gen_arg1⁰ - 1), _lh_gen_arg2⁰))}
+//│ def length_lh_₁(ls⁰) = case ls⁰ of {
+//│ 	LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰))
+//│ 	| LH_N  => 0}
+//│ def nsoln_lh_₁(_lh_nsoln_arg1⁰) = length_lh_₁(gen_lh_₁(_lh_nsoln_arg1⁰, _lh_nsoln_arg1⁰))
+//│ def safe_lh_₁(_lh_safe_arg1⁰, _lh_safe_arg2⁰, _lh_safe_arg3⁰) = case _lh_safe_arg3⁰ of {
+//│ 	LH_N  => [True]
+//│ 	| LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && safe_lh_₁(_lh_safe_arg1⁰, (_lh_safe_arg2⁰ + 1), _lh_safe_LH_C_1⁰))
+//│ 	| _  => error⁰}
+//│ def test_lh_₁(_lh_test_arg1⁰) = nsoln_lh_₁(_lh_test_arg1⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ test_lh_₁(primId⁰(4))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let _lh_listcomp_fun_ls_t¹ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
+//│ 	in let _lh_listcomp_fun_ls_h¹ = a⁰
+//│ 	in (fun _lh_listcomp_fun_ls_h² -> (fun _lh_listcomp_fun² -> (fun _lh_listcomp_fun_ls_t² -> (fun _lh_listcomp_fun³ -> if safe_lh_₁(_lh_listcomp_fun_ls_h¹, 1, _lh_listcomp_fun_ls_h²) then [LH_C [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun_ls_h²] _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹)] else _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹))))) else (fun _lh_listcomp_fun_ls_h³ -> (fun _lh_listcomp_fun⁴ -> (fun _lh_listcomp_fun_ls_t³ -> (fun _lh_listcomp_fun⁵ -> _lh_listcomp_fun⁵(_lh_listcomp_fun_ls_t³)))))
+//│ def gen_lh_₁(_lh_gen_arg1⁰, _lh_gen_arg2⁰) = case _lh_gen_arg1⁰ of {
+//│ 	0  => [LH_C [LH_N] [LH_N]]
+//│ 	| _  => 
+//│ 		let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> case _lh_listcomp_fun_para⁰ of {
+//│ 			LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun_ls_t⁰ => 
+//│ 				let _lh_listcomp_fun¹ = (fun _lh_listcomp_fun_para¹ -> _lh_listcomp_fun_para¹(_lh_listcomp_fun_ls_h⁰, _lh_listcomp_fun¹, _lh_listcomp_fun_ls_t⁰, _lh_listcomp_fun⁰))
+//│ 				in _lh_listcomp_fun¹(enumFromTo_lh_₁(1, _lh_gen_arg2⁰))
+//│ 			| LH_N  => [LH_N]})
+//│ 		in _lh_listcomp_fun⁰(gen_lh_₁((_lh_gen_arg1⁰ - 1), _lh_gen_arg2⁰))}
+//│ def length_lh_₁(ls⁰) = case ls⁰ of {
+//│ 	LH_C h⁰ t⁰ => (1 + length_lh_₁(t⁰))
+//│ 	| LH_N  => 0}
+//│ def nsoln_lh_₁(_lh_nsoln_arg1⁰) = length_lh_₁(gen_lh_₁(_lh_nsoln_arg1⁰, _lh_nsoln_arg1⁰))
+//│ def safe_lh_₁(_lh_safe_arg1⁰, _lh_safe_arg2⁰, _lh_safe_arg3⁰) = case _lh_safe_arg3⁰ of {
+//│ 	LH_N  => [True]
+//│ 	| LH_C _lh_safe_LH_C_0⁰ _lh_safe_LH_C_1⁰ => ((((_lh_safe_arg1⁰ /= _lh_safe_LH_C_0⁰) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ + _lh_safe_arg2⁰))) && (_lh_safe_arg1⁰ /= (_lh_safe_LH_C_0⁰ - _lh_safe_arg2⁰))) && safe_lh_₁(_lh_safe_arg1⁰, (_lh_safe_arg2⁰ + 1), _lh_safe_LH_C_1⁰))
+//│ 	| _  => error⁰}
+//│ def test_lh_₁(_lh_test_arg1⁰) = nsoln_lh_₁(_lh_test_arg1⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // WRONG: not well-typed in haskell
@@ -455,6 +610,42 @@ testSimpleRecursiveTypeExample $ primId 3
 //│ 		in let _lh_listcomp_fun_ls_h¹ = _lh_testSimpleRecursiveTypeExample_arg1¹
 //│ 		in (fun _lh_listcomp_fun² -> [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun²(_lh_listcomp_fun_ls_t¹)]))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ testSimpleRecursiveTypeExample_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> _lh_listcomp_fun_para⁰(_lh_listcomp_fun⁰))
+//│ in _lh_listcomp_fun⁰(
+//│ 	let _lh_listcomp_fun_ls_t⁰ = (fun _lh_listcomp_fun¹ -> [LH_N])
+//│ 	in let _lh_listcomp_fun_ls_h⁰ = primId⁰(3)
+//│ 	in (fun _lh_listcomp_fun² -> [LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun²(_lh_listcomp_fun_ls_t⁰)]))
+//│ def testSimpleRecursiveTypeExample_lh_₁(_lh_testSimpleRecursiveTypeExample_arg1⁰) = 
+//│ 	let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para¹ -> _lh_listcomp_fun_para¹(_lh_listcomp_fun³))
+//│ 	in _lh_listcomp_fun³(
+//│ 		let _lh_listcomp_fun_ls_t¹ = (fun _lh_listcomp_fun⁴ -> [LH_N])
+//│ 		in let _lh_listcomp_fun_ls_h¹ = _lh_testSimpleRecursiveTypeExample_arg1⁰
+//│ 		in (fun _lh_listcomp_fun⁵ -> [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun⁵(_lh_listcomp_fun_ls_t¹)]))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> _lh_listcomp_fun_para⁰(_lh_listcomp_fun⁰))
+//│ in _lh_listcomp_fun⁰(
+//│ 	let _lh_listcomp_fun_ls_t⁰ = (fun _lh_listcomp_fun¹ -> [LH_N])
+//│ 	in let _lh_listcomp_fun_ls_h⁰ = primId⁰(3)
+//│ 	in (fun _lh_listcomp_fun² -> [LH_C _lh_listcomp_fun_ls_h⁰ _lh_listcomp_fun²(_lh_listcomp_fun_ls_t⁰)]))
+//│ def testSimpleRecursiveTypeExample_lh_₁(_lh_testSimpleRecursiveTypeExample_arg1⁰) = 
+//│ 	let _lh_listcomp_fun³ = (fun _lh_listcomp_fun_para¹ -> _lh_listcomp_fun_para¹(_lh_listcomp_fun³))
+//│ 	in _lh_listcomp_fun³(
+//│ 		let _lh_listcomp_fun_ls_t¹ = (fun _lh_listcomp_fun⁴ -> [LH_N])
+//│ 		in let _lh_listcomp_fun_ls_h¹ = _lh_testSimpleRecursiveTypeExample_arg1⁰
+//│ 		in (fun _lh_listcomp_fun⁵ -> [LH_C _lh_listcomp_fun_ls_h¹ _lh_listcomp_fun⁵(_lh_listcomp_fun_ls_t¹)]))
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated Haskell >>>>>>>>>>
 //│ import Criterion.Main

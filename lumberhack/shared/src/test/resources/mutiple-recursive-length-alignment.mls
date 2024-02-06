@@ -81,6 +81,38 @@ c(p1)(p2)
 //│ def p1 = [C [C p1]]
 //│ def p2 = [D [D [D p2]]]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ c(p1, p2)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	C aa⁰ => case aa⁰ of {
+//│ 		C a2⁰ => case a2⁰ of {
+//│ 			C a3⁰ => (fun y⁰ -> case y⁰ of {
+//│ 				D bb⁰ => case bb⁰ of {
+//│ 					D cc⁰ => c(a3⁰, cc⁰)}})}}}
+//│ def p1 = [C [C p1]]
+//│ def p2 = [D [D [D p2]]]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ c(p1, p2)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	C aa⁰ => case aa⁰ of {
+//│ 		C a2⁰ => case a2⁰ of {
+//│ 			C a3⁰ => (fun y⁰ -> case y⁰ of {
+//│ 				D bb⁰ => case bb⁰ of {
+//│ 					D cc⁰ => c(a3⁰, cc⁰)}})}}}
+//│ def p1 = [C [C p1]]
+//│ def p2 = [D [D [D p2]]]
+//│ <<<<<<< after floating out <<<<<<<
 
 // WRONG: manually do the fusion on top of the previous fusion result, since `c0` is used twice, it is wrong
 fun c0(x) = x
@@ -170,6 +202,44 @@ c0(p10)(p20)
 //│ def p20 = [D [D [D p21]]]
 //│ def p21 = [D [D [D p20]]]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ c0(p10, p20)
+//│ def c0(x⁰) = x⁰
+//│ def c1(x¹) = x¹
+//│ def p10 = p11
+//│ def p11(y⁰) = case y⁰ of {
+//│ 	D bb⁰ => case bb⁰ of {
+//│ 		D cc⁰ => c1(p12, cc⁰)}}
+//│ def p12(y¹) = case y¹ of {
+//│ 	D bb¹ => case bb¹ of {
+//│ 		D cc¹ => c0(p10, cc¹)}}
+//│ def p20 = [D [D [D p21]]]
+//│ def p21 = [D [D [D p20]]]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ c0(p10, p20)
+//│ def c0(x⁰) = x⁰
+//│ def c1(x¹) = x¹
+//│ def p10 = p11
+//│ def p11(y⁰) = case y⁰ of {
+//│ 	D bb⁰ => case bb⁰ of {
+//│ 		D cc⁰ => c1(p12, cc⁰)}}
+//│ def p12(y¹) = case y¹ of {
+//│ 	D bb¹ => case bb¹ of {
+//│ 		D cc¹ => c0(p10, cc¹)}}
+//│ def p20 = [D [D [D p21]]]
+//│ def p21 = [D [D [D p20]]]
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT: after duplicating the used-more-than-once `c0`, the result is correct
 fun c0(x) = x
@@ -262,3 +332,43 @@ c0(p10)(p20)
 //│ def p20 = [D [D [D p21]]]
 //│ def p21 = [D [D [D p20]]]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ c0(p10, p20)
+//│ def c0(x⁰) = x⁰
+//│ def c1(x¹) = x¹
+//│ def id(x²) = x²
+//│ def p10 = p11
+//│ def p11(y⁰) = case y⁰ of {
+//│ 	D bb⁰ => case bb⁰ of {
+//│ 		D cc⁰ => c1(p12, cc⁰)}}
+//│ def p12(y¹) = case y¹ of {
+//│ 	D bb¹ => case bb¹ of {
+//│ 		D cc¹ => id(p10, cc¹)}}
+//│ def p20 = [D [D [D p21]]]
+//│ def p21 = [D [D [D p20]]]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ c0(p10, p20)
+//│ def c0(x⁰) = x⁰
+//│ def c1(x¹) = x¹
+//│ def id(x²) = x²
+//│ def p10 = p11
+//│ def p11(y⁰) = case y⁰ of {
+//│ 	D bb⁰ => case bb⁰ of {
+//│ 		D cc⁰ => c1(p12, cc⁰)}}
+//│ def p12(y¹) = case y¹ of {
+//│ 	D bb¹ => case bb¹ of {
+//│ 		D cc¹ => id(p10, cc¹)}}
+//│ def p20 = [D [D [D p21]]]
+//│ def p21 = [D [D [D p20]]]
+//│ <<<<<<< after floating out <<<<<<<

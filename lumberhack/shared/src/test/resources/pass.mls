@@ -74,6 +74,38 @@ c(p)
 //│ 		in (fun _lh_dummy¹ -> e(bb¹))
 //│ 	in (fun _lh_dummy⁰ -> d(b¹))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ e, c, d
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ p -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ p(99)
+//│ def c(x⁰) = x⁰(99)
+//│ def d(y⁰) = y⁰(99)
+//│ def e(z⁰) = z⁰
+//│ def p = 
+//│ 	let b⁰ = 	
+//│ 		let bb⁰ = 7
+//│ 		in (fun _lh_dummy⁰ -> bb⁰)
+//│ 	in (fun _lh_dummy¹ -> b⁰(99))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ p(99)
+//│ def c(x⁰) = x⁰(99)
+//│ def d(y⁰) = y⁰(99)
+//│ def e(z⁰) = z⁰
+//│ def p(_lh_dummy⁰) = 
+//│ 	let b⁰ = 	
+//│ 		let bb⁰ = 7
+//│ 		in (fun _lh_dummy¹ -> bb⁰)
+//│ 	in b⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -133,6 +165,40 @@ sum(mapa(mapb(primitive)))
 //│ 			in (fun _lh_dummy⁰ -> [S [N] sum(t¹)]))}
 //│ def sum(ls¹) = ls¹(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ sum, mapa
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ mapb -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ mapb(primitive⁰, 99, 99)
+//│ def mapa(lsa⁰) = lsa⁰(99)
+//│ def mapb(lsb⁰) = case lsb⁰ of {
+//│ 	C hb⁰ tb⁰ => 
+//│ 		let ta⁰ = mapb(tb⁰)
+//│ 		in let ha⁰ = primitive⁰(hb⁰)
+//│ 		in (fun _lh_dummy⁰ -> 
+//│ 			let t⁰ = ta⁰(99)
+//│ 			in (fun _lh_dummy¹ -> [S [N] t⁰(99)]))}
+//│ def sum(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ mapb(primitive⁰, 99, 99)
+//│ def mapa(lsa⁰) = lsa⁰(99)
+//│ def mapb(lsb⁰) = case lsb⁰ of {
+//│ 	C hb⁰ tb⁰ => 
+//│ 		let ta⁰ = mapb(tb⁰)
+//│ 		in let ha⁰ = primitive⁰(hb⁰)
+//│ 		in (fun _lh_dummy⁰ -> 
+//│ 			let t⁰ = ta⁰(99)
+//│ 			in (fun _lh_dummy¹ -> [S [N] t⁰(99)]))}
+//│ def sum(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT:
 if C(A, B(C)) is
@@ -164,6 +230,24 @@ if C(A, B(C)) is
 //│ let b¹ = [B [C]]
 //│ in [D b¹]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ let b⁰ = [B [C]]
+//│ in [D b⁰]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ let b⁰ = [B [C]]
+//│ in [D b⁰]
+//│ <<<<<<< after floating out <<<<<<<
 //│
 
 
@@ -273,6 +357,46 @@ map(l)
 //│ 	in (fun _lh_dummy⁰ -> [C ff(h¹) map(t¹)])
 //│ def map(ls¹) = ls¹(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map, ff
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ l -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ l(99)
+//│ def ff(x⁰) = x⁰
+//│ def l = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = (fun _lh_dummy⁰ -> [N])
+//│ 			in let h⁰ = [TTTT]
+//│ 			in (fun _lh_dummy¹ -> [C h⁰ t²(99)])
+//│ 		in let h¹ = [TT]
+//│ 		in (fun _lh_dummy² -> [C h¹ t¹(99)])
+//│ 	in let h² = [T]
+//│ 	in (fun _lh_dummy³ -> [C h² t⁰(99)])
+//│ def map(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ l(99)
+//│ def ff(x⁰) = x⁰
+//│ def l(_lh_dummy⁰) = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = (fun _lh_dummy¹ -> [N])
+//│ 			in let h⁰ = [TTTT]
+//│ 			in (fun _lh_dummy² -> [C h⁰ t²(99)])
+//│ 		in let h¹ = [TT]
+//│ 		in (fun _lh_dummy³ -> [C h¹ t¹(99)])
+//│ 	in let h² = [T]
+//│ 	in [C h² t⁰(99)]
+//│ def map(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT: every element is handled
@@ -369,6 +493,44 @@ map(l)
 //│ 	in (fun _lh_dummy⁰ -> [C h¹ map(t¹)])
 //│ def map(ls¹) = ls¹(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ l -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ l(99)
+//│ def l = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = (fun _lh_dummy⁰ -> [N])
+//│ 			in let h⁰ = [TTTT]
+//│ 			in (fun _lh_dummy¹ -> [C h⁰ t²(99)])
+//│ 		in let h¹ = [TT]
+//│ 		in (fun _lh_dummy² -> [C h¹ t¹(99)])
+//│ 	in let h² = [T]
+//│ 	in (fun _lh_dummy³ -> [C h² t⁰(99)])
+//│ def map(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ l(99)
+//│ def l(_lh_dummy⁰) = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = (fun _lh_dummy¹ -> [N])
+//│ 			in let h⁰ = [TTTT]
+//│ 			in (fun _lh_dummy² -> [C h⁰ t²(99)])
+//│ 		in let h¹ = [TT]
+//│ 		in (fun _lh_dummy³ -> [C h¹ t¹(99)])
+//│ 	in let h² = [T]
+//│ 	in [C h² t⁰(99)]
+//│ def map(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT:
 fun sum(ls) = if ls is
@@ -445,6 +607,42 @@ sum(mapa(mapb(primitive)))
 //│ 	| N  => (fun _lh_dummy³ -> (fun _lh_dummy² -> [N]))}
 //│ def sum(ls¹) = ls¹(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ sum, mapa
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ mapb -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ mapb(primitive⁰, 99, 99)
+//│ def mapa(lsa⁰) = lsa⁰(99)
+//│ def mapb(lsb⁰) = case lsb⁰ of {
+//│ 	C hb⁰ tb⁰ => 
+//│ 		let ta⁰ = mapb(tb⁰)
+//│ 		in let ha⁰ = primitive⁰(hb⁰)
+//│ 		in (fun _lh_dummy⁰ -> 
+//│ 			let t⁰ = ta⁰(99)
+//│ 			in (fun _lh_dummy¹ -> [S [N] t⁰(99)]))
+//│ 	| N  => (fun _lh_dummy² -> (fun _lh_dummy³ -> [N]))}
+//│ def sum(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ mapb(primitive⁰, 99, 99)
+//│ def mapa(lsa⁰) = lsa⁰(99)
+//│ def mapb(lsb⁰) = case lsb⁰ of {
+//│ 	C hb⁰ tb⁰ => 
+//│ 		let ta⁰ = mapb(tb⁰)
+//│ 		in let ha⁰ = primitive⁰(hb⁰)
+//│ 		in (fun _lh_dummy⁰ -> 
+//│ 			let t⁰ = ta⁰(99)
+//│ 			in (fun _lh_dummy¹ -> [S [N] t⁰(99)]))
+//│ 	| N  => (fun _lh_dummy² -> (fun _lh_dummy³ -> [N]))}
+//│ def sum(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -486,6 +684,31 @@ c(p)
 //│ 	in (fun _lh_dummy⁰ -> c(a¹))(99)
 //│ def p = [C [N]]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ recursive consumer: c
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ c(p)
+//│ def c(x⁰) = 
+//│ 	let a⁰ = x⁰
+//│ 	in (fun _lh_dummy⁰ -> c(a⁰))(99)
+//│ def p = [C [N]]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ c(p)
+//│ def c(x⁰) = 
+//│ 	let a⁰ = x⁰
+//│ 	in (fun _lh_dummy⁰ -> c(a⁰))(99)
+//│ def p = [C [N]]
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // let rec p = C(p)
@@ -622,6 +845,50 @@ c(t)
 //│ >>>>>>> evaluate >>>>>>>
 //│ [T [KK] [T [NN] [LL] [LL]] [T [NN] [LL] [LL]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ c
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ t -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ t(99)
+//│ def c(x⁰) = x⁰(99)
+//│ def t = 
+//│ 	let r⁰ = 	
+//│ 		let r¹ = (fun _lh_dummy⁰ -> [LL])
+//│ 		in let l⁰ = (fun _lh_dummy¹ -> [LL])
+//│ 		in let n⁰ = [NN]
+//│ 		in (fun _lh_dummy² -> [T n⁰ l⁰(99) r¹(99)])
+//│ 	in let l¹ = 	
+//│ 		let r² = (fun _lh_dummy³ -> [LL])
+//│ 		in let l² = (fun _lh_dummy⁴ -> [LL])
+//│ 		in let n¹ = [NN]
+//│ 		in (fun _lh_dummy⁵ -> [T n¹ l²(99) r²(99)])
+//│ 	in let n² = [KK]
+//│ 	in (fun _lh_dummy⁶ -> [T n² l¹(99) r⁰(99)])
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ t(99)
+//│ def c(x⁰) = x⁰(99)
+//│ def t(_lh_dummy⁰) = 
+//│ 	let r⁰ = 	
+//│ 		let r¹ = (fun _lh_dummy¹ -> [LL])
+//│ 		in let l⁰ = (fun _lh_dummy² -> [LL])
+//│ 		in let n⁰ = [NN]
+//│ 		in (fun _lh_dummy³ -> [T n⁰ l⁰(99) r¹(99)])
+//│ 	in let l¹ = 	
+//│ 		let r² = (fun _lh_dummy⁴ -> [LL])
+//│ 		in let l² = (fun _lh_dummy⁵ -> [LL])
+//│ 		in let n¹ = [NN]
+//│ 		in (fun _lh_dummy⁶ -> [T n¹ l²(99) r²(99)])
+//│ 	in let n² = [KK]
+//│ 	in [T n² l¹(99) r⁰(99)]
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT:
 _LUMBERHACK_EVAL
@@ -752,6 +1019,56 @@ c(t)
 //│ >>>>>>> evaluate >>>>>>>
 //│ [T [KK] [T [NN] [LL] [LL]] [T [NN] [LL] [LL]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ c
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ aa -> 0
+//│ bb -> 0
+//│ t -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ t(99)
+//│ def aa = 
+//│ 	let r⁰ = (fun _lh_dummy⁰ -> [LL])
+//│ 	in let l⁰ = (fun _lh_dummy¹ -> [LL])
+//│ 	in let n⁰ = [NN]
+//│ 	in (fun _lh_dummy² -> [T n⁰ l⁰(99) r⁰(99)])
+//│ def bb = 
+//│ 	let r¹ = (fun _lh_dummy³ -> [LL])
+//│ 	in let l¹ = (fun _lh_dummy⁴ -> [LL])
+//│ 	in let n¹ = [NN]
+//│ 	in (fun _lh_dummy⁵ -> [T n¹ l¹(99) r¹(99)])
+//│ def c(x⁰) = x⁰(99)
+//│ def t = 
+//│ 	let r² = bb
+//│ 	in let l² = aa
+//│ 	in let n² = [KK]
+//│ 	in (fun _lh_dummy⁶ -> [T n² l²(99) r²(99)])
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ t(99)
+//│ def aa = 
+//│ 	let r⁰ = (fun _lh_dummy⁰ -> [LL])
+//│ 	in let l⁰ = (fun _lh_dummy¹ -> [LL])
+//│ 	in let n⁰ = [NN]
+//│ 	in (fun _lh_dummy² -> [T n⁰ l⁰(99) r⁰(99)])
+//│ def bb = 
+//│ 	let r¹ = (fun _lh_dummy³ -> [LL])
+//│ 	in let l¹ = (fun _lh_dummy⁴ -> [LL])
+//│ 	in let n¹ = [NN]
+//│ 	in (fun _lh_dummy⁵ -> [T n¹ l¹(99) r¹(99)])
+//│ def c(x⁰) = x⁰(99)
+//│ def t(_lh_dummy⁶) = 
+//│ 	let r² = bb
+//│ 	in let l² = aa
+//│ 	in let n² = [KK]
+//│ 	in [T n² l²(99) r²(99)]
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT:
 _LUMBERHACK_EVAL
@@ -818,6 +1135,34 @@ map(l)(
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C [T] [N]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ l -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ l((fun x⁰ -> case x⁰ of {
+//│ 	K  => [T]}))
+//│ def l = 
+//│ 	let t⁰ = (fun f⁰ -> [N])
+//│ 	in let h⁰ = [K]
+//│ 	in (fun f¹ -> [C f¹(h⁰) t⁰(f¹)])
+//│ def map(ls⁰) = ls⁰
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ l((fun x⁰ -> case x⁰ of {
+//│ 	K  => [T]}))
+//│ def l(f⁰) = 
+//│ 	let t⁰ = (fun f¹ -> [N])
+//│ 	in let h⁰ = [K]
+//│ 	in [C f⁰(h⁰) t⁰(f⁰)]
+//│ def map(ls⁰) = ls⁰
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT:
 _LUMBERHACK_EVAL
@@ -889,6 +1234,38 @@ lastDrive(C(1, C(2, N)))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [Some 2]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ last, lastDrive
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let tt⁰ = 	
+//│ 		let t⁰ = (fun x⁰ -> x⁰)
+//│ 		in let h⁰ = 2
+//│ 		in (fun x¹ -> t⁰(h⁰))
+//│ 	in let hh⁰ = 1
+//│ 	in (fun _lh_dummy⁰ -> [Some tt⁰(hh⁰)])(99)
+//│ def last(ys⁰) = ys⁰
+//│ def lastDrive(xs⁰) = xs⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let tt⁰ = 	
+//│ 		let t⁰ = (fun x⁰ -> x⁰)
+//│ 		in let h⁰ = 2
+//│ 		in (fun x¹ -> t⁰(h⁰))
+//│ 	in let hh⁰ = 1
+//│ 	in (fun _lh_dummy⁰ -> [Some tt⁰(hh⁰)])(99)
+//│ def last(ys⁰) = ys⁰
+//│ def lastDrive(xs⁰) = xs⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT: with expanding termination
 let p = C(p)
@@ -927,6 +1304,31 @@ c(p)
 //│ 	in (fun _lh_dummy⁰ -> c(a¹))(99)
 //│ def p = [C p]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ recursive consumer: c
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ c(p)
+//│ def c(x⁰) = 
+//│ 	let a⁰ = x⁰
+//│ 	in (fun _lh_dummy⁰ -> c(a⁰))(99)
+//│ def p = [C p]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ c(p)
+//│ def c(x⁰) = 
+//│ 	let a⁰ = x⁰
+//│ 	in (fun _lh_dummy⁰ -> c(a⁰))(99)
+//│ def p = [C p]
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -989,6 +1391,40 @@ c2(B)
 //│ 	A  => [AAA]
 //│ 	| B  => [BBB]}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ c1(a)
+//│ c2(a)
+//│ c2([B])
+//│ def a = [A]
+//│ def c1(x1⁰) = case x1⁰ of {
+//│ 	A  => [AA]
+//│ 	| B  => [BB]}
+//│ def c2(x2⁰) = case x2⁰ of {
+//│ 	A  => [AAA]
+//│ 	| B  => [BBB]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ c1(a)
+//│ c2(a)
+//│ c2([B])
+//│ def a = [A]
+//│ def c1(x1⁰) = case x1⁰ of {
+//│ 	A  => [AA]
+//│ 	| B  => [BB]}
+//│ def c2(x2⁰) = case x2⁰ of {
+//│ 	A  => [AAA]
+//│ 	| B  => [BBB]}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -1055,6 +1491,38 @@ lastDrive(C(1, C(2, N)))
 //│ def last(ys¹) = ys¹
 //│ def lastDrive(xs¹) = xs¹(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ last, lastDrive
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let tt⁰ = 	
+//│ 		let t⁰ = (fun x⁰ -> x⁰)
+//│ 		in let h⁰ = 2
+//│ 		in (fun x¹ -> t⁰(h⁰))
+//│ 	in let hh⁰ = 1
+//│ 	in (fun _lh_dummy⁰ -> [Some tt⁰(hh⁰)])(99)
+//│ def last(ys⁰) = ys⁰
+//│ def lastDrive(xs⁰) = xs⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let tt⁰ = 	
+//│ 		let t⁰ = (fun x⁰ -> x⁰)
+//│ 		in let h⁰ = 2
+//│ 		in (fun x¹ -> t⁰(h⁰))
+//│ 	in let hh⁰ = 1
+//│ 	in (fun _lh_dummy⁰ -> [Some tt⁰(hh⁰)])(99)
+//│ def last(ys⁰) = ys⁰
+//│ def lastDrive(xs⁰) = xs⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT: the time of unrolling is correct
 fun id(k) = k
@@ -1149,6 +1617,62 @@ id6(id4)(c)(id5(id2)(id3(p)))
 //│ 		in (fun _lh_dummy¹ -> c(a²))
 //│ 	in (fun _lh_dummy⁰ -> c(a¹))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ c
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ p -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ id6(id4, c, id5(id2, id3(p)))
+//│ def c(xx⁰) = xx⁰(99)
+//│ def id(k¹) = k¹
+//│ def id1(x⁰) = id(x⁰)
+//│ def id2(y⁰) = y⁰
+//│ def id3(z⁰) = z⁰
+//│ def id4(k⁰) = k⁰
+//│ def id5(j⁰) = j⁰
+//│ def id6(l⁰) = l⁰
+//│ def id7(i⁰) = i⁰
+//│ def p = 
+//│ 	let a⁰ = 	
+//│ 		let a¹ = 	
+//│ 			let a² = id7(
+//│ 				let a³ = 	
+//│ 					let a⁴ = id1(p)
+//│ 					in (fun _lh_dummy⁰ -> a⁴(99))
+//│ 				in (fun _lh_dummy¹ -> a³(99)))
+//│ 			in (fun _lh_dummy² -> a²(99))
+//│ 		in (fun _lh_dummy³ -> a¹(99))
+//│ 	in (fun _lh_dummy⁴ -> a⁰(99))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ id6(id4, c, id5(id2, id3(p)))
+//│ def c(xx⁰) = xx⁰(99)
+//│ def id(k¹) = k¹
+//│ def id1(x⁰) = id(x⁰)
+//│ def id2(y⁰) = y⁰
+//│ def id3(z⁰) = z⁰
+//│ def id4(k⁰) = k⁰
+//│ def id5(j⁰) = j⁰
+//│ def id6(l⁰) = l⁰
+//│ def id7(i⁰) = i⁰
+//│ def p = 
+//│ 	let a⁰ = 	
+//│ 		let a¹ = 	
+//│ 			let a² = id7(
+//│ 				let a³ = 	
+//│ 					let a⁴ = id1(p)
+//│ 					in (fun _lh_dummy⁰ -> a⁴(99))
+//│ 				in (fun _lh_dummy¹ -> a³(99)))
+//│ 			in (fun _lh_dummy² -> a²(99))
+//│ 		in (fun _lh_dummy³ -> a¹(99))
+//│ 	in (fun _lh_dummy⁴ -> a⁰(99))
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT:
 fun id(x) = if x is
@@ -1202,6 +1726,34 @@ c(id(p))
 //│ 	| C a⁰ => id([ID [C a⁰]])}
 //│ def p = [C p]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ c(id(p))
+//│ def c(y⁰) = case y⁰ of {
+//│ 	C aa⁰ => c(aa⁰)}
+//│ def id(x⁰) = case x⁰ of {
+//│ 	ID b⁰ => b⁰
+//│ 	| C a⁰ => id([ID [C a⁰]])}
+//│ def p = [C p]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ c(id(p))
+//│ def c(y⁰) = case y⁰ of {
+//│ 	C aa⁰ => c(aa⁰)}
+//│ def id(x⁰) = case x⁰ of {
+//│ 	ID b⁰ => b⁰
+//│ 	| C a⁰ => id([ID [C a⁰]])}
+//│ def p = [C p]
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT: unlike the rev rev case, TODO: why?
@@ -1303,6 +1855,46 @@ len(map(C(A, C(B, N))))
 //│ def len(ls³) = ls³(99)
 //│ def map(ls²) = ls²(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map, len
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun _lh_dummy⁰ -> (fun _lh_dummy¹ -> 0))
+//│ 		in let h⁰ = [BB]
+//│ 		in (fun _lh_dummy² -> 
+//│ 			let t² = t¹(99)
+//│ 			in (fun _lh_dummy³ -> (1 + t²(99))))
+//│ 	in let h¹ = [AA]
+//│ 	in (fun _lh_dummy⁴ -> 
+//│ 		let t³ = t⁰(99)
+//│ 		in (fun _lh_dummy⁵ -> (1 + t³(99))))(99, 99)
+//│ def len(ls¹) = ls¹(99)
+//│ def map(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun _lh_dummy⁰ -> (fun _lh_dummy¹ -> 0))
+//│ 		in let h⁰ = [BB]
+//│ 		in (fun _lh_dummy² -> 
+//│ 			let t² = t¹(99)
+//│ 			in (fun _lh_dummy³ -> (1 + t²(99))))
+//│ 	in let h¹ = [AA]
+//│ 	in (fun _lh_dummy⁴ -> 
+//│ 		let t³ = t⁰(99)
+//│ 		in (fun _lh_dummy⁵ -> (1 + t³(99))))(99, 99)
+//│ def len(ls¹) = ls¹(99)
+//│ def map(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT: multiple match, but correct
 fun f(x) = if x is
@@ -1342,6 +1934,26 @@ f(C(A))(C(B))(C(D))
 //│ def f(x¹) = case x¹ of {
 //│ 	C a⁰ => f}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f([C [A]], [C [B]], [C [D]])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	C a⁰ => f}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f([C [A]], [C [B]], [C [D]])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	C a⁰ => f}
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT:
 let aa = T(N, t, t)
@@ -1420,6 +2032,45 @@ c(t)
 //│ 	in let n² = [KK]
 //│ 	in (fun _lh_dummy¹ -> [T n² c(l²) c(r²)])
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ c
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ aa -> 0
+//│ t -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ t(99)
+//│ def aa = 
+//│ 	let r⁰ = t
+//│ 	in let l⁰ = t
+//│ 	in let n⁰ = [NN]
+//│ 	in (fun _lh_dummy⁰ -> [T n⁰ l⁰(99) r⁰(99)])
+//│ def c(x⁰) = x⁰(99)
+//│ def t = 
+//│ 	let r¹ = aa
+//│ 	in let l¹ = aa
+//│ 	in let n¹ = [KK]
+//│ 	in (fun _lh_dummy¹ -> [T n¹ l¹(99) r¹(99)])
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ t(99)
+//│ def aa = 
+//│ 	let r⁰ = t
+//│ 	in let l⁰ = t
+//│ 	in let n⁰ = [NN]
+//│ 	in (fun _lh_dummy⁰ -> [T n⁰ l⁰(99) r⁰(99)])
+//│ def c(x⁰) = x⁰(99)
+//│ def t = 
+//│ 	let r¹ = aa
+//│ 	in let l¹ = aa
+//│ 	in let n¹ = [KK]
+//│ 	in (fun _lh_dummy¹ -> [T n¹ l¹(99) r¹(99)])
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT: but explode on branches
@@ -1493,6 +2144,54 @@ filter(C(1, C(2, C(3, N))))
 //│ 		| False  => filter(t¹)}))
 //│ def filter(ls¹) = ls¹(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ filter
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = (fun _lh_dummy⁰ -> [N])
+//│ 			in let h⁰ = 3
+//│ 			in (fun _lh_dummy¹ -> case (h⁰ > 1) of {
+//│ 				True  => [C h⁰ t²(99)]
+//│ 				| False  => t²(99)})
+//│ 		in let h¹ = 2
+//│ 		in (fun _lh_dummy² -> case (h¹ > 1) of {
+//│ 			True  => [C h¹ t¹(99)]
+//│ 			| False  => t¹(99)})
+//│ 	in let h² = 1
+//│ 	in (fun _lh_dummy³ -> case (h² > 1) of {
+//│ 		True  => [C h² t⁰(99)]
+//│ 		| False  => t⁰(99)})(99)
+//│ def filter(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = (fun _lh_dummy⁰ -> [N])
+//│ 			in let h⁰ = 3
+//│ 			in (fun _lh_dummy¹ -> case (h⁰ > 1) of {
+//│ 				True  => [C h⁰ t²(99)]
+//│ 				| False  => t²(99)})
+//│ 		in let h¹ = 2
+//│ 		in (fun _lh_dummy² -> case (h¹ > 1) of {
+//│ 			True  => [C h¹ t¹(99)]
+//│ 			| False  => t¹(99)})
+//│ 	in let h² = 1
+//│ 	in (fun _lh_dummy³ -> case (h² > 1) of {
+//│ 		True  => [C h² t⁰(99)]
+//│ 		| False  => t⁰(99)})(99)
+//│ def filter(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT: top level defs used multiple times are fine
@@ -1554,6 +2253,36 @@ P(c(pp), c(p))
 //│ def p = [C p]
 //│ def pp = [C [C pp]]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ [P c(pp) c(p)]
+//│ def c(x⁰) = case x⁰ of {
+//│ 	C a⁰ => case a⁰ of {
+//│ 		C b⁰ => c(b⁰)
+//│ 		| N  => a⁰}
+//│ 	| N  => x⁰}
+//│ def p = [C p]
+//│ def pp = [C [C pp]]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ [P c(pp) c(p)]
+//│ def c(x⁰) = case x⁰ of {
+//│ 	C a⁰ => case a⁰ of {
+//│ 		C b⁰ => c(b⁰)
+//│ 		| N  => a⁰}
+//│ 	| N  => x⁰}
+//│ def p = [C p]
+//│ def pp = [C [C pp]]
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT:
@@ -1644,6 +2373,48 @@ rev2(rev(C(1, C(2, N)))(N))(N)
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 1 [C 2 [N]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev, rev2
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ let t⁰ = 	
+//│ 	let t¹ = (fun a⁰ -> a⁰)
+//│ 	in let h⁰ = 2
+//│ 	in (fun a¹ -> t¹(
+//│ 		let t2⁰ = a¹
+//│ 		in let h2⁰ = h⁰
+//│ 		in (fun a2⁰ -> t2⁰([C h2⁰ a2⁰]))))
+//│ in let h¹ = 1
+//│ in t⁰(
+//│ 	let t2¹ = (fun a2¹ -> a2¹)
+//│ 	in let h2¹ = h¹
+//│ 	in (fun a2² -> t2¹([C h2¹ a2²])), [N])
+//│ def rev(ls⁰) = ls⁰
+//│ def rev2(ls2⁰) = ls2⁰
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ let t⁰ = 	
+//│ 	let t¹ = (fun a⁰ -> a⁰)
+//│ 	in let h⁰ = 2
+//│ 	in (fun a¹ -> t¹(
+//│ 		let t2⁰ = a¹
+//│ 		in let h2⁰ = h⁰
+//│ 		in (fun a2⁰ -> t2⁰([C h2⁰ a2⁰]))))
+//│ in let h¹ = 1
+//│ in t⁰(
+//│ 	let t2¹ = (fun a2¹ -> a2¹)
+//│ 	in let h2¹ = h¹
+//│ 	in (fun a2² -> t2¹([C h2¹ a2²])), [N])
+//│ def rev(ls⁰) = ls⁰
+//│ def rev2(ls2⁰) = ls2⁰
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT: rev actually works (despite the fact that there are some match clash),
@@ -1726,6 +2497,30 @@ rev(rev(C(A, C(B, N)))(N))(N)
 //│ [C [B] [C [A] [N]]]
 //│ [C [A] [C [B] [N]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ rev([C [A] [C [B] [N]]], [N])
+//│ rev(rev([C [A] [C [B] [N]]], [N]), [N])
+//│ def rev(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => (fun a⁰ -> rev(t⁰, [C h⁰ a⁰]))
+//│ 	| N  => (fun a¹ -> a¹)}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ rev([C [A] [C [B] [N]]], [N])
+//│ rev(rev([C [A] [C [B] [N]]], [N]), [N])
+//│ def rev(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => (fun a⁰ -> rev(t⁰, [C h⁰ a⁰]))
+//│ 	| N  => (fun a¹ -> a¹)}
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT: using primitive is also correct
 fun rev(ls) = if ls is
@@ -1771,6 +2566,28 @@ rev(rev(primitive)(N))(N)
 //│ 	C h⁰ t⁰ => (fun a² -> rev(t⁰, [C h⁰ a²]))
 //│ 	| N  => (fun a³ -> a³)}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ rev(rev(primitive⁰, [N]), [N])
+//│ def rev(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => (fun a⁰ -> rev(t⁰, [C h⁰ a⁰]))
+//│ 	| N  => (fun a¹ -> a¹)}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ rev(rev(primitive⁰, [N]), [N])
+//│ def rev(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => (fun a⁰ -> rev(t⁰, [C h⁰ a⁰]))
+//│ 	| N  => (fun a¹ -> a¹)}
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT: even normal rev can be optimized?
 // NOTE: may be only out of luck: we choose 
@@ -1860,6 +2677,42 @@ rev(C(1, C(2, N)))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 2 [C 1 [N]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun _lh_dummy⁰ -> [N])
+//│ 		in let h⁰ = 2
+//│ 		in (fun _lh_dummy¹ -> concat(t¹(99), [C h⁰ [N]]))
+//│ 	in let h¹ = 1
+//│ 	in (fun _lh_dummy² -> concat(t⁰(99), [C h¹ [N]]))(99)
+//│ def concat(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h² t² => (fun ys¹ -> [C h² concat(t², ys¹)])}
+//│ def rev(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun _lh_dummy⁰ -> [N])
+//│ 		in let h⁰ = 2
+//│ 		in (fun _lh_dummy¹ -> concat(t¹(99), [C h⁰ [N]]))
+//│ 	in let h¹ = 1
+//│ 	in (fun _lh_dummy² -> concat(t⁰(99), [C h¹ [N]]))(99)
+//│ def concat(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h² t² => (fun ys¹ -> [C h² concat(t², ys¹)])}
+//│ def rev(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT: but will be WRONG: if strategy-filtering is strict, since y is a destination of [C 1 N]
@@ -1902,6 +2755,28 @@ f(C(1, N))
 //│ def f(x¹) = (fun x² -> case x² of {
 //│ 	C h⁰ t⁰ => t⁰})(x¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ f
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ (fun x⁰ -> case x⁰ of {
+//│ 	C h⁰ t⁰ => t⁰})([C 1 [N]])
+//│ def f(x¹) = (fun x² -> case x² of {
+//│ 	C h¹ t¹ => t¹})(x¹)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ (fun x⁰ -> case x⁰ of {
+//│ 	C h⁰ t⁰ => t⁰})([C 1 [N]])
+//│ def f(x¹) = (fun x² -> case x² of {
+//│ 	C h¹ t¹ => t¹})(x¹)
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT: after using `last(C(hh, tt))` instead of `last(t)` and pushing in of parameters
 _LUMBERHACK_EVAL
@@ -1980,6 +2855,52 @@ last(C(1, C(2, C(3, N))))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [Some 3]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ last
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ case [C 1 
+//│ 	let tt⁰ = 	
+//│ 		let tt¹ = (fun h⁰ -> [Some h⁰])
+//│ 		in let hh⁰ = 3
+//│ 		in (fun h¹ -> case [C hh⁰ tt¹] of {
+//│ 			C h² t⁰ => t⁰(h²)
+//│ 			| N  => [None]})
+//│ 	in let hh¹ = 2
+//│ 	in (fun h³ -> case [C hh¹ tt⁰] of {
+//│ 		C h⁴ t¹ => t¹(h⁴)
+//│ 		| N  => [None]})] of {
+//│ 	C h⁵ t² => t²(h⁵)
+//│ 	| N  => [None]}
+//│ def last(ls⁰) = case ls⁰ of {
+//│ 	C h⁶ t³ => t³(h⁶)
+//│ 	| N  => [None]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ case [C 1 
+//│ 	let tt⁰ = 	
+//│ 		let tt¹ = (fun h⁰ -> [Some h⁰])
+//│ 		in let hh⁰ = 3
+//│ 		in (fun h¹ -> case [C hh⁰ tt¹] of {
+//│ 			C h² t⁰ => t⁰(h²)
+//│ 			| N  => [None]})
+//│ 	in let hh¹ = 2
+//│ 	in (fun h³ -> case [C hh¹ tt⁰] of {
+//│ 		C h⁴ t¹ => t¹(h⁴)
+//│ 		| N  => [None]})] of {
+//│ 	C h⁵ t² => t²(h⁵)
+//│ 	| N  => [None]}
+//│ def last(ls⁰) = case ls⁰ of {
+//│ 	C h⁶ t³ => t³(h⁶)
+//│ 	| N  => [None]}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 fun f(x) = if primitive(x) then A(x) else B(x + 1)
@@ -2028,6 +2949,34 @@ g(f(1), 2)
 //│ 	in (fun y² -> (y² + m¹))
 //│ def g(scrut¹, y³) = scrut¹(y³)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ g
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ f -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f(1, 2)
+//│ def f(x⁰) = if primitive⁰(x⁰) then 
+//│ 	let n⁰ = x⁰
+//│ 	in (fun y⁰ -> ((y⁰ + n⁰) + 1)) else 
+//│ 	let m⁰ = (x⁰ + 1)
+//│ 	in (fun y¹ -> (y¹ + m⁰))
+//│ def g(scrut⁰, y²) = scrut⁰(y²)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f(1, 2)
+//│ def f(x⁰, _lh_popOutId_0⁰) = if primitive⁰(x⁰) then 
+//│ 	let n⁰ = x⁰
+//│ 	in ((_lh_popOutId_0⁰ + n⁰) + 1) else 
+//│ 	let m⁰ = (x⁰ + 1)
+//│ 	in (_lh_popOutId_0⁰ + m⁰)
+//│ def g(scrut⁰, y⁰) = scrut⁰(y⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 :lhInHaskell
@@ -2150,6 +3099,186 @@ ack (S (S (S Z))) (S (S Z))
 //│ 	let _lh_matchIdent⁵ = _lh_ack_arg1⁵
 //│ 	in _lh_matchIdent⁵(_lh_ack_arg2⁵, _lh_ack_arg1⁵)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ ack_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ let _lh_matchIdent⁰ = 	
+//│ 	let _lh_ack_S_0⁰ = 	
+//│ 		let _lh_ack_S_0¹ = 	
+//│ 			let _lh_ack_S_0² = (fun _lh_ack_arg2⁰ -> (fun _lh_ack_arg1⁰ -> [S _lh_ack_arg2⁰]))
+//│ 			in (fun _lh_ack_arg2¹ -> (fun _lh_ack_arg1¹ -> 
+//│ 				let _lh_matchIdent¹ = _lh_ack_arg2¹
+//│ 				in case _lh_matchIdent¹ of {
+//│ 					Z  => 
+//│ 						let _lh_matchIdent² = _lh_ack_S_0²
+//│ 						in _lh_matchIdent²([S [Z]], _lh_ack_S_0²)
+//│ 					| S _lh_ack_S_0³ => 
+//│ 						let _lh_matchIdent³ = _lh_ack_S_0²
+//│ 						in _lh_matchIdent³(
+//│ 							let _lh_matchIdent⁴ = _lh_ack_arg1¹
+//│ 							in _lh_matchIdent⁴(_lh_ack_S_0³, _lh_ack_arg1¹), _lh_ack_S_0²)
+//│ 					| _  => error⁰}))
+//│ 		in (fun _lh_ack_arg2² -> (fun _lh_ack_arg1² -> 
+//│ 			let _lh_matchIdent⁵ = _lh_ack_arg2²
+//│ 			in case _lh_matchIdent⁵ of {
+//│ 				Z  => 
+//│ 					let _lh_matchIdent⁶ = _lh_ack_S_0¹
+//│ 					in _lh_matchIdent⁶([S [Z]], _lh_ack_S_0¹)
+//│ 				| S _lh_ack_S_0⁴ => 
+//│ 					let _lh_matchIdent⁷ = _lh_ack_S_0¹
+//│ 					in _lh_matchIdent⁷(
+//│ 						let _lh_matchIdent⁸ = _lh_ack_arg1²
+//│ 						in _lh_matchIdent⁸(_lh_ack_S_0⁴, _lh_ack_arg1²), _lh_ack_S_0¹)
+//│ 				| _  => error⁰}))
+//│ 	in (fun _lh_ack_arg2³ -> (fun _lh_ack_arg1³ -> 
+//│ 		let _lh_matchIdent⁹ = _lh_ack_arg2³
+//│ 		in case _lh_matchIdent⁹ of {
+//│ 			Z  => 
+//│ 				let _lh_matchIdent¹⁰ = _lh_ack_S_0⁰
+//│ 				in _lh_matchIdent¹⁰([S [Z]], _lh_ack_S_0⁰)
+//│ 			| S _lh_ack_S_0⁵ => 
+//│ 				let _lh_matchIdent¹¹ = _lh_ack_S_0⁰
+//│ 				in _lh_matchIdent¹¹(
+//│ 					let _lh_matchIdent¹² = _lh_ack_arg1³
+//│ 					in _lh_matchIdent¹²(_lh_ack_S_0⁵, _lh_ack_arg1³), _lh_ack_S_0⁰)
+//│ 			| _  => error⁰}))
+//│ in _lh_matchIdent⁰([S [S [Z]]], 
+//│ 	let _lh_ack_S_0⁶ = 	
+//│ 		let _lh_ack_S_0⁷ = 	
+//│ 			let _lh_ack_S_0⁸ = (fun _lh_ack_arg2⁴ -> (fun _lh_ack_arg1⁴ -> [S _lh_ack_arg2⁴]))
+//│ 			in (fun _lh_ack_arg2⁵ -> (fun _lh_ack_arg1⁵ -> 
+//│ 				let _lh_matchIdent¹³ = _lh_ack_arg2⁵
+//│ 				in case _lh_matchIdent¹³ of {
+//│ 					Z  => 
+//│ 						let _lh_matchIdent¹⁴ = _lh_ack_S_0⁸
+//│ 						in _lh_matchIdent¹⁴([S [Z]], _lh_ack_S_0⁸)
+//│ 					| S _lh_ack_S_0⁹ => 
+//│ 						let _lh_matchIdent¹⁵ = _lh_ack_S_0⁸
+//│ 						in _lh_matchIdent¹⁵(
+//│ 							let _lh_matchIdent¹⁶ = _lh_ack_arg1⁵
+//│ 							in _lh_matchIdent¹⁶(_lh_ack_S_0⁹, _lh_ack_arg1⁵), _lh_ack_S_0⁸)
+//│ 					| _  => error⁰}))
+//│ 		in (fun _lh_ack_arg2⁶ -> (fun _lh_ack_arg1⁶ -> 
+//│ 			let _lh_matchIdent¹⁷ = _lh_ack_arg2⁶
+//│ 			in case _lh_matchIdent¹⁷ of {
+//│ 				Z  => 
+//│ 					let _lh_matchIdent¹⁸ = _lh_ack_S_0⁷
+//│ 					in _lh_matchIdent¹⁸([S [Z]], _lh_ack_S_0⁷)
+//│ 				| S _lh_ack_S_0¹⁰ => 
+//│ 					let _lh_matchIdent¹⁹ = _lh_ack_S_0⁷
+//│ 					in _lh_matchIdent¹⁹(
+//│ 						let _lh_matchIdent²⁰ = _lh_ack_arg1⁶
+//│ 						in _lh_matchIdent²⁰(_lh_ack_S_0¹⁰, _lh_ack_arg1⁶), _lh_ack_S_0⁷)
+//│ 				| _  => error⁰}))
+//│ 	in (fun _lh_ack_arg2⁷ -> (fun _lh_ack_arg1⁷ -> 
+//│ 		let _lh_matchIdent²¹ = _lh_ack_arg2⁷
+//│ 		in case _lh_matchIdent²¹ of {
+//│ 			Z  => 
+//│ 				let _lh_matchIdent²² = _lh_ack_S_0⁶
+//│ 				in _lh_matchIdent²²([S [Z]], _lh_ack_S_0⁶)
+//│ 			| S _lh_ack_S_0¹¹ => 
+//│ 				let _lh_matchIdent²³ = _lh_ack_S_0⁶
+//│ 				in _lh_matchIdent²³(
+//│ 					let _lh_matchIdent²⁴ = _lh_ack_arg1⁷
+//│ 					in _lh_matchIdent²⁴(_lh_ack_S_0¹¹, _lh_ack_arg1⁷), _lh_ack_S_0⁶)
+//│ 			| _  => error⁰})))
+//│ def ack_lh_₁(_lh_ack_arg1⁸, _lh_ack_arg2⁸) = 
+//│ 	let _lh_matchIdent²⁵ = _lh_ack_arg1⁸
+//│ 	in _lh_matchIdent²⁵(_lh_ack_arg2⁸, _lh_ack_arg1⁸)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ let _lh_matchIdent⁰ = 	
+//│ 	let _lh_ack_S_0⁰ = 	
+//│ 		let _lh_ack_S_0¹ = 	
+//│ 			let _lh_ack_S_0² = (fun _lh_ack_arg2⁰ -> (fun _lh_ack_arg1⁰ -> [S _lh_ack_arg2⁰]))
+//│ 			in (fun _lh_ack_arg2¹ -> (fun _lh_ack_arg1¹ -> 
+//│ 				let _lh_matchIdent¹ = _lh_ack_arg2¹
+//│ 				in case _lh_matchIdent¹ of {
+//│ 					Z  => 
+//│ 						let _lh_matchIdent² = _lh_ack_S_0²
+//│ 						in _lh_matchIdent²([S [Z]], _lh_ack_S_0²)
+//│ 					| S _lh_ack_S_0³ => 
+//│ 						let _lh_matchIdent³ = _lh_ack_S_0²
+//│ 						in _lh_matchIdent³(
+//│ 							let _lh_matchIdent⁴ = _lh_ack_arg1¹
+//│ 							in _lh_matchIdent⁴(_lh_ack_S_0³, _lh_ack_arg1¹), _lh_ack_S_0²)
+//│ 					| _  => error⁰}))
+//│ 		in (fun _lh_ack_arg2² -> (fun _lh_ack_arg1² -> 
+//│ 			let _lh_matchIdent⁵ = _lh_ack_arg2²
+//│ 			in case _lh_matchIdent⁵ of {
+//│ 				Z  => 
+//│ 					let _lh_matchIdent⁶ = _lh_ack_S_0¹
+//│ 					in _lh_matchIdent⁶([S [Z]], _lh_ack_S_0¹)
+//│ 				| S _lh_ack_S_0⁴ => 
+//│ 					let _lh_matchIdent⁷ = _lh_ack_S_0¹
+//│ 					in _lh_matchIdent⁷(
+//│ 						let _lh_matchIdent⁸ = _lh_ack_arg1²
+//│ 						in _lh_matchIdent⁸(_lh_ack_S_0⁴, _lh_ack_arg1²), _lh_ack_S_0¹)
+//│ 				| _  => error⁰}))
+//│ 	in (fun _lh_ack_arg2³ -> (fun _lh_ack_arg1³ -> 
+//│ 		let _lh_matchIdent⁹ = _lh_ack_arg2³
+//│ 		in case _lh_matchIdent⁹ of {
+//│ 			Z  => 
+//│ 				let _lh_matchIdent¹⁰ = _lh_ack_S_0⁰
+//│ 				in _lh_matchIdent¹⁰([S [Z]], _lh_ack_S_0⁰)
+//│ 			| S _lh_ack_S_0⁵ => 
+//│ 				let _lh_matchIdent¹¹ = _lh_ack_S_0⁰
+//│ 				in _lh_matchIdent¹¹(
+//│ 					let _lh_matchIdent¹² = _lh_ack_arg1³
+//│ 					in _lh_matchIdent¹²(_lh_ack_S_0⁵, _lh_ack_arg1³), _lh_ack_S_0⁰)
+//│ 			| _  => error⁰}))
+//│ in _lh_matchIdent⁰([S [S [Z]]], 
+//│ 	let _lh_ack_S_0⁶ = 	
+//│ 		let _lh_ack_S_0⁷ = 	
+//│ 			let _lh_ack_S_0⁸ = (fun _lh_ack_arg2⁴ -> (fun _lh_ack_arg1⁴ -> [S _lh_ack_arg2⁴]))
+//│ 			in (fun _lh_ack_arg2⁵ -> (fun _lh_ack_arg1⁵ -> 
+//│ 				let _lh_matchIdent¹³ = _lh_ack_arg2⁵
+//│ 				in case _lh_matchIdent¹³ of {
+//│ 					Z  => 
+//│ 						let _lh_matchIdent¹⁴ = _lh_ack_S_0⁸
+//│ 						in _lh_matchIdent¹⁴([S [Z]], _lh_ack_S_0⁸)
+//│ 					| S _lh_ack_S_0⁹ => 
+//│ 						let _lh_matchIdent¹⁵ = _lh_ack_S_0⁸
+//│ 						in _lh_matchIdent¹⁵(
+//│ 							let _lh_matchIdent¹⁶ = _lh_ack_arg1⁵
+//│ 							in _lh_matchIdent¹⁶(_lh_ack_S_0⁹, _lh_ack_arg1⁵), _lh_ack_S_0⁸)
+//│ 					| _  => error⁰}))
+//│ 		in (fun _lh_ack_arg2⁶ -> (fun _lh_ack_arg1⁶ -> 
+//│ 			let _lh_matchIdent¹⁷ = _lh_ack_arg2⁶
+//│ 			in case _lh_matchIdent¹⁷ of {
+//│ 				Z  => 
+//│ 					let _lh_matchIdent¹⁸ = _lh_ack_S_0⁷
+//│ 					in _lh_matchIdent¹⁸([S [Z]], _lh_ack_S_0⁷)
+//│ 				| S _lh_ack_S_0¹⁰ => 
+//│ 					let _lh_matchIdent¹⁹ = _lh_ack_S_0⁷
+//│ 					in _lh_matchIdent¹⁹(
+//│ 						let _lh_matchIdent²⁰ = _lh_ack_arg1⁶
+//│ 						in _lh_matchIdent²⁰(_lh_ack_S_0¹⁰, _lh_ack_arg1⁶), _lh_ack_S_0⁷)
+//│ 				| _  => error⁰}))
+//│ 	in (fun _lh_ack_arg2⁷ -> (fun _lh_ack_arg1⁷ -> 
+//│ 		let _lh_matchIdent²¹ = _lh_ack_arg2⁷
+//│ 		in case _lh_matchIdent²¹ of {
+//│ 			Z  => 
+//│ 				let _lh_matchIdent²² = _lh_ack_S_0⁶
+//│ 				in _lh_matchIdent²²([S [Z]], _lh_ack_S_0⁶)
+//│ 			| S _lh_ack_S_0¹¹ => 
+//│ 				let _lh_matchIdent²³ = _lh_ack_S_0⁶
+//│ 				in _lh_matchIdent²³(
+//│ 					let _lh_matchIdent²⁴ = _lh_ack_arg1⁷
+//│ 					in _lh_matchIdent²⁴(_lh_ack_S_0¹¹, _lh_ack_arg1⁷), _lh_ack_S_0⁶)
+//│ 			| _  => error⁰})))
+//│ def ack_lh_₁(_lh_ack_arg1⁸, _lh_ack_arg2⁸) = 
+//│ 	let _lh_matchIdent²⁵ = _lh_ack_arg1⁸
+//│ 	in _lh_matchIdent²⁵(_lh_ack_arg2⁸, _lh_ack_arg1⁸)
+//│ <<<<<<< after floating out <<<<<<<
 
 :lhInHaskell
 :lhEval
@@ -2205,6 +3334,34 @@ test $ primId 10
 //│ >>>>>>> evaluate >>>>>>>
 //│ 55
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ foldl_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ enumFromTo_lh_₁ -> 4
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ test_lh_₁(primId⁰(10))
+//│ def enumFromTo_lh_₁(a⁰, b⁰) = if (a⁰ <= b⁰) then 
+//│ 	let t⁰ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
+//│ 	in let h⁰ = a⁰
+//│ 	in (fun f¹ -> (fun i¹ -> t⁰(f¹, f¹(i¹, h⁰)))) else (fun f² -> (fun i² -> i²))
+//│ def foldl_lh_₁(f⁰, i⁰, ls⁰) = ls⁰(f⁰, i⁰)
+//│ def test_lh_₁(_lh_test_arg1⁰) = enumFromTo_lh_₁(1, _lh_test_arg1⁰, (fun a¹ -> (fun b¹ -> (a¹ + b¹))), 0)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ test_lh_₁(primId⁰(10))
+//│ def enumFromTo_lh_₁(a⁰, b⁰, _lh_popOutId_0⁰, _lh_popOutId_1⁰) = if (a⁰ <= b⁰) then 
+//│ 	let t⁰ = enumFromTo_lh_₁((a⁰ + 1), b⁰)
+//│ 	in let h⁰ = a⁰
+//│ 	in t⁰(_lh_popOutId_0⁰, _lh_popOutId_0⁰(_lh_popOutId_1⁰, h⁰)) else _lh_popOutId_1⁰
+//│ def foldl_lh_₁(f⁰, i⁰, ls⁰) = ls⁰(f⁰, i⁰)
+//│ def test_lh_₁(_lh_test_arg1⁰) = enumFromTo_lh_₁(1, _lh_test_arg1⁰, (fun a¹ -> (fun b¹ -> (a¹ + b¹))), 0)
+//│ <<<<<<< after floating out <<<<<<<
 
 :lhInHaskell
 :lhEval
@@ -2292,6 +3449,46 @@ test $ primId 10
 //│ >>>>>>> evaluate >>>>>>>
 //│ 880
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ sum_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ zipWith_lh_₁ -> 4
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ test_lh_₁(primId⁰(10))
+//│ def enumFromTo_lh_₁(a², b²) = if (a² <= b²) then [LH_C a² enumFromTo_lh_₁((a² + 1), b²)] else [LH_N]
+//│ def enumFromTo_lh_₂(a¹, b¹) = if (a¹ <= b¹) then [LH_C a¹ enumFromTo_lh_₂((a¹ + 1), b¹)] else [LH_N]
+//│ def sum_lh_₁(ls⁰) = ls⁰(99)
+//│ def test_lh_₁(_lh_test_arg1⁰) = zipWith_lh_₁((fun a⁰ -> (fun b⁰ -> (a⁰ * b⁰))), primId⁰(enumFromTo_lh_₁(1, _lh_test_arg1⁰)), primId⁰(enumFromTo_lh_₂(_lh_test_arg1⁰, (2 * _lh_test_arg1⁰))), 99)
+//│ def zipWith_lh_₁(f⁰, xs⁰, ys⁰) = case xs⁰ of {
+//│ 	LH_C hx⁰ tx⁰ => case ys⁰ of {
+//│ 		LH_C hy⁰ ty⁰ => 
+//│ 			let t⁰ = zipWith_lh_₁(f⁰, tx⁰, ty⁰)
+//│ 			in let h⁰ = f⁰(hx⁰, hy⁰)
+//│ 			in (fun _lh_dummy⁰ -> (h⁰ + t⁰(99)))
+//│ 		| LH_N  => (fun _lh_dummy¹ -> 0)}
+//│ 	| LH_N  => (fun _lh_dummy² -> 0)}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ test_lh_₁(primId⁰(10))
+//│ def enumFromTo_lh_₁(a², b²) = if (a² <= b²) then [LH_C a² enumFromTo_lh_₁((a² + 1), b²)] else [LH_N]
+//│ def enumFromTo_lh_₂(a¹, b¹) = if (a¹ <= b¹) then [LH_C a¹ enumFromTo_lh_₂((a¹ + 1), b¹)] else [LH_N]
+//│ def sum_lh_₁(ls⁰) = ls⁰(99)
+//│ def test_lh_₁(_lh_test_arg1⁰) = zipWith_lh_₁((fun a⁰ -> (fun b⁰ -> (a⁰ * b⁰))), primId⁰(enumFromTo_lh_₁(1, _lh_test_arg1⁰)), primId⁰(enumFromTo_lh_₂(_lh_test_arg1⁰, (2 * _lh_test_arg1⁰))), 99)
+//│ def zipWith_lh_₁(f⁰, xs⁰, ys⁰, _lh_popOutId_0⁰) = case xs⁰ of {
+//│ 	LH_C hx⁰ tx⁰ => case ys⁰ of {
+//│ 		LH_C hy⁰ ty⁰ => 
+//│ 			let t⁰ = zipWith_lh_₁(f⁰, tx⁰, ty⁰)
+//│ 			in let h⁰ = f⁰(hx⁰, hy⁰)
+//│ 			in (h⁰ + t⁰(99))
+//│ 		| LH_N  => 0}
+//│ 	| LH_N  => 0}
+//│ <<<<<<< after floating out <<<<<<<
 
 :lhInHaskell
 :lhEval
@@ -2520,3 +3717,126 @@ let mainFact = (\x -> fact (\y -> x x y)) (\x -> fact (\y -> x x y)) in mainFact
 //│ >>>>>>> evaluate >>>>>>>
 //│ [S [S [S [S [S [S [Z]]]]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ mmin_lh_₂, mmin_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ fact_lh_₂ -> 1
+//│ fact_lh_₁ -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ let mainFact⁰ = (fun x⁰ -> fact_lh_₁((fun y⁰ -> x⁰(x⁰, y⁰))))((fun x¹ -> fact_lh_₂((fun y¹ -> x¹(x¹, y¹)))))
+//│ in mainFact⁰(primId⁰([S [S [S [Z]]]]))
+//│ def fact_lh_₁(_lh_fact_arg1¹, _lh_fact_arg2¹) = case _lh_fact_arg2¹ of {
+//│ 	Z  => [S [Z]]
+//│ 	| S _lh_fact_S_0¹ => mmul_lh_₁([S _lh_fact_S_0¹], _lh_fact_arg1¹(
+//│ 		let _lh_matchIdent⁵ = 	
+//│ 			let _lh_mmin_S_0² = (fun _lh_mmin_arg1⁴ -> _lh_mmin_arg1⁴)
+//│ 			in (fun _lh_mmin_arg1⁵ -> 
+//│ 				let _lh_matchIdent⁶ = _lh_mmin_arg1⁵
+//│ 				in case _lh_matchIdent⁶ of {
+//│ 					Z  => [Z]
+//│ 					| S _lh_mmin_S_0³ => 
+//│ 						let _lh_matchIdent⁷ = _lh_mmin_S_0²
+//│ 						in _lh_matchIdent⁷(_lh_mmin_S_0³)
+//│ 					| _  => error⁰})
+//│ 		in _lh_matchIdent⁵([S _lh_fact_S_0¹])))
+//│ 	| _  => error⁰}
+//│ def fact_lh_₂(_lh_fact_arg1⁰, _lh_fact_arg2⁰) = case _lh_fact_arg2⁰ of {
+//│ 	Z  => [S [Z]]
+//│ 	| S _lh_fact_S_0⁰ => mmul_lh_₂([S _lh_fact_S_0⁰], _lh_fact_arg1⁰(
+//│ 		let _lh_matchIdent⁰ = 	
+//│ 			let _lh_mmin_S_0⁰ = (fun _lh_mmin_arg1⁰ -> _lh_mmin_arg1⁰)
+//│ 			in (fun _lh_mmin_arg1¹ -> 
+//│ 				let _lh_matchIdent¹ = _lh_mmin_arg1¹
+//│ 				in case _lh_matchIdent¹ of {
+//│ 					Z  => [Z]
+//│ 					| S _lh_mmin_S_0¹ => 
+//│ 						let _lh_matchIdent² = _lh_mmin_S_0⁰
+//│ 						in _lh_matchIdent²(_lh_mmin_S_0¹)
+//│ 					| _  => error⁰})
+//│ 		in _lh_matchIdent⁰([S _lh_fact_S_0⁰])))
+//│ 	| _  => error⁰}
+//│ def mmin_lh_₁(_lh_mmin_arg1², _lh_mmin_arg2⁰) = 
+//│ 	let _lh_matchIdent³ = _lh_mmin_arg2⁰
+//│ 	in _lh_matchIdent³(_lh_mmin_arg1²)
+//│ def mmin_lh_₂(_lh_mmin_arg1³, _lh_mmin_arg2¹) = 
+//│ 	let _lh_matchIdent⁴ = _lh_mmin_arg2¹
+//│ 	in _lh_matchIdent⁴(_lh_mmin_arg1³)
+//│ def mmul_lh_₁(_lh_mmul_arg1¹, _lh_mmul_arg2¹) = case _lh_mmul_arg1¹ of {
+//│ 	Z  => [Z]
+//│ 	| S _lh_mmul_S_0¹ => pplus_lh_₁(_lh_mmul_arg2¹, mmul_lh_₁(_lh_mmul_S_0¹, _lh_mmul_arg2¹))
+//│ 	| _  => error⁰}
+//│ def mmul_lh_₂(_lh_mmul_arg1⁰, _lh_mmul_arg2⁰) = case _lh_mmul_arg1⁰ of {
+//│ 	Z  => [Z]
+//│ 	| S _lh_mmul_S_0⁰ => pplus_lh_₂(_lh_mmul_arg2⁰, mmul_lh_₂(_lh_mmul_S_0⁰, _lh_mmul_arg2⁰))
+//│ 	| _  => error⁰}
+//│ def pplus_lh_₁(_lh_pplus_arg1⁰, _lh_pplus_arg2⁰) = case _lh_pplus_arg1⁰ of {
+//│ 	Z  => _lh_pplus_arg2⁰
+//│ 	| S _lh_pplus_S_0⁰ => [S pplus_lh_₁(_lh_pplus_S_0⁰, _lh_pplus_arg2⁰)]
+//│ 	| _  => error⁰}
+//│ def pplus_lh_₂(_lh_pplus_arg1¹, _lh_pplus_arg2¹) = case _lh_pplus_arg1¹ of {
+//│ 	Z  => _lh_pplus_arg2¹
+//│ 	| S _lh_pplus_S_0¹ => [S pplus_lh_₂(_lh_pplus_S_0¹, _lh_pplus_arg2¹)]
+//│ 	| _  => error⁰}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ let mainFact⁰ = (fun x⁰ -> fact_lh_₁((fun y⁰ -> x⁰(x⁰, y⁰))))((fun x¹ -> fact_lh_₂((fun y¹ -> x¹(x¹, y¹)))))
+//│ in mainFact⁰(primId⁰([S [S [S [Z]]]]))
+//│ def fact_lh_₁(_lh_fact_arg1¹, _lh_fact_arg2¹) = case _lh_fact_arg2¹ of {
+//│ 	Z  => [S [Z]]
+//│ 	| S _lh_fact_S_0¹ => mmul_lh_₁([S _lh_fact_S_0¹], _lh_fact_arg1¹(
+//│ 		let _lh_matchIdent⁵ = 	
+//│ 			let _lh_mmin_S_0² = (fun _lh_mmin_arg1⁴ -> _lh_mmin_arg1⁴)
+//│ 			in (fun _lh_mmin_arg1⁵ -> 
+//│ 				let _lh_matchIdent⁶ = _lh_mmin_arg1⁵
+//│ 				in case _lh_matchIdent⁶ of {
+//│ 					Z  => [Z]
+//│ 					| S _lh_mmin_S_0³ => 
+//│ 						let _lh_matchIdent⁷ = _lh_mmin_S_0²
+//│ 						in _lh_matchIdent⁷(_lh_mmin_S_0³)
+//│ 					| _  => error⁰})
+//│ 		in _lh_matchIdent⁵([S _lh_fact_S_0¹])))
+//│ 	| _  => error⁰}
+//│ def fact_lh_₂(_lh_fact_arg1⁰, _lh_fact_arg2⁰) = case _lh_fact_arg2⁰ of {
+//│ 	Z  => [S [Z]]
+//│ 	| S _lh_fact_S_0⁰ => mmul_lh_₂([S _lh_fact_S_0⁰], _lh_fact_arg1⁰(
+//│ 		let _lh_matchIdent⁰ = 	
+//│ 			let _lh_mmin_S_0⁰ = (fun _lh_mmin_arg1⁰ -> _lh_mmin_arg1⁰)
+//│ 			in (fun _lh_mmin_arg1¹ -> 
+//│ 				let _lh_matchIdent¹ = _lh_mmin_arg1¹
+//│ 				in case _lh_matchIdent¹ of {
+//│ 					Z  => [Z]
+//│ 					| S _lh_mmin_S_0¹ => 
+//│ 						let _lh_matchIdent² = _lh_mmin_S_0⁰
+//│ 						in _lh_matchIdent²(_lh_mmin_S_0¹)
+//│ 					| _  => error⁰})
+//│ 		in _lh_matchIdent⁰([S _lh_fact_S_0⁰])))
+//│ 	| _  => error⁰}
+//│ def mmin_lh_₁(_lh_mmin_arg1², _lh_mmin_arg2⁰) = 
+//│ 	let _lh_matchIdent³ = _lh_mmin_arg2⁰
+//│ 	in _lh_matchIdent³(_lh_mmin_arg1²)
+//│ def mmin_lh_₂(_lh_mmin_arg1³, _lh_mmin_arg2¹) = 
+//│ 	let _lh_matchIdent⁴ = _lh_mmin_arg2¹
+//│ 	in _lh_matchIdent⁴(_lh_mmin_arg1³)
+//│ def mmul_lh_₁(_lh_mmul_arg1¹, _lh_mmul_arg2¹) = case _lh_mmul_arg1¹ of {
+//│ 	Z  => [Z]
+//│ 	| S _lh_mmul_S_0¹ => pplus_lh_₁(_lh_mmul_arg2¹, mmul_lh_₁(_lh_mmul_S_0¹, _lh_mmul_arg2¹))
+//│ 	| _  => error⁰}
+//│ def mmul_lh_₂(_lh_mmul_arg1⁰, _lh_mmul_arg2⁰) = case _lh_mmul_arg1⁰ of {
+//│ 	Z  => [Z]
+//│ 	| S _lh_mmul_S_0⁰ => pplus_lh_₂(_lh_mmul_arg2⁰, mmul_lh_₂(_lh_mmul_S_0⁰, _lh_mmul_arg2⁰))
+//│ 	| _  => error⁰}
+//│ def pplus_lh_₁(_lh_pplus_arg1⁰, _lh_pplus_arg2⁰) = case _lh_pplus_arg1⁰ of {
+//│ 	Z  => _lh_pplus_arg2⁰
+//│ 	| S _lh_pplus_S_0⁰ => [S pplus_lh_₁(_lh_pplus_S_0⁰, _lh_pplus_arg2⁰)]
+//│ 	| _  => error⁰}
+//│ def pplus_lh_₂(_lh_pplus_arg1¹, _lh_pplus_arg2¹) = case _lh_pplus_arg1¹ of {
+//│ 	Z  => _lh_pplus_arg2¹
+//│ 	| S _lh_pplus_S_0¹ => [S pplus_lh_₂(_lh_pplus_S_0¹, _lh_pplus_arg2¹)]
+//│ 	| _  => error⁰}
+//│ <<<<<<< after floating out <<<<<<<

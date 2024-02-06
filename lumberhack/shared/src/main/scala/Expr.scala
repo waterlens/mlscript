@@ -167,10 +167,18 @@ trait FunctionTrait { this: Expr.Function =>
     case b => Nil -> b
   }).mapFirst(this.param :: _)
 }
+
+trait CallTrait { this: Expr.Call =>
+  // NOTE: the order of arguments is reversed
+  lazy val takeArgumentsOut: Expr -> List[Expr] = (this.lhs match {
+    case c: Expr.Call => c.takeArgumentsOut
+    case other => other -> Nil
+  }).mapSecond(args => rhs :: args)
+}
 enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRewrite {
   case Const(lit: Lit)(using Deforest, Option[Ident])
   case Ref(id: Ident)(using Deforest, Option[Ident]) extends Expr with RefTrait
-  case Call(lhs: Expr, rhs: Expr)(using Deforest, Option[Ident])
+  case Call(lhs: Expr, rhs: Expr)(using Deforest, Option[Ident]) extends Expr with CallTrait
   case Ctor(name: Var, args: Ls[Expr])(using Deforest, Option[Ident])
   case LetIn(id: Ident, rhs: Expr, body: Expr)(using Deforest, Option[Ident])
   case LetGroup(defs: Map[Ident, Expr], body: Expr)(using Deforest, Option[Ident])
@@ -318,6 +326,7 @@ enum Expr(using val deforest: Deforest, val inDef: Option[Ident]) extends ExprRe
       case Call(f, p) => Call(f.subst, p.subst)
       case Ctor(n, args) => Ctor(n, args.map(_.subst))
       case LetIn(id, value, body) => LetIn(id, value.subst, body.subst)
+      case LetGroup(lets, body) => LetGroup(lets.map(_.mapSecond(_.subst)), body.subst)
       case Match(scrut, arms) => Match(scrut.subst, arms.map((n, args, body) => (n, args, body.subst)))
       case IfThenElse(cond, thenn, elze) => IfThenElse(cond.subst, thenn.subst, elze.subst)
       case Function(p, body) => Function(p, body.subst(using mapping.filterKeys(_ != p).toMap))

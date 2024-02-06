@@ -366,6 +366,133 @@ testRsa_nofib $ primId 50520
 //│ 	in (fun ys⁵ -> [LH_C h¹³ mappend_lh_₂(t¹³, ys⁵)]))), _lh_unlines_arg1¹))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ concat_lh_₁, map_lh_₂, foldl_lh_₁, map_lh_₁, mappend_lh_₂
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ collect_lh_₁ -> 2
+//│ mappend_lh_₁ -> 2
+//│ take_lh_₁ -> 2
+//│ unlines_lh_₁ -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testRsa_nofib_lh_₁(primId⁰(50520))
+//│ def code_lh_₁(_lh_code_arg1⁰) = _lh_code_arg1⁰((fun x⁰ -> (fun y⁰ -> ((128 * x⁰) + int_of_char⁰(y⁰)))), 0)
+//│ def collect_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰) = case _lh_collect_arg1⁰ of {
+//│ 	0  => (fun f² -> (fun f³ -> (fun _lh_dummy⁰ -> [LH_N])))
+//│ 	| _  => case _lh_collect_arg2⁰ of {
+//│ 		LH_N  => (fun f⁴ -> (fun f⁵ -> (fun _lh_dummy¹ -> [LH_N])))
+//│ 		| _  => 
+//│ 			let t⁰ = collect_lh_₁(_lh_collect_arg1⁰, drop_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰))
+//│ 			in let h⁰ = take_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰)
+//│ 			in (fun f⁶ -> 
+//│ 				let t¹ = t⁰(f⁶)
+//│ 				in let h¹ = f⁶(h⁰)
+//│ 				in (fun f⁷ -> 
+//│ 					let t² = t¹(f⁷)
+//│ 					in let h² = f⁷(h¹)
+//│ 					in (fun _lh_dummy² -> h²(t²(99)))))}}
+//│ def concat_lh_₁(lss⁰) = lss⁰(99)
+//│ def copy_lh_₁(_lh_copy_arg1⁰, _lh_copy_arg2⁰) = case _lh_copy_arg1⁰ of {
+//│ 	0  => [LH_N]
+//│ 	| _  => [LH_C _lh_copy_arg2⁰ copy_lh_₁((_lh_copy_arg1⁰ - 1), _lh_copy_arg2⁰)]}
+//│ def drop_lh_₁(_lh_drop_arg1⁰, _lh_drop_arg2⁰) = case _lh_drop_arg2⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰ => if (_lh_drop_arg1⁰ > 0) then drop_lh_₁((_lh_drop_arg1⁰ - 1), _lh_drop_LH_C_1⁰) else [LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰]
+//│ 	| _  => error⁰}
+//│ def encrypt_lh_₁(_lh_encrypt_arg1⁰, _lh_encrypt_arg2⁰, _lh_funcomp_x⁰) = (fun _lh_funcomp_x¹ -> unlines_lh_₁(_lh_funcomp_x¹((fun _lh_funcomp_x² -> (fun _lh_funcomp_x³ -> string_of_int⁰(power_lh_₁(_lh_encrypt_arg2⁰, _lh_encrypt_arg1⁰, _lh_funcomp_x³)))(code_lh_₁(_lh_funcomp_x²))))))(collect_lh_₁(size_lh_₁(_lh_encrypt_arg1⁰), _lh_funcomp_x⁰))
+//│ def even_lh_₁(_lh_even_arg1⁰) = ((_lh_even_arg1⁰ % 2) == 0)
+//│ def foldl_lh_₁(f⁰, i⁰, ls⁰) = ls⁰(f⁰, i⁰)
+//│ def length_lh_₁(ls²) = case ls² of {
+//│ 	LH_C h³ t³ => (1 + length_lh_₁(t³))
+//│ 	| LH_N  => 0}
+//│ def map_lh_₁(f¹, ls¹) = ls¹(f¹)
+//│ def map_lh_₂(f¹¹, ls⁴) = ls⁴(f¹¹)
+//│ def mappend_lh_₁(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	LH_C h⁴ t⁴ => 
+//│ 		let t⁵ = mappend_lh_₁(t⁴, ys⁰)
+//│ 		in let h⁵ = h⁴
+//│ 		in (fun ys¹ -> [LH_C h⁵ t⁵(ys¹)])
+//│ 	| LH_N  => ys⁰}
+//│ def mappend_lh_₂(xs¹, ys²) = xs¹(ys²)
+//│ def power_lh_₁(_lh_power_arg1⁰, _lh_power_arg2⁰, _lh_power_arg3⁰) = case _lh_power_arg1⁰ of {
+//│ 	0  => 1
+//│ 	| _  => if even_lh_₁(_lh_power_arg1⁰) then (sqr_lh_₁(power_lh_₁(div⁰(_lh_power_arg1⁰, 2), _lh_power_arg2⁰, _lh_power_arg3⁰)) % _lh_power_arg2⁰) else ((_lh_power_arg3⁰ * power_lh_₁((_lh_power_arg1⁰ - 1), _lh_power_arg2⁰, _lh_power_arg3⁰)) % _lh_power_arg2⁰)}
+//│ def size_lh_₁(_lh_size_arg1⁰) = div⁰((length_lh_₁(string_of_int⁰(_lh_size_arg1⁰)) * 47), 100)
+//│ def sqr_lh_₁(_lh_sqr_arg1⁰) = (_lh_sqr_arg1⁰ * _lh_sqr_arg1⁰)
+//│ def take_lh_₁(n⁰, ls³) = if (n⁰ > 0) then case ls³ of {
+//│ 	LH_C h⁶ t⁶ => 
+//│ 		let t⁷ = take_lh_₁((n⁰ - 1), t⁶)
+//│ 		in let h⁷ = h⁶
+//│ 		in (fun f⁸ -> (fun i¹ -> t⁷(f⁸, f⁸(i¹, h⁷))))
+//│ 	| LH_N  => (fun f⁹ -> (fun i² -> i²))} else (fun f¹⁰ -> (fun i³ -> i³))
+//│ def testRsa_nofib_lh_₁(_lh_testRsa_nofib_arg1⁰) = encrypt_lh_₁(6367, 5189, primId⁰(copy_lh_₁(_lh_testRsa_nofib_arg1⁰, 'l')))
+//│ def unlines_lh_₁(_lh_unlines_arg1⁰) = _lh_unlines_arg1⁰((fun l⁰ -> mappend_lh_₁(l⁰, 
+//│ 	let t⁸ = (fun ys³ -> ys³)
+//│ 	in let h⁸ = 'n'
+//│ 	in (fun ys⁴ -> [LH_C h⁸ t⁸(ys⁴)]))), 99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testRsa_nofib_lh_₁(primId⁰(50520))
+//│ def code_lh_₁(_lh_code_arg1⁰) = _lh_code_arg1⁰((fun x⁰ -> (fun y⁰ -> ((128 * x⁰) + int_of_char⁰(y⁰)))), 0)
+//│ def collect_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰) = case _lh_collect_arg1⁰ of {
+//│ 	0  => (fun f² -> (fun f³ -> (fun _lh_dummy⁰ -> [LH_N])))
+//│ 	| _  => case _lh_collect_arg2⁰ of {
+//│ 		LH_N  => (fun f⁴ -> (fun f⁵ -> (fun _lh_dummy¹ -> [LH_N])))
+//│ 		| _  => 
+//│ 			let t⁰ = collect_lh_₁(_lh_collect_arg1⁰, drop_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰))
+//│ 			in let h⁰ = take_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰)
+//│ 			in (fun f⁶ -> 
+//│ 				let t¹ = t⁰(f⁶)
+//│ 				in let h¹ = f⁶(h⁰)
+//│ 				in (fun f⁷ -> 
+//│ 					let t² = t¹(f⁷)
+//│ 					in let h² = f⁷(h¹)
+//│ 					in (fun _lh_dummy² -> h²(t²(99)))))}}
+//│ def concat_lh_₁(lss⁰) = lss⁰(99)
+//│ def copy_lh_₁(_lh_copy_arg1⁰, _lh_copy_arg2⁰) = case _lh_copy_arg1⁰ of {
+//│ 	0  => [LH_N]
+//│ 	| _  => [LH_C _lh_copy_arg2⁰ copy_lh_₁((_lh_copy_arg1⁰ - 1), _lh_copy_arg2⁰)]}
+//│ def drop_lh_₁(_lh_drop_arg1⁰, _lh_drop_arg2⁰) = case _lh_drop_arg2⁰ of {
+//│ 	LH_N  => [LH_N]
+//│ 	| LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰ => if (_lh_drop_arg1⁰ > 0) then drop_lh_₁((_lh_drop_arg1⁰ - 1), _lh_drop_LH_C_1⁰) else [LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰]
+//│ 	| _  => error⁰}
+//│ def encrypt_lh_₁(_lh_encrypt_arg1⁰, _lh_encrypt_arg2⁰, _lh_funcomp_x⁰) = (fun _lh_funcomp_x¹ -> unlines_lh_₁(_lh_funcomp_x¹((fun _lh_funcomp_x² -> (fun _lh_funcomp_x³ -> string_of_int⁰(power_lh_₁(_lh_encrypt_arg2⁰, _lh_encrypt_arg1⁰, _lh_funcomp_x³)))(code_lh_₁(_lh_funcomp_x²))))))(collect_lh_₁(size_lh_₁(_lh_encrypt_arg1⁰), _lh_funcomp_x⁰))
+//│ def even_lh_₁(_lh_even_arg1⁰) = ((_lh_even_arg1⁰ % 2) == 0)
+//│ def foldl_lh_₁(f⁰, i⁰, ls⁰) = ls⁰(f⁰, i⁰)
+//│ def length_lh_₁(ls²) = case ls² of {
+//│ 	LH_C h³ t³ => (1 + length_lh_₁(t³))
+//│ 	| LH_N  => 0}
+//│ def map_lh_₁(f¹, ls¹) = ls¹(f¹)
+//│ def map_lh_₂(f¹¹, ls⁴) = ls⁴(f¹¹)
+//│ def mappend_lh_₁(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	LH_C h⁴ t⁴ => 
+//│ 		let t⁵ = mappend_lh_₁(t⁴, ys⁰)
+//│ 		in let h⁵ = h⁴
+//│ 		in (fun ys¹ -> [LH_C h⁵ t⁵(ys¹)])
+//│ 	| LH_N  => ys⁰}
+//│ def mappend_lh_₂(xs¹, ys²) = xs¹(ys²)
+//│ def power_lh_₁(_lh_power_arg1⁰, _lh_power_arg2⁰, _lh_power_arg3⁰) = case _lh_power_arg1⁰ of {
+//│ 	0  => 1
+//│ 	| _  => if even_lh_₁(_lh_power_arg1⁰) then (sqr_lh_₁(power_lh_₁(div⁰(_lh_power_arg1⁰, 2), _lh_power_arg2⁰, _lh_power_arg3⁰)) % _lh_power_arg2⁰) else ((_lh_power_arg3⁰ * power_lh_₁((_lh_power_arg1⁰ - 1), _lh_power_arg2⁰, _lh_power_arg3⁰)) % _lh_power_arg2⁰)}
+//│ def size_lh_₁(_lh_size_arg1⁰) = div⁰((length_lh_₁(string_of_int⁰(_lh_size_arg1⁰)) * 47), 100)
+//│ def sqr_lh_₁(_lh_sqr_arg1⁰) = (_lh_sqr_arg1⁰ * _lh_sqr_arg1⁰)
+//│ def take_lh_₁(n⁰, ls³) = if (n⁰ > 0) then case ls³ of {
+//│ 	LH_C h⁶ t⁶ => 
+//│ 		let t⁷ = take_lh_₁((n⁰ - 1), t⁶)
+//│ 		in let h⁷ = h⁶
+//│ 		in (fun f⁸ -> (fun i¹ -> t⁷(f⁸, f⁸(i¹, h⁷))))
+//│ 	| LH_N  => (fun f⁹ -> (fun i² -> i²))} else (fun f¹⁰ -> (fun i³ -> i³))
+//│ def testRsa_nofib_lh_₁(_lh_testRsa_nofib_arg1⁰) = encrypt_lh_₁(6367, 5189, primId⁰(copy_lh_₁(_lh_testRsa_nofib_arg1⁰, 'l')))
+//│ def unlines_lh_₁(_lh_unlines_arg1⁰) = _lh_unlines_arg1⁰((fun l⁰ -> mappend_lh_₁(l⁰, 
+//│ 	let t⁸ = (fun ys³ -> ys³)
+//│ 	in let h⁸ = 'n'
+//│ 	in (fun ys⁴ -> [LH_C h⁸ t⁸(ys⁴)]))), 99)
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

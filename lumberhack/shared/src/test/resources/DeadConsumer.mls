@@ -62,6 +62,30 @@ f(g(D))                                   // D gets fused and becomes x => x, g 
 //│ 	| C  => x³}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f(g([D]))
+//│ def f(x⁰) = if [True] then lazy⁰(f(x⁰)) else lazy⁰(f([C]))
+//│ def g(x¹) = case x¹ of {
+//│ 	D  => x¹
+//│ 	| C  => x¹}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f(g([D]))
+//│ def f(x⁰) = if [True] then lazy⁰(f(x⁰)) else lazy⁰(f([C]))
+//│ def g(x¹) = case x¹ of {
+//│ 	D  => x¹
+//│ 	| C  => x¹}
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>

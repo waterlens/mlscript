@@ -39,6 +39,28 @@ c(p)
 //│ 	Pair a⁰ b⁰ => c([Pair b⁰ a⁰])}
 //│ def p = [Pair [A] [B]]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ c(p)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	Pair a⁰ b⁰ => c([Pair b⁰ a⁰])}
+//│ def p = [Pair [A] [B]]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ c(p)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	Pair a⁰ b⁰ => c([Pair b⁰ a⁰])}
+//│ def p = [Pair [A] [B]]
+//│ <<<<<<< after floating out <<<<<<<
 
 // Just a more valid/reasonable version of the above
 // WRONG: recursive strategy
@@ -78,6 +100,28 @@ c(p)
 //│ 	Wrap a⁰ => if (a⁰ > 0) then c([Wrap (a⁰ - 1)]) else [Wrap 0]}
 //│ def p = [Wrap 3]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ c(p)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	Wrap a⁰ => if (a⁰ > 0) then c([Wrap (a⁰ - 1)]) else [Wrap 0]}
+//│ def p = [Wrap 3]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ c(p)
+//│ def c(x⁰) = case x⁰ of {
+//│ 	Wrap a⁰ => if (a⁰ > 0) then c([Wrap (a⁰ - 1)]) else [Wrap 0]}
+//│ def p = [Wrap 3]
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -137,6 +181,34 @@ last(p)
 //│ 	| N  => [None]}
 //│ def p = [C 1 [C 2 [N]]]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ last(p)
+//│ def last(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => case t⁰ of {
+//│ 		N  => [Some h⁰]
+//│ 		| C hh⁰ tt⁰ => last(t⁰)}
+//│ 	| N  => [None]}
+//│ def p = [C 1 [C 2 [N]]]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ last(p)
+//│ def last(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => case t⁰ of {
+//│ 		N  => [Some h⁰]
+//│ 		| C hh⁰ tt⁰ => last(t⁰)}
+//│ 	| N  => [None]}
+//│ def p = [C 1 [C 2 [N]]]
+//│ <<<<<<< after floating out <<<<<<<
 
 // WRONG: one consumer cannot be expanded fully?
 fun idxSum(ls) = if ls is
@@ -215,6 +287,44 @@ idxSum(rev(C(1, C(2, N)))(N))(0)
 //│ def idxSum(ls¹) = ls¹
 //│ def rev(lss¹) = lss¹
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev, idxSum
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ let tt⁰ = 	
+//│ 	let tt¹ = (fun a⁰ -> a⁰)
+//│ 	in let hh⁰ = 2
+//│ 	in (fun a¹ -> tt¹(
+//│ 		let t⁰ = a¹
+//│ 		in (fun acc⁰ -> (acc⁰ + t⁰((acc⁰ + 1))))))
+//│ in let hh¹ = 1
+//│ in tt⁰(
+//│ 	let t¹ = (fun acc¹ -> 0)
+//│ 	in (fun acc² -> (acc² + t¹((acc² + 1)))), 0)
+//│ def idxSum(ls⁰) = ls⁰
+//│ def rev(lss⁰) = lss⁰
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ let tt⁰ = 	
+//│ 	let tt¹ = (fun a⁰ -> a⁰)
+//│ 	in let hh⁰ = 2
+//│ 	in (fun a¹ -> tt¹(
+//│ 		let t⁰ = a¹
+//│ 		in (fun acc⁰ -> (acc⁰ + t⁰((acc⁰ + 1))))))
+//│ in let hh¹ = 1
+//│ in tt⁰(
+//│ 	let t¹ = (fun acc¹ -> 0)
+//│ 	in (fun acc² -> (acc² + t¹((acc² + 1)))), 0)
+//│ def idxSum(ls⁰) = ls⁰
+//│ def rev(lss⁰) = lss⁰
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // WRONG: still has variable extrusion
@@ -286,6 +396,36 @@ minuss(fst)(snd)
 //│ >>>>>>> evaluate >>>>>>>
 //│ [S [Z]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ minuss(fst, snd)
+//│ def fst = [S [S [Z]]]
+//│ def minuss(a⁰) = case a⁰ of {
+//│ 	S aa⁰ => (fun b⁰ -> case b⁰ of {
+//│ 		S bb⁰ => minuss(aa⁰, bb⁰)
+//│ 		| Z  => aa⁰})
+//│ 	| Z  => (fun n⁰ -> [Z])}
+//│ def snd = [Z]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ minuss(fst, snd)
+//│ def fst = [S [S [Z]]]
+//│ def minuss(a⁰) = case a⁰ of {
+//│ 	S aa⁰ => (fun b⁰ -> case b⁰ of {
+//│ 		S bb⁰ => minuss(aa⁰, bb⁰)
+//│ 		| Z  => aa⁰})
+//│ 	| Z  => (fun n⁰ -> [Z])}
+//│ def snd = [Z]
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // WRONG:
@@ -360,6 +500,38 @@ minuss(fst)(snd)
 //│ >>>>>>> evaluate >>>>>>>
 //│ [S [Z]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ minuss(fst, snd)
+//│ def checkb(b¹) = case b¹ of {
+//│ 	S bb⁰ => (fun aaa⁰ -> minuss(aaa⁰, bb⁰))
+//│ 	| Z  => (fun aaa¹ -> aaa¹)}
+//│ def fst = [S [S [Z]]]
+//│ def minuss(a⁰) = case a⁰ of {
+//│ 	S aa⁰ => (fun b⁰ -> checkb(b⁰, aa⁰))
+//│ 	| Z  => (fun n⁰ -> [Z])}
+//│ def snd = [Z]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ minuss(fst, snd)
+//│ def checkb(b¹) = case b¹ of {
+//│ 	S bb⁰ => (fun aaa⁰ -> minuss(aaa⁰, bb⁰))
+//│ 	| Z  => (fun aaa¹ -> aaa¹)}
+//│ def fst = [S [S [Z]]]
+//│ def minuss(a⁰) = case a⁰ of {
+//│ 	S aa⁰ => (fun b⁰ -> checkb(b⁰, aa⁰))
+//│ 	| Z  => (fun n⁰ -> [Z])}
+//│ def snd = [Z]
+//│ <<<<<<< after floating out <<<<<<<
 
 // WRONG:
 fun inter(xs) = if xs is
@@ -414,6 +586,32 @@ inter(l1)(l2)
 //│ def l1 = [C 1 [C 2 l1]]
 //│ def l2 = [C 9 [C 8 l2]]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ inter(l1, l2)
+//│ def inter(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}
+//│ def l1 = [C 1 [C 2 l1]]
+//│ def l2 = [C 9 [C 8 l2]]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ inter(l1, l2)
+//│ def inter(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}
+//│ def l1 = [C 1 [C 2 l1]]
+//│ def l2 = [C 9 [C 8 l2]]
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // WRONG: push in cannot work still have binding error
@@ -496,6 +694,38 @@ f(xx, yy)
 //│ def xx = [X [X xx]]
 //│ def yy = [Y [Y [Y yy]]]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f(xx, yy)
+//│ def f(xs⁰) = case xs⁰ of {
+//│ 	X x1⁰ => case x1⁰ of {
+//│ 		X x2⁰ => case x2⁰ of {
+//│ 			X x3⁰ => (fun ys⁰ -> case ys⁰ of {
+//│ 				Y y1⁰ => case y1⁰ of {
+//│ 					Y y2⁰ => f(x3⁰, y2⁰)}})}}}
+//│ def xx = [X [X xx]]
+//│ def yy = [Y [Y [Y yy]]]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f(xx, yy)
+//│ def f(xs⁰) = case xs⁰ of {
+//│ 	X x1⁰ => case x1⁰ of {
+//│ 		X x2⁰ => case x2⁰ of {
+//│ 			X x3⁰ => (fun ys⁰ -> case ys⁰ of {
+//│ 				Y y1⁰ => case y1⁰ of {
+//│ 					Y y2⁰ => f(x3⁰, y2⁰)}})}}}
+//│ def xx = [X [X xx]]
+//│ def yy = [Y [Y [Y yy]]]
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -532,6 +762,24 @@ f(C(primitive))
 //│ f((fun x¹ -> f(x¹)))
 //│ def f(x²) = x²(x²)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ f
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ (fun x⁰ -> x⁰(x⁰))((fun x¹ -> x¹(x¹)))
+//│ def f(x²) = x²(x²)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ (fun x⁰ -> x⁰(x⁰))((fun x¹ -> x¹(x¹)))
+//│ def f(x²) = x²(x²)
+//│ <<<<<<< after floating out <<<<<<<
 
 // NOTE: this way of pushing in var is local
 fun f(x) = (if x is
@@ -566,6 +814,24 @@ f(C(primitive))
 //│ f((fun x² -> f(x²)))
 //│ def f(x³) = x³(x³)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ f
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ (fun x⁰ -> x⁰(x⁰))((fun x¹ -> x¹(x¹)))
+//│ def f(x²) = x²(x²)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ (fun x⁰ -> x⁰(x⁰))((fun x¹ -> x¹(x¹)))
+//│ def f(x²) = x²(x²)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -605,6 +871,26 @@ f(C(primitive))
 //│ def f(x¹) = case x¹ of {
 //│ 	C k⁰ => f([C x¹])}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f([C primitive⁰])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	C k⁰ => f([C x⁰])}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f([C primitive⁰])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	C k⁰ => f([C x⁰])}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // // CORRECT: after the detection and elimination of multiple matches
@@ -644,6 +930,28 @@ f(primitive)
 //│ 	N  => f([N])
 //│ 	| _  => 0}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f(primitive⁰)
+//│ def f(x⁰) = case x⁰ of {
+//│ 	N  => f([N])
+//│ 	| _  => 0}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f(primitive⁰)
+//│ def f(x⁰) = case x⁰ of {
+//│ 	N  => f([N])
+//│ 	| _  => 0}
+//│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT: mutual recursive strategy can be filtered out
 fun f(x) = if x is
@@ -688,3 +996,27 @@ f(C(A))
 //│ def g(y¹) = case y¹ of {
 //│ 	D b⁰ => f([C b⁰])}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f([C [A]])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	C a⁰ => f([C a⁰])}
+//│ def g(y⁰) = case y⁰ of {
+//│ 	D b⁰ => f([C b⁰])}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f([C [A]])
+//│ def f(x⁰) = case x⁰ of {
+//│ 	C a⁰ => f([C a⁰])}
+//│ def g(y⁰) = case y⁰ of {
+//│ 	D b⁰ => f([C b⁰])}
+//│ <<<<<<< after floating out <<<<<<<

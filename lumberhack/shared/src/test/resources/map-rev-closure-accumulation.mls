@@ -62,6 +62,36 @@ rev(C(1, C(2, N)), N)
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 2 [C 1 [N]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun a⁰ -> a⁰)
+//│ 		in let h⁰ = 2
+//│ 		in (fun a¹ -> t¹([C h⁰ a¹]))
+//│ 	in let h¹ = 1
+//│ 	in (fun a² -> t⁰([C h¹ a²]))([N])
+//│ def rev(ys⁰, a³) = ys⁰(a³)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = (fun a⁰ -> a⁰)
+//│ 		in let h⁰ = 2
+//│ 		in (fun a¹ -> t¹([C h⁰ a¹]))
+//│ 	in let h¹ = 1
+//│ 	in (fun a² -> t⁰([C h¹ a²]))([N])
+//│ def rev(ys⁰, a³) = ys⁰(a³)
+//│ <<<<<<< after floating out <<<<<<<
 
 // NOTE: single rev, paper style of pushing in
 _LUMBERHACK_EVAL
@@ -124,6 +154,34 @@ rev(C(1, C(2, N)))(N)
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 2 [C 1 [N]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ let t⁰ = 	
+//│ 	let t¹ = (fun a⁰ -> a⁰)
+//│ 	in let h⁰ = 2
+//│ 	in (fun a¹ -> t¹([C h⁰ a¹]))
+//│ in let h¹ = 1
+//│ in t⁰([C h¹ [N]])
+//│ def rev(ys⁰) = ys⁰
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ let t⁰ = 	
+//│ 	let t¹ = (fun a⁰ -> a⁰)
+//│ 	in let h⁰ = 2
+//│ 	in (fun a¹ -> t¹([C h⁰ a¹]))
+//│ in let h¹ = 1
+//│ in t⁰([C h¹ [N]])
+//│ def rev(ys⁰) = ys⁰
+//│ <<<<<<< after floating out <<<<<<<
 
 // NOTE: map rev on primitive
 fun map(xs, f) = if xs is
@@ -186,6 +244,42 @@ map(rev(primitive, N), ff)
 //│ 		in (fun f³ -> [C f³(h²) map(t², f³)]))
 //│ 	| N  => a¹}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ rev -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ rev(primitive⁰, (fun f⁰ -> [N]), ff)
+//│ def ff(x⁰) = case x⁰ of {
+//│ 	A  => [AA]
+//│ 	| B  => [BB]}
+//│ def map(xs⁰, f¹) = xs⁰(f¹)
+//│ def rev(ys⁰, a⁰) = case ys⁰ of {
+//│ 	C h⁰ t⁰ => rev(t⁰, 
+//│ 		let t¹ = a⁰
+//│ 		in let h¹ = h⁰
+//│ 		in (fun f² -> [C f²(h¹) t¹(f²)]))
+//│ 	| N  => a⁰}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ rev(primitive⁰, (fun f⁰ -> [N]), ff)
+//│ def ff(x⁰) = case x⁰ of {
+//│ 	A  => [AA]
+//│ 	| B  => [BB]}
+//│ def map(xs⁰, f¹) = xs⁰(f¹)
+//│ def rev(ys⁰, a⁰) = case ys⁰ of {
+//│ 	C h⁰ t⁰ => rev(t⁰, 
+//│ 		let t¹ = a⁰
+//│ 		in let h¹ = h⁰
+//│ 		in (fun f² -> [C f²(h¹) t¹(f²)]))
+//│ 	| N  => a⁰}
+//│ <<<<<<< after floating out <<<<<<<
 
 // NOTE: map rev on primitive, paper style of pushing in
 fun map(xs) = if xs is
@@ -248,6 +342,42 @@ map(rev(primitive, N), ff)
 //│ 		in (fun f³ -> [C f³(h²) map(t², f³)]))
 //│ 	| N  => a¹}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ rev -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ rev(primitive⁰, (fun f⁰ -> [N]), ff)
+//│ def ff(x⁰) = case x⁰ of {
+//│ 	A  => [AA]
+//│ 	| B  => [BB]}
+//│ def map(xs⁰) = xs⁰
+//│ def rev(ys⁰, a⁰) = case ys⁰ of {
+//│ 	C h⁰ t⁰ => rev(t⁰, 
+//│ 		let t¹ = a⁰
+//│ 		in let h¹ = h⁰
+//│ 		in (fun f¹ -> [C f¹(h¹) t¹(f¹)]))
+//│ 	| N  => a⁰}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ rev(primitive⁰, (fun f⁰ -> [N]), ff)
+//│ def ff(x⁰) = case x⁰ of {
+//│ 	A  => [AA]
+//│ 	| B  => [BB]}
+//│ def map(xs⁰) = xs⁰
+//│ def rev(ys⁰, a⁰) = case ys⁰ of {
+//│ 	C h⁰ t⁰ => rev(t⁰, 
+//│ 		let t¹ = a⁰
+//│ 		in let h¹ = h⁰
+//│ 		in (fun f¹ -> [C f¹(h¹) t¹(f¹)]))
+//│ 	| N  => a⁰}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // NOTE: rev map on primitive
@@ -311,6 +441,42 @@ rev(N, map(primitive, ff))
 //│ 	| N  => (fun a² -> a²)}
 //│ def rev(a³, ys¹) = ys¹(a³)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ map -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ map(primitive⁰, ff, [N])
+//│ def ff(x⁰) = case x⁰ of {
+//│ 	A  => [AA]
+//│ 	| B  => [BB]}
+//│ def map(xs⁰, f⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let t¹ = map(t⁰, f⁰)
+//│ 		in let h¹ = f⁰(h⁰)
+//│ 		in (fun a⁰ -> t¹([C h¹ a⁰]))
+//│ 	| N  => (fun a¹ -> a¹)}
+//│ def rev(a², ys⁰) = ys⁰(a²)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ map(primitive⁰, ff, [N])
+//│ def ff(x⁰) = case x⁰ of {
+//│ 	A  => [AA]
+//│ 	| B  => [BB]}
+//│ def map(xs⁰, f⁰, _lh_popOutId_0⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let t¹ = map(t⁰, f⁰)
+//│ 		in let h¹ = f⁰(h⁰)
+//│ 		in t¹([C h¹ _lh_popOutId_0⁰])
+//│ 	| N  => _lh_popOutId_0⁰}
+//│ def rev(a⁰, ys⁰) = ys⁰(a⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // NOTE: rev map on primitive, paper style pushing in
@@ -374,3 +540,39 @@ rev(map(primitive, ff), N)
 //│ 	| N  => (fun f³ -> (fun a³ -> a³))}
 //│ def rev(ys¹) = ys¹
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ map -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ map(primitive⁰, ff, [N])
+//│ def ff(x⁰) = case x⁰ of {
+//│ 	A  => [AA]
+//│ 	| B  => [BB]}
+//│ def map(xs⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => (fun f⁰ -> 
+//│ 		let t¹ = map(t⁰, f⁰)
+//│ 		in let h¹ = f⁰(h⁰)
+//│ 		in (fun a⁰ -> t¹([C h¹ a⁰])))
+//│ 	| N  => (fun f¹ -> (fun a¹ -> a¹))}
+//│ def rev(ys⁰) = ys⁰
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ map(primitive⁰, ff, [N])
+//│ def ff(x⁰) = case x⁰ of {
+//│ 	A  => [AA]
+//│ 	| B  => [BB]}
+//│ def map(xs⁰, _lh_popOutId_0⁰, _lh_popOutId_1⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let t¹ = map(t⁰, _lh_popOutId_0⁰)
+//│ 		in let h¹ = _lh_popOutId_0⁰(h⁰)
+//│ 		in t¹([C h¹ _lh_popOutId_1⁰])
+//│ 	| N  => _lh_popOutId_1⁰}
+//│ def rev(ys⁰) = ys⁰
+//│ <<<<<<< after floating out <<<<<<<

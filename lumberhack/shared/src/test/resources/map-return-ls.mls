@@ -46,3 +46,25 @@ map(map(primId(C(1, C(2, N))), x => x * x), x => x + x)
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 2 [C 8 [N]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ map(map(primId⁰([C 1 [C 2 [N]]]), (fun x⁰ -> (x⁰ * x⁰))), (fun x¹ -> (x¹ + x¹)))
+//│ def map(ls⁰, f⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => [C f⁰(h⁰) map(t⁰, f⁰)]
+//│ 	| N  => ls⁰}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ map(map(primId⁰([C 1 [C 2 [N]]]), (fun x⁰ -> (x⁰ * x⁰))), (fun x¹ -> (x¹ + x¹)))
+//│ def map(ls⁰, f⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => [C f⁰(h⁰) map(t⁰, f⁰)]
+//│ 	| N  => ls⁰}
+//│ <<<<<<< after floating out <<<<<<<

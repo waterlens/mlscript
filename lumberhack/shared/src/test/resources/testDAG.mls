@@ -69,6 +69,36 @@ a
 //│ def g_lh_₁ = g_lh_₁(f_lh_₁)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ a_lh_₁
+//│ def a_lh_₁ = b_lh_₁
+//│ def b_lh_₁ = c_lh_₁
+//│ def c_lh_₁ = c_lh_₁(d_lh_₁)
+//│ def d_lh_₁ = f_lh_₁(d_lh_₁, e_lh_₁, a_lh_₁)
+//│ def e_lh_₁ = d_lh_₁
+//│ def f_lh_₁ = g_lh_₁
+//│ def g_lh_₁ = g_lh_₁(f_lh_₁)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ a_lh_₁
+//│ def a_lh_₁ = b_lh_₁
+//│ def b_lh_₁ = c_lh_₁
+//│ def c_lh_₁ = c_lh_₁(d_lh_₁)
+//│ def d_lh_₁ = f_lh_₁(d_lh_₁, e_lh_₁, a_lh_₁)
+//│ def e_lh_₁ = d_lh_₁
+//│ def f_lh_₁ = g_lh_₁
+//│ def g_lh_₁ = g_lh_₁(f_lh_₁)
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
@@ -150,6 +180,34 @@ main
 //│ def f_lh_₂ = f_lh_₂
 //│ def main_lh_₁ = b_lh_₁(a_lh_₁)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main_lh_₁
+//│ def a_lh_₁ = f_lh_₁
+//│ def a_lh_₂ = f_lh_₂
+//│ def b_lh_₁ = a_lh_₂
+//│ def f_lh_₁ = f_lh_₁
+//│ def f_lh_₂ = f_lh_₂
+//│ def main_lh_₁ = b_lh_₁(a_lh_₁)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main_lh_₁
+//│ def a_lh_₁ = f_lh_₁
+//│ def a_lh_₂ = f_lh_₂
+//│ def b_lh_₁ = a_lh_₂
+//│ def f_lh_₁ = f_lh_₁
+//│ def f_lh_₂ = f_lh_₂
+//│ def main_lh_₁ = b_lh_₁(a_lh_₁)
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
@@ -270,6 +328,50 @@ a
 //│ def h_lh_₁ = d_lh_₁(g_lh_₄)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ a_lh_₁
+//│ def a_lh_₁ = b_lh_₁
+//│ def b_lh_₁ = e_lh_₁(f_lh_₁, c_lh_₁)
+//│ def c_lh_₁ = g_lh_₁(d_lh_₁)
+//│ def d_lh_₁ = c_lh_₁(h_lh_₁)
+//│ def e_lh_₁ = a_lh_₁(f_lh_₂)
+//│ def f_lh_₁ = g_lh_₂
+//│ def f_lh_₂ = g_lh_₃
+//│ def f_lh_₃ = g_lh_₁
+//│ def f_lh_₄ = g_lh_₄
+//│ def g_lh_₁ = f_lh_₃
+//│ def g_lh_₂ = f_lh_₁
+//│ def g_lh_₃ = f_lh_₂
+//│ def g_lh_₄ = f_lh_₄
+//│ def h_lh_₁ = d_lh_₁(g_lh_₄)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ a_lh_₁
+//│ def a_lh_₁ = b_lh_₁
+//│ def b_lh_₁ = e_lh_₁(f_lh_₁, c_lh_₁)
+//│ def c_lh_₁ = g_lh_₁(d_lh_₁)
+//│ def d_lh_₁ = c_lh_₁(h_lh_₁)
+//│ def e_lh_₁ = a_lh_₁(f_lh_₂)
+//│ def f_lh_₁ = g_lh_₂
+//│ def f_lh_₂ = g_lh_₃
+//│ def f_lh_₃ = g_lh_₁
+//│ def f_lh_₄ = g_lh_₄
+//│ def g_lh_₁ = f_lh_₃
+//│ def g_lh_₂ = f_lh_₁
+//│ def g_lh_₃ = f_lh_₂
+//│ def g_lh_₄ = f_lh_₄
+//│ def h_lh_₁ = d_lh_₁(g_lh_₄)
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
@@ -365,6 +467,30 @@ a
 //│ def d_lh_₁ = b_lh_₁
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ a_lh_₁
+//│ def a_lh_₁ = b_lh_₁
+//│ def b_lh_₁ = c_lh_₁
+//│ def c_lh_₁ = a_lh_₁(d_lh_₁)
+//│ def d_lh_₁ = b_lh_₁
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ a_lh_₁
+//│ def a_lh_₁ = b_lh_₁
+//│ def b_lh_₁ = c_lh_₁
+//│ def c_lh_₁ = a_lh_₁(d_lh_₁)
+//│ def d_lh_₁ = b_lh_₁
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
@@ -434,6 +560,30 @@ a
 //│ def d_lh_₁ = a_lh_₁
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ a_lh_₁
+//│ def a_lh_₁ = b_lh_₁
+//│ def b_lh_₁ = c_lh_₁
+//│ def c_lh_₁ = b_lh_₁(d_lh_₁)
+//│ def d_lh_₁ = a_lh_₁
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ a_lh_₁
+//│ def a_lh_₁ = b_lh_₁
+//│ def b_lh_₁ = c_lh_₁
+//│ def c_lh_₁ = b_lh_₁(d_lh_₁)
+//│ def d_lh_₁ = a_lh_₁
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
@@ -484,6 +634,24 @@ a
 //│ a_lh_₁
 //│ def a_lh_₁ = a_lh_₁
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ a_lh_₁
+//│ def a_lh_₁ = a_lh_₁
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ a_lh_₁
+//│ def a_lh_₁ = a_lh_₁
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
@@ -554,6 +722,34 @@ main
 //│ def main_lh_₁ = a_lh_₁(b_lh_₁)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main_lh_₁
+//│ def a_lh_₁ = f_lh_₁(main_lh_₁)
+//│ def a_lh_₂ = f_lh_₂(main_lh_₁)
+//│ def b_lh_₁ = a_lh_₂
+//│ def f_lh_₁ = f_lh_₁
+//│ def f_lh_₂ = f_lh_₂
+//│ def main_lh_₁ = a_lh_₁(b_lh_₁)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main_lh_₁
+//│ def a_lh_₁ = f_lh_₁(main_lh_₁)
+//│ def a_lh_₂ = f_lh_₂(main_lh_₁)
+//│ def b_lh_₁ = a_lh_₂
+//│ def f_lh_₁ = f_lh_₁
+//│ def f_lh_₂ = f_lh_₂
+//│ def main_lh_₁ = a_lh_₁(b_lh_₁)
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
@@ -618,6 +814,28 @@ a
 //│ def b_lh_₁ = c_lh_₁
 //│ def c_lh_₁ = 1
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ a_lh_₁
+//│ def a_lh_₁ = b_lh_₁
+//│ def b_lh_₁ = c_lh_₁
+//│ def c_lh_₁ = 1
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ a_lh_₁
+//│ def a_lh_₁ = b_lh_₁
+//│ def b_lh_₁ = c_lh_₁
+//│ def c_lh_₁ = 1
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`

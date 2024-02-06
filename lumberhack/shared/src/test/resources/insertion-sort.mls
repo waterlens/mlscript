@@ -76,3 +76,33 @@ testInsertionSortPolyVar(primId(C(1, C(4, C(2, N)))))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 1 [C 2 [C 4 [N]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testInsertionSortPolyVar(primId⁰([C 1 [C 4 [C 2 [N]]]]))
+//│ def insert(y⁰, xs²) = case xs² of {
+//│ 	N  => [C y⁰ [N]]
+//│ 	| C z⁰ zs⁰ => if (z⁰ > y⁰) then [C y⁰ [C z⁰ zs⁰]] else [C z⁰ insert(y⁰, zs⁰)]}
+//│ def isort(xs⁰) = case xs⁰ of {
+//│ 	N  => [N]
+//│ 	| C x⁰ xs¹ => insert(x⁰, isort(xs¹))}
+//│ def testInsertionSortPolyVar(xs³) = isort(xs³)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testInsertionSortPolyVar(primId⁰([C 1 [C 4 [C 2 [N]]]]))
+//│ def insert(y⁰, xs²) = case xs² of {
+//│ 	N  => [C y⁰ [N]]
+//│ 	| C z⁰ zs⁰ => if (z⁰ > y⁰) then [C y⁰ [C z⁰ zs⁰]] else [C z⁰ insert(y⁰, zs⁰)]}
+//│ def isort(xs⁰) = case xs⁰ of {
+//│ 	N  => [N]
+//│ 	| C x⁰ xs¹ => insert(x⁰, isort(xs¹))}
+//│ def testInsertionSortPolyVar(xs³) = isort(xs³)
+//│ <<<<<<< after floating out <<<<<<<

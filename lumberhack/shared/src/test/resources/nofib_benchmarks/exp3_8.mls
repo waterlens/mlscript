@@ -171,6 +171,58 @@ testExp38_nofib $ primId 8
 //│ def testExp38_nofib_lh_₁(_lh_testExp38_nofib_arg1¹) = int_lh_₁(p_lh_₁(fromInteger_lh_₂(3), fromInteger_lh_₁(_lh_testExp38_nofib_arg1¹)))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ p_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ fromInteger_lh_₁ -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testExp38_nofib_lh_₁(primId⁰(8))
+//│ def fromInteger_lh_₁(_lh_fromInteger_arg1⁰) = if (_lh_fromInteger_arg1⁰ < 1) then (fun _lh_p_arg1⁰ -> [S [Z]]) else 
+//│ 	let _lh_p_S_0⁰ = fromInteger_lh_₁((_lh_fromInteger_arg1⁰ - 1))
+//│ 	in (fun _lh_p_arg1¹ -> natMult_lh_₁(_lh_p_arg1¹, _lh_p_S_0⁰(_lh_p_arg1¹)))
+//│ def fromInteger_lh_₂(_lh_fromInteger_arg1¹) = if (_lh_fromInteger_arg1¹ < 1) then [Z] else [S fromInteger_lh_₂((_lh_fromInteger_arg1¹ - 1))]
+//│ def int_lh_₁(_lh_int_arg1⁰) = case _lh_int_arg1⁰ of {
+//│ 	Z  => 0
+//│ 	| S _lh_int_S_0⁰ => (1 + int_lh_₁(_lh_int_S_0⁰))
+//│ 	| _  => error⁰}
+//│ def natMult_lh_₁(_lh_natMult_arg1⁰, _lh_natMult_arg2⁰) = case _lh_natMult_arg2⁰ of {
+//│ 	Z  => [Z]
+//│ 	| S _lh_natMult_S_0⁰ => natPlus_lh_₁(natMult_lh_₁(_lh_natMult_arg1⁰, _lh_natMult_S_0⁰), _lh_natMult_arg1⁰)
+//│ 	| _  => error⁰}
+//│ def natPlus_lh_₁(_lh_natPlus_arg1⁰, _lh_natPlus_arg2⁰) = case _lh_natPlus_arg1⁰ of {
+//│ 	Z  => _lh_natPlus_arg2⁰
+//│ 	| S _lh_natPlus_S_0⁰ => [S natPlus_lh_₁(_lh_natPlus_S_0⁰, _lh_natPlus_arg2⁰)]
+//│ 	| _  => error⁰}
+//│ def p_lh_₁(_lh_p_arg1², _lh_p_arg2⁰) = _lh_p_arg2⁰(_lh_p_arg1²)
+//│ def testExp38_nofib_lh_₁(_lh_testExp38_nofib_arg1⁰) = int_lh_₁(fromInteger_lh_₁(_lh_testExp38_nofib_arg1⁰, fromInteger_lh_₂(3)))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testExp38_nofib_lh_₁(primId⁰(8))
+//│ def fromInteger_lh_₁(_lh_fromInteger_arg1⁰, _lh_popOutId_0⁰) = if (_lh_fromInteger_arg1⁰ < 1) then [S [Z]] else 
+//│ 	let _lh_p_S_0⁰ = fromInteger_lh_₁((_lh_fromInteger_arg1⁰ - 1))
+//│ 	in natMult_lh_₁(_lh_popOutId_0⁰, _lh_p_S_0⁰(_lh_popOutId_0⁰))
+//│ def fromInteger_lh_₂(_lh_fromInteger_arg1¹) = if (_lh_fromInteger_arg1¹ < 1) then [Z] else [S fromInteger_lh_₂((_lh_fromInteger_arg1¹ - 1))]
+//│ def int_lh_₁(_lh_int_arg1⁰) = case _lh_int_arg1⁰ of {
+//│ 	Z  => 0
+//│ 	| S _lh_int_S_0⁰ => (1 + int_lh_₁(_lh_int_S_0⁰))
+//│ 	| _  => error⁰}
+//│ def natMult_lh_₁(_lh_natMult_arg1⁰, _lh_natMult_arg2⁰) = case _lh_natMult_arg2⁰ of {
+//│ 	Z  => [Z]
+//│ 	| S _lh_natMult_S_0⁰ => natPlus_lh_₁(natMult_lh_₁(_lh_natMult_arg1⁰, _lh_natMult_S_0⁰), _lh_natMult_arg1⁰)
+//│ 	| _  => error⁰}
+//│ def natPlus_lh_₁(_lh_natPlus_arg1⁰, _lh_natPlus_arg2⁰) = case _lh_natPlus_arg1⁰ of {
+//│ 	Z  => _lh_natPlus_arg2⁰
+//│ 	| S _lh_natPlus_S_0⁰ => [S natPlus_lh_₁(_lh_natPlus_S_0⁰, _lh_natPlus_arg2⁰)]
+//│ 	| _  => error⁰}
+//│ def p_lh_₁(_lh_p_arg1⁰, _lh_p_arg2⁰) = _lh_p_arg2⁰(_lh_p_arg1⁰)
+//│ def testExp38_nofib_lh_₁(_lh_testExp38_nofib_arg1⁰) = int_lh_₁(fromInteger_lh_₁(_lh_testExp38_nofib_arg1⁰, fromInteger_lh_₂(3)))
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

@@ -82,6 +82,38 @@ rev(genCountDown(4))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 1 [C 2 [C 3 [C 4 [N]]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ genCountDown -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ genCountDown(4, 99)
+//│ def concat(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}
+//│ def genCountDown(n⁰) = if (n⁰ > 0) then 
+//│ 	let t¹ = genCountDown((n⁰ - 1))
+//│ 	in let h¹ = n⁰
+//│ 	in (fun _lh_dummy⁰ -> concat(t¹(99), [C h¹ [N]])) else (fun _lh_dummy¹ -> [N])
+//│ def rev(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ genCountDown(4, 99)
+//│ def concat(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}
+//│ def genCountDown(n⁰, _lh_popOutId_0⁰) = if (n⁰ > 0) then 
+//│ 	let t¹ = genCountDown((n⁰ - 1))
+//│ 	in let h¹ = n⁰
+//│ 	in concat(t¹(99), [C h¹ [N]]) else [N]
+//│ def rev(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // NOTE: will only fuse the `rev` for the first iteration, the second iteration will not fuse do to things flowing into toplevelConstraits
@@ -156,6 +188,38 @@ rev(genCountDown(primitive))
 //│ 	in (fun _lh_dummy⁰ -> concat(rev(t²), [C h² [N]])) else (fun _lh_dummy¹ -> [N])
 //│ def rev(ls¹) = ls¹(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ genCountDown -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ genCountDown(primitive⁰, 99)
+//│ def concat(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}
+//│ def genCountDown(n⁰) = if (n⁰ > 0) then 
+//│ 	let t¹ = genCountDown((n⁰ - 1))
+//│ 	in let h¹ = n⁰
+//│ 	in (fun _lh_dummy⁰ -> concat(t¹(99), [C h¹ [N]])) else (fun _lh_dummy¹ -> [N])
+//│ def rev(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ genCountDown(primitive⁰, 99)
+//│ def concat(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}
+//│ def genCountDown(n⁰, _lh_popOutId_0⁰) = if (n⁰ > 0) then 
+//│ 	let t¹ = genCountDown((n⁰ - 1))
+//│ 	in let h¹ = n⁰
+//│ 	in concat(t¹(99), [C h¹ [N]]) else [N]
+//│ def rev(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // above is the rev using concat, below is the rev using accumulating parameters
@@ -205,3 +269,29 @@ rev(genCountDown(10), N)
 //│ 	in (fun a² -> rev(t¹, [C h¹ a²])) else (fun a³ -> a³)
 //│ def rev(ls¹, a¹) = ls¹(a¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ genCountDown -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ genCountDown(10, [N])
+//│ def genCountDown(n⁰) = if (n⁰ > 0) then 
+//│ 	let t⁰ = genCountDown((n⁰ - 1))
+//│ 	in let h⁰ = n⁰
+//│ 	in (fun a¹ -> t⁰([C h⁰ a¹])) else (fun a² -> a²)
+//│ def rev(ls⁰, a⁰) = ls⁰(a⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ genCountDown(10, [N])
+//│ def genCountDown(n⁰, _lh_popOutId_0⁰) = if (n⁰ > 0) then 
+//│ 	let t⁰ = genCountDown((n⁰ - 1))
+//│ 	in let h⁰ = n⁰
+//│ 	in t⁰([C h⁰ _lh_popOutId_0⁰]) else _lh_popOutId_0⁰
+//│ def rev(ls⁰, a⁰) = ls⁰(a⁰)
+//│ <<<<<<< after floating out <<<<<<<

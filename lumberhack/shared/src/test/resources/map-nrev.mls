@@ -84,6 +84,42 @@ map(x => x + 1, nrev(primId(fromEnumTo(1, 4))))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 5 [C 4 [C 3 [C 2 [N]]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ map((fun x⁰ -> (x⁰ + 1)), nrev(primId⁰(fromEnumTo(1, 4))))
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]}
+//│ def fromEnumTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ fromEnumTo((a⁰ + 1), b⁰)] else [N]
+//│ def map(f⁰, ls¹) = case ls¹ of {
+//│ 	C h² t² => [C f⁰(h²) map(f⁰, t²)]
+//│ 	| N  => [N]}
+//│ def nrev(ls⁰) = case ls⁰ of {
+//│ 	C h¹ t¹ => append(nrev(t¹), [C h¹ [N]])
+//│ 	| N  => [N]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ map((fun x⁰ -> (x⁰ + 1)), nrev(primId⁰(fromEnumTo(1, 4))))
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]}
+//│ def fromEnumTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ fromEnumTo((a⁰ + 1), b⁰)] else [N]
+//│ def map(f⁰, ls¹) = case ls¹ of {
+//│ 	C h² t² => [C f⁰(h²) map(f⁰, t²)]
+//│ 	| N  => [N]}
+//│ def nrev(ls⁰) = case ls⁰ of {
+//│ 	C h¹ t¹ => append(nrev(t¹), [C h¹ [N]])
+//│ 	| N  => [N]}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // CORRECT: can get some simple fusion done
@@ -167,6 +203,44 @@ nrev(map(x => x + 1, primId(fromEnumTo(1, 6))))
 //│ 	| N  => (fun _lh_dummy¹ -> [N])}
 //│ def nrev(ls²) = ls²(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ nrev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ map -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ map((fun x⁰ -> (x⁰ + 1)), primId⁰(fromEnumTo(1, 6)), 99)
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]}
+//│ def fromEnumTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ fromEnumTo((a⁰ + 1), b⁰)] else [N]
+//│ def map(f⁰, ls¹) = case ls¹ of {
+//│ 	C h¹ t¹ => 
+//│ 		let t² = map(f⁰, t¹)
+//│ 		in let h² = f⁰(h¹)
+//│ 		in (fun _lh_dummy⁰ -> append(t²(99), [C h² [N]]))
+//│ 	| N  => (fun _lh_dummy¹ -> [N])}
+//│ def nrev(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ map((fun x⁰ -> (x⁰ + 1)), primId⁰(fromEnumTo(1, 6)), 99)
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]}
+//│ def fromEnumTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ fromEnumTo((a⁰ + 1), b⁰)] else [N]
+//│ def map(f⁰, ls¹, _lh_popOutId_0⁰) = case ls¹ of {
+//│ 	C h¹ t¹ => 
+//│ 		let t² = map(f⁰, t¹)
+//│ 		in let h² = f⁰(h¹)
+//│ 		in append(t²(99), [C h² [N]])
+//│ 	| N  => [N]}
+//│ def nrev(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // WRONG: just adding another call the knot tier will not tie the ideal knots!
@@ -253,3 +327,43 @@ t(4)
 //│ def nrev(ls³) = ls³(99)
 //│ def t(n¹) = nrev(map((fun x¹ -> (x¹ + 1)), primId⁰(fromEnumTo(1, n¹))))
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ nrev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ map -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ t(4)
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h² t³ => [C h² append(t³, ys⁰)]}
+//│ def fromEnumTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ fromEnumTo((a⁰ + 1), b⁰)] else [N]
+//│ def map(f⁰, ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t¹ => 
+//│ 		let t² = map(f⁰, t¹)
+//│ 		in let h¹ = f⁰(h⁰)
+//│ 		in (fun _lh_dummy⁰ -> append(t²(99), [C h¹ [N]]))
+//│ 	| N  => (fun _lh_dummy¹ -> [N])}
+//│ def nrev(ls¹) = ls¹(99)
+//│ def t(n⁰) = map((fun x⁰ -> (x⁰ + 1)), primId⁰(fromEnumTo(1, n⁰)), 99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ t(4)
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h² t³ => [C h² append(t³, ys⁰)]}
+//│ def fromEnumTo(a⁰, b⁰) = if (a⁰ <= b⁰) then [C a⁰ fromEnumTo((a⁰ + 1), b⁰)] else [N]
+//│ def map(f⁰, ls⁰, _lh_popOutId_0⁰) = case ls⁰ of {
+//│ 	C h⁰ t¹ => 
+//│ 		let t² = map(f⁰, t¹)
+//│ 		in let h¹ = f⁰(h⁰)
+//│ 		in append(t²(99), [C h¹ [N]])
+//│ 	| N  => [N]}
+//│ def nrev(ls¹) = ls¹(99)
+//│ def t(n⁰) = map((fun x⁰ -> (x⁰ + 1)), primId⁰(fromEnumTo(1, n⁰)), 99)
+//│ <<<<<<< after floating out <<<<<<<

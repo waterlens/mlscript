@@ -231,6 +231,62 @@ msort(primId(C(2, C(1, C(3, N)))))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 1 [C 2 [C 3 [N]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ msort(primId⁰([C 2 [C 1 [C 3 [N]]]]))
+//│ def firsts(xs⁰) = case xs⁰ of {
+//│ 	N  => [N]
+//│ 	| C h⁰ t⁰ => case t⁰ of {
+//│ 		N  => [C h⁰ [N]]
+//│ 		| C hh⁰ tt⁰ => [C h⁰ firsts(tt⁰)]}}
+//│ def merge(xs², ys⁰) = case xs² of {
+//│ 	N  => ys⁰
+//│ 	| C hx⁰ tx⁰ => case ys⁰ of {
+//│ 		N  => xs²
+//│ 		| C hy⁰ ty⁰ => if (hy⁰ > hx⁰) then [C hx⁰ merge(tx⁰, ys⁰)] else [C hy⁰ merge(xs², ty⁰)]}}
+//│ def msort(ls⁰) = case ls⁰ of {
+//│ 	N  => [N]
+//│ 	| C h² t² => case t² of {
+//│ 		N  => [C h² [N]]
+//│ 		| C hh² tt² => merge(msort(firsts(ls⁰)), msort(seconds(ls⁰)))}}
+//│ def seconds(xs¹) = case xs¹ of {
+//│ 	N  => [N]
+//│ 	| C h¹ t¹ => case t¹ of {
+//│ 		N  => [N]
+//│ 		| C hh¹ tt¹ => [C hh¹ seconds(tt¹)]}}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ msort(primId⁰([C 2 [C 1 [C 3 [N]]]]))
+//│ def firsts(xs⁰) = case xs⁰ of {
+//│ 	N  => [N]
+//│ 	| C h⁰ t⁰ => case t⁰ of {
+//│ 		N  => [C h⁰ [N]]
+//│ 		| C hh⁰ tt⁰ => [C h⁰ firsts(tt⁰)]}}
+//│ def merge(xs², ys⁰) = case xs² of {
+//│ 	N  => ys⁰
+//│ 	| C hx⁰ tx⁰ => case ys⁰ of {
+//│ 		N  => xs²
+//│ 		| C hy⁰ ty⁰ => if (hy⁰ > hx⁰) then [C hx⁰ merge(tx⁰, ys⁰)] else [C hy⁰ merge(xs², ty⁰)]}}
+//│ def msort(ls⁰) = case ls⁰ of {
+//│ 	N  => [N]
+//│ 	| C h² t² => case t² of {
+//│ 		N  => [C h² [N]]
+//│ 		| C hh² tt² => merge(msort(firsts(ls⁰)), msort(seconds(ls⁰)))}}
+//│ def seconds(xs¹) = case xs¹ of {
+//│ 	N  => [N]
+//│ 	| C h¹ t¹ => case t¹ of {
+//│ 		N  => [N]
+//│ 		| C hh¹ tt¹ => [C hh¹ seconds(tt¹)]}}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // :lhInHaskell

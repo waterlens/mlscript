@@ -53,6 +53,38 @@ map(l)
 //│ 	in (fun _lh_dummy⁰ -> [C primitive⁰(h¹) map(t¹)])
 //│ def map(ls¹) = ls¹(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ l -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ l(99)
+//│ def l = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = l
+//│ 		in let h⁰ = [KK]
+//│ 		in (fun _lh_dummy⁰ -> [C primitive⁰(h⁰) t¹(99)])
+//│ 	in let h¹ = [K]
+//│ 	in (fun _lh_dummy¹ -> [C primitive⁰(h¹) t⁰(99)])
+//│ def map(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ l(99)
+//│ def l = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = l
+//│ 		in let h⁰ = [KK]
+//│ 		in (fun _lh_dummy⁰ -> [C primitive⁰(h⁰) t¹(99)])
+//│ 	in let h¹ = [K]
+//│ 	in (fun _lh_dummy¹ -> [C primitive⁰(h¹) t⁰(99)])
+//│ def map(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 fun map(ls) = if ls is
@@ -115,6 +147,44 @@ map(C(S, l))
 //│ 	in (fun _lh_dummy¹ -> [C primitive⁰(h²) map(t²)])
 //│ def map(ls¹) = ls¹(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ l -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let t⁰ = l
+//│ 	in let h⁰ = [S]
+//│ 	in (fun _lh_dummy⁰ -> [C primitive⁰(h⁰) t⁰(99)])(99)
+//│ def l = 
+//│ 	let t¹ = 	
+//│ 		let t² = l
+//│ 		in let h¹ = [KK]
+//│ 		in (fun _lh_dummy¹ -> [C primitive⁰(h¹) t²(99)])
+//│ 	in let h² = [K]
+//│ 	in (fun _lh_dummy² -> [C primitive⁰(h²) t¹(99)])
+//│ def map(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let t⁰ = l
+//│ 	in let h⁰ = [S]
+//│ 	in (fun _lh_dummy⁰ -> [C primitive⁰(h⁰) t⁰(99)])(99)
+//│ def l = 
+//│ 	let t¹ = 	
+//│ 		let t² = l
+//│ 		in let h¹ = [KK]
+//│ 		in (fun _lh_dummy¹ -> [C primitive⁰(h¹) t²(99)])
+//│ 	in let h² = [K]
+//│ 	in (fun _lh_dummy² -> [C primitive⁰(h²) t¹(99)])
+//│ def map(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 fun map(ls) = if ls is
@@ -177,3 +247,41 @@ map(l)
 //│ 	in (fun _lh_dummy⁰ -> [C primitive⁰(h¹) map(t¹)])
 //│ def map(ls¹) = ls¹(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ l -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ l(99)
+//│ def l = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = l
+//│ 			in let h⁰ = [KKK]
+//│ 			in (fun _lh_dummy⁰ -> [C primitive⁰(h⁰) t²(99)])
+//│ 		in let h¹ = [KK]
+//│ 		in (fun _lh_dummy¹ -> [C primitive⁰(h¹) t¹(99)])
+//│ 	in let h² = [K]
+//│ 	in (fun _lh_dummy² -> [C primitive⁰(h²) t⁰(99)])
+//│ def map(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ l(99)
+//│ def l = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = l
+//│ 			in let h⁰ = [KKK]
+//│ 			in (fun _lh_dummy⁰ -> [C primitive⁰(h⁰) t²(99)])
+//│ 		in let h¹ = [KK]
+//│ 		in (fun _lh_dummy¹ -> [C primitive⁰(h¹) t¹(99)])
+//│ 	in let h² = [K]
+//│ 	in (fun _lh_dummy² -> [C primitive⁰(h²) t⁰(99)])
+//│ def map(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<

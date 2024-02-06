@@ -55,6 +55,38 @@ all
 //│ 		in (fun _lh_dummy⁰ -> if h² then andd(t²) else [False])
 //│ 	| N  => (fun _lh_dummy¹ -> [True])}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ andd
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ map -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ all
+//│ def all(xs⁰, p⁰) = map(xs⁰, p⁰, 99)
+//│ def andd(bs⁰) = bs⁰(99)
+//│ def map(ls⁰, f⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let t¹ = map(t⁰, f⁰)
+//│ 		in let h¹ = f⁰(h⁰)
+//│ 		in (fun _lh_dummy⁰ -> if h¹ then t¹(99) else [False])
+//│ 	| N  => (fun _lh_dummy¹ -> [True])}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ all
+//│ def all(xs⁰, p⁰) = map(xs⁰, p⁰, 99)
+//│ def andd(bs⁰) = bs⁰(99)
+//│ def map(ls⁰, f⁰, _lh_popOutId_0⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let t¹ = map(t⁰, f⁰)
+//│ 		in let h¹ = f⁰(h⁰)
+//│ 		in if h¹ then t¹(99) else [False]
+//│ 	| N  => [True]}
+//│ <<<<<<< after floating out <<<<<<<
 
 fun map(ls, f) = if ls is
   C(h, t) then C(f(h), map(t, f))
@@ -119,6 +151,44 @@ f
 //│ 	| N  => (fun f⁵ -> (fun ok² -> [N]))}
 //│ def odd(x²) = if ((x² % 2) == 0) then [True] else [False]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ f
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ map -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ f
+//│ def f(xs⁰, g⁰, f⁴) = 
+//│ 	let ok² = (fun ls¹ -> ls¹(f⁴, ok²))
+//│ 	in ok²(map(xs⁰, f⁴))
+//│ def map(ls⁰, f¹) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let t¹ = map(t⁰, f¹)
+//│ 		in let h¹ = f¹(h⁰)
+//│ 		in (fun f² -> (fun ok⁰ -> case h¹ of {
+//│ 			x⁰ => if odd(x⁰) then [C f²(x⁰) ok⁰(t¹)] else ok⁰(t¹)}))
+//│ 	| N  => (fun f³ -> (fun ok¹ -> [N]))}
+//│ def odd(x¹) = if ((x¹ % 2) == 0) then [True] else [False]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ f
+//│ def f(xs⁰, g⁰, f⁴) = 
+//│ 	let ok² = (fun ls¹ -> ls¹(f⁴, ok²))
+//│ 	in ok²(map(xs⁰, f⁴))
+//│ def map(ls⁰, f¹) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let t¹ = map(t⁰, f¹)
+//│ 		in let h¹ = f¹(h⁰)
+//│ 		in (fun f² -> (fun ok⁰ -> case h¹ of {
+//│ 			x⁰ => if odd(x⁰) then [C f²(x⁰) ok⁰(t¹)] else ok⁰(t¹)}))
+//│ 	| N  => (fun f³ -> (fun ok¹ -> [N]))}
+//│ def odd(x¹) = if ((x¹ % 2) == 0) then [True] else [False]
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // [ f x | x <- map g xs, odd x ]
@@ -223,6 +293,50 @@ f(C(1, C(2, C(3, C(4, N)))), x => x + 1, x => x * 2)
 //│ 	[C 4 [C 8 [N]]]
 //│ 	[C 1 [C 2 [C 3 [C 4 [N]]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ f
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ map -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ let ok⁰ = (fun ls⁰ -> ls⁰((fun x⁰ -> (x⁰ * 2)), ok⁰))
+//│ in ok⁰(map([C 1 [C 2 [C 3 [C 4 [N]]]]], (fun x¹ -> (x¹ + 1))))
+//│ [C 1 [C 2 [C 3 [C 4 [N]]]]]
+//│ def f(xs⁰, g⁰, f⁴) = 
+//│ 	let ok³ = (fun ls² -> ls²(f⁴, ok³))
+//│ 	in ok³(map(xs⁰, g⁰))
+//│ 	xs⁰
+//│ def map(ls¹, f¹) = case ls¹ of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let t¹ = map(t⁰, f¹)
+//│ 		in let h¹ = f¹(h⁰)
+//│ 		in (fun f² -> (fun ok¹ -> case h¹ of {
+//│ 			x² => if odd(x²) then [C f²(x²) ok¹(t¹)] else ok¹(t¹)}))
+//│ 	| N  => (fun f³ -> (fun ok² -> [N]))}
+//│ def odd(x³) = if ((x³ % 2) == 0) then [True] else [False]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ let ok⁰ = (fun ls⁰ -> ls⁰((fun x⁰ -> (x⁰ * 2)), ok⁰))
+//│ in ok⁰(map([C 1 [C 2 [C 3 [C 4 [N]]]]], (fun x¹ -> (x¹ + 1))))
+//│ [C 1 [C 2 [C 3 [C 4 [N]]]]]
+//│ def f(xs⁰, g⁰, f⁴) = 
+//│ 	let ok³ = (fun ls² -> ls²(f⁴, ok³))
+//│ 	in ok³(map(xs⁰, g⁰))
+//│ 	xs⁰
+//│ def map(ls¹, f¹) = case ls¹ of {
+//│ 	C h⁰ t⁰ => 
+//│ 		let t¹ = map(t⁰, f¹)
+//│ 		in let h¹ = f¹(h⁰)
+//│ 		in (fun f² -> (fun ok¹ -> case h¹ of {
+//│ 			x² => if odd(x²) then [C f²(x²) ok¹(t¹)] else ok¹(t¹)}))
+//│ 	| N  => (fun f³ -> (fun ok² -> [N]))}
+//│ def odd(x³) = if ((x³ % 2) == 0) then [True] else [False]
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -409,3 +523,63 @@ main(C(
 //│ 	[C [AA] [C [BB] [C [NL] [C [CC] [C [DD] [C [NL] [C [EE] [C [FF] [C [NL] [N]]]]]]]]]]
 //│ 	[C [C [AA] [C [BB] [N]]] [C [C [CC] [C [DD] [N]]] [C [C [EE] [C [FF] [N]]] [N]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ concatInner, concat
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ unlines -> 1
+//│ append -> 2
+//│ map -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main([C [C [AA] [C [BB] [N]]] [C [C [CC] [C [DD] [N]]] [C [C [EE] [C [FF] [N]]] [N]]]])
+//│ def append(xs¹, ys⁰) = case xs¹ of {
+//│ 	C h¹ t¹ => 
+//│ 		let t² = append(t¹, ys⁰)
+//│ 		in let h² = h¹
+//│ 		in (fun xss² -> [C h² t²(xss²)])
+//│ 	| N  => ys⁰}
+//│ def concat(lss²) = lss²(99)
+//│ def concatInner(xs², xss³) = xs²(xss³)
+//│ def main(lss⁰) = 
+//│ 	unlines(lss⁰)
+//│ 	lss⁰
+//│ def map(xs³, f⁰) = case xs³ of {
+//│ 	C h³ t³ => 
+//│ 		let tt⁰ = map(t³, f⁰)
+//│ 		in let hh⁰ = f⁰(h³)
+//│ 		in (fun _lh_dummy⁰ -> hh⁰(tt⁰))
+//│ 	| N  => (fun _lh_dummy¹ -> [N])}
+//│ def unlines(lss¹) = map(lss¹, (fun xs⁰ -> append(xs⁰, 
+//│ 	let t⁰ = (fun xss⁰ -> xss⁰(99))
+//│ 	in let h⁰ = [NL]
+//│ 	in (fun xss¹ -> [C h⁰ t⁰(xss¹)]))), 99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main([C [C [AA] [C [BB] [N]]] [C [C [CC] [C [DD] [N]]] [C [C [EE] [C [FF] [N]]] [N]]]])
+//│ def append(xs¹, ys⁰) = case xs¹ of {
+//│ 	C h¹ t¹ => 
+//│ 		let t² = append(t¹, ys⁰)
+//│ 		in let h² = h¹
+//│ 		in (fun xss² -> [C h² t²(xss²)])
+//│ 	| N  => ys⁰}
+//│ def concat(lss²) = lss²(99)
+//│ def concatInner(xs², xss³) = xs²(xss³)
+//│ def main(lss⁰) = 
+//│ 	unlines(lss⁰)
+//│ 	lss⁰
+//│ def map(xs³, f⁰) = case xs³ of {
+//│ 	C h³ t³ => 
+//│ 		let tt⁰ = map(t³, f⁰)
+//│ 		in let hh⁰ = f⁰(h³)
+//│ 		in (fun _lh_dummy⁰ -> hh⁰(tt⁰))
+//│ 	| N  => (fun _lh_dummy¹ -> [N])}
+//│ def unlines(lss¹) = map(lss¹, (fun xs⁰ -> append(xs⁰, 
+//│ 	let t⁰ = (fun xss⁰ -> xss⁰(99))
+//│ 	in let h⁰ = [NL]
+//│ 	in (fun xss¹ -> [C h⁰ t⁰(xss¹)]))), 99)
+//│ <<<<<<< after floating out <<<<<<<

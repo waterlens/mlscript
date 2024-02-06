@@ -73,3 +73,39 @@ testMinusAdd(4)
 //│ >>>>>>> evaluate >>>>>>>
 //│ [S [S [S [S [Z]]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testMinusAdd(4)
+//│ def intToNat(x⁰) = if (x⁰ <= 0) then [Z] else [S intToNat((x⁰ - 1))]
+//│ def natAdd(x¹, y⁰) = case x¹ of {
+//│ 	Z  => y⁰
+//│ 	| S x² => [S natAdd(x², y⁰)]}
+//│ def natMinus(x³, y¹) = case y¹ of {
+//│ 	Z  => x³
+//│ 	| S y² => case x³ of {
+//│ 		Z  => [Z]
+//│ 		| S x⁴ => natMinus(x⁴, y²)}}
+//│ def testMinusAdd(x⁵) = natMinus(natAdd(primId⁰(intToNat(x⁵)), primId⁰(intToNat((3 * x⁵)))), primId⁰(intToNat((3 * x⁵))))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testMinusAdd(4)
+//│ def intToNat(x⁰) = if (x⁰ <= 0) then [Z] else [S intToNat((x⁰ - 1))]
+//│ def natAdd(x¹, y⁰) = case x¹ of {
+//│ 	Z  => y⁰
+//│ 	| S x² => [S natAdd(x², y⁰)]}
+//│ def natMinus(x³, y¹) = case y¹ of {
+//│ 	Z  => x³
+//│ 	| S y² => case x³ of {
+//│ 		Z  => [Z]
+//│ 		| S x⁴ => natMinus(x⁴, y²)}}
+//│ def testMinusAdd(x⁵) = natMinus(natAdd(primId⁰(intToNat(x⁵)), primId⁰(intToNat((3 * x⁵)))), primId⁰(intToNat((3 * x⁵))))
+//│ <<<<<<< after floating out <<<<<<<

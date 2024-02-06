@@ -91,3 +91,43 @@ count(0, rev(N, C(1, C(2, N))))
 //│ >>>>>>> evaluate >>>>>>>
 //│ 2
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev, count
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let t1⁰ = 	
+//│ 		let t1¹ = (fun a⁰ -> a⁰)
+//│ 		in let h1⁰ = 2
+//│ 		in (fun a¹ -> t1¹(
+//│ 			let t⁰ = a¹
+//│ 			in (fun c⁰ -> t⁰((c⁰ + 1)))))
+//│ 	in let h1¹ = 1
+//│ 	in (fun a² -> t1⁰(
+//│ 		let t¹ = a²
+//│ 		in (fun c¹ -> t¹((c¹ + 1)))))((fun c² -> c²), 0)
+//│ def count(c³, xs⁰) = xs⁰(c³)
+//│ def rev(a³, ys⁰) = ys⁰(a³)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let t1⁰ = 	
+//│ 		let t1¹ = (fun a⁰ -> a⁰)
+//│ 		in let h1⁰ = 2
+//│ 		in (fun a¹ -> t1¹(
+//│ 			let t⁰ = a¹
+//│ 			in (fun c⁰ -> t⁰((c⁰ + 1)))))
+//│ 	in let h1¹ = 1
+//│ 	in (fun a² -> t1⁰(
+//│ 		let t¹ = a²
+//│ 		in (fun c¹ -> t¹((c¹ + 1)))))((fun c² -> c²), 0)
+//│ def count(c³, xs⁰) = xs⁰(c³)
+//│ def rev(a³, ys⁰) = ys⁰(a³)
+//│ <<<<<<< after floating out <<<<<<<

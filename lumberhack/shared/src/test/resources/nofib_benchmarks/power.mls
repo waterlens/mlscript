@@ -5627,6 +5627,904 @@ testPower_nofib $ primId 14
 //│ def x_lh_₁ = lazy⁰([Pc 0 lazy⁰([Pc 1 lazy⁰([Pz])])])
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ integral_lh_₁, revert_lh_₁, integral_lh_₄, deriv_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ divPs_lh_₂ -> 2
+//│ integralLz_lh_₂ -> 1
+//│ sqrtPs_lh_₁ -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testPower_nofib_lh_₁(primId⁰(14))
+//│ def addPs_lh_₁(_lh_addPs_arg1⁵, _lh_addPs_arg2⁵) = lazy⁰(
+//│ 	let _lh_matchIdent⁶¹ = force⁰(_lh_addPs_arg1⁵)
+//│ 	in case _lh_matchIdent⁶¹ of {
+//│ 		Pz  => force⁰(_lh_addPs_arg2⁵)
+//│ 		| Pc _lh_addPs_Pc_0¹⁰ _lh_addPs_Pc_1¹⁰ => 
+//│ 			let _lh_matchIdent⁶² = force⁰(_lh_addPs_arg2⁵)
+//│ 			in case _lh_matchIdent⁶² of {
+//│ 				Pz  => force⁰(_lh_addPs_arg1⁵)
+//│ 				| Pc _lh_addPs_Pc_0¹¹ _lh_addPs_Pc_1¹¹ => [Pc (_lh_addPs_Pc_0¹⁰ + _lh_addPs_Pc_0¹¹) addPs_lh_₁(_lh_addPs_Pc_1¹⁰, _lh_addPs_Pc_1¹¹)]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def addPs_lh_₂(_lh_addPs_arg1², _lh_addPs_arg2²) = lazy⁰(
+//│ 	let _lh_matchIdent²⁸ = force⁰(_lh_addPs_arg1²)
+//│ 	in case _lh_matchIdent²⁸ of {
+//│ 		Pz  => force⁰(_lh_addPs_arg2²)
+//│ 		| Pc _lh_addPs_Pc_0⁴ _lh_addPs_Pc_1⁴ => 
+//│ 			let _lh_matchIdent²⁹ = force⁰(_lh_addPs_arg2²)
+//│ 			in case _lh_matchIdent²⁹ of {
+//│ 				Pz  => force⁰(_lh_addPs_arg1²)
+//│ 				| Pc _lh_addPs_Pc_0⁵ _lh_addPs_Pc_1⁵ => [Pc (_lh_addPs_Pc_0⁴ + _lh_addPs_Pc_0⁵) addPs_lh_₂(_lh_addPs_Pc_1⁴, _lh_addPs_Pc_1⁵)]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def addPs_lh_₃(_lh_addPs_arg1¹, _lh_addPs_arg2¹) = lazy⁰(
+//│ 	let _lh_matchIdent²⁵ = force⁰(_lh_addPs_arg1¹)
+//│ 	in case _lh_matchIdent²⁵ of {
+//│ 		Pz  => force⁰(_lh_addPs_arg2¹)
+//│ 		| Pc _lh_addPs_Pc_0² _lh_addPs_Pc_1² => 
+//│ 			let _lh_matchIdent²⁶ = force⁰(_lh_addPs_arg2¹)
+//│ 			in case _lh_matchIdent²⁶ of {
+//│ 				Pz  => force⁰(_lh_addPs_arg1¹)
+//│ 				| Pc _lh_addPs_Pc_0³ _lh_addPs_Pc_1³ => [Pc (_lh_addPs_Pc_0² + _lh_addPs_Pc_0³) addPs_lh_₃(_lh_addPs_Pc_1², _lh_addPs_Pc_1³)]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def addPs_lh_₄(_lh_addPs_arg1⁰, _lh_addPs_arg2⁰) = lazy⁰(
+//│ 	let _lh_matchIdent²¹ = force⁰(_lh_addPs_arg1⁰)
+//│ 	in case _lh_matchIdent²¹ of {
+//│ 		Pz  => force⁰(_lh_addPs_arg2⁰)
+//│ 		| Pc _lh_addPs_Pc_0⁰ _lh_addPs_Pc_1⁰ => 
+//│ 			let _lh_matchIdent²² = force⁰(_lh_addPs_arg2⁰)
+//│ 			in case _lh_matchIdent²² of {
+//│ 				Pz  => force⁰(_lh_addPs_arg1⁰)
+//│ 				| Pc _lh_addPs_Pc_0¹ _lh_addPs_Pc_1¹ => [Pc (_lh_addPs_Pc_0⁰ + _lh_addPs_Pc_0¹) addPs_lh_₄(_lh_addPs_Pc_1⁰, _lh_addPs_Pc_1¹)]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def addPs_lh_₅(_lh_addPs_arg1³, _lh_addPs_arg2³) = lazy⁰(
+//│ 	let _lh_matchIdent⁴⁷ = force⁰(_lh_addPs_arg1³)
+//│ 	in case _lh_matchIdent⁴⁷ of {
+//│ 		Pz  => force⁰(_lh_addPs_arg2³)
+//│ 		| Pc _lh_addPs_Pc_0⁶ _lh_addPs_Pc_1⁶ => 
+//│ 			let _lh_matchIdent⁴⁸ = force⁰(_lh_addPs_arg2³)
+//│ 			in case _lh_matchIdent⁴⁸ of {
+//│ 				Pz  => force⁰(_lh_addPs_arg1³)
+//│ 				| Pc _lh_addPs_Pc_0⁷ _lh_addPs_Pc_1⁷ => [Pc (_lh_addPs_Pc_0⁶ + _lh_addPs_Pc_0⁷) addPs_lh_₅(_lh_addPs_Pc_1⁶, _lh_addPs_Pc_1⁷)]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def addPs_lh_₆(_lh_addPs_arg1⁴, _lh_addPs_arg2⁴) = lazy⁰(
+//│ 	let _lh_matchIdent⁴⁹ = force⁰(_lh_addPs_arg1⁴)
+//│ 	in case _lh_matchIdent⁴⁹ of {
+//│ 		Pz  => force⁰(_lh_addPs_arg2⁴)
+//│ 		| Pc _lh_addPs_Pc_0⁸ _lh_addPs_Pc_1⁸ => 
+//│ 			let _lh_matchIdent⁵⁰ = force⁰(_lh_addPs_arg2⁴)
+//│ 			in case _lh_matchIdent⁵⁰ of {
+//│ 				Pz  => force⁰(_lh_addPs_arg1⁴)
+//│ 				| Pc _lh_addPs_Pc_0⁹ _lh_addPs_Pc_1⁹ => [Pc (_lh_addPs_Pc_0⁸ + _lh_addPs_Pc_0⁹) addPs_lh_₆(_lh_addPs_Pc_1⁸, _lh_addPs_Pc_1⁹)]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def composeSndLz_lh_₁(_lh_composeSndLz_arg1⁰, _lh_composeSndLz_arg2⁰) = lazy⁰(
+//│ 	let _lh_matchIdent¹⁸ = force⁰(_lh_composeSndLz_arg1⁰)
+//│ 	in case _lh_matchIdent¹⁸ of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_composeSndLz_Pc_0⁰ _lh_composeSndLz_Pc_1⁰ => 
+//│ 			let _lh_matchIdent¹⁹ = force⁰(force⁰(_lh_composeSndLz_arg2⁰))
+//│ 			in case _lh_matchIdent¹⁹ of {
+//│ 				Pz  => [Pc _lh_composeSndLz_Pc_0⁰ lazy⁰([Pz])]
+//│ 				| Pc _lh_composeSndLz_Pc_0¹ _lh_composeSndLz_Pc_1¹ => case _lh_composeSndLz_Pc_0¹ of {
+//│ 					0  => [Pc _lh_composeSndLz_Pc_0⁰ multPs_lh_₁(_lh_composeSndLz_Pc_1¹, compose_lh_₁(_lh_composeSndLz_Pc_1⁰, lazy⁰([Pc 0 _lh_composeSndLz_Pc_1¹])))]
+//│ 					| _  => force⁰(addPs_lh_₆(lazy⁰([Pc _lh_composeSndLz_Pc_0⁰ lazy⁰([Pz])]), multPsFstLz_lh_₁(_lh_composeSndLz_arg2⁰, composeSndLz_lh_₁(_lh_composeSndLz_Pc_1⁰, _lh_composeSndLz_arg2⁰))))}
+//│ 				| _  => force⁰(addPs_lh_₆(lazy⁰([Pc _lh_composeSndLz_Pc_0⁰ lazy⁰([Pz])]), multPsFstLz_lh_₁(_lh_composeSndLz_arg2⁰, composeSndLz_lh_₁(_lh_composeSndLz_Pc_1⁰, _lh_composeSndLz_arg2⁰))))}
+//│ 		| _  => error⁰})
+//│ def compose_lh_₁(_lh_compose_arg1⁰, _lh_compose_arg2⁰) = lazy⁰(
+//│ 	let _lh_matchIdent¹⁰ = force⁰(_lh_compose_arg1⁰)
+//│ 	in case _lh_matchIdent¹⁰ of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_compose_Pc_0⁰ _lh_compose_Pc_1⁰ => 
+//│ 			let _lh_matchIdent¹¹ = force⁰(_lh_compose_arg2⁰)
+//│ 			in case _lh_matchIdent¹¹ of {
+//│ 				Pz  => [Pc _lh_compose_Pc_0⁰ lazy⁰([Pz])]
+//│ 				| Pc _lh_compose_Pc_0¹ _lh_compose_Pc_1¹ => case _lh_compose_Pc_0¹ of {
+//│ 					0  => [Pc _lh_compose_Pc_0⁰ multPs_lh_₁(_lh_compose_Pc_1¹, compose_lh_₁(_lh_compose_Pc_1⁰, lazy⁰([Pc 0 _lh_compose_Pc_1¹])))]
+//│ 					| _  => force⁰(addPs_lh_₆(lazy⁰([Pc _lh_compose_Pc_0⁰ lazy⁰([Pz])]), multPs_lh_₁(_lh_compose_arg2⁰, compose_lh_₁(_lh_compose_Pc_1⁰, _lh_compose_arg2⁰))))}
+//│ 				| _  => force⁰(addPs_lh_₆(lazy⁰([Pc _lh_compose_Pc_0⁰ lazy⁰([Pz])]), multPs_lh_₁(_lh_compose_arg2⁰, compose_lh_₁(_lh_compose_Pc_1⁰, _lh_compose_arg2⁰))))}
+//│ 		| _  => error⁰})
+//│ def cosx_lh_₁(_lh_cosx_arg1⁰) = minusPs_lh_₅(lazy⁰([Pc 1 lazy⁰([Pz])]), 
+//│ 	let int1⁰ = (fun fss⁰ -> (fun n⁰ -> lazy⁰(
+//│ 		let _lh_matchIdent¹ = force⁰(fss⁰)
+//│ 		in _lh_matchIdent¹(int1⁰, n⁰))))
+//│ 	in lazy⁰([Pc 0 int1⁰(integralLz_lh_₂(lazy⁰(cosx_lh_₁(0))), 1)]))
+//│ def cosx_lh_₂(_lh_cosx_arg1¹) = minusPs_lh_₆(lazy⁰([Pc 1 lazy⁰([Pz])]), integral_lh_₅(integralLz_lh_₃(lazy⁰(cosx_lh_₂(0)))))
+//│ def deriv_lh_₁(_lh_deriv_arg1⁰) = lazy⁰(
+//│ 	let _lh_matchIdent³² = force⁰(_lh_deriv_arg1⁰)
+//│ 	in _lh_matchIdent³²(99))
+//│ def divPs_lh_₁(_lh_divPs_arg1², _lh_divPs_arg2²) = lazy⁰(
+//│ 	let _lh_matchIdent⁵⁴ = force⁰(_lh_divPs_arg1²)
+//│ 	in case _lh_matchIdent⁵⁴ of {
+//│ 		Pz  => 
+//│ 			let _lh_matchIdent⁵⁵ = force⁰(_lh_divPs_arg2²)
+//│ 			in case _lh_matchIdent⁵⁵ of {
+//│ 				Pz  => error⁰([LH_C 'p' [LH_C 'o' [LH_C 'w' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C 's' [LH_C 'e' [LH_C 'r' [LH_C 'i' [LH_C 'e' [LH_C 's' [LH_C ' ' [LH_C '0' [LH_C '/' [LH_C '0' [LH_N]]]]]]]]]]]]]]]]])
+//│ 				| Pc _lh_divPs_Pc_0⁸ _lh_divPs_Pc_1⁸ => case _lh_divPs_Pc_0⁸ of {
+//│ 					0  => force⁰(divPs_lh_₁(lazy⁰([Pz]), _lh_divPs_Pc_1⁸))
+//│ 					| _  => [Pz]}
+//│ 				| _  => [Pz]}
+//│ 		| Pc _lh_divPs_Pc_0⁹ _lh_divPs_Pc_1⁹ => case _lh_divPs_Pc_0⁹ of {
+//│ 			0  => 
+//│ 				let _lh_matchIdent⁵⁶ = force⁰(_lh_divPs_arg2²)
+//│ 				in case _lh_matchIdent⁵⁶ of {
+//│ 					Pc _lh_divPs_Pc_0¹⁰ _lh_divPs_Pc_1¹⁰ => case _lh_divPs_Pc_0¹⁰ of {
+//│ 						0  => force⁰(divPs_lh_₁(_lh_divPs_Pc_1⁹, _lh_divPs_Pc_1¹⁰))
+//│ 						| _  => 
+//│ 							let q⁴ = 0
+//│ 							in [Pc q⁴ divPs_lh_₁(addPs_lh_₆(_lh_divPs_Pc_1⁹, negatePs_lh_₃(dotMult_lh_₁(q⁴, _lh_divPs_Pc_1¹⁰))), lazy⁰([Pc _lh_divPs_Pc_0¹⁰ _lh_divPs_Pc_1¹⁰]))]}
+//│ 					| _  => error⁰}
+//│ 			| _  => 
+//│ 				let _lh_matchIdent⁵⁷ = force⁰(_lh_divPs_arg2²)
+//│ 				in case _lh_matchIdent⁵⁷ of {
+//│ 					Pc _lh_divPs_Pc_0¹¹ _lh_divPs_Pc_1¹¹ => 
+//│ 						let q⁵ = (_lh_divPs_Pc_0⁹ / _lh_divPs_Pc_0¹¹)
+//│ 						in [Pc q⁵ divPs_lh_₁(addPs_lh_₅(_lh_divPs_Pc_1⁹, negatePs_lh_₃(dotMult_lh_₁(q⁵, _lh_divPs_Pc_1¹¹))), lazy⁰([Pc _lh_divPs_Pc_0¹¹ _lh_divPs_Pc_1¹¹]))]
+//│ 					| _  => error⁰}}
+//│ 		| _  => error⁰})
+//│ def divPs_lh_₂(_lh_divPs_arg1⁰, _lh_divPs_arg2⁰) = lazy⁰(
+//│ 	let _lh_matchIdent¹² = force⁰(_lh_divPs_arg1⁰)
+//│ 	in case _lh_matchIdent¹² of {
+//│ 		Pz  => 
+//│ 			let _lh_matchIdent¹³ = force⁰(_lh_divPs_arg2⁰)
+//│ 			in case _lh_matchIdent¹³ of {
+//│ 				Pz  => error⁰([LH_C 'p' [LH_C 'o' [LH_C 'w' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C 's' [LH_C 'e' [LH_C 'r' [LH_C 'i' [LH_C 'e' [LH_C 's' [LH_C ' ' [LH_C '0' [LH_C '/' [LH_C '0' [LH_N]]]]]]]]]]]]]]]]])
+//│ 				| Pc _lh_divPs_Pc_0⁰ _lh_divPs_Pc_1⁰ => case _lh_divPs_Pc_0⁰ of {
+//│ 					0  => force⁰(divPs_lh_₂(lazy⁰([Pz]), _lh_divPs_Pc_1⁰))
+//│ 					| _  => (fun int1⁴ -> (fun n⁴ -> [Pz]))}
+//│ 				| _  => (fun int1⁵ -> (fun n⁵ -> [Pz]))}
+//│ 		| Pc _lh_divPs_Pc_0¹ _lh_divPs_Pc_1¹ => case _lh_divPs_Pc_0¹ of {
+//│ 			0  => 
+//│ 				let _lh_matchIdent¹⁴ = force⁰(_lh_divPs_arg2⁰)
+//│ 				in case _lh_matchIdent¹⁴ of {
+//│ 					Pc _lh_divPs_Pc_0² _lh_divPs_Pc_1² => case _lh_divPs_Pc_0² of {
+//│ 						0  => force⁰(divPs_lh_₂(_lh_divPs_Pc_1¹, _lh_divPs_Pc_1²))
+//│ 						| _  => 
+//│ 							let q⁰ = 0
+//│ 							in let _lh_int1_Pc_1² = divPs_lh_₂(addPs_lh_₆(_lh_divPs_Pc_1¹, negatePs_lh_₃(dotMult_lh_₁(q⁰, _lh_divPs_Pc_1²))), lazy⁰([Pc _lh_divPs_Pc_0² _lh_divPs_Pc_1²]))
+//│ 							in let _lh_int1_Pc_0² = q⁰
+//│ 							in (fun int1⁶ -> (fun n⁶ -> [Pc (_lh_int1_Pc_0² / n⁶) int1⁶(_lh_int1_Pc_1², (n⁶ + 1))]))}
+//│ 					| _  => error⁰}
+//│ 			| _  => 
+//│ 				let _lh_matchIdent¹⁵ = force⁰(_lh_divPs_arg2⁰)
+//│ 				in case _lh_matchIdent¹⁵ of {
+//│ 					Pc _lh_divPs_Pc_0³ _lh_divPs_Pc_1³ => 
+//│ 						let q¹ = (_lh_divPs_Pc_0¹ / _lh_divPs_Pc_0³)
+//│ 						in let _lh_int1_Pc_1³ = divPs_lh_₂(addPs_lh_₆(_lh_divPs_Pc_1¹, negatePs_lh_₃(dotMult_lh_₁(q¹, _lh_divPs_Pc_1³))), lazy⁰([Pc _lh_divPs_Pc_0³ _lh_divPs_Pc_1³]))
+//│ 						in let _lh_int1_Pc_0³ = q¹
+//│ 						in (fun int1⁷ -> (fun n⁷ -> [Pc (_lh_int1_Pc_0³ / n⁷) int1⁷(_lh_int1_Pc_1³, (n⁷ + 1))]))
+//│ 					| _  => error⁰}}
+//│ 		| _  => error⁰})
+//│ def divPs_lh_₃(_lh_divPs_arg1¹, _lh_divPs_arg2¹) = lazy⁰(
+//│ 	let _lh_matchIdent³⁸ = force⁰(_lh_divPs_arg1¹)
+//│ 	in case _lh_matchIdent³⁸ of {
+//│ 		Pz  => 
+//│ 			let _lh_matchIdent³⁹ = force⁰(_lh_divPs_arg2¹)
+//│ 			in case _lh_matchIdent³⁹ of {
+//│ 				Pz  => error⁰([LH_C 'p' [LH_C 'o' [LH_C 'w' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C 's' [LH_C 'e' [LH_C 'r' [LH_C 'i' [LH_C 'e' [LH_C 's' [LH_C ' ' [LH_C '0' [LH_C '/' [LH_C '0' [LH_N]]]]]]]]]]]]]]]]])
+//│ 				| Pc _lh_divPs_Pc_0⁴ _lh_divPs_Pc_1⁴ => case _lh_divPs_Pc_0⁴ of {
+//│ 					0  => force⁰(divPs_lh_₃(lazy⁰([Pz]), _lh_divPs_Pc_1⁴))
+//│ 					| _  => [Pz]}
+//│ 				| _  => [Pz]}
+//│ 		| Pc _lh_divPs_Pc_0⁵ _lh_divPs_Pc_1⁵ => case _lh_divPs_Pc_0⁵ of {
+//│ 			0  => 
+//│ 				let _lh_matchIdent⁴⁰ = force⁰(_lh_divPs_arg2¹)
+//│ 				in case _lh_matchIdent⁴⁰ of {
+//│ 					Pc _lh_divPs_Pc_0⁶ _lh_divPs_Pc_1⁶ => case _lh_divPs_Pc_0⁶ of {
+//│ 						0  => force⁰(divPs_lh_₃(_lh_divPs_Pc_1⁵, _lh_divPs_Pc_1⁶))
+//│ 						| _  => 
+//│ 							let q² = 0
+//│ 							in [Pc q² divPs_lh_₃(addPs_lh_₆(_lh_divPs_Pc_1⁵, negatePs_lh_₃(dotMult_lh_₁(q², _lh_divPs_Pc_1⁶))), lazy⁰([Pc _lh_divPs_Pc_0⁶ _lh_divPs_Pc_1⁶]))]}
+//│ 					| _  => error⁰}
+//│ 			| _  => 
+//│ 				let _lh_matchIdent⁴¹ = force⁰(_lh_divPs_arg2¹)
+//│ 				in case _lh_matchIdent⁴¹ of {
+//│ 					Pc _lh_divPs_Pc_0⁷ _lh_divPs_Pc_1⁷ => 
+//│ 						let q³ = (_lh_divPs_Pc_0⁵ / _lh_divPs_Pc_0⁷)
+//│ 						in [Pc q³ divPs_lh_₃(addPs_lh_₆(_lh_divPs_Pc_1⁵, negatePs_lh_₃(dotMult_lh_₁(q³, _lh_divPs_Pc_1⁷))), lazy⁰([Pc _lh_divPs_Pc_0⁷ _lh_divPs_Pc_1⁷]))]
+//│ 					| _  => error⁰}}
+//│ 		| _  => error⁰})
+//│ def dotMultSndLz_lh_₁(_lh_dotMultSndLz_arg1⁰, _lh_dotMultSndLz_arg2⁰) = lazy⁰(
+//│ 	let _lh_matchIdent¹⁷ = force⁰(force⁰(_lh_dotMultSndLz_arg2⁰))
+//│ 	in case _lh_matchIdent¹⁷ of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_dotMultSndLz_Pc_0⁰ _lh_dotMultSndLz_Pc_1⁰ => [Pc (_lh_dotMultSndLz_arg1⁰ * _lh_dotMultSndLz_Pc_0⁰) dotMult_lh_₁(_lh_dotMultSndLz_arg1⁰, _lh_dotMultSndLz_Pc_1⁰)]
+//│ 		| _  => error⁰})
+//│ def dotMult_lh_₁(_lh_dotMult_arg1⁰, _lh_dotMult_arg2⁰) = lazy⁰(
+//│ 	let _lh_matchIdent¹⁶ = force⁰(_lh_dotMult_arg2⁰)
+//│ 	in case _lh_matchIdent¹⁶ of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_dotMult_Pc_0⁰ _lh_dotMult_Pc_1⁰ => [Pc (_lh_dotMult_arg1⁰ * _lh_dotMult_Pc_0⁰) dotMult_lh_₁(_lh_dotMult_arg1⁰, _lh_dotMult_Pc_1⁰)]
+//│ 		| _  => error⁰})
+//│ def extract_lh_₁(_lh_extract_arg1¹, _lh_extract_arg2¹) = if (_lh_extract_arg1¹ == 0) then [LH_N] else 
+//│ 	let _lh_matchIdent³⁶ = force⁰(_lh_extract_arg2¹)
+//│ 	in case _lh_matchIdent³⁶ of {
+//│ 		Pz  => [LH_N]
+//│ 		| Pc _lh_extract_Pc_0¹ _lh_extract_Pc_1¹ => [LH_C _lh_extract_Pc_0¹ extract_lh_₁((_lh_extract_arg1¹ - 1), _lh_extract_Pc_1¹)]
+//│ 		| _  => error⁰}
+//│ def extract_lh_₂(_lh_extract_arg1², _lh_extract_arg2²) = if (_lh_extract_arg1² == 0) then [LH_N] else 
+//│ 	let _lh_matchIdent⁵¹ = force⁰(_lh_extract_arg2²)
+//│ 	in case _lh_matchIdent⁵¹ of {
+//│ 		Pz  => [LH_N]
+//│ 		| Pc _lh_extract_Pc_0² _lh_extract_Pc_1² => [LH_C _lh_extract_Pc_0² extract_lh_₂((_lh_extract_arg1² - 1), _lh_extract_Pc_1²)]
+//│ 		| _  => error⁰}
+//│ def extract_lh_₃(_lh_extract_arg1⁰, _lh_extract_arg2⁰) = if (_lh_extract_arg1⁰ == 0) then [LH_N] else 
+//│ 	let _lh_matchIdent³¹ = force⁰(_lh_extract_arg2⁰)
+//│ 	in case _lh_matchIdent³¹ of {
+//│ 		Pz  => [LH_N]
+//│ 		| Pc _lh_extract_Pc_0⁰ _lh_extract_Pc_1⁰ => [LH_C _lh_extract_Pc_0⁰ extract_lh_₃((_lh_extract_arg1⁰ - 1), _lh_extract_Pc_1⁰)]
+//│ 		| _  => error⁰}
+//│ def extract_lh_₄(_lh_extract_arg1³, _lh_extract_arg2³) = if (_lh_extract_arg1³ == 0) then [LH_N] else 
+//│ 	let _lh_matchIdent⁶³ = force⁰(_lh_extract_arg2³)
+//│ 	in case _lh_matchIdent⁶³ of {
+//│ 		Pz  => [LH_N]
+//│ 		| Pc _lh_extract_Pc_0³ _lh_extract_Pc_1³ => [LH_C _lh_extract_Pc_0³ extract_lh_₄((_lh_extract_arg1³ - 1), _lh_extract_Pc_1³)]
+//│ 		| _  => error⁰}
+//│ def fromIntegerPs_lh_₁(_lh_fromIntegerPs_arg1¹) = case _lh_fromIntegerPs_arg1¹ of {
+//│ 	0  => lazy⁰([Pz])
+//│ 	| _  => lazy⁰([Pc _lh_fromIntegerPs_arg1¹ lazy⁰([Pz])])}
+//│ def fromIntegerPs_lh_₂(_lh_fromIntegerPs_arg1²) = case _lh_fromIntegerPs_arg1² of {
+//│ 	0  => lazy⁰([Pz])
+//│ 	| _  => lazy⁰([Pc _lh_fromIntegerPs_arg1² lazy⁰([Pz])])}
+//│ def fromIntegerPs_lh_₃(_lh_fromIntegerPs_arg1⁰) = case _lh_fromIntegerPs_arg1⁰ of {
+//│ 	0  => lazy⁰([Pz])
+//│ 	| _  => lazy⁰([Pc _lh_fromIntegerPs_arg1⁰ lazy⁰([Pz])])}
+//│ def fromIntegerPs_lh_₄(_lh_fromIntegerPs_arg1⁴) = case _lh_fromIntegerPs_arg1⁴ of {
+//│ 	0  => lazy⁰([Pz])
+//│ 	| _  => lazy⁰([Pc _lh_fromIntegerPs_arg1⁴ lazy⁰([Pz])])}
+//│ def fromIntegerPs_lh_₅(_lh_fromIntegerPs_arg1³) = case _lh_fromIntegerPs_arg1³ of {
+//│ 	0  => lazy⁰([Pz])
+//│ 	| _  => lazy⁰([Pc _lh_fromIntegerPs_arg1³ lazy⁰([Pz])])}
+//│ def integralLz_lh_₁(_lh_integralLz_arg1⁰) = 
+//│ 	let int1¹ = (fun fss¹ -> (fun n¹ -> lazy⁰(
+//│ 		let _lh_matchIdent⁴ = force⁰(force⁰(fss¹))
+//│ 		in case _lh_matchIdent⁴ of {
+//│ 			Pz  => [Pz]
+//│ 			| Pc _lh_int1_Pc_0⁰ _lh_int1_Pc_1⁰ => [Pc (_lh_int1_Pc_0⁰ / n¹) int1¹(lazy⁰(_lh_int1_Pc_1⁰), (n¹ + 1))]
+//│ 			| _  => error⁰})))
+//│ 	in lazy⁰([Pc 0 int1¹(_lh_integralLz_arg1⁰, 1)])
+//│ def integralLz_lh_₂(_lh_integralLz_arg1²) = 
+//│ 	let int1⁸ = (fun fss⁴ -> (fun n⁸ -> lazy⁰(
+//│ 		let _lh_matchIdent²³ = force⁰(force⁰(fss⁴))
+//│ 		in case _lh_matchIdent²³ of {
+//│ 			Pz  => (fun int1⁹ -> (fun n⁹ -> [Pz]))
+//│ 			| Pc _lh_int1_Pc_0⁴ _lh_int1_Pc_1⁴ => 
+//│ 				let _lh_int1_Pc_1⁵ = int1⁸(lazy⁰(_lh_int1_Pc_1⁴), (n⁸ + 1))
+//│ 				in let _lh_int1_Pc_0⁵ = (_lh_int1_Pc_0⁴ / n⁸)
+//│ 				in (fun int1¹⁰ -> (fun n¹⁰ -> [Pc (_lh_int1_Pc_0⁵ / n¹⁰) int1¹⁰(_lh_int1_Pc_1⁵, (n¹⁰ + 1))]))
+//│ 			| _  => error⁰})))
+//│ 	in lazy⁰(
+//│ 		let _lh_int1_Pc_1⁶ = int1⁸(_lh_integralLz_arg1², 1)
+//│ 		in let _lh_int1_Pc_0⁶ = 0
+//│ 		in (fun int1¹¹ -> (fun n¹¹ -> [Pc (_lh_int1_Pc_0⁶ / n¹¹) int1¹¹(_lh_int1_Pc_1⁶, (n¹¹ + 1))])))
+//│ def integralLz_lh_₃(_lh_integralLz_arg1¹) = 
+//│ 	let int1³ = (fun fss³ -> (fun n³ -> lazy⁰(
+//│ 		let _lh_matchIdent⁹ = force⁰(force⁰(fss³))
+//│ 		in case _lh_matchIdent⁹ of {
+//│ 			Pz  => [Pz]
+//│ 			| Pc _lh_int1_Pc_0¹ _lh_int1_Pc_1¹ => [Pc (_lh_int1_Pc_0¹ / n³) int1³(lazy⁰(_lh_int1_Pc_1¹), (n³ + 1))]
+//│ 			| _  => error⁰})))
+//│ 	in lazy⁰([Pc 0 int1³(_lh_integralLz_arg1¹, 1)])
+//│ def integral_lh_₁(_lh_integral_arg1³) = 
+//│ 	let int1¹⁵ = (fun fss⁸ -> (fun n¹⁵ -> lazy⁰(
+//│ 		let _lh_matchIdent³³ = force⁰(fss⁸)
+//│ 		in _lh_matchIdent³³(int1¹⁵, n¹⁵))))
+//│ 	in lazy⁰(
+//│ 		let _lh_revert_Pc_1² = int1¹⁵(_lh_integral_arg1³, 1)
+//│ 		in let _lh_revert_Pc_0² = 0
+//│ 		in (fun _lh_dummy¹ -> case _lh_revert_Pc_0² of {
+//│ 			0  => force⁰(
+//│ 				let rs¹ = lazy⁰([Pc 0 divPs_lh_₃(fromIntegerPs_lh_₅(1), compose_lh_₁(_lh_revert_Pc_1², rs¹))])
+//│ 				in rs¹)
+//│ 			| _  => 
+//│ 				let _lh_matchIdent³⁴ = force⁰(_lh_revert_Pc_1²)
+//│ 				in case _lh_matchIdent³⁴ of {
+//│ 					Pc _lh_revert_Pc_0³ _lh_revert_Pc_1³ => 
+//│ 						let _lh_matchIdent³⁵ = force⁰(_lh_revert_Pc_1³)
+//│ 						in case _lh_matchIdent³⁵ of {
+//│ 							Pz  => [Pc ((0 - 1) / _lh_revert_Pc_0³) lazy⁰([Pc (1 / _lh_revert_Pc_0³) lazy⁰([Pz])])]
+//│ 							| _  => error⁰}
+//│ 					| _  => error⁰}}))
+//│ def integral_lh_₂(_lh_integral_arg1⁰) = 
+//│ 	let int1¹² = (fun fss⁵ -> (fun n¹² -> lazy⁰(
+//│ 		let _lh_matchIdent²⁴ = force⁰(fss⁵)
+//│ 		in case _lh_matchIdent²⁴ of {
+//│ 			Pz  => [Pz]
+//│ 			| Pc _lh_int1_Pc_0⁷ _lh_int1_Pc_1⁷ => [Pc (_lh_int1_Pc_0⁷ / n¹²) int1¹²(_lh_int1_Pc_1⁷, (n¹² + 1))]
+//│ 			| _  => error⁰})))
+//│ 	in lazy⁰([Pc 0 int1¹²(_lh_integral_arg1⁰, 1)])
+//│ def integral_lh_₃(_lh_integral_arg1¹) = 
+//│ 	let int1¹³ = (fun fss⁶ -> (fun n¹³ -> lazy⁰(
+//│ 		let _lh_matchIdent²⁷ = force⁰(fss⁶)
+//│ 		in case _lh_matchIdent²⁷ of {
+//│ 			Pz  => [Pz]
+//│ 			| Pc _lh_int1_Pc_0⁸ _lh_int1_Pc_1⁸ => [Pc (_lh_int1_Pc_0⁸ / n¹³) int1¹³(_lh_int1_Pc_1⁸, (n¹³ + 1))]
+//│ 			| _  => error⁰})))
+//│ 	in lazy⁰([Pc 0 int1¹³(_lh_integral_arg1¹, 1)])
+//│ def integral_lh_₄(_lh_integral_arg1²) = 
+//│ 	let int1¹⁴ = (fun fss⁷ -> (fun n¹⁴ -> lazy⁰(
+//│ 		let _lh_matchIdent³⁰ = force⁰(fss⁷)
+//│ 		in _lh_matchIdent³⁰(int1¹⁴, n¹⁴))))
+//│ 	in lazy⁰([Pc 0 int1¹⁴(_lh_integral_arg1², 1)])
+//│ def integral_lh_₅(_lh_integral_arg1⁴) = 
+//│ 	let int1¹⁶ = (fun fss⁹ -> (fun n¹⁷ -> lazy⁰(
+//│ 		let _lh_matchIdent⁴⁶ = force⁰(fss⁹)
+//│ 		in case _lh_matchIdent⁴⁶ of {
+//│ 			Pz  => [Pz]
+//│ 			| Pc _lh_int1_Pc_0⁹ _lh_int1_Pc_1⁹ => [Pc (_lh_int1_Pc_0⁹ / n¹⁷) int1¹⁶(_lh_int1_Pc_1⁹, (n¹⁷ + 1))]
+//│ 			| _  => error⁰})))
+//│ 	in lazy⁰([Pc 0 int1¹⁶(_lh_integral_arg1⁴, 1)])
+//│ def list_lh_₁ = lazy⁰([Pc 1 list_lh_₁])
+//│ def minusPs_lh_₁(_lh_minusPs_arg1², _lh_minusPs_arg2²) = addPs_lh_₂(_lh_minusPs_arg1², negatePs_lh_₁(_lh_minusPs_arg2²))
+//│ def minusPs_lh_₂(_lh_minusPs_arg1⁵, _lh_minusPs_arg2⁵) = addPs_lh_₄(_lh_minusPs_arg1⁵, negatePs_lh_₂(_lh_minusPs_arg2⁵))
+//│ def minusPs_lh_₃(_lh_minusPs_arg1³, _lh_minusPs_arg2³) = addPs_lh_₆(_lh_minusPs_arg1³, negatePs_lh_₃(_lh_minusPs_arg2³))
+//│ def minusPs_lh_₄(_lh_minusPs_arg1⁴, _lh_minusPs_arg2⁴) = addPs_lh_₆(_lh_minusPs_arg1⁴, negatePs_lh_₃(_lh_minusPs_arg2⁴))
+//│ def minusPs_lh_₅(_lh_minusPs_arg1⁰, _lh_minusPs_arg2⁰) = addPs_lh_₆(_lh_minusPs_arg1⁰, negatePs_lh_₃(_lh_minusPs_arg2⁰))
+//│ def minusPs_lh_₆(_lh_minusPs_arg1¹, _lh_minusPs_arg2¹) = addPs_lh_₆(_lh_minusPs_arg1¹, negatePs_lh_₃(_lh_minusPs_arg2¹))
+//│ def multPsFstLz_lh_₁(_lh_multPsFstLz_arg1⁰, _lh_multPsFstLz_arg2⁰) = lazy⁰(
+//│ 	let _lh_matchIdent² = force⁰(force⁰(_lh_multPsFstLz_arg1⁰))
+//│ 	in case _lh_matchIdent² of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_multPsFstLz_Pc_0⁰ _lh_multPsFstLz_Pc_1⁰ => 
+//│ 			let _lh_matchIdent³ = force⁰(_lh_multPsFstLz_arg2⁰)
+//│ 			in case _lh_matchIdent³ of {
+//│ 				Pz  => [Pz]
+//│ 				| Pc _lh_multPsFstLz_Pc_0¹ _lh_multPsFstLz_Pc_1¹ => [Pc (_lh_multPsFstLz_Pc_0⁰ * _lh_multPsFstLz_Pc_0¹) addPs_lh_₆(addPs_lh_₆(dotMult_lh_₁(_lh_multPsFstLz_Pc_0⁰, _lh_multPsFstLz_Pc_1¹), dotMult_lh_₁(_lh_multPsFstLz_Pc_0¹, _lh_multPsFstLz_Pc_1⁰)), multPs_lh_₁(multPs_lh_₁(x_lh_₁, _lh_multPsFstLz_Pc_1⁰), _lh_multPsFstLz_Pc_1¹))]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def multPsLzLz_lh_₁(_lh_multPsLzLz_arg1⁰, _lh_multPsLzLz_arg2⁰) = lazy⁰(
+//│ 	let _lh_matchIdent⁵⁸ = force⁰(force⁰(_lh_multPsLzLz_arg1⁰))
+//│ 	in case _lh_matchIdent⁵⁸ of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_multPsLzLz_Pc_0⁰ _lh_multPsLzLz_Pc_1⁰ => 
+//│ 			let _lh_matchIdent⁵⁹ = force⁰(force⁰(_lh_multPsLzLz_arg2⁰))
+//│ 			in case _lh_matchIdent⁵⁹ of {
+//│ 				Pz  => [Pz]
+//│ 				| Pc _lh_multPsLzLz_Pc_0¹ _lh_multPsLzLz_Pc_1¹ => [Pc (_lh_multPsLzLz_Pc_0⁰ * _lh_multPsLzLz_Pc_0¹) addPs_lh_₆(addPs_lh_₆(dotMult_lh_₁(_lh_multPsLzLz_Pc_0⁰, _lh_multPsLzLz_Pc_1¹), dotMult_lh_₁(_lh_multPsLzLz_Pc_0¹, _lh_multPsLzLz_Pc_1⁰)), multPs_lh_₁(multPs_lh_₁(x_lh_₁, _lh_multPsLzLz_Pc_1⁰), _lh_multPsLzLz_Pc_1¹))]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def multPs_lh_₁(_lh_multPs_arg1⁰, _lh_multPs_arg2⁰) = lazy⁰(
+//│ 	let _lh_matchIdent⁵² = force⁰(_lh_multPs_arg1⁰)
+//│ 	in case _lh_matchIdent⁵² of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_multPs_Pc_0⁰ _lh_multPs_Pc_1⁰ => 
+//│ 			let _lh_matchIdent⁵³ = force⁰(_lh_multPs_arg2⁰)
+//│ 			in case _lh_matchIdent⁵³ of {
+//│ 				Pz  => [Pz]
+//│ 				| Pc _lh_multPs_Pc_0¹ _lh_multPs_Pc_1¹ => [Pc (_lh_multPs_Pc_0⁰ * _lh_multPs_Pc_0¹) addPs_lh_₆(addPs_lh_₆(dotMult_lh_₁(_lh_multPs_Pc_0⁰, _lh_multPs_Pc_1¹), dotMult_lh_₁(_lh_multPs_Pc_0¹, _lh_multPs_Pc_1⁰)), multPs_lh_₁(multPs_lh_₁(x_lh_₁, _lh_multPs_Pc_1⁰), _lh_multPs_Pc_1¹))]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def negatePs_lh_₁(_lh_negatePs_arg1²) = lazy⁰(
+//│ 	let _lh_matchIdent⁶⁰ = force⁰(_lh_negatePs_arg1²)
+//│ 	in case _lh_matchIdent⁶⁰ of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_negatePs_Pc_0² _lh_negatePs_Pc_1² => [Pc (0 - _lh_negatePs_Pc_0²) negatePs_lh_₁(_lh_negatePs_Pc_1²)]
+//│ 		| _  => error⁰})
+//│ def negatePs_lh_₂(_lh_negatePs_arg1¹) = lazy⁰(
+//│ 	let _lh_matchIdent³⁷ = force⁰(_lh_negatePs_arg1¹)
+//│ 	in case _lh_matchIdent³⁷ of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_negatePs_Pc_0¹ _lh_negatePs_Pc_1¹ => [Pc (0 - _lh_negatePs_Pc_0¹) negatePs_lh_₂(_lh_negatePs_Pc_1¹)]
+//│ 		| _  => error⁰})
+//│ def negatePs_lh_₃(_lh_negatePs_arg1⁰) = lazy⁰(
+//│ 	let _lh_matchIdent²⁰ = force⁰(_lh_negatePs_arg1⁰)
+//│ 	in case _lh_matchIdent²⁰ of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_negatePs_Pc_0⁰ _lh_negatePs_Pc_1⁰ => [Pc (0 - _lh_negatePs_Pc_0⁰) negatePs_lh_₃(_lh_negatePs_Pc_1⁰)]
+//│ 		| _  => error⁰})
+//│ def powerPs_lh_₁(_lh_powerPs_arg1¹, _lh_powerPs_arg2¹) = if (_lh_powerPs_arg2¹ <= 0) then fromIntegerPs_lh_₅(1) else multPs_lh_₁(_lh_powerPs_arg1¹, powerPs_lh_₁(_lh_powerPs_arg1¹, (_lh_powerPs_arg2¹ - 1)))
+//│ def powerPs_lh_₂(_lh_powerPs_arg1⁰, _lh_powerPs_arg2⁰) = if (_lh_powerPs_arg2⁰ <= 0) then fromIntegerPs_lh_₅(1) else multPs_lh_₁(_lh_powerPs_arg1⁰, powerPs_lh_₂(_lh_powerPs_arg1⁰, (_lh_powerPs_arg2⁰ - 1)))
+//│ def revert_lh_₁(_lh_revert_arg1⁰) = lazy⁰(
+//│ 	let _lh_matchIdent⁰ = force⁰(_lh_revert_arg1⁰)
+//│ 	in _lh_matchIdent⁰(99))
+//│ def sinx_lh_₁(_lh_sinx_arg1⁰) = integral_lh_₂(minusPs_lh_₄(lazy⁰([Pc 1 lazy⁰([Pz])]), integralLz_lh_₁(lazy⁰(sinx_lh_₁(0)))))
+//│ def sinx_lh_₂(_lh_sinx_arg1¹) = integral_lh_₅(minusPs_lh_₆(lazy⁰([Pc 1 lazy⁰([Pz])]), integralLz_lh_₃(lazy⁰(sinx_lh_₂(0)))))
+//│ def sqrtPs_lh_₁(_lh_sqrtPs_arg1⁰) = lazy⁰(
+//│ 	let _lh_matchIdent⁴² = force⁰(_lh_sqrtPs_arg1⁰)
+//│ 	in case _lh_matchIdent⁴² of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_sqrtPs_Pc_0⁰ _lh_sqrtPs_Pc_1⁰ => case _lh_sqrtPs_Pc_0⁰ of {
+//│ 			0  => 
+//│ 				let _lh_matchIdent⁴³ = force⁰(_lh_sqrtPs_Pc_1⁰)
+//│ 				in case _lh_matchIdent⁴³ of {
+//│ 					Pc _lh_sqrtPs_Pc_0¹ _lh_sqrtPs_Pc_1¹ => case _lh_sqrtPs_Pc_0¹ of {
+//│ 						0  => [Pc 0 sqrtPs_lh_₁(_lh_sqrtPs_Pc_1¹)]
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 			| 1  => 
+//│ 				let qs⁰ = lazy⁰(addPs_lh_₃(fromIntegerPs_lh_₄(1), integral_lh_₃(divPs_lh_₃(lazy⁰(
+//│ 					let _lh_matchIdent⁴⁴ = force⁰(lazy⁰(
+//│ 						let _lh_deriv_Pc_1⁰ = _lh_sqrtPs_Pc_1⁰
+//│ 						in (fun _lh_dummy² -> 
+//│ 							let deriv1⁰ = (fun gss⁰ -> (fun n¹⁶ -> lazy⁰(
+//│ 								let _lh_matchIdent⁴⁵ = force⁰(gss⁰)
+//│ 								in case _lh_matchIdent⁴⁵ of {
+//│ 									Pz  => [Pz]
+//│ 									| Pc _lh_deriv_Pc_0⁰ _lh_deriv_Pc_1¹ => [Pc (n¹⁶ * _lh_deriv_Pc_0⁰) deriv1⁰(_lh_deriv_Pc_1¹, (n¹⁶ + 1))]
+//│ 									| _  => error⁰})))
+//│ 							in force⁰(deriv1⁰(_lh_deriv_Pc_1⁰, 1)))))
+//│ 					in _lh_matchIdent⁴⁴(99)), dotMultSndLz_lh_₁(2, qs⁰)))))
+//│ 				in force⁰(force⁰(qs⁰))
+//│ 			| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def testPower_nofib_lh_₁(_lh_testPower_nofib_arg1⁰) = [LH_C extract_lh_₁(_lh_testPower_nofib_arg1⁰, minusPs_lh_₁(sinx_lh_₂(0), sqrtPs_lh_₁(minusPs_lh_₃(fromIntegerPs_lh_₁(1), powerPs_lh_₁(cosx_lh_₂(0), 2))))) [LH_C extract_lh_₃(_lh_testPower_nofib_arg1⁰, minusPs_lh_₂(divPs_lh_₁(sinx_lh_₁(0), cosx_lh_₁(0)), lazy⁰(
+//│ 	let _lh_matchIdent⁵ = force⁰(
+//│ 		let int1² = (fun fss² -> (fun n² -> lazy⁰(
+//│ 			let _lh_matchIdent⁶ = force⁰(fss²)
+//│ 			in _lh_matchIdent⁶(int1², n²))))
+//│ 		in lazy⁰(
+//│ 			let _lh_revert_Pc_1⁰ = int1²(divPs_lh_₂(fromIntegerPs_lh_₃(1), addPs_lh_₁(fromIntegerPs_lh_₂(1), powerPs_lh_₂(x_lh_₁, 2))), 1)
+//│ 			in let _lh_revert_Pc_0⁰ = 0
+//│ 			in (fun _lh_dummy⁰ -> case _lh_revert_Pc_0⁰ of {
+//│ 				0  => force⁰(
+//│ 					let rs⁰ = lazy⁰([Pc 0 divPs_lh_₃(fromIntegerPs_lh_₅(1), compose_lh_₁(_lh_revert_Pc_1⁰, rs⁰))])
+//│ 					in rs⁰)
+//│ 				| _  => 
+//│ 					let _lh_matchIdent⁷ = force⁰(_lh_revert_Pc_1⁰)
+//│ 					in case _lh_matchIdent⁷ of {
+//│ 						Pc _lh_revert_Pc_0¹ _lh_revert_Pc_1¹ => 
+//│ 							let _lh_matchIdent⁸ = force⁰(_lh_revert_Pc_1¹)
+//│ 							in case _lh_matchIdent⁸ of {
+//│ 								Pz  => [Pc ((0 - 1) / _lh_revert_Pc_0¹) lazy⁰([Pc (1 / _lh_revert_Pc_0¹) lazy⁰([Pz])])]
+//│ 								| _  => error⁰}
+//│ 						| _  => error⁰}})))
+//│ 	in _lh_matchIdent⁵(99)))) [LH_C extract_lh_₄(_lh_testPower_nofib_arg1⁰, ts_lh_₁) [LH_C extract_lh_₂(_lh_testPower_nofib_arg1⁰, tree_lh_₁) [LH_N]]]]]
+//│ def tree_lh_₁ = lazy⁰([Pc 0 composeSndLz_lh_₁(list_lh_₁, lazy⁰(tree_lh_₁))])
+//│ def ts_lh_₁ = lazy⁰([Pc 1 multPsLzLz_lh_₁(lazy⁰(ts_lh_₁), lazy⁰(ts_lh_₁))])
+//│ def x_lh_₁ = lazy⁰([Pc 0 lazy⁰([Pc 1 lazy⁰([Pz])])])
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testPower_nofib_lh_₁(primId⁰(14))
+//│ def addPs_lh_₁(_lh_addPs_arg1⁵, _lh_addPs_arg2⁵) = lazy⁰(
+//│ 	let _lh_matchIdent⁶¹ = force⁰(_lh_addPs_arg1⁵)
+//│ 	in case _lh_matchIdent⁶¹ of {
+//│ 		Pz  => force⁰(_lh_addPs_arg2⁵)
+//│ 		| Pc _lh_addPs_Pc_0¹⁰ _lh_addPs_Pc_1¹⁰ => 
+//│ 			let _lh_matchIdent⁶² = force⁰(_lh_addPs_arg2⁵)
+//│ 			in case _lh_matchIdent⁶² of {
+//│ 				Pz  => force⁰(_lh_addPs_arg1⁵)
+//│ 				| Pc _lh_addPs_Pc_0¹¹ _lh_addPs_Pc_1¹¹ => [Pc (_lh_addPs_Pc_0¹⁰ + _lh_addPs_Pc_0¹¹) addPs_lh_₁(_lh_addPs_Pc_1¹⁰, _lh_addPs_Pc_1¹¹)]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def addPs_lh_₂(_lh_addPs_arg1², _lh_addPs_arg2²) = lazy⁰(
+//│ 	let _lh_matchIdent²⁸ = force⁰(_lh_addPs_arg1²)
+//│ 	in case _lh_matchIdent²⁸ of {
+//│ 		Pz  => force⁰(_lh_addPs_arg2²)
+//│ 		| Pc _lh_addPs_Pc_0⁴ _lh_addPs_Pc_1⁴ => 
+//│ 			let _lh_matchIdent²⁹ = force⁰(_lh_addPs_arg2²)
+//│ 			in case _lh_matchIdent²⁹ of {
+//│ 				Pz  => force⁰(_lh_addPs_arg1²)
+//│ 				| Pc _lh_addPs_Pc_0⁵ _lh_addPs_Pc_1⁵ => [Pc (_lh_addPs_Pc_0⁴ + _lh_addPs_Pc_0⁵) addPs_lh_₂(_lh_addPs_Pc_1⁴, _lh_addPs_Pc_1⁵)]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def addPs_lh_₃(_lh_addPs_arg1¹, _lh_addPs_arg2¹) = lazy⁰(
+//│ 	let _lh_matchIdent²⁵ = force⁰(_lh_addPs_arg1¹)
+//│ 	in case _lh_matchIdent²⁵ of {
+//│ 		Pz  => force⁰(_lh_addPs_arg2¹)
+//│ 		| Pc _lh_addPs_Pc_0² _lh_addPs_Pc_1² => 
+//│ 			let _lh_matchIdent²⁶ = force⁰(_lh_addPs_arg2¹)
+//│ 			in case _lh_matchIdent²⁶ of {
+//│ 				Pz  => force⁰(_lh_addPs_arg1¹)
+//│ 				| Pc _lh_addPs_Pc_0³ _lh_addPs_Pc_1³ => [Pc (_lh_addPs_Pc_0² + _lh_addPs_Pc_0³) addPs_lh_₃(_lh_addPs_Pc_1², _lh_addPs_Pc_1³)]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def addPs_lh_₄(_lh_addPs_arg1⁰, _lh_addPs_arg2⁰) = lazy⁰(
+//│ 	let _lh_matchIdent²¹ = force⁰(_lh_addPs_arg1⁰)
+//│ 	in case _lh_matchIdent²¹ of {
+//│ 		Pz  => force⁰(_lh_addPs_arg2⁰)
+//│ 		| Pc _lh_addPs_Pc_0⁰ _lh_addPs_Pc_1⁰ => 
+//│ 			let _lh_matchIdent²² = force⁰(_lh_addPs_arg2⁰)
+//│ 			in case _lh_matchIdent²² of {
+//│ 				Pz  => force⁰(_lh_addPs_arg1⁰)
+//│ 				| Pc _lh_addPs_Pc_0¹ _lh_addPs_Pc_1¹ => [Pc (_lh_addPs_Pc_0⁰ + _lh_addPs_Pc_0¹) addPs_lh_₄(_lh_addPs_Pc_1⁰, _lh_addPs_Pc_1¹)]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def addPs_lh_₅(_lh_addPs_arg1³, _lh_addPs_arg2³) = lazy⁰(
+//│ 	let _lh_matchIdent⁴⁷ = force⁰(_lh_addPs_arg1³)
+//│ 	in case _lh_matchIdent⁴⁷ of {
+//│ 		Pz  => force⁰(_lh_addPs_arg2³)
+//│ 		| Pc _lh_addPs_Pc_0⁶ _lh_addPs_Pc_1⁶ => 
+//│ 			let _lh_matchIdent⁴⁸ = force⁰(_lh_addPs_arg2³)
+//│ 			in case _lh_matchIdent⁴⁸ of {
+//│ 				Pz  => force⁰(_lh_addPs_arg1³)
+//│ 				| Pc _lh_addPs_Pc_0⁷ _lh_addPs_Pc_1⁷ => [Pc (_lh_addPs_Pc_0⁶ + _lh_addPs_Pc_0⁷) addPs_lh_₅(_lh_addPs_Pc_1⁶, _lh_addPs_Pc_1⁷)]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def addPs_lh_₆(_lh_addPs_arg1⁴, _lh_addPs_arg2⁴) = lazy⁰(
+//│ 	let _lh_matchIdent⁴⁹ = force⁰(_lh_addPs_arg1⁴)
+//│ 	in case _lh_matchIdent⁴⁹ of {
+//│ 		Pz  => force⁰(_lh_addPs_arg2⁴)
+//│ 		| Pc _lh_addPs_Pc_0⁸ _lh_addPs_Pc_1⁸ => 
+//│ 			let _lh_matchIdent⁵⁰ = force⁰(_lh_addPs_arg2⁴)
+//│ 			in case _lh_matchIdent⁵⁰ of {
+//│ 				Pz  => force⁰(_lh_addPs_arg1⁴)
+//│ 				| Pc _lh_addPs_Pc_0⁹ _lh_addPs_Pc_1⁹ => [Pc (_lh_addPs_Pc_0⁸ + _lh_addPs_Pc_0⁹) addPs_lh_₆(_lh_addPs_Pc_1⁸, _lh_addPs_Pc_1⁹)]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def composeSndLz_lh_₁(_lh_composeSndLz_arg1⁰, _lh_composeSndLz_arg2⁰) = lazy⁰(
+//│ 	let _lh_matchIdent¹⁸ = force⁰(_lh_composeSndLz_arg1⁰)
+//│ 	in case _lh_matchIdent¹⁸ of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_composeSndLz_Pc_0⁰ _lh_composeSndLz_Pc_1⁰ => 
+//│ 			let _lh_matchIdent¹⁹ = force⁰(force⁰(_lh_composeSndLz_arg2⁰))
+//│ 			in case _lh_matchIdent¹⁹ of {
+//│ 				Pz  => [Pc _lh_composeSndLz_Pc_0⁰ lazy⁰([Pz])]
+//│ 				| Pc _lh_composeSndLz_Pc_0¹ _lh_composeSndLz_Pc_1¹ => case _lh_composeSndLz_Pc_0¹ of {
+//│ 					0  => [Pc _lh_composeSndLz_Pc_0⁰ multPs_lh_₁(_lh_composeSndLz_Pc_1¹, compose_lh_₁(_lh_composeSndLz_Pc_1⁰, lazy⁰([Pc 0 _lh_composeSndLz_Pc_1¹])))]
+//│ 					| _  => force⁰(addPs_lh_₆(lazy⁰([Pc _lh_composeSndLz_Pc_0⁰ lazy⁰([Pz])]), multPsFstLz_lh_₁(_lh_composeSndLz_arg2⁰, composeSndLz_lh_₁(_lh_composeSndLz_Pc_1⁰, _lh_composeSndLz_arg2⁰))))}
+//│ 				| _  => force⁰(addPs_lh_₆(lazy⁰([Pc _lh_composeSndLz_Pc_0⁰ lazy⁰([Pz])]), multPsFstLz_lh_₁(_lh_composeSndLz_arg2⁰, composeSndLz_lh_₁(_lh_composeSndLz_Pc_1⁰, _lh_composeSndLz_arg2⁰))))}
+//│ 		| _  => error⁰})
+//│ def compose_lh_₁(_lh_compose_arg1⁰, _lh_compose_arg2⁰) = lazy⁰(
+//│ 	let _lh_matchIdent¹⁰ = force⁰(_lh_compose_arg1⁰)
+//│ 	in case _lh_matchIdent¹⁰ of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_compose_Pc_0⁰ _lh_compose_Pc_1⁰ => 
+//│ 			let _lh_matchIdent¹¹ = force⁰(_lh_compose_arg2⁰)
+//│ 			in case _lh_matchIdent¹¹ of {
+//│ 				Pz  => [Pc _lh_compose_Pc_0⁰ lazy⁰([Pz])]
+//│ 				| Pc _lh_compose_Pc_0¹ _lh_compose_Pc_1¹ => case _lh_compose_Pc_0¹ of {
+//│ 					0  => [Pc _lh_compose_Pc_0⁰ multPs_lh_₁(_lh_compose_Pc_1¹, compose_lh_₁(_lh_compose_Pc_1⁰, lazy⁰([Pc 0 _lh_compose_Pc_1¹])))]
+//│ 					| _  => force⁰(addPs_lh_₆(lazy⁰([Pc _lh_compose_Pc_0⁰ lazy⁰([Pz])]), multPs_lh_₁(_lh_compose_arg2⁰, compose_lh_₁(_lh_compose_Pc_1⁰, _lh_compose_arg2⁰))))}
+//│ 				| _  => force⁰(addPs_lh_₆(lazy⁰([Pc _lh_compose_Pc_0⁰ lazy⁰([Pz])]), multPs_lh_₁(_lh_compose_arg2⁰, compose_lh_₁(_lh_compose_Pc_1⁰, _lh_compose_arg2⁰))))}
+//│ 		| _  => error⁰})
+//│ def cosx_lh_₁(_lh_cosx_arg1⁰) = minusPs_lh_₅(lazy⁰([Pc 1 lazy⁰([Pz])]), 
+//│ 	let int1⁰ = (fun fss⁰ -> (fun n⁰ -> lazy⁰(
+//│ 		let _lh_matchIdent¹ = force⁰(fss⁰)
+//│ 		in _lh_matchIdent¹(int1⁰, n⁰))))
+//│ 	in lazy⁰([Pc 0 int1⁰(integralLz_lh_₂(lazy⁰(cosx_lh_₁(0))), 1)]))
+//│ def cosx_lh_₂(_lh_cosx_arg1¹) = minusPs_lh_₆(lazy⁰([Pc 1 lazy⁰([Pz])]), integral_lh_₅(integralLz_lh_₃(lazy⁰(cosx_lh_₂(0)))))
+//│ def deriv_lh_₁(_lh_deriv_arg1⁰) = lazy⁰(
+//│ 	let _lh_matchIdent³² = force⁰(_lh_deriv_arg1⁰)
+//│ 	in _lh_matchIdent³²(99))
+//│ def divPs_lh_₁(_lh_divPs_arg1², _lh_divPs_arg2²) = lazy⁰(
+//│ 	let _lh_matchIdent⁵⁴ = force⁰(_lh_divPs_arg1²)
+//│ 	in case _lh_matchIdent⁵⁴ of {
+//│ 		Pz  => 
+//│ 			let _lh_matchIdent⁵⁵ = force⁰(_lh_divPs_arg2²)
+//│ 			in case _lh_matchIdent⁵⁵ of {
+//│ 				Pz  => error⁰([LH_C 'p' [LH_C 'o' [LH_C 'w' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C 's' [LH_C 'e' [LH_C 'r' [LH_C 'i' [LH_C 'e' [LH_C 's' [LH_C ' ' [LH_C '0' [LH_C '/' [LH_C '0' [LH_N]]]]]]]]]]]]]]]]])
+//│ 				| Pc _lh_divPs_Pc_0⁸ _lh_divPs_Pc_1⁸ => case _lh_divPs_Pc_0⁸ of {
+//│ 					0  => force⁰(divPs_lh_₁(lazy⁰([Pz]), _lh_divPs_Pc_1⁸))
+//│ 					| _  => [Pz]}
+//│ 				| _  => [Pz]}
+//│ 		| Pc _lh_divPs_Pc_0⁹ _lh_divPs_Pc_1⁹ => case _lh_divPs_Pc_0⁹ of {
+//│ 			0  => 
+//│ 				let _lh_matchIdent⁵⁶ = force⁰(_lh_divPs_arg2²)
+//│ 				in case _lh_matchIdent⁵⁶ of {
+//│ 					Pc _lh_divPs_Pc_0¹⁰ _lh_divPs_Pc_1¹⁰ => case _lh_divPs_Pc_0¹⁰ of {
+//│ 						0  => force⁰(divPs_lh_₁(_lh_divPs_Pc_1⁹, _lh_divPs_Pc_1¹⁰))
+//│ 						| _  => 
+//│ 							let q⁴ = 0
+//│ 							in [Pc q⁴ divPs_lh_₁(addPs_lh_₆(_lh_divPs_Pc_1⁹, negatePs_lh_₃(dotMult_lh_₁(q⁴, _lh_divPs_Pc_1¹⁰))), lazy⁰([Pc _lh_divPs_Pc_0¹⁰ _lh_divPs_Pc_1¹⁰]))]}
+//│ 					| _  => error⁰}
+//│ 			| _  => 
+//│ 				let _lh_matchIdent⁵⁷ = force⁰(_lh_divPs_arg2²)
+//│ 				in case _lh_matchIdent⁵⁷ of {
+//│ 					Pc _lh_divPs_Pc_0¹¹ _lh_divPs_Pc_1¹¹ => 
+//│ 						let q⁵ = (_lh_divPs_Pc_0⁹ / _lh_divPs_Pc_0¹¹)
+//│ 						in [Pc q⁵ divPs_lh_₁(addPs_lh_₅(_lh_divPs_Pc_1⁹, negatePs_lh_₃(dotMult_lh_₁(q⁵, _lh_divPs_Pc_1¹¹))), lazy⁰([Pc _lh_divPs_Pc_0¹¹ _lh_divPs_Pc_1¹¹]))]
+//│ 					| _  => error⁰}}
+//│ 		| _  => error⁰})
+//│ def divPs_lh_₂(_lh_divPs_arg1⁰, _lh_divPs_arg2⁰) = lazy⁰(
+//│ 	let _lh_matchIdent¹² = force⁰(_lh_divPs_arg1⁰)
+//│ 	in case _lh_matchIdent¹² of {
+//│ 		Pz  => 
+//│ 			let _lh_matchIdent¹³ = force⁰(_lh_divPs_arg2⁰)
+//│ 			in case _lh_matchIdent¹³ of {
+//│ 				Pz  => error⁰([LH_C 'p' [LH_C 'o' [LH_C 'w' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C 's' [LH_C 'e' [LH_C 'r' [LH_C 'i' [LH_C 'e' [LH_C 's' [LH_C ' ' [LH_C '0' [LH_C '/' [LH_C '0' [LH_N]]]]]]]]]]]]]]]]])
+//│ 				| Pc _lh_divPs_Pc_0⁰ _lh_divPs_Pc_1⁰ => case _lh_divPs_Pc_0⁰ of {
+//│ 					0  => force⁰(divPs_lh_₂(lazy⁰([Pz]), _lh_divPs_Pc_1⁰))
+//│ 					| _  => (fun int1⁴ -> (fun n⁴ -> [Pz]))}
+//│ 				| _  => (fun int1⁵ -> (fun n⁵ -> [Pz]))}
+//│ 		| Pc _lh_divPs_Pc_0¹ _lh_divPs_Pc_1¹ => case _lh_divPs_Pc_0¹ of {
+//│ 			0  => 
+//│ 				let _lh_matchIdent¹⁴ = force⁰(_lh_divPs_arg2⁰)
+//│ 				in case _lh_matchIdent¹⁴ of {
+//│ 					Pc _lh_divPs_Pc_0² _lh_divPs_Pc_1² => case _lh_divPs_Pc_0² of {
+//│ 						0  => force⁰(divPs_lh_₂(_lh_divPs_Pc_1¹, _lh_divPs_Pc_1²))
+//│ 						| _  => 
+//│ 							let q⁰ = 0
+//│ 							in let _lh_int1_Pc_1² = divPs_lh_₂(addPs_lh_₆(_lh_divPs_Pc_1¹, negatePs_lh_₃(dotMult_lh_₁(q⁰, _lh_divPs_Pc_1²))), lazy⁰([Pc _lh_divPs_Pc_0² _lh_divPs_Pc_1²]))
+//│ 							in let _lh_int1_Pc_0² = q⁰
+//│ 							in (fun int1⁶ -> (fun n⁶ -> [Pc (_lh_int1_Pc_0² / n⁶) int1⁶(_lh_int1_Pc_1², (n⁶ + 1))]))}
+//│ 					| _  => error⁰}
+//│ 			| _  => 
+//│ 				let _lh_matchIdent¹⁵ = force⁰(_lh_divPs_arg2⁰)
+//│ 				in case _lh_matchIdent¹⁵ of {
+//│ 					Pc _lh_divPs_Pc_0³ _lh_divPs_Pc_1³ => 
+//│ 						let q¹ = (_lh_divPs_Pc_0¹ / _lh_divPs_Pc_0³)
+//│ 						in let _lh_int1_Pc_1³ = divPs_lh_₂(addPs_lh_₆(_lh_divPs_Pc_1¹, negatePs_lh_₃(dotMult_lh_₁(q¹, _lh_divPs_Pc_1³))), lazy⁰([Pc _lh_divPs_Pc_0³ _lh_divPs_Pc_1³]))
+//│ 						in let _lh_int1_Pc_0³ = q¹
+//│ 						in (fun int1⁷ -> (fun n⁷ -> [Pc (_lh_int1_Pc_0³ / n⁷) int1⁷(_lh_int1_Pc_1³, (n⁷ + 1))]))
+//│ 					| _  => error⁰}}
+//│ 		| _  => error⁰})
+//│ def divPs_lh_₃(_lh_divPs_arg1¹, _lh_divPs_arg2¹) = lazy⁰(
+//│ 	let _lh_matchIdent³⁸ = force⁰(_lh_divPs_arg1¹)
+//│ 	in case _lh_matchIdent³⁸ of {
+//│ 		Pz  => 
+//│ 			let _lh_matchIdent³⁹ = force⁰(_lh_divPs_arg2¹)
+//│ 			in case _lh_matchIdent³⁹ of {
+//│ 				Pz  => error⁰([LH_C 'p' [LH_C 'o' [LH_C 'w' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C 's' [LH_C 'e' [LH_C 'r' [LH_C 'i' [LH_C 'e' [LH_C 's' [LH_C ' ' [LH_C '0' [LH_C '/' [LH_C '0' [LH_N]]]]]]]]]]]]]]]]])
+//│ 				| Pc _lh_divPs_Pc_0⁴ _lh_divPs_Pc_1⁴ => case _lh_divPs_Pc_0⁴ of {
+//│ 					0  => force⁰(divPs_lh_₃(lazy⁰([Pz]), _lh_divPs_Pc_1⁴))
+//│ 					| _  => [Pz]}
+//│ 				| _  => [Pz]}
+//│ 		| Pc _lh_divPs_Pc_0⁵ _lh_divPs_Pc_1⁵ => case _lh_divPs_Pc_0⁵ of {
+//│ 			0  => 
+//│ 				let _lh_matchIdent⁴⁰ = force⁰(_lh_divPs_arg2¹)
+//│ 				in case _lh_matchIdent⁴⁰ of {
+//│ 					Pc _lh_divPs_Pc_0⁶ _lh_divPs_Pc_1⁶ => case _lh_divPs_Pc_0⁶ of {
+//│ 						0  => force⁰(divPs_lh_₃(_lh_divPs_Pc_1⁵, _lh_divPs_Pc_1⁶))
+//│ 						| _  => 
+//│ 							let q² = 0
+//│ 							in [Pc q² divPs_lh_₃(addPs_lh_₆(_lh_divPs_Pc_1⁵, negatePs_lh_₃(dotMult_lh_₁(q², _lh_divPs_Pc_1⁶))), lazy⁰([Pc _lh_divPs_Pc_0⁶ _lh_divPs_Pc_1⁶]))]}
+//│ 					| _  => error⁰}
+//│ 			| _  => 
+//│ 				let _lh_matchIdent⁴¹ = force⁰(_lh_divPs_arg2¹)
+//│ 				in case _lh_matchIdent⁴¹ of {
+//│ 					Pc _lh_divPs_Pc_0⁷ _lh_divPs_Pc_1⁷ => 
+//│ 						let q³ = (_lh_divPs_Pc_0⁵ / _lh_divPs_Pc_0⁷)
+//│ 						in [Pc q³ divPs_lh_₃(addPs_lh_₆(_lh_divPs_Pc_1⁵, negatePs_lh_₃(dotMult_lh_₁(q³, _lh_divPs_Pc_1⁷))), lazy⁰([Pc _lh_divPs_Pc_0⁷ _lh_divPs_Pc_1⁷]))]
+//│ 					| _  => error⁰}}
+//│ 		| _  => error⁰})
+//│ def dotMultSndLz_lh_₁(_lh_dotMultSndLz_arg1⁰, _lh_dotMultSndLz_arg2⁰) = lazy⁰(
+//│ 	let _lh_matchIdent¹⁷ = force⁰(force⁰(_lh_dotMultSndLz_arg2⁰))
+//│ 	in case _lh_matchIdent¹⁷ of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_dotMultSndLz_Pc_0⁰ _lh_dotMultSndLz_Pc_1⁰ => [Pc (_lh_dotMultSndLz_arg1⁰ * _lh_dotMultSndLz_Pc_0⁰) dotMult_lh_₁(_lh_dotMultSndLz_arg1⁰, _lh_dotMultSndLz_Pc_1⁰)]
+//│ 		| _  => error⁰})
+//│ def dotMult_lh_₁(_lh_dotMult_arg1⁰, _lh_dotMult_arg2⁰) = lazy⁰(
+//│ 	let _lh_matchIdent¹⁶ = force⁰(_lh_dotMult_arg2⁰)
+//│ 	in case _lh_matchIdent¹⁶ of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_dotMult_Pc_0⁰ _lh_dotMult_Pc_1⁰ => [Pc (_lh_dotMult_arg1⁰ * _lh_dotMult_Pc_0⁰) dotMult_lh_₁(_lh_dotMult_arg1⁰, _lh_dotMult_Pc_1⁰)]
+//│ 		| _  => error⁰})
+//│ def extract_lh_₁(_lh_extract_arg1¹, _lh_extract_arg2¹) = if (_lh_extract_arg1¹ == 0) then [LH_N] else 
+//│ 	let _lh_matchIdent³⁶ = force⁰(_lh_extract_arg2¹)
+//│ 	in case _lh_matchIdent³⁶ of {
+//│ 		Pz  => [LH_N]
+//│ 		| Pc _lh_extract_Pc_0¹ _lh_extract_Pc_1¹ => [LH_C _lh_extract_Pc_0¹ extract_lh_₁((_lh_extract_arg1¹ - 1), _lh_extract_Pc_1¹)]
+//│ 		| _  => error⁰}
+//│ def extract_lh_₂(_lh_extract_arg1², _lh_extract_arg2²) = if (_lh_extract_arg1² == 0) then [LH_N] else 
+//│ 	let _lh_matchIdent⁵¹ = force⁰(_lh_extract_arg2²)
+//│ 	in case _lh_matchIdent⁵¹ of {
+//│ 		Pz  => [LH_N]
+//│ 		| Pc _lh_extract_Pc_0² _lh_extract_Pc_1² => [LH_C _lh_extract_Pc_0² extract_lh_₂((_lh_extract_arg1² - 1), _lh_extract_Pc_1²)]
+//│ 		| _  => error⁰}
+//│ def extract_lh_₃(_lh_extract_arg1⁰, _lh_extract_arg2⁰) = if (_lh_extract_arg1⁰ == 0) then [LH_N] else 
+//│ 	let _lh_matchIdent³¹ = force⁰(_lh_extract_arg2⁰)
+//│ 	in case _lh_matchIdent³¹ of {
+//│ 		Pz  => [LH_N]
+//│ 		| Pc _lh_extract_Pc_0⁰ _lh_extract_Pc_1⁰ => [LH_C _lh_extract_Pc_0⁰ extract_lh_₃((_lh_extract_arg1⁰ - 1), _lh_extract_Pc_1⁰)]
+//│ 		| _  => error⁰}
+//│ def extract_lh_₄(_lh_extract_arg1³, _lh_extract_arg2³) = if (_lh_extract_arg1³ == 0) then [LH_N] else 
+//│ 	let _lh_matchIdent⁶³ = force⁰(_lh_extract_arg2³)
+//│ 	in case _lh_matchIdent⁶³ of {
+//│ 		Pz  => [LH_N]
+//│ 		| Pc _lh_extract_Pc_0³ _lh_extract_Pc_1³ => [LH_C _lh_extract_Pc_0³ extract_lh_₄((_lh_extract_arg1³ - 1), _lh_extract_Pc_1³)]
+//│ 		| _  => error⁰}
+//│ def fromIntegerPs_lh_₁(_lh_fromIntegerPs_arg1¹) = case _lh_fromIntegerPs_arg1¹ of {
+//│ 	0  => lazy⁰([Pz])
+//│ 	| _  => lazy⁰([Pc _lh_fromIntegerPs_arg1¹ lazy⁰([Pz])])}
+//│ def fromIntegerPs_lh_₂(_lh_fromIntegerPs_arg1²) = case _lh_fromIntegerPs_arg1² of {
+//│ 	0  => lazy⁰([Pz])
+//│ 	| _  => lazy⁰([Pc _lh_fromIntegerPs_arg1² lazy⁰([Pz])])}
+//│ def fromIntegerPs_lh_₃(_lh_fromIntegerPs_arg1⁰) = case _lh_fromIntegerPs_arg1⁰ of {
+//│ 	0  => lazy⁰([Pz])
+//│ 	| _  => lazy⁰([Pc _lh_fromIntegerPs_arg1⁰ lazy⁰([Pz])])}
+//│ def fromIntegerPs_lh_₄(_lh_fromIntegerPs_arg1⁴) = case _lh_fromIntegerPs_arg1⁴ of {
+//│ 	0  => lazy⁰([Pz])
+//│ 	| _  => lazy⁰([Pc _lh_fromIntegerPs_arg1⁴ lazy⁰([Pz])])}
+//│ def fromIntegerPs_lh_₅(_lh_fromIntegerPs_arg1³) = case _lh_fromIntegerPs_arg1³ of {
+//│ 	0  => lazy⁰([Pz])
+//│ 	| _  => lazy⁰([Pc _lh_fromIntegerPs_arg1³ lazy⁰([Pz])])}
+//│ def integralLz_lh_₁(_lh_integralLz_arg1⁰) = 
+//│ 	let int1¹ = (fun fss¹ -> (fun n¹ -> lazy⁰(
+//│ 		let _lh_matchIdent⁴ = force⁰(force⁰(fss¹))
+//│ 		in case _lh_matchIdent⁴ of {
+//│ 			Pz  => [Pz]
+//│ 			| Pc _lh_int1_Pc_0⁰ _lh_int1_Pc_1⁰ => [Pc (_lh_int1_Pc_0⁰ / n¹) int1¹(lazy⁰(_lh_int1_Pc_1⁰), (n¹ + 1))]
+//│ 			| _  => error⁰})))
+//│ 	in lazy⁰([Pc 0 int1¹(_lh_integralLz_arg1⁰, 1)])
+//│ def integralLz_lh_₂(_lh_integralLz_arg1²) = 
+//│ 	let int1⁸ = (fun fss⁴ -> (fun n⁸ -> lazy⁰(
+//│ 		let _lh_matchIdent²³ = force⁰(force⁰(fss⁴))
+//│ 		in case _lh_matchIdent²³ of {
+//│ 			Pz  => (fun int1⁹ -> (fun n⁹ -> [Pz]))
+//│ 			| Pc _lh_int1_Pc_0⁴ _lh_int1_Pc_1⁴ => 
+//│ 				let _lh_int1_Pc_1⁵ = int1⁸(lazy⁰(_lh_int1_Pc_1⁴), (n⁸ + 1))
+//│ 				in let _lh_int1_Pc_0⁵ = (_lh_int1_Pc_0⁴ / n⁸)
+//│ 				in (fun int1¹⁰ -> (fun n¹⁰ -> [Pc (_lh_int1_Pc_0⁵ / n¹⁰) int1¹⁰(_lh_int1_Pc_1⁵, (n¹⁰ + 1))]))
+//│ 			| _  => error⁰})))
+//│ 	in lazy⁰(
+//│ 		let _lh_int1_Pc_1⁶ = int1⁸(_lh_integralLz_arg1², 1)
+//│ 		in let _lh_int1_Pc_0⁶ = 0
+//│ 		in (fun int1¹¹ -> (fun n¹¹ -> [Pc (_lh_int1_Pc_0⁶ / n¹¹) int1¹¹(_lh_int1_Pc_1⁶, (n¹¹ + 1))])))
+//│ def integralLz_lh_₃(_lh_integralLz_arg1¹) = 
+//│ 	let int1³ = (fun fss³ -> (fun n³ -> lazy⁰(
+//│ 		let _lh_matchIdent⁹ = force⁰(force⁰(fss³))
+//│ 		in case _lh_matchIdent⁹ of {
+//│ 			Pz  => [Pz]
+//│ 			| Pc _lh_int1_Pc_0¹ _lh_int1_Pc_1¹ => [Pc (_lh_int1_Pc_0¹ / n³) int1³(lazy⁰(_lh_int1_Pc_1¹), (n³ + 1))]
+//│ 			| _  => error⁰})))
+//│ 	in lazy⁰([Pc 0 int1³(_lh_integralLz_arg1¹, 1)])
+//│ def integral_lh_₁(_lh_integral_arg1³) = 
+//│ 	let int1¹⁵ = (fun fss⁸ -> (fun n¹⁵ -> lazy⁰(
+//│ 		let _lh_matchIdent³³ = force⁰(fss⁸)
+//│ 		in _lh_matchIdent³³(int1¹⁵, n¹⁵))))
+//│ 	in lazy⁰(
+//│ 		let _lh_revert_Pc_1² = int1¹⁵(_lh_integral_arg1³, 1)
+//│ 		in let _lh_revert_Pc_0² = 0
+//│ 		in (fun _lh_dummy¹ -> case _lh_revert_Pc_0² of {
+//│ 			0  => force⁰(
+//│ 				let rs¹ = lazy⁰([Pc 0 divPs_lh_₃(fromIntegerPs_lh_₅(1), compose_lh_₁(_lh_revert_Pc_1², rs¹))])
+//│ 				in rs¹)
+//│ 			| _  => 
+//│ 				let _lh_matchIdent³⁴ = force⁰(_lh_revert_Pc_1²)
+//│ 				in case _lh_matchIdent³⁴ of {
+//│ 					Pc _lh_revert_Pc_0³ _lh_revert_Pc_1³ => 
+//│ 						let _lh_matchIdent³⁵ = force⁰(_lh_revert_Pc_1³)
+//│ 						in case _lh_matchIdent³⁵ of {
+//│ 							Pz  => [Pc ((0 - 1) / _lh_revert_Pc_0³) lazy⁰([Pc (1 / _lh_revert_Pc_0³) lazy⁰([Pz])])]
+//│ 							| _  => error⁰}
+//│ 					| _  => error⁰}}))
+//│ def integral_lh_₂(_lh_integral_arg1⁰) = 
+//│ 	let int1¹² = (fun fss⁵ -> (fun n¹² -> lazy⁰(
+//│ 		let _lh_matchIdent²⁴ = force⁰(fss⁵)
+//│ 		in case _lh_matchIdent²⁴ of {
+//│ 			Pz  => [Pz]
+//│ 			| Pc _lh_int1_Pc_0⁷ _lh_int1_Pc_1⁷ => [Pc (_lh_int1_Pc_0⁷ / n¹²) int1¹²(_lh_int1_Pc_1⁷, (n¹² + 1))]
+//│ 			| _  => error⁰})))
+//│ 	in lazy⁰([Pc 0 int1¹²(_lh_integral_arg1⁰, 1)])
+//│ def integral_lh_₃(_lh_integral_arg1¹) = 
+//│ 	let int1¹³ = (fun fss⁶ -> (fun n¹³ -> lazy⁰(
+//│ 		let _lh_matchIdent²⁷ = force⁰(fss⁶)
+//│ 		in case _lh_matchIdent²⁷ of {
+//│ 			Pz  => [Pz]
+//│ 			| Pc _lh_int1_Pc_0⁸ _lh_int1_Pc_1⁸ => [Pc (_lh_int1_Pc_0⁸ / n¹³) int1¹³(_lh_int1_Pc_1⁸, (n¹³ + 1))]
+//│ 			| _  => error⁰})))
+//│ 	in lazy⁰([Pc 0 int1¹³(_lh_integral_arg1¹, 1)])
+//│ def integral_lh_₄(_lh_integral_arg1²) = 
+//│ 	let int1¹⁴ = (fun fss⁷ -> (fun n¹⁴ -> lazy⁰(
+//│ 		let _lh_matchIdent³⁰ = force⁰(fss⁷)
+//│ 		in _lh_matchIdent³⁰(int1¹⁴, n¹⁴))))
+//│ 	in lazy⁰([Pc 0 int1¹⁴(_lh_integral_arg1², 1)])
+//│ def integral_lh_₅(_lh_integral_arg1⁴) = 
+//│ 	let int1¹⁶ = (fun fss⁹ -> (fun n¹⁷ -> lazy⁰(
+//│ 		let _lh_matchIdent⁴⁶ = force⁰(fss⁹)
+//│ 		in case _lh_matchIdent⁴⁶ of {
+//│ 			Pz  => [Pz]
+//│ 			| Pc _lh_int1_Pc_0⁹ _lh_int1_Pc_1⁹ => [Pc (_lh_int1_Pc_0⁹ / n¹⁷) int1¹⁶(_lh_int1_Pc_1⁹, (n¹⁷ + 1))]
+//│ 			| _  => error⁰})))
+//│ 	in lazy⁰([Pc 0 int1¹⁶(_lh_integral_arg1⁴, 1)])
+//│ def list_lh_₁ = lazy⁰([Pc 1 list_lh_₁])
+//│ def minusPs_lh_₁(_lh_minusPs_arg1², _lh_minusPs_arg2²) = addPs_lh_₂(_lh_minusPs_arg1², negatePs_lh_₁(_lh_minusPs_arg2²))
+//│ def minusPs_lh_₂(_lh_minusPs_arg1⁵, _lh_minusPs_arg2⁵) = addPs_lh_₄(_lh_minusPs_arg1⁵, negatePs_lh_₂(_lh_minusPs_arg2⁵))
+//│ def minusPs_lh_₃(_lh_minusPs_arg1³, _lh_minusPs_arg2³) = addPs_lh_₆(_lh_minusPs_arg1³, negatePs_lh_₃(_lh_minusPs_arg2³))
+//│ def minusPs_lh_₄(_lh_minusPs_arg1⁴, _lh_minusPs_arg2⁴) = addPs_lh_₆(_lh_minusPs_arg1⁴, negatePs_lh_₃(_lh_minusPs_arg2⁴))
+//│ def minusPs_lh_₅(_lh_minusPs_arg1⁰, _lh_minusPs_arg2⁰) = addPs_lh_₆(_lh_minusPs_arg1⁰, negatePs_lh_₃(_lh_minusPs_arg2⁰))
+//│ def minusPs_lh_₆(_lh_minusPs_arg1¹, _lh_minusPs_arg2¹) = addPs_lh_₆(_lh_minusPs_arg1¹, negatePs_lh_₃(_lh_minusPs_arg2¹))
+//│ def multPsFstLz_lh_₁(_lh_multPsFstLz_arg1⁰, _lh_multPsFstLz_arg2⁰) = lazy⁰(
+//│ 	let _lh_matchIdent² = force⁰(force⁰(_lh_multPsFstLz_arg1⁰))
+//│ 	in case _lh_matchIdent² of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_multPsFstLz_Pc_0⁰ _lh_multPsFstLz_Pc_1⁰ => 
+//│ 			let _lh_matchIdent³ = force⁰(_lh_multPsFstLz_arg2⁰)
+//│ 			in case _lh_matchIdent³ of {
+//│ 				Pz  => [Pz]
+//│ 				| Pc _lh_multPsFstLz_Pc_0¹ _lh_multPsFstLz_Pc_1¹ => [Pc (_lh_multPsFstLz_Pc_0⁰ * _lh_multPsFstLz_Pc_0¹) addPs_lh_₆(addPs_lh_₆(dotMult_lh_₁(_lh_multPsFstLz_Pc_0⁰, _lh_multPsFstLz_Pc_1¹), dotMult_lh_₁(_lh_multPsFstLz_Pc_0¹, _lh_multPsFstLz_Pc_1⁰)), multPs_lh_₁(multPs_lh_₁(x_lh_₁, _lh_multPsFstLz_Pc_1⁰), _lh_multPsFstLz_Pc_1¹))]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def multPsLzLz_lh_₁(_lh_multPsLzLz_arg1⁰, _lh_multPsLzLz_arg2⁰) = lazy⁰(
+//│ 	let _lh_matchIdent⁵⁸ = force⁰(force⁰(_lh_multPsLzLz_arg1⁰))
+//│ 	in case _lh_matchIdent⁵⁸ of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_multPsLzLz_Pc_0⁰ _lh_multPsLzLz_Pc_1⁰ => 
+//│ 			let _lh_matchIdent⁵⁹ = force⁰(force⁰(_lh_multPsLzLz_arg2⁰))
+//│ 			in case _lh_matchIdent⁵⁹ of {
+//│ 				Pz  => [Pz]
+//│ 				| Pc _lh_multPsLzLz_Pc_0¹ _lh_multPsLzLz_Pc_1¹ => [Pc (_lh_multPsLzLz_Pc_0⁰ * _lh_multPsLzLz_Pc_0¹) addPs_lh_₆(addPs_lh_₆(dotMult_lh_₁(_lh_multPsLzLz_Pc_0⁰, _lh_multPsLzLz_Pc_1¹), dotMult_lh_₁(_lh_multPsLzLz_Pc_0¹, _lh_multPsLzLz_Pc_1⁰)), multPs_lh_₁(multPs_lh_₁(x_lh_₁, _lh_multPsLzLz_Pc_1⁰), _lh_multPsLzLz_Pc_1¹))]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def multPs_lh_₁(_lh_multPs_arg1⁰, _lh_multPs_arg2⁰) = lazy⁰(
+//│ 	let _lh_matchIdent⁵² = force⁰(_lh_multPs_arg1⁰)
+//│ 	in case _lh_matchIdent⁵² of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_multPs_Pc_0⁰ _lh_multPs_Pc_1⁰ => 
+//│ 			let _lh_matchIdent⁵³ = force⁰(_lh_multPs_arg2⁰)
+//│ 			in case _lh_matchIdent⁵³ of {
+//│ 				Pz  => [Pz]
+//│ 				| Pc _lh_multPs_Pc_0¹ _lh_multPs_Pc_1¹ => [Pc (_lh_multPs_Pc_0⁰ * _lh_multPs_Pc_0¹) addPs_lh_₆(addPs_lh_₆(dotMult_lh_₁(_lh_multPs_Pc_0⁰, _lh_multPs_Pc_1¹), dotMult_lh_₁(_lh_multPs_Pc_0¹, _lh_multPs_Pc_1⁰)), multPs_lh_₁(multPs_lh_₁(x_lh_₁, _lh_multPs_Pc_1⁰), _lh_multPs_Pc_1¹))]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def negatePs_lh_₁(_lh_negatePs_arg1²) = lazy⁰(
+//│ 	let _lh_matchIdent⁶⁰ = force⁰(_lh_negatePs_arg1²)
+//│ 	in case _lh_matchIdent⁶⁰ of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_negatePs_Pc_0² _lh_negatePs_Pc_1² => [Pc (0 - _lh_negatePs_Pc_0²) negatePs_lh_₁(_lh_negatePs_Pc_1²)]
+//│ 		| _  => error⁰})
+//│ def negatePs_lh_₂(_lh_negatePs_arg1¹) = lazy⁰(
+//│ 	let _lh_matchIdent³⁷ = force⁰(_lh_negatePs_arg1¹)
+//│ 	in case _lh_matchIdent³⁷ of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_negatePs_Pc_0¹ _lh_negatePs_Pc_1¹ => [Pc (0 - _lh_negatePs_Pc_0¹) negatePs_lh_₂(_lh_negatePs_Pc_1¹)]
+//│ 		| _  => error⁰})
+//│ def negatePs_lh_₃(_lh_negatePs_arg1⁰) = lazy⁰(
+//│ 	let _lh_matchIdent²⁰ = force⁰(_lh_negatePs_arg1⁰)
+//│ 	in case _lh_matchIdent²⁰ of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_negatePs_Pc_0⁰ _lh_negatePs_Pc_1⁰ => [Pc (0 - _lh_negatePs_Pc_0⁰) negatePs_lh_₃(_lh_negatePs_Pc_1⁰)]
+//│ 		| _  => error⁰})
+//│ def powerPs_lh_₁(_lh_powerPs_arg1¹, _lh_powerPs_arg2¹) = if (_lh_powerPs_arg2¹ <= 0) then fromIntegerPs_lh_₅(1) else multPs_lh_₁(_lh_powerPs_arg1¹, powerPs_lh_₁(_lh_powerPs_arg1¹, (_lh_powerPs_arg2¹ - 1)))
+//│ def powerPs_lh_₂(_lh_powerPs_arg1⁰, _lh_powerPs_arg2⁰) = if (_lh_powerPs_arg2⁰ <= 0) then fromIntegerPs_lh_₅(1) else multPs_lh_₁(_lh_powerPs_arg1⁰, powerPs_lh_₂(_lh_powerPs_arg1⁰, (_lh_powerPs_arg2⁰ - 1)))
+//│ def revert_lh_₁(_lh_revert_arg1⁰) = lazy⁰(
+//│ 	let _lh_matchIdent⁰ = force⁰(_lh_revert_arg1⁰)
+//│ 	in _lh_matchIdent⁰(99))
+//│ def sinx_lh_₁(_lh_sinx_arg1⁰) = integral_lh_₂(minusPs_lh_₄(lazy⁰([Pc 1 lazy⁰([Pz])]), integralLz_lh_₁(lazy⁰(sinx_lh_₁(0)))))
+//│ def sinx_lh_₂(_lh_sinx_arg1¹) = integral_lh_₅(minusPs_lh_₆(lazy⁰([Pc 1 lazy⁰([Pz])]), integralLz_lh_₃(lazy⁰(sinx_lh_₂(0)))))
+//│ def sqrtPs_lh_₁(_lh_sqrtPs_arg1⁰) = lazy⁰(
+//│ 	let _lh_matchIdent⁴² = force⁰(_lh_sqrtPs_arg1⁰)
+//│ 	in case _lh_matchIdent⁴² of {
+//│ 		Pz  => [Pz]
+//│ 		| Pc _lh_sqrtPs_Pc_0⁰ _lh_sqrtPs_Pc_1⁰ => case _lh_sqrtPs_Pc_0⁰ of {
+//│ 			0  => 
+//│ 				let _lh_matchIdent⁴³ = force⁰(_lh_sqrtPs_Pc_1⁰)
+//│ 				in case _lh_matchIdent⁴³ of {
+//│ 					Pc _lh_sqrtPs_Pc_0¹ _lh_sqrtPs_Pc_1¹ => case _lh_sqrtPs_Pc_0¹ of {
+//│ 						0  => [Pc 0 sqrtPs_lh_₁(_lh_sqrtPs_Pc_1¹)]
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}
+//│ 			| 1  => 
+//│ 				let qs⁰ = lazy⁰(addPs_lh_₃(fromIntegerPs_lh_₄(1), integral_lh_₃(divPs_lh_₃(lazy⁰(
+//│ 					let _lh_matchIdent⁴⁴ = force⁰(lazy⁰(
+//│ 						let _lh_deriv_Pc_1⁰ = _lh_sqrtPs_Pc_1⁰
+//│ 						in (fun _lh_dummy² -> 
+//│ 							let deriv1⁰ = (fun gss⁰ -> (fun n¹⁶ -> lazy⁰(
+//│ 								let _lh_matchIdent⁴⁵ = force⁰(gss⁰)
+//│ 								in case _lh_matchIdent⁴⁵ of {
+//│ 									Pz  => [Pz]
+//│ 									| Pc _lh_deriv_Pc_0⁰ _lh_deriv_Pc_1¹ => [Pc (n¹⁶ * _lh_deriv_Pc_0⁰) deriv1⁰(_lh_deriv_Pc_1¹, (n¹⁶ + 1))]
+//│ 									| _  => error⁰})))
+//│ 							in force⁰(deriv1⁰(_lh_deriv_Pc_1⁰, 1)))))
+//│ 					in _lh_matchIdent⁴⁴(99)), dotMultSndLz_lh_₁(2, qs⁰)))))
+//│ 				in force⁰(force⁰(qs⁰))
+//│ 			| _  => error⁰}
+//│ 		| _  => error⁰})
+//│ def testPower_nofib_lh_₁(_lh_testPower_nofib_arg1⁰) = [LH_C extract_lh_₁(_lh_testPower_nofib_arg1⁰, minusPs_lh_₁(sinx_lh_₂(0), sqrtPs_lh_₁(minusPs_lh_₃(fromIntegerPs_lh_₁(1), powerPs_lh_₁(cosx_lh_₂(0), 2))))) [LH_C extract_lh_₃(_lh_testPower_nofib_arg1⁰, minusPs_lh_₂(divPs_lh_₁(sinx_lh_₁(0), cosx_lh_₁(0)), lazy⁰(
+//│ 	let _lh_matchIdent⁵ = force⁰(
+//│ 		let int1² = (fun fss² -> (fun n² -> lazy⁰(
+//│ 			let _lh_matchIdent⁶ = force⁰(fss²)
+//│ 			in _lh_matchIdent⁶(int1², n²))))
+//│ 		in lazy⁰(
+//│ 			let _lh_revert_Pc_1⁰ = int1²(divPs_lh_₂(fromIntegerPs_lh_₃(1), addPs_lh_₁(fromIntegerPs_lh_₂(1), powerPs_lh_₂(x_lh_₁, 2))), 1)
+//│ 			in let _lh_revert_Pc_0⁰ = 0
+//│ 			in (fun _lh_dummy⁰ -> case _lh_revert_Pc_0⁰ of {
+//│ 				0  => force⁰(
+//│ 					let rs⁰ = lazy⁰([Pc 0 divPs_lh_₃(fromIntegerPs_lh_₅(1), compose_lh_₁(_lh_revert_Pc_1⁰, rs⁰))])
+//│ 					in rs⁰)
+//│ 				| _  => 
+//│ 					let _lh_matchIdent⁷ = force⁰(_lh_revert_Pc_1⁰)
+//│ 					in case _lh_matchIdent⁷ of {
+//│ 						Pc _lh_revert_Pc_0¹ _lh_revert_Pc_1¹ => 
+//│ 							let _lh_matchIdent⁸ = force⁰(_lh_revert_Pc_1¹)
+//│ 							in case _lh_matchIdent⁸ of {
+//│ 								Pz  => [Pc ((0 - 1) / _lh_revert_Pc_0¹) lazy⁰([Pc (1 / _lh_revert_Pc_0¹) lazy⁰([Pz])])]
+//│ 								| _  => error⁰}
+//│ 						| _  => error⁰}})))
+//│ 	in _lh_matchIdent⁵(99)))) [LH_C extract_lh_₄(_lh_testPower_nofib_arg1⁰, ts_lh_₁) [LH_C extract_lh_₂(_lh_testPower_nofib_arg1⁰, tree_lh_₁) [LH_N]]]]]
+//│ def tree_lh_₁ = lazy⁰([Pc 0 composeSndLz_lh_₁(list_lh_₁, lazy⁰(tree_lh_₁))])
+//│ def ts_lh_₁ = lazy⁰([Pc 1 multPsLzLz_lh_₁(lazy⁰(ts_lh_₁), lazy⁰(ts_lh_₁))])
+//│ def x_lh_₁ = lazy⁰([Pc 0 lazy⁰([Pc 1 lazy⁰([Pz])])])
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

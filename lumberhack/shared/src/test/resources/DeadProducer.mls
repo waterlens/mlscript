@@ -109,6 +109,44 @@ main(N)
 //│ 		| N  => [G]}}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main([N])
+//│ def g(x¹) = case x¹ of {
+//│ 	N  => g([C [N]])
+//│ 	| C t² => [G]}
+//│ def h(x²) = case x² of {
+//│ 	N  => [H]
+//│ 	| C t³ => [H]}
+//│ def main(x⁰) = case x⁰ of {
+//│ 	C t⁰ => [G]
+//│ 	| n⁰ => case n⁰ of {
+//│ 		C t¹ => if [True] then g(t¹) else h(t¹)
+//│ 		| N  => [G]}}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main([N])
+//│ def g(x¹) = case x¹ of {
+//│ 	N  => g([C [N]])
+//│ 	| C t² => [G]}
+//│ def h(x²) = case x² of {
+//│ 	N  => [H]
+//│ 	| C t³ => [H]}
+//│ def main(x⁰) = case x⁰ of {
+//│ 	C t⁰ => [G]
+//│ 	| n⁰ => case n⁰ of {
+//│ 		C t¹ => if [True] then g(t¹) else h(t¹)
+//│ 		| N  => [G]}}
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
 //│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
@@ -313,6 +351,50 @@ main(N)
 //│ 	C t⁰ => [G]
 //│ 	| n⁰ => hiddenDeadBranch(n⁰)}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main([N])
+//│ def g(x¹) = case x¹ of {
+//│ 	N  => g([C [N]])
+//│ 	| C t² => [G]}
+//│ def h(x²) = case x² of {
+//│ 	N  => [H]
+//│ 	| C t³ => [H]}
+//│ def hiddenDeadBranch(n¹) = case n¹ of {
+//│ 	C t¹ => 
+//│ 		let dummy⁰ = hiddenDeadBranch([C t¹])
+//│ 		in if [True] then g(t¹) else h(t¹)
+//│ 	| N  => [G]}
+//│ def main(x⁰) = case x⁰ of {
+//│ 	C t⁰ => [G]
+//│ 	| n⁰ => hiddenDeadBranch(n⁰)}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main([N])
+//│ def g(x¹) = case x¹ of {
+//│ 	N  => g([C [N]])
+//│ 	| C t² => [G]}
+//│ def h(x²) = case x² of {
+//│ 	N  => [H]
+//│ 	| C t³ => [H]}
+//│ def hiddenDeadBranch(n¹) = case n¹ of {
+//│ 	C t¹ => 
+//│ 		let dummy⁰ = hiddenDeadBranch([C t¹])
+//│ 		in if [True] then g(t¹) else h(t¹)
+//│ 	| N  => [G]}
+//│ def main(x⁰) = case x⁰ of {
+//│ 	C t⁰ => [G]
+//│ 	| n⁰ => hiddenDeadBranch(n⁰)}
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 
@@ -644,6 +726,102 @@ words(C(2, C(1, C(2, C(1, C(2, N))))))
 //│ 		N  => [N]
 //│ 		| _  => break((fun x⁵ -> (x⁵ == 1)), scrut¹, 99)}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ words
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ break -> 3
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ let scrut⁰ = dropWhile((fun x⁰ -> (x⁰ == 1)), [C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]])
+//│ in case scrut⁰ of {
+//│ 	N  => [N]
+//│ 	| _  => break((fun x¹ -> (x¹ == 1)), scrut⁰, 99)}
+//│ def break(p⁰, ls⁰) = case ls⁰ of {
+//│ 	N  => 
+//│ 		let s''⁰ = [N]
+//│ 		in let w⁰ = [N]
+//│ 		in (fun _lh_dummy⁰ -> [C w⁰ 
+//│ 			let scrut¹ = dropWhile((fun x² -> (x² == 1)), s''⁰)
+//│ 			in case scrut¹ of {
+//│ 				N  => [N]
+//│ 				| _  => break((fun x³ -> (x³ == 1)), scrut¹, 99)}])
+//│ 	| C x⁴ xs⁰ => if p⁰(x⁴) then 
+//│ 		let s''¹ = [C x⁴ xs⁰]
+//│ 		in let w¹ = [N]
+//│ 		in (fun _lh_dummy¹ -> [C w¹ 
+//│ 			let scrut² = dropWhile((fun x⁵ -> (x⁵ == 1)), s''¹)
+//│ 			in case scrut² of {
+//│ 				N  => [N]
+//│ 				| _  => break((fun x⁶ -> (x⁶ == 1)), scrut², 99)}]) else case break1(p⁰, xs⁰) of {
+//│ 		P ys⁰ zs⁰ => 
+//│ 			let s''² = zs⁰
+//│ 			in let w² = [C x⁴ ys⁰]
+//│ 			in (fun _lh_dummy² -> [C w² 
+//│ 				let scrut³ = dropWhile((fun x⁷ -> (x⁷ == 1)), s''²)
+//│ 				in case scrut³ of {
+//│ 					N  => [N]
+//│ 					| _  => break((fun x⁸ -> (x⁸ == 1)), scrut³, 99)}])}}
+//│ def break1(p¹, ls¹) = case ls¹ of {
+//│ 	N  => [P [N] [N]]
+//│ 	| C x⁹ xs¹ => if p¹(x⁹) then [P [N] [C x⁹ xs¹]] else case break1(p¹, xs¹) of {
+//│ 		P ys¹ zs¹ => [P [C x⁹ ys¹] zs¹]}}
+//│ def dropWhile(f⁰, ls²) = case ls² of {
+//│ 	N  => [N]
+//│ 	| C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}
+//│ def words(s⁰) = 
+//│ 	let scrut⁴ = dropWhile((fun x¹⁰ -> (x¹⁰ == 1)), s⁰)
+//│ 	in case scrut⁴ of {
+//│ 		N  => [N]
+//│ 		| _  => break((fun x¹¹ -> (x¹¹ == 1)), scrut⁴, 99)}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ let scrut⁰ = dropWhile((fun x⁰ -> (x⁰ == 1)), [C 2 [C 1 [C 2 [C 1 [C 2 [N]]]]]])
+//│ in case scrut⁰ of {
+//│ 	N  => [N]
+//│ 	| _  => break((fun x¹ -> (x¹ == 1)), scrut⁰, 99)}
+//│ def break(p⁰, ls⁰, _lh_popOutId_0⁰) = case ls⁰ of {
+//│ 	N  => 
+//│ 		let s''⁰ = [N]
+//│ 		in let w⁰ = [N]
+//│ 		in [C w⁰ 
+//│ 			let scrut¹ = dropWhile((fun x² -> (x² == 1)), s''⁰)
+//│ 			in case scrut¹ of {
+//│ 				N  => [N]
+//│ 				| _  => break((fun x³ -> (x³ == 1)), scrut¹, 99)}]
+//│ 	| C x⁴ xs⁰ => if p⁰(x⁴) then 
+//│ 		let s''¹ = [C x⁴ xs⁰]
+//│ 		in let w¹ = [N]
+//│ 		in [C w¹ 
+//│ 			let scrut² = dropWhile((fun x⁵ -> (x⁵ == 1)), s''¹)
+//│ 			in case scrut² of {
+//│ 				N  => [N]
+//│ 				| _  => break((fun x⁶ -> (x⁶ == 1)), scrut², 99)}] else case break1(p⁰, xs⁰) of {
+//│ 		P ys⁰ zs⁰ => 
+//│ 			let s''² = zs⁰
+//│ 			in let w² = [C x⁴ ys⁰]
+//│ 			in [C w² 
+//│ 				let scrut³ = dropWhile((fun x⁷ -> (x⁷ == 1)), s''²)
+//│ 				in case scrut³ of {
+//│ 					N  => [N]
+//│ 					| _  => break((fun x⁸ -> (x⁸ == 1)), scrut³, 99)}]}}
+//│ def break1(p¹, ls¹) = case ls¹ of {
+//│ 	N  => [P [N] [N]]
+//│ 	| C x⁹ xs¹ => if p¹(x⁹) then [P [N] [C x⁹ xs¹]] else case break1(p¹, xs¹) of {
+//│ 		P ys¹ zs¹ => [P [C x⁹ ys¹] zs¹]}}
+//│ def dropWhile(f⁰, ls²) = case ls² of {
+//│ 	N  => [N]
+//│ 	| C h⁰ t⁰ => if f⁰(h⁰) then dropWhile(f⁰, t⁰) else [C h⁰ t⁰]}
+//│ def words(s⁰) = 
+//│ 	let scrut⁴ = dropWhile((fun x¹⁰ -> (x¹⁰ == 1)), s⁰)
+//│ 	in case scrut⁴ of {
+//│ 		N  => [N]
+//│ 		| _  => break((fun x¹¹ -> (x¹¹ == 1)), scrut⁴, 99)}
+//│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ 

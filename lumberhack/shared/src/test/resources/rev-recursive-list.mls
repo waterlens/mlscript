@@ -66,6 +66,38 @@ rev(l)
 //│ 	in (fun _lh_dummy⁰ -> concat(rev(t²), [C h² [N]]))
 //│ def rev(ls¹) = ls¹(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ l -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ l(99)
+//│ def concat(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}
+//│ def l = 
+//│ 	let t¹ = l
+//│ 	in let h¹ = 1
+//│ 	in (fun _lh_dummy⁰ -> concat(t¹(99), [C h¹ [N]]))
+//│ def rev(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ l(99)
+//│ def concat(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}
+//│ def l = 
+//│ 	let t¹ = l
+//│ 	in let h¹ = 1
+//│ 	in (fun _lh_dummy⁰ -> concat(t¹(99), [C h¹ [N]]))
+//│ def rev(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 fun concat(xs, ys) = if xs is
@@ -142,6 +174,44 @@ rev(l)
 //│ 	in (fun _lh_dummy⁰ -> concat(rev(t²), [C h² [N]]))
 //│ def rev(ls¹) = ls¹(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ l -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ l(99)
+//│ def concat(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}
+//│ def l = 
+//│ 	let t¹ = 	
+//│ 		let t² = l
+//│ 		in let h¹ = 2
+//│ 		in (fun _lh_dummy⁰ -> concat(t²(99), [C h¹ [N]]))
+//│ 	in let h² = 1
+//│ 	in (fun _lh_dummy¹ -> concat(t¹(99), [C h² [N]]))
+//│ def rev(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ l(99)
+//│ def concat(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	N  => ys⁰
+//│ 	| C h⁰ t⁰ => [C h⁰ concat(t⁰, ys⁰)]}
+//│ def l = 
+//│ 	let t¹ = 	
+//│ 		let t² = l
+//│ 		in let h¹ = 2
+//│ 		in (fun _lh_dummy⁰ -> concat(t²(99), [C h¹ [N]]))
+//│ 	in let h² = 1
+//│ 	in (fun _lh_dummy¹ -> concat(t¹(99), [C h² [N]]))
+//│ def rev(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // above, rev using concat; below, rev using accumulating parameter
@@ -195,6 +265,38 @@ rev(l, N)
 //│ 	in (fun a² -> rev(t¹, [C h¹ a²]))
 //│ def rev(ls¹, a¹) = ls¹(a¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ l -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ l([N])
+//│ def l = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = l
+//│ 		in let h⁰ = 2
+//│ 		in (fun a¹ -> t¹([C h⁰ a¹]))
+//│ 	in let h¹ = 1
+//│ 	in (fun a² -> t⁰([C h¹ a²]))
+//│ def rev(ls⁰, a⁰) = ls⁰(a⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ l([N])
+//│ def l = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = l
+//│ 		in let h⁰ = 2
+//│ 		in (fun a¹ -> t¹([C h⁰ a¹]))
+//│ 	in let h¹ = 1
+//│ 	in (fun a² -> t⁰([C h¹ a²]))
+//│ def rev(ls⁰, a⁰) = ls⁰(a⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 fun rev(ls, a) = if ls is
@@ -245,3 +347,35 @@ rev(l, N)
 //│ 	in (fun a² -> rev(t¹, [C h¹ a²]))
 //│ def rev(ls¹, a¹) = ls¹(a¹)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ rev
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ l -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ l([N])
+//│ def l = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = l
+//│ 		in let h⁰ = [B]
+//│ 		in (fun a¹ -> t¹([C h⁰ a¹]))
+//│ 	in let h¹ = [A]
+//│ 	in (fun a² -> t⁰([C h¹ a²]))
+//│ def rev(ls⁰, a⁰) = ls⁰(a⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ l([N])
+//│ def l = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = l
+//│ 		in let h⁰ = [B]
+//│ 		in (fun a¹ -> t¹([C h⁰ a¹]))
+//│ 	in let h¹ = [A]
+//│ 	in (fun a² -> t⁰([C h¹ a²]))
+//│ def rev(ls⁰, a⁰) = ls⁰(a⁰)
+//│ <<<<<<< after floating out <<<<<<<

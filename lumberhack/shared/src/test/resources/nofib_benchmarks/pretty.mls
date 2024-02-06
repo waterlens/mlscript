@@ -3082,6 +3082,532 @@ testPretty_nofib $ primId 0
 //│ 	in mappend_lh_₁(ppShow_lh_₁(80, pretty_stuff¹), [LH_C '|' [LH_N]])
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ flattenS_lh_₁, ppHang_lh_₁
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ ppStr_lh_₃ -> 3
+//│ cShow_lh_₁ -> 1
+//│ flatten_lh_₁ -> 4
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ testPretty_nofib_lh_₁(primId⁰(0))
+//│ def andL_lh_₁(_lh_andL_arg1¹, _lh_andL_arg2¹) = case _lh_andL_arg1¹ of {
+//│ 	False  => [False]
+//│ 	| True  => _lh_andL_arg2¹
+//│ 	| _  => error⁰}
+//│ def andL_lh_₂(_lh_andL_arg1⁵, _lh_andL_arg2⁵) = case _lh_andL_arg1⁵ of {
+//│ 	False  => [False]
+//│ 	| True  => _lh_andL_arg2⁵
+//│ 	| _  => error⁰}
+//│ def andL_lh_₃(_lh_andL_arg1³, _lh_andL_arg2³) = case _lh_andL_arg1³ of {
+//│ 	False  => [False]
+//│ 	| True  => _lh_andL_arg2³
+//│ 	| _  => error⁰}
+//│ def andL_lh_₄(_lh_andL_arg1⁶, _lh_andL_arg2⁶) = case _lh_andL_arg1⁶ of {
+//│ 	False  => [False]
+//│ 	| True  => _lh_andL_arg2⁶
+//│ 	| _  => error⁰}
+//│ def andL_lh_₅(_lh_andL_arg1², _lh_andL_arg2²) = case _lh_andL_arg1² of {
+//│ 	False  => [False]
+//│ 	| True  => _lh_andL_arg2²
+//│ 	| _  => error⁰}
+//│ def andL_lh_₆(_lh_andL_arg1⁰, _lh_andL_arg2⁰) = case _lh_andL_arg1⁰ of {
+//│ 	False  => [False]
+//│ 	| True  => _lh_andL_arg2⁰
+//│ 	| _  => error⁰}
+//│ def andL_lh_₇(_lh_andL_arg1⁴, _lh_andL_arg2⁴) = case _lh_andL_arg1⁴ of {
+//│ 	False  => [False]
+//│ 	| True  => _lh_andL_arg2⁴
+//│ 	| _  => error⁰}
+//│ def cAppend_lh_₁(_lh_cAppend_arg1⁶, _lh_cAppend_arg2⁶) = [CAppend _lh_cAppend_arg1⁶ _lh_cAppend_arg2⁶]
+//│ def cAppend_lh_₂(_lh_cAppend_arg1⁰, _lh_cAppend_arg2⁰) = [CAppend _lh_cAppend_arg1⁰ _lh_cAppend_arg2⁰]
+//│ def cAppend_lh_₃(_lh_cAppend_arg1², _lh_cAppend_arg2²) = [CAppend _lh_cAppend_arg1² _lh_cAppend_arg2²]
+//│ def cAppend_lh_₄(_lh_cAppend_arg1⁵, _lh_cAppend_arg2⁵) = [CAppend _lh_cAppend_arg1⁵ _lh_cAppend_arg2⁵]
+//│ def cAppend_lh_₅(_lh_cAppend_arg1¹, _lh_cAppend_arg2¹) = [CAppend _lh_cAppend_arg1¹ _lh_cAppend_arg2¹]
+//│ def cAppend_lh_₆(_lh_cAppend_arg1⁴, _lh_cAppend_arg2⁴) = [CAppend _lh_cAppend_arg1⁴ _lh_cAppend_arg2⁴]
+//│ def cAppend_lh_₇(_lh_cAppend_arg1³, _lh_cAppend_arg2³) = [CAppend _lh_cAppend_arg1³ _lh_cAppend_arg2³]
+//│ def cCh_lh_₁(_lh_cCh_arg1¹) = [CCh _lh_cCh_arg1¹]
+//│ def cCh_lh_₂(_lh_cCh_arg1⁰) = [CCh _lh_cCh_arg1⁰]
+//│ def cCh_lh_₃(_lh_cCh_arg1²) = [CCh _lh_cCh_arg1²]
+//│ def cIndent_lh_₁(_lh_cIndent_arg1⁰, _lh_cIndent_arg2⁰) = [CIndent _lh_cIndent_arg1⁰ _lh_cIndent_arg2⁰]
+//│ def cIndent_lh_₂(_lh_cIndent_arg1³, _lh_cIndent_arg2³) = [CIndent _lh_cIndent_arg1³ _lh_cIndent_arg2³]
+//│ def cIndent_lh_₃(_lh_cIndent_arg1², _lh_cIndent_arg2²) = [CIndent _lh_cIndent_arg1² _lh_cIndent_arg2²]
+//│ def cIndent_lh_₄(_lh_cIndent_arg1¹, _lh_cIndent_arg2¹) = [CIndent _lh_cIndent_arg1¹ _lh_cIndent_arg2¹]
+//│ def cNL_lh_₁ = [CNewline]
+//│ def cNil_lh_₁ = [CNil]
+//│ def cNil_lh_₂ = [CNil]
+//│ def cNil_lh_₃ = [CNil]
+//│ def cShow_lh_₁(_lh_cShow_arg1⁰) = flatten_lh_₁(0, [True], _lh_cShow_arg1⁰, (fun _lh_flattenS_arg1¹ -> [LH_N]))
+//│ def cStr_lh_₁(_lh_cStr_arg1¹) = [CStr _lh_cStr_arg1¹]
+//│ def cStr_lh_₂(_lh_cStr_arg1²) = [CStr _lh_cStr_arg1²]
+//│ def cStr_lh_₃(_lh_cStr_arg1³) = [CStr _lh_cStr_arg1³]
+//│ def cStr_lh_₄(_lh_cStr_arg1⁰) = [CStr _lh_cStr_arg1⁰]
+//│ def copy_lh_₁(_lh_copy_arg1⁰, _lh_copy_arg2⁰) = if (_lh_copy_arg1⁰ <= 0) then [LH_N] else [LH_C _lh_copy_arg2⁰ copy_lh_₁((_lh_copy_arg1⁰ - 1), _lh_copy_arg2⁰)]
+//│ def flattenS_lh_₁(_lh_flattenS_arg1⁰, _lh_flattenS_arg2⁰) = _lh_flattenS_arg2⁰(_lh_flattenS_arg1⁰)
+//│ def flatten_lh_₁(_lh_flatten_arg1⁰, _lh_flatten_arg2⁰, _lh_flatten_arg3⁰, _lh_flatten_arg4⁰) = case _lh_flatten_arg3⁰ of {
+//│ 	CNil  => _lh_flatten_arg4⁰(_lh_flatten_arg2⁰)
+//│ 	| CAppend _lh_flatten_CAppend_0⁰ _lh_flatten_CAppend_1⁰ => flatten_lh_₁(_lh_flatten_arg1⁰, _lh_flatten_arg2⁰, _lh_flatten_CAppend_0⁰, 
+//│ 		let _lh_flattenS_LH_C_1⁰ = _lh_flatten_arg4⁰
+//│ 		in let _lh_flattenS_LH_C_0⁰ = 	
+//│ 			let _lh_flattenS_LH_P2_1⁰ = _lh_flatten_CAppend_1⁰
+//│ 			in let _lh_flattenS_LH_P2_0⁰ = _lh_flatten_arg1⁰
+//│ 			in (fun _lh_flattenS_LH_C_1¹ -> (fun _lh_flattenS_arg1² -> flatten_lh_₁(_lh_flattenS_LH_P2_0⁰, _lh_flattenS_arg1², _lh_flattenS_LH_P2_1⁰, _lh_flattenS_LH_C_1¹)))
+//│ 		in (fun _lh_flattenS_arg1³ -> _lh_flattenS_LH_C_0⁰(_lh_flattenS_LH_C_1⁰, _lh_flattenS_arg1³)))
+//│ 	| CIndent _lh_flatten_CIndent_0⁰ _lh_flatten_CIndent_1⁰ => flatten_lh_₁((_lh_flatten_CIndent_0⁰ + _lh_flatten_arg1⁰), _lh_flatten_arg2⁰, _lh_flatten_CIndent_1⁰, _lh_flatten_arg4⁰)
+//│ 	| CNewline  => [LH_C '|' _lh_flatten_arg4⁰([True])]
+//│ 	| _  => case _lh_flatten_arg2⁰ of {
+//│ 		False  => case _lh_flatten_arg3⁰ of {
+//│ 			CStr _lh_flatten_CStr_0⁰ => mappend_lh_₁(_lh_flatten_CStr_0⁰, _lh_flatten_arg4⁰([False]))
+//│ 			| _  => case _lh_flatten_arg2⁰ of {
+//│ 				False  => case _lh_flatten_arg3⁰ of {
+//│ 					CCh _lh_flatten_CCh_0⁰ => [LH_C _lh_flatten_CCh_0⁰ _lh_flatten_arg4⁰([False])]
+//│ 					| _  => case _lh_flatten_arg2⁰ of {
+//│ 						True  => case _lh_flatten_arg3⁰ of {
+//│ 							CStr _lh_flatten_CStr_0¹ => mkIndent_lh_₁(_lh_flatten_arg1⁰, mappend_lh_₁(_lh_flatten_CStr_0¹, _lh_flatten_arg4⁰([False])))
+//│ 							| _  => case _lh_flatten_arg2⁰ of {
+//│ 								True  => case _lh_flatten_arg3⁰ of {
+//│ 									CCh _lh_flatten_CCh_0¹ => mkIndent_lh_₁(_lh_flatten_arg1⁰, [LH_C _lh_flatten_CCh_0¹ _lh_flatten_arg4⁰([False])])
+//│ 									| _  => error⁰}
+//│ 								| _  => error⁰}}
+//│ 						| _  => case _lh_flatten_arg2⁰ of {
+//│ 							True  => case _lh_flatten_arg3⁰ of {
+//│ 								CCh _lh_flatten_CCh_0² => mkIndent_lh_₁(_lh_flatten_arg1⁰, [LH_C _lh_flatten_CCh_0² _lh_flatten_arg4⁰([False])])
+//│ 								| _  => error⁰}
+//│ 							| _  => error⁰}}}
+//│ 				| _  => case _lh_flatten_arg2⁰ of {
+//│ 					True  => case _lh_flatten_arg3⁰ of {
+//│ 						CStr _lh_flatten_CStr_0² => mkIndent_lh_₁(_lh_flatten_arg1⁰, mappend_lh_₁(_lh_flatten_CStr_0², _lh_flatten_arg4⁰([False])))
+//│ 						| _  => case _lh_flatten_arg2⁰ of {
+//│ 							True  => case _lh_flatten_arg3⁰ of {
+//│ 								CCh _lh_flatten_CCh_0³ => mkIndent_lh_₁(_lh_flatten_arg1⁰, [LH_C _lh_flatten_CCh_0³ _lh_flatten_arg4⁰([False])])
+//│ 								| _  => error⁰}
+//│ 							| _  => error⁰}}
+//│ 					| _  => case _lh_flatten_arg2⁰ of {
+//│ 						True  => case _lh_flatten_arg3⁰ of {
+//│ 							CCh _lh_flatten_CCh_0⁴ => mkIndent_lh_₁(_lh_flatten_arg1⁰, [LH_C _lh_flatten_CCh_0⁴ _lh_flatten_arg4⁰([False])])
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}}}}
+//│ 		| _  => case _lh_flatten_arg2⁰ of {
+//│ 			False  => case _lh_flatten_arg3⁰ of {
+//│ 				CCh _lh_flatten_CCh_0⁵ => [LH_C _lh_flatten_CCh_0⁵ _lh_flatten_arg4⁰([False])]
+//│ 				| _  => case _lh_flatten_arg2⁰ of {
+//│ 					True  => case _lh_flatten_arg3⁰ of {
+//│ 						CStr _lh_flatten_CStr_0³ => mkIndent_lh_₁(_lh_flatten_arg1⁰, mappend_lh_₁(_lh_flatten_CStr_0³, _lh_flatten_arg4⁰([False])))
+//│ 						| _  => case _lh_flatten_arg2⁰ of {
+//│ 							True  => case _lh_flatten_arg3⁰ of {
+//│ 								CCh _lh_flatten_CCh_0⁶ => mkIndent_lh_₁(_lh_flatten_arg1⁰, [LH_C _lh_flatten_CCh_0⁶ _lh_flatten_arg4⁰([False])])
+//│ 								| _  => error⁰}
+//│ 							| _  => error⁰}}
+//│ 					| _  => case _lh_flatten_arg2⁰ of {
+//│ 						True  => case _lh_flatten_arg3⁰ of {
+//│ 							CCh _lh_flatten_CCh_0⁷ => mkIndent_lh_₁(_lh_flatten_arg1⁰, [LH_C _lh_flatten_CCh_0⁷ _lh_flatten_arg4⁰([False])])
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}}}
+//│ 			| _  => case _lh_flatten_arg2⁰ of {
+//│ 				True  => case _lh_flatten_arg3⁰ of {
+//│ 					CStr _lh_flatten_CStr_0⁴ => mkIndent_lh_₁(_lh_flatten_arg1⁰, mappend_lh_₁(_lh_flatten_CStr_0⁴, _lh_flatten_arg4⁰([False])))
+//│ 					| _  => case _lh_flatten_arg2⁰ of {
+//│ 						True  => case _lh_flatten_arg3⁰ of {
+//│ 							CCh _lh_flatten_CCh_0⁸ => mkIndent_lh_₁(_lh_flatten_arg1⁰, [LH_C _lh_flatten_CCh_0⁸ _lh_flatten_arg4⁰([False])])
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}}
+//│ 				| _  => case _lh_flatten_arg2⁰ of {
+//│ 					True  => case _lh_flatten_arg3⁰ of {
+//│ 						CCh _lh_flatten_CCh_0⁹ => mkIndent_lh_₁(_lh_flatten_arg1⁰, [LH_C _lh_flatten_CCh_0⁹ _lh_flatten_arg4⁰([False])])
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}}}}}
+//│ def foldr1_lh_₁(_lh_foldr1_arg1¹, _lh_foldr1_arg2¹) = case _lh_foldr1_arg2¹ of {
+//│ 	LH_C _lh_foldr1_LH_C_0¹ _lh_foldr1_LH_C_1¹ => case _lh_foldr1_LH_C_1¹ of {
+//│ 		LH_N  => _lh_foldr1_LH_C_0¹
+//│ 		| _  => _lh_foldr1_arg1¹(_lh_foldr1_LH_C_0¹, foldr1_lh_₁(_lh_foldr1_arg1¹, _lh_foldr1_LH_C_1¹))}
+//│ 	| _  => error⁰}
+//│ def foldr1_lh_₂(_lh_foldr1_arg1², _lh_foldr1_arg2²) = case _lh_foldr1_arg2² of {
+//│ 	LH_C _lh_foldr1_LH_C_0² _lh_foldr1_LH_C_1² => case _lh_foldr1_LH_C_1² of {
+//│ 		LH_N  => _lh_foldr1_LH_C_0²
+//│ 		| _  => _lh_foldr1_arg1²(_lh_foldr1_LH_C_0², foldr1_lh_₂(_lh_foldr1_arg1², _lh_foldr1_LH_C_1²))}
+//│ 	| _  => error⁰}
+//│ def foldr1_lh_₃(_lh_foldr1_arg1⁰, _lh_foldr1_arg2⁰) = case _lh_foldr1_arg2⁰ of {
+//│ 	LH_C _lh_foldr1_LH_C_0⁰ _lh_foldr1_LH_C_1⁰ => case _lh_foldr1_LH_C_1⁰ of {
+//│ 		LH_N  => _lh_foldr1_LH_C_0⁰
+//│ 		| _  => _lh_foldr1_arg1⁰(_lh_foldr1_LH_C_0⁰, foldr1_lh_₃(_lh_foldr1_arg1⁰, _lh_foldr1_LH_C_1⁰))}
+//│ 	| _  => error⁰}
+//│ def length_lh_₁(ls⁵) = case ls⁵ of {
+//│ 	LH_C h² t² => (1 + length_lh_₁(t²))
+//│ 	| LH_N  => 0}
+//│ def length_lh_₂(ls⁸) = case ls⁸ of {
+//│ 	LH_C h⁴ t⁴ => (1 + length_lh_₂(t⁴))
+//│ 	| LH_N  => 0}
+//│ def length_lh_₃(ls⁶) = case ls⁶ of {
+//│ 	LH_C h³ t³ => (1 + length_lh_₃(t³))
+//│ 	| LH_N  => 0}
+//│ def length_lh_₄(ls⁴) = case ls⁴ of {
+//│ 	LH_C h¹ t¹ => (1 + length_lh_₄(t¹))
+//│ 	| LH_N  => 0}
+//│ def mappend_lh_₁(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	LH_C h⁰ t⁰ => [LH_C h⁰ mappend_lh_₁(t⁰, ys⁰)]
+//│ 	| LH_N  => ys⁰}
+//│ def mkIndent_lh_₁(_lh_mkIndent_arg1⁰, _lh_mkIndent_arg2⁰) = case _lh_mkIndent_arg1⁰ of {
+//│ 	0  => _lh_mkIndent_arg2⁰
+//│ 	| _  => if (_lh_mkIndent_arg1⁰ >= 8) then [LH_C '|' mkIndent_lh_₁((_lh_mkIndent_arg1⁰ - 8), _lh_mkIndent_arg2⁰)] else [LH_C ' ' mkIndent_lh_₁((_lh_mkIndent_arg1⁰ - 1), _lh_mkIndent_arg2⁰)]}
+//│ def orL_lh_₁(_lh_orL_arg1¹, _lh_orL_arg2¹) = case _lh_orL_arg1¹ of {
+//│ 	True  => [True]
+//│ 	| False  => _lh_orL_arg2¹
+//│ 	| _  => error⁰}
+//│ def orL_lh_₂(_lh_orL_arg1⁰, _lh_orL_arg2⁰) = case _lh_orL_arg1⁰ of {
+//│ 	True  => [True]
+//│ 	| False  => _lh_orL_arg2⁰
+//│ 	| _  => error⁰}
+//│ def pp'SP_lh_₁(_lh_pp'SP_arg1⁰) = ppStr_lh_₄([LH_C ',' [LH_C ' ' [LH_N]]], _lh_pp'SP_arg1⁰)
+//│ def ppAbove_lh_₁(_lh_ppAbove_arg1⁰, _lh_ppAbove_arg2⁰, _lh_ppAbove_arg3⁰, _lh_ppAbove_arg4⁰) = 
+//│ 	let _lh_matchIdent² = _lh_ppAbove_arg1⁰(_lh_ppAbove_arg3⁰, [True])
+//│ 	in case _lh_matchIdent² of {
+//│ 		MkPrettyRep _lh_ppAbove_MkPrettyRep_0⁰ _lh_ppAbove_MkPrettyRep_1⁰ _lh_ppAbove_MkPrettyRep_2⁰ _lh_ppAbove_MkPrettyRep_3⁰ => 
+//│ 			let _lh_matchIdent³ = _lh_ppAbove_arg2⁰(_lh_ppAbove_arg3⁰, [True])
+//│ 			in case _lh_matchIdent³ of {
+//│ 				MkPrettyRep _lh_ppAbove_MkPrettyRep_0¹ _lh_ppAbove_MkPrettyRep_1¹ _lh_ppAbove_MkPrettyRep_2¹ _lh_ppAbove_MkPrettyRep_3¹ => 
+//│ 					let nl⁰ = if orL_lh_₂(_lh_ppAbove_MkPrettyRep_2⁰, _lh_ppAbove_MkPrettyRep_2¹) then cNil_lh_₃ else cNL_lh_₁
+//│ 					in [MkPrettyRep cAppend_lh_₇(_lh_ppAbove_MkPrettyRep_0⁰, cAppend_lh_₇(nl⁰, _lh_ppAbove_MkPrettyRep_0¹)) _lh_ppAbove_MkPrettyRep_1¹ andL_lh_₇(_lh_ppAbove_MkPrettyRep_2⁰, _lh_ppAbove_MkPrettyRep_2¹) [False]]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ def ppAboves_lh_₁(_lh_ppAboves_arg1⁰) = case _lh_ppAboves_arg1⁰ of {
+//│ 	LH_N  => ppNil_lh_₃
+//│ 	| _  => foldr1_lh_₃(ppAbove_lh_₁, _lh_ppAboves_arg1⁰)}
+//│ def ppBesideSP_lh_₁(_lh_ppBesideSP_arg1⁰, _lh_ppBesideSP_arg2⁰, _lh_ppBesideSP_arg3⁰, _lh_ppBesideSP_arg4⁰) = 
+//│ 	let _lh_matchIdent⁸ = _lh_ppBesideSP_arg1⁰(_lh_ppBesideSP_arg3⁰, [False])
+//│ 	in case _lh_matchIdent⁸ of {
+//│ 		MkPrettyRep _lh_ppBesideSP_MkPrettyRep_0⁰ _lh_ppBesideSP_MkPrettyRep_1⁰ _lh_ppBesideSP_MkPrettyRep_2⁰ _lh_ppBesideSP_MkPrettyRep_3⁰ => 
+//│ 			let li⁰ = if _lh_ppBesideSP_MkPrettyRep_2⁰ then 0 else (_lh_ppBesideSP_MkPrettyRep_1⁰ + 1)
+//│ 			in let _lh_matchIdent⁹ = _lh_ppBesideSP_arg2⁰((_lh_ppBesideSP_arg3⁰ - li⁰), [False])
+//│ 			in case _lh_matchIdent⁹ of {
+//│ 				MkPrettyRep _lh_ppBesideSP_MkPrettyRep_0¹ _lh_ppBesideSP_MkPrettyRep_1¹ _lh_ppBesideSP_MkPrettyRep_2¹ _lh_ppBesideSP_MkPrettyRep_3¹ => 
+//│ 					let wi⁰ = if _lh_ppBesideSP_MkPrettyRep_2⁰ then 0 else 1
+//│ 					in let sp⁰ = if orL_lh_₂(_lh_ppBesideSP_MkPrettyRep_2⁰, _lh_ppBesideSP_MkPrettyRep_2¹) then cNil_lh_₃ else cCh_lh_₃(' ')
+//│ 					in [MkPrettyRep cAppend_lh_₆(_lh_ppBesideSP_MkPrettyRep_0⁰, cAppend_lh_₇(sp⁰, cIndent_lh_₄(li⁰, _lh_ppBesideSP_MkPrettyRep_0¹))) (li⁰ + _lh_ppBesideSP_MkPrettyRep_1¹) andL_lh_₇(_lh_ppBesideSP_MkPrettyRep_2⁰, _lh_ppBesideSP_MkPrettyRep_2¹) andL_lh_₅((_lh_ppBesideSP_arg3⁰ >= wi⁰), andL_lh_₆(_lh_ppBesideSP_MkPrettyRep_3⁰, _lh_ppBesideSP_MkPrettyRep_3¹))]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ def ppBeside_lh_₁(_lh_ppBeside_arg1⁰, _lh_ppBeside_arg2⁰, _lh_ppBeside_arg3⁰, _lh_ppBeside_arg4⁰) = 
+//│ 	let _lh_matchIdent⁶ = _lh_ppBeside_arg1⁰(_lh_ppBeside_arg3⁰, [False])
+//│ 	in case _lh_matchIdent⁶ of {
+//│ 		MkPrettyRep _lh_ppBeside_MkPrettyRep_0⁰ _lh_ppBeside_MkPrettyRep_1⁰ _lh_ppBeside_MkPrettyRep_2⁰ _lh_ppBeside_MkPrettyRep_3⁰ => 
+//│ 			let _lh_matchIdent⁷ = _lh_ppBeside_arg2⁰((_lh_ppBeside_arg3⁰ - _lh_ppBeside_MkPrettyRep_1⁰), [False])
+//│ 			in case _lh_matchIdent⁷ of {
+//│ 				MkPrettyRep _lh_ppBeside_MkPrettyRep_0¹ _lh_ppBeside_MkPrettyRep_1¹ _lh_ppBeside_MkPrettyRep_2¹ _lh_ppBeside_MkPrettyRep_3¹ => [MkPrettyRep cAppend_lh_₅(_lh_ppBeside_MkPrettyRep_0⁰, cIndent_lh_₃(_lh_ppBeside_MkPrettyRep_1⁰, _lh_ppBeside_MkPrettyRep_0¹)) (_lh_ppBeside_MkPrettyRep_1⁰ + _lh_ppBeside_MkPrettyRep_1¹) andL_lh_₂(_lh_ppBeside_MkPrettyRep_2⁰, _lh_ppBeside_MkPrettyRep_2¹) andL_lh_₃((_lh_ppBeside_arg3⁰ >= 0), andL_lh_₄(_lh_ppBeside_MkPrettyRep_3⁰, _lh_ppBeside_MkPrettyRep_3¹))]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ def ppBesides_lh_₁(_lh_ppBesides_arg1⁰) = case _lh_ppBesides_arg1⁰ of {
+//│ 	LH_N  => ppNil_lh_₁
+//│ 	| _  => foldr1_lh_₁(ppBeside_lh_₁, _lh_ppBesides_arg1⁰)}
+//│ def ppCat_lh_₁(_lh_ppCat_arg1⁰) = case _lh_ppCat_arg1⁰ of {
+//│ 	LH_N  => ppNil_lh_₂
+//│ 	| _  => foldr1_lh_₂(ppBesideSP_lh_₁, _lh_ppCat_arg1⁰)}
+//│ def ppChar_lh_₁(_lh_ppChar_arg1⁰, _lh_ppChar_arg2⁰, _lh_ppChar_arg3⁰) = [MkPrettyRep cCh_lh_₁(_lh_ppChar_arg1⁰) 1 [False] (_lh_ppChar_arg2⁰ >= 1)]
+//│ def ppHang_lh_₁(_lh_ppHang_arg1⁰, _lh_ppHang_arg2¹, _lh_ppHang_arg3¹, _lh_ppHang_arg4², _lh_ppHang_arg5²) = 
+//│ 	let _lh_matchIdent⁵ = _lh_ppHang_arg1⁰(_lh_ppHang_arg4², [False])
+//│ 	in _lh_matchIdent⁵(_lh_ppHang_arg2¹, _lh_ppHang_arg3¹, _lh_ppHang_arg4², _lh_ppHang_arg5²)
+//│ def ppInt_lh_₁(_lh_ppInt_arg1⁰) = ppStr_lh_₅(string_of_int⁰(_lh_ppInt_arg1⁰))
+//│ def ppNil_lh_₁(_lh_ppNil_arg1¹, _lh_ppNil_arg2¹) = [MkPrettyRep cNil_lh_₁ 0 [True] (_lh_ppNil_arg1¹ >= 0)]
+//│ def ppNil_lh_₂(_lh_ppNil_arg1⁰, _lh_ppNil_arg2⁰) = [MkPrettyRep cNil_lh_₂ 0 [True] (_lh_ppNil_arg1⁰ >= 0)]
+//│ def ppNil_lh_₃(_lh_ppNil_arg1², _lh_ppNil_arg2²) = [MkPrettyRep cNil_lh_₃ 0 [True] (_lh_ppNil_arg1² >= 0)]
+//│ def ppShow_lh_₁(_lh_ppShow_arg1⁰, _lh_ppShow_arg2⁰) = 
+//│ 	let _lh_matchIdent¹⁰ = _lh_ppShow_arg2⁰(_lh_ppShow_arg1⁰, [False])
+//│ 	in case _lh_matchIdent¹⁰ of {
+//│ 		MkPrettyRep _lh_ppShow_MkPrettyRep_0⁰ _lh_ppShow_MkPrettyRep_1⁰ _lh_ppShow_MkPrettyRep_2⁰ _lh_ppShow_MkPrettyRep_3⁰ => cShow_lh_₁(_lh_ppShow_MkPrettyRep_0⁰)
+//│ 		| _  => error⁰}
+//│ def ppStr_lh_₁(_lh_ppStr_arg1¹, _lh_ppStr_arg2¹, _lh_ppStr_arg3¹) = 
+//│ 	let ls¹ = length_lh_₁(_lh_ppStr_arg1¹)
+//│ 	in [MkPrettyRep cStr_lh_₁(_lh_ppStr_arg1¹) ls¹ [False] (_lh_ppStr_arg2¹ >= ls¹)]
+//│ def ppStr_lh_₂(_lh_ppStr_arg1³, _lh_ppStr_arg2³, _lh_ppStr_arg3³) = 
+//│ 	let ls³ = length_lh_₂(_lh_ppStr_arg1³)
+//│ 	in [MkPrettyRep cStr_lh_₂(_lh_ppStr_arg1³) ls³ [False] (_lh_ppStr_arg2³ >= ls³)]
+//│ def ppStr_lh_₃(_lh_ppStr_arg1², _lh_ppStr_arg2², _lh_ppStr_arg3²) = 
+//│ 	let ls² = length_lh_₃(_lh_ppStr_arg1²)
+//│ 	in let _lh_ppHang_MkPrettyRep_3⁰ = (_lh_ppStr_arg2² >= ls²)
+//│ 	in let _lh_ppHang_MkPrettyRep_2⁰ = [False]
+//│ 	in let _lh_ppHang_MkPrettyRep_1⁰ = ls²
+//│ 	in let _lh_ppHang_MkPrettyRep_0⁰ = cStr_lh_₃(_lh_ppStr_arg1²)
+//│ 	in (fun _lh_ppHang_arg2⁰ -> (fun _lh_ppHang_arg3⁰ -> (fun _lh_ppHang_arg4⁰ -> (fun _lh_ppHang_arg5⁰ -> 
+//│ 		let _lh_matchIdent⁰ = _lh_ppHang_arg3⁰((_lh_ppHang_arg4⁰ - (_lh_ppHang_MkPrettyRep_1⁰ + 1)), [False])
+//│ 		in case _lh_matchIdent⁰ of {
+//│ 			MkPrettyRep _lh_ppHang_MkPrettyRep_0¹ _lh_ppHang_MkPrettyRep_1¹ _lh_ppHang_MkPrettyRep_2¹ _lh_ppHang_MkPrettyRep_3¹ => 
+//│ 				let _lh_matchIdent¹ = _lh_ppHang_arg3⁰((_lh_ppHang_arg4⁰ - _lh_ppHang_arg2⁰), [False])
+//│ 				in case _lh_matchIdent¹ of {
+//│ 					MkPrettyRep _lh_ppHang_MkPrettyRep_0² _lh_ppHang_MkPrettyRep_1² _lh_ppHang_MkPrettyRep_2² _lh_ppHang_MkPrettyRep_3² => if _lh_ppHang_MkPrettyRep_2⁰ then _lh_ppHang_arg3⁰(_lh_ppHang_arg4⁰, _lh_ppHang_arg5⁰) else if orL_lh_₁((_lh_ppHang_MkPrettyRep_1⁰ <= _lh_ppHang_arg2⁰), _lh_ppHang_MkPrettyRep_3¹) then [MkPrettyRep cAppend_lh_₃(cAppend_lh_₁(_lh_ppHang_MkPrettyRep_0⁰, cCh_lh_₂(' ')), cIndent_lh_₂((_lh_ppHang_MkPrettyRep_1⁰ + 1), _lh_ppHang_MkPrettyRep_0¹)) ((_lh_ppHang_MkPrettyRep_1⁰ + 1) + _lh_ppHang_MkPrettyRep_1¹) [False] andL_lh_₁(_lh_ppHang_MkPrettyRep_3⁰, _lh_ppHang_MkPrettyRep_3¹)] else [MkPrettyRep cAppend_lh_₂(_lh_ppHang_MkPrettyRep_0⁰, cAppend_lh_₄(cNL_lh_₁, cIndent_lh_₁(_lh_ppHang_arg2⁰, _lh_ppHang_MkPrettyRep_0²))) _lh_ppHang_MkPrettyRep_1² [False] [False]]
+//│ 					| _  => error⁰}
+//│ 			| _  => error⁰}))))
+//│ def ppStr_lh_₄(_lh_ppStr_arg1⁴, _lh_ppStr_arg2⁴, _lh_ppStr_arg3⁴) = 
+//│ 	let ls⁷ = length_lh_₄(_lh_ppStr_arg1⁴)
+//│ 	in [MkPrettyRep cStr_lh_₄(_lh_ppStr_arg1⁴) ls⁷ [False] (_lh_ppStr_arg2⁴ >= ls⁷)]
+//│ def ppStr_lh_₅(_lh_ppStr_arg1⁰, _lh_ppStr_arg2⁰, _lh_ppStr_arg3⁰) = 
+//│ 	let ls⁰ = length_lh_₄(_lh_ppStr_arg1⁰)
+//│ 	in [MkPrettyRep cStr_lh_₄(_lh_ppStr_arg1⁰) ls⁰ [False] (_lh_ppStr_arg2⁰ >= ls⁰)]
+//│ def testPretty_nofib_lh_₁(_lh_testPretty_nofib_arg1⁰) = 
+//│ 	let pretty_stuff⁰ = ppAboves_lh_₁([LH_C ppBesides_lh_₁([LH_C ppInt_lh_₁((0 - 42)) [LH_C ppChar_lh_₁('@') [LH_C ppStr_lh_₂([LH_C 'T' [LH_C 'h' [LH_C 'i' [LH_C 's' [LH_C ' ' [LH_C 'i' [LH_C 's' [LH_C ' ' [LH_C 'a' [LH_C ' ' [LH_C 's' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_N]]]]]]]]]]]]]]]]]) [LH_N]]]]) [LH_C pp'SP_lh_₁ [LH_C (fun _lh_ppHang_arg4¹ -> (fun _lh_ppHang_arg5¹ -> 
+//│ 		let _lh_matchIdent⁴ = ppStr_lh_₃([LH_C 'T' [LH_C 'h' [LH_C 'i' [LH_C 's' [LH_C ' ' [LH_C 'i' [LH_C 's' [LH_C ' ' [LH_C 't' [LH_C 'h' [LH_C 'e' [LH_C ' ' [LH_C 'l' [LH_C 'a' [LH_C 'b' [LH_C 'e' [LH_C 'l' [LH_N]]]]]]]]]]]]]]]]]], _lh_ppHang_arg4¹, [False])
+//│ 		in _lh_matchIdent⁴(8, ppCat_lh_₁(copy_lh_₁(50, ppStr_lh_₁([LH_C 'x' [LH_C 'x' [LH_C 'x' [LH_C 'x' [LH_C 'x' [LH_N]]]]]]))), _lh_ppHang_arg4¹, _lh_ppHang_arg5¹))) [LH_N]]]])
+//│ 	in mappend_lh_₁(ppShow_lh_₁(80, pretty_stuff⁰), [LH_C '|' [LH_N]])
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ testPretty_nofib_lh_₁(primId⁰(0))
+//│ def andL_lh_₁(_lh_andL_arg1¹, _lh_andL_arg2¹) = case _lh_andL_arg1¹ of {
+//│ 	False  => [False]
+//│ 	| True  => _lh_andL_arg2¹
+//│ 	| _  => error⁰}
+//│ def andL_lh_₂(_lh_andL_arg1⁵, _lh_andL_arg2⁵) = case _lh_andL_arg1⁵ of {
+//│ 	False  => [False]
+//│ 	| True  => _lh_andL_arg2⁵
+//│ 	| _  => error⁰}
+//│ def andL_lh_₃(_lh_andL_arg1³, _lh_andL_arg2³) = case _lh_andL_arg1³ of {
+//│ 	False  => [False]
+//│ 	| True  => _lh_andL_arg2³
+//│ 	| _  => error⁰}
+//│ def andL_lh_₄(_lh_andL_arg1⁶, _lh_andL_arg2⁶) = case _lh_andL_arg1⁶ of {
+//│ 	False  => [False]
+//│ 	| True  => _lh_andL_arg2⁶
+//│ 	| _  => error⁰}
+//│ def andL_lh_₅(_lh_andL_arg1², _lh_andL_arg2²) = case _lh_andL_arg1² of {
+//│ 	False  => [False]
+//│ 	| True  => _lh_andL_arg2²
+//│ 	| _  => error⁰}
+//│ def andL_lh_₆(_lh_andL_arg1⁰, _lh_andL_arg2⁰) = case _lh_andL_arg1⁰ of {
+//│ 	False  => [False]
+//│ 	| True  => _lh_andL_arg2⁰
+//│ 	| _  => error⁰}
+//│ def andL_lh_₇(_lh_andL_arg1⁴, _lh_andL_arg2⁴) = case _lh_andL_arg1⁴ of {
+//│ 	False  => [False]
+//│ 	| True  => _lh_andL_arg2⁴
+//│ 	| _  => error⁰}
+//│ def cAppend_lh_₁(_lh_cAppend_arg1⁶, _lh_cAppend_arg2⁶) = [CAppend _lh_cAppend_arg1⁶ _lh_cAppend_arg2⁶]
+//│ def cAppend_lh_₂(_lh_cAppend_arg1⁰, _lh_cAppend_arg2⁰) = [CAppend _lh_cAppend_arg1⁰ _lh_cAppend_arg2⁰]
+//│ def cAppend_lh_₃(_lh_cAppend_arg1², _lh_cAppend_arg2²) = [CAppend _lh_cAppend_arg1² _lh_cAppend_arg2²]
+//│ def cAppend_lh_₄(_lh_cAppend_arg1⁵, _lh_cAppend_arg2⁵) = [CAppend _lh_cAppend_arg1⁵ _lh_cAppend_arg2⁵]
+//│ def cAppend_lh_₅(_lh_cAppend_arg1¹, _lh_cAppend_arg2¹) = [CAppend _lh_cAppend_arg1¹ _lh_cAppend_arg2¹]
+//│ def cAppend_lh_₆(_lh_cAppend_arg1⁴, _lh_cAppend_arg2⁴) = [CAppend _lh_cAppend_arg1⁴ _lh_cAppend_arg2⁴]
+//│ def cAppend_lh_₇(_lh_cAppend_arg1³, _lh_cAppend_arg2³) = [CAppend _lh_cAppend_arg1³ _lh_cAppend_arg2³]
+//│ def cCh_lh_₁(_lh_cCh_arg1¹) = [CCh _lh_cCh_arg1¹]
+//│ def cCh_lh_₂(_lh_cCh_arg1⁰) = [CCh _lh_cCh_arg1⁰]
+//│ def cCh_lh_₃(_lh_cCh_arg1²) = [CCh _lh_cCh_arg1²]
+//│ def cIndent_lh_₁(_lh_cIndent_arg1⁰, _lh_cIndent_arg2⁰) = [CIndent _lh_cIndent_arg1⁰ _lh_cIndent_arg2⁰]
+//│ def cIndent_lh_₂(_lh_cIndent_arg1³, _lh_cIndent_arg2³) = [CIndent _lh_cIndent_arg1³ _lh_cIndent_arg2³]
+//│ def cIndent_lh_₃(_lh_cIndent_arg1², _lh_cIndent_arg2²) = [CIndent _lh_cIndent_arg1² _lh_cIndent_arg2²]
+//│ def cIndent_lh_₄(_lh_cIndent_arg1¹, _lh_cIndent_arg2¹) = [CIndent _lh_cIndent_arg1¹ _lh_cIndent_arg2¹]
+//│ def cNL_lh_₁ = [CNewline]
+//│ def cNil_lh_₁ = [CNil]
+//│ def cNil_lh_₂ = [CNil]
+//│ def cNil_lh_₃ = [CNil]
+//│ def cShow_lh_₁(_lh_cShow_arg1⁰) = flatten_lh_₁(0, [True], _lh_cShow_arg1⁰, (fun _lh_flattenS_arg1¹ -> [LH_N]))
+//│ def cStr_lh_₁(_lh_cStr_arg1¹) = [CStr _lh_cStr_arg1¹]
+//│ def cStr_lh_₂(_lh_cStr_arg1²) = [CStr _lh_cStr_arg1²]
+//│ def cStr_lh_₃(_lh_cStr_arg1³) = [CStr _lh_cStr_arg1³]
+//│ def cStr_lh_₄(_lh_cStr_arg1⁰) = [CStr _lh_cStr_arg1⁰]
+//│ def copy_lh_₁(_lh_copy_arg1⁰, _lh_copy_arg2⁰) = if (_lh_copy_arg1⁰ <= 0) then [LH_N] else [LH_C _lh_copy_arg2⁰ copy_lh_₁((_lh_copy_arg1⁰ - 1), _lh_copy_arg2⁰)]
+//│ def flattenS_lh_₁(_lh_flattenS_arg1⁰, _lh_flattenS_arg2⁰) = _lh_flattenS_arg2⁰(_lh_flattenS_arg1⁰)
+//│ def flatten_lh_₁(_lh_flatten_arg1⁰, _lh_flatten_arg2⁰, _lh_flatten_arg3⁰, _lh_flatten_arg4⁰) = case _lh_flatten_arg3⁰ of {
+//│ 	CNil  => _lh_flatten_arg4⁰(_lh_flatten_arg2⁰)
+//│ 	| CAppend _lh_flatten_CAppend_0⁰ _lh_flatten_CAppend_1⁰ => flatten_lh_₁(_lh_flatten_arg1⁰, _lh_flatten_arg2⁰, _lh_flatten_CAppend_0⁰, 
+//│ 		let _lh_flattenS_LH_C_1⁰ = _lh_flatten_arg4⁰
+//│ 		in let _lh_flattenS_LH_C_0⁰ = 	
+//│ 			let _lh_flattenS_LH_P2_1⁰ = _lh_flatten_CAppend_1⁰
+//│ 			in let _lh_flattenS_LH_P2_0⁰ = _lh_flatten_arg1⁰
+//│ 			in (fun _lh_flattenS_LH_C_1¹ -> (fun _lh_flattenS_arg1² -> flatten_lh_₁(_lh_flattenS_LH_P2_0⁰, _lh_flattenS_arg1², _lh_flattenS_LH_P2_1⁰, _lh_flattenS_LH_C_1¹)))
+//│ 		in (fun _lh_flattenS_arg1³ -> _lh_flattenS_LH_C_0⁰(_lh_flattenS_LH_C_1⁰, _lh_flattenS_arg1³)))
+//│ 	| CIndent _lh_flatten_CIndent_0⁰ _lh_flatten_CIndent_1⁰ => flatten_lh_₁((_lh_flatten_CIndent_0⁰ + _lh_flatten_arg1⁰), _lh_flatten_arg2⁰, _lh_flatten_CIndent_1⁰, _lh_flatten_arg4⁰)
+//│ 	| CNewline  => [LH_C '|' _lh_flatten_arg4⁰([True])]
+//│ 	| _  => case _lh_flatten_arg2⁰ of {
+//│ 		False  => case _lh_flatten_arg3⁰ of {
+//│ 			CStr _lh_flatten_CStr_0⁰ => mappend_lh_₁(_lh_flatten_CStr_0⁰, _lh_flatten_arg4⁰([False]))
+//│ 			| _  => case _lh_flatten_arg2⁰ of {
+//│ 				False  => case _lh_flatten_arg3⁰ of {
+//│ 					CCh _lh_flatten_CCh_0⁰ => [LH_C _lh_flatten_CCh_0⁰ _lh_flatten_arg4⁰([False])]
+//│ 					| _  => case _lh_flatten_arg2⁰ of {
+//│ 						True  => case _lh_flatten_arg3⁰ of {
+//│ 							CStr _lh_flatten_CStr_0¹ => mkIndent_lh_₁(_lh_flatten_arg1⁰, mappend_lh_₁(_lh_flatten_CStr_0¹, _lh_flatten_arg4⁰([False])))
+//│ 							| _  => case _lh_flatten_arg2⁰ of {
+//│ 								True  => case _lh_flatten_arg3⁰ of {
+//│ 									CCh _lh_flatten_CCh_0¹ => mkIndent_lh_₁(_lh_flatten_arg1⁰, [LH_C _lh_flatten_CCh_0¹ _lh_flatten_arg4⁰([False])])
+//│ 									| _  => error⁰}
+//│ 								| _  => error⁰}}
+//│ 						| _  => case _lh_flatten_arg2⁰ of {
+//│ 							True  => case _lh_flatten_arg3⁰ of {
+//│ 								CCh _lh_flatten_CCh_0² => mkIndent_lh_₁(_lh_flatten_arg1⁰, [LH_C _lh_flatten_CCh_0² _lh_flatten_arg4⁰([False])])
+//│ 								| _  => error⁰}
+//│ 							| _  => error⁰}}}
+//│ 				| _  => case _lh_flatten_arg2⁰ of {
+//│ 					True  => case _lh_flatten_arg3⁰ of {
+//│ 						CStr _lh_flatten_CStr_0² => mkIndent_lh_₁(_lh_flatten_arg1⁰, mappend_lh_₁(_lh_flatten_CStr_0², _lh_flatten_arg4⁰([False])))
+//│ 						| _  => case _lh_flatten_arg2⁰ of {
+//│ 							True  => case _lh_flatten_arg3⁰ of {
+//│ 								CCh _lh_flatten_CCh_0³ => mkIndent_lh_₁(_lh_flatten_arg1⁰, [LH_C _lh_flatten_CCh_0³ _lh_flatten_arg4⁰([False])])
+//│ 								| _  => error⁰}
+//│ 							| _  => error⁰}}
+//│ 					| _  => case _lh_flatten_arg2⁰ of {
+//│ 						True  => case _lh_flatten_arg3⁰ of {
+//│ 							CCh _lh_flatten_CCh_0⁴ => mkIndent_lh_₁(_lh_flatten_arg1⁰, [LH_C _lh_flatten_CCh_0⁴ _lh_flatten_arg4⁰([False])])
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}}}}
+//│ 		| _  => case _lh_flatten_arg2⁰ of {
+//│ 			False  => case _lh_flatten_arg3⁰ of {
+//│ 				CCh _lh_flatten_CCh_0⁵ => [LH_C _lh_flatten_CCh_0⁵ _lh_flatten_arg4⁰([False])]
+//│ 				| _  => case _lh_flatten_arg2⁰ of {
+//│ 					True  => case _lh_flatten_arg3⁰ of {
+//│ 						CStr _lh_flatten_CStr_0³ => mkIndent_lh_₁(_lh_flatten_arg1⁰, mappend_lh_₁(_lh_flatten_CStr_0³, _lh_flatten_arg4⁰([False])))
+//│ 						| _  => case _lh_flatten_arg2⁰ of {
+//│ 							True  => case _lh_flatten_arg3⁰ of {
+//│ 								CCh _lh_flatten_CCh_0⁶ => mkIndent_lh_₁(_lh_flatten_arg1⁰, [LH_C _lh_flatten_CCh_0⁶ _lh_flatten_arg4⁰([False])])
+//│ 								| _  => error⁰}
+//│ 							| _  => error⁰}}
+//│ 					| _  => case _lh_flatten_arg2⁰ of {
+//│ 						True  => case _lh_flatten_arg3⁰ of {
+//│ 							CCh _lh_flatten_CCh_0⁷ => mkIndent_lh_₁(_lh_flatten_arg1⁰, [LH_C _lh_flatten_CCh_0⁷ _lh_flatten_arg4⁰([False])])
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}}}
+//│ 			| _  => case _lh_flatten_arg2⁰ of {
+//│ 				True  => case _lh_flatten_arg3⁰ of {
+//│ 					CStr _lh_flatten_CStr_0⁴ => mkIndent_lh_₁(_lh_flatten_arg1⁰, mappend_lh_₁(_lh_flatten_CStr_0⁴, _lh_flatten_arg4⁰([False])))
+//│ 					| _  => case _lh_flatten_arg2⁰ of {
+//│ 						True  => case _lh_flatten_arg3⁰ of {
+//│ 							CCh _lh_flatten_CCh_0⁸ => mkIndent_lh_₁(_lh_flatten_arg1⁰, [LH_C _lh_flatten_CCh_0⁸ _lh_flatten_arg4⁰([False])])
+//│ 							| _  => error⁰}
+//│ 						| _  => error⁰}}
+//│ 				| _  => case _lh_flatten_arg2⁰ of {
+//│ 					True  => case _lh_flatten_arg3⁰ of {
+//│ 						CCh _lh_flatten_CCh_0⁹ => mkIndent_lh_₁(_lh_flatten_arg1⁰, [LH_C _lh_flatten_CCh_0⁹ _lh_flatten_arg4⁰([False])])
+//│ 						| _  => error⁰}
+//│ 					| _  => error⁰}}}}}
+//│ def foldr1_lh_₁(_lh_foldr1_arg1¹, _lh_foldr1_arg2¹) = case _lh_foldr1_arg2¹ of {
+//│ 	LH_C _lh_foldr1_LH_C_0¹ _lh_foldr1_LH_C_1¹ => case _lh_foldr1_LH_C_1¹ of {
+//│ 		LH_N  => _lh_foldr1_LH_C_0¹
+//│ 		| _  => _lh_foldr1_arg1¹(_lh_foldr1_LH_C_0¹, foldr1_lh_₁(_lh_foldr1_arg1¹, _lh_foldr1_LH_C_1¹))}
+//│ 	| _  => error⁰}
+//│ def foldr1_lh_₂(_lh_foldr1_arg1², _lh_foldr1_arg2²) = case _lh_foldr1_arg2² of {
+//│ 	LH_C _lh_foldr1_LH_C_0² _lh_foldr1_LH_C_1² => case _lh_foldr1_LH_C_1² of {
+//│ 		LH_N  => _lh_foldr1_LH_C_0²
+//│ 		| _  => _lh_foldr1_arg1²(_lh_foldr1_LH_C_0², foldr1_lh_₂(_lh_foldr1_arg1², _lh_foldr1_LH_C_1²))}
+//│ 	| _  => error⁰}
+//│ def foldr1_lh_₃(_lh_foldr1_arg1⁰, _lh_foldr1_arg2⁰) = case _lh_foldr1_arg2⁰ of {
+//│ 	LH_C _lh_foldr1_LH_C_0⁰ _lh_foldr1_LH_C_1⁰ => case _lh_foldr1_LH_C_1⁰ of {
+//│ 		LH_N  => _lh_foldr1_LH_C_0⁰
+//│ 		| _  => _lh_foldr1_arg1⁰(_lh_foldr1_LH_C_0⁰, foldr1_lh_₃(_lh_foldr1_arg1⁰, _lh_foldr1_LH_C_1⁰))}
+//│ 	| _  => error⁰}
+//│ def length_lh_₁(ls⁵) = case ls⁵ of {
+//│ 	LH_C h² t² => (1 + length_lh_₁(t²))
+//│ 	| LH_N  => 0}
+//│ def length_lh_₂(ls⁸) = case ls⁸ of {
+//│ 	LH_C h⁴ t⁴ => (1 + length_lh_₂(t⁴))
+//│ 	| LH_N  => 0}
+//│ def length_lh_₃(ls⁶) = case ls⁶ of {
+//│ 	LH_C h³ t³ => (1 + length_lh_₃(t³))
+//│ 	| LH_N  => 0}
+//│ def length_lh_₄(ls⁴) = case ls⁴ of {
+//│ 	LH_C h¹ t¹ => (1 + length_lh_₄(t¹))
+//│ 	| LH_N  => 0}
+//│ def mappend_lh_₁(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	LH_C h⁰ t⁰ => [LH_C h⁰ mappend_lh_₁(t⁰, ys⁰)]
+//│ 	| LH_N  => ys⁰}
+//│ def mkIndent_lh_₁(_lh_mkIndent_arg1⁰, _lh_mkIndent_arg2⁰) = case _lh_mkIndent_arg1⁰ of {
+//│ 	0  => _lh_mkIndent_arg2⁰
+//│ 	| _  => if (_lh_mkIndent_arg1⁰ >= 8) then [LH_C '|' mkIndent_lh_₁((_lh_mkIndent_arg1⁰ - 8), _lh_mkIndent_arg2⁰)] else [LH_C ' ' mkIndent_lh_₁((_lh_mkIndent_arg1⁰ - 1), _lh_mkIndent_arg2⁰)]}
+//│ def orL_lh_₁(_lh_orL_arg1¹, _lh_orL_arg2¹) = case _lh_orL_arg1¹ of {
+//│ 	True  => [True]
+//│ 	| False  => _lh_orL_arg2¹
+//│ 	| _  => error⁰}
+//│ def orL_lh_₂(_lh_orL_arg1⁰, _lh_orL_arg2⁰) = case _lh_orL_arg1⁰ of {
+//│ 	True  => [True]
+//│ 	| False  => _lh_orL_arg2⁰
+//│ 	| _  => error⁰}
+//│ def pp'SP_lh_₁(_lh_pp'SP_arg1⁰) = ppStr_lh_₄([LH_C ',' [LH_C ' ' [LH_N]]], _lh_pp'SP_arg1⁰)
+//│ def ppAbove_lh_₁(_lh_ppAbove_arg1⁰, _lh_ppAbove_arg2⁰, _lh_ppAbove_arg3⁰, _lh_ppAbove_arg4⁰) = 
+//│ 	let _lh_matchIdent² = _lh_ppAbove_arg1⁰(_lh_ppAbove_arg3⁰, [True])
+//│ 	in case _lh_matchIdent² of {
+//│ 		MkPrettyRep _lh_ppAbove_MkPrettyRep_0⁰ _lh_ppAbove_MkPrettyRep_1⁰ _lh_ppAbove_MkPrettyRep_2⁰ _lh_ppAbove_MkPrettyRep_3⁰ => 
+//│ 			let _lh_matchIdent³ = _lh_ppAbove_arg2⁰(_lh_ppAbove_arg3⁰, [True])
+//│ 			in case _lh_matchIdent³ of {
+//│ 				MkPrettyRep _lh_ppAbove_MkPrettyRep_0¹ _lh_ppAbove_MkPrettyRep_1¹ _lh_ppAbove_MkPrettyRep_2¹ _lh_ppAbove_MkPrettyRep_3¹ => 
+//│ 					let nl⁰ = if orL_lh_₂(_lh_ppAbove_MkPrettyRep_2⁰, _lh_ppAbove_MkPrettyRep_2¹) then cNil_lh_₃ else cNL_lh_₁
+//│ 					in [MkPrettyRep cAppend_lh_₇(_lh_ppAbove_MkPrettyRep_0⁰, cAppend_lh_₇(nl⁰, _lh_ppAbove_MkPrettyRep_0¹)) _lh_ppAbove_MkPrettyRep_1¹ andL_lh_₇(_lh_ppAbove_MkPrettyRep_2⁰, _lh_ppAbove_MkPrettyRep_2¹) [False]]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ def ppAboves_lh_₁(_lh_ppAboves_arg1⁰) = case _lh_ppAboves_arg1⁰ of {
+//│ 	LH_N  => ppNil_lh_₃
+//│ 	| _  => foldr1_lh_₃(ppAbove_lh_₁, _lh_ppAboves_arg1⁰)}
+//│ def ppBesideSP_lh_₁(_lh_ppBesideSP_arg1⁰, _lh_ppBesideSP_arg2⁰, _lh_ppBesideSP_arg3⁰, _lh_ppBesideSP_arg4⁰) = 
+//│ 	let _lh_matchIdent⁸ = _lh_ppBesideSP_arg1⁰(_lh_ppBesideSP_arg3⁰, [False])
+//│ 	in case _lh_matchIdent⁸ of {
+//│ 		MkPrettyRep _lh_ppBesideSP_MkPrettyRep_0⁰ _lh_ppBesideSP_MkPrettyRep_1⁰ _lh_ppBesideSP_MkPrettyRep_2⁰ _lh_ppBesideSP_MkPrettyRep_3⁰ => 
+//│ 			let li⁰ = if _lh_ppBesideSP_MkPrettyRep_2⁰ then 0 else (_lh_ppBesideSP_MkPrettyRep_1⁰ + 1)
+//│ 			in let _lh_matchIdent⁹ = _lh_ppBesideSP_arg2⁰((_lh_ppBesideSP_arg3⁰ - li⁰), [False])
+//│ 			in case _lh_matchIdent⁹ of {
+//│ 				MkPrettyRep _lh_ppBesideSP_MkPrettyRep_0¹ _lh_ppBesideSP_MkPrettyRep_1¹ _lh_ppBesideSP_MkPrettyRep_2¹ _lh_ppBesideSP_MkPrettyRep_3¹ => 
+//│ 					let wi⁰ = if _lh_ppBesideSP_MkPrettyRep_2⁰ then 0 else 1
+//│ 					in let sp⁰ = if orL_lh_₂(_lh_ppBesideSP_MkPrettyRep_2⁰, _lh_ppBesideSP_MkPrettyRep_2¹) then cNil_lh_₃ else cCh_lh_₃(' ')
+//│ 					in [MkPrettyRep cAppend_lh_₆(_lh_ppBesideSP_MkPrettyRep_0⁰, cAppend_lh_₇(sp⁰, cIndent_lh_₄(li⁰, _lh_ppBesideSP_MkPrettyRep_0¹))) (li⁰ + _lh_ppBesideSP_MkPrettyRep_1¹) andL_lh_₇(_lh_ppBesideSP_MkPrettyRep_2⁰, _lh_ppBesideSP_MkPrettyRep_2¹) andL_lh_₅((_lh_ppBesideSP_arg3⁰ >= wi⁰), andL_lh_₆(_lh_ppBesideSP_MkPrettyRep_3⁰, _lh_ppBesideSP_MkPrettyRep_3¹))]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ def ppBeside_lh_₁(_lh_ppBeside_arg1⁰, _lh_ppBeside_arg2⁰, _lh_ppBeside_arg3⁰, _lh_ppBeside_arg4⁰) = 
+//│ 	let _lh_matchIdent⁶ = _lh_ppBeside_arg1⁰(_lh_ppBeside_arg3⁰, [False])
+//│ 	in case _lh_matchIdent⁶ of {
+//│ 		MkPrettyRep _lh_ppBeside_MkPrettyRep_0⁰ _lh_ppBeside_MkPrettyRep_1⁰ _lh_ppBeside_MkPrettyRep_2⁰ _lh_ppBeside_MkPrettyRep_3⁰ => 
+//│ 			let _lh_matchIdent⁷ = _lh_ppBeside_arg2⁰((_lh_ppBeside_arg3⁰ - _lh_ppBeside_MkPrettyRep_1⁰), [False])
+//│ 			in case _lh_matchIdent⁷ of {
+//│ 				MkPrettyRep _lh_ppBeside_MkPrettyRep_0¹ _lh_ppBeside_MkPrettyRep_1¹ _lh_ppBeside_MkPrettyRep_2¹ _lh_ppBeside_MkPrettyRep_3¹ => [MkPrettyRep cAppend_lh_₅(_lh_ppBeside_MkPrettyRep_0⁰, cIndent_lh_₃(_lh_ppBeside_MkPrettyRep_1⁰, _lh_ppBeside_MkPrettyRep_0¹)) (_lh_ppBeside_MkPrettyRep_1⁰ + _lh_ppBeside_MkPrettyRep_1¹) andL_lh_₂(_lh_ppBeside_MkPrettyRep_2⁰, _lh_ppBeside_MkPrettyRep_2¹) andL_lh_₃((_lh_ppBeside_arg3⁰ >= 0), andL_lh_₄(_lh_ppBeside_MkPrettyRep_3⁰, _lh_ppBeside_MkPrettyRep_3¹))]
+//│ 				| _  => error⁰}
+//│ 		| _  => error⁰}
+//│ def ppBesides_lh_₁(_lh_ppBesides_arg1⁰) = case _lh_ppBesides_arg1⁰ of {
+//│ 	LH_N  => ppNil_lh_₁
+//│ 	| _  => foldr1_lh_₁(ppBeside_lh_₁, _lh_ppBesides_arg1⁰)}
+//│ def ppCat_lh_₁(_lh_ppCat_arg1⁰) = case _lh_ppCat_arg1⁰ of {
+//│ 	LH_N  => ppNil_lh_₂
+//│ 	| _  => foldr1_lh_₂(ppBesideSP_lh_₁, _lh_ppCat_arg1⁰)}
+//│ def ppChar_lh_₁(_lh_ppChar_arg1⁰, _lh_ppChar_arg2⁰, _lh_ppChar_arg3⁰) = [MkPrettyRep cCh_lh_₁(_lh_ppChar_arg1⁰) 1 [False] (_lh_ppChar_arg2⁰ >= 1)]
+//│ def ppHang_lh_₁(_lh_ppHang_arg1⁰, _lh_ppHang_arg2¹, _lh_ppHang_arg3¹, _lh_ppHang_arg4², _lh_ppHang_arg5²) = 
+//│ 	let _lh_matchIdent⁵ = _lh_ppHang_arg1⁰(_lh_ppHang_arg4², [False])
+//│ 	in _lh_matchIdent⁵(_lh_ppHang_arg2¹, _lh_ppHang_arg3¹, _lh_ppHang_arg4², _lh_ppHang_arg5²)
+//│ def ppInt_lh_₁(_lh_ppInt_arg1⁰) = ppStr_lh_₅(string_of_int⁰(_lh_ppInt_arg1⁰))
+//│ def ppNil_lh_₁(_lh_ppNil_arg1¹, _lh_ppNil_arg2¹) = [MkPrettyRep cNil_lh_₁ 0 [True] (_lh_ppNil_arg1¹ >= 0)]
+//│ def ppNil_lh_₂(_lh_ppNil_arg1⁰, _lh_ppNil_arg2⁰) = [MkPrettyRep cNil_lh_₂ 0 [True] (_lh_ppNil_arg1⁰ >= 0)]
+//│ def ppNil_lh_₃(_lh_ppNil_arg1², _lh_ppNil_arg2²) = [MkPrettyRep cNil_lh_₃ 0 [True] (_lh_ppNil_arg1² >= 0)]
+//│ def ppShow_lh_₁(_lh_ppShow_arg1⁰, _lh_ppShow_arg2⁰) = 
+//│ 	let _lh_matchIdent¹⁰ = _lh_ppShow_arg2⁰(_lh_ppShow_arg1⁰, [False])
+//│ 	in case _lh_matchIdent¹⁰ of {
+//│ 		MkPrettyRep _lh_ppShow_MkPrettyRep_0⁰ _lh_ppShow_MkPrettyRep_1⁰ _lh_ppShow_MkPrettyRep_2⁰ _lh_ppShow_MkPrettyRep_3⁰ => cShow_lh_₁(_lh_ppShow_MkPrettyRep_0⁰)
+//│ 		| _  => error⁰}
+//│ def ppStr_lh_₁(_lh_ppStr_arg1¹, _lh_ppStr_arg2¹, _lh_ppStr_arg3¹) = 
+//│ 	let ls¹ = length_lh_₁(_lh_ppStr_arg1¹)
+//│ 	in [MkPrettyRep cStr_lh_₁(_lh_ppStr_arg1¹) ls¹ [False] (_lh_ppStr_arg2¹ >= ls¹)]
+//│ def ppStr_lh_₂(_lh_ppStr_arg1³, _lh_ppStr_arg2³, _lh_ppStr_arg3³) = 
+//│ 	let ls³ = length_lh_₂(_lh_ppStr_arg1³)
+//│ 	in [MkPrettyRep cStr_lh_₂(_lh_ppStr_arg1³) ls³ [False] (_lh_ppStr_arg2³ >= ls³)]
+//│ def ppStr_lh_₃(_lh_ppStr_arg1², _lh_ppStr_arg2², _lh_ppStr_arg3²) = 
+//│ 	let ls² = length_lh_₃(_lh_ppStr_arg1²)
+//│ 	in let _lh_ppHang_MkPrettyRep_3⁰ = (_lh_ppStr_arg2² >= ls²)
+//│ 	in let _lh_ppHang_MkPrettyRep_2⁰ = [False]
+//│ 	in let _lh_ppHang_MkPrettyRep_1⁰ = ls²
+//│ 	in let _lh_ppHang_MkPrettyRep_0⁰ = cStr_lh_₃(_lh_ppStr_arg1²)
+//│ 	in (fun _lh_ppHang_arg2⁰ -> (fun _lh_ppHang_arg3⁰ -> (fun _lh_ppHang_arg4⁰ -> (fun _lh_ppHang_arg5⁰ -> 
+//│ 		let _lh_matchIdent⁰ = _lh_ppHang_arg3⁰((_lh_ppHang_arg4⁰ - (_lh_ppHang_MkPrettyRep_1⁰ + 1)), [False])
+//│ 		in case _lh_matchIdent⁰ of {
+//│ 			MkPrettyRep _lh_ppHang_MkPrettyRep_0¹ _lh_ppHang_MkPrettyRep_1¹ _lh_ppHang_MkPrettyRep_2¹ _lh_ppHang_MkPrettyRep_3¹ => 
+//│ 				let _lh_matchIdent¹ = _lh_ppHang_arg3⁰((_lh_ppHang_arg4⁰ - _lh_ppHang_arg2⁰), [False])
+//│ 				in case _lh_matchIdent¹ of {
+//│ 					MkPrettyRep _lh_ppHang_MkPrettyRep_0² _lh_ppHang_MkPrettyRep_1² _lh_ppHang_MkPrettyRep_2² _lh_ppHang_MkPrettyRep_3² => if _lh_ppHang_MkPrettyRep_2⁰ then _lh_ppHang_arg3⁰(_lh_ppHang_arg4⁰, _lh_ppHang_arg5⁰) else if orL_lh_₁((_lh_ppHang_MkPrettyRep_1⁰ <= _lh_ppHang_arg2⁰), _lh_ppHang_MkPrettyRep_3¹) then [MkPrettyRep cAppend_lh_₃(cAppend_lh_₁(_lh_ppHang_MkPrettyRep_0⁰, cCh_lh_₂(' ')), cIndent_lh_₂((_lh_ppHang_MkPrettyRep_1⁰ + 1), _lh_ppHang_MkPrettyRep_0¹)) ((_lh_ppHang_MkPrettyRep_1⁰ + 1) + _lh_ppHang_MkPrettyRep_1¹) [False] andL_lh_₁(_lh_ppHang_MkPrettyRep_3⁰, _lh_ppHang_MkPrettyRep_3¹)] else [MkPrettyRep cAppend_lh_₂(_lh_ppHang_MkPrettyRep_0⁰, cAppend_lh_₄(cNL_lh_₁, cIndent_lh_₁(_lh_ppHang_arg2⁰, _lh_ppHang_MkPrettyRep_0²))) _lh_ppHang_MkPrettyRep_1² [False] [False]]
+//│ 					| _  => error⁰}
+//│ 			| _  => error⁰}))))
+//│ def ppStr_lh_₄(_lh_ppStr_arg1⁴, _lh_ppStr_arg2⁴, _lh_ppStr_arg3⁴) = 
+//│ 	let ls⁷ = length_lh_₄(_lh_ppStr_arg1⁴)
+//│ 	in [MkPrettyRep cStr_lh_₄(_lh_ppStr_arg1⁴) ls⁷ [False] (_lh_ppStr_arg2⁴ >= ls⁷)]
+//│ def ppStr_lh_₅(_lh_ppStr_arg1⁰, _lh_ppStr_arg2⁰, _lh_ppStr_arg3⁰) = 
+//│ 	let ls⁰ = length_lh_₄(_lh_ppStr_arg1⁰)
+//│ 	in [MkPrettyRep cStr_lh_₄(_lh_ppStr_arg1⁰) ls⁰ [False] (_lh_ppStr_arg2⁰ >= ls⁰)]
+//│ def testPretty_nofib_lh_₁(_lh_testPretty_nofib_arg1⁰) = 
+//│ 	let pretty_stuff⁰ = ppAboves_lh_₁([LH_C ppBesides_lh_₁([LH_C ppInt_lh_₁((0 - 42)) [LH_C ppChar_lh_₁('@') [LH_C ppStr_lh_₂([LH_C 'T' [LH_C 'h' [LH_C 'i' [LH_C 's' [LH_C ' ' [LH_C 'i' [LH_C 's' [LH_C ' ' [LH_C 'a' [LH_C ' ' [LH_C 's' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_N]]]]]]]]]]]]]]]]]) [LH_N]]]]) [LH_C pp'SP_lh_₁ [LH_C (fun _lh_ppHang_arg4¹ -> (fun _lh_ppHang_arg5¹ -> 
+//│ 		let _lh_matchIdent⁴ = ppStr_lh_₃([LH_C 'T' [LH_C 'h' [LH_C 'i' [LH_C 's' [LH_C ' ' [LH_C 'i' [LH_C 's' [LH_C ' ' [LH_C 't' [LH_C 'h' [LH_C 'e' [LH_C ' ' [LH_C 'l' [LH_C 'a' [LH_C 'b' [LH_C 'e' [LH_C 'l' [LH_N]]]]]]]]]]]]]]]]]], _lh_ppHang_arg4¹, [False])
+//│ 		in _lh_matchIdent⁴(8, ppCat_lh_₁(copy_lh_₁(50, ppStr_lh_₁([LH_C 'x' [LH_C 'x' [LH_C 'x' [LH_C 'x' [LH_C 'x' [LH_N]]]]]]))), _lh_ppHang_arg4¹, _lh_ppHang_arg5¹))) [LH_N]]]])
+//│ 	in mappend_lh_₁(ppShow_lh_₁(80, pretty_stuff⁰), [LH_C '|' [LH_N]])
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
 //│ benchmark file generated
 //│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

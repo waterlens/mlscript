@@ -127,6 +127,65 @@ class DiffTestLumberhack extends DiffTests {
       
       // d.resolveConstraints
       val iterativeProcessRes = keepFuse(originalProgram, d, mode, evaluate, output)
+
+      val (inlineSomeFunctions, floatingOutSomeLamdbas) = {
+        val newP = iterativeProcessRes._1
+        given newD: Deforest = iterativeProcessRes._2
+        val fusionStrategy = iterativeProcessRes._4
+        
+        output("\n>>>>>>> consumer ids >>>>>>>")
+        val consumers = fusionStrategy.finallyFilteredStrategies._2.keySet.flatMap(consumer => d.exprs(consumer.euid).inDef.map(_.tree.name))
+        import mlscript.utils.shorthands.Tuple2Helper
+        val callGraph_ = newD.callsInfo._2.map(_.mapSecond(_.map(_.id))).toMap
+        val callGraph = newD.callsInfo._2.map { case (k, s) => k.tree.name -> s.map(_.id.tree.name) }.toMap
+        if (callGraph_.size != callGraph.size) then ??? else ()
+        val nonRecursiveConsumers = consumers.filter { case cons =>
+          def detectRecursive(c: String, cache: Set[String]): Boolean = {
+            val callees = callGraph(c).intersect(consumers)
+            if cache.intersect(callees).nonEmpty then
+              false
+            else
+              callees.forall(callee => detectRecursive(callee, cache ++ callees))
+          }
+          if !detectRecursive(cons, Set(cons)) then
+            output(s"recursive consumer: ${cons}")
+            false
+          else
+            true
+        }
+        output(nonRecursiveConsumers.mkString(", "))
+        output("<<<<<<< consumer ids <<<<<<<")
+
+        // output(">>>>>>> prdocuer ids >>>>>>>")
+        val producers = fusionStrategy.finallyFilteredStrategies._1.keySet.flatMap(producer => d.exprs(producer.euid).inDef.map(_.tree.name))
+        val floatingOutCandidates = producers -- consumers
+
+        // output("producers: " + producers.mkString(", "))
+        // output("real_producers: " + real_producers.mkString(", "))
+        // output("<<<<<<< prdocuer ids <<<<<<<")
+
+        val inlinedP = newP.inlineSomeFunctions(using nonRecursiveConsumers)
+
+        val floatingOutStats = inlinedP.handleFloatingOutCandidates(floatingOutCandidates)
+
+        output("\n>>>>>>> floating out info >>>>>>>")
+        output(floatingOutStats.map { case (id, arity) =>
+          s"${id.pp(using InitPpConfig)} -> $arity"
+        }.mkString("\n"))
+        output("<<<<<<< floating out info <<<<<<<")
+
+        val res = (inlinedP, inlinedP.floatOutSomeLambdas(floatingOutStats)._1)
+
+        output("\n>>>>>>> after inlining >>>>>>>")
+        output(inlinedP.pp(using InitPpConfig.multilineOn.showIuidOn))
+        output("<<<<<<< after inlining <<<<<<<")
+        
+        output("\n>>>>>>> after floating out >>>>>>>")
+        output(res._2.pp(using InitPpConfig.multilineOn.showIuidOn))
+        output("<<<<<<< after floating out <<<<<<<")
+
+        res
+      }
       
       if evaluate then {
         if !iterativeProcessRes._3.get.forall(
@@ -180,6 +239,8 @@ class DiffTestLumberhack extends DiffTests {
             (if mode.lhInHaskell then Some("lumberhack_only_expanded" -> originalProgram) else None) ::
             Some("lumberhack" -> iterativeProcessRes._1.deadCodeToMagic) :: 
             Some("lumberhack_pop_out" -> iterativeProcessRes._1.deadCodeToMagic.popOutLambdas(using mode.lhLessExpansion)._1) ::
+            Some("lumberhack_inlined" -> inlineSomeFunctions) ::
+            Some("lumberhack_flo_out" -> floatingOutSomeLamdbas) ::
             Nil
           ).flatten)
           output("benchmark file generated")
@@ -250,7 +311,7 @@ class DiffTestLumberhack extends DiffTests {
     output: Str => Unit,
     count: Int = 0,
     evalRess: Option[List[List[Expr]]] = Some(Nil),
-  ): (Program, Deforest, Option[List[List[Expr]]]) = {
+  ): (Program, Deforest, Option[List[List[Expr]]], FusionStrategy) = {
     val buf = Buffer.empty[String]
     val _output = if mode.stdout || mode.verbose || count == 0 then output else { (str: String) => buf.append(str); () }
 
@@ -261,8 +322,9 @@ class DiffTestLumberhack extends DiffTests {
         val res = expander(using p, d, mode, _output)
         res._2(res._1) // need to apply the deforest object once before resolving constraints
         res
-    val (fusedP, fusedD, stop, evalRes) = fuser(using expandedP, expandedD, callTree, mode, evaluate, _output)
-    
+    val (fusedP, fusedD, strategies, evalRes) = fuser(using expandedP, expandedD, callTree, mode, evaluate, _output)
+    val stop = strategies.finallyFilteredStrategies._1.isEmpty
+
     if count > 0 && !stop then
       output("\n~~~~~~~~~~~~~~~~~~~~~~~ NEXT ITERATION ~~~~~~~~~~~~~~~~~~~~~~~"); output(buf.mkString("\n"))
     
@@ -271,9 +333,9 @@ class DiffTestLumberhack extends DiffTests {
 
     val newEvalRess = evalRes.flatMap(r => evalRess.map(rs => r :: rs))
     if stop then
-      if count > 0 then (p, d, evalRess) else (fusedP, fusedD, newEvalRess)
+      if count > 0 then (p, d, evalRess, strategies) else (fusedP, fusedD, newEvalRess, strategies)
     else if count > 10 || mode.lhNoIter || true then
-      (fusedP, fusedD, newEvalRess)
+      (fusedP, fusedD, newEvalRess, strategies)
     else
       keepFuse(fusedP, fusedD, mode, evaluate, output, count + 1, newEvalRess)
   }
@@ -358,7 +420,7 @@ class DiffTestLumberhack extends DiffTests {
     mode: ModeType,
     evaluate: Boolean,
     output: Str => Unit
-  ): (Program, Deforest, Boolean, Option[List[Expr]]) = {
+  ): (Program, Deforest, FusionStrategy, Option[List[Expr]]) = {
     // d.resolveConstraintsImmutableCache
     d.resolveConstraints
 
@@ -433,7 +495,8 @@ class DiffTestLumberhack extends DiffTests {
     }
     newD(newP)
     // newD.resolveConstraints
-    (newP, newD, fusionStrategy.finallyFilteredStrategies._1.isEmpty, evaluatedExpr) // if is empty, stop the iterative process
+
+    (newP, newD, fusionStrategy, evaluatedExpr) // if is empty, stop the iterative process
   }
 
 }

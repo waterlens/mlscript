@@ -74,6 +74,42 @@ c(p(0))
 //│ 	in f(temp¹)
 //│ 	temp¹
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ c(p(0))
+//│ def c(xx⁰) = case xx⁰ of {
+//│ 	C aa⁰ => primitive⁰(aa⁰)
+//│ 	| N  => [N]}
+//│ def f(z⁰) = case z⁰ of {
+//│ 	C b⁰ => b⁰
+//│ 	| N  => 1}
+//│ def p(x⁰) = if (x⁰ == 0) then [N] else if (x⁰ >= 2) then [C p((x⁰ - 1))] else 
+//│ 	let temp⁰ = [C p((x⁰ + 1))]
+//│ 	in f(temp⁰)
+//│ 	temp⁰
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ c(p(0))
+//│ def c(xx⁰) = case xx⁰ of {
+//│ 	C aa⁰ => primitive⁰(aa⁰)
+//│ 	| N  => [N]}
+//│ def f(z⁰) = case z⁰ of {
+//│ 	C b⁰ => b⁰
+//│ 	| N  => 1}
+//│ def p(x⁰) = if (x⁰ == 0) then [N] else if (x⁰ >= 2) then [C p((x⁰ - 1))] else 
+//│ 	let temp⁰ = [C p((x⁰ + 1))]
+//│ 	in f(temp⁰)
+//│ 	temp⁰
+//│ <<<<<<< after floating out <<<<<<<
 
 // WRONG:
 fun last(ls) = if ls is
@@ -127,4 +163,30 @@ last(C(A, C(B, N)))
 //│ 		| N  => [Some h⁰]}
 //│ 	| N  => [None]}
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ last([C [A] [C [B] [N]]])
+//│ def last(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => case t⁰ of {
+//│ 		C hh⁰ tt⁰ => [Some last(t⁰)]
+//│ 		| N  => [Some h⁰]}
+//│ 	| N  => [None]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ last([C [A] [C [B] [N]]])
+//│ def last(ls⁰) = case ls⁰ of {
+//│ 	C h⁰ t⁰ => case t⁰ of {
+//│ 		C hh⁰ tt⁰ => [Some last(t⁰)]
+//│ 		| N  => [Some h⁰]}
+//│ 	| N  => [None]}
+//│ <<<<<<< after floating out <<<<<<<
 

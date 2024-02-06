@@ -166,6 +166,66 @@ concatMap(ok1, C(P2(5, 10), N))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C [P2 5 1] [C [P2 5 2] [C [P2 5 5] [N]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ concatMap
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ ok1 -> 0
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let t⁰ = (fun f⁰ -> [N])
+//│ 	in let h⁰ = [P2 5 10]
+//│ 	in (fun f¹ -> append(f¹(h⁰), t⁰(f¹)))(ok1)
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h¹ t¹ => [C h¹ append(t¹, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def concatMap(f², ls⁰) = ls⁰(f²)
+//│ def ok1(arg1⁰) = case arg1⁰ of {
+//│ 	P2 a⁰ b⁰ => 
+//│ 		let ok2⁰ = (fun arg2⁰ -> case arg2⁰ of {
+//│ 			P2 c⁰ b¹ => [C [P2 a⁰ c⁰] [N]]
+//│ 			| _  => [N]})
+//│ 		in let t² = 	
+//│ 				let t³ = 	
+//│ 					let t⁴ = (fun f³ -> [N])
+//│ 					in let h² = [P2 a⁰ b⁰]
+//│ 					in (fun f⁴ -> append(f⁴(h²), t⁴(f⁴)))
+//│ 				in let h³ = [P2 2 3]
+//│ 				in (fun f⁵ -> append(f⁵(h³), t³(f⁵)))
+//│ 			in let h⁴ = [P2 1 3]
+//│ 			in (fun f⁶ -> append(f⁶(h⁴), t²(f⁶)))(ok2⁰)
+//│ 	| _  => [N]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let t⁰ = (fun f⁰ -> [N])
+//│ 	in let h⁰ = [P2 5 10]
+//│ 	in (fun f¹ -> append(f¹(h⁰), t⁰(f¹)))(ok1)
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h¹ t¹ => [C h¹ append(t¹, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def concatMap(f², ls⁰) = ls⁰(f²)
+//│ def ok1(arg1⁰) = case arg1⁰ of {
+//│ 	P2 a⁰ b⁰ => 
+//│ 		let ok2⁰ = (fun arg2⁰ -> case arg2⁰ of {
+//│ 			P2 c⁰ b¹ => [C [P2 a⁰ c⁰] [N]]
+//│ 			| _  => [N]})
+//│ 		in let t² = 	
+//│ 				let t³ = 	
+//│ 					let t⁴ = (fun f³ -> [N])
+//│ 					in let h² = [P2 a⁰ b⁰]
+//│ 					in (fun f⁴ -> append(f⁴(h²), t⁴(f⁴)))
+//│ 				in let h³ = [P2 2 3]
+//│ 				in (fun f⁵ -> append(f⁵(h³), t³(f⁵)))
+//│ 			in let h⁴ = [P2 1 3]
+//│ 			in (fun f⁶ -> append(f⁶(h⁴), t²(f⁶)))(ok2⁰)
+//│ 	| _  => [N]}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // [(x, z) | (x, y1) <- zip [1 .. 3] [2 .. 4], (y2, z) <- zip [x .. x + 2] [y1 .. y1 + 1] , y1 == y2]
@@ -292,6 +352,56 @@ ok1(zip(fromTo(1,3), fromTo(2,4)))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C [P2 1 3] [C [P2 2 4] [C [P2 3 5] [N]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ ok1(zip(fromTo(1, 3), fromTo(2, 4)))
+//│ def fromTo(a⁰, b⁰) = if (a⁰ < (b⁰ + 1)) then [C a⁰ fromTo((a⁰ + 1), b⁰)] else [N]
+//│ def ok1(ls1⁰) = case ls1⁰ of {
+//│ 	C h¹ t¹ => case h¹ of {
+//│ 		P2 x⁰ y1⁰ => 
+//│ 			let ok2⁰ = (fun ls2⁰ -> case ls2⁰ of {
+//│ 				C h2¹ t2¹ => case h2¹ of {
+//│ 					P2 y2⁰ z⁰ => if (y1⁰ == y2⁰) then [C [P2 x⁰ z⁰] ok2⁰(t2¹)] else ok2⁰(t2¹)
+//│ 					| _  => ok2⁰(t2¹)}
+//│ 				| N  => ok1(t¹)})
+//│ 			in ok2⁰(zip(fromTo(x⁰, (x⁰ + 2)), fromTo(y1⁰, (y1⁰ + 1))))
+//│ 		| _  => ok1(t¹)}
+//│ 	| N  => [N]}
+//│ def zip(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => case ys⁰ of {
+//│ 		C h2⁰ t2⁰ => [C [P2 h⁰ h2⁰] zip(t⁰, t2⁰)]
+//│ 		| N  => [N]}
+//│ 	| N  => [N]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ ok1(zip(fromTo(1, 3), fromTo(2, 4)))
+//│ def fromTo(a⁰, b⁰) = if (a⁰ < (b⁰ + 1)) then [C a⁰ fromTo((a⁰ + 1), b⁰)] else [N]
+//│ def ok1(ls1⁰) = case ls1⁰ of {
+//│ 	C h¹ t¹ => case h¹ of {
+//│ 		P2 x⁰ y1⁰ => 
+//│ 			let ok2⁰ = (fun ls2⁰ -> case ls2⁰ of {
+//│ 				C h2¹ t2¹ => case h2¹ of {
+//│ 					P2 y2⁰ z⁰ => if (y1⁰ == y2⁰) then [C [P2 x⁰ z⁰] ok2⁰(t2¹)] else ok2⁰(t2¹)
+//│ 					| _  => ok2⁰(t2¹)}
+//│ 				| N  => ok1(t¹)})
+//│ 			in ok2⁰(zip(fromTo(x⁰, (x⁰ + 2)), fromTo(y1⁰, (y1⁰ + 1))))
+//│ 		| _  => ok1(t¹)}
+//│ 	| N  => [N]}
+//│ def zip(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => case ys⁰ of {
+//│ 		C h2⁰ t2⁰ => [C [P2 h⁰ h2⁰] zip(t⁰, t2⁰)]
+//│ 		| N  => [N]}
+//│ 	| N  => [N]}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // NOTE: what if we lift the inner mutual recursive lambdas out?
@@ -389,6 +499,50 @@ go1(C(1, C(2, N)), C(3, C(4, N)))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C [P2 1 3] [C [P2 1 4] [N]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ go1, go2
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let t1⁰ = 	
+//│ 		let t1¹ = (fun ls2⁰ -> [N])
+//│ 		in let h1⁰ = 2
+//│ 		in (fun ls2¹ -> ls2¹(h1⁰, t1¹, ls2¹))
+//│ 	in let h1¹ = 1
+//│ 	in (fun ls2² -> ls2²(h1¹, t1⁰, ls2²))(
+//│ 	let t2⁰ = 	
+//│ 		let t2¹ = (fun h1² -> (fun t1² -> (fun ls2³ -> t1²(ls2³))))
+//│ 		in let h2⁰ = 4
+//│ 		in (fun h1³ -> (fun t1³ -> (fun ls2⁴ -> [C [P2 h1³ h2⁰] t2¹(h1³, t1³, t2¹)])))
+//│ 	in let h2¹ = 3
+//│ 	in (fun h1⁴ -> (fun t1⁴ -> (fun ls2⁵ -> [C [P2 h1⁴ h2¹] t2⁰(h1⁴, t1⁴, t2⁰)]))))
+//│ def go1(ls1⁰, ls2⁶) = ls1⁰(ls2⁶)
+//│ def go2(ls2⁷, h1⁵, t1⁵) = ls2⁷(h1⁵, t1⁵, ls2⁷)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let t1⁰ = 	
+//│ 		let t1¹ = (fun ls2⁰ -> [N])
+//│ 		in let h1⁰ = 2
+//│ 		in (fun ls2¹ -> ls2¹(h1⁰, t1¹, ls2¹))
+//│ 	in let h1¹ = 1
+//│ 	in (fun ls2² -> ls2²(h1¹, t1⁰, ls2²))(
+//│ 	let t2⁰ = 	
+//│ 		let t2¹ = (fun h1² -> (fun t1² -> (fun ls2³ -> t1²(ls2³))))
+//│ 		in let h2⁰ = 4
+//│ 		in (fun h1³ -> (fun t1³ -> (fun ls2⁴ -> [C [P2 h1³ h2⁰] t2¹(h1³, t1³, t2¹)])))
+//│ 	in let h2¹ = 3
+//│ 	in (fun h1⁴ -> (fun t1⁴ -> (fun ls2⁵ -> [C [P2 h1⁴ h2¹] t2⁰(h1⁴, t1⁴, t2⁰)]))))
+//│ def go1(ls1⁰, ls2⁶) = ls1⁰(ls2⁶)
+//│ def go2(ls2⁷, h1⁵, t1⁵) = ls2⁷(h1⁵, t1⁵, ls2⁷)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // [(x, y) | x <- [1, 2], y <- [3, 4]]
@@ -475,3 +629,39 @@ go1(C(1, C(2, N)), C(3, C(4, N)))
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C [P2 1 3] [C [P2 1 4] [N]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ go1
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ 	let t1⁰ = 	
+//│ 		let t1¹ = (fun ls2⁰ -> [N])
+//│ 		in let h1⁰ = 2
+//│ 		in (fun ls2¹ -> go2(ls2¹, h1⁰, t1¹))
+//│ 	in let h1¹ = 1
+//│ 	in (fun ls2² -> go2(ls2², h1¹, t1⁰))([C 3 [C 4 [N]]])
+//│ def go1(ls1⁰, ls2³) = ls1⁰(ls2³)
+//│ def go2(ls2⁴, h1², t1²) = case ls2⁴ of {
+//│ 	C h2⁰ t2⁰ => [C [P2 h1² h2⁰] go2(t2⁰, h1², t1²)]
+//│ 	| N  => t1²([N])}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ 	let t1⁰ = 	
+//│ 		let t1¹ = (fun ls2⁰ -> [N])
+//│ 		in let h1⁰ = 2
+//│ 		in (fun ls2¹ -> go2(ls2¹, h1⁰, t1¹))
+//│ 	in let h1¹ = 1
+//│ 	in (fun ls2² -> go2(ls2², h1¹, t1⁰))([C 3 [C 4 [N]]])
+//│ def go1(ls1⁰, ls2³) = ls1⁰(ls2³)
+//│ def go2(ls2⁴, h1², t1²) = case ls2⁴ of {
+//│ 	C h2⁰ t2⁰ => [C [P2 h1² h2⁰] go2(t2⁰, h1², t1²)]
+//│ 	| N  => t1²([N])}
+//│ <<<<<<< after floating out <<<<<<<

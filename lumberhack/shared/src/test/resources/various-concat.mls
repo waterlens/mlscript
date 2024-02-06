@@ -54,6 +54,30 @@ appendThree(
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ appendThree(primId⁰([C 1 [C 2 [N]]]), primId⁰([C 3 [C 4 [N]]]), primId⁰([C 5 [C 6 [N]]]))
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def appendThree(xs¹, ys¹, zs⁰) = append(append(xs¹, ys¹), zs⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ appendThree(primId⁰([C 1 [C 2 [N]]]), primId⁰([C 3 [C 4 [N]]]), primId⁰([C 5 [C 6 [N]]]))
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def appendThree(xs¹, ys¹, zs⁰) = append(append(xs¹, ys¹), zs⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 // original append, duplicated append
 _LUMBERHACK_EVAL
@@ -116,6 +140,36 @@ appendThree(
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ appendThree(primId⁰([C 1 [C 2 [N]]]), primId⁰([C 3 [C 4 [N]]]), primId⁰([C 5 [C 6 [N]]]))
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def append'(xs¹, ys¹) = case xs¹ of {
+//│ 	C h¹ t¹ => [C h¹ append'(t¹, ys¹)]
+//│ 	| N  => ys¹}
+//│ def appendThree(xs², ys², zs⁰) = append(append'(xs², ys²), zs⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ appendThree(primId⁰([C 1 [C 2 [N]]]), primId⁰([C 3 [C 4 [N]]]), primId⁰([C 5 [C 6 [N]]]))
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def append'(xs¹, ys¹) = case xs¹ of {
+//│ 	C h¹ t¹ => [C h¹ append'(t¹, ys¹)]
+//│ 	| N  => ys¹}
+//│ def appendThree(xs², ys², zs⁰) = append(append'(xs², ys²), zs⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 // original append, duplicated append, but the input is `fromTo`
 _LUMBERHACK_EVAL
@@ -192,6 +246,40 @@ main(11, 22)
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 11 [C 12 [C 13 [C 14 [C 15 [C 16 [C 17 [C 18 [C 19 [C 20 [C 21 [C 11 [C 12 [C 13 [C 14 [C 15 [C 16 [C 17 [C 18 [C 19 [C 20 [C 21 [C 11 [C 12 [C 13 [C 14 [C 15 [C 16 [C 17 [C 18 [C 19 [C 20 [C 21 [N]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main(11, 22)
+//│ def append(xs¹, ys¹) = case xs¹ of {
+//│ 	C h¹ t¹ => [C h¹ append(t¹, ys¹)]
+//│ 	| N  => ys¹}
+//│ def append'(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append'(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def appendThree(xs², ys², zs⁰) = append(append'(xs², ys²), zs⁰)
+//│ def fromTo(a¹, b¹) = if (a¹ < b¹) then [C a¹ fromTo((a¹ + 1), b¹)] else [N]
+//│ def main(a⁰, b⁰) = appendThree(fromTo(a⁰, b⁰), fromTo(a⁰, b⁰), fromTo(a⁰, b⁰))
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main(11, 22)
+//│ def append(xs¹, ys¹) = case xs¹ of {
+//│ 	C h¹ t¹ => [C h¹ append(t¹, ys¹)]
+//│ 	| N  => ys¹}
+//│ def append'(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append'(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def appendThree(xs², ys², zs⁰) = append(append'(xs², ys²), zs⁰)
+//│ def fromTo(a¹, b¹) = if (a¹ < b¹) then [C a¹ fromTo((a¹ + 1), b¹)] else [N]
+//│ def main(a⁰, b⁰) = appendThree(fromTo(a⁰, b⁰), fromTo(a⁰, b⁰), fromTo(a⁰, b⁰))
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // append where recursive `idList` is used
@@ -267,6 +355,36 @@ appendThree(
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ appendThree(primId⁰([C 1 [C 2 [N]]]), primId⁰([C 3 [C 4 [N]]]), primId⁰([C 5 [C 6 [N]]]))
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h¹ t¹ => [C h¹ append(t¹, ys⁰)]
+//│ 	| N  => idList(ys⁰)}
+//│ def appendThree(xs¹, ys¹, zs⁰) = append(append(xs¹, ys¹), zs⁰)
+//│ def idList(l⁰) = case l⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ idList(t⁰)]
+//│ 	| N  => [N]}
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ appendThree(primId⁰([C 1 [C 2 [N]]]), primId⁰([C 3 [C 4 [N]]]), primId⁰([C 5 [C 6 [N]]]))
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h¹ t¹ => [C h¹ append(t¹, ys⁰)]
+//│ 	| N  => idList(ys⁰)}
+//│ def appendThree(xs¹, ys¹, zs⁰) = append(append(xs¹, ys¹), zs⁰)
+//│ def idList(l⁰) = case l⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ idList(t⁰)]
+//│ 	| N  => [N]}
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -333,6 +451,36 @@ main(primId(C(
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main(primId⁰([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]))
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def concat(lss⁰) = case lss⁰ of {
+//│ 	C hh⁰ tt⁰ => append(hh⁰, concat(tt⁰))
+//│ 	| N  => [N]}
+//│ def main(xss⁰) = concat(xss⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main(primId⁰([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]))
+//│ def append(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ append(t⁰, ys⁰)]
+//│ 	| N  => ys⁰}
+//│ def concat(lss⁰) = case lss⁰ of {
+//│ 	C hh⁰ tt⁰ => append(hh⁰, concat(tt⁰))
+//│ 	| N  => [N]}
+//│ def main(xss⁰) = concat(xss⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 // optimized concat function by list comprehension, no fusion done
@@ -414,6 +562,46 @@ main(primId(C(
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main(primId⁰([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]))
+//│ def concat(lss⁰) = case lss⁰ of {
+//│ 	C h⁰ t⁰ => case h⁰ of {
+//│ 		xs⁰ => 
+//│ 			let ok2⁰ = (fun args2⁰ -> case args2⁰ of {
+//│ 				C h¹ t¹ => case h¹ of {
+//│ 					x⁰ => [C x⁰ ok2⁰(t¹)]
+//│ 					| _  => ok2⁰(t¹)}
+//│ 				| _  => concat(t⁰)})
+//│ 			in ok2⁰(xs⁰)
+//│ 		| _  => concat(t⁰)}
+//│ 	| _  => [N]}
+//│ def main(xss⁰) = concat(xss⁰)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main(primId⁰([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]))
+//│ def concat(lss⁰) = case lss⁰ of {
+//│ 	C h⁰ t⁰ => case h⁰ of {
+//│ 		xs⁰ => 
+//│ 			let ok2⁰ = (fun args2⁰ -> case args2⁰ of {
+//│ 				C h¹ t¹ => case h¹ of {
+//│ 					x⁰ => [C x⁰ ok2⁰(t¹)]
+//│ 					| _  => ok2⁰(t¹)}
+//│ 				| _  => concat(t⁰)})
+//│ 			in ok2⁰(xs⁰)
+//│ 		| _  => concat(t⁰)}
+//│ 	| _  => [N]}
+//│ def main(xss⁰) = concat(xss⁰)
+//│ <<<<<<< after floating out <<<<<<<
 
 // optimized concat function by taking out the inner lambda, no fusion done
 _LUMBERHACK_EVAL
@@ -478,3 +666,33 @@ main(primId(C(
 //│ >>>>>>> evaluate >>>>>>>
 //│ [C 1 [C 2 [C 3 [C 4 [C 5 [C 6 [N]]]]]]]
 //│ <<<<<<< evaluate <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ main(primId⁰([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]))
+//│ def concat(lss⁰) = case lss⁰ of {
+//│ 	C hh⁰ tt⁰ => concatInner(hh⁰, tt⁰)
+//│ 	| N  => [N]}
+//│ def concatInner(xs⁰, xss⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ concatInner(t⁰, xss⁰)]
+//│ 	| N  => concat(xss⁰)}
+//│ def main(xss¹) = concat(xss¹)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ main(primId⁰([C [C 1 [C 2 [N]]] [C [C 3 [C 4 [N]]] [C [C 5 [C 6 [N]]] [N]]]]))
+//│ def concat(lss⁰) = case lss⁰ of {
+//│ 	C hh⁰ tt⁰ => concatInner(hh⁰, tt⁰)
+//│ 	| N  => [N]}
+//│ def concatInner(xs⁰, xss⁰) = case xs⁰ of {
+//│ 	C h⁰ t⁰ => [C h⁰ concatInner(t⁰, xss⁰)]
+//│ 	| N  => concat(xss⁰)}
+//│ def main(xss¹) = concat(xss¹)
+//│ <<<<<<< after floating out <<<<<<<

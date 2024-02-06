@@ -52,6 +52,32 @@ inter(l1)(l2)
 //│ def l1 = [C 1 [C 2 [N]]]
 //│ def l2 = [N]
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ inter(l1, l2)
+//│ def inter(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}
+//│ def l1 = [C 1 [C 2 [N]]]
+//│ def l2 = [N]
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ inter(l1, l2)
+//│ def inter(xs⁰) = case xs⁰ of {
+//│ 	N  => (fun ys⁰ -> ys⁰)
+//│ 	| C h⁰ t⁰ => (fun ys¹ -> [C h⁰ inter(ys¹, t⁰)])}
+//│ def l1 = [C 1 [C 2 [N]]]
+//│ def l2 = [N]
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -111,6 +137,34 @@ map(l)(
 //│ 	in (fun f² -> [C f²(h¹) map(t¹, f²)])
 //│ def map(ls¹) = ls¹
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ l -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ l((fun x⁰ -> case x⁰ of {
+//│ 	K  => [T]}))
+//│ def l = 
+//│ 	let t⁰ = (fun f⁰ -> [N])
+//│ 	in let h⁰ = [K]
+//│ 	in (fun f¹ -> [C f¹(h⁰) t⁰(f¹)])
+//│ def map(ls⁰) = ls⁰
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ l((fun x⁰ -> case x⁰ of {
+//│ 	K  => [T]}))
+//│ def l(f⁰) = 
+//│ 	let t⁰ = (fun f¹ -> [N])
+//│ 	in let h⁰ = [K]
+//│ 	in [C f⁰(h⁰) t⁰(f⁰)]
+//│ def map(ls⁰) = ls⁰
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -207,6 +261,44 @@ map(l)
 //│ 	in (fun _lh_dummy⁰ -> [C h¹ map(t¹)])
 //│ def map(ls¹) = ls¹(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ l -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ l(99)
+//│ def l = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = (fun _lh_dummy⁰ -> [N])
+//│ 			in let h⁰ = [TTTT]
+//│ 			in (fun _lh_dummy¹ -> [C h⁰ t²(99)])
+//│ 		in let h¹ = [TT]
+//│ 		in (fun _lh_dummy² -> [C h¹ t¹(99)])
+//│ 	in let h² = [T]
+//│ 	in (fun _lh_dummy³ -> [C h² t⁰(99)])
+//│ def map(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ l(99)
+//│ def l(_lh_dummy⁰) = 
+//│ 	let t⁰ = 	
+//│ 		let t¹ = 	
+//│ 			let t² = (fun _lh_dummy¹ -> [N])
+//│ 			in let h⁰ = [TTTT]
+//│ 			in (fun _lh_dummy² -> [C h⁰ t²(99)])
+//│ 		in let h¹ = [TT]
+//│ 		in (fun _lh_dummy³ -> [C h¹ t¹(99)])
+//│ 	in let h² = [T]
+//│ 	in [C h² t⁰(99)]
+//│ def map(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -330,6 +422,56 @@ c(t)
 //│ 	in let n³ = [KK]
 //│ 	in (fun _lh_dummy⁶ -> [T n³ c(l³) c(r³)])
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ c
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ aa -> 0
+//│ bb -> 0
+//│ t -> 1
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ t(99)
+//│ def aa = 
+//│ 	let r⁰ = (fun _lh_dummy⁰ -> [LL])
+//│ 	in let l⁰ = (fun _lh_dummy¹ -> [LL])
+//│ 	in let n⁰ = [NN]
+//│ 	in (fun _lh_dummy² -> [T n⁰ l⁰(99) r⁰(99)])
+//│ def bb = 
+//│ 	let r¹ = (fun _lh_dummy³ -> [LL])
+//│ 	in let l¹ = (fun _lh_dummy⁴ -> [LL])
+//│ 	in let n¹ = [NN]
+//│ 	in (fun _lh_dummy⁵ -> [T n¹ l¹(99) r¹(99)])
+//│ def c(x⁰) = x⁰(99)
+//│ def t = 
+//│ 	let r² = bb
+//│ 	in let l² = aa
+//│ 	in let n² = [KK]
+//│ 	in (fun _lh_dummy⁶ -> [T n² l²(99) r²(99)])
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ t(99)
+//│ def aa = 
+//│ 	let r⁰ = (fun _lh_dummy⁰ -> [LL])
+//│ 	in let l⁰ = (fun _lh_dummy¹ -> [LL])
+//│ 	in let n⁰ = [NN]
+//│ 	in (fun _lh_dummy² -> [T n⁰ l⁰(99) r⁰(99)])
+//│ def bb = 
+//│ 	let r¹ = (fun _lh_dummy³ -> [LL])
+//│ 	in let l¹ = (fun _lh_dummy⁴ -> [LL])
+//│ 	in let n¹ = [NN]
+//│ 	in (fun _lh_dummy⁵ -> [T n¹ l¹(99) r¹(99)])
+//│ def c(x⁰) = x⁰(99)
+//│ def t(_lh_dummy⁶) = 
+//│ 	let r² = bb
+//│ 	in let l² = aa
+//│ 	in let n² = [KK]
+//│ 	in [T n² l²(99) r²(99)]
+//│ <<<<<<< after floating out <<<<<<<
 
 
 
@@ -408,6 +550,42 @@ sum(mapa(mapb(primitive)))
 //│ 	| N  => (fun _lh_dummy³ -> (fun _lh_dummy² -> [N]))}
 //│ def sum(ls¹) = ls¹(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ sum, mapa
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ mapb -> 2
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ mapb(primitive⁰, 99, 99)
+//│ def mapa(lsa⁰) = lsa⁰(99)
+//│ def mapb(lsb⁰) = case lsb⁰ of {
+//│ 	C hb⁰ tb⁰ => 
+//│ 		let ta⁰ = mapb(tb⁰)
+//│ 		in let ha⁰ = primitive⁰(hb⁰)
+//│ 		in (fun _lh_dummy⁰ -> 
+//│ 			let t⁰ = ta⁰(99)
+//│ 			in (fun _lh_dummy¹ -> [S [N] t⁰(99)]))
+//│ 	| N  => (fun _lh_dummy² -> (fun _lh_dummy³ -> [N]))}
+//│ def sum(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ mapb(primitive⁰, 99, 99)
+//│ def mapa(lsa⁰) = lsa⁰(99)
+//│ def mapb(lsb⁰) = case lsb⁰ of {
+//│ 	C hb⁰ tb⁰ => 
+//│ 		let ta⁰ = mapb(tb⁰)
+//│ 		in let ha⁰ = primitive⁰(hb⁰)
+//│ 		in (fun _lh_dummy⁰ -> 
+//│ 			let t⁰ = ta⁰(99)
+//│ 			in (fun _lh_dummy¹ -> [S [N] t⁰(99)]))
+//│ 	| N  => (fun _lh_dummy² -> (fun _lh_dummy³ -> [N]))}
+//│ def sum(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<
 
 fun map(ls) = if ls is
     N then N
@@ -510,3 +688,45 @@ lastDrive(map(C(T, C(TT, N))))
 //│ 	| C hh⁰ tt⁰ => [Some last(tt⁰, hh⁰)]}
 //│ def map(ls¹) = ls¹(99)
 //│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ map
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ lastDrive(
+//│ 	let ttt⁰ = 	
+//│ 		let ttt¹ = (fun _lh_dummy⁰ -> [N])
+//│ 		in let hhh⁰ = [KK]
+//│ 		in (fun _lh_dummy¹ -> [C (fun head⁰ -> head⁰)(hhh⁰) ttt¹(99)])
+//│ 	in let hhh¹ = [K]
+//│ 	in (fun _lh_dummy² -> [C (fun head¹ -> head¹)(hhh¹) ttt⁰(99)])(99))
+//│ def last(ys⁰) = case ys⁰ of {
+//│ 	N  => (fun x⁰ -> x⁰)
+//│ 	| C h⁰ t⁰ => (fun x¹ -> last(t⁰, h⁰))}
+//│ def lastDrive(xs⁰) = case xs⁰ of {
+//│ 	N  => [None]
+//│ 	| C hh⁰ tt⁰ => [Some last(tt⁰, hh⁰)]}
+//│ def map(ls⁰) = ls⁰(99)
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ lastDrive(
+//│ 	let ttt⁰ = 	
+//│ 		let ttt¹ = (fun _lh_dummy⁰ -> [N])
+//│ 		in let hhh⁰ = [KK]
+//│ 		in (fun _lh_dummy¹ -> [C (fun head⁰ -> head⁰)(hhh⁰) ttt¹(99)])
+//│ 	in let hhh¹ = [K]
+//│ 	in (fun _lh_dummy² -> [C (fun head¹ -> head¹)(hhh¹) ttt⁰(99)])(99))
+//│ def last(ys⁰) = case ys⁰ of {
+//│ 	N  => (fun x⁰ -> x⁰)
+//│ 	| C h⁰ t⁰ => (fun x¹ -> last(t⁰, h⁰))}
+//│ def lastDrive(xs⁰) = case xs⁰ of {
+//│ 	N  => [None]
+//│ 	| C hh⁰ tt⁰ => [Some last(tt⁰, hh⁰)]}
+//│ def map(ls⁰) = ls⁰(99)
+//│ <<<<<<< after floating out <<<<<<<

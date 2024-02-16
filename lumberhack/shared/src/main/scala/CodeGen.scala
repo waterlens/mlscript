@@ -539,7 +539,12 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
         val recFunBody = Expr.Function(
           recFunPara,
           Expr.Match(
-            Expr.Ref(recFunPara),
+            {
+              if produceLazyList then
+                Expr.Call(Expr.Ref(ctx("force")), Expr.Ref(recFunPara))
+              else
+                Expr.Ref(recFunPara)
+            },
             (
               Var(BuiltInTypes.ListCons.toLumberhackType),
               recFunLsH :: recFunLsT :: Nil,

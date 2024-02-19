@@ -3,16 +3,8 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_original_________________ = struct
-let rec keys_lh _lh_keys_arg1_0 =
-  (`LH_C((`LH_C('a', (`LH_C('p', (`LH_C('p', (`LH_C('l', (`LH_C('e', (`LH_N))))))))))), (`LH_C((`LH_C('b', (`LH_C('a', (`LH_C('n', (`LH_C('a', (`LH_C('n', (`LH_C('a', (`LH_N))))))))))))), (`LH_C((`LH_C('p', (`LH_C('e', (`LH_C('a', (`LH_C('c', (`LH_C('h', (`LH_N))))))))))), (`LH_C((`LH_C('a', (`LH_C('p', (`LH_C('r', (`LH_C('i', (`LH_C('c', (`LH_C('o', (`LH_C('t', (`LH_N))))))))))))))), (`LH_N)))))))));;
-let rec member_lh _lh_member_arg1_0 _lh_member_arg2_0 =
-  (match _lh_member_arg2_0 with
-    | `LH_N -> 
-      false
-    | `LH_C(_lh_member_LH_C_0_0, _lh_member_LH_C_1_0) -> 
-      ((_lh_member_arg1_0 = _lh_member_LH_C_0_0) || ((member_lh _lh_member_arg1_0) _lh_member_LH_C_1_0))
-    | _ -> 
-      (failwith "error"));;
+let rec keys_lh =
+  (`LH_C((`LH_C('c', (`LH_C('a', (`LH_C('s', (`LH_C('e', (`LH_N))))))))), (`LH_C((`LH_C('c', (`LH_C('l', (`LH_C('a', (`LH_C('s', (`LH_C('s', (`LH_N))))))))))), (`LH_C((`LH_C('d', (`LH_C('a', (`LH_C('t', (`LH_C('a', (`LH_N))))))))), (`LH_C((`LH_C('d', (`LH_C('e', (`LH_C('f', (`LH_C('a', (`LH_C('u', (`LH_C('l', (`LH_C('t', (`LH_N))))))))))))))), (`LH_C((`LH_C('d', (`LH_C('e', (`LH_C('r', (`LH_C('i', (`LH_C('v', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_N))))))))))))))))), (`LH_C((`LH_C('e', (`LH_C('l', (`LH_C('s', (`LH_C('e', (`LH_N))))))))), (`LH_C((`LH_C('h', (`LH_C('i', (`LH_C('d', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_N))))))))))))), (`LH_C((`LH_C('i', (`LH_C('f', (`LH_N))))), (`LH_C((`LH_C('i', (`LH_C('m', (`LH_C('p', (`LH_C('o', (`LH_C('r', (`LH_C('t', (`LH_N))))))))))))), (`LH_C((`LH_C('i', (`LH_C('n', (`LH_N))))), (`LH_C((`LH_C('i', (`LH_C('n', (`LH_C('f', (`LH_C('i', (`LH_C('x', (`LH_N))))))))))), (`LH_C((`LH_C('i', (`LH_C('n', (`LH_C('f', (`LH_C('i', (`LH_C('x', (`LH_C('l', (`LH_N))))))))))))), (`LH_C((`LH_C('i', (`LH_C('n', (`LH_C('s', (`LH_C('t', (`LH_C('a', (`LH_C('n', (`LH_C('c', (`LH_C('e', (`LH_N))))))))))))))))), (`LH_C((`LH_C('i', (`LH_C('n', (`LH_C('t', (`LH_C('e', (`LH_C('r', (`LH_C('f', (`LH_C('a', (`LH_C('c', (`LH_C('e', (`LH_N))))))))))))))))))), (`LH_C((`LH_C('l', (`LH_C('e', (`LH_C('t', (`LH_N))))))), (`LH_C((`LH_C('m', (`LH_C('o', (`LH_C('d', (`LH_C('u', (`LH_C('l', (`LH_C('e', (`LH_N))))))))))))), (`LH_C((`LH_C('o', (`LH_C('f', (`LH_N))))), (`LH_C((`LH_C('r', (`LH_C('e', (`LH_C('n', (`LH_C('a', (`LH_C('m', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_N))))))))))))))))), (`LH_C((`LH_C('t', (`LH_C('h', (`LH_C('e', (`LH_C('n', (`LH_N))))))))), (`LH_C((`LH_C('t', (`LH_C('o', (`LH_N))))), (`LH_C((`LH_C('t', (`LH_C('y', (`LH_C('p', (`LH_C('e', (`LH_N))))))))), (`LH_C((`LH_C('w', (`LH_C('h', (`LH_C('e', (`LH_C('r', (`LH_C('e', (`LH_N))))))))))), (`LH_N)))))))))))))))))))))))))))))))))))))))))))));;
 let rec all_lh _lh_all_arg1_0 _lh_all_arg2_0 =
   (match _lh_all_arg2_0 with
     | `LH_N -> 
@@ -22,6 +14,14 @@ let rec all_lh _lh_all_arg1_0 _lh_all_arg2_0 =
         ((all_lh _lh_all_arg1_0) _lh_all_LH_C_1_0)
       else
         false)
+    | _ -> 
+      (failwith "error"));;
+let rec member_lh _lh_member_arg1_0 _lh_member_arg2_0 =
+  (match _lh_member_arg2_0 with
+    | `LH_N -> 
+      false
+    | `LH_C(_lh_member_LH_C_0_0, _lh_member_LH_C_1_0) -> 
+      ((_lh_member_arg1_0 = _lh_member_LH_C_0_0) || ((member_lh _lh_member_arg1_0) _lh_member_LH_C_1_0))
     | _ -> 
       (failwith "error"));;
 let rec subset_lh _lh_subset_arg1_0 _lh_subset_arg2_0 =
@@ -154,6 +154,18 @@ let rec map_lh f_0 ls_0 =
       (`LH_C((f_0 h_0), ((map_lh f_0) t_0)))
     | `LH_N -> 
       (`LH_N));;
+let rec length_lh ls_5 =
+  (match ls_5 with
+    | `LH_C(h_5, t_5) -> 
+      (1 + (length_lh t_5))
+    | `LH_N -> 
+      0);;
+let rec head_lh ls_3 =
+  (match ls_3 with
+    | `LH_C(h_3, t_3) -> 
+      h_3
+    | `LH_N -> 
+      (failwith "error"));;
 let rec last_lh _lh_last_arg1_0 =
   (match _lh_last_arg1_0 with
     | `LH_C(_lh_last_LH_C_0_0, _lh_last_LH_C_1_0) -> 
@@ -168,23 +180,13 @@ let rec last_lh _lh_last_arg1_0 =
         ((go_0 _lh_last_LH_C_0_0) _lh_last_LH_C_1_0))
     | _ -> 
       (failwith "error"));;
-let rec length_lh ls_5 =
-  (match ls_5 with
-    | `LH_C(h_5, t_5) -> 
-      (1 + (length_lh t_5))
-    | `LH_N -> 
-      0);;
-let rec head_lh ls_3 =
-  (match ls_3 with
-    | `LH_C(h_3, t_3) -> 
-      h_3
-    | `LH_N -> 
-      (failwith "error"));;
 let rec attribkeys_lh _lh_attribkeys_arg1_0 =
   ((map_lh (fun k_0 -> 
     (`K(k_0, (head_lh k_0), (last_lh k_0), (length_lh k_0))))) _lh_attribkeys_arg1_0);;
-let rec freqtab_lh _lh_freqtab_arg1_0 =
-  (histo_lh (concat_lh ((map_lh ends_lh) (attribkeys_lh (keys_lh 0)))));;
+let rec freqtab_lh =
+  (histo_lh (concat_lh ((map_lh ends_lh) (attribkeys_lh keys_lh))));;
+let rec maxval_lh =
+  (length_lh freqtab_lh);;
 let rec assoc_lh _lh_assoc_arg1_0 _lh_assoc_arg2_0 =
   (match _lh_assoc_arg2_0 with
     | `LH_C(_lh_assoc_LH_C_0_0, _lh_assoc_LH_C_1_0) -> 
@@ -235,12 +237,14 @@ let rec maxm_lh _lh_maxm_arg1_0 _lh_maxm_arg2_0 =
       ((max_lh _lh_maxm_Just_0_0) _lh_maxm_arg2_0)
     | _ -> 
       (failwith "error"));;
+let rec numberofkeys_lh =
+  (length_lh keys_lh);;
 let rec hinsert_lh _lh_hinsert_arg1_0 _lh_hinsert_arg2_0 =
   (match _lh_hinsert_arg2_0 with
     | `H(_lh_hinsert_H_0_0, _lh_hinsert_H_1_0, _lh_hinsert_H_2_0) -> 
       (let rec lo'_0 = ((minm_lh _lh_hinsert_H_0_0) _lh_hinsert_arg1_0) in
         (let rec hi'_0 = ((maxm_lh _lh_hinsert_H_1_0) _lh_hinsert_arg1_0) in
-          (if (((member_lh _lh_hinsert_arg1_0) _lh_hinsert_H_2_0) || (((1 + hi'_0) - lo'_0) > (length_lh (keys_lh 0)))) then
+          (if (((member_lh _lh_hinsert_arg1_0) _lh_hinsert_H_2_0) || (((1 + hi'_0) - lo'_0) > numberofkeys_lh)) then
             (`Nothing)
           else
             (`Just((`H((`Just(lo'_0)), (`Just(hi'_0)), (`LH_C(_lh_hinsert_arg1_0, _lh_hinsert_H_2_0)))))))))
@@ -263,55 +267,54 @@ let rec findhash'_lh _lh_findhash'_arg1_0 _lh_findhash'_arg2_0 _lh_findhash'_arg
                     (((findhash'_lh _lh_findhash'_Just_0_0) newCharAssocs_0) _lh_findhash'_LH_C_1_0)
                   | _ -> 
                     (failwith "error"))))) in
-            (let rec maxval_0 = (length_lh (freqtab_lh 0)) in
-              (let rec _lh_matchIdent_1 = (`LH_P2(((assocm_lh _lh_findhash'_K_1_0) _lh_findhash'_arg2_0), ((assocm_lh _lh_findhash'_K_2_0) _lh_findhash'_arg2_0))) in
-                (match _lh_matchIdent_1 with
-                  | `LH_P2(_lh_findhash'_LH_P2_0_0, _lh_findhash'_LH_P2_1_0) -> 
-                    (match _lh_findhash'_LH_P2_0_0 with
-                      | `Nothing -> 
-                        (match _lh_findhash'_LH_P2_1_0 with
-                          | `Nothing -> 
-                            (if (_lh_findhash'_K_1_0 = _lh_findhash'_K_2_0) then
-                              ((firstSuccess_lh (fun m_0 -> 
-                                (try_0 (`LH_C((`LH_P2(_lh_findhash'_K_1_0, m_0)), (`LH_N)))))) ((enumFromTo_lz_lh 0) maxval_0))
-                            else
-                              ((firstSuccess_lh (fun mn_0 -> 
-                                (let rec _lh_matchIdent_2 = mn_0 in
-                                  (match _lh_matchIdent_2 with
-                                    | `LH_P2(_lh_findhash'_LH_P2_0_1, _lh_findhash'_LH_P2_1_1) -> 
-                                      (try_0 (`LH_C((`LH_P2(_lh_findhash'_K_1_0, _lh_findhash'_LH_P2_0_1)), (`LH_C((`LH_P2(_lh_findhash'_K_2_0, _lh_findhash'_LH_P2_1_1)), (`LH_N))))))
-                                    | _ -> 
-                                      (failwith "error"))))) (let rec _lh_listcomp_fun_1 = (fun _lh_listcomp_fun_para_1 -> 
-                                (match (Lazy.force _lh_listcomp_fun_para_1) with
-                                  | `LH_C(_lh_listcomp_fun_ls_h_1, _lh_listcomp_fun_ls_t_1) -> 
-                                    (let rec _lh_listcomp_fun_2 = (fun _lh_listcomp_fun_para_2 -> 
-                                      (match (Lazy.force _lh_listcomp_fun_para_2) with
-                                        | `LH_C(_lh_listcomp_fun_ls_h_2, _lh_listcomp_fun_ls_t_2) -> 
-                                          (lazy (`LH_C((`LH_P2(_lh_listcomp_fun_ls_h_1, _lh_listcomp_fun_ls_h_2)), (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_2))))
-                                        | `LH_N -> 
-                                          (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_1))) in
-                                      (_lh_listcomp_fun_2 ((enumFromTo_lz_lh 0) maxval_0)))
-                                  | `LH_N -> 
-                                    (lazy (`LH_N)))) in
-                                (_lh_listcomp_fun_1 ((enumFromTo_lz_lh 0) maxval_0)))))
-                          | `Just(_lh_findhash'_Just_0_1) -> 
-                            ((firstSuccess_lh (fun m_1 -> 
-                              (try_0 (`LH_C((`LH_P2(_lh_findhash'_K_1_0, m_1)), (`LH_N)))))) ((enumFromTo_lz_lh 0) maxval_0))
-                          | _ -> 
-                            (failwith "error"))
-                      | `Just(_lh_findhash'_Just_0_2) -> 
-                        (match _lh_findhash'_LH_P2_1_0 with
-                          | `Nothing -> 
-                            ((firstSuccess_lh (fun n_1 -> 
-                              (try_0 (`LH_C((`LH_P2(_lh_findhash'_K_2_0, n_1)), (`LH_N)))))) ((enumFromTo_lz_lh 0) maxval_0))
-                          | `Just(_lh_findhash'_Just_0_3) -> 
-                            (try_0 (`LH_N))
-                          | _ -> 
-                            (failwith "error"))
-                      | _ -> 
-                        (failwith "error"))
-                  | _ -> 
-                    (failwith "error")))))
+            (let rec _lh_matchIdent_1 = (`LH_P2(((assocm_lh _lh_findhash'_K_1_0) _lh_findhash'_arg2_0), ((assocm_lh _lh_findhash'_K_2_0) _lh_findhash'_arg2_0))) in
+              (match _lh_matchIdent_1 with
+                | `LH_P2(_lh_findhash'_LH_P2_0_0, _lh_findhash'_LH_P2_1_0) -> 
+                  (match _lh_findhash'_LH_P2_0_0 with
+                    | `Nothing -> 
+                      (match _lh_findhash'_LH_P2_1_0 with
+                        | `Nothing -> 
+                          (if (_lh_findhash'_K_1_0 = _lh_findhash'_K_2_0) then
+                            ((firstSuccess_lh (fun m_0 -> 
+                              (try_0 (`LH_C((`LH_P2(_lh_findhash'_K_1_0, m_0)), (`LH_N)))))) ((enumFromTo_lz_lh 0) maxval_lh))
+                          else
+                            ((firstSuccess_lh (fun mn_0 -> 
+                              (let rec _lh_matchIdent_2 = mn_0 in
+                                (match _lh_matchIdent_2 with
+                                  | `LH_P2(_lh_findhash'_LH_P2_0_1, _lh_findhash'_LH_P2_1_1) -> 
+                                    (try_0 (`LH_C((`LH_P2(_lh_findhash'_K_1_0, _lh_findhash'_LH_P2_0_1)), (`LH_C((`LH_P2(_lh_findhash'_K_2_0, _lh_findhash'_LH_P2_1_1)), (`LH_N))))))
+                                  | _ -> 
+                                    (failwith "error"))))) (let rec _lh_listcomp_fun_1 = (fun _lh_listcomp_fun_para_1 -> 
+                              (match (Lazy.force _lh_listcomp_fun_para_1) with
+                                | `LH_C(_lh_listcomp_fun_ls_h_1, _lh_listcomp_fun_ls_t_1) -> 
+                                  (let rec _lh_listcomp_fun_2 = (fun _lh_listcomp_fun_para_2 -> 
+                                    (match (Lazy.force _lh_listcomp_fun_para_2) with
+                                      | `LH_C(_lh_listcomp_fun_ls_h_2, _lh_listcomp_fun_ls_t_2) -> 
+                                        (lazy (`LH_C((`LH_P2(_lh_listcomp_fun_ls_h_1, _lh_listcomp_fun_ls_h_2)), (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_2))))
+                                      | `LH_N -> 
+                                        (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_1))) in
+                                    (_lh_listcomp_fun_2 ((enumFromTo_lz_lh 0) maxval_lh)))
+                                | `LH_N -> 
+                                  (lazy (`LH_N)))) in
+                              (_lh_listcomp_fun_1 ((enumFromTo_lz_lh 0) maxval_lh)))))
+                        | `Just(_lh_findhash'_Just_0_1) -> 
+                          ((firstSuccess_lh (fun m_1 -> 
+                            (try_0 (`LH_C((`LH_P2(_lh_findhash'_K_1_0, m_1)), (`LH_N)))))) ((enumFromTo_lz_lh 0) maxval_lh))
+                        | _ -> 
+                          (failwith "error"))
+                    | `Just(_lh_findhash'_Just_0_2) -> 
+                      (match _lh_findhash'_LH_P2_1_0 with
+                        | `Nothing -> 
+                          ((firstSuccess_lh (fun n_1 -> 
+                            (try_0 (`LH_C((`LH_P2(_lh_findhash'_K_2_0, n_1)), (`LH_N)))))) ((enumFromTo_lz_lh 0) maxval_lh))
+                        | `Just(_lh_findhash'_Just_0_3) -> 
+                          (try_0 (`LH_N))
+                        | _ -> 
+                          (failwith "error"))
+                    | _ -> 
+                      (failwith "error"))
+                | _ -> 
+                  (failwith "error"))))
         | _ -> 
           (failwith "error"))
     | _ -> 
@@ -328,7 +331,7 @@ let rec take_lh n_0 ls_4 =
   else
     (`LH_N));;
 let rec cichelli_lh _lh_cichelli_arg1_0 =
-  (let rec attribkeys'_0 = (attribkeys_lh ((mappend_lh (keys_lh 0)) ((take_lh (_lh_cichelli_arg1_0 mod 2)) (keys_lh 0)))) in
+  (let rec attribkeys'_0 = (attribkeys_lh ((mappend_lh keys_lh) ((take_lh (_lh_cichelli_arg1_0 mod 2)) keys_lh))) in
     (let rec hashkeys_0 = ((fun _lh_funcomp_x_0 -> 
       (blocked_lh (freqsorted_lh _lh_funcomp_x_0))) attribkeys'_0) in
       (findhash_lh hashkeys_0)));;

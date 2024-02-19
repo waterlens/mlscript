@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______ = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
 let rec isLower_lh__d1 _lh_isLower_arg1_0 =
   (let rec n_0 = (int_of_char _lh_isLower_arg1_0) in
     ((n_0 >= 97) && (n_0 <= 122)));;

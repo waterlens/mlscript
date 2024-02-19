@@ -3,7 +3,7 @@
 (* lumberhack *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_________ = struct
+module Module_lumberhack_________(LH_Dum: sig end) = struct
 let rec map f_0 ls_0 =
   (ls_0 f_0);;
 let rec summ acc_0 ls_2 =

@@ -3,7 +3,7 @@
 (* lumberhack_flo_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_flo_out_ = struct
+module Module_lumberhack_flo_out_(LH_Dum: sig end) = struct
 let rec unzip ls_1 =
   (match ls_1 with
     | `C(h_0, t_0) -> 

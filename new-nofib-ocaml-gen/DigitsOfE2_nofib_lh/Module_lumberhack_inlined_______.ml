@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______ = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
 let rec enumFromThen_lh__d1 a_0 t_0 =
   (lazy (`LH_C(a_0, ((enumFromThen_lh__d1 t_0) ((2 * t_0) - a_0)))));;
 let rec head_lz_lh__d1 ls_1 =

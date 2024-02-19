@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________ = struct
+module Module_original_________________(LH_Dum: sig end) = struct
 let rec atIndex_lz_lh n_0 ls_3 =
   (if (n_0 < 0) then
     (failwith "error")

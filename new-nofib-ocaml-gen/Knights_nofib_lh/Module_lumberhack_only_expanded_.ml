@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_ = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
 let rec myIsDigit_lh__d1 _lh_myIsDigit_arg1_0 =
   (let rec n_1 = (int_of_char _lh_myIsDigit_arg1_0) in
     ((n_1 >= 48) && (n_1 <= 57)));;

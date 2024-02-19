@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______ = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
 let rec rands_lh__d1 _lh_rands_arg1_0 _lh_rands_arg2_0 =
   (let rec k_2 = (_lh_rands_arg1_0 / 53668) in
     (let rec s1'_0 = ((40014 * (_lh_rands_arg1_0 - (k_2 * 53668))) - (k_2 * 12211)) in

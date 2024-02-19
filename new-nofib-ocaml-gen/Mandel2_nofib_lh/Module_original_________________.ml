@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________ = struct
+module Module_original_________________(LH_Dum: sig end) = struct
 let rec finite_lh _lh_finite_arg1_0 =
   (match _lh_finite_arg1_0 with
     | `Leaf(_lh_finite_Leaf_0_0) -> 

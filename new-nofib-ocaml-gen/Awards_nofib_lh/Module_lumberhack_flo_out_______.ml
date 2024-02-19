@@ -3,7 +3,7 @@
 (* lumberhack_flo_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_flo_out_______ = struct
+module Module_lumberhack_flo_out_______(LH_Dum: sig end) = struct
 let rec enumFromTo_lh__d1 a_1 b_1 _lh_popOutId_0_0 =
   (if (a_1 <= b_1) then
     (let rec t_1 = ((enumFromTo_lh__d1 (a_1 + 1)) b_1) in

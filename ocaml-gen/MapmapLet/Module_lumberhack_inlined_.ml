@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_ = struct
+module Module_lumberhack_inlined_(LH_Dum: sig end) = struct
 let rec enumFromTo a_0 b_0 =
   (if (a_0 <= b_0) then
     (`C(a_0, ((enumFromTo (a_0 + 1)) b_0)))

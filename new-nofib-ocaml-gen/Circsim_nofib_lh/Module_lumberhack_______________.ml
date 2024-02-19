@@ -3,7 +3,7 @@
 (* lumberhack *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_______________ = struct
+module Module_lumberhack_______________(LH_Dum: sig end) = struct
 let rec scanl_lh__d1 _lh_scanl_arg1_2 _lh_scanl_arg2_2 _lh_scanl_arg3_0 =
   (`LH_C(_lh_scanl_arg2_2, (let rec _lh_matchIdent_1_7 = _lh_scanl_arg3_0 in
     ((_lh_matchIdent_1_7 _lh_scanl_arg1_2) _lh_scanl_arg2_2))));;

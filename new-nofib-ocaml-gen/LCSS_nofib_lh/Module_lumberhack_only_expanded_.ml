@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_ = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
 let rec enumFromThenTo_lh__d2 a_6 t_1_4 b_0 =
   (if (a_6 <= b_0) then
     (`LH_C(a_6, (((enumFromThenTo_lh__d2 t_1_4) ((2 * t_1_4) - a_6)) b_0)))

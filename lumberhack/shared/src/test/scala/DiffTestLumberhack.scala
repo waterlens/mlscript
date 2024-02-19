@@ -748,7 +748,7 @@ end;;
       "\n(* original *)\n" +
       "open Lumherhack_Common.Lumherhack_Common;;\n" +
       "open Lumberhack_LargeStr.Lumberhack_LargeStr;;\n" +
-      s"module ${"Module_original".padTo(longestNameSize, '_')} = struct\n" +
+      s"module ${"Module_original".padTo(longestNameSize, '_')}(LH_Dum: sig end) = struct\n" +
       apply(
         Program(
           programs.head._2.contents.filter(_.isLeft)
@@ -765,7 +765,7 @@ end;;
           s"\n\n(* $name *)\n" +
           "open Lumherhack_Common.Lumherhack_Common;;\n" +
           "open Lumberhack_LargeStr.Lumberhack_LargeStr;;\n" +
-          s"module ${s"Module_$name".padTo(longestNameSize, '_')} = struct\n" +
+          s"module ${s"Module_$name".padTo(longestNameSize, '_')}(LH_Dum: sig end) = struct\n" +
           apply(
             Program(
               prgm.contents.filter {
@@ -800,14 +800,14 @@ end;;
           (programs.head._2.defAndExpr._2 match {
             case e :: Nil =>
               (s"original_${benchName}" ->
-                s"let open ${val n = "Module_original".padTo(longestNameSize, '_'); s"$n.$n"} in (${this.rec(e).print})") :: Nil
+                s"let open ${val n = "Module_original".padTo(longestNameSize, '_'); s"$n.$n"}(struct end) in (${this.rec(e).print})") :: Nil
             case e :: m :: Nil => List(
-              (s"original_${benchName}" -> s"let open ${val n = "Module_original".padTo(longestNameSize, '_'); s"$n.$n"} in (${this.rec(e).print})"),
-              (s"manual_${benchName}" -> s"let open ${val n = "Module_original".padTo(longestNameSize, '_'); s"$n.$n"} in (${this.rec(m).print})")
+              (s"original_${benchName}" -> s"let open ${val n = "Module_original".padTo(longestNameSize, '_'); s"$n.$n"}(struct end) in (${this.rec(e).print})"),
+              (s"manual_${benchName}" -> s"let open ${val n = "Module_original".padTo(longestNameSize, '_'); s"$n.$n"}(struct end) in (${this.rec(m).print})")
             )
             case _ => lastWords("unreachable")
           }).appendedAll(programs.tail.map { case (name, prgm) =>
-            s"${name}_${benchName}" -> s"let open ${val n = s"Module_$name".padTo(longestNameSize, '_'); s"$n.$n"} in (${this.rec(prgm.defAndExpr._2.head).print})"
+            s"${name}_${benchName}" -> s"let open ${val n = s"Module_$name".padTo(longestNameSize, '_'); s"$n.$n"}(struct end) in (${this.rec(prgm.defAndExpr._2.head).print})"
           })
         stack(
           Raw("Command_unix.run (Bench.make_command ["),

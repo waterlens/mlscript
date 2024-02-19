@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_______ = struct
+module Module_lumberhack_pop_out_______(LH_Dum: sig end) = struct
 let rec zip_lh__d1 xs_0 ys_2 =
   (xs_0 ys_2);;
 let rec enumFromTo_lh__d2 a_0 b_0 _lh_popOutId_0_0 _lh_popOutId_1_0 =

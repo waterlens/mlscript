@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_ = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
 let rec copy_lh__d1 _lh_copy_arg1_3 _lh_copy_arg2_3 =
   (if (_lh_copy_arg1_3 > 0) then
     (`LH_C(_lh_copy_arg2_3, ((copy_lh__d1 (_lh_copy_arg1_3 - 1)) _lh_copy_arg2_3)))

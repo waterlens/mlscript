@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_ = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
 let rec insertT_lh__d3 _lh_insertT_arg1_0 _lh_insertT_arg2_0 _lh_insertT_arg3_0 =
   (match _lh_insertT_arg3_0 with
     | `Node(_lh_insertT_Node_0_0, _lh_insertT_Node_1_0, _lh_insertT_Node_2_0) -> 

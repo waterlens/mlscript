@@ -3,11 +3,11 @@ ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Lumherhack_Common.ml ./Lumberha
 *)
 open Core_bench;;
 Command_unix.run (Bench.make_command [
-  Bench.Test.create ~name:"original_Paraffins_nofib_lh" (fun () -> ignore (let open Module_original_________________.Module_original_________________ in ((testParaffins_nofib_lh 16))));
-  Bench.Test.create ~name:"lumberhack_only_expanded_Paraffins_nofib_lh" (fun () -> ignore (let open Module_lumberhack_only_expanded_.Module_lumberhack_only_expanded_ in ((testParaffins_nofib_lh__d1 16))));
-  Bench.Test.create ~name:"lumberhack_Paraffins_nofib_lh" (fun () -> ignore (let open Module_lumberhack_______________.Module_lumberhack_______________ in ((testParaffins_nofib_lh__d1 16))));
-  Bench.Test.create ~name:"lumberhack_pop_out_Paraffins_nofib_lh" (fun () -> ignore (let open Module_lumberhack_pop_out_______.Module_lumberhack_pop_out_______ in ((testParaffins_nofib_lh__d1 16))));
-  Bench.Test.create ~name:"lumberhack_inlined_Paraffins_nofib_lh" (fun () -> ignore (let open Module_lumberhack_inlined_______.Module_lumberhack_inlined_______ in ((`LH_P4((let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
+  Bench.Test.create ~name:"original_Paraffins_nofib_lh" (fun () -> ignore (let open Module_original_________________.Module_original_________________(struct end) in ((testParaffins_nofib_lh 16))));
+  Bench.Test.create ~name:"lumberhack_only_expanded_Paraffins_nofib_lh" (fun () -> ignore (let open Module_lumberhack_only_expanded_.Module_lumberhack_only_expanded_(struct end) in ((testParaffins_nofib_lh__d1 16))));
+  Bench.Test.create ~name:"lumberhack_Paraffins_nofib_lh" (fun () -> ignore (let open Module_lumberhack_______________.Module_lumberhack_______________(struct end) in ((testParaffins_nofib_lh__d1 16))));
+  Bench.Test.create ~name:"lumberhack_pop_out_Paraffins_nofib_lh" (fun () -> ignore (let open Module_lumberhack_pop_out_______.Module_lumberhack_pop_out_______(struct end) in ((testParaffins_nofib_lh__d1 16))));
+  Bench.Test.create ~name:"lumberhack_inlined_Paraffins_nofib_lh" (fun () -> ignore (let open Module_lumberhack_inlined_______.Module_lumberhack_inlined_______(struct end) in ((`LH_P4((let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
   ((_lh_listcomp_fun_para_0 _lh_listcomp_fun_0) 16)) in
   (_lh_listcomp_fun_0 (let rec _lh_listcomp_fun_ls_t_0 = (fun _lh_listcomp_fun_1 _lh_testParaffins_nofib_arg1_0 -> 
     (`LH_N)) in
@@ -25,7 +25,7 @@ Command_unix.run (Bench.make_command [
   (let rec _lh_listcomp_fun_6 = (fun _lh_listcomp_fun_para_4 -> 
     ((_lh_listcomp_fun_para_4 _lh_listcomp_fun_6) radicals_2)) in
     (_lh_listcomp_fun_6 ((enumFromTo_lh__d3 1) 16)))))))));
-  Bench.Test.create ~name:"lumberhack_flo_out_Paraffins_nofib_lh" (fun () -> ignore (let open Module_lumberhack_flo_out_______.Module_lumberhack_flo_out_______ in ((`LH_P4((let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
+  Bench.Test.create ~name:"lumberhack_flo_out_Paraffins_nofib_lh" (fun () -> ignore (let open Module_lumberhack_flo_out_______.Module_lumberhack_flo_out_______(struct end) in ((`LH_P4((let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
   ((_lh_listcomp_fun_para_0 _lh_listcomp_fun_0) 16)) in
   (_lh_listcomp_fun_0 (let rec _lh_listcomp_fun_ls_t_0 = (fun _lh_listcomp_fun_1 _lh_testParaffins_nofib_arg1_0 -> 
     (`LH_N)) in

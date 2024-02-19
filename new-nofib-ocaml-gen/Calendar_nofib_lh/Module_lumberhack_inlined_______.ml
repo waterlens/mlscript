@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______ = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
 let rec copy_lh__d1 _lh_copy_arg1_2 _lh_copy_arg2_2 =
   (if (_lh_copy_arg1_2 > 0) then
     (`LH_C(_lh_copy_arg2_2, ((copy_lh__d1 (_lh_copy_arg1_2 - 1)) _lh_copy_arg2_2)))

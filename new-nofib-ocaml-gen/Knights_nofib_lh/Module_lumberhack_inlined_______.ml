@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______ = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
 let rec addAllFront_lh__d2 _lh_addAllFront_arg1_0 _lh_addAllFront_arg2_0 =
   (_lh_addAllFront_arg1_0 _lh_addAllFront_arg2_0);;
 let rec myIsDigit_lh__d1 _lh_myIsDigit_arg1_0 =

@@ -3,7 +3,7 @@
 (* lumberhack *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_______________ = struct
+module Module_lumberhack_______________(LH_Dum: sig end) = struct
 let rec finalState_lh__d1 =
   (`State((`RightBank), (`RightBank), (`RightBank), (`RightBank)));;
 let rec mappend_lh__d3 xs_0 ys_0 =

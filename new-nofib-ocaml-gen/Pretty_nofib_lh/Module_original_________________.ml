@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________ = struct
+module Module_original_________________(LH_Dum: sig end) = struct
 let rec cNil_lh =
   (`CNil);;
 let rec ppNil_lh _lh_ppNil_arg1_0 _lh_ppNil_arg2_0 =

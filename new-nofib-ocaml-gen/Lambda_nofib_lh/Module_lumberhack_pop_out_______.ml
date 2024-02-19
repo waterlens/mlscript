@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_______ = struct
+module Module_lumberhack_pop_out_______(LH_Dum: sig end) = struct
 let rec nMinus1_lh__d2 =
   (`Add((`Var((`LH_C('n', (`LH_N))))), (`Con((0 - 1)))));;
 let rec partialSum0_lh__d2 =

@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________ = struct
+module Module_original_________________(LH_Dum: sig end) = struct
 let rec dotMult_lh _lh_dotMult_arg1_0 _lh_dotMult_arg2_0 =
   (lazy (let rec _lh_matchIdent_1_0 = (Lazy.force _lh_dotMult_arg2_0) in
     (match _lh_matchIdent_1_0 with

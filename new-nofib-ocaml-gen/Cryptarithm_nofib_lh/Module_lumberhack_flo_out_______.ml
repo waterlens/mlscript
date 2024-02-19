@@ -3,7 +3,7 @@
 (* lumberhack_flo_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_flo_out_______ = struct
+module Module_lumberhack_flo_out_______(LH_Dum: sig end) = struct
 let rec addj_lh__d1 _lh_addj_arg1_0 _lh_addj_arg2_0 =
   (match _lh_addj_arg2_0 with
     | `LH_N -> 

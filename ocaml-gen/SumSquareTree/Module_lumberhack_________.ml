@@ -3,7 +3,7 @@
 (* lumberhack *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_________ = struct
+module Module_lumberhack_________(LH_Dum: sig end) = struct
 let rec sumTree t_1 =
   (t_1 99);;
 let rec sqTree t_0 =

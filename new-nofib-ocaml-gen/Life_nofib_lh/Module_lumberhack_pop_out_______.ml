@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_______ = struct
+module Module_lumberhack_pop_out_______(LH_Dum: sig end) = struct
 let rec map_lz_lh__d1 f_0 ls_0 =
   (lazy ((Lazy.force ls_0) f_0));;
 let rec mappend_lh__d1 xs_0 ys_0 =

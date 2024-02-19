@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original___________ = struct
+module Module_original___________(LH_Dum: sig end) = struct
 let rec _lhManualQrevMap f_1 xs_1 a_2 =
   (match xs_1 with
     | `C(h_2, t_2) -> 

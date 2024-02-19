@@ -3,7 +3,7 @@
 (* lumberhack *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_______________ = struct
+module Module_lumberhack_______________(LH_Dum: sig end) = struct
 let rec indent_lh__d2 _lh_indent_arg1_0 =
   (if (_lh_indent_arg1_0 <= 0) then
     (`LH_N)

@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______ = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
 let rec zipWith_lz_lz_lh__d2 f_8 xs_3 ys_3 =
   (lazy (match (Lazy.force xs_3) with
     | `LH_C(hx_3, tx_3) -> 

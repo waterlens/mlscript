@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_______ = struct
+module Module_lumberhack_pop_out_______(LH_Dum: sig end) = struct
 let rec tak_lh__d1 _lh_tak_arg1_0 _lh_tak_arg2_0 _lh_tak_arg3_0 =
   (if (not (_lh_tak_arg2_0 < _lh_tak_arg1_0)) then
     _lh_tak_arg3_0

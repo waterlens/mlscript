@@ -3,10 +3,10 @@ ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Lumherhack_Common.ml ./Lumberha
 *)
 open Core_bench;;
 Command_unix.run (Bench.make_command [
-  Bench.Test.create ~name:"original_Ansi_nofib_lh" (fun () -> ignore (let open Module_original_________________.Module_original_________________ in ((testAnsi_nofib_lh 8))));
-  Bench.Test.create ~name:"lumberhack_only_expanded_Ansi_nofib_lh" (fun () -> ignore (let open Module_lumberhack_only_expanded_.Module_lumberhack_only_expanded_ in ((testAnsi_nofib_lh__d1 8))));
-  Bench.Test.create ~name:"lumberhack_Ansi_nofib_lh" (fun () -> ignore (let open Module_lumberhack_______________.Module_lumberhack_______________ in ((testAnsi_nofib_lh__d1 8))));
-  Bench.Test.create ~name:"lumberhack_pop_out_Ansi_nofib_lh" (fun () -> ignore (let open Module_lumberhack_pop_out_______.Module_lumberhack_pop_out_______ in ((testAnsi_nofib_lh__d1 8))));
-  Bench.Test.create ~name:"lumberhack_inlined_Ansi_nofib_lh" (fun () -> ignore (let open Module_lumberhack_inlined_______.Module_lumberhack_inlined_______ in ((testAnsi_nofib_lh__d1 8))));
-  Bench.Test.create ~name:"lumberhack_flo_out_Ansi_nofib_lh" (fun () -> ignore (let open Module_lumberhack_flo_out_______.Module_lumberhack_flo_out_______ in ((testAnsi_nofib_lh__d1 8))));
+  Bench.Test.create ~name:"original_Ansi_nofib_lh" (fun () -> ignore (let open Module_original_________________.Module_original_________________(struct end) in ((testAnsi_nofib_lh 8))));
+  Bench.Test.create ~name:"lumberhack_only_expanded_Ansi_nofib_lh" (fun () -> ignore (let open Module_lumberhack_only_expanded_.Module_lumberhack_only_expanded_(struct end) in ((testAnsi_nofib_lh__d1 8))));
+  Bench.Test.create ~name:"lumberhack_Ansi_nofib_lh" (fun () -> ignore (let open Module_lumberhack_______________.Module_lumberhack_______________(struct end) in ((testAnsi_nofib_lh__d1 8))));
+  Bench.Test.create ~name:"lumberhack_pop_out_Ansi_nofib_lh" (fun () -> ignore (let open Module_lumberhack_pop_out_______.Module_lumberhack_pop_out_______(struct end) in ((testAnsi_nofib_lh__d1 8))));
+  Bench.Test.create ~name:"lumberhack_inlined_Ansi_nofib_lh" (fun () -> ignore (let open Module_lumberhack_inlined_______.Module_lumberhack_inlined_______(struct end) in ((testAnsi_nofib_lh__d1 8))));
+  Bench.Test.create ~name:"lumberhack_flo_out_Ansi_nofib_lh" (fun () -> ignore (let open Module_lumberhack_flo_out_______.Module_lumberhack_flo_out_______(struct end) in ((testAnsi_nofib_lh__d1 8))));
 ])

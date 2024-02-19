@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______ = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
 let rec mappend_lh__d2_d6 xs_2_4 ys_4_8 =
   (match xs_2_4 with
     | `LH_C(h_3_9, t_4_0) -> 

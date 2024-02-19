@@ -3,7 +3,7 @@
 (* lumberhack *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_______________ = struct
+module Module_lumberhack_______________(LH_Dum: sig end) = struct
 let rec revert_lh__d1 _lh_revert_arg1_0 =
   (lazy (let rec _lh_matchIdent_0 = (Lazy.force _lh_revert_arg1_0) in
     (_lh_matchIdent_0 99)));;

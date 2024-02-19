@@ -3,7 +3,7 @@
 (* lumberhack_flo_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_flo_out_ = struct
+module Module_lumberhack_flo_out_(LH_Dum: sig end) = struct
 let rec sqTree t_0 _lh_popOutId_0_0 =
   (match t_0 with
     | `T(v_0, l_0, r_0) -> 

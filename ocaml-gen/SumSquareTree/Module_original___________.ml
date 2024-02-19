@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original___________ = struct
+module Module_original___________(LH_Dum: sig end) = struct
 let rec sqTree t_0 =
   (match t_0 with
     | `T(v_0, l_0, r_0) -> 

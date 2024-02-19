@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_ = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
 let rec map_lz_lh__d1 f_8 ls_8 =
   (lazy (match (Lazy.force ls_8) with
     | `LH_C(h_8, t_8) -> 

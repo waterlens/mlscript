@@ -3,9 +3,9 @@ ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Lumherhack_Common.ml ./Lumberha
 *)
 open Core_bench;;
 Command_unix.run (Bench.make_command [
-  Bench.Test.create ~name:"original_MapmapLet" (fun () -> ignore (let open Module_original___________.Module_original___________ in ((testMapmapLet ((enumFromTo 1) 100000)))));
-  Bench.Test.create ~name:"lumberhack_MapmapLet" (fun () -> ignore (let open Module_lumberhack_________.Module_lumberhack_________ in ((testMapmapLet ((enumFromTo 1) 100000)))));
-  Bench.Test.create ~name:"lumberhack_pop_out_MapmapLet" (fun () -> ignore (let open Module_lumberhack_pop_out_.Module_lumberhack_pop_out_ in ((testMapmapLet ((enumFromTo 1) 100000)))));
-  Bench.Test.create ~name:"lumberhack_inlined_MapmapLet" (fun () -> ignore (let open Module_lumberhack_inlined_.Module_lumberhack_inlined_ in ((testMapmapLet ((enumFromTo 1) 100000)))));
-  Bench.Test.create ~name:"lumberhack_flo_out_MapmapLet" (fun () -> ignore (let open Module_lumberhack_flo_out_.Module_lumberhack_flo_out_ in ((testMapmapLet ((enumFromTo 1) 100000)))));
+  Bench.Test.create ~name:"original_MapmapLet" (fun () -> ignore (let open Module_original___________.Module_original___________(struct end) in ((testMapmapLet ((enumFromTo 1) 100000)))));
+  Bench.Test.create ~name:"lumberhack_MapmapLet" (fun () -> ignore (let open Module_lumberhack_________.Module_lumberhack_________(struct end) in ((testMapmapLet ((enumFromTo 1) 100000)))));
+  Bench.Test.create ~name:"lumberhack_pop_out_MapmapLet" (fun () -> ignore (let open Module_lumberhack_pop_out_.Module_lumberhack_pop_out_(struct end) in ((testMapmapLet ((enumFromTo 1) 100000)))));
+  Bench.Test.create ~name:"lumberhack_inlined_MapmapLet" (fun () -> ignore (let open Module_lumberhack_inlined_.Module_lumberhack_inlined_(struct end) in ((testMapmapLet ((enumFromTo 1) 100000)))));
+  Bench.Test.create ~name:"lumberhack_flo_out_MapmapLet" (fun () -> ignore (let open Module_lumberhack_flo_out_.Module_lumberhack_flo_out_(struct end) in ((testMapmapLet ((enumFromTo 1) 100000)))));
 ])

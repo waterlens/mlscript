@@ -3,7 +3,7 @@
 (* lumberhack *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_______________ = struct
+module Module_lumberhack_______________(LH_Dum: sig end) = struct
 let rec permutations_lh__d1 _lh_permutations_arg1_0 =
   (_lh_permutations_arg1_0 99);;
 let rec addj_lh__d1 _lh_addj_arg1_0 _lh_addj_arg2_0 =

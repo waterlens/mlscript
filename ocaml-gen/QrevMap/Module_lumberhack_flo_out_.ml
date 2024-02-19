@@ -3,7 +3,7 @@
 (* lumberhack_flo_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_flo_out_ = struct
+module Module_lumberhack_flo_out_(LH_Dum: sig end) = struct
 let rec _lhManualQrevMap f_1 xs_1 a_0 =
   (match xs_1 with
     | `C(h_2, t_2) -> 

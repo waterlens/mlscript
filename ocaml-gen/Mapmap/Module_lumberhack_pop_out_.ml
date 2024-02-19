@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_ = struct
+module Module_lumberhack_pop_out_(LH_Dum: sig end) = struct
 let rec _lhManual ls_2 f1_0 f2_0 =
   (match ls_2 with
     | `C(h_1, t_1) -> 

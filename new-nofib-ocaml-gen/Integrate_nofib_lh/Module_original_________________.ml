@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________ = struct
+module Module_original_________________(LH_Dum: sig end) = struct
 let rec zipWith_lz_lz_lh f_1 xs_0 ys_0 =
   (lazy (match (Lazy.force xs_0) with
     | `LH_C(hx_0, tx_0) -> 

@@ -3,7 +3,7 @@
 (* lumberhack_flo_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_flo_out_ = struct
+module Module_lumberhack_flo_out_(LH_Dum: sig end) = struct
 let rec sum ls_1 =
   (ls_1 0);;
 let rec enumFromTo a_0 b_0 =

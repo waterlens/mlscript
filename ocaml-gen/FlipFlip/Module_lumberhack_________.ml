@@ -3,7 +3,7 @@
 (* lumberhack *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_________ = struct
+module Module_lumberhack_________(LH_Dum: sig end) = struct
 let rec genTree n_0 i_0 =
   (if (n_0 <= 0) then
     (`N(i_0))

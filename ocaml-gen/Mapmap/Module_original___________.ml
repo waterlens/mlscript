@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original___________ = struct
+module Module_original___________(LH_Dum: sig end) = struct
 let rec _lhManual ls_2 f1_0 f2_0 =
   (match ls_2 with
     | `C(h_1, t_1) -> 

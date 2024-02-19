@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_______ = struct
+module Module_lumberhack_pop_out_______(LH_Dum: sig end) = struct
 let rec retURN_lh__d2 _lh_retURN_arg1_0 s_0 =
   (`LH_P2(s_0, _lh_retURN_arg1_0));;
 let rec bind_lh__d3 _lh_bind_arg1_2 _lh_bind_arg2_2 s_4 =

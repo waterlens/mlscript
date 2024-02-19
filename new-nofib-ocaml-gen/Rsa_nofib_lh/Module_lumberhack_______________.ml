@@ -3,7 +3,7 @@
 (* lumberhack *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_______________ = struct
+module Module_lumberhack_______________(LH_Dum: sig end) = struct
 let rec sqr_lh__d1 _lh_sqr_arg1_0 =
   (_lh_sqr_arg1_0 * _lh_sqr_arg1_0);;
 let rec even_lh__d1 _lh_even_arg1_0 =

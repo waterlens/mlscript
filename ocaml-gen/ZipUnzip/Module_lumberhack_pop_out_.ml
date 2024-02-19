@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_ = struct
+module Module_lumberhack_pop_out_(LH_Dum: sig end) = struct
 let rec makeZippedList n_0 =
   (if (n_0 > 0) then
     (`C((`Pair(n_0, (n_0 + 1))), (makeZippedList (n_0 - 1))))

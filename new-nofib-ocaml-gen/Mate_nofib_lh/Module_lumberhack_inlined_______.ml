@@ -140,23 +140,6 @@ let rec kindToChar_lh__d1 _lh_kindToChar_arg1_1 =
         'P'
       | _ -> 
         (failwith "error")));;
-let rec kindToChar_lh__d2 _lh_kindToChar_arg1_0 =
-  (let rec _lh_matchIdent_3_9 = _lh_kindToChar_arg1_0 in
-    (match _lh_matchIdent_3_9 with
-      | `King -> 
-        'K'
-      | `Queen -> 
-        'Q'
-      | `Rook -> 
-        'R'
-      | `Bishop -> 
-        'B'
-      | `Knight -> 
-        'N'
-      | `Pawn -> 
-        'P'
-      | _ -> 
-        (failwith "error")));;
 let rec toLower_lh__d1 _lh_toLower_arg1_0 =
   (let rec _lh_matchIdent_6_3 = _lh_toLower_arg1_0 in
     (match _lh_matchIdent_6_3 with
@@ -214,6 +197,23 @@ let rec toLower_lh__d1 _lh_toLower_arg1_0 =
         'z'
       | _ -> 
         _lh_matchIdent_6_3));;
+let rec kindToChar_lh__d2 _lh_kindToChar_arg1_0 =
+  (let rec _lh_matchIdent_3_9 = _lh_kindToChar_arg1_0 in
+    (match _lh_matchIdent_3_9 with
+      | `King -> 
+        'K'
+      | `Queen -> 
+        'Q'
+      | `Rook -> 
+        'R'
+      | `Bishop -> 
+        'B'
+      | `Knight -> 
+        'N'
+      | `Pawn -> 
+        'P'
+      | _ -> 
+        (failwith "error")));;
 let rec pieceToChar_lh__d1 _lh_pieceToChar_arg1_0 =
   (match _lh_pieceToChar_arg1_0 with
     | `LH_P2(_lh_pieceToChar_LH_P2_0_0, _lh_pieceToChar_LH_P2_1_0) -> 
@@ -226,12 +226,6 @@ let rec pieceToChar_lh__d1 _lh_pieceToChar_arg1_0 =
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
-let rec mappend_lh__d9 xs_2_1 ys_8_2 =
-  (match xs_2_1 with
-    | `LH_C(h_7_4, t_7_4) -> 
-      (`LH_C(h_7_4, ((mappend_lh__d9 t_7_4) ys_8_2)))
-    | `LH_N -> 
-      ys_8_2);;
 let rec mappend_lh__d1_d0 xs_7 ys_3_1 =
   (match xs_7 with
     | `LH_C(h_3_1, t_3_1) -> 
@@ -257,6 +251,12 @@ let rec concat_lh__d1 lss_2 =
     | `LH_N -> 
       (fun ys_1_3_5 -> 
         ys_1_3_5));;
+let rec mappend_lh__d9 xs_2_1 ys_8_2 =
+  (match xs_2_1 with
+    | `LH_C(h_7_4, t_7_4) -> 
+      (`LH_C(h_7_4, ((mappend_lh__d9 t_7_4) ys_8_2)))
+    | `LH_N -> 
+      ys_8_2);;
 let rec unlines_lh__d1 _lh_unlines_arg1_0 =
   (concat_lh__d1 (_lh_unlines_arg1_0 (fun l_0 -> 
     ((mappend_lh__d9 l_0) (`LH_C('|', (`LH_N)))))));;
@@ -2506,21 +2506,22 @@ let rec break_lh__d1 _lh_break_arg1_1 _lh_break_arg2_1 =
     | `LH_C(_lh_break_LH_C_0_1, _lh_break_LH_C_1_1) -> 
       (if (_lh_break_arg1_1 _lh_break_LH_C_0_1) then
         (`LH_P2((`LH_N), (let rec _lh_lines_LH_C_1_0 = _lh_break_LH_C_1_1 in
-          (fun _lh_dummy_8 -> 
-            (let rec _lh_matchIdent_6_4 = ((break_lh__d1 (fun x_9 -> 
-              (x_9 = '|'))) _lh_lines_LH_C_1_0) in
-              (match _lh_matchIdent_6_4 with
-                | `LH_P2(_lh_lines_LH_P2_0_2, _lh_lines_LH_P2_1_2) -> 
-                  (let rec t_8_0 = (let rec _lh_matchIdent_6_5 = _lh_lines_LH_P2_1_2 in
-                    (_lh_matchIdent_6_5 99)) in
-                    (let rec h_8_0 = _lh_lines_LH_P2_0_2 in
-                      (fun f_3_5 -> 
-                        (if (f_3_5 h_8_0) then
-                          (`LH_C(h_8_0, (t_8_0 f_3_5)))
-                        else
-                          (t_8_0 f_3_5)))))
-                | _ -> 
-                  (failwith "error")))))))
+          (let rec _lh_lines_LH_C_0_0 = _lh_break_LH_C_0_1 in
+            (fun _lh_dummy_8 -> 
+              (let rec _lh_matchIdent_6_4 = ((break_lh__d1 (fun x_9 -> 
+                (x_9 = '|'))) _lh_lines_LH_C_1_0) in
+                (match _lh_matchIdent_6_4 with
+                  | `LH_P2(_lh_lines_LH_P2_0_2, _lh_lines_LH_P2_1_2) -> 
+                    (let rec t_8_0 = (let rec _lh_matchIdent_6_5 = _lh_lines_LH_P2_1_2 in
+                      (_lh_matchIdent_6_5 99)) in
+                      (let rec h_8_0 = _lh_lines_LH_P2_0_2 in
+                        (fun f_3_5 -> 
+                          (if (f_3_5 h_8_0) then
+                            (`LH_C(h_8_0, (t_8_0 f_3_5)))
+                          else
+                            (t_8_0 f_3_5)))))
+                  | _ -> 
+                    (failwith "error"))))))))
       else
         (let rec _lh_matchIdent_6_6 = ((break_lh__d1 _lh_break_arg1_1) _lh_break_LH_C_1_1) in
           (match _lh_matchIdent_6_6 with

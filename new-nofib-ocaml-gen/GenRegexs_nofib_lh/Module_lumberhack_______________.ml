@@ -4,43 +4,15 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_lumberhack_______________ = struct
-let rec reverse_helper_lh__d1 ls_1 a_0 =
-  (ls_1 a_0);;
-let rec reverse_lh__d1 ls_6 =
-  ((reverse_helper_lh__d1 ls_6) (fun _lh_alphabeticRule_LH_C_1_7 _lh_listcomp_fun_1_9 -> 
-    (`LH_N)));;
-let rec mappend_lh__d1 xs_0 ys_0 =
-  (xs_0 ys_0);;
-let rec foldl_lh__d2 f_3 i_3 ls_0 =
-  ((ls_0 f_3) i_3);;
 let rec foldl_lh__d1 f_7 i_7 ls_5 =
   ((ls_5 f_7) i_7);;
+let rec foldl_lh__d2 f_3 i_3 ls_0 =
+  ((ls_0 f_3) i_3);;
 let rec mknum_lh__d1 _lh_mknum_arg1_0 =
   (((foldl_lh__d1 (fun u_0 c_1 -> 
     ((u_0 * 10) + ((int_of_char c_1) - (int_of_char '0'))))) 0) _lh_mknum_arg1_0);;
-let rec mappend_lh__d3 xs_1 ys_4 =
-  (xs_1 ys_4);;
-let rec enumFromTo_lh__d4 a_3 b_2 =
-  (if (a_3 <= b_2) then
-    (let rec _lh_listcomp_fun_ls_t_5 = ((enumFromTo_lh__d4 (a_3 + 1)) b_2) in
-      (fun _lh_listcomp_fun_8 -> 
-        (let rec t_7 = (_lh_listcomp_fun_8 _lh_listcomp_fun_ls_t_5) in
-          (let rec h_7 = '0' in
-            (fun ys_5 -> 
-              (`LH_C(h_7, ((mappend_lh__d3 t_7) ys_5))))))))
-  else
-    (fun _lh_listcomp_fun_9 ys_6 -> 
-      ys_6));;
-let rec length_lh__d3 ls_3 =
-  (match ls_3 with
-    | `LH_C(h_3, t_3) -> 
-      (1 + (length_lh__d3 t_3))
-    | `LH_N -> 
-      0);;
-let rec pad_lh__d1 _lh_pad_arg1_0 _lh_pad_arg2_0 =
-  ((mappend_lh__d3 (let rec _lh_listcomp_fun_1_8 = (fun _lh_listcomp_fun_para_9 -> 
-    (_lh_listcomp_fun_para_9 _lh_listcomp_fun_1_8)) in
-    (_lh_listcomp_fun_1_8 ((enumFromTo_lh__d4 1) (_lh_pad_arg2_0 - (length_lh__d3 _lh_pad_arg1_0)))))) _lh_pad_arg1_0);;
+let rec mappend_lh__d1 xs_0 ys_0 =
+  (xs_0 ys_0);;
 let rec mappend_lh__d2 xs_2 ys_8 =
   (match xs_2 with
     | `LH_C(h_1_0, t_1_1) -> 
@@ -50,6 +22,30 @@ let rec mappend_lh__d2 xs_2 ys_8 =
             (`LH_C(h_1_1, ((mappend_lh__d1 t_1_2) ys_9))))))
     | `LH_N -> 
       ys_8);;
+let rec length_lh__d3 ls_3 =
+  (match ls_3 with
+    | `LH_C(h_3, t_3) -> 
+      (1 + (length_lh__d3 t_3))
+    | `LH_N -> 
+      0);;
+let rec mappend_lh__d3 xs_1 ys_4 =
+  (xs_1 ys_4);;
+let rec enumFromTo_lh__d4 a_3 b_2 =
+  (if (a_3 <= b_2) then
+    (let rec _lh_listcomp_fun_ls_t_5 = ((enumFromTo_lh__d4 (a_3 + 1)) b_2) in
+      (let rec _lh_listcomp_fun_ls_h_5 = a_3 in
+        (fun _lh_listcomp_fun_8 -> 
+          (let rec t_7 = (_lh_listcomp_fun_8 _lh_listcomp_fun_ls_t_5) in
+            (let rec h_7 = '0' in
+              (fun ys_5 -> 
+                (`LH_C(h_7, ((mappend_lh__d3 t_7) ys_5)))))))))
+  else
+    (fun _lh_listcomp_fun_9 ys_6 -> 
+      ys_6));;
+let rec pad_lh__d1 _lh_pad_arg1_0 _lh_pad_arg2_0 =
+  ((mappend_lh__d3 (let rec _lh_listcomp_fun_1_8 = (fun _lh_listcomp_fun_para_9 -> 
+    (_lh_listcomp_fun_para_9 _lh_listcomp_fun_1_8)) in
+    (_lh_listcomp_fun_1_8 ((enumFromTo_lh__d4 1) (_lh_pad_arg2_0 - (length_lh__d3 _lh_pad_arg1_0)))))) _lh_pad_arg1_0);;
 let rec mknum_lh__d2 _lh_mknum_arg1_1 =
   (((foldl_lh__d2 (fun u_1 c_3 -> 
     ((u_1 * 10) + ((int_of_char c_3) - (int_of_char '0'))))) 0) _lh_mknum_arg1_1);;
@@ -70,6 +66,11 @@ let rec length_lh__d2 ls_4 =
       (1 + (length_lh__d2 t_5))
     | `LH_N -> 
       0);;
+let rec reverse_helper_lh__d1 ls_1 a_0 =
+  (ls_1 a_0);;
+let rec reverse_lh__d1 ls_6 =
+  ((reverse_helper_lh__d1 ls_6) (fun _lh_alphabeticRule_LH_C_1_7 _lh_listcomp_fun_1_9 -> 
+    (`LH_N)));;
 let rec alphabeticRule_lh__d1 _lh_alphabeticRule_arg1_0 =
   (match _lh_alphabeticRule_arg1_0 with
     | `LH_C(_lh_alphabeticRule_LH_C_0_0, _lh_alphabeticRule_LH_C_1_2) -> 
@@ -125,8 +126,8 @@ constantRule_lh__d2 _lh_constantRule_arg1_1 =
     | `LH_C(_lh_constantRule_LH_C_0_1, _lh_constantRule_LH_C_1_1) -> 
       (let rec _lh_listcomp_fun_1_7 = (fun _lh_listcomp_fun_para_8 -> 
         (match _lh_listcomp_fun_para_8 with
-          | `LH_C(_lh_listcomp_fun_ls_h_9, _lh_listcomp_fun_ls_t_1_0) -> 
-            (`LH_C((let rec t_1_3 = _lh_listcomp_fun_ls_h_9 in
+          | `LH_C(_lh_listcomp_fun_ls_h_1_0, _lh_listcomp_fun_ls_t_1_0) -> 
+            (`LH_C((let rec t_1_3 = _lh_listcomp_fun_ls_h_1_0 in
               (let rec h_1_2 = _lh_constantRule_LH_C_0_1 in
                 (fun ys_1_0 -> 
                   (`LH_C(h_1_2, ((mappend_lh__d1 t_1_3) ys_1_0)))))), (_lh_listcomp_fun_1_7 _lh_listcomp_fun_ls_t_1_0)))
@@ -139,12 +140,12 @@ and
 enumFromThenTo_lh__d1 a_4 t_8 b_3 =
   (if (a_4 <= b_3) then
     (let rec _lh_listcomp_fun_ls_t_6 = (((enumFromThenTo_lh__d1 t_8) ((2 * t_8) - a_4)) b_3) in
-      (let rec _lh_listcomp_fun_ls_h_5 = a_4 in
+      (let rec _lh_listcomp_fun_ls_h_6 = a_4 in
         (fun _lh_listcomp_fun_1_0 _lh_numericRule_LH_C_1_5 width_3 -> 
           (let rec _lh_listcomp_fun_1_1 = (fun _lh_listcomp_fun_para_4 -> 
             (match _lh_listcomp_fun_para_4 with
-              | `LH_C(_lh_listcomp_fun_ls_h_6, _lh_listcomp_fun_ls_t_7) -> 
-                (`LH_C(((mappend_lh__d2 ((pad_lh__d1 (string_of_int _lh_listcomp_fun_ls_h_5)) width_3)) _lh_listcomp_fun_ls_h_6), (_lh_listcomp_fun_1_1 _lh_listcomp_fun_ls_t_7)))
+              | `LH_C(_lh_listcomp_fun_ls_h_7, _lh_listcomp_fun_ls_t_7) -> 
+                (`LH_C(((mappend_lh__d2 ((pad_lh__d1 (string_of_int _lh_listcomp_fun_ls_h_6)) width_3)) _lh_listcomp_fun_ls_h_7), (_lh_listcomp_fun_1_1 _lh_listcomp_fun_ls_t_7)))
               | `LH_N -> 
                 (_lh_listcomp_fun_1_0 _lh_listcomp_fun_ls_t_6))) in
             (_lh_listcomp_fun_1_1 (expand_lh__d1 _lh_numericRule_LH_C_1_5))))))
@@ -177,13 +178,13 @@ enumFromTo_lh__d2 a_5 b_4 =
       (let rec h_8 = a_5 in
         (fun a_6 -> 
           ((reverse_helper_lh__d1 t_9) (let rec _lh_listcomp_fun_ls_t_8 = a_6 in
-            (let rec _lh_listcomp_fun_ls_h_7 = h_8 in
+            (let rec _lh_listcomp_fun_ls_h_8 = h_8 in
               (fun _lh_alphabeticRule_LH_C_1_6 _lh_listcomp_fun_1_5 -> 
                 (let rec _lh_listcomp_fun_1_6 = (fun _lh_listcomp_fun_para_7 -> 
                   (match _lh_listcomp_fun_para_7 with
-                    | `LH_C(_lh_listcomp_fun_ls_h_8, _lh_listcomp_fun_ls_t_9) -> 
-                      (`LH_C((let rec t_1_0 = _lh_listcomp_fun_ls_h_8 in
-                        (let rec h_9 = (char_of_int _lh_listcomp_fun_ls_h_7) in
+                    | `LH_C(_lh_listcomp_fun_ls_h_9, _lh_listcomp_fun_ls_t_9) -> 
+                      (`LH_C((let rec t_1_0 = _lh_listcomp_fun_ls_h_9 in
+                        (let rec h_9 = (char_of_int _lh_listcomp_fun_ls_h_8) in
                           (fun ys_7 -> 
                             (`LH_C(h_9, ((mappend_lh__d1 t_1_0) ys_7)))))), (_lh_listcomp_fun_1_6 _lh_listcomp_fun_ls_t_9)))
                     | `LH_N -> 
@@ -254,18 +255,19 @@ span_lh__d1 _lh_span_arg1_1 _lh_span_arg2_1 =
       else
         (`LH_P2((fun f_6 i_6 -> 
           i_6), (let rec _lh_numericRule_LH_C_1_3 = _lh_span_LH_C_1_1 in
-          (fun _lh_numericRule_LH_P2_0_6 _lh_numericRule_LH_P2_0_7 -> 
-            (let rec _lh_matchIdent_4 = (let rec _lh_numericRule_LH_P2_1_2 = (mknum_lh__d2 _lh_numericRule_LH_P2_0_6) in
-              (let rec _lh_numericRule_LH_P2_0_8 = (mknum_lh__d1 _lh_numericRule_LH_P2_0_7) in
-                (fun _lh_numericRule_LH_C_1_4 -> 
-                  (let rec width_2 = ((max_lh__d1 (length_lh__d1 (string_of_int _lh_numericRule_LH_P2_0_8))) (length_lh__d2 (string_of_int _lh_numericRule_LH_P2_1_2))) in
-                    (let rec _lh_listcomp_fun_7 = (fun _lh_listcomp_fun_para_3 -> 
-                      (((_lh_listcomp_fun_para_3 _lh_listcomp_fun_7) _lh_numericRule_LH_C_1_4) width_2)) in
-                      (_lh_listcomp_fun_7 (if (_lh_numericRule_LH_P2_0_8 < _lh_numericRule_LH_P2_1_2) then
-                        ((enumFromTo_lh__d3 _lh_numericRule_LH_P2_0_8) _lh_numericRule_LH_P2_1_2)
-                      else
-                        (((enumFromThenTo_lh__d1 _lh_numericRule_LH_P2_0_8) (_lh_numericRule_LH_P2_0_8 - 1)) _lh_numericRule_LH_P2_1_2)))))))) in
-              (_lh_matchIdent_4 _lh_numericRule_LH_C_1_3)))))))
+          (let rec _lh_numericRule_LH_C_0_1 = _lh_span_LH_C_0_1 in
+            (fun _lh_numericRule_LH_P2_0_6 _lh_numericRule_LH_P2_0_7 -> 
+              (let rec _lh_matchIdent_4 = (let rec _lh_numericRule_LH_P2_1_2 = (mknum_lh__d2 _lh_numericRule_LH_P2_0_6) in
+                (let rec _lh_numericRule_LH_P2_0_8 = (mknum_lh__d1 _lh_numericRule_LH_P2_0_7) in
+                  (fun _lh_numericRule_LH_C_1_4 -> 
+                    (let rec width_2 = ((max_lh__d1 (length_lh__d1 (string_of_int _lh_numericRule_LH_P2_0_8))) (length_lh__d2 (string_of_int _lh_numericRule_LH_P2_1_2))) in
+                      (let rec _lh_listcomp_fun_7 = (fun _lh_listcomp_fun_para_3 -> 
+                        (((_lh_listcomp_fun_para_3 _lh_listcomp_fun_7) _lh_numericRule_LH_C_1_4) width_2)) in
+                        (_lh_listcomp_fun_7 (if (_lh_numericRule_LH_P2_0_8 < _lh_numericRule_LH_P2_1_2) then
+                          ((enumFromTo_lh__d3 _lh_numericRule_LH_P2_0_8) _lh_numericRule_LH_P2_1_2)
+                        else
+                          (((enumFromThenTo_lh__d1 _lh_numericRule_LH_P2_0_8) (_lh_numericRule_LH_P2_0_8 - 1)) _lh_numericRule_LH_P2_1_2)))))))) in
+                (_lh_matchIdent_4 _lh_numericRule_LH_C_1_3))))))))
     | _ -> 
       (failwith "error"))
 and
@@ -289,14 +291,15 @@ span_lh__d2 _lh_span_arg1_0 _lh_span_arg2_0 =
       else
         (`LH_P2((fun f_2 i_2 -> 
           i_2), (let rec _lh_numericRule_LH_C_1_0 = _lh_span_LH_C_1_0 in
-          (fun _lh_numericRule_LH_P2_0_1 -> 
-            (let rec _lh_matchIdent_1 = ((span_lh__d1 (fun c_0 -> 
-              (c_0 <> '>'))) _lh_numericRule_LH_C_1_0) in
-              (match _lh_matchIdent_1 with
-                | `LH_P2(_lh_numericRule_LH_P2_0_2, _lh_numericRule_LH_P2_1_0) -> 
-                  ((_lh_numericRule_LH_P2_1_0 _lh_numericRule_LH_P2_0_2) _lh_numericRule_LH_P2_0_1)
-                | _ -> 
-                  (failwith "error"))))))))
+          (let rec _lh_numericRule_LH_C_0_0 = _lh_span_LH_C_0_0 in
+            (fun _lh_numericRule_LH_P2_0_1 -> 
+              (let rec _lh_matchIdent_1 = ((span_lh__d1 (fun c_0 -> 
+                (c_0 <> '>'))) _lh_numericRule_LH_C_1_0) in
+                (match _lh_matchIdent_1 with
+                  | `LH_P2(_lh_numericRule_LH_P2_0_2, _lh_numericRule_LH_P2_1_0) -> 
+                    ((_lh_numericRule_LH_P2_1_0 _lh_numericRule_LH_P2_0_2) _lh_numericRule_LH_P2_0_1)
+                  | _ -> 
+                    (failwith "error")))))))))
     | _ -> 
       (failwith "error"));;
 let rec concat_lh__d1 lss_0 =

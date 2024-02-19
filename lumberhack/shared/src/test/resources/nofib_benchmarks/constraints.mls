@@ -7246,11 +7246,13 @@ testConstraints_nofib $ primId 5
 //│ 			in let _lh_f_LH_P2_0¹⁵ = _lh_cacheChecks_Node_0¹
 //│ 			in (fun _lh_f_arg1¹⁰ -> case _lh_f_LH_P2_0¹⁵ of {
 //│ 				LH_N  => 
-//│ 					let _lh_fst_LH_P2_0² = [LH_P2 [LH_N] [Unknown]]
+//│ 					let _lh_fst_LH_P2_1² = _lh_f_LH_P2_1¹⁴
+//│ 					in let _lh_fst_LH_P2_0² = [LH_P2 [LH_N] [Unknown]]
 //│ 					in _lh_fst_LH_P2_0²
 //│ 				| LH_C _lh_f_LH_C_0¹ _lh_f_LH_C_1¹ => 
 //│ 					let tableEntry³ = atIndex_lh_₁((value_lh_₁(_lh_f_LH_C_0¹) - 1), head_lh_₁(_lh_f_LH_P2_1¹⁴))
 //│ 					in let cs¹⁰ = if polyEq⁰(tableEntry³, [Unknown]) then checkComplete_lh_₃(_lh_f_arg1¹⁰, [LH_C _lh_f_LH_C_0¹ _lh_f_LH_C_1¹]) else tableEntry³
+//│ 					in let _lh_fst_LH_P2_1³ = _lh_f_LH_P2_1¹⁴
 //│ 					in let _lh_fst_LH_P2_0³ = [LH_P2 [LH_C _lh_f_LH_C_0¹ _lh_f_LH_C_1¹] cs¹⁰]
 //│ 					in _lh_fst_LH_P2_0³
 //│ 				| _  => error⁰})
@@ -7402,62 +7404,66 @@ testConstraints_nofib $ primId 5
 //│ 	| _  => error⁰}
 //│ def enumFromTo_lh_₁(a²⁰, b¹⁶) = if (a²⁰ <= b¹⁶) then 
 //│ 	let _lh_listcomp_fun_ls_t¹⁴ = enumFromTo_lh_₁((a²⁰ + 1), b¹⁶)
+//│ 	in let _lh_listcomp_fun_ls_h¹⁴ = a²⁰
 //│ 	in (fun _lh_emptyTable_CSP_1² -> (fun _lh_listcomp_fun²² -> [LH_C 
 //│ 		let _lh_listcomp_fun²³ = (fun _lh_listcomp_fun_para¹⁴ -> _lh_listcomp_fun_para¹⁴(_lh_listcomp_fun²³))
 //│ 		in _lh_listcomp_fun²³(enumFromTo_lh_₂(1, _lh_emptyTable_CSP_1²)) _lh_listcomp_fun²²(_lh_listcomp_fun_ls_t¹⁴)])) else (fun _lh_emptyTable_CSP_1³ -> (fun _lh_listcomp_fun²⁴ -> [LH_N]))
 //│ def enumFromTo_lh_₂(a¹⁸, b¹⁴) = if (a¹⁸ <= b¹⁴) then 
 //│ 	let _lh_listcomp_fun_ls_t¹² = enumFromTo_lh_₂((a¹⁸ + 1), b¹⁴)
+//│ 	in let _lh_listcomp_fun_ls_h¹² = a¹⁸
 //│ 	in (fun _lh_listcomp_fun¹⁷ -> [LH_C [Unknown] _lh_listcomp_fun¹⁷(_lh_listcomp_fun_ls_t¹²)]) else (fun _lh_listcomp_fun¹⁸ -> [LH_N])
 //│ def enumFromTo_lh_₃(a²³, b¹⁹) = if (a²³ <= b¹⁹) then 
 //│ 	let _lh_listcomp_fun_ls_t¹⁷ = enumFromTo_lh_₃((a²³ + 1), b¹⁹)
+//│ 	in let _lh_listcomp_fun_ls_h²¹ = a²³
 //│ 	in (fun _lh_emptyTable_CSP_1⁴ -> (fun _lh_listcomp_fun³¹ -> [LH_C 
 //│ 		let _lh_listcomp_fun³² = (fun _lh_listcomp_fun_para¹⁷ -> _lh_listcomp_fun_para¹⁷(_lh_listcomp_fun³²))
 //│ 		in _lh_listcomp_fun³²(enumFromTo_lh_₄(1, _lh_emptyTable_CSP_1⁴)) _lh_listcomp_fun³¹(_lh_listcomp_fun_ls_t¹⁷)])) else (fun _lh_emptyTable_CSP_1⁵ -> (fun _lh_listcomp_fun³³ -> [LH_N]))
 //│ def enumFromTo_lh_₄(a¹⁵, b¹²) = if (a¹⁵ <= b¹²) then 
 //│ 	let _lh_listcomp_fun_ls_t¹⁰ = enumFromTo_lh_₄((a¹⁵ + 1), b¹²)
+//│ 	in let _lh_listcomp_fun_ls_h¹⁰ = a¹⁵
 //│ 	in (fun _lh_listcomp_fun¹¹ -> [LH_C [Unknown] _lh_listcomp_fun¹¹(_lh_listcomp_fun_ls_t¹⁰)]) else (fun _lh_listcomp_fun¹² -> [LH_N])
 //│ def enumFromTo_lh_₅(a²², b¹⁸) = if (a²² <= b¹⁸) then 
 //│ 	let _lh_listcomp_fun_ls_t¹⁶ = enumFromTo_lh_₅((a²² + 1), b¹⁸)
-//│ 	in let _lh_listcomp_fun_ls_h¹⁵ = a²²
-//│ 	in (fun _lh_listcomp_fun_ls_h¹⁶ -> (fun _lh_listcomp_fun²⁹ -> 
+//│ 	in let _lh_listcomp_fun_ls_h¹⁸ = a²²
+//│ 	in (fun _lh_listcomp_fun_ls_h¹⁹ -> (fun _lh_listcomp_fun²⁹ -> 
 //│ 		let ty⁶ = _lh_listcomp_fun²⁹(_lh_listcomp_fun_ls_t¹⁶)
 //│ 		in let hy⁶ = 	
-//│ 			let _lh_fillTable_LH_P2_1³ = _lh_listcomp_fun_ls_h¹⁵
-//│ 			in let _lh_fillTable_LH_P2_0³ = _lh_listcomp_fun_ls_h¹⁶
+//│ 			let _lh_fillTable_LH_P2_1³ = _lh_listcomp_fun_ls_h¹⁸
+//│ 			in let _lh_fillTable_LH_P2_0³ = _lh_listcomp_fun_ls_h¹⁹
 //│ 			in (fun _lh_fillTable_Assign_0³ -> (fun _lh_fillTable_Assign_1³ -> (fun _lh_fillTable_CSP_2³ -> (fun cs⁹ -> if (polyEq⁰(cs⁹, [Unknown]) && not⁰(_lh_fillTable_CSP_2³([Assign _lh_fillTable_Assign_0³ _lh_fillTable_Assign_1³], [Assign _lh_fillTable_LH_P2_0³ _lh_fillTable_LH_P2_1³]))) then [Known [LH_C _lh_fillTable_Assign_0³ [LH_C _lh_fillTable_LH_P2_0³ [LH_N]]]] else cs⁹))))
-//│ 		in (fun f⁶⁸ -> (fun hx⁸ -> (fun tx⁸ -> [LH_C f⁶⁸(hx⁸, hy⁶) zipWith_lh_₂(f⁶⁸, tx⁸, ty⁶)]))))) else (fun _lh_listcomp_fun_ls_h¹⁷ -> (fun _lh_listcomp_fun³⁰ -> (fun f⁶⁹ -> (fun hx⁹ -> (fun tx⁹ -> [LH_N])))))
+//│ 		in (fun f⁶⁸ -> (fun hx⁸ -> (fun tx⁸ -> [LH_C f⁶⁸(hx⁸, hy⁶) zipWith_lh_₂(f⁶⁸, tx⁸, ty⁶)]))))) else (fun _lh_listcomp_fun_ls_h²⁰ -> (fun _lh_listcomp_fun³⁰ -> (fun f⁶⁹ -> (fun hx⁹ -> (fun tx⁹ -> [LH_N])))))
 //│ def enumFromTo_lh_₆(a¹⁶, b¹³) = if (a¹⁶ <= b¹³) then 
 //│ 	let _lh_listcomp_fun_ls_t¹¹ = enumFromTo_lh_₆((a¹⁶ + 1), b¹³)
-//│ 	in let _lh_listcomp_fun_ls_h¹⁰ = a¹⁶
+//│ 	in let _lh_listcomp_fun_ls_h¹¹ = a¹⁶
 //│ 	in (fun _lh_fillTable_CSP_1² -> (fun _lh_listcomp_fun¹³ -> 
 //│ 		let ty⁴ = _lh_listcomp_fun¹³(_lh_listcomp_fun_ls_t¹¹)
 //│ 		in let hy⁴ = 	
-//│ 			let _lh_listcomp_fun¹⁴ = (fun _lh_listcomp_fun_para¹¹ -> _lh_listcomp_fun_para¹¹(_lh_listcomp_fun_ls_h¹⁰, _lh_listcomp_fun¹⁴))
+//│ 			let _lh_listcomp_fun¹⁴ = (fun _lh_listcomp_fun_para¹¹ -> _lh_listcomp_fun_para¹¹(_lh_listcomp_fun_ls_h¹¹, _lh_listcomp_fun¹⁴))
 //│ 			in _lh_listcomp_fun¹⁴(enumFromTo_lh_₅(1, _lh_fillTable_CSP_1²))
 //│ 		in (fun f⁴⁴ -> (fun hx⁴ -> (fun tx⁴ -> [LH_C f⁴⁴(hx⁴, hy⁴) zipWith_lh_₁(f⁴⁴, tx⁴, ty⁴)]))))) else (fun _lh_fillTable_CSP_1³ -> (fun _lh_listcomp_fun¹⁵ -> (fun f⁴⁵ -> (fun hx⁵ -> (fun tx⁵ -> [LH_N])))))
 //│ def enumFromTo_lh_₇(a²¹, b¹⁷) = if (a²¹ <= b¹⁷) then 
 //│ 	let _lh_listcomp_fun_ls_t¹⁵ = enumFromTo_lh_₇((a²¹ + 1), b¹⁷)
-//│ 	in let _lh_listcomp_fun_ls_h¹² = a²¹
-//│ 	in (fun _lh_listcomp_fun_ls_h¹³ -> (fun _lh_listcomp_fun²⁷ -> 
+//│ 	in let _lh_listcomp_fun_ls_h¹⁵ = a²¹
+//│ 	in (fun _lh_listcomp_fun_ls_h¹⁶ -> (fun _lh_listcomp_fun²⁷ -> 
 //│ 		let ty⁵ = _lh_listcomp_fun²⁷(_lh_listcomp_fun_ls_t¹⁵)
 //│ 		in let hy⁵ = 	
-//│ 			let _lh_fillTable_LH_P2_1² = _lh_listcomp_fun_ls_h¹²
-//│ 			in let _lh_fillTable_LH_P2_0² = _lh_listcomp_fun_ls_h¹³
+//│ 			let _lh_fillTable_LH_P2_1² = _lh_listcomp_fun_ls_h¹⁵
+//│ 			in let _lh_fillTable_LH_P2_0² = _lh_listcomp_fun_ls_h¹⁶
 //│ 			in (fun _lh_fillTable_Assign_0² -> (fun _lh_fillTable_Assign_1² -> (fun _lh_fillTable_CSP_2² -> (fun cs⁸ -> if (polyEq⁰(cs⁸, [Unknown]) && not⁰(_lh_fillTable_CSP_2²([Assign _lh_fillTable_Assign_0² _lh_fillTable_Assign_1²], [Assign _lh_fillTable_LH_P2_0² _lh_fillTable_LH_P2_1²]))) then [Known [LH_C _lh_fillTable_Assign_0² [LH_C _lh_fillTable_LH_P2_0² [LH_N]]]] else cs⁸))))
-//│ 		in (fun f⁶⁶ -> (fun hx⁶ -> (fun tx⁶ -> [LH_C f⁶⁶(hx⁶, hy⁵) zipWith_lh_₄(f⁶⁶, tx⁶, ty⁵)]))))) else (fun _lh_listcomp_fun_ls_h¹⁴ -> (fun _lh_listcomp_fun²⁸ -> (fun f⁶⁷ -> (fun hx⁷ -> (fun tx⁷ -> [LH_N])))))
+//│ 		in (fun f⁶⁶ -> (fun hx⁶ -> (fun tx⁶ -> [LH_C f⁶⁶(hx⁶, hy⁵) zipWith_lh_₄(f⁶⁶, tx⁶, ty⁵)]))))) else (fun _lh_listcomp_fun_ls_h¹⁷ -> (fun _lh_listcomp_fun²⁸ -> (fun f⁶⁷ -> (fun hx⁷ -> (fun tx⁷ -> [LH_N])))))
 //│ def enumFromTo_lh_₈(a²⁴, b²⁰) = if (a²⁴ <= b²⁰) then 
 //│ 	let _lh_listcomp_fun_ls_t¹⁸ = enumFromTo_lh_₈((a²⁴ + 1), b²⁰)
-//│ 	in let _lh_listcomp_fun_ls_h¹⁸ = a²⁴
+//│ 	in let _lh_listcomp_fun_ls_h²² = a²⁴
 //│ 	in (fun _lh_fillTable_CSP_1⁴ -> (fun _lh_listcomp_fun³⁵ -> 
 //│ 		let ty⁷ = _lh_listcomp_fun³⁵(_lh_listcomp_fun_ls_t¹⁸)
 //│ 		in let hy⁷ = 	
-//│ 			let _lh_listcomp_fun³⁶ = (fun _lh_listcomp_fun_para¹⁹ -> _lh_listcomp_fun_para¹⁹(_lh_listcomp_fun_ls_h¹⁸, _lh_listcomp_fun³⁶))
+//│ 			let _lh_listcomp_fun³⁶ = (fun _lh_listcomp_fun_para¹⁹ -> _lh_listcomp_fun_para¹⁹(_lh_listcomp_fun_ls_h²², _lh_listcomp_fun³⁶))
 //│ 			in _lh_listcomp_fun³⁶(enumFromTo_lh_₇(1, _lh_fillTable_CSP_1⁴))
 //│ 		in (fun f⁸² -> (fun hx¹⁰ -> (fun tx¹⁰ -> [LH_C f⁸²(hx¹⁰, hy⁷) zipWith_lh_₃(f⁸², tx¹⁰, ty⁷)]))))) else (fun _lh_fillTable_CSP_1⁵ -> (fun _lh_listcomp_fun³⁷ -> (fun f⁸³ -> (fun hx¹¹ -> (fun tx¹¹ -> [LH_N])))))
 //│ def enumFromTo_lh_₉(a¹⁹, b¹⁵) = if (a¹⁹ <= b¹⁵) then 
 //│ 	let _lh_listcomp_fun_ls_t¹³ = enumFromTo_lh_₉((a¹⁹ + 1), b¹⁵)
-//│ 	in let _lh_listcomp_fun_ls_h¹¹ = a¹⁹
-//│ 	in (fun _lh_listcomp_fun¹⁹ -> (fun ss² -> [LH_C [LH_C [Assign (maxLevel_lh_₃(ss²) + 1) _lh_listcomp_fun_ls_h¹¹] ss²] _lh_listcomp_fun¹⁹(_lh_listcomp_fun_ls_t¹³)])) else (fun _lh_listcomp_fun²⁰ -> (fun ss³ -> [LH_N]))
+//│ 	in let _lh_listcomp_fun_ls_h¹³ = a¹⁹
+//│ 	in (fun _lh_listcomp_fun¹⁹ -> (fun ss² -> [LH_C [LH_C [Assign (maxLevel_lh_₃(ss²) + 1) _lh_listcomp_fun_ls_h¹³] ss²] _lh_listcomp_fun¹⁹(_lh_listcomp_fun_ls_t¹³)])) else (fun _lh_listcomp_fun²⁰ -> (fun ss³ -> [LH_N]))
 //│ def fc_lh_₁(_lh_fc_arg1¹, _lh_funcomp_x²⁶) = (fun _lh_funcomp_x²⁷ -> domainWipeOut_lh_₁(_lh_fc_arg1¹, lookupCache_lh_₂(_lh_fc_arg1¹, _lh_funcomp_x²⁷)))(cacheChecks_lh_₂(_lh_fc_arg1¹, emptyTable_lh_₂(_lh_fc_arg1¹), _lh_funcomp_x²⁶))
 //│ def fillTable_lh_₁(_lh_fillTable_arg1², _lh_fillTable_arg2², _lh_fillTable_arg3²) = case _lh_fillTable_arg1² of {
 //│ 	LH_N  => _lh_fillTable_arg3²
@@ -7499,6 +7505,7 @@ testConstraints_nofib $ primId 5
 //│ 		in let h³⁹ = h¹³
 //│ 		in (fun f⁸⁷ -> 
 //│ 			let t⁴⁰ = map_lh_₇(f⁸⁷, t³⁹)
+//│ 			in let h⁴⁰ = f⁸⁷(h³⁹)
 //│ 			in (fun _lh_dummy² -> (1 + length_lh_₁(t⁴⁰)))) else filter_lh_₂(f⁸⁶, t¹³)
 //│ 	| LH_N  => (fun f⁸⁸ -> (fun _lh_dummy³ -> 0))}
 //│ def filter_lh_₃(f³⁶, ls²⁹) = case ls²⁹ of {
@@ -7799,10 +7806,10 @@ testConstraints_nofib $ primId 5
 //│ 	| LH_C _lh_all_LH_C_0⁰ _lh_all_LH_C_1⁰ => if _lh_all_arg1⁰(_lh_all_LH_C_0⁰) then all_lh_₁(_lh_all_arg1⁰, _lh_all_LH_C_1⁰) else [False]
 //│ 	| _  => error⁰}
 //│ def atIndex_lh_₁(n¹, ls²⁷) = if (n¹ < 0) then error⁰ else case ls²⁷ of {
-//│ 	LH_C h³⁰ t³¹ => if (n¹ == 0) then h³⁰ else atIndex_lh_₁((n¹ - 1), t³¹)
+//│ 	LH_C h³¹ t³¹ => if (n¹ == 0) then h³¹ else atIndex_lh_₁((n¹ - 1), t³¹)
 //│ 	| LH_N  => error⁰}
 //│ def atIndex_lh_₂(n⁰, ls²⁵) = if (n⁰ < 0) then error⁰ else case ls²⁵ of {
-//│ 	LH_C h²⁹ t³⁰ => if (n⁰ == 0) then h²⁹ else atIndex_lh_₂((n⁰ - 1), t³⁰)
+//│ 	LH_C h³⁰ t³⁰ => if (n⁰ == 0) then h³⁰ else atIndex_lh_₂((n⁰ - 1), t³⁰)
 //│ 	| LH_N  => error⁰}
 //│ def bj'_lh_₁(_lh_bj'_arg1⁰) = 
 //│ 	let f⁴⁴ = (fun _lh_f_arg1⁷ -> (fun _lh_f_arg2⁶ -> case _lh_f_arg1⁷ of {
@@ -7881,11 +7888,13 @@ testConstraints_nofib $ primId 5
 //│ 			in let _lh_f_LH_P2_0¹⁰ = _lh_cacheChecks_Node_0¹
 //│ 			in (fun _lh_f_arg1⁸ -> case _lh_f_LH_P2_0¹⁰ of {
 //│ 				LH_N  => 
-//│ 					let _lh_fst_LH_P2_0¹ = [LH_P2 [LH_N] [Unknown]]
+//│ 					let _lh_fst_LH_P2_1¹ = _lh_f_LH_P2_1⁹
+//│ 					in let _lh_fst_LH_P2_0¹ = [LH_P2 [LH_N] [Unknown]]
 //│ 					in _lh_fst_LH_P2_0¹
 //│ 				| LH_C _lh_f_LH_C_0¹ _lh_f_LH_C_1¹ => 
 //│ 					let tableEntry¹ = atIndex_lh_₁((value_lh_₁(_lh_f_LH_C_0¹) - 1), head_lh_₁(_lh_f_LH_P2_1⁹))
 //│ 					in let cs⁷ = if polyEq⁰(tableEntry¹, [Unknown]) then checkComplete_lh_₃(_lh_f_arg1⁸, [LH_C _lh_f_LH_C_0¹ _lh_f_LH_C_1¹]) else tableEntry¹
+//│ 					in let _lh_fst_LH_P2_1² = _lh_f_LH_P2_1⁹
 //│ 					in let _lh_fst_LH_P2_0² = [LH_P2 [LH_C _lh_f_LH_C_0¹ _lh_f_LH_C_1¹] cs⁷]
 //│ 					in _lh_fst_LH_P2_0²
 //│ 				| _  => error⁰})
@@ -7926,7 +7935,7 @@ testConstraints_nofib $ primId 5
 //│ 						in (fun _lh_f_LH_P2_1⁴ -> 
 //│ 							let wipedDomains⁰ = 	
 //│ 								let _lh_listcomp_fun¹⁸ = (fun _lh_listcomp_fun_para⁸ -> case _lh_listcomp_fun_para⁸ of {
-//│ 									LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t⁵ => if all_lh_₁(knownConflict_lh_₁, _lh_listcomp_fun_ls_h²) then [LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun¹⁸(_lh_listcomp_fun_ls_t⁵)] else _lh_listcomp_fun¹⁸(_lh_listcomp_fun_ls_t⁵)
+//│ 									LH_C _lh_listcomp_fun_ls_h⁵ _lh_listcomp_fun_ls_t⁵ => if all_lh_₁(knownConflict_lh_₁, _lh_listcomp_fun_ls_h⁵) then [LH_C _lh_listcomp_fun_ls_h⁵ _lh_listcomp_fun¹⁸(_lh_listcomp_fun_ls_t⁵)] else _lh_listcomp_fun¹⁸(_lh_listcomp_fun_ls_t⁵)
 //│ 									| LH_N  => [LH_N]})
 //│ 								in _lh_listcomp_fun¹⁸(_lh_f_LH_P2_1⁴)
 //│ 							in let cs'⁰ = if null_lh_₁(wipedDomains⁰) then _lh_f_LH_P2_1³ else [Known collect_lh_₁(head_lh_₂(wipedDomains⁰))]
@@ -7942,7 +7951,7 @@ testConstraints_nofib $ primId 5
 //│ 						in (fun _lh_f_LH_P2_1⁷ -> 
 //│ 							let wipedDomains¹ = 	
 //│ 								let _lh_listcomp_fun¹⁹ = (fun _lh_listcomp_fun_para⁹ -> case _lh_listcomp_fun_para⁹ of {
-//│ 									LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t⁶ => if all_lh_₁(knownConflict_lh_₁, _lh_listcomp_fun_ls_h³) then [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun¹⁹(_lh_listcomp_fun_ls_t⁶)] else _lh_listcomp_fun¹⁹(_lh_listcomp_fun_ls_t⁶)
+//│ 									LH_C _lh_listcomp_fun_ls_h⁶ _lh_listcomp_fun_ls_t⁶ => if all_lh_₁(knownConflict_lh_₁, _lh_listcomp_fun_ls_h⁶) then [LH_C _lh_listcomp_fun_ls_h⁶ _lh_listcomp_fun¹⁹(_lh_listcomp_fun_ls_t⁶)] else _lh_listcomp_fun¹⁹(_lh_listcomp_fun_ls_t⁶)
 //│ 									| LH_N  => [LH_N]})
 //│ 								in _lh_listcomp_fun¹⁹(_lh_f_LH_P2_1⁷)
 //│ 							in let cs'¹ = if null_lh_₁(wipedDomains¹) then _lh_f_LH_P2_1⁶ else [Known collect_lh_₁(head_lh_₂(wipedDomains¹))]
@@ -8054,70 +8063,74 @@ testConstraints_nofib $ primId 5
 //│ 	| _  => error⁰}
 //│ def enumFromTo_lh_₁(a⁷, b⁵) = if (a⁷ <= b⁵) then 
 //│ 	let _lh_listcomp_fun_ls_t⁴ = enumFromTo_lh_₁((a⁷ + 1), b⁵)
+//│ 	in let _lh_listcomp_fun_ls_h⁴ = a⁷
 //│ 	in (fun _lh_emptyTable_CSP_1² -> (fun _lh_listcomp_fun¹³ -> [LH_C 
 //│ 		let _lh_listcomp_fun¹⁴ = (fun _lh_listcomp_fun_para⁵ -> _lh_listcomp_fun_para⁵(_lh_listcomp_fun¹⁴))
 //│ 		in _lh_listcomp_fun¹⁴(enumFromTo_lh_₂(1, _lh_emptyTable_CSP_1²)) _lh_listcomp_fun¹³(_lh_listcomp_fun_ls_t⁴)])) else (fun _lh_emptyTable_CSP_1³ -> (fun _lh_listcomp_fun¹⁵ -> [LH_N]))
 //│ def enumFromTo_lh_₂(a⁵, b³) = if (a⁵ <= b³) then 
 //│ 	let _lh_listcomp_fun_ls_t² = enumFromTo_lh_₂((a⁵ + 1), b³)
+//│ 	in let _lh_listcomp_fun_ls_h² = a⁵
 //│ 	in (fun _lh_listcomp_fun⁸ -> [LH_C [Unknown] _lh_listcomp_fun⁸(_lh_listcomp_fun_ls_t²)]) else (fun _lh_listcomp_fun⁹ -> [LH_N])
 //│ def enumFromTo_lh_₃(a¹⁰, b⁸) = if (a¹⁰ <= b⁸) then 
 //│ 	let _lh_listcomp_fun_ls_t⁹ = enumFromTo_lh_₃((a¹⁰ + 1), b⁸)
+//│ 	in let _lh_listcomp_fun_ls_h¹³ = a¹⁰
 //│ 	in (fun _lh_emptyTable_CSP_1⁵ -> (fun _lh_listcomp_fun²⁵ -> [LH_C 
 //│ 		let _lh_listcomp_fun²⁶ = (fun _lh_listcomp_fun_para¹¹ -> _lh_listcomp_fun_para¹¹(_lh_listcomp_fun²⁶))
 //│ 		in _lh_listcomp_fun²⁶(enumFromTo_lh_₄(1, _lh_emptyTable_CSP_1⁵)) _lh_listcomp_fun²⁵(_lh_listcomp_fun_ls_t⁹)])) else (fun _lh_emptyTable_CSP_1⁶ -> (fun _lh_listcomp_fun²⁷ -> [LH_N]))
 //│ def enumFromTo_lh_₄(a², b¹) = if (a² <= b¹) then 
 //│ 	let _lh_listcomp_fun_ls_t⁰ = enumFromTo_lh_₄((a² + 1), b¹)
+//│ 	in let _lh_listcomp_fun_ls_h⁰ = a²
 //│ 	in (fun _lh_listcomp_fun¹ -> [LH_C [Unknown] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t⁰)]) else (fun _lh_listcomp_fun² -> [LH_N])
 //│ def enumFromTo_lh_₅(a⁹, b⁷) = if (a⁹ <= b⁷) then 
 //│ 	let _lh_listcomp_fun_ls_t⁸ = enumFromTo_lh_₅((a⁹ + 1), b⁷)
-//│ 	in let _lh_listcomp_fun_ls_h⁷ = a⁹
-//│ 	in (fun _lh_listcomp_fun_ls_h⁸ -> (fun _lh_listcomp_fun²² -> 
+//│ 	in let _lh_listcomp_fun_ls_h¹⁰ = a⁹
+//│ 	in (fun _lh_listcomp_fun_ls_h¹¹ -> (fun _lh_listcomp_fun²² -> 
 //│ 		let ty² = _lh_listcomp_fun²²(_lh_listcomp_fun_ls_t⁸)
 //│ 		in let hy² = 	
-//│ 			let _lh_fillTable_LH_P2_1¹ = _lh_listcomp_fun_ls_h⁷
-//│ 			in let _lh_fillTable_LH_P2_0¹ = _lh_listcomp_fun_ls_h⁸
+//│ 			let _lh_fillTable_LH_P2_1¹ = _lh_listcomp_fun_ls_h¹⁰
+//│ 			in let _lh_fillTable_LH_P2_0¹ = _lh_listcomp_fun_ls_h¹¹
 //│ 			in (fun _lh_fillTable_Assign_0³ -> (fun _lh_fillTable_Assign_1³ -> (fun _lh_fillTable_CSP_2³ -> (fun cs⁵ -> if (polyEq⁰(cs⁵, [Unknown]) && not⁰(_lh_fillTable_CSP_2³([Assign _lh_fillTable_Assign_0³ _lh_fillTable_Assign_1³], [Assign _lh_fillTable_LH_P2_0¹ _lh_fillTable_LH_P2_1¹]))) then [Known [LH_C _lh_fillTable_Assign_0³ [LH_C _lh_fillTable_LH_P2_0¹ [LH_N]]]] else cs⁵))))
 //│ 		in (fun f⁴⁰ -> (fun hx¹¹ -> (fun tx¹¹ -> [LH_C f⁴⁰(hx¹¹, hy²) case tx¹¹ of {
 //│ 			LH_C hx¹² tx¹² => ty²(f⁴⁰, hx¹², tx¹²)
-//│ 			| LH_N  => [LH_N]}]))))) else (fun _lh_listcomp_fun_ls_h⁹ -> (fun _lh_listcomp_fun²³ -> (fun f⁴¹ -> (fun hx¹³ -> (fun tx¹³ -> [LH_N])))))
+//│ 			| LH_N  => [LH_N]}]))))) else (fun _lh_listcomp_fun_ls_h¹² -> (fun _lh_listcomp_fun²³ -> (fun f⁴¹ -> (fun hx¹³ -> (fun tx¹³ -> [LH_N])))))
 //│ def enumFromTo_lh_₆(a³, b²) = if (a³ <= b²) then 
 //│ 	let _lh_listcomp_fun_ls_t¹ = enumFromTo_lh_₆((a³ + 1), b²)
-//│ 	in let _lh_listcomp_fun_ls_h⁰ = a³
+//│ 	in let _lh_listcomp_fun_ls_h¹ = a³
 //│ 	in (fun _lh_fillTable_CSP_1¹ -> (fun _lh_listcomp_fun⁴ -> 
 //│ 		let ty⁰ = _lh_listcomp_fun⁴(_lh_listcomp_fun_ls_t¹)
 //│ 		in let hy⁰ = 	
-//│ 			let _lh_listcomp_fun⁵ = (fun _lh_listcomp_fun_para² -> _lh_listcomp_fun_para²(_lh_listcomp_fun_ls_h⁰, _lh_listcomp_fun⁵))
+//│ 			let _lh_listcomp_fun⁵ = (fun _lh_listcomp_fun_para² -> _lh_listcomp_fun_para²(_lh_listcomp_fun_ls_h¹, _lh_listcomp_fun⁵))
 //│ 			in _lh_listcomp_fun⁵(enumFromTo_lh_₅(1, _lh_fillTable_CSP_1¹))
 //│ 		in (fun f¹³ -> (fun hx² -> (fun tx² -> [LH_C f¹³(hx², hy⁰) case tx² of {
 //│ 			LH_C hx³ tx³ => ty⁰(f¹³, hx³, tx³)
 //│ 			| LH_N  => [LH_N]}]))))) else (fun _lh_fillTable_CSP_1² -> (fun _lh_listcomp_fun⁶ -> (fun f¹⁴ -> (fun hx⁴ -> (fun tx⁴ -> [LH_N])))))
 //│ def enumFromTo_lh_₇(a⁸, b⁶) = if (a⁸ <= b⁶) then 
 //│ 	let _lh_listcomp_fun_ls_t⁷ = enumFromTo_lh_₇((a⁸ + 1), b⁶)
-//│ 	in let _lh_listcomp_fun_ls_h⁴ = a⁸
-//│ 	in (fun _lh_listcomp_fun_ls_h⁵ -> (fun _lh_listcomp_fun²⁰ -> 
+//│ 	in let _lh_listcomp_fun_ls_h⁷ = a⁸
+//│ 	in (fun _lh_listcomp_fun_ls_h⁸ -> (fun _lh_listcomp_fun²⁰ -> 
 //│ 		let ty¹ = _lh_listcomp_fun²⁰(_lh_listcomp_fun_ls_t⁷)
 //│ 		in let hy¹ = 	
-//│ 			let _lh_fillTable_LH_P2_1⁰ = _lh_listcomp_fun_ls_h⁴
-//│ 			in let _lh_fillTable_LH_P2_0⁰ = _lh_listcomp_fun_ls_h⁵
+//│ 			let _lh_fillTable_LH_P2_1⁰ = _lh_listcomp_fun_ls_h⁷
+//│ 			in let _lh_fillTable_LH_P2_0⁰ = _lh_listcomp_fun_ls_h⁸
 //│ 			in (fun _lh_fillTable_Assign_0² -> (fun _lh_fillTable_Assign_1² -> (fun _lh_fillTable_CSP_2² -> (fun cs⁴ -> if (polyEq⁰(cs⁴, [Unknown]) && not⁰(_lh_fillTable_CSP_2²([Assign _lh_fillTable_Assign_0² _lh_fillTable_Assign_1²], [Assign _lh_fillTable_LH_P2_0⁰ _lh_fillTable_LH_P2_1⁰]))) then [Known [LH_C _lh_fillTable_Assign_0² [LH_C _lh_fillTable_LH_P2_0⁰ [LH_N]]]] else cs⁴))))
 //│ 		in (fun f³⁸ -> (fun hx⁸ -> (fun tx⁸ -> [LH_C f³⁸(hx⁸, hy¹) case tx⁸ of {
 //│ 			LH_C hx⁹ tx⁹ => ty¹(f³⁸, hx⁹, tx⁹)
-//│ 			| LH_N  => [LH_N]}]))))) else (fun _lh_listcomp_fun_ls_h⁶ -> (fun _lh_listcomp_fun²¹ -> (fun f³⁹ -> (fun hx¹⁰ -> (fun tx¹⁰ -> [LH_N])))))
+//│ 			| LH_N  => [LH_N]}]))))) else (fun _lh_listcomp_fun_ls_h⁹ -> (fun _lh_listcomp_fun²¹ -> (fun f³⁹ -> (fun hx¹⁰ -> (fun tx¹⁰ -> [LH_N])))))
 //│ def enumFromTo_lh_₈(a¹¹, b⁹) = if (a¹¹ <= b⁹) then 
 //│ 	let _lh_listcomp_fun_ls_t¹⁰ = enumFromTo_lh_₈((a¹¹ + 1), b⁹)
-//│ 	in let _lh_listcomp_fun_ls_h¹⁰ = a¹¹
+//│ 	in let _lh_listcomp_fun_ls_h¹⁴ = a¹¹
 //│ 	in (fun _lh_fillTable_CSP_1⁵ -> (fun _lh_listcomp_fun³⁰ -> 
 //│ 		let ty³ = _lh_listcomp_fun³⁰(_lh_listcomp_fun_ls_t¹⁰)
 //│ 		in let hy³ = 	
-//│ 			let _lh_listcomp_fun³¹ = (fun _lh_listcomp_fun_para¹⁴ -> _lh_listcomp_fun_para¹⁴(_lh_listcomp_fun_ls_h¹⁰, _lh_listcomp_fun³¹))
+//│ 			let _lh_listcomp_fun³¹ = (fun _lh_listcomp_fun_para¹⁴ -> _lh_listcomp_fun_para¹⁴(_lh_listcomp_fun_ls_h¹⁴, _lh_listcomp_fun³¹))
 //│ 			in _lh_listcomp_fun³¹(enumFromTo_lh_₇(1, _lh_fillTable_CSP_1⁵))
 //│ 		in (fun f⁵⁷ -> (fun hx¹⁸ -> (fun tx¹⁸ -> [LH_C f⁵⁷(hx¹⁸, hy³) case tx¹⁸ of {
 //│ 			LH_C hx¹⁹ tx¹⁹ => ty³(f⁵⁷, hx¹⁹, tx¹⁹)
 //│ 			| LH_N  => [LH_N]}]))))) else (fun _lh_fillTable_CSP_1⁶ -> (fun _lh_listcomp_fun³² -> (fun f⁵⁸ -> (fun hx²⁰ -> (fun tx²⁰ -> [LH_N])))))
 //│ def enumFromTo_lh_₉(a⁶, b⁴) = if (a⁶ <= b⁴) then 
 //│ 	let _lh_listcomp_fun_ls_t³ = enumFromTo_lh_₉((a⁶ + 1), b⁴)
-//│ 	in let _lh_listcomp_fun_ls_h¹ = a⁶
-//│ 	in (fun _lh_listcomp_fun¹⁰ -> (fun ss¹ -> [LH_C [LH_C [Assign (maxLevel_lh_₃(ss¹) + 1) _lh_listcomp_fun_ls_h¹] ss¹] _lh_listcomp_fun¹⁰(_lh_listcomp_fun_ls_t³)])) else (fun _lh_listcomp_fun¹¹ -> (fun ss² -> [LH_N]))
+//│ 	in let _lh_listcomp_fun_ls_h³ = a⁶
+//│ 	in (fun _lh_listcomp_fun¹⁰ -> (fun ss¹ -> [LH_C [LH_C [Assign (maxLevel_lh_₃(ss¹) + 1) _lh_listcomp_fun_ls_h³] ss¹] _lh_listcomp_fun¹⁰(_lh_listcomp_fun_ls_t³)])) else (fun _lh_listcomp_fun¹¹ -> (fun ss² -> [LH_N]))
 //│ def fc_lh_₁(_lh_fc_arg1⁰, _lh_funcomp_x⁸) = (fun _lh_funcomp_x⁹ -> case _lh_fc_arg1⁰ of {
 //│ 	CSP _lh_domainWipeOut_CSP_0¹ _lh_domainWipeOut_CSP_1¹ _lh_domainWipeOut_CSP_2¹ => 
 //│ 		let f³⁴ = (fun _lh_f_arg1³ -> _lh_f_arg1³(99))
@@ -8176,6 +8189,7 @@ testConstraints_nofib $ primId 5
 //│ 		in let h²⁸ = h²⁷
 //│ 		in (fun f⁶² -> 
 //│ 			let t²⁹ = t²⁸(f⁶²)
+//│ 			in let h²⁹ = f⁶²(h²⁸)
 //│ 			in (fun _lh_dummy² -> (1 + t²⁹(99)))) else filter_lh_₂(f⁶¹, t²⁷)
 //│ 	| LH_N  => (fun f⁶³ -> (fun _lh_dummy³ -> 0))}
 //│ def filter_lh_₃(f³, ls⁰) = case ls⁰ of {
@@ -8311,9 +8325,9 @@ testConstraints_nofib $ primId 5
 //│ 	| LH_N  => (fun f²³ -> (fun f²⁴ -> [LH_N]))}
 //│ def map_lh_₇(f⁸, ls³) = ls³(f⁸)
 //│ def map_lh_₈(f⁶⁶, ls²⁸) = case ls²⁸ of {
-//│ 	LH_C h³¹ t³² => 
+//│ 	LH_C h³² t³² => 
 //│ 		let _lh_combine_LH_C_1¹ = map_lh_₈(f⁶⁶, t³²)
-//│ 		in let _lh_combine_LH_C_0¹ = f⁶⁶(h³¹)
+//│ 		in let _lh_combine_LH_C_0¹ = f⁶⁶(h³²)
 //│ 		in (fun _lh_combine_arg2⁴ -> case _lh_combine_LH_C_0¹ of {
 //│ 			LH_P2 _lh_combine_LH_P2_0¹ _lh_combine_LH_P2_1¹ => case _lh_combine_LH_P2_1¹ of {
 //│ 				Known _lh_combine_Known_0¹ => if notElem_lh_₁(maxLevel_lh_₄(_lh_combine_LH_P2_0¹), _lh_combine_Known_0¹) then _lh_combine_Known_0¹ else _lh_combine_LH_C_1¹(union_lh_₂(_lh_combine_Known_0¹, _lh_combine_arg2⁴))
@@ -8452,10 +8466,10 @@ testConstraints_nofib $ primId 5
 //│ 	| LH_C _lh_all_LH_C_0⁰ _lh_all_LH_C_1⁰ => if _lh_all_arg1⁰(_lh_all_LH_C_0⁰) then all_lh_₁(_lh_all_arg1⁰, _lh_all_LH_C_1⁰) else [False]
 //│ 	| _  => error⁰}
 //│ def atIndex_lh_₁(n¹, ls²⁷) = if (n¹ < 0) then error⁰ else case ls²⁷ of {
-//│ 	LH_C h³⁰ t³¹ => if (n¹ == 0) then h³⁰ else atIndex_lh_₁((n¹ - 1), t³¹)
+//│ 	LH_C h³¹ t³¹ => if (n¹ == 0) then h³¹ else atIndex_lh_₁((n¹ - 1), t³¹)
 //│ 	| LH_N  => error⁰}
 //│ def atIndex_lh_₂(n⁰, ls²⁵) = if (n⁰ < 0) then error⁰ else case ls²⁵ of {
-//│ 	LH_C h²⁹ t³⁰ => if (n⁰ == 0) then h²⁹ else atIndex_lh_₂((n⁰ - 1), t³⁰)
+//│ 	LH_C h³⁰ t³⁰ => if (n⁰ == 0) then h³⁰ else atIndex_lh_₂((n⁰ - 1), t³⁰)
 //│ 	| LH_N  => error⁰}
 //│ def bj'_lh_₁(_lh_bj'_arg1⁰) = 
 //│ 	let f³⁸ = (fun _lh_f_arg1⁷ -> (fun _lh_f_arg2⁶ -> case _lh_f_arg1⁷ of {
@@ -8534,11 +8548,13 @@ testConstraints_nofib $ primId 5
 //│ 			in let _lh_f_LH_P2_0¹⁰ = _lh_cacheChecks_Node_0¹
 //│ 			in (fun _lh_f_arg1⁸ -> case _lh_f_LH_P2_0¹⁰ of {
 //│ 				LH_N  => 
-//│ 					let _lh_fst_LH_P2_0¹ = [LH_P2 [LH_N] [Unknown]]
+//│ 					let _lh_fst_LH_P2_1¹ = _lh_f_LH_P2_1⁹
+//│ 					in let _lh_fst_LH_P2_0¹ = [LH_P2 [LH_N] [Unknown]]
 //│ 					in _lh_fst_LH_P2_0¹
 //│ 				| LH_C _lh_f_LH_C_0¹ _lh_f_LH_C_1¹ => 
 //│ 					let tableEntry¹ = atIndex_lh_₁((value_lh_₁(_lh_f_LH_C_0¹) - 1), head_lh_₁(_lh_f_LH_P2_1⁹))
 //│ 					in let cs⁷ = if polyEq⁰(tableEntry¹, [Unknown]) then checkComplete_lh_₃(_lh_f_arg1⁸, [LH_C _lh_f_LH_C_0¹ _lh_f_LH_C_1¹]) else tableEntry¹
+//│ 					in let _lh_fst_LH_P2_1² = _lh_f_LH_P2_1⁹
 //│ 					in let _lh_fst_LH_P2_0² = [LH_P2 [LH_C _lh_f_LH_C_0¹ _lh_f_LH_C_1¹] cs⁷]
 //│ 					in _lh_fst_LH_P2_0²
 //│ 				| _  => error⁰})
@@ -8579,7 +8595,7 @@ testConstraints_nofib $ primId 5
 //│ 						in (fun _lh_f_LH_P2_1⁴ -> 
 //│ 							let wipedDomains⁰ = 	
 //│ 								let _lh_listcomp_fun¹⁸ = (fun _lh_listcomp_fun_para⁸ -> case _lh_listcomp_fun_para⁸ of {
-//│ 									LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun_ls_t⁵ => if all_lh_₁(knownConflict_lh_₁, _lh_listcomp_fun_ls_h²) then [LH_C _lh_listcomp_fun_ls_h² _lh_listcomp_fun¹⁸(_lh_listcomp_fun_ls_t⁵)] else _lh_listcomp_fun¹⁸(_lh_listcomp_fun_ls_t⁵)
+//│ 									LH_C _lh_listcomp_fun_ls_h⁵ _lh_listcomp_fun_ls_t⁵ => if all_lh_₁(knownConflict_lh_₁, _lh_listcomp_fun_ls_h⁵) then [LH_C _lh_listcomp_fun_ls_h⁵ _lh_listcomp_fun¹⁸(_lh_listcomp_fun_ls_t⁵)] else _lh_listcomp_fun¹⁸(_lh_listcomp_fun_ls_t⁵)
 //│ 									| LH_N  => [LH_N]})
 //│ 								in _lh_listcomp_fun¹⁸(_lh_f_LH_P2_1⁴)
 //│ 							in let cs'⁰ = if null_lh_₁(wipedDomains⁰) then _lh_f_LH_P2_1³ else [Known collect_lh_₁(head_lh_₂(wipedDomains⁰))]
@@ -8595,7 +8611,7 @@ testConstraints_nofib $ primId 5
 //│ 						in (fun _lh_f_LH_P2_1⁷ -> 
 //│ 							let wipedDomains¹ = 	
 //│ 								let _lh_listcomp_fun¹⁹ = (fun _lh_listcomp_fun_para⁹ -> case _lh_listcomp_fun_para⁹ of {
-//│ 									LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun_ls_t⁶ => if all_lh_₁(knownConflict_lh_₁, _lh_listcomp_fun_ls_h³) then [LH_C _lh_listcomp_fun_ls_h³ _lh_listcomp_fun¹⁹(_lh_listcomp_fun_ls_t⁶)] else _lh_listcomp_fun¹⁹(_lh_listcomp_fun_ls_t⁶)
+//│ 									LH_C _lh_listcomp_fun_ls_h⁶ _lh_listcomp_fun_ls_t⁶ => if all_lh_₁(knownConflict_lh_₁, _lh_listcomp_fun_ls_h⁶) then [LH_C _lh_listcomp_fun_ls_h⁶ _lh_listcomp_fun¹⁹(_lh_listcomp_fun_ls_t⁶)] else _lh_listcomp_fun¹⁹(_lh_listcomp_fun_ls_t⁶)
 //│ 									| LH_N  => [LH_N]})
 //│ 								in _lh_listcomp_fun¹⁹(_lh_f_LH_P2_1⁷)
 //│ 							in let cs'¹ = if null_lh_₁(wipedDomains¹) then _lh_f_LH_P2_1⁶ else [Known collect_lh_₁(head_lh_₂(wipedDomains¹))]
@@ -8707,70 +8723,74 @@ testConstraints_nofib $ primId 5
 //│ 	| _  => error⁰}
 //│ def enumFromTo_lh_₁(a⁷, b⁵) = if (a⁷ <= b⁵) then 
 //│ 	let _lh_listcomp_fun_ls_t⁴ = enumFromTo_lh_₁((a⁷ + 1), b⁵)
+//│ 	in let _lh_listcomp_fun_ls_h⁴ = a⁷
 //│ 	in (fun _lh_emptyTable_CSP_1² -> (fun _lh_listcomp_fun¹³ -> [LH_C 
 //│ 		let _lh_listcomp_fun¹⁴ = (fun _lh_listcomp_fun_para⁵ -> _lh_listcomp_fun_para⁵(_lh_listcomp_fun¹⁴))
 //│ 		in _lh_listcomp_fun¹⁴(enumFromTo_lh_₂(1, _lh_emptyTable_CSP_1²)) _lh_listcomp_fun¹³(_lh_listcomp_fun_ls_t⁴)])) else (fun _lh_emptyTable_CSP_1³ -> (fun _lh_listcomp_fun¹⁵ -> [LH_N]))
 //│ def enumFromTo_lh_₂(a⁵, b³) = if (a⁵ <= b³) then 
 //│ 	let _lh_listcomp_fun_ls_t² = enumFromTo_lh_₂((a⁵ + 1), b³)
+//│ 	in let _lh_listcomp_fun_ls_h² = a⁵
 //│ 	in (fun _lh_listcomp_fun⁸ -> [LH_C [Unknown] _lh_listcomp_fun⁸(_lh_listcomp_fun_ls_t²)]) else (fun _lh_listcomp_fun⁹ -> [LH_N])
 //│ def enumFromTo_lh_₃(a¹⁰, b⁸) = if (a¹⁰ <= b⁸) then 
 //│ 	let _lh_listcomp_fun_ls_t⁹ = enumFromTo_lh_₃((a¹⁰ + 1), b⁸)
+//│ 	in let _lh_listcomp_fun_ls_h¹³ = a¹⁰
 //│ 	in (fun _lh_emptyTable_CSP_1⁵ -> (fun _lh_listcomp_fun²⁵ -> [LH_C 
 //│ 		let _lh_listcomp_fun²⁶ = (fun _lh_listcomp_fun_para¹¹ -> _lh_listcomp_fun_para¹¹(_lh_listcomp_fun²⁶))
 //│ 		in _lh_listcomp_fun²⁶(enumFromTo_lh_₄(1, _lh_emptyTable_CSP_1⁵)) _lh_listcomp_fun²⁵(_lh_listcomp_fun_ls_t⁹)])) else (fun _lh_emptyTable_CSP_1⁶ -> (fun _lh_listcomp_fun²⁷ -> [LH_N]))
 //│ def enumFromTo_lh_₄(a², b¹) = if (a² <= b¹) then 
 //│ 	let _lh_listcomp_fun_ls_t⁰ = enumFromTo_lh_₄((a² + 1), b¹)
+//│ 	in let _lh_listcomp_fun_ls_h⁰ = a²
 //│ 	in (fun _lh_listcomp_fun¹ -> [LH_C [Unknown] _lh_listcomp_fun¹(_lh_listcomp_fun_ls_t⁰)]) else (fun _lh_listcomp_fun² -> [LH_N])
 //│ def enumFromTo_lh_₅(a⁹, b⁷) = if (a⁹ <= b⁷) then 
 //│ 	let _lh_listcomp_fun_ls_t⁸ = enumFromTo_lh_₅((a⁹ + 1), b⁷)
-//│ 	in let _lh_listcomp_fun_ls_h⁷ = a⁹
-//│ 	in (fun _lh_listcomp_fun_ls_h⁸ -> (fun _lh_listcomp_fun²² -> 
+//│ 	in let _lh_listcomp_fun_ls_h¹⁰ = a⁹
+//│ 	in (fun _lh_listcomp_fun_ls_h¹¹ -> (fun _lh_listcomp_fun²² -> 
 //│ 		let ty² = _lh_listcomp_fun²²(_lh_listcomp_fun_ls_t⁸)
 //│ 		in let hy² = 	
-//│ 			let _lh_fillTable_LH_P2_1¹ = _lh_listcomp_fun_ls_h⁷
-//│ 			in let _lh_fillTable_LH_P2_0¹ = _lh_listcomp_fun_ls_h⁸
+//│ 			let _lh_fillTable_LH_P2_1¹ = _lh_listcomp_fun_ls_h¹⁰
+//│ 			in let _lh_fillTable_LH_P2_0¹ = _lh_listcomp_fun_ls_h¹¹
 //│ 			in (fun _lh_fillTable_Assign_0³ -> (fun _lh_fillTable_Assign_1³ -> (fun _lh_fillTable_CSP_2³ -> (fun cs⁵ -> if (polyEq⁰(cs⁵, [Unknown]) && not⁰(_lh_fillTable_CSP_2³([Assign _lh_fillTable_Assign_0³ _lh_fillTable_Assign_1³], [Assign _lh_fillTable_LH_P2_0¹ _lh_fillTable_LH_P2_1¹]))) then [Known [LH_C _lh_fillTable_Assign_0³ [LH_C _lh_fillTable_LH_P2_0¹ [LH_N]]]] else cs⁵))))
 //│ 		in (fun f³⁴ -> (fun hx¹¹ -> (fun tx¹¹ -> [LH_C f³⁴(hx¹¹, hy²) case tx¹¹ of {
 //│ 			LH_C hx¹² tx¹² => ty²(f³⁴, hx¹², tx¹²)
-//│ 			| LH_N  => [LH_N]}]))))) else (fun _lh_listcomp_fun_ls_h⁹ -> (fun _lh_listcomp_fun²³ -> (fun f³⁵ -> (fun hx¹³ -> (fun tx¹³ -> [LH_N])))))
+//│ 			| LH_N  => [LH_N]}]))))) else (fun _lh_listcomp_fun_ls_h¹² -> (fun _lh_listcomp_fun²³ -> (fun f³⁵ -> (fun hx¹³ -> (fun tx¹³ -> [LH_N])))))
 //│ def enumFromTo_lh_₆(a³, b²) = if (a³ <= b²) then 
 //│ 	let _lh_listcomp_fun_ls_t¹ = enumFromTo_lh_₆((a³ + 1), b²)
-//│ 	in let _lh_listcomp_fun_ls_h⁰ = a³
+//│ 	in let _lh_listcomp_fun_ls_h¹ = a³
 //│ 	in (fun _lh_fillTable_CSP_1¹ -> (fun _lh_listcomp_fun⁴ -> 
 //│ 		let ty⁰ = _lh_listcomp_fun⁴(_lh_listcomp_fun_ls_t¹)
 //│ 		in let hy⁰ = 	
-//│ 			let _lh_listcomp_fun⁵ = (fun _lh_listcomp_fun_para² -> _lh_listcomp_fun_para²(_lh_listcomp_fun_ls_h⁰, _lh_listcomp_fun⁵))
+//│ 			let _lh_listcomp_fun⁵ = (fun _lh_listcomp_fun_para² -> _lh_listcomp_fun_para²(_lh_listcomp_fun_ls_h¹, _lh_listcomp_fun⁵))
 //│ 			in _lh_listcomp_fun⁵(enumFromTo_lh_₅(1, _lh_fillTable_CSP_1¹))
 //│ 		in (fun f¹¹ -> (fun hx² -> (fun tx² -> [LH_C f¹¹(hx², hy⁰) case tx² of {
 //│ 			LH_C hx³ tx³ => ty⁰(f¹¹, hx³, tx³)
 //│ 			| LH_N  => [LH_N]}]))))) else (fun _lh_fillTable_CSP_1² -> (fun _lh_listcomp_fun⁶ -> (fun f¹² -> (fun hx⁴ -> (fun tx⁴ -> [LH_N])))))
 //│ def enumFromTo_lh_₇(a⁸, b⁶) = if (a⁸ <= b⁶) then 
 //│ 	let _lh_listcomp_fun_ls_t⁷ = enumFromTo_lh_₇((a⁸ + 1), b⁶)
-//│ 	in let _lh_listcomp_fun_ls_h⁴ = a⁸
-//│ 	in (fun _lh_listcomp_fun_ls_h⁵ -> (fun _lh_listcomp_fun²⁰ -> 
+//│ 	in let _lh_listcomp_fun_ls_h⁷ = a⁸
+//│ 	in (fun _lh_listcomp_fun_ls_h⁸ -> (fun _lh_listcomp_fun²⁰ -> 
 //│ 		let ty¹ = _lh_listcomp_fun²⁰(_lh_listcomp_fun_ls_t⁷)
 //│ 		in let hy¹ = 	
-//│ 			let _lh_fillTable_LH_P2_1⁰ = _lh_listcomp_fun_ls_h⁴
-//│ 			in let _lh_fillTable_LH_P2_0⁰ = _lh_listcomp_fun_ls_h⁵
+//│ 			let _lh_fillTable_LH_P2_1⁰ = _lh_listcomp_fun_ls_h⁷
+//│ 			in let _lh_fillTable_LH_P2_0⁰ = _lh_listcomp_fun_ls_h⁸
 //│ 			in (fun _lh_fillTable_Assign_0² -> (fun _lh_fillTable_Assign_1² -> (fun _lh_fillTable_CSP_2² -> (fun cs⁴ -> if (polyEq⁰(cs⁴, [Unknown]) && not⁰(_lh_fillTable_CSP_2²([Assign _lh_fillTable_Assign_0² _lh_fillTable_Assign_1²], [Assign _lh_fillTable_LH_P2_0⁰ _lh_fillTable_LH_P2_1⁰]))) then [Known [LH_C _lh_fillTable_Assign_0² [LH_C _lh_fillTable_LH_P2_0⁰ [LH_N]]]] else cs⁴))))
 //│ 		in (fun f³² -> (fun hx⁸ -> (fun tx⁸ -> [LH_C f³²(hx⁸, hy¹) case tx⁸ of {
 //│ 			LH_C hx⁹ tx⁹ => ty¹(f³², hx⁹, tx⁹)
-//│ 			| LH_N  => [LH_N]}]))))) else (fun _lh_listcomp_fun_ls_h⁶ -> (fun _lh_listcomp_fun²¹ -> (fun f³³ -> (fun hx¹⁰ -> (fun tx¹⁰ -> [LH_N])))))
+//│ 			| LH_N  => [LH_N]}]))))) else (fun _lh_listcomp_fun_ls_h⁹ -> (fun _lh_listcomp_fun²¹ -> (fun f³³ -> (fun hx¹⁰ -> (fun tx¹⁰ -> [LH_N])))))
 //│ def enumFromTo_lh_₈(a¹¹, b⁹) = if (a¹¹ <= b⁹) then 
 //│ 	let _lh_listcomp_fun_ls_t¹⁰ = enumFromTo_lh_₈((a¹¹ + 1), b⁹)
-//│ 	in let _lh_listcomp_fun_ls_h¹⁰ = a¹¹
+//│ 	in let _lh_listcomp_fun_ls_h¹⁴ = a¹¹
 //│ 	in (fun _lh_fillTable_CSP_1⁵ -> (fun _lh_listcomp_fun³⁰ -> 
 //│ 		let ty³ = _lh_listcomp_fun³⁰(_lh_listcomp_fun_ls_t¹⁰)
 //│ 		in let hy³ = 	
-//│ 			let _lh_listcomp_fun³¹ = (fun _lh_listcomp_fun_para¹⁴ -> _lh_listcomp_fun_para¹⁴(_lh_listcomp_fun_ls_h¹⁰, _lh_listcomp_fun³¹))
+//│ 			let _lh_listcomp_fun³¹ = (fun _lh_listcomp_fun_para¹⁴ -> _lh_listcomp_fun_para¹⁴(_lh_listcomp_fun_ls_h¹⁴, _lh_listcomp_fun³¹))
 //│ 			in _lh_listcomp_fun³¹(enumFromTo_lh_₇(1, _lh_fillTable_CSP_1⁵))
 //│ 		in (fun f⁴⁷ -> (fun hx¹⁸ -> (fun tx¹⁸ -> [LH_C f⁴⁷(hx¹⁸, hy³) case tx¹⁸ of {
 //│ 			LH_C hx¹⁹ tx¹⁹ => ty³(f⁴⁷, hx¹⁹, tx¹⁹)
 //│ 			| LH_N  => [LH_N]}]))))) else (fun _lh_fillTable_CSP_1⁶ -> (fun _lh_listcomp_fun³² -> (fun f⁴⁸ -> (fun hx²⁰ -> (fun tx²⁰ -> [LH_N])))))
 //│ def enumFromTo_lh_₉(a⁶, b⁴) = if (a⁶ <= b⁴) then 
 //│ 	let _lh_listcomp_fun_ls_t³ = enumFromTo_lh_₉((a⁶ + 1), b⁴)
-//│ 	in let _lh_listcomp_fun_ls_h¹ = a⁶
-//│ 	in (fun _lh_listcomp_fun¹⁰ -> (fun ss¹ -> [LH_C [LH_C [Assign (maxLevel_lh_₃(ss¹) + 1) _lh_listcomp_fun_ls_h¹] ss¹] _lh_listcomp_fun¹⁰(_lh_listcomp_fun_ls_t³)])) else (fun _lh_listcomp_fun¹¹ -> (fun ss² -> [LH_N]))
+//│ 	in let _lh_listcomp_fun_ls_h³ = a⁶
+//│ 	in (fun _lh_listcomp_fun¹⁰ -> (fun ss¹ -> [LH_C [LH_C [Assign (maxLevel_lh_₃(ss¹) + 1) _lh_listcomp_fun_ls_h³] ss¹] _lh_listcomp_fun¹⁰(_lh_listcomp_fun_ls_t³)])) else (fun _lh_listcomp_fun¹¹ -> (fun ss² -> [LH_N]))
 //│ def fc_lh_₁(_lh_fc_arg1⁰, _lh_funcomp_x⁸) = (fun _lh_funcomp_x⁹ -> case _lh_fc_arg1⁰ of {
 //│ 	CSP _lh_domainWipeOut_CSP_0¹ _lh_domainWipeOut_CSP_1¹ _lh_domainWipeOut_CSP_2¹ => 
 //│ 		let f²⁸ = (fun _lh_f_arg1³ -> _lh_f_arg1³(99))
@@ -8829,6 +8849,7 @@ testConstraints_nofib $ primId 5
 //│ 		in let h²⁸ = h²⁷
 //│ 		in (fun f⁵² -> 
 //│ 			let t²⁹ = t²⁸(f⁵²)
+//│ 			in let h²⁹ = f⁵²(h²⁸)
 //│ 			in (fun _lh_dummy² -> (1 + t²⁹(99)))) else filter_lh_₂(f⁵¹, t²⁷)
 //│ 	| LH_N  => (fun f⁵³ -> (fun _lh_dummy³ -> 0))}
 //│ def filter_lh_₃(f³, ls⁰) = case ls⁰ of {
@@ -8962,9 +8983,9 @@ testConstraints_nofib $ primId 5
 //│ 	| LH_N  => [LH_N]}
 //│ def map_lh_₇(f⁶, ls³) = ls³(f⁶)
 //│ def map_lh_₈(f⁵⁶, ls²⁸, _lh_popOutId_0⁴) = case ls²⁸ of {
-//│ 	LH_C h³¹ t³² => 
+//│ 	LH_C h³² t³² => 
 //│ 		let _lh_combine_LH_C_1¹ = map_lh_₈(f⁵⁶, t³²)
-//│ 		in let _lh_combine_LH_C_0¹ = f⁵⁶(h³¹)
+//│ 		in let _lh_combine_LH_C_0¹ = f⁵⁶(h³²)
 //│ 		in case _lh_combine_LH_C_0¹ of {
 //│ 			LH_P2 _lh_combine_LH_P2_0¹ _lh_combine_LH_P2_1¹ => case _lh_combine_LH_P2_1¹ of {
 //│ 				Known _lh_combine_Known_0¹ => if notElem_lh_₁(maxLevel_lh_₄(_lh_combine_LH_P2_0¹), _lh_combine_Known_0¹) then _lh_combine_Known_0¹ else _lh_combine_LH_C_1¹(union_lh_₂(_lh_combine_Known_0¹, _lh_popOutId_0⁴))

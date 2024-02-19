@@ -529,17 +529,18 @@ let rec sqrtPs_lh__d1 _lh_sqrtPs_arg1_0 =
                   (failwith "error")))
           | 1 -> 
             (let rec qs_0 = (lazy ((addPs_lh__d3 (fromIntegerPs_lh__d4 1)) (integral_lh__d3 ((divPs_lh__d3 (deriv_lh__d1 (lazy (let rec _lh_deriv_Pc_1_0 = _lh_sqrtPs_Pc_1_0 in
-              (fun _lh_dummy_1 -> 
-                (let rec deriv1_0 = (fun gss_0 n_1_4 -> 
-                  (lazy (let rec _lh_matchIdent_3_9 = (Lazy.force gss_0) in
-                    (match _lh_matchIdent_3_9 with
-                      | `Pz -> 
-                        (`Pz)
-                      | `Pc(_lh_deriv_Pc_0_0, _lh_deriv_Pc_1_1) -> 
-                        (`Pc((n_1_4 * _lh_deriv_Pc_0_0), ((deriv1_0 _lh_deriv_Pc_1_1) (n_1_4 + 1))))
-                      | _ -> 
-                        (failwith "error"))))) in
-                  (Lazy.force ((deriv1_0 _lh_deriv_Pc_1_0) 1)))))))) ((dotMultSndLz_lh__d1 2) qs_0))))) in
+              (let rec _lh_deriv_Pc_0_0 = 1 in
+                (fun _lh_dummy_1 -> 
+                  (let rec deriv1_0 = (fun gss_0 n_1_4 -> 
+                    (lazy (let rec _lh_matchIdent_3_9 = (Lazy.force gss_0) in
+                      (match _lh_matchIdent_3_9 with
+                        | `Pz -> 
+                          (`Pz)
+                        | `Pc(_lh_deriv_Pc_0_1, _lh_deriv_Pc_1_1) -> 
+                          (`Pc((n_1_4 * _lh_deriv_Pc_0_1), ((deriv1_0 _lh_deriv_Pc_1_1) (n_1_4 + 1))))
+                        | _ -> 
+                          (failwith "error"))))) in
+                    (Lazy.force ((deriv1_0 _lh_deriv_Pc_1_0) 1))))))))) ((dotMultSndLz_lh__d1 2) qs_0))))) in
               (Lazy.force (Lazy.force qs_0)))
           | _ -> 
             (failwith "error"))

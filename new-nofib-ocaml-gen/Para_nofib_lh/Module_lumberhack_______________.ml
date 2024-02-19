@@ -535,8 +535,9 @@ let rec break_lh__d1 _lh_break_arg1_2 _lh_break_arg2_2 =
     | `LH_C(_lh_break_LH_C_0_1, _lh_break_LH_C_1_1) -> 
       (if (_lh_break_arg1_2 _lh_break_LH_C_0_1) then
         (`LH_P2((`LH_N), (let rec _lh_lines_LH_C_1_0 = _lh_break_LH_C_1_1 in
-          (fun _lh_dummy_3 -> 
-            (lines_lh__d1 _lh_lines_LH_C_1_0)))))
+          (let rec _lh_lines_LH_C_0_0 = _lh_break_LH_C_0_1 in
+            (fun _lh_dummy_3 -> 
+              (lines_lh__d1 _lh_lines_LH_C_1_0))))))
       else
         (let rec _lh_matchIdent_8 = ((break_lh__d1 _lh_break_arg1_2) _lh_break_LH_C_1_1) in
           (match _lh_matchIdent_8 with

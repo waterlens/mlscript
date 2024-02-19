@@ -61,6 +61,7 @@ count(0, rev(N, N))
 //│ def rev(a¹, ys¹) = case ys¹ of {
 //│ 	C h1⁰ t1⁰ => rev(
 //│ 		let t¹ = a¹
+//│ 		in let h¹ = h1⁰
 //│ 		in (fun c³ -> count((c³ + 1), t¹)), t1⁰)
 //│ 	| N  => a¹}
 //│ <<<<<<< after fusion <<<<<<<
@@ -83,6 +84,7 @@ count(0, rev(N, N))
 //│ def rev(a⁰, ys⁰) = case ys⁰ of {
 //│ 	C h1⁰ t1⁰ => rev(
 //│ 		let t⁰ = a⁰
+//│ 		in let h⁰ = h1⁰
 //│ 		in (fun c² -> t⁰((c² + 1))), t1⁰)
 //│ 	| N  => a⁰}
 //│ <<<<<<< after inlining <<<<<<<
@@ -93,6 +95,7 @@ count(0, rev(N, N))
 //│ def rev(a⁰, ys⁰) = case ys⁰ of {
 //│ 	C h1⁰ t1⁰ => rev(
 //│ 		let t⁰ = a⁰
+//│ 		in let h⁰ = h1⁰
 //│ 		in (fun c² -> t⁰((c² + 1))), t1⁰)
 //│ 	| N  => a⁰}
 //│ <<<<<<< after floating out <<<<<<<
@@ -167,12 +170,15 @@ count(0, rev(C(1, C(2, N)), N))
 //│ count(0, rev(
 //│ 	let t¹ = 	
 //│ 		let t² = (fun c⁵ -> c⁵)
+//│ 		in let h² = 2
 //│ 		in (fun c⁴ -> count((c⁴ + 1), t²))
+//│ 	in let h¹ = 1
 //│ 	in (fun c³ -> count((c³ + 1), t¹)), [N]))
 //│ def count(c⁶, xs¹) = xs¹(c⁶)
 //│ def rev(a³, ys¹) = case ys¹ of {
 //│ 	C h1⁰ t1⁰ => (fun a⁴ -> rev(
 //│ 		let t³ = a⁴
+//│ 		in let h³ = h1⁰
 //│ 		in (fun c⁷ -> count((c⁷ + 1), t³)), t1⁰))
 //│ 	| N  => (fun a⁵ -> a⁵)}(a³)
 //│ <<<<<<< after fusion <<<<<<<
@@ -193,12 +199,15 @@ count(0, rev(C(1, C(2, N)), N))
 //│ rev(
 //│ 	let t⁰ = 	
 //│ 		let t¹ = (fun c⁰ -> c⁰)
+//│ 		in let h⁰ = 2
 //│ 		in (fun c¹ -> t¹((c¹ + 1)))
+//│ 	in let h¹ = 1
 //│ 	in (fun c² -> t⁰((c² + 1))), [N], 0)
 //│ def count(c³, xs⁰) = xs⁰(c³)
 //│ def rev(a⁰, ys⁰) = case ys⁰ of {
 //│ 	C h1⁰ t1⁰ => (fun a¹ -> rev(
 //│ 		let t² = a¹
+//│ 		in let h² = h1⁰
 //│ 		in (fun c⁴ -> t²((c⁴ + 1))), t1⁰))
 //│ 	| N  => (fun a² -> a²)}(a⁰)
 //│ <<<<<<< after inlining <<<<<<<
@@ -207,12 +216,15 @@ count(0, rev(C(1, C(2, N)), N))
 //│ rev(
 //│ 	let t⁰ = 	
 //│ 		let t¹ = (fun c⁰ -> c⁰)
+//│ 		in let h⁰ = 2
 //│ 		in (fun c¹ -> t¹((c¹ + 1)))
+//│ 	in let h¹ = 1
 //│ 	in (fun c² -> t⁰((c² + 1))), [N], 0)
 //│ def count(c³, xs⁰) = xs⁰(c³)
 //│ def rev(a⁰, ys⁰) = case ys⁰ of {
 //│ 	C h1⁰ t1⁰ => (fun a¹ -> rev(
 //│ 		let t² = a¹
+//│ 		in let h² = h1⁰
 //│ 		in (fun c⁴ -> t²((c⁴ + 1))), t1⁰))
 //│ 	| N  => (fun a² -> a²)}(a⁰)
 //│ <<<<<<< after floating out <<<<<<<
@@ -281,6 +293,7 @@ count(rev(N, init))(0)
 //│ def rev(a¹, ys¹) = case ys¹ of {
 //│ 	C h1⁰ t1⁰ => rev(
 //│ 		let t¹ = a¹
+//│ 		in let h¹ = h1⁰
 //│ 		in (fun c³ -> count(t¹, (c³ + 1))), t1⁰)
 //│ 	| N  => a¹}
 //│ <<<<<<< after fusion <<<<<<<
@@ -304,6 +317,7 @@ count(rev(N, init))(0)
 //│ def rev(a⁰, ys⁰) = case ys⁰ of {
 //│ 	C h1⁰ t1⁰ => rev(
 //│ 		let t⁰ = a⁰
+//│ 		in let h⁰ = h1⁰
 //│ 		in (fun c¹ -> t⁰((c¹ + 1))), t1⁰)
 //│ 	| N  => a⁰}
 //│ <<<<<<< after inlining <<<<<<<
@@ -315,6 +329,7 @@ count(rev(N, init))(0)
 //│ def rev(a⁰, ys⁰) = case ys⁰ of {
 //│ 	C h1⁰ t1⁰ => rev(
 //│ 		let t⁰ = a⁰
+//│ 		in let h⁰ = h1⁰
 //│ 		in (fun c¹ -> t⁰((c¹ + 1))), t1⁰)
 //│ 	| N  => a⁰}
 //│ <<<<<<< after floating out <<<<<<<
@@ -381,6 +396,7 @@ idxSum(0, rev(N, N))
 //│ def rev(a¹, ys¹) = case ys¹ of {
 //│ 	C h1⁰ t1⁰ => rev(
 //│ 		let t¹ = a¹
+//│ 		in let h¹ = h1⁰
 //│ 		in (fun i³ -> add⁰(i³, idxSum(add⁰(i³, 1), t¹))), t1⁰)
 //│ 	| N  => a¹}
 //│ <<<<<<< after fusion <<<<<<<
@@ -403,6 +419,7 @@ idxSum(0, rev(N, N))
 //│ def rev(a⁰, ys⁰) = case ys⁰ of {
 //│ 	C h1⁰ t1⁰ => rev(
 //│ 		let t⁰ = a⁰
+//│ 		in let h⁰ = h1⁰
 //│ 		in (fun i² -> add⁰(i², t⁰(add⁰(i², 1)))), t1⁰)
 //│ 	| N  => a⁰}
 //│ <<<<<<< after inlining <<<<<<<
@@ -413,6 +430,7 @@ idxSum(0, rev(N, N))
 //│ def rev(a⁰, ys⁰) = case ys⁰ of {
 //│ 	C h1⁰ t1⁰ => rev(
 //│ 		let t⁰ = a⁰
+//│ 		in let h⁰ = h1⁰
 //│ 		in (fun i² -> add⁰(i², t⁰(add⁰(i², 1)))), t1⁰)
 //│ 	| N  => a⁰}
 //│ <<<<<<< after floating out <<<<<<<
@@ -481,6 +499,7 @@ count(rev(N, init))
 //│ def rev(a¹, ys¹) = case ys¹ of {
 //│ 	C h1⁰ t1⁰ => rev(
 //│ 		let t¹ = a¹
+//│ 		in let h¹ = h1⁰
 //│ 		in (fun _lh_dummy¹ -> add⁰(1, count(t¹))), t1⁰)
 //│ 	| N  => a¹}
 //│ <<<<<<< after fusion <<<<<<<
@@ -504,6 +523,7 @@ count(rev(N, init))
 //│ def rev(a⁰, ys⁰) = case ys⁰ of {
 //│ 	C h1⁰ t1⁰ => rev(
 //│ 		let t⁰ = a⁰
+//│ 		in let h⁰ = h1⁰
 //│ 		in (fun _lh_dummy¹ -> add⁰(1, t⁰(99))), t1⁰)
 //│ 	| N  => a⁰}
 //│ <<<<<<< after inlining <<<<<<<
@@ -515,6 +535,7 @@ count(rev(N, init))
 //│ def rev(a⁰, ys⁰) = case ys⁰ of {
 //│ 	C h1⁰ t1⁰ => rev(
 //│ 		let t⁰ = a⁰
+//│ 		in let h⁰ = h1⁰
 //│ 		in (fun _lh_dummy¹ -> add⁰(1, t⁰(99))), t1⁰)
 //│ 	| N  => a⁰}
 //│ <<<<<<< after floating out <<<<<<<
@@ -709,9 +730,11 @@ rev(rev2, init)(1, init2)
 //│ rev(rev2, init, 1, init2)
 //│ def init = 
 //│ 	let t1¹ = init
+//│ 	in let h1¹ = 0
 //│ 	in (fun a² -> rev(a², t1¹))
 //│ def init2 = 
 //│ 	let t12¹ = init2
+//│ 	in let h12¹ = 0
 //│ 	in (fun a2² -> rev2(a2², t12¹))
 //│ def rev(a¹, ys¹) = ys¹(a¹)
 //│ def rev2(a2¹, ys2¹) = ys2¹(a2¹)
@@ -730,9 +753,11 @@ rev(rev2, init)(1, init2)
 //│ init(rev2, 1, init2)
 //│ def init = 
 //│ 	let t1⁰ = init
+//│ 	in let h1⁰ = 0
 //│ 	in (fun a¹ -> t1⁰(a¹))
 //│ def init2 = 
 //│ 	let t12⁰ = init2
+//│ 	in let h12⁰ = 0
 //│ 	in (fun a2¹ -> t12⁰(a2¹))
 //│ def rev(a⁰, ys⁰) = ys⁰(a⁰)
 //│ def rev2(a2⁰, ys2⁰) = ys2⁰(a2⁰)
@@ -742,9 +767,11 @@ rev(rev2, init)(1, init2)
 //│ init(rev2, 1, init2)
 //│ def init = 
 //│ 	let t1⁰ = init
+//│ 	in let h1⁰ = 0
 //│ 	in (fun a¹ -> t1⁰(a¹))
 //│ def init2 = 
 //│ 	let t12⁰ = init2
+//│ 	in let h12⁰ = 0
 //│ 	in (fun a2¹ -> t12⁰(a2¹))
 //│ def rev(a⁰, ys⁰) = ys⁰(a⁰)
 //│ def rev2(a2⁰, ys2⁰) = ys2⁰(a2⁰)

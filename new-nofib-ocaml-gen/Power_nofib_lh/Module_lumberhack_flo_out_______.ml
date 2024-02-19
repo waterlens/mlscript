@@ -498,17 +498,18 @@ let rec sqrtPs_lh__d1 _lh_sqrtPs_arg1_0 =
                   (failwith "error")))
           | 1 -> 
             (let rec qs_0 = (lazy ((addPs_lh__d3 (fromIntegerPs_lh__d4 1)) (integral_lh__d3 ((divPs_lh__d3 (lazy (let rec _lh_matchIdent_4_4 = (Lazy.force (lazy (let rec _lh_deriv_Pc_1_0 = _lh_sqrtPs_Pc_1_0 in
-              (fun _lh_dummy_2 -> 
-                (let rec deriv1_0 = (fun gss_0 n_1_6 -> 
-                  (lazy (let rec _lh_matchIdent_4_5 = (Lazy.force gss_0) in
-                    (match _lh_matchIdent_4_5 with
-                      | `Pz -> 
-                        (`Pz)
-                      | `Pc(_lh_deriv_Pc_0_0, _lh_deriv_Pc_1_1) -> 
-                        (`Pc((n_1_6 * _lh_deriv_Pc_0_0), ((deriv1_0 _lh_deriv_Pc_1_1) (n_1_6 + 1))))
-                      | _ -> 
-                        (failwith "error"))))) in
-                  (Lazy.force ((deriv1_0 _lh_deriv_Pc_1_0) 1))))))) in
+              (let rec _lh_deriv_Pc_0_0 = 1 in
+                (fun _lh_dummy_2 -> 
+                  (let rec deriv1_0 = (fun gss_0 n_1_6 -> 
+                    (lazy (let rec _lh_matchIdent_4_5 = (Lazy.force gss_0) in
+                      (match _lh_matchIdent_4_5 with
+                        | `Pz -> 
+                          (`Pz)
+                        | `Pc(_lh_deriv_Pc_0_1, _lh_deriv_Pc_1_1) -> 
+                          (`Pc((n_1_6 * _lh_deriv_Pc_0_1), ((deriv1_0 _lh_deriv_Pc_1_1) (n_1_6 + 1))))
+                        | _ -> 
+                          (failwith "error"))))) in
+                    (Lazy.force ((deriv1_0 _lh_deriv_Pc_1_0) 1)))))))) in
               (_lh_matchIdent_4_4 99)))) ((dotMultSndLz_lh__d1 2) qs_0))))) in
               (Lazy.force (Lazy.force qs_0)))
           | _ -> 
@@ -536,8 +537,6 @@ let rec addPs_lh__d1 _lh_addPs_arg1_5 _lh_addPs_arg2_5 =
               (failwith "error")))
       | _ -> 
         (failwith "error"))));;
-let rec list_lh__d1 =
-  (lazy (`Pc(1, list_lh__d1)));;
 let rec multPsFstLz_lh__d1 _lh_multPsFstLz_arg1_0 _lh_multPsFstLz_arg2_0 =
   (lazy (let rec _lh_matchIdent_2 = (Lazy.force (Lazy.force _lh_multPsFstLz_arg1_0)) in
     (match _lh_matchIdent_2 with
@@ -574,6 +573,8 @@ let rec composeSndLz_lh__d1 _lh_composeSndLz_arg1_0 _lh_composeSndLz_arg2_0 =
               (Lazy.force ((addPs_lh__d6 (lazy (`Pc(_lh_composeSndLz_Pc_0_0, (lazy (`Pz)))))) ((multPsFstLz_lh__d1 _lh_composeSndLz_arg2_0) ((composeSndLz_lh__d1 _lh_composeSndLz_Pc_1_0) _lh_composeSndLz_arg2_0))))))
       | _ -> 
         (failwith "error"))));;
+let rec list_lh__d1 =
+  (lazy (`Pc(1, list_lh__d1)));;
 let rec tree_lh__d1 =
   (lazy (`Pc(0, ((composeSndLz_lh__d1 list_lh__d1) (lazy tree_lh__d1)))));;
 let rec extract_lh__d4 _lh_extract_arg1_3 _lh_extract_arg2_3 =

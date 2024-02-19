@@ -14,8 +14,9 @@ let rec break_lh__d1 _lh_break_arg1_1 _lh_break_arg2_1 =
     | `LH_C(_lh_break_LH_C_0_1, _lh_break_LH_C_1_1) -> 
       (if (_lh_break_arg1_1 _lh_break_LH_C_0_1) then
         (`LH_P2((`LH_N), (let rec _lh_lines_LH_C_1_0 = _lh_break_LH_C_1_1 in
-          (fun _lh_dummy_8 -> 
-            (lines_lh__d1 _lh_lines_LH_C_1_0)))))
+          (let rec _lh_lines_LH_C_0_0 = _lh_break_LH_C_0_1 in
+            (fun _lh_dummy_8 -> 
+              (lines_lh__d1 _lh_lines_LH_C_1_0))))))
       else
         (let rec _lh_matchIdent_5_9 = ((break_lh__d1 _lh_break_arg1_1) _lh_break_LH_C_1_1) in
           (match _lh_matchIdent_5_9 with
@@ -75,63 +76,6 @@ let rec enumFromTo_lh__d4 a_2 b_2 =
       (`LH_N)));;
 let rec zipWith_lh__d2 f_1_2 xs_1_3 ys_4_2 =
   ((xs_1_3 f_1_2) ys_4_2);;
-let rec toLower_lh__d1 _lh_toLower_arg1_0 =
-  (let rec _lh_matchIdent_5_8 = _lh_toLower_arg1_0 in
-    (match _lh_matchIdent_5_8 with
-      | 'A' -> 
-        'a'
-      | 'B' -> 
-        'b'
-      | 'C' -> 
-        'c'
-      | 'D' -> 
-        'd'
-      | 'E' -> 
-        'e'
-      | 'F' -> 
-        'f'
-      | 'G' -> 
-        'g'
-      | 'H' -> 
-        'h'
-      | 'I' -> 
-        'i'
-      | 'J' -> 
-        'j'
-      | 'K' -> 
-        'k'
-      | 'L' -> 
-        'l'
-      | 'M' -> 
-        'm'
-      | 'N' -> 
-        'n'
-      | 'O' -> 
-        'o'
-      | 'P' -> 
-        'p'
-      | 'Q' -> 
-        'q'
-      | 'R' -> 
-        'r'
-      | 'S' -> 
-        's'
-      | 'T' -> 
-        't'
-      | 'U' -> 
-        'u'
-      | 'V' -> 
-        'v'
-      | 'W' -> 
-        'w'
-      | 'X' -> 
-        'x'
-      | 'Y' -> 
-        'y'
-      | 'Z' -> 
-        'z'
-      | _ -> 
-        _lh_matchIdent_5_8));;
 let rec isUpper_lh__d1 _lh_isUpper_arg1_0 =
   (let rec _lh_matchIdent_3_5 = _lh_isUpper_arg1_0 in
     (match _lh_matchIdent_3_5 with
@@ -189,6 +133,63 @@ let rec isUpper_lh__d1 _lh_isUpper_arg1_0 =
         true
       | _ -> 
         false));;
+let rec toLower_lh__d1 _lh_toLower_arg1_0 =
+  (let rec _lh_matchIdent_5_8 = _lh_toLower_arg1_0 in
+    (match _lh_matchIdent_5_8 with
+      | 'A' -> 
+        'a'
+      | 'B' -> 
+        'b'
+      | 'C' -> 
+        'c'
+      | 'D' -> 
+        'd'
+      | 'E' -> 
+        'e'
+      | 'F' -> 
+        'f'
+      | 'G' -> 
+        'g'
+      | 'H' -> 
+        'h'
+      | 'I' -> 
+        'i'
+      | 'J' -> 
+        'j'
+      | 'K' -> 
+        'k'
+      | 'L' -> 
+        'l'
+      | 'M' -> 
+        'm'
+      | 'N' -> 
+        'n'
+      | 'O' -> 
+        'o'
+      | 'P' -> 
+        'p'
+      | 'Q' -> 
+        'q'
+      | 'R' -> 
+        'r'
+      | 'S' -> 
+        's'
+      | 'T' -> 
+        't'
+      | 'U' -> 
+        'u'
+      | 'V' -> 
+        'v'
+      | 'W' -> 
+        'w'
+      | 'X' -> 
+        'x'
+      | 'Y' -> 
+        'y'
+      | 'Z' -> 
+        'z'
+      | _ -> 
+        _lh_matchIdent_5_8));;
 let rec parseSquare_lh__d1 _lh_parseSquare_arg1_0 _lh_parseSquare_arg2_0 _lh_parseSquare_arg3_0 =
   (match _lh_parseSquare_arg3_0 with
     | '-' -> 
@@ -481,8 +482,6 @@ let rec pieceToChar_lh__d1 _lh_pieceToChar_arg1_0 =
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
-let rec map_lh__d2 f_2_2 ls_1_5 =
-  (ls_1_5 f_2_2);;
 let rec mappend_lh__d2 xs_9 ys_3_7 =
   (xs_9 ys_3_7);;
 let rec mappend_lh__d1_d0 xs_7 ys_3_1 =
@@ -510,6 +509,8 @@ let rec concat_lh__d1 lss_2 =
     | `LH_N -> 
       (fun ys_1_3_5 -> 
         ys_1_3_5));;
+let rec map_lh__d2 f_2_2 ls_1_5 =
+  (ls_1_5 f_2_2);;
 let rec mappend_lh__d9 xs_2_1 ys_8_2 =
   (match xs_2_1 with
     | `LH_C(h_7_3, t_7_3) -> 

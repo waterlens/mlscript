@@ -52,7 +52,9 @@ if C(A, B(D)) is
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ let bd¹ = (fun a² -> a²)
+//│ let bd¹ = 	
+//│ 	let d¹ = [D]
+//│ 	in (fun a² -> a²)
 //│ in let a¹ = [OK]
 //│ in bd¹(a¹)
 //│ <<<<<<< after fusion <<<<<<<
@@ -70,13 +72,17 @@ if C(A, B(D)) is
 //│ <<<<<<< floating out info <<<<<<<
 //│ 
 //│ >>>>>>> after inlining >>>>>>>
-//│ let bd⁰ = (fun a⁰ -> a⁰)
+//│ let bd⁰ = 	
+//│ 	let d⁰ = [D]
+//│ 	in (fun a⁰ -> a⁰)
 //│ in let a¹ = [OK]
 //│ in bd⁰(a¹)
 //│ <<<<<<< after inlining <<<<<<<
 //│ 
 //│ >>>>>>> after floating out >>>>>>>
-//│ let bd⁰ = (fun a⁰ -> a⁰)
+//│ let bd⁰ = 	
+//│ 	let d⁰ = [D]
+//│ 	in (fun a⁰ -> a⁰)
 //│ in let a¹ = [OK]
 //│ in bd⁰(a¹)
 //│ <<<<<<< after floating out <<<<<<<
@@ -130,7 +136,9 @@ if C(A, B(D)) is
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ 
-//│ 	let bd¹ = (fun a³ -> (fun a⁴ -> a⁴)(a³))
+//│ 	let bd¹ = 	
+//│ 		let d¹ = [D]
+//│ 		in (fun a³ -> (fun a⁴ -> a⁴)(a³))
 //│ 	in let a² = [OK]
 //│ 	in (fun _lh_dummy⁰ -> bd¹(a²))(99)
 //│ <<<<<<< after fusion <<<<<<<
@@ -145,14 +153,18 @@ if C(A, B(D)) is
 //│ 
 //│ >>>>>>> after inlining >>>>>>>
 //│ 
-//│ 	let bd⁰ = (fun a⁰ -> (fun a¹ -> a¹)(a⁰))
+//│ 	let bd⁰ = 	
+//│ 		let d⁰ = [D]
+//│ 		in (fun a⁰ -> (fun a¹ -> a¹)(a⁰))
 //│ 	in let a² = [OK]
 //│ 	in (fun _lh_dummy⁰ -> bd⁰(a²))(99)
 //│ <<<<<<< after inlining <<<<<<<
 //│ 
 //│ >>>>>>> after floating out >>>>>>>
 //│ 
-//│ 	let bd⁰ = (fun a⁰ -> (fun a¹ -> a¹)(a⁰))
+//│ 	let bd⁰ = 	
+//│ 		let d⁰ = [D]
+//│ 		in (fun a⁰ -> (fun a¹ -> a¹)(a⁰))
 //│ 	in let a² = [OK]
 //│ 	in (fun _lh_dummy⁰ -> bd⁰(a²))(99)
 //│ <<<<<<< after floating out <<<<<<<

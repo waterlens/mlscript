@@ -18,6 +18,13 @@ let rec copy_lh__d1 _lh_copy_arg1_1 _lh_copy_arg2_1 =
       (`LH_N)));;
 let rec pad_circuit_lh__d1 _lh_pad_circuit_arg1_0 =
   (_lh_pad_circuit_arg1_0 99);;
+let rec zip_lh__d1 xs_1 ys_1 =
+  (match xs_1 with
+    | `LH_C(hx_0, tx_0) -> 
+      ((ys_1 hx_0) tx_0)
+    | `LH_N -> 
+      (fun _lh_listcomp_fun_1 _lh_store_inputs_PS_0_0 _lh_store_inputs_PS_2_0 _lh_store_inputs_PS_3_0 _lh_store_inputs_PS_4_0 -> 
+        (`LH_N)));;
 let rec outports_lh__d4 _lh_outports_arg1_6 =
   (match _lh_outports_arg1_6 with
     | `PS(_lh_outports_PS_0_6, _lh_outports_PS_1_6, _lh_outports_PS_2_6, _lh_outports_PS_3_6, _lh_outports_PS_4_6) -> 
@@ -62,13 +69,6 @@ let rec update_outports_lh__d2 _lh_update_outports_arg1_1 _lh_update_outports_ar
       | `LH_N -> 
         (`LH_N))) in
     (_lh_listcomp_fun_7 (outports_lh__d4 _lh_update_outports_arg1_1))));;
-let rec zip_lh__d1 xs_1 ys_1 =
-  (match xs_1 with
-    | `LH_C(hx_0, tx_0) -> 
-      ((ys_1 hx_0) tx_0)
-    | `LH_N -> 
-      (fun _lh_listcomp_fun_1 _lh_store_inputs_PS_0_0 _lh_store_inputs_PS_2_0 _lh_store_inputs_PS_3_0 _lh_store_inputs_PS_4_0 -> 
-        (`LH_N)));;
 let rec copy_lh__d2 _lh_copy_arg1_2 _lh_copy_arg2_2 =
   (if (_lh_copy_arg1_2 > 0) then
     (let rec ty_5 = ((copy_lh__d2 (_lh_copy_arg1_2 - 1)) _lh_copy_arg2_2) in
@@ -91,14 +91,6 @@ let rec copy_lh__d2 _lh_copy_arg1_2 _lh_copy_arg2_2 =
   else
     (fun hx_6 tx_6 _lh_listcomp_fun_1_2 _lh_store_inputs_PS_0_3 _lh_store_inputs_PS_2_3 _lh_store_inputs_PS_3_3 _lh_store_inputs_PS_4_3 -> 
       (`LH_N)));;
-let rec map_lh__d2 f_2_6 ls_1_3 =
-  (match ls_1_3 with
-    | `LH_C(h_3_1, t_3_1) -> 
-      (`LH_C((f_2_6 h_3_1), ((map_lh__d2 f_2_6) t_3_1)))
-    | `LH_N -> 
-      (`LH_N));;
-let rec simulate_lh__d1 _lh_simulate_arg1_0 _lh_simulate_arg2_0 =
-  (_lh_simulate_arg2_0 _lh_simulate_arg1_0);;
 let rec head_lh__d2 ls_4 =
   (match ls_4 with
     | `LH_C(h_5, t_5) -> 
@@ -156,6 +148,14 @@ let rec collect_outputs_lh__d1 _lh_collect_outputs_arg1_0 =
       in ((map_lh__d3 (get_output_0 _lh_collect_outputs_LH_P4_3_0)) _lh_collect_outputs_LH_P4_2_0)
     | _ -> 
       (failwith "error"));;
+let rec simulate_lh__d1 _lh_simulate_arg1_0 _lh_simulate_arg2_0 =
+  (_lh_simulate_arg2_0 _lh_simulate_arg1_0);;
+let rec map_lh__d2 f_2_6 ls_1_3 =
+  (match ls_1_3 with
+    | `LH_C(h_3_1, t_3_1) -> 
+      (`LH_C((f_2_6 h_3_1), ((map_lh__d2 f_2_6) t_3_1)))
+    | `LH_N -> 
+      (`LH_N));;
 let rec circuit_simulate_lh__d1 _lh_circuit_simulate_arg1_0 _lh_circuit_simulate_arg2_0 =
   ((map_lh__d2 collect_outputs_lh__d1) ((simulate_lh__d1 _lh_circuit_simulate_arg1_0) _lh_circuit_simulate_arg2_0));;
 let rec until_lh__d1 _lh_until_arg1_2 _lh_until_arg2_2 _lh_until_arg3_2 =
@@ -200,6 +200,12 @@ let rec enumFromTo_lh__d2 a_3 b_1 =
       (`LH_N)));;
 let rec mappend_lh__d2 xs_5 ys_3 =
   (xs_5 ys_3);;
+let rec compType_lh__d4 _lh_compType_arg1_3 =
+  (match _lh_compType_arg1_3 with
+    | `PS(_lh_compType_PS_0_3, _lh_compType_PS_1_3, _lh_compType_PS_2_3, _lh_compType_PS_3_3, _lh_compType_PS_4_3) -> 
+      _lh_compType_PS_1_3
+    | _ -> 
+      (failwith "error"));;
 let rec inports_lh__d4 _lh_inports_arg1_0 =
   (match _lh_inports_arg1_0 with
     | `PS(_lh_inports_PS_0_0, _lh_inports_PS_1_0, _lh_inports_PS_2_0, _lh_inports_PS_3_0, _lh_inports_PS_4_0) -> 
@@ -210,12 +216,6 @@ let rec pathDepth_lh__d4 _lh_pathDepth_arg1_1 =
   (match _lh_pathDepth_arg1_1 with
     | `PS(_lh_pathDepth_PS_0_1, _lh_pathDepth_PS_1_1, _lh_pathDepth_PS_2_1, _lh_pathDepth_PS_3_1, _lh_pathDepth_PS_4_1) -> 
       _lh_pathDepth_PS_2_1
-    | _ -> 
-      (failwith "error"));;
-let rec compType_lh__d4 _lh_compType_arg1_3 =
-  (match _lh_compType_arg1_3 with
-    | `PS(_lh_compType_PS_0_3, _lh_compType_PS_1_3, _lh_compType_PS_2_3, _lh_compType_PS_3_3, _lh_compType_PS_4_3) -> 
-      _lh_compType_PS_1_3
     | _ -> 
       (failwith "error"));;
 let rec pid_lh__d3 _lh_pid_arg1_2 =
@@ -510,16 +510,16 @@ let rec outports_lh__d7 _lh_outports_arg1_0 =
       _lh_outports_PS_4_0
     | _ -> 
       (failwith "error"));;
-let rec pathDepth_lh__d7 _lh_pathDepth_arg1_3 =
-  (match _lh_pathDepth_arg1_3 with
-    | `PS(_lh_pathDepth_PS_0_3, _lh_pathDepth_PS_1_3, _lh_pathDepth_PS_2_3, _lh_pathDepth_PS_3_3, _lh_pathDepth_PS_4_3) -> 
-      _lh_pathDepth_PS_2_3
-    | _ -> 
-      (failwith "error"));;
 let rec pid_lh__d5 _lh_pid_arg1_4 =
   (match _lh_pid_arg1_4 with
     | `PS(_lh_pid_PS_0_4, _lh_pid_PS_1_4, _lh_pid_PS_2_4, _lh_pid_PS_3_4, _lh_pid_PS_4_4) -> 
       _lh_pid_PS_0_4
+    | _ -> 
+      (failwith "error"));;
+let rec pathDepth_lh__d7 _lh_pathDepth_arg1_3 =
+  (match _lh_pathDepth_arg1_3 with
+    | `PS(_lh_pathDepth_PS_0_3, _lh_pathDepth_PS_1_3, _lh_pathDepth_PS_2_3, _lh_pathDepth_PS_3_3, _lh_pathDepth_PS_4_3) -> 
+      _lh_pathDepth_PS_2_3
     | _ -> 
       (failwith "error"));;
 let rec inports_lh__d6 _lh_inports_arg1_3 =
@@ -629,14 +629,14 @@ let rec map_lh__d1_d8 f_3_0 ls_1_6 =
     | `LH_N -> 
       (fun _lh_dummy_9 -> 
         false));;
-let rec updateOutports_lh__d5 _lh_updateOutports_arg1_0 _lh_updateOutports_arg2_0 =
-  (`PS((pid_lh__d5 _lh_updateOutports_arg1_0), (compType_lh__d5 _lh_updateOutports_arg1_0), (pathDepth_lh__d7 _lh_updateOutports_arg1_0), (inports_lh__d6 _lh_updateOutports_arg1_0), _lh_updateOutports_arg2_0));;
 let rec outports_lh__d9 _lh_outports_arg1_3 =
   (match _lh_outports_arg1_3 with
     | `PS(_lh_outports_PS_0_3, _lh_outports_PS_1_3, _lh_outports_PS_2_3, _lh_outports_PS_3_3, _lh_outports_PS_4_3) -> 
       _lh_outports_PS_4_3
     | _ -> 
       (failwith "error"));;
+let rec updateOutports_lh__d5 _lh_updateOutports_arg1_0 _lh_updateOutports_arg2_0 =
+  (`PS((pid_lh__d5 _lh_updateOutports_arg1_0), (compType_lh__d5 _lh_updateOutports_arg1_0), (pathDepth_lh__d7 _lh_updateOutports_arg1_0), (inports_lh__d6 _lh_updateOutports_arg1_0), _lh_updateOutports_arg2_0));;
 let rec update_requests_lh__d1 _lh_update_requests_arg1_0 _lh_update_requests_arg2_0 =
   ((updateOutports_lh__d5 _lh_update_requests_arg2_0) (let rec _lh_listcomp_fun_2_0 = (fun _lh_listcomp_fun_para_1_0 -> 
     (match _lh_listcomp_fun_para_1_0 with
@@ -1033,34 +1033,36 @@ let rec put_lh__d1 _lh_put_arg1_0 =
         | `LH_N -> 
           (let rec _lh_upsweep_Cell_0_0 = _lh_put_LH_C_0_0 in
             (fun _lh_upsweep_arg1_0 -> 
-              (`LH_P2(_lh_upsweep_Cell_0_0, (fun _lh_downsweep_arg2_1 _lh_downsweep_arg1_1 -> 
-                (`Cell(_lh_downsweep_arg2_1)))))))
+              (`LH_P2(_lh_upsweep_Cell_0_0, (let rec _lh_downsweep_Cell_0_0 = _lh_upsweep_Cell_0_0 in
+                (fun _lh_downsweep_arg2_1 _lh_downsweep_arg1_1 -> 
+                  (`Cell(_lh_downsweep_arg2_1))))))))
         | _ -> 
           (let rec _lh_matchIdent_6 = ((splitAt_lh__d1 ((length_lh__d1 _lh_put_arg1_0) / 2)) _lh_put_arg1_0) in
             (match _lh_matchIdent_6 with
               | `LH_P2(_lh_put_LH_P2_0_0, _lh_put_LH_P2_1_0) -> 
                 (let rec _lh_upsweep_Node_2_0 = (put_lh__d1 _lh_put_LH_P2_1_0) in
                   (let rec _lh_upsweep_Node_1_0 = (put_lh__d1 _lh_put_LH_P2_0_0) in
-                    (fun _lh_upsweep_arg1_1 -> 
-                      (let rec _lh_matchIdent_7 = ((upsweep_lh__d1 _lh_upsweep_arg1_1) _lh_upsweep_Node_1_0) in
-                        (match _lh_matchIdent_7 with
-                          | `LH_P2(_lh_upsweep_LH_P2_0_0, _lh_upsweep_LH_P2_1_0) -> 
-                            (let rec _lh_matchIdent_8 = ((upsweep_lh__d1 _lh_upsweep_arg1_1) _lh_upsweep_Node_2_0) in
-                              (match _lh_matchIdent_8 with
-                                | `LH_P2(_lh_upsweep_LH_P2_0_1, _lh_upsweep_LH_P2_1_1) -> 
-                                  (`LH_P2(((_lh_upsweep_arg1_1 _lh_upsweep_LH_P2_0_0) _lh_upsweep_LH_P2_0_1), (let rec _lh_downsweep_Node_2_0 = _lh_upsweep_LH_P2_1_1 in
-                                    (let rec _lh_downsweep_Node_1_0 = _lh_upsweep_LH_P2_1_0 in
-                                      (let rec _lh_downsweep_Node_0_0 = (let rec _lh_downsweep_LH_P2_1_0 = _lh_upsweep_LH_P2_0_1 in
-                                        (let rec _lh_downsweep_LH_P2_0_0 = _lh_upsweep_LH_P2_0_0 in
-                                          (fun _lh_downsweep_Node_1_1 _lh_downsweep_Node_2_1 _lh_downsweep_arg1_2 _lh_downsweep_arg2_2 -> 
-                                            (let rec _lh_matchIdent_9 = (((_lh_downsweep_arg1_2 _lh_downsweep_LH_P2_0_0) _lh_downsweep_LH_P2_1_0) _lh_downsweep_arg2_2) in
-                                              (((_lh_matchIdent_9 _lh_downsweep_Node_1_1) _lh_downsweep_Node_2_1) _lh_downsweep_arg1_2))))) in
-                                        (fun _lh_downsweep_arg2_3 _lh_downsweep_arg1_3 -> 
-                                          ((((_lh_downsweep_Node_0_0 _lh_downsweep_Node_1_0) _lh_downsweep_Node_2_0) _lh_downsweep_arg1_3) _lh_downsweep_arg2_3)))))))
-                                | _ -> 
-                                  (failwith "error")))
-                          | _ -> 
-                            (failwith "error"))))))
+                    (let rec _lh_upsweep_Node_0_0 = (`Unit) in
+                      (fun _lh_upsweep_arg1_1 -> 
+                        (let rec _lh_matchIdent_7 = ((upsweep_lh__d1 _lh_upsweep_arg1_1) _lh_upsweep_Node_1_0) in
+                          (match _lh_matchIdent_7 with
+                            | `LH_P2(_lh_upsweep_LH_P2_0_0, _lh_upsweep_LH_P2_1_0) -> 
+                              (let rec _lh_matchIdent_8 = ((upsweep_lh__d1 _lh_upsweep_arg1_1) _lh_upsweep_Node_2_0) in
+                                (match _lh_matchIdent_8 with
+                                  | `LH_P2(_lh_upsweep_LH_P2_0_1, _lh_upsweep_LH_P2_1_1) -> 
+                                    (`LH_P2(((_lh_upsweep_arg1_1 _lh_upsweep_LH_P2_0_0) _lh_upsweep_LH_P2_0_1), (let rec _lh_downsweep_Node_2_0 = _lh_upsweep_LH_P2_1_1 in
+                                      (let rec _lh_downsweep_Node_1_0 = _lh_upsweep_LH_P2_1_0 in
+                                        (let rec _lh_downsweep_Node_0_0 = (let rec _lh_downsweep_LH_P2_1_0 = _lh_upsweep_LH_P2_0_1 in
+                                          (let rec _lh_downsweep_LH_P2_0_0 = _lh_upsweep_LH_P2_0_0 in
+                                            (fun _lh_downsweep_Node_1_1 _lh_downsweep_Node_2_1 _lh_downsweep_arg1_2 _lh_downsweep_arg2_2 -> 
+                                              (let rec _lh_matchIdent_9 = (((_lh_downsweep_arg1_2 _lh_downsweep_LH_P2_0_0) _lh_downsweep_LH_P2_1_0) _lh_downsweep_arg2_2) in
+                                                (((_lh_matchIdent_9 _lh_downsweep_Node_1_1) _lh_downsweep_Node_2_1) _lh_downsweep_arg1_2))))) in
+                                          (fun _lh_downsweep_arg2_3 _lh_downsweep_arg1_3 -> 
+                                            ((((_lh_downsweep_Node_0_0 _lh_downsweep_Node_1_0) _lh_downsweep_Node_2_0) _lh_downsweep_arg1_3) _lh_downsweep_arg2_3)))))))
+                                  | _ -> 
+                                    (failwith "error")))
+                            | _ -> 
+                              (failwith "error")))))))
               | _ -> 
                 (failwith "error"))))
     | _ -> 
@@ -1069,26 +1071,27 @@ let rec put_lh__d1 _lh_put_arg1_0 =
           | `LH_P2(_lh_put_LH_P2_0_1, _lh_put_LH_P2_1_1) -> 
             (let rec _lh_upsweep_Node_2_1 = (put_lh__d1 _lh_put_LH_P2_1_1) in
               (let rec _lh_upsweep_Node_1_1 = (put_lh__d1 _lh_put_LH_P2_0_1) in
-                (fun _lh_upsweep_arg1_2 -> 
-                  (let rec _lh_matchIdent_1_1 = ((upsweep_lh__d1 _lh_upsweep_arg1_2) _lh_upsweep_Node_1_1) in
-                    (match _lh_matchIdent_1_1 with
-                      | `LH_P2(_lh_upsweep_LH_P2_0_2, _lh_upsweep_LH_P2_1_2) -> 
-                        (let rec _lh_matchIdent_1_2 = ((upsweep_lh__d1 _lh_upsweep_arg1_2) _lh_upsweep_Node_2_1) in
-                          (match _lh_matchIdent_1_2 with
-                            | `LH_P2(_lh_upsweep_LH_P2_0_3, _lh_upsweep_LH_P2_1_3) -> 
-                              (`LH_P2(((_lh_upsweep_arg1_2 _lh_upsweep_LH_P2_0_2) _lh_upsweep_LH_P2_0_3), (let rec _lh_downsweep_Node_2_2 = _lh_upsweep_LH_P2_1_3 in
-                                (let rec _lh_downsweep_Node_1_2 = _lh_upsweep_LH_P2_1_2 in
-                                  (let rec _lh_downsweep_Node_0_1 = (let rec _lh_downsweep_LH_P2_1_1 = _lh_upsweep_LH_P2_0_3 in
-                                    (let rec _lh_downsweep_LH_P2_0_1 = _lh_upsweep_LH_P2_0_2 in
-                                      (fun _lh_downsweep_Node_1_3 _lh_downsweep_Node_2_3 _lh_downsweep_arg1_4 _lh_downsweep_arg2_4 -> 
-                                        (let rec _lh_matchIdent_1_3 = (((_lh_downsweep_arg1_4 _lh_downsweep_LH_P2_0_1) _lh_downsweep_LH_P2_1_1) _lh_downsweep_arg2_4) in
-                                          (((_lh_matchIdent_1_3 _lh_downsweep_Node_1_3) _lh_downsweep_Node_2_3) _lh_downsweep_arg1_4))))) in
-                                    (fun _lh_downsweep_arg2_5 _lh_downsweep_arg1_5 -> 
-                                      ((((_lh_downsweep_Node_0_1 _lh_downsweep_Node_1_2) _lh_downsweep_Node_2_2) _lh_downsweep_arg1_5) _lh_downsweep_arg2_5)))))))
-                            | _ -> 
-                              (failwith "error")))
-                      | _ -> 
-                        (failwith "error"))))))
+                (let rec _lh_upsweep_Node_0_1 = (`Unit) in
+                  (fun _lh_upsweep_arg1_2 -> 
+                    (let rec _lh_matchIdent_1_1 = ((upsweep_lh__d1 _lh_upsweep_arg1_2) _lh_upsweep_Node_1_1) in
+                      (match _lh_matchIdent_1_1 with
+                        | `LH_P2(_lh_upsweep_LH_P2_0_2, _lh_upsweep_LH_P2_1_2) -> 
+                          (let rec _lh_matchIdent_1_2 = ((upsweep_lh__d1 _lh_upsweep_arg1_2) _lh_upsweep_Node_2_1) in
+                            (match _lh_matchIdent_1_2 with
+                              | `LH_P2(_lh_upsweep_LH_P2_0_3, _lh_upsweep_LH_P2_1_3) -> 
+                                (`LH_P2(((_lh_upsweep_arg1_2 _lh_upsweep_LH_P2_0_2) _lh_upsweep_LH_P2_0_3), (let rec _lh_downsweep_Node_2_2 = _lh_upsweep_LH_P2_1_3 in
+                                  (let rec _lh_downsweep_Node_1_2 = _lh_upsweep_LH_P2_1_2 in
+                                    (let rec _lh_downsweep_Node_0_1 = (let rec _lh_downsweep_LH_P2_1_1 = _lh_upsweep_LH_P2_0_3 in
+                                      (let rec _lh_downsweep_LH_P2_0_1 = _lh_upsweep_LH_P2_0_2 in
+                                        (fun _lh_downsweep_Node_1_3 _lh_downsweep_Node_2_3 _lh_downsweep_arg1_4 _lh_downsweep_arg2_4 -> 
+                                          (let rec _lh_matchIdent_1_3 = (((_lh_downsweep_arg1_4 _lh_downsweep_LH_P2_0_1) _lh_downsweep_LH_P2_1_1) _lh_downsweep_arg2_4) in
+                                            (((_lh_matchIdent_1_3 _lh_downsweep_Node_1_3) _lh_downsweep_Node_2_3) _lh_downsweep_arg1_4))))) in
+                                      (fun _lh_downsweep_arg2_5 _lh_downsweep_arg1_5 -> 
+                                        ((((_lh_downsweep_Node_0_1 _lh_downsweep_Node_1_2) _lh_downsweep_Node_2_2) _lh_downsweep_arg1_5) _lh_downsweep_arg2_5)))))))
+                              | _ -> 
+                                (failwith "error")))
+                        | _ -> 
+                          (failwith "error")))))))
           | _ -> 
             (failwith "error"))));;
 let rec scanlr_lh__d1 _lh_scanlr_arg1_1 _lh_scanlr_arg2_1 _lh_scanlr_arg3_1 _lh_scanlr_arg4_1 _lh_scanlr_arg5_0 =
@@ -1476,8 +1479,11 @@ let rec regs_lh__d1 _lh_regs_arg1_0 =
                             (let rec _lh_simulate_LH_P4_0_0 = p2_0 in
                               (fun _lh_simulate_arg1_1 -> 
                                 (tail_lh__d1 (((scanl_lh__d1 (do_cycle_lh__d1 (critical_path_depth_lh__d1 (let rec _lh_critical_path_depth_LH_P4_3_0 = _lh_simulate_LH_P4_3_0 in
-                                  (fun _lh_dummy_1_1 -> 
-                                    (maximum_lh__d1 ((map_lh__d6 pathDepth_lh__d1) _lh_critical_path_depth_LH_P4_3_0))))))) (`LH_P4(_lh_simulate_LH_P4_0_0, _lh_simulate_LH_P4_1_0, _lh_simulate_LH_P4_2_0, ((map_lh__d4 init_dffs_lh__d1) _lh_simulate_LH_P4_3_0)))) _lh_simulate_arg1_1)))))))))))))))));;
+                                  (let rec _lh_critical_path_depth_LH_P4_2_0 = _lh_simulate_LH_P4_2_0 in
+                                    (let rec _lh_critical_path_depth_LH_P4_1_0 = _lh_simulate_LH_P4_1_0 in
+                                      (let rec _lh_critical_path_depth_LH_P4_0_0 = _lh_simulate_LH_P4_0_0 in
+                                        (fun _lh_dummy_1_1 -> 
+                                          (maximum_lh__d1 ((map_lh__d6 pathDepth_lh__d1) _lh_critical_path_depth_LH_P4_3_0)))))))))) (`LH_P4(_lh_simulate_LH_P4_0_0, _lh_simulate_LH_P4_1_0, _lh_simulate_LH_P4_2_0, ((map_lh__d4 init_dffs_lh__d1) _lh_simulate_LH_P4_3_0)))) _lh_simulate_arg1_1)))))))))))))))));;
 let rec run_lh__d1 _lh_run_arg1_0 _lh_run_arg2_0 =
   (let rec example_0 = (pad_circuit_lh__d1 (regs_lh__d1 _lh_run_arg1_0)) in
     (let rec inputs_0 = ((copy_lh__d2 (_lh_run_arg1_0 + 1)) (`T)) in

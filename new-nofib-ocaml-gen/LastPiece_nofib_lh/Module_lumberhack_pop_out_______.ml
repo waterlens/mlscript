@@ -73,41 +73,43 @@ insert_lh__d2 _lh_insert_arg1_1_6 _lh_insert_arg2_1_6 _lh_insert_arg3_1 =
                   (let rec _lh_singleR_Bin_3_2 = _lh_rotateR_Bin_3_2 in
                     (let rec _lh_singleR_Bin_2_2 = _lh_rotateR_Bin_2_2 in
                       (let rec _lh_singleR_Bin_1_2 = _lh_rotateR_Bin_1_2 in
-                        (fun _lh_singleR_arg1_3 _lh_singleR_arg2_3 _lh_singleR_arg4_3 -> 
-                          (let rec size_8 = (fun p_9 -> 
-                            (let rec _lh_matchIdent_1_2_7 = p_9 in
-                              (match _lh_matchIdent_1_2_7 with
-                                | `Tip -> 
-                                  0
-                                | `Bin(_lh_singleR_Bin_0_1, _lh_singleR_Bin_1_3, _lh_singleR_Bin_2_3, _lh_singleR_Bin_3_3, _lh_singleR_Bin_4_3) -> 
-                                  _lh_singleR_Bin_0_1
-                                | _ -> 
-                                  (failwith "error")))) in
-                            (let rec bin_4 = (fun k_4 x_5 l_4 r_4 -> 
-                              (`Bin((((size_8 l_4) + (size_8 r_4)) + 1), k_4, x_5, l_4, r_4))) in
-                              ((((bin_4 _lh_singleR_Bin_1_2) _lh_singleR_Bin_2_2) _lh_singleR_Bin_3_2) ((((bin_4 _lh_singleR_arg1_3) _lh_singleR_arg2_3) _lh_singleR_Bin_4_2) _lh_singleR_arg4_3)))))))))) _lh_rotateR_arg4_1)
+                        (let rec _lh_singleR_Bin_0_2 = _lh_rotateR_Bin_0_2 in
+                          (fun _lh_singleR_arg1_3 _lh_singleR_arg2_3 _lh_singleR_arg4_3 -> 
+                            (let rec size_8 = (fun p_9 -> 
+                              (let rec _lh_matchIdent_1_2_7 = p_9 in
+                                (match _lh_matchIdent_1_2_7 with
+                                  | `Tip -> 
+                                    0
+                                  | `Bin(_lh_singleR_Bin_0_3, _lh_singleR_Bin_1_3, _lh_singleR_Bin_2_3, _lh_singleR_Bin_3_3, _lh_singleR_Bin_4_3) -> 
+                                    _lh_singleR_Bin_0_3
+                                  | _ -> 
+                                    (failwith "error")))) in
+                              (let rec bin_4 = (fun k_4 x_5 l_4 r_4 -> 
+                                (`Bin((((size_8 l_4) + (size_8 r_4)) + 1), k_4, x_5, l_4, r_4))) in
+                                ((((bin_4 _lh_singleR_Bin_1_2) _lh_singleR_Bin_2_2) _lh_singleR_Bin_3_2) ((((bin_4 _lh_singleR_arg1_3) _lh_singleR_arg2_3) _lh_singleR_Bin_4_2) _lh_singleR_arg4_3))))))))))) _lh_rotateR_arg4_1)
               else
                 ((((doubleR_1 _lh_rotateR_arg1_1) _lh_rotateR_arg2_1) (let rec _lh_doubleR_Bin_4_3 = _lh_rotateR_Bin_4_2 in
                   (let rec _lh_doubleR_Bin_3_3 = _lh_rotateR_Bin_3_2 in
                     (let rec _lh_doubleR_Bin_2_3 = _lh_rotateR_Bin_2_2 in
                       (let rec _lh_doubleR_Bin_1_3 = _lh_rotateR_Bin_1_2 in
-                        (fun _lh_doubleR_arg1_2 _lh_doubleR_arg2_2 _lh_doubleR_arg4_2 -> 
-                          (match _lh_doubleR_Bin_4_3 with
-                            | `Bin(_lh_doubleR_Bin_0_2, _lh_doubleR_Bin_1_4, _lh_doubleR_Bin_2_4, _lh_doubleR_Bin_3_4, _lh_doubleR_Bin_4_4) -> 
-                              (let rec size_9 = (fun p_1_0 -> 
-                                (let rec _lh_matchIdent_1_2_8 = p_1_0 in
-                                  (match _lh_matchIdent_1_2_8 with
-                                    | `Tip -> 
-                                      0
-                                    | `Bin(_lh_doubleR_Bin_0_3, _lh_doubleR_Bin_1_5, _lh_doubleR_Bin_2_5, _lh_doubleR_Bin_3_5, _lh_doubleR_Bin_4_5) -> 
-                                      _lh_doubleR_Bin_0_3
-                                    | _ -> 
-                                      (failwith "error")))) in
-                                (let rec bin_5 = (fun k_5 x_6 l_5 r_5 -> 
-                                  (`Bin((((size_9 l_5) + (size_9 r_5)) + 1), k_5, x_6, l_5, r_5))) in
-                                  ((((bin_5 _lh_doubleR_Bin_1_4) _lh_doubleR_Bin_2_4) ((((bin_5 _lh_doubleR_Bin_1_3) _lh_doubleR_Bin_2_3) _lh_doubleR_Bin_3_3) _lh_doubleR_Bin_3_4)) ((((bin_5 _lh_doubleR_arg1_2) _lh_doubleR_arg2_2) _lh_doubleR_Bin_4_4) _lh_doubleR_arg4_2))))
-                            | _ -> 
-                              ((failwith "error") (`LH_C('d', (`LH_C('o', (`LH_C('u', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C('R', (`LH_N))))))))))))))))))))))) _lh_rotateR_arg4_1)))
+                        (let rec _lh_doubleR_Bin_0_3 = _lh_rotateR_Bin_0_2 in
+                          (fun _lh_doubleR_arg1_2 _lh_doubleR_arg2_2 _lh_doubleR_arg4_2 -> 
+                            (match _lh_doubleR_Bin_4_3 with
+                              | `Bin(_lh_doubleR_Bin_0_4, _lh_doubleR_Bin_1_4, _lh_doubleR_Bin_2_4, _lh_doubleR_Bin_3_4, _lh_doubleR_Bin_4_4) -> 
+                                (let rec size_9 = (fun p_1_0 -> 
+                                  (let rec _lh_matchIdent_1_2_8 = p_1_0 in
+                                    (match _lh_matchIdent_1_2_8 with
+                                      | `Tip -> 
+                                        0
+                                      | `Bin(_lh_doubleR_Bin_0_5, _lh_doubleR_Bin_1_5, _lh_doubleR_Bin_2_5, _lh_doubleR_Bin_3_5, _lh_doubleR_Bin_4_5) -> 
+                                        _lh_doubleR_Bin_0_5
+                                      | _ -> 
+                                        (failwith "error")))) in
+                                  (let rec bin_5 = (fun k_5 x_6 l_5 r_5 -> 
+                                    (`Bin((((size_9 l_5) + (size_9 r_5)) + 1), k_5, x_6, l_5, r_5))) in
+                                    ((((bin_5 _lh_doubleR_Bin_1_4) _lh_doubleR_Bin_2_4) ((((bin_5 _lh_doubleR_Bin_1_3) _lh_doubleR_Bin_2_3) _lh_doubleR_Bin_3_3) _lh_doubleR_Bin_3_4)) ((((bin_5 _lh_doubleR_arg1_2) _lh_doubleR_arg2_2) _lh_doubleR_Bin_4_4) _lh_doubleR_arg4_2))))
+                              | _ -> 
+                                ((failwith "error") (`LH_C('d', (`LH_C('o', (`LH_C('u', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C('R', (`LH_N)))))))))))))))))))))))) _lh_rotateR_arg4_1)))
           | `Tip -> 
             ((failwith "error") (`LH_C('r', (`LH_C('o', (`LH_C('t', (`LH_C('a', (`LH_C('t', (`LH_C('e', (`LH_C('R', (`LH_C(' ', (`LH_C('T', (`LH_C('i', (`LH_C('p', (`LH_N))))))))))))))))))))))))
           | _ -> 
@@ -129,41 +131,43 @@ insert_lh__d2 _lh_insert_arg1_1_6 _lh_insert_arg2_1_6 _lh_insert_arg3_1 =
                   (let rec _lh_singleL_Bin_3_2 = _lh_rotateL_Bin_3_2 in
                     (let rec _lh_singleL_Bin_2_2 = _lh_rotateL_Bin_2_2 in
                       (let rec _lh_singleL_Bin_1_2 = _lh_rotateL_Bin_1_2 in
-                        (fun _lh_singleL_arg1_3 _lh_singleL_arg2_3 _lh_singleL_arg3_3 -> 
-                          (let rec size_1_1 = (fun p_1_2 -> 
-                            (let rec _lh_matchIdent_1_3_0 = p_1_2 in
-                              (match _lh_matchIdent_1_3_0 with
-                                | `Tip -> 
-                                  0
-                                | `Bin(_lh_singleL_Bin_0_1, _lh_singleL_Bin_1_3, _lh_singleL_Bin_2_3, _lh_singleL_Bin_3_3, _lh_singleL_Bin_4_3) -> 
-                                  _lh_singleL_Bin_0_1
-                                | _ -> 
-                                  (failwith "error")))) in
-                            (let rec bin_6 = (fun k_6 x_7 l_6 r_6 -> 
-                              (`Bin((((size_1_1 l_6) + (size_1_1 r_6)) + 1), k_6, x_7, l_6, r_6))) in
-                              ((((bin_6 _lh_singleL_Bin_1_2) _lh_singleL_Bin_2_2) ((((bin_6 _lh_singleL_arg1_3) _lh_singleL_arg2_3) _lh_singleL_arg3_3) _lh_singleL_Bin_3_2)) _lh_singleL_Bin_4_2)))))))))
+                        (let rec _lh_singleL_Bin_0_2 = _lh_rotateL_Bin_0_2 in
+                          (fun _lh_singleL_arg1_3 _lh_singleL_arg2_3 _lh_singleL_arg3_3 -> 
+                            (let rec size_1_1 = (fun p_1_2 -> 
+                              (let rec _lh_matchIdent_1_3_0 = p_1_2 in
+                                (match _lh_matchIdent_1_3_0 with
+                                  | `Tip -> 
+                                    0
+                                  | `Bin(_lh_singleL_Bin_0_3, _lh_singleL_Bin_1_3, _lh_singleL_Bin_2_3, _lh_singleL_Bin_3_3, _lh_singleL_Bin_4_3) -> 
+                                    _lh_singleL_Bin_0_3
+                                  | _ -> 
+                                    (failwith "error")))) in
+                              (let rec bin_6 = (fun k_6 x_7 l_6 r_6 -> 
+                                (`Bin((((size_1_1 l_6) + (size_1_1 r_6)) + 1), k_6, x_7, l_6, r_6))) in
+                                ((((bin_6 _lh_singleL_Bin_1_2) _lh_singleL_Bin_2_2) ((((bin_6 _lh_singleL_arg1_3) _lh_singleL_arg2_3) _lh_singleL_arg3_3) _lh_singleL_Bin_3_2)) _lh_singleL_Bin_4_2))))))))))
               else
                 ((((doubleL_1 _lh_rotateL_arg1_1) _lh_rotateL_arg2_1) _lh_rotateL_arg3_1) (let rec _lh_doubleL_Bin_4_3 = _lh_rotateL_Bin_4_2 in
                   (let rec _lh_doubleL_Bin_3_3 = _lh_rotateL_Bin_3_2 in
                     (let rec _lh_doubleL_Bin_2_3 = _lh_rotateL_Bin_2_2 in
                       (let rec _lh_doubleL_Bin_1_3 = _lh_rotateL_Bin_1_2 in
-                        (fun _lh_doubleL_arg1_2 _lh_doubleL_arg2_2 _lh_doubleL_arg3_2 -> 
-                          (match _lh_doubleL_Bin_3_3 with
-                            | `Bin(_lh_doubleL_Bin_0_2, _lh_doubleL_Bin_1_4, _lh_doubleL_Bin_2_4, _lh_doubleL_Bin_3_4, _lh_doubleL_Bin_4_4) -> 
-                              (let rec size_1_2 = (fun p_1_3 -> 
-                                (let rec _lh_matchIdent_1_3_1 = p_1_3 in
-                                  (match _lh_matchIdent_1_3_1 with
-                                    | `Tip -> 
-                                      0
-                                    | `Bin(_lh_doubleL_Bin_0_3, _lh_doubleL_Bin_1_5, _lh_doubleL_Bin_2_5, _lh_doubleL_Bin_3_5, _lh_doubleL_Bin_4_5) -> 
-                                      _lh_doubleL_Bin_0_3
-                                    | _ -> 
-                                      (failwith "error")))) in
-                                (let rec bin_7 = (fun k_7 x_8 l_7 r_7 -> 
-                                  (`Bin((((size_1_2 l_7) + (size_1_2 r_7)) + 1), k_7, x_8, l_7, r_7))) in
-                                  ((((bin_7 _lh_doubleL_Bin_1_4) _lh_doubleL_Bin_2_4) ((((bin_7 _lh_doubleL_arg1_2) _lh_doubleL_arg2_2) _lh_doubleL_arg3_2) _lh_doubleL_Bin_3_4)) ((((bin_7 _lh_doubleL_Bin_1_3) _lh_doubleL_Bin_2_3) _lh_doubleL_Bin_4_4) _lh_doubleL_Bin_4_3))))
-                            | _ -> 
-                              ((failwith "error") (`LH_C('d', (`LH_C('o', (`LH_C('u', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C('L', (`LH_N)))))))))))))))))))))))))
+                        (let rec _lh_doubleL_Bin_0_3 = _lh_rotateL_Bin_0_2 in
+                          (fun _lh_doubleL_arg1_2 _lh_doubleL_arg2_2 _lh_doubleL_arg3_2 -> 
+                            (match _lh_doubleL_Bin_3_3 with
+                              | `Bin(_lh_doubleL_Bin_0_4, _lh_doubleL_Bin_1_4, _lh_doubleL_Bin_2_4, _lh_doubleL_Bin_3_4, _lh_doubleL_Bin_4_4) -> 
+                                (let rec size_1_2 = (fun p_1_3 -> 
+                                  (let rec _lh_matchIdent_1_3_1 = p_1_3 in
+                                    (match _lh_matchIdent_1_3_1 with
+                                      | `Tip -> 
+                                        0
+                                      | `Bin(_lh_doubleL_Bin_0_5, _lh_doubleL_Bin_1_5, _lh_doubleL_Bin_2_5, _lh_doubleL_Bin_3_5, _lh_doubleL_Bin_4_5) -> 
+                                        _lh_doubleL_Bin_0_5
+                                      | _ -> 
+                                        (failwith "error")))) in
+                                  (let rec bin_7 = (fun k_7 x_8 l_7 r_7 -> 
+                                    (`Bin((((size_1_2 l_7) + (size_1_2 r_7)) + 1), k_7, x_8, l_7, r_7))) in
+                                    ((((bin_7 _lh_doubleL_Bin_1_4) _lh_doubleL_Bin_2_4) ((((bin_7 _lh_doubleL_arg1_2) _lh_doubleL_arg2_2) _lh_doubleL_arg3_2) _lh_doubleL_Bin_3_4)) ((((bin_7 _lh_doubleL_Bin_1_3) _lh_doubleL_Bin_2_3) _lh_doubleL_Bin_4_4) _lh_doubleL_Bin_4_3))))
+                              | _ -> 
+                                ((failwith "error") (`LH_C('d', (`LH_C('o', (`LH_C('u', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C('L', (`LH_N))))))))))))))))))))))))))
           | `Tip -> 
             ((failwith "error") (`LH_C('r', (`LH_C('o', (`LH_C('t', (`LH_C('a', (`LH_C('t', (`LH_C('e', (`LH_C('L', (`LH_C(' ', (`LH_C('T', (`LH_C('i', (`LH_C('p', (`LH_N))))))))))))))))))))))))
           | _ -> 
@@ -263,41 +267,43 @@ insert_lh__d4 _lh_insert_arg1_1_5 _lh_insert_arg2_1_5 _lh_insert_arg3_0 =
                   (let rec _lh_singleR_Bin_3_0 = _lh_rotateR_Bin_3_0 in
                     (let rec _lh_singleR_Bin_2_0 = _lh_rotateR_Bin_2_0 in
                       (let rec _lh_singleR_Bin_1_0 = _lh_rotateR_Bin_1_0 in
-                        (fun _lh_singleR_arg1_0 _lh_singleR_arg2_0 _lh_singleR_arg4_0 -> 
-                          (let rec size_1 = (fun p_2 -> 
-                            (let rec _lh_matchIdent_1_0_2 = p_2 in
-                              (match _lh_matchIdent_1_0_2 with
-                                | `Tip -> 
-                                  0
-                                | `Bin(_lh_singleR_Bin_0_0, _lh_singleR_Bin_1_1, _lh_singleR_Bin_2_1, _lh_singleR_Bin_3_1, _lh_singleR_Bin_4_1) -> 
-                                  _lh_singleR_Bin_0_0
-                                | _ -> 
-                                  (failwith "error")))) in
-                            (let rec bin_0 = (fun k_0 x_1 l_0 r_0 -> 
-                              (`Bin((((size_1 l_0) + (size_1 r_0)) + 1), k_0, x_1, l_0, r_0))) in
-                              ((((bin_0 _lh_singleR_Bin_1_0) _lh_singleR_Bin_2_0) _lh_singleR_Bin_3_0) ((((bin_0 _lh_singleR_arg1_0) _lh_singleR_arg2_0) _lh_singleR_Bin_4_0) _lh_singleR_arg4_0)))))))))) _lh_rotateR_arg4_0)
+                        (let rec _lh_singleR_Bin_0_0 = _lh_rotateR_Bin_0_0 in
+                          (fun _lh_singleR_arg1_0 _lh_singleR_arg2_0 _lh_singleR_arg4_0 -> 
+                            (let rec size_1 = (fun p_2 -> 
+                              (let rec _lh_matchIdent_1_0_2 = p_2 in
+                                (match _lh_matchIdent_1_0_2 with
+                                  | `Tip -> 
+                                    0
+                                  | `Bin(_lh_singleR_Bin_0_1, _lh_singleR_Bin_1_1, _lh_singleR_Bin_2_1, _lh_singleR_Bin_3_1, _lh_singleR_Bin_4_1) -> 
+                                    _lh_singleR_Bin_0_1
+                                  | _ -> 
+                                    (failwith "error")))) in
+                              (let rec bin_0 = (fun k_0 x_1 l_0 r_0 -> 
+                                (`Bin((((size_1 l_0) + (size_1 r_0)) + 1), k_0, x_1, l_0, r_0))) in
+                                ((((bin_0 _lh_singleR_Bin_1_0) _lh_singleR_Bin_2_0) _lh_singleR_Bin_3_0) ((((bin_0 _lh_singleR_arg1_0) _lh_singleR_arg2_0) _lh_singleR_Bin_4_0) _lh_singleR_arg4_0))))))))))) _lh_rotateR_arg4_0)
               else
                 ((((doubleR_0 _lh_rotateR_arg1_0) _lh_rotateR_arg2_0) (let rec _lh_doubleR_Bin_4_0 = _lh_rotateR_Bin_4_0 in
                   (let rec _lh_doubleR_Bin_3_0 = _lh_rotateR_Bin_3_0 in
                     (let rec _lh_doubleR_Bin_2_0 = _lh_rotateR_Bin_2_0 in
                       (let rec _lh_doubleR_Bin_1_0 = _lh_rotateR_Bin_1_0 in
-                        (fun _lh_doubleR_arg1_0 _lh_doubleR_arg2_0 _lh_doubleR_arg4_0 -> 
-                          (match _lh_doubleR_Bin_4_0 with
-                            | `Bin(_lh_doubleR_Bin_0_0, _lh_doubleR_Bin_1_1, _lh_doubleR_Bin_2_1, _lh_doubleR_Bin_3_1, _lh_doubleR_Bin_4_1) -> 
-                              (let rec size_2 = (fun p_3 -> 
-                                (let rec _lh_matchIdent_1_0_3 = p_3 in
-                                  (match _lh_matchIdent_1_0_3 with
-                                    | `Tip -> 
-                                      0
-                                    | `Bin(_lh_doubleR_Bin_0_1, _lh_doubleR_Bin_1_2, _lh_doubleR_Bin_2_2, _lh_doubleR_Bin_3_2, _lh_doubleR_Bin_4_2) -> 
-                                      _lh_doubleR_Bin_0_1
-                                    | _ -> 
-                                      (failwith "error")))) in
-                                (let rec bin_1 = (fun k_1 x_2 l_1 r_1 -> 
-                                  (`Bin((((size_2 l_1) + (size_2 r_1)) + 1), k_1, x_2, l_1, r_1))) in
-                                  ((((bin_1 _lh_doubleR_Bin_1_1) _lh_doubleR_Bin_2_1) ((((bin_1 _lh_doubleR_Bin_1_0) _lh_doubleR_Bin_2_0) _lh_doubleR_Bin_3_0) _lh_doubleR_Bin_3_1)) ((((bin_1 _lh_doubleR_arg1_0) _lh_doubleR_arg2_0) _lh_doubleR_Bin_4_1) _lh_doubleR_arg4_0))))
-                            | _ -> 
-                              ((failwith "error") (`LH_C('d', (`LH_C('o', (`LH_C('u', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C('R', (`LH_N))))))))))))))))))))))) _lh_rotateR_arg4_0)))
+                        (let rec _lh_doubleR_Bin_0_0 = _lh_rotateR_Bin_0_0 in
+                          (fun _lh_doubleR_arg1_0 _lh_doubleR_arg2_0 _lh_doubleR_arg4_0 -> 
+                            (match _lh_doubleR_Bin_4_0 with
+                              | `Bin(_lh_doubleR_Bin_0_1, _lh_doubleR_Bin_1_1, _lh_doubleR_Bin_2_1, _lh_doubleR_Bin_3_1, _lh_doubleR_Bin_4_1) -> 
+                                (let rec size_2 = (fun p_3 -> 
+                                  (let rec _lh_matchIdent_1_0_3 = p_3 in
+                                    (match _lh_matchIdent_1_0_3 with
+                                      | `Tip -> 
+                                        0
+                                      | `Bin(_lh_doubleR_Bin_0_2, _lh_doubleR_Bin_1_2, _lh_doubleR_Bin_2_2, _lh_doubleR_Bin_3_2, _lh_doubleR_Bin_4_2) -> 
+                                        _lh_doubleR_Bin_0_2
+                                      | _ -> 
+                                        (failwith "error")))) in
+                                  (let rec bin_1 = (fun k_1 x_2 l_1 r_1 -> 
+                                    (`Bin((((size_2 l_1) + (size_2 r_1)) + 1), k_1, x_2, l_1, r_1))) in
+                                    ((((bin_1 _lh_doubleR_Bin_1_1) _lh_doubleR_Bin_2_1) ((((bin_1 _lh_doubleR_Bin_1_0) _lh_doubleR_Bin_2_0) _lh_doubleR_Bin_3_0) _lh_doubleR_Bin_3_1)) ((((bin_1 _lh_doubleR_arg1_0) _lh_doubleR_arg2_0) _lh_doubleR_Bin_4_1) _lh_doubleR_arg4_0))))
+                              | _ -> 
+                                ((failwith "error") (`LH_C('d', (`LH_C('o', (`LH_C('u', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C('R', (`LH_N)))))))))))))))))))))))) _lh_rotateR_arg4_0)))
           | `Tip -> 
             ((failwith "error") (`LH_C('r', (`LH_C('o', (`LH_C('t', (`LH_C('a', (`LH_C('t', (`LH_C('e', (`LH_C('R', (`LH_C(' ', (`LH_C('T', (`LH_C('i', (`LH_C('p', (`LH_N))))))))))))))))))))))))
           | _ -> 
@@ -352,41 +358,43 @@ insert_lh__d4 _lh_insert_arg1_1_5 _lh_insert_arg2_1_5 _lh_insert_arg3_0 =
                   (let rec _lh_singleL_Bin_3_0 = _lh_rotateL_Bin_3_0 in
                     (let rec _lh_singleL_Bin_2_0 = _lh_rotateL_Bin_2_0 in
                       (let rec _lh_singleL_Bin_1_0 = _lh_rotateL_Bin_1_0 in
-                        (fun _lh_singleL_arg1_1 _lh_singleL_arg2_1 _lh_singleL_arg3_1 -> 
-                          (let rec size_5 = (fun p_6 -> 
-                            (let rec _lh_matchIdent_1_0_6 = p_6 in
-                              (match _lh_matchIdent_1_0_6 with
-                                | `Tip -> 
-                                  0
-                                | `Bin(_lh_singleL_Bin_0_0, _lh_singleL_Bin_1_1, _lh_singleL_Bin_2_1, _lh_singleL_Bin_3_1, _lh_singleL_Bin_4_1) -> 
-                                  _lh_singleL_Bin_0_0
-                                | _ -> 
-                                  (failwith "error")))) in
-                            (let rec bin_2 = (fun k_2 x_3 l_2 r_2 -> 
-                              (`Bin((((size_5 l_2) + (size_5 r_2)) + 1), k_2, x_3, l_2, r_2))) in
-                              ((((bin_2 _lh_singleL_Bin_1_0) _lh_singleL_Bin_2_0) ((((bin_2 _lh_singleL_arg1_1) _lh_singleL_arg2_1) _lh_singleL_arg3_1) _lh_singleL_Bin_3_0)) _lh_singleL_Bin_4_0)))))))))
+                        (let rec _lh_singleL_Bin_0_0 = _lh_rotateL_Bin_0_0 in
+                          (fun _lh_singleL_arg1_1 _lh_singleL_arg2_1 _lh_singleL_arg3_1 -> 
+                            (let rec size_5 = (fun p_6 -> 
+                              (let rec _lh_matchIdent_1_0_6 = p_6 in
+                                (match _lh_matchIdent_1_0_6 with
+                                  | `Tip -> 
+                                    0
+                                  | `Bin(_lh_singleL_Bin_0_1, _lh_singleL_Bin_1_1, _lh_singleL_Bin_2_1, _lh_singleL_Bin_3_1, _lh_singleL_Bin_4_1) -> 
+                                    _lh_singleL_Bin_0_1
+                                  | _ -> 
+                                    (failwith "error")))) in
+                              (let rec bin_2 = (fun k_2 x_3 l_2 r_2 -> 
+                                (`Bin((((size_5 l_2) + (size_5 r_2)) + 1), k_2, x_3, l_2, r_2))) in
+                                ((((bin_2 _lh_singleL_Bin_1_0) _lh_singleL_Bin_2_0) ((((bin_2 _lh_singleL_arg1_1) _lh_singleL_arg2_1) _lh_singleL_arg3_1) _lh_singleL_Bin_3_0)) _lh_singleL_Bin_4_0))))))))))
               else
                 ((((doubleL_0 _lh_rotateL_arg1_0) _lh_rotateL_arg2_0) _lh_rotateL_arg3_0) (let rec _lh_doubleL_Bin_4_0 = _lh_rotateL_Bin_4_0 in
                   (let rec _lh_doubleL_Bin_3_0 = _lh_rotateL_Bin_3_0 in
                     (let rec _lh_doubleL_Bin_2_0 = _lh_rotateL_Bin_2_0 in
                       (let rec _lh_doubleL_Bin_1_0 = _lh_rotateL_Bin_1_0 in
-                        (fun _lh_doubleL_arg1_1 _lh_doubleL_arg2_1 _lh_doubleL_arg3_1 -> 
-                          (match _lh_doubleL_Bin_3_0 with
-                            | `Bin(_lh_doubleL_Bin_0_0, _lh_doubleL_Bin_1_1, _lh_doubleL_Bin_2_1, _lh_doubleL_Bin_3_1, _lh_doubleL_Bin_4_1) -> 
-                              (let rec size_6 = (fun p_7 -> 
-                                (let rec _lh_matchIdent_1_0_7 = p_7 in
-                                  (match _lh_matchIdent_1_0_7 with
-                                    | `Tip -> 
-                                      0
-                                    | `Bin(_lh_doubleL_Bin_0_1, _lh_doubleL_Bin_1_2, _lh_doubleL_Bin_2_2, _lh_doubleL_Bin_3_2, _lh_doubleL_Bin_4_2) -> 
-                                      _lh_doubleL_Bin_0_1
-                                    | _ -> 
-                                      (failwith "error")))) in
-                                (let rec bin_3 = (fun k_3 x_4 l_3 r_3 -> 
-                                  (`Bin((((size_6 l_3) + (size_6 r_3)) + 1), k_3, x_4, l_3, r_3))) in
-                                  ((((bin_3 _lh_doubleL_Bin_1_1) _lh_doubleL_Bin_2_1) ((((bin_3 _lh_doubleL_arg1_1) _lh_doubleL_arg2_1) _lh_doubleL_arg3_1) _lh_doubleL_Bin_3_1)) ((((bin_3 _lh_doubleL_Bin_1_0) _lh_doubleL_Bin_2_0) _lh_doubleL_Bin_4_1) _lh_doubleL_Bin_4_0))))
-                            | _ -> 
-                              ((failwith "error") (`LH_C('d', (`LH_C('o', (`LH_C('u', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C('L', (`LH_N)))))))))))))))))))))))))
+                        (let rec _lh_doubleL_Bin_0_0 = _lh_rotateL_Bin_0_0 in
+                          (fun _lh_doubleL_arg1_1 _lh_doubleL_arg2_1 _lh_doubleL_arg3_1 -> 
+                            (match _lh_doubleL_Bin_3_0 with
+                              | `Bin(_lh_doubleL_Bin_0_1, _lh_doubleL_Bin_1_1, _lh_doubleL_Bin_2_1, _lh_doubleL_Bin_3_1, _lh_doubleL_Bin_4_1) -> 
+                                (let rec size_6 = (fun p_7 -> 
+                                  (let rec _lh_matchIdent_1_0_7 = p_7 in
+                                    (match _lh_matchIdent_1_0_7 with
+                                      | `Tip -> 
+                                        0
+                                      | `Bin(_lh_doubleL_Bin_0_2, _lh_doubleL_Bin_1_2, _lh_doubleL_Bin_2_2, _lh_doubleL_Bin_3_2, _lh_doubleL_Bin_4_2) -> 
+                                        _lh_doubleL_Bin_0_2
+                                      | _ -> 
+                                        (failwith "error")))) in
+                                  (let rec bin_3 = (fun k_3 x_4 l_3 r_3 -> 
+                                    (`Bin((((size_6 l_3) + (size_6 r_3)) + 1), k_3, x_4, l_3, r_3))) in
+                                    ((((bin_3 _lh_doubleL_Bin_1_1) _lh_doubleL_Bin_2_1) ((((bin_3 _lh_doubleL_arg1_1) _lh_doubleL_arg2_1) _lh_doubleL_arg3_1) _lh_doubleL_Bin_3_1)) ((((bin_3 _lh_doubleL_Bin_1_0) _lh_doubleL_Bin_2_0) _lh_doubleL_Bin_4_1) _lh_doubleL_Bin_4_0))))
+                              | _ -> 
+                                ((failwith "error") (`LH_C('d', (`LH_C('o', (`LH_C('u', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C('L', (`LH_N))))))))))))))))))))))))))
           | `Tip -> 
             ((failwith "error") (`LH_C('r', (`LH_C('o', (`LH_C('t', (`LH_C('a', (`LH_C('t', (`LH_C('e', (`LH_C('L', (`LH_C(' ', (`LH_C('T', (`LH_C('i', (`LH_C('p', (`LH_N))))))))))))))))))))))))
           | _ -> 
@@ -502,41 +510,43 @@ insert_lh__d3 _lh_insert_arg1_1_7 _lh_insert_arg2_1_7 _lh_insert_arg3_2 =
                   (let rec _lh_singleR_Bin_3_4 = _lh_rotateR_Bin_3_4 in
                     (let rec _lh_singleR_Bin_2_4 = _lh_rotateR_Bin_2_4 in
                       (let rec _lh_singleR_Bin_1_4 = _lh_rotateR_Bin_1_4 in
-                        (fun _lh_singleR_arg1_5 _lh_singleR_arg2_5 _lh_singleR_arg4_5 -> 
-                          (let rec size_1_6 = (fun p_1_7 -> 
-                            (let rec _lh_matchIdent_1_6_2 = p_1_7 in
-                              (match _lh_matchIdent_1_6_2 with
-                                | `Tip -> 
-                                  0
-                                | `Bin(_lh_singleR_Bin_0_2, _lh_singleR_Bin_1_5, _lh_singleR_Bin_2_5, _lh_singleR_Bin_3_5, _lh_singleR_Bin_4_5) -> 
-                                  _lh_singleR_Bin_0_2
-                                | _ -> 
-                                  (failwith "error")))) in
-                            (let rec bin_8 = (fun k_8 x_9 l_8 r_8 -> 
-                              (`Bin((((size_1_6 l_8) + (size_1_6 r_8)) + 1), k_8, x_9, l_8, r_8))) in
-                              ((((bin_8 _lh_singleR_Bin_1_4) _lh_singleR_Bin_2_4) _lh_singleR_Bin_3_4) ((((bin_8 _lh_singleR_arg1_5) _lh_singleR_arg2_5) _lh_singleR_Bin_4_4) _lh_singleR_arg4_5)))))))))) _lh_rotateR_arg4_2)
+                        (let rec _lh_singleR_Bin_0_4 = _lh_rotateR_Bin_0_4 in
+                          (fun _lh_singleR_arg1_5 _lh_singleR_arg2_5 _lh_singleR_arg4_5 -> 
+                            (let rec size_1_6 = (fun p_1_7 -> 
+                              (let rec _lh_matchIdent_1_6_2 = p_1_7 in
+                                (match _lh_matchIdent_1_6_2 with
+                                  | `Tip -> 
+                                    0
+                                  | `Bin(_lh_singleR_Bin_0_5, _lh_singleR_Bin_1_5, _lh_singleR_Bin_2_5, _lh_singleR_Bin_3_5, _lh_singleR_Bin_4_5) -> 
+                                    _lh_singleR_Bin_0_5
+                                  | _ -> 
+                                    (failwith "error")))) in
+                              (let rec bin_8 = (fun k_8 x_9 l_8 r_8 -> 
+                                (`Bin((((size_1_6 l_8) + (size_1_6 r_8)) + 1), k_8, x_9, l_8, r_8))) in
+                                ((((bin_8 _lh_singleR_Bin_1_4) _lh_singleR_Bin_2_4) _lh_singleR_Bin_3_4) ((((bin_8 _lh_singleR_arg1_5) _lh_singleR_arg2_5) _lh_singleR_Bin_4_4) _lh_singleR_arg4_5))))))))))) _lh_rotateR_arg4_2)
               else
                 ((((doubleR_2 _lh_rotateR_arg1_2) _lh_rotateR_arg2_2) (let rec _lh_doubleR_Bin_4_6 = _lh_rotateR_Bin_4_4 in
                   (let rec _lh_doubleR_Bin_3_6 = _lh_rotateR_Bin_3_4 in
                     (let rec _lh_doubleR_Bin_2_6 = _lh_rotateR_Bin_2_4 in
                       (let rec _lh_doubleR_Bin_1_6 = _lh_rotateR_Bin_1_4 in
-                        (fun _lh_doubleR_arg1_5 _lh_doubleR_arg2_5 _lh_doubleR_arg4_5 -> 
-                          (match _lh_doubleR_Bin_4_6 with
-                            | `Bin(_lh_doubleR_Bin_0_4, _lh_doubleR_Bin_1_7, _lh_doubleR_Bin_2_7, _lh_doubleR_Bin_3_7, _lh_doubleR_Bin_4_7) -> 
-                              (let rec size_1_7 = (fun p_1_8 -> 
-                                (let rec _lh_matchIdent_1_6_3 = p_1_8 in
-                                  (match _lh_matchIdent_1_6_3 with
-                                    | `Tip -> 
-                                      0
-                                    | `Bin(_lh_doubleR_Bin_0_5, _lh_doubleR_Bin_1_8, _lh_doubleR_Bin_2_8, _lh_doubleR_Bin_3_8, _lh_doubleR_Bin_4_8) -> 
-                                      _lh_doubleR_Bin_0_5
-                                    | _ -> 
-                                      (failwith "error")))) in
-                                (let rec bin_9 = (fun k_9 x_1_0 l_9 r_9 -> 
-                                  (`Bin((((size_1_7 l_9) + (size_1_7 r_9)) + 1), k_9, x_1_0, l_9, r_9))) in
-                                  ((((bin_9 _lh_doubleR_Bin_1_7) _lh_doubleR_Bin_2_7) ((((bin_9 _lh_doubleR_Bin_1_6) _lh_doubleR_Bin_2_6) _lh_doubleR_Bin_3_6) _lh_doubleR_Bin_3_7)) ((((bin_9 _lh_doubleR_arg1_5) _lh_doubleR_arg2_5) _lh_doubleR_Bin_4_7) _lh_doubleR_arg4_5))))
-                            | _ -> 
-                              ((failwith "error") (`LH_C('d', (`LH_C('o', (`LH_C('u', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C('R', (`LH_N))))))))))))))))))))))) _lh_rotateR_arg4_2)))
+                        (let rec _lh_doubleR_Bin_0_6 = _lh_rotateR_Bin_0_4 in
+                          (fun _lh_doubleR_arg1_5 _lh_doubleR_arg2_5 _lh_doubleR_arg4_5 -> 
+                            (match _lh_doubleR_Bin_4_6 with
+                              | `Bin(_lh_doubleR_Bin_0_7, _lh_doubleR_Bin_1_7, _lh_doubleR_Bin_2_7, _lh_doubleR_Bin_3_7, _lh_doubleR_Bin_4_7) -> 
+                                (let rec size_1_7 = (fun p_1_8 -> 
+                                  (let rec _lh_matchIdent_1_6_3 = p_1_8 in
+                                    (match _lh_matchIdent_1_6_3 with
+                                      | `Tip -> 
+                                        0
+                                      | `Bin(_lh_doubleR_Bin_0_8, _lh_doubleR_Bin_1_8, _lh_doubleR_Bin_2_8, _lh_doubleR_Bin_3_8, _lh_doubleR_Bin_4_8) -> 
+                                        _lh_doubleR_Bin_0_8
+                                      | _ -> 
+                                        (failwith "error")))) in
+                                  (let rec bin_9 = (fun k_9 x_1_0 l_9 r_9 -> 
+                                    (`Bin((((size_1_7 l_9) + (size_1_7 r_9)) + 1), k_9, x_1_0, l_9, r_9))) in
+                                    ((((bin_9 _lh_doubleR_Bin_1_7) _lh_doubleR_Bin_2_7) ((((bin_9 _lh_doubleR_Bin_1_6) _lh_doubleR_Bin_2_6) _lh_doubleR_Bin_3_6) _lh_doubleR_Bin_3_7)) ((((bin_9 _lh_doubleR_arg1_5) _lh_doubleR_arg2_5) _lh_doubleR_Bin_4_7) _lh_doubleR_arg4_5))))
+                              | _ -> 
+                                ((failwith "error") (`LH_C('d', (`LH_C('o', (`LH_C('u', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C('R', (`LH_N)))))))))))))))))))))))) _lh_rotateR_arg4_2)))
           | `Tip -> 
             ((failwith "error") (`LH_C('r', (`LH_C('o', (`LH_C('t', (`LH_C('a', (`LH_C('t', (`LH_C('e', (`LH_C('R', (`LH_C(' ', (`LH_C('T', (`LH_C('i', (`LH_C('p', (`LH_N))))))))))))))))))))))))
           | _ -> 
@@ -558,41 +568,43 @@ insert_lh__d3 _lh_insert_arg1_1_7 _lh_insert_arg2_1_7 _lh_insert_arg3_2 =
                   (let rec _lh_singleL_Bin_3_4 = _lh_rotateL_Bin_3_4 in
                     (let rec _lh_singleL_Bin_2_4 = _lh_rotateL_Bin_2_4 in
                       (let rec _lh_singleL_Bin_1_4 = _lh_rotateL_Bin_1_4 in
-                        (fun _lh_singleL_arg1_5 _lh_singleL_arg2_5 _lh_singleL_arg3_5 -> 
-                          (let rec size_1_9 = (fun p_2_0 -> 
-                            (let rec _lh_matchIdent_1_6_5 = p_2_0 in
-                              (match _lh_matchIdent_1_6_5 with
-                                | `Tip -> 
-                                  0
-                                | `Bin(_lh_singleL_Bin_0_2, _lh_singleL_Bin_1_5, _lh_singleL_Bin_2_5, _lh_singleL_Bin_3_5, _lh_singleL_Bin_4_5) -> 
-                                  _lh_singleL_Bin_0_2
-                                | _ -> 
-                                  (failwith "error")))) in
-                            (let rec bin_1_0 = (fun k_1_0 x_1_1 l_1_0 r_1_0 -> 
-                              (`Bin((((size_1_9 l_1_0) + (size_1_9 r_1_0)) + 1), k_1_0, x_1_1, l_1_0, r_1_0))) in
-                              ((((bin_1_0 _lh_singleL_Bin_1_4) _lh_singleL_Bin_2_4) ((((bin_1_0 _lh_singleL_arg1_5) _lh_singleL_arg2_5) _lh_singleL_arg3_5) _lh_singleL_Bin_3_4)) _lh_singleL_Bin_4_4)))))))))
+                        (let rec _lh_singleL_Bin_0_4 = _lh_rotateL_Bin_0_4 in
+                          (fun _lh_singleL_arg1_5 _lh_singleL_arg2_5 _lh_singleL_arg3_5 -> 
+                            (let rec size_1_9 = (fun p_2_0 -> 
+                              (let rec _lh_matchIdent_1_6_5 = p_2_0 in
+                                (match _lh_matchIdent_1_6_5 with
+                                  | `Tip -> 
+                                    0
+                                  | `Bin(_lh_singleL_Bin_0_5, _lh_singleL_Bin_1_5, _lh_singleL_Bin_2_5, _lh_singleL_Bin_3_5, _lh_singleL_Bin_4_5) -> 
+                                    _lh_singleL_Bin_0_5
+                                  | _ -> 
+                                    (failwith "error")))) in
+                              (let rec bin_1_0 = (fun k_1_0 x_1_1 l_1_0 r_1_0 -> 
+                                (`Bin((((size_1_9 l_1_0) + (size_1_9 r_1_0)) + 1), k_1_0, x_1_1, l_1_0, r_1_0))) in
+                                ((((bin_1_0 _lh_singleL_Bin_1_4) _lh_singleL_Bin_2_4) ((((bin_1_0 _lh_singleL_arg1_5) _lh_singleL_arg2_5) _lh_singleL_arg3_5) _lh_singleL_Bin_3_4)) _lh_singleL_Bin_4_4))))))))))
               else
                 ((((doubleL_2 _lh_rotateL_arg1_2) _lh_rotateL_arg2_2) _lh_rotateL_arg3_2) (let rec _lh_doubleL_Bin_4_6 = _lh_rotateL_Bin_4_4 in
                   (let rec _lh_doubleL_Bin_3_6 = _lh_rotateL_Bin_3_4 in
                     (let rec _lh_doubleL_Bin_2_6 = _lh_rotateL_Bin_2_4 in
                       (let rec _lh_doubleL_Bin_1_6 = _lh_rotateL_Bin_1_4 in
-                        (fun _lh_doubleL_arg1_5 _lh_doubleL_arg2_5 _lh_doubleL_arg3_5 -> 
-                          (match _lh_doubleL_Bin_3_6 with
-                            | `Bin(_lh_doubleL_Bin_0_4, _lh_doubleL_Bin_1_7, _lh_doubleL_Bin_2_7, _lh_doubleL_Bin_3_7, _lh_doubleL_Bin_4_7) -> 
-                              (let rec size_2_0 = (fun p_2_1 -> 
-                                (let rec _lh_matchIdent_1_6_6 = p_2_1 in
-                                  (match _lh_matchIdent_1_6_6 with
-                                    | `Tip -> 
-                                      0
-                                    | `Bin(_lh_doubleL_Bin_0_5, _lh_doubleL_Bin_1_8, _lh_doubleL_Bin_2_8, _lh_doubleL_Bin_3_8, _lh_doubleL_Bin_4_8) -> 
-                                      _lh_doubleL_Bin_0_5
-                                    | _ -> 
-                                      (failwith "error")))) in
-                                (let rec bin_1_1 = (fun k_1_1 x_1_2 l_1_1 r_1_1 -> 
-                                  (`Bin((((size_2_0 l_1_1) + (size_2_0 r_1_1)) + 1), k_1_1, x_1_2, l_1_1, r_1_1))) in
-                                  ((((bin_1_1 _lh_doubleL_Bin_1_7) _lh_doubleL_Bin_2_7) ((((bin_1_1 _lh_doubleL_arg1_5) _lh_doubleL_arg2_5) _lh_doubleL_arg3_5) _lh_doubleL_Bin_3_7)) ((((bin_1_1 _lh_doubleL_Bin_1_6) _lh_doubleL_Bin_2_6) _lh_doubleL_Bin_4_7) _lh_doubleL_Bin_4_6))))
-                            | _ -> 
-                              ((failwith "error") (`LH_C('d', (`LH_C('o', (`LH_C('u', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C('L', (`LH_N)))))))))))))))))))))))))
+                        (let rec _lh_doubleL_Bin_0_6 = _lh_rotateL_Bin_0_4 in
+                          (fun _lh_doubleL_arg1_5 _lh_doubleL_arg2_5 _lh_doubleL_arg3_5 -> 
+                            (match _lh_doubleL_Bin_3_6 with
+                              | `Bin(_lh_doubleL_Bin_0_7, _lh_doubleL_Bin_1_7, _lh_doubleL_Bin_2_7, _lh_doubleL_Bin_3_7, _lh_doubleL_Bin_4_7) -> 
+                                (let rec size_2_0 = (fun p_2_1 -> 
+                                  (let rec _lh_matchIdent_1_6_6 = p_2_1 in
+                                    (match _lh_matchIdent_1_6_6 with
+                                      | `Tip -> 
+                                        0
+                                      | `Bin(_lh_doubleL_Bin_0_8, _lh_doubleL_Bin_1_8, _lh_doubleL_Bin_2_8, _lh_doubleL_Bin_3_8, _lh_doubleL_Bin_4_8) -> 
+                                        _lh_doubleL_Bin_0_8
+                                      | _ -> 
+                                        (failwith "error")))) in
+                                  (let rec bin_1_1 = (fun k_1_1 x_1_2 l_1_1 r_1_1 -> 
+                                    (`Bin((((size_2_0 l_1_1) + (size_2_0 r_1_1)) + 1), k_1_1, x_1_2, l_1_1, r_1_1))) in
+                                    ((((bin_1_1 _lh_doubleL_Bin_1_7) _lh_doubleL_Bin_2_7) ((((bin_1_1 _lh_doubleL_arg1_5) _lh_doubleL_arg2_5) _lh_doubleL_arg3_5) _lh_doubleL_Bin_3_7)) ((((bin_1_1 _lh_doubleL_Bin_1_6) _lh_doubleL_Bin_2_6) _lh_doubleL_Bin_4_7) _lh_doubleL_Bin_4_6))))
+                              | _ -> 
+                                ((failwith "error") (`LH_C('d', (`LH_C('o', (`LH_C('u', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C('L', (`LH_N))))))))))))))))))))))))))
           | `Tip -> 
             ((failwith "error") (`LH_C('r', (`LH_C('o', (`LH_C('t', (`LH_C('a', (`LH_C('t', (`LH_C('e', (`LH_C('L', (`LH_C(' ', (`LH_C('T', (`LH_C('i', (`LH_C('p', (`LH_N))))))))))))))))))))))))
           | _ -> 
@@ -667,7 +679,8 @@ let rec compareIntInt_lh__d3 _lh_compareIntInt_arg1_4 _lh_compareIntInt_arg2_5_2
                     ((mapLookup_lh__d2 _lh_mapLookup_arg1_2_4_5) _lh_mapLookup_Bin_3_2_4_5))
                 else
                   (fun _lh_mapLookup_Bin_3_2_4_6 _lh_mapLookup_arg1_2_4_6 _lh_mapLookup_Bin_4_2_4_6 _lh_mapLookup_Bin_2_2_4_6 -> 
-                    true)))))
+                    (let rec _lh_isJust_Just_0_0 = _lh_mapLookup_Bin_2_2_4_6 in
+                      true))))))
         | _ -> 
           (failwith "error"))
     | _ -> 
@@ -785,8 +798,10 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 _lh_listcomp_fun_ls_t_3_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_1_6_5 _lh_mapLookup_arg1_1_6_5 _lh_mapLookup_Bin_4_1_6_5 _lh_mapLookup_Bin_2_1_6_5 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_6_5) _lh_mapLookup_Bin_3_1_6_5))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_1_6_6 _lh_mapLookup_arg1_1_6_6 _lh_mapLookup_Bin_4_1_6_6 _lh_mapLookup_Bin_2_1_6_6 _lh_extend_maybe_LH_P2_0_6_7 _lh_extend_maybe_LH_P2_1_6_7 _lh_extend_maybe_arg1_6_7 _lh_extend_maybe_arg3_6_7 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_1_6_6 _lh_mapLookup_arg1_1_6_6 _lh_mapLookup_Bin_4_1_6_6 _lh_mapLookup_Bin_2_1_6_6 -> 
+                                        (let rec _lh_extend_maybe_Just_0_3_2 = _lh_mapLookup_Bin_2_1_6_6 in
+                                          (fun _lh_extend_maybe_LH_P2_0_6_7 _lh_extend_maybe_LH_P2_1_6_7 _lh_extend_maybe_arg1_6_7 _lh_extend_maybe_arg3_6_7 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_6_8 _lh_extend_maybe_LH_P2_0_6_6) _lh_extend_maybe_LH_P2_1_6_6) _lh_extend_maybe_arg1_6_6) _lh_extend_maybe_arg3_6_6))))))))) in
@@ -830,8 +845,10 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 _lh_listcomp_fun_ls_t_3_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_1_7_0 _lh_mapLookup_arg1_1_7_0 _lh_mapLookup_Bin_4_1_7_0 _lh_mapLookup_Bin_2_1_7_0 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_7_0) _lh_mapLookup_Bin_3_1_7_0))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_1_7_1 _lh_mapLookup_arg1_1_7_1 _lh_mapLookup_Bin_4_1_7_1 _lh_mapLookup_Bin_2_1_7_1 _lh_extend_maybe_LH_P2_0_6_9 _lh_extend_maybe_LH_P2_1_6_9 _lh_extend_maybe_arg1_6_9 _lh_extend_maybe_arg3_6_9 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_1_7_1 _lh_mapLookup_arg1_1_7_1 _lh_mapLookup_Bin_4_1_7_1 _lh_mapLookup_Bin_2_1_7_1 -> 
+                                        (let rec _lh_extend_maybe_Just_0_3_3 = _lh_mapLookup_Bin_2_1_7_1 in
+                                          (fun _lh_extend_maybe_LH_P2_0_6_9 _lh_extend_maybe_LH_P2_1_6_9 _lh_extend_maybe_arg1_6_9 _lh_extend_maybe_arg3_6_9 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_7_0 _lh_extend_maybe_LH_P2_0_6_8) _lh_extend_maybe_LH_P2_1_6_8) _lh_extend_maybe_arg1_6_8) _lh_extend_maybe_arg3_6_8))))))))) in
@@ -875,8 +892,10 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 _lh_listcomp_fun_ls_t_3_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_1_7_5 _lh_mapLookup_arg1_1_7_5 _lh_mapLookup_Bin_4_1_7_5 _lh_mapLookup_Bin_2_1_7_5 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_7_5) _lh_mapLookup_Bin_3_1_7_5))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_1_7_6 _lh_mapLookup_arg1_1_7_6 _lh_mapLookup_Bin_4_1_7_6 _lh_mapLookup_Bin_2_1_7_6 _lh_extend_maybe_LH_P2_0_7_1 _lh_extend_maybe_LH_P2_1_7_1 _lh_extend_maybe_arg1_7_1 _lh_extend_maybe_arg3_7_1 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_1_7_6 _lh_mapLookup_arg1_1_7_6 _lh_mapLookup_Bin_4_1_7_6 _lh_mapLookup_Bin_2_1_7_6 -> 
+                                        (let rec _lh_extend_maybe_Just_0_3_4 = _lh_mapLookup_Bin_2_1_7_6 in
+                                          (fun _lh_extend_maybe_LH_P2_0_7_1 _lh_extend_maybe_LH_P2_1_7_1 _lh_extend_maybe_arg1_7_1 _lh_extend_maybe_arg3_7_1 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_7_2 _lh_extend_maybe_LH_P2_0_7_0) _lh_extend_maybe_LH_P2_1_7_0) _lh_extend_maybe_arg1_7_0) _lh_extend_maybe_arg3_7_0))))))))) in
@@ -920,8 +939,10 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 _lh_listcomp_fun_ls_t_3_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_1_8_0 _lh_mapLookup_arg1_1_8_0 _lh_mapLookup_Bin_4_1_8_0 _lh_mapLookup_Bin_2_1_8_0 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_8_0) _lh_mapLookup_Bin_3_1_8_0))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_1_8_1 _lh_mapLookup_arg1_1_8_1 _lh_mapLookup_Bin_4_1_8_1 _lh_mapLookup_Bin_2_1_8_1 _lh_extend_maybe_LH_P2_0_7_3 _lh_extend_maybe_LH_P2_1_7_3 _lh_extend_maybe_arg1_7_3 _lh_extend_maybe_arg3_7_3 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_1_8_1 _lh_mapLookup_arg1_1_8_1 _lh_mapLookup_Bin_4_1_8_1 _lh_mapLookup_Bin_2_1_8_1 -> 
+                                        (let rec _lh_extend_maybe_Just_0_3_5 = _lh_mapLookup_Bin_2_1_8_1 in
+                                          (fun _lh_extend_maybe_LH_P2_0_7_3 _lh_extend_maybe_LH_P2_1_7_3 _lh_extend_maybe_arg1_7_3 _lh_extend_maybe_arg3_7_3 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_7_4 _lh_extend_maybe_LH_P2_0_7_2) _lh_extend_maybe_LH_P2_1_7_2) _lh_extend_maybe_arg1_7_2) _lh_extend_maybe_arg3_7_2))))))))) in
@@ -975,8 +996,10 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 _lh_listcomp_fun_ls_t_3_2 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_1_8_5 _lh_mapLookup_arg1_1_8_5 _lh_mapLookup_Bin_4_1_8_5 _lh_mapLookup_Bin_2_1_8_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_8_5) _lh_mapLookup_Bin_3_1_8_5))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_1_8_6 _lh_mapLookup_arg1_1_8_6 _lh_mapLookup_Bin_4_1_8_6 _lh_mapLookup_Bin_2_1_8_6 _lh_extend_maybe_LH_P2_0_7_5 _lh_extend_maybe_LH_P2_1_7_5 _lh_extend_maybe_arg1_7_5 _lh_extend_maybe_arg3_7_5 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_1_8_6 _lh_mapLookup_arg1_1_8_6 _lh_mapLookup_Bin_4_1_8_6 _lh_mapLookup_Bin_2_1_8_6 -> 
+                                          (let rec _lh_extend_maybe_Just_0_3_6 = _lh_mapLookup_Bin_2_1_8_6 in
+                                            (fun _lh_extend_maybe_LH_P2_0_7_5 _lh_extend_maybe_LH_P2_1_7_5 _lh_extend_maybe_arg1_7_5 _lh_extend_maybe_arg3_7_5 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_7_6 _lh_extend_maybe_LH_P2_0_7_4) _lh_extend_maybe_LH_P2_1_7_4) _lh_extend_maybe_arg1_7_4) _lh_extend_maybe_arg3_7_4))))))))) in
@@ -1020,8 +1043,10 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 _lh_listcomp_fun_ls_t_3_2 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_1_9_0 _lh_mapLookup_arg1_1_9_0 _lh_mapLookup_Bin_4_1_9_0 _lh_mapLookup_Bin_2_1_9_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_9_0) _lh_mapLookup_Bin_3_1_9_0))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_1_9_1 _lh_mapLookup_arg1_1_9_1 _lh_mapLookup_Bin_4_1_9_1 _lh_mapLookup_Bin_2_1_9_1 _lh_extend_maybe_LH_P2_0_7_7 _lh_extend_maybe_LH_P2_1_7_7 _lh_extend_maybe_arg1_7_7 _lh_extend_maybe_arg3_7_7 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_1_9_1 _lh_mapLookup_arg1_1_9_1 _lh_mapLookup_Bin_4_1_9_1 _lh_mapLookup_Bin_2_1_9_1 -> 
+                                          (let rec _lh_extend_maybe_Just_0_3_7 = _lh_mapLookup_Bin_2_1_9_1 in
+                                            (fun _lh_extend_maybe_LH_P2_0_7_7 _lh_extend_maybe_LH_P2_1_7_7 _lh_extend_maybe_arg1_7_7 _lh_extend_maybe_arg3_7_7 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_7_8 _lh_extend_maybe_LH_P2_0_7_6) _lh_extend_maybe_LH_P2_1_7_6) _lh_extend_maybe_arg1_7_6) _lh_extend_maybe_arg3_7_6))))))))) in
@@ -1065,8 +1090,10 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 _lh_listcomp_fun_ls_t_3_2 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_1_9_5 _lh_mapLookup_arg1_1_9_5 _lh_mapLookup_Bin_4_1_9_5 _lh_mapLookup_Bin_2_1_9_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_9_5) _lh_mapLookup_Bin_3_1_9_5))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_1_9_6 _lh_mapLookup_arg1_1_9_6 _lh_mapLookup_Bin_4_1_9_6 _lh_mapLookup_Bin_2_1_9_6 _lh_extend_maybe_LH_P2_0_7_9 _lh_extend_maybe_LH_P2_1_7_9 _lh_extend_maybe_arg1_7_9 _lh_extend_maybe_arg3_7_9 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_1_9_6 _lh_mapLookup_arg1_1_9_6 _lh_mapLookup_Bin_4_1_9_6 _lh_mapLookup_Bin_2_1_9_6 -> 
+                                          (let rec _lh_extend_maybe_Just_0_3_8 = _lh_mapLookup_Bin_2_1_9_6 in
+                                            (fun _lh_extend_maybe_LH_P2_0_7_9 _lh_extend_maybe_LH_P2_1_7_9 _lh_extend_maybe_arg1_7_9 _lh_extend_maybe_arg3_7_9 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_8_0 _lh_extend_maybe_LH_P2_0_7_8) _lh_extend_maybe_LH_P2_1_7_8) _lh_extend_maybe_arg1_7_8) _lh_extend_maybe_arg3_7_8))))))))) in
@@ -1110,8 +1137,10 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 _lh_listcomp_fun_ls_t_3_2 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_2_0_0 _lh_mapLookup_arg1_2_0_0 _lh_mapLookup_Bin_4_2_0_0 _lh_mapLookup_Bin_2_2_0_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_0_0) _lh_mapLookup_Bin_3_2_0_0))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_2_0_1 _lh_mapLookup_arg1_2_0_1 _lh_mapLookup_Bin_4_2_0_1 _lh_mapLookup_Bin_2_2_0_1 _lh_extend_maybe_LH_P2_0_8_1 _lh_extend_maybe_LH_P2_1_8_1 _lh_extend_maybe_arg1_8_1 _lh_extend_maybe_arg3_8_1 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_2_0_1 _lh_mapLookup_arg1_2_0_1 _lh_mapLookup_Bin_4_2_0_1 _lh_mapLookup_Bin_2_2_0_1 -> 
+                                          (let rec _lh_extend_maybe_Just_0_3_9 = _lh_mapLookup_Bin_2_2_0_1 in
+                                            (fun _lh_extend_maybe_LH_P2_0_8_1 _lh_extend_maybe_LH_P2_1_8_1 _lh_extend_maybe_arg1_8_1 _lh_extend_maybe_arg3_8_1 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_8_2 _lh_extend_maybe_LH_P2_0_8_0) _lh_extend_maybe_LH_P2_1_8_0) _lh_extend_maybe_arg1_8_0) _lh_extend_maybe_arg3_8_0))))))))) in
@@ -1163,8 +1192,10 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 _lh_listcomp_fun_ls_t_3_2 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_2_0_5 _lh_mapLookup_arg1_2_0_5 _lh_mapLookup_Bin_4_2_0_5 _lh_mapLookup_Bin_2_2_0_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_0_5) _lh_mapLookup_Bin_3_2_0_5))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_2_0_6 _lh_mapLookup_arg1_2_0_6 _lh_mapLookup_Bin_4_2_0_6 _lh_mapLookup_Bin_2_2_0_6 _lh_extend_maybe_LH_P2_0_8_3 _lh_extend_maybe_LH_P2_1_8_3 _lh_extend_maybe_arg1_8_3 _lh_extend_maybe_arg3_8_3 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_2_0_6 _lh_mapLookup_arg1_2_0_6 _lh_mapLookup_Bin_4_2_0_6 _lh_mapLookup_Bin_2_2_0_6 -> 
+                                          (let rec _lh_extend_maybe_Just_0_4_0 = _lh_mapLookup_Bin_2_2_0_6 in
+                                            (fun _lh_extend_maybe_LH_P2_0_8_3 _lh_extend_maybe_LH_P2_1_8_3 _lh_extend_maybe_arg1_8_3 _lh_extend_maybe_arg3_8_3 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_8_4 _lh_extend_maybe_LH_P2_0_8_2) _lh_extend_maybe_LH_P2_1_8_2) _lh_extend_maybe_arg1_8_2) _lh_extend_maybe_arg3_8_2))))))))) in
@@ -1208,8 +1239,10 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 _lh_listcomp_fun_ls_t_3_2 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_2_1_0 _lh_mapLookup_arg1_2_1_0 _lh_mapLookup_Bin_4_2_1_0 _lh_mapLookup_Bin_2_2_1_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_1_0) _lh_mapLookup_Bin_3_2_1_0))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_2_1_1 _lh_mapLookup_arg1_2_1_1 _lh_mapLookup_Bin_4_2_1_1 _lh_mapLookup_Bin_2_2_1_1 _lh_extend_maybe_LH_P2_0_8_5 _lh_extend_maybe_LH_P2_1_8_5 _lh_extend_maybe_arg1_8_5 _lh_extend_maybe_arg3_8_5 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_2_1_1 _lh_mapLookup_arg1_2_1_1 _lh_mapLookup_Bin_4_2_1_1 _lh_mapLookup_Bin_2_2_1_1 -> 
+                                          (let rec _lh_extend_maybe_Just_0_4_1 = _lh_mapLookup_Bin_2_2_1_1 in
+                                            (fun _lh_extend_maybe_LH_P2_0_8_5 _lh_extend_maybe_LH_P2_1_8_5 _lh_extend_maybe_arg1_8_5 _lh_extend_maybe_arg3_8_5 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_8_6 _lh_extend_maybe_LH_P2_0_8_4) _lh_extend_maybe_LH_P2_1_8_4) _lh_extend_maybe_arg1_8_4) _lh_extend_maybe_arg3_8_4))))))))) in
@@ -1253,8 +1286,10 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 _lh_listcomp_fun_ls_t_3_2 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_2_1_5 _lh_mapLookup_arg1_2_1_5 _lh_mapLookup_Bin_4_2_1_5 _lh_mapLookup_Bin_2_2_1_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_1_5) _lh_mapLookup_Bin_3_2_1_5))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_2_1_6 _lh_mapLookup_arg1_2_1_6 _lh_mapLookup_Bin_4_2_1_6 _lh_mapLookup_Bin_2_2_1_6 _lh_extend_maybe_LH_P2_0_8_7 _lh_extend_maybe_LH_P2_1_8_7 _lh_extend_maybe_arg1_8_7 _lh_extend_maybe_arg3_8_7 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_2_1_6 _lh_mapLookup_arg1_2_1_6 _lh_mapLookup_Bin_4_2_1_6 _lh_mapLookup_Bin_2_2_1_6 -> 
+                                          (let rec _lh_extend_maybe_Just_0_4_2 = _lh_mapLookup_Bin_2_2_1_6 in
+                                            (fun _lh_extend_maybe_LH_P2_0_8_7 _lh_extend_maybe_LH_P2_1_8_7 _lh_extend_maybe_arg1_8_7 _lh_extend_maybe_arg3_8_7 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_8_8 _lh_extend_maybe_LH_P2_0_8_6) _lh_extend_maybe_LH_P2_1_8_6) _lh_extend_maybe_arg1_8_6) _lh_extend_maybe_arg3_8_6))))))))) in
@@ -1298,8 +1333,10 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 _lh_listcomp_fun_ls_t_3_2 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_2_2_0 _lh_mapLookup_arg1_2_2_0 _lh_mapLookup_Bin_4_2_2_0 _lh_mapLookup_Bin_2_2_2_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_2_0) _lh_mapLookup_Bin_3_2_2_0))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_2_2_1 _lh_mapLookup_arg1_2_2_1 _lh_mapLookup_Bin_4_2_2_1 _lh_mapLookup_Bin_2_2_2_1 _lh_extend_maybe_LH_P2_0_8_9 _lh_extend_maybe_LH_P2_1_8_9 _lh_extend_maybe_arg1_8_9 _lh_extend_maybe_arg3_8_9 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_2_2_1 _lh_mapLookup_arg1_2_2_1 _lh_mapLookup_Bin_4_2_2_1 _lh_mapLookup_Bin_2_2_2_1 -> 
+                                          (let rec _lh_extend_maybe_Just_0_4_3 = _lh_mapLookup_Bin_2_2_2_1 in
+                                            (fun _lh_extend_maybe_LH_P2_0_8_9 _lh_extend_maybe_LH_P2_1_8_9 _lh_extend_maybe_arg1_8_9 _lh_extend_maybe_arg3_8_9 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_9_0 _lh_extend_maybe_LH_P2_0_8_8) _lh_extend_maybe_LH_P2_1_8_8) _lh_extend_maybe_arg1_8_8) _lh_extend_maybe_arg3_8_8))))))))) in
@@ -1351,8 +1388,10 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 _lh_listcomp_fun_ls_t_3_2 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_2_2_5 _lh_mapLookup_arg1_2_2_5 _lh_mapLookup_Bin_4_2_2_5 _lh_mapLookup_Bin_2_2_2_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_2_5) _lh_mapLookup_Bin_3_2_2_5))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_2_2_6 _lh_mapLookup_arg1_2_2_6 _lh_mapLookup_Bin_4_2_2_6 _lh_mapLookup_Bin_2_2_2_6 _lh_extend_maybe_LH_P2_0_9_1 _lh_extend_maybe_LH_P2_1_9_1 _lh_extend_maybe_arg1_9_1 _lh_extend_maybe_arg3_9_1 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_2_2_6 _lh_mapLookup_arg1_2_2_6 _lh_mapLookup_Bin_4_2_2_6 _lh_mapLookup_Bin_2_2_2_6 -> 
+                                          (let rec _lh_extend_maybe_Just_0_4_4 = _lh_mapLookup_Bin_2_2_2_6 in
+                                            (fun _lh_extend_maybe_LH_P2_0_9_1 _lh_extend_maybe_LH_P2_1_9_1 _lh_extend_maybe_arg1_9_1 _lh_extend_maybe_arg3_9_1 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_9_2 _lh_extend_maybe_LH_P2_0_9_0) _lh_extend_maybe_LH_P2_1_9_0) _lh_extend_maybe_arg1_9_0) _lh_extend_maybe_arg3_9_0))))))))) in
@@ -1396,8 +1435,10 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 _lh_listcomp_fun_ls_t_3_2 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_2_3_0 _lh_mapLookup_arg1_2_3_0 _lh_mapLookup_Bin_4_2_3_0 _lh_mapLookup_Bin_2_2_3_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_3_0) _lh_mapLookup_Bin_3_2_3_0))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_2_3_1 _lh_mapLookup_arg1_2_3_1 _lh_mapLookup_Bin_4_2_3_1 _lh_mapLookup_Bin_2_2_3_1 _lh_extend_maybe_LH_P2_0_9_3 _lh_extend_maybe_LH_P2_1_9_3 _lh_extend_maybe_arg1_9_3 _lh_extend_maybe_arg3_9_3 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_2_3_1 _lh_mapLookup_arg1_2_3_1 _lh_mapLookup_Bin_4_2_3_1 _lh_mapLookup_Bin_2_2_3_1 -> 
+                                          (let rec _lh_extend_maybe_Just_0_4_5 = _lh_mapLookup_Bin_2_2_3_1 in
+                                            (fun _lh_extend_maybe_LH_P2_0_9_3 _lh_extend_maybe_LH_P2_1_9_3 _lh_extend_maybe_arg1_9_3 _lh_extend_maybe_arg3_9_3 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_9_4 _lh_extend_maybe_LH_P2_0_9_2) _lh_extend_maybe_LH_P2_1_9_2) _lh_extend_maybe_arg1_9_2) _lh_extend_maybe_arg3_9_2))))))))) in
@@ -1441,8 +1482,10 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 _lh_listcomp_fun_ls_t_3_2 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_2_3_5 _lh_mapLookup_arg1_2_3_5 _lh_mapLookup_Bin_4_2_3_5 _lh_mapLookup_Bin_2_2_3_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_3_5) _lh_mapLookup_Bin_3_2_3_5))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_2_3_6 _lh_mapLookup_arg1_2_3_6 _lh_mapLookup_Bin_4_2_3_6 _lh_mapLookup_Bin_2_2_3_6 _lh_extend_maybe_LH_P2_0_9_5 _lh_extend_maybe_LH_P2_1_9_5 _lh_extend_maybe_arg1_9_5 _lh_extend_maybe_arg3_9_5 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_2_3_6 _lh_mapLookup_arg1_2_3_6 _lh_mapLookup_Bin_4_2_3_6 _lh_mapLookup_Bin_2_2_3_6 -> 
+                                          (let rec _lh_extend_maybe_Just_0_4_6 = _lh_mapLookup_Bin_2_2_3_6 in
+                                            (fun _lh_extend_maybe_LH_P2_0_9_5 _lh_extend_maybe_LH_P2_1_9_5 _lh_extend_maybe_arg1_9_5 _lh_extend_maybe_arg3_9_5 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_9_6 _lh_extend_maybe_LH_P2_0_9_4) _lh_extend_maybe_LH_P2_1_9_4) _lh_extend_maybe_arg1_9_4) _lh_extend_maybe_arg3_9_4))))))))) in
@@ -1486,8 +1529,10 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 _lh_listcomp_fun_ls_t_3_2 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_2_4_0 _lh_mapLookup_arg1_2_4_0 _lh_mapLookup_Bin_4_2_4_0 _lh_mapLookup_Bin_2_2_4_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_4_0) _lh_mapLookup_Bin_3_2_4_0))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_2_4_1 _lh_mapLookup_arg1_2_4_1 _lh_mapLookup_Bin_4_2_4_1 _lh_mapLookup_Bin_2_2_4_1 _lh_extend_maybe_LH_P2_0_9_7 _lh_extend_maybe_LH_P2_1_9_7 _lh_extend_maybe_arg1_9_7 _lh_extend_maybe_arg3_9_7 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_2_4_1 _lh_mapLookup_arg1_2_4_1 _lh_mapLookup_Bin_4_2_4_1 _lh_mapLookup_Bin_2_2_4_1 -> 
+                                          (let rec _lh_extend_maybe_Just_0_4_7 = _lh_mapLookup_Bin_2_2_4_1 in
+                                            (fun _lh_extend_maybe_LH_P2_0_9_7 _lh_extend_maybe_LH_P2_1_9_7 _lh_extend_maybe_arg1_9_7 _lh_extend_maybe_arg3_9_7 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_9_8 _lh_extend_maybe_LH_P2_0_9_6) _lh_extend_maybe_LH_P2_1_9_6) _lh_extend_maybe_arg1_9_6) _lh_extend_maybe_arg3_9_6))))))))) in
@@ -1555,8 +1600,10 @@ let rec nPiece_lh__d1 _lh_nPiece_arg1_0 _lh_listcomp_fun_ls_t_4_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_2_5_0 _lh_mapLookup_arg1_2_5_0 _lh_mapLookup_Bin_4_2_5_0 _lh_mapLookup_Bin_2_2_5_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_5_0) _lh_mapLookup_Bin_3_2_5_0))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_2_5_1 _lh_mapLookup_arg1_2_5_1 _lh_mapLookup_Bin_4_2_5_1 _lh_mapLookup_Bin_2_2_5_1 _lh_extend_maybe_LH_P2_0_9_9 _lh_extend_maybe_LH_P2_1_9_9 _lh_extend_maybe_arg1_9_9 _lh_extend_maybe_arg3_9_9 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_2_5_1 _lh_mapLookup_arg1_2_5_1 _lh_mapLookup_Bin_4_2_5_1 _lh_mapLookup_Bin_2_2_5_1 -> 
+                                          (let rec _lh_extend_maybe_Just_0_4_8 = _lh_mapLookup_Bin_2_2_5_1 in
+                                            (fun _lh_extend_maybe_LH_P2_0_9_9 _lh_extend_maybe_LH_P2_1_9_9 _lh_extend_maybe_arg1_9_9 _lh_extend_maybe_arg3_9_9 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_0_9 _lh_extend_maybe_LH_P2_0_9_8) _lh_extend_maybe_LH_P2_1_9_8) _lh_extend_maybe_arg1_9_8) _lh_extend_maybe_arg3_9_8))))))))) in
@@ -1600,8 +1647,10 @@ let rec nPiece_lh__d1 _lh_nPiece_arg1_0 _lh_listcomp_fun_ls_t_4_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_2_5_5 _lh_mapLookup_arg1_2_5_5 _lh_mapLookup_Bin_4_2_5_5 _lh_mapLookup_Bin_2_2_5_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_5_5) _lh_mapLookup_Bin_3_2_5_5))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_2_5_6 _lh_mapLookup_arg1_2_5_6 _lh_mapLookup_Bin_4_2_5_6 _lh_mapLookup_Bin_2_2_5_6 _lh_extend_maybe_LH_P2_0_1_0_1 _lh_extend_maybe_LH_P2_1_1_0_1 _lh_extend_maybe_arg1_1_0_1 _lh_extend_maybe_arg3_1_0_1 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_2_5_6 _lh_mapLookup_arg1_2_5_6 _lh_mapLookup_Bin_4_2_5_6 _lh_mapLookup_Bin_2_2_5_6 -> 
+                                          (let rec _lh_extend_maybe_Just_0_4_9 = _lh_mapLookup_Bin_2_2_5_6 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_0_1 _lh_extend_maybe_LH_P2_1_1_0_1 _lh_extend_maybe_arg1_1_0_1 _lh_extend_maybe_arg3_1_0_1 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_1_1 _lh_extend_maybe_LH_P2_0_1_0_0) _lh_extend_maybe_LH_P2_1_1_0_0) _lh_extend_maybe_arg1_1_0_0) _lh_extend_maybe_arg3_1_0_0))))))))) in
@@ -1645,8 +1694,10 @@ let rec nPiece_lh__d1 _lh_nPiece_arg1_0 _lh_listcomp_fun_ls_t_4_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_2_6_0 _lh_mapLookup_arg1_2_6_0 _lh_mapLookup_Bin_4_2_6_0 _lh_mapLookup_Bin_2_2_6_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_6_0) _lh_mapLookup_Bin_3_2_6_0))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_2_6_1 _lh_mapLookup_arg1_2_6_1 _lh_mapLookup_Bin_4_2_6_1 _lh_mapLookup_Bin_2_2_6_1 _lh_extend_maybe_LH_P2_0_1_0_3 _lh_extend_maybe_LH_P2_1_1_0_3 _lh_extend_maybe_arg1_1_0_3 _lh_extend_maybe_arg3_1_0_3 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_2_6_1 _lh_mapLookup_arg1_2_6_1 _lh_mapLookup_Bin_4_2_6_1 _lh_mapLookup_Bin_2_2_6_1 -> 
+                                          (let rec _lh_extend_maybe_Just_0_5_0 = _lh_mapLookup_Bin_2_2_6_1 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_0_3 _lh_extend_maybe_LH_P2_1_1_0_3 _lh_extend_maybe_arg1_1_0_3 _lh_extend_maybe_arg3_1_0_3 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_1_3 _lh_extend_maybe_LH_P2_0_1_0_2) _lh_extend_maybe_LH_P2_1_1_0_2) _lh_extend_maybe_arg1_1_0_2) _lh_extend_maybe_arg3_1_0_2))))))))) in
@@ -1690,8 +1741,10 @@ let rec nPiece_lh__d1 _lh_nPiece_arg1_0 _lh_listcomp_fun_ls_t_4_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_2_6_5 _lh_mapLookup_arg1_2_6_5 _lh_mapLookup_Bin_4_2_6_5 _lh_mapLookup_Bin_2_2_6_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_6_5) _lh_mapLookup_Bin_3_2_6_5))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_2_6_6 _lh_mapLookup_arg1_2_6_6 _lh_mapLookup_Bin_4_2_6_6 _lh_mapLookup_Bin_2_2_6_6 _lh_extend_maybe_LH_P2_0_1_0_5 _lh_extend_maybe_LH_P2_1_1_0_5 _lh_extend_maybe_arg1_1_0_5 _lh_extend_maybe_arg3_1_0_5 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_2_6_6 _lh_mapLookup_arg1_2_6_6 _lh_mapLookup_Bin_4_2_6_6 _lh_mapLookup_Bin_2_2_6_6 -> 
+                                          (let rec _lh_extend_maybe_Just_0_5_1 = _lh_mapLookup_Bin_2_2_6_6 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_0_5 _lh_extend_maybe_LH_P2_1_1_0_5 _lh_extend_maybe_arg1_1_0_5 _lh_extend_maybe_arg3_1_0_5 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_1_5 _lh_extend_maybe_LH_P2_0_1_0_4) _lh_extend_maybe_LH_P2_1_1_0_4) _lh_extend_maybe_arg1_1_0_4) _lh_extend_maybe_arg3_1_0_4))))))))) in
@@ -1743,8 +1796,10 @@ let rec nPiece_lh__d1 _lh_nPiece_arg1_0 _lh_listcomp_fun_ls_t_4_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_2_7_0 _lh_mapLookup_arg1_2_7_0 _lh_mapLookup_Bin_4_2_7_0 _lh_mapLookup_Bin_2_2_7_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_7_0) _lh_mapLookup_Bin_3_2_7_0))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_2_7_1 _lh_mapLookup_arg1_2_7_1 _lh_mapLookup_Bin_4_2_7_1 _lh_mapLookup_Bin_2_2_7_1 _lh_extend_maybe_LH_P2_0_1_0_7 _lh_extend_maybe_LH_P2_1_1_0_7 _lh_extend_maybe_arg1_1_0_7 _lh_extend_maybe_arg3_1_0_7 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_2_7_1 _lh_mapLookup_arg1_2_7_1 _lh_mapLookup_Bin_4_2_7_1 _lh_mapLookup_Bin_2_2_7_1 -> 
+                                          (let rec _lh_extend_maybe_Just_0_5_2 = _lh_mapLookup_Bin_2_2_7_1 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_0_7 _lh_extend_maybe_LH_P2_1_1_0_7 _lh_extend_maybe_arg1_1_0_7 _lh_extend_maybe_arg3_1_0_7 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_1_7 _lh_extend_maybe_LH_P2_0_1_0_6) _lh_extend_maybe_LH_P2_1_1_0_6) _lh_extend_maybe_arg1_1_0_6) _lh_extend_maybe_arg3_1_0_6))))))))) in
@@ -1788,8 +1843,10 @@ let rec nPiece_lh__d1 _lh_nPiece_arg1_0 _lh_listcomp_fun_ls_t_4_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_2_7_5 _lh_mapLookup_arg1_2_7_5 _lh_mapLookup_Bin_4_2_7_5 _lh_mapLookup_Bin_2_2_7_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_7_5) _lh_mapLookup_Bin_3_2_7_5))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_2_7_6 _lh_mapLookup_arg1_2_7_6 _lh_mapLookup_Bin_4_2_7_6 _lh_mapLookup_Bin_2_2_7_6 _lh_extend_maybe_LH_P2_0_1_0_9 _lh_extend_maybe_LH_P2_1_1_0_9 _lh_extend_maybe_arg1_1_0_9 _lh_extend_maybe_arg3_1_0_9 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_2_7_6 _lh_mapLookup_arg1_2_7_6 _lh_mapLookup_Bin_4_2_7_6 _lh_mapLookup_Bin_2_2_7_6 -> 
+                                          (let rec _lh_extend_maybe_Just_0_5_3 = _lh_mapLookup_Bin_2_2_7_6 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_0_9 _lh_extend_maybe_LH_P2_1_1_0_9 _lh_extend_maybe_arg1_1_0_9 _lh_extend_maybe_arg3_1_0_9 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_1_9 _lh_extend_maybe_LH_P2_0_1_0_8) _lh_extend_maybe_LH_P2_1_1_0_8) _lh_extend_maybe_arg1_1_0_8) _lh_extend_maybe_arg3_1_0_8))))))))) in
@@ -1833,8 +1890,10 @@ let rec nPiece_lh__d1 _lh_nPiece_arg1_0 _lh_listcomp_fun_ls_t_4_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_2_8_0 _lh_mapLookup_arg1_2_8_0 _lh_mapLookup_Bin_4_2_8_0 _lh_mapLookup_Bin_2_2_8_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_8_0) _lh_mapLookup_Bin_3_2_8_0))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_2_8_1 _lh_mapLookup_arg1_2_8_1 _lh_mapLookup_Bin_4_2_8_1 _lh_mapLookup_Bin_2_2_8_1 _lh_extend_maybe_LH_P2_0_1_1_1 _lh_extend_maybe_LH_P2_1_1_1_1 _lh_extend_maybe_arg1_1_1_1 _lh_extend_maybe_arg3_1_1_1 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_2_8_1 _lh_mapLookup_arg1_2_8_1 _lh_mapLookup_Bin_4_2_8_1 _lh_mapLookup_Bin_2_2_8_1 -> 
+                                          (let rec _lh_extend_maybe_Just_0_5_4 = _lh_mapLookup_Bin_2_2_8_1 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_1_1 _lh_extend_maybe_LH_P2_1_1_1_1 _lh_extend_maybe_arg1_1_1_1 _lh_extend_maybe_arg3_1_1_1 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_2_1 _lh_extend_maybe_LH_P2_0_1_1_0) _lh_extend_maybe_LH_P2_1_1_1_0) _lh_extend_maybe_arg1_1_1_0) _lh_extend_maybe_arg3_1_1_0))))))))) in
@@ -1878,8 +1937,10 @@ let rec nPiece_lh__d1 _lh_nPiece_arg1_0 _lh_listcomp_fun_ls_t_4_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_2_8_5 _lh_mapLookup_arg1_2_8_5 _lh_mapLookup_Bin_4_2_8_5 _lh_mapLookup_Bin_2_2_8_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_8_5) _lh_mapLookup_Bin_3_2_8_5))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_2_8_6 _lh_mapLookup_arg1_2_8_6 _lh_mapLookup_Bin_4_2_8_6 _lh_mapLookup_Bin_2_2_8_6 _lh_extend_maybe_LH_P2_0_1_1_3 _lh_extend_maybe_LH_P2_1_1_1_3 _lh_extend_maybe_arg1_1_1_3 _lh_extend_maybe_arg3_1_1_3 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_2_8_6 _lh_mapLookup_arg1_2_8_6 _lh_mapLookup_Bin_4_2_8_6 _lh_mapLookup_Bin_2_2_8_6 -> 
+                                          (let rec _lh_extend_maybe_Just_0_5_5 = _lh_mapLookup_Bin_2_2_8_6 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_1_3 _lh_extend_maybe_LH_P2_1_1_1_3 _lh_extend_maybe_arg1_1_1_3 _lh_extend_maybe_arg3_1_1_3 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_2_3 _lh_extend_maybe_LH_P2_0_1_1_2) _lh_extend_maybe_LH_P2_1_1_1_2) _lh_extend_maybe_arg1_1_1_2) _lh_extend_maybe_arg3_1_1_2))))))))) in
@@ -1945,8 +2006,10 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 _lh_listcomp_fun_ls_t_5_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_2_9_0 _lh_mapLookup_arg1_2_9_0 _lh_mapLookup_Bin_4_2_9_0 _lh_mapLookup_Bin_2_2_9_0 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_9_0) _lh_mapLookup_Bin_3_2_9_0))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_2_9_1 _lh_mapLookup_arg1_2_9_1 _lh_mapLookup_Bin_4_2_9_1 _lh_mapLookup_Bin_2_2_9_1 _lh_extend_maybe_LH_P2_0_1_1_5 _lh_extend_maybe_LH_P2_1_1_1_5 _lh_extend_maybe_arg1_1_1_5 _lh_extend_maybe_arg3_1_1_5 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_2_9_1 _lh_mapLookup_arg1_2_9_1 _lh_mapLookup_Bin_4_2_9_1 _lh_mapLookup_Bin_2_2_9_1 -> 
+                                        (let rec _lh_extend_maybe_Just_0_5_6 = _lh_mapLookup_Bin_2_2_9_1 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_1_5 _lh_extend_maybe_LH_P2_1_1_1_5 _lh_extend_maybe_arg1_1_1_5 _lh_extend_maybe_arg3_1_1_5 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_1_3_4 _lh_extend_maybe_LH_P2_0_1_1_4) _lh_extend_maybe_LH_P2_1_1_1_4) _lh_extend_maybe_arg1_1_1_4) _lh_extend_maybe_arg3_1_1_4))))))))) in
@@ -1990,8 +2053,10 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 _lh_listcomp_fun_ls_t_5_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_2_9_5 _lh_mapLookup_arg1_2_9_5 _lh_mapLookup_Bin_4_2_9_5 _lh_mapLookup_Bin_2_2_9_5 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_9_5) _lh_mapLookup_Bin_3_2_9_5))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_2_9_6 _lh_mapLookup_arg1_2_9_6 _lh_mapLookup_Bin_4_2_9_6 _lh_mapLookup_Bin_2_2_9_6 _lh_extend_maybe_LH_P2_0_1_1_7 _lh_extend_maybe_LH_P2_1_1_1_7 _lh_extend_maybe_arg1_1_1_7 _lh_extend_maybe_arg3_1_1_7 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_2_9_6 _lh_mapLookup_arg1_2_9_6 _lh_mapLookup_Bin_4_2_9_6 _lh_mapLookup_Bin_2_2_9_6 -> 
+                                        (let rec _lh_extend_maybe_Just_0_5_7 = _lh_mapLookup_Bin_2_2_9_6 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_1_7 _lh_extend_maybe_LH_P2_1_1_1_7 _lh_extend_maybe_arg1_1_1_7 _lh_extend_maybe_arg3_1_1_7 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_1_3_6 _lh_extend_maybe_LH_P2_0_1_1_6) _lh_extend_maybe_LH_P2_1_1_1_6) _lh_extend_maybe_arg1_1_1_6) _lh_extend_maybe_arg3_1_1_6))))))))) in
@@ -2035,8 +2100,10 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 _lh_listcomp_fun_ls_t_5_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_3_0_0 _lh_mapLookup_arg1_3_0_0 _lh_mapLookup_Bin_4_3_0_0 _lh_mapLookup_Bin_2_3_0_0 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_0_0) _lh_mapLookup_Bin_3_3_0_0))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_3_0_1 _lh_mapLookup_arg1_3_0_1 _lh_mapLookup_Bin_4_3_0_1 _lh_mapLookup_Bin_2_3_0_1 _lh_extend_maybe_LH_P2_0_1_1_9 _lh_extend_maybe_LH_P2_1_1_1_9 _lh_extend_maybe_arg1_1_1_9 _lh_extend_maybe_arg3_1_1_9 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_3_0_1 _lh_mapLookup_arg1_3_0_1 _lh_mapLookup_Bin_4_3_0_1 _lh_mapLookup_Bin_2_3_0_1 -> 
+                                        (let rec _lh_extend_maybe_Just_0_5_8 = _lh_mapLookup_Bin_2_3_0_1 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_1_9 _lh_extend_maybe_LH_P2_1_1_1_9 _lh_extend_maybe_arg1_1_1_9 _lh_extend_maybe_arg3_1_1_9 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_1_3_8 _lh_extend_maybe_LH_P2_0_1_1_8) _lh_extend_maybe_LH_P2_1_1_1_8) _lh_extend_maybe_arg1_1_1_8) _lh_extend_maybe_arg3_1_1_8))))))))) in
@@ -2088,8 +2155,10 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 _lh_listcomp_fun_ls_t_5_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_3_0_5 _lh_mapLookup_arg1_3_0_5 _lh_mapLookup_Bin_4_3_0_5 _lh_mapLookup_Bin_2_3_0_5 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_0_5) _lh_mapLookup_Bin_3_3_0_5))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_3_0_6 _lh_mapLookup_arg1_3_0_6 _lh_mapLookup_Bin_4_3_0_6 _lh_mapLookup_Bin_2_3_0_6 _lh_extend_maybe_LH_P2_0_1_2_1 _lh_extend_maybe_LH_P2_1_1_2_1 _lh_extend_maybe_arg1_1_2_1 _lh_extend_maybe_arg3_1_2_1 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_3_0_6 _lh_mapLookup_arg1_3_0_6 _lh_mapLookup_Bin_4_3_0_6 _lh_mapLookup_Bin_2_3_0_6 -> 
+                                        (let rec _lh_extend_maybe_Just_0_5_9 = _lh_mapLookup_Bin_2_3_0_6 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_2_1 _lh_extend_maybe_LH_P2_1_1_2_1 _lh_extend_maybe_arg1_1_2_1 _lh_extend_maybe_arg3_1_2_1 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_1_4_0 _lh_extend_maybe_LH_P2_0_1_2_0) _lh_extend_maybe_LH_P2_1_1_2_0) _lh_extend_maybe_arg1_1_2_0) _lh_extend_maybe_arg3_1_2_0))))))))) in
@@ -2133,8 +2202,10 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 _lh_listcomp_fun_ls_t_5_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_3_1_0 _lh_mapLookup_arg1_3_1_0 _lh_mapLookup_Bin_4_3_1_0 _lh_mapLookup_Bin_2_3_1_0 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_1_0) _lh_mapLookup_Bin_3_3_1_0))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_3_1_1 _lh_mapLookup_arg1_3_1_1 _lh_mapLookup_Bin_4_3_1_1 _lh_mapLookup_Bin_2_3_1_1 _lh_extend_maybe_LH_P2_0_1_2_3 _lh_extend_maybe_LH_P2_1_1_2_3 _lh_extend_maybe_arg1_1_2_3 _lh_extend_maybe_arg3_1_2_3 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_3_1_1 _lh_mapLookup_arg1_3_1_1 _lh_mapLookup_Bin_4_3_1_1 _lh_mapLookup_Bin_2_3_1_1 -> 
+                                        (let rec _lh_extend_maybe_Just_0_6_0 = _lh_mapLookup_Bin_2_3_1_1 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_2_3 _lh_extend_maybe_LH_P2_1_1_2_3 _lh_extend_maybe_arg1_1_2_3 _lh_extend_maybe_arg3_1_2_3 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_1_4_2 _lh_extend_maybe_LH_P2_0_1_2_2) _lh_extend_maybe_LH_P2_1_1_2_2) _lh_extend_maybe_arg1_1_2_2) _lh_extend_maybe_arg3_1_2_2))))))))) in
@@ -2178,8 +2249,10 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 _lh_listcomp_fun_ls_t_5_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_3_1_5 _lh_mapLookup_arg1_3_1_5 _lh_mapLookup_Bin_4_3_1_5 _lh_mapLookup_Bin_2_3_1_5 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_1_5) _lh_mapLookup_Bin_3_3_1_5))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_3_1_6 _lh_mapLookup_arg1_3_1_6 _lh_mapLookup_Bin_4_3_1_6 _lh_mapLookup_Bin_2_3_1_6 _lh_extend_maybe_LH_P2_0_1_2_5 _lh_extend_maybe_LH_P2_1_1_2_5 _lh_extend_maybe_arg1_1_2_5 _lh_extend_maybe_arg3_1_2_5 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_3_1_6 _lh_mapLookup_arg1_3_1_6 _lh_mapLookup_Bin_4_3_1_6 _lh_mapLookup_Bin_2_3_1_6 -> 
+                                        (let rec _lh_extend_maybe_Just_0_6_1 = _lh_mapLookup_Bin_2_3_1_6 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_2_5 _lh_extend_maybe_LH_P2_1_1_2_5 _lh_extend_maybe_arg1_1_2_5 _lh_extend_maybe_arg3_1_2_5 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_1_4_4 _lh_extend_maybe_LH_P2_0_1_2_4) _lh_extend_maybe_LH_P2_1_1_2_4) _lh_extend_maybe_arg1_1_2_4) _lh_extend_maybe_arg3_1_2_4))))))))) in
@@ -2233,8 +2306,10 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 _lh_listcomp_fun_ls_t_5_2 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_3_2_0 _lh_mapLookup_arg1_3_2_0 _lh_mapLookup_Bin_4_3_2_0 _lh_mapLookup_Bin_2_3_2_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_2_0) _lh_mapLookup_Bin_3_3_2_0))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_3_2_1 _lh_mapLookup_arg1_3_2_1 _lh_mapLookup_Bin_4_3_2_1 _lh_mapLookup_Bin_2_3_2_1 _lh_extend_maybe_LH_P2_0_1_2_7 _lh_extend_maybe_LH_P2_1_1_2_7 _lh_extend_maybe_arg1_1_2_7 _lh_extend_maybe_arg3_1_2_7 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_3_2_1 _lh_mapLookup_arg1_3_2_1 _lh_mapLookup_Bin_4_3_2_1 _lh_mapLookup_Bin_2_3_2_1 -> 
+                                          (let rec _lh_extend_maybe_Just_0_6_2 = _lh_mapLookup_Bin_2_3_2_1 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_2_7 _lh_extend_maybe_LH_P2_1_1_2_7 _lh_extend_maybe_arg1_1_2_7 _lh_extend_maybe_arg3_1_2_7 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_4_6 _lh_extend_maybe_LH_P2_0_1_2_6) _lh_extend_maybe_LH_P2_1_1_2_6) _lh_extend_maybe_arg1_1_2_6) _lh_extend_maybe_arg3_1_2_6))))))))) in
@@ -2278,8 +2353,10 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 _lh_listcomp_fun_ls_t_5_2 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_3_2_5 _lh_mapLookup_arg1_3_2_5 _lh_mapLookup_Bin_4_3_2_5 _lh_mapLookup_Bin_2_3_2_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_2_5) _lh_mapLookup_Bin_3_3_2_5))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_3_2_6 _lh_mapLookup_arg1_3_2_6 _lh_mapLookup_Bin_4_3_2_6 _lh_mapLookup_Bin_2_3_2_6 _lh_extend_maybe_LH_P2_0_1_2_9 _lh_extend_maybe_LH_P2_1_1_2_9 _lh_extend_maybe_arg1_1_2_9 _lh_extend_maybe_arg3_1_2_9 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_3_2_6 _lh_mapLookup_arg1_3_2_6 _lh_mapLookup_Bin_4_3_2_6 _lh_mapLookup_Bin_2_3_2_6 -> 
+                                          (let rec _lh_extend_maybe_Just_0_6_3 = _lh_mapLookup_Bin_2_3_2_6 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_2_9 _lh_extend_maybe_LH_P2_1_1_2_9 _lh_extend_maybe_arg1_1_2_9 _lh_extend_maybe_arg3_1_2_9 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_4_8 _lh_extend_maybe_LH_P2_0_1_2_8) _lh_extend_maybe_LH_P2_1_1_2_8) _lh_extend_maybe_arg1_1_2_8) _lh_extend_maybe_arg3_1_2_8))))))))) in
@@ -2323,8 +2400,10 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 _lh_listcomp_fun_ls_t_5_2 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_3_3_0 _lh_mapLookup_arg1_3_3_0 _lh_mapLookup_Bin_4_3_3_0 _lh_mapLookup_Bin_2_3_3_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_3_0) _lh_mapLookup_Bin_3_3_3_0))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_3_3_1 _lh_mapLookup_arg1_3_3_1 _lh_mapLookup_Bin_4_3_3_1 _lh_mapLookup_Bin_2_3_3_1 _lh_extend_maybe_LH_P2_0_1_3_1 _lh_extend_maybe_LH_P2_1_1_3_1 _lh_extend_maybe_arg1_1_3_1 _lh_extend_maybe_arg3_1_3_1 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_3_3_1 _lh_mapLookup_arg1_3_3_1 _lh_mapLookup_Bin_4_3_3_1 _lh_mapLookup_Bin_2_3_3_1 -> 
+                                          (let rec _lh_extend_maybe_Just_0_6_4 = _lh_mapLookup_Bin_2_3_3_1 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_3_1 _lh_extend_maybe_LH_P2_1_1_3_1 _lh_extend_maybe_arg1_1_3_1 _lh_extend_maybe_arg3_1_3_1 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_5_0 _lh_extend_maybe_LH_P2_0_1_3_0) _lh_extend_maybe_LH_P2_1_1_3_0) _lh_extend_maybe_arg1_1_3_0) _lh_extend_maybe_arg3_1_3_0))))))))) in
@@ -2376,8 +2455,10 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 _lh_listcomp_fun_ls_t_5_2 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_3_3_5 _lh_mapLookup_arg1_3_3_5 _lh_mapLookup_Bin_4_3_3_5 _lh_mapLookup_Bin_2_3_3_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_3_5) _lh_mapLookup_Bin_3_3_3_5))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_3_3_6 _lh_mapLookup_arg1_3_3_6 _lh_mapLookup_Bin_4_3_3_6 _lh_mapLookup_Bin_2_3_3_6 _lh_extend_maybe_LH_P2_0_1_3_3 _lh_extend_maybe_LH_P2_1_1_3_3 _lh_extend_maybe_arg1_1_3_3 _lh_extend_maybe_arg3_1_3_3 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_3_3_6 _lh_mapLookup_arg1_3_3_6 _lh_mapLookup_Bin_4_3_3_6 _lh_mapLookup_Bin_2_3_3_6 -> 
+                                          (let rec _lh_extend_maybe_Just_0_6_5 = _lh_mapLookup_Bin_2_3_3_6 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_3_3 _lh_extend_maybe_LH_P2_1_1_3_3 _lh_extend_maybe_arg1_1_3_3 _lh_extend_maybe_arg3_1_3_3 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_5_2 _lh_extend_maybe_LH_P2_0_1_3_2) _lh_extend_maybe_LH_P2_1_1_3_2) _lh_extend_maybe_arg1_1_3_2) _lh_extend_maybe_arg3_1_3_2))))))))) in
@@ -2421,8 +2502,10 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 _lh_listcomp_fun_ls_t_5_2 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_3_4_0 _lh_mapLookup_arg1_3_4_0 _lh_mapLookup_Bin_4_3_4_0 _lh_mapLookup_Bin_2_3_4_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_4_0) _lh_mapLookup_Bin_3_3_4_0))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_3_4_1 _lh_mapLookup_arg1_3_4_1 _lh_mapLookup_Bin_4_3_4_1 _lh_mapLookup_Bin_2_3_4_1 _lh_extend_maybe_LH_P2_0_1_3_5 _lh_extend_maybe_LH_P2_1_1_3_5 _lh_extend_maybe_arg1_1_3_5 _lh_extend_maybe_arg3_1_3_5 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_3_4_1 _lh_mapLookup_arg1_3_4_1 _lh_mapLookup_Bin_4_3_4_1 _lh_mapLookup_Bin_2_3_4_1 -> 
+                                          (let rec _lh_extend_maybe_Just_0_6_6 = _lh_mapLookup_Bin_2_3_4_1 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_3_5 _lh_extend_maybe_LH_P2_1_1_3_5 _lh_extend_maybe_arg1_1_3_5 _lh_extend_maybe_arg3_1_3_5 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_5_4 _lh_extend_maybe_LH_P2_0_1_3_4) _lh_extend_maybe_LH_P2_1_1_3_4) _lh_extend_maybe_arg1_1_3_4) _lh_extend_maybe_arg3_1_3_4))))))))) in
@@ -2466,8 +2549,10 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 _lh_listcomp_fun_ls_t_5_2 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_3_4_5 _lh_mapLookup_arg1_3_4_5 _lh_mapLookup_Bin_4_3_4_5 _lh_mapLookup_Bin_2_3_4_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_4_5) _lh_mapLookup_Bin_3_3_4_5))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_3_4_6 _lh_mapLookup_arg1_3_4_6 _lh_mapLookup_Bin_4_3_4_6 _lh_mapLookup_Bin_2_3_4_6 _lh_extend_maybe_LH_P2_0_1_3_7 _lh_extend_maybe_LH_P2_1_1_3_7 _lh_extend_maybe_arg1_1_3_7 _lh_extend_maybe_arg3_1_3_7 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_3_4_6 _lh_mapLookup_arg1_3_4_6 _lh_mapLookup_Bin_4_3_4_6 _lh_mapLookup_Bin_2_3_4_6 -> 
+                                          (let rec _lh_extend_maybe_Just_0_6_7 = _lh_mapLookup_Bin_2_3_4_6 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_3_7 _lh_extend_maybe_LH_P2_1_1_3_7 _lh_extend_maybe_arg1_1_3_7 _lh_extend_maybe_arg3_1_3_7 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_5_6 _lh_extend_maybe_LH_P2_0_1_3_6) _lh_extend_maybe_LH_P2_1_1_3_6) _lh_extend_maybe_arg1_1_3_6) _lh_extend_maybe_arg3_1_3_6))))))))) in
@@ -2533,8 +2618,10 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 _lh_listcomp_fun_ls_t_6_1 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_3_5_1 _lh_mapLookup_arg1_3_5_1 _lh_mapLookup_Bin_4_3_5_1 _lh_mapLookup_Bin_2_3_5_1 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_5_1) _lh_mapLookup_Bin_3_3_5_1))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_3_5_2 _lh_mapLookup_arg1_3_5_2 _lh_mapLookup_Bin_4_3_5_2 _lh_mapLookup_Bin_2_3_5_2 _lh_extend_maybe_LH_P2_0_1_3_9 _lh_extend_maybe_LH_P2_1_1_3_9 _lh_extend_maybe_arg1_1_4_0 _lh_extend_maybe_arg3_1_4_0 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_3_5_2 _lh_mapLookup_arg1_3_5_2 _lh_mapLookup_Bin_4_3_5_2 _lh_mapLookup_Bin_2_3_5_2 -> 
+                                        (let rec _lh_extend_maybe_Just_0_6_8 = _lh_mapLookup_Bin_2_3_5_2 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_3_9 _lh_extend_maybe_LH_P2_1_1_3_9 _lh_extend_maybe_arg1_1_4_0 _lh_extend_maybe_arg3_1_4_0 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_1_6_8 _lh_extend_maybe_LH_P2_0_1_3_8) _lh_extend_maybe_LH_P2_1_1_3_8) _lh_extend_maybe_arg1_1_3_9) _lh_extend_maybe_arg3_1_3_9))))))))) in
@@ -2578,8 +2665,10 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 _lh_listcomp_fun_ls_t_6_1 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_3_5_6 _lh_mapLookup_arg1_3_5_6 _lh_mapLookup_Bin_4_3_5_6 _lh_mapLookup_Bin_2_3_5_6 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_5_6) _lh_mapLookup_Bin_3_3_5_6))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_3_5_7 _lh_mapLookup_arg1_3_5_7 _lh_mapLookup_Bin_4_3_5_7 _lh_mapLookup_Bin_2_3_5_7 _lh_extend_maybe_LH_P2_0_1_4_1 _lh_extend_maybe_LH_P2_1_1_4_1 _lh_extend_maybe_arg1_1_4_2 _lh_extend_maybe_arg3_1_4_2 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_3_5_7 _lh_mapLookup_arg1_3_5_7 _lh_mapLookup_Bin_4_3_5_7 _lh_mapLookup_Bin_2_3_5_7 -> 
+                                        (let rec _lh_extend_maybe_Just_0_6_9 = _lh_mapLookup_Bin_2_3_5_7 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_4_1 _lh_extend_maybe_LH_P2_1_1_4_1 _lh_extend_maybe_arg1_1_4_2 _lh_extend_maybe_arg3_1_4_2 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_1_7_0 _lh_extend_maybe_LH_P2_0_1_4_0) _lh_extend_maybe_LH_P2_1_1_4_0) _lh_extend_maybe_arg1_1_4_1) _lh_extend_maybe_arg3_1_4_1))))))))) in
@@ -2623,8 +2712,10 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 _lh_listcomp_fun_ls_t_6_1 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_3_6_1 _lh_mapLookup_arg1_3_6_1 _lh_mapLookup_Bin_4_3_6_1 _lh_mapLookup_Bin_2_3_6_1 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_6_1) _lh_mapLookup_Bin_3_3_6_1))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_3_6_2 _lh_mapLookup_arg1_3_6_2 _lh_mapLookup_Bin_4_3_6_2 _lh_mapLookup_Bin_2_3_6_2 _lh_extend_maybe_LH_P2_0_1_4_3 _lh_extend_maybe_LH_P2_1_1_4_3 _lh_extend_maybe_arg1_1_4_4 _lh_extend_maybe_arg3_1_4_4 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_3_6_2 _lh_mapLookup_arg1_3_6_2 _lh_mapLookup_Bin_4_3_6_2 _lh_mapLookup_Bin_2_3_6_2 -> 
+                                        (let rec _lh_extend_maybe_Just_0_7_0 = _lh_mapLookup_Bin_2_3_6_2 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_4_3 _lh_extend_maybe_LH_P2_1_1_4_3 _lh_extend_maybe_arg1_1_4_4 _lh_extend_maybe_arg3_1_4_4 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_1_7_2 _lh_extend_maybe_LH_P2_0_1_4_2) _lh_extend_maybe_LH_P2_1_1_4_2) _lh_extend_maybe_arg1_1_4_3) _lh_extend_maybe_arg3_1_4_3))))))))) in
@@ -2668,8 +2759,10 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 _lh_listcomp_fun_ls_t_6_1 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_3_6_6 _lh_mapLookup_arg1_3_6_6 _lh_mapLookup_Bin_4_3_6_6 _lh_mapLookup_Bin_2_3_6_6 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_6_6) _lh_mapLookup_Bin_3_3_6_6))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_3_6_7 _lh_mapLookup_arg1_3_6_7 _lh_mapLookup_Bin_4_3_6_7 _lh_mapLookup_Bin_2_3_6_7 _lh_extend_maybe_LH_P2_0_1_4_5 _lh_extend_maybe_LH_P2_1_1_4_5 _lh_extend_maybe_arg1_1_4_6 _lh_extend_maybe_arg3_1_4_6 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_3_6_7 _lh_mapLookup_arg1_3_6_7 _lh_mapLookup_Bin_4_3_6_7 _lh_mapLookup_Bin_2_3_6_7 -> 
+                                        (let rec _lh_extend_maybe_Just_0_7_1 = _lh_mapLookup_Bin_2_3_6_7 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_4_5 _lh_extend_maybe_LH_P2_1_1_4_5 _lh_extend_maybe_arg1_1_4_6 _lh_extend_maybe_arg3_1_4_6 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_1_7_4 _lh_extend_maybe_LH_P2_0_1_4_4) _lh_extend_maybe_LH_P2_1_1_4_4) _lh_extend_maybe_arg1_1_4_5) _lh_extend_maybe_arg3_1_4_5))))))))) in
@@ -2721,8 +2814,10 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 _lh_listcomp_fun_ls_t_6_1 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_3_7_1 _lh_mapLookup_arg1_3_7_1 _lh_mapLookup_Bin_4_3_7_1 _lh_mapLookup_Bin_2_3_7_1 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_7_1) _lh_mapLookup_Bin_3_3_7_1))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_3_7_2 _lh_mapLookup_arg1_3_7_2 _lh_mapLookup_Bin_4_3_7_2 _lh_mapLookup_Bin_2_3_7_2 _lh_extend_maybe_LH_P2_0_1_4_7 _lh_extend_maybe_LH_P2_1_1_4_7 _lh_extend_maybe_arg1_1_4_8 _lh_extend_maybe_arg3_1_4_8 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_3_7_2 _lh_mapLookup_arg1_3_7_2 _lh_mapLookup_Bin_4_3_7_2 _lh_mapLookup_Bin_2_3_7_2 -> 
+                                        (let rec _lh_extend_maybe_Just_0_7_2 = _lh_mapLookup_Bin_2_3_7_2 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_4_7 _lh_extend_maybe_LH_P2_1_1_4_7 _lh_extend_maybe_arg1_1_4_8 _lh_extend_maybe_arg3_1_4_8 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_1_7_6 _lh_extend_maybe_LH_P2_0_1_4_6) _lh_extend_maybe_LH_P2_1_1_4_6) _lh_extend_maybe_arg1_1_4_7) _lh_extend_maybe_arg3_1_4_7))))))))) in
@@ -2766,8 +2861,10 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 _lh_listcomp_fun_ls_t_6_1 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_3_7_6 _lh_mapLookup_arg1_3_7_6 _lh_mapLookup_Bin_4_3_7_6 _lh_mapLookup_Bin_2_3_7_6 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_7_6) _lh_mapLookup_Bin_3_3_7_6))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_3_7_7 _lh_mapLookup_arg1_3_7_7 _lh_mapLookup_Bin_4_3_7_7 _lh_mapLookup_Bin_2_3_7_7 _lh_extend_maybe_LH_P2_0_1_4_9 _lh_extend_maybe_LH_P2_1_1_4_9 _lh_extend_maybe_arg1_1_5_0 _lh_extend_maybe_arg3_1_5_0 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_3_7_7 _lh_mapLookup_arg1_3_7_7 _lh_mapLookup_Bin_4_3_7_7 _lh_mapLookup_Bin_2_3_7_7 -> 
+                                        (let rec _lh_extend_maybe_Just_0_7_3 = _lh_mapLookup_Bin_2_3_7_7 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_4_9 _lh_extend_maybe_LH_P2_1_1_4_9 _lh_extend_maybe_arg1_1_5_0 _lh_extend_maybe_arg3_1_5_0 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_1_7_8 _lh_extend_maybe_LH_P2_0_1_4_8) _lh_extend_maybe_LH_P2_1_1_4_8) _lh_extend_maybe_arg1_1_4_9) _lh_extend_maybe_arg3_1_4_9))))))))) in
@@ -2811,8 +2908,10 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 _lh_listcomp_fun_ls_t_6_1 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_3_8_1 _lh_mapLookup_arg1_3_8_1 _lh_mapLookup_Bin_4_3_8_1 _lh_mapLookup_Bin_2_3_8_1 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_8_1) _lh_mapLookup_Bin_3_3_8_1))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_3_8_2 _lh_mapLookup_arg1_3_8_2 _lh_mapLookup_Bin_4_3_8_2 _lh_mapLookup_Bin_2_3_8_2 _lh_extend_maybe_LH_P2_0_1_5_1 _lh_extend_maybe_LH_P2_1_1_5_1 _lh_extend_maybe_arg1_1_5_2 _lh_extend_maybe_arg3_1_5_2 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_3_8_2 _lh_mapLookup_arg1_3_8_2 _lh_mapLookup_Bin_4_3_8_2 _lh_mapLookup_Bin_2_3_8_2 -> 
+                                        (let rec _lh_extend_maybe_Just_0_7_4 = _lh_mapLookup_Bin_2_3_8_2 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_5_1 _lh_extend_maybe_LH_P2_1_1_5_1 _lh_extend_maybe_arg1_1_5_2 _lh_extend_maybe_arg3_1_5_2 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_1_8_0 _lh_extend_maybe_LH_P2_0_1_5_0) _lh_extend_maybe_LH_P2_1_1_5_0) _lh_extend_maybe_arg1_1_5_1) _lh_extend_maybe_arg3_1_5_1))))))))) in
@@ -2856,8 +2955,10 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 _lh_listcomp_fun_ls_t_6_1 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_3_8_6 _lh_mapLookup_arg1_3_8_6 _lh_mapLookup_Bin_4_3_8_6 _lh_mapLookup_Bin_2_3_8_6 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_8_6) _lh_mapLookup_Bin_3_3_8_6))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_3_8_7 _lh_mapLookup_arg1_3_8_7 _lh_mapLookup_Bin_4_3_8_7 _lh_mapLookup_Bin_2_3_8_7 _lh_extend_maybe_LH_P2_0_1_5_3 _lh_extend_maybe_LH_P2_1_1_5_3 _lh_extend_maybe_arg1_1_5_4 _lh_extend_maybe_arg3_1_5_4 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_3_8_7 _lh_mapLookup_arg1_3_8_7 _lh_mapLookup_Bin_4_3_8_7 _lh_mapLookup_Bin_2_3_8_7 -> 
+                                        (let rec _lh_extend_maybe_Just_0_7_5 = _lh_mapLookup_Bin_2_3_8_7 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_5_3 _lh_extend_maybe_LH_P2_1_1_5_3 _lh_extend_maybe_arg1_1_5_4 _lh_extend_maybe_arg3_1_5_4 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_1_8_2 _lh_extend_maybe_LH_P2_0_1_5_2) _lh_extend_maybe_LH_P2_1_1_5_2) _lh_extend_maybe_arg1_1_5_3) _lh_extend_maybe_arg3_1_5_3))))))))) in
@@ -2911,8 +3012,10 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 _lh_listcomp_fun_ls_t_6_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_3_9_1 _lh_mapLookup_arg1_3_9_1 _lh_mapLookup_Bin_4_3_9_1 _lh_mapLookup_Bin_2_3_9_1 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_9_1) _lh_mapLookup_Bin_3_3_9_1))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_3_9_2 _lh_mapLookup_arg1_3_9_2 _lh_mapLookup_Bin_4_3_9_2 _lh_mapLookup_Bin_2_3_9_2 _lh_extend_maybe_LH_P2_0_1_5_5 _lh_extend_maybe_LH_P2_1_1_5_5 _lh_extend_maybe_arg1_1_5_6 _lh_extend_maybe_arg3_1_5_6 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_3_9_2 _lh_mapLookup_arg1_3_9_2 _lh_mapLookup_Bin_4_3_9_2 _lh_mapLookup_Bin_2_3_9_2 -> 
+                                          (let rec _lh_extend_maybe_Just_0_7_6 = _lh_mapLookup_Bin_2_3_9_2 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_5_5 _lh_extend_maybe_LH_P2_1_1_5_5 _lh_extend_maybe_arg1_1_5_6 _lh_extend_maybe_arg3_1_5_6 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_8_4 _lh_extend_maybe_LH_P2_0_1_5_4) _lh_extend_maybe_LH_P2_1_1_5_4) _lh_extend_maybe_arg1_1_5_5) _lh_extend_maybe_arg3_1_5_5))))))))) in
@@ -2956,8 +3059,10 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 _lh_listcomp_fun_ls_t_6_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_3_9_6 _lh_mapLookup_arg1_3_9_6 _lh_mapLookup_Bin_4_3_9_6 _lh_mapLookup_Bin_2_3_9_6 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_9_6) _lh_mapLookup_Bin_3_3_9_6))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_3_9_7 _lh_mapLookup_arg1_3_9_7 _lh_mapLookup_Bin_4_3_9_7 _lh_mapLookup_Bin_2_3_9_7 _lh_extend_maybe_LH_P2_0_1_5_7 _lh_extend_maybe_LH_P2_1_1_5_7 _lh_extend_maybe_arg1_1_5_8 _lh_extend_maybe_arg3_1_5_8 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_3_9_7 _lh_mapLookup_arg1_3_9_7 _lh_mapLookup_Bin_4_3_9_7 _lh_mapLookup_Bin_2_3_9_7 -> 
+                                          (let rec _lh_extend_maybe_Just_0_7_7 = _lh_mapLookup_Bin_2_3_9_7 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_5_7 _lh_extend_maybe_LH_P2_1_1_5_7 _lh_extend_maybe_arg1_1_5_8 _lh_extend_maybe_arg3_1_5_8 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_8_6 _lh_extend_maybe_LH_P2_0_1_5_6) _lh_extend_maybe_LH_P2_1_1_5_6) _lh_extend_maybe_arg1_1_5_7) _lh_extend_maybe_arg3_1_5_7))))))))) in
@@ -3001,8 +3106,10 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 _lh_listcomp_fun_ls_t_6_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_4_0_1 _lh_mapLookup_arg1_4_0_1 _lh_mapLookup_Bin_4_4_0_1 _lh_mapLookup_Bin_2_4_0_1 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_0_1) _lh_mapLookup_Bin_3_4_0_1))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_4_0_2 _lh_mapLookup_arg1_4_0_2 _lh_mapLookup_Bin_4_4_0_2 _lh_mapLookup_Bin_2_4_0_2 _lh_extend_maybe_LH_P2_0_1_5_9 _lh_extend_maybe_LH_P2_1_1_5_9 _lh_extend_maybe_arg1_1_6_0 _lh_extend_maybe_arg3_1_6_0 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_4_0_2 _lh_mapLookup_arg1_4_0_2 _lh_mapLookup_Bin_4_4_0_2 _lh_mapLookup_Bin_2_4_0_2 -> 
+                                          (let rec _lh_extend_maybe_Just_0_7_8 = _lh_mapLookup_Bin_2_4_0_2 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_5_9 _lh_extend_maybe_LH_P2_1_1_5_9 _lh_extend_maybe_arg1_1_6_0 _lh_extend_maybe_arg3_1_6_0 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_8_8 _lh_extend_maybe_LH_P2_0_1_5_8) _lh_extend_maybe_LH_P2_1_1_5_8) _lh_extend_maybe_arg1_1_5_9) _lh_extend_maybe_arg3_1_5_9))))))))) in
@@ -3046,8 +3153,10 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 _lh_listcomp_fun_ls_t_6_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_4_0_6 _lh_mapLookup_arg1_4_0_6 _lh_mapLookup_Bin_4_4_0_6 _lh_mapLookup_Bin_2_4_0_6 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_0_6) _lh_mapLookup_Bin_3_4_0_6))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_4_0_7 _lh_mapLookup_arg1_4_0_7 _lh_mapLookup_Bin_4_4_0_7 _lh_mapLookup_Bin_2_4_0_7 _lh_extend_maybe_LH_P2_0_1_6_1 _lh_extend_maybe_LH_P2_1_1_6_1 _lh_extend_maybe_arg1_1_6_2 _lh_extend_maybe_arg3_1_6_2 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_4_0_7 _lh_mapLookup_arg1_4_0_7 _lh_mapLookup_Bin_4_4_0_7 _lh_mapLookup_Bin_2_4_0_7 -> 
+                                          (let rec _lh_extend_maybe_Just_0_7_9 = _lh_mapLookup_Bin_2_4_0_7 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_6_1 _lh_extend_maybe_LH_P2_1_1_6_1 _lh_extend_maybe_arg1_1_6_2 _lh_extend_maybe_arg3_1_6_2 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_9_0 _lh_extend_maybe_LH_P2_0_1_6_0) _lh_extend_maybe_LH_P2_1_1_6_0) _lh_extend_maybe_arg1_1_6_1) _lh_extend_maybe_arg3_1_6_1))))))))) in
@@ -3113,8 +3222,10 @@ let rec iPiece_lh__d1 _lh_iPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_4 _lh_mapLookup_arg1_4 _lh_mapLookup_Bin_4_4 _lh_mapLookup_Bin_2_4 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4) _lh_mapLookup_Bin_3_4))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_5 _lh_mapLookup_arg1_5 _lh_mapLookup_Bin_4_5 _lh_mapLookup_Bin_2_5 _lh_extend_maybe_LH_P2_0_2 _lh_extend_maybe_LH_P2_1_2 _lh_extend_maybe_arg1_2 _lh_extend_maybe_arg3_2 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_5 _lh_mapLookup_arg1_5 _lh_mapLookup_Bin_4_5 _lh_mapLookup_Bin_2_5 -> 
+                                        (let rec _lh_extend_maybe_Just_0_0 = _lh_mapLookup_Bin_2_5 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2 _lh_extend_maybe_LH_P2_1_2 _lh_extend_maybe_arg1_2 _lh_extend_maybe_arg3_2 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_1 _lh_extend_maybe_LH_P2_0_1) _lh_extend_maybe_LH_P2_1_1) _lh_extend_maybe_arg1_1) _lh_extend_maybe_arg3_1))))))))) in
@@ -3158,8 +3269,10 @@ let rec iPiece_lh__d1 _lh_iPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_9 _lh_mapLookup_arg1_9 _lh_mapLookup_Bin_4_9 _lh_mapLookup_Bin_2_9 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_9) _lh_mapLookup_Bin_3_9))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_1_0 _lh_mapLookup_arg1_1_0 _lh_mapLookup_Bin_4_1_0 _lh_mapLookup_Bin_2_1_0 _lh_extend_maybe_LH_P2_0_4 _lh_extend_maybe_LH_P2_1_4 _lh_extend_maybe_arg1_4 _lh_extend_maybe_arg3_4 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_1_0 _lh_mapLookup_arg1_1_0 _lh_mapLookup_Bin_4_1_0 _lh_mapLookup_Bin_2_1_0 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1 = _lh_mapLookup_Bin_2_1_0 in
+                                          (fun _lh_extend_maybe_LH_P2_0_4 _lh_extend_maybe_LH_P2_1_4 _lh_extend_maybe_arg1_4 _lh_extend_maybe_arg3_4 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3 _lh_extend_maybe_LH_P2_0_3) _lh_extend_maybe_LH_P2_1_3) _lh_extend_maybe_arg1_3) _lh_extend_maybe_arg3_3))))))))) in
@@ -3203,8 +3316,10 @@ let rec iPiece_lh__d1 _lh_iPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_1_4 _lh_mapLookup_arg1_1_4 _lh_mapLookup_Bin_4_1_4 _lh_mapLookup_Bin_2_1_4 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_4) _lh_mapLookup_Bin_3_1_4))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_1_5 _lh_mapLookup_arg1_1_5 _lh_mapLookup_Bin_4_1_5 _lh_mapLookup_Bin_2_1_5 _lh_extend_maybe_LH_P2_0_6 _lh_extend_maybe_LH_P2_1_6 _lh_extend_maybe_arg1_6 _lh_extend_maybe_arg3_6 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_1_5 _lh_mapLookup_arg1_1_5 _lh_mapLookup_Bin_4_1_5 _lh_mapLookup_Bin_2_1_5 -> 
+                                        (let rec _lh_extend_maybe_Just_0_2 = _lh_mapLookup_Bin_2_1_5 in
+                                          (fun _lh_extend_maybe_LH_P2_0_6 _lh_extend_maybe_LH_P2_1_6 _lh_extend_maybe_arg1_6 _lh_extend_maybe_arg3_6 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_5 _lh_extend_maybe_LH_P2_0_5) _lh_extend_maybe_LH_P2_1_5) _lh_extend_maybe_arg1_5) _lh_extend_maybe_arg3_5))))))))) in
@@ -3248,8 +3363,10 @@ let rec iPiece_lh__d1 _lh_iPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_1_9 _lh_mapLookup_arg1_1_9 _lh_mapLookup_Bin_4_1_9 _lh_mapLookup_Bin_2_1_9 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_9) _lh_mapLookup_Bin_3_1_9))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_2_0 _lh_mapLookup_arg1_2_0 _lh_mapLookup_Bin_4_2_0 _lh_mapLookup_Bin_2_2_0 _lh_extend_maybe_LH_P2_0_8 _lh_extend_maybe_LH_P2_1_8 _lh_extend_maybe_arg1_8 _lh_extend_maybe_arg3_8 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_2_0 _lh_mapLookup_arg1_2_0 _lh_mapLookup_Bin_4_2_0 _lh_mapLookup_Bin_2_2_0 -> 
+                                        (let rec _lh_extend_maybe_Just_0_3 = _lh_mapLookup_Bin_2_2_0 in
+                                          (fun _lh_extend_maybe_LH_P2_0_8 _lh_extend_maybe_LH_P2_1_8 _lh_extend_maybe_arg1_8 _lh_extend_maybe_arg3_8 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_7 _lh_extend_maybe_LH_P2_0_7) _lh_extend_maybe_LH_P2_1_7) _lh_extend_maybe_arg1_7) _lh_extend_maybe_arg3_7))))))))) in
@@ -3303,8 +3420,10 @@ let rec iPiece_lh__d1 _lh_iPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_2_4 _lh_mapLookup_arg1_2_4 _lh_mapLookup_Bin_4_2_4 _lh_mapLookup_Bin_2_2_4 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_4) _lh_mapLookup_Bin_3_2_4))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_2_5 _lh_mapLookup_arg1_2_5 _lh_mapLookup_Bin_4_2_5 _lh_mapLookup_Bin_2_2_5 _lh_extend_maybe_LH_P2_0_1_0 _lh_extend_maybe_LH_P2_1_1_0 _lh_extend_maybe_arg1_1_0 _lh_extend_maybe_arg3_1_0 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_2_5 _lh_mapLookup_arg1_2_5 _lh_mapLookup_Bin_4_2_5 _lh_mapLookup_Bin_2_2_5 -> 
+                                          (let rec _lh_extend_maybe_Just_0_4 = _lh_mapLookup_Bin_2_2_5 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_0 _lh_extend_maybe_LH_P2_1_1_0 _lh_extend_maybe_arg1_1_0 _lh_extend_maybe_arg3_1_0 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_9 _lh_extend_maybe_LH_P2_0_9) _lh_extend_maybe_LH_P2_1_9) _lh_extend_maybe_arg1_9) _lh_extend_maybe_arg3_9))))))))) in
@@ -3348,8 +3467,10 @@ let rec iPiece_lh__d1 _lh_iPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_2_9 _lh_mapLookup_arg1_2_9 _lh_mapLookup_Bin_4_2_9 _lh_mapLookup_Bin_2_2_9 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_9) _lh_mapLookup_Bin_3_2_9))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_3_0 _lh_mapLookup_arg1_3_0 _lh_mapLookup_Bin_4_3_0 _lh_mapLookup_Bin_2_3_0 _lh_extend_maybe_LH_P2_0_1_2 _lh_extend_maybe_LH_P2_1_1_2 _lh_extend_maybe_arg1_1_2 _lh_extend_maybe_arg3_1_2 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_3_0 _lh_mapLookup_arg1_3_0 _lh_mapLookup_Bin_4_3_0 _lh_mapLookup_Bin_2_3_0 -> 
+                                          (let rec _lh_extend_maybe_Just_0_5 = _lh_mapLookup_Bin_2_3_0 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_2 _lh_extend_maybe_LH_P2_1_1_2 _lh_extend_maybe_arg1_1_2 _lh_extend_maybe_arg3_1_2 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_1 _lh_extend_maybe_LH_P2_0_1_1) _lh_extend_maybe_LH_P2_1_1_1) _lh_extend_maybe_arg1_1_1) _lh_extend_maybe_arg3_1_1))))))))) in
@@ -3393,8 +3514,10 @@ let rec iPiece_lh__d1 _lh_iPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_3_4 _lh_mapLookup_arg1_3_4 _lh_mapLookup_Bin_4_3_4 _lh_mapLookup_Bin_2_3_4 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_4) _lh_mapLookup_Bin_3_3_4))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_3_5 _lh_mapLookup_arg1_3_5 _lh_mapLookup_Bin_4_3_5 _lh_mapLookup_Bin_2_3_5 _lh_extend_maybe_LH_P2_0_1_4 _lh_extend_maybe_LH_P2_1_1_4 _lh_extend_maybe_arg1_1_4 _lh_extend_maybe_arg3_1_4 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_3_5 _lh_mapLookup_arg1_3_5 _lh_mapLookup_Bin_4_3_5 _lh_mapLookup_Bin_2_3_5 -> 
+                                          (let rec _lh_extend_maybe_Just_0_6 = _lh_mapLookup_Bin_2_3_5 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_4 _lh_extend_maybe_LH_P2_1_1_4 _lh_extend_maybe_arg1_1_4 _lh_extend_maybe_arg3_1_4 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_3 _lh_extend_maybe_LH_P2_0_1_3) _lh_extend_maybe_LH_P2_1_1_3) _lh_extend_maybe_arg1_1_3) _lh_extend_maybe_arg3_1_3))))))))) in
@@ -3438,8 +3561,10 @@ let rec iPiece_lh__d1 _lh_iPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_3_9 _lh_mapLookup_arg1_3_9 _lh_mapLookup_Bin_4_3_9 _lh_mapLookup_Bin_2_3_9 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_9) _lh_mapLookup_Bin_3_3_9))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_4_0 _lh_mapLookup_arg1_4_0 _lh_mapLookup_Bin_4_4_0 _lh_mapLookup_Bin_2_4_0 _lh_extend_maybe_LH_P2_0_1_6 _lh_extend_maybe_LH_P2_1_1_6 _lh_extend_maybe_arg1_1_6 _lh_extend_maybe_arg3_1_6 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_4_0 _lh_mapLookup_arg1_4_0 _lh_mapLookup_Bin_4_4_0 _lh_mapLookup_Bin_2_4_0 -> 
+                                          (let rec _lh_extend_maybe_Just_0_7 = _lh_mapLookup_Bin_2_4_0 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_6 _lh_extend_maybe_LH_P2_1_1_6 _lh_extend_maybe_arg1_1_6 _lh_extend_maybe_arg3_1_6 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_5 _lh_extend_maybe_LH_P2_0_1_5) _lh_extend_maybe_LH_P2_1_1_5) _lh_extend_maybe_arg1_1_5) _lh_extend_maybe_arg3_1_5))))))))) in
@@ -3491,8 +3616,10 @@ let rec iPiece_lh__d1 _lh_iPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_4_4 _lh_mapLookup_arg1_4_4 _lh_mapLookup_Bin_4_4_4 _lh_mapLookup_Bin_2_4_4 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_4) _lh_mapLookup_Bin_3_4_4))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_4_5 _lh_mapLookup_arg1_4_5 _lh_mapLookup_Bin_4_4_5 _lh_mapLookup_Bin_2_4_5 _lh_extend_maybe_LH_P2_0_1_8 _lh_extend_maybe_LH_P2_1_1_8 _lh_extend_maybe_arg1_1_8 _lh_extend_maybe_arg3_1_8 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_4_5 _lh_mapLookup_arg1_4_5 _lh_mapLookup_Bin_4_4_5 _lh_mapLookup_Bin_2_4_5 -> 
+                                          (let rec _lh_extend_maybe_Just_0_8 = _lh_mapLookup_Bin_2_4_5 in
+                                            (fun _lh_extend_maybe_LH_P2_0_1_8 _lh_extend_maybe_LH_P2_1_1_8 _lh_extend_maybe_arg1_1_8 _lh_extend_maybe_arg3_1_8 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_7 _lh_extend_maybe_LH_P2_0_1_7) _lh_extend_maybe_LH_P2_1_1_7) _lh_extend_maybe_arg1_1_7) _lh_extend_maybe_arg3_1_7))))))))) in
@@ -3536,8 +3663,10 @@ let rec iPiece_lh__d1 _lh_iPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_4_9 _lh_mapLookup_arg1_4_9 _lh_mapLookup_Bin_4_4_9 _lh_mapLookup_Bin_2_4_9 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_9) _lh_mapLookup_Bin_3_4_9))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_5_0 _lh_mapLookup_arg1_5_0 _lh_mapLookup_Bin_4_5_0 _lh_mapLookup_Bin_2_5_0 _lh_extend_maybe_LH_P2_0_2_0 _lh_extend_maybe_LH_P2_1_2_0 _lh_extend_maybe_arg1_2_0 _lh_extend_maybe_arg3_2_0 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_5_0 _lh_mapLookup_arg1_5_0 _lh_mapLookup_Bin_4_5_0 _lh_mapLookup_Bin_2_5_0 -> 
+                                          (let rec _lh_extend_maybe_Just_0_9 = _lh_mapLookup_Bin_2_5_0 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_0 _lh_extend_maybe_LH_P2_1_2_0 _lh_extend_maybe_arg1_2_0 _lh_extend_maybe_arg3_2_0 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_1_9 _lh_extend_maybe_LH_P2_0_1_9) _lh_extend_maybe_LH_P2_1_1_9) _lh_extend_maybe_arg1_1_9) _lh_extend_maybe_arg3_1_9))))))))) in
@@ -3581,8 +3710,10 @@ let rec iPiece_lh__d1 _lh_iPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_5_4 _lh_mapLookup_arg1_5_4 _lh_mapLookup_Bin_4_5_4 _lh_mapLookup_Bin_2_5_4 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_5_4) _lh_mapLookup_Bin_3_5_4))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_5_5 _lh_mapLookup_arg1_5_5 _lh_mapLookup_Bin_4_5_5 _lh_mapLookup_Bin_2_5_5 _lh_extend_maybe_LH_P2_0_2_2 _lh_extend_maybe_LH_P2_1_2_2 _lh_extend_maybe_arg1_2_2 _lh_extend_maybe_arg3_2_2 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_5_5 _lh_mapLookup_arg1_5_5 _lh_mapLookup_Bin_4_5_5 _lh_mapLookup_Bin_2_5_5 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_0 = _lh_mapLookup_Bin_2_5_5 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_2 _lh_extend_maybe_LH_P2_1_2_2 _lh_extend_maybe_arg1_2_2 _lh_extend_maybe_arg3_2_2 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_2_1 _lh_extend_maybe_LH_P2_0_2_1) _lh_extend_maybe_LH_P2_1_2_1) _lh_extend_maybe_arg1_2_1) _lh_extend_maybe_arg3_2_1))))))))) in
@@ -3626,8 +3757,10 @@ let rec iPiece_lh__d1 _lh_iPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_5_9 _lh_mapLookup_arg1_5_9 _lh_mapLookup_Bin_4_5_9 _lh_mapLookup_Bin_2_5_9 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_5_9) _lh_mapLookup_Bin_3_5_9))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_6_0 _lh_mapLookup_arg1_6_0 _lh_mapLookup_Bin_4_6_0 _lh_mapLookup_Bin_2_6_0 _lh_extend_maybe_LH_P2_0_2_4 _lh_extend_maybe_LH_P2_1_2_4 _lh_extend_maybe_arg1_2_4 _lh_extend_maybe_arg3_2_4 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_6_0 _lh_mapLookup_arg1_6_0 _lh_mapLookup_Bin_4_6_0 _lh_mapLookup_Bin_2_6_0 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_1 = _lh_mapLookup_Bin_2_6_0 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_4 _lh_extend_maybe_LH_P2_1_2_4 _lh_extend_maybe_arg1_2_4 _lh_extend_maybe_arg3_2_4 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_2_3 _lh_extend_maybe_LH_P2_0_2_3) _lh_extend_maybe_LH_P2_1_2_3) _lh_extend_maybe_arg1_2_3) _lh_extend_maybe_arg3_2_3))))))))) in
@@ -3679,8 +3812,10 @@ let rec iPiece_lh__d1 _lh_iPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_6_4 _lh_mapLookup_arg1_6_4 _lh_mapLookup_Bin_4_6_4 _lh_mapLookup_Bin_2_6_4 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_4) _lh_mapLookup_Bin_3_6_4))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_6_5 _lh_mapLookup_arg1_6_5 _lh_mapLookup_Bin_4_6_5 _lh_mapLookup_Bin_2_6_5 _lh_extend_maybe_LH_P2_0_2_6 _lh_extend_maybe_LH_P2_1_2_6 _lh_extend_maybe_arg1_2_6 _lh_extend_maybe_arg3_2_6 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_6_5 _lh_mapLookup_arg1_6_5 _lh_mapLookup_Bin_4_6_5 _lh_mapLookup_Bin_2_6_5 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_2 = _lh_mapLookup_Bin_2_6_5 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_6 _lh_extend_maybe_LH_P2_1_2_6 _lh_extend_maybe_arg1_2_6 _lh_extend_maybe_arg3_2_6 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_2_5 _lh_extend_maybe_LH_P2_0_2_5) _lh_extend_maybe_LH_P2_1_2_5) _lh_extend_maybe_arg1_2_5) _lh_extend_maybe_arg3_2_5))))))))) in
@@ -3724,8 +3859,10 @@ let rec iPiece_lh__d1 _lh_iPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_6_9 _lh_mapLookup_arg1_6_9 _lh_mapLookup_Bin_4_6_9 _lh_mapLookup_Bin_2_6_9 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_9) _lh_mapLookup_Bin_3_6_9))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_7_0 _lh_mapLookup_arg1_7_0 _lh_mapLookup_Bin_4_7_0 _lh_mapLookup_Bin_2_7_0 _lh_extend_maybe_LH_P2_0_2_8 _lh_extend_maybe_LH_P2_1_2_8 _lh_extend_maybe_arg1_2_8 _lh_extend_maybe_arg3_2_8 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_7_0 _lh_mapLookup_arg1_7_0 _lh_mapLookup_Bin_4_7_0 _lh_mapLookup_Bin_2_7_0 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_3 = _lh_mapLookup_Bin_2_7_0 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_8 _lh_extend_maybe_LH_P2_1_2_8 _lh_extend_maybe_arg1_2_8 _lh_extend_maybe_arg3_2_8 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_2_7 _lh_extend_maybe_LH_P2_0_2_7) _lh_extend_maybe_LH_P2_1_2_7) _lh_extend_maybe_arg1_2_7) _lh_extend_maybe_arg3_2_7))))))))) in
@@ -3769,8 +3906,10 @@ let rec iPiece_lh__d1 _lh_iPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_7_4 _lh_mapLookup_arg1_7_4 _lh_mapLookup_Bin_4_7_4 _lh_mapLookup_Bin_2_7_4 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_4) _lh_mapLookup_Bin_3_7_4))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_7_5 _lh_mapLookup_arg1_7_5 _lh_mapLookup_Bin_4_7_5 _lh_mapLookup_Bin_2_7_5 _lh_extend_maybe_LH_P2_0_3_0 _lh_extend_maybe_LH_P2_1_3_0 _lh_extend_maybe_arg1_3_0 _lh_extend_maybe_arg3_3_0 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_7_5 _lh_mapLookup_arg1_7_5 _lh_mapLookup_Bin_4_7_5 _lh_mapLookup_Bin_2_7_5 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_4 = _lh_mapLookup_Bin_2_7_5 in
+                                            (fun _lh_extend_maybe_LH_P2_0_3_0 _lh_extend_maybe_LH_P2_1_3_0 _lh_extend_maybe_arg1_3_0 _lh_extend_maybe_arg3_3_0 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_2_9 _lh_extend_maybe_LH_P2_0_2_9) _lh_extend_maybe_LH_P2_1_2_9) _lh_extend_maybe_arg1_2_9) _lh_extend_maybe_arg3_2_9))))))))) in
@@ -3814,8 +3953,10 @@ let rec iPiece_lh__d1 _lh_iPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_7_9 _lh_mapLookup_arg1_7_9 _lh_mapLookup_Bin_4_7_9 _lh_mapLookup_Bin_2_7_9 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_9) _lh_mapLookup_Bin_3_7_9))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_8_0 _lh_mapLookup_arg1_8_0 _lh_mapLookup_Bin_4_8_0 _lh_mapLookup_Bin_2_8_0 _lh_extend_maybe_LH_P2_0_3_2 _lh_extend_maybe_LH_P2_1_3_2 _lh_extend_maybe_arg1_3_2 _lh_extend_maybe_arg3_3_2 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_8_0 _lh_mapLookup_arg1_8_0 _lh_mapLookup_Bin_4_8_0 _lh_mapLookup_Bin_2_8_0 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_5 = _lh_mapLookup_Bin_2_8_0 in
+                                            (fun _lh_extend_maybe_LH_P2_0_3_2 _lh_extend_maybe_LH_P2_1_3_2 _lh_extend_maybe_arg1_3_2 _lh_extend_maybe_arg3_3_2 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_1 _lh_extend_maybe_LH_P2_0_3_1) _lh_extend_maybe_LH_P2_1_3_1) _lh_extend_maybe_arg1_3_1) _lh_extend_maybe_arg3_3_1))))))))) in
@@ -3881,8 +4022,10 @@ let rec gPiece_lh__d1 _lh_gPiece_arg1_0 _lh_listcomp_fun_ls_t_7_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_4_1_1 _lh_mapLookup_arg1_4_1_1 _lh_mapLookup_Bin_4_4_1_1 _lh_mapLookup_Bin_2_4_1_1 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_1_1) _lh_mapLookup_Bin_3_4_1_1))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_4_1_2 _lh_mapLookup_arg1_4_1_2 _lh_mapLookup_Bin_4_4_1_2 _lh_mapLookup_Bin_2_4_1_2 _lh_extend_maybe_LH_P2_0_1_6_3 _lh_extend_maybe_LH_P2_1_1_6_3 _lh_extend_maybe_arg1_1_6_4 _lh_extend_maybe_arg3_1_6_4 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_4_1_2 _lh_mapLookup_arg1_4_1_2 _lh_mapLookup_Bin_4_4_1_2 _lh_mapLookup_Bin_2_4_1_2 -> 
+                                        (let rec _lh_extend_maybe_Just_0_8_0 = _lh_mapLookup_Bin_2_4_1_2 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_6_3 _lh_extend_maybe_LH_P2_1_1_6_3 _lh_extend_maybe_arg1_1_6_4 _lh_extend_maybe_arg3_1_6_4 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_1_9_6 _lh_extend_maybe_LH_P2_0_1_6_2) _lh_extend_maybe_LH_P2_1_1_6_2) _lh_extend_maybe_arg1_1_6_3) _lh_extend_maybe_arg3_1_6_3))))))))) in
@@ -3926,8 +4069,10 @@ let rec gPiece_lh__d1 _lh_gPiece_arg1_0 _lh_listcomp_fun_ls_t_7_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_4_1_6 _lh_mapLookup_arg1_4_1_6 _lh_mapLookup_Bin_4_4_1_6 _lh_mapLookup_Bin_2_4_1_6 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_1_6) _lh_mapLookup_Bin_3_4_1_6))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_4_1_7 _lh_mapLookup_arg1_4_1_7 _lh_mapLookup_Bin_4_4_1_7 _lh_mapLookup_Bin_2_4_1_7 _lh_extend_maybe_LH_P2_0_1_6_5 _lh_extend_maybe_LH_P2_1_1_6_5 _lh_extend_maybe_arg1_1_6_6 _lh_extend_maybe_arg3_1_6_6 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_4_1_7 _lh_mapLookup_arg1_4_1_7 _lh_mapLookup_Bin_4_4_1_7 _lh_mapLookup_Bin_2_4_1_7 -> 
+                                        (let rec _lh_extend_maybe_Just_0_8_1 = _lh_mapLookup_Bin_2_4_1_7 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_6_5 _lh_extend_maybe_LH_P2_1_1_6_5 _lh_extend_maybe_arg1_1_6_6 _lh_extend_maybe_arg3_1_6_6 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_1_9_8 _lh_extend_maybe_LH_P2_0_1_6_4) _lh_extend_maybe_LH_P2_1_1_6_4) _lh_extend_maybe_arg1_1_6_5) _lh_extend_maybe_arg3_1_6_5))))))))) in
@@ -3971,8 +4116,10 @@ let rec gPiece_lh__d1 _lh_gPiece_arg1_0 _lh_listcomp_fun_ls_t_7_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_4_2_1 _lh_mapLookup_arg1_4_2_1 _lh_mapLookup_Bin_4_4_2_1 _lh_mapLookup_Bin_2_4_2_1 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_2_1) _lh_mapLookup_Bin_3_4_2_1))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_4_2_2 _lh_mapLookup_arg1_4_2_2 _lh_mapLookup_Bin_4_4_2_2 _lh_mapLookup_Bin_2_4_2_2 _lh_extend_maybe_LH_P2_0_1_6_7 _lh_extend_maybe_LH_P2_1_1_6_7 _lh_extend_maybe_arg1_1_6_8 _lh_extend_maybe_arg3_1_6_8 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_4_2_2 _lh_mapLookup_arg1_4_2_2 _lh_mapLookup_Bin_4_4_2_2 _lh_mapLookup_Bin_2_4_2_2 -> 
+                                        (let rec _lh_extend_maybe_Just_0_8_2 = _lh_mapLookup_Bin_2_4_2_2 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_6_7 _lh_extend_maybe_LH_P2_1_1_6_7 _lh_extend_maybe_arg1_1_6_8 _lh_extend_maybe_arg3_1_6_8 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_0_0 _lh_extend_maybe_LH_P2_0_1_6_6) _lh_extend_maybe_LH_P2_1_1_6_6) _lh_extend_maybe_arg1_1_6_7) _lh_extend_maybe_arg3_1_6_7))))))))) in
@@ -4016,8 +4163,10 @@ let rec gPiece_lh__d1 _lh_gPiece_arg1_0 _lh_listcomp_fun_ls_t_7_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_4_2_6 _lh_mapLookup_arg1_4_2_6 _lh_mapLookup_Bin_4_4_2_6 _lh_mapLookup_Bin_2_4_2_6 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_2_6) _lh_mapLookup_Bin_3_4_2_6))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_4_2_7 _lh_mapLookup_arg1_4_2_7 _lh_mapLookup_Bin_4_4_2_7 _lh_mapLookup_Bin_2_4_2_7 _lh_extend_maybe_LH_P2_0_1_6_9 _lh_extend_maybe_LH_P2_1_1_6_9 _lh_extend_maybe_arg1_1_7_0 _lh_extend_maybe_arg3_1_7_0 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_4_2_7 _lh_mapLookup_arg1_4_2_7 _lh_mapLookup_Bin_4_4_2_7 _lh_mapLookup_Bin_2_4_2_7 -> 
+                                        (let rec _lh_extend_maybe_Just_0_8_3 = _lh_mapLookup_Bin_2_4_2_7 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_6_9 _lh_extend_maybe_LH_P2_1_1_6_9 _lh_extend_maybe_arg1_1_7_0 _lh_extend_maybe_arg3_1_7_0 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_0_2 _lh_extend_maybe_LH_P2_0_1_6_8) _lh_extend_maybe_LH_P2_1_1_6_8) _lh_extend_maybe_arg1_1_6_9) _lh_extend_maybe_arg3_1_6_9))))))))) in
@@ -4069,8 +4218,10 @@ let rec gPiece_lh__d1 _lh_gPiece_arg1_0 _lh_listcomp_fun_ls_t_7_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_4_3_1 _lh_mapLookup_arg1_4_3_1 _lh_mapLookup_Bin_4_4_3_1 _lh_mapLookup_Bin_2_4_3_1 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_3_1) _lh_mapLookup_Bin_3_4_3_1))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_4_3_2 _lh_mapLookup_arg1_4_3_2 _lh_mapLookup_Bin_4_4_3_2 _lh_mapLookup_Bin_2_4_3_2 _lh_extend_maybe_LH_P2_0_1_7_1 _lh_extend_maybe_LH_P2_1_1_7_1 _lh_extend_maybe_arg1_1_7_2 _lh_extend_maybe_arg3_1_7_2 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_4_3_2 _lh_mapLookup_arg1_4_3_2 _lh_mapLookup_Bin_4_4_3_2 _lh_mapLookup_Bin_2_4_3_2 -> 
+                                        (let rec _lh_extend_maybe_Just_0_8_4 = _lh_mapLookup_Bin_2_4_3_2 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_7_1 _lh_extend_maybe_LH_P2_1_1_7_1 _lh_extend_maybe_arg1_1_7_2 _lh_extend_maybe_arg3_1_7_2 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_0_4 _lh_extend_maybe_LH_P2_0_1_7_0) _lh_extend_maybe_LH_P2_1_1_7_0) _lh_extend_maybe_arg1_1_7_1) _lh_extend_maybe_arg3_1_7_1))))))))) in
@@ -4114,8 +4265,10 @@ let rec gPiece_lh__d1 _lh_gPiece_arg1_0 _lh_listcomp_fun_ls_t_7_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_4_3_6 _lh_mapLookup_arg1_4_3_6 _lh_mapLookup_Bin_4_4_3_6 _lh_mapLookup_Bin_2_4_3_6 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_3_6) _lh_mapLookup_Bin_3_4_3_6))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_4_3_7 _lh_mapLookup_arg1_4_3_7 _lh_mapLookup_Bin_4_4_3_7 _lh_mapLookup_Bin_2_4_3_7 _lh_extend_maybe_LH_P2_0_1_7_3 _lh_extend_maybe_LH_P2_1_1_7_3 _lh_extend_maybe_arg1_1_7_4 _lh_extend_maybe_arg3_1_7_4 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_4_3_7 _lh_mapLookup_arg1_4_3_7 _lh_mapLookup_Bin_4_4_3_7 _lh_mapLookup_Bin_2_4_3_7 -> 
+                                        (let rec _lh_extend_maybe_Just_0_8_5 = _lh_mapLookup_Bin_2_4_3_7 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_7_3 _lh_extend_maybe_LH_P2_1_1_7_3 _lh_extend_maybe_arg1_1_7_4 _lh_extend_maybe_arg3_1_7_4 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_0_6 _lh_extend_maybe_LH_P2_0_1_7_2) _lh_extend_maybe_LH_P2_1_1_7_2) _lh_extend_maybe_arg1_1_7_3) _lh_extend_maybe_arg3_1_7_3))))))))) in
@@ -4159,8 +4312,10 @@ let rec gPiece_lh__d1 _lh_gPiece_arg1_0 _lh_listcomp_fun_ls_t_7_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_4_4_1 _lh_mapLookup_arg1_4_4_1 _lh_mapLookup_Bin_4_4_4_1 _lh_mapLookup_Bin_2_4_4_1 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_4_1) _lh_mapLookup_Bin_3_4_4_1))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_4_4_2 _lh_mapLookup_arg1_4_4_2 _lh_mapLookup_Bin_4_4_4_2 _lh_mapLookup_Bin_2_4_4_2 _lh_extend_maybe_LH_P2_0_1_7_5 _lh_extend_maybe_LH_P2_1_1_7_5 _lh_extend_maybe_arg1_1_7_6 _lh_extend_maybe_arg3_1_7_6 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_4_4_2 _lh_mapLookup_arg1_4_4_2 _lh_mapLookup_Bin_4_4_4_2 _lh_mapLookup_Bin_2_4_4_2 -> 
+                                        (let rec _lh_extend_maybe_Just_0_8_6 = _lh_mapLookup_Bin_2_4_4_2 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_7_5 _lh_extend_maybe_LH_P2_1_1_7_5 _lh_extend_maybe_arg1_1_7_6 _lh_extend_maybe_arg3_1_7_6 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_0_8 _lh_extend_maybe_LH_P2_0_1_7_4) _lh_extend_maybe_LH_P2_1_1_7_4) _lh_extend_maybe_arg1_1_7_5) _lh_extend_maybe_arg3_1_7_5))))))))) in
@@ -4204,8 +4359,10 @@ let rec gPiece_lh__d1 _lh_gPiece_arg1_0 _lh_listcomp_fun_ls_t_7_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_4_4_6 _lh_mapLookup_arg1_4_4_6 _lh_mapLookup_Bin_4_4_4_6 _lh_mapLookup_Bin_2_4_4_6 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_4_6) _lh_mapLookup_Bin_3_4_4_6))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_4_4_7 _lh_mapLookup_arg1_4_4_7 _lh_mapLookup_Bin_4_4_4_7 _lh_mapLookup_Bin_2_4_4_7 _lh_extend_maybe_LH_P2_0_1_7_7 _lh_extend_maybe_LH_P2_1_1_7_7 _lh_extend_maybe_arg1_1_7_8 _lh_extend_maybe_arg3_1_7_8 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_4_4_7 _lh_mapLookup_arg1_4_4_7 _lh_mapLookup_Bin_4_4_4_7 _lh_mapLookup_Bin_2_4_4_7 -> 
+                                        (let rec _lh_extend_maybe_Just_0_8_7 = _lh_mapLookup_Bin_2_4_4_7 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_7_7 _lh_extend_maybe_LH_P2_1_1_7_7 _lh_extend_maybe_arg1_1_7_8 _lh_extend_maybe_arg3_1_7_8 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_1_0 _lh_extend_maybe_LH_P2_0_1_7_6) _lh_extend_maybe_LH_P2_1_1_7_6) _lh_extend_maybe_arg1_1_7_7) _lh_extend_maybe_arg3_1_7_7))))))))) in
@@ -4257,8 +4414,10 @@ let rec gPiece_lh__d1 _lh_gPiece_arg1_0 _lh_listcomp_fun_ls_t_7_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_4_5_1 _lh_mapLookup_arg1_4_5_1 _lh_mapLookup_Bin_4_4_5_1 _lh_mapLookup_Bin_2_4_5_1 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_5_1) _lh_mapLookup_Bin_3_4_5_1))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_4_5_2 _lh_mapLookup_arg1_4_5_2 _lh_mapLookup_Bin_4_4_5_2 _lh_mapLookup_Bin_2_4_5_2 _lh_extend_maybe_LH_P2_0_1_7_9 _lh_extend_maybe_LH_P2_1_1_7_9 _lh_extend_maybe_arg1_1_8_0 _lh_extend_maybe_arg3_1_8_0 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_4_5_2 _lh_mapLookup_arg1_4_5_2 _lh_mapLookup_Bin_4_4_5_2 _lh_mapLookup_Bin_2_4_5_2 -> 
+                                        (let rec _lh_extend_maybe_Just_0_8_8 = _lh_mapLookup_Bin_2_4_5_2 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_7_9 _lh_extend_maybe_LH_P2_1_1_7_9 _lh_extend_maybe_arg1_1_8_0 _lh_extend_maybe_arg3_1_8_0 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_1_2 _lh_extend_maybe_LH_P2_0_1_7_8) _lh_extend_maybe_LH_P2_1_1_7_8) _lh_extend_maybe_arg1_1_7_9) _lh_extend_maybe_arg3_1_7_9))))))))) in
@@ -4302,8 +4461,10 @@ let rec gPiece_lh__d1 _lh_gPiece_arg1_0 _lh_listcomp_fun_ls_t_7_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_4_5_6 _lh_mapLookup_arg1_4_5_6 _lh_mapLookup_Bin_4_4_5_6 _lh_mapLookup_Bin_2_4_5_6 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_5_6) _lh_mapLookup_Bin_3_4_5_6))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_4_5_7 _lh_mapLookup_arg1_4_5_7 _lh_mapLookup_Bin_4_4_5_7 _lh_mapLookup_Bin_2_4_5_7 _lh_extend_maybe_LH_P2_0_1_8_1 _lh_extend_maybe_LH_P2_1_1_8_1 _lh_extend_maybe_arg1_1_8_2 _lh_extend_maybe_arg3_1_8_2 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_4_5_7 _lh_mapLookup_arg1_4_5_7 _lh_mapLookup_Bin_4_4_5_7 _lh_mapLookup_Bin_2_4_5_7 -> 
+                                        (let rec _lh_extend_maybe_Just_0_8_9 = _lh_mapLookup_Bin_2_4_5_7 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_8_1 _lh_extend_maybe_LH_P2_1_1_8_1 _lh_extend_maybe_arg1_1_8_2 _lh_extend_maybe_arg3_1_8_2 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_1_4 _lh_extend_maybe_LH_P2_0_1_8_0) _lh_extend_maybe_LH_P2_1_1_8_0) _lh_extend_maybe_arg1_1_8_1) _lh_extend_maybe_arg3_1_8_1))))))))) in
@@ -4347,8 +4508,10 @@ let rec gPiece_lh__d1 _lh_gPiece_arg1_0 _lh_listcomp_fun_ls_t_7_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_4_6_1 _lh_mapLookup_arg1_4_6_1 _lh_mapLookup_Bin_4_4_6_1 _lh_mapLookup_Bin_2_4_6_1 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_6_1) _lh_mapLookup_Bin_3_4_6_1))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_4_6_2 _lh_mapLookup_arg1_4_6_2 _lh_mapLookup_Bin_4_4_6_2 _lh_mapLookup_Bin_2_4_6_2 _lh_extend_maybe_LH_P2_0_1_8_3 _lh_extend_maybe_LH_P2_1_1_8_3 _lh_extend_maybe_arg1_1_8_4 _lh_extend_maybe_arg3_1_8_4 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_4_6_2 _lh_mapLookup_arg1_4_6_2 _lh_mapLookup_Bin_4_4_6_2 _lh_mapLookup_Bin_2_4_6_2 -> 
+                                        (let rec _lh_extend_maybe_Just_0_9_0 = _lh_mapLookup_Bin_2_4_6_2 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_8_3 _lh_extend_maybe_LH_P2_1_1_8_3 _lh_extend_maybe_arg1_1_8_4 _lh_extend_maybe_arg3_1_8_4 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_1_6 _lh_extend_maybe_LH_P2_0_1_8_2) _lh_extend_maybe_LH_P2_1_1_8_2) _lh_extend_maybe_arg1_1_8_3) _lh_extend_maybe_arg3_1_8_3))))))))) in
@@ -4392,8 +4555,10 @@ let rec gPiece_lh__d1 _lh_gPiece_arg1_0 _lh_listcomp_fun_ls_t_7_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_4_6_6 _lh_mapLookup_arg1_4_6_6 _lh_mapLookup_Bin_4_4_6_6 _lh_mapLookup_Bin_2_4_6_6 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_6_6) _lh_mapLookup_Bin_3_4_6_6))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_4_6_7 _lh_mapLookup_arg1_4_6_7 _lh_mapLookup_Bin_4_4_6_7 _lh_mapLookup_Bin_2_4_6_7 _lh_extend_maybe_LH_P2_0_1_8_5 _lh_extend_maybe_LH_P2_1_1_8_5 _lh_extend_maybe_arg1_1_8_6 _lh_extend_maybe_arg3_1_8_6 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_4_6_7 _lh_mapLookup_arg1_4_6_7 _lh_mapLookup_Bin_4_4_6_7 _lh_mapLookup_Bin_2_4_6_7 -> 
+                                        (let rec _lh_extend_maybe_Just_0_9_1 = _lh_mapLookup_Bin_2_4_6_7 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_8_5 _lh_extend_maybe_LH_P2_1_1_8_5 _lh_extend_maybe_arg1_1_8_6 _lh_extend_maybe_arg3_1_8_6 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_1_8 _lh_extend_maybe_LH_P2_0_1_8_4) _lh_extend_maybe_LH_P2_1_1_8_4) _lh_extend_maybe_arg1_1_8_5) _lh_extend_maybe_arg3_1_8_5))))))))) in
@@ -4445,8 +4610,10 @@ let rec gPiece_lh__d1 _lh_gPiece_arg1_0 _lh_listcomp_fun_ls_t_7_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_4_7_1 _lh_mapLookup_arg1_4_7_1 _lh_mapLookup_Bin_4_4_7_1 _lh_mapLookup_Bin_2_4_7_1 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_7_1) _lh_mapLookup_Bin_3_4_7_1))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_4_7_2 _lh_mapLookup_arg1_4_7_2 _lh_mapLookup_Bin_4_4_7_2 _lh_mapLookup_Bin_2_4_7_2 _lh_extend_maybe_LH_P2_0_1_8_7 _lh_extend_maybe_LH_P2_1_1_8_7 _lh_extend_maybe_arg1_1_8_8 _lh_extend_maybe_arg3_1_8_8 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_4_7_2 _lh_mapLookup_arg1_4_7_2 _lh_mapLookup_Bin_4_4_7_2 _lh_mapLookup_Bin_2_4_7_2 -> 
+                                        (let rec _lh_extend_maybe_Just_0_9_2 = _lh_mapLookup_Bin_2_4_7_2 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_8_7 _lh_extend_maybe_LH_P2_1_1_8_7 _lh_extend_maybe_arg1_1_8_8 _lh_extend_maybe_arg3_1_8_8 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_2_0 _lh_extend_maybe_LH_P2_0_1_8_6) _lh_extend_maybe_LH_P2_1_1_8_6) _lh_extend_maybe_arg1_1_8_7) _lh_extend_maybe_arg3_1_8_7))))))))) in
@@ -4490,8 +4657,10 @@ let rec gPiece_lh__d1 _lh_gPiece_arg1_0 _lh_listcomp_fun_ls_t_7_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_4_7_6 _lh_mapLookup_arg1_4_7_6 _lh_mapLookup_Bin_4_4_7_6 _lh_mapLookup_Bin_2_4_7_6 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_7_6) _lh_mapLookup_Bin_3_4_7_6))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_4_7_7 _lh_mapLookup_arg1_4_7_7 _lh_mapLookup_Bin_4_4_7_7 _lh_mapLookup_Bin_2_4_7_7 _lh_extend_maybe_LH_P2_0_1_8_9 _lh_extend_maybe_LH_P2_1_1_8_9 _lh_extend_maybe_arg1_1_9_0 _lh_extend_maybe_arg3_1_9_0 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_4_7_7 _lh_mapLookup_arg1_4_7_7 _lh_mapLookup_Bin_4_4_7_7 _lh_mapLookup_Bin_2_4_7_7 -> 
+                                        (let rec _lh_extend_maybe_Just_0_9_3 = _lh_mapLookup_Bin_2_4_7_7 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_8_9 _lh_extend_maybe_LH_P2_1_1_8_9 _lh_extend_maybe_arg1_1_9_0 _lh_extend_maybe_arg3_1_9_0 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_2_2 _lh_extend_maybe_LH_P2_0_1_8_8) _lh_extend_maybe_LH_P2_1_1_8_8) _lh_extend_maybe_arg1_1_8_9) _lh_extend_maybe_arg3_1_8_9))))))))) in
@@ -4535,8 +4704,10 @@ let rec gPiece_lh__d1 _lh_gPiece_arg1_0 _lh_listcomp_fun_ls_t_7_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_4_8_1 _lh_mapLookup_arg1_4_8_1 _lh_mapLookup_Bin_4_4_8_1 _lh_mapLookup_Bin_2_4_8_1 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_8_1) _lh_mapLookup_Bin_3_4_8_1))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_4_8_2 _lh_mapLookup_arg1_4_8_2 _lh_mapLookup_Bin_4_4_8_2 _lh_mapLookup_Bin_2_4_8_2 _lh_extend_maybe_LH_P2_0_1_9_1 _lh_extend_maybe_LH_P2_1_1_9_1 _lh_extend_maybe_arg1_1_9_2 _lh_extend_maybe_arg3_1_9_2 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_4_8_2 _lh_mapLookup_arg1_4_8_2 _lh_mapLookup_Bin_4_4_8_2 _lh_mapLookup_Bin_2_4_8_2 -> 
+                                        (let rec _lh_extend_maybe_Just_0_9_4 = _lh_mapLookup_Bin_2_4_8_2 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_9_1 _lh_extend_maybe_LH_P2_1_1_9_1 _lh_extend_maybe_arg1_1_9_2 _lh_extend_maybe_arg3_1_9_2 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_2_4 _lh_extend_maybe_LH_P2_0_1_9_0) _lh_extend_maybe_LH_P2_1_1_9_0) _lh_extend_maybe_arg1_1_9_1) _lh_extend_maybe_arg3_1_9_1))))))))) in
@@ -4580,8 +4751,10 @@ let rec gPiece_lh__d1 _lh_gPiece_arg1_0 _lh_listcomp_fun_ls_t_7_2 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_4_8_6 _lh_mapLookup_arg1_4_8_6 _lh_mapLookup_Bin_4_4_8_6 _lh_mapLookup_Bin_2_4_8_6 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_8_6) _lh_mapLookup_Bin_3_4_8_6))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_4_8_7 _lh_mapLookup_arg1_4_8_7 _lh_mapLookup_Bin_4_4_8_7 _lh_mapLookup_Bin_2_4_8_7 _lh_extend_maybe_LH_P2_0_1_9_3 _lh_extend_maybe_LH_P2_1_1_9_3 _lh_extend_maybe_arg1_1_9_4 _lh_extend_maybe_arg3_1_9_4 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_4_8_7 _lh_mapLookup_arg1_4_8_7 _lh_mapLookup_Bin_4_4_8_7 _lh_mapLookup_Bin_2_4_8_7 -> 
+                                        (let rec _lh_extend_maybe_Just_0_9_5 = _lh_mapLookup_Bin_2_4_8_7 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_9_3 _lh_extend_maybe_LH_P2_1_1_9_3 _lh_extend_maybe_arg1_1_9_4 _lh_extend_maybe_arg3_1_9_4 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_2_6 _lh_extend_maybe_LH_P2_0_1_9_2) _lh_extend_maybe_LH_P2_1_1_9_2) _lh_extend_maybe_arg1_1_9_3) _lh_extend_maybe_arg3_1_9_3))))))))) in
@@ -4649,8 +4822,10 @@ let rec cPiece_lh__d1 _lh_cPiece_arg1_0 _lh_listcomp_fun_ls_t_8_3 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_4_9_2 _lh_mapLookup_arg1_4_9_2 _lh_mapLookup_Bin_4_4_9_2 _lh_mapLookup_Bin_2_4_9_2 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_9_2) _lh_mapLookup_Bin_3_4_9_2))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_4_9_3 _lh_mapLookup_arg1_4_9_3 _lh_mapLookup_Bin_4_4_9_3 _lh_mapLookup_Bin_2_4_9_3 _lh_extend_maybe_LH_P2_0_1_9_5 _lh_extend_maybe_LH_P2_1_1_9_5 _lh_extend_maybe_arg1_1_9_7 _lh_extend_maybe_arg3_1_9_7 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_4_9_3 _lh_mapLookup_arg1_4_9_3 _lh_mapLookup_Bin_4_4_9_3 _lh_mapLookup_Bin_2_4_9_3 -> 
+                                        (let rec _lh_extend_maybe_Just_0_9_6 = _lh_mapLookup_Bin_2_4_9_3 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_9_5 _lh_extend_maybe_LH_P2_1_1_9_5 _lh_extend_maybe_arg1_1_9_7 _lh_extend_maybe_arg3_1_9_7 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_3_0 _lh_extend_maybe_LH_P2_0_1_9_4) _lh_extend_maybe_LH_P2_1_1_9_4) _lh_extend_maybe_arg1_1_9_6) _lh_extend_maybe_arg3_1_9_6))))))))) in
@@ -4694,8 +4869,10 @@ let rec cPiece_lh__d1 _lh_cPiece_arg1_0 _lh_listcomp_fun_ls_t_8_3 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_4_9_7 _lh_mapLookup_arg1_4_9_7 _lh_mapLookup_Bin_4_4_9_7 _lh_mapLookup_Bin_2_4_9_7 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_9_7) _lh_mapLookup_Bin_3_4_9_7))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_4_9_8 _lh_mapLookup_arg1_4_9_8 _lh_mapLookup_Bin_4_4_9_8 _lh_mapLookup_Bin_2_4_9_8 _lh_extend_maybe_LH_P2_0_1_9_7 _lh_extend_maybe_LH_P2_1_1_9_7 _lh_extend_maybe_arg1_1_9_9 _lh_extend_maybe_arg3_1_9_9 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_4_9_8 _lh_mapLookup_arg1_4_9_8 _lh_mapLookup_Bin_4_4_9_8 _lh_mapLookup_Bin_2_4_9_8 -> 
+                                        (let rec _lh_extend_maybe_Just_0_9_7 = _lh_mapLookup_Bin_2_4_9_8 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_9_7 _lh_extend_maybe_LH_P2_1_1_9_7 _lh_extend_maybe_arg1_1_9_9 _lh_extend_maybe_arg3_1_9_9 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_3_2 _lh_extend_maybe_LH_P2_0_1_9_6) _lh_extend_maybe_LH_P2_1_1_9_6) _lh_extend_maybe_arg1_1_9_8) _lh_extend_maybe_arg3_1_9_8))))))))) in
@@ -4739,8 +4916,10 @@ let rec cPiece_lh__d1 _lh_cPiece_arg1_0 _lh_listcomp_fun_ls_t_8_3 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_5_0_2 _lh_mapLookup_arg1_5_0_2 _lh_mapLookup_Bin_4_5_0_2 _lh_mapLookup_Bin_2_5_0_2 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_5_0_2) _lh_mapLookup_Bin_3_5_0_2))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_5_0_3 _lh_mapLookup_arg1_5_0_3 _lh_mapLookup_Bin_4_5_0_3 _lh_mapLookup_Bin_2_5_0_3 _lh_extend_maybe_LH_P2_0_1_9_9 _lh_extend_maybe_LH_P2_1_1_9_9 _lh_extend_maybe_arg1_2_0_1 _lh_extend_maybe_arg3_2_0_1 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_5_0_3 _lh_mapLookup_arg1_5_0_3 _lh_mapLookup_Bin_4_5_0_3 _lh_mapLookup_Bin_2_5_0_3 -> 
+                                        (let rec _lh_extend_maybe_Just_0_9_8 = _lh_mapLookup_Bin_2_5_0_3 in
+                                          (fun _lh_extend_maybe_LH_P2_0_1_9_9 _lh_extend_maybe_LH_P2_1_1_9_9 _lh_extend_maybe_arg1_2_0_1 _lh_extend_maybe_arg3_2_0_1 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_3_4 _lh_extend_maybe_LH_P2_0_1_9_8) _lh_extend_maybe_LH_P2_1_1_9_8) _lh_extend_maybe_arg1_2_0_0) _lh_extend_maybe_arg3_2_0_0))))))))) in
@@ -4792,8 +4971,10 @@ let rec cPiece_lh__d1 _lh_cPiece_arg1_0 _lh_listcomp_fun_ls_t_8_3 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_5_0_7 _lh_mapLookup_arg1_5_0_7 _lh_mapLookup_Bin_4_5_0_7 _lh_mapLookup_Bin_2_5_0_7 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_5_0_7) _lh_mapLookup_Bin_3_5_0_7))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_5_0_8 _lh_mapLookup_arg1_5_0_8 _lh_mapLookup_Bin_4_5_0_8 _lh_mapLookup_Bin_2_5_0_8 _lh_extend_maybe_LH_P2_0_2_0_1 _lh_extend_maybe_LH_P2_1_2_0_1 _lh_extend_maybe_arg1_2_0_3 _lh_extend_maybe_arg3_2_0_3 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_5_0_8 _lh_mapLookup_arg1_5_0_8 _lh_mapLookup_Bin_4_5_0_8 _lh_mapLookup_Bin_2_5_0_8 -> 
+                                        (let rec _lh_extend_maybe_Just_0_9_9 = _lh_mapLookup_Bin_2_5_0_8 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_0_1 _lh_extend_maybe_LH_P2_1_2_0_1 _lh_extend_maybe_arg1_2_0_3 _lh_extend_maybe_arg3_2_0_3 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_3_6 _lh_extend_maybe_LH_P2_0_2_0_0) _lh_extend_maybe_LH_P2_1_2_0_0) _lh_extend_maybe_arg1_2_0_2) _lh_extend_maybe_arg3_2_0_2))))))))) in
@@ -4837,8 +5018,10 @@ let rec cPiece_lh__d1 _lh_cPiece_arg1_0 _lh_listcomp_fun_ls_t_8_3 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_5_1_2 _lh_mapLookup_arg1_5_1_2 _lh_mapLookup_Bin_4_5_1_2 _lh_mapLookup_Bin_2_5_1_2 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_5_1_2) _lh_mapLookup_Bin_3_5_1_2))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_5_1_3 _lh_mapLookup_arg1_5_1_3 _lh_mapLookup_Bin_4_5_1_3 _lh_mapLookup_Bin_2_5_1_3 _lh_extend_maybe_LH_P2_0_2_0_3 _lh_extend_maybe_LH_P2_1_2_0_3 _lh_extend_maybe_arg1_2_0_5 _lh_extend_maybe_arg3_2_0_5 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_5_1_3 _lh_mapLookup_arg1_5_1_3 _lh_mapLookup_Bin_4_5_1_3 _lh_mapLookup_Bin_2_5_1_3 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_0_0 = _lh_mapLookup_Bin_2_5_1_3 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_0_3 _lh_extend_maybe_LH_P2_1_2_0_3 _lh_extend_maybe_arg1_2_0_5 _lh_extend_maybe_arg3_2_0_5 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_3_8 _lh_extend_maybe_LH_P2_0_2_0_2) _lh_extend_maybe_LH_P2_1_2_0_2) _lh_extend_maybe_arg1_2_0_4) _lh_extend_maybe_arg3_2_0_4))))))))) in
@@ -4882,8 +5065,10 @@ let rec cPiece_lh__d1 _lh_cPiece_arg1_0 _lh_listcomp_fun_ls_t_8_3 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_5_1_7 _lh_mapLookup_arg1_5_1_7 _lh_mapLookup_Bin_4_5_1_7 _lh_mapLookup_Bin_2_5_1_7 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_5_1_7) _lh_mapLookup_Bin_3_5_1_7))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_5_1_8 _lh_mapLookup_arg1_5_1_8 _lh_mapLookup_Bin_4_5_1_8 _lh_mapLookup_Bin_2_5_1_8 _lh_extend_maybe_LH_P2_0_2_0_5 _lh_extend_maybe_LH_P2_1_2_0_5 _lh_extend_maybe_arg1_2_0_7 _lh_extend_maybe_arg3_2_0_7 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_5_1_8 _lh_mapLookup_arg1_5_1_8 _lh_mapLookup_Bin_4_5_1_8 _lh_mapLookup_Bin_2_5_1_8 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_0_1 = _lh_mapLookup_Bin_2_5_1_8 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_0_5 _lh_extend_maybe_LH_P2_1_2_0_5 _lh_extend_maybe_arg1_2_0_7 _lh_extend_maybe_arg3_2_0_7 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_4_0 _lh_extend_maybe_LH_P2_0_2_0_4) _lh_extend_maybe_LH_P2_1_2_0_4) _lh_extend_maybe_arg1_2_0_6) _lh_extend_maybe_arg3_2_0_6))))))))) in
@@ -4935,8 +5120,10 @@ let rec cPiece_lh__d1 _lh_cPiece_arg1_0 _lh_listcomp_fun_ls_t_8_3 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_5_2_2 _lh_mapLookup_arg1_5_2_2 _lh_mapLookup_Bin_4_5_2_2 _lh_mapLookup_Bin_2_5_2_2 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_5_2_2) _lh_mapLookup_Bin_3_5_2_2))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_5_2_3 _lh_mapLookup_arg1_5_2_3 _lh_mapLookup_Bin_4_5_2_3 _lh_mapLookup_Bin_2_5_2_3 _lh_extend_maybe_LH_P2_0_2_0_7 _lh_extend_maybe_LH_P2_1_2_0_7 _lh_extend_maybe_arg1_2_0_9 _lh_extend_maybe_arg3_2_0_9 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_5_2_3 _lh_mapLookup_arg1_5_2_3 _lh_mapLookup_Bin_4_5_2_3 _lh_mapLookup_Bin_2_5_2_3 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_0_2 = _lh_mapLookup_Bin_2_5_2_3 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_0_7 _lh_extend_maybe_LH_P2_1_2_0_7 _lh_extend_maybe_arg1_2_0_9 _lh_extend_maybe_arg3_2_0_9 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_4_2 _lh_extend_maybe_LH_P2_0_2_0_6) _lh_extend_maybe_LH_P2_1_2_0_6) _lh_extend_maybe_arg1_2_0_8) _lh_extend_maybe_arg3_2_0_8))))))))) in
@@ -4980,8 +5167,10 @@ let rec cPiece_lh__d1 _lh_cPiece_arg1_0 _lh_listcomp_fun_ls_t_8_3 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_5_2_7 _lh_mapLookup_arg1_5_2_7 _lh_mapLookup_Bin_4_5_2_7 _lh_mapLookup_Bin_2_5_2_7 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_5_2_7) _lh_mapLookup_Bin_3_5_2_7))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_5_2_8 _lh_mapLookup_arg1_5_2_8 _lh_mapLookup_Bin_4_5_2_8 _lh_mapLookup_Bin_2_5_2_8 _lh_extend_maybe_LH_P2_0_2_0_9 _lh_extend_maybe_LH_P2_1_2_0_9 _lh_extend_maybe_arg1_2_1_1 _lh_extend_maybe_arg3_2_1_1 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_5_2_8 _lh_mapLookup_arg1_5_2_8 _lh_mapLookup_Bin_4_5_2_8 _lh_mapLookup_Bin_2_5_2_8 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_0_3 = _lh_mapLookup_Bin_2_5_2_8 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_0_9 _lh_extend_maybe_LH_P2_1_2_0_9 _lh_extend_maybe_arg1_2_1_1 _lh_extend_maybe_arg3_2_1_1 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_4_4 _lh_extend_maybe_LH_P2_0_2_0_8) _lh_extend_maybe_LH_P2_1_2_0_8) _lh_extend_maybe_arg1_2_1_0) _lh_extend_maybe_arg3_2_1_0))))))))) in
@@ -5025,8 +5214,10 @@ let rec cPiece_lh__d1 _lh_cPiece_arg1_0 _lh_listcomp_fun_ls_t_8_3 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_5_3_2 _lh_mapLookup_arg1_5_3_2 _lh_mapLookup_Bin_4_5_3_2 _lh_mapLookup_Bin_2_5_3_2 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_5_3_2) _lh_mapLookup_Bin_3_5_3_2))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_5_3_3 _lh_mapLookup_arg1_5_3_3 _lh_mapLookup_Bin_4_5_3_3 _lh_mapLookup_Bin_2_5_3_3 _lh_extend_maybe_LH_P2_0_2_1_1 _lh_extend_maybe_LH_P2_1_2_1_1 _lh_extend_maybe_arg1_2_1_3 _lh_extend_maybe_arg3_2_1_3 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_5_3_3 _lh_mapLookup_arg1_5_3_3 _lh_mapLookup_Bin_4_5_3_3 _lh_mapLookup_Bin_2_5_3_3 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_0_4 = _lh_mapLookup_Bin_2_5_3_3 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_1_1 _lh_extend_maybe_LH_P2_1_2_1_1 _lh_extend_maybe_arg1_2_1_3 _lh_extend_maybe_arg3_2_1_3 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_4_6 _lh_extend_maybe_LH_P2_0_2_1_0) _lh_extend_maybe_LH_P2_1_2_1_0) _lh_extend_maybe_arg1_2_1_2) _lh_extend_maybe_arg3_2_1_2))))))))) in
@@ -5078,8 +5269,10 @@ let rec cPiece_lh__d1 _lh_cPiece_arg1_0 _lh_listcomp_fun_ls_t_8_3 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_5_3_7 _lh_mapLookup_arg1_5_3_7 _lh_mapLookup_Bin_4_5_3_7 _lh_mapLookup_Bin_2_5_3_7 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_5_3_7) _lh_mapLookup_Bin_3_5_3_7))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_5_3_8 _lh_mapLookup_arg1_5_3_8 _lh_mapLookup_Bin_4_5_3_8 _lh_mapLookup_Bin_2_5_3_8 _lh_extend_maybe_LH_P2_0_2_1_3 _lh_extend_maybe_LH_P2_1_2_1_3 _lh_extend_maybe_arg1_2_1_5 _lh_extend_maybe_arg3_2_1_5 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_5_3_8 _lh_mapLookup_arg1_5_3_8 _lh_mapLookup_Bin_4_5_3_8 _lh_mapLookup_Bin_2_5_3_8 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_0_5 = _lh_mapLookup_Bin_2_5_3_8 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_1_3 _lh_extend_maybe_LH_P2_1_2_1_3 _lh_extend_maybe_arg1_2_1_5 _lh_extend_maybe_arg3_2_1_5 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_4_8 _lh_extend_maybe_LH_P2_0_2_1_2) _lh_extend_maybe_LH_P2_1_2_1_2) _lh_extend_maybe_arg1_2_1_4) _lh_extend_maybe_arg3_2_1_4))))))))) in
@@ -5123,8 +5316,10 @@ let rec cPiece_lh__d1 _lh_cPiece_arg1_0 _lh_listcomp_fun_ls_t_8_3 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_5_4_2 _lh_mapLookup_arg1_5_4_2 _lh_mapLookup_Bin_4_5_4_2 _lh_mapLookup_Bin_2_5_4_2 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_5_4_2) _lh_mapLookup_Bin_3_5_4_2))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_5_4_3 _lh_mapLookup_arg1_5_4_3 _lh_mapLookup_Bin_4_5_4_3 _lh_mapLookup_Bin_2_5_4_3 _lh_extend_maybe_LH_P2_0_2_1_5 _lh_extend_maybe_LH_P2_1_2_1_5 _lh_extend_maybe_arg1_2_1_7 _lh_extend_maybe_arg3_2_1_7 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_5_4_3 _lh_mapLookup_arg1_5_4_3 _lh_mapLookup_Bin_4_5_4_3 _lh_mapLookup_Bin_2_5_4_3 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_0_6 = _lh_mapLookup_Bin_2_5_4_3 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_1_5 _lh_extend_maybe_LH_P2_1_2_1_5 _lh_extend_maybe_arg1_2_1_7 _lh_extend_maybe_arg3_2_1_7 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_5_0 _lh_extend_maybe_LH_P2_0_2_1_4) _lh_extend_maybe_LH_P2_1_2_1_4) _lh_extend_maybe_arg1_2_1_6) _lh_extend_maybe_arg3_2_1_6))))))))) in
@@ -5168,8 +5363,10 @@ let rec cPiece_lh__d1 _lh_cPiece_arg1_0 _lh_listcomp_fun_ls_t_8_3 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_5_4_7 _lh_mapLookup_arg1_5_4_7 _lh_mapLookup_Bin_4_5_4_7 _lh_mapLookup_Bin_2_5_4_7 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_5_4_7) _lh_mapLookup_Bin_3_5_4_7))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_5_4_8 _lh_mapLookup_arg1_5_4_8 _lh_mapLookup_Bin_4_5_4_8 _lh_mapLookup_Bin_2_5_4_8 _lh_extend_maybe_LH_P2_0_2_1_7 _lh_extend_maybe_LH_P2_1_2_1_7 _lh_extend_maybe_arg1_2_1_9 _lh_extend_maybe_arg3_2_1_9 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_5_4_8 _lh_mapLookup_arg1_5_4_8 _lh_mapLookup_Bin_4_5_4_8 _lh_mapLookup_Bin_2_5_4_8 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_0_7 = _lh_mapLookup_Bin_2_5_4_8 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_1_7 _lh_extend_maybe_LH_P2_1_2_1_7 _lh_extend_maybe_arg1_2_1_9 _lh_extend_maybe_arg3_2_1_9 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_5_2 _lh_extend_maybe_LH_P2_0_2_1_6) _lh_extend_maybe_LH_P2_1_2_1_6) _lh_extend_maybe_arg1_2_1_8) _lh_extend_maybe_arg3_2_1_8))))))))) in
@@ -5237,8 +5434,10 @@ let rec jPiece_lh__d1 _lh_jPiece_arg1_0 _lh_listcomp_fun_ls_t_2_1 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_8_4 _lh_mapLookup_arg1_8_4 _lh_mapLookup_Bin_4_8_4 _lh_mapLookup_Bin_2_8_4 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_8_4) _lh_mapLookup_Bin_3_8_4))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_8_5 _lh_mapLookup_arg1_8_5 _lh_mapLookup_Bin_4_8_5 _lh_mapLookup_Bin_2_8_5 _lh_extend_maybe_LH_P2_0_3_4 _lh_extend_maybe_LH_P2_1_3_4 _lh_extend_maybe_arg1_3_4 _lh_extend_maybe_arg3_3_4 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_8_5 _lh_mapLookup_arg1_8_5 _lh_mapLookup_Bin_4_8_5 _lh_mapLookup_Bin_2_8_5 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_6 = _lh_mapLookup_Bin_2_8_5 in
+                                          (fun _lh_extend_maybe_LH_P2_0_3_4 _lh_extend_maybe_LH_P2_1_3_4 _lh_extend_maybe_arg1_3_4 _lh_extend_maybe_arg3_3_4 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_4 _lh_extend_maybe_LH_P2_0_3_3) _lh_extend_maybe_LH_P2_1_3_3) _lh_extend_maybe_arg1_3_3) _lh_extend_maybe_arg3_3_3))))))))) in
@@ -5282,8 +5481,10 @@ let rec jPiece_lh__d1 _lh_jPiece_arg1_0 _lh_listcomp_fun_ls_t_2_1 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_8_9 _lh_mapLookup_arg1_8_9 _lh_mapLookup_Bin_4_8_9 _lh_mapLookup_Bin_2_8_9 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_8_9) _lh_mapLookup_Bin_3_8_9))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_9_0 _lh_mapLookup_arg1_9_0 _lh_mapLookup_Bin_4_9_0 _lh_mapLookup_Bin_2_9_0 _lh_extend_maybe_LH_P2_0_3_6 _lh_extend_maybe_LH_P2_1_3_6 _lh_extend_maybe_arg1_3_6 _lh_extend_maybe_arg3_3_6 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_9_0 _lh_mapLookup_arg1_9_0 _lh_mapLookup_Bin_4_9_0 _lh_mapLookup_Bin_2_9_0 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_7 = _lh_mapLookup_Bin_2_9_0 in
+                                          (fun _lh_extend_maybe_LH_P2_0_3_6 _lh_extend_maybe_LH_P2_1_3_6 _lh_extend_maybe_arg1_3_6 _lh_extend_maybe_arg3_3_6 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_6 _lh_extend_maybe_LH_P2_0_3_5) _lh_extend_maybe_LH_P2_1_3_5) _lh_extend_maybe_arg1_3_5) _lh_extend_maybe_arg3_3_5))))))))) in
@@ -5327,8 +5528,10 @@ let rec jPiece_lh__d1 _lh_jPiece_arg1_0 _lh_listcomp_fun_ls_t_2_1 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_9_4 _lh_mapLookup_arg1_9_4 _lh_mapLookup_Bin_4_9_4 _lh_mapLookup_Bin_2_9_4 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_9_4) _lh_mapLookup_Bin_3_9_4))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_9_5 _lh_mapLookup_arg1_9_5 _lh_mapLookup_Bin_4_9_5 _lh_mapLookup_Bin_2_9_5 _lh_extend_maybe_LH_P2_0_3_8 _lh_extend_maybe_LH_P2_1_3_8 _lh_extend_maybe_arg1_3_8 _lh_extend_maybe_arg3_3_8 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_9_5 _lh_mapLookup_arg1_9_5 _lh_mapLookup_Bin_4_9_5 _lh_mapLookup_Bin_2_9_5 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_8 = _lh_mapLookup_Bin_2_9_5 in
+                                          (fun _lh_extend_maybe_LH_P2_0_3_8 _lh_extend_maybe_LH_P2_1_3_8 _lh_extend_maybe_arg1_3_8 _lh_extend_maybe_arg3_3_8 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_8 _lh_extend_maybe_LH_P2_0_3_7) _lh_extend_maybe_LH_P2_1_3_7) _lh_extend_maybe_arg1_3_7) _lh_extend_maybe_arg3_3_7))))))))) in
@@ -5372,8 +5575,10 @@ let rec jPiece_lh__d1 _lh_jPiece_arg1_0 _lh_listcomp_fun_ls_t_2_1 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_9_9 _lh_mapLookup_arg1_9_9 _lh_mapLookup_Bin_4_9_9 _lh_mapLookup_Bin_2_9_9 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_9_9) _lh_mapLookup_Bin_3_9_9))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_1_0_0 _lh_mapLookup_arg1_1_0_0 _lh_mapLookup_Bin_4_1_0_0 _lh_mapLookup_Bin_2_1_0_0 _lh_extend_maybe_LH_P2_0_4_0 _lh_extend_maybe_LH_P2_1_4_0 _lh_extend_maybe_arg1_4_0 _lh_extend_maybe_arg3_4_0 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_1_0_0 _lh_mapLookup_arg1_1_0_0 _lh_mapLookup_Bin_4_1_0_0 _lh_mapLookup_Bin_2_1_0_0 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_9 = _lh_mapLookup_Bin_2_1_0_0 in
+                                          (fun _lh_extend_maybe_LH_P2_0_4_0 _lh_extend_maybe_LH_P2_1_4_0 _lh_extend_maybe_arg1_4_0 _lh_extend_maybe_arg3_4_0 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_4_0 _lh_extend_maybe_LH_P2_0_3_9) _lh_extend_maybe_LH_P2_1_3_9) _lh_extend_maybe_arg1_3_9) _lh_extend_maybe_arg3_3_9))))))))) in
@@ -5427,8 +5632,10 @@ let rec jPiece_lh__d1 _lh_jPiece_arg1_0 _lh_listcomp_fun_ls_t_2_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_1_0_4 _lh_mapLookup_arg1_1_0_4 _lh_mapLookup_Bin_4_1_0_4 _lh_mapLookup_Bin_2_1_0_4 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_0_4) _lh_mapLookup_Bin_3_1_0_4))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_1_0_5 _lh_mapLookup_arg1_1_0_5 _lh_mapLookup_Bin_4_1_0_5 _lh_mapLookup_Bin_2_1_0_5 _lh_extend_maybe_LH_P2_0_4_2 _lh_extend_maybe_LH_P2_1_4_2 _lh_extend_maybe_arg1_4_2 _lh_extend_maybe_arg3_4_2 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_1_0_5 _lh_mapLookup_arg1_1_0_5 _lh_mapLookup_Bin_4_1_0_5 _lh_mapLookup_Bin_2_1_0_5 -> 
+                                          (let rec _lh_extend_maybe_Just_0_2_0 = _lh_mapLookup_Bin_2_1_0_5 in
+                                            (fun _lh_extend_maybe_LH_P2_0_4_2 _lh_extend_maybe_LH_P2_1_4_2 _lh_extend_maybe_arg1_4_2 _lh_extend_maybe_arg3_4_2 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_4_2 _lh_extend_maybe_LH_P2_0_4_1) _lh_extend_maybe_LH_P2_1_4_1) _lh_extend_maybe_arg1_4_1) _lh_extend_maybe_arg3_4_1))))))))) in
@@ -5472,8 +5679,10 @@ let rec jPiece_lh__d1 _lh_jPiece_arg1_0 _lh_listcomp_fun_ls_t_2_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_1_0_9 _lh_mapLookup_arg1_1_0_9 _lh_mapLookup_Bin_4_1_0_9 _lh_mapLookup_Bin_2_1_0_9 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_0_9) _lh_mapLookup_Bin_3_1_0_9))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_1_1_0 _lh_mapLookup_arg1_1_1_0 _lh_mapLookup_Bin_4_1_1_0 _lh_mapLookup_Bin_2_1_1_0 _lh_extend_maybe_LH_P2_0_4_4 _lh_extend_maybe_LH_P2_1_4_4 _lh_extend_maybe_arg1_4_4 _lh_extend_maybe_arg3_4_4 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_1_1_0 _lh_mapLookup_arg1_1_1_0 _lh_mapLookup_Bin_4_1_1_0 _lh_mapLookup_Bin_2_1_1_0 -> 
+                                          (let rec _lh_extend_maybe_Just_0_2_1 = _lh_mapLookup_Bin_2_1_1_0 in
+                                            (fun _lh_extend_maybe_LH_P2_0_4_4 _lh_extend_maybe_LH_P2_1_4_4 _lh_extend_maybe_arg1_4_4 _lh_extend_maybe_arg3_4_4 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_4_4 _lh_extend_maybe_LH_P2_0_4_3) _lh_extend_maybe_LH_P2_1_4_3) _lh_extend_maybe_arg1_4_3) _lh_extend_maybe_arg3_4_3))))))))) in
@@ -5517,8 +5726,10 @@ let rec jPiece_lh__d1 _lh_jPiece_arg1_0 _lh_listcomp_fun_ls_t_2_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_1_1_4 _lh_mapLookup_arg1_1_1_4 _lh_mapLookup_Bin_4_1_1_4 _lh_mapLookup_Bin_2_1_1_4 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_1_4) _lh_mapLookup_Bin_3_1_1_4))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_1_1_5 _lh_mapLookup_arg1_1_1_5 _lh_mapLookup_Bin_4_1_1_5 _lh_mapLookup_Bin_2_1_1_5 _lh_extend_maybe_LH_P2_0_4_6 _lh_extend_maybe_LH_P2_1_4_6 _lh_extend_maybe_arg1_4_6 _lh_extend_maybe_arg3_4_6 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_1_1_5 _lh_mapLookup_arg1_1_1_5 _lh_mapLookup_Bin_4_1_1_5 _lh_mapLookup_Bin_2_1_1_5 -> 
+                                          (let rec _lh_extend_maybe_Just_0_2_2 = _lh_mapLookup_Bin_2_1_1_5 in
+                                            (fun _lh_extend_maybe_LH_P2_0_4_6 _lh_extend_maybe_LH_P2_1_4_6 _lh_extend_maybe_arg1_4_6 _lh_extend_maybe_arg3_4_6 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_4_6 _lh_extend_maybe_LH_P2_0_4_5) _lh_extend_maybe_LH_P2_1_4_5) _lh_extend_maybe_arg1_4_5) _lh_extend_maybe_arg3_4_5))))))))) in
@@ -5562,8 +5773,10 @@ let rec jPiece_lh__d1 _lh_jPiece_arg1_0 _lh_listcomp_fun_ls_t_2_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_1_1_9 _lh_mapLookup_arg1_1_1_9 _lh_mapLookup_Bin_4_1_1_9 _lh_mapLookup_Bin_2_1_1_9 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_1_9) _lh_mapLookup_Bin_3_1_1_9))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_1_2_0 _lh_mapLookup_arg1_1_2_0 _lh_mapLookup_Bin_4_1_2_0 _lh_mapLookup_Bin_2_1_2_0 _lh_extend_maybe_LH_P2_0_4_8 _lh_extend_maybe_LH_P2_1_4_8 _lh_extend_maybe_arg1_4_8 _lh_extend_maybe_arg3_4_8 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_1_2_0 _lh_mapLookup_arg1_1_2_0 _lh_mapLookup_Bin_4_1_2_0 _lh_mapLookup_Bin_2_1_2_0 -> 
+                                          (let rec _lh_extend_maybe_Just_0_2_3 = _lh_mapLookup_Bin_2_1_2_0 in
+                                            (fun _lh_extend_maybe_LH_P2_0_4_8 _lh_extend_maybe_LH_P2_1_4_8 _lh_extend_maybe_arg1_4_8 _lh_extend_maybe_arg3_4_8 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_4_8 _lh_extend_maybe_LH_P2_0_4_7) _lh_extend_maybe_LH_P2_1_4_7) _lh_extend_maybe_arg1_4_7) _lh_extend_maybe_arg3_4_7))))))))) in
@@ -5615,8 +5828,10 @@ let rec jPiece_lh__d1 _lh_jPiece_arg1_0 _lh_listcomp_fun_ls_t_2_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_1_2_4 _lh_mapLookup_arg1_1_2_4 _lh_mapLookup_Bin_4_1_2_4 _lh_mapLookup_Bin_2_1_2_4 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_2_4) _lh_mapLookup_Bin_3_1_2_4))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_1_2_5 _lh_mapLookup_arg1_1_2_5 _lh_mapLookup_Bin_4_1_2_5 _lh_mapLookup_Bin_2_1_2_5 _lh_extend_maybe_LH_P2_0_5_0 _lh_extend_maybe_LH_P2_1_5_0 _lh_extend_maybe_arg1_5_0 _lh_extend_maybe_arg3_5_0 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_1_2_5 _lh_mapLookup_arg1_1_2_5 _lh_mapLookup_Bin_4_1_2_5 _lh_mapLookup_Bin_2_1_2_5 -> 
+                                          (let rec _lh_extend_maybe_Just_0_2_4 = _lh_mapLookup_Bin_2_1_2_5 in
+                                            (fun _lh_extend_maybe_LH_P2_0_5_0 _lh_extend_maybe_LH_P2_1_5_0 _lh_extend_maybe_arg1_5_0 _lh_extend_maybe_arg3_5_0 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_5_0 _lh_extend_maybe_LH_P2_0_4_9) _lh_extend_maybe_LH_P2_1_4_9) _lh_extend_maybe_arg1_4_9) _lh_extend_maybe_arg3_4_9))))))))) in
@@ -5660,8 +5875,10 @@ let rec jPiece_lh__d1 _lh_jPiece_arg1_0 _lh_listcomp_fun_ls_t_2_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_1_2_9 _lh_mapLookup_arg1_1_2_9 _lh_mapLookup_Bin_4_1_2_9 _lh_mapLookup_Bin_2_1_2_9 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_2_9) _lh_mapLookup_Bin_3_1_2_9))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_1_3_0 _lh_mapLookup_arg1_1_3_0 _lh_mapLookup_Bin_4_1_3_0 _lh_mapLookup_Bin_2_1_3_0 _lh_extend_maybe_LH_P2_0_5_2 _lh_extend_maybe_LH_P2_1_5_2 _lh_extend_maybe_arg1_5_2 _lh_extend_maybe_arg3_5_2 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_1_3_0 _lh_mapLookup_arg1_1_3_0 _lh_mapLookup_Bin_4_1_3_0 _lh_mapLookup_Bin_2_1_3_0 -> 
+                                          (let rec _lh_extend_maybe_Just_0_2_5 = _lh_mapLookup_Bin_2_1_3_0 in
+                                            (fun _lh_extend_maybe_LH_P2_0_5_2 _lh_extend_maybe_LH_P2_1_5_2 _lh_extend_maybe_arg1_5_2 _lh_extend_maybe_arg3_5_2 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_5_2 _lh_extend_maybe_LH_P2_0_5_1) _lh_extend_maybe_LH_P2_1_5_1) _lh_extend_maybe_arg1_5_1) _lh_extend_maybe_arg3_5_1))))))))) in
@@ -5705,8 +5922,10 @@ let rec jPiece_lh__d1 _lh_jPiece_arg1_0 _lh_listcomp_fun_ls_t_2_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_1_3_4 _lh_mapLookup_arg1_1_3_4 _lh_mapLookup_Bin_4_1_3_4 _lh_mapLookup_Bin_2_1_3_4 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_3_4) _lh_mapLookup_Bin_3_1_3_4))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_1_3_5 _lh_mapLookup_arg1_1_3_5 _lh_mapLookup_Bin_4_1_3_5 _lh_mapLookup_Bin_2_1_3_5 _lh_extend_maybe_LH_P2_0_5_4 _lh_extend_maybe_LH_P2_1_5_4 _lh_extend_maybe_arg1_5_4 _lh_extend_maybe_arg3_5_4 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_1_3_5 _lh_mapLookup_arg1_1_3_5 _lh_mapLookup_Bin_4_1_3_5 _lh_mapLookup_Bin_2_1_3_5 -> 
+                                          (let rec _lh_extend_maybe_Just_0_2_6 = _lh_mapLookup_Bin_2_1_3_5 in
+                                            (fun _lh_extend_maybe_LH_P2_0_5_4 _lh_extend_maybe_LH_P2_1_5_4 _lh_extend_maybe_arg1_5_4 _lh_extend_maybe_arg3_5_4 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_5_4 _lh_extend_maybe_LH_P2_0_5_3) _lh_extend_maybe_LH_P2_1_5_3) _lh_extend_maybe_arg1_5_3) _lh_extend_maybe_arg3_5_3))))))))) in
@@ -5750,8 +5969,10 @@ let rec jPiece_lh__d1 _lh_jPiece_arg1_0 _lh_listcomp_fun_ls_t_2_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_1_3_9 _lh_mapLookup_arg1_1_3_9 _lh_mapLookup_Bin_4_1_3_9 _lh_mapLookup_Bin_2_1_3_9 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_3_9) _lh_mapLookup_Bin_3_1_3_9))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_1_4_0 _lh_mapLookup_arg1_1_4_0 _lh_mapLookup_Bin_4_1_4_0 _lh_mapLookup_Bin_2_1_4_0 _lh_extend_maybe_LH_P2_0_5_6 _lh_extend_maybe_LH_P2_1_5_6 _lh_extend_maybe_arg1_5_6 _lh_extend_maybe_arg3_5_6 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_1_4_0 _lh_mapLookup_arg1_1_4_0 _lh_mapLookup_Bin_4_1_4_0 _lh_mapLookup_Bin_2_1_4_0 -> 
+                                          (let rec _lh_extend_maybe_Just_0_2_7 = _lh_mapLookup_Bin_2_1_4_0 in
+                                            (fun _lh_extend_maybe_LH_P2_0_5_6 _lh_extend_maybe_LH_P2_1_5_6 _lh_extend_maybe_arg1_5_6 _lh_extend_maybe_arg3_5_6 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_5_6 _lh_extend_maybe_LH_P2_0_5_5) _lh_extend_maybe_LH_P2_1_5_5) _lh_extend_maybe_arg1_5_5) _lh_extend_maybe_arg3_5_5))))))))) in
@@ -5803,8 +6024,10 @@ let rec jPiece_lh__d1 _lh_jPiece_arg1_0 _lh_listcomp_fun_ls_t_2_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_1_4_4 _lh_mapLookup_arg1_1_4_4 _lh_mapLookup_Bin_4_1_4_4 _lh_mapLookup_Bin_2_1_4_4 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_4_4) _lh_mapLookup_Bin_3_1_4_4))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_1_4_5 _lh_mapLookup_arg1_1_4_5 _lh_mapLookup_Bin_4_1_4_5 _lh_mapLookup_Bin_2_1_4_5 _lh_extend_maybe_LH_P2_0_5_8 _lh_extend_maybe_LH_P2_1_5_8 _lh_extend_maybe_arg1_5_8 _lh_extend_maybe_arg3_5_8 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_1_4_5 _lh_mapLookup_arg1_1_4_5 _lh_mapLookup_Bin_4_1_4_5 _lh_mapLookup_Bin_2_1_4_5 -> 
+                                          (let rec _lh_extend_maybe_Just_0_2_8 = _lh_mapLookup_Bin_2_1_4_5 in
+                                            (fun _lh_extend_maybe_LH_P2_0_5_8 _lh_extend_maybe_LH_P2_1_5_8 _lh_extend_maybe_arg1_5_8 _lh_extend_maybe_arg3_5_8 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_5_8 _lh_extend_maybe_LH_P2_0_5_7) _lh_extend_maybe_LH_P2_1_5_7) _lh_extend_maybe_arg1_5_7) _lh_extend_maybe_arg3_5_7))))))))) in
@@ -5848,8 +6071,10 @@ let rec jPiece_lh__d1 _lh_jPiece_arg1_0 _lh_listcomp_fun_ls_t_2_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_1_4_9 _lh_mapLookup_arg1_1_4_9 _lh_mapLookup_Bin_4_1_4_9 _lh_mapLookup_Bin_2_1_4_9 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_4_9) _lh_mapLookup_Bin_3_1_4_9))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_1_5_0 _lh_mapLookup_arg1_1_5_0 _lh_mapLookup_Bin_4_1_5_0 _lh_mapLookup_Bin_2_1_5_0 _lh_extend_maybe_LH_P2_0_6_0 _lh_extend_maybe_LH_P2_1_6_0 _lh_extend_maybe_arg1_6_0 _lh_extend_maybe_arg3_6_0 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_1_5_0 _lh_mapLookup_arg1_1_5_0 _lh_mapLookup_Bin_4_1_5_0 _lh_mapLookup_Bin_2_1_5_0 -> 
+                                          (let rec _lh_extend_maybe_Just_0_2_9 = _lh_mapLookup_Bin_2_1_5_0 in
+                                            (fun _lh_extend_maybe_LH_P2_0_6_0 _lh_extend_maybe_LH_P2_1_6_0 _lh_extend_maybe_arg1_6_0 _lh_extend_maybe_arg3_6_0 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_6_0 _lh_extend_maybe_LH_P2_0_5_9) _lh_extend_maybe_LH_P2_1_5_9) _lh_extend_maybe_arg1_5_9) _lh_extend_maybe_arg3_5_9))))))))) in
@@ -5893,8 +6118,10 @@ let rec jPiece_lh__d1 _lh_jPiece_arg1_0 _lh_listcomp_fun_ls_t_2_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_1_5_4 _lh_mapLookup_arg1_1_5_4 _lh_mapLookup_Bin_4_1_5_4 _lh_mapLookup_Bin_2_1_5_4 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_5_4) _lh_mapLookup_Bin_3_1_5_4))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_1_5_5 _lh_mapLookup_arg1_1_5_5 _lh_mapLookup_Bin_4_1_5_5 _lh_mapLookup_Bin_2_1_5_5 _lh_extend_maybe_LH_P2_0_6_2 _lh_extend_maybe_LH_P2_1_6_2 _lh_extend_maybe_arg1_6_2 _lh_extend_maybe_arg3_6_2 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_1_5_5 _lh_mapLookup_arg1_1_5_5 _lh_mapLookup_Bin_4_1_5_5 _lh_mapLookup_Bin_2_1_5_5 -> 
+                                          (let rec _lh_extend_maybe_Just_0_3_0 = _lh_mapLookup_Bin_2_1_5_5 in
+                                            (fun _lh_extend_maybe_LH_P2_0_6_2 _lh_extend_maybe_LH_P2_1_6_2 _lh_extend_maybe_arg1_6_2 _lh_extend_maybe_arg3_6_2 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_6_2 _lh_extend_maybe_LH_P2_0_6_1) _lh_extend_maybe_LH_P2_1_6_1) _lh_extend_maybe_arg1_6_1) _lh_extend_maybe_arg3_6_1))))))))) in
@@ -5938,8 +6165,10 @@ let rec jPiece_lh__d1 _lh_jPiece_arg1_0 _lh_listcomp_fun_ls_t_2_1 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_1_5_9 _lh_mapLookup_arg1_1_5_9 _lh_mapLookup_Bin_4_1_5_9 _lh_mapLookup_Bin_2_1_5_9 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_5_9) _lh_mapLookup_Bin_3_1_5_9))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_1_6_0 _lh_mapLookup_arg1_1_6_0 _lh_mapLookup_Bin_4_1_6_0 _lh_mapLookup_Bin_2_1_6_0 _lh_extend_maybe_LH_P2_0_6_4 _lh_extend_maybe_LH_P2_1_6_4 _lh_extend_maybe_arg1_6_4 _lh_extend_maybe_arg3_6_4 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_1_6_0 _lh_mapLookup_arg1_1_6_0 _lh_mapLookup_Bin_4_1_6_0 _lh_mapLookup_Bin_2_1_6_0 -> 
+                                          (let rec _lh_extend_maybe_Just_0_3_1 = _lh_mapLookup_Bin_2_1_6_0 in
+                                            (fun _lh_extend_maybe_LH_P2_0_6_4 _lh_extend_maybe_LH_P2_1_6_4 _lh_extend_maybe_arg1_6_4 _lh_extend_maybe_arg3_6_4 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_6_4 _lh_extend_maybe_LH_P2_0_6_3) _lh_extend_maybe_LH_P2_1_6_3) _lh_extend_maybe_arg1_6_3) _lh_extend_maybe_arg3_6_3))))))))) in
@@ -6005,8 +6234,10 @@ let rec dPiece_lh__d1 _lh_dPiece_arg1_0 _lh_listcomp_fun_ls_t_1_3_2 _lh_listcomp
                                       (fun _lh_mapLookup_Bin_3_8_2_7 _lh_mapLookup_arg1_8_2_7 _lh_mapLookup_Bin_4_8_2_7 _lh_mapLookup_Bin_2_8_2_7 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_8_2_7) _lh_mapLookup_Bin_3_8_2_7))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_8_2_8 _lh_mapLookup_arg1_8_2_8 _lh_mapLookup_Bin_4_8_2_8 _lh_mapLookup_Bin_2_8_2_8 _lh_extend_maybe_LH_P2_0_3_2_7 _lh_extend_maybe_LH_P2_1_3_2_7 _lh_extend_maybe_arg1_3_2_9 _lh_extend_maybe_arg3_3_2_9 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_8_2_8 _lh_mapLookup_arg1_8_2_8 _lh_mapLookup_Bin_4_8_2_8 _lh_mapLookup_Bin_2_8_2_8 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_6_2 = _lh_mapLookup_Bin_2_8_2_8 in
+                                          (fun _lh_extend_maybe_LH_P2_0_3_2_7 _lh_extend_maybe_LH_P2_1_3_2_7 _lh_extend_maybe_arg1_3_2_9 _lh_extend_maybe_arg3_3_2_9 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_9_0 _lh_extend_maybe_LH_P2_0_3_2_6) _lh_extend_maybe_LH_P2_1_3_2_6) _lh_extend_maybe_arg1_3_2_8) _lh_extend_maybe_arg3_3_2_8))))))))) in
@@ -6050,8 +6281,10 @@ let rec dPiece_lh__d1 _lh_dPiece_arg1_0 _lh_listcomp_fun_ls_t_1_3_2 _lh_listcomp
                                       (fun _lh_mapLookup_Bin_3_8_3_2 _lh_mapLookup_arg1_8_3_2 _lh_mapLookup_Bin_4_8_3_2 _lh_mapLookup_Bin_2_8_3_2 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_8_3_2) _lh_mapLookup_Bin_3_8_3_2))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_8_3_3 _lh_mapLookup_arg1_8_3_3 _lh_mapLookup_Bin_4_8_3_3 _lh_mapLookup_Bin_2_8_3_3 _lh_extend_maybe_LH_P2_0_3_2_9 _lh_extend_maybe_LH_P2_1_3_2_9 _lh_extend_maybe_arg1_3_3_1 _lh_extend_maybe_arg3_3_3_1 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_8_3_3 _lh_mapLookup_arg1_8_3_3 _lh_mapLookup_Bin_4_8_3_3 _lh_mapLookup_Bin_2_8_3_3 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_6_3 = _lh_mapLookup_Bin_2_8_3_3 in
+                                          (fun _lh_extend_maybe_LH_P2_0_3_2_9 _lh_extend_maybe_LH_P2_1_3_2_9 _lh_extend_maybe_arg1_3_3_1 _lh_extend_maybe_arg3_3_3_1 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_9_2 _lh_extend_maybe_LH_P2_0_3_2_8) _lh_extend_maybe_LH_P2_1_3_2_8) _lh_extend_maybe_arg1_3_3_0) _lh_extend_maybe_arg3_3_3_0))))))))) in
@@ -6095,8 +6328,10 @@ let rec dPiece_lh__d1 _lh_dPiece_arg1_0 _lh_listcomp_fun_ls_t_1_3_2 _lh_listcomp
                                       (fun _lh_mapLookup_Bin_3_8_3_7 _lh_mapLookup_arg1_8_3_7 _lh_mapLookup_Bin_4_8_3_7 _lh_mapLookup_Bin_2_8_3_7 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_8_3_7) _lh_mapLookup_Bin_3_8_3_7))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_8_3_8 _lh_mapLookup_arg1_8_3_8 _lh_mapLookup_Bin_4_8_3_8 _lh_mapLookup_Bin_2_8_3_8 _lh_extend_maybe_LH_P2_0_3_3_1 _lh_extend_maybe_LH_P2_1_3_3_1 _lh_extend_maybe_arg1_3_3_3 _lh_extend_maybe_arg3_3_3_3 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_8_3_8 _lh_mapLookup_arg1_8_3_8 _lh_mapLookup_Bin_4_8_3_8 _lh_mapLookup_Bin_2_8_3_8 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_6_4 = _lh_mapLookup_Bin_2_8_3_8 in
+                                          (fun _lh_extend_maybe_LH_P2_0_3_3_1 _lh_extend_maybe_LH_P2_1_3_3_1 _lh_extend_maybe_arg1_3_3_3 _lh_extend_maybe_arg3_3_3_3 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_9_4 _lh_extend_maybe_LH_P2_0_3_3_0) _lh_extend_maybe_LH_P2_1_3_3_0) _lh_extend_maybe_arg1_3_3_2) _lh_extend_maybe_arg3_3_3_2))))))))) in
@@ -6150,8 +6385,10 @@ let rec dPiece_lh__d1 _lh_dPiece_arg1_0 _lh_listcomp_fun_ls_t_1_3_2 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_8_4_2 _lh_mapLookup_arg1_8_4_2 _lh_mapLookup_Bin_4_8_4_2 _lh_mapLookup_Bin_2_8_4_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_8_4_2) _lh_mapLookup_Bin_3_8_4_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_8_4_3 _lh_mapLookup_arg1_8_4_3 _lh_mapLookup_Bin_4_8_4_3 _lh_mapLookup_Bin_2_8_4_3 _lh_extend_maybe_LH_P2_0_3_3_3 _lh_extend_maybe_LH_P2_1_3_3_3 _lh_extend_maybe_arg1_3_3_5 _lh_extend_maybe_arg3_3_3_5 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_8_4_3 _lh_mapLookup_arg1_8_4_3 _lh_mapLookup_Bin_4_8_4_3 _lh_mapLookup_Bin_2_8_4_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_6_5 = _lh_mapLookup_Bin_2_8_4_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_3_3_3 _lh_extend_maybe_LH_P2_1_3_3_3 _lh_extend_maybe_arg1_3_3_5 _lh_extend_maybe_arg3_3_3_5 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_9_6 _lh_extend_maybe_LH_P2_0_3_3_2) _lh_extend_maybe_LH_P2_1_3_3_2) _lh_extend_maybe_arg1_3_3_4) _lh_extend_maybe_arg3_3_3_4))))))))) in
@@ -6195,8 +6432,10 @@ let rec dPiece_lh__d1 _lh_dPiece_arg1_0 _lh_listcomp_fun_ls_t_1_3_2 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_8_4_7 _lh_mapLookup_arg1_8_4_7 _lh_mapLookup_Bin_4_8_4_7 _lh_mapLookup_Bin_2_8_4_7 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_8_4_7) _lh_mapLookup_Bin_3_8_4_7))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_8_4_8 _lh_mapLookup_arg1_8_4_8 _lh_mapLookup_Bin_4_8_4_8 _lh_mapLookup_Bin_2_8_4_8 _lh_extend_maybe_LH_P2_0_3_3_5 _lh_extend_maybe_LH_P2_1_3_3_5 _lh_extend_maybe_arg1_3_3_7 _lh_extend_maybe_arg3_3_3_7 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_8_4_8 _lh_mapLookup_arg1_8_4_8 _lh_mapLookup_Bin_4_8_4_8 _lh_mapLookup_Bin_2_8_4_8 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_6_6 = _lh_mapLookup_Bin_2_8_4_8 in
+                                            (fun _lh_extend_maybe_LH_P2_0_3_3_5 _lh_extend_maybe_LH_P2_1_3_3_5 _lh_extend_maybe_arg1_3_3_7 _lh_extend_maybe_arg3_3_3_7 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_9_8 _lh_extend_maybe_LH_P2_0_3_3_4) _lh_extend_maybe_LH_P2_1_3_3_4) _lh_extend_maybe_arg1_3_3_6) _lh_extend_maybe_arg3_3_3_6))))))))) in
@@ -6240,8 +6479,10 @@ let rec dPiece_lh__d1 _lh_dPiece_arg1_0 _lh_listcomp_fun_ls_t_1_3_2 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_8_5_2 _lh_mapLookup_arg1_8_5_2 _lh_mapLookup_Bin_4_8_5_2 _lh_mapLookup_Bin_2_8_5_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_8_5_2) _lh_mapLookup_Bin_3_8_5_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_8_5_3 _lh_mapLookup_arg1_8_5_3 _lh_mapLookup_Bin_4_8_5_3 _lh_mapLookup_Bin_2_8_5_3 _lh_extend_maybe_LH_P2_0_3_3_7 _lh_extend_maybe_LH_P2_1_3_3_7 _lh_extend_maybe_arg1_3_3_9 _lh_extend_maybe_arg3_3_3_9 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_8_5_3 _lh_mapLookup_arg1_8_5_3 _lh_mapLookup_Bin_4_8_5_3 _lh_mapLookup_Bin_2_8_5_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_6_7 = _lh_mapLookup_Bin_2_8_5_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_3_3_7 _lh_extend_maybe_LH_P2_1_3_3_7 _lh_extend_maybe_arg1_3_3_9 _lh_extend_maybe_arg3_3_3_9 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_4_0_0 _lh_extend_maybe_LH_P2_0_3_3_6) _lh_extend_maybe_LH_P2_1_3_3_6) _lh_extend_maybe_arg1_3_3_8) _lh_extend_maybe_arg3_3_3_8))))))))) in
@@ -6293,8 +6534,10 @@ let rec dPiece_lh__d1 _lh_dPiece_arg1_0 _lh_listcomp_fun_ls_t_1_3_2 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_8_5_7 _lh_mapLookup_arg1_8_5_7 _lh_mapLookup_Bin_4_8_5_7 _lh_mapLookup_Bin_2_8_5_7 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_8_5_7) _lh_mapLookup_Bin_3_8_5_7))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_8_5_8 _lh_mapLookup_arg1_8_5_8 _lh_mapLookup_Bin_4_8_5_8 _lh_mapLookup_Bin_2_8_5_8 _lh_extend_maybe_LH_P2_0_3_3_9 _lh_extend_maybe_LH_P2_1_3_3_9 _lh_extend_maybe_arg1_3_4_1 _lh_extend_maybe_arg3_3_4_1 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_8_5_8 _lh_mapLookup_arg1_8_5_8 _lh_mapLookup_Bin_4_8_5_8 _lh_mapLookup_Bin_2_8_5_8 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_6_8 = _lh_mapLookup_Bin_2_8_5_8 in
+                                            (fun _lh_extend_maybe_LH_P2_0_3_3_9 _lh_extend_maybe_LH_P2_1_3_3_9 _lh_extend_maybe_arg1_3_4_1 _lh_extend_maybe_arg3_3_4_1 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_4_0_2 _lh_extend_maybe_LH_P2_0_3_3_8) _lh_extend_maybe_LH_P2_1_3_3_8) _lh_extend_maybe_arg1_3_4_0) _lh_extend_maybe_arg3_3_4_0))))))))) in
@@ -6338,8 +6581,10 @@ let rec dPiece_lh__d1 _lh_dPiece_arg1_0 _lh_listcomp_fun_ls_t_1_3_2 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_8_6_2 _lh_mapLookup_arg1_8_6_2 _lh_mapLookup_Bin_4_8_6_2 _lh_mapLookup_Bin_2_8_6_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_8_6_2) _lh_mapLookup_Bin_3_8_6_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_8_6_3 _lh_mapLookup_arg1_8_6_3 _lh_mapLookup_Bin_4_8_6_3 _lh_mapLookup_Bin_2_8_6_3 _lh_extend_maybe_LH_P2_0_3_4_1 _lh_extend_maybe_LH_P2_1_3_4_1 _lh_extend_maybe_arg1_3_4_3 _lh_extend_maybe_arg3_3_4_3 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_8_6_3 _lh_mapLookup_arg1_8_6_3 _lh_mapLookup_Bin_4_8_6_3 _lh_mapLookup_Bin_2_8_6_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_6_9 = _lh_mapLookup_Bin_2_8_6_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_3_4_1 _lh_extend_maybe_LH_P2_1_3_4_1 _lh_extend_maybe_arg1_3_4_3 _lh_extend_maybe_arg3_3_4_3 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_4_0_4 _lh_extend_maybe_LH_P2_0_3_4_0) _lh_extend_maybe_LH_P2_1_3_4_0) _lh_extend_maybe_arg1_3_4_2) _lh_extend_maybe_arg3_3_4_2))))))))) in
@@ -6383,8 +6628,10 @@ let rec dPiece_lh__d1 _lh_dPiece_arg1_0 _lh_listcomp_fun_ls_t_1_3_2 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_8_6_7 _lh_mapLookup_arg1_8_6_7 _lh_mapLookup_Bin_4_8_6_7 _lh_mapLookup_Bin_2_8_6_7 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_8_6_7) _lh_mapLookup_Bin_3_8_6_7))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_8_6_8 _lh_mapLookup_arg1_8_6_8 _lh_mapLookup_Bin_4_8_6_8 _lh_mapLookup_Bin_2_8_6_8 _lh_extend_maybe_LH_P2_0_3_4_3 _lh_extend_maybe_LH_P2_1_3_4_3 _lh_extend_maybe_arg1_3_4_5 _lh_extend_maybe_arg3_3_4_5 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_8_6_8 _lh_mapLookup_arg1_8_6_8 _lh_mapLookup_Bin_4_8_6_8 _lh_mapLookup_Bin_2_8_6_8 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_7_0 = _lh_mapLookup_Bin_2_8_6_8 in
+                                            (fun _lh_extend_maybe_LH_P2_0_3_4_3 _lh_extend_maybe_LH_P2_1_3_4_3 _lh_extend_maybe_arg1_3_4_5 _lh_extend_maybe_arg3_3_4_5 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_4_0_6 _lh_extend_maybe_LH_P2_0_3_4_2) _lh_extend_maybe_LH_P2_1_3_4_2) _lh_extend_maybe_arg1_3_4_4) _lh_extend_maybe_arg3_3_4_4))))))))) in
@@ -6450,8 +6697,10 @@ let rec kPiece_lh__d1 _lh_kPiece_arg1_0 _lh_listcomp_fun_ls_t_9_0 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_5_6_7 _lh_mapLookup_arg1_5_6_7 _lh_mapLookup_Bin_4_5_6_7 _lh_mapLookup_Bin_2_5_6_7 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_5_6_7) _lh_mapLookup_Bin_3_5_6_7))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_5_6_8 _lh_mapLookup_arg1_5_6_8 _lh_mapLookup_Bin_4_5_6_8 _lh_mapLookup_Bin_2_5_6_8 _lh_extend_maybe_LH_P2_0_2_2_3 _lh_extend_maybe_LH_P2_1_2_2_3 _lh_extend_maybe_arg1_2_2_5 _lh_extend_maybe_arg3_2_2_5 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_5_6_8 _lh_mapLookup_arg1_5_6_8 _lh_mapLookup_Bin_4_5_6_8 _lh_mapLookup_Bin_2_5_6_8 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_1_0 = _lh_mapLookup_Bin_2_5_6_8 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_2_3 _lh_extend_maybe_LH_P2_1_2_2_3 _lh_extend_maybe_arg1_2_2_5 _lh_extend_maybe_arg3_2_2_5 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_7_4 _lh_extend_maybe_LH_P2_0_2_2_2) _lh_extend_maybe_LH_P2_1_2_2_2) _lh_extend_maybe_arg1_2_2_4) _lh_extend_maybe_arg3_2_2_4))))))))) in
@@ -6495,8 +6744,10 @@ let rec kPiece_lh__d1 _lh_kPiece_arg1_0 _lh_listcomp_fun_ls_t_9_0 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_5_7_2 _lh_mapLookup_arg1_5_7_2 _lh_mapLookup_Bin_4_5_7_2 _lh_mapLookup_Bin_2_5_7_2 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_5_7_2) _lh_mapLookup_Bin_3_5_7_2))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_5_7_3 _lh_mapLookup_arg1_5_7_3 _lh_mapLookup_Bin_4_5_7_3 _lh_mapLookup_Bin_2_5_7_3 _lh_extend_maybe_LH_P2_0_2_2_5 _lh_extend_maybe_LH_P2_1_2_2_5 _lh_extend_maybe_arg1_2_2_7 _lh_extend_maybe_arg3_2_2_7 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_5_7_3 _lh_mapLookup_arg1_5_7_3 _lh_mapLookup_Bin_4_5_7_3 _lh_mapLookup_Bin_2_5_7_3 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_1_1 = _lh_mapLookup_Bin_2_5_7_3 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_2_5 _lh_extend_maybe_LH_P2_1_2_2_5 _lh_extend_maybe_arg1_2_2_7 _lh_extend_maybe_arg3_2_2_7 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_7_6 _lh_extend_maybe_LH_P2_0_2_2_4) _lh_extend_maybe_LH_P2_1_2_2_4) _lh_extend_maybe_arg1_2_2_6) _lh_extend_maybe_arg3_2_2_6))))))))) in
@@ -6540,8 +6791,10 @@ let rec kPiece_lh__d1 _lh_kPiece_arg1_0 _lh_listcomp_fun_ls_t_9_0 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_5_7_7 _lh_mapLookup_arg1_5_7_7 _lh_mapLookup_Bin_4_5_7_7 _lh_mapLookup_Bin_2_5_7_7 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_5_7_7) _lh_mapLookup_Bin_3_5_7_7))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_5_7_8 _lh_mapLookup_arg1_5_7_8 _lh_mapLookup_Bin_4_5_7_8 _lh_mapLookup_Bin_2_5_7_8 _lh_extend_maybe_LH_P2_0_2_2_7 _lh_extend_maybe_LH_P2_1_2_2_7 _lh_extend_maybe_arg1_2_2_9 _lh_extend_maybe_arg3_2_2_9 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_5_7_8 _lh_mapLookup_arg1_5_7_8 _lh_mapLookup_Bin_4_5_7_8 _lh_mapLookup_Bin_2_5_7_8 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_1_2 = _lh_mapLookup_Bin_2_5_7_8 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_2_7 _lh_extend_maybe_LH_P2_1_2_2_7 _lh_extend_maybe_arg1_2_2_9 _lh_extend_maybe_arg3_2_2_9 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_7_8 _lh_extend_maybe_LH_P2_0_2_2_6) _lh_extend_maybe_LH_P2_1_2_2_6) _lh_extend_maybe_arg1_2_2_8) _lh_extend_maybe_arg3_2_2_8))))))))) in
@@ -6585,8 +6838,10 @@ let rec kPiece_lh__d1 _lh_kPiece_arg1_0 _lh_listcomp_fun_ls_t_9_0 _lh_listcomp_f
                                       (fun _lh_mapLookup_Bin_3_5_8_2 _lh_mapLookup_arg1_5_8_2 _lh_mapLookup_Bin_4_5_8_2 _lh_mapLookup_Bin_2_5_8_2 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_5_8_2) _lh_mapLookup_Bin_3_5_8_2))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_5_8_3 _lh_mapLookup_arg1_5_8_3 _lh_mapLookup_Bin_4_5_8_3 _lh_mapLookup_Bin_2_5_8_3 _lh_extend_maybe_LH_P2_0_2_2_9 _lh_extend_maybe_LH_P2_1_2_2_9 _lh_extend_maybe_arg1_2_3_1 _lh_extend_maybe_arg3_2_3_1 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_5_8_3 _lh_mapLookup_arg1_5_8_3 _lh_mapLookup_Bin_4_5_8_3 _lh_mapLookup_Bin_2_5_8_3 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_1_3 = _lh_mapLookup_Bin_2_5_8_3 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_2_9 _lh_extend_maybe_LH_P2_1_2_2_9 _lh_extend_maybe_arg1_2_3_1 _lh_extend_maybe_arg3_2_3_1 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_8_0 _lh_extend_maybe_LH_P2_0_2_2_8) _lh_extend_maybe_LH_P2_1_2_2_8) _lh_extend_maybe_arg1_2_3_0) _lh_extend_maybe_arg3_2_3_0))))))))) in
@@ -6640,8 +6895,10 @@ let rec kPiece_lh__d1 _lh_kPiece_arg1_0 _lh_listcomp_fun_ls_t_9_0 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_5_8_7 _lh_mapLookup_arg1_5_8_7 _lh_mapLookup_Bin_4_5_8_7 _lh_mapLookup_Bin_2_5_8_7 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_5_8_7) _lh_mapLookup_Bin_3_5_8_7))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_5_8_8 _lh_mapLookup_arg1_5_8_8 _lh_mapLookup_Bin_4_5_8_8 _lh_mapLookup_Bin_2_5_8_8 _lh_extend_maybe_LH_P2_0_2_3_1 _lh_extend_maybe_LH_P2_1_2_3_1 _lh_extend_maybe_arg1_2_3_3 _lh_extend_maybe_arg3_2_3_3 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_5_8_8 _lh_mapLookup_arg1_5_8_8 _lh_mapLookup_Bin_4_5_8_8 _lh_mapLookup_Bin_2_5_8_8 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_1_4 = _lh_mapLookup_Bin_2_5_8_8 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_3_1 _lh_extend_maybe_LH_P2_1_2_3_1 _lh_extend_maybe_arg1_2_3_3 _lh_extend_maybe_arg3_2_3_3 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_2_8_2 _lh_extend_maybe_LH_P2_0_2_3_0) _lh_extend_maybe_LH_P2_1_2_3_0) _lh_extend_maybe_arg1_2_3_2) _lh_extend_maybe_arg3_2_3_2))))))))) in
@@ -6685,8 +6942,10 @@ let rec kPiece_lh__d1 _lh_kPiece_arg1_0 _lh_listcomp_fun_ls_t_9_0 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_5_9_2 _lh_mapLookup_arg1_5_9_2 _lh_mapLookup_Bin_4_5_9_2 _lh_mapLookup_Bin_2_5_9_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_5_9_2) _lh_mapLookup_Bin_3_5_9_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_5_9_3 _lh_mapLookup_arg1_5_9_3 _lh_mapLookup_Bin_4_5_9_3 _lh_mapLookup_Bin_2_5_9_3 _lh_extend_maybe_LH_P2_0_2_3_3 _lh_extend_maybe_LH_P2_1_2_3_3 _lh_extend_maybe_arg1_2_3_5 _lh_extend_maybe_arg3_2_3_5 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_5_9_3 _lh_mapLookup_arg1_5_9_3 _lh_mapLookup_Bin_4_5_9_3 _lh_mapLookup_Bin_2_5_9_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_1_5 = _lh_mapLookup_Bin_2_5_9_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_3_3 _lh_extend_maybe_LH_P2_1_2_3_3 _lh_extend_maybe_arg1_2_3_5 _lh_extend_maybe_arg3_2_3_5 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_2_8_4 _lh_extend_maybe_LH_P2_0_2_3_2) _lh_extend_maybe_LH_P2_1_2_3_2) _lh_extend_maybe_arg1_2_3_4) _lh_extend_maybe_arg3_2_3_4))))))))) in
@@ -6730,8 +6989,10 @@ let rec kPiece_lh__d1 _lh_kPiece_arg1_0 _lh_listcomp_fun_ls_t_9_0 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_5_9_7 _lh_mapLookup_arg1_5_9_7 _lh_mapLookup_Bin_4_5_9_7 _lh_mapLookup_Bin_2_5_9_7 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_5_9_7) _lh_mapLookup_Bin_3_5_9_7))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_5_9_8 _lh_mapLookup_arg1_5_9_8 _lh_mapLookup_Bin_4_5_9_8 _lh_mapLookup_Bin_2_5_9_8 _lh_extend_maybe_LH_P2_0_2_3_5 _lh_extend_maybe_LH_P2_1_2_3_5 _lh_extend_maybe_arg1_2_3_7 _lh_extend_maybe_arg3_2_3_7 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_5_9_8 _lh_mapLookup_arg1_5_9_8 _lh_mapLookup_Bin_4_5_9_8 _lh_mapLookup_Bin_2_5_9_8 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_1_6 = _lh_mapLookup_Bin_2_5_9_8 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_3_5 _lh_extend_maybe_LH_P2_1_2_3_5 _lh_extend_maybe_arg1_2_3_7 _lh_extend_maybe_arg3_2_3_7 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_2_8_6 _lh_extend_maybe_LH_P2_0_2_3_4) _lh_extend_maybe_LH_P2_1_2_3_4) _lh_extend_maybe_arg1_2_3_6) _lh_extend_maybe_arg3_2_3_6))))))))) in
@@ -6775,8 +7036,10 @@ let rec kPiece_lh__d1 _lh_kPiece_arg1_0 _lh_listcomp_fun_ls_t_9_0 _lh_listcomp_f
                                         (fun _lh_mapLookup_Bin_3_6_0_2 _lh_mapLookup_arg1_6_0_2 _lh_mapLookup_Bin_4_6_0_2 _lh_mapLookup_Bin_2_6_0_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_0_2) _lh_mapLookup_Bin_3_6_0_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_6_0_3 _lh_mapLookup_arg1_6_0_3 _lh_mapLookup_Bin_4_6_0_3 _lh_mapLookup_Bin_2_6_0_3 _lh_extend_maybe_LH_P2_0_2_3_7 _lh_extend_maybe_LH_P2_1_2_3_7 _lh_extend_maybe_arg1_2_3_9 _lh_extend_maybe_arg3_2_3_9 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_6_0_3 _lh_mapLookup_arg1_6_0_3 _lh_mapLookup_Bin_4_6_0_3 _lh_mapLookup_Bin_2_6_0_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_1_7 = _lh_mapLookup_Bin_2_6_0_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_3_7 _lh_extend_maybe_LH_P2_1_2_3_7 _lh_extend_maybe_arg1_2_3_9 _lh_extend_maybe_arg3_2_3_9 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_2_8_8 _lh_extend_maybe_LH_P2_0_2_3_6) _lh_extend_maybe_LH_P2_1_2_3_6) _lh_extend_maybe_arg1_2_3_8) _lh_extend_maybe_arg3_2_3_8))))))))) in
@@ -6842,8 +7105,10 @@ let rec bPiece_lh__d1 _lh_bPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0_1 _lh_listcomp
                                       (fun _lh_mapLookup_Bin_3_6_0_7 _lh_mapLookup_arg1_6_0_7 _lh_mapLookup_Bin_4_6_0_7 _lh_mapLookup_Bin_2_6_0_7 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_0_7) _lh_mapLookup_Bin_3_6_0_7))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_6_0_8 _lh_mapLookup_arg1_6_0_8 _lh_mapLookup_Bin_4_6_0_8 _lh_mapLookup_Bin_2_6_0_8 _lh_extend_maybe_LH_P2_0_2_3_9 _lh_extend_maybe_LH_P2_1_2_3_9 _lh_extend_maybe_arg1_2_4_1 _lh_extend_maybe_arg3_2_4_1 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_6_0_8 _lh_mapLookup_arg1_6_0_8 _lh_mapLookup_Bin_4_6_0_8 _lh_mapLookup_Bin_2_6_0_8 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_1_8 = _lh_mapLookup_Bin_2_6_0_8 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_3_9 _lh_extend_maybe_LH_P2_1_2_3_9 _lh_extend_maybe_arg1_2_4_1 _lh_extend_maybe_arg3_2_4_1 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_2_9_9 _lh_extend_maybe_LH_P2_0_2_3_8) _lh_extend_maybe_LH_P2_1_2_3_8) _lh_extend_maybe_arg1_2_4_0) _lh_extend_maybe_arg3_2_4_0))))))))) in
@@ -6887,8 +7152,10 @@ let rec bPiece_lh__d1 _lh_bPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0_1 _lh_listcomp
                                       (fun _lh_mapLookup_Bin_3_6_1_2 _lh_mapLookup_arg1_6_1_2 _lh_mapLookup_Bin_4_6_1_2 _lh_mapLookup_Bin_2_6_1_2 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_1_2) _lh_mapLookup_Bin_3_6_1_2))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_6_1_3 _lh_mapLookup_arg1_6_1_3 _lh_mapLookup_Bin_4_6_1_3 _lh_mapLookup_Bin_2_6_1_3 _lh_extend_maybe_LH_P2_0_2_4_1 _lh_extend_maybe_LH_P2_1_2_4_1 _lh_extend_maybe_arg1_2_4_3 _lh_extend_maybe_arg3_2_4_3 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_6_1_3 _lh_mapLookup_arg1_6_1_3 _lh_mapLookup_Bin_4_6_1_3 _lh_mapLookup_Bin_2_6_1_3 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_1_9 = _lh_mapLookup_Bin_2_6_1_3 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_4_1 _lh_extend_maybe_LH_P2_1_2_4_1 _lh_extend_maybe_arg1_2_4_3 _lh_extend_maybe_arg3_2_4_3 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_0_1 _lh_extend_maybe_LH_P2_0_2_4_0) _lh_extend_maybe_LH_P2_1_2_4_0) _lh_extend_maybe_arg1_2_4_2) _lh_extend_maybe_arg3_2_4_2))))))))) in
@@ -6932,8 +7199,10 @@ let rec bPiece_lh__d1 _lh_bPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0_1 _lh_listcomp
                                       (fun _lh_mapLookup_Bin_3_6_1_7 _lh_mapLookup_arg1_6_1_7 _lh_mapLookup_Bin_4_6_1_7 _lh_mapLookup_Bin_2_6_1_7 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_1_7) _lh_mapLookup_Bin_3_6_1_7))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_6_1_8 _lh_mapLookup_arg1_6_1_8 _lh_mapLookup_Bin_4_6_1_8 _lh_mapLookup_Bin_2_6_1_8 _lh_extend_maybe_LH_P2_0_2_4_3 _lh_extend_maybe_LH_P2_1_2_4_3 _lh_extend_maybe_arg1_2_4_5 _lh_extend_maybe_arg3_2_4_5 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_6_1_8 _lh_mapLookup_arg1_6_1_8 _lh_mapLookup_Bin_4_6_1_8 _lh_mapLookup_Bin_2_6_1_8 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_2_0 = _lh_mapLookup_Bin_2_6_1_8 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_4_3 _lh_extend_maybe_LH_P2_1_2_4_3 _lh_extend_maybe_arg1_2_4_5 _lh_extend_maybe_arg3_2_4_5 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_0_3 _lh_extend_maybe_LH_P2_0_2_4_2) _lh_extend_maybe_LH_P2_1_2_4_2) _lh_extend_maybe_arg1_2_4_4) _lh_extend_maybe_arg3_2_4_4))))))))) in
@@ -6987,8 +7256,10 @@ let rec bPiece_lh__d1 _lh_bPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0_1 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_6_2_2 _lh_mapLookup_arg1_6_2_2 _lh_mapLookup_Bin_4_6_2_2 _lh_mapLookup_Bin_2_6_2_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_2_2) _lh_mapLookup_Bin_3_6_2_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_6_2_3 _lh_mapLookup_arg1_6_2_3 _lh_mapLookup_Bin_4_6_2_3 _lh_mapLookup_Bin_2_6_2_3 _lh_extend_maybe_LH_P2_0_2_4_5 _lh_extend_maybe_LH_P2_1_2_4_5 _lh_extend_maybe_arg1_2_4_7 _lh_extend_maybe_arg3_2_4_7 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_6_2_3 _lh_mapLookup_arg1_6_2_3 _lh_mapLookup_Bin_4_6_2_3 _lh_mapLookup_Bin_2_6_2_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_2_1 = _lh_mapLookup_Bin_2_6_2_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_4_5 _lh_extend_maybe_LH_P2_1_2_4_5 _lh_extend_maybe_arg1_2_4_7 _lh_extend_maybe_arg3_2_4_7 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_0_5 _lh_extend_maybe_LH_P2_0_2_4_4) _lh_extend_maybe_LH_P2_1_2_4_4) _lh_extend_maybe_arg1_2_4_6) _lh_extend_maybe_arg3_2_4_6))))))))) in
@@ -7032,8 +7303,10 @@ let rec bPiece_lh__d1 _lh_bPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0_1 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_6_2_7 _lh_mapLookup_arg1_6_2_7 _lh_mapLookup_Bin_4_6_2_7 _lh_mapLookup_Bin_2_6_2_7 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_2_7) _lh_mapLookup_Bin_3_6_2_7))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_6_2_8 _lh_mapLookup_arg1_6_2_8 _lh_mapLookup_Bin_4_6_2_8 _lh_mapLookup_Bin_2_6_2_8 _lh_extend_maybe_LH_P2_0_2_4_7 _lh_extend_maybe_LH_P2_1_2_4_7 _lh_extend_maybe_arg1_2_4_9 _lh_extend_maybe_arg3_2_4_9 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_6_2_8 _lh_mapLookup_arg1_6_2_8 _lh_mapLookup_Bin_4_6_2_8 _lh_mapLookup_Bin_2_6_2_8 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_2_2 = _lh_mapLookup_Bin_2_6_2_8 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_4_7 _lh_extend_maybe_LH_P2_1_2_4_7 _lh_extend_maybe_arg1_2_4_9 _lh_extend_maybe_arg3_2_4_9 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_0_7 _lh_extend_maybe_LH_P2_0_2_4_6) _lh_extend_maybe_LH_P2_1_2_4_6) _lh_extend_maybe_arg1_2_4_8) _lh_extend_maybe_arg3_2_4_8))))))))) in
@@ -7077,8 +7350,10 @@ let rec bPiece_lh__d1 _lh_bPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0_1 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_6_3_2 _lh_mapLookup_arg1_6_3_2 _lh_mapLookup_Bin_4_6_3_2 _lh_mapLookup_Bin_2_6_3_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_3_2) _lh_mapLookup_Bin_3_6_3_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_6_3_3 _lh_mapLookup_arg1_6_3_3 _lh_mapLookup_Bin_4_6_3_3 _lh_mapLookup_Bin_2_6_3_3 _lh_extend_maybe_LH_P2_0_2_4_9 _lh_extend_maybe_LH_P2_1_2_4_9 _lh_extend_maybe_arg1_2_5_1 _lh_extend_maybe_arg3_2_5_1 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_6_3_3 _lh_mapLookup_arg1_6_3_3 _lh_mapLookup_Bin_4_6_3_3 _lh_mapLookup_Bin_2_6_3_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_2_3 = _lh_mapLookup_Bin_2_6_3_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_4_9 _lh_extend_maybe_LH_P2_1_2_4_9 _lh_extend_maybe_arg1_2_5_1 _lh_extend_maybe_arg3_2_5_1 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_0_9 _lh_extend_maybe_LH_P2_0_2_4_8) _lh_extend_maybe_LH_P2_1_2_4_8) _lh_extend_maybe_arg1_2_5_0) _lh_extend_maybe_arg3_2_5_0))))))))) in
@@ -7130,8 +7405,10 @@ let rec bPiece_lh__d1 _lh_bPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0_1 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_6_3_7 _lh_mapLookup_arg1_6_3_7 _lh_mapLookup_Bin_4_6_3_7 _lh_mapLookup_Bin_2_6_3_7 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_3_7) _lh_mapLookup_Bin_3_6_3_7))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_6_3_8 _lh_mapLookup_arg1_6_3_8 _lh_mapLookup_Bin_4_6_3_8 _lh_mapLookup_Bin_2_6_3_8 _lh_extend_maybe_LH_P2_0_2_5_1 _lh_extend_maybe_LH_P2_1_2_5_1 _lh_extend_maybe_arg1_2_5_3 _lh_extend_maybe_arg3_2_5_3 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_6_3_8 _lh_mapLookup_arg1_6_3_8 _lh_mapLookup_Bin_4_6_3_8 _lh_mapLookup_Bin_2_6_3_8 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_2_4 = _lh_mapLookup_Bin_2_6_3_8 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_5_1 _lh_extend_maybe_LH_P2_1_2_5_1 _lh_extend_maybe_arg1_2_5_3 _lh_extend_maybe_arg3_2_5_3 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_1_1 _lh_extend_maybe_LH_P2_0_2_5_0) _lh_extend_maybe_LH_P2_1_2_5_0) _lh_extend_maybe_arg1_2_5_2) _lh_extend_maybe_arg3_2_5_2))))))))) in
@@ -7175,8 +7452,10 @@ let rec bPiece_lh__d1 _lh_bPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0_1 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_6_4_2 _lh_mapLookup_arg1_6_4_2 _lh_mapLookup_Bin_4_6_4_2 _lh_mapLookup_Bin_2_6_4_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_4_2) _lh_mapLookup_Bin_3_6_4_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_6_4_3 _lh_mapLookup_arg1_6_4_3 _lh_mapLookup_Bin_4_6_4_3 _lh_mapLookup_Bin_2_6_4_3 _lh_extend_maybe_LH_P2_0_2_5_3 _lh_extend_maybe_LH_P2_1_2_5_3 _lh_extend_maybe_arg1_2_5_5 _lh_extend_maybe_arg3_2_5_5 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_6_4_3 _lh_mapLookup_arg1_6_4_3 _lh_mapLookup_Bin_4_6_4_3 _lh_mapLookup_Bin_2_6_4_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_2_5 = _lh_mapLookup_Bin_2_6_4_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_5_3 _lh_extend_maybe_LH_P2_1_2_5_3 _lh_extend_maybe_arg1_2_5_5 _lh_extend_maybe_arg3_2_5_5 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_1_3 _lh_extend_maybe_LH_P2_0_2_5_2) _lh_extend_maybe_LH_P2_1_2_5_2) _lh_extend_maybe_arg1_2_5_4) _lh_extend_maybe_arg3_2_5_4))))))))) in
@@ -7220,8 +7499,10 @@ let rec bPiece_lh__d1 _lh_bPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0_1 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_6_4_7 _lh_mapLookup_arg1_6_4_7 _lh_mapLookup_Bin_4_6_4_7 _lh_mapLookup_Bin_2_6_4_7 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_4_7) _lh_mapLookup_Bin_3_6_4_7))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_6_4_8 _lh_mapLookup_arg1_6_4_8 _lh_mapLookup_Bin_4_6_4_8 _lh_mapLookup_Bin_2_6_4_8 _lh_extend_maybe_LH_P2_0_2_5_5 _lh_extend_maybe_LH_P2_1_2_5_5 _lh_extend_maybe_arg1_2_5_7 _lh_extend_maybe_arg3_2_5_7 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_6_4_8 _lh_mapLookup_arg1_6_4_8 _lh_mapLookup_Bin_4_6_4_8 _lh_mapLookup_Bin_2_6_4_8 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_2_6 = _lh_mapLookup_Bin_2_6_4_8 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_5_5 _lh_extend_maybe_LH_P2_1_2_5_5 _lh_extend_maybe_arg1_2_5_7 _lh_extend_maybe_arg3_2_5_7 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_1_5 _lh_extend_maybe_LH_P2_0_2_5_4) _lh_extend_maybe_LH_P2_1_2_5_4) _lh_extend_maybe_arg1_2_5_6) _lh_extend_maybe_arg3_2_5_6))))))))) in
@@ -7273,8 +7554,10 @@ let rec bPiece_lh__d1 _lh_bPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0_1 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_6_5_2 _lh_mapLookup_arg1_6_5_2 _lh_mapLookup_Bin_4_6_5_2 _lh_mapLookup_Bin_2_6_5_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_5_2) _lh_mapLookup_Bin_3_6_5_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_6_5_3 _lh_mapLookup_arg1_6_5_3 _lh_mapLookup_Bin_4_6_5_3 _lh_mapLookup_Bin_2_6_5_3 _lh_extend_maybe_LH_P2_0_2_5_7 _lh_extend_maybe_LH_P2_1_2_5_7 _lh_extend_maybe_arg1_2_5_9 _lh_extend_maybe_arg3_2_5_9 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_6_5_3 _lh_mapLookup_arg1_6_5_3 _lh_mapLookup_Bin_4_6_5_3 _lh_mapLookup_Bin_2_6_5_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_2_7 = _lh_mapLookup_Bin_2_6_5_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_5_7 _lh_extend_maybe_LH_P2_1_2_5_7 _lh_extend_maybe_arg1_2_5_9 _lh_extend_maybe_arg3_2_5_9 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_1_7 _lh_extend_maybe_LH_P2_0_2_5_6) _lh_extend_maybe_LH_P2_1_2_5_6) _lh_extend_maybe_arg1_2_5_8) _lh_extend_maybe_arg3_2_5_8))))))))) in
@@ -7318,8 +7601,10 @@ let rec bPiece_lh__d1 _lh_bPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0_1 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_6_5_7 _lh_mapLookup_arg1_6_5_7 _lh_mapLookup_Bin_4_6_5_7 _lh_mapLookup_Bin_2_6_5_7 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_5_7) _lh_mapLookup_Bin_3_6_5_7))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_6_5_8 _lh_mapLookup_arg1_6_5_8 _lh_mapLookup_Bin_4_6_5_8 _lh_mapLookup_Bin_2_6_5_8 _lh_extend_maybe_LH_P2_0_2_5_9 _lh_extend_maybe_LH_P2_1_2_5_9 _lh_extend_maybe_arg1_2_6_1 _lh_extend_maybe_arg3_2_6_1 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_6_5_8 _lh_mapLookup_arg1_6_5_8 _lh_mapLookup_Bin_4_6_5_8 _lh_mapLookup_Bin_2_6_5_8 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_2_8 = _lh_mapLookup_Bin_2_6_5_8 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_5_9 _lh_extend_maybe_LH_P2_1_2_5_9 _lh_extend_maybe_arg1_2_6_1 _lh_extend_maybe_arg3_2_6_1 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_1_9 _lh_extend_maybe_LH_P2_0_2_5_8) _lh_extend_maybe_LH_P2_1_2_5_8) _lh_extend_maybe_arg1_2_6_0) _lh_extend_maybe_arg3_2_6_0))))))))) in
@@ -7363,8 +7648,10 @@ let rec bPiece_lh__d1 _lh_bPiece_arg1_0 _lh_listcomp_fun_ls_t_1_0_1 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_6_6_2 _lh_mapLookup_arg1_6_6_2 _lh_mapLookup_Bin_4_6_6_2 _lh_mapLookup_Bin_2_6_6_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_6_2) _lh_mapLookup_Bin_3_6_6_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_6_6_3 _lh_mapLookup_arg1_6_6_3 _lh_mapLookup_Bin_4_6_6_3 _lh_mapLookup_Bin_2_6_6_3 _lh_extend_maybe_LH_P2_0_2_6_1 _lh_extend_maybe_LH_P2_1_2_6_1 _lh_extend_maybe_arg1_2_6_3 _lh_extend_maybe_arg3_2_6_3 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_6_6_3 _lh_mapLookup_arg1_6_6_3 _lh_mapLookup_Bin_4_6_6_3 _lh_mapLookup_Bin_2_6_6_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_2_9 = _lh_mapLookup_Bin_2_6_6_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_6_1 _lh_extend_maybe_LH_P2_1_2_6_1 _lh_extend_maybe_arg1_2_6_3 _lh_extend_maybe_arg3_2_6_3 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_2_1 _lh_extend_maybe_LH_P2_0_2_6_0) _lh_extend_maybe_LH_P2_1_2_6_0) _lh_extend_maybe_arg1_2_6_2) _lh_extend_maybe_arg3_2_6_2))))))))) in
@@ -7430,8 +7717,10 @@ let rec hPiece_lh__d1 _lh_hPiece_arg1_0 _lh_listcomp_fun_ls_t_1_1_2 _lh_listcomp
                                       (fun _lh_mapLookup_Bin_3_6_6_7 _lh_mapLookup_arg1_6_6_7 _lh_mapLookup_Bin_4_6_6_7 _lh_mapLookup_Bin_2_6_6_7 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_6_7) _lh_mapLookup_Bin_3_6_6_7))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_6_6_8 _lh_mapLookup_arg1_6_6_8 _lh_mapLookup_Bin_4_6_6_8 _lh_mapLookup_Bin_2_6_6_8 _lh_extend_maybe_LH_P2_0_2_6_3 _lh_extend_maybe_LH_P2_1_2_6_3 _lh_extend_maybe_arg1_2_6_5 _lh_extend_maybe_arg3_2_6_5 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_6_6_8 _lh_mapLookup_arg1_6_6_8 _lh_mapLookup_Bin_4_6_6_8 _lh_mapLookup_Bin_2_6_6_8 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_3_0 = _lh_mapLookup_Bin_2_6_6_8 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_6_3 _lh_extend_maybe_LH_P2_1_2_6_3 _lh_extend_maybe_arg1_2_6_5 _lh_extend_maybe_arg3_2_6_5 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_2_4 _lh_extend_maybe_LH_P2_0_2_6_2) _lh_extend_maybe_LH_P2_1_2_6_2) _lh_extend_maybe_arg1_2_6_4) _lh_extend_maybe_arg3_2_6_4))))))))) in
@@ -7475,8 +7764,10 @@ let rec hPiece_lh__d1 _lh_hPiece_arg1_0 _lh_listcomp_fun_ls_t_1_1_2 _lh_listcomp
                                       (fun _lh_mapLookup_Bin_3_6_7_2 _lh_mapLookup_arg1_6_7_2 _lh_mapLookup_Bin_4_6_7_2 _lh_mapLookup_Bin_2_6_7_2 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_7_2) _lh_mapLookup_Bin_3_6_7_2))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_6_7_3 _lh_mapLookup_arg1_6_7_3 _lh_mapLookup_Bin_4_6_7_3 _lh_mapLookup_Bin_2_6_7_3 _lh_extend_maybe_LH_P2_0_2_6_5 _lh_extend_maybe_LH_P2_1_2_6_5 _lh_extend_maybe_arg1_2_6_7 _lh_extend_maybe_arg3_2_6_7 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_6_7_3 _lh_mapLookup_arg1_6_7_3 _lh_mapLookup_Bin_4_6_7_3 _lh_mapLookup_Bin_2_6_7_3 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_3_1 = _lh_mapLookup_Bin_2_6_7_3 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_6_5 _lh_extend_maybe_LH_P2_1_2_6_5 _lh_extend_maybe_arg1_2_6_7 _lh_extend_maybe_arg3_2_6_7 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_2_6 _lh_extend_maybe_LH_P2_0_2_6_4) _lh_extend_maybe_LH_P2_1_2_6_4) _lh_extend_maybe_arg1_2_6_6) _lh_extend_maybe_arg3_2_6_6))))))))) in
@@ -7520,8 +7811,10 @@ let rec hPiece_lh__d1 _lh_hPiece_arg1_0 _lh_listcomp_fun_ls_t_1_1_2 _lh_listcomp
                                       (fun _lh_mapLookup_Bin_3_6_7_7 _lh_mapLookup_arg1_6_7_7 _lh_mapLookup_Bin_4_6_7_7 _lh_mapLookup_Bin_2_6_7_7 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_7_7) _lh_mapLookup_Bin_3_6_7_7))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_6_7_8 _lh_mapLookup_arg1_6_7_8 _lh_mapLookup_Bin_4_6_7_8 _lh_mapLookup_Bin_2_6_7_8 _lh_extend_maybe_LH_P2_0_2_6_7 _lh_extend_maybe_LH_P2_1_2_6_7 _lh_extend_maybe_arg1_2_6_9 _lh_extend_maybe_arg3_2_6_9 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_6_7_8 _lh_mapLookup_arg1_6_7_8 _lh_mapLookup_Bin_4_6_7_8 _lh_mapLookup_Bin_2_6_7_8 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_3_2 = _lh_mapLookup_Bin_2_6_7_8 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_6_7 _lh_extend_maybe_LH_P2_1_2_6_7 _lh_extend_maybe_arg1_2_6_9 _lh_extend_maybe_arg3_2_6_9 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_2_8 _lh_extend_maybe_LH_P2_0_2_6_6) _lh_extend_maybe_LH_P2_1_2_6_6) _lh_extend_maybe_arg1_2_6_8) _lh_extend_maybe_arg3_2_6_8))))))))) in
@@ -7565,8 +7858,10 @@ let rec hPiece_lh__d1 _lh_hPiece_arg1_0 _lh_listcomp_fun_ls_t_1_1_2 _lh_listcomp
                                       (fun _lh_mapLookup_Bin_3_6_8_2 _lh_mapLookup_arg1_6_8_2 _lh_mapLookup_Bin_4_6_8_2 _lh_mapLookup_Bin_2_6_8_2 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_8_2) _lh_mapLookup_Bin_3_6_8_2))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_6_8_3 _lh_mapLookup_arg1_6_8_3 _lh_mapLookup_Bin_4_6_8_3 _lh_mapLookup_Bin_2_6_8_3 _lh_extend_maybe_LH_P2_0_2_6_9 _lh_extend_maybe_LH_P2_1_2_6_9 _lh_extend_maybe_arg1_2_7_1 _lh_extend_maybe_arg3_2_7_1 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_6_8_3 _lh_mapLookup_arg1_6_8_3 _lh_mapLookup_Bin_4_6_8_3 _lh_mapLookup_Bin_2_6_8_3 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_3_3 = _lh_mapLookup_Bin_2_6_8_3 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_6_9 _lh_extend_maybe_LH_P2_1_2_6_9 _lh_extend_maybe_arg1_2_7_1 _lh_extend_maybe_arg3_2_7_1 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_3_0 _lh_extend_maybe_LH_P2_0_2_6_8) _lh_extend_maybe_LH_P2_1_2_6_8) _lh_extend_maybe_arg1_2_7_0) _lh_extend_maybe_arg3_2_7_0))))))))) in
@@ -7620,8 +7915,10 @@ let rec hPiece_lh__d1 _lh_hPiece_arg1_0 _lh_listcomp_fun_ls_t_1_1_2 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_6_8_7 _lh_mapLookup_arg1_6_8_7 _lh_mapLookup_Bin_4_6_8_7 _lh_mapLookup_Bin_2_6_8_7 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_8_7) _lh_mapLookup_Bin_3_6_8_7))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_6_8_8 _lh_mapLookup_arg1_6_8_8 _lh_mapLookup_Bin_4_6_8_8 _lh_mapLookup_Bin_2_6_8_8 _lh_extend_maybe_LH_P2_0_2_7_1 _lh_extend_maybe_LH_P2_1_2_7_1 _lh_extend_maybe_arg1_2_7_3 _lh_extend_maybe_arg3_2_7_3 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_6_8_8 _lh_mapLookup_arg1_6_8_8 _lh_mapLookup_Bin_4_6_8_8 _lh_mapLookup_Bin_2_6_8_8 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_3_4 = _lh_mapLookup_Bin_2_6_8_8 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_7_1 _lh_extend_maybe_LH_P2_1_2_7_1 _lh_extend_maybe_arg1_2_7_3 _lh_extend_maybe_arg3_2_7_3 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_3_2 _lh_extend_maybe_LH_P2_0_2_7_0) _lh_extend_maybe_LH_P2_1_2_7_0) _lh_extend_maybe_arg1_2_7_2) _lh_extend_maybe_arg3_2_7_2))))))))) in
@@ -7665,8 +7962,10 @@ let rec hPiece_lh__d1 _lh_hPiece_arg1_0 _lh_listcomp_fun_ls_t_1_1_2 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_6_9_2 _lh_mapLookup_arg1_6_9_2 _lh_mapLookup_Bin_4_6_9_2 _lh_mapLookup_Bin_2_6_9_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_9_2) _lh_mapLookup_Bin_3_6_9_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_6_9_3 _lh_mapLookup_arg1_6_9_3 _lh_mapLookup_Bin_4_6_9_3 _lh_mapLookup_Bin_2_6_9_3 _lh_extend_maybe_LH_P2_0_2_7_3 _lh_extend_maybe_LH_P2_1_2_7_3 _lh_extend_maybe_arg1_2_7_5 _lh_extend_maybe_arg3_2_7_5 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_6_9_3 _lh_mapLookup_arg1_6_9_3 _lh_mapLookup_Bin_4_6_9_3 _lh_mapLookup_Bin_2_6_9_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_3_5 = _lh_mapLookup_Bin_2_6_9_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_7_3 _lh_extend_maybe_LH_P2_1_2_7_3 _lh_extend_maybe_arg1_2_7_5 _lh_extend_maybe_arg3_2_7_5 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_3_4 _lh_extend_maybe_LH_P2_0_2_7_2) _lh_extend_maybe_LH_P2_1_2_7_2) _lh_extend_maybe_arg1_2_7_4) _lh_extend_maybe_arg3_2_7_4))))))))) in
@@ -7710,8 +8009,10 @@ let rec hPiece_lh__d1 _lh_hPiece_arg1_0 _lh_listcomp_fun_ls_t_1_1_2 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_6_9_7 _lh_mapLookup_arg1_6_9_7 _lh_mapLookup_Bin_4_6_9_7 _lh_mapLookup_Bin_2_6_9_7 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_6_9_7) _lh_mapLookup_Bin_3_6_9_7))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_6_9_8 _lh_mapLookup_arg1_6_9_8 _lh_mapLookup_Bin_4_6_9_8 _lh_mapLookup_Bin_2_6_9_8 _lh_extend_maybe_LH_P2_0_2_7_5 _lh_extend_maybe_LH_P2_1_2_7_5 _lh_extend_maybe_arg1_2_7_7 _lh_extend_maybe_arg3_2_7_7 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_6_9_8 _lh_mapLookup_arg1_6_9_8 _lh_mapLookup_Bin_4_6_9_8 _lh_mapLookup_Bin_2_6_9_8 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_3_6 = _lh_mapLookup_Bin_2_6_9_8 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_7_5 _lh_extend_maybe_LH_P2_1_2_7_5 _lh_extend_maybe_arg1_2_7_7 _lh_extend_maybe_arg3_2_7_7 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_3_6 _lh_extend_maybe_LH_P2_0_2_7_4) _lh_extend_maybe_LH_P2_1_2_7_4) _lh_extend_maybe_arg1_2_7_6) _lh_extend_maybe_arg3_2_7_6))))))))) in
@@ -7755,8 +8056,10 @@ let rec hPiece_lh__d1 _lh_hPiece_arg1_0 _lh_listcomp_fun_ls_t_1_1_2 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_7_0_2 _lh_mapLookup_arg1_7_0_2 _lh_mapLookup_Bin_4_7_0_2 _lh_mapLookup_Bin_2_7_0_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_0_2) _lh_mapLookup_Bin_3_7_0_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_7_0_3 _lh_mapLookup_arg1_7_0_3 _lh_mapLookup_Bin_4_7_0_3 _lh_mapLookup_Bin_2_7_0_3 _lh_extend_maybe_LH_P2_0_2_7_7 _lh_extend_maybe_LH_P2_1_2_7_7 _lh_extend_maybe_arg1_2_7_9 _lh_extend_maybe_arg3_2_7_9 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_7_0_3 _lh_mapLookup_arg1_7_0_3 _lh_mapLookup_Bin_4_7_0_3 _lh_mapLookup_Bin_2_7_0_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_3_7 = _lh_mapLookup_Bin_2_7_0_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_7_7 _lh_extend_maybe_LH_P2_1_2_7_7 _lh_extend_maybe_arg1_2_7_9 _lh_extend_maybe_arg3_2_7_9 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_3_8 _lh_extend_maybe_LH_P2_0_2_7_6) _lh_extend_maybe_LH_P2_1_2_7_6) _lh_extend_maybe_arg1_2_7_8) _lh_extend_maybe_arg3_2_7_8))))))))) in
@@ -7808,8 +8111,10 @@ let rec hPiece_lh__d1 _lh_hPiece_arg1_0 _lh_listcomp_fun_ls_t_1_1_2 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_7_0_7 _lh_mapLookup_arg1_7_0_7 _lh_mapLookup_Bin_4_7_0_7 _lh_mapLookup_Bin_2_7_0_7 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_0_7) _lh_mapLookup_Bin_3_7_0_7))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_7_0_8 _lh_mapLookup_arg1_7_0_8 _lh_mapLookup_Bin_4_7_0_8 _lh_mapLookup_Bin_2_7_0_8 _lh_extend_maybe_LH_P2_0_2_7_9 _lh_extend_maybe_LH_P2_1_2_7_9 _lh_extend_maybe_arg1_2_8_1 _lh_extend_maybe_arg3_2_8_1 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_7_0_8 _lh_mapLookup_arg1_7_0_8 _lh_mapLookup_Bin_4_7_0_8 _lh_mapLookup_Bin_2_7_0_8 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_3_8 = _lh_mapLookup_Bin_2_7_0_8 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_7_9 _lh_extend_maybe_LH_P2_1_2_7_9 _lh_extend_maybe_arg1_2_8_1 _lh_extend_maybe_arg3_2_8_1 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_4_0 _lh_extend_maybe_LH_P2_0_2_7_8) _lh_extend_maybe_LH_P2_1_2_7_8) _lh_extend_maybe_arg1_2_8_0) _lh_extend_maybe_arg3_2_8_0))))))))) in
@@ -7853,8 +8158,10 @@ let rec hPiece_lh__d1 _lh_hPiece_arg1_0 _lh_listcomp_fun_ls_t_1_1_2 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_7_1_2 _lh_mapLookup_arg1_7_1_2 _lh_mapLookup_Bin_4_7_1_2 _lh_mapLookup_Bin_2_7_1_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_1_2) _lh_mapLookup_Bin_3_7_1_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_7_1_3 _lh_mapLookup_arg1_7_1_3 _lh_mapLookup_Bin_4_7_1_3 _lh_mapLookup_Bin_2_7_1_3 _lh_extend_maybe_LH_P2_0_2_8_1 _lh_extend_maybe_LH_P2_1_2_8_1 _lh_extend_maybe_arg1_2_8_3 _lh_extend_maybe_arg3_2_8_3 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_7_1_3 _lh_mapLookup_arg1_7_1_3 _lh_mapLookup_Bin_4_7_1_3 _lh_mapLookup_Bin_2_7_1_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_3_9 = _lh_mapLookup_Bin_2_7_1_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_8_1 _lh_extend_maybe_LH_P2_1_2_8_1 _lh_extend_maybe_arg1_2_8_3 _lh_extend_maybe_arg3_2_8_3 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_4_2 _lh_extend_maybe_LH_P2_0_2_8_0) _lh_extend_maybe_LH_P2_1_2_8_0) _lh_extend_maybe_arg1_2_8_2) _lh_extend_maybe_arg3_2_8_2))))))))) in
@@ -7898,8 +8205,10 @@ let rec hPiece_lh__d1 _lh_hPiece_arg1_0 _lh_listcomp_fun_ls_t_1_1_2 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_7_1_7 _lh_mapLookup_arg1_7_1_7 _lh_mapLookup_Bin_4_7_1_7 _lh_mapLookup_Bin_2_7_1_7 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_1_7) _lh_mapLookup_Bin_3_7_1_7))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_7_1_8 _lh_mapLookup_arg1_7_1_8 _lh_mapLookup_Bin_4_7_1_8 _lh_mapLookup_Bin_2_7_1_8 _lh_extend_maybe_LH_P2_0_2_8_3 _lh_extend_maybe_LH_P2_1_2_8_3 _lh_extend_maybe_arg1_2_8_5 _lh_extend_maybe_arg3_2_8_5 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_7_1_8 _lh_mapLookup_arg1_7_1_8 _lh_mapLookup_Bin_4_7_1_8 _lh_mapLookup_Bin_2_7_1_8 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_4_0 = _lh_mapLookup_Bin_2_7_1_8 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_8_3 _lh_extend_maybe_LH_P2_1_2_8_3 _lh_extend_maybe_arg1_2_8_5 _lh_extend_maybe_arg3_2_8_5 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_4_4 _lh_extend_maybe_LH_P2_0_2_8_2) _lh_extend_maybe_LH_P2_1_2_8_2) _lh_extend_maybe_arg1_2_8_4) _lh_extend_maybe_arg3_2_8_4))))))))) in
@@ -7943,8 +8252,10 @@ let rec hPiece_lh__d1 _lh_hPiece_arg1_0 _lh_listcomp_fun_ls_t_1_1_2 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_7_2_2 _lh_mapLookup_arg1_7_2_2 _lh_mapLookup_Bin_4_7_2_2 _lh_mapLookup_Bin_2_7_2_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_2_2) _lh_mapLookup_Bin_3_7_2_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_7_2_3 _lh_mapLookup_arg1_7_2_3 _lh_mapLookup_Bin_4_7_2_3 _lh_mapLookup_Bin_2_7_2_3 _lh_extend_maybe_LH_P2_0_2_8_5 _lh_extend_maybe_LH_P2_1_2_8_5 _lh_extend_maybe_arg1_2_8_7 _lh_extend_maybe_arg3_2_8_7 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_7_2_3 _lh_mapLookup_arg1_7_2_3 _lh_mapLookup_Bin_4_7_2_3 _lh_mapLookup_Bin_2_7_2_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_4_1 = _lh_mapLookup_Bin_2_7_2_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_8_5 _lh_extend_maybe_LH_P2_1_2_8_5 _lh_extend_maybe_arg1_2_8_7 _lh_extend_maybe_arg3_2_8_7 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_4_6 _lh_extend_maybe_LH_P2_0_2_8_4) _lh_extend_maybe_LH_P2_1_2_8_4) _lh_extend_maybe_arg1_2_8_6) _lh_extend_maybe_arg3_2_8_6))))))))) in
@@ -7996,8 +8307,10 @@ let rec hPiece_lh__d1 _lh_hPiece_arg1_0 _lh_listcomp_fun_ls_t_1_1_2 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_7_2_7 _lh_mapLookup_arg1_7_2_7 _lh_mapLookup_Bin_4_7_2_7 _lh_mapLookup_Bin_2_7_2_7 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_2_7) _lh_mapLookup_Bin_3_7_2_7))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_7_2_8 _lh_mapLookup_arg1_7_2_8 _lh_mapLookup_Bin_4_7_2_8 _lh_mapLookup_Bin_2_7_2_8 _lh_extend_maybe_LH_P2_0_2_8_7 _lh_extend_maybe_LH_P2_1_2_8_7 _lh_extend_maybe_arg1_2_8_9 _lh_extend_maybe_arg3_2_8_9 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_7_2_8 _lh_mapLookup_arg1_7_2_8 _lh_mapLookup_Bin_4_7_2_8 _lh_mapLookup_Bin_2_7_2_8 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_4_2 = _lh_mapLookup_Bin_2_7_2_8 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_8_7 _lh_extend_maybe_LH_P2_1_2_8_7 _lh_extend_maybe_arg1_2_8_9 _lh_extend_maybe_arg3_2_8_9 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_4_8 _lh_extend_maybe_LH_P2_0_2_8_6) _lh_extend_maybe_LH_P2_1_2_8_6) _lh_extend_maybe_arg1_2_8_8) _lh_extend_maybe_arg3_2_8_8))))))))) in
@@ -8041,8 +8354,10 @@ let rec hPiece_lh__d1 _lh_hPiece_arg1_0 _lh_listcomp_fun_ls_t_1_1_2 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_7_3_2 _lh_mapLookup_arg1_7_3_2 _lh_mapLookup_Bin_4_7_3_2 _lh_mapLookup_Bin_2_7_3_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_3_2) _lh_mapLookup_Bin_3_7_3_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_7_3_3 _lh_mapLookup_arg1_7_3_3 _lh_mapLookup_Bin_4_7_3_3 _lh_mapLookup_Bin_2_7_3_3 _lh_extend_maybe_LH_P2_0_2_8_9 _lh_extend_maybe_LH_P2_1_2_8_9 _lh_extend_maybe_arg1_2_9_1 _lh_extend_maybe_arg3_2_9_1 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_7_3_3 _lh_mapLookup_arg1_7_3_3 _lh_mapLookup_Bin_4_7_3_3 _lh_mapLookup_Bin_2_7_3_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_4_3 = _lh_mapLookup_Bin_2_7_3_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_8_9 _lh_extend_maybe_LH_P2_1_2_8_9 _lh_extend_maybe_arg1_2_9_1 _lh_extend_maybe_arg3_2_9_1 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_5_0 _lh_extend_maybe_LH_P2_0_2_8_8) _lh_extend_maybe_LH_P2_1_2_8_8) _lh_extend_maybe_arg1_2_9_0) _lh_extend_maybe_arg3_2_9_0))))))))) in
@@ -8086,8 +8401,10 @@ let rec hPiece_lh__d1 _lh_hPiece_arg1_0 _lh_listcomp_fun_ls_t_1_1_2 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_7_3_7 _lh_mapLookup_arg1_7_3_7 _lh_mapLookup_Bin_4_7_3_7 _lh_mapLookup_Bin_2_7_3_7 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_3_7) _lh_mapLookup_Bin_3_7_3_7))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_7_3_8 _lh_mapLookup_arg1_7_3_8 _lh_mapLookup_Bin_4_7_3_8 _lh_mapLookup_Bin_2_7_3_8 _lh_extend_maybe_LH_P2_0_2_9_1 _lh_extend_maybe_LH_P2_1_2_9_1 _lh_extend_maybe_arg1_2_9_3 _lh_extend_maybe_arg3_2_9_3 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_7_3_8 _lh_mapLookup_arg1_7_3_8 _lh_mapLookup_Bin_4_7_3_8 _lh_mapLookup_Bin_2_7_3_8 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_4_4 = _lh_mapLookup_Bin_2_7_3_8 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_9_1 _lh_extend_maybe_LH_P2_1_2_9_1 _lh_extend_maybe_arg1_2_9_3 _lh_extend_maybe_arg3_2_9_3 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_5_2 _lh_extend_maybe_LH_P2_0_2_9_0) _lh_extend_maybe_LH_P2_1_2_9_0) _lh_extend_maybe_arg1_2_9_2) _lh_extend_maybe_arg3_2_9_2))))))))) in
@@ -8131,8 +8448,10 @@ let rec hPiece_lh__d1 _lh_hPiece_arg1_0 _lh_listcomp_fun_ls_t_1_1_2 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_7_4_2 _lh_mapLookup_arg1_7_4_2 _lh_mapLookup_Bin_4_7_4_2 _lh_mapLookup_Bin_2_7_4_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_4_2) _lh_mapLookup_Bin_3_7_4_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_7_4_3 _lh_mapLookup_arg1_7_4_3 _lh_mapLookup_Bin_4_7_4_3 _lh_mapLookup_Bin_2_7_4_3 _lh_extend_maybe_LH_P2_0_2_9_3 _lh_extend_maybe_LH_P2_1_2_9_3 _lh_extend_maybe_arg1_2_9_5 _lh_extend_maybe_arg3_2_9_5 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_7_4_3 _lh_mapLookup_arg1_7_4_3 _lh_mapLookup_Bin_4_7_4_3 _lh_mapLookup_Bin_2_7_4_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_4_5 = _lh_mapLookup_Bin_2_7_4_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_2_9_3 _lh_extend_maybe_LH_P2_1_2_9_3 _lh_extend_maybe_arg1_2_9_5 _lh_extend_maybe_arg3_2_9_5 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_5_4 _lh_extend_maybe_LH_P2_0_2_9_2) _lh_extend_maybe_LH_P2_1_2_9_2) _lh_extend_maybe_arg1_2_9_4) _lh_extend_maybe_arg3_2_9_4))))))))) in
@@ -8198,8 +8517,10 @@ let rec lPiece_lh__d1 _lh_lPiece_arg1_0 _lh_listcomp_fun_ls_t_1_2_3 _lh_listcomp
                                       (fun _lh_mapLookup_Bin_3_7_4_7 _lh_mapLookup_arg1_7_4_7 _lh_mapLookup_Bin_4_7_4_7 _lh_mapLookup_Bin_2_7_4_7 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_4_7) _lh_mapLookup_Bin_3_7_4_7))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_7_4_8 _lh_mapLookup_arg1_7_4_8 _lh_mapLookup_Bin_4_7_4_8 _lh_mapLookup_Bin_2_7_4_8 _lh_extend_maybe_LH_P2_0_2_9_5 _lh_extend_maybe_LH_P2_1_2_9_5 _lh_extend_maybe_arg1_2_9_7 _lh_extend_maybe_arg3_2_9_7 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_7_4_8 _lh_mapLookup_arg1_7_4_8 _lh_mapLookup_Bin_4_7_4_8 _lh_mapLookup_Bin_2_7_4_8 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_4_6 = _lh_mapLookup_Bin_2_7_4_8 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_9_5 _lh_extend_maybe_LH_P2_1_2_9_5 _lh_extend_maybe_arg1_2_9_7 _lh_extend_maybe_arg3_2_9_7 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_5_7 _lh_extend_maybe_LH_P2_0_2_9_4) _lh_extend_maybe_LH_P2_1_2_9_4) _lh_extend_maybe_arg1_2_9_6) _lh_extend_maybe_arg3_2_9_6))))))))) in
@@ -8243,8 +8564,10 @@ let rec lPiece_lh__d1 _lh_lPiece_arg1_0 _lh_listcomp_fun_ls_t_1_2_3 _lh_listcomp
                                       (fun _lh_mapLookup_Bin_3_7_5_2 _lh_mapLookup_arg1_7_5_2 _lh_mapLookup_Bin_4_7_5_2 _lh_mapLookup_Bin_2_7_5_2 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_5_2) _lh_mapLookup_Bin_3_7_5_2))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_7_5_3 _lh_mapLookup_arg1_7_5_3 _lh_mapLookup_Bin_4_7_5_3 _lh_mapLookup_Bin_2_7_5_3 _lh_extend_maybe_LH_P2_0_2_9_7 _lh_extend_maybe_LH_P2_1_2_9_7 _lh_extend_maybe_arg1_2_9_9 _lh_extend_maybe_arg3_2_9_9 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_7_5_3 _lh_mapLookup_arg1_7_5_3 _lh_mapLookup_Bin_4_7_5_3 _lh_mapLookup_Bin_2_7_5_3 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_4_7 = _lh_mapLookup_Bin_2_7_5_3 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_9_7 _lh_extend_maybe_LH_P2_1_2_9_7 _lh_extend_maybe_arg1_2_9_9 _lh_extend_maybe_arg3_2_9_9 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_5_9 _lh_extend_maybe_LH_P2_0_2_9_6) _lh_extend_maybe_LH_P2_1_2_9_6) _lh_extend_maybe_arg1_2_9_8) _lh_extend_maybe_arg3_2_9_8))))))))) in
@@ -8288,8 +8611,10 @@ let rec lPiece_lh__d1 _lh_lPiece_arg1_0 _lh_listcomp_fun_ls_t_1_2_3 _lh_listcomp
                                       (fun _lh_mapLookup_Bin_3_7_5_7 _lh_mapLookup_arg1_7_5_7 _lh_mapLookup_Bin_4_7_5_7 _lh_mapLookup_Bin_2_7_5_7 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_5_7) _lh_mapLookup_Bin_3_7_5_7))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_7_5_8 _lh_mapLookup_arg1_7_5_8 _lh_mapLookup_Bin_4_7_5_8 _lh_mapLookup_Bin_2_7_5_8 _lh_extend_maybe_LH_P2_0_2_9_9 _lh_extend_maybe_LH_P2_1_2_9_9 _lh_extend_maybe_arg1_3_0_1 _lh_extend_maybe_arg3_3_0_1 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_7_5_8 _lh_mapLookup_arg1_7_5_8 _lh_mapLookup_Bin_4_7_5_8 _lh_mapLookup_Bin_2_7_5_8 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_4_8 = _lh_mapLookup_Bin_2_7_5_8 in
+                                          (fun _lh_extend_maybe_LH_P2_0_2_9_9 _lh_extend_maybe_LH_P2_1_2_9_9 _lh_extend_maybe_arg1_3_0_1 _lh_extend_maybe_arg3_3_0_1 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_6_1 _lh_extend_maybe_LH_P2_0_2_9_8) _lh_extend_maybe_LH_P2_1_2_9_8) _lh_extend_maybe_arg1_3_0_0) _lh_extend_maybe_arg3_3_0_0))))))))) in
@@ -8333,8 +8658,10 @@ let rec lPiece_lh__d1 _lh_lPiece_arg1_0 _lh_listcomp_fun_ls_t_1_2_3 _lh_listcomp
                                       (fun _lh_mapLookup_Bin_3_7_6_2 _lh_mapLookup_arg1_7_6_2 _lh_mapLookup_Bin_4_7_6_2 _lh_mapLookup_Bin_2_7_6_2 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_6_2) _lh_mapLookup_Bin_3_7_6_2))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_7_6_3 _lh_mapLookup_arg1_7_6_3 _lh_mapLookup_Bin_4_7_6_3 _lh_mapLookup_Bin_2_7_6_3 _lh_extend_maybe_LH_P2_0_3_0_1 _lh_extend_maybe_LH_P2_1_3_0_1 _lh_extend_maybe_arg1_3_0_3 _lh_extend_maybe_arg3_3_0_3 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_7_6_3 _lh_mapLookup_arg1_7_6_3 _lh_mapLookup_Bin_4_7_6_3 _lh_mapLookup_Bin_2_7_6_3 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_4_9 = _lh_mapLookup_Bin_2_7_6_3 in
+                                          (fun _lh_extend_maybe_LH_P2_0_3_0_1 _lh_extend_maybe_LH_P2_1_3_0_1 _lh_extend_maybe_arg1_3_0_3 _lh_extend_maybe_arg3_3_0_3 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_6_3 _lh_extend_maybe_LH_P2_0_3_0_0) _lh_extend_maybe_LH_P2_1_3_0_0) _lh_extend_maybe_arg1_3_0_2) _lh_extend_maybe_arg3_3_0_2))))))))) in
@@ -8386,8 +8713,10 @@ let rec lPiece_lh__d1 _lh_lPiece_arg1_0 _lh_listcomp_fun_ls_t_1_2_3 _lh_listcomp
                                       (fun _lh_mapLookup_Bin_3_7_6_7 _lh_mapLookup_arg1_7_6_7 _lh_mapLookup_Bin_4_7_6_7 _lh_mapLookup_Bin_2_7_6_7 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_6_7) _lh_mapLookup_Bin_3_7_6_7))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_7_6_8 _lh_mapLookup_arg1_7_6_8 _lh_mapLookup_Bin_4_7_6_8 _lh_mapLookup_Bin_2_7_6_8 _lh_extend_maybe_LH_P2_0_3_0_3 _lh_extend_maybe_LH_P2_1_3_0_3 _lh_extend_maybe_arg1_3_0_5 _lh_extend_maybe_arg3_3_0_5 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_7_6_8 _lh_mapLookup_arg1_7_6_8 _lh_mapLookup_Bin_4_7_6_8 _lh_mapLookup_Bin_2_7_6_8 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_5_0 = _lh_mapLookup_Bin_2_7_6_8 in
+                                          (fun _lh_extend_maybe_LH_P2_0_3_0_3 _lh_extend_maybe_LH_P2_1_3_0_3 _lh_extend_maybe_arg1_3_0_5 _lh_extend_maybe_arg3_3_0_5 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_6_5 _lh_extend_maybe_LH_P2_0_3_0_2) _lh_extend_maybe_LH_P2_1_3_0_2) _lh_extend_maybe_arg1_3_0_4) _lh_extend_maybe_arg3_3_0_4))))))))) in
@@ -8431,8 +8760,10 @@ let rec lPiece_lh__d1 _lh_lPiece_arg1_0 _lh_listcomp_fun_ls_t_1_2_3 _lh_listcomp
                                       (fun _lh_mapLookup_Bin_3_7_7_2 _lh_mapLookup_arg1_7_7_2 _lh_mapLookup_Bin_4_7_7_2 _lh_mapLookup_Bin_2_7_7_2 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_7_2) _lh_mapLookup_Bin_3_7_7_2))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_7_7_3 _lh_mapLookup_arg1_7_7_3 _lh_mapLookup_Bin_4_7_7_3 _lh_mapLookup_Bin_2_7_7_3 _lh_extend_maybe_LH_P2_0_3_0_5 _lh_extend_maybe_LH_P2_1_3_0_5 _lh_extend_maybe_arg1_3_0_7 _lh_extend_maybe_arg3_3_0_7 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_7_7_3 _lh_mapLookup_arg1_7_7_3 _lh_mapLookup_Bin_4_7_7_3 _lh_mapLookup_Bin_2_7_7_3 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_5_1 = _lh_mapLookup_Bin_2_7_7_3 in
+                                          (fun _lh_extend_maybe_LH_P2_0_3_0_5 _lh_extend_maybe_LH_P2_1_3_0_5 _lh_extend_maybe_arg1_3_0_7 _lh_extend_maybe_arg3_3_0_7 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_6_7 _lh_extend_maybe_LH_P2_0_3_0_4) _lh_extend_maybe_LH_P2_1_3_0_4) _lh_extend_maybe_arg1_3_0_6) _lh_extend_maybe_arg3_3_0_6))))))))) in
@@ -8476,8 +8807,10 @@ let rec lPiece_lh__d1 _lh_lPiece_arg1_0 _lh_listcomp_fun_ls_t_1_2_3 _lh_listcomp
                                       (fun _lh_mapLookup_Bin_3_7_7_7 _lh_mapLookup_arg1_7_7_7 _lh_mapLookup_Bin_4_7_7_7 _lh_mapLookup_Bin_2_7_7_7 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_7_7) _lh_mapLookup_Bin_3_7_7_7))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_7_7_8 _lh_mapLookup_arg1_7_7_8 _lh_mapLookup_Bin_4_7_7_8 _lh_mapLookup_Bin_2_7_7_8 _lh_extend_maybe_LH_P2_0_3_0_7 _lh_extend_maybe_LH_P2_1_3_0_7 _lh_extend_maybe_arg1_3_0_9 _lh_extend_maybe_arg3_3_0_9 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_7_7_8 _lh_mapLookup_arg1_7_7_8 _lh_mapLookup_Bin_4_7_7_8 _lh_mapLookup_Bin_2_7_7_8 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_5_2 = _lh_mapLookup_Bin_2_7_7_8 in
+                                          (fun _lh_extend_maybe_LH_P2_0_3_0_7 _lh_extend_maybe_LH_P2_1_3_0_7 _lh_extend_maybe_arg1_3_0_9 _lh_extend_maybe_arg3_3_0_9 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_6_9 _lh_extend_maybe_LH_P2_0_3_0_6) _lh_extend_maybe_LH_P2_1_3_0_6) _lh_extend_maybe_arg1_3_0_8) _lh_extend_maybe_arg3_3_0_8))))))))) in
@@ -8521,8 +8854,10 @@ let rec lPiece_lh__d1 _lh_lPiece_arg1_0 _lh_listcomp_fun_ls_t_1_2_3 _lh_listcomp
                                       (fun _lh_mapLookup_Bin_3_7_8_2 _lh_mapLookup_arg1_7_8_2 _lh_mapLookup_Bin_4_7_8_2 _lh_mapLookup_Bin_2_7_8_2 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_8_2) _lh_mapLookup_Bin_3_7_8_2))
                                     else
-                                      (fun _lh_mapLookup_Bin_3_7_8_3 _lh_mapLookup_arg1_7_8_3 _lh_mapLookup_Bin_4_7_8_3 _lh_mapLookup_Bin_2_7_8_3 _lh_extend_maybe_LH_P2_0_3_0_9 _lh_extend_maybe_LH_P2_1_3_0_9 _lh_extend_maybe_arg1_3_1_1 _lh_extend_maybe_arg3_3_1_1 -> 
-                                        (`Nothing))))))
+                                      (fun _lh_mapLookup_Bin_3_7_8_3 _lh_mapLookup_arg1_7_8_3 _lh_mapLookup_Bin_4_7_8_3 _lh_mapLookup_Bin_2_7_8_3 -> 
+                                        (let rec _lh_extend_maybe_Just_0_1_5_3 = _lh_mapLookup_Bin_2_7_8_3 in
+                                          (fun _lh_extend_maybe_LH_P2_0_3_0_9 _lh_extend_maybe_LH_P2_1_3_0_9 _lh_extend_maybe_arg1_3_1_1 _lh_extend_maybe_arg3_3_1_1 -> 
+                                            (`Nothing))))))))
                             | _ -> 
                               (failwith "error")))))) in
                       ((((_lh_matchIdent_3_7_1 _lh_extend_maybe_LH_P2_0_3_0_8) _lh_extend_maybe_LH_P2_1_3_0_8) _lh_extend_maybe_arg1_3_1_0) _lh_extend_maybe_arg3_3_1_0))))))))) in
@@ -8576,8 +8911,10 @@ let rec lPiece_lh__d1 _lh_lPiece_arg1_0 _lh_listcomp_fun_ls_t_1_2_3 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_7_8_7 _lh_mapLookup_arg1_7_8_7 _lh_mapLookup_Bin_4_7_8_7 _lh_mapLookup_Bin_2_7_8_7 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_8_7) _lh_mapLookup_Bin_3_7_8_7))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_7_8_8 _lh_mapLookup_arg1_7_8_8 _lh_mapLookup_Bin_4_7_8_8 _lh_mapLookup_Bin_2_7_8_8 _lh_extend_maybe_LH_P2_0_3_1_1 _lh_extend_maybe_LH_P2_1_3_1_1 _lh_extend_maybe_arg1_3_1_3 _lh_extend_maybe_arg3_3_1_3 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_7_8_8 _lh_mapLookup_arg1_7_8_8 _lh_mapLookup_Bin_4_7_8_8 _lh_mapLookup_Bin_2_7_8_8 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_5_4 = _lh_mapLookup_Bin_2_7_8_8 in
+                                            (fun _lh_extend_maybe_LH_P2_0_3_1_1 _lh_extend_maybe_LH_P2_1_3_1_1 _lh_extend_maybe_arg1_3_1_3 _lh_extend_maybe_arg3_3_1_3 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_7_3 _lh_extend_maybe_LH_P2_0_3_1_0) _lh_extend_maybe_LH_P2_1_3_1_0) _lh_extend_maybe_arg1_3_1_2) _lh_extend_maybe_arg3_3_1_2))))))))) in
@@ -8621,8 +8958,10 @@ let rec lPiece_lh__d1 _lh_lPiece_arg1_0 _lh_listcomp_fun_ls_t_1_2_3 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_7_9_2 _lh_mapLookup_arg1_7_9_2 _lh_mapLookup_Bin_4_7_9_2 _lh_mapLookup_Bin_2_7_9_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_9_2) _lh_mapLookup_Bin_3_7_9_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_7_9_3 _lh_mapLookup_arg1_7_9_3 _lh_mapLookup_Bin_4_7_9_3 _lh_mapLookup_Bin_2_7_9_3 _lh_extend_maybe_LH_P2_0_3_1_3 _lh_extend_maybe_LH_P2_1_3_1_3 _lh_extend_maybe_arg1_3_1_5 _lh_extend_maybe_arg3_3_1_5 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_7_9_3 _lh_mapLookup_arg1_7_9_3 _lh_mapLookup_Bin_4_7_9_3 _lh_mapLookup_Bin_2_7_9_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_5_5 = _lh_mapLookup_Bin_2_7_9_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_3_1_3 _lh_extend_maybe_LH_P2_1_3_1_3 _lh_extend_maybe_arg1_3_1_5 _lh_extend_maybe_arg3_3_1_5 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_7_5 _lh_extend_maybe_LH_P2_0_3_1_2) _lh_extend_maybe_LH_P2_1_3_1_2) _lh_extend_maybe_arg1_3_1_4) _lh_extend_maybe_arg3_3_1_4))))))))) in
@@ -8666,8 +9005,10 @@ let rec lPiece_lh__d1 _lh_lPiece_arg1_0 _lh_listcomp_fun_ls_t_1_2_3 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_7_9_7 _lh_mapLookup_arg1_7_9_7 _lh_mapLookup_Bin_4_7_9_7 _lh_mapLookup_Bin_2_7_9_7 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_7_9_7) _lh_mapLookup_Bin_3_7_9_7))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_7_9_8 _lh_mapLookup_arg1_7_9_8 _lh_mapLookup_Bin_4_7_9_8 _lh_mapLookup_Bin_2_7_9_8 _lh_extend_maybe_LH_P2_0_3_1_5 _lh_extend_maybe_LH_P2_1_3_1_5 _lh_extend_maybe_arg1_3_1_7 _lh_extend_maybe_arg3_3_1_7 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_7_9_8 _lh_mapLookup_arg1_7_9_8 _lh_mapLookup_Bin_4_7_9_8 _lh_mapLookup_Bin_2_7_9_8 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_5_6 = _lh_mapLookup_Bin_2_7_9_8 in
+                                            (fun _lh_extend_maybe_LH_P2_0_3_1_5 _lh_extend_maybe_LH_P2_1_3_1_5 _lh_extend_maybe_arg1_3_1_7 _lh_extend_maybe_arg3_3_1_7 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_7_7 _lh_extend_maybe_LH_P2_0_3_1_4) _lh_extend_maybe_LH_P2_1_3_1_4) _lh_extend_maybe_arg1_3_1_6) _lh_extend_maybe_arg3_3_1_6))))))))) in
@@ -8711,8 +9052,10 @@ let rec lPiece_lh__d1 _lh_lPiece_arg1_0 _lh_listcomp_fun_ls_t_1_2_3 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_8_0_2 _lh_mapLookup_arg1_8_0_2 _lh_mapLookup_Bin_4_8_0_2 _lh_mapLookup_Bin_2_8_0_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_8_0_2) _lh_mapLookup_Bin_3_8_0_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_8_0_3 _lh_mapLookup_arg1_8_0_3 _lh_mapLookup_Bin_4_8_0_3 _lh_mapLookup_Bin_2_8_0_3 _lh_extend_maybe_LH_P2_0_3_1_7 _lh_extend_maybe_LH_P2_1_3_1_7 _lh_extend_maybe_arg1_3_1_9 _lh_extend_maybe_arg3_3_1_9 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_8_0_3 _lh_mapLookup_arg1_8_0_3 _lh_mapLookup_Bin_4_8_0_3 _lh_mapLookup_Bin_2_8_0_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_5_7 = _lh_mapLookup_Bin_2_8_0_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_3_1_7 _lh_extend_maybe_LH_P2_1_3_1_7 _lh_extend_maybe_arg1_3_1_9 _lh_extend_maybe_arg3_3_1_9 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_7_9 _lh_extend_maybe_LH_P2_0_3_1_6) _lh_extend_maybe_LH_P2_1_3_1_6) _lh_extend_maybe_arg1_3_1_8) _lh_extend_maybe_arg3_3_1_8))))))))) in
@@ -8764,8 +9107,10 @@ let rec lPiece_lh__d1 _lh_lPiece_arg1_0 _lh_listcomp_fun_ls_t_1_2_3 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_8_0_7 _lh_mapLookup_arg1_8_0_7 _lh_mapLookup_Bin_4_8_0_7 _lh_mapLookup_Bin_2_8_0_7 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_8_0_7) _lh_mapLookup_Bin_3_8_0_7))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_8_0_8 _lh_mapLookup_arg1_8_0_8 _lh_mapLookup_Bin_4_8_0_8 _lh_mapLookup_Bin_2_8_0_8 _lh_extend_maybe_LH_P2_0_3_1_9 _lh_extend_maybe_LH_P2_1_3_1_9 _lh_extend_maybe_arg1_3_2_1 _lh_extend_maybe_arg3_3_2_1 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_8_0_8 _lh_mapLookup_arg1_8_0_8 _lh_mapLookup_Bin_4_8_0_8 _lh_mapLookup_Bin_2_8_0_8 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_5_8 = _lh_mapLookup_Bin_2_8_0_8 in
+                                            (fun _lh_extend_maybe_LH_P2_0_3_1_9 _lh_extend_maybe_LH_P2_1_3_1_9 _lh_extend_maybe_arg1_3_2_1 _lh_extend_maybe_arg3_3_2_1 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_8_1 _lh_extend_maybe_LH_P2_0_3_1_8) _lh_extend_maybe_LH_P2_1_3_1_8) _lh_extend_maybe_arg1_3_2_0) _lh_extend_maybe_arg3_3_2_0))))))))) in
@@ -8809,8 +9154,10 @@ let rec lPiece_lh__d1 _lh_lPiece_arg1_0 _lh_listcomp_fun_ls_t_1_2_3 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_8_1_2 _lh_mapLookup_arg1_8_1_2 _lh_mapLookup_Bin_4_8_1_2 _lh_mapLookup_Bin_2_8_1_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_8_1_2) _lh_mapLookup_Bin_3_8_1_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_8_1_3 _lh_mapLookup_arg1_8_1_3 _lh_mapLookup_Bin_4_8_1_3 _lh_mapLookup_Bin_2_8_1_3 _lh_extend_maybe_LH_P2_0_3_2_1 _lh_extend_maybe_LH_P2_1_3_2_1 _lh_extend_maybe_arg1_3_2_3 _lh_extend_maybe_arg3_3_2_3 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_8_1_3 _lh_mapLookup_arg1_8_1_3 _lh_mapLookup_Bin_4_8_1_3 _lh_mapLookup_Bin_2_8_1_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_5_9 = _lh_mapLookup_Bin_2_8_1_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_3_2_1 _lh_extend_maybe_LH_P2_1_3_2_1 _lh_extend_maybe_arg1_3_2_3 _lh_extend_maybe_arg3_3_2_3 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_8_3 _lh_extend_maybe_LH_P2_0_3_2_0) _lh_extend_maybe_LH_P2_1_3_2_0) _lh_extend_maybe_arg1_3_2_2) _lh_extend_maybe_arg3_3_2_2))))))))) in
@@ -8854,8 +9201,10 @@ let rec lPiece_lh__d1 _lh_lPiece_arg1_0 _lh_listcomp_fun_ls_t_1_2_3 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_8_1_7 _lh_mapLookup_arg1_8_1_7 _lh_mapLookup_Bin_4_8_1_7 _lh_mapLookup_Bin_2_8_1_7 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_8_1_7) _lh_mapLookup_Bin_3_8_1_7))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_8_1_8 _lh_mapLookup_arg1_8_1_8 _lh_mapLookup_Bin_4_8_1_8 _lh_mapLookup_Bin_2_8_1_8 _lh_extend_maybe_LH_P2_0_3_2_3 _lh_extend_maybe_LH_P2_1_3_2_3 _lh_extend_maybe_arg1_3_2_5 _lh_extend_maybe_arg3_3_2_5 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_8_1_8 _lh_mapLookup_arg1_8_1_8 _lh_mapLookup_Bin_4_8_1_8 _lh_mapLookup_Bin_2_8_1_8 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_6_0 = _lh_mapLookup_Bin_2_8_1_8 in
+                                            (fun _lh_extend_maybe_LH_P2_0_3_2_3 _lh_extend_maybe_LH_P2_1_3_2_3 _lh_extend_maybe_arg1_3_2_5 _lh_extend_maybe_arg3_3_2_5 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_8_5 _lh_extend_maybe_LH_P2_0_3_2_2) _lh_extend_maybe_LH_P2_1_3_2_2) _lh_extend_maybe_arg1_3_2_4) _lh_extend_maybe_arg3_3_2_4))))))))) in
@@ -8899,8 +9248,10 @@ let rec lPiece_lh__d1 _lh_lPiece_arg1_0 _lh_listcomp_fun_ls_t_1_2_3 _lh_listcomp
                                         (fun _lh_mapLookup_Bin_3_8_2_2 _lh_mapLookup_arg1_8_2_2 _lh_mapLookup_Bin_4_8_2_2 _lh_mapLookup_Bin_2_8_2_2 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_8_2_2) _lh_mapLookup_Bin_3_8_2_2))
                                       else
-                                        (fun _lh_mapLookup_Bin_3_8_2_3 _lh_mapLookup_arg1_8_2_3 _lh_mapLookup_Bin_4_8_2_3 _lh_mapLookup_Bin_2_8_2_3 _lh_extend_maybe_LH_P2_0_3_2_5 _lh_extend_maybe_LH_P2_1_3_2_5 _lh_extend_maybe_arg1_3_2_7 _lh_extend_maybe_arg3_3_2_7 -> 
-                                          (`Nothing))))))
+                                        (fun _lh_mapLookup_Bin_3_8_2_3 _lh_mapLookup_arg1_8_2_3 _lh_mapLookup_Bin_4_8_2_3 _lh_mapLookup_Bin_2_8_2_3 -> 
+                                          (let rec _lh_extend_maybe_Just_0_1_6_1 = _lh_mapLookup_Bin_2_8_2_3 in
+                                            (fun _lh_extend_maybe_LH_P2_0_3_2_5 _lh_extend_maybe_LH_P2_1_3_2_5 _lh_extend_maybe_arg1_3_2_7 _lh_extend_maybe_arg3_3_2_7 -> 
+                                              (`Nothing))))))))
                               | _ -> 
                                 (failwith "error")))))) in
                         ((((_lh_matchIdent_3_8_7 _lh_extend_maybe_LH_P2_0_3_2_4) _lh_extend_maybe_LH_P2_1_3_2_4) _lh_extend_maybe_arg1_3_2_6) _lh_extend_maybe_arg3_3_2_6))))))))) in
@@ -8989,41 +9340,43 @@ insert_lh__d1 _lh_insert_arg1_1_8 _lh_insert_arg2_1_8 _lh_insert_arg3_3 =
                   (let rec _lh_singleR_Bin_3_6 = _lh_rotateR_Bin_3_6 in
                     (let rec _lh_singleR_Bin_2_6 = _lh_rotateR_Bin_2_6 in
                       (let rec _lh_singleR_Bin_1_6 = _lh_rotateR_Bin_1_6 in
-                        (fun _lh_singleR_arg1_6 _lh_singleR_arg2_6 _lh_singleR_arg4_6 -> 
-                          (let rec size_2_2 = (fun p_2_7 -> 
-                            (let rec _lh_matchIdent_2_9_2 = p_2_7 in
-                              (match _lh_matchIdent_2_9_2 with
-                                | `Tip -> 
-                                  0
-                                | `Bin(_lh_singleR_Bin_0_3, _lh_singleR_Bin_1_7, _lh_singleR_Bin_2_7, _lh_singleR_Bin_3_7, _lh_singleR_Bin_4_7) -> 
-                                  _lh_singleR_Bin_0_3
-                                | _ -> 
-                                  (failwith "error")))) in
-                            (let rec bin_1_2 = (fun k_1_6 x_1_5 l_1_2 r_1_3 -> 
-                              (`Bin((((size_2_2 l_1_2) + (size_2_2 r_1_3)) + 1), k_1_6, x_1_5, l_1_2, r_1_3))) in
-                              ((((bin_1_2 _lh_singleR_Bin_1_6) _lh_singleR_Bin_2_6) _lh_singleR_Bin_3_6) ((((bin_1_2 _lh_singleR_arg1_6) _lh_singleR_arg2_6) _lh_singleR_Bin_4_6) _lh_singleR_arg4_6)))))))))) _lh_rotateR_arg4_3)
+                        (let rec _lh_singleR_Bin_0_6 = _lh_rotateR_Bin_0_6 in
+                          (fun _lh_singleR_arg1_6 _lh_singleR_arg2_6 _lh_singleR_arg4_6 -> 
+                            (let rec size_2_2 = (fun p_2_7 -> 
+                              (let rec _lh_matchIdent_2_9_2 = p_2_7 in
+                                (match _lh_matchIdent_2_9_2 with
+                                  | `Tip -> 
+                                    0
+                                  | `Bin(_lh_singleR_Bin_0_7, _lh_singleR_Bin_1_7, _lh_singleR_Bin_2_7, _lh_singleR_Bin_3_7, _lh_singleR_Bin_4_7) -> 
+                                    _lh_singleR_Bin_0_7
+                                  | _ -> 
+                                    (failwith "error")))) in
+                              (let rec bin_1_2 = (fun k_1_6 x_1_5 l_1_2 r_1_3 -> 
+                                (`Bin((((size_2_2 l_1_2) + (size_2_2 r_1_3)) + 1), k_1_6, x_1_5, l_1_2, r_1_3))) in
+                                ((((bin_1_2 _lh_singleR_Bin_1_6) _lh_singleR_Bin_2_6) _lh_singleR_Bin_3_6) ((((bin_1_2 _lh_singleR_arg1_6) _lh_singleR_arg2_6) _lh_singleR_Bin_4_6) _lh_singleR_arg4_6))))))))))) _lh_rotateR_arg4_3)
               else
                 ((((doubleR_3 _lh_rotateR_arg1_3) _lh_rotateR_arg2_3) (let rec _lh_doubleR_Bin_4_9 = _lh_rotateR_Bin_4_6 in
                   (let rec _lh_doubleR_Bin_3_9 = _lh_rotateR_Bin_3_6 in
                     (let rec _lh_doubleR_Bin_2_9 = _lh_rotateR_Bin_2_6 in
                       (let rec _lh_doubleR_Bin_1_9 = _lh_rotateR_Bin_1_6 in
-                        (fun _lh_doubleR_arg1_6 _lh_doubleR_arg2_6 _lh_doubleR_arg4_6 -> 
-                          (match _lh_doubleR_Bin_4_9 with
-                            | `Bin(_lh_doubleR_Bin_0_6, _lh_doubleR_Bin_1_1_0, _lh_doubleR_Bin_2_1_0, _lh_doubleR_Bin_3_1_0, _lh_doubleR_Bin_4_1_0) -> 
-                              (let rec size_2_3 = (fun p_2_8 -> 
-                                (let rec _lh_matchIdent_2_9_3 = p_2_8 in
-                                  (match _lh_matchIdent_2_9_3 with
-                                    | `Tip -> 
-                                      0
-                                    | `Bin(_lh_doubleR_Bin_0_7, _lh_doubleR_Bin_1_1_1, _lh_doubleR_Bin_2_1_1, _lh_doubleR_Bin_3_1_1, _lh_doubleR_Bin_4_1_1) -> 
-                                      _lh_doubleR_Bin_0_7
-                                    | _ -> 
-                                      (failwith "error")))) in
-                                (let rec bin_1_3 = (fun k_1_7 x_1_6 l_1_3 r_1_4 -> 
-                                  (`Bin((((size_2_3 l_1_3) + (size_2_3 r_1_4)) + 1), k_1_7, x_1_6, l_1_3, r_1_4))) in
-                                  ((((bin_1_3 _lh_doubleR_Bin_1_1_0) _lh_doubleR_Bin_2_1_0) ((((bin_1_3 _lh_doubleR_Bin_1_9) _lh_doubleR_Bin_2_9) _lh_doubleR_Bin_3_9) _lh_doubleR_Bin_3_1_0)) ((((bin_1_3 _lh_doubleR_arg1_6) _lh_doubleR_arg2_6) _lh_doubleR_Bin_4_1_0) _lh_doubleR_arg4_6))))
-                            | _ -> 
-                              ((failwith "error") (`LH_C('d', (`LH_C('o', (`LH_C('u', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C('R', (`LH_N))))))))))))))))))))))) _lh_rotateR_arg4_3)))
+                        (let rec _lh_doubleR_Bin_0_9 = _lh_rotateR_Bin_0_6 in
+                          (fun _lh_doubleR_arg1_6 _lh_doubleR_arg2_6 _lh_doubleR_arg4_6 -> 
+                            (match _lh_doubleR_Bin_4_9 with
+                              | `Bin(_lh_doubleR_Bin_0_1_0, _lh_doubleR_Bin_1_1_0, _lh_doubleR_Bin_2_1_0, _lh_doubleR_Bin_3_1_0, _lh_doubleR_Bin_4_1_0) -> 
+                                (let rec size_2_3 = (fun p_2_8 -> 
+                                  (let rec _lh_matchIdent_2_9_3 = p_2_8 in
+                                    (match _lh_matchIdent_2_9_3 with
+                                      | `Tip -> 
+                                        0
+                                      | `Bin(_lh_doubleR_Bin_0_1_1, _lh_doubleR_Bin_1_1_1, _lh_doubleR_Bin_2_1_1, _lh_doubleR_Bin_3_1_1, _lh_doubleR_Bin_4_1_1) -> 
+                                        _lh_doubleR_Bin_0_1_1
+                                      | _ -> 
+                                        (failwith "error")))) in
+                                  (let rec bin_1_3 = (fun k_1_7 x_1_6 l_1_3 r_1_4 -> 
+                                    (`Bin((((size_2_3 l_1_3) + (size_2_3 r_1_4)) + 1), k_1_7, x_1_6, l_1_3, r_1_4))) in
+                                    ((((bin_1_3 _lh_doubleR_Bin_1_1_0) _lh_doubleR_Bin_2_1_0) ((((bin_1_3 _lh_doubleR_Bin_1_9) _lh_doubleR_Bin_2_9) _lh_doubleR_Bin_3_9) _lh_doubleR_Bin_3_1_0)) ((((bin_1_3 _lh_doubleR_arg1_6) _lh_doubleR_arg2_6) _lh_doubleR_Bin_4_1_0) _lh_doubleR_arg4_6))))
+                              | _ -> 
+                                ((failwith "error") (`LH_C('d', (`LH_C('o', (`LH_C('u', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C('R', (`LH_N)))))))))))))))))))))))) _lh_rotateR_arg4_3)))
           | `Tip -> 
             ((failwith "error") (`LH_C('r', (`LH_C('o', (`LH_C('t', (`LH_C('a', (`LH_C('t', (`LH_C('e', (`LH_C('R', (`LH_C(' ', (`LH_C('T', (`LH_C('i', (`LH_C('p', (`LH_N))))))))))))))))))))))))
           | _ -> 
@@ -9070,41 +9423,43 @@ insert_lh__d1 _lh_insert_arg1_1_8 _lh_insert_arg2_1_8 _lh_insert_arg3_3 =
                   (let rec _lh_singleL_Bin_3_6 = _lh_rotateL_Bin_3_6 in
                     (let rec _lh_singleL_Bin_2_6 = _lh_rotateL_Bin_2_6 in
                       (let rec _lh_singleL_Bin_1_6 = _lh_rotateL_Bin_1_6 in
-                        (fun _lh_singleL_arg1_7 _lh_singleL_arg2_7 _lh_singleL_arg3_7 -> 
-                          (let rec size_2_6 = (fun p_3_1 -> 
-                            (let rec _lh_matchIdent_2_9_6 = p_3_1 in
-                              (match _lh_matchIdent_2_9_6 with
-                                | `Tip -> 
-                                  0
-                                | `Bin(_lh_singleL_Bin_0_3, _lh_singleL_Bin_1_7, _lh_singleL_Bin_2_7, _lh_singleL_Bin_3_7, _lh_singleL_Bin_4_7) -> 
-                                  _lh_singleL_Bin_0_3
-                                | _ -> 
-                                  (failwith "error")))) in
-                            (let rec bin_1_4 = (fun k_1_8 x_1_7 l_1_4 r_1_5 -> 
-                              (`Bin((((size_2_6 l_1_4) + (size_2_6 r_1_5)) + 1), k_1_8, x_1_7, l_1_4, r_1_5))) in
-                              ((((bin_1_4 _lh_singleL_Bin_1_6) _lh_singleL_Bin_2_6) ((((bin_1_4 _lh_singleL_arg1_7) _lh_singleL_arg2_7) _lh_singleL_arg3_7) _lh_singleL_Bin_3_6)) _lh_singleL_Bin_4_6)))))))))
+                        (let rec _lh_singleL_Bin_0_6 = _lh_rotateL_Bin_0_6 in
+                          (fun _lh_singleL_arg1_7 _lh_singleL_arg2_7 _lh_singleL_arg3_7 -> 
+                            (let rec size_2_6 = (fun p_3_1 -> 
+                              (let rec _lh_matchIdent_2_9_6 = p_3_1 in
+                                (match _lh_matchIdent_2_9_6 with
+                                  | `Tip -> 
+                                    0
+                                  | `Bin(_lh_singleL_Bin_0_7, _lh_singleL_Bin_1_7, _lh_singleL_Bin_2_7, _lh_singleL_Bin_3_7, _lh_singleL_Bin_4_7) -> 
+                                    _lh_singleL_Bin_0_7
+                                  | _ -> 
+                                    (failwith "error")))) in
+                              (let rec bin_1_4 = (fun k_1_8 x_1_7 l_1_4 r_1_5 -> 
+                                (`Bin((((size_2_6 l_1_4) + (size_2_6 r_1_5)) + 1), k_1_8, x_1_7, l_1_4, r_1_5))) in
+                                ((((bin_1_4 _lh_singleL_Bin_1_6) _lh_singleL_Bin_2_6) ((((bin_1_4 _lh_singleL_arg1_7) _lh_singleL_arg2_7) _lh_singleL_arg3_7) _lh_singleL_Bin_3_6)) _lh_singleL_Bin_4_6))))))))))
               else
                 ((((doubleL_3 _lh_rotateL_arg1_3) _lh_rotateL_arg2_3) _lh_rotateL_arg3_3) (let rec _lh_doubleL_Bin_4_9 = _lh_rotateL_Bin_4_6 in
                   (let rec _lh_doubleL_Bin_3_9 = _lh_rotateL_Bin_3_6 in
                     (let rec _lh_doubleL_Bin_2_9 = _lh_rotateL_Bin_2_6 in
                       (let rec _lh_doubleL_Bin_1_9 = _lh_rotateL_Bin_1_6 in
-                        (fun _lh_doubleL_arg1_7 _lh_doubleL_arg2_7 _lh_doubleL_arg3_7 -> 
-                          (match _lh_doubleL_Bin_3_9 with
-                            | `Bin(_lh_doubleL_Bin_0_6, _lh_doubleL_Bin_1_1_0, _lh_doubleL_Bin_2_1_0, _lh_doubleL_Bin_3_1_0, _lh_doubleL_Bin_4_1_0) -> 
-                              (let rec size_2_7 = (fun p_3_2 -> 
-                                (let rec _lh_matchIdent_2_9_7 = p_3_2 in
-                                  (match _lh_matchIdent_2_9_7 with
-                                    | `Tip -> 
-                                      0
-                                    | `Bin(_lh_doubleL_Bin_0_7, _lh_doubleL_Bin_1_1_1, _lh_doubleL_Bin_2_1_1, _lh_doubleL_Bin_3_1_1, _lh_doubleL_Bin_4_1_1) -> 
-                                      _lh_doubleL_Bin_0_7
-                                    | _ -> 
-                                      (failwith "error")))) in
-                                (let rec bin_1_5 = (fun k_1_9 x_1_8 l_1_5 r_1_6 -> 
-                                  (`Bin((((size_2_7 l_1_5) + (size_2_7 r_1_6)) + 1), k_1_9, x_1_8, l_1_5, r_1_6))) in
-                                  ((((bin_1_5 _lh_doubleL_Bin_1_1_0) _lh_doubleL_Bin_2_1_0) ((((bin_1_5 _lh_doubleL_arg1_7) _lh_doubleL_arg2_7) _lh_doubleL_arg3_7) _lh_doubleL_Bin_3_1_0)) ((((bin_1_5 _lh_doubleL_Bin_1_9) _lh_doubleL_Bin_2_9) _lh_doubleL_Bin_4_1_0) _lh_doubleL_Bin_4_9))))
-                            | _ -> 
-                              ((failwith "error") (`LH_C('d', (`LH_C('o', (`LH_C('u', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C('L', (`LH_N)))))))))))))))))))))))))
+                        (let rec _lh_doubleL_Bin_0_9 = _lh_rotateL_Bin_0_6 in
+                          (fun _lh_doubleL_arg1_7 _lh_doubleL_arg2_7 _lh_doubleL_arg3_7 -> 
+                            (match _lh_doubleL_Bin_3_9 with
+                              | `Bin(_lh_doubleL_Bin_0_1_0, _lh_doubleL_Bin_1_1_0, _lh_doubleL_Bin_2_1_0, _lh_doubleL_Bin_3_1_0, _lh_doubleL_Bin_4_1_0) -> 
+                                (let rec size_2_7 = (fun p_3_2 -> 
+                                  (let rec _lh_matchIdent_2_9_7 = p_3_2 in
+                                    (match _lh_matchIdent_2_9_7 with
+                                      | `Tip -> 
+                                        0
+                                      | `Bin(_lh_doubleL_Bin_0_1_1, _lh_doubleL_Bin_1_1_1, _lh_doubleL_Bin_2_1_1, _lh_doubleL_Bin_3_1_1, _lh_doubleL_Bin_4_1_1) -> 
+                                        _lh_doubleL_Bin_0_1_1
+                                      | _ -> 
+                                        (failwith "error")))) in
+                                  (let rec bin_1_5 = (fun k_1_9 x_1_8 l_1_5 r_1_6 -> 
+                                    (`Bin((((size_2_7 l_1_5) + (size_2_7 r_1_6)) + 1), k_1_9, x_1_8, l_1_5, r_1_6))) in
+                                    ((((bin_1_5 _lh_doubleL_Bin_1_1_0) _lh_doubleL_Bin_2_1_0) ((((bin_1_5 _lh_doubleL_arg1_7) _lh_doubleL_arg2_7) _lh_doubleL_arg3_7) _lh_doubleL_Bin_3_1_0)) ((((bin_1_5 _lh_doubleL_Bin_1_9) _lh_doubleL_Bin_2_9) _lh_doubleL_Bin_4_1_0) _lh_doubleL_Bin_4_9))))
+                              | _ -> 
+                                ((failwith "error") (`LH_C('d', (`LH_C('o', (`LH_C('u', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C('L', (`LH_N))))))))))))))))))))))))))
           | `Tip -> 
             ((failwith "error") (`LH_C('r', (`LH_C('o', (`LH_C('t', (`LH_C('a', (`LH_C('t', (`LH_C('e', (`LH_C('L', (`LH_C(' ', (`LH_C('T', (`LH_C('i', (`LH_C('p', (`LH_N))))))))))))))))))))))))
           | _ -> 
@@ -9727,8 +10082,10 @@ let rec testLastPiece_nofib_lh__d1 _lh_testLastPiece_nofib_arg1_0 =
                                     (fun _lh_mapLookup_Bin_3_5_5_7 _lh_mapLookup_arg1_5_5_7 _lh_mapLookup_Bin_4_5_5_7 _lh_mapLookup_Bin_2_5_5_7 -> 
                                       ((mapLookup_lh__d3 _lh_mapLookup_arg1_5_5_7) _lh_mapLookup_Bin_3_5_5_7))
                                   else
-                                    (fun _lh_mapLookup_Bin_3_5_5_8 _lh_mapLookup_arg1_5_5_8 _lh_mapLookup_Bin_4_5_5_8 _lh_mapLookup_Bin_2_5_5_8 _lh_extend_maybe_LH_P2_0_2_1_9 _lh_extend_maybe_LH_P2_1_2_1_9 _lh_extend_maybe_arg1_2_2_1 _lh_extend_maybe_arg3_2_2_1 -> 
-                                      (`Nothing))))))
+                                    (fun _lh_mapLookup_Bin_3_5_5_8 _lh_mapLookup_arg1_5_5_8 _lh_mapLookup_Bin_4_5_5_8 _lh_mapLookup_Bin_2_5_5_8 -> 
+                                      (let rec _lh_extend_maybe_Just_0_1_0_8 = _lh_mapLookup_Bin_2_5_5_8 in
+                                        (fun _lh_extend_maybe_LH_P2_0_2_1_9 _lh_extend_maybe_LH_P2_1_2_1_9 _lh_extend_maybe_arg1_2_2_1 _lh_extend_maybe_arg3_2_2_1 -> 
+                                          (`Nothing))))))))
                           | _ -> 
                             (failwith "error")))))) in
                     ((((_lh_matchIdent_2_7_0 _lh_extend_maybe_LH_P2_0_2_1_8) _lh_extend_maybe_LH_P2_1_2_1_8) _lh_extend_maybe_arg1_2_2_0) _lh_extend_maybe_arg3_2_2_0))))))))) in
@@ -9772,8 +10129,10 @@ let rec testLastPiece_nofib_lh__d1 _lh_testLastPiece_nofib_arg1_0 =
                                     (fun _lh_mapLookup_Bin_3_5_6_2 _lh_mapLookup_arg1_5_6_2 _lh_mapLookup_Bin_4_5_6_2 _lh_mapLookup_Bin_2_5_6_2 -> 
                                       ((mapLookup_lh__d3 _lh_mapLookup_arg1_5_6_2) _lh_mapLookup_Bin_3_5_6_2))
                                   else
-                                    (fun _lh_mapLookup_Bin_3_5_6_3 _lh_mapLookup_arg1_5_6_3 _lh_mapLookup_Bin_4_5_6_3 _lh_mapLookup_Bin_2_5_6_3 _lh_extend_maybe_LH_P2_0_2_2_1 _lh_extend_maybe_LH_P2_1_2_2_1 _lh_extend_maybe_arg1_2_2_3 _lh_extend_maybe_arg3_2_2_3 -> 
-                                      (`Nothing))))))
+                                    (fun _lh_mapLookup_Bin_3_5_6_3 _lh_mapLookup_arg1_5_6_3 _lh_mapLookup_Bin_4_5_6_3 _lh_mapLookup_Bin_2_5_6_3 -> 
+                                      (let rec _lh_extend_maybe_Just_0_1_0_9 = _lh_mapLookup_Bin_2_5_6_3 in
+                                        (fun _lh_extend_maybe_LH_P2_0_2_2_1 _lh_extend_maybe_LH_P2_1_2_2_1 _lh_extend_maybe_arg1_2_2_3 _lh_extend_maybe_arg3_2_2_3 -> 
+                                          (`Nothing))))))))
                           | _ -> 
                             (failwith "error")))))) in
                     ((((_lh_matchIdent_2_7_2 _lh_extend_maybe_LH_P2_0_2_2_0) _lh_extend_maybe_LH_P2_1_2_2_0) _lh_extend_maybe_arg1_2_2_2) _lh_extend_maybe_arg3_2_2_2))))))))) in

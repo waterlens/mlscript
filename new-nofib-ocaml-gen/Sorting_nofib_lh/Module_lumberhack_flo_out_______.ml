@@ -176,6 +176,12 @@ let rec mappend_lh__d3 xs_1 ys_1 =
       (`LH_C(h_1, ((mappend_lh__d3 t_1) ys_1)))
     | `LH_N -> 
       ys_1);;
+let rec foldr_lh__d3 f_3 i_3 ls_6 =
+  (match ls_6 with
+    | `LH_C(h_1_0, t_1_0) -> 
+      ((f_3 h_1_0) (((foldr_lh__d3 f_3) i_3) t_1_0))
+    | `LH_N -> 
+      i_3);;
 let rec select_lh__d1 _lh_select_arg1_0 _lh_select_arg2_0 _lh_select_arg3_0 =
   (match _lh_select_arg3_0 with
     | `LH_P2(_lh_select_LH_P2_0_0, _lh_select_LH_P2_1_0) -> 
@@ -185,12 +191,6 @@ let rec select_lh__d1 _lh_select_arg1_0 _lh_select_arg2_0 _lh_select_arg3_0 =
         (`LH_P2(_lh_select_LH_P2_0_0, (`LH_C(_lh_select_arg2_0, _lh_select_LH_P2_1_0)))))
     | _ -> 
       (failwith "error"));;
-let rec foldr_lh__d3 f_3 i_3 ls_6 =
-  (match ls_6 with
-    | `LH_C(h_1_0, t_1_0) -> 
-      ((f_3 h_1_0) (((foldr_lh__d3 f_3) i_3) t_1_0))
-    | `LH_N -> 
-      i_3);;
 let rec partition_lh__d1 _lh_partition_arg1_0 _lh_partition_arg2_0 =
   (((foldr_lh__d3 (select_lh__d1 _lh_partition_arg1_0)) (`LH_P2((`LH_N), (`LH_N)))) _lh_partition_arg2_0);;
 let rec geList_lh__d1 _lh_geList_arg1_0 _lh_geList_arg2_0 =
@@ -364,19 +364,20 @@ let rec break_lh__d1 _lh_break_arg1_0 _lh_break_arg2_0 =
     | `LH_C(_lh_break_LH_C_0_0, _lh_break_LH_C_1_0) -> 
       (if (_lh_break_arg1_0 _lh_break_LH_C_0_0) then
         (`LH_P2((`LH_N), (let rec _lh_lines_LH_C_1_0 = _lh_break_LH_C_1_0 in
-          (fun _lh_dummy_1 -> 
-            (match _lh_lines_LH_C_1_0 with
-              | `LH_N -> 
-                (`LH_N)
-              | _ -> 
-                (let rec _lh_matchIdent_7 = ((break_lh__d1 (fun x_2 -> 
-                  (x_2 = '|'))) _lh_lines_LH_C_1_0) in
-                  (match _lh_matchIdent_7 with
-                    | `LH_P2(_lh_lines_LH_P2_0_1, _lh_lines_LH_P2_1_1) -> 
-                      (`LH_C(_lh_lines_LH_P2_0_1, (let rec _lh_matchIdent_8 = _lh_lines_LH_P2_1_1 in
-                        (_lh_matchIdent_8 99))))
-                    | _ -> 
-                      (failwith "error"))))))))
+          (let rec _lh_lines_LH_C_0_0 = _lh_break_LH_C_0_0 in
+            (fun _lh_dummy_1 -> 
+              (match _lh_lines_LH_C_1_0 with
+                | `LH_N -> 
+                  (`LH_N)
+                | _ -> 
+                  (let rec _lh_matchIdent_7 = ((break_lh__d1 (fun x_2 -> 
+                    (x_2 = '|'))) _lh_lines_LH_C_1_0) in
+                    (match _lh_matchIdent_7 with
+                      | `LH_P2(_lh_lines_LH_P2_0_1, _lh_lines_LH_P2_1_1) -> 
+                        (`LH_C(_lh_lines_LH_P2_0_1, (let rec _lh_matchIdent_8 = _lh_lines_LH_P2_1_1 in
+                          (_lh_matchIdent_8 99))))
+                      | _ -> 
+                        (failwith "error")))))))))
       else
         (let rec _lh_matchIdent_9 = ((break_lh__d1 _lh_break_arg1_0) _lh_break_LH_C_1_0) in
           (match _lh_matchIdent_9 with

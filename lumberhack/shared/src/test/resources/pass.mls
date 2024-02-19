@@ -71,7 +71,9 @@ c(p)
 //│ def p = 
 //│ 	let b¹ = 	
 //│ 		let bb¹ = 7
+//│ 		in let aa¹ = 2
 //│ 		in (fun _lh_dummy¹ -> e(bb¹))
+//│ 	in let a¹ = 1
 //│ 	in (fun _lh_dummy⁰ -> d(b¹))
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
@@ -91,7 +93,9 @@ c(p)
 //│ def p = 
 //│ 	let b⁰ = 	
 //│ 		let bb⁰ = 7
+//│ 		in let aa⁰ = 2
 //│ 		in (fun _lh_dummy⁰ -> bb⁰)
+//│ 	in let a⁰ = 1
 //│ 	in (fun _lh_dummy¹ -> b⁰(99))
 //│ <<<<<<< after inlining <<<<<<<
 //│ 
@@ -103,7 +107,9 @@ c(p)
 //│ def p(_lh_dummy⁰) = 
 //│ 	let b⁰ = 	
 //│ 		let bb⁰ = 7
+//│ 		in let aa⁰ = 2
 //│ 		in (fun _lh_dummy¹ -> bb⁰)
+//│ 	in let a⁰ = 1
 //│ 	in b⁰(99)
 //│ <<<<<<< after floating out <<<<<<<
 
@@ -162,6 +168,7 @@ sum(mapa(mapb(primitive)))
 //│ 		in let ha¹ = primitive⁰(hb⁰)
 //│ 		in (fun _lh_dummy¹ -> 
 //│ 			let t¹ = mapa(ta¹)
+//│ 			in let h¹ = primitive⁰(ha¹)
 //│ 			in (fun _lh_dummy⁰ -> [S [N] sum(t¹)]))}
 //│ def sum(ls¹) = ls¹(99)
 //│ <<<<<<< after fusion <<<<<<<
@@ -183,6 +190,7 @@ sum(mapa(mapb(primitive)))
 //│ 		in let ha⁰ = primitive⁰(hb⁰)
 //│ 		in (fun _lh_dummy⁰ -> 
 //│ 			let t⁰ = ta⁰(99)
+//│ 			in let h⁰ = primitive⁰(ha⁰)
 //│ 			in (fun _lh_dummy¹ -> [S [N] t⁰(99)]))}
 //│ def sum(ls⁰) = ls⁰(99)
 //│ <<<<<<< after inlining <<<<<<<
@@ -195,6 +203,7 @@ sum(mapa(mapb(primitive)))
 //│ 		let ta⁰ = mapb(tb⁰)
 //│ 		in let ha⁰ = primitive⁰(hb⁰)
 //│ 		in let t⁰ = ta⁰(99)
+//│ 		in let h⁰ = primitive⁰(ha⁰)
 //│ 		in [S [N] t⁰(99)]}
 //│ def sum(ls⁰) = ls⁰(99)
 //│ <<<<<<< after floating out <<<<<<<
@@ -227,6 +236,7 @@ if C(A, B(C)) is
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ let b¹ = [B [C]]
+//│ in let a¹ = [A]
 //│ in [D b¹]
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
@@ -240,11 +250,13 @@ if C(A, B(C)) is
 //│ 
 //│ >>>>>>> after inlining >>>>>>>
 //│ let b⁰ = [B [C]]
+//│ in let a⁰ = [A]
 //│ in [D b⁰]
 //│ <<<<<<< after inlining <<<<<<<
 //│ 
 //│ >>>>>>> after floating out >>>>>>>
 //│ let b⁰ = [B [C]]
+//│ in let a⁰ = [A]
 //│ in [D b⁰]
 //│ <<<<<<< after floating out <<<<<<<
 //│
@@ -602,6 +614,7 @@ sum(mapa(mapb(primitive)))
 //│ 		in let ha¹ = primitive⁰(hb⁰)
 //│ 		in (fun _lh_dummy¹ -> 
 //│ 			let t¹ = mapa(ta¹)
+//│ 			in let h¹ = primitive⁰(ha¹)
 //│ 			in (fun _lh_dummy⁰ -> [S [N] sum(t¹)]))
 //│ 	| N  => (fun _lh_dummy³ -> (fun _lh_dummy² -> [N]))}
 //│ def sum(ls¹) = ls¹(99)
@@ -624,6 +637,7 @@ sum(mapa(mapb(primitive)))
 //│ 		in let ha⁰ = primitive⁰(hb⁰)
 //│ 		in (fun _lh_dummy⁰ -> 
 //│ 			let t⁰ = ta⁰(99)
+//│ 			in let h⁰ = primitive⁰(ha⁰)
 //│ 			in (fun _lh_dummy¹ -> [S [N] t⁰(99)]))
 //│ 	| N  => (fun _lh_dummy² -> (fun _lh_dummy³ -> [N]))}
 //│ def sum(ls⁰) = ls⁰(99)
@@ -637,6 +651,7 @@ sum(mapa(mapb(primitive)))
 //│ 		let ta⁰ = mapb(tb⁰)
 //│ 		in let ha⁰ = primitive⁰(hb⁰)
 //│ 		in let t⁰ = ta⁰(99)
+//│ 		in let h⁰ = primitive⁰(ha⁰)
 //│ 		in [S [N] t⁰(99)]
 //│ 	| N  => [N]}
 //│ def sum(ls⁰) = ls⁰(99)
@@ -1842,13 +1857,15 @@ len(map(C(A, C(B, N))))
 //│ len(map(
 //│ 	let t² = 	
 //│ 		let t⁴ = (fun _lh_dummy⁵ -> (fun _lh_dummy⁴ -> 0))
-//│ 		in let h³ = [BB]
+//│ 		in let h⁴ = [BB]
 //│ 		in (fun _lh_dummy³ -> 
 //│ 			let t⁵ = map(t⁴)
+//│ 			in let h⁵ = h⁴
 //│ 			in (fun _lh_dummy² -> (1 + len(t⁵))))
 //│ 	in let h² = [AA]
 //│ 	in (fun _lh_dummy¹ -> 
 //│ 		let t³ = map(t²)
+//│ 		in let h³ = h²
 //│ 		in (fun _lh_dummy⁰ -> (1 + len(t³))))))
 //│ def len(ls³) = ls³(99)
 //│ def map(ls²) = ls²(99)
@@ -1869,10 +1886,12 @@ len(map(C(A, C(B, N))))
 //│ 		in let h⁰ = [BB]
 //│ 		in (fun _lh_dummy² -> 
 //│ 			let t² = t¹(99)
+//│ 			in let h¹ = h⁰
 //│ 			in (fun _lh_dummy³ -> (1 + t²(99))))
-//│ 	in let h¹ = [AA]
+//│ 	in let h² = [AA]
 //│ 	in (fun _lh_dummy⁴ -> 
 //│ 		let t³ = t⁰(99)
+//│ 		in let h³ = h²
 //│ 		in (fun _lh_dummy⁵ -> (1 + t³(99))))(99, 99)
 //│ def len(ls¹) = ls¹(99)
 //│ def map(ls⁰) = ls⁰(99)
@@ -1885,10 +1904,12 @@ len(map(C(A, C(B, N))))
 //│ 		in let h⁰ = [BB]
 //│ 		in (fun _lh_dummy² -> 
 //│ 			let t² = t¹(99)
+//│ 			in let h¹ = h⁰
 //│ 			in (fun _lh_dummy³ -> (1 + t²(99))))
-//│ 	in let h¹ = [AA]
+//│ 	in let h² = [AA]
 //│ 	in (fun _lh_dummy⁴ -> 
 //│ 		let t³ = t⁰(99)
+//│ 		in let h³ = h²
 //│ 		in (fun _lh_dummy⁵ -> (1 + t³(99))))(99, 99)
 //│ def len(ls¹) = ls¹(99)
 //│ def map(ls⁰) = ls⁰(99)
@@ -2750,8 +2771,10 @@ f(C(1, N))
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ f([C 1 [N]])
-//│ def f(x¹) = (fun x² -> case x² of {
-//│ 	C h⁰ t⁰ => t⁰})(x¹)
+//│ def f(x¹) = 
+//│ 	let y¹ = x¹
+//│ 	in (fun x² -> case x² of {
+//│ 		C h⁰ t⁰ => t⁰})(x¹)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> consumer ids >>>>>>>
@@ -2763,17 +2786,25 @@ f(C(1, N))
 //│ <<<<<<< floating out info <<<<<<<
 //│ 
 //│ >>>>>>> after inlining >>>>>>>
-//│ (fun x⁰ -> case x⁰ of {
-//│ 	C h⁰ t⁰ => t⁰})([C 1 [N]])
-//│ def f(x¹) = (fun x² -> case x² of {
-//│ 	C h¹ t¹ => t¹})(x¹)
+//│ 
+//│ 	let y⁰ = [C 1 [N]]
+//│ 	in (fun x⁰ -> case x⁰ of {
+//│ 		C h⁰ t⁰ => t⁰})([C 1 [N]])
+//│ def f(x¹) = 
+//│ 	let y¹ = x¹
+//│ 	in (fun x² -> case x² of {
+//│ 		C h¹ t¹ => t¹})(x¹)
 //│ <<<<<<< after inlining <<<<<<<
 //│ 
 //│ >>>>>>> after floating out >>>>>>>
-//│ (fun x⁰ -> case x⁰ of {
-//│ 	C h⁰ t⁰ => t⁰})([C 1 [N]])
-//│ def f(x¹) = (fun x² -> case x² of {
-//│ 	C h¹ t¹ => t¹})(x¹)
+//│ 
+//│ 	let y⁰ = [C 1 [N]]
+//│ 	in (fun x⁰ -> case x⁰ of {
+//│ 		C h⁰ t⁰ => t⁰})([C 1 [N]])
+//│ def f(x¹) = 
+//│ 	let y¹ = x¹
+//│ 	in (fun x² -> case x² of {
+//│ 		C h¹ t¹ => t¹})(x¹)
 //│ <<<<<<< after floating out <<<<<<<
 
 // CORRECT: after using `last(C(hh, tt))` instead of `last(t)` and pushing in of parameters

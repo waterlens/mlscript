@@ -279,10 +279,12 @@ idxSum(rev(C(1, C(2, N)))(N))(0)
 //│ 		in let hh² = 2
 //│ 		in (fun a³ -> rev(tt², 
 //│ 			let t² = a³
+//│ 			in let h² = hh²
 //│ 			in (fun acc³ -> (acc³ + idxSum(t², (acc³ + 1))))))
 //│ 	in let hh¹ = 1
 //│ 	in (fun a² -> rev(tt¹, 
 //│ 		let t¹ = a²
+//│ 		in let h¹ = hh¹
 //│ 		in (fun acc² -> (acc² + idxSum(t¹, (acc² + 1)))))), (fun acc⁴ -> 0)), 0)
 //│ def idxSum(ls¹) = ls¹
 //│ def rev(lss¹) = lss¹
@@ -302,10 +304,12 @@ idxSum(rev(C(1, C(2, N)))(N))(0)
 //│ 	in let hh⁰ = 2
 //│ 	in (fun a¹ -> tt¹(
 //│ 		let t⁰ = a¹
+//│ 		in let h⁰ = hh⁰
 //│ 		in (fun acc⁰ -> (acc⁰ + t⁰((acc⁰ + 1))))))
 //│ in let hh¹ = 1
 //│ in tt⁰(
 //│ 	let t¹ = (fun acc¹ -> 0)
+//│ 	in let h¹ = hh¹
 //│ 	in (fun acc² -> (acc² + t¹((acc² + 1)))), 0)
 //│ def idxSum(ls⁰) = ls⁰
 //│ def rev(lss⁰) = lss⁰
@@ -317,10 +321,12 @@ idxSum(rev(C(1, C(2, N)))(N))(0)
 //│ 	in let hh⁰ = 2
 //│ 	in (fun a¹ -> tt¹(
 //│ 		let t⁰ = a¹
+//│ 		in let h⁰ = hh⁰
 //│ 		in (fun acc⁰ -> (acc⁰ + t⁰((acc⁰ + 1))))))
 //│ in let hh¹ = 1
 //│ in tt⁰(
 //│ 	let t¹ = (fun acc¹ -> 0)
+//│ 	in let h¹ = hh¹
 //│ 	in (fun acc² -> (acc² + t¹((acc² + 1)))), 0)
 //│ def idxSum(ls⁰) = ls⁰
 //│ def rev(lss⁰) = lss⁰
@@ -759,7 +765,9 @@ f(C(primitive))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f((fun x¹ -> f(x¹)))
+//│ f(
+//│ 	let k¹ = primitive⁰
+//│ 	in (fun x¹ -> f(x¹)))
 //│ def f(x²) = x²(x²)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
@@ -772,12 +780,20 @@ f(C(primitive))
 //│ <<<<<<< floating out info <<<<<<<
 //│ 
 //│ >>>>>>> after inlining >>>>>>>
-//│ (fun x⁰ -> x⁰(x⁰))((fun x¹ -> x¹(x¹)))
+//│ 
+//│ 	let k⁰ = primitive⁰
+//│ 	in (fun x⁰ -> x⁰(x⁰))(
+//│ 	let k¹ = primitive⁰
+//│ 	in (fun x¹ -> x¹(x¹)))
 //│ def f(x²) = x²(x²)
 //│ <<<<<<< after inlining <<<<<<<
 //│ 
 //│ >>>>>>> after floating out >>>>>>>
-//│ (fun x⁰ -> x⁰(x⁰))((fun x¹ -> x¹(x¹)))
+//│ 
+//│ 	let k⁰ = primitive⁰
+//│ 	in (fun x⁰ -> x⁰(x⁰))(
+//│ 	let k¹ = primitive⁰
+//│ 	in (fun x¹ -> x¹(x¹)))
 //│ def f(x²) = x²(x²)
 //│ <<<<<<< after floating out <<<<<<<
 
@@ -811,7 +827,9 @@ f(C(primitive))
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ f((fun x² -> f(x²)))
+//│ f(
+//│ 	let k¹ = primitive⁰
+//│ 	in (fun x² -> f(x²)))
 //│ def f(x³) = x³(x³)
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
@@ -824,12 +842,20 @@ f(C(primitive))
 //│ <<<<<<< floating out info <<<<<<<
 //│ 
 //│ >>>>>>> after inlining >>>>>>>
-//│ (fun x⁰ -> x⁰(x⁰))((fun x¹ -> x¹(x¹)))
+//│ 
+//│ 	let k⁰ = primitive⁰
+//│ 	in (fun x⁰ -> x⁰(x⁰))(
+//│ 	let k¹ = primitive⁰
+//│ 	in (fun x¹ -> x¹(x¹)))
 //│ def f(x²) = x²(x²)
 //│ <<<<<<< after inlining <<<<<<<
 //│ 
 //│ >>>>>>> after floating out >>>>>>>
-//│ (fun x⁰ -> x⁰(x⁰))((fun x¹ -> x¹(x¹)))
+//│ 
+//│ 	let k⁰ = primitive⁰
+//│ 	in (fun x⁰ -> x⁰(x⁰))(
+//│ 	let k¹ = primitive⁰
+//│ 	in (fun x¹ -> x¹(x¹)))
 //│ def f(x²) = x²(x²)
 //│ <<<<<<< after floating out <<<<<<<
 

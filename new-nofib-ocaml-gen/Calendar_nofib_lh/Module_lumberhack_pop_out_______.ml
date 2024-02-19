@@ -4,21 +4,83 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_lumberhack_pop_out_______ = struct
-let rec map_lh__d1 f_1_2 ls_5 =
-  (match ls_5 with
-    | `LH_C(h_1_5, t_1_6) -> 
-      (`LH_C((f_1_2 h_1_5), ((map_lh__d1 f_1_2) t_1_6)))
-    | `LH_N -> 
-      (`LH_N));;
+let rec length_lh__d1 ls_7 =
+  (ls_7 99);;
 let rec enumFromTo_lh__d1 a_0 b_0 =
   (if (a_0 <= b_0) then
     (`LH_C(a_0, ((enumFromTo_lh__d1 (a_0 + 1)) b_0)))
   else
     (`LH_N));;
-let rec length_lh__d1 ls_7 =
-  (ls_7 99);;
+let rec map_lh__d1 f_1_2 ls_5 =
+  (match ls_5 with
+    | `LH_C(h_1_6, t_1_6) -> 
+      (`LH_C((f_1_2 h_1_6), ((map_lh__d1 f_1_2) t_1_6)))
+    | `LH_N -> 
+      (`LH_N));;
 let rec mappend_lh__d1 xs_0 ys_0 =
   (xs_0 ys_0);;
+let rec emptyPic_lh__d1 _lh_emptyPic_arg1_2 =
+  (_lh_emptyPic_arg1_2 99);;
+let rec mappend_lh__d2 xs_5 ys_8 =
+  (xs_5 ys_8);;
+let rec copy_lh__d1 _lh_copy_arg1_2 _lh_copy_arg2_2 =
+  (if (_lh_copy_arg1_2 > 0) then
+    (`LH_C(_lh_copy_arg2_2, ((copy_lh__d1 (_lh_copy_arg1_2 - 1)) _lh_copy_arg2_2)))
+  else
+    (`LH_N));;
+let rec mappend_lh__d5 xs_6 ys_9 =
+  (xs_6 ys_9);;
+let rec mappend_lh__d4 xs_1_1 ys_1_9 =
+  (match xs_1_1 with
+    | `LH_C(h_1_3, t_1_3) -> 
+      (`LH_C(h_1_3, ((mappend_lh__d4 t_1_3) ys_1_9)))
+    | `LH_N -> 
+      ys_1_9);;
+let rec copy_lh__d4 _lh_copy_arg1_1 _lh_copy_arg2_1 =
+  (if (_lh_copy_arg1_1 > 0) then
+    (`LH_C(_lh_copy_arg2_1, ((copy_lh__d4 (_lh_copy_arg1_1 - 1)) _lh_copy_arg2_1)))
+  else
+    (`LH_N));;
+let rec space_lh__d2 _lh_space_arg1_1 =
+  ((copy_lh__d4 _lh_space_arg1_1) ' ');;
+let rec copy_lh__d3 _lh_copy_arg1_7 _lh_copy_arg2_7 _lh_popOutId_0_8 =
+  (if (_lh_copy_arg1_7 > 0) then
+    (let rec t_3_6 = ((copy_lh__d3 (_lh_copy_arg1_7 - 1)) _lh_copy_arg2_7) in
+      (let rec h_3_6 = _lh_copy_arg2_7 in
+        (`LH_C(h_3_6, ((mappend_lh__d5 t_3_6) _lh_popOutId_0_8)))))
+  else
+    _lh_popOutId_0_8);;
+let rec space_lh__d1 _lh_space_arg1_3 =
+  ((copy_lh__d3 _lh_space_arg1_3) ' ');;
+let rec length_lh__d2 ls_1_1 =
+  (match ls_1_1 with
+    | `LH_C(h_4_1, t_4_1) -> 
+      (1 + (length_lh__d2 t_4_1))
+    | `LH_N -> 
+      0);;
+let rec cjustify_lh__d1 _lh_cjustify_arg1_1 _lh_cjustify_arg2_1 =
+  (let rec m_1 = (_lh_cjustify_arg1_1 - (length_lh__d2 _lh_cjustify_arg2_1)) in
+    (let rec halfm_1 = (m_1 / 2) in
+      ((mappend_lh__d4 ((mappend_lh__d5 (space_lh__d1 halfm_1)) _lh_cjustify_arg2_1)) (space_lh__d2 (m_1 - halfm_1)))));;
+let rec copy_lh__d2 _lh_copy_arg1_5 _lh_copy_arg2_5 _lh_popOutId_0_6 =
+  (if (_lh_copy_arg1_5 > 0) then
+    (let rec t_3_3 = ((copy_lh__d2 (_lh_copy_arg1_5 - 1)) _lh_copy_arg2_5) in
+      (let rec h_3_3 = _lh_copy_arg2_5 in
+        (`LH_C(h_3_3, ((mappend_lh__d1 t_3_3) _lh_popOutId_0_6)))))
+  else
+    _lh_popOutId_0_6);;
+let rec banner_lh__d1 _lh_banner_arg1_0 =
+  ((mappend_lh__d2 (let rec t_8 = (fun ys_1_4 -> 
+    ys_1_4) in
+    (let rec h_8 = ((cjustify_lh__d1 75) (string_of_int _lh_banner_arg1_0)) in
+      (fun ys_1_5 -> 
+        (let rec t_9 = ((mappend_lh__d2 t_8) ys_1_5) in
+          (let rec h_9 = h_8 in
+            (fun ys_1_6 -> 
+              (`LH_C(h_9, ((mappend_lh__d1 t_9) ys_1_6)))))))))) (emptyPic_lh__d1 (let rec _lh_emptyPic_LH_P2_1_1 = 75 in
+    (let rec _lh_emptyPic_LH_P2_0_1 = 1 in
+      (fun _lh_dummy_2 -> 
+        ((copy_lh__d2 _lh_emptyPic_LH_P2_0_1) ((copy_lh__d1 _lh_emptyPic_LH_P2_1_1) ' ')))))));;
 let rec mappend_lh__d6 xs_9 ys_1_7 =
   (xs_9 ys_1_7);;
 let rec mappend_lh__d3 xs_1 ys_3 =
@@ -28,18 +90,19 @@ let rec mappend_lh__d3 xs_1 ys_3 =
         (let rec h_3 = h_2 in
           (fun ys_4 -> 
             (let rec t_4 = ((mappend_lh__d6 t_3) ys_4) in
-              (fun _lh_dummy_1 -> 
-                (1 + (length_lh__d1 t_4)))))))
+              (let rec h_4 = h_3 in
+                (fun _lh_dummy_1 -> 
+                  (1 + (length_lh__d1 t_4))))))))
     | `LH_N -> 
       ys_3);;
 let rec concat_lh__d1 lss_0 =
   (lss_0 99);;
 let rec map_lh__d2 f_6 ls_4 _lh_popOutId_0_3 =
   (match ls_4 with
-    | `LH_C(h_1_3, t_1_4) -> 
+    | `LH_C(h_1_4, t_1_4) -> 
       (let rec t_1_5 = ((map_lh__d2 f_6) t_1_4) in
-        (let rec h_1_4 = (f_6 h_1_3) in
-          ((mappend_lh__d6 h_1_4) (concat_lh__d1 t_1_5))))
+        (let rec h_1_5 = (f_6 h_1_4) in
+          ((mappend_lh__d6 h_1_5) (concat_lh__d1 t_1_5))))
     | `LH_N -> 
       (fun _lh_dummy_6 -> 
         0));;
@@ -47,56 +110,14 @@ let rec unlines_lh__d1 _lh_unlines_arg1_0 =
   (concat_lh__d1 ((map_lh__d2 (fun l_0 -> 
     ((mappend_lh__d3 l_0) (let rec t_3_9 = (fun ys_4_1 -> 
       ys_4_1) in
-      (let rec h_3_8 = 'n' in
+      (let rec h_3_9 = 'n' in
         (fun ys_4_2 -> 
           (let rec t_4_0 = ((mappend_lh__d6 t_3_9) ys_4_2) in
-            (fun _lh_dummy_2_0 -> 
-              (1 + (length_lh__d1 t_4_0)))))))))) _lh_unlines_arg1_0));;
+            (let rec h_4_0 = h_3_9 in
+              (fun _lh_dummy_2_0 -> 
+                (1 + (length_lh__d1 t_4_0))))))))))) _lh_unlines_arg1_0));;
 let rec pic_lh__d1 _lh_pic_arg1_0 =
   (_lh_pic_arg1_0 99);;
-let rec map_lh__d4 f_3_1 ls_1_0 =
-  (match ls_1_0 with
-    | `LH_C(h_3_6, t_3_7) -> 
-      (`LH_C((f_3_1 h_3_6), ((map_lh__d4 f_3_1) t_3_7)))
-    | `LH_N -> 
-      (`LH_N));;
-let rec mappend_lh__d1_d2 xs_1_7 ys_4_0 =
-  (match xs_1_7 with
-    | `LH_C(h_3_7, t_3_8) -> 
-      (`LH_C(h_3_7, ((mappend_lh__d1_d2 t_3_8) ys_4_0)))
-    | `LH_N -> 
-      ys_4_0);;
-let rec zipWith_lh__d3 f_3_2 xs_1_6 ys_3_9 =
-  (match xs_1_6 with
-    | `LH_C(hx_4, tx_4) -> 
-      (match ys_3_9 with
-        | `LH_C(hy_2, ty_2) -> 
-          (`LH_C(((f_3_2 hx_4) hy_2), (((zipWith_lh__d3 f_3_2) tx_4) ty_2)))
-        | `LH_N -> 
-          (`LH_N))
-    | `LH_N -> 
-      (`LH_N));;
-let rec foldr_lh__d2 f_2 i_1 ls_1 =
-  (match ls_1 with
-    | `LH_C(h_4, t_5) -> 
-      ((f_2 h_4) (((foldr_lh__d2 f_2) i_1) t_5))
-    | `LH_N -> 
-      i_1);;
-let rec foldr1_lh__d2 _lh_foldr1_arg1_1 _lh_foldr1_arg2_1 =
-  (match _lh_foldr1_arg2_1 with
-    | `LH_C(_lh_foldr1_LH_C_0_1, _lh_foldr1_LH_C_1_1) -> 
-      (((foldr_lh__d2 _lh_foldr1_arg1_1) _lh_foldr1_LH_C_0_1) _lh_foldr1_LH_C_1_1)
-    | _ -> 
-      (failwith "error"));;
-let rec spread_lh__d1 _lh_spread_arg1_0 =
-  ((foldr1_lh__d2 (fun a_3 b_2 -> 
-    (((zipWith_lh__d3 mappend_lh__d1_d2) a_3) b_2))) _lh_spread_arg1_0);;
-let rec mappend_lh__d1_d1 xs_1_0 ys_1_8 =
-  (match xs_1_0 with
-    | `LH_C(h_1_0, t_1_1) -> 
-      (`LH_C(h_1_0, ((mappend_lh__d1_d1 t_1_1) ys_1_8)))
-    | `LH_N -> 
-      ys_1_8);;
 let rec foldr_lh__d1 f_0 i_0 ls_0 =
   (match ls_0 with
     | `LH_C(h_1, t_1) -> 
@@ -109,9 +130,24 @@ let rec foldr1_lh__d1 _lh_foldr1_arg1_0 _lh_foldr1_arg2_0 =
       (((foldr_lh__d1 _lh_foldr1_arg1_0) _lh_foldr1_LH_C_0_0) _lh_foldr1_LH_C_1_0)
     | _ -> 
       (failwith "error"));;
+let rec mappend_lh__d1_d1 xs_1_0 ys_1_8 =
+  (match xs_1_0 with
+    | `LH_C(h_1_1, t_1_1) -> 
+      (`LH_C(h_1_1, ((mappend_lh__d1_d1 t_1_1) ys_1_8)))
+    | `LH_N -> 
+      ys_1_8);;
 let rec stack_lh__d1 _lh_stack_arg1_0 =
   ((foldr1_lh__d1 (fun a_4 b_3 -> 
     ((mappend_lh__d1_d1 a_4) b_3))) _lh_stack_arg1_0);;
+let rec take_lh__d1 n_1 ls_3 =
+  (if (n_1 > 0) then
+    (match ls_3 with
+      | `LH_C(h_1_2, t_1_2) -> 
+        (`LH_C(h_1_2, ((take_lh__d1 (n_1 - 1)) t_1_2)))
+      | `LH_N -> 
+        (`LH_N))
+  else
+    (`LH_N));;
 let rec drop_lh__d1 _lh_drop_arg1_0 _lh_drop_arg2_0 =
   (match _lh_drop_arg2_0 with
     | `LH_N -> 
@@ -123,21 +159,49 @@ let rec drop_lh__d1 _lh_drop_arg1_0 _lh_drop_arg2_0 =
         _lh_drop_LH_C_1_0)
     | _ -> 
       (failwith "error"));;
-let rec take_lh__d1 n_1 ls_3 =
-  (if (n_1 > 0) then
-    (match ls_3 with
-      | `LH_C(h_1_1, t_1_2) -> 
-        (`LH_C(h_1_1, ((take_lh__d1 (n_1 - 1)) t_1_2)))
-      | `LH_N -> 
-        (`LH_N))
-  else
-    (`LH_N));;
 let rec groop_lh__d1 _lh_groop_arg1_0 _lh_groop_arg2_0 =
   (match _lh_groop_arg2_0 with
     | `LH_N -> 
       (`LH_N)
     | _ -> 
       (`LH_C(((take_lh__d1 _lh_groop_arg1_0) _lh_groop_arg2_0), ((groop_lh__d1 _lh_groop_arg1_0) ((drop_lh__d1 _lh_groop_arg1_0) _lh_groop_arg2_0)))));;
+let rec foldr_lh__d2 f_2 i_1 ls_1 =
+  (match ls_1 with
+    | `LH_C(h_5, t_5) -> 
+      ((f_2 h_5) (((foldr_lh__d2 f_2) i_1) t_5))
+    | `LH_N -> 
+      i_1);;
+let rec foldr1_lh__d2 _lh_foldr1_arg1_1 _lh_foldr1_arg2_1 =
+  (match _lh_foldr1_arg2_1 with
+    | `LH_C(_lh_foldr1_LH_C_0_1, _lh_foldr1_LH_C_1_1) -> 
+      (((foldr_lh__d2 _lh_foldr1_arg1_1) _lh_foldr1_LH_C_0_1) _lh_foldr1_LH_C_1_1)
+    | _ -> 
+      (failwith "error"));;
+let rec mappend_lh__d1_d2 xs_1_7 ys_4_0 =
+  (match xs_1_7 with
+    | `LH_C(h_3_8, t_3_8) -> 
+      (`LH_C(h_3_8, ((mappend_lh__d1_d2 t_3_8) ys_4_0)))
+    | `LH_N -> 
+      ys_4_0);;
+let rec zipWith_lh__d3 f_3_2 xs_1_6 ys_3_9 =
+  (match xs_1_6 with
+    | `LH_C(hx_4, tx_4) -> 
+      (match ys_3_9 with
+        | `LH_C(hy_2, ty_2) -> 
+          (`LH_C(((f_3_2 hx_4) hy_2), (((zipWith_lh__d3 f_3_2) tx_4) ty_2)))
+        | `LH_N -> 
+          (`LH_N))
+    | `LH_N -> 
+      (`LH_N));;
+let rec spread_lh__d1 _lh_spread_arg1_0 =
+  ((foldr1_lh__d2 (fun a_3 b_2 -> 
+    (((zipWith_lh__d3 mappend_lh__d1_d2) a_3) b_2))) _lh_spread_arg1_0);;
+let rec map_lh__d4 f_3_1 ls_1_0 =
+  (match ls_1_0 with
+    | `LH_C(h_3_7, t_3_7) -> 
+      (`LH_C((f_3_1 h_3_7), ((map_lh__d4 f_3_1) t_3_7)))
+    | `LH_N -> 
+      (`LH_N));;
 let rec block_lh__d1 _lh_block_arg1_0 _lh_funcomp_x_3 =
   ((fun _lh_funcomp_x_4 -> 
     (stack_lh__d1 ((map_lh__d4 spread_lh__d1) _lh_funcomp_x_4))) ((groop_lh__d1 _lh_block_arg1_0) _lh_funcomp_x_3));;
@@ -166,10 +230,12 @@ let rec end_lh__d1 _lh_end_arg1_0 =
         ((copy_lh__d8 _lh_emptyPic_LH_P2_0_2) ((copy_lh__d7 _lh_emptyPic_LH_P2_1_2) ' '))))));;
 let rec mappend_lh__d9 xs_1_3 ys_2_8 =
   (match xs_1_3 with
-    | `LH_C(h_1_6, t_1_7) -> 
-      (`LH_C(h_1_6, ((mappend_lh__d9 t_1_7) ys_2_8)))
+    | `LH_C(h_1_7, t_1_7) -> 
+      (`LH_C(h_1_7, ((mappend_lh__d9 t_1_7) ys_2_8)))
     | `LH_N -> 
       ys_2_8);;
+let rec emptyPic_lh__d4 _lh_emptyPic_arg1_0 =
+  (_lh_emptyPic_arg1_0 99);;
 let rec copy_lh__d1_d0 _lh_copy_arg1_3 _lh_copy_arg2_3 _lh_popOutId_0_5 _lh_popOutId_1_3 _lh_popOutId_2_2 _lh_popOutId_3_0 =
   (if (_lh_copy_arg1_3 > 0) then
     (let rec tx_0 = ((copy_lh__d1_d0 (_lh_copy_arg1_3 - 1)) _lh_copy_arg2_3) in
@@ -185,8 +251,6 @@ let rec copy_lh__d1_d0 _lh_copy_arg1_3 _lh_copy_arg2_3 _lh_popOutId_0_5 _lh_popO
   else
     (fun ys_2_7 -> 
       ys_2_7));;
-let rec emptyPic_lh__d4 _lh_emptyPic_arg1_0 =
-  (_lh_emptyPic_arg1_0 99);;
 let rec copy_lh__d9 _lh_copy_arg1_0 _lh_copy_arg2_0 _lh_popOutId_0_0 =
   (if (_lh_copy_arg1_0 > 0) then
     (let rec t_0 = ((copy_lh__d9 (_lh_copy_arg1_0 - 1)) _lh_copy_arg2_0) in
@@ -211,8 +275,8 @@ let rec copy_lh__d6 _lh_copy_arg1_6 _lh_copy_arg2_6 _lh_popOutId_0_7 _lh_popOutI
     (let rec ty_1 = ((copy_lh__d6 (_lh_copy_arg1_6 - 1)) _lh_copy_arg2_6) in
       (let rec hy_1 = _lh_copy_arg2_6 in
         (let rec t_3_4 = (((zipWith_lh__d1 _lh_popOutId_0_7) _lh_popOutId_2_3) ty_1) in
-          (let rec h_3_3 = ((_lh_popOutId_0_7 _lh_popOutId_1_4) hy_1) in
-            (`LH_C(h_3_3, ((mappend_lh__d8 t_3_4) _lh_popOutId_3_1)))))))
+          (let rec h_3_4 = ((_lh_popOutId_0_7 _lh_popOutId_1_4) hy_1) in
+            (`LH_C(h_3_4, ((mappend_lh__d8 t_3_4) _lh_popOutId_3_1)))))))
   else
     _lh_popOutId_3_1);;
 let rec emptyPic_lh__d2 _lh_emptyPic_arg1_1 =
@@ -226,6 +290,9 @@ let rec pad_lh__d1 _lh_pad_arg1_0 =
   ((mappend_lh__d8 (((zipWith_lh__d1 mappend_lh__d9) (((zipWith_lh__d2 mappend_lh__d7) (side_lh__d2 0)) _lh_pad_arg1_0)) (side_lh__d1 0))) (end_lh__d1 0));;
 let rec map_lh__d3 f_2_8 ls_8 =
   (ls_8 f_2_8);;
+let rec zip3_lh__d1 _lh_zip3_arg1_0 _lh_zip3_arg2_1_3 _lh_zip3_arg3_1_6 =
+  (let rec _lh_matchIdent_1_4 = _lh_zip3_arg1_0 in
+    ((_lh_matchIdent_1_4 _lh_zip3_arg2_1_3) _lh_zip3_arg3_1_6));;
 let rec mappend_lh__d1_d0 xs_3 ys_6 =
   (xs_3 ys_6);;
 let rec copy_lh__d1_d1 _lh_copy_arg1_8 _lh_copy_arg2_8 =
@@ -237,19 +304,19 @@ let rec space_lh__d4 _lh_space_arg1_0 =
   ((copy_lh__d1_d1 _lh_space_arg1_0) ' ');;
 let rec mappend_lh__d1_d4 xs_8 ys_1_3 =
   (match xs_8 with
-    | `LH_C(h_6, t_7) -> 
-      (`LH_C(h_6, ((mappend_lh__d1_d4 t_7) ys_1_3)))
+    | `LH_C(h_7, t_7) -> 
+      (`LH_C(h_7, ((mappend_lh__d1_d4 t_7) ys_1_3)))
     | `LH_N -> 
       ys_1_3);;
 let rec mappend_lh__d1_d5 xs_1_4 ys_2_9 =
   (match xs_1_4 with
-    | `LH_C(h_1_7, t_1_8) -> 
-      (`LH_C(h_1_7, ((mappend_lh__d1_d5 t_1_8) ys_2_9)))
+    | `LH_C(h_1_8, t_1_8) -> 
+      (`LH_C(h_1_8, ((mappend_lh__d1_d5 t_1_8) ys_2_9)))
     | `LH_N -> 
       ys_2_9);;
 let rec length_lh__d3 ls_9 =
   (match ls_9 with
-    | `LH_C(h_3_4, t_3_5) -> 
+    | `LH_C(h_3_5, t_3_5) -> 
       (1 + (length_lh__d3 t_3_5))
     | `LH_N -> 
       0);;
@@ -262,32 +329,26 @@ let rec cjustify_lh__d2 _lh_cjustify_arg1_0 _lh_cjustify_arg2_0 =
 let rec title_lh__d1 _lh_title_arg1_0 ys_3_1 =
   (let rec t_1_9 = (fun ys_3_0 -> 
     ys_3_0) in
-    (let rec h_1_8 = ((cjustify_lh__d2 21) _lh_title_arg1_0) in
-      (`LH_C(h_1_8, ((mappend_lh__d1_d0 t_1_9) ys_3_1)))));;
+    (let rec h_1_9 = ((cjustify_lh__d2 21) _lh_title_arg1_0) in
+      (`LH_C(h_1_9, ((mappend_lh__d1_d0 t_1_9) ys_3_1)))));;
 let rec leap_lh__d1 _lh_leap_arg1_1 =
   (if ((_lh_leap_arg1_1 mod 100) = 0) then
     ((_lh_leap_arg1_1 mod 400) = 0)
   else
     ((_lh_leap_arg1_1 mod 4) = 0));;
-let rec zip3_lh__d1 _lh_zip3_arg1_0 _lh_zip3_arg2_1_3 _lh_zip3_arg3_1_6 =
-  (let rec _lh_matchIdent_1_4 = _lh_zip3_arg1_0 in
-    ((_lh_matchIdent_1_4 _lh_zip3_arg2_1_3) _lh_zip3_arg3_1_6));;
 let rec mappend_lh__d1_d3 xs_1_2 ys_2_0 =
   (xs_1_2 ys_2_0);;
 let rec daynames_lh__d1 ys_1_2 =
   (let rec t_6 = (fun ys_1_1 -> 
     ys_1_1) in
-    (let rec h_5 = (`LH_C(' ', (`LH_C('S', (`LH_C('u', (`LH_C(' ', (`LH_C('M', (`LH_C('o', (`LH_C(' ', (`LH_C('T', (`LH_C('u', (`LH_C(' ', (`LH_C('W', (`LH_C('e', (`LH_C(' ', (`LH_C('T', (`LH_C('h', (`LH_C(' ', (`LH_C('F', (`LH_C('r', (`LH_C(' ', (`LH_C('S', (`LH_C('a', (`LH_N))))))))))))))))))))))))))))))))))))))))))) in
-      (`LH_C(h_5, ((mappend_lh__d1_d3 t_6) ys_1_2)))));;
+    (let rec h_6 = (`LH_C(' ', (`LH_C('S', (`LH_C('u', (`LH_C(' ', (`LH_C('M', (`LH_C('o', (`LH_C(' ', (`LH_C('T', (`LH_C('u', (`LH_C(' ', (`LH_C('W', (`LH_C('e', (`LH_C(' ', (`LH_C('T', (`LH_C('h', (`LH_C(' ', (`LH_C('F', (`LH_C('r', (`LH_C(' ', (`LH_C('S', (`LH_C('a', (`LH_N))))))))))))))))))))))))))))))))))))))))))) in
+      (`LH_C(h_6, ((mappend_lh__d1_d3 t_6) ys_1_2)))));;
 let rec map_lh__d5 f_1_3 ls_6 =
   (match ls_6 with
-    | `LH_C(h_1_9, t_2_0) -> 
-      (`LH_C((f_1_3 h_1_9), ((map_lh__d5 f_1_3) t_2_0)))
+    | `LH_C(h_2_0, t_2_0) -> 
+      (`LH_C((f_1_3 h_2_0), ((map_lh__d5 f_1_3) t_2_0)))
     | `LH_N -> 
       (`LH_N));;
-let rec block_lh__d2 _lh_block_arg1_1 _lh_funcomp_x_5 =
-  ((fun _lh_funcomp_x_6 -> 
-    (stack_lh__d1 ((map_lh__d5 spread_lh__d1) _lh_funcomp_x_6))) ((groop_lh__d1 _lh_block_arg1_1) _lh_funcomp_x_5));;
 let rec rjustify_lh__d1 _lh_rjustify_arg1_0 _lh_rjustify_arg2_0 =
   ((mappend_lh__d1_d5 (space_lh__d4 (_lh_rjustify_arg1_0 - (length_lh__d3 _lh_rjustify_arg2_0)))) _lh_rjustify_arg2_0);;
 let rec date_lh__d1 _lh_date_arg1_0 _lh_date_arg2_0 =
@@ -298,6 +359,9 @@ let rec date_lh__d1 _lh_date_arg1_0 _lh_date_arg2_0 =
 let rec dates_lh__d1 _lh_dates_arg1_0 _lh_dates_arg2_0 =
   ((map_lh__d5 (fun d_0 -> 
     ((date_lh__d1 _lh_dates_arg2_0) d_0))) ((enumFromTo_lh__d1 (1 - _lh_dates_arg1_0)) (42 - _lh_dates_arg1_0)));;
+let rec block_lh__d2 _lh_block_arg1_1 _lh_funcomp_x_5 =
+  ((fun _lh_funcomp_x_6 -> 
+    (stack_lh__d1 ((map_lh__d5 spread_lh__d1) _lh_funcomp_x_6))) ((groop_lh__d1 _lh_block_arg1_1) _lh_funcomp_x_5));;
 let rec entries_lh__d1 _lh_entries_arg1_0 _lh_entries_arg2_0 =
   ((block_lh__d2 7) ((dates_lh__d1 _lh_entries_arg1_0) _lh_entries_arg2_0));;
 let rec table_lh__d1 _lh_table_arg1_0 _lh_table_arg2_0 =
@@ -312,121 +376,121 @@ let rec monthLengths_lh__d1 _lh_monthLengths_arg1_1 _lh_zip3_LH_C_0_5_2 _lh_zip3
       (let rec _lh_zip3_LH_C_0_1_8 = 31 in
         (fun _lh_zip3_LH_C_0_1_9 _lh_zip3_LH_C_0_2_0 _lh_zip3_LH_C_1_3_0 _lh_zip3_LH_C_1_3_1 -> 
           (let rec t_2_1 = (((zip3_lh__d1 _lh_zip3_LH_C_1_3_1) _lh_zip3_LH_C_1_3_0) _lh_zip3_LH_C_1_2_7) in
-            (let rec h_2_0 = (let rec _lh_pic_LH_P3_2_0 = _lh_zip3_LH_C_0_1_8 in
+            (let rec h_2_1 = (let rec _lh_pic_LH_P3_2_0 = _lh_zip3_LH_C_0_1_8 in
               (let rec _lh_pic_LH_P3_1_0 = _lh_zip3_LH_C_0_1_9 in
                 (let rec _lh_pic_LH_P3_0_0 = _lh_zip3_LH_C_0_2_0 in
                   (fun _lh_dummy_8 -> 
                     ((mappend_lh__d1_d0 (title_lh__d1 _lh_pic_LH_P3_0_0)) ((table_lh__d1 _lh_pic_LH_P3_1_0) _lh_pic_LH_P3_2_0)))))) in
               (fun f_1_6 -> 
-                (`LH_C((f_1_6 h_2_0), ((map_lh__d3 f_1_6) t_2_1))))))))) in
+                (`LH_C((f_1_6 h_2_1), ((map_lh__d3 f_1_6) t_2_1))))))))) in
       (let rec _lh_zip3_LH_C_0_2_1 = 30 in
         (fun _lh_zip3_LH_C_0_2_2 _lh_zip3_LH_C_0_2_3 _lh_zip3_LH_C_1_3_2 _lh_zip3_LH_C_1_3_3 -> 
           (let rec t_2_2 = (((zip3_lh__d1 _lh_zip3_LH_C_1_3_3) _lh_zip3_LH_C_1_3_2) _lh_zip3_LH_C_1_2_6) in
-            (let rec h_2_1 = (let rec _lh_pic_LH_P3_2_1 = _lh_zip3_LH_C_0_2_1 in
+            (let rec h_2_2 = (let rec _lh_pic_LH_P3_2_1 = _lh_zip3_LH_C_0_2_1 in
               (let rec _lh_pic_LH_P3_1_1 = _lh_zip3_LH_C_0_2_2 in
                 (let rec _lh_pic_LH_P3_0_1 = _lh_zip3_LH_C_0_2_3 in
                   (fun _lh_dummy_9 -> 
                     ((mappend_lh__d1_d0 (title_lh__d1 _lh_pic_LH_P3_0_1)) ((table_lh__d1 _lh_pic_LH_P3_1_1) _lh_pic_LH_P3_2_1)))))) in
               (fun f_1_7 -> 
-                (`LH_C((f_1_7 h_2_1), ((map_lh__d3 f_1_7) t_2_2))))))))) in
+                (`LH_C((f_1_7 h_2_2), ((map_lh__d3 f_1_7) t_2_2))))))))) in
       (let rec _lh_zip3_LH_C_0_2_4 = 31 in
         (fun _lh_zip3_LH_C_0_2_5 _lh_zip3_LH_C_0_2_6 _lh_zip3_LH_C_1_3_4 _lh_zip3_LH_C_1_3_5 -> 
           (let rec t_2_3 = (((zip3_lh__d1 _lh_zip3_LH_C_1_3_5) _lh_zip3_LH_C_1_3_4) _lh_zip3_LH_C_1_2_5) in
-            (let rec h_2_2 = (let rec _lh_pic_LH_P3_2_2 = _lh_zip3_LH_C_0_2_4 in
+            (let rec h_2_3 = (let rec _lh_pic_LH_P3_2_2 = _lh_zip3_LH_C_0_2_4 in
               (let rec _lh_pic_LH_P3_1_2 = _lh_zip3_LH_C_0_2_5 in
                 (let rec _lh_pic_LH_P3_0_2 = _lh_zip3_LH_C_0_2_6 in
                   (fun _lh_dummy_1_0 -> 
                     ((mappend_lh__d1_d0 (title_lh__d1 _lh_pic_LH_P3_0_2)) ((table_lh__d1 _lh_pic_LH_P3_1_2) _lh_pic_LH_P3_2_2)))))) in
               (fun f_1_8 -> 
-                (`LH_C((f_1_8 h_2_2), ((map_lh__d3 f_1_8) t_2_3))))))))) in
+                (`LH_C((f_1_8 h_2_3), ((map_lh__d3 f_1_8) t_2_3))))))))) in
       (let rec _lh_zip3_LH_C_0_2_7 = 30 in
         (fun _lh_zip3_LH_C_0_2_8 _lh_zip3_LH_C_0_2_9 _lh_zip3_LH_C_1_3_6 _lh_zip3_LH_C_1_3_7 -> 
           (let rec t_2_4 = (((zip3_lh__d1 _lh_zip3_LH_C_1_3_7) _lh_zip3_LH_C_1_3_6) _lh_zip3_LH_C_1_2_4) in
-            (let rec h_2_3 = (let rec _lh_pic_LH_P3_2_3 = _lh_zip3_LH_C_0_2_7 in
+            (let rec h_2_4 = (let rec _lh_pic_LH_P3_2_3 = _lh_zip3_LH_C_0_2_7 in
               (let rec _lh_pic_LH_P3_1_3 = _lh_zip3_LH_C_0_2_8 in
                 (let rec _lh_pic_LH_P3_0_3 = _lh_zip3_LH_C_0_2_9 in
                   (fun _lh_dummy_1_1 -> 
                     ((mappend_lh__d1_d0 (title_lh__d1 _lh_pic_LH_P3_0_3)) ((table_lh__d1 _lh_pic_LH_P3_1_3) _lh_pic_LH_P3_2_3)))))) in
               (fun f_1_9 -> 
-                (`LH_C((f_1_9 h_2_3), ((map_lh__d3 f_1_9) t_2_4))))))))) in
+                (`LH_C((f_1_9 h_2_4), ((map_lh__d3 f_1_9) t_2_4))))))))) in
       (let rec _lh_zip3_LH_C_0_3_0 = 31 in
         (fun _lh_zip3_LH_C_0_3_1 _lh_zip3_LH_C_0_3_2 _lh_zip3_LH_C_1_3_8 _lh_zip3_LH_C_1_3_9 -> 
           (let rec t_2_5 = (((zip3_lh__d1 _lh_zip3_LH_C_1_3_9) _lh_zip3_LH_C_1_3_8) _lh_zip3_LH_C_1_2_3) in
-            (let rec h_2_4 = (let rec _lh_pic_LH_P3_2_4 = _lh_zip3_LH_C_0_3_0 in
+            (let rec h_2_5 = (let rec _lh_pic_LH_P3_2_4 = _lh_zip3_LH_C_0_3_0 in
               (let rec _lh_pic_LH_P3_1_4 = _lh_zip3_LH_C_0_3_1 in
                 (let rec _lh_pic_LH_P3_0_4 = _lh_zip3_LH_C_0_3_2 in
                   (fun _lh_dummy_1_2 -> 
                     ((mappend_lh__d1_d0 (title_lh__d1 _lh_pic_LH_P3_0_4)) ((table_lh__d1 _lh_pic_LH_P3_1_4) _lh_pic_LH_P3_2_4)))))) in
               (fun f_2_0 -> 
-                (`LH_C((f_2_0 h_2_4), ((map_lh__d3 f_2_0) t_2_5))))))))) in
+                (`LH_C((f_2_0 h_2_5), ((map_lh__d3 f_2_0) t_2_5))))))))) in
       (let rec _lh_zip3_LH_C_0_3_3 = 31 in
         (fun _lh_zip3_LH_C_0_3_4 _lh_zip3_LH_C_0_3_5 _lh_zip3_LH_C_1_4_0 _lh_zip3_LH_C_1_4_1 -> 
           (let rec t_2_6 = (((zip3_lh__d1 _lh_zip3_LH_C_1_4_1) _lh_zip3_LH_C_1_4_0) _lh_zip3_LH_C_1_2_2) in
-            (let rec h_2_5 = (let rec _lh_pic_LH_P3_2_5 = _lh_zip3_LH_C_0_3_3 in
+            (let rec h_2_6 = (let rec _lh_pic_LH_P3_2_5 = _lh_zip3_LH_C_0_3_3 in
               (let rec _lh_pic_LH_P3_1_5 = _lh_zip3_LH_C_0_3_4 in
                 (let rec _lh_pic_LH_P3_0_5 = _lh_zip3_LH_C_0_3_5 in
                   (fun _lh_dummy_1_3 -> 
                     ((mappend_lh__d1_d0 (title_lh__d1 _lh_pic_LH_P3_0_5)) ((table_lh__d1 _lh_pic_LH_P3_1_5) _lh_pic_LH_P3_2_5)))))) in
               (fun f_2_1 -> 
-                (`LH_C((f_2_1 h_2_5), ((map_lh__d3 f_2_1) t_2_6))))))))) in
+                (`LH_C((f_2_1 h_2_6), ((map_lh__d3 f_2_1) t_2_6))))))))) in
       (let rec _lh_zip3_LH_C_0_3_6 = 30 in
         (fun _lh_zip3_LH_C_0_3_7 _lh_zip3_LH_C_0_3_8 _lh_zip3_LH_C_1_4_2 _lh_zip3_LH_C_1_4_3 -> 
           (let rec t_2_7 = (((zip3_lh__d1 _lh_zip3_LH_C_1_4_3) _lh_zip3_LH_C_1_4_2) _lh_zip3_LH_C_1_2_1) in
-            (let rec h_2_6 = (let rec _lh_pic_LH_P3_2_6 = _lh_zip3_LH_C_0_3_6 in
+            (let rec h_2_7 = (let rec _lh_pic_LH_P3_2_6 = _lh_zip3_LH_C_0_3_6 in
               (let rec _lh_pic_LH_P3_1_6 = _lh_zip3_LH_C_0_3_7 in
                 (let rec _lh_pic_LH_P3_0_6 = _lh_zip3_LH_C_0_3_8 in
                   (fun _lh_dummy_1_4 -> 
                     ((mappend_lh__d1_d0 (title_lh__d1 _lh_pic_LH_P3_0_6)) ((table_lh__d1 _lh_pic_LH_P3_1_6) _lh_pic_LH_P3_2_6)))))) in
               (fun f_2_2 -> 
-                (`LH_C((f_2_2 h_2_6), ((map_lh__d3 f_2_2) t_2_7))))))))) in
+                (`LH_C((f_2_2 h_2_7), ((map_lh__d3 f_2_2) t_2_7))))))))) in
       (let rec _lh_zip3_LH_C_0_3_9 = 31 in
         (fun _lh_zip3_LH_C_0_4_0 _lh_zip3_LH_C_0_4_1 _lh_zip3_LH_C_1_4_4 _lh_zip3_LH_C_1_4_5 -> 
           (let rec t_2_8 = (((zip3_lh__d1 _lh_zip3_LH_C_1_4_5) _lh_zip3_LH_C_1_4_4) _lh_zip3_LH_C_1_2_0) in
-            (let rec h_2_7 = (let rec _lh_pic_LH_P3_2_7 = _lh_zip3_LH_C_0_3_9 in
+            (let rec h_2_8 = (let rec _lh_pic_LH_P3_2_7 = _lh_zip3_LH_C_0_3_9 in
               (let rec _lh_pic_LH_P3_1_7 = _lh_zip3_LH_C_0_4_0 in
                 (let rec _lh_pic_LH_P3_0_7 = _lh_zip3_LH_C_0_4_1 in
                   (fun _lh_dummy_1_5 -> 
                     ((mappend_lh__d1_d0 (title_lh__d1 _lh_pic_LH_P3_0_7)) ((table_lh__d1 _lh_pic_LH_P3_1_7) _lh_pic_LH_P3_2_7)))))) in
               (fun f_2_3 -> 
-                (`LH_C((f_2_3 h_2_7), ((map_lh__d3 f_2_3) t_2_8))))))))) in
+                (`LH_C((f_2_3 h_2_8), ((map_lh__d3 f_2_3) t_2_8))))))))) in
       (let rec _lh_zip3_LH_C_0_4_2 = 30 in
         (fun _lh_zip3_LH_C_0_4_3 _lh_zip3_LH_C_0_4_4 _lh_zip3_LH_C_1_4_6 _lh_zip3_LH_C_1_4_7 -> 
           (let rec t_2_9 = (((zip3_lh__d1 _lh_zip3_LH_C_1_4_7) _lh_zip3_LH_C_1_4_6) _lh_zip3_LH_C_1_1_9) in
-            (let rec h_2_8 = (let rec _lh_pic_LH_P3_2_8 = _lh_zip3_LH_C_0_4_2 in
+            (let rec h_2_9 = (let rec _lh_pic_LH_P3_2_8 = _lh_zip3_LH_C_0_4_2 in
               (let rec _lh_pic_LH_P3_1_8 = _lh_zip3_LH_C_0_4_3 in
                 (let rec _lh_pic_LH_P3_0_8 = _lh_zip3_LH_C_0_4_4 in
                   (fun _lh_dummy_1_6 -> 
                     ((mappend_lh__d1_d0 (title_lh__d1 _lh_pic_LH_P3_0_8)) ((table_lh__d1 _lh_pic_LH_P3_1_8) _lh_pic_LH_P3_2_8)))))) in
               (fun f_2_4 -> 
-                (`LH_C((f_2_4 h_2_8), ((map_lh__d3 f_2_4) t_2_9))))))))) in
+                (`LH_C((f_2_4 h_2_9), ((map_lh__d3 f_2_4) t_2_9))))))))) in
       (let rec _lh_zip3_LH_C_0_4_5 = 31 in
         (fun _lh_zip3_LH_C_0_4_6 _lh_zip3_LH_C_0_4_7 _lh_zip3_LH_C_1_4_8 _lh_zip3_LH_C_1_4_9 -> 
           (let rec t_3_0 = (((zip3_lh__d1 _lh_zip3_LH_C_1_4_9) _lh_zip3_LH_C_1_4_8) _lh_zip3_LH_C_1_1_8) in
-            (let rec h_2_9 = (let rec _lh_pic_LH_P3_2_9 = _lh_zip3_LH_C_0_4_5 in
+            (let rec h_3_0 = (let rec _lh_pic_LH_P3_2_9 = _lh_zip3_LH_C_0_4_5 in
               (let rec _lh_pic_LH_P3_1_9 = _lh_zip3_LH_C_0_4_6 in
                 (let rec _lh_pic_LH_P3_0_9 = _lh_zip3_LH_C_0_4_7 in
                   (fun _lh_dummy_1_7 -> 
                     ((mappend_lh__d1_d0 (title_lh__d1 _lh_pic_LH_P3_0_9)) ((table_lh__d1 _lh_pic_LH_P3_1_9) _lh_pic_LH_P3_2_9)))))) in
               (fun f_2_5 -> 
-                (`LH_C((f_2_5 h_2_9), ((map_lh__d3 f_2_5) t_3_0))))))))) in
+                (`LH_C((f_2_5 h_3_0), ((map_lh__d3 f_2_5) t_3_0))))))))) in
       (let rec _lh_zip3_LH_C_0_4_8 = feb_1 in
         (fun _lh_zip3_LH_C_0_4_9 _lh_zip3_LH_C_0_5_0 _lh_zip3_LH_C_1_5_0 _lh_zip3_LH_C_1_5_1 -> 
           (let rec t_3_1 = (((zip3_lh__d1 _lh_zip3_LH_C_1_5_1) _lh_zip3_LH_C_1_5_0) _lh_zip3_LH_C_1_1_7) in
-            (let rec h_3_0 = (let rec _lh_pic_LH_P3_2_1_0 = _lh_zip3_LH_C_0_4_8 in
+            (let rec h_3_1 = (let rec _lh_pic_LH_P3_2_1_0 = _lh_zip3_LH_C_0_4_8 in
               (let rec _lh_pic_LH_P3_1_1_0 = _lh_zip3_LH_C_0_4_9 in
                 (let rec _lh_pic_LH_P3_0_1_0 = _lh_zip3_LH_C_0_5_0 in
                   (fun _lh_dummy_1_8 -> 
                     ((mappend_lh__d1_d0 (title_lh__d1 _lh_pic_LH_P3_0_1_0)) ((table_lh__d1 _lh_pic_LH_P3_1_1_0) _lh_pic_LH_P3_2_1_0)))))) in
               (fun f_2_6 -> 
-                (`LH_C((f_2_6 h_3_0), ((map_lh__d3 f_2_6) t_3_1))))))))) in
+                (`LH_C((f_2_6 h_3_1), ((map_lh__d3 f_2_6) t_3_1))))))))) in
       (let rec _lh_zip3_LH_C_0_5_1 = 31 in
         (let rec t_3_2 = (((zip3_lh__d1 _lh_zip3_LH_C_1_5_3) _lh_zip3_LH_C_1_5_2) _lh_zip3_LH_C_1_1_6) in
-          (let rec h_3_1 = (let rec _lh_pic_LH_P3_2_1_1 = _lh_zip3_LH_C_0_5_1 in
+          (let rec h_3_2 = (let rec _lh_pic_LH_P3_2_1_1 = _lh_zip3_LH_C_0_5_1 in
             (let rec _lh_pic_LH_P3_1_1_1 = _lh_zip3_LH_C_0_5_2 in
               (let rec _lh_pic_LH_P3_0_1_1 = _lh_zip3_LH_C_0_5_3 in
                 (fun _lh_dummy_1_9 -> 
                   ((mappend_lh__d1_d0 (title_lh__d1 _lh_pic_LH_P3_0_1_1)) ((table_lh__d1 _lh_pic_LH_P3_1_1_1) _lh_pic_LH_P3_2_1_1)))))) in
-            (`LH_C((f_2_7 h_3_1), ((map_lh__d3 f_2_7) t_3_2))))))));;
+            (`LH_C((f_2_7 h_3_2), ((map_lh__d3 f_2_7) t_3_2))))))));;
 let rec leap_lh__d2 _lh_leap_arg1_0 =
   (if ((_lh_leap_arg1_0 mod 100) = 0) then
     ((_lh_leap_arg1_0 mod 400) = 0)
@@ -480,9 +544,9 @@ let rec monthLengths_lh__d2 _lh_monthLengths_arg1_0 _lh_scanl_arg1_1_2 _lh_scanl
 let rec take_lh__d2 n_0 ls_2 _lh_popOutId_0_2 _lh_popOutId_1_1 _lh_popOutId_2_1 =
   (if (n_0 > 0) then
     (match ls_2 with
-      | `LH_C(h_9, t_1_0) -> 
+      | `LH_C(h_1_0, t_1_0) -> 
         (let rec _lh_zip3_LH_C_1_1_2 = ((take_lh__d2 (n_0 - 1)) t_1_0) in
-          (let rec _lh_zip3_LH_C_0_1_2 = h_9 in
+          (let rec _lh_zip3_LH_C_0_1_2 = h_1_0 in
             (let rec _lh_matchIdent_1_2 = _lh_popOutId_2_1 in
               ((((_lh_matchIdent_1_2 _lh_zip3_LH_C_0_1_2) _lh_popOutId_0_2) _lh_zip3_LH_C_1_1_2) _lh_popOutId_1_1))))
       | `LH_N -> 
@@ -554,68 +618,6 @@ let rec body_lh__d1 _lh_funcomp_x_0 =
   ((fun _lh_funcomp_x_1 -> 
     ((block_lh__d1 3) ((map_lh__d3 (fun _lh_funcomp_x_2 -> 
       (pad_lh__d1 (pic_lh__d1 _lh_funcomp_x_2)))) _lh_funcomp_x_1))) (months_lh__d1 _lh_funcomp_x_0));;
-let rec emptyPic_lh__d1 _lh_emptyPic_arg1_2 =
-  (_lh_emptyPic_arg1_2 99);;
-let rec mappend_lh__d2 xs_5 ys_8 =
-  (xs_5 ys_8);;
-let rec copy_lh__d1 _lh_copy_arg1_2 _lh_copy_arg2_2 =
-  (if (_lh_copy_arg1_2 > 0) then
-    (`LH_C(_lh_copy_arg2_2, ((copy_lh__d1 (_lh_copy_arg1_2 - 1)) _lh_copy_arg2_2)))
-  else
-    (`LH_N));;
-let rec mappend_lh__d5 xs_6 ys_9 =
-  (xs_6 ys_9);;
-let rec mappend_lh__d4 xs_1_1 ys_1_9 =
-  (match xs_1_1 with
-    | `LH_C(h_1_2, t_1_3) -> 
-      (`LH_C(h_1_2, ((mappend_lh__d4 t_1_3) ys_1_9)))
-    | `LH_N -> 
-      ys_1_9);;
-let rec copy_lh__d4 _lh_copy_arg1_1 _lh_copy_arg2_1 =
-  (if (_lh_copy_arg1_1 > 0) then
-    (`LH_C(_lh_copy_arg2_1, ((copy_lh__d4 (_lh_copy_arg1_1 - 1)) _lh_copy_arg2_1)))
-  else
-    (`LH_N));;
-let rec space_lh__d2 _lh_space_arg1_1 =
-  ((copy_lh__d4 _lh_space_arg1_1) ' ');;
-let rec copy_lh__d3 _lh_copy_arg1_7 _lh_copy_arg2_7 _lh_popOutId_0_8 =
-  (if (_lh_copy_arg1_7 > 0) then
-    (let rec t_3_6 = ((copy_lh__d3 (_lh_copy_arg1_7 - 1)) _lh_copy_arg2_7) in
-      (let rec h_3_5 = _lh_copy_arg2_7 in
-        (`LH_C(h_3_5, ((mappend_lh__d5 t_3_6) _lh_popOutId_0_8)))))
-  else
-    _lh_popOutId_0_8);;
-let rec space_lh__d1 _lh_space_arg1_3 =
-  ((copy_lh__d3 _lh_space_arg1_3) ' ');;
-let rec length_lh__d2 ls_1_1 =
-  (match ls_1_1 with
-    | `LH_C(h_3_9, t_4_1) -> 
-      (1 + (length_lh__d2 t_4_1))
-    | `LH_N -> 
-      0);;
-let rec cjustify_lh__d1 _lh_cjustify_arg1_1 _lh_cjustify_arg2_1 =
-  (let rec m_1 = (_lh_cjustify_arg1_1 - (length_lh__d2 _lh_cjustify_arg2_1)) in
-    (let rec halfm_1 = (m_1 / 2) in
-      ((mappend_lh__d4 ((mappend_lh__d5 (space_lh__d1 halfm_1)) _lh_cjustify_arg2_1)) (space_lh__d2 (m_1 - halfm_1)))));;
-let rec copy_lh__d2 _lh_copy_arg1_5 _lh_copy_arg2_5 _lh_popOutId_0_6 =
-  (if (_lh_copy_arg1_5 > 0) then
-    (let rec t_3_3 = ((copy_lh__d2 (_lh_copy_arg1_5 - 1)) _lh_copy_arg2_5) in
-      (let rec h_3_2 = _lh_copy_arg2_5 in
-        (`LH_C(h_3_2, ((mappend_lh__d1 t_3_3) _lh_popOutId_0_6)))))
-  else
-    _lh_popOutId_0_6);;
-let rec banner_lh__d1 _lh_banner_arg1_0 =
-  ((mappend_lh__d2 (let rec t_8 = (fun ys_1_4 -> 
-    ys_1_4) in
-    (let rec h_7 = ((cjustify_lh__d1 75) (string_of_int _lh_banner_arg1_0)) in
-      (fun ys_1_5 -> 
-        (let rec t_9 = ((mappend_lh__d2 t_8) ys_1_5) in
-          (let rec h_8 = h_7 in
-            (fun ys_1_6 -> 
-              (`LH_C(h_8, ((mappend_lh__d1 t_9) ys_1_6)))))))))) (emptyPic_lh__d1 (let rec _lh_emptyPic_LH_P2_1_1 = 75 in
-    (let rec _lh_emptyPic_LH_P2_0_1 = 1 in
-      (fun _lh_dummy_2 -> 
-        ((copy_lh__d2 _lh_emptyPic_LH_P2_0_1) ((copy_lh__d1 _lh_emptyPic_LH_P2_1_1) ' ')))))));;
 let rec cal_lh__d1 _lh_cal_arg1_0 =
   (unlines_lh__d1 ((mappend_lh__d1 (banner_lh__d1 _lh_cal_arg1_0)) (body_lh__d1 _lh_cal_arg1_0)));;
 let rec testCalendar_nofib_lh__d1 _lh_testCalendar_nofib_arg1_0 =

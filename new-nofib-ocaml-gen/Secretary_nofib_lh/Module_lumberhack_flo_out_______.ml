@@ -34,33 +34,35 @@ let rec infRand_lh__d1 _lh_infRand_arg1_0 =
 let rec enumFromTo_lh__d2 a_0 b_0 =
   (if (a_0 <= b_0) then
     (let rec _lh_listcomp_fun_ls_t_0 = ((enumFromTo_lh__d2 (a_0 + 1)) b_0) in
-      (fun _lh_listcomp_fun_2 _lh_simulate_arg2_0 _lh_simulate_arg3_0 -> 
-        (let rec t_1 = (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_0) in
-          (let rec h_1 = (_lh_simulate_arg3_0 (infRand_lh__d1 _lh_simulate_arg2_0)) in
-            (fun f_1 -> 
-              (if (f_1 h_1) then
-                (let rec t_2 = (t_1 f_1) in
-                  (fun _lh_dummy_0 -> 
-                    (1 + (t_2 99))))
-              else
-                (t_1 f_1)))))))
+      (let rec _lh_listcomp_fun_ls_h_0 = a_0 in
+        (fun _lh_listcomp_fun_2 _lh_simulate_arg2_0 _lh_simulate_arg3_0 -> 
+          (let rec t_1 = (_lh_listcomp_fun_2 _lh_listcomp_fun_ls_t_0) in
+            (let rec h_1 = (_lh_simulate_arg3_0 (infRand_lh__d1 _lh_simulate_arg2_0)) in
+              (fun f_1 -> 
+                (if (f_1 h_1) then
+                  (let rec t_2 = (t_1 f_1) in
+                    (let rec h_2 = h_1 in
+                      (fun _lh_dummy_0 -> 
+                        (1 + (t_2 99)))))
+                else
+                  (t_1 f_1))))))))
   else
     (fun _lh_listcomp_fun_3 _lh_simulate_arg2_1 _lh_simulate_arg3_1 f_2 _lh_dummy_1 -> 
       0));;
 let rec take_lh__d1 n_0 ls_1 =
   (if (n_0 > 0) then
     (match ls_1 with
-      | `LH_C(h_2, t_3) -> 
-        (`LH_C(h_2, ((take_lh__d1 (n_0 - 1)) t_3)))
+      | `LH_C(h_3, t_3) -> 
+        (`LH_C(h_3, ((take_lh__d1 (n_0 - 1)) t_3)))
       | `LH_N -> 
         (`LH_N))
   else
     (`LH_N));;
 let rec filter_lz_lh__d1 f_4 ls_4 =
   (lazy (match (Lazy.force ls_4) with
-    | `LH_C(h_3, t_4) -> 
-      (if (f_4 h_3) then
-        (`LH_C(h_3, ((filter_lz_lh__d1 f_4) t_4)))
+    | `LH_C(h_4, t_4) -> 
+      (if (f_4 h_4) then
+        (`LH_C(h_4, ((filter_lz_lh__d1 f_4) t_4)))
       else
         (Lazy.force ((filter_lz_lh__d1 f_4) t_4)))
     | `LH_N -> 
@@ -108,8 +110,8 @@ let rec dropWhile_lh__d1 _lh_dropWhile_arg1_0 _lh_dropWhile_arg2_0 =
 let rec take_lh__d2 n_1 ls_5 =
   (if (n_1 > 0) then
     (match ls_5 with
-      | `LH_C(h_4, t_5) -> 
-        (`LH_C(h_4, ((take_lh__d2 (n_1 - 1)) t_5)))
+      | `LH_C(h_5, t_5) -> 
+        (`LH_C(h_5, ((take_lh__d2 (n_1 - 1)) t_5)))
       | `LH_N -> 
         (`LH_N))
   else
@@ -133,9 +135,9 @@ let rec sim_lh__d1 _lh_sim_arg1_0 =
 let rec enumFromTo_lh__d1 a_1 b_1 =
   (if (a_1 <= b_1) then
     (let rec _lh_listcomp_fun_ls_t_1 = ((enumFromTo_lh__d1 (a_1 + 1)) b_1) in
-      (let rec _lh_listcomp_fun_ls_h_0 = a_1 in
+      (let rec _lh_listcomp_fun_ls_h_1 = a_1 in
         (fun _lh_listcomp_fun_4 -> 
-          (`LH_C((sim_lh__d1 _lh_listcomp_fun_ls_h_0), (_lh_listcomp_fun_4 _lh_listcomp_fun_ls_t_1))))))
+          (`LH_C((sim_lh__d1 _lh_listcomp_fun_ls_h_1), (_lh_listcomp_fun_4 _lh_listcomp_fun_ls_t_1))))))
   else
     (fun _lh_listcomp_fun_5 -> 
       (`LH_N)));;

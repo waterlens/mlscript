@@ -199,8 +199,8 @@ let rec placePiece_lh__d1 _lh_placePiece_arg1_0 _lh_placePiece_arg2_0 _lh_placeP
           (failwith "error"))));;
 let rec map_lh__d6 f_3 ls_3 =
   (match ls_3 with
-    | `LH_C(h_9_8, t_1_1_4) -> 
-      (`LH_C((f_3 h_9_8), ((map_lh__d6 f_3) t_1_1_4)))
+    | `LH_C(h_1_1_4, t_1_1_4) -> 
+      (`LH_C((f_3 h_1_1_4), ((map_lh__d6 f_3) t_1_1_4)))
     | `LH_N -> 
       (`LH_N));;
 let rec cropTree_lh__d1 _lh_cropTree_arg1_0 =
@@ -253,12 +253,12 @@ let rec enumFromTo_lh__d2 a_0 b_0 =
       (let rec _lh_listcomp_fun_ls_h_0 = a_0 in
         (fun _lh_listcomp_fun_ls_h_1 _lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_1 _lh_listcomp_fun_2 -> 
           (let rec t_3_6 = (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_0) in
-            (let rec h_3_5 = (`LH_P2(_lh_listcomp_fun_ls_h_1, _lh_listcomp_fun_ls_h_0)) in
+            (let rec h_3_6 = (`LH_P2(_lh_listcomp_fun_ls_h_1, _lh_listcomp_fun_ls_h_0)) in
               (fun f_1 -> 
                 (let rec t_3_7 = (t_3_6 f_1) in
-                  (let rec h_3_6 = (f_1 h_3_5) in
+                  (let rec h_3_7 = (f_1 h_3_6) in
                     (fun _lh_dummy_1 -> 
-                      ((mappend_lh__d2_d1 h_3_6) (t_3_7 99)))))))))))
+                      ((mappend_lh__d2_d1 h_3_7) (t_3_7 99)))))))))))
   else
     (fun _lh_listcomp_fun_ls_h_2 _lh_listcomp_fun_3 _lh_listcomp_fun_ls_t_2 _lh_listcomp_fun_4 -> 
       (_lh_listcomp_fun_4 _lh_listcomp_fun_ls_t_2)));;
@@ -293,8 +293,8 @@ let rec searchTree_lh__d1 _lh_searchTree_arg1_0 _lh_searchTree_arg2_0 =
       (_lh_listcomp_fun_6 ((enumFromTo_lh__d1 1) 3))) ((placePiece_lh__d1 (opposite_lh__d1 _lh_searchTree_arg1_0)) _lh_newPositions_arg2_2)) 99))) _lh_searchTree_arg2_0));;
 let rec foldr_lh__d1 f_2 i_0 ls_1 =
   (match ls_1 with
-    | `LH_C(h_3_7, t_3_8) -> 
-      ((f_2 h_3_7) (((foldr_lh__d1 f_2) i_0) t_3_8))
+    | `LH_C(h_3_8, t_3_8) -> 
+      ((f_2 h_3_8) (((foldr_lh__d1 f_2) i_0) t_3_8))
     | `LH_N -> 
       i_0);;
 let rec mise_lh__d1 _lh_mise_arg1_0 _lh_mise_arg2_0 _lh_mise_arg3_0 =
@@ -345,28 +345,12 @@ let rec map2_lh__d1 _lh_map2_arg1_0 _lh_map2_arg2_0 _lh_map2_arg3_0 =
               (failwith "error"))));;
 let rec sum_lh__d1 ls_2 =
   (match ls_2 with
-    | `LH_C(h_9_7, t_1_1_3) -> 
-      (h_9_7 + (sum_lh__d1 t_1_1_3))
+    | `LH_C(h_1_1_3, t_1_1_3) -> 
+      (h_1_1_3 + (sum_lh__d1 t_1_1_3))
     | `LH_N -> 
       0);;
 let rec score_lh__d2 _lh_score_arg1_1 _lh_score_arg2_1 =
   (eval_lh__d1 (sum_lh__d1 ((map_lh__d6 sum_lh__d1) (((map2_lh__d1 (map2_lh__d1 scorePiece_lh__d1)) _lh_score_arg1_1) _lh_score_arg2_1))));;
-let rec interpret_lh__d2 _lh_interpret_arg1_0 _lh_interpret_arg2_0 =
-  (match _lh_interpret_arg2_0 with
-    | `LH_N -> 
-      (`Score(_lh_interpret_arg1_0))
-    | `LH_C(_lh_interpret_LH_C_0_0, _lh_interpret_LH_C_1_0) -> 
-      (match _lh_interpret_LH_C_0_0 with
-        | `Score(_lh_interpret_Score_0_0) -> 
-          ((interpret_lh__d2 (_lh_interpret_arg1_0 + _lh_interpret_Score_0_0)) _lh_interpret_LH_C_1_0)
-        | `XWin -> 
-          (`XWin)
-        | `OWin -> 
-          (`OWin)
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
 let rec win4_lh__d1 =
   (`LH_C((`LH_C(1, (`LH_C(0, (`LH_C(0, (`LH_N))))))), (`LH_C((`LH_C(1, (`LH_C(0, (`LH_C(0, (`LH_N))))))), (`LH_C((`LH_C(1, (`LH_C(0, (`LH_C(0, (`LH_N))))))), (`LH_N)))))));;
 let rec win6_lh__d1 =
@@ -385,6 +369,22 @@ let rec win5_lh__d1 =
   (`LH_C((`LH_C(0, (`LH_C(1, (`LH_C(0, (`LH_N))))))), (`LH_C((`LH_C(0, (`LH_C(1, (`LH_C(0, (`LH_N))))))), (`LH_C((`LH_C(0, (`LH_C(1, (`LH_C(0, (`LH_N))))))), (`LH_N)))))));;
 let rec wins_lh__d2 =
   (`LH_C(win1_lh__d1, (`LH_C(win2_lh__d1, (`LH_C(win3_lh__d1, (`LH_C(win4_lh__d1, (`LH_C(win5_lh__d1, (`LH_C(win6_lh__d1, (`LH_C(win7_lh__d1, (`LH_C(win8_lh__d1, (`LH_N)))))))))))))))));;
+let rec interpret_lh__d2 _lh_interpret_arg1_0 _lh_interpret_arg2_0 =
+  (match _lh_interpret_arg2_0 with
+    | `LH_N -> 
+      (`Score(_lh_interpret_arg1_0))
+    | `LH_C(_lh_interpret_LH_C_0_0, _lh_interpret_LH_C_1_0) -> 
+      (match _lh_interpret_LH_C_0_0 with
+        | `Score(_lh_interpret_Score_0_0) -> 
+          ((interpret_lh__d2 (_lh_interpret_arg1_0 + _lh_interpret_Score_0_0)) _lh_interpret_LH_C_1_0)
+        | `XWin -> 
+          (`XWin)
+        | `OWin -> 
+          (`OWin)
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
 let rec static_lh__d3 _lh_static_arg1_2 =
   ((interpret_lh__d2 0) ((map_lh__d6 (score_lh__d2 _lh_static_arg1_2)) wins_lh__d2));;
 let rec mapTree_lh__d1 _lh_mapTree_arg1_0 _lh_mapTree_arg2_0 =
@@ -406,10 +406,10 @@ let rec testBoard_lh__d2_d6 =
 let rec wins_lh__d1 f_1_9 _lh_interpret_arg1_1 =
   (let rec t_1_8_3 = (let rec t_1_8_4 = (let rec t_1_8_5 = (let rec t_1_8_6 = (let rec t_1_8_7 = (let rec t_1_8_8 = (let rec t_1_8_9 = (let rec t_1_9_0 = (fun f_2_0 _lh_interpret_arg1_2 -> 
     (`Score(_lh_interpret_arg1_2))) in
-    (let rec h_1_5_5 = win8_lh__d1 in
+    (let rec h_1_8_3 = win8_lh__d1 in
       (fun f_2_1 -> 
         (let rec _lh_interpret_LH_C_1_1 = (t_1_9_0 f_2_1) in
-          (let rec _lh_interpret_LH_C_0_1 = (f_2_1 h_1_5_5) in
+          (let rec _lh_interpret_LH_C_0_1 = (f_2_1 h_1_8_3) in
             (fun _lh_interpret_arg1_3 -> 
               (match _lh_interpret_LH_C_0_1 with
                 | `Score(_lh_interpret_Score_0_1) -> 
@@ -420,10 +420,10 @@ let rec wins_lh__d1 f_1_9 _lh_interpret_arg1_1 =
                   (`OWin)
                 | _ -> 
                   (failwith "error")))))))) in
-    (let rec h_1_5_6 = win7_lh__d1 in
+    (let rec h_1_8_4 = win7_lh__d1 in
       (fun f_2_2 -> 
         (let rec _lh_interpret_LH_C_1_2 = (t_1_8_9 f_2_2) in
-          (let rec _lh_interpret_LH_C_0_2 = (f_2_2 h_1_5_6) in
+          (let rec _lh_interpret_LH_C_0_2 = (f_2_2 h_1_8_4) in
             (fun _lh_interpret_arg1_4 -> 
               (match _lh_interpret_LH_C_0_2 with
                 | `Score(_lh_interpret_Score_0_2) -> 
@@ -434,10 +434,10 @@ let rec wins_lh__d1 f_1_9 _lh_interpret_arg1_1 =
                   (`OWin)
                 | _ -> 
                   (failwith "error")))))))) in
-    (let rec h_1_5_7 = win6_lh__d1 in
+    (let rec h_1_8_5 = win6_lh__d1 in
       (fun f_2_3 -> 
         (let rec _lh_interpret_LH_C_1_3 = (t_1_8_8 f_2_3) in
-          (let rec _lh_interpret_LH_C_0_3 = (f_2_3 h_1_5_7) in
+          (let rec _lh_interpret_LH_C_0_3 = (f_2_3 h_1_8_5) in
             (fun _lh_interpret_arg1_5 -> 
               (match _lh_interpret_LH_C_0_3 with
                 | `Score(_lh_interpret_Score_0_3) -> 
@@ -448,10 +448,10 @@ let rec wins_lh__d1 f_1_9 _lh_interpret_arg1_1 =
                   (`OWin)
                 | _ -> 
                   (failwith "error")))))))) in
-    (let rec h_1_5_8 = win5_lh__d1 in
+    (let rec h_1_8_6 = win5_lh__d1 in
       (fun f_2_4 -> 
         (let rec _lh_interpret_LH_C_1_4 = (t_1_8_7 f_2_4) in
-          (let rec _lh_interpret_LH_C_0_4 = (f_2_4 h_1_5_8) in
+          (let rec _lh_interpret_LH_C_0_4 = (f_2_4 h_1_8_6) in
             (fun _lh_interpret_arg1_6 -> 
               (match _lh_interpret_LH_C_0_4 with
                 | `Score(_lh_interpret_Score_0_4) -> 
@@ -462,10 +462,10 @@ let rec wins_lh__d1 f_1_9 _lh_interpret_arg1_1 =
                   (`OWin)
                 | _ -> 
                   (failwith "error")))))))) in
-    (let rec h_1_5_9 = win4_lh__d1 in
+    (let rec h_1_8_7 = win4_lh__d1 in
       (fun f_2_5 -> 
         (let rec _lh_interpret_LH_C_1_5 = (t_1_8_6 f_2_5) in
-          (let rec _lh_interpret_LH_C_0_5 = (f_2_5 h_1_5_9) in
+          (let rec _lh_interpret_LH_C_0_5 = (f_2_5 h_1_8_7) in
             (fun _lh_interpret_arg1_7 -> 
               (match _lh_interpret_LH_C_0_5 with
                 | `Score(_lh_interpret_Score_0_5) -> 
@@ -476,10 +476,10 @@ let rec wins_lh__d1 f_1_9 _lh_interpret_arg1_1 =
                   (`OWin)
                 | _ -> 
                   (failwith "error")))))))) in
-    (let rec h_1_6_0 = win3_lh__d1 in
+    (let rec h_1_8_8 = win3_lh__d1 in
       (fun f_2_6 -> 
         (let rec _lh_interpret_LH_C_1_6 = (t_1_8_5 f_2_6) in
-          (let rec _lh_interpret_LH_C_0_6 = (f_2_6 h_1_6_0) in
+          (let rec _lh_interpret_LH_C_0_6 = (f_2_6 h_1_8_8) in
             (fun _lh_interpret_arg1_8 -> 
               (match _lh_interpret_LH_C_0_6 with
                 | `Score(_lh_interpret_Score_0_6) -> 
@@ -490,10 +490,10 @@ let rec wins_lh__d1 f_1_9 _lh_interpret_arg1_1 =
                   (`OWin)
                 | _ -> 
                   (failwith "error")))))))) in
-    (let rec h_1_6_1 = win2_lh__d1 in
+    (let rec h_1_8_9 = win2_lh__d1 in
       (fun f_2_7 -> 
         (let rec _lh_interpret_LH_C_1_7 = (t_1_8_4 f_2_7) in
-          (let rec _lh_interpret_LH_C_0_7 = (f_2_7 h_1_6_1) in
+          (let rec _lh_interpret_LH_C_0_7 = (f_2_7 h_1_8_9) in
             (fun _lh_interpret_arg1_9 -> 
               (match _lh_interpret_LH_C_0_7 with
                 | `Score(_lh_interpret_Score_0_7) -> 
@@ -504,9 +504,9 @@ let rec wins_lh__d1 f_1_9 _lh_interpret_arg1_1 =
                   (`OWin)
                 | _ -> 
                   (failwith "error")))))))) in
-    (let rec h_1_6_2 = win1_lh__d1 in
+    (let rec h_1_9_0 = win1_lh__d1 in
       (let rec _lh_interpret_LH_C_1_8 = (t_1_8_3 f_1_9) in
-        (let rec _lh_interpret_LH_C_0_8 = (f_1_9 h_1_6_2) in
+        (let rec _lh_interpret_LH_C_0_8 = (f_1_9 h_1_9_0) in
           (match _lh_interpret_LH_C_0_8 with
             | `Score(_lh_interpret_Score_0_8) -> 
               (_lh_interpret_LH_C_1_8 (_lh_interpret_arg1_1 + _lh_interpret_Score_0_8))
@@ -545,14 +545,14 @@ let rec testBoard_lh__d1_d5 =
 let rec testBoard_lh__d2_d9 ys_4_4 =
   (let rec t_3_3 = (let rec t_3_4 = (let rec t_3_5 = (fun ys_4_5 -> 
     ys_4_5) in
-    (let rec h_3_2 = (`LH_C((`Empty), (`LH_C((`Empty), (`LH_C((`Empty), (`LH_N))))))) in
+    (let rec h_3_3 = (`LH_C((`Empty), (`LH_C((`Empty), (`LH_C((`Empty), (`LH_N))))))) in
       (fun ys_4_6 -> 
-        (`LH_C(h_3_2, (t_3_5 ys_4_6)))))) in
-    (let rec h_3_3 = (`LH_C((`Empty), (`LH_C((`X), (`LH_C((`Empty), (`LH_N))))))) in
+        (`LH_C(h_3_3, (t_3_5 ys_4_6)))))) in
+    (let rec h_3_4 = (`LH_C((`Empty), (`LH_C((`X), (`LH_C((`Empty), (`LH_N))))))) in
       (fun ys_4_7 -> 
-        (`LH_C(h_3_3, (t_3_4 ys_4_7)))))) in
-    (let rec h_3_4 = (`LH_C((`Empty), (`LH_C((`O), (`LH_C((`Empty), (`LH_N))))))) in
-      (`LH_C(h_3_4, (t_3_3 ys_4_4)))));;
+        (`LH_C(h_3_4, (t_3_4 ys_4_7)))))) in
+    (let rec h_3_5 = (`LH_C((`Empty), (`LH_C((`O), (`LH_C((`Empty), (`LH_N))))))) in
+      (`LH_C(h_3_5, (t_3_3 ys_4_4)))));;
 let rec testBoard_lh__d1_d8 =
   (`LH_C((`LH_C((`Empty), (`LH_C((`O), (`LH_C((`Empty), (`LH_N))))))), (`LH_C((`LH_C((`Empty), (`LH_C((`X), (`LH_C((`Empty), (`LH_N))))))), (`LH_C((`LH_C((`Empty), (`LH_C((`Empty), (`LH_C((`Empty), (`LH_N))))))), (`LH_N)))))));;
 let rec testBoard_lh__d2_d3 =
@@ -565,8 +565,8 @@ let rec testBoard_lh__d2_d0 =
   (`LH_C((`LH_C((`Empty), (`LH_C((`O), (`LH_C((`Empty), (`LH_N))))))), (`LH_C((`LH_C((`Empty), (`LH_C((`X), (`LH_C((`Empty), (`LH_N))))))), (`LH_C((`LH_C((`Empty), (`LH_C((`Empty), (`LH_C((`Empty), (`LH_N))))))), (`LH_N)))))));;
 let rec map_lh__d2 f_4 ls_4 =
   (match ls_4 with
-    | `LH_C(h_1_0_2, t_1_1_9) -> 
-      (`LH_C((f_4 h_1_0_2), ((map_lh__d2 f_4) t_1_1_9)))
+    | `LH_C(h_1_1_9, t_1_1_9) -> 
+      (`LH_C((f_4 h_1_1_9), ((map_lh__d2 f_4) t_1_1_9)))
     | `LH_N -> 
       (`LH_N));;
 let rec showMove_lh__d1 _lh_showMove_arg1_0 =
@@ -637,23 +637,23 @@ let rec min'_lh__d1 _lh_min'_arg1_0 _lh_min'_arg2_0 =
                       (failwith "error"))))));;
 let rec testBoard_lh__d1_d4 =
   (`LH_C((`LH_C((`Empty), (`LH_C((`O), (`LH_C((`Empty), (`LH_N))))))), (`LH_C((`LH_C((`Empty), (`LH_C((`X), (`LH_C((`Empty), (`LH_N))))))), (`LH_C((`LH_C((`Empty), (`LH_C((`Empty), (`LH_C((`Empty), (`LH_N))))))), (`LH_N)))))));;
+let rec concat_lh__d2 lss_1 =
+  (match lss_1 with
+    | `LH_C(h_3_2, t_3_2) -> 
+      ((mappend_lh__d2_d1 h_3_2) (concat_lh__d2 t_3_2))
+    | `LH_N -> 
+      (`LH_N));;
 let rec map_lh__d3 f_1_1 ls_8 _lh_popOutId_0_0 =
   (match ls_8 with
-    | `LH_C(h_1_4_4, t_1_6_8) -> 
+    | `LH_C(h_1_6_8, t_1_6_8) -> 
       (let rec _lh_and_LH_C_1_0 = ((map_lh__d3 f_1_1) t_1_6_8) in
-        (let rec _lh_and_LH_C_0_0 = (f_1_1 h_1_4_4) in
+        (let rec _lh_and_LH_C_0_0 = (f_1_1 h_1_6_8) in
           (if _lh_and_LH_C_0_0 then
             (_lh_and_LH_C_1_0 99)
           else
             false)))
     | `LH_N -> 
       true);;
-let rec concat_lh__d2 lss_1 =
-  (match lss_1 with
-    | `LH_C(h_3_1, t_3_2) -> 
-      ((mappend_lh__d2_d1 h_3_1) (concat_lh__d2 t_3_2))
-    | `LH_N -> 
-      (`LH_N));;
 let rec fullBoard_lh__d1 _lh_fullBoard_arg1_0 =
   (((map_lh__d3 (fun x_0 -> 
     (not (x_0 = (`Empty))))) (concat_lh__d2 _lh_fullBoard_arg1_0)) 99);;
@@ -672,21 +672,245 @@ let rec showEvaluation_lh__d1 _lh_showEvaluation_arg1_0 =
     | `Score(_lh_showEvaluation_Score_0_0) -> 
       ((let rec t_4_9 = (let rec t_5_0 = (let rec t_5_1 = (let rec t_5_2 = (let rec t_5_3 = (fun ys_6_1 -> 
         ys_6_1) in
-        (let rec h_4_6 = 'e' in
+        (let rec h_4_9 = 'e' in
           (fun ys_6_2 -> 
-            (`LH_C(h_4_6, (t_5_3 ys_6_2)))))) in
-        (let rec h_4_7 = 'r' in
+            (`LH_C(h_4_9, (t_5_3 ys_6_2)))))) in
+        (let rec h_5_0 = 'r' in
           (fun ys_6_3 -> 
-            (`LH_C(h_4_7, (t_5_2 ys_6_3)))))) in
-        (let rec h_4_8 = 'o' in
+            (`LH_C(h_5_0, (t_5_2 ys_6_3)))))) in
+        (let rec h_5_1 = 'o' in
           (fun ys_6_4 -> 
-            (`LH_C(h_4_8, (t_5_1 ys_6_4)))))) in
-        (let rec h_4_9 = 'c' in
+            (`LH_C(h_5_1, (t_5_1 ys_6_4)))))) in
+        (let rec h_5_2 = 'c' in
           (fun ys_6_5 -> 
-            (`LH_C(h_4_9, (t_5_0 ys_6_5)))))) in
-        (let rec h_5_0 = 'S' in
+            (`LH_C(h_5_2, (t_5_0 ys_6_5)))))) in
+        (let rec h_5_3 = 'S' in
           (fun ys_6_6 -> 
-            (`LH_C(h_5_0, (t_4_9 ys_6_6)))))) (string_of_int _lh_showEvaluation_Score_0_0))
+            (`LH_C(h_5_3, (t_4_9 ys_6_6)))))) (string_of_int _lh_showEvaluation_Score_0_0))
+    | _ -> 
+      (failwith "error"));;
+let rec showPiece_lh__d6 _lh_showPiece_arg1_6 =
+  (match _lh_showPiece_arg1_6 with
+    | `X -> 
+      (let rec t_1_6_9 = (fun ys_1_7_7 -> 
+        ys_1_7_7) in
+        (let rec h_1_6_9 = 'X' in
+          (fun ys_1_7_8 -> 
+            (let rec t_1_7_0 = (t_1_6_9 ys_1_7_8) in
+              (let rec h_1_7_0 = h_1_6_9 in
+                (fun ys_1_7_9 -> 
+                  (let rec t_1_7_1 = (t_1_7_0 ys_1_7_9) in
+                    (let rec h_1_7_1 = h_1_7_0 in
+                      (fun _lh_dummy_3_2 -> 
+                        (1 + (t_1_7_1 99)))))))))))
+    | `O -> 
+      (let rec t_1_7_2 = (fun ys_1_8_0 -> 
+        ys_1_8_0) in
+        (let rec h_1_7_2 = 'O' in
+          (fun ys_1_8_1 -> 
+            (let rec t_1_7_3 = (t_1_7_2 ys_1_8_1) in
+              (let rec h_1_7_3 = h_1_7_2 in
+                (fun ys_1_8_2 -> 
+                  (let rec t_1_7_4 = (t_1_7_3 ys_1_8_2) in
+                    (let rec h_1_7_4 = h_1_7_3 in
+                      (fun _lh_dummy_3_3 -> 
+                        (1 + (t_1_7_4 99)))))))))))
+    | `Empty -> 
+      (let rec t_1_7_5 = (fun ys_1_8_3 -> 
+        ys_1_8_3) in
+        (let rec h_1_7_5 = ' ' in
+          (fun ys_1_8_4 -> 
+            (let rec t_1_7_6 = (t_1_7_5 ys_1_8_4) in
+              (let rec h_1_7_6 = h_1_7_5 in
+                (fun ys_1_8_5 -> 
+                  (let rec t_1_7_7 = (t_1_7_6 ys_1_8_5) in
+                    (let rec h_1_7_7 = h_1_7_6 in
+                      (fun _lh_dummy_3_4 -> 
+                        (1 + (t_1_7_7 99)))))))))))
+    | _ -> 
+      (failwith "error"));;
+let rec showPiece_lh__d5 _lh_showPiece_arg1_4 =
+  (match _lh_showPiece_arg1_4 with
+    | `X -> 
+      (let rec t_1_2_1 = (fun ys_1_3_0 -> 
+        ys_1_3_0) in
+        (let rec h_1_2_1 = 'X' in
+          (fun ys_1_3_1 -> 
+            (let rec t_1_2_2 = (t_1_2_1 ys_1_3_1) in
+              (let rec h_1_2_2 = h_1_2_1 in
+                (fun ys_1_3_2 -> 
+                  (let rec t_1_2_3 = (t_1_2_2 ys_1_3_2) in
+                    (let rec h_1_2_3 = h_1_2_2 in
+                      (fun ys_1_3_3 -> 
+                        (let rec t_1_2_4 = (t_1_2_3 ys_1_3_3) in
+                          (let rec h_1_2_4 = h_1_2_3 in
+                            (fun ys_1_3_4 -> 
+                              (let rec t_1_2_5 = (t_1_2_4 ys_1_3_4) in
+                                (let rec h_1_2_5 = h_1_2_4 in
+                                  (fun ys_1_3_5 -> 
+                                    (let rec t_1_2_6 = (t_1_2_5 ys_1_3_5) in
+                                      (let rec h_1_2_6 = h_1_2_5 in
+                                        (fun ys_1_3_6 -> 
+                                          (let rec t_1_2_7 = (t_1_2_6 ys_1_3_6) in
+                                            (let rec h_1_2_7 = h_1_2_6 in
+                                              (fun _lh_dummy_1_9 -> 
+                                                (1 + (t_1_2_7 99)))))))))))))))))))))))
+    | `O -> 
+      (let rec t_1_2_8 = (fun ys_1_3_7 -> 
+        ys_1_3_7) in
+        (let rec h_1_2_8 = 'O' in
+          (fun ys_1_3_8 -> 
+            (let rec t_1_2_9 = (t_1_2_8 ys_1_3_8) in
+              (let rec h_1_2_9 = h_1_2_8 in
+                (fun ys_1_3_9 -> 
+                  (let rec t_1_3_0 = (t_1_2_9 ys_1_3_9) in
+                    (let rec h_1_3_0 = h_1_2_9 in
+                      (fun ys_1_4_0 -> 
+                        (let rec t_1_3_1 = (t_1_3_0 ys_1_4_0) in
+                          (let rec h_1_3_1 = h_1_3_0 in
+                            (fun ys_1_4_1 -> 
+                              (let rec t_1_3_2 = (t_1_3_1 ys_1_4_1) in
+                                (let rec h_1_3_2 = h_1_3_1 in
+                                  (fun ys_1_4_2 -> 
+                                    (let rec t_1_3_3 = (t_1_3_2 ys_1_4_2) in
+                                      (let rec h_1_3_3 = h_1_3_2 in
+                                        (fun ys_1_4_3 -> 
+                                          (let rec t_1_3_4 = (t_1_3_3 ys_1_4_3) in
+                                            (let rec h_1_3_4 = h_1_3_3 in
+                                              (fun _lh_dummy_2_0 -> 
+                                                (1 + (t_1_3_4 99)))))))))))))))))))))))
+    | `Empty -> 
+      (let rec t_1_3_5 = (fun ys_1_4_4 -> 
+        ys_1_4_4) in
+        (let rec h_1_3_5 = ' ' in
+          (fun ys_1_4_5 -> 
+            (let rec t_1_3_6 = (t_1_3_5 ys_1_4_5) in
+              (let rec h_1_3_6 = h_1_3_5 in
+                (fun ys_1_4_6 -> 
+                  (let rec t_1_3_7 = (t_1_3_6 ys_1_4_6) in
+                    (let rec h_1_3_7 = h_1_3_6 in
+                      (fun ys_1_4_7 -> 
+                        (let rec t_1_3_8 = (t_1_3_7 ys_1_4_7) in
+                          (let rec h_1_3_8 = h_1_3_7 in
+                            (fun ys_1_4_8 -> 
+                              (let rec t_1_3_9 = (t_1_3_8 ys_1_4_8) in
+                                (let rec h_1_3_9 = h_1_3_8 in
+                                  (fun ys_1_4_9 -> 
+                                    (let rec t_1_4_0 = (t_1_3_9 ys_1_4_9) in
+                                      (let rec h_1_4_0 = h_1_3_9 in
+                                        (fun ys_1_5_0 -> 
+                                          (let rec t_1_4_1 = (t_1_4_0 ys_1_5_0) in
+                                            (let rec h_1_4_1 = h_1_4_0 in
+                                              (fun _lh_dummy_2_1 -> 
+                                                (1 + (t_1_4_1 99)))))))))))))))))))))))
+    | _ -> 
+      (failwith "error"));;
+let rec showPiece_lh__d4 _lh_showPiece_arg1_2 =
+  (match _lh_showPiece_arg1_2 with
+    | `X -> 
+      (let rec t_5_4 = (fun ys_6_9 -> 
+        ys_6_9) in
+        (let rec h_5_4 = 'X' in
+          (fun ys_7_0 -> 
+            (let rec t_5_5 = (t_5_4 ys_7_0) in
+              (let rec h_5_5 = h_5_4 in
+                (fun ys_7_1 -> 
+                  (let rec t_5_6 = (t_5_5 ys_7_1) in
+                    (let rec h_5_6 = h_5_5 in
+                      (fun ys_7_2 -> 
+                        (let rec t_5_7 = (t_5_6 ys_7_2) in
+                          (let rec h_5_7 = h_5_6 in
+                            (fun ys_7_3 -> 
+                              (let rec t_5_8 = (t_5_7 ys_7_3) in
+                                (let rec h_5_8 = h_5_7 in
+                                  (fun _lh_dummy_4 -> 
+                                    (1 + (t_5_8 99)))))))))))))))))
+    | `O -> 
+      (let rec t_5_9 = (fun ys_7_4 -> 
+        ys_7_4) in
+        (let rec h_5_9 = 'O' in
+          (fun ys_7_5 -> 
+            (let rec t_6_0 = (t_5_9 ys_7_5) in
+              (let rec h_6_0 = h_5_9 in
+                (fun ys_7_6 -> 
+                  (let rec t_6_1 = (t_6_0 ys_7_6) in
+                    (let rec h_6_1 = h_6_0 in
+                      (fun ys_7_7 -> 
+                        (let rec t_6_2 = (t_6_1 ys_7_7) in
+                          (let rec h_6_2 = h_6_1 in
+                            (fun ys_7_8 -> 
+                              (let rec t_6_3 = (t_6_2 ys_7_8) in
+                                (let rec h_6_3 = h_6_2 in
+                                  (fun _lh_dummy_5 -> 
+                                    (1 + (t_6_3 99)))))))))))))))))
+    | `Empty -> 
+      (let rec t_6_4 = (fun ys_7_9 -> 
+        ys_7_9) in
+        (let rec h_6_4 = ' ' in
+          (fun ys_8_0 -> 
+            (let rec t_6_5 = (t_6_4 ys_8_0) in
+              (let rec h_6_5 = h_6_4 in
+                (fun ys_8_1 -> 
+                  (let rec t_6_6 = (t_6_5 ys_8_1) in
+                    (let rec h_6_6 = h_6_5 in
+                      (fun ys_8_2 -> 
+                        (let rec t_6_7 = (t_6_6 ys_8_2) in
+                          (let rec h_6_7 = h_6_6 in
+                            (fun ys_8_3 -> 
+                              (let rec t_6_8 = (t_6_7 ys_8_3) in
+                                (let rec h_6_8 = h_6_7 in
+                                  (fun _lh_dummy_6 -> 
+                                    (1 + (t_6_8 99)))))))))))))))))
+    | _ -> 
+      (failwith "error"));;
+let rec showRow_lh__d2 _lh_showRow_arg1_1 =
+  (match _lh_showRow_arg1_1 with
+    | `LH_C(_lh_showRow_LH_C_0_3, _lh_showRow_LH_C_1_3) -> 
+      (match _lh_showRow_LH_C_1_3 with
+        | `LH_C(_lh_showRow_LH_C_0_4, _lh_showRow_LH_C_1_4) -> 
+          (match _lh_showRow_LH_C_1_4 with
+            | `LH_C(_lh_showRow_LH_C_0_5, _lh_showRow_LH_C_1_5) -> 
+              (match _lh_showRow_LH_C_1_5 with
+                | `LH_N -> 
+                  (((((showPiece_lh__d5 _lh_showRow_LH_C_0_3) (let rec t_3_9 = (fun ys_4_8 -> 
+                    ys_4_8) in
+                    (let rec h_3_9 = '|' in
+                      (fun ys_4_9 -> 
+                        (let rec t_4_0 = (t_3_9 ys_4_9) in
+                          (let rec h_4_0 = h_3_9 in
+                            (fun ys_5_0 -> 
+                              (let rec t_4_1 = (t_4_0 ys_5_0) in
+                                (let rec h_4_1 = h_4_0 in
+                                  (fun ys_5_1 -> 
+                                    (let rec t_4_2 = (t_4_1 ys_5_1) in
+                                      (let rec h_4_2 = h_4_1 in
+                                        (fun ys_5_2 -> 
+                                          (let rec t_4_3 = (t_4_2 ys_5_2) in
+                                            (let rec h_4_3 = h_4_2 in
+                                              (fun ys_5_3 -> 
+                                                (let rec t_4_4 = (t_4_3 ys_5_3) in
+                                                  (let rec h_4_4 = h_4_3 in
+                                                    (fun _lh_dummy_2 -> 
+                                                      (1 + (t_4_4 99))))))))))))))))))))) (showPiece_lh__d4 _lh_showRow_LH_C_0_4)) (let rec t_4_5 = (fun ys_5_4 -> 
+                    ys_5_4) in
+                    (let rec h_4_5 = '|' in
+                      (fun ys_5_5 -> 
+                        (let rec t_4_6 = (t_4_5 ys_5_5) in
+                          (let rec h_4_6 = h_4_5 in
+                            (fun ys_5_6 -> 
+                              (let rec t_4_7 = (t_4_6 ys_5_6) in
+                                (let rec h_4_7 = h_4_6 in
+                                  (fun ys_5_7 -> 
+                                    (let rec t_4_8 = (t_4_7 ys_5_7) in
+                                      (let rec h_4_8 = h_4_7 in
+                                        (fun _lh_dummy_3 -> 
+                                          (1 + (t_4_8 99))))))))))))))) (showPiece_lh__d6 _lh_showRow_LH_C_0_5))
+                | _ -> 
+                  (failwith "error"))
+            | _ -> 
+              (failwith "error"))
+        | _ -> 
+          (failwith "error"))
     | _ -> 
       (failwith "error"));;
 let rec showPiece_lh__d3 _lh_showPiece_arg1_1 =
@@ -743,66 +967,66 @@ let rec showPiece_lh__d1 _lh_showPiece_arg1_5 =
     | `X -> 
       (let rec t_1_5_0 = (fun ys_1_5_6 -> 
         ys_1_5_6) in
-        (let rec h_1_2_6 = 'X' in
+        (let rec h_1_5_0 = 'X' in
           (fun ys_1_5_7 -> 
             (let rec t_1_5_1 = (t_1_5_0 ys_1_5_7) in
-              (let rec h_1_2_7 = h_1_2_6 in
+              (let rec h_1_5_1 = h_1_5_0 in
                 (fun ys_1_5_8 -> 
                   (let rec t_1_5_2 = (t_1_5_1 ys_1_5_8) in
-                    (let rec h_1_2_8 = h_1_2_7 in
+                    (let rec h_1_5_2 = h_1_5_1 in
                       (fun ys_1_5_9 -> 
                         (let rec t_1_5_3 = (t_1_5_2 ys_1_5_9) in
-                          (let rec h_1_2_9 = h_1_2_8 in
+                          (let rec h_1_5_3 = h_1_5_2 in
                             (fun ys_1_6_0 -> 
                               (let rec t_1_5_4 = (t_1_5_3 ys_1_6_0) in
-                                (let rec h_1_3_0 = h_1_2_9 in
+                                (let rec h_1_5_4 = h_1_5_3 in
                                   (fun ys_1_6_1 -> 
                                     (let rec t_1_5_5 = (t_1_5_4 ys_1_6_1) in
-                                      (let rec h_1_3_1 = h_1_3_0 in
+                                      (let rec h_1_5_5 = h_1_5_4 in
                                         (fun ys_1_6_2 -> 
-                                          (`LH_C(h_1_3_1, (t_1_5_5 ys_1_6_2)))))))))))))))))))))
+                                          (`LH_C(h_1_5_5, (t_1_5_5 ys_1_6_2)))))))))))))))))))))
     | `O -> 
       (let rec t_1_5_6 = (fun ys_1_6_3 -> 
         ys_1_6_3) in
-        (let rec h_1_3_2 = 'O' in
+        (let rec h_1_5_6 = 'O' in
           (fun ys_1_6_4 -> 
             (let rec t_1_5_7 = (t_1_5_6 ys_1_6_4) in
-              (let rec h_1_3_3 = h_1_3_2 in
+              (let rec h_1_5_7 = h_1_5_6 in
                 (fun ys_1_6_5 -> 
                   (let rec t_1_5_8 = (t_1_5_7 ys_1_6_5) in
-                    (let rec h_1_3_4 = h_1_3_3 in
+                    (let rec h_1_5_8 = h_1_5_7 in
                       (fun ys_1_6_6 -> 
                         (let rec t_1_5_9 = (t_1_5_8 ys_1_6_6) in
-                          (let rec h_1_3_5 = h_1_3_4 in
+                          (let rec h_1_5_9 = h_1_5_8 in
                             (fun ys_1_6_7 -> 
                               (let rec t_1_6_0 = (t_1_5_9 ys_1_6_7) in
-                                (let rec h_1_3_6 = h_1_3_5 in
+                                (let rec h_1_6_0 = h_1_5_9 in
                                   (fun ys_1_6_8 -> 
                                     (let rec t_1_6_1 = (t_1_6_0 ys_1_6_8) in
-                                      (let rec h_1_3_7 = h_1_3_6 in
+                                      (let rec h_1_6_1 = h_1_6_0 in
                                         (fun ys_1_6_9 -> 
-                                          (`LH_C(h_1_3_7, (t_1_6_1 ys_1_6_9)))))))))))))))))))))
+                                          (`LH_C(h_1_6_1, (t_1_6_1 ys_1_6_9)))))))))))))))))))))
     | `Empty -> 
       (let rec t_1_6_2 = (fun ys_1_7_0 -> 
         ys_1_7_0) in
-        (let rec h_1_3_8 = ' ' in
+        (let rec h_1_6_2 = ' ' in
           (fun ys_1_7_1 -> 
             (let rec t_1_6_3 = (t_1_6_2 ys_1_7_1) in
-              (let rec h_1_3_9 = h_1_3_8 in
+              (let rec h_1_6_3 = h_1_6_2 in
                 (fun ys_1_7_2 -> 
                   (let rec t_1_6_4 = (t_1_6_3 ys_1_7_2) in
-                    (let rec h_1_4_0 = h_1_3_9 in
+                    (let rec h_1_6_4 = h_1_6_3 in
                       (fun ys_1_7_3 -> 
                         (let rec t_1_6_5 = (t_1_6_4 ys_1_7_3) in
-                          (let rec h_1_4_1 = h_1_4_0 in
+                          (let rec h_1_6_5 = h_1_6_4 in
                             (fun ys_1_7_4 -> 
                               (let rec t_1_6_6 = (t_1_6_5 ys_1_7_4) in
-                                (let rec h_1_4_2 = h_1_4_1 in
+                                (let rec h_1_6_6 = h_1_6_5 in
                                   (fun ys_1_7_5 -> 
                                     (let rec t_1_6_7 = (t_1_6_6 ys_1_7_5) in
-                                      (let rec h_1_4_3 = h_1_4_2 in
+                                      (let rec h_1_6_7 = h_1_6_6 in
                                         (fun ys_1_7_6 -> 
-                                          (`LH_C(h_1_4_3, (t_1_6_7 ys_1_7_6)))))))))))))))))))))
+                                          (`LH_C(h_1_6_7, (t_1_6_7 ys_1_7_6)))))))))))))))))))))
     | _ -> 
       (failwith "error"));;
 let rec showPiece_lh__d2 _lh_showPiece_arg1_0 =
@@ -880,6 +1104,24 @@ let rec showRow_lh__d1 _lh_showRow_arg1_0 =
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
+let rec mappend_lh__d8 xs_5 ys_3_9 =
+  (match xs_5 with
+    | `LH_C(h_2_7, t_2_7) -> 
+      (let rec t_2_8 = ((mappend_lh__d8 t_2_7) ys_3_9) in
+        (let rec h_2_8 = h_2_7 in
+          (fun ys_4_0 -> 
+            (let rec t_2_9 = (t_2_8 ys_4_0) in
+              (let rec h_2_9 = h_2_8 in
+                (fun ys_4_1 -> 
+                  (let rec t_3_0 = (t_2_9 ys_4_1) in
+                    (let rec h_3_0 = h_2_9 in
+                      (fun ys_4_2 -> 
+                        (let rec t_3_1 = (t_3_0 ys_4_2) in
+                          (let rec h_3_1 = h_3_0 in
+                            (fun _lh_dummy_0 -> 
+                              (1 + (t_3_1 99))))))))))))))
+    | `LH_N -> 
+      ys_3_9);;
 let rec showPiece_lh__d7 _lh_showPiece_arg1_3 =
   (match _lh_showPiece_arg1_3 with
     | `X -> 
@@ -892,8 +1134,8 @@ let rec showPiece_lh__d7 _lh_showPiece_arg1_3 =
       (failwith "error"));;
 let rec mappend_lh__d2_d0 xs_1_5 ys_1_2_6 =
   (match xs_1_5 with
-    | `LH_C(h_1_0_3, t_1_2_0) -> 
-      (`LH_C(h_1_0_3, ((mappend_lh__d2_d0 t_1_2_0) ys_1_2_6)))
+    | `LH_C(h_1_2_0, t_1_2_0) -> 
+      (`LH_C(h_1_2_0, ((mappend_lh__d2_d0 t_1_2_0) ys_1_2_6)))
     | `LH_N -> 
       ys_1_2_6);;
 let rec showRow_lh__d3 _lh_showRow_arg1_2 =
@@ -914,236 +1156,6 @@ let rec showRow_lh__d3 _lh_showRow_arg1_2 =
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
-let rec mappend_lh__d8 xs_5 ys_3_9 =
-  (match xs_5 with
-    | `LH_C(h_2_7, t_2_7) -> 
-      (let rec t_2_8 = ((mappend_lh__d8 t_2_7) ys_3_9) in
-        (let rec h_2_8 = h_2_7 in
-          (fun ys_4_0 -> 
-            (let rec t_2_9 = (t_2_8 ys_4_0) in
-              (let rec h_2_9 = h_2_8 in
-                (fun ys_4_1 -> 
-                  (let rec t_3_0 = (t_2_9 ys_4_1) in
-                    (let rec h_3_0 = h_2_9 in
-                      (fun ys_4_2 -> 
-                        (let rec t_3_1 = (t_3_0 ys_4_2) in
-                          (fun _lh_dummy_0 -> 
-                            (1 + (t_3_1 99)))))))))))))
-    | `LH_N -> 
-      ys_3_9);;
-let rec showPiece_lh__d6 _lh_showPiece_arg1_6 =
-  (match _lh_showPiece_arg1_6 with
-    | `X -> 
-      (let rec t_1_6_9 = (fun ys_1_7_7 -> 
-        ys_1_7_7) in
-        (let rec h_1_4_5 = 'X' in
-          (fun ys_1_7_8 -> 
-            (let rec t_1_7_0 = (t_1_6_9 ys_1_7_8) in
-              (let rec h_1_4_6 = h_1_4_5 in
-                (fun ys_1_7_9 -> 
-                  (let rec t_1_7_1 = (t_1_7_0 ys_1_7_9) in
-                    (fun _lh_dummy_3_2 -> 
-                      (1 + (t_1_7_1 99))))))))))
-    | `O -> 
-      (let rec t_1_7_2 = (fun ys_1_8_0 -> 
-        ys_1_8_0) in
-        (let rec h_1_4_7 = 'O' in
-          (fun ys_1_8_1 -> 
-            (let rec t_1_7_3 = (t_1_7_2 ys_1_8_1) in
-              (let rec h_1_4_8 = h_1_4_7 in
-                (fun ys_1_8_2 -> 
-                  (let rec t_1_7_4 = (t_1_7_3 ys_1_8_2) in
-                    (fun _lh_dummy_3_3 -> 
-                      (1 + (t_1_7_4 99))))))))))
-    | `Empty -> 
-      (let rec t_1_7_5 = (fun ys_1_8_3 -> 
-        ys_1_8_3) in
-        (let rec h_1_4_9 = ' ' in
-          (fun ys_1_8_4 -> 
-            (let rec t_1_7_6 = (t_1_7_5 ys_1_8_4) in
-              (let rec h_1_5_0 = h_1_4_9 in
-                (fun ys_1_8_5 -> 
-                  (let rec t_1_7_7 = (t_1_7_6 ys_1_8_5) in
-                    (fun _lh_dummy_3_4 -> 
-                      (1 + (t_1_7_7 99))))))))))
-    | _ -> 
-      (failwith "error"));;
-let rec showPiece_lh__d4 _lh_showPiece_arg1_2 =
-  (match _lh_showPiece_arg1_2 with
-    | `X -> 
-      (let rec t_5_4 = (fun ys_6_9 -> 
-        ys_6_9) in
-        (let rec h_5_1 = 'X' in
-          (fun ys_7_0 -> 
-            (let rec t_5_5 = (t_5_4 ys_7_0) in
-              (let rec h_5_2 = h_5_1 in
-                (fun ys_7_1 -> 
-                  (let rec t_5_6 = (t_5_5 ys_7_1) in
-                    (let rec h_5_3 = h_5_2 in
-                      (fun ys_7_2 -> 
-                        (let rec t_5_7 = (t_5_6 ys_7_2) in
-                          (let rec h_5_4 = h_5_3 in
-                            (fun ys_7_3 -> 
-                              (let rec t_5_8 = (t_5_7 ys_7_3) in
-                                (fun _lh_dummy_4 -> 
-                                  (1 + (t_5_8 99))))))))))))))))
-    | `O -> 
-      (let rec t_5_9 = (fun ys_7_4 -> 
-        ys_7_4) in
-        (let rec h_5_5 = 'O' in
-          (fun ys_7_5 -> 
-            (let rec t_6_0 = (t_5_9 ys_7_5) in
-              (let rec h_5_6 = h_5_5 in
-                (fun ys_7_6 -> 
-                  (let rec t_6_1 = (t_6_0 ys_7_6) in
-                    (let rec h_5_7 = h_5_6 in
-                      (fun ys_7_7 -> 
-                        (let rec t_6_2 = (t_6_1 ys_7_7) in
-                          (let rec h_5_8 = h_5_7 in
-                            (fun ys_7_8 -> 
-                              (let rec t_6_3 = (t_6_2 ys_7_8) in
-                                (fun _lh_dummy_5 -> 
-                                  (1 + (t_6_3 99))))))))))))))))
-    | `Empty -> 
-      (let rec t_6_4 = (fun ys_7_9 -> 
-        ys_7_9) in
-        (let rec h_5_9 = ' ' in
-          (fun ys_8_0 -> 
-            (let rec t_6_5 = (t_6_4 ys_8_0) in
-              (let rec h_6_0 = h_5_9 in
-                (fun ys_8_1 -> 
-                  (let rec t_6_6 = (t_6_5 ys_8_1) in
-                    (let rec h_6_1 = h_6_0 in
-                      (fun ys_8_2 -> 
-                        (let rec t_6_7 = (t_6_6 ys_8_2) in
-                          (let rec h_6_2 = h_6_1 in
-                            (fun ys_8_3 -> 
-                              (let rec t_6_8 = (t_6_7 ys_8_3) in
-                                (fun _lh_dummy_6 -> 
-                                  (1 + (t_6_8 99))))))))))))))))
-    | _ -> 
-      (failwith "error"));;
-let rec showPiece_lh__d5 _lh_showPiece_arg1_4 =
-  (match _lh_showPiece_arg1_4 with
-    | `X -> 
-      (let rec t_1_2_1 = (fun ys_1_3_0 -> 
-        ys_1_3_0) in
-        (let rec h_1_0_4 = 'X' in
-          (fun ys_1_3_1 -> 
-            (let rec t_1_2_2 = (t_1_2_1 ys_1_3_1) in
-              (let rec h_1_0_5 = h_1_0_4 in
-                (fun ys_1_3_2 -> 
-                  (let rec t_1_2_3 = (t_1_2_2 ys_1_3_2) in
-                    (let rec h_1_0_6 = h_1_0_5 in
-                      (fun ys_1_3_3 -> 
-                        (let rec t_1_2_4 = (t_1_2_3 ys_1_3_3) in
-                          (let rec h_1_0_7 = h_1_0_6 in
-                            (fun ys_1_3_4 -> 
-                              (let rec t_1_2_5 = (t_1_2_4 ys_1_3_4) in
-                                (let rec h_1_0_8 = h_1_0_7 in
-                                  (fun ys_1_3_5 -> 
-                                    (let rec t_1_2_6 = (t_1_2_5 ys_1_3_5) in
-                                      (let rec h_1_0_9 = h_1_0_8 in
-                                        (fun ys_1_3_6 -> 
-                                          (let rec t_1_2_7 = (t_1_2_6 ys_1_3_6) in
-                                            (fun _lh_dummy_1_9 -> 
-                                              (1 + (t_1_2_7 99))))))))))))))))))))))
-    | `O -> 
-      (let rec t_1_2_8 = (fun ys_1_3_7 -> 
-        ys_1_3_7) in
-        (let rec h_1_1_0 = 'O' in
-          (fun ys_1_3_8 -> 
-            (let rec t_1_2_9 = (t_1_2_8 ys_1_3_8) in
-              (let rec h_1_1_1 = h_1_1_0 in
-                (fun ys_1_3_9 -> 
-                  (let rec t_1_3_0 = (t_1_2_9 ys_1_3_9) in
-                    (let rec h_1_1_2 = h_1_1_1 in
-                      (fun ys_1_4_0 -> 
-                        (let rec t_1_3_1 = (t_1_3_0 ys_1_4_0) in
-                          (let rec h_1_1_3 = h_1_1_2 in
-                            (fun ys_1_4_1 -> 
-                              (let rec t_1_3_2 = (t_1_3_1 ys_1_4_1) in
-                                (let rec h_1_1_4 = h_1_1_3 in
-                                  (fun ys_1_4_2 -> 
-                                    (let rec t_1_3_3 = (t_1_3_2 ys_1_4_2) in
-                                      (let rec h_1_1_5 = h_1_1_4 in
-                                        (fun ys_1_4_3 -> 
-                                          (let rec t_1_3_4 = (t_1_3_3 ys_1_4_3) in
-                                            (fun _lh_dummy_2_0 -> 
-                                              (1 + (t_1_3_4 99))))))))))))))))))))))
-    | `Empty -> 
-      (let rec t_1_3_5 = (fun ys_1_4_4 -> 
-        ys_1_4_4) in
-        (let rec h_1_1_6 = ' ' in
-          (fun ys_1_4_5 -> 
-            (let rec t_1_3_6 = (t_1_3_5 ys_1_4_5) in
-              (let rec h_1_1_7 = h_1_1_6 in
-                (fun ys_1_4_6 -> 
-                  (let rec t_1_3_7 = (t_1_3_6 ys_1_4_6) in
-                    (let rec h_1_1_8 = h_1_1_7 in
-                      (fun ys_1_4_7 -> 
-                        (let rec t_1_3_8 = (t_1_3_7 ys_1_4_7) in
-                          (let rec h_1_1_9 = h_1_1_8 in
-                            (fun ys_1_4_8 -> 
-                              (let rec t_1_3_9 = (t_1_3_8 ys_1_4_8) in
-                                (let rec h_1_2_0 = h_1_1_9 in
-                                  (fun ys_1_4_9 -> 
-                                    (let rec t_1_4_0 = (t_1_3_9 ys_1_4_9) in
-                                      (let rec h_1_2_1 = h_1_2_0 in
-                                        (fun ys_1_5_0 -> 
-                                          (let rec t_1_4_1 = (t_1_4_0 ys_1_5_0) in
-                                            (fun _lh_dummy_2_1 -> 
-                                              (1 + (t_1_4_1 99))))))))))))))))))))))
-    | _ -> 
-      (failwith "error"));;
-let rec showRow_lh__d2 _lh_showRow_arg1_1 =
-  (match _lh_showRow_arg1_1 with
-    | `LH_C(_lh_showRow_LH_C_0_3, _lh_showRow_LH_C_1_3) -> 
-      (match _lh_showRow_LH_C_1_3 with
-        | `LH_C(_lh_showRow_LH_C_0_4, _lh_showRow_LH_C_1_4) -> 
-          (match _lh_showRow_LH_C_1_4 with
-            | `LH_C(_lh_showRow_LH_C_0_5, _lh_showRow_LH_C_1_5) -> 
-              (match _lh_showRow_LH_C_1_5 with
-                | `LH_N -> 
-                  (((((showPiece_lh__d5 _lh_showRow_LH_C_0_3) (let rec t_3_9 = (fun ys_4_8 -> 
-                    ys_4_8) in
-                    (let rec h_3_8 = '|' in
-                      (fun ys_4_9 -> 
-                        (let rec t_4_0 = (t_3_9 ys_4_9) in
-                          (let rec h_3_9 = h_3_8 in
-                            (fun ys_5_0 -> 
-                              (let rec t_4_1 = (t_4_0 ys_5_0) in
-                                (let rec h_4_0 = h_3_9 in
-                                  (fun ys_5_1 -> 
-                                    (let rec t_4_2 = (t_4_1 ys_5_1) in
-                                      (let rec h_4_1 = h_4_0 in
-                                        (fun ys_5_2 -> 
-                                          (let rec t_4_3 = (t_4_2 ys_5_2) in
-                                            (let rec h_4_2 = h_4_1 in
-                                              (fun ys_5_3 -> 
-                                                (let rec t_4_4 = (t_4_3 ys_5_3) in
-                                                  (fun _lh_dummy_2 -> 
-                                                    (1 + (t_4_4 99)))))))))))))))))))) (showPiece_lh__d4 _lh_showRow_LH_C_0_4)) (let rec t_4_5 = (fun ys_5_4 -> 
-                    ys_5_4) in
-                    (let rec h_4_3 = '|' in
-                      (fun ys_5_5 -> 
-                        (let rec t_4_6 = (t_4_5 ys_5_5) in
-                          (let rec h_4_4 = h_4_3 in
-                            (fun ys_5_6 -> 
-                              (let rec t_4_7 = (t_4_6 ys_5_6) in
-                                (let rec h_4_5 = h_4_4 in
-                                  (fun ys_5_7 -> 
-                                    (let rec t_4_8 = (t_4_7 ys_5_7) in
-                                      (fun _lh_dummy_3 -> 
-                                        (1 + (t_4_8 99)))))))))))))) (showPiece_lh__d6 _lh_showRow_LH_C_0_5))
-                | _ -> 
-                  (failwith "error"))
-            | _ -> 
-              (failwith "error"))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
 let rec showBoard_lh__d1 _lh_showBoard_arg1_0 =
   (match _lh_showBoard_arg1_0 with
     | `LH_C(_lh_showBoard_LH_C_0_0, _lh_showBoard_LH_C_1_0) -> 
@@ -1155,130 +1167,140 @@ let rec showBoard_lh__d1 _lh_showBoard_arg1_0 =
                 | `LH_N -> 
                   ((((mappend_lh__d8 (((showRow_lh__d1 _lh_showBoard_LH_C_0_0) (let rec t_6_9 = (let rec t_7_0 = (let rec t_7_1 = (let rec t_7_2 = (let rec t_7_3 = (let rec t_7_4 = (let rec t_7_5 = (let rec t_7_6 = (fun ys_8_6 -> 
                     ys_8_6) in
-                    (let rec h_6_3 = '|' in
+                    (let rec h_6_9 = '|' in
                       (fun ys_8_7 -> 
-                        (`LH_C(h_6_3, (t_7_6 ys_8_7)))))) in
-                    (let rec h_6_4 = '-' in
+                        (`LH_C(h_6_9, (t_7_6 ys_8_7)))))) in
+                    (let rec h_7_0 = '-' in
                       (fun ys_8_8 -> 
-                        (`LH_C(h_6_4, (t_7_5 ys_8_8)))))) in
-                    (let rec h_6_5 = '-' in
+                        (`LH_C(h_7_0, (t_7_5 ys_8_8)))))) in
+                    (let rec h_7_1 = '-' in
                       (fun ys_8_9 -> 
-                        (`LH_C(h_6_5, (t_7_4 ys_8_9)))))) in
-                    (let rec h_6_6 = '-' in
+                        (`LH_C(h_7_1, (t_7_4 ys_8_9)))))) in
+                    (let rec h_7_2 = '-' in
                       (fun ys_9_0 -> 
-                        (`LH_C(h_6_6, (t_7_3 ys_9_0)))))) in
-                    (let rec h_6_7 = '-' in
+                        (`LH_C(h_7_2, (t_7_3 ys_9_0)))))) in
+                    (let rec h_7_3 = '-' in
                       (fun ys_9_1 -> 
-                        (`LH_C(h_6_7, (t_7_2 ys_9_1)))))) in
-                    (let rec h_6_8 = '-' in
+                        (`LH_C(h_7_3, (t_7_2 ys_9_1)))))) in
+                    (let rec h_7_4 = '-' in
                       (fun ys_9_2 -> 
-                        (`LH_C(h_6_8, (t_7_1 ys_9_2)))))) in
-                    (let rec h_6_9 = '-' in
+                        (`LH_C(h_7_4, (t_7_1 ys_9_2)))))) in
+                    (let rec h_7_5 = '-' in
                       (fun ys_9_3 -> 
-                        (`LH_C(h_6_9, (t_7_0 ys_9_3)))))) in
-                    (let rec h_7_0 = '|' in
+                        (`LH_C(h_7_5, (t_7_0 ys_9_3)))))) in
+                    (let rec h_7_6 = '|' in
                       (fun ys_9_4 -> 
-                        (`LH_C(h_7_0, (t_6_9 ys_9_4))))))) (showRow_lh__d3 _lh_showBoard_LH_C_0_1))) (let rec t_7_7 = (let rec t_7_8 = (let rec t_7_9 = (let rec t_8_0 = (let rec t_8_1 = (let rec t_8_2 = (let rec t_8_3 = (let rec t_8_4 = (fun ys_9_5 -> 
+                        (`LH_C(h_7_6, (t_6_9 ys_9_4))))))) (showRow_lh__d3 _lh_showBoard_LH_C_0_1))) (let rec t_7_7 = (let rec t_7_8 = (let rec t_7_9 = (let rec t_8_0 = (let rec t_8_1 = (let rec t_8_2 = (let rec t_8_3 = (let rec t_8_4 = (fun ys_9_5 -> 
                     ys_9_5) in
-                    (let rec h_7_1 = '|' in
+                    (let rec h_7_7 = '|' in
                       (fun ys_9_6 -> 
                         (let rec t_8_5 = (t_8_4 ys_9_6) in
-                          (let rec h_7_2 = h_7_1 in
+                          (let rec h_7_8 = h_7_7 in
                             (fun ys_9_7 -> 
                               (let rec t_8_6 = (t_8_5 ys_9_7) in
-                                (let rec h_7_3 = h_7_2 in
+                                (let rec h_7_9 = h_7_8 in
                                   (fun ys_9_8 -> 
                                     (let rec t_8_7 = (t_8_6 ys_9_8) in
-                                      (fun _lh_dummy_7 -> 
-                                        (1 + (t_8_7 99))))))))))))) in
-                    (let rec h_7_4 = '-' in
+                                      (let rec h_8_0 = h_7_9 in
+                                        (fun _lh_dummy_7 -> 
+                                          (1 + (t_8_7 99)))))))))))))) in
+                    (let rec h_8_1 = '-' in
                       (fun ys_9_9 -> 
                         (let rec t_8_8 = (t_8_3 ys_9_9) in
-                          (let rec h_7_5 = h_7_4 in
+                          (let rec h_8_2 = h_8_1 in
                             (fun ys_1_0_0 -> 
                               (let rec t_8_9 = (t_8_8 ys_1_0_0) in
-                                (let rec h_7_6 = h_7_5 in
+                                (let rec h_8_3 = h_8_2 in
                                   (fun ys_1_0_1 -> 
                                     (let rec t_9_0 = (t_8_9 ys_1_0_1) in
-                                      (fun _lh_dummy_8 -> 
-                                        (1 + (t_9_0 99))))))))))))) in
-                    (let rec h_7_7 = '-' in
+                                      (let rec h_8_4 = h_8_3 in
+                                        (fun _lh_dummy_8 -> 
+                                          (1 + (t_9_0 99)))))))))))))) in
+                    (let rec h_8_5 = '-' in
                       (fun ys_1_0_2 -> 
                         (let rec t_9_1 = (t_8_2 ys_1_0_2) in
-                          (let rec h_7_8 = h_7_7 in
+                          (let rec h_8_6 = h_8_5 in
                             (fun ys_1_0_3 -> 
                               (let rec t_9_2 = (t_9_1 ys_1_0_3) in
-                                (let rec h_7_9 = h_7_8 in
+                                (let rec h_8_7 = h_8_6 in
                                   (fun ys_1_0_4 -> 
                                     (let rec t_9_3 = (t_9_2 ys_1_0_4) in
-                                      (fun _lh_dummy_9 -> 
-                                        (1 + (t_9_3 99))))))))))))) in
-                    (let rec h_8_0 = '-' in
+                                      (let rec h_8_8 = h_8_7 in
+                                        (fun _lh_dummy_9 -> 
+                                          (1 + (t_9_3 99)))))))))))))) in
+                    (let rec h_8_9 = '-' in
                       (fun ys_1_0_5 -> 
                         (let rec t_9_4 = (t_8_1 ys_1_0_5) in
-                          (let rec h_8_1 = h_8_0 in
+                          (let rec h_9_0 = h_8_9 in
                             (fun ys_1_0_6 -> 
                               (let rec t_9_5 = (t_9_4 ys_1_0_6) in
-                                (let rec h_8_2 = h_8_1 in
+                                (let rec h_9_1 = h_9_0 in
                                   (fun ys_1_0_7 -> 
                                     (let rec t_9_6 = (t_9_5 ys_1_0_7) in
-                                      (fun _lh_dummy_1_0 -> 
-                                        (1 + (t_9_6 99))))))))))))) in
-                    (let rec h_8_3 = '-' in
+                                      (let rec h_9_2 = h_9_1 in
+                                        (fun _lh_dummy_1_0 -> 
+                                          (1 + (t_9_6 99)))))))))))))) in
+                    (let rec h_9_3 = '-' in
                       (fun ys_1_0_8 -> 
                         (let rec t_9_7 = (t_8_0 ys_1_0_8) in
-                          (let rec h_8_4 = h_8_3 in
+                          (let rec h_9_4 = h_9_3 in
                             (fun ys_1_0_9 -> 
                               (let rec t_9_8 = (t_9_7 ys_1_0_9) in
-                                (let rec h_8_5 = h_8_4 in
+                                (let rec h_9_5 = h_9_4 in
                                   (fun ys_1_1_0 -> 
                                     (let rec t_9_9 = (t_9_8 ys_1_1_0) in
-                                      (fun _lh_dummy_1_1 -> 
-                                        (1 + (t_9_9 99))))))))))))) in
-                    (let rec h_8_6 = '-' in
+                                      (let rec h_9_6 = h_9_5 in
+                                        (fun _lh_dummy_1_1 -> 
+                                          (1 + (t_9_9 99)))))))))))))) in
+                    (let rec h_9_7 = '-' in
                       (fun ys_1_1_1 -> 
                         (let rec t_1_0_0 = (t_7_9 ys_1_1_1) in
-                          (let rec h_8_7 = h_8_6 in
+                          (let rec h_9_8 = h_9_7 in
                             (fun ys_1_1_2 -> 
                               (let rec t_1_0_1 = (t_1_0_0 ys_1_1_2) in
-                                (let rec h_8_8 = h_8_7 in
+                                (let rec h_9_9 = h_9_8 in
                                   (fun ys_1_1_3 -> 
                                     (let rec t_1_0_2 = (t_1_0_1 ys_1_1_3) in
-                                      (fun _lh_dummy_1_2 -> 
-                                        (1 + (t_1_0_2 99))))))))))))) in
-                    (let rec h_8_9 = '-' in
+                                      (let rec h_1_0_0 = h_9_9 in
+                                        (fun _lh_dummy_1_2 -> 
+                                          (1 + (t_1_0_2 99)))))))))))))) in
+                    (let rec h_1_0_1 = '-' in
                       (fun ys_1_1_4 -> 
                         (let rec t_1_0_3 = (t_7_8 ys_1_1_4) in
-                          (let rec h_9_0 = h_8_9 in
+                          (let rec h_1_0_2 = h_1_0_1 in
                             (fun ys_1_1_5 -> 
                               (let rec t_1_0_4 = (t_1_0_3 ys_1_1_5) in
-                                (let rec h_9_1 = h_9_0 in
+                                (let rec h_1_0_3 = h_1_0_2 in
                                   (fun ys_1_1_6 -> 
                                     (let rec t_1_0_5 = (t_1_0_4 ys_1_1_6) in
-                                      (fun _lh_dummy_1_3 -> 
-                                        (1 + (t_1_0_5 99))))))))))))) in
-                    (let rec h_9_2 = '|' in
+                                      (let rec h_1_0_4 = h_1_0_3 in
+                                        (fun _lh_dummy_1_3 -> 
+                                          (1 + (t_1_0_5 99)))))))))))))) in
+                    (let rec h_1_0_5 = '|' in
                       (fun ys_1_1_7 -> 
                         (let rec t_1_0_6 = (t_7_7 ys_1_1_7) in
-                          (let rec h_9_3 = h_9_2 in
+                          (let rec h_1_0_6 = h_1_0_5 in
                             (fun ys_1_1_8 -> 
                               (let rec t_1_0_7 = (t_1_0_6 ys_1_1_8) in
-                                (let rec h_9_4 = h_9_3 in
+                                (let rec h_1_0_7 = h_1_0_6 in
                                   (fun ys_1_1_9 -> 
                                     (let rec t_1_0_8 = (t_1_0_7 ys_1_1_9) in
-                                      (fun _lh_dummy_1_4 -> 
-                                        (1 + (t_1_0_8 99)))))))))))))) (showRow_lh__d2 _lh_showBoard_LH_C_0_2)) (let rec t_1_0_9 = (let rec t_1_1_0 = (fun ys_1_2_0 -> 
+                                      (let rec h_1_0_8 = h_1_0_7 in
+                                        (fun _lh_dummy_1_4 -> 
+                                          (1 + (t_1_0_8 99))))))))))))))) (showRow_lh__d2 _lh_showBoard_LH_C_0_2)) (let rec t_1_0_9 = (let rec t_1_1_0 = (fun ys_1_2_0 -> 
                     ys_1_2_0) in
-                    (let rec h_9_5 = '|' in
+                    (let rec h_1_0_9 = '|' in
                       (fun ys_1_2_1 -> 
                         (let rec t_1_1_1 = (t_1_1_0 ys_1_2_1) in
-                          (fun _lh_dummy_1_5 -> 
-                            (1 + (t_1_1_1 99))))))) in
-                    (let rec h_9_6 = '|' in
+                          (let rec h_1_1_0 = h_1_0_9 in
+                            (fun _lh_dummy_1_5 -> 
+                              (1 + (t_1_1_1 99)))))))) in
+                    (let rec h_1_1_1 = '|' in
                       (fun ys_1_2_2 -> 
                         (let rec t_1_1_2 = (t_1_0_9 ys_1_2_2) in
-                          (fun _lh_dummy_1_6 -> 
-                            (1 + (t_1_1_2 99))))))))
+                          (let rec h_1_1_2 = h_1_1_1 in
+                            (fun _lh_dummy_1_6 -> 
+                              (1 + (t_1_1_2 99)))))))))
                 | _ -> 
                   (failwith "error"))
             | _ -> 
@@ -1289,16 +1311,17 @@ let rec showBoard_lh__d1 _lh_showBoard_arg1_0 =
       (failwith "error"));;
 let rec mappend_lh__d4 xs_1_4 ys_1_2_3 =
   (match xs_1_4 with
-    | `LH_C(h_9_9, t_1_1_5) -> 
+    | `LH_C(h_1_1_5, t_1_1_5) -> 
       (let rec t_1_1_6 = ((mappend_lh__d4 t_1_1_5) ys_1_2_3) in
-        (let rec h_1_0_0 = h_9_9 in
+        (let rec h_1_1_6 = h_1_1_5 in
           (fun ys_1_2_4 -> 
             (let rec t_1_1_7 = (t_1_1_6 ys_1_2_4) in
-              (let rec h_1_0_1 = h_1_0_0 in
+              (let rec h_1_1_7 = h_1_1_6 in
                 (fun ys_1_2_5 -> 
                   (let rec t_1_1_8 = (t_1_1_7 ys_1_2_5) in
-                    (fun _lh_dummy_1_7 -> 
-                      (1 + (t_1_1_8 99))))))))))
+                    (let rec h_1_1_8 = h_1_1_7 in
+                      (fun _lh_dummy_1_7 -> 
+                        (1 + (t_1_1_8 99)))))))))))
     | `LH_N -> 
       ys_1_2_3);;
 let rec best_lh__d1 _lh_best_arg1_0 _lh_best_arg2_0 _lh_best_arg3_0 =
@@ -1336,24 +1359,25 @@ let rec best_lh__d1 _lh_best_arg1_0 _lh_best_arg2_0 _lh_best_arg3_0 =
                                           (let rec boardd_eval_1 = (((best_lh__d1 _lh_alternate_arg3_0) possibles_1) scores_1) in
                                             (let rec _lh_matchIdent_5 = boardd_eval_1 in
                                               (((_lh_matchIdent_5 _lh_alternate_arg3_0) _lh_alternate_arg2_0) opposition_2))))))))) in
-                                (let rec h_1_5_1 = (let rec _lh_showMove_LH_P2_1_0 = _lh_alternate_LH_P2_1_0 in
+                                (let rec h_1_7_8 = (let rec _lh_showMove_LH_P2_1_0 = _lh_alternate_LH_P2_1_0 in
                                   (let rec _lh_showMove_LH_P2_0_0 = _lh_alternate_LH_P2_0_0 in
                                     (fun _lh_dummy_4_1 -> 
                                       (((mappend_lh__d4 (showEvaluation_lh__d1 _lh_showMove_LH_P2_1_0)) (let rec t_1_7_9 = (fun ys_1_8_6 -> 
                                         ys_1_8_6) in
-                                        (let rec h_1_5_2 = '|' in
+                                        (let rec h_1_7_9 = '|' in
                                           (fun ys_1_8_7 -> 
                                             (let rec t_1_8_0 = (t_1_7_9 ys_1_8_7) in
-                                              (let rec h_1_5_3 = h_1_5_2 in
+                                              (let rec h_1_8_0 = h_1_7_9 in
                                                 (fun ys_1_8_8 -> 
                                                   (let rec t_1_8_1 = (t_1_8_0 ys_1_8_8) in
-                                                    (fun _lh_dummy_4_2 -> 
-                                                      (1 + (t_1_8_1 99))))))))))) (showBoard_lh__d1 _lh_showMove_LH_P2_0_0))))) in
+                                                    (let rec h_1_8_1 = h_1_8_0 in
+                                                      (fun _lh_dummy_4_2 -> 
+                                                        (1 + (t_1_8_1 99)))))))))))) (showBoard_lh__d1 _lh_showMove_LH_P2_0_0))))) in
                                   (fun f_1_5 -> 
                                     (let rec t_1_8_2 = (t_1_7_8 f_1_5) in
-                                      (let rec h_1_5_4 = (f_1_5 h_1_5_1) in
+                                      (let rec h_1_8_2 = (f_1_5 h_1_7_8) in
                                         (fun _lh_dummy_4_3 -> 
-                                          (h_1_5_4 (t_1_8_2 99)))))))))))
+                                          (h_1_8_2 (t_1_8_2 99)))))))))))
                       | _ -> 
                         (failwith "error")))
                 | `LH_C(_lh_best_LH_C_0_2, _lh_best_LH_C_1_2) -> 
@@ -1512,26 +1536,30 @@ let rec prog_lh__d1 _lh_prog_arg1_0 =
                     (((_lh_matchIdent_2 max'_lh__d1) min'_lh__d1) opposition_0))))))))) in
       ((let rec t_1_4_2 = (let rec t_1_4_3 = (let rec t_1_4_4 = (let rec t_1_4_5 = (fun ys_1_5_1 -> 
         ys_1_5_1) in
-        (let rec h_1_2_2 = '|' in
+        (let rec h_1_4_2 = '|' in
           (fun ys_1_5_2 -> 
             (let rec t_1_4_6 = (t_1_4_5 ys_1_5_2) in
-              (fun _lh_dummy_2_8 -> 
-                (1 + (t_1_4_6 99))))))) in
-        (let rec h_1_2_3 = 'O' in
+              (let rec h_1_4_3 = h_1_4_2 in
+                (fun _lh_dummy_2_8 -> 
+                  (1 + (t_1_4_6 99)))))))) in
+        (let rec h_1_4_4 = 'O' in
           (fun ys_1_5_3 -> 
             (let rec t_1_4_7 = (t_1_4_4 ys_1_5_3) in
-              (fun _lh_dummy_2_9 -> 
-                (1 + (t_1_4_7 99))))))) in
-        (let rec h_1_2_4 = 'X' in
+              (let rec h_1_4_5 = h_1_4_4 in
+                (fun _lh_dummy_2_9 -> 
+                  (1 + (t_1_4_7 99)))))))) in
+        (let rec h_1_4_6 = 'X' in
           (fun ys_1_5_4 -> 
             (let rec t_1_4_8 = (t_1_4_3 ys_1_5_4) in
-              (fun _lh_dummy_3_0 -> 
-                (1 + (t_1_4_8 99))))))) in
-        (let rec h_1_2_5 = 'O' in
+              (let rec h_1_4_7 = h_1_4_6 in
+                (fun _lh_dummy_3_0 -> 
+                  (1 + (t_1_4_8 99)))))))) in
+        (let rec h_1_4_8 = 'O' in
           (fun ys_1_5_5 -> 
             (let rec t_1_4_9 = (t_1_4_2 ys_1_5_5) in
-              (fun _lh_dummy_3_1 -> 
-                (1 + (t_1_4_9 99))))))) ((game_0 showMove_lh__d1) 99))));;
+              (let rec h_1_4_9 = h_1_4_8 in
+                (fun _lh_dummy_3_1 -> 
+                  (1 + (t_1_4_9 99)))))))) ((game_0 showMove_lh__d1) 99))));;
 let rec testMinimax_nofib_lh__d1 _lh_testMinimax_nofib_arg1_0 =
   ((prog_lh__d1 _lh_testMinimax_nofib_arg1_0) 99);;
 end;;

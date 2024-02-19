@@ -79,12 +79,14 @@ let rec enumFromTo_lh__d1 a_1 b_1 =
               (let rec _lh_f1_LH_P2_0_0 = _lh_listcomp_fun_ls_h_2 in
                 (fun _lh_dummy_0 -> 
                   (let rec _lh_f2_LH_P3_2_0 = ((gcdE_lh__d1 _lh_f1_LH_P2_0_0) _lh_f1_LH_P2_1_0) in
-                    (fun _lh_dummy_1 -> 
-                      (match _lh_f2_LH_P3_2_0 with
-                        | `LH_P3(_lh_f2_LH_P3_0_0, _lh_f2_LH_P3_1_0, _lh_f2_LH_P3_2_1) -> 
-                          (abs_lh__d1 ((_lh_f2_LH_P3_0_0 + _lh_f2_LH_P3_1_0) + _lh_f2_LH_P3_2_1))
-                        | _ -> 
-                          (failwith "error"))))))) in
+                    (let rec _lh_f2_LH_P3_1_0 = _lh_f1_LH_P2_1_0 in
+                      (let rec _lh_f2_LH_P3_0_0 = _lh_f1_LH_P2_0_0 in
+                        (fun _lh_dummy_1 -> 
+                          (match _lh_f2_LH_P3_2_0 with
+                            | `LH_P3(_lh_f2_LH_P3_0_1, _lh_f2_LH_P3_1_1, _lh_f2_LH_P3_2_1) -> 
+                              (abs_lh__d1 ((_lh_f2_LH_P3_0_1 + _lh_f2_LH_P3_1_1) + _lh_f2_LH_P3_2_1))
+                            | _ -> 
+                              (failwith "error"))))))))) in
               (fun f_3 -> 
                 (let rec t_1 = (t_0 f_3) in
                   (let rec h_1 = (f_3 h_0) in

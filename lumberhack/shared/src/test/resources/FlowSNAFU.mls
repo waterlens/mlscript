@@ -1522,6 +1522,7 @@ fun head(ls) = if ls is
 //│ 	N  => [P [N] (fun _lh_dummy⁰ -> [N])]
 //│ 	| C h⁰ t⁰ => if (h⁰ == 1) then [P [N] 
 //│ 		let t³ = t⁰
+//│ 		in let h³ = h⁰
 //│ 		in (fun _lh_dummy¹ -> line(t³))] else case break(t⁰) of {
 //│ 		P fst⁰ snd⁰ => [P [C h⁰ fst⁰] snd⁰]}}
 //│ def head(ls⁵) = case ls⁵ of {
@@ -1546,11 +1547,12 @@ fun head(ls) = if ls is
 //│ 	N  => [P [N] (fun _lh_dummy⁰ -> [N])]
 //│ 	| C h⁰ t⁰ => if (h⁰ == 1) then [P [N] 
 //│ 		let t¹ = t⁰
+//│ 		in let h¹ = h⁰
 //│ 		in (fun _lh_dummy¹ -> case break(t¹) of {
 //│ 			P fst¹ snd¹ => [C fst¹ snd¹(99)]})] else case break(t⁰) of {
 //│ 		P fst² snd² => [P [C h⁰ fst²] snd²]}}
 //│ def head(ls²) = case ls² of {
-//│ 	C h¹ t² => h¹
+//│ 	C h² t² => h²
 //│ 	| N  => error⁰}
 //│ def line(ls¹) = case break(ls¹) of {
 //│ 	P fst³ snd³ => [C fst³ snd³(99)]}
@@ -1563,11 +1565,12 @@ fun head(ls) = if ls is
 //│ 	N  => [P [N] (fun _lh_dummy⁰ -> [N])]
 //│ 	| C h⁰ t⁰ => if (h⁰ == 1) then [P [N] 
 //│ 		let t¹ = t⁰
+//│ 		in let h¹ = h⁰
 //│ 		in (fun _lh_dummy¹ -> case break(t¹) of {
 //│ 			P fst¹ snd¹ => [C fst¹ snd¹(99)]})] else case break(t⁰) of {
 //│ 		P fst² snd² => [P [C h⁰ fst²] snd²]}}
 //│ def head(ls²) = case ls² of {
-//│ 	C h¹ t² => h¹
+//│ 	C h² t² => h²
 //│ 	| N  => error⁰}
 //│ def line(ls¹) = case break(ls¹) of {
 //│ 	P fst³ snd³ => [C fst³ snd³(99)]}
@@ -1603,44 +1606,52 @@ fun head(ls) = if ls is
 //│ (h == 1) :: '25_callres <: [] ::: true
 //│ [N] :: N ::: true
 //│ t :: 't⁰ <: [] ::: true
+//│ h :: 'h⁰ <: [] ::: true
 //│ line :: 'line <: [] ::: true
 //│ t :: 't¹ <: [] ::: true
-//│ line(t) :: '30_callres <: [] ::: true
-//│ (fun _lh_dummy -> line(t)) :: '_lh_dummy¹ => '30_callres ::: true
+//│ line(t) :: '31_callres <: [] ::: true
+//│ (fun _lh_dummy -> line(t)) :: '_lh_dummy¹ => '31_callres ::: true
+//│ let h = h
+//│ in (fun _lh_dummy -> line(t)) :: '_lh_dummy¹ => '31_callres ::: true
 //│ let t = t
-//│ in (fun _lh_dummy -> line(t)) :: '_lh_dummy¹ => '30_callres ::: true
+//│ in let h = h
+//│ in (fun _lh_dummy -> line(t)) :: '_lh_dummy¹ => '31_callres ::: true
 //│ [P [N] let t = t
-//│ in (fun _lh_dummy -> line(t))] :: P(N, '_lh_dummy¹ => '30_callres) ::: true
+//│ in let h = h
+//│ in (fun _lh_dummy -> line(t))] :: P(N, '_lh_dummy¹ => '31_callres) ::: true
 //│ break :: 'break <: [] ::: true
 //│ t :: 't⁰ <: [] ::: true
-//│ break(t) :: '36_callres <: [] ::: true
+//│ break(t) :: '38_callres <: [] ::: true
 //│ h :: 'h⁰ <: [] ::: true
 //│ fst :: 'fst⁰ <: [] ::: true
 //│ [C h fst] :: C('h⁰, 'fst⁰) ::: true
 //│ snd :: 'snd⁰ <: [] ::: true
 //│ [P [C h fst] snd] :: P(C('h⁰, 'fst⁰), 'snd⁰) ::: true
-//│ case break(t) of {P fst snd => [P [C h fst] snd]} :: '42_matchres <: [] ::: true
+//│ case break(t) of {P fst snd => [P [C h fst] snd]} :: '44_matchres <: [] ::: true
 //│ if (h == 1) then [P [N] let t = t
-//│ in (fun _lh_dummy -> line(t))] else case break(t) of {P fst snd => [P [C h fst] snd]} :: '43_ifres <: [] ::: true
+//│ in let h = h
+//│ in (fun _lh_dummy -> line(t))] else case break(t) of {P fst snd => [P [C h fst] snd]} :: '45_ifres <: [] ::: true
 //│ case ls of {N  => [P [N] (fun _lh_dummy -> [N])] | C h t => if (h == 1) then [P [N] let t = t
-//│ in (fun _lh_dummy -> line(t))] else case break(t) of {P fst snd => [P [C h fst] snd]}} :: '44_matchres <: [] ::: true
+//│ in let h = h
+//│ in (fun _lh_dummy -> line(t))] else case break(t) of {P fst snd => [P [C h fst] snd]}} :: '46_matchres <: [] ::: true
 //│ (fun ls -> case ls of {N  => [P [N] (fun _lh_dummy -> [N])] | C h t => if (h == 1) then [P [N] let t = t
-//│ in (fun _lh_dummy -> line(t))] else case break(t) of {P fst snd => [P [C h fst] snd]}}) :: 'ls⁰ => '44_matchres ::: true
+//│ in let h = h
+//│ in (fun _lh_dummy -> line(t))] else case break(t) of {P fst snd => [P [C h fst] snd]}}) :: 'ls⁰ => '46_matchres ::: true
 //│ break :: 'break <: [] ::: true
 //│ ls :: 'ls¹ <: [] ::: true
-//│ break(ls) :: '48_callres <: [] ::: true
+//│ break(ls) :: '50_callres <: [] ::: true
 //│ fst :: 'fst¹ <: [] ::: true
 //│ snd :: 'snd¹ <: [] ::: true
 //│ 99 :: Int ::: false
-//│ snd(99) :: '52_callres <: [] ::: true
-//│ [C fst snd(99)] :: C('fst¹, '52_callres) ::: true
-//│ case break(ls) of {P fst snd => [C fst snd(99)]} :: '54_matchres <: [] ::: true
-//│ (fun ls -> case break(ls) of {P fst snd => [C fst snd(99)]}) :: 'ls¹ => '54_matchres ::: true
+//│ snd(99) :: '54_callres <: [] ::: true
+//│ [C fst snd(99)] :: C('fst¹, '54_callres) ::: true
+//│ case break(ls) of {P fst snd => [C fst snd(99)]} :: '56_matchres <: [] ::: true
+//│ (fun ls -> case break(ls) of {P fst snd => [C fst snd(99)]}) :: 'ls¹ => '56_matchres ::: true
 //│ ls :: 'ls² <: [] ::: true
-//│ h :: 'h¹ <: [] ::: true
+//│ h :: 'h² <: [] ::: true
 //│ error :: '_lh_rigid_error_var <: [] ::: true
-//│ case ls of {C h t => h | N  => error} :: '59_matchres <: [] ::: true
-//│ (fun ls -> case ls of {C h t => h | N  => error}) :: 'ls² => '59_matchres ::: true
+//│ case ls of {C h t => h | N  => error} :: '61_matchres <: [] ::: true
+//│ (fun ls -> case ls of {C h t => h | N  => error}) :: 'ls² => '61_matchres ::: true
 //│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
 //│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
 //│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
@@ -1653,8 +1664,9 @@ fun head(ls) = if ls is
 //│     | `C(h_0, t_0) -> 
 //│       (if (h_0 = 1) then
 //│         (`P((`N), (let rec t_1 = t_0 in
-//│           (fun _lh_dummy_1 -> 
-//│             (line t_1)))))
+//│           (let rec h_1 = h_0 in
+//│             (fun _lh_dummy_1 -> 
+//│               (line t_1))))))
 //│       else
 //│         (match (break t_0) with
 //│           | `P(fst_0, snd_0) -> 
@@ -1666,8 +1678,8 @@ fun head(ls) = if ls is
 //│       (`C(fst_1, (snd_1 99))));;
 //│ let rec head ls_2 =
 //│   (match ls_2 with
-//│     | `C(h_1, t_2) -> 
-//│       h_1
+//│     | `C(h_2, t_2) -> 
+//│       h_2
 //│     | `N -> 
 //│       (failwith "error"));;
 //│ (head (line (`C(2, (`C(2, (`C(1, (`C(2, (`N)))))))))))

@@ -138,14 +138,6 @@ let rec uniform_lh__d1 _lh_uniform_arg1_0 _lh_uniform_arg2_0 =
               (failwith "error")))
     | _ -> 
       (failwith "error"));;
-let rec iterate_lh__d1 f_2_3 x_6 =
-  (lazy (let rec t_1_6 = ((iterate_lh__d1 f_2_3) (f_2_3 x_6)) in
-    (let rec h_1_3 = x_6 in
-      (fun n_9 -> 
-        (`LH_C(h_1_3, (if ((n_9 - 1) > 0) then
-          ((Lazy.force t_1_6) (n_9 - 1))
-        else
-          (`LH_N))))))));;
 let rec even_lh__d2 _lh_even_arg1_0 =
   ((_lh_even_arg1_0 mod 2) = 0);;
 let rec powerMod_lh__d1 _lh_powerMod_arg1_0 _lh_powerMod_arg2_0 _lh_powerMod_arg3_0 =
@@ -165,6 +157,14 @@ let rec powerMod_lh__d1 _lh_powerMod_arg1_0 _lh_powerMod_arg2_0 _lh_powerMod_arg
             else
               ((g_0 a_0) b_0)))) in
           (((f_0 a'_0) (_lh_powerMod_arg2_0 - 1)) a'_0))));;
+let rec iterate_lh__d1 f_2_3 x_6 =
+  (lazy (let rec t_1_6 = ((iterate_lh__d1 f_2_3) (f_2_3 x_6)) in
+    (let rec h_1_3 = x_6 in
+      (fun n_9 -> 
+        (`LH_C(h_1_3, (if ((n_9 - 1) > 0) then
+          ((Lazy.force t_1_6) (n_9 - 1))
+        else
+          (`LH_N))))))));;
 let rec singleTestX_lh__d1 _lh_singleTestX_arg1_0 _lh_singleTestX_arg2_0 _lh_singleTestX_arg3_0 =
   (match _lh_singleTestX_arg2_0 with
     | `LH_P2(_lh_singleTestX_LH_P2_0_0, _lh_singleTestX_LH_P2_1_0) -> 
@@ -259,57 +259,58 @@ let rec break_lh__d1 _lh_break_arg1_0 _lh_break_arg2_0 =
       (if (_lh_break_arg1_0 _lh_break_LH_C_0_0) then
         (`LH_P2((fun _lh_f_arg2_3 f_1_8 -> 
           _lh_f_arg2_3), (let rec _lh_lines_LH_C_1_0 = _lh_break_LH_C_1_0 in
-          (fun _lh_dummy_1 -> 
-            (let rec _lh_matchIdent_2_0 = ((break_lh__d1 (fun x_5 -> 
-              (x_5 = '|'))) _lh_lines_LH_C_1_0) in
-              (match _lh_matchIdent_2_0 with
-                | `LH_P2(_lh_lines_LH_P2_0_1, _lh_lines_LH_P2_1_1) -> 
-                  (let rec _lh_doInput_LH_C_1_1 = (let rec _lh_matchIdent_2_1 = _lh_lines_LH_P2_1_1 in
-                    (_lh_matchIdent_2_1 99)) in
-                    (let rec _lh_doInput_LH_C_0_1 = _lh_lines_LH_P2_0_1 in
-                      (fun _lh_doInput_arg1_2 -> 
-                        (let rec n_7 = (let rec f_1_9 = (fun _lh_f_arg1_4 _lh_f_arg2_4 -> 
-                          ((_lh_f_arg1_4 _lh_f_arg2_4) f_1_9)) in
-                          ((f_1_9 _lh_doInput_LH_C_0_1) 0)) in
-                          (let rec _lh_matchIdent_2_2 = (let rec mTest_3 = (fun k_4 rs_2 -> 
-                            (if (k_4 = 0) then
-                              (let rec _lh_doLine_LH_P2_1_5 = rs_2 in
-                                (let rec _lh_doLine_LH_P2_0_5 = true in
-                                  (fun _lh_doLine_arg2_5 -> 
-                                    (if _lh_doLine_LH_P2_0_5 then
-                                      (`LH_C((`LH_C('P', (`LH_C('r', (`LH_C('o', (`LH_C('b', (`LH_C('a', (`LH_C('b', (`LH_C('l', (`LH_C('y', (`LH_C(' ', (`LH_C('p', (`LH_C('r', (`LH_C('i', (`LH_C('m', (`LH_C('e', (`LH_N))))))))))))))))))))))))))))), (_lh_doLine_arg2_5 _lh_doLine_LH_P2_1_5)))
-                                    else
-                                      (`LH_C((`LH_C('C', (`LH_C('o', (`LH_C('m', (`LH_C('p', (`LH_C('o', (`LH_C('s', (`LH_C('i', (`LH_C('t', (`LH_C('e', (`LH_N))))))))))))))))))), (_lh_doLine_arg2_5 _lh_doLine_LH_P2_1_5)))))))
-                            else
-                              (let rec _lh_matchIdent_2_3 = (let rec _lh_matchIdent_2_4 = (let rec ns_5 = (let rec chop'_5 = (fun a_8 n_8 -> 
-                                (let rec _lh_matchIdent_2_5 = ((divmod_lh__d2 n_8) 65536) in
-                                  (((_lh_matchIdent_2_5 a_8) chop'_5) n_8))) in
-                                ((chop'_5 (`LH_N)) (n_7 - 2))) in
-                                (let rec _lh_matchIdent_2_6 = ((splitAt_lz_lh__d1 (length_lh__d1 ns_5)) rs_2) in
-                                  (_lh_matchIdent_2_6 ns_5))) in
-                                ((_lh_matchIdent_2_4 n_7) (let rec f_2_0 = (fun _lh_f_arg1_5 -> 
-                                  (match _lh_f_arg1_5 with
-                                    | `LH_P2(_lh_f_LH_P2_0_4, _lh_f_LH_P2_1_4) -> 
-                                      (let rec _lh_matchIdent_2_7 = ((divmod_lh__d1 _lh_f_LH_P2_1_4) 2) in
-                                        (((_lh_matchIdent_2_7 _lh_f_LH_P2_0_4) _lh_f_LH_P2_1_4) f_2_0))
-                                    | _ -> 
-                                      (failwith "error"))) in
-                                  (f_2_0 (`LH_P2(0, (n_7 - 1))))))) in
-                                ((_lh_matchIdent_2_3 k_4) mTest_3)))) in
-                            (if ((n_7 <= 1) || (even_lh__d1 n_7)) then
-                              (let rec _lh_doLine_LH_P2_1_6 = _lh_doInput_arg1_2 in
-                                (let rec _lh_doLine_LH_P2_0_6 = (n_7 = 2) in
-                                  (fun _lh_doLine_arg2_6 -> 
-                                    (if _lh_doLine_LH_P2_0_6 then
-                                      (`LH_C((`LH_C('P', (`LH_C('r', (`LH_C('o', (`LH_C('b', (`LH_C('a', (`LH_C('b', (`LH_C('l', (`LH_C('y', (`LH_C(' ', (`LH_C('p', (`LH_C('r', (`LH_C('i', (`LH_C('m', (`LH_C('e', (`LH_N))))))))))))))))))))))))))))), (_lh_doLine_arg2_6 _lh_doLine_LH_P2_1_6)))
-                                    else
-                                      (`LH_C((`LH_C('C', (`LH_C('o', (`LH_C('m', (`LH_C('p', (`LH_C('o', (`LH_C('s', (`LH_C('i', (`LH_C('t', (`LH_C('e', (`LH_N))))))))))))))))))), (_lh_doLine_arg2_6 _lh_doLine_LH_P2_1_6)))))))
-                            else
-                              ((mTest_3 100) _lh_doInput_arg1_2))) in
-                            (_lh_matchIdent_2_2 (fun state_1 -> 
-                              (_lh_doInput_LH_C_1_1 state_1))))))))
-                | _ -> 
-                  (failwith "error")))))))
+          (let rec _lh_lines_LH_C_0_0 = _lh_break_LH_C_0_0 in
+            (fun _lh_dummy_1 -> 
+              (let rec _lh_matchIdent_2_0 = ((break_lh__d1 (fun x_5 -> 
+                (x_5 = '|'))) _lh_lines_LH_C_1_0) in
+                (match _lh_matchIdent_2_0 with
+                  | `LH_P2(_lh_lines_LH_P2_0_1, _lh_lines_LH_P2_1_1) -> 
+                    (let rec _lh_doInput_LH_C_1_1 = (let rec _lh_matchIdent_2_1 = _lh_lines_LH_P2_1_1 in
+                      (_lh_matchIdent_2_1 99)) in
+                      (let rec _lh_doInput_LH_C_0_1 = _lh_lines_LH_P2_0_1 in
+                        (fun _lh_doInput_arg1_2 -> 
+                          (let rec n_7 = (let rec f_1_9 = (fun _lh_f_arg1_4 _lh_f_arg2_4 -> 
+                            ((_lh_f_arg1_4 _lh_f_arg2_4) f_1_9)) in
+                            ((f_1_9 _lh_doInput_LH_C_0_1) 0)) in
+                            (let rec _lh_matchIdent_2_2 = (let rec mTest_3 = (fun k_4 rs_2 -> 
+                              (if (k_4 = 0) then
+                                (let rec _lh_doLine_LH_P2_1_5 = rs_2 in
+                                  (let rec _lh_doLine_LH_P2_0_5 = true in
+                                    (fun _lh_doLine_arg2_5 -> 
+                                      (if _lh_doLine_LH_P2_0_5 then
+                                        (`LH_C((`LH_C('P', (`LH_C('r', (`LH_C('o', (`LH_C('b', (`LH_C('a', (`LH_C('b', (`LH_C('l', (`LH_C('y', (`LH_C(' ', (`LH_C('p', (`LH_C('r', (`LH_C('i', (`LH_C('m', (`LH_C('e', (`LH_N))))))))))))))))))))))))))))), (_lh_doLine_arg2_5 _lh_doLine_LH_P2_1_5)))
+                                      else
+                                        (`LH_C((`LH_C('C', (`LH_C('o', (`LH_C('m', (`LH_C('p', (`LH_C('o', (`LH_C('s', (`LH_C('i', (`LH_C('t', (`LH_C('e', (`LH_N))))))))))))))))))), (_lh_doLine_arg2_5 _lh_doLine_LH_P2_1_5)))))))
+                              else
+                                (let rec _lh_matchIdent_2_3 = (let rec _lh_matchIdent_2_4 = (let rec ns_5 = (let rec chop'_5 = (fun a_8 n_8 -> 
+                                  (let rec _lh_matchIdent_2_5 = ((divmod_lh__d2 n_8) 65536) in
+                                    (((_lh_matchIdent_2_5 a_8) chop'_5) n_8))) in
+                                  ((chop'_5 (`LH_N)) (n_7 - 2))) in
+                                  (let rec _lh_matchIdent_2_6 = ((splitAt_lz_lh__d1 (length_lh__d1 ns_5)) rs_2) in
+                                    (_lh_matchIdent_2_6 ns_5))) in
+                                  ((_lh_matchIdent_2_4 n_7) (let rec f_2_0 = (fun _lh_f_arg1_5 -> 
+                                    (match _lh_f_arg1_5 with
+                                      | `LH_P2(_lh_f_LH_P2_0_4, _lh_f_LH_P2_1_4) -> 
+                                        (let rec _lh_matchIdent_2_7 = ((divmod_lh__d1 _lh_f_LH_P2_1_4) 2) in
+                                          (((_lh_matchIdent_2_7 _lh_f_LH_P2_0_4) _lh_f_LH_P2_1_4) f_2_0))
+                                      | _ -> 
+                                        (failwith "error"))) in
+                                    (f_2_0 (`LH_P2(0, (n_7 - 1))))))) in
+                                  ((_lh_matchIdent_2_3 k_4) mTest_3)))) in
+                              (if ((n_7 <= 1) || (even_lh__d1 n_7)) then
+                                (let rec _lh_doLine_LH_P2_1_6 = _lh_doInput_arg1_2 in
+                                  (let rec _lh_doLine_LH_P2_0_6 = (n_7 = 2) in
+                                    (fun _lh_doLine_arg2_6 -> 
+                                      (if _lh_doLine_LH_P2_0_6 then
+                                        (`LH_C((`LH_C('P', (`LH_C('r', (`LH_C('o', (`LH_C('b', (`LH_C('a', (`LH_C('b', (`LH_C('l', (`LH_C('y', (`LH_C(' ', (`LH_C('p', (`LH_C('r', (`LH_C('i', (`LH_C('m', (`LH_C('e', (`LH_N))))))))))))))))))))))))))))), (_lh_doLine_arg2_6 _lh_doLine_LH_P2_1_6)))
+                                      else
+                                        (`LH_C((`LH_C('C', (`LH_C('o', (`LH_C('m', (`LH_C('p', (`LH_C('o', (`LH_C('s', (`LH_C('i', (`LH_C('t', (`LH_C('e', (`LH_N))))))))))))))))))), (_lh_doLine_arg2_6 _lh_doLine_LH_P2_1_6)))))))
+                              else
+                                ((mTest_3 100) _lh_doInput_arg1_2))) in
+                              (_lh_matchIdent_2_2 (fun state_1 -> 
+                                (_lh_doInput_LH_C_1_1 state_1))))))))
+                  | _ -> 
+                    (failwith "error"))))))))
       else
         (let rec _lh_matchIdent_2_8 = ((break_lh__d1 _lh_break_arg1_0) _lh_break_LH_C_1_0) in
           (match _lh_matchIdent_2_8 with

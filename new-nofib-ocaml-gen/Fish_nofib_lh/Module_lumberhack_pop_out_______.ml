@@ -17,30 +17,31 @@ let rec mappend_lh__d8 xs_1 ys_1 =
         (let rec h_1 = h_0 in
           (fun ys_2 -> 
             (let rec t_2 = ((mappend_lh__d2 t_1) ys_2) in
-              (fun _lh_dummy_0 -> 
-                (1 + (length_lh__d1 t_2)))))))
+              (let rec h_2 = h_1 in
+                (fun _lh_dummy_0 -> 
+                  (1 + (length_lh__d1 t_2))))))))
     | `LH_N -> 
       ys_1);;
 let rec mappend_lh__d7 xs_7 ys_2_6 =
   (xs_7 ys_2_6);;
 let rec mappend_lh__d5 xs_9 ys_2_8 =
   (match xs_9 with
-    | `LH_C(h_1_6, t_2_6) -> 
+    | `LH_C(h_2_6, t_2_6) -> 
       (let rec t_2_7 = ((mappend_lh__d5 t_2_6) ys_2_8) in
-        (let rec h_1_7 = h_1_6 in
+        (let rec h_2_7 = h_2_6 in
           (fun ys_2_9 -> 
-            (`LH_C(h_1_7, ((mappend_lh__d7 t_2_7) ys_2_9))))))
+            (`LH_C(h_2_7, ((mappend_lh__d7 t_2_7) ys_2_9))))))
     | `LH_N -> 
       ys_2_8);;
 let rec mappend_lh__d9 xs_1_6 ys_3_8 =
   (xs_1_6 ys_3_8);;
 let rec mappend_lh__d6 xs_1_1 ys_3_2 =
   (match xs_1_1 with
-    | `LH_C(h_2_0, t_3_0) -> 
+    | `LH_C(h_3_0, t_3_0) -> 
       (let rec t_3_1 = ((mappend_lh__d6 t_3_0) ys_3_2) in
-        (let rec h_2_1 = h_2_0 in
+        (let rec h_3_1 = h_3_0 in
           (fun ys_3_3 -> 
-            (`LH_C(h_2_1, ((mappend_lh__d9 t_3_1) ys_3_3))))))
+            (`LH_C(h_3_1, ((mappend_lh__d9 t_3_1) ys_3_3))))))
     | `LH_N -> 
       ys_3_2);;
 let rec mappend_lh__d1_d1 xs_1_2 ys_3_4 =
@@ -49,11 +50,11 @@ let rec mappend_lh__d1_d2 xs_1_9 ys_4_2 =
   (xs_1_9 ys_4_2);;
 let rec mappend_lh__d1_d0 xs_6 ys_2_4 =
   (match xs_6 with
-    | `LH_C(h_1_4, t_2_4) -> 
+    | `LH_C(h_2_4, t_2_4) -> 
       (let rec t_2_5 = ((mappend_lh__d1_d0 t_2_4) ys_2_4) in
-        (let rec h_1_5 = h_1_4 in
+        (let rec h_2_5 = h_2_4 in
           (fun ys_2_5 -> 
-            (`LH_C(h_1_5, ((mappend_lh__d1_d1 t_2_5) ys_2_5))))))
+            (`LH_C(h_2_5, ((mappend_lh__d1_d1 t_2_5) ys_2_5))))))
     | `LH_N -> 
       ys_2_4);;
 let rec showFourTupleofInt_lh__d1 _lh_showFourTupleofInt_arg1_0 =
@@ -61,27 +62,28 @@ let rec showFourTupleofInt_lh__d1 _lh_showFourTupleofInt_arg1_0 =
     | `LH_P4(_lh_showFourTupleofInt_LH_P4_0_0, _lh_showFourTupleofInt_LH_P4_1_0, _lh_showFourTupleofInt_LH_P4_2_0, _lh_showFourTupleofInt_LH_P4_3_0) -> 
       ((mappend_lh__d8 ((mappend_lh__d1_d1 ((mappend_lh__d1_d0 ((mappend_lh__d7 ((mappend_lh__d5 ((mappend_lh__d9 ((mappend_lh__d6 ((mappend_lh__d1_d2 (let rec t_3 = (fun ys_4 -> 
         ys_4) in
-        (let rec h_2 = '(' in
+        (let rec h_3 = '(' in
           (fun ys_5 -> 
-            (`LH_C(h_2, ((mappend_lh__d1_d2 t_3) ys_5))))))) (string_of_int _lh_showFourTupleofInt_LH_P4_0_0))) (let rec t_4 = (fun ys_6 -> 
+            (`LH_C(h_3, ((mappend_lh__d1_d2 t_3) ys_5))))))) (string_of_int _lh_showFourTupleofInt_LH_P4_0_0))) (let rec t_4 = (fun ys_6 -> 
         ys_6) in
-        (let rec h_3 = ',' in
-          (fun ys_7 -> 
-            (`LH_C(h_3, ((mappend_lh__d9 t_4) ys_7)))))))) (string_of_int _lh_showFourTupleofInt_LH_P4_1_0))) (let rec t_5 = (fun ys_8 -> 
-        ys_8) in
         (let rec h_4 = ',' in
-          (fun ys_9 -> 
-            (`LH_C(h_4, ((mappend_lh__d7 t_5) ys_9)))))))) (string_of_int _lh_showFourTupleofInt_LH_P4_2_0))) (let rec t_6 = (fun ys_1_0 -> 
-        ys_1_0) in
+          (fun ys_7 -> 
+            (`LH_C(h_4, ((mappend_lh__d9 t_4) ys_7)))))))) (string_of_int _lh_showFourTupleofInt_LH_P4_1_0))) (let rec t_5 = (fun ys_8 -> 
+        ys_8) in
         (let rec h_5 = ',' in
+          (fun ys_9 -> 
+            (`LH_C(h_5, ((mappend_lh__d7 t_5) ys_9)))))))) (string_of_int _lh_showFourTupleofInt_LH_P4_2_0))) (let rec t_6 = (fun ys_1_0 -> 
+        ys_1_0) in
+        (let rec h_6 = ',' in
           (fun ys_1_1 -> 
-            (`LH_C(h_5, ((mappend_lh__d1_d1 t_6) ys_1_1)))))))) (string_of_int _lh_showFourTupleofInt_LH_P4_3_0))) (let rec t_7 = (fun ys_1_2 -> 
+            (`LH_C(h_6, ((mappend_lh__d1_d1 t_6) ys_1_1)))))))) (string_of_int _lh_showFourTupleofInt_LH_P4_3_0))) (let rec t_7 = (fun ys_1_2 -> 
         ys_1_2) in
-        (let rec h_6 = ')' in
+        (let rec h_7 = ')' in
           (fun ys_1_3 -> 
             (let rec t_8 = ((mappend_lh__d2 t_7) ys_1_3) in
-              (fun _lh_dummy_1 -> 
-                (1 + (length_lh__d1 t_8))))))))
+              (let rec h_8 = h_7 in
+                (fun _lh_dummy_1 -> 
+                  (1 + (length_lh__d1 t_8)))))))))
     | _ -> 
       (failwith "error"));;
 let rec mappend_lh__d1 xs_3 ys_1_4 =
@@ -92,45 +94,46 @@ let rec mappend_lh__d1_d6 xs_0 ys_0 =
   (xs_0 ys_0);;
 let rec mappend_lh__d1_d8 xs_4 ys_1_5 =
   (match xs_4 with
-    | `LH_C(h_7, t_9) -> 
-      (`LH_C(h_7, ((mappend_lh__d1_d8 t_9) ys_1_5)))
+    | `LH_C(h_9, t_9) -> 
+      (`LH_C(h_9, ((mappend_lh__d1_d8 t_9) ys_1_5)))
     | `LH_N -> 
       ys_1_5);;
 let rec mappend_lh__d1_d9 xs_5 ys_1_6 =
   (match xs_5 with
-    | `LH_C(h_8, t_1_0) -> 
+    | `LH_C(h_1_0, t_1_0) -> 
       (let rec t_1_1 = ((mappend_lh__d1_d9 t_1_0) ys_1_6) in
-        (let rec h_9 = h_8 in
+        (let rec h_1_1 = h_1_0 in
           (fun ys_1_7 -> 
             (let rec t_1_2 = ((mappend_lh__d4 t_1_1) ys_1_7) in
-              (fun _lh_dummy_2 -> 
-                (1 + (length_lh__d1 t_1_2)))))))
+              (let rec h_1_2 = h_1_1 in
+                (fun _lh_dummy_2 -> 
+                  (1 + (length_lh__d1 t_1_2))))))))
     | `LH_N -> 
       ys_1_6);;
 let rec mappend_lh__d1_d7 xs_1_8 ys_4_1 =
   (xs_1_8 ys_4_1);;
 let rec mappend_lh__d1_d4 xs_1_0 ys_3_0 =
   (match xs_1_0 with
-    | `LH_C(h_1_8, t_2_8) -> 
+    | `LH_C(h_2_8, t_2_8) -> 
       (let rec t_2_9 = ((mappend_lh__d1_d4 t_2_8) ys_3_0) in
-        (let rec h_1_9 = h_1_8 in
+        (let rec h_2_9 = h_2_8 in
           (fun ys_3_1 -> 
-            (`LH_C(h_1_9, ((mappend_lh__d1_d7 t_2_9) ys_3_1))))))
+            (`LH_C(h_2_9, ((mappend_lh__d1_d7 t_2_9) ys_3_1))))))
     | `LH_N -> 
       ys_3_0);;
 let rec mappend_lh__d1_d5 xs_1_7 ys_3_9 =
   (match xs_1_7 with
-    | `LH_C(h_2_4, t_3_4) -> 
+    | `LH_C(h_3_4, t_3_4) -> 
       (let rec t_3_5 = ((mappend_lh__d1_d5 t_3_4) ys_3_9) in
-        (let rec h_2_5 = h_2_4 in
+        (let rec h_3_5 = h_3_4 in
           (fun ys_4_0 -> 
-            (`LH_C(h_2_5, ((mappend_lh__d1_d6 t_3_5) ys_4_0))))))
+            (`LH_C(h_3_5, ((mappend_lh__d1_d6 t_3_5) ys_4_0))))))
     | `LH_N -> 
       ys_3_9);;
 let rec mappend_lh__d2_d0 xs_1_4 ys_3_6 =
   (match xs_1_4 with
-    | `LH_C(h_2_2, t_3_2) -> 
-      (`LH_C(h_2_2, ((mappend_lh__d2_d0 t_3_2) ys_3_6)))
+    | `LH_C(h_3_2, t_3_2) -> 
+      (`LH_C(h_3_2, ((mappend_lh__d2_d0 t_3_2) ys_3_6)))
     | `LH_N -> 
       ys_3_6);;
 let rec mappend_lh__d1_d3 xs_1_5 ys_3_7 =
@@ -140,23 +143,24 @@ let rec showFourTupleofInt_lh__d2 _lh_showFourTupleofInt_arg1_1 =
     | `LH_P4(_lh_showFourTupleofInt_LH_P4_0_1, _lh_showFourTupleofInt_LH_P4_1_1, _lh_showFourTupleofInt_LH_P4_2_1, _lh_showFourTupleofInt_LH_P4_3_1) -> 
       ((mappend_lh__d1_d9 ((mappend_lh__d2_d0 ((mappend_lh__d1_d8 ((mappend_lh__d1_d6 ((mappend_lh__d1_d5 ((mappend_lh__d1_d7 ((mappend_lh__d1_d4 ((mappend_lh__d1_d3 (let rec t_3_6 = (fun ys_4_3 -> 
         ys_4_3) in
-        (let rec h_2_6 = '(' in
+        (let rec h_3_6 = '(' in
           (fun ys_4_4 -> 
-            (`LH_C(h_2_6, ((mappend_lh__d1_d3 t_3_6) ys_4_4))))))) (string_of_int _lh_showFourTupleofInt_LH_P4_0_1))) (let rec t_3_7 = (fun ys_4_5 -> 
+            (`LH_C(h_3_6, ((mappend_lh__d1_d3 t_3_6) ys_4_4))))))) (string_of_int _lh_showFourTupleofInt_LH_P4_0_1))) (let rec t_3_7 = (fun ys_4_5 -> 
         ys_4_5) in
-        (let rec h_2_7 = ',' in
+        (let rec h_3_7 = ',' in
           (fun ys_4_6 -> 
-            (`LH_C(h_2_7, ((mappend_lh__d1_d7 t_3_7) ys_4_6)))))))) (string_of_int _lh_showFourTupleofInt_LH_P4_1_1))) (let rec t_3_8 = (fun ys_4_7 -> 
+            (`LH_C(h_3_7, ((mappend_lh__d1_d7 t_3_7) ys_4_6)))))))) (string_of_int _lh_showFourTupleofInt_LH_P4_1_1))) (let rec t_3_8 = (fun ys_4_7 -> 
         ys_4_7) in
-        (let rec h_2_8 = ',' in
+        (let rec h_3_8 = ',' in
           (fun ys_4_8 -> 
-            (`LH_C(h_2_8, ((mappend_lh__d1_d6 t_3_8) ys_4_8)))))))) (string_of_int _lh_showFourTupleofInt_LH_P4_2_1))) (`LH_C(',', (`LH_N))))) (string_of_int _lh_showFourTupleofInt_LH_P4_3_1))) (let rec t_3_9 = (fun ys_4_9 -> 
+            (`LH_C(h_3_8, ((mappend_lh__d1_d6 t_3_8) ys_4_8)))))))) (string_of_int _lh_showFourTupleofInt_LH_P4_2_1))) (`LH_C(',', (`LH_N))))) (string_of_int _lh_showFourTupleofInt_LH_P4_3_1))) (let rec t_3_9 = (fun ys_4_9 -> 
         ys_4_9) in
-        (let rec h_2_9 = ')' in
+        (let rec h_3_9 = ')' in
           (fun ys_5_0 -> 
             (let rec t_4_0 = ((mappend_lh__d4 t_3_9) ys_5_0) in
-              (fun _lh_dummy_1_2 -> 
-                (1 + (length_lh__d1 t_4_0))))))))
+              (let rec h_4_0 = h_3_9 in
+                (fun _lh_dummy_1_2 -> 
+                  (1 + (length_lh__d1 t_4_0)))))))))
     | _ -> 
       (failwith "error"));;
 let rec fmt_lh__d1 _lh_fmt_arg1_0 =
@@ -164,33 +168,38 @@ let rec fmt_lh__d1 _lh_fmt_arg1_0 =
     | `LH_N -> 
       (let rec t_1_3 = (let rec t_1_4 = (fun _lh_dummy_3 -> 
         0) in
-        (fun _lh_dummy_4 -> 
-          (1 + (length_lh__d1 t_1_4)))) in
-        (fun _lh_dummy_5 -> 
-          (1 + (length_lh__d1 t_1_3))))
+        (let rec h_1_3 = ']' in
+          (fun _lh_dummy_4 -> 
+            (1 + (length_lh__d1 t_1_4))))) in
+        (let rec h_1_4 = '[' in
+          (fun _lh_dummy_5 -> 
+            (1 + (length_lh__d1 t_1_3)))))
     | `LH_C(_lh_fmt_LH_C_0_0, _lh_fmt_LH_C_1_0) -> 
       (let rec showl_0 = (fun _lh_showl_arg1_0 _lh_showl_arg2_0 -> 
         (match _lh_showl_arg1_0 with
           | `LH_N -> 
             (let rec t_1_5 = _lh_showl_arg2_0 in
-              (fun _lh_dummy_6 -> 
-                (1 + (length_lh__d1 t_1_5))))
+              (let rec h_1_5 = ']' in
+                (fun _lh_dummy_6 -> 
+                  (1 + (length_lh__d1 t_1_5)))))
           | `LH_C(_lh_showl_LH_C_0_0, _lh_showl_LH_C_1_0) -> 
             ((fun _lh_funcomp_x_0 -> 
               ((fun _lh_funcomp_x_1 -> 
                 ((fun s_0 -> 
                   ((mappend_lh__d1 (let rec t_1_6 = (let rec t_1_7 = (fun ys_1_8 -> 
                     ys_1_8) in
-                    (let rec h_1_0 = '|' in
+                    (let rec h_1_6 = '|' in
                       (fun ys_1_9 -> 
                         (let rec t_1_8 = ((mappend_lh__d1 t_1_7) ys_1_9) in
-                          (fun _lh_dummy_7 -> 
-                            (1 + (length_lh__d1 t_1_8))))))) in
-                    (let rec h_1_1 = ',' in
+                          (let rec h_1_7 = h_1_6 in
+                            (fun _lh_dummy_7 -> 
+                              (1 + (length_lh__d1 t_1_8)))))))) in
+                    (let rec h_1_8 = ',' in
                       (fun ys_2_0 -> 
                         (let rec t_1_9 = ((mappend_lh__d1 t_1_6) ys_2_0) in
-                          (fun _lh_dummy_8 -> 
-                            (1 + (length_lh__d1 t_1_9)))))))) s_0)) ((fun s_1 -> 
+                          (let rec h_1_9 = h_1_8 in
+                            (fun _lh_dummy_8 -> 
+                              (1 + (length_lh__d1 t_1_9))))))))) s_0)) ((fun s_1 -> 
                   ((mappend_lh__d4 (showFourTupleofInt_lh__d2 _lh_showl_LH_C_0_0)) s_1)) _lh_funcomp_x_1))) ((showl_0 _lh_showl_LH_C_1_0) _lh_funcomp_x_0))) _lh_showl_arg2_0)
           | _ -> 
             (failwith "error"))) in
@@ -199,20 +208,24 @@ let rec fmt_lh__d1 _lh_fmt_arg1_0 =
             ((fun s_2 -> 
               ((mappend_lh__d3 (let rec t_2_0 = (let rec t_2_1 = (fun ys_2_1 -> 
                 ys_2_1) in
-                (let rec h_1_2 = '|' in
+                (let rec h_2_0 = '|' in
                   (fun ys_2_2 -> 
                     (let rec t_2_2 = ((mappend_lh__d3 t_2_1) ys_2_2) in
-                      (fun _lh_dummy_9 -> 
-                        (1 + (length_lh__d1 t_2_2))))))) in
-                (let rec h_1_3 = '[' in
+                      (let rec h_2_1 = h_2_0 in
+                        (fun _lh_dummy_9 -> 
+                          (1 + (length_lh__d1 t_2_2)))))))) in
+                (let rec h_2_2 = '[' in
                   (fun ys_2_3 -> 
                     (let rec t_2_3 = ((mappend_lh__d3 t_2_0) ys_2_3) in
-                      (fun _lh_dummy_1_0 -> 
-                        (1 + (length_lh__d1 t_2_3)))))))) s_2)) ((fun s_3 -> 
+                      (let rec h_2_3 = h_2_2 in
+                        (fun _lh_dummy_1_0 -> 
+                          (1 + (length_lh__d1 t_2_3))))))))) s_2)) ((fun s_3 -> 
               ((mappend_lh__d2 (showFourTupleofInt_lh__d1 _lh_fmt_LH_C_0_0)) s_3)) _lh_funcomp_x_3))) ((showl_0 _lh_fmt_LH_C_1_0) _lh_funcomp_x_2))) (fun _lh_dummy_1_1 -> 
           0)))
     | _ -> 
       (failwith "error"));;
+let rec vec_sub_lh__d4 _lh_vec_sub_arg1_5 _lh_vec_sub_arg2_1_2 =
+  (_lh_vec_sub_arg1_5 _lh_vec_sub_arg2_1_2);;
 let rec vec_add_lh__d4 _lh_vec_add_arg1_1 _lh_vec_add_arg2_1 =
   (match _lh_vec_add_arg1_1 with
     | `LH_P2(_lh_vec_add_LH_P2_0_0, _lh_vec_add_LH_P2_1_0) -> 
@@ -237,8 +250,6 @@ let rec vec_add_lh__d4 _lh_vec_add_arg1_1 _lh_vec_add_arg2_1 =
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
-let rec vec_sub_lh__d4 _lh_vec_sub_arg1_5 _lh_vec_sub_arg2_1_2 =
-  (_lh_vec_sub_arg1_5 _lh_vec_sub_arg2_1_2);;
 let rec rot_lh__d4 _lh_rot_arg1_1 _lh_rot_arg2_1 _lh_rot_arg3_1 _lh_rot_arg4_1 =
   (((_lh_rot_arg1_1 ((vec_add_lh__d4 _lh_rot_arg2_1) _lh_rot_arg3_1)) _lh_rot_arg4_1) ((vec_sub_lh__d4 (let rec _lh_vec_sub_LH_P2_1_2 = 0 in
     (let rec _lh_vec_sub_LH_P2_0_2 = 0 in
@@ -264,12 +275,12 @@ let rec vec_add_lh__d7 _lh_vec_add_arg1_2 _lh_vec_add_arg2_4 =
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
-let rec beside_lh__d1 _lh_beside_arg1_0 _lh_beside_arg2_0 _lh_beside_arg3_0 _lh_beside_arg4_0 _lh_beside_arg5_0 _lh_beside_arg6_0 _lh_beside_arg7_0 =
-  ((mappend_lh__d2_d0 (((_lh_beside_arg3_0 _lh_beside_arg5_0) (((scale_vec2_lh__d1 _lh_beside_arg6_0) _lh_beside_arg1_0) (_lh_beside_arg1_0 + _lh_beside_arg2_0))) _lh_beside_arg7_0)) (((_lh_beside_arg4_0 ((vec_add_lh__d7 _lh_beside_arg5_0) (((scale_vec2_lh__d1 _lh_beside_arg6_0) _lh_beside_arg1_0) (_lh_beside_arg1_0 + _lh_beside_arg2_0)))) (((scale_vec2_lh__d1 _lh_beside_arg6_0) _lh_beside_arg2_0) (_lh_beside_arg2_0 + _lh_beside_arg1_0))) _lh_beside_arg7_0));;
 let rec beside_lh__d2 _lh_beside_arg1_1 _lh_beside_arg2_1 _lh_beside_arg3_1 _lh_beside_arg4_1 _lh_beside_arg5_1 _lh_beside_arg6_1 _lh_beside_arg7_1 =
   ((mappend_lh__d2_d0 (((_lh_beside_arg3_1 _lh_beside_arg5_1) (((scale_vec2_lh__d1 _lh_beside_arg6_1) _lh_beside_arg1_1) (_lh_beside_arg1_1 + _lh_beside_arg2_1))) _lh_beside_arg7_1)) (((_lh_beside_arg4_1 ((vec_add_lh__d7 _lh_beside_arg5_1) (((scale_vec2_lh__d1 _lh_beside_arg6_1) _lh_beside_arg1_1) (_lh_beside_arg1_1 + _lh_beside_arg2_1)))) (((scale_vec2_lh__d1 _lh_beside_arg6_1) _lh_beside_arg2_1) (_lh_beside_arg2_1 + _lh_beside_arg1_1))) _lh_beside_arg7_1));;
 let rec above_lh__d1 _lh_above_arg1_0 _lh_above_arg2_0 _lh_above_arg3_0 _lh_above_arg4_0 _lh_above_arg5_0 _lh_above_arg6_0 _lh_above_arg7_0 =
   ((mappend_lh__d2_d0 (((_lh_above_arg3_0 ((vec_add_lh__d7 _lh_above_arg5_0) (((scale_vec2_lh__d1 _lh_above_arg7_0) _lh_above_arg2_0) (_lh_above_arg1_0 + _lh_above_arg2_0)))) _lh_above_arg6_0) (((scale_vec2_lh__d1 _lh_above_arg7_0) _lh_above_arg1_0) (_lh_above_arg2_0 + _lh_above_arg1_0)))) (((_lh_above_arg4_0 _lh_above_arg5_0) _lh_above_arg6_0) (((scale_vec2_lh__d1 _lh_above_arg7_0) _lh_above_arg2_0) (_lh_above_arg1_0 + _lh_above_arg2_0))));;
+let rec beside_lh__d1 _lh_beside_arg1_0 _lh_beside_arg2_0 _lh_beside_arg3_0 _lh_beside_arg4_0 _lh_beside_arg5_0 _lh_beside_arg6_0 _lh_beside_arg7_0 =
+  ((mappend_lh__d2_d0 (((_lh_beside_arg3_0 _lh_beside_arg5_0) (((scale_vec2_lh__d1 _lh_beside_arg6_0) _lh_beside_arg1_0) (_lh_beside_arg1_0 + _lh_beside_arg2_0))) _lh_beside_arg7_0)) (((_lh_beside_arg4_0 ((vec_add_lh__d7 _lh_beside_arg5_0) (((scale_vec2_lh__d1 _lh_beside_arg6_0) _lh_beside_arg1_0) (_lh_beside_arg1_0 + _lh_beside_arg2_0)))) (((scale_vec2_lh__d1 _lh_beside_arg6_0) _lh_beside_arg2_0) (_lh_beside_arg2_0 + _lh_beside_arg1_0))) _lh_beside_arg7_0));;
 let rec quartet_lh__d1 _lh_quartet_arg1_1 _lh_quartet_arg2_1 _lh_quartet_arg3_1 _lh_quartet_arg4_1 =
   ((((above_lh__d1 1) 1) ((((beside_lh__d1 1) 1) _lh_quartet_arg1_1) _lh_quartet_arg2_1)) ((((beside_lh__d2 1) 1) _lh_quartet_arg3_1) _lh_quartet_arg4_1));;
 let rec vec_sub_lh__d1 _lh_vec_sub_arg1_4 _lh_vec_sub_arg2_1_1 =
@@ -334,10 +345,10 @@ let rec rot_lh__d6 _lh_rot_arg1_7 _lh_rot_arg2_7 _lh_rot_arg3_7 _lh_rot_arg4_7 =
             (`LH_P2((_lh_vec_sub_LH_P2_0_1_4 - _lh_vec_sub_LH_P2_0_1_5), (_lh_vec_sub_LH_P2_1_1_4 - _lh_vec_sub_LH_P2_1_1_5)))
           | _ -> 
             (failwith "error")))))) _lh_rot_arg3_7));;
-let rec vec_add_lh__d2 _lh_vec_add_arg1_0 _lh_vec_add_arg2_0 =
-  (_lh_vec_add_arg1_0 _lh_vec_add_arg2_0);;
 let rec vec_sub_lh__d2 _lh_vec_sub_arg1_6 _lh_vec_sub_arg2_1_5 =
   (_lh_vec_sub_arg1_6 _lh_vec_sub_arg2_1_5);;
+let rec vec_add_lh__d2 _lh_vec_add_arg1_0 _lh_vec_add_arg2_0 =
+  (_lh_vec_add_arg1_0 _lh_vec_add_arg2_0);;
 let rec rot_lh__d2 _lh_rot_arg1_8 _lh_rot_arg2_8 _lh_rot_arg3_8 _lh_rot_arg4_8 =
   (((_lh_rot_arg1_8 ((vec_add_lh__d2 _lh_rot_arg2_8) _lh_rot_arg3_8)) _lh_rot_arg4_8) ((vec_sub_lh__d2 (let rec _lh_vec_sub_LH_P2_1_1_6 = 0 in
     (let rec _lh_vec_sub_LH_P2_0_1_6 = 0 in
@@ -347,10 +358,10 @@ let rec rot_lh__d2 _lh_rot_arg1_8 _lh_rot_arg2_8 _lh_rot_arg3_8 _lh_rot_arg4_8 =
             (`LH_P2((_lh_vec_sub_LH_P2_0_1_6 - _lh_vec_sub_LH_P2_0_1_7), (_lh_vec_sub_LH_P2_1_1_6 - _lh_vec_sub_LH_P2_1_1_7)))
           | _ -> 
             (failwith "error")))))) _lh_rot_arg3_8));;
-let rec vec_sub_lh__d5 _lh_vec_sub_arg1_2 _lh_vec_sub_arg2_6 =
-  (_lh_vec_sub_arg1_2 _lh_vec_sub_arg2_6);;
 let rec vec_add_lh__d5 _lh_vec_add_arg1_5 _lh_vec_add_arg2_7 =
   (_lh_vec_add_arg1_5 _lh_vec_add_arg2_7);;
+let rec vec_sub_lh__d5 _lh_vec_sub_arg1_2 _lh_vec_sub_arg2_6 =
+  (_lh_vec_sub_arg1_2 _lh_vec_sub_arg2_6);;
 let rec rot_lh__d5 _lh_rot_arg1_9 _lh_rot_arg2_9 _lh_rot_arg3_9 _lh_rot_arg4_9 =
   (((_lh_rot_arg1_9 ((vec_add_lh__d5 _lh_rot_arg2_9) _lh_rot_arg3_9)) _lh_rot_arg4_9) ((vec_sub_lh__d5 (let rec _lh_vec_sub_LH_P2_1_1_8 = 0 in
     (let rec _lh_vec_sub_LH_P2_0_1_8 = 0 in
@@ -375,6 +386,12 @@ let rec rot_lh__d1_d0 _lh_rot_arg1_4 _lh_rot_arg2_4 _lh_rot_arg3_4 _lh_rot_arg4_
             (`LH_P2((_lh_vec_sub_LH_P2_0_8 - _lh_vec_sub_LH_P2_0_9), (_lh_vec_sub_LH_P2_1_8 - _lh_vec_sub_LH_P2_1_9)))
           | _ -> 
             (failwith "error")))))) _lh_rot_arg3_4));;
+let rec grid_lh__d1 _lh_grid_arg1_2_4_4 _lh_grid_arg2_2_4_4 _lh_grid_arg3_0 _lh_grid_arg4_2_4_4 _lh_grid_arg5_2_4_4 _lh_grid_arg6_2_4_4 =
+  (let rec _lh_listcomp_fun_2_4_4 = (fun _lh_listcomp_fun_para_0 -> 
+    ((((((_lh_listcomp_fun_para_0 _lh_grid_arg1_2_4_4) _lh_grid_arg2_2_4_4) _lh_grid_arg4_2_4_4) _lh_grid_arg5_2_4_4) _lh_grid_arg6_2_4_4) _lh_listcomp_fun_2_4_4)) in
+    (_lh_listcomp_fun_2_4_4 _lh_grid_arg3_0));;
+let rec tile_to_grid_lh__d1 _lh_tile_to_grid_arg1_0 =
+  (((grid_lh__d1 16) 16) _lh_tile_to_grid_arg1_0);;
 let rec tup2_lh__d1 _lh_tup2_arg1_0 _lh_tup2_arg2_0 =
   (match _lh_tup2_arg1_0 with
     | `LH_P2(_lh_tup2_LH_P2_0_0, _lh_tup2_LH_P2_1_0) -> 
@@ -627,12 +644,6 @@ let rec p_tile_lh__d1 _lh_grid_arg1_2_4_3 _lh_grid_arg2_2_4_3 _lh_grid_arg4_2_4_
             (fun _lh_grid_arg1_2_4_2 _lh_grid_arg2_2_4_2 _lh_grid_arg4_2_4_2 _lh_grid_arg5_2_4_2 _lh_grid_arg6_2_4_2 _lh_listcomp_fun_ls_t_2_3_9 _lh_listcomp_fun_2_4_2 -> 
               (`LH_C(((tup2_lh__d1 ((vec_add_lh__d7 ((vec_add_lh__d7 _lh_grid_arg4_2_4_2) (((scale_vec2_lh__d1 _lh_grid_arg5_2_4_2) _lh_grid_LH_P4_0_1_1_9) _lh_grid_arg1_2_4_2))) (((scale_vec2_lh__d1 _lh_grid_arg6_2_4_2) _lh_grid_LH_P4_1_1_1_9) _lh_grid_arg2_2_4_2))) ((vec_add_lh__d7 ((vec_add_lh__d7 _lh_grid_arg4_2_4_2) (((scale_vec2_lh__d1 _lh_grid_arg5_2_4_2) _lh_grid_LH_P4_2_1_1_9) _lh_grid_arg1_2_4_2))) (((scale_vec2_lh__d1 _lh_grid_arg6_2_4_2) _lh_grid_LH_P4_3_1_1_9) _lh_grid_arg2_2_4_2))), (_lh_listcomp_fun_2_4_2 _lh_listcomp_fun_ls_t_2_3_9)))))))) in
       (((((((_lh_listcomp_fun_ls_h_1_1_9 _lh_grid_arg1_2_4_3) _lh_grid_arg2_2_4_3) _lh_grid_arg4_2_4_3) _lh_grid_arg5_2_4_3) _lh_grid_arg6_2_4_3) _lh_listcomp_fun_ls_t_1_8_0) _lh_listcomp_fun_2_4_3)));;
-let rec grid_lh__d1 _lh_grid_arg1_2_4_4 _lh_grid_arg2_2_4_4 _lh_grid_arg3_0 _lh_grid_arg4_2_4_4 _lh_grid_arg5_2_4_4 _lh_grid_arg6_2_4_4 =
-  (let rec _lh_listcomp_fun_2_4_4 = (fun _lh_listcomp_fun_para_0 -> 
-    ((((((_lh_listcomp_fun_para_0 _lh_grid_arg1_2_4_4) _lh_grid_arg2_2_4_4) _lh_grid_arg4_2_4_4) _lh_grid_arg5_2_4_4) _lh_grid_arg6_2_4_4) _lh_listcomp_fun_2_4_4)) in
-    (_lh_listcomp_fun_2_4_4 _lh_grid_arg3_0));;
-let rec tile_to_grid_lh__d1 _lh_tile_to_grid_arg1_0 =
-  (((grid_lh__d1 16) 16) _lh_tile_to_grid_arg1_0);;
 let rec p_lh__d1 _lh_p_arg1_0 =
   ((tile_to_grid_lh__d1 p_tile_lh__d1) _lh_p_arg1_0);;
 let rec s_tile_lh__d1 _lh_grid_arg1_1_8_2 _lh_grid_arg2_1_8_2 _lh_grid_arg4_1_8_2 _lh_grid_arg5_1_8_2 _lh_grid_arg6_1_8_2 _lh_listcomp_fun_1_8_2 =
@@ -1430,8 +1441,8 @@ let rec pseudolimit_lh__d1 _lh_pseudolimit_arg1_0 =
   ((cycle'_lh__d1 pseudocorner_lh__d1) _lh_pseudolimit_arg1_0);;
 let rec map_lh__d1 f_0 ls_1 =
   (match ls_1 with
-    | `LH_C(h_2_3, t_3_3) -> 
-      (`LH_C((f_0 h_2_3), ((map_lh__d1 f_0) t_3_3)))
+    | `LH_C(h_3_3, t_3_3) -> 
+      (`LH_C((f_0 h_3_3), ((map_lh__d1 f_0) t_3_3)))
     | `LH_N -> 
       (`LH_N));;
 let rec min_lh__d1 _lh_min_arg1_0 _lh_min_arg2_0 =

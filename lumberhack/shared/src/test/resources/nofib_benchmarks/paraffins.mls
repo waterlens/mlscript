@@ -1733,6 +1733,7 @@ testParaffins_nofib $ primId 16
 //│ 				let _lh_listcomp_fun⁹⁹ = (fun _lh_listcomp_fun_para⁷¹ -> case _lh_listcomp_fun_para⁷¹ of {
 //│ 					LH_C _lh_listcomp_fun_ls_h²⁷ _lh_listcomp_fun_ls_t²⁷ => 
 //│ 						let t¹⁴ = _lh_listcomp_fun⁹⁹(_lh_listcomp_fun_ls_t²⁷)
+//│ 						in let h¹⁴ = [BCP _lh_bcp_generator_LH_C_0¹ _lh_listcomp_fun_ls_h²⁷]
 //│ 						in (fun _lh_dummy⁸ -> (1 + length_lh_₂(t¹⁴)))
 //│ 					| LH_N  => _lh_listcomp_fun⁹⁸(_lh_listcomp_fun_ls_t²⁶)})
 //│ 				in _lh_listcomp_fun⁹⁹([LH_C _lh_bcp_generator_LH_C_0¹ _lh_bcp_generator_LH_C_1¹])
@@ -1746,6 +1747,7 @@ testParaffins_nofib $ primId 16
 //│ 				let _lh_listcomp_fun⁴³ = (fun _lh_listcomp_fun_para⁴³ -> case _lh_listcomp_fun_para⁴³ of {
 //│ 					LH_C _lh_listcomp_fun_ls_h²⁴ _lh_listcomp_fun_ls_t²⁴ => 
 //│ 						let t¹¹ = _lh_listcomp_fun⁴³(_lh_listcomp_fun_ls_t²⁴)
+//│ 						in let h¹¹ = [BCP _lh_bcp_generator_LH_C_0⁰ _lh_listcomp_fun_ls_h²⁴]
 //│ 						in (fun _lh_dummy¹ -> (1 + length_lh_₃(t¹¹)))
 //│ 					| LH_N  => _lh_listcomp_fun⁴²(_lh_listcomp_fun_ls_t²³)})
 //│ 				in _lh_listcomp_fun⁴³([LH_C _lh_bcp_generator_LH_C_0⁰ _lh_bcp_generator_LH_C_1⁰])
@@ -1772,6 +1774,7 @@ testParaffins_nofib $ primId 16
 //│ 													let _lh_listcomp_fun⁸⁸ = (fun _lh_listcomp_fun_para⁶⁶ -> case _lh_listcomp_fun_para⁶⁶ of {
 //│ 														LH_C _lh_listcomp_fun_ls_h²² _lh_listcomp_fun_ls_t²² => 
 //│ 															let t¹³ = _lh_listcomp_fun⁸⁸(_lh_listcomp_fun_ls_t²²)
+//│ 															in let h¹³ = [CCP _lh_ccp_generator_LH_C_0³ _lh_ccp_generator_LH_C_0⁴ _lh_ccp_generator_LH_C_0⁵ _lh_listcomp_fun_ls_h²²]
 //│ 															in (fun _lh_dummy⁵ -> (1 + length_lh_₄(t¹³)))
 //│ 														| LH_N  => _lh_listcomp_fun⁸⁷(_lh_listcomp_fun_ls_t²¹)})
 //│ 													in _lh_listcomp_fun⁸⁸(if (_lh_ccp_generator_LH_P4_2¹ == _lh_ccp_generator_LH_P4_3¹) then [LH_C _lh_ccp_generator_LH_C_0⁵ _lh_ccp_generator_LH_C_1⁵] else atIndex_lz_lh_₆(_lh_ccp_generator_LH_P4_3¹, _lh_ccp_generator_arg1³))
@@ -1803,6 +1806,7 @@ testParaffins_nofib $ primId 16
 //│ 													let _lh_listcomp_fun⁸³ = (fun _lh_listcomp_fun_para⁶¹ -> case _lh_listcomp_fun_para⁶¹ of {
 //│ 														LH_C _lh_listcomp_fun_ls_h¹⁵ _lh_listcomp_fun_ls_t¹⁵ => 
 //│ 															let t¹² = _lh_listcomp_fun⁸³(_lh_listcomp_fun_ls_t¹⁵)
+//│ 															in let h¹² = [CCP _lh_ccp_generator_LH_C_0⁰ _lh_ccp_generator_LH_C_0¹ _lh_ccp_generator_LH_C_0² _lh_listcomp_fun_ls_h¹⁵]
 //│ 															in (fun _lh_dummy³ -> (1 + length_lh_₅(t¹²)))
 //│ 														| LH_N  => _lh_listcomp_fun⁸²(_lh_listcomp_fun_ls_t¹⁴)})
 //│ 													in _lh_listcomp_fun⁸³(if (_lh_ccp_generator_LH_P4_2⁰ == _lh_ccp_generator_LH_P4_3⁰) then [LH_C _lh_ccp_generator_LH_C_0² _lh_ccp_generator_LH_C_1²] else atIndex_lz_lh_₆(_lh_ccp_generator_LH_P4_3⁰, _lh_ccp_generator_arg1²))
@@ -2022,22 +2026,22 @@ testParaffins_nofib $ primId 16
 //│ 	in let _lh_listcomp_fun⁶ = (fun _lh_listcomp_fun_para⁴ -> _lh_listcomp_fun_para⁴(_lh_listcomp_fun⁶, radicals²))
 //│ 	in _lh_listcomp_fun⁶(enumFromTo_lh_₃(1, primId⁰(16)))]
 //│ def atIndex_lz_lh_₁(n², ls³) = if (n² < 0) then error⁰ else case force⁰(ls³) of {
-//│ 	LH_C h² t³ => if (n² == 0) then h² else atIndex_lz_lh_₁((n² - 1), t³)
+//│ 	LH_C h³ t³ => if (n² == 0) then h³ else atIndex_lz_lh_₁((n² - 1), t³)
 //│ 	| LH_N  => error⁰}
 //│ def atIndex_lz_lh_₂(n⁵, ls⁷) = if (n⁵ < 0) then error⁰ else case force⁰(ls⁷) of {
-//│ 	LH_C h⁵ t⁸ => if (n⁵ == 0) then h⁵ else atIndex_lz_lh_₂((n⁵ - 1), t⁸)
+//│ 	LH_C h⁸ t⁸ => if (n⁵ == 0) then h⁸ else atIndex_lz_lh_₂((n⁵ - 1), t⁸)
 //│ 	| LH_N  => error⁰}
 //│ def atIndex_lz_lh_₃(n⁰, ls⁰) = if (n⁰ < 0) then error⁰ else case force⁰(ls⁰) of {
-//│ 	LH_C h⁰ t¹ => if (n⁰ == 0) then h⁰ else atIndex_lz_lh_₃((n⁰ - 1), t¹)
+//│ 	LH_C h¹ t¹ => if (n⁰ == 0) then h¹ else atIndex_lz_lh_₃((n⁰ - 1), t¹)
 //│ 	| LH_N  => error⁰}
 //│ def atIndex_lz_lh_₄(n³, ls⁵) = if (n³ < 0) then error⁰ else case force⁰(ls⁵) of {
-//│ 	LH_C h³ t⁴ => if (n³ == 0) then h³ else atIndex_lz_lh_₄((n³ - 1), t⁴)
+//│ 	LH_C h⁴ t⁴ => if (n³ == 0) then h⁴ else atIndex_lz_lh_₄((n³ - 1), t⁴)
 //│ 	| LH_N  => error⁰}
 //│ def atIndex_lz_lh_₅(n¹, ls²) = if (n¹ < 0) then error⁰ else case force⁰(ls²) of {
-//│ 	LH_C h¹ t² => if (n¹ == 0) then h¹ else atIndex_lz_lh_₅((n¹ - 1), t²)
+//│ 	LH_C h² t² => if (n¹ == 0) then h² else atIndex_lz_lh_₅((n¹ - 1), t²)
 //│ 	| LH_N  => error⁰}
 //│ def atIndex_lz_lh_₆(n⁴, ls⁶) = if (n⁴ < 0) then error⁰ else case force⁰(ls⁶) of {
-//│ 	LH_C h⁴ t⁷ => if (n⁴ == 0) then h⁴ else atIndex_lz_lh_₆((n⁴ - 1), t⁷)
+//│ 	LH_C h⁷ t⁷ => if (n⁴ == 0) then h⁷ else atIndex_lz_lh_₆((n⁴ - 1), t⁷)
 //│ 	| LH_N  => error⁰}
 //│ def bcp_generator_lh_₁(_lh_bcp_generator_arg1¹, _lh_bcp_generator_arg2¹) = if odd_lh_₁(_lh_bcp_generator_arg2¹) then (fun _lh_dummy⁷ -> 0) else 
 //│ 	let _lh_listcomp_fun¹⁰⁶ = (fun _lh_listcomp_fun_para⁵⁶ -> case _lh_listcomp_fun_para⁵⁶ of {
@@ -2046,6 +2050,7 @@ testParaffins_nofib $ primId 16
 //│ 				let _lh_listcomp_fun¹⁰⁷ = (fun _lh_listcomp_fun_para⁵⁷ -> case _lh_listcomp_fun_para⁵⁷ of {
 //│ 					LH_C _lh_listcomp_fun_ls_h⁹¹ _lh_listcomp_fun_ls_t⁷⁷ => 
 //│ 						let t⁹ = _lh_listcomp_fun¹⁰⁷(_lh_listcomp_fun_ls_t⁷⁷)
+//│ 						in let h⁹ = [BCP _lh_bcp_generator_LH_C_0¹ _lh_listcomp_fun_ls_h⁹¹]
 //│ 						in (fun _lh_dummy⁸ -> (1 + t⁹(99)))
 //│ 					| LH_N  => _lh_listcomp_fun¹⁰⁶(_lh_listcomp_fun_ls_t⁷⁶)})
 //│ 				in _lh_listcomp_fun¹⁰⁷([LH_C _lh_bcp_generator_LH_C_0¹ _lh_bcp_generator_LH_C_1¹])
@@ -2059,6 +2064,7 @@ testParaffins_nofib $ primId 16
 //│ 				let _lh_listcomp_fun¹⁹ = (fun _lh_listcomp_fun_para¹³ -> case _lh_listcomp_fun_para¹³ of {
 //│ 					LH_C _lh_listcomp_fun_ls_h¹³ _lh_listcomp_fun_ls_t¹¹ => 
 //│ 						let t⁰ = _lh_listcomp_fun¹⁹(_lh_listcomp_fun_ls_t¹¹)
+//│ 						in let h⁰ = [BCP _lh_bcp_generator_LH_C_0⁰ _lh_listcomp_fun_ls_h¹³]
 //│ 						in (fun _lh_dummy¹ -> (1 + t⁰(99)))
 //│ 					| LH_N  => _lh_listcomp_fun¹⁸(_lh_listcomp_fun_ls_t¹⁰)})
 //│ 				in _lh_listcomp_fun¹⁹([LH_C _lh_bcp_generator_LH_C_0⁰ _lh_bcp_generator_LH_C_1⁰])
@@ -2085,6 +2091,7 @@ testParaffins_nofib $ primId 16
 //│ 													let _lh_listcomp_fun⁸⁸ = (fun _lh_listcomp_fun_para⁴⁸ -> case _lh_listcomp_fun_para⁴⁸ of {
 //│ 														LH_C _lh_listcomp_fun_ls_h⁷¹ _lh_listcomp_fun_ls_t⁶³ => 
 //│ 															let t⁶ = _lh_listcomp_fun⁸⁸(_lh_listcomp_fun_ls_t⁶³)
+//│ 															in let h⁶ = [CCP _lh_ccp_generator_LH_C_0³ _lh_ccp_generator_LH_C_0⁴ _lh_ccp_generator_LH_C_0⁵ _lh_listcomp_fun_ls_h⁷¹]
 //│ 															in (fun _lh_dummy⁵ -> (1 + t⁶(99)))
 //│ 														| LH_N  => _lh_listcomp_fun⁸⁷(_lh_listcomp_fun_ls_t⁶²)})
 //│ 													in _lh_listcomp_fun⁸⁸(if (_lh_ccp_generator_LH_P4_2¹ == _lh_ccp_generator_LH_P4_3¹) then [LH_C _lh_ccp_generator_LH_C_0⁵ _lh_ccp_generator_LH_C_1⁵] else atIndex_lz_lh_₆(_lh_ccp_generator_LH_P4_3¹, _lh_ccp_generator_arg1¹))
@@ -2133,6 +2140,7 @@ testParaffins_nofib $ primId 16
 //│ 													let _lh_listcomp_fun⁷⁵ = (fun _lh_listcomp_fun_para³⁹ -> case _lh_listcomp_fun_para³⁹ of {
 //│ 														LH_C _lh_listcomp_fun_ls_h⁵⁶ _lh_listcomp_fun_ls_t⁵² => 
 //│ 															let t⁵ = _lh_listcomp_fun⁷⁵(_lh_listcomp_fun_ls_t⁵²)
+//│ 															in let h⁵ = [CCP _lh_ccp_generator_LH_C_0⁰ _lh_ccp_generator_LH_C_0¹ _lh_ccp_generator_LH_C_0² _lh_listcomp_fun_ls_h⁵⁶]
 //│ 															in (fun _lh_dummy³ -> (1 + t⁵(99)))
 //│ 														| LH_N  => _lh_listcomp_fun⁷⁴(_lh_listcomp_fun_ls_t⁵¹)})
 //│ 													in _lh_listcomp_fun⁷⁵(if (_lh_ccp_generator_LH_P4_2⁰ == _lh_ccp_generator_LH_P4_3⁰) then [LH_C _lh_ccp_generator_LH_C_0² _lh_ccp_generator_LH_C_1²] else atIndex_lz_lh_₆(_lh_ccp_generator_LH_P4_3⁰, _lh_ccp_generator_arg1⁰))
@@ -2229,7 +2237,7 @@ testParaffins_nofib $ primId 16
 //│ 		| LH_N  => [LH_N]})
 //│ 	in _lh_listcomp_fun²⁷(enumFromTo_lh_₄(0, div⁰(_lh_four_partitions_arg1⁰, 4)))
 //│ def length_lh_₁(ls⁹) = case ls⁹ of {
-//│ 	LH_C h⁶ t¹⁰ => (1 + length_lh_₁(t¹⁰))
+//│ 	LH_C h¹⁰ t¹⁰ => (1 + length_lh_₁(t¹⁰))
 //│ 	| LH_N  => 0}
 //│ def length_lh_₂(ls¹⁰) = ls¹⁰(99)
 //│ def length_lh_₃(ls¹) = ls¹(99)
@@ -2409,22 +2417,22 @@ testParaffins_nofib $ primId 16
 //│ 	in let _lh_listcomp_fun⁶ = (fun _lh_listcomp_fun_para⁴ -> _lh_listcomp_fun_para⁴(_lh_listcomp_fun⁶, radicals²))
 //│ 	in _lh_listcomp_fun⁶(enumFromTo_lh_₃(1, primId⁰(16)))]
 //│ def atIndex_lz_lh_₁(n², ls³) = if (n² < 0) then error⁰ else case force⁰(ls³) of {
-//│ 	LH_C h² t³ => if (n² == 0) then h² else atIndex_lz_lh_₁((n² - 1), t³)
+//│ 	LH_C h³ t³ => if (n² == 0) then h³ else atIndex_lz_lh_₁((n² - 1), t³)
 //│ 	| LH_N  => error⁰}
 //│ def atIndex_lz_lh_₂(n⁵, ls⁷) = if (n⁵ < 0) then error⁰ else case force⁰(ls⁷) of {
-//│ 	LH_C h⁵ t⁸ => if (n⁵ == 0) then h⁵ else atIndex_lz_lh_₂((n⁵ - 1), t⁸)
+//│ 	LH_C h⁸ t⁸ => if (n⁵ == 0) then h⁸ else atIndex_lz_lh_₂((n⁵ - 1), t⁸)
 //│ 	| LH_N  => error⁰}
 //│ def atIndex_lz_lh_₃(n⁰, ls⁰) = if (n⁰ < 0) then error⁰ else case force⁰(ls⁰) of {
-//│ 	LH_C h⁰ t¹ => if (n⁰ == 0) then h⁰ else atIndex_lz_lh_₃((n⁰ - 1), t¹)
+//│ 	LH_C h¹ t¹ => if (n⁰ == 0) then h¹ else atIndex_lz_lh_₃((n⁰ - 1), t¹)
 //│ 	| LH_N  => error⁰}
 //│ def atIndex_lz_lh_₄(n³, ls⁵) = if (n³ < 0) then error⁰ else case force⁰(ls⁵) of {
-//│ 	LH_C h³ t⁴ => if (n³ == 0) then h³ else atIndex_lz_lh_₄((n³ - 1), t⁴)
+//│ 	LH_C h⁴ t⁴ => if (n³ == 0) then h⁴ else atIndex_lz_lh_₄((n³ - 1), t⁴)
 //│ 	| LH_N  => error⁰}
 //│ def atIndex_lz_lh_₅(n¹, ls²) = if (n¹ < 0) then error⁰ else case force⁰(ls²) of {
-//│ 	LH_C h¹ t² => if (n¹ == 0) then h¹ else atIndex_lz_lh_₅((n¹ - 1), t²)
+//│ 	LH_C h² t² => if (n¹ == 0) then h² else atIndex_lz_lh_₅((n¹ - 1), t²)
 //│ 	| LH_N  => error⁰}
 //│ def atIndex_lz_lh_₆(n⁴, ls⁶) = if (n⁴ < 0) then error⁰ else case force⁰(ls⁶) of {
-//│ 	LH_C h⁴ t⁷ => if (n⁴ == 0) then h⁴ else atIndex_lz_lh_₆((n⁴ - 1), t⁷)
+//│ 	LH_C h⁷ t⁷ => if (n⁴ == 0) then h⁷ else atIndex_lz_lh_₆((n⁴ - 1), t⁷)
 //│ 	| LH_N  => error⁰}
 //│ def bcp_generator_lh_₁(_lh_bcp_generator_arg1¹, _lh_bcp_generator_arg2¹) = if odd_lh_₁(_lh_bcp_generator_arg2¹) then (fun _lh_dummy⁷ -> 0) else 
 //│ 	let _lh_listcomp_fun¹⁰⁶ = (fun _lh_listcomp_fun_para⁵⁶ -> case _lh_listcomp_fun_para⁵⁶ of {
@@ -2433,6 +2441,7 @@ testParaffins_nofib $ primId 16
 //│ 				let _lh_listcomp_fun¹⁰⁷ = (fun _lh_listcomp_fun_para⁵⁷ -> case _lh_listcomp_fun_para⁵⁷ of {
 //│ 					LH_C _lh_listcomp_fun_ls_h⁹¹ _lh_listcomp_fun_ls_t⁷⁷ => 
 //│ 						let t⁹ = _lh_listcomp_fun¹⁰⁷(_lh_listcomp_fun_ls_t⁷⁷)
+//│ 						in let h⁹ = [BCP _lh_bcp_generator_LH_C_0¹ _lh_listcomp_fun_ls_h⁹¹]
 //│ 						in (fun _lh_dummy⁸ -> (1 + t⁹(99)))
 //│ 					| LH_N  => _lh_listcomp_fun¹⁰⁶(_lh_listcomp_fun_ls_t⁷⁶)})
 //│ 				in _lh_listcomp_fun¹⁰⁷([LH_C _lh_bcp_generator_LH_C_0¹ _lh_bcp_generator_LH_C_1¹])
@@ -2446,6 +2455,7 @@ testParaffins_nofib $ primId 16
 //│ 				let _lh_listcomp_fun¹⁹ = (fun _lh_listcomp_fun_para¹³ -> case _lh_listcomp_fun_para¹³ of {
 //│ 					LH_C _lh_listcomp_fun_ls_h¹³ _lh_listcomp_fun_ls_t¹¹ => 
 //│ 						let t⁰ = _lh_listcomp_fun¹⁹(_lh_listcomp_fun_ls_t¹¹)
+//│ 						in let h⁰ = [BCP _lh_bcp_generator_LH_C_0⁰ _lh_listcomp_fun_ls_h¹³]
 //│ 						in (fun _lh_dummy¹ -> (1 + t⁰(99)))
 //│ 					| LH_N  => _lh_listcomp_fun¹⁸(_lh_listcomp_fun_ls_t¹⁰)})
 //│ 				in _lh_listcomp_fun¹⁹([LH_C _lh_bcp_generator_LH_C_0⁰ _lh_bcp_generator_LH_C_1⁰])
@@ -2472,6 +2482,7 @@ testParaffins_nofib $ primId 16
 //│ 													let _lh_listcomp_fun⁸⁸ = (fun _lh_listcomp_fun_para⁴⁸ -> case _lh_listcomp_fun_para⁴⁸ of {
 //│ 														LH_C _lh_listcomp_fun_ls_h⁷¹ _lh_listcomp_fun_ls_t⁶³ => 
 //│ 															let t⁶ = _lh_listcomp_fun⁸⁸(_lh_listcomp_fun_ls_t⁶³)
+//│ 															in let h⁶ = [CCP _lh_ccp_generator_LH_C_0³ _lh_ccp_generator_LH_C_0⁴ _lh_ccp_generator_LH_C_0⁵ _lh_listcomp_fun_ls_h⁷¹]
 //│ 															in (fun _lh_dummy⁵ -> (1 + t⁶(99)))
 //│ 														| LH_N  => _lh_listcomp_fun⁸⁷(_lh_listcomp_fun_ls_t⁶²)})
 //│ 													in _lh_listcomp_fun⁸⁸(if (_lh_ccp_generator_LH_P4_2¹ == _lh_ccp_generator_LH_P4_3¹) then [LH_C _lh_ccp_generator_LH_C_0⁵ _lh_ccp_generator_LH_C_1⁵] else atIndex_lz_lh_₆(_lh_ccp_generator_LH_P4_3¹, _lh_ccp_generator_arg1¹))
@@ -2520,6 +2531,7 @@ testParaffins_nofib $ primId 16
 //│ 													let _lh_listcomp_fun⁷⁵ = (fun _lh_listcomp_fun_para³⁹ -> case _lh_listcomp_fun_para³⁹ of {
 //│ 														LH_C _lh_listcomp_fun_ls_h⁵⁶ _lh_listcomp_fun_ls_t⁵² => 
 //│ 															let t⁵ = _lh_listcomp_fun⁷⁵(_lh_listcomp_fun_ls_t⁵²)
+//│ 															in let h⁵ = [CCP _lh_ccp_generator_LH_C_0⁰ _lh_ccp_generator_LH_C_0¹ _lh_ccp_generator_LH_C_0² _lh_listcomp_fun_ls_h⁵⁶]
 //│ 															in (fun _lh_dummy³ -> (1 + t⁵(99)))
 //│ 														| LH_N  => _lh_listcomp_fun⁷⁴(_lh_listcomp_fun_ls_t⁵¹)})
 //│ 													in _lh_listcomp_fun⁷⁵(if (_lh_ccp_generator_LH_P4_2⁰ == _lh_ccp_generator_LH_P4_3⁰) then [LH_C _lh_ccp_generator_LH_C_0² _lh_ccp_generator_LH_C_1²] else atIndex_lz_lh_₆(_lh_ccp_generator_LH_P4_3⁰, _lh_ccp_generator_arg1⁰))
@@ -2616,7 +2628,7 @@ testParaffins_nofib $ primId 16
 //│ 		| LH_N  => [LH_N]})
 //│ 	in _lh_listcomp_fun²⁷(enumFromTo_lh_₄(0, div⁰(_lh_four_partitions_arg1⁰, 4)))
 //│ def length_lh_₁(ls⁹) = case ls⁹ of {
-//│ 	LH_C h⁶ t¹⁰ => (1 + length_lh_₁(t¹⁰))
+//│ 	LH_C h¹⁰ t¹⁰ => (1 + length_lh_₁(t¹⁰))
 //│ 	| LH_N  => 0}
 //│ def length_lh_₂(ls¹⁰) = ls¹⁰(99)
 //│ def length_lh_₃(ls¹) = ls¹(99)

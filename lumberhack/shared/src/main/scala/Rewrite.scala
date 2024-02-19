@@ -481,9 +481,9 @@ trait ExprRewrite { this: Expr =>
         val allFvs = matchArm._3.getFreeVarsInExpr
         val usedFieldsWithArgs = {
           if matchArm._1.name == "_" then // id pattern or wildcard pattern
-            (matchArm._2 zip (ctor :: Nil)).filter(ida => allFvs(ida._1))
+            (matchArm._2 zip (ctor :: Nil)).filter(ida => true)
           else
-            (matchArm._2 zip args).filter(ida => allFvs(ida._1))
+            (matchArm._2 zip args).filter(ida => true)
         }
 
         val (newIds, newArgs) = usedFieldsWithArgs.unzip.mapFirst(_.map(i => i -> i.copyToNewDeforest))

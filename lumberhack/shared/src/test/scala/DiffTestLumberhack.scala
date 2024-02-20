@@ -134,6 +134,7 @@ class DiffTestLumberhack extends DiffTests {
         val fusionStrategy = iterativeProcessRes._4
         
         output("\n>>>>>>> consumer ids >>>>>>>")
+        val producers = fusionStrategy.finallyFilteredStrategies._1.keySet.flatMap(producer => d.exprs(producer.euid).inDef.map(_.tree.name))
         val consumers = fusionStrategy.finallyFilteredStrategies._2.keySet.flatMap(consumer => d.exprs(consumer.euid).inDef.map(_.tree.name))
         import mlscript.utils.shorthands.Tuple2Helper
         val callGraph_ = newD.callsInfo._2.map(_.mapSecond(_.map(_.id))).toMap
@@ -151,13 +152,18 @@ class DiffTestLumberhack extends DiffTests {
             output(s"recursive consumer: ${cons}")
             false
           else
-            true
+            val body = {
+              val tmp = newP.defAndExpr._1.filterKeys(_.tree.name == cons)
+              if (tmp.size != 1) then ???
+              tmp.head._2
+            }
+            body.isInstanceOf[Expr.Function]
+            // make sure this consumer is a function
         }
         output(nonRecursiveConsumers.mkString(", "))
         output("<<<<<<< consumer ids <<<<<<<")
 
         // output(">>>>>>> prdocuer ids >>>>>>>")
-        val producers = fusionStrategy.finallyFilteredStrategies._1.keySet.flatMap(producer => d.exprs(producer.euid).inDef.map(_.tree.name))
         val floatingOutCandidates = producers -- consumers
 
         // output("producers: " + producers.mkString(", "))

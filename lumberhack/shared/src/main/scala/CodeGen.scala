@@ -1261,7 +1261,10 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
       if Deforest.lumberhackBinOps(op) || Deforest.lumberhackPolyOps(op) || (op == "div") =>
       "(" <:> rec(fst) <:> s" ${transformPrimitive(op)} " <:> rec(snd) <:> ")"
     case Call(lhs, rhs) =>
-      "(" <:> rec(lhs) <:> " " <:> rec(rhs) <:> ")"
+      rhs match {
+        case _: LetGroup => "(" <:> rec(lhs) <:> " (" <:> rec(rhs) <:> "))"
+        case _ => "(" <:> rec(lhs) <:> " " <:> rec(rhs) <:> ")"
+      }
     case Ctor(name, args) => //All constructors are polymorphic variants with tuple arguments
       (BuiltInTypes.fromStr(name.name).flatMap {
         case BuiltInTypes.BoolTrue => Some(Raw("true"))

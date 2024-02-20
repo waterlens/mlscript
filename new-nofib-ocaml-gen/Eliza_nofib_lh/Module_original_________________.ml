@@ -20,6 +20,15 @@ let rec drop_lh _lh_drop_arg1_0 _lh_drop_arg2_0 =
         _lh_drop_LH_C_1_0)
     | _ -> 
       (failwith "error"));;
+let rec lz_map_lh _lh_lz_map_arg1_0 _lh_lz_map_arg2_0 =
+  (let rec _lh_matchIdent_1_0 = _lh_lz_map_arg2_0 in
+    (match _lh_matchIdent_1_0 with
+      | `LH_N -> 
+        (lazy (`LH_N))
+      | `LH_C(_lh_lz_map_LH_C_0_0, _lh_lz_map_LH_C_1_0) -> 
+        (lazy (`LH_C((_lh_lz_map_arg1_0 _lh_lz_map_LH_C_0_0), ((lz_map_lh _lh_lz_map_arg1_0) _lh_lz_map_LH_C_1_0))))
+      | _ -> 
+        (failwith "error")));;
 let rec tail_lh ls_4 =
   (match ls_4 with
     | `LH_C(h_4, t_4) -> 
@@ -39,19 +48,21 @@ let rec length_lh ls_6 =
     | `LH_N -> 
       0);;
 let rec prefix_lh _lh_prefix_arg1_0 _lh_prefix_arg2_0 =
-  (match _lh_prefix_arg1_0 with
-    | `LH_N -> 
-      true
-    | `LH_C(_lh_prefix_LH_C_0_0, _lh_prefix_LH_C_1_0) -> 
-      (match _lh_prefix_arg2_0 with
-        | `LH_N -> 
-          false
-        | `LH_C(_lh_prefix_LH_C_0_1, _lh_prefix_LH_C_1_1) -> 
-          ((_lh_prefix_LH_C_0_0 = _lh_prefix_LH_C_0_1) && ((prefix_lh _lh_prefix_LH_C_1_0) _lh_prefix_LH_C_1_1))
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
+  (let rec _lh_matchIdent_3 = _lh_prefix_arg1_0 in
+    (match _lh_matchIdent_3 with
+      | `LH_N -> 
+        true
+      | `LH_C(_lh_prefix_LH_C_0_0, _lh_prefix_LH_C_1_0) -> 
+        (let rec _lh_matchIdent_4 = (Lazy.force _lh_prefix_arg2_0) in
+          (match _lh_matchIdent_4 with
+            | `LH_N -> 
+              false
+            | `LH_C(_lh_prefix_LH_C_0_1, _lh_prefix_LH_C_1_1) -> 
+              ((_lh_prefix_LH_C_0_0 = _lh_prefix_LH_C_0_1) && ((prefix_lh _lh_prefix_LH_C_1_0) _lh_prefix_LH_C_1_1))
+            | _ -> 
+              (failwith "error")))
+      | _ -> 
+        (failwith "error")));;
 let rec mappend_lh xs_0 ys_0 =
   (match xs_0 with
     | `LH_C(h_7, t_7) -> 
@@ -129,7 +140,7 @@ let rec toUpper_lh _lh_toUpper_arg1_0 =
         _lh_matchIdent_1));;
 let rec ucase_lh _lh_ucase_arg1_0 =
   ((map_lh toUpper_lh) _lh_ucase_arg1_0);;
-let rec conjugates_lh _lh_conjugates_arg1_0 =
+let rec conjugates_lh =
   (let rec prepare_0 = (fun _lh_prepare_arg1_0 -> 
     ((map_lh (fun wr_0 -> 
       (let rec _lh_matchIdent_0 = wr_0 in
@@ -202,7 +213,7 @@ let rec conjug_lh _lh_conjug_arg1_0 _lh_conjug_arg2_0 =
               (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_1))
         | `LH_N -> 
           (`LH_N))) in
-      (_lh_listcomp_fun_1 (conjugates_lh 0)))) (`LH_C(_lh_conj_arg1_0, (`LH_N))))))
+      (_lh_listcomp_fun_1 conjugates_lh))) (`LH_C(_lh_conj_arg1_0, (`LH_N))))))
   and trailingI_0 = (fun _lh_trailingI_arg1_0 -> 
     (let rec cons_1 = (fun x_1 xs_1 -> 
       (if ((x_1 = (`LH_C('I', (`LH_N)))) && (null_lh xs_1)) then
@@ -215,10 +226,10 @@ let rec conjug_lh _lh_conjug_arg1_0 _lh_conjug_arg2_0 =
       _lh_maybe_arg1_0
     else
       _lh_maybe_arg2_0))
-  in ((fun _lh_funcomp_x_5 -> 
-    ((fun _lh_funcomp_x_6 -> 
-      ((fun _lh_funcomp_x_7 -> 
-        (unwords_lh (trailingI_0 _lh_funcomp_x_7))) ((map_lh conj_0) _lh_funcomp_x_6))) ((maybe_0 _lh_conjug_arg1_0) _lh_funcomp_x_5))) _lh_conjug_arg2_0);;
+  in ((fun _lh_funcomp_x_4 -> 
+    ((fun _lh_funcomp_x_5 -> 
+      ((fun _lh_funcomp_x_6 -> 
+        (unwords_lh (trailingI_0 _lh_funcomp_x_6))) ((map_lh conj_0) _lh_funcomp_x_5))) ((maybe_0 _lh_conjug_arg1_0) _lh_funcomp_x_4))) _lh_conjug_arg2_0);;
 let rec filter_lh f_1 ls_1 =
   (match ls_1 with
     | `LH_C(h_1, t_1) -> 
@@ -232,8 +243,8 @@ let rec replies_lh _lh_replies_arg1_0 _lh_replies_arg2_0 =
   ((fun _lh_funcomp_x_0 -> 
     ((fun _lh_funcomp_x_1 -> 
       ((map_lh (fun _lh_funcomp_x_2 -> 
-        ((conjug_lh _lh_replies_arg2_0) ((drop_lh (length_lh _lh_replies_arg1_0)) _lh_funcomp_x_2)))) ((filter_lh (fun _lh_funcomp_x_3 -> 
-        ((prefix_lh _lh_replies_arg1_0) ((map_lh ucase_lh) _lh_funcomp_x_3)))) _lh_funcomp_x_1))) (tails_lh _lh_funcomp_x_0))) _lh_replies_arg2_0);;
+        ((conjug_lh _lh_replies_arg2_0) ((drop_lh (length_lh _lh_replies_arg1_0)) _lh_funcomp_x_2)))) ((filter_lh (fun ls_7 -> 
+        ((prefix_lh _lh_replies_arg1_0) ((lz_map_lh ucase_lh) ls_7)))) _lh_funcomp_x_1))) (tails_lh _lh_funcomp_x_0))) _lh_replies_arg2_0);;
 let rec keyTabOf_lh _lh_keyTabOf_arg1_0 =
   (match _lh_keyTabOf_arg1_0 with
     | `LH_P2(_lh_keyTabOf_LH_P2_0_0, _lh_keyTabOf_LH_P2_1_0) -> 
@@ -262,8 +273,8 @@ let rec answer_lh _lh_answer_arg1_0 _lh_answer_arg2_0 =
   and ans_0 = (fun _lh_ans_arg1_0 _lh_ans_arg2_0 -> 
     (match _lh_ans_arg1_0 with
       | `LH_C(_lh_ans_LH_C_0_0, _lh_ans_LH_C_1_0) -> 
-        (let rec _lh_matchIdent_4 = _lh_ans_LH_C_0_0 in
-          (match _lh_matchIdent_4 with
+        (let rec _lh_matchIdent_6 = _lh_ans_LH_C_0_0 in
+          (match _lh_matchIdent_6 with
             | `LH_P2(_lh_ans_LH_P2_0_0, _lh_ans_LH_P2_1_0) -> 
               (match _lh_ans_LH_P2_1_0 with
                 | `LH_C(_lh_ans_LH_C_0_1, _lh_ans_LH_C_1_1) -> 
@@ -278,8 +289,8 @@ let rec answer_lh _lh_answer_arg1_0 _lh_answer_arg2_0 =
               (failwith "error")))
       | _ -> 
         (failwith "error")))
-  in (let rec _lh_matchIdent_5 = ((ans_0 (keyTabOf_lh _lh_answer_arg1_0)) _lh_answer_arg2_0) in
-    (match _lh_matchIdent_5 with
+  in (let rec _lh_matchIdent_7 = ((ans_0 (keyTabOf_lh _lh_answer_arg1_0)) _lh_answer_arg2_0) in
+    (match _lh_matchIdent_7 with
       | `LH_P2(_lh_answer_LH_P2_0_0, _lh_answer_LH_P2_1_0) -> 
         (`LH_P2(_lh_answer_LH_P2_0_0, ((newKeyTab_lh _lh_answer_LH_P2_1_0) _lh_answer_arg1_0)))
       | _ -> 
@@ -299,11 +310,11 @@ let rec session_lh _lh_session_arg1_0 _lh_session_arg2_0 _lh_session_arg3_0 =
     | `LH_N -> 
       (`LH_N)
     | `LH_C(_lh_session_LH_C_0_0, _lh_session_LH_C_1_0) -> 
-      (let rec _lh_matchIdent_3 = (if (_lh_session_arg2_0 = _lh_session_LH_C_0_0) then
+      (let rec _lh_matchIdent_5 = (if (_lh_session_arg2_0 = _lh_session_LH_C_0_0) then
         (repeated_lh _lh_session_arg1_0)
       else
         ((answer_lh _lh_session_arg1_0) _lh_session_LH_C_0_0)) in
-        (match _lh_matchIdent_3 with
+        (match _lh_matchIdent_5 with
           | `LH_P2(_lh_session_LH_P2_0_0, _lh_session_LH_P2_1_0) -> 
             ((mappend_lh ((mappend_lh _lh_session_LH_P2_0_0) (`LH_C('n', (`LH_C('n', (`LH_N))))))) (((session_lh _lh_session_LH_P2_1_0) _lh_session_LH_C_0_0) _lh_session_LH_C_1_0))
           | _ -> 
@@ -354,13 +365,13 @@ let rec break_lh _lh_break_arg1_0 _lh_break_arg2_0 =
     | _ -> 
       (failwith "error"));;
 let rec words_lh _lh_words_arg1_0 =
-  (let rec _lh_matchIdent_6 = ((dropWhile_lh isSpace_lh) _lh_words_arg1_0) in
-    (match _lh_matchIdent_6 with
+  (let rec _lh_matchIdent_8 = ((dropWhile_lh isSpace_lh) _lh_words_arg1_0) in
+    (match _lh_matchIdent_8 with
       | `LH_N -> 
         (`LH_N)
       | `LH_C(_lh_words_LH_C_0_0, _lh_words_LH_C_1_0) -> 
-        (let rec _lh_matchIdent_7 = ((break_lh isSpace_lh) (`LH_C(_lh_words_LH_C_0_0, _lh_words_LH_C_1_0))) in
-          (match _lh_matchIdent_7 with
+        (let rec _lh_matchIdent_9 = ((break_lh isSpace_lh) (`LH_C(_lh_words_LH_C_0_0, _lh_words_LH_C_1_0))) in
+          (match _lh_matchIdent_9 with
             | `LH_P2(_lh_words_LH_P2_0_0, _lh_words_LH_P2_1_0) -> 
               (`LH_C(_lh_words_LH_P2_0_0, (words_lh _lh_words_LH_P2_1_0)))
             | _ -> 
@@ -384,12 +395,12 @@ let rec trim_lh _lh_trim_arg1_0 =
       (`LH_N)
     else
       (`LH_C(_lh_cons_arg1_0, _lh_cons_arg2_0)))) in
-    ((fun _lh_funcomp_x_4 -> 
+    ((fun _lh_funcomp_x_3 -> 
       (((foldr_lh cons_0) (`LH_N)) ((dropWhile_lh (fun x_0 -> 
-        ((inList_lh x_0) (`LH_C(' ', (`LH_C('.', (`LH_C('!', (`LH_C('?', (`LH_C(',', (`LH_N)))))))))))))) _lh_funcomp_x_4))) _lh_trim_arg1_0));;
+        ((inList_lh x_0) (`LH_C(' ', (`LH_C('.', (`LH_C('!', (`LH_C('?', (`LH_C(',', (`LH_N)))))))))))))) _lh_funcomp_x_3))) _lh_trim_arg1_0));;
 let rec cycle_lh _lh_cycle_arg1_0 =
   _lh_cycle_arg1_0;;
-let rec initial_lh _lh_initial_arg1_0 =
+let rec initial_lh =
   (let rec repeatMsgs_0 = (`LH_C((`LH_C('W', (`LH_C('h', (`LH_C('y', (`LH_C(' ', (`LH_C('d', (`LH_C('i', (`LH_C('d', (`LH_C(' ', (`LH_C('y', (`LH_C('o', (`LH_C('u', (`LH_C(' ', (`LH_C('r', (`LH_C('e', (`LH_C('p', (`LH_C('e', (`LH_C('a', (`LH_C('t', (`LH_C(' ', (`LH_C('y', (`LH_C('o', (`LH_C('u', (`LH_C('r', (`LH_C('s', (`LH_C('e', (`LH_C('l', (`LH_C('f', (`LH_C('?', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))))))), (`LH_C((`LH_C('D', (`LH_C('o', (`LH_C(' ', (`LH_C('y', (`LH_C('o', (`LH_C('u', (`LH_C(' ', (`LH_C('e', (`LH_C('x', (`LH_C('p', (`LH_C('e', (`LH_C('c', (`LH_C('t', (`LH_C(' ', (`LH_C('a', (`LH_C(' ', (`LH_C('d', (`LH_C('i', (`LH_C('f', (`LH_C('f', (`LH_C('e', (`LH_C('r', (`LH_C('e', (`LH_C('n', (`LH_C('t', (`LH_C(' ', (`LH_C('a', (`LH_C('n', (`LH_C('s', (`LH_C('w', (`LH_C('e', (`LH_C('r', (`LH_C(' ', (`LH_C('b', (`LH_C('y', (`LH_C(' ', (`LH_C('r', (`LH_C('e', (`LH_C('p', (`LH_C('e', (`LH_C('a', (`LH_C('t', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_C(' ', (`LH_C('y', (`LH_C('o', (`LH_C('u', (`LH_C('r', (`LH_C('s', (`LH_C('e', (`LH_C('l', (`LH_C('f', (`LH_C('?', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), (`LH_C((`LH_C('C', (`LH_C('o', (`LH_C('m', (`LH_C('e', (`LH_C(',', (`LH_C(' ', (`LH_C('c', (`LH_C('o', (`LH_C('m', (`LH_C('e', (`LH_C(',', (`LH_C(' ', (`LH_C('e', (`LH_C('l', (`LH_C('u', (`LH_C('c', (`LH_C('i', (`LH_C('d', (`LH_C('a', (`LH_C('t', (`LH_C('e', (`LH_C(' ', (`LH_C('y', (`LH_C('o', (`LH_C('u', (`LH_C('r', (`LH_C(' ', (`LH_C('t', (`LH_C('h', (`LH_C('o', (`LH_C('u', (`LH_C('g', (`LH_C('h', (`LH_C('t', (`LH_C('s', (`LH_C('.', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), (`LH_C((`LH_C('P', (`LH_C('l', (`LH_C('e', (`LH_C('a', (`LH_C('s', (`LH_C('e', (`LH_C(' ', (`LH_C('d', (`LH_C('o', (`LH_C('n', (`LH_C('_', (`LH_C('t', (`LH_C(' ', (`LH_C('r', (`LH_C('e', (`LH_C('p', (`LH_C('e', (`LH_C('a', (`LH_C('t', (`LH_C(' ', (`LH_C('y', (`LH_C('o', (`LH_C('u', (`LH_C('r', (`LH_C('s', (`LH_C('e', (`LH_C('l', (`LH_C('f', (`LH_C('!', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), (`LH_N))))))))) in
     (let rec respMsgs_0 = (let rec canYou_0 = (`LH_C((`LH_C('?', (`LH_C('D', (`LH_C('o', (`LH_C('n', (`LH_C('_', (`LH_C('t', (`LH_C(' ', (`LH_C('y', (`LH_C('o', (`LH_C('u', (`LH_C(' ', (`LH_C('b', (`LH_C('e', (`LH_C('l', (`LH_C('i', (`LH_C('e', (`LH_C('v', (`LH_C('e', (`LH_C(' ', (`LH_C('t', (`LH_C('h', (`LH_C('a', (`LH_C('t', (`LH_C(' ', (`LH_C('I', (`LH_C(' ', (`LH_C('c', (`LH_C('a', (`LH_C('n', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), (`LH_C((`LH_C('?', (`LH_C('P', (`LH_C('e', (`LH_C('r', (`LH_C('h', (`LH_C('a', (`LH_C('p', (`LH_C('s', (`LH_C(' ', (`LH_C('y', (`LH_C('o', (`LH_C('u', (`LH_C(' ', (`LH_C('w', (`LH_C('o', (`LH_C('u', (`LH_C('l', (`LH_C('d', (`LH_C(' ', (`LH_C('l', (`LH_C('i', (`LH_C('k', (`LH_C('e', (`LH_C(' ', (`LH_C('t', (`LH_C('o', (`LH_C(' ', (`LH_C('b', (`LH_C('e', (`LH_C(' ', (`LH_C('a', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C(' ', (`LH_C('t', (`LH_C('o', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), (`LH_C((`LH_C('?', (`LH_C('Y', (`LH_C('o', (`LH_C('u', (`LH_C(' ', (`LH_C('w', (`LH_C('a', (`LH_C('n', (`LH_C('t', (`LH_C(' ', (`LH_C('m', (`LH_C('e', (`LH_C(' ', (`LH_C('t', (`LH_C('o', (`LH_C(' ', (`LH_C('b', (`LH_C('e', (`LH_C(' ', (`LH_C('a', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C(' ', (`LH_C('t', (`LH_C('o', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))), (`LH_N))))))) in
       (let rec canI_0 = (`LH_C((`LH_C('?', (`LH_C('P', (`LH_C('e', (`LH_C('r', (`LH_C('h', (`LH_C('a', (`LH_C('p', (`LH_C('s', (`LH_C(' ', (`LH_C('y', (`LH_C('o', (`LH_C('u', (`LH_C(' ', (`LH_C('d', (`LH_C('o', (`LH_C('n', (`LH_C('_', (`LH_C('t', (`LH_C(' ', (`LH_C('w', (`LH_C('a', (`LH_C('n', (`LH_C('t', (`LH_C(' ', (`LH_C('t', (`LH_C('o', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))), (`LH_C((`LH_C('?', (`LH_C('D', (`LH_C('o', (`LH_C(' ', (`LH_C('y', (`LH_C('o', (`LH_C('u', (`LH_C(' ', (`LH_C('w', (`LH_C('a', (`LH_C('n', (`LH_C('t', (`LH_C(' ', (`LH_C('t', (`LH_C('o', (`LH_C(' ', (`LH_C('b', (`LH_C('e', (`LH_C(' ', (`LH_C('a', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C(' ', (`LH_C('t', (`LH_C('o', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))), (`LH_N))))) in
@@ -434,12 +445,12 @@ let rec initial_lh _lh_initial_arg1_0 =
 let rec testEliza_nofib_lh _lh_testEliza_nofib_arg1_0 =
   (let rec input_0 = (`LH_C((`LH_C('A', (`LH_C('r', (`LH_C('e', (`LH_C(' ', (`LH_C('w', (`LH_C('e', (`LH_C(' ', (`LH_C('a', (`LH_C('l', (`LH_C('o', (`LH_C('n', (`LH_C('e', (`LH_C('?', (`LH_N))))))))))))))))))))))))))), (`LH_C((`LH_C('T', (`LH_C('h', (`LH_C('a', (`LH_C('t', (`LH_C(' ', (`LH_C('t', (`LH_C('h', (`LH_C('e', (`LH_C(' ', (`LH_C('R', (`LH_C('o', (`LH_C('s', (`LH_C('w', (`LH_C('e', (`LH_C('l', (`LH_C('l', (`LH_C(' ', (`LH_C('e', (`LH_C('v', (`LH_C('e', (`LH_C('n', (`LH_C('t', (`LH_C(' ', (`LH_C('w', (`LH_C('a', (`LH_C('s', (`LH_C(' ', (`LH_C('a', (`LH_C('c', (`LH_C('t', (`LH_C('u', (`LH_C('a', (`LH_C('l', (`LH_C('l', (`LH_C('y', (`LH_C(' ', (`LH_C('a', (`LH_C('n', (`LH_C(' ', (`LH_C('a', (`LH_C('l', (`LH_C('i', (`LH_C('e', (`LH_C('n', (`LH_C(' ', (`LH_C('e', (`LH_C('n', (`LH_C('c', (`LH_C('o', (`LH_C('u', (`LH_C('n', (`LH_C('t', (`LH_C('e', (`LH_C('r', (`LH_C('.', (`LH_C(' ', (`LH_C('D', (`LH_C('o', (`LH_C(' ', (`LH_C('y', (`LH_C('o', (`LH_C('u', (`LH_C(' ', (`LH_C('a', (`LH_C('g', (`LH_C('r', (`LH_C('e', (`LH_C('e', (`LH_C('d', (`LH_C('?', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), (`LH_C((`LH_C('B', (`LH_C('u', (`LH_C('t', (`LH_C(' ', (`LH_C('w', (`LH_C('h', (`LH_C('y', (`LH_C(' ', (`LH_C('n', (`LH_C('o', (`LH_C('t', (`LH_C(' ', (`LH_C('t', (`LH_C('a', (`LH_C('l', (`LH_C('k', (`LH_C(' ', (`LH_C('a', (`LH_C('b', (`LH_C('o', (`LH_C('u', (`LH_C('t', (`LH_C(' ', (`LH_C('y', (`LH_C('o', (`LH_C('u', (`LH_C(',', (`LH_C(' ', (`LH_C('i', (`LH_C('t', (`LH_C('s', (`LH_C(' ', (`LH_C('m', (`LH_C('o', (`LH_C('r', (`LH_C('e', (`LH_C(' ', (`LH_C('f', (`LH_C('u', (`LH_C('n', (`LH_C('.', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), (`LH_C((`LH_C('I', (`LH_C(' ', (`LH_C('d', (`LH_C('o', (`LH_C('n', (`LH_C('t', (`LH_C(' ', (`LH_C('a', (`LH_C('s', (`LH_C('k', (`LH_C(',', (`LH_C(' ', (`LH_C('y', (`LH_C('o', (`LH_C('u', (`LH_C(' ', (`LH_C('d', (`LH_C('o', (`LH_N))))))))))))))))))))))))))))))))))))), (`LH_C((`LH_C('d', (`LH_C('o', (`LH_C(' ', (`LH_C('r', (`LH_C('a', (`LH_C('y', (`LH_C(' ', (`LH_C('m', (`LH_C('e', (`LH_N))))))))))))))))))), (`LH_C((`LH_C('N', (`LH_C('o', (`LH_C('p', (`LH_C(',', (`LH_C(' ', (`LH_C('t', (`LH_C('h', (`LH_C('a', (`LH_C('t', (`LH_C('s', (`LH_C(' ', (`LH_C('b', (`LH_C('e', (`LH_C('c', (`LH_C('a', (`LH_C('u', (`LH_C('s', (`LH_C('e', (`LH_C(' ', (`LH_C('y', (`LH_C('o', (`LH_C('u', (`LH_C('r', (`LH_C(' ', (`LH_C('a', (`LH_C(' ', (`LH_C('c', (`LH_C('o', (`LH_C('m', (`LH_C('p', (`LH_C('u', (`LH_C('t', (`LH_C('e', (`LH_C('r', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), (`LH_C((`LH_C('y', (`LH_C('o', (`LH_C('u', (`LH_C(' ', (`LH_C('d', (`LH_C('o', (`LH_C('n', (`LH_C('t', (`LH_N))))))))))))))))), (`LH_C((`LH_C('O', (`LH_C('h', (`LH_C(',', (`LH_C(' ', (`LH_C('a', (`LH_C(' ', (`LH_C('p', (`LH_C('a', (`LH_C('r', (`LH_C('a', (`LH_C('n', (`LH_C('o', (`LH_C('i', (`LH_C('d', (`LH_C(' ', (`LH_C('c', (`LH_C('o', (`LH_C('m', (`LH_C('p', (`LH_C('u', (`LH_C('t', (`LH_C('e', (`LH_C('r', (`LH_C(',', (`LH_C(' ', (`LH_C('e', (`LH_C('h', (`LH_C('h', (`LH_C('?', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), (`LH_C((`LH_C('T', (`LH_C('e', (`LH_C('l', (`LH_C('l', (`LH_C(' ', (`LH_C('m', (`LH_C('e', (`LH_C(' ', (`LH_C('a', (`LH_C('b', (`LH_C('o', (`LH_C('u', (`LH_C('t', (`LH_C(' ', (`LH_C('*', (`LH_C('y', (`LH_C('o', (`LH_C('u', (`LH_C('r', (`LH_C('*', (`LH_C(' ', (`LH_C('m', (`LH_C('o', (`LH_C('t', (`LH_C('h', (`LH_C('e', (`LH_C('r', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))))), (`LH_C((`LH_C('N', (`LH_C('o', (`LH_C(',', (`LH_C(' ', (`LH_C('w', (`LH_C('h', (`LH_C('a', (`LH_C('t', (`LH_C(' ', (`LH_C('w', (`LH_C('h', (`LH_C('a', (`LH_C('t', (`LH_C(' ', (`LH_C('w', (`LH_C('a', (`LH_C('s', (`LH_C(' ', (`LH_C('s', (`LH_C('h', (`LH_C('e', (`LH_C(' ', (`LH_C('l', (`LH_C('i', (`LH_C('k', (`LH_C('e', (`LH_C('?', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))))), (`LH_C((`LH_C('I', (`LH_C('_', (`LH_C('m', (`LH_C(' ', (`LH_C('a', (`LH_C('s', (`LH_C('k', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_C(' ', (`LH_C('q', (`LH_C('u', (`LH_C('e', (`LH_C('s', (`LH_C('t', (`LH_C('i', (`LH_C('o', (`LH_C('n', (`LH_C('s', (`LH_C(',', (`LH_C(' ', (`LH_C('n', (`LH_C('o', (`LH_C('t', (`LH_C(' ', (`LH_C('y', (`LH_C('o', (`LH_C('u', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))))))))), (`LH_C((`LH_C('n', (`LH_C('o', (`LH_N))))), (`LH_C((`LH_C('y', (`LH_C('e', (`LH_C('s', (`LH_N))))))), (`LH_C((`LH_C('b', (`LH_C('u', (`LH_C('t', (`LH_C(' ', (`LH_C('I', (`LH_C('_', (`LH_C('m', (`LH_C(' ', (`LH_C('n', (`LH_C('o', (`LH_C('t', (`LH_N))))))))))))))))))))))), (`LH_N))))))))))))))))))))))))))))) in
     ((map_lh (fun i_1 -> 
-      ((fun _lh_funcomp_x_8 -> 
-        ((fun _lh_funcomp_x_9 -> 
-          ((fun _lh_funcomp_x_1_0 -> 
-            ((fun _lh_funcomp_x_1_1 -> 
-              (length_lh (((session_lh (initial_lh 0)) (`LH_N)) _lh_funcomp_x_1_1))) ((filter_lh (fun _lh_funcomp_x_1_2 -> 
-              (not (null_lh _lh_funcomp_x_1_2)))) _lh_funcomp_x_1_0))) ((map_lh (fun _lh_funcomp_x_1_3 -> 
-            (words_lh (trim_lh _lh_funcomp_x_1_3)))) _lh_funcomp_x_9))) ((take_lh (i_1 mod 20)) _lh_funcomp_x_8))) input_0))) ((enumFromTo_lh 1) _lh_testEliza_nofib_arg1_0)));;
+      ((fun _lh_funcomp_x_7 -> 
+        ((fun _lh_funcomp_x_8 -> 
+          ((fun _lh_funcomp_x_9 -> 
+            ((fun _lh_funcomp_x_1_0 -> 
+              (length_lh (((session_lh initial_lh) (`LH_N)) _lh_funcomp_x_1_0))) ((filter_lh (fun _lh_funcomp_x_1_1 -> 
+              (not (null_lh _lh_funcomp_x_1_1)))) _lh_funcomp_x_9))) ((map_lh (fun _lh_funcomp_x_1_2 -> 
+            (words_lh (trim_lh _lh_funcomp_x_1_2)))) _lh_funcomp_x_8))) ((take_lh (i_1 mod 20)) _lh_funcomp_x_7))) input_0))) ((enumFromTo_lh 1) _lh_testEliza_nofib_arg1_0)));;
 end;;
 

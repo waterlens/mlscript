@@ -3,6 +3,12 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_original_________________(LH_Dum: sig end) = struct
+let rec mappend_lh xs_0 ys_0 =
+  (match xs_0 with
+    | `LH_C(h_5, t_5) -> 
+      (`LH_C(h_5, ((mappend_lh t_5) ys_0)))
+    | `LH_N -> 
+      ys_0);;
 let rec enumFromTo_lh a_0 b_0 =
   (if (a_0 <= b_0) then
     (`LH_C(a_0, ((enumFromTo_lh (a_0 + 1)) b_0)))
@@ -23,12 +29,6 @@ let rec runStateT_lh _lh_runStateT_arg1_0 =
       _lh_runStateT_StateT_0_0
     | _ -> 
       (failwith "error"));;
-let rec mappend_lh xs_0 ys_0 =
-  (match xs_0 with
-    | `LH_C(h_5, t_5) -> 
-      (`LH_C(h_5, ((mappend_lh t_5) ys_0)))
-    | `LH_N -> 
-      ys_0);;
 let rec concat_lh lss_0 =
   (match lss_0 with
     | `LH_C(h_7, t_7) -> 
@@ -332,11 +332,10 @@ let rec puzzle_lh _lh_puzzle_arg1_0 _lh_puzzle_arg2_0 =
                           (`LH_N))) in
                       (_lh_listcomp_fun_1 (digitEnv_lh answer_0)))))))))))));;
 let rec testCryptarithm2_nofib_lh _lh_testCryptarithm2_nofib_arg1_0 =
-  ((map_lh (fun i_2 -> 
-    (let rec args_0 = (`LH_C((`LH_C('T', (`LH_C('H', (`LH_C('I', (`LH_C('R', (`LH_C('T', (`LH_C('Y', (`LH_N))))))))))))), (`LH_C((`LH_C('T', (`LH_C('W', (`LH_C('E', (`LH_C('L', (`LH_C('V', (`LH_C('E', (`LH_N))))))))))))), (`LH_C((`LH_C('T', (`LH_C('W', (`LH_C('E', (`LH_C('L', (`LH_C('V', (`LH_C('E', (`LH_N))))))))))))), (`LH_C((`LH_C('T', (`LH_C('W', (`LH_C('E', (`LH_C('L', (`LH_C('V', (`LH_C('E', (`LH_N))))))))))))), (`LH_C((`LH_C('T', (`LH_C('W', (`LH_C('E', (`LH_C('L', (`LH_C('V', (`LH_C('E', (`LH_N))))))))))))), (`LH_C(((mappend_lh (`LH_C('T', (`LH_C('W', (`LH_C('E', (`LH_C('L', (`LH_C('V', (`LH_C('E', (`LH_N)))))))))))))) (if (i_2 > 999999) then
-      (`LH_C('1', (`LH_N)))
-    else
-      (`LH_N))), (`LH_N))))))))))))) in
-      ((puzzle_lh args_0) (`LH_C('N', (`LH_C('I', (`LH_C('N', (`LH_C('E', (`LH_C('T', (`LH_C('Y', (`LH_N))))))))))))))))) ((enumFromTo_lh 1) _lh_testCryptarithm2_nofib_arg1_0));;
+  (let rec args_0 = (`LH_C((`LH_C('T', (`LH_C('H', (`LH_C('I', (`LH_C('R', (`LH_C('T', (`LH_C('Y', (`LH_N))))))))))))), (`LH_C((`LH_C('T', (`LH_C('W', (`LH_C('E', (`LH_C('L', (`LH_C('V', (`LH_C('E', (`LH_N))))))))))))), (`LH_C((`LH_C('T', (`LH_C('W', (`LH_C('E', (`LH_C('L', (`LH_C('V', (`LH_C('E', (`LH_N))))))))))))), (`LH_C((`LH_C('T', (`LH_C('W', (`LH_C('E', (`LH_C('L', (`LH_C('V', (`LH_C('E', (`LH_N))))))))))))), (`LH_C((`LH_C('T', (`LH_C('W', (`LH_C('E', (`LH_C('L', (`LH_C('V', (`LH_C('E', (`LH_N))))))))))))), (`LH_C(((mappend_lh (`LH_C('T', (`LH_C('W', (`LH_C('E', (`LH_C('L', (`LH_C('V', (`LH_C('E', (`LH_N)))))))))))))) (if (_lh_testCryptarithm2_nofib_arg1_0 > 999999) then
+    (`LH_C('1', (`LH_N)))
+  else
+    (`LH_N))), (`LH_N))))))))))))) in
+    ((puzzle_lh args_0) (`LH_C('N', (`LH_C('I', (`LH_C('N', (`LH_C('E', (`LH_C('T', (`LH_C('Y', (`LH_N)))))))))))))));;
 end;;
 

@@ -61,8 +61,11 @@
 
 :lhInHaskell
 :lhGenOCaml
-depth d m = let n = bit (m - d + minN) in
+max a b = if a > b then a else b
+minN = 4
+depth d m =
     if d <= m then
+      let n = bit (m - d + minN) in
       let s = sumT d n 0 in (let rest = depth (d+2) m in ((2*n,d,s) : rest))
     else []
 sumT d 0 t = t
@@ -74,119 +77,521 @@ check' b z Nil          = z
 check' b z (Node i l r) = check' (not b) (check' b (if b then (z+i) else (z-i)) l) r
 make i 0 = Node i Nil Nil
 make i d = let i2 = 2*i in (let d2 = d-1 in (Node i (make (i2-1) d2) (make i2 d2)))
-testBinaryTrees_nofib n = check (make 0 n)
-testBinaryTrees_nofib $ primId 17
+testBinaryTrees_nofib n =
+  let maxN = (max (minN + 2) n) in
+  let stretchN = (maxN + 1) in
+  let long = (make 0 maxN) in
+  let c = (check (make 0 stretchN)) in
+  let vs = (depth minN maxN) in
+  (map (\(m_d_i) -> case m_d_i of { (m,d,i) -> ((string_of_int m) ++ "t trees") }) vs, check long)
+testBinaryTrees_nofib $ primId 14
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ testBinaryTrees_nofib_lh_₁^86(primId⁰(17))
-//│ def check'_lh_₁(_lh_check'_arg1⁰, _lh_check'_arg2⁰, _lh_check'_arg3⁰) = case _lh_check'_arg3⁰ of {
-//│ 	Nil  => _lh_check'_arg2⁰
-//│ 	| Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₁^3(not⁰(_lh_check'_arg1⁰), check'_lh_₁^8(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰)
+//│ testBinaryTrees_nofib_lh_₁^529(primId⁰(14))
+//│ def bit_lh_₁(_lh_bit_arg1⁰) = if (_lh_bit_arg1⁰ > 0) then (2 * bit_lh_₁^163((_lh_bit_arg1⁰ - 1))) else 1
+//│ def check'_lh_₁(_lh_check'_arg1³, _lh_check'_arg2³, _lh_check'_arg3³) = case _lh_check'_arg3³ of {
+//│ 	Nil  => _lh_check'_arg2³
+//│ 	| Node _lh_check'_Node_0³ _lh_check'_Node_1³ _lh_check'_Node_2³ => check'_lh_₁^251(not⁰(_lh_check'_arg1³), check'_lh_₁^256(_lh_check'_arg1³, if _lh_check'_arg1³ then (_lh_check'_arg2³ + _lh_check'_Node_0³) else (_lh_check'_arg2³ - _lh_check'_Node_0³), _lh_check'_Node_1³), _lh_check'_Node_2³)
 //│ 	| _  => error⁰}
-//│ def check_lh_₁(_lh_check_arg1⁰) = check'_lh_₁^70([True], 0, _lh_check_arg1⁰)
-//│ def make_lh_₁(_lh_make_arg1⁰, _lh_make_arg2⁰) = case _lh_make_arg2⁰ of {
+//│ def check'_lh_₂(_lh_check'_arg1², _lh_check'_arg2², _lh_check'_arg3²) = case _lh_check'_arg3² of {
+//│ 	Nil  => _lh_check'_arg2²
+//│ 	| Node _lh_check'_Node_0² _lh_check'_Node_1² _lh_check'_Node_2² => check'_lh_₂^218(not⁰(_lh_check'_arg1²), check'_lh_₂^223(_lh_check'_arg1², if _lh_check'_arg1² then (_lh_check'_arg2² + _lh_check'_Node_0²) else (_lh_check'_arg2² - _lh_check'_Node_0²), _lh_check'_Node_1²), _lh_check'_Node_2²)
+//│ 	| _  => error⁰}
+//│ def check'_lh_₃(_lh_check'_arg1¹, _lh_check'_arg2¹, _lh_check'_arg3¹) = case _lh_check'_arg3¹ of {
+//│ 	Nil  => _lh_check'_arg2¹
+//│ 	| Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_lh_₃^36(not⁰(_lh_check'_arg1¹), check'_lh_₃^41(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹)
+//│ 	| _  => error⁰}
+//│ def check'_lh_₄(_lh_check'_arg1⁰, _lh_check'_arg2⁰, _lh_check'_arg3⁰) = case _lh_check'_arg3⁰ of {
+//│ 	Nil  => _lh_check'_arg2⁰
+//│ 	| Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₄^3(not⁰(_lh_check'_arg1⁰), check'_lh_₄^8(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰)
+//│ 	| _  => error⁰}
+//│ def check_lh_₁(_lh_check_arg1³) = check'_lh_₁^376([True], 0, _lh_check_arg1³)
+//│ def check_lh_₂(_lh_check_arg1²) = check'_lh_₂^332([True], 0, _lh_check_arg1²)
+//│ def check_lh_₃(_lh_check_arg1¹) = check'_lh_₃^147([True], 0, _lh_check_arg1¹)
+//│ def check_lh_₄(_lh_check_arg1⁰) = check'_lh_₄^67([True], 0, _lh_check_arg1⁰)
+//│ def depth_lh_₁(_lh_depth_arg1⁰, _lh_depth_arg2⁰) = if (_lh_depth_arg1⁰ <= _lh_depth_arg2⁰) then 
+//│ 	let n⁰ = bit_lh_₁^287(((_lh_depth_arg2⁰ - _lh_depth_arg1⁰) + minN_lh_₃^295))
+//│ 	in let s⁰ = sumT_lh_₁^298(_lh_depth_arg1⁰, n⁰, 0)
+//│ 	in let rest⁰ = depth_lh_₁^305((_lh_depth_arg1⁰ + 2), _lh_depth_arg2⁰)
+//│ 	in [LH_C [LH_P3 (2 * n⁰) _lh_depth_arg1⁰ s⁰] rest⁰] else [LH_N]
+//│ def make_lh_₁(_lh_make_arg1³, _lh_make_arg2³) = case _lh_make_arg2³ of {
+//│ 	0  => [Node _lh_make_arg1³ [Nil] [Nil]]
+//│ 	| _  => 
+//│ 		let i2³ = (2 * _lh_make_arg1³)
+//│ 		in let d2³ = (_lh_make_arg2³ - 1)
+//│ 		in [Node _lh_make_arg1³ make_lh_₁^436((i2³ - 1), d2³) make_lh_₁^445(i2³, d2³)]}
+//│ def make_lh_₂(_lh_make_arg1², _lh_make_arg2²) = case _lh_make_arg2² of {
+//│ 	0  => [Node _lh_make_arg1² [Nil] [Nil]]
+//│ 	| _  => 
+//│ 		let i2² = (2 * _lh_make_arg1²)
+//│ 		in let d2² = (_lh_make_arg2² - 1)
+//│ 		in [Node _lh_make_arg1² make_lh_₂^400((i2² - 1), d2²) make_lh_₂^409(i2², d2²)]}
+//│ def make_lh_₃(_lh_make_arg1¹, _lh_make_arg2¹) = case _lh_make_arg2¹ of {
+//│ 	0  => [Node _lh_make_arg1¹ [Nil] [Nil]]
+//│ 	| _  => 
+//│ 		let i2¹ = (2 * _lh_make_arg1¹)
+//│ 		in let d2¹ = (_lh_make_arg2¹ - 1)
+//│ 		in [Node _lh_make_arg1¹ make_lh_₃^127((i2¹ - 1), d2¹) make_lh_₃^136(i2¹, d2¹)]}
+//│ def make_lh_₄(_lh_make_arg1⁰, _lh_make_arg2⁰) = case _lh_make_arg2⁰ of {
 //│ 	0  => [Node _lh_make_arg1⁰ [Nil] [Nil]]
 //│ 	| _  => 
 //│ 		let i2⁰ = (2 * _lh_make_arg1⁰)
 //│ 		in let d2⁰ = (_lh_make_arg2⁰ - 1)
-//│ 		in [Node _lh_make_arg1⁰ make_lh_₁^50((i2⁰ - 1), d2⁰) make_lh_₁^59(i2⁰, d2⁰)]}
-//│ def testBinaryTrees_nofib_lh_₁(_lh_testBinaryTrees_nofib_arg1⁰) = check_lh_₁^78(make_lh_₁^79(0, _lh_testBinaryTrees_nofib_arg1⁰))
+//│ 		in [Node _lh_make_arg1⁰ make_lh_₄^91((i2⁰ - 1), d2⁰) make_lh_₄^100(i2⁰, d2⁰)]}
+//│ def map_lh_₁(f⁰, ls⁰) = case ls⁰ of {
+//│ 	LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map_lh_₁^344(f⁰, t⁰)]
+//│ 	| LH_N  => [LH_N]}
+//│ def mappend_lh_₁(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	LH_C h¹ t¹ => [LH_C h¹ mappend_lh_₁^366(t¹, ys⁰)]
+//│ 	| LH_N  => ys⁰}
+//│ def max_lh_₁(_lh_max_arg1⁰, _lh_max_arg2⁰) = if (_lh_max_arg1⁰ > _lh_max_arg2⁰) then _lh_max_arg1⁰ else _lh_max_arg2⁰
+//│ def minN_lh_₁ = 4
+//│ def minN_lh_₂ = 4
+//│ def minN_lh_₃ = 4
+//│ def sumT_lh_₁(_lh_sumT_arg1⁰, _lh_sumT_arg2⁰, _lh_sumT_arg3⁰) = case _lh_sumT_arg2⁰ of {
+//│ 	0  => _lh_sumT_arg3⁰
+//│ 	| _  => sumT_lh_₁^177(_lh_sumT_arg1⁰, (_lh_sumT_arg2⁰ - 1), ((check_lh_₄^188(make_lh_₃^189(_lh_sumT_arg2⁰, _lh_sumT_arg1⁰)) + check_lh_₃^196(make_lh_₄^197((0 - _lh_sumT_arg2⁰), _lh_sumT_arg1⁰))) + _lh_sumT_arg3⁰))}
+//│ def testBinaryTrees_nofib_lh_₁(_lh_testBinaryTrees_nofib_arg1⁰) = 
+//│ 	let maxN⁰ = max_lh_₁^457((minN_lh_₁^459 + 2), _lh_testBinaryTrees_nofib_arg1⁰)
+//│ 	in let stretchN⁰ = (maxN⁰ + 1)
+//│ 	in let long⁰ = make_lh_₁^471(0, maxN⁰)
+//│ 	in let c⁰ = check_lh_₁^476(make_lh_₂^477(0, stretchN⁰))
+//│ 	in let vs⁰ = depth_lh_₁^483(minN_lh_₂^484, maxN⁰)
+//│ 	in [LH_P2 map_lh_₁^488((fun m_d_i⁰ -> 
+//│ 		let _lh_matchIdent⁰ = m_d_i⁰
+//│ 		in case _lh_matchIdent⁰ of {
+//│ 			LH_P3 _lh_testBinaryTrees_nofib_LH_P3_0⁰ _lh_testBinaryTrees_nofib_LH_P3_1⁰ _lh_testBinaryTrees_nofib_LH_P3_2⁰ => mappend_lh_₁^491(string_of_int⁰(_lh_testBinaryTrees_nofib_LH_P3_0⁰), [LH_C 't' [LH_C ' ' [LH_C 't' [LH_C 'r' [LH_C 'e' [LH_C 'e' [LH_C 's' [LH_N]]]]]]]])
+//│ 			| _  => error⁰}), vs⁰) check_lh_₂^519(long⁰)]
 //│ 		---------- unoptimized ocaml gen ----------
-//│ 		let rec check'_lh__d1 _lh_check'_arg1_0 _lh_check'_arg2_0 _lh_check'_arg3_0 =
+//│ 		let rec mappend_lh__d1 xs_0 ys_0 =
+//│ 		  (match xs_0 with
+//│ 		    | `LH_C(h_1, t_1) -> 
+//│ 		      (`LH_C(h_1, ((mappend_lh__d1 t_1) ys_0)))
+//│ 		    | `LH_N -> 
+//│ 		      ys_0);;
+//│ 		let rec minN_lh__d1 =
+//│ 		  4;;
+//│ 		let rec make_lh__d2 _lh_make_arg1_2 _lh_make_arg2_2 =
+//│ 		  (match _lh_make_arg2_2 with
+//│ 		    | 0 -> 
+//│ 		      (`Node(_lh_make_arg1_2, (`Nil), (`Nil)))
+//│ 		    | _ -> 
+//│ 		      (let rec i2_2 = (2 * _lh_make_arg1_2) in
+//│ 		        (let rec d2_2 = (_lh_make_arg2_2 - 1) in
+//│ 		          (`Node(_lh_make_arg1_2, ((make_lh__d2 (i2_2 - 1)) d2_2), ((make_lh__d2 i2_2) d2_2))))));;
+//│ 		let rec minN_lh__d2 =
+//│ 		  4;;
+//│ 		let rec map_lh__d1 f_0 ls_0 =
+//│ 		  (match ls_0 with
+//│ 		    | `LH_C(h_0, t_0) -> 
+//│ 		      (`LH_C((f_0 h_0), ((map_lh__d1 f_0) t_0)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N));;
+//│ 		let rec check'_lh__d2 _lh_check'_arg1_2 _lh_check'_arg2_2 _lh_check'_arg3_2 =
+//│ 		  (match _lh_check'_arg3_2 with
+//│ 		    | `Nil -> 
+//│ 		      _lh_check'_arg2_2
+//│ 		    | `Node(_lh_check'_Node_0_2, _lh_check'_Node_1_2, _lh_check'_Node_2_2) -> 
+//│ 		      (((check'_lh__d2 (not _lh_check'_arg1_2)) (((check'_lh__d2 _lh_check'_arg1_2) (if _lh_check'_arg1_2 then
+//│ 		        (_lh_check'_arg2_2 + _lh_check'_Node_0_2)
+//│ 		      else
+//│ 		        (_lh_check'_arg2_2 - _lh_check'_Node_0_2))) _lh_check'_Node_1_2)) _lh_check'_Node_2_2)
+//│ 		    | _ -> 
+//│ 		      (failwith "error"));;
+//│ 		let rec check_lh__d2 _lh_check_arg1_2 =
+//│ 		  (((check'_lh__d2 true) 0) _lh_check_arg1_2);;
+//│ 		let rec make_lh__d1 _lh_make_arg1_3 _lh_make_arg2_3 =
+//│ 		  (match _lh_make_arg2_3 with
+//│ 		    | 0 -> 
+//│ 		      (`Node(_lh_make_arg1_3, (`Nil), (`Nil)))
+//│ 		    | _ -> 
+//│ 		      (let rec i2_3 = (2 * _lh_make_arg1_3) in
+//│ 		        (let rec d2_3 = (_lh_make_arg2_3 - 1) in
+//│ 		          (`Node(_lh_make_arg1_3, ((make_lh__d1 (i2_3 - 1)) d2_3), ((make_lh__d1 i2_3) d2_3))))));;
+//│ 		let rec check'_lh__d1 _lh_check'_arg1_3 _lh_check'_arg2_3 _lh_check'_arg3_3 =
+//│ 		  (match _lh_check'_arg3_3 with
+//│ 		    | `Nil -> 
+//│ 		      _lh_check'_arg2_3
+//│ 		    | `Node(_lh_check'_Node_0_3, _lh_check'_Node_1_3, _lh_check'_Node_2_3) -> 
+//│ 		      (((check'_lh__d1 (not _lh_check'_arg1_3)) (((check'_lh__d1 _lh_check'_arg1_3) (if _lh_check'_arg1_3 then
+//│ 		        (_lh_check'_arg2_3 + _lh_check'_Node_0_3)
+//│ 		      else
+//│ 		        (_lh_check'_arg2_3 - _lh_check'_Node_0_3))) _lh_check'_Node_1_3)) _lh_check'_Node_2_3)
+//│ 		    | _ -> 
+//│ 		      (failwith "error"));;
+//│ 		let rec check_lh__d1 _lh_check_arg1_3 =
+//│ 		  (((check'_lh__d1 true) 0) _lh_check_arg1_3);;
+//│ 		let rec minN_lh__d3 =
+//│ 		  4;;
+//│ 		let rec check'_lh__d4 _lh_check'_arg1_0 _lh_check'_arg2_0 _lh_check'_arg3_0 =
 //│ 		  (match _lh_check'_arg3_0 with
 //│ 		    | `Nil -> 
 //│ 		      _lh_check'_arg2_0
 //│ 		    | `Node(_lh_check'_Node_0_0, _lh_check'_Node_1_0, _lh_check'_Node_2_0) -> 
-//│ 		      (((check'_lh__d1 (not _lh_check'_arg1_0)) (((check'_lh__d1 _lh_check'_arg1_0) (if _lh_check'_arg1_0 then
+//│ 		      (((check'_lh__d4 (not _lh_check'_arg1_0)) (((check'_lh__d4 _lh_check'_arg1_0) (if _lh_check'_arg1_0 then
 //│ 		        (_lh_check'_arg2_0 + _lh_check'_Node_0_0)
 //│ 		      else
 //│ 		        (_lh_check'_arg2_0 - _lh_check'_Node_0_0))) _lh_check'_Node_1_0)) _lh_check'_Node_2_0)
 //│ 		    | _ -> 
 //│ 		      (failwith "error"));;
-//│ 		let rec check_lh__d1 _lh_check_arg1_0 =
-//│ 		  (((check'_lh__d1 true) 0) _lh_check_arg1_0);;
-//│ 		let rec make_lh__d1 _lh_make_arg1_0 _lh_make_arg2_0 =
+//│ 		let rec check_lh__d4 _lh_check_arg1_0 =
+//│ 		  (((check'_lh__d4 true) 0) _lh_check_arg1_0);;
+//│ 		let rec check'_lh__d3 _lh_check'_arg1_1 _lh_check'_arg2_1 _lh_check'_arg3_1 =
+//│ 		  (match _lh_check'_arg3_1 with
+//│ 		    | `Nil -> 
+//│ 		      _lh_check'_arg2_1
+//│ 		    | `Node(_lh_check'_Node_0_1, _lh_check'_Node_1_1, _lh_check'_Node_2_1) -> 
+//│ 		      (((check'_lh__d3 (not _lh_check'_arg1_1)) (((check'_lh__d3 _lh_check'_arg1_1) (if _lh_check'_arg1_1 then
+//│ 		        (_lh_check'_arg2_1 + _lh_check'_Node_0_1)
+//│ 		      else
+//│ 		        (_lh_check'_arg2_1 - _lh_check'_Node_0_1))) _lh_check'_Node_1_1)) _lh_check'_Node_2_1)
+//│ 		    | _ -> 
+//│ 		      (failwith "error"));;
+//│ 		let rec check_lh__d3 _lh_check_arg1_1 =
+//│ 		  (((check'_lh__d3 true) 0) _lh_check_arg1_1);;
+//│ 		let rec make_lh__d3 _lh_make_arg1_1 _lh_make_arg2_1 =
+//│ 		  (match _lh_make_arg2_1 with
+//│ 		    | 0 -> 
+//│ 		      (`Node(_lh_make_arg1_1, (`Nil), (`Nil)))
+//│ 		    | _ -> 
+//│ 		      (let rec i2_1 = (2 * _lh_make_arg1_1) in
+//│ 		        (let rec d2_1 = (_lh_make_arg2_1 - 1) in
+//│ 		          (`Node(_lh_make_arg1_1, ((make_lh__d3 (i2_1 - 1)) d2_1), ((make_lh__d3 i2_1) d2_1))))));;
+//│ 		let rec make_lh__d4 _lh_make_arg1_0 _lh_make_arg2_0 =
 //│ 		  (match _lh_make_arg2_0 with
 //│ 		    | 0 -> 
 //│ 		      (`Node(_lh_make_arg1_0, (`Nil), (`Nil)))
 //│ 		    | _ -> 
 //│ 		      (let rec i2_0 = (2 * _lh_make_arg1_0) in
 //│ 		        (let rec d2_0 = (_lh_make_arg2_0 - 1) in
-//│ 		          (`Node(_lh_make_arg1_0, ((make_lh__d1 (i2_0 - 1)) d2_0), ((make_lh__d1 i2_0) d2_0))))));;
+//│ 		          (`Node(_lh_make_arg1_0, ((make_lh__d4 (i2_0 - 1)) d2_0), ((make_lh__d4 i2_0) d2_0))))));;
+//│ 		let rec sumT_lh__d1 _lh_sumT_arg1_0 _lh_sumT_arg2_0 _lh_sumT_arg3_0 =
+//│ 		  (match _lh_sumT_arg2_0 with
+//│ 		    | 0 -> 
+//│ 		      _lh_sumT_arg3_0
+//│ 		    | _ -> 
+//│ 		      (((sumT_lh__d1 _lh_sumT_arg1_0) (_lh_sumT_arg2_0 - 1)) (((check_lh__d4 ((make_lh__d3 _lh_sumT_arg2_0) _lh_sumT_arg1_0)) + (check_lh__d3 ((make_lh__d4 (0 - _lh_sumT_arg2_0)) _lh_sumT_arg1_0))) + _lh_sumT_arg3_0)));;
+//│ 		let rec bit_lh__d1 _lh_bit_arg1_0 =
+//│ 		  (if (_lh_bit_arg1_0 > 0) then
+//│ 		    (2 * (bit_lh__d1 (_lh_bit_arg1_0 - 1)))
+//│ 		  else
+//│ 		    1);;
+//│ 		let rec depth_lh__d1 _lh_depth_arg1_0 _lh_depth_arg2_0 =
+//│ 		  (if (_lh_depth_arg1_0 <= _lh_depth_arg2_0) then
+//│ 		    (let rec n_0 = (bit_lh__d1 ((_lh_depth_arg2_0 - _lh_depth_arg1_0) + minN_lh__d3)) in
+//│ 		      (let rec s_0 = (((sumT_lh__d1 _lh_depth_arg1_0) n_0) 0) in
+//│ 		        (let rec rest_0 = ((depth_lh__d1 (_lh_depth_arg1_0 + 2)) _lh_depth_arg2_0) in
+//│ 		          (`LH_C((`LH_P3((2 * n_0), _lh_depth_arg1_0, s_0)), rest_0)))))
+//│ 		  else
+//│ 		    (`LH_N));;
+//│ 		let rec max_lh__d1 _lh_max_arg1_0 _lh_max_arg2_0 =
+//│ 		  (if (_lh_max_arg1_0 > _lh_max_arg2_0) then
+//│ 		    _lh_max_arg1_0
+//│ 		  else
+//│ 		    _lh_max_arg2_0);;
 //│ 		let rec testBinaryTrees_nofib_lh__d1 _lh_testBinaryTrees_nofib_arg1_0 =
-//│ 		  (check_lh__d1 ((make_lh__d1 0) _lh_testBinaryTrees_nofib_arg1_0));;
-//│ 		(testBinaryTrees_nofib_lh__d1 17)
+//│ 		  (let rec maxN_0 = ((max_lh__d1 (minN_lh__d1 + 2)) _lh_testBinaryTrees_nofib_arg1_0) in
+//│ 		    (let rec stretchN_0 = (maxN_0 + 1) in
+//│ 		      (let rec long_0 = ((make_lh__d1 0) maxN_0) in
+//│ 		        (let rec c_0 = (check_lh__d1 ((make_lh__d2 0) stretchN_0)) in
+//│ 		          (let rec vs_0 = ((depth_lh__d1 minN_lh__d2) maxN_0) in
+//│ 		            (`LH_P2(((map_lh__d1 (fun m_d_i_0 -> 
+//│ 		              (let rec _lh_matchIdent_0 = m_d_i_0 in
+//│ 		                (match _lh_matchIdent_0 with
+//│ 		                  | `LH_P3(_lh_testBinaryTrees_nofib_LH_P3_0_0, _lh_testBinaryTrees_nofib_LH_P3_1_0, _lh_testBinaryTrees_nofib_LH_P3_2_0) -> 
+//│ 		                    ((mappend_lh__d1 (string_of_int _lh_testBinaryTrees_nofib_LH_P3_0_0)) (`LH_C('t', (`LH_C(' ', (`LH_C('t', (`LH_C('r', (`LH_C('e', (`LH_C('e', (`LH_C('s', (`LH_N))))))))))))))))
+//│ 		                  | _ -> 
+//│ 		                    (failwith "error"))))) vs_0), (check_lh__d2 long_0))))))));;
+//│ 		(testBinaryTrees_nofib_lh__d1 14)
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [Nil]: 36 --->
-//│ 	case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₁(not⁰(_lh_check'_arg1⁰), check'_lh_₁(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30
-//│ [Nil]: 37 --->
-//│ 	case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₁(not⁰(_lh_check'_arg1⁰), check'_lh_₁(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30
-//│ [Node _lh_make_arg1⁰ [Nil] [Nil]]: 38 --->
-//│ 	case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₁(not⁰(_lh_check'_arg1⁰), check'_lh_₁(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30
-//│ [Node _lh_make_arg1⁰ make_lh_₁((i2⁰ - 1), d2⁰) make_lh_₁(i2⁰, d2⁰)]: 64 --->
-//│ 	case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₁(not⁰(_lh_check'_arg1⁰), check'_lh_₁(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30
+//│ [Nil]: 77 --->
+//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_lh_₃(not⁰(_lh_check'_arg1¹), check'_lh_₃(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 63
+//│ [Nil]: 78 --->
+//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_lh_₃(not⁰(_lh_check'_arg1¹), check'_lh_₃(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 63
+//│ [Node _lh_make_arg1⁰ [Nil] [Nil]]: 79 --->
+//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_lh_₃(not⁰(_lh_check'_arg1¹), check'_lh_₃(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 63
+//│ [Node _lh_make_arg1⁰ make_lh_₄((i2⁰ - 1), d2⁰) make_lh_₄(i2⁰, d2⁰)]: 105 --->
+//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_lh_₃(not⁰(_lh_check'_arg1¹), check'_lh_₃(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 63
+//│ [Nil]: 113 --->
+//│ 	case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₄(not⁰(_lh_check'_arg1⁰), check'_lh_₄(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30
+//│ [Nil]: 114 --->
+//│ 	case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₄(not⁰(_lh_check'_arg1⁰), check'_lh_₄(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30
+//│ [Node _lh_make_arg1¹ [Nil] [Nil]]: 115 --->
+//│ 	case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₄(not⁰(_lh_check'_arg1⁰), check'_lh_₄(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30
+//│ [Node _lh_make_arg1¹ make_lh_₃((i2¹ - 1), d2¹) make_lh_₃(i2¹, d2¹)]: 141 --->
+//│ 	case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₄(not⁰(_lh_check'_arg1⁰), check'_lh_₄(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30
+//│ [LH_P3 (2 * n⁰) _lh_depth_arg1⁰ s⁰]: 321 --->
+//│ 	case _lh_matchIdent⁰ of {LH_P3 _lh_testBinaryTrees_nofib_LH_P3_0⁰ _lh_testBinaryTrees_nofib_LH_P3_1⁰ _lh_testBinaryTrees_nofib_LH_P3_2⁰ => mappend_lh_₁(string_of_int⁰(_lh_testBinaryTrees_nofib_LH_P3_0⁰), [LH_C 't' [LH_C ' ' [LH_C 't' [LH_C 'r' [LH_C 'e' [LH_C 'e' [LH_C 's' [LH_N]]]]]]]]) | _  => error⁰}: 513
+//│ [LH_C [LH_P3 (2 * n⁰) _lh_depth_arg1⁰ s⁰] rest⁰]: 323 --->
+//│ 	case ls⁰ of {LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map_lh_₁(f⁰, t⁰)] | LH_N  => [LH_N]}: 351
+//│ [LH_N]: 327 --->
+//│ 	case ls⁰ of {LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map_lh_₁(f⁰, t⁰)] | LH_N  => [LH_N]}: 351
+//│ [Nil]: 386 --->
+//│ 	case _lh_check'_arg3³ of {Nil  => _lh_check'_arg2³ | Node _lh_check'_Node_0³ _lh_check'_Node_1³ _lh_check'_Node_2³ => check'_lh_₁(not⁰(_lh_check'_arg1³), check'_lh_₁(_lh_check'_arg1³, if _lh_check'_arg1³ then (_lh_check'_arg2³ + _lh_check'_Node_0³) else (_lh_check'_arg2³ - _lh_check'_Node_0³), _lh_check'_Node_1³), _lh_check'_Node_2³) | _  => error⁰}: 278
+//│ [Nil]: 387 --->
+//│ 	case _lh_check'_arg3³ of {Nil  => _lh_check'_arg2³ | Node _lh_check'_Node_0³ _lh_check'_Node_1³ _lh_check'_Node_2³ => check'_lh_₁(not⁰(_lh_check'_arg1³), check'_lh_₁(_lh_check'_arg1³, if _lh_check'_arg1³ then (_lh_check'_arg2³ + _lh_check'_Node_0³) else (_lh_check'_arg2³ - _lh_check'_Node_0³), _lh_check'_Node_1³), _lh_check'_Node_2³) | _  => error⁰}: 278
+//│ [Node _lh_make_arg1² [Nil] [Nil]]: 388 --->
+//│ 	case _lh_check'_arg3³ of {Nil  => _lh_check'_arg2³ | Node _lh_check'_Node_0³ _lh_check'_Node_1³ _lh_check'_Node_2³ => check'_lh_₁(not⁰(_lh_check'_arg1³), check'_lh_₁(_lh_check'_arg1³, if _lh_check'_arg1³ then (_lh_check'_arg2³ + _lh_check'_Node_0³) else (_lh_check'_arg2³ - _lh_check'_Node_0³), _lh_check'_Node_1³), _lh_check'_Node_2³) | _  => error⁰}: 278
+//│ [Node _lh_make_arg1² make_lh_₂((i2² - 1), d2²) make_lh_₂(i2², d2²)]: 414 --->
+//│ 	case _lh_check'_arg3³ of {Nil  => _lh_check'_arg2³ | Node _lh_check'_Node_0³ _lh_check'_Node_1³ _lh_check'_Node_2³ => check'_lh_₁(not⁰(_lh_check'_arg1³), check'_lh_₁(_lh_check'_arg1³, if _lh_check'_arg1³ then (_lh_check'_arg2³ + _lh_check'_Node_0³) else (_lh_check'_arg2³ - _lh_check'_Node_0³), _lh_check'_Node_1³), _lh_check'_Node_2³) | _  => error⁰}: 278
+//│ [Nil]: 422 --->
+//│ 	case _lh_check'_arg3² of {Nil  => _lh_check'_arg2² | Node _lh_check'_Node_0² _lh_check'_Node_1² _lh_check'_Node_2² => check'_lh_₂(not⁰(_lh_check'_arg1²), check'_lh_₂(_lh_check'_arg1², if _lh_check'_arg1² then (_lh_check'_arg2² + _lh_check'_Node_0²) else (_lh_check'_arg2² - _lh_check'_Node_0²), _lh_check'_Node_1²), _lh_check'_Node_2²) | _  => error⁰}: 245
+//│ [Nil]: 423 --->
+//│ 	case _lh_check'_arg3² of {Nil  => _lh_check'_arg2² | Node _lh_check'_Node_0² _lh_check'_Node_1² _lh_check'_Node_2² => check'_lh_₂(not⁰(_lh_check'_arg1²), check'_lh_₂(_lh_check'_arg1², if _lh_check'_arg1² then (_lh_check'_arg2² + _lh_check'_Node_0²) else (_lh_check'_arg2² - _lh_check'_Node_0²), _lh_check'_Node_1²), _lh_check'_Node_2²) | _  => error⁰}: 245
+//│ [Node _lh_make_arg1³ [Nil] [Nil]]: 424 --->
+//│ 	case _lh_check'_arg3² of {Nil  => _lh_check'_arg2² | Node _lh_check'_Node_0² _lh_check'_Node_1² _lh_check'_Node_2² => check'_lh_₂(not⁰(_lh_check'_arg1²), check'_lh_₂(_lh_check'_arg1², if _lh_check'_arg1² then (_lh_check'_arg2² + _lh_check'_Node_0²) else (_lh_check'_arg2² - _lh_check'_Node_0²), _lh_check'_Node_1²), _lh_check'_Node_2²) | _  => error⁰}: 245
+//│ [Node _lh_make_arg1³ make_lh_₁((i2³ - 1), d2³) make_lh_₁(i2³, d2³)]: 450 --->
+//│ 	case _lh_check'_arg3² of {Nil  => _lh_check'_arg2² | Node _lh_check'_Node_0² _lh_check'_Node_1² _lh_check'_Node_2² => check'_lh_₂(not⁰(_lh_check'_arg1²), check'_lh_₂(_lh_check'_arg1², if _lh_check'_arg1² then (_lh_check'_arg2² + _lh_check'_Node_0²) else (_lh_check'_arg2² - _lh_check'_Node_0²), _lh_check'_Node_1²), _lh_check'_Node_2²) | _  => error⁰}: 245
 //│ ------------------
-//│ case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₁(not⁰(_lh_check'_arg1⁰), check'_lh_₁(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30 --->
-//│ 	[Nil]: 36
-//│ 	[Nil]: 37
-//│ 	[Node _lh_make_arg1⁰ [Nil] [Nil]]: 38
-//│ 	[Node _lh_make_arg1⁰ make_lh_₁((i2⁰ - 1), d2⁰) make_lh_₁(i2⁰, d2⁰)]: 64
+//│ case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₄(not⁰(_lh_check'_arg1⁰), check'_lh_₄(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30 --->
+//│ 	[Nil]: 113
+//│ 	[Nil]: 114
+//│ 	[Node _lh_make_arg1¹ [Nil] [Nil]]: 115
+//│ 	[Node _lh_make_arg1¹ make_lh_₃((i2¹ - 1), d2¹) make_lh_₃(i2¹, d2¹)]: 141
+//│ case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_lh_₃(not⁰(_lh_check'_arg1¹), check'_lh_₃(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 63 --->
+//│ 	[Nil]: 77
+//│ 	[Nil]: 78
+//│ 	[Node _lh_make_arg1⁰ [Nil] [Nil]]: 79
+//│ 	[Node _lh_make_arg1⁰ make_lh_₄((i2⁰ - 1), d2⁰) make_lh_₄(i2⁰, d2⁰)]: 105
+//│ case _lh_check'_arg3² of {Nil  => _lh_check'_arg2² | Node _lh_check'_Node_0² _lh_check'_Node_1² _lh_check'_Node_2² => check'_lh_₂(not⁰(_lh_check'_arg1²), check'_lh_₂(_lh_check'_arg1², if _lh_check'_arg1² then (_lh_check'_arg2² + _lh_check'_Node_0²) else (_lh_check'_arg2² - _lh_check'_Node_0²), _lh_check'_Node_1²), _lh_check'_Node_2²) | _  => error⁰}: 245 --->
+//│ 	[Nil]: 422
+//│ 	[Nil]: 423
+//│ 	[Node _lh_make_arg1³ [Nil] [Nil]]: 424
+//│ 	[Node _lh_make_arg1³ make_lh_₁((i2³ - 1), d2³) make_lh_₁(i2³, d2³)]: 450
+//│ case _lh_check'_arg3³ of {Nil  => _lh_check'_arg2³ | Node _lh_check'_Node_0³ _lh_check'_Node_1³ _lh_check'_Node_2³ => check'_lh_₁(not⁰(_lh_check'_arg1³), check'_lh_₁(_lh_check'_arg1³, if _lh_check'_arg1³ then (_lh_check'_arg2³ + _lh_check'_Node_0³) else (_lh_check'_arg2³ - _lh_check'_Node_0³), _lh_check'_Node_1³), _lh_check'_Node_2³) | _  => error⁰}: 278 --->
+//│ 	[Nil]: 386
+//│ 	[Nil]: 387
+//│ 	[Node _lh_make_arg1² [Nil] [Nil]]: 388
+//│ 	[Node _lh_make_arg1² make_lh_₂((i2² - 1), d2²) make_lh_₂(i2², d2²)]: 414
+//│ case ls⁰ of {LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map_lh_₁(f⁰, t⁰)] | LH_N  => [LH_N]}: 351 --->
+//│ 	[LH_C [LH_P3 (2 * n⁰) _lh_depth_arg1⁰ s⁰] rest⁰]: 323
+//│ 	[LH_N]: 327
+//│ case _lh_matchIdent⁰ of {LH_P3 _lh_testBinaryTrees_nofib_LH_P3_0⁰ _lh_testBinaryTrees_nofib_LH_P3_1⁰ _lh_testBinaryTrees_nofib_LH_P3_2⁰ => mappend_lh_₁(string_of_int⁰(_lh_testBinaryTrees_nofib_LH_P3_0⁰), [LH_C 't' [LH_C ' ' [LH_C 't' [LH_C 'r' [LH_C 'e' [LH_C 'e' [LH_C 's' [LH_N]]]]]]]]) | _  => error⁰}: 513 --->
+//│ 	[LH_P3 (2 * n⁰) _lh_depth_arg1⁰ s⁰]: 321
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [Nil]: 36 --->
-//│ 	case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₁(not⁰(_lh_check'_arg1⁰), check'_lh_₁(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30
-//│ [Nil]: 37 --->
-//│ 	case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₁(not⁰(_lh_check'_arg1⁰), check'_lh_₁(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30
-//│ [Node _lh_make_arg1⁰ [Nil] [Nil]]: 38 --->
-//│ 	case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₁(not⁰(_lh_check'_arg1⁰), check'_lh_₁(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30
-//│ [Node _lh_make_arg1⁰ make_lh_₁((i2⁰ - 1), d2⁰) make_lh_₁(i2⁰, d2⁰)]: 64 --->
-//│ 	case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₁(not⁰(_lh_check'_arg1⁰), check'_lh_₁(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30
+//│ [Nil]: 77 --->
+//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_lh_₃(not⁰(_lh_check'_arg1¹), check'_lh_₃(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 63
+//│ [Nil]: 78 --->
+//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_lh_₃(not⁰(_lh_check'_arg1¹), check'_lh_₃(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 63
+//│ [Node _lh_make_arg1⁰ [Nil] [Nil]]: 79 --->
+//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_lh_₃(not⁰(_lh_check'_arg1¹), check'_lh_₃(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 63
+//│ [Node _lh_make_arg1⁰ make_lh_₄((i2⁰ - 1), d2⁰) make_lh_₄(i2⁰, d2⁰)]: 105 --->
+//│ 	case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_lh_₃(not⁰(_lh_check'_arg1¹), check'_lh_₃(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 63
+//│ [Nil]: 113 --->
+//│ 	case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₄(not⁰(_lh_check'_arg1⁰), check'_lh_₄(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30
+//│ [Nil]: 114 --->
+//│ 	case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₄(not⁰(_lh_check'_arg1⁰), check'_lh_₄(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30
+//│ [Node _lh_make_arg1¹ [Nil] [Nil]]: 115 --->
+//│ 	case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₄(not⁰(_lh_check'_arg1⁰), check'_lh_₄(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30
+//│ [Node _lh_make_arg1¹ make_lh_₃((i2¹ - 1), d2¹) make_lh_₃(i2¹, d2¹)]: 141 --->
+//│ 	case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₄(not⁰(_lh_check'_arg1⁰), check'_lh_₄(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30
+//│ [LH_P3 (2 * n⁰) _lh_depth_arg1⁰ s⁰]: 321 --->
+//│ 	case _lh_matchIdent⁰ of {LH_P3 _lh_testBinaryTrees_nofib_LH_P3_0⁰ _lh_testBinaryTrees_nofib_LH_P3_1⁰ _lh_testBinaryTrees_nofib_LH_P3_2⁰ => mappend_lh_₁(string_of_int⁰(_lh_testBinaryTrees_nofib_LH_P3_0⁰), [LH_C 't' [LH_C ' ' [LH_C 't' [LH_C 'r' [LH_C 'e' [LH_C 'e' [LH_C 's' [LH_N]]]]]]]]) | _  => error⁰}: 513
+//│ [LH_C [LH_P3 (2 * n⁰) _lh_depth_arg1⁰ s⁰] rest⁰]: 323 --->
+//│ 	case ls⁰ of {LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map_lh_₁(f⁰, t⁰)] | LH_N  => [LH_N]}: 351
+//│ [LH_N]: 327 --->
+//│ 	case ls⁰ of {LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map_lh_₁(f⁰, t⁰)] | LH_N  => [LH_N]}: 351
+//│ [Nil]: 386 --->
+//│ 	case _lh_check'_arg3³ of {Nil  => _lh_check'_arg2³ | Node _lh_check'_Node_0³ _lh_check'_Node_1³ _lh_check'_Node_2³ => check'_lh_₁(not⁰(_lh_check'_arg1³), check'_lh_₁(_lh_check'_arg1³, if _lh_check'_arg1³ then (_lh_check'_arg2³ + _lh_check'_Node_0³) else (_lh_check'_arg2³ - _lh_check'_Node_0³), _lh_check'_Node_1³), _lh_check'_Node_2³) | _  => error⁰}: 278
+//│ [Nil]: 387 --->
+//│ 	case _lh_check'_arg3³ of {Nil  => _lh_check'_arg2³ | Node _lh_check'_Node_0³ _lh_check'_Node_1³ _lh_check'_Node_2³ => check'_lh_₁(not⁰(_lh_check'_arg1³), check'_lh_₁(_lh_check'_arg1³, if _lh_check'_arg1³ then (_lh_check'_arg2³ + _lh_check'_Node_0³) else (_lh_check'_arg2³ - _lh_check'_Node_0³), _lh_check'_Node_1³), _lh_check'_Node_2³) | _  => error⁰}: 278
+//│ [Node _lh_make_arg1² [Nil] [Nil]]: 388 --->
+//│ 	case _lh_check'_arg3³ of {Nil  => _lh_check'_arg2³ | Node _lh_check'_Node_0³ _lh_check'_Node_1³ _lh_check'_Node_2³ => check'_lh_₁(not⁰(_lh_check'_arg1³), check'_lh_₁(_lh_check'_arg1³, if _lh_check'_arg1³ then (_lh_check'_arg2³ + _lh_check'_Node_0³) else (_lh_check'_arg2³ - _lh_check'_Node_0³), _lh_check'_Node_1³), _lh_check'_Node_2³) | _  => error⁰}: 278
+//│ [Node _lh_make_arg1² make_lh_₂((i2² - 1), d2²) make_lh_₂(i2², d2²)]: 414 --->
+//│ 	case _lh_check'_arg3³ of {Nil  => _lh_check'_arg2³ | Node _lh_check'_Node_0³ _lh_check'_Node_1³ _lh_check'_Node_2³ => check'_lh_₁(not⁰(_lh_check'_arg1³), check'_lh_₁(_lh_check'_arg1³, if _lh_check'_arg1³ then (_lh_check'_arg2³ + _lh_check'_Node_0³) else (_lh_check'_arg2³ - _lh_check'_Node_0³), _lh_check'_Node_1³), _lh_check'_Node_2³) | _  => error⁰}: 278
+//│ [Nil]: 422 --->
+//│ 	case _lh_check'_arg3² of {Nil  => _lh_check'_arg2² | Node _lh_check'_Node_0² _lh_check'_Node_1² _lh_check'_Node_2² => check'_lh_₂(not⁰(_lh_check'_arg1²), check'_lh_₂(_lh_check'_arg1², if _lh_check'_arg1² then (_lh_check'_arg2² + _lh_check'_Node_0²) else (_lh_check'_arg2² - _lh_check'_Node_0²), _lh_check'_Node_1²), _lh_check'_Node_2²) | _  => error⁰}: 245
+//│ [Nil]: 423 --->
+//│ 	case _lh_check'_arg3² of {Nil  => _lh_check'_arg2² | Node _lh_check'_Node_0² _lh_check'_Node_1² _lh_check'_Node_2² => check'_lh_₂(not⁰(_lh_check'_arg1²), check'_lh_₂(_lh_check'_arg1², if _lh_check'_arg1² then (_lh_check'_arg2² + _lh_check'_Node_0²) else (_lh_check'_arg2² - _lh_check'_Node_0²), _lh_check'_Node_1²), _lh_check'_Node_2²) | _  => error⁰}: 245
+//│ [Node _lh_make_arg1³ [Nil] [Nil]]: 424 --->
+//│ 	case _lh_check'_arg3² of {Nil  => _lh_check'_arg2² | Node _lh_check'_Node_0² _lh_check'_Node_1² _lh_check'_Node_2² => check'_lh_₂(not⁰(_lh_check'_arg1²), check'_lh_₂(_lh_check'_arg1², if _lh_check'_arg1² then (_lh_check'_arg2² + _lh_check'_Node_0²) else (_lh_check'_arg2² - _lh_check'_Node_0²), _lh_check'_Node_1²), _lh_check'_Node_2²) | _  => error⁰}: 245
+//│ [Node _lh_make_arg1³ make_lh_₁((i2³ - 1), d2³) make_lh_₁(i2³, d2³)]: 450 --->
+//│ 	case _lh_check'_arg3² of {Nil  => _lh_check'_arg2² | Node _lh_check'_Node_0² _lh_check'_Node_1² _lh_check'_Node_2² => check'_lh_₂(not⁰(_lh_check'_arg1²), check'_lh_₂(_lh_check'_arg1², if _lh_check'_arg1² then (_lh_check'_arg2² + _lh_check'_Node_0²) else (_lh_check'_arg2² - _lh_check'_Node_0²), _lh_check'_Node_1²), _lh_check'_Node_2²) | _  => error⁰}: 245
 //│ ------------------
-//│ case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₁(not⁰(_lh_check'_arg1⁰), check'_lh_₁(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30 --->
-//│ 	[Nil]: 36
-//│ 	[Nil]: 37
-//│ 	[Node _lh_make_arg1⁰ [Nil] [Nil]]: 38
-//│ 	[Node _lh_make_arg1⁰ make_lh_₁((i2⁰ - 1), d2⁰) make_lh_₁(i2⁰, d2⁰)]: 64
+//│ case _lh_check'_arg3⁰ of {Nil  => _lh_check'_arg2⁰ | Node _lh_check'_Node_0⁰ _lh_check'_Node_1⁰ _lh_check'_Node_2⁰ => check'_lh_₄(not⁰(_lh_check'_arg1⁰), check'_lh_₄(_lh_check'_arg1⁰, if _lh_check'_arg1⁰ then (_lh_check'_arg2⁰ + _lh_check'_Node_0⁰) else (_lh_check'_arg2⁰ - _lh_check'_Node_0⁰), _lh_check'_Node_1⁰), _lh_check'_Node_2⁰) | _  => error⁰}: 30 --->
+//│ 	[Nil]: 113
+//│ 	[Nil]: 114
+//│ 	[Node _lh_make_arg1¹ [Nil] [Nil]]: 115
+//│ 	[Node _lh_make_arg1¹ make_lh_₃((i2¹ - 1), d2¹) make_lh_₃(i2¹, d2¹)]: 141
+//│ case _lh_check'_arg3¹ of {Nil  => _lh_check'_arg2¹ | Node _lh_check'_Node_0¹ _lh_check'_Node_1¹ _lh_check'_Node_2¹ => check'_lh_₃(not⁰(_lh_check'_arg1¹), check'_lh_₃(_lh_check'_arg1¹, if _lh_check'_arg1¹ then (_lh_check'_arg2¹ + _lh_check'_Node_0¹) else (_lh_check'_arg2¹ - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹) | _  => error⁰}: 63 --->
+//│ 	[Nil]: 77
+//│ 	[Nil]: 78
+//│ 	[Node _lh_make_arg1⁰ [Nil] [Nil]]: 79
+//│ 	[Node _lh_make_arg1⁰ make_lh_₄((i2⁰ - 1), d2⁰) make_lh_₄(i2⁰, d2⁰)]: 105
+//│ case _lh_check'_arg3² of {Nil  => _lh_check'_arg2² | Node _lh_check'_Node_0² _lh_check'_Node_1² _lh_check'_Node_2² => check'_lh_₂(not⁰(_lh_check'_arg1²), check'_lh_₂(_lh_check'_arg1², if _lh_check'_arg1² then (_lh_check'_arg2² + _lh_check'_Node_0²) else (_lh_check'_arg2² - _lh_check'_Node_0²), _lh_check'_Node_1²), _lh_check'_Node_2²) | _  => error⁰}: 245 --->
+//│ 	[Nil]: 422
+//│ 	[Nil]: 423
+//│ 	[Node _lh_make_arg1³ [Nil] [Nil]]: 424
+//│ 	[Node _lh_make_arg1³ make_lh_₁((i2³ - 1), d2³) make_lh_₁(i2³, d2³)]: 450
+//│ case _lh_check'_arg3³ of {Nil  => _lh_check'_arg2³ | Node _lh_check'_Node_0³ _lh_check'_Node_1³ _lh_check'_Node_2³ => check'_lh_₁(not⁰(_lh_check'_arg1³), check'_lh_₁(_lh_check'_arg1³, if _lh_check'_arg1³ then (_lh_check'_arg2³ + _lh_check'_Node_0³) else (_lh_check'_arg2³ - _lh_check'_Node_0³), _lh_check'_Node_1³), _lh_check'_Node_2³) | _  => error⁰}: 278 --->
+//│ 	[Nil]: 386
+//│ 	[Nil]: 387
+//│ 	[Node _lh_make_arg1² [Nil] [Nil]]: 388
+//│ 	[Node _lh_make_arg1² make_lh_₂((i2² - 1), d2²) make_lh_₂(i2², d2²)]: 414
+//│ case ls⁰ of {LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map_lh_₁(f⁰, t⁰)] | LH_N  => [LH_N]}: 351 --->
+//│ 	[LH_C [LH_P3 (2 * n⁰) _lh_depth_arg1⁰ s⁰] rest⁰]: 323
+//│ 	[LH_N]: 327
+//│ case _lh_matchIdent⁰ of {LH_P3 _lh_testBinaryTrees_nofib_LH_P3_0⁰ _lh_testBinaryTrees_nofib_LH_P3_1⁰ _lh_testBinaryTrees_nofib_LH_P3_2⁰ => mappend_lh_₁(string_of_int⁰(_lh_testBinaryTrees_nofib_LH_P3_0⁰), [LH_C 't' [LH_C ' ' [LH_C 't' [LH_C 'r' [LH_C 'e' [LH_C 'e' [LH_C 's' [LH_N]]]]]]]]) | _  => error⁰}: 513 --->
+//│ 	[LH_P3 (2 * n⁰) _lh_depth_arg1⁰ s⁰]: 321
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testBinaryTrees_nofib_lh_₁(primId⁰(17))
-//│ def check'_lh_₁(_lh_check'_arg1¹, _lh_check'_arg2¹, _lh_check'_arg3¹) = _lh_check'_arg3¹(_lh_check'_arg2¹, _lh_check'_arg1¹)
-//│ def check_lh_₁(_lh_check_arg1¹) = check'_lh_₁([True], 0, _lh_check_arg1¹)
-//│ def make_lh_₁(_lh_make_arg1¹, _lh_make_arg2¹) = case _lh_make_arg2¹ of {
+//│ testBinaryTrees_nofib_lh_₁(primId⁰(14))
+//│ def bit_lh_₁(_lh_bit_arg1¹) = if (_lh_bit_arg1¹ > 0) then (2 * bit_lh_₁((_lh_bit_arg1¹ - 1))) else 1
+//│ def check'_lh_₁(_lh_check'_arg1¹³, _lh_check'_arg2¹³, _lh_check'_arg3⁵) = _lh_check'_arg3⁵(_lh_check'_arg2¹³, _lh_check'_arg1¹³)
+//│ def check'_lh_₂(_lh_check'_arg1¹⁴, _lh_check'_arg2¹⁴, _lh_check'_arg3⁶) = _lh_check'_arg3⁶(_lh_check'_arg2¹⁴, _lh_check'_arg1¹⁴)
+//│ def check'_lh_₃(_lh_check'_arg1¹⁵, _lh_check'_arg2¹⁵, _lh_check'_arg3⁷) = _lh_check'_arg3⁷(_lh_check'_arg2¹⁵, _lh_check'_arg1¹⁵)
+//│ def check'_lh_₄(_lh_check'_arg1⁴, _lh_check'_arg2⁴, _lh_check'_arg3⁴) = _lh_check'_arg3⁴(_lh_check'_arg2⁴, _lh_check'_arg1⁴)
+//│ def check_lh_₁(_lh_check_arg1⁶) = check'_lh_₁([True], 0, _lh_check_arg1⁶)
+//│ def check_lh_₂(_lh_check_arg1⁷) = check'_lh_₂([True], 0, _lh_check_arg1⁷)
+//│ def check_lh_₃(_lh_check_arg1⁵) = check'_lh_₃([True], 0, _lh_check_arg1⁵)
+//│ def check_lh_₄(_lh_check_arg1⁴) = check'_lh_₄([True], 0, _lh_check_arg1⁴)
+//│ def depth_lh_₁(_lh_depth_arg1¹, _lh_depth_arg2¹) = if (_lh_depth_arg1¹ <= _lh_depth_arg2¹) then 
+//│ 	let n¹ = bit_lh_₁(((_lh_depth_arg2¹ - _lh_depth_arg1¹) + minN_lh_₃))
+//│ 	in let s¹ = sumT_lh_₁(_lh_depth_arg1¹, n¹, 0)
+//│ 	in let rest¹ = depth_lh_₁((_lh_depth_arg1¹ + 2), _lh_depth_arg2¹)
+//│ 	in let t² = rest¹
+//│ 	in let h² = 	
+//│ 		let _lh_testBinaryTrees_nofib_LH_P3_2¹ = s¹
+//│ 		in let _lh_testBinaryTrees_nofib_LH_P3_1¹ = _lh_depth_arg1¹
+//│ 		in let _lh_testBinaryTrees_nofib_LH_P3_0¹ = (2 * n¹)
+//│ 		in (fun _lh_dummy⁰ -> mappend_lh_₁(string_of_int⁰(_lh_testBinaryTrees_nofib_LH_P3_0¹), [LH_C 't' [LH_C ' ' [LH_C 't' [LH_C 'r' [LH_C 'e' [LH_C 'e' [LH_C 's' [LH_N]]]]]]]]))
+//│ 	in (fun f² -> [LH_C f²(h²) map_lh_₁(f², t²)]) else (fun f³ -> [LH_N])
+//│ def make_lh_₁(_lh_make_arg1⁵, _lh_make_arg2⁵) = case _lh_make_arg2⁵ of {
 //│ 	0  => 
-//│ 		let _lh_check'_Node_2¹ = (fun _lh_check'_arg2⁴ -> (fun _lh_check'_arg1⁴ -> _lh_check'_arg2⁴))
-//│ 		in let _lh_check'_Node_1¹ = (fun _lh_check'_arg2³ -> (fun _lh_check'_arg1³ -> _lh_check'_arg2³))
-//│ 		in let _lh_check'_Node_0¹ = _lh_make_arg1¹
-//│ 		in (fun _lh_check'_arg2² -> (fun _lh_check'_arg1² -> check'_lh_₁(not⁰(_lh_check'_arg1²), check'_lh_₁(_lh_check'_arg1², if _lh_check'_arg1² then (_lh_check'_arg2² + _lh_check'_Node_0¹) else (_lh_check'_arg2² - _lh_check'_Node_0¹), _lh_check'_Node_1¹), _lh_check'_Node_2¹)))
+//│ 		let _lh_check'_Node_2⁶ = (fun _lh_check'_arg2¹¹ -> (fun _lh_check'_arg1¹¹ -> _lh_check'_arg2¹¹))
+//│ 		in let _lh_check'_Node_1⁶ = (fun _lh_check'_arg2¹⁰ -> (fun _lh_check'_arg1¹⁰ -> _lh_check'_arg2¹⁰))
+//│ 		in let _lh_check'_Node_0⁶ = _lh_make_arg1⁵
+//│ 		in (fun _lh_check'_arg2⁹ -> (fun _lh_check'_arg1⁹ -> check'_lh_₂(not⁰(_lh_check'_arg1⁹), check'_lh_₂(_lh_check'_arg1⁹, if _lh_check'_arg1⁹ then (_lh_check'_arg2⁹ + _lh_check'_Node_0⁶) else (_lh_check'_arg2⁹ - _lh_check'_Node_0⁶), _lh_check'_Node_1⁶), _lh_check'_Node_2⁶)))
 //│ 	| _  => 
-//│ 		let i2¹ = (2 * _lh_make_arg1¹)
-//│ 		in let d2¹ = (_lh_make_arg2¹ - 1)
-//│ 		in let _lh_check'_Node_2² = make_lh_₁(i2¹, d2¹)
-//│ 		in let _lh_check'_Node_1² = make_lh_₁((i2¹ - 1), d2¹)
-//│ 		in let _lh_check'_Node_0² = _lh_make_arg1¹
-//│ 		in (fun _lh_check'_arg2⁵ -> (fun _lh_check'_arg1⁵ -> check'_lh_₁(not⁰(_lh_check'_arg1⁵), check'_lh_₁(_lh_check'_arg1⁵, if _lh_check'_arg1⁵ then (_lh_check'_arg2⁵ + _lh_check'_Node_0²) else (_lh_check'_arg2⁵ - _lh_check'_Node_0²), _lh_check'_Node_1²), _lh_check'_Node_2²)))}
-//│ def testBinaryTrees_nofib_lh_₁(_lh_testBinaryTrees_nofib_arg1¹) = check_lh_₁(make_lh_₁(0, _lh_testBinaryTrees_nofib_arg1¹))
+//│ 		let i2⁵ = (2 * _lh_make_arg1⁵)
+//│ 		in let d2⁵ = (_lh_make_arg2⁵ - 1)
+//│ 		in let _lh_check'_Node_2⁷ = make_lh_₁(i2⁵, d2⁵)
+//│ 		in let _lh_check'_Node_1⁷ = make_lh_₁((i2⁵ - 1), d2⁵)
+//│ 		in let _lh_check'_Node_0⁷ = _lh_make_arg1⁵
+//│ 		in (fun _lh_check'_arg2¹² -> (fun _lh_check'_arg1¹² -> check'_lh_₂(not⁰(_lh_check'_arg1¹²), check'_lh_₂(_lh_check'_arg1¹², if _lh_check'_arg1¹² then (_lh_check'_arg2¹² + _lh_check'_Node_0⁷) else (_lh_check'_arg2¹² - _lh_check'_Node_0⁷), _lh_check'_Node_1⁷), _lh_check'_Node_2⁷)))}
+//│ def make_lh_₂(_lh_make_arg1⁴, _lh_make_arg2⁴) = case _lh_make_arg2⁴ of {
+//│ 	0  => 
+//│ 		let _lh_check'_Node_2⁴ = (fun _lh_check'_arg2⁷ -> (fun _lh_check'_arg1⁷ -> _lh_check'_arg2⁷))
+//│ 		in let _lh_check'_Node_1⁴ = (fun _lh_check'_arg2⁶ -> (fun _lh_check'_arg1⁶ -> _lh_check'_arg2⁶))
+//│ 		in let _lh_check'_Node_0⁴ = _lh_make_arg1⁴
+//│ 		in (fun _lh_check'_arg2⁵ -> (fun _lh_check'_arg1⁵ -> check'_lh_₁(not⁰(_lh_check'_arg1⁵), check'_lh_₁(_lh_check'_arg1⁵, if _lh_check'_arg1⁵ then (_lh_check'_arg2⁵ + _lh_check'_Node_0⁴) else (_lh_check'_arg2⁵ - _lh_check'_Node_0⁴), _lh_check'_Node_1⁴), _lh_check'_Node_2⁴)))
+//│ 	| _  => 
+//│ 		let i2⁴ = (2 * _lh_make_arg1⁴)
+//│ 		in let d2⁴ = (_lh_make_arg2⁴ - 1)
+//│ 		in let _lh_check'_Node_2⁵ = make_lh_₂(i2⁴, d2⁴)
+//│ 		in let _lh_check'_Node_1⁵ = make_lh_₂((i2⁴ - 1), d2⁴)
+//│ 		in let _lh_check'_Node_0⁵ = _lh_make_arg1⁴
+//│ 		in (fun _lh_check'_arg2⁸ -> (fun _lh_check'_arg1⁸ -> check'_lh_₁(not⁰(_lh_check'_arg1⁸), check'_lh_₁(_lh_check'_arg1⁸, if _lh_check'_arg1⁸ then (_lh_check'_arg2⁸ + _lh_check'_Node_0⁵) else (_lh_check'_arg2⁸ - _lh_check'_Node_0⁵), _lh_check'_Node_1⁵), _lh_check'_Node_2⁵)))}
+//│ def make_lh_₃(_lh_make_arg1⁶, _lh_make_arg2⁶) = case _lh_make_arg2⁶ of {
+//│ 	0  => 
+//│ 		let _lh_check'_Node_2⁸ = (fun _lh_check'_arg2¹⁸ -> (fun _lh_check'_arg1¹⁸ -> _lh_check'_arg2¹⁸))
+//│ 		in let _lh_check'_Node_1⁸ = (fun _lh_check'_arg2¹⁷ -> (fun _lh_check'_arg1¹⁷ -> _lh_check'_arg2¹⁷))
+//│ 		in let _lh_check'_Node_0⁸ = _lh_make_arg1⁶
+//│ 		in (fun _lh_check'_arg2¹⁶ -> (fun _lh_check'_arg1¹⁶ -> check'_lh_₄(not⁰(_lh_check'_arg1¹⁶), check'_lh_₄(_lh_check'_arg1¹⁶, if _lh_check'_arg1¹⁶ then (_lh_check'_arg2¹⁶ + _lh_check'_Node_0⁸) else (_lh_check'_arg2¹⁶ - _lh_check'_Node_0⁸), _lh_check'_Node_1⁸), _lh_check'_Node_2⁸)))
+//│ 	| _  => 
+//│ 		let i2⁶ = (2 * _lh_make_arg1⁶)
+//│ 		in let d2⁶ = (_lh_make_arg2⁶ - 1)
+//│ 		in let _lh_check'_Node_2⁹ = make_lh_₃(i2⁶, d2⁶)
+//│ 		in let _lh_check'_Node_1⁹ = make_lh_₃((i2⁶ - 1), d2⁶)
+//│ 		in let _lh_check'_Node_0⁹ = _lh_make_arg1⁶
+//│ 		in (fun _lh_check'_arg2¹⁹ -> (fun _lh_check'_arg1¹⁹ -> check'_lh_₄(not⁰(_lh_check'_arg1¹⁹), check'_lh_₄(_lh_check'_arg1¹⁹, if _lh_check'_arg1¹⁹ then (_lh_check'_arg2¹⁹ + _lh_check'_Node_0⁹) else (_lh_check'_arg2¹⁹ - _lh_check'_Node_0⁹), _lh_check'_Node_1⁹), _lh_check'_Node_2⁹)))}
+//│ def make_lh_₄(_lh_make_arg1⁷, _lh_make_arg2⁷) = case _lh_make_arg2⁷ of {
+//│ 	0  => 
+//│ 		let _lh_check'_Node_2¹⁰ = (fun _lh_check'_arg2²² -> (fun _lh_check'_arg1²² -> _lh_check'_arg2²²))
+//│ 		in let _lh_check'_Node_1¹⁰ = (fun _lh_check'_arg2²¹ -> (fun _lh_check'_arg1²¹ -> _lh_check'_arg2²¹))
+//│ 		in let _lh_check'_Node_0¹⁰ = _lh_make_arg1⁷
+//│ 		in (fun _lh_check'_arg2²⁰ -> (fun _lh_check'_arg1²⁰ -> check'_lh_₃(not⁰(_lh_check'_arg1²⁰), check'_lh_₃(_lh_check'_arg1²⁰, if _lh_check'_arg1²⁰ then (_lh_check'_arg2²⁰ + _lh_check'_Node_0¹⁰) else (_lh_check'_arg2²⁰ - _lh_check'_Node_0¹⁰), _lh_check'_Node_1¹⁰), _lh_check'_Node_2¹⁰)))
+//│ 	| _  => 
+//│ 		let i2⁷ = (2 * _lh_make_arg1⁷)
+//│ 		in let d2⁷ = (_lh_make_arg2⁷ - 1)
+//│ 		in let _lh_check'_Node_2¹¹ = make_lh_₄(i2⁷, d2⁷)
+//│ 		in let _lh_check'_Node_1¹¹ = make_lh_₄((i2⁷ - 1), d2⁷)
+//│ 		in let _lh_check'_Node_0¹¹ = _lh_make_arg1⁷
+//│ 		in (fun _lh_check'_arg2²³ -> (fun _lh_check'_arg1²³ -> check'_lh_₃(not⁰(_lh_check'_arg1²³), check'_lh_₃(_lh_check'_arg1²³, if _lh_check'_arg1²³ then (_lh_check'_arg2²³ + _lh_check'_Node_0¹¹) else (_lh_check'_arg2²³ - _lh_check'_Node_0¹¹), _lh_check'_Node_1¹¹), _lh_check'_Node_2¹¹)))}
+//│ def map_lh_₁(f¹, ls¹) = ls¹(f¹)
+//│ def mappend_lh_₁(xs¹, ys¹) = case xs¹ of {
+//│ 	LH_C h¹ t¹ => [LH_C h¹ mappend_lh_₁(t¹, ys¹)]
+//│ 	| LH_N  => ys¹}
+//│ def max_lh_₁(_lh_max_arg1¹, _lh_max_arg2¹) = if (_lh_max_arg1¹ > _lh_max_arg2¹) then _lh_max_arg1¹ else _lh_max_arg2¹
+//│ def minN_lh_₁ = 4
+//│ def minN_lh_₂ = 4
+//│ def minN_lh_₃ = 4
+//│ def sumT_lh_₁(_lh_sumT_arg1¹, _lh_sumT_arg2¹, _lh_sumT_arg3¹) = case _lh_sumT_arg2¹ of {
+//│ 	0  => _lh_sumT_arg3¹
+//│ 	| _  => sumT_lh_₁(_lh_sumT_arg1¹, (_lh_sumT_arg2¹ - 1), ((check_lh_₄(make_lh_₃(_lh_sumT_arg2¹, _lh_sumT_arg1¹)) + check_lh_₃(make_lh_₄((0 - _lh_sumT_arg2¹), _lh_sumT_arg1¹))) + _lh_sumT_arg3¹))}
+//│ def testBinaryTrees_nofib_lh_₁(_lh_testBinaryTrees_nofib_arg1¹) = 
+//│ 	let maxN¹ = max_lh_₁((minN_lh_₁ + 2), _lh_testBinaryTrees_nofib_arg1¹)
+//│ 	in let stretchN¹ = (maxN¹ + 1)
+//│ 	in let long¹ = make_lh_₁(0, maxN¹)
+//│ 	in let c¹ = check_lh_₁(make_lh_₂(0, stretchN¹))
+//│ 	in let vs¹ = depth_lh_₁(minN_lh_₂, maxN¹)
+//│ 	in [LH_P2 map_lh_₁((fun m_d_i¹ -> 
+//│ 		let _lh_matchIdent¹ = m_d_i¹
+//│ 		in _lh_matchIdent¹(99)), vs¹) check_lh_₂(long¹)]
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> consumer ids >>>>>>>
-//│ check'_lh_₁
+//│ check'_lh_₃, check'_lh_₄, testBinaryTrees_nofib_lh_₁, check'_lh_₂, map_lh_₁, check'_lh_₁
 //│ <<<<<<< consumer ids <<<<<<<
 //│ 
 //│ >>>>>>> floating out info >>>>>>>
+//│ make_lh_₂ -> 2
 //│ make_lh_₁ -> 2
+//│ depth_lh_₁ -> 2
+//│ make_lh_₃ -> 2
+//│ make_lh_₄ -> 2
 //│ <<<<<<< floating out info <<<<<<<
 //│ 
 //│ >>>>>>> after inlining >>>>>>>
-//│ testBinaryTrees_nofib_lh_₁(primId⁰(17))
-//│ def check'_lh_₁(_lh_check'_arg1⁰, _lh_check'_arg2⁰, _lh_check'_arg3⁰) = _lh_check'_arg3⁰(_lh_check'_arg2⁰, _lh_check'_arg1⁰)
-//│ def check_lh_₁(_lh_check_arg1⁰) = _lh_check_arg1⁰(0, [True])
-//│ def make_lh_₁(_lh_make_arg1⁰, _lh_make_arg2⁰) = case _lh_make_arg2⁰ of {
+//│ let maxN⁰ = max_lh_₁((minN_lh_₁ + 2), primId⁰(14))
+//│ in let stretchN⁰ = (maxN⁰ + 1)
+//│ in let long⁰ = make_lh_₁(0, maxN⁰)
+//│ in let c⁰ = check_lh_₁(make_lh_₂(0, stretchN⁰))
+//│ in let vs⁰ = depth_lh_₁(minN_lh_₂, maxN⁰)
+//│ in [LH_P2 vs⁰((fun m_d_i⁰ -> 
+//│ 	let _lh_matchIdent⁰ = m_d_i⁰
+//│ 	in _lh_matchIdent⁰(99))) check_lh_₂(long⁰)]
+//│ def bit_lh_₁(_lh_bit_arg1⁰) = if (_lh_bit_arg1⁰ > 0) then (2 * bit_lh_₁((_lh_bit_arg1⁰ - 1))) else 1
+//│ def check'_lh_₁(_lh_check'_arg1⁹, _lh_check'_arg2⁹, _lh_check'_arg3¹) = _lh_check'_arg3¹(_lh_check'_arg2⁹, _lh_check'_arg1⁹)
+//│ def check'_lh_₂(_lh_check'_arg1¹⁰, _lh_check'_arg2¹⁰, _lh_check'_arg3²) = _lh_check'_arg3²(_lh_check'_arg2¹⁰, _lh_check'_arg1¹⁰)
+//│ def check'_lh_₃(_lh_check'_arg1¹¹, _lh_check'_arg2¹¹, _lh_check'_arg3³) = _lh_check'_arg3³(_lh_check'_arg2¹¹, _lh_check'_arg1¹¹)
+//│ def check'_lh_₄(_lh_check'_arg1⁰, _lh_check'_arg2⁰, _lh_check'_arg3⁰) = _lh_check'_arg3⁰(_lh_check'_arg2⁰, _lh_check'_arg1⁰)
+//│ def check_lh_₁(_lh_check_arg1²) = _lh_check_arg1²(0, [True])
+//│ def check_lh_₂(_lh_check_arg1³) = _lh_check_arg1³(0, [True])
+//│ def check_lh_₃(_lh_check_arg1¹) = _lh_check_arg1¹(0, [True])
+//│ def check_lh_₄(_lh_check_arg1⁰) = _lh_check_arg1⁰(0, [True])
+//│ def depth_lh_₁(_lh_depth_arg1⁰, _lh_depth_arg2⁰) = if (_lh_depth_arg1⁰ <= _lh_depth_arg2⁰) then 
+//│ 	let n⁰ = bit_lh_₁(((_lh_depth_arg2⁰ - _lh_depth_arg1⁰) + minN_lh_₃))
+//│ 	in let s⁰ = sumT_lh_₁(_lh_depth_arg1⁰, n⁰, 0)
+//│ 	in let rest⁰ = depth_lh_₁((_lh_depth_arg1⁰ + 2), _lh_depth_arg2⁰)
+//│ 	in let t⁰ = rest⁰
+//│ 	in let h⁰ = 	
+//│ 		let _lh_testBinaryTrees_nofib_LH_P3_2⁰ = s⁰
+//│ 		in let _lh_testBinaryTrees_nofib_LH_P3_1⁰ = _lh_depth_arg1⁰
+//│ 		in let _lh_testBinaryTrees_nofib_LH_P3_0⁰ = (2 * n⁰)
+//│ 		in (fun _lh_dummy⁰ -> mappend_lh_₁(string_of_int⁰(_lh_testBinaryTrees_nofib_LH_P3_0⁰), [LH_C 't' [LH_C ' ' [LH_C 't' [LH_C 'r' [LH_C 'e' [LH_C 'e' [LH_C 's' [LH_N]]]]]]]]))
+//│ 	in (fun f¹ -> [LH_C f¹(h⁰) t⁰(f¹)]) else (fun f² -> [LH_N])
+//│ def make_lh_₁(_lh_make_arg1¹, _lh_make_arg2¹) = case _lh_make_arg2¹ of {
+//│ 	0  => 
+//│ 		let _lh_check'_Node_2² = (fun _lh_check'_arg2⁵ -> (fun _lh_check'_arg1⁵ -> _lh_check'_arg2⁵))
+//│ 		in let _lh_check'_Node_1² = (fun _lh_check'_arg2⁶ -> (fun _lh_check'_arg1⁶ -> _lh_check'_arg2⁶))
+//│ 		in let _lh_check'_Node_0² = _lh_make_arg1¹
+//│ 		in (fun _lh_check'_arg2⁷ -> (fun _lh_check'_arg1⁷ -> _lh_check'_Node_2²(_lh_check'_Node_1²(if _lh_check'_arg1⁷ then (_lh_check'_arg2⁷ + _lh_check'_Node_0²) else (_lh_check'_arg2⁷ - _lh_check'_Node_0²), _lh_check'_arg1⁷), not⁰(_lh_check'_arg1⁷))))
+//│ 	| _  => 
+//│ 		let i2¹ = (2 * _lh_make_arg1¹)
+//│ 		in let d2¹ = (_lh_make_arg2¹ - 1)
+//│ 		in let _lh_check'_Node_2³ = make_lh_₁(i2¹, d2¹)
+//│ 		in let _lh_check'_Node_1³ = make_lh_₁((i2¹ - 1), d2¹)
+//│ 		in let _lh_check'_Node_0³ = _lh_make_arg1¹
+//│ 		in (fun _lh_check'_arg2⁸ -> (fun _lh_check'_arg1⁸ -> _lh_check'_Node_2³(_lh_check'_Node_1³(if _lh_check'_arg1⁸ then (_lh_check'_arg2⁸ + _lh_check'_Node_0³) else (_lh_check'_arg2⁸ - _lh_check'_Node_0³), _lh_check'_arg1⁸), not⁰(_lh_check'_arg1⁸))))}
+//│ def make_lh_₂(_lh_make_arg1⁰, _lh_make_arg2⁰) = case _lh_make_arg2⁰ of {
 //│ 	0  => 
 //│ 		let _lh_check'_Node_2⁰ = (fun _lh_check'_arg2¹ -> (fun _lh_check'_arg1¹ -> _lh_check'_arg2¹))
 //│ 		in let _lh_check'_Node_1⁰ = (fun _lh_check'_arg2² -> (fun _lh_check'_arg1² -> _lh_check'_arg2²))
@@ -195,18 +600,101 @@ testBinaryTrees_nofib $ primId 17
 //│ 	| _  => 
 //│ 		let i2⁰ = (2 * _lh_make_arg1⁰)
 //│ 		in let d2⁰ = (_lh_make_arg2⁰ - 1)
-//│ 		in let _lh_check'_Node_2¹ = make_lh_₁(i2⁰, d2⁰)
-//│ 		in let _lh_check'_Node_1¹ = make_lh_₁((i2⁰ - 1), d2⁰)
+//│ 		in let _lh_check'_Node_2¹ = make_lh_₂(i2⁰, d2⁰)
+//│ 		in let _lh_check'_Node_1¹ = make_lh_₂((i2⁰ - 1), d2⁰)
 //│ 		in let _lh_check'_Node_0¹ = _lh_make_arg1⁰
 //│ 		in (fun _lh_check'_arg2⁴ -> (fun _lh_check'_arg1⁴ -> _lh_check'_Node_2¹(_lh_check'_Node_1¹(if _lh_check'_arg1⁴ then (_lh_check'_arg2⁴ + _lh_check'_Node_0¹) else (_lh_check'_arg2⁴ - _lh_check'_Node_0¹), _lh_check'_arg1⁴), not⁰(_lh_check'_arg1⁴))))}
-//│ def testBinaryTrees_nofib_lh_₁(_lh_testBinaryTrees_nofib_arg1⁰) = check_lh_₁(make_lh_₁(0, _lh_testBinaryTrees_nofib_arg1⁰))
+//│ def make_lh_₃(_lh_make_arg1², _lh_make_arg2²) = case _lh_make_arg2² of {
+//│ 	0  => 
+//│ 		let _lh_check'_Node_2⁴ = (fun _lh_check'_arg2¹² -> (fun _lh_check'_arg1¹² -> _lh_check'_arg2¹²))
+//│ 		in let _lh_check'_Node_1⁴ = (fun _lh_check'_arg2¹³ -> (fun _lh_check'_arg1¹³ -> _lh_check'_arg2¹³))
+//│ 		in let _lh_check'_Node_0⁴ = _lh_make_arg1²
+//│ 		in (fun _lh_check'_arg2¹⁴ -> (fun _lh_check'_arg1¹⁴ -> _lh_check'_Node_2⁴(_lh_check'_Node_1⁴(if _lh_check'_arg1¹⁴ then (_lh_check'_arg2¹⁴ + _lh_check'_Node_0⁴) else (_lh_check'_arg2¹⁴ - _lh_check'_Node_0⁴), _lh_check'_arg1¹⁴), not⁰(_lh_check'_arg1¹⁴))))
+//│ 	| _  => 
+//│ 		let i2² = (2 * _lh_make_arg1²)
+//│ 		in let d2² = (_lh_make_arg2² - 1)
+//│ 		in let _lh_check'_Node_2⁵ = make_lh_₃(i2², d2²)
+//│ 		in let _lh_check'_Node_1⁵ = make_lh_₃((i2² - 1), d2²)
+//│ 		in let _lh_check'_Node_0⁵ = _lh_make_arg1²
+//│ 		in (fun _lh_check'_arg2¹⁵ -> (fun _lh_check'_arg1¹⁵ -> _lh_check'_Node_2⁵(_lh_check'_Node_1⁵(if _lh_check'_arg1¹⁵ then (_lh_check'_arg2¹⁵ + _lh_check'_Node_0⁵) else (_lh_check'_arg2¹⁵ - _lh_check'_Node_0⁵), _lh_check'_arg1¹⁵), not⁰(_lh_check'_arg1¹⁵))))}
+//│ def make_lh_₄(_lh_make_arg1³, _lh_make_arg2³) = case _lh_make_arg2³ of {
+//│ 	0  => 
+//│ 		let _lh_check'_Node_2⁶ = (fun _lh_check'_arg2¹⁶ -> (fun _lh_check'_arg1¹⁶ -> _lh_check'_arg2¹⁶))
+//│ 		in let _lh_check'_Node_1⁶ = (fun _lh_check'_arg2¹⁷ -> (fun _lh_check'_arg1¹⁷ -> _lh_check'_arg2¹⁷))
+//│ 		in let _lh_check'_Node_0⁶ = _lh_make_arg1³
+//│ 		in (fun _lh_check'_arg2¹⁸ -> (fun _lh_check'_arg1¹⁸ -> _lh_check'_Node_2⁶(_lh_check'_Node_1⁶(if _lh_check'_arg1¹⁸ then (_lh_check'_arg2¹⁸ + _lh_check'_Node_0⁶) else (_lh_check'_arg2¹⁸ - _lh_check'_Node_0⁶), _lh_check'_arg1¹⁸), not⁰(_lh_check'_arg1¹⁸))))
+//│ 	| _  => 
+//│ 		let i2³ = (2 * _lh_make_arg1³)
+//│ 		in let d2³ = (_lh_make_arg2³ - 1)
+//│ 		in let _lh_check'_Node_2⁷ = make_lh_₄(i2³, d2³)
+//│ 		in let _lh_check'_Node_1⁷ = make_lh_₄((i2³ - 1), d2³)
+//│ 		in let _lh_check'_Node_0⁷ = _lh_make_arg1³
+//│ 		in (fun _lh_check'_arg2¹⁹ -> (fun _lh_check'_arg1¹⁹ -> _lh_check'_Node_2⁷(_lh_check'_Node_1⁷(if _lh_check'_arg1¹⁹ then (_lh_check'_arg2¹⁹ + _lh_check'_Node_0⁷) else (_lh_check'_arg2¹⁹ - _lh_check'_Node_0⁷), _lh_check'_arg1¹⁹), not⁰(_lh_check'_arg1¹⁹))))}
+//│ def map_lh_₁(f⁰, ls⁰) = ls⁰(f⁰)
+//│ def mappend_lh_₁(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	LH_C h¹ t¹ => [LH_C h¹ mappend_lh_₁(t¹, ys⁰)]
+//│ 	| LH_N  => ys⁰}
+//│ def max_lh_₁(_lh_max_arg1⁰, _lh_max_arg2⁰) = if (_lh_max_arg1⁰ > _lh_max_arg2⁰) then _lh_max_arg1⁰ else _lh_max_arg2⁰
+//│ def minN_lh_₁ = 4
+//│ def minN_lh_₂ = 4
+//│ def minN_lh_₃ = 4
+//│ def sumT_lh_₁(_lh_sumT_arg1⁰, _lh_sumT_arg2⁰, _lh_sumT_arg3⁰) = case _lh_sumT_arg2⁰ of {
+//│ 	0  => _lh_sumT_arg3⁰
+//│ 	| _  => sumT_lh_₁(_lh_sumT_arg1⁰, (_lh_sumT_arg2⁰ - 1), ((check_lh_₄(make_lh_₃(_lh_sumT_arg2⁰, _lh_sumT_arg1⁰)) + check_lh_₃(make_lh_₄((0 - _lh_sumT_arg2⁰), _lh_sumT_arg1⁰))) + _lh_sumT_arg3⁰))}
+//│ def testBinaryTrees_nofib_lh_₁(_lh_testBinaryTrees_nofib_arg1⁰) = 
+//│ 	let maxN¹ = max_lh_₁((minN_lh_₁ + 2), _lh_testBinaryTrees_nofib_arg1⁰)
+//│ 	in let stretchN¹ = (maxN¹ + 1)
+//│ 	in let long¹ = make_lh_₁(0, maxN¹)
+//│ 	in let c¹ = check_lh_₁(make_lh_₂(0, stretchN¹))
+//│ 	in let vs¹ = depth_lh_₁(minN_lh_₂, maxN¹)
+//│ 	in [LH_P2 vs¹((fun m_d_i¹ -> 
+//│ 		let _lh_matchIdent¹ = m_d_i¹
+//│ 		in _lh_matchIdent¹(99))) check_lh_₂(long¹)]
 //│ <<<<<<< after inlining <<<<<<<
 //│ 
 //│ >>>>>>> after floating out >>>>>>>
-//│ testBinaryTrees_nofib_lh_₁(primId⁰(17))
-//│ def check'_lh_₁(_lh_check'_arg1⁰, _lh_check'_arg2⁰, _lh_check'_arg3⁰) = _lh_check'_arg3⁰(_lh_check'_arg2⁰, _lh_check'_arg1⁰)
-//│ def check_lh_₁(_lh_check_arg1⁰) = _lh_check_arg1⁰(0, [True])
-//│ def make_lh_₁(_lh_make_arg1⁰, _lh_make_arg2⁰) = case _lh_make_arg2⁰ of {
+//│ let maxN⁰ = max_lh_₁((minN_lh_₁ + 2), primId⁰(14))
+//│ in let stretchN⁰ = (maxN⁰ + 1)
+//│ in let long⁰ = make_lh_₁(0, maxN⁰)
+//│ in let c⁰ = check_lh_₁(make_lh_₂(0, stretchN⁰))
+//│ in let vs⁰ = depth_lh_₁(minN_lh_₂, maxN⁰)
+//│ in [LH_P2 vs⁰((fun m_d_i⁰ -> 
+//│ 	let _lh_matchIdent⁰ = m_d_i⁰
+//│ 	in _lh_matchIdent⁰(99))) check_lh_₂(long⁰)]
+//│ def bit_lh_₁(_lh_bit_arg1⁰) = if (_lh_bit_arg1⁰ > 0) then (2 * bit_lh_₁((_lh_bit_arg1⁰ - 1))) else 1
+//│ def check'_lh_₁(_lh_check'_arg1⁹, _lh_check'_arg2⁹, _lh_check'_arg3¹) = _lh_check'_arg3¹(_lh_check'_arg2⁹, _lh_check'_arg1⁹)
+//│ def check'_lh_₂(_lh_check'_arg1¹⁰, _lh_check'_arg2¹⁰, _lh_check'_arg3²) = _lh_check'_arg3²(_lh_check'_arg2¹⁰, _lh_check'_arg1¹⁰)
+//│ def check'_lh_₃(_lh_check'_arg1¹¹, _lh_check'_arg2¹¹, _lh_check'_arg3³) = _lh_check'_arg3³(_lh_check'_arg2¹¹, _lh_check'_arg1¹¹)
+//│ def check'_lh_₄(_lh_check'_arg1⁰, _lh_check'_arg2⁰, _lh_check'_arg3⁰) = _lh_check'_arg3⁰(_lh_check'_arg2⁰, _lh_check'_arg1⁰)
+//│ def check_lh_₁(_lh_check_arg1²) = _lh_check_arg1²(0, [True])
+//│ def check_lh_₂(_lh_check_arg1³) = _lh_check_arg1³(0, [True])
+//│ def check_lh_₃(_lh_check_arg1¹) = _lh_check_arg1¹(0, [True])
+//│ def check_lh_₄(_lh_check_arg1⁰) = _lh_check_arg1⁰(0, [True])
+//│ def depth_lh_₁(_lh_depth_arg1⁰, _lh_depth_arg2⁰) = if (_lh_depth_arg1⁰ <= _lh_depth_arg2⁰) then 
+//│ 	let n⁰ = bit_lh_₁(((_lh_depth_arg2⁰ - _lh_depth_arg1⁰) + minN_lh_₃))
+//│ 	in let s⁰ = sumT_lh_₁(_lh_depth_arg1⁰, n⁰, 0)
+//│ 	in let rest⁰ = depth_lh_₁((_lh_depth_arg1⁰ + 2), _lh_depth_arg2⁰)
+//│ 	in let t⁰ = rest⁰
+//│ 	in let h⁰ = 	
+//│ 		let _lh_testBinaryTrees_nofib_LH_P3_2⁰ = s⁰
+//│ 		in let _lh_testBinaryTrees_nofib_LH_P3_1⁰ = _lh_depth_arg1⁰
+//│ 		in let _lh_testBinaryTrees_nofib_LH_P3_0⁰ = (2 * n⁰)
+//│ 		in (fun _lh_dummy⁰ -> mappend_lh_₁(string_of_int⁰(_lh_testBinaryTrees_nofib_LH_P3_0⁰), [LH_C 't' [LH_C ' ' [LH_C 't' [LH_C 'r' [LH_C 'e' [LH_C 'e' [LH_C 's' [LH_N]]]]]]]]))
+//│ 	in (fun f¹ -> [LH_C f¹(h⁰) t⁰(f¹)]) else (fun f² -> [LH_N])
+//│ def make_lh_₁(_lh_make_arg1¹, _lh_make_arg2¹) = case _lh_make_arg2¹ of {
+//│ 	0  => 
+//│ 		let _lh_check'_Node_2² = (fun _lh_check'_arg2⁵ -> (fun _lh_check'_arg1⁵ -> _lh_check'_arg2⁵))
+//│ 		in let _lh_check'_Node_1² = (fun _lh_check'_arg2⁶ -> (fun _lh_check'_arg1⁶ -> _lh_check'_arg2⁶))
+//│ 		in let _lh_check'_Node_0² = _lh_make_arg1¹
+//│ 		in (fun _lh_check'_arg2⁷ -> (fun _lh_check'_arg1⁷ -> _lh_check'_Node_2²(_lh_check'_Node_1²(if _lh_check'_arg1⁷ then (_lh_check'_arg2⁷ + _lh_check'_Node_0²) else (_lh_check'_arg2⁷ - _lh_check'_Node_0²), _lh_check'_arg1⁷), not⁰(_lh_check'_arg1⁷))))
+//│ 	| _  => 
+//│ 		let i2¹ = (2 * _lh_make_arg1¹)
+//│ 		in let d2¹ = (_lh_make_arg2¹ - 1)
+//│ 		in let _lh_check'_Node_2³ = make_lh_₁(i2¹, d2¹)
+//│ 		in let _lh_check'_Node_1³ = make_lh_₁((i2¹ - 1), d2¹)
+//│ 		in let _lh_check'_Node_0³ = _lh_make_arg1¹
+//│ 		in (fun _lh_check'_arg2⁸ -> (fun _lh_check'_arg1⁸ -> _lh_check'_Node_2³(_lh_check'_Node_1³(if _lh_check'_arg1⁸ then (_lh_check'_arg2⁸ + _lh_check'_Node_0³) else (_lh_check'_arg2⁸ - _lh_check'_Node_0³), _lh_check'_arg1⁸), not⁰(_lh_check'_arg1⁸))))}
+//│ def make_lh_₂(_lh_make_arg1⁰, _lh_make_arg2⁰) = case _lh_make_arg2⁰ of {
 //│ 	0  => 
 //│ 		let _lh_check'_Node_2⁰ = (fun _lh_check'_arg2¹ -> (fun _lh_check'_arg1¹ -> _lh_check'_arg2¹))
 //│ 		in let _lh_check'_Node_1⁰ = (fun _lh_check'_arg2² -> (fun _lh_check'_arg1² -> _lh_check'_arg2²))
@@ -215,11 +703,56 @@ testBinaryTrees_nofib $ primId 17
 //│ 	| _  => 
 //│ 		let i2⁰ = (2 * _lh_make_arg1⁰)
 //│ 		in let d2⁰ = (_lh_make_arg2⁰ - 1)
-//│ 		in let _lh_check'_Node_2¹ = make_lh_₁(i2⁰, d2⁰)
-//│ 		in let _lh_check'_Node_1¹ = make_lh_₁((i2⁰ - 1), d2⁰)
+//│ 		in let _lh_check'_Node_2¹ = make_lh_₂(i2⁰, d2⁰)
+//│ 		in let _lh_check'_Node_1¹ = make_lh_₂((i2⁰ - 1), d2⁰)
 //│ 		in let _lh_check'_Node_0¹ = _lh_make_arg1⁰
 //│ 		in (fun _lh_check'_arg2⁴ -> (fun _lh_check'_arg1⁴ -> _lh_check'_Node_2¹(_lh_check'_Node_1¹(if _lh_check'_arg1⁴ then (_lh_check'_arg2⁴ + _lh_check'_Node_0¹) else (_lh_check'_arg2⁴ - _lh_check'_Node_0¹), _lh_check'_arg1⁴), not⁰(_lh_check'_arg1⁴))))}
-//│ def testBinaryTrees_nofib_lh_₁(_lh_testBinaryTrees_nofib_arg1⁰) = check_lh_₁(make_lh_₁(0, _lh_testBinaryTrees_nofib_arg1⁰))
+//│ def make_lh_₃(_lh_make_arg1², _lh_make_arg2²) = case _lh_make_arg2² of {
+//│ 	0  => 
+//│ 		let _lh_check'_Node_2⁴ = (fun _lh_check'_arg2¹² -> (fun _lh_check'_arg1¹² -> _lh_check'_arg2¹²))
+//│ 		in let _lh_check'_Node_1⁴ = (fun _lh_check'_arg2¹³ -> (fun _lh_check'_arg1¹³ -> _lh_check'_arg2¹³))
+//│ 		in let _lh_check'_Node_0⁴ = _lh_make_arg1²
+//│ 		in (fun _lh_check'_arg2¹⁴ -> (fun _lh_check'_arg1¹⁴ -> _lh_check'_Node_2⁴(_lh_check'_Node_1⁴(if _lh_check'_arg1¹⁴ then (_lh_check'_arg2¹⁴ + _lh_check'_Node_0⁴) else (_lh_check'_arg2¹⁴ - _lh_check'_Node_0⁴), _lh_check'_arg1¹⁴), not⁰(_lh_check'_arg1¹⁴))))
+//│ 	| _  => 
+//│ 		let i2² = (2 * _lh_make_arg1²)
+//│ 		in let d2² = (_lh_make_arg2² - 1)
+//│ 		in let _lh_check'_Node_2⁵ = make_lh_₃(i2², d2²)
+//│ 		in let _lh_check'_Node_1⁵ = make_lh_₃((i2² - 1), d2²)
+//│ 		in let _lh_check'_Node_0⁵ = _lh_make_arg1²
+//│ 		in (fun _lh_check'_arg2¹⁵ -> (fun _lh_check'_arg1¹⁵ -> _lh_check'_Node_2⁵(_lh_check'_Node_1⁵(if _lh_check'_arg1¹⁵ then (_lh_check'_arg2¹⁵ + _lh_check'_Node_0⁵) else (_lh_check'_arg2¹⁵ - _lh_check'_Node_0⁵), _lh_check'_arg1¹⁵), not⁰(_lh_check'_arg1¹⁵))))}
+//│ def make_lh_₄(_lh_make_arg1³, _lh_make_arg2³) = case _lh_make_arg2³ of {
+//│ 	0  => 
+//│ 		let _lh_check'_Node_2⁶ = (fun _lh_check'_arg2¹⁶ -> (fun _lh_check'_arg1¹⁶ -> _lh_check'_arg2¹⁶))
+//│ 		in let _lh_check'_Node_1⁶ = (fun _lh_check'_arg2¹⁷ -> (fun _lh_check'_arg1¹⁷ -> _lh_check'_arg2¹⁷))
+//│ 		in let _lh_check'_Node_0⁶ = _lh_make_arg1³
+//│ 		in (fun _lh_check'_arg2¹⁸ -> (fun _lh_check'_arg1¹⁸ -> _lh_check'_Node_2⁶(_lh_check'_Node_1⁶(if _lh_check'_arg1¹⁸ then (_lh_check'_arg2¹⁸ + _lh_check'_Node_0⁶) else (_lh_check'_arg2¹⁸ - _lh_check'_Node_0⁶), _lh_check'_arg1¹⁸), not⁰(_lh_check'_arg1¹⁸))))
+//│ 	| _  => 
+//│ 		let i2³ = (2 * _lh_make_arg1³)
+//│ 		in let d2³ = (_lh_make_arg2³ - 1)
+//│ 		in let _lh_check'_Node_2⁷ = make_lh_₄(i2³, d2³)
+//│ 		in let _lh_check'_Node_1⁷ = make_lh_₄((i2³ - 1), d2³)
+//│ 		in let _lh_check'_Node_0⁷ = _lh_make_arg1³
+//│ 		in (fun _lh_check'_arg2¹⁹ -> (fun _lh_check'_arg1¹⁹ -> _lh_check'_Node_2⁷(_lh_check'_Node_1⁷(if _lh_check'_arg1¹⁹ then (_lh_check'_arg2¹⁹ + _lh_check'_Node_0⁷) else (_lh_check'_arg2¹⁹ - _lh_check'_Node_0⁷), _lh_check'_arg1¹⁹), not⁰(_lh_check'_arg1¹⁹))))}
+//│ def map_lh_₁(f⁰, ls⁰) = ls⁰(f⁰)
+//│ def mappend_lh_₁(xs⁰, ys⁰) = case xs⁰ of {
+//│ 	LH_C h¹ t¹ => [LH_C h¹ mappend_lh_₁(t¹, ys⁰)]
+//│ 	| LH_N  => ys⁰}
+//│ def max_lh_₁(_lh_max_arg1⁰, _lh_max_arg2⁰) = if (_lh_max_arg1⁰ > _lh_max_arg2⁰) then _lh_max_arg1⁰ else _lh_max_arg2⁰
+//│ def minN_lh_₁ = 4
+//│ def minN_lh_₂ = 4
+//│ def minN_lh_₃ = 4
+//│ def sumT_lh_₁(_lh_sumT_arg1⁰, _lh_sumT_arg2⁰, _lh_sumT_arg3⁰) = case _lh_sumT_arg2⁰ of {
+//│ 	0  => _lh_sumT_arg3⁰
+//│ 	| _  => sumT_lh_₁(_lh_sumT_arg1⁰, (_lh_sumT_arg2⁰ - 1), ((check_lh_₄(make_lh_₃(_lh_sumT_arg2⁰, _lh_sumT_arg1⁰)) + check_lh_₃(make_lh_₄((0 - _lh_sumT_arg2⁰), _lh_sumT_arg1⁰))) + _lh_sumT_arg3⁰))}
+//│ def testBinaryTrees_nofib_lh_₁(_lh_testBinaryTrees_nofib_arg1⁰) = 
+//│ 	let maxN¹ = max_lh_₁((minN_lh_₁ + 2), _lh_testBinaryTrees_nofib_arg1⁰)
+//│ 	in let stretchN¹ = (maxN¹ + 1)
+//│ 	in let long¹ = make_lh_₁(0, maxN¹)
+//│ 	in let c¹ = check_lh_₁(make_lh_₂(0, stretchN¹))
+//│ 	in let vs¹ = depth_lh_₁(minN_lh_₂, maxN¹)
+//│ 	in [LH_P2 vs¹((fun m_d_i¹ -> 
+//│ 		let _lh_matchIdent¹ = m_d_i¹
+//│ 		in _lh_matchIdent¹(99))) check_lh_₂(long¹)]
 //│ <<<<<<< after floating out <<<<<<<
 //│ 
 //│ >>>>>>>>>> Generated OCaml >>>>>>>>>>

@@ -5044,7 +5044,7 @@ let rec testExpert_nofib_lh__d1 _lh_testExpert_nofib_arg1_0 =
     (let rec contents_0 = (`LH_C('N', (`LH_C('o', (`LH_C('|', (`LH_C('N', (`LH_C('o', (`LH_C('|', (`LH_C('Y', (`LH_C('o', (`LH_C('u', (`LH_C(' ', (`LH_C('b', (`LH_C('e', (`LH_C('t', (`LH_C('|', (`LH_C('M', (`LH_C('a', (`LH_C('y', (`LH_C('b', (`LH_C('e', (`LH_C('|', (`LH_C('A', (`LH_C(' ', (`LH_C('t', (`LH_C('i', (`LH_C('g', (`LH_C('e', (`LH_C('r', (`LH_C('?', (`LH_C('|', (`LH_C('U', (`LH_C('n', (`LH_C('h', (`LH_C('u', (`LH_C('h', (`LH_C('|', (`LH_C('Y', (`LH_C('e', (`LH_C('p', (`LH_C('|', (`LH_C('y', (`LH_C('|', (`LH_C('n', (`LH_C('|', (`LH_C('y', (`LH_C('|', (`LH_C('y', (`LH_C('|', (`LH_C('y', (`LH_C('|', (`LH_C('y', (`LH_C('|', (`LH_C('n', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) in
       ((fun _lh_funcomp_x_0 -> 
         ((fun _lh_funcomp_x_1 -> 
-          (length_lh__d1 let rec problem_1 = (fun _lh_problem_arg1_1 -> 
+          (length_lh__d1 (let rec problem_1 = (fun _lh_problem_arg1_1 -> 
             (goal_lh__d1 (words_lh__d2 (head_lh__d1 (lines_lh__d1 _lh_problem_arg1_1)))))
           and replies_1 = (fun _lh_replies_arg1_1 -> 
             (let rec _lh_listcomp_fun_1_9 = (fun _lh_listcomp_fun_para_1_5 -> 
@@ -5107,6 +5107,6 @@ let rec testExpert_nofib_lh__d1 _lh_testExpert_nofib_arg1_0 =
             ys_5_7) in
             (let rec h_5_3 = '|' in
               (fun ys_5_8 -> 
-                (`LH_C(h_5_3, (t_5_3 ys_5_8))))))) (((display_lh__d1 ((results_1 animals_0) _lh_funcomp_x_1)) (vars_lh__d1 (problem_1 animals_0))) (replies_1 _lh_funcomp_x_1))))) ((take_lh__d1 (_lh_testExpert_nofib_arg1_0 + 9999)) _lh_funcomp_x_0))) contents_0)));;
+                (`LH_C(h_5_3, (t_5_3 ys_5_8))))))) (((display_lh__d1 ((results_1 animals_0) _lh_funcomp_x_1)) (vars_lh__d1 (problem_1 animals_0))) (replies_1 _lh_funcomp_x_1)))))) ((take_lh__d1 (_lh_testExpert_nofib_arg1_0 + 9999)) _lh_funcomp_x_0))) contents_0)));;
 end;;
 

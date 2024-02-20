@@ -1204,7 +1204,7 @@ trait ProgramRewrite { this: Program =>
     val shouldInlineFunctionDefs = shouldInline.map { funName =>
       val tmpRes = this.defAndExpr._1.filterKeys(_.tree.name == funName)
       assert(tmpRes.size == 1)
-      assert(tmpRes.values.head.isInstanceOf[Expr.Function])
+      assert(tmpRes.values.head.isInstanceOf[Expr.Function], tmpRes.values.head.pp(using InitPpConfig))
       tmpRes.keys.head -> tmpRes.values.head
     }.toMap
     val tmpProgram = Program(

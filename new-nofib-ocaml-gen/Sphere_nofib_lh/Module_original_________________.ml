@@ -3,6 +3,36 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_original_________________(LH_Dum: sig end) = struct
+let rec map_lh f_0 ls_0 =
+  (match ls_0 with
+    | `LH_C(h_0, t_0) -> 
+      (`LH_C((f_0 h_0), ((map_lh f_0) t_0)))
+    | `LH_N -> 
+      (`LH_N));;
+let rec snd_lh _lh_snd_arg1_0 =
+  (match _lh_snd_arg1_0 with
+    | `LH_P2(_lh_snd_LH_P2_0_0, _lh_snd_LH_P2_1_0) -> 
+      _lh_snd_LH_P2_1_0
+    | _ -> 
+      (failwith "error"));;
+let rec foldr_lh f_1 i_0 ls_1 =
+  (match ls_1 with
+    | `LH_C(h_1, t_1) -> 
+      ((f_1 h_1) (((foldr_lh f_1) i_0) t_1))
+    | `LH_N -> 
+      i_0);;
+let rec hash_lh _lh_hash_arg1_0 =
+  (let rec u8_0 = (fun x_0 -> 
+    ((fun _lh_funcomp_x_0 -> 
+      (int_of_float ((fun x_1 -> 
+        (255.0 *. x_1)) _lh_funcomp_x_0))) x_0)) in
+    (((foldr_lh (fun rgb_0 acc_0 -> 
+      (let rec _lh_matchIdent_2 = rgb_0 in
+        (match _lh_matchIdent_2 with
+          | `LH_P3(_lh_hash_LH_P3_0_0, _lh_hash_LH_P3_1_0, _lh_hash_LH_P3_2_0) -> 
+            ((((u8_0 _lh_hash_LH_P3_0_0) + ((u8_0 _lh_hash_LH_P3_1_0) * 7)) + ((u8_0 _lh_hash_LH_P3_2_0) * 23)) + (acc_0 * 61))
+          | _ -> 
+            (failwith "error"))))) 0) _lh_hash_arg1_0));;
 let rec enumFromTo_lh a_0 b_0 =
   (if (a_0 <= b_0) then
     (`LH_C(a_0, ((enumFromTo_lh (a_0 + 1)) b_0)))
@@ -22,12 +52,6 @@ let rec tail_lh ls_3 =
       (failwith "error"));;
 let rec infinity_lh =
   100000000.0;;
-let rec foldr_lh f_1 i_0 ls_1 =
-  (match ls_1 with
-    | `LH_C(h_1, t_1) -> 
-      ((f_1 h_1) (((foldr_lh f_1) i_0) t_1))
-    | `LH_N -> 
-      i_0);;
 let rec vecdot_lh _lh_vecdot_arg1_0 _lh_vecdot_arg2_0 =
   (match _lh_vecdot_arg1_0 with
     | `LH_P3(_lh_vecdot_LH_P3_0_0, _lh_vecdot_LH_P3_1_0, _lh_vecdot_LH_P3_2_0) -> 
@@ -191,12 +215,12 @@ let rec specpowsurf_lh _lh_specpowsurf_arg1_0 =
     (_lh_listcomp_fun_2 _lh_specpowsurf_arg1_0))) (`LH_C(8.0, (`LH_N)))));;
 let rec epsilon_lh =
   0.000001;;
-let rec s2_lh _lh_s2_arg1_0 =
+let rec s2_lh =
   (`LH_C((`Ambient((`LH_P3(0.035, 0.0325, 0.025)))), (`LH_C((`Diffuse((`LH_P3(0.5, 0.45, 0.35)))), (`LH_C((`Specular((`LH_P3(0.8, 0.8, 0.8)))), (`LH_C((`Specpow(3.0)), (`LH_C((`Reflect(0.5)), (`LH_N)))))))))));;
-let rec testspheres_lh _lh_testspheres_arg1_0 =
-  (`LH_C((`Sphere((`LH_P3(0.0, 0.0, 0.0)), 0.5, (s2_lh 0))), (`LH_C((`Sphere((`LH_P3(0.272166, 0.272166, 0.544331)), 0.166667, (s2_lh 0))), (`LH_C((`Sphere((`LH_P3(0.643951, 0.172546, 0.0)), 0.166667, (s2_lh 0))), (`LH_C((`Sphere((`LH_P3(0.172546, 0.643951, 0.0)), 0.166667, (s2_lh 0))), (`LH_C((`Sphere((`LH_P3((0.0 -. 0.371785), 0.0996195, 0.544331)), 0.166667, (s2_lh 0))), (`LH_C((`Sphere((`LH_P3((0.0 -. 0.471405), 0.471405, 0.0)), 0.166667, (s2_lh 0))), (`LH_C((`Sphere((`LH_P3((0.0 -. 0.643951), (0.0 -. 0.172546), 0.0)), 0.166667, (s2_lh 0))), (`LH_C((`Sphere((`LH_P3(0.0996195, (0.0 -. 0.371785), 0.544331)), 0.166667, (s2_lh 0))), (`LH_C((`Sphere((`LH_P3((0.0 -. 0.172546), (0.0 -. 0.643951), 0.0)), 0.166667, (s2_lh 0))), (`LH_C((`Sphere((`LH_P3(0.471405, (0.0 -. 0.471405), 0.0)), 0.166667, (s2_lh 0))), (`LH_N)))))))))))))))))))));;
+let rec testspheres_lh =
+  (`LH_C((`Sphere((`LH_P3(0.0, 0.0, 0.0)), 0.5, s2_lh)), (`LH_C((`Sphere((`LH_P3(0.272166, 0.272166, 0.544331)), 0.166667, s2_lh)), (`LH_C((`Sphere((`LH_P3(0.643951, 0.172546, 0.0)), 0.166667, s2_lh)), (`LH_C((`Sphere((`LH_P3(0.172546, 0.643951, 0.0)), 0.166667, s2_lh)), (`LH_C((`Sphere((`LH_P3((0.0 -. 0.371785), 0.0996195, 0.544331)), 0.166667, s2_lh)), (`LH_C((`Sphere((`LH_P3((0.0 -. 0.471405), 0.471405, 0.0)), 0.166667, s2_lh)), (`LH_C((`Sphere((`LH_P3((0.0 -. 0.643951), (0.0 -. 0.172546), 0.0)), 0.166667, s2_lh)), (`LH_C((`Sphere((`LH_P3(0.0996195, (0.0 -. 0.371785), 0.544331)), 0.166667, s2_lh)), (`LH_C((`Sphere((`LH_P3((0.0 -. 0.172546), (0.0 -. 0.643951), 0.0)), 0.166667, s2_lh)), (`LH_C((`Sphere((`LH_P3(0.471405, (0.0 -. 0.471405), 0.0)), 0.166667, s2_lh)), (`LH_N)))))))))))))))))))));;
 let rec shadowed_lh _lh_shadowed_arg1_0 _lh_shadowed_arg2_0 _lh_shadowed_arg3_0 =
-  (let rec _lh_matchIdent_1_4 = (((trace_lh (testspheres_lh 0)) ((vecadd_lh _lh_shadowed_arg1_0) ((vecscale_lh _lh_shadowed_arg2_0) epsilon_lh))) _lh_shadowed_arg2_0) in
+  (let rec _lh_matchIdent_1_4 = (((trace_lh testspheres_lh) ((vecadd_lh _lh_shadowed_arg1_0) ((vecscale_lh _lh_shadowed_arg2_0) epsilon_lh))) _lh_shadowed_arg2_0) in
     (match _lh_matchIdent_1_4 with
       | `LH_P3(_lh_shadowed_LH_P3_0_0, _lh_shadowed_LH_P3_1_0, _lh_shadowed_LH_P3_2_0) -> 
         (if (not _lh_shadowed_LH_P3_0_0) then
@@ -332,12 +356,6 @@ let rec transmitsurf_lh _lh_transmitsurf_arg1_0 =
       | `LH_N -> 
         (`LH_N))) in
     (_lh_listcomp_fun_7 _lh_transmitsurf_arg1_0))) (`LH_C(0.0, (`LH_N)))));;
-let rec map_lh f_0 ls_0 =
-  (match ls_0 with
-    | `LH_C(h_0, t_0) -> 
-      (`LH_C((f_0 h_0), ((map_lh f_0) t_0)))
-    | `LH_N -> 
-      (`LH_N));;
 let rec spheresurf_lh _lh_spheresurf_arg1_0 =
   (match _lh_spheresurf_arg1_0 with
     | `Sphere(_lh_spheresurf_Sphere_0_0, _lh_spheresurf_Sphere_1_0, _lh_spheresurf_Sphere_2_0) -> 
@@ -377,7 +395,7 @@ let rec refractray_lh _lh_refractray_arg1_0 _lh_refractray_arg2_0 _lh_refractray
 let rec reflectray_lh _lh_reflectray_arg1_0 _lh_reflectray_arg2_0 _lh_reflectray_arg3_0 _lh_reflectray_arg4_0 _lh_reflectray_arg5_0 _lh_reflectray_arg6_0 =
   (let rec newcontrib_0 = ((vecmult_lh _lh_reflectray_arg4_0) _lh_reflectray_arg5_0) in
     (let rec nearpos_0 = ((vecadd_lh _lh_reflectray_arg1_0) ((vecscale_lh _lh_reflectray_arg2_0) epsilon_lh)) in
-      (let rec _lh_matchIdent_0 = (((trace_lh (testspheres_lh 0)) nearpos_0) _lh_reflectray_arg2_0) in
+      (let rec _lh_matchIdent_0 = (((trace_lh testspheres_lh) nearpos_0) _lh_reflectray_arg2_0) in
         (match _lh_matchIdent_0 with
           | `LH_P3(_lh_reflectray_LH_P3_0_0, _lh_reflectray_LH_P3_1_0, _lh_reflectray_LH_P3_2_0) -> 
             (let rec newcol_0 = (if _lh_reflectray_LH_P3_0_0 then
@@ -428,7 +446,7 @@ transmitray_lh _lh_transmitray_arg1_0 _lh_transmitray_arg2_0 _lh_transmitray_arg
       (match _lh_matchIdent_8 with
         | `LH_P2(_lh_transmitray_LH_P2_0_0, _lh_transmitray_LH_P2_1_0) -> 
           (let rec nearpos_1 = ((vecadd_lh _lh_transmitray_arg3_0) ((vecscale_lh _lh_transmitray_LH_P2_1_0) epsilon_lh)) in
-            (let rec _lh_matchIdent_9 = (((trace_lh (testspheres_lh 0)) nearpos_1) _lh_transmitray_LH_P2_1_0) in
+            (let rec _lh_matchIdent_9 = (((trace_lh testspheres_lh) nearpos_1) _lh_transmitray_LH_P2_1_0) in
               (match _lh_matchIdent_9 with
                 | `LH_P3(_lh_transmitray_LH_P3_0_0, _lh_transmitray_LH_P3_1_0, _lh_transmitray_LH_P3_2_0) -> 
                   (let rec newcol_1 = (if _lh_transmitray_LH_P3_0_0 then
@@ -502,19 +520,19 @@ let rec camparams_lh _lh_camparams_arg1_0 _lh_camparams_arg2_0 _lh_camparams_arg
           (failwith "error"))));;
 let rec fov_lh =
   45.0;;
-let rec lookat_lh _lh_lookat_arg1_0 =
+let rec lookat_lh =
   (`LH_P3(0.0, 0.0, 0.0));;
-let rec vup_lh _lh_vup_arg1_0 =
+let rec vup_lh =
   (`LH_P3(0.0, 0.0, 1.0));;
 let rec testlights_lh _lh_testlights_arg1_0 =
   (`LH_C((`Point((`LH_P3(4.0, 3.0, 2.0)), (`LH_P3(0.288675, 0.288675, 0.288675)))), (`LH_C((`Point((`LH_P3(1.0, (0.0 -. 4.0), 4.0)), (`LH_P3(0.288675, 0.288675, 0.288675)))), (`LH_C((`Point((`LH_P3((0.0 -. 3.0), 1.0, 5.0)), (`LH_P3(0.288675, 0.288675, 0.288675)))), (`LH_N)))))));;
 let rec ray_lh _lh_ray_arg1_0 =
   (let rec lights_0 = (testlights_lh 0) in
-    (let rec _lh_matchIdent_1_3 = (((((camparams_lh lookfrom_lh) (lookat_lh 0)) (vup_lh 0)) fov_lh) (float_of_int _lh_ray_arg1_0)) in
+    (let rec _lh_matchIdent_1_3 = (((((camparams_lh lookfrom_lh) lookat_lh) vup_lh) fov_lh) (float_of_int _lh_ray_arg1_0)) in
       (match _lh_matchIdent_1_3 with
         | `LH_P3(_lh_ray_LH_P3_0_0, _lh_ray_LH_P3_1_0, _lh_ray_LH_P3_2_0) -> 
           (let rec f_3 = (fun i_1 j_0 -> 
-            (((((((tracepixel_lh (testspheres_lh 0)) lights_0) (float_of_int i_1)) (float_of_int j_0)) _lh_ray_LH_P3_0_0) _lh_ray_LH_P3_1_0) _lh_ray_LH_P3_2_0)) in
+            (((((((tracepixel_lh testspheres_lh) lights_0) (float_of_int i_1)) (float_of_int j_0)) _lh_ray_LH_P3_0_0) _lh_ray_LH_P3_1_0) _lh_ray_LH_P3_2_0)) in
             (let rec _lh_listcomp_fun_4 = (fun _lh_listcomp_fun_para_4 -> 
               (match _lh_listcomp_fun_para_4 with
                 | `LH_C(_lh_listcomp_fun_ls_h_4, _lh_listcomp_fun_ls_t_4) -> 
@@ -530,24 +548,6 @@ let rec ray_lh _lh_ray_arg1_0 =
               (_lh_listcomp_fun_4 ((enumFromTo_lh 0) (_lh_ray_arg1_0 - 1)))))
         | _ -> 
           (failwith "error"))));;
-let rec snd_lh _lh_snd_arg1_0 =
-  (match _lh_snd_arg1_0 with
-    | `LH_P2(_lh_snd_LH_P2_0_0, _lh_snd_LH_P2_1_0) -> 
-      _lh_snd_LH_P2_1_0
-    | _ -> 
-      (failwith "error"));;
-let rec hash_lh _lh_hash_arg1_0 =
-  (let rec u8_0 = (fun x_0 -> 
-    ((fun _lh_funcomp_x_0 -> 
-      (int_of_float ((fun x_1 -> 
-        (255.0 *. x_1)) _lh_funcomp_x_0))) x_0)) in
-    (((foldr_lh (fun rgb_0 acc_0 -> 
-      (let rec _lh_matchIdent_2 = rgb_0 in
-        (match _lh_matchIdent_2 with
-          | `LH_P3(_lh_hash_LH_P3_0_0, _lh_hash_LH_P3_1_0, _lh_hash_LH_P3_2_0) -> 
-            ((((u8_0 _lh_hash_LH_P3_0_0) + ((u8_0 _lh_hash_LH_P3_1_0) * 7)) + ((u8_0 _lh_hash_LH_P3_2_0) * 23)) + (acc_0 * 61))
-          | _ -> 
-            (failwith "error"))))) 0) _lh_hash_arg1_0));;
 let rec run_lh _lh_run_arg1_0 =
   (hash_lh ((map_lh snd_lh) (ray_lh _lh_run_arg1_0)));;
 let rec testSphere_nofib_lh _lh_testSphere_nofib_arg1_0 =

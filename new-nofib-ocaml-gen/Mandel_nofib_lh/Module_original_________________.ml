@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec enumFromTo_lh a_0 b_0 =
   (if (a_0 <= b_0) then
     (`LH_C(a_0, ((enumFromTo_lh (a_0 + 1)) b_0)))
@@ -116,5 +116,6 @@ let rec testMandel_nofib_lh _lh_testMandel_nofib_arg1_0 =
             (let rec screenY_0 = 80 in
               (let rec limit_0 = 75 in
                 (((((((mandelset_lh minx_0) miny_0) maxx_0) maxy_0) screenX_0) screenY_0) limit_0))))))));;
+let run () = 1 + (Obj.magic ((testMandel_nofib_lh 0)));
 end;;
 

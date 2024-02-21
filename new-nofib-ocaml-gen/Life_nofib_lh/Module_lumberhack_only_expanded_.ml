@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec map_lz_lh__d1 f_7 ls_9 =
   (lazy (match (Lazy.force ls_9) with
     | `LH_C(h_1_9, t_1_9) -> 
@@ -397,5 +397,6 @@ let rec generations_lh__d1 _lh_generations_arg1_0 =
       ((mappend_lh__d2 l_1) ((copy_lh__d1 _lh_generations_arg1_0) 0))) _lh_funcomp_x_5)))) ((mappend_lh__d1 start_lh__d1) ((copy_lh__d3 _lh_generations_arg1_0) ((copy_lh__d2 _lh_generations_arg1_0) 0))))));;
 let rec testLife_nofib_lh__d1 _lh_testLife_nofib_arg1_0 =
   (generations_lh__d1 _lh_testLife_nofib_arg1_0);;
+let run () = 1 + (Obj.magic ((testLife_nofib_lh__d1 15)));
 end;;
 

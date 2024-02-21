@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec testBoard_lh =
   (`LH_C((`LH_C((`Empty), (`LH_C((`O), (`LH_C((`Empty), (`LH_N))))))), (`LH_C((`LH_C((`Empty), (`LH_C((`X), (`LH_C((`Empty), (`LH_N))))))), (`LH_C((`LH_C((`Empty), (`LH_C((`Empty), (`LH_C((`Empty), (`LH_N))))))), (`LH_N)))))));;
 let rec min'_lh _lh_min'_arg1_0 _lh_min'_arg2_0 =
@@ -698,5 +698,6 @@ let rec length_lh ls_2 =
       0);;
 let rec testMinimax_nofib_lh _lh_testMinimax_nofib_arg1_0 =
   (length_lh (prog_lh _lh_testMinimax_nofib_arg1_0));;
+let run () = 1 + (Obj.magic ((testMinimax_nofib_lh (`LH_C('1', (`LH_C('8', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_N))))))))))))))));
 end;;
 

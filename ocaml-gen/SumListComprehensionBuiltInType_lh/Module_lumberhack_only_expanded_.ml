@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec sum_lh__d1 _lh_sum_arg1_0 =
   (match _lh_sum_arg1_0 with
     | `LH_N -> 
@@ -36,5 +36,6 @@ let rec testSumListComprehensionBuiltInType_lh__d1 _lh_testSumListComprehensionB
       | `LH_N -> 
         (`LH_N))) in
     (_lh_listcomp_fun_0 ((enumFromTo_lh__d1 1) _lh_testSumListComprehensionBuiltInType_arg1_0))));;
+let run () = 1 + (Obj.magic ((testSumListComprehensionBuiltInType_lh__d1 1000)));
 end;;
 

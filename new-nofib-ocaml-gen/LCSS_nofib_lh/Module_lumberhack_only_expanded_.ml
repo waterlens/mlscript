@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec enumFromThenTo_lh__d2 a_6 t_1_4 b_0 =
   (if (a_6 <= b_0) then
     (`LH_C(a_6, (((enumFromThenTo_lh__d2 t_1_4) ((2 * t_1_4) - a_6)) b_0)))
@@ -336,5 +336,6 @@ let rec lcssMain_lh__d1 _lh_lcssMain_arg1_0 _lh_lcssMain_arg2_0 _lh_lcssMain_arg
   ((lcss_lh__d1 (((enumFromThenTo_lh__d1 _lh_lcssMain_arg1_0) _lh_lcssMain_arg2_0) _lh_lcssMain_arg3_0)) (((enumFromThenTo_lh__d2 _lh_lcssMain_arg4_0) _lh_lcssMain_arg5_0) _lh_lcssMain_arg6_0));;
 let rec testLCSS_nofib_lh__d1 _lh_testLCSS_nofib_arg1_0 =
   ((((((lcssMain_lh__d1 1) 2) 60) 30) 31) 90);;
+let run () = 1 + (Obj.magic ((testLCSS_nofib_lh__d1 0)));
 end;;
 

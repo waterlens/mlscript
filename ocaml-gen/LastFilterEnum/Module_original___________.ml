@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original___________(LH_Dum: sig end) = struct
+module Module_original___________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec filter ls_0 f_0 =
   (match ls_0 with
     | `C(h_0, t_0) -> 
@@ -32,5 +32,6 @@ let rec enumFromTo a_0 b_0 =
 let rec testLastFilterEnum n_0 =
   (lastDrive ((filter ((enumFromTo 1) n_0)) (fun x_0 -> 
     (x_0 < 1000))));;
+let run () = 1 + (Obj.magic ((testLastFilterEnum 500000)));
 end;;
 

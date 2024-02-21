@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec map_lh__d1 f_1 ls_1 =
   (match ls_1 with
     | `LH_C(h_1, t_1) -> 
@@ -693,5 +693,6 @@ let rec all_lh__d1 _lh_all_arg1_0 _lh_all_arg2_0 =
       (failwith "error"));;
 let rec testBoyer_nofib_lh__d1 _lh_testBoyer_nofib_arg1_0 =
   ((all_lh__d1 test0_lh__d1) ((replicate_lh__d1 _lh_testBoyer_nofib_arg1_0) (`Var((`X)))));;
+let run () = 1 + (Obj.magic ((testBoyer_nofib_lh__d1 5)));
 end;;
 

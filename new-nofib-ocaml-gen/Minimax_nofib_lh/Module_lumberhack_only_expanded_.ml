@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec length_lh__d1 ls_8 =
   (match ls_8 with
     | `LH_C(h_3_2, t_3_2) -> 
@@ -1042,5 +1042,6 @@ let rec prog_lh__d1 _lh_prog_arg1_0 =
       ((mappend_lh__d2 (`LH_C('O', (`LH_C('X', (`LH_C('O', (`LH_C('|', (`LH_N)))))))))) (concat_lh__d1 ((map_lh__d1 showMove_lh__d1) game_0)))));;
 let rec testMinimax_nofib_lh__d1 _lh_testMinimax_nofib_arg1_0 =
   (length_lh__d1 (prog_lh__d1 _lh_testMinimax_nofib_arg1_0));;
+let run () = 1 + (Obj.magic ((testMinimax_nofib_lh__d1 (`LH_C('1', (`LH_C('8', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_N))))))))))))))));
 end;;
 

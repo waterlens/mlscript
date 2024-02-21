@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_pop_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec sum_lh__d1 _lh_sum_arg1_0 =
   (_lh_sum_arg1_0 99);;
 let rec enumFromTo_lh__d2 a_0 b_0 _lh_popOutId_0_0 _lh_popOutId_1_0 _lh_popOutId_2_0 _lh_popOutId_3_0 =
@@ -30,5 +30,6 @@ let rec testSumListComprehensionBuiltInType_lh__d1 _lh_testSumListComprehensionB
   (sum_lh__d1 (let rec _lh_listcomp_fun_7 = (fun _lh_listcomp_fun_para_1 -> 
     (_lh_listcomp_fun_para_1 _lh_listcomp_fun_7)) in
     (_lh_listcomp_fun_7 ((enumFromTo_lh__d1 1) _lh_testSumListComprehensionBuiltInType_arg1_0))));;
+let run () = 1 + (Obj.magic ((testSumListComprehensionBuiltInType_lh__d1 1000)));
 end;;
 

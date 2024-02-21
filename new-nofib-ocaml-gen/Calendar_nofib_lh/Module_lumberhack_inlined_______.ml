@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec monthNames_lh__d1 =
   (let rec _lh_zip3_LH_C_1_0 = (let rec _lh_zip3_LH_C_1_1 = (let rec _lh_zip3_LH_C_1_2 = (let rec _lh_zip3_LH_C_1_3 = (let rec _lh_zip3_LH_C_1_4 = (let rec _lh_zip3_LH_C_1_5 = (let rec _lh_zip3_LH_C_1_6 = (let rec _lh_zip3_LH_C_1_7 = (let rec _lh_zip3_LH_C_1_8 = (let rec _lh_zip3_LH_C_1_9 = (let rec _lh_zip3_LH_C_1_1_0 = (let rec _lh_zip3_LH_C_1_1_1 = (fun _lh_zip3_arg2_0 _lh_zip3_arg3_0 f_1_5 -> 
     (`LH_N)) in
@@ -695,5 +695,6 @@ let rec testCalendar_nofib_lh__d1 _lh_testCalendar_nofib_arg1_0 =
           (fun ys_3 -> 
             (`LH_C(h_2, (t_2 ys_3)))))))
     in (unlines_lh__d1 ((banner_0 n_0) (body_0 n_0))))))) ((enumFromTo_lh__d1 1993) (1993 + _lh_testCalendar_nofib_arg1_0)));;
+let run () = 1 + (Obj.magic ((testCalendar_nofib_lh__d1 100)));
 end;;
 

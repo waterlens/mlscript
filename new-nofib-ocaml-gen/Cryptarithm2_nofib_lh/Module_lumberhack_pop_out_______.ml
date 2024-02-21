@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_pop_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec mappend_lh__d1 xs_3 ys_3 =
   (xs_3 ys_3);;
 let rec length_lh__d1 ls_1_1 =
@@ -627,5 +627,6 @@ let rec testCryptarithm2_nofib_lh__d1 _lh_testCryptarithm2_nofib_arg1_0 =
   else
     (`LH_N))), (`LH_N))))))))))))) in
     ((puzzle_lh__d1 args_0) (`LH_C('N', (`LH_C('I', (`LH_C('N', (`LH_C('E', (`LH_C('T', (`LH_C('Y', (`LH_N)))))))))))))));;
+let run () = 1 + (Obj.magic ((testCryptarithm2_nofib_lh__d1 1500)));
 end;;
 

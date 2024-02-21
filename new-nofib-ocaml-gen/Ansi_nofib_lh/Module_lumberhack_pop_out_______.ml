@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_pop_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec foldr_lh__d1 f_1 i_0 ls_2 =
   ((ls_2 f_1) i_0);;
 let rec cls_lh__d1 =
@@ -439,5 +439,6 @@ let rec testAnsi_nofib_lh__d1 _lh_testAnsi_nofib_arg1_0 =
   ((((foldr_lh__d1 (fun f_0 g_0 _lh_funcomp_x_0 -> 
     (f_0 (g_0 _lh_funcomp_x_0)))) (fun x_0 -> 
     x_0)) ((copy_lh__d1 _lh_testAnsi_nofib_arg1_0) program_lh__d1)) (`LH_C('t', (`LH_C('e', (`LH_C('s', (`LH_C('t', (`LH_C('t', (`LH_C('e', (`LH_C('s', (`LH_C('t', (`LH_C('t', (`LH_C('e', (`LH_C('s', (`LH_C('t', (`LH_N))))))))))))))))))))))))));;
+let run () = 1 + (Obj.magic ((testAnsi_nofib_lh__d1 8)));
 end;;
 

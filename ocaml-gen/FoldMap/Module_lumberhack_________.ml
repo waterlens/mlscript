@@ -3,7 +3,7 @@
 (* lumberhack *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_________(LH_Dum: sig end) = struct
+module Module_lumberhack_________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec enumFromTo a_0 b_0 =
   (if (a_0 <= b_0) then
     (`C(a_0, ((enumFromTo (a_0 + 1)) b_0)))
@@ -25,5 +25,6 @@ let rec testFoldMap n_0 =
   (((foldl (fun i_0 x_0 -> 
     (i_0 + x_0))) 0) ((map (fun x_1 -> 
     (x_1 * x_1))) ((enumFromTo 1) n_0)));;
+let run () = 1 + (Obj.magic ((testFoldMap 300000)));
 end;;
 

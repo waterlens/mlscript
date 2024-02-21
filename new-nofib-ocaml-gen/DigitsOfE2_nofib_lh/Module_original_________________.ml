@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec head_lz_lh ls_1 =
   (match (Lazy.force ls_1) with
     | `LH_C(h_1, t_1) -> 
@@ -87,5 +87,6 @@ let rec e_lh _lh_e_arg1_0 =
         (10 * a_1))) _lh_funcomp_x_3))) (tail_lz_lh _lh_funcomp_x_2)))) (lazy (`LH_C(2, ((enumFromThen_lh 1) 1)))))))));;
 let rec testDigitsOfE2_nofib_lh _lh_testDigitsOfE2_nofib_arg1_0 =
   (e_lh _lh_testDigitsOfE2_nofib_arg1_0);;
+let run () = 1 + (Obj.magic ((testDigitsOfE2_nofib_lh 500)));
 end;;
 

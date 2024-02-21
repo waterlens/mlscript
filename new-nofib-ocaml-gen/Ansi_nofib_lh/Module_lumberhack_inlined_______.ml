@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec cls_lh__d1 =
   (`LH_C('L', (`LH_N)));;
 let rec mappend_lh__d3 xs_1 ys_4_5 =
@@ -401,5 +401,6 @@ let rec testAnsi_nofib_lh__d1 _lh_testAnsi_nofib_arg1_0 =
   (((((copy_lh__d1 _lh_testAnsi_nofib_arg1_0) program_lh__d1) (fun f_0 g_0 _lh_funcomp_x_0 -> 
     (f_0 (g_0 _lh_funcomp_x_0)))) (fun x_0 -> 
     x_0)) (`LH_C('t', (`LH_C('e', (`LH_C('s', (`LH_C('t', (`LH_C('t', (`LH_C('e', (`LH_C('s', (`LH_C('t', (`LH_C('t', (`LH_C('e', (`LH_C('s', (`LH_C('t', (`LH_N))))))))))))))))))))))))));;
+let run () = 1 + (Obj.magic ((testAnsi_nofib_lh__d1 8)));
 end;;
 

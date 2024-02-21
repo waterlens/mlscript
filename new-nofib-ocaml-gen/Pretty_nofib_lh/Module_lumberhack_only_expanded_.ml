@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec length_lh__d3 ls_2 =
   (match ls_2 with
     | `LH_C(h_1, t_1) -> 
@@ -471,5 +471,6 @@ let rec ppShow_lh__d1 _lh_ppShow_arg1_0 _lh_ppShow_arg2_0 =
 let rec testPretty_nofib_lh__d1 _lh_testPretty_nofib_arg1_0 =
   (let rec pretty_stuff_0 = (ppAboves_lh__d1 (`LH_C((ppBesides_lh__d1 (`LH_C((ppInt_lh__d1 (0 - 42)), (`LH_C((ppChar_lh__d1 '@'), (`LH_C((ppStr_lh__d2 (`LH_C('T', (`LH_C('h', (`LH_C('i', (`LH_C('s', (`LH_C(' ', (`LH_C('i', (`LH_C('s', (`LH_C(' ', (`LH_C('a', (`LH_C(' ', (`LH_C('s', (`LH_C('t', (`LH_C('r', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_N)))))))))))))))))))))))))))))))))), (`LH_N)))))))), (`LH_C(pp'SP_lh__d1, (`LH_C((((ppHang_lh__d1 (ppStr_lh__d3 (`LH_C('T', (`LH_C('h', (`LH_C('i', (`LH_C('s', (`LH_C(' ', (`LH_C('i', (`LH_C('s', (`LH_C(' ', (`LH_C('t', (`LH_C('h', (`LH_C('e', (`LH_C(' ', (`LH_C('l', (`LH_C('a', (`LH_C('b', (`LH_C('e', (`LH_C('l', (`LH_N))))))))))))))))))))))))))))))))))))) 8) (ppCat_lh__d1 ((copy_lh__d1 50) (ppStr_lh__d1 (`LH_C('x', (`LH_C('x', (`LH_C('x', (`LH_C('x', (`LH_C('x', (`LH_N))))))))))))))), (`LH_N)))))))) in
     ((mappend_lh__d1 ((ppShow_lh__d1 80) pretty_stuff_0)) (`LH_C('|', (`LH_N)))));;
+let run () = 1 + (Obj.magic ((testPretty_nofib_lh__d1 0)));
 end;;
 

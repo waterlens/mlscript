@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec zip_nl_lz_lh__d1 xs_5 ys_5 =
   (match xs_5 with
     | `LH_C(hx_4, tx_4) -> 
@@ -168,5 +168,6 @@ let rec bernoulli_lh__d1 _lh_bernoulli_arg1_0 =
             (_lh_listcomp_fun_0 ((zip_nl_lz_lh__d1 ((enumFromTo_lh__d1 2) _lh_bernoulli_arg1_0)) pascal_lh__d1))))))));;
 let rec testBernoulli_nofib_lh__d1 _lh_testBernoulli_nofib_arg1_0 =
   (bernoulli_lh__d1 _lh_testBernoulli_nofib_arg1_0);;
+let run () = 1 + (Obj.magic ((testBernoulli_nofib_lh__d1 1500)));
 end;;
 

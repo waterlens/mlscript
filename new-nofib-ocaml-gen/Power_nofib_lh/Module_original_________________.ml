@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec dotMult_lh _lh_dotMult_arg1_0 _lh_dotMult_arg2_0 =
   (lazy (let rec _lh_matchIdent_1_0 = (Lazy.force _lh_dotMult_arg2_0) in
     (match _lh_matchIdent_1_0 with
@@ -300,5 +300,6 @@ let rec revert_lh _lh_revert_arg1_0 =
         (failwith "error"))));;
 let rec testPower_nofib_lh _lh_testPower_nofib_arg1_0 =
   (`LH_C(((extract_lh _lh_testPower_nofib_arg1_0) ((minusPs_lh (sinx_lh 0)) (sqrtPs_lh ((minusPs_lh (fromIntegerPs_lh 1)) ((powerPs_lh (cosx_lh 0)) 2))))), (`LH_C(((extract_lh _lh_testPower_nofib_arg1_0) ((minusPs_lh ((divPs_lh (sinx_lh 0)) (cosx_lh 0))) (revert_lh (integral_lh ((divPs_lh (fromIntegerPs_lh 1)) ((addPs_lh (fromIntegerPs_lh 1)) ((powerPs_lh x_lh) 2))))))), (`LH_C(((extract_lh _lh_testPower_nofib_arg1_0) ts_lh), (`LH_C(((extract_lh _lh_testPower_nofib_arg1_0) tree_lh), (`LH_N)))))))));;
+let run () = 1 + (Obj.magic ((testPower_nofib_lh 14)));
 end;;
 

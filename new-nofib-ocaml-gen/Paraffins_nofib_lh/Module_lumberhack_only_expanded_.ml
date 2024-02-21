@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec length_lh__d2 ls_8 =
   (match ls_8 with
     | `LH_C(h_8, t_8) -> 
@@ -534,5 +534,6 @@ let rec testParaffins_nofib_lh__d1 _lh_testParaffins_nofib_arg1_0 =
       | `LH_N -> 
         (`LH_N))) in
     (_lh_listcomp_fun_3_6 (`LH_C((radical_generator_lh__d1 _lh_testParaffins_nofib_arg1_0), (`LH_N))))), (bcp_until_lh__d1 _lh_testParaffins_nofib_arg1_0), (ccp_until_lh__d1 _lh_testParaffins_nofib_arg1_0), (paraffins_until_lh__d1 _lh_testParaffins_nofib_arg1_0)));;
+let run () = 1 + (Obj.magic ((testParaffins_nofib_lh__d1 16)));
 end;;
 

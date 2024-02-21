@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec start_lh__d1 =
   (let rec t_3 = (let rec t_4 = (let rec t_5 = (let rec t_6 = (let rec t_7 = (let rec t_8 = (let rec t_9 = (let rec t_1_0 = (let rec t_1_1 = (let rec t_1_2 = (let rec t_1_3 = (let rec t_1_4 = (let rec t_1_5 = (let rec t_1_6 = (let rec t_1_7 = (fun ys_3 -> 
     ys_3) in
@@ -889,5 +889,6 @@ let rec generations_lh__d1 _lh_generations_arg1_0 =
     (`LH_N)));;
 let rec testLife_nofib_lh__d1 _lh_testLife_nofib_arg1_0 =
   (generations_lh__d1 _lh_testLife_nofib_arg1_0);;
+let run () = 1 + (Obj.magic ((testLife_nofib_lh__d1 15)));
 end;;
 

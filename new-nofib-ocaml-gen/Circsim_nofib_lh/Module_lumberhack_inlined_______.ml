@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec outports_lh__d2 _lh_outports_arg1_1 =
   (match _lh_outports_arg1_1 with
     | `PS(_lh_outports_PS_0_1, _lh_outports_PS_1_1, _lh_outports_PS_2_1, _lh_outports_PS_3_1, _lh_outports_PS_4_1) -> 
@@ -1474,5 +1474,6 @@ let rec run_lh__d1 _lh_run_arg1_0 _lh_run_arg2_0 =
         ((circuit_simulate_lh__d1 cycles_0) example_0))));;
 let rec testCircsim_nofib_lh__d1 _lh_testCircsim_nofib_arg1_0 =
   ((run_lh__d1 8) _lh_testCircsim_nofib_arg1_0);;
+let run () = 1 + (Obj.magic ((testCircsim_nofib_lh__d1 8)));
 end;;
 

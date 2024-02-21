@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original___________(LH_Dum: sig end) = struct
+module Module_original___________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec flip t_0 =
   (match t_0 with
     | `T(l_0, r_0) -> 
@@ -18,5 +18,6 @@ let rec genTree n_0 i_0 =
     (`N(i_0))
   else
     (`T(((genTree (n_0 - 1)) i_0), ((genTree (n_0 - 1)) (i_0 + 1)))));;
+let run () = 1 + (Obj.magic ((testFlipFlip ((genTree 17) 0))));
 end;;
 

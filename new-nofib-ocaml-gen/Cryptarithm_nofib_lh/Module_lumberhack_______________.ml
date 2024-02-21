@@ -3,7 +3,7 @@
 (* lumberhack *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_______________(LH_Dum: sig end) = struct
+module Module_lumberhack_______________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec permutations_lh__d1 _lh_permutations_arg1_0 =
   (_lh_permutations_arg1_0 99);;
 let rec addj_lh__d1 _lh_addj_arg1_0 _lh_addj_arg2_0 =
@@ -126,5 +126,6 @@ let rec testCryptarithm_nofib_lh__d1 _lh_testCryptarithm_nofib_arg1_0 =
   ((map_lh__d1 (fun i_0 -> 
     (let rec p0_0 = ((take_lh__d1 10) ((enumFromTo_lh__d2 0) (9 + i_0))) in
       ((filter_lh__d1 condition_lh__d1) (permutations_lh__d1 p0_0))))) ((enumFromTo_lh__d1 1) _lh_testCryptarithm_nofib_arg1_0));;
+let run () = 1 + (Obj.magic ((testCryptarithm_nofib_lh__d1 1)));
 end;;
 

@@ -3,7 +3,7 @@
 (* lumberhack *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_______________(LH_Dum: sig end) = struct
+module Module_lumberhack_______________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec append_lh__d2 _lh_append_arg1_0 _lh_append_arg2_0 =
   (_lh_append_arg1_0 _lh_append_arg2_0);;
 let rec append_lh__d1 _lh_append_arg1_1 _lh_append_arg2_5 =
@@ -64,5 +64,6 @@ let rec nsoln_lh__d1 _lh_nsoln_arg1_0 =
   (length_lh__d1 ((gen_lh__d1 _lh_nsoln_arg1_0) _lh_nsoln_arg1_0));;
 let rec testQueenUsingFlatMapBuiltInType_lh__d1 _lh_testQueenUsingFlatMapBuiltInType_arg1_0 =
   (nsoln_lh__d1 _lh_testQueenUsingFlatMapBuiltInType_arg1_0);;
+let run () = 1 + (Obj.magic ((testQueenUsingFlatMapBuiltInType_lh__d1 11)));
 end;;
 

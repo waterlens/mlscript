@@ -3,7 +3,7 @@
 (* lumberhack *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_______________(LH_Dum: sig end) = struct
+module Module_lumberhack_______________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec foldl_lh__d1 f_7 i_7 ls_5 =
   ((ls_5 f_7) i_7);;
 let rec foldl_lh__d2 f_3 i_3 ls_0 =
@@ -310,5 +310,6 @@ let rec concat_lh__d1 lss_0 =
       (`LH_N));;
 let rec testGenRegexs_nofib_lh__d1 _lh_testGenRegexs_nofib_arg1_0 =
   (concat_lh__d1 (expand_lh__d1 _lh_testGenRegexs_nofib_arg1_0));;
+let run () = 1 + (Obj.magic ((testGenRegexs_nofib_lh__d1 (`LH_C('[', (`LH_C('a', (`LH_C('-', (`LH_C('j', (`LH_C(']', (`LH_C('[', (`LH_C('a', (`LH_C('-', (`LH_C('j', (`LH_C(']', (`LH_C('[', (`LH_C('a', (`LH_C('-', (`LH_C('j', (`LH_C(']', (`LH_C('[', (`LH_C('0', (`LH_C('-', (`LH_C('9', (`LH_C(']', (`LH_N))))))))))))))))))))))))))))))))))))))))))));
 end;;
 

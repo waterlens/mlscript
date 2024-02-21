@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original___________(LH_Dum: sig end) = struct
+module Module_original___________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec foldl f_1 s_0 ls_1 =
   (match ls_1 with
     | `C(h_1, t_1) -> 
@@ -24,5 +24,6 @@ let rec testFoldMap n_0 =
   (((foldl (fun i_0 x_0 -> 
     (i_0 + x_0))) 0) ((map (fun x_1 -> 
     (x_1 * x_1))) ((enumFromTo 1) n_0)));;
+let run () = 1 + (Obj.magic ((testFoldMap 300000)));
 end;;
 

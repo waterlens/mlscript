@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec indent_lh__d2 _lh_indent_arg1_0 =
   (if (_lh_indent_arg1_0 <= 0) then
     (`LH_N)
@@ -20330,5 +20330,6 @@ let rec testLastPiece_nofib_lh__d1 _lh_testLastPiece_nofib_arg1_0 =
               (failwith "error")))))) emptyBoard_lh__d1) (`LH_P2(1, 1))) 'a') 99) in
     (let rec solutions_0 = ((((search_lh__d1 (`LH_P2(1, 2))) (`Female)) initialBoard_0) (initialPieces_lh__d1 0)) in
       (printDoc_0 (display_0 solutions_0))));;
+let run () = 1 + (Obj.magic ((testLastPiece_nofib_lh__d1 0)));
 end;;
 

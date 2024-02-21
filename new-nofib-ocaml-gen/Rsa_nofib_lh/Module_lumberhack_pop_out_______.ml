@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_pop_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec sqr_lh__d1 _lh_sqr_arg1_0 =
   (_lh_sqr_arg1_0 * _lh_sqr_arg1_0);;
 let rec even_lh__d1 _lh_even_arg1_0 =
@@ -105,5 +105,6 @@ let rec copy_lh__d1 _lh_copy_arg1_0 _lh_copy_arg2_0 =
       (`LH_C(_lh_copy_arg2_0, ((copy_lh__d1 (_lh_copy_arg1_0 - 1)) _lh_copy_arg2_0))));;
 let rec testRsa_nofib_lh__d1 _lh_testRsa_nofib_arg1_0 =
   (((encrypt_lh__d1 6367) 5189) ((copy_lh__d1 _lh_testRsa_nofib_arg1_0) 'l'));;
+let run () = 1 + (Obj.magic ((testRsa_nofib_lh__d1 50520)));
 end;;
 

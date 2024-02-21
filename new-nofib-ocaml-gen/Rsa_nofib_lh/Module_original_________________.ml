@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec copy_lh _lh_copy_arg1_0 _lh_copy_arg2_0 =
   (match _lh_copy_arg1_0 with
     | 0 -> 
@@ -97,5 +97,6 @@ let rec encrypt_lh _lh_encrypt_arg1_0 _lh_encrypt_arg2_0 _lh_funcomp_x_0 =
         (string_of_int (((power_lh _lh_encrypt_arg2_0) _lh_encrypt_arg1_0) _lh_funcomp_x_3))) (code_lh _lh_funcomp_x_2)))) _lh_funcomp_x_1))) ((collect_lh (size_lh _lh_encrypt_arg1_0)) _lh_funcomp_x_0));;
 let rec testRsa_nofib_lh _lh_testRsa_nofib_arg1_0 =
   (((encrypt_lh 6367) 5189) ((copy_lh _lh_testRsa_nofib_arg1_0) 'l'));;
+let run () = 1 + (Obj.magic ((testRsa_nofib_lh 50520)));
 end;;
 

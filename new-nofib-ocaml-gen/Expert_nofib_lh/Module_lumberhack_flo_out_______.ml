@@ -3,7 +3,7 @@
 (* lumberhack_flo_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_flo_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_flo_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec zip_lh__d1 xs_1 ys_3_2 =
   (match xs_1 with
     | `LH_C(hx_0, tx_0) -> 
@@ -5108,5 +5108,6 @@ let rec testExpert_nofib_lh__d1 _lh_testExpert_nofib_arg1_0 =
             (let rec h_5_3 = '|' in
               (fun ys_5_8 -> 
                 (`LH_C(h_5_3, (t_5_3 ys_5_8))))))) (((display_lh__d1 ((results_1 animals_0) _lh_funcomp_x_1)) (vars_lh__d1 (problem_1 animals_0))) (replies_1 _lh_funcomp_x_1)))))) ((take_lh__d1 (_lh_testExpert_nofib_arg1_0 + 9999)) _lh_funcomp_x_0))) contents_0)));;
+let run () = 1 + (Obj.magic ((testExpert_nofib_lh__d1 3)));
 end;;
 

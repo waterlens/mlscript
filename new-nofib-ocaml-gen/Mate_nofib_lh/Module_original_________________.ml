@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec opponent_lh _lh_opponent_arg1_0 =
   (match _lh_opponent_arg1_0 with
     | `Black -> 
@@ -1188,5 +1188,6 @@ let rec testMate_nofib_lh _lh_testMate_nofib_arg1_0 =
                 (failwith "error"))
           | _ -> 
             (failwith "error")))));;
+let run () = 1 + (Obj.magic ((testMate_nofib_lh 0)));
 end;;
 

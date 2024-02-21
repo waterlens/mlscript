@@ -3,7 +3,7 @@
 (* lumberhack *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_______________(LH_Dum: sig end) = struct
+module Module_lumberhack_______________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec fromInteger_lh__d2 _lh_fromInteger_arg1_1 =
   (if (_lh_fromInteger_arg1_1 < 1) then
     (`Z)
@@ -45,5 +45,6 @@ let rec int_lh__d1 _lh_int_arg1_0 =
       (failwith "error"));;
 let rec testExp38_nofib_lh__d1 _lh_testExp38_nofib_arg1_0 =
   (int_lh__d1 ((p_lh__d1 (fromInteger_lh__d2 3)) (fromInteger_lh__d1 _lh_testExp38_nofib_arg1_0)));;
+let run () = 1 + (Obj.magic ((testExp38_nofib_lh__d1 8)));
 end;;
 

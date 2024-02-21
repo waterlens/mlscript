@@ -3,7 +3,7 @@
 (* lumberhack *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_______________(LH_Dum: sig end) = struct
+module Module_lumberhack_______________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec filter_lh__d1 f_3_5 ls_2_1 =
   (ls_2_1 f_3_5);;
 let rec break_lh__d1 _lh_break_arg1_1 _lh_break_arg2_1 =
@@ -2591,5 +2591,6 @@ let rec testMate_nofib_lh__d1 _lh_testMate_nofib_arg1_0 =
     (let rec bdcn_0 = (readProblem_lh__d1 input_0) in
       (let rec _lh_matchIdent_1 = bdcn_0 in
         (_lh_matchIdent_1 99))));;
+let run () = 1 + (Obj.magic ((testMate_nofib_lh__d1 0)));
 end;;
 

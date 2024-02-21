@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int val run_manual: unit -> int end = struct
 let rec enumFromTo_lh a_0 b_0 =
   (if (a_0 <= b_0) then
     (`LH_C(a_0, ((enumFromTo_lh (a_0 + 1)) b_0)))
@@ -62,5 +62,19 @@ let rec summ_lh _lh_summ_arg1_0 =
         (failwith "error")));;
 let rec testSumFlatten_lh _lh_testSumFlatten_arg1_0 =
   (summ_lh (flatten_lh _lh_testSumFlatten_arg1_0));;
+let run () = 1 + (Obj.magic ((testSumFlatten_lh (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
+  (match _lh_listcomp_fun_para_0 with
+    | `LH_C(_lh_listcomp_fun_ls_h_0, _lh_listcomp_fun_ls_t_0) -> 
+      (`LH_C(((enumFromTo_lh 1) _lh_listcomp_fun_ls_h_0), (_lh_listcomp_fun_0 _lh_listcomp_fun_ls_t_0)))
+    | `LH_N -> 
+      (`LH_N))) in
+  (_lh_listcomp_fun_0 ((enumFromTo_lh 1) 1000))))));
+let run_manual () = 1 + (Obj.magic ((testManual_lh (let rec _lh_listcomp_fun_1 = (fun _lh_listcomp_fun_para_1 -> 
+  (match _lh_listcomp_fun_para_1 with
+    | `LH_C(_lh_listcomp_fun_ls_h_1, _lh_listcomp_fun_ls_t_1) -> 
+      (`LH_C(((enumFromTo_lh 1) _lh_listcomp_fun_ls_h_1), (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_1)))
+    | `LH_N -> 
+      (`LH_N))) in
+  (_lh_listcomp_fun_1 ((enumFromTo_lh 1) 1000))))));
 end;;
 

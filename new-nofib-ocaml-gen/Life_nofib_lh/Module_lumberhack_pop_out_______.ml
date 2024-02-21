@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_pop_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec map_lz_lh__d1 f_0 ls_0 =
   (lazy ((Lazy.force ls_0) f_0));;
 let rec mappend_lh__d1 xs_0 ys_0 =
@@ -739,5 +739,6 @@ let rec generations_lh__d1 _lh_generations_arg1_0 =
       ((mappend_lh__d2 l_1) ((copy_lh__d1 _lh_generations_arg1_0) 0))) _lh_funcomp_x_3)))) ((mappend_lh__d1 start_lh__d1) ((copy_lh__d3 _lh_generations_arg1_0) ((copy_lh__d2 _lh_generations_arg1_0) 0))))));;
 let rec testLife_nofib_lh__d1 _lh_testLife_nofib_arg1_0 =
   (generations_lh__d1 _lh_testLife_nofib_arg1_0);;
+let run () = 1 + (Obj.magic ((testLife_nofib_lh__d1 15)));
 end;;
 

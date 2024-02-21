@@ -3,7 +3,7 @@
 (* lumberhack_flo_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_flo_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_flo_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec max_lh__d1 _lh_max_arg1_0 _lh_max_arg2_0 =
   (if (_lh_max_arg1_0 > _lh_max_arg2_0) then
     _lh_max_arg1_0
@@ -152,5 +152,13 @@ let rec make_lh__d1 _lh_make_arg1_1 _lh_make_arg2_1 =
                     (_lh_check'_arg2_8 - _lh_check'_Node_0_3))) _lh_check'_arg1_8)) (not _lh_check'_arg1_8)))))))));;
 let rec minN_lh__d2 =
   4;;
+let run () = 1 + (Obj.magic ((let rec maxN_0 = ((max_lh__d1 (minN_lh__d1 + 2)) 14) in
+  (let rec stretchN_0 = (maxN_0 + 1) in
+    (let rec long_0 = ((make_lh__d1 0) maxN_0) in
+      (let rec c_0 = (check_lh__d1 ((make_lh__d2 0) stretchN_0)) in
+        (let rec vs_0 = ((depth_lh__d1 minN_lh__d2) maxN_0) in
+          (`LH_P2((vs_0 (fun m_d_i_0 -> 
+            (let rec _lh_matchIdent_0 = m_d_i_0 in
+              (_lh_matchIdent_0 99)))), (check_lh__d2 long_0))))))))));
 end;;
 

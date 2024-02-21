@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_pop_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec fst_lh__d4 _lh_fst_arg1_0 =
   (match _lh_fst_arg1_0 with
     | `LH_P2(_lh_fst_LH_P2_0_0, _lh_fst_LH_P2_1_0) -> 
@@ -2038,5 +2038,6 @@ let rec testRewrite_nofib_lh__d1 _lh_testRewrite_nofib_arg1_0 =
             (fun f_2_8 -> 
               (`LH_C((f_2_8 h_2_1), ((map_lh__d2 f_2_8) t_2_4)))))))) in
           ((eqExpr_lh__d2 ((simplify_lh__d4 (super_reduce_0 group_completion_0)) (parse_0 _lh_result_LH_P2_0_0))) (parse_0 _lh_result_LH_P2_1_0))))))));;
+let run () = 1 + (Obj.magic ((testRewrite_nofib_lh__d1 50)));
 end;;
 

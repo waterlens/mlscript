@@ -3,7 +3,7 @@
 (* lumberhack *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_______________(LH_Dum: sig end) = struct
+module Module_lumberhack_______________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec map_lz_lh__d1 f_0 ls_0 =
   (lazy ((Lazy.force ls_0) f_0));;
 let rec atIndex_lz_lh__d1 n_0 ls_1 =
@@ -54,5 +54,6 @@ let rec prime_lh__d1 _lh_prime_arg1_0 =
   ((atIndex_lz_lh__d1 _lh_prime_arg1_0) ((map_lz_lh__d1 head_lh__d1) ((iterate_lh__d1 the_filter_lh__d1) ((enumFromTo_lh__d1 2) (_lh_prime_arg1_0 * _lh_prime_arg1_0)))));;
 let rec testPrime_nofib_lh__d1 _lh_testPrime_nofib_arg1_0 =
   (prime_lh__d1 _lh_testPrime_nofib_arg1_0);;
+let run () = 1 + (Obj.magic ((testPrime_nofib_lh__d1 100)));
 end;;
 

@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec enumFromTo a_0 b_0 =
   (if (a_0 <= b_0) then
     (`C(a_0, ((enumFromTo (a_0 + 1)) b_0)))
@@ -20,5 +20,6 @@ let rec testMapmapLet ls_1 =
   ((map (fun x_0 -> 
     (x_0 + 1))) ((map (fun x_1 -> 
     (x_1 * x_1))) ls_1));;
+let run () = 1 + (Obj.magic ((testMapmapLet ((enumFromTo 1) 100000))));
 end;;
 

@@ -3,7 +3,7 @@
 (* lumberhack_flo_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_flo_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_flo_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec drop_lh__d2 _lh_drop_arg1_2 _lh_drop_arg2_2 =
   (match _lh_drop_arg2_2 with
     | `LH_C(_lh_drop_LH_C_0_2, _lh_drop_LH_C_1_2) -> 
@@ -324,5 +324,6 @@ let rec lcssMain_lh__d1 _lh_lcssMain_arg1_0 _lh_lcssMain_arg2_0 _lh_lcssMain_arg
   ((lcss_lh__d1 (((enumFromThenTo_lh__d1 _lh_lcssMain_arg1_0) _lh_lcssMain_arg2_0) _lh_lcssMain_arg3_0)) (((enumFromThenTo_lh__d2 _lh_lcssMain_arg4_0) _lh_lcssMain_arg5_0) _lh_lcssMain_arg6_0));;
 let rec testLCSS_nofib_lh__d1 _lh_testLCSS_nofib_arg1_0 =
   ((((((lcssMain_lh__d1 1) 2) 60) 30) 31) 90);;
+let run () = 1 + (Obj.magic ((testLCSS_nofib_lh__d1 0)));
 end;;
 

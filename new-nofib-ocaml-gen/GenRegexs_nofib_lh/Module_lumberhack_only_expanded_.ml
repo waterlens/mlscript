@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec mappend_lh__d1 xs_2 ys_2 =
   (match xs_2 with
     | `LH_C(h_8, t_9) -> 
@@ -282,5 +282,6 @@ numericRule_lh__d1 _lh_numericRule_arg1_0 =
         (failwith "error")));;
 let rec testGenRegexs_nofib_lh__d1 _lh_testGenRegexs_nofib_arg1_0 =
   (concat_lh__d1 (expand_lh__d1 _lh_testGenRegexs_nofib_arg1_0));;
+let run () = 1 + (Obj.magic ((testGenRegexs_nofib_lh__d1 (`LH_C('[', (`LH_C('a', (`LH_C('-', (`LH_C('j', (`LH_C(']', (`LH_C('[', (`LH_C('a', (`LH_C('-', (`LH_C('j', (`LH_C(']', (`LH_C('[', (`LH_C('a', (`LH_C('-', (`LH_C('j', (`LH_C(']', (`LH_C('[', (`LH_C('0', (`LH_C('-', (`LH_C('9', (`LH_C(']', (`LH_N))))))))))))))))))))))))))))))))))))))))))));
 end;;
 

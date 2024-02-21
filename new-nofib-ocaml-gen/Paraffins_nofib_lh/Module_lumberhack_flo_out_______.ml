@@ -3,7 +3,7 @@
 (* lumberhack_flo_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_flo_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_flo_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec atIndex_lz_lh__d1 n_2 ls_3 =
   (if (n_2 < 0) then
     (failwith "error")
@@ -537,5 +537,23 @@ let rec enumFromTo_lh__d3 a_1 b_1 =
   else
     (fun _lh_listcomp_fun_4_1 radicals_6 -> 
       (`LH_N)));;
+let run () = 1 + (Obj.magic ((`LH_P4((let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
+  ((_lh_listcomp_fun_para_0 _lh_listcomp_fun_0) 16)) in
+  (_lh_listcomp_fun_0 (let rec _lh_listcomp_fun_ls_t_0 = (fun _lh_listcomp_fun_1 _lh_testParaffins_nofib_arg1_0 -> 
+    (`LH_N)) in
+    (let rec _lh_listcomp_fun_ls_h_0 = (let rec radicals_0 = (lazy (`LH_C((`LH_C((`H), (`LH_N))), (let rec _lh_listcomp_fun_2 = (fun _lh_listcomp_fun_para_1 -> 
+      (((Lazy.force _lh_listcomp_fun_para_1) _lh_listcomp_fun_2) radicals_0)) in
+      (_lh_listcomp_fun_2 ((enumFromTo_lz_lh__d1 1) 16)))))) in
+      radicals_0) in
+      (fun _lh_listcomp_fun_3 _lh_testParaffins_nofib_arg1_1 -> 
+        (let rec _lh_listcomp_fun_4 = (fun _lh_listcomp_fun_para_2 -> 
+          ((((_lh_listcomp_fun_para_2 _lh_listcomp_fun_ls_h_0) _lh_listcomp_fun_4) _lh_listcomp_fun_ls_t_0) _lh_listcomp_fun_3)) in
+          (_lh_listcomp_fun_4 ((enumFromTo_lh__d1 0) _lh_testParaffins_nofib_arg1_1)))))))), (let rec radicals_1 = (radical_generator_lh__d2 (16 / 2)) in
+  (let rec _lh_listcomp_fun_5 = (fun _lh_listcomp_fun_para_3 -> 
+    ((_lh_listcomp_fun_para_3 _lh_listcomp_fun_5) radicals_1)) in
+    (_lh_listcomp_fun_5 ((enumFromTo_lh__d2 1) 16)))), (ccp_until_lh__d1 16), (let rec radicals_2 = (radical_generator_lh__d3 (16 / 2)) in
+  (let rec _lh_listcomp_fun_6 = (fun _lh_listcomp_fun_para_4 -> 
+    ((_lh_listcomp_fun_para_4 _lh_listcomp_fun_6) radicals_2)) in
+    (_lh_listcomp_fun_6 ((enumFromTo_lh__d3 1) 16))))))));
 end;;
 

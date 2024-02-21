@@ -3,7 +3,7 @@
 (* lumberhack *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_______________(LH_Dum: sig end) = struct
+module Module_lumberhack_______________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec even_lh__d1 _lh_even_arg1_1 =
   ((_lh_even_arg1_1 mod 2) = 0);;
 let rec divmod_lh__d2 _lh_divmod_arg1_1 _lh_divmod_arg2_1 =
@@ -354,5 +354,6 @@ let rec process_lh__d1 _lh_process_arg1_0 =
 let rec testPrimetest_nofib_lh__d1 _lh_testPrimetest_nofib_arg1_0 =
   (let rec cts_0 = (`LH_C('2', (`LH_C('4', (`LH_C('|', (`LH_C('4', (`LH_C('8', (`LH_C('|', (`LH_C('4', (`LH_C('7', (`LH_C('|', (`LH_C('1', (`LH_C('3', (`LH_C('1', (`LH_C('7', (`LH_C('|', (`LH_C('8', (`LH_C('9', (`LH_C('0', (`LH_C('1', (`LH_N))))))))))))))))))))))))))))))))))))) in
     (process_lh__d1 (lines_lh__d1 cts_0)));;
+let run () = 1 + (Obj.magic ((testPrimetest_nofib_lh__d1 0)));
 end;;
 

@@ -3,7 +3,7 @@
 (* lumberhack_flo_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_flo_out_(LH_Dum: sig end) = struct
+module Module_lumberhack_flo_out_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec _lhManual ls_2 f1_0 f2_0 =
   (match ls_2 with
     | `C(h_1, t_1) -> 
@@ -29,5 +29,6 @@ let rec testMapmap ls_1 =
   ((map (fun x_0 -> 
     (x_0 + 1))) ((map (fun x_1 -> 
     (x_1 * x_1))) ls_1));;
+let run () = 1 + (Obj.magic ((testMapmap ((enumFromTo 1) 100000))));
 end;;
 

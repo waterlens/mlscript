@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec mappend_lh xs_0 ys_0 =
   (match xs_0 with
     | `LH_C(h_1, t_1) -> 
@@ -15,14 +15,14 @@ let rec showTerm_lh _lh_showTerm_arg1_0 =
       ((mappend_lh (`LH_C('C', (`LH_C('o', (`LH_C('n', (`LH_C(' ', (`LH_N)))))))))) (string_of_int _lh_showTerm_Con_0_0))
     | _ -> 
       ((failwith "error") (`LH_C('u', (`LH_C('n', (`LH_C('i', (`LH_C('m', (`LH_C('p', (`LH_C('l', (`LH_C('e', (`LH_C('m', (`LH_C('e', (`LH_C('n', (`LH_C('t', (`LH_C('e', (`LH_C('d', (`LH_N)))))))))))))))))))))))))))));;
-let rec nMinus1_lh =
-  (`Add((`Var((`LH_C('n', (`LH_N))))), (`Con((0 - 1)))));;
-let rec partialSum0_lh =
-  (`Lam((`LH_C('s', (`LH_C('u', (`LH_C('m', (`LH_N))))))), (`Lam((`LH_C('n', (`LH_N))), (`IfZero((`Var((`LH_C('n', (`LH_N))))), (`Con(0)), (`Add((`Var((`LH_C('n', (`LH_N))))), (`App((`Var((`LH_C('s', (`LH_C('u', (`LH_C('m', (`LH_N))))))))), nMinus1_lh))))))))));;
 let rec lfxx_lh =
   (`Lam((`LH_C('x', (`LH_N))), (`App((`Var((`LH_C('F', (`LH_N))))), (`App((`Var((`LH_C('x', (`LH_N))))), (`Var((`LH_C('x', (`LH_N)))))))))));;
 let rec fix_lh =
   (`Lam((`LH_C('F', (`LH_N))), (`App(lfxx_lh, lfxx_lh))));;
+let rec nMinus1_lh =
+  (`Add((`Var((`LH_C('n', (`LH_N))))), (`Con((0 - 1)))));;
+let rec partialSum0_lh =
+  (`Lam((`LH_C('s', (`LH_C('u', (`LH_C('m', (`LH_N))))))), (`Lam((`LH_C('n', (`LH_N))), (`IfZero((`Var((`LH_C('n', (`LH_N))))), (`Con(0)), (`Add((`Var((`LH_C('n', (`LH_N))))), (`App((`Var((`LH_C('s', (`LH_C('u', (`LH_C('m', (`LH_N))))))))), nMinus1_lh))))))))));;
 let rec sum0_lh =
   (`App(fix_lh, partialSum0_lh));;
 let rec bracket_lh _lh_bracket_arg1_0 _lh_bracket_arg2_0 _lh_bracket_arg3_0 =
@@ -283,7 +283,7 @@ let rec myRunState_lh _lh_myRunState_arg1_0 =
 let rec myReturn_lh _lh_myReturn_arg1_0 =
   (`MyState((fun s_2 -> 
     (`LH_P2(s_2, _lh_myReturn_arg1_0)))));;
-let rec incr_lh _lh_incr_arg1_0 =
+let rec incr_lh =
   (myReturn_lh (`Unit));;
 let rec myGet_lh =
   (`MyState((fun s_0 -> 
@@ -354,7 +354,7 @@ eval_lh _lh_eval_arg1_0 =
     | `Con(_lh_eval_Con_0_0) -> 
       (myReturn_lh (`Con(_lh_eval_Con_0_0)))
     | `Incr -> 
-      ((myBind_lh (incr_lh 99)) (fun _dummy_0 -> 
+      ((myBind_lh incr_lh) (fun _dummy_0 -> 
         (myReturn_lh (`Con(0)))))
     | _ -> 
       (failwith "error"))
@@ -385,5 +385,6 @@ let rec mainMonad_lh _lh_mainMonad_arg1_0 =
     (ev_lh (`App(sum0_lh, (`Con((head_lh _lh_mainMonad_arg1_0)))))));;
 let rec testLambda_nofib_lh _lh_testLambda_nofib_arg1_0 =
   (`LH_P2((mainSimple_lh (`LH_C(_lh_testLambda_nofib_arg1_0, (`LH_N)))), (mainMonad_lh (`LH_C(_lh_testLambda_nofib_arg1_0, (`LH_N))))));;
+let run () = 1 + (Obj.magic ((testLambda_nofib_lh 80)));
 end;;
 

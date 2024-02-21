@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec length_lh__d1 ls_9 =
   (match ls_9 with
     | `LH_C(h_1_9, t_1_9) -> 
@@ -3354,5 +3354,6 @@ let rec testExpert_nofib_lh__d1 _lh_testExpert_nofib_arg1_0 =
       ((fun _lh_funcomp_x_1 -> 
         ((fun _lh_funcomp_x_2 -> 
           (length_lh__d1 ((process_lh__d1 animals_0) _lh_funcomp_x_2))) ((take_lh__d1 (_lh_testExpert_nofib_arg1_0 + 9999)) _lh_funcomp_x_1))) contents_0)));;
+let run () = 1 + (Obj.magic ((testExpert_nofib_lh__d1 3)));
 end;;
 

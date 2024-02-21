@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec mappend_lh__d1 xs_0 ys_0 =
   (match xs_0 with
     | `LH_C(h_1, t_1) -> 
@@ -143,5 +143,6 @@ let rec testBinaryTrees_nofib_lh__d1 _lh_testBinaryTrees_nofib_arg1_0 =
                     ((mappend_lh__d1 (string_of_int _lh_testBinaryTrees_nofib_LH_P3_0_0)) (`LH_C('t', (`LH_C(' ', (`LH_C('t', (`LH_C('r', (`LH_C('e', (`LH_C('e', (`LH_C('s', (`LH_N))))))))))))))))
                   | _ -> 
                     (failwith "error"))))) vs_0), (check_lh__d2 long_0))))))));;
+let run () = 1 + (Obj.magic ((testBinaryTrees_nofib_lh__d1 14)));
 end;;
 

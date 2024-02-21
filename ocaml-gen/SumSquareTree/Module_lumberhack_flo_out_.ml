@@ -3,7 +3,7 @@
 (* lumberhack_flo_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_flo_out_(LH_Dum: sig end) = struct
+module Module_lumberhack_flo_out_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec sqTree t_0 _lh_popOutId_0_0 =
   (match t_0 with
     | `T(v_0, l_0, r_0) -> 
@@ -20,5 +20,6 @@ let rec genTree n_0 =
     (`L));;
 let rec testSumSquareTree n_1 =
   ((sqTree (genTree n_1)) 99);;
+let run () = 1 + (Obj.magic ((testSumSquareTree 18)));
 end;;
 

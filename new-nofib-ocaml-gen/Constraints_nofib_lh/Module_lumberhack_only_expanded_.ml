@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec maxLevel_lh__d2 _lh_maxLevel_arg1_2 =
   (match _lh_maxLevel_arg1_2 with
     | `LH_N -> 
@@ -1072,5 +1072,6 @@ let rec bm_lh__d1 _lh_bm_arg1_0 _lh_funcomp_x_1_5 =
     ((mapTree_lh__d1 fst_lh__d1) ((lookupCache_lh__d1 _lh_bm_arg1_0) _lh_funcomp_x_1_6))) (((cacheChecks_lh__d1 _lh_bm_arg1_0) (emptyTable_lh__d1 _lh_bm_arg1_0)) _lh_funcomp_x_1_5));;
 let rec testConstraints_nofib_lh__d1 _lh_testConstraints_nofib_arg1_0 =
   ((map_lh__d1 (try_lh__d1 _lh_testConstraints_nofib_arg1_0)) (`LH_C(bt_lh__d1, (`LH_C(bm_lh__d1, (`LH_C(bjbt_lh__d1, (`LH_C(bjbt'_lh__d1, (`LH_C(fc_lh__d1, (`LH_N))))))))))));;
+let run () = 1 + (Obj.magic ((testConstraints_nofib_lh__d1 5)));
 end;;
 

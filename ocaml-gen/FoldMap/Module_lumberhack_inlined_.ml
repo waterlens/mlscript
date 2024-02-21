@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec map f_0 ls_0 =
   (match ls_0 with
     | `C(h_0, t_0) -> 
@@ -23,5 +23,6 @@ let rec testFoldMap n_0 =
   ((((map (fun x_0 -> 
     (x_0 * x_0))) ((enumFromTo 1) n_0)) (fun i_0 x_1 -> 
     (i_0 + x_1))) 0);;
+let run () = 1 + (Obj.magic ((testFoldMap 300000)));
 end;;
 

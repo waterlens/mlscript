@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec enumFromTo_lh__d2 a_0 b_0 =
   (if (a_0 <= b_0) then
     (let rec _lh_listcomp_fun_ls_t_0 = ((enumFromTo_lh__d2 (a_0 + 1)) b_0) in
@@ -27,5 +27,8 @@ let rec enumFromTo_lh__d1 a_1 b_1 =
   else
     (fun _lh_listcomp_fun_7 _lh_dummy_1 -> 
       0));;
+let run () = 1 + (Obj.magic (((let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
+  (_lh_listcomp_fun_para_0 _lh_listcomp_fun_0)) in
+  (_lh_listcomp_fun_0 ((enumFromTo_lh__d1 1) 1000))) 99)));
 end;;
 

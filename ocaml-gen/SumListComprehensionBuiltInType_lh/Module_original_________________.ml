@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec enumFromTo_lh a_0 b_0 =
   (if (a_0 <= b_0) then
     (`LH_C(a_0, ((enumFromTo_lh (a_0 + 1)) b_0)))
@@ -30,5 +30,6 @@ let rec testSumListComprehensionBuiltInType_lh _lh_testSumListComprehensionBuilt
       | `LH_N -> 
         (`LH_N))) in
     (_lh_listcomp_fun_0 ((enumFromTo_lh 1) _lh_testSumListComprehensionBuiltInType_arg1_0))));;
+let run () = 1 + (Obj.magic ((testSumListComprehensionBuiltInType_lh 1000)));
 end;;
 

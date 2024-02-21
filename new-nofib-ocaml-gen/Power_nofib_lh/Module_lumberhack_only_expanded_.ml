@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec fromIntegerPs_lh__d5 _lh_fromIntegerPs_arg1_0 =
   (match _lh_fromIntegerPs_arg1_0 with
     | 0 -> 
@@ -624,5 +624,6 @@ let rec cosx_lh__d2 _lh_cosx_arg1_0 =
   ((minusPs_lh__d6 (lazy (`Pc(1, (lazy (`Pz)))))) (integral_lh__d5 (integralLz_lh__d3 (lazy (cosx_lh__d2 0)))));;
 let rec testPower_nofib_lh__d1 _lh_testPower_nofib_arg1_0 =
   (`LH_C(((extract_lh__d1 _lh_testPower_nofib_arg1_0) ((minusPs_lh__d1 (sinx_lh__d2 0)) (sqrtPs_lh__d1 ((minusPs_lh__d3 (fromIntegerPs_lh__d1 1)) ((powerPs_lh__d1 (cosx_lh__d2 0)) 2))))), (`LH_C(((extract_lh__d3 _lh_testPower_nofib_arg1_0) ((minusPs_lh__d2 ((divPs_lh__d1 (sinx_lh__d1 0)) (cosx_lh__d1 0))) (revert_lh__d1 (integral_lh__d1 ((divPs_lh__d2 (fromIntegerPs_lh__d3 1)) ((addPs_lh__d1 (fromIntegerPs_lh__d2 1)) ((powerPs_lh__d2 x_lh__d1) 2))))))), (`LH_C(((extract_lh__d4 _lh_testPower_nofib_arg1_0) ts_lh__d1), (`LH_C(((extract_lh__d2 _lh_testPower_nofib_arg1_0) tree_lh__d1), (`LH_N)))))))));;
+let run () = 1 + (Obj.magic ((testPower_nofib_lh__d1 14)));
 end;;
 

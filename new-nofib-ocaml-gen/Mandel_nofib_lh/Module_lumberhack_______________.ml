@@ -3,7 +3,7 @@
 (* lumberhack *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_______________(LH_Dum: sig end) = struct
+module Module_lumberhack_______________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec map_lh__d1 f_1 ls_1 =
   (ls_1 f_1);;
 let rec map_lh__d2 f_0 ls_0 =
@@ -124,5 +124,6 @@ let rec testMandel_nofib_lh__d1 _lh_testMandel_nofib_arg1_0 =
             (let rec screenY_0 = 80 in
               (let rec limit_0 = 75 in
                 (((((((mandelset_lh__d1 minx_0) miny_0) maxx_0) maxy_0) screenX_0) screenY_0) limit_0))))))));;
+let run () = 1 + (Obj.magic ((testMandel_nofib_lh__d1 0)));
 end;;
 

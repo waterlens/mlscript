@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec until_lh _lh_until_arg1_0 _lh_until_arg2_0 _lh_until_arg3_0 =
   (if (_lh_until_arg1_0 _lh_until_arg3_0) then
     _lh_until_arg3_0
@@ -791,5 +791,6 @@ let rec run_lh _lh_run_arg1_0 _lh_run_arg2_0 =
         ((circuit_simulate_lh cycles_0) example_0))));;
 let rec testCircsim_nofib_lh _lh_testCircsim_nofib_arg1_0 =
   ((run_lh 8) _lh_testCircsim_nofib_arg1_0);;
+let run () = 1 + (Obj.magic ((testCircsim_nofib_lh 8)));
 end;;
 

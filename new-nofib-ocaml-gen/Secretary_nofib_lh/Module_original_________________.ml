@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec enumFromTo_lh a_0 b_0 =
   (if (a_0 <= b_0) then
     (`LH_C(a_0, ((enumFromTo_lh (a_0 + 1)) b_0)))
@@ -138,5 +138,6 @@ let rec testSecretary_nofib_lh _lh_testSecretary_nofib_arg1_0 =
       | `LH_N -> 
         (`LH_N))) in
     (_lh_listcomp_fun_0 ((enumFromTo_lh 35) 39)));;
+let run () = 1 + (Obj.magic ((testSecretary_nofib_lh 0)));
 end;;
 

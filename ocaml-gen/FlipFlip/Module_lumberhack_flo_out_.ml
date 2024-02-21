@@ -3,7 +3,7 @@
 (* lumberhack_flo_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_flo_out_(LH_Dum: sig end) = struct
+module Module_lumberhack_flo_out_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec genTree n_0 i_0 =
   (if (n_0 <= 0) then
     (`N(i_0))
@@ -19,5 +19,6 @@ let rec ff t_1 =
   (flip (flip t_1));;
 let rec testFlipFlip t_2 =
   (ff t_2);;
+let run () = 1 + (Obj.magic ((testFlipFlip ((genTree 17) 0))));
 end;;
 

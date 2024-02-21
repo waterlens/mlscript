@@ -3,7 +3,7 @@
 (* lumberhack_flo_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_flo_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_flo_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec replicate_lh__d1 _lh_replicate_arg1_0 _lh_replicate_arg2_0 _lh_popOutId_0_0 =
   (if (_lh_replicate_arg1_0 = 0) then
     true
@@ -734,5 +734,6 @@ let rec test0_lh__d1 _lh_test0_arg1_0 =
       (tautp_lh__d1 ((apply_subst_lh__d1 subst0_0) theorem_0))));;
 let rec testBoyer_nofib_lh__d1 _lh_testBoyer_nofib_arg1_0 =
   (((replicate_lh__d1 _lh_testBoyer_nofib_arg1_0) (`Var((`X)))) test0_lh__d1);;
+let run () = 1 + (Obj.magic ((testBoyer_nofib_lh__d1 5)));
 end;;
 

@@ -3,7 +3,7 @@
 (* lumberhack *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_______________(LH_Dum: sig end) = struct
+module Module_lumberhack_______________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec scalarMut_lh__d1 _lh_scalarMut_arg1_0 _lh_scalarMut_arg2_0 =
   (_lh_scalarMut_arg2_0 _lh_scalarMut_arg1_0);;
 let rec scalarMut_lh__d2 _lh_scalarMut_arg1_4 _lh_scalarMut_arg2_1 =
@@ -184,5 +184,6 @@ let rec testAtom_nofib_lh__d1 _lh_testAtom_nofib_arg1_0 =
       (let rec _lh_scalarMut_LH_C_0_1 = 1.0 in
         (fun _lh_scalarMut_arg1_6 -> 
           (`LH_C((_lh_scalarMut_arg1_6 *. _lh_scalarMut_LH_C_0_1), ((scalarMut_lh__d1 _lh_scalarMut_arg1_6) _lh_scalarMut_LH_C_1_1))))))) (`State((`LH_C(1.0, (`LH_N))), (`LH_C(0.0, (`LH_N))))))))));;
+let run () = 1 + (Obj.magic ((testAtom_nofib_lh__d1 500)));
 end;;
 

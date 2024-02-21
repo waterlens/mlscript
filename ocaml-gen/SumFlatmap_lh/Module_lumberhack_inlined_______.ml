@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec enumFromTo_lh__d1 a_0 b_0 =
   (if (a_0 <= b_0) then
     (`LH_C(a_0, ((enumFromTo_lh__d1 (a_0 + 1)) b_0)))
@@ -34,5 +34,6 @@ let rec testSumFlatmap_lh__d1 _lh_testSumFlatmap_arg1_0 =
             (let rec _lh_sum_LH_C_0_1 = h_1 in
               (fun _lh_sum_arg1_3 -> 
                 (_lh_sum_LH_C_1_1 (_lh_sum_arg1_3 + _lh_sum_LH_C_0_1)))))))))) ((enumFromTo_lh__d1 1) _lh_testSumFlatmap_arg1_0)) 0);;
+let run () = 1 + (Obj.magic ((testSumFlatmap_lh__d1 100000)));
 end;;
 

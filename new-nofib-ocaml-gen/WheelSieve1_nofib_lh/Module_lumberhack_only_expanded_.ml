@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec atIndex_lz_lh__d1 n_0 ls_4 =
   (if (n_0 < 0) then
     (failwith "error")
@@ -164,5 +164,6 @@ let rec prime_lh__d1 _lh_prime_arg1_0 =
   ((atIndex_lz_lh__d1 _lh_prime_arg1_0) (primes_lh__d1 _lh_prime_arg1_0));;
 let rec testWheelSieve1_nofib_lh__d1 _lh_testWheelSieve1_nofib_arg1_0 =
   (prime_lh__d1 _lh_testWheelSieve1_nofib_arg1_0);;
+let run () = 1 + (Obj.magic ((testWheelSieve1_nofib_lh__d1 1000)));
 end;;
 

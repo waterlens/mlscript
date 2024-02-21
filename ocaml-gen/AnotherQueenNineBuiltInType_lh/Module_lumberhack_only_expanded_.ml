@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec append_lh__d1 _lh_append_arg1_0 _lh_append_arg2_0 =
   (match _lh_append_arg1_0 with
     | `LH_N -> 
@@ -91,5 +91,6 @@ let rec length_lh__d1 ls_1 =
       0);;
 let rec testAnotherQueenNineBuiltInType_lh__d1 _lh_testAnotherQueenNineBuiltInType_arg1_0 =
   (length_lh__d1 (queens_lh__d1 _lh_testAnotherQueenNineBuiltInType_arg1_0));;
+let run () = 1 + (Obj.magic ((testAnotherQueenNineBuiltInType_lh__d1 9)));
 end;;
 

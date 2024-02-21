@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_pop_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec finite_lh__d1 _lh_finite_arg1_0 =
   (match _lh_finite_arg1_0 with
     | `Leaf(_lh_finite_Leaf_0_0) -> 
@@ -365,5 +365,6 @@ let rec testMandel2_nofib_lh__d1 _lh_testMandel2_nofib_arg1_0 =
   (let rec size'_0 = ((max_lh__d1 (length_lh__d1 _lh_testMandel2_nofib_arg1_0)) size_lh__d1) in
     (let rec tree_0 = ((build_tree_lh__d1 (`LH_P2(0, 0))) (`LH_P2(size'_0, (size'_0 / 2)))) in
       (finite_lh__d1 tree_0)));;
+let run () = 1 + (Obj.magic ((testMandel2_nofib_lh__d1 (`LH_C(5, (`LH_N))))));
 end;;
 

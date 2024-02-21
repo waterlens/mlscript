@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec enumFromTo_lh__d1 a_1 b_1 =
   (if (a_1 <= b_1) then
     (let rec tx_2 = ((enumFromTo_lh__d1 (a_1 + 1)) b_1) in
@@ -24,5 +24,6 @@ let rec enumFromTo_lh__d2 a_0 b_0 =
       (`LH_N)));;
 let rec testZipEnumEnum_lh__d1 _lh_testZipEnumEnum_arg1_0 =
   (((enumFromTo_lh__d1 1) _lh_testZipEnumEnum_arg1_0) ((enumFromTo_lh__d2 1) _lh_testZipEnumEnum_arg1_0));;
+let run () = 1 + (Obj.magic ((testZipEnumEnum_lh__d1 100000)));
 end;;
 

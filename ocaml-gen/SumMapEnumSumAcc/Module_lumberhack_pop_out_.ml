@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_(LH_Dum: sig end) = struct
+module Module_lumberhack_pop_out_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec map f_0 ls_0 =
   (ls_0 f_0);;
 let rec summ acc_0 ls_2 =
@@ -22,5 +22,6 @@ let rec sum ls_1 =
 let rec testSumMapEnumSumAcc n_0 =
   (sum ((map (fun x_0 -> 
     (x_0 * x_0))) ((enumFromTo 1) n_0)));;
+let run () = 1 + (Obj.magic ((testSumMapEnumSumAcc 300000)));
 end;;
 

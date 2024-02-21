@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec mappend_lh xs_0 ys_0 =
   (match xs_0 with
     | `LH_C(h_6, t_6) -> 
@@ -451,5 +451,6 @@ let rec testPara_nofib_lh _lh_testPara_nofib_arg1_0 =
     (`LH_N)
   else
     (fmt_lh (test_lh 0)));;
+let run () = 1 + (Obj.magic ((testPara_nofib_lh 0)));
 end;;
 

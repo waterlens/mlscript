@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_pop_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec zip_lh__d1 xs_0 ys_2 =
   (xs_0 ys_2);;
 let rec enumFromTo_lh__d2 a_0 b_0 _lh_popOutId_0_0 _lh_popOutId_1_0 =
@@ -22,5 +22,6 @@ let rec enumFromTo_lh__d1 a_1 b_1 _lh_popOutId_0_1 =
     (`LH_N));;
 let rec testZipEnumEnum_lh__d1 _lh_testZipEnumEnum_arg1_0 =
   ((zip_lh__d1 ((enumFromTo_lh__d1 1) _lh_testZipEnumEnum_arg1_0)) ((enumFromTo_lh__d2 1) _lh_testZipEnumEnum_arg1_0));;
+let run () = 1 + (Obj.magic ((testZipEnumEnum_lh__d1 100000)));
 end;;
 

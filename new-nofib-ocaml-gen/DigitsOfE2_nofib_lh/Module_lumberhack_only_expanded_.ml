@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec map_lz_lh__d1 f_1 ls_2 =
   (lazy (match (Lazy.force ls_2) with
     | `LH_C(h_2, t_3) -> 
@@ -109,5 +109,6 @@ let rec e_lh__d1 _lh_e_arg1_0 =
         (10 * a_1))) _lh_funcomp_x_3))) (tail_lz_lh__d1 _lh_funcomp_x_2)))) (lazy (`LH_C(2, ((enumFromThen_lh__d1 1) 1)))))))));;
 let rec testDigitsOfE2_nofib_lh__d1 _lh_testDigitsOfE2_nofib_arg1_0 =
   (e_lh__d1 _lh_testDigitsOfE2_nofib_arg1_0);;
+let run () = 1 + (Obj.magic ((testDigitsOfE2_nofib_lh__d1 500)));
 end;;
 

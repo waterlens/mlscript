@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec integralLz_lh__d2 _lh_integralLz_arg1_2 =
   (let rec int1_8 = (fun fss_4 n_8 -> 
     (lazy (let rec _lh_matchIdent_2_3 = (Lazy.force (Lazy.force fss_4)) in
@@ -615,5 +615,6 @@ let rec testPower_nofib_lh__d1 _lh_testPower_nofib_arg1_0 =
                   | _ -> 
                     (failwith "error")))))))))) in
     (_lh_matchIdent_5 99))))), (`LH_C(((extract_lh__d4 _lh_testPower_nofib_arg1_0) ts_lh__d1), (`LH_C(((extract_lh__d2 _lh_testPower_nofib_arg1_0) tree_lh__d1), (`LH_N)))))))));;
+let run () = 1 + (Obj.magic ((testPower_nofib_lh__d1 14)));
 end;;
 

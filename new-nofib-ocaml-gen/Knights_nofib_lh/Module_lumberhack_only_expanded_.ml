@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec myIsDigit_lh__d1 _lh_myIsDigit_arg1_0 =
   (let rec n_1 = (int_of_char _lh_myIsDigit_arg1_0) in
     ((n_1 >= 48) && (n_1 <= 57)));;
@@ -929,5 +929,6 @@ let rec testKnights_nofib_lh__d1 _lh_testKnights_nofib_arg1_0 =
     (length_lh__d2 (printTour_lh__d1 _lh_testKnights_nofib_arg1_0))
   else
     ((failwith "error") usageString_0));;
+let run () = 1 + (Obj.magic ((testKnights_nofib_lh__d1 (`LH_C((`LH_C('8', (`LH_N))), (`LH_C((`LH_C('1', (`LH_N))), (`LH_N))))))));
 end;;
 

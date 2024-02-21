@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_pop_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec signum_lh__d2 _lh_signum_arg1_0 =
   (match _lh_signum_arg1_0 with
     | 0 -> 
@@ -70,5 +70,6 @@ let rec eContFrac_lh__d1 =
   (lazy (`LH_C(2, (aux_lh__d1 2))));;
 let rec testDigitsOfE1_nofib_lh__d1 _lh_testDigitsOfE1_nofib_arg1_0 =
   ((takeDigits_lh__d1 _lh_testDigitsOfE1_nofib_arg1_0) eContFrac_lh__d1);;
+let run () = 1 + (Obj.magic ((testDigitsOfE1_nofib_lh__d1 300)));
 end;;
 

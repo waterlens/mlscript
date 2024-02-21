@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec enumFromTo_lh__d1 a_0 b_0 =
   (if (a_0 <= b_0) then
     (let rec _lh_listcomp_fun_ls_t_0 = ((enumFromTo_lh__d1 (a_0 + 1)) b_0) in
@@ -115,5 +115,6 @@ let rec testMandel_nofib_lh__d1 _lh_testMandel_nofib_arg1_0 =
                       (((_lh_listcomp_fun_para_2 _lh_listcomp_fun_8) screenX_0) windowToViewport_5)) in
                       (_lh_listcomp_fun_8 ((enumFromTo_lh__d2 1) screenY_0)))) limit_0) (((myMax_lh__d1 (maxx_0 -. minx_0)) (maxy_0 -. miny_0)) /. 2.0)) in
                       ((((createPixmap_lh__d1 screenX_0) screenY_0) limit_0) (result_1 prettyRGB_1))))))))))));;
+let run () = 1 + (Obj.magic ((testMandel_nofib_lh__d1 0)));
 end;;
 

@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec foldl_lh__d1 f_0 i_0 ls_0 =
   (match ls_0 with
     | `LH_C(h_0, t_0) -> 
@@ -141,5 +141,8 @@ let rec enumFromTo_lh__d1 a_1 b_1 =
   else
     (fun _lh_listcomp_fun_5 -> 
       (`LH_N)));;
+let run () = 1 + (Obj.magic ((let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
+  (_lh_listcomp_fun_para_0 _lh_listcomp_fun_0)) in
+  (_lh_listcomp_fun_0 ((enumFromTo_lh__d1 35) 39)))));
 end;;
 

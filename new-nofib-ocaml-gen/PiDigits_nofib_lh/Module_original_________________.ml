@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec take_lz_lh n_0 ls_0 =
   (if (n_0 > 0) then
     (match (Lazy.force ls_0) with
@@ -92,5 +92,6 @@ let rec pidgits_lh _lh_pidgits_arg1_0 =
   (((percOp_lh 0) ((hashOp_lh 0) (`LH_P3(1, 0, 1)))) _lh_pidgits_arg1_0);;
 let rec testPiDigits_nofib_lh _lh_testPiDigits_nofib_arg1_0 =
   (pidgits_lh _lh_testPiDigits_nofib_arg1_0);;
+let run () = 1 + (Obj.magic ((testPiDigits_nofib_lh 5000)));
 end;;
 

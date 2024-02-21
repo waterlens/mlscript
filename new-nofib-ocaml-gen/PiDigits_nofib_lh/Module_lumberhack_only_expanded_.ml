@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec ampOp_lh__d1 _lh_ampOp_arg1_0 _lh_ampOp_arg2_0 =
   (match _lh_ampOp_arg2_0 with
     | `LH_P3(_lh_ampOp_LH_P3_0_0, _lh_ampOp_LH_P3_1_0, _lh_ampOp_LH_P3_2_0) -> 
@@ -132,5 +132,6 @@ let rec pidgits_lh__d1 _lh_pidgits_arg1_0 =
   (((percOp_lh__d1 0) ((hashOp_lh__d1 0) (`LH_P3(1, 0, 1)))) _lh_pidgits_arg1_0);;
 let rec testPiDigits_nofib_lh__d1 _lh_testPiDigits_nofib_arg1_0 =
   (pidgits_lh__d1 _lh_testPiDigits_nofib_arg1_0);;
+let run () = 1 + (Obj.magic ((testPiDigits_nofib_lh__d1 5000)));
 end;;
 

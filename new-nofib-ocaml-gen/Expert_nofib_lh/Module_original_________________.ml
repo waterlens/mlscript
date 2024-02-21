@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec take_lh n_0 ls_5 =
   (if (n_0 > 0) then
     (match ls_5 with
@@ -2332,5 +2332,6 @@ let rec testExpert_nofib_lh _lh_testExpert_nofib_arg1_0 =
       ((fun _lh_funcomp_x_1 -> 
         ((fun _lh_funcomp_x_2 -> 
           (length_lh ((process_lh animals_0) _lh_funcomp_x_2))) ((take_lh (_lh_testExpert_nofib_arg1_0 + 9999)) _lh_funcomp_x_1))) contents_0)));;
+let run () = 1 + (Obj.magic ((testExpert_nofib_lh 3)));
 end;;
 

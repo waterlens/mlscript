@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_pop_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec enumFromTo_lh__d4 a_2 b_2 =
   (if (a_2 <= b_2) then
     (`LH_C(a_2, ((enumFromTo_lh__d4 (a_2 + 1)) b_2)))
@@ -528,5 +528,6 @@ let rec testParaffins_nofib_lh__d1 _lh_testParaffins_nofib_arg1_0 =
           (let rec _lh_listcomp_fun_6_6 = (fun _lh_listcomp_fun_para_3_6 -> 
             ((((_lh_listcomp_fun_para_3_6 _lh_listcomp_fun_ls_h_4_9) _lh_listcomp_fun_6_6) _lh_listcomp_fun_ls_t_4_9) _lh_listcomp_fun_6_5)) in
             (_lh_listcomp_fun_6_6 ((enumFromTo_lh__d1 0) _lh_testParaffins_nofib_arg1_2)))))))), (bcp_until_lh__d1 _lh_testParaffins_nofib_arg1_0), (ccp_until_lh__d1 _lh_testParaffins_nofib_arg1_0), (paraffins_until_lh__d1 _lh_testParaffins_nofib_arg1_0)));;
+let run () = 1 + (Obj.magic ((testParaffins_nofib_lh__d1 16)));
 end;;
 

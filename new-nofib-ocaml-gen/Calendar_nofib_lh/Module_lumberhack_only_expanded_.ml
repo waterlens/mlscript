@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec map_lh__d1 f_9 ls_1_1 =
   (match ls_1_1 with
     | `LH_C(h_2_4, t_2_4) -> 
@@ -399,5 +399,6 @@ let rec cal_lh__d1 _lh_cal_arg1_0 =
 let rec testCalendar_nofib_lh__d1 _lh_testCalendar_nofib_arg1_0 =
   ((map_lh__d1 (fun n_1 -> 
     (length_lh__d1 (cal_lh__d1 n_1)))) ((enumFromTo_lh__d1 1993) (1993 + _lh_testCalendar_nofib_arg1_0)));;
+let run () = 1 + (Obj.magic ((testCalendar_nofib_lh__d1 100)));
 end;;
 

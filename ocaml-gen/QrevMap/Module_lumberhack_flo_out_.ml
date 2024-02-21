@@ -3,7 +3,7 @@
 (* lumberhack_flo_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_flo_out_(LH_Dum: sig end) = struct
+module Module_lumberhack_flo_out_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec _lhManualQrevMap f_1 xs_1 a_0 =
   (match xs_1 with
     | `C(h_2, t_2) -> 
@@ -29,5 +29,6 @@ let rec enumFromTo a_2 b_0 =
     (`C(a_2, ((enumFromTo (a_2 + 1)) b_0)))
   else
     (`N));;
+let run () = 1 + (Obj.magic ((testQrevMap ((enumFromTo 1) 10000))));
 end;;
 

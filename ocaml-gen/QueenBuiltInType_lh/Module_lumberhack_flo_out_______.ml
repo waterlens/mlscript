@@ -3,7 +3,7 @@
 (* lumberhack_flo_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_flo_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_flo_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec safe_lh__d1 _lh_safe_arg1_0 _lh_safe_arg2_0 _lh_safe_arg3_0 =
   (match _lh_safe_arg3_0 with
     | `LH_N -> 
@@ -48,5 +48,6 @@ let rec nsoln_lh__d1 _lh_nsoln_arg1_0 =
   (length_lh__d1 ((gen_lh__d1 _lh_nsoln_arg1_0) _lh_nsoln_arg1_0));;
 let rec testQueenBuiltInType_lh__d1 _lh_testQueenBuiltInType_arg1_0 =
   (nsoln_lh__d1 _lh_testQueenBuiltInType_arg1_0);;
+let run () = 1 + (Obj.magic ((testQueenBuiltInType_lh__d1 11)));
 end;;
 

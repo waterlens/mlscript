@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec totalTime_lh _lh_totalTime_arg1_0 =
   (match _lh_totalTime_arg1_0 with
     | `LH_C(_lh_totalTime_LH_C_0_0, _lh_totalTime_LH_C_1_0) -> 
@@ -311,5 +311,6 @@ let rec testPuzzle_nofib_lh _lh_testPuzzle_nofib_arg1_0 =
     (let rec solutions_0 = (((((transfer_lh initialState_lh) finalState_lh) (`RightBank)) time_0) (`LH_N)) in
       (let rec mins_0 = (minSolutions_lh solutions_0) in
         (((writeSolutions_lh mins_0) 1) (`LH_N)))));;
+let run () = 1 + (Obj.magic ((testPuzzle_nofib_lh (`LH_C(2, (`LH_N))))));
 end;;
 

@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec start_lh =
   (`LH_C((`LH_N), (`LH_C((`LH_N), (`LH_C((`LH_N), (`LH_C((`LH_N), (`LH_C((`LH_N), (`LH_C((`LH_N), (`LH_C((`LH_N), (`LH_C((`LH_N), (`LH_C((`LH_N), (`LH_C((`LH_N), (`LH_C((`LH_N), (`LH_C((`LH_N), (`LH_C((`LH_N), (`LH_C((`LH_N), (`LH_C((`LH_C(0, (`LH_C(0, (`LH_C(0, (`LH_C(1, (`LH_C(1, (`LH_C(1, (`LH_C(1, (`LH_C(1, (`LH_C(0, (`LH_C(1, (`LH_C(1, (`LH_C(1, (`LH_C(1, (`LH_C(1, (`LH_C(0, (`LH_C(1, (`LH_C(1, (`LH_C(1, (`LH_C(1, (`LH_C(1, (`LH_C(0, (`LH_C(1, (`LH_C(1, (`LH_C(1, (`LH_C(1, (`LH_C(1, (`LH_C(0, (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))))), (`LH_N)))))))))))))))))))))))))))))));;
 let rec copy_lh _lh_copy_arg1_0 _lh_copy_arg2_0 =
@@ -204,5 +204,6 @@ let rec generations_lh _lh_generations_arg1_0 =
       ((mappend_lh l_1) ((copy_lh _lh_generations_arg1_0) 0))) _lh_funcomp_x_3)))) ((mappend_lh start_lh) ((copy_lh _lh_generations_arg1_0) ((copy_lh _lh_generations_arg1_0) 0))))));;
 let rec testLife_nofib_lh _lh_testLife_nofib_arg1_0 =
   (generations_lh _lh_testLife_nofib_arg1_0);;
+let run () = 1 + (Obj.magic ((testLife_nofib_lh 15)));
 end;;
 

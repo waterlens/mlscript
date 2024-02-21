@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec makeZippedList n_0 =
   (if (n_0 > 0) then
     (`C((`Pair(n_0, (n_0 + 1))), (makeZippedList (n_0 - 1))))
@@ -31,5 +31,6 @@ let rec testZipUnzip n_1 =
   (match (unzip (makeZippedList n_1)) with
     | `Pair(xs_1, ys_3) -> 
       (xs_1 ys_3));;
+let run () = 1 + (Obj.magic ((testZipUnzip 50000)));
 end;;
 

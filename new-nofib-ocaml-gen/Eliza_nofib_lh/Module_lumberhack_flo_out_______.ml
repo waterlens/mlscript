@@ -3,7 +3,7 @@
 (* lumberhack_flo_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_flo_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_flo_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec newKeyTab_lh__d1 _lh_newKeyTab_arg1_0 _lh_newKeyTab_arg2_0 =
   (match _lh_newKeyTab_arg2_0 with
     | `LH_P2(_lh_newKeyTab_LH_P2_0_0, _lh_newKeyTab_LH_P2_1_0) -> 
@@ -2172,5 +2172,6 @@ let rec testEliza_nofib_lh__d1 _lh_testEliza_nofib_arg1_0 =
         else
           (fun f_6_3 f_6_4 _lh_session_arg1_2_9 _lh_session_arg2_2_9 _lh_dummy_1_5 -> 
             0)))) input_0))) ((enumFromTo_lh__d1 1) _lh_testEliza_nofib_arg1_0)));;
+let run () = 1 + (Obj.magic ((testEliza_nofib_lh__d1 20)));
 end;;
 

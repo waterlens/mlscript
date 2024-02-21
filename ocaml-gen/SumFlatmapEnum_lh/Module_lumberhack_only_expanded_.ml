@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec mappend_lh__d1 xs_0 ys_0 =
   (match xs_0 with
     | `LH_C(h_0, t_0) -> 
@@ -34,5 +34,6 @@ let rec enumFromTo_lh__d1 a_0 b_0 =
 let rec testSumFlatmapEnum_lh__d1 _lh_testSumFlatmapEnum_arg1_0 =
   ((sum_lh__d1 0) ((flatMap_lh__d1 (fun a_1 -> 
     (`LH_C(a_1, (`LH_C(a_1, (`LH_N))))))) ((enumFromTo_lh__d1 1) _lh_testSumFlatmapEnum_arg1_0)));;
+let run () = 1 + (Obj.magic ((testSumFlatmapEnum_lh__d1 100000)));
 end;;
 

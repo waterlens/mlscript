@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_pop_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec minN_lh__d1 =
   4;;
 let rec check'_lh__d1 _lh_check'_arg1_9 _lh_check'_arg2_9 _lh_check'_arg3_1 =
@@ -161,5 +161,6 @@ let rec testBinaryTrees_nofib_lh__d1 _lh_testBinaryTrees_nofib_arg1_0 =
             (`LH_P2(((map_lh__d1 (fun m_d_i_0 -> 
               (let rec _lh_matchIdent_0 = m_d_i_0 in
                 (_lh_matchIdent_0 99)))) vs_0), (check_lh__d2 long_0))))))));;
+let run () = 1 + (Obj.magic ((testBinaryTrees_nofib_lh__d1 14)));
 end;;
 

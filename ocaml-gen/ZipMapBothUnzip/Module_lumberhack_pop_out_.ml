@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_(LH_Dum: sig end) = struct
+module Module_lumberhack_pop_out_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec map f_0 ls_0 =
   (ls_0 f_0);;
 let rec makeZippedList n_1 =
@@ -45,5 +45,6 @@ let rec testZipMapBothUnzip n_0 =
       ((zip ((map (fun x_0 -> 
         (x_0 + 1))) xs_0)) ((map (fun x_1 -> 
         (x_1 * x_1))) ys_0)));;
+let run () = 1 + (Obj.magic ((testZipMapBothUnzip 50000)));
 end;;
 

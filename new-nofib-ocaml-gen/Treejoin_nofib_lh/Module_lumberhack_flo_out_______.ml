@@ -3,7 +3,7 @@
 (* lumberhack_flo_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_flo_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_flo_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec isSpace_lh__d3 _lh_isSpace_arg1_0 =
   ((_lh_isSpace_arg1_0 = ' ') || (_lh_isSpace_arg1_0 = '|'));;
 let rec dropWhile_lh__d2 _lh_dropWhile_arg1_1 _lh_dropWhile_arg2_1 =
@@ -328,5 +328,6 @@ let rec testTreejoin_nofib_lh__d1 _lh_testTreejoin_nofib_arg1_0 =
                     | _ -> 
                       (failwith "error"))))) (`Empty)))) in
           (((join_lh__d1 a_0) b_0) (`Empty))))));;
+let run () = 1 + (Obj.magic ((testTreejoin_nofib_lh__d1 0)));
 end;;
 

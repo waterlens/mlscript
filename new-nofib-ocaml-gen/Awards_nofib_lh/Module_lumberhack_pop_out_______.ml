@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_pop_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec map_lh__d1 f_1_2 ls_6 =
   (ls_6 f_1_2);;
 let rec enumFromTo_lh__d1 a_1 b_1 _lh_popOutId_0_0 =
@@ -283,5 +283,6 @@ let rec findallawards_lh__d1 _lh_findallawards_arg1_0 =
 let rec testAwards_nofib_lh__d1 _lh_testAwards_nofib_arg1_0 =
   ((map_lh__d1 (fun x_2 -> 
     (findallawards_lh__d1 (competitors_lh__d1 (x_2 mod 100))))) ((enumFromTo_lh__d1 1) _lh_testAwards_nofib_arg1_0));;
+let run () = 1 + (Obj.magic ((testAwards_nofib_lh__d1 500)));
 end;;
 

@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec snd_lh _lh_snd_arg1_0 =
   (match _lh_snd_arg1_0 with
     | `LH_P2(_lh_snd_LH_P2_0_0, _lh_snd_LH_P2_1_0) -> 
@@ -106,5 +106,6 @@ let rec testScc_nofib_lh _lh_testScc_nofib_arg1_0 =
                 (let rec vertices_0 = (`LH_C(a_0, (`LH_C(b_0, (`LH_C(c_0, (`LH_C(d_0, (`LH_C(f_1, (`LH_C(g_0, (`LH_C(h_2, (`LH_N))))))))))))))) in
                   (let rec edges_0 = (`LH_C((`LH_P2(b_0, a_0)), (`LH_C((`LH_P2(c_0, b_0)), (`LH_C((`LH_P2(c_0, d_0)), (`LH_C((`LH_P2(c_0, h_2)), (`LH_C((`LH_P2(d_0, c_0)), (`LH_C((`LH_P2(f_1, a_0)), (`LH_C((`LH_P2(f_1, g_0)), (`LH_C((`LH_P2(f_1, h_2)), (`LH_C((`LH_P2(g_0, f_1)), (`LH_C((`LH_P2(h_2, g_0)), (`LH_N))))))))))))))))))))) in
                     ((stronglyConnComp_lh edges_0) vertices_0))))))))));;
+let run () = 1 + (Obj.magic ((testScc_nofib_lh 0)));
 end;;
 

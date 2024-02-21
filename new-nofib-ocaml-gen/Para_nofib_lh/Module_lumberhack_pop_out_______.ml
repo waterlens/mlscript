@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_pop_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec null_lh__d2 _lh_null_arg1_1 =
   (match _lh_null_arg1_1 with
     | `LH_N -> 
@@ -855,5 +855,6 @@ let rec testPara_nofib_lh__d1 _lh_testPara_nofib_arg1_0 =
     (`LH_N)
   else
     (fmt_lh__d1 (test_lh__d1 0)));;
+let run () = 1 + (Obj.magic ((testPara_nofib_lh__d1 0)));
 end;;
 

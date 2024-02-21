@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec keys_lh =
   (`LH_C((`LH_C('c', (`LH_C('a', (`LH_C('s', (`LH_C('e', (`LH_N))))))))), (`LH_C((`LH_C('c', (`LH_C('l', (`LH_C('a', (`LH_C('s', (`LH_C('s', (`LH_N))))))))))), (`LH_C((`LH_C('d', (`LH_C('a', (`LH_C('t', (`LH_C('a', (`LH_N))))))))), (`LH_C((`LH_C('d', (`LH_C('e', (`LH_C('f', (`LH_C('a', (`LH_C('u', (`LH_C('l', (`LH_C('t', (`LH_N))))))))))))))), (`LH_C((`LH_C('d', (`LH_C('e', (`LH_C('r', (`LH_C('i', (`LH_C('v', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_N))))))))))))))))), (`LH_C((`LH_C('e', (`LH_C('l', (`LH_C('s', (`LH_C('e', (`LH_N))))))))), (`LH_C((`LH_C('h', (`LH_C('i', (`LH_C('d', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_N))))))))))))), (`LH_C((`LH_C('i', (`LH_C('f', (`LH_N))))), (`LH_C((`LH_C('i', (`LH_C('m', (`LH_C('p', (`LH_C('o', (`LH_C('r', (`LH_C('t', (`LH_N))))))))))))), (`LH_C((`LH_C('i', (`LH_C('n', (`LH_N))))), (`LH_C((`LH_C('i', (`LH_C('n', (`LH_C('f', (`LH_C('i', (`LH_C('x', (`LH_N))))))))))), (`LH_C((`LH_C('i', (`LH_C('n', (`LH_C('f', (`LH_C('i', (`LH_C('x', (`LH_C('l', (`LH_N))))))))))))), (`LH_C((`LH_C('i', (`LH_C('n', (`LH_C('s', (`LH_C('t', (`LH_C('a', (`LH_C('n', (`LH_C('c', (`LH_C('e', (`LH_N))))))))))))))))), (`LH_C((`LH_C('i', (`LH_C('n', (`LH_C('t', (`LH_C('e', (`LH_C('r', (`LH_C('f', (`LH_C('a', (`LH_C('c', (`LH_C('e', (`LH_N))))))))))))))))))), (`LH_C((`LH_C('l', (`LH_C('e', (`LH_C('t', (`LH_N))))))), (`LH_C((`LH_C('m', (`LH_C('o', (`LH_C('d', (`LH_C('u', (`LH_C('l', (`LH_C('e', (`LH_N))))))))))))), (`LH_C((`LH_C('o', (`LH_C('f', (`LH_N))))), (`LH_C((`LH_C('r', (`LH_C('e', (`LH_C('n', (`LH_C('a', (`LH_C('m', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_N))))))))))))))))), (`LH_C((`LH_C('t', (`LH_C('h', (`LH_C('e', (`LH_C('n', (`LH_N))))))))), (`LH_C((`LH_C('t', (`LH_C('o', (`LH_N))))), (`LH_C((`LH_C('t', (`LH_C('y', (`LH_C('p', (`LH_C('e', (`LH_N))))))))), (`LH_C((`LH_C('w', (`LH_C('h', (`LH_C('e', (`LH_C('r', (`LH_C('e', (`LH_N))))))))))), (`LH_N)))))))))))))))))))))))))))))))))))))))))))));;
 let rec all_lh _lh_all_arg1_0 _lh_all_arg2_0 =
@@ -339,5 +339,6 @@ let rec prog_lh _lh_prog_arg1_0 =
   (cichelli_lh _lh_prog_arg1_0);;
 let rec testCichelli_nofib_lh _lh_testCichelli_nofib_arg1_0 =
   (prog_lh _lh_testCichelli_nofib_arg1_0);;
+let run () = 1 + (Obj.magic ((testCichelli_nofib_lh 6)));
 end;;
 

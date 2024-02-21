@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec conjunct_lh__d2 _lh_conjunct_arg1_0 =
   (match _lh_conjunct_arg1_0 with
     | `Con(_lh_conjunct_Con_0_0, _lh_conjunct_Con_1_0) -> 
@@ -685,5 +685,6 @@ let rec copy_lh__d1 _lh_copy_arg1_0 _lh_copy_arg2_0 =
 let rec testClausify_nofib_lh__d1 _lh_testClausify_nofib_arg1_0 =
   (let rec xs_5 = ((copy_lh__d1 _lh_testClausify_nofib_arg1_0) (`LH_C('(', (`LH_C('a', (`LH_C(' ', (`LH_C('=', (`LH_C(' ', (`LH_C('a', (`LH_C(' ', (`LH_C('=', (`LH_C(' ', (`LH_C('a', (`LH_C(')', (`LH_C(' ', (`LH_C('=', (`LH_C(' ', (`LH_C('(', (`LH_C('a', (`LH_C(' ', (`LH_C('=', (`LH_C(' ', (`LH_C('a', (`LH_C(' ', (`LH_C('=', (`LH_C(' ', (`LH_C('a', (`LH_C(')', (`LH_C(' ', (`LH_C('=', (`LH_C(' ', (`LH_C('(', (`LH_C('a', (`LH_C(' ', (`LH_C('=', (`LH_C(' ', (`LH_C('a', (`LH_C(' ', (`LH_C('=', (`LH_C(' ', (`LH_C('a', (`LH_C(')', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) in
     ((xs_5 clauses_lh__d1) 99));;
+let run () = 1 + (Obj.magic ((testClausify_nofib_lh__d1 10)));
 end;;
 

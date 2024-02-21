@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec enumFromThen_lh__d1 a_0 t_0 =
   (lazy (`LH_C(a_0, ((enumFromThen_lh__d1 t_0) ((2 * t_0) - a_0)))));;
 let rec head_lz_lh__d1 ls_1 =
@@ -102,5 +102,6 @@ let rec e_lh__d1 _lh_e_arg1_0 =
     (string_of_int (head_lz_lh__d1 _lh_funcomp_x_3))))))));;
 let rec testDigitsOfE2_nofib_lh__d1 _lh_testDigitsOfE2_nofib_arg1_0 =
   (e_lh__d1 _lh_testDigitsOfE2_nofib_arg1_0);;
+let run () = 1 + (Obj.magic ((testDigitsOfE2_nofib_lh__d1 500)));
 end;;
 

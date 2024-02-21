@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec append_lh _lh_append_arg1_0 _lh_append_arg2_0 =
   (match _lh_append_arg1_0 with
     | `LH_N -> 
@@ -79,5 +79,6 @@ let rec queens_lh _lh_queens_arg1_0 =
         (_lh_listcomp_fun_1 (queens_lh (_lh_queens_arg1_0 - 1)))));;
 let rec testAnotherQueenNineBuiltInType_lh _lh_testAnotherQueenNineBuiltInType_arg1_0 =
   (length_lh (queens_lh _lh_testAnotherQueenNineBuiltInType_arg1_0));;
+let run () = 1 + (Obj.magic ((testAnotherQueenNineBuiltInType_lh 9)));
 end;;
 

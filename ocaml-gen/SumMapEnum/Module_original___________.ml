@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original___________(LH_Dum: sig end) = struct
+module Module_original___________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec sum ls_1 =
   (match ls_1 with
     | `C(h_1, t_1) -> 
@@ -23,5 +23,6 @@ let rec map f_0 ls_0 =
 let rec testSumMapEnum n_0 =
   (sum ((map (fun x_0 -> 
     (x_0 * x_0))) ((enumFromTo 1) n_0)));;
+let run () = 1 + (Obj.magic ((testSumMapEnum 300000)));
 end;;
 

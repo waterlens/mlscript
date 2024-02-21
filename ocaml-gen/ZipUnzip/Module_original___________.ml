@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original___________(LH_Dum: sig end) = struct
+module Module_original___________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec unzip ls_0 =
   (match ls_0 with
     | `C(h_0, t_0) -> 
@@ -32,5 +32,6 @@ let rec testZipUnzip n_1 =
   (match (unzip (makeZippedList n_1)) with
     | `Pair(xs_1, ys_1) -> 
       ((zip xs_1) ys_1));;
+let run () = 1 + (Obj.magic ((testZipUnzip 50000)));
 end;;
 

@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec copy_lh__d1 _lh_copy_arg1_3 _lh_copy_arg2_3 =
   (if (_lh_copy_arg1_3 > 0) then
     (`LH_C(_lh_copy_arg2_3, ((copy_lh__d1 (_lh_copy_arg1_3 - 1)) _lh_copy_arg2_3)))
@@ -1439,5 +1439,6 @@ let rec run_lh__d1 _lh_run_arg1_0 _lh_run_arg2_0 =
         ((circuit_simulate_lh__d1 cycles_0) example_0))));;
 let rec testCircsim_nofib_lh__d1 _lh_testCircsim_nofib_arg1_0 =
   ((run_lh__d1 8) _lh_testCircsim_nofib_arg1_0);;
+let run () = 1 + (Obj.magic ((testCircsim_nofib_lh__d1 8)));
 end;;
 

@@ -3,7 +3,7 @@
 (* lumberhack_flo_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_flo_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_flo_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec insert_lh__d1 _lh_insert_arg1_0 _lh_insert_arg2_0 _lh_insert_arg3_0 =
   (match _lh_insert_arg2_0 with
     | `LH_C(_lh_insert_LH_C_0_0, _lh_insert_LH_C_1_0) -> 
@@ -1562,5 +1562,6 @@ let rec prog_lh__d1 _lh_prog_arg1_0 =
                   (1 + (t_1_4_9 99)))))))) ((game_0 showMove_lh__d1) 99))));;
 let rec testMinimax_nofib_lh__d1 _lh_testMinimax_nofib_arg1_0 =
   ((prog_lh__d1 _lh_testMinimax_nofib_arg1_0) 99);;
+let run () = 1 + (Obj.magic ((testMinimax_nofib_lh__d1 (`LH_C('1', (`LH_C('8', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_C('0', (`LH_N))))))))))))))));
 end;;
 

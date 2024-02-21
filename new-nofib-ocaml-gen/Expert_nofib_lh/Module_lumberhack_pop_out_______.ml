@@ -3,7 +3,7 @@
 (* lumberhack_pop_out *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_pop_out_______(LH_Dum: sig end) = struct
+module Module_lumberhack_pop_out_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec take_lh__d1 n_2 ls_4 =
   (if (n_2 > 0) then
     (match ls_4 with
@@ -3535,5 +3535,6 @@ let rec testExpert_nofib_lh__d1 _lh_testExpert_nofib_arg1_0 =
       ((fun _lh_funcomp_x_0 -> 
         ((fun _lh_funcomp_x_1 -> 
           (length_lh__d1 ((process_lh__d1 animals_0) _lh_funcomp_x_1))) ((take_lh__d1 (_lh_testExpert_nofib_arg1_0 + 9999)) _lh_funcomp_x_0))) contents_0)));;
+let run () = 1 + (Obj.magic ((testExpert_nofib_lh__d1 3)));
 end;;
 

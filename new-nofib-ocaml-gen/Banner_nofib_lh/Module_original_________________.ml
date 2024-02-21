@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec replicate_lh _lh_replicate_arg1_0 _lh_replicate_arg2_0 =
   (if (_lh_replicate_arg1_0 = 0) then
     (`LH_N)
@@ -183,5 +183,6 @@ let rec say_lh _lh_say_arg1_0 =
             (`LH_C('n', x_0))) (unlines_lh _lh_funcomp_x_3))) ((map_lh join_lh) _lh_funcomp_x_2))) (transpose_lh _lh_funcomp_x_1))) ((map_lh picChar_lh) _lh_funcomp_x_0))) _lh_say_arg1_0);;
 let rec testBanner_nofib_lh _lh_testBanner_nofib_arg1_0 =
   (say_lh (concat_lh ((replicate_lh _lh_testBanner_nofib_arg1_0) (`LH_C('I', (`LH_C('s', (`LH_C(' ', (`LH_C('t', (`LH_C('h', (`LH_C('i', (`LH_C('s', (`LH_C(' ', (`LH_C('n', (`LH_C('o', (`LH_C('t', (`LH_C(' ', (`LH_C('a', (`LH_C(' ', (`LH_C('g', (`LH_C('r', (`LH_C('e', (`LH_C('a', (`LH_C('t', (`LH_C(' ', (`LH_C('b', (`LH_C('a', (`LH_C('n', (`LH_C('n', (`LH_C('e', (`LH_C('r', (`LH_C('?', (`LH_N))))))))))))))))))))))))))))))))))))))))))))))))))))))))));;
+let run () = 1 + (Obj.magic ((testBanner_nofib_lh 100)));
 end;;
 

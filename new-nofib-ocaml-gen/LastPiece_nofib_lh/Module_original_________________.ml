@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec enumFromTo_lh a_0 b_0 =
   (if (a_0 <= b_0) then
     (`LH_C(a_0, ((enumFromTo_lh (a_0 + 1)) b_0)))
@@ -880,5 +880,6 @@ let rec testLastPiece_nofib_lh _lh_testLastPiece_nofib_arg1_0 =
   in (let rec initialBoard_0 = (fromJust_lh ((((fit_lh emptyBoard_lh) (`LH_P2(1, 1))) 'a') (`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, 1)), (`LH_N))))))) in
     (let rec solutions_0 = ((((search_lh (`LH_P2(1, 2))) (`Female)) initialBoard_0) (initialPieces_lh 0)) in
       (printDoc_0 (display_0 solutions_0))));;
+let run () = 1 + (Obj.magic ((testLastPiece_nofib_lh 0)));
 end;;
 

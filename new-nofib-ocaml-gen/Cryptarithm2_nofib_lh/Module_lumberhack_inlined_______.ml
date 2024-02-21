@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec filter_lh__d1 f_1_3 ls_1_2 =
   (match ls_1_2 with
     | `LH_C(h_2_7, t_2_7) -> 
@@ -591,5 +591,6 @@ let rec testCryptarithm2_nofib_lh__d1 _lh_testCryptarithm2_nofib_arg1_0 =
   else
     (`LH_N))), (`LH_N))))))))))))) in
     ((puzzle_lh__d1 args_0) (`LH_C('N', (`LH_C('I', (`LH_C('N', (`LH_C('E', (`LH_C('T', (`LH_C('Y', (`LH_N)))))))))))))));;
+let run () = 1 + (Obj.magic ((testCryptarithm2_nofib_lh__d1 1500)));
 end;;
 

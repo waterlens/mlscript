@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec mappend_lh__d1_d8 xs_4 ys_1_5 =
   (match xs_4 with
     | `LH_C(h_9, t_9) -> 
@@ -1417,5 +1417,6 @@ let rec testFish_nofib_lh__d1 _lh_testFish_nofib_arg1_0 =
   ((map_lh__d1 (fun i_0 -> 
     (let rec n_0 = ((min_lh__d1 0) i_0) in
       ((fmt_lh__d1 (((pseudolimit_lh__d1 (`LH_P2(0, 0))) (`LH_P2((640 + n_0), 0))) (`LH_P2(0, (640 + n_0))))) 99)))) ((enumFromTo_lh__d1 0) _lh_testFish_nofib_arg1_0));;
+let run () = 1 + (Obj.magic ((testFish_nofib_lh__d1 3)));
 end;;
 

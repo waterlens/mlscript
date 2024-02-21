@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec cNil_lh =
   (`CNil);;
 let rec ppNil_lh _lh_ppNil_arg1_0 _lh_ppNil_arg2_0 =
@@ -328,5 +328,6 @@ let rec ppShow_lh _lh_ppShow_arg1_0 _lh_ppShow_arg2_0 =
 let rec testPretty_nofib_lh _lh_testPretty_nofib_arg1_0 =
   (let rec pretty_stuff_0 = (ppAboves_lh (`LH_C((ppBesides_lh (`LH_C((ppInt_lh (0 - 42)), (`LH_C((ppChar_lh '@'), (`LH_C((ppStr_lh (`LH_C('T', (`LH_C('h', (`LH_C('i', (`LH_C('s', (`LH_C(' ', (`LH_C('i', (`LH_C('s', (`LH_C(' ', (`LH_C('a', (`LH_C(' ', (`LH_C('s', (`LH_C('t', (`LH_C('r', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_N)))))))))))))))))))))))))))))))))), (`LH_N)))))))), (`LH_C(pp'SP_lh, (`LH_C((((ppHang_lh (ppStr_lh (`LH_C('T', (`LH_C('h', (`LH_C('i', (`LH_C('s', (`LH_C(' ', (`LH_C('i', (`LH_C('s', (`LH_C(' ', (`LH_C('t', (`LH_C('h', (`LH_C('e', (`LH_C(' ', (`LH_C('l', (`LH_C('a', (`LH_C('b', (`LH_C('e', (`LH_C('l', (`LH_N))))))))))))))))))))))))))))))))))))) 8) (ppCat_lh ((copy_lh 50) (ppStr_lh (`LH_C('x', (`LH_C('x', (`LH_C('x', (`LH_C('x', (`LH_C('x', (`LH_N))))))))))))))), (`LH_N)))))))) in
     ((mappend_lh ((ppShow_lh 80) pretty_stuff_0)) (`LH_C('|', (`LH_N)))));;
+let run () = 1 + (Obj.magic ((testPretty_nofib_lh 0)));
 end;;
 

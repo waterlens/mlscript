@@ -3,7 +3,7 @@
 (* lumberhack_only_expanded *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_only_expanded_(LH_Dum: sig end) = struct
+module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec finalState_lh__d1 =
   (`State((`RightBank), (`RightBank), (`RightBank), (`RightBank)));;
 let rec updateState_lh__d1 _lh_updateState_arg1_2 _lh_updateState_arg2_2 _lh_updateState_arg3_2 =
@@ -555,5 +555,6 @@ let rec testPuzzle_nofib_lh__d1 _lh_testPuzzle_nofib_arg1_0 =
     (let rec solutions_0 = (((((transfer_lh__d1 initialState_lh__d1) finalState_lh__d1) (`RightBank)) time_0) (`LH_N)) in
       (let rec mins_1 = (minSolutions_lh__d1 solutions_0) in
         (((writeSolutions_lh__d1 mins_1) 1) (`LH_N)))));;
+let run () = 1 + (Obj.magic ((testPuzzle_nofib_lh__d1 (`LH_C(2, (`LH_N))))));
 end;;
 

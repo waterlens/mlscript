@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec mappend_lh__d3 xs_0 ys_0 =
   (match xs_0 with
     | `LH_C(h_0, t_0) -> 
@@ -771,5 +771,6 @@ let rec testPuzzle_nofib_lh__d1 _lh_testPuzzle_nofib_arg1_0 =
               ((mappend_lh__d3 moveOne_3) moveTwo_3)))))) in
       (let rec mins_1 = (minSolutions_lh__d1 solutions_0) in
         ((mins_1 1) (`LH_N)))));;
+let run () = 1 + (Obj.magic ((testPuzzle_nofib_lh__d1 (`LH_C(2, (`LH_N))))));
 end;;
 

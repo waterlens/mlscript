@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec freqsorted_lh__d1 _lh_freqsorted_arg1_0 =
   _lh_freqsorted_arg1_0;;
 let rec findhash_lh__d1 _lh_findhash_arg1_0 =
@@ -937,5 +937,6 @@ let rec prog_lh__d1 _lh_prog_arg1_0 =
   (cichelli_lh__d1 _lh_prog_arg1_0);;
 let rec testCichelli_nofib_lh__d1 _lh_testCichelli_nofib_arg1_0 =
   (prog_lh__d1 _lh_testCichelli_nofib_arg1_0);;
+let run () = 1 + (Obj.magic ((testCichelli_nofib_lh__d1 6)));
 end;;
 

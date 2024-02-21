@@ -3,7 +3,7 @@
 (* lumberhack_inlined *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_lumberhack_inlined_______(LH_Dum: sig end) = struct
+module Module_lumberhack_inlined_______(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec enumFromTo_lh__d1 a_1 b_1 =
   (if (a_1 <= b_1) then
     (let rec t_1 = ((enumFromTo_lh__d1 (a_1 + 1)) b_1) in
@@ -276,5 +276,6 @@ let rec testAwards_nofib_lh__d1 _lh_testAwards_nofib_arg1_0 =
     ((competitors_lh__d1 (x_2 mod 100)) (fun name_scores_1 -> 
       (let rec _lh_matchIdent_5 = name_scores_1 in
         (_lh_matchIdent_5 99))))));;
+let run () = 1 + (Obj.magic ((testAwards_nofib_lh__d1 500)));
 end;;
 

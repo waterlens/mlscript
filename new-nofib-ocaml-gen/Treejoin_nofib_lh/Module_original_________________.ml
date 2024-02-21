@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec insertT_lh _lh_insertT_arg1_0 _lh_insertT_arg2_0 _lh_insertT_arg3_0 =
   (match _lh_insertT_arg3_0 with
     | `Node(_lh_insertT_Node_0_0, _lh_insertT_Node_1_0, _lh_insertT_Node_2_0) -> 
@@ -146,5 +146,6 @@ let rec testTreejoin_nofib_lh _lh_testTreejoin_nofib_arg1_0 =
               | _ -> 
                 (failwith "error"))))) c2_0) (`Empty)) in
           (((join_lh a_0) b_0) (`Empty))))));;
+let run () = 1 + (Obj.magic ((testTreejoin_nofib_lh 0)));
 end;;
 

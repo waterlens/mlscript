@@ -2,7 +2,7 @@
 (* original *)
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
-module Module_original_________________(LH_Dum: sig end) = struct
+module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
 let rec map_lh f_0 ls_0 =
   (match ls_0 with
     | `LH_C(h_0, t_0) -> 
@@ -524,10 +524,10 @@ let rec lookat_lh =
   (`LH_P3(0.0, 0.0, 0.0));;
 let rec vup_lh =
   (`LH_P3(0.0, 0.0, 1.0));;
-let rec testlights_lh _lh_testlights_arg1_0 =
+let rec testlights_lh =
   (`LH_C((`Point((`LH_P3(4.0, 3.0, 2.0)), (`LH_P3(0.288675, 0.288675, 0.288675)))), (`LH_C((`Point((`LH_P3(1.0, (0.0 -. 4.0), 4.0)), (`LH_P3(0.288675, 0.288675, 0.288675)))), (`LH_C((`Point((`LH_P3((0.0 -. 3.0), 1.0, 5.0)), (`LH_P3(0.288675, 0.288675, 0.288675)))), (`LH_N)))))));;
 let rec ray_lh _lh_ray_arg1_0 =
-  (let rec lights_0 = (testlights_lh 0) in
+  (let rec lights_0 = testlights_lh in
     (let rec _lh_matchIdent_1_3 = (((((camparams_lh lookfrom_lh) lookat_lh) vup_lh) fov_lh) (float_of_int _lh_ray_arg1_0)) in
       (match _lh_matchIdent_1_3 with
         | `LH_P3(_lh_ray_LH_P3_0_0, _lh_ray_LH_P3_1_0, _lh_ray_LH_P3_2_0) -> 
@@ -552,5 +552,6 @@ let rec run_lh _lh_run_arg1_0 =
   (hash_lh ((map_lh snd_lh) (ray_lh _lh_run_arg1_0)));;
 let rec testSphere_nofib_lh _lh_testSphere_nofib_arg1_0 =
   (run_lh _lh_testSphere_nofib_arg1_0);;
+let run () = 1 + (Obj.magic ((testSphere_nofib_lh 30)));
 end;;
 

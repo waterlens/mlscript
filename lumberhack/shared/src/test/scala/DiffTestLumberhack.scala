@@ -245,8 +245,8 @@ class DiffTestLumberhack extends DiffTests {
             (if mode.lhInHaskell then Some("lumberhack_only_expanded" -> originalProgram) else None) ::
             Some("lumberhack" -> iterativeProcessRes._1.deadCodeToMagic) :: 
             Some("lumberhack_pop_out" -> iterativeProcessRes._1.deadCodeToMagic.popOutLambdas(using mode.lhLessExpansion)._1) ::
-            Some("lumberhack_inlined" -> inlineSomeFunctions) ::
-            Some("lumberhack_flo_out" -> floatingOutSomeLamdbas) ::
+            // Some("lumberhack_inlined" -> inlineSomeFunctions) ::
+            // Some("lumberhack_flo_out" -> floatingOutSomeLamdbas) ::
             Nil
           ).flatten)
           output("benchmark file generated")
@@ -827,7 +827,10 @@ end;;
       }
       
       val mainGen = {
-        val benchRunGen = 
+        val benchRunGen =
+          (programs.tail.map { case (name, prgm) =>
+            s"${name}_${benchName}" -> s"let open ${val n = s"Module_$name".padTo(longestNameSize, '_'); s"$n.$n"}(struct end) in (run ())"
+          }).reverse ++
           (programs.head._2.defAndExpr._2 match {
             case e :: Nil =>
               (s"original_${benchName}" ->
@@ -837,8 +840,6 @@ end;;
               (s"manual_${benchName}" -> s"let open ${val n = "Module_original".padTo(longestNameSize, '_'); s"$n.$n"}(struct end) in (run_manual ())")
             )
             case _ => lastWords("unreachable")
-          }).appendedAll(programs.tail.map { case (name, prgm) =>
-            s"${name}_${benchName}" -> s"let open ${val n = s"Module_$name".padTo(longestNameSize, '_'); s"$n.$n"}(struct end) in (run ())"
           })
         stack(
           Raw("Command_unix.run (Bench.make_command ["),

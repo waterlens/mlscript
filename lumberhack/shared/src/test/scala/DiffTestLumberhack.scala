@@ -828,6 +828,60 @@ end;;
       
       val mainGen = {
         val benchRunGen =
+          (programs.head._2.defAndExpr._2 match {
+            case e :: Nil =>
+              (s"original_${benchName}" ->
+                s"let open ${val n = "Module_original".padTo(longestNameSize, '_'); s"$n.$n"}(struct end) in (run ())") :: Nil
+            case e :: m :: Nil => List(
+              (s"original_${benchName}" -> s"let open ${val n = "Module_original".padTo(longestNameSize, '_'); s"$n.$n"}(struct end) in (run ())"),
+              (s"manual_${benchName}" -> s"let open ${val n = "Module_original".padTo(longestNameSize, '_'); s"$n.$n"}(struct end) in (run_manual ())")
+            )
+            case _ => lastWords("unreachable")
+          }) ++
+          (programs.tail.map { case (name, prgm) =>
+            s"${name}_${benchName}" -> s"let open ${val n = s"Module_$name".padTo(longestNameSize, '_'); s"$n.$n"}(struct end) in (run ())"
+          })
+          
+        stack(
+          Raw("Command_unix.run (Bench.make_command ["),
+          Indented(Stacked(
+            benchRunGen.map { case (name, doc) =>
+              Raw(s"Bench.Test.create ~name:\"$name\" (fun () -> ignore ($doc));")
+            },
+            false
+          )),
+          Raw("])")
+        )
+      }
+
+      (
+        "main",
+        Stacked(
+          Raw(s"(*\n$compileAndRunCommand\n*)") ::
+          Raw("open Core_bench;;") ::
+          mainGen ::
+          Nil,
+          false
+        ).print
+      )
+    }
+
+    val mainFileStringReversed = {
+      val compileAndRunCommand = {
+        val allFileNames =
+          (commonFileString ::
+          largeStrFileString ::
+          originalDefsString ::
+          restMergedDefsString).map("./" + _._1 + ".ml") :+ "./mainRev.ml"
+        "ocamlfind ocamlopt -rectypes -thread -O3 -w -A " +
+        allFileNames.mkString(" ") +
+        s" -o ${benchName}Rev.out" +
+        s" -linkpkg -package \"core_unix.command_unix\" -linkpkg -package \"core_bench\" "+
+        s"&& ./${benchName}Rev.out +time"
+      }
+      
+      val mainGen = {
+        val benchRunGen =
           (programs.tail.map { case (name, prgm) =>
             s"${name}_${benchName}" -> s"let open ${val n = s"Module_$name".padTo(longestNameSize, '_'); s"$n.$n"}(struct end) in (run ())"
           }).reverse ++
@@ -854,7 +908,7 @@ end;;
       }
 
       (
-        "main",
+        "mainRev",
         Stacked(
           Raw(s"(*\n$compileAndRunCommand\n*)") ::
           Raw("open Core_bench;;") ::
@@ -883,7 +937,7 @@ end;;
     ) ::
     originalDefsString ::
     restMergedDefsString :::
-    (mainFileString :: Nil)).foreach { case (fileName, fileContent) =>
+    (mainFileString :: mainFileStringReversed :: Nil)).foreach { case (fileName, fileContent) =>
       // s"touch $pathPrefix/$fileName.ml".!
       val fw = new FileWriter(s"$pathPrefix/$fileName.ml", false)
       fw.write(fileContent + "\n")

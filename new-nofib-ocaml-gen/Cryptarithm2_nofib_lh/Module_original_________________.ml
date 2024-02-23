@@ -3,12 +3,6 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
-let rec mappend_lh xs_0 ys_0 =
-  (match xs_0 with
-    | `LH_C(h_5, t_5) -> 
-      (`LH_C(h_5, ((mappend_lh t_5) ys_0)))
-    | `LH_N -> 
-      ys_0);;
 let rec enumFromTo_lh a_0 b_0 =
   (if (a_0 <= b_0) then
     (`LH_C(a_0, ((enumFromTo_lh (a_0 + 1)) b_0)))
@@ -23,18 +17,24 @@ let rec digitEnv_lh _lh_digitEnv_arg1_0 =
       _lh_digitEnv_Digits_1_0
     | _ -> 
       (failwith "error"));;
-let rec runStateT_lh _lh_runStateT_arg1_0 =
-  (match _lh_runStateT_arg1_0 with
-    | `StateT(_lh_runStateT_StateT_0_0) -> 
-      _lh_runStateT_StateT_0_0
-    | _ -> 
-      (failwith "error"));;
+let rec mappend_lh xs_0 ys_0 =
+  (match xs_0 with
+    | `LH_C(h_5, t_5) -> 
+      (`LH_C(h_5, ((mappend_lh t_5) ys_0)))
+    | `LH_N -> 
+      ys_0);;
 let rec concat_lh lss_0 =
   (match lss_0 with
     | `LH_C(h_7, t_7) -> 
       ((mappend_lh h_7) (concat_lh t_7))
     | `LH_N -> 
       (`LH_N));;
+let rec runStateT_lh _lh_runStateT_arg1_0 =
+  (match _lh_runStateT_arg1_0 with
+    | `StateT(_lh_runStateT_StateT_0_0) -> 
+      _lh_runStateT_StateT_0_0
+    | _ -> 
+      (failwith "error"));;
 let rec map_lh f_0 ls_0 =
   (match ls_0 with
     | `LH_C(h_0, t_0) -> 
@@ -66,6 +66,12 @@ let rec lift_lh _lh_lift_arg1_0 =
   (`StateT((fun s_1 -> 
     (concat_lh ((map_lh (fun x_2 -> 
       (`LH_C((`LH_P2(x_2, s_1)), (`LH_N))))) _lh_lift_arg1_0)))));;
+let rec foldl_lh f_2 i_0 ls_2 =
+  (match ls_2 with
+    | `LH_C(h_2, t_2) -> 
+      (((foldl_lh f_2) ((f_2 i_0) h_2)) t_2)
+    | `LH_N -> 
+      i_0);;
 let rec delete_lh _lh_delete_arg1_0 _lh_delete_arg2_0 =
   (match _lh_delete_arg1_0 with
     | `LH_C(_lh_delete_LH_C_0_0, _lh_delete_LH_C_1_0) -> 
@@ -77,12 +83,6 @@ let rec delete_lh _lh_delete_arg1_0 _lh_delete_arg2_0 =
       (`LH_N)
     | _ -> 
       (failwith "error"));;
-let rec foldl_lh f_2 i_0 ls_2 =
-  (match ls_2 with
-    | `LH_C(h_2, t_2) -> 
-      (((foldl_lh f_2) ((f_2 i_0) h_2)) t_2)
-    | `LH_N -> 
-      i_0);;
 let rec listDiff_lh =
   (foldl_lh delete_lh);;
 let rec permute_lh _lh_permute_arg1_0 =
@@ -127,14 +127,14 @@ let rec select_lh _lh_select_arg1_0 =
           (permute_lh _lh_select_arg1_0)
         | _ -> 
           (failwith "error")))));;
-let rec sum_lh _lh_sum_arg1_0 =
-  (match _lh_sum_arg1_0 with
+let rec sumAux_lh ls_6 a_1 =
+  (match ls_6 with
     | `LH_N -> 
-      0
-    | `LH_C(_lh_sum_LH_C_0_0, _lh_sum_LH_C_1_0) -> 
-      (_lh_sum_LH_C_0_0 + (sum_lh _lh_sum_LH_C_1_0))
-    | _ -> 
-      (failwith "error"));;
+      a_1
+    | `LH_C(h_6, t_6) -> 
+      ((sumAux_lh t_6) (a_1 + h_6)));;
+let rec sum_lh ls_5 =
+  ((sumAux_lh ls_5) 0);;
 let rec guard_lh _lh_guard_arg1_0 =
   (match _lh_guard_arg1_0 with
     | true -> 
@@ -160,8 +160,8 @@ let rec foldr_lh f_3 i_1 ls_3 =
     | `LH_N -> 
       i_1);;
 let rec mapM_lh _lh_mapM_arg1_0 _lh_mapM_arg2_0 =
-  (((foldr_lh (fun a_2 r_0 -> 
-    ((bind_lh (_lh_mapM_arg1_0 a_2)) (fun x_0 -> 
+  (((foldr_lh (fun a_3 r_0 -> 
+    ((bind_lh (_lh_mapM_arg1_0 a_3)) (fun x_0 -> 
       ((bind_lh r_0) (fun xs_1 -> 
         (return_lh (`LH_C(x_0, xs_1))))))))) (return_lh (`LH_N))) _lh_mapM_arg2_0);;
 let rec solve_lh _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
@@ -196,14 +196,14 @@ let rec solve_lh _lh_solve_arg1_0 _lh_solve_arg2_0 _lh_solve_arg3_0 =
         | _ -> 
           (`StateT((fun _p_3 -> 
             (`LH_N))))));;
-let rec reverse_helper_lh ls_7 a_1 =
-  (match ls_7 with
+let rec reverse_helper_lh ls_8 a_2 =
+  (match ls_8 with
     | `LH_C(h_8, t_8) -> 
-      ((reverse_helper_lh t_8) (`LH_C(h_8, a_1)))
+      ((reverse_helper_lh t_8) (`LH_C(h_8, a_2)))
     | `LH_N -> 
-      a_1);;
-let rec reverse_lh ls_6 =
-  ((reverse_helper_lh ls_6) (`LH_N));;
+      a_2);;
+let rec reverse_lh ls_7 =
+  ((reverse_helper_lh ls_7) (`LH_N));;
 let rec fromJust_lh _lh_fromJust_arg1_0 =
   (match _lh_fromJust_arg1_0 with
     | `Just(_lh_fromJust_Just_0_0) -> 
@@ -303,9 +303,9 @@ let rec puzzle_lh _lh_puzzle_arg1_0 _lh_puzzle_arg2_0 =
       (let rec env_0 = (digitEnv_lh answer_0) in
         (let rec look_0 = (fun c_0 -> 
           (fromJust_lh ((lookup_lh c_0) env_0))) in
-          (let rec expand_0 = (fun ls_8 -> 
-            (((foldl_lh (fun a_3 b_1 -> 
-              ((a_3 * 10) + (look_0 b_1)))) 0) ls_8)) in
+          (let rec expand_0 = (fun ls_9 -> 
+            (((foldl_lh (fun a_4 b_1 -> 
+              ((a_4 * 10) + (look_0 b_1)))) 0) ls_9)) in
             (let rec topVal_0 = (sum_lh (let rec _lh_listcomp_fun_0 = (fun _lh_listcomp_fun_para_0 -> 
               (match _lh_listcomp_fun_para_0 with
                 | `LH_C(_lh_listcomp_fun_ls_h_0, _lh_listcomp_fun_ls_t_0) -> 

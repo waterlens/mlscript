@@ -3,6 +3,11 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_original_________________(LH_Dum: sig end): sig val run: unit -> int end = struct
+let rec copy_lh _lh_copy_arg1_0 _lh_copy_arg2_0 =
+  (if (_lh_copy_arg1_0 <= 0) then
+    (`LH_N)
+  else
+    (`LH_C(_lh_copy_arg2_0, ((copy_lh (_lh_copy_arg1_0 - 1)) _lh_copy_arg2_0))));;
 let rec all_lh _lh_all_arg1_0 _lh_all_arg2_0 =
   (match _lh_all_arg2_0 with
     | `LH_N -> 
@@ -31,18 +36,18 @@ let rec tail_lh ls_4 =
       t_4
     | `LH_N -> 
       (failwith "error"));;
-let rec cross_lh _lh_cross_arg1_0 _lh_cross_arg2_0 _lh_cross_arg3_0 =
-  (match _lh_cross_arg3_0 with
-    | `LH_P2(_lh_cross_LH_P2_0_0, _lh_cross_LH_P2_1_0) -> 
-      (`LH_P2((_lh_cross_arg1_0 _lh_cross_LH_P2_0_0), (_lh_cross_arg2_0 _lh_cross_LH_P2_1_0)))
-    | _ -> 
-      (failwith "error"));;
 let rec map_lh f_0 ls_0 =
   (match ls_0 with
     | `LH_C(h_0, t_0) -> 
       (`LH_C((f_0 h_0), ((map_lh f_0) t_0)))
     | `LH_N -> 
       (`LH_N));;
+let rec cross_lh _lh_cross_arg1_0 _lh_cross_arg2_0 _lh_cross_arg3_0 =
+  (match _lh_cross_arg3_0 with
+    | `LH_P2(_lh_cross_LH_P2_0_0, _lh_cross_LH_P2_1_0) -> 
+      (`LH_P2((_lh_cross_arg1_0 _lh_cross_LH_P2_0_0), (_lh_cross_arg2_0 _lh_cross_LH_P2_1_0)))
+    | _ -> 
+      (failwith "error"));;
 let rec map_dnet_lh _lh_map_dnet_arg1_0 _lh_map_dnet_arg2_0 =
   (match _lh_map_dnet_arg2_0 with
     | `Switch(_lh_map_dnet_Switch_0_0, _lh_map_dnet_Switch_1_0) -> 
@@ -210,8 +215,8 @@ let rec quant_lh _lh_quant_arg1_0 _lh_quant_arg2_0 _lh_quant_arg3_0 _lh_quant_ar
     ((_lh_quant_arg2_0 x_0) _lh_quant_arg3_0)) in
     ((_lh_quant_arg1_0 p_0) _lh_quant_arg4_0));;
 let rec update_alist_lh _lh_update_alist_arg1_0 _lh_update_alist_arg2_0 _lh_update_alist_arg3_0 =
-  (let rec upd_0 = (fun ls_8 -> 
-    (let rec _lh_matchIdent_1_2 = ls_8 in
+  (let rec upd_0 = (fun ls_9 -> 
+    (let rec _lh_matchIdent_1_2 = ls_9 in
       (match _lh_matchIdent_1_2 with
         | `LH_N -> 
           (`LH_C((`LH_P2(_lh_update_alist_arg1_0, (_lh_update_alist_arg2_0 _lh_update_alist_arg3_0))), (`LH_N)))
@@ -235,6 +240,27 @@ let rec lift_lh _lh_lift_arg1_0 _lh_lift_arg2_0 =
       (`Just((_lh_lift_arg1_0 _lh_lift_Just_0_0)))
     | _ -> 
       (failwith "error"));;
+let rec expr_fold_lh _lh_expr_fold_arg1_0 _lh_expr_fold_arg2_0 _lh_expr_fold_arg3_0 =
+  (match _lh_expr_fold_arg3_0 with
+    | `Var(_lh_expr_fold_Var_0_0) -> 
+      (_lh_expr_fold_arg2_0 _lh_expr_fold_Var_0_0)
+    | `Func(_lh_expr_fold_Func_0_0, _lh_expr_fold_Func_1_0) -> 
+      ((_lh_expr_fold_arg1_0 _lh_expr_fold_Func_0_0) ((map_lh ((expr_fold_lh _lh_expr_fold_arg1_0) _lh_expr_fold_arg2_0)) _lh_expr_fold_Func_1_0))
+    | _ -> 
+      (failwith "error"));;
+let rec getOrElse_lh _lh_getOrElse_arg1_0 _lh_getOrElse_arg2_0 =
+  (match _lh_getOrElse_arg1_0 with
+    | `Just(_lh_getOrElse_Just_0_0) -> 
+      _lh_getOrElse_Just_0_0
+    | `Nothing -> 
+      _lh_getOrElse_arg2_0
+    | _ -> 
+      (failwith "error"));;
+let rec apply_lh _lh_apply_arg1_0 _lh_apply_arg2_0 =
+  ((getOrElse_lh ((assoc_lh _lh_apply_arg1_0) _lh_apply_arg2_0)) (`Var(_lh_apply_arg2_0)));;
+let rec sub_lh _lh_sub_arg1_0 _lh_sub_arg2_0 =
+  (((expr_fold_lh (fun x_1_6 y_2 -> 
+    (`Func(x_1_6, y_2)))) (apply_lh _lh_sub_arg2_0)) _lh_sub_arg1_0);;
 let rec prop2_lh _lh_prop2_arg1_0 _lh_prop2_arg2_0 _lh_prop2_arg3_0 =
   (match _lh_prop2_arg2_0 with
     | `Nothing -> 
@@ -299,27 +325,6 @@ let rec match'_lh _lh_match'_arg1_0 _lh_match'_arg2_0 =
       (failwith "error"));;
 let rec match_lh _lh_match_arg1_0 _lh_match_arg2_0 =
   ((match'_lh (`LH_N)) (`LH_P2(_lh_match_arg1_0, _lh_match_arg2_0)));;
-let rec expr_fold_lh _lh_expr_fold_arg1_0 _lh_expr_fold_arg2_0 _lh_expr_fold_arg3_0 =
-  (match _lh_expr_fold_arg3_0 with
-    | `Var(_lh_expr_fold_Var_0_0) -> 
-      (_lh_expr_fold_arg2_0 _lh_expr_fold_Var_0_0)
-    | `Func(_lh_expr_fold_Func_0_0, _lh_expr_fold_Func_1_0) -> 
-      ((_lh_expr_fold_arg1_0 _lh_expr_fold_Func_0_0) ((map_lh ((expr_fold_lh _lh_expr_fold_arg1_0) _lh_expr_fold_arg2_0)) _lh_expr_fold_Func_1_0))
-    | _ -> 
-      (failwith "error"));;
-let rec getOrElse_lh _lh_getOrElse_arg1_0 _lh_getOrElse_arg2_0 =
-  (match _lh_getOrElse_arg1_0 with
-    | `Just(_lh_getOrElse_Just_0_0) -> 
-      _lh_getOrElse_Just_0_0
-    | `Nothing -> 
-      _lh_getOrElse_arg2_0
-    | _ -> 
-      (failwith "error"));;
-let rec apply_lh _lh_apply_arg1_0 _lh_apply_arg2_0 =
-  ((getOrElse_lh ((assoc_lh _lh_apply_arg1_0) _lh_apply_arg2_0)) (`Var(_lh_apply_arg2_0)));;
-let rec sub_lh _lh_sub_arg1_0 _lh_sub_arg2_0 =
-  (((expr_fold_lh (fun x_1_6 y_2 -> 
-    (`Func(x_1_6, y_2)))) (apply_lh _lh_sub_arg2_0)) _lh_sub_arg1_0);;
 let rec rewrite_lh _lh_rewrite_arg1_0 =
   (match _lh_rewrite_arg1_0 with
     | `Eqn(_lh_rewrite_Eqn_0_0, _lh_rewrite_Eqn_1_0) -> 
@@ -487,18 +492,20 @@ let rec subterms_lh _lh_subterms_arg1_0 =
       (failwith "error"));;
 let rec eqRewrite_lh _lh_eqRewrite_arg1_0 _lh_eqRewrite_arg2_0 _lh_eqRewrite_arg3_0 =
   ((_lh_eqRewrite_arg1_0 (`LH_P2(_lh_eqRewrite_arg2_0, _lh_eqRewrite_arg3_0))) = (`Equal));;
-let rec sum_lh ls_5 =
-  (match ls_5 with
-    | `LH_C(h_6, t_6) -> 
-      (h_6 + (sum_lh t_6))
+let rec sumAux_lh ls_6 a_1 =
+  (match ls_6 with
     | `LH_N -> 
-      0);;
+      a_1
+    | `LH_C(h_6, t_6) -> 
+      ((sumAux_lh t_6) (a_1 + h_6)));;
+let rec sum_lh ls_5 =
+  ((sumAux_lh ls_5) 0);;
 let rec cost_lh _lh_cost_arg1_0 =
   (match _lh_cost_arg1_0 with
     | `LH_P2(_lh_cost_LH_P2_0_0, _lh_cost_LH_P2_1_0) -> 
       (let rec size_0 = (fun _lh_size_arg1_0 -> 
-        (((expr_fold_lh (fun x_1_5 a_1 -> 
-          ((sum_lh a_1) + 1))) (fun dum_3 -> 
+        (((expr_fold_lh (fun x_1_5 a_2 -> 
+          ((sum_lh a_2) + 1))) (fun dum_3 -> 
           0)) _lh_size_arg1_0)) in
         ((size_0 _lh_cost_LH_P2_0_0) + (size_0 _lh_cost_LH_P2_1_0)))
     | _ -> 
@@ -543,11 +550,11 @@ let rec fst_lh _lh_fst_arg1_0 =
       _lh_fst_LH_P2_0_0
     | _ -> 
       (failwith "error"));;
-let rec atIndex_lh n_0 ls_6 =
+let rec atIndex_lh n_0 ls_7 =
   (if (n_0 < 0) then
     (failwith "error")
   else
-    (match ls_6 with
+    (match ls_7 with
       | `LH_C(h_7, t_7) -> 
         (if (n_0 = 0) then
           h_7
@@ -687,8 +694,8 @@ let rec result_lh _lh_result_arg1_0 =
             | _ -> 
               (failwith "error"))))
       and addby_0 = (fun _lh_addby_arg1_0 _lh_addby_arg2_0 _lh_addby_arg3_0 -> 
-        (let rec insert_0 = (fun x_2 ls_7 -> 
-          (let rec _lh_matchIdent_3 = ls_7 in
+        (let rec insert_0 = (fun x_2 ls_8 -> 
+          (let rec _lh_matchIdent_3 = ls_8 in
             (match _lh_matchIdent_3 with
               | `LH_N -> 
                 (`LH_C(x_2, (`LH_N)))
@@ -1334,11 +1341,6 @@ let rec result_lh _lh_result_arg1_0 =
         ((eqExpr_lh ((simplify_lh (super_reduce_0 group_completion_0)) (parse_0 _lh_result_LH_P2_0_0))) (parse_0 _lh_result_LH_P2_1_0)))
     | _ -> 
       (failwith "error"));;
-let rec copy_lh _lh_copy_arg1_0 _lh_copy_arg2_0 =
-  (if (_lh_copy_arg1_0 <= 0) then
-    (`LH_N)
-  else
-    (`LH_C(_lh_copy_arg2_0, ((copy_lh (_lh_copy_arg1_0 - 1)) _lh_copy_arg2_0))));;
 let rec testRewrite_nofib_lh _lh_testRewrite_nofib_arg1_0 =
   ((all_lh result_lh) ((copy_lh _lh_testRewrite_nofib_arg1_0) (`LH_P2((`LH_C('I', (`LH_C('(', (`LH_C('a', (`LH_C(' ', (`LH_C('*', (`LH_C(' ', (`LH_C('b', (`LH_C(')', (`LH_N))))))))))))))))), (`LH_C('I', (`LH_C('(', (`LH_C('b', (`LH_C(')', (`LH_C(' ', (`LH_C('*', (`LH_C(' ', (`LH_C('I', (`LH_C('(', (`LH_C('a', (`LH_C(')', (`LH_N)))))))))))))))))))))))))));;
 let run () = 1 + (Obj.magic ((testRewrite_nofib_lh 50)));

@@ -501,12 +501,14 @@ let rec eval_lh _lh_eval_arg1_0 =
       (`OWin)
     else
       (`Score(_lh_eval_arg1_0))));;
-let rec sum_lh ls_3 =
-  (match ls_3 with
-    | `LH_C(h_4, t_4) -> 
-      (h_4 + (sum_lh t_4))
+let rec sumAux_lh ls_4 a_1 =
+  (match ls_4 with
     | `LH_N -> 
-      0);;
+      a_1
+    | `LH_C(h_4, t_4) -> 
+      ((sumAux_lh t_4) (a_1 + h_4)));;
+let rec sum_lh ls_3 =
+  ((sumAux_lh ls_3) 0);;
 let rec map2_lh _lh_map2_arg1_0 _lh_map2_arg2_0 _lh_map2_arg3_0 =
   (match _lh_map2_arg2_0 with
     | `LH_N -> 

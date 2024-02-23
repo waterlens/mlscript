@@ -752,9 +752,10 @@ fun mappend(xs, ys) = if xs is
   LH_C(h, t) then LH_C(h, mappend(t, ys))
   LH_N then ys
 
-fun sum(ls) = if ls is
-  LH_C(h, t) then h + (sum(t))
-  LH_N then 0
+fun sum(ls) = sumAux(ls, 0)
+fun sumAux(ls, a) = if ls is
+  LH_N then a
+  LH_C(h, t) then sumAux(t, (a + h))
 
 fun atIndex(n, ls) =
   if n < 0 then

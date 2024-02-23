@@ -3400,28 +3400,31 @@ test $ primId 10
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ test_lh_₁^106(primId⁰(10))
-//│ def enumFromTo_lh_₁(a¹, b¹) = if (a¹ <= b¹) then [LH_C a¹ enumFromTo_lh_₁^60((a¹ + 1), b¹)] else [LH_N]
-//│ def enumFromTo_lh_₂(a⁰, b⁰) = if (a⁰ <= b⁰) then [LH_C a⁰ enumFromTo_lh_₂^7((a⁰ + 1), b⁰)] else [LH_N]
-//│ def sum_lh_₁(ls⁰) = case ls⁰ of {
-//│ 	LH_C h⁰ t⁰ => (h⁰ + sum_lh_₁^25(t⁰))
-//│ 	| LH_N  => 0}
-//│ def test_lh_₁(_lh_test_arg1⁰) = sum_lh_₁^74(zipWith_lh_₁^75((fun a² -> (fun b² -> (a² * b²))), primId⁰(enumFromTo_lh_₁^85(1, _lh_test_arg1⁰)), primId⁰(enumFromTo_lh_₂^93(_lh_test_arg1⁰, (2 * _lh_test_arg1⁰)))))
+//│ test_lh_₁^115(primId⁰(10))
+//│ def enumFromTo_lh_₁(a², b¹) = if (a² <= b¹) then [LH_C a² enumFromTo_lh_₁^69((a² + 1), b¹)] else [LH_N]
+//│ def enumFromTo_lh_₂(a¹, b⁰) = if (a¹ <= b⁰) then [LH_C a¹ enumFromTo_lh_₂^49((a¹ + 1), b⁰)] else [LH_N]
+//│ def sumAux_lh_₁(ls⁰, a⁰) = case ls⁰ of {
+//│ 	LH_N  => a⁰
+//│ 	| LH_C h⁰ t⁰ => sumAux_lh_₁^3(t⁰, (a⁰ + h⁰))}
+//│ def sum_lh_₁(ls¹) = sumAux_lh_₁^37(ls¹, 0)
+//│ def test_lh_₁(_lh_test_arg1⁰) = sum_lh_₁^83(zipWith_lh_₁^84((fun a³ -> (fun b² -> (a³ * b²))), primId⁰(enumFromTo_lh_₂^94(1, _lh_test_arg1⁰)), primId⁰(enumFromTo_lh_₁^102(_lh_test_arg1⁰, (2 * _lh_test_arg1⁰)))))
 //│ def zipWith_lh_₁(f⁰, xs⁰, ys⁰) = case xs⁰ of {
 //│ 	LH_C hx⁰ tx⁰ => case ys⁰ of {
-//│ 		LH_C hy⁰ ty⁰ => [LH_C f⁰(hx⁰, hy⁰) zipWith_lh_₁^39(f⁰, tx⁰, ty⁰)]
+//│ 		LH_C hy⁰ ty⁰ => [LH_C f⁰(hx⁰, hy⁰) zipWith_lh_₁^22(f⁰, tx⁰, ty⁰)]
 //│ 		| LH_N  => [LH_N]}
 //│ 	| LH_N  => [LH_N]}
 //│ 		---------- unoptimized distiller gen ----------
 //│ 		main = (test_lh__d1 10);
-//│ 		enumFromTo_lh__d1 a_1 b_1 =
-//│ 		  (case (le a_1 b_1) of True -> ((LH_C(a_1, ((enumFromTo_lh__d1 (plus a_1 1)) b_1)))) | False -> ((LH_N)));
-//│ 		enumFromTo_lh__d2 a_0 b_0 =
-//│ 		  (case (le a_0 b_0) of True -> ((LH_C(a_0, ((enumFromTo_lh__d2 (plus a_0 1)) b_0)))) | False -> ((LH_N)));
-//│ 		sum_lh__d1 ls_0 =
-//│ 		  (case ls_0 of LH_C(h_0, t_0) -> (plus h_0 (sum_lh__d1 t_0)) | LH_N -> 0);
+//│ 		enumFromTo_lh__d1 a_2 b_1 =
+//│ 		  (case (le a_2 b_1) of True -> ((LH_C(a_2, ((enumFromTo_lh__d1 (plus a_2 1)) b_1)))) | False -> ((LH_N)));
+//│ 		enumFromTo_lh__d2 a_1 b_0 =
+//│ 		  (case (le a_1 b_0) of True -> ((LH_C(a_1, ((enumFromTo_lh__d2 (plus a_1 1)) b_0)))) | False -> ((LH_N)));
+//│ 		sumAux_lh__d1 ls_0 a_0 =
+//│ 		  (case ls_0 of LH_N -> a_0 | LH_C(h_0, t_0) -> ((sumAux_lh__d1 t_0) (plus a_0 h_0)));
+//│ 		sum_lh__d1 ls_1 =
+//│ 		  ((sumAux_lh__d1 ls_1) 0);
 //│ 		test_lh__d1 _lh_test_arg1_0 =
-//│ 		  (sum_lh__d1 (((zipWith_lh__d1 (\a_2 b_2 -> (mul a_2 b_2))) ((enumFromTo_lh__d1 1) _lh_test_arg1_0)) ((enumFromTo_lh__d2 _lh_test_arg1_0) (mul 2 _lh_test_arg1_0))));
+//│ 		  (sum_lh__d1 (((zipWith_lh__d1 (\a_3 b_2 -> (mul a_3 b_2))) ((enumFromTo_lh__d2 1) _lh_test_arg1_0)) ((enumFromTo_lh__d1 _lh_test_arg1_0) (mul 2 _lh_test_arg1_0))));
 //│ 		zipWith_lh__d1 f_0 xs_0 ys_0 =
 //│ 		  (case xs_0 of LH_C(hx_0, tx_0) -> (case ys_0 of LH_C(hy_0, ty_0) -> (LH_C(((f_0 hx_0) hy_0), (((zipWith_lh__d1 f_0) tx_0) ty_0))) | LH_N -> (LH_N)) | LH_N -> (LH_N))
 //│ 		---------- unoptimized distiller gen ----------
@@ -3432,47 +3435,48 @@ test $ primId 10
 //│ <<<<<<<<<< Original Eval Res <<<<<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
-//│ [LH_C f⁰(hx⁰, hy⁰) zipWith_lh_₁(f⁰, tx⁰, ty⁰)]: 46 --->
-//│ 	case ls⁰ of {LH_C h⁰ t⁰ => (h⁰ + sum_lh_₁(t⁰)) | LH_N  => 0}: 30
-//│ [LH_N]: 47 --->
-//│ 	case ls⁰ of {LH_C h⁰ t⁰ => (h⁰ + sum_lh_₁(t⁰)) | LH_N  => 0}: 30
-//│ [LH_N]: 49 --->
-//│ 	case ls⁰ of {LH_C h⁰ t⁰ => (h⁰ + sum_lh_₁(t⁰)) | LH_N  => 0}: 30
+//│ [LH_C f⁰(hx⁰, hy⁰) zipWith_lh_₁(f⁰, tx⁰, ty⁰)]: 29 --->
+//│ 	case ls⁰ of {LH_N  => a⁰ | LH_C h⁰ t⁰ => sumAux_lh_₁(t⁰, (a⁰ + h⁰))}: 12
+//│ [LH_N]: 30 --->
+//│ 	case ls⁰ of {LH_N  => a⁰ | LH_C h⁰ t⁰ => sumAux_lh_₁(t⁰, (a⁰ + h⁰))}: 12
+//│ [LH_N]: 32 --->
+//│ 	case ls⁰ of {LH_N  => a⁰ | LH_C h⁰ t⁰ => sumAux_lh_₁(t⁰, (a⁰ + h⁰))}: 12
 //│ ------------------
-//│ case ls⁰ of {LH_C h⁰ t⁰ => (h⁰ + sum_lh_₁(t⁰)) | LH_N  => 0}: 30 --->
-//│ 	[LH_C f⁰(hx⁰, hy⁰) zipWith_lh_₁(f⁰, tx⁰, ty⁰)]: 46
-//│ 	[LH_N]: 47
-//│ 	[LH_N]: 49
+//│ case ls⁰ of {LH_N  => a⁰ | LH_C h⁰ t⁰ => sumAux_lh_₁(t⁰, (a⁰ + h⁰))}: 12 --->
+//│ 	[LH_C f⁰(hx⁰, hy⁰) zipWith_lh_₁(f⁰, tx⁰, ty⁰)]: 29
+//│ 	[LH_N]: 30
+//│ 	[LH_N]: 32
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
-//│ [LH_C f⁰(hx⁰, hy⁰) zipWith_lh_₁(f⁰, tx⁰, ty⁰)]: 46 --->
-//│ 	case ls⁰ of {LH_C h⁰ t⁰ => (h⁰ + sum_lh_₁(t⁰)) | LH_N  => 0}: 30
-//│ [LH_N]: 47 --->
-//│ 	case ls⁰ of {LH_C h⁰ t⁰ => (h⁰ + sum_lh_₁(t⁰)) | LH_N  => 0}: 30
-//│ [LH_N]: 49 --->
-//│ 	case ls⁰ of {LH_C h⁰ t⁰ => (h⁰ + sum_lh_₁(t⁰)) | LH_N  => 0}: 30
+//│ [LH_C f⁰(hx⁰, hy⁰) zipWith_lh_₁(f⁰, tx⁰, ty⁰)]: 29 --->
+//│ 	case ls⁰ of {LH_N  => a⁰ | LH_C h⁰ t⁰ => sumAux_lh_₁(t⁰, (a⁰ + h⁰))}: 12
+//│ [LH_N]: 30 --->
+//│ 	case ls⁰ of {LH_N  => a⁰ | LH_C h⁰ t⁰ => sumAux_lh_₁(t⁰, (a⁰ + h⁰))}: 12
+//│ [LH_N]: 32 --->
+//│ 	case ls⁰ of {LH_N  => a⁰ | LH_C h⁰ t⁰ => sumAux_lh_₁(t⁰, (a⁰ + h⁰))}: 12
 //│ ------------------
-//│ case ls⁰ of {LH_C h⁰ t⁰ => (h⁰ + sum_lh_₁(t⁰)) | LH_N  => 0}: 30 --->
-//│ 	[LH_C f⁰(hx⁰, hy⁰) zipWith_lh_₁(f⁰, tx⁰, ty⁰)]: 46
-//│ 	[LH_N]: 47
-//│ 	[LH_N]: 49
+//│ case ls⁰ of {LH_N  => a⁰ | LH_C h⁰ t⁰ => sumAux_lh_₁(t⁰, (a⁰ + h⁰))}: 12 --->
+//│ 	[LH_C f⁰(hx⁰, hy⁰) zipWith_lh_₁(f⁰, tx⁰, ty⁰)]: 29
+//│ 	[LH_N]: 30
+//│ 	[LH_N]: 32
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ test_lh_₁(primId⁰(10))
-//│ def enumFromTo_lh_₁(a⁵, b⁵) = if (a⁵ <= b⁵) then [LH_C a⁵ enumFromTo_lh_₁((a⁵ + 1), b⁵)] else [LH_N]
-//│ def enumFromTo_lh_₂(a⁴, b⁴) = if (a⁴ <= b⁴) then [LH_C a⁴ enumFromTo_lh_₂((a⁴ + 1), b⁴)] else [LH_N]
-//│ def sum_lh_₁(ls¹) = ls¹(99)
-//│ def test_lh_₁(_lh_test_arg1¹) = sum_lh_₁(zipWith_lh_₁((fun a³ -> (fun b³ -> (a³ * b³))), primId⁰(enumFromTo_lh_₁(1, _lh_test_arg1¹)), primId⁰(enumFromTo_lh_₂(_lh_test_arg1¹, (2 * _lh_test_arg1¹)))))
+//│ def enumFromTo_lh_₁(a⁶, b⁵) = if (a⁶ <= b⁵) then [LH_C a⁶ enumFromTo_lh_₁((a⁶ + 1), b⁵)] else [LH_N]
+//│ def enumFromTo_lh_₂(a⁵, b⁴) = if (a⁵ <= b⁴) then [LH_C a⁵ enumFromTo_lh_₂((a⁵ + 1), b⁴)] else [LH_N]
+//│ def sumAux_lh_₁(ls³, a⁷) = ls³(a⁷)
+//│ def sum_lh_₁(ls²) = sumAux_lh_₁(ls², 0)
+//│ def test_lh_₁(_lh_test_arg1¹) = sum_lh_₁(zipWith_lh_₁((fun a⁴ -> (fun b³ -> (a⁴ * b³))), primId⁰(enumFromTo_lh_₂(1, _lh_test_arg1¹)), primId⁰(enumFromTo_lh_₁(_lh_test_arg1¹, (2 * _lh_test_arg1¹)))))
 //│ def zipWith_lh_₁(f¹, xs¹, ys¹) = case xs¹ of {
 //│ 	LH_C hx⁰ tx⁰ => case ys¹ of {
 //│ 		LH_C hy⁰ ty⁰ => 
 //│ 			let t¹ = zipWith_lh_₁(f¹, tx⁰, ty⁰)
 //│ 			in let h¹ = f¹(hx⁰, hy⁰)
-//│ 			in (fun _lh_dummy⁰ -> (h¹ + sum_lh_₁(t¹)))
-//│ 		| LH_N  => (fun _lh_dummy¹ -> 0)}
-//│ 	| LH_N  => (fun _lh_dummy² -> 0)}
+//│ 			in (fun a⁸ -> sumAux_lh_₁(t¹, (a⁸ + h¹)))
+//│ 		| LH_N  => (fun a⁹ -> a⁹)}
+//│ 	| LH_N  => (fun a¹⁰ -> a¹⁰)}
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> evaluate >>>>>>>
@@ -3480,43 +3484,45 @@ test $ primId 10
 //│ <<<<<<< evaluate <<<<<<<
 //│ 
 //│ >>>>>>> consumer ids >>>>>>>
-//│ sum_lh_₁
+//│ sumAux_lh_₁
 //│ <<<<<<< consumer ids <<<<<<<
 //│ 
 //│ >>>>>>> floating out info >>>>>>>
-//│ zipWith_lh_₁ -> 4
+//│ zipWith_lh_₁ -> 3
 //│ <<<<<<< floating out info <<<<<<<
 //│ 
 //│ >>>>>>> after inlining >>>>>>>
 //│ test_lh_₁(primId⁰(10))
 //│ def enumFromTo_lh_₁(a², b²) = if (a² <= b²) then [LH_C a² enumFromTo_lh_₁((a² + 1), b²)] else [LH_N]
 //│ def enumFromTo_lh_₂(a¹, b¹) = if (a¹ <= b¹) then [LH_C a¹ enumFromTo_lh_₂((a¹ + 1), b¹)] else [LH_N]
-//│ def sum_lh_₁(ls⁰) = ls⁰(99)
-//│ def test_lh_₁(_lh_test_arg1⁰) = zipWith_lh_₁((fun a⁰ -> (fun b⁰ -> (a⁰ * b⁰))), primId⁰(enumFromTo_lh_₁(1, _lh_test_arg1⁰)), primId⁰(enumFromTo_lh_₂(_lh_test_arg1⁰, (2 * _lh_test_arg1⁰))), 99)
+//│ def sumAux_lh_₁(ls¹, a³) = ls¹(a³)
+//│ def sum_lh_₁(ls⁰) = ls⁰(0)
+//│ def test_lh_₁(_lh_test_arg1⁰) = sum_lh_₁(zipWith_lh_₁((fun a⁰ -> (fun b⁰ -> (a⁰ * b⁰))), primId⁰(enumFromTo_lh_₂(1, _lh_test_arg1⁰)), primId⁰(enumFromTo_lh_₁(_lh_test_arg1⁰, (2 * _lh_test_arg1⁰)))))
 //│ def zipWith_lh_₁(f⁰, xs⁰, ys⁰) = case xs⁰ of {
 //│ 	LH_C hx⁰ tx⁰ => case ys⁰ of {
 //│ 		LH_C hy⁰ ty⁰ => 
 //│ 			let t⁰ = zipWith_lh_₁(f⁰, tx⁰, ty⁰)
 //│ 			in let h⁰ = f⁰(hx⁰, hy⁰)
-//│ 			in (fun _lh_dummy⁰ -> (h⁰ + t⁰(99)))
-//│ 		| LH_N  => (fun _lh_dummy¹ -> 0)}
-//│ 	| LH_N  => (fun _lh_dummy² -> 0)}
+//│ 			in (fun a⁴ -> t⁰((a⁴ + h⁰)))
+//│ 		| LH_N  => (fun a⁵ -> a⁵)}
+//│ 	| LH_N  => (fun a⁶ -> a⁶)}
 //│ <<<<<<< after inlining <<<<<<<
 //│ 
 //│ >>>>>>> after floating out >>>>>>>
 //│ test_lh_₁(primId⁰(10))
 //│ def enumFromTo_lh_₁(a², b²) = if (a² <= b²) then [LH_C a² enumFromTo_lh_₁((a² + 1), b²)] else [LH_N]
 //│ def enumFromTo_lh_₂(a¹, b¹) = if (a¹ <= b¹) then [LH_C a¹ enumFromTo_lh_₂((a¹ + 1), b¹)] else [LH_N]
-//│ def sum_lh_₁(ls⁰) = ls⁰(99)
-//│ def test_lh_₁(_lh_test_arg1⁰) = zipWith_lh_₁((fun a⁰ -> (fun b⁰ -> (a⁰ * b⁰))), primId⁰(enumFromTo_lh_₁(1, _lh_test_arg1⁰)), primId⁰(enumFromTo_lh_₂(_lh_test_arg1⁰, (2 * _lh_test_arg1⁰))), 99)
-//│ def zipWith_lh_₁(f⁰, xs⁰, ys⁰, _lh_popOutId_0⁰) = case xs⁰ of {
+//│ def sumAux_lh_₁(ls¹, a³) = ls¹(a³)
+//│ def sum_lh_₁(ls⁰) = ls⁰(0)
+//│ def test_lh_₁(_lh_test_arg1⁰) = sum_lh_₁(zipWith_lh_₁((fun a⁰ -> (fun b⁰ -> (a⁰ * b⁰))), primId⁰(enumFromTo_lh_₂(1, _lh_test_arg1⁰)), primId⁰(enumFromTo_lh_₁(_lh_test_arg1⁰, (2 * _lh_test_arg1⁰)))))
+//│ def zipWith_lh_₁(f⁰, xs⁰, ys⁰) = case xs⁰ of {
 //│ 	LH_C hx⁰ tx⁰ => case ys⁰ of {
 //│ 		LH_C hy⁰ ty⁰ => 
 //│ 			let t⁰ = zipWith_lh_₁(f⁰, tx⁰, ty⁰)
 //│ 			in let h⁰ = f⁰(hx⁰, hy⁰)
-//│ 			in (h⁰ + t⁰(99))
-//│ 		| LH_N  => 0}
-//│ 	| LH_N  => 0}
+//│ 			in (fun a⁴ -> t⁰((a⁴ + h⁰)))
+//│ 		| LH_N  => (fun a⁵ -> a⁵)}
+//│ 	| LH_N  => (fun a⁶ -> a⁶)}
 //│ <<<<<<< after floating out <<<<<<<
 
 :lhInHaskell

@@ -4,56 +4,24 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_lumberhack_only_expanded_(LH_Dum: sig end): sig val run: unit -> int end = struct
-let rec enumFromTo_lh__d1 a_1 b_1 =
-  (if (a_1 <= b_1) then
-    (`LH_C(a_1, ((enumFromTo_lh__d1 (a_1 + 1)) b_1)))
-  else
-    (`LH_N));;
-let rec map_lh__d2 f_6 ls_7 =
-  (match ls_7 with
-    | `LH_C(h_1_0, t_1_0) -> 
-      (`LH_C((f_6 h_1_0), ((map_lh__d2 f_6) t_1_0)))
+let rec map_lh__d1 f_7 ls_9 =
+  (match ls_9 with
+    | `LH_C(h_1_1, t_1_1) -> 
+      (`LH_C((f_7 h_1_1), ((map_lh__d1 f_7) t_1_1)))
     | `LH_N -> 
       (`LH_N));;
-let rec delete_lh__d1 _lh_delete_arg1_0 _lh_delete_arg2_0 =
-  (match _lh_delete_arg1_0 with
-    | `LH_C(_lh_delete_LH_C_0_0, _lh_delete_LH_C_1_0) -> 
-      (if (_lh_delete_LH_C_0_0 = _lh_delete_arg2_0) then
-        ((delete_lh__d1 _lh_delete_LH_C_1_0) _lh_delete_arg2_0)
-      else
-        (`LH_C(_lh_delete_LH_C_0_0, ((delete_lh__d1 _lh_delete_LH_C_1_0) _lh_delete_arg2_0))))
-    | `LH_N -> 
-      (`LH_N)
-    | _ -> 
-      (failwith "error"));;
-let rec foldl_lh__d1 f_5 i_0 ls_6 =
-  (match ls_6 with
-    | `LH_C(h_9, t_9) -> 
-      (((foldl_lh__d1 f_5) ((f_5 i_0) h_9)) t_9)
-    | `LH_N -> 
-      i_0);;
-let rec listDiff_lh__d1 =
-  (foldl_lh__d1 delete_lh__d1);;
+let rec competitors_lh__d1 _lh_competitors_arg1_0 =
+  (`LH_C((`LH_P2((`LH_C('S', (`LH_C('i', (`LH_C('m', (`LH_C('o', (`LH_C('n', (`LH_N))))))))))), (`LH_C(35, (`LH_C(27, (`LH_C(40, (`LH_C(_lh_competitors_arg1_0, (`LH_C(34, (`LH_C(21, (`LH_N))))))))))))))), (`LH_C((`LH_P2((`LH_C('H', (`LH_C('a', (`LH_C('n', (`LH_C('s', (`LH_N))))))))), (`LH_C(23, (`LH_C(19, (`LH_C(45, (`LH_C(_lh_competitors_arg1_0, (`LH_C(17, (`LH_C(10, (`LH_C(5, (`LH_C(8, (`LH_C(14, (`LH_N))))))))))))))))))))), (`LH_C((`LH_P2((`LH_C('P', (`LH_C('h', (`LH_C('i', (`LH_C('l', (`LH_N))))))))), (`LH_C(1, (`LH_C(18, (`LH_C(_lh_competitors_arg1_0, (`LH_C(20, (`LH_C(21, (`LH_C(19, (`LH_C(34, (`LH_C(8, (`LH_C(16, (`LH_C(21, (`LH_N))))))))))))))))))))))), (`LH_C((`LH_P2((`LH_C('K', (`LH_C('e', (`LH_C('v', (`LH_C('i', (`LH_C('n', (`LH_N))))))))))), (`LH_C(9, (`LH_C(23, (`LH_C(17, (`LH_C(54, (`LH_C(_lh_competitors_arg1_0, (`LH_C(41, (`LH_C(9, (`LH_C(18, (`LH_C(14, (`LH_N))))))))))))))))))))), (`LH_N)))))))));;
 let rec mappend_lh__d1 xs_2 ys_2 =
   (match xs_2 with
-    | `LH_C(h_8, t_8) -> 
-      (`LH_C(h_8, ((mappend_lh__d1 t_8) ys_2)))
+    | `LH_C(h_9, t_9) -> 
+      (`LH_C(h_9, ((mappend_lh__d1 t_9) ys_2)))
     | `LH_N -> 
       ys_2);;
-let rec compareTuple2_lh__d1 _lh_compareTuple2_arg1_0 _lh_compareTuple2_arg2_0 =
-  (match _lh_compareTuple2_arg1_0 with
-    | `LH_P2(_lh_compareTuple2_LH_P2_0_0, _lh_compareTuple2_LH_P2_1_0) -> 
-      (match _lh_compareTuple2_arg2_0 with
-        | `LH_P2(_lh_compareTuple2_LH_P2_0_1, _lh_compareTuple2_LH_P2_1_1) -> 
-          (_lh_compareTuple2_LH_P2_0_0 <= _lh_compareTuple2_LH_P2_0_1)
-        | _ -> 
-          (failwith "error"))
-    | _ -> 
-      (failwith "error"));;
 let rec qpart_lh__d1 _lh_qpart_arg1_0 _lh_qpart_arg2_0 _lh_qpart_arg3_0 _lh_qpart_arg4_0 _lh_qpart_arg5_0 _lh_qpart_arg6_0 =
   (match _lh_qpart_arg3_0 with
     | `LH_N -> 
-      (((rqsort_lh__d2 _lh_qpart_arg1_0) _lh_qpart_arg4_0) (`LH_C(_lh_qpart_arg2_0, (((rqsort_lh__d1 _lh_qpart_arg1_0) _lh_qpart_arg5_0) _lh_qpart_arg6_0))))
+      (((rqsort_lh__d1 _lh_qpart_arg1_0) _lh_qpart_arg4_0) (`LH_C(_lh_qpart_arg2_0, (((rqsort_lh__d2 _lh_qpart_arg1_0) _lh_qpart_arg5_0) _lh_qpart_arg6_0))))
     | `LH_C(_lh_qpart_LH_C_0_0, _lh_qpart_LH_C_1_0) -> 
       (if ((_lh_qpart_arg1_0 _lh_qpart_arg2_0) _lh_qpart_LH_C_0_0) then
         ((((((qpart_lh__d1 _lh_qpart_arg1_0) _lh_qpart_arg2_0) _lh_qpart_LH_C_1_0) _lh_qpart_arg4_0) (`LH_C(_lh_qpart_LH_C_0_0, _lh_qpart_arg5_0))) _lh_qpart_arg6_0)
@@ -124,23 +92,33 @@ rqsort_lh__d2 _lh_rqsort_arg1_0 _lh_rqsort_arg2_0 _lh_rqsort_arg3_0 =
           ((((((rqpart_lh__d2 _lh_rqsort_arg1_0) _lh_rqsort_LH_C_0_0) _lh_rqsort_LH_C_1_0) (`LH_N)) (`LH_N)) _lh_rqsort_arg3_0))
     | _ -> 
       (failwith "error"));;
+let rec compareTuple2_lh__d1 _lh_compareTuple2_arg1_0 _lh_compareTuple2_arg2_0 =
+  (match _lh_compareTuple2_arg1_0 with
+    | `LH_P2(_lh_compareTuple2_LH_P2_0_0, _lh_compareTuple2_LH_P2_1_0) -> 
+      (match _lh_compareTuple2_arg2_0 with
+        | `LH_P2(_lh_compareTuple2_LH_P2_0_1, _lh_compareTuple2_LH_P2_1_1) -> 
+          (_lh_compareTuple2_LH_P2_0_0 <= _lh_compareTuple2_LH_P2_0_1)
+        | _ -> 
+          (failwith "error"))
+    | _ -> 
+      (failwith "error"));;
 let rec sort_lh__d1 _lh_sort_arg1_0 =
-  (((qsort_lh__d1 (fun a_0 b_0 -> 
-    ((compareTuple2_lh__d1 a_0) b_0))) _lh_sort_arg1_0) (`LH_N));;
+  (((qsort_lh__d1 (fun a_1 b_0 -> 
+    ((compareTuple2_lh__d1 a_1) b_0))) _lh_sort_arg1_0) (`LH_N));;
 let rec mappend_lh__d3 xs_0 ys_0 =
   (match xs_0 with
-    | `LH_C(h_1, t_1) -> 
-      (`LH_C(h_1, ((mappend_lh__d3 t_1) ys_0)))
+    | `LH_C(h_3, t_3) -> 
+      (`LH_C(h_3, ((mappend_lh__d3 t_3) ys_0)))
     | `LH_N -> 
       ys_0);;
-let rec map_lh__d6 f_0 ls_0 =
-  (match ls_0 with
-    | `LH_C(h_0, t_0) -> 
-      (`LH_C((f_0 h_0), ((map_lh__d6 f_0) t_0)))
+let rec map_lh__d6 f_0 ls_1 =
+  (match ls_1 with
+    | `LH_C(h_1, t_1) -> 
+      (`LH_C((f_0 h_1), ((map_lh__d6 f_0) t_1)))
     | `LH_N -> 
       (`LH_N));;
-let rec map_lh__d5 f_1 ls_1 =
-  (match ls_1 with
+let rec map_lh__d5 f_1 ls_2 =
+  (match ls_2 with
     | `LH_C(h_2, t_2) -> 
       (`LH_C((f_1 h_2), ((map_lh__d5 f_1) t_2)))
     | `LH_N -> 
@@ -163,39 +141,41 @@ let rec perms_lh__d1 _lh_perms_arg1_0 _lh_perms_arg2_0 =
               (failwith "error"))));;
 let rec mappend_lh__d2 xs_1 ys_1 =
   (match xs_1 with
-    | `LH_C(h_3, t_3) -> 
-      (`LH_C(h_3, ((mappend_lh__d2 t_3) ys_1)))
+    | `LH_C(h_8, t_8) -> 
+      (`LH_C(h_8, ((mappend_lh__d2 t_8) ys_1)))
     | `LH_N -> 
       ys_1);;
-let rec sum_lh__d1 ls_3 =
-  (match ls_3 with
-    | `LH_C(h_5, t_5) -> 
-      (h_5 + (sum_lh__d1 t_5))
+let rec sumAux_lh__d1 ls_0 a_0 =
+  (match ls_0 with
     | `LH_N -> 
-      0);;
-let rec map_lh__d3 f_4 ls_5 =
-  (match ls_5 with
+      a_0
+    | `LH_C(h_0, t_0) -> 
+      ((sumAux_lh__d1 t_0) (a_0 + h_0)));;
+let rec sum_lh__d1 ls_7 =
+  ((sumAux_lh__d1 ls_7) 0);;
+let rec map_lh__d3 f_5 ls_6 =
+  (match ls_6 with
     | `LH_C(h_7, t_7) -> 
-      (`LH_C((f_4 h_7), ((map_lh__d3 f_4) t_7)))
+      (`LH_C((f_5 h_7), ((map_lh__d3 f_5) t_7)))
     | `LH_N -> 
       (`LH_N));;
 let rec filter_lh__d1 f_3 ls_4 =
   (match ls_4 with
-    | `LH_C(h_6, t_6) -> 
-      (if (f_3 h_6) then
-        (`LH_C(h_6, ((filter_lh__d1 f_3) t_6)))
+    | `LH_C(h_5, t_5) -> 
+      (if (f_3 h_5) then
+        (`LH_C(h_5, ((filter_lh__d1 f_3) t_5)))
       else
-        ((filter_lh__d1 f_3) t_6))
+        ((filter_lh__d1 f_3) t_5))
     | `LH_N -> 
       (`LH_N));;
-let rec map_lh__d4 f_2 ls_2 =
-  (match ls_2 with
-    | `LH_C(h_4, t_4) -> 
-      (`LH_C((f_2 h_4), ((map_lh__d4 f_2) t_4)))
+let rec map_lh__d4 f_4 ls_5 =
+  (match ls_5 with
+    | `LH_C(h_6, t_6) -> 
+      (`LH_C((f_4 h_6), ((map_lh__d4 f_4) t_6)))
     | `LH_N -> 
       (`LH_N));;
 let rec awards_lh__d1 _lh_awards_arg1_0 =
-  (let rec sumscores_0 = ((map_lh__d3 (fun p_0 -> 
+  (let rec sumscores_0 = ((map_lh__d4 (fun p_0 -> 
     (`LH_P2((sum_lh__d1 p_0), p_0)))) ((perms_lh__d1 3) _lh_awards_arg1_0)) in
     (let rec atleast_0 = (fun threshold_0 -> 
       ((filter_lh__d1 (fun sum_p_0 -> 
@@ -209,11 +189,30 @@ let rec awards_lh__d1 _lh_awards_arg1_0 =
         (let rec _lh_matchIdent_1 = name_threshold_0 in
           (match _lh_matchIdent_1 with
             | `LH_P2(_lh_awards_LH_P2_0_1, _lh_awards_LH_P2_1_1) -> 
-              ((map_lh__d4 (fun ps_0 -> 
+              ((map_lh__d3 (fun ps_0 -> 
                 (`LH_P2(_lh_awards_LH_P2_0_1, ps_0)))) (sort_lh__d1 (atleast_0 _lh_awards_LH_P2_1_1)))
             | _ -> 
               (failwith "error")))) in
         ((mappend_lh__d2 ((mappend_lh__d1 (award_0 (`LH_P2((`LH_C('G', (`LH_C('o', (`LH_C('l', (`LH_C('d', (`LH_N))))))))), 70)))) (award_0 (`LH_P2((`LH_C('S', (`LH_C('i', (`LH_C('l', (`LH_C('v', (`LH_C('e', (`LH_C('r', (`LH_N))))))))))))), 60))))) (award_0 (`LH_P2((`LH_C('B', (`LH_C('r', (`LH_C('o', (`LH_C('n', (`LH_C('z', (`LH_C('e', (`LH_N))))))))))))), 50)))))));;
+let rec delete_lh__d1 _lh_delete_arg1_0 _lh_delete_arg2_0 =
+  (match _lh_delete_arg1_0 with
+    | `LH_C(_lh_delete_LH_C_0_0, _lh_delete_LH_C_1_0) -> 
+      (if (_lh_delete_LH_C_0_0 = _lh_delete_arg2_0) then
+        ((delete_lh__d1 _lh_delete_LH_C_1_0) _lh_delete_arg2_0)
+      else
+        (`LH_C(_lh_delete_LH_C_0_0, ((delete_lh__d1 _lh_delete_LH_C_1_0) _lh_delete_arg2_0))))
+    | `LH_N -> 
+      (`LH_N)
+    | _ -> 
+      (failwith "error"));;
+let rec foldl_lh__d1 f_2 i_0 ls_3 =
+  (match ls_3 with
+    | `LH_C(h_4, t_4) -> 
+      (((foldl_lh__d1 f_2) ((f_2 i_0) h_4)) t_4)
+    | `LH_N -> 
+      i_0);;
+let rec listDiff_lh__d1 =
+  (foldl_lh__d1 delete_lh__d1);;
 let rec findawards_lh__d1 _lh_findawards_arg1_0 =
   (let rec _lh_matchIdent_2 = (awards_lh__d1 _lh_findawards_arg1_0) in
     (match _lh_matchIdent_2 with
@@ -232,6 +231,12 @@ let rec findawards_lh__d1 _lh_findawards_arg1_0 =
               (failwith "error")))
       | _ -> 
         (failwith "error")));;
+let rec map_lh__d2 f_6 ls_8 =
+  (match ls_8 with
+    | `LH_C(h_1_0, t_1_0) -> 
+      (`LH_C((f_6 h_1_0), ((map_lh__d2 f_6) t_1_0)))
+    | `LH_N -> 
+      (`LH_N));;
 let rec findallawards_lh__d1 _lh_findallawards_arg1_0 =
   ((map_lh__d2 (fun name_scores_0 -> 
     (let rec _lh_matchIdent_4 = name_scores_0 in
@@ -240,14 +245,11 @@ let rec findallawards_lh__d1 _lh_findallawards_arg1_0 =
           (`LH_P2(_lh_findallawards_LH_P2_0_0, (findawards_lh__d1 _lh_findallawards_LH_P2_1_0)))
         | _ -> 
           (failwith "error"))))) _lh_findallawards_arg1_0);;
-let rec competitors_lh__d1 _lh_competitors_arg1_0 =
-  (`LH_C((`LH_P2((`LH_C('S', (`LH_C('i', (`LH_C('m', (`LH_C('o', (`LH_C('n', (`LH_N))))))))))), (`LH_C(35, (`LH_C(27, (`LH_C(40, (`LH_C(_lh_competitors_arg1_0, (`LH_C(34, (`LH_C(21, (`LH_N))))))))))))))), (`LH_C((`LH_P2((`LH_C('H', (`LH_C('a', (`LH_C('n', (`LH_C('s', (`LH_N))))))))), (`LH_C(23, (`LH_C(19, (`LH_C(45, (`LH_C(_lh_competitors_arg1_0, (`LH_C(17, (`LH_C(10, (`LH_C(5, (`LH_C(8, (`LH_C(14, (`LH_N))))))))))))))))))))), (`LH_C((`LH_P2((`LH_C('P', (`LH_C('h', (`LH_C('i', (`LH_C('l', (`LH_N))))))))), (`LH_C(1, (`LH_C(18, (`LH_C(_lh_competitors_arg1_0, (`LH_C(20, (`LH_C(21, (`LH_C(19, (`LH_C(34, (`LH_C(8, (`LH_C(16, (`LH_C(21, (`LH_N))))))))))))))))))))))), (`LH_C((`LH_P2((`LH_C('K', (`LH_C('e', (`LH_C('v', (`LH_C('i', (`LH_C('n', (`LH_N))))))))))), (`LH_C(9, (`LH_C(23, (`LH_C(17, (`LH_C(54, (`LH_C(_lh_competitors_arg1_0, (`LH_C(41, (`LH_C(9, (`LH_C(18, (`LH_C(14, (`LH_N))))))))))))))))))))), (`LH_N)))))))));;
-let rec map_lh__d1 f_7 ls_8 =
-  (match ls_8 with
-    | `LH_C(h_1_1, t_1_1) -> 
-      (`LH_C((f_7 h_1_1), ((map_lh__d1 f_7) t_1_1)))
-    | `LH_N -> 
-      (`LH_N));;
+let rec enumFromTo_lh__d1 a_2 b_1 =
+  (if (a_2 <= b_1) then
+    (`LH_C(a_2, ((enumFromTo_lh__d1 (a_2 + 1)) b_1)))
+  else
+    (`LH_N));;
 let rec testAwards_nofib_lh__d1 _lh_testAwards_nofib_arg1_0 =
   ((map_lh__d1 (fun x_2 -> 
     (findallawards_lh__d1 (competitors_lh__d1 (x_2 mod 100))))) ((enumFromTo_lh__d1 1) _lh_testAwards_nofib_arg1_0));;

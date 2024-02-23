@@ -3,8 +3,9 @@
 
 :lhInHaskell
 :lhGenOCaml
-sumFloat [] = 0.0
-sumFloat (h:t) = h +. (sumFloat t)
+sumFloatAux [] a = a
+sumFloatAux (h:t) a = (sumFloatAux t (a +. h))
+sumFloat ls = sumFloatAux ls 0.0
 enumFromFloat a = lazy (a:(enumFromFloat (a +. 1.0)))
 integrate1D l u f =
   let d = (u -. l) /. 8.0 in
@@ -31,17 +32,17 @@ itotals = lazy ((head_lz (is)) : (zipWith_lz_lz (\a b -> a +. b) (tail_lz (is)) 
 itotal n = atIndex_lz n (itotals)
 etotal n = sumFloat (take_lz n (map_lz (\a -> a *. a) (zipWith_lz_lz (\a b -> a -. b) (rtotals) (itotals))))
 testIntegrate_nofib n = etotal n
-testIntegrate_nofib $ primId 100
+testIntegrate_nofib $ primId 100000
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ testIntegrate_nofib_lh_₁^667(primId⁰(100))
+//│ testIntegrate_nofib_lh_₁^700(primId⁰(100000))
 //│ def enumFromFloat_lh_₁(_lh_enumFromFloat_arg1²) = lazy⁰([LH_C _lh_enumFromFloat_arg1² enumFromFloat_lh_₁^163((_lh_enumFromFloat_arg1² +. 1.0))])
 //│ def enumFromFloat_lh_₂(_lh_enumFromFloat_arg1¹) = lazy⁰([LH_C _lh_enumFromFloat_arg1¹ enumFromFloat_lh_₂^151((_lh_enumFromFloat_arg1¹ +. 1.0))])
 //│ def enumFromFloat_lh_₃(_lh_enumFromFloat_arg1⁰) = lazy⁰([LH_C _lh_enumFromFloat_arg1⁰ enumFromFloat_lh_₃^115((_lh_enumFromFloat_arg1⁰ +. 1.0))])
-//│ def etotal_lh_₁(_lh_etotal_arg1⁰) = sumFloat_lh_₁^634(take_lz_lh_₁^635(_lh_etotal_arg1⁰, map_lz_lh_₁^638((fun a⁴ -> (a⁴ *. a⁴)), zipWith_lz_lz_lh_₁^646((fun a⁵ -> (fun b² -> (a⁵ -. b²))), rtotals_lh_₁^655, itotals_lh_₁^657))))
-//│ def head_lz_lh_₁(ls⁶) = case force⁰(ls⁶) of {
-//│ 	LH_C h⁶ t⁶ => h⁶
+//│ def etotal_lh_₁(_lh_etotal_arg1⁰) = sumFloat_lh_₁^667(take_lz_lh_₁^668(_lh_etotal_arg1⁰, map_lz_lh_₁^671((fun a⁴ -> (a⁴ *. a⁴)), zipWith_lz_lz_lh_₁^679((fun a⁵ -> (fun b² -> (a⁵ -. b²))), rtotals_lh_₁^688, itotals_lh_₁^690))))
+//│ def head_lz_lh_₁(ls⁷) = case force⁰(ls⁷) of {
+//│ 	LH_C h⁷ t⁷ => h⁷
 //│ 	| LH_N  => error⁰}
 //│ def head_lz_lh_₂(ls⁴) = case force⁰(ls⁴) of {
 //│ 	LH_C h⁴ t⁴ => h⁴
@@ -49,147 +50,149 @@ testIntegrate_nofib $ primId 100
 //│ def integrate1D_lh_₁(_lh_integrate1D_arg1⁰, _lh_integrate1D_arg2⁰, _lh_integrate1D_arg3⁰) = 
 //│ 	let d⁰ = ((_lh_integrate1D_arg2⁰ -. _lh_integrate1D_arg1⁰) /. 8.0)
 //│ 	in (d⁰ *. sumFloat_lh_₁^13([LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg1⁰) *. 0.5) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. d⁰)) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]]]]]]]))
-//│ def integrate2D_lh_₁(_lh_integrate2D_arg1⁰, _lh_integrate2D_arg2⁰, _lh_integrate2D_arg3⁰, _lh_integrate2D_arg4⁰, _lh_integrate2D_arg5⁰) = integrate1D_lh_₁^125(_lh_integrate2D_arg3⁰, _lh_integrate2D_arg4⁰, (fun y⁰ -> integrate1D_lh_₁^130(_lh_integrate2D_arg1⁰, _lh_integrate2D_arg2⁰, (fun x⁰ -> _lh_integrate2D_arg5⁰(x⁰, y⁰)))))
-//│ def ints_lh_₁ = enumFromFloat_lh_₁^336(1.0)
-//│ def ints_lh_₂ = enumFromFloat_lh_₂^315(1.0)
-//│ def ints_lh_₃ = enumFromFloat_lh_₃^293(1.0)
-//│ def ints_lh_₄ = enumFromFloat_lh_₃^272(1.0)
-//│ def ints_lh_₅ = enumFromFloat_lh_₃^195(1.0)
-//│ def ints_lh_₆ = enumFromFloat_lh_₃^173(1.0)
-//│ def is_lh_₁ = map_lz_lh_₂^491((fun a¹ -> (((a¹ *. a¹) *. a¹) *. a¹)), ints_lh_₁^507)
-//│ def is_lh_₂ = map_lz_lh_₃^438((fun a⁰ -> (((a⁰ *. a⁰) *. a⁰) *. a⁰)), ints_lh_₂^454)
-//│ def itotals_lh_₁ = lazy⁰([LH_C head_lz_lh_₁^614(is_lh_₁^615) zipWith_lz_lz_lh_₂^617((fun a³ -> (fun b¹ -> (a³ +. b¹))), tail_lz_lh_₁^626(is_lh_₂^627), itotals_lh_₁^630)])
-//│ def map_lz_lh_₁(f⁸, ls⁸) = lazy⁰(case force⁰(ls⁸) of {
-//│ 	LH_C h⁸ t⁸ => [LH_C f⁸(h⁸) map_lz_lh_₁^516(f⁸, t⁸)]
+//│ def integrate2D_lh_₁(_lh_integrate2D_arg1¹, _lh_integrate2D_arg2¹, _lh_integrate2D_arg3¹, _lh_integrate2D_arg4¹, _lh_integrate2D_arg5¹) = integrate1D_lh_₁^173(_lh_integrate2D_arg3¹, _lh_integrate2D_arg4¹, (fun y¹ -> integrate1D_lh_₁^178(_lh_integrate2D_arg1¹, _lh_integrate2D_arg2¹, (fun x¹ -> _lh_integrate2D_arg5¹(x¹, y¹)))))
+//│ def integrate2D_lh_₂(_lh_integrate2D_arg1⁰, _lh_integrate2D_arg2⁰, _lh_integrate2D_arg3⁰, _lh_integrate2D_arg4⁰, _lh_integrate2D_arg5⁰) = integrate1D_lh_₁^125(_lh_integrate2D_arg3⁰, _lh_integrate2D_arg4⁰, (fun y⁰ -> integrate1D_lh_₁^130(_lh_integrate2D_arg1⁰, _lh_integrate2D_arg2⁰, (fun x⁰ -> _lh_integrate2D_arg5⁰(x⁰, y⁰)))))
+//│ def ints_lh_₁ = enumFromFloat_lh_₁^359(1.0)
+//│ def ints_lh_₂ = enumFromFloat_lh_₂^356(1.0)
+//│ def ints_lh_₃ = enumFromFloat_lh_₃^260(1.0)
+//│ def ints_lh_₄ = enumFromFloat_lh_₃^239(1.0)
+//│ def ints_lh_₅ = enumFromFloat_lh_₃^236(1.0)
+//│ def ints_lh_₆ = enumFromFloat_lh_₃^215(1.0)
+//│ def is_lh_₁ = map_lz_lh_₄^441((fun a¹ -> (((a¹ *. a¹) *. a¹) *. a¹)), ints_lh_₅^457)
+//│ def is_lh_₂ = map_lz_lh_₅^381((fun a⁰ -> (((a⁰ *. a⁰) *. a⁰) *. a⁰)), ints_lh_₆^397)
+//│ def itotals_lh_₁ = lazy⁰([LH_C head_lz_lh_₂^549(is_lh_₁^550) zipWith_lz_lz_lh_₃^552((fun a² -> (fun b⁰ -> (a² +. b⁰))), tail_lz_lh_₂^561(is_lh_₂^562), itotals_lh_₁^565)])
+//│ def map_lz_lh_₁(f⁹, ls⁸) = lazy⁰(case force⁰(ls⁸) of {
+//│ 	LH_C h⁸ t⁸ => [LH_C f⁹(h⁸) map_lz_lh_₁^625(f⁹, t⁸)]
 //│ 	| LH_N  => [LH_N]})
 //│ def map_lz_lh_₂(f⁵, ls³) = lazy⁰(case force⁰(ls³) of {
-//│ 	LH_C h³ t³ => [LH_C f⁵(h³) map_lz_lh_₂^346(f⁵, t³)]
+//│ 	LH_C h³ t³ => [LH_C f⁵(h³) map_lz_lh_₂^345(f⁵, t³)]
 //│ 	| LH_N  => [LH_N]})
-//│ def map_lz_lh_₃(f⁴, ls²) = lazy⁰(case force⁰(ls²) of {
-//│ 	LH_C h² t² => [LH_C f⁴(h²) map_lz_lh_₃^325(f⁴, t²)]
+//│ def map_lz_lh_₃(f², ls²) = lazy⁰(case force⁰(ls²) of {
+//│ 	LH_C h² t² => [LH_C f²(h²) map_lz_lh_₃^249(f², t²)]
 //│ 	| LH_N  => [LH_N]})
-//│ def map_lz_lh_₄(f³, ls¹) = lazy⁰(case force⁰(ls¹) of {
-//│ 	LH_C h¹ t¹ => [LH_C f³(h¹) map_lz_lh_₄^282(f³, t¹)]
+//│ def map_lz_lh_₄(f¹, ls¹) = lazy⁰(case force⁰(ls¹) of {
+//│ 	LH_C h¹ t¹ => [LH_C f¹(h¹) map_lz_lh_₄^225(f¹, t¹)]
 //│ 	| LH_N  => [LH_N]})
-//│ def map_lz_lh_₅(f¹, ls⁰) = lazy⁰(case force⁰(ls⁰) of {
-//│ 	LH_C h⁰ t⁰ => [LH_C f¹(h⁰) map_lz_lh_₅^233(f¹, t⁰)]
+//│ def map_lz_lh_₅(f⁰, ls⁰) = lazy⁰(case force⁰(ls⁰) of {
+//│ 	LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map_lz_lh_₅^204(f⁰, t⁰)]
 //│ 	| LH_N  => [LH_N]})
-//│ def rtotals_lh_₁ = lazy⁰([LH_C head_lz_lh_₂^565(zarks_lh_₂^566) zipWith_lz_lz_lh_₃^568((fun a² -> (fun b⁰ -> (a² +. b⁰))), tail_lz_lh_₂^577(zarks_lh_₁^578), rtotals_lh_₁^581)])
-//│ def sumFloat_lh_₁(_lh_sumFloat_arg1⁰) = case _lh_sumFloat_arg1⁰ of {
-//│ 	LH_N  => 0.0
-//│ 	| LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁^557(_lh_sumFloat_LH_C_1⁰))
+//│ def rtotals_lh_₁ = lazy⁰([LH_C head_lz_lh_₁^598(zarks_lh_₂^599) zipWith_lz_lz_lh_₂^601((fun a³ -> (fun b¹ -> (a³ +. b¹))), tail_lz_lh_₁^610(zarks_lh_₁^611), rtotals_lh_₁^614)])
+//│ def sumFloatAux_lh_₁(_lh_sumFloatAux_arg1⁰, _lh_sumFloatAux_arg2⁰) = case _lh_sumFloatAux_arg1⁰ of {
+//│ 	LH_N  => _lh_sumFloatAux_arg2⁰
+//│ 	| LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁^535(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰))
 //│ 	| _  => error⁰}
-//│ def tail_lz_lh_₁(ls⁷) = case force⁰(ls⁷) of {
-//│ 	LH_C h⁷ t⁷ => t⁷
+//│ def sumFloat_lh_₁(_lh_sumFloat_arg1⁰) = sumFloatAux_lh_₁^661(_lh_sumFloat_arg1⁰, 0.0)
+//│ def tail_lz_lh_₁(ls⁶) = case force⁰(ls⁶) of {
+//│ 	LH_C h⁶ t⁶ => t⁶
 //│ 	| LH_N  => error⁰}
 //│ def tail_lz_lh_₂(ls⁵) = case force⁰(ls⁵) of {
 //│ 	LH_C h⁵ t⁵ => t⁵
 //│ 	| LH_N  => error⁰}
 //│ def take_lz_lh_₁(n², ls⁹) = if (n² > 0) then case force⁰(ls⁹) of {
-//│ 	LH_C h⁹ t⁹ => [LH_C h⁹ take_lz_lh_₁^536((n² - 1), t⁹)]
+//│ 	LH_C h⁹ t⁹ => [LH_C h⁹ take_lz_lh_₁^645((n² - 1), t⁹)]
 //│ 	| LH_N  => [LH_N]} else [LH_N]
-//│ def testIntegrate_nofib_lh_₁(_lh_testIntegrate_nofib_arg1⁰) = etotal_lh_₁^663(_lh_testIntegrate_nofib_arg1⁰)
-//│ def zark_lh_₁(_lh_zark_arg1¹, _lh_zark_arg2¹) = integrate2D_lh_₁^296(0.0, _lh_zark_arg1¹, 0.0, _lh_zark_arg2¹, (fun x² -> (fun y² -> (x² *. y²))))
-//│ def zark_lh_₂(_lh_zark_arg1⁰, _lh_zark_arg2⁰) = integrate2D_lh_₁^176(0.0, _lh_zark_arg1⁰, 0.0, _lh_zark_arg2⁰, (fun x¹ -> (fun y¹ -> (x¹ *. y¹))))
-//│ def zarks_lh_₁ = zipWith_lz_lz_lh_₄^415(zark_lh_₁^416, ints_lh_₄^418, map_lz_lh_₄^420((fun n¹ -> (2.0 *. n¹)), ints_lh_₃^428))
-//│ def zarks_lh_₂ = zipWith_lz_lz_lh_₅^392(zark_lh_₂^393, ints_lh_₆^395, map_lz_lh_₅^397((fun n⁰ -> (2.0 *. n⁰)), ints_lh_₅^405))
-//│ def zipWith_lz_lz_lh_₁(f⁹, xs⁴, ys⁴) = lazy⁰(case force⁰(xs⁴) of {
+//│ def testIntegrate_nofib_lh_₁(_lh_testIntegrate_nofib_arg1⁰) = etotal_lh_₁^696(_lh_testIntegrate_nofib_arg1⁰)
+//│ def zark_lh_₁(_lh_zark_arg1¹, _lh_zark_arg2¹) = integrate2D_lh_₁^362(0.0, _lh_zark_arg1¹, 0.0, _lh_zark_arg2¹, (fun x³ -> (fun y³ -> (x³ *. y³))))
+//│ def zark_lh_₂(_lh_zark_arg1⁰, _lh_zark_arg2⁰) = integrate2D_lh_₂^263(0.0, _lh_zark_arg1⁰, 0.0, _lh_zark_arg2⁰, (fun x² -> (fun y² -> (x² *. y²))))
+//│ def zarks_lh_₁ = zipWith_lz_lz_lh_₄^503(zark_lh_₁^504, ints_lh_₁^506, map_lz_lh_₂^508((fun n¹ -> (2.0 *. n¹)), ints_lh_₂^516))
+//│ def zarks_lh_₂ = zipWith_lz_lz_lh_₅^487(zark_lh_₂^488, ints_lh_₄^490, map_lz_lh_₃^492((fun n⁰ -> (2.0 *. n⁰)), ints_lh_₃^500))
+//│ def zipWith_lz_lz_lh_₁(f⁸, xs⁴, ys⁴) = lazy⁰(case force⁰(xs⁴) of {
 //│ 	LH_C hx⁴ tx⁴ => case force⁰(ys⁴) of {
-//│ 		LH_C hy⁴ ty⁴ => [LH_C f⁹(hx⁴, hy⁴) zipWith_lz_lz_lh_₁^597(f⁹, tx⁴, ty⁴)]
+//│ 		LH_C hy⁴ ty⁴ => [LH_C f⁸(hx⁴, hy⁴) zipWith_lz_lz_lh_₁^581(f⁸, tx⁴, ty⁴)]
 //│ 		| LH_N  => [LH_N]}
 //│ 	| LH_N  => [LH_N]})
 //│ def zipWith_lz_lz_lh_₂(f⁷, xs³, ys³) = lazy⁰(case force⁰(xs³) of {
 //│ 	LH_C hx³ tx³ => case force⁰(ys³) of {
-//│ 		LH_C hy³ ty³ => [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂^468(f⁷, tx³, ty³)]
+//│ 		LH_C hy³ ty³ => [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂^471(f⁷, tx³, ty³)]
 //│ 		| LH_N  => [LH_N]}
 //│ 	| LH_N  => [LH_N]})
 //│ def zipWith_lz_lz_lh_₃(f⁶, xs², ys²) = lazy⁰(case force⁰(xs²) of {
 //│ 	LH_C hx² tx² => case force⁰(ys²) of {
-//│ 		LH_C hy² ty² => [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃^376(f⁶, tx², ty²)]
+//│ 		LH_C hy² ty² => [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃^411(f⁶, tx², ty²)]
 //│ 		| LH_N  => [LH_N]}
 //│ 	| LH_N  => [LH_N]})
-//│ def zipWith_lz_lz_lh_₄(f², xs¹, ys¹) = lazy⁰(case force⁰(xs¹) of {
+//│ def zipWith_lz_lz_lh_₄(f⁴, xs¹, ys¹) = lazy⁰(case force⁰(xs¹) of {
 //│ 	LH_C hx¹ tx¹ => case force⁰(ys¹) of {
-//│ 		LH_C hy¹ ty¹ => [LH_C f²(hx¹, hy¹) zipWith_lz_lz_lh_₄^256(f², tx¹, ty¹)]
+//│ 		LH_C hy¹ ty¹ => [LH_C f⁴(hx¹, hy¹) zipWith_lz_lz_lh_₄^322(f⁴, tx¹, ty¹)]
 //│ 		| LH_N  => [LH_N]}
 //│ 	| LH_N  => [LH_N]})
-//│ def zipWith_lz_lz_lh_₅(f⁰, xs⁰, ys⁰) = lazy⁰(case force⁰(xs⁰) of {
+//│ def zipWith_lz_lz_lh_₅(f³, xs⁰, ys⁰) = lazy⁰(case force⁰(xs⁰) of {
 //│ 	LH_C hx⁰ tx⁰ => case force⁰(ys⁰) of {
-//│ 		LH_C hy⁰ ty⁰ => [LH_C f⁰(hx⁰, hy⁰) zipWith_lz_lz_lh_₅^210(f⁰, tx⁰, ty⁰)]
+//│ 		LH_C hy⁰ ty⁰ => [LH_C f³(hx⁰, hy⁰) zipWith_lz_lz_lh_₅^294(f³, tx⁰, ty⁰)]
 //│ 		| LH_N  => [LH_N]}
 //│ 	| LH_N  => [LH_N]})
 //│ 		---------- unoptimized ocaml gen ----------
-//│ 		let rec map_lz_lh__d1 f_8 ls_8 =
+//│ 		let rec map_lz_lh__d1 f_9 ls_8 =
 //│ 		  (lazy (match (Lazy.force ls_8) with
 //│ 		    | `LH_C(h_8, t_8) -> 
-//│ 		      (`LH_C((f_8 h_8), ((map_lz_lh__d1 f_8) t_8)))
+//│ 		      (`LH_C((f_9 h_8), ((map_lz_lh__d1 f_9) t_8)))
 //│ 		    | `LH_N -> 
 //│ 		      (`LH_N)));;
-//│ 		let rec map_lz_lh__d3 f_4 ls_2 =
-//│ 		  (lazy (match (Lazy.force ls_2) with
-//│ 		    | `LH_C(h_2, t_2) -> 
-//│ 		      (`LH_C((f_4 h_2), ((map_lz_lh__d3 f_4) t_2)))
-//│ 		    | `LH_N -> 
-//│ 		      (`LH_N)));;
-//│ 		let rec enumFromFloat_lh__d2 _lh_enumFromFloat_arg1_1 =
-//│ 		  (lazy (`LH_C(_lh_enumFromFloat_arg1_1, (enumFromFloat_lh__d2 (_lh_enumFromFloat_arg1_1 +. 1.0)))));;
-//│ 		let rec ints_lh__d2 =
-//│ 		  (enumFromFloat_lh__d2 1.0);;
-//│ 		let rec is_lh__d2 =
-//│ 		  ((map_lz_lh__d3 (fun a_0 -> 
-//│ 		    (((a_0 *. a_0) *. a_0) *. a_0))) ints_lh__d2);;
-//│ 		let rec head_lz_lh__d1 ls_6 =
-//│ 		  (match (Lazy.force ls_6) with
-//│ 		    | `LH_C(h_6, t_6) -> 
-//│ 		      h_6
-//│ 		    | `LH_N -> 
-//│ 		      (failwith "error"));;
-//│ 		let rec tail_lz_lh__d1 ls_7 =
-//│ 		  (match (Lazy.force ls_7) with
-//│ 		    | `LH_C(h_7, t_7) -> 
-//│ 		      t_7
-//│ 		    | `LH_N -> 
-//│ 		      (failwith "error"));;
-//│ 		let rec enumFromFloat_lh__d1 _lh_enumFromFloat_arg1_2 =
-//│ 		  (lazy (`LH_C(_lh_enumFromFloat_arg1_2, (enumFromFloat_lh__d1 (_lh_enumFromFloat_arg1_2 +. 1.0)))));;
-//│ 		let rec ints_lh__d1 =
-//│ 		  (enumFromFloat_lh__d1 1.0);;
-//│ 		let rec map_lz_lh__d2 f_5 ls_3 =
-//│ 		  (lazy (match (Lazy.force ls_3) with
-//│ 		    | `LH_C(h_3, t_3) -> 
-//│ 		      (`LH_C((f_5 h_3), ((map_lz_lh__d2 f_5) t_3)))
-//│ 		    | `LH_N -> 
-//│ 		      (`LH_N)));;
-//│ 		let rec is_lh__d1 =
-//│ 		  ((map_lz_lh__d2 (fun a_1 -> 
-//│ 		    (((a_1 *. a_1) *. a_1) *. a_1))) ints_lh__d1);;
-//│ 		let rec zipWith_lz_lz_lh__d2 f_7 xs_3 ys_3 =
-//│ 		  (lazy (match (Lazy.force xs_3) with
-//│ 		    | `LH_C(hx_3, tx_3) -> 
-//│ 		      (match (Lazy.force ys_3) with
-//│ 		        | `LH_C(hy_3, ty_3) -> 
-//│ 		          (`LH_C(((f_7 hx_3) hy_3), (((zipWith_lz_lz_lh__d2 f_7) tx_3) ty_3)))
+//│ 		let rec zipWith_lz_lz_lh__d3 f_6 xs_2 ys_2 =
+//│ 		  (lazy (match (Lazy.force xs_2) with
+//│ 		    | `LH_C(hx_2, tx_2) -> 
+//│ 		      (match (Lazy.force ys_2) with
+//│ 		        | `LH_C(hy_2, ty_2) -> 
+//│ 		          (`LH_C(((f_6 hx_2) hy_2), (((zipWith_lz_lz_lh__d3 f_6) tx_2) ty_2)))
 //│ 		        | `LH_N -> 
 //│ 		          (`LH_N))
 //│ 		    | `LH_N -> 
 //│ 		      (`LH_N)));;
-//│ 		let rec itotals_lh__d1 =
-//│ 		  (lazy (`LH_C((head_lz_lh__d1 is_lh__d1), (((zipWith_lz_lz_lh__d2 (fun a_3 b_1 -> 
-//│ 		    (a_3 +. b_1))) (tail_lz_lh__d1 is_lh__d2)) itotals_lh__d1))));;
-//│ 		let rec sumFloat_lh__d1 _lh_sumFloat_arg1_0 =
-//│ 		  (match _lh_sumFloat_arg1_0 with
+//│ 		let rec enumFromFloat_lh__d3 _lh_enumFromFloat_arg1_0 =
+//│ 		  (lazy (`LH_C(_lh_enumFromFloat_arg1_0, (enumFromFloat_lh__d3 (_lh_enumFromFloat_arg1_0 +. 1.0)))));;
+//│ 		let rec ints_lh__d6 =
+//│ 		  (enumFromFloat_lh__d3 1.0);;
+//│ 		let rec map_lz_lh__d5 f_0 ls_0 =
+//│ 		  (lazy (match (Lazy.force ls_0) with
+//│ 		    | `LH_C(h_0, t_0) -> 
+//│ 		      (`LH_C((f_0 h_0), ((map_lz_lh__d5 f_0) t_0)))
 //│ 		    | `LH_N -> 
-//│ 		      0.0
-//│ 		    | `LH_C(_lh_sumFloat_LH_C_0_0, _lh_sumFloat_LH_C_1_0) -> 
-//│ 		      (_lh_sumFloat_LH_C_0_0 +. (sumFloat_lh__d1 _lh_sumFloat_LH_C_1_0))
+//│ 		      (`LH_N)));;
+//│ 		let rec is_lh__d2 =
+//│ 		  ((map_lz_lh__d5 (fun a_0 -> 
+//│ 		    (((a_0 *. a_0) *. a_0) *. a_0))) ints_lh__d6);;
+//│ 		let rec tail_lz_lh__d2 ls_5 =
+//│ 		  (match (Lazy.force ls_5) with
+//│ 		    | `LH_C(h_5, t_5) -> 
+//│ 		      t_5
+//│ 		    | `LH_N -> 
+//│ 		      (failwith "error"));;
+//│ 		let rec ints_lh__d5 =
+//│ 		  (enumFromFloat_lh__d3 1.0);;
+//│ 		let rec map_lz_lh__d4 f_1 ls_1 =
+//│ 		  (lazy (match (Lazy.force ls_1) with
+//│ 		    | `LH_C(h_1, t_1) -> 
+//│ 		      (`LH_C((f_1 h_1), ((map_lz_lh__d4 f_1) t_1)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)));;
+//│ 		let rec is_lh__d1 =
+//│ 		  ((map_lz_lh__d4 (fun a_1 -> 
+//│ 		    (((a_1 *. a_1) *. a_1) *. a_1))) ints_lh__d5);;
+//│ 		let rec head_lz_lh__d2 ls_4 =
+//│ 		  (match (Lazy.force ls_4) with
+//│ 		    | `LH_C(h_4, t_4) -> 
+//│ 		      h_4
+//│ 		    | `LH_N -> 
+//│ 		      (failwith "error"));;
+//│ 		let rec itotals_lh__d1 =
+//│ 		  (lazy (`LH_C((head_lz_lh__d2 is_lh__d1), (((zipWith_lz_lz_lh__d3 (fun a_2 b_0 -> 
+//│ 		    (a_2 +. b_0))) (tail_lz_lh__d2 is_lh__d2)) itotals_lh__d1))));;
+//│ 		let rec sumFloatAux_lh__d1 _lh_sumFloatAux_arg1_0 _lh_sumFloatAux_arg2_0 =
+//│ 		  (match _lh_sumFloatAux_arg1_0 with
+//│ 		    | `LH_N -> 
+//│ 		      _lh_sumFloatAux_arg2_0
+//│ 		    | `LH_C(_lh_sumFloatAux_LH_C_0_0, _lh_sumFloatAux_LH_C_1_0) -> 
+//│ 		      ((sumFloatAux_lh__d1 _lh_sumFloatAux_LH_C_1_0) (_lh_sumFloatAux_arg2_0 +. _lh_sumFloatAux_LH_C_0_0))
 //│ 		    | _ -> 
 //│ 		      (failwith "error"));;
-//│ 		let rec zipWith_lz_lz_lh__d1 f_9 xs_4 ys_4 =
+//│ 		let rec sumFloat_lh__d1 _lh_sumFloat_arg1_0 =
+//│ 		  ((sumFloatAux_lh__d1 _lh_sumFloat_arg1_0) 0.0);;
+//│ 		let rec zipWith_lz_lz_lh__d1 f_8 xs_4 ys_4 =
 //│ 		  (lazy (match (Lazy.force xs_4) with
 //│ 		    | `LH_C(hx_4, tx_4) -> 
 //│ 		      (match (Lazy.force ys_4) with
 //│ 		        | `LH_C(hy_4, ty_4) -> 
-//│ 		          (`LH_C(((f_9 hx_4) hy_4), (((zipWith_lz_lz_lh__d1 f_9) tx_4) ty_4)))
+//│ 		          (`LH_C(((f_8 hx_4) hy_4), (((zipWith_lz_lz_lh__d1 f_8) tx_4) ty_4)))
 //│ 		        | `LH_N -> 
 //│ 		          (`LH_N))
 //│ 		    | `LH_N -> 
@@ -203,268 +206,267 @@ testIntegrate_nofib $ primId 100
 //│ 		        (`LH_N))
 //│ 		  else
 //│ 		    (`LH_N));;
-//│ 		let rec zipWith_lz_lz_lh__d3 f_6 xs_2 ys_2 =
-//│ 		  (lazy (match (Lazy.force xs_2) with
-//│ 		    | `LH_C(hx_2, tx_2) -> 
-//│ 		      (match (Lazy.force ys_2) with
-//│ 		        | `LH_C(hy_2, ty_2) -> 
-//│ 		          (`LH_C(((f_6 hx_2) hy_2), (((zipWith_lz_lz_lh__d3 f_6) tx_2) ty_2)))
+//│ 		let rec zipWith_lz_lz_lh__d2 f_7 xs_3 ys_3 =
+//│ 		  (lazy (match (Lazy.force xs_3) with
+//│ 		    | `LH_C(hx_3, tx_3) -> 
+//│ 		      (match (Lazy.force ys_3) with
+//│ 		        | `LH_C(hy_3, ty_3) -> 
+//│ 		          (`LH_C(((f_7 hx_3) hy_3), (((zipWith_lz_lz_lh__d2 f_7) tx_3) ty_3)))
 //│ 		        | `LH_N -> 
 //│ 		          (`LH_N))
-//│ 		    | `LH_N -> 
-//│ 		      (`LH_N)));;
-//│ 		let rec map_lz_lh__d4 f_3 ls_1 =
-//│ 		  (lazy (match (Lazy.force ls_1) with
-//│ 		    | `LH_C(h_1, t_1) -> 
-//│ 		      (`LH_C((f_3 h_1), ((map_lz_lh__d4 f_3) t_1)))
 //│ 		    | `LH_N -> 
 //│ 		      (`LH_N)));;
 //│ 		let rec integrate1D_lh__d1 _lh_integrate1D_arg1_0 _lh_integrate1D_arg2_0 _lh_integrate1D_arg3_0 =
 //│ 		  (let rec d_0 = ((_lh_integrate1D_arg2_0 -. _lh_integrate1D_arg1_0) /. 8.0) in
 //│ 		    (d_0 *. (sumFloat_lh__d1 (`LH_C(((_lh_integrate1D_arg3_0 _lh_integrate1D_arg1_0) *. 0.5), (`LH_C((_lh_integrate1D_arg3_0 (_lh_integrate1D_arg1_0 +. d_0)), (`LH_C((_lh_integrate1D_arg3_0 (_lh_integrate1D_arg1_0 +. (2.0 *. d_0))), (`LH_C((_lh_integrate1D_arg3_0 (_lh_integrate1D_arg1_0 +. (3.0 *. d_0))), (`LH_C((_lh_integrate1D_arg3_0 (_lh_integrate1D_arg1_0 +. (4.0 *. d_0))), (`LH_C((_lh_integrate1D_arg3_0 (_lh_integrate1D_arg2_0 -. (3.0 *. d_0))), (`LH_C((_lh_integrate1D_arg3_0 (_lh_integrate1D_arg2_0 -. (2.0 *. d_0))), (`LH_C((_lh_integrate1D_arg3_0 (_lh_integrate1D_arg2_0 -. d_0)), (`LH_C(((_lh_integrate1D_arg3_0 _lh_integrate1D_arg2_0) *. 0.5), (`LH_N))))))))))))))))))))));;
-//│ 		let rec integrate2D_lh__d1 _lh_integrate2D_arg1_0 _lh_integrate2D_arg2_0 _lh_integrate2D_arg3_0 _lh_integrate2D_arg4_0 _lh_integrate2D_arg5_0 =
-//│ 		  (((integrate1D_lh__d1 _lh_integrate2D_arg3_0) _lh_integrate2D_arg4_0) (fun y_0 -> 
-//│ 		    (((integrate1D_lh__d1 _lh_integrate2D_arg1_0) _lh_integrate2D_arg2_0) (fun x_0 -> 
-//│ 		      ((_lh_integrate2D_arg5_0 x_0) y_0)))));;
+//│ 		let rec integrate2D_lh__d1 _lh_integrate2D_arg1_1 _lh_integrate2D_arg2_1 _lh_integrate2D_arg3_1 _lh_integrate2D_arg4_1 _lh_integrate2D_arg5_1 =
+//│ 		  (((integrate1D_lh__d1 _lh_integrate2D_arg3_1) _lh_integrate2D_arg4_1) (fun y_1 -> 
+//│ 		    (((integrate1D_lh__d1 _lh_integrate2D_arg1_1) _lh_integrate2D_arg2_1) (fun x_1 -> 
+//│ 		      ((_lh_integrate2D_arg5_1 x_1) y_1)))));;
 //│ 		let rec zark_lh__d1 _lh_zark_arg1_1 _lh_zark_arg2_1 =
-//│ 		  (((((integrate2D_lh__d1 0.0) _lh_zark_arg1_1) 0.0) _lh_zark_arg2_1) (fun x_2 y_2 -> 
-//│ 		    (x_2 *. y_2)));;
-//│ 		let rec enumFromFloat_lh__d3 _lh_enumFromFloat_arg1_0 =
-//│ 		  (lazy (`LH_C(_lh_enumFromFloat_arg1_0, (enumFromFloat_lh__d3 (_lh_enumFromFloat_arg1_0 +. 1.0)))));;
-//│ 		let rec ints_lh__d3 =
-//│ 		  (enumFromFloat_lh__d3 1.0);;
-//│ 		let rec zipWith_lz_lz_lh__d4 f_2 xs_1 ys_1 =
+//│ 		  (((((integrate2D_lh__d1 0.0) _lh_zark_arg1_1) 0.0) _lh_zark_arg2_1) (fun x_3 y_3 -> 
+//│ 		    (x_3 *. y_3)));;
+//│ 		let rec enumFromFloat_lh__d2 _lh_enumFromFloat_arg1_1 =
+//│ 		  (lazy (`LH_C(_lh_enumFromFloat_arg1_1, (enumFromFloat_lh__d2 (_lh_enumFromFloat_arg1_1 +. 1.0)))));;
+//│ 		let rec ints_lh__d2 =
+//│ 		  (enumFromFloat_lh__d2 1.0);;
+//│ 		let rec zipWith_lz_lz_lh__d4 f_4 xs_1 ys_1 =
 //│ 		  (lazy (match (Lazy.force xs_1) with
 //│ 		    | `LH_C(hx_1, tx_1) -> 
 //│ 		      (match (Lazy.force ys_1) with
 //│ 		        | `LH_C(hy_1, ty_1) -> 
-//│ 		          (`LH_C(((f_2 hx_1) hy_1), (((zipWith_lz_lz_lh__d4 f_2) tx_1) ty_1)))
+//│ 		          (`LH_C(((f_4 hx_1) hy_1), (((zipWith_lz_lz_lh__d4 f_4) tx_1) ty_1)))
 //│ 		        | `LH_N -> 
 //│ 		          (`LH_N))
 //│ 		    | `LH_N -> 
 //│ 		      (`LH_N)));;
-//│ 		let rec ints_lh__d4 =
-//│ 		  (enumFromFloat_lh__d3 1.0);;
-//│ 		let rec zarks_lh__d1 =
-//│ 		  (((zipWith_lz_lz_lh__d4 zark_lh__d1) ints_lh__d4) ((map_lz_lh__d4 (fun n_1 -> 
-//│ 		    (2.0 *. n_1))) ints_lh__d3));;
-//│ 		let rec ints_lh__d5 =
-//│ 		  (enumFromFloat_lh__d3 1.0);;
-//│ 		let rec ints_lh__d6 =
-//│ 		  (enumFromFloat_lh__d3 1.0);;
-//│ 		let rec map_lz_lh__d5 f_1 ls_0 =
-//│ 		  (lazy (match (Lazy.force ls_0) with
-//│ 		    | `LH_C(h_0, t_0) -> 
-//│ 		      (`LH_C((f_1 h_0), ((map_lz_lh__d5 f_1) t_0)))
+//│ 		let rec enumFromFloat_lh__d1 _lh_enumFromFloat_arg1_2 =
+//│ 		  (lazy (`LH_C(_lh_enumFromFloat_arg1_2, (enumFromFloat_lh__d1 (_lh_enumFromFloat_arg1_2 +. 1.0)))));;
+//│ 		let rec ints_lh__d1 =
+//│ 		  (enumFromFloat_lh__d1 1.0);;
+//│ 		let rec map_lz_lh__d2 f_5 ls_3 =
+//│ 		  (lazy (match (Lazy.force ls_3) with
+//│ 		    | `LH_C(h_3, t_3) -> 
+//│ 		      (`LH_C((f_5 h_3), ((map_lz_lh__d2 f_5) t_3)))
 //│ 		    | `LH_N -> 
 //│ 		      (`LH_N)));;
+//│ 		let rec zarks_lh__d1 =
+//│ 		  (((zipWith_lz_lz_lh__d4 zark_lh__d1) ints_lh__d1) ((map_lz_lh__d2 (fun n_1 -> 
+//│ 		    (2.0 *. n_1))) ints_lh__d2));;
+//│ 		let rec head_lz_lh__d1 ls_7 =
+//│ 		  (match (Lazy.force ls_7) with
+//│ 		    | `LH_C(h_7, t_7) -> 
+//│ 		      h_7
+//│ 		    | `LH_N -> 
+//│ 		      (failwith "error"));;
+//│ 		let rec map_lz_lh__d3 f_2 ls_2 =
+//│ 		  (lazy (match (Lazy.force ls_2) with
+//│ 		    | `LH_C(h_2, t_2) -> 
+//│ 		      (`LH_C((f_2 h_2), ((map_lz_lh__d3 f_2) t_2)))
+//│ 		    | `LH_N -> 
+//│ 		      (`LH_N)));;
+//│ 		let rec ints_lh__d3 =
+//│ 		  (enumFromFloat_lh__d3 1.0);;
+//│ 		let rec ints_lh__d4 =
+//│ 		  (enumFromFloat_lh__d3 1.0);;
+//│ 		let rec integrate2D_lh__d2 _lh_integrate2D_arg1_0 _lh_integrate2D_arg2_0 _lh_integrate2D_arg3_0 _lh_integrate2D_arg4_0 _lh_integrate2D_arg5_0 =
+//│ 		  (((integrate1D_lh__d1 _lh_integrate2D_arg3_0) _lh_integrate2D_arg4_0) (fun y_0 -> 
+//│ 		    (((integrate1D_lh__d1 _lh_integrate2D_arg1_0) _lh_integrate2D_arg2_0) (fun x_0 -> 
+//│ 		      ((_lh_integrate2D_arg5_0 x_0) y_0)))));;
 //│ 		let rec zark_lh__d2 _lh_zark_arg1_0 _lh_zark_arg2_0 =
-//│ 		  (((((integrate2D_lh__d1 0.0) _lh_zark_arg1_0) 0.0) _lh_zark_arg2_0) (fun x_1 y_1 -> 
-//│ 		    (x_1 *. y_1)));;
-//│ 		let rec zipWith_lz_lz_lh__d5 f_0 xs_0 ys_0 =
+//│ 		  (((((integrate2D_lh__d2 0.0) _lh_zark_arg1_0) 0.0) _lh_zark_arg2_0) (fun x_2 y_2 -> 
+//│ 		    (x_2 *. y_2)));;
+//│ 		let rec zipWith_lz_lz_lh__d5 f_3 xs_0 ys_0 =
 //│ 		  (lazy (match (Lazy.force xs_0) with
 //│ 		    | `LH_C(hx_0, tx_0) -> 
 //│ 		      (match (Lazy.force ys_0) with
 //│ 		        | `LH_C(hy_0, ty_0) -> 
-//│ 		          (`LH_C(((f_0 hx_0) hy_0), (((zipWith_lz_lz_lh__d5 f_0) tx_0) ty_0)))
+//│ 		          (`LH_C(((f_3 hx_0) hy_0), (((zipWith_lz_lz_lh__d5 f_3) tx_0) ty_0)))
 //│ 		        | `LH_N -> 
 //│ 		          (`LH_N))
 //│ 		    | `LH_N -> 
 //│ 		      (`LH_N)));;
 //│ 		let rec zarks_lh__d2 =
-//│ 		  (((zipWith_lz_lz_lh__d5 zark_lh__d2) ints_lh__d6) ((map_lz_lh__d5 (fun n_0 -> 
-//│ 		    (2.0 *. n_0))) ints_lh__d5));;
-//│ 		let rec tail_lz_lh__d2 ls_5 =
-//│ 		  (match (Lazy.force ls_5) with
-//│ 		    | `LH_C(h_5, t_5) -> 
-//│ 		      t_5
-//│ 		    | `LH_N -> 
-//│ 		      (failwith "error"));;
-//│ 		let rec head_lz_lh__d2 ls_4 =
-//│ 		  (match (Lazy.force ls_4) with
-//│ 		    | `LH_C(h_4, t_4) -> 
-//│ 		      h_4
+//│ 		  (((zipWith_lz_lz_lh__d5 zark_lh__d2) ints_lh__d4) ((map_lz_lh__d3 (fun n_0 -> 
+//│ 		    (2.0 *. n_0))) ints_lh__d3));;
+//│ 		let rec tail_lz_lh__d1 ls_6 =
+//│ 		  (match (Lazy.force ls_6) with
+//│ 		    | `LH_C(h_6, t_6) -> 
+//│ 		      t_6
 //│ 		    | `LH_N -> 
 //│ 		      (failwith "error"));;
 //│ 		let rec rtotals_lh__d1 =
-//│ 		  (lazy (`LH_C((head_lz_lh__d2 zarks_lh__d2), (((zipWith_lz_lz_lh__d3 (fun a_2 b_0 -> 
-//│ 		    (a_2 +. b_0))) (tail_lz_lh__d2 zarks_lh__d1)) rtotals_lh__d1))));;
+//│ 		  (lazy (`LH_C((head_lz_lh__d1 zarks_lh__d2), (((zipWith_lz_lz_lh__d2 (fun a_3 b_1 -> 
+//│ 		    (a_3 +. b_1))) (tail_lz_lh__d1 zarks_lh__d1)) rtotals_lh__d1))));;
 //│ 		let rec etotal_lh__d1 _lh_etotal_arg1_0 =
 //│ 		  (sumFloat_lh__d1 ((take_lz_lh__d1 _lh_etotal_arg1_0) ((map_lz_lh__d1 (fun a_4 -> 
 //│ 		    (a_4 *. a_4))) (((zipWith_lz_lz_lh__d1 (fun a_5 b_2 -> 
 //│ 		    (a_5 -. b_2))) rtotals_lh__d1) itotals_lh__d1))));;
 //│ 		let rec testIntegrate_nofib_lh__d1 _lh_testIntegrate_nofib_arg1_0 =
 //│ 		  (etotal_lh__d1 _lh_testIntegrate_nofib_arg1_0);;
-//│ 		(testIntegrate_nofib_lh__d1 100)
+//│ 		(testIntegrate_nofib_lh__d1 100000)
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [LH_N]: 97 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]: 98 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]: 99 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]: 100 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]]: 101 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]]]: 102 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]]]]: 103 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]]]]]: 104 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. d⁰)) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]]]]]]: 105 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg1⁰) *. 0.5) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. d⁰)) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]]]]]]]: 106 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C _lh_enumFromFloat_arg1⁰ enumFromFloat_lh_₃((_lh_enumFromFloat_arg1⁰ +. 1.0))]: 122 --->
-//│ 	case force⁰(xs⁰) of {LH_C hx⁰ tx⁰ => case force⁰(ys⁰) of {LH_C hy⁰ ty⁰ => [LH_C f⁰(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f⁰, tx⁰, ty⁰)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 221
-//│ 	case force⁰(ls⁰) of {LH_C h⁰ t⁰ => [LH_C f¹(h⁰) map_lz_lh_₅(f¹, t⁰)] | LH_N  => [LH_N]}: 240
-//│ 	case force⁰(xs¹) of {LH_C hx¹ tx¹ => case force⁰(ys¹) of {LH_C hy¹ ty¹ => [LH_C f²(hx¹, hy¹) zipWith_lz_lz_lh_₄(f², tx¹, ty¹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 267
-//│ 	case force⁰(ls¹) of {LH_C h¹ t¹ => [LH_C f³(h¹) map_lz_lh_₄(f³, t¹)] | LH_N  => [LH_N]}: 289
+//│ 	case force⁰(ls⁰) of {LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map_lz_lh_₅(f⁰, t⁰)] | LH_N  => [LH_N]}: 211
+//│ 	case force⁰(ls¹) of {LH_C h¹ t¹ => [LH_C f¹(h¹) map_lz_lh_₄(f¹, t¹)] | LH_N  => [LH_N]}: 232
+//│ 	case force⁰(ls²) of {LH_C h² t² => [LH_C f²(h²) map_lz_lh_₃(f², t²)] | LH_N  => [LH_N]}: 256
+//│ 	case force⁰(xs⁰) of {LH_C hx⁰ tx⁰ => case force⁰(ys⁰) of {LH_C hy⁰ ty⁰ => [LH_C f³(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f³, tx⁰, ty⁰)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 305
 //│ [LH_C _lh_enumFromFloat_arg1¹ enumFromFloat_lh_₂((_lh_enumFromFloat_arg1¹ +. 1.0))]: 158 --->
-//│ 	case force⁰(ls²) of {LH_C h² t² => [LH_C f⁴(h²) map_lz_lh_₃(f⁴, t²)] | LH_N  => [LH_N]}: 332
+//│ 	case force⁰(ls³) of {LH_C h³ t³ => [LH_C f⁵(h³) map_lz_lh_₂(f⁵, t³)] | LH_N  => [LH_N]}: 352
 //│ [LH_C _lh_enumFromFloat_arg1² enumFromFloat_lh_₁((_lh_enumFromFloat_arg1² +. 1.0))]: 170 --->
-//│ 	case force⁰(ls³) of {LH_C h³ t³ => [LH_C f⁵(h³) map_lz_lh_₂(f⁵, t³)] | LH_N  => [LH_N]}: 353
-//│ [LH_C f⁰(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f⁰, tx⁰, ty⁰)]: 217 --->
+//│ 	case force⁰(xs¹) of {LH_C hx¹ tx¹ => case force⁰(ys¹) of {LH_C hy¹ ty¹ => [LH_C f⁴(hx¹, hy¹) zipWith_lz_lz_lh_₄(f⁴, tx¹, ty¹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 333
+//│ [LH_C f⁰(h⁰) map_lz_lh_₅(f⁰, t⁰)]: 209 --->
+//│ 	case force⁰(xs²) of {LH_C hx² tx² => case force⁰(ys²) of {LH_C hy² ty² => [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 422
+//│ 	case force⁰(ls⁵) of {LH_C h⁵ t⁵ => t⁵ | LH_N  => error⁰}: 439
+//│ [LH_N]: 210 --->
+//│ 	case force⁰(xs²) of {LH_C hx² tx² => case force⁰(ys²) of {LH_C hy² ty² => [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 422
+//│ 	case force⁰(ls⁵) of {LH_C h⁵ t⁵ => t⁵ | LH_N  => error⁰}: 439
+//│ [LH_C f¹(h¹) map_lz_lh_₄(f¹, t¹)]: 230 --->
 //│ 	DeadCodeCons
-//│ 	case force⁰(ls⁴) of {LH_C h⁴ t⁴ => h⁴ | LH_N  => error⁰}: 362
-//│ [LH_N]: 218 --->
+//│ 	case force⁰(ls⁴) of {LH_C h⁴ t⁴ => h⁴ | LH_N  => error⁰}: 432
+//│ [LH_N]: 231 --->
 //│ 	DeadCodeCons
-//│ 	case force⁰(ls⁴) of {LH_C h⁴ t⁴ => h⁴ | LH_N  => error⁰}: 362
-//│ [LH_N]: 220 --->
+//│ 	case force⁰(ls⁴) of {LH_C h⁴ t⁴ => h⁴ | LH_N  => error⁰}: 432
+//│ [LH_C f²(h²) map_lz_lh_₃(f², t²)]: 254 --->
+//│ 	case force⁰(ys⁰) of {LH_C hy⁰ ty⁰ => [LH_C f³(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f³, tx⁰, ty⁰)] | LH_N  => [LH_N]}: 303
+//│ [LH_N]: 255 --->
+//│ 	case force⁰(ys⁰) of {LH_C hy⁰ ty⁰ => [LH_C f³(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f³, tx⁰, ty⁰)] | LH_N  => [LH_N]}: 303
+//│ [LH_C f³(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f³, tx⁰, ty⁰)]: 301 --->
 //│ 	DeadCodeCons
-//│ 	case force⁰(ls⁴) of {LH_C h⁴ t⁴ => h⁴ | LH_N  => error⁰}: 362
-//│ [LH_C f¹(h⁰) map_lz_lh_₅(f¹, t⁰)]: 238 --->
-//│ 	case force⁰(ys⁰) of {LH_C hy⁰ ty⁰ => [LH_C f⁰(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f⁰, tx⁰, ty⁰)] | LH_N  => [LH_N]}: 219
-//│ [LH_N]: 239 --->
-//│ 	case force⁰(ys⁰) of {LH_C hy⁰ ty⁰ => [LH_C f⁰(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f⁰, tx⁰, ty⁰)] | LH_N  => [LH_N]}: 219
-//│ [LH_C f²(hx¹, hy¹) zipWith_lz_lz_lh_₄(f², tx¹, ty¹)]: 263 --->
-//│ 	case force⁰(xs²) of {LH_C hx² tx² => case force⁰(ys²) of {LH_C hy² ty² => [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 387
-//│ 	case force⁰(ls⁵) of {LH_C h⁵ t⁵ => t⁵ | LH_N  => error⁰}: 413
-//│ [LH_N]: 264 --->
-//│ 	case force⁰(xs²) of {LH_C hx² tx² => case force⁰(ys²) of {LH_C hy² ty² => [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 387
-//│ 	case force⁰(ls⁵) of {LH_C h⁵ t⁵ => t⁵ | LH_N  => error⁰}: 413
-//│ [LH_N]: 266 --->
-//│ 	case force⁰(xs²) of {LH_C hx² tx² => case force⁰(ys²) of {LH_C hy² ty² => [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 387
-//│ 	case force⁰(ls⁵) of {LH_C h⁵ t⁵ => t⁵ | LH_N  => error⁰}: 413
-//│ [LH_C f³(h¹) map_lz_lh_₄(f³, t¹)]: 287 --->
-//│ 	case force⁰(ys¹) of {LH_C hy¹ ty¹ => [LH_C f²(hx¹, hy¹) zipWith_lz_lz_lh_₄(f², tx¹, ty¹)] | LH_N  => [LH_N]}: 265
-//│ [LH_N]: 288 --->
-//│ 	case force⁰(ys¹) of {LH_C hy¹ ty¹ => [LH_C f²(hx¹, hy¹) zipWith_lz_lz_lh_₄(f², tx¹, ty¹)] | LH_N  => [LH_N]}: 265
-//│ [LH_C f⁴(h²) map_lz_lh_₃(f⁴, t²)]: 330 --->
-//│ 	case force⁰(xs³) of {LH_C hx³ tx³ => case force⁰(ys³) of {LH_C hy³ ty³ => [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 479
-//│ 	case force⁰(ls⁷) of {LH_C h⁷ t⁷ => t⁷ | LH_N  => error⁰}: 489
-//│ [LH_N]: 331 --->
-//│ 	case force⁰(xs³) of {LH_C hx³ tx³ => case force⁰(ys³) of {LH_C hy³ ty³ => [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 479
-//│ 	case force⁰(ls⁷) of {LH_C h⁷ t⁷ => t⁷ | LH_N  => error⁰}: 489
-//│ [LH_C f⁵(h³) map_lz_lh_₂(f⁵, t³)]: 351 --->
+//│ 	case force⁰(ls⁷) of {LH_C h⁷ t⁷ => h⁷ | LH_N  => error⁰}: 531
+//│ [LH_N]: 302 --->
 //│ 	DeadCodeCons
-//│ 	case force⁰(ls⁶) of {LH_C h⁶ t⁶ => h⁶ | LH_N  => error⁰}: 436
-//│ [LH_N]: 352 --->
+//│ 	case force⁰(ls⁷) of {LH_C h⁷ t⁷ => h⁷ | LH_N  => error⁰}: 531
+//│ [LH_N]: 304 --->
 //│ 	DeadCodeCons
-//│ 	case force⁰(ls⁶) of {LH_C h⁶ t⁶ => h⁶ | LH_N  => error⁰}: 436
-//│ [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)]: 383 --->
-//│ 	case force⁰(ys²) of {LH_C hy² ty² => [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)] | LH_N  => [LH_N]}: 385
-//│ 	case force⁰(xs⁴) of {LH_C hx⁴ tx⁴ => case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁹(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁹, tx⁴, ty⁴)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 608
-//│ [LH_N]: 384 --->
-//│ 	case force⁰(ys²) of {LH_C hy² ty² => [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)] | LH_N  => [LH_N]}: 385
-//│ 	case force⁰(xs⁴) of {LH_C hx⁴ tx⁴ => case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁹(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁹, tx⁴, ty⁴)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 608
-//│ [LH_N]: 386 --->
-//│ 	case force⁰(ys²) of {LH_C hy² ty² => [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)] | LH_N  => [LH_N]}: 385
-//│ 	case force⁰(xs⁴) of {LH_C hx⁴ tx⁴ => case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁹(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁹, tx⁴, ty⁴)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 608
-//│ [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)]: 475 --->
-//│ 	case force⁰(ys³) of {LH_C hy³ ty³ => [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)] | LH_N  => [LH_N]}: 477
-//│ 	case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁹(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁹, tx⁴, ty⁴)] | LH_N  => [LH_N]}: 606
-//│ [LH_N]: 476 --->
-//│ 	case force⁰(ys³) of {LH_C hy³ ty³ => [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)] | LH_N  => [LH_N]}: 477
-//│ 	case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁹(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁹, tx⁴, ty⁴)] | LH_N  => [LH_N]}: 606
-//│ [LH_N]: 478 --->
-//│ 	case force⁰(ys³) of {LH_C hy³ ty³ => [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)] | LH_N  => [LH_N]}: 477
-//│ 	case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁹(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁹, tx⁴, ty⁴)] | LH_N  => [LH_N]}: 606
-//│ [LH_C f⁸(h⁸) map_lz_lh_₁(f⁸, t⁸)]: 521 --->
-//│ 	case force⁰(ls⁹) of {LH_C h⁹ t⁹ => [LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)] | LH_N  => [LH_N]}: 547
-//│ [LH_N]: 522 --->
-//│ 	case force⁰(ls⁹) of {LH_C h⁹ t⁹ => [LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)] | LH_N  => [LH_N]}: 547
-//│ [LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)]: 545 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
-//│ [LH_N]: 546 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
-//│ [LH_N]: 548 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
-//│ [LH_C head_lz_lh_₂(zarks_lh_₂) zipWith_lz_lz_lh_₃((fun a² -> (fun b⁰ -> (a² +. b⁰))), tail_lz_lh_₂(zarks_lh_₁), rtotals_lh_₁)]: 583 --->
-//│ 	case force⁰(ys²) of {LH_C hy² ty² => [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)] | LH_N  => [LH_N]}: 385
-//│ 	case force⁰(xs⁴) of {LH_C hx⁴ tx⁴ => case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁹(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁹, tx⁴, ty⁴)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 608
-//│ [LH_C f⁹(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁹, tx⁴, ty⁴)]: 604 --->
-//│ 	case force⁰(ls⁸) of {LH_C h⁸ t⁸ => [LH_C f⁸(h⁸) map_lz_lh_₁(f⁸, t⁸)] | LH_N  => [LH_N]}: 523
-//│ [LH_N]: 605 --->
-//│ 	case force⁰(ls⁸) of {LH_C h⁸ t⁸ => [LH_C f⁸(h⁸) map_lz_lh_₁(f⁸, t⁸)] | LH_N  => [LH_N]}: 523
-//│ [LH_N]: 607 --->
-//│ 	case force⁰(ls⁸) of {LH_C h⁸ t⁸ => [LH_C f⁸(h⁸) map_lz_lh_₁(f⁸, t⁸)] | LH_N  => [LH_N]}: 523
-//│ [LH_C head_lz_lh_₁(is_lh_₁) zipWith_lz_lz_lh_₂((fun a³ -> (fun b¹ -> (a³ +. b¹))), tail_lz_lh_₁(is_lh_₂), itotals_lh_₁)]: 632 --->
-//│ 	case force⁰(ys³) of {LH_C hy³ ty³ => [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)] | LH_N  => [LH_N]}: 477
-//│ 	case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁹(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁹, tx⁴, ty⁴)] | LH_N  => [LH_N]}: 606
+//│ 	case force⁰(ls⁷) of {LH_C h⁷ t⁷ => h⁷ | LH_N  => error⁰}: 531
+//│ [LH_C f⁴(hx¹, hy¹) zipWith_lz_lz_lh_₄(f⁴, tx¹, ty¹)]: 329 --->
+//│ 	case force⁰(xs³) of {LH_C hx³ tx³ => case force⁰(ys³) of {LH_C hy³ ty³ => [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 482
+//│ 	case force⁰(ls⁶) of {LH_C h⁶ t⁶ => t⁶ | LH_N  => error⁰}: 524
+//│ [LH_N]: 330 --->
+//│ 	case force⁰(xs³) of {LH_C hx³ tx³ => case force⁰(ys³) of {LH_C hy³ ty³ => [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 482
+//│ 	case force⁰(ls⁶) of {LH_C h⁶ t⁶ => t⁶ | LH_N  => error⁰}: 524
+//│ [LH_N]: 332 --->
+//│ 	case force⁰(xs³) of {LH_C hx³ tx³ => case force⁰(ys³) of {LH_C hy³ ty³ => [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 482
+//│ 	case force⁰(ls⁶) of {LH_C h⁶ t⁶ => t⁶ | LH_N  => error⁰}: 524
+//│ [LH_C f⁵(h³) map_lz_lh_₂(f⁵, t³)]: 350 --->
+//│ 	case force⁰(ys¹) of {LH_C hy¹ ty¹ => [LH_C f⁴(hx¹, hy¹) zipWith_lz_lz_lh_₄(f⁴, tx¹, ty¹)] | LH_N  => [LH_N]}: 331
+//│ [LH_N]: 351 --->
+//│ 	case force⁰(ys¹) of {LH_C hy¹ ty¹ => [LH_C f⁴(hx¹, hy¹) zipWith_lz_lz_lh_₄(f⁴, tx¹, ty¹)] | LH_N  => [LH_N]}: 331
+//│ [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)]: 418 --->
+//│ 	case force⁰(ys²) of {LH_C hy² ty² => [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)] | LH_N  => [LH_N]}: 420
+//│ 	case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁸(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁸, tx⁴, ty⁴)] | LH_N  => [LH_N]}: 590
+//│ [LH_N]: 419 --->
+//│ 	case force⁰(ys²) of {LH_C hy² ty² => [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)] | LH_N  => [LH_N]}: 420
+//│ 	case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁸(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁸, tx⁴, ty⁴)] | LH_N  => [LH_N]}: 590
+//│ [LH_N]: 421 --->
+//│ 	case force⁰(ys²) of {LH_C hy² ty² => [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)] | LH_N  => [LH_N]}: 420
+//│ 	case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁸(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁸, tx⁴, ty⁴)] | LH_N  => [LH_N]}: 590
+//│ [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)]: 478 --->
+//│ 	case force⁰(ys³) of {LH_C hy³ ty³ => [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)] | LH_N  => [LH_N]}: 480
+//│ 	case force⁰(xs⁴) of {LH_C hx⁴ tx⁴ => case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁸(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁸, tx⁴, ty⁴)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 592
+//│ [LH_N]: 479 --->
+//│ 	case force⁰(ys³) of {LH_C hy³ ty³ => [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)] | LH_N  => [LH_N]}: 480
+//│ 	case force⁰(xs⁴) of {LH_C hx⁴ tx⁴ => case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁸(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁸, tx⁴, ty⁴)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 592
+//│ [LH_N]: 481 --->
+//│ 	case force⁰(ys³) of {LH_C hy³ ty³ => [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)] | LH_N  => [LH_N]}: 480
+//│ 	case force⁰(xs⁴) of {LH_C hx⁴ tx⁴ => case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁸(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁸, tx⁴, ty⁴)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 592
+//│ [LH_C head_lz_lh_₂(is_lh_₁) zipWith_lz_lz_lh_₃((fun a² -> (fun b⁰ -> (a² +. b⁰))), tail_lz_lh_₂(is_lh_₂), itotals_lh_₁)]: 567 --->
+//│ 	case force⁰(ys²) of {LH_C hy² ty² => [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)] | LH_N  => [LH_N]}: 420
+//│ 	case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁸(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁸, tx⁴, ty⁴)] | LH_N  => [LH_N]}: 590
+//│ [LH_C f⁸(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁸, tx⁴, ty⁴)]: 588 --->
+//│ 	case force⁰(ls⁸) of {LH_C h⁸ t⁸ => [LH_C f⁹(h⁸) map_lz_lh_₁(f⁹, t⁸)] | LH_N  => [LH_N]}: 632
+//│ [LH_N]: 589 --->
+//│ 	case force⁰(ls⁸) of {LH_C h⁸ t⁸ => [LH_C f⁹(h⁸) map_lz_lh_₁(f⁹, t⁸)] | LH_N  => [LH_N]}: 632
+//│ [LH_N]: 591 --->
+//│ 	case force⁰(ls⁸) of {LH_C h⁸ t⁸ => [LH_C f⁹(h⁸) map_lz_lh_₁(f⁹, t⁸)] | LH_N  => [LH_N]}: 632
+//│ [LH_C head_lz_lh_₁(zarks_lh_₂) zipWith_lz_lz_lh_₂((fun a³ -> (fun b¹ -> (a³ +. b¹))), tail_lz_lh_₁(zarks_lh_₁), rtotals_lh_₁)]: 616 --->
+//│ 	case force⁰(ys³) of {LH_C hy³ ty³ => [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)] | LH_N  => [LH_N]}: 480
+//│ 	case force⁰(xs⁴) of {LH_C hx⁴ tx⁴ => case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁸(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁸, tx⁴, ty⁴)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 592
+//│ [LH_C f⁹(h⁸) map_lz_lh_₁(f⁹, t⁸)]: 630 --->
+//│ 	case force⁰(ls⁹) of {LH_C h⁹ t⁹ => [LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)] | LH_N  => [LH_N]}: 656
+//│ [LH_N]: 631 --->
+//│ 	case force⁰(ls⁹) of {LH_C h⁹ t⁹ => [LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)] | LH_N  => [LH_N]}: 656
+//│ [LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)]: 654 --->
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
+//│ [LH_N]: 655 --->
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
+//│ [LH_N]: 657 --->
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ ------------------
-//│ case force⁰(ys⁰) of {LH_C hy⁰ ty⁰ => [LH_C f⁰(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f⁰, tx⁰, ty⁰)] | LH_N  => [LH_N]}: 219 --->
-//│ 	[LH_C f¹(h⁰) map_lz_lh_₅(f¹, t⁰)]: 238
-//│ 	[LH_N]: 239
-//│ case force⁰(xs⁰) of {LH_C hx⁰ tx⁰ => case force⁰(ys⁰) of {LH_C hy⁰ ty⁰ => [LH_C f⁰(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f⁰, tx⁰, ty⁰)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 221 --->
+//│ case force⁰(ls⁰) of {LH_C h⁰ t⁰ => [LH_C f⁰(h⁰) map_lz_lh_₅(f⁰, t⁰)] | LH_N  => [LH_N]}: 211 --->
 //│ 	[LH_C _lh_enumFromFloat_arg1⁰ enumFromFloat_lh_₃((_lh_enumFromFloat_arg1⁰ +. 1.0))]: 122
-//│ case force⁰(ls⁰) of {LH_C h⁰ t⁰ => [LH_C f¹(h⁰) map_lz_lh_₅(f¹, t⁰)] | LH_N  => [LH_N]}: 240 --->
+//│ case force⁰(ls¹) of {LH_C h¹ t¹ => [LH_C f¹(h¹) map_lz_lh_₄(f¹, t¹)] | LH_N  => [LH_N]}: 232 --->
 //│ 	[LH_C _lh_enumFromFloat_arg1⁰ enumFromFloat_lh_₃((_lh_enumFromFloat_arg1⁰ +. 1.0))]: 122
-//│ case force⁰(ys¹) of {LH_C hy¹ ty¹ => [LH_C f²(hx¹, hy¹) zipWith_lz_lz_lh_₄(f², tx¹, ty¹)] | LH_N  => [LH_N]}: 265 --->
-//│ 	[LH_C f³(h¹) map_lz_lh_₄(f³, t¹)]: 287
-//│ 	[LH_N]: 288
-//│ case force⁰(xs¹) of {LH_C hx¹ tx¹ => case force⁰(ys¹) of {LH_C hy¹ ty¹ => [LH_C f²(hx¹, hy¹) zipWith_lz_lz_lh_₄(f², tx¹, ty¹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 267 --->
+//│ case force⁰(ls²) of {LH_C h² t² => [LH_C f²(h²) map_lz_lh_₃(f², t²)] | LH_N  => [LH_N]}: 256 --->
 //│ 	[LH_C _lh_enumFromFloat_arg1⁰ enumFromFloat_lh_₃((_lh_enumFromFloat_arg1⁰ +. 1.0))]: 122
-//│ case force⁰(ls¹) of {LH_C h¹ t¹ => [LH_C f³(h¹) map_lz_lh_₄(f³, t¹)] | LH_N  => [LH_N]}: 289 --->
+//│ case force⁰(ys⁰) of {LH_C hy⁰ ty⁰ => [LH_C f³(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f³, tx⁰, ty⁰)] | LH_N  => [LH_N]}: 303 --->
+//│ 	[LH_C f²(h²) map_lz_lh_₃(f², t²)]: 254
+//│ 	[LH_N]: 255
+//│ case force⁰(xs⁰) of {LH_C hx⁰ tx⁰ => case force⁰(ys⁰) of {LH_C hy⁰ ty⁰ => [LH_C f³(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f³, tx⁰, ty⁰)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 305 --->
 //│ 	[LH_C _lh_enumFromFloat_arg1⁰ enumFromFloat_lh_₃((_lh_enumFromFloat_arg1⁰ +. 1.0))]: 122
-//│ case force⁰(ls²) of {LH_C h² t² => [LH_C f⁴(h²) map_lz_lh_₃(f⁴, t²)] | LH_N  => [LH_N]}: 332 --->
-//│ 	[LH_C _lh_enumFromFloat_arg1¹ enumFromFloat_lh_₂((_lh_enumFromFloat_arg1¹ +. 1.0))]: 158
-//│ case force⁰(ls³) of {LH_C h³ t³ => [LH_C f⁵(h³) map_lz_lh_₂(f⁵, t³)] | LH_N  => [LH_N]}: 353 --->
+//│ case force⁰(ys¹) of {LH_C hy¹ ty¹ => [LH_C f⁴(hx¹, hy¹) zipWith_lz_lz_lh_₄(f⁴, tx¹, ty¹)] | LH_N  => [LH_N]}: 331 --->
+//│ 	[LH_C f⁵(h³) map_lz_lh_₂(f⁵, t³)]: 350
+//│ 	[LH_N]: 351
+//│ case force⁰(xs¹) of {LH_C hx¹ tx¹ => case force⁰(ys¹) of {LH_C hy¹ ty¹ => [LH_C f⁴(hx¹, hy¹) zipWith_lz_lz_lh_₄(f⁴, tx¹, ty¹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 333 --->
 //│ 	[LH_C _lh_enumFromFloat_arg1² enumFromFloat_lh_₁((_lh_enumFromFloat_arg1² +. 1.0))]: 170
-//│ case force⁰(ls⁴) of {LH_C h⁴ t⁴ => h⁴ | LH_N  => error⁰}: 362 --->
-//│ 	[LH_C f⁰(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f⁰, tx⁰, ty⁰)]: 217
-//│ 	[LH_N]: 218
-//│ 	[LH_N]: 220
-//│ case force⁰(ys²) of {LH_C hy² ty² => [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)] | LH_N  => [LH_N]}: 385 --->
-//│ 	[LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)]: 383
-//│ 	[LH_N]: 384
-//│ 	[LH_N]: 386
-//│ 	[LH_C head_lz_lh_₂(zarks_lh_₂) zipWith_lz_lz_lh_₃((fun a² -> (fun b⁰ -> (a² +. b⁰))), tail_lz_lh_₂(zarks_lh_₁), rtotals_lh_₁)]: 583
-//│ case force⁰(xs²) of {LH_C hx² tx² => case force⁰(ys²) of {LH_C hy² ty² => [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 387 --->
-//│ 	[LH_C f²(hx¹, hy¹) zipWith_lz_lz_lh_₄(f², tx¹, ty¹)]: 263
-//│ 	[LH_N]: 264
-//│ 	[LH_N]: 266
-//│ case force⁰(ls⁵) of {LH_C h⁵ t⁵ => t⁵ | LH_N  => error⁰}: 413 --->
-//│ 	[LH_C f²(hx¹, hy¹) zipWith_lz_lz_lh_₄(f², tx¹, ty¹)]: 263
-//│ 	[LH_N]: 264
-//│ 	[LH_N]: 266
-//│ case force⁰(ls⁶) of {LH_C h⁶ t⁶ => h⁶ | LH_N  => error⁰}: 436 --->
-//│ 	[LH_C f⁵(h³) map_lz_lh_₂(f⁵, t³)]: 351
-//│ 	[LH_N]: 352
-//│ case force⁰(ys³) of {LH_C hy³ ty³ => [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)] | LH_N  => [LH_N]}: 477 --->
-//│ 	[LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)]: 475
-//│ 	[LH_N]: 476
-//│ 	[LH_N]: 478
-//│ 	[LH_C head_lz_lh_₁(is_lh_₁) zipWith_lz_lz_lh_₂((fun a³ -> (fun b¹ -> (a³ +. b¹))), tail_lz_lh_₁(is_lh_₂), itotals_lh_₁)]: 632
-//│ case force⁰(xs³) of {LH_C hx³ tx³ => case force⁰(ys³) of {LH_C hy³ ty³ => [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 479 --->
-//│ 	[LH_C f⁴(h²) map_lz_lh_₃(f⁴, t²)]: 330
-//│ 	[LH_N]: 331
-//│ case force⁰(ls⁷) of {LH_C h⁷ t⁷ => t⁷ | LH_N  => error⁰}: 489 --->
-//│ 	[LH_C f⁴(h²) map_lz_lh_₃(f⁴, t²)]: 330
-//│ 	[LH_N]: 331
-//│ case force⁰(ls⁸) of {LH_C h⁸ t⁸ => [LH_C f⁸(h⁸) map_lz_lh_₁(f⁸, t⁸)] | LH_N  => [LH_N]}: 523 --->
-//│ 	[LH_C f⁹(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁹, tx⁴, ty⁴)]: 604
-//│ 	[LH_N]: 605
-//│ 	[LH_N]: 607
-//│ case force⁰(ls⁹) of {LH_C h⁹ t⁹ => [LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)] | LH_N  => [LH_N]}: 547 --->
-//│ 	[LH_C f⁸(h⁸) map_lz_lh_₁(f⁸, t⁸)]: 521
-//│ 	[LH_N]: 522
-//│ case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562 --->
+//│ case force⁰(ls³) of {LH_C h³ t³ => [LH_C f⁵(h³) map_lz_lh_₂(f⁵, t³)] | LH_N  => [LH_N]}: 352 --->
+//│ 	[LH_C _lh_enumFromFloat_arg1¹ enumFromFloat_lh_₂((_lh_enumFromFloat_arg1¹ +. 1.0))]: 158
+//│ case force⁰(ys²) of {LH_C hy² ty² => [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)] | LH_N  => [LH_N]}: 420 --->
+//│ 	[LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)]: 418
+//│ 	[LH_N]: 419
+//│ 	[LH_N]: 421
+//│ 	[LH_C head_lz_lh_₂(is_lh_₁) zipWith_lz_lz_lh_₃((fun a² -> (fun b⁰ -> (a² +. b⁰))), tail_lz_lh_₂(is_lh_₂), itotals_lh_₁)]: 567
+//│ case force⁰(xs²) of {LH_C hx² tx² => case force⁰(ys²) of {LH_C hy² ty² => [LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 422 --->
+//│ 	[LH_C f⁰(h⁰) map_lz_lh_₅(f⁰, t⁰)]: 209
+//│ 	[LH_N]: 210
+//│ case force⁰(ls⁴) of {LH_C h⁴ t⁴ => h⁴ | LH_N  => error⁰}: 432 --->
+//│ 	[LH_C f¹(h¹) map_lz_lh_₄(f¹, t¹)]: 230
+//│ 	[LH_N]: 231
+//│ case force⁰(ls⁵) of {LH_C h⁵ t⁵ => t⁵ | LH_N  => error⁰}: 439 --->
+//│ 	[LH_C f⁰(h⁰) map_lz_lh_₅(f⁰, t⁰)]: 209
+//│ 	[LH_N]: 210
+//│ case force⁰(ys³) of {LH_C hy³ ty³ => [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)] | LH_N  => [LH_N]}: 480 --->
+//│ 	[LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)]: 478
+//│ 	[LH_N]: 479
+//│ 	[LH_N]: 481
+//│ 	[LH_C head_lz_lh_₁(zarks_lh_₂) zipWith_lz_lz_lh_₂((fun a³ -> (fun b¹ -> (a³ +. b¹))), tail_lz_lh_₁(zarks_lh_₁), rtotals_lh_₁)]: 616
+//│ case force⁰(xs³) of {LH_C hx³ tx³ => case force⁰(ys³) of {LH_C hy³ ty³ => [LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 482 --->
+//│ 	[LH_C f⁴(hx¹, hy¹) zipWith_lz_lz_lh_₄(f⁴, tx¹, ty¹)]: 329
+//│ 	[LH_N]: 330
+//│ 	[LH_N]: 332
+//│ case force⁰(ls⁶) of {LH_C h⁶ t⁶ => t⁶ | LH_N  => error⁰}: 524 --->
+//│ 	[LH_C f⁴(hx¹, hy¹) zipWith_lz_lz_lh_₄(f⁴, tx¹, ty¹)]: 329
+//│ 	[LH_N]: 330
+//│ 	[LH_N]: 332
+//│ case force⁰(ls⁷) of {LH_C h⁷ t⁷ => h⁷ | LH_N  => error⁰}: 531 --->
+//│ 	[LH_C f³(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f³, tx⁰, ty⁰)]: 301
+//│ 	[LH_N]: 302
+//│ 	[LH_N]: 304
+//│ case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545 --->
 //│ 	[LH_N]: 97
 //│ 	[LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]: 98
 //│ 	[LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]: 99
@@ -475,89 +477,89 @@ testIntegrate_nofib $ primId 100
 //│ 	[LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]]]]]: 104
 //│ 	[LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. d⁰)) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]]]]]]: 105
 //│ 	[LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg1⁰) *. 0.5) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. d⁰)) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]]]]]]]: 106
-//│ 	[LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)]: 545
-//│ 	[LH_N]: 546
-//│ 	[LH_N]: 548
-//│ case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁹(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁹, tx⁴, ty⁴)] | LH_N  => [LH_N]}: 606 --->
-//│ 	[LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)]: 475
-//│ 	[LH_N]: 476
-//│ 	[LH_N]: 478
-//│ 	[LH_C head_lz_lh_₁(is_lh_₁) zipWith_lz_lz_lh_₂((fun a³ -> (fun b¹ -> (a³ +. b¹))), tail_lz_lh_₁(is_lh_₂), itotals_lh_₁)]: 632
-//│ case force⁰(xs⁴) of {LH_C hx⁴ tx⁴ => case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁹(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁹, tx⁴, ty⁴)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 608 --->
-//│ 	[LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)]: 383
-//│ 	[LH_N]: 384
-//│ 	[LH_N]: 386
-//│ 	[LH_C head_lz_lh_₂(zarks_lh_₂) zipWith_lz_lz_lh_₃((fun a² -> (fun b⁰ -> (a² +. b⁰))), tail_lz_lh_₂(zarks_lh_₁), rtotals_lh_₁)]: 583
+//│ 	[LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)]: 654
+//│ 	[LH_N]: 655
+//│ 	[LH_N]: 657
+//│ case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁸(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁸, tx⁴, ty⁴)] | LH_N  => [LH_N]}: 590 --->
+//│ 	[LH_C f⁶(hx², hy²) zipWith_lz_lz_lh_₃(f⁶, tx², ty²)]: 418
+//│ 	[LH_N]: 419
+//│ 	[LH_N]: 421
+//│ 	[LH_C head_lz_lh_₂(is_lh_₁) zipWith_lz_lz_lh_₃((fun a² -> (fun b⁰ -> (a² +. b⁰))), tail_lz_lh_₂(is_lh_₂), itotals_lh_₁)]: 567
+//│ case force⁰(xs⁴) of {LH_C hx⁴ tx⁴ => case force⁰(ys⁴) of {LH_C hy⁴ ty⁴ => [LH_C f⁸(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁸, tx⁴, ty⁴)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 592 --->
+//│ 	[LH_C f⁷(hx³, hy³) zipWith_lz_lz_lh_₂(f⁷, tx³, ty³)]: 478
+//│ 	[LH_N]: 479
+//│ 	[LH_N]: 481
+//│ 	[LH_C head_lz_lh_₁(zarks_lh_₂) zipWith_lz_lz_lh_₂((fun a³ -> (fun b¹ -> (a³ +. b¹))), tail_lz_lh_₁(zarks_lh_₁), rtotals_lh_₁)]: 616
+//│ case force⁰(ls⁸) of {LH_C h⁸ t⁸ => [LH_C f⁹(h⁸) map_lz_lh_₁(f⁹, t⁸)] | LH_N  => [LH_N]}: 632 --->
+//│ 	[LH_C f⁸(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁸, tx⁴, ty⁴)]: 588
+//│ 	[LH_N]: 589
+//│ 	[LH_N]: 591
+//│ case force⁰(ls⁹) of {LH_C h⁹ t⁹ => [LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)] | LH_N  => [LH_N]}: 656 --->
+//│ 	[LH_C f⁹(h⁸) map_lz_lh_₁(f⁹, t⁸)]: 630
+//│ 	[LH_N]: 631
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [LH_N]: 97 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]: 98 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]: 99 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]: 100 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]]: 101 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]]]: 102 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]]]]: 103 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]]]]]: 104 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. d⁰)) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]]]]]]: 105 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg1⁰) *. 0.5) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. d⁰)) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]]]]]]]: 106 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ [LH_C _lh_enumFromFloat_arg1¹ enumFromFloat_lh_₂((_lh_enumFromFloat_arg1¹ +. 1.0))]: 158 --->
-//│ 	case force⁰(ls²) of {LH_C h² t² => [LH_C f⁴(h²) map_lz_lh_₃(f⁴, t²)] | LH_N  => [LH_N]}: 332
+//│ 	case force⁰(ls³) of {LH_C h³ t³ => [LH_C f⁵(h³) map_lz_lh_₂(f⁵, t³)] | LH_N  => [LH_N]}: 352
 //│ [LH_C _lh_enumFromFloat_arg1² enumFromFloat_lh_₁((_lh_enumFromFloat_arg1² +. 1.0))]: 170 --->
-//│ 	case force⁰(ls³) of {LH_C h³ t³ => [LH_C f⁵(h³) map_lz_lh_₂(f⁵, t³)] | LH_N  => [LH_N]}: 353
-//│ [LH_C f¹(h⁰) map_lz_lh_₅(f¹, t⁰)]: 238 --->
-//│ 	case force⁰(ys⁰) of {LH_C hy⁰ ty⁰ => [LH_C f⁰(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f⁰, tx⁰, ty⁰)] | LH_N  => [LH_N]}: 219
-//│ [LH_N]: 239 --->
-//│ 	case force⁰(ys⁰) of {LH_C hy⁰ ty⁰ => [LH_C f⁰(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f⁰, tx⁰, ty⁰)] | LH_N  => [LH_N]}: 219
-//│ [LH_C f³(h¹) map_lz_lh_₄(f³, t¹)]: 287 --->
-//│ 	case force⁰(ys¹) of {LH_C hy¹ ty¹ => [LH_C f²(hx¹, hy¹) zipWith_lz_lz_lh_₄(f², tx¹, ty¹)] | LH_N  => [LH_N]}: 265
-//│ [LH_N]: 288 --->
-//│ 	case force⁰(ys¹) of {LH_C hy¹ ty¹ => [LH_C f²(hx¹, hy¹) zipWith_lz_lz_lh_₄(f², tx¹, ty¹)] | LH_N  => [LH_N]}: 265
-//│ [LH_C f⁸(h⁸) map_lz_lh_₁(f⁸, t⁸)]: 521 --->
-//│ 	case force⁰(ls⁹) of {LH_C h⁹ t⁹ => [LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)] | LH_N  => [LH_N]}: 547
-//│ [LH_N]: 522 --->
-//│ 	case force⁰(ls⁹) of {LH_C h⁹ t⁹ => [LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)] | LH_N  => [LH_N]}: 547
-//│ [LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)]: 545 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
-//│ [LH_N]: 546 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
-//│ [LH_N]: 548 --->
-//│ 	case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562
-//│ [LH_C f⁹(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁹, tx⁴, ty⁴)]: 604 --->
-//│ 	case force⁰(ls⁸) of {LH_C h⁸ t⁸ => [LH_C f⁸(h⁸) map_lz_lh_₁(f⁸, t⁸)] | LH_N  => [LH_N]}: 523
-//│ [LH_N]: 605 --->
-//│ 	case force⁰(ls⁸) of {LH_C h⁸ t⁸ => [LH_C f⁸(h⁸) map_lz_lh_₁(f⁸, t⁸)] | LH_N  => [LH_N]}: 523
-//│ [LH_N]: 607 --->
-//│ 	case force⁰(ls⁸) of {LH_C h⁸ t⁸ => [LH_C f⁸(h⁸) map_lz_lh_₁(f⁸, t⁸)] | LH_N  => [LH_N]}: 523
+//│ 	case force⁰(xs¹) of {LH_C hx¹ tx¹ => case force⁰(ys¹) of {LH_C hy¹ ty¹ => [LH_C f⁴(hx¹, hy¹) zipWith_lz_lz_lh_₄(f⁴, tx¹, ty¹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 333
+//│ [LH_C f²(h²) map_lz_lh_₃(f², t²)]: 254 --->
+//│ 	case force⁰(ys⁰) of {LH_C hy⁰ ty⁰ => [LH_C f³(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f³, tx⁰, ty⁰)] | LH_N  => [LH_N]}: 303
+//│ [LH_N]: 255 --->
+//│ 	case force⁰(ys⁰) of {LH_C hy⁰ ty⁰ => [LH_C f³(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f³, tx⁰, ty⁰)] | LH_N  => [LH_N]}: 303
+//│ [LH_C f⁵(h³) map_lz_lh_₂(f⁵, t³)]: 350 --->
+//│ 	case force⁰(ys¹) of {LH_C hy¹ ty¹ => [LH_C f⁴(hx¹, hy¹) zipWith_lz_lz_lh_₄(f⁴, tx¹, ty¹)] | LH_N  => [LH_N]}: 331
+//│ [LH_N]: 351 --->
+//│ 	case force⁰(ys¹) of {LH_C hy¹ ty¹ => [LH_C f⁴(hx¹, hy¹) zipWith_lz_lz_lh_₄(f⁴, tx¹, ty¹)] | LH_N  => [LH_N]}: 331
+//│ [LH_C f⁸(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁸, tx⁴, ty⁴)]: 588 --->
+//│ 	case force⁰(ls⁸) of {LH_C h⁸ t⁸ => [LH_C f⁹(h⁸) map_lz_lh_₁(f⁹, t⁸)] | LH_N  => [LH_N]}: 632
+//│ [LH_N]: 589 --->
+//│ 	case force⁰(ls⁸) of {LH_C h⁸ t⁸ => [LH_C f⁹(h⁸) map_lz_lh_₁(f⁹, t⁸)] | LH_N  => [LH_N]}: 632
+//│ [LH_N]: 591 --->
+//│ 	case force⁰(ls⁸) of {LH_C h⁸ t⁸ => [LH_C f⁹(h⁸) map_lz_lh_₁(f⁹, t⁸)] | LH_N  => [LH_N]}: 632
+//│ [LH_C f⁹(h⁸) map_lz_lh_₁(f⁹, t⁸)]: 630 --->
+//│ 	case force⁰(ls⁹) of {LH_C h⁹ t⁹ => [LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)] | LH_N  => [LH_N]}: 656
+//│ [LH_N]: 631 --->
+//│ 	case force⁰(ls⁹) of {LH_C h⁹ t⁹ => [LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)] | LH_N  => [LH_N]}: 656
+//│ [LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)]: 654 --->
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
+//│ [LH_N]: 655 --->
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
+//│ [LH_N]: 657 --->
+//│ 	case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545
 //│ ------------------
-//│ case force⁰(ys⁰) of {LH_C hy⁰ ty⁰ => [LH_C f⁰(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f⁰, tx⁰, ty⁰)] | LH_N  => [LH_N]}: 219 --->
-//│ 	[LH_C f¹(h⁰) map_lz_lh_₅(f¹, t⁰)]: 238
-//│ 	[LH_N]: 239
-//│ case force⁰(ys¹) of {LH_C hy¹ ty¹ => [LH_C f²(hx¹, hy¹) zipWith_lz_lz_lh_₄(f², tx¹, ty¹)] | LH_N  => [LH_N]}: 265 --->
-//│ 	[LH_C f³(h¹) map_lz_lh_₄(f³, t¹)]: 287
-//│ 	[LH_N]: 288
-//│ case force⁰(ls²) of {LH_C h² t² => [LH_C f⁴(h²) map_lz_lh_₃(f⁴, t²)] | LH_N  => [LH_N]}: 332 --->
-//│ 	[LH_C _lh_enumFromFloat_arg1¹ enumFromFloat_lh_₂((_lh_enumFromFloat_arg1¹ +. 1.0))]: 158
-//│ case force⁰(ls³) of {LH_C h³ t³ => [LH_C f⁵(h³) map_lz_lh_₂(f⁵, t³)] | LH_N  => [LH_N]}: 353 --->
+//│ case force⁰(ys⁰) of {LH_C hy⁰ ty⁰ => [LH_C f³(hx⁰, hy⁰) zipWith_lz_lz_lh_₅(f³, tx⁰, ty⁰)] | LH_N  => [LH_N]}: 303 --->
+//│ 	[LH_C f²(h²) map_lz_lh_₃(f², t²)]: 254
+//│ 	[LH_N]: 255
+//│ case force⁰(ys¹) of {LH_C hy¹ ty¹ => [LH_C f⁴(hx¹, hy¹) zipWith_lz_lz_lh_₄(f⁴, tx¹, ty¹)] | LH_N  => [LH_N]}: 331 --->
+//│ 	[LH_C f⁵(h³) map_lz_lh_₂(f⁵, t³)]: 350
+//│ 	[LH_N]: 351
+//│ case force⁰(xs¹) of {LH_C hx¹ tx¹ => case force⁰(ys¹) of {LH_C hy¹ ty¹ => [LH_C f⁴(hx¹, hy¹) zipWith_lz_lz_lh_₄(f⁴, tx¹, ty¹)] | LH_N  => [LH_N]} | LH_N  => [LH_N]}: 333 --->
 //│ 	[LH_C _lh_enumFromFloat_arg1² enumFromFloat_lh_₁((_lh_enumFromFloat_arg1² +. 1.0))]: 170
-//│ case force⁰(ls⁸) of {LH_C h⁸ t⁸ => [LH_C f⁸(h⁸) map_lz_lh_₁(f⁸, t⁸)] | LH_N  => [LH_N]}: 523 --->
-//│ 	[LH_C f⁹(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁹, tx⁴, ty⁴)]: 604
-//│ 	[LH_N]: 605
-//│ 	[LH_N]: 607
-//│ case force⁰(ls⁹) of {LH_C h⁹ t⁹ => [LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)] | LH_N  => [LH_N]}: 547 --->
-//│ 	[LH_C f⁸(h⁸) map_lz_lh_₁(f⁸, t⁸)]: 521
-//│ 	[LH_N]: 522
-//│ case _lh_sumFloat_arg1⁰ of {LH_N  => 0.0 | LH_C _lh_sumFloat_LH_C_0⁰ _lh_sumFloat_LH_C_1⁰ => (_lh_sumFloat_LH_C_0⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁰)) | _  => error⁰}: 562 --->
+//│ case force⁰(ls³) of {LH_C h³ t³ => [LH_C f⁵(h³) map_lz_lh_₂(f⁵, t³)] | LH_N  => [LH_N]}: 352 --->
+//│ 	[LH_C _lh_enumFromFloat_arg1¹ enumFromFloat_lh_₂((_lh_enumFromFloat_arg1¹ +. 1.0))]: 158
+//│ case _lh_sumFloatAux_arg1⁰ of {LH_N  => _lh_sumFloatAux_arg2⁰ | LH_C _lh_sumFloatAux_LH_C_0⁰ _lh_sumFloatAux_LH_C_1⁰ => sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁰, (_lh_sumFloatAux_arg2⁰ +. _lh_sumFloatAux_LH_C_0⁰)) | _  => error⁰}: 545 --->
 //│ 	[LH_N]: 97
 //│ 	[LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]: 98
 //│ 	[LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]: 99
@@ -568,25 +570,35 @@ testIntegrate_nofib $ primId 100
 //│ 	[LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]]]]]: 104
 //│ 	[LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. d⁰)) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]]]]]]: 105
 //│ 	[LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg1⁰) *. 0.5) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. d⁰)) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰))) [LH_C _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰)) [LH_C (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5) [LH_N]]]]]]]]]]: 106
-//│ 	[LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)]: 545
-//│ 	[LH_N]: 546
-//│ 	[LH_N]: 548
+//│ 	[LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)]: 654
+//│ 	[LH_N]: 655
+//│ 	[LH_N]: 657
+//│ case force⁰(ls⁸) of {LH_C h⁸ t⁸ => [LH_C f⁹(h⁸) map_lz_lh_₁(f⁹, t⁸)] | LH_N  => [LH_N]}: 632 --->
+//│ 	[LH_C f⁸(hx⁴, hy⁴) zipWith_lz_lz_lh_₁(f⁸, tx⁴, ty⁴)]: 588
+//│ 	[LH_N]: 589
+//│ 	[LH_N]: 591
+//│ case force⁰(ls⁹) of {LH_C h⁹ t⁹ => [LH_C h⁹ take_lz_lh_₁((n² - 1), t⁹)] | LH_N  => [LH_N]}: 656 --->
+//│ 	[LH_C f⁹(h⁸) map_lz_lh_₁(f⁹, t⁸)]: 630
+//│ 	[LH_N]: 631
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testIntegrate_nofib_lh_₁(primId⁰(100))
+//│ testIntegrate_nofib_lh_₁(primId⁰(100000))
 //│ def enumFromFloat_lh_₁(_lh_enumFromFloat_arg1⁴) = lazy⁰(
-//│ 	let t¹³ = enumFromFloat_lh_₁((_lh_enumFromFloat_arg1⁴ +. 1.0))
-//│ 	in let h¹³ = _lh_enumFromFloat_arg1⁴
-//│ 	in (fun f²⁴ -> [LH_C f²⁴(h¹³) map_lz_lh_₂(f²⁴, t¹³)]))
+//│ 	let tx⁸ = enumFromFloat_lh_₁((_lh_enumFromFloat_arg1⁴ +. 1.0))
+//│ 	in let hx⁸ = _lh_enumFromFloat_arg1⁴
+//│ 	in (fun f²⁵ -> (fun ys¹⁰ -> force⁰(ys¹⁰, f²⁵, hx⁸, tx⁸))))
 //│ def enumFromFloat_lh_₂(_lh_enumFromFloat_arg1³) = lazy⁰(
 //│ 	let t¹² = enumFromFloat_lh_₂((_lh_enumFromFloat_arg1³ +. 1.0))
 //│ 	in let h¹² = _lh_enumFromFloat_arg1³
-//│ 	in (fun f²⁰ -> [LH_C f²⁰(h¹²) map_lz_lh_₃(f²⁰, t¹²)]))
+//│ 	in (fun f¹⁸ -> 
+//│ 		let ty⁵ = map_lz_lh_₂(f¹⁸, t¹²)
+//│ 		in let hy⁵ = f¹⁸(h¹²)
+//│ 		in (fun f¹⁹ -> (fun hx⁵ -> (fun tx⁵ -> [LH_C f¹⁹(hx⁵, hy⁵) zipWith_lz_lz_lh_₄(f¹⁹, tx⁵, ty⁵)])))))
 //│ def enumFromFloat_lh_₃(_lh_enumFromFloat_arg1⁵) = lazy⁰([LH_C _lh_enumFromFloat_arg1⁵ enumFromFloat_lh_₃((_lh_enumFromFloat_arg1⁵ +. 1.0))])
 //│ def etotal_lh_₁(_lh_etotal_arg1¹) = sumFloat_lh_₁(take_lz_lh_₁(_lh_etotal_arg1¹, map_lz_lh_₁((fun a⁹ -> (a⁹ *. a⁹)), zipWith_lz_lz_lh_₁((fun a¹⁰ -> (fun b⁴ -> (a¹⁰ -. b⁴))), rtotals_lh_₁, itotals_lh_₁))))
 //│ def head_lz_lh_₁(ls¹²) = case force⁰(ls¹²) of {
-//│ 	LH_C h⁶ t⁶ => h⁶
+//│ 	LH_C h⁷ t⁷ => h⁷
 //│ 	| LH_N  => error⁰}
 //│ def head_lz_lh_₂(ls¹⁷) = case force⁰(ls¹⁷) of {
 //│ 	LH_C h⁴ t⁴ => h⁴
@@ -594,89 +606,90 @@ testIntegrate_nofib $ primId 100
 //│ def integrate1D_lh_₁(_lh_integrate1D_arg1¹, _lh_integrate1D_arg2¹, _lh_integrate1D_arg3¹) = 
 //│ 	let d¹ = ((_lh_integrate1D_arg2¹ -. _lh_integrate1D_arg1¹) /. 8.0)
 //│ 	in (d¹ *. sumFloat_lh_₁(
-//│ 		let _lh_sumFloat_LH_C_1² = 	
-//│ 			let _lh_sumFloat_LH_C_1³ = 	
-//│ 				let _lh_sumFloat_LH_C_1⁴ = 	
-//│ 					let _lh_sumFloat_LH_C_1⁵ = 	
-//│ 						let _lh_sumFloat_LH_C_1⁶ = 	
-//│ 							let _lh_sumFloat_LH_C_1⁷ = 	
-//│ 								let _lh_sumFloat_LH_C_1⁸ = 	
-//│ 									let _lh_sumFloat_LH_C_1⁹ = 	
-//│ 										let _lh_sumFloat_LH_C_1¹⁰ = (fun _lh_dummy¹² -> 0.0)
-//│ 										in let _lh_sumFloat_LH_C_0¹⁰ = (_lh_integrate1D_arg3¹(_lh_integrate1D_arg2¹) *. 0.5)
-//│ 										in (fun _lh_dummy¹¹ -> (_lh_sumFloat_LH_C_0¹⁰ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1¹⁰)))
-//│ 									in let _lh_sumFloat_LH_C_0⁹ = _lh_integrate1D_arg3¹((_lh_integrate1D_arg2¹ -. d¹))
-//│ 									in (fun _lh_dummy¹⁰ -> (_lh_sumFloat_LH_C_0⁹ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁹)))
-//│ 								in let _lh_sumFloat_LH_C_0⁸ = _lh_integrate1D_arg3¹((_lh_integrate1D_arg2¹ -. (2.0 *. d¹)))
-//│ 								in (fun _lh_dummy⁹ -> (_lh_sumFloat_LH_C_0⁸ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁸)))
-//│ 							in let _lh_sumFloat_LH_C_0⁷ = _lh_integrate1D_arg3¹((_lh_integrate1D_arg2¹ -. (3.0 *. d¹)))
-//│ 							in (fun _lh_dummy⁸ -> (_lh_sumFloat_LH_C_0⁷ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁷)))
-//│ 						in let _lh_sumFloat_LH_C_0⁶ = _lh_integrate1D_arg3¹((_lh_integrate1D_arg1¹ +. (4.0 *. d¹)))
-//│ 						in (fun _lh_dummy⁷ -> (_lh_sumFloat_LH_C_0⁶ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁶)))
-//│ 					in let _lh_sumFloat_LH_C_0⁵ = _lh_integrate1D_arg3¹((_lh_integrate1D_arg1¹ +. (3.0 *. d¹)))
-//│ 					in (fun _lh_dummy⁶ -> (_lh_sumFloat_LH_C_0⁵ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁵)))
-//│ 				in let _lh_sumFloat_LH_C_0⁴ = _lh_integrate1D_arg3¹((_lh_integrate1D_arg1¹ +. (2.0 *. d¹)))
-//│ 				in (fun _lh_dummy⁵ -> (_lh_sumFloat_LH_C_0⁴ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1⁴)))
-//│ 			in let _lh_sumFloat_LH_C_0³ = _lh_integrate1D_arg3¹((_lh_integrate1D_arg1¹ +. d¹))
-//│ 			in (fun _lh_dummy⁴ -> (_lh_sumFloat_LH_C_0³ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1³)))
-//│ 		in let _lh_sumFloat_LH_C_0² = (_lh_integrate1D_arg3¹(_lh_integrate1D_arg1¹) *. 0.5)
-//│ 		in (fun _lh_dummy³ -> (_lh_sumFloat_LH_C_0² +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1²)))))
-//│ def integrate2D_lh_₁(_lh_integrate2D_arg1¹, _lh_integrate2D_arg2¹, _lh_integrate2D_arg3¹, _lh_integrate2D_arg4¹, _lh_integrate2D_arg5¹) = integrate1D_lh_₁(_lh_integrate2D_arg3¹, _lh_integrate2D_arg4¹, (fun y⁴ -> integrate1D_lh_₁(_lh_integrate2D_arg1¹, _lh_integrate2D_arg2¹, (fun x⁴ -> _lh_integrate2D_arg5¹(x⁴, y⁴)))))
+//│ 		let _lh_sumFloatAux_LH_C_1² = 	
+//│ 			let _lh_sumFloatAux_LH_C_1³ = 	
+//│ 				let _lh_sumFloatAux_LH_C_1⁴ = 	
+//│ 					let _lh_sumFloatAux_LH_C_1⁵ = 	
+//│ 						let _lh_sumFloatAux_LH_C_1⁶ = 	
+//│ 							let _lh_sumFloatAux_LH_C_1⁷ = 	
+//│ 								let _lh_sumFloatAux_LH_C_1⁸ = 	
+//│ 									let _lh_sumFloatAux_LH_C_1⁹ = 	
+//│ 										let _lh_sumFloatAux_LH_C_1¹⁰ = (fun _lh_sumFloatAux_arg2¹³ -> _lh_sumFloatAux_arg2¹³)
+//│ 										in let _lh_sumFloatAux_LH_C_0¹⁰ = (_lh_integrate1D_arg3¹(_lh_integrate1D_arg2¹) *. 0.5)
+//│ 										in (fun _lh_sumFloatAux_arg2¹² -> sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1¹⁰, (_lh_sumFloatAux_arg2¹² +. _lh_sumFloatAux_LH_C_0¹⁰)))
+//│ 									in let _lh_sumFloatAux_LH_C_0⁹ = _lh_integrate1D_arg3¹((_lh_integrate1D_arg2¹ -. d¹))
+//│ 									in (fun _lh_sumFloatAux_arg2¹¹ -> sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁹, (_lh_sumFloatAux_arg2¹¹ +. _lh_sumFloatAux_LH_C_0⁹)))
+//│ 								in let _lh_sumFloatAux_LH_C_0⁸ = _lh_integrate1D_arg3¹((_lh_integrate1D_arg2¹ -. (2.0 *. d¹)))
+//│ 								in (fun _lh_sumFloatAux_arg2¹⁰ -> sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁸, (_lh_sumFloatAux_arg2¹⁰ +. _lh_sumFloatAux_LH_C_0⁸)))
+//│ 							in let _lh_sumFloatAux_LH_C_0⁷ = _lh_integrate1D_arg3¹((_lh_integrate1D_arg2¹ -. (3.0 *. d¹)))
+//│ 							in (fun _lh_sumFloatAux_arg2⁹ -> sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁷, (_lh_sumFloatAux_arg2⁹ +. _lh_sumFloatAux_LH_C_0⁷)))
+//│ 						in let _lh_sumFloatAux_LH_C_0⁶ = _lh_integrate1D_arg3¹((_lh_integrate1D_arg1¹ +. (4.0 *. d¹)))
+//│ 						in (fun _lh_sumFloatAux_arg2⁸ -> sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁶, (_lh_sumFloatAux_arg2⁸ +. _lh_sumFloatAux_LH_C_0⁶)))
+//│ 					in let _lh_sumFloatAux_LH_C_0⁵ = _lh_integrate1D_arg3¹((_lh_integrate1D_arg1¹ +. (3.0 *. d¹)))
+//│ 					in (fun _lh_sumFloatAux_arg2⁷ -> sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁵, (_lh_sumFloatAux_arg2⁷ +. _lh_sumFloatAux_LH_C_0⁵)))
+//│ 				in let _lh_sumFloatAux_LH_C_0⁴ = _lh_integrate1D_arg3¹((_lh_integrate1D_arg1¹ +. (2.0 *. d¹)))
+//│ 				in (fun _lh_sumFloatAux_arg2⁶ -> sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1⁴, (_lh_sumFloatAux_arg2⁶ +. _lh_sumFloatAux_LH_C_0⁴)))
+//│ 			in let _lh_sumFloatAux_LH_C_0³ = _lh_integrate1D_arg3¹((_lh_integrate1D_arg1¹ +. d¹))
+//│ 			in (fun _lh_sumFloatAux_arg2⁵ -> sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1³, (_lh_sumFloatAux_arg2⁵ +. _lh_sumFloatAux_LH_C_0³)))
+//│ 		in let _lh_sumFloatAux_LH_C_0² = (_lh_integrate1D_arg3¹(_lh_integrate1D_arg1¹) *. 0.5)
+//│ 		in (fun _lh_sumFloatAux_arg2⁴ -> sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1², (_lh_sumFloatAux_arg2⁴ +. _lh_sumFloatAux_LH_C_0²)))))
+//│ def integrate2D_lh_₁(_lh_integrate2D_arg1³, _lh_integrate2D_arg2³, _lh_integrate2D_arg3³, _lh_integrate2D_arg4³, _lh_integrate2D_arg5³) = integrate1D_lh_₁(_lh_integrate2D_arg3³, _lh_integrate2D_arg4³, (fun y⁶ -> integrate1D_lh_₁(_lh_integrate2D_arg1³, _lh_integrate2D_arg2³, (fun x⁶ -> _lh_integrate2D_arg5³(x⁶, y⁶)))))
+//│ def integrate2D_lh_₂(_lh_integrate2D_arg1², _lh_integrate2D_arg2², _lh_integrate2D_arg3², _lh_integrate2D_arg4², _lh_integrate2D_arg5²) = integrate1D_lh_₁(_lh_integrate2D_arg3², _lh_integrate2D_arg4², (fun y⁴ -> integrate1D_lh_₁(_lh_integrate2D_arg1², _lh_integrate2D_arg2², (fun x⁴ -> _lh_integrate2D_arg5²(x⁴, y⁴)))))
 //│ def ints_lh_₁ = enumFromFloat_lh_₁(1.0)
 //│ def ints_lh_₂ = enumFromFloat_lh_₂(1.0)
 //│ def ints_lh_₃ = enumFromFloat_lh_₃(1.0)
 //│ def ints_lh_₄ = enumFromFloat_lh_₃(1.0)
 //│ def ints_lh_₅ = enumFromFloat_lh_₃(1.0)
 //│ def ints_lh_₆ = enumFromFloat_lh_₃(1.0)
-//│ def is_lh_₁ = map_lz_lh_₂((fun a⁶ -> (((a⁶ *. a⁶) *. a⁶) *. a⁶)), ints_lh_₁)
-//│ def is_lh_₂ = map_lz_lh_₃((fun a⁸ -> (((a⁸ *. a⁸) *. a⁸) *. a⁸)), ints_lh_₂)
-//│ def itotals_lh_₁ = lazy⁰([LH_C head_lz_lh_₁(is_lh_₁) zipWith_lz_lz_lh_₂((fun a⁷ -> (fun b³ -> (a⁷ +. b³))), tail_lz_lh_₁(is_lh_₂), itotals_lh_₁)])
+//│ def is_lh_₁ = map_lz_lh_₄((fun a⁶ -> (((a⁶ *. a⁶) *. a⁶) *. a⁶)), ints_lh_₅)
+//│ def is_lh_₂ = map_lz_lh_₅((fun a⁸ -> (((a⁸ *. a⁸) *. a⁸) *. a⁸)), ints_lh_₆)
+//│ def itotals_lh_₁ = lazy⁰([LH_C head_lz_lh_₂(is_lh_₁) zipWith_lz_lz_lh_₃((fun a⁷ -> (fun b³ -> (a⁷ +. b³))), tail_lz_lh_₂(is_lh_₂), itotals_lh_₁)])
 //│ def map_lz_lh_₁(f¹⁰, ls¹⁰) = lazy⁰(force⁰(ls¹⁰, f¹⁰))
-//│ def map_lz_lh_₂(f²⁵, ls¹⁸) = lazy⁰(force⁰(ls¹⁸, f²⁵))
-//│ def map_lz_lh_₃(f²³, ls¹³) = lazy⁰(force⁰(ls¹³, f²³))
+//│ def map_lz_lh_₂(f²⁶, ls¹⁸) = lazy⁰(force⁰(ls¹⁸, f²⁶))
+//│ def map_lz_lh_₃(f²², ls¹³) = lazy⁰(case force⁰(ls¹³) of {
+//│ 	LH_C h² t² => 
+//│ 		let ty⁶ = map_lz_lh_₃(f²², t²)
+//│ 		in let hy⁶ = f²²(h²)
+//│ 		in (fun f²³ -> (fun hx⁶ -> (fun tx⁶ -> [LH_C f²³(hx⁶, hy⁶) zipWith_lz_lz_lh_₅(f²³, tx⁶, ty⁶)])))
+//│ 	| LH_N  => (fun f²⁴ -> (fun hx⁷ -> (fun tx⁷ -> [LH_N])))})
 //│ def map_lz_lh_₄(f¹², ls¹¹) = lazy⁰(case force⁰(ls¹¹) of {
-//│ 	LH_C h¹ t¹ => 
-//│ 		let ty⁵ = map_lz_lh_₄(f¹², t¹)
-//│ 		in let hy⁵ = f¹²(h¹)
-//│ 		in (fun f¹³ -> (fun hx⁵ -> (fun tx⁵ -> [LH_C f¹³(hx⁵, hy⁵) zipWith_lz_lz_lh_₄(f¹³, tx⁵, ty⁵)])))
-//│ 	| LH_N  => (fun f¹⁴ -> (fun hx⁶ -> (fun tx⁶ -> [LH_N])))})
-//│ def map_lz_lh_₅(f²⁶, ls¹⁹) = lazy⁰(case force⁰(ls¹⁹) of {
-//│ 	LH_C h⁰ t⁰ => 
-//│ 		let ty⁶ = map_lz_lh_₅(f²⁶, t⁰)
-//│ 		in let hy⁶ = f²⁶(h⁰)
-//│ 		in (fun f²⁷ -> (fun hx⁷ -> (fun tx⁷ -> [LH_C f²⁷(hx⁷, hy⁶) zipWith_lz_lz_lh_₅(f²⁷, tx⁷, ty⁶)])))
-//│ 	| LH_N  => (fun f²⁸ -> (fun hx⁸ -> (fun tx⁸ -> [LH_N])))})
-//│ def rtotals_lh_₁ = lazy⁰([LH_C head_lz_lh_₂(zarks_lh_₂) zipWith_lz_lz_lh_₃((fun a¹¹ -> (fun b⁵ -> (a¹¹ +. b⁵))), tail_lz_lh_₂(zarks_lh_₁), rtotals_lh_₁)])
-//│ def sumFloat_lh_₁(_lh_sumFloat_arg1¹) = _lh_sumFloat_arg1¹(99)
+//│ 	LH_C h¹ t¹ => [LH_C f¹²(h¹) map_lz_lh_₄(f¹², t¹)]
+//│ 	| LH_N  => [LH_N]})
+//│ def map_lz_lh_₅(f²⁷, ls¹⁹) = lazy⁰(case force⁰(ls¹⁹) of {
+//│ 	LH_C h⁰ t⁰ => [LH_C f²⁷(h⁰) map_lz_lh_₅(f²⁷, t⁰)]
+//│ 	| LH_N  => [LH_N]})
+//│ def rtotals_lh_₁ = lazy⁰([LH_C head_lz_lh_₁(zarks_lh_₂) zipWith_lz_lz_lh_₂((fun a¹¹ -> (fun b⁵ -> (a¹¹ +. b⁵))), tail_lz_lh_₁(zarks_lh_₁), rtotals_lh_₁)])
+//│ def sumFloatAux_lh_₁(_lh_sumFloatAux_arg1¹, _lh_sumFloatAux_arg2¹⁵) = _lh_sumFloatAux_arg1¹(_lh_sumFloatAux_arg2¹⁵)
+//│ def sumFloat_lh_₁(_lh_sumFloat_arg1¹) = sumFloatAux_lh_₁(_lh_sumFloat_arg1¹, 0.0)
 //│ def tail_lz_lh_₁(ls¹⁵) = case force⁰(ls¹⁵) of {
-//│ 	LH_C h⁷ t⁷ => t⁷
+//│ 	LH_C h⁶ t⁶ => t⁶
 //│ 	| LH_N  => error⁰}
 //│ def tail_lz_lh_₂(ls¹⁴) = case force⁰(ls¹⁴) of {
 //│ 	LH_C h⁵ t⁵ => t⁵
 //│ 	| LH_N  => error⁰}
-//│ def take_lz_lh_₁(n⁸, ls¹⁶) = if (n⁸ > 0) then force⁰(ls¹⁶, n⁸) else (fun _lh_dummy¹³ -> 0.0)
+//│ def take_lz_lh_₁(n⁸, ls¹⁶) = if (n⁸ > 0) then force⁰(ls¹⁶, n⁸) else (fun _lh_sumFloatAux_arg2¹⁴ -> _lh_sumFloatAux_arg2¹⁴)
 //│ def testIntegrate_nofib_lh_₁(_lh_testIntegrate_nofib_arg1¹) = etotal_lh_₁(_lh_testIntegrate_nofib_arg1¹)
-//│ def zark_lh_₁(_lh_zark_arg1³, _lh_zark_arg2³) = integrate2D_lh_₁(0.0, _lh_zark_arg1³, 0.0, _lh_zark_arg2³, (fun x⁵ -> (fun y⁵ -> (x⁵ *. y⁵))))
-//│ def zark_lh_₂(_lh_zark_arg1², _lh_zark_arg2²) = integrate2D_lh_₁(0.0, _lh_zark_arg1², 0.0, _lh_zark_arg2², (fun x³ -> (fun y³ -> (x³ *. y³))))
-//│ def zarks_lh_₁ = zipWith_lz_lz_lh_₄(zark_lh_₁, ints_lh_₄, map_lz_lh_₄((fun n⁷ -> (2.0 *. n⁷)), ints_lh_₃))
-//│ def zarks_lh_₂ = zipWith_lz_lz_lh_₅(zark_lh_₂, ints_lh_₆, map_lz_lh_₅((fun n⁶ -> (2.0 *. n⁶)), ints_lh_₅))
-//│ def zipWith_lz_lz_lh_₁(f¹⁵, xs⁶, ys⁶) = lazy⁰(case force⁰(xs⁶) of {
+//│ def zark_lh_₁(_lh_zark_arg1³, _lh_zark_arg2³) = integrate2D_lh_₁(0.0, _lh_zark_arg1³, 0.0, _lh_zark_arg2³, (fun x⁷ -> (fun y⁷ -> (x⁷ *. y⁷))))
+//│ def zark_lh_₂(_lh_zark_arg1², _lh_zark_arg2²) = integrate2D_lh_₂(0.0, _lh_zark_arg1², 0.0, _lh_zark_arg2², (fun x⁵ -> (fun y⁵ -> (x⁵ *. y⁵))))
+//│ def zarks_lh_₁ = zipWith_lz_lz_lh_₄(zark_lh_₁, ints_lh_₁, map_lz_lh_₂((fun n⁷ -> (2.0 *. n⁷)), ints_lh_₂))
+//│ def zarks_lh_₂ = zipWith_lz_lz_lh_₅(zark_lh_₂, ints_lh_₄, map_lz_lh_₃((fun n⁶ -> (2.0 *. n⁶)), ints_lh_₃))
+//│ def zipWith_lz_lz_lh_₁(f¹³, xs⁶, ys⁶) = lazy⁰(case force⁰(xs⁶) of {
 //│ 	LH_C hx⁴ tx⁴ => case force⁰(ys⁶) of {
 //│ 		LH_C hy⁴ ty⁴ => 
-//│ 			let t¹⁰ = zipWith_lz_lz_lh_₁(f¹⁵, tx⁴, ty⁴)
-//│ 			in let h¹⁰ = f¹⁵(hx⁴, hy⁴)
-//│ 			in (fun f¹⁶ -> 
-//│ 				let t¹¹ = map_lz_lh_₁(f¹⁶, t¹⁰)
-//│ 				in let h¹¹ = f¹⁶(h¹⁰)
+//│ 			let t¹⁰ = zipWith_lz_lz_lh_₁(f¹³, tx⁴, ty⁴)
+//│ 			in let h¹⁰ = f¹³(hx⁴, hy⁴)
+//│ 			in (fun f¹⁴ -> 
+//│ 				let t¹¹ = map_lz_lh_₁(f¹⁴, t¹⁰)
+//│ 				in let h¹¹ = f¹⁴(h¹⁰)
 //│ 				in (fun n³ -> 
-//│ 					let _lh_sumFloat_LH_C_1¹ = take_lz_lh_₁((n³ - 1), t¹¹)
-//│ 					in let _lh_sumFloat_LH_C_0¹ = h¹¹
-//│ 					in (fun _lh_dummy⁰ -> (_lh_sumFloat_LH_C_0¹ +. sumFloat_lh_₁(_lh_sumFloat_LH_C_1¹)))))
-//│ 		| LH_N  => (fun f¹⁷ -> (fun n⁴ -> (fun _lh_dummy¹ -> 0.0)))}
-//│ 	| LH_N  => (fun f¹⁸ -> (fun n⁵ -> (fun _lh_dummy² -> 0.0)))})
-//│ def zipWith_lz_lz_lh_₂(f²¹, xs⁸, ys⁸) = lazy⁰(case force⁰(xs⁸) of {
+//│ 					let _lh_sumFloatAux_LH_C_1¹ = take_lz_lh_₁((n³ - 1), t¹¹)
+//│ 					in let _lh_sumFloatAux_LH_C_0¹ = h¹¹
+//│ 					in (fun _lh_sumFloatAux_arg2¹ -> sumFloatAux_lh_₁(_lh_sumFloatAux_LH_C_1¹, (_lh_sumFloatAux_arg2¹ +. _lh_sumFloatAux_LH_C_0¹)))))
+//│ 		| LH_N  => (fun f¹⁵ -> (fun n⁴ -> (fun _lh_sumFloatAux_arg2² -> _lh_sumFloatAux_arg2²)))}
+//│ 	| LH_N  => (fun f¹⁶ -> (fun n⁵ -> (fun _lh_sumFloatAux_arg2³ -> _lh_sumFloatAux_arg2³)))})
+//│ def zipWith_lz_lz_lh_₂(f²⁰, xs⁸, ys⁸) = lazy⁰(case force⁰(xs⁸) of {
 //│ 	LH_C hx³ tx³ => case force⁰(ys⁸) of {
-//│ 		LH_C hy³ ty³ => [LH_C f²¹(hx³, hy³) zipWith_lz_lz_lh_₂(f²¹, tx³, ty³)]
+//│ 		LH_C hy³ ty³ => [LH_C f²⁰(hx³, hy³) zipWith_lz_lz_lh_₂(f²⁰, tx³, ty³)]
 //│ 		| LH_N  => [LH_N]}
 //│ 	| LH_N  => [LH_N]})
 //│ def zipWith_lz_lz_lh_₃(f¹¹, xs⁵, ys⁵) = lazy⁰(case force⁰(xs⁵) of {
@@ -684,39 +697,39 @@ testIntegrate_nofib $ primId 100
 //│ 		LH_C hy² ty² => [LH_C f¹¹(hx², hy²) zipWith_lz_lz_lh_₃(f¹¹, tx², ty²)]
 //│ 		| LH_N  => [LH_N]}
 //│ 	| LH_N  => [LH_N]})
-//│ def zipWith_lz_lz_lh_₄(f¹⁹, xs⁷, ys⁷) = lazy⁰(case force⁰(xs⁷) of {
-//│ 	LH_C hx¹ tx¹ => force⁰(ys⁷, f¹⁹, hx¹, tx¹)
-//│ 	| LH_N  => [LH_N]})
-//│ def zipWith_lz_lz_lh_₅(f²², xs⁹, ys⁹) = lazy⁰(case force⁰(xs⁹) of {
-//│ 	LH_C hx⁰ tx⁰ => force⁰(ys⁹, f²², hx⁰, tx⁰)
+//│ def zipWith_lz_lz_lh_₄(f¹⁷, xs⁷, ys⁷) = lazy⁰(force⁰(xs⁷, f¹⁷, ys⁷))
+//│ def zipWith_lz_lz_lh_₅(f²¹, xs⁹, ys⁹) = lazy⁰(case force⁰(xs⁹) of {
+//│ 	LH_C hx⁰ tx⁰ => force⁰(ys⁹, f²¹, hx⁰, tx⁰)
 //│ 	| LH_N  => [LH_N]})
 //│ <<<<<<< after fusion <<<<<<<
 //│ 
 //│ >>>>>>> consumer ids >>>>>>>
-//│ map_lz_lh_₃, zipWith_lz_lz_lh_₄, take_lz_lh_₁, map_lz_lh_₁, map_lz_lh_₂, zipWith_lz_lz_lh_₅, sumFloat_lh_₁
+//│ sumFloatAux_lh_₁, zipWith_lz_lz_lh_₅, zipWith_lz_lz_lh_₄, take_lz_lh_₁, map_lz_lh_₁, map_lz_lh_₂
 //│ <<<<<<< consumer ids <<<<<<<
 //│ 
 //│ >>>>>>> floating out info >>>>>>>
-//│ map_lz_lh_₄ -> 2
 //│ integrate1D_lh_₁ -> 3
+//│ map_lz_lh_₃ -> 2
 //│ zipWith_lz_lz_lh_₁ -> 3
 //│ enumFromFloat_lh_₁ -> 1
 //│ enumFromFloat_lh_₂ -> 1
-//│ map_lz_lh_₅ -> 2
 //│ <<<<<<< floating out info <<<<<<<
 //│ 
 //│ >>>>>>> after inlining >>>>>>>
-//│ testIntegrate_nofib_lh_₁(primId⁰(100))
+//│ testIntegrate_nofib_lh_₁(primId⁰(100000))
 //│ def enumFromFloat_lh_₁(_lh_enumFromFloat_arg1¹) = lazy⁰(
-//│ 	let t⁵ = enumFromFloat_lh_₁((_lh_enumFromFloat_arg1¹ +. 1.0))
-//│ 	in let h⁵ = _lh_enumFromFloat_arg1¹
-//│ 	in (fun f¹⁴ -> [LH_C f¹⁴(h⁵) lazy⁰(force⁰(t⁵, f¹⁴))]))
+//│ 	let tx⁹ = enumFromFloat_lh_₁((_lh_enumFromFloat_arg1¹ +. 1.0))
+//│ 	in let hx⁹ = _lh_enumFromFloat_arg1¹
+//│ 	in (fun f¹⁵ -> (fun ys⁵ -> force⁰(ys⁵, f¹⁵, hx⁹, tx⁹))))
 //│ def enumFromFloat_lh_₂(_lh_enumFromFloat_arg1⁰) = lazy⁰(
 //│ 	let t⁴ = enumFromFloat_lh_₂((_lh_enumFromFloat_arg1⁰ +. 1.0))
 //│ 	in let h⁴ = _lh_enumFromFloat_arg1⁰
-//│ 	in (fun f¹⁰ -> [LH_C f¹⁰(h⁴) lazy⁰(force⁰(t⁴, f¹⁰))]))
+//│ 	in (fun f⁸ -> 
+//│ 		let ty² = lazy⁰(force⁰(t⁴, f⁸))
+//│ 		in let hy² = f⁸(h⁴)
+//│ 		in (fun f⁹ -> (fun hx³ -> (fun tx³ -> [LH_C f⁹(hx³, hy²) lazy⁰(force⁰(tx³, f⁹, ty²))])))))
 //│ def enumFromFloat_lh_₃(_lh_enumFromFloat_arg1²) = lazy⁰([LH_C _lh_enumFromFloat_arg1² enumFromFloat_lh_₃((_lh_enumFromFloat_arg1² +. 1.0))])
-//│ def etotal_lh_₁(_lh_etotal_arg1⁰) = if (_lh_etotal_arg1⁰ > 0) then force⁰(lazy⁰(force⁰(zipWith_lz_lz_lh_₁((fun a³ -> (fun b¹ -> (a³ -. b¹))), rtotals_lh_₁, itotals_lh_₁), (fun a⁴ -> (a⁴ *. a⁴)))), _lh_etotal_arg1⁰) else (fun _lh_dummy¹⁴ -> 0.0)(99)
+//│ def etotal_lh_₁(_lh_etotal_arg1⁰) = sumFloat_lh_₁(if (_lh_etotal_arg1⁰ > 0) then force⁰(lazy⁰(force⁰(zipWith_lz_lz_lh_₁((fun a³ -> (fun b¹ -> (a³ -. b¹))), rtotals_lh_₁, itotals_lh_₁), (fun a⁴ -> (a⁴ *. a⁴)))), _lh_etotal_arg1⁰) else (fun _lh_sumFloatAux_arg2¹⁴ -> _lh_sumFloatAux_arg2¹⁴))
 //│ def head_lz_lh_₁(ls²) = case force⁰(ls²) of {
 //│ 	LH_C h³ t³ => h³
 //│ 	| LH_N  => error⁰}
@@ -725,98 +738,95 @@ testIntegrate_nofib $ primId 100
 //│ 	| LH_N  => error⁰}
 //│ def integrate1D_lh_₁(_lh_integrate1D_arg1⁰, _lh_integrate1D_arg2⁰, _lh_integrate1D_arg3⁰) = 
 //│ 	let d⁰ = ((_lh_integrate1D_arg2⁰ -. _lh_integrate1D_arg1⁰) /. 8.0)
-//│ 	in (d⁰ *. 
-//│ 		let _lh_sumFloat_LH_C_1¹ = 	
-//│ 			let _lh_sumFloat_LH_C_1² = 	
-//│ 				let _lh_sumFloat_LH_C_1³ = 	
-//│ 					let _lh_sumFloat_LH_C_1⁴ = 	
-//│ 						let _lh_sumFloat_LH_C_1⁵ = 	
-//│ 							let _lh_sumFloat_LH_C_1⁶ = 	
-//│ 								let _lh_sumFloat_LH_C_1⁷ = 	
-//│ 									let _lh_sumFloat_LH_C_1⁸ = 	
-//│ 										let _lh_sumFloat_LH_C_1⁹ = (fun _lh_dummy⁴ -> 0.0)
-//│ 										in let _lh_sumFloat_LH_C_0¹ = (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5)
-//│ 										in (fun _lh_dummy⁵ -> (_lh_sumFloat_LH_C_0¹ +. _lh_sumFloat_LH_C_1⁹(99)))
-//│ 									in let _lh_sumFloat_LH_C_0² = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰))
-//│ 									in (fun _lh_dummy⁶ -> (_lh_sumFloat_LH_C_0² +. _lh_sumFloat_LH_C_1⁸(99)))
-//│ 								in let _lh_sumFloat_LH_C_0³ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰)))
-//│ 								in (fun _lh_dummy⁷ -> (_lh_sumFloat_LH_C_0³ +. _lh_sumFloat_LH_C_1⁷(99)))
-//│ 							in let _lh_sumFloat_LH_C_0⁴ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰)))
-//│ 							in (fun _lh_dummy⁸ -> (_lh_sumFloat_LH_C_0⁴ +. _lh_sumFloat_LH_C_1⁶(99)))
-//│ 						in let _lh_sumFloat_LH_C_0⁵ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰)))
-//│ 						in (fun _lh_dummy⁹ -> (_lh_sumFloat_LH_C_0⁵ +. _lh_sumFloat_LH_C_1⁵(99)))
-//│ 					in let _lh_sumFloat_LH_C_0⁶ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (3.0 *. d⁰)))
-//│ 					in (fun _lh_dummy¹⁰ -> (_lh_sumFloat_LH_C_0⁶ +. _lh_sumFloat_LH_C_1⁴(99)))
-//│ 				in let _lh_sumFloat_LH_C_0⁷ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (2.0 *. d⁰)))
-//│ 				in (fun _lh_dummy¹¹ -> (_lh_sumFloat_LH_C_0⁷ +. _lh_sumFloat_LH_C_1³(99)))
-//│ 			in let _lh_sumFloat_LH_C_0⁸ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. d⁰))
-//│ 			in (fun _lh_dummy¹² -> (_lh_sumFloat_LH_C_0⁸ +. _lh_sumFloat_LH_C_1²(99)))
-//│ 		in let _lh_sumFloat_LH_C_0⁹ = (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg1⁰) *. 0.5)
-//│ 		in (fun _lh_dummy¹³ -> (_lh_sumFloat_LH_C_0⁹ +. _lh_sumFloat_LH_C_1¹(99)))(99))
-//│ def integrate2D_lh_₁(_lh_integrate2D_arg1⁰, _lh_integrate2D_arg2⁰, _lh_integrate2D_arg3⁰, _lh_integrate2D_arg4⁰, _lh_integrate2D_arg5⁰) = integrate1D_lh_₁(_lh_integrate2D_arg3⁰, _lh_integrate2D_arg4⁰, (fun y¹ -> integrate1D_lh_₁(_lh_integrate2D_arg1⁰, _lh_integrate2D_arg2⁰, (fun x¹ -> _lh_integrate2D_arg5⁰(x¹, y¹)))))
+//│ 	in (d⁰ *. sumFloat_lh_₁(
+//│ 		let _lh_sumFloatAux_LH_C_1¹ = 	
+//│ 			let _lh_sumFloatAux_LH_C_1² = 	
+//│ 				let _lh_sumFloatAux_LH_C_1³ = 	
+//│ 					let _lh_sumFloatAux_LH_C_1⁴ = 	
+//│ 						let _lh_sumFloatAux_LH_C_1⁵ = 	
+//│ 							let _lh_sumFloatAux_LH_C_1⁶ = 	
+//│ 								let _lh_sumFloatAux_LH_C_1⁷ = 	
+//│ 									let _lh_sumFloatAux_LH_C_1⁸ = 	
+//│ 										let _lh_sumFloatAux_LH_C_1⁹ = (fun _lh_sumFloatAux_arg2⁴ -> _lh_sumFloatAux_arg2⁴)
+//│ 										in let _lh_sumFloatAux_LH_C_0¹ = (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5)
+//│ 										in (fun _lh_sumFloatAux_arg2⁵ -> _lh_sumFloatAux_LH_C_1⁹((_lh_sumFloatAux_arg2⁵ +. _lh_sumFloatAux_LH_C_0¹)))
+//│ 									in let _lh_sumFloatAux_LH_C_0² = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰))
+//│ 									in (fun _lh_sumFloatAux_arg2⁶ -> _lh_sumFloatAux_LH_C_1⁸((_lh_sumFloatAux_arg2⁶ +. _lh_sumFloatAux_LH_C_0²)))
+//│ 								in let _lh_sumFloatAux_LH_C_0³ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰)))
+//│ 								in (fun _lh_sumFloatAux_arg2⁷ -> _lh_sumFloatAux_LH_C_1⁷((_lh_sumFloatAux_arg2⁷ +. _lh_sumFloatAux_LH_C_0³)))
+//│ 							in let _lh_sumFloatAux_LH_C_0⁴ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰)))
+//│ 							in (fun _lh_sumFloatAux_arg2⁸ -> _lh_sumFloatAux_LH_C_1⁶((_lh_sumFloatAux_arg2⁸ +. _lh_sumFloatAux_LH_C_0⁴)))
+//│ 						in let _lh_sumFloatAux_LH_C_0⁵ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰)))
+//│ 						in (fun _lh_sumFloatAux_arg2⁹ -> _lh_sumFloatAux_LH_C_1⁵((_lh_sumFloatAux_arg2⁹ +. _lh_sumFloatAux_LH_C_0⁵)))
+//│ 					in let _lh_sumFloatAux_LH_C_0⁶ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (3.0 *. d⁰)))
+//│ 					in (fun _lh_sumFloatAux_arg2¹⁰ -> _lh_sumFloatAux_LH_C_1⁴((_lh_sumFloatAux_arg2¹⁰ +. _lh_sumFloatAux_LH_C_0⁶)))
+//│ 				in let _lh_sumFloatAux_LH_C_0⁷ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (2.0 *. d⁰)))
+//│ 				in (fun _lh_sumFloatAux_arg2¹¹ -> _lh_sumFloatAux_LH_C_1³((_lh_sumFloatAux_arg2¹¹ +. _lh_sumFloatAux_LH_C_0⁷)))
+//│ 			in let _lh_sumFloatAux_LH_C_0⁸ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. d⁰))
+//│ 			in (fun _lh_sumFloatAux_arg2¹² -> _lh_sumFloatAux_LH_C_1²((_lh_sumFloatAux_arg2¹² +. _lh_sumFloatAux_LH_C_0⁸)))
+//│ 		in let _lh_sumFloatAux_LH_C_0⁹ = (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg1⁰) *. 0.5)
+//│ 		in (fun _lh_sumFloatAux_arg2¹³ -> _lh_sumFloatAux_LH_C_1¹((_lh_sumFloatAux_arg2¹³ +. _lh_sumFloatAux_LH_C_0⁹)))))
+//│ def integrate2D_lh_₁(_lh_integrate2D_arg1¹, _lh_integrate2D_arg2¹, _lh_integrate2D_arg3¹, _lh_integrate2D_arg4¹, _lh_integrate2D_arg5¹) = integrate1D_lh_₁(_lh_integrate2D_arg3¹, _lh_integrate2D_arg4¹, (fun y² -> integrate1D_lh_₁(_lh_integrate2D_arg1¹, _lh_integrate2D_arg2¹, (fun x² -> _lh_integrate2D_arg5¹(x², y²)))))
+//│ def integrate2D_lh_₂(_lh_integrate2D_arg1⁰, _lh_integrate2D_arg2⁰, _lh_integrate2D_arg3⁰, _lh_integrate2D_arg4⁰, _lh_integrate2D_arg5⁰) = integrate1D_lh_₁(_lh_integrate2D_arg3⁰, _lh_integrate2D_arg4⁰, (fun y⁰ -> integrate1D_lh_₁(_lh_integrate2D_arg1⁰, _lh_integrate2D_arg2⁰, (fun x⁰ -> _lh_integrate2D_arg5⁰(x⁰, y⁰)))))
 //│ def ints_lh_₁ = enumFromFloat_lh_₁(1.0)
 //│ def ints_lh_₂ = enumFromFloat_lh_₂(1.0)
 //│ def ints_lh_₃ = enumFromFloat_lh_₃(1.0)
 //│ def ints_lh_₄ = enumFromFloat_lh_₃(1.0)
 //│ def ints_lh_₅ = enumFromFloat_lh_₃(1.0)
 //│ def ints_lh_₆ = enumFromFloat_lh_₃(1.0)
-//│ def is_lh_₁ = lazy⁰(force⁰(ints_lh_₁, (fun a⁰ -> (((a⁰ *. a⁰) *. a⁰) *. a⁰))))
-//│ def is_lh_₂ = lazy⁰(force⁰(ints_lh_₂, (fun a² -> (((a² *. a²) *. a²) *. a²))))
-//│ def itotals_lh_₁ = lazy⁰([LH_C head_lz_lh_₁(is_lh_₁) zipWith_lz_lz_lh_₂((fun a¹ -> (fun b⁰ -> (a¹ +. b⁰))), tail_lz_lh_₁(is_lh_₂), itotals_lh_₁)])
+//│ def is_lh_₁ = map_lz_lh_₄((fun a⁰ -> (((a⁰ *. a⁰) *. a⁰) *. a⁰)), ints_lh_₅)
+//│ def is_lh_₂ = map_lz_lh_₅((fun a² -> (((a² *. a²) *. a²) *. a²)), ints_lh_₆)
+//│ def itotals_lh_₁ = lazy⁰([LH_C head_lz_lh_₂(is_lh_₁) zipWith_lz_lz_lh_₃((fun a¹ -> (fun b⁰ -> (a¹ +. b⁰))), tail_lz_lh_₂(is_lh_₂), itotals_lh_₁)])
 //│ def map_lz_lh_₁(f⁰, ls⁰) = lazy⁰(force⁰(ls⁰, f⁰))
-//│ def map_lz_lh_₂(f¹⁵, ls⁸) = lazy⁰(force⁰(ls⁸, f¹⁵))
-//│ def map_lz_lh_₃(f¹³, ls³) = lazy⁰(force⁰(ls³, f¹³))
+//│ def map_lz_lh_₂(f¹⁶, ls⁸) = lazy⁰(force⁰(ls⁸, f¹⁶))
+//│ def map_lz_lh_₃(f¹², ls³) = lazy⁰(case force⁰(ls³) of {
+//│ 	LH_C h⁵ t⁵ => 
+//│ 		let ty⁴ = map_lz_lh_₃(f¹², t⁵)
+//│ 		in let hy⁴ = f¹²(h⁵)
+//│ 		in (fun f¹³ -> (fun hx⁶ -> (fun tx⁶ -> [LH_C f¹³(hx⁶, hy⁴) lazy⁰(case force⁰(tx⁶) of {
+//│ 			LH_C hx⁷ tx⁷ => force⁰(ty⁴, f¹³, hx⁷, tx⁷)
+//│ 			| LH_N  => [LH_N]})])))
+//│ 	| LH_N  => (fun f¹⁴ -> (fun hx⁸ -> (fun tx⁸ -> [LH_N])))})
 //│ def map_lz_lh_₄(f², ls¹) = lazy⁰(case force⁰(ls¹) of {
-//│ 	LH_C h⁰ t⁰ => 
-//│ 		let ty¹ = map_lz_lh_₄(f², t⁰)
-//│ 		in let hy¹ = f²(h⁰)
-//│ 		in (fun f³ -> (fun hx¹ -> (fun tx¹ -> [LH_C f³(hx¹, hy¹) lazy⁰(case force⁰(tx¹) of {
-//│ 			LH_C hx² tx² => force⁰(ty¹, f³, hx², tx²)
-//│ 			| LH_N  => [LH_N]})])))
-//│ 	| LH_N  => (fun f⁴ -> (fun hx³ -> (fun tx³ -> [LH_N])))})
-//│ def map_lz_lh_₅(f¹⁶, ls⁹) = lazy⁰(case force⁰(ls⁹) of {
-//│ 	LH_C h⁹ t⁹ => 
-//│ 		let ty⁴ = map_lz_lh_₅(f¹⁶, t⁹)
-//│ 		in let hy⁴ = f¹⁶(h⁹)
-//│ 		in (fun f¹⁷ -> (fun hx¹⁰ -> (fun tx¹⁰ -> [LH_C f¹⁷(hx¹⁰, hy⁴) lazy⁰(case force⁰(tx¹⁰) of {
-//│ 			LH_C hx¹¹ tx¹¹ => force⁰(ty⁴, f¹⁷, hx¹¹, tx¹¹)
-//│ 			| LH_N  => [LH_N]})])))
-//│ 	| LH_N  => (fun f¹⁸ -> (fun hx¹² -> (fun tx¹² -> [LH_N])))})
-//│ def rtotals_lh_₁ = lazy⁰([LH_C head_lz_lh_₂(zarks_lh_₂) zipWith_lz_lz_lh_₃((fun a⁵ -> (fun b² -> (a⁵ +. b²))), tail_lz_lh_₂(zarks_lh_₁), rtotals_lh_₁)])
-//│ def sumFloat_lh_₁(_lh_sumFloat_arg1⁰) = _lh_sumFloat_arg1⁰(99)
+//│ 	LH_C h⁰ t⁰ => [LH_C f²(h⁰) map_lz_lh_₄(f², t⁰)]
+//│ 	| LH_N  => [LH_N]})
+//│ def map_lz_lh_₅(f¹⁷, ls⁹) = lazy⁰(case force⁰(ls⁹) of {
+//│ 	LH_C h⁹ t⁹ => [LH_C f¹⁷(h⁹) map_lz_lh_₅(f¹⁷, t⁹)]
+//│ 	| LH_N  => [LH_N]})
+//│ def rtotals_lh_₁ = lazy⁰([LH_C head_lz_lh_₁(zarks_lh_₂) zipWith_lz_lz_lh_₂((fun a⁵ -> (fun b² -> (a⁵ +. b²))), tail_lz_lh_₁(zarks_lh_₁), rtotals_lh_₁)])
+//│ def sumFloatAux_lh_₁(_lh_sumFloatAux_arg1⁰, _lh_sumFloatAux_arg2¹⁶) = _lh_sumFloatAux_arg1⁰(_lh_sumFloatAux_arg2¹⁶)
+//│ def sumFloat_lh_₁(_lh_sumFloat_arg1⁰) = _lh_sumFloat_arg1⁰(0.0)
 //│ def tail_lz_lh_₁(ls⁵) = case force⁰(ls⁵) of {
 //│ 	LH_C h⁷ t⁷ => t⁷
 //│ 	| LH_N  => error⁰}
 //│ def tail_lz_lh_₂(ls⁴) = case force⁰(ls⁴) of {
 //│ 	LH_C h⁶ t⁶ => t⁶
 //│ 	| LH_N  => error⁰}
-//│ def take_lz_lh_₁(n⁵, ls⁶) = if (n⁵ > 0) then force⁰(ls⁶, n⁵) else (fun _lh_dummy¹⁵ -> 0.0)
+//│ def take_lz_lh_₁(n⁵, ls⁶) = if (n⁵ > 0) then force⁰(ls⁶, n⁵) else (fun _lh_sumFloatAux_arg2¹⁵ -> _lh_sumFloatAux_arg2¹⁵)
 //│ def testIntegrate_nofib_lh_₁(_lh_testIntegrate_nofib_arg1⁰) = etotal_lh_₁(_lh_testIntegrate_nofib_arg1⁰)
-//│ def zark_lh_₁(_lh_zark_arg1¹, _lh_zark_arg2¹) = integrate2D_lh_₁(0.0, _lh_zark_arg1¹, 0.0, _lh_zark_arg2¹, (fun x² -> (fun y² -> (x² *. y²))))
-//│ def zark_lh_₂(_lh_zark_arg1⁰, _lh_zark_arg2⁰) = integrate2D_lh_₁(0.0, _lh_zark_arg1⁰, 0.0, _lh_zark_arg2⁰, (fun x⁰ -> (fun y⁰ -> (x⁰ *. y⁰))))
-//│ def zarks_lh_₁ = lazy⁰(case force⁰(ints_lh_₄) of {
-//│ 	LH_C hx⁹ tx⁹ => force⁰(map_lz_lh_₄((fun n⁴ -> (2.0 *. n⁴)), ints_lh_₃), zark_lh_₁, hx⁹, tx⁹)
+//│ def zark_lh_₁(_lh_zark_arg1¹, _lh_zark_arg2¹) = integrate2D_lh_₁(0.0, _lh_zark_arg1¹, 0.0, _lh_zark_arg2¹, (fun x³ -> (fun y³ -> (x³ *. y³))))
+//│ def zark_lh_₂(_lh_zark_arg1⁰, _lh_zark_arg2⁰) = integrate2D_lh_₂(0.0, _lh_zark_arg1⁰, 0.0, _lh_zark_arg2⁰, (fun x¹ -> (fun y¹ -> (x¹ *. y¹))))
+//│ def zarks_lh_₁ = lazy⁰(force⁰(ints_lh_₁, zark_lh_₁, lazy⁰(force⁰(ints_lh_₂, (fun n⁴ -> (2.0 *. n⁴))))))
+//│ def zarks_lh_₂ = lazy⁰(case force⁰(ints_lh_₄) of {
+//│ 	LH_C hx² tx² => force⁰(map_lz_lh_₃((fun n³ -> (2.0 *. n³)), ints_lh_₃), zark_lh_₂, hx², tx²)
 //│ 	| LH_N  => [LH_N]})
-//│ def zarks_lh_₂ = lazy⁰(case force⁰(ints_lh_₆) of {
-//│ 	LH_C hx⁶ tx⁶ => force⁰(map_lz_lh_₅((fun n³ -> (2.0 *. n³)), ints_lh_₅), zark_lh_₂, hx⁶, tx⁶)
-//│ 	| LH_N  => [LH_N]})
-//│ def zipWith_lz_lz_lh_₁(f⁵, xs¹, ys¹) = lazy⁰(case force⁰(xs¹) of {
-//│ 	LH_C hx⁴ tx⁴ => case force⁰(ys¹) of {
-//│ 		LH_C hy² ty² => 
-//│ 			let t¹ = zipWith_lz_lz_lh_₁(f⁵, tx⁴, ty²)
-//│ 			in let h¹ = f⁵(hx⁴, hy²)
-//│ 			in (fun f⁶ -> 
-//│ 				let t² = lazy⁰(force⁰(t¹, f⁶))
-//│ 				in let h² = f⁶(h¹)
+//│ def zipWith_lz_lz_lh_₁(f³, xs¹, ys¹) = lazy⁰(case force⁰(xs¹) of {
+//│ 	LH_C hx¹ tx¹ => case force⁰(ys¹) of {
+//│ 		LH_C hy¹ ty¹ => 
+//│ 			let t¹ = zipWith_lz_lz_lh_₁(f³, tx¹, ty¹)
+//│ 			in let h¹ = f³(hx¹, hy¹)
+//│ 			in (fun f⁴ -> 
+//│ 				let t² = lazy⁰(force⁰(t¹, f⁴))
+//│ 				in let h² = f⁴(h¹)
 //│ 				in (fun n⁰ -> 
-//│ 					let _lh_sumFloat_LH_C_1⁰ = if ((n⁰ - 1) > 0) then force⁰(t², (n⁰ - 1)) else (fun _lh_dummy⁰ -> 0.0)
-//│ 					in let _lh_sumFloat_LH_C_0⁰ = h²
-//│ 					in (fun _lh_dummy¹ -> (_lh_sumFloat_LH_C_0⁰ +. _lh_sumFloat_LH_C_1⁰(99)))))
-//│ 		| LH_N  => (fun f⁷ -> (fun n¹ -> (fun _lh_dummy² -> 0.0)))}
-//│ 	| LH_N  => (fun f⁸ -> (fun n² -> (fun _lh_dummy³ -> 0.0)))})
-//│ def zipWith_lz_lz_lh_₂(f¹¹, xs³, ys³) = lazy⁰(case force⁰(xs³) of {
-//│ 	LH_C hx⁷ tx⁷ => case force⁰(ys³) of {
-//│ 		LH_C hy³ ty³ => [LH_C f¹¹(hx⁷, hy³) zipWith_lz_lz_lh_₂(f¹¹, tx⁷, ty³)]
+//│ 					let _lh_sumFloatAux_LH_C_1⁰ = if ((n⁰ - 1) > 0) then force⁰(t², (n⁰ - 1)) else (fun _lh_sumFloatAux_arg2⁰ -> _lh_sumFloatAux_arg2⁰)
+//│ 					in let _lh_sumFloatAux_LH_C_0⁰ = h²
+//│ 					in (fun _lh_sumFloatAux_arg2¹ -> _lh_sumFloatAux_LH_C_1⁰((_lh_sumFloatAux_arg2¹ +. _lh_sumFloatAux_LH_C_0⁰)))))
+//│ 		| LH_N  => (fun f⁵ -> (fun n¹ -> (fun _lh_sumFloatAux_arg2² -> _lh_sumFloatAux_arg2²)))}
+//│ 	| LH_N  => (fun f⁶ -> (fun n² -> (fun _lh_sumFloatAux_arg2³ -> _lh_sumFloatAux_arg2³)))})
+//│ def zipWith_lz_lz_lh_₂(f¹⁰, xs³, ys³) = lazy⁰(case force⁰(xs³) of {
+//│ 	LH_C hx⁴ tx⁴ => case force⁰(ys³) of {
+//│ 		LH_C hy³ ty³ => [LH_C f¹⁰(hx⁴, hy³) zipWith_lz_lz_lh_₂(f¹⁰, tx⁴, ty³)]
 //│ 		| LH_N  => [LH_N]}
 //│ 	| LH_N  => [LH_N]})
 //│ def zipWith_lz_lz_lh_₃(f¹, xs⁰, ys⁰) = lazy⁰(case force⁰(xs⁰) of {
@@ -824,26 +834,27 @@ testIntegrate_nofib $ primId 100
 //│ 		LH_C hy⁰ ty⁰ => [LH_C f¹(hx⁰, hy⁰) zipWith_lz_lz_lh_₃(f¹, tx⁰, ty⁰)]
 //│ 		| LH_N  => [LH_N]}
 //│ 	| LH_N  => [LH_N]})
-//│ def zipWith_lz_lz_lh_₄(f⁹, xs², ys²) = lazy⁰(case force⁰(xs²) of {
-//│ 	LH_C hx⁵ tx⁵ => force⁰(ys², f⁹, hx⁵, tx⁵)
-//│ 	| LH_N  => [LH_N]})
-//│ def zipWith_lz_lz_lh_₅(f¹², xs⁴, ys⁴) = lazy⁰(case force⁰(xs⁴) of {
-//│ 	LH_C hx⁸ tx⁸ => force⁰(ys⁴, f¹², hx⁸, tx⁸)
+//│ def zipWith_lz_lz_lh_₄(f⁷, xs², ys²) = lazy⁰(force⁰(xs², f⁷, ys²))
+//│ def zipWith_lz_lz_lh_₅(f¹¹, xs⁴, ys⁴) = lazy⁰(case force⁰(xs⁴) of {
+//│ 	LH_C hx⁵ tx⁵ => force⁰(ys⁴, f¹¹, hx⁵, tx⁵)
 //│ 	| LH_N  => [LH_N]})
 //│ <<<<<<< after inlining <<<<<<<
 //│ 
 //│ >>>>>>> after floating out >>>>>>>
-//│ testIntegrate_nofib_lh_₁(primId⁰(100))
+//│ testIntegrate_nofib_lh_₁(primId⁰(100000))
 //│ def enumFromFloat_lh_₁(_lh_enumFromFloat_arg1¹) = lazy⁰(
-//│ 	let t⁵ = enumFromFloat_lh_₁((_lh_enumFromFloat_arg1¹ +. 1.0))
-//│ 	in let h⁵ = _lh_enumFromFloat_arg1¹
-//│ 	in (fun f¹⁴ -> [LH_C f¹⁴(h⁵) lazy⁰(force⁰(t⁵, f¹⁴))]))
+//│ 	let tx⁹ = enumFromFloat_lh_₁((_lh_enumFromFloat_arg1¹ +. 1.0))
+//│ 	in let hx⁹ = _lh_enumFromFloat_arg1¹
+//│ 	in (fun f¹⁵ -> (fun ys⁵ -> force⁰(ys⁵, f¹⁵, hx⁹, tx⁹))))
 //│ def enumFromFloat_lh_₂(_lh_enumFromFloat_arg1⁰) = lazy⁰(
 //│ 	let t⁴ = enumFromFloat_lh_₂((_lh_enumFromFloat_arg1⁰ +. 1.0))
 //│ 	in let h⁴ = _lh_enumFromFloat_arg1⁰
-//│ 	in (fun f¹⁰ -> [LH_C f¹⁰(h⁴) lazy⁰(force⁰(t⁴, f¹⁰))]))
+//│ 	in (fun f⁸ -> 
+//│ 		let ty² = lazy⁰(force⁰(t⁴, f⁸))
+//│ 		in let hy² = f⁸(h⁴)
+//│ 		in (fun f⁹ -> (fun hx³ -> (fun tx³ -> [LH_C f⁹(hx³, hy²) lazy⁰(force⁰(tx³, f⁹, ty²))])))))
 //│ def enumFromFloat_lh_₃(_lh_enumFromFloat_arg1²) = lazy⁰([LH_C _lh_enumFromFloat_arg1² enumFromFloat_lh_₃((_lh_enumFromFloat_arg1² +. 1.0))])
-//│ def etotal_lh_₁(_lh_etotal_arg1⁰) = if (_lh_etotal_arg1⁰ > 0) then force⁰(lazy⁰(force⁰(zipWith_lz_lz_lh_₁((fun a³ -> (fun b¹ -> (a³ -. b¹))), rtotals_lh_₁, itotals_lh_₁), (fun a⁴ -> (a⁴ *. a⁴)))), _lh_etotal_arg1⁰) else (fun _lh_dummy¹⁴ -> 0.0)(99)
+//│ def etotal_lh_₁(_lh_etotal_arg1⁰) = sumFloat_lh_₁(if (_lh_etotal_arg1⁰ > 0) then force⁰(lazy⁰(force⁰(zipWith_lz_lz_lh_₁((fun a³ -> (fun b¹ -> (a³ -. b¹))), rtotals_lh_₁, itotals_lh_₁), (fun a⁴ -> (a⁴ *. a⁴)))), _lh_etotal_arg1⁰) else (fun _lh_sumFloatAux_arg2¹⁴ -> _lh_sumFloatAux_arg2¹⁴))
 //│ def head_lz_lh_₁(ls²) = case force⁰(ls²) of {
 //│ 	LH_C h³ t³ => h³
 //│ 	| LH_N  => error⁰}
@@ -852,98 +863,95 @@ testIntegrate_nofib $ primId 100
 //│ 	| LH_N  => error⁰}
 //│ def integrate1D_lh_₁(_lh_integrate1D_arg1⁰, _lh_integrate1D_arg2⁰, _lh_integrate1D_arg3⁰) = 
 //│ 	let d⁰ = ((_lh_integrate1D_arg2⁰ -. _lh_integrate1D_arg1⁰) /. 8.0)
-//│ 	in (d⁰ *. 
-//│ 		let _lh_sumFloat_LH_C_1¹ = 	
-//│ 			let _lh_sumFloat_LH_C_1² = 	
-//│ 				let _lh_sumFloat_LH_C_1³ = 	
-//│ 					let _lh_sumFloat_LH_C_1⁴ = 	
-//│ 						let _lh_sumFloat_LH_C_1⁵ = 	
-//│ 							let _lh_sumFloat_LH_C_1⁶ = 	
-//│ 								let _lh_sumFloat_LH_C_1⁷ = 	
-//│ 									let _lh_sumFloat_LH_C_1⁸ = 	
-//│ 										let _lh_sumFloat_LH_C_1⁹ = (fun _lh_dummy⁴ -> 0.0)
-//│ 										in let _lh_sumFloat_LH_C_0¹ = (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5)
-//│ 										in (fun _lh_dummy⁵ -> (_lh_sumFloat_LH_C_0¹ +. _lh_sumFloat_LH_C_1⁹(99)))
-//│ 									in let _lh_sumFloat_LH_C_0² = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰))
-//│ 									in (fun _lh_dummy⁶ -> (_lh_sumFloat_LH_C_0² +. _lh_sumFloat_LH_C_1⁸(99)))
-//│ 								in let _lh_sumFloat_LH_C_0³ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰)))
-//│ 								in (fun _lh_dummy⁷ -> (_lh_sumFloat_LH_C_0³ +. _lh_sumFloat_LH_C_1⁷(99)))
-//│ 							in let _lh_sumFloat_LH_C_0⁴ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰)))
-//│ 							in (fun _lh_dummy⁸ -> (_lh_sumFloat_LH_C_0⁴ +. _lh_sumFloat_LH_C_1⁶(99)))
-//│ 						in let _lh_sumFloat_LH_C_0⁵ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰)))
-//│ 						in (fun _lh_dummy⁹ -> (_lh_sumFloat_LH_C_0⁵ +. _lh_sumFloat_LH_C_1⁵(99)))
-//│ 					in let _lh_sumFloat_LH_C_0⁶ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (3.0 *. d⁰)))
-//│ 					in (fun _lh_dummy¹⁰ -> (_lh_sumFloat_LH_C_0⁶ +. _lh_sumFloat_LH_C_1⁴(99)))
-//│ 				in let _lh_sumFloat_LH_C_0⁷ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (2.0 *. d⁰)))
-//│ 				in (fun _lh_dummy¹¹ -> (_lh_sumFloat_LH_C_0⁷ +. _lh_sumFloat_LH_C_1³(99)))
-//│ 			in let _lh_sumFloat_LH_C_0⁸ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. d⁰))
-//│ 			in (fun _lh_dummy¹² -> (_lh_sumFloat_LH_C_0⁸ +. _lh_sumFloat_LH_C_1²(99)))
-//│ 		in let _lh_sumFloat_LH_C_0⁹ = (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg1⁰) *. 0.5)
-//│ 		in (fun _lh_dummy¹³ -> (_lh_sumFloat_LH_C_0⁹ +. _lh_sumFloat_LH_C_1¹(99)))(99))
-//│ def integrate2D_lh_₁(_lh_integrate2D_arg1⁰, _lh_integrate2D_arg2⁰, _lh_integrate2D_arg3⁰, _lh_integrate2D_arg4⁰, _lh_integrate2D_arg5⁰) = integrate1D_lh_₁(_lh_integrate2D_arg3⁰, _lh_integrate2D_arg4⁰, (fun y¹ -> integrate1D_lh_₁(_lh_integrate2D_arg1⁰, _lh_integrate2D_arg2⁰, (fun x¹ -> _lh_integrate2D_arg5⁰(x¹, y¹)))))
+//│ 	in (d⁰ *. sumFloat_lh_₁(
+//│ 		let _lh_sumFloatAux_LH_C_1¹ = 	
+//│ 			let _lh_sumFloatAux_LH_C_1² = 	
+//│ 				let _lh_sumFloatAux_LH_C_1³ = 	
+//│ 					let _lh_sumFloatAux_LH_C_1⁴ = 	
+//│ 						let _lh_sumFloatAux_LH_C_1⁵ = 	
+//│ 							let _lh_sumFloatAux_LH_C_1⁶ = 	
+//│ 								let _lh_sumFloatAux_LH_C_1⁷ = 	
+//│ 									let _lh_sumFloatAux_LH_C_1⁸ = 	
+//│ 										let _lh_sumFloatAux_LH_C_1⁹ = (fun _lh_sumFloatAux_arg2⁴ -> _lh_sumFloatAux_arg2⁴)
+//│ 										in let _lh_sumFloatAux_LH_C_0¹ = (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg2⁰) *. 0.5)
+//│ 										in (fun _lh_sumFloatAux_arg2⁵ -> _lh_sumFloatAux_LH_C_1⁹((_lh_sumFloatAux_arg2⁵ +. _lh_sumFloatAux_LH_C_0¹)))
+//│ 									in let _lh_sumFloatAux_LH_C_0² = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. d⁰))
+//│ 									in (fun _lh_sumFloatAux_arg2⁶ -> _lh_sumFloatAux_LH_C_1⁸((_lh_sumFloatAux_arg2⁶ +. _lh_sumFloatAux_LH_C_0²)))
+//│ 								in let _lh_sumFloatAux_LH_C_0³ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (2.0 *. d⁰)))
+//│ 								in (fun _lh_sumFloatAux_arg2⁷ -> _lh_sumFloatAux_LH_C_1⁷((_lh_sumFloatAux_arg2⁷ +. _lh_sumFloatAux_LH_C_0³)))
+//│ 							in let _lh_sumFloatAux_LH_C_0⁴ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg2⁰ -. (3.0 *. d⁰)))
+//│ 							in (fun _lh_sumFloatAux_arg2⁸ -> _lh_sumFloatAux_LH_C_1⁶((_lh_sumFloatAux_arg2⁸ +. _lh_sumFloatAux_LH_C_0⁴)))
+//│ 						in let _lh_sumFloatAux_LH_C_0⁵ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (4.0 *. d⁰)))
+//│ 						in (fun _lh_sumFloatAux_arg2⁹ -> _lh_sumFloatAux_LH_C_1⁵((_lh_sumFloatAux_arg2⁹ +. _lh_sumFloatAux_LH_C_0⁵)))
+//│ 					in let _lh_sumFloatAux_LH_C_0⁶ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (3.0 *. d⁰)))
+//│ 					in (fun _lh_sumFloatAux_arg2¹⁰ -> _lh_sumFloatAux_LH_C_1⁴((_lh_sumFloatAux_arg2¹⁰ +. _lh_sumFloatAux_LH_C_0⁶)))
+//│ 				in let _lh_sumFloatAux_LH_C_0⁷ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. (2.0 *. d⁰)))
+//│ 				in (fun _lh_sumFloatAux_arg2¹¹ -> _lh_sumFloatAux_LH_C_1³((_lh_sumFloatAux_arg2¹¹ +. _lh_sumFloatAux_LH_C_0⁷)))
+//│ 			in let _lh_sumFloatAux_LH_C_0⁸ = _lh_integrate1D_arg3⁰((_lh_integrate1D_arg1⁰ +. d⁰))
+//│ 			in (fun _lh_sumFloatAux_arg2¹² -> _lh_sumFloatAux_LH_C_1²((_lh_sumFloatAux_arg2¹² +. _lh_sumFloatAux_LH_C_0⁸)))
+//│ 		in let _lh_sumFloatAux_LH_C_0⁹ = (_lh_integrate1D_arg3⁰(_lh_integrate1D_arg1⁰) *. 0.5)
+//│ 		in (fun _lh_sumFloatAux_arg2¹³ -> _lh_sumFloatAux_LH_C_1¹((_lh_sumFloatAux_arg2¹³ +. _lh_sumFloatAux_LH_C_0⁹)))))
+//│ def integrate2D_lh_₁(_lh_integrate2D_arg1¹, _lh_integrate2D_arg2¹, _lh_integrate2D_arg3¹, _lh_integrate2D_arg4¹, _lh_integrate2D_arg5¹) = integrate1D_lh_₁(_lh_integrate2D_arg3¹, _lh_integrate2D_arg4¹, (fun y² -> integrate1D_lh_₁(_lh_integrate2D_arg1¹, _lh_integrate2D_arg2¹, (fun x² -> _lh_integrate2D_arg5¹(x², y²)))))
+//│ def integrate2D_lh_₂(_lh_integrate2D_arg1⁰, _lh_integrate2D_arg2⁰, _lh_integrate2D_arg3⁰, _lh_integrate2D_arg4⁰, _lh_integrate2D_arg5⁰) = integrate1D_lh_₁(_lh_integrate2D_arg3⁰, _lh_integrate2D_arg4⁰, (fun y⁰ -> integrate1D_lh_₁(_lh_integrate2D_arg1⁰, _lh_integrate2D_arg2⁰, (fun x⁰ -> _lh_integrate2D_arg5⁰(x⁰, y⁰)))))
 //│ def ints_lh_₁ = enumFromFloat_lh_₁(1.0)
 //│ def ints_lh_₂ = enumFromFloat_lh_₂(1.0)
 //│ def ints_lh_₃ = enumFromFloat_lh_₃(1.0)
 //│ def ints_lh_₄ = enumFromFloat_lh_₃(1.0)
 //│ def ints_lh_₅ = enumFromFloat_lh_₃(1.0)
 //│ def ints_lh_₆ = enumFromFloat_lh_₃(1.0)
-//│ def is_lh_₁ = lazy⁰(force⁰(ints_lh_₁, (fun a⁰ -> (((a⁰ *. a⁰) *. a⁰) *. a⁰))))
-//│ def is_lh_₂ = lazy⁰(force⁰(ints_lh_₂, (fun a² -> (((a² *. a²) *. a²) *. a²))))
-//│ def itotals_lh_₁ = lazy⁰([LH_C head_lz_lh_₁(is_lh_₁) zipWith_lz_lz_lh_₂((fun a¹ -> (fun b⁰ -> (a¹ +. b⁰))), tail_lz_lh_₁(is_lh_₂), itotals_lh_₁)])
+//│ def is_lh_₁ = map_lz_lh_₄((fun a⁰ -> (((a⁰ *. a⁰) *. a⁰) *. a⁰)), ints_lh_₅)
+//│ def is_lh_₂ = map_lz_lh_₅((fun a² -> (((a² *. a²) *. a²) *. a²)), ints_lh_₆)
+//│ def itotals_lh_₁ = lazy⁰([LH_C head_lz_lh_₂(is_lh_₁) zipWith_lz_lz_lh_₃((fun a¹ -> (fun b⁰ -> (a¹ +. b⁰))), tail_lz_lh_₂(is_lh_₂), itotals_lh_₁)])
 //│ def map_lz_lh_₁(f⁰, ls⁰) = lazy⁰(force⁰(ls⁰, f⁰))
-//│ def map_lz_lh_₂(f¹⁵, ls⁸) = lazy⁰(force⁰(ls⁸, f¹⁵))
-//│ def map_lz_lh_₃(f¹³, ls³) = lazy⁰(force⁰(ls³, f¹³))
+//│ def map_lz_lh_₂(f¹⁶, ls⁸) = lazy⁰(force⁰(ls⁸, f¹⁶))
+//│ def map_lz_lh_₃(f¹², ls³) = lazy⁰(case force⁰(ls³) of {
+//│ 	LH_C h⁵ t⁵ => 
+//│ 		let ty⁴ = map_lz_lh_₃(f¹², t⁵)
+//│ 		in let hy⁴ = f¹²(h⁵)
+//│ 		in (fun f¹³ -> (fun hx⁶ -> (fun tx⁶ -> [LH_C f¹³(hx⁶, hy⁴) lazy⁰(case force⁰(tx⁶) of {
+//│ 			LH_C hx⁷ tx⁷ => force⁰(ty⁴, f¹³, hx⁷, tx⁷)
+//│ 			| LH_N  => [LH_N]})])))
+//│ 	| LH_N  => (fun f¹⁴ -> (fun hx⁸ -> (fun tx⁸ -> [LH_N])))})
 //│ def map_lz_lh_₄(f², ls¹) = lazy⁰(case force⁰(ls¹) of {
-//│ 	LH_C h⁰ t⁰ => 
-//│ 		let ty¹ = map_lz_lh_₄(f², t⁰)
-//│ 		in let hy¹ = f²(h⁰)
-//│ 		in (fun f³ -> (fun hx¹ -> (fun tx¹ -> [LH_C f³(hx¹, hy¹) lazy⁰(case force⁰(tx¹) of {
-//│ 			LH_C hx² tx² => force⁰(ty¹, f³, hx², tx²)
-//│ 			| LH_N  => [LH_N]})])))
-//│ 	| LH_N  => (fun f⁴ -> (fun hx³ -> (fun tx³ -> [LH_N])))})
-//│ def map_lz_lh_₅(f¹⁶, ls⁹) = lazy⁰(case force⁰(ls⁹) of {
-//│ 	LH_C h⁹ t⁹ => 
-//│ 		let ty⁴ = map_lz_lh_₅(f¹⁶, t⁹)
-//│ 		in let hy⁴ = f¹⁶(h⁹)
-//│ 		in (fun f¹⁷ -> (fun hx¹⁰ -> (fun tx¹⁰ -> [LH_C f¹⁷(hx¹⁰, hy⁴) lazy⁰(case force⁰(tx¹⁰) of {
-//│ 			LH_C hx¹¹ tx¹¹ => force⁰(ty⁴, f¹⁷, hx¹¹, tx¹¹)
-//│ 			| LH_N  => [LH_N]})])))
-//│ 	| LH_N  => (fun f¹⁸ -> (fun hx¹² -> (fun tx¹² -> [LH_N])))})
-//│ def rtotals_lh_₁ = lazy⁰([LH_C head_lz_lh_₂(zarks_lh_₂) zipWith_lz_lz_lh_₃((fun a⁵ -> (fun b² -> (a⁵ +. b²))), tail_lz_lh_₂(zarks_lh_₁), rtotals_lh_₁)])
-//│ def sumFloat_lh_₁(_lh_sumFloat_arg1⁰) = _lh_sumFloat_arg1⁰(99)
+//│ 	LH_C h⁰ t⁰ => [LH_C f²(h⁰) map_lz_lh_₄(f², t⁰)]
+//│ 	| LH_N  => [LH_N]})
+//│ def map_lz_lh_₅(f¹⁷, ls⁹) = lazy⁰(case force⁰(ls⁹) of {
+//│ 	LH_C h⁹ t⁹ => [LH_C f¹⁷(h⁹) map_lz_lh_₅(f¹⁷, t⁹)]
+//│ 	| LH_N  => [LH_N]})
+//│ def rtotals_lh_₁ = lazy⁰([LH_C head_lz_lh_₁(zarks_lh_₂) zipWith_lz_lz_lh_₂((fun a⁵ -> (fun b² -> (a⁵ +. b²))), tail_lz_lh_₁(zarks_lh_₁), rtotals_lh_₁)])
+//│ def sumFloatAux_lh_₁(_lh_sumFloatAux_arg1⁰, _lh_sumFloatAux_arg2¹⁶) = _lh_sumFloatAux_arg1⁰(_lh_sumFloatAux_arg2¹⁶)
+//│ def sumFloat_lh_₁(_lh_sumFloat_arg1⁰) = _lh_sumFloat_arg1⁰(0.0)
 //│ def tail_lz_lh_₁(ls⁵) = case force⁰(ls⁵) of {
 //│ 	LH_C h⁷ t⁷ => t⁷
 //│ 	| LH_N  => error⁰}
 //│ def tail_lz_lh_₂(ls⁴) = case force⁰(ls⁴) of {
 //│ 	LH_C h⁶ t⁶ => t⁶
 //│ 	| LH_N  => error⁰}
-//│ def take_lz_lh_₁(n⁵, ls⁶) = if (n⁵ > 0) then force⁰(ls⁶, n⁵) else (fun _lh_dummy¹⁵ -> 0.0)
+//│ def take_lz_lh_₁(n⁵, ls⁶) = if (n⁵ > 0) then force⁰(ls⁶, n⁵) else (fun _lh_sumFloatAux_arg2¹⁵ -> _lh_sumFloatAux_arg2¹⁵)
 //│ def testIntegrate_nofib_lh_₁(_lh_testIntegrate_nofib_arg1⁰) = etotal_lh_₁(_lh_testIntegrate_nofib_arg1⁰)
-//│ def zark_lh_₁(_lh_zark_arg1¹, _lh_zark_arg2¹) = integrate2D_lh_₁(0.0, _lh_zark_arg1¹, 0.0, _lh_zark_arg2¹, (fun x² -> (fun y² -> (x² *. y²))))
-//│ def zark_lh_₂(_lh_zark_arg1⁰, _lh_zark_arg2⁰) = integrate2D_lh_₁(0.0, _lh_zark_arg1⁰, 0.0, _lh_zark_arg2⁰, (fun x⁰ -> (fun y⁰ -> (x⁰ *. y⁰))))
-//│ def zarks_lh_₁ = lazy⁰(case force⁰(ints_lh_₄) of {
-//│ 	LH_C hx⁹ tx⁹ => force⁰(map_lz_lh_₄((fun n⁴ -> (2.0 *. n⁴)), ints_lh_₃), zark_lh_₁, hx⁹, tx⁹)
+//│ def zark_lh_₁(_lh_zark_arg1¹, _lh_zark_arg2¹) = integrate2D_lh_₁(0.0, _lh_zark_arg1¹, 0.0, _lh_zark_arg2¹, (fun x³ -> (fun y³ -> (x³ *. y³))))
+//│ def zark_lh_₂(_lh_zark_arg1⁰, _lh_zark_arg2⁰) = integrate2D_lh_₂(0.0, _lh_zark_arg1⁰, 0.0, _lh_zark_arg2⁰, (fun x¹ -> (fun y¹ -> (x¹ *. y¹))))
+//│ def zarks_lh_₁ = lazy⁰(force⁰(ints_lh_₁, zark_lh_₁, lazy⁰(force⁰(ints_lh_₂, (fun n⁴ -> (2.0 *. n⁴))))))
+//│ def zarks_lh_₂ = lazy⁰(case force⁰(ints_lh_₄) of {
+//│ 	LH_C hx² tx² => force⁰(map_lz_lh_₃((fun n³ -> (2.0 *. n³)), ints_lh_₃), zark_lh_₂, hx², tx²)
 //│ 	| LH_N  => [LH_N]})
-//│ def zarks_lh_₂ = lazy⁰(case force⁰(ints_lh_₆) of {
-//│ 	LH_C hx⁶ tx⁶ => force⁰(map_lz_lh_₅((fun n³ -> (2.0 *. n³)), ints_lh_₅), zark_lh_₂, hx⁶, tx⁶)
-//│ 	| LH_N  => [LH_N]})
-//│ def zipWith_lz_lz_lh_₁(f⁵, xs¹, ys¹) = lazy⁰(case force⁰(xs¹) of {
-//│ 	LH_C hx⁴ tx⁴ => case force⁰(ys¹) of {
-//│ 		LH_C hy² ty² => 
-//│ 			let t¹ = zipWith_lz_lz_lh_₁(f⁵, tx⁴, ty²)
-//│ 			in let h¹ = f⁵(hx⁴, hy²)
-//│ 			in (fun f⁶ -> 
-//│ 				let t² = lazy⁰(force⁰(t¹, f⁶))
-//│ 				in let h² = f⁶(h¹)
+//│ def zipWith_lz_lz_lh_₁(f³, xs¹, ys¹) = lazy⁰(case force⁰(xs¹) of {
+//│ 	LH_C hx¹ tx¹ => case force⁰(ys¹) of {
+//│ 		LH_C hy¹ ty¹ => 
+//│ 			let t¹ = zipWith_lz_lz_lh_₁(f³, tx¹, ty¹)
+//│ 			in let h¹ = f³(hx¹, hy¹)
+//│ 			in (fun f⁴ -> 
+//│ 				let t² = lazy⁰(force⁰(t¹, f⁴))
+//│ 				in let h² = f⁴(h¹)
 //│ 				in (fun n⁰ -> 
-//│ 					let _lh_sumFloat_LH_C_1⁰ = if ((n⁰ - 1) > 0) then force⁰(t², (n⁰ - 1)) else (fun _lh_dummy⁰ -> 0.0)
-//│ 					in let _lh_sumFloat_LH_C_0⁰ = h²
-//│ 					in (fun _lh_dummy¹ -> (_lh_sumFloat_LH_C_0⁰ +. _lh_sumFloat_LH_C_1⁰(99)))))
-//│ 		| LH_N  => (fun f⁷ -> (fun n¹ -> (fun _lh_dummy² -> 0.0)))}
-//│ 	| LH_N  => (fun f⁸ -> (fun n² -> (fun _lh_dummy³ -> 0.0)))})
-//│ def zipWith_lz_lz_lh_₂(f¹¹, xs³, ys³) = lazy⁰(case force⁰(xs³) of {
-//│ 	LH_C hx⁷ tx⁷ => case force⁰(ys³) of {
-//│ 		LH_C hy³ ty³ => [LH_C f¹¹(hx⁷, hy³) zipWith_lz_lz_lh_₂(f¹¹, tx⁷, ty³)]
+//│ 					let _lh_sumFloatAux_LH_C_1⁰ = if ((n⁰ - 1) > 0) then force⁰(t², (n⁰ - 1)) else (fun _lh_sumFloatAux_arg2⁰ -> _lh_sumFloatAux_arg2⁰)
+//│ 					in let _lh_sumFloatAux_LH_C_0⁰ = h²
+//│ 					in (fun _lh_sumFloatAux_arg2¹ -> _lh_sumFloatAux_LH_C_1⁰((_lh_sumFloatAux_arg2¹ +. _lh_sumFloatAux_LH_C_0⁰)))))
+//│ 		| LH_N  => (fun f⁵ -> (fun n¹ -> (fun _lh_sumFloatAux_arg2² -> _lh_sumFloatAux_arg2²)))}
+//│ 	| LH_N  => (fun f⁶ -> (fun n² -> (fun _lh_sumFloatAux_arg2³ -> _lh_sumFloatAux_arg2³)))})
+//│ def zipWith_lz_lz_lh_₂(f¹⁰, xs³, ys³) = lazy⁰(case force⁰(xs³) of {
+//│ 	LH_C hx⁴ tx⁴ => case force⁰(ys³) of {
+//│ 		LH_C hy³ ty³ => [LH_C f¹⁰(hx⁴, hy³) zipWith_lz_lz_lh_₂(f¹⁰, tx⁴, ty³)]
 //│ 		| LH_N  => [LH_N]}
 //│ 	| LH_N  => [LH_N]})
 //│ def zipWith_lz_lz_lh_₃(f¹, xs⁰, ys⁰) = lazy⁰(case force⁰(xs⁰) of {
@@ -951,11 +959,9 @@ testIntegrate_nofib $ primId 100
 //│ 		LH_C hy⁰ ty⁰ => [LH_C f¹(hx⁰, hy⁰) zipWith_lz_lz_lh_₃(f¹, tx⁰, ty⁰)]
 //│ 		| LH_N  => [LH_N]}
 //│ 	| LH_N  => [LH_N]})
-//│ def zipWith_lz_lz_lh_₄(f⁹, xs², ys²) = lazy⁰(case force⁰(xs²) of {
-//│ 	LH_C hx⁵ tx⁵ => force⁰(ys², f⁹, hx⁵, tx⁵)
-//│ 	| LH_N  => [LH_N]})
-//│ def zipWith_lz_lz_lh_₅(f¹², xs⁴, ys⁴) = lazy⁰(case force⁰(xs⁴) of {
-//│ 	LH_C hx⁸ tx⁸ => force⁰(ys⁴, f¹², hx⁸, tx⁸)
+//│ def zipWith_lz_lz_lh_₄(f⁷, xs², ys²) = lazy⁰(force⁰(xs², f⁷, ys²))
+//│ def zipWith_lz_lz_lh_₅(f¹¹, xs⁴, ys⁴) = lazy⁰(case force⁰(xs⁴) of {
+//│ 	LH_C hx⁵ tx⁵ => force⁰(ys⁴, f¹¹, hx⁵, tx⁵)
 //│ 	| LH_N  => [LH_N]})
 //│ <<<<<<< after floating out <<<<<<<
 //│ 

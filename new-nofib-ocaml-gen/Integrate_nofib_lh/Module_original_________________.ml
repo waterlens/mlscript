@@ -19,14 +19,16 @@ let rec map_lz_lh f_0 ls_0 =
       (`LH_C((f_0 h_0), ((map_lz_lh f_0) t_0)))
     | `LH_N -> 
       (`LH_N)));;
-let rec sumFloat_lh _lh_sumFloat_arg1_0 =
-  (match _lh_sumFloat_arg1_0 with
+let rec sumFloatAux_lh _lh_sumFloatAux_arg1_0 _lh_sumFloatAux_arg2_0 =
+  (match _lh_sumFloatAux_arg1_0 with
     | `LH_N -> 
-      0.0
-    | `LH_C(_lh_sumFloat_LH_C_0_0, _lh_sumFloat_LH_C_1_0) -> 
-      (_lh_sumFloat_LH_C_0_0 +. (sumFloat_lh _lh_sumFloat_LH_C_1_0))
+      _lh_sumFloatAux_arg2_0
+    | `LH_C(_lh_sumFloatAux_LH_C_0_0, _lh_sumFloatAux_LH_C_1_0) -> 
+      ((sumFloatAux_lh _lh_sumFloatAux_LH_C_1_0) (_lh_sumFloatAux_arg2_0 +. _lh_sumFloatAux_LH_C_0_0))
     | _ -> 
       (failwith "error"));;
+let rec sumFloat_lh _lh_sumFloat_arg1_0 =
+  ((sumFloatAux_lh _lh_sumFloat_arg1_0) 0.0);;
 let rec head_lz_lh ls_1 =
   (match (Lazy.force ls_1) with
     | `LH_C(h_1, t_1) -> 
@@ -80,6 +82,6 @@ let rec etotal_lh _lh_etotal_arg1_0 =
     (a_2 -. b_1))) rtotals_lh) itotals_lh))));;
 let rec testIntegrate_nofib_lh _lh_testIntegrate_nofib_arg1_0 =
   (etotal_lh _lh_testIntegrate_nofib_arg1_0);;
-let run () = 1 + (Obj.magic ((testIntegrate_nofib_lh 100)));
+let run () = 1 + (Obj.magic ((testIntegrate_nofib_lh 100000)));
 end;;
 

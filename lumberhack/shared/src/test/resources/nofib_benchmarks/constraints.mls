@@ -135,30 +135,6 @@ bt :: Labeler
 bt csp =
   let f = \s -> (s, case (earliestInconsistency csp s) of {Nothing    -> checkComplete csp s; Just (a,b) -> Known [a,b]}) in
   mapTree f
-btsolver :: CSP -> [State]
-btsolver = search bt
--------------------------------------
--- Figure 7. Randomization heuristic.
--------------------------------------
-hrandom :: Int -> Transform a a
-hrandom seed (Node a cs) = let seed' = random seed in Node a (randomList seed' (zipWith_lz_nl hrandom (randoms seed') cs))
-btr :: Int -> Labeler
-btr seed csp = bt csp . hrandom seed
----------------------------------------------
--- Support for random numbers (not in paper).
----------------------------------------------
-random2 :: Int -> Int
-random2 n =
-  let hi = n `div` 127773 in
-  let lo = n `mod` 127773 in
-  let test = 16807 * lo - 2836 * hi in
-  if test > 0 then test else test + 2147483647
-randoms :: Int -> [Int]
-randoms = iterate random2
-random :: Int -> Int
-random n = (994108973 * n + 994108973)
-randomList :: Int -> [a] -> [a]
-randomList i as = map snd (qsort (\a b -> compareTuple2 a b) (zip_lz_nl (randoms i) as) [])
 -------------------------
 -- Figure 8. Backmarking.
 -------------------------

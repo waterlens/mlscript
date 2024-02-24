@@ -48,6 +48,7 @@ abstract class ModeType {
   def lhGenDistill: Bool
   def lhNoIter: Bool
   def lhLessExpansion: Bool
+  def lhUseZarith: Bool
 }
 
 class DiffTests
@@ -169,6 +170,7 @@ class DiffTests
       lhGenDistill: Bool = false,
       lhNoIter: Bool = false,
       lhLessExpansion: Bool = true,
+      lhUseZarith: Bool = false,
       
     ) extends ModeType {
       def isDebugging: Bool = dbg || dbgSimplif
@@ -233,6 +235,7 @@ class DiffTests
           case "lhGenDistill" => mode.copy(lhGenDistill = true)
           case "lhNoIter" => mode.copy(lhNoIter = true)
           case "lhLessExpansion" => mode.copy(lhLessExpansion = true)
+          case "lhUseZarith" => mode.copy(lhUseZarith = true)
           case _ =>
             failures += allLines.size - lines.size
             output("/!\\ Unrecognized option " + line)

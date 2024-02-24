@@ -248,7 +248,7 @@ class DiffTestLumberhack extends DiffTests {
             // Some("lumberhack_inlined" -> inlineSomeFunctions) ::
             // Some("lumberhack_flo_out" -> floatingOutSomeLamdbas) ::
             Nil
-          ).flatten)
+          ).flatten, mode.lhUseZarith)
           output("benchmark file generated")
         } catch { case e =>
           output(s"cannot generate benchmark files: ${e.getMessage()}\n")
@@ -698,7 +698,7 @@ class OCamlGenTests(
     hsFileContent
   }
 
-  def makeBenchFilesSeparate(programs: List[String -> Program]): Unit = {
+  def makeBenchFilesSeparate(programs: List[String -> Program], useZarith: Bool): Unit = {
     assert(mode.lhLessExpansion)
     assert(programs.length >= 2)
     assert(programs.head._1 == "original")
@@ -823,6 +823,7 @@ end;;
         allFileNames.mkString(" ") +
         s" -o $benchName.out" +
         s" -linkpkg -package \"core_unix.command_unix\" -linkpkg -package \"core_bench\" "+
+        (if useZarith then "-linkpkg -package \"zarith\" " else "") +
         s"&& ./$benchName.out +time"
       }
       
@@ -877,6 +878,7 @@ end;;
         allFileNames.mkString(" ") +
         s" -o ${benchName}Rev.out" +
         s" -linkpkg -package \"core_unix.command_unix\" -linkpkg -package \"core_bench\" "+
+        (if useZarith then "-linkpkg -package \"zarith\" " else "") +
         s"&& ./${benchName}Rev.out +time"
       }
       

@@ -408,6 +408,8 @@ class Deforest(var debug: Boolean) {
           ProdFun(consFloat(using noExprId).toStrat(), prodInt(using noExprId).toStrat())(using e.uid)
         else if primitive == "ceiling" then
           ProdFun(consFloat(using noExprId).toStrat(), prodFloat(using noExprId).toStrat())(using e.uid)
+        else if primitive == "z_of_int" then
+          prodBoolUnaryOp(using e.uid, this)
         else
           lastWords("lazy, force and lumberhack_obj_magic should not be handled here")
       }
@@ -1154,11 +1156,12 @@ object Deforest {
       ++ lumberhackFloatBinOps ++ lumberhackFloatUnaryOps)
       + "string_of_int" + "int_of_char" + "char_of_int" + "ceiling" + "float_of_int" + "int_of_float" + "string_of_float"
       + "primitive" + "primId" + "error" + "lazy" + "force" + "lumberhack_obj_magic" + "from_large_str"
+      + "z_of_int"
   lazy val lumberhackPolyOps: Set[String] = Set("polyEq", "polyLt", "polyGt", "polyLeq", "polyGeq", "polyNeq")
   lazy val lumberhackBinOps = lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackFloatBinOps
   lazy val lumberhackIntFun: Set[String] = lumberhackIntValueFun ++ lumberhackIntComparisonFun
-  lazy val lumberhackIntValueFun: Set[String] = Set("add", "minus", "mult", "div", "mod")
-  lazy val lumberhackIntComparisonFun: Set[String] = Set("eq", "lt", "gt", "leq", "geq", "neq")
+  lazy val lumberhackIntValueFun: Set[String] = Set("add", "minus", "mult", "div", "mod", "z_add", "z_sub", "z_mul", "z_div", "z_mod")
+  lazy val lumberhackIntComparisonFun: Set[String] = Set("eq", "lt", "gt", "leq", "geq", "neq", "z_equal", "z_lt", "z_gt", "z_leq", "z_geq")
   lazy val lumberhackIntBinOps: Set[String] = lumberhackIntValueBinOps ++ lumberhackIntComparisonOps
   lazy val lumberhackIntValueBinOps: Set[String] = Set("+", "-", "*", "/", "%", "mod")
   lazy val lumberhackIntComparisonOps: Set[String] = Set("==", ">", "<", ">=", "<=", "/=")

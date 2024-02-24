@@ -1,5 +1,5 @@
 (*
-ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Lumherhack_Common.ml ./Lumberhack_LargeStr.ml ./Module_original_________________.ml ./Module_lumberhack_only_expanded_.ml ./Module_lumberhack_______________.ml ./Module_lumberhack_pop_out_______.ml ./mainRev.ml -o Integer_nofib_lhRev.out -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" && ./Integer_nofib_lhRev.out +time
+ocamlfind ocamlopt -rectypes -thread -O3 -w -A ./Lumherhack_Common.ml ./Lumberhack_LargeStr.ml ./Module_original_________________.ml ./Module_lumberhack_only_expanded_.ml ./Module_lumberhack_______________.ml ./Module_lumberhack_pop_out_______.ml ./mainRev.ml -o Integer_nofib_lhRev.out -linkpkg -package "core_unix.command_unix" -linkpkg -package "core_bench" -linkpkg -package "zarith" && ./Integer_nofib_lhRev.out +time
 *)
 open Core_bench;;
 Command_unix.run (Bench.make_command [

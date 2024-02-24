@@ -1168,7 +1168,7 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
     "polyGeq" -> ">=", "polyNeq" -> "<>", "div" -> "/", "ceiling" -> "ceil", "lumberhack_obj_magic" -> "Obj.magic",
     "z_add" -> "Z.add", "z_sub" -> "Z.sub", "z_mul" -> "Z.mul", "z_div" -> "Z.div", "z_mod" -> "Z.rem",
     "z_equal" -> "Z.equal", "z_lt" -> "Z.lt", "z_gt" -> "Z.gt", "z_leq" -> "Z.leq", "z_geq" -> "Z.geq",
-    "z_of_int" -> "Z.of_int"
+    "z_of_int" -> "Z.of_int", "z_to_int" -> "Z.to_int"
   )
   def transformPrimitive(p: String): String = primitives.getOrElse(p, p)
 

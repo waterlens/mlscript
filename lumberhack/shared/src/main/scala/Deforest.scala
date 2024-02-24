@@ -408,7 +408,7 @@ class Deforest(var debug: Boolean) {
           ProdFun(consFloat(using noExprId).toStrat(), prodInt(using noExprId).toStrat())(using e.uid)
         else if primitive == "ceiling" then
           ProdFun(consFloat(using noExprId).toStrat(), prodFloat(using noExprId).toStrat())(using e.uid)
-        else if primitive == "z_of_int" then
+        else if primitive == "z_of_int" || primitive == "z_to_int" then
           prodBoolUnaryOp(using e.uid, this)
         else
           lastWords("lazy, force and lumberhack_obj_magic should not be handled here")
@@ -1156,7 +1156,7 @@ object Deforest {
       ++ lumberhackFloatBinOps ++ lumberhackFloatUnaryOps)
       + "string_of_int" + "int_of_char" + "char_of_int" + "ceiling" + "float_of_int" + "int_of_float" + "string_of_float"
       + "primitive" + "primId" + "error" + "lazy" + "force" + "lumberhack_obj_magic" + "from_large_str"
-      + "z_of_int"
+      + "z_of_int" + "z_to_int"
   lazy val lumberhackPolyOps: Set[String] = Set("polyEq", "polyLt", "polyGt", "polyLeq", "polyGeq", "polyNeq")
   lazy val lumberhackBinOps = lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackFloatBinOps
   lazy val lumberhackIntFun: Set[String] = lumberhackIntValueFun ++ lumberhackIntComparisonFun

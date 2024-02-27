@@ -196,10 +196,10 @@ object FromHaskell extends NativeLoader("java-tree-sitter-ocaml-haskell") {
               )
             // NOTE: special case for large str literals
             case f :: a :: Nil if
-              f.getSrcContent == "from_large_str" &&
+              f.getSrcContent == "from_large_str" || f.getSrcContent == "z_of_string" &&
               a.getType() == "exp_literal" &&
               a.getChild(0).getType() == "string" =>
-              Expr.Call(Expr.Ref(ctx("from_large_str")), Expr.Const(StrLit(a.getSrcContent.drop(1).dropRight(1))))
+              Expr.Call(Expr.Ref(ctx(f.getSrcContent)), Expr.Const(StrLit(a.getSrcContent.drop(1).dropRight(1))))
             case f :: a :: rest => rest.foldLeft(Call(f.toExpr, a.toExpr))((e, n) => Call(e, n.toExpr))
             case _ => lastWords("cannot be single")
           }
@@ -1253,6 +1253,7 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
   }
   
   def handleLargeString(s: String): Document = Raw(s"\"${s}\"")
+  def handleLargeInt(s: String): Document = Raw(s"(Z.of_string \"${s}\")")
   override def rec(e: Expr): Document = recMultiline(e)
   def recMultiline(e: Expr): Document = e match {
     case Const(lit) => Raw(lit.idStr)
@@ -1260,6 +1261,7 @@ class OCamlGen(val usePolymorphicVariant: Bool, val backToBuiltInType: Bool = fa
       transformPrimitive(id.tree.name)
     case Ref(id) => transformId(id)
     case Call(Ref(Ident(_, Var("from_large_str"), _)), Const(StrLit(s))) => this.handleLargeString(s)
+    case Call(Ref(Ident(_, Var("z_of_string"), _)), Const(StrLit(s))) => this.handleLargeInt(s)
     case Call(Ref(Ident(_, Var("primId"), _)), arg) => rec(arg)
     case Call(Call(Ref(Ident(_, Var(op), _)), fst), snd)
       if Deforest.lumberhackBinOps(op) || Deforest.lumberhackPolyOps(op) || (op == "div") =>

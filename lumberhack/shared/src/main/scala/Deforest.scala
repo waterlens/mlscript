@@ -368,6 +368,8 @@ class Deforest(var debug: Boolean) {
       // the `recursiveConstr` later will be changed, since mkctor type's eq test and hashCode value relies on the exprId
       case Call(Ref(fromLargeStr), Const(StrLit(largeStr))) if fromLargeStr.tree.name == "from_large_str" =>
         NoProd()(using e.uid)
+      case Call(Ref(z_of_string), Const(StrLit(largeInt))) if z_of_string.tree.name == "z_of_string" =>
+        NoProd()(using e.uid)
       case Call(Ref(err), callee) if err.tree.name == "error" =>
         process(callee.primIdize(using this, None), false)
         freshVar("_lh_rigid_error_var")(using e.uid)._1
@@ -1156,7 +1158,7 @@ object Deforest {
       ++ lumberhackFloatBinOps ++ lumberhackFloatUnaryOps)
       + "string_of_int" + "int_of_char" + "char_of_int" + "ceiling" + "float_of_int" + "int_of_float" + "string_of_float"
       + "primitive" + "primId" + "error" + "lazy" + "force" + "lumberhack_obj_magic" + "from_large_str"
-      + "z_of_int" + "z_to_int"
+      + "z_of_int" + "z_to_int" + "z_of_string"
   lazy val lumberhackPolyOps: Set[String] = Set("polyEq", "polyLt", "polyGt", "polyLeq", "polyGeq", "polyNeq")
   lazy val lumberhackBinOps = lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackFloatBinOps
   lazy val lumberhackIntFun: Set[String] = lumberhackIntValueFun ++ lumberhackIntComparisonFun

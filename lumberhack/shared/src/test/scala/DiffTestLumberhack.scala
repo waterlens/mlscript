@@ -589,6 +589,13 @@ class OCamlGenTests(
   override def handleLargeString(s: String): Document =
     val nextId = this.largeStrIdents.getOrElseUpdate(s, largeStrIdents.size)
     Raw(s"${largeStrPrefix}${nextId}")
+
+  var largeIntIdents = scala.collection.mutable.Map.empty[String, Int]
+  val largeIntPrefix = "lh_large_int_"
+  override def handleLargeInt(s: String): Document =
+    val nextId = this.largeIntIdents.getOrElseUpdate(s, largeStrIdents.size)
+    Raw(s"${largeIntPrefix}${nextId}")
+  
   def makeBenchFiles(programs: List[String -> Program]): String = {
     val useModule = mode.lhLessExpansion
     assert(programs.length >= 2)
@@ -932,8 +939,11 @@ end;;
         val largeStrDefs = this.largeStrIdents.map { case (s, id) =>
           s"let ${largeStrPrefix}${id} = listToTaggedList (explode_string \"${s}\");;"
         }.mkString("\n")
+        val largeIntDefs = this.largeIntIdents.map { case (i, id) =>
+          s"let ${largeIntPrefix}${id} = Z.of_string \"$i\";;"
+        }.mkString("\n")
         "open Lumherhack_Common.Lumherhack_Common;;\n" +
-        s"module Lumberhack_LargeStr = struct\n$largeStrDefs\n" +
+        s"module Lumberhack_LargeStr = struct\n$largeStrDefs\n$largeIntDefs\n" +
         s"${if this.usePolymorphicVariant then "end" else (generateTypeInfo(programs.head._2.d) + "\nend")};;\n"
       }
     ) ::

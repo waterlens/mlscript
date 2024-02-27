@@ -177,6 +177,6 @@ let rec testAtom_nofib_lh__d1 _lh_testAtom_nofib_arg1_0 =
       | `LH_N -> 
         (`LH_N))) in
     (_lh_listcomp_fun_1 ((take_lz_lh__d1 _lh_testAtom_nofib_arg1_0) ((((runExperiment_lh__d1 testforce_lh__d1) 0.02) (`LH_C(1.0, (`LH_N)))) (`State((`LH_C(1.0, (`LH_N))), (`LH_C(0.0, (`LH_N))))))))));;
-let run () = 1 + (Obj.magic ((testAtom_nofib_lh__d1 500)));
+let run () = 1 + (Obj.magic ((testAtom_nofib_lh__d1 1000)));
 end;;
 

@@ -28,11 +28,11 @@ scalarMut:: Num a => a-> [a] -> [a]
 scalarMut c []     = []
 scalarMut c (f:fs) = (c *. f) : (scalarMut c fs)
 testAtom_nofib n = concat [(show state) ++ "n" | state <- (take_lz n $ runExperiment testforce 0.02 [1.0] (State [1.0] [0.0]))]
-testAtom_nofib $ primId 500
+testAtom_nofib $ primId 1000
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ testAtom_nofib_lh_₁^410(primId⁰(500))
+//│ testAtom_nofib_lh_₁^410(primId⁰(1000))
 //│ def concat_lh_₁(lss¹) = case lss¹ of {
 //│ 	LH_C h⁴ t⁴ => mappend_lh_₃^261(h⁴, concat_lh_₁^264(t⁴))
 //│ 	| LH_N  => [LH_N]}
@@ -297,7 +297,7 @@ testAtom_nofib $ primId 500
 //│ 		      | `LH_N -> 
 //│ 		        (`LH_N))) in
 //│ 		    (_lh_listcomp_fun_1 ((take_lz_lh__d1 _lh_testAtom_nofib_arg1_0) ((((runExperiment_lh__d1 testforce_lh__d1) 0.02) (`LH_C(1.0, (`LH_N)))) (`State((`LH_C(1.0, (`LH_N))), (`LH_C(0.0, (`LH_N))))))))));;
-//│ 		(testAtom_nofib_lh__d1 500)
+//│ 		(testAtom_nofib_lh__d1 1000)
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
@@ -640,7 +640,7 @@ testAtom_nofib $ primId 500
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
-//│ testAtom_nofib_lh_₁(primId⁰(500))
+//│ testAtom_nofib_lh_₁(primId⁰(1000))
 //│ def concat_lh_₁(lss³) = lss³(99)
 //│ def concat_lh_₂(lss²) = lss²(99)
 //│ def dotMult_lh_₁(_lh_dotMult_arg1¹, _lh_dotMult_arg2¹) = case _lh_dotMult_arg2¹ of {
@@ -767,7 +767,7 @@ testAtom_nofib $ primId 500
 //│ >>>>>>> after inlining >>>>>>>
 //│ 
 //│ 	let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> _lh_listcomp_fun_para⁰(_lh_listcomp_fun⁰))
-//│ 	in _lh_listcomp_fun⁰(take_lz_lh_₁(primId⁰(500), runExperiment_lh_₁(testforce_lh_₁, 0.02, 
+//│ 	in _lh_listcomp_fun⁰(take_lz_lh_₁(primId⁰(1000), runExperiment_lh_₁(testforce_lh_₁, 0.02, 
 //│ 		let _lh_scalarMut_LH_C_1⁰ = (fun _lh_scalarMut_arg1⁰ -> [LH_N])
 //│ 		in let _lh_scalarMut_LH_C_0⁰ = 1.0
 //│ 		in (fun _lh_scalarMut_arg1¹ -> [LH_C (_lh_scalarMut_arg1¹ *. _lh_scalarMut_LH_C_0⁰) _lh_scalarMut_LH_C_1⁰(_lh_scalarMut_arg1¹)]), [State [LH_C 1.0 [LH_N]] [LH_C 0.0 [LH_N]]])))(99)
@@ -885,7 +885,7 @@ testAtom_nofib $ primId 500
 //│ >>>>>>> after floating out >>>>>>>
 //│ 
 //│ 	let _lh_listcomp_fun⁰ = (fun _lh_listcomp_fun_para⁰ -> _lh_listcomp_fun_para⁰(_lh_listcomp_fun⁰))
-//│ 	in _lh_listcomp_fun⁰(take_lz_lh_₁(primId⁰(500), runExperiment_lh_₁(testforce_lh_₁, 0.02, 
+//│ 	in _lh_listcomp_fun⁰(take_lz_lh_₁(primId⁰(1000), runExperiment_lh_₁(testforce_lh_₁, 0.02, 
 //│ 		let _lh_scalarMut_LH_C_1⁰ = (fun _lh_scalarMut_arg1⁰ -> [LH_N])
 //│ 		in let _lh_scalarMut_LH_C_0⁰ = 1.0
 //│ 		in (fun _lh_scalarMut_arg1¹ -> [LH_C (_lh_scalarMut_arg1¹ *. _lh_scalarMut_LH_C_0⁰) _lh_scalarMut_LH_C_1⁰(_lh_scalarMut_arg1¹)]), [State [LH_C 1.0 [LH_N]] [LH_C 0.0 [LH_N]]])))(99)

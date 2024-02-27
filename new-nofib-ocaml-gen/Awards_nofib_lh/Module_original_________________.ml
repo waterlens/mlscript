@@ -9,6 +9,25 @@ let rec map_lh f_0 ls_0 =
       (`LH_C((f_0 h_0), ((map_lh f_0) t_0)))
     | `LH_N -> 
       (`LH_N));;
+let rec delete_lh _lh_delete_arg1_0 _lh_delete_arg2_0 =
+  (match _lh_delete_arg1_0 with
+    | `LH_C(_lh_delete_LH_C_0_0, _lh_delete_LH_C_1_0) -> 
+      (if (_lh_delete_LH_C_0_0 = _lh_delete_arg2_0) then
+        ((delete_lh _lh_delete_LH_C_1_0) _lh_delete_arg2_0)
+      else
+        (`LH_C(_lh_delete_LH_C_0_0, ((delete_lh _lh_delete_LH_C_1_0) _lh_delete_arg2_0))))
+    | `LH_N -> 
+      (`LH_N)
+    | _ -> 
+      (failwith "error"));;
+let rec foldl_lh f_2 i_0 ls_2 =
+  (match ls_2 with
+    | `LH_C(h_2, t_2) -> 
+      (((foldl_lh f_2) ((f_2 i_0) h_2)) t_2)
+    | `LH_N -> 
+      i_0);;
+let rec listDiff_lh =
+  (foldl_lh delete_lh);;
 let rec qpart_lh _lh_qpart_arg1_0 _lh_qpart_arg2_0 _lh_qpart_arg3_0 _lh_qpart_arg4_0 _lh_qpart_arg5_0 _lh_qpart_arg6_0 =
   (match _lh_qpart_arg3_0 with
     | `LH_N -> 
@@ -130,25 +149,6 @@ let rec awards_lh _lh_awards_arg1_0 =
             | _ -> 
               (failwith "error")))) in
         ((mappend_lh ((mappend_lh (award_0 (`LH_P2((`LH_C('G', (`LH_C('o', (`LH_C('l', (`LH_C('d', (`LH_N))))))))), 70)))) (award_0 (`LH_P2((`LH_C('S', (`LH_C('i', (`LH_C('l', (`LH_C('v', (`LH_C('e', (`LH_C('r', (`LH_N))))))))))))), 60))))) (award_0 (`LH_P2((`LH_C('B', (`LH_C('r', (`LH_C('o', (`LH_C('n', (`LH_C('z', (`LH_C('e', (`LH_N))))))))))))), 50)))))));;
-let rec delete_lh _lh_delete_arg1_0 _lh_delete_arg2_0 =
-  (match _lh_delete_arg1_0 with
-    | `LH_C(_lh_delete_LH_C_0_0, _lh_delete_LH_C_1_0) -> 
-      (if (_lh_delete_LH_C_0_0 = _lh_delete_arg2_0) then
-        ((delete_lh _lh_delete_LH_C_1_0) _lh_delete_arg2_0)
-      else
-        (`LH_C(_lh_delete_LH_C_0_0, ((delete_lh _lh_delete_LH_C_1_0) _lh_delete_arg2_0))))
-    | `LH_N -> 
-      (`LH_N)
-    | _ -> 
-      (failwith "error"));;
-let rec foldl_lh f_2 i_0 ls_2 =
-  (match ls_2 with
-    | `LH_C(h_2, t_2) -> 
-      (((foldl_lh f_2) ((f_2 i_0) h_2)) t_2)
-    | `LH_N -> 
-      i_0);;
-let rec listDiff_lh =
-  (foldl_lh delete_lh);;
 let rec findawards_lh _lh_findawards_arg1_0 =
   (let rec _lh_matchIdent_3 = (awards_lh _lh_findawards_arg1_0) in
     (match _lh_matchIdent_3 with
@@ -175,13 +175,13 @@ let rec findallawards_lh _lh_findallawards_arg1_0 =
           (`LH_P2(_lh_findallawards_LH_P2_0_0, (findawards_lh _lh_findallawards_LH_P2_1_0)))
         | _ -> 
           (failwith "error"))))) _lh_findallawards_arg1_0);;
+let rec competitors_lh _lh_competitors_arg1_0 =
+  (`LH_C((`LH_P2((`LH_C('S', (`LH_C('i', (`LH_C('m', (`LH_C('o', (`LH_C('n', (`LH_N))))))))))), (`LH_C(35, (`LH_C(27, (`LH_C(40, (`LH_C(_lh_competitors_arg1_0, (`LH_C(34, (`LH_C(21, (`LH_N))))))))))))))), (`LH_C((`LH_P2((`LH_C('H', (`LH_C('a', (`LH_C('n', (`LH_C('s', (`LH_N))))))))), (`LH_C(23, (`LH_C(19, (`LH_C(45, (`LH_C(_lh_competitors_arg1_0, (`LH_C(17, (`LH_C(10, (`LH_C(5, (`LH_C(8, (`LH_C(14, (`LH_N))))))))))))))))))))), (`LH_C((`LH_P2((`LH_C('P', (`LH_C('h', (`LH_C('i', (`LH_C('l', (`LH_N))))))))), (`LH_C(1, (`LH_C(18, (`LH_C(_lh_competitors_arg1_0, (`LH_C(20, (`LH_C(21, (`LH_C(19, (`LH_C(34, (`LH_C(8, (`LH_C(16, (`LH_C(21, (`LH_N))))))))))))))))))))))), (`LH_C((`LH_P2((`LH_C('K', (`LH_C('e', (`LH_C('v', (`LH_C('i', (`LH_C('n', (`LH_N))))))))))), (`LH_C(9, (`LH_C(23, (`LH_C(17, (`LH_C(54, (`LH_C(_lh_competitors_arg1_0, (`LH_C(41, (`LH_C(9, (`LH_C(18, (`LH_C(14, (`LH_N))))))))))))))))))))), (`LH_N)))))))));;
 let rec enumFromTo_lh a_0 b_0 =
   (if (a_0 <= b_0) then
     (`LH_C(a_0, ((enumFromTo_lh (a_0 + 1)) b_0)))
   else
     (`LH_N));;
-let rec competitors_lh _lh_competitors_arg1_0 =
-  (`LH_C((`LH_P2((`LH_C('S', (`LH_C('i', (`LH_C('m', (`LH_C('o', (`LH_C('n', (`LH_N))))))))))), (`LH_C(35, (`LH_C(27, (`LH_C(40, (`LH_C(_lh_competitors_arg1_0, (`LH_C(34, (`LH_C(21, (`LH_N))))))))))))))), (`LH_C((`LH_P2((`LH_C('H', (`LH_C('a', (`LH_C('n', (`LH_C('s', (`LH_N))))))))), (`LH_C(23, (`LH_C(19, (`LH_C(45, (`LH_C(_lh_competitors_arg1_0, (`LH_C(17, (`LH_C(10, (`LH_C(5, (`LH_C(8, (`LH_C(14, (`LH_N))))))))))))))))))))), (`LH_C((`LH_P2((`LH_C('P', (`LH_C('h', (`LH_C('i', (`LH_C('l', (`LH_N))))))))), (`LH_C(1, (`LH_C(18, (`LH_C(_lh_competitors_arg1_0, (`LH_C(20, (`LH_C(21, (`LH_C(19, (`LH_C(34, (`LH_C(8, (`LH_C(16, (`LH_C(21, (`LH_N))))))))))))))))))))))), (`LH_C((`LH_P2((`LH_C('K', (`LH_C('e', (`LH_C('v', (`LH_C('i', (`LH_C('n', (`LH_N))))))))))), (`LH_C(9, (`LH_C(23, (`LH_C(17, (`LH_C(54, (`LH_C(_lh_competitors_arg1_0, (`LH_C(41, (`LH_C(9, (`LH_C(18, (`LH_C(14, (`LH_N))))))))))))))))))))), (`LH_N)))))))));;
 let rec testAwards_nofib_lh _lh_testAwards_nofib_arg1_0 =
   ((map_lh (fun x_0 -> 
     (findallawards_lh (competitors_lh (x_0 mod 100))))) ((enumFromTo_lh 1) _lh_testAwards_nofib_arg1_0));;

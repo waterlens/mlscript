@@ -368,6 +368,6 @@ let rec testMandel2_nofib_lh__d1 _lh_testMandel2_nofib_arg1_0 =
   (let rec size'_0 = ((max_lh__d1 (length_lh__d1 _lh_testMandel2_nofib_arg1_0)) size_lh__d1) in
     (let rec tree_0 = ((build_tree_lh__d1 (`LH_P2(0, 0))) (`LH_P2(size'_0, (size'_0 / 2)))) in
       (finite_lh__d1 tree_0)));;
-let run () = 1 + (Obj.magic ((testMandel2_nofib_lh__d1 (`LH_C(5, (`LH_N))))));
+let run () = 1 + (Obj.magic ((testMandel2_nofib_lh__d1 (`LH_C(60, (`LH_N))))));
 end;;
 

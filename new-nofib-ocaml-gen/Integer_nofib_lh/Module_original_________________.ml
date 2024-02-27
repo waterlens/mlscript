@@ -65,8 +65,14 @@ let rec runalltests_lh _lh_runalltests_arg1_0 _lh_runalltests_arg2_0 _lh_runallt
     (a_1_8 > b_1_8))) (`LH_C('(', (`LH_C('>', (`LH_C(')', (`LH_N)))))))) _lh_runalltests_arg1_0) _lh_runalltests_arg2_0) _lh_runalltests_arg3_0) _lh_runalltests_arg1_0) _lh_runalltests_arg2_0) _lh_runalltests_arg3_0), (((((((((runbench_lh (fun a_1_9 b_1_9 -> 
     ((Z.geq a_1_9) b_1_9))) (fun a_2_0 b_2_0 -> 
     (a_2_0 >= b_2_0))) (`LH_C('(', (`LH_C('>', (`LH_C('=', (`LH_C(')', (`LH_N)))))))))) _lh_runalltests_arg1_0) _lh_runalltests_arg2_0) _lh_runalltests_arg3_0) _lh_runalltests_arg1_0) _lh_runalltests_arg2_0) _lh_runalltests_arg3_0)));;
+let rec const2100000000_lh =
+  (Z.of_int 2100000000);;
+let rec const0_lh =
+  (Z.of_int 0);;
 let rec testInteger_nofib_lh _lh_testInteger_nofib_arg1_0 =
-  ((((((runalltests_lh ((Z.sub (Z.of_int 0)) (Z.of_int 2100000000))) _lh_testInteger_nofib_arg1_0) (Z.of_int 2100000000)) ((Z.sub (Z.of_int 0)) (Z.of_int 2100000000))) _lh_testInteger_nofib_arg1_0) (Z.of_int 2100000000));;
-let run () = 1 + (Obj.magic ((testInteger_nofib_lh (Z.of_int 14000001))));
+  ((((((runalltests_lh ((Z.sub const0_lh) const2100000000_lh)) _lh_testInteger_nofib_arg1_0) const2100000000_lh) ((Z.sub const0_lh) const2100000000_lh)) _lh_testInteger_nofib_arg1_0) const2100000000_lh);;
+let rec const14000001_lh =
+  (Z.of_int 14000001);;
+let run () = 1 + (Obj.magic ((testInteger_nofib_lh const14000001_lh)));
 end;;
 

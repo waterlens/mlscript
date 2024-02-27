@@ -6,5 +6,6 @@ let rec listToTaggedList s = match s with
   | [] -> `LH_N;;
 let string_of_int i = listToTaggedList (explode_string (string_of_int i));;
 let string_of_float f = listToTaggedList (explode_string (string_of_float f))
+let string_of_z z = listToTaggedList (explode_string (Z.to_string z));;
 end;;
 

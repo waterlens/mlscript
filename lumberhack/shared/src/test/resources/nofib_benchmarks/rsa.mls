@@ -1,81 +1,102 @@
 :NewParser
 :ParseOnly
 
+
 :lhInHaskell
 :lhGenOCaml
-hash str = foldl (\acc -> \c -> int_of_char c + acc*31) 0 str
+:lhUseZarith
+const0 = z_of_int 0
+const31 = z_of_int 31
+const1 = z_of_int 1
+const2 = z_of_int 2
+const128 = z_of_int 128
+hash str = foldl (\acc -> \c -> z_add (z_of_int (int_of_char c)) (z_mul acc (const31))) (const0) str
 and [] = True
 and (h:t) = if h then (and t) else False
-copy 0 a = []
-copy n a = a:(copy (n - 1) a)
 unlines ls = concat (map (\l -> l ++ ['n']) ls)
-even a = (a `mod` 2) == 0
+even a = z_equal (z_mod a (const2)) (const0)
 drop n [] = []
 drop n (h:t) = if n > 0 then (drop (n - 1) t) else (h:t)
-encrypt n e = unlines . map (string_of_int . power e n . code) . collect (size n)
-code ls = foldl (\x y -> (128 * x) + (int_of_char y)) 0 ls
+encrypt n e = unlines . map (string_of_z . power e n . code) . collect (size n)
+code ls = foldl (\x y -> z_add (z_mul (const128) x) (z_of_int (int_of_char y))) (const0) ls
 collect 0 xs = []
 collect n [] = []
 collect n xs = (take n xs) : collect n (drop n xs)
-size n = (length (string_of_int n) * 47) `div` 100
-power 0 m x = 1
-power n m x = if (even n) then ((sqr (power (n `div` 2) m x)) `mod` m) else ((x * (power (n-1) m x)) `mod` m)
-sqr x = x * x
-input = primId "module Rsa (encrypt, decrypt, makeKeys)whereencrypt, decrypt :: Integer -> Integer -> String -> Stringencrypt n e = unlines . map (show . power e n . code) . collect (size n)decrypt n d = concat . map (decode . power d n . read) . lines-------- Converting between Strings and Integers -----------code :: String -> Integercode = foldl accum 0where accum x y = (128 * x) + fromIntegral (fromEnum y)"
-testRsa_nofib _ = hash (encrypt 6367 5189 input)
+size n = ((length (string_of_z n)) * 47) `div` 100
+--- power 0 m x = 1
+--- power n m x = if (even n) then ((sqr (power (n `div` 2) m x)) `mod` m) else ((x * (power (n-1) m x)) `mod` m)
+power n m x = if (z_equal n (const0)) then
+                (const1)
+              else
+                if (even n) then (z_mod (sqr (power (z_div n (const2)) m x)) m) else (z_mod (z_mul x (power (z_sub n (const1)) m x)) m)
+sqr x = z_mul x x
+input = from_large_str "module Rsa (encrypt, decrypt, makeKeys)whereencrypt, decrypt :: Integer -> Integer -> String -> Stringencrypt n e = unlines . map (show . power e n . code) . collect (size n)decrypt n d = concat . map (decode . power d n . read) . lines-------- Converting between Strings and Integers -----------code :: String -> Integercode = foldl accum 0  where accum x y = (128 * x) + fromIntegral (fromEnum y)decode :: Integer -> Stringdecode n = reverse (expand n)   where expand 0 = []         expand x = toEnum (fromIntegral (x `mod` 128)) : expand (x `div` 128)collect :: Int -> [a] -> [[a]]collect 0 xs = []collect n [] = []collect n xs = take n xs : collect n (drop n xs)size :: Integer -> Intsize n = (length (show n) * 47) `div` 100	-- log_128 10 = 0.4745------- Constructing keys -------------------------makeKeys :: Integer -> Integer -> (Integer, Integer, Integer)makeKeys p' q' = (n, invert phi d, d)   where   p = nextPrime p'           q = nextPrime q'	   n = p*q	   phi = (p-1)*(q-1)	   d = nextPrime (p+q+1)nextPrime :: Integer -> IntegernextPrime a = head (filter prime [odd,odd+2..])  where  odd | even a = a+1             | True   = a         prime p = and [power (p-1) p x == 1 | x <- [3,5,7]]invert :: Integer -> Integer -> Integerinvert n a = if e<0 then e+n else e  where  e=iter n 0 a 1iter :: Integer -> Integer -> Integer -> Integer -> Integeriter g v 0  w = viter g v h w = iter h w (g - fact * h) (v - fact * w)    where  fact = g `div` h------- Fast exponentiation, mod m -----------------power :: Integer -> Integer -> Integer -> Integerpower 0 m x          = 1power n m x | even n = sqr (power (n `div` 2) m x) `mod` m	    | True   = (x * power (n-1) m x) `mod` msqr :: Integer -> Integersqr x = x * x\\section{AbsDensematrix}This module imports the contents of Densematrix and exports some of thefunctions renaming many of them for use by Matrix. The original %includestatement(from Matrix) is left as a comment at the foot of this file.\\begin{code}module AbsDensematrix(Block,Vec,bmult,bvecmult,vecbmult,vecdot,vecnorm,                      vecouter,badd,bsub,vecadd,vecsub,bsize,vecsize,bneg,                      bxpose,bident,vecneg,svecmult,mkblock,bswaprow,bswapcol,                      bdroprow,bgetrow,bgetcol,bsubscript,vecsubscript,bupdate,                      vecupdate,vechd,vectl,mergevecs,binverse,showblock,                     showvec, mkvec,mkrvec,vecpart,update2,veclist,matlist)       whereimport Densematrixtype Block = Matrixtype Vec = Vectorbmult = mmultbvecmult = matvecmultvecbmult = vmmultvecdot   = vdotvecnorm = normvecouter = vouterbadd = maddbsub = msubvecadd = vaddvecsub = vsubbsize = msizevecsize = vsizebneg = mnegbxpose = mxposebident = midentvecneg = vnegsvecmult = svmultmkblock = mkmatbswaprow = swaprowbswapcol = swapcolbdroprow = droprowbgetrow = getrowbgetcol = getcolbsubscript = subscriptvecsubscript = vsubscriptbupdate = updatevecupdate = vupdatevechd = vhdvectl = vtlmergevecs = mergevectorsbinverse = minverseshowblock = showmatrixshowvec = displayvector\\end{code}The original include statement from Matrix :- %include \"densematrix\"                         block/matrix  vec/vector                         bmult/mmult   bvecmult/mvmult vecbmult/vmmult                         vecdot/vdot   vecnorm/norm    vecouter/vouterr                         badd/madd     bsub/msub  vecadd/vadd vecsub/vsub                         bsize/msize   vecsize/vsize                         bneg/mneg     bxpose/mxpose   bident/mident                         vecneg/vneg   svecmult/svmult                         mkblock/mkmat                         -mkrmat -mkcmat -mkcvec                         bswaprow/swaprow       bswapcol/swapcol                         bdroprow/droprow       bgetrow/getrow bgetcol/getcol                         bsubscript/subscript   vecsubscript/vsubscript                         bupdate/update         vecupdate/vupdate                         vechd/vhd              vectl/vtl                         mergevecs/mergevectors                         binverse/minverse                         showblock/showmatrix showvec/showvectormodule Rsa (encrypt, decrypt, makeKeys)whereencrypt, decrypt :: Integer -> Integer -> String -> Stringencrypt n e = unlines . map (show . power e n . code) . collect (size n)decrypt n d = concat . map (decode . power d n . read) . lines-------- Converting between Strings and Integers -----------code :: String -> Integercode = foldl accum 0  where accum x y = (128 * x) + fromIntegral (fromEnum y)decode :: Integer -> Stringdecode n = reverse (expand n)   where expand 0 = []         expand x = toEnum (fromIntegral (x `mod` 128)) : expand (x `div` 128)collect :: Int -> [a] -> [[a]]collect 0 xs = []collect n [] = []collect n xs = take n xs : collect n (drop n xs)size :: Integer -> Intsize n = (length (show n) * 47) `div` 100	-- log_128 10 = 0.4745------- Constructing keys -------------------------makeKeys :: Integer -> Integer -> (Integer, Integer, Integer)makeKeys p' q' = (n, invert phi d, d)   where   p = nextPrime p'           q = nextPrime q'	   n = p*q	   phi = (p-1)*(q-1)	   d = nextPrime (p+q+1)nextPrime :: Integer -> IntegernextPrime a = head (filter prime [odd,odd+2..])  where  odd | even a = a+1             | True   = a         prime p = and [power (p-1) p x == 1 | x <- [3,5,7]]invert :: Integer -> Integer -> Integerinvert n a = if e<0 then e+n else e  where  e=iter n 0 a 1iter :: Integer -> Integer -> Integer -> Integer -> Integeriter g v 0  w = viter g v h w = iter h w (g - fact * h) (v - fact * w)    where  fact = g `div` h------- Fast exponentiation, mod m -----------------power :: Integer -> Integer -> Integer -> Integerpower 0 m x          = 1power n m x | even n = sqr (power (n `div` 2) m x) `mod` m	    | True   = (x * power (n-1) m x) `mod` msqr :: Integer -> Integersqr x = x * x\\section{AbsDensematrix}This module imports the contents of Densematrix and exports some of thefunctions renaming many of them for use by Matrix. The original %includestatement(from Matrix) is left as a comment at the foot of this file.\\begin{code}module AbsDensematrix(Block,Vec,bmult,bvecmult,vecbmult,vecdot,vecnorm,                      vecouter,badd,bsub,vecadd,vecsub,bsize,vecsize,bneg,                      bxpose,bident,vecneg,svecmult,mkblock,bswaprow,bswapcol,                      bdroprow,bgetrow,bgetcol,bsubscript,vecsubscript,bupdate,                      vecupdate,vechd,vectl,mergevecs,binverse,showblock,                     showvec, mkvec,mkrvec,vecpart,update2,veclist,matlist)       whereimport Densematrixtype Block = Matrixtype Vec = Vectorbmult = mmultbvecmult = matvecmultvecbmult = vmmultvecdot   = vdotvecnorm = normvecouter = vouterbadd = maddbsub = msubvecadd = vaddvecsub = vsubbsize = msizevecsize = vsizebneg = mnegbxpose = mxposebident = midentvecneg = vnegsvecmult = svmultmkblock = mkmatbswaprow = swaprowbswapcol = swapcolbdroprow = droprowbgetrow = getrowbgetcol = getcolbsubscript = subscriptvecsubscript = vsubscriptbupdate = updatevecupdate = vupdatevechd = vhdvectl = vtlmergevecs = mergevectorsbinverse = minverseshowblock = showmatrixshowvec = displayvector\\end{code}The original include statement from Matrix :- %include \"densematrix\"                         block/matrix  vec/vector                         bmult/mmult   bvecmult/mvmult vecbmult/vmmult                         vecdot/vdot   vecnorm/norm    vecouter/vouterr                         badd/madd     bsub/msub  vecadd/vadd vecsub/vsub                         bsize/msize   vecsize/vsize                         bneg/mneg     bxpose/mxpose   bident/mident                         vecneg/vneg   svecmult/svmult                         mkblock/mkmat                         -mkrmat -mkcmat -mkcvec                         bswaprow/swaprow       bswapcol/swapcol                         bdroprow/droprow       bgetrow/getrow bgetcol/getcol                         bsubscript/subscript   vecsubscript/vsubscript                         bupdate/update         vecupdate/vupdate                         vechd/vhd              vectl/vtl                         mergevecs/mergevectors                         binverse/minverse                         showblock/showmatrix showvec/showvectormodule Rsa (encrypt, decrypt, makeKeys)whereencrypt, decrypt :: Integer -> Integer -> String -> Stringencrypt n e = unlines . map (show . power e n . code) . collect (size n)decrypt n d = concat . map (decode . power d n . read) . lines-------- Converting between Strings and Integers -----------code :: String -> Integercode = foldl accum 0  where accum x y = (128 * x) + fromIntegral (fromEnum y)decode :: Integer -> Stringdecode n = reverse (expand n)   where expand 0 = []         expand x = toEnum (fromIntegral (x `mod` 128)) : expand (x `div` 128)collect :: Int -> [a] -> [[a]]collect 0 xs = []collect n [] = []collect n xs = take n xs : collect n (drop n xs)size :: Integer -> Intsize n = (length (show n) * 47) `div` 100	-- log_128 10 = 0.4745------- Constructing keys -------------------------makeKeys :: Integer -> Integer -> (Integer, Integer, Integer)makeKeys p' q' = (n, invert phi d, d)   where   p = nextPrime p'           q = nextPrime q'	   n = p*q	   phi = (p-1)*(q-1)	   d = nextPrime (p+q+1)nextPrime :: Integer -> IntegernextPrime a = head (filter prime [odd,odd+2..])  where  odd | even a = a+1             | True   = a         prime p = and [power (p-1) p x == 1 | x <- [3,5,7]]invert :: Integer -> Integer -> Integerinvert n a = if e<0 then e+n else e  where  e=iter n 0 a 1iter :: Integer -> Integer -> Integer -> Integer -> Integeriter g v 0  w = viter g v h w = iter h w (g - fact * h) (v - fact * w)    where  fact = g `div` h"
+testRsa_nofib _ = hash (encrypt
+                          (z_of_string "2036450659413645137870851576872812267542175329986469156678671505255564383842535488743101632280716717779536712424613501441720195827856504007305662157107")
+                          (z_of_string "387784473137902876992546516170169092918207676456888779623592396031349415024943784869634893342729620092877891356118467738167515879252473323905128540213")
+                          input
+                        )
 testRsa_nofib $ primId 0
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
-//│ testRsa_nofib_lh_₁^1148(primId⁰(0))
-//│ def code_lh_₁(_lh_code_arg1⁰) = foldl_lh_₂^172((fun x⁰ -> (fun y⁰ -> ((128 * x⁰) + int_of_char⁰(y⁰)))), 0, _lh_code_arg1⁰)
+//│ testRsa_nofib_lh_₁^398(primId⁰(0))
+//│ def code_lh_₁(_lh_code_arg1⁰) = foldl_lh_₂^240((fun x⁰ -> (fun y⁰ -> z_add⁰(z_mul⁰(const128_lh_₁^243, x⁰), z_of_int⁰(int_of_char⁰(y⁰))))), const0_lh_₃^257, _lh_code_arg1⁰)
 //│ def collect_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰) = case _lh_collect_arg1⁰ of {
 //│ 	0  => [LH_N]
 //│ 	| _  => case _lh_collect_arg2⁰ of {
 //│ 		LH_N  => [LH_N]
-//│ 		| _  => [LH_C take_lh_₁^271(_lh_collect_arg1⁰, _lh_collect_arg2⁰) collect_lh_₁^276(_lh_collect_arg1⁰, drop_lh_₁^279(_lh_collect_arg1⁰, _lh_collect_arg2⁰))]}}
+//│ 		| _  => [LH_C take_lh_₁^221(_lh_collect_arg1⁰, _lh_collect_arg2⁰) collect_lh_₁^226(_lh_collect_arg1⁰, drop_lh_₁^229(_lh_collect_arg1⁰, _lh_collect_arg2⁰))]}}
 //│ def concat_lh_₁(lss⁰) = case lss⁰ of {
-//│ 	LH_C h⁴ t⁴ => mappend_lh_₂^70(h⁴, concat_lh_₁^73(t⁴))
+//│ 	LH_C h¹ t¹ => mappend_lh_₂^20(h¹, concat_lh_₁^23(t¹))
 //│ 	| LH_N  => [LH_N]}
+//│ def const0_lh_₁ = z_of_int⁰(0)
+//│ def const0_lh_₂ = z_of_int⁰(0)
+//│ def const0_lh_₃ = z_of_int⁰(0)
+//│ def const0_lh_₄ = z_of_int⁰(0)
+//│ def const128_lh_₁ = z_of_int⁰(128)
+//│ def const1_lh_₁ = z_of_int⁰(1)
+//│ def const1_lh_₂ = z_of_int⁰(1)
+//│ def const2_lh_₁ = z_of_int⁰(2)
+//│ def const2_lh_₂ = z_of_int⁰(2)
+//│ def const31_lh_₁ = z_of_int⁰(31)
 //│ def drop_lh_₁(_lh_drop_arg1⁰, _lh_drop_arg2⁰) = case _lh_drop_arg2⁰ of {
 //│ 	LH_N  => [LH_N]
-//│ 	| LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰ => if (_lh_drop_arg1⁰ > 0) then drop_lh_₁^101((_lh_drop_arg1⁰ - 1), _lh_drop_LH_C_1⁰) else [LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰]
+//│ 	| LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰ => if (_lh_drop_arg1⁰ > 0) then drop_lh_₁^97((_lh_drop_arg1⁰ - 1), _lh_drop_LH_C_1⁰) else [LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰]
 //│ 	| _  => error⁰}
-//│ def encrypt_lh_₁(_lh_encrypt_arg1⁰, _lh_encrypt_arg2⁰, _lh_funcomp_x⁰) = (fun _lh_funcomp_x¹ -> unlines_lh_₁^1105(map_lh_₁^1106((fun _lh_funcomp_x² -> (fun _lh_funcomp_x³ -> string_of_int⁰(power_lh_₁^1108(_lh_encrypt_arg2⁰, _lh_encrypt_arg1⁰, _lh_funcomp_x³)))(code_lh_₁^1117(_lh_funcomp_x²))), _lh_funcomp_x¹)))(collect_lh_₁^1127(size_lh_₁^1128(_lh_encrypt_arg1⁰), _lh_funcomp_x⁰))
-//│ def even_lh_₁(_lh_even_arg1⁰) = ((_lh_even_arg1⁰ % 2) == 0)
+//│ def encrypt_lh_₁(_lh_encrypt_arg1⁰, _lh_encrypt_arg2⁰, _lh_funcomp_x⁰) = (fun _lh_funcomp_x¹ -> unlines_lh_₁^348(map_lh_₁^349((fun _lh_funcomp_x² -> (fun _lh_funcomp_x³ -> string_of_z⁰(power_lh_₁^351(_lh_encrypt_arg2⁰, _lh_encrypt_arg1⁰, _lh_funcomp_x³)))(code_lh_₁^360(_lh_funcomp_x²))), _lh_funcomp_x¹)))(collect_lh_₁^370(size_lh_₁^371(_lh_encrypt_arg1⁰), _lh_funcomp_x⁰))
+//│ def even_lh_₁(_lh_even_arg1⁰) = z_equal⁰(z_mod⁰(_lh_even_arg1⁰, const2_lh_₂^153), const0_lh_₄^156)
 //│ def foldl_lh_₁(f², i¹, ls⁴) = case ls⁴ of {
-//│ 	LH_C h⁷ t⁷ => foldl_lh_₁^142(f², f²(i¹, h⁷), t⁷)
+//│ 	LH_C h⁷ t⁷ => foldl_lh_₁^169(f², f²(i¹, h⁷), t⁷)
 //│ 	| LH_N  => i¹}
-//│ def foldl_lh_₂(f⁰, i⁰, ls⁰) = case ls⁰ of {
-//│ 	LH_C h¹ t¹ => foldl_lh_₂^14(f⁰, f⁰(i⁰, h¹), t¹)
+//│ def foldl_lh_₂(f¹, i⁰, ls³) = case ls³ of {
+//│ 	LH_C h⁶ t⁶ => foldl_lh_₂^121(f¹, f¹(i⁰, h⁶), t⁶)
 //│ 	| LH_N  => i⁰}
-//│ def hash_lh_₁(_lh_hash_arg1⁰) = foldl_lh_₁^1085((fun acc⁰ -> (fun c⁰ -> ((int_of_char⁰(c⁰) + acc⁰) * 31))), 0, _lh_hash_arg1⁰)
-//│ def input_lh_₁ = primId⁰([LH_C 'm' [LH_C 'o' [LH_C 'd' [LH_C 'u' [LH_C 'l' [LH_C 'e' [LH_C ' ' [LH_C 'R' [LH_C 's' [LH_C 'a' [LH_C ' ' [LH_C '(' [LH_C 'e' [LH_C 'n' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ',' [LH_C ' ' [LH_C 'd' [LH_C 'e' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ',' [LH_C ' ' [LH_C 'm' [LH_C 'a' [LH_C 'k' [LH_C 'e' [LH_C 'K' [LH_C 'e' [LH_C 'y' [LH_C 's' [LH_C ')' [LH_C 'w' [LH_C 'h' [LH_C 'e' [LH_C 'r' [LH_C 'e' [LH_C 'e' [LH_C 'n' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ',' [LH_C ' ' [LH_C 'd' [LH_C 'e' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ' ' [LH_C ':' [LH_C ':' [LH_C ' ' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C '-' [LH_C '>' [LH_C ' ' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C '-' [LH_C '>' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C ' ' [LH_C '-' [LH_C '>' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C 'e' [LH_C 'n' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ' ' [LH_C 'n' [LH_C ' ' [LH_C 'e' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'u' [LH_C 'n' [LH_C 'l' [LH_C 'i' [LH_C 'n' [LH_C 'e' [LH_C 's' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'm' [LH_C 'a' [LH_C 'p' [LH_C ' ' [LH_C '(' [LH_C 's' [LH_C 'h' [LH_C 'o' [LH_C 'w' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'p' [LH_C 'o' [LH_C 'w' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C 'e' [LH_C ' ' [LH_C 'n' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'c' [LH_C 'o' [LH_C 'd' [LH_C 'e' [LH_C ')' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'c' [LH_C 'o' [LH_C 'l' [LH_C 'l' [LH_C 'e' [LH_C 'c' [LH_C 't' [LH_C ' ' [LH_C '(' [LH_C 's' [LH_C 'i' [LH_C 'z' [LH_C 'e' [LH_C ' ' [LH_C 'n' [LH_C ')' [LH_C 'd' [LH_C 'e' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ' ' [LH_C 'n' [LH_C ' ' [LH_C 'd' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'c' [LH_C 'o' [LH_C 'n' [LH_C 'c' [LH_C 'a' [LH_C 't' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'm' [LH_C 'a' [LH_C 'p' [LH_C ' ' [LH_C '(' [LH_C 'd' [LH_C 'e' [LH_C 'c' [LH_C 'o' [LH_C 'd' [LH_C 'e' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'p' [LH_C 'o' [LH_C 'w' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C 'd' [LH_C ' ' [LH_C 'n' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'r' [LH_C 'e' [LH_C 'a' [LH_C 'd' [LH_C ')' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'l' [LH_C 'i' [LH_C 'n' [LH_C 'e' [LH_C 's' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C ' ' [LH_C 'C' [LH_C 'o' [LH_C 'n' [LH_C 'v' [LH_C 'e' [LH_C 'r' [LH_C 't' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C ' ' [LH_C 'b' [LH_C 'e' [LH_C 't' [LH_C 'w' [LH_C 'e' [LH_C 'e' [LH_C 'n' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C 's' [LH_C ' ' [LH_C 'a' [LH_C 'n' [LH_C 'd' [LH_C ' ' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'e' [LH_C 'r' [LH_C 's' [LH_C ' ' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C 'c' [LH_C 'o' [LH_C 'd' [LH_C 'e' [LH_C ' ' [LH_C ':' [LH_C ':' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C ' ' [LH_C '-' [LH_C '>' [LH_C ' ' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'e' [LH_C 'r' [LH_C 'c' [LH_C 'o' [LH_C 'd' [LH_C 'e' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'f' [LH_C 'o' [LH_C 'l' [LH_C 'd' [LH_C 'l' [LH_C ' ' [LH_C 'a' [LH_C 'c' [LH_C 'c' [LH_C 'u' [LH_C 'm' [LH_C ' ' [LH_C '0' [LH_C 'w' [LH_C 'h' [LH_C 'e' [LH_C 'r' [LH_C 'e' [LH_C ' ' [LH_C 'a' [LH_C 'c' [LH_C 'c' [LH_C 'u' [LH_C 'm' [LH_C ' ' [LH_C 'x' [LH_C ' ' [LH_C 'y' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C '(' [LH_C '1' [LH_C '2' [LH_C '8' [LH_C ' ' [LH_C '*' [LH_C ' ' [LH_C 'x' [LH_C ')' [LH_C ' ' [LH_C '+' [LH_C ' ' [LH_C 'f' [LH_C 'r' [LH_C 'o' [LH_C 'm' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'r' [LH_C 'a' [LH_C 'l' [LH_C ' ' [LH_C '(' [LH_C 'f' [LH_C 'r' [LH_C 'o' [LH_C 'm' [LH_C 'E' [LH_C 'n' [LH_C 'u' [LH_C 'm' [LH_C ' ' [LH_C 'y' [LH_C ')' [LH_N]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]])
+//│ def hash_lh_₁(_lh_hash_arg1⁰) = foldl_lh_₁^326((fun acc⁰ -> (fun c⁰ -> z_add⁰(z_of_int⁰(int_of_char⁰(c⁰)), z_mul⁰(acc⁰, const31_lh_₁^337)))), const0_lh_₁^343, _lh_hash_arg1⁰)
+//│ def input_lh_₁ = from_large_str⁰("module Rsa (encrypt, decrypt, makeKeys)whereencrypt, decrypt :: Integer -> Integer -> String -> Stringencrypt n e = unlines . map (show . power e n . code) . collect (size n)decrypt n d = concat . map (decode . power d n . read) . lines-------- Converting between Strings and Integers -----------code :: String -> Integercode = foldl accum 0  where accum x y = (128 * x) + fromIntegral (fromEnum y)decode :: Integer -> Stringdecode n = reverse (expand n)   where expand 0 = []         expand x = toEnum (fromIntegral (x `mod` 128)) : expand (x `div` 128)collect :: Int -> [a] -> [[a]]collect 0 xs = []collect n [] = []collect n xs = take n xs : collect n (drop n xs)size :: Integer -> Intsize n = (length (show n) * 47) `div` 100	-- log_128 10 = 0.4745------- Constructing keys -------------------------makeKeys :: Integer -> Integer -> (Integer, Integer, Integer)makeKeys p' q' = (n, invert phi d, d)   where   p = nextPrime p'           q = nextPrime q'	   n = p*q	   phi = (p-1)*(q-1)	   d = nextPrime (p+q+1)nextPrime :: Integer -> IntegernextPrime a = head (filter prime [odd,odd+2..])  where  odd | even a = a+1             | True   = a         prime p = and [power (p-1) p x == 1 | x <- [3,5,7]]invert :: Integer -> Integer -> Integerinvert n a = if e<0 then e+n else e  where  e=iter n 0 a 1iter :: Integer -> Integer -> Integer -> Integer -> Integeriter g v 0  w = viter g v h w = iter h w (g - fact * h) (v - fact * w)    where  fact = g `div` h------- Fast exponentiation, mod m -----------------power :: Integer -> Integer -> Integer -> Integerpower 0 m x          = 1power n m x | even n = sqr (power (n `div` 2) m x) `mod` m	    | True   = (x * power (n-1) m x) `mod` msqr :: Integer -> Integersqr x = x * x\\section{AbsDensematrix}This module imports the contents of Densematrix and exports some of thefunctions renaming many of them for use by Matrix. The original %includestatement(from Matrix) is left as a comment at the foot of this file.\\begin{code}module AbsDensematrix(Block,Vec,bmult,bvecmult,vecbmult,vecdot,vecnorm,                      vecouter,badd,bsub,vecadd,vecsub,bsize,vecsize,bneg,                      bxpose,bident,vecneg,svecmult,mkblock,bswaprow,bswapcol,                      bdroprow,bgetrow,bgetcol,bsubscript,vecsubscript,bupdate,                      vecupdate,vechd,vectl,mergevecs,binverse,showblock,                     showvec, mkvec,mkrvec,vecpart,update2,veclist,matlist)       whereimport Densematrixtype Block = Matrixtype Vec = Vectorbmult = mmultbvecmult = matvecmultvecbmult = vmmultvecdot   = vdotvecnorm = normvecouter = vouterbadd = maddbsub = msubvecadd = vaddvecsub = vsubbsize = msizevecsize = vsizebneg = mnegbxpose = mxposebident = midentvecneg = vnegsvecmult = svmultmkblock = mkmatbswaprow = swaprowbswapcol = swapcolbdroprow = droprowbgetrow = getrowbgetcol = getcolbsubscript = subscriptvecsubscript = vsubscriptbupdate = updatevecupdate = vupdatevechd = vhdvectl = vtlmergevecs = mergevectorsbinverse = minverseshowblock = showmatrixshowvec = displayvector\\end{code}The original include statement from Matrix :- %include \"densematrix\"                         block/matrix  vec/vector                         bmult/mmult   bvecmult/mvmult vecbmult/vmmult                         vecdot/vdot   vecnorm/norm    vecouter/vouterr                         badd/madd     bsub/msub  vecadd/vadd vecsub/vsub                         bsize/msize   vecsize/vsize                         bneg/mneg     bxpose/mxpose   bident/mident                         vecneg/vneg   svecmult/svmult                         mkblock/mkmat                         -mkrmat -mkcmat -mkcvec                         bswaprow/swaprow       bswapcol/swapcol                         bdroprow/droprow       bgetrow/getrow bgetcol/getcol                         bsubscript/subscript   vecsubscript/vsubscript                         bupdate/update         vecupdate/vupdate                         vechd/vhd              vectl/vtl                         mergevecs/mergevectors                         binverse/minverse                         showblock/showmatrix showvec/showvectormodule Rsa (encrypt, decrypt, makeKeys)whereencrypt, decrypt :: Integer -> Integer -> String -> Stringencrypt n e = unlines . map (show . power e n . code) . collect (size n)decrypt n d = concat . map (decode . power d n . read) . lines-------- Converting between Strings and Integers -----------code :: String -> Integercode = foldl accum 0  where accum x y = (128 * x) + fromIntegral (fromEnum y)decode :: Integer -> Stringdecode n = reverse (expand n)   where expand 0 = []         expand x = toEnum (fromIntegral (x `mod` 128)) : expand (x `div` 128)collect :: Int -> [a] -> [[a]]collect 0 xs = []collect n [] = []collect n xs = take n xs : collect n (drop n xs)size :: Integer -> Intsize n = (length (show n) * 47) `div` 100	-- log_128 10 = 0.4745------- Constructing keys -------------------------makeKeys :: Integer -> Integer -> (Integer, Integer, Integer)makeKeys p' q' = (n, invert phi d, d)   where   p = nextPrime p'           q = nextPrime q'	   n = p*q	   phi = (p-1)*(q-1)	   d = nextPrime (p+q+1)nextPrime :: Integer -> IntegernextPrime a = head (filter prime [odd,odd+2..])  where  odd | even a = a+1             | True   = a         prime p = and [power (p-1) p x == 1 | x <- [3,5,7]]invert :: Integer -> Integer -> Integerinvert n a = if e<0 then e+n else e  where  e=iter n 0 a 1iter :: Integer -> Integer -> Integer -> Integer -> Integeriter g v 0  w = viter g v h w = iter h w (g - fact * h) (v - fact * w)    where  fact = g `div` h------- Fast exponentiation, mod m -----------------power :: Integer -> Integer -> Integer -> Integerpower 0 m x          = 1power n m x | even n = sqr (power (n `div` 2) m x) `mod` m	    | True   = (x * power (n-1) m x) `mod` msqr :: Integer -> Integersqr x = x * x\\section{AbsDensematrix}This module imports the contents of Densematrix and exports some of thefunctions renaming many of them for use by Matrix. The original %includestatement(from Matrix) is left as a comment at the foot of this file.\\begin{code}module AbsDensematrix(Block,Vec,bmult,bvecmult,vecbmult,vecdot,vecnorm,                      vecouter,badd,bsub,vecadd,vecsub,bsize,vecsize,bneg,                      bxpose,bident,vecneg,svecmult,mkblock,bswaprow,bswapcol,                      bdroprow,bgetrow,bgetcol,bsubscript,vecsubscript,bupdate,                      vecupdate,vechd,vectl,mergevecs,binverse,showblock,                     showvec, mkvec,mkrvec,vecpart,update2,veclist,matlist)       whereimport Densematrixtype Block = Matrixtype Vec = Vectorbmult = mmultbvecmult = matvecmultvecbmult = vmmultvecdot   = vdotvecnorm = normvecouter = vouterbadd = maddbsub = msubvecadd = vaddvecsub = vsubbsize = msizevecsize = vsizebneg = mnegbxpose = mxposebident = midentvecneg = vnegsvecmult = svmultmkblock = mkmatbswaprow = swaprowbswapcol = swapcolbdroprow = droprowbgetrow = getrowbgetcol = getcolbsubscript = subscriptvecsubscript = vsubscriptbupdate = updatevecupdate = vupdatevechd = vhdvectl = vtlmergevecs = mergevectorsbinverse = minverseshowblock = showmatrixshowvec = displayvector\\end{code}The original include statement from Matrix :- %include \"densematrix\"                         block/matrix  vec/vector                         bmult/mmult   bvecmult/mvmult vecbmult/vmmult                         vecdot/vdot   vecnorm/norm    vecouter/vouterr                         badd/madd     bsub/msub  vecadd/vadd vecsub/vsub                         bsize/msize   vecsize/vsize                         bneg/mneg     bxpose/mxpose   bident/mident                         vecneg/vneg   svecmult/svmult                         mkblock/mkmat                         -mkrmat -mkcmat -mkcvec                         bswaprow/swaprow       bswapcol/swapcol                         bdroprow/droprow       bgetrow/getrow bgetcol/getcol                         bsubscript/subscript   vecsubscript/vsubscript                         bupdate/update         vecupdate/vupdate                         vechd/vhd              vectl/vtl                         mergevecs/mergevectors                         binverse/minverse                         showblock/showmatrix showvec/showvectormodule Rsa (encrypt, decrypt, makeKeys)whereencrypt, decrypt :: Integer -> Integer -> String -> Stringencrypt n e = unlines . map (show . power e n . code) . collect (size n)decrypt n d = concat . map (decode . power d n . read) . lines-------- Converting between Strings and Integers -----------code :: String -> Integercode = foldl accum 0  where accum x y = (128 * x) + fromIntegral (fromEnum y)decode :: Integer -> Stringdecode n = reverse (expand n)   where expand 0 = []         expand x = toEnum (fromIntegral (x `mod` 128)) : expand (x `div` 128)collect :: Int -> [a] -> [[a]]collect 0 xs = []collect n [] = []collect n xs = take n xs : collect n (drop n xs)size :: Integer -> Intsize n = (length (show n) * 47) `div` 100	-- log_128 10 = 0.4745------- Constructing keys -------------------------makeKeys :: Integer -> Integer -> (Integer, Integer, Integer)makeKeys p' q' = (n, invert phi d, d)   where   p = nextPrime p'           q = nextPrime q'	   n = p*q	   phi = (p-1)*(q-1)	   d = nextPrime (p+q+1)nextPrime :: Integer -> IntegernextPrime a = head (filter prime [odd,odd+2..])  where  odd | even a = a+1             | True   = a         prime p = and [power (p-1) p x == 1 | x <- [3,5,7]]invert :: Integer -> Integer -> Integerinvert n a = if e<0 then e+n else e  where  e=iter n 0 a 1iter :: Integer -> Integer -> Integer -> Integer -> Integeriter g v 0  w = viter g v h w = iter h w (g - fact * h) (v - fact * w)    where  fact = g `div` h")
 //│ def length_lh_₁(ls¹) = case ls¹ of {
-//│ 	LH_C h² t² => (1 + length_lh_₁^50(t²))
+//│ 	LH_C h⁴ t⁴ => (1 + length_lh_₁^60(t⁴))
 //│ 	| LH_N  => 0}
 //│ def map_lh_₁(f³, ls⁵) = case ls⁵ of {
-//│ 	LH_C h⁸ t⁸ => [LH_C f³(h⁸) map_lh_₁^162(f³, t⁸)]
+//│ 	LH_C h⁸ t⁸ => [LH_C f³(h⁸) map_lh_₁^266(f³, t⁸)]
 //│ 	| LH_N  => [LH_N]}
-//│ def map_lh_₂(f¹, ls²) = case ls² of {
-//│ 	LH_C h⁵ t⁵ => [LH_C f¹(h⁵) map_lh_₂^84(f¹, t⁵)]
+//│ def map_lh_₂(f⁰, ls⁰) = case ls⁰ of {
+//│ 	LH_C h³ t³ => [LH_C f⁰(h³) map_lh_₂^46(f⁰, t³)]
 //│ 	| LH_N  => [LH_N]}
 //│ def mappend_lh_₁(xs¹, ys¹) = case xs¹ of {
-//│ 	LH_C h³ t³ => [LH_C h³ mappend_lh_₁^59(t³, ys¹)]
+//│ 	LH_C h² t² => [LH_C h² mappend_lh_₁^32(t², ys¹)]
 //│ 	| LH_N  => ys¹}
 //│ def mappend_lh_₂(xs⁰, ys⁰) = case xs⁰ of {
 //│ 	LH_C h⁰ t⁰ => [LH_C h⁰ mappend_lh_₂^3(t⁰, ys⁰)]
 //│ 	| LH_N  => ys⁰}
-//│ def power_lh_₁(_lh_power_arg1⁰, _lh_power_arg2⁰, _lh_power_arg3⁰) = case _lh_power_arg1⁰ of {
-//│ 	0  => 1
-//│ 	| _  => if even_lh_₁^194(_lh_power_arg1⁰) then (sqr_lh_₁^198(power_lh_₁^199(div⁰(_lh_power_arg1⁰, 2), _lh_power_arg2⁰, _lh_power_arg3⁰)) % _lh_power_arg2⁰) else ((_lh_power_arg3⁰ * power_lh_₁^218((_lh_power_arg1⁰ - 1), _lh_power_arg2⁰, _lh_power_arg3⁰)) % _lh_power_arg2⁰)}
-//│ def size_lh_₁(_lh_size_arg1⁰) = div⁰((length_lh_₁^240(string_of_int⁰(_lh_size_arg1⁰)) * 47), 100)
-//│ def sqr_lh_₁(_lh_sqr_arg1⁰) = (_lh_sqr_arg1⁰ * _lh_sqr_arg1⁰)
-//│ def take_lh_₁(n⁰, ls³) = if (n⁰ > 0) then case ls³ of {
-//│ 	LH_C h⁶ t⁶ => [LH_C h⁶ take_lh_₁^125((n⁰ - 1), t⁶)]
+//│ def power_lh_₁(_lh_power_arg1⁰, _lh_power_arg2⁰, _lh_power_arg3⁰) = if z_equal⁰(_lh_power_arg1⁰, const0_lh_₂^279) then const1_lh_₁^281 else if even_lh_₁^282(_lh_power_arg1⁰) then z_mod⁰(sqr_lh_₁^286(power_lh_₁^287(z_div⁰(_lh_power_arg1⁰, const2_lh_₁^291), _lh_power_arg2⁰, _lh_power_arg3⁰)), _lh_power_arg2⁰) else z_mod⁰(z_mul⁰(_lh_power_arg3⁰, power_lh_₁^306(z_sub⁰(_lh_power_arg1⁰, const1_lh_₂^310), _lh_power_arg2⁰, _lh_power_arg3⁰)), _lh_power_arg2⁰)
+//│ def size_lh_₁(_lh_size_arg1⁰) = div⁰((length_lh_₁^205(string_of_z⁰(_lh_size_arg1⁰)) * 47), 100)
+//│ def sqr_lh_₁(_lh_sqr_arg1⁰) = z_mul⁰(_lh_sqr_arg1⁰, _lh_sqr_arg1⁰)
+//│ def take_lh_₁(n⁰, ls²) = if (n⁰ > 0) then case ls² of {
+//│ 	LH_C h⁵ t⁵ => [LH_C h⁵ take_lh_₁^74((n⁰ - 1), t⁵)]
 //│ 	| LH_N  => [LH_N]} else [LH_N]
-//│ def testRsa_nofib_lh_₁(_lh_testRsa_nofib_arg1⁰) = hash_lh_₁^1138(encrypt_lh_₁^1139(6367, 5189, input_lh_₁^1144))
-//│ def unlines_lh_₁(_lh_unlines_arg1⁰) = concat_lh_₁^252(map_lh_₂^253((fun l⁰ -> mappend_lh_₁^254(l⁰, [LH_C 'n' [LH_N]])), _lh_unlines_arg1⁰))
+//│ def testRsa_nofib_lh_₁(_lh_testRsa_nofib_arg1⁰) = hash_lh_₁^384(encrypt_lh_₁^385(z_of_string⁰("2036450659413645137870851576872812267542175329986469156678671505255564383842535488743101632280716717779536712424613501441720195827856504007305662157107"), z_of_string⁰("387784473137902876992546516170169092918207676456888779623592396031349415024943784869634893342729620092877891356118467738167515879252473323905128540213"), input_lh_₁^394))
+//│ def unlines_lh_₁(_lh_unlines_arg1⁰) = concat_lh_₁^188(map_lh_₂^189((fun l⁰ -> mappend_lh_₁^190(l⁰, [LH_C 'n' [LH_N]])), _lh_unlines_arg1⁰))
 //│ 		---------- unoptimized ocaml gen ----------
 //│ 		let rec foldl_lh__d1 f_2 i_1 ls_4 =
 //│ 		  (match ls_4 with
@@ -83,30 +104,54 @@ testRsa_nofib $ primId 0
 //│ 		      (((foldl_lh__d1 f_2) ((f_2 i_1) h_7)) t_7)
 //│ 		    | `LH_N -> 
 //│ 		      i_1);;
+//│ 		let rec const31_lh__d1 =
+//│ 		  (Z.of_int 31);;
+//│ 		let rec const0_lh__d1 =
+//│ 		  (Z.of_int 0);;
 //│ 		let rec hash_lh__d1 _lh_hash_arg1_0 =
 //│ 		  (((foldl_lh__d1 (fun acc_0 c_0 -> 
-//│ 		    (((int_of_char c_0) + acc_0) * 31))) 0) _lh_hash_arg1_0);;
+//│ 		    ((Z.add (Z.of_int (int_of_char c_0))) ((Z.mul acc_0) const31_lh__d1)))) const0_lh__d1) _lh_hash_arg1_0);;
 //│ 		let rec input_lh__d1 =
-//│ 		  (`LH_C('m', (`LH_C('o', (`LH_C('d', (`LH_C('u', (`LH_C('l', (`LH_C('e', (`LH_C(' ', (`LH_C('R', (`LH_C('s', (`LH_C('a', (`LH_C(' ', (`LH_C('(', (`LH_C('e', (`LH_C('n', (`LH_C('c', (`LH_C('r', (`LH_C('y', (`LH_C('p', (`LH_C('t', (`LH_C(',', (`LH_C(' ', (`LH_C('d', (`LH_C('e', (`LH_C('c', (`LH_C('r', (`LH_C('y', (`LH_C('p', (`LH_C('t', (`LH_C(',', (`LH_C(' ', (`LH_C('m', (`LH_C('a', (`LH_C('k', (`LH_C('e', (`LH_C('K', (`LH_C('e', (`LH_C('y', (`LH_C('s', (`LH_C(')', (`LH_C('w', (`LH_C('h', (`LH_C('e', (`LH_C('r', (`LH_C('e', (`LH_C('e', (`LH_C('n', (`LH_C('c', (`LH_C('r', (`LH_C('y', (`LH_C('p', (`LH_C('t', (`LH_C(',', (`LH_C(' ', (`LH_C('d', (`LH_C('e', (`LH_C('c', (`LH_C('r', (`LH_C('y', (`LH_C('p', (`LH_C('t', (`LH_C(' ', (`LH_C(':', (`LH_C(':', (`LH_C(' ', (`LH_C('I', (`LH_C('n', (`LH_C('t', (`LH_C('e', (`LH_C('g', (`LH_C('e', (`LH_C('r', (`LH_C(' ', (`LH_C('-', (`LH_C('>', (`LH_C(' ', (`LH_C('I', (`LH_C('n', (`LH_C('t', (`LH_C('e', (`LH_C('g', (`LH_C('e', (`LH_C('r', (`LH_C(' ', (`LH_C('-', (`LH_C('>', (`LH_C(' ', (`LH_C('S', (`LH_C('t', (`LH_C('r', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_C(' ', (`LH_C('-', (`LH_C('>', (`LH_C(' ', (`LH_C('S', (`LH_C('t', (`LH_C('r', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_C('e', (`LH_C('n', (`LH_C('c', (`LH_C('r', (`LH_C('y', (`LH_C('p', (`LH_C('t', (`LH_C(' ', (`LH_C('n', (`LH_C(' ', (`LH_C('e', (`LH_C(' ', (`LH_C('=', (`LH_C(' ', (`LH_C('u', (`LH_C('n', (`LH_C('l', (`LH_C('i', (`LH_C('n', (`LH_C('e', (`LH_C('s', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C('m', (`LH_C('a', (`LH_C('p', (`LH_C(' ', (`LH_C('(', (`LH_C('s', (`LH_C('h', (`LH_C('o', (`LH_C('w', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C('p', (`LH_C('o', (`LH_C('w', (`LH_C('e', (`LH_C('r', (`LH_C(' ', (`LH_C('e', (`LH_C(' ', (`LH_C('n', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C('c', (`LH_C('o', (`LH_C('d', (`LH_C('e', (`LH_C(')', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C('c', (`LH_C('o', (`LH_C('l', (`LH_C('l', (`LH_C('e', (`LH_C('c', (`LH_C('t', (`LH_C(' ', (`LH_C('(', (`LH_C('s', (`LH_C('i', (`LH_C('z', (`LH_C('e', (`LH_C(' ', (`LH_C('n', (`LH_C(')', (`LH_C('d', (`LH_C('e', (`LH_C('c', (`LH_C('r', (`LH_C('y', (`LH_C('p', (`LH_C('t', (`LH_C(' ', (`LH_C('n', (`LH_C(' ', (`LH_C('d', (`LH_C(' ', (`LH_C('=', (`LH_C(' ', (`LH_C('c', (`LH_C('o', (`LH_C('n', (`LH_C('c', (`LH_C('a', (`LH_C('t', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C('m', (`LH_C('a', (`LH_C('p', (`LH_C(' ', (`LH_C('(', (`LH_C('d', (`LH_C('e', (`LH_C('c', (`LH_C('o', (`LH_C('d', (`LH_C('e', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C('p', (`LH_C('o', (`LH_C('w', (`LH_C('e', (`LH_C('r', (`LH_C(' ', (`LH_C('d', (`LH_C(' ', (`LH_C('n', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C('r', (`LH_C('e', (`LH_C('a', (`LH_C('d', (`LH_C(')', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C('l', (`LH_C('i', (`LH_C('n', (`LH_C('e', (`LH_C('s', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C(' ', (`LH_C('C', (`LH_C('o', (`LH_C('n', (`LH_C('v', (`LH_C('e', (`LH_C('r', (`LH_C('t', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_C(' ', (`LH_C('b', (`LH_C('e', (`LH_C('t', (`LH_C('w', (`LH_C('e', (`LH_C('e', (`LH_C('n', (`LH_C(' ', (`LH_C('S', (`LH_C('t', (`LH_C('r', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_C('s', (`LH_C(' ', (`LH_C('a', (`LH_C('n', (`LH_C('d', (`LH_C(' ', (`LH_C('I', (`LH_C('n', (`LH_C('t', (`LH_C('e', (`LH_C('g', (`LH_C('e', (`LH_C('r', (`LH_C('s', (`LH_C(' ', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('c', (`LH_C('o', (`LH_C('d', (`LH_C('e', (`LH_C(' ', (`LH_C(':', (`LH_C(':', (`LH_C(' ', (`LH_C('S', (`LH_C('t', (`LH_C('r', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_C(' ', (`LH_C('-', (`LH_C('>', (`LH_C(' ', (`LH_C('I', (`LH_C('n', (`LH_C('t', (`LH_C('e', (`LH_C('g', (`LH_C('e', (`LH_C('r', (`LH_C('c', (`LH_C('o', (`LH_C('d', (`LH_C('e', (`LH_C(' ', (`LH_C('=', (`LH_C(' ', (`LH_C('f', (`LH_C('o', (`LH_C('l', (`LH_C('d', (`LH_C('l', (`LH_C(' ', (`LH_C('a', (`LH_C('c', (`LH_C('c', (`LH_C('u', (`LH_C('m', (`LH_C(' ', (`LH_C('0', (`LH_C('w', (`LH_C('h', (`LH_C('e', (`LH_C('r', (`LH_C('e', (`LH_C(' ', (`LH_C('a', (`LH_C('c', (`LH_C('c', (`LH_C('u', (`LH_C('m', (`LH_C(' ', (`LH_C('x', (`LH_C(' ', (`LH_C('y', (`LH_C(' ', (`LH_C('=', (`LH_C(' ', (`LH_C('(', (`LH_C('1', (`LH_C('2', (`LH_C('8', (`LH_C(' ', (`LH_C('*', (`LH_C(' ', (`LH_C('x', (`LH_C(')', (`LH_C(' ', (`LH_C('+', (`LH_C(' ', (`LH_C('f', (`LH_C('r', (`LH_C('o', (`LH_C('m', (`LH_C('I', (`LH_C('n', (`LH_C('t', (`LH_C('e', (`LH_C('g', (`LH_C('r', (`LH_C('a', (`LH_C('l', (`LH_C(' ', (`LH_C('(', (`LH_C('f', (`LH_C('r', (`LH_C('o', (`LH_C('m', (`LH_C('E', (`LH_C('n', (`LH_C('u', (`LH_C('m', (`LH_C(' ', (`LH_C('y', (`LH_C(')', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))));;
+//│ 		  lh_large_str_0;;
+//│ 		let rec const2_lh__d1 =
+//│ 		  (Z.of_int 2);;
+//│ 		let rec const0_lh__d2 =
+//│ 		  (Z.of_int 0);;
+//│ 		let rec const0_lh__d4 =
+//│ 		  (Z.of_int 0);;
+//│ 		let rec const2_lh__d2 =
+//│ 		  (Z.of_int 2);;
 //│ 		let rec even_lh__d1 _lh_even_arg1_0 =
-//│ 		  ((_lh_even_arg1_0 mod 2) = 0);;
+//│ 		  ((Z.equal ((Z.rem _lh_even_arg1_0) const2_lh__d2)) const0_lh__d4);;
+//│ 		let rec const1_lh__d2 =
+//│ 		  (Z.of_int 1);;
 //│ 		let rec sqr_lh__d1 _lh_sqr_arg1_0 =
-//│ 		  (_lh_sqr_arg1_0 * _lh_sqr_arg1_0);;
+//│ 		  ((Z.mul _lh_sqr_arg1_0) _lh_sqr_arg1_0);;
+//│ 		let rec const1_lh__d1 =
+//│ 		  (Z.of_int 1);;
 //│ 		let rec power_lh__d1 _lh_power_arg1_0 _lh_power_arg2_0 _lh_power_arg3_0 =
-//│ 		  (match _lh_power_arg1_0 with
-//│ 		    | 0 -> 
-//│ 		      1
-//│ 		    | _ -> 
-//│ 		      (if (even_lh__d1 _lh_power_arg1_0) then
-//│ 		        ((sqr_lh__d1 (((power_lh__d1 (_lh_power_arg1_0 / 2)) _lh_power_arg2_0) _lh_power_arg3_0)) mod _lh_power_arg2_0)
-//│ 		      else
-//│ 		        ((_lh_power_arg3_0 * (((power_lh__d1 (_lh_power_arg1_0 - 1)) _lh_power_arg2_0) _lh_power_arg3_0)) mod _lh_power_arg2_0)));;
+//│ 		  (if ((Z.equal _lh_power_arg1_0) const0_lh__d2) then
+//│ 		    const1_lh__d1
+//│ 		  else
+//│ 		    (if (even_lh__d1 _lh_power_arg1_0) then
+//│ 		      ((Z.rem (sqr_lh__d1 (((power_lh__d1 ((Z.div _lh_power_arg1_0) const2_lh__d1)) _lh_power_arg2_0) _lh_power_arg3_0))) _lh_power_arg2_0)
+//│ 		    else
+//│ 		      ((Z.rem ((Z.mul _lh_power_arg3_0) (((power_lh__d1 ((Z.sub _lh_power_arg1_0) const1_lh__d2)) _lh_power_arg2_0) _lh_power_arg3_0))) _lh_power_arg2_0)));;
 //│ 		let rec map_lh__d1 f_3 ls_5 =
 //│ 		  (match ls_5 with
 //│ 		    | `LH_C(h_8, t_8) -> 
 //│ 		      (`LH_C((f_3 h_8), ((map_lh__d1 f_3) t_8)))
 //│ 		    | `LH_N -> 
 //│ 		      (`LH_N));;
+//│ 		let rec take_lh__d1 n_0 ls_2 =
+//│ 		  (if (n_0 > 0) then
+//│ 		    (match ls_2 with
+//│ 		      | `LH_C(h_5, t_5) -> 
+//│ 		        (`LH_C(h_5, ((take_lh__d1 (n_0 - 1)) t_5)))
+//│ 		      | `LH_N -> 
+//│ 		        (`LH_N))
+//│ 		  else
+//│ 		    (`LH_N));;
 //│ 		let rec drop_lh__d1 _lh_drop_arg1_0 _lh_drop_arg2_0 =
 //│ 		  (match _lh_drop_arg2_0 with
 //│ 		    | `LH_N -> 
@@ -118,15 +163,6 @@ testRsa_nofib $ primId 0
 //│ 		        (`LH_C(_lh_drop_LH_C_0_0, _lh_drop_LH_C_1_0)))
 //│ 		    | _ -> 
 //│ 		      (failwith "error"));;
-//│ 		let rec take_lh__d1 n_0 ls_3 =
-//│ 		  (if (n_0 > 0) then
-//│ 		    (match ls_3 with
-//│ 		      | `LH_C(h_6, t_6) -> 
-//│ 		        (`LH_C(h_6, ((take_lh__d1 (n_0 - 1)) t_6)))
-//│ 		      | `LH_N -> 
-//│ 		        (`LH_N))
-//│ 		  else
-//│ 		    (`LH_N));;
 //│ 		let rec collect_lh__d1 _lh_collect_arg1_0 _lh_collect_arg2_0 =
 //│ 		  (match _lh_collect_arg1_0 with
 //│ 		    | 0 -> 
@@ -137,33 +173,37 @@ testRsa_nofib $ primId 0
 //│ 		          (`LH_N)
 //│ 		        | _ -> 
 //│ 		          (`LH_C(((take_lh__d1 _lh_collect_arg1_0) _lh_collect_arg2_0), ((collect_lh__d1 _lh_collect_arg1_0) ((drop_lh__d1 _lh_collect_arg1_0) _lh_collect_arg2_0))))));;
-//│ 		let rec foldl_lh__d2 f_0 i_0 ls_0 =
-//│ 		  (match ls_0 with
-//│ 		    | `LH_C(h_1, t_1) -> 
-//│ 		      (((foldl_lh__d2 f_0) ((f_0 i_0) h_1)) t_1)
+//│ 		let rec const0_lh__d3 =
+//│ 		  (Z.of_int 0);;
+//│ 		let rec const128_lh__d1 =
+//│ 		  (Z.of_int 128);;
+//│ 		let rec foldl_lh__d2 f_1 i_0 ls_3 =
+//│ 		  (match ls_3 with
+//│ 		    | `LH_C(h_6, t_6) -> 
+//│ 		      (((foldl_lh__d2 f_1) ((f_1 i_0) h_6)) t_6)
 //│ 		    | `LH_N -> 
 //│ 		      i_0);;
 //│ 		let rec code_lh__d1 _lh_code_arg1_0 =
 //│ 		  (((foldl_lh__d2 (fun x_0 y_0 -> 
-//│ 		    ((128 * x_0) + (int_of_char y_0)))) 0) _lh_code_arg1_0);;
+//│ 		    ((Z.add ((Z.mul const128_lh__d1) x_0)) (Z.of_int (int_of_char y_0))))) const0_lh__d3) _lh_code_arg1_0);;
 //│ 		let rec length_lh__d1 ls_1 =
 //│ 		  (match ls_1 with
-//│ 		    | `LH_C(h_2, t_2) -> 
-//│ 		      (1 + (length_lh__d1 t_2))
+//│ 		    | `LH_C(h_4, t_4) -> 
+//│ 		      (1 + (length_lh__d1 t_4))
 //│ 		    | `LH_N -> 
 //│ 		      0);;
 //│ 		let rec size_lh__d1 _lh_size_arg1_0 =
-//│ 		  (((length_lh__d1 (string_of_int _lh_size_arg1_0)) * 47) / 100);;
+//│ 		  (((length_lh__d1 (string_of_z _lh_size_arg1_0)) * 47) / 100);;
 //│ 		let rec mappend_lh__d1 xs_1 ys_1 =
 //│ 		  (match xs_1 with
-//│ 		    | `LH_C(h_3, t_3) -> 
-//│ 		      (`LH_C(h_3, ((mappend_lh__d1 t_3) ys_1)))
+//│ 		    | `LH_C(h_2, t_2) -> 
+//│ 		      (`LH_C(h_2, ((mappend_lh__d1 t_2) ys_1)))
 //│ 		    | `LH_N -> 
 //│ 		      ys_1);;
-//│ 		let rec map_lh__d2 f_1 ls_2 =
-//│ 		  (match ls_2 with
-//│ 		    | `LH_C(h_5, t_5) -> 
-//│ 		      (`LH_C((f_1 h_5), ((map_lh__d2 f_1) t_5)))
+//│ 		let rec map_lh__d2 f_0 ls_0 =
+//│ 		  (match ls_0 with
+//│ 		    | `LH_C(h_3, t_3) -> 
+//│ 		      (`LH_C((f_0 h_3), ((map_lh__d2 f_0) t_3)))
 //│ 		    | `LH_N -> 
 //│ 		      (`LH_N));;
 //│ 		let rec mappend_lh__d2 xs_0 ys_0 =
@@ -174,8 +214,8 @@ testRsa_nofib $ primId 0
 //│ 		      ys_0);;
 //│ 		let rec concat_lh__d1 lss_0 =
 //│ 		  (match lss_0 with
-//│ 		    | `LH_C(h_4, t_4) -> 
-//│ 		      ((mappend_lh__d2 h_4) (concat_lh__d1 t_4))
+//│ 		    | `LH_C(h_1, t_1) -> 
+//│ 		      ((mappend_lh__d2 h_1) (concat_lh__d1 t_1))
 //│ 		    | `LH_N -> 
 //│ 		      (`LH_N));;
 //│ 		let rec unlines_lh__d1 _lh_unlines_arg1_0 =
@@ -185,146 +225,146 @@ testRsa_nofib $ primId 0
 //│ 		  ((fun _lh_funcomp_x_1 -> 
 //│ 		    (unlines_lh__d1 ((map_lh__d1 (fun _lh_funcomp_x_2 -> 
 //│ 		      ((fun _lh_funcomp_x_3 -> 
-//│ 		        (string_of_int (((power_lh__d1 _lh_encrypt_arg2_0) _lh_encrypt_arg1_0) _lh_funcomp_x_3))) (code_lh__d1 _lh_funcomp_x_2)))) _lh_funcomp_x_1))) ((collect_lh__d1 (size_lh__d1 _lh_encrypt_arg1_0)) _lh_funcomp_x_0));;
+//│ 		        (string_of_z (((power_lh__d1 _lh_encrypt_arg2_0) _lh_encrypt_arg1_0) _lh_funcomp_x_3))) (code_lh__d1 _lh_funcomp_x_2)))) _lh_funcomp_x_1))) ((collect_lh__d1 (size_lh__d1 _lh_encrypt_arg1_0)) _lh_funcomp_x_0));;
 //│ 		let rec testRsa_nofib_lh__d1 _lh_testRsa_nofib_arg1_0 =
-//│ 		  (hash_lh__d1 (((encrypt_lh__d1 6367) 5189) input_lh__d1));;
+//│ 		  (hash_lh__d1 (((encrypt_lh__d1 lh_large_int_0) lh_large_int_1) input_lh__d1));;
 //│ 		(testRsa_nofib_lh__d1 0)
 //│ 		---------- unoptimized ocaml gen ----------
 //│ <<<<<<<<<< Original <<<<<<<<<<
 //│ 
 //│ >>>>>>> fusion matches >>>>>>>
 //│ [LH_C h⁰ mappend_lh_₂(t⁰, ys⁰)]: 8 --->
-//│ 	case ls⁴ of {LH_C h⁷ t⁷ => foldl_lh_₁(f², f²(i¹, h⁷), t⁷) | LH_N  => i¹}: 154
-//│ [LH_C h³ mappend_lh_₁(t³, ys¹)]: 64 --->
+//│ 	case ls⁴ of {LH_C h⁷ t⁷ => foldl_lh_₁(f², f²(i¹, h⁷), t⁷) | LH_N  => i¹}: 181
+//│ [LH_N]: 27 --->
+//│ 	case ls⁴ of {LH_C h⁷ t⁷ => foldl_lh_₁(f², f²(i¹, h⁷), t⁷) | LH_N  => i¹}: 181
+//│ [LH_C h² mappend_lh_₁(t², ys¹)]: 37 --->
 //│ 	case xs⁰ of {LH_C h⁰ t⁰ => [LH_C h⁰ mappend_lh_₂(t⁰, ys⁰)] | LH_N  => ys⁰}: 10
-//│ [LH_N]: 77 --->
-//│ 	case ls⁴ of {LH_C h⁷ t⁷ => foldl_lh_₁(f², f²(i¹, h⁷), t⁷) | LH_N  => i¹}: 154
-//│ [LH_C f¹(h⁵) map_lh_₂(f¹, t⁵)]: 89 --->
-//│ 	case lss⁰ of {LH_C h⁴ t⁴ => mappend_lh_₂(h⁴, concat_lh_₁(t⁴)) | LH_N  => [LH_N]}: 78
-//│ [LH_N]: 90 --->
-//│ 	case lss⁰ of {LH_C h⁴ t⁴ => mappend_lh_₂(h⁴, concat_lh_₁(t⁴)) | LH_N  => [LH_N]}: 78
-//│ [LH_N]: 95 --->
-//│ 	case _lh_drop_arg2⁰ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰ => if (_lh_drop_arg1⁰ > 0) then drop_lh_₁((_lh_drop_arg1⁰ - 1), _lh_drop_LH_C_1⁰) else [LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰] | _  => error⁰}: 115
-//│ 	case ls³ of {LH_C h⁶ t⁶ => [LH_C h⁶ take_lh_₁((n⁰ - 1), t⁶)] | LH_N  => [LH_N]}: 136
-//│ 	case _lh_collect_arg2⁰ of {LH_N  => [LH_N] | _  => [LH_C take_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰) collect_lh_₁(_lh_collect_arg1⁰, drop_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰))]}: 286
-//│ [LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰]: 112 --->
-//│ 	case _lh_drop_arg2⁰ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰ => if (_lh_drop_arg1⁰ > 0) then drop_lh_₁((_lh_drop_arg1⁰ - 1), _lh_drop_LH_C_1⁰) else [LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰] | _  => error⁰}: 115
-//│ 	case ls³ of {LH_C h⁶ t⁶ => [LH_C h⁶ take_lh_₁((n⁰ - 1), t⁶)] | LH_N  => [LH_N]}: 136
-//│ 	case _lh_collect_arg2⁰ of {LH_N  => [LH_N] | _  => [LH_C take_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰) collect_lh_₁(_lh_collect_arg1⁰, drop_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰))]}: 286
-//│ [LH_C h⁶ take_lh_₁((n⁰ - 1), t⁶)]: 134 --->
-//│ 	case ls⁰ of {LH_C h¹ t¹ => foldl_lh_₂(f⁰, f⁰(i⁰, h¹), t¹) | LH_N  => i⁰}: 26
-//│ [LH_N]: 135 --->
-//│ 	case ls⁰ of {LH_C h¹ t¹ => foldl_lh_₂(f⁰, f⁰(i⁰, h¹), t¹) | LH_N  => i⁰}: 26
-//│ [LH_N]: 137 --->
-//│ 	case ls⁰ of {LH_C h¹ t¹ => foldl_lh_₂(f⁰, f⁰(i⁰, h¹), t¹) | LH_N  => i⁰}: 26
-//│ [LH_C f³(h⁸) map_lh_₁(f³, t⁸)]: 167 --->
-//│ 	case ls² of {LH_C h⁵ t⁵ => [LH_C f¹(h⁵) map_lh_₂(f¹, t⁵)] | LH_N  => [LH_N]}: 91
-//│ [LH_N]: 168 --->
-//│ 	case ls² of {LH_C h⁵ t⁵ => [LH_C f¹(h⁵) map_lh_₂(f¹, t⁵)] | LH_N  => [LH_N]}: 91
-//│ [LH_N]: 258 --->
+//│ [LH_C f⁰(h³) map_lh_₂(f⁰, t³)]: 51 --->
+//│ 	case lss⁰ of {LH_C h¹ t¹ => mappend_lh_₂(h¹, concat_lh_₁(t¹)) | LH_N  => [LH_N]}: 28
+//│ [LH_N]: 52 --->
+//│ 	case lss⁰ of {LH_C h¹ t¹ => mappend_lh_₂(h¹, concat_lh_₁(t¹)) | LH_N  => [LH_N]}: 28
+//│ [LH_C h⁵ take_lh_₁((n⁰ - 1), t⁵)]: 83 --->
+//│ 	case ls³ of {LH_C h⁶ t⁶ => foldl_lh_₂(f¹, f¹(i⁰, h⁶), t⁶) | LH_N  => i⁰}: 133
+//│ [LH_N]: 84 --->
+//│ 	case ls³ of {LH_C h⁶ t⁶ => foldl_lh_₂(f¹, f¹(i⁰, h⁶), t⁶) | LH_N  => i⁰}: 133
+//│ [LH_N]: 86 --->
+//│ 	case ls³ of {LH_C h⁶ t⁶ => foldl_lh_₂(f¹, f¹(i⁰, h⁶), t⁶) | LH_N  => i⁰}: 133
+//│ [LH_N]: 91 --->
+//│ 	case ls² of {LH_C h⁵ t⁵ => [LH_C h⁵ take_lh_₁((n⁰ - 1), t⁵)] | LH_N  => [LH_N]}: 85
+//│ 	case _lh_drop_arg2⁰ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰ => if (_lh_drop_arg1⁰ > 0) then drop_lh_₁((_lh_drop_arg1⁰ - 1), _lh_drop_LH_C_1⁰) else [LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰] | _  => error⁰}: 111
+//│ 	case _lh_collect_arg2⁰ of {LH_N  => [LH_N] | _  => [LH_C take_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰) collect_lh_₁(_lh_collect_arg1⁰, drop_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰))]}: 236
+//│ [LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰]: 108 --->
+//│ 	case ls² of {LH_C h⁵ t⁵ => [LH_C h⁵ take_lh_₁((n⁰ - 1), t⁵)] | LH_N  => [LH_N]}: 85
+//│ 	case _lh_drop_arg2⁰ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰ => if (_lh_drop_arg1⁰ > 0) then drop_lh_₁((_lh_drop_arg1⁰ - 1), _lh_drop_LH_C_1⁰) else [LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰] | _  => error⁰}: 111
+//│ 	case _lh_collect_arg2⁰ of {LH_N  => [LH_N] | _  => [LH_C take_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰) collect_lh_₁(_lh_collect_arg1⁰, drop_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰))]}: 236
+//│ [LH_N]: 194 --->
 //│ 	case xs⁰ of {LH_C h⁰ t⁰ => [LH_C h⁰ mappend_lh_₂(t⁰, ys⁰)] | LH_N  => ys⁰}: 10
-//│ [LH_C 'n' [LH_N]]: 259 --->
+//│ [LH_C 'n' [LH_N]]: 195 --->
 //│ 	case xs⁰ of {LH_C h⁰ t⁰ => [LH_C h⁰ mappend_lh_₂(t⁰, ys⁰)] | LH_N  => ys⁰}: 10
-//│ [LH_N]: 268 --->
-//│ 	case ls⁵ of {LH_C h⁸ t⁸ => [LH_C f³(h⁸) map_lh_₁(f³, t⁸)] | LH_N  => [LH_N]}: 169
-//│ [LH_N]: 270 --->
-//│ 	case ls⁵ of {LH_C h⁸ t⁸ => [LH_C f³(h⁸) map_lh_₁(f³, t⁸)] | LH_N  => [LH_N]}: 169
-//│ [LH_C take_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰) collect_lh_₁(_lh_collect_arg1⁰, drop_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰))]: 285 --->
-//│ 	case ls⁵ of {LH_C h⁸ t⁸ => [LH_C f³(h⁸) map_lh_₁(f³, t⁸)] | LH_N  => [LH_N]}: 169
+//│ [LH_N]: 218 --->
+//│ 	case ls⁵ of {LH_C h⁸ t⁸ => [LH_C f³(h⁸) map_lh_₁(f³, t⁸)] | LH_N  => [LH_N]}: 273
+//│ [LH_N]: 220 --->
+//│ 	case ls⁵ of {LH_C h⁸ t⁸ => [LH_C f³(h⁸) map_lh_₁(f³, t⁸)] | LH_N  => [LH_N]}: 273
+//│ [LH_C take_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰) collect_lh_₁(_lh_collect_arg1⁰, drop_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰))]: 235 --->
+//│ 	case ls⁵ of {LH_C h⁸ t⁸ => [LH_C f³(h⁸) map_lh_₁(f³, t⁸)] | LH_N  => [LH_N]}: 273
+//│ [LH_C f³(h⁸) map_lh_₁(f³, t⁸)]: 271 --->
+//│ 	case ls⁰ of {LH_C h³ t³ => [LH_C f⁰(h³) map_lh_₂(f⁰, t³)] | LH_N  => [LH_N]}: 53
+//│ [LH_N]: 272 --->
+//│ 	case ls⁰ of {LH_C h³ t³ => [LH_C f⁰(h³) map_lh_₂(f⁰, t³)] | LH_N  => [LH_N]}: 53
 //│ ------------------
 //│ case xs⁰ of {LH_C h⁰ t⁰ => [LH_C h⁰ mappend_lh_₂(t⁰, ys⁰)] | LH_N  => ys⁰}: 10 --->
-//│ 	[LH_C h³ mappend_lh_₁(t³, ys¹)]: 64
-//│ 	[LH_N]: 258
-//│ 	[LH_C 'n' [LH_N]]: 259
-//│ case ls⁰ of {LH_C h¹ t¹ => foldl_lh_₂(f⁰, f⁰(i⁰, h¹), t¹) | LH_N  => i⁰}: 26 --->
-//│ 	[LH_C h⁶ take_lh_₁((n⁰ - 1), t⁶)]: 134
-//│ 	[LH_N]: 135
-//│ 	[LH_N]: 137
-//│ case lss⁰ of {LH_C h⁴ t⁴ => mappend_lh_₂(h⁴, concat_lh_₁(t⁴)) | LH_N  => [LH_N]}: 78 --->
-//│ 	[LH_C f¹(h⁵) map_lh_₂(f¹, t⁵)]: 89
-//│ 	[LH_N]: 90
-//│ case ls² of {LH_C h⁵ t⁵ => [LH_C f¹(h⁵) map_lh_₂(f¹, t⁵)] | LH_N  => [LH_N]}: 91 --->
-//│ 	[LH_C f³(h⁸) map_lh_₁(f³, t⁸)]: 167
-//│ 	[LH_N]: 168
-//│ case _lh_drop_arg2⁰ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰ => if (_lh_drop_arg1⁰ > 0) then drop_lh_₁((_lh_drop_arg1⁰ - 1), _lh_drop_LH_C_1⁰) else [LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰] | _  => error⁰}: 115 --->
+//│ 	[LH_C h² mappend_lh_₁(t², ys¹)]: 37
+//│ 	[LH_N]: 194
+//│ 	[LH_C 'n' [LH_N]]: 195
+//│ case lss⁰ of {LH_C h¹ t¹ => mappend_lh_₂(h¹, concat_lh_₁(t¹)) | LH_N  => [LH_N]}: 28 --->
+//│ 	[LH_C f⁰(h³) map_lh_₂(f⁰, t³)]: 51
+//│ 	[LH_N]: 52
+//│ case ls⁰ of {LH_C h³ t³ => [LH_C f⁰(h³) map_lh_₂(f⁰, t³)] | LH_N  => [LH_N]}: 53 --->
+//│ 	[LH_C f³(h⁸) map_lh_₁(f³, t⁸)]: 271
+//│ 	[LH_N]: 272
+//│ case ls² of {LH_C h⁵ t⁵ => [LH_C h⁵ take_lh_₁((n⁰ - 1), t⁵)] | LH_N  => [LH_N]}: 85 --->
+//│ 	[LH_N]: 91
+//│ 	[LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰]: 108
 //│ 	NoProd
-//│ 	[LH_N]: 95
-//│ 	[LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰]: 112
-//│ case ls³ of {LH_C h⁶ t⁶ => [LH_C h⁶ take_lh_₁((n⁰ - 1), t⁶)] | LH_N  => [LH_N]}: 136 --->
+//│ case _lh_drop_arg2⁰ of {LH_N  => [LH_N] | LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰ => if (_lh_drop_arg1⁰ > 0) then drop_lh_₁((_lh_drop_arg1⁰ - 1), _lh_drop_LH_C_1⁰) else [LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰] | _  => error⁰}: 111 --->
+//│ 	[LH_N]: 91
+//│ 	[LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰]: 108
 //│ 	NoProd
-//│ 	[LH_N]: 95
-//│ 	[LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰]: 112
-//│ case ls⁴ of {LH_C h⁷ t⁷ => foldl_lh_₁(f², f²(i¹, h⁷), t⁷) | LH_N  => i¹}: 154 --->
+//│ case ls³ of {LH_C h⁶ t⁶ => foldl_lh_₂(f¹, f¹(i⁰, h⁶), t⁶) | LH_N  => i⁰}: 133 --->
+//│ 	[LH_C h⁵ take_lh_₁((n⁰ - 1), t⁵)]: 83
+//│ 	[LH_N]: 84
+//│ 	[LH_N]: 86
+//│ case ls⁴ of {LH_C h⁷ t⁷ => foldl_lh_₁(f², f²(i¹, h⁷), t⁷) | LH_N  => i¹}: 181 --->
 //│ 	[LH_C h⁰ mappend_lh_₂(t⁰, ys⁰)]: 8
-//│ 	[LH_N]: 77
-//│ case ls⁵ of {LH_C h⁸ t⁸ => [LH_C f³(h⁸) map_lh_₁(f³, t⁸)] | LH_N  => [LH_N]}: 169 --->
-//│ 	[LH_N]: 268
-//│ 	[LH_N]: 270
-//│ 	[LH_C take_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰) collect_lh_₁(_lh_collect_arg1⁰, drop_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰))]: 285
-//│ case _lh_collect_arg2⁰ of {LH_N  => [LH_N] | _  => [LH_C take_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰) collect_lh_₁(_lh_collect_arg1⁰, drop_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰))]}: 286 --->
+//│ 	[LH_N]: 27
+//│ case _lh_collect_arg2⁰ of {LH_N  => [LH_N] | _  => [LH_C take_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰) collect_lh_₁(_lh_collect_arg1⁰, drop_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰))]}: 236 --->
+//│ 	[LH_N]: 91
+//│ 	[LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰]: 108
 //│ 	NoProd
-//│ 	[LH_N]: 95
-//│ 	[LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰]: 112
+//│ case ls⁵ of {LH_C h⁸ t⁸ => [LH_C f³(h⁸) map_lh_₁(f³, t⁸)] | LH_N  => [LH_N]}: 273 --->
+//│ 	[LH_N]: 218
+//│ 	[LH_N]: 220
+//│ 	[LH_C take_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰) collect_lh_₁(_lh_collect_arg1⁰, drop_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰))]: 235
 //│ <<<<<<< fusion matches <<<<<<<
 //│ 
 //│ >>>>>>> new fusion strategy >>>>>>>
 //│ [LH_C h⁰ mappend_lh_₂(t⁰, ys⁰)]: 8 --->
-//│ 	case ls⁴ of {LH_C h⁷ t⁷ => foldl_lh_₁(f², f²(i¹, h⁷), t⁷) | LH_N  => i¹}: 154
-//│ [LH_C h³ mappend_lh_₁(t³, ys¹)]: 64 --->
+//│ 	case ls⁴ of {LH_C h⁷ t⁷ => foldl_lh_₁(f², f²(i¹, h⁷), t⁷) | LH_N  => i¹}: 181
+//│ [LH_N]: 27 --->
+//│ 	case ls⁴ of {LH_C h⁷ t⁷ => foldl_lh_₁(f², f²(i¹, h⁷), t⁷) | LH_N  => i¹}: 181
+//│ [LH_C h² mappend_lh_₁(t², ys¹)]: 37 --->
 //│ 	case xs⁰ of {LH_C h⁰ t⁰ => [LH_C h⁰ mappend_lh_₂(t⁰, ys⁰)] | LH_N  => ys⁰}: 10
-//│ [LH_N]: 77 --->
-//│ 	case ls⁴ of {LH_C h⁷ t⁷ => foldl_lh_₁(f², f²(i¹, h⁷), t⁷) | LH_N  => i¹}: 154
-//│ [LH_C f¹(h⁵) map_lh_₂(f¹, t⁵)]: 89 --->
-//│ 	case lss⁰ of {LH_C h⁴ t⁴ => mappend_lh_₂(h⁴, concat_lh_₁(t⁴)) | LH_N  => [LH_N]}: 78
-//│ [LH_N]: 90 --->
-//│ 	case lss⁰ of {LH_C h⁴ t⁴ => mappend_lh_₂(h⁴, concat_lh_₁(t⁴)) | LH_N  => [LH_N]}: 78
-//│ [LH_C h⁶ take_lh_₁((n⁰ - 1), t⁶)]: 134 --->
-//│ 	case ls⁰ of {LH_C h¹ t¹ => foldl_lh_₂(f⁰, f⁰(i⁰, h¹), t¹) | LH_N  => i⁰}: 26
-//│ [LH_N]: 135 --->
-//│ 	case ls⁰ of {LH_C h¹ t¹ => foldl_lh_₂(f⁰, f⁰(i⁰, h¹), t¹) | LH_N  => i⁰}: 26
-//│ [LH_N]: 137 --->
-//│ 	case ls⁰ of {LH_C h¹ t¹ => foldl_lh_₂(f⁰, f⁰(i⁰, h¹), t¹) | LH_N  => i⁰}: 26
-//│ [LH_C f³(h⁸) map_lh_₁(f³, t⁸)]: 167 --->
-//│ 	case ls² of {LH_C h⁵ t⁵ => [LH_C f¹(h⁵) map_lh_₂(f¹, t⁵)] | LH_N  => [LH_N]}: 91
-//│ [LH_N]: 168 --->
-//│ 	case ls² of {LH_C h⁵ t⁵ => [LH_C f¹(h⁵) map_lh_₂(f¹, t⁵)] | LH_N  => [LH_N]}: 91
-//│ [LH_N]: 258 --->
+//│ [LH_C f⁰(h³) map_lh_₂(f⁰, t³)]: 51 --->
+//│ 	case lss⁰ of {LH_C h¹ t¹ => mappend_lh_₂(h¹, concat_lh_₁(t¹)) | LH_N  => [LH_N]}: 28
+//│ [LH_N]: 52 --->
+//│ 	case lss⁰ of {LH_C h¹ t¹ => mappend_lh_₂(h¹, concat_lh_₁(t¹)) | LH_N  => [LH_N]}: 28
+//│ [LH_C h⁵ take_lh_₁((n⁰ - 1), t⁵)]: 83 --->
+//│ 	case ls³ of {LH_C h⁶ t⁶ => foldl_lh_₂(f¹, f¹(i⁰, h⁶), t⁶) | LH_N  => i⁰}: 133
+//│ [LH_N]: 84 --->
+//│ 	case ls³ of {LH_C h⁶ t⁶ => foldl_lh_₂(f¹, f¹(i⁰, h⁶), t⁶) | LH_N  => i⁰}: 133
+//│ [LH_N]: 86 --->
+//│ 	case ls³ of {LH_C h⁶ t⁶ => foldl_lh_₂(f¹, f¹(i⁰, h⁶), t⁶) | LH_N  => i⁰}: 133
+//│ [LH_N]: 194 --->
 //│ 	case xs⁰ of {LH_C h⁰ t⁰ => [LH_C h⁰ mappend_lh_₂(t⁰, ys⁰)] | LH_N  => ys⁰}: 10
-//│ [LH_C 'n' [LH_N]]: 259 --->
+//│ [LH_C 'n' [LH_N]]: 195 --->
 //│ 	case xs⁰ of {LH_C h⁰ t⁰ => [LH_C h⁰ mappend_lh_₂(t⁰, ys⁰)] | LH_N  => ys⁰}: 10
-//│ [LH_N]: 268 --->
-//│ 	case ls⁵ of {LH_C h⁸ t⁸ => [LH_C f³(h⁸) map_lh_₁(f³, t⁸)] | LH_N  => [LH_N]}: 169
-//│ [LH_N]: 270 --->
-//│ 	case ls⁵ of {LH_C h⁸ t⁸ => [LH_C f³(h⁸) map_lh_₁(f³, t⁸)] | LH_N  => [LH_N]}: 169
-//│ [LH_C take_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰) collect_lh_₁(_lh_collect_arg1⁰, drop_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰))]: 285 --->
-//│ 	case ls⁵ of {LH_C h⁸ t⁸ => [LH_C f³(h⁸) map_lh_₁(f³, t⁸)] | LH_N  => [LH_N]}: 169
+//│ [LH_N]: 218 --->
+//│ 	case ls⁵ of {LH_C h⁸ t⁸ => [LH_C f³(h⁸) map_lh_₁(f³, t⁸)] | LH_N  => [LH_N]}: 273
+//│ [LH_N]: 220 --->
+//│ 	case ls⁵ of {LH_C h⁸ t⁸ => [LH_C f³(h⁸) map_lh_₁(f³, t⁸)] | LH_N  => [LH_N]}: 273
+//│ [LH_C take_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰) collect_lh_₁(_lh_collect_arg1⁰, drop_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰))]: 235 --->
+//│ 	case ls⁵ of {LH_C h⁸ t⁸ => [LH_C f³(h⁸) map_lh_₁(f³, t⁸)] | LH_N  => [LH_N]}: 273
+//│ [LH_C f³(h⁸) map_lh_₁(f³, t⁸)]: 271 --->
+//│ 	case ls⁰ of {LH_C h³ t³ => [LH_C f⁰(h³) map_lh_₂(f⁰, t³)] | LH_N  => [LH_N]}: 53
+//│ [LH_N]: 272 --->
+//│ 	case ls⁰ of {LH_C h³ t³ => [LH_C f⁰(h³) map_lh_₂(f⁰, t³)] | LH_N  => [LH_N]}: 53
 //│ ------------------
 //│ case xs⁰ of {LH_C h⁰ t⁰ => [LH_C h⁰ mappend_lh_₂(t⁰, ys⁰)] | LH_N  => ys⁰}: 10 --->
-//│ 	[LH_C h³ mappend_lh_₁(t³, ys¹)]: 64
-//│ 	[LH_N]: 258
-//│ 	[LH_C 'n' [LH_N]]: 259
-//│ case ls⁰ of {LH_C h¹ t¹ => foldl_lh_₂(f⁰, f⁰(i⁰, h¹), t¹) | LH_N  => i⁰}: 26 --->
-//│ 	[LH_C h⁶ take_lh_₁((n⁰ - 1), t⁶)]: 134
-//│ 	[LH_N]: 135
-//│ 	[LH_N]: 137
-//│ case lss⁰ of {LH_C h⁴ t⁴ => mappend_lh_₂(h⁴, concat_lh_₁(t⁴)) | LH_N  => [LH_N]}: 78 --->
-//│ 	[LH_C f¹(h⁵) map_lh_₂(f¹, t⁵)]: 89
-//│ 	[LH_N]: 90
-//│ case ls² of {LH_C h⁵ t⁵ => [LH_C f¹(h⁵) map_lh_₂(f¹, t⁵)] | LH_N  => [LH_N]}: 91 --->
-//│ 	[LH_C f³(h⁸) map_lh_₁(f³, t⁸)]: 167
-//│ 	[LH_N]: 168
-//│ case ls⁴ of {LH_C h⁷ t⁷ => foldl_lh_₁(f², f²(i¹, h⁷), t⁷) | LH_N  => i¹}: 154 --->
+//│ 	[LH_C h² mappend_lh_₁(t², ys¹)]: 37
+//│ 	[LH_N]: 194
+//│ 	[LH_C 'n' [LH_N]]: 195
+//│ case lss⁰ of {LH_C h¹ t¹ => mappend_lh_₂(h¹, concat_lh_₁(t¹)) | LH_N  => [LH_N]}: 28 --->
+//│ 	[LH_C f⁰(h³) map_lh_₂(f⁰, t³)]: 51
+//│ 	[LH_N]: 52
+//│ case ls⁰ of {LH_C h³ t³ => [LH_C f⁰(h³) map_lh_₂(f⁰, t³)] | LH_N  => [LH_N]}: 53 --->
+//│ 	[LH_C f³(h⁸) map_lh_₁(f³, t⁸)]: 271
+//│ 	[LH_N]: 272
+//│ case ls³ of {LH_C h⁶ t⁶ => foldl_lh_₂(f¹, f¹(i⁰, h⁶), t⁶) | LH_N  => i⁰}: 133 --->
+//│ 	[LH_C h⁵ take_lh_₁((n⁰ - 1), t⁵)]: 83
+//│ 	[LH_N]: 84
+//│ 	[LH_N]: 86
+//│ case ls⁴ of {LH_C h⁷ t⁷ => foldl_lh_₁(f², f²(i¹, h⁷), t⁷) | LH_N  => i¹}: 181 --->
 //│ 	[LH_C h⁰ mappend_lh_₂(t⁰, ys⁰)]: 8
-//│ 	[LH_N]: 77
-//│ case ls⁵ of {LH_C h⁸ t⁸ => [LH_C f³(h⁸) map_lh_₁(f³, t⁸)] | LH_N  => [LH_N]}: 169 --->
-//│ 	[LH_N]: 268
-//│ 	[LH_N]: 270
-//│ 	[LH_C take_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰) collect_lh_₁(_lh_collect_arg1⁰, drop_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰))]: 285
+//│ 	[LH_N]: 27
+//│ case ls⁵ of {LH_C h⁸ t⁸ => [LH_C f³(h⁸) map_lh_₁(f³, t⁸)] | LH_N  => [LH_N]}: 273 --->
+//│ 	[LH_N]: 218
+//│ 	[LH_N]: 220
+//│ 	[LH_C take_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰) collect_lh_₁(_lh_collect_arg1⁰, drop_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰))]: 235
 //│ <<<<<<< new fusion strategy <<<<<<<
 //│ 
 //│ >>>>>>> after fusion >>>>>>>
 //│ testRsa_nofib_lh_₁(primId⁰(0))
-//│ def code_lh_₁(_lh_code_arg1¹) = foldl_lh_₂((fun x¹ -> (fun y¹ -> ((128 * x¹) + int_of_char⁰(y¹)))), 0, _lh_code_arg1¹)
+//│ def code_lh_₁(_lh_code_arg1¹) = foldl_lh_₂((fun x¹ -> (fun y¹ -> z_add⁰(z_mul⁰(const128_lh_₁, x¹), z_of_int⁰(int_of_char⁰(y¹))))), const0_lh_₃, _lh_code_arg1¹)
 //│ def collect_lh_₁(_lh_collect_arg1¹, _lh_collect_arg2¹) = case _lh_collect_arg1¹ of {
 //│ 	0  => (fun f⁷ -> (fun f⁸ -> (fun _lh_dummy⁰ -> (fun f⁹ -> (fun i⁴ -> i⁴)))))
 //│ 	| _  => case _lh_collect_arg2¹ of {
@@ -340,43 +380,51 @@ testRsa_nofib $ primId 0
 //│ 					in let h¹¹ = f¹⁴(h¹⁰)
 //│ 					in (fun _lh_dummy² -> mappend_lh_₂(h¹¹, concat_lh_₁(t¹¹)))))}}
 //│ def concat_lh_₁(lss¹) = lss¹(99)
+//│ def const0_lh_₁ = z_of_int⁰(0)
+//│ def const0_lh_₂ = z_of_int⁰(0)
+//│ def const0_lh_₃ = z_of_int⁰(0)
+//│ def const0_lh_₄ = z_of_int⁰(0)
+//│ def const128_lh_₁ = z_of_int⁰(128)
+//│ def const1_lh_₁ = z_of_int⁰(1)
+//│ def const1_lh_₂ = z_of_int⁰(1)
+//│ def const2_lh_₁ = z_of_int⁰(2)
+//│ def const2_lh_₂ = z_of_int⁰(2)
+//│ def const31_lh_₁ = z_of_int⁰(31)
 //│ def drop_lh_₁(_lh_drop_arg1¹, _lh_drop_arg2¹) = case _lh_drop_arg2¹ of {
 //│ 	LH_N  => [LH_N]
 //│ 	| LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰ => if (_lh_drop_arg1¹ > 0) then drop_lh_₁((_lh_drop_arg1¹ - 1), _lh_drop_LH_C_1⁰) else [LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰]
 //│ 	| _  => error⁰}
-//│ def encrypt_lh_₁(_lh_encrypt_arg1¹, _lh_encrypt_arg2¹, _lh_funcomp_x⁴) = (fun _lh_funcomp_x⁵ -> unlines_lh_₁(map_lh_₁((fun _lh_funcomp_x⁶ -> (fun _lh_funcomp_x⁷ -> string_of_int⁰(power_lh_₁(_lh_encrypt_arg2¹, _lh_encrypt_arg1¹, _lh_funcomp_x⁷)))(code_lh_₁(_lh_funcomp_x⁶))), _lh_funcomp_x⁵)))(collect_lh_₁(size_lh_₁(_lh_encrypt_arg1¹), _lh_funcomp_x⁴))
-//│ def even_lh_₁(_lh_even_arg1¹) = ((_lh_even_arg1¹ % 2) == 0)
+//│ def encrypt_lh_₁(_lh_encrypt_arg1¹, _lh_encrypt_arg2¹, _lh_funcomp_x⁴) = (fun _lh_funcomp_x⁵ -> unlines_lh_₁(map_lh_₁((fun _lh_funcomp_x⁶ -> (fun _lh_funcomp_x⁷ -> string_of_z⁰(power_lh_₁(_lh_encrypt_arg2¹, _lh_encrypt_arg1¹, _lh_funcomp_x⁷)))(code_lh_₁(_lh_funcomp_x⁶))), _lh_funcomp_x⁵)))(collect_lh_₁(size_lh_₁(_lh_encrypt_arg1¹), _lh_funcomp_x⁴))
+//│ def even_lh_₁(_lh_even_arg1¹) = z_equal⁰(z_mod⁰(_lh_even_arg1¹, const2_lh_₂), const0_lh_₄)
 //│ def foldl_lh_₁(f⁵, i³, ls⁷) = ls⁷(f⁵, i³)
 //│ def foldl_lh_₂(f⁴, i², ls⁶) = ls⁶(f⁴, i²)
-//│ def hash_lh_₁(_lh_hash_arg1¹) = foldl_lh_₁((fun acc¹ -> (fun c¹ -> ((int_of_char⁰(c¹) + acc¹) * 31))), 0, _lh_hash_arg1¹)
-//│ def input_lh_₁ = primId⁰([LH_C 'm' [LH_C 'o' [LH_C 'd' [LH_C 'u' [LH_C 'l' [LH_C 'e' [LH_C ' ' [LH_C 'R' [LH_C 's' [LH_C 'a' [LH_C ' ' [LH_C '(' [LH_C 'e' [LH_C 'n' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ',' [LH_C ' ' [LH_C 'd' [LH_C 'e' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ',' [LH_C ' ' [LH_C 'm' [LH_C 'a' [LH_C 'k' [LH_C 'e' [LH_C 'K' [LH_C 'e' [LH_C 'y' [LH_C 's' [LH_C ')' [LH_C 'w' [LH_C 'h' [LH_C 'e' [LH_C 'r' [LH_C 'e' [LH_C 'e' [LH_C 'n' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ',' [LH_C ' ' [LH_C 'd' [LH_C 'e' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ' ' [LH_C ':' [LH_C ':' [LH_C ' ' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C '-' [LH_C '>' [LH_C ' ' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C '-' [LH_C '>' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C ' ' [LH_C '-' [LH_C '>' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C 'e' [LH_C 'n' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ' ' [LH_C 'n' [LH_C ' ' [LH_C 'e' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'u' [LH_C 'n' [LH_C 'l' [LH_C 'i' [LH_C 'n' [LH_C 'e' [LH_C 's' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'm' [LH_C 'a' [LH_C 'p' [LH_C ' ' [LH_C '(' [LH_C 's' [LH_C 'h' [LH_C 'o' [LH_C 'w' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'p' [LH_C 'o' [LH_C 'w' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C 'e' [LH_C ' ' [LH_C 'n' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'c' [LH_C 'o' [LH_C 'd' [LH_C 'e' [LH_C ')' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'c' [LH_C 'o' [LH_C 'l' [LH_C 'l' [LH_C 'e' [LH_C 'c' [LH_C 't' [LH_C ' ' [LH_C '(' [LH_C 's' [LH_C 'i' [LH_C 'z' [LH_C 'e' [LH_C ' ' [LH_C 'n' [LH_C ')' [LH_C 'd' [LH_C 'e' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ' ' [LH_C 'n' [LH_C ' ' [LH_C 'd' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'c' [LH_C 'o' [LH_C 'n' [LH_C 'c' [LH_C 'a' [LH_C 't' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'm' [LH_C 'a' [LH_C 'p' [LH_C ' ' [LH_C '(' [LH_C 'd' [LH_C 'e' [LH_C 'c' [LH_C 'o' [LH_C 'd' [LH_C 'e' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'p' [LH_C 'o' [LH_C 'w' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C 'd' [LH_C ' ' [LH_C 'n' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'r' [LH_C 'e' [LH_C 'a' [LH_C 'd' [LH_C ')' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'l' [LH_C 'i' [LH_C 'n' [LH_C 'e' [LH_C 's' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C ' ' [LH_C 'C' [LH_C 'o' [LH_C 'n' [LH_C 'v' [LH_C 'e' [LH_C 'r' [LH_C 't' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C ' ' [LH_C 'b' [LH_C 'e' [LH_C 't' [LH_C 'w' [LH_C 'e' [LH_C 'e' [LH_C 'n' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C 's' [LH_C ' ' [LH_C 'a' [LH_C 'n' [LH_C 'd' [LH_C ' ' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'e' [LH_C 'r' [LH_C 's' [LH_C ' ' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C 'c' [LH_C 'o' [LH_C 'd' [LH_C 'e' [LH_C ' ' [LH_C ':' [LH_C ':' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C ' ' [LH_C '-' [LH_C '>' [LH_C ' ' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'e' [LH_C 'r' [LH_C 'c' [LH_C 'o' [LH_C 'd' [LH_C 'e' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'f' [LH_C 'o' [LH_C 'l' [LH_C 'd' [LH_C 'l' [LH_C ' ' [LH_C 'a' [LH_C 'c' [LH_C 'c' [LH_C 'u' [LH_C 'm' [LH_C ' ' [LH_C '0' [LH_C 'w' [LH_C 'h' [LH_C 'e' [LH_C 'r' [LH_C 'e' [LH_C ' ' [LH_C 'a' [LH_C 'c' [LH_C 'c' [LH_C 'u' [LH_C 'm' [LH_C ' ' [LH_C 'x' [LH_C ' ' [LH_C 'y' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C '(' [LH_C '1' [LH_C '2' [LH_C '8' [LH_C ' ' [LH_C '*' [LH_C ' ' [LH_C 'x' [LH_C ')' [LH_C ' ' [LH_C '+' [LH_C ' ' [LH_C 'f' [LH_C 'r' [LH_C 'o' [LH_C 'm' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'r' [LH_C 'a' [LH_C 'l' [LH_C ' ' [LH_C '(' [LH_C 'f' [LH_C 'r' [LH_C 'o' [LH_C 'm' [LH_C 'E' [LH_C 'n' [LH_C 'u' [LH_C 'm' [LH_C ' ' [LH_C 'y' [LH_C ')' [LH_N]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]])
+//│ def hash_lh_₁(_lh_hash_arg1¹) = foldl_lh_₁((fun acc¹ -> (fun c¹ -> z_add⁰(z_of_int⁰(int_of_char⁰(c¹)), z_mul⁰(acc¹, const31_lh_₁)))), const0_lh_₁, _lh_hash_arg1¹)
+//│ def input_lh_₁ = from_large_str⁰("module Rsa (encrypt, decrypt, makeKeys)whereencrypt, decrypt :: Integer -> Integer -> String -> Stringencrypt n e = unlines . map (show . power e n . code) . collect (size n)decrypt n d = concat . map (decode . power d n . read) . lines-------- Converting between Strings and Integers -----------code :: String -> Integercode = foldl accum 0  where accum x y = (128 * x) + fromIntegral (fromEnum y)decode :: Integer -> Stringdecode n = reverse (expand n)   where expand 0 = []         expand x = toEnum (fromIntegral (x `mod` 128)) : expand (x `div` 128)collect :: Int -> [a] -> [[a]]collect 0 xs = []collect n [] = []collect n xs = take n xs : collect n (drop n xs)size :: Integer -> Intsize n = (length (show n) * 47) `div` 100	-- log_128 10 = 0.4745------- Constructing keys -------------------------makeKeys :: Integer -> Integer -> (Integer, Integer, Integer)makeKeys p' q' = (n, invert phi d, d)   where   p = nextPrime p'           q = nextPrime q'	   n = p*q	   phi = (p-1)*(q-1)	   d = nextPrime (p+q+1)nextPrime :: Integer -> IntegernextPrime a = head (filter prime [odd,odd+2..])  where  odd | even a = a+1             | True   = a         prime p = and [power (p-1) p x == 1 | x <- [3,5,7]]invert :: Integer -> Integer -> Integerinvert n a = if e<0 then e+n else e  where  e=iter n 0 a 1iter :: Integer -> Integer -> Integer -> Integer -> Integeriter g v 0  w = viter g v h w = iter h w (g - fact * h) (v - fact * w)    where  fact = g `div` h------- Fast exponentiation, mod m -----------------power :: Integer -> Integer -> Integer -> Integerpower 0 m x          = 1power n m x | even n = sqr (power (n `div` 2) m x) `mod` m	    | True   = (x * power (n-1) m x) `mod` msqr :: Integer -> Integersqr x = x * x\\section{AbsDensematrix}This module imports the contents of Densematrix and exports some of thefunctions renaming many of them for use by Matrix. The original %includestatement(from Matrix) is left as a comment at the foot of this file.\\begin{code}module AbsDensematrix(Block,Vec,bmult,bvecmult,vecbmult,vecdot,vecnorm,                      vecouter,badd,bsub,vecadd,vecsub,bsize,vecsize,bneg,                      bxpose,bident,vecneg,svecmult,mkblock,bswaprow,bswapcol,                      bdroprow,bgetrow,bgetcol,bsubscript,vecsubscript,bupdate,                      vecupdate,vechd,vectl,mergevecs,binverse,showblock,                     showvec, mkvec,mkrvec,vecpart,update2,veclist,matlist)       whereimport Densematrixtype Block = Matrixtype Vec = Vectorbmult = mmultbvecmult = matvecmultvecbmult = vmmultvecdot   = vdotvecnorm = normvecouter = vouterbadd = maddbsub = msubvecadd = vaddvecsub = vsubbsize = msizevecsize = vsizebneg = mnegbxpose = mxposebident = midentvecneg = vnegsvecmult = svmultmkblock = mkmatbswaprow = swaprowbswapcol = swapcolbdroprow = droprowbgetrow = getrowbgetcol = getcolbsubscript = subscriptvecsubscript = vsubscriptbupdate = updatevecupdate = vupdatevechd = vhdvectl = vtlmergevecs = mergevectorsbinverse = minverseshowblock = showmatrixshowvec = displayvector\\end{code}The original include statement from Matrix :- %include \"densematrix\"                         block/matrix  vec/vector                         bmult/mmult   bvecmult/mvmult vecbmult/vmmult                         vecdot/vdot   vecnorm/norm    vecouter/vouterr                         badd/madd     bsub/msub  vecadd/vadd vecsub/vsub                         bsize/msize   vecsize/vsize                         bneg/mneg     bxpose/mxpose   bident/mident                         vecneg/vneg   svecmult/svmult                         mkblock/mkmat                         -mkrmat -mkcmat -mkcvec                         bswaprow/swaprow       bswapcol/swapcol                         bdroprow/droprow       bgetrow/getrow bgetcol/getcol                         bsubscript/subscript   vecsubscript/vsubscript                         bupdate/update         vecupdate/vupdate                         vechd/vhd              vectl/vtl                         mergevecs/mergevectors                         binverse/minverse                         showblock/showmatrix showvec/showvectormodule Rsa (encrypt, decrypt, makeKeys)whereencrypt, decrypt :: Integer -> Integer -> String -> Stringencrypt n e = unlines . map (show . power e n . code) . collect (size n)decrypt n d = concat . map (decode . power d n . read) . lines-------- Converting between Strings and Integers -----------code :: String -> Integercode = foldl accum 0  where accum x y = (128 * x) + fromIntegral (fromEnum y)decode :: Integer -> Stringdecode n = reverse (expand n)   where expand 0 = []         expand x = toEnum (fromIntegral (x `mod` 128)) : expand (x `div` 128)collect :: Int -> [a] -> [[a]]collect 0 xs = []collect n [] = []collect n xs = take n xs : collect n (drop n xs)size :: Integer -> Intsize n = (length (show n) * 47) `div` 100	-- log_128 10 = 0.4745------- Constructing keys -------------------------makeKeys :: Integer -> Integer -> (Integer, Integer, Integer)makeKeys p' q' = (n, invert phi d, d)   where   p = nextPrime p'           q = nextPrime q'	   n = p*q	   phi = (p-1)*(q-1)	   d = nextPrime (p+q+1)nextPrime :: Integer -> IntegernextPrime a = head (filter prime [odd,odd+2..])  where  odd | even a = a+1             | True   = a         prime p = and [power (p-1) p x == 1 | x <- [3,5,7]]invert :: Integer -> Integer -> Integerinvert n a = if e<0 then e+n else e  where  e=iter n 0 a 1iter :: Integer -> Integer -> Integer -> Integer -> Integeriter g v 0  w = viter g v h w = iter h w (g - fact * h) (v - fact * w)    where  fact = g `div` h------- Fast exponentiation, mod m -----------------power :: Integer -> Integer -> Integer -> Integerpower 0 m x          = 1power n m x | even n = sqr (power (n `div` 2) m x) `mod` m	    | True   = (x * power (n-1) m x) `mod` msqr :: Integer -> Integersqr x = x * x\\section{AbsDensematrix}This module imports the contents of Densematrix and exports some of thefunctions renaming many of them for use by Matrix. The original %includestatement(from Matrix) is left as a comment at the foot of this file.\\begin{code}module AbsDensematrix(Block,Vec,bmult,bvecmult,vecbmult,vecdot,vecnorm,                      vecouter,badd,bsub,vecadd,vecsub,bsize,vecsize,bneg,                      bxpose,bident,vecneg,svecmult,mkblock,bswaprow,bswapcol,                      bdroprow,bgetrow,bgetcol,bsubscript,vecsubscript,bupdate,                      vecupdate,vechd,vectl,mergevecs,binverse,showblock,                     showvec, mkvec,mkrvec,vecpart,update2,veclist,matlist)       whereimport Densematrixtype Block = Matrixtype Vec = Vectorbmult = mmultbvecmult = matvecmultvecbmult = vmmultvecdot   = vdotvecnorm = normvecouter = vouterbadd = maddbsub = msubvecadd = vaddvecsub = vsubbsize = msizevecsize = vsizebneg = mnegbxpose = mxposebident = midentvecneg = vnegsvecmult = svmultmkblock = mkmatbswaprow = swaprowbswapcol = swapcolbdroprow = droprowbgetrow = getrowbgetcol = getcolbsubscript = subscriptvecsubscript = vsubscriptbupdate = updatevecupdate = vupdatevechd = vhdvectl = vtlmergevecs = mergevectorsbinverse = minverseshowblock = showmatrixshowvec = displayvector\\end{code}The original include statement from Matrix :- %include \"densematrix\"                         block/matrix  vec/vector                         bmult/mmult   bvecmult/mvmult vecbmult/vmmult                         vecdot/vdot   vecnorm/norm    vecouter/vouterr                         badd/madd     bsub/msub  vecadd/vadd vecsub/vsub                         bsize/msize   vecsize/vsize                         bneg/mneg     bxpose/mxpose   bident/mident                         vecneg/vneg   svecmult/svmult                         mkblock/mkmat                         -mkrmat -mkcmat -mkcvec                         bswaprow/swaprow       bswapcol/swapcol                         bdroprow/droprow       bgetrow/getrow bgetcol/getcol                         bsubscript/subscript   vecsubscript/vsubscript                         bupdate/update         vecupdate/vupdate                         vechd/vhd              vectl/vtl                         mergevecs/mergevectors                         binverse/minverse                         showblock/showmatrix showvec/showvectormodule Rsa (encrypt, decrypt, makeKeys)whereencrypt, decrypt :: Integer -> Integer -> String -> Stringencrypt n e = unlines . map (show . power e n . code) . collect (size n)decrypt n d = concat . map (decode . power d n . read) . lines-------- Converting between Strings and Integers -----------code :: String -> Integercode = foldl accum 0  where accum x y = (128 * x) + fromIntegral (fromEnum y)decode :: Integer -> Stringdecode n = reverse (expand n)   where expand 0 = []         expand x = toEnum (fromIntegral (x `mod` 128)) : expand (x `div` 128)collect :: Int -> [a] -> [[a]]collect 0 xs = []collect n [] = []collect n xs = take n xs : collect n (drop n xs)size :: Integer -> Intsize n = (length (show n) * 47) `div` 100	-- log_128 10 = 0.4745------- Constructing keys -------------------------makeKeys :: Integer -> Integer -> (Integer, Integer, Integer)makeKeys p' q' = (n, invert phi d, d)   where   p = nextPrime p'           q = nextPrime q'	   n = p*q	   phi = (p-1)*(q-1)	   d = nextPrime (p+q+1)nextPrime :: Integer -> IntegernextPrime a = head (filter prime [odd,odd+2..])  where  odd | even a = a+1             | True   = a         prime p = and [power (p-1) p x == 1 | x <- [3,5,7]]invert :: Integer -> Integer -> Integerinvert n a = if e<0 then e+n else e  where  e=iter n 0 a 1iter :: Integer -> Integer -> Integer -> Integer -> Integeriter g v 0  w = viter g v h w = iter h w (g - fact * h) (v - fact * w)    where  fact = g `div` h")
 //│ def length_lh_₁(ls¹¹) = case ls¹¹ of {
-//│ 	LH_C h² t² => (1 + length_lh_₁(t²))
+//│ 	LH_C h⁴ t⁴ => (1 + length_lh_₁(t⁴))
 //│ 	| LH_N  => 0}
 //│ def map_lh_₁(f⁶, ls⁸) = ls⁸(f⁶)
 //│ def map_lh_₂(f¹⁹, ls¹⁰) = ls¹⁰(f¹⁹)
 //│ def mappend_lh_₁(xs², ys²) = case xs² of {
-//│ 	LH_C h³ t³ => 
-//│ 		let t¹² = mappend_lh_₁(t³, ys²)
-//│ 		in let h¹² = h³
+//│ 	LH_C h² t² => 
+//│ 		let t¹² = mappend_lh_₁(t², ys²)
+//│ 		in let h¹² = h²
 //│ 		in (fun ys³ -> 
 //│ 			let t¹³ = mappend_lh_₂(t¹², ys³)
 //│ 			in let h¹³ = h¹²
 //│ 			in (fun f¹⁵ -> (fun i⁶ -> foldl_lh_₁(f¹⁵, f¹⁵(i⁶, h¹³), t¹³))))
 //│ 	| LH_N  => ys²}
 //│ def mappend_lh_₂(xs³, ys⁴) = xs³(ys⁴)
-//│ def power_lh_₁(_lh_power_arg1¹, _lh_power_arg2¹, _lh_power_arg3¹) = case _lh_power_arg1¹ of {
-//│ 	0  => 1
-//│ 	| _  => if even_lh_₁(_lh_power_arg1¹) then (sqr_lh_₁(power_lh_₁(div⁰(_lh_power_arg1¹, 2), _lh_power_arg2¹, _lh_power_arg3¹)) % _lh_power_arg2¹) else ((_lh_power_arg3¹ * power_lh_₁((_lh_power_arg1¹ - 1), _lh_power_arg2¹, _lh_power_arg3¹)) % _lh_power_arg2¹)}
-//│ def size_lh_₁(_lh_size_arg1¹) = div⁰((length_lh_₁(string_of_int⁰(_lh_size_arg1¹)) * 47), 100)
-//│ def sqr_lh_₁(_lh_sqr_arg1¹) = (_lh_sqr_arg1¹ * _lh_sqr_arg1¹)
+//│ def power_lh_₁(_lh_power_arg1¹, _lh_power_arg2¹, _lh_power_arg3¹) = if z_equal⁰(_lh_power_arg1¹, const0_lh_₂) then const1_lh_₁ else if even_lh_₁(_lh_power_arg1¹) then z_mod⁰(sqr_lh_₁(power_lh_₁(z_div⁰(_lh_power_arg1¹, const2_lh_₁), _lh_power_arg2¹, _lh_power_arg3¹)), _lh_power_arg2¹) else z_mod⁰(z_mul⁰(_lh_power_arg3¹, power_lh_₁(z_sub⁰(_lh_power_arg1¹, const1_lh_₂), _lh_power_arg2¹, _lh_power_arg3¹)), _lh_power_arg2¹)
+//│ def size_lh_₁(_lh_size_arg1¹) = div⁰((length_lh_₁(string_of_z⁰(_lh_size_arg1¹)) * 47), 100)
+//│ def sqr_lh_₁(_lh_sqr_arg1¹) = z_mul⁰(_lh_sqr_arg1¹, _lh_sqr_arg1¹)
 //│ def take_lh_₁(n¹, ls⁹) = if (n¹ > 0) then case ls⁹ of {
-//│ 	LH_C h⁶ t⁶ => 
-//│ 		let t¹⁴ = take_lh_₁((n¹ - 1), t⁶)
-//│ 		in let h¹⁴ = h⁶
+//│ 	LH_C h⁵ t⁵ => 
+//│ 		let t¹⁴ = take_lh_₁((n¹ - 1), t⁵)
+//│ 		in let h¹⁴ = h⁵
 //│ 		in (fun f¹⁶ -> (fun i⁷ -> foldl_lh_₂(f¹⁶, f¹⁶(i⁷, h¹⁴), t¹⁴)))
 //│ 	| LH_N  => (fun f¹⁷ -> (fun i⁸ -> i⁸))} else (fun f¹⁸ -> (fun i⁹ -> i⁹))
-//│ def testRsa_nofib_lh_₁(_lh_testRsa_nofib_arg1¹) = hash_lh_₁(encrypt_lh_₁(6367, 5189, input_lh_₁))
+//│ def testRsa_nofib_lh_₁(_lh_testRsa_nofib_arg1¹) = hash_lh_₁(encrypt_lh_₁(z_of_string⁰("2036450659413645137870851576872812267542175329986469156678671505255564383842535488743101632280716717779536712424613501441720195827856504007305662157107"), z_of_string⁰("387784473137902876992546516170169092918207676456888779623592396031349415024943784869634893342729620092877891356118467738167515879252473323905128540213"), input_lh_₁))
 //│ def unlines_lh_₁(_lh_unlines_arg1¹) = concat_lh_₁(map_lh_₂((fun l¹ -> mappend_lh_₁(l¹, 
 //│ 	let t¹⁵ = (fun ys⁶ -> ys⁶)
 //│ 	in let h¹⁵ = 'n'
@@ -399,7 +447,7 @@ testRsa_nofib $ primId 0
 //│ 
 //│ >>>>>>> after inlining >>>>>>>
 //│ testRsa_nofib_lh_₁(primId⁰(0))
-//│ def code_lh_₁(_lh_code_arg1⁰) = _lh_code_arg1⁰((fun x⁰ -> (fun y⁰ -> ((128 * x⁰) + int_of_char⁰(y⁰)))), 0)
+//│ def code_lh_₁(_lh_code_arg1⁰) = _lh_code_arg1⁰((fun x⁰ -> (fun y⁰ -> z_add⁰(z_mul⁰(const128_lh_₁, x⁰), z_of_int⁰(int_of_char⁰(y⁰))))), const0_lh_₃)
 //│ def collect_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰) = case _lh_collect_arg1⁰ of {
 //│ 	0  => (fun f³ -> (fun f⁴ -> (fun _lh_dummy⁰ -> (fun f⁵ -> (fun i² -> i²)))))
 //│ 	| _  => case _lh_collect_arg2⁰ of {
@@ -415,16 +463,26 @@ testRsa_nofib $ primId 0
 //│ 					in let h² = f¹⁰(h¹)
 //│ 					in (fun _lh_dummy² -> h²(t²(99)))))}}
 //│ def concat_lh_₁(lss⁰) = lss⁰(99)
+//│ def const0_lh_₁ = z_of_int⁰(0)
+//│ def const0_lh_₂ = z_of_int⁰(0)
+//│ def const0_lh_₃ = z_of_int⁰(0)
+//│ def const0_lh_₄ = z_of_int⁰(0)
+//│ def const128_lh_₁ = z_of_int⁰(128)
+//│ def const1_lh_₁ = z_of_int⁰(1)
+//│ def const1_lh_₂ = z_of_int⁰(1)
+//│ def const2_lh_₁ = z_of_int⁰(2)
+//│ def const2_lh_₂ = z_of_int⁰(2)
+//│ def const31_lh_₁ = z_of_int⁰(31)
 //│ def drop_lh_₁(_lh_drop_arg1⁰, _lh_drop_arg2⁰) = case _lh_drop_arg2⁰ of {
 //│ 	LH_N  => [LH_N]
 //│ 	| LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰ => if (_lh_drop_arg1⁰ > 0) then drop_lh_₁((_lh_drop_arg1⁰ - 1), _lh_drop_LH_C_1⁰) else [LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰]
 //│ 	| _  => error⁰}
-//│ def encrypt_lh_₁(_lh_encrypt_arg1⁰, _lh_encrypt_arg2⁰, _lh_funcomp_x⁰) = (fun _lh_funcomp_x¹ -> unlines_lh_₁(_lh_funcomp_x¹((fun _lh_funcomp_x² -> (fun _lh_funcomp_x³ -> string_of_int⁰(power_lh_₁(_lh_encrypt_arg2⁰, _lh_encrypt_arg1⁰, _lh_funcomp_x³)))(code_lh_₁(_lh_funcomp_x²))))))(collect_lh_₁(size_lh_₁(_lh_encrypt_arg1⁰), _lh_funcomp_x⁰))
-//│ def even_lh_₁(_lh_even_arg1⁰) = ((_lh_even_arg1⁰ % 2) == 0)
+//│ def encrypt_lh_₁(_lh_encrypt_arg1⁰, _lh_encrypt_arg2⁰, _lh_funcomp_x⁰) = (fun _lh_funcomp_x¹ -> unlines_lh_₁(_lh_funcomp_x¹((fun _lh_funcomp_x² -> (fun _lh_funcomp_x³ -> string_of_z⁰(power_lh_₁(_lh_encrypt_arg2⁰, _lh_encrypt_arg1⁰, _lh_funcomp_x³)))(code_lh_₁(_lh_funcomp_x²))))))(collect_lh_₁(size_lh_₁(_lh_encrypt_arg1⁰), _lh_funcomp_x⁰))
+//│ def even_lh_₁(_lh_even_arg1⁰) = z_equal⁰(z_mod⁰(_lh_even_arg1⁰, const2_lh_₂), const0_lh_₄)
 //│ def foldl_lh_₁(f¹, i¹, ls¹) = ls¹(f¹, i¹)
 //│ def foldl_lh_₂(f⁰, i⁰, ls⁰) = ls⁰(f⁰, i⁰)
-//│ def hash_lh_₁(_lh_hash_arg1⁰) = _lh_hash_arg1⁰((fun acc⁰ -> (fun c⁰ -> ((int_of_char⁰(c⁰) + acc⁰) * 31))), 0)
-//│ def input_lh_₁ = primId⁰([LH_C 'm' [LH_C 'o' [LH_C 'd' [LH_C 'u' [LH_C 'l' [LH_C 'e' [LH_C ' ' [LH_C 'R' [LH_C 's' [LH_C 'a' [LH_C ' ' [LH_C '(' [LH_C 'e' [LH_C 'n' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ',' [LH_C ' ' [LH_C 'd' [LH_C 'e' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ',' [LH_C ' ' [LH_C 'm' [LH_C 'a' [LH_C 'k' [LH_C 'e' [LH_C 'K' [LH_C 'e' [LH_C 'y' [LH_C 's' [LH_C ')' [LH_C 'w' [LH_C 'h' [LH_C 'e' [LH_C 'r' [LH_C 'e' [LH_C 'e' [LH_C 'n' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ',' [LH_C ' ' [LH_C 'd' [LH_C 'e' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ' ' [LH_C ':' [LH_C ':' [LH_C ' ' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C '-' [LH_C '>' [LH_C ' ' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C '-' [LH_C '>' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C ' ' [LH_C '-' [LH_C '>' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C 'e' [LH_C 'n' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ' ' [LH_C 'n' [LH_C ' ' [LH_C 'e' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'u' [LH_C 'n' [LH_C 'l' [LH_C 'i' [LH_C 'n' [LH_C 'e' [LH_C 's' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'm' [LH_C 'a' [LH_C 'p' [LH_C ' ' [LH_C '(' [LH_C 's' [LH_C 'h' [LH_C 'o' [LH_C 'w' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'p' [LH_C 'o' [LH_C 'w' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C 'e' [LH_C ' ' [LH_C 'n' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'c' [LH_C 'o' [LH_C 'd' [LH_C 'e' [LH_C ')' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'c' [LH_C 'o' [LH_C 'l' [LH_C 'l' [LH_C 'e' [LH_C 'c' [LH_C 't' [LH_C ' ' [LH_C '(' [LH_C 's' [LH_C 'i' [LH_C 'z' [LH_C 'e' [LH_C ' ' [LH_C 'n' [LH_C ')' [LH_C 'd' [LH_C 'e' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ' ' [LH_C 'n' [LH_C ' ' [LH_C 'd' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'c' [LH_C 'o' [LH_C 'n' [LH_C 'c' [LH_C 'a' [LH_C 't' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'm' [LH_C 'a' [LH_C 'p' [LH_C ' ' [LH_C '(' [LH_C 'd' [LH_C 'e' [LH_C 'c' [LH_C 'o' [LH_C 'd' [LH_C 'e' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'p' [LH_C 'o' [LH_C 'w' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C 'd' [LH_C ' ' [LH_C 'n' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'r' [LH_C 'e' [LH_C 'a' [LH_C 'd' [LH_C ')' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'l' [LH_C 'i' [LH_C 'n' [LH_C 'e' [LH_C 's' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C ' ' [LH_C 'C' [LH_C 'o' [LH_C 'n' [LH_C 'v' [LH_C 'e' [LH_C 'r' [LH_C 't' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C ' ' [LH_C 'b' [LH_C 'e' [LH_C 't' [LH_C 'w' [LH_C 'e' [LH_C 'e' [LH_C 'n' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C 's' [LH_C ' ' [LH_C 'a' [LH_C 'n' [LH_C 'd' [LH_C ' ' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'e' [LH_C 'r' [LH_C 's' [LH_C ' ' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C 'c' [LH_C 'o' [LH_C 'd' [LH_C 'e' [LH_C ' ' [LH_C ':' [LH_C ':' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C ' ' [LH_C '-' [LH_C '>' [LH_C ' ' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'e' [LH_C 'r' [LH_C 'c' [LH_C 'o' [LH_C 'd' [LH_C 'e' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'f' [LH_C 'o' [LH_C 'l' [LH_C 'd' [LH_C 'l' [LH_C ' ' [LH_C 'a' [LH_C 'c' [LH_C 'c' [LH_C 'u' [LH_C 'm' [LH_C ' ' [LH_C '0' [LH_C 'w' [LH_C 'h' [LH_C 'e' [LH_C 'r' [LH_C 'e' [LH_C ' ' [LH_C 'a' [LH_C 'c' [LH_C 'c' [LH_C 'u' [LH_C 'm' [LH_C ' ' [LH_C 'x' [LH_C ' ' [LH_C 'y' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C '(' [LH_C '1' [LH_C '2' [LH_C '8' [LH_C ' ' [LH_C '*' [LH_C ' ' [LH_C 'x' [LH_C ')' [LH_C ' ' [LH_C '+' [LH_C ' ' [LH_C 'f' [LH_C 'r' [LH_C 'o' [LH_C 'm' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'r' [LH_C 'a' [LH_C 'l' [LH_C ' ' [LH_C '(' [LH_C 'f' [LH_C 'r' [LH_C 'o' [LH_C 'm' [LH_C 'E' [LH_C 'n' [LH_C 'u' [LH_C 'm' [LH_C ' ' [LH_C 'y' [LH_C ')' [LH_N]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]])
+//│ def hash_lh_₁(_lh_hash_arg1⁰) = _lh_hash_arg1⁰((fun acc⁰ -> (fun c⁰ -> z_add⁰(z_of_int⁰(int_of_char⁰(c⁰)), z_mul⁰(acc⁰, const31_lh_₁)))), const0_lh_₁)
+//│ def input_lh_₁ = from_large_str⁰("module Rsa (encrypt, decrypt, makeKeys)whereencrypt, decrypt :: Integer -> Integer -> String -> Stringencrypt n e = unlines . map (show . power e n . code) . collect (size n)decrypt n d = concat . map (decode . power d n . read) . lines-------- Converting between Strings and Integers -----------code :: String -> Integercode = foldl accum 0  where accum x y = (128 * x) + fromIntegral (fromEnum y)decode :: Integer -> Stringdecode n = reverse (expand n)   where expand 0 = []         expand x = toEnum (fromIntegral (x `mod` 128)) : expand (x `div` 128)collect :: Int -> [a] -> [[a]]collect 0 xs = []collect n [] = []collect n xs = take n xs : collect n (drop n xs)size :: Integer -> Intsize n = (length (show n) * 47) `div` 100	-- log_128 10 = 0.4745------- Constructing keys -------------------------makeKeys :: Integer -> Integer -> (Integer, Integer, Integer)makeKeys p' q' = (n, invert phi d, d)   where   p = nextPrime p'           q = nextPrime q'	   n = p*q	   phi = (p-1)*(q-1)	   d = nextPrime (p+q+1)nextPrime :: Integer -> IntegernextPrime a = head (filter prime [odd,odd+2..])  where  odd | even a = a+1             | True   = a         prime p = and [power (p-1) p x == 1 | x <- [3,5,7]]invert :: Integer -> Integer -> Integerinvert n a = if e<0 then e+n else e  where  e=iter n 0 a 1iter :: Integer -> Integer -> Integer -> Integer -> Integeriter g v 0  w = viter g v h w = iter h w (g - fact * h) (v - fact * w)    where  fact = g `div` h------- Fast exponentiation, mod m -----------------power :: Integer -> Integer -> Integer -> Integerpower 0 m x          = 1power n m x | even n = sqr (power (n `div` 2) m x) `mod` m	    | True   = (x * power (n-1) m x) `mod` msqr :: Integer -> Integersqr x = x * x\\section{AbsDensematrix}This module imports the contents of Densematrix and exports some of thefunctions renaming many of them for use by Matrix. The original %includestatement(from Matrix) is left as a comment at the foot of this file.\\begin{code}module AbsDensematrix(Block,Vec,bmult,bvecmult,vecbmult,vecdot,vecnorm,                      vecouter,badd,bsub,vecadd,vecsub,bsize,vecsize,bneg,                      bxpose,bident,vecneg,svecmult,mkblock,bswaprow,bswapcol,                      bdroprow,bgetrow,bgetcol,bsubscript,vecsubscript,bupdate,                      vecupdate,vechd,vectl,mergevecs,binverse,showblock,                     showvec, mkvec,mkrvec,vecpart,update2,veclist,matlist)       whereimport Densematrixtype Block = Matrixtype Vec = Vectorbmult = mmultbvecmult = matvecmultvecbmult = vmmultvecdot   = vdotvecnorm = normvecouter = vouterbadd = maddbsub = msubvecadd = vaddvecsub = vsubbsize = msizevecsize = vsizebneg = mnegbxpose = mxposebident = midentvecneg = vnegsvecmult = svmultmkblock = mkmatbswaprow = swaprowbswapcol = swapcolbdroprow = droprowbgetrow = getrowbgetcol = getcolbsubscript = subscriptvecsubscript = vsubscriptbupdate = updatevecupdate = vupdatevechd = vhdvectl = vtlmergevecs = mergevectorsbinverse = minverseshowblock = showmatrixshowvec = displayvector\\end{code}The original include statement from Matrix :- %include \"densematrix\"                         block/matrix  vec/vector                         bmult/mmult   bvecmult/mvmult vecbmult/vmmult                         vecdot/vdot   vecnorm/norm    vecouter/vouterr                         badd/madd     bsub/msub  vecadd/vadd vecsub/vsub                         bsize/msize   vecsize/vsize                         bneg/mneg     bxpose/mxpose   bident/mident                         vecneg/vneg   svecmult/svmult                         mkblock/mkmat                         -mkrmat -mkcmat -mkcvec                         bswaprow/swaprow       bswapcol/swapcol                         bdroprow/droprow       bgetrow/getrow bgetcol/getcol                         bsubscript/subscript   vecsubscript/vsubscript                         bupdate/update         vecupdate/vupdate                         vechd/vhd              vectl/vtl                         mergevecs/mergevectors                         binverse/minverse                         showblock/showmatrix showvec/showvectormodule Rsa (encrypt, decrypt, makeKeys)whereencrypt, decrypt :: Integer -> Integer -> String -> Stringencrypt n e = unlines . map (show . power e n . code) . collect (size n)decrypt n d = concat . map (decode . power d n . read) . lines-------- Converting between Strings and Integers -----------code :: String -> Integercode = foldl accum 0  where accum x y = (128 * x) + fromIntegral (fromEnum y)decode :: Integer -> Stringdecode n = reverse (expand n)   where expand 0 = []         expand x = toEnum (fromIntegral (x `mod` 128)) : expand (x `div` 128)collect :: Int -> [a] -> [[a]]collect 0 xs = []collect n [] = []collect n xs = take n xs : collect n (drop n xs)size :: Integer -> Intsize n = (length (show n) * 47) `div` 100	-- log_128 10 = 0.4745------- Constructing keys -------------------------makeKeys :: Integer -> Integer -> (Integer, Integer, Integer)makeKeys p' q' = (n, invert phi d, d)   where   p = nextPrime p'           q = nextPrime q'	   n = p*q	   phi = (p-1)*(q-1)	   d = nextPrime (p+q+1)nextPrime :: Integer -> IntegernextPrime a = head (filter prime [odd,odd+2..])  where  odd | even a = a+1             | True   = a         prime p = and [power (p-1) p x == 1 | x <- [3,5,7]]invert :: Integer -> Integer -> Integerinvert n a = if e<0 then e+n else e  where  e=iter n 0 a 1iter :: Integer -> Integer -> Integer -> Integer -> Integeriter g v 0  w = viter g v h w = iter h w (g - fact * h) (v - fact * w)    where  fact = g `div` h------- Fast exponentiation, mod m -----------------power :: Integer -> Integer -> Integer -> Integerpower 0 m x          = 1power n m x | even n = sqr (power (n `div` 2) m x) `mod` m	    | True   = (x * power (n-1) m x) `mod` msqr :: Integer -> Integersqr x = x * x\\section{AbsDensematrix}This module imports the contents of Densematrix and exports some of thefunctions renaming many of them for use by Matrix. The original %includestatement(from Matrix) is left as a comment at the foot of this file.\\begin{code}module AbsDensematrix(Block,Vec,bmult,bvecmult,vecbmult,vecdot,vecnorm,                      vecouter,badd,bsub,vecadd,vecsub,bsize,vecsize,bneg,                      bxpose,bident,vecneg,svecmult,mkblock,bswaprow,bswapcol,                      bdroprow,bgetrow,bgetcol,bsubscript,vecsubscript,bupdate,                      vecupdate,vechd,vectl,mergevecs,binverse,showblock,                     showvec, mkvec,mkrvec,vecpart,update2,veclist,matlist)       whereimport Densematrixtype Block = Matrixtype Vec = Vectorbmult = mmultbvecmult = matvecmultvecbmult = vmmultvecdot   = vdotvecnorm = normvecouter = vouterbadd = maddbsub = msubvecadd = vaddvecsub = vsubbsize = msizevecsize = vsizebneg = mnegbxpose = mxposebident = midentvecneg = vnegsvecmult = svmultmkblock = mkmatbswaprow = swaprowbswapcol = swapcolbdroprow = droprowbgetrow = getrowbgetcol = getcolbsubscript = subscriptvecsubscript = vsubscriptbupdate = updatevecupdate = vupdatevechd = vhdvectl = vtlmergevecs = mergevectorsbinverse = minverseshowblock = showmatrixshowvec = displayvector\\end{code}The original include statement from Matrix :- %include \"densematrix\"                         block/matrix  vec/vector                         bmult/mmult   bvecmult/mvmult vecbmult/vmmult                         vecdot/vdot   vecnorm/norm    vecouter/vouterr                         badd/madd     bsub/msub  vecadd/vadd vecsub/vsub                         bsize/msize   vecsize/vsize                         bneg/mneg     bxpose/mxpose   bident/mident                         vecneg/vneg   svecmult/svmult                         mkblock/mkmat                         -mkrmat -mkcmat -mkcvec                         bswaprow/swaprow       bswapcol/swapcol                         bdroprow/droprow       bgetrow/getrow bgetcol/getcol                         bsubscript/subscript   vecsubscript/vsubscript                         bupdate/update         vecupdate/vupdate                         vechd/vhd              vectl/vtl                         mergevecs/mergevectors                         binverse/minverse                         showblock/showmatrix showvec/showvectormodule Rsa (encrypt, decrypt, makeKeys)whereencrypt, decrypt :: Integer -> Integer -> String -> Stringencrypt n e = unlines . map (show . power e n . code) . collect (size n)decrypt n d = concat . map (decode . power d n . read) . lines-------- Converting between Strings and Integers -----------code :: String -> Integercode = foldl accum 0  where accum x y = (128 * x) + fromIntegral (fromEnum y)decode :: Integer -> Stringdecode n = reverse (expand n)   where expand 0 = []         expand x = toEnum (fromIntegral (x `mod` 128)) : expand (x `div` 128)collect :: Int -> [a] -> [[a]]collect 0 xs = []collect n [] = []collect n xs = take n xs : collect n (drop n xs)size :: Integer -> Intsize n = (length (show n) * 47) `div` 100	-- log_128 10 = 0.4745------- Constructing keys -------------------------makeKeys :: Integer -> Integer -> (Integer, Integer, Integer)makeKeys p' q' = (n, invert phi d, d)   where   p = nextPrime p'           q = nextPrime q'	   n = p*q	   phi = (p-1)*(q-1)	   d = nextPrime (p+q+1)nextPrime :: Integer -> IntegernextPrime a = head (filter prime [odd,odd+2..])  where  odd | even a = a+1             | True   = a         prime p = and [power (p-1) p x == 1 | x <- [3,5,7]]invert :: Integer -> Integer -> Integerinvert n a = if e<0 then e+n else e  where  e=iter n 0 a 1iter :: Integer -> Integer -> Integer -> Integer -> Integeriter g v 0  w = viter g v h w = iter h w (g - fact * h) (v - fact * w)    where  fact = g `div` h")
 //│ def length_lh_₁(ls⁵) = case ls⁵ of {
 //│ 	LH_C h⁸ t⁸ => (1 + length_lh_₁(t⁸))
 //│ 	| LH_N  => 0}
@@ -440,18 +498,16 @@ testRsa_nofib $ primId 0
 //│ 			in (fun f¹¹ -> (fun i⁴ -> t⁵(f¹¹, f¹¹(i⁴, h⁵)))))
 //│ 	| LH_N  => ys⁰}
 //│ def mappend_lh_₂(xs¹, ys²) = xs¹(ys²)
-//│ def power_lh_₁(_lh_power_arg1⁰, _lh_power_arg2⁰, _lh_power_arg3⁰) = case _lh_power_arg1⁰ of {
-//│ 	0  => 1
-//│ 	| _  => if even_lh_₁(_lh_power_arg1⁰) then (sqr_lh_₁(power_lh_₁(div⁰(_lh_power_arg1⁰, 2), _lh_power_arg2⁰, _lh_power_arg3⁰)) % _lh_power_arg2⁰) else ((_lh_power_arg3⁰ * power_lh_₁((_lh_power_arg1⁰ - 1), _lh_power_arg2⁰, _lh_power_arg3⁰)) % _lh_power_arg2⁰)}
-//│ def size_lh_₁(_lh_size_arg1⁰) = div⁰((length_lh_₁(string_of_int⁰(_lh_size_arg1⁰)) * 47), 100)
-//│ def sqr_lh_₁(_lh_sqr_arg1⁰) = (_lh_sqr_arg1⁰ * _lh_sqr_arg1⁰)
+//│ def power_lh_₁(_lh_power_arg1⁰, _lh_power_arg2⁰, _lh_power_arg3⁰) = if z_equal⁰(_lh_power_arg1⁰, const0_lh_₂) then const1_lh_₁ else if even_lh_₁(_lh_power_arg1⁰) then z_mod⁰(sqr_lh_₁(power_lh_₁(z_div⁰(_lh_power_arg1⁰, const2_lh_₁), _lh_power_arg2⁰, _lh_power_arg3⁰)), _lh_power_arg2⁰) else z_mod⁰(z_mul⁰(_lh_power_arg3⁰, power_lh_₁(z_sub⁰(_lh_power_arg1⁰, const1_lh_₂), _lh_power_arg2⁰, _lh_power_arg3⁰)), _lh_power_arg2⁰)
+//│ def size_lh_₁(_lh_size_arg1⁰) = div⁰((length_lh_₁(string_of_z⁰(_lh_size_arg1⁰)) * 47), 100)
+//│ def sqr_lh_₁(_lh_sqr_arg1⁰) = z_mul⁰(_lh_sqr_arg1⁰, _lh_sqr_arg1⁰)
 //│ def take_lh_₁(n⁰, ls³) = if (n⁰ > 0) then case ls³ of {
 //│ 	LH_C h⁶ t⁶ => 
 //│ 		let t⁷ = take_lh_₁((n⁰ - 1), t⁶)
 //│ 		in let h⁷ = h⁶
 //│ 		in (fun f¹² -> (fun i⁵ -> t⁷(f¹², f¹²(i⁵, h⁷))))
 //│ 	| LH_N  => (fun f¹³ -> (fun i⁶ -> i⁶))} else (fun f¹⁴ -> (fun i⁷ -> i⁷))
-//│ def testRsa_nofib_lh_₁(_lh_testRsa_nofib_arg1⁰) = hash_lh_₁(encrypt_lh_₁(6367, 5189, input_lh_₁))
+//│ def testRsa_nofib_lh_₁(_lh_testRsa_nofib_arg1⁰) = hash_lh_₁(encrypt_lh_₁(z_of_string⁰("2036450659413645137870851576872812267542175329986469156678671505255564383842535488743101632280716717779536712424613501441720195827856504007305662157107"), z_of_string⁰("387784473137902876992546516170169092918207676456888779623592396031349415024943784869634893342729620092877891356118467738167515879252473323905128540213"), input_lh_₁))
 //│ def unlines_lh_₁(_lh_unlines_arg1⁰) = _lh_unlines_arg1⁰((fun l⁰ -> mappend_lh_₁(l⁰, 
 //│ 	let t⁹ = (fun ys³ -> ys³)
 //│ 	in let h⁹ = 'n'
@@ -463,7 +519,7 @@ testRsa_nofib $ primId 0
 //│ 
 //│ >>>>>>> after floating out >>>>>>>
 //│ testRsa_nofib_lh_₁(primId⁰(0))
-//│ def code_lh_₁(_lh_code_arg1⁰) = _lh_code_arg1⁰((fun x⁰ -> (fun y⁰ -> ((128 * x⁰) + int_of_char⁰(y⁰)))), 0)
+//│ def code_lh_₁(_lh_code_arg1⁰) = _lh_code_arg1⁰((fun x⁰ -> (fun y⁰ -> z_add⁰(z_mul⁰(const128_lh_₁, x⁰), z_of_int⁰(int_of_char⁰(y⁰))))), const0_lh_₃)
 //│ def collect_lh_₁(_lh_collect_arg1⁰, _lh_collect_arg2⁰) = case _lh_collect_arg1⁰ of {
 //│ 	0  => (fun f³ -> (fun f⁴ -> (fun _lh_dummy⁰ -> (fun f⁵ -> (fun i² -> i²)))))
 //│ 	| _  => case _lh_collect_arg2⁰ of {
@@ -479,16 +535,26 @@ testRsa_nofib $ primId 0
 //│ 					in let h² = f¹⁰(h¹)
 //│ 					in (fun _lh_dummy² -> h²(t²(99)))))}}
 //│ def concat_lh_₁(lss⁰) = lss⁰(99)
+//│ def const0_lh_₁ = z_of_int⁰(0)
+//│ def const0_lh_₂ = z_of_int⁰(0)
+//│ def const0_lh_₃ = z_of_int⁰(0)
+//│ def const0_lh_₄ = z_of_int⁰(0)
+//│ def const128_lh_₁ = z_of_int⁰(128)
+//│ def const1_lh_₁ = z_of_int⁰(1)
+//│ def const1_lh_₂ = z_of_int⁰(1)
+//│ def const2_lh_₁ = z_of_int⁰(2)
+//│ def const2_lh_₂ = z_of_int⁰(2)
+//│ def const31_lh_₁ = z_of_int⁰(31)
 //│ def drop_lh_₁(_lh_drop_arg1⁰, _lh_drop_arg2⁰) = case _lh_drop_arg2⁰ of {
 //│ 	LH_N  => [LH_N]
 //│ 	| LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰ => if (_lh_drop_arg1⁰ > 0) then drop_lh_₁((_lh_drop_arg1⁰ - 1), _lh_drop_LH_C_1⁰) else [LH_C _lh_drop_LH_C_0⁰ _lh_drop_LH_C_1⁰]
 //│ 	| _  => error⁰}
-//│ def encrypt_lh_₁(_lh_encrypt_arg1⁰, _lh_encrypt_arg2⁰, _lh_funcomp_x⁰) = (fun _lh_funcomp_x¹ -> unlines_lh_₁(_lh_funcomp_x¹((fun _lh_funcomp_x² -> (fun _lh_funcomp_x³ -> string_of_int⁰(power_lh_₁(_lh_encrypt_arg2⁰, _lh_encrypt_arg1⁰, _lh_funcomp_x³)))(code_lh_₁(_lh_funcomp_x²))))))(collect_lh_₁(size_lh_₁(_lh_encrypt_arg1⁰), _lh_funcomp_x⁰))
-//│ def even_lh_₁(_lh_even_arg1⁰) = ((_lh_even_arg1⁰ % 2) == 0)
+//│ def encrypt_lh_₁(_lh_encrypt_arg1⁰, _lh_encrypt_arg2⁰, _lh_funcomp_x⁰) = (fun _lh_funcomp_x¹ -> unlines_lh_₁(_lh_funcomp_x¹((fun _lh_funcomp_x² -> (fun _lh_funcomp_x³ -> string_of_z⁰(power_lh_₁(_lh_encrypt_arg2⁰, _lh_encrypt_arg1⁰, _lh_funcomp_x³)))(code_lh_₁(_lh_funcomp_x²))))))(collect_lh_₁(size_lh_₁(_lh_encrypt_arg1⁰), _lh_funcomp_x⁰))
+//│ def even_lh_₁(_lh_even_arg1⁰) = z_equal⁰(z_mod⁰(_lh_even_arg1⁰, const2_lh_₂), const0_lh_₄)
 //│ def foldl_lh_₁(f¹, i¹, ls¹) = ls¹(f¹, i¹)
 //│ def foldl_lh_₂(f⁰, i⁰, ls⁰) = ls⁰(f⁰, i⁰)
-//│ def hash_lh_₁(_lh_hash_arg1⁰) = _lh_hash_arg1⁰((fun acc⁰ -> (fun c⁰ -> ((int_of_char⁰(c⁰) + acc⁰) * 31))), 0)
-//│ def input_lh_₁ = primId⁰([LH_C 'm' [LH_C 'o' [LH_C 'd' [LH_C 'u' [LH_C 'l' [LH_C 'e' [LH_C ' ' [LH_C 'R' [LH_C 's' [LH_C 'a' [LH_C ' ' [LH_C '(' [LH_C 'e' [LH_C 'n' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ',' [LH_C ' ' [LH_C 'd' [LH_C 'e' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ',' [LH_C ' ' [LH_C 'm' [LH_C 'a' [LH_C 'k' [LH_C 'e' [LH_C 'K' [LH_C 'e' [LH_C 'y' [LH_C 's' [LH_C ')' [LH_C 'w' [LH_C 'h' [LH_C 'e' [LH_C 'r' [LH_C 'e' [LH_C 'e' [LH_C 'n' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ',' [LH_C ' ' [LH_C 'd' [LH_C 'e' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ' ' [LH_C ':' [LH_C ':' [LH_C ' ' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C '-' [LH_C '>' [LH_C ' ' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C '-' [LH_C '>' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C ' ' [LH_C '-' [LH_C '>' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C 'e' [LH_C 'n' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ' ' [LH_C 'n' [LH_C ' ' [LH_C 'e' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'u' [LH_C 'n' [LH_C 'l' [LH_C 'i' [LH_C 'n' [LH_C 'e' [LH_C 's' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'm' [LH_C 'a' [LH_C 'p' [LH_C ' ' [LH_C '(' [LH_C 's' [LH_C 'h' [LH_C 'o' [LH_C 'w' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'p' [LH_C 'o' [LH_C 'w' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C 'e' [LH_C ' ' [LH_C 'n' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'c' [LH_C 'o' [LH_C 'd' [LH_C 'e' [LH_C ')' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'c' [LH_C 'o' [LH_C 'l' [LH_C 'l' [LH_C 'e' [LH_C 'c' [LH_C 't' [LH_C ' ' [LH_C '(' [LH_C 's' [LH_C 'i' [LH_C 'z' [LH_C 'e' [LH_C ' ' [LH_C 'n' [LH_C ')' [LH_C 'd' [LH_C 'e' [LH_C 'c' [LH_C 'r' [LH_C 'y' [LH_C 'p' [LH_C 't' [LH_C ' ' [LH_C 'n' [LH_C ' ' [LH_C 'd' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'c' [LH_C 'o' [LH_C 'n' [LH_C 'c' [LH_C 'a' [LH_C 't' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'm' [LH_C 'a' [LH_C 'p' [LH_C ' ' [LH_C '(' [LH_C 'd' [LH_C 'e' [LH_C 'c' [LH_C 'o' [LH_C 'd' [LH_C 'e' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'p' [LH_C 'o' [LH_C 'w' [LH_C 'e' [LH_C 'r' [LH_C ' ' [LH_C 'd' [LH_C ' ' [LH_C 'n' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'r' [LH_C 'e' [LH_C 'a' [LH_C 'd' [LH_C ')' [LH_C ' ' [LH_C '.' [LH_C ' ' [LH_C 'l' [LH_C 'i' [LH_C 'n' [LH_C 'e' [LH_C 's' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C ' ' [LH_C 'C' [LH_C 'o' [LH_C 'n' [LH_C 'v' [LH_C 'e' [LH_C 'r' [LH_C 't' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C ' ' [LH_C 'b' [LH_C 'e' [LH_C 't' [LH_C 'w' [LH_C 'e' [LH_C 'e' [LH_C 'n' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C 's' [LH_C ' ' [LH_C 'a' [LH_C 'n' [LH_C 'd' [LH_C ' ' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'e' [LH_C 'r' [LH_C 's' [LH_C ' ' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C '-' [LH_C 'c' [LH_C 'o' [LH_C 'd' [LH_C 'e' [LH_C ' ' [LH_C ':' [LH_C ':' [LH_C ' ' [LH_C 'S' [LH_C 't' [LH_C 'r' [LH_C 'i' [LH_C 'n' [LH_C 'g' [LH_C ' ' [LH_C '-' [LH_C '>' [LH_C ' ' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'e' [LH_C 'r' [LH_C 'c' [LH_C 'o' [LH_C 'd' [LH_C 'e' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C 'f' [LH_C 'o' [LH_C 'l' [LH_C 'd' [LH_C 'l' [LH_C ' ' [LH_C 'a' [LH_C 'c' [LH_C 'c' [LH_C 'u' [LH_C 'm' [LH_C ' ' [LH_C '0' [LH_C 'w' [LH_C 'h' [LH_C 'e' [LH_C 'r' [LH_C 'e' [LH_C ' ' [LH_C 'a' [LH_C 'c' [LH_C 'c' [LH_C 'u' [LH_C 'm' [LH_C ' ' [LH_C 'x' [LH_C ' ' [LH_C 'y' [LH_C ' ' [LH_C '=' [LH_C ' ' [LH_C '(' [LH_C '1' [LH_C '2' [LH_C '8' [LH_C ' ' [LH_C '*' [LH_C ' ' [LH_C 'x' [LH_C ')' [LH_C ' ' [LH_C '+' [LH_C ' ' [LH_C 'f' [LH_C 'r' [LH_C 'o' [LH_C 'm' [LH_C 'I' [LH_C 'n' [LH_C 't' [LH_C 'e' [LH_C 'g' [LH_C 'r' [LH_C 'a' [LH_C 'l' [LH_C ' ' [LH_C '(' [LH_C 'f' [LH_C 'r' [LH_C 'o' [LH_C 'm' [LH_C 'E' [LH_C 'n' [LH_C 'u' [LH_C 'm' [LH_C ' ' [LH_C 'y' [LH_C ')' [LH_N]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]])
+//│ def hash_lh_₁(_lh_hash_arg1⁰) = _lh_hash_arg1⁰((fun acc⁰ -> (fun c⁰ -> z_add⁰(z_of_int⁰(int_of_char⁰(c⁰)), z_mul⁰(acc⁰, const31_lh_₁)))), const0_lh_₁)
+//│ def input_lh_₁ = from_large_str⁰("module Rsa (encrypt, decrypt, makeKeys)whereencrypt, decrypt :: Integer -> Integer -> String -> Stringencrypt n e = unlines . map (show . power e n . code) . collect (size n)decrypt n d = concat . map (decode . power d n . read) . lines-------- Converting between Strings and Integers -----------code :: String -> Integercode = foldl accum 0  where accum x y = (128 * x) + fromIntegral (fromEnum y)decode :: Integer -> Stringdecode n = reverse (expand n)   where expand 0 = []         expand x = toEnum (fromIntegral (x `mod` 128)) : expand (x `div` 128)collect :: Int -> [a] -> [[a]]collect 0 xs = []collect n [] = []collect n xs = take n xs : collect n (drop n xs)size :: Integer -> Intsize n = (length (show n) * 47) `div` 100	-- log_128 10 = 0.4745------- Constructing keys -------------------------makeKeys :: Integer -> Integer -> (Integer, Integer, Integer)makeKeys p' q' = (n, invert phi d, d)   where   p = nextPrime p'           q = nextPrime q'	   n = p*q	   phi = (p-1)*(q-1)	   d = nextPrime (p+q+1)nextPrime :: Integer -> IntegernextPrime a = head (filter prime [odd,odd+2..])  where  odd | even a = a+1             | True   = a         prime p = and [power (p-1) p x == 1 | x <- [3,5,7]]invert :: Integer -> Integer -> Integerinvert n a = if e<0 then e+n else e  where  e=iter n 0 a 1iter :: Integer -> Integer -> Integer -> Integer -> Integeriter g v 0  w = viter g v h w = iter h w (g - fact * h) (v - fact * w)    where  fact = g `div` h------- Fast exponentiation, mod m -----------------power :: Integer -> Integer -> Integer -> Integerpower 0 m x          = 1power n m x | even n = sqr (power (n `div` 2) m x) `mod` m	    | True   = (x * power (n-1) m x) `mod` msqr :: Integer -> Integersqr x = x * x\\section{AbsDensematrix}This module imports the contents of Densematrix and exports some of thefunctions renaming many of them for use by Matrix. The original %includestatement(from Matrix) is left as a comment at the foot of this file.\\begin{code}module AbsDensematrix(Block,Vec,bmult,bvecmult,vecbmult,vecdot,vecnorm,                      vecouter,badd,bsub,vecadd,vecsub,bsize,vecsize,bneg,                      bxpose,bident,vecneg,svecmult,mkblock,bswaprow,bswapcol,                      bdroprow,bgetrow,bgetcol,bsubscript,vecsubscript,bupdate,                      vecupdate,vechd,vectl,mergevecs,binverse,showblock,                     showvec, mkvec,mkrvec,vecpart,update2,veclist,matlist)       whereimport Densematrixtype Block = Matrixtype Vec = Vectorbmult = mmultbvecmult = matvecmultvecbmult = vmmultvecdot   = vdotvecnorm = normvecouter = vouterbadd = maddbsub = msubvecadd = vaddvecsub = vsubbsize = msizevecsize = vsizebneg = mnegbxpose = mxposebident = midentvecneg = vnegsvecmult = svmultmkblock = mkmatbswaprow = swaprowbswapcol = swapcolbdroprow = droprowbgetrow = getrowbgetcol = getcolbsubscript = subscriptvecsubscript = vsubscriptbupdate = updatevecupdate = vupdatevechd = vhdvectl = vtlmergevecs = mergevectorsbinverse = minverseshowblock = showmatrixshowvec = displayvector\\end{code}The original include statement from Matrix :- %include \"densematrix\"                         block/matrix  vec/vector                         bmult/mmult   bvecmult/mvmult vecbmult/vmmult                         vecdot/vdot   vecnorm/norm    vecouter/vouterr                         badd/madd     bsub/msub  vecadd/vadd vecsub/vsub                         bsize/msize   vecsize/vsize                         bneg/mneg     bxpose/mxpose   bident/mident                         vecneg/vneg   svecmult/svmult                         mkblock/mkmat                         -mkrmat -mkcmat -mkcvec                         bswaprow/swaprow       bswapcol/swapcol                         bdroprow/droprow       bgetrow/getrow bgetcol/getcol                         bsubscript/subscript   vecsubscript/vsubscript                         bupdate/update         vecupdate/vupdate                         vechd/vhd              vectl/vtl                         mergevecs/mergevectors                         binverse/minverse                         showblock/showmatrix showvec/showvectormodule Rsa (encrypt, decrypt, makeKeys)whereencrypt, decrypt :: Integer -> Integer -> String -> Stringencrypt n e = unlines . map (show . power e n . code) . collect (size n)decrypt n d = concat . map (decode . power d n . read) . lines-------- Converting between Strings and Integers -----------code :: String -> Integercode = foldl accum 0  where accum x y = (128 * x) + fromIntegral (fromEnum y)decode :: Integer -> Stringdecode n = reverse (expand n)   where expand 0 = []         expand x = toEnum (fromIntegral (x `mod` 128)) : expand (x `div` 128)collect :: Int -> [a] -> [[a]]collect 0 xs = []collect n [] = []collect n xs = take n xs : collect n (drop n xs)size :: Integer -> Intsize n = (length (show n) * 47) `div` 100	-- log_128 10 = 0.4745------- Constructing keys -------------------------makeKeys :: Integer -> Integer -> (Integer, Integer, Integer)makeKeys p' q' = (n, invert phi d, d)   where   p = nextPrime p'           q = nextPrime q'	   n = p*q	   phi = (p-1)*(q-1)	   d = nextPrime (p+q+1)nextPrime :: Integer -> IntegernextPrime a = head (filter prime [odd,odd+2..])  where  odd | even a = a+1             | True   = a         prime p = and [power (p-1) p x == 1 | x <- [3,5,7]]invert :: Integer -> Integer -> Integerinvert n a = if e<0 then e+n else e  where  e=iter n 0 a 1iter :: Integer -> Integer -> Integer -> Integer -> Integeriter g v 0  w = viter g v h w = iter h w (g - fact * h) (v - fact * w)    where  fact = g `div` h------- Fast exponentiation, mod m -----------------power :: Integer -> Integer -> Integer -> Integerpower 0 m x          = 1power n m x | even n = sqr (power (n `div` 2) m x) `mod` m	    | True   = (x * power (n-1) m x) `mod` msqr :: Integer -> Integersqr x = x * x\\section{AbsDensematrix}This module imports the contents of Densematrix and exports some of thefunctions renaming many of them for use by Matrix. The original %includestatement(from Matrix) is left as a comment at the foot of this file.\\begin{code}module AbsDensematrix(Block,Vec,bmult,bvecmult,vecbmult,vecdot,vecnorm,                      vecouter,badd,bsub,vecadd,vecsub,bsize,vecsize,bneg,                      bxpose,bident,vecneg,svecmult,mkblock,bswaprow,bswapcol,                      bdroprow,bgetrow,bgetcol,bsubscript,vecsubscript,bupdate,                      vecupdate,vechd,vectl,mergevecs,binverse,showblock,                     showvec, mkvec,mkrvec,vecpart,update2,veclist,matlist)       whereimport Densematrixtype Block = Matrixtype Vec = Vectorbmult = mmultbvecmult = matvecmultvecbmult = vmmultvecdot   = vdotvecnorm = normvecouter = vouterbadd = maddbsub = msubvecadd = vaddvecsub = vsubbsize = msizevecsize = vsizebneg = mnegbxpose = mxposebident = midentvecneg = vnegsvecmult = svmultmkblock = mkmatbswaprow = swaprowbswapcol = swapcolbdroprow = droprowbgetrow = getrowbgetcol = getcolbsubscript = subscriptvecsubscript = vsubscriptbupdate = updatevecupdate = vupdatevechd = vhdvectl = vtlmergevecs = mergevectorsbinverse = minverseshowblock = showmatrixshowvec = displayvector\\end{code}The original include statement from Matrix :- %include \"densematrix\"                         block/matrix  vec/vector                         bmult/mmult   bvecmult/mvmult vecbmult/vmmult                         vecdot/vdot   vecnorm/norm    vecouter/vouterr                         badd/madd     bsub/msub  vecadd/vadd vecsub/vsub                         bsize/msize   vecsize/vsize                         bneg/mneg     bxpose/mxpose   bident/mident                         vecneg/vneg   svecmult/svmult                         mkblock/mkmat                         -mkrmat -mkcmat -mkcvec                         bswaprow/swaprow       bswapcol/swapcol                         bdroprow/droprow       bgetrow/getrow bgetcol/getcol                         bsubscript/subscript   vecsubscript/vsubscript                         bupdate/update         vecupdate/vupdate                         vechd/vhd              vectl/vtl                         mergevecs/mergevectors                         binverse/minverse                         showblock/showmatrix showvec/showvectormodule Rsa (encrypt, decrypt, makeKeys)whereencrypt, decrypt :: Integer -> Integer -> String -> Stringencrypt n e = unlines . map (show . power e n . code) . collect (size n)decrypt n d = concat . map (decode . power d n . read) . lines-------- Converting between Strings and Integers -----------code :: String -> Integercode = foldl accum 0  where accum x y = (128 * x) + fromIntegral (fromEnum y)decode :: Integer -> Stringdecode n = reverse (expand n)   where expand 0 = []         expand x = toEnum (fromIntegral (x `mod` 128)) : expand (x `div` 128)collect :: Int -> [a] -> [[a]]collect 0 xs = []collect n [] = []collect n xs = take n xs : collect n (drop n xs)size :: Integer -> Intsize n = (length (show n) * 47) `div` 100	-- log_128 10 = 0.4745------- Constructing keys -------------------------makeKeys :: Integer -> Integer -> (Integer, Integer, Integer)makeKeys p' q' = (n, invert phi d, d)   where   p = nextPrime p'           q = nextPrime q'	   n = p*q	   phi = (p-1)*(q-1)	   d = nextPrime (p+q+1)nextPrime :: Integer -> IntegernextPrime a = head (filter prime [odd,odd+2..])  where  odd | even a = a+1             | True   = a         prime p = and [power (p-1) p x == 1 | x <- [3,5,7]]invert :: Integer -> Integer -> Integerinvert n a = if e<0 then e+n else e  where  e=iter n 0 a 1iter :: Integer -> Integer -> Integer -> Integer -> Integeriter g v 0  w = viter g v h w = iter h w (g - fact * h) (v - fact * w)    where  fact = g `div` h")
 //│ def length_lh_₁(ls⁵) = case ls⁵ of {
 //│ 	LH_C h⁸ t⁸ => (1 + length_lh_₁(t⁸))
 //│ 	| LH_N  => 0}
@@ -504,18 +570,16 @@ testRsa_nofib $ primId 0
 //│ 			in (fun f¹¹ -> (fun i⁴ -> t⁵(f¹¹, f¹¹(i⁴, h⁵)))))
 //│ 	| LH_N  => ys⁰}
 //│ def mappend_lh_₂(xs¹, ys²) = xs¹(ys²)
-//│ def power_lh_₁(_lh_power_arg1⁰, _lh_power_arg2⁰, _lh_power_arg3⁰) = case _lh_power_arg1⁰ of {
-//│ 	0  => 1
-//│ 	| _  => if even_lh_₁(_lh_power_arg1⁰) then (sqr_lh_₁(power_lh_₁(div⁰(_lh_power_arg1⁰, 2), _lh_power_arg2⁰, _lh_power_arg3⁰)) % _lh_power_arg2⁰) else ((_lh_power_arg3⁰ * power_lh_₁((_lh_power_arg1⁰ - 1), _lh_power_arg2⁰, _lh_power_arg3⁰)) % _lh_power_arg2⁰)}
-//│ def size_lh_₁(_lh_size_arg1⁰) = div⁰((length_lh_₁(string_of_int⁰(_lh_size_arg1⁰)) * 47), 100)
-//│ def sqr_lh_₁(_lh_sqr_arg1⁰) = (_lh_sqr_arg1⁰ * _lh_sqr_arg1⁰)
+//│ def power_lh_₁(_lh_power_arg1⁰, _lh_power_arg2⁰, _lh_power_arg3⁰) = if z_equal⁰(_lh_power_arg1⁰, const0_lh_₂) then const1_lh_₁ else if even_lh_₁(_lh_power_arg1⁰) then z_mod⁰(sqr_lh_₁(power_lh_₁(z_div⁰(_lh_power_arg1⁰, const2_lh_₁), _lh_power_arg2⁰, _lh_power_arg3⁰)), _lh_power_arg2⁰) else z_mod⁰(z_mul⁰(_lh_power_arg3⁰, power_lh_₁(z_sub⁰(_lh_power_arg1⁰, const1_lh_₂), _lh_power_arg2⁰, _lh_power_arg3⁰)), _lh_power_arg2⁰)
+//│ def size_lh_₁(_lh_size_arg1⁰) = div⁰((length_lh_₁(string_of_z⁰(_lh_size_arg1⁰)) * 47), 100)
+//│ def sqr_lh_₁(_lh_sqr_arg1⁰) = z_mul⁰(_lh_sqr_arg1⁰, _lh_sqr_arg1⁰)
 //│ def take_lh_₁(n⁰, ls³) = if (n⁰ > 0) then case ls³ of {
 //│ 	LH_C h⁶ t⁶ => 
 //│ 		let t⁷ = take_lh_₁((n⁰ - 1), t⁶)
 //│ 		in let h⁷ = h⁶
 //│ 		in (fun f¹² -> (fun i⁵ -> t⁷(f¹², f¹²(i⁵, h⁷))))
 //│ 	| LH_N  => (fun f¹³ -> (fun i⁶ -> i⁶))} else (fun f¹⁴ -> (fun i⁷ -> i⁷))
-//│ def testRsa_nofib_lh_₁(_lh_testRsa_nofib_arg1⁰) = hash_lh_₁(encrypt_lh_₁(6367, 5189, input_lh_₁))
+//│ def testRsa_nofib_lh_₁(_lh_testRsa_nofib_arg1⁰) = hash_lh_₁(encrypt_lh_₁(z_of_string⁰("2036450659413645137870851576872812267542175329986469156678671505255564383842535488743101632280716717779536712424613501441720195827856504007305662157107"), z_of_string⁰("387784473137902876992546516170169092918207676456888779623592396031349415024943784869634893342729620092877891356118467738167515879252473323905128540213"), input_lh_₁))
 //│ def unlines_lh_₁(_lh_unlines_arg1⁰) = _lh_unlines_arg1⁰((fun l⁰ -> mappend_lh_₁(l⁰, 
 //│ 	let t⁹ = (fun ys³ -> ys³)
 //│ 	in let h⁹ = 'n'

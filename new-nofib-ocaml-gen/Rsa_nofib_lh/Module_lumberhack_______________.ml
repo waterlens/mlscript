@@ -4,26 +4,30 @@
 open Lumherhack_Common.Lumherhack_Common;;
 open Lumberhack_LargeStr.Lumberhack_LargeStr;;
 module Module_lumberhack_______________(LH_Dum: sig end): sig val run: unit -> int end = struct
-let rec foldl_lh__d1 f_1 i_1 ls_1 =
-  ((ls_1 f_1) i_1);;
-let rec hash_lh__d1 _lh_hash_arg1_0 =
-  (((foldl_lh__d1 (fun acc_0 c_0 -> 
-    (((int_of_char c_0) + acc_0) * 31))) 0) _lh_hash_arg1_0);;
-let rec input_lh__d1 =
-  (`LH_C('m', (`LH_C('o', (`LH_C('d', (`LH_C('u', (`LH_C('l', (`LH_C('e', (`LH_C(' ', (`LH_C('R', (`LH_C('s', (`LH_C('a', (`LH_C(' ', (`LH_C('(', (`LH_C('e', (`LH_C('n', (`LH_C('c', (`LH_C('r', (`LH_C('y', (`LH_C('p', (`LH_C('t', (`LH_C(',', (`LH_C(' ', (`LH_C('d', (`LH_C('e', (`LH_C('c', (`LH_C('r', (`LH_C('y', (`LH_C('p', (`LH_C('t', (`LH_C(',', (`LH_C(' ', (`LH_C('m', (`LH_C('a', (`LH_C('k', (`LH_C('e', (`LH_C('K', (`LH_C('e', (`LH_C('y', (`LH_C('s', (`LH_C(')', (`LH_C('w', (`LH_C('h', (`LH_C('e', (`LH_C('r', (`LH_C('e', (`LH_C('e', (`LH_C('n', (`LH_C('c', (`LH_C('r', (`LH_C('y', (`LH_C('p', (`LH_C('t', (`LH_C(',', (`LH_C(' ', (`LH_C('d', (`LH_C('e', (`LH_C('c', (`LH_C('r', (`LH_C('y', (`LH_C('p', (`LH_C('t', (`LH_C(' ', (`LH_C(':', (`LH_C(':', (`LH_C(' ', (`LH_C('I', (`LH_C('n', (`LH_C('t', (`LH_C('e', (`LH_C('g', (`LH_C('e', (`LH_C('r', (`LH_C(' ', (`LH_C('-', (`LH_C('>', (`LH_C(' ', (`LH_C('I', (`LH_C('n', (`LH_C('t', (`LH_C('e', (`LH_C('g', (`LH_C('e', (`LH_C('r', (`LH_C(' ', (`LH_C('-', (`LH_C('>', (`LH_C(' ', (`LH_C('S', (`LH_C('t', (`LH_C('r', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_C(' ', (`LH_C('-', (`LH_C('>', (`LH_C(' ', (`LH_C('S', (`LH_C('t', (`LH_C('r', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_C('e', (`LH_C('n', (`LH_C('c', (`LH_C('r', (`LH_C('y', (`LH_C('p', (`LH_C('t', (`LH_C(' ', (`LH_C('n', (`LH_C(' ', (`LH_C('e', (`LH_C(' ', (`LH_C('=', (`LH_C(' ', (`LH_C('u', (`LH_C('n', (`LH_C('l', (`LH_C('i', (`LH_C('n', (`LH_C('e', (`LH_C('s', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C('m', (`LH_C('a', (`LH_C('p', (`LH_C(' ', (`LH_C('(', (`LH_C('s', (`LH_C('h', (`LH_C('o', (`LH_C('w', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C('p', (`LH_C('o', (`LH_C('w', (`LH_C('e', (`LH_C('r', (`LH_C(' ', (`LH_C('e', (`LH_C(' ', (`LH_C('n', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C('c', (`LH_C('o', (`LH_C('d', (`LH_C('e', (`LH_C(')', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C('c', (`LH_C('o', (`LH_C('l', (`LH_C('l', (`LH_C('e', (`LH_C('c', (`LH_C('t', (`LH_C(' ', (`LH_C('(', (`LH_C('s', (`LH_C('i', (`LH_C('z', (`LH_C('e', (`LH_C(' ', (`LH_C('n', (`LH_C(')', (`LH_C('d', (`LH_C('e', (`LH_C('c', (`LH_C('r', (`LH_C('y', (`LH_C('p', (`LH_C('t', (`LH_C(' ', (`LH_C('n', (`LH_C(' ', (`LH_C('d', (`LH_C(' ', (`LH_C('=', (`LH_C(' ', (`LH_C('c', (`LH_C('o', (`LH_C('n', (`LH_C('c', (`LH_C('a', (`LH_C('t', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C('m', (`LH_C('a', (`LH_C('p', (`LH_C(' ', (`LH_C('(', (`LH_C('d', (`LH_C('e', (`LH_C('c', (`LH_C('o', (`LH_C('d', (`LH_C('e', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C('p', (`LH_C('o', (`LH_C('w', (`LH_C('e', (`LH_C('r', (`LH_C(' ', (`LH_C('d', (`LH_C(' ', (`LH_C('n', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C('r', (`LH_C('e', (`LH_C('a', (`LH_C('d', (`LH_C(')', (`LH_C(' ', (`LH_C('.', (`LH_C(' ', (`LH_C('l', (`LH_C('i', (`LH_C('n', (`LH_C('e', (`LH_C('s', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C(' ', (`LH_C('C', (`LH_C('o', (`LH_C('n', (`LH_C('v', (`LH_C('e', (`LH_C('r', (`LH_C('t', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_C(' ', (`LH_C('b', (`LH_C('e', (`LH_C('t', (`LH_C('w', (`LH_C('e', (`LH_C('e', (`LH_C('n', (`LH_C(' ', (`LH_C('S', (`LH_C('t', (`LH_C('r', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_C('s', (`LH_C(' ', (`LH_C('a', (`LH_C('n', (`LH_C('d', (`LH_C(' ', (`LH_C('I', (`LH_C('n', (`LH_C('t', (`LH_C('e', (`LH_C('g', (`LH_C('e', (`LH_C('r', (`LH_C('s', (`LH_C(' ', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('-', (`LH_C('c', (`LH_C('o', (`LH_C('d', (`LH_C('e', (`LH_C(' ', (`LH_C(':', (`LH_C(':', (`LH_C(' ', (`LH_C('S', (`LH_C('t', (`LH_C('r', (`LH_C('i', (`LH_C('n', (`LH_C('g', (`LH_C(' ', (`LH_C('-', (`LH_C('>', (`LH_C(' ', (`LH_C('I', (`LH_C('n', (`LH_C('t', (`LH_C('e', (`LH_C('g', (`LH_C('e', (`LH_C('r', (`LH_C('c', (`LH_C('o', (`LH_C('d', (`LH_C('e', (`LH_C(' ', (`LH_C('=', (`LH_C(' ', (`LH_C('f', (`LH_C('o', (`LH_C('l', (`LH_C('d', (`LH_C('l', (`LH_C(' ', (`LH_C('a', (`LH_C('c', (`LH_C('c', (`LH_C('u', (`LH_C('m', (`LH_C(' ', (`LH_C('0', (`LH_C('w', (`LH_C('h', (`LH_C('e', (`LH_C('r', (`LH_C('e', (`LH_C(' ', (`LH_C('a', (`LH_C('c', (`LH_C('c', (`LH_C('u', (`LH_C('m', (`LH_C(' ', (`LH_C('x', (`LH_C(' ', (`LH_C('y', (`LH_C(' ', (`LH_C('=', (`LH_C(' ', (`LH_C('(', (`LH_C('1', (`LH_C('2', (`LH_C('8', (`LH_C(' ', (`LH_C('*', (`LH_C(' ', (`LH_C('x', (`LH_C(')', (`LH_C(' ', (`LH_C('+', (`LH_C(' ', (`LH_C('f', (`LH_C('r', (`LH_C('o', (`LH_C('m', (`LH_C('I', (`LH_C('n', (`LH_C('t', (`LH_C('e', (`LH_C('g', (`LH_C('r', (`LH_C('a', (`LH_C('l', (`LH_C(' ', (`LH_C('(', (`LH_C('f', (`LH_C('r', (`LH_C('o', (`LH_C('m', (`LH_C('E', (`LH_C('n', (`LH_C('u', (`LH_C('m', (`LH_C(' ', (`LH_C('y', (`LH_C(')', (`LH_N)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))));;
+let rec const2_lh__d1 =
+  (Z.of_int 2);;
+let rec const0_lh__d2 =
+  (Z.of_int 0);;
+let rec const2_lh__d2 =
+  (Z.of_int 2);;
+let rec const0_lh__d4 =
+  (Z.of_int 0);;
 let rec even_lh__d1 _lh_even_arg1_0 =
-  ((_lh_even_arg1_0 mod 2) = 0);;
+  ((Z.equal ((Z.rem _lh_even_arg1_0) const2_lh__d2)) const0_lh__d4);;
+let rec const1_lh__d2 =
+  (Z.of_int 1);;
 let rec sqr_lh__d1 _lh_sqr_arg1_0 =
-  (_lh_sqr_arg1_0 * _lh_sqr_arg1_0);;
+  ((Z.mul _lh_sqr_arg1_0) _lh_sqr_arg1_0);;
+let rec const1_lh__d1 =
+  (Z.of_int 1);;
 let rec power_lh__d1 _lh_power_arg1_0 _lh_power_arg2_0 _lh_power_arg3_0 =
-  (match _lh_power_arg1_0 with
-    | 0 -> 
-      1
-    | _ -> 
-      (if (even_lh__d1 _lh_power_arg1_0) then
-        ((sqr_lh__d1 (((power_lh__d1 (_lh_power_arg1_0 / 2)) _lh_power_arg2_0) _lh_power_arg3_0)) mod _lh_power_arg2_0)
-      else
-        ((_lh_power_arg3_0 * (((power_lh__d1 (_lh_power_arg1_0 - 1)) _lh_power_arg2_0) _lh_power_arg3_0)) mod _lh_power_arg2_0)));;
+  (if ((Z.equal _lh_power_arg1_0) const0_lh__d2) then
+    const1_lh__d1
+  else
+    (if (even_lh__d1 _lh_power_arg1_0) then
+      ((Z.rem (sqr_lh__d1 (((power_lh__d1 ((Z.div _lh_power_arg1_0) const2_lh__d1)) _lh_power_arg2_0) _lh_power_arg3_0))) _lh_power_arg2_0)
+    else
+      ((Z.rem ((Z.mul _lh_power_arg3_0) (((power_lh__d1 ((Z.sub _lh_power_arg1_0) const1_lh__d2)) _lh_power_arg2_0) _lh_power_arg3_0))) _lh_power_arg2_0)));;
 let rec map_lh__d1 f_2 ls_2 =
   (ls_2 f_2);;
 let rec mappend_lh__d2 xs_1 ys_2 =
@@ -80,9 +84,13 @@ let rec collect_lh__d1 _lh_collect_arg1_0 _lh_collect_arg2_0 =
                         (let rec h_2 = (f_1_0 h_1) in
                           (fun _lh_dummy_2 -> 
                             ((mappend_lh__d2 h_2) (concat_lh__d1 t_2)))))))))))));;
+let rec const128_lh__d1 =
+  (Z.of_int 128);;
+let rec const0_lh__d3 =
+  (Z.of_int 0);;
 let rec code_lh__d1 _lh_code_arg1_0 =
   (((foldl_lh__d2 (fun x_0 y_0 -> 
-    ((128 * x_0) + (int_of_char y_0)))) 0) _lh_code_arg1_0);;
+    ((Z.add ((Z.mul const128_lh__d1) x_0)) (Z.of_int (int_of_char y_0))))) const0_lh__d3) _lh_code_arg1_0);;
 let rec length_lh__d1 ls_5 =
   (match ls_5 with
     | `LH_C(h_8, t_8) -> 
@@ -90,7 +98,9 @@ let rec length_lh__d1 ls_5 =
     | `LH_N -> 
       0);;
 let rec size_lh__d1 _lh_size_arg1_0 =
-  (((length_lh__d1 (string_of_int _lh_size_arg1_0)) * 47) / 100);;
+  (((length_lh__d1 (string_of_z _lh_size_arg1_0)) * 47) / 100);;
+let rec foldl_lh__d1 f_1 i_1 ls_1 =
+  ((ls_1 f_1) i_1);;
 let rec mappend_lh__d1 xs_0 ys_0 =
   (match xs_0 with
     | `LH_C(h_3, t_3) -> 
@@ -117,9 +127,18 @@ let rec encrypt_lh__d1 _lh_encrypt_arg1_0 _lh_encrypt_arg2_0 _lh_funcomp_x_0 =
   ((fun _lh_funcomp_x_1 -> 
     (unlines_lh__d1 ((map_lh__d1 (fun _lh_funcomp_x_2 -> 
       ((fun _lh_funcomp_x_3 -> 
-        (string_of_int (((power_lh__d1 _lh_encrypt_arg2_0) _lh_encrypt_arg1_0) _lh_funcomp_x_3))) (code_lh__d1 _lh_funcomp_x_2)))) _lh_funcomp_x_1))) ((collect_lh__d1 (size_lh__d1 _lh_encrypt_arg1_0)) _lh_funcomp_x_0));;
+        (string_of_z (((power_lh__d1 _lh_encrypt_arg2_0) _lh_encrypt_arg1_0) _lh_funcomp_x_3))) (code_lh__d1 _lh_funcomp_x_2)))) _lh_funcomp_x_1))) ((collect_lh__d1 (size_lh__d1 _lh_encrypt_arg1_0)) _lh_funcomp_x_0));;
+let rec const0_lh__d1 =
+  (Z.of_int 0);;
+let rec const31_lh__d1 =
+  (Z.of_int 31);;
+let rec hash_lh__d1 _lh_hash_arg1_0 =
+  (((foldl_lh__d1 (fun acc_0 c_0 -> 
+    ((Z.add (Z.of_int (int_of_char c_0))) ((Z.mul acc_0) const31_lh__d1)))) const0_lh__d1) _lh_hash_arg1_0);;
+let rec input_lh__d1 =
+  lh_large_str_0;;
 let rec testRsa_nofib_lh__d1 _lh_testRsa_nofib_arg1_0 =
-  (hash_lh__d1 (((encrypt_lh__d1 6367) 5189) input_lh__d1));;
+  (hash_lh__d1 (((encrypt_lh__d1 lh_large_int_0) lh_large_int_1) input_lh__d1));;
 let run () = 1 + (Obj.magic ((testRsa_nofib_lh__d1 0)));
 end;;
 

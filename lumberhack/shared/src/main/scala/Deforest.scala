@@ -398,6 +398,8 @@ class Deforest(var debug: Boolean) {
           NoProd()(using e.uid) // `primitive`, `primId`
         else if primitive == "string_of_int" then
           ProdFun(consInt(using noExprId).toStrat(), prodString(using this, noExprId).toStrat())(using e.uid)
+        else if primitive == "string_of_z" then
+          ProdFun(consInt(using noExprId).toStrat(), prodString(using this, noExprId).toStrat())(using e.uid)
         else if primitive == "string_of_float" then
           ProdFun(consFloat(using noExprId).toStrat(), prodString(using this, noExprId).toStrat())(using e.uid)
         else if primitive == "char_of_int" then
@@ -1158,7 +1160,7 @@ object Deforest {
       ++ lumberhackFloatBinOps ++ lumberhackFloatUnaryOps)
       + "string_of_int" + "int_of_char" + "char_of_int" + "ceiling" + "float_of_int" + "int_of_float" + "string_of_float"
       + "primitive" + "primId" + "error" + "lazy" + "force" + "lumberhack_obj_magic" + "from_large_str"
-      + "z_of_int" + "z_to_int" + "z_of_string"
+      + "z_of_int" + "z_to_int" + "z_of_string" + "string_of_z"
   lazy val lumberhackPolyOps: Set[String] = Set("polyEq", "polyLt", "polyGt", "polyLeq", "polyGeq", "polyNeq")
   lazy val lumberhackBinOps = lumberhackIntBinOps ++ lumberhackBoolBinOps ++ lumberhackFloatBinOps
   lazy val lumberhackIntFun: Set[String] = lumberhackIntValueFun ++ lumberhackIntComparisonFun

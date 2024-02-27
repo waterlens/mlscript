@@ -593,7 +593,7 @@ class OCamlGenTests(
   var largeIntIdents = scala.collection.mutable.Map.empty[String, Int]
   val largeIntPrefix = "lh_large_int_"
   override def handleLargeInt(s: String): Document =
-    val nextId = this.largeIntIdents.getOrElseUpdate(s, largeStrIdents.size)
+    val nextId = this.largeIntIdents.getOrElseUpdate(s, largeIntIdents.size)
     Raw(s"${largeIntPrefix}${nextId}")
   
   def makeBenchFiles(programs: List[String -> Program]): String = {
@@ -732,7 +732,7 @@ class OCamlGenTests(
 
     val commonFileString = (
       "Lumherhack_Common",
-      """
+      s"""
 module Lumherhack_Common = struct
 let explode_string s = List.init (String.length s) (String.get s);;
 let rec listToTaggedList s = match s with
@@ -740,7 +740,7 @@ let rec listToTaggedList s = match s with
   | [] -> `LH_N;;
 let string_of_int i = listToTaggedList (explode_string (string_of_int i));;
 let string_of_float f = listToTaggedList (explode_string (string_of_float f))
-end;;
+${if !useZarith then "end;;" else "let string_of_z z = listToTaggedList (explode_string (Z.to_string z));;\nend;;"}
 """
     )
 
@@ -943,7 +943,7 @@ end;;
           s"let ${largeIntPrefix}${id} = Z.of_string \"$i\";;"
         }.mkString("\n")
         "open Lumherhack_Common.Lumherhack_Common;;\n" +
-        s"module Lumberhack_LargeStr = struct\n$largeStrDefs\n$largeIntDefs\n" +
+        s"module Lumberhack_LargeStr = struct\n$largeStrDefs\n${if largeIntDefs.isEmpty() then "" else largeIntDefs + "\n"}" +
         s"${if this.usePolymorphicVariant then "end" else (generateTypeInfo(programs.head._2.d) + "\nend")};;\n"
       }
     ) ::

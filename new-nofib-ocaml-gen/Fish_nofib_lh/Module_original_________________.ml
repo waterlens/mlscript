@@ -159,6 +159,6 @@ let rec testFish_nofib_lh _lh_testFish_nofib_arg1_0 =
   ((map_lh (fun i_0 -> 
     (let rec n_0 = ((min_lh 0) i_0) in
       (length_lh (fmt_lh (((pseudolimit_lh (`LH_P2(0, 0))) (`LH_P2((640 + n_0), 0))) (`LH_P2(0, (640 + n_0))))))))) ((enumFromTo_lh 0) _lh_testFish_nofib_arg1_0));;
-let run () = 1 + (Obj.magic ((testFish_nofib_lh 3)));
+let run () = 1 + (Obj.magic ((testFish_nofib_lh 30)));
 end;;
 

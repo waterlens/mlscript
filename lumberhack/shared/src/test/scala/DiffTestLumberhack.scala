@@ -239,6 +239,34 @@ class DiffTestLumberhack extends DiffTests {
                 p.d(p)
                 val newp = p.copyToNewDeforestWithDeadDefElim
                 newp.d(newp)
+                {
+                  // output haskell code to some files
+                  val benchName = (newp.defAndExpr._2 match {
+                    case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId), _)) :: Nil
+                      if test.tree.name.startsWith("test") && primId.tree.name == "primId" =>
+                      test.tree.name.drop(4).filter(_ <= 0x7f).reverse.dropWhile(_ == '_').reverse // keep only valid ASCII characters, and drop the possibly last "_"
+                    // with manually fuse tests
+                    case Expr.Call(Expr.Ref(test), Expr.Call(Expr.Ref(primId1), arg1))
+                      :: Expr.Call(Expr.Ref(testManual), Expr.Call(Expr.Ref(primId2), arg2))
+                      :: Nil
+                      if test.tree.name.startsWith("test") && primId1.tree.name == "primId"
+                        && testManual.tree.name.startsWith("testManual") && primId1 == primId2
+                        && arg1.pp(using InitPpConfig) == arg2.pp(using InitPpConfig) =>
+                      test.tree.name.drop(4).filter(_ <= 0x7f).reverse.dropWhile(_ == '_').reverse // keep only valid ASCII characters, and drop the possibly last "_"
+                    case _ => lastWords(
+                      "benchmark requires a method of name `testxxx` calling a value wrapped in `primId`"
+                        + "\n and if there are manually fused benchmarks, there should be a call to `testManual`"
+                        + "with exact the same parameter following the `testxxx`"
+                    )
+                  }).emptyOrElse(newp.hashCode().toString())
+                  import sys.process.*
+                  import java.io._
+                  val pathPrefix = if benchName.contains("_nofib") then s"./new-nofib-haskell-input-extract/$benchName" else s"./haskell-input-extract/$benchName"
+                  s"mkdir -p $pathPrefix".!
+                  val fw = new FileWriter(s"$pathPrefix/$benchName.hs", false)
+                  fw.write(prgmStr.mkString("\n") + "\n")
+                  fw.close()
+                }
                 newp
               else originalProgram
             }) ::

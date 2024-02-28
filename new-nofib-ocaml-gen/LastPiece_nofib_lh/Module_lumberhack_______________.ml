@@ -16,42 +16,65 @@ let rec snd_lh__d2 _lh_snd_arg1_0 =
     | _ -> 
       (failwith "error"));;
 let rec compareIntInt_lh__d5 _lh_compareIntInt_arg1_1 _lh_compareIntInt_arg2_1 =
-  (_lh_compareIntInt_arg1_1 _lh_compareIntInt_arg2_1);;
-let rec compareIntInt_lh__d4 _lh_compareIntInt_arg1_3 _lh_compareIntInt_arg2_3_5 =
-  (match _lh_compareIntInt_arg1_3 with
-    | `LH_P2(_lh_compareIntInt_LH_P2_0_6_8, _lh_compareIntInt_LH_P2_1_6_8) -> 
-      (match _lh_compareIntInt_arg2_3_5 with
-        | `LH_P2(_lh_compareIntInt_LH_P2_0_6_9, _lh_compareIntInt_LH_P2_1_6_9) -> 
-          (if (_lh_compareIntInt_LH_P2_0_6_8 > _lh_compareIntInt_LH_P2_0_6_9) then
-            (fun _lh_insert_Bin_1_1_0 _lh_insert_Bin_2_1_0 _lh_insert_Bin_3_1_0 _lh_insert_Bin_4_1_0 _lh_insert_arg1_1_0 _lh_insert_arg2_1_0 balance_1_0 _lh_insert_Bin_0_1_0 -> 
-              ((((balance_1_0 _lh_insert_Bin_1_1_0) _lh_insert_Bin_2_1_0) _lh_insert_Bin_3_1_0) (((insert_lh__d2 _lh_insert_arg1_1_0) _lh_insert_arg2_1_0) _lh_insert_Bin_4_1_0)))
+  (match _lh_compareIntInt_arg1_1 with
+    | `LH_P2(_lh_compareIntInt_LH_P2_0_2, _lh_compareIntInt_LH_P2_1_2) -> 
+      (match _lh_compareIntInt_arg2_1 with
+        | `LH_P2(_lh_compareIntInt_LH_P2_0_3, _lh_compareIntInt_LH_P2_1_3) -> 
+          (if (_lh_compareIntInt_LH_P2_0_2 > _lh_compareIntInt_LH_P2_0_3) then
+            (fun _lh_insert_Bin_1_5 _lh_insert_Bin_2_5 _lh_insert_Bin_3_5 _lh_insert_Bin_4_5 _lh_insert_arg1_5 _lh_insert_arg2_5 balance_5 _lh_insert_Bin_0_5 -> 
+              ((((balance_5 _lh_insert_Bin_1_5) _lh_insert_Bin_2_5) _lh_insert_Bin_3_5) (((insert_lh__d2 _lh_insert_arg1_5) _lh_insert_arg2_5) _lh_insert_Bin_4_5)))
           else
-            (if (_lh_compareIntInt_LH_P2_0_6_8 < _lh_compareIntInt_LH_P2_0_6_9) then
-              (fun _lh_insert_Bin_1_1_1 _lh_insert_Bin_2_1_1 _lh_insert_Bin_3_1_1 _lh_insert_Bin_4_1_1 _lh_insert_arg1_1_1 _lh_insert_arg2_1_1 balance_1_1 _lh_insert_Bin_0_1_1 -> 
-                ((((balance_1_1 _lh_insert_Bin_1_1_1) _lh_insert_Bin_2_1_1) (((insert_lh__d2 _lh_insert_arg1_1_1) _lh_insert_arg2_1_1) _lh_insert_Bin_3_1_1)) _lh_insert_Bin_4_1_1))
+            (if (_lh_compareIntInt_LH_P2_0_2 < _lh_compareIntInt_LH_P2_0_3) then
+              (fun _lh_insert_Bin_1_6 _lh_insert_Bin_2_6 _lh_insert_Bin_3_6 _lh_insert_Bin_4_6 _lh_insert_arg1_6 _lh_insert_arg2_6 balance_6 _lh_insert_Bin_0_6 -> 
+                ((((balance_6 _lh_insert_Bin_1_6) _lh_insert_Bin_2_6) (((insert_lh__d2 _lh_insert_arg1_6) _lh_insert_arg2_6) _lh_insert_Bin_3_6)) _lh_insert_Bin_4_6))
             else
-              (if (_lh_compareIntInt_LH_P2_1_6_8 > _lh_compareIntInt_LH_P2_1_6_9) then
-                (fun _lh_insert_Bin_1_1_2 _lh_insert_Bin_2_1_2 _lh_insert_Bin_3_1_2 _lh_insert_Bin_4_1_2 _lh_insert_arg1_1_2 _lh_insert_arg2_1_2 balance_1_2 _lh_insert_Bin_0_1_2 -> 
-                  ((((balance_1_2 _lh_insert_Bin_1_1_2) _lh_insert_Bin_2_1_2) _lh_insert_Bin_3_1_2) (((insert_lh__d2 _lh_insert_arg1_1_2) _lh_insert_arg2_1_2) _lh_insert_Bin_4_1_2)))
+              (if (_lh_compareIntInt_LH_P2_1_2 > _lh_compareIntInt_LH_P2_1_3) then
+                (fun _lh_insert_Bin_1_7 _lh_insert_Bin_2_7 _lh_insert_Bin_3_7 _lh_insert_Bin_4_7 _lh_insert_arg1_7 _lh_insert_arg2_7 balance_7 _lh_insert_Bin_0_7 -> 
+                  ((((balance_7 _lh_insert_Bin_1_7) _lh_insert_Bin_2_7) _lh_insert_Bin_3_7) (((insert_lh__d2 _lh_insert_arg1_7) _lh_insert_arg2_7) _lh_insert_Bin_4_7)))
               else
-                (if (_lh_compareIntInt_LH_P2_1_6_8 < _lh_compareIntInt_LH_P2_1_6_9) then
-                  (fun _lh_insert_Bin_1_1_3 _lh_insert_Bin_2_1_3 _lh_insert_Bin_3_1_3 _lh_insert_Bin_4_1_3 _lh_insert_arg1_1_3 _lh_insert_arg2_1_3 balance_1_3 _lh_insert_Bin_0_1_3 -> 
-                    ((((balance_1_3 _lh_insert_Bin_1_1_3) _lh_insert_Bin_2_1_3) (((insert_lh__d2 _lh_insert_arg1_1_3) _lh_insert_arg2_1_3) _lh_insert_Bin_3_1_3)) _lh_insert_Bin_4_1_3))
+                (if (_lh_compareIntInt_LH_P2_1_2 < _lh_compareIntInt_LH_P2_1_3) then
+                  (fun _lh_insert_Bin_1_8 _lh_insert_Bin_2_8 _lh_insert_Bin_3_8 _lh_insert_Bin_4_8 _lh_insert_arg1_8 _lh_insert_arg2_8 balance_8 _lh_insert_Bin_0_8 -> 
+                    ((((balance_8 _lh_insert_Bin_1_8) _lh_insert_Bin_2_8) (((insert_lh__d2 _lh_insert_arg1_8) _lh_insert_arg2_8) _lh_insert_Bin_3_8)) _lh_insert_Bin_4_8))
                 else
-                  (fun _lh_insert_Bin_1_1_4 _lh_insert_Bin_2_1_4 _lh_insert_Bin_3_1_4 _lh_insert_Bin_4_1_4 _lh_insert_arg1_1_4 _lh_insert_arg2_1_4 balance_1_4 _lh_insert_Bin_0_1_4 -> 
-                    (`Bin(_lh_insert_Bin_0_1_4, _lh_insert_arg1_1_4, _lh_insert_arg2_1_4, _lh_insert_Bin_3_1_4, _lh_insert_Bin_4_1_4)))))))
+                  (fun _lh_insert_Bin_1_9 _lh_insert_Bin_2_9 _lh_insert_Bin_3_9 _lh_insert_Bin_4_9 _lh_insert_arg1_9 _lh_insert_arg2_9 balance_9 _lh_insert_Bin_0_9 -> 
+                    (`Bin(_lh_insert_Bin_0_9, _lh_insert_arg1_9, _lh_insert_arg2_9, _lh_insert_Bin_3_9, _lh_insert_Bin_4_9)))))))
         | _ -> 
           (failwith "error"))
     | _ -> 
       (failwith "error"))
 and
-insert_lh__d2 _lh_insert_arg1_1_6 _lh_insert_arg2_1_6 _lh_insert_arg3_1 =
+insert_lh__d2 _lh_insert_arg1_1_1 _lh_insert_arg2_1_1 _lh_insert_arg3_1 =
   (match _lh_insert_arg3_1 with
     | `Tip -> 
-      (`Bin(1, _lh_insert_arg1_1_6, _lh_insert_arg2_1_6, (`Tip), (`Tip)))
-    | `Bin(_lh_insert_Bin_0_1_6, _lh_insert_Bin_1_1_6, _lh_insert_Bin_2_1_6, _lh_insert_Bin_3_1_6, _lh_insert_Bin_4_1_6) -> 
+      (`Bin(1, _lh_insert_arg1_1_1, _lh_insert_arg2_1_1, (`Tip), (`Tip)))
+    | `Bin(_lh_insert_Bin_0_1_1, _lh_insert_Bin_1_1_1, _lh_insert_Bin_2_1_1, _lh_insert_Bin_3_1_1, _lh_insert_Bin_4_1_1) -> 
       let rec singleton_1 = (fun _lh_singleton_arg1_1 _lh_singleton_arg2_1 -> 
         (`Bin(1, _lh_singleton_arg1_1, _lh_singleton_arg2_1, (`Tip), (`Tip))))
+      and balance_1_1 = (fun _lh_balance_arg1_1 _lh_balance_arg2_1 _lh_balance_arg3_1 _lh_balance_arg4_1 -> 
+        (let rec size_7 = (fun p_8 -> 
+          (let rec _lh_matchIdent_1_2_6 = p_8 in
+            (match _lh_matchIdent_1_2_6 with
+              | `Tip -> 
+                0
+              | `Bin(_lh_balance_Bin_0_1, _lh_balance_Bin_1_1, _lh_balance_Bin_2_1, _lh_balance_Bin_3_1, _lh_balance_Bin_4_1) -> 
+                _lh_balance_Bin_0_1
+              | _ -> 
+                (failwith "error")))) in
+          (let rec sizeL_1 = (size_7 _lh_balance_arg3_1) in
+            (let rec sizeR_1 = (size_7 _lh_balance_arg4_1) in
+              (let rec sizeX_1 = ((sizeL_1 + sizeR_1) + 1) in
+                (if ((sizeL_1 + sizeR_1) <= 1) then
+                  (`Bin(sizeX_1, _lh_balance_arg1_1, _lh_balance_arg2_1, _lh_balance_arg3_1, _lh_balance_arg4_1))
+                else
+                  (if (sizeR_1 >= (4 * sizeL_1)) then
+                    ((((rotateL_1 _lh_balance_arg1_1) _lh_balance_arg2_1) _lh_balance_arg3_1) _lh_balance_arg4_1)
+                  else
+                    (if (sizeL_1 >= (4 * sizeR_1)) then
+                      ((((rotateR_1 _lh_balance_arg1_1) _lh_balance_arg2_1) _lh_balance_arg3_1) _lh_balance_arg4_1)
+                    else
+                      (`Bin(sizeX_1, _lh_balance_arg1_1, _lh_balance_arg2_1, _lh_balance_arg3_1, _lh_balance_arg4_1))))))))))
+      and doubleR_1 = (fun _lh_doubleR_arg1_2 _lh_doubleR_arg2_2 _lh_doubleR_arg3_1 _lh_doubleR_arg4_2 -> 
+        (((_lh_doubleR_arg3_1 _lh_doubleR_arg1_2) _lh_doubleR_arg2_2) _lh_doubleR_arg4_2))
       and singleR_1 = (fun _lh_singleR_arg1_2 _lh_singleR_arg2_2 _lh_singleR_arg3_1 _lh_singleR_arg4_2 -> 
         (((_lh_singleR_arg3_1 _lh_singleR_arg1_2) _lh_singleR_arg2_2) _lh_singleR_arg4_2))
       and singleL_1 = (fun _lh_singleL_arg1_3 _lh_singleL_arg2_3 _lh_singleL_arg3_3 _lh_singleL_arg4_1 -> 
@@ -174,158 +197,73 @@ insert_lh__d2 _lh_insert_arg1_1_6 _lh_insert_arg2_1_6 _lh_insert_arg3_1 =
             (failwith "error")))
       and doubleL_1 = (fun _lh_doubleL_arg1_2 _lh_doubleL_arg2_2 _lh_doubleL_arg3_2 _lh_doubleL_arg4_1 -> 
         (((_lh_doubleL_arg4_1 _lh_doubleL_arg1_2) _lh_doubleL_arg2_2) _lh_doubleL_arg3_2))
-      and balance_1_6 = (fun _lh_balance_arg1_1 _lh_balance_arg2_1 _lh_balance_arg3_1 _lh_balance_arg4_1 -> 
-        (let rec size_7 = (fun p_8 -> 
-          (let rec _lh_matchIdent_1_2_6 = p_8 in
-            (match _lh_matchIdent_1_2_6 with
-              | `Tip -> 
-                0
-              | `Bin(_lh_balance_Bin_0_1, _lh_balance_Bin_1_1, _lh_balance_Bin_2_1, _lh_balance_Bin_3_1, _lh_balance_Bin_4_1) -> 
-                _lh_balance_Bin_0_1
-              | _ -> 
-                (failwith "error")))) in
-          (let rec sizeL_1 = (size_7 _lh_balance_arg3_1) in
-            (let rec sizeR_1 = (size_7 _lh_balance_arg4_1) in
-              (let rec sizeX_1 = ((sizeL_1 + sizeR_1) + 1) in
-                (if ((sizeL_1 + sizeR_1) <= 1) then
-                  (`Bin(sizeX_1, _lh_balance_arg1_1, _lh_balance_arg2_1, _lh_balance_arg3_1, _lh_balance_arg4_1))
-                else
-                  (if (sizeR_1 >= (4 * sizeL_1)) then
-                    ((((rotateL_1 _lh_balance_arg1_1) _lh_balance_arg2_1) _lh_balance_arg3_1) _lh_balance_arg4_1)
-                  else
-                    (if (sizeL_1 >= (4 * sizeR_1)) then
-                      ((((rotateR_1 _lh_balance_arg1_1) _lh_balance_arg2_1) _lh_balance_arg3_1) _lh_balance_arg4_1)
-                    else
-                      (`Bin(sizeX_1, _lh_balance_arg1_1, _lh_balance_arg2_1, _lh_balance_arg3_1, _lh_balance_arg4_1))))))))))
-      and doubleR_1 = (fun _lh_doubleR_arg1_2 _lh_doubleR_arg2_2 _lh_doubleR_arg3_1 _lh_doubleR_arg4_2 -> 
-        (((_lh_doubleR_arg3_1 _lh_doubleR_arg1_2) _lh_doubleR_arg2_2) _lh_doubleR_arg4_2))
-      in (let rec _lh_matchIdent_1_3_3 = ((compareIntInt_lh__d4 _lh_insert_arg1_1_6) _lh_insert_Bin_1_1_6) in
-        ((((((((_lh_matchIdent_1_3_3 _lh_insert_Bin_1_1_6) _lh_insert_Bin_2_1_6) _lh_insert_Bin_3_1_6) _lh_insert_Bin_4_1_6) _lh_insert_arg1_1_6) _lh_insert_arg2_1_6) balance_1_6) _lh_insert_Bin_0_1_6))
+      in (let rec _lh_matchIdent_1_3_3 = ((compareIntInt_lh__d5 _lh_insert_arg1_1_1) _lh_insert_Bin_1_1_1) in
+        ((((((((_lh_matchIdent_1_3_3 _lh_insert_Bin_1_1_1) _lh_insert_Bin_2_1_1) _lh_insert_Bin_3_1_1) _lh_insert_Bin_4_1_1) _lh_insert_arg1_1_1) _lh_insert_arg2_1_1) balance_1_1) _lh_insert_Bin_0_1_1))
     | _ -> 
       (failwith "error"));;
 let rec extend_lh__d2 _lh_extend_arg1_2 _lh_extend_arg2_2 _lh_extend_arg3_2 =
   (((insert_lh__d2 _lh_extend_arg2_2) _lh_extend_arg3_2) _lh_extend_arg1_2);;
+let rec compareIntInt_lh__d4 _lh_compareIntInt_arg1_3 _lh_compareIntInt_arg2_3_5 =
+  (_lh_compareIntInt_arg1_3 _lh_compareIntInt_arg2_3_5);;
 let rec mapLookup_lh__d3 _lh_mapLookup_arg1_0 _lh_mapLookup_arg2_0 =
   (match _lh_mapLookup_arg2_0 with
     | `Tip -> 
       (fun _lh_extend_maybe_LH_P2_0_0 _lh_extend_maybe_LH_P2_1_0 _lh_extend_maybe_arg1_0 _lh_extend_maybe_arg3_0 -> 
         (`Just((((extend_lh__d2 _lh_extend_maybe_arg1_0) (`LH_P2(_lh_extend_maybe_LH_P2_0_0, _lh_extend_maybe_LH_P2_1_0))) _lh_extend_maybe_arg3_0))))
     | `Bin(_lh_mapLookup_Bin_0_0, _lh_mapLookup_Bin_1_0, _lh_mapLookup_Bin_2_0, _lh_mapLookup_Bin_3_0, _lh_mapLookup_Bin_4_0) -> 
-      (let rec _lh_matchIdent_0 = ((compareIntInt_lh__d5 _lh_mapLookup_arg1_0) _lh_mapLookup_Bin_1_0) in
+      (let rec _lh_matchIdent_0 = ((compareIntInt_lh__d4 _lh_mapLookup_arg1_0) _lh_mapLookup_Bin_1_0) in
         ((((_lh_matchIdent_0 _lh_mapLookup_Bin_3_0) _lh_mapLookup_arg1_0) _lh_mapLookup_Bin_4_0) _lh_mapLookup_Bin_2_0))
     | _ -> 
       (failwith "error"));;
 let rec maxCol_lh__d4 =
   8;;
 let rec compareIntInt_lh__d7 _lh_compareIntInt_arg1_2 _lh_compareIntInt_arg2_2 =
-  (match _lh_compareIntInt_arg1_2 with
-    | `LH_P2(_lh_compareIntInt_LH_P2_0_2, _lh_compareIntInt_LH_P2_1_2) -> 
-      (match _lh_compareIntInt_arg2_2 with
-        | `LH_P2(_lh_compareIntInt_LH_P2_0_3, _lh_compareIntInt_LH_P2_1_3) -> 
-          (if (_lh_compareIntInt_LH_P2_0_2 > _lh_compareIntInt_LH_P2_0_3) then
-            (fun _lh_insert_Bin_1_5 _lh_insert_Bin_2_5 _lh_insert_Bin_3_5 _lh_insert_Bin_4_5 _lh_insert_arg1_5 _lh_insert_arg2_5 balance_5 _lh_insert_Bin_0_5 -> 
-              ((((balance_5 _lh_insert_Bin_1_5) _lh_insert_Bin_2_5) _lh_insert_Bin_3_5) (((insert_lh__d4 _lh_insert_arg1_5) _lh_insert_arg2_5) _lh_insert_Bin_4_5)))
+  (_lh_compareIntInt_arg1_2 _lh_compareIntInt_arg2_2);;
+let rec compareIntInt_lh__d8 _lh_compareIntInt_arg1_6 _lh_compareIntInt_arg2_8_6 =
+  (match _lh_compareIntInt_arg1_6 with
+    | `LH_P2(_lh_compareIntInt_LH_P2_0_1_6_6, _lh_compareIntInt_LH_P2_1_1_6_6) -> 
+      (match _lh_compareIntInt_arg2_8_6 with
+        | `LH_P2(_lh_compareIntInt_LH_P2_0_1_6_7, _lh_compareIntInt_LH_P2_1_1_6_7) -> 
+          (if (_lh_compareIntInt_LH_P2_0_1_6_6 > _lh_compareIntInt_LH_P2_0_1_6_7) then
+            (fun _lh_insert_Bin_1_1_3 _lh_insert_Bin_2_1_3 _lh_insert_Bin_3_1_3 _lh_insert_Bin_4_1_3 _lh_insert_arg1_1_3 _lh_insert_arg2_1_3 balance_1_3 _lh_insert_Bin_0_1_3 -> 
+              ((((balance_1_3 _lh_insert_Bin_1_1_3) _lh_insert_Bin_2_1_3) _lh_insert_Bin_3_1_3) (((insert_lh__d4 _lh_insert_arg1_1_3) _lh_insert_arg2_1_3) _lh_insert_Bin_4_1_3)))
           else
-            (if (_lh_compareIntInt_LH_P2_0_2 < _lh_compareIntInt_LH_P2_0_3) then
-              (fun _lh_insert_Bin_1_6 _lh_insert_Bin_2_6 _lh_insert_Bin_3_6 _lh_insert_Bin_4_6 _lh_insert_arg1_6 _lh_insert_arg2_6 balance_6 _lh_insert_Bin_0_6 -> 
-                ((((balance_6 _lh_insert_Bin_1_6) _lh_insert_Bin_2_6) (((insert_lh__d4 _lh_insert_arg1_6) _lh_insert_arg2_6) _lh_insert_Bin_3_6)) _lh_insert_Bin_4_6))
+            (if (_lh_compareIntInt_LH_P2_0_1_6_6 < _lh_compareIntInt_LH_P2_0_1_6_7) then
+              (fun _lh_insert_Bin_1_1_4 _lh_insert_Bin_2_1_4 _lh_insert_Bin_3_1_4 _lh_insert_Bin_4_1_4 _lh_insert_arg1_1_4 _lh_insert_arg2_1_4 balance_1_4 _lh_insert_Bin_0_1_4 -> 
+                ((((balance_1_4 _lh_insert_Bin_1_1_4) _lh_insert_Bin_2_1_4) (((insert_lh__d4 _lh_insert_arg1_1_4) _lh_insert_arg2_1_4) _lh_insert_Bin_3_1_4)) _lh_insert_Bin_4_1_4))
             else
-              (if (_lh_compareIntInt_LH_P2_1_2 > _lh_compareIntInt_LH_P2_1_3) then
-                (fun _lh_insert_Bin_1_7 _lh_insert_Bin_2_7 _lh_insert_Bin_3_7 _lh_insert_Bin_4_7 _lh_insert_arg1_7 _lh_insert_arg2_7 balance_7 _lh_insert_Bin_0_7 -> 
-                  ((((balance_7 _lh_insert_Bin_1_7) _lh_insert_Bin_2_7) _lh_insert_Bin_3_7) (((insert_lh__d4 _lh_insert_arg1_7) _lh_insert_arg2_7) _lh_insert_Bin_4_7)))
+              (if (_lh_compareIntInt_LH_P2_1_1_6_6 > _lh_compareIntInt_LH_P2_1_1_6_7) then
+                (fun _lh_insert_Bin_1_1_5 _lh_insert_Bin_2_1_5 _lh_insert_Bin_3_1_5 _lh_insert_Bin_4_1_5 _lh_insert_arg1_1_5 _lh_insert_arg2_1_5 balance_1_5 _lh_insert_Bin_0_1_5 -> 
+                  ((((balance_1_5 _lh_insert_Bin_1_1_5) _lh_insert_Bin_2_1_5) _lh_insert_Bin_3_1_5) (((insert_lh__d4 _lh_insert_arg1_1_5) _lh_insert_arg2_1_5) _lh_insert_Bin_4_1_5)))
               else
-                (if (_lh_compareIntInt_LH_P2_1_2 < _lh_compareIntInt_LH_P2_1_3) then
-                  (fun _lh_insert_Bin_1_8 _lh_insert_Bin_2_8 _lh_insert_Bin_3_8 _lh_insert_Bin_4_8 _lh_insert_arg1_8 _lh_insert_arg2_8 balance_8 _lh_insert_Bin_0_8 -> 
-                    ((((balance_8 _lh_insert_Bin_1_8) _lh_insert_Bin_2_8) (((insert_lh__d4 _lh_insert_arg1_8) _lh_insert_arg2_8) _lh_insert_Bin_3_8)) _lh_insert_Bin_4_8))
+                (if (_lh_compareIntInt_LH_P2_1_1_6_6 < _lh_compareIntInt_LH_P2_1_1_6_7) then
+                  (fun _lh_insert_Bin_1_1_6 _lh_insert_Bin_2_1_6 _lh_insert_Bin_3_1_6 _lh_insert_Bin_4_1_6 _lh_insert_arg1_1_6 _lh_insert_arg2_1_6 balance_1_6 _lh_insert_Bin_0_1_6 -> 
+                    ((((balance_1_6 _lh_insert_Bin_1_1_6) _lh_insert_Bin_2_1_6) (((insert_lh__d4 _lh_insert_arg1_1_6) _lh_insert_arg2_1_6) _lh_insert_Bin_3_1_6)) _lh_insert_Bin_4_1_6))
                 else
-                  (fun _lh_insert_Bin_1_9 _lh_insert_Bin_2_9 _lh_insert_Bin_3_9 _lh_insert_Bin_4_9 _lh_insert_arg1_9 _lh_insert_arg2_9 balance_9 _lh_insert_Bin_0_9 -> 
-                    (`Bin(_lh_insert_Bin_0_9, _lh_insert_arg1_9, _lh_insert_arg2_9, _lh_insert_Bin_3_9, _lh_insert_Bin_4_9)))))))
+                  (fun _lh_insert_Bin_1_1_7 _lh_insert_Bin_2_1_7 _lh_insert_Bin_3_1_7 _lh_insert_Bin_4_1_7 _lh_insert_arg1_1_7 _lh_insert_arg2_1_7 balance_1_7 _lh_insert_Bin_0_1_7 -> 
+                    (`Bin(_lh_insert_Bin_0_1_7, _lh_insert_arg1_1_7, _lh_insert_arg2_1_7, _lh_insert_Bin_3_1_7, _lh_insert_Bin_4_1_7)))))))
         | _ -> 
           (failwith "error"))
     | _ -> 
       (failwith "error"))
 and
-insert_lh__d4 _lh_insert_arg1_1_5 _lh_insert_arg2_1_5 _lh_insert_arg3_0 =
+insert_lh__d4 _lh_insert_arg1_1_0 _lh_insert_arg2_1_0 _lh_insert_arg3_0 =
   (match _lh_insert_arg3_0 with
     | `Tip -> 
-      (`Bin(1, _lh_insert_arg1_1_5, _lh_insert_arg2_1_5, (`Tip), (`Tip)))
-    | `Bin(_lh_insert_Bin_0_1_5, _lh_insert_Bin_1_1_5, _lh_insert_Bin_2_1_5, _lh_insert_Bin_3_1_5, _lh_insert_Bin_4_1_5) -> 
-      let rec rotateR_0 = (fun _lh_rotateR_arg1_0 _lh_rotateR_arg2_0 _lh_rotateR_arg3_0 _lh_rotateR_arg4_0 -> 
-        (match _lh_rotateR_arg3_0 with
-          | `Bin(_lh_rotateR_Bin_0_0, _lh_rotateR_Bin_1_0, _lh_rotateR_Bin_2_0, _lh_rotateR_Bin_3_0, _lh_rotateR_Bin_4_0) -> 
-            (let rec size_3 = (fun p_4 -> 
-              (let rec _lh_matchIdent_1_0_4 = p_4 in
-                (match _lh_matchIdent_1_0_4 with
-                  | `Tip -> 
-                    0
-                  | `Bin(_lh_rotateR_Bin_0_1, _lh_rotateR_Bin_1_1, _lh_rotateR_Bin_2_1, _lh_rotateR_Bin_3_1, _lh_rotateR_Bin_4_1) -> 
-                    _lh_rotateR_Bin_0_1
-                  | _ -> 
-                    (failwith "error")))) in
-              (if ((size_3 _lh_rotateR_Bin_4_0) < (2 * (size_3 _lh_rotateR_Bin_3_0))) then
-                ((((singleR_0 _lh_rotateR_arg1_0) _lh_rotateR_arg2_0) (let rec _lh_singleR_Bin_4_0 = _lh_rotateR_Bin_4_0 in
-                  (let rec _lh_singleR_Bin_3_0 = _lh_rotateR_Bin_3_0 in
-                    (let rec _lh_singleR_Bin_2_0 = _lh_rotateR_Bin_2_0 in
-                      (let rec _lh_singleR_Bin_1_0 = _lh_rotateR_Bin_1_0 in
-                        (let rec _lh_singleR_Bin_0_0 = _lh_rotateR_Bin_0_0 in
-                          (fun _lh_singleR_arg1_1 _lh_singleR_arg2_1 _lh_singleR_arg4_1 -> 
-                            (let rec size_4 = (fun p_5 -> 
-                              (let rec _lh_matchIdent_1_0_5 = p_5 in
-                                (match _lh_matchIdent_1_0_5 with
-                                  | `Tip -> 
-                                    0
-                                  | `Bin(_lh_singleR_Bin_0_1, _lh_singleR_Bin_1_1, _lh_singleR_Bin_2_1, _lh_singleR_Bin_3_1, _lh_singleR_Bin_4_1) -> 
-                                    _lh_singleR_Bin_0_1
-                                  | _ -> 
-                                    (failwith "error")))) in
-                              (let rec bin_2 = (fun k_2 x_3 l_2 r_2 -> 
-                                (`Bin((((size_4 l_2) + (size_4 r_2)) + 1), k_2, x_3, l_2, r_2))) in
-                                ((((bin_2 _lh_singleR_Bin_1_0) _lh_singleR_Bin_2_0) _lh_singleR_Bin_3_0) ((((bin_2 _lh_singleR_arg1_1) _lh_singleR_arg2_1) _lh_singleR_Bin_4_0) _lh_singleR_arg4_1))))))))))) _lh_rotateR_arg4_0)
-              else
-                ((((doubleR_0 _lh_rotateR_arg1_0) _lh_rotateR_arg2_0) (let rec _lh_doubleR_Bin_4_0 = _lh_rotateR_Bin_4_0 in
-                  (let rec _lh_doubleR_Bin_3_0 = _lh_rotateR_Bin_3_0 in
-                    (let rec _lh_doubleR_Bin_2_0 = _lh_rotateR_Bin_2_0 in
-                      (let rec _lh_doubleR_Bin_1_0 = _lh_rotateR_Bin_1_0 in
-                        (let rec _lh_doubleR_Bin_0_0 = _lh_rotateR_Bin_0_0 in
-                          (fun _lh_doubleR_arg1_1 _lh_doubleR_arg2_1 _lh_doubleR_arg4_1 -> 
-                            (match _lh_doubleR_Bin_4_0 with
-                              | `Bin(_lh_doubleR_Bin_0_1, _lh_doubleR_Bin_1_1, _lh_doubleR_Bin_2_1, _lh_doubleR_Bin_3_1, _lh_doubleR_Bin_4_1) -> 
-                                (let rec size_5 = (fun p_6 -> 
-                                  (let rec _lh_matchIdent_1_0_6 = p_6 in
-                                    (match _lh_matchIdent_1_0_6 with
-                                      | `Tip -> 
-                                        0
-                                      | `Bin(_lh_doubleR_Bin_0_2, _lh_doubleR_Bin_1_2, _lh_doubleR_Bin_2_2, _lh_doubleR_Bin_3_2, _lh_doubleR_Bin_4_2) -> 
-                                        _lh_doubleR_Bin_0_2
-                                      | _ -> 
-                                        (failwith "error")))) in
-                                  (let rec bin_3 = (fun k_3 x_4 l_3 r_3 -> 
-                                    (`Bin((((size_5 l_3) + (size_5 r_3)) + 1), k_3, x_4, l_3, r_3))) in
-                                    ((((bin_3 _lh_doubleR_Bin_1_1) _lh_doubleR_Bin_2_1) ((((bin_3 _lh_doubleR_Bin_1_0) _lh_doubleR_Bin_2_0) _lh_doubleR_Bin_3_0) _lh_doubleR_Bin_3_1)) ((((bin_3 _lh_doubleR_arg1_1) _lh_doubleR_arg2_1) _lh_doubleR_Bin_4_1) _lh_doubleR_arg4_1))))
-                              | _ -> 
-                                ((failwith "error") (`LH_C('d', (`LH_C('o', (`LH_C('u', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C('R', (`LH_N)))))))))))))))))))))))) _lh_rotateR_arg4_0)))
-          | `Tip -> 
-            ((failwith "error") (`LH_C('r', (`LH_C('o', (`LH_C('t', (`LH_C('a', (`LH_C('t', (`LH_C('e', (`LH_C('R', (`LH_C(' ', (`LH_C('T', (`LH_C('i', (`LH_C('p', (`LH_N))))))))))))))))))))))))
-          | _ -> 
-            (failwith "error")))
-      and singleton_0 = (fun _lh_singleton_arg1_0 _lh_singleton_arg2_0 -> 
-        (`Bin(1, _lh_singleton_arg1_0, _lh_singleton_arg2_0, (`Tip), (`Tip))))
-      and doubleL_0 = (fun _lh_doubleL_arg1_0 _lh_doubleL_arg2_0 _lh_doubleL_arg3_0 _lh_doubleL_arg4_0 -> 
-        (((_lh_doubleL_arg4_0 _lh_doubleL_arg1_0) _lh_doubleL_arg2_0) _lh_doubleL_arg3_0))
-      and singleR_0 = (fun _lh_singleR_arg1_0 _lh_singleR_arg2_0 _lh_singleR_arg3_0 _lh_singleR_arg4_0 -> 
-        (((_lh_singleR_arg3_0 _lh_singleR_arg1_0) _lh_singleR_arg2_0) _lh_singleR_arg4_0))
-      and balance_1_5 = (fun _lh_balance_arg1_0 _lh_balance_arg2_0 _lh_balance_arg3_0 _lh_balance_arg4_0 -> 
-        (let rec size_6 = (fun p_7 -> 
-          (let rec _lh_matchIdent_1_0_7 = p_7 in
-            (match _lh_matchIdent_1_0_7 with
+      (`Bin(1, _lh_insert_arg1_1_0, _lh_insert_arg2_1_0, (`Tip), (`Tip)))
+    | `Bin(_lh_insert_Bin_0_1_0, _lh_insert_Bin_1_1_0, _lh_insert_Bin_2_1_0, _lh_insert_Bin_3_1_0, _lh_insert_Bin_4_1_0) -> 
+      let rec balance_1_0 = (fun _lh_balance_arg1_0 _lh_balance_arg2_0 _lh_balance_arg3_0 _lh_balance_arg4_0 -> 
+        (let rec size_0 = (fun p_1 -> 
+          (let rec _lh_matchIdent_1_0_1 = p_1 in
+            (match _lh_matchIdent_1_0_1 with
               | `Tip -> 
                 0
               | `Bin(_lh_balance_Bin_0_0, _lh_balance_Bin_1_0, _lh_balance_Bin_2_0, _lh_balance_Bin_3_0, _lh_balance_Bin_4_0) -> 
                 _lh_balance_Bin_0_0
               | _ -> 
                 (failwith "error")))) in
-          (let rec sizeL_0 = (size_6 _lh_balance_arg3_0) in
-            (let rec sizeR_0 = (size_6 _lh_balance_arg4_0) in
+          (let rec sizeL_0 = (size_0 _lh_balance_arg3_0) in
+            (let rec sizeR_0 = (size_0 _lh_balance_arg4_0) in
               (let rec sizeX_0 = ((sizeL_0 + sizeR_0) + 1) in
                 (if ((sizeL_0 + sizeR_0) <= 1) then
                   (`Bin(sizeX_0, _lh_balance_arg1_0, _lh_balance_arg2_0, _lh_balance_arg3_0, _lh_balance_arg4_0))
@@ -337,41 +275,105 @@ insert_lh__d4 _lh_insert_arg1_1_5 _lh_insert_arg2_1_5 _lh_insert_arg3_0 =
                       ((((rotateR_0 _lh_balance_arg1_0) _lh_balance_arg2_0) _lh_balance_arg3_0) _lh_balance_arg4_0)
                     else
                       (`Bin(sizeX_0, _lh_balance_arg1_0, _lh_balance_arg2_0, _lh_balance_arg3_0, _lh_balance_arg4_0))))))))))
-      and doubleR_0 = (fun _lh_doubleR_arg1_0 _lh_doubleR_arg2_0 _lh_doubleR_arg3_0 _lh_doubleR_arg4_0 -> 
-        (((_lh_doubleR_arg3_0 _lh_doubleR_arg1_0) _lh_doubleR_arg2_0) _lh_doubleR_arg4_0))
+      and rotateR_0 = (fun _lh_rotateR_arg1_0 _lh_rotateR_arg2_0 _lh_rotateR_arg3_0 _lh_rotateR_arg4_0 -> 
+        (match _lh_rotateR_arg3_0 with
+          | `Bin(_lh_rotateR_Bin_0_0, _lh_rotateR_Bin_1_0, _lh_rotateR_Bin_2_0, _lh_rotateR_Bin_3_0, _lh_rotateR_Bin_4_0) -> 
+            (let rec size_1 = (fun p_2 -> 
+              (let rec _lh_matchIdent_1_0_2 = p_2 in
+                (match _lh_matchIdent_1_0_2 with
+                  | `Tip -> 
+                    0
+                  | `Bin(_lh_rotateR_Bin_0_1, _lh_rotateR_Bin_1_1, _lh_rotateR_Bin_2_1, _lh_rotateR_Bin_3_1, _lh_rotateR_Bin_4_1) -> 
+                    _lh_rotateR_Bin_0_1
+                  | _ -> 
+                    (failwith "error")))) in
+              (if ((size_1 _lh_rotateR_Bin_4_0) < (2 * (size_1 _lh_rotateR_Bin_3_0))) then
+                ((((singleR_0 _lh_rotateR_arg1_0) _lh_rotateR_arg2_0) (let rec _lh_singleR_Bin_4_0 = _lh_rotateR_Bin_4_0 in
+                  (let rec _lh_singleR_Bin_3_0 = _lh_rotateR_Bin_3_0 in
+                    (let rec _lh_singleR_Bin_2_0 = _lh_rotateR_Bin_2_0 in
+                      (let rec _lh_singleR_Bin_1_0 = _lh_rotateR_Bin_1_0 in
+                        (let rec _lh_singleR_Bin_0_0 = _lh_rotateR_Bin_0_0 in
+                          (fun _lh_singleR_arg1_0 _lh_singleR_arg2_0 _lh_singleR_arg4_0 -> 
+                            (let rec size_2 = (fun p_3 -> 
+                              (let rec _lh_matchIdent_1_0_3 = p_3 in
+                                (match _lh_matchIdent_1_0_3 with
+                                  | `Tip -> 
+                                    0
+                                  | `Bin(_lh_singleR_Bin_0_1, _lh_singleR_Bin_1_1, _lh_singleR_Bin_2_1, _lh_singleR_Bin_3_1, _lh_singleR_Bin_4_1) -> 
+                                    _lh_singleR_Bin_0_1
+                                  | _ -> 
+                                    (failwith "error")))) in
+                              (let rec bin_0 = (fun k_0 x_1 l_0 r_0 -> 
+                                (`Bin((((size_2 l_0) + (size_2 r_0)) + 1), k_0, x_1, l_0, r_0))) in
+                                ((((bin_0 _lh_singleR_Bin_1_0) _lh_singleR_Bin_2_0) _lh_singleR_Bin_3_0) ((((bin_0 _lh_singleR_arg1_0) _lh_singleR_arg2_0) _lh_singleR_Bin_4_0) _lh_singleR_arg4_0))))))))))) _lh_rotateR_arg4_0)
+              else
+                ((((doubleR_0 _lh_rotateR_arg1_0) _lh_rotateR_arg2_0) (let rec _lh_doubleR_Bin_4_0 = _lh_rotateR_Bin_4_0 in
+                  (let rec _lh_doubleR_Bin_3_0 = _lh_rotateR_Bin_3_0 in
+                    (let rec _lh_doubleR_Bin_2_0 = _lh_rotateR_Bin_2_0 in
+                      (let rec _lh_doubleR_Bin_1_0 = _lh_rotateR_Bin_1_0 in
+                        (let rec _lh_doubleR_Bin_0_0 = _lh_rotateR_Bin_0_0 in
+                          (fun _lh_doubleR_arg1_0 _lh_doubleR_arg2_0 _lh_doubleR_arg4_0 -> 
+                            (match _lh_doubleR_Bin_4_0 with
+                              | `Bin(_lh_doubleR_Bin_0_1, _lh_doubleR_Bin_1_1, _lh_doubleR_Bin_2_1, _lh_doubleR_Bin_3_1, _lh_doubleR_Bin_4_1) -> 
+                                (let rec size_3 = (fun p_4 -> 
+                                  (let rec _lh_matchIdent_1_0_4 = p_4 in
+                                    (match _lh_matchIdent_1_0_4 with
+                                      | `Tip -> 
+                                        0
+                                      | `Bin(_lh_doubleR_Bin_0_2, _lh_doubleR_Bin_1_2, _lh_doubleR_Bin_2_2, _lh_doubleR_Bin_3_2, _lh_doubleR_Bin_4_2) -> 
+                                        _lh_doubleR_Bin_0_2
+                                      | _ -> 
+                                        (failwith "error")))) in
+                                  (let rec bin_1 = (fun k_1 x_2 l_1 r_1 -> 
+                                    (`Bin((((size_3 l_1) + (size_3 r_1)) + 1), k_1, x_2, l_1, r_1))) in
+                                    ((((bin_1 _lh_doubleR_Bin_1_1) _lh_doubleR_Bin_2_1) ((((bin_1 _lh_doubleR_Bin_1_0) _lh_doubleR_Bin_2_0) _lh_doubleR_Bin_3_0) _lh_doubleR_Bin_3_1)) ((((bin_1 _lh_doubleR_arg1_0) _lh_doubleR_arg2_0) _lh_doubleR_Bin_4_1) _lh_doubleR_arg4_0))))
+                              | _ -> 
+                                ((failwith "error") (`LH_C('d', (`LH_C('o', (`LH_C('u', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C('R', (`LH_N)))))))))))))))))))))))) _lh_rotateR_arg4_0)))
+          | `Tip -> 
+            ((failwith "error") (`LH_C('r', (`LH_C('o', (`LH_C('t', (`LH_C('a', (`LH_C('t', (`LH_C('e', (`LH_C('R', (`LH_C(' ', (`LH_C('T', (`LH_C('i', (`LH_C('p', (`LH_N))))))))))))))))))))))))
+          | _ -> 
+            (failwith "error")))
+      and singleton_0 = (fun _lh_singleton_arg1_0 _lh_singleton_arg2_0 -> 
+        (`Bin(1, _lh_singleton_arg1_0, _lh_singleton_arg2_0, (`Tip), (`Tip))))
+      and doubleL_0 = (fun _lh_doubleL_arg1_0 _lh_doubleL_arg2_0 _lh_doubleL_arg3_0 _lh_doubleL_arg4_0 -> 
+        (((_lh_doubleL_arg4_0 _lh_doubleL_arg1_0) _lh_doubleL_arg2_0) _lh_doubleL_arg3_0))
+      and singleR_0 = (fun _lh_singleR_arg1_1 _lh_singleR_arg2_1 _lh_singleR_arg3_0 _lh_singleR_arg4_1 -> 
+        (((_lh_singleR_arg3_0 _lh_singleR_arg1_1) _lh_singleR_arg2_1) _lh_singleR_arg4_1))
+      and doubleR_0 = (fun _lh_doubleR_arg1_1 _lh_doubleR_arg2_1 _lh_doubleR_arg3_0 _lh_doubleR_arg4_1 -> 
+        (((_lh_doubleR_arg3_0 _lh_doubleR_arg1_1) _lh_doubleR_arg2_1) _lh_doubleR_arg4_1))
       and singleL_0 = (fun _lh_singleL_arg1_0 _lh_singleL_arg2_0 _lh_singleL_arg3_0 _lh_singleL_arg4_0 -> 
         (((_lh_singleL_arg4_0 _lh_singleL_arg1_0) _lh_singleL_arg2_0) _lh_singleL_arg3_0))
       and rotateL_0 = (fun _lh_rotateL_arg1_0 _lh_rotateL_arg2_0 _lh_rotateL_arg3_0 _lh_rotateL_arg4_0 -> 
         (match _lh_rotateL_arg4_0 with
           | `Bin(_lh_rotateL_Bin_0_0, _lh_rotateL_Bin_1_0, _lh_rotateL_Bin_2_0, _lh_rotateL_Bin_3_0, _lh_rotateL_Bin_4_0) -> 
-            (let rec size_0 = (fun p_1 -> 
-              (let rec _lh_matchIdent_1_0_1 = p_1 in
-                (match _lh_matchIdent_1_0_1 with
+            (let rec size_4 = (fun p_5 -> 
+              (let rec _lh_matchIdent_1_0_5 = p_5 in
+                (match _lh_matchIdent_1_0_5 with
                   | `Tip -> 
                     0
                   | `Bin(_lh_rotateL_Bin_0_1, _lh_rotateL_Bin_1_1, _lh_rotateL_Bin_2_1, _lh_rotateL_Bin_3_1, _lh_rotateL_Bin_4_1) -> 
                     _lh_rotateL_Bin_0_1
                   | _ -> 
                     (failwith "error")))) in
-              (if ((size_0 _lh_rotateL_Bin_3_0) < (2 * (size_0 _lh_rotateL_Bin_4_0))) then
+              (if ((size_4 _lh_rotateL_Bin_3_0) < (2 * (size_4 _lh_rotateL_Bin_4_0))) then
                 ((((singleL_0 _lh_rotateL_arg1_0) _lh_rotateL_arg2_0) _lh_rotateL_arg3_0) (let rec _lh_singleL_Bin_4_0 = _lh_rotateL_Bin_4_0 in
                   (let rec _lh_singleL_Bin_3_0 = _lh_rotateL_Bin_3_0 in
                     (let rec _lh_singleL_Bin_2_0 = _lh_rotateL_Bin_2_0 in
                       (let rec _lh_singleL_Bin_1_0 = _lh_rotateL_Bin_1_0 in
                         (let rec _lh_singleL_Bin_0_0 = _lh_rotateL_Bin_0_0 in
                           (fun _lh_singleL_arg1_1 _lh_singleL_arg2_1 _lh_singleL_arg3_1 -> 
-                            (let rec size_1 = (fun p_2 -> 
-                              (let rec _lh_matchIdent_1_0_2 = p_2 in
-                                (match _lh_matchIdent_1_0_2 with
+                            (let rec size_5 = (fun p_6 -> 
+                              (let rec _lh_matchIdent_1_0_6 = p_6 in
+                                (match _lh_matchIdent_1_0_6 with
                                   | `Tip -> 
                                     0
                                   | `Bin(_lh_singleL_Bin_0_1, _lh_singleL_Bin_1_1, _lh_singleL_Bin_2_1, _lh_singleL_Bin_3_1, _lh_singleL_Bin_4_1) -> 
                                     _lh_singleL_Bin_0_1
                                   | _ -> 
                                     (failwith "error")))) in
-                              (let rec bin_0 = (fun k_0 x_1 l_0 r_0 -> 
-                                (`Bin((((size_1 l_0) + (size_1 r_0)) + 1), k_0, x_1, l_0, r_0))) in
-                                ((((bin_0 _lh_singleL_Bin_1_0) _lh_singleL_Bin_2_0) ((((bin_0 _lh_singleL_arg1_1) _lh_singleL_arg2_1) _lh_singleL_arg3_1) _lh_singleL_Bin_3_0)) _lh_singleL_Bin_4_0))))))))))
+                              (let rec bin_2 = (fun k_2 x_3 l_2 r_2 -> 
+                                (`Bin((((size_5 l_2) + (size_5 r_2)) + 1), k_2, x_3, l_2, r_2))) in
+                                ((((bin_2 _lh_singleL_Bin_1_0) _lh_singleL_Bin_2_0) ((((bin_2 _lh_singleL_arg1_1) _lh_singleL_arg2_1) _lh_singleL_arg3_1) _lh_singleL_Bin_3_0)) _lh_singleL_Bin_4_0))))))))))
               else
                 ((((doubleL_0 _lh_rotateL_arg1_0) _lh_rotateL_arg2_0) _lh_rotateL_arg3_0) (let rec _lh_doubleL_Bin_4_0 = _lh_rotateL_Bin_4_0 in
                   (let rec _lh_doubleL_Bin_3_0 = _lh_rotateL_Bin_3_0 in
@@ -381,39 +383,37 @@ insert_lh__d4 _lh_insert_arg1_1_5 _lh_insert_arg2_1_5 _lh_insert_arg3_0 =
                           (fun _lh_doubleL_arg1_1 _lh_doubleL_arg2_1 _lh_doubleL_arg3_1 -> 
                             (match _lh_doubleL_Bin_3_0 with
                               | `Bin(_lh_doubleL_Bin_0_1, _lh_doubleL_Bin_1_1, _lh_doubleL_Bin_2_1, _lh_doubleL_Bin_3_1, _lh_doubleL_Bin_4_1) -> 
-                                (let rec size_2 = (fun p_3 -> 
-                                  (let rec _lh_matchIdent_1_0_3 = p_3 in
-                                    (match _lh_matchIdent_1_0_3 with
+                                (let rec size_6 = (fun p_7 -> 
+                                  (let rec _lh_matchIdent_1_0_7 = p_7 in
+                                    (match _lh_matchIdent_1_0_7 with
                                       | `Tip -> 
                                         0
                                       | `Bin(_lh_doubleL_Bin_0_2, _lh_doubleL_Bin_1_2, _lh_doubleL_Bin_2_2, _lh_doubleL_Bin_3_2, _lh_doubleL_Bin_4_2) -> 
                                         _lh_doubleL_Bin_0_2
                                       | _ -> 
                                         (failwith "error")))) in
-                                  (let rec bin_1 = (fun k_1 x_2 l_1 r_1 -> 
-                                    (`Bin((((size_2 l_1) + (size_2 r_1)) + 1), k_1, x_2, l_1, r_1))) in
-                                    ((((bin_1 _lh_doubleL_Bin_1_1) _lh_doubleL_Bin_2_1) ((((bin_1 _lh_doubleL_arg1_1) _lh_doubleL_arg2_1) _lh_doubleL_arg3_1) _lh_doubleL_Bin_3_1)) ((((bin_1 _lh_doubleL_Bin_1_0) _lh_doubleL_Bin_2_0) _lh_doubleL_Bin_4_1) _lh_doubleL_Bin_4_0))))
+                                  (let rec bin_3 = (fun k_3 x_4 l_3 r_3 -> 
+                                    (`Bin((((size_6 l_3) + (size_6 r_3)) + 1), k_3, x_4, l_3, r_3))) in
+                                    ((((bin_3 _lh_doubleL_Bin_1_1) _lh_doubleL_Bin_2_1) ((((bin_3 _lh_doubleL_arg1_1) _lh_doubleL_arg2_1) _lh_doubleL_arg3_1) _lh_doubleL_Bin_3_1)) ((((bin_3 _lh_doubleL_Bin_1_0) _lh_doubleL_Bin_2_0) _lh_doubleL_Bin_4_1) _lh_doubleL_Bin_4_0))))
                               | _ -> 
                                 ((failwith "error") (`LH_C('d', (`LH_C('o', (`LH_C('u', (`LH_C('b', (`LH_C('l', (`LH_C('e', (`LH_C('L', (`LH_N))))))))))))))))))))))))))
           | `Tip -> 
             ((failwith "error") (`LH_C('r', (`LH_C('o', (`LH_C('t', (`LH_C('a', (`LH_C('t', (`LH_C('e', (`LH_C('L', (`LH_C(' ', (`LH_C('T', (`LH_C('i', (`LH_C('p', (`LH_N))))))))))))))))))))))))
           | _ -> 
             (failwith "error")))
-      in (let rec _lh_matchIdent_1_0_8 = ((compareIntInt_lh__d7 _lh_insert_arg1_1_5) _lh_insert_Bin_1_1_5) in
-        ((((((((_lh_matchIdent_1_0_8 _lh_insert_Bin_1_1_5) _lh_insert_Bin_2_1_5) _lh_insert_Bin_3_1_5) _lh_insert_Bin_4_1_5) _lh_insert_arg1_1_5) _lh_insert_arg2_1_5) balance_1_5) _lh_insert_Bin_0_1_5))
+      in (let rec _lh_matchIdent_1_0_8 = ((compareIntInt_lh__d8 _lh_insert_arg1_1_0) _lh_insert_Bin_1_1_0) in
+        ((((((((_lh_matchIdent_1_0_8 _lh_insert_Bin_1_1_0) _lh_insert_Bin_2_1_0) _lh_insert_Bin_3_1_0) _lh_insert_Bin_4_1_0) _lh_insert_arg1_1_0) _lh_insert_arg2_1_0) balance_1_0) _lh_insert_Bin_0_1_0))
     | _ -> 
       (failwith "error"));;
 let rec extend_lh__d4 _lh_extend_arg1_1 _lh_extend_arg2_1 _lh_extend_arg3_1 =
   (((insert_lh__d4 _lh_extend_arg2_1) _lh_extend_arg3_1) _lh_extend_arg1_1);;
-let rec compareIntInt_lh__d8 _lh_compareIntInt_arg1_6 _lh_compareIntInt_arg2_8_6 =
-  (_lh_compareIntInt_arg1_6 _lh_compareIntInt_arg2_8_6);;
 let rec mapLookup_lh__d4 _lh_mapLookup_arg1_1_6_1 _lh_mapLookup_arg2_1 =
   (match _lh_mapLookup_arg2_1 with
     | `Tip -> 
       (fun _lh_extend_maybe_LH_P2_0_6_5 _lh_extend_maybe_LH_P2_1_6_5 _lh_extend_maybe_arg1_6_5 _lh_extend_maybe_arg3_6_5 -> 
         (`Just((((extend_lh__d4 _lh_extend_maybe_arg1_6_5) (`LH_P2(_lh_extend_maybe_LH_P2_0_6_5, _lh_extend_maybe_LH_P2_1_6_5))) _lh_extend_maybe_arg3_6_5))))
     | `Bin(_lh_mapLookup_Bin_0_1, _lh_mapLookup_Bin_1_1, _lh_mapLookup_Bin_2_1_6_1, _lh_mapLookup_Bin_3_1_6_1, _lh_mapLookup_Bin_4_1_6_1) -> 
-      (let rec _lh_matchIdent_6_7 = ((compareIntInt_lh__d8 _lh_mapLookup_arg1_1_6_1) _lh_mapLookup_Bin_1_1) in
+      (let rec _lh_matchIdent_6_7 = ((compareIntInt_lh__d7 _lh_mapLookup_arg1_1_6_1) _lh_mapLookup_Bin_1_1) in
         ((((_lh_matchIdent_6_7 _lh_mapLookup_Bin_3_1_6_1) _lh_mapLookup_arg1_1_6_1) _lh_mapLookup_Bin_4_1_6_1) _lh_mapLookup_Bin_2_1_6_1))
     | _ -> 
       (failwith "error"));;
@@ -455,18 +455,16 @@ let rec compareIntInt_lh__d6 _lh_compareIntInt_arg1_0 _lh_compareIntInt_arg2_0 =
     | _ -> 
       (failwith "error"))
 and
-insert_lh__d3 _lh_insert_arg1_1_7 _lh_insert_arg2_1_7 _lh_insert_arg3_2 =
+insert_lh__d3 _lh_insert_arg1_1_2 _lh_insert_arg2_1_2 _lh_insert_arg3_2 =
   (match _lh_insert_arg3_2 with
     | `Tip -> 
-      (`Bin(1, _lh_insert_arg1_1_7, _lh_insert_arg2_1_7, (`Tip), (`Tip)))
-    | `Bin(_lh_insert_Bin_0_1_7, _lh_insert_Bin_1_1_7, _lh_insert_Bin_2_1_7, _lh_insert_Bin_3_1_7, _lh_insert_Bin_4_1_7) -> 
+      (`Bin(1, _lh_insert_arg1_1_2, _lh_insert_arg2_1_2, (`Tip), (`Tip)))
+    | `Bin(_lh_insert_Bin_0_1_2, _lh_insert_Bin_1_1_2, _lh_insert_Bin_2_1_2, _lh_insert_Bin_3_1_2, _lh_insert_Bin_4_1_2) -> 
       let rec singleton_2 = (fun _lh_singleton_arg1_2 _lh_singleton_arg2_2 -> 
         (`Bin(1, _lh_singleton_arg1_2, _lh_singleton_arg2_2, (`Tip), (`Tip))))
       and doubleR_2 = (fun _lh_doubleR_arg1_5 _lh_doubleR_arg2_5 _lh_doubleR_arg3_2 _lh_doubleR_arg4_5 -> 
         (((_lh_doubleR_arg3_2 _lh_doubleR_arg1_5) _lh_doubleR_arg2_5) _lh_doubleR_arg4_5))
-      and singleL_2 = (fun _lh_singleL_arg1_5 _lh_singleL_arg2_5 _lh_singleL_arg3_5 _lh_singleL_arg4_2 -> 
-        (((_lh_singleL_arg4_2 _lh_singleL_arg1_5) _lh_singleL_arg2_5) _lh_singleL_arg3_5))
-      and balance_1_7 = (fun _lh_balance_arg1_2 _lh_balance_arg2_2 _lh_balance_arg3_2 _lh_balance_arg4_2 -> 
+      and balance_1_2 = (fun _lh_balance_arg1_2 _lh_balance_arg2_2 _lh_balance_arg3_2 _lh_balance_arg4_2 -> 
         (let rec size_1_4 = (fun p_1_5 -> 
           (let rec _lh_matchIdent_1_6_0 = p_1_5 in
             (match _lh_matchIdent_1_6_0 with
@@ -489,6 +487,8 @@ insert_lh__d3 _lh_insert_arg1_1_7 _lh_insert_arg2_1_7 _lh_insert_arg3_2 =
                       ((((rotateR_2 _lh_balance_arg1_2) _lh_balance_arg2_2) _lh_balance_arg3_2) _lh_balance_arg4_2)
                     else
                       (`Bin(sizeX_2, _lh_balance_arg1_2, _lh_balance_arg2_2, _lh_balance_arg3_2, _lh_balance_arg4_2))))))))))
+      and singleL_2 = (fun _lh_singleL_arg1_5 _lh_singleL_arg2_5 _lh_singleL_arg3_5 _lh_singleL_arg4_2 -> 
+        (((_lh_singleL_arg4_2 _lh_singleL_arg1_5) _lh_singleL_arg2_5) _lh_singleL_arg3_5))
       and singleR_2 = (fun _lh_singleR_arg1_5 _lh_singleR_arg2_5 _lh_singleR_arg3_2 _lh_singleR_arg4_5 -> 
         (((_lh_singleR_arg3_2 _lh_singleR_arg1_5) _lh_singleR_arg2_5) _lh_singleR_arg4_5))
       and doubleL_2 = (fun _lh_doubleL_arg1_5 _lh_doubleL_arg2_5 _lh_doubleL_arg3_5 _lh_doubleL_arg4_2 -> 
@@ -609,8 +609,8 @@ insert_lh__d3 _lh_insert_arg1_1_7 _lh_insert_arg2_1_7 _lh_insert_arg3_2 =
             ((failwith "error") (`LH_C('r', (`LH_C('o', (`LH_C('t', (`LH_C('a', (`LH_C('t', (`LH_C('e', (`LH_C('L', (`LH_C(' ', (`LH_C('T', (`LH_C('i', (`LH_C('p', (`LH_N))))))))))))))))))))))))
           | _ -> 
             (failwith "error")))
-      in (let rec _lh_matchIdent_1_6_7 = ((compareIntInt_lh__d6 _lh_insert_arg1_1_7) _lh_insert_Bin_1_1_7) in
-        ((((((((_lh_matchIdent_1_6_7 _lh_insert_Bin_1_1_7) _lh_insert_Bin_2_1_7) _lh_insert_Bin_3_1_7) _lh_insert_Bin_4_1_7) _lh_insert_arg1_1_7) _lh_insert_arg2_1_7) balance_1_7) _lh_insert_Bin_0_1_7))
+      in (let rec _lh_matchIdent_1_6_7 = ((compareIntInt_lh__d6 _lh_insert_arg1_1_2) _lh_insert_Bin_1_1_2) in
+        ((((((((_lh_matchIdent_1_6_7 _lh_insert_Bin_1_1_2) _lh_insert_Bin_2_1_2) _lh_insert_Bin_3_1_2) _lh_insert_Bin_4_1_2) _lh_insert_arg1_1_2) _lh_insert_arg2_1_2) balance_1_2) _lh_insert_Bin_0_1_2))
     | _ -> 
       (failwith "error"));;
 let rec extend_lh__d3 _lh_extend_arg1_0 _lh_extend_arg2_0 _lh_extend_arg3_0 =
@@ -659,22 +659,22 @@ let rec isJust_lh__d1 _lh_isJust_arg1_0 =
   _lh_isJust_arg1_0;;
 let rec compareIntInt_lh__d3 _lh_compareIntInt_arg1_4 _lh_compareIntInt_arg2_5_2 =
   (match _lh_compareIntInt_arg1_4 with
-    | `LH_P2(_lh_compareIntInt_LH_P2_0_1_0_2, _lh_compareIntInt_LH_P2_1_1_0_2) -> 
+    | `LH_P2(_lh_compareIntInt_LH_P2_0_1_0_0, _lh_compareIntInt_LH_P2_1_1_0_0) -> 
       (match _lh_compareIntInt_arg2_5_2 with
-        | `LH_P2(_lh_compareIntInt_LH_P2_0_1_0_3, _lh_compareIntInt_LH_P2_1_1_0_3) -> 
-          (if (_lh_compareIntInt_LH_P2_0_1_0_2 > _lh_compareIntInt_LH_P2_0_1_0_3) then
+        | `LH_P2(_lh_compareIntInt_LH_P2_0_1_0_1, _lh_compareIntInt_LH_P2_1_1_0_1) -> 
+          (if (_lh_compareIntInt_LH_P2_0_1_0_0 > _lh_compareIntInt_LH_P2_0_1_0_1) then
             (fun _lh_mapLookup_Bin_3_2_4_2 _lh_mapLookup_arg1_2_4_2 _lh_mapLookup_Bin_4_2_4_2 _lh_mapLookup_Bin_2_2_4_2 -> 
               ((mapLookup_lh__d2 _lh_mapLookup_arg1_2_4_2) _lh_mapLookup_Bin_4_2_4_2))
           else
-            (if (_lh_compareIntInt_LH_P2_0_1_0_2 < _lh_compareIntInt_LH_P2_0_1_0_3) then
+            (if (_lh_compareIntInt_LH_P2_0_1_0_0 < _lh_compareIntInt_LH_P2_0_1_0_1) then
               (fun _lh_mapLookup_Bin_3_2_4_3 _lh_mapLookup_arg1_2_4_3 _lh_mapLookup_Bin_4_2_4_3 _lh_mapLookup_Bin_2_2_4_3 -> 
                 ((mapLookup_lh__d2 _lh_mapLookup_arg1_2_4_3) _lh_mapLookup_Bin_3_2_4_3))
             else
-              (if (_lh_compareIntInt_LH_P2_1_1_0_2 > _lh_compareIntInt_LH_P2_1_1_0_3) then
+              (if (_lh_compareIntInt_LH_P2_1_1_0_0 > _lh_compareIntInt_LH_P2_1_1_0_1) then
                 (fun _lh_mapLookup_Bin_3_2_4_4 _lh_mapLookup_arg1_2_4_4 _lh_mapLookup_Bin_4_2_4_4 _lh_mapLookup_Bin_2_2_4_4 -> 
                   ((mapLookup_lh__d2 _lh_mapLookup_arg1_2_4_4) _lh_mapLookup_Bin_4_2_4_4))
               else
-                (if (_lh_compareIntInt_LH_P2_1_1_0_2 < _lh_compareIntInt_LH_P2_1_1_0_3) then
+                (if (_lh_compareIntInt_LH_P2_1_1_0_0 < _lh_compareIntInt_LH_P2_1_1_0_1) then
                   (fun _lh_mapLookup_Bin_3_2_4_5 _lh_mapLookup_arg1_2_4_5 _lh_mapLookup_Bin_4_2_4_5 _lh_mapLookup_Bin_2_2_4_5 -> 
                     ((mapLookup_lh__d2 _lh_mapLookup_arg1_2_4_5) _lh_mapLookup_Bin_3_2_4_5))
                 else
@@ -759,7 +759,7 @@ let rec flip_lh__d3 _lh_flip_arg1_0 =
       (`Male)
     | _ -> 
       (failwith "error"));;
-let rec fPiece_lh__d1 _lh_fPiece_arg1_0 =
+let rec fPiece_lh__d1 =
   (let rec _lh_search_P_2_2 = (let rec _lh_listcomp_fun_ls_t_2_2 = (fun _lh_listcomp_fun_2_8 _lh_search_LH_P2_1_1_4 _lh_search_P_0_1_4 _lh_listcomp_fun_ls_t_2_3 _lh_listcomp_fun_2_9 -> 
     (_lh_listcomp_fun_2_9 _lh_listcomp_fun_ls_t_2_3)) in
     (let rec _lh_listcomp_fun_ls_h_8 = (let rec _lh_fit_LH_C_1_3_2 = (let rec _lh_fit_LH_C_1_3_3 = (let rec _lh_fit_LH_C_1_3_4 = (let rec _lh_fit_LH_C_1_3_5 = (fun _lh_fit_arg1_4_0 _lh_fit_arg2_4_0 _lh_fit_arg3_4_0 -> 
@@ -777,24 +777,24 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 =
                   (if (((_lh_extend_maybe_LH_P2_0_6_6 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_6_6 < 1)) || (_lh_extend_maybe_LH_P2_1_6_6 > maxCol_lh__d4)) then
                     (`Nothing)
                   else
-                    (let rec _lh_matchIdent_6_8 = ((check_lh__d4 _lh_extend_maybe_arg1_6_6) (let rec _lh_compareIntInt_LH_P2_1_7_0 = _lh_extend_maybe_LH_P2_1_6_6 in
-                      (let rec _lh_compareIntInt_LH_P2_0_7_0 = _lh_extend_maybe_LH_P2_0_6_6 in
+                    (let rec _lh_matchIdent_6_8 = ((check_lh__d4 _lh_extend_maybe_arg1_6_6) (let rec _lh_compareIntInt_LH_P2_1_6_8 = _lh_extend_maybe_LH_P2_1_6_6 in
+                      (let rec _lh_compareIntInt_LH_P2_0_6_8 = _lh_extend_maybe_LH_P2_0_6_6 in
                         (fun _lh_compareIntInt_arg2_3_6 -> 
                           (match _lh_compareIntInt_arg2_3_6 with
-                            | `LH_P2(_lh_compareIntInt_LH_P2_0_7_1, _lh_compareIntInt_LH_P2_1_7_1) -> 
-                              (if (_lh_compareIntInt_LH_P2_0_7_0 > _lh_compareIntInt_LH_P2_0_7_1) then
+                            | `LH_P2(_lh_compareIntInt_LH_P2_0_6_9, _lh_compareIntInt_LH_P2_1_6_9) -> 
+                              (if (_lh_compareIntInt_LH_P2_0_6_8 > _lh_compareIntInt_LH_P2_0_6_9) then
                                 (fun _lh_mapLookup_Bin_3_1_6_2 _lh_mapLookup_arg1_1_6_2 _lh_mapLookup_Bin_4_1_6_2 _lh_mapLookup_Bin_2_1_6_2 -> 
                                   ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_6_2) _lh_mapLookup_Bin_4_1_6_2))
                               else
-                                (if (_lh_compareIntInt_LH_P2_0_7_0 < _lh_compareIntInt_LH_P2_0_7_1) then
+                                (if (_lh_compareIntInt_LH_P2_0_6_8 < _lh_compareIntInt_LH_P2_0_6_9) then
                                   (fun _lh_mapLookup_Bin_3_1_6_3 _lh_mapLookup_arg1_1_6_3 _lh_mapLookup_Bin_4_1_6_3 _lh_mapLookup_Bin_2_1_6_3 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_6_3) _lh_mapLookup_Bin_3_1_6_3))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_1_7_0 > _lh_compareIntInt_LH_P2_1_7_1) then
+                                  (if (_lh_compareIntInt_LH_P2_1_6_8 > _lh_compareIntInt_LH_P2_1_6_9) then
                                     (fun _lh_mapLookup_Bin_3_1_6_4 _lh_mapLookup_arg1_1_6_4 _lh_mapLookup_Bin_4_1_6_4 _lh_mapLookup_Bin_2_1_6_4 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_6_4) _lh_mapLookup_Bin_4_1_6_4))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_7_0 < _lh_compareIntInt_LH_P2_1_7_1) then
+                                    (if (_lh_compareIntInt_LH_P2_1_6_8 < _lh_compareIntInt_LH_P2_1_6_9) then
                                       (fun _lh_mapLookup_Bin_3_1_6_5 _lh_mapLookup_arg1_1_6_5 _lh_mapLookup_Bin_4_1_6_5 _lh_mapLookup_Bin_2_1_6_5 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_6_5) _lh_mapLookup_Bin_3_1_6_5))
                                     else
@@ -824,24 +824,24 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 =
                   (if (((_lh_extend_maybe_LH_P2_0_6_8 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_6_8 < 1)) || (_lh_extend_maybe_LH_P2_1_6_8 > maxCol_lh__d4)) then
                     (`Nothing)
                   else
-                    (let rec _lh_matchIdent_7_0 = ((check_lh__d4 _lh_extend_maybe_arg1_6_8) (let rec _lh_compareIntInt_LH_P2_1_7_2 = _lh_extend_maybe_LH_P2_1_6_8 in
-                      (let rec _lh_compareIntInt_LH_P2_0_7_2 = _lh_extend_maybe_LH_P2_0_6_8 in
+                    (let rec _lh_matchIdent_7_0 = ((check_lh__d4 _lh_extend_maybe_arg1_6_8) (let rec _lh_compareIntInt_LH_P2_1_7_0 = _lh_extend_maybe_LH_P2_1_6_8 in
+                      (let rec _lh_compareIntInt_LH_P2_0_7_0 = _lh_extend_maybe_LH_P2_0_6_8 in
                         (fun _lh_compareIntInt_arg2_3_7 -> 
                           (match _lh_compareIntInt_arg2_3_7 with
-                            | `LH_P2(_lh_compareIntInt_LH_P2_0_7_3, _lh_compareIntInt_LH_P2_1_7_3) -> 
-                              (if (_lh_compareIntInt_LH_P2_0_7_2 > _lh_compareIntInt_LH_P2_0_7_3) then
+                            | `LH_P2(_lh_compareIntInt_LH_P2_0_7_1, _lh_compareIntInt_LH_P2_1_7_1) -> 
+                              (if (_lh_compareIntInt_LH_P2_0_7_0 > _lh_compareIntInt_LH_P2_0_7_1) then
                                 (fun _lh_mapLookup_Bin_3_1_6_7 _lh_mapLookup_arg1_1_6_7 _lh_mapLookup_Bin_4_1_6_7 _lh_mapLookup_Bin_2_1_6_7 -> 
                                   ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_6_7) _lh_mapLookup_Bin_4_1_6_7))
                               else
-                                (if (_lh_compareIntInt_LH_P2_0_7_2 < _lh_compareIntInt_LH_P2_0_7_3) then
+                                (if (_lh_compareIntInt_LH_P2_0_7_0 < _lh_compareIntInt_LH_P2_0_7_1) then
                                   (fun _lh_mapLookup_Bin_3_1_6_8 _lh_mapLookup_arg1_1_6_8 _lh_mapLookup_Bin_4_1_6_8 _lh_mapLookup_Bin_2_1_6_8 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_6_8) _lh_mapLookup_Bin_3_1_6_8))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_1_7_2 > _lh_compareIntInt_LH_P2_1_7_3) then
+                                  (if (_lh_compareIntInt_LH_P2_1_7_0 > _lh_compareIntInt_LH_P2_1_7_1) then
                                     (fun _lh_mapLookup_Bin_3_1_6_9 _lh_mapLookup_arg1_1_6_9 _lh_mapLookup_Bin_4_1_6_9 _lh_mapLookup_Bin_2_1_6_9 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_6_9) _lh_mapLookup_Bin_4_1_6_9))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_7_2 < _lh_compareIntInt_LH_P2_1_7_3) then
+                                    (if (_lh_compareIntInt_LH_P2_1_7_0 < _lh_compareIntInt_LH_P2_1_7_1) then
                                       (fun _lh_mapLookup_Bin_3_1_7_0 _lh_mapLookup_arg1_1_7_0 _lh_mapLookup_Bin_4_1_7_0 _lh_mapLookup_Bin_2_1_7_0 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_7_0) _lh_mapLookup_Bin_3_1_7_0))
                                     else
@@ -871,24 +871,24 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 =
                   (if (((_lh_extend_maybe_LH_P2_0_7_0 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_7_0 < 1)) || (_lh_extend_maybe_LH_P2_1_7_0 > maxCol_lh__d4)) then
                     (`Nothing)
                   else
-                    (let rec _lh_matchIdent_7_2 = ((check_lh__d4 _lh_extend_maybe_arg1_7_0) (let rec _lh_compareIntInt_LH_P2_1_7_4 = _lh_extend_maybe_LH_P2_1_7_0 in
-                      (let rec _lh_compareIntInt_LH_P2_0_7_4 = _lh_extend_maybe_LH_P2_0_7_0 in
+                    (let rec _lh_matchIdent_7_2 = ((check_lh__d4 _lh_extend_maybe_arg1_7_0) (let rec _lh_compareIntInt_LH_P2_1_7_2 = _lh_extend_maybe_LH_P2_1_7_0 in
+                      (let rec _lh_compareIntInt_LH_P2_0_7_2 = _lh_extend_maybe_LH_P2_0_7_0 in
                         (fun _lh_compareIntInt_arg2_3_8 -> 
                           (match _lh_compareIntInt_arg2_3_8 with
-                            | `LH_P2(_lh_compareIntInt_LH_P2_0_7_5, _lh_compareIntInt_LH_P2_1_7_5) -> 
-                              (if (_lh_compareIntInt_LH_P2_0_7_4 > _lh_compareIntInt_LH_P2_0_7_5) then
+                            | `LH_P2(_lh_compareIntInt_LH_P2_0_7_3, _lh_compareIntInt_LH_P2_1_7_3) -> 
+                              (if (_lh_compareIntInt_LH_P2_0_7_2 > _lh_compareIntInt_LH_P2_0_7_3) then
                                 (fun _lh_mapLookup_Bin_3_1_7_2 _lh_mapLookup_arg1_1_7_2 _lh_mapLookup_Bin_4_1_7_2 _lh_mapLookup_Bin_2_1_7_2 -> 
                                   ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_7_2) _lh_mapLookup_Bin_4_1_7_2))
                               else
-                                (if (_lh_compareIntInt_LH_P2_0_7_4 < _lh_compareIntInt_LH_P2_0_7_5) then
+                                (if (_lh_compareIntInt_LH_P2_0_7_2 < _lh_compareIntInt_LH_P2_0_7_3) then
                                   (fun _lh_mapLookup_Bin_3_1_7_3 _lh_mapLookup_arg1_1_7_3 _lh_mapLookup_Bin_4_1_7_3 _lh_mapLookup_Bin_2_1_7_3 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_7_3) _lh_mapLookup_Bin_3_1_7_3))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_1_7_4 > _lh_compareIntInt_LH_P2_1_7_5) then
+                                  (if (_lh_compareIntInt_LH_P2_1_7_2 > _lh_compareIntInt_LH_P2_1_7_3) then
                                     (fun _lh_mapLookup_Bin_3_1_7_4 _lh_mapLookup_arg1_1_7_4 _lh_mapLookup_Bin_4_1_7_4 _lh_mapLookup_Bin_2_1_7_4 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_7_4) _lh_mapLookup_Bin_4_1_7_4))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_7_4 < _lh_compareIntInt_LH_P2_1_7_5) then
+                                    (if (_lh_compareIntInt_LH_P2_1_7_2 < _lh_compareIntInt_LH_P2_1_7_3) then
                                       (fun _lh_mapLookup_Bin_3_1_7_5 _lh_mapLookup_arg1_1_7_5 _lh_mapLookup_Bin_4_1_7_5 _lh_mapLookup_Bin_2_1_7_5 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_7_5) _lh_mapLookup_Bin_3_1_7_5))
                                     else
@@ -918,24 +918,24 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 =
                   (if (((_lh_extend_maybe_LH_P2_0_7_2 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_7_2 < 1)) || (_lh_extend_maybe_LH_P2_1_7_2 > maxCol_lh__d4)) then
                     (`Nothing)
                   else
-                    (let rec _lh_matchIdent_7_4 = ((check_lh__d4 _lh_extend_maybe_arg1_7_2) (let rec _lh_compareIntInt_LH_P2_1_7_6 = _lh_extend_maybe_LH_P2_1_7_2 in
-                      (let rec _lh_compareIntInt_LH_P2_0_7_6 = _lh_extend_maybe_LH_P2_0_7_2 in
+                    (let rec _lh_matchIdent_7_4 = ((check_lh__d4 _lh_extend_maybe_arg1_7_2) (let rec _lh_compareIntInt_LH_P2_1_7_4 = _lh_extend_maybe_LH_P2_1_7_2 in
+                      (let rec _lh_compareIntInt_LH_P2_0_7_4 = _lh_extend_maybe_LH_P2_0_7_2 in
                         (fun _lh_compareIntInt_arg2_3_9 -> 
                           (match _lh_compareIntInt_arg2_3_9 with
-                            | `LH_P2(_lh_compareIntInt_LH_P2_0_7_7, _lh_compareIntInt_LH_P2_1_7_7) -> 
-                              (if (_lh_compareIntInt_LH_P2_0_7_6 > _lh_compareIntInt_LH_P2_0_7_7) then
+                            | `LH_P2(_lh_compareIntInt_LH_P2_0_7_5, _lh_compareIntInt_LH_P2_1_7_5) -> 
+                              (if (_lh_compareIntInt_LH_P2_0_7_4 > _lh_compareIntInt_LH_P2_0_7_5) then
                                 (fun _lh_mapLookup_Bin_3_1_7_7 _lh_mapLookup_arg1_1_7_7 _lh_mapLookup_Bin_4_1_7_7 _lh_mapLookup_Bin_2_1_7_7 -> 
                                   ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_7_7) _lh_mapLookup_Bin_4_1_7_7))
                               else
-                                (if (_lh_compareIntInt_LH_P2_0_7_6 < _lh_compareIntInt_LH_P2_0_7_7) then
+                                (if (_lh_compareIntInt_LH_P2_0_7_4 < _lh_compareIntInt_LH_P2_0_7_5) then
                                   (fun _lh_mapLookup_Bin_3_1_7_8 _lh_mapLookup_arg1_1_7_8 _lh_mapLookup_Bin_4_1_7_8 _lh_mapLookup_Bin_2_1_7_8 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_7_8) _lh_mapLookup_Bin_3_1_7_8))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_1_7_6 > _lh_compareIntInt_LH_P2_1_7_7) then
+                                  (if (_lh_compareIntInt_LH_P2_1_7_4 > _lh_compareIntInt_LH_P2_1_7_5) then
                                     (fun _lh_mapLookup_Bin_3_1_7_9 _lh_mapLookup_arg1_1_7_9 _lh_mapLookup_Bin_4_1_7_9 _lh_mapLookup_Bin_2_1_7_9 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_7_9) _lh_mapLookup_Bin_4_1_7_9))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_7_6 < _lh_compareIntInt_LH_P2_1_7_7) then
+                                    (if (_lh_compareIntInt_LH_P2_1_7_4 < _lh_compareIntInt_LH_P2_1_7_5) then
                                       (fun _lh_mapLookup_Bin_3_1_8_0 _lh_mapLookup_arg1_1_8_0 _lh_mapLookup_Bin_4_1_8_0 _lh_mapLookup_Bin_2_1_8_0 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_8_0) _lh_mapLookup_Bin_3_1_8_0))
                                     else
@@ -975,24 +975,24 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_7_4 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_7_4 < 1)) || (_lh_extend_maybe_LH_P2_1_7_4 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_7_6 = ((check_lh__d4 _lh_extend_maybe_arg1_7_4) (let rec _lh_compareIntInt_LH_P2_1_7_8 = _lh_extend_maybe_LH_P2_1_7_4 in
-                        (let rec _lh_compareIntInt_LH_P2_0_7_8 = _lh_extend_maybe_LH_P2_0_7_4 in
+                      (let rec _lh_matchIdent_7_6 = ((check_lh__d4 _lh_extend_maybe_arg1_7_4) (let rec _lh_compareIntInt_LH_P2_1_7_6 = _lh_extend_maybe_LH_P2_1_7_4 in
+                        (let rec _lh_compareIntInt_LH_P2_0_7_6 = _lh_extend_maybe_LH_P2_0_7_4 in
                           (fun _lh_compareIntInt_arg2_4_0 -> 
                             (match _lh_compareIntInt_arg2_4_0 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_7_9, _lh_compareIntInt_LH_P2_1_7_9) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_7_8 > _lh_compareIntInt_LH_P2_0_7_9) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_7_7, _lh_compareIntInt_LH_P2_1_7_7) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_7_6 > _lh_compareIntInt_LH_P2_0_7_7) then
                                   (fun _lh_mapLookup_Bin_3_1_8_2 _lh_mapLookup_arg1_1_8_2 _lh_mapLookup_Bin_4_1_8_2 _lh_mapLookup_Bin_2_1_8_2 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_8_2) _lh_mapLookup_Bin_4_1_8_2))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_7_8 < _lh_compareIntInt_LH_P2_0_7_9) then
+                                  (if (_lh_compareIntInt_LH_P2_0_7_6 < _lh_compareIntInt_LH_P2_0_7_7) then
                                     (fun _lh_mapLookup_Bin_3_1_8_3 _lh_mapLookup_arg1_1_8_3 _lh_mapLookup_Bin_4_1_8_3 _lh_mapLookup_Bin_2_1_8_3 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_8_3) _lh_mapLookup_Bin_3_1_8_3))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_7_8 > _lh_compareIntInt_LH_P2_1_7_9) then
+                                    (if (_lh_compareIntInt_LH_P2_1_7_6 > _lh_compareIntInt_LH_P2_1_7_7) then
                                       (fun _lh_mapLookup_Bin_3_1_8_4 _lh_mapLookup_arg1_1_8_4 _lh_mapLookup_Bin_4_1_8_4 _lh_mapLookup_Bin_2_1_8_4 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_8_4) _lh_mapLookup_Bin_4_1_8_4))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_7_8 < _lh_compareIntInt_LH_P2_1_7_9) then
+                                      (if (_lh_compareIntInt_LH_P2_1_7_6 < _lh_compareIntInt_LH_P2_1_7_7) then
                                         (fun _lh_mapLookup_Bin_3_1_8_5 _lh_mapLookup_arg1_1_8_5 _lh_mapLookup_Bin_4_1_8_5 _lh_mapLookup_Bin_2_1_8_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_8_5) _lh_mapLookup_Bin_3_1_8_5))
                                       else
@@ -1022,24 +1022,24 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_7_6 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_7_6 < 1)) || (_lh_extend_maybe_LH_P2_1_7_6 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_7_8 = ((check_lh__d4 _lh_extend_maybe_arg1_7_6) (let rec _lh_compareIntInt_LH_P2_1_8_0 = _lh_extend_maybe_LH_P2_1_7_6 in
-                        (let rec _lh_compareIntInt_LH_P2_0_8_0 = _lh_extend_maybe_LH_P2_0_7_6 in
+                      (let rec _lh_matchIdent_7_8 = ((check_lh__d4 _lh_extend_maybe_arg1_7_6) (let rec _lh_compareIntInt_LH_P2_1_7_8 = _lh_extend_maybe_LH_P2_1_7_6 in
+                        (let rec _lh_compareIntInt_LH_P2_0_7_8 = _lh_extend_maybe_LH_P2_0_7_6 in
                           (fun _lh_compareIntInt_arg2_4_1 -> 
                             (match _lh_compareIntInt_arg2_4_1 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_8_1, _lh_compareIntInt_LH_P2_1_8_1) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_8_0 > _lh_compareIntInt_LH_P2_0_8_1) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_7_9, _lh_compareIntInt_LH_P2_1_7_9) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_7_8 > _lh_compareIntInt_LH_P2_0_7_9) then
                                   (fun _lh_mapLookup_Bin_3_1_8_7 _lh_mapLookup_arg1_1_8_7 _lh_mapLookup_Bin_4_1_8_7 _lh_mapLookup_Bin_2_1_8_7 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_8_7) _lh_mapLookup_Bin_4_1_8_7))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_8_0 < _lh_compareIntInt_LH_P2_0_8_1) then
+                                  (if (_lh_compareIntInt_LH_P2_0_7_8 < _lh_compareIntInt_LH_P2_0_7_9) then
                                     (fun _lh_mapLookup_Bin_3_1_8_8 _lh_mapLookup_arg1_1_8_8 _lh_mapLookup_Bin_4_1_8_8 _lh_mapLookup_Bin_2_1_8_8 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_8_8) _lh_mapLookup_Bin_3_1_8_8))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_8_0 > _lh_compareIntInt_LH_P2_1_8_1) then
+                                    (if (_lh_compareIntInt_LH_P2_1_7_8 > _lh_compareIntInt_LH_P2_1_7_9) then
                                       (fun _lh_mapLookup_Bin_3_1_8_9 _lh_mapLookup_arg1_1_8_9 _lh_mapLookup_Bin_4_1_8_9 _lh_mapLookup_Bin_2_1_8_9 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_8_9) _lh_mapLookup_Bin_4_1_8_9))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_8_0 < _lh_compareIntInt_LH_P2_1_8_1) then
+                                      (if (_lh_compareIntInt_LH_P2_1_7_8 < _lh_compareIntInt_LH_P2_1_7_9) then
                                         (fun _lh_mapLookup_Bin_3_1_9_0 _lh_mapLookup_arg1_1_9_0 _lh_mapLookup_Bin_4_1_9_0 _lh_mapLookup_Bin_2_1_9_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_9_0) _lh_mapLookup_Bin_3_1_9_0))
                                       else
@@ -1069,24 +1069,24 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_7_8 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_7_8 < 1)) || (_lh_extend_maybe_LH_P2_1_7_8 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_8_0 = ((check_lh__d4 _lh_extend_maybe_arg1_7_8) (let rec _lh_compareIntInt_LH_P2_1_8_2 = _lh_extend_maybe_LH_P2_1_7_8 in
-                        (let rec _lh_compareIntInt_LH_P2_0_8_2 = _lh_extend_maybe_LH_P2_0_7_8 in
+                      (let rec _lh_matchIdent_8_0 = ((check_lh__d4 _lh_extend_maybe_arg1_7_8) (let rec _lh_compareIntInt_LH_P2_1_8_0 = _lh_extend_maybe_LH_P2_1_7_8 in
+                        (let rec _lh_compareIntInt_LH_P2_0_8_0 = _lh_extend_maybe_LH_P2_0_7_8 in
                           (fun _lh_compareIntInt_arg2_4_2 -> 
                             (match _lh_compareIntInt_arg2_4_2 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_8_3, _lh_compareIntInt_LH_P2_1_8_3) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_8_2 > _lh_compareIntInt_LH_P2_0_8_3) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_8_1, _lh_compareIntInt_LH_P2_1_8_1) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_8_0 > _lh_compareIntInt_LH_P2_0_8_1) then
                                   (fun _lh_mapLookup_Bin_3_1_9_2 _lh_mapLookup_arg1_1_9_2 _lh_mapLookup_Bin_4_1_9_2 _lh_mapLookup_Bin_2_1_9_2 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_9_2) _lh_mapLookup_Bin_4_1_9_2))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_8_2 < _lh_compareIntInt_LH_P2_0_8_3) then
+                                  (if (_lh_compareIntInt_LH_P2_0_8_0 < _lh_compareIntInt_LH_P2_0_8_1) then
                                     (fun _lh_mapLookup_Bin_3_1_9_3 _lh_mapLookup_arg1_1_9_3 _lh_mapLookup_Bin_4_1_9_3 _lh_mapLookup_Bin_2_1_9_3 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_9_3) _lh_mapLookup_Bin_3_1_9_3))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_8_2 > _lh_compareIntInt_LH_P2_1_8_3) then
+                                    (if (_lh_compareIntInt_LH_P2_1_8_0 > _lh_compareIntInt_LH_P2_1_8_1) then
                                       (fun _lh_mapLookup_Bin_3_1_9_4 _lh_mapLookup_arg1_1_9_4 _lh_mapLookup_Bin_4_1_9_4 _lh_mapLookup_Bin_2_1_9_4 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_9_4) _lh_mapLookup_Bin_4_1_9_4))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_8_2 < _lh_compareIntInt_LH_P2_1_8_3) then
+                                      (if (_lh_compareIntInt_LH_P2_1_8_0 < _lh_compareIntInt_LH_P2_1_8_1) then
                                         (fun _lh_mapLookup_Bin_3_1_9_5 _lh_mapLookup_arg1_1_9_5 _lh_mapLookup_Bin_4_1_9_5 _lh_mapLookup_Bin_2_1_9_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_9_5) _lh_mapLookup_Bin_3_1_9_5))
                                       else
@@ -1116,24 +1116,24 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_8_0 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_8_0 < 1)) || (_lh_extend_maybe_LH_P2_1_8_0 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_8_2 = ((check_lh__d4 _lh_extend_maybe_arg1_8_0) (let rec _lh_compareIntInt_LH_P2_1_8_4 = _lh_extend_maybe_LH_P2_1_8_0 in
-                        (let rec _lh_compareIntInt_LH_P2_0_8_4 = _lh_extend_maybe_LH_P2_0_8_0 in
+                      (let rec _lh_matchIdent_8_2 = ((check_lh__d4 _lh_extend_maybe_arg1_8_0) (let rec _lh_compareIntInt_LH_P2_1_8_2 = _lh_extend_maybe_LH_P2_1_8_0 in
+                        (let rec _lh_compareIntInt_LH_P2_0_8_2 = _lh_extend_maybe_LH_P2_0_8_0 in
                           (fun _lh_compareIntInt_arg2_4_3 -> 
                             (match _lh_compareIntInt_arg2_4_3 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_8_5, _lh_compareIntInt_LH_P2_1_8_5) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_8_4 > _lh_compareIntInt_LH_P2_0_8_5) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_8_3, _lh_compareIntInt_LH_P2_1_8_3) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_8_2 > _lh_compareIntInt_LH_P2_0_8_3) then
                                   (fun _lh_mapLookup_Bin_3_1_9_7 _lh_mapLookup_arg1_1_9_7 _lh_mapLookup_Bin_4_1_9_7 _lh_mapLookup_Bin_2_1_9_7 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_9_7) _lh_mapLookup_Bin_4_1_9_7))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_8_4 < _lh_compareIntInt_LH_P2_0_8_5) then
+                                  (if (_lh_compareIntInt_LH_P2_0_8_2 < _lh_compareIntInt_LH_P2_0_8_3) then
                                     (fun _lh_mapLookup_Bin_3_1_9_8 _lh_mapLookup_arg1_1_9_8 _lh_mapLookup_Bin_4_1_9_8 _lh_mapLookup_Bin_2_1_9_8 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_9_8) _lh_mapLookup_Bin_3_1_9_8))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_8_4 > _lh_compareIntInt_LH_P2_1_8_5) then
+                                    (if (_lh_compareIntInt_LH_P2_1_8_2 > _lh_compareIntInt_LH_P2_1_8_3) then
                                       (fun _lh_mapLookup_Bin_3_1_9_9 _lh_mapLookup_arg1_1_9_9 _lh_mapLookup_Bin_4_1_9_9 _lh_mapLookup_Bin_2_1_9_9 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_1_9_9) _lh_mapLookup_Bin_4_1_9_9))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_8_4 < _lh_compareIntInt_LH_P2_1_8_5) then
+                                      (if (_lh_compareIntInt_LH_P2_1_8_2 < _lh_compareIntInt_LH_P2_1_8_3) then
                                         (fun _lh_mapLookup_Bin_3_2_0_0 _lh_mapLookup_arg1_2_0_0 _lh_mapLookup_Bin_4_2_0_0 _lh_mapLookup_Bin_2_2_0_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_0_0) _lh_mapLookup_Bin_3_2_0_0))
                                       else
@@ -1171,24 +1171,24 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_8_2 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_8_2 < 1)) || (_lh_extend_maybe_LH_P2_1_8_2 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_8_4 = ((check_lh__d4 _lh_extend_maybe_arg1_8_2) (let rec _lh_compareIntInt_LH_P2_1_8_6 = _lh_extend_maybe_LH_P2_1_8_2 in
-                        (let rec _lh_compareIntInt_LH_P2_0_8_6 = _lh_extend_maybe_LH_P2_0_8_2 in
+                      (let rec _lh_matchIdent_8_4 = ((check_lh__d4 _lh_extend_maybe_arg1_8_2) (let rec _lh_compareIntInt_LH_P2_1_8_4 = _lh_extend_maybe_LH_P2_1_8_2 in
+                        (let rec _lh_compareIntInt_LH_P2_0_8_4 = _lh_extend_maybe_LH_P2_0_8_2 in
                           (fun _lh_compareIntInt_arg2_4_4 -> 
                             (match _lh_compareIntInt_arg2_4_4 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_8_7, _lh_compareIntInt_LH_P2_1_8_7) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_8_6 > _lh_compareIntInt_LH_P2_0_8_7) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_8_5, _lh_compareIntInt_LH_P2_1_8_5) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_8_4 > _lh_compareIntInt_LH_P2_0_8_5) then
                                   (fun _lh_mapLookup_Bin_3_2_0_2 _lh_mapLookup_arg1_2_0_2 _lh_mapLookup_Bin_4_2_0_2 _lh_mapLookup_Bin_2_2_0_2 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_0_2) _lh_mapLookup_Bin_4_2_0_2))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_8_6 < _lh_compareIntInt_LH_P2_0_8_7) then
+                                  (if (_lh_compareIntInt_LH_P2_0_8_4 < _lh_compareIntInt_LH_P2_0_8_5) then
                                     (fun _lh_mapLookup_Bin_3_2_0_3 _lh_mapLookup_arg1_2_0_3 _lh_mapLookup_Bin_4_2_0_3 _lh_mapLookup_Bin_2_2_0_3 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_0_3) _lh_mapLookup_Bin_3_2_0_3))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_8_6 > _lh_compareIntInt_LH_P2_1_8_7) then
+                                    (if (_lh_compareIntInt_LH_P2_1_8_4 > _lh_compareIntInt_LH_P2_1_8_5) then
                                       (fun _lh_mapLookup_Bin_3_2_0_4 _lh_mapLookup_arg1_2_0_4 _lh_mapLookup_Bin_4_2_0_4 _lh_mapLookup_Bin_2_2_0_4 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_0_4) _lh_mapLookup_Bin_4_2_0_4))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_8_6 < _lh_compareIntInt_LH_P2_1_8_7) then
+                                      (if (_lh_compareIntInt_LH_P2_1_8_4 < _lh_compareIntInt_LH_P2_1_8_5) then
                                         (fun _lh_mapLookup_Bin_3_2_0_5 _lh_mapLookup_arg1_2_0_5 _lh_mapLookup_Bin_4_2_0_5 _lh_mapLookup_Bin_2_2_0_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_0_5) _lh_mapLookup_Bin_3_2_0_5))
                                       else
@@ -1218,24 +1218,24 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_8_4 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_8_4 < 1)) || (_lh_extend_maybe_LH_P2_1_8_4 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_8_6 = ((check_lh__d4 _lh_extend_maybe_arg1_8_4) (let rec _lh_compareIntInt_LH_P2_1_8_8 = _lh_extend_maybe_LH_P2_1_8_4 in
-                        (let rec _lh_compareIntInt_LH_P2_0_8_8 = _lh_extend_maybe_LH_P2_0_8_4 in
+                      (let rec _lh_matchIdent_8_6 = ((check_lh__d4 _lh_extend_maybe_arg1_8_4) (let rec _lh_compareIntInt_LH_P2_1_8_6 = _lh_extend_maybe_LH_P2_1_8_4 in
+                        (let rec _lh_compareIntInt_LH_P2_0_8_6 = _lh_extend_maybe_LH_P2_0_8_4 in
                           (fun _lh_compareIntInt_arg2_4_5 -> 
                             (match _lh_compareIntInt_arg2_4_5 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_8_9, _lh_compareIntInt_LH_P2_1_8_9) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_8_8 > _lh_compareIntInt_LH_P2_0_8_9) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_8_7, _lh_compareIntInt_LH_P2_1_8_7) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_8_6 > _lh_compareIntInt_LH_P2_0_8_7) then
                                   (fun _lh_mapLookup_Bin_3_2_0_7 _lh_mapLookup_arg1_2_0_7 _lh_mapLookup_Bin_4_2_0_7 _lh_mapLookup_Bin_2_2_0_7 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_0_7) _lh_mapLookup_Bin_4_2_0_7))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_8_8 < _lh_compareIntInt_LH_P2_0_8_9) then
+                                  (if (_lh_compareIntInt_LH_P2_0_8_6 < _lh_compareIntInt_LH_P2_0_8_7) then
                                     (fun _lh_mapLookup_Bin_3_2_0_8 _lh_mapLookup_arg1_2_0_8 _lh_mapLookup_Bin_4_2_0_8 _lh_mapLookup_Bin_2_2_0_8 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_0_8) _lh_mapLookup_Bin_3_2_0_8))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_8_8 > _lh_compareIntInt_LH_P2_1_8_9) then
+                                    (if (_lh_compareIntInt_LH_P2_1_8_6 > _lh_compareIntInt_LH_P2_1_8_7) then
                                       (fun _lh_mapLookup_Bin_3_2_0_9 _lh_mapLookup_arg1_2_0_9 _lh_mapLookup_Bin_4_2_0_9 _lh_mapLookup_Bin_2_2_0_9 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_0_9) _lh_mapLookup_Bin_4_2_0_9))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_8_8 < _lh_compareIntInt_LH_P2_1_8_9) then
+                                      (if (_lh_compareIntInt_LH_P2_1_8_6 < _lh_compareIntInt_LH_P2_1_8_7) then
                                         (fun _lh_mapLookup_Bin_3_2_1_0 _lh_mapLookup_arg1_2_1_0 _lh_mapLookup_Bin_4_2_1_0 _lh_mapLookup_Bin_2_2_1_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_1_0) _lh_mapLookup_Bin_3_2_1_0))
                                       else
@@ -1265,24 +1265,24 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_8_6 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_8_6 < 1)) || (_lh_extend_maybe_LH_P2_1_8_6 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_8_8 = ((check_lh__d4 _lh_extend_maybe_arg1_8_6) (let rec _lh_compareIntInt_LH_P2_1_9_0 = _lh_extend_maybe_LH_P2_1_8_6 in
-                        (let rec _lh_compareIntInt_LH_P2_0_9_0 = _lh_extend_maybe_LH_P2_0_8_6 in
+                      (let rec _lh_matchIdent_8_8 = ((check_lh__d4 _lh_extend_maybe_arg1_8_6) (let rec _lh_compareIntInt_LH_P2_1_8_8 = _lh_extend_maybe_LH_P2_1_8_6 in
+                        (let rec _lh_compareIntInt_LH_P2_0_8_8 = _lh_extend_maybe_LH_P2_0_8_6 in
                           (fun _lh_compareIntInt_arg2_4_6 -> 
                             (match _lh_compareIntInt_arg2_4_6 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_9_1, _lh_compareIntInt_LH_P2_1_9_1) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_9_0 > _lh_compareIntInt_LH_P2_0_9_1) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_8_9, _lh_compareIntInt_LH_P2_1_8_9) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_8_8 > _lh_compareIntInt_LH_P2_0_8_9) then
                                   (fun _lh_mapLookup_Bin_3_2_1_2 _lh_mapLookup_arg1_2_1_2 _lh_mapLookup_Bin_4_2_1_2 _lh_mapLookup_Bin_2_2_1_2 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_1_2) _lh_mapLookup_Bin_4_2_1_2))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_9_0 < _lh_compareIntInt_LH_P2_0_9_1) then
+                                  (if (_lh_compareIntInt_LH_P2_0_8_8 < _lh_compareIntInt_LH_P2_0_8_9) then
                                     (fun _lh_mapLookup_Bin_3_2_1_3 _lh_mapLookup_arg1_2_1_3 _lh_mapLookup_Bin_4_2_1_3 _lh_mapLookup_Bin_2_2_1_3 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_1_3) _lh_mapLookup_Bin_3_2_1_3))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_9_0 > _lh_compareIntInt_LH_P2_1_9_1) then
+                                    (if (_lh_compareIntInt_LH_P2_1_8_8 > _lh_compareIntInt_LH_P2_1_8_9) then
                                       (fun _lh_mapLookup_Bin_3_2_1_4 _lh_mapLookup_arg1_2_1_4 _lh_mapLookup_Bin_4_2_1_4 _lh_mapLookup_Bin_2_2_1_4 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_1_4) _lh_mapLookup_Bin_4_2_1_4))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_9_0 < _lh_compareIntInt_LH_P2_1_9_1) then
+                                      (if (_lh_compareIntInt_LH_P2_1_8_8 < _lh_compareIntInt_LH_P2_1_8_9) then
                                         (fun _lh_mapLookup_Bin_3_2_1_5 _lh_mapLookup_arg1_2_1_5 _lh_mapLookup_Bin_4_2_1_5 _lh_mapLookup_Bin_2_2_1_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_1_5) _lh_mapLookup_Bin_3_2_1_5))
                                       else
@@ -1312,24 +1312,24 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_8_8 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_8_8 < 1)) || (_lh_extend_maybe_LH_P2_1_8_8 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_9_0 = ((check_lh__d4 _lh_extend_maybe_arg1_8_8) (let rec _lh_compareIntInt_LH_P2_1_9_2 = _lh_extend_maybe_LH_P2_1_8_8 in
-                        (let rec _lh_compareIntInt_LH_P2_0_9_2 = _lh_extend_maybe_LH_P2_0_8_8 in
+                      (let rec _lh_matchIdent_9_0 = ((check_lh__d4 _lh_extend_maybe_arg1_8_8) (let rec _lh_compareIntInt_LH_P2_1_9_0 = _lh_extend_maybe_LH_P2_1_8_8 in
+                        (let rec _lh_compareIntInt_LH_P2_0_9_0 = _lh_extend_maybe_LH_P2_0_8_8 in
                           (fun _lh_compareIntInt_arg2_4_7 -> 
                             (match _lh_compareIntInt_arg2_4_7 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_9_3, _lh_compareIntInt_LH_P2_1_9_3) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_9_2 > _lh_compareIntInt_LH_P2_0_9_3) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_9_1, _lh_compareIntInt_LH_P2_1_9_1) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_9_0 > _lh_compareIntInt_LH_P2_0_9_1) then
                                   (fun _lh_mapLookup_Bin_3_2_1_7 _lh_mapLookup_arg1_2_1_7 _lh_mapLookup_Bin_4_2_1_7 _lh_mapLookup_Bin_2_2_1_7 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_1_7) _lh_mapLookup_Bin_4_2_1_7))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_9_2 < _lh_compareIntInt_LH_P2_0_9_3) then
+                                  (if (_lh_compareIntInt_LH_P2_0_9_0 < _lh_compareIntInt_LH_P2_0_9_1) then
                                     (fun _lh_mapLookup_Bin_3_2_1_8 _lh_mapLookup_arg1_2_1_8 _lh_mapLookup_Bin_4_2_1_8 _lh_mapLookup_Bin_2_2_1_8 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_1_8) _lh_mapLookup_Bin_3_2_1_8))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_9_2 > _lh_compareIntInt_LH_P2_1_9_3) then
+                                    (if (_lh_compareIntInt_LH_P2_1_9_0 > _lh_compareIntInt_LH_P2_1_9_1) then
                                       (fun _lh_mapLookup_Bin_3_2_1_9 _lh_mapLookup_arg1_2_1_9 _lh_mapLookup_Bin_4_2_1_9 _lh_mapLookup_Bin_2_2_1_9 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_1_9) _lh_mapLookup_Bin_4_2_1_9))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_9_2 < _lh_compareIntInt_LH_P2_1_9_3) then
+                                      (if (_lh_compareIntInt_LH_P2_1_9_0 < _lh_compareIntInt_LH_P2_1_9_1) then
                                         (fun _lh_mapLookup_Bin_3_2_2_0 _lh_mapLookup_arg1_2_2_0 _lh_mapLookup_Bin_4_2_2_0 _lh_mapLookup_Bin_2_2_2_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_2_0) _lh_mapLookup_Bin_3_2_2_0))
                                       else
@@ -1367,24 +1367,24 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_9_0 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_9_0 < 1)) || (_lh_extend_maybe_LH_P2_1_9_0 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_9_2 = ((check_lh__d4 _lh_extend_maybe_arg1_9_0) (let rec _lh_compareIntInt_LH_P2_1_9_4 = _lh_extend_maybe_LH_P2_1_9_0 in
-                        (let rec _lh_compareIntInt_LH_P2_0_9_4 = _lh_extend_maybe_LH_P2_0_9_0 in
+                      (let rec _lh_matchIdent_9_2 = ((check_lh__d4 _lh_extend_maybe_arg1_9_0) (let rec _lh_compareIntInt_LH_P2_1_9_2 = _lh_extend_maybe_LH_P2_1_9_0 in
+                        (let rec _lh_compareIntInt_LH_P2_0_9_2 = _lh_extend_maybe_LH_P2_0_9_0 in
                           (fun _lh_compareIntInt_arg2_4_8 -> 
                             (match _lh_compareIntInt_arg2_4_8 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_9_5, _lh_compareIntInt_LH_P2_1_9_5) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_9_4 > _lh_compareIntInt_LH_P2_0_9_5) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_9_3, _lh_compareIntInt_LH_P2_1_9_3) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_9_2 > _lh_compareIntInt_LH_P2_0_9_3) then
                                   (fun _lh_mapLookup_Bin_3_2_2_2 _lh_mapLookup_arg1_2_2_2 _lh_mapLookup_Bin_4_2_2_2 _lh_mapLookup_Bin_2_2_2_2 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_2_2) _lh_mapLookup_Bin_4_2_2_2))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_9_4 < _lh_compareIntInt_LH_P2_0_9_5) then
+                                  (if (_lh_compareIntInt_LH_P2_0_9_2 < _lh_compareIntInt_LH_P2_0_9_3) then
                                     (fun _lh_mapLookup_Bin_3_2_2_3 _lh_mapLookup_arg1_2_2_3 _lh_mapLookup_Bin_4_2_2_3 _lh_mapLookup_Bin_2_2_2_3 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_2_3) _lh_mapLookup_Bin_3_2_2_3))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_9_4 > _lh_compareIntInt_LH_P2_1_9_5) then
+                                    (if (_lh_compareIntInt_LH_P2_1_9_2 > _lh_compareIntInt_LH_P2_1_9_3) then
                                       (fun _lh_mapLookup_Bin_3_2_2_4 _lh_mapLookup_arg1_2_2_4 _lh_mapLookup_Bin_4_2_2_4 _lh_mapLookup_Bin_2_2_2_4 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_2_4) _lh_mapLookup_Bin_4_2_2_4))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_9_4 < _lh_compareIntInt_LH_P2_1_9_5) then
+                                      (if (_lh_compareIntInt_LH_P2_1_9_2 < _lh_compareIntInt_LH_P2_1_9_3) then
                                         (fun _lh_mapLookup_Bin_3_2_2_5 _lh_mapLookup_arg1_2_2_5 _lh_mapLookup_Bin_4_2_2_5 _lh_mapLookup_Bin_2_2_2_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_2_5) _lh_mapLookup_Bin_3_2_2_5))
                                       else
@@ -1414,24 +1414,24 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_9_2 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_9_2 < 1)) || (_lh_extend_maybe_LH_P2_1_9_2 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_9_4 = ((check_lh__d4 _lh_extend_maybe_arg1_9_2) (let rec _lh_compareIntInt_LH_P2_1_9_6 = _lh_extend_maybe_LH_P2_1_9_2 in
-                        (let rec _lh_compareIntInt_LH_P2_0_9_6 = _lh_extend_maybe_LH_P2_0_9_2 in
+                      (let rec _lh_matchIdent_9_4 = ((check_lh__d4 _lh_extend_maybe_arg1_9_2) (let rec _lh_compareIntInt_LH_P2_1_9_4 = _lh_extend_maybe_LH_P2_1_9_2 in
+                        (let rec _lh_compareIntInt_LH_P2_0_9_4 = _lh_extend_maybe_LH_P2_0_9_2 in
                           (fun _lh_compareIntInt_arg2_4_9 -> 
                             (match _lh_compareIntInt_arg2_4_9 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_9_7, _lh_compareIntInt_LH_P2_1_9_7) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_9_6 > _lh_compareIntInt_LH_P2_0_9_7) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_9_5, _lh_compareIntInt_LH_P2_1_9_5) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_9_4 > _lh_compareIntInt_LH_P2_0_9_5) then
                                   (fun _lh_mapLookup_Bin_3_2_2_7 _lh_mapLookup_arg1_2_2_7 _lh_mapLookup_Bin_4_2_2_7 _lh_mapLookup_Bin_2_2_2_7 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_2_7) _lh_mapLookup_Bin_4_2_2_7))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_9_6 < _lh_compareIntInt_LH_P2_0_9_7) then
+                                  (if (_lh_compareIntInt_LH_P2_0_9_4 < _lh_compareIntInt_LH_P2_0_9_5) then
                                     (fun _lh_mapLookup_Bin_3_2_2_8 _lh_mapLookup_arg1_2_2_8 _lh_mapLookup_Bin_4_2_2_8 _lh_mapLookup_Bin_2_2_2_8 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_2_8) _lh_mapLookup_Bin_3_2_2_8))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_9_6 > _lh_compareIntInt_LH_P2_1_9_7) then
+                                    (if (_lh_compareIntInt_LH_P2_1_9_4 > _lh_compareIntInt_LH_P2_1_9_5) then
                                       (fun _lh_mapLookup_Bin_3_2_2_9 _lh_mapLookup_arg1_2_2_9 _lh_mapLookup_Bin_4_2_2_9 _lh_mapLookup_Bin_2_2_2_9 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_2_9) _lh_mapLookup_Bin_4_2_2_9))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_9_6 < _lh_compareIntInt_LH_P2_1_9_7) then
+                                      (if (_lh_compareIntInt_LH_P2_1_9_4 < _lh_compareIntInt_LH_P2_1_9_5) then
                                         (fun _lh_mapLookup_Bin_3_2_3_0 _lh_mapLookup_arg1_2_3_0 _lh_mapLookup_Bin_4_2_3_0 _lh_mapLookup_Bin_2_2_3_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_3_0) _lh_mapLookup_Bin_3_2_3_0))
                                       else
@@ -1461,24 +1461,24 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_9_4 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_9_4 < 1)) || (_lh_extend_maybe_LH_P2_1_9_4 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_9_6 = ((check_lh__d4 _lh_extend_maybe_arg1_9_4) (let rec _lh_compareIntInt_LH_P2_1_9_8 = _lh_extend_maybe_LH_P2_1_9_4 in
-                        (let rec _lh_compareIntInt_LH_P2_0_9_8 = _lh_extend_maybe_LH_P2_0_9_4 in
+                      (let rec _lh_matchIdent_9_6 = ((check_lh__d4 _lh_extend_maybe_arg1_9_4) (let rec _lh_compareIntInt_LH_P2_1_9_6 = _lh_extend_maybe_LH_P2_1_9_4 in
+                        (let rec _lh_compareIntInt_LH_P2_0_9_6 = _lh_extend_maybe_LH_P2_0_9_4 in
                           (fun _lh_compareIntInt_arg2_5_0 -> 
                             (match _lh_compareIntInt_arg2_5_0 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_9_9, _lh_compareIntInt_LH_P2_1_9_9) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_9_8 > _lh_compareIntInt_LH_P2_0_9_9) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_9_7, _lh_compareIntInt_LH_P2_1_9_7) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_9_6 > _lh_compareIntInt_LH_P2_0_9_7) then
                                   (fun _lh_mapLookup_Bin_3_2_3_2 _lh_mapLookup_arg1_2_3_2 _lh_mapLookup_Bin_4_2_3_2 _lh_mapLookup_Bin_2_2_3_2 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_3_2) _lh_mapLookup_Bin_4_2_3_2))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_9_8 < _lh_compareIntInt_LH_P2_0_9_9) then
+                                  (if (_lh_compareIntInt_LH_P2_0_9_6 < _lh_compareIntInt_LH_P2_0_9_7) then
                                     (fun _lh_mapLookup_Bin_3_2_3_3 _lh_mapLookup_arg1_2_3_3 _lh_mapLookup_Bin_4_2_3_3 _lh_mapLookup_Bin_2_2_3_3 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_3_3) _lh_mapLookup_Bin_3_2_3_3))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_9_8 > _lh_compareIntInt_LH_P2_1_9_9) then
+                                    (if (_lh_compareIntInt_LH_P2_1_9_6 > _lh_compareIntInt_LH_P2_1_9_7) then
                                       (fun _lh_mapLookup_Bin_3_2_3_4 _lh_mapLookup_arg1_2_3_4 _lh_mapLookup_Bin_4_2_3_4 _lh_mapLookup_Bin_2_2_3_4 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_3_4) _lh_mapLookup_Bin_4_2_3_4))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_9_8 < _lh_compareIntInt_LH_P2_1_9_9) then
+                                      (if (_lh_compareIntInt_LH_P2_1_9_6 < _lh_compareIntInt_LH_P2_1_9_7) then
                                         (fun _lh_mapLookup_Bin_3_2_3_5 _lh_mapLookup_arg1_2_3_5 _lh_mapLookup_Bin_4_2_3_5 _lh_mapLookup_Bin_2_2_3_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_3_5) _lh_mapLookup_Bin_3_2_3_5))
                                       else
@@ -1508,24 +1508,24 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_9_6 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_9_6 < 1)) || (_lh_extend_maybe_LH_P2_1_9_6 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_9_8 = ((check_lh__d4 _lh_extend_maybe_arg1_9_6) (let rec _lh_compareIntInt_LH_P2_1_1_0_0 = _lh_extend_maybe_LH_P2_1_9_6 in
-                        (let rec _lh_compareIntInt_LH_P2_0_1_0_0 = _lh_extend_maybe_LH_P2_0_9_6 in
+                      (let rec _lh_matchIdent_9_8 = ((check_lh__d4 _lh_extend_maybe_arg1_9_6) (let rec _lh_compareIntInt_LH_P2_1_9_8 = _lh_extend_maybe_LH_P2_1_9_6 in
+                        (let rec _lh_compareIntInt_LH_P2_0_9_8 = _lh_extend_maybe_LH_P2_0_9_6 in
                           (fun _lh_compareIntInt_arg2_5_1 -> 
                             (match _lh_compareIntInt_arg2_5_1 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_0_1, _lh_compareIntInt_LH_P2_1_1_0_1) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_1_0_0 > _lh_compareIntInt_LH_P2_0_1_0_1) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_9_9, _lh_compareIntInt_LH_P2_1_9_9) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_9_8 > _lh_compareIntInt_LH_P2_0_9_9) then
                                   (fun _lh_mapLookup_Bin_3_2_3_7 _lh_mapLookup_arg1_2_3_7 _lh_mapLookup_Bin_4_2_3_7 _lh_mapLookup_Bin_2_2_3_7 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_3_7) _lh_mapLookup_Bin_4_2_3_7))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_1_0_0 < _lh_compareIntInt_LH_P2_0_1_0_1) then
+                                  (if (_lh_compareIntInt_LH_P2_0_9_8 < _lh_compareIntInt_LH_P2_0_9_9) then
                                     (fun _lh_mapLookup_Bin_3_2_3_8 _lh_mapLookup_arg1_2_3_8 _lh_mapLookup_Bin_4_2_3_8 _lh_mapLookup_Bin_2_2_3_8 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_3_8) _lh_mapLookup_Bin_3_2_3_8))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_0_0 > _lh_compareIntInt_LH_P2_1_1_0_1) then
+                                    (if (_lh_compareIntInt_LH_P2_1_9_8 > _lh_compareIntInt_LH_P2_1_9_9) then
                                       (fun _lh_mapLookup_Bin_3_2_3_9 _lh_mapLookup_arg1_2_3_9 _lh_mapLookup_Bin_4_2_3_9 _lh_mapLookup_Bin_2_2_3_9 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_3_9) _lh_mapLookup_Bin_4_2_3_9))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_1_0_0 < _lh_compareIntInt_LH_P2_1_1_0_1) then
+                                      (if (_lh_compareIntInt_LH_P2_1_9_8 < _lh_compareIntInt_LH_P2_1_9_9) then
                                         (fun _lh_mapLookup_Bin_3_2_4_0 _lh_mapLookup_arg1_2_4_0 _lh_mapLookup_Bin_4_2_4_0 _lh_mapLookup_Bin_2_2_4_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_4_0) _lh_mapLookup_Bin_3_2_4_0))
                                       else
@@ -1560,7 +1560,7 @@ let rec fPiece_lh__d1 _lh_fPiece_arg1_0 =
                   _lh_search_P_2_2
                 | _ -> 
                   (failwith "error")))))))));;
-let rec nPiece_lh__d1 _lh_nPiece_arg1_0 =
+let rec nPiece_lh__d1 =
   (let rec _lh_search_P_2_3 = (fun _lh_listcomp_fun_4_5 _lh_search_LH_P2_1_2_2 _lh_search_P_0_2_1 _lh_listcomp_fun_ls_t_3_5 _lh_listcomp_fun_4_6 -> 
     (_lh_listcomp_fun_4_6 _lh_listcomp_fun_ls_t_3_5)) in
     (let rec _lh_search_P_1_3 = (let rec _lh_listcomp_fun_ls_t_3_6 = (let rec _lh_listcomp_fun_ls_t_3_7 = (fun _lh_listcomp_fun_4_7 _lh_search_LH_P2_1_2_3 _lh_search_P_0_2_2 _lh_listcomp_fun_ls_t_3_8 _lh_listcomp_fun_4_8 -> 
@@ -1580,24 +1580,24 @@ let rec nPiece_lh__d1 _lh_nPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_9_8 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_9_8 < 1)) || (_lh_extend_maybe_LH_P2_1_9_8 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_1_0_9 = ((check_lh__d4 _lh_extend_maybe_arg1_9_8) (let rec _lh_compareIntInt_LH_P2_1_1_0_4 = _lh_extend_maybe_LH_P2_1_9_8 in
-                        (let rec _lh_compareIntInt_LH_P2_0_1_0_4 = _lh_extend_maybe_LH_P2_0_9_8 in
+                      (let rec _lh_matchIdent_1_0_9 = ((check_lh__d4 _lh_extend_maybe_arg1_9_8) (let rec _lh_compareIntInt_LH_P2_1_1_0_2 = _lh_extend_maybe_LH_P2_1_9_8 in
+                        (let rec _lh_compareIntInt_LH_P2_0_1_0_2 = _lh_extend_maybe_LH_P2_0_9_8 in
                           (fun _lh_compareIntInt_arg2_5_3 -> 
                             (match _lh_compareIntInt_arg2_5_3 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_0_5, _lh_compareIntInt_LH_P2_1_1_0_5) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_1_0_4 > _lh_compareIntInt_LH_P2_0_1_0_5) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_0_3, _lh_compareIntInt_LH_P2_1_1_0_3) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_1_0_2 > _lh_compareIntInt_LH_P2_0_1_0_3) then
                                   (fun _lh_mapLookup_Bin_3_2_4_7 _lh_mapLookup_arg1_2_4_7 _lh_mapLookup_Bin_4_2_4_7 _lh_mapLookup_Bin_2_2_4_7 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_4_7) _lh_mapLookup_Bin_4_2_4_7))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_1_0_4 < _lh_compareIntInt_LH_P2_0_1_0_5) then
+                                  (if (_lh_compareIntInt_LH_P2_0_1_0_2 < _lh_compareIntInt_LH_P2_0_1_0_3) then
                                     (fun _lh_mapLookup_Bin_3_2_4_8 _lh_mapLookup_arg1_2_4_8 _lh_mapLookup_Bin_4_2_4_8 _lh_mapLookup_Bin_2_2_4_8 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_4_8) _lh_mapLookup_Bin_3_2_4_8))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_0_4 > _lh_compareIntInt_LH_P2_1_1_0_5) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_0_2 > _lh_compareIntInt_LH_P2_1_1_0_3) then
                                       (fun _lh_mapLookup_Bin_3_2_4_9 _lh_mapLookup_arg1_2_4_9 _lh_mapLookup_Bin_4_2_4_9 _lh_mapLookup_Bin_2_2_4_9 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_4_9) _lh_mapLookup_Bin_4_2_4_9))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_1_0_4 < _lh_compareIntInt_LH_P2_1_1_0_5) then
+                                      (if (_lh_compareIntInt_LH_P2_1_1_0_2 < _lh_compareIntInt_LH_P2_1_1_0_3) then
                                         (fun _lh_mapLookup_Bin_3_2_5_0 _lh_mapLookup_arg1_2_5_0 _lh_mapLookup_Bin_4_2_5_0 _lh_mapLookup_Bin_2_2_5_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_5_0) _lh_mapLookup_Bin_3_2_5_0))
                                       else
@@ -1627,24 +1627,24 @@ let rec nPiece_lh__d1 _lh_nPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_1_0_0 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_0_0 < 1)) || (_lh_extend_maybe_LH_P2_1_1_0_0 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_1_1_1 = ((check_lh__d4 _lh_extend_maybe_arg1_1_0_0) (let rec _lh_compareIntInt_LH_P2_1_1_0_6 = _lh_extend_maybe_LH_P2_1_1_0_0 in
-                        (let rec _lh_compareIntInt_LH_P2_0_1_0_6 = _lh_extend_maybe_LH_P2_0_1_0_0 in
+                      (let rec _lh_matchIdent_1_1_1 = ((check_lh__d4 _lh_extend_maybe_arg1_1_0_0) (let rec _lh_compareIntInt_LH_P2_1_1_0_4 = _lh_extend_maybe_LH_P2_1_1_0_0 in
+                        (let rec _lh_compareIntInt_LH_P2_0_1_0_4 = _lh_extend_maybe_LH_P2_0_1_0_0 in
                           (fun _lh_compareIntInt_arg2_5_4 -> 
                             (match _lh_compareIntInt_arg2_5_4 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_0_7, _lh_compareIntInt_LH_P2_1_1_0_7) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_1_0_6 > _lh_compareIntInt_LH_P2_0_1_0_7) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_0_5, _lh_compareIntInt_LH_P2_1_1_0_5) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_1_0_4 > _lh_compareIntInt_LH_P2_0_1_0_5) then
                                   (fun _lh_mapLookup_Bin_3_2_5_2 _lh_mapLookup_arg1_2_5_2 _lh_mapLookup_Bin_4_2_5_2 _lh_mapLookup_Bin_2_2_5_2 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_5_2) _lh_mapLookup_Bin_4_2_5_2))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_1_0_6 < _lh_compareIntInt_LH_P2_0_1_0_7) then
+                                  (if (_lh_compareIntInt_LH_P2_0_1_0_4 < _lh_compareIntInt_LH_P2_0_1_0_5) then
                                     (fun _lh_mapLookup_Bin_3_2_5_3 _lh_mapLookup_arg1_2_5_3 _lh_mapLookup_Bin_4_2_5_3 _lh_mapLookup_Bin_2_2_5_3 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_5_3) _lh_mapLookup_Bin_3_2_5_3))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_0_6 > _lh_compareIntInt_LH_P2_1_1_0_7) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_0_4 > _lh_compareIntInt_LH_P2_1_1_0_5) then
                                       (fun _lh_mapLookup_Bin_3_2_5_4 _lh_mapLookup_arg1_2_5_4 _lh_mapLookup_Bin_4_2_5_4 _lh_mapLookup_Bin_2_2_5_4 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_5_4) _lh_mapLookup_Bin_4_2_5_4))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_1_0_6 < _lh_compareIntInt_LH_P2_1_1_0_7) then
+                                      (if (_lh_compareIntInt_LH_P2_1_1_0_4 < _lh_compareIntInt_LH_P2_1_1_0_5) then
                                         (fun _lh_mapLookup_Bin_3_2_5_5 _lh_mapLookup_arg1_2_5_5 _lh_mapLookup_Bin_4_2_5_5 _lh_mapLookup_Bin_2_2_5_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_5_5) _lh_mapLookup_Bin_3_2_5_5))
                                       else
@@ -1674,24 +1674,24 @@ let rec nPiece_lh__d1 _lh_nPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_1_0_2 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_0_2 < 1)) || (_lh_extend_maybe_LH_P2_1_1_0_2 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_1_1_3 = ((check_lh__d4 _lh_extend_maybe_arg1_1_0_2) (let rec _lh_compareIntInt_LH_P2_1_1_0_8 = _lh_extend_maybe_LH_P2_1_1_0_2 in
-                        (let rec _lh_compareIntInt_LH_P2_0_1_0_8 = _lh_extend_maybe_LH_P2_0_1_0_2 in
+                      (let rec _lh_matchIdent_1_1_3 = ((check_lh__d4 _lh_extend_maybe_arg1_1_0_2) (let rec _lh_compareIntInt_LH_P2_1_1_0_6 = _lh_extend_maybe_LH_P2_1_1_0_2 in
+                        (let rec _lh_compareIntInt_LH_P2_0_1_0_6 = _lh_extend_maybe_LH_P2_0_1_0_2 in
                           (fun _lh_compareIntInt_arg2_5_5 -> 
                             (match _lh_compareIntInt_arg2_5_5 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_0_9, _lh_compareIntInt_LH_P2_1_1_0_9) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_1_0_8 > _lh_compareIntInt_LH_P2_0_1_0_9) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_0_7, _lh_compareIntInt_LH_P2_1_1_0_7) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_1_0_6 > _lh_compareIntInt_LH_P2_0_1_0_7) then
                                   (fun _lh_mapLookup_Bin_3_2_5_7 _lh_mapLookup_arg1_2_5_7 _lh_mapLookup_Bin_4_2_5_7 _lh_mapLookup_Bin_2_2_5_7 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_5_7) _lh_mapLookup_Bin_4_2_5_7))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_1_0_8 < _lh_compareIntInt_LH_P2_0_1_0_9) then
+                                  (if (_lh_compareIntInt_LH_P2_0_1_0_6 < _lh_compareIntInt_LH_P2_0_1_0_7) then
                                     (fun _lh_mapLookup_Bin_3_2_5_8 _lh_mapLookup_arg1_2_5_8 _lh_mapLookup_Bin_4_2_5_8 _lh_mapLookup_Bin_2_2_5_8 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_5_8) _lh_mapLookup_Bin_3_2_5_8))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_0_8 > _lh_compareIntInt_LH_P2_1_1_0_9) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_0_6 > _lh_compareIntInt_LH_P2_1_1_0_7) then
                                       (fun _lh_mapLookup_Bin_3_2_5_9 _lh_mapLookup_arg1_2_5_9 _lh_mapLookup_Bin_4_2_5_9 _lh_mapLookup_Bin_2_2_5_9 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_5_9) _lh_mapLookup_Bin_4_2_5_9))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_1_0_8 < _lh_compareIntInt_LH_P2_1_1_0_9) then
+                                      (if (_lh_compareIntInt_LH_P2_1_1_0_6 < _lh_compareIntInt_LH_P2_1_1_0_7) then
                                         (fun _lh_mapLookup_Bin_3_2_6_0 _lh_mapLookup_arg1_2_6_0 _lh_mapLookup_Bin_4_2_6_0 _lh_mapLookup_Bin_2_2_6_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_6_0) _lh_mapLookup_Bin_3_2_6_0))
                                       else
@@ -1721,24 +1721,24 @@ let rec nPiece_lh__d1 _lh_nPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_1_0_4 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_0_4 < 1)) || (_lh_extend_maybe_LH_P2_1_1_0_4 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_1_1_5 = ((check_lh__d4 _lh_extend_maybe_arg1_1_0_4) (let rec _lh_compareIntInt_LH_P2_1_1_1_0 = _lh_extend_maybe_LH_P2_1_1_0_4 in
-                        (let rec _lh_compareIntInt_LH_P2_0_1_1_0 = _lh_extend_maybe_LH_P2_0_1_0_4 in
+                      (let rec _lh_matchIdent_1_1_5 = ((check_lh__d4 _lh_extend_maybe_arg1_1_0_4) (let rec _lh_compareIntInt_LH_P2_1_1_0_8 = _lh_extend_maybe_LH_P2_1_1_0_4 in
+                        (let rec _lh_compareIntInt_LH_P2_0_1_0_8 = _lh_extend_maybe_LH_P2_0_1_0_4 in
                           (fun _lh_compareIntInt_arg2_5_6 -> 
                             (match _lh_compareIntInt_arg2_5_6 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_1_1, _lh_compareIntInt_LH_P2_1_1_1_1) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_1_1_0 > _lh_compareIntInt_LH_P2_0_1_1_1) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_0_9, _lh_compareIntInt_LH_P2_1_1_0_9) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_1_0_8 > _lh_compareIntInt_LH_P2_0_1_0_9) then
                                   (fun _lh_mapLookup_Bin_3_2_6_2 _lh_mapLookup_arg1_2_6_2 _lh_mapLookup_Bin_4_2_6_2 _lh_mapLookup_Bin_2_2_6_2 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_6_2) _lh_mapLookup_Bin_4_2_6_2))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_1_1_0 < _lh_compareIntInt_LH_P2_0_1_1_1) then
+                                  (if (_lh_compareIntInt_LH_P2_0_1_0_8 < _lh_compareIntInt_LH_P2_0_1_0_9) then
                                     (fun _lh_mapLookup_Bin_3_2_6_3 _lh_mapLookup_arg1_2_6_3 _lh_mapLookup_Bin_4_2_6_3 _lh_mapLookup_Bin_2_2_6_3 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_6_3) _lh_mapLookup_Bin_3_2_6_3))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_1_0 > _lh_compareIntInt_LH_P2_1_1_1_1) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_0_8 > _lh_compareIntInt_LH_P2_1_1_0_9) then
                                       (fun _lh_mapLookup_Bin_3_2_6_4 _lh_mapLookup_arg1_2_6_4 _lh_mapLookup_Bin_4_2_6_4 _lh_mapLookup_Bin_2_2_6_4 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_6_4) _lh_mapLookup_Bin_4_2_6_4))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_1_1_0 < _lh_compareIntInt_LH_P2_1_1_1_1) then
+                                      (if (_lh_compareIntInt_LH_P2_1_1_0_8 < _lh_compareIntInt_LH_P2_1_1_0_9) then
                                         (fun _lh_mapLookup_Bin_3_2_6_5 _lh_mapLookup_arg1_2_6_5 _lh_mapLookup_Bin_4_2_6_5 _lh_mapLookup_Bin_2_2_6_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_6_5) _lh_mapLookup_Bin_3_2_6_5))
                                       else
@@ -1776,24 +1776,24 @@ let rec nPiece_lh__d1 _lh_nPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_1_0_6 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_0_6 < 1)) || (_lh_extend_maybe_LH_P2_1_1_0_6 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_1_1_7 = ((check_lh__d4 _lh_extend_maybe_arg1_1_0_6) (let rec _lh_compareIntInt_LH_P2_1_1_1_2 = _lh_extend_maybe_LH_P2_1_1_0_6 in
-                        (let rec _lh_compareIntInt_LH_P2_0_1_1_2 = _lh_extend_maybe_LH_P2_0_1_0_6 in
+                      (let rec _lh_matchIdent_1_1_7 = ((check_lh__d4 _lh_extend_maybe_arg1_1_0_6) (let rec _lh_compareIntInt_LH_P2_1_1_1_0 = _lh_extend_maybe_LH_P2_1_1_0_6 in
+                        (let rec _lh_compareIntInt_LH_P2_0_1_1_0 = _lh_extend_maybe_LH_P2_0_1_0_6 in
                           (fun _lh_compareIntInt_arg2_5_7 -> 
                             (match _lh_compareIntInt_arg2_5_7 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_1_3, _lh_compareIntInt_LH_P2_1_1_1_3) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_1_1_2 > _lh_compareIntInt_LH_P2_0_1_1_3) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_1_1, _lh_compareIntInt_LH_P2_1_1_1_1) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_1_1_0 > _lh_compareIntInt_LH_P2_0_1_1_1) then
                                   (fun _lh_mapLookup_Bin_3_2_6_7 _lh_mapLookup_arg1_2_6_7 _lh_mapLookup_Bin_4_2_6_7 _lh_mapLookup_Bin_2_2_6_7 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_6_7) _lh_mapLookup_Bin_4_2_6_7))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_1_1_2 < _lh_compareIntInt_LH_P2_0_1_1_3) then
+                                  (if (_lh_compareIntInt_LH_P2_0_1_1_0 < _lh_compareIntInt_LH_P2_0_1_1_1) then
                                     (fun _lh_mapLookup_Bin_3_2_6_8 _lh_mapLookup_arg1_2_6_8 _lh_mapLookup_Bin_4_2_6_8 _lh_mapLookup_Bin_2_2_6_8 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_6_8) _lh_mapLookup_Bin_3_2_6_8))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_1_2 > _lh_compareIntInt_LH_P2_1_1_1_3) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_1_0 > _lh_compareIntInt_LH_P2_1_1_1_1) then
                                       (fun _lh_mapLookup_Bin_3_2_6_9 _lh_mapLookup_arg1_2_6_9 _lh_mapLookup_Bin_4_2_6_9 _lh_mapLookup_Bin_2_2_6_9 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_6_9) _lh_mapLookup_Bin_4_2_6_9))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_1_1_2 < _lh_compareIntInt_LH_P2_1_1_1_3) then
+                                      (if (_lh_compareIntInt_LH_P2_1_1_1_0 < _lh_compareIntInt_LH_P2_1_1_1_1) then
                                         (fun _lh_mapLookup_Bin_3_2_7_0 _lh_mapLookup_arg1_2_7_0 _lh_mapLookup_Bin_4_2_7_0 _lh_mapLookup_Bin_2_2_7_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_7_0) _lh_mapLookup_Bin_3_2_7_0))
                                       else
@@ -1823,24 +1823,24 @@ let rec nPiece_lh__d1 _lh_nPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_1_0_8 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_0_8 < 1)) || (_lh_extend_maybe_LH_P2_1_1_0_8 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_1_1_9 = ((check_lh__d4 _lh_extend_maybe_arg1_1_0_8) (let rec _lh_compareIntInt_LH_P2_1_1_1_4 = _lh_extend_maybe_LH_P2_1_1_0_8 in
-                        (let rec _lh_compareIntInt_LH_P2_0_1_1_4 = _lh_extend_maybe_LH_P2_0_1_0_8 in
+                      (let rec _lh_matchIdent_1_1_9 = ((check_lh__d4 _lh_extend_maybe_arg1_1_0_8) (let rec _lh_compareIntInt_LH_P2_1_1_1_2 = _lh_extend_maybe_LH_P2_1_1_0_8 in
+                        (let rec _lh_compareIntInt_LH_P2_0_1_1_2 = _lh_extend_maybe_LH_P2_0_1_0_8 in
                           (fun _lh_compareIntInt_arg2_5_8 -> 
                             (match _lh_compareIntInt_arg2_5_8 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_1_5, _lh_compareIntInt_LH_P2_1_1_1_5) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_1_1_4 > _lh_compareIntInt_LH_P2_0_1_1_5) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_1_3, _lh_compareIntInt_LH_P2_1_1_1_3) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_1_1_2 > _lh_compareIntInt_LH_P2_0_1_1_3) then
                                   (fun _lh_mapLookup_Bin_3_2_7_2 _lh_mapLookup_arg1_2_7_2 _lh_mapLookup_Bin_4_2_7_2 _lh_mapLookup_Bin_2_2_7_2 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_7_2) _lh_mapLookup_Bin_4_2_7_2))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_1_1_4 < _lh_compareIntInt_LH_P2_0_1_1_5) then
+                                  (if (_lh_compareIntInt_LH_P2_0_1_1_2 < _lh_compareIntInt_LH_P2_0_1_1_3) then
                                     (fun _lh_mapLookup_Bin_3_2_7_3 _lh_mapLookup_arg1_2_7_3 _lh_mapLookup_Bin_4_2_7_3 _lh_mapLookup_Bin_2_2_7_3 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_7_3) _lh_mapLookup_Bin_3_2_7_3))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_1_4 > _lh_compareIntInt_LH_P2_1_1_1_5) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_1_2 > _lh_compareIntInt_LH_P2_1_1_1_3) then
                                       (fun _lh_mapLookup_Bin_3_2_7_4 _lh_mapLookup_arg1_2_7_4 _lh_mapLookup_Bin_4_2_7_4 _lh_mapLookup_Bin_2_2_7_4 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_7_4) _lh_mapLookup_Bin_4_2_7_4))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_1_1_4 < _lh_compareIntInt_LH_P2_1_1_1_5) then
+                                      (if (_lh_compareIntInt_LH_P2_1_1_1_2 < _lh_compareIntInt_LH_P2_1_1_1_3) then
                                         (fun _lh_mapLookup_Bin_3_2_7_5 _lh_mapLookup_arg1_2_7_5 _lh_mapLookup_Bin_4_2_7_5 _lh_mapLookup_Bin_2_2_7_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_7_5) _lh_mapLookup_Bin_3_2_7_5))
                                       else
@@ -1870,24 +1870,24 @@ let rec nPiece_lh__d1 _lh_nPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_1_1_0 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_1_0 < 1)) || (_lh_extend_maybe_LH_P2_1_1_1_0 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_1_2_1 = ((check_lh__d4 _lh_extend_maybe_arg1_1_1_0) (let rec _lh_compareIntInt_LH_P2_1_1_1_6 = _lh_extend_maybe_LH_P2_1_1_1_0 in
-                        (let rec _lh_compareIntInt_LH_P2_0_1_1_6 = _lh_extend_maybe_LH_P2_0_1_1_0 in
+                      (let rec _lh_matchIdent_1_2_1 = ((check_lh__d4 _lh_extend_maybe_arg1_1_1_0) (let rec _lh_compareIntInt_LH_P2_1_1_1_4 = _lh_extend_maybe_LH_P2_1_1_1_0 in
+                        (let rec _lh_compareIntInt_LH_P2_0_1_1_4 = _lh_extend_maybe_LH_P2_0_1_1_0 in
                           (fun _lh_compareIntInt_arg2_5_9 -> 
                             (match _lh_compareIntInt_arg2_5_9 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_1_7, _lh_compareIntInt_LH_P2_1_1_1_7) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_1_1_6 > _lh_compareIntInt_LH_P2_0_1_1_7) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_1_5, _lh_compareIntInt_LH_P2_1_1_1_5) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_1_1_4 > _lh_compareIntInt_LH_P2_0_1_1_5) then
                                   (fun _lh_mapLookup_Bin_3_2_7_7 _lh_mapLookup_arg1_2_7_7 _lh_mapLookup_Bin_4_2_7_7 _lh_mapLookup_Bin_2_2_7_7 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_7_7) _lh_mapLookup_Bin_4_2_7_7))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_1_1_6 < _lh_compareIntInt_LH_P2_0_1_1_7) then
+                                  (if (_lh_compareIntInt_LH_P2_0_1_1_4 < _lh_compareIntInt_LH_P2_0_1_1_5) then
                                     (fun _lh_mapLookup_Bin_3_2_7_8 _lh_mapLookup_arg1_2_7_8 _lh_mapLookup_Bin_4_2_7_8 _lh_mapLookup_Bin_2_2_7_8 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_7_8) _lh_mapLookup_Bin_3_2_7_8))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_1_6 > _lh_compareIntInt_LH_P2_1_1_1_7) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_1_4 > _lh_compareIntInt_LH_P2_1_1_1_5) then
                                       (fun _lh_mapLookup_Bin_3_2_7_9 _lh_mapLookup_arg1_2_7_9 _lh_mapLookup_Bin_4_2_7_9 _lh_mapLookup_Bin_2_2_7_9 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_7_9) _lh_mapLookup_Bin_4_2_7_9))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_1_1_6 < _lh_compareIntInt_LH_P2_1_1_1_7) then
+                                      (if (_lh_compareIntInt_LH_P2_1_1_1_4 < _lh_compareIntInt_LH_P2_1_1_1_5) then
                                         (fun _lh_mapLookup_Bin_3_2_8_0 _lh_mapLookup_arg1_2_8_0 _lh_mapLookup_Bin_4_2_8_0 _lh_mapLookup_Bin_2_2_8_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_8_0) _lh_mapLookup_Bin_3_2_8_0))
                                       else
@@ -1917,24 +1917,24 @@ let rec nPiece_lh__d1 _lh_nPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_1_1_2 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_1_2 < 1)) || (_lh_extend_maybe_LH_P2_1_1_1_2 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_1_2_3 = ((check_lh__d4 _lh_extend_maybe_arg1_1_1_2) (let rec _lh_compareIntInt_LH_P2_1_1_1_8 = _lh_extend_maybe_LH_P2_1_1_1_2 in
-                        (let rec _lh_compareIntInt_LH_P2_0_1_1_8 = _lh_extend_maybe_LH_P2_0_1_1_2 in
+                      (let rec _lh_matchIdent_1_2_3 = ((check_lh__d4 _lh_extend_maybe_arg1_1_1_2) (let rec _lh_compareIntInt_LH_P2_1_1_1_6 = _lh_extend_maybe_LH_P2_1_1_1_2 in
+                        (let rec _lh_compareIntInt_LH_P2_0_1_1_6 = _lh_extend_maybe_LH_P2_0_1_1_2 in
                           (fun _lh_compareIntInt_arg2_6_0 -> 
                             (match _lh_compareIntInt_arg2_6_0 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_1_9, _lh_compareIntInt_LH_P2_1_1_1_9) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_1_1_8 > _lh_compareIntInt_LH_P2_0_1_1_9) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_1_7, _lh_compareIntInt_LH_P2_1_1_1_7) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_1_1_6 > _lh_compareIntInt_LH_P2_0_1_1_7) then
                                   (fun _lh_mapLookup_Bin_3_2_8_2 _lh_mapLookup_arg1_2_8_2 _lh_mapLookup_Bin_4_2_8_2 _lh_mapLookup_Bin_2_2_8_2 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_8_2) _lh_mapLookup_Bin_4_2_8_2))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_1_1_8 < _lh_compareIntInt_LH_P2_0_1_1_9) then
+                                  (if (_lh_compareIntInt_LH_P2_0_1_1_6 < _lh_compareIntInt_LH_P2_0_1_1_7) then
                                     (fun _lh_mapLookup_Bin_3_2_8_3 _lh_mapLookup_arg1_2_8_3 _lh_mapLookup_Bin_4_2_8_3 _lh_mapLookup_Bin_2_2_8_3 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_8_3) _lh_mapLookup_Bin_3_2_8_3))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_1_8 > _lh_compareIntInt_LH_P2_1_1_1_9) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_1_6 > _lh_compareIntInt_LH_P2_1_1_1_7) then
                                       (fun _lh_mapLookup_Bin_3_2_8_4 _lh_mapLookup_arg1_2_8_4 _lh_mapLookup_Bin_4_2_8_4 _lh_mapLookup_Bin_2_2_8_4 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_8_4) _lh_mapLookup_Bin_4_2_8_4))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_1_1_8 < _lh_compareIntInt_LH_P2_1_1_1_9) then
+                                      (if (_lh_compareIntInt_LH_P2_1_1_1_6 < _lh_compareIntInt_LH_P2_1_1_1_7) then
                                         (fun _lh_mapLookup_Bin_3_2_8_5 _lh_mapLookup_arg1_2_8_5 _lh_mapLookup_Bin_4_2_8_5 _lh_mapLookup_Bin_2_2_8_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_8_5) _lh_mapLookup_Bin_3_2_8_5))
                                       else
@@ -1969,7 +1969,7 @@ let rec nPiece_lh__d1 _lh_nPiece_arg1_0 =
                   _lh_search_P_2_3
                 | _ -> 
                   (failwith "error")))))))));;
-let rec ePiece_lh__d1 _lh_ePiece_arg1_0 =
+let rec ePiece_lh__d1 =
   (let rec _lh_search_P_2_4 = (let rec _lh_listcomp_fun_ls_t_4_2 = (let rec _lh_listcomp_fun_ls_t_4_3 = (fun _lh_listcomp_fun_5_5 _lh_search_LH_P2_1_2_7 _lh_search_P_0_2_6 _lh_listcomp_fun_ls_t_4_4 _lh_listcomp_fun_5_6 -> 
     (_lh_listcomp_fun_5_6 _lh_listcomp_fun_ls_t_4_4)) in
     (let rec _lh_listcomp_fun_ls_h_1_5 = (let rec _lh_fit_LH_C_1_5_6 = (let rec _lh_fit_LH_C_1_5_7 = (let rec _lh_fit_LH_C_1_5_8 = (fun _lh_fit_arg1_7_0 _lh_fit_arg2_7_0 _lh_fit_arg3_7_0 -> 
@@ -1987,24 +1987,24 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 =
                   (if (((_lh_extend_maybe_LH_P2_0_1_1_4 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_1_4 < 1)) || (_lh_extend_maybe_LH_P2_1_1_1_4 > maxCol_lh__d4)) then
                     (`Nothing)
                   else
-                    (let rec _lh_matchIdent_1_3_4 = ((check_lh__d4 _lh_extend_maybe_arg1_1_1_4) (let rec _lh_compareIntInt_LH_P2_1_1_2_0 = _lh_extend_maybe_LH_P2_1_1_1_4 in
-                      (let rec _lh_compareIntInt_LH_P2_0_1_2_0 = _lh_extend_maybe_LH_P2_0_1_1_4 in
+                    (let rec _lh_matchIdent_1_3_4 = ((check_lh__d4 _lh_extend_maybe_arg1_1_1_4) (let rec _lh_compareIntInt_LH_P2_1_1_1_8 = _lh_extend_maybe_LH_P2_1_1_1_4 in
+                      (let rec _lh_compareIntInt_LH_P2_0_1_1_8 = _lh_extend_maybe_LH_P2_0_1_1_4 in
                         (fun _lh_compareIntInt_arg2_6_1 -> 
                           (match _lh_compareIntInt_arg2_6_1 with
-                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_2_1, _lh_compareIntInt_LH_P2_1_1_2_1) -> 
-                              (if (_lh_compareIntInt_LH_P2_0_1_2_0 > _lh_compareIntInt_LH_P2_0_1_2_1) then
+                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_1_9, _lh_compareIntInt_LH_P2_1_1_1_9) -> 
+                              (if (_lh_compareIntInt_LH_P2_0_1_1_8 > _lh_compareIntInt_LH_P2_0_1_1_9) then
                                 (fun _lh_mapLookup_Bin_3_2_8_7 _lh_mapLookup_arg1_2_8_7 _lh_mapLookup_Bin_4_2_8_7 _lh_mapLookup_Bin_2_2_8_7 -> 
                                   ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_8_7) _lh_mapLookup_Bin_4_2_8_7))
                               else
-                                (if (_lh_compareIntInt_LH_P2_0_1_2_0 < _lh_compareIntInt_LH_P2_0_1_2_1) then
+                                (if (_lh_compareIntInt_LH_P2_0_1_1_8 < _lh_compareIntInt_LH_P2_0_1_1_9) then
                                   (fun _lh_mapLookup_Bin_3_2_8_8 _lh_mapLookup_arg1_2_8_8 _lh_mapLookup_Bin_4_2_8_8 _lh_mapLookup_Bin_2_2_8_8 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_8_8) _lh_mapLookup_Bin_3_2_8_8))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_1_1_2_0 > _lh_compareIntInt_LH_P2_1_1_2_1) then
+                                  (if (_lh_compareIntInt_LH_P2_1_1_1_8 > _lh_compareIntInt_LH_P2_1_1_1_9) then
                                     (fun _lh_mapLookup_Bin_3_2_8_9 _lh_mapLookup_arg1_2_8_9 _lh_mapLookup_Bin_4_2_8_9 _lh_mapLookup_Bin_2_2_8_9 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_8_9) _lh_mapLookup_Bin_4_2_8_9))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_2_0 < _lh_compareIntInt_LH_P2_1_1_2_1) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_1_8 < _lh_compareIntInt_LH_P2_1_1_1_9) then
                                       (fun _lh_mapLookup_Bin_3_2_9_0 _lh_mapLookup_arg1_2_9_0 _lh_mapLookup_Bin_4_2_9_0 _lh_mapLookup_Bin_2_2_9_0 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_9_0) _lh_mapLookup_Bin_3_2_9_0))
                                     else
@@ -2034,24 +2034,24 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 =
                   (if (((_lh_extend_maybe_LH_P2_0_1_1_6 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_1_6 < 1)) || (_lh_extend_maybe_LH_P2_1_1_1_6 > maxCol_lh__d4)) then
                     (`Nothing)
                   else
-                    (let rec _lh_matchIdent_1_3_6 = ((check_lh__d4 _lh_extend_maybe_arg1_1_1_6) (let rec _lh_compareIntInt_LH_P2_1_1_2_2 = _lh_extend_maybe_LH_P2_1_1_1_6 in
-                      (let rec _lh_compareIntInt_LH_P2_0_1_2_2 = _lh_extend_maybe_LH_P2_0_1_1_6 in
+                    (let rec _lh_matchIdent_1_3_6 = ((check_lh__d4 _lh_extend_maybe_arg1_1_1_6) (let rec _lh_compareIntInt_LH_P2_1_1_2_0 = _lh_extend_maybe_LH_P2_1_1_1_6 in
+                      (let rec _lh_compareIntInt_LH_P2_0_1_2_0 = _lh_extend_maybe_LH_P2_0_1_1_6 in
                         (fun _lh_compareIntInt_arg2_6_2 -> 
                           (match _lh_compareIntInt_arg2_6_2 with
-                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_2_3, _lh_compareIntInt_LH_P2_1_1_2_3) -> 
-                              (if (_lh_compareIntInt_LH_P2_0_1_2_2 > _lh_compareIntInt_LH_P2_0_1_2_3) then
+                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_2_1, _lh_compareIntInt_LH_P2_1_1_2_1) -> 
+                              (if (_lh_compareIntInt_LH_P2_0_1_2_0 > _lh_compareIntInt_LH_P2_0_1_2_1) then
                                 (fun _lh_mapLookup_Bin_3_2_9_2 _lh_mapLookup_arg1_2_9_2 _lh_mapLookup_Bin_4_2_9_2 _lh_mapLookup_Bin_2_2_9_2 -> 
                                   ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_9_2) _lh_mapLookup_Bin_4_2_9_2))
                               else
-                                (if (_lh_compareIntInt_LH_P2_0_1_2_2 < _lh_compareIntInt_LH_P2_0_1_2_3) then
+                                (if (_lh_compareIntInt_LH_P2_0_1_2_0 < _lh_compareIntInt_LH_P2_0_1_2_1) then
                                   (fun _lh_mapLookup_Bin_3_2_9_3 _lh_mapLookup_arg1_2_9_3 _lh_mapLookup_Bin_4_2_9_3 _lh_mapLookup_Bin_2_2_9_3 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_9_3) _lh_mapLookup_Bin_3_2_9_3))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_1_1_2_2 > _lh_compareIntInt_LH_P2_1_1_2_3) then
+                                  (if (_lh_compareIntInt_LH_P2_1_1_2_0 > _lh_compareIntInt_LH_P2_1_1_2_1) then
                                     (fun _lh_mapLookup_Bin_3_2_9_4 _lh_mapLookup_arg1_2_9_4 _lh_mapLookup_Bin_4_2_9_4 _lh_mapLookup_Bin_2_2_9_4 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_9_4) _lh_mapLookup_Bin_4_2_9_4))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_2_2 < _lh_compareIntInt_LH_P2_1_1_2_3) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_2_0 < _lh_compareIntInt_LH_P2_1_1_2_1) then
                                       (fun _lh_mapLookup_Bin_3_2_9_5 _lh_mapLookup_arg1_2_9_5 _lh_mapLookup_Bin_4_2_9_5 _lh_mapLookup_Bin_2_2_9_5 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_9_5) _lh_mapLookup_Bin_3_2_9_5))
                                     else
@@ -2081,24 +2081,24 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 =
                   (if (((_lh_extend_maybe_LH_P2_0_1_1_8 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_1_8 < 1)) || (_lh_extend_maybe_LH_P2_1_1_1_8 > maxCol_lh__d4)) then
                     (`Nothing)
                   else
-                    (let rec _lh_matchIdent_1_3_8 = ((check_lh__d4 _lh_extend_maybe_arg1_1_1_8) (let rec _lh_compareIntInt_LH_P2_1_1_2_4 = _lh_extend_maybe_LH_P2_1_1_1_8 in
-                      (let rec _lh_compareIntInt_LH_P2_0_1_2_4 = _lh_extend_maybe_LH_P2_0_1_1_8 in
+                    (let rec _lh_matchIdent_1_3_8 = ((check_lh__d4 _lh_extend_maybe_arg1_1_1_8) (let rec _lh_compareIntInt_LH_P2_1_1_2_2 = _lh_extend_maybe_LH_P2_1_1_1_8 in
+                      (let rec _lh_compareIntInt_LH_P2_0_1_2_2 = _lh_extend_maybe_LH_P2_0_1_1_8 in
                         (fun _lh_compareIntInt_arg2_6_3 -> 
                           (match _lh_compareIntInt_arg2_6_3 with
-                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_2_5, _lh_compareIntInt_LH_P2_1_1_2_5) -> 
-                              (if (_lh_compareIntInt_LH_P2_0_1_2_4 > _lh_compareIntInt_LH_P2_0_1_2_5) then
+                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_2_3, _lh_compareIntInt_LH_P2_1_1_2_3) -> 
+                              (if (_lh_compareIntInt_LH_P2_0_1_2_2 > _lh_compareIntInt_LH_P2_0_1_2_3) then
                                 (fun _lh_mapLookup_Bin_3_2_9_7 _lh_mapLookup_arg1_2_9_7 _lh_mapLookup_Bin_4_2_9_7 _lh_mapLookup_Bin_2_2_9_7 -> 
                                   ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_9_7) _lh_mapLookup_Bin_4_2_9_7))
                               else
-                                (if (_lh_compareIntInt_LH_P2_0_1_2_4 < _lh_compareIntInt_LH_P2_0_1_2_5) then
+                                (if (_lh_compareIntInt_LH_P2_0_1_2_2 < _lh_compareIntInt_LH_P2_0_1_2_3) then
                                   (fun _lh_mapLookup_Bin_3_2_9_8 _lh_mapLookup_arg1_2_9_8 _lh_mapLookup_Bin_4_2_9_8 _lh_mapLookup_Bin_2_2_9_8 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_9_8) _lh_mapLookup_Bin_3_2_9_8))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_1_1_2_4 > _lh_compareIntInt_LH_P2_1_1_2_5) then
+                                  (if (_lh_compareIntInt_LH_P2_1_1_2_2 > _lh_compareIntInt_LH_P2_1_1_2_3) then
                                     (fun _lh_mapLookup_Bin_3_2_9_9 _lh_mapLookup_arg1_2_9_9 _lh_mapLookup_Bin_4_2_9_9 _lh_mapLookup_Bin_2_2_9_9 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_2_9_9) _lh_mapLookup_Bin_4_2_9_9))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_2_4 < _lh_compareIntInt_LH_P2_1_1_2_5) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_2_2 < _lh_compareIntInt_LH_P2_1_1_2_3) then
                                       (fun _lh_mapLookup_Bin_3_3_0_0 _lh_mapLookup_arg1_3_0_0 _lh_mapLookup_Bin_4_3_0_0 _lh_mapLookup_Bin_2_3_0_0 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_0_0) _lh_mapLookup_Bin_3_3_0_0))
                                     else
@@ -2136,24 +2136,24 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 =
                   (if (((_lh_extend_maybe_LH_P2_0_1_2_0 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_2_0 < 1)) || (_lh_extend_maybe_LH_P2_1_1_2_0 > maxCol_lh__d4)) then
                     (`Nothing)
                   else
-                    (let rec _lh_matchIdent_1_4_0 = ((check_lh__d4 _lh_extend_maybe_arg1_1_2_0) (let rec _lh_compareIntInt_LH_P2_1_1_2_6 = _lh_extend_maybe_LH_P2_1_1_2_0 in
-                      (let rec _lh_compareIntInt_LH_P2_0_1_2_6 = _lh_extend_maybe_LH_P2_0_1_2_0 in
+                    (let rec _lh_matchIdent_1_4_0 = ((check_lh__d4 _lh_extend_maybe_arg1_1_2_0) (let rec _lh_compareIntInt_LH_P2_1_1_2_4 = _lh_extend_maybe_LH_P2_1_1_2_0 in
+                      (let rec _lh_compareIntInt_LH_P2_0_1_2_4 = _lh_extend_maybe_LH_P2_0_1_2_0 in
                         (fun _lh_compareIntInt_arg2_6_4 -> 
                           (match _lh_compareIntInt_arg2_6_4 with
-                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_2_7, _lh_compareIntInt_LH_P2_1_1_2_7) -> 
-                              (if (_lh_compareIntInt_LH_P2_0_1_2_6 > _lh_compareIntInt_LH_P2_0_1_2_7) then
+                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_2_5, _lh_compareIntInt_LH_P2_1_1_2_5) -> 
+                              (if (_lh_compareIntInt_LH_P2_0_1_2_4 > _lh_compareIntInt_LH_P2_0_1_2_5) then
                                 (fun _lh_mapLookup_Bin_3_3_0_2 _lh_mapLookup_arg1_3_0_2 _lh_mapLookup_Bin_4_3_0_2 _lh_mapLookup_Bin_2_3_0_2 -> 
                                   ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_0_2) _lh_mapLookup_Bin_4_3_0_2))
                               else
-                                (if (_lh_compareIntInt_LH_P2_0_1_2_6 < _lh_compareIntInt_LH_P2_0_1_2_7) then
+                                (if (_lh_compareIntInt_LH_P2_0_1_2_4 < _lh_compareIntInt_LH_P2_0_1_2_5) then
                                   (fun _lh_mapLookup_Bin_3_3_0_3 _lh_mapLookup_arg1_3_0_3 _lh_mapLookup_Bin_4_3_0_3 _lh_mapLookup_Bin_2_3_0_3 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_0_3) _lh_mapLookup_Bin_3_3_0_3))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_1_1_2_6 > _lh_compareIntInt_LH_P2_1_1_2_7) then
+                                  (if (_lh_compareIntInt_LH_P2_1_1_2_4 > _lh_compareIntInt_LH_P2_1_1_2_5) then
                                     (fun _lh_mapLookup_Bin_3_3_0_4 _lh_mapLookup_arg1_3_0_4 _lh_mapLookup_Bin_4_3_0_4 _lh_mapLookup_Bin_2_3_0_4 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_0_4) _lh_mapLookup_Bin_4_3_0_4))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_2_6 < _lh_compareIntInt_LH_P2_1_1_2_7) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_2_4 < _lh_compareIntInt_LH_P2_1_1_2_5) then
                                       (fun _lh_mapLookup_Bin_3_3_0_5 _lh_mapLookup_arg1_3_0_5 _lh_mapLookup_Bin_4_3_0_5 _lh_mapLookup_Bin_2_3_0_5 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_0_5) _lh_mapLookup_Bin_3_3_0_5))
                                     else
@@ -2183,24 +2183,24 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 =
                   (if (((_lh_extend_maybe_LH_P2_0_1_2_2 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_2_2 < 1)) || (_lh_extend_maybe_LH_P2_1_1_2_2 > maxCol_lh__d4)) then
                     (`Nothing)
                   else
-                    (let rec _lh_matchIdent_1_4_2 = ((check_lh__d4 _lh_extend_maybe_arg1_1_2_2) (let rec _lh_compareIntInt_LH_P2_1_1_2_8 = _lh_extend_maybe_LH_P2_1_1_2_2 in
-                      (let rec _lh_compareIntInt_LH_P2_0_1_2_8 = _lh_extend_maybe_LH_P2_0_1_2_2 in
+                    (let rec _lh_matchIdent_1_4_2 = ((check_lh__d4 _lh_extend_maybe_arg1_1_2_2) (let rec _lh_compareIntInt_LH_P2_1_1_2_6 = _lh_extend_maybe_LH_P2_1_1_2_2 in
+                      (let rec _lh_compareIntInt_LH_P2_0_1_2_6 = _lh_extend_maybe_LH_P2_0_1_2_2 in
                         (fun _lh_compareIntInt_arg2_6_5 -> 
                           (match _lh_compareIntInt_arg2_6_5 with
-                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_2_9, _lh_compareIntInt_LH_P2_1_1_2_9) -> 
-                              (if (_lh_compareIntInt_LH_P2_0_1_2_8 > _lh_compareIntInt_LH_P2_0_1_2_9) then
+                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_2_7, _lh_compareIntInt_LH_P2_1_1_2_7) -> 
+                              (if (_lh_compareIntInt_LH_P2_0_1_2_6 > _lh_compareIntInt_LH_P2_0_1_2_7) then
                                 (fun _lh_mapLookup_Bin_3_3_0_7 _lh_mapLookup_arg1_3_0_7 _lh_mapLookup_Bin_4_3_0_7 _lh_mapLookup_Bin_2_3_0_7 -> 
                                   ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_0_7) _lh_mapLookup_Bin_4_3_0_7))
                               else
-                                (if (_lh_compareIntInt_LH_P2_0_1_2_8 < _lh_compareIntInt_LH_P2_0_1_2_9) then
+                                (if (_lh_compareIntInt_LH_P2_0_1_2_6 < _lh_compareIntInt_LH_P2_0_1_2_7) then
                                   (fun _lh_mapLookup_Bin_3_3_0_8 _lh_mapLookup_arg1_3_0_8 _lh_mapLookup_Bin_4_3_0_8 _lh_mapLookup_Bin_2_3_0_8 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_0_8) _lh_mapLookup_Bin_3_3_0_8))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_1_1_2_8 > _lh_compareIntInt_LH_P2_1_1_2_9) then
+                                  (if (_lh_compareIntInt_LH_P2_1_1_2_6 > _lh_compareIntInt_LH_P2_1_1_2_7) then
                                     (fun _lh_mapLookup_Bin_3_3_0_9 _lh_mapLookup_arg1_3_0_9 _lh_mapLookup_Bin_4_3_0_9 _lh_mapLookup_Bin_2_3_0_9 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_0_9) _lh_mapLookup_Bin_4_3_0_9))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_2_8 < _lh_compareIntInt_LH_P2_1_1_2_9) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_2_6 < _lh_compareIntInt_LH_P2_1_1_2_7) then
                                       (fun _lh_mapLookup_Bin_3_3_1_0 _lh_mapLookup_arg1_3_1_0 _lh_mapLookup_Bin_4_3_1_0 _lh_mapLookup_Bin_2_3_1_0 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_1_0) _lh_mapLookup_Bin_3_3_1_0))
                                     else
@@ -2230,24 +2230,24 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 =
                   (if (((_lh_extend_maybe_LH_P2_0_1_2_4 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_2_4 < 1)) || (_lh_extend_maybe_LH_P2_1_1_2_4 > maxCol_lh__d4)) then
                     (`Nothing)
                   else
-                    (let rec _lh_matchIdent_1_4_4 = ((check_lh__d4 _lh_extend_maybe_arg1_1_2_4) (let rec _lh_compareIntInt_LH_P2_1_1_3_0 = _lh_extend_maybe_LH_P2_1_1_2_4 in
-                      (let rec _lh_compareIntInt_LH_P2_0_1_3_0 = _lh_extend_maybe_LH_P2_0_1_2_4 in
+                    (let rec _lh_matchIdent_1_4_4 = ((check_lh__d4 _lh_extend_maybe_arg1_1_2_4) (let rec _lh_compareIntInt_LH_P2_1_1_2_8 = _lh_extend_maybe_LH_P2_1_1_2_4 in
+                      (let rec _lh_compareIntInt_LH_P2_0_1_2_8 = _lh_extend_maybe_LH_P2_0_1_2_4 in
                         (fun _lh_compareIntInt_arg2_6_6 -> 
                           (match _lh_compareIntInt_arg2_6_6 with
-                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_3_1, _lh_compareIntInt_LH_P2_1_1_3_1) -> 
-                              (if (_lh_compareIntInt_LH_P2_0_1_3_0 > _lh_compareIntInt_LH_P2_0_1_3_1) then
+                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_2_9, _lh_compareIntInt_LH_P2_1_1_2_9) -> 
+                              (if (_lh_compareIntInt_LH_P2_0_1_2_8 > _lh_compareIntInt_LH_P2_0_1_2_9) then
                                 (fun _lh_mapLookup_Bin_3_3_1_2 _lh_mapLookup_arg1_3_1_2 _lh_mapLookup_Bin_4_3_1_2 _lh_mapLookup_Bin_2_3_1_2 -> 
                                   ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_1_2) _lh_mapLookup_Bin_4_3_1_2))
                               else
-                                (if (_lh_compareIntInt_LH_P2_0_1_3_0 < _lh_compareIntInt_LH_P2_0_1_3_1) then
+                                (if (_lh_compareIntInt_LH_P2_0_1_2_8 < _lh_compareIntInt_LH_P2_0_1_2_9) then
                                   (fun _lh_mapLookup_Bin_3_3_1_3 _lh_mapLookup_arg1_3_1_3 _lh_mapLookup_Bin_4_3_1_3 _lh_mapLookup_Bin_2_3_1_3 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_1_3) _lh_mapLookup_Bin_3_3_1_3))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_1_1_3_0 > _lh_compareIntInt_LH_P2_1_1_3_1) then
+                                  (if (_lh_compareIntInt_LH_P2_1_1_2_8 > _lh_compareIntInt_LH_P2_1_1_2_9) then
                                     (fun _lh_mapLookup_Bin_3_3_1_4 _lh_mapLookup_arg1_3_1_4 _lh_mapLookup_Bin_4_3_1_4 _lh_mapLookup_Bin_2_3_1_4 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_1_4) _lh_mapLookup_Bin_4_3_1_4))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_3_0 < _lh_compareIntInt_LH_P2_1_1_3_1) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_2_8 < _lh_compareIntInt_LH_P2_1_1_2_9) then
                                       (fun _lh_mapLookup_Bin_3_3_1_5 _lh_mapLookup_arg1_3_1_5 _lh_mapLookup_Bin_4_3_1_5 _lh_mapLookup_Bin_2_3_1_5 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_1_5) _lh_mapLookup_Bin_3_3_1_5))
                                     else
@@ -2287,24 +2287,24 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_1_2_6 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_2_6 < 1)) || (_lh_extend_maybe_LH_P2_1_1_2_6 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_1_4_6 = ((check_lh__d4 _lh_extend_maybe_arg1_1_2_6) (let rec _lh_compareIntInt_LH_P2_1_1_3_2 = _lh_extend_maybe_LH_P2_1_1_2_6 in
-                        (let rec _lh_compareIntInt_LH_P2_0_1_3_2 = _lh_extend_maybe_LH_P2_0_1_2_6 in
+                      (let rec _lh_matchIdent_1_4_6 = ((check_lh__d4 _lh_extend_maybe_arg1_1_2_6) (let rec _lh_compareIntInt_LH_P2_1_1_3_0 = _lh_extend_maybe_LH_P2_1_1_2_6 in
+                        (let rec _lh_compareIntInt_LH_P2_0_1_3_0 = _lh_extend_maybe_LH_P2_0_1_2_6 in
                           (fun _lh_compareIntInt_arg2_6_7 -> 
                             (match _lh_compareIntInt_arg2_6_7 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_3_3, _lh_compareIntInt_LH_P2_1_1_3_3) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_1_3_2 > _lh_compareIntInt_LH_P2_0_1_3_3) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_3_1, _lh_compareIntInt_LH_P2_1_1_3_1) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_1_3_0 > _lh_compareIntInt_LH_P2_0_1_3_1) then
                                   (fun _lh_mapLookup_Bin_3_3_1_7 _lh_mapLookup_arg1_3_1_7 _lh_mapLookup_Bin_4_3_1_7 _lh_mapLookup_Bin_2_3_1_7 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_1_7) _lh_mapLookup_Bin_4_3_1_7))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_1_3_2 < _lh_compareIntInt_LH_P2_0_1_3_3) then
+                                  (if (_lh_compareIntInt_LH_P2_0_1_3_0 < _lh_compareIntInt_LH_P2_0_1_3_1) then
                                     (fun _lh_mapLookup_Bin_3_3_1_8 _lh_mapLookup_arg1_3_1_8 _lh_mapLookup_Bin_4_3_1_8 _lh_mapLookup_Bin_2_3_1_8 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_1_8) _lh_mapLookup_Bin_3_3_1_8))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_3_2 > _lh_compareIntInt_LH_P2_1_1_3_3) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_3_0 > _lh_compareIntInt_LH_P2_1_1_3_1) then
                                       (fun _lh_mapLookup_Bin_3_3_1_9 _lh_mapLookup_arg1_3_1_9 _lh_mapLookup_Bin_4_3_1_9 _lh_mapLookup_Bin_2_3_1_9 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_1_9) _lh_mapLookup_Bin_4_3_1_9))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_1_3_2 < _lh_compareIntInt_LH_P2_1_1_3_3) then
+                                      (if (_lh_compareIntInt_LH_P2_1_1_3_0 < _lh_compareIntInt_LH_P2_1_1_3_1) then
                                         (fun _lh_mapLookup_Bin_3_3_2_0 _lh_mapLookup_arg1_3_2_0 _lh_mapLookup_Bin_4_3_2_0 _lh_mapLookup_Bin_2_3_2_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_2_0) _lh_mapLookup_Bin_3_3_2_0))
                                       else
@@ -2334,24 +2334,24 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_1_2_8 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_2_8 < 1)) || (_lh_extend_maybe_LH_P2_1_1_2_8 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_1_4_8 = ((check_lh__d4 _lh_extend_maybe_arg1_1_2_8) (let rec _lh_compareIntInt_LH_P2_1_1_3_4 = _lh_extend_maybe_LH_P2_1_1_2_8 in
-                        (let rec _lh_compareIntInt_LH_P2_0_1_3_4 = _lh_extend_maybe_LH_P2_0_1_2_8 in
+                      (let rec _lh_matchIdent_1_4_8 = ((check_lh__d4 _lh_extend_maybe_arg1_1_2_8) (let rec _lh_compareIntInt_LH_P2_1_1_3_2 = _lh_extend_maybe_LH_P2_1_1_2_8 in
+                        (let rec _lh_compareIntInt_LH_P2_0_1_3_2 = _lh_extend_maybe_LH_P2_0_1_2_8 in
                           (fun _lh_compareIntInt_arg2_6_8 -> 
                             (match _lh_compareIntInt_arg2_6_8 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_3_5, _lh_compareIntInt_LH_P2_1_1_3_5) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_1_3_4 > _lh_compareIntInt_LH_P2_0_1_3_5) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_3_3, _lh_compareIntInt_LH_P2_1_1_3_3) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_1_3_2 > _lh_compareIntInt_LH_P2_0_1_3_3) then
                                   (fun _lh_mapLookup_Bin_3_3_2_2 _lh_mapLookup_arg1_3_2_2 _lh_mapLookup_Bin_4_3_2_2 _lh_mapLookup_Bin_2_3_2_2 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_2_2) _lh_mapLookup_Bin_4_3_2_2))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_1_3_4 < _lh_compareIntInt_LH_P2_0_1_3_5) then
+                                  (if (_lh_compareIntInt_LH_P2_0_1_3_2 < _lh_compareIntInt_LH_P2_0_1_3_3) then
                                     (fun _lh_mapLookup_Bin_3_3_2_3 _lh_mapLookup_arg1_3_2_3 _lh_mapLookup_Bin_4_3_2_3 _lh_mapLookup_Bin_2_3_2_3 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_2_3) _lh_mapLookup_Bin_3_3_2_3))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_3_4 > _lh_compareIntInt_LH_P2_1_1_3_5) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_3_2 > _lh_compareIntInt_LH_P2_1_1_3_3) then
                                       (fun _lh_mapLookup_Bin_3_3_2_4 _lh_mapLookup_arg1_3_2_4 _lh_mapLookup_Bin_4_3_2_4 _lh_mapLookup_Bin_2_3_2_4 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_2_4) _lh_mapLookup_Bin_4_3_2_4))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_1_3_4 < _lh_compareIntInt_LH_P2_1_1_3_5) then
+                                      (if (_lh_compareIntInt_LH_P2_1_1_3_2 < _lh_compareIntInt_LH_P2_1_1_3_3) then
                                         (fun _lh_mapLookup_Bin_3_3_2_5 _lh_mapLookup_arg1_3_2_5 _lh_mapLookup_Bin_4_3_2_5 _lh_mapLookup_Bin_2_3_2_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_2_5) _lh_mapLookup_Bin_3_3_2_5))
                                       else
@@ -2381,24 +2381,24 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_1_3_0 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_3_0 < 1)) || (_lh_extend_maybe_LH_P2_1_1_3_0 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_1_5_0 = ((check_lh__d4 _lh_extend_maybe_arg1_1_3_0) (let rec _lh_compareIntInt_LH_P2_1_1_3_6 = _lh_extend_maybe_LH_P2_1_1_3_0 in
-                        (let rec _lh_compareIntInt_LH_P2_0_1_3_6 = _lh_extend_maybe_LH_P2_0_1_3_0 in
+                      (let rec _lh_matchIdent_1_5_0 = ((check_lh__d4 _lh_extend_maybe_arg1_1_3_0) (let rec _lh_compareIntInt_LH_P2_1_1_3_4 = _lh_extend_maybe_LH_P2_1_1_3_0 in
+                        (let rec _lh_compareIntInt_LH_P2_0_1_3_4 = _lh_extend_maybe_LH_P2_0_1_3_0 in
                           (fun _lh_compareIntInt_arg2_6_9 -> 
                             (match _lh_compareIntInt_arg2_6_9 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_3_7, _lh_compareIntInt_LH_P2_1_1_3_7) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_1_3_6 > _lh_compareIntInt_LH_P2_0_1_3_7) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_3_5, _lh_compareIntInt_LH_P2_1_1_3_5) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_1_3_4 > _lh_compareIntInt_LH_P2_0_1_3_5) then
                                   (fun _lh_mapLookup_Bin_3_3_2_7 _lh_mapLookup_arg1_3_2_7 _lh_mapLookup_Bin_4_3_2_7 _lh_mapLookup_Bin_2_3_2_7 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_2_7) _lh_mapLookup_Bin_4_3_2_7))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_1_3_6 < _lh_compareIntInt_LH_P2_0_1_3_7) then
+                                  (if (_lh_compareIntInt_LH_P2_0_1_3_4 < _lh_compareIntInt_LH_P2_0_1_3_5) then
                                     (fun _lh_mapLookup_Bin_3_3_2_8 _lh_mapLookup_arg1_3_2_8 _lh_mapLookup_Bin_4_3_2_8 _lh_mapLookup_Bin_2_3_2_8 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_2_8) _lh_mapLookup_Bin_3_3_2_8))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_3_6 > _lh_compareIntInt_LH_P2_1_1_3_7) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_3_4 > _lh_compareIntInt_LH_P2_1_1_3_5) then
                                       (fun _lh_mapLookup_Bin_3_3_2_9 _lh_mapLookup_arg1_3_2_9 _lh_mapLookup_Bin_4_3_2_9 _lh_mapLookup_Bin_2_3_2_9 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_2_9) _lh_mapLookup_Bin_4_3_2_9))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_1_3_6 < _lh_compareIntInt_LH_P2_1_1_3_7) then
+                                      (if (_lh_compareIntInt_LH_P2_1_1_3_4 < _lh_compareIntInt_LH_P2_1_1_3_5) then
                                         (fun _lh_mapLookup_Bin_3_3_3_0 _lh_mapLookup_arg1_3_3_0 _lh_mapLookup_Bin_4_3_3_0 _lh_mapLookup_Bin_2_3_3_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_3_0) _lh_mapLookup_Bin_3_3_3_0))
                                       else
@@ -2436,24 +2436,24 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_1_3_2 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_3_2 < 1)) || (_lh_extend_maybe_LH_P2_1_1_3_2 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_1_5_2 = ((check_lh__d4 _lh_extend_maybe_arg1_1_3_2) (let rec _lh_compareIntInt_LH_P2_1_1_3_8 = _lh_extend_maybe_LH_P2_1_1_3_2 in
-                        (let rec _lh_compareIntInt_LH_P2_0_1_3_8 = _lh_extend_maybe_LH_P2_0_1_3_2 in
+                      (let rec _lh_matchIdent_1_5_2 = ((check_lh__d4 _lh_extend_maybe_arg1_1_3_2) (let rec _lh_compareIntInt_LH_P2_1_1_3_6 = _lh_extend_maybe_LH_P2_1_1_3_2 in
+                        (let rec _lh_compareIntInt_LH_P2_0_1_3_6 = _lh_extend_maybe_LH_P2_0_1_3_2 in
                           (fun _lh_compareIntInt_arg2_7_0 -> 
                             (match _lh_compareIntInt_arg2_7_0 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_3_9, _lh_compareIntInt_LH_P2_1_1_3_9) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_1_3_8 > _lh_compareIntInt_LH_P2_0_1_3_9) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_3_7, _lh_compareIntInt_LH_P2_1_1_3_7) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_1_3_6 > _lh_compareIntInt_LH_P2_0_1_3_7) then
                                   (fun _lh_mapLookup_Bin_3_3_3_2 _lh_mapLookup_arg1_3_3_2 _lh_mapLookup_Bin_4_3_3_2 _lh_mapLookup_Bin_2_3_3_2 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_3_2) _lh_mapLookup_Bin_4_3_3_2))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_1_3_8 < _lh_compareIntInt_LH_P2_0_1_3_9) then
+                                  (if (_lh_compareIntInt_LH_P2_0_1_3_6 < _lh_compareIntInt_LH_P2_0_1_3_7) then
                                     (fun _lh_mapLookup_Bin_3_3_3_3 _lh_mapLookup_arg1_3_3_3 _lh_mapLookup_Bin_4_3_3_3 _lh_mapLookup_Bin_2_3_3_3 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_3_3) _lh_mapLookup_Bin_3_3_3_3))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_3_8 > _lh_compareIntInt_LH_P2_1_1_3_9) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_3_6 > _lh_compareIntInt_LH_P2_1_1_3_7) then
                                       (fun _lh_mapLookup_Bin_3_3_3_4 _lh_mapLookup_arg1_3_3_4 _lh_mapLookup_Bin_4_3_3_4 _lh_mapLookup_Bin_2_3_3_4 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_3_4) _lh_mapLookup_Bin_4_3_3_4))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_1_3_8 < _lh_compareIntInt_LH_P2_1_1_3_9) then
+                                      (if (_lh_compareIntInt_LH_P2_1_1_3_6 < _lh_compareIntInt_LH_P2_1_1_3_7) then
                                         (fun _lh_mapLookup_Bin_3_3_3_5 _lh_mapLookup_arg1_3_3_5 _lh_mapLookup_Bin_4_3_3_5 _lh_mapLookup_Bin_2_3_3_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_3_5) _lh_mapLookup_Bin_3_3_3_5))
                                       else
@@ -2483,24 +2483,24 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_1_3_4 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_3_4 < 1)) || (_lh_extend_maybe_LH_P2_1_1_3_4 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_1_5_4 = ((check_lh__d4 _lh_extend_maybe_arg1_1_3_4) (let rec _lh_compareIntInt_LH_P2_1_1_4_0 = _lh_extend_maybe_LH_P2_1_1_3_4 in
-                        (let rec _lh_compareIntInt_LH_P2_0_1_4_0 = _lh_extend_maybe_LH_P2_0_1_3_4 in
+                      (let rec _lh_matchIdent_1_5_4 = ((check_lh__d4 _lh_extend_maybe_arg1_1_3_4) (let rec _lh_compareIntInt_LH_P2_1_1_3_8 = _lh_extend_maybe_LH_P2_1_1_3_4 in
+                        (let rec _lh_compareIntInt_LH_P2_0_1_3_8 = _lh_extend_maybe_LH_P2_0_1_3_4 in
                           (fun _lh_compareIntInt_arg2_7_1 -> 
                             (match _lh_compareIntInt_arg2_7_1 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_4_1, _lh_compareIntInt_LH_P2_1_1_4_1) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_1_4_0 > _lh_compareIntInt_LH_P2_0_1_4_1) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_3_9, _lh_compareIntInt_LH_P2_1_1_3_9) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_1_3_8 > _lh_compareIntInt_LH_P2_0_1_3_9) then
                                   (fun _lh_mapLookup_Bin_3_3_3_7 _lh_mapLookup_arg1_3_3_7 _lh_mapLookup_Bin_4_3_3_7 _lh_mapLookup_Bin_2_3_3_7 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_3_7) _lh_mapLookup_Bin_4_3_3_7))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_1_4_0 < _lh_compareIntInt_LH_P2_0_1_4_1) then
+                                  (if (_lh_compareIntInt_LH_P2_0_1_3_8 < _lh_compareIntInt_LH_P2_0_1_3_9) then
                                     (fun _lh_mapLookup_Bin_3_3_3_8 _lh_mapLookup_arg1_3_3_8 _lh_mapLookup_Bin_4_3_3_8 _lh_mapLookup_Bin_2_3_3_8 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_3_8) _lh_mapLookup_Bin_3_3_3_8))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_4_0 > _lh_compareIntInt_LH_P2_1_1_4_1) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_3_8 > _lh_compareIntInt_LH_P2_1_1_3_9) then
                                       (fun _lh_mapLookup_Bin_3_3_3_9 _lh_mapLookup_arg1_3_3_9 _lh_mapLookup_Bin_4_3_3_9 _lh_mapLookup_Bin_2_3_3_9 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_3_9) _lh_mapLookup_Bin_4_3_3_9))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_1_4_0 < _lh_compareIntInt_LH_P2_1_1_4_1) then
+                                      (if (_lh_compareIntInt_LH_P2_1_1_3_8 < _lh_compareIntInt_LH_P2_1_1_3_9) then
                                         (fun _lh_mapLookup_Bin_3_3_4_0 _lh_mapLookup_arg1_3_4_0 _lh_mapLookup_Bin_4_3_4_0 _lh_mapLookup_Bin_2_3_4_0 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_4_0) _lh_mapLookup_Bin_3_3_4_0))
                                       else
@@ -2530,24 +2530,24 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_1_3_6 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_3_6 < 1)) || (_lh_extend_maybe_LH_P2_1_1_3_6 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_1_5_6 = ((check_lh__d4 _lh_extend_maybe_arg1_1_3_6) (let rec _lh_compareIntInt_LH_P2_1_1_4_2 = _lh_extend_maybe_LH_P2_1_1_3_6 in
-                        (let rec _lh_compareIntInt_LH_P2_0_1_4_2 = _lh_extend_maybe_LH_P2_0_1_3_6 in
+                      (let rec _lh_matchIdent_1_5_6 = ((check_lh__d4 _lh_extend_maybe_arg1_1_3_6) (let rec _lh_compareIntInt_LH_P2_1_1_4_0 = _lh_extend_maybe_LH_P2_1_1_3_6 in
+                        (let rec _lh_compareIntInt_LH_P2_0_1_4_0 = _lh_extend_maybe_LH_P2_0_1_3_6 in
                           (fun _lh_compareIntInt_arg2_7_2 -> 
                             (match _lh_compareIntInt_arg2_7_2 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_4_3, _lh_compareIntInt_LH_P2_1_1_4_3) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_1_4_2 > _lh_compareIntInt_LH_P2_0_1_4_3) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_4_1, _lh_compareIntInt_LH_P2_1_1_4_1) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_1_4_0 > _lh_compareIntInt_LH_P2_0_1_4_1) then
                                   (fun _lh_mapLookup_Bin_3_3_4_2 _lh_mapLookup_arg1_3_4_2 _lh_mapLookup_Bin_4_3_4_2 _lh_mapLookup_Bin_2_3_4_2 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_4_2) _lh_mapLookup_Bin_4_3_4_2))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_1_4_2 < _lh_compareIntInt_LH_P2_0_1_4_3) then
+                                  (if (_lh_compareIntInt_LH_P2_0_1_4_0 < _lh_compareIntInt_LH_P2_0_1_4_1) then
                                     (fun _lh_mapLookup_Bin_3_3_4_3 _lh_mapLookup_arg1_3_4_3 _lh_mapLookup_Bin_4_3_4_3 _lh_mapLookup_Bin_2_3_4_3 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_4_3) _lh_mapLookup_Bin_3_3_4_3))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_4_2 > _lh_compareIntInt_LH_P2_1_1_4_3) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_4_0 > _lh_compareIntInt_LH_P2_1_1_4_1) then
                                       (fun _lh_mapLookup_Bin_3_3_4_4 _lh_mapLookup_arg1_3_4_4 _lh_mapLookup_Bin_4_3_4_4 _lh_mapLookup_Bin_2_3_4_4 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_4_4) _lh_mapLookup_Bin_4_3_4_4))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_1_4_2 < _lh_compareIntInt_LH_P2_1_1_4_3) then
+                                      (if (_lh_compareIntInt_LH_P2_1_1_4_0 < _lh_compareIntInt_LH_P2_1_1_4_1) then
                                         (fun _lh_mapLookup_Bin_3_3_4_5 _lh_mapLookup_arg1_3_4_5 _lh_mapLookup_Bin_4_3_4_5 _lh_mapLookup_Bin_2_3_4_5 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_4_5) _lh_mapLookup_Bin_3_3_4_5))
                                       else
@@ -2582,7 +2582,7 @@ let rec ePiece_lh__d1 _lh_ePiece_arg1_0 =
                   _lh_search_P_2_4
                 | _ -> 
                   (failwith "error")))))))));;
-let rec mPiece_lh__d1 _lh_mPiece_arg1_0 =
+let rec mPiece_lh__d1 =
   (let rec _lh_search_P_2_5 = (let rec _lh_listcomp_fun_ls_t_5_3 = (let rec _lh_listcomp_fun_ls_t_5_4 = (fun _lh_listcomp_fun_6_9 _lh_search_LH_P2_1_3_4 _lh_search_P_0_3_3 _lh_listcomp_fun_ls_t_5_5 _lh_listcomp_fun_7_0 -> 
     (_lh_listcomp_fun_7_0 _lh_listcomp_fun_ls_t_5_5)) in
     (let rec _lh_listcomp_fun_ls_h_1_9 = (let rec _lh_fit_LH_C_1_6_8 = (let rec _lh_fit_LH_C_1_6_9 = (let rec _lh_fit_LH_C_1_7_0 = (let rec _lh_fit_LH_C_1_7_1 = (fun _lh_fit_arg1_8_7 _lh_fit_arg2_8_7 _lh_fit_arg3_8_7 -> 
@@ -2600,24 +2600,24 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 =
                   (if (((_lh_extend_maybe_LH_P2_0_1_3_8 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_3_8 < 1)) || (_lh_extend_maybe_LH_P2_1_1_3_8 > maxCol_lh__d4)) then
                     (`Nothing)
                   else
-                    (let rec _lh_matchIdent_1_6_8 = ((check_lh__d4 _lh_extend_maybe_arg1_1_3_9) (let rec _lh_compareIntInt_LH_P2_1_1_4_4 = _lh_extend_maybe_LH_P2_1_1_3_8 in
-                      (let rec _lh_compareIntInt_LH_P2_0_1_4_4 = _lh_extend_maybe_LH_P2_0_1_3_8 in
+                    (let rec _lh_matchIdent_1_6_8 = ((check_lh__d4 _lh_extend_maybe_arg1_1_3_9) (let rec _lh_compareIntInt_LH_P2_1_1_4_2 = _lh_extend_maybe_LH_P2_1_1_3_8 in
+                      (let rec _lh_compareIntInt_LH_P2_0_1_4_2 = _lh_extend_maybe_LH_P2_0_1_3_8 in
                         (fun _lh_compareIntInt_arg2_7_4 -> 
                           (match _lh_compareIntInt_arg2_7_4 with
-                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_4_5, _lh_compareIntInt_LH_P2_1_1_4_5) -> 
-                              (if (_lh_compareIntInt_LH_P2_0_1_4_4 > _lh_compareIntInt_LH_P2_0_1_4_5) then
+                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_4_3, _lh_compareIntInt_LH_P2_1_1_4_3) -> 
+                              (if (_lh_compareIntInt_LH_P2_0_1_4_2 > _lh_compareIntInt_LH_P2_0_1_4_3) then
                                 (fun _lh_mapLookup_Bin_3_3_4_8 _lh_mapLookup_arg1_3_4_8 _lh_mapLookup_Bin_4_3_4_8 _lh_mapLookup_Bin_2_3_4_8 -> 
                                   ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_4_8) _lh_mapLookup_Bin_4_3_4_8))
                               else
-                                (if (_lh_compareIntInt_LH_P2_0_1_4_4 < _lh_compareIntInt_LH_P2_0_1_4_5) then
+                                (if (_lh_compareIntInt_LH_P2_0_1_4_2 < _lh_compareIntInt_LH_P2_0_1_4_3) then
                                   (fun _lh_mapLookup_Bin_3_3_4_9 _lh_mapLookup_arg1_3_4_9 _lh_mapLookup_Bin_4_3_4_9 _lh_mapLookup_Bin_2_3_4_9 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_4_9) _lh_mapLookup_Bin_3_3_4_9))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_1_1_4_4 > _lh_compareIntInt_LH_P2_1_1_4_5) then
+                                  (if (_lh_compareIntInt_LH_P2_1_1_4_2 > _lh_compareIntInt_LH_P2_1_1_4_3) then
                                     (fun _lh_mapLookup_Bin_3_3_5_0 _lh_mapLookup_arg1_3_5_0 _lh_mapLookup_Bin_4_3_5_0 _lh_mapLookup_Bin_2_3_5_0 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_5_0) _lh_mapLookup_Bin_4_3_5_0))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_4_4 < _lh_compareIntInt_LH_P2_1_1_4_5) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_4_2 < _lh_compareIntInt_LH_P2_1_1_4_3) then
                                       (fun _lh_mapLookup_Bin_3_3_5_1 _lh_mapLookup_arg1_3_5_1 _lh_mapLookup_Bin_4_3_5_1 _lh_mapLookup_Bin_2_3_5_1 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_5_1) _lh_mapLookup_Bin_3_3_5_1))
                                     else
@@ -2647,24 +2647,24 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 =
                   (if (((_lh_extend_maybe_LH_P2_0_1_4_0 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_4_0 < 1)) || (_lh_extend_maybe_LH_P2_1_1_4_0 > maxCol_lh__d4)) then
                     (`Nothing)
                   else
-                    (let rec _lh_matchIdent_1_7_0 = ((check_lh__d4 _lh_extend_maybe_arg1_1_4_1) (let rec _lh_compareIntInt_LH_P2_1_1_4_6 = _lh_extend_maybe_LH_P2_1_1_4_0 in
-                      (let rec _lh_compareIntInt_LH_P2_0_1_4_6 = _lh_extend_maybe_LH_P2_0_1_4_0 in
+                    (let rec _lh_matchIdent_1_7_0 = ((check_lh__d4 _lh_extend_maybe_arg1_1_4_1) (let rec _lh_compareIntInt_LH_P2_1_1_4_4 = _lh_extend_maybe_LH_P2_1_1_4_0 in
+                      (let rec _lh_compareIntInt_LH_P2_0_1_4_4 = _lh_extend_maybe_LH_P2_0_1_4_0 in
                         (fun _lh_compareIntInt_arg2_7_5 -> 
                           (match _lh_compareIntInt_arg2_7_5 with
-                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_4_7, _lh_compareIntInt_LH_P2_1_1_4_7) -> 
-                              (if (_lh_compareIntInt_LH_P2_0_1_4_6 > _lh_compareIntInt_LH_P2_0_1_4_7) then
+                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_4_5, _lh_compareIntInt_LH_P2_1_1_4_5) -> 
+                              (if (_lh_compareIntInt_LH_P2_0_1_4_4 > _lh_compareIntInt_LH_P2_0_1_4_5) then
                                 (fun _lh_mapLookup_Bin_3_3_5_3 _lh_mapLookup_arg1_3_5_3 _lh_mapLookup_Bin_4_3_5_3 _lh_mapLookup_Bin_2_3_5_3 -> 
                                   ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_5_3) _lh_mapLookup_Bin_4_3_5_3))
                               else
-                                (if (_lh_compareIntInt_LH_P2_0_1_4_6 < _lh_compareIntInt_LH_P2_0_1_4_7) then
+                                (if (_lh_compareIntInt_LH_P2_0_1_4_4 < _lh_compareIntInt_LH_P2_0_1_4_5) then
                                   (fun _lh_mapLookup_Bin_3_3_5_4 _lh_mapLookup_arg1_3_5_4 _lh_mapLookup_Bin_4_3_5_4 _lh_mapLookup_Bin_2_3_5_4 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_5_4) _lh_mapLookup_Bin_3_3_5_4))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_1_1_4_6 > _lh_compareIntInt_LH_P2_1_1_4_7) then
+                                  (if (_lh_compareIntInt_LH_P2_1_1_4_4 > _lh_compareIntInt_LH_P2_1_1_4_5) then
                                     (fun _lh_mapLookup_Bin_3_3_5_5 _lh_mapLookup_arg1_3_5_5 _lh_mapLookup_Bin_4_3_5_5 _lh_mapLookup_Bin_2_3_5_5 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_5_5) _lh_mapLookup_Bin_4_3_5_5))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_4_6 < _lh_compareIntInt_LH_P2_1_1_4_7) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_4_4 < _lh_compareIntInt_LH_P2_1_1_4_5) then
                                       (fun _lh_mapLookup_Bin_3_3_5_6 _lh_mapLookup_arg1_3_5_6 _lh_mapLookup_Bin_4_3_5_6 _lh_mapLookup_Bin_2_3_5_6 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_5_6) _lh_mapLookup_Bin_3_3_5_6))
                                     else
@@ -2694,24 +2694,24 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 =
                   (if (((_lh_extend_maybe_LH_P2_0_1_4_2 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_4_2 < 1)) || (_lh_extend_maybe_LH_P2_1_1_4_2 > maxCol_lh__d4)) then
                     (`Nothing)
                   else
-                    (let rec _lh_matchIdent_1_7_2 = ((check_lh__d4 _lh_extend_maybe_arg1_1_4_3) (let rec _lh_compareIntInt_LH_P2_1_1_4_8 = _lh_extend_maybe_LH_P2_1_1_4_2 in
-                      (let rec _lh_compareIntInt_LH_P2_0_1_4_8 = _lh_extend_maybe_LH_P2_0_1_4_2 in
+                    (let rec _lh_matchIdent_1_7_2 = ((check_lh__d4 _lh_extend_maybe_arg1_1_4_3) (let rec _lh_compareIntInt_LH_P2_1_1_4_6 = _lh_extend_maybe_LH_P2_1_1_4_2 in
+                      (let rec _lh_compareIntInt_LH_P2_0_1_4_6 = _lh_extend_maybe_LH_P2_0_1_4_2 in
                         (fun _lh_compareIntInt_arg2_7_6 -> 
                           (match _lh_compareIntInt_arg2_7_6 with
-                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_4_9, _lh_compareIntInt_LH_P2_1_1_4_9) -> 
-                              (if (_lh_compareIntInt_LH_P2_0_1_4_8 > _lh_compareIntInt_LH_P2_0_1_4_9) then
+                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_4_7, _lh_compareIntInt_LH_P2_1_1_4_7) -> 
+                              (if (_lh_compareIntInt_LH_P2_0_1_4_6 > _lh_compareIntInt_LH_P2_0_1_4_7) then
                                 (fun _lh_mapLookup_Bin_3_3_5_8 _lh_mapLookup_arg1_3_5_8 _lh_mapLookup_Bin_4_3_5_8 _lh_mapLookup_Bin_2_3_5_8 -> 
                                   ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_5_8) _lh_mapLookup_Bin_4_3_5_8))
                               else
-                                (if (_lh_compareIntInt_LH_P2_0_1_4_8 < _lh_compareIntInt_LH_P2_0_1_4_9) then
+                                (if (_lh_compareIntInt_LH_P2_0_1_4_6 < _lh_compareIntInt_LH_P2_0_1_4_7) then
                                   (fun _lh_mapLookup_Bin_3_3_5_9 _lh_mapLookup_arg1_3_5_9 _lh_mapLookup_Bin_4_3_5_9 _lh_mapLookup_Bin_2_3_5_9 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_5_9) _lh_mapLookup_Bin_3_3_5_9))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_1_1_4_8 > _lh_compareIntInt_LH_P2_1_1_4_9) then
+                                  (if (_lh_compareIntInt_LH_P2_1_1_4_6 > _lh_compareIntInt_LH_P2_1_1_4_7) then
                                     (fun _lh_mapLookup_Bin_3_3_6_0 _lh_mapLookup_arg1_3_6_0 _lh_mapLookup_Bin_4_3_6_0 _lh_mapLookup_Bin_2_3_6_0 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_6_0) _lh_mapLookup_Bin_4_3_6_0))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_4_8 < _lh_compareIntInt_LH_P2_1_1_4_9) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_4_6 < _lh_compareIntInt_LH_P2_1_1_4_7) then
                                       (fun _lh_mapLookup_Bin_3_3_6_1 _lh_mapLookup_arg1_3_6_1 _lh_mapLookup_Bin_4_3_6_1 _lh_mapLookup_Bin_2_3_6_1 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_6_1) _lh_mapLookup_Bin_3_3_6_1))
                                     else
@@ -2741,24 +2741,24 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 =
                   (if (((_lh_extend_maybe_LH_P2_0_1_4_4 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_4_4 < 1)) || (_lh_extend_maybe_LH_P2_1_1_4_4 > maxCol_lh__d4)) then
                     (`Nothing)
                   else
-                    (let rec _lh_matchIdent_1_7_4 = ((check_lh__d4 _lh_extend_maybe_arg1_1_4_5) (let rec _lh_compareIntInt_LH_P2_1_1_5_0 = _lh_extend_maybe_LH_P2_1_1_4_4 in
-                      (let rec _lh_compareIntInt_LH_P2_0_1_5_0 = _lh_extend_maybe_LH_P2_0_1_4_4 in
+                    (let rec _lh_matchIdent_1_7_4 = ((check_lh__d4 _lh_extend_maybe_arg1_1_4_5) (let rec _lh_compareIntInt_LH_P2_1_1_4_8 = _lh_extend_maybe_LH_P2_1_1_4_4 in
+                      (let rec _lh_compareIntInt_LH_P2_0_1_4_8 = _lh_extend_maybe_LH_P2_0_1_4_4 in
                         (fun _lh_compareIntInt_arg2_7_7 -> 
                           (match _lh_compareIntInt_arg2_7_7 with
-                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_5_1, _lh_compareIntInt_LH_P2_1_1_5_1) -> 
-                              (if (_lh_compareIntInt_LH_P2_0_1_5_0 > _lh_compareIntInt_LH_P2_0_1_5_1) then
+                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_4_9, _lh_compareIntInt_LH_P2_1_1_4_9) -> 
+                              (if (_lh_compareIntInt_LH_P2_0_1_4_8 > _lh_compareIntInt_LH_P2_0_1_4_9) then
                                 (fun _lh_mapLookup_Bin_3_3_6_3 _lh_mapLookup_arg1_3_6_3 _lh_mapLookup_Bin_4_3_6_3 _lh_mapLookup_Bin_2_3_6_3 -> 
                                   ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_6_3) _lh_mapLookup_Bin_4_3_6_3))
                               else
-                                (if (_lh_compareIntInt_LH_P2_0_1_5_0 < _lh_compareIntInt_LH_P2_0_1_5_1) then
+                                (if (_lh_compareIntInt_LH_P2_0_1_4_8 < _lh_compareIntInt_LH_P2_0_1_4_9) then
                                   (fun _lh_mapLookup_Bin_3_3_6_4 _lh_mapLookup_arg1_3_6_4 _lh_mapLookup_Bin_4_3_6_4 _lh_mapLookup_Bin_2_3_6_4 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_6_4) _lh_mapLookup_Bin_3_3_6_4))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_1_1_5_0 > _lh_compareIntInt_LH_P2_1_1_5_1) then
+                                  (if (_lh_compareIntInt_LH_P2_1_1_4_8 > _lh_compareIntInt_LH_P2_1_1_4_9) then
                                     (fun _lh_mapLookup_Bin_3_3_6_5 _lh_mapLookup_arg1_3_6_5 _lh_mapLookup_Bin_4_3_6_5 _lh_mapLookup_Bin_2_3_6_5 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_6_5) _lh_mapLookup_Bin_4_3_6_5))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_5_0 < _lh_compareIntInt_LH_P2_1_1_5_1) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_4_8 < _lh_compareIntInt_LH_P2_1_1_4_9) then
                                       (fun _lh_mapLookup_Bin_3_3_6_6 _lh_mapLookup_arg1_3_6_6 _lh_mapLookup_Bin_4_3_6_6 _lh_mapLookup_Bin_2_3_6_6 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_6_6) _lh_mapLookup_Bin_3_3_6_6))
                                     else
@@ -2796,24 +2796,24 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 =
                   (if (((_lh_extend_maybe_LH_P2_0_1_4_6 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_4_6 < 1)) || (_lh_extend_maybe_LH_P2_1_1_4_6 > maxCol_lh__d4)) then
                     (`Nothing)
                   else
-                    (let rec _lh_matchIdent_1_7_6 = ((check_lh__d4 _lh_extend_maybe_arg1_1_4_7) (let rec _lh_compareIntInt_LH_P2_1_1_5_2 = _lh_extend_maybe_LH_P2_1_1_4_6 in
-                      (let rec _lh_compareIntInt_LH_P2_0_1_5_2 = _lh_extend_maybe_LH_P2_0_1_4_6 in
+                    (let rec _lh_matchIdent_1_7_6 = ((check_lh__d4 _lh_extend_maybe_arg1_1_4_7) (let rec _lh_compareIntInt_LH_P2_1_1_5_0 = _lh_extend_maybe_LH_P2_1_1_4_6 in
+                      (let rec _lh_compareIntInt_LH_P2_0_1_5_0 = _lh_extend_maybe_LH_P2_0_1_4_6 in
                         (fun _lh_compareIntInt_arg2_7_8 -> 
                           (match _lh_compareIntInt_arg2_7_8 with
-                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_5_3, _lh_compareIntInt_LH_P2_1_1_5_3) -> 
-                              (if (_lh_compareIntInt_LH_P2_0_1_5_2 > _lh_compareIntInt_LH_P2_0_1_5_3) then
+                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_5_1, _lh_compareIntInt_LH_P2_1_1_5_1) -> 
+                              (if (_lh_compareIntInt_LH_P2_0_1_5_0 > _lh_compareIntInt_LH_P2_0_1_5_1) then
                                 (fun _lh_mapLookup_Bin_3_3_6_8 _lh_mapLookup_arg1_3_6_8 _lh_mapLookup_Bin_4_3_6_8 _lh_mapLookup_Bin_2_3_6_8 -> 
                                   ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_6_8) _lh_mapLookup_Bin_4_3_6_8))
                               else
-                                (if (_lh_compareIntInt_LH_P2_0_1_5_2 < _lh_compareIntInt_LH_P2_0_1_5_3) then
+                                (if (_lh_compareIntInt_LH_P2_0_1_5_0 < _lh_compareIntInt_LH_P2_0_1_5_1) then
                                   (fun _lh_mapLookup_Bin_3_3_6_9 _lh_mapLookup_arg1_3_6_9 _lh_mapLookup_Bin_4_3_6_9 _lh_mapLookup_Bin_2_3_6_9 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_6_9) _lh_mapLookup_Bin_3_3_6_9))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_1_1_5_2 > _lh_compareIntInt_LH_P2_1_1_5_3) then
+                                  (if (_lh_compareIntInt_LH_P2_1_1_5_0 > _lh_compareIntInt_LH_P2_1_1_5_1) then
                                     (fun _lh_mapLookup_Bin_3_3_7_0 _lh_mapLookup_arg1_3_7_0 _lh_mapLookup_Bin_4_3_7_0 _lh_mapLookup_Bin_2_3_7_0 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_7_0) _lh_mapLookup_Bin_4_3_7_0))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_5_2 < _lh_compareIntInt_LH_P2_1_1_5_3) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_5_0 < _lh_compareIntInt_LH_P2_1_1_5_1) then
                                       (fun _lh_mapLookup_Bin_3_3_7_1 _lh_mapLookup_arg1_3_7_1 _lh_mapLookup_Bin_4_3_7_1 _lh_mapLookup_Bin_2_3_7_1 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_7_1) _lh_mapLookup_Bin_3_3_7_1))
                                     else
@@ -2843,24 +2843,24 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 =
                   (if (((_lh_extend_maybe_LH_P2_0_1_4_8 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_4_8 < 1)) || (_lh_extend_maybe_LH_P2_1_1_4_8 > maxCol_lh__d4)) then
                     (`Nothing)
                   else
-                    (let rec _lh_matchIdent_1_7_8 = ((check_lh__d4 _lh_extend_maybe_arg1_1_4_9) (let rec _lh_compareIntInt_LH_P2_1_1_5_4 = _lh_extend_maybe_LH_P2_1_1_4_8 in
-                      (let rec _lh_compareIntInt_LH_P2_0_1_5_4 = _lh_extend_maybe_LH_P2_0_1_4_8 in
+                    (let rec _lh_matchIdent_1_7_8 = ((check_lh__d4 _lh_extend_maybe_arg1_1_4_9) (let rec _lh_compareIntInt_LH_P2_1_1_5_2 = _lh_extend_maybe_LH_P2_1_1_4_8 in
+                      (let rec _lh_compareIntInt_LH_P2_0_1_5_2 = _lh_extend_maybe_LH_P2_0_1_4_8 in
                         (fun _lh_compareIntInt_arg2_7_9 -> 
                           (match _lh_compareIntInt_arg2_7_9 with
-                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_5_5, _lh_compareIntInt_LH_P2_1_1_5_5) -> 
-                              (if (_lh_compareIntInt_LH_P2_0_1_5_4 > _lh_compareIntInt_LH_P2_0_1_5_5) then
+                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_5_3, _lh_compareIntInt_LH_P2_1_1_5_3) -> 
+                              (if (_lh_compareIntInt_LH_P2_0_1_5_2 > _lh_compareIntInt_LH_P2_0_1_5_3) then
                                 (fun _lh_mapLookup_Bin_3_3_7_3 _lh_mapLookup_arg1_3_7_3 _lh_mapLookup_Bin_4_3_7_3 _lh_mapLookup_Bin_2_3_7_3 -> 
                                   ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_7_3) _lh_mapLookup_Bin_4_3_7_3))
                               else
-                                (if (_lh_compareIntInt_LH_P2_0_1_5_4 < _lh_compareIntInt_LH_P2_0_1_5_5) then
+                                (if (_lh_compareIntInt_LH_P2_0_1_5_2 < _lh_compareIntInt_LH_P2_0_1_5_3) then
                                   (fun _lh_mapLookup_Bin_3_3_7_4 _lh_mapLookup_arg1_3_7_4 _lh_mapLookup_Bin_4_3_7_4 _lh_mapLookup_Bin_2_3_7_4 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_7_4) _lh_mapLookup_Bin_3_3_7_4))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_1_1_5_4 > _lh_compareIntInt_LH_P2_1_1_5_5) then
+                                  (if (_lh_compareIntInt_LH_P2_1_1_5_2 > _lh_compareIntInt_LH_P2_1_1_5_3) then
                                     (fun _lh_mapLookup_Bin_3_3_7_5 _lh_mapLookup_arg1_3_7_5 _lh_mapLookup_Bin_4_3_7_5 _lh_mapLookup_Bin_2_3_7_5 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_7_5) _lh_mapLookup_Bin_4_3_7_5))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_5_4 < _lh_compareIntInt_LH_P2_1_1_5_5) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_5_2 < _lh_compareIntInt_LH_P2_1_1_5_3) then
                                       (fun _lh_mapLookup_Bin_3_3_7_6 _lh_mapLookup_arg1_3_7_6 _lh_mapLookup_Bin_4_3_7_6 _lh_mapLookup_Bin_2_3_7_6 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_7_6) _lh_mapLookup_Bin_3_3_7_6))
                                     else
@@ -2890,24 +2890,24 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 =
                   (if (((_lh_extend_maybe_LH_P2_0_1_5_0 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_5_0 < 1)) || (_lh_extend_maybe_LH_P2_1_1_5_0 > maxCol_lh__d4)) then
                     (`Nothing)
                   else
-                    (let rec _lh_matchIdent_1_8_0 = ((check_lh__d4 _lh_extend_maybe_arg1_1_5_1) (let rec _lh_compareIntInt_LH_P2_1_1_5_6 = _lh_extend_maybe_LH_P2_1_1_5_0 in
-                      (let rec _lh_compareIntInt_LH_P2_0_1_5_6 = _lh_extend_maybe_LH_P2_0_1_5_0 in
+                    (let rec _lh_matchIdent_1_8_0 = ((check_lh__d4 _lh_extend_maybe_arg1_1_5_1) (let rec _lh_compareIntInt_LH_P2_1_1_5_4 = _lh_extend_maybe_LH_P2_1_1_5_0 in
+                      (let rec _lh_compareIntInt_LH_P2_0_1_5_4 = _lh_extend_maybe_LH_P2_0_1_5_0 in
                         (fun _lh_compareIntInt_arg2_8_0 -> 
                           (match _lh_compareIntInt_arg2_8_0 with
-                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_5_7, _lh_compareIntInt_LH_P2_1_1_5_7) -> 
-                              (if (_lh_compareIntInt_LH_P2_0_1_5_6 > _lh_compareIntInt_LH_P2_0_1_5_7) then
+                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_5_5, _lh_compareIntInt_LH_P2_1_1_5_5) -> 
+                              (if (_lh_compareIntInt_LH_P2_0_1_5_4 > _lh_compareIntInt_LH_P2_0_1_5_5) then
                                 (fun _lh_mapLookup_Bin_3_3_7_8 _lh_mapLookup_arg1_3_7_8 _lh_mapLookup_Bin_4_3_7_8 _lh_mapLookup_Bin_2_3_7_8 -> 
                                   ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_7_8) _lh_mapLookup_Bin_4_3_7_8))
                               else
-                                (if (_lh_compareIntInt_LH_P2_0_1_5_6 < _lh_compareIntInt_LH_P2_0_1_5_7) then
+                                (if (_lh_compareIntInt_LH_P2_0_1_5_4 < _lh_compareIntInt_LH_P2_0_1_5_5) then
                                   (fun _lh_mapLookup_Bin_3_3_7_9 _lh_mapLookup_arg1_3_7_9 _lh_mapLookup_Bin_4_3_7_9 _lh_mapLookup_Bin_2_3_7_9 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_7_9) _lh_mapLookup_Bin_3_3_7_9))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_1_1_5_6 > _lh_compareIntInt_LH_P2_1_1_5_7) then
+                                  (if (_lh_compareIntInt_LH_P2_1_1_5_4 > _lh_compareIntInt_LH_P2_1_1_5_5) then
                                     (fun _lh_mapLookup_Bin_3_3_8_0 _lh_mapLookup_arg1_3_8_0 _lh_mapLookup_Bin_4_3_8_0 _lh_mapLookup_Bin_2_3_8_0 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_8_0) _lh_mapLookup_Bin_4_3_8_0))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_5_6 < _lh_compareIntInt_LH_P2_1_1_5_7) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_5_4 < _lh_compareIntInt_LH_P2_1_1_5_5) then
                                       (fun _lh_mapLookup_Bin_3_3_8_1 _lh_mapLookup_arg1_3_8_1 _lh_mapLookup_Bin_4_3_8_1 _lh_mapLookup_Bin_2_3_8_1 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_8_1) _lh_mapLookup_Bin_3_3_8_1))
                                     else
@@ -2937,24 +2937,24 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 =
                   (if (((_lh_extend_maybe_LH_P2_0_1_5_2 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_5_2 < 1)) || (_lh_extend_maybe_LH_P2_1_1_5_2 > maxCol_lh__d4)) then
                     (`Nothing)
                   else
-                    (let rec _lh_matchIdent_1_8_2 = ((check_lh__d4 _lh_extend_maybe_arg1_1_5_3) (let rec _lh_compareIntInt_LH_P2_1_1_5_8 = _lh_extend_maybe_LH_P2_1_1_5_2 in
-                      (let rec _lh_compareIntInt_LH_P2_0_1_5_8 = _lh_extend_maybe_LH_P2_0_1_5_2 in
+                    (let rec _lh_matchIdent_1_8_2 = ((check_lh__d4 _lh_extend_maybe_arg1_1_5_3) (let rec _lh_compareIntInt_LH_P2_1_1_5_6 = _lh_extend_maybe_LH_P2_1_1_5_2 in
+                      (let rec _lh_compareIntInt_LH_P2_0_1_5_6 = _lh_extend_maybe_LH_P2_0_1_5_2 in
                         (fun _lh_compareIntInt_arg2_8_1 -> 
                           (match _lh_compareIntInt_arg2_8_1 with
-                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_5_9, _lh_compareIntInt_LH_P2_1_1_5_9) -> 
-                              (if (_lh_compareIntInt_LH_P2_0_1_5_8 > _lh_compareIntInt_LH_P2_0_1_5_9) then
+                            | `LH_P2(_lh_compareIntInt_LH_P2_0_1_5_7, _lh_compareIntInt_LH_P2_1_1_5_7) -> 
+                              (if (_lh_compareIntInt_LH_P2_0_1_5_6 > _lh_compareIntInt_LH_P2_0_1_5_7) then
                                 (fun _lh_mapLookup_Bin_3_3_8_3 _lh_mapLookup_arg1_3_8_3 _lh_mapLookup_Bin_4_3_8_3 _lh_mapLookup_Bin_2_3_8_3 -> 
                                   ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_8_3) _lh_mapLookup_Bin_4_3_8_3))
                               else
-                                (if (_lh_compareIntInt_LH_P2_0_1_5_8 < _lh_compareIntInt_LH_P2_0_1_5_9) then
+                                (if (_lh_compareIntInt_LH_P2_0_1_5_6 < _lh_compareIntInt_LH_P2_0_1_5_7) then
                                   (fun _lh_mapLookup_Bin_3_3_8_4 _lh_mapLookup_arg1_3_8_4 _lh_mapLookup_Bin_4_3_8_4 _lh_mapLookup_Bin_2_3_8_4 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_8_4) _lh_mapLookup_Bin_3_3_8_4))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_1_1_5_8 > _lh_compareIntInt_LH_P2_1_1_5_9) then
+                                  (if (_lh_compareIntInt_LH_P2_1_1_5_6 > _lh_compareIntInt_LH_P2_1_1_5_7) then
                                     (fun _lh_mapLookup_Bin_3_3_8_5 _lh_mapLookup_arg1_3_8_5 _lh_mapLookup_Bin_4_3_8_5 _lh_mapLookup_Bin_2_3_8_5 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_8_5) _lh_mapLookup_Bin_4_3_8_5))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_5_8 < _lh_compareIntInt_LH_P2_1_1_5_9) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_5_6 < _lh_compareIntInt_LH_P2_1_1_5_7) then
                                       (fun _lh_mapLookup_Bin_3_3_8_6 _lh_mapLookup_arg1_3_8_6 _lh_mapLookup_Bin_4_3_8_6 _lh_mapLookup_Bin_2_3_8_6 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_8_6) _lh_mapLookup_Bin_3_3_8_6))
                                     else
@@ -2994,24 +2994,24 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_1_5_4 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_5_4 < 1)) || (_lh_extend_maybe_LH_P2_1_1_5_4 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_1_8_4 = ((check_lh__d4 _lh_extend_maybe_arg1_1_5_5) (let rec _lh_compareIntInt_LH_P2_1_1_6_0 = _lh_extend_maybe_LH_P2_1_1_5_4 in
-                        (let rec _lh_compareIntInt_LH_P2_0_1_6_0 = _lh_extend_maybe_LH_P2_0_1_5_4 in
+                      (let rec _lh_matchIdent_1_8_4 = ((check_lh__d4 _lh_extend_maybe_arg1_1_5_5) (let rec _lh_compareIntInt_LH_P2_1_1_5_8 = _lh_extend_maybe_LH_P2_1_1_5_4 in
+                        (let rec _lh_compareIntInt_LH_P2_0_1_5_8 = _lh_extend_maybe_LH_P2_0_1_5_4 in
                           (fun _lh_compareIntInt_arg2_8_2 -> 
                             (match _lh_compareIntInt_arg2_8_2 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_6_1, _lh_compareIntInt_LH_P2_1_1_6_1) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_1_6_0 > _lh_compareIntInt_LH_P2_0_1_6_1) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_5_9, _lh_compareIntInt_LH_P2_1_1_5_9) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_1_5_8 > _lh_compareIntInt_LH_P2_0_1_5_9) then
                                   (fun _lh_mapLookup_Bin_3_3_8_8 _lh_mapLookup_arg1_3_8_8 _lh_mapLookup_Bin_4_3_8_8 _lh_mapLookup_Bin_2_3_8_8 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_8_8) _lh_mapLookup_Bin_4_3_8_8))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_1_6_0 < _lh_compareIntInt_LH_P2_0_1_6_1) then
+                                  (if (_lh_compareIntInt_LH_P2_0_1_5_8 < _lh_compareIntInt_LH_P2_0_1_5_9) then
                                     (fun _lh_mapLookup_Bin_3_3_8_9 _lh_mapLookup_arg1_3_8_9 _lh_mapLookup_Bin_4_3_8_9 _lh_mapLookup_Bin_2_3_8_9 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_8_9) _lh_mapLookup_Bin_3_3_8_9))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_6_0 > _lh_compareIntInt_LH_P2_1_1_6_1) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_5_8 > _lh_compareIntInt_LH_P2_1_1_5_9) then
                                       (fun _lh_mapLookup_Bin_3_3_9_0 _lh_mapLookup_arg1_3_9_0 _lh_mapLookup_Bin_4_3_9_0 _lh_mapLookup_Bin_2_3_9_0 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_9_0) _lh_mapLookup_Bin_4_3_9_0))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_1_6_0 < _lh_compareIntInt_LH_P2_1_1_6_1) then
+                                      (if (_lh_compareIntInt_LH_P2_1_1_5_8 < _lh_compareIntInt_LH_P2_1_1_5_9) then
                                         (fun _lh_mapLookup_Bin_3_3_9_1 _lh_mapLookup_arg1_3_9_1 _lh_mapLookup_Bin_4_3_9_1 _lh_mapLookup_Bin_2_3_9_1 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_9_1) _lh_mapLookup_Bin_3_3_9_1))
                                       else
@@ -3041,24 +3041,24 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_1_5_6 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_5_6 < 1)) || (_lh_extend_maybe_LH_P2_1_1_5_6 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_1_8_6 = ((check_lh__d4 _lh_extend_maybe_arg1_1_5_7) (let rec _lh_compareIntInt_LH_P2_1_1_6_2 = _lh_extend_maybe_LH_P2_1_1_5_6 in
-                        (let rec _lh_compareIntInt_LH_P2_0_1_6_2 = _lh_extend_maybe_LH_P2_0_1_5_6 in
+                      (let rec _lh_matchIdent_1_8_6 = ((check_lh__d4 _lh_extend_maybe_arg1_1_5_7) (let rec _lh_compareIntInt_LH_P2_1_1_6_0 = _lh_extend_maybe_LH_P2_1_1_5_6 in
+                        (let rec _lh_compareIntInt_LH_P2_0_1_6_0 = _lh_extend_maybe_LH_P2_0_1_5_6 in
                           (fun _lh_compareIntInt_arg2_8_3 -> 
                             (match _lh_compareIntInt_arg2_8_3 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_6_3, _lh_compareIntInt_LH_P2_1_1_6_3) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_1_6_2 > _lh_compareIntInt_LH_P2_0_1_6_3) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_6_1, _lh_compareIntInt_LH_P2_1_1_6_1) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_1_6_0 > _lh_compareIntInt_LH_P2_0_1_6_1) then
                                   (fun _lh_mapLookup_Bin_3_3_9_3 _lh_mapLookup_arg1_3_9_3 _lh_mapLookup_Bin_4_3_9_3 _lh_mapLookup_Bin_2_3_9_3 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_9_3) _lh_mapLookup_Bin_4_3_9_3))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_1_6_2 < _lh_compareIntInt_LH_P2_0_1_6_3) then
+                                  (if (_lh_compareIntInt_LH_P2_0_1_6_0 < _lh_compareIntInt_LH_P2_0_1_6_1) then
                                     (fun _lh_mapLookup_Bin_3_3_9_4 _lh_mapLookup_arg1_3_9_4 _lh_mapLookup_Bin_4_3_9_4 _lh_mapLookup_Bin_2_3_9_4 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_9_4) _lh_mapLookup_Bin_3_3_9_4))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_6_2 > _lh_compareIntInt_LH_P2_1_1_6_3) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_6_0 > _lh_compareIntInt_LH_P2_1_1_6_1) then
                                       (fun _lh_mapLookup_Bin_3_3_9_5 _lh_mapLookup_arg1_3_9_5 _lh_mapLookup_Bin_4_3_9_5 _lh_mapLookup_Bin_2_3_9_5 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_9_5) _lh_mapLookup_Bin_4_3_9_5))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_1_6_2 < _lh_compareIntInt_LH_P2_1_1_6_3) then
+                                      (if (_lh_compareIntInt_LH_P2_1_1_6_0 < _lh_compareIntInt_LH_P2_1_1_6_1) then
                                         (fun _lh_mapLookup_Bin_3_3_9_6 _lh_mapLookup_arg1_3_9_6 _lh_mapLookup_Bin_4_3_9_6 _lh_mapLookup_Bin_2_3_9_6 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_9_6) _lh_mapLookup_Bin_3_3_9_6))
                                       else
@@ -3088,24 +3088,24 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_1_5_8 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_5_8 < 1)) || (_lh_extend_maybe_LH_P2_1_1_5_8 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_1_8_8 = ((check_lh__d4 _lh_extend_maybe_arg1_1_5_9) (let rec _lh_compareIntInt_LH_P2_1_1_6_4 = _lh_extend_maybe_LH_P2_1_1_5_8 in
-                        (let rec _lh_compareIntInt_LH_P2_0_1_6_4 = _lh_extend_maybe_LH_P2_0_1_5_8 in
+                      (let rec _lh_matchIdent_1_8_8 = ((check_lh__d4 _lh_extend_maybe_arg1_1_5_9) (let rec _lh_compareIntInt_LH_P2_1_1_6_2 = _lh_extend_maybe_LH_P2_1_1_5_8 in
+                        (let rec _lh_compareIntInt_LH_P2_0_1_6_2 = _lh_extend_maybe_LH_P2_0_1_5_8 in
                           (fun _lh_compareIntInt_arg2_8_4 -> 
                             (match _lh_compareIntInt_arg2_8_4 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_6_5, _lh_compareIntInt_LH_P2_1_1_6_5) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_1_6_4 > _lh_compareIntInt_LH_P2_0_1_6_5) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_6_3, _lh_compareIntInt_LH_P2_1_1_6_3) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_1_6_2 > _lh_compareIntInt_LH_P2_0_1_6_3) then
                                   (fun _lh_mapLookup_Bin_3_3_9_8 _lh_mapLookup_arg1_3_9_8 _lh_mapLookup_Bin_4_3_9_8 _lh_mapLookup_Bin_2_3_9_8 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_9_8) _lh_mapLookup_Bin_4_3_9_8))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_1_6_4 < _lh_compareIntInt_LH_P2_0_1_6_5) then
+                                  (if (_lh_compareIntInt_LH_P2_0_1_6_2 < _lh_compareIntInt_LH_P2_0_1_6_3) then
                                     (fun _lh_mapLookup_Bin_3_3_9_9 _lh_mapLookup_arg1_3_9_9 _lh_mapLookup_Bin_4_3_9_9 _lh_mapLookup_Bin_2_3_9_9 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_3_9_9) _lh_mapLookup_Bin_3_3_9_9))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_6_4 > _lh_compareIntInt_LH_P2_1_1_6_5) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_6_2 > _lh_compareIntInt_LH_P2_1_1_6_3) then
                                       (fun _lh_mapLookup_Bin_3_4_0_0 _lh_mapLookup_arg1_4_0_0 _lh_mapLookup_Bin_4_4_0_0 _lh_mapLookup_Bin_2_4_0_0 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_0_0) _lh_mapLookup_Bin_4_4_0_0))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_1_6_4 < _lh_compareIntInt_LH_P2_1_1_6_5) then
+                                      (if (_lh_compareIntInt_LH_P2_1_1_6_2 < _lh_compareIntInt_LH_P2_1_1_6_3) then
                                         (fun _lh_mapLookup_Bin_3_4_0_1 _lh_mapLookup_arg1_4_0_1 _lh_mapLookup_Bin_4_4_0_1 _lh_mapLookup_Bin_2_4_0_1 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_0_1) _lh_mapLookup_Bin_3_4_0_1))
                                       else
@@ -3135,24 +3135,24 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 =
                     (if (((_lh_extend_maybe_LH_P2_0_1_6_0 > maxRow_lh__d3) || (_lh_extend_maybe_LH_P2_1_1_6_0 < 1)) || (_lh_extend_maybe_LH_P2_1_1_6_0 > maxCol_lh__d4)) then
                       (`Nothing)
                     else
-                      (let rec _lh_matchIdent_1_9_0 = ((check_lh__d4 _lh_extend_maybe_arg1_1_6_1) (let rec _lh_compareIntInt_LH_P2_1_1_6_6 = _lh_extend_maybe_LH_P2_1_1_6_0 in
-                        (let rec _lh_compareIntInt_LH_P2_0_1_6_6 = _lh_extend_maybe_LH_P2_0_1_6_0 in
+                      (let rec _lh_matchIdent_1_9_0 = ((check_lh__d4 _lh_extend_maybe_arg1_1_6_1) (let rec _lh_compareIntInt_LH_P2_1_1_6_4 = _lh_extend_maybe_LH_P2_1_1_6_0 in
+                        (let rec _lh_compareIntInt_LH_P2_0_1_6_4 = _lh_extend_maybe_LH_P2_0_1_6_0 in
                           (fun _lh_compareIntInt_arg2_8_5 -> 
                             (match _lh_compareIntInt_arg2_8_5 with
-                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_6_7, _lh_compareIntInt_LH_P2_1_1_6_7) -> 
-                                (if (_lh_compareIntInt_LH_P2_0_1_6_6 > _lh_compareIntInt_LH_P2_0_1_6_7) then
+                              | `LH_P2(_lh_compareIntInt_LH_P2_0_1_6_5, _lh_compareIntInt_LH_P2_1_1_6_5) -> 
+                                (if (_lh_compareIntInt_LH_P2_0_1_6_4 > _lh_compareIntInt_LH_P2_0_1_6_5) then
                                   (fun _lh_mapLookup_Bin_3_4_0_3 _lh_mapLookup_arg1_4_0_3 _lh_mapLookup_Bin_4_4_0_3 _lh_mapLookup_Bin_2_4_0_3 -> 
                                     ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_0_3) _lh_mapLookup_Bin_4_4_0_3))
                                 else
-                                  (if (_lh_compareIntInt_LH_P2_0_1_6_6 < _lh_compareIntInt_LH_P2_0_1_6_7) then
+                                  (if (_lh_compareIntInt_LH_P2_0_1_6_4 < _lh_compareIntInt_LH_P2_0_1_6_5) then
                                     (fun _lh_mapLookup_Bin_3_4_0_4 _lh_mapLookup_arg1_4_0_4 _lh_mapLookup_Bin_4_4_0_4 _lh_mapLookup_Bin_2_4_0_4 -> 
                                       ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_0_4) _lh_mapLookup_Bin_3_4_0_4))
                                   else
-                                    (if (_lh_compareIntInt_LH_P2_1_1_6_6 > _lh_compareIntInt_LH_P2_1_1_6_7) then
+                                    (if (_lh_compareIntInt_LH_P2_1_1_6_4 > _lh_compareIntInt_LH_P2_1_1_6_5) then
                                       (fun _lh_mapLookup_Bin_3_4_0_5 _lh_mapLookup_arg1_4_0_5 _lh_mapLookup_Bin_4_4_0_5 _lh_mapLookup_Bin_2_4_0_5 -> 
                                         ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_0_5) _lh_mapLookup_Bin_4_4_0_5))
                                     else
-                                      (if (_lh_compareIntInt_LH_P2_1_1_6_6 < _lh_compareIntInt_LH_P2_1_1_6_7) then
+                                      (if (_lh_compareIntInt_LH_P2_1_1_6_4 < _lh_compareIntInt_LH_P2_1_1_6_5) then
                                         (fun _lh_mapLookup_Bin_3_4_0_6 _lh_mapLookup_arg1_4_0_6 _lh_mapLookup_Bin_4_4_0_6 _lh_mapLookup_Bin_2_4_0_6 -> 
                                           ((mapLookup_lh__d4 _lh_mapLookup_arg1_4_0_6) _lh_mapLookup_Bin_3_4_0_6))
                                       else
@@ -3187,7 +3187,7 @@ let rec mPiece_lh__d1 _lh_mPiece_arg1_0 =
                   _lh_search_P_2_5
                 | _ -> 
                   (failwith "error")))))))));;
-let rec iPiece_lh__d1 _lh_iPiece_arg1_0 =
+let rec iPiece_lh__d1 =
   (let rec _lh_search_P_2_0 = (let rec _lh_listcomp_fun_ls_t_0 = (fun _lh_listcomp_fun_0 _lh_search_LH_P2_1_0 _lh_search_P_0_0 _lh_listcomp_fun_ls_t_1 _lh_listcomp_fun_1 -> 
     (_lh_listcomp_fun_1 _lh_listcomp_fun_ls_t_1)) in
     (let rec _lh_listcomp_fun_ls_h_0 = (let rec _lh_fit_LH_C_1_0 = (let rec _lh_fit_LH_C_1_1 = (let rec _lh_fit_LH_C_1_2 = (let rec _lh_fit_LH_C_1_3 = (fun _lh_fit_arg1_0 _lh_fit_arg2_0 _lh_fit_arg3_0 -> 
@@ -3988,7 +3988,7 @@ let rec iPiece_lh__d1 _lh_iPiece_arg1_0 =
                   _lh_search_P_2_0
                 | _ -> 
                   (failwith "error")))))))));;
-let rec gPiece_lh__d1 _lh_gPiece_arg1_0 =
+let rec gPiece_lh__d1 =
   (let rec _lh_search_P_2_6 = (let rec _lh_listcomp_fun_ls_t_6_2 = (let rec _lh_listcomp_fun_ls_t_6_3 = (let rec _lh_listcomp_fun_ls_t_6_4 = (let rec _lh_listcomp_fun_ls_t_6_5 = (fun _lh_listcomp_fun_8_2 _lh_search_LH_P2_1_4_1 _lh_search_P_0_3_9 _lh_listcomp_fun_ls_t_6_6 _lh_listcomp_fun_8_3 -> 
     (_lh_listcomp_fun_8_3 _lh_listcomp_fun_ls_t_6_6)) in
     (let rec _lh_listcomp_fun_ls_h_2_2 = (let rec _lh_fit_LH_C_1_8_0 = (let rec _lh_fit_LH_C_1_8_1 = (let rec _lh_fit_LH_C_1_8_2 = (let rec _lh_fit_LH_C_1_8_3 = (fun _lh_fit_arg1_1_0_3 _lh_fit_arg2_1_0_3 _lh_fit_arg3_1_0_3 -> 
@@ -4789,7 +4789,7 @@ let rec gPiece_lh__d1 _lh_gPiece_arg1_0 =
                   _lh_search_P_2_6
                 | _ -> 
                   (failwith "error")))))))));;
-let rec cPiece_lh__d1 _lh_cPiece_arg1_0 =
+let rec cPiece_lh__d1 =
   (let rec _lh_search_P_2_7 = (let rec _lh_listcomp_fun_ls_t_7_3 = (let rec _lh_listcomp_fun_ls_t_7_4 = (let rec _lh_listcomp_fun_ls_t_7_5 = (let rec _lh_listcomp_fun_ls_t_7_6 = (fun _lh_listcomp_fun_9_6 _lh_search_LH_P2_1_4_8 _lh_search_P_0_4_6 _lh_listcomp_fun_ls_t_7_7 _lh_listcomp_fun_9_7 -> 
     (_lh_listcomp_fun_9_7 _lh_listcomp_fun_ls_t_7_7)) in
     (let rec _lh_listcomp_fun_ls_h_2_6 = (let rec _lh_fit_LH_C_1_9_6 = (let rec _lh_fit_LH_C_1_9_7 = (let rec _lh_fit_LH_C_1_9_8 = (fun _lh_fit_arg1_1_2_3 _lh_fit_arg2_1_2_3 _lh_fit_arg3_1_2_3 -> 
@@ -5402,7 +5402,7 @@ let rec cPiece_lh__d1 _lh_cPiece_arg1_0 =
                   _lh_search_P_2_7
                 | _ -> 
                   (failwith "error")))))))));;
-let rec jPiece_lh__d1 _lh_jPiece_arg1_0 =
+let rec jPiece_lh__d1 =
   (let rec _lh_search_P_2_1 = (let rec _lh_listcomp_fun_ls_t_1_1 = (fun _lh_listcomp_fun_1_4 _lh_search_LH_P2_1_7 _lh_search_P_0_7 _lh_listcomp_fun_ls_t_1_2 _lh_listcomp_fun_1_5 -> 
     (_lh_listcomp_fun_1_5 _lh_listcomp_fun_ls_t_1_2)) in
     (let rec _lh_listcomp_fun_ls_h_4 = (let rec _lh_fit_LH_C_1_1_6 = (let rec _lh_fit_LH_C_1_1_7 = (let rec _lh_fit_LH_C_1_1_8 = (let rec _lh_fit_LH_C_1_1_9 = (fun _lh_fit_arg1_2_0 _lh_fit_arg2_2_0 _lh_fit_arg3_2_0 -> 
@@ -6203,7 +6203,7 @@ let rec jPiece_lh__d1 _lh_jPiece_arg1_0 =
                   _lh_search_P_2_1
                 | _ -> 
                   (failwith "error")))))))));;
-let rec dPiece_lh__d1 _lh_dPiece_arg1_0 =
+let rec dPiece_lh__d1 =
   (let rec _lh_search_P_2_1_2 = (let rec _lh_listcomp_fun_ls_t_1_2_4 = (fun _lh_listcomp_fun_1_6_2 _lh_search_LH_P2_1_8_1 _lh_search_P_0_7_9 _lh_listcomp_fun_ls_t_1_2_5 _lh_listcomp_fun_1_6_3 -> 
     (_lh_listcomp_fun_1_6_3 _lh_listcomp_fun_ls_t_1_2_5)) in
     (let rec _lh_listcomp_fun_ls_h_4_4 = (let rec _lh_fit_LH_C_1_1_6_2 = (let rec _lh_fit_LH_C_1_1_6_3 = (let rec _lh_fit_LH_C_1_1_6_4 = (fun _lh_fit_arg1_2_0_8 _lh_fit_arg2_2_0_8 _lh_fit_arg3_2_0_8 -> 
@@ -6667,7 +6667,7 @@ let rec dPiece_lh__d1 _lh_dPiece_arg1_0 =
                   _lh_search_P_2_1_2
                 | _ -> 
                   (failwith "error")))))))));;
-let rec kPiece_lh__d1 _lh_kPiece_arg1_0 =
+let rec kPiece_lh__d1 =
   (let rec _lh_search_P_2_8 = (let rec _lh_listcomp_fun_ls_t_8_4 = (fun _lh_listcomp_fun_1_1_0 _lh_search_LH_P2_1_5_5 _lh_search_P_0_5_3 _lh_listcomp_fun_ls_t_8_5 _lh_listcomp_fun_1_1_1 -> 
     (_lh_listcomp_fun_1_1_1 _lh_listcomp_fun_ls_t_8_5)) in
     (let rec _lh_listcomp_fun_ls_h_3_0 = (let rec _lh_fit_LH_C_1_1_1_0 = (let rec _lh_fit_LH_C_1_1_1_1 = (let rec _lh_fit_LH_C_1_1_1_2 = (let rec _lh_fit_LH_C_1_1_1_3 = (fun _lh_fit_arg1_1_4_2 _lh_fit_arg2_1_4_2 _lh_fit_arg3_1_4_2 -> 
@@ -7076,7 +7076,7 @@ let rec kPiece_lh__d1 _lh_kPiece_arg1_0 =
                   _lh_search_P_2_8
                 | _ -> 
                   (failwith "error")))))))));;
-let rec bPiece_lh__d1 _lh_bPiece_arg1_0 =
+let rec bPiece_lh__d1 =
   (let rec _lh_search_P_2_9 = (let rec _lh_listcomp_fun_ls_t_9_1 = (fun _lh_listcomp_fun_1_2_0 _lh_search_LH_P2_1_6_0 _lh_search_P_0_5_8 _lh_listcomp_fun_ls_t_9_2 _lh_listcomp_fun_1_2_1 -> 
     (_lh_listcomp_fun_1_2_1 _lh_listcomp_fun_ls_t_9_2)) in
     (let rec _lh_listcomp_fun_ls_h_3_2 = (let rec _lh_fit_LH_C_1_1_1_8 = (let rec _lh_fit_LH_C_1_1_1_9 = (let rec _lh_fit_LH_C_1_1_2_0 = (fun _lh_fit_arg1_1_5_2 _lh_fit_arg2_1_5_2 _lh_fit_arg3_1_5_2 -> 
@@ -7689,7 +7689,7 @@ let rec bPiece_lh__d1 _lh_bPiece_arg1_0 =
                   _lh_search_P_2_9
                 | _ -> 
                   (failwith "error")))))))));;
-let rec hPiece_lh__d1 _lh_hPiece_arg1_0 =
+let rec hPiece_lh__d1 =
   (let rec _lh_search_P_2_1_0 = (let rec _lh_listcomp_fun_ls_t_1_0_2 = (fun _lh_listcomp_fun_1_3_4 _lh_search_LH_P2_1_6_7 _lh_search_P_0_6_5 _lh_listcomp_fun_ls_t_1_0_3 _lh_listcomp_fun_1_3_5 -> 
     (_lh_listcomp_fun_1_3_5 _lh_listcomp_fun_ls_t_1_0_3)) in
     (let rec _lh_listcomp_fun_ls_h_3_6 = (let rec _lh_fit_LH_C_1_1_3_0 = (let rec _lh_fit_LH_C_1_1_3_1 = (let rec _lh_fit_LH_C_1_1_3_2 = (let rec _lh_fit_LH_C_1_1_3_3 = (fun _lh_fit_arg1_1_6_8 _lh_fit_arg2_1_6_8 _lh_fit_arg3_1_6_8 -> 
@@ -8490,7 +8490,7 @@ let rec hPiece_lh__d1 _lh_hPiece_arg1_0 =
                   _lh_search_P_2_1_0
                 | _ -> 
                   (failwith "error")))))))));;
-let rec lPiece_lh__d1 _lh_lPiece_arg1_0 =
+let rec lPiece_lh__d1 =
   (let rec _lh_search_P_2_1_1 = (let rec _lh_listcomp_fun_ls_t_1_1_3 = (let rec _lh_listcomp_fun_ls_t_1_1_4 = (fun _lh_listcomp_fun_1_4_8 _lh_search_LH_P2_1_7_4 _lh_search_P_0_7_2 _lh_listcomp_fun_ls_t_1_1_5 _lh_listcomp_fun_1_4_9 -> 
     (_lh_listcomp_fun_1_4_9 _lh_listcomp_fun_ls_t_1_1_5)) in
     (let rec _lh_listcomp_fun_ls_h_4_0 = (let rec _lh_fit_LH_C_1_1_4_6 = (let rec _lh_fit_LH_C_1_1_4_7 = (let rec _lh_fit_LH_C_1_1_4_8 = (let rec _lh_fit_LH_C_1_1_4_9 = (fun _lh_fit_arg1_1_8_8 _lh_fit_arg2_1_8_8 _lh_fit_arg3_1_8_8 -> 
@@ -9291,8 +9291,8 @@ let rec lPiece_lh__d1 _lh_lPiece_arg1_0 =
                   _lh_search_P_2_1_1
                 | _ -> 
                   (failwith "error")))))))));;
-let rec initialPieces_lh__d1 _lh_initialPieces_arg1_0 =
-  (`LH_C((bPiece_lh__d1 0), (`LH_C((cPiece_lh__d1 0), (`LH_C((dPiece_lh__d1 0), (`LH_C((ePiece_lh__d1 0), (`LH_C((fPiece_lh__d1 0), (`LH_C((gPiece_lh__d1 0), (`LH_C((hPiece_lh__d1 0), (`LH_C((iPiece_lh__d1 0), (`LH_C((jPiece_lh__d1 0), (`LH_C((kPiece_lh__d1 0), (`LH_C((lPiece_lh__d1 0), (`LH_C((mPiece_lh__d1 0), (`LH_C((nPiece_lh__d1 0), (`LH_N)))))))))))))))))))))))))));;
+let rec initialPieces_lh__d1 =
+  (`LH_C(bPiece_lh__d1, (`LH_C(cPiece_lh__d1, (`LH_C(dPiece_lh__d1, (`LH_C(ePiece_lh__d1, (`LH_C(fPiece_lh__d1, (`LH_C(gPiece_lh__d1, (`LH_C(hPiece_lh__d1, (`LH_C(iPiece_lh__d1, (`LH_C(jPiece_lh__d1, (`LH_C(kPiece_lh__d1, (`LH_C(lPiece_lh__d1, (`LH_C(mPiece_lh__d1, (`LH_C(nPiece_lh__d1, (`LH_N)))))))))))))))))))))))))));;
 let rec map_lh__d2 f_6 ls_2 =
   (ls_2 f_6);;
 let rec emptyBoard_lh__d1 =
@@ -9553,7 +9553,7 @@ let rec map_lh__d1 f_7 ls_3 =
       (let rec t_5 = ((map_lh__d1 f_7) t_4) in
         (let rec h_5 = (f_7 h_4) in
           (fun f_8 i_4 -> 
-            ((f_8 h_5) (((foldr_lh__d2 f_8) i_4) t_5)))))
+            ((f_8 h_5) (((foldr_lh__d1 f_8) i_4) t_5)))))
     | `LH_N -> 
       (fun f_9 i_5 -> 
         i_5));;
@@ -9671,7 +9671,7 @@ let rec testLastPiece_nofib_lh__d1 _lh_testLastPiece_nofib_arg1_0 =
   and hcat_0 = (fun _lh_hcat_arg1_0 -> 
     ((fun _lh_funcomp_x_1 -> 
       ((fun _lh_funcomp_x_2 -> 
-        (snd_lh__d4 (reduceHoriz_0 _lh_funcomp_x_2))) (((foldr_lh__d1 (fun p_2_3 q_0 -> 
+        (snd_lh__d2 (reduceHoriz_0 _lh_funcomp_x_2))) (((foldr_lh__d2 (fun p_2_3 q_0 -> 
         (`Beside(p_2_3, false, q_0)))) (`Empty)) _lh_funcomp_x_1))) _lh_hcat_arg1_0))
   and displayBoard_0 = (fun _lh_displayBoard_arg1_0 -> 
     (let rec sq_0 = (fun n_0 col_0 -> 
@@ -9704,8 +9704,8 @@ let rec testLastPiece_nofib_lh__d1 _lh_testLastPiece_nofib_arg1_0 =
                 (failwith "error")))))) in
         (_lh_matchIdent_2_6_4 char_1))) in
       (let rec row_0 = (fun n_1 -> 
-        (hcat_0 ((map_lh__d2 (sq_0 n_1)) ((enumFromTo_lh__d1 1) maxCol_lh__d1)))) in
-        (((above__0 (vcat_0 ((map_lh__d3 row_0) ((enumFromTo_lh__d2 1) maxRow_lh__d1)))) false) (text_0 (`LH_N))))))
+        (hcat_0 ((map_lh__d3 (sq_0 n_1)) ((enumFromTo_lh__d2 1) maxCol_lh__d1)))) in
+        (((above__0 (vcat_0 ((map_lh__d2 row_0) ((enumFromTo_lh__d1 1) maxRow_lh__d1)))) false) (text_0 (`LH_N))))))
   and annotSize_0 = (fun _lh_annotSize_arg1_0 -> 
     (match _lh_annotSize_arg1_0 with
       | `NoAnnot(_lh_annotSize_NoAnnot_0_0, _lh_annotSize_NoAnnot_1_0) -> 
@@ -9716,7 +9716,7 @@ let rec testLastPiece_nofib_lh__d1 _lh_testLastPiece_nofib_arg1_0 =
     (match _lh_reduceHoriz_arg1_0 with
       | `Beside(_lh_reduceHoriz_Beside_0_0, _lh_reduceHoriz_Beside_1_0, _lh_reduceHoriz_Beside_2_0) -> 
         ((((eliminateEmpty_0 (fun a_3 b_3 c_1 -> 
-          (`Beside(a_3, b_3, c_1)))) (snd_lh__d1 (reduceHoriz_0 _lh_reduceHoriz_Beside_0_0))) _lh_reduceHoriz_Beside_1_0) (reduceHoriz_0 _lh_reduceHoriz_Beside_2_0))
+          (`Beside(a_3, b_3, c_1)))) (snd_lh__d3 (reduceHoriz_0 _lh_reduceHoriz_Beside_0_0))) _lh_reduceHoriz_Beside_1_0) (reduceHoriz_0 _lh_reduceHoriz_Beside_2_0))
       | _ -> 
         (`LH_P2((`NotEmpty), _lh_reduceHoriz_arg1_0))))
   and mkNest_0 = (fun _lh_mkNest_arg1_0 _lh_mkNest_arg2_0 -> 
@@ -9784,7 +9784,7 @@ let rec testLastPiece_nofib_lh__d1 _lh_testLastPiece_nofib_arg1_0 =
     (match _lh_reduceVert_arg1_0 with
       | `Above(_lh_reduceVert_Above_0_0, _lh_reduceVert_Above_1_0, _lh_reduceVert_Above_2_0) -> 
         ((((eliminateEmpty_0 (fun a_2 b_2 c_0 -> 
-          (`Above(a_2, b_2, c_0)))) (snd_lh__d2 (reduceVert_0 _lh_reduceVert_Above_0_0))) _lh_reduceVert_Above_1_0) (reduceVert_0 _lh_reduceVert_Above_2_0))
+          (`Above(a_2, b_2, c_0)))) (snd_lh__d4 (reduceVert_0 _lh_reduceVert_Above_0_0))) _lh_reduceVert_Above_1_0) (reduceVert_0 _lh_reduceVert_Above_2_0))
       | _ -> 
         (`LH_P2((`NotEmpty), _lh_reduceVert_arg1_0))))
   and nilAboveNest_0 = (fun _lh_nilAboveNest_arg1_0 _lh_nilAboveNest_arg2_0 _lh_nilAboveNest_arg3_0 -> 
@@ -9874,10 +9874,10 @@ let rec testLastPiece_nofib_lh__d1 _lh_testLastPiece_nofib_arg1_0 =
                       (match _lh_matchIdent_2_6_3 with
                         | `ZigZagMode -> 
                           (if (k_1_5 >= _lh_matchIdent_2_5_9) then
-                            ((_lh_displayDoc_arg4_0 nlText_0) ((_lh_displayDoc_arg4_0 (`NoAnnot((`Str(((copy_lh__d1 _lh_matchIdent_2_6_0) '/'))), _lh_matchIdent_2_6_0))) ((_lh_displayDoc_arg4_0 nlText_0) (((lay1_0 (k_1_5 - _lh_matchIdent_2_6_0)) _lh_displayDoc_TextBeside_0_1) _lh_displayDoc_TextBeside_1_1))))
+                            ((_lh_displayDoc_arg4_0 nlText_0) ((_lh_displayDoc_arg4_0 (`NoAnnot((`Str(((copy_lh__d2 _lh_matchIdent_2_6_0) '/'))), _lh_matchIdent_2_6_0))) ((_lh_displayDoc_arg4_0 nlText_0) (((lay1_0 (k_1_5 - _lh_matchIdent_2_6_0)) _lh_displayDoc_TextBeside_0_1) _lh_displayDoc_TextBeside_1_1))))
                           else
                             (if (k_1_5 < 0) then
-                              ((_lh_displayDoc_arg4_0 nlText_0) ((_lh_displayDoc_arg4_0 (`NoAnnot((`Str(((copy_lh__d2 _lh_matchIdent_2_6_0) '|'))), _lh_matchIdent_2_6_0))) ((_lh_displayDoc_arg4_0 nlText_0) (((lay1_0 (k_1_5 + _lh_matchIdent_2_6_0)) _lh_displayDoc_TextBeside_0_1) _lh_displayDoc_TextBeside_1_1))))
+                              ((_lh_displayDoc_arg4_0 nlText_0) ((_lh_displayDoc_arg4_0 (`NoAnnot((`Str(((copy_lh__d1 _lh_matchIdent_2_6_0) '|'))), _lh_matchIdent_2_6_0))) ((_lh_displayDoc_arg4_0 nlText_0) (((lay1_0 (k_1_5 + _lh_matchIdent_2_6_0)) _lh_displayDoc_TextBeside_0_1) _lh_displayDoc_TextBeside_1_1))))
                             else
                               (((lay1_0 k_1_5) _lh_displayDoc_TextBeside_0_1) _lh_displayDoc_TextBeside_1_1)))
                         | _ -> 
@@ -9898,7 +9898,7 @@ let rec testLastPiece_nofib_lh__d1 _lh_testLastPiece_nofib_arg1_0 =
   and vcat_0 = (fun _lh_vcat_arg1_0 -> 
     ((fun _lh_funcomp_x_3 -> 
       ((fun _lh_funcomp_x_4 -> 
-        (snd_lh__d3 (reduceVert_0 _lh_funcomp_x_4))) (((foldr_lh__d2 (fun p_2_5 q_1 -> 
+        (snd_lh__d1 (reduceVert_0 _lh_funcomp_x_4))) (((foldr_lh__d1 (fun p_2_5 q_1 -> 
         (`Above(p_2_5, false, q_1)))) (`Empty)) _lh_funcomp_x_3))) _lh_vcat_arg1_0))
   and reduceDoc_0 = (fun _lh_reduceDoc_arg1_0 -> 
     (match _lh_reduceDoc_arg1_0 with
@@ -9929,9 +9929,9 @@ let rec testLastPiece_nofib_lh__d1 _lh_testLastPiece_nofib_arg1_0 =
           | `Chr(_lh_printDoc_Chr_0_0) -> 
             (`LH_C(_lh_printDoc_Chr_0_0, next_0))
           | `Str(_lh_printDoc_Str_0_0) -> 
-            ((mappend_lh__d1 _lh_printDoc_Str_0_0) next_0)
+            ((mappend_lh__d2 _lh_printDoc_Str_0_0) next_0)
           | `PStr(_lh_printDoc_PStr_0_0) -> 
-            ((mappend_lh__d2 _lh_printDoc_PStr_0_0) next_0)
+            ((mappend_lh__d1 _lh_printDoc_PStr_0_0) next_0)
           | _ -> 
             (failwith "error")))) in
       (let rec done_0 = (`LH_C('|', (`LH_N))) in
@@ -10031,10 +10031,10 @@ let rec testLastPiece_nofib_lh__d1 _lh_testLastPiece_nofib_arg1_0 =
           i_8) in
           (let rec h_9 = ((nest_0 2) (displayBoard_0 _lh_display_Soln_0_0)) in
             (fun f_1_6 i_9 -> 
-              ((f_1_6 h_9) (((foldr_lh__d2 f_1_6) i_9) t_1_0))))) in
+              ((f_1_6 h_9) (((foldr_lh__d1 f_1_6) i_9) t_1_0))))) in
           (let rec h_1_0 = (text_0 (`LH_C('S', (`LH_C('u', (`LH_C('c', (`LH_C('c', (`LH_C('e', (`LH_C('s', (`LH_C('s', (`LH_C('!', (`LH_N)))))))))))))))))) in
             (fun f_1_7 i_1_0 -> 
-              ((f_1_7 h_1_0) (((foldr_lh__d2 f_1_7) i_1_0) t_9))))))
+              ((f_1_7 h_1_0) (((foldr_lh__d1 f_1_7) i_1_0) t_9))))))
       | `Choose(_lh_display_Choose_0_0) -> 
         (vcat_0 ((map_lh__d1 display_0) _lh_display_Choose_0_0))
       | `Fail(_lh_display_Fail_0_0, _lh_display_Fail_1_0) -> 
@@ -10167,7 +10167,7 @@ let rec testLastPiece_nofib_lh__d1 _lh_testLastPiece_nofib_arg1_0 =
                 (failwith "error"))
             | _ -> 
               (failwith "error")))))))) in
-    (let rec solutions_0 = ((((search_lh__d1 (`LH_P2(1, 2))) (`Female)) initialBoard_0) (initialPieces_lh__d1 0)) in
+    (let rec solutions_0 = ((((search_lh__d1 (`LH_P2(1, 2))) (`Female)) initialBoard_0) initialPieces_lh__d1) in
       (printDoc_0 (display_0 solutions_0))));;
 let run () = 1 + (Obj.magic ((testLastPiece_nofib_lh__d1 0)));
 end;;

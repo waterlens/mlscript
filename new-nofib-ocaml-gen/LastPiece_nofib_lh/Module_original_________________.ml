@@ -8,8 +8,6 @@ let rec enumFromTo_lh a_0 b_0 =
     (`LH_C(a_0, ((enumFromTo_lh (a_0 + 1)) b_0)))
   else
     (`LH_N));;
-let rec maxRow_lh =
-  8;;
 let rec compareIntInt_lh _lh_compareIntInt_arg1_0 _lh_compareIntInt_arg2_0 =
   (match _lh_compareIntInt_arg1_0 with
     | `LH_P2(_lh_compareIntInt_LH_P2_0_0, _lh_compareIntInt_LH_P2_1_0) -> 
@@ -32,6 +30,25 @@ let rec compareIntInt_lh _lh_compareIntInt_arg1_0 _lh_compareIntInt_arg2_0 =
           (failwith "error"))
     | _ -> 
       (failwith "error"));;
+let rec mapLookup_lh _lh_mapLookup_arg1_0 _lh_mapLookup_arg2_0 =
+  (match _lh_mapLookup_arg2_0 with
+    | `Tip -> 
+      (`Nothing)
+    | `Bin(_lh_mapLookup_Bin_0_0, _lh_mapLookup_Bin_1_0, _lh_mapLookup_Bin_2_0, _lh_mapLookup_Bin_3_0, _lh_mapLookup_Bin_4_0) -> 
+      (let rec _lh_matchIdent_2_7 = ((compareIntInt_lh _lh_mapLookup_arg1_0) _lh_mapLookup_Bin_1_0) in
+        (match _lh_matchIdent_2_7 with
+          | `LT -> 
+            ((mapLookup_lh _lh_mapLookup_arg1_0) _lh_mapLookup_Bin_3_0)
+          | `GT -> 
+            ((mapLookup_lh _lh_mapLookup_arg1_0) _lh_mapLookup_Bin_4_0)
+          | `EQ -> 
+            (`Just(_lh_mapLookup_Bin_2_0))
+          | _ -> 
+            (failwith "error")))
+    | _ -> 
+      (failwith "error"));;
+let rec check_lh _lh_check_arg1_0 _lh_check_arg2_0 =
+  ((mapLookup_lh _lh_check_arg2_0) _lh_check_arg1_0);;
 let rec insert_lh _lh_insert_arg1_0 _lh_insert_arg2_0 _lh_insert_arg3_0 =
   (match _lh_insert_arg3_0 with
     | `Tip -> 
@@ -196,26 +213,9 @@ let rec insert_lh _lh_insert_arg1_0 _lh_insert_arg2_0 _lh_insert_arg3_0 =
       (failwith "error"));;
 let rec extend_lh _lh_extend_arg1_0 _lh_extend_arg2_0 _lh_extend_arg3_0 =
   (((insert_lh _lh_extend_arg2_0) _lh_extend_arg3_0) _lh_extend_arg1_0);;
-let rec mapLookup_lh _lh_mapLookup_arg1_0 _lh_mapLookup_arg2_0 =
-  (match _lh_mapLookup_arg2_0 with
-    | `Tip -> 
-      (`Nothing)
-    | `Bin(_lh_mapLookup_Bin_0_0, _lh_mapLookup_Bin_1_0, _lh_mapLookup_Bin_2_0, _lh_mapLookup_Bin_3_0, _lh_mapLookup_Bin_4_0) -> 
-      (let rec _lh_matchIdent_2_7 = ((compareIntInt_lh _lh_mapLookup_arg1_0) _lh_mapLookup_Bin_1_0) in
-        (match _lh_matchIdent_2_7 with
-          | `LT -> 
-            ((mapLookup_lh _lh_mapLookup_arg1_0) _lh_mapLookup_Bin_3_0)
-          | `GT -> 
-            ((mapLookup_lh _lh_mapLookup_arg1_0) _lh_mapLookup_Bin_4_0)
-          | `EQ -> 
-            (`Just(_lh_mapLookup_Bin_2_0))
-          | _ -> 
-            (failwith "error")))
-    | _ -> 
-      (failwith "error"));;
-let rec check_lh _lh_check_arg1_0 _lh_check_arg2_0 =
-  ((mapLookup_lh _lh_check_arg2_0) _lh_check_arg1_0);;
 let rec maxCol_lh =
+  8;;
+let rec maxRow_lh =
   8;;
 let rec extend_maybe_lh _lh_extend_maybe_arg1_0 _lh_extend_maybe_arg2_0 _lh_extend_maybe_arg3_0 =
   (match _lh_extend_maybe_arg2_0 with
@@ -422,34 +422,34 @@ let rec foldr_lh f_1 i_0 ls_1 =
       ((f_1 h_1) (((foldr_lh f_1) i_0) t_1))
     | `LH_N -> 
       i_0);;
-let rec nPiece_lh _lh_nPiece_arg1_0 =
+let rec nPiece_lh =
   (`P('n', (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(1, 1)), (`LH_C((`LH_P2(2, 1)), (`LH_C((`LH_P2(2, 2)), (`LH_N))))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, (0 - 1))), (`LH_C((`LH_P2(1, (0 - 2))), (`LH_C((`LH_P2(2, (0 - 2))), (`LH_N))))))))), (`LH_N))))), (`LH_N)));;
-let rec gPiece_lh _lh_gPiece_arg1_0 =
+let rec gPiece_lh =
   (`P('g', (`LH_N), (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(1, 1)), (`LH_C((`LH_P2(1, 2)), (`LH_C((`LH_P2(1, 3)), (`LH_N))))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, (0 - 1))), (`LH_C((`LH_P2(2, (0 - 1))), (`LH_C((`LH_P2(3, (0 - 1))), (`LH_N))))))))), (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(0, 2)), (`LH_C((`LH_P2(1, 2)), (`LH_C((`LH_P2(1, 3)), (`LH_N))))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(2, 0)), (`LH_C((`LH_P2(2, (0 - 1))), (`LH_C((`LH_P2(3, (0 - 1))), (`LH_N))))))))), (`LH_N)))))))))));;
-let rec cPiece_lh _lh_cPiece_arg1_0 =
+let rec cPiece_lh =
   (`P('c', (`LH_N), (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(0, 2)), (`LH_C((`LH_P2(1, 1)), (`LH_N))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, (0 - 1))), (`LH_C((`LH_P2(2, 0)), (`LH_N))))))), (`LH_C((`LH_C((`LH_P2(1, (0 - 1))), (`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, 1)), (`LH_N))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, 1)), (`LH_C((`LH_P2(2, 0)), (`LH_N))))))), (`LH_N)))))))))));;
-let rec bPiece_lh _lh_bPiece_arg1_0 =
+let rec bPiece_lh =
   (`P('b', (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(0, 2)), (`LH_C((`LH_P2(1, 2)), (`LH_N))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(2, 0)), (`LH_C((`LH_P2(2, (0 - 1))), (`LH_N))))))), (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(2, 0)), (`LH_N))))))), (`LH_N))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, 1)), (`LH_C((`LH_P2(1, 2)), (`LH_N))))))), (`LH_N)))));;
-let rec hPiece_lh _lh_hPiece_arg1_0 =
+let rec hPiece_lh =
   (`P('h', (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(1, 1)), (`LH_C((`LH_P2(1, 2)), (`LH_C((`LH_P2(2, 2)), (`LH_N))))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, (0 - 1))), (`LH_C((`LH_P2(2, (0 - 1))), (`LH_C((`LH_P2(2, (0 - 2))), (`LH_N))))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, 1)), (`LH_C((`LH_P2(2, 1)), (`LH_C((`LH_P2(2, 2)), (`LH_N))))))))), (`LH_N))))))), (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, (0 - 1))), (`LH_C((`LH_P2(2, (0 - 1))), (`LH_N))))))))), (`LH_N)))));;
-let rec iPiece_lh _lh_iPiece_arg1_0 =
+let rec iPiece_lh =
   (`P('i', (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(2, 0)), (`LH_C((`LH_P2(2, 1)), (`LH_C((`LH_P2(3, 1)), (`LH_N))))))))), (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(0, 2)), (`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, (0 - 1))), (`LH_N))))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, 1)), (`LH_C((`LH_P2(2, 1)), (`LH_C((`LH_P2(3, 1)), (`LH_N))))))))), (`LH_N))))))), (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, (0 - 1))), (`LH_C((`LH_P2(1, (0 - 2))), (`LH_N))))))))), (`LH_N)))));;
-let rec mPiece_lh _lh_mPiece_arg1_0 =
+let rec mPiece_lh =
   (`P('m', (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(2, 0)), (`LH_C((`LH_P2(3, 0)), (`LH_N))))))))), (`LH_N))), (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(0, 2)), (`LH_C((`LH_P2(0, 3)), (`LH_C((`LH_P2(1, 3)), (`LH_N))))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(2, 0)), (`LH_C((`LH_P2(3, 0)), (`LH_C((`LH_P2(3, (0 - 1))), (`LH_N))))))))), (`LH_N)))))));;
-let rec ePiece_lh _lh_ePiece_arg1_0 =
+let rec ePiece_lh =
   (`P('e', (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(1, 1)), (`LH_C((`LH_P2(1, 2)), (`LH_N))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, (0 - 1))), (`LH_C((`LH_P2(2, (0 - 1))), (`LH_N))))))), (`LH_N))))), (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(1, 1)), (`LH_C((`LH_P2(1, 2)), (`LH_N))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, (0 - 1))), (`LH_C((`LH_P2(2, (0 - 1))), (`LH_N))))))), (`LH_N)))))));;
-let rec jPiece_lh _lh_jPiece_arg1_0 =
+let rec jPiece_lh =
   (`P('j', (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(0, 2)), (`LH_C((`LH_P2(0, 3)), (`LH_C((`LH_P2(1, 1)), (`LH_N))))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(2, 0)), (`LH_C((`LH_P2(3, 0)), (`LH_C((`LH_P2(1, (0 - 1))), (`LH_N))))))))), (`LH_C((`LH_C((`LH_P2(1, (0 - 2))), (`LH_C((`LH_P2(1, (0 - 1))), (`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, 1)), (`LH_N))))))))), (`LH_N))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(2, 0)), (`LH_C((`LH_P2(3, 0)), (`LH_C((`LH_P2(2, 2)), (`LH_N))))))))), (`LH_N)))));;
-let rec kPiece_lh _lh_kPiece_arg1_0 =
+let rec kPiece_lh =
   (`P('k', (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(2, 0)), (`LH_C((`LH_P2(2, (0 - 1))), (`LH_N))))))))), (`LH_N))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, 1)), (`LH_C((`LH_P2(1, 2)), (`LH_C((`LH_P2(2, 2)), (`LH_N))))))))), (`LH_N)))));;
-let rec fPiece_lh _lh_fPiece_arg1_0 =
+let rec fPiece_lh =
   (`P('f', (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(1, 1)), (`LH_C((`LH_P2(2, 1)), (`LH_C((`LH_P2(3, 1)), (`LH_N))))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, (0 - 1))), (`LH_C((`LH_P2(1, (0 - 2))), (`LH_C((`LH_P2(1, (0 - 3))), (`LH_N))))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(2, 0)), (`LH_C((`LH_P2(3, 0)), (`LH_C((`LH_P2(3, 1)), (`LH_N))))))))), (`LH_N))))))), (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(0, 2)), (`LH_C((`LH_P2(0, 3)), (`LH_C((`LH_P2(1, 0)), (`LH_N))))))))), (`LH_N)))));;
-let rec dPiece_lh _lh_dPiece_arg1_0 =
+let rec dPiece_lh =
   (`P('d', (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(1, 1)), (`LH_C((`LH_P2(2, 1)), (`LH_N))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, (0 - 1))), (`LH_C((`LH_P2(1, (0 - 2))), (`LH_N))))))), (`LH_N))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(2, 0)), (`LH_C((`LH_P2(2, 1)), (`LH_N))))))), (`LH_N)))));;
-let rec lPiece_lh _lh_lPiece_arg1_0 =
+let rec lPiece_lh =
   (`P('l', (`LH_C((`LH_C((`LH_P2(0, 1)), (`LH_C((`LH_P2(0, 2)), (`LH_C((`LH_P2(0, 3)), (`LH_C((`LH_P2(1, 2)), (`LH_N))))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(2, 0)), (`LH_C((`LH_P2(3, 0)), (`LH_C((`LH_P2(2, (0 - 1))), (`LH_N))))))))), (`LH_N))))), (`LH_C((`LH_C((`LH_P2(1, (0 - 1))), (`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, 1)), (`LH_C((`LH_P2(1, 2)), (`LH_N))))))))), (`LH_C((`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(2, 0)), (`LH_C((`LH_P2(3, 0)), (`LH_C((`LH_P2(1, 1)), (`LH_N))))))))), (`LH_N)))))));;
-let rec initialPieces_lh _lh_initialPieces_arg1_0 =
-  (`LH_C((bPiece_lh 0), (`LH_C((cPiece_lh 0), (`LH_C((dPiece_lh 0), (`LH_C((ePiece_lh 0), (`LH_C((fPiece_lh 0), (`LH_C((gPiece_lh 0), (`LH_C((hPiece_lh 0), (`LH_C((iPiece_lh 0), (`LH_C((jPiece_lh 0), (`LH_C((kPiece_lh 0), (`LH_C((lPiece_lh 0), (`LH_C((mPiece_lh 0), (`LH_C((nPiece_lh 0), (`LH_N)))))))))))))))))))))))))));;
+let rec initialPieces_lh =
+  (`LH_C(bPiece_lh, (`LH_C(cPiece_lh, (`LH_C(dPiece_lh, (`LH_C(ePiece_lh, (`LH_C(fPiece_lh, (`LH_C(gPiece_lh, (`LH_C(hPiece_lh, (`LH_C(iPiece_lh, (`LH_C(jPiece_lh, (`LH_C(kPiece_lh, (`LH_C(lPiece_lh, (`LH_C(mPiece_lh, (`LH_C(nPiece_lh, (`LH_N)))))))))))))))))))))))))));;
 let rec emptyBoard_lh =
   (`Tip);;
 let rec testLastPiece_nofib_lh _lh_testLastPiece_nofib_arg1_0 =
@@ -878,7 +878,7 @@ let rec testLastPiece_nofib_lh _lh_testLastPiece_nofib_arg1_0 =
           | _ -> 
             (failwith "error")))))
   in (let rec initialBoard_0 = (fromJust_lh ((((fit_lh emptyBoard_lh) (`LH_P2(1, 1))) 'a') (`LH_C((`LH_P2(1, 0)), (`LH_C((`LH_P2(1, 1)), (`LH_N))))))) in
-    (let rec solutions_0 = ((((search_lh (`LH_P2(1, 2))) (`Female)) initialBoard_0) (initialPieces_lh 0)) in
+    (let rec solutions_0 = ((((search_lh (`LH_P2(1, 2))) (`Female)) initialBoard_0) initialPieces_lh) in
       (printDoc_0 (display_0 solutions_0))));;
 let run () = 1 + (Obj.magic ((testLastPiece_nofib_lh 0)));
 end;;

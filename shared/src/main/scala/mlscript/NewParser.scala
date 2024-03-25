@@ -95,8 +95,8 @@ abstract class NewParser(origin: Origin, tokens: Ls[Stroken -> Loc], raiseFun: D
       "",
       "",
       // ^ for keywords
+      // ";",
       ",",
-      ";",
       "=",
       "@",
       ":",
@@ -110,21 +110,60 @@ abstract class NewParser(origin: Origin, tokens: Ls[Stroken -> Loc], raiseFun: D
       "+ -",
       // "* / %",
       "* %",
+      "", // Precedence of application
       ".",
     ).zipWithIndex.flatMap {
       case (cs, i) => cs.filterNot(_ === ' ').map(_ -> (i + 1))
     }.toMap.withDefaultValue(Int.MaxValue)
   
-  def opCharPrec(opChar: Char): Int = prec(opChar)
-  def opPrec(opStr: Str): (Int, Int) = opStr match {
+  private val AppPrec = prec('.') - 1
+  
+  final def opCharPrec(opChar: Char): Int = prec(opChar)
+  final def opPrec(opStr: Str): (Int, Int) = opStr match {
     case "is" => (4, 4)
     case "and" => (3, 3)
     case "or" => (2, 2)
+    case "=>" =>
+      // * The lambda operator is special:
+      // *  it should associate very strongly on the left and very loosely on the right
+      // *  so that we can write things like `f() |> x => x is 0` ie `(f()) |> (x => (x is 0))`
+      val eqPrec = prec('.') // * We pick the tightest precedence
+      (eqPrec, 1)
+      // * Note: we used to do this instead which broke the example above on both sides:
+      // val eqPrec = prec('=')
+      // (eqPrec, eqPrec - 1)
+    case "+." | "-." | "*." =>
+      (prec(opStr.head), prec(opStr.head))
     case _ if opStr.exists(_.isLetter) =>
       (5, 5)
     case _ =>
       val r = opStr.last
-      (prec(opStr.head), prec(r) - (if (r === '@' || r === '/' || r === ',') 1 else 0))
+      (prec(opStr.head), prec(r) - (if (r === '@' || r === '/' || r === ',' || r === ':') 1 else 0))
+  }
+  final def opPrecOpt(opStr: Str): Opt[(Int, Int)] = opStr match {
+    case "is" => S((4, 4))
+    case "and" => S((3, 3))
+    case "or" => S((2, 2))
+    case "=>" =>
+      // * The lambda operator is special:
+      // *  it should associate very strongly on the left and very loosely on the right
+      // *  so that we can write things like `f() |> x => x is 0` ie `(f()) |> (x => (x is 0))`
+      val eqPrec = prec('.') // * We pick the tightest precedence
+      S((eqPrec, 1))
+      // * Note: we used to do this instead which broke the example above on both sides:
+      // val eqPrec = prec('=')
+      // (eqPrec, eqPrec - 1)
+    case "+." | "-." | "*." =>
+      S((prec(opStr.head), prec(opStr.head)))
+    case _ if opStr.exists(_.isLetter) =>
+      N
+    case _ =>
+      val r = opStr.last
+      (prec.get(r), prec.get(opStr.head)) match {
+        case (Some(prec1), Some(prec2)) =>
+          S((prec2, prec1 - (if (r === '@' || r === '/' || r === ',' || r === ':') 1 else 0)))
+        case _ => None
+      }
   }
   
   // def pe(msg: Message, l: Loc, rest: (Message, Opt[Loc])*): Unit =

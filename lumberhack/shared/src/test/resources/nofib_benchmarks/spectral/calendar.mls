@@ -17,6 +17,7 @@
 :lhInHaskell
 :lhGenOCaml
 :lhNoIter
+:lhToMls
 zip3 xs ys zs = case xs of {
                   (hx:tx) -> case ys of {
                     (hy:ty) -> case zs of {
@@ -75,6 +76,400 @@ testCalendar_nofib $ primId 100
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
+//│ 		---------- unoptimized mls gen ----------
+//│ fun map(f)(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       LH_C ((f h), (map f t))
+//│     LH_N then
+//│       LH_N ()
+//│ fun map_lz(f)(ls) =
+//│   lazy (if force ls is
+//│     LH_C (h, t) then
+//│       LH_C ((f h), (map_lz f t))
+//│     LH_N then
+//│       LH_N ())
+//│ fun filter(f)(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       if f h then
+//│         LH_C (h, (filter f t))
+//│       else
+//│         (filter f t)
+//│     LH_N then
+//│       LH_N ()
+//│ fun filter_lz(f)(ls) =
+//│   lazy (if force ls is
+//│     LH_C (h, t) then
+//│       if f h then
+//│         LH_C (h, (filter_lz f t))
+//│       else
+//│         (force (filter_lz f t))
+//│     LH_N then
+//│       LH_N ())
+//│ fun foldl(f)(i)(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       foldl f (f i h) t
+//│     LH_N then
+//│       i
+//│ fun foldr(f)(i)(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       f h (foldr f i t)
+//│     LH_N then
+//│       i
+//│ fun foldr_lz(f)(i)(ls) =
+//│   lazy (if force ls is
+//│     LH_C (h, t) then
+//│       f h (foldr_lz f i t)
+//│     LH_N then
+//│       i)
+//│ fun zip(xs)(ys) =
+//│   if xs is
+//│     LH_C (hx, tx) then
+//│       if ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((LH_P2 (hx, hy)), (zip tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zip_nl_lz(xs)(ys) =
+//│   if xs is
+//│     LH_C (hx, tx) then
+//│       if force ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((LH_P2 (hx, hy)), (zip_nl_lz tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zip_lz_nl(xs)(ys) =
+//│   if ys is
+//│     LH_C (hy, ty) then
+//│       if force xs is
+//│         LH_C (hx, tx) then
+//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_nl tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zip_lz_lz(xs)(ys) =
+//│   lazy (if force xs is
+//│     LH_C (hx, tx) then
+//│       if force ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_lz tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ())
+//│ fun zipWith(f)(xs)(ys) =
+//│   if xs is
+//│     LH_C (hx, tx) then
+//│       if ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((f hx hy), (zipWith f tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zipWith_nl_lz(f)(xs)(ys) =
+//│   if xs is
+//│     LH_C (hx, tx) then
+//│       if force ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((f hx hy), (zipWith_nl_lz f tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zipWith_lz_nl(f)(xs)(ys) =
+//│   if ys is
+//│     LH_C (hy, ty) then
+//│       if force xs is
+//│         LH_C (hx, tx) then
+//│           LH_C ((f hx hy), (zipWith_lz_nl f tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zipWith_lz_lz(f)(xs)(ys) =
+//│   lazy (if force xs is
+//│     LH_C (hx, tx) then
+//│       if force ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((f hx hy), (zipWith_lz_lz f tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ())
+//│ fun head(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       h
+//│     LH_N then
+//│       error
+//│ fun head_lz(ls) =
+//│   if force ls is
+//│     LH_C (h, t) then
+//│       h
+//│     LH_N then
+//│       error
+//│ fun tail(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       t
+//│     LH_N then
+//│       error
+//│ fun tail_lz(ls) =
+//│   if force ls is
+//│     LH_C (h, t) then
+//│       t
+//│     LH_N then
+//│       error
+//│ fun enumFromTo(a)(b) =
+//│   if a <= b then
+//│     LH_C (a, (enumFromTo (a + 1) b))
+//│   else
+//│     (LH_N ())
+//│ fun enumFromThenTo(a)(t)(b) =
+//│   if a <= b then
+//│     LH_C (a, (enumFromThenTo t (2 * t - a) b))
+//│   else
+//│     (LH_N ())
+//│ fun enumFrom(a) =
+//│   lazy (LH_C (a, (enumFrom (a + 1))))
+//│ fun enumFromThen(a)(t) =
+//│   lazy (LH_C (a, (enumFromThen t (2 * t - a))))
+//│ fun repeat(x) =
+//│   lazy (LH_C (x, (repeat x)))
+//│ fun iterate(f)(x) =
+//│   lazy (LH_C (x, (iterate f (f x))))
+//│ fun take(n)(ls) =
+//│   if n > 0 then
+//│     if ls is
+//│       LH_C (h, t) then
+//│         LH_C (h, (take (n - 1) t))
+//│       LH_N then
+//│         LH_N ()
+//│   else
+//│     (LH_N ())
+//│ fun take_lz(n)(ls) =
+//│   if n > 0 then
+//│     if force ls is
+//│       LH_C (h, t) then
+//│         LH_C (h, (take_lz (n - 1) t))
+//│       LH_N then
+//│         LH_N ()
+//│   else
+//│     (LH_N ())
+//│ fun length(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       1 + (length t)
+//│     LH_N then
+//│       0
+//│ fun mappend(xs)(ys) =
+//│   if xs is
+//│     LH_C (h, t) then
+//│       LH_C (h, (mappend t ys))
+//│     LH_N then
+//│       ys
+//│ fun sum(ls) =
+//│   sumAux ls 0
+//│ fun sumAux(ls)(a) =
+//│   if ls is
+//│     LH_N then
+//│       a
+//│     LH_C (h, t) then
+//│       sumAux t (a + h)
+//│ fun atIndex(n)(ls) =
+//│   if n < 0 then
+//│     error
+//│   else
+//│     (if ls is
+//│       LH_C (h, t) then
+//│         if n == 0 then
+//│           h
+//│         else
+//│           (atIndex (n - 1) t)
+//│       LH_N then
+//│         error)
+//│ fun atIndex_lz(n)(ls) =
+//│   if n < 0 then
+//│     error
+//│   else
+//│     (if force ls is
+//│       LH_C (h, t) then
+//│         if n == 0 then
+//│           h
+//│         else
+//│           (atIndex_lz (n - 1) t)
+//│       LH_N then
+//│         error)
+//│ fun concat(lss) =
+//│   if lss is
+//│     LH_C (h, t) then
+//│       mappend h (concat t)
+//│     LH_N then
+//│       LH_N ()
+//│ fun reverse(ls) =
+//│   reverse_helper ls (LH_N ())
+//│ fun reverse_helper(ls)(a) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       reverse_helper t (LH_C (h, a))
+//│     LH_N then
+//│       a
+//│ fun emptyPic(_lh_emptyPic_arg1) =
+//│   if _lh_emptyPic_arg1 is
+//│     LH_P2 (_lh_emptyPic_LH_P2_0, _lh_emptyPic_LH_P2_1) then
+//│       copy _lh_emptyPic_LH_P2_0 (copy _lh_emptyPic_LH_P2_1 ' ')
+//│ fun rjustify(_lh_rjustify_arg1)(_lh_rjustify_arg2) =
+//│   mappend (space (_lh_rjustify_arg1 - (length _lh_rjustify_arg2))) _lh_rjustify_arg2
+//│ fun jan1st(_lh_jan1st_arg1) =
+//│   let last = _lh_jan1st_arg1 - 1
+//│   (div ((div ((div (_lh_jan1st_arg1 + last) 4) - last) 100) + last) 400) % 7
+//│ fun unlines(_lh_unlines_arg1) =
+//│   concat (map (l =>
+//│     (mappend l (LH_C ('n', (LH_N ()))))) _lh_unlines_arg1)
+//│ fun height(_lh_height_arg1) =
+//│   length _lh_height_arg1
+//│ fun block(_lh_block_arg1)(_lh_funcomp_x) =
+//│   (_lh_funcomp_x =>
+//│     (stack (map spread _lh_funcomp_x))) (groop _lh_block_arg1 _lh_funcomp_x)
+//│ fun blockT(_lh_blockT_arg1)(_lh_funcomp_x) =
+//│   (_lh_funcomp_x =>
+//│     (spread (map stack _lh_funcomp_x))) (groop _lh_blockT_arg1 _lh_funcomp_x)
+//│ fun monthNames =
+//│   LH_C ((LH_C ('J', (LH_C ('a', (LH_C ('n', (LH_C ('u', (LH_C ('a', (LH_C ('r', (LH_C ('y', (LH_N ()))))))))))))))), (LH_C ((LH_C ('F', (LH_C ('e', (LH_C ('b', (LH_C ('r', (LH_C ('u', (LH_C ('a', (LH_C ('r', (LH_C ('y', (LH_N ()))))))))))))))))), (LH_C ((LH_C ('M', (LH_C ('a', (LH_C ('r', (LH_C ('c', (LH_C ('h', (LH_N ()))))))))))), (LH_C ((LH_C ('A', (LH_C ('p', (LH_C ('r', (LH_C ('i', (LH_C ('l', (LH_N ()))))))))))), (LH_C ((LH_C ('M', (LH_C ('a', (LH_C ('y', (LH_N ()))))))), (LH_C ((LH_C ('J', (LH_C ('u', (LH_C ('n', (LH_C ('e', (LH_N ()))))))))), (LH_C ((LH_C ('J', (LH_C ('u', (LH_C ('l', (LH_C ('y', (LH_N ()))))))))), (LH_C ((LH_C ('A', (LH_C ('u', (LH_C ('g', (LH_C ('u', (LH_C ('s', (LH_C ('t', (LH_N ()))))))))))))), (LH_C ((LH_C ('S', (LH_C ('e', (LH_C ('p', (LH_C ('t', (LH_C ('e', (LH_C ('m', (LH_C ('b', (LH_C ('e', (LH_C ('r', (LH_N ()))))))))))))))))))), (LH_C ((LH_C ('O', (LH_C ('c', (LH_C ('t', (LH_C ('o', (LH_C ('b', (LH_C ('e', (LH_C ('r', (LH_N ()))))))))))))))), (LH_C ((LH_C ('N', (LH_C ('o', (LH_C ('v', (LH_C ('e', (LH_C ('m', (LH_C ('b', (LH_C ('e', (LH_C ('r', (LH_N ()))))))))))))))))), (LH_C ((LH_C ('D', (LH_C ('e', (LH_C ('c', (LH_C ('e', (LH_C ('m', (LH_C ('b', (LH_C ('e', (LH_C ('r', (LH_N ()))))))))))))))))), (LH_N ()))))))))))))))))))))))))
+//│ fun stack(_lh_stack_arg1) =
+//│   foldr1 (a => b =>
+//│     (mappend a b)) _lh_stack_arg1
+//│ fun copy(_lh_copy_arg1)(_lh_copy_arg2) =
+//│   if _lh_copy_arg1 > 0 then
+//│     LH_C (_lh_copy_arg2, (copy (_lh_copy_arg1 - 1) _lh_copy_arg2))
+//│   else
+//│     (LH_N ())
+//│ fun cjustify(_lh_cjustify_arg1)(_lh_cjustify_arg2) =
+//│   let m = _lh_cjustify_arg1 - (length _lh_cjustify_arg2)
+//│   let halfm = div m 2
+//│   mappend (mappend (space halfm) _lh_cjustify_arg2) (space (m - halfm))
+//│ fun ljustify(_lh_ljustify_arg1)(_lh_ljustify_arg2) =
+//│   mappend _lh_ljustify_arg2 (space (_lh_ljustify_arg1 - (length _lh_ljustify_arg2)))
+//│ fun foldr1(_lh_foldr1_arg1)(_lh_foldr1_arg2) =
+//│   if _lh_foldr1_arg2 is
+//│     LH_C (_lh_foldr1_LH_C_0, _lh_foldr1_LH_C_1) then
+//│       foldr _lh_foldr1_arg1 _lh_foldr1_LH_C_0 _lh_foldr1_LH_C_1
+//│ fun width(_lh_width_arg1) =
+//│   length (head _lh_width_arg1)
+//│ fun lframe(_lh_lframe_arg1)(_lh_lframe_arg2) =
+//│   if _lh_lframe_arg1 is
+//│     LH_P2 (_lh_lframe_LH_P2_0, _lh_lframe_LH_P2_1) then
+//│       let h = height _lh_lframe_arg2
+//│       let w = width _lh_lframe_arg2
+//│       mappend (zipWith mappend _lh_lframe_arg2 (emptyPic (LH_P2 (h, (_lh_lframe_LH_P2_1 - w))))) (emptyPic (LH_P2 ((_lh_lframe_LH_P2_0 - h), _lh_lframe_LH_P2_1)))
+//│ fun spread(_lh_spread_arg1) =
+//│   foldr1 (a => b =>
+//│     (zipWith mappend a b)) _lh_spread_arg1
+//│ fun scanl(_lh_scanl_arg1)(_lh_scanl_arg2)(_lh_scanl_arg3) =
+//│   LH_C (_lh_scanl_arg2, (let _lh_matchIdent = _lh_scanl_arg3
+//│   if _lh_matchIdent is
+//│     LH_N then
+//│       LH_N ()
+//│     LH_C (_lh_scanl_LH_C_0, _lh_scanl_LH_C_1) then
+//│       scanl _lh_scanl_arg1 (_lh_scanl_arg1 _lh_scanl_arg2 _lh_scanl_LH_C_0) _lh_scanl_LH_C_1))
+//│ fun monthLengths(_lh_monthLengths_arg1) =
+//│   let feb = if leap _lh_monthLengths_arg1 then
+//│     29
+//│   else
+//│     28
+//│   LH_C (31, (LH_C (feb, (LH_C (31, (LH_C (30, (LH_C (31, (LH_C (30, (LH_C (31, (LH_C (31, (LH_C (30, (LH_C (31, (LH_C (30, (LH_C (31, (LH_N ()))))))))))))))))))))))))
+//│ fun testCalendar_nofib(_lh_testCalendar_nofib_arg1) =
+//│   map (n =>
+//│     (length (cal n))) (primId (enumFromTo 1993 (1993 + _lh_testCalendar_nofib_arg1)))
+//│ fun groop(_lh_groop_arg1)(_lh_groop_arg2) =
+//│   if _lh_groop_arg2 is
+//│     LH_N then
+//│       LH_N ()
+//│ fun cal(_lh_cal_arg1) =
+//│   let rec
+//│     fun pic(_lh_pic_arg1) =
+//│       if _lh_pic_arg1 is
+//│         LH_P3 (_lh_pic_LH_P3_0, _lh_pic_LH_P3_1, _lh_pic_LH_P3_2) then
+//│           mappend (title _lh_pic_LH_P3_0) (table _lh_pic_LH_P3_1 _lh_pic_LH_P3_2)
+//│     fun table(_lh_table_arg1)(_lh_table_arg2) =
+//│       mappend daynames (entries _lh_table_arg1 _lh_table_arg2)
+//│     let daynames =
+//│       LH_C ((LH_C (' ', (LH_C ('S', (LH_C ('u', (LH_C (' ', (LH_C ('M', (LH_C ('o', (LH_C (' ', (LH_C ('T', (LH_C ('u', (LH_C (' ', (LH_C ('W', (LH_C ('e', (LH_C (' ', (LH_C ('T', (LH_C ('h', (LH_C (' ', (LH_C ('F', (LH_C ('r', (LH_C (' ', (LH_C ('S', (LH_C ('a', (LH_N ()))))))))))))))))))))))))))))))))))))))))))), (LH_N ()))
+//│     fun pad(_lh_pad_arg1) =
+//│       mappend (zipWith mappend (zipWith mappend side _lh_pad_arg1) side) end
+//│     fun months(_lh_months_arg1) =
+//│       zip3 monthNames (firstDays _lh_months_arg1) (monthLengths _lh_months_arg1)
+//│     fun entries(_lh_entries_arg1)(_lh_entries_arg2) =
+//│       block 7 (dates _lh_entries_arg1 _lh_entries_arg2)
+//│     let side =
+//│       emptyPic (LH_P2 (8, 2))
+//│     fun body(_lh_funcomp_x) =
+//│       (_lh_funcomp_x =>
+//│         (block 3 (map (_lh_funcomp_x =>
+//│           (pad (pic _lh_funcomp_x))) _lh_funcomp_x))) (months _lh_funcomp_x)
+//│     fun banner(_lh_banner_arg1) =
+//│       mappend (LH_C ((cjustify 75 (string_of_int _lh_banner_arg1)), (LH_N ()))) (emptyPic (LH_P2 (1, 75)))
+//│     let end =
+//│       emptyPic (LH_P2 (1, 25))
+//│     fun title(_lh_title_arg1) =
+//│       LH_C ((cjustify 21 _lh_title_arg1), (LH_N ()))
+//│   (unlines (mappend (banner _lh_cal_arg1) (body _lh_cal_arg1)))
+//│ fun drop(_lh_drop_arg1)(_lh_drop_arg2) =
+//│   if _lh_drop_arg2 is
+//│     LH_N then
+//│       LH_N ()
+//│     LH_C (_lh_drop_LH_C_0, _lh_drop_LH_C_1) then
+//│       if _lh_drop_arg1 > 0 then
+//│         drop (_lh_drop_arg1 - 1) _lh_drop_LH_C_1
+//│       else
+//│         _lh_drop_LH_C_1
+//│ fun zip3(_lh_zip3_arg1)(_lh_zip3_arg2)(_lh_zip3_arg3) =
+//│   let _lh_matchIdent = _lh_zip3_arg1
+//│   if _lh_matchIdent is
+//│     LH_C (_lh_zip3_LH_C_0, _lh_zip3_LH_C_1) then
+//│       let _lh_matchIdent = _lh_zip3_arg2
+//│       if _lh_matchIdent is
+//│         LH_C (_lh_zip3_LH_C_0, _lh_zip3_LH_C_1) then
+//│           let _lh_matchIdent = _lh_zip3_arg3
+//│           if _lh_matchIdent is
+//│             LH_C (_lh_zip3_LH_C_0, _lh_zip3_LH_C_1) then
+//│               LH_C ((LH_P3 (_lh_zip3_LH_C_0, _lh_zip3_LH_C_0, _lh_zip3_LH_C_0)), (zip3 _lh_zip3_LH_C_1 _lh_zip3_LH_C_1 _lh_zip3_LH_C_1))
+//│             LH_N then
+//│               LH_N ()
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun space(_lh_space_arg1) =
+//│   copy _lh_space_arg1 ' '
+//│ fun dates(_lh_dates_arg1)(_lh_dates_arg2) =
+//│   map (d =>
+//│     (date _lh_dates_arg2 d)) (enumFromTo (1 - _lh_dates_arg1) (42 - _lh_dates_arg1))
+//│ fun date(_lh_date_arg1)(_lh_date_arg2) =
+//│   if _lh_date_arg2 < 1 || _lh_date_arg1 < _lh_date_arg2 then
+//│     LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))), (LH_N ()))
+//│   else
+//│     (LH_C ((rjustify 3 (string_of_int _lh_date_arg2)), (LH_N ())))
+//│ fun leap(_lh_leap_arg1) =
+//│   if _lh_leap_arg1 % 100 == 0 then
+//│     _lh_leap_arg1 % 400 == 0
+//│   else
+//│     (_lh_leap_arg1 % 4 == 0)
+//│ fun firstDays(_lh_firstDays_arg1) =
+//│   take 12 (map (a =>
+//│     (a % 7)) (scanl (a => b =>
+//│     (a + b)) (jan1st _lh_firstDays_arg1) (monthLengths _lh_firstDays_arg1)))
+//│ (testCalendar_nofib (primId 100))
+//│ 		---------- unoptimized mls gen ----------
 //│ testCalendar_nofib_lh_₁^1498(primId⁰(100))
 //│ def block_lh_₁(_lh_block_arg1¹, _lh_funcomp_x²) = (fun _lh_funcomp_x³ -> stack_lh_₁^1154(map_lh_₃^1155(spread_lh_₁^1156, _lh_funcomp_x³)))(groop_lh_₁^1162(_lh_block_arg1¹, _lh_funcomp_x²))
 //│ def block_lh_₂(_lh_block_arg1⁰, _lh_funcomp_x⁰) = (fun _lh_funcomp_x¹ -> stack_lh_₂^810(map_lh_₆^811(spread_lh_₂^812, _lh_funcomp_x¹)))(groop_lh_₂^818(_lh_block_arg1⁰, _lh_funcomp_x⁰))

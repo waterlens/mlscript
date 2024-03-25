@@ -98,10 +98,7 @@ f(0)
 //│ 		(f 0)
 //│ 		....... ocaml repl result .......
 //│ !!!!!!ERROR!!!!!!
-//│ java.lang.Exception:           Lines 5-6, characters 7-11:
-//│ 5 | .......((fun x_0 -> 
-//│ 6 |       x_0))....
-//│ Error: This expression should not be a function, the expected type is int
+//│ java.io.IOException: Cannot run program "/Users/crescentonc/.opam/benchmarkflambda/bin/ocaml": error=2, No such file or directory
 //│ !!!!!!ERROR!!!!!!
 
 // fun f(a) = if True then C(0) else Object.magic(C(x => x))
@@ -161,99 +158,7 @@ dropWhile(C(N))
 //│ 		        (`C(t_0))));;
 //│ 		(dropWhile (`C((`N))))
 //│ 		....... ocaml repl result .......
-//│ 		[ok]
-//│ 		                val dropWhile : ([< `C of 'a | `N > `N ] as 'a) -> [> `C of 'a ] = <fun>
-//│ 		....... ocaml repl result .......
-//│ 		---------- unoptimized ocaml gen ----------
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 14 --->
-//│ 	NoCons
-//│ 	case ls⁰ of {N  => [C [N]] | C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}: 11
-//│ [C [N]]: 15 --->
-//│ 	case ls⁰ of {N  => [C [N]] | C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}: 11
-//│ ------------------
-//│ case ls⁰ of {N  => [C [N]] | C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}: 11 --->
-//│ 	[N]: 14
-//│ 	[C [N]]: 15
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ dropWhile([C [N]])
-//│ def dropWhile(ls¹) = case ls¹ of {
-//│ 	N  => [C [N]]
-//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
-//│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> consumer ids >>>>>>>
-//│ 
-//│ <<<<<<< consumer ids <<<<<<<
-//│ 
-//│ >>>>>>> floating out info >>>>>>>
-//│ 
-//│ <<<<<<< floating out info <<<<<<<
-//│ 
-//│ >>>>>>> after inlining >>>>>>>
-//│ dropWhile([C [N]])
-//│ def dropWhile(ls⁰) = case ls⁰ of {
-//│ 	N  => [C [N]]
-//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
-//│ <<<<<<< after inlining <<<<<<<
-//│ 
-//│ >>>>>>> after floating out >>>>>>>
-//│ dropWhile([C [N]])
-//│ def dropWhile(ls⁰) = case ls⁰ of {
-//│ 	N  => [C [N]]
-//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
-//│ <<<<<<< after floating out <<<<<<<
-//│ 
-//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
-//│ 
-//│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ dropWhile :: 'dropWhile <: [] ::: true
-//│ [N] :: N ::: true
-//│ [C [N]] :: C(N) ::: true
-//│ dropWhile([C [N]]) :: '4_callres <: [] ::: true
-//│ ls :: 'ls⁰ <: [] ::: true
-//│ [N] :: N ::: true
-//│ [C [N]] :: C(N) ::: true
-//│ [True] :: True ::: true
-//│ dropWhile :: 'dropWhile <: [] ::: true
-//│ t :: 't⁰ <: [] ::: true
-//│ dropWhile(t) :: '11_callres <: [] ::: true
-//│ t :: 't⁰ <: [] ::: true
-//│ [C t] :: C('t⁰) ::: true
-//│ if [True] then dropWhile(t) else [C t] :: '14_ifres <: [] ::: true
-//│ case ls of {N  => [C [N]] | C t => if [True] then dropWhile(t) else [C t]} :: '15_matchres <: [] ::: true
-//│ (fun ls -> case ls of {N  => [C [N]] | C t => if [True] then dropWhile(t) else [C t]}) :: 'ls⁰ => '15_matchres ::: true
-//│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
-//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
-//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
-//│ 
-//│ let rec dropWhile ls_0 =
-//│   (match ls_0 with
-//│     | `N -> 
-//│       (`C((`N)))
-//│     | `C(t_0) -> 
-//│       (if true then
-//│         (dropWhile t_0)
-//│       else
-//│         (`C(t_0))));;
-//│ (dropWhile (`C((`N))))
-//│ 
-//│ --------------- ocaml repl result -----------------
-//│ [ok]
-//│   - : [> `C of [ `C of 'a | `N ] as 'a ] = `C `N
-//│ 
-//│ --------------- ocaml repl result -----------------
-//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+//│ /!!!\ Uncaught error: java.io.IOException: Cannot run program "/Users/crescentonc/.opam/benchmarkflambda/bin/ocaml": error=2, No such file or directory
 
 
 :lhGenOCaml
@@ -282,103 +187,17 @@ fun dropWhile(ls) = if ls is
 //│ 		((fun x_0 -> 
 //│ 		  2) (dropWhile (`C((`N)))))
 //│ 		....... ocaml repl result .......
-//│ 		[ok]
-//│ 		                val dropWhile : ([< `C of 'a | `N > `N ] as 'a) -> [> `C of 'a ] = <fun>
-//│ 		....... ocaml repl result .......
-//│ 		---------- unoptimized ocaml gen ----------
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 16 --->
-//│ 	DeadCodeCons
-//│ 	case ls⁰ of {N  => [C [N]] | C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}: 11
-//│ [C [N]]: 17 --->
-//│ 	case ls⁰ of {N  => [C [N]] | C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}: 11
-//│ ------------------
-//│ case ls⁰ of {N  => [C [N]] | C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}: 11 --->
-//│ 	[N]: 16
-//│ 	[C [N]]: 17
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ (fun x¹ -> 2)(dropWhile([C [N]]))
-//│ def dropWhile(ls¹) = case ls¹ of {
-//│ 	N  => [C [N]]
-//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
-//│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> consumer ids >>>>>>>
-//│ 
-//│ <<<<<<< consumer ids <<<<<<<
-//│ 
-//│ >>>>>>> floating out info >>>>>>>
-//│ 
-//│ <<<<<<< floating out info <<<<<<<
-//│ 
-//│ >>>>>>> after inlining >>>>>>>
-//│ (fun x⁰ -> 2)(dropWhile([C [N]]))
-//│ def dropWhile(ls⁰) = case ls⁰ of {
-//│ 	N  => [C [N]]
-//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
-//│ <<<<<<< after inlining <<<<<<<
-//│ 
-//│ >>>>>>> after floating out >>>>>>>
-//│ (fun x⁰ -> 2)(dropWhile([C [N]]))
-//│ def dropWhile(ls⁰) = case ls⁰ of {
-//│ 	N  => [C [N]]
-//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
-//│ <<<<<<< after floating out <<<<<<<
-//│ 
-//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
-//│ 
-//│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ 2 :: Int ::: false
-//│ (fun x -> 2) :: 'x⁰ => Int ::: true
-//│ dropWhile :: 'dropWhile <: [] ::: true
-//│ [N] :: N ::: true
-//│ [C [N]] :: C(N) ::: true
-//│ dropWhile([C [N]]) :: '6_callres <: [] ::: true
-//│ (fun x -> 2)(dropWhile([C [N]])) :: '7_callres <: [] ::: true
-//│ ls :: 'ls⁰ <: [] ::: true
-//│ [N] :: N ::: true
-//│ [C [N]] :: C(N) ::: true
-//│ [True] :: True ::: true
-//│ dropWhile :: 'dropWhile <: [] ::: true
-//│ t :: 't⁰ <: [] ::: true
-//│ dropWhile(t) :: '14_callres <: [] ::: true
-//│ t :: 't⁰ <: [] ::: true
-//│ [C t] :: C('t⁰) ::: true
-//│ if [True] then dropWhile(t) else [C t] :: '17_ifres <: [] ::: true
-//│ case ls of {N  => [C [N]] | C t => if [True] then dropWhile(t) else [C t]} :: '18_matchres <: [] ::: true
-//│ (fun ls -> case ls of {N  => [C [N]] | C t => if [True] then dropWhile(t) else [C t]}) :: 'ls⁰ => '18_matchres ::: true
-//│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
-//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
-//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
-//│ 
-//│ let rec dropWhile ls_0 =
-//│   (match ls_0 with
-//│     | `N -> 
-//│       (`C((`N)))
-//│     | `C(t_0) -> 
-//│       (if true then
-//│         (dropWhile t_0)
-//│       else
-//│         (`C(t_0))));;
-//│ ((fun x_0 -> 
-//│   2) (dropWhile (`C((`N)))))
-//│ 
-//│ --------------- ocaml repl result -----------------
-//│ [ok]
-//│     - : int = 2
-//│ 
-//│ --------------- ocaml repl result -----------------
-//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+//│ /!!!\ Uncaught error: java.io.IOException: Cannot run program "/Users/crescentonc/.opam/benchmarkflambda/bin/ocaml": error=2, No such file or directory
+//│ 	at: java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1128)
+//│ 	at: java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1071)
+//│ 	at: mlscript.lumberhack.OCamlReplHost.<init>(DiffTestLumberhack.scala:580)
+//│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTestLumberhack.scala:106)
+//│ 	at: mlscript.DiffTests.rec$1(DiffTests.scala:396)
+//│ 	at: mlscript.DiffTests.$anonfun$new$3(DiffTests.scala:803)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
+//│ 	at: org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
+//│ 	at: org.scalatest.Transformer.apply(Transformer.scala:22)
 
 :lhGenOCaml
 :d
@@ -409,116 +228,17 @@ f(dropWhile(C(N)))
 //│ 		        (`C(t_0))));;
 //│ 		(f (dropWhile (`C((`N)))))
 //│ 		....... ocaml repl result .......
-//│ 		[ok]
-//│ 		  val f : [> `C of [> `N ] ] -> ([> `Pair of 'a * 'a ] as 'a) = <fun>
-//│ 		[ok]
-//│ 		                  val dropWhile : ([< `C of 'a | `N ] as 'a) -> [> `C of 'a | `N ] = <fun>
-//│ 		....... ocaml repl result .......
-//│ 		---------- unoptimized ocaml gen ----------
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 23 --->
-//│ 	DeadCodeCons
-//│ 	case ls⁰ of {N  => [N] | C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}: 10
-//│ [C [N]]: 24 --->
-//│ 	case ls⁰ of {N  => [N] | C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}: 10
-//│ ------------------
-//│ case ls⁰ of {N  => [N] | C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}: 10 --->
-//│ 	[N]: 23
-//│ 	[C [N]]: 24
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ f(dropWhile([C [N]]))
-//│ def dropWhile(ls¹) = case ls¹ of {
-//│ 	N  => [N]
-//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
-//│ def f(x¹) = [Pair f([C [N]]) f(x¹)]
-//│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> consumer ids >>>>>>>
-//│ 
-//│ <<<<<<< consumer ids <<<<<<<
-//│ 
-//│ >>>>>>> floating out info >>>>>>>
-//│ 
-//│ <<<<<<< floating out info <<<<<<<
-//│ 
-//│ >>>>>>> after inlining >>>>>>>
-//│ f(dropWhile([C [N]]))
-//│ def dropWhile(ls⁰) = case ls⁰ of {
-//│ 	N  => [N]
-//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
-//│ def f(x⁰) = [Pair f([C [N]]) f(x⁰)]
-//│ <<<<<<< after inlining <<<<<<<
-//│ 
-//│ >>>>>>> after floating out >>>>>>>
-//│ f(dropWhile([C [N]]))
-//│ def dropWhile(ls⁰) = case ls⁰ of {
-//│ 	N  => [N]
-//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
-//│ def f(x⁰) = [Pair f([C [N]]) f(x⁰)]
-//│ <<<<<<< after floating out <<<<<<<
-//│ 
-//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
-//│ 
-//│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ f :: 'f <: [] ::: true
-//│ dropWhile :: 'dropWhile <: [] ::: true
-//│ [N] :: N ::: true
-//│ [C [N]] :: C(N) ::: true
-//│ dropWhile([C [N]]) :: '5_callres <: [] ::: true
-//│ f(dropWhile([C [N]])) :: '6_callres <: [] ::: true
-//│ ls :: 'ls⁰ <: [] ::: true
-//│ [N] :: N ::: true
-//│ [True] :: True ::: true
-//│ dropWhile :: 'dropWhile <: [] ::: true
-//│ t :: 't⁰ <: [] ::: true
-//│ dropWhile(t) :: '12_callres <: [] ::: true
-//│ t :: 't⁰ <: [] ::: true
-//│ [C t] :: C('t⁰) ::: true
-//│ if [True] then dropWhile(t) else [C t] :: '15_ifres <: [] ::: true
-//│ case ls of {N  => [N] | C t => if [True] then dropWhile(t) else [C t]} :: '16_matchres <: [] ::: true
-//│ (fun ls -> case ls of {N  => [N] | C t => if [True] then dropWhile(t) else [C t]}) :: 'ls⁰ => '16_matchres ::: true
-//│ f :: 'f <: [] ::: true
-//│ [N] :: N ::: true
-//│ [C [N]] :: C(N) ::: true
-//│ f([C [N]]) :: '21_callres <: [] ::: true
-//│ f :: 'f <: [] ::: true
-//│ x :: 'x⁰ <: [] ::: true
-//│ f(x) :: '24_callres <: [] ::: true
-//│ [Pair f([C [N]]) f(x)] :: Pair('21_callres, '24_callres) ::: true
-//│ (fun x -> [Pair f([C [N]]) f(x)]) :: 'x⁰ => Pair('21_callres, '24_callres) ::: true
-//│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
-//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
-//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
-//│ 
-//│ let rec f x_0 =
-//│   (`Pair((f (`C((`N)))), (f x_0)));;
-//│ let rec dropWhile ls_0 =
-//│   (match ls_0 with
-//│     | `N -> 
-//│       (`N)
-//│     | `C(t_0) -> 
-//│       (if true then
-//│         (dropWhile t_0)
-//│       else
-//│         (`C(t_0))));;
-//│ (f (dropWhile (`C((`N)))))
-//│ 
-//│ --------------- ocaml repl result -----------------
-//│ [ok]
-//│   Stack overflow during evaluation (looping recursion?).
-//│ 
-//│ --------------- ocaml repl result -----------------
-//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+//│ /!!!\ Uncaught error: java.io.IOException: Cannot run program "/Users/crescentonc/.opam/benchmarkflambda/bin/ocaml": error=2, No such file or directory
+//│ 	at: java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1128)
+//│ 	at: java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1071)
+//│ 	at: mlscript.lumberhack.OCamlReplHost.<init>(DiffTestLumberhack.scala:580)
+//│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTestLumberhack.scala:106)
+//│ 	at: mlscript.DiffTests.rec$1(DiffTests.scala:396)
+//│ 	at: mlscript.DiffTests.$anonfun$new$3(DiffTests.scala:803)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
+//│ 	at: org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
+//│ 	at: org.scalatest.Transformer.apply(Transformer.scala:22)
 
 
 :lhGenOCaml
@@ -563,144 +283,17 @@ f(dropWhile(C(N)))
 //│ 		        (`C(t_0))));;
 //│ 		(f (dropWhile (`C((`N)))))
 //│ 		....... ocaml repl result .......
-//│ 		[ok]
-//│ 		            val f : [ `C of [> `N ] as 'a | `N ] -> [ `C of 'a | `N ] = <fun>
-//│ 		[ok]
-//│ 		                  val dropWhile : ([< `C of 'a | `N ] as 'a) -> [> `C of 'a | `N ] = <fun>
-//│ 		....... ocaml repl result .......
-//│ 		---------- unoptimized ocaml gen ----------
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 17 --->
-//│ 	NoCons
-//│ 	DeadCodeCons
-//│ 	case x¹ of {C a⁰ => [N] | N  => f(x¹)}: 21
-//│ [N]: 26 --->
-//│ 	DeadCodeCons
-//│ 	case ls⁰ of {N  => [N] | C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}: 10
-//│ [C [N]]: 27 --->
-//│ 	case ls⁰ of {N  => [N] | C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}: 10
-//│ ------------------
-//│ case ls⁰ of {N  => [N] | C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}: 10 --->
-//│ 	[N]: 26
-//│ 	[C [N]]: 27
-//│ case x¹ of {C a⁰ => [N] | N  => f(x¹)}: 21 --->
-//│ 	[N]: 17
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ f(dropWhile([C [N]]))
-//│ def dropWhile(ls¹) = case ls¹ of {
-//│ 	N  => [N]
-//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
-//│ def f(x²) = 
-//│ 	let x³ = f([C [N]])
-//│ 	in case x³ of {
-//│ 		C a⁰ => [N]
-//│ 		| N  => f(x³)}
-//│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> consumer ids >>>>>>>
-//│ 
-//│ <<<<<<< consumer ids <<<<<<<
-//│ 
-//│ >>>>>>> floating out info >>>>>>>
-//│ 
-//│ <<<<<<< floating out info <<<<<<<
-//│ 
-//│ >>>>>>> after inlining >>>>>>>
-//│ f(dropWhile([C [N]]))
-//│ def dropWhile(ls⁰) = case ls⁰ of {
-//│ 	N  => [N]
-//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
-//│ def f(x⁰) = 
-//│ 	let x¹ = f([C [N]])
-//│ 	in case x¹ of {
-//│ 		C a⁰ => [N]
-//│ 		| N  => f(x¹)}
-//│ <<<<<<< after inlining <<<<<<<
-//│ 
-//│ >>>>>>> after floating out >>>>>>>
-//│ f(dropWhile([C [N]]))
-//│ def dropWhile(ls⁰) = case ls⁰ of {
-//│ 	N  => [N]
-//│ 	| C t⁰ => if [True] then dropWhile(t⁰) else [C t⁰]}
-//│ def f(x⁰) = 
-//│ 	let x¹ = f([C [N]])
-//│ 	in case x¹ of {
-//│ 		C a⁰ => [N]
-//│ 		| N  => f(x¹)}
-//│ <<<<<<< after floating out <<<<<<<
-//│ 
-//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
-//│ 
-//│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ f :: 'f <: [] ::: true
-//│ dropWhile :: 'dropWhile <: [] ::: true
-//│ [N] :: N ::: true
-//│ [C [N]] :: C(N) ::: true
-//│ dropWhile([C [N]]) :: '5_callres <: [] ::: true
-//│ f(dropWhile([C [N]])) :: '6_callres <: [] ::: true
-//│ ls :: 'ls⁰ <: [] ::: true
-//│ [N] :: N ::: true
-//│ [True] :: True ::: true
-//│ dropWhile :: 'dropWhile <: [] ::: true
-//│ t :: 't⁰ <: [] ::: true
-//│ dropWhile(t) :: '12_callres <: [] ::: true
-//│ t :: 't⁰ <: [] ::: true
-//│ [C t] :: C('t⁰) ::: true
-//│ if [True] then dropWhile(t) else [C t] :: '15_ifres <: [] ::: true
-//│ case ls of {N  => [N] | C t => if [True] then dropWhile(t) else [C t]} :: '16_matchres <: [] ::: true
-//│ (fun ls -> case ls of {N  => [N] | C t => if [True] then dropWhile(t) else [C t]}) :: 'ls⁰ => '16_matchres ::: true
-//│ f :: 'f <: [] ::: true
-//│ [N] :: N ::: true
-//│ [C [N]] :: C(N) ::: true
-//│ f([C [N]]) :: '21_callres <: [] ::: true
-//│ x :: 'x¹ <: [] ::: true
-//│ [N] :: N ::: true
-//│ f :: 'f <: [] ::: true
-//│ x :: 'x¹ <: [] ::: true
-//│ f(x) :: '26_callres <: [] ::: true
-//│ case x of {C a => [N] | N  => f(x)} :: '27_matchres <: [] ::: true
-//│ let x = f([C [N]])
-//│ in case x of {C a => [N] | N  => f(x)} :: '27_matchres <: [] ::: true
-//│ (fun x -> let x = f([C [N]])
-//│ in case x of {C a => [N] | N  => f(x)}) :: 'x⁰ => '27_matchres ::: true
-//│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
-//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
-//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
-//│ 
-//│ let rec f x_0 =
-//│   (let rec x_1 = (f (`C((`N)))) in
-//│     (match x_1 with
-//│       | `C(a_0) -> 
-//│         (`N)
-//│       | `N -> 
-//│         (f x_1)));;
-//│ let rec dropWhile ls_0 =
-//│   (match ls_0 with
-//│     | `N -> 
-//│       (`N)
-//│     | `C(t_0) -> 
-//│       (if true then
-//│         (dropWhile t_0)
-//│       else
-//│         (`C(t_0))));;
-//│ (f (dropWhile (`C((`N)))))
-//│ 
-//│ --------------- ocaml repl result -----------------
-//│ [ok]
-//│   Stack overflow during evaluation (looping recursion?).
-//│ 
-//│ --------------- ocaml repl result -----------------
-//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+//│ /!!!\ Uncaught error: java.io.IOException: Cannot run program "/Users/crescentonc/.opam/benchmarkflambda/bin/ocaml": error=2, No such file or directory
+//│ 	at: java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1128)
+//│ 	at: java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1071)
+//│ 	at: mlscript.lumberhack.OCamlReplHost.<init>(DiffTestLumberhack.scala:580)
+//│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTestLumberhack.scala:106)
+//│ 	at: mlscript.DiffTests.rec$1(DiffTests.scala:396)
+//│ 	at: mlscript.DiffTests.$anonfun$new$3(DiffTests.scala:803)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
+//│ 	at: org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
+//│ 	at: org.scalatest.Transformer.apply(Transformer.scala:22)
 
 
 :lhGenOCaml
@@ -795,300 +388,17 @@ fun words1(ls) =
 //│ 		((fun x_2 -> 
 //│ 		  2) words0)
 //│ 		....... ocaml repl result .......
-//│ 		[ok]
-//│ 		                val dropWhile :
-//│ 		  ('a -> bool) -> ([< `C of 'a * 'b | `N ] as 'b) -> [> `C of 'a * 'b | `N ] =
-//│ 		  <fun>
-//│ 		[ok]
-//│ 		                                      val break :
-//│ 		  [ `C of 'a * ([ `C of 'a * 'b | `N ] as 'b) | `N ] ->
-//│ 		  ([> `C of [> `N ] * 'c | `N ] as 'c) = <fun>
-//│ 		val words1 :
-//│ 		  ([ `C of 'b * 'a | `N ] as 'a) -> ([> `C of [> `N ] * 'c | `N ] as 'c) =
-//│ 		  <fun>
-//│ 		[ok]
-//│ 		                val words0 :
-//│ 		  ([ `C of 'b * 'a | `N ] as 'a) -> ([> `C of [> `N ] * 'c | `N ] as 'c) =
-//│ 		  <fun>
-//│ 		....... ocaml repl result .......
-//│ 		---------- unoptimized ocaml gen ----------
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 3 --->
-//│ 	case ls¹ of {N  => [N] | C h¹ t¹ => if p⁰(h¹) then dropWhile(p⁰, t¹) else [C h¹ t¹]}: 38
-//│ [C h⁰ t⁰]: 14 --->
-//│ 	case ls¹ of {N  => [N] | C h¹ t¹ => if p⁰(h¹) then dropWhile(p⁰, t¹) else [C h¹ t¹]}: 38
-//│ [N]: 25 --->
-//│ 	case ls⁰ of {N  => let fst⁰ = [N]
-//│ in let snd⁰ = [N]
-//│ in [C fst⁰ words1(snd⁰)] | C h⁰ t⁰ => let fst¹ = [N]
-//│ in let snd¹ = [C h⁰ t⁰]
-//│ in [C fst¹ words1(snd¹)]}: 22
-//│ 	case mident⁰ of {N  => [N] | _  => break(mident⁰)}: 52
-//│ 	case mident¹ of {N  => [N] | _  => break(mident¹)}: 66
-//│ [C h¹ t¹]: 36 --->
-//│ 	case ls⁰ of {N  => let fst⁰ = [N]
-//│ in let snd⁰ = [N]
-//│ in [C fst⁰ words1(snd⁰)] | C h⁰ t⁰ => let fst¹ = [N]
-//│ in let snd¹ = [C h⁰ t⁰]
-//│ in [C fst¹ words1(snd¹)]}: 22
-//│ 	case mident⁰ of {N  => [N] | _  => break(mident⁰)}: 52
-//│ 	case mident¹ of {N  => [N] | _  => break(mident¹)}: 66
-//│ ------------------
-//│ case ls⁰ of {N  => let fst⁰ = [N]
-//│ in let snd⁰ = [N]
-//│ in [C fst⁰ words1(snd⁰)] | C h⁰ t⁰ => let fst¹ = [N]
-//│ in let snd¹ = [C h⁰ t⁰]
-//│ in [C fst¹ words1(snd¹)]}: 22 --->
-//│ 	[N]: 25
-//│ 	[C h¹ t¹]: 36
-//│ case ls¹ of {N  => [N] | C h¹ t¹ => if p⁰(h¹) then dropWhile(p⁰, t¹) else [C h¹ t¹]}: 38 --->
-//│ 	DeadCodeProd
-//│ 	[N]: 3
-//│ 	[C h⁰ t⁰]: 14
-//│ case mident⁰ of {N  => [N] | _  => break(mident⁰)}: 52 --->
-//│ 	[N]: 25
-//│ 	[C h¹ t¹]: 36
-//│ case mident¹ of {N  => [N] | _  => break(mident¹)}: 66 --->
-//│ 	[N]: 25
-//│ 	[C h¹ t¹]: 36
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ (fun x³ -> 2)(words0)
-//│ def break(ls⁴) = case ls⁴ of {
-//│ 	N  => 
-//│ 		let fst² = [N]
-//│ 		in let snd² = [N]
-//│ 		in [C fst² words1(snd²)]
-//│ 	| C h⁰ t⁰ => 
-//│ 		let fst³ = [N]
-//│ 		in let snd³ = [C h⁰ t⁰]
-//│ 		in [C fst³ words1(snd³)]}
-//│ def dropWhile(p¹, ls⁵) = case ls⁵ of {
-//│ 	N  => [N]
-//│ 	| C h¹ t¹ => if p¹(h¹) then dropWhile(p¹, t¹) else [C h¹ t¹]}
-//│ def words0(ls⁶) = 
-//│ 	let mident² = dropWhile((fun x⁴ -> [False]), ls⁶)
-//│ 	in case mident² of {
-//│ 		N  => [N]
-//│ 		| _  => break(mident²)}
-//│ def words1(ls⁷) = 
-//│ 	let mident³ = dropWhile((fun x⁵ -> [False]), ls⁷)
-//│ 	in case mident³ of {
-//│ 		N  => [N]
-//│ 		| _  => break(mident³)}
-//│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> consumer ids >>>>>>>
-//│ 
-//│ <<<<<<< consumer ids <<<<<<<
-//│ 
-//│ >>>>>>> floating out info >>>>>>>
-//│ 
-//│ <<<<<<< floating out info <<<<<<<
-//│ 
-//│ >>>>>>> after inlining >>>>>>>
-//│ (fun x⁰ -> 2)(words0)
-//│ def break(ls⁰) = case ls⁰ of {
-//│ 	N  => 
-//│ 		let fst⁰ = [N]
-//│ 		in let snd⁰ = [N]
-//│ 		in [C fst⁰ words1(snd⁰)]
-//│ 	| C h⁰ t⁰ => 
-//│ 		let fst¹ = [N]
-//│ 		in let snd¹ = [C h⁰ t⁰]
-//│ 		in [C fst¹ words1(snd¹)]}
-//│ def dropWhile(p⁰, ls¹) = case ls¹ of {
-//│ 	N  => [N]
-//│ 	| C h¹ t¹ => if p⁰(h¹) then dropWhile(p⁰, t¹) else [C h¹ t¹]}
-//│ def words0(ls²) = 
-//│ 	let mident⁰ = dropWhile((fun x¹ -> [False]), ls²)
-//│ 	in case mident⁰ of {
-//│ 		N  => [N]
-//│ 		| _  => break(mident⁰)}
-//│ def words1(ls³) = 
-//│ 	let mident¹ = dropWhile((fun x² -> [False]), ls³)
-//│ 	in case mident¹ of {
-//│ 		N  => [N]
-//│ 		| _  => break(mident¹)}
-//│ <<<<<<< after inlining <<<<<<<
-//│ 
-//│ >>>>>>> after floating out >>>>>>>
-//│ (fun x⁰ -> 2)(words0)
-//│ def break(ls⁰) = case ls⁰ of {
-//│ 	N  => 
-//│ 		let fst⁰ = [N]
-//│ 		in let snd⁰ = [N]
-//│ 		in [C fst⁰ words1(snd⁰)]
-//│ 	| C h⁰ t⁰ => 
-//│ 		let fst¹ = [N]
-//│ 		in let snd¹ = [C h⁰ t⁰]
-//│ 		in [C fst¹ words1(snd¹)]}
-//│ def dropWhile(p⁰, ls¹) = case ls¹ of {
-//│ 	N  => [N]
-//│ 	| C h¹ t¹ => if p⁰(h¹) then dropWhile(p⁰, t¹) else [C h¹ t¹]}
-//│ def words0(ls²) = 
-//│ 	let mident⁰ = dropWhile((fun x¹ -> [False]), ls²)
-//│ 	in case mident⁰ of {
-//│ 		N  => [N]
-//│ 		| _  => break(mident⁰)}
-//│ def words1(ls³) = 
-//│ 	let mident¹ = dropWhile((fun x² -> [False]), ls³)
-//│ 	in case mident¹ of {
-//│ 		N  => [N]
-//│ 		| _  => break(mident¹)}
-//│ <<<<<<< after floating out <<<<<<<
-//│ 
-//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
-//│ 
-//│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ 2 :: Int ::: false
-//│ (fun x -> 2) :: 'x⁰ => Int ::: true
-//│ words0 :: 'words0 <: [] ::: true
-//│ (fun x -> 2)(words0) :: '4_callres <: [] ::: true
-//│ ls :: 'ls⁰ <: [] ::: true
-//│ [N] :: N ::: true
-//│ [N] :: N ::: true
-//│ fst :: 'fst⁰ <: [] ::: true
-//│ words1 :: 'words1 <: [] ::: true
-//│ snd :: 'snd⁰ <: [] ::: true
-//│ words1(snd) :: '11_callres <: [] ::: true
-//│ [C fst words1(snd)] :: C('fst⁰, '11_callres) ::: true
-//│ let snd = [N]
-//│ in [C fst words1(snd)] :: C('fst⁰, '11_callres) ::: true
-//│ let fst = [N]
-//│ in let snd = [N]
-//│ in [C fst words1(snd)] :: C('fst⁰, '11_callres) ::: true
-//│ [N] :: N ::: true
-//│ h :: 'h⁰ <: [] ::: true
-//│ t :: 't⁰ <: [] ::: true
-//│ [C h t] :: C('h⁰, 't⁰) ::: true
-//│ fst :: 'fst¹ <: [] ::: true
-//│ words1 :: 'words1 <: [] ::: true
-//│ snd :: 'snd¹ <: [] ::: true
-//│ words1(snd) :: '22_callres <: [] ::: true
-//│ [C fst words1(snd)] :: C('fst¹, '22_callres) ::: true
-//│ let snd = [C h t]
-//│ in [C fst words1(snd)] :: C('fst¹, '22_callres) ::: true
-//│ let fst = [N]
-//│ in let snd = [C h t]
-//│ in [C fst words1(snd)] :: C('fst¹, '22_callres) ::: true
-//│ case ls of {N  => let fst = [N]
-//│ in let snd = [N]
-//│ in [C fst words1(snd)] | C h t => let fst = [N]
-//│ in let snd = [C h t]
-//│ in [C fst words1(snd)]} :: '26_matchres <: [] ::: true
-//│ (fun ls -> case ls of {N  => let fst = [N]
-//│ in let snd = [N]
-//│ in [C fst words1(snd)] | C h t => let fst = [N]
-//│ in let snd = [C h t]
-//│ in [C fst words1(snd)]}) :: 'ls⁰ => '26_matchres ::: true
-//│ ls :: 'ls¹ <: [] ::: true
-//│ [N] :: N ::: true
-//│ p :: 'p⁰ <: [] ::: true
-//│ h :: 'h¹ <: [] ::: true
-//│ p(h) :: '32_callres <: [] ::: true
-//│ dropWhile :: 'dropWhile <: [] ::: true
-//│ p :: 'p⁰ <: [] ::: true
-//│ dropWhile(p) :: '35_callres <: [] ::: true
-//│ t :: 't¹ <: [] ::: true
-//│ dropWhile(p, t) :: '37_callres <: [] ::: true
-//│ h :: 'h¹ <: [] ::: true
-//│ t :: 't¹ <: [] ::: true
-//│ [C h t] :: C('h¹, 't¹) ::: true
-//│ if p(h) then dropWhile(p, t) else [C h t] :: '41_ifres <: [] ::: true
-//│ case ls of {N  => [N] | C h t => if p(h) then dropWhile(p, t) else [C h t]} :: '42_matchres <: [] ::: true
-//│ (fun ls -> case ls of {N  => [N] | C h t => if p(h) then dropWhile(p, t) else [C h t]}) :: 'ls¹ => '42_matchres ::: true
-//│ (fun p -> (fun ls -> case ls of {N  => [N] | C h t => if p(h) then dropWhile(p, t) else [C h t]})) :: 'p⁰ => 'ls¹ => '42_matchres ::: true
-//│ dropWhile :: 'dropWhile <: [] ::: true
-//│ [False] :: False ::: true
-//│ (fun x -> [False]) :: 'x¹ => False ::: true
-//│ dropWhile((fun x -> [False])) :: '48_callres <: [] ::: true
-//│ ls :: 'ls² <: [] ::: true
-//│ dropWhile((fun x -> [False]), ls) :: '50_callres <: [] ::: true
-//│ mident :: 'mident⁰ <: [] ::: true
-//│ [N] :: N ::: true
-//│ break :: 'break <: [] ::: true
-//│ mident :: 'mident⁰ <: [] ::: true
-//│ break(mident) :: '55_callres <: [] ::: true
-//│ case mident of {N  => [N] | _  => break(mident)} :: '56_matchres <: [] ::: true
-//│ let mident = dropWhile((fun x -> [False]), ls)
-//│ in case mident of {N  => [N] | _  => break(mident)} :: '56_matchres <: [] ::: true
-//│ (fun ls -> let mident = dropWhile((fun x -> [False]), ls)
-//│ in case mident of {N  => [N] | _  => break(mident)}) :: 'ls² => '56_matchres ::: true
-//│ dropWhile :: 'dropWhile <: [] ::: true
-//│ [False] :: False ::: true
-//│ (fun x -> [False]) :: 'x² => False ::: true
-//│ dropWhile((fun x -> [False])) :: '62_callres <: [] ::: true
-//│ ls :: 'ls³ <: [] ::: true
-//│ dropWhile((fun x -> [False]), ls) :: '64_callres <: [] ::: true
-//│ mident :: 'mident¹ <: [] ::: true
-//│ [N] :: N ::: true
-//│ break :: 'break <: [] ::: true
-//│ mident :: 'mident¹ <: [] ::: true
-//│ break(mident) :: '69_callres <: [] ::: true
-//│ case mident of {N  => [N] | _  => break(mident)} :: '70_matchres <: [] ::: true
-//│ let mident = dropWhile((fun x -> [False]), ls)
-//│ in case mident of {N  => [N] | _  => break(mident)} :: '70_matchres <: [] ::: true
-//│ (fun ls -> let mident = dropWhile((fun x -> [False]), ls)
-//│ in case mident of {N  => [N] | _  => break(mident)}) :: 'ls³ => '70_matchres ::: true
-//│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
-//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
-//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
-//│ 
-//│ let rec dropWhile p_0 ls_1 =
-//│   (match ls_1 with
-//│     | `N -> 
-//│       (`N)
-//│     | `C(h_1, t_1) -> 
-//│       (if (p_0 h_1) then
-//│         ((dropWhile p_0) t_1)
-//│       else
-//│         (`C(h_1, t_1))));;
-//│ let rec break ls_0 =
-//│   (match ls_0 with
-//│     | `N -> 
-//│       (let rec fst_0 = (`N) in
-//│         (let rec snd_0 = (`N) in
-//│           (`C(fst_0, (words1 snd_0)))))
-//│     | `C(h_0, t_0) -> 
-//│       (let rec fst_1 = (`N) in
-//│         (let rec snd_1 = (`C(h_0, t_0)) in
-//│           (`C(fst_1, (words1 snd_1))))))
-//│ and
-//│ words1 ls_3 =
-//│   (let rec mident_1 = ((dropWhile (fun x_2 -> 
-//│     false)) ls_3) in
-//│     (match mident_1 with
-//│       | `N -> 
-//│         (`N)
-//│       | _ -> 
-//│         (break mident_1)));;
-//│ let rec words0 ls_2 =
-//│   (let rec mident_0 = ((dropWhile (fun x_1 -> 
-//│     false)) ls_2) in
-//│     (match mident_0 with
-//│       | `N -> 
-//│         (`N)
-//│       | _ -> 
-//│         (break mident_0)));;
-//│ ((fun x_0 -> 
-//│   2) words0)
-//│ 
-//│ --------------- ocaml repl result -----------------
-//│ [ok]
-//│     - : int = 2
-//│ 
-//│ --------------- ocaml repl result -----------------
-//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+//│ /!!!\ Uncaught error: java.io.IOException: Cannot run program "/Users/crescentonc/.opam/benchmarkflambda/bin/ocaml": error=2, No such file or directory
+//│ 	at: java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1128)
+//│ 	at: java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1071)
+//│ 	at: mlscript.lumberhack.OCamlReplHost.<init>(DiffTestLumberhack.scala:580)
+//│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTestLumberhack.scala:106)
+//│ 	at: mlscript.DiffTests.rec$1(DiffTests.scala:396)
+//│ 	at: mlscript.DiffTests.$anonfun$new$3(DiffTests.scala:803)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
+//│ 	at: org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
+//│ 	at: org.scalatest.Transformer.apply(Transformer.scala:22)
 
 
 :lhGenOCaml
@@ -1119,109 +429,17 @@ fun break(x) = break(f(C(x)))
 //│ 		  2) (fun x_3 -> 
 //│ 		  (break (f x_3))))
 //│ 		....... ocaml repl result .......
-//│ 		[ok]
-//│ 		            val f : ([< `C of 'a ] as 'a) -> 'a = <fun>
-//│ 		[ok]
-//│ 		    val break : ([ `C of 'a ] as 'a) -> 'b = <fun>
-//│ 		....... ocaml repl result .......
-//│ 		---------- unoptimized ocaml gen ----------
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ [C x¹]: 13 --->
-//│ 	case x⁰ of {C t⁰ => if [True] then f(t⁰) else x⁰}: 8
-//│ ------------------
-//│ case x⁰ of {C t⁰ => if [True] then f(t⁰) else x⁰}: 8 --->
-//│ 	DeadCodeProd
-//│ 	[C x¹]: 13
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ (fun x⁴ -> 2)((fun x⁵ -> break(f(x⁵))))
-//│ def break(x⁷) = break(f([C x⁷]))
-//│ def f(x⁶) = case x⁶ of {
-//│ 	C t⁰ => if [True] then f(t⁰) else x⁶}
-//│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> consumer ids >>>>>>>
-//│ 
-//│ <<<<<<< consumer ids <<<<<<<
-//│ 
-//│ >>>>>>> floating out info >>>>>>>
-//│ 
-//│ <<<<<<< floating out info <<<<<<<
-//│ 
-//│ >>>>>>> after inlining >>>>>>>
-//│ (fun x⁰ -> 2)((fun x¹ -> break(f(x¹))))
-//│ def break(x³) = break(f([C x³]))
-//│ def f(x²) = case x² of {
-//│ 	C t⁰ => if [True] then f(t⁰) else x²}
-//│ <<<<<<< after inlining <<<<<<<
-//│ 
-//│ >>>>>>> after floating out >>>>>>>
-//│ (fun x⁰ -> 2)((fun x¹ -> break(f(x¹))))
-//│ def break(x³) = break(f([C x³]))
-//│ def f(x²) = case x² of {
-//│ 	C t⁰ => if [True] then f(t⁰) else x²}
-//│ <<<<<<< after floating out <<<<<<<
-//│ 
-//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
-//│ 
-//│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ 2 :: Int ::: false
-//│ (fun x -> 2) :: 'x⁰ => Int ::: true
-//│ break :: 'break <: [] ::: true
-//│ f :: 'f <: [] ::: true
-//│ x :: 'x¹ <: [] ::: true
-//│ f(x) :: '6_callres <: [] ::: true
-//│ break(f(x)) :: '7_callres <: [] ::: true
-//│ (fun x -> break(f(x))) :: 'x¹ => '7_callres ::: true
-//│ (fun x -> 2)((fun x -> break(f(x)))) :: '9_callres <: [] ::: true
-//│ x :: 'x² <: [] ::: true
-//│ [True] :: True ::: true
-//│ f :: 'f <: [] ::: true
-//│ t :: 't⁰ <: [] ::: true
-//│ f(t) :: '14_callres <: [] ::: true
-//│ x :: 'x² <: [] ::: true
-//│ if [True] then f(t) else x :: '16_ifres <: [] ::: true
-//│ case x of {C t => if [True] then f(t) else x} :: '17_matchres <: [] ::: true
-//│ (fun x -> case x of {C t => if [True] then f(t) else x}) :: 'x² => '17_matchres ::: true
-//│ break :: 'break <: [] ::: true
-//│ f :: 'f <: [] ::: true
-//│ x :: 'x³ <: [] ::: true
-//│ [C x] :: C('x³) ::: true
-//│ f([C x]) :: '23_callres <: [] ::: true
-//│ break(f([C x])) :: '24_callres <: [] ::: true
-//│ (fun x -> break(f([C x]))) :: 'x³ => '24_callres ::: true
-//│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
-//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
-//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
-//│ 
-//│ let rec f x_2 =
-//│   (match x_2 with
-//│     | `C(t_0) -> 
-//│       (if true then
-//│         (f t_0)
-//│       else
-//│         x_2));;
-//│ let rec break x_3 =
-//│   (break (f (`C(x_3))));;
-//│ ((fun x_0 -> 
-//│   2) (fun x_1 -> 
-//│   (break (f x_1))))
-//│ 
-//│ --------------- ocaml repl result -----------------
-//│ [ok]
-//│       - : int = 2
-//│ 
-//│ --------------- ocaml repl result -----------------
-//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+//│ /!!!\ Uncaught error: java.io.IOException: Cannot run program "/Users/crescentonc/.opam/benchmarkflambda/bin/ocaml": error=2, No such file or directory
+//│ 	at: java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1128)
+//│ 	at: java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1071)
+//│ 	at: mlscript.lumberhack.OCamlReplHost.<init>(DiffTestLumberhack.scala:580)
+//│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTestLumberhack.scala:106)
+//│ 	at: mlscript.DiffTests.rec$1(DiffTests.scala:396)
+//│ 	at: mlscript.DiffTests.$anonfun$new$3(DiffTests.scala:803)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
+//│ 	at: org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
+//│ 	at: org.scalatest.Transformer.apply(Transformer.scala:22)
 
 // prodType recurses in a way that will return a type of `[C of 'a] as 'a`
 // two uses of the consumer `f`:
@@ -1266,133 +484,17 @@ fun g(t) = C(t)
 //│ 		  2) (fun x_3 -> 
 //│ 		  (f (prodType x_3))))
 //│ 		....... ocaml repl result .......
-//│ 		[ok]
-//│ 		  val g : 'a -> [> `C of 'a ] = <fun>
-//│ 		[ok]
-//│ 		              val f : ([ `C of 'a ] as 'a) -> 'b = <fun>
-//│ 		[ok]
-//│ 		              val prodType : ([< `C of 'a ] as 'a) -> 'a = <fun>
-//│ 		....... ocaml repl result .......
-//│ 		---------- unoptimized ocaml gen ----------
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ [C t²]: 24 --->
-//│ 	case x¹ of {C t¹ => if [True] then f(t¹) else f(g(t¹))}: 21
-//│ ------------------
-//│ case x¹ of {C t¹ => if [True] then f(t¹) else f(g(t¹))}: 21 --->
-//│ 	DeadCodeProd
-//│ 	[C t²]: 24
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ (fun x⁴ -> 2)((fun x⁵ -> f(prodType(x⁵))))
-//│ def f(x⁷) = case x⁷ of {
-//│ 	C t¹ => if [True] then f(t¹) else f(g(t¹))}
-//│ def g(t³) = [C t³]
-//│ def prodType(x⁶) = case x⁶ of {
-//│ 	C t⁰ => if [True] then t⁰ else prodType(t⁰)}
-//│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> consumer ids >>>>>>>
-//│ 
-//│ <<<<<<< consumer ids <<<<<<<
-//│ 
-//│ >>>>>>> floating out info >>>>>>>
-//│ 
-//│ <<<<<<< floating out info <<<<<<<
-//│ 
-//│ >>>>>>> after inlining >>>>>>>
-//│ (fun x⁰ -> 2)((fun x¹ -> f(prodType(x¹))))
-//│ def f(x³) = case x³ of {
-//│ 	C t¹ => if [True] then f(t¹) else f(g(t¹))}
-//│ def g(t²) = [C t²]
-//│ def prodType(x²) = case x² of {
-//│ 	C t⁰ => if [True] then t⁰ else prodType(t⁰)}
-//│ <<<<<<< after inlining <<<<<<<
-//│ 
-//│ >>>>>>> after floating out >>>>>>>
-//│ (fun x⁰ -> 2)((fun x¹ -> f(prodType(x¹))))
-//│ def f(x³) = case x³ of {
-//│ 	C t¹ => if [True] then f(t¹) else f(g(t¹))}
-//│ def g(t²) = [C t²]
-//│ def prodType(x²) = case x² of {
-//│ 	C t⁰ => if [True] then t⁰ else prodType(t⁰)}
-//│ <<<<<<< after floating out <<<<<<<
-//│ 
-//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
-//│ 
-//│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ 2 :: Int ::: false
-//│ (fun x -> 2) :: 'x⁰ => Int ::: true
-//│ f :: 'f <: [] ::: true
-//│ prodType :: 'prodType <: [] ::: true
-//│ x :: 'x¹ <: [] ::: true
-//│ prodType(x) :: '6_callres <: [] ::: true
-//│ f(prodType(x)) :: '7_callres <: [] ::: true
-//│ (fun x -> f(prodType(x))) :: 'x¹ => '7_callres ::: true
-//│ (fun x -> 2)((fun x -> f(prodType(x)))) :: '9_callres <: [] ::: true
-//│ x :: 'x² <: [] ::: true
-//│ [True] :: True ::: true
-//│ t :: 't⁰ <: [] ::: true
-//│ prodType :: 'prodType <: [] ::: true
-//│ t :: 't⁰ <: [] ::: true
-//│ prodType(t) :: '15_callres <: [] ::: true
-//│ if [True] then t else prodType(t) :: '16_ifres <: [] ::: true
-//│ case x of {C t => if [True] then t else prodType(t)} :: '17_matchres <: [] ::: true
-//│ (fun x -> case x of {C t => if [True] then t else prodType(t)}) :: 'x² => '17_matchres ::: true
-//│ x :: 'x³ <: [] ::: true
-//│ [True] :: True ::: true
-//│ f :: 'f <: [] ::: true
-//│ t :: 't¹ <: [] ::: true
-//│ f(t) :: '23_callres <: [] ::: true
-//│ f :: 'f <: [] ::: true
-//│ g :: 'g <: [] ::: true
-//│ t :: 't¹ <: [] ::: true
-//│ g(t) :: '27_callres <: [] ::: true
-//│ f(g(t)) :: '28_callres <: [] ::: true
-//│ if [True] then f(t) else f(g(t)) :: '29_ifres <: [] ::: true
-//│ case x of {C t => if [True] then f(t) else f(g(t))} :: '30_matchres <: [] ::: true
-//│ (fun x -> case x of {C t => if [True] then f(t) else f(g(t))}) :: 'x³ => '30_matchres ::: true
-//│ t :: 't² <: [] ::: true
-//│ [C t] :: C('t²) ::: true
-//│ (fun t -> [C t]) :: 't² => C('t²) ::: true
-//│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
-//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
-//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
-//│ 
-//│ let rec g t_2 =
-//│   (`C(t_2));;
-//│ let rec f x_3 =
-//│   (match x_3 with
-//│     | `C(t_1) -> 
-//│       (if true then
-//│         (f t_1)
-//│       else
-//│         (f (g t_1))));;
-//│ let rec prodType x_2 =
-//│   (match x_2 with
-//│     | `C(t_0) -> 
-//│       (if true then
-//│         t_0
-//│       else
-//│         (prodType t_0)));;
-//│ ((fun x_0 -> 
-//│   2) (fun x_1 -> 
-//│   (f (prodType x_1))))
-//│ 
-//│ --------------- ocaml repl result -----------------
-//│ [ok]
-//│       - : int = 2
-//│ 
-//│ --------------- ocaml repl result -----------------
-//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+//│ /!!!\ Uncaught error: java.io.IOException: Cannot run program "/Users/crescentonc/.opam/benchmarkflambda/bin/ocaml": error=2, No such file or directory
+//│ 	at: java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1128)
+//│ 	at: java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1071)
+//│ 	at: mlscript.lumberhack.OCamlReplHost.<init>(DiffTestLumberhack.scala:580)
+//│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTestLumberhack.scala:106)
+//│ 	at: mlscript.DiffTests.rec$1(DiffTests.scala:396)
+//│ 	at: mlscript.DiffTests.$anonfun$new$3(DiffTests.scala:803)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
+//│ 	at: org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
+//│ 	at: org.scalatest.Transformer.apply(Transformer.scala:22)
 
 
 :lhGenOCaml
@@ -1457,236 +559,14 @@ fun head(ls) = if ls is
 //│ 		      (failwith "error"));;
 //│ 		(head (line (`C(2, (`C(2, (`C(1, (`C(2, (`N)))))))))))
 //│ 		....... ocaml repl result .......
-//│ 		[ok]
-//│ 		                    val break :
-//│ 		  ([< `C of int * 'a | `N ] as 'a) ->
-//│ 		  [ `P of ([> `C of int * 'b | `N ] as 'b) * [> `C of int * 'a | `N ] ] =
-//│ 		  <fun>
-//│ 		[ok]
-//│ 		                val line :
-//│ 		  ([< `C of int * 'a | `N ] as 'a) ->
-//│ 		  ([> `C of ([> `C of int * 'c | `N ] as 'c) * 'b | `N ] as 'b) = <fun>
-//│ 		[ok]
-//│ 		            val head : [< `C of 'a * 'b | `N ] -> 'a = <fun>
-//│ 		....... ocaml repl result .......
-//│ 		---------- unoptimized ocaml gen ----------
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ [N]: 3 --->
-//│ 	case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}: 36
-//│ [P [N] [N]]: 4 --->
-//│ 	case break(t⁰) of {P fst⁰ snd⁰ => [P [C h⁰ fst⁰] snd⁰]}: 23
-//│ 	case break(ls¹) of {P fst¹ snd¹ => [C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]}: 38
-//│ [C h⁰ t⁰]: 13 --->
-//│ 	case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}: 36
-//│ [P [N] [C h⁰ t⁰]]: 14 --->
-//│ 	case break(t⁰) of {P fst⁰ snd⁰ => [P [C h⁰ fst⁰] snd⁰]}: 23
-//│ 	case break(ls¹) of {P fst¹ snd¹ => [C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]}: 38
-//│ [P [C h⁰ fst⁰] snd⁰]: 22 --->
-//│ 	case break(t⁰) of {P fst⁰ snd⁰ => [P [C h⁰ fst⁰] snd⁰]}: 23
-//│ 	case break(ls¹) of {P fst¹ snd¹ => [C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]}: 38
-//│ [C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]: 37 --->
-//│ 	DeadCodeCons
-//│ 	case ls² of {C h² t² => h² | N  => error⁰}: 43
-//│ ------------------
-//│ case break(t⁰) of {P fst⁰ snd⁰ => [P [C h⁰ fst⁰] snd⁰]}: 23 --->
-//│ 	[P [N] [N]]: 4
-//│ 	[P [N] [C h⁰ t⁰]]: 14
-//│ 	[P [C h⁰ fst⁰] snd⁰]: 22
-//│ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}: 36 --->
-//│ 	[N]: 3
-//│ 	[C h⁰ t⁰]: 13
-//│ case break(ls¹) of {P fst¹ snd¹ => [C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]}: 38 --->
-//│ 	[P [N] [N]]: 4
-//│ 	[P [N] [C h⁰ t⁰]]: 14
-//│ 	[P [C h⁰ fst⁰] snd⁰]: 22
-//│ case ls² of {C h² t² => h² | N  => error⁰}: 43 --->
-//│ 	[C fst¹ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}]: 37
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ [N]: 3 --->
-//│ 	case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}: 36
-//│ [C h⁰ t⁰]: 13 --->
-//│ 	case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}: 36
-//│ ------------------
-//│ case snd¹ of {C h¹ t¹ => line(t¹) | N  => [N]}: 36 --->
-//│ 	[N]: 3
-//│ 	[C h⁰ t⁰]: 13
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ head(line(primId⁰([C 2 [C 2 [C 1 [C 2 [N]]]]])))
-//│ def break(ls³) = case ls³ of {
-//│ 	N  => [P [N] (fun _lh_dummy⁰ -> [N])]
-//│ 	| C h⁰ t⁰ => if (h⁰ == 1) then [P [N] 
-//│ 		let t³ = t⁰
-//│ 		in let h³ = h⁰
-//│ 		in (fun _lh_dummy¹ -> line(t³))] else case break(t⁰) of {
-//│ 		P fst⁰ snd⁰ => [P [C h⁰ fst⁰] snd⁰]}}
-//│ def head(ls⁵) = case ls⁵ of {
-//│ 	C h² t² => h²
-//│ 	| N  => error⁰}
-//│ def line(ls⁴) = case break(ls⁴) of {
-//│ 	P fst¹ snd¹ => [C fst¹ snd¹(99)]}
-//│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> consumer ids >>>>>>>
-//│ line
-//│ <<<<<<< consumer ids <<<<<<<
-//│ 
-//│ >>>>>>> floating out info >>>>>>>
-//│ break -> 1
-//│ <<<<<<< floating out info <<<<<<<
-//│ 
-//│ >>>>>>> after inlining >>>>>>>
-//│ head(case break(primId⁰([C 2 [C 2 [C 1 [C 2 [N]]]]])) of {
-//│ 	P fst⁰ snd⁰ => [C fst⁰ snd⁰(99)]})
-//│ def break(ls⁰) = case ls⁰ of {
-//│ 	N  => [P [N] (fun _lh_dummy⁰ -> [N])]
-//│ 	| C h⁰ t⁰ => if (h⁰ == 1) then [P [N] 
-//│ 		let t¹ = t⁰
-//│ 		in let h¹ = h⁰
-//│ 		in (fun _lh_dummy¹ -> case break(t¹) of {
-//│ 			P fst¹ snd¹ => [C fst¹ snd¹(99)]})] else case break(t⁰) of {
-//│ 		P fst² snd² => [P [C h⁰ fst²] snd²]}}
-//│ def head(ls²) = case ls² of {
-//│ 	C h² t² => h²
-//│ 	| N  => error⁰}
-//│ def line(ls¹) = case break(ls¹) of {
-//│ 	P fst³ snd³ => [C fst³ snd³(99)]}
-//│ <<<<<<< after inlining <<<<<<<
-//│ 
-//│ >>>>>>> after floating out >>>>>>>
-//│ head(case break(primId⁰([C 2 [C 2 [C 1 [C 2 [N]]]]])) of {
-//│ 	P fst⁰ snd⁰ => [C fst⁰ snd⁰(99)]})
-//│ def break(ls⁰) = case ls⁰ of {
-//│ 	N  => [P [N] (fun _lh_dummy⁰ -> [N])]
-//│ 	| C h⁰ t⁰ => if (h⁰ == 1) then [P [N] 
-//│ 		let t¹ = t⁰
-//│ 		in let h¹ = h⁰
-//│ 		in (fun _lh_dummy¹ -> case break(t¹) of {
-//│ 			P fst¹ snd¹ => [C fst¹ snd¹(99)]})] else case break(t⁰) of {
-//│ 		P fst² snd² => [P [C h⁰ fst²] snd²]}}
-//│ def head(ls²) = case ls² of {
-//│ 	C h² t² => h²
-//│ 	| N  => error⁰}
-//│ def line(ls¹) = case break(ls¹) of {
-//│ 	P fst³ snd³ => [C fst³ snd³(99)]}
-//│ <<<<<<< after floating out <<<<<<<
-//│ 
-//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
-//│ 
-//│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ head :: 'head <: [] ::: true
-//│ line :: 'line <: [] ::: true
-//│ primId :: NoProd ::: true
-//│ 2 :: Int ::: false
-//│ 2 :: Int ::: false
-//│ 1 :: Int ::: false
-//│ 2 :: Int ::: false
-//│ [N] :: N ::: true
-//│ [C 2 [N]] :: C(Int, N) ::: true
-//│ [C 1 [C 2 [N]]] :: C(Int, C(Int, N)) ::: true
-//│ [C 2 [C 1 [C 2 [N]]]] :: C(Int, C(Int, C(Int, N))) ::: true
-//│ [C 2 [C 2 [C 1 [C 2 [N]]]]] :: C(Int, C(Int, C(Int, C(Int, N)))) ::: true
-//│ primId([C 2 [C 2 [C 1 [C 2 [N]]]]]) :: '13_callres <: [] ::: true
-//│ line(primId([C 2 [C 2 [C 1 [C 2 [N]]]]])) :: '14_callres <: [] ::: true
-//│ head(line(primId([C 2 [C 2 [C 1 [C 2 [N]]]]]))) :: '15_callres <: [] ::: true
-//│ ls :: 'ls⁰ <: [] ::: true
-//│ [N] :: N ::: true
-//│ [N] :: N ::: true
-//│ (fun _lh_dummy -> [N]) :: '_lh_dummy⁰ => N ::: true
-//│ [P [N] (fun _lh_dummy -> [N])] :: P(N, '_lh_dummy⁰ => N) ::: true
-//│ == :: Destruct(Int) => Destruct(Int) => Sum[True, False] ::: true
-//│ h :: 'h⁰ <: [] ::: true
-//│ ==(h) :: '23_callres <: [] ::: true
-//│ 1 :: Int ::: false
-//│ (h == 1) :: '25_callres <: [] ::: true
-//│ [N] :: N ::: true
-//│ t :: 't⁰ <: [] ::: true
-//│ h :: 'h⁰ <: [] ::: true
-//│ line :: 'line <: [] ::: true
-//│ t :: 't¹ <: [] ::: true
-//│ line(t) :: '31_callres <: [] ::: true
-//│ (fun _lh_dummy -> line(t)) :: '_lh_dummy¹ => '31_callres ::: true
-//│ let h = h
-//│ in (fun _lh_dummy -> line(t)) :: '_lh_dummy¹ => '31_callres ::: true
-//│ let t = t
-//│ in let h = h
-//│ in (fun _lh_dummy -> line(t)) :: '_lh_dummy¹ => '31_callres ::: true
-//│ [P [N] let t = t
-//│ in let h = h
-//│ in (fun _lh_dummy -> line(t))] :: P(N, '_lh_dummy¹ => '31_callres) ::: true
-//│ break :: 'break <: [] ::: true
-//│ t :: 't⁰ <: [] ::: true
-//│ break(t) :: '38_callres <: [] ::: true
-//│ h :: 'h⁰ <: [] ::: true
-//│ fst :: 'fst⁰ <: [] ::: true
-//│ [C h fst] :: C('h⁰, 'fst⁰) ::: true
-//│ snd :: 'snd⁰ <: [] ::: true
-//│ [P [C h fst] snd] :: P(C('h⁰, 'fst⁰), 'snd⁰) ::: true
-//│ case break(t) of {P fst snd => [P [C h fst] snd]} :: '44_matchres <: [] ::: true
-//│ if (h == 1) then [P [N] let t = t
-//│ in let h = h
-//│ in (fun _lh_dummy -> line(t))] else case break(t) of {P fst snd => [P [C h fst] snd]} :: '45_ifres <: [] ::: true
-//│ case ls of {N  => [P [N] (fun _lh_dummy -> [N])] | C h t => if (h == 1) then [P [N] let t = t
-//│ in let h = h
-//│ in (fun _lh_dummy -> line(t))] else case break(t) of {P fst snd => [P [C h fst] snd]}} :: '46_matchres <: [] ::: true
-//│ (fun ls -> case ls of {N  => [P [N] (fun _lh_dummy -> [N])] | C h t => if (h == 1) then [P [N] let t = t
-//│ in let h = h
-//│ in (fun _lh_dummy -> line(t))] else case break(t) of {P fst snd => [P [C h fst] snd]}}) :: 'ls⁰ => '46_matchres ::: true
-//│ break :: 'break <: [] ::: true
-//│ ls :: 'ls¹ <: [] ::: true
-//│ break(ls) :: '50_callres <: [] ::: true
-//│ fst :: 'fst¹ <: [] ::: true
-//│ snd :: 'snd¹ <: [] ::: true
-//│ 99 :: Int ::: false
-//│ snd(99) :: '54_callres <: [] ::: true
-//│ [C fst snd(99)] :: C('fst¹, '54_callres) ::: true
-//│ case break(ls) of {P fst snd => [C fst snd(99)]} :: '56_matchres <: [] ::: true
-//│ (fun ls -> case break(ls) of {P fst snd => [C fst snd(99)]}) :: 'ls¹ => '56_matchres ::: true
-//│ ls :: 'ls² <: [] ::: true
-//│ h :: 'h² <: [] ::: true
-//│ error :: '_lh_rigid_error_var <: [] ::: true
-//│ case ls of {C h t => h | N  => error} :: '61_matchres <: [] ::: true
-//│ (fun ls -> case ls of {C h t => h | N  => error}) :: 'ls² => '61_matchres ::: true
-//│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
-//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
-//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
-//│ 
-//│ let rec break ls_0 =
-//│   (match ls_0 with
-//│     | `N -> 
-//│       (`P((`N), (fun _lh_dummy_0 -> 
-//│         (`N))))
-//│     | `C(h_0, t_0) -> 
-//│       (if (h_0 = 1) then
-//│         (`P((`N), (let rec t_1 = t_0 in
-//│           (let rec h_1 = h_0 in
-//│             (fun _lh_dummy_1 -> 
-//│               (line t_1))))))
-//│       else
-//│         (match (break t_0) with
-//│           | `P(fst_0, snd_0) -> 
-//│             (`P((`C(h_0, fst_0)), snd_0)))))
-//│ and
-//│ line ls_1 =
-//│   (match (break ls_1) with
-//│     | `P(fst_1, snd_1) -> 
-//│       (`C(fst_1, (snd_1 99))));;
-//│ let rec head ls_2 =
-//│   (match ls_2 with
-//│     | `C(h_2, t_2) -> 
-//│       h_2
-//│     | `N -> 
-//│       (failwith "error"));;
-//│ (head (line (`C(2, (`C(2, (`C(1, (`C(2, (`N)))))))))))
-//│ 
-//│ --------------- ocaml repl result -----------------
-//│ [ok]
-//│   - : [> `C of int * 'a | `N ] as 'a = `C (2, `C (2, `N))
-//│ 
-//│ --------------- ocaml repl result -----------------
-//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+//│ /!!!\ Uncaught error: java.io.IOException: Cannot run program "/Users/crescentonc/.opam/benchmarkflambda/bin/ocaml": error=2, No such file or directory
+//│ 	at: java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1128)
+//│ 	at: java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1071)
+//│ 	at: mlscript.lumberhack.OCamlReplHost.<init>(DiffTestLumberhack.scala:580)
+//│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTestLumberhack.scala:106)
+//│ 	at: mlscript.DiffTests.rec$1(DiffTests.scala:396)
+//│ 	at: mlscript.DiffTests.$anonfun$new$3(DiffTests.scala:803)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
+//│ 	at: org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
+//│ 	at: org.scalatest.Transformer.apply(Transformer.scala:22)

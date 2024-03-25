@@ -1,0 +1,316 @@
+:NewParser
+:ParseOnly
+
+:lhNoIter
+:lhInHaskell
+:lhGenOCaml
+:lhToMls
+arith a b c d =
+  let x = a * b * c in
+  let y = (a * b) + (c * d) in
+  let z = (a < b) + (b < c) in
+  let z2 = a < (b + b) < c in
+  let a1 = a + b - c + d in
+  (0)
+//│ ||
+//│ Parsed: {}
+//│ >>>>>>>>>> Original >>>>>>>>>>
+//│ 		---------- unoptimized mls gen ----------
+//│ fun map(f)(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       LH_C ((f h), (map f t))
+//│     LH_N then
+//│       LH_N ()
+//│ fun map_lz(f)(ls) =
+//│   lazy (if force ls is
+//│     LH_C (h, t) then
+//│       LH_C ((f h), (map_lz f t))
+//│     LH_N then
+//│       LH_N ())
+//│ fun filter(f)(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       if f h then
+//│         LH_C (h, (filter f t))
+//│       else
+//│         (filter f t)
+//│     LH_N then
+//│       LH_N ()
+//│ fun filter_lz(f)(ls) =
+//│   lazy (if force ls is
+//│     LH_C (h, t) then
+//│       if f h then
+//│         LH_C (h, (filter_lz f t))
+//│       else
+//│         (force (filter_lz f t))
+//│     LH_N then
+//│       LH_N ())
+//│ fun foldl(f)(i)(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       foldl f (f i h) t
+//│     LH_N then
+//│       i
+//│ fun foldr(f)(i)(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       f h (foldr f i t)
+//│     LH_N then
+//│       i
+//│ fun foldr_lz(f)(i)(ls) =
+//│   lazy (if force ls is
+//│     LH_C (h, t) then
+//│       f h (foldr_lz f i t)
+//│     LH_N then
+//│       i)
+//│ fun zip(xs)(ys) =
+//│   if xs is
+//│     LH_C (hx, tx) then
+//│       if ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((LH_P2 (hx, hy)), (zip tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zip_nl_lz(xs)(ys) =
+//│   if xs is
+//│     LH_C (hx, tx) then
+//│       if force ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((LH_P2 (hx, hy)), (zip_nl_lz tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zip_lz_nl(xs)(ys) =
+//│   if ys is
+//│     LH_C (hy, ty) then
+//│       if force xs is
+//│         LH_C (hx, tx) then
+//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_nl tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zip_lz_lz(xs)(ys) =
+//│   lazy (if force xs is
+//│     LH_C (hx, tx) then
+//│       if force ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_lz tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ())
+//│ fun zipWith(f)(xs)(ys) =
+//│   if xs is
+//│     LH_C (hx, tx) then
+//│       if ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((f hx hy), (zipWith f tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zipWith_nl_lz(f)(xs)(ys) =
+//│   if xs is
+//│     LH_C (hx, tx) then
+//│       if force ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((f hx hy), (zipWith_nl_lz f tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zipWith_lz_nl(f)(xs)(ys) =
+//│   if ys is
+//│     LH_C (hy, ty) then
+//│       if force xs is
+//│         LH_C (hx, tx) then
+//│           LH_C ((f hx hy), (zipWith_lz_nl f tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zipWith_lz_lz(f)(xs)(ys) =
+//│   lazy (if force xs is
+//│     LH_C (hx, tx) then
+//│       if force ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((f hx hy), (zipWith_lz_lz f tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ())
+//│ fun head(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       h
+//│     LH_N then
+//│       error
+//│ fun head_lz(ls) =
+//│   if force ls is
+//│     LH_C (h, t) then
+//│       h
+//│     LH_N then
+//│       error
+//│ fun tail(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       t
+//│     LH_N then
+//│       error
+//│ fun tail_lz(ls) =
+//│   if force ls is
+//│     LH_C (h, t) then
+//│       t
+//│     LH_N then
+//│       error
+//│ fun enumFromTo(a)(b) =
+//│   if a <= b then
+//│     LH_C (a, (enumFromTo (a + 1) b))
+//│   else
+//│     (LH_N ())
+//│ fun enumFromThenTo(a)(t)(b) =
+//│   if a <= b then
+//│     LH_C (a, (enumFromThenTo t (2 * t - a) b))
+//│   else
+//│     (LH_N ())
+//│ fun enumFrom(a) =
+//│   lazy (LH_C (a, (enumFrom (a + 1))))
+//│ fun enumFromThen(a)(t) =
+//│   lazy (LH_C (a, (enumFromThen t (2 * t - a))))
+//│ fun repeat(x) =
+//│   lazy (LH_C (x, (repeat x)))
+//│ fun iterate(f)(x) =
+//│   lazy (LH_C (x, (iterate f (f x))))
+//│ fun take(n)(ls) =
+//│   if n > 0 then
+//│     if ls is
+//│       LH_C (h, t) then
+//│         LH_C (h, (take (n - 1) t))
+//│       LH_N then
+//│         LH_N ()
+//│   else
+//│     (LH_N ())
+//│ fun take_lz(n)(ls) =
+//│   if n > 0 then
+//│     if force ls is
+//│       LH_C (h, t) then
+//│         LH_C (h, (take_lz (n - 1) t))
+//│       LH_N then
+//│         LH_N ()
+//│   else
+//│     (LH_N ())
+//│ fun length(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       1 + (length t)
+//│     LH_N then
+//│       0
+//│ fun mappend(xs)(ys) =
+//│   if xs is
+//│     LH_C (h, t) then
+//│       LH_C (h, (mappend t ys))
+//│     LH_N then
+//│       ys
+//│ fun sum(ls) =
+//│   sumAux ls 0
+//│ fun sumAux(ls)(a) =
+//│   if ls is
+//│     LH_N then
+//│       a
+//│     LH_C (h, t) then
+//│       sumAux t (a + h)
+//│ fun atIndex(n)(ls) =
+//│   if n < 0 then
+//│     error
+//│   else
+//│     (if ls is
+//│       LH_C (h, t) then
+//│         if n == 0 then
+//│           h
+//│         else
+//│           (atIndex (n - 1) t)
+//│       LH_N then
+//│         error)
+//│ fun atIndex_lz(n)(ls) =
+//│   if n < 0 then
+//│     error
+//│   else
+//│     (if force ls is
+//│       LH_C (h, t) then
+//│         if n == 0 then
+//│           h
+//│         else
+//│           (atIndex_lz (n - 1) t)
+//│       LH_N then
+//│         error)
+//│ fun concat(lss) =
+//│   if lss is
+//│     LH_C (h, t) then
+//│       mappend h (concat t)
+//│     LH_N then
+//│       LH_N ()
+//│ fun reverse(ls) =
+//│   reverse_helper ls (LH_N ())
+//│ fun reverse_helper(ls)(a) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       reverse_helper t (LH_C (h, a))
+//│     LH_N then
+//│       a
+//│ fun arith(_lh_arith_arg1)(_lh_arith_arg2)(_lh_arith_arg3)(_lh_arith_arg4) =
+//│   let x = _lh_arith_arg1 * _lh_arith_arg2 * _lh_arith_arg3
+//│   let y = _lh_arith_arg1 * _lh_arith_arg2 + _lh_arith_arg3 * _lh_arith_arg4
+//│   let z = (_lh_arith_arg1 < _lh_arith_arg2) + (_lh_arith_arg2 < _lh_arith_arg3)
+//│   let z2 = _lh_arith_arg1 < _lh_arith_arg2 + _lh_arith_arg2 < _lh_arith_arg3
+//│   let a1 = _lh_arith_arg1 + _lh_arith_arg2 - _lh_arith_arg3 + _lh_arith_arg4
+//│   0
+//│ 		---------- unoptimized mls gen ----------
+//│ 
+//│ 		---------- unoptimized ocaml gen ----------
+//│ 
+//│ 		---------- unoptimized ocaml gen ----------
+//│ <<<<<<<<<< Original <<<<<<<<<<
+//│ 
+//│ >>>>>>> fusion matches >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< fusion matches <<<<<<<
+//│ 
+//│ >>>>>>> new fusion strategy >>>>>>>
+//│ 
+//│ ------------------
+//│ 
+//│ <<<<<<< new fusion strategy <<<<<<<
+//│ 
+//│ >>>>>>> after fusion >>>>>>>
+//│ 
+//│ <<<<<<< after fusion <<<<<<<
+//│ 
+//│ >>>>>>> consumer ids >>>>>>>
+//│ 
+//│ <<<<<<< consumer ids <<<<<<<
+//│ 
+//│ >>>>>>> floating out info >>>>>>>
+//│ 
+//│ <<<<<<< floating out info <<<<<<<
+//│ 
+//│ >>>>>>> after inlining >>>>>>>
+//│ 
+//│ <<<<<<< after inlining <<<<<<<
+//│ 
+//│ >>>>>>> after floating out >>>>>>>
+//│ 
+//│ <<<<<<< after floating out <<<<<<<
+//│ 
+//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
+//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
+//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
+//│ 
+//│ 
+//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<

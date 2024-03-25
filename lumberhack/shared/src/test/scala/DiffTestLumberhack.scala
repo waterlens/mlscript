@@ -56,6 +56,10 @@ class DiffTestLumberhack extends DiffTests {
     try {
       val (originalProgram, newD) = if mode.lhInHaskell then
         val p = FromHaskell(prgmStr.mkString("\n"))(using Deforest(mode.stdout), output)
+        if mode.lhToMls then
+          output("\t\t---------- unoptimized mls gen ----------")
+          output(MlsPrettyPrinter.show(ExprToMls.run(p)))
+          output("\t\t---------- unoptimized mls gen ----------")
         p.d(p) // duplicate multiple usages here to enbale polymorphism
         // before resolving constraints, there isn't any potential knots to tie,
         // so the method to tie the knot actually does not matter, will always get the

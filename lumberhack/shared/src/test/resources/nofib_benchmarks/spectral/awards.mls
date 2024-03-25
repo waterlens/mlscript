@@ -3,6 +3,7 @@
 
 :lhInHaskell
 :lhGenOCaml
+:lhToMls
 compareTuple2 (a, b) (c, d) = a <= c
 delete (x:xs) e = if polyEq x e then delete xs e else x:(delete xs e)
 delete [] e = []
@@ -56,6 +57,352 @@ testAwards_nofib $ primId 500
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
+//│ 		---------- unoptimized mls gen ----------
+//│ fun map(f)(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       LH_C ((f h), (map f t))
+//│     LH_N then
+//│       LH_N ()
+//│ fun map_lz(f)(ls) =
+//│   lazy (if force ls is
+//│     LH_C (h, t) then
+//│       LH_C ((f h), (map_lz f t))
+//│     LH_N then
+//│       LH_N ())
+//│ fun filter(f)(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       if f h then
+//│         LH_C (h, (filter f t))
+//│       else
+//│         (filter f t)
+//│     LH_N then
+//│       LH_N ()
+//│ fun filter_lz(f)(ls) =
+//│   lazy (if force ls is
+//│     LH_C (h, t) then
+//│       if f h then
+//│         LH_C (h, (filter_lz f t))
+//│       else
+//│         (force (filter_lz f t))
+//│     LH_N then
+//│       LH_N ())
+//│ fun foldl(f)(i)(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       foldl f (f i h) t
+//│     LH_N then
+//│       i
+//│ fun foldr(f)(i)(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       f h (foldr f i t)
+//│     LH_N then
+//│       i
+//│ fun foldr_lz(f)(i)(ls) =
+//│   lazy (if force ls is
+//│     LH_C (h, t) then
+//│       f h (foldr_lz f i t)
+//│     LH_N then
+//│       i)
+//│ fun zip(xs)(ys) =
+//│   if xs is
+//│     LH_C (hx, tx) then
+//│       if ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((LH_P2 (hx, hy)), (zip tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zip_nl_lz(xs)(ys) =
+//│   if xs is
+//│     LH_C (hx, tx) then
+//│       if force ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((LH_P2 (hx, hy)), (zip_nl_lz tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zip_lz_nl(xs)(ys) =
+//│   if ys is
+//│     LH_C (hy, ty) then
+//│       if force xs is
+//│         LH_C (hx, tx) then
+//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_nl tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zip_lz_lz(xs)(ys) =
+//│   lazy (if force xs is
+//│     LH_C (hx, tx) then
+//│       if force ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_lz tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ())
+//│ fun zipWith(f)(xs)(ys) =
+//│   if xs is
+//│     LH_C (hx, tx) then
+//│       if ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((f hx hy), (zipWith f tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zipWith_nl_lz(f)(xs)(ys) =
+//│   if xs is
+//│     LH_C (hx, tx) then
+//│       if force ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((f hx hy), (zipWith_nl_lz f tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zipWith_lz_nl(f)(xs)(ys) =
+//│   if ys is
+//│     LH_C (hy, ty) then
+//│       if force xs is
+//│         LH_C (hx, tx) then
+//│           LH_C ((f hx hy), (zipWith_lz_nl f tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zipWith_lz_lz(f)(xs)(ys) =
+//│   lazy (if force xs is
+//│     LH_C (hx, tx) then
+//│       if force ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((f hx hy), (zipWith_lz_lz f tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ())
+//│ fun head(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       h
+//│     LH_N then
+//│       error
+//│ fun head_lz(ls) =
+//│   if force ls is
+//│     LH_C (h, t) then
+//│       h
+//│     LH_N then
+//│       error
+//│ fun tail(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       t
+//│     LH_N then
+//│       error
+//│ fun tail_lz(ls) =
+//│   if force ls is
+//│     LH_C (h, t) then
+//│       t
+//│     LH_N then
+//│       error
+//│ fun enumFromTo(a)(b) =
+//│   if a <= b then
+//│     LH_C (a, (enumFromTo (a + 1) b))
+//│   else
+//│     (LH_N ())
+//│ fun enumFromThenTo(a)(t)(b) =
+//│   if a <= b then
+//│     LH_C (a, (enumFromThenTo t (2 * t - a) b))
+//│   else
+//│     (LH_N ())
+//│ fun enumFrom(a) =
+//│   lazy (LH_C (a, (enumFrom (a + 1))))
+//│ fun enumFromThen(a)(t) =
+//│   lazy (LH_C (a, (enumFromThen t (2 * t - a))))
+//│ fun repeat(x) =
+//│   lazy (LH_C (x, (repeat x)))
+//│ fun iterate(f)(x) =
+//│   lazy (LH_C (x, (iterate f (f x))))
+//│ fun take(n)(ls) =
+//│   if n > 0 then
+//│     if ls is
+//│       LH_C (h, t) then
+//│         LH_C (h, (take (n - 1) t))
+//│       LH_N then
+//│         LH_N ()
+//│   else
+//│     (LH_N ())
+//│ fun take_lz(n)(ls) =
+//│   if n > 0 then
+//│     if force ls is
+//│       LH_C (h, t) then
+//│         LH_C (h, (take_lz (n - 1) t))
+//│       LH_N then
+//│         LH_N ()
+//│   else
+//│     (LH_N ())
+//│ fun length(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       1 + (length t)
+//│     LH_N then
+//│       0
+//│ fun mappend(xs)(ys) =
+//│   if xs is
+//│     LH_C (h, t) then
+//│       LH_C (h, (mappend t ys))
+//│     LH_N then
+//│       ys
+//│ fun sum(ls) =
+//│   sumAux ls 0
+//│ fun sumAux(ls)(a) =
+//│   if ls is
+//│     LH_N then
+//│       a
+//│     LH_C (h, t) then
+//│       sumAux t (a + h)
+//│ fun atIndex(n)(ls) =
+//│   if n < 0 then
+//│     error
+//│   else
+//│     (if ls is
+//│       LH_C (h, t) then
+//│         if n == 0 then
+//│           h
+//│         else
+//│           (atIndex (n - 1) t)
+//│       LH_N then
+//│         error)
+//│ fun atIndex_lz(n)(ls) =
+//│   if n < 0 then
+//│     error
+//│   else
+//│     (if force ls is
+//│       LH_C (h, t) then
+//│         if n == 0 then
+//│           h
+//│         else
+//│           (atIndex_lz (n - 1) t)
+//│       LH_N then
+//│         error)
+//│ fun concat(lss) =
+//│   if lss is
+//│     LH_C (h, t) then
+//│       mappend h (concat t)
+//│     LH_N then
+//│       LH_N ()
+//│ fun reverse(ls) =
+//│   reverse_helper ls (LH_N ())
+//│ fun reverse_helper(ls)(a) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       reverse_helper t (LH_C (h, a))
+//│     LH_N then
+//│       a
+//│ fun findallawards(_lh_findallawards_arg1) =
+//│   map (name_scores =>
+//│     (let _lh_matchIdent = name_scores
+//│     if _lh_matchIdent is
+//│       LH_P2 (_lh_findallawards_LH_P2_0, _lh_findallawards_LH_P2_1) then
+//│         LH_P2 (_lh_findallawards_LH_P2_0, (findawards _lh_findallawards_LH_P2_1)))) _lh_findallawards_arg1
+//│ fun qpart(_lh_qpart_arg1)(_lh_qpart_arg2)(_lh_qpart_arg3)(_lh_qpart_arg4)(_lh_qpart_arg5)(_lh_qpart_arg6) =
+//│   if _lh_qpart_arg3 is
+//│     LH_N then
+//│       rqsort _lh_qpart_arg1 _lh_qpart_arg4 (LH_C (_lh_qpart_arg2, (rqsort _lh_qpart_arg1 _lh_qpart_arg5 _lh_qpart_arg6)))
+//│     LH_C (_lh_qpart_LH_C_0, _lh_qpart_LH_C_1) then
+//│       if _lh_qpart_arg1 _lh_qpart_arg2 _lh_qpart_LH_C_0 then
+//│         qpart _lh_qpart_arg1 _lh_qpart_arg2 _lh_qpart_LH_C_1 _lh_qpart_arg4 (LH_C (_lh_qpart_LH_C_0, _lh_qpart_arg5)) _lh_qpart_arg6
+//│       else
+//│         (qpart _lh_qpart_arg1 _lh_qpart_arg2 _lh_qpart_LH_C_1 (LH_C (_lh_qpart_LH_C_0, _lh_qpart_arg4)) _lh_qpart_arg5 _lh_qpart_arg6)
+//│ fun qsort(_lh_qsort_arg1)(_lh_qsort_arg2)(_lh_qsort_arg3) =
+//│   if _lh_qsort_arg2 is
+//│     LH_N then
+//│       _lh_qsort_arg3
+//│     LH_C (_lh_qsort_LH_C_0, _lh_qsort_LH_C_1) then
+//│       if _lh_qsort_LH_C_1 is
+//│         LH_N then
+//│           LH_C (_lh_qsort_LH_C_0, _lh_qsort_arg3)
+//│ fun competitors(_lh_competitors_arg1) =
+//│   LH_C ((LH_P2 ((LH_C ('S', (LH_C ('i', (LH_C ('m', (LH_C ('o', (LH_C ('n', (LH_N ()))))))))))), (LH_C (35, (LH_C (27, (LH_C (40, (LH_C (_lh_competitors_arg1, (LH_C (34, (LH_C (21, (LH_N ()))))))))))))))), (LH_C ((LH_P2 ((LH_C ('H', (LH_C ('a', (LH_C ('n', (LH_C ('s', (LH_N ()))))))))), (LH_C (23, (LH_C (19, (LH_C (45, (LH_C (_lh_competitors_arg1, (LH_C (17, (LH_C (10, (LH_C (5, (LH_C (8, (LH_C (14, (LH_N ()))))))))))))))))))))), (LH_C ((LH_P2 ((LH_C ('P', (LH_C ('h', (LH_C ('i', (LH_C ('l', (LH_N ()))))))))), (LH_C (1, (LH_C (18, (LH_C (_lh_competitors_arg1, (LH_C (20, (LH_C (21, (LH_C (19, (LH_C (34, (LH_C (8, (LH_C (16, (LH_C (21, (LH_N ()))))))))))))))))))))))), (LH_C ((LH_P2 ((LH_C ('K', (LH_C ('e', (LH_C ('v', (LH_C ('i', (LH_C ('n', (LH_N ()))))))))))), (LH_C (9, (LH_C (23, (LH_C (17, (LH_C (54, (LH_C (_lh_competitors_arg1, (LH_C (41, (LH_C (9, (LH_C (18, (LH_C (14, (LH_N ()))))))))))))))))))))), (LH_N ()))))))))
+//│ fun compareTuple2(_lh_compareTuple2_arg1)(_lh_compareTuple2_arg2) =
+//│   if _lh_compareTuple2_arg1 is
+//│     LH_P2 (_lh_compareTuple2_LH_P2_0, _lh_compareTuple2_LH_P2_1) then
+//│       if _lh_compareTuple2_arg2 is
+//│         LH_P2 (_lh_compareTuple2_LH_P2_0, _lh_compareTuple2_LH_P2_1) then
+//│           _lh_compareTuple2_LH_P2_0 <= _lh_compareTuple2_LH_P2_0
+//│ fun rqpart(_lh_rqpart_arg1)(_lh_rqpart_arg2)(_lh_rqpart_arg3)(_lh_rqpart_arg4)(_lh_rqpart_arg5)(_lh_rqpart_arg6) =
+//│   if _lh_rqpart_arg3 is
+//│     LH_N then
+//│       qsort _lh_rqpart_arg1 _lh_rqpart_arg4 (LH_C (_lh_rqpart_arg2, (qsort _lh_rqpart_arg1 _lh_rqpart_arg5 _lh_rqpart_arg6)))
+//│     LH_C (_lh_rqpart_LH_C_0, _lh_rqpart_LH_C_1) then
+//│       if _lh_rqpart_arg1 _lh_rqpart_LH_C_0 _lh_rqpart_arg2 then
+//│         rqpart _lh_rqpart_arg1 _lh_rqpart_arg2 _lh_rqpart_LH_C_1 (LH_C (_lh_rqpart_LH_C_0, _lh_rqpart_arg4)) _lh_rqpart_arg5 _lh_rqpart_arg6
+//│       else
+//│         (rqpart _lh_rqpart_arg1 _lh_rqpart_arg2 _lh_rqpart_LH_C_1 _lh_rqpart_arg4 (LH_C (_lh_rqpart_LH_C_0, _lh_rqpart_arg5)) _lh_rqpart_arg6)
+//│ fun listDiff =
+//│   foldl delete
+//│ fun testAwards_nofib(_lh_testAwards_nofib_arg1) =
+//│   map (x =>
+//│     (findallawards (competitors (x % 100)))) (primId (enumFromTo 1 _lh_testAwards_nofib_arg1))
+//│ fun awards(_lh_awards_arg1) =
+//│   let sumscores = map (p =>
+//│     (LH_P2 ((sum p), p))) (perms 3 _lh_awards_arg1)
+//│   let atleast = threshold =>
+//│     (filter (sum_p =>
+//│       (let _lh_matchIdent = sum_p
+//│       if _lh_matchIdent is
+//│         LH_P2 (_lh_awards_LH_P2_0, _lh_awards_LH_P2_1) then
+//│           _lh_awards_LH_P2_0 >= threshold)) sumscores)
+//│   let award = name_threshold =>
+//│     (let _lh_matchIdent = name_threshold
+//│     if _lh_matchIdent is
+//│       LH_P2 (_lh_awards_LH_P2_0, _lh_awards_LH_P2_1) then
+//│         map (ps =>
+//│           (LH_P2 (_lh_awards_LH_P2_0, ps))) (sort (atleast _lh_awards_LH_P2_1)))
+//│   mappend (mappend (award (LH_P2 ((LH_C ('G', (LH_C ('o', (LH_C ('l', (LH_C ('d', (LH_N ()))))))))), 70))) (award (LH_P2 ((LH_C ('S', (LH_C ('i', (LH_C ('l', (LH_C ('v', (LH_C ('e', (LH_C ('r', (LH_N ()))))))))))))), 60)))) (award (LH_P2 ((LH_C ('B', (LH_C ('r', (LH_C ('o', (LH_C ('n', (LH_C ('z', (LH_C ('e', (LH_N ()))))))))))))), 50)))
+//│ fun perms(_lh_perms_arg1)(_lh_perms_arg2) =
+//│   if _lh_perms_arg2 is
+//│     LH_N then
+//│       LH_N ()
+//│ fun delete(_lh_delete_arg1)(_lh_delete_arg2) =
+//│   if _lh_delete_arg1 is
+//│     LH_C (_lh_delete_LH_C_0, _lh_delete_LH_C_1) then
+//│       if polyEq _lh_delete_LH_C_0 _lh_delete_arg2 then
+//│         delete _lh_delete_LH_C_1 _lh_delete_arg2
+//│       else
+//│         (LH_C (_lh_delete_LH_C_0, (delete _lh_delete_LH_C_1 _lh_delete_arg2)))
+//│     LH_N then
+//│       LH_N ()
+//│ fun rqsort(_lh_rqsort_arg1)(_lh_rqsort_arg2)(_lh_rqsort_arg3) =
+//│   if _lh_rqsort_arg2 is
+//│     LH_N then
+//│       _lh_rqsort_arg3
+//│     LH_C (_lh_rqsort_LH_C_0, _lh_rqsort_LH_C_1) then
+//│       if _lh_rqsort_LH_C_1 is
+//│         LH_N then
+//│           LH_C (_lh_rqsort_LH_C_0, _lh_rqsort_arg3)
+//│ fun sort(_lh_sort_arg1) =
+//│   qsort (a => b =>
+//│     (compareTuple2 a b)) _lh_sort_arg1 (LH_N ())
+//│ fun findawards(_lh_findawards_arg1) =
+//│   let _lh_matchIdent = awards _lh_findawards_arg1
+//│   if _lh_matchIdent is
+//│     LH_N then
+//│       LH_N ()
+//│     LH_C (_lh_findawards_LH_C_0, _lh_findawards_LH_C_1) then
+//│       let _lh_matchIdent = _lh_findawards_LH_C_0
+//│       if _lh_matchIdent is
+//│         LH_P2 (_lh_findawards_LH_P2_0, _lh_findawards_LH_P2_1) then
+//│           if _lh_findawards_LH_P2_1 is
+//│             LH_P2 (_lh_findawards_LH_P2_0, _lh_findawards_LH_P2_1) then
+//│               LH_C ((LH_P2 (_lh_findawards_LH_P2_0, (LH_P2 (_lh_findawards_LH_P2_0, _lh_findawards_LH_P2_1)))), (findawards (listDiff _lh_findawards_arg1 _lh_findawards_LH_P2_1)))
+//│ (testAwards_nofib (primId 500))
+//│ 		---------- unoptimized mls gen ----------
 //│ testAwards_nofib_lh_₁^844(primId⁰(500))
 //│ def awards_lh_₁(_lh_awards_arg1⁰) = 
 //│ 	let sumscores⁰ = map_lh_₃^499((fun p⁰ -> [LH_P2 sum_lh_₁^500(p⁰) p⁰]), perms_lh_₁^507(3, _lh_awards_arg1⁰))

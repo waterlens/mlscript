@@ -3,6 +3,7 @@
 
 :lhInHaskell
 :lhGenOCaml
+:lhToMls
 -----------------------------
 -- Figure 1. CSPs in Haskell.
 -----------------------------
@@ -201,6 +202,674 @@ testConstraints_nofib $ primId 6
 //│ ||
 //│ Parsed: {}
 //│ >>>>>>>>>> Original >>>>>>>>>>
+//│ 		---------- unoptimized mls gen ----------
+//│ fun map(f)(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       LH_C ((f h), (map f t))
+//│     LH_N then
+//│       LH_N ()
+//│ fun map_lz(f)(ls) =
+//│   lazy (if force ls is
+//│     LH_C (h, t) then
+//│       LH_C ((f h), (map_lz f t))
+//│     LH_N then
+//│       LH_N ())
+//│ fun filter(f)(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       if f h then
+//│         LH_C (h, (filter f t))
+//│       else
+//│         (filter f t)
+//│     LH_N then
+//│       LH_N ()
+//│ fun filter_lz(f)(ls) =
+//│   lazy (if force ls is
+//│     LH_C (h, t) then
+//│       if f h then
+//│         LH_C (h, (filter_lz f t))
+//│       else
+//│         (force (filter_lz f t))
+//│     LH_N then
+//│       LH_N ())
+//│ fun foldl(f)(i)(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       foldl f (f i h) t
+//│     LH_N then
+//│       i
+//│ fun foldr(f)(i)(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       f h (foldr f i t)
+//│     LH_N then
+//│       i
+//│ fun foldr_lz(f)(i)(ls) =
+//│   lazy (if force ls is
+//│     LH_C (h, t) then
+//│       f h (foldr_lz f i t)
+//│     LH_N then
+//│       i)
+//│ fun zip(xs)(ys) =
+//│   if xs is
+//│     LH_C (hx, tx) then
+//│       if ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((LH_P2 (hx, hy)), (zip tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zip_nl_lz(xs)(ys) =
+//│   if xs is
+//│     LH_C (hx, tx) then
+//│       if force ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((LH_P2 (hx, hy)), (zip_nl_lz tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zip_lz_nl(xs)(ys) =
+//│   if ys is
+//│     LH_C (hy, ty) then
+//│       if force xs is
+//│         LH_C (hx, tx) then
+//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_nl tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zip_lz_lz(xs)(ys) =
+//│   lazy (if force xs is
+//│     LH_C (hx, tx) then
+//│       if force ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_lz tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ())
+//│ fun zipWith(f)(xs)(ys) =
+//│   if xs is
+//│     LH_C (hx, tx) then
+//│       if ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((f hx hy), (zipWith f tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zipWith_nl_lz(f)(xs)(ys) =
+//│   if xs is
+//│     LH_C (hx, tx) then
+//│       if force ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((f hx hy), (zipWith_nl_lz f tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zipWith_lz_nl(f)(xs)(ys) =
+//│   if ys is
+//│     LH_C (hy, ty) then
+//│       if force xs is
+//│         LH_C (hx, tx) then
+//│           LH_C ((f hx hy), (zipWith_lz_nl f tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ()
+//│ fun zipWith_lz_lz(f)(xs)(ys) =
+//│   lazy (if force xs is
+//│     LH_C (hx, tx) then
+//│       if force ys is
+//│         LH_C (hy, ty) then
+//│           LH_C ((f hx hy), (zipWith_lz_lz f tx ty))
+//│         LH_N then
+//│           LH_N ()
+//│     LH_N then
+//│       LH_N ())
+//│ fun head(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       h
+//│     LH_N then
+//│       error
+//│ fun head_lz(ls) =
+//│   if force ls is
+//│     LH_C (h, t) then
+//│       h
+//│     LH_N then
+//│       error
+//│ fun tail(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       t
+//│     LH_N then
+//│       error
+//│ fun tail_lz(ls) =
+//│   if force ls is
+//│     LH_C (h, t) then
+//│       t
+//│     LH_N then
+//│       error
+//│ fun enumFromTo(a)(b) =
+//│   if a <= b then
+//│     LH_C (a, (enumFromTo (a + 1) b))
+//│   else
+//│     (LH_N ())
+//│ fun enumFromThenTo(a)(t)(b) =
+//│   if a <= b then
+//│     LH_C (a, (enumFromThenTo t (2 * t - a) b))
+//│   else
+//│     (LH_N ())
+//│ fun enumFrom(a) =
+//│   lazy (LH_C (a, (enumFrom (a + 1))))
+//│ fun enumFromThen(a)(t) =
+//│   lazy (LH_C (a, (enumFromThen t (2 * t - a))))
+//│ fun repeat(x) =
+//│   lazy (LH_C (x, (repeat x)))
+//│ fun iterate(f)(x) =
+//│   lazy (LH_C (x, (iterate f (f x))))
+//│ fun take(n)(ls) =
+//│   if n > 0 then
+//│     if ls is
+//│       LH_C (h, t) then
+//│         LH_C (h, (take (n - 1) t))
+//│       LH_N then
+//│         LH_N ()
+//│   else
+//│     (LH_N ())
+//│ fun take_lz(n)(ls) =
+//│   if n > 0 then
+//│     if force ls is
+//│       LH_C (h, t) then
+//│         LH_C (h, (take_lz (n - 1) t))
+//│       LH_N then
+//│         LH_N ()
+//│   else
+//│     (LH_N ())
+//│ fun length(ls) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       1 + (length t)
+//│     LH_N then
+//│       0
+//│ fun mappend(xs)(ys) =
+//│   if xs is
+//│     LH_C (h, t) then
+//│       LH_C (h, (mappend t ys))
+//│     LH_N then
+//│       ys
+//│ fun sum(ls) =
+//│   sumAux ls 0
+//│ fun sumAux(ls)(a) =
+//│   if ls is
+//│     LH_N then
+//│       a
+//│     LH_C (h, t) then
+//│       sumAux t (a + h)
+//│ fun atIndex(n)(ls) =
+//│   if n < 0 then
+//│     error
+//│   else
+//│     (if ls is
+//│       LH_C (h, t) then
+//│         if n == 0 then
+//│           h
+//│         else
+//│           (atIndex (n - 1) t)
+//│       LH_N then
+//│         error)
+//│ fun atIndex_lz(n)(ls) =
+//│   if n < 0 then
+//│     error
+//│   else
+//│     (if force ls is
+//│       LH_C (h, t) then
+//│         if n == 0 then
+//│           h
+//│         else
+//│           (atIndex_lz (n - 1) t)
+//│       LH_N then
+//│         error)
+//│ fun concat(lss) =
+//│   if lss is
+//│     LH_C (h, t) then
+//│       mappend h (concat t)
+//│     LH_N then
+//│       LH_N ()
+//│ fun reverse(ls) =
+//│   reverse_helper ls (LH_N ())
+//│ fun reverse_helper(ls)(a) =
+//│   if ls is
+//│     LH_C (h, t) then
+//│       reverse_helper t (LH_C (h, a))
+//│     LH_N then
+//│       a
+//│ fun emptyTable(_lh_emptyTable_arg1) =
+//│   if _lh_emptyTable_arg1 is
+//│     CSP (_lh_emptyTable_CSP_0, _lh_emptyTable_CSP_1, _lh_emptyTable_CSP_2) then
+//│       LH_C ((LH_N ()), (let _lh_listcomp_fun = _lh_listcomp_fun_para =>
+//│         (if _lh_listcomp_fun_para is
+//│           LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_t) then
+//│             LH_C ((let _lh_listcomp_fun = _lh_listcomp_fun_para =>
+//│               (if _lh_listcomp_fun_para is
+//│                 LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_t) then
+//│                   LH_C ((Unknown ()), (_lh_listcomp_fun _lh_listcomp_fun_ls_t))
+//│                 LH_N then
+//│                   LH_N ())
+//│             _lh_listcomp_fun (enumFromTo 1 _lh_emptyTable_CSP_1)), (_lh_listcomp_fun _lh_listcomp_fun_ls_t))
+//│           LH_N then
+//│             LH_N ())
+//│       _lh_listcomp_fun (enumFromTo 1 _lh_emptyTable_CSP_0)))
+//│ fun compareTuple2(_lh_compareTuple2_arg1)(_lh_compareTuple2_arg2) =
+//│   if _lh_compareTuple2_arg1 is
+//│     LH_P2 (_lh_compareTuple2_LH_P2_0, _lh_compareTuple2_LH_P2_1) then
+//│       if _lh_compareTuple2_arg2 is
+//│         LH_P2 (_lh_compareTuple2_LH_P2_0, _lh_compareTuple2_LH_P2_1) then
+//│           _lh_compareTuple2_LH_P2_0 <= _lh_compareTuple2_LH_P2_0
+//│ fun cacheChecks(_lh_cacheChecks_arg1)(_lh_cacheChecks_arg2)(_lh_cacheChecks_arg3) =
+//│   if _lh_cacheChecks_arg3 is
+//│     Node (_lh_cacheChecks_Node_0, _lh_cacheChecks_Node_1) then
+//│       Node ((LH_P2 (_lh_cacheChecks_Node_0, _lh_cacheChecks_arg2)), (map (cacheChecks _lh_cacheChecks_arg1 (fillTable _lh_cacheChecks_Node_0 _lh_cacheChecks_arg1 (tail _lh_cacheChecks_arg2))) _lh_cacheChecks_Node_1))
+//│ fun bm(_lh_bm_arg1)(_lh_funcomp_x) =
+//│   (_lh_funcomp_x =>
+//│     (mapTree fst (lookupCache _lh_bm_arg1 _lh_funcomp_x))) (cacheChecks _lh_bm_arg1 (emptyTable _lh_bm_arg1) _lh_funcomp_x)
+//│ fun solver(_lh_solver_arg1) =
+//│   test _lh_solver_arg1 (generate _lh_solver_arg1)
+//│ fun prune(_lh_prune_arg1) =
+//│   filterTree (_lh_funcomp_x =>
+//│     (not (_lh_prune_arg1 _lh_funcomp_x)))
+//│ fun flip(_lh_flip_arg1)(_lh_flip_arg2)(_lh_flip_arg3) =
+//│   _lh_flip_arg1 _lh_flip_arg3 _lh_flip_arg2
+//│ fun rqsort(_lh_rqsort_arg1)(_lh_rqsort_arg2)(_lh_rqsort_arg3) =
+//│   if _lh_rqsort_arg2 is
+//│     LH_N then
+//│       _lh_rqsort_arg3
+//│     LH_C (_lh_rqsort_LH_C_0, _lh_rqsort_LH_C_1) then
+//│       if _lh_rqsort_LH_C_1 is
+//│         LH_N then
+//│           LH_C (_lh_rqsort_LH_C_0, _lh_rqsort_arg3)
+//│ fun collect(_lh_collect_arg1) =
+//│   if _lh_collect_arg1 is
+//│     LH_N then
+//│       LH_N ()
+//│     LH_C (_lh_collect_LH_C_0, _lh_collect_LH_C_1) then
+//│       if _lh_collect_LH_C_0 is
+//│         Known (_lh_collect_Known_0) then
+//│           union _lh_collect_Known_0 (collect _lh_collect_LH_C_1)
+//│ fun knownSolution(_lh_knownSolution_arg1) =
+//│   if _lh_knownSolution_arg1 is
+//│     Known (_lh_knownSolution_Known_0) then
+//│       if _lh_knownSolution_Known_0 is
+//│         LH_N then
+//│           True ()
+//│ fun test(_lh_test_arg1) =
+//│   filter (consistent _lh_test_arg1)
+//│ fun qpart(_lh_qpart_arg1)(_lh_qpart_arg2)(_lh_qpart_arg3)(_lh_qpart_arg4)(_lh_qpart_arg5)(_lh_qpart_arg6) =
+//│   if _lh_qpart_arg3 is
+//│     LH_N then
+//│       rqsort _lh_qpart_arg1 _lh_qpart_arg4 (LH_C (_lh_qpart_arg2, (rqsort _lh_qpart_arg1 _lh_qpart_arg5 _lh_qpart_arg6)))
+//│     LH_C (_lh_qpart_LH_C_0, _lh_qpart_LH_C_1) then
+//│       if _lh_qpart_arg1 _lh_qpart_arg2 _lh_qpart_LH_C_0 then
+//│         qpart _lh_qpart_arg1 _lh_qpart_arg2 _lh_qpart_LH_C_1 _lh_qpart_arg4 (LH_C (_lh_qpart_LH_C_0, _lh_qpart_arg5)) _lh_qpart_arg6
+//│       else
+//│         (qpart _lh_qpart_arg1 _lh_qpart_arg2 _lh_qpart_LH_C_1 (LH_C (_lh_qpart_LH_C_0, _lh_qpart_arg4)) _lh_qpart_arg5 _lh_qpart_arg6)
+//│ fun leaves(_lh_leaves_arg1) =
+//│   if _lh_leaves_arg1 is
+//│     Node (_lh_leaves_Node_0, _lh_leaves_Node_1) then
+//│       if _lh_leaves_Node_1 is
+//│         LH_N then
+//│           LH_C (_lh_leaves_Node_0, (LH_N ()))
+//│ fun unionBy(_lh_unionBy_arg1)(_lh_unionBy_arg2)(_lh_unionBy_arg3) =
+//│   mappend _lh_unionBy_arg2 (foldl (flip (deleteBy _lh_unionBy_arg1)) (nubBy _lh_unionBy_arg1 _lh_unionBy_arg3) _lh_unionBy_arg2)
+//│ fun try(_lh_try_arg1)(_lh_try_arg2) =
+//│   length (search _lh_try_arg2 (queens _lh_try_arg1))
+//│ fun inconsistencies(_lh_inconsistencies_arg1)(_lh_inconsistencies_arg2) =
+//│   if _lh_inconsistencies_arg1 is
+//│     CSP (_lh_inconsistencies_CSP_0, _lh_inconsistencies_CSP_1, _lh_inconsistencies_CSP_2) then
+//│       let _lh_listcomp_fun = _lh_listcomp_fun_para =>
+//│         (if _lh_listcomp_fun_para is
+//│           LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_t) then
+//│             let _lh_listcomp_fun = _lh_listcomp_fun_para =>
+//│               (if _lh_listcomp_fun_para is
+//│                 LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_t) then
+//│                   if _lh_listcomp_fun_ls_h > _lh_listcomp_fun_ls_h then
+//│                     if not (_lh_inconsistencies_CSP_2 _lh_listcomp_fun_ls_h _lh_listcomp_fun_ls_h) then
+//│                       LH_C ((LH_P2 ((level _lh_listcomp_fun_ls_h), (level _lh_listcomp_fun_ls_h))), (_lh_listcomp_fun _lh_listcomp_fun_ls_t))
+//│                     else
+//│                       (_lh_listcomp_fun _lh_listcomp_fun_ls_t)
+//│                   else
+//│                     (_lh_listcomp_fun _lh_listcomp_fun_ls_t)
+//│                 LH_N then
+//│                   _lh_listcomp_fun _lh_listcomp_fun_ls_t)
+//│             _lh_listcomp_fun (reverse _lh_inconsistencies_arg2)
+//│           LH_N then
+//│             LH_N ())
+//│       _lh_listcomp_fun _lh_inconsistencies_arg2
+//│ fun union(_lh_union_arg1)(_lh_union_arg2) =
+//│   unionBy (a => b =>
+//│     (polyEq a b)) _lh_union_arg1 _lh_union_arg2
+//│ fun qsort(_lh_qsort_arg1)(_lh_qsort_arg2)(_lh_qsort_arg3) =
+//│   if _lh_qsort_arg2 is
+//│     LH_N then
+//│       _lh_qsort_arg3
+//│     LH_C (_lh_qsort_LH_C_0, _lh_qsort_LH_C_1) then
+//│       if _lh_qsort_LH_C_1 is
+//│         LH_N then
+//│           LH_C (_lh_qsort_LH_C_0, _lh_qsort_arg3)
+//│ fun generate(_lh_generate_arg1) =
+//│   if _lh_generate_arg1 is
+//│     CSP (_lh_generate_CSP_0, _lh_generate_CSP_1, _lh_generate_CSP_2) then
+//│       let g = _lh_g_arg1 => _lh_g_arg2 =>
+//│         (if _lh_g_arg2 is
+//│           0 then
+//│             LH_C ((LH_N ()), (LH_N ())))
+//│       g _lh_generate_CSP_1 _lh_generate_CSP_0
+//│ fun rqpart(_lh_rqpart_arg1)(_lh_rqpart_arg2)(_lh_rqpart_arg3)(_lh_rqpart_arg4)(_lh_rqpart_arg5)(_lh_rqpart_arg6) =
+//│   if _lh_rqpart_arg3 is
+//│     LH_N then
+//│       qsort _lh_rqpart_arg1 _lh_rqpart_arg4 (LH_C (_lh_rqpart_arg2, (qsort _lh_rqpart_arg1 _lh_rqpart_arg5 _lh_rqpart_arg6)))
+//│     LH_C (_lh_rqpart_LH_C_0, _lh_rqpart_LH_C_1) then
+//│       if _lh_rqpart_arg1 _lh_rqpart_LH_C_0 _lh_rqpart_arg2 then
+//│         rqpart _lh_rqpart_arg1 _lh_rqpart_arg2 _lh_rqpart_LH_C_1 (LH_C (_lh_rqpart_LH_C_0, _lh_rqpart_arg4)) _lh_rqpart_arg5 _lh_rqpart_arg6
+//│       else
+//│         (rqpart _lh_rqpart_arg1 _lh_rqpart_arg2 _lh_rqpart_LH_C_1 _lh_rqpart_arg4 (LH_C (_lh_rqpart_LH_C_0, _lh_rqpart_arg5)) _lh_rqpart_arg6)
+//│ fun all(_lh_all_arg1)(_lh_all_arg2) =
+//│   if _lh_all_arg2 is
+//│     LH_N then
+//│       True ()
+//│     LH_C (_lh_all_LH_C_0, _lh_all_LH_C_1) then
+//│       if _lh_all_arg1 _lh_all_LH_C_0 then
+//│         all _lh_all_arg1 _lh_all_LH_C_1
+//│       else
+//│         (False ())
+//│ fun bjbt(_lh_bjbt_arg1)(_lh_funcomp_x) =
+//│   bj _lh_bjbt_arg1 (bt _lh_bjbt_arg1 _lh_funcomp_x)
+//│ fun fc(_lh_fc_arg1)(_lh_funcomp_x) =
+//│   (_lh_funcomp_x =>
+//│     (domainWipeOut _lh_fc_arg1 (lookupCache _lh_fc_arg1 _lh_funcomp_x))) (cacheChecks _lh_fc_arg1 (emptyTable _lh_fc_arg1) _lh_funcomp_x)
+//│ fun bt(_lh_bt_arg1) =
+//│   let f = s =>
+//│     (LH_P2 (s, (let _lh_matchIdent = earliestInconsistency _lh_bt_arg1 s
+//│     if _lh_matchIdent is
+//│       Nothing then
+//│         checkComplete _lh_bt_arg1 s
+//│       Just (_lh_bt_Just_0) then
+//│         if _lh_bt_Just_0 is
+//│           LH_P2 (_lh_bt_LH_P2_0, _lh_bt_LH_P2_1) then
+//│             Known ((LH_C (_lh_bt_LH_P2_0, (LH_C (_lh_bt_LH_P2_1, (LH_N ())))))))))
+//│   mapTree f
+//│ fun label(_lh_label_arg1) =
+//│   if _lh_label_arg1 is
+//│     Node (_lh_label_Node_0, _lh_label_Node_1) then
+//│       _lh_label_Node_0
+//│ fun earliestInconsistency(_lh_earliestInconsistency_arg1)(_lh_earliestInconsistency_arg2) =
+//│   if _lh_earliestInconsistency_arg1 is
+//│     CSP (_lh_earliestInconsistency_CSP_0, _lh_earliestInconsistency_CSP_1, _lh_earliestInconsistency_CSP_2) then
+//│       if _lh_earliestInconsistency_arg2 is
+//│         LH_N then
+//│           Nothing ()
+//│         LH_C (_lh_earliestInconsistency_LH_C_0, _lh_earliestInconsistency_LH_C_1) then
+//│           let _lh_matchIdent = filter (_lh_funcomp_x =>
+//│             (not (_lh_earliestInconsistency_CSP_2 _lh_earliestInconsistency_LH_C_0 _lh_funcomp_x))) (reverse _lh_earliestInconsistency_LH_C_1)
+//│           if _lh_matchIdent is
+//│             LH_N then
+//│               Nothing ()
+//│             LH_C (_lh_earliestInconsistency_LH_C_0, _lh_earliestInconsistency_LH_C_1) then
+//│               Just ((LH_P2 ((level _lh_earliestInconsistency_LH_C_0), (level _lh_earliestInconsistency_LH_C_0))))
+//│ fun testConstraints_nofib(_lh_testConstraints_nofib_arg1) =
+//│   map (try _lh_testConstraints_nofib_arg1) (LH_C (bt, (LH_C (bm, (LH_C (bjbt, (LH_C (bjbt', (LH_C (fc, (LH_N ())))))))))))
+//│ fun bj(_lh_bj_arg1) =
+//│   let f = _lh_f_arg1 => _lh_f_arg2 =>
+//│     (if _lh_f_arg1 is
+//│       LH_P2 (_lh_f_LH_P2_0, _lh_f_LH_P2_1) then
+//│         if _lh_f_LH_P2_1 is
+//│           Known (_lh_f_Known_0) then
+//│             Node ((LH_P2 (_lh_f_LH_P2_0, (Known (_lh_f_Known_0)))), _lh_f_arg2)
+//│           Unknown then
+//│             Node ((LH_P2 (_lh_f_LH_P2_0, (Known ((combine (map label _lh_f_arg2) (LH_N ())))))), _lh_f_arg2))
+//│   foldTree f
+//│ fun btsolver0(_lh_btsolver0_arg1) =
+//│   (_lh_funcomp_x =>
+//│     ((_lh_funcomp_x =>
+//│       ((_lh_funcomp_x =>
+//│         ((_lh_funcomp_x =>
+//│           ((_lh_funcomp_x =>
+//│             (filter (complete _lh_btsolver0_arg1) (leaves _lh_funcomp_x))) (mapTree fst _lh_funcomp_x))) (prune (_lh_funcomp_x =>
+//│           ((x =>
+//│             (x /= (Nothing ()))) (snd _lh_funcomp_x))) _lh_funcomp_x))) (labelInconsistencies _lh_btsolver0_arg1 _lh_funcomp_x))) (mkTree _lh_funcomp_x))) _lh_btsolver0_arg1
+//│ fun foldTree(_lh_foldTree_arg1)(_lh_foldTree_arg2) =
+//│   if _lh_foldTree_arg2 is
+//│     Node (_lh_foldTree_Node_0, _lh_foldTree_Node_1) then
+//│       _lh_foldTree_arg1 _lh_foldTree_Node_0 (map (foldTree _lh_foldTree_arg1) _lh_foldTree_Node_1)
+//│ fun domainWipeOut(_lh_domainWipeOut_arg1)(_lh_domainWipeOut_arg2) =
+//│   if _lh_domainWipeOut_arg1 is
+//│     CSP (_lh_domainWipeOut_CSP_0, _lh_domainWipeOut_CSP_1, _lh_domainWipeOut_CSP_2) then
+//│       let f = _lh_f_arg1 =>
+//│         (if _lh_f_arg1 is
+//│           LH_P2 (_lh_f_LH_P2_0, _lh_f_LH_P2_1) then
+//│             if _lh_f_LH_P2_0 is
+//│               LH_P2 (_lh_f_LH_P2_0, _lh_f_LH_P2_1) then
+//│                 let wipedDomains = let _lh_listcomp_fun = _lh_listcomp_fun_para =>
+//│                   (if _lh_listcomp_fun_para is
+//│                     LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_t) then
+//│                       if all knownConflict _lh_listcomp_fun_ls_h then
+//│                         LH_C (_lh_listcomp_fun_ls_h, (_lh_listcomp_fun _lh_listcomp_fun_ls_t))
+//│                       else
+//│                         (_lh_listcomp_fun _lh_listcomp_fun_ls_t)
+//│                     LH_N then
+//│                       LH_N ())
+//│                 _lh_listcomp_fun _lh_f_LH_P2_1
+//│                 let cs' = if null wipedDomains then
+//│                   _lh_f_LH_P2_1
+//│                 else
+//│                   (Known ((collect (head wipedDomains))))
+//│                 LH_P2 (_lh_f_LH_P2_0, cs'))
+//│       mapTree f _lh_domainWipeOut_arg2
+//│ fun null(_lh_null_arg1) =
+//│   if _lh_null_arg1 is
+//│     LH_N then
+//│       True ()
+//│     LH_C (_lh_null_LH_C_0, _lh_null_LH_C_1) then
+//│       False ()
+//│ fun safe(_lh_safe_arg1)(_lh_safe_arg2) =
+//│   if _lh_safe_arg1 is
+//│     Assign (_lh_safe_Assign_0, _lh_safe_Assign_1) then
+//│       if _lh_safe_arg2 is
+//│         Assign (_lh_safe_Assign_0, _lh_safe_Assign_1) then
+//│           (_lh_safe_Assign_1 /= _lh_safe_Assign_1) && ((abs (_lh_safe_Assign_0 - _lh_safe_Assign_0)) /= (abs (_lh_safe_Assign_1 - _lh_safe_Assign_1)))
+//│ fun snd(_lh_snd_arg1) =
+//│   if _lh_snd_arg1 is
+//│     LH_P2 (_lh_snd_LH_P2_0, _lh_snd_LH_P2_1) then
+//│       _lh_snd_LH_P2_1
+//│ fun maxLevel(_lh_maxLevel_arg1) =
+//│   if _lh_maxLevel_arg1 is
+//│     LH_N then
+//│       0
+//│     LH_C (_lh_maxLevel_LH_C_0, _lh_maxLevel_LH_C_1) then
+//│       if _lh_maxLevel_LH_C_0 is
+//│         Assign (_lh_maxLevel_Assign_0, _lh_maxLevel_Assign_1) then
+//│           _lh_maxLevel_Assign_0
+//│ fun queens(_lh_queens_arg1) =
+//│   CSP (_lh_queens_arg1, _lh_queens_arg1, safe)
+//│ fun labelInconsistencies(_lh_labelInconsistencies_arg1) =
+//│   let f = s =>
+//│     (LH_P2 (s, (earliestInconsistency _lh_labelInconsistencies_arg1 s)))
+//│   mapTree f
+//│ fun consistent(_lh_consistent_arg1)(_lh_funcomp_x) =
+//│   null (inconsistencies _lh_consistent_arg1 _lh_funcomp_x)
+//│ fun complete(_lh_complete_arg1)(_lh_complete_arg2) =
+//│   if _lh_complete_arg1 is
+//│     CSP (_lh_complete_CSP_0, _lh_complete_CSP_1, _lh_complete_CSP_2) then
+//│       (maxLevel _lh_complete_arg2) == _lh_complete_CSP_0
+//│ fun combine(_lh_combine_arg1)(_lh_combine_arg2) =
+//│   if _lh_combine_arg1 is
+//│     LH_N then
+//│       _lh_combine_arg2
+//│     LH_C (_lh_combine_LH_C_0, _lh_combine_LH_C_1) then
+//│       if _lh_combine_LH_C_0 is
+//│         LH_P2 (_lh_combine_LH_P2_0, _lh_combine_LH_P2_1) then
+//│           if _lh_combine_LH_P2_1 is
+//│             Known (_lh_combine_Known_0) then
+//│               if notElem (maxLevel _lh_combine_LH_P2_0) _lh_combine_Known_0 then
+//│                 _lh_combine_Known_0
+//│               else
+//│                 (combine _lh_combine_LH_C_1 (union _lh_combine_Known_0 _lh_combine_arg2))
+//│ fun mkTree(_lh_mkTree_arg1) =
+//│   if _lh_mkTree_arg1 is
+//│     CSP (_lh_mkTree_CSP_0, _lh_mkTree_CSP_1, _lh_mkTree_CSP_2) then
+//│       let next = ss =>
+//│         (if (maxLevel ss) < _lh_mkTree_CSP_0 then
+//│           let _lh_listcomp_fun = _lh_listcomp_fun_para =>
+//│             (if _lh_listcomp_fun_para is
+//│               LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_t) then
+//│                 LH_C ((LH_C ((Assign (((maxLevel ss) + 1), _lh_listcomp_fun_ls_h)), ss)), (_lh_listcomp_fun _lh_listcomp_fun_ls_t))
+//│               LH_N then
+//│                 LH_N ())
+//│           _lh_listcomp_fun (enumFromTo 1 _lh_mkTree_CSP_1)
+//│         else
+//│           (LH_N ()))
+//│       initTree next (LH_N ())
+//│ fun notElem(_lh_notElem_arg1)(_lh_notElem_arg2) =
+//│   if _lh_notElem_arg2 is
+//│     LH_N then
+//│       True ()
+//│     LH_C (_lh_notElem_LH_C_0, _lh_notElem_LH_C_1) then
+//│       if polyEq _lh_notElem_arg1 _lh_notElem_LH_C_0 then
+//│         False ()
+//│       else
+//│         (notElem _lh_notElem_arg1 _lh_notElem_LH_C_1)
+//│ fun abs(_lh_abs_arg1) =
+//│   if _lh_abs_arg1 > 0 then
+//│     _lh_abs_arg1
+//│   else
+//│     (0 - _lh_abs_arg1)
+//│ fun fst(_lh_fst_arg1) =
+//│   if _lh_fst_arg1 is
+//│     LH_P2 (_lh_fst_LH_P2_0, _lh_fst_LH_P2_1) then
+//│       _lh_fst_LH_P2_0
+//│ fun knownConflict(_lh_knownConflict_arg1) =
+//│   if _lh_knownConflict_arg1 is
+//│     Known (_lh_knownConflict_Known_0) then
+//│       if _lh_knownConflict_Known_0 is
+//│         LH_C (_lh_knownConflict_LH_C_0, _lh_knownConflict_LH_C_1) then
+//│           True ()
+//│ fun nubBy(_lh_nubBy_arg1)(_lh_nubBy_arg2) =
+//│   if _lh_nubBy_arg2 is
+//│     LH_N then
+//│       LH_N ()
+//│     LH_C (_lh_nubBy_LH_C_0, _lh_nubBy_LH_C_1) then
+//│       LH_C (_lh_nubBy_LH_C_0, (nubBy _lh_nubBy_arg1 (filter (y =>
+//│         (not (_lh_nubBy_arg1 _lh_nubBy_LH_C_0 y))) _lh_nubBy_LH_C_1)))
+//│ fun bjbt'(_lh_bjbt'_arg1)(_lh_funcomp_x) =
+//│   bj' _lh_bjbt'_arg1 (bt _lh_bjbt'_arg1 _lh_funcomp_x)
+//│ fun bj'(_lh_bj'_arg1) =
+//│   let f = _lh_f_arg1 => _lh_f_arg2 =>
+//│     (if _lh_f_arg1 is
+//│       LH_P2 (_lh_f_LH_P2_0, _lh_f_LH_P2_1) then
+//│         if _lh_f_LH_P2_1 is
+//│           Known (_lh_f_Known_0) then
+//│             Node ((LH_P2 (_lh_f_LH_P2_0, (Known (_lh_f_Known_0)))), _lh_f_arg2)
+//│           Unknown then
+//│             let cs' = Known ((combine (map label _lh_f_arg2) (LH_N ())))
+//│             if knownConflict cs' then
+//│               Node ((LH_P2 (_lh_f_LH_P2_0, cs')), (LH_N ()))
+//│             else
+//│               (Node ((LH_P2 (_lh_f_LH_P2_0, cs')), _lh_f_arg2)))
+//│   foldTree f
+//│ fun checkComplete(_lh_checkComplete_arg1)(_lh_checkComplete_arg2) =
+//│   if complete _lh_checkComplete_arg1 _lh_checkComplete_arg2 then
+//│     Known ((LH_N ()))
+//│   else
+//│     (Unknown ())
+//│ fun value(_lh_value_arg1) =
+//│   if _lh_value_arg1 is
+//│     Assign (_lh_value_Assign_0, _lh_value_Assign_1) then
+//│       _lh_value_Assign_1
+//│ fun filterTree(_lh_filterTree_arg1) =
+//│   let f = a => cs =>
+//│     (Node (a, (filter (_lh_funcomp_x =>
+//│       (_lh_filterTree_arg1 (label _lh_funcomp_x))) cs)))
+//│   foldTree f
+//│ fun mapTree(_lh_mapTree_arg1)(_lh_mapTree_arg2) =
+//│   if _lh_mapTree_arg2 is
+//│     Node (_lh_mapTree_Node_0, _lh_mapTree_Node_1) then
+//│       Node ((_lh_mapTree_arg1 _lh_mapTree_Node_0), (map (mapTree _lh_mapTree_arg1) _lh_mapTree_Node_1))
+//│ fun initTree(_lh_initTree_arg1)(_lh_initTree_arg2) =
+//│   Node (_lh_initTree_arg2, (map (initTree _lh_initTree_arg1) (_lh_initTree_arg1 _lh_initTree_arg2)))
+//│ fun fillTable(_lh_fillTable_arg1)(_lh_fillTable_arg2)(_lh_fillTable_arg3) =
+//│   if _lh_fillTable_arg1 is
+//│     LH_N then
+//│       _lh_fillTable_arg3
+//│     LH_C (_lh_fillTable_LH_C_0, _lh_fillTable_LH_C_1) then
+//│       if _lh_fillTable_LH_C_0 is
+//│         Assign (_lh_fillTable_Assign_0, _lh_fillTable_Assign_1) then
+//│           if _lh_fillTable_arg2 is
+//│             CSP (_lh_fillTable_CSP_0, _lh_fillTable_CSP_1, _lh_fillTable_CSP_2) then
+//│               let f = cs => varval =>
+//│                 (let _lh_matchIdent = varval
+//│                 if _lh_matchIdent is
+//│                   LH_P2 (_lh_fillTable_LH_P2_0, _lh_fillTable_LH_P2_1) then
+//│                     if (polyEq cs (Unknown ())) && (not (_lh_fillTable_CSP_2 (Assign (_lh_fillTable_Assign_0, _lh_fillTable_Assign_1)) (Assign (_lh_fillTable_LH_P2_0, _lh_fillTable_LH_P2_1)))) then
+//│                       Known ((LH_C (_lh_fillTable_Assign_0, (LH_C (_lh_fillTable_LH_P2_0, (LH_N ()))))))
+//│                     else
+//│                       cs)
+//│               zipWith (zipWith f) _lh_fillTable_arg3 (let _lh_listcomp_fun = _lh_listcomp_fun_para =>
+//│                 (if _lh_listcomp_fun_para is
+//│                   LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_t) then
+//│                     LH_C ((let _lh_listcomp_fun = _lh_listcomp_fun_para =>
+//│                       (if _lh_listcomp_fun_para is
+//│                         LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_t) then
+//│                           LH_C ((LH_P2 (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_h)), (_lh_listcomp_fun _lh_listcomp_fun_ls_t))
+//│                         LH_N then
+//│                           LH_N ())
+//│                     _lh_listcomp_fun (enumFromTo 1 _lh_fillTable_CSP_1)), (_lh_listcomp_fun _lh_listcomp_fun_ls_t))
+//│                   LH_N then
+//│                     LH_N ())
+//│               _lh_listcomp_fun (enumFromTo (_lh_fillTable_Assign_0 + 1) _lh_fillTable_CSP_0))
+//│ fun lookupCache(_lh_lookupCache_arg1)(_lh_lookupCache_arg2) =
+//│   let f = _lh_f_arg1 => _lh_f_arg2 =>
+//│     (if _lh_f_arg2 is
+//│       LH_P2 (_lh_f_LH_P2_0, _lh_f_LH_P2_1) then
+//│         if _lh_f_LH_P2_0 is
+//│           LH_N then
+//│             LH_P2 ((LH_P2 ((LH_N ()), (Unknown ()))), _lh_f_LH_P2_1)
+//│           LH_C (_lh_f_LH_C_0, _lh_f_LH_C_1) then
+//│             let tableEntry = atIndex ((value _lh_f_LH_C_0) - 1) (head _lh_f_LH_P2_1)
+//│             let cs = if polyEq tableEntry (Unknown ()) then
+//│               checkComplete _lh_f_arg1 (LH_C (_lh_f_LH_C_0, _lh_f_LH_C_1))
+//│             else
+//│               tableEntry
+//│             LH_P2 ((LH_P2 ((LH_C (_lh_f_LH_C_0, _lh_f_LH_C_1)), cs)), _lh_f_LH_P2_1))
+//│   mapTree (f _lh_lookupCache_arg1) _lh_lookupCache_arg2
+//│ fun deleteBy(_lh_deleteBy_arg1)(_lh_deleteBy_arg2)(_lh_deleteBy_arg3) =
+//│   if _lh_deleteBy_arg3 is
+//│     LH_N then
+//│       LH_N ()
+//│     LH_C (_lh_deleteBy_LH_C_0, _lh_deleteBy_LH_C_1) then
+//│       if _lh_deleteBy_arg1 _lh_deleteBy_arg2 _lh_deleteBy_LH_C_0 then
+//│         _lh_deleteBy_LH_C_1
+//│       else
+//│         (LH_C (_lh_deleteBy_LH_C_0, (deleteBy _lh_deleteBy_arg1 _lh_deleteBy_arg2 _lh_deleteBy_LH_C_1)))
+//│ fun level(_lh_level_arg1) =
+//│   if _lh_level_arg1 is
+//│     Assign (_lh_level_Assign_0, _lh_level_Assign_1) then
+//│       _lh_level_Assign_0
+//│ fun search(_lh_search_arg1)(_lh_search_arg2) =
+//│   (_lh_funcomp_x =>
+//│     ((_lh_funcomp_x =>
+//│       ((_lh_funcomp_x =>
+//│         ((_lh_funcomp_x =>
+//│           ((_lh_funcomp_x =>
+//│             (map fst (filter (_lh_funcomp_x =>
+//│               (knownSolution (snd _lh_funcomp_x))) _lh_funcomp_x))) (leaves _lh_funcomp_x))) (prune (_lh_funcomp_x =>
+//│           (knownConflict (snd _lh_funcomp_x))) _lh_funcomp_x))) (_lh_search_arg1 _lh_search_arg2 _lh_funcomp_x))) (mkTree _lh_funcomp_x))) _lh_search_arg2
+//│ (testConstraints_nofib (primId 6))
+//│ 		---------- unoptimized mls gen ----------
 //│ testConstraints_nofib_lh_₁^2366(primId⁰(6))
 //│ def abs_lh_₁(_lh_abs_arg1¹) = if (_lh_abs_arg1¹ > 0) then _lh_abs_arg1¹ else (0 - _lh_abs_arg1¹)
 //│ def abs_lh_₂(_lh_abs_arg1⁰) = if (_lh_abs_arg1⁰ > 0) then _lh_abs_arg1⁰ else (0 - _lh_abs_arg1⁰)

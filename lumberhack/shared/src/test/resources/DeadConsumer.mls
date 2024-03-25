@@ -31,105 +31,14 @@ f(g(D))                                   // D gets fused and becomes x => x, g 
 //│ 		      x_1);;
 //│ 		(f (g (`D)))
 //│ 		....... ocaml repl result .......
-//│ 		[ok]
-//│ 		        val f : [> `C ] -> ('a lazy_t as 'a) = <fun>
-//│ 		[ok]
-//│ 		            val g : ([< `C | `D ] as 'a) -> 'a = <fun>
-//│ 		....... ocaml repl result .......
-//│ 		---------- unoptimized ocaml gen ----------
-//│ <<<<<<<<<< Original <<<<<<<<<<
-//│ 
-//│ >>>>>>> fusion matches >>>>>>>
-//│ [D]: 21 --->
-//│ 	DeadCodeCons
-//│ 	case x¹ of {D  => x¹ | C  => x¹}: 17
-//│ ------------------
-//│ case x¹ of {D  => x¹ | C  => x¹}: 17 --->
-//│ 	[D]: 21
-//│ <<<<<<< fusion matches <<<<<<<
-//│ 
-//│ >>>>>>> new fusion strategy >>>>>>>
-//│ 
-//│ ------------------
-//│ 
-//│ <<<<<<< new fusion strategy <<<<<<<
-//│ 
-//│ >>>>>>> after fusion >>>>>>>
-//│ f(g([D]))
-//│ def f(x²) = if [True] then lazy⁰(f(x²)) else lazy⁰(f([C]))
-//│ def g(x³) = case x³ of {
-//│ 	D  => x³
-//│ 	| C  => x³}
-//│ <<<<<<< after fusion <<<<<<<
-//│ 
-//│ >>>>>>> consumer ids >>>>>>>
-//│ 
-//│ <<<<<<< consumer ids <<<<<<<
-//│ 
-//│ >>>>>>> floating out info >>>>>>>
-//│ 
-//│ <<<<<<< floating out info <<<<<<<
-//│ 
-//│ >>>>>>> after inlining >>>>>>>
-//│ f(g([D]))
-//│ def f(x⁰) = if [True] then lazy⁰(f(x⁰)) else lazy⁰(f([C]))
-//│ def g(x¹) = case x¹ of {
-//│ 	D  => x¹
-//│ 	| C  => x¹}
-//│ <<<<<<< after inlining <<<<<<<
-//│ 
-//│ >>>>>>> after floating out >>>>>>>
-//│ f(g([D]))
-//│ def f(x⁰) = if [True] then lazy⁰(f(x⁰)) else lazy⁰(f([C]))
-//│ def g(x¹) = case x¹ of {
-//│ 	D  => x¹
-//│ 	| C  => x¹}
-//│ <<<<<<< after floating out <<<<<<<
-//│ 
-//│ >>>>>>>>>> Generated OCaml >>>>>>>>>>
-//│ 
-//│ >>>>>>>>>> deadcode elimination info >>>>>>>>>>
-//│ f :: 'f <: [] ::: true
-//│ g :: 'g <: [] ::: true
-//│ [D] :: D ::: true
-//│ g([D]) :: '4_callres <: [] ::: true
-//│ f(g([D])) :: '5_callres <: [] ::: true
-//│ [True] :: True ::: true
-//│ f :: 'f <: [] ::: true
-//│ x :: 'x⁰ <: [] ::: true
-//│ f(x) :: '10_callres <: [] ::: true
-//│ lazy(f(x)) :: '10_callres <: [] ::: true
-//│ f :: 'f <: [] ::: true
-//│ [C] :: C ::: true
-//│ f([C]) :: '15_callres <: [] ::: true
-//│ lazy(f([C])) :: '15_callres <: [] ::: true
-//│ if [True] then lazy(f(x)) else lazy(f([C])) :: '17_ifres <: [] ::: true
-//│ (fun x -> if [True] then lazy(f(x)) else lazy(f([C]))) :: 'x⁰ => '17_ifres ::: true
-//│ x :: 'x¹ <: [] ::: true
-//│ x :: 'x¹ <: [] ::: true
-//│ x :: 'x¹ <: [] ::: true
-//│ case x of {D  => x | C  => x} :: '22_matchres <: [] ::: true
-//│ (fun x -> case x of {D  => x | C  => x}) :: 'x¹ => '22_matchres ::: true
-//│ <<<<<<<<<< deadcode elimination info <<<<<<<<<<
-//│ cannot generate benchmark files: Internal Error: benchmark requires a method of name `testxxx` calling a value wrapped in `primId`
-//│  and if there are manually fused benchmarks, there should be a call to `testManual`with exact the same parameter following the `testxxx`
-//│ 
-//│ let rec f x_0 =
-//│   (if true then
-//│     (lazy (f x_0))
-//│   else
-//│     (lazy (f (`C))));;
-//│ let rec g x_1 =
-//│   (match x_1 with
-//│     | `D -> 
-//│       x_1
-//│     | `C -> 
-//│       x_1);;
-//│ (f (g (`D)))
-//│ 
-//│ --------------- ocaml repl result -----------------
-//│ [ok]
-//│   - : 'a lazy_t as 'a = <lazy>
-//│ 
-//│ --------------- ocaml repl result -----------------
-//│ <<<<<<<<<< Generated OCaml <<<<<<<<<<
+//│ /!!!\ Uncaught error: java.io.IOException: Cannot run program "/Users/crescentonc/.opam/benchmarkflambda/bin/ocaml": error=2, No such file or directory
+//│ 	at: java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1128)
+//│ 	at: java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1071)
+//│ 	at: mlscript.lumberhack.OCamlReplHost.<init>(DiffTestLumberhack.scala:580)
+//│ 	at: mlscript.lumberhack.DiffTestLumberhack.postProcess(DiffTestLumberhack.scala:106)
+//│ 	at: mlscript.DiffTests.rec$1(DiffTests.scala:396)
+//│ 	at: mlscript.DiffTests.$anonfun$new$3(DiffTests.scala:803)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
+//│ 	at: org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
+//│ 	at: org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
+//│ 	at: org.scalatest.Transformer.apply(Transformer.scala:22)

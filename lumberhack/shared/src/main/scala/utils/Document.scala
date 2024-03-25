@@ -35,6 +35,7 @@ enum Document:
   case Raw(s: String)
 
   def <:>(other: Document) = line(List(this, other))
+  def <#>(other: Document) = Lined(List(this, other), separator = Raw(" "))
 
   def print: String = {
     val sb = new StringBuffer()

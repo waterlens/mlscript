@@ -125,11 +125,13 @@ object MlsPrettyPrinter {
          <#> raw(name)
          <#> toDoc(y, true, Some(next_prec)), next_prec)
       case App(app1 @ App(f, x), y) =>
-        (toDoc(app1, false) <#> aux(y)) |> bra
+        (toDoc(app1, false) <:> raw("(") <:> toDoc(y, false) <:> raw(")")) |> bra
+      case App(f, x @ Tup(_)) =>
+        (aux(f) <#> aux(x)) |> bra
       case App(f, x) =>
-        (aux(f) <:> raw(" ") <:> aux(x)) |> bra
+        (aux(f) <:> raw("(") <:> toDoc(x, false) <:> raw(")")) |> bra
       case Sel(e, field) =>
-        raw("(") <:> aux(e) <:> raw(")") <:> raw(".") <:> raw(field.toString)
+        raw("(") <:> toDoc(e, false) <:> raw(")") <:> raw(".") <:> raw(field.toString)
       case Let(is_rec, name, rhs, body) =>
         stack(
           raw(if is_rec then "let rec" else "let") <#> raw(name.toString) <#> raw("=") <#> toDoc(rhs, false),
@@ -158,9 +160,9 @@ object MlsPrettyPrinter {
         xs.foreach { case (n, x) =>
           if first then
             first = false
-            output = aux(x.value) :: output
+            output = toDoc(x.value, false) :: output
           else
-            output = aux(x.value) :: raw(" ") :: raw(",") :: output
+            output = toDoc(x.value, false) :: raw(" ") :: raw(",") :: output
         }
         raw("(") <:> line(output.reverse) <:> raw(")")
       case If(body, Some(els)) =>

@@ -80,49 +80,49 @@ testClausify_nofib $ primId 10
 //│ fun map(f)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       LH_C ((f h), (map f t))
+//│       LH_C (f(h), map(f)(t))
 //│     LH_N then
 //│       LH_N ()
 //│ fun map_lz(f)(ls) =
-//│   lazy (if force ls is
+//│   lazy(if force(ls) is
 //│     LH_C (h, t) then
-//│       LH_C ((f h), (map_lz f t))
+//│       LH_C (f(h), map_lz(f)(t))
 //│     LH_N then
 //│       LH_N ())
 //│ fun filter(f)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       if f h then
-//│         LH_C (h, (filter f t))
+//│       if f(h) then
+//│         LH_C (h, filter(f)(t))
 //│       else
-//│         (filter f t)
+//│         (filter(f)(t))
 //│     LH_N then
 //│       LH_N ()
 //│ fun filter_lz(f)(ls) =
-//│   lazy (if force ls is
+//│   lazy(if force(ls) is
 //│     LH_C (h, t) then
-//│       if f h then
-//│         LH_C (h, (filter_lz f t))
+//│       if f(h) then
+//│         LH_C (h, filter_lz(f)(t))
 //│       else
-//│         (force (filter_lz f t))
+//│         (force(filter_lz(f)(t)))
 //│     LH_N then
 //│       LH_N ())
 //│ fun foldl(f)(i)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       foldl f (f i h) t
+//│       foldl(f)(f(i)(h))(t)
 //│     LH_N then
 //│       i
 //│ fun foldr(f)(i)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       f h (foldr f i t)
+//│       f(h)(foldr(f)(i)(t))
 //│     LH_N then
 //│       i
 //│ fun foldr_lz(f)(i)(ls) =
-//│   lazy (if force ls is
+//│   lazy(if force(ls) is
 //│     LH_C (h, t) then
-//│       f h (foldr_lz f i t)
+//│       f(h)(foldr_lz(f)(i)(t))
 //│     LH_N then
 //│       i)
 //│ fun zip(xs)(ys) =
@@ -130,7 +130,7 @@ testClausify_nofib $ primId 10
 //│     LH_C (hx, tx) then
 //│       if ys is
 //│         LH_C (hy, ty) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -138,9 +138,9 @@ testClausify_nofib $ primId 10
 //│ fun zip_nl_lz(xs)(ys) =
 //│   if xs is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip_nl_lz tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip_nl_lz(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -148,19 +148,19 @@ testClausify_nofib $ primId 10
 //│ fun zip_lz_nl(xs)(ys) =
 //│   if ys is
 //│     LH_C (hy, ty) then
-//│       if force xs is
+//│       if force(xs) is
 //│         LH_C (hx, tx) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_nl tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip_lz_nl(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
 //│       LH_N ()
 //│ fun zip_lz_lz(xs)(ys) =
-//│   lazy (if force xs is
+//│   lazy(if force(xs) is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_lz tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip_lz_lz(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -170,7 +170,7 @@ testClausify_nofib $ primId 10
 //│     LH_C (hx, tx) then
 //│       if ys is
 //│         LH_C (hy, ty) then
-//│           LH_C ((f hx hy), (zipWith f tx ty))
+//│           LH_C (f(hx)(hy), zipWith(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -178,9 +178,9 @@ testClausify_nofib $ primId 10
 //│ fun zipWith_nl_lz(f)(xs)(ys) =
 //│   if xs is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((f hx hy), (zipWith_nl_lz f tx ty))
+//│           LH_C (f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -188,19 +188,19 @@ testClausify_nofib $ primId 10
 //│ fun zipWith_lz_nl(f)(xs)(ys) =
 //│   if ys is
 //│     LH_C (hy, ty) then
-//│       if force xs is
+//│       if force(xs) is
 //│         LH_C (hx, tx) then
-//│           LH_C ((f hx hy), (zipWith_lz_nl f tx ty))
+//│           LH_C (f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
 //│       LH_N ()
 //│ fun zipWith_lz_lz(f)(xs)(ys) =
-//│   lazy (if force xs is
+//│   lazy(if force(xs) is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((f hx hy), (zipWith_lz_lz f tx ty))
+//│           LH_C (f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -212,7 +212,7 @@ testClausify_nofib $ primId 10
 //│     LH_N then
 //│       error
 //│ fun head_lz(ls) =
-//│   if force ls is
+//│   if force(ls) is
 //│     LH_C (h, t) then
 //│       h
 //│     LH_N then
@@ -224,43 +224,43 @@ testClausify_nofib $ primId 10
 //│     LH_N then
 //│       error
 //│ fun tail_lz(ls) =
-//│   if force ls is
+//│   if force(ls) is
 //│     LH_C (h, t) then
 //│       t
 //│     LH_N then
 //│       error
 //│ fun enumFromTo(a)(b) =
 //│   if a <= b then
-//│     LH_C (a, (enumFromTo (a + 1) b))
+//│     LH_C (a, enumFromTo(a + 1)(b))
 //│   else
 //│     (LH_N ())
 //│ fun enumFromThenTo(a)(t)(b) =
 //│   if a <= b then
-//│     LH_C (a, (enumFromThenTo t (2 * t - a) b))
+//│     LH_C (a, enumFromThenTo(t)(2 * t - a)(b))
 //│   else
 //│     (LH_N ())
 //│ fun enumFrom(a) =
-//│   lazy (LH_C (a, (enumFrom (a + 1))))
+//│   lazy(LH_C (a, enumFrom(a + 1)))
 //│ fun enumFromThen(a)(t) =
-//│   lazy (LH_C (a, (enumFromThen t (2 * t - a))))
+//│   lazy(LH_C (a, enumFromThen(t)(2 * t - a)))
 //│ fun repeat(x) =
-//│   lazy (LH_C (x, (repeat x)))
+//│   lazy(LH_C (x, repeat(x)))
 //│ fun iterate(f)(x) =
-//│   lazy (LH_C (x, (iterate f (f x))))
+//│   lazy(LH_C (x, iterate(f)(f(x))))
 //│ fun take(n)(ls) =
 //│   if n > 0 then
 //│     if ls is
 //│       LH_C (h, t) then
-//│         LH_C (h, (take (n - 1) t))
+//│         LH_C (h, take(n - 1)(t))
 //│       LH_N then
 //│         LH_N ()
 //│   else
 //│     (LH_N ())
 //│ fun take_lz(n)(ls) =
 //│   if n > 0 then
-//│     if force ls is
+//│     if force(ls) is
 //│       LH_C (h, t) then
-//│         LH_C (h, (take_lz (n - 1) t))
+//│         LH_C (h, take_lz(n - 1)(t))
 //│       LH_N then
 //│         LH_N ()
 //│   else
@@ -268,23 +268,23 @@ testClausify_nofib $ primId 10
 //│ fun length(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       1 + (length t)
+//│       1 + (length(t))
 //│     LH_N then
 //│       0
 //│ fun mappend(xs)(ys) =
 //│   if xs is
 //│     LH_C (h, t) then
-//│       LH_C (h, (mappend t ys))
+//│       LH_C (h, mappend(t)(ys))
 //│     LH_N then
 //│       ys
 //│ fun sum(ls) =
-//│   sumAux ls 0
+//│   sumAux(ls)(0)
 //│ fun sumAux(ls)(a) =
 //│   if ls is
 //│     LH_N then
 //│       a
 //│     LH_C (h, t) then
-//│       sumAux t (a + h)
+//│       sumAux(t)(a + h)
 //│ fun atIndex(n)(ls) =
 //│   if n < 0 then
 //│     error
@@ -294,33 +294,33 @@ testClausify_nofib $ primId 10
 //│         if n == 0 then
 //│           h
 //│         else
-//│           (atIndex (n - 1) t)
+//│           (atIndex(n - 1)(t))
 //│       LH_N then
 //│         error)
 //│ fun atIndex_lz(n)(ls) =
 //│   if n < 0 then
 //│     error
 //│   else
-//│     (if force ls is
+//│     (if force(ls) is
 //│       LH_C (h, t) then
 //│         if n == 0 then
 //│           h
 //│         else
-//│           (atIndex_lz (n - 1) t)
+//│           (atIndex_lz(n - 1)(t))
 //│       LH_N then
 //│         error)
 //│ fun concat(lss) =
 //│   if lss is
 //│     LH_C (h, t) then
-//│       mappend h (concat t)
+//│       mappend(h)(concat(t))
 //│     LH_N then
 //│       LH_N ()
 //│ fun reverse(ls) =
-//│   reverse_helper ls (LH_N ())
+//│   reverse_helper(ls)(LH_N ())
 //│ fun reverse_helper(ls)(a) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       reverse_helper t (LH_C (h, a))
+//│       reverse_helper(t)(LH_C (h, a))
 //│     LH_N then
 //│       a
 //│ fun elim(_lh_elim_arg1) =
@@ -328,15 +328,15 @@ testClausify_nofib $ primId 10
 //│     Sym (_lh_elim_Sym_0) then
 //│       Sym (_lh_elim_Sym_0)
 //│     Not (_lh_elim_Not_0) then
-//│       Not ((elim _lh_elim_Not_0))
+//│       Not (elim(_lh_elim_Not_0))
 //│     Dis (_lh_elim_Dis_0, _lh_elim_Dis_1) then
-//│       Dis ((elim _lh_elim_Dis_0), (elim _lh_elim_Dis_1))
+//│       Dis (elim(_lh_elim_Dis_0), elim(_lh_elim_Dis_1))
 //│     Con (_lh_elim_Con_0, _lh_elim_Con_1) then
-//│       Con ((elim _lh_elim_Con_0), (elim _lh_elim_Con_1))
+//│       Con (elim(_lh_elim_Con_0), elim(_lh_elim_Con_1))
 //│     Imp (_lh_elim_Imp_0, _lh_elim_Imp_1) then
-//│       Dis ((Not ((elim _lh_elim_Imp_0))), (elim _lh_elim_Imp_1))
+//│       Dis (Not (elim(_lh_elim_Imp_0)), elim(_lh_elim_Imp_1))
 //│     Eqv (_lh_elim_Eqv_0, _lh_elim_Eqv_1) then
-//│       Con ((elim (Imp (_lh_elim_Eqv_0, _lh_elim_Eqv_1))), (elim (Imp (_lh_elim_Eqv_1, _lh_elim_Eqv_0))))
+//│       Con (elim(Imp (_lh_elim_Eqv_0, _lh_elim_Eqv_1)), elim(Imp (_lh_elim_Eqv_1, _lh_elim_Eqv_0)))
 //│ fun conjunct(_lh_conjunct_arg1) =
 //│   if _lh_conjunct_arg1 is
 //│     Con (_lh_conjunct_Con_0, _lh_conjunct_Con_1) then
@@ -344,32 +344,32 @@ testClausify_nofib $ primId 10
 //│ fun insert(_lh_insert_arg1)(_lh_insert_arg2) =
 //│   if _lh_insert_arg2 is
 //│     LH_N then
-//│       LH_C (_lh_insert_arg1, (LH_N ()))
+//│       LH_C (_lh_insert_arg1, LH_N ())
 //│     LH_C (_lh_insert_LH_C_0, _lh_insert_LH_C_1) then
-//│       if polyLt _lh_insert_arg1 _lh_insert_LH_C_0 then
-//│         LH_C (_lh_insert_arg1, (LH_C (_lh_insert_LH_C_0, _lh_insert_LH_C_1)))
+//│       if polyLt(_lh_insert_arg1)(_lh_insert_LH_C_0) then
+//│         LH_C (_lh_insert_arg1, LH_C (_lh_insert_LH_C_0, _lh_insert_LH_C_1))
 //│       else
-//│         (if polyGt _lh_insert_arg1 _lh_insert_LH_C_0 then
-//│           LH_C (_lh_insert_LH_C_0, (insert _lh_insert_arg1 _lh_insert_LH_C_1))
+//│         (if polyGt(_lh_insert_arg1)(_lh_insert_LH_C_0) then
+//│           LH_C (_lh_insert_LH_C_0, insert(_lh_insert_arg1)(_lh_insert_LH_C_1))
 //│         else
 //│           (LH_C (_lh_insert_LH_C_0, _lh_insert_LH_C_1)))
 //│ fun tautclause(_lh_tautclause_arg1) =
 //│   if _lh_tautclause_arg1 is
 //│     LH_P2 (_lh_tautclause_LH_P2_0, _lh_tautclause_LH_P2_1) then
-//│       polyNeq (let _lh_listcomp_fun = _lh_listcomp_fun_para =>
+//│       polyNeq(let _lh_listcomp_fun = _lh_listcomp_fun_para =>
 //│         (if _lh_listcomp_fun_para is
 //│           LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_t) then
-//│             if contains _lh_listcomp_fun_ls_h _lh_tautclause_LH_P2_1 then
-//│               LH_C (_lh_listcomp_fun_ls_h, (_lh_listcomp_fun _lh_listcomp_fun_ls_t))
+//│             if contains(_lh_listcomp_fun_ls_h)(_lh_tautclause_LH_P2_1) then
+//│               LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun(_lh_listcomp_fun_ls_t))
 //│             else
-//│               (_lh_listcomp_fun _lh_listcomp_fun_ls_t)
+//│               (_lh_listcomp_fun(_lh_listcomp_fun_ls_t))
 //│           LH_N then
 //│             LH_N ())
-//│       _lh_listcomp_fun _lh_tautclause_LH_P2_0) (LH_N ())
+//│       _lh_listcomp_fun(_lh_tautclause_LH_P2_0))(LH_N ())
 //│ fun interleave(_lh_interleave_arg1)(_lh_interleave_arg2) =
 //│   if _lh_interleave_arg1 is
 //│     LH_C (_lh_interleave_LH_C_0, _lh_interleave_LH_C_1) then
-//│       LH_C (_lh_interleave_LH_C_0, (interleave _lh_interleave_arg2 _lh_interleave_LH_C_1))
+//│       LH_C (_lh_interleave_LH_C_0, interleave(_lh_interleave_arg2)(_lh_interleave_LH_C_1))
 //│     LH_N then
 //│       LH_N ()
 //│ fun disin(_lh_disin_arg1) =
@@ -377,9 +377,9 @@ testClausify_nofib $ primId 10
 //│     Dis (_lh_disin_Dis_0, _lh_disin_Dis_1) then
 //│       if _lh_disin_Dis_1 is
 //│         Con (_lh_disin_Con_0, _lh_disin_Con_1) then
-//│           Con ((disin (Dis (_lh_disin_Dis_0, _lh_disin_Con_0))), (disin (Dis (_lh_disin_Dis_0, _lh_disin_Con_1))))
+//│           Con (disin(Dis (_lh_disin_Dis_0, _lh_disin_Con_0)), disin(Dis (_lh_disin_Dis_0, _lh_disin_Con_1)))
 //│     Con (_lh_disin_Con_0, _lh_disin_Con_1) then
-//│       Con ((disin _lh_disin_Con_0), (disin _lh_disin_Con_1))
+//│       Con (disin(_lh_disin_Con_0), disin(_lh_disin_Con_1))
 //│ fun opri(_lh_opri_arg1) =
 //│   if _lh_opri_arg1 is
 //│     '(' then
@@ -397,22 +397,22 @@ testClausify_nofib $ primId 10
 //│ fun clauseHelper(_lh_clauseHelper_arg1)(_lh_clauseHelper_arg2) =
 //│   if _lh_clauseHelper_arg1 is
 //│     Dis (_lh_clauseHelper_Dis_0, _lh_clauseHelper_Dis_1) then
-//│       clauseHelper _lh_clauseHelper_Dis_0 (clauseHelper _lh_clauseHelper_Dis_1 _lh_clauseHelper_arg2)
+//│       clauseHelper(_lh_clauseHelper_Dis_0)(clauseHelper(_lh_clauseHelper_Dis_1)(_lh_clauseHelper_arg2))
 //│     Sym (_lh_clauseHelper_Sym_0) then
 //│       if _lh_clauseHelper_arg2 is
 //│         LH_P2 (_lh_clauseHelper_LH_P2_0, _lh_clauseHelper_LH_P2_1) then
-//│           LH_P2 ((insert _lh_clauseHelper_Sym_0 _lh_clauseHelper_LH_P2_0), _lh_clauseHelper_LH_P2_1)
+//│           LH_P2 (insert(_lh_clauseHelper_Sym_0)(_lh_clauseHelper_LH_P2_0), _lh_clauseHelper_LH_P2_1)
 //│     Not (_lh_clauseHelper_Not_0) then
 //│       if _lh_clauseHelper_Not_0 is
 //│         Sym (_lh_clauseHelper_Sym_0) then
 //│           if _lh_clauseHelper_arg2 is
 //│             LH_P2 (_lh_clauseHelper_LH_P2_0, _lh_clauseHelper_LH_P2_1) then
-//│               LH_P2 (_lh_clauseHelper_LH_P2_0, (insert _lh_clauseHelper_Sym_0 _lh_clauseHelper_LH_P2_1))
+//│               LH_P2 (_lh_clauseHelper_LH_P2_0, insert(_lh_clauseHelper_Sym_0)(_lh_clauseHelper_LH_P2_1))
 //│ fun testClausify_nofib(_lh_testClausify_nofib_arg1) =
-//│   let xs = copy _lh_testClausify_nofib_arg1 (LH_C ('(', (LH_C ('a', (LH_C (' ', (LH_C ('=', (LH_C (' ', (LH_C ('a', (LH_C (' ', (LH_C ('=', (LH_C (' ', (LH_C ('a', (LH_C (')', (LH_C (' ', (LH_C ('=', (LH_C (' ', (LH_C ('(', (LH_C ('a', (LH_C (' ', (LH_C ('=', (LH_C (' ', (LH_C ('a', (LH_C (' ', (LH_C ('=', (LH_C (' ', (LH_C ('a', (LH_C (')', (LH_C (' ', (LH_C ('=', (LH_C (' ', (LH_C ('(', (LH_C ('a', (LH_C (' ', (LH_C ('=', (LH_C (' ', (LH_C ('a', (LH_C (' ', (LH_C ('=', (LH_C (' ', (LH_C ('a', (LH_C (')', (LH_N ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
-//│   concat (map clauses xs)
+//│   let xs = copy(_lh_testClausify_nofib_arg1)(LH_C ('(', LH_C ('a', LH_C (' ', LH_C ('=', LH_C (' ', LH_C ('a', LH_C (' ', LH_C ('=', LH_C (' ', LH_C ('a', LH_C (')', LH_C (' ', LH_C ('=', LH_C (' ', LH_C ('(', LH_C ('a', LH_C (' ', LH_C ('=', LH_C (' ', LH_C ('a', LH_C (' ', LH_C ('=', LH_C (' ', LH_C ('a', LH_C (')', LH_C (' ', LH_C ('=', LH_C (' ', LH_C ('(', LH_C ('a', LH_C (' ', LH_C ('=', LH_C (' ', LH_C ('a', LH_C (' ', LH_C ('=', LH_C (' ', LH_C ('a', LH_C (')', LH_N ()))))))))))))))))))))))))))))))))))))))))
+//│   concat(map(clauses)(xs))
 //│ fun parse(_lh_parse_arg1) =
-//│   let _lh_matchIdent = parseHelper _lh_parse_arg1 (LH_N ())
+//│   let _lh_matchIdent = parseHelper(_lh_parse_arg1)(LH_N ())
 //│   if _lh_matchIdent is
 //│     LH_C (_lh_parse_LH_C_0, _lh_parse_LH_C_1) then
 //│       if _lh_parse_LH_C_0 is
@@ -421,10 +421,10 @@ testClausify_nofib $ primId 10
 //│             LH_N then
 //│               _lh_parse_Ast_0
 //│ fun split(_lh_split_arg1) =
-//│   splitHelper _lh_split_arg1 (LH_N ())
+//│   splitHelper(_lh_split_arg1)(LH_N ())
 //│ fun redstar(_lh_redstar_arg1) =
-//│   while (_lh_funcomp_x =>
-//│     (0 /= (spri _lh_funcomp_x))) red _lh_redstar_arg1
+//│   while(_lh_funcomp_x =>
+//│     (0 /= (spri(_lh_funcomp_x))))(red)(_lh_redstar_arg1)
 //│ fun spri(_lh_spri_arg1) =
 //│   if _lh_spri_arg1 is
 //│     LH_C (_lh_spri_LH_C_0, _lh_spri_LH_C_1) then
@@ -434,11 +434,11 @@ testClausify_nofib $ primId 10
 //│             LH_C (_lh_spri_LH_C_0, _lh_spri_LH_C_1) then
 //│               if _lh_spri_LH_C_0 is
 //│                 Lex (_lh_spri_Lex_0) then
-//│                   opri _lh_spri_Lex_0
+//│                   opri(_lh_spri_Lex_0)
 //│ fun splitHelper(_lh_splitHelper_arg1)(_lh_splitHelper_arg2) =
 //│   if _lh_splitHelper_arg1 is
 //│     Con (_lh_splitHelper_Con_0, _lh_splitHelper_Con_1) then
-//│       splitHelper _lh_splitHelper_Con_0 (splitHelper _lh_splitHelper_Con_1 _lh_splitHelper_arg2)
+//│       splitHelper(_lh_splitHelper_Con_0)(splitHelper(_lh_splitHelper_Con_1)(_lh_splitHelper_arg2))
 //│ fun clauses(_lh_clauses_arg1) =
 //│   (_lh_funcomp_x =>
 //│     ((_lh_funcomp_x =>
@@ -447,55 +447,55 @@ testClausify_nofib $ primId 10
 //│           ((_lh_funcomp_x =>
 //│             ((_lh_funcomp_x =>
 //│               ((_lh_funcomp_x =>
-//│                 (concat (map disp _lh_funcomp_x))) (unicl _lh_funcomp_x))) (split _lh_funcomp_x))) (disin _lh_funcomp_x))) (negin _lh_funcomp_x))) (elim _lh_funcomp_x))) (parse _lh_funcomp_x))) _lh_clauses_arg1
+//│                 (concat(map(disp)(_lh_funcomp_x))))(unicl(_lh_funcomp_x))))(split(_lh_funcomp_x))))(disin(_lh_funcomp_x))))(negin(_lh_funcomp_x))))(elim(_lh_funcomp_x))))(parse(_lh_funcomp_x))))(_lh_clauses_arg1)
 //│ fun negin(_lh_negin_arg1) =
 //│   if _lh_negin_arg1 is
 //│     Not (_lh_negin_Not_0) then
 //│       if _lh_negin_Not_0 is
 //│         Not (_lh_negin_Not_0) then
-//│           negin _lh_negin_Not_0
+//│           negin(_lh_negin_Not_0)
 //│         Con (_lh_negin_Con_0, _lh_negin_Con_1) then
-//│           Dis ((negin (Not (_lh_negin_Con_0))), (negin (Not (_lh_negin_Con_1))))
+//│           Dis (negin(Not (_lh_negin_Con_0)), negin(Not (_lh_negin_Con_1)))
 //│         Dis (_lh_negin_Dis_0, _lh_negin_Dis_1) then
-//│           Con ((negin (Not (_lh_negin_Dis_0))), (negin (Not (_lh_negin_Dis_1))))
+//│           Con (negin(Not (_lh_negin_Dis_0)), negin(Not (_lh_negin_Dis_1)))
 //│     Dis (_lh_negin_Dis_0, _lh_negin_Dis_1) then
-//│       Dis ((negin _lh_negin_Dis_0), (negin _lh_negin_Dis_1))
+//│       Dis (negin(_lh_negin_Dis_0), negin(_lh_negin_Dis_1))
 //│     Con (_lh_negin_Con_0, _lh_negin_Con_1) then
-//│       Con ((negin _lh_negin_Con_0), (negin _lh_negin_Con_1))
+//│       Con (negin(_lh_negin_Con_0), negin(_lh_negin_Con_1))
 //│ fun uniclHelper(_lh_uniclHelper_arg1)(_lh_uniclHelper_arg2) =
-//│   let cp = clause _lh_uniclHelper_arg1
-//│   if tautclause cp then
+//│   let cp = clause(_lh_uniclHelper_arg1)
+//│   if tautclause(cp) then
 //│     _lh_uniclHelper_arg2
 //│   else
-//│     (insert cp _lh_uniclHelper_arg2)
+//│     (insert(cp)(_lh_uniclHelper_arg2))
 //│ fun while(_lh_while_arg1)(_lh_while_arg2)(_lh_while_arg3) =
-//│   if _lh_while_arg1 _lh_while_arg3 then
-//│     while _lh_while_arg1 _lh_while_arg2 (_lh_while_arg2 _lh_while_arg3)
+//│   if _lh_while_arg1(_lh_while_arg3) then
+//│     while(_lh_while_arg1)(_lh_while_arg2)(_lh_while_arg2(_lh_while_arg3))
 //│   else
 //│     _lh_while_arg3
 //│ fun unicl(_lh_unicl_arg1) =
-//│   foldr uniclHelper (LH_N ()) _lh_unicl_arg1
+//│   foldr(uniclHelper)(LH_N ())(_lh_unicl_arg1)
 //│ fun disp(_lh_disp_arg1) =
 //│   if _lh_disp_arg1 is
 //│     LH_P2 (_lh_disp_LH_P2_0, _lh_disp_LH_P2_1) then
-//│       mappend (mappend (interleave _lh_disp_LH_P2_0 (spaces (length _lh_disp_LH_P2_0))) (LH_C ('<', (LH_C ('=', (LH_N ())))))) (mappend (interleave (spaces (length _lh_disp_LH_P2_1)) _lh_disp_LH_P2_1) (LH_C ('n', (LH_N ()))))
+//│       mappend(mappend(interleave(_lh_disp_LH_P2_0)(spaces(length(_lh_disp_LH_P2_0))))(LH_C ('<', LH_C ('=', LH_N ()))))(mappend(interleave(spaces(length(_lh_disp_LH_P2_1)))(_lh_disp_LH_P2_1))(LH_C ('n', LH_N ())))
 //│ fun copy(_lh_copy_arg1)(_lh_copy_arg2) =
 //│   if _lh_copy_arg1 > 0 then
-//│     LH_C (_lh_copy_arg2, (copy (_lh_copy_arg1 - 1) _lh_copy_arg2))
+//│     LH_C (_lh_copy_arg2, copy(_lh_copy_arg1 - 1)(_lh_copy_arg2))
 //│   else
 //│     (LH_N ())
 //│ fun parseHelper(_lh_parseHelper_arg1)(_lh_parseHelper_arg2) =
 //│   if _lh_parseHelper_arg1 is
 //│     LH_N then
-//│       redstar _lh_parseHelper_arg2
+//│       redstar(_lh_parseHelper_arg2)
 //│     LH_C (_lh_parseHelper_LH_C_0, _lh_parseHelper_LH_C_1) then
 //│       if _lh_parseHelper_LH_C_0 is
 //│         ' ' then
-//│           parseHelper _lh_parseHelper_LH_C_1 _lh_parseHelper_arg2
+//│           parseHelper(_lh_parseHelper_LH_C_1)(_lh_parseHelper_arg2)
 //│         '(' then
-//│           parseHelper _lh_parseHelper_LH_C_1 (LH_C ((Lex ('(')), _lh_parseHelper_arg2))
+//│           parseHelper(_lh_parseHelper_LH_C_1)(LH_C (Lex ('('), _lh_parseHelper_arg2))
 //│         ')' then
-//│           let _lh_matchIdent = redstar _lh_parseHelper_arg2
+//│           let _lh_matchIdent = redstar(_lh_parseHelper_arg2)
 //│           if _lh_matchIdent is
 //│             LH_C (_lh_parseHelper_LH_C_0, _lh_parseHelper_LH_C_1) then
 //│               if _lh_parseHelper_LH_C_1 is
@@ -504,17 +504,17 @@ testClausify_nofib $ primId 10
 //│                     Lex (_lh_parseHelper_Lex_0) then
 //│                       if _lh_parseHelper_Lex_0 is
 //│                         '(' then
-//│                           parseHelper _lh_parseHelper_LH_C_1 (LH_C (_lh_parseHelper_LH_C_0, _lh_parseHelper_LH_C_1))
+//│                           parseHelper(_lh_parseHelper_LH_C_1)(LH_C (_lh_parseHelper_LH_C_0, _lh_parseHelper_LH_C_1))
 //│ fun contains(_lh_contains_arg1)(_lh_contains_arg2) =
 //│   if _lh_contains_arg2 is
 //│     LH_C (_lh_contains_LH_C_0, _lh_contains_LH_C_1) then
-//│       (polyEq _lh_contains_arg1 _lh_contains_LH_C_0) || (contains _lh_contains_arg1 _lh_contains_LH_C_1)
+//│       (polyEq(_lh_contains_arg1)(_lh_contains_LH_C_0)) || (contains(_lh_contains_arg1)(_lh_contains_LH_C_1))
 //│     LH_N then
 //│       False ()
 //│ fun clause(_lh_clause_arg1) =
-//│   clauseHelper _lh_clause_arg1 (LH_P2 ((LH_N ()), (LH_N ())))
+//│   clauseHelper(_lh_clause_arg1)(LH_P2 (LH_N (), LH_N ()))
 //│ fun spaces(_lh_spaces_arg1) =
-//│   copy _lh_spaces_arg1 ' '
+//│   copy(_lh_spaces_arg1)(' ')
 //│ fun red(_lh_red_arg1) =
 //│   if _lh_red_arg1 is
 //│     LH_C (_lh_red_LH_C_0, _lh_red_LH_C_1) then
@@ -530,28 +530,28 @@ testClausify_nofib $ primId 10
 //│                         LH_C (_lh_red_LH_C_0, _lh_red_LH_C_1) then
 //│                           if _lh_red_LH_C_0 is
 //│                             Ast (_lh_red_Ast_0) then
-//│                               LH_C ((Ast ((Eqv (_lh_red_Ast_0, _lh_red_Ast_0)))), _lh_red_LH_C_1)
+//│                               LH_C (Ast (Eqv (_lh_red_Ast_0, _lh_red_Ast_0)), _lh_red_LH_C_1)
 //│                     '>' then
 //│                       if _lh_red_LH_C_1 is
 //│                         LH_C (_lh_red_LH_C_0, _lh_red_LH_C_1) then
 //│                           if _lh_red_LH_C_0 is
 //│                             Ast (_lh_red_Ast_0) then
-//│                               LH_C ((Ast ((Imp (_lh_red_Ast_0, _lh_red_Ast_0)))), _lh_red_LH_C_1)
+//│                               LH_C (Ast (Imp (_lh_red_Ast_0, _lh_red_Ast_0)), _lh_red_LH_C_1)
 //│                     '|' then
 //│                       if _lh_red_LH_C_1 is
 //│                         LH_C (_lh_red_LH_C_0, _lh_red_LH_C_1) then
 //│                           if _lh_red_LH_C_0 is
 //│                             Ast (_lh_red_Ast_0) then
-//│                               LH_C ((Ast ((Dis (_lh_red_Ast_0, _lh_red_Ast_0)))), _lh_red_LH_C_1)
+//│                               LH_C (Ast (Dis (_lh_red_Ast_0, _lh_red_Ast_0)), _lh_red_LH_C_1)
 //│                     '&' then
 //│                       if _lh_red_LH_C_1 is
 //│                         LH_C (_lh_red_LH_C_0, _lh_red_LH_C_1) then
 //│                           if _lh_red_LH_C_0 is
 //│                             Ast (_lh_red_Ast_0) then
-//│                               LH_C ((Ast ((Con (_lh_red_Ast_0, _lh_red_Ast_0)))), _lh_red_LH_C_1)
+//│                               LH_C (Ast (Con (_lh_red_Ast_0, _lh_red_Ast_0)), _lh_red_LH_C_1)
 //│                     '~' then
-//│                       LH_C ((Ast ((Not (_lh_red_Ast_0)))), _lh_red_LH_C_1)
-//│ (testClausify_nofib (primId 10))
+//│                       LH_C (Ast (Not (_lh_red_Ast_0)), _lh_red_LH_C_1)
+//│ (testClausify_nofib(primId(10)))
 //│ 		---------- unoptimized mls gen ----------
 //│ testClausify_nofib_lh_₁^1295(primId⁰(10))
 //│ def clauseHelper_lh_₁(_lh_clauseHelper_arg1⁰, _lh_clauseHelper_arg2⁰) = case _lh_clauseHelper_arg1⁰ of {

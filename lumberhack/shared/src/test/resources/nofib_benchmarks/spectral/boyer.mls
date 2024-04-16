@@ -255,49 +255,49 @@ testBoyer_nofib $ primId 5
 //│ fun map(f)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       LH_C ((f h), (map f t))
+//│       LH_C (f(h), map(f)(t))
 //│     LH_N then
 //│       LH_N ()
 //│ fun map_lz(f)(ls) =
-//│   lazy (if force ls is
+//│   lazy(if force(ls) is
 //│     LH_C (h, t) then
-//│       LH_C ((f h), (map_lz f t))
+//│       LH_C (f(h), map_lz(f)(t))
 //│     LH_N then
 //│       LH_N ())
 //│ fun filter(f)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       if f h then
-//│         LH_C (h, (filter f t))
+//│       if f(h) then
+//│         LH_C (h, filter(f)(t))
 //│       else
-//│         (filter f t)
+//│         (filter(f)(t))
 //│     LH_N then
 //│       LH_N ()
 //│ fun filter_lz(f)(ls) =
-//│   lazy (if force ls is
+//│   lazy(if force(ls) is
 //│     LH_C (h, t) then
-//│       if f h then
-//│         LH_C (h, (filter_lz f t))
+//│       if f(h) then
+//│         LH_C (h, filter_lz(f)(t))
 //│       else
-//│         (force (filter_lz f t))
+//│         (force(filter_lz(f)(t)))
 //│     LH_N then
 //│       LH_N ())
 //│ fun foldl(f)(i)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       foldl f (f i h) t
+//│       foldl(f)(f(i)(h))(t)
 //│     LH_N then
 //│       i
 //│ fun foldr(f)(i)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       f h (foldr f i t)
+//│       f(h)(foldr(f)(i)(t))
 //│     LH_N then
 //│       i
 //│ fun foldr_lz(f)(i)(ls) =
-//│   lazy (if force ls is
+//│   lazy(if force(ls) is
 //│     LH_C (h, t) then
-//│       f h (foldr_lz f i t)
+//│       f(h)(foldr_lz(f)(i)(t))
 //│     LH_N then
 //│       i)
 //│ fun zip(xs)(ys) =
@@ -305,7 +305,7 @@ testBoyer_nofib $ primId 5
 //│     LH_C (hx, tx) then
 //│       if ys is
 //│         LH_C (hy, ty) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -313,9 +313,9 @@ testBoyer_nofib $ primId 5
 //│ fun zip_nl_lz(xs)(ys) =
 //│   if xs is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip_nl_lz tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip_nl_lz(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -323,19 +323,19 @@ testBoyer_nofib $ primId 5
 //│ fun zip_lz_nl(xs)(ys) =
 //│   if ys is
 //│     LH_C (hy, ty) then
-//│       if force xs is
+//│       if force(xs) is
 //│         LH_C (hx, tx) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_nl tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip_lz_nl(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
 //│       LH_N ()
 //│ fun zip_lz_lz(xs)(ys) =
-//│   lazy (if force xs is
+//│   lazy(if force(xs) is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_lz tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip_lz_lz(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -345,7 +345,7 @@ testBoyer_nofib $ primId 5
 //│     LH_C (hx, tx) then
 //│       if ys is
 //│         LH_C (hy, ty) then
-//│           LH_C ((f hx hy), (zipWith f tx ty))
+//│           LH_C (f(hx)(hy), zipWith(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -353,9 +353,9 @@ testBoyer_nofib $ primId 5
 //│ fun zipWith_nl_lz(f)(xs)(ys) =
 //│   if xs is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((f hx hy), (zipWith_nl_lz f tx ty))
+//│           LH_C (f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -363,19 +363,19 @@ testBoyer_nofib $ primId 5
 //│ fun zipWith_lz_nl(f)(xs)(ys) =
 //│   if ys is
 //│     LH_C (hy, ty) then
-//│       if force xs is
+//│       if force(xs) is
 //│         LH_C (hx, tx) then
-//│           LH_C ((f hx hy), (zipWith_lz_nl f tx ty))
+//│           LH_C (f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
 //│       LH_N ()
 //│ fun zipWith_lz_lz(f)(xs)(ys) =
-//│   lazy (if force xs is
+//│   lazy(if force(xs) is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((f hx hy), (zipWith_lz_lz f tx ty))
+//│           LH_C (f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -387,7 +387,7 @@ testBoyer_nofib $ primId 5
 //│     LH_N then
 //│       error
 //│ fun head_lz(ls) =
-//│   if force ls is
+//│   if force(ls) is
 //│     LH_C (h, t) then
 //│       h
 //│     LH_N then
@@ -399,43 +399,43 @@ testBoyer_nofib $ primId 5
 //│     LH_N then
 //│       error
 //│ fun tail_lz(ls) =
-//│   if force ls is
+//│   if force(ls) is
 //│     LH_C (h, t) then
 //│       t
 //│     LH_N then
 //│       error
 //│ fun enumFromTo(a)(b) =
 //│   if a <= b then
-//│     LH_C (a, (enumFromTo (a + 1) b))
+//│     LH_C (a, enumFromTo(a + 1)(b))
 //│   else
 //│     (LH_N ())
 //│ fun enumFromThenTo(a)(t)(b) =
 //│   if a <= b then
-//│     LH_C (a, (enumFromThenTo t (2 * t - a) b))
+//│     LH_C (a, enumFromThenTo(t)(2 * t - a)(b))
 //│   else
 //│     (LH_N ())
 //│ fun enumFrom(a) =
-//│   lazy (LH_C (a, (enumFrom (a + 1))))
+//│   lazy(LH_C (a, enumFrom(a + 1)))
 //│ fun enumFromThen(a)(t) =
-//│   lazy (LH_C (a, (enumFromThen t (2 * t - a))))
+//│   lazy(LH_C (a, enumFromThen(t)(2 * t - a)))
 //│ fun repeat(x) =
-//│   lazy (LH_C (x, (repeat x)))
+//│   lazy(LH_C (x, repeat(x)))
 //│ fun iterate(f)(x) =
-//│   lazy (LH_C (x, (iterate f (f x))))
+//│   lazy(LH_C (x, iterate(f)(f(x))))
 //│ fun take(n)(ls) =
 //│   if n > 0 then
 //│     if ls is
 //│       LH_C (h, t) then
-//│         LH_C (h, (take (n - 1) t))
+//│         LH_C (h, take(n - 1)(t))
 //│       LH_N then
 //│         LH_N ()
 //│   else
 //│     (LH_N ())
 //│ fun take_lz(n)(ls) =
 //│   if n > 0 then
-//│     if force ls is
+//│     if force(ls) is
 //│       LH_C (h, t) then
-//│         LH_C (h, (take_lz (n - 1) t))
+//│         LH_C (h, take_lz(n - 1)(t))
 //│       LH_N then
 //│         LH_N ()
 //│   else
@@ -443,23 +443,23 @@ testBoyer_nofib $ primId 5
 //│ fun length(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       1 + (length t)
+//│       1 + (length(t))
 //│     LH_N then
 //│       0
 //│ fun mappend(xs)(ys) =
 //│   if xs is
 //│     LH_C (h, t) then
-//│       LH_C (h, (mappend t ys))
+//│       LH_C (h, mappend(t)(ys))
 //│     LH_N then
 //│       ys
 //│ fun sum(ls) =
-//│   sumAux ls 0
+//│   sumAux(ls)(0)
 //│ fun sumAux(ls)(a) =
 //│   if ls is
 //│     LH_N then
 //│       a
 //│     LH_C (h, t) then
-//│       sumAux t (a + h)
+//│       sumAux(t)(a + h)
 //│ fun atIndex(n)(ls) =
 //│   if n < 0 then
 //│     error
@@ -469,39 +469,39 @@ testBoyer_nofib $ primId 5
 //│         if n == 0 then
 //│           h
 //│         else
-//│           (atIndex (n - 1) t)
+//│           (atIndex(n - 1)(t))
 //│       LH_N then
 //│         error)
 //│ fun atIndex_lz(n)(ls) =
 //│   if n < 0 then
 //│     error
 //│   else
-//│     (if force ls is
+//│     (if force(ls) is
 //│       LH_C (h, t) then
 //│         if n == 0 then
 //│           h
 //│         else
-//│           (atIndex_lz (n - 1) t)
+//│           (atIndex_lz(n - 1)(t))
 //│       LH_N then
 //│         error)
 //│ fun concat(lss) =
 //│   if lss is
 //│     LH_C (h, t) then
-//│       mappend h (concat t)
+//│       mappend(h)(concat(t))
 //│     LH_N then
 //│       LH_N ()
 //│ fun reverse(ls) =
-//│   reverse_helper ls (LH_N ())
+//│   reverse_helper(ls)(LH_N ())
 //│ fun reverse_helper(ls)(a) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       reverse_helper t (LH_C (h, a))
+//│       reverse_helper(t)(LH_C (h, a))
 //│     LH_N then
 //│       a
 //│ fun apply_subst(_lh_apply_subst_arg1)(_lh_apply_subst_arg2) =
 //│   if _lh_apply_subst_arg2 is
 //│     Var (_lh_apply_subst_Var_0) then
-//│       let _lh_matchIdent = find _lh_apply_subst_Var_0 _lh_apply_subst_arg1
+//│       let _lh_matchIdent = find(_lh_apply_subst_Var_0)(_lh_apply_subst_arg1)
 //│       if _lh_matchIdent is
 //│         LH_P2 (_lh_apply_subst_LH_P2_0, _lh_apply_subst_LH_P2_1) then
 //│           if _lh_apply_subst_LH_P2_0 then
@@ -509,119 +509,119 @@ testBoyer_nofib $ primId 5
 //│           else
 //│             (Var (_lh_apply_subst_Var_0))
 //│     Fun (_lh_apply_subst_Fun_0, _lh_apply_subst_Fun_1, _lh_apply_subst_Fun_2) then
-//│       Fun (_lh_apply_subst_Fun_0, (map (apply_subst _lh_apply_subst_arg1) _lh_apply_subst_Fun_1), _lh_apply_subst_Fun_2)
+//│       Fun (_lh_apply_subst_Fun_0, map(apply_subst(_lh_apply_subst_arg1))(_lh_apply_subst_Fun_1), _lh_apply_subst_Fun_2)
 //│ fun test0(_lh_test0_arg1) =
 //│   let rec
 //│     fun f(_lh_f_arg1) =
-//│       Fun ((F ()), (LH_C (_lh_f_arg1, (LH_N ()))), (lazy (LH_N ())))
+//│       Fun (F (), LH_C (_lh_f_arg1, LH_N ()), lazy(LH_N ()))
 //│     let boyerTrue =
-//│       Fun ((TRUE ()), (LH_N ()), (lazy (LH_N ())))
+//│       Fun (TRUE (), LH_N (), lazy(LH_N ()))
 //│     fun append(_lh_append_arg1)(_lh_append_arg2) =
-//│       Fun ((APPEND ()), (LH_C (_lh_append_arg1, (LH_C (_lh_append_arg2, (LH_N ()))))), (lazy (LH_C ((LH_P2 ((append (append x y) z), (append x (append y z)))), (LH_N ())))))
+//│       Fun (APPEND (), LH_C (_lh_append_arg1, LH_C (_lh_append_arg2, LH_N ())), lazy(LH_C (LH_P2 (append(append(x)(y))(z), append(x)(append(y)(z))), LH_N ())))
 //│     fun difference(_lh_difference_arg1)(_lh_difference_arg2) =
-//│       Fun ((DIFFERENCE ()), (LH_C (_lh_difference_arg1, (LH_C (_lh_difference_arg2, (LH_N ()))))), (lazy (LH_C ((LH_P2 ((difference x x), zero)), (LH_C ((LH_P2 ((difference (plus x y) x), y)), (LH_C ((LH_P2 ((difference (plus y x) x), y)), (LH_C ((LH_P2 ((difference (plus x y) (plus x z)), (difference y z))), (LH_C ((LH_P2 ((difference (plus y (plus x z)) x), (plus y z))), (LH_C ((LH_P2 ((difference (add1 (plus y z)) z), (add1 y))), (LH_C ((LH_P2 ((difference (add1 (add1 x)) two), x)), (LH_N ())))))))))))))))))
+//│       Fun (DIFFERENCE (), LH_C (_lh_difference_arg1, LH_C (_lh_difference_arg2, LH_N ())), lazy(LH_C (LH_P2 (difference(x)(x), zero), LH_C (LH_P2 (difference(plus(x)(y))(x), y), LH_C (LH_P2 (difference(plus(y)(x))(x), y), LH_C (LH_P2 (difference(plus(x)(y))(plus(x)(z)), difference(y)(z)), LH_C (LH_P2 (difference(plus(y)(plus(x)(z)))(x), plus(y)(z)), LH_C (LH_P2 (difference(add1(plus(y)(z)))(z), add1(y)), LH_C (LH_P2 (difference(add1(add1(x)))(two), x), LH_N ())))))))))
 //│     fun listp(_lh_listp_arg1) =
-//│       Fun ((LISTP ()), (LH_C (_lh_listp_arg1, (LH_N ()))), (lazy (LH_C ((LH_P2 ((listp x), (or_ (nilp x) (consp x)))), (LH_N ())))))
+//│       Fun (LISTP (), LH_C (_lh_listp_arg1, LH_N ()), lazy(LH_C (LH_P2 (listp(x), or_(nilp(x))(consp(x))), LH_N ())))
 //│     fun iff(_lh_iff_arg1)(_lh_iff_arg2) =
-//│       Fun ((IFF ()), (LH_C (_lh_iff_arg1, (LH_C (_lh_iff_arg2, (LH_N ()))))), (lazy (LH_C ((LH_P2 ((iff x y), (and_ (implies x y) (implies y x)))), (LH_N ())))))
+//│       Fun (IFF (), LH_C (_lh_iff_arg1, LH_C (_lh_iff_arg2, LH_N ())), lazy(LH_C (LH_P2 (iff(x)(y), and_(implies(x)(y))(implies(y)(x))), LH_N ())))
 //│     let z =
-//│       Var ((Z ()))
+//│       Var (Z ())
 //│     fun remainder(_lh_remainder_arg1)(_lh_remainder_arg2) =
-//│       Fun ((REMAINDER ()), (LH_C (_lh_remainder_arg1, (LH_C (_lh_remainder_arg2, (LH_N ()))))), (lazy (LH_C ((LH_P2 ((remainder x one), zero)), (LH_C ((LH_P2 ((remainder x x), zero)), (LH_C ((LH_P2 ((remainder (times x y) x), zero)), (LH_C ((LH_P2 ((remainder (times x y) y), zero)), (LH_N ())))))))))))
+//│       Fun (REMAINDER (), LH_C (_lh_remainder_arg1, LH_C (_lh_remainder_arg2, LH_N ())), lazy(LH_C (LH_P2 (remainder(x)(one), zero), LH_C (LH_P2 (remainder(x)(x), zero), LH_C (LH_P2 (remainder(times(x)(y))(x), zero), LH_C (LH_P2 (remainder(times(x)(y))(y), zero), LH_N ()))))))
 //│     fun nlistp(_lh_nlistp_arg1) =
-//│       Fun ((NLISTP ()), (LH_C (_lh_nlistp_arg1, (LH_N ()))), (lazy (LH_C ((LH_P2 ((nlistp x), (not_ (listp x)))), (LH_N ())))))
+//│       Fun (NLISTP (), LH_C (_lh_nlistp_arg1, LH_N ()), lazy(LH_C (LH_P2 (nlistp(x), not_(listp(x))), LH_N ())))
 //│     fun and_(_lh_and__arg1)(_lh_and__arg2) =
-//│       Fun ((AND ()), (LH_C (_lh_and__arg1, (LH_C (_lh_and__arg2, (LH_N ()))))), (lazy (LH_C ((LH_P2 ((and_ x y), (if_ x (if_ y boyerTrue boyerFalse) boyerFalse))), (LH_N ())))))
+//│       Fun (AND (), LH_C (_lh_and__arg1, LH_C (_lh_and__arg2, LH_N ())), lazy(LH_C (LH_P2 (and_(x)(y), if_(x)(if_(y)(boyerTrue)(boyerFalse))(boyerFalse)), LH_N ())))
 //│     fun implies(_lh_implies_arg1)(_lh_implies_arg2) =
-//│       Fun ((IMPLIES ()), (LH_C (_lh_implies_arg1, (LH_C (_lh_implies_arg2, (LH_N ()))))), (lazy (LH_C ((LH_P2 ((implies x y), (if_ x (if_ y boyerTrue boyerFalse) boyerTrue))), (LH_N ())))))
+//│       Fun (IMPLIES (), LH_C (_lh_implies_arg1, LH_C (_lh_implies_arg2, LH_N ())), lazy(LH_C (LH_P2 (implies(x)(y), if_(x)(if_(y)(boyerTrue)(boyerFalse))(boyerTrue)), LH_N ())))
 //│     fun equal(_lh_equal_arg1)(_lh_equal_arg2) =
-//│       Fun ((EQUAL ()), (LH_C (_lh_equal_arg1, (LH_C (_lh_equal_arg2, (LH_N ()))))), (lazy (LH_C ((LH_P2 ((equal (plus x y) zero), (and_ (zerop x) (zerop y)))), (LH_C ((LH_P2 ((equal (plus x y) (plus x z)), (equal y z))), (LH_C ((LH_P2 ((equal zero (difference x y)), (not_ (lessp y x)))), (LH_C ((LH_P2 ((equal x (difference x y)), (or_ (equal x zero) (zerop y)))), (LH_C ((LH_P2 ((equal (times x y) zero), (or_ (zerop x) (zerop y)))), (LH_C ((LH_P2 ((equal (append x y) (append x z)), (equal y z))), (LH_C ((LH_P2 ((equal y (times x y)), (or_ (equal y zero) (equal x one)))), (LH_C ((LH_P2 ((equal x (times x y)), (or_ (equal x zero) (equal y one)))), (LH_C ((LH_P2 ((equal (times x y) one), (and_ (equal x one) (equal y one)))), (LH_C ((LH_P2 ((equal (difference x y) (difference z y)), (if_ (lessp x y) (not_ (lessp y z)) (if_ (lessp z y) (not_ (lessp y x)) (equal x z))))), (LH_C ((LH_P2 ((equal (lessp x y) z), (if_ (lessp x y) (equal boyerTrue z) (equal boyerFalse z)))), (LH_N ())))))))))))))))))))))))))
+//│       Fun (EQUAL (), LH_C (_lh_equal_arg1, LH_C (_lh_equal_arg2, LH_N ())), lazy(LH_C (LH_P2 (equal(plus(x)(y))(zero), and_(zerop(x))(zerop(y))), LH_C (LH_P2 (equal(plus(x)(y))(plus(x)(z)), equal(y)(z)), LH_C (LH_P2 (equal(zero)(difference(x)(y)), not_(lessp(y)(x))), LH_C (LH_P2 (equal(x)(difference(x)(y)), or_(equal(x)(zero))(zerop(y))), LH_C (LH_P2 (equal(times(x)(y))(zero), or_(zerop(x))(zerop(y))), LH_C (LH_P2 (equal(append(x)(y))(append(x)(z)), equal(y)(z)), LH_C (LH_P2 (equal(y)(times(x)(y)), or_(equal(y)(zero))(equal(x)(one))), LH_C (LH_P2 (equal(x)(times(x)(y)), or_(equal(x)(zero))(equal(y)(one))), LH_C (LH_P2 (equal(times(x)(y))(one), and_(equal(x)(one))(equal(y)(one))), LH_C (LH_P2 (equal(difference(x)(y))(difference(z)(y)), if_(lessp(x)(y))(not_(lessp(y)(z)))(if_(lessp(z)(y))(not_(lessp(y)(x)))(equal(x)(z)))), LH_C (LH_P2 (equal(lessp(x)(y))(z), if_(lessp(x)(y))(equal(boyerTrue)(z))(equal(boyerFalse)(z))), LH_N ())))))))))))))
 //│     fun divides(_lh_divides_arg1)(_lh_divides_arg2) =
-//│       Fun ((DIVIDES ()), (LH_C (_lh_divides_arg1, (LH_C (_lh_divides_arg2, (LH_N ()))))), (lazy (LH_C ((LH_P2 ((divides x y), (zerop (remainder y x)))), (LH_N ())))))
+//│       Fun (DIVIDES (), LH_C (_lh_divides_arg1, LH_C (_lh_divides_arg2, LH_N ())), lazy(LH_C (LH_P2 (divides(x)(y), zerop(remainder(y)(x))), LH_N ())))
 //│     let b =
-//│       Var ((B ()))
+//│       Var (B ())
 //│     fun lesseqp(_lh_lesseqp_arg1)(_lh_lesseqp_arg2) =
-//│       Fun ((LESSEQP ()), (LH_C (_lh_lesseqp_arg1, (LH_C (_lh_lesseqp_arg2, (LH_N ()))))), (lazy (LH_C ((LH_P2 ((lesseqp x y), (not_ (lessp y x)))), (LH_N ())))))
+//│       Fun (LESSEQP (), LH_C (_lh_lesseqp_arg1, LH_C (_lh_lesseqp_arg2, LH_N ())), lazy(LH_C (LH_P2 (lesseqp(x)(y), not_(lessp(y)(x))), LH_N ())))
 //│     fun exp_(_lh_exp__arg1)(_lh_exp__arg2) =
-//│       Fun ((EXP ()), (LH_C (_lh_exp__arg1, (LH_C (_lh_exp__arg2, (LH_N ()))))), (lazy (LH_C ((LH_P2 ((exp_ x (plus y z)), (times (exp_ x y) (exp_ x z)))), (LH_C ((LH_P2 ((exp_ x (times y z)), (exp_ (exp_ x y) z))), (LH_N ())))))))
+//│       Fun (EXP (), LH_C (_lh_exp__arg1, LH_C (_lh_exp__arg2, LH_N ())), lazy(LH_C (LH_P2 (exp_(x)(plus(y)(z)), times(exp_(x)(y))(exp_(x)(z))), LH_C (LH_P2 (exp_(x)(times(y)(z)), exp_(exp_(x)(y))(z)), LH_N ()))))
 //│     fun lessp(_lh_lessp_arg1)(_lh_lessp_arg2) =
-//│       Fun ((LESSP ()), (LH_C (_lh_lessp_arg1, (LH_C (_lh_lessp_arg2, (LH_N ()))))), (lazy (LH_C ((LH_P2 ((lessp (remainder x y) y), (not_ (zerop y)))), (LH_C ((LH_P2 ((lessp (quotient x y) x), (and_ (not_ (zerop x)) (lessp one y)))), (LH_C ((LH_P2 ((lessp (plus x y) (plus x z)), (lessp y z))), (LH_C ((LH_P2 ((lessp (times x z) (times y z)), (and_ (not_ (zerop z)) (lessp x y)))), (LH_C ((LH_P2 ((lessp y (plus x y)), (not_ (zerop x)))), (LH_N ())))))))))))))
+//│       Fun (LESSP (), LH_C (_lh_lessp_arg1, LH_C (_lh_lessp_arg2, LH_N ())), lazy(LH_C (LH_P2 (lessp(remainder(x)(y))(y), not_(zerop(y))), LH_C (LH_P2 (lessp(quotient(x)(y))(x), and_(not_(zerop(x)))(lessp(one)(y))), LH_C (LH_P2 (lessp(plus(x)(y))(plus(x)(z)), lessp(y)(z)), LH_C (LH_P2 (lessp(times(x)(z))(times(y)(z)), and_(not_(zerop(z)))(lessp(x)(y))), LH_C (LH_P2 (lessp(y)(plus(x)(y)), not_(zerop(x))), LH_N ())))))))
 //│     fun reverse_(_lh_reverse__arg1) =
-//│       Fun ((REVERSE ()), (LH_C (_lh_reverse__arg1, (LH_N ()))), (lazy (LH_C ((LH_P2 ((reverse_ (append x y)), (append (reverse_ y) (reverse_ x)))), (LH_N ())))))
+//│       Fun (REVERSE (), LH_C (_lh_reverse__arg1, LH_N ()), lazy(LH_C (LH_P2 (reverse_(append(x)(y)), append(reverse_(y))(reverse_(x))), LH_N ())))
 //│     fun zerop(_lh_zerop_arg1) =
-//│       Fun ((ZEROP ()), (LH_C (_lh_zerop_arg1, (LH_N ()))), (lazy (LH_C ((LH_P2 ((zerop x), (equal x zero))), (LH_N ())))))
+//│       Fun (ZEROP (), LH_C (_lh_zerop_arg1, LH_N ()), lazy(LH_C (LH_P2 (zerop(x), equal(x)(zero)), LH_N ())))
 //│     let zero =
-//│       Fun ((ZERO ()), (LH_N ()), (lazy (LH_N ())))
+//│       Fun (ZERO (), LH_N (), lazy(LH_N ()))
 //│     let u =
-//│       Var ((U ()))
+//│       Var (U ())
 //│     fun times(_lh_times_arg1)(_lh_times_arg2) =
-//│       Fun ((TIMES ()), (LH_C (_lh_times_arg1, (LH_C (_lh_times_arg2, (LH_N ()))))), (lazy (LH_C ((LH_P2 ((times x (plus y z)), (plus (times x y) (times x z)))), (LH_C ((LH_P2 ((times (times x y) z), (times x (times y z)))), (LH_C ((LH_P2 ((times x (difference y z)), (difference (times y x) (times z x)))), (LH_C ((LH_P2 ((times x (add1 y)), (plus x (times x y)))), (LH_N ())))))))))))
+//│       Fun (TIMES (), LH_C (_lh_times_arg1, LH_C (_lh_times_arg2, LH_N ())), lazy(LH_C (LH_P2 (times(x)(plus(y)(z)), plus(times(x)(y))(times(x)(z))), LH_C (LH_P2 (times(times(x)(y))(z), times(x)(times(y)(z))), LH_C (LH_P2 (times(x)(difference(y)(z)), difference(times(y)(x))(times(z)(x))), LH_C (LH_P2 (times(x)(add1(y)), plus(x)(times(x)(y))), LH_N ()))))))
 //│     let one =
-//│       Fun ((ONE ()), (LH_N ()), (lazy (LH_C ((LH_P2 (one, (add1 zero))), (LH_N ())))))
+//│       Fun (ONE (), LH_N (), lazy(LH_C (LH_P2 (one, add1(zero)), LH_N ())))
 //│     fun plus(_lh_plus_arg1)(_lh_plus_arg2) =
-//│       Fun ((PLUS ()), (LH_C (_lh_plus_arg1, (LH_C (_lh_plus_arg2, (LH_N ()))))), (lazy (LH_C ((LH_P2 ((plus (plus x y) z), (plus x (plus y z)))), (LH_C ((LH_P2 ((plus (remainder x y) (times y (quotient x y))), x)), (LH_C ((LH_P2 ((plus x (add1 y)), (add1 (plus x y)))), (LH_N ())))))))))
+//│       Fun (PLUS (), LH_C (_lh_plus_arg1, LH_C (_lh_plus_arg2, LH_N ())), lazy(LH_C (LH_P2 (plus(plus(x)(y))(z), plus(x)(plus(y)(z))), LH_C (LH_P2 (plus(remainder(x)(y))(times(y)(quotient(x)(y))), x), LH_C (LH_P2 (plus(x)(add1(y)), add1(plus(x)(y))), LH_N ())))))
 //│     fun if_(_lh_if__arg1)(_lh_if__arg2)(_lh_if__arg3) =
-//│       Fun ((IF ()), (LH_C (_lh_if__arg1, (LH_C (_lh_if__arg2, (LH_C (_lh_if__arg3, (LH_N ()))))))), (lazy (LH_C ((LH_P2 ((if_ (if_ x y z) u w), (if_ x (if_ y u w) (if_ z u w)))), (LH_N ())))))
+//│       Fun (IF (), LH_C (_lh_if__arg1, LH_C (_lh_if__arg2, LH_C (_lh_if__arg3, LH_N ()))), lazy(LH_C (LH_P2 (if_(if_(x)(y)(z))(u)(w), if_(x)(if_(y)(u)(w))(if_(z)(u)(w))), LH_N ())))
 //│     let x =
-//│       Var ((X ()))
+//│       Var (X ())
 //│     let w =
-//│       Var ((W ()))
+//│       Var (W ())
 //│     let nil =
-//│       Fun ((NIL ()), (LH_N ()), (lazy (LH_N ())))
+//│       Fun (NIL (), LH_N (), lazy(LH_N ()))
 //│     fun odd_(_lh_odd__arg1) =
-//│       Fun ((ODD ()), (LH_C (_lh_odd__arg1, (LH_N ()))), (lazy (LH_C ((LH_P2 ((odd_ x), (even_ (sub1 x)))), (LH_N ())))))
+//│       Fun (ODD (), LH_C (_lh_odd__arg1, LH_N ()), lazy(LH_C (LH_P2 (odd_(x), even_(sub1(x))), LH_N ())))
 //│     let a =
-//│       Var ((A ()))
+//│       Var (A ())
 //│     let y =
-//│       Var ((Y ()))
+//│       Var (Y ())
 //│     fun greatereqp(_lh_greatereqp_arg1)(_lh_greatereqp_arg2) =
-//│       Fun ((GREATEREQP ()), (LH_C (_lh_greatereqp_arg1, (LH_C (_lh_greatereqp_arg2, (LH_N ()))))), (lazy (LH_C ((LH_P2 ((greatereqp x y), (not_ (lessp x y)))), (LH_N ())))))
+//│       Fun (GREATEREQP (), LH_C (_lh_greatereqp_arg1, LH_C (_lh_greatereqp_arg2, LH_N ())), lazy(LH_C (LH_P2 (greatereqp(x)(y), not_(lessp(x)(y))), LH_N ())))
 //│     fun not_(_lh_not__arg1) =
-//│       Fun ((NOT ()), (LH_C (_lh_not__arg1, (LH_N ()))), (lazy (LH_C ((LH_P2 ((not_ x), (if_ x boyerFalse boyerTrue))), (LH_N ())))))
+//│       Fun (NOT (), LH_C (_lh_not__arg1, LH_N ()), lazy(LH_C (LH_P2 (not_(x), if_(x)(boyerFalse)(boyerTrue)), LH_N ())))
 //│     fun member(_lh_member_arg1)(_lh_member_arg2) =
-//│       Fun ((MEMBER ()), (LH_C (_lh_member_arg1, (LH_C (_lh_member_arg2, (LH_N ()))))), (lazy (LH_C ((LH_P2 ((member x (append y z)), (or_ (member x y) (member x z)))), (LH_C ((LH_P2 ((member x (reverse_ y)), (member x y))), (LH_N ())))))))
+//│       Fun (MEMBER (), LH_C (_lh_member_arg1, LH_C (_lh_member_arg2, LH_N ())), lazy(LH_C (LH_P2 (member(x)(append(y)(z)), or_(member(x)(y))(member(x)(z))), LH_C (LH_P2 (member(x)(reverse_(y)), member(x)(y)), LH_N ()))))
 //│     let d =
-//│       Var ((D ()))
+//│       Var (D ())
 //│     let c =
-//│       Var ((C ()))
+//│       Var (C ())
 //│     fun consp(_lh_consp_arg1) =
-//│       Fun ((CONSP ()), (LH_C (_lh_consp_arg1, (LH_N ()))), (lazy (LH_C ((LH_P2 ((consp (cons x y)), boyerTrue)), (LH_N ())))))
+//│       Fun (CONSP (), LH_C (_lh_consp_arg1, LH_N ()), lazy(LH_C (LH_P2 (consp(cons(x)(y)), boyerTrue), LH_N ())))
 //│     fun nilp(_lh_nilp_arg1) =
-//│       Fun ((NILP ()), (LH_C (_lh_nilp_arg1, (LH_N ()))), (lazy (LH_C ((LH_P2 ((nilp x), (equal x nil))), (LH_N ())))))
+//│       Fun (NILP (), LH_C (_lh_nilp_arg1, LH_N ()), lazy(LH_C (LH_P2 (nilp(x), equal(x)(nil)), LH_N ())))
 //│     let two =
-//│       Fun ((TWO ()), (LH_N ()), (lazy (LH_C ((LH_P2 (two, (add1 one))), (LH_N ())))))
+//│       Fun (TWO (), LH_N (), lazy(LH_C (LH_P2 (two, add1(one)), LH_N ())))
 //│     fun sub1(_lh_sub1_arg1) =
-//│       Fun ((SUB1 ()), (LH_C (_lh_sub1_arg1, (LH_N ()))), (lazy (LH_C ((LH_P2 ((sub1 (add1 x)), x)), (LH_N ())))))
+//│       Fun (SUB1 (), LH_C (_lh_sub1_arg1, LH_N ()), lazy(LH_C (LH_P2 (sub1(add1(x)), x), LH_N ())))
 //│     fun add1(_lh_add1_arg1) =
-//│       Fun ((ADD1 ()), (LH_C (_lh_add1_arg1, (LH_N ()))), (lazy (LH_N ())))
+//│       Fun (ADD1 (), LH_C (_lh_add1_arg1, LH_N ()), lazy(LH_N ()))
 //│     fun greaterp(_lh_greaterp_arg1)(_lh_greaterp_arg2) =
-//│       Fun ((GREATERP ()), (LH_C (_lh_greaterp_arg1, (LH_C (_lh_greaterp_arg2, (LH_N ()))))), (lazy (LH_C ((LH_P2 ((greaterp x y), (lessp y x))), (LH_N ())))))
+//│       Fun (GREATERP (), LH_C (_lh_greaterp_arg1, LH_C (_lh_greaterp_arg2, LH_N ())), lazy(LH_C (LH_P2 (greaterp(x)(y), lessp(y)(x)), LH_N ())))
 //│     fun or_(_lh_or__arg1)(_lh_or__arg2) =
-//│       Fun ((OR ()), (LH_C (_lh_or__arg1, (LH_C (_lh_or__arg2, (LH_N ()))))), (lazy (LH_C ((LH_P2 ((or_ x y), (if_ x boyerTrue (if_ y boyerTrue boyerFalse)))), (LH_N ())))))
+//│       Fun (OR (), LH_C (_lh_or__arg1, LH_C (_lh_or__arg2, LH_N ())), lazy(LH_C (LH_P2 (or_(x)(y), if_(x)(boyerTrue)(if_(y)(boyerTrue)(boyerFalse))), LH_N ())))
 //│     fun length_(_lh_length__arg1) =
-//│       Fun ((LENGTH ()), (LH_C (_lh_length__arg1, (LH_N ()))), (lazy (LH_C ((LH_P2 ((length_ (reverse_ x)), (length_ x))), (LH_C ((LH_P2 ((length_ (cons x (cons y (cons z (cons u w))))), (plus four (length_ w)))), (LH_N ())))))))
+//│       Fun (LENGTH (), LH_C (_lh_length__arg1, LH_N ()), lazy(LH_C (LH_P2 (length_(reverse_(x)), length_(x)), LH_C (LH_P2 (length_(cons(x)(cons(y)(cons(z)(cons(u)(w))))), plus(four)(length_(w))), LH_N ()))))
 //│     let boyerFalse =
-//│       Fun ((FALSE ()), (LH_N ()), (lazy (LH_N ())))
+//│       Fun (FALSE (), LH_N (), lazy(LH_N ()))
 //│     let four =
-//│       Fun ((FOUR ()), (LH_N ()), (lazy (LH_C ((LH_P2 (four, (add1 (add1 two)))), (LH_N ())))))
+//│       Fun (FOUR (), LH_N (), lazy(LH_C (LH_P2 (four, add1(add1(two))), LH_N ())))
 //│     fun cons(_lh_cons_arg1)(_lh_cons_arg2) =
-//│       Fun ((CONS ()), (LH_C (_lh_cons_arg1, (LH_C (_lh_cons_arg2, (LH_N ()))))), (lazy (LH_N ())))
+//│       Fun (CONS (), LH_C (_lh_cons_arg1, LH_C (_lh_cons_arg2, LH_N ())), lazy(LH_N ()))
 //│     fun quotient(_lh_quotient_arg1)(_lh_quotient_arg2) =
-//│       Fun ((QUOTIENT ()), (LH_C (_lh_quotient_arg1, (LH_C (_lh_quotient_arg2, (LH_N ()))))), (lazy (LH_C ((LH_P2 ((quotient (plus x (plus x y)) two), (plus x (quotient y two)))), (LH_C ((LH_P2 ((quotient (times y x) y), (if_ (zerop y) zero x))), (LH_N ())))))))
+//│       Fun (QUOTIENT (), LH_C (_lh_quotient_arg1, LH_C (_lh_quotient_arg2, LH_N ())), lazy(LH_C (LH_P2 (quotient(plus(x)(plus(x)(y)))(two), plus(x)(quotient(y)(two))), LH_C (LH_P2 (quotient(times(y)(x))(y), if_(zerop(y))(zero)(x)), LH_N ()))))
 //│     fun gcd_(_lh_gcd__arg1)(_lh_gcd__arg2) =
-//│       Fun ((GCD ()), (LH_C (_lh_gcd__arg1, (LH_C (_lh_gcd__arg2, (LH_N ()))))), (lazy (LH_C ((LH_P2 ((gcd_ x y), (gcd_ y x))), (LH_C ((LH_P2 ((gcd_ (times x z) (times y z)), (times z (gcd_ x y)))), (LH_N ())))))))
+//│       Fun (GCD (), LH_C (_lh_gcd__arg1, LH_C (_lh_gcd__arg2, LH_N ())), lazy(LH_C (LH_P2 (gcd_(x)(y), gcd_(y)(x)), LH_C (LH_P2 (gcd_(times(x)(z))(times(y)(z)), times(z)(gcd_(x)(y))), LH_N ()))))
 //│     fun even_(_lh_even__arg1) =
-//│       Fun ((EVEN ()), (LH_C (_lh_even__arg1, (LH_N ()))), (lazy (LH_C ((LH_P2 ((even_ x), (if_ (zerop x) boyerTrue (odd_ (sub1 x))))), (LH_N ())))))
-//│   (let subst0 = LH_C ((LH_P2 ((X ()), (f (plus (plus a b) (plus c zero))))), (LH_C ((LH_P2 ((Y ()), (f (times (times a b) (plus c d))))), (LH_C ((LH_P2 ((Z ()), (f (reverse_ (append (append a b) nil))))), (LH_C ((LH_P2 ((U ()), (equal (plus a b) (difference x y)))), (LH_C ((LH_P2 ((W ()), (lessp (remainder a b) (member a (length_ b))))), (LH_N ()))))))))))
-//│   let theorem = implies (and_ (implies _lh_test0_arg1 y) (and_ (implies y z) (and_ (implies z u) (implies u w)))) (implies x w)
-//│   tautp (apply_subst subst0 theorem))
+//│       Fun (EVEN (), LH_C (_lh_even__arg1, LH_N ()), lazy(LH_C (LH_P2 (even_(x), if_(zerop(x))(boyerTrue)(odd_(sub1(x)))), LH_N ())))
+//│   (let subst0 = LH_C (LH_P2 (X (), f(plus(plus(a)(b))(plus(c)(zero)))), LH_C (LH_P2 (Y (), f(times(times(a)(b))(plus(c)(d)))), LH_C (LH_P2 (Z (), f(reverse_(append(append(a)(b))(nil)))), LH_C (LH_P2 (U (), equal(plus(a)(b))(difference(x)(y))), LH_C (LH_P2 (W (), lessp(remainder(a)(b))(member(a)(length_(b)))), LH_N ())))))
+//│   let theorem = implies(and_(implies(_lh_test0_arg1)(y))(and_(implies(y)(z))(and_(implies(z)(u))(implies(u)(w)))))(implies(x)(w))
+//│   tautp(apply_subst(subst0)(theorem)))
 //│ fun replicate(_lh_replicate_arg1)(_lh_replicate_arg2) =
 //│   if _lh_replicate_arg1 == 0 then
 //│     LH_N ()
 //│   else
-//│     (LH_C (_lh_replicate_arg2, (replicate (_lh_replicate_arg1 - 1) _lh_replicate_arg2)))
+//│     (LH_C (_lh_replicate_arg2, replicate(_lh_replicate_arg1 - 1)(_lh_replicate_arg2)))
 //│ fun rewrite_with_lemmas(_lh_rewrite_with_lemmas_arg1)(_lh_rewrite_with_lemmas_arg2) =
-//│   rewrite_with_lemmas_helper _lh_rewrite_with_lemmas_arg1 (force _lh_rewrite_with_lemmas_arg2)
+//│   rewrite_with_lemmas_helper(_lh_rewrite_with_lemmas_arg1)(force(_lh_rewrite_with_lemmas_arg2))
 //│ fun truep(_lh_truep_arg1)(_lh_truep_arg2) =
 //│   if _lh_truep_arg1 is
 //│     Fun (_lh_truep_Fun_0, _lh_truep_Fun_1, _lh_truep_Fun_2) then
@@ -631,26 +631,26 @@ testBoyer_nofib $ primId 5
 //│ fun termInList(_lh_termInList_arg1)(_lh_termInList_arg2) =
 //│   if _lh_termInList_arg2 is
 //│     LH_C (_lh_termInList_LH_C_0, _lh_termInList_LH_C_1) then
-//│       if termEq _lh_termInList_arg1 _lh_termInList_LH_C_0 then
+//│       if termEq(_lh_termInList_arg1)(_lh_termInList_LH_C_0) then
 //│         True ()
 //│       else
-//│         (termInList _lh_termInList_arg1 _lh_termInList_LH_C_1)
+//│         (termInList(_lh_termInList_arg1)(_lh_termInList_LH_C_1))
 //│     LH_N then
 //│       False ()
 //│ fun testBoyer_nofib(_lh_testBoyer_nofib_arg1) =
-//│   all test0 (replicate _lh_testBoyer_nofib_arg1 (Var ((X ()))))
+//│   all(test0)(replicate(_lh_testBoyer_nofib_arg1)(Var (X ())))
 //│ fun one_way_unify1(_lh_one_way_unify1_arg1)(_lh_one_way_unify1_arg2)(_lh_one_way_unify1_arg3) =
 //│   if _lh_one_way_unify1_arg2 is
 //│     Var (_lh_one_way_unify1_Var_0) then
-//│       let _lh_matchIdent = find _lh_one_way_unify1_Var_0 _lh_one_way_unify1_arg3
+//│       let _lh_matchIdent = find(_lh_one_way_unify1_Var_0)(_lh_one_way_unify1_arg3)
 //│       if _lh_matchIdent is
 //│         LH_P2 (_lh_one_way_unify1_LH_P2_0, _lh_one_way_unify1_LH_P2_1) then
 //│           if _lh_one_way_unify1_LH_P2_0 then
-//│             LH_P2 ((termEq _lh_one_way_unify1_arg1 _lh_one_way_unify1_LH_P2_1), _lh_one_way_unify1_arg3)
+//│             LH_P2 (termEq(_lh_one_way_unify1_arg1)(_lh_one_way_unify1_LH_P2_1), _lh_one_way_unify1_arg3)
 //│           else
-//│             (LH_P2 ((True ()), (LH_C ((LH_P2 (_lh_one_way_unify1_Var_0, _lh_one_way_unify1_arg1)), _lh_one_way_unify1_arg3))))
+//│             (LH_P2 (True (), LH_C (LH_P2 (_lh_one_way_unify1_Var_0, _lh_one_way_unify1_arg1), _lh_one_way_unify1_arg3)))
 //│ fun one_way_unify(_lh_one_way_unify_arg1)(_lh_one_way_unify_arg2) =
-//│   one_way_unify1 _lh_one_way_unify_arg1 _lh_one_way_unify_arg2 (LH_N ())
+//│   one_way_unify1(_lh_one_way_unify_arg1)(_lh_one_way_unify_arg2)(LH_N ())
 //│ fun falsep(_lh_falsep_arg1)(_lh_falsep_arg2) =
 //│   if _lh_falsep_arg1 is
 //│     Fun (_lh_falsep_Fun_0, _lh_falsep_Fun_1, _lh_falsep_Fun_2) then
@@ -658,10 +658,10 @@ testBoyer_nofib $ primId 5
 //│         FALSE then
 //│           True ()
 //│ fun tautologyp(_lh_tautologyp_arg1)(_lh_tautologyp_arg2)(_lh_tautologyp_arg3) =
-//│   if truep _lh_tautologyp_arg1 _lh_tautologyp_arg2 then
+//│   if truep(_lh_tautologyp_arg1)(_lh_tautologyp_arg2) then
 //│     True ()
 //│   else
-//│     (if falsep _lh_tautologyp_arg1 _lh_tautologyp_arg3 then
+//│     (if falsep(_lh_tautologyp_arg1)(_lh_tautologyp_arg3) then
 //│       False ()
 //│     else
 //│       (let _lh_matchIdent = _lh_tautologyp_arg1
@@ -677,33 +677,33 @@ testBoyer_nofib $ primId 5
 //│                         LH_C (_lh_tautologyp_LH_C_0, _lh_tautologyp_LH_C_1) then
 //│                           if _lh_tautologyp_LH_C_1 is
 //│                             LH_N then
-//│                               if truep _lh_tautologyp_LH_C_0 _lh_tautologyp_arg2 then
-//│                                 tautologyp _lh_tautologyp_LH_C_0 _lh_tautologyp_arg2 _lh_tautologyp_arg3
+//│                               if truep(_lh_tautologyp_LH_C_0)(_lh_tautologyp_arg2) then
+//│                                 tautologyp(_lh_tautologyp_LH_C_0)(_lh_tautologyp_arg2)(_lh_tautologyp_arg3)
 //│                               else
-//│                                 (if falsep _lh_tautologyp_LH_C_0 _lh_tautologyp_arg3 then
-//│                                   tautologyp _lh_tautologyp_LH_C_0 _lh_tautologyp_arg2 _lh_tautologyp_arg3
+//│                                 (if falsep(_lh_tautologyp_LH_C_0)(_lh_tautologyp_arg3) then
+//│                                   tautologyp(_lh_tautologyp_LH_C_0)(_lh_tautologyp_arg2)(_lh_tautologyp_arg3)
 //│                                 else
-//│                                   ((tautologyp _lh_tautologyp_LH_C_0 (LH_C (_lh_tautologyp_LH_C_0, _lh_tautologyp_arg2)) _lh_tautologyp_arg3) && (tautologyp _lh_tautologyp_LH_C_0 _lh_tautologyp_arg2 (LH_C (_lh_tautologyp_LH_C_0, _lh_tautologyp_arg3)))))))
+//│                                   ((tautologyp(_lh_tautologyp_LH_C_0)(LH_C (_lh_tautologyp_LH_C_0, _lh_tautologyp_arg2))(_lh_tautologyp_arg3)) && (tautologyp(_lh_tautologyp_LH_C_0)(_lh_tautologyp_arg2)(LH_C (_lh_tautologyp_LH_C_0, _lh_tautologyp_arg3)))))))
 //│ fun find(_lh_find_arg1)(_lh_find_arg2) =
 //│   if _lh_find_arg2 is
 //│     LH_N then
-//│       LH_P2 ((False ()), (ERROR ()))
+//│       LH_P2 (False (), ERROR ())
 //│     LH_C (_lh_find_LH_C_0, _lh_find_LH_C_1) then
 //│       if _lh_find_LH_C_0 is
 //│         LH_P2 (_lh_find_LH_P2_0, _lh_find_LH_P2_1) then
-//│           if polyEq _lh_find_arg1 _lh_find_LH_P2_0 then
-//│             LH_P2 ((True ()), _lh_find_LH_P2_1)
+//│           if polyEq(_lh_find_arg1)(_lh_find_LH_P2_0) then
+//│             LH_P2 (True (), _lh_find_LH_P2_1)
 //│           else
-//│             (find _lh_find_arg1 _lh_find_LH_C_1)
+//│             (find(_lh_find_arg1)(_lh_find_LH_C_1))
 //│ fun tautp(_lh_tautp_arg1) =
-//│   tautologyp (rewrite _lh_tautp_arg1) (LH_N ()) (LH_N ())
+//│   tautologyp(rewrite(_lh_tautp_arg1))(LH_N ())(LH_N ())
 //│ fun termLsEq(_lh_termLsEq_arg1)(_lh_termLsEq_arg2) =
 //│   if _lh_termLsEq_arg1 is
 //│     LH_C (_lh_termLsEq_LH_C_0, _lh_termLsEq_LH_C_1) then
 //│       if _lh_termLsEq_arg2 is
 //│         LH_C (_lh_termLsEq_LH_C_0, _lh_termLsEq_LH_C_1) then
-//│           if termEq _lh_termLsEq_LH_C_0 _lh_termLsEq_LH_C_0 then
-//│             termLsEq _lh_termLsEq_LH_C_1 _lh_termLsEq_LH_C_1
+//│           if termEq(_lh_termLsEq_LH_C_0)(_lh_termLsEq_LH_C_0) then
+//│             termLsEq(_lh_termLsEq_LH_C_1)(_lh_termLsEq_LH_C_1)
 //│           else
 //│             (False ())
 //│     LH_N then
@@ -718,30 +718,30 @@ testBoyer_nofib $ primId 5
 //│     LH_C (_lh_rewrite_with_lemmas_helper_LH_C_0, _lh_rewrite_with_lemmas_helper_LH_C_1) then
 //│       if _lh_rewrite_with_lemmas_helper_LH_C_0 is
 //│         LH_P2 (_lh_rewrite_with_lemmas_helper_LH_P2_0, _lh_rewrite_with_lemmas_helper_LH_P2_1) then
-//│           let _lh_matchIdent = one_way_unify _lh_rewrite_with_lemmas_helper_arg1 _lh_rewrite_with_lemmas_helper_LH_P2_0
+//│           let _lh_matchIdent = one_way_unify(_lh_rewrite_with_lemmas_helper_arg1)(_lh_rewrite_with_lemmas_helper_LH_P2_0)
 //│           if _lh_matchIdent is
 //│             LH_P2 (_lh_rewrite_with_lemmas_helper_LH_P2_0, _lh_rewrite_with_lemmas_helper_LH_P2_1) then
 //│               if _lh_rewrite_with_lemmas_helper_LH_P2_0 then
-//│                 rewrite (apply_subst _lh_rewrite_with_lemmas_helper_LH_P2_1 _lh_rewrite_with_lemmas_helper_LH_P2_1)
+//│                 rewrite(apply_subst(_lh_rewrite_with_lemmas_helper_LH_P2_1)(_lh_rewrite_with_lemmas_helper_LH_P2_1))
 //│               else
-//│                 (rewrite_with_lemmas_helper _lh_rewrite_with_lemmas_helper_arg1 _lh_rewrite_with_lemmas_helper_LH_C_1)
+//│                 (rewrite_with_lemmas_helper(_lh_rewrite_with_lemmas_helper_arg1)(_lh_rewrite_with_lemmas_helper_LH_C_1))
 //│ fun termEq(_lh_termEq_arg1)(_lh_termEq_arg2) =
 //│   if _lh_termEq_arg1 is
 //│     Var (_lh_termEq_Var_0) then
 //│       if _lh_termEq_arg2 is
 //│         Var (_lh_termEq_Var_0) then
-//│           polyEq _lh_termEq_Var_0 _lh_termEq_Var_0
+//│           polyEq(_lh_termEq_Var_0)(_lh_termEq_Var_0)
 //│     Fun (_lh_termEq_Fun_0, _lh_termEq_Fun_1, _lh_termEq_Fun_2) then
 //│       if _lh_termEq_arg2 is
 //│         Fun (_lh_termEq_Fun_0, _lh_termEq_Fun_1, _lh_termEq_Fun_2) then
-//│           (polyEq _lh_termEq_Fun_0 _lh_termEq_Fun_0) && (termLsEq _lh_termEq_Fun_1 _lh_termEq_Fun_1)
+//│           (polyEq(_lh_termEq_Fun_0)(_lh_termEq_Fun_0)) && (termLsEq(_lh_termEq_Fun_1)(_lh_termEq_Fun_1))
 //│ fun all(_lh_all_arg1)(_lh_all_arg2) =
 //│   if _lh_all_arg2 is
 //│     LH_N then
 //│       True ()
 //│     LH_C (_lh_all_LH_C_0, _lh_all_LH_C_1) then
-//│       if _lh_all_arg1 _lh_all_LH_C_0 then
-//│         all _lh_all_arg1 _lh_all_LH_C_1
+//│       if _lh_all_arg1(_lh_all_LH_C_0) then
+//│         all(_lh_all_arg1)(_lh_all_LH_C_1)
 //│       else
 //│         (False ())
 //│ fun rewrite(_lh_rewrite_arg1) =
@@ -749,24 +749,24 @@ testBoyer_nofib $ primId 5
 //│     Var (_lh_rewrite_Var_0) then
 //│       Var (_lh_rewrite_Var_0)
 //│     Fun (_lh_rewrite_Fun_0, _lh_rewrite_Fun_1, _lh_rewrite_Fun_2) then
-//│       rewrite_with_lemmas (Fun (_lh_rewrite_Fun_0, (map rewrite _lh_rewrite_Fun_1), _lh_rewrite_Fun_2)) _lh_rewrite_Fun_2
+//│       rewrite_with_lemmas(Fun (_lh_rewrite_Fun_0, map(rewrite)(_lh_rewrite_Fun_1), _lh_rewrite_Fun_2))(_lh_rewrite_Fun_2)
 //│ fun one_way_unify1_lst(_lh_one_way_unify1_lst_arg1)(_lh_one_way_unify1_lst_arg2)(_lh_one_way_unify1_lst_arg3) =
 //│   if _lh_one_way_unify1_lst_arg1 is
 //│     LH_N then
 //│       if _lh_one_way_unify1_lst_arg2 is
 //│         LH_N then
-//│           LH_P2 ((True ()), _lh_one_way_unify1_lst_arg3)
+//│           LH_P2 (True (), _lh_one_way_unify1_lst_arg3)
 //│     LH_C (_lh_one_way_unify1_lst_LH_C_0, _lh_one_way_unify1_lst_LH_C_1) then
 //│       if _lh_one_way_unify1_lst_arg2 is
 //│         LH_C (_lh_one_way_unify1_lst_LH_C_0, _lh_one_way_unify1_lst_LH_C_1) then
-//│           let _lh_matchIdent = one_way_unify1 _lh_one_way_unify1_lst_LH_C_0 _lh_one_way_unify1_lst_LH_C_0 _lh_one_way_unify1_lst_arg3
+//│           let _lh_matchIdent = one_way_unify1(_lh_one_way_unify1_lst_LH_C_0)(_lh_one_way_unify1_lst_LH_C_0)(_lh_one_way_unify1_lst_arg3)
 //│           if _lh_matchIdent is
 //│             LH_P2 (_lh_one_way_unify1_lst_LH_P2_0, _lh_one_way_unify1_lst_LH_P2_1) then
-//│               let _lh_matchIdent = one_way_unify1_lst _lh_one_way_unify1_lst_LH_C_1 _lh_one_way_unify1_lst_LH_C_1 _lh_one_way_unify1_lst_LH_P2_1
+//│               let _lh_matchIdent = one_way_unify1_lst(_lh_one_way_unify1_lst_LH_C_1)(_lh_one_way_unify1_lst_LH_C_1)(_lh_one_way_unify1_lst_LH_P2_1)
 //│               if _lh_matchIdent is
 //│                 LH_P2 (_lh_one_way_unify1_lst_LH_P2_0, _lh_one_way_unify1_lst_LH_P2_1) then
-//│                   LH_P2 ((_lh_one_way_unify1_lst_LH_P2_0 && _lh_one_way_unify1_lst_LH_P2_0), _lh_one_way_unify1_lst_LH_P2_1)
-//│ (testBoyer_nofib (primId 5))
+//│                   LH_P2 (_lh_one_way_unify1_lst_LH_P2_0 && _lh_one_way_unify1_lst_LH_P2_0, _lh_one_way_unify1_lst_LH_P2_1)
+//│ (testBoyer_nofib(primId(5)))
 //│ 		---------- unoptimized mls gen ----------
 //│ testBoyer_nofib_lh_₁^2796(primId⁰(5))
 //│ def all_lh_₁(_lh_all_arg1⁰, _lh_all_arg2⁰) = case _lh_all_arg2⁰ of {

@@ -95,49 +95,49 @@ testBanner_nofib $ primId 100
 //│ fun map(f)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       LH_C ((f h), (map f t))
+//│       LH_C (f(h), map(f)(t))
 //│     LH_N then
 //│       LH_N ()
 //│ fun map_lz(f)(ls) =
-//│   lazy (if force ls is
+//│   lazy(if force(ls) is
 //│     LH_C (h, t) then
-//│       LH_C ((f h), (map_lz f t))
+//│       LH_C (f(h), map_lz(f)(t))
 //│     LH_N then
 //│       LH_N ())
 //│ fun filter(f)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       if f h then
-//│         LH_C (h, (filter f t))
+//│       if f(h) then
+//│         LH_C (h, filter(f)(t))
 //│       else
-//│         (filter f t)
+//│         (filter(f)(t))
 //│     LH_N then
 //│       LH_N ()
 //│ fun filter_lz(f)(ls) =
-//│   lazy (if force ls is
+//│   lazy(if force(ls) is
 //│     LH_C (h, t) then
-//│       if f h then
-//│         LH_C (h, (filter_lz f t))
+//│       if f(h) then
+//│         LH_C (h, filter_lz(f)(t))
 //│       else
-//│         (force (filter_lz f t))
+//│         (force(filter_lz(f)(t)))
 //│     LH_N then
 //│       LH_N ())
 //│ fun foldl(f)(i)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       foldl f (f i h) t
+//│       foldl(f)(f(i)(h))(t)
 //│     LH_N then
 //│       i
 //│ fun foldr(f)(i)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       f h (foldr f i t)
+//│       f(h)(foldr(f)(i)(t))
 //│     LH_N then
 //│       i
 //│ fun foldr_lz(f)(i)(ls) =
-//│   lazy (if force ls is
+//│   lazy(if force(ls) is
 //│     LH_C (h, t) then
-//│       f h (foldr_lz f i t)
+//│       f(h)(foldr_lz(f)(i)(t))
 //│     LH_N then
 //│       i)
 //│ fun zip(xs)(ys) =
@@ -145,7 +145,7 @@ testBanner_nofib $ primId 100
 //│     LH_C (hx, tx) then
 //│       if ys is
 //│         LH_C (hy, ty) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -153,9 +153,9 @@ testBanner_nofib $ primId 100
 //│ fun zip_nl_lz(xs)(ys) =
 //│   if xs is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip_nl_lz tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip_nl_lz(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -163,19 +163,19 @@ testBanner_nofib $ primId 100
 //│ fun zip_lz_nl(xs)(ys) =
 //│   if ys is
 //│     LH_C (hy, ty) then
-//│       if force xs is
+//│       if force(xs) is
 //│         LH_C (hx, tx) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_nl tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip_lz_nl(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
 //│       LH_N ()
 //│ fun zip_lz_lz(xs)(ys) =
-//│   lazy (if force xs is
+//│   lazy(if force(xs) is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_lz tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip_lz_lz(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -185,7 +185,7 @@ testBanner_nofib $ primId 100
 //│     LH_C (hx, tx) then
 //│       if ys is
 //│         LH_C (hy, ty) then
-//│           LH_C ((f hx hy), (zipWith f tx ty))
+//│           LH_C (f(hx)(hy), zipWith(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -193,9 +193,9 @@ testBanner_nofib $ primId 100
 //│ fun zipWith_nl_lz(f)(xs)(ys) =
 //│   if xs is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((f hx hy), (zipWith_nl_lz f tx ty))
+//│           LH_C (f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -203,19 +203,19 @@ testBanner_nofib $ primId 100
 //│ fun zipWith_lz_nl(f)(xs)(ys) =
 //│   if ys is
 //│     LH_C (hy, ty) then
-//│       if force xs is
+//│       if force(xs) is
 //│         LH_C (hx, tx) then
-//│           LH_C ((f hx hy), (zipWith_lz_nl f tx ty))
+//│           LH_C (f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
 //│       LH_N ()
 //│ fun zipWith_lz_lz(f)(xs)(ys) =
-//│   lazy (if force xs is
+//│   lazy(if force(xs) is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((f hx hy), (zipWith_lz_lz f tx ty))
+//│           LH_C (f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -227,7 +227,7 @@ testBanner_nofib $ primId 100
 //│     LH_N then
 //│       error
 //│ fun head_lz(ls) =
-//│   if force ls is
+//│   if force(ls) is
 //│     LH_C (h, t) then
 //│       h
 //│     LH_N then
@@ -239,43 +239,43 @@ testBanner_nofib $ primId 100
 //│     LH_N then
 //│       error
 //│ fun tail_lz(ls) =
-//│   if force ls is
+//│   if force(ls) is
 //│     LH_C (h, t) then
 //│       t
 //│     LH_N then
 //│       error
 //│ fun enumFromTo(a)(b) =
 //│   if a <= b then
-//│     LH_C (a, (enumFromTo (a + 1) b))
+//│     LH_C (a, enumFromTo(a + 1)(b))
 //│   else
 //│     (LH_N ())
 //│ fun enumFromThenTo(a)(t)(b) =
 //│   if a <= b then
-//│     LH_C (a, (enumFromThenTo t (2 * t - a) b))
+//│     LH_C (a, enumFromThenTo(t)(2 * t - a)(b))
 //│   else
 //│     (LH_N ())
 //│ fun enumFrom(a) =
-//│   lazy (LH_C (a, (enumFrom (a + 1))))
+//│   lazy(LH_C (a, enumFrom(a + 1)))
 //│ fun enumFromThen(a)(t) =
-//│   lazy (LH_C (a, (enumFromThen t (2 * t - a))))
+//│   lazy(LH_C (a, enumFromThen(t)(2 * t - a)))
 //│ fun repeat(x) =
-//│   lazy (LH_C (x, (repeat x)))
+//│   lazy(LH_C (x, repeat(x)))
 //│ fun iterate(f)(x) =
-//│   lazy (LH_C (x, (iterate f (f x))))
+//│   lazy(LH_C (x, iterate(f)(f(x))))
 //│ fun take(n)(ls) =
 //│   if n > 0 then
 //│     if ls is
 //│       LH_C (h, t) then
-//│         LH_C (h, (take (n - 1) t))
+//│         LH_C (h, take(n - 1)(t))
 //│       LH_N then
 //│         LH_N ()
 //│   else
 //│     (LH_N ())
 //│ fun take_lz(n)(ls) =
 //│   if n > 0 then
-//│     if force ls is
+//│     if force(ls) is
 //│       LH_C (h, t) then
-//│         LH_C (h, (take_lz (n - 1) t))
+//│         LH_C (h, take_lz(n - 1)(t))
 //│       LH_N then
 //│         LH_N ()
 //│   else
@@ -283,23 +283,23 @@ testBanner_nofib $ primId 100
 //│ fun length(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       1 + (length t)
+//│       1 + (length(t))
 //│     LH_N then
 //│       0
 //│ fun mappend(xs)(ys) =
 //│   if xs is
 //│     LH_C (h, t) then
-//│       LH_C (h, (mappend t ys))
+//│       LH_C (h, mappend(t)(ys))
 //│     LH_N then
 //│       ys
 //│ fun sum(ls) =
-//│   sumAux ls 0
+//│   sumAux(ls)(0)
 //│ fun sumAux(ls)(a) =
 //│   if ls is
 //│     LH_N then
 //│       a
 //│     LH_C (h, t) then
-//│       sumAux t (a + h)
+//│       sumAux(t)(a + h)
 //│ fun atIndex(n)(ls) =
 //│   if n < 0 then
 //│     error
@@ -309,58 +309,58 @@ testBanner_nofib $ primId 100
 //│         if n == 0 then
 //│           h
 //│         else
-//│           (atIndex (n - 1) t)
+//│           (atIndex(n - 1)(t))
 //│       LH_N then
 //│         error)
 //│ fun atIndex_lz(n)(ls) =
 //│   if n < 0 then
 //│     error
 //│   else
-//│     (if force ls is
+//│     (if force(ls) is
 //│       LH_C (h, t) then
 //│         if n == 0 then
 //│           h
 //│         else
-//│           (atIndex_lz (n - 1) t)
+//│           (atIndex_lz(n - 1)(t))
 //│       LH_N then
 //│         error)
 //│ fun concat(lss) =
 //│   if lss is
 //│     LH_C (h, t) then
-//│       mappend h (concat t)
+//│       mappend(h)(concat(t))
 //│     LH_N then
 //│       LH_N ()
 //│ fun reverse(ls) =
-//│   reverse_helper ls (LH_N ())
+//│   reverse_helper(ls)(LH_N ())
 //│ fun reverse_helper(ls)(a) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       reverse_helper t (LH_C (h, a))
+//│       reverse_helper(t)(LH_C (h, a))
 //│     LH_N then
 //│       a
 //│ fun isLower(_lh_isLower_arg1) =
-//│   let n = int_of_char _lh_isLower_arg1
+//│   let n = int_of_char(_lh_isLower_arg1)
 //│   n >= 97 && n <= 122
 //│ fun unzip(_lh_unzip_arg1) =
-//│   foldr (ab => asbs =>
+//│   foldr(ab => asbs =>
 //│     (let _lh_matchIdent = ab
 //│     if _lh_matchIdent is
 //│       LH_P2 (_lh_unzip_LH_P2_0, _lh_unzip_LH_P2_1) then
 //│         let _lh_matchIdent = asbs
 //│         if _lh_matchIdent is
 //│           LH_P2 (_lh_unzip_LH_P2_0, _lh_unzip_LH_P2_1) then
-//│             LH_P2 ((LH_C (_lh_unzip_LH_P2_0, _lh_unzip_LH_P2_0)), (LH_C (_lh_unzip_LH_P2_1, _lh_unzip_LH_P2_1))))) (LH_P2 ((LH_N ()), (LH_N ()))) _lh_unzip_arg1
+//│             LH_P2 (LH_C (_lh_unzip_LH_P2_0, _lh_unzip_LH_P2_0), LH_C (_lh_unzip_LH_P2_1, _lh_unzip_LH_P2_1))))(LH_P2 (LH_N (), LH_N ()))(_lh_unzip_arg1)
 //│ fun replicate(_lh_replicate_arg1)(_lh_replicate_arg2) =
 //│   if _lh_replicate_arg1 == 0 then
 //│     LH_N ()
 //│   else
-//│     (LH_C (_lh_replicate_arg2, (replicate (_lh_replicate_arg1 - 1) _lh_replicate_arg2)))
+//│     (LH_C (_lh_replicate_arg2, replicate(_lh_replicate_arg1 - 1)(_lh_replicate_arg2)))
 //│ fun blank =
-//│   LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))
+//│   LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_N ())))))
 //│ fun alphas =
-//│   LH_C ((LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('A', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('A', (LH_C (' ', (LH_C ('A', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('A', (LH_C ('A', (LH_C ('A', (LH_C ('A', (LH_C ('A', (LH_N ()))))))))))), (LH_C ((LH_C ('A', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('A', (LH_N ()))))))))))), (LH_C ((LH_C ('A', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('A', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('B', (LH_C ('B', (LH_C ('B', (LH_C ('B', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('B', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('B', (LH_N ()))))))))))), (LH_C ((LH_C ('B', (LH_C ('B', (LH_C ('B', (LH_C ('B', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('B', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('B', (LH_N ()))))))))))), (LH_C ((LH_C ('B', (LH_C ('B', (LH_C ('B', (LH_C ('B', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C (' ', (LH_C ('C', (LH_C ('C', (LH_C ('C', (LH_C ('C', (LH_N ()))))))))))), (LH_C ((LH_C ('C', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('C', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('C', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('C', (LH_C ('C', (LH_C ('C', (LH_C ('C', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('D', (LH_C ('D', (LH_C ('D', (LH_C ('D', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('D', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('D', (LH_N ()))))))))))), (LH_C ((LH_C ('D', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('D', (LH_N ()))))))))))), (LH_C ((LH_C ('D', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('D', (LH_N ()))))))))))), (LH_C ((LH_C ('D', (LH_C ('D', (LH_C ('D', (LH_C ('D', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('E', (LH_C ('E', (LH_C ('E', (LH_C ('E', (LH_C ('E', (LH_N ()))))))))))), (LH_C ((LH_C ('E', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('E', (LH_C ('E', (LH_C ('E', (LH_C ('E', (LH_C ('E', (LH_N ()))))))))))), (LH_C ((LH_C ('E', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('E', (LH_C ('E', (LH_C ('E', (LH_C ('E', (LH_C ('E', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('F', (LH_C ('F', (LH_C ('F', (LH_C ('F', (LH_C ('F', (LH_N ()))))))))))), (LH_C ((LH_C ('F', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('F', (LH_C ('F', (LH_C ('F', (LH_C ('F', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('F', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('F', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C (' ', (LH_C ('G', (LH_C ('G', (LH_C ('G', (LH_C ('G', (LH_N ()))))))))))), (LH_C ((LH_C ('G', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('G', (LH_C (' ', (LH_C (' ', (LH_C ('G', (LH_C ('G', (LH_N ()))))))))))), (LH_C ((LH_C ('G', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('G', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('G', (LH_C ('G', (LH_C ('G', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('H', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('H', (LH_N ()))))))))))), (LH_C ((LH_C ('H', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('H', (LH_N ()))))))))))), (LH_C ((LH_C ('H', (LH_C ('H', (LH_C ('H', (LH_C ('H', (LH_C ('H', (LH_N ()))))))))))), (LH_C ((LH_C ('H', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('H', (LH_N ()))))))))))), (LH_C ((LH_C ('H', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('H', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('I', (LH_C ('I', (LH_C ('I', (LH_C ('I', (LH_C ('I', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('I', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('I', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('I', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('I', (LH_C ('I', (LH_C ('I', (LH_C ('I', (LH_C ('I', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('J', (LH_C ('J', (LH_C ('J', (LH_C ('J', (LH_C ('J', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('J', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('J', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('J', (LH_C (' ', (LH_C (' ', (LH_C ('J', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('J', (LH_C ('J', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('K', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('K', (LH_N ()))))))))))), (LH_C ((LH_C ('K', (LH_C (' ', (LH_C (' ', (LH_C ('K', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('K', (LH_C ('K', (LH_C ('K', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('K', (LH_C (' ', (LH_C (' ', (LH_C ('K', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('K', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('K', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('L', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('L', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('L', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('L', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('L', (LH_C ('L', (LH_C ('L', (LH_C ('L', (LH_C ('L', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('M', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('M', (LH_N ()))))))))))), (LH_C ((LH_C ('M', (LH_C ('M', (LH_C (' ', (LH_C ('M', (LH_C ('M', (LH_N ()))))))))))), (LH_C ((LH_C ('M', (LH_C (' ', (LH_C ('M', (LH_C (' ', (LH_C ('M', (LH_N ()))))))))))), (LH_C ((LH_C ('M', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('M', (LH_N ()))))))))))), (LH_C ((LH_C ('M', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('M', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('N', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('N', (LH_N ()))))))))))), (LH_C ((LH_C ('N', (LH_C ('N', (LH_C (' ', (LH_C (' ', (LH_C ('N', (LH_N ()))))))))))), (LH_C ((LH_C ('N', (LH_C (' ', (LH_C ('N', (LH_C (' ', (LH_C ('N', (LH_N ()))))))))))), (LH_C ((LH_C ('N', (LH_C (' ', (LH_C (' ', (LH_C ('N', (LH_C ('N', (LH_N ()))))))))))), (LH_C ((LH_C ('N', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('N', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C (' ', (LH_C ('O', (LH_C ('O', (LH_C ('O', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('O', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('O', (LH_N ()))))))))))), (LH_C ((LH_C ('O', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('O', (LH_N ()))))))))))), (LH_C ((LH_C ('O', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('O', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('O', (LH_C ('O', (LH_C ('O', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('P', (LH_C ('P', (LH_C ('P', (LH_C ('P', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('P', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('P', (LH_N ()))))))))))), (LH_C ((LH_C ('P', (LH_C ('P', (LH_C ('P', (LH_C ('P', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('P', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('P', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C (' ', (LH_C ('Q', (LH_C ('Q', (LH_C ('Q', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('Q', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('Q', (LH_N ()))))))))))), (LH_C ((LH_C ('Q', (LH_C (' ', (LH_C ('Q', (LH_C (' ', (LH_C ('Q', (LH_N ()))))))))))), (LH_C ((LH_C ('Q', (LH_C (' ', (LH_C (' ', (LH_C ('Q', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('Q', (LH_C ('Q', (LH_C (' ', (LH_C ('Q', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('R', (LH_C ('R', (LH_C ('R', (LH_C ('R', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('R', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('R', (LH_N ()))))))))))), (LH_C ((LH_C ('R', (LH_C ('R', (LH_C ('R', (LH_C ('R', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('R', (LH_C (' ', (LH_C (' ', (LH_C ('R', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('R', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('R', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C (' ', (LH_C ('S', (LH_C ('S', (LH_C ('S', (LH_C ('S', (LH_N ()))))))))))), (LH_C ((LH_C ('S', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('S', (LH_C ('S', (LH_C ('S', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('S', (LH_N ()))))))))))), (LH_C ((LH_C ('S', (LH_C ('S', (LH_C ('S', (LH_C ('S', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('T', (LH_C ('T', (LH_C ('T', (LH_C ('T', (LH_C ('T', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('T', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('T', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('T', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('T', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('U', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('U', (LH_N ()))))))))))), (LH_C ((LH_C ('U', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('U', (LH_N ()))))))))))), (LH_C ((LH_C ('U', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('U', (LH_N ()))))))))))), (LH_C ((LH_C ('U', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('U', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('U', (LH_C ('U', (LH_C ('U', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('V', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('V', (LH_N ()))))))))))), (LH_C ((LH_C ('V', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('V', (LH_N ()))))))))))), (LH_C ((LH_C ('V', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('V', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('V', (LH_C (' ', (LH_C ('V', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('V', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('W', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('W', (LH_N ()))))))))))), (LH_C ((LH_C ('W', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('W', (LH_N ()))))))))))), (LH_C ((LH_C ('W', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('W', (LH_N ()))))))))))), (LH_C ((LH_C ('W', (LH_C (' ', (LH_C ('W', (LH_C (' ', (LH_C ('W', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('W', (LH_C (' ', (LH_C ('W', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('X', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('X', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('X', (LH_C (' ', (LH_C ('X', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('X', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('X', (LH_C (' ', (LH_C ('X', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('X', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('X', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('Y', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('Y', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('Y', (LH_C (' ', (LH_C ('Y', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('Y', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('Y', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('Y', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('Z', (LH_C ('Z', (LH_C ('Z', (LH_C ('Z', (LH_C ('Z', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('Z', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('Z', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('Z', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('Z', (LH_C ('Z', (LH_C ('Z', (LH_C ('Z', (LH_C ('Z', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_N ()))))))))))))))))))))))))))))))))))))))))))))))))))))
+//│   LH_C (LH_C (LH_C (' ', LH_C (' ', LH_C ('A', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C ('A', LH_C (' ', LH_C ('A', LH_C (' ', LH_N ()))))), LH_C (LH_C ('A', LH_C ('A', LH_C ('A', LH_C ('A', LH_C ('A', LH_N ()))))), LH_C (LH_C ('A', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('A', LH_N ()))))), LH_C (LH_C ('A', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('A', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('B', LH_C ('B', LH_C ('B', LH_C ('B', LH_C (' ', LH_N ()))))), LH_C (LH_C ('B', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('B', LH_N ()))))), LH_C (LH_C ('B', LH_C ('B', LH_C ('B', LH_C ('B', LH_C (' ', LH_N ()))))), LH_C (LH_C ('B', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('B', LH_N ()))))), LH_C (LH_C ('B', LH_C ('B', LH_C ('B', LH_C ('B', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C (' ', LH_C ('C', LH_C ('C', LH_C ('C', LH_C ('C', LH_N ()))))), LH_C (LH_C ('C', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('C', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('C', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C ('C', LH_C ('C', LH_C ('C', LH_C ('C', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('D', LH_C ('D', LH_C ('D', LH_C ('D', LH_C (' ', LH_N ()))))), LH_C (LH_C ('D', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('D', LH_N ()))))), LH_C (LH_C ('D', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('D', LH_N ()))))), LH_C (LH_C ('D', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('D', LH_N ()))))), LH_C (LH_C ('D', LH_C ('D', LH_C ('D', LH_C ('D', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('E', LH_C ('E', LH_C ('E', LH_C ('E', LH_C ('E', LH_N ()))))), LH_C (LH_C ('E', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('E', LH_C ('E', LH_C ('E', LH_C ('E', LH_C ('E', LH_N ()))))), LH_C (LH_C ('E', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('E', LH_C ('E', LH_C ('E', LH_C ('E', LH_C ('E', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('F', LH_C ('F', LH_C ('F', LH_C ('F', LH_C ('F', LH_N ()))))), LH_C (LH_C ('F', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('F', LH_C ('F', LH_C ('F', LH_C ('F', LH_C (' ', LH_N ()))))), LH_C (LH_C ('F', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('F', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C (' ', LH_C ('G', LH_C ('G', LH_C ('G', LH_C ('G', LH_N ()))))), LH_C (LH_C ('G', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('G', LH_C (' ', LH_C (' ', LH_C ('G', LH_C ('G', LH_N ()))))), LH_C (LH_C ('G', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('G', LH_N ()))))), LH_C (LH_C (' ', LH_C ('G', LH_C ('G', LH_C ('G', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('H', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('H', LH_N ()))))), LH_C (LH_C ('H', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('H', LH_N ()))))), LH_C (LH_C ('H', LH_C ('H', LH_C ('H', LH_C ('H', LH_C ('H', LH_N ()))))), LH_C (LH_C ('H', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('H', LH_N ()))))), LH_C (LH_C ('H', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('H', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('I', LH_C ('I', LH_C ('I', LH_C ('I', LH_C ('I', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('I', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('I', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('I', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('I', LH_C ('I', LH_C ('I', LH_C ('I', LH_C ('I', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('J', LH_C ('J', LH_C ('J', LH_C ('J', LH_C ('J', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('J', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('J', LH_C (' ', LH_N ()))))), LH_C (LH_C ('J', LH_C (' ', LH_C (' ', LH_C ('J', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C ('J', LH_C ('J', LH_C (' ', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('K', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('K', LH_N ()))))), LH_C (LH_C ('K', LH_C (' ', LH_C (' ', LH_C ('K', LH_C (' ', LH_N ()))))), LH_C (LH_C ('K', LH_C ('K', LH_C ('K', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('K', LH_C (' ', LH_C (' ', LH_C ('K', LH_C (' ', LH_N ()))))), LH_C (LH_C ('K', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('K', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('L', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('L', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('L', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('L', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('L', LH_C ('L', LH_C ('L', LH_C ('L', LH_C ('L', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('M', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('M', LH_N ()))))), LH_C (LH_C ('M', LH_C ('M', LH_C (' ', LH_C ('M', LH_C ('M', LH_N ()))))), LH_C (LH_C ('M', LH_C (' ', LH_C ('M', LH_C (' ', LH_C ('M', LH_N ()))))), LH_C (LH_C ('M', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('M', LH_N ()))))), LH_C (LH_C ('M', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('M', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('N', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('N', LH_N ()))))), LH_C (LH_C ('N', LH_C ('N', LH_C (' ', LH_C (' ', LH_C ('N', LH_N ()))))), LH_C (LH_C ('N', LH_C (' ', LH_C ('N', LH_C (' ', LH_C ('N', LH_N ()))))), LH_C (LH_C ('N', LH_C (' ', LH_C (' ', LH_C ('N', LH_C ('N', LH_N ()))))), LH_C (LH_C ('N', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('N', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C (' ', LH_C ('O', LH_C ('O', LH_C ('O', LH_C (' ', LH_N ()))))), LH_C (LH_C ('O', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('O', LH_N ()))))), LH_C (LH_C ('O', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('O', LH_N ()))))), LH_C (LH_C ('O', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('O', LH_N ()))))), LH_C (LH_C (' ', LH_C ('O', LH_C ('O', LH_C ('O', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('P', LH_C ('P', LH_C ('P', LH_C ('P', LH_C (' ', LH_N ()))))), LH_C (LH_C ('P', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('P', LH_N ()))))), LH_C (LH_C ('P', LH_C ('P', LH_C ('P', LH_C ('P', LH_C (' ', LH_N ()))))), LH_C (LH_C ('P', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('P', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C (' ', LH_C ('Q', LH_C ('Q', LH_C ('Q', LH_C (' ', LH_N ()))))), LH_C (LH_C ('Q', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('Q', LH_N ()))))), LH_C (LH_C ('Q', LH_C (' ', LH_C ('Q', LH_C (' ', LH_C ('Q', LH_N ()))))), LH_C (LH_C ('Q', LH_C (' ', LH_C (' ', LH_C ('Q', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C ('Q', LH_C ('Q', LH_C (' ', LH_C ('Q', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('R', LH_C ('R', LH_C ('R', LH_C ('R', LH_C (' ', LH_N ()))))), LH_C (LH_C ('R', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('R', LH_N ()))))), LH_C (LH_C ('R', LH_C ('R', LH_C ('R', LH_C ('R', LH_C (' ', LH_N ()))))), LH_C (LH_C ('R', LH_C (' ', LH_C (' ', LH_C ('R', LH_C (' ', LH_N ()))))), LH_C (LH_C ('R', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('R', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C (' ', LH_C ('S', LH_C ('S', LH_C ('S', LH_C ('S', LH_N ()))))), LH_C (LH_C ('S', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C ('S', LH_C ('S', LH_C ('S', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('S', LH_N ()))))), LH_C (LH_C ('S', LH_C ('S', LH_C ('S', LH_C ('S', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('T', LH_C ('T', LH_C ('T', LH_C ('T', LH_C ('T', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('T', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('T', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('T', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('T', LH_C (' ', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('U', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('U', LH_N ()))))), LH_C (LH_C ('U', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('U', LH_N ()))))), LH_C (LH_C ('U', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('U', LH_N ()))))), LH_C (LH_C ('U', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('U', LH_N ()))))), LH_C (LH_C (' ', LH_C ('U', LH_C ('U', LH_C ('U', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('V', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('V', LH_N ()))))), LH_C (LH_C ('V', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('V', LH_N ()))))), LH_C (LH_C ('V', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('V', LH_N ()))))), LH_C (LH_C (' ', LH_C ('V', LH_C (' ', LH_C ('V', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('V', LH_C (' ', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('W', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('W', LH_N ()))))), LH_C (LH_C ('W', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('W', LH_N ()))))), LH_C (LH_C ('W', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('W', LH_N ()))))), LH_C (LH_C ('W', LH_C (' ', LH_C ('W', LH_C (' ', LH_C ('W', LH_N ()))))), LH_C (LH_C (' ', LH_C ('W', LH_C (' ', LH_C ('W', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('X', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('X', LH_N ()))))), LH_C (LH_C (' ', LH_C ('X', LH_C (' ', LH_C ('X', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('X', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C ('X', LH_C (' ', LH_C ('X', LH_C (' ', LH_N ()))))), LH_C (LH_C ('X', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('X', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('Y', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('Y', LH_N ()))))), LH_C (LH_C (' ', LH_C ('Y', LH_C (' ', LH_C ('Y', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('Y', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('Y', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('Y', LH_C (' ', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('Z', LH_C ('Z', LH_C ('Z', LH_C ('Z', LH_C ('Z', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('Z', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('Z', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C ('Z', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('Z', LH_C ('Z', LH_C ('Z', LH_C ('Z', LH_C ('Z', LH_N ()))))), LH_N ()))))), LH_N ()))))))))))))))))))))))))))
 //│ fun testBanner_nofib(_lh_testBanner_nofib_arg1) =
-//│   say (concat (replicate _lh_testBanner_nofib_arg1 (LH_C ('I', (LH_C ('s', (LH_C (' ', (LH_C ('t', (LH_C ('h', (LH_C ('i', (LH_C ('s', (LH_C (' ', (LH_C ('n', (LH_C ('o', (LH_C ('t', (LH_C (' ', (LH_C ('a', (LH_C (' ', (LH_C ('g', (LH_C ('r', (LH_C ('e', (LH_C ('a', (LH_C ('t', (LH_C (' ', (LH_C ('b', (LH_C ('a', (LH_C ('n', (LH_C ('n', (LH_C ('e', (LH_C ('r', (LH_C ('?', (LH_N ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+//│   say(concat(replicate(_lh_testBanner_nofib_arg1)(LH_C ('I', LH_C ('s', LH_C (' ', LH_C ('t', LH_C ('h', LH_C ('i', LH_C ('s', LH_C (' ', LH_C ('n', LH_C ('o', LH_C ('t', LH_C (' ', LH_C ('a', LH_C (' ', LH_C ('g', LH_C ('r', LH_C ('e', LH_C ('a', LH_C ('t', LH_C (' ', LH_C ('b', LH_C ('a', LH_C ('n', LH_C ('n', LH_C ('e', LH_C ('r', LH_C ('?', LH_N ()))))))))))))))))))))))))))))))
 //│ fun foldr1(_lh_foldr1_arg1)(_lh_foldr1_arg2) =
 //│   if _lh_foldr1_arg2 is
 //│     LH_C (_lh_foldr1_LH_C_0, _lh_foldr1_LH_C_1) then
@@ -368,66 +368,66 @@ testBanner_nofib $ primId 100
 //│         LH_N then
 //│           _lh_foldr1_LH_C_0
 //│ fun picChar(_lh_picChar_arg1) =
-//│   if isUpper _lh_picChar_arg1 then
-//│     atIndex ((int_of_char _lh_picChar_arg1) - (int_of_char 'A')) alphas
+//│   if isUpper(_lh_picChar_arg1) then
+//│     atIndex((int_of_char(_lh_picChar_arg1)) - (int_of_char('A')))(alphas)
 //│   else
-//│     (if isLower _lh_picChar_arg1 then
-//│       atIndex ((int_of_char _lh_picChar_arg1) - (int_of_char 'a')) alphas
+//│     (if isLower(_lh_picChar_arg1) then
+//│       atIndex((int_of_char(_lh_picChar_arg1)) - (int_of_char('a')))(alphas)
 //│     else
-//│       (if isSpace _lh_picChar_arg1 then
+//│       (if isSpace(_lh_picChar_arg1) then
 //│         blank
 //│       else
-//│         (if isDigit _lh_picChar_arg1 then
-//│           atIndex ((int_of_char _lh_picChar_arg1) - (int_of_char '0')) digits
+//│         (if isDigit(_lh_picChar_arg1) then
+//│           atIndex((int_of_char(_lh_picChar_arg1)) - (int_of_char('0')))(digits)
 //│         else
-//│           (if polyEq _lh_picChar_arg1 '/' then
+//│           (if polyEq(_lh_picChar_arg1)('/') then
 //│             slant
 //│           else
-//│             (if polyEq _lh_picChar_arg1 '=' then
-//│               reverse slant
+//│             (if polyEq(_lh_picChar_arg1)('=') then
+//│               reverse(slant)
 //│             else
-//│               (head (mappend (let _lh_listcomp_fun = _lh_listcomp_fun_para =>
+//│               (head(mappend(let _lh_listcomp_fun = _lh_listcomp_fun_para =>
 //│                 (if _lh_listcomp_fun_para is
 //│                   LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_t) then
 //│                     if _lh_listcomp_fun_ls_h is
 //│                       LH_P2 (_lh_picChar_LH_P2_0, _lh_picChar_LH_P2_1) then
-//│                         if polyEq _lh_picChar_LH_P2_0 _lh_picChar_arg1 then
-//│                           LH_C (_lh_picChar_LH_P2_1, (_lh_listcomp_fun _lh_listcomp_fun_ls_t))
+//│                         if polyEq(_lh_picChar_LH_P2_0)(_lh_picChar_arg1) then
+//│                           LH_C (_lh_picChar_LH_P2_1, _lh_listcomp_fun(_lh_listcomp_fun_ls_t))
 //│                         else
-//│                           (_lh_listcomp_fun _lh_listcomp_fun_ls_t)
+//│                           (_lh_listcomp_fun(_lh_listcomp_fun_ls_t))
 //│                   LH_N then
 //│                     LH_N ())
-//│               _lh_listcomp_fun punct) (LH_C ((LH_C ((LH_N ()), (LH_N ()))), (LH_N ()))))))))))
+//│               _lh_listcomp_fun(punct))(LH_C (LH_C (LH_N (), LH_N ()), LH_N ())))))))))
 //│ fun join(_lh_join_arg1) =
-//│   foldr1 (xs => ys =>
-//│     (mappend (mappend xs (LH_C (' ', (LH_C (' ', (LH_N ())))))) ys)) _lh_join_arg1
+//│   foldr1(xs => ys =>
+//│     (mappend(mappend(xs)(LH_C (' ', LH_C (' ', LH_N ()))))(ys)))(_lh_join_arg1)
 //│ fun isUpper(_lh_isUpper_arg1) =
-//│   let n = int_of_char _lh_isUpper_arg1
+//│   let n = int_of_char(_lh_isUpper_arg1)
 //│   n >= 65 && n <= 90
 //│ fun digits =
-//│   LH_C ((LH_C ((LH_C (' ', (LH_C ('O', (LH_C ('O', (LH_C ('O', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('0', (LH_C (' ', (LH_C (' ', (LH_C ('0', (LH_C ('0', (LH_N ()))))))))))), (LH_C ((LH_C ('0', (LH_C (' ', (LH_C ('0', (LH_C (' ', (LH_C ('0', (LH_N ()))))))))))), (LH_C ((LH_C ('0', (LH_C ('0', (LH_C (' ', (LH_C (' ', (LH_C ('0', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('0', (LH_C ('0', (LH_C ('0', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('1', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('1', (LH_C ('1', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('1', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('1', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('1', (LH_C ('1', (LH_C ('1', (LH_C ('1', (LH_C ('1', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C (' ', (LH_C ('2', (LH_C ('2', (LH_C ('2', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('2', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('2', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('2', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('2', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('2', (LH_C ('2', (LH_C ('2', (LH_C ('2', (LH_C ('2', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('3', (LH_C ('3', (LH_C ('3', (LH_C ('3', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('3', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('3', (LH_C ('3', (LH_C ('3', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('3', (LH_N ()))))))))))), (LH_C ((LH_C ('3', (LH_C ('3', (LH_C ('3', (LH_C ('3', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('4', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('4', (LH_C ('4', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('4', (LH_C (' ', (LH_C ('4', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('4', (LH_C ('4', (LH_C ('4', (LH_C ('4', (LH_C ('4', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('4', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('5', (LH_C ('5', (LH_C ('5', (LH_C ('5', (LH_C ('5', (LH_N ()))))))))))), (LH_C ((LH_C ('5', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('5', (LH_C ('5', (LH_C ('5', (LH_C ('5', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('5', (LH_N ()))))))))))), (LH_C ((LH_C ('5', (LH_C ('5', (LH_C ('5', (LH_C ('5', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('6', (LH_C ('6', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('6', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('6', (LH_C ('6', (LH_C ('6', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('6', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('6', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('6', (LH_C ('6', (LH_C ('6', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C ('7', (LH_C ('7', (LH_C ('7', (LH_C ('7', (LH_C ('7', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('7', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('7', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('7', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('7', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C (' ', (LH_C ('8', (LH_C ('8', (LH_C ('8', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('8', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('8', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('8', (LH_C ('8', (LH_C ('8', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('8', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('8', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('8', (LH_C ('8', (LH_C ('8', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_C ((LH_C ((LH_C (' ', (LH_C ('9', (LH_C ('9', (LH_C ('9', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('9', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('9', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C ('9', (LH_C ('9', (LH_C ('9', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('9', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('9', (LH_C ('9', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))), (LH_N ()))))))))))))))))))))
+//│   LH_C (LH_C (LH_C (' ', LH_C ('O', LH_C ('O', LH_C ('O', LH_C (' ', LH_N ()))))), LH_C (LH_C ('0', LH_C (' ', LH_C (' ', LH_C ('0', LH_C ('0', LH_N ()))))), LH_C (LH_C ('0', LH_C (' ', LH_C ('0', LH_C (' ', LH_C ('0', LH_N ()))))), LH_C (LH_C ('0', LH_C ('0', LH_C (' ', LH_C (' ', LH_C ('0', LH_N ()))))), LH_C (LH_C (' ', LH_C ('0', LH_C ('0', LH_C ('0', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C (' ', LH_C (' ', LH_C ('1', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C ('1', LH_C ('1', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('1', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('1', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('1', LH_C ('1', LH_C ('1', LH_C ('1', LH_C ('1', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C (' ', LH_C ('2', LH_C ('2', LH_C ('2', LH_C (' ', LH_N ()))))), LH_C (LH_C ('2', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('2', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('2', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('2', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('2', LH_C ('2', LH_C ('2', LH_C ('2', LH_C ('2', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('3', LH_C ('3', LH_C ('3', LH_C ('3', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('3', LH_N ()))))), LH_C (LH_C (' ', LH_C ('3', LH_C ('3', LH_C ('3', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('3', LH_N ()))))), LH_C (LH_C ('3', LH_C ('3', LH_C ('3', LH_C ('3', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('4', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('4', LH_C ('4', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C ('4', LH_C (' ', LH_C ('4', LH_C (' ', LH_N ()))))), LH_C (LH_C ('4', LH_C ('4', LH_C ('4', LH_C ('4', LH_C ('4', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('4', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('5', LH_C ('5', LH_C ('5', LH_C ('5', LH_C ('5', LH_N ()))))), LH_C (LH_C ('5', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('5', LH_C ('5', LH_C ('5', LH_C ('5', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('5', LH_N ()))))), LH_C (LH_C ('5', LH_C ('5', LH_C ('5', LH_C ('5', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('6', LH_C ('6', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('6', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C ('6', LH_C ('6', LH_C ('6', LH_C (' ', LH_N ()))))), LH_C (LH_C ('6', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('6', LH_N ()))))), LH_C (LH_C (' ', LH_C ('6', LH_C ('6', LH_C ('6', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C ('7', LH_C ('7', LH_C ('7', LH_C ('7', LH_C ('7', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('7', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('7', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('7', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('7', LH_C (' ', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C (' ', LH_C ('8', LH_C ('8', LH_C ('8', LH_C (' ', LH_N ()))))), LH_C (LH_C ('8', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('8', LH_N ()))))), LH_C (LH_C (' ', LH_C ('8', LH_C ('8', LH_C ('8', LH_C (' ', LH_N ()))))), LH_C (LH_C ('8', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('8', LH_N ()))))), LH_C (LH_C (' ', LH_C ('8', LH_C ('8', LH_C ('8', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_C (LH_C (LH_C (' ', LH_C ('9', LH_C ('9', LH_C ('9', LH_C (' ', LH_N ()))))), LH_C (LH_C ('9', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('9', LH_N ()))))), LH_C (LH_C (' ', LH_C ('9', LH_C ('9', LH_C ('9', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('9', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('9', LH_C ('9', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_N ()))))), LH_N ()))))))))))
 //│ fun isDigit(_lh_isDigit_arg1) =
-//│   let n = int_of_char _lh_isDigit_arg1
+//│   let n = int_of_char(_lh_isDigit_arg1)
 //│   n >= 48 && n <= 57
 //│ fun unlines(_lh_unlines_arg1) =
-//│   concat (map (l =>
-//│     (mappend l (LH_C ('n', (LH_N ()))))) _lh_unlines_arg1)
+//│   concat(map(l =>
+//│     (mappend(l)(LH_C ('n', LH_N ()))))(_lh_unlines_arg1))
 //│ fun combine(_lh_combine_arg1)(_lh_combine_arg2)(_lh_combine_arg3)(_lh_combine_arg4) =
-//│   LH_C ((LH_C (_lh_combine_arg1, _lh_combine_arg2)), (transpose (LH_C (_lh_combine_arg3, _lh_combine_arg4))))
+//│   LH_C (LH_C (_lh_combine_arg1, _lh_combine_arg2), transpose(LH_C (_lh_combine_arg3, _lh_combine_arg4)))
 //│ fun punct =
-//│   LH_C ((LH_P2 ('.', (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('.', (LH_C ('.', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('.', (LH_C ('.', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))))), (LH_C ((LH_P2 ('?', (LH_C ((LH_C (' ', (LH_C ('?', (LH_C ('?', (LH_C ('?', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('?', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('?', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C ('?', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('?', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('.', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))))), (LH_C ((LH_P2 ('!', (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('!', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('!', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('!', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('!', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('.', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))))), (LH_C ((LH_P2 ('-', (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('-', (LH_C ('-', (LH_C ('-', (LH_C ('-', (LH_C ('-', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))))), (LH_C ((LH_P2 ('+', (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('+', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('+', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C ('+', (LH_C ('+', (LH_C ('+', (LH_C ('+', (LH_C ('+', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('+', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C ('+', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))))), (LH_C ((LH_P2 (':', (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (':', (LH_C (':', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (':', (LH_C (':', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))))), (LH_C ((LH_P2 (';', (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (';', (LH_C (';', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (';', (LH_C (';', (LH_C (' ', (LH_N ()))))))))))), (LH_C ((LH_C (' ', (LH_C (';', (LH_C (';', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))))), (LH_N ()))))))))))))), (LH_N ()))))))))))))))
+//│   LH_C (LH_P2 ('.', LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('.', LH_C ('.', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('.', LH_C ('.', LH_C (' ', LH_N ()))))), LH_N ())))))), LH_C (LH_P2 ('?', LH_C (LH_C (' ', LH_C ('?', LH_C ('?', LH_C ('?', LH_C (' ', LH_N ()))))), LH_C (LH_C ('?', LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('?', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C ('?', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('?', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('.', LH_C (' ', LH_C (' ', LH_N ()))))), LH_N ())))))), LH_C (LH_P2 ('!', LH_C (LH_C (' ', LH_C (' ', LH_C ('!', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('!', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('!', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('!', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('.', LH_C (' ', LH_C (' ', LH_N ()))))), LH_N ())))))), LH_C (LH_P2 ('-', LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('-', LH_C ('-', LH_C ('-', LH_C ('-', LH_C ('-', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_N ())))))), LH_C (LH_P2 ('+', LH_C (LH_C (' ', LH_C (' ', LH_C ('+', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('+', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C ('+', LH_C ('+', LH_C ('+', LH_C ('+', LH_C ('+', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('+', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C ('+', LH_C (' ', LH_C (' ', LH_N ()))))), LH_N ())))))), LH_C (LH_P2 (':', LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (':', LH_C (':', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (':', LH_C (':', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_N ())))))), LH_C (LH_P2 (';', LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (';', LH_C (';', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (' ', LH_C (';', LH_C (';', LH_C (' ', LH_N ()))))), LH_C (LH_C (' ', LH_C (';', LH_C (';', LH_C (' ', LH_C (' ', LH_N ()))))), LH_N ())))))), LH_N ())))))))
 //│ fun say(_lh_say_arg1) =
 //│   (_lh_funcomp_x =>
 //│     ((_lh_funcomp_x =>
 //│       ((_lh_funcomp_x =>
 //│         ((_lh_funcomp_x =>
 //│           ((x =>
-//│             (LH_C ('n', x))) (unlines _lh_funcomp_x))) (map join _lh_funcomp_x))) (transpose _lh_funcomp_x))) (map picChar _lh_funcomp_x))) _lh_say_arg1
+//│             (LH_C ('n', x)))(unlines(_lh_funcomp_x))))(map(join)(_lh_funcomp_x))))(transpose(_lh_funcomp_x))))(map(picChar)(_lh_funcomp_x))))(_lh_say_arg1)
 //│ fun isSpace(_lh_isSpace_arg1) =
-//│   let n = int_of_char _lh_isSpace_arg1
+//│   let n = int_of_char(_lh_isSpace_arg1)
 //│   n == 32
 //│ fun slant =
-//│   LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_C (' ', (LH_N ()))))))), (LH_C ((LH_C (' ', (LH_C (' ', (LH_N ()))))), (LH_C ((LH_C (' ', (LH_N ()))), (LH_C ((LH_N ()), (LH_N ()))))))))))
+//│   LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_C (' ', LH_N ())))), LH_C (LH_C (' ', LH_C (' ', LH_C (' ', LH_N ()))), LH_C (LH_C (' ', LH_C (' ', LH_N ())), LH_C (LH_C (' ', LH_N ()), LH_C (LH_N (), LH_N ())))))
 //│ fun transpose(_lh_transpose_arg1) =
 //│   if _lh_transpose_arg1 is
 //│     LH_N then
@@ -435,21 +435,21 @@ testBanner_nofib $ primId 100
 //│     LH_C (_lh_transpose_LH_C_0, _lh_transpose_LH_C_1) then
 //│       if _lh_transpose_LH_C_0 is
 //│         LH_N then
-//│           transpose _lh_transpose_LH_C_1
+//│           transpose(_lh_transpose_LH_C_1)
 //│         LH_C (_lh_transpose_LH_C_0, _lh_transpose_LH_C_1) then
-//│           let _lh_matchIdent = unzip (let _lh_listcomp_fun = _lh_listcomp_fun_para =>
+//│           let _lh_matchIdent = unzip(let _lh_listcomp_fun = _lh_listcomp_fun_para =>
 //│             (if _lh_listcomp_fun_para is
 //│               LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_t) then
 //│                 if _lh_listcomp_fun_ls_h is
 //│                   LH_C (_lh_transpose_LH_C_0, _lh_transpose_LH_C_1) then
-//│                     LH_C ((LH_P2 (_lh_transpose_LH_C_0, _lh_transpose_LH_C_1)), (_lh_listcomp_fun _lh_listcomp_fun_ls_t))
+//│                     LH_C (LH_P2 (_lh_transpose_LH_C_0, _lh_transpose_LH_C_1), _lh_listcomp_fun(_lh_listcomp_fun_ls_t))
 //│               LH_N then
 //│                 LH_N ())
-//│           _lh_listcomp_fun _lh_transpose_LH_C_1)
+//│           _lh_listcomp_fun(_lh_transpose_LH_C_1))
 //│           if _lh_matchIdent is
 //│             LH_P2 (_lh_transpose_LH_P2_0, _lh_transpose_LH_P2_1) then
-//│               combine _lh_transpose_LH_C_0 _lh_transpose_LH_P2_0 _lh_transpose_LH_C_1 _lh_transpose_LH_P2_1
-//│ (testBanner_nofib (primId 100))
+//│               combine(_lh_transpose_LH_C_0)(_lh_transpose_LH_P2_0)(_lh_transpose_LH_C_1)(_lh_transpose_LH_P2_1)
+//│ (testBanner_nofib(primId(100)))
 //│ 		---------- unoptimized mls gen ----------
 //│ testBanner_nofib_lh_₁^5108(primId⁰(100))
 //│ def alphas_lh_₁ = [LH_C [LH_C [LH_C ' ' [LH_C ' ' [LH_C 'A' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C 'A' [LH_C ' ' [LH_C 'A' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'A' [LH_C 'A' [LH_C 'A' [LH_C 'A' [LH_C 'A' [LH_N]]]]]] [LH_C [LH_C 'A' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'A' [LH_N]]]]]] [LH_C [LH_C 'A' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'A' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'B' [LH_C 'B' [LH_C 'B' [LH_C 'B' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'B' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'B' [LH_N]]]]]] [LH_C [LH_C 'B' [LH_C 'B' [LH_C 'B' [LH_C 'B' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'B' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'B' [LH_N]]]]]] [LH_C [LH_C 'B' [LH_C 'B' [LH_C 'B' [LH_C 'B' [LH_C ' ' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C ' ' [LH_C 'C' [LH_C 'C' [LH_C 'C' [LH_C 'C' [LH_N]]]]]] [LH_C [LH_C 'C' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'C' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'C' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C 'C' [LH_C 'C' [LH_C 'C' [LH_C 'C' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'D' [LH_C 'D' [LH_C 'D' [LH_C 'D' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'D' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'D' [LH_N]]]]]] [LH_C [LH_C 'D' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'D' [LH_N]]]]]] [LH_C [LH_C 'D' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'D' [LH_N]]]]]] [LH_C [LH_C 'D' [LH_C 'D' [LH_C 'D' [LH_C 'D' [LH_C ' ' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'E' [LH_C 'E' [LH_C 'E' [LH_C 'E' [LH_C 'E' [LH_N]]]]]] [LH_C [LH_C 'E' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'E' [LH_C 'E' [LH_C 'E' [LH_C 'E' [LH_C 'E' [LH_N]]]]]] [LH_C [LH_C 'E' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'E' [LH_C 'E' [LH_C 'E' [LH_C 'E' [LH_C 'E' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'F' [LH_C 'F' [LH_C 'F' [LH_C 'F' [LH_C 'F' [LH_N]]]]]] [LH_C [LH_C 'F' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'F' [LH_C 'F' [LH_C 'F' [LH_C 'F' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'F' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'F' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C ' ' [LH_C 'G' [LH_C 'G' [LH_C 'G' [LH_C 'G' [LH_N]]]]]] [LH_C [LH_C 'G' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'G' [LH_C ' ' [LH_C ' ' [LH_C 'G' [LH_C 'G' [LH_N]]]]]] [LH_C [LH_C 'G' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'G' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C 'G' [LH_C 'G' [LH_C 'G' [LH_C ' ' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'H' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'H' [LH_N]]]]]] [LH_C [LH_C 'H' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'H' [LH_N]]]]]] [LH_C [LH_C 'H' [LH_C 'H' [LH_C 'H' [LH_C 'H' [LH_C 'H' [LH_N]]]]]] [LH_C [LH_C 'H' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'H' [LH_N]]]]]] [LH_C [LH_C 'H' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'H' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'I' [LH_C 'I' [LH_C 'I' [LH_C 'I' [LH_C 'I' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C ' ' [LH_C 'I' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C ' ' [LH_C 'I' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C ' ' [LH_C 'I' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'I' [LH_C 'I' [LH_C 'I' [LH_C 'I' [LH_C 'I' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'J' [LH_C 'J' [LH_C 'J' [LH_C 'J' [LH_C 'J' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'J' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'J' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'J' [LH_C ' ' [LH_C ' ' [LH_C 'J' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C 'J' [LH_C 'J' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'K' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'K' [LH_N]]]]]] [LH_C [LH_C 'K' [LH_C ' ' [LH_C ' ' [LH_C 'K' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'K' [LH_C 'K' [LH_C 'K' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'K' [LH_C ' ' [LH_C ' ' [LH_C 'K' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'K' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'K' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'L' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'L' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'L' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'L' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'L' [LH_C 'L' [LH_C 'L' [LH_C 'L' [LH_C 'L' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'M' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'M' [LH_N]]]]]] [LH_C [LH_C 'M' [LH_C 'M' [LH_C ' ' [LH_C 'M' [LH_C 'M' [LH_N]]]]]] [LH_C [LH_C 'M' [LH_C ' ' [LH_C 'M' [LH_C ' ' [LH_C 'M' [LH_N]]]]]] [LH_C [LH_C 'M' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'M' [LH_N]]]]]] [LH_C [LH_C 'M' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'M' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'N' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'N' [LH_N]]]]]] [LH_C [LH_C 'N' [LH_C 'N' [LH_C ' ' [LH_C ' ' [LH_C 'N' [LH_N]]]]]] [LH_C [LH_C 'N' [LH_C ' ' [LH_C 'N' [LH_C ' ' [LH_C 'N' [LH_N]]]]]] [LH_C [LH_C 'N' [LH_C ' ' [LH_C ' ' [LH_C 'N' [LH_C 'N' [LH_N]]]]]] [LH_C [LH_C 'N' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'N' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C ' ' [LH_C 'O' [LH_C 'O' [LH_C 'O' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'O' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'O' [LH_N]]]]]] [LH_C [LH_C 'O' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'O' [LH_N]]]]]] [LH_C [LH_C 'O' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'O' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C 'O' [LH_C 'O' [LH_C 'O' [LH_C ' ' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'P' [LH_C 'P' [LH_C 'P' [LH_C 'P' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'P' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'P' [LH_N]]]]]] [LH_C [LH_C 'P' [LH_C 'P' [LH_C 'P' [LH_C 'P' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'P' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'P' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C ' ' [LH_C 'Q' [LH_C 'Q' [LH_C 'Q' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'Q' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'Q' [LH_N]]]]]] [LH_C [LH_C 'Q' [LH_C ' ' [LH_C 'Q' [LH_C ' ' [LH_C 'Q' [LH_N]]]]]] [LH_C [LH_C 'Q' [LH_C ' ' [LH_C ' ' [LH_C 'Q' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C 'Q' [LH_C 'Q' [LH_C ' ' [LH_C 'Q' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'R' [LH_C 'R' [LH_C 'R' [LH_C 'R' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'R' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'R' [LH_N]]]]]] [LH_C [LH_C 'R' [LH_C 'R' [LH_C 'R' [LH_C 'R' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'R' [LH_C ' ' [LH_C ' ' [LH_C 'R' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'R' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'R' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C ' ' [LH_C 'S' [LH_C 'S' [LH_C 'S' [LH_C 'S' [LH_N]]]]]] [LH_C [LH_C 'S' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C 'S' [LH_C 'S' [LH_C 'S' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'S' [LH_N]]]]]] [LH_C [LH_C 'S' [LH_C 'S' [LH_C 'S' [LH_C 'S' [LH_C ' ' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'T' [LH_C 'T' [LH_C 'T' [LH_C 'T' [LH_C 'T' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C ' ' [LH_C 'T' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C ' ' [LH_C 'T' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C ' ' [LH_C 'T' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C ' ' [LH_C 'T' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'U' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'U' [LH_N]]]]]] [LH_C [LH_C 'U' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'U' [LH_N]]]]]] [LH_C [LH_C 'U' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'U' [LH_N]]]]]] [LH_C [LH_C 'U' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'U' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C 'U' [LH_C 'U' [LH_C 'U' [LH_C ' ' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'V' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'V' [LH_N]]]]]] [LH_C [LH_C 'V' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'V' [LH_N]]]]]] [LH_C [LH_C 'V' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'V' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C 'V' [LH_C ' ' [LH_C 'V' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C ' ' [LH_C 'V' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'W' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'W' [LH_N]]]]]] [LH_C [LH_C 'W' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'W' [LH_N]]]]]] [LH_C [LH_C 'W' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'W' [LH_N]]]]]] [LH_C [LH_C 'W' [LH_C ' ' [LH_C 'W' [LH_C ' ' [LH_C 'W' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C 'W' [LH_C ' ' [LH_C 'W' [LH_C ' ' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'X' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'X' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C 'X' [LH_C ' ' [LH_C 'X' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C ' ' [LH_C 'X' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C 'X' [LH_C ' ' [LH_C 'X' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'X' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'X' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'Y' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'Y' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C 'Y' [LH_C ' ' [LH_C 'Y' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C ' ' [LH_C 'Y' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C ' ' [LH_C 'Y' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C ' ' [LH_C 'Y' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_N]]]]]] [LH_C [LH_C [LH_C 'Z' [LH_C 'Z' [LH_C 'Z' [LH_C 'Z' [LH_C 'Z' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_C 'Z' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C ' ' [LH_C 'Z' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C ' ' [LH_C 'Z' [LH_C ' ' [LH_C ' ' [LH_C ' ' [LH_N]]]]]] [LH_C [LH_C 'Z' [LH_C 'Z' [LH_C 'Z' [LH_C 'Z' [LH_C 'Z' [LH_N]]]]]] [LH_N]]]]]] [LH_N]]]]]]]]]]]]]]]]]]]]]]]]]]]

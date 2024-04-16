@@ -117,49 +117,49 @@ testCichelli_nofib $ primId 6
 //│ fun map(f)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       LH_C ((f h), (map f t))
+//│       LH_C (f(h), map(f)(t))
 //│     LH_N then
 //│       LH_N ()
 //│ fun map_lz(f)(ls) =
-//│   lazy (if force ls is
+//│   lazy(if force(ls) is
 //│     LH_C (h, t) then
-//│       LH_C ((f h), (map_lz f t))
+//│       LH_C (f(h), map_lz(f)(t))
 //│     LH_N then
 //│       LH_N ())
 //│ fun filter(f)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       if f h then
-//│         LH_C (h, (filter f t))
+//│       if f(h) then
+//│         LH_C (h, filter(f)(t))
 //│       else
-//│         (filter f t)
+//│         (filter(f)(t))
 //│     LH_N then
 //│       LH_N ()
 //│ fun filter_lz(f)(ls) =
-//│   lazy (if force ls is
+//│   lazy(if force(ls) is
 //│     LH_C (h, t) then
-//│       if f h then
-//│         LH_C (h, (filter_lz f t))
+//│       if f(h) then
+//│         LH_C (h, filter_lz(f)(t))
 //│       else
-//│         (force (filter_lz f t))
+//│         (force(filter_lz(f)(t)))
 //│     LH_N then
 //│       LH_N ())
 //│ fun foldl(f)(i)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       foldl f (f i h) t
+//│       foldl(f)(f(i)(h))(t)
 //│     LH_N then
 //│       i
 //│ fun foldr(f)(i)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       f h (foldr f i t)
+//│       f(h)(foldr(f)(i)(t))
 //│     LH_N then
 //│       i
 //│ fun foldr_lz(f)(i)(ls) =
-//│   lazy (if force ls is
+//│   lazy(if force(ls) is
 //│     LH_C (h, t) then
-//│       f h (foldr_lz f i t)
+//│       f(h)(foldr_lz(f)(i)(t))
 //│     LH_N then
 //│       i)
 //│ fun zip(xs)(ys) =
@@ -167,7 +167,7 @@ testCichelli_nofib $ primId 6
 //│     LH_C (hx, tx) then
 //│       if ys is
 //│         LH_C (hy, ty) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -175,9 +175,9 @@ testCichelli_nofib $ primId 6
 //│ fun zip_nl_lz(xs)(ys) =
 //│   if xs is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip_nl_lz tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip_nl_lz(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -185,19 +185,19 @@ testCichelli_nofib $ primId 6
 //│ fun zip_lz_nl(xs)(ys) =
 //│   if ys is
 //│     LH_C (hy, ty) then
-//│       if force xs is
+//│       if force(xs) is
 //│         LH_C (hx, tx) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_nl tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip_lz_nl(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
 //│       LH_N ()
 //│ fun zip_lz_lz(xs)(ys) =
-//│   lazy (if force xs is
+//│   lazy(if force(xs) is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_lz tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip_lz_lz(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -207,7 +207,7 @@ testCichelli_nofib $ primId 6
 //│     LH_C (hx, tx) then
 //│       if ys is
 //│         LH_C (hy, ty) then
-//│           LH_C ((f hx hy), (zipWith f tx ty))
+//│           LH_C (f(hx)(hy), zipWith(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -215,9 +215,9 @@ testCichelli_nofib $ primId 6
 //│ fun zipWith_nl_lz(f)(xs)(ys) =
 //│   if xs is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((f hx hy), (zipWith_nl_lz f tx ty))
+//│           LH_C (f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -225,19 +225,19 @@ testCichelli_nofib $ primId 6
 //│ fun zipWith_lz_nl(f)(xs)(ys) =
 //│   if ys is
 //│     LH_C (hy, ty) then
-//│       if force xs is
+//│       if force(xs) is
 //│         LH_C (hx, tx) then
-//│           LH_C ((f hx hy), (zipWith_lz_nl f tx ty))
+//│           LH_C (f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
 //│       LH_N ()
 //│ fun zipWith_lz_lz(f)(xs)(ys) =
-//│   lazy (if force xs is
+//│   lazy(if force(xs) is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((f hx hy), (zipWith_lz_lz f tx ty))
+//│           LH_C (f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -249,7 +249,7 @@ testCichelli_nofib $ primId 6
 //│     LH_N then
 //│       error
 //│ fun head_lz(ls) =
-//│   if force ls is
+//│   if force(ls) is
 //│     LH_C (h, t) then
 //│       h
 //│     LH_N then
@@ -261,43 +261,43 @@ testCichelli_nofib $ primId 6
 //│     LH_N then
 //│       error
 //│ fun tail_lz(ls) =
-//│   if force ls is
+//│   if force(ls) is
 //│     LH_C (h, t) then
 //│       t
 //│     LH_N then
 //│       error
 //│ fun enumFromTo(a)(b) =
 //│   if a <= b then
-//│     LH_C (a, (enumFromTo (a + 1) b))
+//│     LH_C (a, enumFromTo(a + 1)(b))
 //│   else
 //│     (LH_N ())
 //│ fun enumFromThenTo(a)(t)(b) =
 //│   if a <= b then
-//│     LH_C (a, (enumFromThenTo t (2 * t - a) b))
+//│     LH_C (a, enumFromThenTo(t)(2 * t - a)(b))
 //│   else
 //│     (LH_N ())
 //│ fun enumFrom(a) =
-//│   lazy (LH_C (a, (enumFrom (a + 1))))
+//│   lazy(LH_C (a, enumFrom(a + 1)))
 //│ fun enumFromThen(a)(t) =
-//│   lazy (LH_C (a, (enumFromThen t (2 * t - a))))
+//│   lazy(LH_C (a, enumFromThen(t)(2 * t - a)))
 //│ fun repeat(x) =
-//│   lazy (LH_C (x, (repeat x)))
+//│   lazy(LH_C (x, repeat(x)))
 //│ fun iterate(f)(x) =
-//│   lazy (LH_C (x, (iterate f (f x))))
+//│   lazy(LH_C (x, iterate(f)(f(x))))
 //│ fun take(n)(ls) =
 //│   if n > 0 then
 //│     if ls is
 //│       LH_C (h, t) then
-//│         LH_C (h, (take (n - 1) t))
+//│         LH_C (h, take(n - 1)(t))
 //│       LH_N then
 //│         LH_N ()
 //│   else
 //│     (LH_N ())
 //│ fun take_lz(n)(ls) =
 //│   if n > 0 then
-//│     if force ls is
+//│     if force(ls) is
 //│       LH_C (h, t) then
-//│         LH_C (h, (take_lz (n - 1) t))
+//│         LH_C (h, take_lz(n - 1)(t))
 //│       LH_N then
 //│         LH_N ()
 //│   else
@@ -305,23 +305,23 @@ testCichelli_nofib $ primId 6
 //│ fun length(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       1 + (length t)
+//│       1 + (length(t))
 //│     LH_N then
 //│       0
 //│ fun mappend(xs)(ys) =
 //│   if xs is
 //│     LH_C (h, t) then
-//│       LH_C (h, (mappend t ys))
+//│       LH_C (h, mappend(t)(ys))
 //│     LH_N then
 //│       ys
 //│ fun sum(ls) =
-//│   sumAux ls 0
+//│   sumAux(ls)(0)
 //│ fun sumAux(ls)(a) =
 //│   if ls is
 //│     LH_N then
 //│       a
 //│     LH_C (h, t) then
-//│       sumAux t (a + h)
+//│       sumAux(t)(a + h)
 //│ fun atIndex(n)(ls) =
 //│   if n < 0 then
 //│     error
@@ -331,67 +331,67 @@ testCichelli_nofib $ primId 6
 //│         if n == 0 then
 //│           h
 //│         else
-//│           (atIndex (n - 1) t)
+//│           (atIndex(n - 1)(t))
 //│       LH_N then
 //│         error)
 //│ fun atIndex_lz(n)(ls) =
 //│   if n < 0 then
 //│     error
 //│   else
-//│     (if force ls is
+//│     (if force(ls) is
 //│       LH_C (h, t) then
 //│         if n == 0 then
 //│           h
 //│         else
-//│           (atIndex_lz (n - 1) t)
+//│           (atIndex_lz(n - 1)(t))
 //│       LH_N then
 //│         error)
 //│ fun concat(lss) =
 //│   if lss is
 //│     LH_C (h, t) then
-//│       mappend h (concat t)
+//│       mappend(h)(concat(t))
 //│     LH_N then
 //│       LH_N ()
 //│ fun reverse(ls) =
-//│   reverse_helper ls (LH_N ())
+//│   reverse_helper(ls)(LH_N ())
 //│ fun reverse_helper(ls)(a) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       reverse_helper t (LH_C (h, a))
+//│       reverse_helper(t)(LH_C (h, a))
 //│     LH_N then
 //│       a
 //│ fun firstSuccess(_lh_firstSuccess_arg1)(_lh_firstSuccess_arg2) =
-//│   first 0 (map_lz _lh_firstSuccess_arg1 _lh_firstSuccess_arg2)
+//│   first(0)(map_lz(_lh_firstSuccess_arg1)(_lh_firstSuccess_arg2))
 //│ fun hinsert(_lh_hinsert_arg1)(_lh_hinsert_arg2) =
 //│   if _lh_hinsert_arg2 is
 //│     H (_lh_hinsert_H_0, _lh_hinsert_H_1, _lh_hinsert_H_2) then
-//│       let lo' = minm _lh_hinsert_H_0 _lh_hinsert_arg1
-//│       let hi' = maxm _lh_hinsert_H_1 _lh_hinsert_arg1
-//│       if (member _lh_hinsert_arg1 _lh_hinsert_H_2) || 1 + hi' - lo' > numberofkeys then
+//│       let lo' = minm(_lh_hinsert_H_0)(_lh_hinsert_arg1)
+//│       let hi' = maxm(_lh_hinsert_H_1)(_lh_hinsert_arg1)
+//│       if (member(_lh_hinsert_arg1)(_lh_hinsert_H_2)) || 1 + hi' - lo' > numberofkeys then
 //│         Nothing ()
 //│       else
-//│         (Just ((H ((Just (lo')), (Just (hi')), (LH_C (_lh_hinsert_arg1, _lh_hinsert_H_2))))))
+//│         (Just (H (Just (lo'), Just (hi'), LH_C (_lh_hinsert_arg1, _lh_hinsert_H_2))))
 //│ fun union(_lh_union_arg1)(_lh_union_arg2) =
-//│   mappend _lh_union_arg1 (let _lh_listcomp_fun = _lh_listcomp_fun_para =>
+//│   mappend(_lh_union_arg1)(let _lh_listcomp_fun = _lh_listcomp_fun_para =>
 //│     (if _lh_listcomp_fun_para is
 //│       LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_t) then
-//│         if not (member _lh_listcomp_fun_ls_h _lh_union_arg1) then
-//│           LH_C (_lh_listcomp_fun_ls_h, (_lh_listcomp_fun _lh_listcomp_fun_ls_t))
+//│         if not(member(_lh_listcomp_fun_ls_h)(_lh_union_arg1)) then
+//│           LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun(_lh_listcomp_fun_ls_t))
 //│         else
-//│           (_lh_listcomp_fun _lh_listcomp_fun_ls_t)
+//│           (_lh_listcomp_fun(_lh_listcomp_fun_ls_t))
 //│       LH_N then
 //│         LH_N ())
-//│   _lh_listcomp_fun _lh_union_arg2)
+//│   _lh_listcomp_fun(_lh_union_arg2))
 //│ fun freq(_lh_freq_arg1) =
-//│   assoc _lh_freq_arg1 freqtab
+//│   assoc(_lh_freq_arg1)(freqtab)
 //│ fun histo(_lh_histo_arg1) =
-//│   foldr histins (LH_N ()) _lh_histo_arg1
+//│   foldr(histins)(LH_N ())(_lh_histo_arg1)
 //│ fun maxm(_lh_maxm_arg1)(_lh_maxm_arg2) =
 //│   if _lh_maxm_arg1 is
 //│     Nothing then
 //│       _lh_maxm_arg2
 //│     Just (_lh_maxm_Just_0) then
-//│       max _lh_maxm_Just_0 _lh_maxm_arg2
+//│       max(_lh_maxm_Just_0)(_lh_maxm_arg2)
 //│ fun last(_lh_last_arg1) =
 //│   if _lh_last_arg1 is
 //│     LH_C (_lh_last_LH_C_0, _lh_last_LH_C_1) then
@@ -400,8 +400,8 @@ testCichelli_nofib $ primId 6
 //│           LH_N then
 //│             _lh_go_arg1
 //│           LH_C (_lh_go_LH_C_0, _lh_go_LH_C_1) then
-//│             go _lh_go_LH_C_0 _lh_go_LH_C_1)
-//│       go _lh_last_LH_C_0 _lh_last_LH_C_1
+//│             go(_lh_go_LH_C_0)(_lh_go_LH_C_1))
+//│       go(_lh_last_LH_C_0)(_lh_last_LH_C_1)
 //│ fun assocm(_lh_assocm_arg1)(_lh_assocm_arg2) =
 //│   if _lh_assocm_arg2 is
 //│     LH_N then
@@ -409,31 +409,31 @@ testCichelli_nofib $ primId 6
 //│     LH_C (_lh_assocm_LH_C_0, _lh_assocm_LH_C_1) then
 //│       if _lh_assocm_LH_C_0 is
 //│         LH_P2 (_lh_assocm_LH_P2_0, _lh_assocm_LH_P2_1) then
-//│           if polyEq _lh_assocm_arg1 _lh_assocm_LH_P2_0 then
+//│           if polyEq(_lh_assocm_arg1)(_lh_assocm_LH_P2_0) then
 //│             Just (_lh_assocm_LH_P2_1)
 //│           else
-//│             (assocm _lh_assocm_arg1 _lh_assocm_LH_C_1)
+//│             (assocm(_lh_assocm_arg1)(_lh_assocm_LH_C_1))
 //│ fun blocked(_lh_blocked_arg1) =
-//│   blocked' (LH_N ()) _lh_blocked_arg1
+//│   blocked'(LH_N ())(_lh_blocked_arg1)
 //│ fun assoc(_lh_assoc_arg1)(_lh_assoc_arg2) =
 //│   if _lh_assoc_arg2 is
 //│     LH_C (_lh_assoc_LH_C_0, _lh_assoc_LH_C_1) then
 //│       if _lh_assoc_LH_C_0 is
 //│         LH_P2 (_lh_assoc_LH_P2_0, _lh_assoc_LH_P2_1) then
-//│           if polyEq _lh_assoc_arg1 _lh_assoc_LH_P2_0 then
+//│           if polyEq(_lh_assoc_arg1)(_lh_assoc_LH_P2_0) then
 //│             _lh_assoc_LH_P2_1
 //│           else
-//│             (assoc _lh_assoc_arg1 _lh_assoc_LH_C_1)
+//│             (assoc(_lh_assoc_arg1)(_lh_assoc_LH_C_1))
 //│ fun keys =
-//│   LH_C ((LH_C ('c', (LH_C ('a', (LH_C ('s', (LH_C ('e', (LH_N ()))))))))), (LH_C ((LH_C ('c', (LH_C ('l', (LH_C ('a', (LH_C ('s', (LH_C ('s', (LH_N ()))))))))))), (LH_C ((LH_C ('d', (LH_C ('a', (LH_C ('t', (LH_C ('a', (LH_N ()))))))))), (LH_C ((LH_C ('d', (LH_C ('e', (LH_C ('f', (LH_C ('a', (LH_C ('u', (LH_C ('l', (LH_C ('t', (LH_N ()))))))))))))))), (LH_C ((LH_C ('d', (LH_C ('e', (LH_C ('r', (LH_C ('i', (LH_C ('v', (LH_C ('i', (LH_C ('n', (LH_C ('g', (LH_N ()))))))))))))))))), (LH_C ((LH_C ('e', (LH_C ('l', (LH_C ('s', (LH_C ('e', (LH_N ()))))))))), (LH_C ((LH_C ('h', (LH_C ('i', (LH_C ('d', (LH_C ('i', (LH_C ('n', (LH_C ('g', (LH_N ()))))))))))))), (LH_C ((LH_C ('i', (LH_C ('f', (LH_N ()))))), (LH_C ((LH_C ('i', (LH_C ('m', (LH_C ('p', (LH_C ('o', (LH_C ('r', (LH_C ('t', (LH_N ()))))))))))))), (LH_C ((LH_C ('i', (LH_C ('n', (LH_N ()))))), (LH_C ((LH_C ('i', (LH_C ('n', (LH_C ('f', (LH_C ('i', (LH_C ('x', (LH_N ()))))))))))), (LH_C ((LH_C ('i', (LH_C ('n', (LH_C ('f', (LH_C ('i', (LH_C ('x', (LH_C ('l', (LH_N ()))))))))))))), (LH_C ((LH_C ('i', (LH_C ('n', (LH_C ('s', (LH_C ('t', (LH_C ('a', (LH_C ('n', (LH_C ('c', (LH_C ('e', (LH_N ()))))))))))))))))), (LH_C ((LH_C ('i', (LH_C ('n', (LH_C ('t', (LH_C ('e', (LH_C ('r', (LH_C ('f', (LH_C ('a', (LH_C ('c', (LH_C ('e', (LH_N ()))))))))))))))))))), (LH_C ((LH_C ('l', (LH_C ('e', (LH_C ('t', (LH_N ()))))))), (LH_C ((LH_C ('m', (LH_C ('o', (LH_C ('d', (LH_C ('u', (LH_C ('l', (LH_C ('e', (LH_N ()))))))))))))), (LH_C ((LH_C ('o', (LH_C ('f', (LH_N ()))))), (LH_C ((LH_C ('r', (LH_C ('e', (LH_C ('n', (LH_C ('a', (LH_C ('m', (LH_C ('i', (LH_C ('n', (LH_C ('g', (LH_N ()))))))))))))))))), (LH_C ((LH_C ('t', (LH_C ('h', (LH_C ('e', (LH_C ('n', (LH_N ()))))))))), (LH_C ((LH_C ('t', (LH_C ('o', (LH_N ()))))), (LH_C ((LH_C ('t', (LH_C ('y', (LH_C ('p', (LH_C ('e', (LH_N ()))))))))), (LH_C ((LH_C ('w', (LH_C ('h', (LH_C ('e', (LH_C ('r', (LH_C ('e', (LH_N ()))))))))))), (LH_N ()))))))))))))))))))))))))))))))))))))))))))))
+//│   LH_C (LH_C ('c', LH_C ('a', LH_C ('s', LH_C ('e', LH_N ())))), LH_C (LH_C ('c', LH_C ('l', LH_C ('a', LH_C ('s', LH_C ('s', LH_N ()))))), LH_C (LH_C ('d', LH_C ('a', LH_C ('t', LH_C ('a', LH_N ())))), LH_C (LH_C ('d', LH_C ('e', LH_C ('f', LH_C ('a', LH_C ('u', LH_C ('l', LH_C ('t', LH_N ()))))))), LH_C (LH_C ('d', LH_C ('e', LH_C ('r', LH_C ('i', LH_C ('v', LH_C ('i', LH_C ('n', LH_C ('g', LH_N ())))))))), LH_C (LH_C ('e', LH_C ('l', LH_C ('s', LH_C ('e', LH_N ())))), LH_C (LH_C ('h', LH_C ('i', LH_C ('d', LH_C ('i', LH_C ('n', LH_C ('g', LH_N ())))))), LH_C (LH_C ('i', LH_C ('f', LH_N ())), LH_C (LH_C ('i', LH_C ('m', LH_C ('p', LH_C ('o', LH_C ('r', LH_C ('t', LH_N ())))))), LH_C (LH_C ('i', LH_C ('n', LH_N ())), LH_C (LH_C ('i', LH_C ('n', LH_C ('f', LH_C ('i', LH_C ('x', LH_N ()))))), LH_C (LH_C ('i', LH_C ('n', LH_C ('f', LH_C ('i', LH_C ('x', LH_C ('l', LH_N ())))))), LH_C (LH_C ('i', LH_C ('n', LH_C ('s', LH_C ('t', LH_C ('a', LH_C ('n', LH_C ('c', LH_C ('e', LH_N ())))))))), LH_C (LH_C ('i', LH_C ('n', LH_C ('t', LH_C ('e', LH_C ('r', LH_C ('f', LH_C ('a', LH_C ('c', LH_C ('e', LH_N ()))))))))), LH_C (LH_C ('l', LH_C ('e', LH_C ('t', LH_N ()))), LH_C (LH_C ('m', LH_C ('o', LH_C ('d', LH_C ('u', LH_C ('l', LH_C ('e', LH_N ())))))), LH_C (LH_C ('o', LH_C ('f', LH_N ())), LH_C (LH_C ('r', LH_C ('e', LH_C ('n', LH_C ('a', LH_C ('m', LH_C ('i', LH_C ('n', LH_C ('g', LH_N ())))))))), LH_C (LH_C ('t', LH_C ('h', LH_C ('e', LH_C ('n', LH_N ())))), LH_C (LH_C ('t', LH_C ('o', LH_N ())), LH_C (LH_C ('t', LH_C ('y', LH_C ('p', LH_C ('e', LH_N ())))), LH_C (LH_C ('w', LH_C ('h', LH_C ('e', LH_C ('r', LH_C ('e', LH_N ()))))), LH_N ()))))))))))))))))))))))
 //│ fun ends(_lh_ends_arg1) =
 //│   if _lh_ends_arg1 is
 //│     K (_lh_ends_K_0, _lh_ends_K_1, _lh_ends_K_2, _lh_ends_K_3) then
-//│       LH_C (_lh_ends_K_1, (LH_C (_lh_ends_K_2, (LH_N ()))))
+//│       LH_C (_lh_ends_K_1, LH_C (_lh_ends_K_2, LH_N ()))
 //│ fun partition'(_lh_partition'_arg1) =
-//│   foldr (select _lh_partition'_arg1) (LH_P2 ((LH_N ()), (LH_N ())))
+//│   foldr(select(_lh_partition'_arg1))(LH_P2 (LH_N (), LH_N ()))
 //│ fun numberofkeys =
-//│   length keys
+//│   length(keys)
 //│ fun findhash'(_lh_findhash'_arg1)(_lh_findhash'_arg2)(_lh_findhash'_arg3) =
 //│   if _lh_findhash'_arg3 is
 //│     LH_N then
@@ -442,58 +442,58 @@ testCichelli_nofib $ primId 6
 //│       if _lh_findhash'_LH_C_0 is
 //│         K (_lh_findhash'_K_0, _lh_findhash'_K_1, _lh_findhash'_K_2, _lh_findhash'_K_3) then
 //│           let try = newAssocs =>
-//│             (let newCharAssocs = mappend newAssocs _lh_findhash'_arg2
-//│             let _lh_matchIdent = hinsert (hash newCharAssocs (K (_lh_findhash'_K_0, _lh_findhash'_K_1, _lh_findhash'_K_2, _lh_findhash'_K_3))) _lh_findhash'_arg1
+//│             (let newCharAssocs = mappend(newAssocs)(_lh_findhash'_arg2)
+//│             let _lh_matchIdent = hinsert(hash(newCharAssocs)(K (_lh_findhash'_K_0, _lh_findhash'_K_1, _lh_findhash'_K_2, _lh_findhash'_K_3)))(_lh_findhash'_arg1)
 //│             if _lh_matchIdent is
 //│               Nothing then
 //│                 NotEver (1)
 //│               Just (_lh_findhash'_Just_0) then
-//│                 findhash' _lh_findhash'_Just_0 newCharAssocs _lh_findhash'_LH_C_1)
-//│           let _lh_matchIdent = LH_P2 ((assocm _lh_findhash'_K_1 _lh_findhash'_arg2), (assocm _lh_findhash'_K_2 _lh_findhash'_arg2))
+//│                 findhash'(_lh_findhash'_Just_0)(newCharAssocs)(_lh_findhash'_LH_C_1))
+//│           let _lh_matchIdent = LH_P2 (assocm(_lh_findhash'_K_1)(_lh_findhash'_arg2), assocm(_lh_findhash'_K_2)(_lh_findhash'_arg2))
 //│           if _lh_matchIdent is
 //│             LH_P2 (_lh_findhash'_LH_P2_0, _lh_findhash'_LH_P2_1) then
 //│               if _lh_findhash'_LH_P2_0 is
 //│                 Nothing then
 //│                   if _lh_findhash'_LH_P2_1 is
 //│                     Nothing then
-//│                       if polyEq _lh_findhash'_K_1 _lh_findhash'_K_2 then
-//│                         firstSuccess (m =>
-//│                           (try (LH_C ((LH_P2 (_lh_findhash'_K_1, m)), (LH_N ()))))) (enumFromTo_lz 0 maxval)
+//│                       if polyEq(_lh_findhash'_K_1)(_lh_findhash'_K_2) then
+//│                         firstSuccess(m =>
+//│                           (try(LH_C (LH_P2 (_lh_findhash'_K_1, m), LH_N ()))))(enumFromTo_lz(0)(maxval))
 //│                       else
-//│                         (firstSuccess (mn =>
+//│                         (firstSuccess(mn =>
 //│                           (let _lh_matchIdent = mn
 //│                           if _lh_matchIdent is
 //│                             LH_P2 (_lh_findhash'_LH_P2_0, _lh_findhash'_LH_P2_1) then
-//│                               try (LH_C ((LH_P2 (_lh_findhash'_K_1, _lh_findhash'_LH_P2_0)), (LH_C ((LH_P2 (_lh_findhash'_K_2, _lh_findhash'_LH_P2_1)), (LH_N ()))))))) (let _lh_listcomp_fun = _lh_listcomp_fun_para =>
-//│                           (if force _lh_listcomp_fun_para is
+//│                               try(LH_C (LH_P2 (_lh_findhash'_K_1, _lh_findhash'_LH_P2_0), LH_C (LH_P2 (_lh_findhash'_K_2, _lh_findhash'_LH_P2_1), LH_N ())))))(let _lh_listcomp_fun = _lh_listcomp_fun_para =>
+//│                           (if force(_lh_listcomp_fun_para) is
 //│                             LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_t) then
 //│                               let _lh_listcomp_fun = _lh_listcomp_fun_para =>
-//│                                 (if force _lh_listcomp_fun_para is
+//│                                 (if force(_lh_listcomp_fun_para) is
 //│                                   LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_t) then
-//│                                     lazy (LH_C ((LH_P2 (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_h)), (_lh_listcomp_fun _lh_listcomp_fun_ls_t)))
+//│                                     lazy(LH_C (LH_P2 (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_h), _lh_listcomp_fun(_lh_listcomp_fun_ls_t)))
 //│                                   LH_N then
-//│                                     _lh_listcomp_fun _lh_listcomp_fun_ls_t)
-//│                               _lh_listcomp_fun (enumFromTo_lz 0 maxval)
+//│                                     _lh_listcomp_fun(_lh_listcomp_fun_ls_t))
+//│                               _lh_listcomp_fun(enumFromTo_lz(0)(maxval))
 //│                             LH_N then
-//│                               lazy (LH_N ()))
-//│                         _lh_listcomp_fun (enumFromTo_lz 0 maxval)))
+//│                               lazy(LH_N ()))
+//│                         _lh_listcomp_fun(enumFromTo_lz(0)(maxval))))
 //│                     Just (_lh_findhash'_Just_0) then
-//│                       firstSuccess (m =>
-//│                         (try (LH_C ((LH_P2 (_lh_findhash'_K_1, m)), (LH_N ()))))) (enumFromTo_lz 0 maxval)
+//│                       firstSuccess(m =>
+//│                         (try(LH_C (LH_P2 (_lh_findhash'_K_1, m), LH_N ()))))(enumFromTo_lz(0)(maxval))
 //│                 Just (_lh_findhash'_Just_0) then
 //│                   if _lh_findhash'_LH_P2_1 is
 //│                     Nothing then
-//│                       firstSuccess (n =>
-//│                         (try (LH_C ((LH_P2 (_lh_findhash'_K_2, n)), (LH_N ()))))) (enumFromTo_lz 0 maxval)
+//│                       firstSuccess(n =>
+//│                         (try(LH_C (LH_P2 (_lh_findhash'_K_2, n), LH_N ()))))(enumFromTo_lz(0)(maxval))
 //│                     Just (_lh_findhash'_Just_0) then
-//│                       try (LH_N ())
+//│                       try(LH_N ())
 //│ fun all(_lh_all_arg1)(_lh_all_arg2) =
 //│   if _lh_all_arg2 is
 //│     LH_N then
 //│       True ()
 //│     LH_C (_lh_all_LH_C_0, _lh_all_LH_C_1) then
-//│       if _lh_all_arg1 _lh_all_LH_C_0 then
-//│         all _lh_all_arg1 _lh_all_LH_C_1
+//│       if _lh_all_arg1(_lh_all_LH_C_0) then
+//│         all(_lh_all_arg1)(_lh_all_LH_C_1)
 //│       else
 //│         (False ())
 //│ fun minm(_lh_minm_arg1)(_lh_minm_arg2) =
@@ -501,92 +501,92 @@ testCichelli_nofib $ primId 6
 //│     Nothing then
 //│       _lh_minm_arg2
 //│     Just (_lh_minm_Just_0) then
-//│       min _lh_minm_Just_0 _lh_minm_arg2
+//│       min(_lh_minm_Just_0)(_lh_minm_arg2)
 //│ fun freqtab =
-//│   histo (concat (map ends (attribkeys keys)))
+//│   histo(concat(map(ends)(attribkeys(keys))))
 //│ fun min(_lh_min_arg1)(_lh_min_arg2) =
 //│   if _lh_min_arg1 < _lh_min_arg2 then
 //│     _lh_min_arg1
 //│   else
 //│     _lh_min_arg2
 //│ fun enumFromTo_lz(_lh_enumFromTo_lz_arg1)(_lh_enumFromTo_lz_arg2) =
-//│   lazy (if _lh_enumFromTo_lz_arg1 <= _lh_enumFromTo_lz_arg2 then
-//│     LH_C (_lh_enumFromTo_lz_arg1, (enumFromTo_lz (_lh_enumFromTo_lz_arg1 + 1) _lh_enumFromTo_lz_arg2))
+//│   lazy(if _lh_enumFromTo_lz_arg1 <= _lh_enumFromTo_lz_arg2 then
+//│     LH_C (_lh_enumFromTo_lz_arg1, enumFromTo_lz(_lh_enumFromTo_lz_arg1 + 1)(_lh_enumFromTo_lz_arg2))
 //│   else
 //│     (LH_N ()))
 //│ fun prog(_lh_prog_arg1) =
-//│   cichelli _lh_prog_arg1
+//│   cichelli(_lh_prog_arg1)
 //│ fun histins(_lh_histins_arg1)(_lh_histins_arg2) =
 //│   if _lh_histins_arg2 is
 //│     LH_N then
-//│       LH_C ((LH_P2 (_lh_histins_arg1, 1)), (LH_N ()))
+//│       LH_C (LH_P2 (_lh_histins_arg1, 1), LH_N ())
 //│     LH_C (_lh_histins_LH_C_0, _lh_histins_LH_C_1) then
 //│       if _lh_histins_LH_C_0 is
 //│         LH_P2 (_lh_histins_LH_P2_0, _lh_histins_LH_P2_1) then
-//│           if polyEq _lh_histins_arg1 _lh_histins_LH_P2_0 then
-//│             LH_C ((LH_P2 (_lh_histins_LH_P2_0, (_lh_histins_LH_P2_1 + 1))), _lh_histins_LH_C_1)
+//│           if polyEq(_lh_histins_arg1)(_lh_histins_LH_P2_0) then
+//│             LH_C (LH_P2 (_lh_histins_LH_P2_0, _lh_histins_LH_P2_1 + 1), _lh_histins_LH_C_1)
 //│           else
-//│             (LH_C ((LH_P2 (_lh_histins_LH_P2_0, _lh_histins_LH_P2_1)), (histins _lh_histins_arg1 _lh_histins_LH_C_1)))
+//│             (LH_C (LH_P2 (_lh_histins_LH_P2_0, _lh_histins_LH_P2_1), histins(_lh_histins_arg1)(_lh_histins_LH_C_1)))
 //│ fun attribkeys(_lh_attribkeys_arg1) =
-//│   map (k =>
-//│     (K (k, (head k), (last k), (length k)))) _lh_attribkeys_arg1
+//│   map(k =>
+//│     (K (k, head(k), last(k), length(k))))(_lh_attribkeys_arg1)
 //│ fun select(_lh_select_arg1)(_lh_select_arg2)(_lh_select_arg3) =
 //│   if _lh_select_arg3 is
 //│     LH_P2 (_lh_select_LH_P2_0, _lh_select_LH_P2_1) then
-//│       if _lh_select_arg1 _lh_select_arg2 then
-//│         LH_P2 ((LH_C (_lh_select_arg2, _lh_select_LH_P2_0)), _lh_select_LH_P2_1)
+//│       if _lh_select_arg1(_lh_select_arg2) then
+//│         LH_P2 (LH_C (_lh_select_arg2, _lh_select_LH_P2_0), _lh_select_LH_P2_1)
 //│       else
-//│         (LH_P2 (_lh_select_LH_P2_0, (LH_C (_lh_select_arg2, _lh_select_LH_P2_1))))
+//│         (LH_P2 (_lh_select_LH_P2_0, LH_C (_lh_select_arg2, _lh_select_LH_P2_1)))
 //│ fun blocked'(_lh_blocked'_arg1)(_lh_blocked'_arg2) =
 //│   if _lh_blocked'_arg2 is
 //│     LH_N then
 //│       LH_N ()
 //│     LH_C (_lh_blocked'_LH_C_0, _lh_blocked'_LH_C_1) then
-//│       let ds' = union _lh_blocked'_arg1 (ends _lh_blocked'_LH_C_0)
-//│       let _lh_matchIdent = partition' (x =>
-//│         (subset (ends x) ds')) _lh_blocked'_LH_C_1
+//│       let ds' = union(_lh_blocked'_arg1)(ends(_lh_blocked'_LH_C_0))
+//│       let _lh_matchIdent = partition'(x =>
+//│         (subset(ends(x))(ds')))(_lh_blocked'_LH_C_1)
 //│       if _lh_matchIdent is
 //│         LH_P2 (_lh_blocked'_LH_P2_0, _lh_blocked'_LH_P2_1) then
-//│           mappend (LH_C (_lh_blocked'_LH_C_0, _lh_blocked'_LH_P2_0)) (blocked' ds' _lh_blocked'_LH_P2_1)
+//│           mappend(LH_C (_lh_blocked'_LH_C_0, _lh_blocked'_LH_P2_0))(blocked'(ds')(_lh_blocked'_LH_P2_1))
 //│ fun morefreq(_lh_morefreq_arg1)(_lh_morefreq_arg2) =
 //│   if _lh_morefreq_arg1 is
 //│     K (_lh_morefreq_K_0, _lh_morefreq_K_1, _lh_morefreq_K_2, _lh_morefreq_K_3) then
 //│       if _lh_morefreq_arg2 is
 //│         K (_lh_morefreq_K_0, _lh_morefreq_K_1, _lh_morefreq_K_2, _lh_morefreq_K_3) then
-//│           (freq _lh_morefreq_K_1) + (freq _lh_morefreq_K_2) > (freq _lh_morefreq_K_1) + (freq _lh_morefreq_K_2)
+//│           (freq(_lh_morefreq_K_1)) + (freq(_lh_morefreq_K_2)) > (freq(_lh_morefreq_K_1)) + (freq(_lh_morefreq_K_2))
 //│ fun maxval =
-//│   length freqtab
+//│   length(freqtab)
 //│ fun hash(_lh_hash_arg1)(_lh_hash_arg2) =
 //│   if _lh_hash_arg2 is
 //│     K (_lh_hash_K_0, _lh_hash_K_1, _lh_hash_K_2, _lh_hash_K_3) then
-//│       _lh_hash_K_3 + (assoc _lh_hash_K_1 _lh_hash_arg1) + (assoc _lh_hash_K_2 _lh_hash_arg1)
+//│       _lh_hash_K_3 + (assoc(_lh_hash_K_1)(_lh_hash_arg1)) + (assoc(_lh_hash_K_2)(_lh_hash_arg1))
 //│ fun max(_lh_max_arg1)(_lh_max_arg2) =
 //│   if _lh_max_arg1 > _lh_max_arg2 then
 //│     _lh_max_arg1
 //│   else
 //│     _lh_max_arg2
 //│ fun cichelli(_lh_cichelli_arg1) =
-//│   let attribkeys' = attribkeys (mappend keys (take (_lh_cichelli_arg1 % 2) keys))
+//│   let attribkeys' = attribkeys(mappend(keys)(take(_lh_cichelli_arg1 % 2)(keys)))
 //│   let hashkeys = (_lh_funcomp_x =>
-//│     (blocked (freqsorted _lh_funcomp_x))) attribkeys'
-//│   findhash hashkeys
+//│     (blocked(freqsorted(_lh_funcomp_x))))(attribkeys')
+//│   findhash(hashkeys)
 //│ fun member(_lh_member_arg1)(_lh_member_arg2) =
 //│   if _lh_member_arg2 is
 //│     LH_N then
 //│       False ()
 //│     LH_C (_lh_member_LH_C_0, _lh_member_LH_C_1) then
-//│       (polyEq _lh_member_arg1 _lh_member_LH_C_0) || (member _lh_member_arg1 _lh_member_LH_C_1)
+//│       (polyEq(_lh_member_arg1)(_lh_member_LH_C_0)) || (member(_lh_member_arg1)(_lh_member_LH_C_1))
 //│ fun findhash(_lh_findhash_arg1) =
-//│   findhash' (H ((Nothing ()), (Nothing ()), (LH_N ()))) (LH_N ()) _lh_findhash_arg1
+//│   findhash'(H (Nothing (), Nothing (), LH_N ()))(LH_N ())(_lh_findhash_arg1)
 //│ fun subset(_lh_subset_arg1)(_lh_subset_arg2) =
-//│   all (x =>
-//│     (member x _lh_subset_arg2)) _lh_subset_arg1
+//│   all(x =>
+//│     (member(x)(_lh_subset_arg2)))(_lh_subset_arg1)
 //│ fun freqsorted(_lh_freqsorted_arg1) =
 //│   _lh_freqsorted_arg1
 //│ fun testCichelli_nofib(_lh_testCichelli_nofib_arg1) =
-//│   prog _lh_testCichelli_nofib_arg1
+//│   prog(_lh_testCichelli_nofib_arg1)
 //│ fun first(_lh_first_arg1)(_lh_first_arg2) =
-//│   let _lh_matchIdent = force _lh_first_arg2
+//│   let _lh_matchIdent = force(_lh_first_arg2)
 //│   if _lh_matchIdent is
 //│     LH_N then
 //│       NotEver (_lh_first_arg1)
@@ -594,10 +594,10 @@ testCichelli_nofib $ primId 6
 //│       let _lh_matchIdent = _lh_first_LH_C_0
 //│       if _lh_matchIdent is
 //│         YesIts (_lh_first_YesIts_0, _lh_first_YesIts_1) then
-//│           YesIts ((_lh_first_arg1 + _lh_first_YesIts_0), _lh_first_YesIts_1)
+//│           YesIts (_lh_first_arg1 + _lh_first_YesIts_0, _lh_first_YesIts_1)
 //│         NotEver (_lh_first_NotEver_0) then
-//│           first (_lh_first_arg1 + _lh_first_NotEver_0) _lh_first_LH_C_1
-//│ (testCichelli_nofib (primId 6))
+//│           first(_lh_first_arg1 + _lh_first_NotEver_0)(_lh_first_LH_C_1)
+//│ (testCichelli_nofib(primId(6)))
 //│ 		---------- unoptimized mls gen ----------
 //│ testCichelli_nofib_lh_₁^2530(primId⁰(6))
 //│ def all_lh_₁(_lh_all_arg1⁰, _lh_all_arg2⁰) = case _lh_all_arg2⁰ of {

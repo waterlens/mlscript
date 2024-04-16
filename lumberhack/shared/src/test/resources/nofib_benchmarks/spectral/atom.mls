@@ -37,49 +37,49 @@ testAtom_nofib $ primId 1000
 //│ fun map(f)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       LH_C ((f h), (map f t))
+//│       LH_C (f(h), map(f)(t))
 //│     LH_N then
 //│       LH_N ()
 //│ fun map_lz(f)(ls) =
-//│   lazy (if force ls is
+//│   lazy(if force(ls) is
 //│     LH_C (h, t) then
-//│       LH_C ((f h), (map_lz f t))
+//│       LH_C (f(h), map_lz(f)(t))
 //│     LH_N then
 //│       LH_N ())
 //│ fun filter(f)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       if f h then
-//│         LH_C (h, (filter f t))
+//│       if f(h) then
+//│         LH_C (h, filter(f)(t))
 //│       else
-//│         (filter f t)
+//│         (filter(f)(t))
 //│     LH_N then
 //│       LH_N ()
 //│ fun filter_lz(f)(ls) =
-//│   lazy (if force ls is
+//│   lazy(if force(ls) is
 //│     LH_C (h, t) then
-//│       if f h then
-//│         LH_C (h, (filter_lz f t))
+//│       if f(h) then
+//│         LH_C (h, filter_lz(f)(t))
 //│       else
-//│         (force (filter_lz f t))
+//│         (force(filter_lz(f)(t)))
 //│     LH_N then
 //│       LH_N ())
 //│ fun foldl(f)(i)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       foldl f (f i h) t
+//│       foldl(f)(f(i)(h))(t)
 //│     LH_N then
 //│       i
 //│ fun foldr(f)(i)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       f h (foldr f i t)
+//│       f(h)(foldr(f)(i)(t))
 //│     LH_N then
 //│       i
 //│ fun foldr_lz(f)(i)(ls) =
-//│   lazy (if force ls is
+//│   lazy(if force(ls) is
 //│     LH_C (h, t) then
-//│       f h (foldr_lz f i t)
+//│       f(h)(foldr_lz(f)(i)(t))
 //│     LH_N then
 //│       i)
 //│ fun zip(xs)(ys) =
@@ -87,7 +87,7 @@ testAtom_nofib $ primId 1000
 //│     LH_C (hx, tx) then
 //│       if ys is
 //│         LH_C (hy, ty) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -95,9 +95,9 @@ testAtom_nofib $ primId 1000
 //│ fun zip_nl_lz(xs)(ys) =
 //│   if xs is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip_nl_lz tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip_nl_lz(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -105,19 +105,19 @@ testAtom_nofib $ primId 1000
 //│ fun zip_lz_nl(xs)(ys) =
 //│   if ys is
 //│     LH_C (hy, ty) then
-//│       if force xs is
+//│       if force(xs) is
 //│         LH_C (hx, tx) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_nl tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip_lz_nl(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
 //│       LH_N ()
 //│ fun zip_lz_lz(xs)(ys) =
-//│   lazy (if force xs is
+//│   lazy(if force(xs) is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_lz tx ty))
+//│           LH_C (LH_P2 (hx, hy), zip_lz_lz(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -127,7 +127,7 @@ testAtom_nofib $ primId 1000
 //│     LH_C (hx, tx) then
 //│       if ys is
 //│         LH_C (hy, ty) then
-//│           LH_C ((f hx hy), (zipWith f tx ty))
+//│           LH_C (f(hx)(hy), zipWith(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -135,9 +135,9 @@ testAtom_nofib $ primId 1000
 //│ fun zipWith_nl_lz(f)(xs)(ys) =
 //│   if xs is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((f hx hy), (zipWith_nl_lz f tx ty))
+//│           LH_C (f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -145,19 +145,19 @@ testAtom_nofib $ primId 1000
 //│ fun zipWith_lz_nl(f)(xs)(ys) =
 //│   if ys is
 //│     LH_C (hy, ty) then
-//│       if force xs is
+//│       if force(xs) is
 //│         LH_C (hx, tx) then
-//│           LH_C ((f hx hy), (zipWith_lz_nl f tx ty))
+//│           LH_C (f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
 //│       LH_N ()
 //│ fun zipWith_lz_lz(f)(xs)(ys) =
-//│   lazy (if force xs is
+//│   lazy(if force(xs) is
 //│     LH_C (hx, tx) then
-//│       if force ys is
+//│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((f hx hy), (zipWith_lz_lz f tx ty))
+//│           LH_C (f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -169,7 +169,7 @@ testAtom_nofib $ primId 1000
 //│     LH_N then
 //│       error
 //│ fun head_lz(ls) =
-//│   if force ls is
+//│   if force(ls) is
 //│     LH_C (h, t) then
 //│       h
 //│     LH_N then
@@ -181,43 +181,43 @@ testAtom_nofib $ primId 1000
 //│     LH_N then
 //│       error
 //│ fun tail_lz(ls) =
-//│   if force ls is
+//│   if force(ls) is
 //│     LH_C (h, t) then
 //│       t
 //│     LH_N then
 //│       error
 //│ fun enumFromTo(a)(b) =
 //│   if a <= b then
-//│     LH_C (a, (enumFromTo (a + 1) b))
+//│     LH_C (a, enumFromTo(a + 1)(b))
 //│   else
 //│     (LH_N ())
 //│ fun enumFromThenTo(a)(t)(b) =
 //│   if a <= b then
-//│     LH_C (a, (enumFromThenTo t (2 * t - a) b))
+//│     LH_C (a, enumFromThenTo(t)(2 * t - a)(b))
 //│   else
 //│     (LH_N ())
 //│ fun enumFrom(a) =
-//│   lazy (LH_C (a, (enumFrom (a + 1))))
+//│   lazy(LH_C (a, enumFrom(a + 1)))
 //│ fun enumFromThen(a)(t) =
-//│   lazy (LH_C (a, (enumFromThen t (2 * t - a))))
+//│   lazy(LH_C (a, enumFromThen(t)(2 * t - a)))
 //│ fun repeat(x) =
-//│   lazy (LH_C (x, (repeat x)))
+//│   lazy(LH_C (x, repeat(x)))
 //│ fun iterate(f)(x) =
-//│   lazy (LH_C (x, (iterate f (f x))))
+//│   lazy(LH_C (x, iterate(f)(f(x))))
 //│ fun take(n)(ls) =
 //│   if n > 0 then
 //│     if ls is
 //│       LH_C (h, t) then
-//│         LH_C (h, (take (n - 1) t))
+//│         LH_C (h, take(n - 1)(t))
 //│       LH_N then
 //│         LH_N ()
 //│   else
 //│     (LH_N ())
 //│ fun take_lz(n)(ls) =
 //│   if n > 0 then
-//│     if force ls is
+//│     if force(ls) is
 //│       LH_C (h, t) then
-//│         LH_C (h, (take_lz (n - 1) t))
+//│         LH_C (h, take_lz(n - 1)(t))
 //│       LH_N then
 //│         LH_N ()
 //│   else
@@ -225,23 +225,23 @@ testAtom_nofib $ primId 1000
 //│ fun length(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       1 + (length t)
+//│       1 + (length(t))
 //│     LH_N then
 //│       0
 //│ fun mappend(xs)(ys) =
 //│   if xs is
 //│     LH_C (h, t) then
-//│       LH_C (h, (mappend t ys))
+//│       LH_C (h, mappend(t)(ys))
 //│     LH_N then
 //│       ys
 //│ fun sum(ls) =
-//│   sumAux ls 0
+//│   sumAux(ls)(0)
 //│ fun sumAux(ls)(a) =
 //│   if ls is
 //│     LH_N then
 //│       a
 //│     LH_C (h, t) then
-//│       sumAux t (a + h)
+//│       sumAux(t)(a + h)
 //│ fun atIndex(n)(ls) =
 //│   if n < 0 then
 //│     error
@@ -251,84 +251,84 @@ testAtom_nofib $ primId 1000
 //│         if n == 0 then
 //│           h
 //│         else
-//│           (atIndex (n - 1) t)
+//│           (atIndex(n - 1)(t))
 //│       LH_N then
 //│         error)
 //│ fun atIndex_lz(n)(ls) =
 //│   if n < 0 then
 //│     error
 //│   else
-//│     (if force ls is
+//│     (if force(ls) is
 //│       LH_C (h, t) then
 //│         if n == 0 then
 //│           h
 //│         else
-//│           (atIndex_lz (n - 1) t)
+//│           (atIndex_lz(n - 1)(t))
 //│       LH_N then
 //│         error)
 //│ fun concat(lss) =
 //│   if lss is
 //│     LH_C (h, t) then
-//│       mappend h (concat t)
+//│       mappend(h)(concat(t))
 //│     LH_N then
 //│       LH_N ()
 //│ fun reverse(ls) =
-//│   reverse_helper ls (LH_N ())
+//│   reverse_helper(ls)(LH_N ())
 //│ fun reverse_helper(ls)(a) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       reverse_helper t (LH_C (h, a))
+//│       reverse_helper(t)(LH_C (h, a))
 //│     LH_N then
 //│       a
 //│ fun test =
-//│   runExperiment testforce 0.02 (LH_C (1.0, (LH_N ()))) (State ((LH_C (1.0, (LH_N ()))), (LH_C (0.0, (LH_N ())))))
+//│   runExperiment(testforce)(0.02)(LH_C (1.0, LH_N ()))(State (LH_C (1.0, LH_N ()), LH_C (0.0, LH_N ())))
 //│ fun propagate(_lh_propagate_arg1)(_lh_propagate_arg2)(_lh_propagate_arg3) =
 //│   if _lh_propagate_arg3 is
 //│     State (_lh_propagate_State_0, _lh_propagate_State_1) then
-//│       State ((dotPlus _lh_propagate_State_0 (scalarMut _lh_propagate_arg1 _lh_propagate_State_1)), (dotPlus _lh_propagate_State_1 (scalarMut _lh_propagate_arg1 _lh_propagate_arg2)))
+//│       State (dotPlus(_lh_propagate_State_0)(scalarMut(_lh_propagate_arg1)(_lh_propagate_State_1)), dotPlus(_lh_propagate_State_1)(scalarMut(_lh_propagate_arg1)(_lh_propagate_arg2)))
 //│ fun show(_lh_show_arg1) =
 //│   if _lh_show_arg1 is
 //│     State (_lh_show_State_0, _lh_show_State_1) then
-//│       concat (let _lh_listcomp_fun = _lh_listcomp_fun_para =>
+//│       concat(let _lh_listcomp_fun = _lh_listcomp_fun_para =>
 //│         (if _lh_listcomp_fun_para is
 //│           LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_t) then
-//│             LH_C ((mappend (string_of_float _lh_listcomp_fun_ls_h) (LH_C ('t', (LH_N ())))), (_lh_listcomp_fun _lh_listcomp_fun_ls_t))
+//│             LH_C (mappend(string_of_float(_lh_listcomp_fun_ls_h))(LH_C ('t', LH_N ())), _lh_listcomp_fun(_lh_listcomp_fun_ls_t))
 //│           LH_N then
 //│             LH_N ())
-//│       _lh_listcomp_fun _lh_show_State_0)
+//│       _lh_listcomp_fun(_lh_show_State_0))
 //│ fun dotMult(_lh_dotMult_arg1)(_lh_dotMult_arg2) =
 //│   if _lh_dotMult_arg2 is
 //│     LH_N then
 //│       LH_N ()
 //│ fun testforce(_lh_testforce_arg1)(_lh_testforce_arg2) =
-//│   lazy (let _lh_matchIdent = force _lh_testforce_arg2
+//│   lazy(let _lh_matchIdent = force(_lh_testforce_arg2)
 //│   if _lh_matchIdent is
 //│     LH_C (_lh_testforce_LH_C_0, _lh_testforce_LH_C_1) then
 //│       if _lh_testforce_LH_C_0 is
 //│         State (_lh_testforce_State_0, _lh_testforce_State_1) then
-//│           LH_C ((dotMult (scalarMut (0.0 -. 1.0) _lh_testforce_arg1) _lh_testforce_State_0), (testforce _lh_testforce_arg1 _lh_testforce_LH_C_1)))
+//│           LH_C (dotMult(scalarMut(0.0 -. 1.0)(_lh_testforce_arg1))(_lh_testforce_State_0), testforce(_lh_testforce_arg1)(_lh_testforce_LH_C_1)))
 //│ fun dotPlus(_lh_dotPlus_arg1)(_lh_dotPlus_arg2) =
 //│   if _lh_dotPlus_arg2 is
 //│     LH_N then
 //│       _lh_dotPlus_arg1
 //│ fun testAtom_nofib(_lh_testAtom_nofib_arg1) =
-//│   concat (let _lh_listcomp_fun = _lh_listcomp_fun_para =>
+//│   concat(let _lh_listcomp_fun = _lh_listcomp_fun_para =>
 //│     (if _lh_listcomp_fun_para is
 //│       LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_t) then
-//│         LH_C ((mappend (show _lh_listcomp_fun_ls_h) (LH_C ('n', (LH_N ())))), (_lh_listcomp_fun _lh_listcomp_fun_ls_t))
+//│         LH_C (mappend(show(_lh_listcomp_fun_ls_h))(LH_C ('n', LH_N ())), _lh_listcomp_fun(_lh_listcomp_fun_ls_t))
 //│       LH_N then
 //│         LH_N ())
-//│   _lh_listcomp_fun (take_lz _lh_testAtom_nofib_arg1 (runExperiment testforce 0.02 (LH_C (1.0, (LH_N ()))) (State ((LH_C (1.0, (LH_N ()))), (LH_C (0.0, (LH_N ()))))))))
+//│   _lh_listcomp_fun(take_lz(_lh_testAtom_nofib_arg1)(runExperiment(testforce)(0.02)(LH_C (1.0, LH_N ()))(State (LH_C (1.0, LH_N ()), LH_C (0.0, LH_N ()))))))
 //│ fun scalarMut(_lh_scalarMut_arg1)(_lh_scalarMut_arg2) =
 //│   if _lh_scalarMut_arg2 is
 //│     LH_N then
 //│       LH_N ()
 //│     LH_C (_lh_scalarMut_LH_C_0, _lh_scalarMut_LH_C_1) then
-//│       LH_C ((_lh_scalarMut_arg1 *. _lh_scalarMut_LH_C_0), (scalarMut _lh_scalarMut_arg1 _lh_scalarMut_LH_C_1))
+//│       LH_C (_lh_scalarMut_arg1 *. _lh_scalarMut_LH_C_0, scalarMut(_lh_scalarMut_arg1)(_lh_scalarMut_LH_C_1))
 //│ fun runExperiment(_lh_runExperiment_arg1)(_lh_runExperiment_arg2)(_lh_runExperiment_arg3)(_lh_runExperiment_arg4) =
-//│   lazy (let stream = runExperiment _lh_runExperiment_arg1 _lh_runExperiment_arg2 _lh_runExperiment_arg3 _lh_runExperiment_arg4
-//│   LH_C (_lh_runExperiment_arg4, (zipWith_lz_lz (propagate _lh_runExperiment_arg2) (_lh_runExperiment_arg1 _lh_runExperiment_arg3 stream) stream)))
-//│ (testAtom_nofib (primId 1000))
+//│   lazy(let stream = runExperiment(_lh_runExperiment_arg1)(_lh_runExperiment_arg2)(_lh_runExperiment_arg3)(_lh_runExperiment_arg4)
+//│   LH_C (_lh_runExperiment_arg4, zipWith_lz_lz(propagate(_lh_runExperiment_arg2))(_lh_runExperiment_arg1(_lh_runExperiment_arg3)(stream))(stream)))
+//│ (testAtom_nofib(primId(1000)))
 //│ 		---------- unoptimized mls gen ----------
 //│ testAtom_nofib_lh_₁^410(primId⁰(1000))
 //│ def concat_lh_₁(lss¹) = case lss¹ of {

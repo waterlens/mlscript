@@ -53,57 +53,57 @@ testPiDigits_nofib $ primId 5000
 //│ fun map(f)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       LH_C ((f(h)), (map(f)(f)))
+//│       LH_C (f(h), map(f)(t))
 //│     LH_N then
 //│       LH_N ()
 //│ fun map_lz(f)(ls) =
-//│   lazy((if force(ls) is
+//│   lazy(if force(ls) is
 //│     LH_C (h, t) then
-//│       LH_C ((f(h)), (map_lz(f)(f)))
+//│       LH_C (f(h), map_lz(f)(t))
 //│     LH_N then
-//│       LH_N ()))
+//│       LH_N ())
 //│ fun filter(f)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
 //│       if f(h) then
-//│         LH_C (h, (filter(f)(f)))
+//│         LH_C (h, filter(f)(t))
 //│       else
-//│         (filter(f)(f))
+//│         (filter(f)(t))
 //│     LH_N then
 //│       LH_N ()
 //│ fun filter_lz(f)(ls) =
-//│   lazy((if force(ls) is
+//│   lazy(if force(ls) is
 //│     LH_C (h, t) then
 //│       if f(h) then
-//│         LH_C (h, (filter_lz(f)(f)))
+//│         LH_C (h, filter_lz(f)(t))
 //│       else
-//│         (force((filter_lz(f)(f))))
+//│         (force(filter_lz(f)(t)))
 //│     LH_N then
-//│       LH_N ()))
+//│       LH_N ())
 //│ fun foldl(f)(i)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       foldl(f)(f)((f(i)(i)))
+//│       foldl(f)(f(i)(h))(t)
 //│     LH_N then
 //│       i
 //│ fun foldr(f)(i)(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       f(h)(h)
+//│       f(h)(foldr(f)(i)(t))
 //│     LH_N then
 //│       i
 //│ fun foldr_lz(f)(i)(ls) =
-//│   lazy((if force(ls) is
+//│   lazy(if force(ls) is
 //│     LH_C (h, t) then
-//│       f(h)(h)
+//│       f(h)(foldr_lz(f)(i)(t))
 //│     LH_N then
-//│       i))
+//│       i)
 //│ fun zip(xs)(ys) =
 //│   if xs is
 //│     LH_C (hx, tx) then
 //│       if ys is
 //│         LH_C (hy, ty) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip(tx)(tx)))
+//│           LH_C (LH_P2 (hx, hy), zip(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -113,7 +113,7 @@ testPiDigits_nofib $ primId 5000
 //│     LH_C (hx, tx) then
 //│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip_nl_lz(tx)(tx)))
+//│           LH_C (LH_P2 (hx, hy), zip_nl_lz(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -123,27 +123,27 @@ testPiDigits_nofib $ primId 5000
 //│     LH_C (hy, ty) then
 //│       if force(xs) is
 //│         LH_C (hx, tx) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_nl(tx)(tx)))
+//│           LH_C (LH_P2 (hx, hy), zip_lz_nl(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
 //│       LH_N ()
 //│ fun zip_lz_lz(xs)(ys) =
-//│   lazy((if force(xs) is
+//│   lazy(if force(xs) is
 //│     LH_C (hx, tx) then
 //│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((LH_P2 (hx, hy)), (zip_lz_lz(tx)(tx)))
+//│           LH_C (LH_P2 (hx, hy), zip_lz_lz(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
-//│       LH_N ()))
+//│       LH_N ())
 //│ fun zipWith(f)(xs)(ys) =
 //│   if xs is
 //│     LH_C (hx, tx) then
 //│       if ys is
 //│         LH_C (hy, ty) then
-//│           LH_C ((f(hx)(hx)), (zipWith(f)(f)(tx)))
+//│           LH_C (f(hx)(hy), zipWith(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -153,7 +153,7 @@ testPiDigits_nofib $ primId 5000
 //│     LH_C (hx, tx) then
 //│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((f(hx)(hx)), (zipWith_nl_lz(f)(f)(tx)))
+//│           LH_C (f(hx)(hy), zipWith_nl_lz(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
@@ -163,21 +163,21 @@ testPiDigits_nofib $ primId 5000
 //│     LH_C (hy, ty) then
 //│       if force(xs) is
 //│         LH_C (hx, tx) then
-//│           LH_C ((f(hx)(hx)), (zipWith_lz_nl(f)(f)(tx)))
+//│           LH_C (f(hx)(hy), zipWith_lz_nl(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
 //│       LH_N ()
 //│ fun zipWith_lz_lz(f)(xs)(ys) =
-//│   lazy((if force(xs) is
+//│   lazy(if force(xs) is
 //│     LH_C (hx, tx) then
 //│       if force(ys) is
 //│         LH_C (hy, ty) then
-//│           LH_C ((f(hx)(hx)), (zipWith_lz_lz(f)(f)(tx)))
+//│           LH_C (f(hx)(hy), zipWith_lz_lz(f)(tx)(ty))
 //│         LH_N then
 //│           LH_N ()
 //│     LH_N then
-//│       LH_N ()))
+//│       LH_N ())
 //│ fun head(ls) =
 //│   if ls is
 //│     LH_C (h, t) then
@@ -204,27 +204,27 @@ testPiDigits_nofib $ primId 5000
 //│       error
 //│ fun enumFromTo(a)(b) =
 //│   if a <= b then
-//│     LH_C (a, (enumFromTo((a + 1))((a + 1))))
+//│     LH_C (a, enumFromTo(a + 1)(b))
 //│   else
 //│     (LH_N ())
 //│ fun enumFromThenTo(a)(t)(b) =
 //│   if a <= b then
-//│     LH_C (a, (enumFromThenTo(t)(t)((2 * t - a))))
+//│     LH_C (a, enumFromThenTo(t)(2 * t - a)(b))
 //│   else
 //│     (LH_N ())
 //│ fun enumFrom(a) =
-//│   lazy((LH_C (a, (enumFrom((a + 1))))))
+//│   lazy(LH_C (a, enumFrom(a + 1)))
 //│ fun enumFromThen(a)(t) =
-//│   lazy((LH_C (a, (enumFromThen(t)(t)))))
+//│   lazy(LH_C (a, enumFromThen(t)(2 * t - a)))
 //│ fun repeat(x) =
-//│   lazy((LH_C (x, (repeat(x)))))
+//│   lazy(LH_C (x, repeat(x)))
 //│ fun iterate(f)(x) =
-//│   lazy((LH_C (x, (iterate(f)(f)))))
+//│   lazy(LH_C (x, iterate(f)(f(x))))
 //│ fun take(n)(ls) =
 //│   if n > 0 then
 //│     if ls is
 //│       LH_C (h, t) then
-//│         LH_C (h, (take((n - 1))((n - 1))))
+//│         LH_C (h, take(n - 1)(t))
 //│       LH_N then
 //│         LH_N ()
 //│   else
@@ -233,7 +233,7 @@ testPiDigits_nofib $ primId 5000
 //│   if n > 0 then
 //│     if force(ls) is
 //│       LH_C (h, t) then
-//│         LH_C (h, (take_lz((n - 1))((n - 1))))
+//│         LH_C (h, take_lz(n - 1)(t))
 //│       LH_N then
 //│         LH_N ()
 //│   else
@@ -247,17 +247,17 @@ testPiDigits_nofib $ primId 5000
 //│ fun mappend(xs)(ys) =
 //│   if xs is
 //│     LH_C (h, t) then
-//│       LH_C (h, (mappend(t)(t)))
+//│       LH_C (h, mappend(t)(ys))
 //│     LH_N then
 //│       ys
 //│ fun sum(ls) =
-//│   sumAux(ls)(ls)
+//│   sumAux(ls)(0)
 //│ fun sumAux(ls)(a) =
 //│   if ls is
 //│     LH_N then
 //│       a
 //│     LH_C (h, t) then
-//│       sumAux(t)(t)
+//│       sumAux(t)(a + h)
 //│ fun atIndex(n)(ls) =
 //│   if n < 0 then
 //│     error
@@ -267,7 +267,7 @@ testPiDigits_nofib $ primId 5000
 //│         if n == 0 then
 //│           h
 //│         else
-//│           (atIndex((n - 1))((n - 1)))
+//│           (atIndex(n - 1)(t))
 //│       LH_N then
 //│         error)
 //│ fun atIndex_lz(n)(ls) =
@@ -279,33 +279,33 @@ testPiDigits_nofib $ primId 5000
 //│         if n == 0 then
 //│           h
 //│         else
-//│           (atIndex_lz((n - 1))((n - 1)))
+//│           (atIndex_lz(n - 1)(t))
 //│       LH_N then
 //│         error)
 //│ fun concat(lss) =
 //│   if lss is
 //│     LH_C (h, t) then
-//│       mappend(h)(h)
+//│       mappend(h)(concat(t))
 //│     LH_N then
 //│       LH_N ()
 //│ fun reverse(ls) =
-//│   reverse_helper(ls)(ls)
+//│   reverse_helper(ls)(LH_N ())
 //│ fun reverse_helper(ls)(a) =
 //│   if ls is
 //│     LH_C (h, t) then
-//│       reverse_helper(t)(t)
+//│       reverse_helper(t)(LH_C (h, a))
 //│     LH_N then
 //│       a
 //│ fun testPiDigits_nofib(_lh_testPiDigits_nofib_arg1) =
 //│   pidgits(_lh_testPiDigits_nofib_arg1)
 //│ fun drop_lz(_lh_drop_lz_arg1)(_lh_drop_lz_arg2) =
 //│   if _lh_drop_lz_arg1 > 0 then
-//│     lazy((let _lh_matchIdent = force(_lh_drop_lz_arg2)
+//│     lazy(let _lh_matchIdent = force(_lh_drop_lz_arg2)
 //│     if _lh_matchIdent is
 //│       LH_N then
 //│         LH_N ()
 //│       LH_C (_lh_drop_lz_LH_C_0, _lh_drop_lz_LH_C_1) then
-//│         force((drop_lz((_lh_drop_lz_arg1 - 1))((_lh_drop_lz_arg1 - 1))))))
+//│         force(drop_lz(_lh_drop_lz_arg1 - 1)(_lh_drop_lz_LH_C_1)))
 //│   else
 //│     _lh_drop_lz_arg2
 //│ fun min(_lh_min_arg1)(_lh_min_arg2) =
@@ -315,46 +315,46 @@ testPiDigits_nofib $ primId 5000
 //│     _lh_min_arg1
 //│ fun replicate(_lh_replicate_arg1)(_lh_replicate_arg2) =
 //│   if _lh_replicate_arg1 > 0 then
-//│     LH_C (_lh_replicate_arg2, (replicate((_lh_replicate_arg1 - 1))((_lh_replicate_arg1 - 1))))
+//│     LH_C (_lh_replicate_arg2, replicate(_lh_replicate_arg1 - 1)(_lh_replicate_arg2))
 //│   else
 //│     (LH_N ())
 //│ fun pidgits(_lh_pidgits_arg1) =
-//│   percOp(0)(0)((hashOp(0)(0)))
+//│   percOp(0)(hashOp(0)(LH_P3 (1, 0, 1)))(_lh_pidgits_arg1)
 //│ fun ampOp(_lh_ampOp_arg1)(_lh_ampOp_arg2) =
 //│   if _lh_ampOp_arg2 is
 //│     LH_P3 (_lh_ampOp_LH_P3_0, _lh_ampOp_LH_P3_1, _lh_ampOp_LH_P3_2) then
 //│       let y = _lh_ampOp_arg1 * 2 + 1
-//│       LH_P3 ((_lh_ampOp_LH_P3_0 * _lh_ampOp_arg1), ((_lh_ampOp_LH_P3_1 + _lh_ampOp_LH_P3_0 * 2) * y), (_lh_ampOp_LH_P3_2 * y))
+//│       LH_P3 (_lh_ampOp_LH_P3_0 * _lh_ampOp_arg1, (_lh_ampOp_LH_P3_1 + _lh_ampOp_LH_P3_0 * 2) * y, _lh_ampOp_LH_P3_2 * y)
 //│ fun percOp(_lh_percOp_arg1)(_lh_percOp_arg2)(_lh_percOp_arg3) =
 //│   if _lh_percOp_arg1 >= _lh_percOp_arg3 then
 //│     LH_N ()
 //│   else
 //│     (let k = _lh_percOp_arg1 + 10
-//│     let j = min(_lh_percOp_arg3)(_lh_percOp_arg3)
+//│     let j = min(_lh_percOp_arg3)(k)
 //│     let _lh_matchIdent = if k > _lh_percOp_arg3 then
-//│       LH_P2 ((mappend((take_lz((_lh_percOp_arg3 % 10))((_lh_percOp_arg3 % 10))))((take_lz((_lh_percOp_arg3 % 10))((_lh_percOp_arg3 % 10))))), (lazy((LH_N ()))))
+//│       LH_P2 (mappend(take_lz(_lh_percOp_arg3 % 10)(_lh_percOp_arg2))(replicate(k - _lh_percOp_arg3)(LH_C (' ', LH_N ()))), lazy(LH_N ()))
 //│     else
-//│       (splitAt_lz(10)(10))
+//│       (splitAt_lz(10)(_lh_percOp_arg2))
 //│     if _lh_matchIdent is
 //│       LH_P2 (_lh_percOp_LH_P2_0, _lh_percOp_LH_P2_1) then
-//│         mappend((mappend((concat(_lh_percOp_LH_P2_0)))((concat(_lh_percOp_LH_P2_0)))))((mappend((concat(_lh_percOp_LH_P2_0)))((concat(_lh_percOp_LH_P2_0))))))
+//│         mappend(mappend(concat(_lh_percOp_LH_P2_0))(mappend(LH_C ('t', LH_C (':', LH_N ())))(mappend(string_of_int(j))(LH_C ('n', LH_N ())))))(percOp(j)(_lh_percOp_LH_P2_1)(_lh_percOp_arg3)))
 //│ fun divmod(_lh_divmod_arg1)(_lh_divmod_arg2) =
-//│   LH_P2 ((div(_lh_divmod_arg1)(_lh_divmod_arg1)), (_lh_divmod_arg1 % _lh_divmod_arg2))
+//│   LH_P2 (div(_lh_divmod_arg1)(_lh_divmod_arg2), _lh_divmod_arg1 % _lh_divmod_arg2)
 //│ fun splitAt_lz(_lh_splitAt_lz_arg1)(_lh_splitAt_lz_arg2) =
-//│   LH_P2 ((take_lz(_lh_splitAt_lz_arg1)(_lh_splitAt_lz_arg1)), (drop_lz(_lh_splitAt_lz_arg1)(_lh_splitAt_lz_arg1)))
+//│   LH_P2 (take_lz(_lh_splitAt_lz_arg1)(_lh_splitAt_lz_arg2), drop_lz(_lh_splitAt_lz_arg1)(_lh_splitAt_lz_arg2))
 //│ fun hashOp(_lh_hashOp_arg1)(_lh_hashOp_arg2) =
-//│   lazy((let k = _lh_hashOp_arg1 + 1
-//│   let _lh_matchIdent = ampOp(k)(k)
+//│   lazy(let k = _lh_hashOp_arg1 + 1
+//│   let _lh_matchIdent = ampOp(k)(_lh_hashOp_arg2)
 //│   if _lh_matchIdent is
 //│     LH_P3 (_lh_hashOp_LH_P3_0, _lh_hashOp_LH_P3_1, _lh_hashOp_LH_P3_2) then
-//│       let _lh_matchIdent = divmod((_lh_hashOp_LH_P3_0 * 3 + _lh_hashOp_LH_P3_1))((_lh_hashOp_LH_P3_0 * 3 + _lh_hashOp_LH_P3_1))
+//│       let _lh_matchIdent = divmod(_lh_hashOp_LH_P3_0 * 3 + _lh_hashOp_LH_P3_1)(_lh_hashOp_LH_P3_2)
 //│       if _lh_matchIdent is
 //│         LH_P2 (_lh_hashOp_LH_P2_0, _lh_hashOp_LH_P2_1) then
 //│           if _lh_hashOp_LH_P3_0 > _lh_hashOp_LH_P3_1 || _lh_hashOp_LH_P2_1 + _lh_hashOp_LH_P3_0 >= _lh_hashOp_LH_P3_2 then
-//│             force((hashOp(k)(k)))
+//│             force(hashOp(k)(LH_P3 (_lh_hashOp_LH_P3_0, _lh_hashOp_LH_P3_1, _lh_hashOp_LH_P3_2)))
 //│           else
-//│             (LH_C ((string_of_int(_lh_hashOp_LH_P2_0)), (hashOp(k)(k))))))
-//│ (testPiDigits_nofib((primId(5000))))
+//│             (LH_C (string_of_int(_lh_hashOp_LH_P2_0), hashOp(k)(LH_P3 (_lh_hashOp_LH_P3_0 * 10, (_lh_hashOp_LH_P3_1 - _lh_hashOp_LH_P2_0 * _lh_hashOp_LH_P3_2) * 10, _lh_hashOp_LH_P3_2)))))
+//│ (testPiDigits_nofib(primId(5000)))
 //│ 		---------- unoptimized mls gen ----------
 //│ testPiDigits_nofib_lh_₁^467(primId⁰(5000))
 //│ def ampOp_lh_₁(_lh_ampOp_arg1⁰, _lh_ampOp_arg2⁰) = case _lh_ampOp_arg2⁰ of {

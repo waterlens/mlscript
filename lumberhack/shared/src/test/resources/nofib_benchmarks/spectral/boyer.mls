@@ -628,6 +628,10 @@ testBoyer_nofib $ primId 5
 //│       if _lh_truep_Fun_0 is
 //│         TRUE then
 //│           True ()
+//│         _ then
+//│           termInList(_lh_truep_arg1)(_lh_truep_arg2)
+//│     _ then
+//│       termInList(_lh_truep_arg1)(_lh_truep_arg2)
 //│ fun termInList(_lh_termInList_arg1)(_lh_termInList_arg2) =
 //│   if _lh_termInList_arg2 is
 //│     LH_C (_lh_termInList_LH_C_0, _lh_termInList_LH_C_1) then
@@ -649,6 +653,19 @@ testBoyer_nofib $ primId 5
 //│             LH_P2 (termEq(_lh_one_way_unify1_arg1)(_lh_one_way_unify1_LH_P2_1), _lh_one_way_unify1_arg3)
 //│           else
 //│             (LH_P2 (True (), LH_C (LH_P2 (_lh_one_way_unify1_Var_0, _lh_one_way_unify1_arg1), _lh_one_way_unify1_arg3)))
+//│     _ then
+//│       if _lh_one_way_unify1_arg1 is
+//│         Fun (_lh_one_way_unify1_Fun_0, _lh_one_way_unify1_Fun_1, _lh_one_way_unify1_Fun_2) then
+//│           if _lh_one_way_unify1_arg2 is
+//│             Fun (_lh_one_way_unify1_Fun_0, _lh_one_way_unify1_Fun_1, _lh_one_way_unify1_Fun_2) then
+//│               if polyEq(_lh_one_way_unify1_Fun_0)(_lh_one_way_unify1_Fun_0) then
+//│                 one_way_unify1_lst(_lh_one_way_unify1_Fun_1)(_lh_one_way_unify1_Fun_1)(_lh_one_way_unify1_arg3)
+//│               else
+//│                 (LH_P2 (False (), LH_N ()))
+//│             _ then
+//│               LH_P2 (False (), LH_N ())
+//│         _ then
+//│           LH_P2 (False (), LH_N ())
 //│ fun one_way_unify(_lh_one_way_unify_arg1)(_lh_one_way_unify_arg2) =
 //│   one_way_unify1(_lh_one_way_unify_arg1)(_lh_one_way_unify_arg2)(LH_N ())
 //│ fun falsep(_lh_falsep_arg1)(_lh_falsep_arg2) =
@@ -657,6 +674,10 @@ testBoyer_nofib $ primId 5
 //│       if _lh_falsep_Fun_0 is
 //│         FALSE then
 //│           True ()
+//│         _ then
+//│           termInList(_lh_falsep_arg1)(_lh_falsep_arg2)
+//│     _ then
+//│       termInList(_lh_falsep_arg1)(_lh_falsep_arg2)
 //│ fun tautologyp(_lh_tautologyp_arg1)(_lh_tautologyp_arg2)(_lh_tautologyp_arg3) =
 //│   if truep(_lh_tautologyp_arg1)(_lh_tautologyp_arg2) then
 //│     True ()
@@ -683,7 +704,19 @@ testBoyer_nofib $ primId 5
 //│                                 (if falsep(_lh_tautologyp_LH_C_0)(_lh_tautologyp_arg3) then
 //│                                   tautologyp(_lh_tautologyp_LH_C_0)(_lh_tautologyp_arg2)(_lh_tautologyp_arg3)
 //│                                 else
-//│                                   ((tautologyp(_lh_tautologyp_LH_C_0)(LH_C (_lh_tautologyp_LH_C_0, _lh_tautologyp_arg2))(_lh_tautologyp_arg3)) && (tautologyp(_lh_tautologyp_LH_C_0)(_lh_tautologyp_arg2)(LH_C (_lh_tautologyp_LH_C_0, _lh_tautologyp_arg3)))))))
+//│                                   ((tautologyp(_lh_tautologyp_LH_C_0)(LH_C (_lh_tautologyp_LH_C_0, _lh_tautologyp_arg2))(_lh_tautologyp_arg3)) && (tautologyp(_lh_tautologyp_LH_C_0)(_lh_tautologyp_arg2)(LH_C (_lh_tautologyp_LH_C_0, _lh_tautologyp_arg3)))))
+//│                             _ then
+//│                               False ()
+//│                         _ then
+//│                           False ()
+//│                     _ then
+//│                       False ()
+//│                 _ then
+//│                   False ()
+//│             _ then
+//│               False ()
+//│         _ then
+//│           False ()))
 //│ fun find(_lh_find_arg1)(_lh_find_arg2) =
 //│   if _lh_find_arg2 is
 //│     LH_N then
@@ -731,10 +764,16 @@ testBoyer_nofib $ primId 5
 //│       if _lh_termEq_arg2 is
 //│         Var (_lh_termEq_Var_0) then
 //│           polyEq(_lh_termEq_Var_0)(_lh_termEq_Var_0)
+//│         _ then
+//│           False ()
 //│     Fun (_lh_termEq_Fun_0, _lh_termEq_Fun_1, _lh_termEq_Fun_2) then
 //│       if _lh_termEq_arg2 is
 //│         Fun (_lh_termEq_Fun_0, _lh_termEq_Fun_1, _lh_termEq_Fun_2) then
 //│           (polyEq(_lh_termEq_Fun_0)(_lh_termEq_Fun_0)) && (termLsEq(_lh_termEq_Fun_1)(_lh_termEq_Fun_1))
+//│         _ then
+//│           False ()
+//│     _ then
+//│       False ()
 //│ fun all(_lh_all_arg1)(_lh_all_arg2) =
 //│   if _lh_all_arg2 is
 //│     LH_N then
@@ -756,6 +795,8 @@ testBoyer_nofib $ primId 5
 //│       if _lh_one_way_unify1_lst_arg2 is
 //│         LH_N then
 //│           LH_P2 (True (), _lh_one_way_unify1_lst_arg3)
+//│         _ then
+//│           LH_P2 (False (), LH_N ())
 //│     LH_C (_lh_one_way_unify1_lst_LH_C_0, _lh_one_way_unify1_lst_LH_C_1) then
 //│       if _lh_one_way_unify1_lst_arg2 is
 //│         LH_C (_lh_one_way_unify1_lst_LH_C_0, _lh_one_way_unify1_lst_LH_C_1) then
@@ -766,6 +807,10 @@ testBoyer_nofib $ primId 5
 //│               if _lh_matchIdent is
 //│                 LH_P2 (_lh_one_way_unify1_lst_LH_P2_0, _lh_one_way_unify1_lst_LH_P2_1) then
 //│                   LH_P2 (_lh_one_way_unify1_lst_LH_P2_0 && _lh_one_way_unify1_lst_LH_P2_0, _lh_one_way_unify1_lst_LH_P2_1)
+//│         _ then
+//│           LH_P2 (False (), LH_N ())
+//│     _ then
+//│       LH_P2 (False (), LH_N ())
 //│ (testBoyer_nofib(primId(5)))
 //│ 		---------- unoptimized mls gen ----------
 //│ testBoyer_nofib_lh_₁^2796(primId⁰(5))

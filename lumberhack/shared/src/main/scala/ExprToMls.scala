@@ -19,7 +19,7 @@ object ExprToMls {
     case LE.Match(scrut, arms) => 
       val scrut2 = f(scrut)
       val lines = arms.flatMap {        
-        case (Var("_"), _, body) =>
+        case (Var("_"), _, LE.Ref(id)) if id.tree.name == "error" =>
           None
         case (c, Nil, body) =>
           Some(Left(IfThen(c, f(body))))

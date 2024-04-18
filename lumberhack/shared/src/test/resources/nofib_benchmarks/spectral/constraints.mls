@@ -493,6 +493,8 @@ testConstraints_nofib $ primId 6
 //│       if _lh_rqsort_LH_C_1 is
 //│         LH_N then
 //│           LH_C (_lh_rqsort_LH_C_0, _lh_rqsort_arg3)
+//│         _ then
+//│           rqpart(_lh_rqsort_arg1)(_lh_rqsort_LH_C_0)(_lh_rqsort_LH_C_1)(LH_N ())(LH_N ())(_lh_rqsort_arg3)
 //│ fun collect(_lh_collect_arg1) =
 //│   if _lh_collect_arg1 is
 //│     LH_N then
@@ -507,6 +509,10 @@ testConstraints_nofib $ primId 6
 //│       if _lh_knownSolution_Known_0 is
 //│         LH_N then
 //│           True ()
+//│         _ then
+//│           False ()
+//│     _ then
+//│       False ()
 //│ fun test(_lh_test_arg1) =
 //│   filter(consistent(_lh_test_arg1))
 //│ fun qpart(_lh_qpart_arg1)(_lh_qpart_arg2)(_lh_qpart_arg3)(_lh_qpart_arg4)(_lh_qpart_arg5)(_lh_qpart_arg6) =
@@ -524,6 +530,8 @@ testConstraints_nofib $ primId 6
 //│       if _lh_leaves_Node_1 is
 //│         LH_N then
 //│           LH_C (_lh_leaves_Node_0, LH_N ())
+//│         _ then
+//│           concat(map(leaves)(_lh_leaves_Node_1))
 //│ fun unionBy(_lh_unionBy_arg1)(_lh_unionBy_arg2)(_lh_unionBy_arg3) =
 //│   mappend(_lh_unionBy_arg2)(foldl(flip(deleteBy(_lh_unionBy_arg1)))(nubBy(_lh_unionBy_arg1)(_lh_unionBy_arg3))(_lh_unionBy_arg2))
 //│ fun try(_lh_try_arg1)(_lh_try_arg2) =
@@ -561,13 +569,29 @@ testConstraints_nofib $ primId 6
 //│       if _lh_qsort_LH_C_1 is
 //│         LH_N then
 //│           LH_C (_lh_qsort_LH_C_0, _lh_qsort_arg3)
+//│         _ then
+//│           qpart(_lh_qsort_arg1)(_lh_qsort_LH_C_0)(_lh_qsort_LH_C_1)(LH_N ())(LH_N ())(_lh_qsort_arg3)
 //│ fun generate(_lh_generate_arg1) =
 //│   if _lh_generate_arg1 is
 //│     CSP (_lh_generate_CSP_0, _lh_generate_CSP_1, _lh_generate_CSP_2) then
 //│       let g = _lh_g_arg1 => _lh_g_arg2 =>
 //│         (if _lh_g_arg2 is
 //│           0 then
-//│             LH_C (LH_N (), LH_N ()))
+//│             LH_C (LH_N (), LH_N ())
+//│           _ then
+//│             let _lh_listcomp_fun = _lh_listcomp_fun_para =>
+//│               (if _lh_listcomp_fun_para is
+//│                 LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_t) then
+//│                   let _lh_listcomp_fun = _lh_listcomp_fun_para =>
+//│                     (if _lh_listcomp_fun_para is
+//│                       LH_C (_lh_listcomp_fun_ls_h, _lh_listcomp_fun_ls_t) then
+//│                         LH_C (LH_C (Assign (_lh_g_arg2, _lh_listcomp_fun_ls_h), _lh_listcomp_fun_ls_h), _lh_listcomp_fun(_lh_listcomp_fun_ls_t))
+//│                       LH_N then
+//│                         _lh_listcomp_fun(_lh_listcomp_fun_ls_t))
+//│                   _lh_listcomp_fun(g(_lh_g_arg1)(_lh_g_arg2 - 1))
+//│                 LH_N then
+//│                   LH_N ())
+//│             _lh_listcomp_fun(enumFromTo(1)(_lh_g_arg1)))
 //│       g(_lh_generate_CSP_1)(_lh_generate_CSP_0)
 //│ fun rqpart(_lh_rqpart_arg1)(_lh_rqpart_arg2)(_lh_rqpart_arg3)(_lh_rqpart_arg4)(_lh_rqpart_arg5)(_lh_rqpart_arg6) =
 //│   if _lh_rqpart_arg3 is
@@ -758,6 +782,10 @@ testConstraints_nofib $ primId 6
 //│       if _lh_knownConflict_Known_0 is
 //│         LH_C (_lh_knownConflict_LH_C_0, _lh_knownConflict_LH_C_1) then
 //│           True ()
+//│         _ then
+//│           False ()
+//│     _ then
+//│       False ()
 //│ fun nubBy(_lh_nubBy_arg1)(_lh_nubBy_arg2) =
 //│   if _lh_nubBy_arg2 is
 //│     LH_N then
